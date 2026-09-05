@@ -1,0 +1,39 @@
+// Copies the three dispatch-indirect group counts into a private slot, replacing them with
+// zeros when any component exceeds the device limit. Guest memory that a shader never wrote
+// (dropped BDA stores, patterns like 0xDEADBEEF) would otherwise hang the host GPU.
+
+#version 450
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(std430, binding = 0) readonly buffer source_buf {
+    uint source_args[];
+};
+
+layout(std430, binding = 1) writeonly buffer target_buf {
+    uint target_args[];
+};
+
+layout(push_constant) uniform Params {
+    uint source_dword;
+    uint max_x;
+    uint max_y;
+    uint max_z;
+} params;
+
+void main() {
+    uint x = source_args[params.source_dword + 0u];
+    uint y = source_args[params.source_dword + 1u];
+    uint z = source_args[params.source_dword + 2u];
+    uint rejected = 0u;
+    if (x > params.max_x || y > params.max_y || z > params.max_z) {
+        x = 0u;
+        y = 0u;
+        z = 0u;
+        rejected = 1u;
+    }
+    target_args[0] = x;
+    target_args[1] = y;
+    target_args[2] = z;
+    target_args[3] = rejected;
+}

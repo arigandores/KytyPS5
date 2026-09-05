@@ -28,9 +28,12 @@
 #include <cstdlib>
 #include <atomic>
 #include <cmath>
+#include <cstdio>
 #include <cstring>
 #include <limits>
 #include <span>
+#include <string>
+#include <tuple>
 #include <unordered_map>
 #include <vector>
 
@@ -364,7 +367,53 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	RebindBuffers(bindings);
 	RebindImages(bindings);
 
-	auto              vk_buffer        = buffer.Handle();
+	auto vk_buffer = buffer.Handle();
+
+	// Indirect arguments: the triple is read by the GPU from the cached buffer that mirrors guest
+	// memory, so results of the compute shader that produced it are used, not the stale CPU copy
+	// (games fill unwritten memory with patterns like 0xDEADBEEF). The values still pass through
+	// a sanitizing pass, because a producer whose stores were dropped (BDA page not cached yet)
+	// leaves garbage counts that would hang the host GPU. Recorded before CommitBindings: the
+	// sanitizer pushes its own descriptor set.
+	vk::Buffer indirect_vk_buffer;
+	uint64_t   indirect_vk_offset = 0;
+	if (indirect) {
+		constexpr uint64_t ArgsSize = 3u * sizeof(uint32_t);
+		auto&              cache    = m_context.GetBufferCache();
+		static std::atomic<uint32_t> indirect_log_count {0};
+		if (indirect_log_count.fetch_add(1, std::memory_order_relaxed) < 96) {
+			LOGF("GraphicsRenderDispatchDirect: indirect args at 0x%016" PRIx64
+			     " cpu_view=%u,%u,%u gpu_modified=%d cpu_modified=%d gpu_dirty=%d shader=0x%016" PRIx64
+			     "\n",
+			     indirect_args_addr, thread_group_x, thread_group_y, thread_group_z,
+			     cache.IsRegionGpuModified(indirect_args_addr, ArgsSize) ? 1 : 0,
+			     cache.IsRegionCpuModified(indirect_args_addr, ArgsSize) ? 1 : 0,
+			     cache.HasGpuDirtyBytes(indirect_args_addr, ArgsSize) ? 1 : 0, program.shader_hash);
+		}
+		auto [args_buffer, args_offset] = cache.ObtainBuffer(indirect_args_addr, ArgsSize, false);
+		EXIT_IF(args_buffer == nullptr);
+		static const bool sanitize = std::getenv("KYTY_NO_INDIRECT_SANITIZE") == nullptr;
+		if (sanitize) {
+			if (m_indirect_sanitizer == nullptr) {
+				m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(
+				    m_context.GetGraphics(), m_context.GetCommandScheduler());
+			}
+			std::tie(indirect_vk_buffer, indirect_vk_offset) =
+			    m_indirect_sanitizer->Sanitize(vk_buffer, *args_buffer, args_offset);
+		} else {
+			indirect_vk_buffer = args_buffer->Handle();
+			indirect_vk_offset = args_offset;
+			VulkanMemoryBarrier barrier {};
+			barrier.sType = vk::StructureType::eMemoryBarrier;
+			barrier.srcAccessMask =
+			    vk::AccessFlagBits::eShaderWrite | vk::AccessFlagBits::eTransferWrite;
+			barrier.dstAccessMask = vk::AccessFlagBits::eIndirectCommandRead;
+			vk_buffer.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
+			                          vk::PipelineStageFlagBits::eDrawIndirect,
+			                          vk::DependencyFlags {}, 1, &barrier, 0, nullptr, 0, nullptr);
+		}
+	}
+
 	PreparedBindings* descriptor_stage = &bindings;
 	CommitBindings(buffer, vk::PipelineBindPoint::eCompute, pipeline,
 	               std::span {&descriptor_stage, 1u});
@@ -384,21 +433,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	vk_buffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
 	if (indirect) {
-		// The argument triple is read by the GPU from the cached buffer that mirrors guest
-		// memory, so results of the compute shader that produced it are used, not the stale
-		// CPU copy (games fill unwritten memory with patterns like 0xDEADBEEF).
-		constexpr uint64_t ArgsSize = 3u * sizeof(uint32_t);
-		auto [args_buffer, args_offset] =
-		    m_context.GetBufferCache().ObtainBuffer(indirect_args_addr, ArgsSize, false);
-		EXIT_IF(args_buffer == nullptr);
-		vk::MemoryBarrier barrier {};
-		barrier.sType         = vk::StructureType::eMemoryBarrier;
-		barrier.srcAccessMask = vk::AccessFlagBits::eShaderWrite | vk::AccessFlagBits::eTransferWrite;
-		barrier.dstAccessMask = vk::AccessFlagBits::eIndirectCommandRead;
-		vk_buffer.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
-		                          vk::PipelineStageFlagBits::eDrawIndirect, vk::DependencyFlags {},
-		                          1, &barrier, 0, nullptr, 0, nullptr);
-		vk_buffer.dispatchIndirect(args_buffer->Handle(), args_offset);
+		vk_buffer.dispatchIndirect(indirect_vk_buffer, indirect_vk_offset);
 	} else {
 		vk_buffer.dispatch(thread_group_x, thread_group_y, thread_group_z);
 	}

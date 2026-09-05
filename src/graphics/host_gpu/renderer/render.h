@@ -210,6 +210,7 @@ private:
 	                                                     const CommandBuffer&          buffer);
 
 	RenderContext&                        m_context;
+	std::unique_ptr<IndirectArgsSanitizer> m_indirect_sanitizer;
 	std::vector<ImageId>                  m_bound_images;
 	std::vector<vk::DescriptorBufferInfo> m_descriptor_buffers;
 	std::vector<vk::DescriptorImageInfo>  m_descriptor_images;

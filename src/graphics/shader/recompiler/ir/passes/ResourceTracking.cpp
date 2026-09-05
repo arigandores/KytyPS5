@@ -5,6 +5,7 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <fmt/format.h>
 #include <span>
@@ -98,6 +99,7 @@ public:
 		if (!m_program.srt_plan_complete) {
 			Fail(0, "SRT plan is not ready");
 		}
+		UnflattenVariantSrtReads();
 		PlanIndirectImages();
 		for (auto* block: m_program.blocks) {
 			for (auto& inst: *block) {
@@ -606,6 +608,105 @@ private:
 		m_handle_patches.push_back({handle, resource});
 	}
 
+	// The SRT planner flattens every scalar load reachable from a descriptor handle, including
+	// loads whose address goes through a loop header phi that changes on every iteration (a
+	// pointer walking an array of structures). Those slots have no single value to push, so
+	// give their uses the real load back and let the descriptor consumers fall back to
+	// run-time addressing.
+	bool ChainIsVariant(Value value, std::vector<const Inst*>& visiting,
+	                    std::vector<uint8_t>& slot_state) {
+		value            = value.Resolve();
+		const auto* inst = value.TryInstruction();
+		if (inst == nullptr) {
+			return false;
+		}
+		if (inst->GetOpcode() == ValueOpcode::ReadConst) {
+			const auto slot = inst->NumArgs() == 2 ? inst->Arg(1).Resolve() : Value {};
+			if (slot.IsImmediate() && slot.GetType() == Type::U32 &&
+			    slot.U32() < m_program.srt_reads.size()) {
+				return SlotIsVariant(slot.U32(), visiting, slot_state);
+			}
+			return false;
+		}
+		if (std::ranges::find(visiting, inst) != visiting.end()) {
+			return false;
+		}
+		visiting.push_back(inst);
+		bool variant = false;
+		if (inst->GetOpcode() == ValueOpcode::Phi) {
+			const auto invariant = ResolveInvariantPhi(m_program, value);
+			variant = invariant.IsEmpty() || ChainIsVariant(invariant, visiting, slot_state);
+		} else {
+			for (size_t index = 0; index < inst->NumArgs() && !variant; index++) {
+				variant = ChainIsVariant(inst->Arg(index), visiting, slot_state);
+			}
+		}
+		visiting.pop_back();
+		return variant;
+	}
+
+	bool SlotIsVariant(uint32_t slot, std::vector<const Inst*>& visiting,
+	                   std::vector<uint8_t>& slot_state) {
+		// 0 = unknown, 1 = invariant, 2 = variant, 3 = being evaluated
+		if (slot_state[slot] != 0) {
+			return slot_state[slot] == 2;
+		}
+		slot_state[slot]   = 3;
+		const bool variant = ChainIsVariant(m_program.srt_reads[slot].value, visiting, slot_state);
+		slot_state[slot]   = variant ? 2 : 1;
+		return variant;
+	}
+
+	void UnflattenVariantSrtReads() {
+		std::vector<uint8_t>     slot_state(m_program.srt_reads.size(), 0);
+		std::vector<const Inst*> visiting;
+		for (uint32_t slot = 0; slot < m_program.srt_reads.size(); slot++) {
+			SlotIsVariant(slot, visiting, slot_state);
+		}
+		for (uint32_t slot = 0; slot < m_program.srt_reads.size(); slot++) {
+			if (slot_state[slot] != 2) {
+				continue;
+			}
+			auto& read   = m_program.srt_reads[slot];
+			read.variant = true;
+			std::fprintf(stderr, "shader 0x%016llx: SRT slot %u is loop-variant, restored its load\n",
+			             static_cast<unsigned long long>(m_program.shader_hash), slot);
+			auto* load   = read.value.Resolve().TryInstruction();
+			if (load != nullptr && (load->GetOpcode() == ValueOpcode::LoadAddressU32 ||
+			                        load->GetOpcode() == ValueOpcode::ReadConstBuffer)) {
+				const auto index = load->Flags<MemoryFlags>().index;
+				if (index < m_program.memory_info.size()) {
+					m_program.memory_info[index].planning_only = false;
+				}
+			}
+			const auto is_slot_read = [&](Value candidate) {
+				const auto* inst = candidate.Resolve().TryInstruction();
+				if (inst == nullptr || inst->GetOpcode() != ValueOpcode::ReadConst ||
+				    inst->NumArgs() != 2) {
+					return false;
+				}
+				const auto arg = inst->Arg(1).Resolve();
+				return arg.IsImmediate() && arg.GetType() == Type::U32 && arg.U32() == slot;
+			};
+			for (auto* block: m_program.blocks) {
+				for (auto& inst: *block) {
+					if (inst.GetOpcode() == ValueOpcode::ReadConst && is_slot_read(Value(&inst))) {
+						inst.ReplaceUsesWith(read.value, true);
+					}
+				}
+			}
+			for (auto& info: m_program.block_info) {
+				if (is_slot_read(info.condition)) {
+					info.condition = read.value;
+				}
+				if (is_slot_read(info.indirect_target)) {
+					info.indirect_target = read.value;
+				}
+			}
+			m_info.uses_dma = true;
+		}
+	}
+
 	// A scalar buffer load whose V# cannot be evaluated ahead of time (for example a descriptor
 	// fetched through a pointer that advances on every loop iteration) has no static resource to
 	// bind. The V# base address is still a plain uniform value, so read the memory through the
@@ -652,6 +753,9 @@ private:
 		    where, ValueOpcode::LoadAddressU32,
 		    {Value(&*address), inst.Arg(1), Value(0u), Value(true)}, bits);
 		inst.ReplaceUsesWith(Value(&*load), true);
+		std::fprintf(stderr, "shader 0x%016llx: scalar buffer load at pc 0x%08x uses a variant V#, "
+		             "reading through its base address\n",
+		             static_cast<unsigned long long>(m_program.shader_hash), flags.pc);
 		if (!handle->HasUses()) {
 			handle->Invalidate();
 		}

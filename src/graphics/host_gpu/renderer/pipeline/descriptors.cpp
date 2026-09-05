@@ -29,6 +29,7 @@
 #include "kernel/memory.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <atomic>
 #include <fmt/format.h>
 #include <limits>
@@ -429,7 +430,9 @@ static bool IsSupportedStorageTextureDescriptor(const ShaderRecompiler::IR::Imag
 	const bool supported_swizzle =
 	    IsValidImageSwizzle(swizzle) &&
 	    (swizzle == DstSel(4, 5, 6, 7) || !resource.read || resource.atomic);
-	const auto max_mip = resource.r128 ? descriptor.LastLevel() : descriptor.MaxMip();
+	// Storage views ignore max_mip for addressing; accept a stale max_mip below the view level.
+	const auto max_mip = resource.r128 ? descriptor.LastLevel()
+	                                   : std::max(descriptor.MaxMip(), descriptor.LastLevel());
 	const auto view_last_level =
 	    resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage
 	        ? descriptor.LastLevel()
@@ -659,7 +662,12 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 	}
 
 	auto& texture_cache = m_context.GetTextureCache();
-	if (descriptor.IsNull()) {
+	// Debug aid: KYTY_SKIP_TAIL_MIP_STORAGE=1 binds a dummy image for storage views that
+	// address a mip level above the descriptor max_mip, to isolate GPU faults.
+	static const bool skip_tail_mip_storage = std::getenv("KYTY_SKIP_TAIL_MIP_STORAGE") != nullptr;
+	const bool tail_mip_storage = storage && !descriptor.IsNull() && !resource.r128 &&
+	                              descriptor.LastLevel() > descriptor.MaxMip();
+	if (descriptor.IsNull() || (skip_tail_mip_storage && tail_mip_storage)) {
 		auto       desc = NullTextureDesc(resource, storage ? TextureCache::BindingType::Storage
 		                                                    : TextureCache::BindingType::Texture);
 		const auto id   = texture_cache.FindImage(desc);
@@ -673,8 +681,14 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 	const auto last_level   = descriptor.LastLevel();
 	const auto type         = TextureType(descriptor);
 	const bool multisampled = IsMultisampledTexture(type);
-	const auto max_mip      = resource.r128 ? last_level : descriptor.MaxMip();
-	const auto levels       = multisampled ? 1u : static_cast<uint32_t>(max_mip) + 1u;
+	auto max_mip = resource.r128 ? last_level : descriptor.MaxMip();
+	// Storage views address their mip level from the surface layout and ignore max_mip, and
+	// games do bind a stale max_mip together with a higher base/last level when they write the
+	// tail of a mip chain (ASTRO BOT downsampling a 480x270 buffer). Extend the level count.
+	if (storage && !multisampled && last_level > max_mip) {
+		max_mip = last_level;
+	}
+	const auto levels = multisampled ? 1u : static_cast<uint32_t>(max_mip) + 1u;
 	const bool dynamic_storage =
 	    storage && resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage;
 	const auto view_last_level =

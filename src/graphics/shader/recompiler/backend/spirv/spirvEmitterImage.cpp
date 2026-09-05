@@ -122,6 +122,45 @@ ImageSampleLayout Layout(const IR::MemoryInfo& mem, ImageDimension dimension) {
 	return layout;
 }
 
+// Shader-side depth comparison: (ref <op> depth) ? 1.0 : 0.0 with the Vulkan compare op numbering.
+uint32_t CompareDepth(EmitterState& state, uint32_t ref, uint32_t depth, uint32_t op) {
+	uint32_t opcode = 0;
+	switch (op) {
+		case 1: opcode = OpFOrdLessThan; break;
+		case 2: opcode = OpFOrdEqual; break;
+		case 3: opcode = OpFOrdLessThanEqual; break;
+		case 4: opcode = OpFOrdGreaterThan; break;
+		case 5: opcode = OpFUnordNotEqual; break;
+		case 6: opcode = OpFOrdGreaterThanEqual; break;
+		default: break;
+	}
+	const auto condition = opcode != 0 ? Binary(state, opcode, TypeBool(state), ref, depth)
+	                                   : ConstantBool(state, op == 7u);
+	const auto result    = state.builder.AllocateId();
+	state.builder.AddFunction({OpSelect, TypeF32(state), result, condition,
+	                           ConstantF32Value(state, 1.0f), ConstantF32Value(state, 0.0f)});
+	return result;
+}
+
+uint32_t ManualDepthCompare(EmitterState& state, uint32_t texel, uint32_t ref, uint32_t op) {
+	const auto depth = state.builder.AllocateId();
+	state.builder.AddFunction({OpCompositeExtract, TypeF32(state), depth, texel, 0u});
+	return CompareDepth(state, ref, depth, op);
+}
+
+uint32_t ManualDepthCompareGather(EmitterState& state, uint32_t texels, uint32_t ref, uint32_t op) {
+	std::array<uint32_t, 4> compared {};
+	for (uint32_t component = 0; component < 4u; component++) {
+		const auto depth = state.builder.AllocateId();
+		state.builder.AddFunction({OpCompositeExtract, TypeF32(state), depth, texels, component});
+		compared[component] = CompareDepth(state, ref, depth, op);
+	}
+	const auto result = state.builder.AllocateId();
+	state.builder.AddFunction({OpCompositeConstruct, TypeF32Vector(state, 4), result, compared[0],
+	                           compared[1], compared[2], compared[3]});
+	return result;
+}
+
 uint32_t ZeroF32(EmitterState& state) {
 	return ConstantF32(state, 0);
 }
@@ -677,6 +716,8 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 		const auto  layout         = Layout(mem, dimension);
 		const auto  numeric_class  = image.numeric_class;
 		const bool  dref           = HasFlag(mem, Decoder::ImageSampleFlagCompare);
+		const bool  manual_dref    = dref && image.manual_depth_compare;
+		const bool  native_dref    = dref && !manual_dref;
 		if (dref && state.program.info.images[mem.resource].conversion_format !=
 		                Prospero::BufferFormat::kInvalid) {
 			ctx.Fail(inst, "uses depth comparison with a packed integer image");
@@ -704,16 +745,17 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			const auto            sampled = MakeSampledImage(state, mem.resource, mem.sampler);
 			const auto            sample  = state.builder.AllocateId();
 			std::vector<uint32_t> words;
-			if (dref) {
-				auto dref_value = ZeroF32(state);
-				if (layout.dref != NoImageComponent) {
-					dref_value = AddressF32(ctx, mem, *address, layout.dref);
-				}
+			auto gather_dref_value = ZeroF32(state);
+			if (dref && layout.dref != NoImageComponent) {
+				gather_dref_value = AddressF32(ctx, mem, *address, layout.dref);
+			}
+			if (native_dref) {
 				words = {OpImageDrefGather, TypeF32Vector(state, 4), sample, sampled, coord,
-				         dref_value};
+				         gather_dref_value};
 			} else {
 				uint32_t component = 0;
-				if (ImageConversionFormat(state, mem).format == Prospero::BufferFormat::kInvalid) {
+				if (!manual_dref &&
+				    ImageConversionFormat(state, mem).format == Prospero::BufferFormat::kInvalid) {
 					component = ImageGatherComponent(mem.dmask);
 				}
 				words = {OpImageGather, ImageVectorType(state, numeric_class, 4),
@@ -729,10 +771,15 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			}
 			state.builder.AddFunction(words);
 			auto result_numeric_class = numeric_class;
+			auto gathered             = sample;
 			if (dref) {
 				result_numeric_class = Prospero::TextureNumericClass::Float;
 			}
-			ctx.Define(inst, ResultVector(ctx, UnpackImageGather(ctx, mem, sample),
+			if (manual_dref) {
+				gathered = ManualDepthCompareGather(state, sample, gather_dref_value,
+				                                    image.depth_compare_op);
+			}
+			ctx.Define(inst, ResultVector(ctx, UnpackImageGather(ctx, mem, gathered),
 			                              result_numeric_class, false, mem, true));
 			return true;
 		}
@@ -742,15 +789,17 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 		                          state.stage != ShaderType::Pixel;
 		uint32_t opcode = OpImageSampleImplicitLod;
 		if (explicit_lod) {
-			opcode = dref ? OpImageSampleDrefExplicitLod : OpImageSampleExplicitLod;
-		} else if (dref) {
+			opcode = native_dref ? OpImageSampleDrefExplicitLod : OpImageSampleExplicitLod;
+		} else if (native_dref) {
 			opcode = OpImageSampleDrefImplicitLod;
 		}
 		uint32_t result_type = ImageVectorType(state, numeric_class, 4);
 		uint32_t dref_value  = 0;
 		if (dref) {
-			result_type = TypeF32(state);
-			dref_value  = ZeroF32(state);
+			if (native_dref) {
+				result_type = TypeF32(state);
+			}
+			dref_value = ZeroF32(state);
 			if (layout.dref != NoImageComponent) {
 				dref_value = AddressF32(ctx, mem, *address, layout.dref);
 			}
@@ -778,7 +827,7 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			const auto            sampled = MakeSampledImage(state, resource, mem.sampler);
 			const auto            sample  = state.builder.AllocateId();
 			std::vector<uint32_t> words {opcode, result_type, sample, sampled, coord};
-			if (dref) {
+			if (native_dref) {
 				words.push_back(dref_value);
 			}
 			if (operand_mask != 0u) {
@@ -794,7 +843,10 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			if (!dref) {
 				result = UnpackImageTexel(ctx, mem, sample);
 			}
-			ctx.Define(inst, ResultVector(ctx, result, numeric_class, dref, mem));
+			if (manual_dref) {
+			result = ManualDepthCompare(state, result, dref_value, image.depth_compare_op);
+		}
+		ctx.Define(inst, ResultVector(ctx, result, numeric_class, dref, mem));
 			return true;
 		}
 		const auto* handle = image_arg.ResolveInstruction();
@@ -888,6 +940,9 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 		auto result = phi_words[2];
 		if (!dref) {
 			result = UnpackImageTexel(ctx, mem, result);
+		}
+		if (manual_dref) {
+			result = ManualDepthCompare(state, result, dref_value, image.depth_compare_op);
 		}
 		ctx.Define(inst, ResultVector(ctx, result, numeric_class, dref, mem));
 		return true;

@@ -130,6 +130,10 @@ struct ImageResource {
 	bool                          depth_compare     = false;
 	bool                          cube              = false;
 	bool                          r128              = false;
+	// Depth comparison is emulated in the shader (sample + compare) because the bound view
+	// format cannot be sampled with a comparison sampler on the host.
+	bool                          manual_depth_compare = false;
+	uint32_t                      depth_compare_op     = 0;
 	uint32_t                      indirect_root     = NoIndirectImage;
 	uint32_t                      indirect_mapping_offset   = 0;
 	uint32_t                      indirect_search_iterations = 0;
@@ -465,6 +469,9 @@ struct DescriptorSource {
 struct SrtRead {
 	Value    value;
 	uint32_t flat_offset = 0;
+	// The value depends on a loop-variant phi and cannot be flattened into the SRT push data;
+	// its uses were restored to the real load instruction and it is skipped when evaluating.
+	bool     variant     = false;
 
 	bool operator==(const SrtRead& other) const = default;
 };

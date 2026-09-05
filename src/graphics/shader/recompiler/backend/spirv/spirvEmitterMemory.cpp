@@ -1019,12 +1019,23 @@ void DefineGetBdaPointer(EmitterState& state) {
 	const auto page64 = Binary(
 	    state, OpShiftRightLogical, type, address,
 	    ConstantDeviceAddress(state, BufferCache::CACHING_PAGEBITS));
-	const auto page = Unary(state, OpUConvert, TypeU32(state), page64);
+	// Addresses outside the page table (garbage pointers in never-taken paths, or guest
+	// addresses above the covered range) must not index past the table: clamp the lookup to
+	// entry 0 and treat the page as missing, instead of reading out of bounds.
+	const auto table_length = state.builder.AllocateId();
+	state.builder.AddFunction({OpArrayLength, TypeU32(state), table_length,
+	                           state.bda_pagetable_variable, 0});
+	const auto in_table = Binary(state, OpULessThan, TypeBool(state), page64,
+	                             Unary(state, OpUConvert, type, table_length));
+	const auto page = Select(state, TypeU32(state), in_table,
+	                         Unary(state, OpUConvert, TypeU32(state), page64),
+	                         ConstantU32(state, 0));
 	const auto entry_pointer = state.builder.AllocateId();
 	state.builder.AddFunction({OpAccessChain, TypeDeviceAddressStoragePointer(state), entry_pointer,
 	                           state.bda_pagetable_variable, ConstantU32(state, 0), page});
-	const auto base = state.builder.AllocateId();
-	state.builder.AddFunction({OpLoad, type, base, entry_pointer});
+	const auto loaded = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, type, loaded, entry_pointer});
+	const auto base = Select(state, type, in_table, loaded, ConstantDeviceAddress(state, 0));
 	const auto missing =
 	    Binary(state, OpIEqual, TypeBool(state), base, ConstantDeviceAddress(state, 0));
 	const auto fault_label     = state.builder.AllocateId();

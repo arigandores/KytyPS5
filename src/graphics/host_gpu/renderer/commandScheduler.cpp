@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 
+#include <cstdlib>
+
 #include "common/assert.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -408,6 +410,20 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 		                  m_command.m_debug_arg4);
 	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
+
+	// Debug aid: KYTY_SYNC_SUBMIT=1 drains the queue after every submit so a device loss is
+	// reported on the submit that caused it, together with its debug ids.
+	static const bool sync_submit = std::getenv("KYTY_SYNC_SUBMIT") != nullptr;
+	if (sync_submit) {
+		const auto idle = graphics.queue.waitIdle();
+		if (idle != vk::Result::eSuccess) {
+			ReportVulkanFatal("vkQueueWaitIdle(sync)", idle, tick, m_command.m_debug_op,
+			                  m_command.m_debug_submit_id, m_command.m_debug_arg0,
+			                  m_command.m_debug_arg1, m_command.m_debug_arg2,
+			                  m_command.m_debug_arg3, m_command.m_debug_arg4);
+		}
+		EXIT_NOT_IMPLEMENTED(idle != vk::Result::eSuccess);
+	}
 
 	m_command.m_buffer = nullptr;
 	return tick;

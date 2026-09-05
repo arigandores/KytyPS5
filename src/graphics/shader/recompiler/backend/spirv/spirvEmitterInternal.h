@@ -263,6 +263,8 @@ enum : uint32_t {
 	OpLabel                        = 248,
 	OpBranch                       = 249,
 	OpBranchConditional            = 250,
+
+	OpUnreachable            = 255,
 	OpSwitch                       = 251,
 	OpKill                         = 252,
 	OpReturn                       = 253,
@@ -360,6 +362,9 @@ struct EmitterState {
 	uint32_t                                         bda_pagetable_variable  = 0;
 	uint32_t                                         fault_buffer_variable   = 0;
 	uint32_t                                         bda_pointer_function    = 0;
+	// Merge labels synthesized for conditional branches the structurizer left without a merge
+	// block (both arms leave the construct); emitted as unreachable blocks at function end.
+	std::vector<uint32_t>                            synthetic_merge_labels;
 	uint32_t                                         gds_variable            = 0;
 	uint32_t                                         gds_length              = 0;
 	uint32_t                                         push_constant_variable  = 0;

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cstdlib>
 #include <limits>
 
 namespace Libs::Graphics::ShaderRecompiler::Frontend {
@@ -716,6 +717,16 @@ bool Translator::IMAGE_GATHER(const Decoder::Instruction& inst) {
 bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool node64) {
 	const auto memory = MemoryInfoFromDecoded(inst);
 	const bool a16    = (inst.image_sample_flags & Decoder::ImageSampleFlagA16) != 0u;
+
+	// Debug aid: KYTY_BVH_STUB=1 makes every ray miss without touching BVH memory.
+	static const bool stub = std::getenv("KYTY_BVH_STUB") != nullptr;
+	if (stub) {
+		const IR::Value miss(0xffffffffu);
+		WriteImageComponents(inst.dst,
+		                     ir.Emit(IR::ValueOpcode::CompositeConstructU32x4, {miss, miss, miss, miss}),
+		                     memory, 4u);
+		return true;
+	}
 
 	constexpr uint32_t InvalidNode = 0xffffffffu;
 	constexpr float    Infinity    = std::numeric_limits<float>::infinity();

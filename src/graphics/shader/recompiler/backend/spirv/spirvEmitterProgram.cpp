@@ -105,11 +105,21 @@ void EmitStructuredTerminator(ValueEmitContext& ctx, const IR::Block* block,
 				ctx.state.builder.AddFunction(
 				    {OpLoopMerge, ctx.Label(merge), ctx.Label(cont), LoopControlNone});
 			}
-		} else if (term.kind == CFG::TerminatorKind::ConditionalBranch &&
-		           term.merge_block != UINT32_MAX) {
-			if (const auto* merge = TargetBlock(ctx.program, term.merge_block); merge != nullptr) {
+		} else if (term.kind == CFG::TerminatorKind::ConditionalBranch) {
+			const auto* merge = term.merge_block != UINT32_MAX
+			                        ? TargetBlock(ctx.program, term.merge_block)
+			                        : nullptr;
+			if (merge != nullptr) {
 				ctx.state.builder.AddFunction(
 				    {OpSelectionMerge, ctx.Label(merge), SelectionControlNone});
+			} else {
+				// SPIR-V requires every conditional branch to head a structured selection. When
+				// the structurizer found no merge block (typically both arms break/continue an
+				// enclosing loop, whose merge block cannot be reused), declare a synthetic merge
+				// block that is never reached, like glslang does for "if (c) break; else continue;".
+				const auto label = ctx.state.builder.AllocateId();
+				ctx.state.synthetic_merge_labels.push_back(label);
+				ctx.state.builder.AddFunction({OpSelectionMerge, label, SelectionControlNone});
 			}
 		}
 	};
@@ -285,6 +295,11 @@ void EmitStructuredFunction(ValueEmitContext& ctx) {
 		structured.block_exit_labels.emplace(block, ctx.state.current_label);
 		EmitStructuredTerminator(ctx, block, ctx.program.block_info[index]);
 	}
+	for (const auto label: ctx.state.synthetic_merge_labels) {
+		EmitLabel(ctx.state, label);
+		ctx.state.builder.AddFunction({OpUnreachable});
+	}
+	ctx.state.synthetic_merge_labels.clear();
 	PatchStructuredPhis(ctx, structured);
 }
 

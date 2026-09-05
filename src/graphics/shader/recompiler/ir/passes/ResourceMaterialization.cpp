@@ -461,6 +461,25 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 			image.cube          = false;
 			continue;
 		}
+		image.manual_depth_compare = false;
+		image.depth_compare_op     = 0;
+		if (base.depth_compare) {
+			// PS5 hardware compares against any format; Vulkan only allows comparison samplers on
+			// depth formats. 16-bit shadow maps rendered as R16 color targets (ASTRO BOT) are
+			// therefore compared in the shader with the sampler compare function baked in.
+			const auto format =
+			    static_cast<Prospero::BufferFormat>((descriptor.dwords[1] >> 20u) & 0x1ffu);
+			if (Prospero::NumBytesPerElement(format) == 2u) {
+				image.manual_depth_compare = true;
+				for (const auto& pair: program.info.sampled_pairs) {
+					if (pair.image == base_index && pair.sampler < next_snapshot.samplers.size()) {
+						image.depth_compare_op =
+						    (next_snapshot.samplers[pair.sampler].dwords[0] >> 12u) & 0x7u;
+						break;
+					}
+				}
+			}
+		}
 		const auto descriptor_dimension = DescriptorDimension(descriptor, base.dimension);
 		if (descriptor_dimension == Decoder::ImageDimension::Unknown) {
 			return SpecializationFail(fmt::format(
@@ -658,7 +677,7 @@ ResourcePlan ExtractResourcePlan(const Program& program) {
 	}
 	plan.srt_reads.reserve(program.srt_reads.size());
 	for (const auto& read: program.srt_reads) {
-		plan.srt_reads.push_back({Clone(read.value), read.flat_offset});
+		plan.srt_reads.push_back({Clone(read.value), read.flat_offset, read.variant});
 	}
 	plan.materialization_sources.reserve(plan.info.buffers.size() + plan.info.images.size() +
 	                                     plan.info.samplers.size());
@@ -729,6 +748,8 @@ void ApplyResourceSpecialization(Program& program, const ResourceSpecialization&
 		image.indirect_mapping_offset    = source.indirect_mapping_offset;
 		image.indirect_search_iterations = source.indirect_search_iterations;
 		image.cube                       = source.cube;
+		image.manual_depth_compare       = source.manual_depth_compare;
+		image.depth_compare_op           = source.depth_compare_op;
 		image.indirect_resources.clear();
 	}
 	for (uint32_t index = 0; index < images.size(); index++) {
@@ -743,6 +764,25 @@ void ApplyResourceSpecialization(Program& program, const ResourceSpecialization&
 	EXIT_IF(!BuildSamplerPlan(program.info, images, sampler_plan));
 	auto samplers      = program.info.samplers;
 	auto sampled_pairs = program.info.sampled_pairs;
+	// A sampler shared between a shader-compared image and a natively compared one cannot serve
+	// both: make every image it touches shader-compared, then drop the host compare function.
+	for (bool changed = true; changed;) {
+		changed = false;
+		for (const auto& pair: sampled_pairs) {
+			if (pair.image >= images.size() || pair.sampler >= samplers.size()) {
+				continue;
+			}
+			if (images[pair.image].manual_depth_compare && samplers[pair.sampler].depth_compare) {
+				samplers[pair.sampler].depth_compare = false;
+				changed                              = true;
+			}
+			if (!samplers[pair.sampler].depth_compare && images[pair.image].depth_compare &&
+			    !images[pair.image].manual_depth_compare) {
+				images[pair.image].manual_depth_compare = true;
+				changed                                 = true;
+			}
+		}
+	}
 	samplers.reserve(sampler_plan.sampler_count);
 	for (uint32_t index = 0; index < program.info.samplers.size(); index++) {
 		const auto target = sampler_plan.point_sampler[index];

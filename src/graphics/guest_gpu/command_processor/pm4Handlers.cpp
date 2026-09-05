@@ -1333,7 +1333,8 @@ KYTY_CP_OP_PARSER(CpOpDispatchIndirect) {
 		uint32_t mode = buffer[2];
 
 		EXIT_NOT_IMPLEMENTED(args == nullptr);
-		cp.DispatchDirect(args->thread_group_x, args->thread_group_y, args->thread_group_z, mode);
+		cp.DispatchDirect(args->thread_group_x, args->thread_group_y, args->thread_group_z, mode,
+		                  reinterpret_cast<uint64_t>(args));
 
 		return 3;
 	}
@@ -3716,6 +3717,17 @@ void GraphicsInitJmpTablesShIndirect() {
 		base &= 0xFFFF00FFFFFFFFFFull;
 		base |= (static_cast<uint64_t>(value) & 0xffu) << 40u;
 		cp.GetShCtx().SetEsShaderBase(base);
+	};
+
+	// ES stage resource words (GE/NGG geometry draws). Those draws are not executed yet
+	// ("Skipping unsupported GE shader draw"), so the values only need to be accepted.
+	g_hw_sh_indirect_func[Pm4::SPI_SHADER_PGM_RSRC1_ES] = [](KYTY_HW_SH_INDIRECT_ARGS) {
+		(void)cp;
+		(void)value;
+	};
+	g_hw_sh_indirect_func[Pm4::SPI_SHADER_PGM_RSRC2_ES] = [](KYTY_HW_SH_INDIRECT_ARGS) {
+		(void)cp;
+		(void)value;
 	};
 
 	g_hw_sh_indirect_func[Pm4::SPI_SHADER_PGM_LO_GS] = [](KYTY_HW_SH_INDIRECT_ARGS) {

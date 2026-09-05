@@ -433,9 +433,13 @@ public:
 
 	// Human readable reason for the first evaluation failure, for diagnostics only.
 	[[nodiscard]] const std::string& Failure() const { return m_failure; }
+	// True when a guest memory read failed since the last ClearMemoryReadFailure().
+	[[nodiscard]] bool MemoryReadFailed() const { return m_memory_read_failed; }
+	void               ClearMemoryReadFailure() { m_memory_read_failed = false; }
 
 private:
 	std::string m_failure;
+	bool        m_memory_read_failed = false;
 
 	void RecordFailure(std::string reason) {
 		if (m_failure.empty()) {
@@ -635,6 +639,7 @@ private:
 		if (m_runtime.read_memory != nullptr) {
 			if (!m_runtime.read_memory(m_runtime.userdata, address, &word)) {
 				RecordFailure(fmt::format("guest memory read at 0x{:016x} failed", address));
+				m_memory_read_failed = true;
 				return false;
 			}
 		} else {
@@ -1115,7 +1120,15 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		DescriptorValue value;
 		value.dword_count = source->dword_count;
 		for (uint32_t index = 0; index < source->dword_count; index++) {
+			evaluator.ClearMemoryReadFailure();
 			if (!evaluator.Evaluate(source->dwords[index], value.dwords[index])) {
+				if (evaluator.MemoryReadFailed()) {
+					// The chain dereferences memory that is not mapped right now (typically a
+					// pointer the game has not filled in yet, guarded by shader control flow).
+					// Materialize a null descriptor instead of failing the whole shader.
+					value.dwords[index] = 0;
+					continue;
+				}
 				std::fprintf(stderr,
 				             "shader resource evaluation failed: hash=0x%016llx source=%u (%s) dword=%u: "
 				             "%s; value = %s\n",
@@ -1132,15 +1145,28 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 	if (evaluate_flat) {
 		flattened.resize(program.srt_reads.size());
 		for (const auto& read: program.srt_reads) {
+			if (read.variant) {
+				if (read.flat_offset < flattened.size()) {
+					flattened[read.flat_offset] = 0;
+				}
+				continue;
+			}
 			const bool clean    = read.flat_offset < clean_flat_slots.size() &&
 			                      clean_flat_slots[read.flat_offset] != 0u;
 			auto&      selected = clean ? clean_evaluator : evaluator;
+			selected.ClearMemoryReadFailure();
+			if (read.flat_offset < flattened.size() &&
+			    !selected.Evaluate(read.value, flattened[read.flat_offset]) &&
+			    selected.MemoryReadFailed()) {
+				flattened[read.flat_offset] = 0;
+				continue;
+			}
 			if (read.flat_offset >= flattened.size() ||
 			    !selected.Evaluate(read.value, flattened[read.flat_offset])) {
 				std::fprintf(stderr,
 				             "shader resource evaluation failed: hash=0x%016llx flat slot %u: %s\n",
 				             static_cast<unsigned long long>(program.shader_hash), read.flat_offset,
-				             selected.Failure().c_str());
+				             (selected.Failure() + "; value = " + DescribeValue(program, read.value)).c_str());
 				return false;
 			}
 		}

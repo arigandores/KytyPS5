@@ -55,7 +55,7 @@ void CommandBuffer::End() const {
 }
 
 void CommandBuffer::SetDebugInfo(uint32_t op, uint64_t submit_id, uint32_t arg0, uint32_t arg1,
-                                 uint32_t arg2, uint32_t arg3, uint64_t arg4) {
+                                 uint32_t arg2, uint32_t arg3, uint64_t arg4, uint64_t arg5) {
 	m_debug_op        = op;
 	m_debug_submit_id = submit_id;
 	m_debug_arg0      = arg0;
@@ -63,8 +63,9 @@ void CommandBuffer::SetDebugInfo(uint32_t op, uint64_t submit_id, uint32_t arg0,
 	m_debug_arg2      = arg2;
 	m_debug_arg3      = arg3;
 	m_debug_arg4      = arg4;
-	RecordGpuCheckpoint(m_graphics, m_context.GetCommandScheduler(), m_buffer, op, submit_id, arg0,
-	                    arg1, arg2, arg3, arg4);
+	m_debug_arg5      = arg5;
+	RecordGpuCheckpoint(m_graphics, m_context.GetCommandScheduler(), m_buffer, m_rendering, op,
+	                    submit_id, arg0, arg1, arg2, arg3, arg4, arg5);
 }
 
 void CommandBuffer::BeginRendering(const RenderState& state) const {

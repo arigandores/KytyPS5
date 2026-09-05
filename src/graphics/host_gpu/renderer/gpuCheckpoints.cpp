@@ -20,6 +20,7 @@ struct CheckpointRecord {
 	uint64_t sequence  = 0;
 	uint64_t submit_id = 0;
 	uint64_t arg4      = 0;
+	uint64_t arg5      = 0;
 	uint32_t op        = 0;
 	uint32_t arg0      = 0;
 	uint32_t arg1      = 0;
@@ -49,35 +50,40 @@ const char* OpName(uint32_t op) {
 		case 6: return "EopFlip";
 		case 7: return "EopWriteBackFlip";
 		case 8: return "EopOnlyFlip";
+		case 9: return "DrawComplete";
 		default: return "Unknown";
 	}
 }
 
 void Print(const char* stage, const CheckpointRecord& record) {
+	// Draws: args=phase,index_count,instance_count,first_instance ps=<hash> vs=<hash>.
+	// Dispatches: args=x,y,z,mode ps=<cs hash>.
 	LOGF("GpuCheckpoint %s: seq=%" PRIu64 " op=%s(%u) submit=%" PRIu64
-	     " args=%u,%u,%u,0x%08x,0x%016" PRIx64 "\n",
+	     " args=%u,%u,%u,0x%08x ps=0x%016" PRIx64 " vs=0x%016" PRIx64 "\n",
 	     stage, record.sequence, OpName(record.op), record.op, record.submit_id, record.arg0,
-	     record.arg1, record.arg2, record.arg3, record.arg4);
+	     record.arg1, record.arg2, record.arg3, record.arg4, record.arg5);
 	std::printf("GpuCheckpoint %s: seq=%" PRIu64 " op=%s(%u) submit=%" PRIu64
-	            " args=%u,%u,%u,0x%08x,0x%016" PRIx64 "\n",
+	            " args=%u,%u,%u,0x%08x ps=0x%016" PRIx64 " vs=0x%016" PRIx64 "\n",
 	            stage, record.sequence, OpName(record.op), record.op, record.submit_id,
-	            record.arg0, record.arg1, record.arg2, record.arg3, record.arg4);
+	            record.arg0, record.arg1, record.arg2, record.arg3, record.arg4, record.arg5);
 }
 
 } // namespace
 
 void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
-                         vk::CommandBuffer command, uint32_t op, uint64_t submit_id, uint32_t arg0,
-                         uint32_t arg1, uint32_t arg2, uint32_t arg3, uint64_t arg4) {
+                         vk::CommandBuffer command, bool inside_rendering, uint32_t op,
+                         uint64_t submit_id, uint32_t arg0, uint32_t arg1, uint32_t arg2,
+                         uint32_t arg3, uint64_t arg4, uint64_t arg5) {
 	if ((!graphics.gpu_breadcrumbs_enabled && !graphics.diagnostic_checkpoints_enabled) ||
 	    command == nullptr) {
 		return;
 	}
 	const auto sequence = g_sequence.fetch_add(1, std::memory_order_relaxed) + 1;
 	auto&      record   = g_ring[sequence % RingSize];
-	record              = {sequence, submit_id, arg4, op, arg0, arg1, arg2, arg3};
+	record              = {sequence, submit_id, arg4, arg5, op, arg0, arg1, arg2, arg3};
 
-	if (graphics.gpu_breadcrumbs_enabled) {
+	// vkCmdUpdateBuffer must be recorded outside a render pass instance.
+	if (graphics.gpu_breadcrumbs_enabled && !inside_rendering) {
 		if (g_breadcrumbs == nullptr) {
 			g_breadcrumbs = new Buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
 			                           BreadcrumbSize);

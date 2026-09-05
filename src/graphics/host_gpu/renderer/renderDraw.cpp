@@ -889,12 +889,58 @@ static PreparedVertexBuffers AcquireVertexBuffers(CommandBuffer&               b
 	return prepared;
 }
 
+static uint64_t DrawShaderHash(const ShaderStageRuntime& stage) {
+	return (stage && stage.program != nullptr) ? stage.program->shader_hash : 0u;
+}
+
+// Debug record of a draw: args=phase,index_count,instance_count,first_instance, arg4=PS hash,
+// arg5=VS hash (see GpuCheckpoint output).
 static void SetDrawDebugPhase(CommandBuffer& buffer, uint64_t submit_id, const DrawCallInfo& draw,
-                              uint32_t phase) {
+                              const DrawRenderState& state, uint32_t phase,
+                              CommandBufferDebugOp op) {
 	EXIT_IF(draw.name == nullptr);
 
-	buffer.SetDebugInfo(static_cast<uint32_t>(draw.debug_op), submit_id, phase, draw.index_count, 0,
-	                    draw.instance_count, draw.first_instance);
+	buffer.SetDebugInfo(static_cast<uint32_t>(op), submit_id, phase, draw.index_count,
+	                    draw.instance_count, draw.first_instance,
+	                    state.ps_active ? DrawShaderHash(state.ps_input_info.stage) : 0u,
+	                    DrawShaderHash(state.vs_input_info.stage));
+}
+
+static void SetDrawDebugPhase(CommandBuffer& buffer, uint64_t submit_id, const DrawCallInfo& draw,
+                              const DrawRenderState& state, uint32_t phase) {
+	SetDrawDebugPhase(buffer, submit_id, draw, state, phase, draw.debug_op);
+}
+
+// KYTY_GPU_CHECKPOINTS: draws are not followed by a barrier, so the breadcrumb written before the
+// next operation may execute while an earlier draw is still running. In this mode every draw is
+// bracketed: a marker outside the render pass before it and, after it, an all-commands barrier plus
+// a DrawComplete marker. A device loss then leaves the hung draw (with its shader hashes) in the
+// breadcrumb buffer.
+static void RecordDrawStartBreadcrumb(RenderContext& context, CommandBuffer& buffer,
+                                      uint64_t submit_id, const DrawCallInfo& draw,
+                                      const DrawRenderState& state) {
+	if (!buffer.GetGraphics().gpu_breadcrumbs_enabled) {
+		return;
+	}
+	context.GetCommandScheduler().EndRendering();
+	SetDrawDebugPhase(buffer, submit_id, draw, state, 0x800u);
+}
+
+static void RecordDrawCompleteBreadcrumb(RenderContext& context, CommandBuffer& buffer,
+                                         uint64_t submit_id, const DrawCallInfo& draw,
+                                         const DrawRenderState& state) {
+	if (!buffer.GetGraphics().gpu_breadcrumbs_enabled) {
+		return;
+	}
+	context.GetCommandScheduler().EndRendering();
+	VulkanMemoryBarrier barrier {};
+	barrier.sType         = vk::StructureType::eMemoryBarrier;
+	barrier.srcAccessMask = vk::AccessFlagBits::eMemoryWrite;
+	barrier.dstAccessMask = vk::AccessFlagBits::eTransferWrite | vk::AccessFlagBits::eMemoryRead;
+	buffer.Handle().pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
+	                                vk::PipelineStageFlagBits::eTransfer, vk::DependencyFlags {},
+	                                1, &barrier, 0, nullptr, 0, nullptr);
+	SetDrawDebugPhase(buffer, submit_id, draw, state, 0x900u, CommandBufferDebugOp::DrawComplete);
 }
 
 static bool GetDrawTopology(const HW::UserConfig& ucfg, bool auto_draw,
@@ -1220,16 +1266,17 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// point onward, every operation targets the current command buffer and cannot touch guest
 	// memory.
 	auto vk_buffer = buffer.Handle();
+	RecordDrawStartBreadcrumb(m_context, buffer, submit_id, draw, state);
 	if (set_bind_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x100u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x100u);
 	}
 	if (set_auto_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x200u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x200u);
 	}
 	CommitVertexBuffers(vk_buffer, vertex_bindings);
 	if (bindings.pixel.has_value()) {
 		if (set_auto_debug) {
-			SetDrawDebugPhase(buffer, submit_id, draw, 0x300u);
+			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x300u);
 		}
 	}
 	std::array<PreparedBindings*, 2> descriptor_stages {&bindings.vertex, nullptr};
@@ -1246,17 +1293,17 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 
 	LogDrawPhase(draw.name, "BeginRendering");
 	if (set_auto_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x400u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 	}
 	m_context.GetCommandScheduler().BeginRendering(state.rendering);
 	vk_buffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.pipeline);
 	if (set_auto_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x500u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
 	}
 	EmitDrawPrimitives(ucfg, vk_buffer, state.vs_input_info, draw, emit);
 
 	if (set_auto_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x600u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
 	}
 	vk::PipelineStageFlags shader_write_stages = {};
 	if (HasShaderBufferWrites(state.vs_input_info.stage)) {
@@ -1271,8 +1318,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	LogDrawPhase(draw.name, "DrawComplete");
 	if (set_auto_debug) {
-		SetDrawDebugPhase(buffer, submit_id, draw, 0x700u);
+		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
 	}
+	RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
 }
 
 void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,

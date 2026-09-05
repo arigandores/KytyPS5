@@ -5,6 +5,7 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
 #include <algorithm>
+#include <cstring>
 #include <fmt/format.h>
 #include <span>
 #include <utility>
@@ -605,6 +606,59 @@ private:
 		m_handle_patches.push_back({handle, resource});
 	}
 
+	// A scalar buffer load whose V# cannot be evaluated ahead of time (for example a descriptor
+	// fetched through a pointer that advances on every loop iteration) has no static resource to
+	// bind. The V# base address is still a plain uniform value, so read the memory through the
+	// physical-address path instead, exactly like a scalar load from a pointer.
+	bool RewriteVariantScalarBufferLoad(Inst& inst, const MemoryInfo& memory, MemoryFlags flags) {
+		auto* handle = inst.Arg(0).Resolve().TryInstruction();
+		if (handle == nullptr || handle->GetOpcode() != ValueOpcode::GetBufferResource ||
+		    handle->NumArgs() != 4 || inst.NumArgs() != 2) {
+			return false;
+		}
+		DescriptorSource descriptor;
+		MakeSource(*handle, 4, false, false, descriptor, flags.pc);
+		uint32_t bad_dword = 0;
+		if (ValidateSource(descriptor, bad_dword)) {
+			return false;
+		}
+		auto* block = inst.Parent();
+		if (block == nullptr) {
+			return false;
+		}
+		auto&      list  = block->Instructions();
+		const auto where = std::ranges::find_if(list, [&](const Inst& candidate) {
+			return &candidate == &inst;
+		});
+		if (where == list.end()) {
+			return false;
+		}
+		const auto base_high = block->PrependNewInst(where, ValueOpcode::BitwiseAnd32,
+		                                             {handle->Arg(1), Value(0xffffu)});
+		const auto address   = block->PrependNewInst(where, ValueOpcode::GetAddressResource,
+		                                             {handle->Arg(0), Value(&*base_high)});
+		auto scalar            = memory;
+		scalar.kind            = ResourceKind::ScalarAddress;
+		scalar.resource        = 0;
+		scalar.sampler         = 0;
+		scalar.address_is_full = false;
+		scalar.planning_only   = false;
+		const auto  index      = static_cast<uint32_t>(m_program.memory_info.size());
+		m_program.memory_info.push_back(scalar);
+		MemoryFlags new_flags {.index = index, .pc = flags.pc};
+		uint64_t    bits = 0;
+		std::memcpy(&bits, &new_flags, sizeof(new_flags));
+		const auto load = block->PrependNewInst(
+		    where, ValueOpcode::LoadAddressU32,
+		    {Value(&*address), inst.Arg(1), Value(0u), Value(true)}, bits);
+		inst.ReplaceUsesWith(Value(&*load), true);
+		if (!handle->HasUses()) {
+			handle->Invalidate();
+		}
+		m_info.uses_dma = true;
+		return true;
+	}
+
 	void AddMemoryPatch(uint32_t index, uint32_t resource, uint32_t sampler, bool has_sampler,
 	                    uint32_t pc) {
 		for (auto& patch: m_memory_patches) {
@@ -649,6 +703,9 @@ private:
 		uint32_t resource = 0;
 
 		if (buffer != BufferAccess::None) {
+			if (op == ValueOpcode::ReadConstBuffer && RewriteVariantScalarBufferLoad(inst, memory, flags)) {
+				return;
+			}
 			GetHandle(inst.Arg(0), ValueOpcode::GetBufferResource, 4, flags.pc, handle, source);
 			resource = AddBuffer(source, memory, op, flags.pc);
 			if (resource == UINT32_MAX) {

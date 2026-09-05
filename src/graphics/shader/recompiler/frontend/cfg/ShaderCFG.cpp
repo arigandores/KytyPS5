@@ -3,6 +3,8 @@
 #include "common/assert.h"
 
 #include <algorithm>
+#include <cstdio>
+#include <cstdlib>
 #include <fmt/format.h>
 #include <iterator>
 #include <map>
@@ -1127,6 +1129,28 @@ bool IsInsideLoopConstruct(const Graph& graph, const NaturalLoop& loop, uint32_t
 	       graph.Dominates(loop.header, block_id) && !graph.Dominates(loop.merge, block_id);
 }
 
+// `start` is a terminal epilogue owned by `header`: a chain of single-successor blocks ending at
+// the program terminal, each entered only from the previous one (the first only from `header`).
+bool IsPrivateTerminalEpilogue(const Graph& graph, uint32_t header, uint32_t start) {
+	std::vector<bool> visited(graph.blocks.size(), false);
+	uint32_t          previous = header;
+	for (auto block_id = start;;) {
+		const auto* block = graph.FindBlock(block_id);
+		if (block == nullptr || block_id >= visited.size() || visited[block_id]) {
+			return false;
+		}
+		if (block->successors.empty()) {
+			return block_id != start;
+		}
+		if (block->successors.size() != 1 || block->predecessors != std::vector<uint32_t> {previous}) {
+			return false;
+		}
+		visited[block_id] = true;
+		previous          = block_id;
+		block_id          = block->successors.front();
+	}
+}
+
 bool IsLoopControlGateway(const Graph& graph, const NaturalLoop& loop, uint32_t block_id) {
 	const auto* block = graph.FindBlock(block_id);
 	if (block == nullptr || block->terminator.kind != TerminatorKind::ConditionalBranch) {
@@ -1170,6 +1194,80 @@ bool IsEnclosingLinearExit(const Graph& graph, uint32_t header, uint32_t block_i
 	});
 }
 
+std::string VectorToString(const std::vector<uint32_t>& values);
+
+// The chain of single-successor blocks from `start` down to the shared program terminal (the
+// terminal itself excluded), when `start` is a terminal epilogue that may be duplicated per
+// predecessor: plain branches only, no memory access, few instructions. Empty when `start` is not
+// such an epilogue. AGC lowers early returns of pixel shaders through one shared "kill" epilogue
+// (s_mov exec, 0; exp null done; s_endpgm) reached from several conditionals that do not dominate
+// each other; giving every such conditional its own copy keeps each selection local.
+std::vector<uint32_t> ClonableTerminalEpilogue(const Graph& graph, uint32_t start) {
+	constexpr uint32_t    MaxEpilogueInstructions = 32;
+	std::vector<uint32_t> chain;
+	std::vector<bool>     visited(graph.blocks.size(), false);
+	uint32_t              instructions = 0;
+	for (auto block_id = start;;) {
+		const auto* block = graph.FindBlock(block_id);
+		if (block == nullptr || block_id >= visited.size() || visited[block_id]) {
+			return {};
+		}
+		if (block->successors.empty()) {
+			return chain;
+		}
+		if (block->successors.size() != 1 || block->terminator.kind != TerminatorKind::Branch ||
+		    block->memory_access) {
+			return {};
+		}
+		instructions += block->inst_end - block->inst_begin;
+		if (instructions > MaxEpilogueInstructions) {
+			return {};
+		}
+		visited[block_id] = true;
+		chain.push_back(block_id);
+		block_id = block->successors.front();
+	}
+}
+
+// Duplicates the epilogue `chain` (see ClonableTerminalEpilogue) and retargets the given
+// predecessors of its first block to the copy. Returns the id of the copied first block. The
+// caller rebuilds predecessors and analyses.
+uint32_t CloneTerminalEpilogue(Graph& graph, const std::vector<uint32_t>& chain,
+                               const std::vector<uint32_t>& predecessors) {
+	if (chain.empty()) {
+		return UINT32_MAX;
+	}
+	// Clones are appended in chain order so every clone precedes the blocks it dominates (SPIR-V
+	// requires that block order).
+	const auto terminal = graph.FindBlock(chain.back())->successors.front();
+	const auto first    = static_cast<uint32_t>(graph.blocks.size());
+	for (uint32_t index = 0; index < chain.size(); index++) {
+		BasicBlock clone = *graph.FindBlock(chain[index]);
+		clone.id         = first + index;
+		const auto next  = index + 1 < chain.size() ? first + index + 1 : terminal;
+		clone.predecessors.clear();
+		clone.dominators.clear();
+		clone.post_dominators.clear();
+		clone.successors                = {next};
+		clone.terminator.true_block     = next;
+		clone.terminator.false_block    = UINT32_MAX;
+		clone.terminator.merge_block    = UINT32_MAX;
+		clone.terminator.continue_block = UINT32_MAX;
+		clone.terminator.loop_header    = false;
+		graph.blocks.push_back(std::move(clone));
+	}
+	for (const auto predecessor: predecessors) {
+		auto* block = graph.FindBlock(predecessor);
+		if (block == nullptr) {
+			continue;
+		}
+		ReplaceValue(block->successors, chain.front(), first);
+		ReplaceTerminatorTarget(block->terminator, chain.front(), first);
+		SortUnique(block->successors);
+	}
+	return first;
+}
+
 bool CanReachBefore(const Graph& graph, uint32_t start, uint32_t target, uint32_t stop) {
 	std::vector<uint32_t> pending = {start};
 	std::vector<bool>     visited(graph.blocks.size(), false);
@@ -1192,6 +1290,25 @@ bool CanReachBefore(const Graph& graph, uint32_t start, uint32_t target, uint32_
 }
 
 uint32_t FindSelectionMerge(const Graph& graph, const BasicBlock& block) {
+	// `if (c) { epilogue; return; }`: an arm that is a terminal epilogue reached only from this
+	// header is the whole selection, and control rejoins at the other arm. The common
+	// post-dominator would be the program terminal, which turns the rest of the shader into the
+	// selection region.
+	{
+		const auto true_target  = block.terminator.true_block;
+		const auto false_target = block.terminator.false_block;
+		const bool true_exit    = IsPrivateTerminalEpilogue(graph, block.id, true_target);
+		const bool false_exit   = IsPrivateTerminalEpilogue(graph, block.id, false_target);
+		if (true_exit != false_exit && true_target != false_target) {
+			// The other arm becomes the merge block, which the header must dominate; a shared
+			// other arm is left to the post-dominator search and goto routing below.
+			const auto merge = true_exit ? false_target : true_target;
+			if (graph.Dominates(block.id, merge)) {
+				return merge;
+			}
+		}
+	}
+
 	const auto  global_merge = graph.FindNearestCommonPostDominator(block.terminator.true_block,
 	                                                                block.terminator.false_block);
 	const auto* loop         = FindInnermostContainingLoop(graph, block.id);
@@ -1496,10 +1613,34 @@ bool SplitOneSelectionMerge(Graph& graph) {
 			       });
 		});
 		if (external != region.end()) {
+			// A shared terminal epilogue entered from outside the selection gets a private copy
+			// for the header and the region's own predecessors; other blocks cannot be cloned.
+			const auto chain = ClonableTerminalEpilogue(graph, *external);
+			if (!chain.empty()) {
+				std::vector<uint32_t> local_predecessors;
+				for (const auto predecessor: graph.FindBlock(*external)->predecessors) {
+					if (predecessor == block_id || Contains(region, predecessor)) {
+						local_predecessors.push_back(predecessor);
+					}
+				}
+				if (!local_predecessors.empty()) {
+					if (std::getenv("KYTY_CFG_TRACE") != nullptr) {
+						std::fprintf(stderr,
+						             "CFG: header %u clones terminal epilogue %u (%zu blocks) for "
+						             "predecessors [%s]\n",
+						             block_id, *external, chain.size(),
+						             VectorToString(local_predecessors).c_str());
+					}
+					CloneTerminalEpilogue(graph, chain, local_predecessors);
+					RebuildPredecessors(graph);
+					PruneUnreachableBlocks(graph);
+					return true;
+				}
+			}
 			SetFailure(
 			    graph, FailureKind::StructuredControlFlow, block_id,
 			    fmt::format("selection header block {} has externally entered region block {}; "
-			                "semantic block cloning is disabled",
+			                "semantic block cloning is only supported for terminal epilogues",
 			                block_id, *external));
 			return false;
 		}
@@ -1990,7 +2131,20 @@ Graph BuildGraph(const Decoder::Program& program) {
 	}
 
 	for (auto& block: graph.blocks) {
-		block.terminator = {};
+		block.terminator    = {};
+		block.memory_access = std::any_of(
+		    program.instructions.begin() + block.inst_begin,
+		    program.instructions.begin() + block.inst_end, [](const Instruction& inst) {
+			    switch (inst.family) {
+				    case Decoder::Family::SMEM:
+				    case Decoder::Family::MUBUF:
+				    case Decoder::Family::MTBUF:
+				    case Decoder::Family::FLAT:
+				    case Decoder::Family::DS:
+				    case Decoder::Family::MIMG: return true;
+				    default: return false;
+			    }
+		    });
 		if (block.inst_begin == block.inst_end) {
 			block.terminator.kind = TerminatorKind::Return;
 			continue;

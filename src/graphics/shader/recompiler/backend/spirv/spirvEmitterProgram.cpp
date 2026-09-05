@@ -93,6 +93,20 @@ const IR::Block* TargetBlock(const IR::Program& program, uint32_t id) {
 	return program.blocks[static_cast<size_t>(found - program.block_info.begin())];
 }
 
+// The CFG models s_endpgm as a branch to one shared, empty terminal block. Blocks that jump there
+// return directly instead: a branch into that shared block from inside a selection construct
+// would be an illegal construct exit (the block belongs to no construct, or to an enclosing one).
+bool IsEmptyTerminalBlock(const IR::Program& program, uint32_t id) {
+	const auto found = std::ranges::find_if(
+	    program.block_info, [&](const IR::BlockInfo& info) { return info.id == id; });
+	if (found == program.block_info.end() ||
+	    found->terminator.kind != CFG::TerminatorKind::Return) {
+		return false;
+	}
+	const auto* block = program.blocks[static_cast<size_t>(found - program.block_info.begin())];
+	return block->empty();
+}
+
 void EmitReturn(ValueEmitContext& ctx) {
 	EmitKillIfPixelValidMaskInactive(ctx.state);
 	ctx.state.builder.AddFunction({OpReturn});
@@ -182,7 +196,8 @@ void EmitStructuredTerminator(ValueEmitContext& ctx, const IR::Block* block,
 	switch (term.kind) {
 		case CFG::TerminatorKind::Branch: {
 			const auto* target = TargetBlock(ctx.program, term.true_block);
-			if (target == nullptr) {
+			if (target == nullptr ||
+			    (!term.loop_header && IsEmptyTerminalBlock(ctx.program, term.true_block))) {
 				EmitReturn(ctx);
 				return;
 			}

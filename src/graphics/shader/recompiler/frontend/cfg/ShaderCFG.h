@@ -63,6 +63,9 @@ struct BasicBlock {
 	std::vector<uint32_t> dominators;
 	std::vector<uint32_t> post_dominators;
 	Terminator            terminator;
+	// Any instruction of the block touches memory (scalar/vector/flat/LDS/image). Blocks without
+	// such instructions may be duplicated by the structurizer (terminal epilogue cloning).
+	bool memory_access = false;
 };
 
 struct BackEdge {

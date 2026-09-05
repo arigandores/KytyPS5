@@ -4,12 +4,14 @@
 #include "common/abi.h"
 #include "common/assert.h"
 #include "common/common.h"
+#include "graphics/host_gpu/renderer/indirectArgsSanitizer.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/renderTarget.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
 #include <array>
+#include <memory>
 #include <optional>
 #include <span>
 #include <vector>
@@ -220,6 +222,13 @@ private:
 	friend class CommandProcessor;
 	friend struct RenderExecutorTestAccess;
 };
+
+// Debug aid (KYTY_DUMP_ADDR=<hex guest address>): find every draw or dispatch whose buffer or
+// image bindings cover the address, and log its bindings.
+[[nodiscard]] uint64_t DebugDumpAddress();
+[[nodiscard]] bool     ShaderStageTouchesAddress(const ShaderStageRuntime& stage, uint64_t address);
+void DumpShaderStageBindings(RenderContext& context, const char* label,
+                             const ShaderStageRuntime& stage);
 
 [[nodiscard]] bool ResolveComputeImageClear(const ShaderComputeInputInfo& input, uint32_t group_x,
                                             uint32_t group_y, uint32_t group_z, uint32_t mode,

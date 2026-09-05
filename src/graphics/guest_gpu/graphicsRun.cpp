@@ -1107,8 +1107,27 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 			}
 		}
 
+		if (IsAsyncComputeQueue()) {
+			static std::atomic<uint32_t> async_log_count {0};
+			if (async_log_count.fetch_add(1, std::memory_order_relaxed) < 256) {
+				LOGF("AsyncCompute dispatch: queue=0x%02x frame=%u submit=%" PRIu64
+				     " groups=%ux%ux%u mode=0x%08" PRIx32 " cs=0x%016" PRIx64
+				     " indirect=0x%016" PRIx64 "\n",
+				     static_cast<uint32_t>(m_interrupt_event_id), frame_num, m_submit_id,
+				     thread_group_x, thread_group_y, thread_group_z, mode, cs.data_addr,
+				     indirect_args_addr);
+			}
+		}
+
 		m_renderer.GetRenderExecutor().DispatchDirect(m_submit_id, CurrentBuffer(), thread_group_x,
 		                                              thread_group_y, thread_group_z, mode, indirect_args_addr);
+
+		// Debug aid: KYTY_SYNC_DISPATCH=1 submits and drains the queue after every dispatch, so a
+		// device loss is attributed to the dispatch logged last ("SyncDispatch" in the log).
+		static const bool sync_dispatch = std::getenv("KYTY_SYNC_DISPATCH") != nullptr;
+		if (sync_dispatch) {
+			BufferFlushAndWait();
+		}
 	}
 
 	/*constexpr uint32_t DispatchInitiatorUseThreadDimensions = 1u << 5u;

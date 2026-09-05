@@ -21,6 +21,7 @@
 #include "graphics/shader/recompiler/ir/passes/ResourceMaterialization.h"
 #include "graphics/shader/shader.h"
 #include "kernel/eventQueue.h"
+#include "kernel/memory.h"
 #include "kernel/pthread.h"
 #include "libs/errno.h"
 
@@ -231,6 +232,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
 	const auto& program   = *input_info.stage.program;
 	const auto& resources = input_info.stage.resources;
+	// Refresh the debug record with the shader hash now that the program is known (the checkpoint
+	// marker then names the shader instead of its guest address).
+	buffer.SetDebugInfo(static_cast<uint32_t>(CommandBufferDebugOp::DispatchDirect), submit_id,
+	                    thread_group_x, thread_group_y, thread_group_z, mode, program.shader_hash);
 	// Debug aid: KYTY_SKIP_CS=<hex hash> drops every dispatch of that compute shader.
 	static const char* skip_cs = std::getenv("KYTY_SKIP_CS");
 	if (skip_cs != nullptr && program.shader_hash == std::strtoull(skip_cs, nullptr, 16)) {
@@ -306,6 +311,240 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			     static_cast<uint32_t>(r.ZFilter()), static_cast<uint32_t>(r.MipFilter()),
 			     static_cast<uint32_t>(r.MinLod()), static_cast<uint32_t>(r.MaxLod()),
 			     static_cast<int32_t>(r.LodBias()));
+		}
+	}
+
+	// Debug aid: KYTY_DUMP_CS=<hex hash> logs every buffer binding of that compute shader together
+	// with the CPU view of its first dwords and the buffer-cache ownership flags; KYTY_SYNC_DISPATCH
+	// logs every dispatch before it is recorded (see CommandProcessor::DispatchDirect).
+	static const char* dump_cs      = std::getenv("KYTY_DUMP_CS");
+	static const bool  sync_dispatch = std::getenv("KYTY_SYNC_DISPATCH") != nullptr;
+	// KYTY_DUMP_ADDR=<hex guest address> additionally dumps every dispatch whose buffer or image
+	// binding covers that address (finds the producers of a buffer).
+	static const uint64_t dump_addr = [] {
+		const char* value = std::getenv("KYTY_DUMP_ADDR");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	bool dump_this = dump_cs != nullptr && program.shader_hash == std::strtoull(dump_cs, nullptr, 16);
+	if (!dump_this && dump_addr != 0) {
+		for (uint32_t i = 0; i < program.info.buffers.size() && !dump_this; i++) {
+			const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+			const auto base = r.Base48();
+			const auto size = BufferDescriptorSize(r);
+			dump_this       = base != 0 && dump_addr >= base && dump_addr < base + size;
+		}
+		for (uint32_t i = 0; i < program.info.images.size() && !dump_this; i++) {
+			const auto r    = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+			const auto base = r.Base40();
+			constexpr uint64_t ImageSpan = 64ull * 1024 * 1024; // extent unknown here; generous
+			dump_this = base != 0 && dump_addr >= base && dump_addr < base + ImageSpan;
+		}
+	}
+	if (sync_dispatch || dump_this) {
+		LOGF("SyncDispatch: frame=%u shader=0x%016" PRIx64 " cs=0x%016" PRIx64
+		     " groups=%ux%ux%u mode=0x%08" PRIx32 " local=%ux%ux%u indirect=0x%016" PRIx64
+		     " buffers=%zu images=%zu uses_dma=%d\n",
+		     frame_num, program.shader_hash, sh_ctx.GetCs().cs_regs.data_addr, thread_group_x,
+		     thread_group_y, thread_group_z, mode, input_info.threads_num[0],
+		     input_info.threads_num[1], input_info.threads_num[2], indirect_args_addr,
+		     program.info.buffers.size(), program.info.images.size(), program.info.uses_dma ? 1 : 0);
+	}
+	if (dump_this) {
+		auto& cache = m_context.GetBufferCache();
+		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+			const auto& res  = program.info.buffers[i];
+			const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+			const auto  base = r.Base48();
+			const auto  size = BufferDescriptorSize(r);
+			uint32_t    head[8] {};
+			const auto  head_size = static_cast<uint64_t>(std::min<uint64_t>(sizeof(head), size));
+			const bool  readable =
+			    base != 0 && head_size != 0 &&
+			    Libs::LibKernel::Memory::TryReadBacking(base, head, head_size);
+			LOGF("  DumpCS buffer[%u]: source=%u usage=%s addr=0x%012" PRIx64 " stride=%u "
+			     "records=%u size=0x%" PRIx64 " gpu_modified=%d cpu_modified=%d gpu_dirty=%d "
+			     "cpu_head=%s%08x %08x %08x %08x %08x %08x %08x %08x\n",
+			     i, res.source, res.written ? "read-write" : "read-only", base, r.Stride(),
+			     r.NumRecords(), size,
+			     (base != 0 && size != 0 && cache.IsRegionGpuModified(base, size)) ? 1 : 0,
+			     (base != 0 && size != 0 && cache.IsRegionCpuModified(base, size)) ? 1 : 0,
+			     (base != 0 && size != 0 && cache.HasGpuDirtyBytes(base, size)) ? 1 : 0,
+			     readable ? "" : "(unreadable) ", head[0], head[1], head[2], head[3], head[4],
+			     head[5], head[6], head[7]);
+		}
+		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+			const auto& image = program.info.images[i];
+			const auto  r     = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+			LOGF("  DumpCS image[%u]: source=%u usage=%s class=%s addr=0x%010" PRIx64
+			     " type=%u fmt=%u extent=%ux%u depth=%u tile=%u\n",
+			     i, image.source, image.written ? "read-write" : "read-only",
+			     image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled
+			         ? "sampled"
+			         : "storage",
+			     r.Base40(), static_cast<uint32_t>(r.Type()), static_cast<uint32_t>(r.Format()),
+			     static_cast<uint32_t>(r.Width5()) + 1u, static_cast<uint32_t>(r.Height5()) + 1u,
+			     static_cast<uint32_t>(r.Depth()) + 1u, static_cast<uint32_t>(r.TileMode()));
+		}
+		// KYTY_DUMP_CS_REUPLOAD=1: experiment - mark every read-only buffer of the dumped shader as
+		// CPU-modified so that the binding below re-uploads the current guest memory. If a hang
+		// disappears with this, the GPU copy was stale (a CPU write went unnoticed by the tracker).
+		static const bool reupload = std::getenv("KYTY_DUMP_CS_REUPLOAD") != nullptr;
+		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+			const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+			const auto base = r.Base48();
+			const auto size = BufferDescriptorSize(r);
+			if (base == 0 || size == 0 || size > (1u << 20) || program.info.buffers[i].written ||
+			    cache.IsRegionGpuModified(base, size)) {
+				continue;
+			}
+			std::vector<uint32_t> words(size / 4);
+			uint32_t              sum = 0;
+			if (Libs::LibKernel::Memory::TryReadBacking(base, words.data(), words.size() * 4)) {
+				for (const auto w: words) {
+					sum = sum * 31u + w;
+				}
+			}
+			LOGF("  DumpCS buffer[%u] cpu checksum=0x%08x%s dwords[0:4]=%08x %08x %08x %08x\n", i,
+			     sum, reupload ? " (re-uploaded)" : "", words.size() > 0 ? words[0] : 0u,
+			     words.size() > 1 ? words[1] : 0u, words.size() > 2 ? words[2] : 0u,
+			     words.size() > 3 ? words[3] : 0u);
+			if (words.size() >= 4472) {
+				LOGF("  DumpCS buffer[%u] cpu dwords[4468:4472]=%08x %08x %08x %08x\n", i,
+				     words[4468], words[4469], words[4470], words[4471]);
+			}
+			if (reupload) {
+				cache.InvalidateMemory(base, size);
+			}
+		}
+		// Save the CPU copy of every small buffer binding (constants) of the first two dumped
+		// dispatches to _dumpcpu_<hash>_<binding>_<n>.bin for offline inspection.
+		{
+			static std::atomic<uint32_t> cpu_dump_count {0};
+			const auto snapshot = cpu_dump_count.fetch_add(1, std::memory_order_relaxed);
+			if (snapshot < 2) {
+				for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+					const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+					const auto base = r.Base48();
+					const auto size = BufferDescriptorSize(r);
+					if (base == 0 || size == 0 || size > (64u << 10)) {
+						continue;
+					}
+					std::vector<uint8_t> bytes(size);
+					if (!Libs::LibKernel::Memory::TryReadBacking(base, bytes.data(), size)) {
+						continue;
+					}
+					const auto name =
+					    fmt::format("_dumpcpu_{:016x}_{}_{}.bin", program.shader_hash, i, snapshot);
+					if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+						std::fwrite(bytes.data(), 1, bytes.size(), f);
+						std::fclose(f);
+					}
+				}
+			}
+		}
+		// KYTY_DUMP_CS_READBACK=1: download the GPU contents of every GPU-written buffer binding
+		// before the dispatch, summarize it as a linked-list node array ({payload, next} records)
+		// and save the first two snapshots to _dump_<hash>_<binding>.bin for offline analysis.
+		static const bool readback = std::getenv("KYTY_DUMP_CS_READBACK") != nullptr;
+		if (readback) {
+			static std::atomic<uint32_t> readback_count {0};
+			const auto snapshot = readback_count.fetch_add(1, std::memory_order_relaxed);
+			for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+				const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+				const auto base = r.Base48();
+				const auto size = std::min<uint64_t>(BufferDescriptorSize(r), 32ull << 20);
+				if (base == 0 || size < 8 || !cache.IsRegionGpuModified(base, size)) {
+					continue;
+				}
+				cache.ReadMemory(base, size);
+				std::vector<uint32_t> words(size / 4);
+				if (!Libs::LibKernel::Memory::TryReadBacking(base, words.data(), words.size() * 4)) {
+					LOGF("  DumpCS readback buffer[%u]: unreadable\n", i);
+					continue;
+				}
+				const uint32_t dwords  = std::max<uint32_t>(r.Stride() / 4, 1u);
+				const uint64_t records = words.size() / dwords;
+				uint64_t nonzero = 0, self_loops = 0, out_of_range = 0, max_next = 0, printed = 0;
+				for (uint64_t rec = 0; rec < records; rec++) {
+					bool nz = false;
+					for (uint32_t d = 0; d < dwords; d++) {
+						nz = nz || words[rec * dwords + d] != 0;
+					}
+					if (!nz) {
+						continue;
+					}
+					nonzero++;
+					if (dwords >= 2) {
+						const auto next = words[rec * dwords + 1];
+						self_loops += next == rec ? 1 : 0;
+						out_of_range += next >= records ? 1 : 0;
+						max_next = std::max<uint64_t>(max_next, next);
+					}
+					if (printed < 8) {
+						printed++;
+						LOGF("    record[%" PRIu64 "]: %08x %08x %08x\n", rec, words[rec * dwords],
+						     dwords > 1 ? words[rec * dwords + 1] : 0u,
+						     dwords > 2 ? words[rec * dwords + 2] : 0u);
+					}
+				}
+				// Linked-list cycle search: follow `next` (dword 1) from every nonzero record.
+				uint64_t cycles = 0, longest = 0, first_cycle_node = UINT64_MAX;
+				if (dwords >= 2 && records <= (4u << 20)) {
+					std::vector<uint8_t> state(records, 0); // 0 new, 1 on path, 2 done
+					std::vector<uint32_t> path;
+					for (uint64_t start = 0; start < records; start++) {
+						if (state[start] != 0) {
+							continue;
+						}
+						bool nz = false;
+						for (uint32_t d = 0; d < dwords; d++) {
+							nz = nz || words[start * dwords + d] != 0;
+						}
+						if (!nz) {
+							continue;
+						}
+						path.clear();
+						uint64_t cur = start;
+						while (cur != 0 && cur < records && state[cur] == 0) {
+							state[cur] = 1;
+							path.push_back(static_cast<uint32_t>(cur));
+							cur = words[cur * dwords + 1];
+						}
+						if (cur != 0 && cur < records && state[cur] == 1) {
+							cycles++;
+							if (first_cycle_node == UINT64_MAX) {
+								first_cycle_node = cur;
+							}
+						}
+						longest = std::max<uint64_t>(longest, path.size());
+						for (const auto p: path) {
+							state[p] = 2;
+						}
+					}
+				}
+				LOGF("  DumpCS readback buffer[%u]: addr=0x%012" PRIx64 " size=0x%" PRIx64
+				     " stride=%u records=%" PRIu64 " nonzero=%" PRIu64 " self_loops=%" PRIu64
+				     " next_out_of_range=%" PRIu64 " max_next=%" PRIu64 " cycles=%" PRIu64
+				     " first_cycle_node=%" PRIu64 " longest_chain=%" PRIu64 "\n",
+				     i, base, size, r.Stride(), records, nonzero, self_loops, out_of_range, max_next,
+				     cycles, first_cycle_node, longest);
+				const auto name = fmt::format("_dump_{:016x}_{}_{}.bin", program.shader_hash, i,
+				                              snapshot < 2 ? std::to_string(snapshot) : "latest");
+				if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+					std::fwrite(words.data(), 4, words.size(), f);
+					std::fclose(f);
+				}
+			}
+		}
+		if (indirect_args_addr != 0) {
+			uint32_t args[3] {};
+			const bool readable = Libs::LibKernel::Memory::TryReadBacking(indirect_args_addr, args, sizeof(args));
+			LOGF("  DumpCS indirect args at 0x%016" PRIx64 ": %s%u,%u,%u gpu_modified=%d "
+			     "cpu_modified=%d gpu_dirty=%d\n",
+			     indirect_args_addr, readable ? "" : "(unreadable) ", args[0], args[1], args[2],
+			     cache.IsRegionGpuModified(indirect_args_addr, sizeof(args)) ? 1 : 0,
+			     cache.IsRegionCpuModified(indirect_args_addr, sizeof(args)) ? 1 : 0,
+			     cache.HasGpuDirtyBytes(indirect_args_addr, sizeof(args)) ? 1 : 0);
 		}
 	}
 
@@ -441,6 +680,76 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	// The removed host fence also ordered read-only dispatches before later writers.
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
 	ResetBindings();
+}
+
+uint64_t DebugDumpAddress() {
+	static const uint64_t dump_addr = [] {
+		const char* value = std::getenv("KYTY_DUMP_ADDR");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	return dump_addr;
+}
+
+bool ShaderStageTouchesAddress(const ShaderStageRuntime& stage, uint64_t address) {
+	if (!stage || address == 0) {
+		return false;
+	}
+	const auto& program   = *stage.program;
+	const auto& resources = stage.resources;
+	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+		const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+		const auto base = r.Base48();
+		const auto size = BufferDescriptorSize(r);
+		if (base != 0 && address >= base && address < base + size) {
+			return true;
+		}
+	}
+	for (uint32_t i = 0; i < program.info.images.size(); i++) {
+		const auto r    = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+		const auto base = r.Base40();
+		constexpr uint64_t ImageSpan = 64ull * 1024 * 1024; // extent unknown here; generous
+		if (base != 0 && address >= base && address < base + ImageSpan) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void DumpShaderStageBindings(RenderContext& context, const char* label,
+                             const ShaderStageRuntime& stage) {
+	if (!stage) {
+		return;
+	}
+	const auto& program   = *stage.program;
+	const auto& resources = stage.resources;
+	auto&       cache     = context.GetBufferCache();
+	LOGF("  Dump%s: shader=0x%016" PRIx64 " buffers=%zu images=%zu uses_dma=%d\n", label,
+	     program.shader_hash, program.info.buffers.size(), program.info.images.size(),
+	     program.info.uses_dma ? 1 : 0);
+	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+		const auto& res  = program.info.buffers[i];
+		const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+		const auto  base = r.Base48();
+		const auto  size = BufferDescriptorSize(r);
+		LOGF("  Dump%s buffer[%u]: source=%u usage=%s addr=0x%012" PRIx64 " stride=%u records=%u "
+		     "size=0x%" PRIx64 " gpu_modified=%d cpu_modified=%d\n",
+		     label, i, res.source, res.written ? "read-write" : "read-only", base, r.Stride(),
+		     r.NumRecords(), size,
+		     (base != 0 && size != 0 && cache.IsRegionGpuModified(base, size)) ? 1 : 0,
+		     (base != 0 && size != 0 && cache.IsRegionCpuModified(base, size)) ? 1 : 0);
+	}
+	for (uint32_t i = 0; i < program.info.images.size(); i++) {
+		const auto& image = program.info.images[i];
+		const auto  r     = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+		LOGF("  Dump%s image[%u]: source=%u usage=%s class=%s addr=0x%010" PRIx64
+		     " type=%u fmt=%u extent=%ux%u depth=%u tile=%u\n",
+		     label, i, image.source, image.written ? "read-write" : "read-only",
+		     image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled ? "sampled"
+		                                                                               : "storage",
+		     r.Base40(), static_cast<uint32_t>(r.Type()), static_cast<uint32_t>(r.Format()),
+		     static_cast<uint32_t>(r.Width5()) + 1u, static_cast<uint32_t>(r.Height5()) + 1u,
+		     static_cast<uint32_t>(r.Depth()) + 1u, static_cast<uint32_t>(r.TileMode()));
+	}
 }
 
 } // namespace Libs::Graphics

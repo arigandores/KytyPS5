@@ -40,6 +40,7 @@
 
 #include <algorithm>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fmt/format.h>
 #include <memory>
@@ -1075,6 +1076,18 @@ void WindowContext::CreateVulkan() {
 		}
 		if (HasExtension(available_extensions, VK_EXT_ROBUSTNESS_2_EXTENSION_NAME)) {
 			device_extensions.push_back(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME);
+		}
+		// Diagnostic checkpoints attribute a device loss to the draw or dispatch that hung.
+		// Enabled only on request: the markers cost a little per operation.
+		if (std::getenv("KYTY_GPU_CHECKPOINTS") != nullptr) {
+			graphic_ctx.gpu_breadcrumbs_enabled = true;
+			LOGF("Vulkan: GPU breadcrumbs enabled\n");
+			if (HasExtension(available_extensions,
+			                 VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME)) {
+				device_extensions.push_back(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME);
+				graphic_ctx.diagnostic_checkpoints_enabled = true;
+				LOGF("Vulkan: diagnostic checkpoints enabled\n");
+			}
 		}
 	}
 

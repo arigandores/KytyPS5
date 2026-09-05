@@ -33,6 +33,8 @@ struct GraphicContext {
 	bool                               compute_subgroup_size_control_enabled = false;
 	bool                               compute_wave64_supported              = false;
 	bool                               sample_rate_shading_enabled           = false;
+	bool                               diagnostic_checkpoints_enabled        = false;
+	bool                               gpu_breadcrumbs_enabled               = false;
 	uint32_t                           subgroup_size                         = 0;
 	uint32_t                           min_subgroup_size                     = 0;
 	uint32_t                           max_subgroup_size                     = 0;

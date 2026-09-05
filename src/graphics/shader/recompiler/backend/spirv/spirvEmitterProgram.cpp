@@ -1,11 +1,15 @@
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
 
 #include "common/assert.h"
+#include "common/logging/log.h"
 
 #include <algorithm>
 #include <bit>
+#include <cinttypes>
+#include <cstdlib>
 #include <functional>
 #include <optional>
+#include <unordered_map>
 #include <unordered_set>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
@@ -94,11 +98,60 @@ void EmitReturn(ValueEmitContext& ctx) {
 	ctx.state.builder.AddFunction({OpReturn});
 }
 
+// Debug aid: KYTY_LOOP_LIMIT=<n> gives every structured loop an iteration counter; an invocation
+// that exceeds the limit returns instead of hanging the GPU (a loop bound read from garbage memory
+// would otherwise run for billions of iterations and trigger a device loss).
+uint32_t LoopGuardLimit() {
+	static const uint32_t limit = [] {
+		const char* value = std::getenv("KYTY_LOOP_LIMIT");
+		return value != nullptr ? static_cast<uint32_t>(std::strtoul(value, nullptr, 10)) : 0u;
+	}();
+	return limit;
+}
+
+using LoopGuardVariables = std::unordered_map<const IR::Block*, uint32_t>;
+
+// Emits the loop header prologue of a guarded loop: counter update, OpLoopMerge and a conditional
+// exit into a returning block. The block's original terminator then follows in a fresh label, so
+// the caller must emit it without a second OpLoopMerge (`guarded`). Returns false when the loop
+// has no usable merge/continue targets and the terminator must be emitted normally.
+bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t variable) {
+	const auto& term  = info.terminator;
+	const auto* merge = TargetBlock(ctx.program, term.merge_block);
+	const auto* cont  = TargetBlock(ctx.program, term.continue_block);
+	if (merge == nullptr || cont == nullptr) {
+		return false;
+	}
+	auto&      state = ctx.state;
+	const auto count = state.builder.AllocateId();
+	const auto next  = state.builder.AllocateId();
+	const auto over  = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, TypeU32(state), count, variable});
+	state.builder.AddFunction({OpIAdd, TypeU32(state), next, count, ConstantU32(state, 1)});
+	state.builder.AddFunction({OpStore, variable, next});
+	state.builder.AddFunction(
+	    {OpUGreaterThan, TypeBool(state), over, next, ConstantU32(state, LoopGuardLimit())});
+	state.builder.AddFunction({OpLoopMerge, ctx.Label(merge), ctx.Label(cont), LoopControlNone});
+	// The header branches unconditionally into a nested selection (a conditional branch in the
+	// header itself would have to target the loop merge to stay structured).
+	const auto guard_label = state.builder.AllocateId();
+	const auto abort_label = state.builder.AllocateId();
+	const auto after_label = state.builder.AllocateId();
+	state.builder.AddFunction({OpBranch, guard_label});
+	EmitLabel(state, guard_label);
+	state.builder.AddFunction({OpSelectionMerge, after_label, SelectionControlNone});
+	state.builder.AddFunction({OpBranchConditional, over, abort_label, after_label});
+	EmitLabel(state, abort_label);
+	state.builder.AddFunction({OpReturn});
+	EmitLabel(state, after_label);
+	return true;
+}
+
 void EmitStructuredTerminator(ValueEmitContext& ctx, const IR::Block* block,
-                              const IR::BlockInfo& info) {
+                              const IR::BlockInfo& info, bool guarded = false) {
 	const auto& term       = info.terminator;
 	const auto  emit_merge = [&]() {
-		if (term.loop_header) {
+		if (term.loop_header && !guarded) {
 			const auto* merge = TargetBlock(ctx.program, term.merge_block);
 			const auto* cont  = TargetBlock(ctx.program, term.continue_block);
 			if (merge != nullptr && cont != nullptr) {
@@ -106,7 +159,9 @@ void EmitStructuredTerminator(ValueEmitContext& ctx, const IR::Block* block,
 				    {OpLoopMerge, ctx.Label(merge), ctx.Label(cont), LoopControlNone});
 			}
 		} else if (term.kind == CFG::TerminatorKind::ConditionalBranch) {
-			const auto* merge = term.merge_block != UINT32_MAX
+			// A guarded loop header's own branch now lives in a nested block: its merge_block is
+			// the loop merge, which cannot double as a selection merge, so use a synthetic one.
+			const auto* merge = (!guarded && term.merge_block != UINT32_MAX)
 			                        ? TargetBlock(ctx.program, term.merge_block)
 			                        : nullptr;
 			if (merge != nullptr) {
@@ -284,16 +339,21 @@ void PatchStructuredPhis(ValueEmitContext& ctx, StructuredFunctionState& structu
 	}
 }
 
-void EmitStructuredFunction(ValueEmitContext& ctx) {
+void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuardVariables& loop_guards) {
 	StructuredFunctionState structured;
 	ctx.state.builder.AddFunction({OpBranch, ctx.Label(ctx.program.blocks.front())});
 	for (size_t index = 0; index < ctx.program.blocks.size(); index++) {
 		const auto* block = ctx.program.blocks[index];
+		const auto& info  = ctx.program.block_info[index];
 		EmitBlock(ctx, block, [&](const IR::Inst& inst) {
 			EmitStructuredInstruction(ctx, structured, inst);
 		});
+		bool guarded = false;
+		if (const auto found = loop_guards.find(block); found != loop_guards.end()) {
+			guarded = EmitLoopGuard(ctx, info, found->second);
+		}
 		structured.block_exit_labels.emplace(block, ctx.state.current_label);
-		EmitStructuredTerminator(ctx, block, ctx.program.block_info[index]);
+		EmitStructuredTerminator(ctx, block, info, guarded);
 	}
 	for (const auto label: ctx.state.synthetic_merge_labels) {
 		EmitLabel(ctx.state, label);
@@ -502,6 +562,18 @@ void EmitProgram(EmitterState& state, const IR::Program& program) {
 	for (const auto* block: program.blocks) {
 		ctx.labels.emplace(block, state.builder.AllocateId());
 	}
+	LoopGuardVariables loop_guards;
+	if (LoopGuardLimit() != 0 && !state.program.dispatcher_fallback) {
+		for (size_t index = 0; index < program.blocks.size(); index++) {
+			if (program.block_info[index].terminator.loop_header) {
+				loop_guards.emplace(program.blocks[index], state.builder.AllocateId());
+			}
+		}
+		if (!loop_guards.empty()) {
+			LOGF("SPIR-V loop guard: shader=0x%016" PRIx64 " loops=%zu limit=%u\n",
+			     program.shader_hash, loop_guards.size(), LoopGuardLimit());
+		}
+	}
 	if (state.program.dispatcher_fallback) {
 		auto& dispatch = dispatcher.emplace();
 		for (const auto* block: program.blocks) {
@@ -597,6 +669,12 @@ void EmitProgram(EmitterState& state, const IR::Program& program) {
 		                           TypePointer(state, StorageClassFunction, TypeU32(state)),
 		                           ctx.scratch_u32_variable, StorageClassFunction});
 	}
+	for (const auto& [guarded_block, variable]: loop_guards) {
+		(void)guarded_block;
+		state.builder.AddFunction({OpVariable,
+		                           TypePointer(state, StorageClassFunction, TypeU32(state)),
+		                           variable, StorageClassFunction, ConstantU32(state, 0)});
+	}
 	if (state.gds_variable != 0) {
 		state.gds_length = state.builder.AllocateId();
 		state.builder.AddFunction(
@@ -612,7 +690,7 @@ void EmitProgram(EmitterState& state, const IR::Program& program) {
 	} else if (state.program.dispatcher_fallback) {
 		EmitDispatcherFunction(ctx, *dispatcher);
 	} else {
-		EmitStructuredFunction(ctx);
+		EmitStructuredFunction(ctx, loop_guards);
 	}
 	state.builder.AddFunction({OpFunctionEnd});
 }

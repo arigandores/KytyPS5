@@ -1,7 +1,13 @@
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 
 #include "common/assert.h"
+#include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
+#include "graphics/host_gpu/vulkanCommon.h"
+
+#include <cinttypes>
+#include <cstdio>
 
 namespace Libs::Graphics {
 
@@ -53,6 +59,13 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	wait_info.pValues        = &tick;
 
 	const auto result = m_graphics.device.waitSemaphores(&wait_info, UINT64_MAX);
+	if (result != vk::Result::eSuccess) {
+		LOGF("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
+		     VulkanToString(result).c_str(), static_cast<int>(result), tick);
+		std::printf("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
+		            VulkanToString(result).c_str(), static_cast<int>(result), tick);
+		ReportGpuCheckpoints(m_graphics);
+	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 	Refresh();
 }

@@ -1179,6 +1179,30 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	LogDrawPhase(draw.name, "PrepareBindings");
 	auto bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
 	                                        state.ps_active);
+	if (const auto dump_addr = DebugDumpAddress(); dump_addr != 0) {
+		const auto& vs     = state.vs_input_info.stage;
+		const auto& ps     = state.ps_input_info.stage;
+		const bool  vs_hit = ShaderStageTouchesAddress(vs, dump_addr);
+		const bool  ps_hit = state.ps_active && ShaderStageTouchesAddress(ps, dump_addr);
+		const bool  bda    = (vs && vs.program->info.uses_dma) ||
+		                 (state.ps_active && ps && ps.program->info.uses_dma);
+		static std::atomic<uint32_t> bda_log_count {0};
+		if (vs_hit || ps_hit ||
+		    (bda && bda_log_count.fetch_add(1, std::memory_order_relaxed) < 4096)) {
+			LOGF("DumpDraw: %s submit=%" PRIu64 " frame=%d vs=0x%016" PRIx64 " ps=0x%016" PRIx64
+			     " touches=%s%s bda=%d\n",
+			     draw.name, submit_id, m_context.GetGpu().GetFrameNum(),
+			     vs ? vs.program->shader_hash : 0u,
+			     (state.ps_active && ps) ? ps.program->shader_hash : 0u, vs_hit ? "VS " : "",
+			     ps_hit ? "PS" : "", bda ? 1 : 0);
+			if (vs_hit || ps_hit) {
+				DumpShaderStageBindings(m_context, "VS", vs);
+				if (state.ps_active) {
+					DumpShaderStageBindings(m_context, "PS", ps);
+				}
+			}
+		}
+	}
 	auto vertex_bindings = PrepareVertexBuffers(submit_id, buffer, draw, state.vs_input_info);
 	auto index_binding   = PrepareIndexBuffer(buffer, index_source);
 	state.rendering =

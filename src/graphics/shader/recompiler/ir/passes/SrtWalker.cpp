@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <bit>
 #include <cmath>
+#include <cstdio>
 #include <cstring>
 #include <fmt/format.h>
 #include <unordered_map>
@@ -430,6 +431,20 @@ public:
 		return true;
 	}
 
+	// Human readable reason for the first evaluation failure, for diagnostics only.
+	[[nodiscard]] const std::string& Failure() const { return m_failure; }
+
+private:
+	std::string m_failure;
+
+	void RecordFailure(std::string reason) {
+		if (m_failure.empty()) {
+			m_failure = std::move(reason);
+		}
+	}
+
+public:
+
 private:
 	static float Float32(uint64_t bits) {
 		return std::bit_cast<float>(static_cast<uint32_t>(bits));
@@ -452,6 +467,8 @@ private:
 		}
 		auto* inst = value.TryInstruction();
 		if (inst == nullptr) {
+			RecordFailure(fmt::format("value of type {} is not an instruction",
+			                          static_cast<unsigned>(value.GetType())));
 			return false;
 		}
 		if (!m_reserved) {
@@ -468,11 +485,14 @@ private:
 			return true;
 		}
 		if (std::ranges::find(m_visiting, inst) != m_visiting.end()) {
+			RecordFailure(fmt::format("cyclic dependency through {}",
+			                          ValueOpcodeName(inst->GetOpcode())));
 			return false;
 		}
 		m_visiting.push_back(inst);
 		uint64_t out = 0;
 		if (!EvaluateInst(*inst, out)) {
+			RecordFailure(fmt::format("cannot evaluate {}", ValueOpcodeName(inst->GetOpcode())));
 			return false;
 		}
 		m_visiting.pop_back();
@@ -578,6 +598,7 @@ private:
 		uint32_t word = 0;
 		if (m_runtime.read_memory != nullptr) {
 			if (!m_runtime.read_memory(m_runtime.userdata, address, &word)) {
+				RecordFailure(fmt::format("guest memory read at 0x{:016x} failed", address));
 				return false;
 			}
 		} else {
@@ -961,6 +982,11 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		value.dword_count = source->dword_count;
 		for (uint32_t index = 0; index < source->dword_count; index++) {
 			if (!evaluator.Evaluate(source->dwords[index], value.dwords[index])) {
+				std::fprintf(stderr,
+				             "shader resource evaluation failed: hash=0x%016llx source=%u dword=%u: %s
+",
+				             static_cast<unsigned long long>(program.shader_hash), source_index,
+				             index, evaluator.Failure().c_str());
 				return false;
 			}
 		}
@@ -975,6 +1001,11 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 			auto&      selected = clean ? clean_evaluator : evaluator;
 			if (read.flat_offset >= flattened.size() ||
 			    !selected.Evaluate(read.value, flattened[read.flat_offset])) {
+				std::fprintf(stderr,
+				             "shader resource evaluation failed: hash=0x%016llx flat slot %u: %s
+",
+				             static_cast<unsigned long long>(program.shader_hash), read.flat_offset,
+				             selected.Failure().c_str());
 				return false;
 			}
 		}

@@ -285,17 +285,17 @@ bool MaterializeIndirectImage(const DescriptorSource::IndirectImage& indirect,
 static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& runtime,
                                 MaterializedSnapshot& snapshot) {
 	if (!program.resource_tracking_complete) {
-		return false;
+		return SpecializationFail("shader resources were not tracked");
 	}
 
 	if (program.requires_specialization_memory && runtime.read_specialization_memory == nullptr) {
-		return false;
+		return SpecializationFail("specialization memory reader is not available");
 	}
 	std::vector<DescriptorValue> values;
 	std::vector<uint32_t>        flattened_srt;
 	if (!EvaluateRuntimeSources(program, program.materialization_sources, runtime, values,
 	                            flattened_srt, program.clean_flat_slots)) {
-		return false;
+		return SpecializationFail("runtime descriptor sources could not be evaluated");
 	}
 
 	auto& next   = snapshot.resources;
@@ -314,14 +314,15 @@ static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& r
 			clean_runtime.read_memory      = runtime.read_specialization_memory;
 			std::vector<DescriptorValue> tables;
 			if (!EvaluateDescriptorSources(program, requests, clean_runtime, tables)) {
-				return false;
+				return SpecializationFail("indirect image table sources could not be evaluated");
 			}
 			const auto&   material = tables[0];
 			const auto&   heap     = tables[1];
 			IndirectImage table;
 			if (!MaterializeIndirectImage(*source->indirect_image, material, heap, image.r128,
 			                              runtime, table)) {
-				return false;
+				return SpecializationFail(
+				    fmt::format("indirect image {} could not be materialized", image_index));
 			}
 			next.images[image_index] = table.descriptors[table.candidates[0]];
 			if (table.descriptors.size() > 1u) {

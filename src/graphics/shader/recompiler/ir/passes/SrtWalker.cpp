@@ -522,8 +522,13 @@ private:
 				continue;
 			}
 			uint64_t current = 0;
+			// An operand that only becomes valid on a later loop iteration (for example a
+			// pointer reloaded from memory the loop has not produced yet) cannot be evaluated
+			// at snapshot time; it carries no information about the current value.
+			const auto saved_failure = m_failure;
 			if (!EvaluateWide(arg, current)) {
-				return false;
+				m_failure = saved_failure;
+				continue;
 			}
 			if (have && current != agreed) {
 				RecordFailure(fmt::format("phi operands disagree ({:#x} vs {:#x})", agreed, current));

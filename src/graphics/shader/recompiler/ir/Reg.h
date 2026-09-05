@@ -7,7 +7,10 @@ namespace Libs::Graphics::ShaderRecompiler::IR {
 enum class ScalarReg : uint16_t {};
 enum class VectorReg : uint16_t {};
 
-constexpr uint32_t NumScalarRegs = 106;
+// s0..s105 plus two slots for the VCC halves: wave32 programs use vcc_hi (107) as an ordinary
+// SGPR, so the translator maps it onto that slot.
+constexpr uint32_t NumScalarRegs = 108;
+constexpr uint32_t VccHiScalarReg = 107;
 constexpr uint32_t NumVectorRegs = 256;
 
 constexpr uint32_t RegIndex(ScalarReg reg) {

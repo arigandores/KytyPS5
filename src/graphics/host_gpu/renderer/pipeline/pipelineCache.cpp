@@ -334,10 +334,12 @@ struct PipelineCache::ProgramCache {
 		options.dump_label  = label;
 		options.input_info  = stage_input;
 		if constexpr (stage == ShaderType::Vertex) {
-			options.user_data_base = 8;
-			options.scratch_dwords = input_info.scratch_size_dwords;
+			options.user_data_base   = 8;
+			options.scratch_dwords   = input_info.scratch_size_dwords;
+			options.detect_wave_size = true;
 		} else if constexpr (stage == ShaderType::Pixel) {
-			options.scratch_dwords = input_info.scratch_size_dwords;
+			options.scratch_dwords   = input_info.scratch_size_dwords;
+			options.detect_wave_size = true;
 		} else {
 			options.scratch_dwords = input_info.scratch_size_dwords;
 			options.wave_size      = input_info.wave_size;

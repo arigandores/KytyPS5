@@ -71,6 +71,42 @@ void LogDispatcherFallback(const CompileOptions& options, const CFG::Graph& cfg,
 	     static_cast<uint64_t>(cfg.back_edges.size()), reason.c_str());
 }
 
+bool IsWaveMaskOperand(const Decoder::Operand& operand) {
+	return operand.kind == Decoder::OperandKind::ExecLo ||
+	       operand.kind == Decoder::OperandKind::ExecHi;
+}
+
+// 32 when the program handles EXEC with 32-bit scalar ops only, 64 when it uses the _B64 forms,
+// `fallback` when it never touches EXEC through the scalar ALU.
+uint32_t DetectGraphicsWaveSize(const Decoder::Program& decoded, uint32_t fallback) {
+	uint32_t b32 = 0;
+	uint32_t b64 = 0;
+	for (const auto& inst: decoded.instructions) {
+		switch (inst.family) {
+			case Decoder::Family::SOP1:
+			case Decoder::Family::SOP2:
+			case Decoder::Family::SOPC:
+			case Decoder::Family::SOPK: break;
+			default: continue;
+		}
+		if (!IsWaveMaskOperand(inst.dst) && !IsWaveMaskOperand(inst.src0) &&
+		    !IsWaveMaskOperand(inst.src1)) {
+			continue;
+		}
+		const auto text     = Decoder::InstructionToString(inst);
+		const auto mnemonic = text.substr(0, text.find(','));
+		if (mnemonic.find("_B64") != std::string::npos) {
+			b64++;
+		} else if (mnemonic.find("_B32") != std::string::npos) {
+			b32++;
+		}
+	}
+	if (b64 != 0) {
+		return 64;
+	}
+	return b32 != 0 ? 32 : fallback;
+}
+
 enum class EmbeddedFetchValueType {
 	Unknown,
 	Constant,
@@ -507,6 +543,20 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	     GetDumpLabel(options), StageName(options.stage), options.shader_hash,
 	     static_cast<uint64_t>(decoded.instructions.size()), phase_ms());
 
+	// Graphics stages do not carry the wave size in the registers Kyty tracks; the code tells:
+	// wave32 programs manipulate EXEC with 32-bit scalar ops (s_and_saveexec_b32, s_mov_b32
+	// exec_lo, ...), wave64 programs with the _B64 forms. Compute keeps the dispatch's wave size.
+	// Getting this wrong is fatal for wave32 code: a wave64 translation treats vcc_hi as the upper
+	// VCC half and clobbers it on every compare, while the program uses it as an ordinary SGPR.
+	const uint32_t wave_size = options.detect_wave_size && options.stage != ShaderType::Compute
+	                               ? DetectGraphicsWaveSize(decoded, options.wave_size)
+	                               : options.wave_size;
+	if (wave_size != options.wave_size) {
+		LOGF("%s wave size from code: stage=%s hash=0x%016" PRIx64 " wave_size=%u (registers: %u)\n",
+		     GetDumpLabel(options), StageName(options.stage), options.shader_hash, wave_size,
+		     options.wave_size);
+	}
+
 	std::string decoded_dump;
 	if (options.dump_ir) {
 		decoded_dump = Decoder::ProgramToString(decoded);
@@ -574,7 +624,7 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	if (options.stage == ShaderType::Vertex && vertex->fetch_embedded) {
 		embedded_fetch = DetectEmbeddedVertexFetch(decoded, vertex, options.user_data_base,
 		                                           static_cast<uint32_t>(options.user_data.size()),
-		                                           options.wave_size);
+		                                           wave_size);
 		if (!embedded_fetch.loads.empty()) {
 			LOGF("%s embedded vertex fetch plan: detected=%" PRIu64 "\n", GetDumpLabel(options),
 			     static_cast<uint64_t>(embedded_fetch.loads.size()));
@@ -582,7 +632,7 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	}
 	Frontend::TranslateOptions translate_options {
 	    .stage               = options.stage,
-	    .wave_size           = options.wave_size,
+	    .wave_size           = wave_size,
 	    .shader_hash         = options.shader_hash,
 	    .user_data_base      = options.user_data_base,
 	    .user_data_count     = static_cast<uint32_t>(options.user_data.size()),

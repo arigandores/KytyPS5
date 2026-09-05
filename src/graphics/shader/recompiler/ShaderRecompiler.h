@@ -14,6 +14,9 @@ namespace Libs::Graphics::ShaderRecompiler {
 struct CompileOptions {
 	ShaderType                  stage           = ShaderType::Compute;
 	uint32_t                    wave_size       = 64;
+	// Graphics stages: take the wave size from the code (32-bit vs 64-bit EXEC handling) instead
+	// of `wave_size`, which the tracked registers do not provide.
+	bool                        detect_wave_size = false;
 	uint32_t                    user_data_base  = 0;
 	uint32_t                    scratch_dwords  = 0;
 	uint64_t                    shader_hash     = 0;

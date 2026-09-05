@@ -74,7 +74,7 @@ Decoder::Operand Translator::ScalarDestinationOperand(const Decoder::Operand& op
 	}
 	code += offset;
 	Decoder::Operand result {};
-	if (code < 106u) {
+	if (code < 106u || (code == 107u && current_wave_size == 32u)) {
 		result.kind = Decoder::OperandKind::Sgpr;
 		result.reg  = code;
 	} else {
@@ -144,7 +144,7 @@ IR::U32 Translator::ReadRawU32(const Decoder::Operand& operand) {
 
 // Scalar operands share one encoded namespace with VCC, M0, and EXEC aliases.
 IR::U32 Translator::ReadScalarCode(uint32_t code) {
-	if (code < 106u) {
+	if (code < 106u || (code == 107u && current_wave_size == 32u)) {
 		return ir.GetScalarReg(static_cast<IR::ScalarReg>(code));
 	}
 	switch (code) {
@@ -381,7 +381,9 @@ void Translator::WriteOperand(const Decoder::Operand& operand, IR::Value value) 
 				const auto mask = BallotMask(IR::U1(value));
 				ir.SetVcc(IR::U1(value));
 				ir.SetVccLo(mask[0]);
-				ir.SetVccHi(mask[1]);
+				if (current_wave_size == 64u) {
+					ir.SetVccHi(mask[1]);
+				}
 				return;
 			}
 			default:
@@ -727,7 +729,9 @@ void Translator::WriteMask(const Decoder::Operand& operand, IR::U1 value) {
 			const auto mask = BallotMask(value);
 			ir.SetVcc(value);
 			ir.SetVccLo(mask[0]);
-			ir.SetVccHi(mask[1]);
+			if (current_wave_size == 64u) {
+				ir.SetVccHi(mask[1]);
+			}
 			return;
 		}
 		case Decoder::OperandKind::Scc: ir.SetScc(value); return;

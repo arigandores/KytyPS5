@@ -3,9 +3,27 @@
 
 namespace Libs::Graphics::ShaderRecompiler::Frontend {
 
-void Translator::TranslateInstruction(const Decoder::Instruction& inst) {
-	current_opcode = inst.opcode;
-	current_pc     = inst.pc;
+// In wave32 the VCC mask is vcc_lo alone and vcc_hi is an ordinary SGPR (compilers use it as a
+// scratch register or to save EXEC). Route it to its own scalar slot so mask writes to vcc_lo
+// cannot clobber it and mask/integer reads of it follow the SGPR rules.
+Decoder::Instruction Translator::NormalizeOperands(const Decoder::Instruction& source) const {
+	auto inst = source;
+	if (current_wave_size != 32u) {
+		return inst;
+	}
+	for (auto* operand: {&inst.dst, &inst.dst2, &inst.src0, &inst.src1, &inst.src2, &inst.src3}) {
+		if (operand->kind == Decoder::OperandKind::VccHi) {
+			operand->kind = Decoder::OperandKind::Sgpr;
+			operand->reg  = IR::VccHiScalarReg;
+		}
+	}
+	return inst;
+}
+
+void Translator::TranslateInstruction(const Decoder::Instruction& source) {
+	const auto inst = NormalizeOperands(source);
+	current_opcode  = inst.opcode;
+	current_pc      = inst.pc;
 
 	switch (inst.opcode) {
 		case Decoder::Opcode::UNKNOWN:

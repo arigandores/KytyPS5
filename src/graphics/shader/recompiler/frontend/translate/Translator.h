@@ -14,6 +14,7 @@ public:
 	      current_wave_size(wave_size) {}
 
 	void TranslateInstruction(const Decoder::Instruction& inst);
+	[[nodiscard]] Decoder::Instruction NormalizeOperands(const Decoder::Instruction& inst) const;
 	void TranslateEmbeddedFetch(const Decoder::Instruction& inst, uint32_t attribute,
 	                            uint32_t component_count);
 	void AddBranchCondition(const CFG::BasicBlock& source, IR::BlockInfo& info);

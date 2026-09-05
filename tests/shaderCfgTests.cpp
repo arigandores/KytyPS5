@@ -4329,6 +4329,65 @@ void TestNewShaderRecompilerCapturedVopcSdwaCmpxClass() {
   CheckSpirvBinaryValidates(result.spirv);
 }
 
+// In wave32 the VCC mask is vcc_lo alone and vcc_hi is an ordinary SGPR that compilers use as a
+// scratch register (ASTRO BOT saves EXEC in it). A compare must not clobber it and moves to/from
+// it must go through the scalar register file; in wave64 the same compare writes both VCC words.
+void TestNewShaderRecompilerWave32VccHiIsScalarRegister() {
+  const uint32_t shader[] = {
+      EncodeSop1(0x03, 107, 126),   // s_mov_b32 vcc_hi, exec_lo
+      EncodeVopc(0xc1, 5 + 256, 8), // v_cmp_lt_u32 vcc, v5, v8
+      EncodeSop1(0x03, 126, 107),   // s_mov_b32 exec_lo, vcc_hi
+      EncodeSMovB32(0, 129),
+      0xbf810000u,
+  };
+  ShaderRecompiler::Decoder::Program decoded;
+  ShaderRecompiler::Decoder::DecodeProgram(std::span{shader}, decoded);
+  ShaderRecompiler::CFG::Graph graph;
+  graph = ShaderRecompiler::CFG::BuildGraph(decoded);
+  ShaderComputeInputInfo compute_info{};
+
+  const auto count = [&](uint32_t wave_size, uint32_t &vcc_hi_writes,
+                         uint32_t &slot_writes) {
+    ShaderRecompiler::Frontend::TranslateOptions translate_options{};
+    translate_options.stage = ShaderType::Compute;
+    translate_options.wave_size = wave_size;
+    translate_options.compute = &compute_info;
+    const auto ir = ShaderRecompiler::Frontend::TranslateProgram(
+        decoded, graph, translate_options);
+    vcc_hi_writes = 0;
+    slot_writes = 0;
+    for (const auto *block : ir.blocks) {
+      for (const auto &inst : *block) {
+        const auto opcode = inst.GetOpcode();
+        if (opcode == ShaderRecompiler::IR::ValueOpcode::SetVccHi) {
+          vcc_hi_writes++;
+        }
+        if ((opcode == ShaderRecompiler::IR::ValueOpcode::SetScalarRegister ||
+             opcode == ShaderRecompiler::IR::ValueOpcode::
+                           SetThreadBitScalarRegister) &&
+            ShaderRecompiler::IR::RegIndex(inst.Arg(0).ScalarRegister()) ==
+                ShaderRecompiler::IR::VccHiScalarReg) {
+          slot_writes++;
+        }
+      }
+    }
+  };
+
+  uint32_t vcc_hi_writes = 0;
+  uint32_t slot_writes = 0;
+  count(32u, vcc_hi_writes, slot_writes);
+  Check(vcc_hi_writes == 0u && slot_writes >= 1u,
+        "wave32 vcc_hi was not treated as an ordinary SGPR");
+  count(64u, vcc_hi_writes, slot_writes);
+  Check(vcc_hi_writes >= 1u && slot_writes == 0u,
+        "wave64 compare did not write the upper VCC word");
+
+  auto options = MakeCompileOptions(ShaderType::Compute);
+  options.wave_size = 32u;
+  auto result = RecompileForTest(shader, options);
+  CheckSpirvBinaryValidates(result.spirv);
+}
+
 void TestNewShaderRecompilerIrLookupMissFailsExplicitly() {
   namespace Decoder = ShaderRecompiler::Decoder;
   namespace CFG = ShaderRecompiler::CFG;
@@ -12057,6 +12116,7 @@ int main() {
   // here.
   RUN(TestNewShaderDecoderArchitecture);
   RUN(TestNewShaderRecompilerCapturedVopcSdwaCmpxClass);
+  RUN(TestNewShaderRecompilerWave32VccHiIsScalarRegister);
   RUN(TestNewShaderRecompilerIrLookupMissFailsExplicitly);
   RUN(TestNewShaderRecompilerRejectsDppOn64BitCompares);
   RUN(TestPsInputCountRegisterDecode);

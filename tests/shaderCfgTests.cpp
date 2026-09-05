@@ -7894,9 +7894,11 @@ void TestNewShaderRecompilerCfgExecSccSharedArm() {
         "EXEC/SCC shared-arm SPIR-V has the wrong selection-merge count");
   Check(SpirvInstructionOpcodeCount(result.spirv, 251) == 0u,
         "EXEC/SCC shared-arm SPIR-V unexpectedly used dispatcher OpSwitch");
-  Check(!Common::ContainsStr(DisassembleSpirvBinary(result.spirv),
-                             "OpGroupNonUniformBallot"),
-        "per-invocation EXEC/SCC branch reconstructed a native subgroup mask");
+  // S_CBRANCH_EXECZ tests the wave-wide mask, so the branch condition is a subgroup ballot of
+  // the per-invocation EXEC Boolean and every lane takes the same path.
+  Check(Common::ContainsStr(DisassembleSpirvBinary(result.spirv),
+                            "OpGroupNonUniformBallot"),
+        "EXEC branch did not reduce EXEC to a wave-wide condition");
   CheckSpirvBinaryValidates(result.spirv);
 }
 

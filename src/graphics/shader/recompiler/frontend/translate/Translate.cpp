@@ -794,17 +794,28 @@ void Translator::AddBranchCondition(const CFG::BasicBlock& source, IR::BlockInfo
 	if (source.terminator.kind != CFG::TerminatorKind::ConditionalBranch) {
 		return;
 	}
-	// EXEC and VCC are invocation-local Boolean masks. Branching on that Boolean lets inactive
-	// invocations leave the region without reconstructing a host-subgroup mask.
+	// EXEC and VCC are kept as invocation-local Booleans, but S_CBRANCH_EXECZ/VCCZ test the wave-wide
+	// mask: the branch is taken by every lane iff no lane has the bit set. Inactive lanes therefore
+	// walk through the region like on the hardware (their vector side effects are masked by EXEC)
+	// and their copies of the scalar registers stay in step with the active lanes. Branching per
+	// lane instead let inactive lanes skip scalar code, so once EXEC was restored they continued
+	// with stale SGPRs - e.g. a linked-list "next" index that never reached the terminator, which
+	// made waterfall loops in ASTRO BOT pixel shaders spin forever.
+	const auto any_lane = [&](IR::U1 value) {
+		const auto ballot = ir.Emit(IR::ValueOpcode::Ballot, {value});
+		const auto low    = IR::U32(ir.CompositeExtract(ballot, 0u));
+		const auto high   = IR::U32(ir.CompositeExtract(ballot, 1u));
+		return ir.INotEqual(ir.BitwiseOr(low, high), IR::U32(IR::Value(0u)));
+	};
 	IR::U1 condition;
 	switch (source.terminator.condition) {
 		case CFG::BranchCondition::Always: condition = IR::U1(IR::Value(true)); break;
 		case CFG::BranchCondition::SccZero: condition = ir.LogicalNot(ir.GetScc()); break;
 		case CFG::BranchCondition::SccNonZero: condition = ir.GetScc(); break;
-		case CFG::BranchCondition::VccZero: condition = ir.LogicalNot(ir.GetVcc()); break;
-		case CFG::BranchCondition::VccNonZero: condition = ir.GetVcc(); break;
-		case CFG::BranchCondition::ExecZero: condition = ir.LogicalNot(ir.GetExec()); break;
-		case CFG::BranchCondition::ExecNonZero: condition = ir.GetExec(); break;
+		case CFG::BranchCondition::VccZero: condition = ir.LogicalNot(any_lane(ir.GetVcc())); break;
+		case CFG::BranchCondition::VccNonZero: condition = any_lane(ir.GetVcc()); break;
+		case CFG::BranchCondition::ExecZero: condition = ir.LogicalNot(any_lane(ir.GetExec())); break;
+		case CFG::BranchCondition::ExecNonZero: condition = any_lane(ir.GetExec()); break;
 		case CFG::BranchCondition::GotoVariable:
 			if (source.terminator.goto_variable == UINT32_MAX) {
 				EXIT("block %u reads an invalid goto variable", source.id);

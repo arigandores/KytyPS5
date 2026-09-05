@@ -507,7 +507,37 @@ private:
 
 	bool EvaluatePhi(const Inst& inst, uint64_t& result) {
 		const auto value = ResolveInvariantPhi(m_program, Value(const_cast<Inst*>(&inst)));
-		return !value.IsEmpty() && EvaluateWide(value, result);
+		if (!value.IsEmpty()) {
+			return EvaluateWide(value, result);
+		}
+		// The incoming values are not structurally identical (for example a pointer that is
+		// reloaded through a different chain on a loop back edge). The snapshot only needs the
+		// value the phi has right now, so accept it when every incoming value that can be
+		// evaluated at all agrees; self references are the loop back edge and carry no new value.
+		bool     have   = false;
+		uint64_t agreed = 0;
+		for (size_t index = 0; index < inst.NumArgs(); index++) {
+			const auto arg = inst.Arg(index).Resolve();
+			if (arg.TryInstruction() == &inst) {
+				continue;
+			}
+			uint64_t current = 0;
+			if (!EvaluateWide(arg, current)) {
+				return false;
+			}
+			if (have && current != agreed) {
+				RecordFailure(fmt::format("phi operands disagree ({:#x} vs {:#x})", agreed, current));
+				return false;
+			}
+			agreed = current;
+			have   = true;
+		}
+		if (!have) {
+			RecordFailure("phi has no evaluable operand");
+			return false;
+		}
+		result = agreed;
+		return true;
 	}
 
 	bool EvaluateExtract(const Inst& inst, uint64_t& result) {
@@ -985,6 +1015,19 @@ void DescribeValue(const ResourcePlan& program, Value value, std::string& out, u
 		return;
 	}
 	out += ValueOpcodeName(inst->GetOpcode());
+	if (inst->GetOpcode() == ValueOpcode::ReadConst && inst->NumArgs() == 2 &&
+	    std::ranges::find(seen, inst) == seen.end() && depth != 0) {
+		const auto slot = inst->Arg(1).Resolve();
+		if (slot.IsImmediate() && slot.GetType() == Type::U32 &&
+		    slot.U32() < program.srt_reads.size()) {
+			out += fmt::format("[slot {:#x} = ", slot.U32());
+			seen.push_back(inst);
+			DescribeValue(program, program.srt_reads[slot.U32()].value, out, depth - 1u, seen);
+			seen.pop_back();
+			out += "]";
+			return;
+		}
+	}
 	if (inst->GetOpcode() == ValueOpcode::LoadAddressU32 ||
 	    inst->GetOpcode() == ValueOpcode::ReadConstBuffer) {
 		const auto index = inst->Flags<MemoryFlags>().index;
@@ -1017,7 +1060,7 @@ void DescribeValue(const ResourcePlan& program, Value value, std::string& out, u
 std::string DescribeValue(const ResourcePlan& program, Value value) {
 	std::string              out;
 	std::vector<const Inst*> seen;
-	DescribeValue(program, value, out, 6u, seen);
+	DescribeValue(program, value, out, 10u, seen);
 	return out;
 }
 

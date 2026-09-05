@@ -956,6 +956,91 @@ const DescriptorSource* Source(const ResourcePlan& program, uint32_t source) {
 	return &program.descriptor_sources[source];
 }
 
+// Diagnostics: render a value tree (depth limited) for evaluation failure messages.
+void DescribeValue(const ResourcePlan& program, Value value, std::string& out, uint32_t depth,
+                   std::vector<const Inst*>& seen) {
+	value = value.Resolve();
+	if (value.IsEmpty()) {
+		out += "<empty>";
+		return;
+	}
+	if (value.IsImmediate()) {
+		switch (value.GetType()) {
+			case Type::U1: out += value.U1() ? "true" : "false"; return;
+			case Type::U32: out += fmt::format("{:#x}", value.U32()); return;
+			case Type::U64: out += fmt::format("{:#x}", value.U64()); return;
+			case Type::F32: out += fmt::format("{}f", value.F32Value()); return;
+			default: out += "imm"; return;
+		}
+	}
+	const auto* inst = value.TryInstruction();
+	if (inst == nullptr) {
+		if (value.GetType() == Type::ScalarReg) {
+			out += fmt::format("s{}", static_cast<unsigned>(value.ScalarRegister()));
+		} else if (value.GetType() == Type::VectorReg) {
+			out += fmt::format("v{}", static_cast<unsigned>(value.VectorRegister()));
+		} else {
+			out += "?";
+		}
+		return;
+	}
+	out += ValueOpcodeName(inst->GetOpcode());
+	if (inst->GetOpcode() == ValueOpcode::LoadAddressU32 ||
+	    inst->GetOpcode() == ValueOpcode::ReadConstBuffer) {
+		const auto index = inst->Flags<MemoryFlags>().index;
+		if (index < program.memory_info.size()) {
+			const auto& mem = program.memory_info[index];
+			out += fmt::format("[mem{} kind={} off={:#x}]", index, static_cast<unsigned>(mem.kind),
+			                   mem.offset);
+		}
+	}
+	if (std::ranges::find(seen, inst) != seen.end()) {
+		out += "(<cycle>)";
+		return;
+	}
+	if (depth == 0) {
+		out += "(...)";
+		return;
+	}
+	seen.push_back(inst);
+	out += "(";
+	for (size_t index = 0; index < inst->NumArgs(); index++) {
+		if (index != 0) {
+			out += ", ";
+		}
+		DescribeValue(program, inst->Arg(index), out, depth - 1u, seen);
+	}
+	out += ")";
+	seen.pop_back();
+}
+
+std::string DescribeValue(const ResourcePlan& program, Value value) {
+	std::string              out;
+	std::vector<const Inst*> seen;
+	DescribeValue(program, value, out, 6u, seen);
+	return out;
+}
+
+std::string DescribeSourceOwner(const ResourcePlan& program, uint32_t source_index) {
+	std::string owner;
+	for (uint32_t index = 0; index < program.info.buffers.size(); index++) {
+		if (program.info.buffers[index].source == source_index) {
+			owner += fmt::format(" buffer{}", index);
+		}
+	}
+	for (uint32_t index = 0; index < program.info.images.size(); index++) {
+		if (program.info.images[index].source == source_index) {
+			owner += fmt::format(" image{}", index);
+		}
+	}
+	for (uint32_t index = 0; index < program.info.samplers.size(); index++) {
+		if (program.info.samplers[index].source == source_index) {
+			owner += fmt::format(" sampler{}", index);
+		}
+	}
+	return owner.empty() ? std::string(" <unowned>") : owner;
+}
+
 bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uint32_t> sources,
                                 const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
                                 std::vector<uint32_t>& flat, bool evaluate_flat,
@@ -983,9 +1068,12 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		for (uint32_t index = 0; index < source->dword_count; index++) {
 			if (!evaluator.Evaluate(source->dwords[index], value.dwords[index])) {
 				std::fprintf(stderr,
-				             "shader resource evaluation failed: hash=0x%016llx source=%u dword=%u: %s\n",
+				             "shader resource evaluation failed: hash=0x%016llx source=%u (%s) dword=%u: "
+				             "%s; value = %s\n",
 				             static_cast<unsigned long long>(program.shader_hash), source_index,
-				             index, evaluator.Failure().c_str());
+				             DescribeSourceOwner(program, source_index).c_str(), index,
+				             evaluator.Failure().c_str(),
+				             DescribeValue(program, source->dwords[index]).c_str());
 				return false;
 			}
 		}

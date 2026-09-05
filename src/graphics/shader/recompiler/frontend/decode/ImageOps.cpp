@@ -246,6 +246,8 @@ Opcode DecodeMimgOpcode(uint32_t opcode, const MimgSampleInfo* sample, const Mim
 		case 0x09u: return Opcode::IMAGE_STORE_MIP;
 		case 0x0eu: return Opcode::IMAGE_GET_RESINFO;
 		case 0x60u: return Opcode::IMAGE_GET_LOD;
+		case 0xe6u: return Opcode::IMAGE_BVH_INTERSECT_RAY;
+		case 0xe7u: return Opcode::IMAGE_BVH64_INTERSECT_RAY;
 		default: return Opcode::UNSUPPORTED;
 	}
 }
@@ -341,6 +343,13 @@ void DecodeMimg(uint32_t pc, std::span<const uint32_t> code, uint32_t word_index
 	}
 	inst.image_address_components =
 	    DecodeMimgAddressComponents(opcode, dimension, sample, gather, atomic);
+	if (inst.opcode == Opcode::IMAGE_BVH_INTERSECT_RAY ||
+	    inst.opcode == Opcode::IMAGE_BVH64_INTERSECT_RAY) {
+		// node_ptr (1 or 2 dwords), ray_extent, ray_origin.xyz, then ray_dir.xyz and
+		// ray_inv_dir.xyz either as 6 fp32 dwords or packed into 3 dwords of fp16 pairs (a16).
+		const uint32_t node_dwords = inst.opcode == Opcode::IMAGE_BVH64_INTERSECT_RAY ? 2u : 1u;
+		inst.image_address_components = node_dwords + 1u + 3u + (a16 ? 3u : 6u);
+	}
 	SetRawWords(inst, code, word_index, word_count);
 
 	if (inst.opcode == Opcode::UNSUPPORTED) {

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <limits>
 
 namespace Libs::Graphics::ShaderRecompiler::Frontend {
 
@@ -700,6 +701,344 @@ bool Translator::IMAGE_GATHER(const Decoder::Instruction& inst) {
 	return true;
 }
 
+// IMAGE_BVH_INTERSECT_RAY / IMAGE_BVH64_INTERSECT_RAY (RDNA2 hardware ray tracing).
+//
+// The hardware tests one ray against one BVH node and returns 4 dwords:
+//   box node (types 4 = fp16 boxes, 5 = fp32 boxes): the 4 child node pointers whose boxes
+//     were hit, optionally sorted by the descriptor box sort heuristic, misses = 0xffffffff;
+//   triangle node (types 0 and 1): {t_num, t_denom, i_num, j_num} as raw floats, a miss is
+//     encoded as {+inf, 1.0, ...};
+//   anything else: 0xffffffff x4.
+// The node layouts and the intersection math follow the software fallback in the AMD GPURT
+// library (IntersectCommon.hlsl), which is what the closed hardware implements.
+// The intersection is emitted branch-free: all node kinds are evaluated and the result is
+// selected by node type, so no extra basic blocks are needed inside the translator.
+bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool node64) {
+	const auto memory = MemoryInfoFromDecoded(inst);
+	const bool a16    = (inst.image_sample_flags & Decoder::ImageSampleFlagA16) != 0u;
+
+	constexpr uint32_t InvalidNode = 0xffffffffu;
+	constexpr float    Infinity    = std::numeric_limits<float>::infinity();
+
+	const auto U32C = [](uint32_t value) { return IR::U32(IR::Value(value)); };
+	const auto F32C = [](float value) { return IR::F32(IR::Value::F32(value)); };
+
+	const auto f32  = [&](IR::U32 value) { return ir.BitCastF32(value); };
+	const auto fadd = [&](IR::F32 a, IR::F32 b) {
+		return IR::F32(ir.Emit(IR::ValueOpcode::FPAdd32, {a, b}));
+	};
+	const auto fsub = [&](IR::F32 a, IR::F32 b) {
+		return IR::F32(ir.Emit(IR::ValueOpcode::FPSub32, {a, b}));
+	};
+	const auto fmul = [&](IR::F32 a, IR::F32 b) {
+		return IR::F32(ir.Emit(IR::ValueOpcode::FPMul32, {a, b}));
+	};
+	const auto fmin = [&](IR::F32 a, IR::F32 b) {
+		return IR::F32(ir.Emit(IR::ValueOpcode::FPMin32, {a, b}));
+	};
+	const auto fmax = [&](IR::F32 a, IR::F32 b) {
+		return IR::F32(ir.Emit(IR::ValueOpcode::FPMax32, {a, b}));
+	};
+	const auto flt = [&](IR::F32 a, IR::F32 b) {
+		return IR::U1(ir.Emit(IR::ValueOpcode::FPOrdLessThan32, {a, b}));
+	};
+	const auto fle = [&](IR::F32 a, IR::F32 b) {
+		return IR::U1(ir.Emit(IR::ValueOpcode::FPOrdLessThanEqual32, {a, b}));
+	};
+	const auto fge = [&](IR::F32 a, IR::F32 b) {
+		return IR::U1(ir.Emit(IR::ValueOpcode::FPOrdGreaterThanEqual32, {a, b}));
+	};
+	const auto fgt = [&](IR::F32 a, IR::F32 b) {
+		return IR::U1(ir.Emit(IR::ValueOpcode::FPOrdGreaterThan32, {a, b}));
+	};
+	const auto fnan = [&](IR::F32 a) { return IR::U1(ir.Emit(IR::ValueOpcode::FPIsNan32, {a})); };
+	const auto fsel = [&](IR::U1 c, IR::F32 a, IR::F32 b) { return SelectF32(c, a, b); };
+	// HLSL-style NaN suppressing min/max, which is what the GPURT reference relies on.
+	const auto nmax = [&](IR::F32 a, IR::F32 b) {
+		return fsel(fnan(a), b, fsel(fnan(b), a, fmax(a, b)));
+	};
+	const auto nmin = [&](IR::F32 a, IR::F32 b) {
+		return fsel(fnan(a), b, fsel(fnan(b), a, fmin(a, b)));
+	};
+	const auto half_to_f32 = [&](IR::U32 word, bool high) {
+		const IR::U32 bits =
+		    high ? ir.ShiftRightLogical(word, U32C(16u)) : ir.BitwiseAnd(word, U32C(0xffffu));
+		const auto u16 = ir.Emit(IR::ValueOpcode::ConvertU16U32, {bits});
+		const auto f16 = ir.Emit(IR::ValueOpcode::BitCastF16U16, {u16});
+		return IR::F32(ir.Emit(IR::ValueOpcode::ConvertF32F16, {f16}));
+	};
+
+	using Vec3      = std::array<IR::F32, 3>;
+	const auto vsub = [&](const Vec3& a, const Vec3& b) {
+		return Vec3 {fsub(a[0], b[0]), fsub(a[1], b[1]), fsub(a[2], b[2])};
+	};
+	const auto cross = [&](const Vec3& a, const Vec3& b) {
+		return Vec3 {fsub(fmul(a[1], b[2]), fmul(a[2], b[1])),
+		             fsub(fmul(a[2], b[0]), fmul(a[0], b[2])),
+		             fsub(fmul(a[0], b[1]), fmul(a[1], b[0]))};
+	};
+	const auto dot = [&](const Vec3& a, const Vec3& b) {
+		return fadd(fmul(a[0], b[0]), fadd(fmul(a[1], b[1]), fmul(a[2], b[2])));
+	};
+
+	// --- Instruction operands: vaddr plus the NSA registers, same order as MakeImageAddress.
+	const auto              base = PlainOperand(MemorySourceAt(inst, 0));
+	std::array<IR::U32, 13> comp {};
+	const auto              nsa_components =
+	    std::min(memory.image_nsa_dwords * 4u, Decoder::MaxImageNsaAddressComponents);
+	const auto component_count =
+	    std::min<uint32_t>(inst.image_address_components, static_cast<uint32_t>(comp.size()));
+	for (uint32_t index = 0; index < component_count; index++) {
+		if (index == 0u) {
+			comp[index] = ReadRawU32(base);
+		} else if (index - 1u < nsa_components) {
+			comp[index] =
+			    ir.GetVectorReg(static_cast<IR::VectorReg>(memory.image_nsa_addr[index - 1u]));
+		} else {
+			comp[index] = ReadRawU32(OffsetOperand(base, index));
+		}
+	}
+	for (uint32_t index = component_count; index < comp.size(); index++) {
+		comp[index] = U32C(0u);
+	}
+
+	uint32_t      cursor  = 0;
+	const IR::U32 node_lo = comp[cursor++];
+	const IR::U32 node_hi = node64 ? comp[cursor++] : U32C(0u);
+	const IR::F32 extent  = f32(comp[cursor++]);
+	Vec3          origin {}, dir {}, inv_dir {};
+	for (auto& value : origin) {
+		value = f32(comp[cursor++]);
+	}
+	if (!a16) {
+		for (auto& value : dir) {
+			value = f32(comp[cursor++]);
+		}
+		for (auto& value : inv_dir) {
+			value = f32(comp[cursor++]);
+		}
+	} else {
+		// fp16 pairs: {dir.x, dir.y}, {dir.z, inv_dir.x}, {inv_dir.y, inv_dir.z}
+		const IR::U32 w0 = comp[cursor++];
+		const IR::U32 w1 = comp[cursor++];
+		const IR::U32 w2 = comp[cursor++];
+		dir     = {half_to_f32(w0, false), half_to_f32(w0, true), half_to_f32(w1, false)};
+		inv_dir = {half_to_f32(w1, true), half_to_f32(w2, false), half_to_f32(w2, true)};
+	}
+
+	// --- BVH descriptor (T#, 128-bit):
+	//   dword0        = base_address[31:0]
+	//   dword1[15:0]  = base_address[47:32]
+	//   dword1[22:21] = box sort heuristic (0 closest, 1 largest, 2 midpoint, 3 disabled)
+	//   dword1[30:23] = box grow value (ulps)
+	//   dword1[31]    = box sort enable
+	const IR::U32 desc0 = GetResourceDword(memory.resource, 0);
+	const IR::U32 desc1 = GetResourceDword(memory.resource, 1);
+	const IR::U32 box_grow =
+	    IR::U32(ir.Emit(IR::ValueOpcode::BitFieldUExtract, {desc1, U32C(23u), U32C(8u)}));
+	const IR::U32 sort_mode =
+	    IR::U32(ir.Emit(IR::ValueOpcode::BitFieldUExtract, {desc1, U32C(21u), U32C(2u)}));
+	const IR::U1 sort_enabled =
+	    ir.LogicalAnd(ir.INotEqual(ir.BitwiseAnd(desc1, U32C(0x80000000u)), U32C(0u)),
+	                  ir.INotEqual(sort_mode, U32C(3u)));
+
+	// --- Node address: the node pointer holds the node type in bits [2:0] and the offset in
+	// 64-byte units in bits [31:3]; the hardware computes (base >> 3) + pointer, then << 3.
+	const IR::U32 node_type = ir.BitwiseAnd(node_lo, U32C(7u));
+	const IR::U32 node_off  = ir.BitwiseAnd(node_lo, U32C(~7u));
+	IR::U64       node_addr;
+	if (node64) {
+		node_addr = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
+		                            {ir.ConstructU64(node_off, node_hi), U32C(3u)}));
+	} else {
+		const IR::U64 base64 = ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu)));
+		const IR::U64 off64  = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
+		                                       {ir.ConstructU64(node_off, U32C(0u)), U32C(3u)}));
+		node_addr            = IR::U64(ir.Emit(IR::ValueOpcode::IAdd64, {base64, off64}));
+	}
+	const IR::U32 addr_lo = ir.CompositeExtract(node_addr, 0);
+	const IR::U32 addr_hi = ir.CompositeExtract(node_addr, 1);
+
+	const IR::U1 is_box16 = ir.IEqual(node_type, U32C(4u));
+	const IR::U1 is_box32 = ir.IEqual(node_type, U32C(5u));
+	const IR::U1 is_tri   = ir.ULessThan(node_type, U32C(2u));
+
+	// --- Node memory: dwords 0..15 cover fp16 box nodes (64 bytes) and triangle nodes (64
+	// bytes); fp32 box nodes are 128 bytes, so dwords 16..27 are only read for them.
+	const auto exec       = ir.GetExec();
+	const auto resource   = GetAddressResource(addr_lo, addr_hi);
+	const auto load_dword = [&](uint32_t dword, IR::U1 active) {
+		IR::MemoryInfo info;
+		info.kind            = IR::ResourceKind::Flat;
+		info.address_is_full = true;
+		info.offset          = dword * sizeof(uint32_t);
+		info.data_dwords     = 1u;
+		info.data_bits       = 32u;
+		info.component_index = 0u;
+		info.component_count = 1u;
+		return IR::U32(ir.Emit(IR::ValueOpcode::LoadAddressU32,
+		                       {resource, addr_lo, addr_hi, active}, AddMemoryInfo(info, inst.pc)));
+	};
+	std::array<IR::U32, 28> d {};
+	const auto              active32 = ir.LogicalAnd(exec, is_box32);
+	for (uint32_t index = 0; index < d.size(); index++) {
+		d[index] = load_dword(index, index < 16u ? exec : active32);
+	}
+
+	// --- Ray vs. box, GPURT fast_intersect_bbox: returns {min_t, max_t, min_of, max_of}.
+	struct BoxHit {
+		IR::F32 min_t, max_t, min_of, max_of;
+	};
+	const auto intersect_box = [&](const Vec3& box_min, const Vec3& box_max) {
+		Vec3 interval_min {}, interval_max {};
+		for (uint32_t axis = 0; axis < 3u; axis++) {
+			const IR::F32 t_min    = fmul(fsub(box_min[axis], origin[axis]), inv_dir[axis]);
+			const IR::F32 t_max    = fmul(fsub(box_max[axis], origin[axis]), inv_dir[axis]);
+			const IR::U1  positive = fge(inv_dir[axis], F32C(0.0f));
+			interval_min[axis]     = fsel(positive, t_min, t_max);
+			interval_max[axis]     = fsel(positive, t_max, t_min);
+		}
+		IR::F32       min_of = nmax(nmax(interval_min[0], interval_min[1]), interval_min[2]);
+		IR::F32       max_of = nmin(nmin(interval_max[0], interval_max[1]), interval_max[2]);
+		const IR::U1  nan    = ir.LogicalOr(fnan(min_of), fnan(max_of));
+		const IR::F32 min_t  = fsel(nan, F32C(Infinity), nmax(min_of, F32C(0.0f)));
+		const IR::F32 max_t  = fsel(nan, F32C(-Infinity), nmin(max_of, extent));
+		min_of               = fsel(fnan(min_of), F32C(0.0f), min_of);
+		max_of               = fsel(fnan(max_of), F32C(Infinity), max_of);
+		return BoxHit {min_t, max_t, min_of, max_of};
+	};
+
+	// Box test against the grown extent, then the optional distance sort
+	// (GPURT IntersectNodeBvh4).
+	const IR::F32 grow_factor =
+	    fadd(F32C(1.0f), fmul(IR::F32(ir.Emit(IR::ValueOpcode::ConvertF32U32, {box_grow})),
+	                          F32C(5.960464478e-8f)));
+	const auto box_children = [&](const std::array<BoxHit, 4>& hits) {
+		std::array<IR::U32, 4> child {};
+		std::array<IR::F32, 4> key {};
+		for (uint32_t index = 0; index < 4u; index++) {
+			const IR::U1 hit = fle(hits[index].min_t, fmul(hits[index].max_t, grow_factor));
+			child[index]     = ir.Select(hit, d[index], U32C(InvalidNode));
+			const IR::F32 closest  = hits[index].min_t;
+			const IR::F32 largest  = fsub(hits[index].min_t, hits[index].max_t);
+			const IR::F32 midpoint = fadd(hits[index].min_of, hits[index].max_of);
+			key[index]             = fsel(ir.IEqual(sort_mode, U32C(1u)), largest,
+			                              fsel(ir.IEqual(sort_mode, U32C(2u)), midpoint, closest));
+		}
+		auto       sorted_child = child;
+		auto       sorted_key   = key;
+		const auto sort2        = [&](uint32_t a, uint32_t b) {
+			const IR::U1 swap =
+			    ir.LogicalOr(ir.LogicalAnd(ir.INotEqual(sorted_child[b], U32C(InvalidNode)),
+			                               flt(sorted_key[b], sorted_key[a])),
+			                 ir.IEqual(sorted_child[a], U32C(InvalidNode)));
+			const IR::U32 new_a = ir.Select(swap, sorted_child[b], sorted_child[a]);
+			const IR::U32 new_b = ir.Select(swap, sorted_child[a], sorted_child[b]);
+			const IR::F32 key_a = fsel(swap, sorted_key[b], sorted_key[a]);
+			const IR::F32 key_b = fsel(swap, sorted_key[a], sorted_key[b]);
+			sorted_child[a]     = new_a;
+			sorted_child[b]     = new_b;
+			sorted_key[a]       = key_a;
+			sorted_key[b]       = key_b;
+		};
+		sort2(0, 2);
+		sort2(1, 3);
+		sort2(0, 1);
+		sort2(2, 3);
+		sort2(1, 2);
+		for (uint32_t index = 0; index < 4u; index++) {
+			child[index] = ir.Select(sort_enabled, sorted_child[index], child[index]);
+		}
+		return child;
+	};
+
+	// fp32 box node: children d[0..3], then 4 x (min.xyz, max.xyz).
+	std::array<BoxHit, 4> hits32 {};
+	for (uint32_t index = 0; index < 4u; index++) {
+		const uint32_t at = 4u + index * 6u;
+		hits32[index]     = intersect_box({f32(d[at]), f32(d[at + 1u]), f32(d[at + 2u])},
+		                                  {f32(d[at + 3u]), f32(d[at + 4u]), f32(d[at + 5u])});
+	}
+	const auto box32_result = box_children(hits32);
+
+	// fp16 box node: children d[0..3], then 4 x 3 dwords packed as
+	// {min.x | min.y << 16}, {min.z | max.x << 16}, {max.y | max.z << 16}.
+	std::array<BoxHit, 4> hits16 {};
+	for (uint32_t index = 0; index < 4u; index++) {
+		const uint32_t at = 4u + index * 3u;
+		hits16[index]     = intersect_box(
+		    {half_to_f32(d[at], false), half_to_f32(d[at], true), half_to_f32(d[at + 1u], false)},
+		    {half_to_f32(d[at + 1u], true), half_to_f32(d[at + 2u], false),
+		     half_to_f32(d[at + 2u], true)});
+	}
+	const auto box16_result = box_children(hits16);
+
+	// --- Triangle node: 4 vertices; type 0 = (v0, v1, v2), type 1 = (v1, v3, v2),
+	// triangle id in dword 15 (GPURT fast_intersect_triangle + SwizzleBarycentrics).
+	const IR::U1 is_tri1 = ir.IEqual(node_type, U32C(1u));
+	const auto   vertex  = [&](uint32_t index) {
+		return Vec3 {f32(d[index * 3u]), f32(d[index * 3u + 1u]), f32(d[index * 3u + 2u])};
+	};
+	const auto vsel = [&](IR::U1 c, const Vec3& a, const Vec3& b) {
+		return Vec3 {fsel(c, a[0], b[0]), fsel(c, a[1], b[1]), fsel(c, a[2], b[2])};
+	};
+	const Vec3 v0    = vertex(0);
+	const Vec3 v1    = vertex(1);
+	const Vec3 v2    = vertex(2);
+	const Vec3 v3    = vertex(3);
+	const Vec3 tri_a = vsel(is_tri1, v1, v0);
+	const Vec3 tri_b = vsel(is_tri1, v3, v1);
+	const Vec3 tri_c = v2;
+
+	const Vec3    e1     = vsub(tri_b, tri_a);
+	const Vec3    e2     = vsub(tri_c, tri_a);
+	const Vec3    e3     = vsub(origin, tri_a);
+	const Vec3    s1     = cross(dir, e2);
+	const Vec3    s2     = cross(e3, e1);
+	const IR::F32 rx     = dot(e2, s2);
+	const IR::F32 ry     = dot(s1, e1);
+	const IR::F32 rz     = dot(e3, s1);
+	const IR::F32 rw     = dot(dir, s2);
+	const IR::F32 inv_ry = IR::F32(ir.Emit(IR::ValueOpcode::FPRecip32, {ry}));
+	const IR::F32 t      = fmul(rx, inv_ry);
+	const IR::F32 u      = fmul(rz, inv_ry);
+	const IR::F32 v      = fmul(rw, inv_ry);
+	IR::U1        missed = ir.LogicalOr(flt(u, F32C(0.0f)), fgt(u, F32C(1.0f)));
+	missed               = ir.LogicalOr(missed, flt(v, F32C(0.0f)));
+	missed               = ir.LogicalOr(missed, fgt(fadd(u, v), F32C(1.0f)));
+	missed               = ir.LogicalOr(missed, flt(t, F32C(0.0f)));
+	const IR::F32 tri_x  = fsel(missed, F32C(Infinity), rx);
+	const IR::F32 tri_y  = fsel(missed, F32C(1.0f), ry);
+
+	const IR::U32 triangle_id = d[15];
+	const IR::U32 id_shift    = ir.ShiftLeftLogical(node_type, U32C(3u));
+	const IR::F32 bary0       = fsub(fsub(tri_y, rz), rw);
+	const auto    pick_bary   = [&](uint32_t extra_shift) {
+		const IR::U32 index = ir.BitwiseAnd(
+		    ir.ShiftRightLogical(triangle_id, ir.IAdd(id_shift, U32C(extra_shift))), U32C(3u));
+		return fsel(ir.IEqual(index, U32C(0u)), bary0,
+		            fsel(ir.IEqual(index, U32C(1u)), rz,
+		                 fsel(ir.IEqual(index, U32C(2u)), rw, F32C(0.0f))));
+	};
+	const std::array<IR::U32, 4> tri_result {ir.BitCastU32(tri_x), ir.BitCastU32(tri_y),
+	                                         ir.BitCastU32(pick_bary(0u)),
+	                                         ir.BitCastU32(pick_bary(2u))};
+
+	// --- Select by node type and write the 4 result dwords.
+	std::array<IR::U32, 4> result {};
+	for (uint32_t index = 0; index < 4u; index++) {
+		result[index] =
+		    ir.Select(is_box32, box32_result[index],
+		              ir.Select(is_box16, box16_result[index],
+		                        ir.Select(is_tri, tri_result[index], U32C(InvalidNode))));
+	}
+	WriteImageComponents(inst.dst,
+	                     ir.Emit(IR::ValueOpcode::CompositeConstructU32x4,
+	                             {result[0], result[1], result[2], result[3]}),
+	                     memory, 4u);
+	return true;
+}
+
 IR::Value Translator::LoadSharedU32(uint32_t width, IR::U32 address, const IR::MemoryInfo& memory,
                                     uint32_t pc) {
 	IR::ValueOpcode opcode;
@@ -1046,6 +1385,8 @@ bool Translator::EmitMemory(const Decoder::Instruction& inst) {
 		case Decoder::Opcode::IMAGE_GATHER4_C_O:
 		case Decoder::Opcode::IMAGE_GATHER4_C_LZ_O:
 		case Decoder::Opcode::IMAGE_GATHER4H: return IMAGE_GATHER(inst);
+		case Decoder::Opcode::IMAGE_BVH_INTERSECT_RAY: return IMAGE_BVH_INTERSECT_RAY(inst, false);
+		case Decoder::Opcode::IMAGE_BVH64_INTERSECT_RAY: return IMAGE_BVH_INTERSECT_RAY(inst, true);
 
 		case Decoder::Opcode::DS_MIN_F32:
 			return DS_MINMAX_F32(inst, IR::ValueOpcode::SharedAtomicFMin32);

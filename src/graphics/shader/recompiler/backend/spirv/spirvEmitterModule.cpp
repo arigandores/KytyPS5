@@ -498,6 +498,7 @@ uint32_t BuiltInForInput(IR::StageInputKind kind) {
 		case IR::StageInputKind::InstanceIndex: return BuiltInInstanceIndex;
 		case IR::StageInputKind::FragCoord: return BuiltInFragCoord;
 		case IR::StageInputKind::FrontFacing: return BuiltInFrontFacing;
+		case IR::StageInputKind::HelperInvocation: return BuiltInHelperInvocation;
 		case IR::StageInputKind::BaryCoordSmooth: return BuiltInBaryCoordKHR;
 		case IR::StageInputKind::BaryCoordNoPerspective: return BuiltInBaryCoordNoPerspKHR;
 		case IR::StageInputKind::WorkgroupId: return BuiltInWorkgroupId;
@@ -778,6 +779,7 @@ void DefineModule(EmitterState& state) {
 				ptr_type = TypePointer(state, StorageClassInput, TypeF32Vector(state, 3));
 				break;
 			case IR::StageInputKind::FrontFacing:
+			case IR::StageInputKind::HelperInvocation:
 				ptr_type = TypePointer(state, StorageClassInput, TypeBool(state));
 				break;
 			case IR::StageInputKind::Parameter:

@@ -117,6 +117,7 @@ void ValidateValueReferences(const Program& program, const ShaderInfoOptions& op
 						case StageInputKind::VertexIndex:
 						case StageInputKind::InstanceIndex:
 						case StageInputKind::FrontFacing:
+						case StageInputKind::HelperInvocation:
 						case StageInputKind::LocalInvocationIndex:
 							if (component != 0u) {
 								return Fail("typed scalar builtin component is out of range");
@@ -249,6 +250,9 @@ void CollectBuiltinInputs(const Program& program, ShaderInfo& info) {
 				case StageInputKind::FragCoord: AddInput(info, kind, 0, 4, "gl_FragCoord"); break;
 				case StageInputKind::FrontFacing:
 					AddInput(info, kind, 0, 1, "gl_FrontFacing");
+					break;
+				case StageInputKind::HelperInvocation:
+					AddInput(info, kind, 0, 1, "gl_HelperInvocation");
 					break;
 				case StageInputKind::BaryCoordSmooth:
 					AddInput(info, kind, 0, 3, "gl_BaryCoordKHR");

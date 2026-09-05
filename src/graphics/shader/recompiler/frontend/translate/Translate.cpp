@@ -1061,6 +1061,19 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 		entry_ir.SetExec(IR::U1(IR::Value(true)));
 		entry_ir.SetExecLo(IR::U32(IR::Value(1u)));
 		entry_ir.SetExecHi(IR::U32(IR::Value(0u)));
+		if (options.stage == ShaderType::Pixel) {
+			// A pixel wave starts in exact mode: EXEC holds the rasterized pixels only, and helper
+			// pixels are added explicitly with S_WQM when derivatives are needed. Vulkan helper
+			// invocations must therefore start inactive: their stores and atomics are discarded by
+			// the host, yet they take part in subgroup ballots, so an active helper lane would
+			// corrupt DS_APPEND / MBCNT based allocation (a helper as the first lane loses the
+			// atomic and every lane of the wave gets a garbage base index).
+			const auto helper = builtin(IR::StageInputKind::HelperInvocation);
+			const auto live   = entry_ir.IEqual(helper, IR::U32(IR::Value(0u)));
+			entry_ir.SetExec(live);
+			entry_ir.SetExecLo(entry_ir.Select(live, IR::U32(IR::Value(1u)), IR::U32(IR::Value(0u))));
+			entry_ir.SetExecHi(IR::U32(IR::Value(0u)));
+		}
 		if (options.stage == ShaderType::Compute) {
 			const auto* cs = options.compute;
 			const auto  thread_ids =

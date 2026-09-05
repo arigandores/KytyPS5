@@ -92,6 +92,7 @@ enum : uint32_t {
 	BuiltInFragCoord                 = 15,
 	BuiltInFrontFacing               = 17,
 	BuiltInSampleMask                = 20,
+	BuiltInHelperInvocation          = 23,
 	BuiltInFragDepth                 = 22,
 	BuiltInWorkgroupId               = 26,
 	BuiltInLocalInvocationId         = 27,

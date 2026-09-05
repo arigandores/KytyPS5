@@ -983,8 +983,7 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		for (uint32_t index = 0; index < source->dword_count; index++) {
 			if (!evaluator.Evaluate(source->dwords[index], value.dwords[index])) {
 				std::fprintf(stderr,
-				             "shader resource evaluation failed: hash=0x%016llx source=%u dword=%u: %s
-",
+				             "shader resource evaluation failed: hash=0x%016llx source=%u dword=%u: %s\n",
 				             static_cast<unsigned long long>(program.shader_hash), source_index,
 				             index, evaluator.Failure().c_str());
 				return false;
@@ -1002,8 +1001,7 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 			if (read.flat_offset >= flattened.size() ||
 			    !selected.Evaluate(read.value, flattened[read.flat_offset])) {
 				std::fprintf(stderr,
-				             "shader resource evaluation failed: hash=0x%016llx flat slot %u: %s
-",
+				             "shader resource evaluation failed: hash=0x%016llx flat slot %u: %s\n",
 				             static_cast<unsigned long long>(program.shader_hash), read.flat_offset,
 				             selected.Failure().c_str());
 				return false;

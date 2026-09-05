@@ -147,15 +147,27 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_BREV_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::BitReverse32, IR::Type::U32, false, false,
 			                     false);
-		case O::S_BCNT1_I32_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::BitCount32, IR::Type::U32, false, false,
-			                     true);
-		case O::S_BCNT1_I32_B64:
-			return SimpleInteger(inst, IR::ValueOpcode::BitCount64, IR::Type::U64, false, false,
-			                     true);
+		// Popcount / find-first-set of lane masks ("s_bcnt1_i32_b64 sN, exec" counts the active
+		// lanes): the wave-wide bit pattern comes from a ballot, see ReadMaskWord.
+		case O::S_BCNT1_I32_B32: {
+			const auto result = IR::U32(
+			    ir.Emit(IR::ValueOpcode::BitCount32, {ReadMaskWord(inst.src0, 0u)}));
+			WriteOperand(DestinationOperand(inst), result);
+			ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
+			return true;
+		}
+		case O::S_BCNT1_I32_B64: {
+			const auto words  = ReadMaskWords64(inst.src0);
+			const auto result = ir.IAdd(IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {words[0]})),
+			                            IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {words[1]})));
+			WriteOperand(DestinationOperand(inst), result);
+			ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
+			return true;
+		}
 		case O::S_FF1_I32_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::FindILsb32, IR::Type::U32, false, false,
-			                     false);
+			WriteOperand(DestinationOperand(inst),
+			             IR::U32(ir.Emit(IR::ValueOpcode::FindILsb32, {ReadMaskWord(inst.src0, 0u)})));
+			return true;
 		case O::S_LSHL_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::ShiftLeftLogical32, IR::Type::U32, false,
 			                     true, true);

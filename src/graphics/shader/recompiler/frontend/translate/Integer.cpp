@@ -213,7 +213,8 @@ bool Translator::V_XOR3_B32(const Decoder::Instruction& inst) {
 }
 
 bool Translator::S_FF1_I32_B64(const Decoder::Instruction& inst) {
-	const auto source        = ExtractU64(ReadU64(inst.src0));
+	// Typically "s_ff1_i32_b64 sN, exec": the first active lane of a waterfall loop.
+	const auto source        = ReadMaskWords64(inst.src0);
 	const auto low_lsb       = IR::U32(ir.Emit(IR::ValueOpcode::FindILsb32, {source[0]}));
 	const auto high_lsb      = IR::U32(ir.Emit(IR::ValueOpcode::FindILsb32, {source[1]}));
 	const auto high_position = ir.IAdd(high_lsb, IR::U32(IR::Value(32u)));
@@ -238,7 +239,8 @@ bool Translator::V_FFBH_32(const Decoder::Instruction& inst, bool sign) {
 }
 
 bool Translator::S_FLBIT_I32_B64(const Decoder::Instruction& inst) {
-	const auto source   = ReadU64(inst.src0);
+	const auto words    = ReadMaskWords64(inst.src0);
+	const auto source   = ir.ConstructU64(words[0], words[1]);
 	const auto msb      = IR::U32(ir.Emit(IR::ValueOpcode::FindUMsb64, {source}));
 	const auto position = ir.ISub(IR::U32(IR::Value(63u)), msb);
 	const auto nonzero =
@@ -343,8 +345,20 @@ bool Translator::V_MBCNT_U32_B32(const Decoder::Instruction& inst, bool low) {
 	    IR::U1(ir.Emit(IR::ValueOpcode::UGreaterThanEqual32, {lane, IR::Value(32u)}));
 	const auto thread_mask = low ? ir.Select(high_lane, IR::U32(IR::Value(0xffffffffu)), below)
 	                             : ir.Select(high_lane, below, IR::U32(IR::Value(0u)));
-	const auto active      = ir.BitwiseAnd(ReadU32(inst.src0), thread_mask);
-	const auto count       = IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {active}));
+	// Lane masks (EXEC, VCC, SGPR pairs written by compares) are modelled per lane: reading them
+	// as a register yields 1/0 for the current lane, not the wave-wide bit pattern. MBCNT needs
+	// the real pattern (the prefix count of active lanes below this one drives append/compaction
+	// indexing), so rebuild it with a ballot; plain integer SGPRs keep their bits.
+	// EXEC_HI / VCC_HI name the upper half; an SGPR pair is used with its upper half by the HI form.
+	const auto kind = inst.src0.kind;
+	const uint32_t word =
+	    (kind == Decoder::OperandKind::ExecHi || kind == Decoder::OperandKind::VccHi ||
+	     (kind == Decoder::OperandKind::Sgpr && !low))
+	        ? 1u
+	        : 0u;
+	const auto source = ReadMaskWord(inst.src0, word);
+	const auto active = ir.BitwiseAnd(source, thread_mask);
+	const auto count  = IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {active}));
 	WriteOperand(DestinationOperand(inst), ir.IAdd(count, ReadU32(inst.src1)));
 	return true;
 }

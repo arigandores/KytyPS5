@@ -612,6 +612,39 @@ IR::U32 Translator::ConditionBit(const Decoder::Operand& operand) {
 	return ir.Select(ReadMask(operand), IR::U32(IR::Value(1u)), IR::U32(IR::Value(0u)));
 }
 
+// Lane masks (EXEC, VCC, SGPR pairs written by compares) are modelled per lane: read as a plain
+// register they yield 1/0 for the current lane, not the wave-wide bit pattern. Instructions that
+// treat the mask as an integer (MBCNT, BCNT1, FF1, FLBIT) need the real pattern, rebuilt here
+// with a ballot; operands that are not lane masks keep their integer bits.
+IR::U32 Translator::ReadMaskWord(const Decoder::Operand& operand, uint32_t word) {
+	const auto ballot_word = [&](IR::U1 lanes) {
+		return IR::U32(ir.CompositeExtract(ir.Emit(IR::ValueOpcode::Ballot, {lanes}), word));
+	};
+	switch (operand.kind) {
+		case Decoder::OperandKind::ExecLo:
+		case Decoder::OperandKind::ExecHi: return ballot_word(ir.GetExec());
+		case Decoder::OperandKind::VccLo:
+		case Decoder::OperandKind::VccHi: return ballot_word(ir.GetVcc());
+		case Decoder::OperandKind::Sgpr: {
+			const auto reg = static_cast<IR::ScalarReg>(operand.reg);
+			return ir.Select(ir.GetScalarMaskTag(reg), ballot_word(ir.GetThreadBitScalarReg(reg)),
+			                 word == 0u ? ReadU32(operand) : ReadU32Pair(operand)[1]);
+		}
+		default: return word == 0u ? ReadU32(operand) : ReadU32Pair(operand)[1];
+	}
+}
+
+std::array<IR::U32, 2> Translator::ReadMaskWords64(const Decoder::Operand& operand) {
+	switch (operand.kind) {
+		case Decoder::OperandKind::ExecLo:
+		case Decoder::OperandKind::ExecHi:
+		case Decoder::OperandKind::VccLo:
+		case Decoder::OperandKind::VccHi:
+		case Decoder::OperandKind::Sgpr: return {ReadMaskWord(operand, 0u), ReadMaskWord(operand, 1u)};
+		default: return ExtractU64(ReadU64(operand));
+	}
+}
+
 IR::U1 Translator::ReadMask(const Decoder::Operand& operand) {
 	if (operand.kind == Decoder::OperandKind::LiteralConstant ||
 	    operand.kind == Decoder::OperandKind::IntegerInlineConstant ||

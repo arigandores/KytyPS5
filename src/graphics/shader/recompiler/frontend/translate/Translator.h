@@ -53,6 +53,8 @@ private:
 	IR::U32 ConditionBit(const Decoder::Operand& operand);
 	IR::U1  ReadMask(const Decoder::Operand& operand);
 	IR::U1  ReadMaskValid(const Decoder::Operand& operand);
+	IR::U32 ReadMaskWord(const Decoder::Operand& operand, uint32_t word);
+	std::array<IR::U32, 2> ReadMaskWords64(const Decoder::Operand& operand);
 	void    WriteMask(const Decoder::Operand& operand, IR::U1 value);
 	void    WriteMask64(const Decoder::Operand& operand, IR::U1 value);
 	void    WriteCompareResult(const Decoder::Operand& operand, IR::U1 value);

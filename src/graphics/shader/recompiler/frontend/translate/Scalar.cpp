@@ -32,6 +32,22 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_ORN2_SAVEEXEC_B64:
 			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, true);
 			return true;
+		// D = S0 op EXEC (the N2 forms negate EXEC, the N1 forms negate S0), EXEC = D.
+		case O::S_OR_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, false);
+			return true;
+		case O::S_ANDN2_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, false);
+			return true;
+		case O::S_ORN2_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, false);
+			return true;
+		case O::S_OR_SAVEEXEC_B64:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, true);
+			return true;
+		case O::S_ANDN2_SAVEEXEC_B64:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, true);
+			return true;
 		case O::S_ADD_U32: ADD_U32(inst, false, false); return true;
 		case O::S_ADDC_U32: ADD_U32(inst, false, true); return true;
 		case O::S_SUB_U32: SUB_U32(inst, false, false); return true;

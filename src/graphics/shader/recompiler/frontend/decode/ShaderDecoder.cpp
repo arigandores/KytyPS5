@@ -488,8 +488,13 @@ std::string InstructionToString(const Instruction& inst) {
 		case Opcode::S_WQM_B64:
 		case Opcode::S_QUADMASK_B64:
 		case Opcode::S_AND_SAVEEXEC_B32:
+		case Opcode::S_OR_SAVEEXEC_B32:
+		case Opcode::S_ANDN2_SAVEEXEC_B32:
+		case Opcode::S_ORN2_SAVEEXEC_B32:
 		case Opcode::S_ANDN1_SAVEEXEC_B32:
 		case Opcode::S_AND_SAVEEXEC_B64:
+		case Opcode::S_OR_SAVEEXEC_B64:
+		case Opcode::S_ANDN2_SAVEEXEC_B64:
 		case Opcode::S_ORN2_SAVEEXEC_B64:
 		case Opcode::S_ANDN1_SAVEEXEC_B64:
 			return WithUnsupportedReason(inst, fmt::format("0x{:08x}: {} {}, {}", inst.pc,

@@ -493,6 +493,7 @@ private:
 		uint64_t out = 0;
 		if (!EvaluateInst(*inst, out)) {
 			RecordFailure(fmt::format("cannot evaluate {}", ValueOpcodeName(inst->GetOpcode())));
+			m_visiting.pop_back();
 			return false;
 		}
 		m_visiting.pop_back();

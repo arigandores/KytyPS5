@@ -14,6 +14,8 @@
 #include "libs/libs.h"
 #include "libs/network.h"
 
+#include <cstdlib>
+#include <chrono>
 #include <algorithm>
 #include <atomic>
 #include <climits>
@@ -592,6 +594,12 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
 	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
+	// The invalidation above only announces the write. A large read takes milliseconds, and the
+	// GPU thread may synchronize an overlapping buffer meanwhile: it uploads the half-written
+	// pages and clears their CPU-dirty state, so the finished data would never reach the GPU
+	// (ASTRO BOT's texture streamer then rejects the upload and reloads the file forever).
+	// Mark the region dirty again now that the data is complete.
+	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
 
 	file->mutex.Unlock();
 
@@ -719,6 +727,8 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 	file->f.Seek(offset);
 	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
 	file->f.Seek(pos);
+	// See KernelRead: re-mark the region CPU-dirty once the data is complete.
+	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
 
 	file->mutex.Unlock();
 

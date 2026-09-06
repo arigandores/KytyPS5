@@ -683,9 +683,26 @@ static void ShaderGetStaticInputInfoPS(
 	ps_info.input_num            = sh.ps_in_control & 0x3fu;
 	EXIT_NOT_IMPLEMENTED(ps_info.input_num > std::size(ps_info.interpolator_settings));
 	ps_info.ps_system_input_base = ShaderCalcPsSystemInputBase(sh);
+	ps_info.vs_export_count      = sh.GetExportCount();
 	const uint32_t active_inputs = sh.ps_input_ena & sh.ps_input_addr;
 	if ((active_inputs & 0x00000002u) != 0) {
 		ps_info.ps_perspective_center_vgpr = (active_inputs & 0x00000001u) != 0 ? 2u : 0u;
+	}
+	{
+		// VGPR layout of SPI_PS_INPUT_ADDR: persp sample (2), persp center (2), persp centroid
+		// (2), persp pull model (3), linear sample (2), linear center (2), linear centroid (2).
+		constexpr uint32_t mode_bits[ShaderPixelInputInfo::PS_BARYCENTRIC_MODES] = {
+		    0x00000001u, 0x00000002u, 0x00000004u, 0x00000010u, 0x00000020u, 0x00000040u};
+		uint32_t reg = 0;
+		for (uint32_t mode = 0; mode < ShaderPixelInputInfo::PS_BARYCENTRIC_MODES; mode++) {
+			if (mode == 3 && (active_inputs & 0x00000008u) != 0) {
+				reg += 3; // persp pull model: 1/W, I/W, J/W
+			}
+			if ((active_inputs & mode_bits[mode]) != 0) {
+				ps_info.ps_barycentric_vgpr[mode] = reg;
+				reg += 2;
+			}
+		}
 	}
 	for (uint32_t i = 0; i < data.num_input_semantics && i < ps_info.input_num && i < 32u; i++) {
 		const auto& semantic = data.input_semantics[i];
@@ -793,8 +810,10 @@ void BuildStageStaticKey(const ShaderPixelInputInfo& info, std::vector<uint32_t>
 	key.push_back(info.scratch_size_dwords);
 	key.push_back(info.input_num);
 	key.push_back(info.ps_system_input_base);
+	key.push_back(info.vs_export_count);
 	key.push_back(info.custom_interpolation_mask);
 	key.push_back(info.ps_perspective_center_vgpr);
+	key.insert(key.end(), std::begin(info.ps_barycentric_vgpr), std::end(info.ps_barycentric_vgpr));
 	key.push_back(static_cast<uint32_t>(info.ps_pos_x));
 	key.push_back(static_cast<uint32_t>(info.ps_pos_y));
 	key.push_back(static_cast<uint32_t>(info.ps_pos_z));

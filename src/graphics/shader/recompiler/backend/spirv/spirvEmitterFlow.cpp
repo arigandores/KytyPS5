@@ -188,9 +188,36 @@ uint32_t EmitDppWriteCondition(ValueEmitContext& ctx, const IR::DppMoveFlags& fl
 	return result;
 }
 
+// SPI_PS_INPUT_CNTL_n: a parameter whose OFFSET is not exported by the vertex shader (offset
+// >= SPI_VS_OUT_CONFIG export count, or the explicit "use default" offset 0x20) reads DEFAULT_VAL:
+// 0 = (0,0,0,0), 1 = (0,0,0,1), 2 = (1,1,1,0), 3 = (1,1,1,1). Vulkan leaves such inputs undefined.
+static bool PixelParameterDefault(const EmitterState& state, uint32_t attr, uint32_t chan,
+                                  uint32_t& value) {
+	if (state.stage != ShaderType::Pixel || state.input_info.pixel == nullptr) {
+		return false;
+	}
+	const auto& ps = *state.input_info.pixel;
+	if (attr >= ps.input_num || ps.vs_export_count == 0) {
+		return false;
+	}
+	const auto settings = ps.interpolator_settings[attr];
+	const auto offset   = settings & 0x1fu;
+	if (offset < ps.vs_export_count) {
+		return false;
+	}
+	const auto default_value = (settings >> 8u) & 3u;
+	const bool one           = (default_value == 1u && (chan & 3u) == 3u) ||
+	                 (default_value == 2u && (chan & 3u) != 3u) || default_value == 3u;
+	value = one ? 0x3f800000u : 0u;
+	return true;
+}
+
 uint32_t EmitAttribute(ValueEmitContext& ctx, uint32_t attr, uint32_t chan) {
 	auto&       state = ctx.state;
 	const auto* input = InputBindingForParameter(state, attr);
+	if (uint32_t default_value = 0; PixelParameterDefault(state, attr, chan, default_value)) {
+		return ConstantU32(state, default_value);
+	}
 	if (input == nullptr || input->variable_id == 0) {
 		return ConstantU32(state, 0);
 	}
@@ -206,6 +233,12 @@ uint32_t EmitAttribute(ValueEmitContext& ctx, uint32_t attr, uint32_t chan) {
 		state.builder.AddFunction({OpLoad, TypeF32(state), value, pointer});
 		return value;
 	};
+	if (input->per_vertex && PixelParameterIsFlat(state, attr)) {
+		// Flat parameter served by a shared per-vertex variable: the provoking vertex.
+		const auto bits = state.builder.AllocateId();
+		state.builder.AddFunction({OpBitcast, TypeU32(state), bits, load_per_vertex(0)});
+		return bits;
+	}
 	if (input->per_vertex) {
 		const auto barycentric_kind = state.input_info.pixel->ps_no_perspective
 		                                  ? IR::StageInputKind::BaryCoordNoPerspective
@@ -260,6 +293,11 @@ uint32_t EmitInterpolationParameter(ValueEmitContext& ctx, uint32_t attr, uint32
 		return value;
 	};
 
+	if (uint32_t default_value = 0; PixelParameterDefault(state, attr, chan, default_value)) {
+		// Every vertex carries the same default: P0 is the value, P10/P20 deltas are zero.
+		const bool delta = !PixelParameterIsCustom(state, attr) && mode < 2u;
+		return ConstantU32(state, delta ? 0u : default_value);
+	}
 	const auto selected_vertex = (mode + 1u) % 3u;
 	uint32_t   value           = load_vertex(selected_vertex);
 	if (!PixelParameterIsCustom(state, attr) && mode < 2u) {

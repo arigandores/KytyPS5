@@ -101,8 +101,19 @@ struct ShaderPixelInputInfo {
 	uint32_t                                       interpolator_settings[32]    = {0};
 	uint32_t                                       input_num                    = 0;
 	uint32_t                                       ps_system_input_base         = 0;
+	// SPI_VS_OUT_CONFIG export count of the paired vertex shader: PS inputs whose
+	// SPI_PS_INPUT_CNTL offset is not exported read the DEFAULT_VAL constant instead.
+	uint32_t                                       vs_export_count              = 0;
 	uint32_t                                       custom_interpolation_mask    = 0;
 	uint32_t                                       ps_perspective_center_vgpr   = UINT32_MAX;
+	// First VGPR of the I/J pair of every SPI_PS_INPUT_ADDR interpolation mode, in register
+	// order: persp sample, persp center, persp centroid, linear sample, linear center, linear
+	// centroid. UINT32_MAX when the mode is disabled. Without MSAA the sample and centroid
+	// barycentrics equal the center ones, so all persp modes share gl_BaryCoordKHR and all
+	// linear modes share gl_BaryCoordNoPerspKHR.
+	static constexpr uint32_t                      PS_BARYCENTRIC_MODES         = 6;
+	std::array<uint32_t, 6>                        ps_barycentric_vgpr          = {
+        UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX, UINT32_MAX};
 	uint8_t                                        target_output_mode[8]        = {};
 	std::array<Prospero::ColorComponentMapping, 8> target_export_mapping        = {};
 	uint32_t                                       scratch_size_dwords          = 0;

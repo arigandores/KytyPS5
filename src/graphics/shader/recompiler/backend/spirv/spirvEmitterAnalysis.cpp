@@ -17,7 +17,7 @@ uint32_t PixelParameterLocation(const EmitterState& state, uint32_t attr) {
 	std::array<uint32_t, 32> active_inputs {};
 	uint32_t                 active_count = 0;
 	for (const auto& input: state.inputs) {
-		if (input.kind == IR::StageInputKind::Parameter) {
+		if (input.kind == IR::StageInputKind::Parameter && !input.alias) {
 			active_inputs[active_count++] = input.location;
 		}
 	}

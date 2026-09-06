@@ -430,9 +430,42 @@ static bool MrtUsesUintOutput(const EmitterState& state, uint32_t index) {
 }
 
 void AllocateInputVariables(EmitterState& state) {
-	for (auto& binding: state.inputs) {
+	for (size_t index = 0; index < state.inputs.size(); index++) {
+		auto& binding = state.inputs[index];
+		if (state.stage == ShaderType::Pixel && binding.kind == IR::StageInputKind::Parameter) {
+			// Inputs that address the same vertex parameter share one variable: the vertex
+			// shader exports each parameter to a single location.
+			const auto location = PixelParameterMappedLocation(state, binding.location);
+			InputBinding* owner = nullptr;
+			for (size_t prior = 0; prior < index; prior++) {
+				auto& candidate = state.inputs[prior];
+				if (candidate.kind == IR::StageInputKind::Parameter && !candidate.alias &&
+				    PixelParameterMappedLocation(state, candidate.location) == location) {
+					owner = &candidate;
+					break;
+				}
+			}
+			if (owner != nullptr) {
+				owner->per_vertex |= binding.per_vertex;
+				binding.alias       = true;
+				binding.variable_id = owner->variable_id;
+				continue;
+			}
+		}
 		binding.variable_id = state.builder.AllocateId();
 		state.interface_variables.push_back(binding.variable_id);
+	}
+	// Aliases follow the owner's per-vertex layout (the owner may have been upgraded).
+	for (auto& binding: state.inputs) {
+		if (!binding.alias) {
+			continue;
+		}
+		for (const auto& owner: state.inputs) {
+			if (!owner.alias && owner.variable_id == binding.variable_id) {
+				binding.per_vertex = owner.per_vertex;
+				break;
+			}
+		}
 	}
 	if (state.requirements.subgroup_local_invocation_id) {
 		state.subgroup_local_invocation_id_variable = state.builder.AllocateId();
@@ -521,6 +554,9 @@ void AddInputAnnotationsAndNames(EmitterState& state) {
 		}
 	}
 	for (const auto& input: state.inputs) {
+		if (input.alias) {
+			continue;
+		}
 		state.builder.AddName(input.variable_id, input.debug_name.c_str());
 		if (input.kind == IR::StageInputKind::Parameter) {
 			const auto flat = PixelParameterIsFlat(state, input.location);
@@ -760,6 +796,9 @@ void DefineModule(EmitterState& state) {
 		                                   StorageClassInput);
 	}
 	for (const auto& input: state.inputs) {
+		if (input.alias) {
+			continue;
+		}
 		uint32_t ptr_type = TypePointer(state, StorageClassInput, TypeU32(state));
 		switch (input.kind) {
 			case IR::StageInputKind::VertexIndex:

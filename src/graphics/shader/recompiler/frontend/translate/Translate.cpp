@@ -1125,12 +1125,24 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 			}
 		} else if (options.stage == ShaderType::Pixel) {
 			const auto* ps = options.pixel;
-			if (ps->ps_perspective_center_vgpr != UINT32_MAX) {
-				entry_ir.SetVectorReg(static_cast<IR::VectorReg>(ps->ps_perspective_center_vgpr),
-				                      builtin(IR::StageInputKind::BaryCoordSmooth, 0));
-				entry_ir.SetVectorReg(
-				    static_cast<IR::VectorReg>(ps->ps_perspective_center_vgpr + 1u),
-				    builtin(IR::StageInputKind::BaryCoordSmooth, 1));
+			// Every enabled interpolation mode gets its I/J pair: persp modes read the
+			// perspective barycentrics, linear modes the non-perspective ones. ASTRO BOT
+			// interpolates packed per-vertex normals manually with the PERSP_CENTROID pair;
+			// leaving it at zero collapsed the normals to vertex 0 and produced NaN.
+			auto barycentric_vgpr = ps->ps_barycentric_vgpr;
+			if (std::ranges::all_of(barycentric_vgpr, [](uint32_t r) { return r == UINT32_MAX; })) {
+				// Callers that only fill the legacy perspective-center field (tests).
+				barycentric_vgpr[1] = ps->ps_perspective_center_vgpr;
+			}
+			for (uint32_t mode = 0; mode < ShaderPixelInputInfo::PS_BARYCENTRIC_MODES; mode++) {
+				const auto reg = barycentric_vgpr[mode];
+				if (reg == UINT32_MAX) {
+					continue;
+				}
+				const auto kind = mode < 3 ? IR::StageInputKind::BaryCoordSmooth
+				                           : IR::StageInputKind::BaryCoordNoPerspective;
+				entry_ir.SetVectorReg(static_cast<IR::VectorReg>(reg), builtin(kind, 0));
+				entry_ir.SetVectorReg(static_cast<IR::VectorReg>(reg + 1u), builtin(kind, 1));
 			}
 			uint32_t reg = ps->ps_system_input_base;
 			if (ps->ps_pos_x) {

@@ -315,6 +315,9 @@ struct InputBinding {
 	uint32_t           variable_id     = 0;
 	std::string        debug_name;
 	bool               per_vertex = false;
+	// Pixel parameter that shares the variable of an earlier input with the same
+	// SPI_PS_INPUT_CNTL offset (no own variable, annotations or interface entry).
+	bool               alias = false;
 };
 
 struct OutputBinding {

@@ -1,5 +1,7 @@
 #include "graphics/shader/recompiler/ir/passes/ConstantPropagation.h"
 
+#include "graphics/shader/recompiler/ir/ShaderIR.h"
+
 #include <algorithm>
 #include <bit>
 #include <cstdint>
@@ -341,6 +343,38 @@ void FoldInstruction(Inst& inst) {
 				ReplaceBinaryIdentity(inst, Type::U64, 1u);
 			}
 			return;
+		case ValueOpcode::WqmMask: {
+			// S_WQM of a pixel wave's initial EXEC (the non-helper lanes) is true for every
+			// existing invocation: Vulkan creates helper invocations only inside quads that
+			// contain a covered pixel, so the whole-quad expansion of "not helper" never leaves
+			// a lane out. Folding it lets every top-level "exec ? new : old" VGPR write select
+			// disappear. Besides being dead weight, those selects miscompile on NVIDIA when the
+			// "old" value is a live coordinate of an earlier image sample and the new value is a
+			// later sample's result (ASTRO BOT video PS 0xe197e307a5f2cb39: the luma sample read
+			// its y coordinate from the register the U sample was still writing).
+			const auto value = Arg(inst, 0);
+			if (IsImmediate(value, Type::U1)) {
+				Replace(inst, Value(value.U1()));
+				return;
+			}
+			auto* compare = value.TryInstruction();
+			if (compare == nullptr || compare->GetOpcode() != ValueOpcode::IEqual32) {
+				return;
+			}
+			const auto lhs     = compare->Arg(0).Resolve();
+			const auto rhs     = compare->Arg(1).Resolve();
+			auto*      builtin = lhs.TryInstruction();
+			if (builtin == nullptr || builtin->GetOpcode() != ValueOpcode::GetBuiltin ||
+			    !IsImmediate(rhs, Type::U32) || rhs.U32() != 0u) {
+				return;
+			}
+			const auto kind = builtin->Arg(0).Resolve();
+			if (IsImmediate(kind, Type::U32) &&
+			    kind.U32() == static_cast<uint32_t>(StageInputKind::HelperInvocation)) {
+				Replace(inst, Value(true));
+			}
+			return;
+		}
 		case ValueOpcode::WqmU64: {
 			const auto value = Arg(inst, 0);
 			if (IsImmediate(value, Type::U64)) {

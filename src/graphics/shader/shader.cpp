@@ -106,6 +106,33 @@ uint64_t ShaderComputeHash(const void* code, uint32_t size_bytes) {
 	return XXH3_64bits(code, size_bytes & ~3u);
 }
 
+void ShaderMakeHostCopy(ShaderMappedData& data) {
+	auto copy = std::make_shared<ShaderHeaderCopy>();
+	if (data.user_data != nullptr) {
+		std::memcpy(&copy->user_data, data.user_data, sizeof(copy->user_data));
+		auto& ud = copy->user_data;
+		if (ud.direct_resource_offset != nullptr && ud.direct_resource_count != 0) {
+			copy->direct_offsets.assign(ud.direct_resource_offset,
+			                            ud.direct_resource_offset + ud.direct_resource_count);
+			ud.direct_resource_offset = copy->direct_offsets.data();
+		}
+		for (int i = 0; i < 4; i++) {
+			if (ud.sharp_resource_offset[i] != nullptr && ud.sharp_resource_count[i] != 0) {
+				copy->sharps[i].assign(ud.sharp_resource_offset[i],
+				                       ud.sharp_resource_offset[i] + ud.sharp_resource_count[i]);
+				ud.sharp_resource_offset[i] = copy->sharps[i].data();
+			}
+		}
+		data.user_data = &copy->user_data;
+	}
+	if (data.input_semantics != nullptr && data.num_input_semantics != 0) {
+		copy->input_semantics.assign(data.input_semantics,
+		                             data.input_semantics + data.num_input_semantics);
+		data.input_semantics = copy->input_semantics.data();
+	}
+	data.owner = std::move(copy);
+}
+
 static ShaderMappedData ShaderGetMappedData(uint64_t addr, const char* label) {
 	EXIT_IF(g_shader_map == nullptr);
 

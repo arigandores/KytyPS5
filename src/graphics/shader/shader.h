@@ -7,6 +7,7 @@
 #include "graphics/shader/recompiler/ir/ResourceSnapshot.h"
 #include "graphics/shader/shaderBindings.h"
 
+#include <memory>
 #include <array>
 #include <span>
 #include <string>
@@ -232,6 +233,14 @@ struct Shader {
 	uint8_t              num_sh_registers;
 };
 
+// Host copies of the AGC header parts the draw path reads (ShaderMakeHostCopy).
+struct ShaderHeaderCopy {
+	ShaderUserData              user_data {};
+	std::vector<uint16_t>       direct_offsets;
+	std::vector<ShaderSharp>    sharps[4];
+	std::vector<ShaderSemantic> input_semantics;
+};
+
 struct ShaderMappedData {
 	// Declared AGC hash (or XXH3 of the code), computed when the shader is registered so that
 	// draws never read the code pages (they may share a page with GPU-written data).
@@ -241,11 +250,16 @@ struct ShaderMappedData {
 	uint32_t        num_input_semantics = 0;
 	uint32_t        code_size_bytes     = 0;
 	uint32_t        scratch_size_dwords = 0;
+	std::shared_ptr<ShaderHeaderCopy> owner; // keeps user_data / input_semantics alive
 };
 
 void ShaderInit();
 void ShaderMapUserData(uint64_t addr, const ShaderMappedData& data);
 uint64_t ShaderComputeHash(const void* code, uint32_t size_bytes);
+// Copies the AGC user-data header, its offset tables and the input semantics into host memory
+// and repoints the mapped data at the copies, so the per-draw readers never touch the guest
+// header pages (which may share a page with GPU-written data and page-fault into a drain).
+void ShaderMakeHostCopy(ShaderMappedData& data);
 
 void     ShaderDbgDumpInputInfo(const ShaderVertexInputInfo& info);
 void     ShaderDbgDumpInputInfo(const ShaderPixelInputInfo& info);

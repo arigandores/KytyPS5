@@ -6,11 +6,14 @@
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
 #include <algorithm>
+#include <atomic>
 #include <bit>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fmt/format.h>
+#include <memory>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -1162,6 +1165,758 @@ std::string DescribeSourceOwner(const ResourcePlan& program, uint32_t source_ind
 	return owner.empty() ? std::string(" <unowned>") : owner;
 }
 
+
+// ---- Compiled snapshot evaluation ----------------------------------------------------------
+//
+// MaterializeResources runs once per draw and dispatch. The recursive Evaluator above walks the
+// IR value graph with a memo table each time (~10 us for ~120 values); the same graph, once
+// linearized into a node array in dependency order, evaluates in ~1 us. The compiled form keeps
+// the interpreter's semantics: a node fails "hard" (the interpreter returned false) or "soft" (a
+// guest memory read failed, the dword becomes 0); on any hard failure the caller falls back to
+// the interpreter so diagnostics and edge cases stay identical. KYTY_SRT_VERIFY=1 evaluates both
+// and logs mismatches.
+
+} // namespace
+
+struct CompiledSrt {
+	enum class Op : uint8_t {
+		Const,
+		UserData,
+		ShaderBase,
+		Fail,
+		MemRead,
+		Add32,
+		Add64,
+		Sub32,
+		Sub64,
+		Mul32,
+		Mul64,
+		UMin32,
+		CvtF32U32,
+		CvtU32F32,
+		FMul32,
+		FTrunc32,
+		FIsNan32,
+		FLe32,
+		FGe32,
+		And32,
+		And64,
+		Or32,
+		Xor32,
+		Not32,
+		Shl32,
+		Shl64,
+		Shr32,
+		Shr64,
+		Sar32,
+		Sar64,
+		BfUExt,
+		BfSExt,
+		BfIns,
+		Select,
+		IEq32,
+		INe32,
+		ULt32,
+		UGt32,
+		LAnd,
+		LOr,
+		LXor,
+		LNot,
+		Construct64,
+		ExtractCarry,
+		Extract64,
+		PhiAgree,
+	};
+	static constexpr uint32_t None = UINT32_MAX;
+	// Node status after evaluation.
+	static constexpr uint8_t StOk       = 0;
+	static constexpr uint8_t StMemFail  = 1; // live guest read failed -> dword 0
+	static constexpr uint8_t StHardFail = 2; // interpreter would have failed the dword
+	static constexpr uint8_t StCleanMemFail = 3; // read through the clean reader failed
+
+	struct Node {
+		Op       op         = Op::Fail;
+		uint8_t  comp       = 0; // Extract*: component; MemRead: bit0 = const buffer, bit1 = clean
+		uint32_t a          = None;
+		uint32_t b          = None;
+		uint32_t c          = None;
+		uint32_t d          = None;
+		uint32_t e          = None;
+		uint64_t imm        = 0; // Const value, UserData register, MemRead memory_info index
+		uint32_t list_start = 0; // PhiAgree operands in `lists`
+		uint32_t list_count = 0;
+	};
+
+	std::vector<Node>     nodes;
+	std::vector<uint32_t> lists;
+	std::vector<uint32_t> source_root_start; // per descriptor source -> index into source_roots
+	std::vector<uint32_t> source_roots;
+	std::vector<uint32_t> flat_roots; // per srt_reads slot (None for variant reads)
+	bool                  valid = false;
+};
+
+namespace {
+
+class SrtCompiler {
+public:
+	SrtCompiler(const ResourcePlan& plan, CompiledSrt& out): m_plan(plan), m_out(out) {}
+
+	bool Run() {
+		m_out.source_root_start.resize(m_plan.descriptor_sources.size());
+		for (uint32_t index = 0; index < m_plan.descriptor_sources.size(); index++) {
+			const auto& source            = m_plan.descriptor_sources[index];
+			m_out.source_root_start[index] = static_cast<uint32_t>(m_out.source_roots.size());
+			for (uint32_t dword = 0; dword < source.dword_count && dword < source.dwords.size();
+			     dword++) {
+				m_out.source_roots.push_back(Compile(source.dwords[dword], Ctx {}));
+				if (m_failed) {
+					return false;
+				}
+			}
+		}
+		m_out.flat_roots.assign(m_plan.srt_reads.size(), CompiledSrt::None);
+		for (uint32_t slot = 0; slot < m_plan.srt_reads.size(); slot++) {
+			const auto& read = m_plan.srt_reads[slot];
+			if (read.variant) {
+				continue;
+			}
+			const bool clean =
+			    slot < m_plan.clean_flat_slots.size() && m_plan.clean_flat_slots[slot] != 0u;
+			m_out.flat_roots[slot] = Compile(read.value, Ctx {nullptr, clean});
+			if (m_failed) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+private:
+	struct Ctx {
+		const Inst* mask  = nullptr; // ReadFirstLane active mask (runtime selects take arg 1)
+		bool        clean = false;   // reads go through the specialization (GPU-clean) reader
+	};
+	struct Key {
+		const Inst* inst;
+		const Inst* mask;
+		bool        clean;
+		bool        operator==(const Key&) const = default;
+	};
+	struct KeyHash {
+		size_t operator()(const Key& key) const {
+			auto x = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(key.inst));
+			x ^= static_cast<uint64_t>(reinterpret_cast<uintptr_t>(key.mask)) * 0x9E3779B97F4A7C15ull;
+			x ^= key.clean ? 0x51ed27f4ull : 0ull;
+			x *= 0xff51afd7ed558ccdull;
+			return static_cast<size_t>(x ^ (x >> 32u));
+		}
+	};
+	static constexpr uint32_t Visiting = UINT32_MAX - 1u;
+
+	uint32_t Emit(CompiledSrt::Node node) {
+		m_out.nodes.push_back(node);
+		return static_cast<uint32_t>(m_out.nodes.size() - 1u);
+	}
+	uint32_t Fail() {
+		if (m_fail_node == CompiledSrt::None) {
+			CompiledSrt::Node node;
+			node.op     = CompiledSrt::Op::Fail;
+			m_fail_node = Emit(node);
+		}
+		return m_fail_node;
+	}
+	uint32_t Const(uint64_t value) {
+		CompiledSrt::Node node;
+		node.op  = CompiledSrt::Op::Const;
+		node.imm = value;
+		return Emit(node);
+	}
+	uint32_t Unary(CompiledSrt::Op op, const Inst& inst, Ctx ctx) {
+		CompiledSrt::Node node;
+		node.op = op;
+		node.a  = Compile(inst.Arg(0), ctx);
+		return Emit(node);
+	}
+	uint32_t Binary(CompiledSrt::Op op, const Inst& inst, Ctx ctx) {
+		CompiledSrt::Node node;
+		node.op = op;
+		node.a  = Compile(inst.Arg(0), ctx);
+		node.b  = Compile(inst.Arg(1), ctx);
+		return Emit(node);
+	}
+	uint32_t Ternary(CompiledSrt::Op op, const Inst& inst, Ctx ctx) {
+		CompiledSrt::Node node;
+		node.op = op;
+		node.a  = Compile(inst.Arg(0), ctx);
+		node.b  = Compile(inst.Arg(1), ctx);
+		node.c  = Compile(inst.Arg(2), ctx);
+		return Emit(node);
+	}
+
+	uint32_t Compile(Value value, Ctx ctx) {
+		if (m_failed) {
+			return CompiledSrt::None;
+		}
+		value = value.Resolve();
+		if (value.IsImmediate()) {
+			switch (value.GetType()) {
+				case Type::U1: return Const(value.U1());
+				case Type::U8: return Const(value.U8());
+				case Type::U16: return Const(value.U16());
+				case Type::U32: return Const(value.U32());
+				case Type::U64: return Const(value.U64());
+				case Type::F32: return Const(std::bit_cast<uint32_t>(value.F32Value()));
+				default: return Fail();
+			}
+		}
+		auto* inst = value.TryInstruction();
+		if (inst == nullptr) {
+			return Fail();
+		}
+		if (ctx.mask != nullptr && IsRuntimeSelect(inst->GetOpcode()) && inst->NumArgs() == 3 &&
+		    inst->Arg(0).Resolve() == Value(const_cast<Inst*>(ctx.mask))) {
+			return Compile(inst->Arg(1), ctx);
+		}
+		const Key key {inst, ctx.mask, ctx.clean};
+		if (const auto found = m_memo.find(key); found != m_memo.end()) {
+			// A cycle: the interpreter reports "cyclic dependency" for this operand.
+			return found->second == Visiting ? Fail() : found->second;
+		}
+		m_memo[key]     = Visiting;
+		const auto node = CompileInst(*inst, ctx);
+		m_memo[key]     = node;
+		return node;
+	}
+
+	uint32_t CompileExtract(const Inst& inst, Ctx ctx) {
+		const auto index = inst.Arg(1).Resolve();
+		if (!index.IsImmediate() || index.GetType() != Type::U32) {
+			return Fail();
+		}
+		const auto component = index.U32();
+		if (component >= 2u) {
+			return Fail();
+		}
+		if (inst.GetOpcode() == ValueOpcode::CompositeExtractU64) {
+			CompiledSrt::Node node;
+			node.op   = CompiledSrt::Op::Extract64;
+			node.comp = static_cast<uint8_t>(component);
+			node.a    = Compile(inst.Arg(0), ctx);
+			return Emit(node);
+		}
+		const auto* source = inst.Arg(0).ResolveInstruction();
+		if (source == nullptr) {
+			return Fail();
+		}
+		if (source->GetOpcode() == ValueOpcode::CompositeConstructU32x2) {
+			return Compile(source->Arg(component), ctx);
+		}
+		if (source->GetOpcode() == ValueOpcode::IAddCarry32) {
+			CompiledSrt::Node node;
+			node.op   = CompiledSrt::Op::ExtractCarry;
+			node.comp = static_cast<uint8_t>(component);
+			node.a    = Compile(source->Arg(0), ctx);
+			node.b    = Compile(source->Arg(1), ctx);
+			return Emit(node);
+		}
+		return Fail();
+	}
+
+	uint32_t CompileRawRead(const Inst& inst, Ctx ctx) {
+		const auto flags = inst.Flags<MemoryFlags>();
+		if (flags.index >= m_plan.memory_info.size()) {
+			return Fail();
+		}
+		const auto* handle = inst.Arg(0).ResolveInstruction();
+		if (handle == nullptr) {
+			return Fail();
+		}
+		const bool        const_buffer = inst.GetOpcode() == ValueOpcode::ReadConstBuffer;
+		CompiledSrt::Node node;
+		node.op   = CompiledSrt::Op::MemRead;
+		node.imm  = flags.index;
+		node.comp = static_cast<uint8_t>((const_buffer ? 1u : 0u) | (ctx.clean ? 2u : 0u));
+		node.a    = Compile(handle->Arg(0), ctx);
+		node.b    = Compile(handle->Arg(1), ctx);
+		node.c    = Compile(inst.Arg(1), ctx);
+		if (const_buffer) {
+			if (handle->NumArgs() != 4u) {
+				return Fail();
+			}
+			node.d = Compile(handle->Arg(2), ctx);
+			node.e = Compile(handle->Arg(3), ctx);
+		}
+		return Emit(node);
+	}
+
+	uint32_t CompileInst(const Inst& inst, Ctx ctx) {
+		using Op = CompiledSrt::Op;
+		switch (inst.GetOpcode()) {
+			case ValueOpcode::GetUserData: {
+				if (inst.NumArgs() < 1 || inst.Arg(0).GetType() != Type::ScalarReg) {
+					return Fail();
+				}
+				CompiledSrt::Node node;
+				node.op  = Op::UserData;
+				node.imm = RegIndex(inst.Arg(0).ScalarRegister());
+				return Emit(node);
+			}
+			case ValueOpcode::GetShaderBase: {
+				CompiledSrt::Node node;
+				node.op = Op::ShaderBase;
+				return Emit(node);
+			}
+			case ValueOpcode::Phi: {
+				const auto invariant =
+				    ResolveInvariantPhi(m_plan, Value(const_cast<Inst*>(&inst)));
+				if (!invariant.IsEmpty()) {
+					return Compile(invariant, ctx);
+				}
+				std::vector<uint32_t> operands;
+				for (size_t index = 0; index < inst.NumArgs(); index++) {
+					const auto arg = inst.Arg(index).Resolve();
+					if (arg.TryInstruction() == &inst) {
+						continue;
+					}
+					operands.push_back(Compile(arg, ctx));
+				}
+				CompiledSrt::Node node;
+				node.op         = Op::PhiAgree;
+				node.list_start = static_cast<uint32_t>(m_out.lists.size());
+				node.list_count = static_cast<uint32_t>(operands.size());
+				m_out.lists.insert(m_out.lists.end(), operands.begin(), operands.end());
+				return Emit(node);
+			}
+			case ValueOpcode::ReadFirstLane: {
+				if (inst.NumArgs() < 2) {
+					return Fail();
+				}
+				const auto  mask      = inst.Arg(1).Resolve();
+				const auto* mask_inst = mask.TryInstruction();
+				if (mask_inst == nullptr) {
+					m_failed = true; // immediate masks: keep the interpreter
+					return CompiledSrt::None;
+				}
+				return Compile(inst.Arg(0), Ctx {mask_inst, ctx.clean});
+			}
+			case ValueOpcode::BitCastU32F32:
+			case ValueOpcode::BitCastF32U32: return Compile(inst.Arg(0), ctx);
+			case ValueOpcode::CompositeExtractU64:
+			case ValueOpcode::CompositeExtractU32x2: return CompileExtract(inst, ctx);
+			case ValueOpcode::CompositeConstructU64: return Binary(Op::Construct64, inst, ctx);
+			case ValueOpcode::ReadConst: {
+				if (inst.NumArgs() < 2) {
+					return Fail();
+				}
+				const auto slot = inst.Arg(1).Resolve();
+				if (!slot.IsImmediate() || slot.GetType() != Type::U32 ||
+				    slot.U32() >= m_plan.srt_reads.size()) {
+					return Fail();
+				}
+				const auto index = slot.U32();
+				if (!ctx.clean && index < m_plan.clean_flat_slots.size() &&
+				    m_plan.clean_flat_slots[index] != 0u) {
+					return Compile(m_plan.srt_reads[index].value, Ctx {nullptr, true});
+				}
+				return Compile(m_plan.srt_reads[index].value, ctx);
+			}
+			case ValueOpcode::LoadAddressU32:
+			case ValueOpcode::ReadConstBuffer:
+				if (IsRawRead(m_plan, inst)) {
+					return CompileRawRead(inst, ctx);
+				}
+				return Fail();
+			case ValueOpcode::IAdd32: return Binary(Op::Add32, inst, ctx);
+			case ValueOpcode::IAdd64: return Binary(Op::Add64, inst, ctx);
+			case ValueOpcode::ISub32: return Binary(Op::Sub32, inst, ctx);
+			case ValueOpcode::ISub64: return Binary(Op::Sub64, inst, ctx);
+			case ValueOpcode::IMul32: return Binary(Op::Mul32, inst, ctx);
+			case ValueOpcode::IMul64: return Binary(Op::Mul64, inst, ctx);
+			case ValueOpcode::UMin32: return Binary(Op::UMin32, inst, ctx);
+			case ValueOpcode::ConvertF32U32: return Unary(Op::CvtF32U32, inst, ctx);
+			case ValueOpcode::ConvertU32F32: return Unary(Op::CvtU32F32, inst, ctx);
+			case ValueOpcode::FPMul32: return Binary(Op::FMul32, inst, ctx);
+			case ValueOpcode::FPTrunc32: return Unary(Op::FTrunc32, inst, ctx);
+			case ValueOpcode::FPIsNan32: return Unary(Op::FIsNan32, inst, ctx);
+			case ValueOpcode::FPOrdLessThanEqual32: return Binary(Op::FLe32, inst, ctx);
+			case ValueOpcode::FPOrdGreaterThanEqual32: return Binary(Op::FGe32, inst, ctx);
+			case ValueOpcode::BitwiseAnd32: return Binary(Op::And32, inst, ctx);
+			case ValueOpcode::BitwiseAnd64: return Binary(Op::And64, inst, ctx);
+			case ValueOpcode::BitwiseOr32: return Binary(Op::Or32, inst, ctx);
+			case ValueOpcode::BitwiseXor32: return Binary(Op::Xor32, inst, ctx);
+			case ValueOpcode::BitwiseNot32: return Unary(Op::Not32, inst, ctx);
+			case ValueOpcode::ShiftLeftLogical32: return Binary(Op::Shl32, inst, ctx);
+			case ValueOpcode::ShiftLeftLogical64: return Binary(Op::Shl64, inst, ctx);
+			case ValueOpcode::ShiftRightLogical32: return Binary(Op::Shr32, inst, ctx);
+			case ValueOpcode::ShiftRightLogical64: return Binary(Op::Shr64, inst, ctx);
+			case ValueOpcode::ShiftRightArithmetic32: return Binary(Op::Sar32, inst, ctx);
+			case ValueOpcode::ShiftRightArithmetic64: return Binary(Op::Sar64, inst, ctx);
+			case ValueOpcode::BitFieldUExtract: return Ternary(Op::BfUExt, inst, ctx);
+			case ValueOpcode::BitFieldSExtract: return Ternary(Op::BfSExt, inst, ctx);
+			case ValueOpcode::BitFieldInsert: {
+				CompiledSrt::Node node;
+				node.op = Op::BfIns;
+				node.a  = Compile(inst.Arg(0), ctx);
+				node.b  = Compile(inst.Arg(1), ctx);
+				node.c  = Compile(inst.Arg(2), ctx);
+				node.d  = Compile(inst.Arg(3), ctx);
+				return Emit(node);
+			}
+			case ValueOpcode::SelectU32:
+			case ValueOpcode::SelectU1:
+			case ValueOpcode::SelectF32: return Ternary(Op::Select, inst, ctx);
+			case ValueOpcode::IEqual32: return Binary(Op::IEq32, inst, ctx);
+			case ValueOpcode::INotEqual32: return Binary(Op::INe32, inst, ctx);
+			case ValueOpcode::ULessThan32: return Binary(Op::ULt32, inst, ctx);
+			case ValueOpcode::UGreaterThan32: return Binary(Op::UGt32, inst, ctx);
+			case ValueOpcode::LogicalAnd: return Binary(Op::LAnd, inst, ctx);
+			case ValueOpcode::LogicalOr: return Binary(Op::LOr, inst, ctx);
+			case ValueOpcode::LogicalXor: return Binary(Op::LXor, inst, ctx);
+			case ValueOpcode::LogicalNot: return Unary(Op::LNot, inst, ctx);
+			default: return Fail();
+		}
+	}
+
+	const ResourcePlan&                         m_plan;
+	CompiledSrt&                                m_out;
+	std::unordered_map<Key, uint32_t, KeyHash>  m_memo;
+	uint32_t                                    m_fail_node = CompiledSrt::None;
+	bool                                        m_failed    = false;
+};
+
+const CompiledSrt& GetCompiledSrt(const ResourcePlan& plan) {
+	if (plan.srt_compiled == nullptr) {
+		auto compiled = std::make_shared<CompiledSrt>();
+		SrtCompiler compiler(plan, *compiled);
+		compiled->valid = compiler.Run();
+		if (!compiled->valid) {
+			compiled->nodes.clear();
+			compiled->lists.clear();
+		}
+		plan.srt_compiled = std::move(compiled);
+	}
+	return *plan.srt_compiled;
+}
+
+// Evaluates every node in order; values/status must hold nodes.size() entries.
+void EvaluateCompiledNodes(const CompiledSrt& compiled, const ResourcePlan& plan,
+                           const SrtRuntime& runtime, uint64_t* values, uint8_t* status) {
+	using Op   = CompiledSrt::Op;
+	const auto float32 = [](uint64_t bits) { return std::bit_cast<float>(static_cast<uint32_t>(bits)); };
+	const auto bits32  = [](float value) { return static_cast<uint64_t>(std::bit_cast<uint32_t>(value)); };
+	for (uint32_t index = 0; index < compiled.nodes.size(); index++) {
+		const auto& node = compiled.nodes[index];
+		uint64_t&   out  = values[index];
+		uint8_t&    st   = status[index];
+		out              = 0;
+		st               = CompiledSrt::StOk;
+		// Operands are consumed in argument order; the first failing one decides the status, as the
+		// interpreter stopped evaluating there.
+		const auto dep = [&](uint32_t operand) noexcept {
+			if (operand == CompiledSrt::None) {
+				return true;
+			}
+			if (status[operand] != CompiledSrt::StOk) {
+				st = status[operand];
+				return false;
+			}
+			return true;
+		};
+		const auto A = [&]() { return values[node.a]; };
+		const auto B = [&]() { return values[node.b]; };
+		const auto C = [&]() { return values[node.c]; };
+		switch (node.op) {
+			case Op::Const: out = node.imm; break;
+			case Op::UserData: {
+				const auto reg = node.imm;
+				if (reg < plan.user_data_base || reg - plan.user_data_base >= runtime.user_data.size()) {
+					st = CompiledSrt::StHardFail;
+					break;
+				}
+				out = runtime.user_data[reg - plan.user_data_base];
+				break;
+			}
+			case Op::ShaderBase: out = runtime.shader_base; break;
+			case Op::Fail: st = CompiledSrt::StHardFail; break;
+			case Op::MemRead: {
+				if (!dep(node.a) || !dep(node.b) || !dep(node.c)) {
+					break;
+				}
+				const auto  low       = A();
+				const auto  high      = B();
+				const auto  offset    = C();
+				const auto& mem       = plan.memory_info[node.imm];
+				const auto  base      = ((high << 32u) | static_cast<uint32_t>(low)) & AddressMask;
+				const auto  immediate = static_cast<int64_t>(static_cast<int32_t>(mem.offset));
+				uint64_t    address   = 0;
+				if ((node.comp & 1u) != 0) {
+					if (!dep(node.d) || !dep(node.e)) {
+						break;
+					}
+					const auto records = values[node.d];
+					if (immediate < 0) {
+						st = CompiledSrt::StHardFail;
+						break;
+					}
+					const auto byte_offset =
+					    static_cast<uint64_t>(immediate) + static_cast<uint32_t>(offset);
+					const auto aligned = byte_offset & ~uint64_t {3};
+					const auto stride  = (static_cast<uint32_t>(high) >> 16u) & 0x3fffu;
+					const auto size    = stride == 0u
+					                      ? static_cast<uint64_t>(static_cast<uint32_t>(records))
+					                      : static_cast<uint64_t>(stride) * static_cast<uint32_t>(records);
+					if (aligned > size || size - aligned < sizeof(uint32_t)) {
+						st = CompiledSrt::StHardFail;
+						break;
+					}
+					address = ((base & ~uint64_t {3}) + byte_offset) & ~uint64_t {3};
+				} else {
+					const auto relative = (immediate & ~int64_t {3}) +
+					                      static_cast<int64_t>(static_cast<uint32_t>(offset) & ~3u);
+					if (!AddSignedAddress(base & ~uint64_t {3}, relative, address)) {
+						st = CompiledSrt::StHardFail;
+						break;
+					}
+				}
+				uint32_t   word   = 0;
+				const bool clean  = (node.comp & 2u) != 0;
+				const auto reader = clean ? runtime.read_specialization_memory : runtime.read_memory;
+				if (reader != nullptr) {
+					if (!reader(runtime.userdata, address, &word)) {
+						st = clean ? CompiledSrt::StCleanMemFail : CompiledSrt::StMemFail;
+						break;
+					}
+				} else {
+					std::memcpy(&word, reinterpret_cast<const void*>(address), sizeof(word));
+				}
+				out = word;
+				break;
+			}
+			case Op::Add32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() + B()); break;
+			case Op::Add64: if (dep(node.a) && dep(node.b)) out = A() + B(); break;
+			case Op::Sub32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() - B()); break;
+			case Op::Sub64: if (dep(node.a) && dep(node.b)) out = A() - B(); break;
+			case Op::Mul32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() * B()); break;
+			case Op::Mul64: if (dep(node.a) && dep(node.b)) out = A() * B(); break;
+			case Op::UMin32:
+				if (dep(node.a) && dep(node.b)) {
+					out = std::min(static_cast<uint32_t>(A()), static_cast<uint32_t>(B()));
+				}
+				break;
+			case Op::CvtF32U32:
+				if (dep(node.a)) {
+					out = bits32(static_cast<float>(static_cast<uint32_t>(A())));
+				}
+				break;
+			case Op::CvtU32F32:
+				if (dep(node.a)) {
+					const auto value = float32(A());
+					if (!std::isfinite(value) || value < 0.0f || static_cast<double>(value) > UINT32_MAX) {
+						st = CompiledSrt::StHardFail;
+						break;
+					}
+					out = static_cast<uint32_t>(value);
+				}
+				break;
+			case Op::FMul32: if (dep(node.a) && dep(node.b)) out = bits32(float32(A()) * float32(B())); break;
+			case Op::FTrunc32: if (dep(node.a)) out = bits32(std::trunc(float32(A()))); break;
+			case Op::FIsNan32: if (dep(node.a)) out = std::isnan(float32(A())) ? 1u : 0u; break;
+			case Op::FLe32: if (dep(node.a) && dep(node.b)) out = float32(A()) <= float32(B()) ? 1u : 0u; break;
+			case Op::FGe32: if (dep(node.a) && dep(node.b)) out = float32(A()) >= float32(B()) ? 1u : 0u; break;
+			case Op::And32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() & B()); break;
+			case Op::And64: if (dep(node.a) && dep(node.b)) out = A() & B(); break;
+			case Op::Or32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() | B()); break;
+			case Op::Xor32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A() ^ B()); break;
+			case Op::Not32: if (dep(node.a)) out = ~static_cast<uint32_t>(A()); break;
+			case Op::Shl32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) << (B() & 31u); break;
+			case Op::Shl64: if (dep(node.a) && dep(node.b)) out = A() << (B() & 63u); break;
+			case Op::Shr32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) >> (B() & 31u); break;
+			case Op::Shr64: if (dep(node.a) && dep(node.b)) out = A() >> (B() & 63u); break;
+			case Op::Sar32:
+				if (dep(node.a) && dep(node.b)) {
+					out = static_cast<uint32_t>(std::bit_cast<int32_t>(static_cast<uint32_t>(A())) >> (B() & 31u));
+				}
+				break;
+			case Op::Sar64:
+				if (dep(node.a) && dep(node.b)) {
+					out = static_cast<uint64_t>(std::bit_cast<int64_t>(A()) >> (B() & 63u));
+				}
+				break;
+			case Op::BfUExt:
+			case Op::BfSExt: {
+				if (!dep(node.a) || !dep(node.b) || !dep(node.c)) {
+					break;
+				}
+				const auto offset = static_cast<uint32_t>(B());
+				const auto width  = static_cast<uint32_t>(C());
+				if (offset > 32u || width > 32u - offset) {
+					st = CompiledSrt::StHardFail;
+					break;
+				}
+				if (width == 0u) {
+					out = 0;
+					break;
+				}
+				const auto mask = width == 32u ? UINT32_MAX : (uint32_t {1} << width) - 1u;
+				auto       bits = (static_cast<uint32_t>(A()) >> offset) & mask;
+				if (node.op == Op::BfSExt && width < 32u && (bits & (uint32_t {1} << (width - 1u))) != 0u) {
+					bits |= ~mask;
+				}
+				out = bits;
+				break;
+			}
+			case Op::BfIns: {
+				if (!dep(node.a) || !dep(node.b) || !dep(node.c) || !dep(node.d)) {
+					break;
+				}
+				const auto offset = static_cast<uint32_t>(C());
+				const auto width  = static_cast<uint32_t>(values[node.d]);
+				if (offset > 32u || width > 32u - offset) {
+					st = CompiledSrt::StHardFail;
+					break;
+				}
+				if (width == 0u) {
+					out = static_cast<uint32_t>(A());
+					break;
+				}
+				const auto mask = width == 32u ? UINT32_MAX : ((uint32_t {1} << width) - 1u) << offset;
+				out = (static_cast<uint32_t>(A()) & ~mask) | ((static_cast<uint32_t>(B()) << offset) & mask);
+				break;
+			}
+			case Op::Select:
+				if (dep(node.a) && dep(node.b) && dep(node.c)) {
+					out = A() != 0u ? B() : C();
+				}
+				break;
+			case Op::IEq32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) == static_cast<uint32_t>(B()) ? 1u : 0u; break;
+			case Op::INe32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) != static_cast<uint32_t>(B()) ? 1u : 0u; break;
+			case Op::ULt32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) < static_cast<uint32_t>(B()) ? 1u : 0u; break;
+			case Op::UGt32: if (dep(node.a) && dep(node.b)) out = static_cast<uint32_t>(A()) > static_cast<uint32_t>(B()) ? 1u : 0u; break;
+			case Op::LAnd: if (dep(node.a) && dep(node.b)) out = (A() != 0u && B() != 0u) ? 1u : 0u; break;
+			case Op::LOr: if (dep(node.a) && dep(node.b)) out = (A() != 0u || B() != 0u) ? 1u : 0u; break;
+			case Op::LXor: if (dep(node.a) && dep(node.b)) out = ((A() != 0u) != (B() != 0u)) ? 1u : 0u; break;
+			case Op::LNot: if (dep(node.a)) out = A() == 0u ? 1u : 0u; break;
+			case Op::Construct64:
+				if (dep(node.a) && dep(node.b)) {
+					out = static_cast<uint32_t>(A()) | (static_cast<uint64_t>(static_cast<uint32_t>(B())) << 32u);
+				}
+				break;
+			case Op::ExtractCarry:
+				if (dep(node.a) && dep(node.b)) {
+					const auto sum = static_cast<uint64_t>(static_cast<uint32_t>(A())) + static_cast<uint32_t>(B());
+					out = node.comp == 0u ? static_cast<uint32_t>(sum) : static_cast<uint32_t>(sum >> 32u);
+				}
+				break;
+			case Op::Extract64:
+				if (dep(node.a)) {
+					out = static_cast<uint32_t>(A() >> (node.comp * 32u));
+				}
+				break;
+			case Op::PhiAgree: {
+				bool     have      = false;
+				bool     any_mem   = false;
+				bool     any_clean = false;
+				uint64_t agreed    = 0;
+				bool     disagree  = false;
+				for (uint32_t i = 0; i < node.list_count; i++) {
+					const auto operand = compiled.lists[node.list_start + i];
+					if (status[operand] != CompiledSrt::StOk) {
+						any_mem |= status[operand] == CompiledSrt::StMemFail;
+						any_clean |= status[operand] == CompiledSrt::StCleanMemFail;
+						continue;
+					}
+					if (have && values[operand] != agreed) {
+						disagree = true;
+						break;
+					}
+					agreed = values[operand];
+					have   = true;
+				}
+				if (disagree || !have) {
+					st = any_mem ? CompiledSrt::StMemFail
+					             : (any_clean ? CompiledSrt::StCleanMemFail : CompiledSrt::StHardFail);
+					break;
+				}
+				out = agreed;
+				break;
+			}
+		}
+	}
+}
+
+enum class CompiledResult { Done, Unsupported, HardFailure };
+
+// Fast path of EvaluateRuntimeSourcesImpl for the materialization call (all flat slots, the
+// plan's own clean-slot table). Returns Unsupported when the plan could not be compiled and
+// HardFailure when the interpreter has to reproduce an evaluation failure.
+CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uint32_t> sources,
+                                const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
+                                std::vector<uint32_t>& flat) {
+	const auto& compiled = GetCompiledSrt(program);
+	if (!compiled.valid) {
+		return CompiledResult::Unsupported;
+	}
+	thread_local std::vector<uint64_t> values;
+	thread_local std::vector<uint8_t>  status;
+	if (values.size() < compiled.nodes.size()) {
+		values.resize(compiled.nodes.size());
+		status.resize(compiled.nodes.size());
+	}
+	EvaluateCompiledNodes(compiled, program, runtime, values.data(), status.data());
+
+	std::vector<DescriptorValue> evaluated;
+	evaluated.reserve(sources.size());
+	for (const auto source_index: sources) {
+		const auto* source = Source(program, source_index);
+		if (source == nullptr || source_index >= compiled.source_root_start.size()) {
+			return CompiledResult::HardFailure;
+		}
+		DescriptorValue value;
+		value.dword_count = source->dword_count;
+		const auto start  = compiled.source_root_start[source_index];
+		for (uint32_t dword = 0; dword < source->dword_count && dword < value.dwords.size(); dword++) {
+			const auto root = compiled.source_roots[start + dword];
+			switch (status[root]) {
+				case CompiledSrt::StOk: value.dwords[dword] = static_cast<uint32_t>(values[root]); break;
+				case CompiledSrt::StMemFail: value.dwords[dword] = 0; break;
+				default: return CompiledResult::HardFailure;
+			}
+		}
+		evaluated.push_back(value);
+	}
+	std::vector<uint32_t> flattened(program.srt_reads.size());
+	for (uint32_t slot = 0; slot < program.srt_reads.size(); slot++) {
+		const auto& read = program.srt_reads[slot];
+		if (read.variant) {
+			flattened[slot] = 0;
+			continue;
+		}
+		const auto root = compiled.flat_roots[slot];
+		if (root == CompiledSrt::None) {
+			return CompiledResult::HardFailure;
+		}
+		const bool clean = slot < program.clean_flat_slots.size() && program.clean_flat_slots[slot] != 0u;
+		switch (status[root]) {
+			case CompiledSrt::StOk: flattened[slot] = static_cast<uint32_t>(values[root]); break;
+			case CompiledSrt::StMemFail: flattened[slot] = 0; break;
+			case CompiledSrt::StCleanMemFail:
+				if (!clean) {
+					return CompiledResult::HardFailure;
+				}
+				flattened[slot] = 0;
+				break;
+			default: return CompiledResult::HardFailure;
+		}
+	}
+	results = std::move(evaluated);
+	flat    = std::move(flattened);
+	return CompiledResult::Done;
+}
+
+bool EvaluateRuntimeSourcesInterpreted(const ResourcePlan& program, std::span<const uint32_t> sources,
+                                       const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
+                                       std::vector<uint32_t>& flat, bool evaluate_flat,
+                                       std::span<const uint8_t> clean_flat_slots);
+
 bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uint32_t> sources,
                                 const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
                                 std::vector<uint32_t>& flat, bool evaluate_flat,
@@ -1173,6 +1928,65 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 	    runtime.read_specialization_memory == nullptr) {
 		return false;
 	}
+	static const bool compiled_enabled = [] {
+		const char* value = std::getenv("KYTY_SRT_COMPILED");
+		return value == nullptr || value[0] != '0';
+	}();
+	static const bool verify = std::getenv("KYTY_SRT_VERIFY") != nullptr;
+	if (compiled_enabled && evaluate_flat && clean_flat_slots.data() == program.clean_flat_slots.data() &&
+	    clean_flat_slots.size() == program.clean_flat_slots.size()) {
+		std::vector<DescriptorValue> compiled_results;
+		std::vector<uint32_t>        compiled_flat;
+		const auto outcome = EvaluateCompiled(program, sources, runtime, compiled_results, compiled_flat);
+		if (outcome == CompiledResult::Done) {
+			if (Common::FrameStats::Enabled()) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::MatMemoHits, 1);
+			}
+			if (verify) {
+				std::vector<DescriptorValue> reference;
+				std::vector<uint32_t>        reference_flat;
+				const bool ok = EvaluateRuntimeSourcesInterpreted(program, sources, runtime, reference,
+				                                                  reference_flat, evaluate_flat, clean_flat_slots);
+				static std::atomic<uint32_t> logged {0};
+				if ((!ok || reference != compiled_results || reference_flat != compiled_flat) &&
+				    logged.fetch_add(1) < 64) {
+					std::string detail;
+					for (size_t i = 0; i < std::min(reference.size(), compiled_results.size()); i++) {
+						for (uint32_t d = 0; d < 8; d++) {
+							if (reference[i].dwords[d] != compiled_results[i].dwords[d]) {
+								detail += fmt::format(" src{}[{}]={:#x}/{:#x}", i, d, reference[i].dwords[d],
+								                      compiled_results[i].dwords[d]);
+							}
+						}
+					}
+					for (size_t i = 0; i < std::min(reference_flat.size(), compiled_flat.size()); i++) {
+						if (reference_flat[i] != compiled_flat[i]) {
+							detail += fmt::format(" flat{}={:#x}/{:#x}", i, reference_flat[i], compiled_flat[i]);
+						}
+					}
+					std::fprintf(stderr,
+					             "SrtVerify: hash=0x%016llx interpreter_ok=%d sources=%zu/%zu flat=%zu/%zu%s\n",
+					             static_cast<unsigned long long>(program.shader_hash), ok ? 1 : 0,
+					             reference.size(), compiled_results.size(), reference_flat.size(),
+					             compiled_flat.size(), detail.c_str());
+				}
+			}
+			results = std::move(compiled_results);
+			flat    = std::move(compiled_flat);
+			return true;
+		}
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::MatMemoMisses, 1);
+		}
+	}
+	return EvaluateRuntimeSourcesInterpreted(program, sources, runtime, results, flat, evaluate_flat,
+	                                         clean_flat_slots);
+}
+
+bool EvaluateRuntimeSourcesInterpreted(const ResourcePlan& program, std::span<const uint32_t> sources,
+                                       const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
+                                       std::vector<uint32_t>& flat, bool evaluate_flat,
+                                       std::span<const uint8_t> clean_flat_slots) {
 	SrtRuntime clean_runtime  = runtime;
 	clean_runtime.read_memory = runtime.read_specialization_memory;
 	Evaluator                    clean_evaluator(program, clean_runtime);

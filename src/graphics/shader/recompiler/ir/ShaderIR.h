@@ -492,6 +492,8 @@ struct CompiledShaderInfo {
 
 // Immutable runtime resource analysis retained by the shader cache. It owns only the native
 // value graph reachable from descriptors/SRT reads, rather than the translated shader CFG.
+struct CompiledSrt;
+
 struct ResourcePlan {
 	ResourcePlan() = default;
 	~ResourcePlan();
@@ -515,6 +517,8 @@ struct ResourcePlan {
 	bool                                srt_plan_complete          = false;
 	bool                                resource_tracking_complete = false;
 	ShaderInfo                          info;
+	// Linearized form of the snapshot evaluation, built lazily by the SRT walker (SrtWalker.cpp).
+	mutable std::shared_ptr<CompiledSrt> srt_compiled;
 };
 
 struct Program: ResourcePlan {

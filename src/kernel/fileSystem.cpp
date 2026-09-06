@@ -773,6 +773,12 @@ int64_t KYTY_SYSV_ABI KernelWrite(int d, const void* buf, size_t nbytes) {
 	}
 
 	if (d == 1 || d == 2) {
+		// Mirror the game's stdout/stderr into the log so it interleaves with the emulator traces.
+		{
+			std::string text(static_cast<const char*>(buf), nbytes);
+			LOGF_COLOR(Log::Color::BrightMagenta, "GuestOut[%d]: %s%s", d, text.c_str(),
+			           (!text.empty() && text.back() == '\n' ? "" : "\n"));
+		}
 		auto*      out      = (d == 1 ? stdout : stderr);
 		const auto written  = std::fwrite(buf, 1, nbytes, out);
 		const auto flush_ok = std::fflush(out) == 0;

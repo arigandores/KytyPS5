@@ -765,6 +765,17 @@ static int kyty_printf_internal(bool sn, char* sn_s, size_t sn_n, const char* fo
 	return static_cast<int>(idx);
 }
 
+static int kyty_vsnprintf(char* s, size_t n, const char* format, VaList* va_list) {
+	if (s == nullptr || n == 0) {
+		return kyty_printf_internal(false, nullptr, 0, format, va_list);
+	}
+	// kyty_printf_internal exits on truncation: format into a large scratch buffer first.
+	std::vector<char> tmp(65536);
+	int               r = kyty_printf_internal(true, tmp.data(), tmp.size(), format, va_list);
+	std::snprintf(s, n, "%s", tmp.data());
+	return r;
+}
+
 static int kyty_vprintf(const char* format, VaList* va_list) {
 	return kyty_printf_internal(false, nullptr, 0, format, va_list);
 }
@@ -803,6 +814,10 @@ guest_snprintf_ctx_func_t GetGuestSnprintfCtxFunc() {
 
 guest_vprintf_func_t GetGuestVprintfFunc() {
 	return kyty_vprintf;
+}
+
+guest_vsnprintf_func_t GetGuestVsnprintfFunc() {
+	return kyty_vsnprintf;
 }
 
 } // namespace Libs

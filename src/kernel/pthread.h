@@ -4,6 +4,8 @@
 #include "common/abi.h"
 #include "common/common.h"
 
+#include <string>
+
 // IWYU pragma: no_include <pthread.h>
 
 extern "C" {
@@ -109,6 +111,9 @@ int KYTY_SYSV_ABI     PthreadGetname(Pthread thread, char* name);
 int KYTY_SYSV_ABI     PthreadRename(Pthread thread, const char* name);
 void KYTY_SYSV_ABI    PthreadYield();
 int KYTY_SYSV_ABI     PthreadGetthreadid();
+// Debug: module-relative return addresses found by scanning the guest stack upwards from stack_ptr
+// (pass __builtin_frame_address(0) + 2 from a directly-called library entry point).
+std::string GuestBacktrace(void* stack_ptr, int depth);
 int KYTY_SYSV_ABI     PthreadGetaffinity(Pthread thread, KernelCpumask* mask);
 int                   PthreadGetUniqueId(Pthread thread);
 uint64_t              PthreadGetHostThreadId(Pthread thread);

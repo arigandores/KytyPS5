@@ -1422,6 +1422,28 @@ void RuntimeLinker::Execute(const std::filesystem::path& game_patch) {
 	}
 	StartAllModules();
 
+	// KYTY_POKE=<hex addr>:<hex bytes>[,<addr>:<bytes>...] - write bytes into guest memory before the entry
+	// point runs (addresses below 0x100000000 are relative to the main module base).
+	if (const char* poke = std::getenv("KYTY_POKE"); poke != nullptr && !m_programs.empty()) {
+		const auto base = m_programs.front()->base_vaddr;
+		for (const auto& item: Common::Split(std::string(poke), ',')) {
+			const auto parts = Common::Split(item, ':');
+			if (parts.size() != 2) {
+				continue;
+			}
+			auto addr = std::strtoull(parts[0].c_str(), nullptr, 16);
+			if (addr < 0x100000000ull) {
+				addr += base;
+			}
+			const auto& hex = parts[1];
+			for (size_t i = 0; i + 1 < hex.size(); i += 2) {
+				const auto byte = static_cast<uint8_t>(std::strtoul(hex.substr(i, 2).c_str(), nullptr, 16));
+				*reinterpret_cast<uint8_t*>(addr + i / 2) = byte;
+			}
+			LOGF("KYTY_POKE: 0x%016" PRIx64 " <- %s\n", addr, hex.c_str());
+		}
+	}
+
 	LOGF_COLOR(Log::Color::BrightYellow, "---\n--- Execute: %s\n---\n", "Main");
 
 	if (auto entry = GetEntry(); entry != 0) {

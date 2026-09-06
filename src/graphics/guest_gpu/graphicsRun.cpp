@@ -35,6 +35,10 @@
 #include <thread>
 #include <vector>
 
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+#include <windows.h>
+#endif
+
 namespace Libs::Graphics {
 
 static thread_local CommandProcessor* g_current_processor = nullptr;
@@ -200,6 +204,24 @@ void GuestGpu::SubmitFlipPreparation(uint64_t request_id) {
 	Enqueue(std::move(submission));
 }
 
+// KYTY_PEEK2=<hex ptr addr>@<hex off>[,...]: every 10 frames read the pointer stored at <ptr addr>, add <off> and
+// log 16 bytes from there (walks one level of indirection; <ptr addr> of 0 means "no deref").
+static bool PeekReadable(uint64_t addr, size_t size) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	MEMORY_BASIC_INFORMATION mbi {};
+	if (addr == 0 || VirtualQuery(reinterpret_cast<void*>(addr), &mbi, sizeof(mbi)) == 0 ||
+	    mbi.State != MEM_COMMIT || (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) != 0 ||
+	    addr + size > reinterpret_cast<uint64_t>(mbi.BaseAddress) + mbi.RegionSize) {
+		return false;
+	}
+	return true;
+#else
+	(void)addr;
+	(void)size;
+	return false;
+#endif
+}
+
 // KYTY_PEEK_ADDR=<hex>: once per frame log a hash and the first floats of 8 KB of guest memory.
 static void DebugPeekMemory(int frame) {
 	static const uint64_t addr = [] {
@@ -211,8 +233,12 @@ static void DebugPeekMemory(int frame) {
 	}
 	std::array<uint8_t, 8192> bytes {};
 	if (!LibKernel::Memory::TryReadBacking(addr, bytes.data(), bytes.size())) {
-		LOGF("Peek: frame=%d addr=0x%016" PRIx64 " unreadable" "\n", frame, addr);
-		return;
+		// Not GPU-tracked memory (e.g. the module image): read it directly when it is committed.
+		if (!PeekReadable(addr, bytes.size())) {
+			LOGF("Peek: frame=%d addr=0x%016" PRIx64 " unreadable" "\n", frame, addr);
+			return;
+		}
+		std::memcpy(bytes.data(), reinterpret_cast<const void*>(addr), bytes.size());
 	}
 	uint64_t h = 1469598103934665603ull;
 	for (const auto b: bytes) {
@@ -226,6 +252,47 @@ static void DebugPeekMemory(int frame) {
 	     halves[7]);
 }
 
+static void DebugPeek2(int frame) {
+	static const std::vector<std::pair<uint64_t, uint64_t>> items = [] {
+		std::vector<std::pair<uint64_t, uint64_t>> out;
+		if (const char* value = std::getenv("KYTY_PEEK2"); value != nullptr) {
+			for (const auto& item: Common::Split(std::string(value), ',')) {
+				const auto parts = Common::Split(item, '@');
+				if (parts.size() == 2) {
+					out.emplace_back(std::strtoull(parts[0].c_str(), nullptr, 16),
+					                 std::strtoull(parts[1].c_str(), nullptr, 16));
+				}
+			}
+		}
+		return out;
+	}();
+	if (items.empty() || (frame % 10) != 0) {
+		return;
+	}
+	for (const auto& [ptr_addr, off]: items) {
+		uint64_t base = 0;
+		if (ptr_addr != 0) {
+			if (!PeekReadable(ptr_addr, 8)) {
+				LOGF("Peek2: frame=%d ptr=0x%" PRIx64 " unreadable" "\n", frame, ptr_addr);
+				continue;
+			}
+			std::memcpy(&base, reinterpret_cast<const void*>(ptr_addr), 8);
+		}
+		const auto addr = base + off;
+		if (!PeekReadable(addr, 16)) {
+			LOGF("Peek2: frame=%d ptr=0x%" PRIx64 " base=0x%" PRIx64 " addr=0x%" PRIx64 " unreadable" "\n", frame,
+			     ptr_addr, base, addr);
+			continue;
+		}
+		uint8_t b[16] {};
+		std::memcpy(b, reinterpret_cast<const void*>(addr), 16);
+		LOGF("Peek2: frame=%d ptr=0x%" PRIx64 " base=0x%" PRIx64 " addr=0x%" PRIx64
+		     " = %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x %02x" "\n",
+		     frame, ptr_addr, base, addr, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], b[11],
+		     b[12], b[13], b[14], b[15]);
+	}
+}
+
 void GuestGpu::Done() {
 	GpuMutexLock lock(m_submission_mutex);
 	if (!IsGpuThread()) {
@@ -234,6 +301,7 @@ void GuestGpu::Done() {
 	m_graphics_done = true;
 	m_done_num++;
 	DebugPeekMemory(m_done_num);
+	DebugPeek2(m_done_num);
 }
 
 int GuestGpu::GetFrameNum() const {

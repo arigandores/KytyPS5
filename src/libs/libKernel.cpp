@@ -2661,8 +2661,9 @@ int32_t KYTY_SYSV_ABI FiberFinalize(FiberObject* fiber) {
 int32_t KYTY_SYSV_ABI FiberRun(FiberObject* fiber, uint64_t arg_on_run, uint64_t* arg_on_return) {
 	PRINT_NAME();
 	if (FiberTraceEnabled() && FiberIsValid(fiber)) {
-		LOGF("FiberTrace: run   %s@%p state=%u thread %d" "\n", fiber->name,
-		     static_cast<void*>(fiber), FiberLoadState(fiber), Common::Thread::GetThreadIdUnique());
+		LOGF("FiberTrace: run   %s@%p state=%u thread %d bt=%s\n", fiber->name,
+		     static_cast<void*>(fiber), FiberLoadState(fiber), Common::Thread::GetThreadIdUnique(),
+		     LibKernel::GuestBacktrace(static_cast<void**>(__builtin_frame_address(0)) + 2, 10).c_str());
 	}
 
 	if (!FiberIsValid(fiber)) {
@@ -2736,9 +2737,10 @@ int32_t KYTY_SYSV_ABI FiberSwitch(FiberObject* fiber, uint64_t arg_on_run,
 
 	auto* caller = g_current_fiber;
 	if (FiberTraceEnabled()) {
-		LOGF("FiberTrace: switch %s@%p -> %s@%p thread %d" "\n", caller->name,
+		LOGF("FiberTrace: switch %s@%p -> %s@%p thread %d bt=%s\n", caller->name,
 		     static_cast<void*>(caller), fiber->name, static_cast<void*>(fiber),
-		     Common::Thread::GetThreadIdUnique());
+		     Common::Thread::GetThreadIdUnique(),
+		     LibKernel::GuestBacktrace(static_cast<void**>(__builtin_frame_address(0)) + 2, 10).c_str());
 	}
 
 	fiber->arg_on_run    = arg_on_run;
@@ -2786,8 +2788,9 @@ int32_t KYTY_SYSV_ABI FiberReturnToThread(uint64_t arg_on_return, uint64_t* arg_
 	auto* fiber          = g_current_fiber;
 	fiber->arg_on_return = arg_on_return;
 	if (FiberTraceEnabled()) {
-		LOGF("FiberTrace: return %s@%p thread %d" "\n", fiber->name, static_cast<void*>(fiber),
-		     Common::Thread::GetThreadIdUnique());
+		LOGF("FiberTrace: return %s@%p thread %d bt=%s\n", fiber->name, static_cast<void*>(fiber),
+		     Common::Thread::GetThreadIdUnique(),
+		     LibKernel::GuestBacktrace(static_cast<void**>(__builtin_frame_address(0)) + 2, 10).c_str());
 	}
 
 	if (FiberSaveContext(&fiber->saved_context) == 0) {

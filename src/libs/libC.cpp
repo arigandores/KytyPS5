@@ -625,6 +625,37 @@ int KYTY_SYSV_ABI vprintf(const char* str, VaList* c) {
 	return GetGuestVprintfFunc()(str, c);
 }
 
+int KYTY_SYSV_ABI vsnprintf(char* s, size_t n, const char* str, VaList* c) {
+	PRINT_NAME();
+
+	int r = GetGuestVsnprintfFunc()(s, n, str, c);
+	// KYTY_GUEST_FMT_LOG=1: log every formatted string (the game's logger formats through vsnprintf)
+	static const bool fmt_log = std::getenv("KYTY_GUEST_FMT_LOG") != nullptr;
+	if (fmt_log && s != nullptr && n != 0) {
+		LOGF_COLOR(Log::Color::BrightMagenta, "GuestFmt: [%d] %s%s", Common::Thread::GetThreadIdUnique(), s,
+		           (s[0] != 0 && s[std::strlen(s) - 1] == '\n' ? "" : "\n"));
+	}
+	return r;
+}
+
+// The game's own logger writes to stdout through fwrite/fputc: forward the text to the log.
+size_t KYTY_SYSV_ABI fwrite(const void* ptr, size_t size, size_t nmemb, FILE* /*stream*/) {
+	const auto bytes = size * nmemb;
+	if (ptr != nullptr && bytes != 0) {
+		std::string text(static_cast<const char*>(ptr), bytes);
+		LOGF_COLOR(Log::Color::BrightMagenta, "GuestOut: %s%s", text.c_str(),
+		           (text.back() == '\n' ? "" : "\n"));
+	}
+	return nmemb;
+}
+
+int KYTY_SYSV_ABI fputc(int c, FILE* /*stream*/) {
+	if (c != '\n' && c != '\r') {
+		LOGF_COLOR(Log::Color::BrightMagenta, "GuestOut: %c\n", static_cast<char>(c));
+	}
+	return c;
+}
+
 static KYTY_SYSV_ABI int snprintf(VA_ARGS) {
 	VA_CONTEXT(ctx); // NOLINT(cppcoreguidelines-pro-type-member-init,hicpp-member-init)
 
@@ -822,6 +853,9 @@ LIB_DEFINE(InitLibC_1) {
 	LIB_FUNC("8G2LB+A3rzg", LibC::atexit);
 	LIB_FUNC("hcuQgD53UxM", LibC::libc_printf);
 	LIB_FUNC("YQ0navp+YIc", LibC::puts);
+	LIB_FUNC("Q2V+iqvjgC0", LibcInternal::vsnprintf);
+	LIB_FUNC("MpxhMh8QFro", LibcInternal::fwrite);
+	LIB_FUNC("aZK8lNei-Qw", LibcInternal::fputc);
 	LIB_FUNC("M4YYbSFfJ8g", LibC::setenv);
 	LIB_FUNC("wLlFkwG9UcQ", LibC::libc_time);
 	LIB_FUNC("-VVn74ZyhEs", LibC::libc_difftime);

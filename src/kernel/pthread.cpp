@@ -700,6 +700,8 @@ private:
 };
 
 thread_local Pthread        g_pthread_self           = nullptr;
+// KYTY_RET_TRACE_AFTER_THREAD=<name>: gate for TlsTrace (set when a thread with that name starts)
+std::atomic<bool>           g_ret_trace_gate {false};
 static Pthread              g_pthread_main           = nullptr;
 PThreadContext*             g_pthread_context        = nullptr;
 thread_local uintptr_t      g_guest_entry_return_rsp = 0;
@@ -3442,6 +3444,14 @@ static void* RunThread(void* arg) {
 	     reinterpret_cast<uint64_t>(thread->entry), reinterpret_cast<uint64_t>(thread->arg),
 	     reinterpret_cast<uint64_t>(thread->attr->stack_addr),
 	     static_cast<uint64_t>(thread->attr->stack_size));
+	{
+		static const char* gate_name = std::getenv("KYTY_RET_TRACE_AFTER_THREAD");
+		if (gate_name != nullptr && !g_ret_trace_gate.load(std::memory_order_relaxed) &&
+		    std::strcmp(gate_name, thread->name.c_str()) == 0) {
+			g_ret_trace_gate.store(true, std::memory_order_release);
+			LOGF("TlsTrace: gate opened by thread %s\n", thread->name.c_str());
+		}
+	}
 
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
 	pthread_cleanup_push(CleanupThread, thread);
@@ -3842,6 +3852,43 @@ int KYTY_SYSV_ABI PthreadGetthreadid() {
 	// PRINT_NAME();
 
 	return g_pthread_self != nullptr ? g_pthread_self->guest.thread_id : 0;
+}
+
+std::string GuestBacktrace(void* stack_ptr, int depth) {
+	// Scan the guest stack upwards for values inside the main module code range and report the
+	// first <depth> of them (module-relative). Stale slots may appear; the top entries are reliable.
+	// The range is the ASTRO BOT eboot (base 0x900000000, text 0x74edc9c bytes); debug aid only.
+	std::string out;
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	auto*       sp = static_cast<uint64_t*>(stack_ptr);
+	int         found = 0;
+	static thread_local uint64_t region_begin = 0;
+	static thread_local uint64_t region_end   = 0;
+	for (int i = 0; i < 1024 && found < depth; i++, sp++) {
+		auto p = reinterpret_cast<uint64_t>(sp);
+		if (p < region_begin || p + 8 > region_end) {
+			MEMORY_BASIC_INFORMATION mbi {};
+			if (VirtualQuery(sp, &mbi, sizeof(mbi)) == 0 || mbi.State != MEM_COMMIT ||
+			    (mbi.Protect & (PAGE_READONLY | PAGE_READWRITE | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE)) == 0 ||
+			    (mbi.Protect & (PAGE_GUARD | PAGE_NOACCESS)) != 0) {
+				break;
+			}
+			region_begin = reinterpret_cast<uint64_t>(mbi.BaseAddress);
+			region_end   = region_begin + mbi.RegionSize;
+		}
+		uint64_t v = *sp;
+		if (v >= 0x900000000ull && v < 0x9074edc9cull) {
+			char buf[32];
+			snprintf(buf, sizeof(buf), "%s%" PRIx64, (found == 0 ? "" : " "), v - 0x900000000ull);
+			out += buf;
+			found++;
+		}
+	}
+#else
+	(void)stack_ptr;
+	(void)depth;
+#endif
+	return out;
 }
 
 int KYTY_SYSV_ABI KernelClockGetres(KernelClockid clock_id, KernelTimespec* tp) {
@@ -4613,6 +4660,17 @@ int KYTY_SYSV_ABI pthread_setspecific(LibKernel::PthreadKey key, void* value) {
 
 void* KYTY_SYSV_ABI pthread_getspecific(LibKernel::PthreadKey key) {
 	PRINT_NAME();
+
+	// KYTY_RET_TRACE=1: guest call sites of pthread_getspecific (the game polls objects through TLS)
+	static const bool ret_trace = std::getenv("KYTY_RET_TRACE") != nullptr;
+	static const bool ret_trace_gated = std::getenv("KYTY_RET_TRACE_AFTER_THREAD") != nullptr;
+	if (ret_trace && Common::Thread::GetThreadIdUnique() == 5 &&
+	    (!ret_trace_gated || LibKernel::g_ret_trace_gate.load(std::memory_order_relaxed))) {
+		void* guest_sp = static_cast<void**>(__builtin_frame_address(0)) + 2;
+		LOGF("TlsTrace: tid=%d key=%d ret=%" PRIx64 " bt=%s\n", Common::Thread::GetThreadIdUnique(),
+		     static_cast<int>(key), reinterpret_cast<uint64_t>(__builtin_return_address(0)) - 0x900000000ull,
+		     LibKernel::GuestBacktrace(guest_sp, 10).c_str());
+	}
 
 	return (LibKernel::PthreadGetspecific(key));
 }

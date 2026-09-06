@@ -181,6 +181,9 @@ struct VideoOutConfig {
 	bool                                opened      = false;
 	bool                                closing     = false;
 	int                                 flip_rate   = 0;
+	uint64_t                            pace_last_base_us = 0;
+	double                              pace_ema_us       = 0.0;
+	double                              pace_speed        = 1.0;
 	uint64_t                            output_mode = VIDEO_OUT_OUTPUT_MODE_DEFAULT;
 	float                               gamma       = 1.0f;
 	VideoOutFlipStatus                  flip_status;
@@ -1140,6 +1143,26 @@ bool FlipQueue::Flip(uint32_t micros) {
 	r.cfg->flip_status.currentBuffer            = r.index;
 	r.cfg->flip_status.flipPendingNum = static_cast<int>(m_requests.size() + m_cpu_requests.size());
 	{
+		// Emulation speed from the presented frame pace (unscaled guest time, freezes excluded):
+		// a fixed-step game advances one target interval per flip, so speed = target / actual.
+		const auto base_us = LibKernel::KernelGetBaseTimeUs();
+		auto&      cfg     = *r.cfg;
+		if (cfg.pace_last_base_us != 0 && base_us > cfg.pace_last_base_us) {
+			const double target_us = 1000000.0 * static_cast<double>(cfg.flip_rate + 1) /
+			                         static_cast<double>(std::max(Config::GetVblankFrequency(), 1u));
+			const double interval_us = std::clamp(static_cast<double>(base_us - cfg.pace_last_base_us),
+			                                      target_us * 0.5, target_us * 8.0);
+			cfg.pace_ema_us = cfg.pace_ema_us == 0.0 ? interval_us : cfg.pace_ema_us + 0.08 * (interval_us - cfg.pace_ema_us);
+			double speed    = std::clamp(target_us / cfg.pace_ema_us, 0.2, 1.0);
+			if (speed > 0.97) {
+				speed = 1.0;
+			}
+			cfg.pace_speed = speed;
+			LibKernel::KernelSetGuestSpeed(speed);
+		}
+		cfg.pace_last_base_us = base_us;
+	}
+	{
 		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
 		if (av_trace) {
 			const auto host_frequency = Common::Timer::QueryPerformanceFrequency();
@@ -1149,9 +1172,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 			                                      ((host_counter % host_frequency) * 1000000u) / host_frequency
 			                                : 0u;
 			LOGF("AvTrace: flip n=%" PRIu64 " t=%" PRIu64 " host=%" PRIu64 " arg=%" PRId64 " vblank=%" PRIu64
-			     " pending=%d\n",
+			     " pending=%d base=%" PRIu64 " speed=%.3f\n",
 			     r.cfg->flip_status.count, r.cfg->flip_status.processTime, host_us, r.flip_arg,
-			     r.cfg->vblank_status.count, r.cfg->flip_status.flipPendingNum);
+			     r.cfg->vblank_status.count, r.cfg->flip_status.flipPendingNum, r.cfg->pace_last_base_us,
+			     r.cfg->pace_speed);
 		}
 	}
 	if (r.source == FlipRequestSource::GpuEop && r.cfg->flip_status.gcQueueNum > 0) {

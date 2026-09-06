@@ -18,6 +18,7 @@
 #include <atomic>
 #include <cstdlib>
 #include <cstring>
+#include <cmath>
 #include <limits>
 #include <mutex>
 #include <vector>
@@ -46,6 +47,99 @@ static bool audio_out_port_type_is_valid(int type) {
 }
 
 } // namespace
+
+// WSOLA time-stretcher (pitch preserving) for the PCM handed to SDL. `ratio` is the emulation
+// speed: each output frame consumes `ratio` input frames, so at 0.6 the sound plays 1/0.6 times
+// longer at the original pitch. At ratio 1 the output is the input delayed by the lookahead.
+struct AudioStretcher {
+	static constexpr size_t WINDOW = 1024; // 21 ms at 48 kHz
+	static constexpr size_t HOP    = WINDOW / 2;
+	static constexpr size_t SEARCH = 160;
+
+	uint32_t           channels = 0;
+	std::vector<float> in;      // interleaved FIFO
+	std::vector<float> tail;    // windowed second half of the previous synthesis frame
+	std::vector<float> window;  // Hann, sums to 1 at 50% overlap
+	double             nominal  = 0.0; // next analysis position (frames into the FIFO)
+	size_t             natural  = 0;   // natural continuation of the previous frame
+	bool               have_prev = false;
+
+	void Reset(uint32_t ch) {
+		channels = ch;
+		in.clear();
+		tail.assign(HOP * ch, 0.0f);
+		window.resize(WINDOW);
+		for (size_t i = 0; i < WINDOW; i++) {
+			window[i] = 0.5f - 0.5f * std::cos(2.0f * 3.14159265358979f * static_cast<float>(i) /
+			                                  static_cast<float>(WINDOW));
+		}
+		nominal   = 0.0;
+		natural   = 0;
+		have_prev = false;
+	}
+
+	[[nodiscard]] size_t Frames() const { return channels != 0 ? in.size() / channels : 0; }
+
+	void Process(const float* data, size_t frames, double ratio, std::vector<float>& out) {
+		const size_t ch = channels;
+		in.insert(in.end(), data, data + frames * ch);
+		out.clear();
+		for (;;) {
+			const auto start = static_cast<size_t>(std::llround(nominal));
+			if (start + SEARCH + WINDOW > Frames()) {
+				break;
+			}
+			size_t best = start;
+			if (have_prev && natural + HOP <= Frames()) {
+				const size_t lo         = start > SEARCH ? start - SEARCH : 0;
+				const size_t hi         = start + SEARCH;
+				const float* ref        = in.data() + natural * ch;
+				double       best_score = -1.0e300;
+				for (size_t cand = lo; cand <= hi; cand += 2) {
+					const float* seg    = in.data() + cand * ch;
+					double       corr   = 0.0;
+					double       energy = 1.0e-9;
+					const size_t n      = HOP * ch;
+					for (size_t i = 0; i < n; i++) {
+						corr += static_cast<double>(seg[i]) * static_cast<double>(ref[i]);
+						energy += static_cast<double>(seg[i]) * static_cast<double>(seg[i]);
+					}
+					const double score = corr / std::sqrt(energy);
+					if (score > best_score) {
+						best_score = score;
+						best       = cand;
+					}
+				}
+			}
+			const float* frame = in.data() + best * ch;
+			const size_t base  = out.size();
+			out.resize(base + HOP * ch);
+			for (size_t i = 0; i < HOP; i++) {
+				const float w = have_prev ? window[i] : 1.0f;
+				for (size_t c = 0; c < ch; c++) {
+					out[base + i * ch + c] = tail[i * ch + c] + frame[i * ch + c] * w;
+				}
+			}
+			for (size_t i = 0; i < HOP; i++) {
+				const float w = window[HOP + i];
+				for (size_t c = 0; c < ch; c++) {
+					tail[i * ch + c] = frame[(HOP + i) * ch + c] * w;
+				}
+			}
+			have_prev = true;
+			natural   = best + HOP;
+			nominal += static_cast<double>(HOP) * ratio;
+			// Drop input nobody can reference any more (both positions only move forward).
+			const size_t keep_from_pos = std::min<size_t>(natural, static_cast<size_t>(nominal));
+			const size_t drop          = keep_from_pos > SEARCH ? keep_from_pos - SEARCH : 0;
+			if (drop > 4096) {
+				in.erase(in.begin(), in.begin() + static_cast<std::ptrdiff_t>(drop * ch));
+				natural -= drop;
+				nominal -= static_cast<double>(drop);
+			}
+		}
+	}
+};
 
 class Audio {
 public:
@@ -114,6 +208,8 @@ private:
 		uint64_t          trace_frames = 0;
 		uint64_t          trace_first  = 0;
 		uint64_t          trace_drops  = 0;
+		AudioStretcher    stretch;
+		std::vector<float> stretch_out;
 	};
 
 	struct PortIn {
@@ -400,16 +496,34 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 		queue_size = static_cast<uint32_t>(cvt.len_cvt);
 	}
 
+	// Emulation-speed audio sync: stretch the device-format PCM by the guest speed (float devices;
+	// Kyty opens float ports as AUDIO_F32SYS). The game's audio thread then blocks on the SDL
+	// queue until the slowed-down device has room, i.e. it is paced to the simulation speed.
+	const double guest_speed = LibKernel::KernelGetGuestSpeed();
+	if (LibKernel::KernelGuestSpeedEnabled() && port->audio_spec.format == AUDIO_F32SYS &&
+	    port->audio_spec.channels != 0 && (queue_size % (sizeof(float) * port->audio_spec.channels)) == 0) {
+		if (port->stretch.channels != port->audio_spec.channels) {
+			port->stretch.Reset(port->audio_spec.channels);
+		}
+		port->stretch.Process(static_cast<const float*>(queue_data),
+		                      queue_size / (sizeof(float) * port->audio_spec.channels), guest_speed,
+		                      port->stretch_out);
+		queue_data = port->stretch_out.data();
+		queue_size = static_cast<uint32_t>(port->stretch_out.size() * sizeof(float));
+	}
+
 	static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
 	const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
 	const auto        av_t0            = LibKernel::KernelGetProcessTime();
 	if (blocking) {
+		// Keep about 40 ms of device time queued (stretching changes the bytes per push, so the
+		// threshold is derived from the device format, not from the push size).
 		constexpr uint64_t target_latency_us = 40000;
-		const auto buffer_us = port->freq != 0 ? (1000000ULL * port->samples_num) / port->freq : 0;
-		const auto buffers =
-		    buffer_us != 0 ? static_cast<uint32_t>((target_latency_us + buffer_us - 1) / buffer_us)
-		                   : 2u;
-		const auto min_queued_size = queue_size * std::clamp(buffers, 2u, 16u);
+		const auto device_frame_bytes = static_cast<uint64_t>(SDL_AUDIO_BITSIZE(port->audio_spec.format) / 8) *
+		                                std::max<uint32_t>(port->audio_spec.channels, 1u);
+		const auto device_bytes_per_us = device_frame_bytes * static_cast<uint64_t>(std::max(port->audio_spec.freq, 1));
+		const auto min_queued_size     = static_cast<uint32_t>(
+		    std::max<uint64_t>((device_bytes_per_us * target_latency_us) / 1000000u, uint64_t {queue_size} * 2u));
 		const auto wait_start      = LibKernel::KernelGetProcessTime();
 		while (SDL_GetQueuedAudioSize(port->audio_device) > min_queued_size) {
 			if (LibKernel::KernelGetProcessTime() - wait_start > 200000) {
@@ -442,10 +556,11 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 			const double wall_s  = static_cast<double>(now - port->trace_first) / 1000000.0;
 			LOGF("AvTrace: audio dev=%u type=%d blocking=%d push=%" PRIu64 " grain=%u freq=%u audio_s=%.3f "
 			     "wall_s=%.3f queued_before=%u queued_after=%u wait_us=%" PRIu64 " drops=%" PRIu64 " t=%" PRIu64
-			     "\n",
+			     " speed=%.3f out_bytes=%u\n",
 			     static_cast<uint32_t>(port->audio_device), port->type, blocking ? 1 : 0, port->trace_pushes,
 			     port->samples_num, port->freq, audio_s, wall_s, av_queued_before,
-			     SDL_GetQueuedAudioSize(port->audio_device), now - av_t0, port->trace_drops, now);
+			     SDL_GetQueuedAudioSize(port->audio_device), now - av_t0, port->trace_drops, now, guest_speed,
+			     queue_size);
 		}
 	}
 

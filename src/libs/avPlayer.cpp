@@ -786,8 +786,8 @@ public:
 			}
 			SeekNoLock(ms);
 			start_time_ms = ms;
-			clock_start   = std::chrono::steady_clock::now();
-			paused_extra  = {};
+			clock_start   = LibKernel::KernelGetProcessTime();
+			paused_extra  = 0;
 			paused        = paused_after_start;
 			pause_time    = clock_start;
 			seek_video_frame_pending =
@@ -828,13 +828,13 @@ public:
 		std::scoped_lock lifecycle_lock(lifecycle_mutex);
 		std::lock_guard  lock(mutex);
 		paused     = true;
-		pause_time = std::chrono::steady_clock::now();
+		pause_time = LibKernel::KernelGetProcessTime();
 	}
 	void Resume() {
 		std::scoped_lock lifecycle_lock(lifecycle_mutex);
 		std::lock_guard  lock(mutex);
 		if (paused) {
-			paused_extra += std::chrono::steady_clock::now() - pause_time;
+			paused_extra += LibKernel::KernelGetProcessTime() - pause_time;
 		}
 		paused                   = false;
 		seek_video_frame_pending = false;
@@ -871,11 +871,10 @@ public:
 		if (stopped) {
 			return 0;
 		}
-		using namespace std::chrono;
-		auto now = paused ? pause_time : steady_clock::now();
-		return start_time_ms +
-		       static_cast<uint64_t>(
-		           duration_cast<milliseconds>(now - clock_start - paused_extra).count());
+		// Guest clock (stall freezes and the emulation speed apply), so the video keeps step with
+		// the game and with the time-stretched audio.
+		const auto now = paused ? pause_time : LibKernel::KernelGetProcessTime();
+		return start_time_ms + (now - clock_start - paused_extra) / 1000u;
 	}
 	int Info(uint32_t id, AvPlayerStreamInfo* out) const {
 		if (out == nullptr) {
@@ -1741,9 +1740,9 @@ private:
 	uint32_t                                 sync_mode     = 0;
 	uint64_t                                 start_time_ms = 0;
 	uint64_t                                 last_audio_ts = 0;
-	std::chrono::steady_clock::time_point    clock_start {};
-	std::chrono::steady_clock::time_point    pause_time {};
-	std::chrono::steady_clock::duration      paused_extra {};
+	uint64_t                                 clock_start  = 0; // guest microseconds
+	uint64_t                                 pause_time   = 0;
+	uint64_t                                 paused_extra = 0;
 };
 
 struct AvPlayerInternal {

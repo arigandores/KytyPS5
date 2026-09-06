@@ -219,6 +219,14 @@ void KernelTimeFreezeBegin();
 void KernelTimeFreezeEnd();
 void KernelSetTimeFreezeListener(void (*listener)(bool frozen));
 
+// Emulation speed: the guest clocks advance at `speed` x real time (audio output is
+// time-stretched by the same factor), so a fixed-step game that presents below its target
+// frame rate stays in sync with its own real-time audio thread. KYTY_AUDIO_SYNC=0 disables.
+bool     KernelGuestSpeedEnabled();
+void     KernelSetGuestSpeed(double speed);
+double   KernelGetGuestSpeed();
+uint64_t KernelGetBaseTimeUs(); // unscaled guest time (freezes excluded), for pace measurement
+
 class KernelTimeFreezeScope {
 public:
 	KernelTimeFreezeScope() { KernelTimeFreezeBegin(); }

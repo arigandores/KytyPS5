@@ -149,6 +149,12 @@ struct TimeFreezeState {
 	uint64_t   total = 0;
 	uint64_t   count = 0;
 	void (*listener)(bool) = nullptr;
+	// Speed scaling: scaled(base) = scaled_mark + (base - base_mark) * speed, marks move on
+	// every speed change so the scaled clock stays continuous and monotonic.
+	double      speed       = 1.0;
+	uint64_t    base_mark   = 0;
+	long double scaled_mark = 0;
+	bool        scaling     = false;
 };
 
 TimeFreezeState& GetTimeFreezeState() {
@@ -164,18 +170,44 @@ bool TimeFreezeEnabled() {
 	return enabled;
 }
 
+bool GuestSpeedEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_AUDIO_SYNC");
+		return value == nullptr || std::atoi(value) != 0;
+	}();
+	return enabled;
+}
+
+// Base guest ticks: raw TSC minus the time spent inside freezes. Caller holds state.mutex.
+uint64_t BaseTscLocked(const TimeFreezeState& state, uint64_t raw) {
+	if (!TimeFreezeEnabled()) {
+		return raw;
+	}
+	const uint64_t frozen =
+	    state.total + (state.depth > 0 && raw > state.start ? raw - state.start : 0);
+	return raw - frozen;
+}
+
+uint64_t ScaledTscLocked(const TimeFreezeState& state, uint64_t base) {
+	if (!state.scaling) {
+		return base;
+	}
+	const long double ahead = base > state.base_mark ? static_cast<long double>(base - state.base_mark) : 0.0L;
+	return static_cast<uint64_t>(state.scaled_mark + ahead * static_cast<long double>(state.speed));
+}
+
 } // namespace
 
-// Guest-visible TSC: the raw counter minus the time spent inside freezes (constant while frozen).
+// Guest-visible TSC: the raw counter minus the time spent inside freezes (constant while frozen),
+// then scaled by the emulation speed.
 static uint64_t KernelReadTscNative() {
 	const auto now = KernelReadTscRaw();
-	if (!TimeFreezeEnabled()) {
+	if (!TimeFreezeEnabled() && !GuestSpeedEnabled()) {
 		return now;
 	}
 	auto&                       state = GetTimeFreezeState();
 	std::lock_guard<std::mutex> lock(state.mutex);
-	const uint64_t frozen = state.total + (state.depth > 0 && now > state.start ? now - state.start : 0);
-	return now - frozen;
+	return ScaledTscLocked(state, BaseTscLocked(state, now));
 }
 
 static uint64_t KernelGetTscFrequencyNative() {
@@ -4200,6 +4232,55 @@ void KernelTimeFreezeEnd() {
 		     "\n",
 		     to_us(duration), to_us(total), count, KernelGetProcessTime());
 	}
+}
+
+bool KernelGuestSpeedEnabled() {
+	return GuestSpeedEnabled();
+}
+
+void KernelSetGuestSpeed(double speed) {
+	if (!GuestSpeedEnabled()) {
+		return;
+	}
+	speed = std::clamp(speed, 0.1, 1.0);
+	auto&                       state = GetTimeFreezeState();
+	std::lock_guard<std::mutex> lock(state.mutex);
+	const auto base = BaseTscLocked(state, KernelReadTscRaw());
+	if (!state.scaling) {
+		if (speed >= 1.0) {
+			return;
+		}
+		state.scaling     = true;
+		state.scaled_mark = static_cast<long double>(base);
+	} else {
+		state.scaled_mark = static_cast<long double>(ScaledTscLocked(state, base));
+	}
+	state.base_mark = base;
+	state.speed     = speed;
+}
+
+double KernelGetGuestSpeed() {
+	if (!GuestSpeedEnabled()) {
+		return 1.0;
+	}
+	auto&                       state = GetTimeFreezeState();
+	std::lock_guard<std::mutex> lock(state.mutex);
+	return state.scaling ? state.speed : 1.0;
+}
+
+uint64_t KernelGetBaseTimeUs() {
+	const auto frequency = KernelGetTscFrequencyNative();
+	auto&      state     = GetTimeFreezeState();
+	uint64_t   base      = 0;
+	{
+		std::lock_guard<std::mutex> lock(state.mutex);
+		base = BaseTscLocked(state, KernelReadTscRaw());
+	}
+	if (frequency == 0) {
+		return 0;
+	}
+	return static_cast<uint64_t>((static_cast<long double>(base) * 1000000.0L) /
+	                             static_cast<long double>(frequency));
 }
 
 void KernelSetTimeFreezeListener(void (*listener)(bool frozen)) {

@@ -184,6 +184,9 @@ VALUE_OPCODE(FPFract32, F32, F32)
 
 VALUE_OPCODE(LaneId, U32)
 VALUE_OPCODE(Ballot, U32x4, U1)
+// Wave-wide "any lane" for S_CBRANCH_EXECZ/VCCZ: uniform across the whole GCN wave, which
+// on hosts that emulate wave64 with two 32-lane subgroups needs a workgroup-wide reduction.
+VALUE_OPCODE(WaveAny, U1, U1)
 VALUE_OPCODE(ReadFirstLane, U32, U32, U1)
 VALUE_OPCODE(ReadLane, U32, U32, U32)
 VALUE_OPCODE(WriteLane, U32, U32, U32, U32)

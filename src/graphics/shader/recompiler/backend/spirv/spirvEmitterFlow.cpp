@@ -598,6 +598,54 @@ bool EmitValueFlow(ValueEmitContext& ctx, const IR::Inst& inst) {
 			ctx.Emit(inst, OpGroupNonUniformBallot, IR::Type::U32x4,
 			         {ConstantU32(state, ScopeSubgroup), ctx.Arg(inst, 0)});
 			return true;
+		case IR::ValueOpcode::WaveAny: {
+			const auto sub_any = state.builder.AllocateId();
+			state.builder.AddFunction({OpGroupNonUniformAny, TypeBool(state), sub_any,
+			                           ConstantU32(state, ScopeSubgroup), ctx.Arg(inst, 0)});
+			if (!WaveAnyNeedsWorkgroupReduction(state)) {
+				ctx.Define(inst, sub_any);
+				return true;
+			}
+			// Two 32-lane subgroups emulate one wave64: publish each subgroup's result in the two
+			// LDS dwords past the shader's own LDS and OR them. Both barriers are required: the
+			// first keeps a fast subgroup from overwriting a flag the other one has not read yet
+			// (loops re-run this site), the second publishes the flags.
+			EnsureLdsStorage(state);
+			const auto semantics = MemorySemanticsAcquireRelease | MemorySemanticsWorkgroupMemory;
+			const auto barrier   = [&] {
+				state.builder.AddFunction({OpControlBarrier, ConstantU32(state, ScopeWorkgroup),
+				                           ConstantU32(state, ScopeWorkgroup),
+				                           ConstantU32(state, semantics)});
+			};
+			const auto base    = ConstantU32(state, WaveAnyFlagsBase(state));
+			const auto slot    = state.builder.AllocateId();
+			const auto index   = state.builder.AllocateId();
+			const auto ptr_ty  = TypePointer(state, StorageClassWorkgroup, TypeU32(state));
+			const auto ptr     = state.builder.AllocateId();
+			const auto value   = state.builder.AllocateId();
+			state.builder.AddFunction({OpShiftRightLogical, TypeU32(state), slot,
+			                           EmitLocalInvocationIndex(state), ConstantU32(state, 5)});
+			state.builder.AddFunction({OpIAdd, TypeU32(state), index, base, slot});
+			state.builder.AddFunction({OpSelect, TypeU32(state), value, sub_any,
+			                           ConstantU32(state, 1), ConstantU32(state, 0)});
+			barrier();
+			state.builder.AddFunction({OpAccessChain, ptr_ty, ptr, state.lds_variable, index});
+			state.builder.AddFunction({OpStore, ptr, value});
+			barrier();
+			const auto ptr0 = state.builder.AllocateId();
+			const auto ptr1 = state.builder.AllocateId();
+			const auto v0   = state.builder.AllocateId();
+			const auto v1   = state.builder.AllocateId();
+			const auto both = state.builder.AllocateId();
+			const auto idx1 = ConstantU32(state, WaveAnyFlagsBase(state) + 1u);
+			state.builder.AddFunction({OpAccessChain, ptr_ty, ptr0, state.lds_variable, base});
+			state.builder.AddFunction({OpAccessChain, ptr_ty, ptr1, state.lds_variable, idx1});
+			state.builder.AddFunction({OpLoad, TypeU32(state), v0, ptr0});
+			state.builder.AddFunction({OpLoad, TypeU32(state), v1, ptr1});
+			state.builder.AddFunction({OpBitwiseOr, TypeU32(state), both, v0, v1});
+			ctx.Emit(inst, OpINotEqual, IR::Type::U1, {both, ConstantU32(state, 0)});
+			return true;
+		}
 		case IR::ValueOpcode::ReadFirstLane: {
 			const auto ballot = state.builder.AllocateId();
 			const auto lane   = state.builder.AllocateId();

@@ -64,11 +64,27 @@ void EmitMemoryOffsets(EmitterState& state) {
 	}
 }
 
-uint32_t LdsDwordCount(const EmitterState& state) {
-	return state.stage == ShaderType::Compute ? state.input_info.compute->lds_size_dwords : 8192u;
+bool WaveAnyNeedsWorkgroupReduction(const EmitterState& state) {
+	return state.stage == ShaderType::Compute && state.wave_size == 64u &&
+	       state.input_info.compute != nullptr && state.input_info.compute->needs_lds_barriers &&
+	       state.input_info.compute->threads_num[0] * state.input_info.compute->threads_num[1] *
+	               state.input_info.compute->threads_num[2] ==
+	           64u;
 }
 
-static void EnsureLdsStorage(EmitterState& state) {
+uint32_t WaveAnyFlagsBase(const EmitterState& state) {
+	return state.stage == ShaderType::Compute ? state.input_info.compute->lds_size_dwords : 0u;
+}
+
+uint32_t LdsDwordCount(const EmitterState& state) {
+	if (state.stage != ShaderType::Compute) {
+		return 8192u;
+	}
+	const auto dwords = state.input_info.compute->lds_size_dwords;
+	return WaveAnyNeedsWorkgroupReduction(state) ? dwords + 2u : dwords;
+}
+
+void EnsureLdsStorage(EmitterState& state) {
 	if (state.lds_variable != 0) {
 		return;
 	}

@@ -805,11 +805,11 @@ void Translator::AddBranchCondition(const CFG::BasicBlock& source, IR::BlockInfo
 	// lane instead let inactive lanes skip scalar code, so once EXEC was restored they continued
 	// with stale SGPRs - e.g. a linked-list "next" index that never reached the terminator, which
 	// made waterfall loops in ASTRO BOT pixel shaders spin forever.
+	// WaveAny covers the whole wave: on hosts whose subgroups are narrower than the wave (wave64
+	// compute on NVIDIA) the emitter reduces across the workgroup, so that both halves of the
+	// wave take the same branch and LDS exchanges between them stay in lockstep.
 	const auto any_lane = [&](IR::U1 value) {
-		const auto ballot = ir.Emit(IR::ValueOpcode::Ballot, {value});
-		const auto low    = IR::U32(ir.CompositeExtract(ballot, 0u));
-		const auto high   = IR::U32(ir.CompositeExtract(ballot, 1u));
-		return ir.INotEqual(ir.BitwiseOr(low, high), IR::U32(IR::Value(0u)));
+		return IR::U1(ir.Emit(IR::ValueOpcode::WaveAny, {value}));
 	};
 	IR::U1 condition;
 	switch (source.terminator.condition) {

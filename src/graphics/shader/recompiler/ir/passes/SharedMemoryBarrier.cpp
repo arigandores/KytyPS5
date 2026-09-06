@@ -2,6 +2,8 @@
 
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
+#include "common/logging/log.h"
+
 #include <algorithm>
 #include <queue>
 #include <unordered_map>
@@ -38,6 +40,10 @@ bool DependsOnInvocation(Value value) {
 		}
 		if (inst->GetOpcode() == ValueOpcode::LaneId) {
 			return true;
+		}
+		if (inst->GetOpcode() == ValueOpcode::WaveAny) {
+			// Reduced across the whole wave (workgroup when emulated): uniform by construction.
+			continue;
 		}
 		if (inst->GetOpcode() == ValueOpcode::GetBuiltin) {
 			const auto kind = static_cast<StageInputKind>(inst->Arg(0).U32());
@@ -101,14 +107,20 @@ SharedMemoryBarrierStats InsertSharedMemoryBarriers(Program& program, uint32_t w
 	                              compute_info.threads_num[2];
 	if (wave_size != 64u || !compute_info.needs_lds_barriers ||
 	    compute_info.lds_size_dwords == 0u || threadgroup_size != 64u) {
+		if (compute_info.lds_size_dwords != 0u && threadgroup_size == 64u) {
+			LOGF("LDS barriers skipped: wave_size=%u needs=%d lds_dwords=%u" "\n", wave_size,
+			     compute_info.needs_lds_barriers ? 1 : 0, compute_info.lds_size_dwords);
+		}
 		return stats;
 	}
 	if (program.blocks.size() != program.block_info.size()) {
+		LOGF("LDS barriers skipped: block/info size mismatch" "\n");
 		return stats;
 	}
 	for (const auto& info: program.block_info) {
 		if (info.terminator.kind == CFG::TerminatorKind::ConditionalBranch &&
 		    info.terminator.merge_block == UINT32_MAX && DependsOnInvocation(info.condition)) {
+			LOGF("LDS barriers skipped: unstructured lane-dependent branch in block %u" "\n", info.id);
 			return stats;
 		}
 	}

@@ -609,6 +609,14 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	}
 
 	LOGF("\tRead %u bytes from: %s\n", bytes_read, Common::PathToString(file->real_name).c_str());
+	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	if (stream_trace && bytes_read >= (1u << 20)) {
+		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+		                    std::chrono::steady_clock::now().time_since_epoch())
+		                    .count();
+		LOGF("StreamTrace: read dst=0x%016" PRIx64 " size=0x%x t=%lld" "\n",
+		     reinterpret_cast<uint64_t>(buf), bytes_read, static_cast<long long>(us));
+	}
 
 	return bytes_read;
 }

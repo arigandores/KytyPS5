@@ -27,6 +27,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <deque>
 #include <memory>
 #include <mutex>
@@ -199,6 +200,32 @@ void GuestGpu::SubmitFlipPreparation(uint64_t request_id) {
 	Enqueue(std::move(submission));
 }
 
+// KYTY_PEEK_ADDR=<hex>: once per frame log a hash and the first floats of 8 KB of guest memory.
+static void DebugPeekMemory(int frame) {
+	static const uint64_t addr = [] {
+		const char* value = std::getenv("KYTY_PEEK_ADDR");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	if (addr == 0 || (frame % 30) != 0) {
+		return;
+	}
+	std::array<uint8_t, 8192> bytes {};
+	if (!LibKernel::Memory::TryReadBacking(addr, bytes.data(), bytes.size())) {
+		LOGF("Peek: frame=%d addr=0x%016" PRIx64 " unreadable" "\n", frame, addr);
+		return;
+	}
+	uint64_t h = 1469598103934665603ull;
+	for (const auto b: bytes) {
+		h = (h ^ b) * 1099511628211ull;
+	}
+	std::array<uint16_t, 8> halves {};
+	std::memcpy(halves.data(), bytes.data() + 4096, sizeof(halves));
+	LOGF("Peek: frame=%d addr=0x%016" PRIx64 " hash=0x%016" PRIx64
+	     " mid halves=%04x %04x %04x %04x %04x %04x %04x %04x" "\n",
+	     frame, addr, h, halves[0], halves[1], halves[2], halves[3], halves[4], halves[5], halves[6],
+	     halves[7]);
+}
+
 void GuestGpu::Done() {
 	GpuMutexLock lock(m_submission_mutex);
 	if (!IsGpuThread()) {
@@ -206,6 +233,7 @@ void GuestGpu::Done() {
 	}
 	m_graphics_done = true;
 	m_done_num++;
+	DebugPeekMemory(m_done_num);
 }
 
 int GuestGpu::GetFrameNum() const {
@@ -610,8 +638,21 @@ static void DebugAutoRenderDocCapture(int frame_num) {
 		const char* value = std::getenv("KYTY_RD_FRAME");
 		return value != nullptr ? std::strtol(value, nullptr, 10) : -1L;
 	}();
-	static bool requested = false;
-	if (target < 0 || requested || frame_num < target) {
+	// KYTY_RD_TIME=<seconds>: alternatively trigger by wall-clock time since the first frame.
+	static const double target_time = [] {
+		const char* value = std::getenv("KYTY_RD_TIME");
+		return value != nullptr ? std::strtod(value, nullptr) : -1.0;
+	}();
+	static const auto start   = std::chrono::steady_clock::now();
+	static bool       requested = false;
+	if (requested) {
+		return;
+	}
+	const bool frame_hit = target >= 0 && frame_num >= target;
+	const bool time_hit =
+	    target_time >= 0 &&
+	    std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count() >= target_time;
+	if (!frame_hit && !time_hit) {
 		return;
 	}
 	requested = true;

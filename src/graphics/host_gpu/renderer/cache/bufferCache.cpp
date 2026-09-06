@@ -656,6 +656,14 @@ void BufferCache::WriteHostMemory(uint64_t vaddr, std::span<const uint8_t> data)
 }
 
 void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds) {
+	static const uint64_t peek_addr_fill = [] {
+		const char* value = std::getenv("KYTY_PEEK_ADDR");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	if (peek_addr_fill != 0 && !is_gds && vaddr <= peek_addr_fill && peek_addr_fill < vaddr + size) {
+		LOGF("Peek: dma fill covers addr: dst=0x%016" PRIx64 " size=0x%" PRIx64 " value=0x%08x" "\n",
+		     vaddr, size, value);
+	}
 	if ((vaddr & 3u) != 0 || size == 0 || (size & 3u) != 0 || size > UINT64_MAX - vaddr) {
 		EXIT("BufferCache: fill range must be dword aligned\n");
 	}
@@ -698,6 +706,24 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 
 void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
                              bool src_gds) {
+	// KYTY_PEEK_ADDR=<hex>: log DMA copies whose destination covers the address.
+	static const uint64_t peek_addr = [] {
+		const char* value = std::getenv("KYTY_PEEK_ADDR");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	if (peek_addr != 0 && !dst_gds && dst_vaddr <= peek_addr && peek_addr < dst_vaddr + size) {
+		LOGF("Peek: dma copy covers addr: src=0x%016" PRIx64 " dst=0x%016" PRIx64 " size=0x%" PRIx64
+		     " src_gds=%d" "\n", src_vaddr, dst_vaddr, size, static_cast<int>(src_gds));
+	}
+	// KYTY_STREAM_TRACE=1: log large DMA copies (texture streaming) with a timestamp.
+	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	if (stream_trace && size >= (1u << 20)) {
+		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+		                    std::chrono::steady_clock::now().time_since_epoch())
+		                    .count();
+		LOGF("StreamTrace: dma src=0x%016" PRIx64 " dst=0x%016" PRIx64 " size=0x%" PRIx64 " t=%lld" "\n",
+		     src_vaddr, dst_vaddr, size, static_cast<long long>(us));
+	}
 	const bool dst_memory = !dst_gds;
 	const bool src_memory = !src_gds;
 	if ((dst_memory && dst_vaddr == 0) || (src_memory && src_vaddr == 0) || size == 0 ||

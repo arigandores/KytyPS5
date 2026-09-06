@@ -236,6 +236,32 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	// marker then names the shader instead of its guest address).
 	buffer.SetDebugInfo(static_cast<uint32_t>(CommandBufferDebugOp::DispatchDirect), submit_id,
 	                    thread_group_x, thread_group_y, thread_group_z, mode, program.shader_hash);
+	// Debug aid: KYTY_TRACE_CS=1 logs every direct dispatch whose raw X dimension is zero, and
+	// KYTY_TRACE_CS=<hex hash>[,<hex hash>...] logs every dispatch of the listed shaders.
+	static const std::vector<uint64_t> trace_cs = [] {
+		std::vector<uint64_t> out;
+		const char*           value = std::getenv("KYTY_TRACE_CS");
+		if (value == nullptr) {
+			return out;
+		}
+		std::string_view text(value);
+		while (!text.empty()) {
+			const auto comma = text.find(',');
+			const auto item  = std::string(text.substr(0, comma));
+			text             = comma == std::string_view::npos ? std::string_view {} : text.substr(comma + 1u);
+			out.push_back(std::strtoull(item.c_str(), nullptr, 16));
+		}
+		return out;
+	}();
+	if (!trace_cs.empty()) {
+		const bool listed = std::find(trace_cs.begin(), trace_cs.end(), program.shader_hash) != trace_cs.end();
+		if (listed || (!indirect && thread_group_x == 0)) {
+			LOGF("TraceCS: frame=%u shader=0x%016" PRIx64 " raw=%ux%ux%u mode=0x%08" PRIx32
+			     " threads_dims=%d indirect=%d" "\n",
+			     frame_num, program.shader_hash, thread_group_x, thread_group_y, thread_group_z, mode,
+			     use_thread_dimensions ? 1 : 0, indirect ? 1 : 0);
+		}
+	}
 	// Debug aid: KYTY_SKIP_CS=<hex hash> drops every dispatch of that compute shader.
 	static const char* skip_cs = std::getenv("KYTY_SKIP_CS");
 	if (skip_cs != nullptr && program.shader_hash == std::strtoull(skip_cs, nullptr, 16)) {

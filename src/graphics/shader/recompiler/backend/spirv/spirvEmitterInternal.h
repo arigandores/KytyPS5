@@ -205,6 +205,7 @@ enum : uint32_t {
 	OpSMulExtended                 = 152,
 	OpAny                          = 154,
 	OpAll                          = 155,
+	OpIsNan                        = 156,
 	OpLogicalNotEqual              = 165,
 	OpLogicalOr                    = 166,
 	OpLogicalAnd                   = 167,

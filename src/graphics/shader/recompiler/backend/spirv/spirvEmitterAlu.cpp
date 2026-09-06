@@ -405,11 +405,23 @@ bool EmitValueAlu(ValueEmitContext& ctx, const IR::Inst& inst) {
 		case IR::ValueOpcode::FPNeg32:
 			ctx.Define(inst, EmitFNegateValue(state, ctx.Arg(inst, 0)));
 			return true;
-		case IR::ValueOpcode::FPSaturate32:
-			ctx.Define(inst, EmitExt(state, TypeF32(state), GlslFClamp,
-			                         {ctx.Arg(inst, 0), ConstantF32(state, 0),
-			                          ConstantF32(state, 0x3f800000u)}));
+		case IR::ValueOpcode::FPSaturate32: {
+			// The GCN clamp modifier runs in DX10_CLAMP mode on PS5 shaders and flushes NaN to
+			// +0. FClamp leaves NaN undefined (NVIDIA propagates it): ASTRO BOT builds sign(x) as
+			// `v_mul_f32 inf, |x| clamp`, which yields NaN for x == 0 and poisoned the save-card
+			// G-buffer normals. Select +0 explicitly for NaN inputs.
+			const auto value   = ctx.Arg(inst, 0);
+			const auto clamped = EmitExt(state, TypeF32(state), GlslFClamp,
+			                             {value, ConstantF32(state, 0),
+			                              ConstantF32(state, 0x3f800000u)});
+			const auto is_nan  = state.builder.AllocateId();
+			state.builder.AddFunction({OpIsNan, TypeBool(state), is_nan, value});
+			const auto result = state.builder.AllocateId();
+			state.builder.AddFunction(
+			    {OpSelect, TypeF32(state), result, is_nan, ConstantF32(state, 0), clamped});
+			ctx.Define(inst, result);
 			return true;
+		}
 		case IR::ValueOpcode::BitFieldInsert:
 			ctx.Emit(inst, OpBitFieldInsert, IR::Type::U32,
 			         {ctx.Arg(inst, 0), ctx.Arg(inst, 1), ctx.Arg(inst, 2), ctx.Arg(inst, 3)});

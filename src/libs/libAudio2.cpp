@@ -502,6 +502,15 @@ int KYTY_SYSV_ABI AudioOut2ContextAdvance(AudioOut2ContextHandle ctx) {
 
 int KYTY_SYSV_ABI AudioOut2ContextPush(AudioOut2ContextHandle ctx, uint32_t blocking) {
 	uint32_t sleep_micros = audioout2_grain_micros(512);
+	static const bool            av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	static std::atomic<uint64_t> av_calls {0};
+	if (av_trace) {
+		const auto n = av_calls.fetch_add(1, std::memory_order_relaxed) + 1;
+		if (n <= 5 || (n % 1000) == 0) {
+			LOGF("AvTrace: push ctx=0x%" PRIx64 " blocking=%u n=%" PRIu64 " tid=%d t=%" PRIu64 "\n", ctx, blocking, n,
+			     Common::Thread::GetThreadIdUnique(), LibKernel::KernelGetProcessTime());
+		}
+	}
 
 	for (;;) {
 		// Only a synchronous submission carrying PCM to a real device can rely on the SDL queue for

@@ -109,6 +109,10 @@ private:
 
 		SDL_AudioDeviceID audio_device = 0;
 		SDL_AudioSpec     audio_spec   = {};
+		uint64_t          trace_pushes = 0;
+		uint64_t          trace_frames = 0;
+		uint64_t          trace_first  = 0;
+		uint64_t          trace_drops  = 0;
 	};
 
 	struct PortIn {
@@ -368,6 +372,9 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 		queue_size = static_cast<uint32_t>(cvt.len_cvt);
 	}
 
+	static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
+	const auto        av_t0            = LibKernel::KernelGetProcessTime();
 	if (blocking) {
 		constexpr uint64_t target_latency_us = 40000;
 		const auto buffer_us = port->freq != 0 ? (1000000ULL * port->samples_num) / port->freq : 0;
@@ -378,6 +385,12 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 		const auto wait_start      = LibKernel::KernelGetProcessTime();
 		while (SDL_GetQueuedAudioSize(port->audio_device) > min_queued_size) {
 			if (LibKernel::KernelGetProcessTime() - wait_start > 200000) {
+				port->trace_drops++;
+				if (av_trace) {
+					LOGF("AvTrace: audio DROP dev=%u queued=%u min=%u t=%" PRIu64 "\n",
+					     static_cast<uint32_t>(port->audio_device),
+					     SDL_GetQueuedAudioSize(port->audio_device), min_queued_size, av_t0);
+				}
 				SDL_ClearQueuedAudio(port->audio_device);
 				break;
 			}
@@ -388,6 +401,24 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 	if (SDL_QueueAudio(port->audio_device, queue_data, queue_size) < 0) {
 		LOGF("AudioOut: SDL_QueueAudio failed: %s\n", SDL_GetError());
 		return false;
+	}
+	if (av_trace) {
+		const auto now = LibKernel::KernelGetProcessTime();
+		if (port->trace_first == 0) {
+			port->trace_first = now;
+		}
+		port->trace_pushes++;
+		port->trace_frames += port->samples_num;
+		if ((port->trace_pushes % 100) == 1 || port->trace_pushes <= 5) {
+			const double audio_s = port->freq != 0 ? static_cast<double>(port->trace_frames) / port->freq : 0.0;
+			const double wall_s  = static_cast<double>(now - port->trace_first) / 1000000.0;
+			LOGF("AvTrace: audio dev=%u type=%d blocking=%d push=%" PRIu64 " grain=%u freq=%u audio_s=%.3f "
+			     "wall_s=%.3f queued_before=%u queued_after=%u wait_us=%" PRIu64 " drops=%" PRIu64 " t=%" PRIu64
+			     "\n",
+			     static_cast<uint32_t>(port->audio_device), port->type, blocking ? 1 : 0, port->trace_pushes,
+			     port->samples_num, port->freq, audio_s, wall_s, av_queued_before,
+			     SDL_GetQueuedAudioSize(port->audio_device), now - av_t0, port->trace_drops, now);
+		}
 	}
 
 	return true;

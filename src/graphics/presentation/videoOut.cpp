@@ -1139,6 +1139,21 @@ bool FlipQueue::Flip(uint32_t micros) {
 	r.cfg->flip_status.flipArg                  = r.flip_arg;
 	r.cfg->flip_status.currentBuffer            = r.index;
 	r.cfg->flip_status.flipPendingNum = static_cast<int>(m_requests.size() + m_cpu_requests.size());
+	{
+		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		if (av_trace) {
+			const auto host_frequency = Common::Timer::QueryPerformanceFrequency();
+			const auto host_counter   = Common::Timer::QueryPerformanceCounter();
+			const auto host_us        = host_frequency != 0
+			                                ? (host_counter / host_frequency) * 1000000u +
+			                                      ((host_counter % host_frequency) * 1000000u) / host_frequency
+			                                : 0u;
+			LOGF("AvTrace: flip n=%" PRIu64 " t=%" PRIu64 " host=%" PRIu64 " arg=%" PRId64 " vblank=%" PRIu64
+			     " pending=%d\n",
+			     r.cfg->flip_status.count, r.cfg->flip_status.processTime, host_us, r.flip_arg,
+			     r.cfg->vblank_status.count, r.cfg->flip_status.flipPendingNum);
+		}
+	}
 	if (r.source == FlipRequestSource::GpuEop && r.cfg->flip_status.gcQueueNum > 0) {
 		r.cfg->flip_status.gcQueueNum--;
 	}

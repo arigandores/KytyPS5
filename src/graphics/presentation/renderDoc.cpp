@@ -5,6 +5,7 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <cstdlib>
 #include <filesystem>
 #include <renderdoc_app.h>
 #include <string>
@@ -179,13 +180,23 @@ void RenderDocEndCapture() {
 	LOGF(ok != 0 ? "RenderDoc: capture finished\n" : "RenderDoc: capture failed\n");
 }
 
+// KYTY_RD_FLIPS=<n>: number of guest flips per capture (default 2).
+static uint32_t RenderDocFlipsPerCapture() {
+	static const uint32_t flips = [] {
+		const char* value = std::getenv("KYTY_RD_FLIPS");
+		const auto  n     = value != nullptr ? std::strtoul(value, nullptr, 10) : 0UL;
+		return n > 0 ? static_cast<uint32_t>(n) : 2U;
+	}();
+	return flips;
+}
+
 void RenderDocOnGuestFlip() {
 	if (!RenderDocCaptureInProgress()) {
 		return;
 	}
 	const auto flip = g_captured_flips.fetch_add(1, std::memory_order_acq_rel) + 1;
-	LOGF("RenderDoc: captured guest flip %u/2\n", flip);
-	if (flip >= 2) {
+	LOGF("RenderDoc: captured guest flip %u/%u\n", flip, RenderDocFlipsPerCapture());
+	if (flip >= RenderDocFlipsPerCapture()) {
 		RenderDocEndCapture();
 	}
 }

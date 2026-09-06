@@ -25,6 +25,7 @@
 #include <array>
 #include <atomic>
 #include <cstdio>
+#include <cstdlib>
 #include <deque>
 #include <memory>
 #include <mutex>
@@ -559,8 +560,27 @@ void GuestGpu::ThreadRun(void* data) {
 	}
 }
 
+// KYTY_RD_FRAME=<n>: request a RenderDoc capture automatically once the guest frame counter
+// reaches n (unattended equivalent of pressing F1). Requires --rd.
+static void DebugAutoRenderDocCapture(int frame_num) {
+	static const long target = [] {
+		const char* value = std::getenv("KYTY_RD_FRAME");
+		return value != nullptr ? std::strtol(value, nullptr, 10) : -1L;
+	}();
+	static bool requested = false;
+	if (target < 0 || requested || frame_num < target) {
+		return;
+	}
+	requested = true;
+	LOGF("RenderDoc: auto capture at frame %d (KYTY_RD_FRAME=%ld)\n", frame_num, target);
+	RenderDocRequestCapture();
+}
+
 bool GuestGpu::Process(Submission& submission) {
 	const bool first_slice = !submission.started;
+	if (first_slice) {
+		DebugAutoRenderDocCapture(GetFrameNum());
+	}
 	if (first_slice && RenderDocCaptureRequested()) {
 		Common::LockGuard render_lock(m_renderer.GetMutex());
 		RenderDocStartCapture();

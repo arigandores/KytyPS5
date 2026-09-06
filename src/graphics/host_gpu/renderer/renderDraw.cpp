@@ -690,6 +690,27 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			access |= vk::AccessFlagBits2::eDepthStencilAttachmentWrite;
 		}
 		const auto& view = depth.desc.view_info;
+		if (depth.depth_meta_clear_enable &&
+		    (std::min(state.width, depth.width) < depth.width ||
+		     std::min(state.height, depth.height) < depth.height)) {
+			// An HTile fast clear covers the whole depth slice, but a load-op clear only reaches
+			// the render area of this draw. ASTRO BOT clears HTile and then renders a 1024x1024
+			// probe into the 1920x1080 depth buffer before the depth pre-pass: a load-op clear
+			// leaves the rest of the buffer stale and every later scene draw fails its depth test
+			// there. Clear the attached slice explicitly instead.
+			buffer.EndRendering();
+			image.Transit(vk::ImageLayout::eTransferDstOptimal,
+			              vk::AccessFlagBits2::eTransferWrite, {}, buffer.Handle());
+			const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eDepth,
+			                                       view.base_level, view.level_count,
+			                                       view.base_layer, view.layer_count};
+			const vk::ClearDepthStencilValue clear {depth.depth_clear_value, 0u};
+			buffer.Handle().clearDepthStencilImage(image.backing.image,
+			                                       vk::ImageLayout::eTransferDstOptimal, &clear, 1,
+			                                       &range);
+			depth.depth_meta_clear_enable = false;
+			depth.depth_load_clear_enable = depth.depth_clear_enable;
+		}
 		image.Transit(layout, access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},

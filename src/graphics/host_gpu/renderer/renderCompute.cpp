@@ -366,6 +366,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			dump_this = base != 0 && dump_addr >= base && dump_addr < base + ImageSpan;
 		}
 	}
+	if (!dump_this) {
+		dump_this = ShaderStageTouchesAnyBuffer(input_info.stage, DebugDumpAddresses());
+	}
 	if (DebugDumpFrame(frame_num)) {
 		LOGF("DumpDispatch: frame=%u shader=0x%016" PRIx64 " groups=%ux%ux%u mode=0x%08" PRIx32
 		     " local=%ux%ux%u indirect=0x%016" PRIx64 " buffers=%zu images=%zu uses_dma=%d\n",
@@ -787,6 +790,49 @@ uint64_t DebugDumpAddress() {
 		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
 	}();
 	return dump_addr;
+}
+
+const std::vector<uint64_t>& DebugDumpAddresses() {
+	static const std::vector<uint64_t> addresses = [] {
+		std::vector<uint64_t> list;
+		const char*           value = std::getenv("KYTY_DUMP_ADDRS");
+		while (value != nullptr && *value != 0) {
+			char*      end  = nullptr;
+			const auto addr = std::strtoull(value, &end, 16);
+			if (end == value) {
+				break;
+			}
+			if (addr != 0) {
+				list.push_back(addr);
+			}
+			value = (*end == ',') ? end + 1 : end;
+		}
+		return list;
+	}();
+	return addresses;
+}
+
+bool ShaderStageTouchesAnyBuffer(const ShaderStageRuntime& stage,
+                                 const std::vector<uint64_t>& addresses) {
+	if (!stage || addresses.empty()) {
+		return false;
+	}
+	const auto& program   = *stage.program;
+	const auto& resources = stage.resources;
+	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+		const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+		const auto base = r.Base48();
+		const auto size = BufferDescriptorSize(r);
+		if (base == 0) {
+			continue;
+		}
+		for (const auto address: addresses) {
+			if (address >= base && address < base + size) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 bool ShaderStageTouchesAddress(const ShaderStageRuntime& stage, uint64_t address) {

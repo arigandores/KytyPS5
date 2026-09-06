@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/logging/log.h"
+#include "kernel/memory.h"
 
 #include <atomic>
 #include <cinttypes>
@@ -36,6 +37,17 @@ bool GpuResourceManager::HandleFault(PageFaultAccess access, uint64_t fault_vadd
 		m_texture_cache.InvalidateMemory(fault_vaddr, fault_size);
 	} else {
 		m_buffer_cache.ReadMemory(fault_vaddr, fault_size);
+		if (trace) {
+			// What the CPU is about to read, after the download.
+			const auto base = fault_vaddr & ~uint64_t {15};
+			uint32_t   words[8] {};
+			if (Libs::LibKernel::Memory::TryReadBacking(base, words, sizeof(words))) {
+				LOGF("FaultData: addr=0x%016" PRIx64 " base=0x%016" PRIx64
+				     " %08x %08x %08x %08x %08x %08x %08x %08x" "\n",
+				     fault_vaddr, base, words[0], words[1], words[2], words[3], words[4], words[5],
+				     words[6], words[7]);
+			}
+		}
 	}
 	return true;
 }

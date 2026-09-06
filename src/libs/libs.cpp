@@ -6,6 +6,8 @@
 
 namespace Libs {
 
+thread_local bool g_print_name_thread_forced = false;
+
 namespace LibContentDelete {
 LIB_DEFINE(InitContentDelete_1);
 } // namespace LibContentDelete

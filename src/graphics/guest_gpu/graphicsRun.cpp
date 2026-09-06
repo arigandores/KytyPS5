@@ -1662,6 +1662,15 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 			constexpr uint64_t counter_mask = ready_bit - 1u;
 			auto*              results      = reinterpret_cast<volatile uint64_t*>(event_address);
 			const auto         value        = ready_bit | m_synthetic_occlusion_counter;
+			// KYTY_FAULT_TRACE=1: log the dump destination and the tracker state before the write.
+			static const bool occlusion_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+			if (occlusion_trace) {
+				const auto st = LibKernel::Memory::QueryGpuTracking(event_address, 16u * 16u);
+				LOGF("OcclusionDump: addr=0x%016" PRIx64 " value=0x%016" PRIx64
+				     " tracker[gpu_range=%d cpu=%d gpu=%d]" "\n",
+				     event_address, value, st.gpu_range ? 1 : 0, st.cpu_dirty ? 1 : 0,
+				     st.gpu_dirty ? 1 : 0);
+			}
 			for (uint32_t db = 0; db < 16u; db++) {
 				results[db * 2u] = value;
 			}

@@ -114,6 +114,15 @@ bool                   TryReadPrtBacking(uint64_t vaddr, void* data, uint64_t si
 [[nodiscard]] uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size);
 void                   WriteBacking(uint64_t vaddr, const void* data, uint64_t size) noexcept;
 void                   InvalidateMemory(uint64_t vaddr, uint64_t size);
+// Debug: state of the GPU memory tracker for a range (all false when the range is not GPU memory).
+struct GpuTrackingState {
+	bool gpu_range       = false;
+	bool cpu_dirty       = false;
+	bool gpu_dirty       = false;
+	bool image_bytes     = false;
+	bool gpu_image_bytes = false;
+};
+[[nodiscard]] GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size);
 void                   InstallGpuResources(Graphics::GpuResourceManager* resources) noexcept;
 [[nodiscard]] bool HandleGpuFault(Graphics::PageFaultAccess access, uint64_t fault_vaddr) noexcept;
 

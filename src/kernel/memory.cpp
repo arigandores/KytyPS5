@@ -878,6 +878,21 @@ bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
 	return TryReadBacking(vaddr, data, size);
 }
 
+GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size) {
+	GpuTrackingState state {};
+	if (size == 0 || g_gpu_resources == nullptr || !IsGpuAddressRange(vaddr, size)) {
+		return state;
+	}
+	state.gpu_range      = true;
+	auto& buffers        = GetGpuResources().GetBufferCache();
+	state.cpu_dirty      = buffers.IsRegionCpuModified(vaddr, size);
+	state.gpu_dirty      = buffers.IsRegionGpuModified(vaddr, size);
+	const auto images    = GetGpuResources().GetTextureCache().QueryRegion(vaddr, size);
+	state.image_bytes    = images.image_bytes;
+	state.gpu_image_bytes = images.gpu_image_bytes;
+	return state;
+}
+
 uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size) {
 	EXIT_IF(g_virtual_ranges == nullptr);
 

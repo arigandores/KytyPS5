@@ -14,6 +14,9 @@
 #include "libs/libs.h"
 #include "libs/network.h"
 
+#include <array>
+#include <mutex>
+#include <string>
 #include <cstdlib>
 #include <chrono>
 #include <algorithm>
@@ -547,6 +550,143 @@ int KYTY_SYSV_ABI KernelClose(int d) {
 	return OK;
 }
 
+namespace {
+
+// KYTY_STREAM_TRACE=1: trace large reads into GPU memory. For every read of at least 64 KiB the
+// "StreamRead:" line reports the tracker state before the read, after ReadFile (before the
+// re-invalidation) and after it, the read duration and a sampled hash of the destination. When
+// the destination overlaps a slot that was read into before, the previous contents are re-hashed
+// first to tell whether anything rewrote the slot in between.
+struct StreamSlot {
+	uint64_t    addr = 0;
+	uint64_t    size = 0;
+	uint64_t    hash = 0;
+	uint64_t    seq  = 0;
+	std::string name;
+};
+
+std::mutex                 g_stream_mutex;
+std::array<StreamSlot, 1024> g_stream_slots;
+std::atomic<uint64_t>      g_stream_seq {0};
+
+const bool g_stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+
+uint64_t StreamSampleHash(const void* buf, uint64_t size) {
+	const auto* p = static_cast<const uint8_t*>(buf);
+	uint64_t    h = 1469598103934665603ull;
+	const auto  mix = [&](uint64_t off, uint64_t n) {
+		for (uint64_t i = 0; i < n; i++) {
+			h ^= p[off + i];
+			h *= 1099511628211ull;
+		}
+	};
+	constexpr uint64_t step  = 16384;
+	constexpr uint64_t chunk = 64;
+	if (size < chunk) {
+		mix(0, size);
+		return h;
+	}
+	for (uint64_t off = 0; off + chunk <= size; off += step) {
+		mix(off, chunk);
+	}
+	mix(size - chunk, chunk);
+	return h;
+}
+
+uint64_t StreamNowUs() {
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+	                                 std::chrono::steady_clock::now().time_since_epoch())
+	                                 .count());
+}
+
+const char* StreamState(const Memory::GpuTrackingState& st, char* out, size_t n) {
+	if (!st.gpu_range) {
+		snprintf(out, n, "-");
+	} else {
+		snprintf(out, n, "cpu=%d gpu=%d img=%d gimg=%d", st.cpu_dirty ? 1 : 0, st.gpu_dirty ? 1 : 0,
+		         st.image_bytes ? 1 : 0, st.gpu_image_bytes ? 1 : 0);
+	}
+	return out;
+}
+
+struct StreamReadTrace {
+	bool                     active = false;
+	uint64_t                 seq    = 0;
+	uint64_t                 t0     = 0;
+	uint64_t                 t_read = 0;
+	Memory::GpuTrackingState pre;
+	Memory::GpuTrackingState mid;
+};
+
+StreamReadTrace StreamTraceBegin(const void* buf, uint64_t size, const char* name) {
+	StreamReadTrace t {};
+	if (!g_stream_trace || size < (64u << 10)) {
+		return t;
+	}
+	t.active = true;
+	t.seq    = g_stream_seq.fetch_add(1);
+	const auto addr = reinterpret_cast<uint64_t>(buf);
+	t.pre           = Memory::QueryGpuTracking(addr, size);
+	// Compare the previous contents of an overlapping slot.
+	std::lock_guard lock(g_stream_mutex);
+	for (auto& slot: g_stream_slots) {
+		if (slot.size == 0 || slot.addr >= addr + size || addr >= slot.addr + slot.size) {
+			continue;
+		}
+		const char* verdict = "partial-overlap";
+		if (slot.addr == addr && slot.size == size) {
+			if (t.pre.gpu_dirty) {
+				verdict = "skipped(gpu-dirty)";
+			} else {
+				verdict = StreamSampleHash(buf, size) == slot.hash ? "same" : "CHANGED";
+			}
+		}
+		LOGF("StreamRead: slot#%" PRIu64 " dst=0x%016" PRIx64 " prev#%" PRIu64 " %s -> %s (%s)" "\n",
+		     t.seq, addr, slot.seq, slot.name.c_str(), name, verdict);
+	}
+	t.t0 = StreamNowUs();
+	return t;
+}
+
+void StreamTraceMid(StreamReadTrace& t, const void* buf, uint64_t bytes_read) {
+	if (!t.active) {
+		return;
+	}
+	t.t_read = StreamNowUs();
+	t.mid    = Memory::QueryGpuTracking(reinterpret_cast<uint64_t>(buf), bytes_read);
+}
+
+void StreamTraceEnd(StreamReadTrace& t, const void* buf, uint64_t bytes_read, const char* name) {
+	if (!t.active) {
+		return;
+	}
+	const auto addr = reinterpret_cast<uint64_t>(buf);
+	const auto post = Memory::QueryGpuTracking(addr, bytes_read);
+	const auto hash = bytes_read != 0 ? StreamSampleHash(buf, bytes_read) : 0;
+	char       a[64];
+	char       b[64];
+	char       c[64];
+	const char* flag = "";
+	if (t.mid.gpu_range && t.mid.gpu_dirty) {
+		flag = " TORN:gpu-dirty-after-read";
+	} else if (t.mid.gpu_range && !t.mid.cpu_dirty) {
+		flag = " TORN:uploaded-during-read";
+	}
+	LOGF("StreamRead: #%" PRIu64 " tid=%d dst=0x%016" PRIx64 " size=0x%" PRIx64 " %s pre[%s] mid[%s] post[%s] "
+	     "read_us=%" PRIu64 " t=%" PRIu64 " hash=0x%016" PRIx64 "%s" "\n",
+	     t.seq, Common::Thread::GetThreadIdUnique(), addr, bytes_read, name, StreamState(t.pre, a, sizeof(a)),
+	     StreamState(t.mid, b, sizeof(b)), StreamState(post, c, sizeof(c)), t.t_read - t.t0, t.t0, hash, flag);
+	std::lock_guard lock(g_stream_mutex);
+	auto& slot = g_stream_slots[t.seq % g_stream_slots.size()];
+	slot.addr  = addr;
+	slot.size  = bytes_read;
+	slot.hash  = hash;
+	slot.seq   = t.seq;
+	slot.name  = name;
+}
+
+} // namespace
+
 int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	PRINT_NAME();
 
@@ -590,16 +730,20 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	const auto pos        = file->f.Tell();
 	const auto file_size  = file->f.Size();
 	const auto remaining  = pos < file_size ? file_size - pos : 0;
+	auto stream_read = StreamTraceBegin(buf, std::min<uint64_t>(nbytes, remaining),
+	                                    Common::PathToString(file->real_name).c_str());
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf),
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
 	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
+	StreamTraceMid(stream_read, buf, bytes_read);
 	// The invalidation above only announces the write. A large read takes milliseconds, and the
 	// GPU thread may synchronize an overlapping buffer meanwhile: it uploads the half-written
 	// pages and clears their CPU-dirty state, so the finished data would never reach the GPU
 	// (ASTRO BOT's texture streamer then rejects the upload and reloads the file forever).
 	// Mark the region dirty again now that the data is complete.
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
+	StreamTraceEnd(stream_read, buf, bytes_read, Common::PathToString(file->real_name).c_str());
 
 	file->mutex.Unlock();
 
@@ -729,14 +873,18 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 	const auto file_size  = file->f.Size();
 	const auto remaining =
 	    static_cast<uint64_t>(offset) < file_size ? file_size - static_cast<uint64_t>(offset) : 0;
+	auto stream_read = StreamTraceBegin(buf, std::min<uint64_t>(nbytes, remaining),
+	                                    Common::PathToString(file->real_name).c_str());
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf),
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
 	file->f.Seek(offset);
 	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
 	file->f.Seek(pos);
+	StreamTraceMid(stream_read, buf, bytes_read);
 	// See KernelRead: re-mark the region CPU-dirty once the data is complete.
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
+	StreamTraceEnd(stream_read, buf, bytes_read, Common::PathToString(file->real_name).c_str());
 
 	file->mutex.Unlock();
 

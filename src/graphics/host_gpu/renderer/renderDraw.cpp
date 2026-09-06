@@ -1248,11 +1248,15 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	                                        state.ps_active);
 	const bool frame_dump =
 	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
-	if (const auto dump_addr = DebugDumpAddress(); dump_addr != 0 || frame_dump) {
+	const auto& dump_addrs = DebugDumpAddresses();
+	if (const auto dump_addr = DebugDumpAddress();
+	    dump_addr != 0 || frame_dump || !dump_addrs.empty()) {
 		const auto& vs     = state.vs_input_info.stage;
 		const auto& ps     = state.ps_input_info.stage;
-		const bool  vs_hit = ShaderStageTouchesAddress(vs, dump_addr);
-		const bool  ps_hit = state.ps_active && ShaderStageTouchesAddress(ps, dump_addr);
+		const bool  vs_hit = ShaderStageTouchesAddress(vs, dump_addr) ||
+		                    ShaderStageTouchesAnyBuffer(vs, dump_addrs);
+		const bool ps_hit = state.ps_active && (ShaderStageTouchesAddress(ps, dump_addr) ||
+		                                        ShaderStageTouchesAnyBuffer(ps, dump_addrs));
 		bool        rt_hit = false;
 		for (uint32_t i = 0; i < state.color_count; i++) {
 			const auto& c = state.color_info[i];

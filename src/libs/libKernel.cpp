@@ -2334,6 +2334,11 @@ static std::mutex                                 g_fiber_owner_mutex;
 static std::unordered_map<FiberObject*, uint64_t> g_fiber_owner_thread;
 static std::unordered_map<uint64_t, FiberObject*> g_fiber_current_by_thread;
 
+static bool FiberTraceEnabled() {
+	static const bool enabled = std::getenv("KYTY_FIBER_TRACE") != nullptr;
+	return enabled;
+}
+
 static uint32_t FiberLoadState(const FiberObject* fiber) {
 	auto& state = const_cast<uint32_t&>(fiber->state);
 	return std::atomic_ref<uint32_t>(state).load(std::memory_order_acquire);
@@ -2635,6 +2640,10 @@ int32_t KYTY_SYSV_ABI FiberOptParamInitialize(FiberOptParam* opt_param) {
 
 int32_t KYTY_SYSV_ABI FiberFinalize(FiberObject* fiber) {
 	PRINT_NAME();
+	if (FiberTraceEnabled() && FiberIsValid(fiber)) {
+		LOGF("FiberTrace: final %s@%p state=%u thread %d" "\n", fiber->name,
+		     static_cast<void*>(fiber), FiberLoadState(fiber), Common::Thread::GetThreadIdUnique());
+	}
 
 	if (fiber == nullptr) {
 		return FIBER_ERROR_NULL;
@@ -2651,14 +2660,22 @@ int32_t KYTY_SYSV_ABI FiberFinalize(FiberObject* fiber) {
 
 int32_t KYTY_SYSV_ABI FiberRun(FiberObject* fiber, uint64_t arg_on_run, uint64_t* arg_on_return) {
 	PRINT_NAME();
+	if (FiberTraceEnabled() && FiberIsValid(fiber)) {
+		LOGF("FiberTrace: run   %s@%p state=%u thread %d" "\n", fiber->name,
+		     static_cast<void*>(fiber), FiberLoadState(fiber), Common::Thread::GetThreadIdUnique());
+	}
 
 	if (!FiberIsValid(fiber)) {
 		return FIBER_ERROR_INVALID;
 	}
 	if (g_current_fiber != nullptr) {
+		LOGF("FiberRun failed: %s from inside fiber %s (thread %d)" "\n", fiber->name,
+		     g_current_fiber->name, Common::Thread::GetThreadIdUnique());
 		return FIBER_ERROR_PERMISSION;
 	}
 	if (!FiberCompareExchangeState(fiber, FIBER_STATE_IDLE, FIBER_STATE_RUNNING)) {
+		LOGF("FiberRun failed: %s state=%u owner=0x%" PRIx64 " thread %d" "\n", fiber->name,
+		     FiberLoadState(fiber), FiberGetOwner(fiber), Common::Thread::GetThreadIdUnique());
 		return FIBER_ERROR_STATE;
 	}
 
@@ -2682,6 +2699,11 @@ int32_t KYTY_SYSV_ABI FiberRun(FiberObject* fiber, uint64_t arg_on_run, uint64_t
 		*arg_on_return = returned_fiber->arg_on_return;
 	}
 
+	if (FiberTraceEnabled()) {
+		LOGF("FiberTrace: back  %s@%p (returned %s state=%u) thread %d" "\n", fiber->name,
+		     static_cast<void*>(fiber), returned_fiber->name, FiberLoadState(returned_fiber),
+		     Common::Thread::GetThreadIdUnique());
+	}
 	return (FiberLoadState(returned_fiber) == FIBER_STATE_TERMINATED ? FIBER_ERROR_STATE : OK);
 }
 
@@ -2702,12 +2724,22 @@ int32_t KYTY_SYSV_ABI FiberSwitch(FiberObject* fiber, uint64_t arg_on_run,
 			break;
 		}
 		if (FiberRepairStaleRunningOnThisThread(fiber, observed_state)) {
+			LOGF("FiberSwitch: repaired stale RUNNING state of %s (thread %d)" "\n", fiber->name,
+			     Common::Thread::GetThreadIdUnique());
 			continue;
 		}
+		LOGF("FiberSwitch failed: %s -> %s state=%u owner=0x%" PRIx64 " thread %d" "\n",
+		     g_current_fiber->name, fiber->name, observed_state, FiberGetOwner(fiber),
+		     Common::Thread::GetThreadIdUnique());
 		return FIBER_ERROR_STATE;
 	}
 
 	auto* caller = g_current_fiber;
+	if (FiberTraceEnabled()) {
+		LOGF("FiberTrace: switch %s@%p -> %s@%p thread %d" "\n", caller->name,
+		     static_cast<void*>(caller), fiber->name, static_cast<void*>(fiber),
+		     Common::Thread::GetThreadIdUnique());
+	}
 
 	fiber->arg_on_run    = arg_on_run;
 	fiber->arg_on_return = 0;
@@ -2753,6 +2785,10 @@ int32_t KYTY_SYSV_ABI FiberReturnToThread(uint64_t arg_on_return, uint64_t* arg_
 
 	auto* fiber          = g_current_fiber;
 	fiber->arg_on_return = arg_on_return;
+	if (FiberTraceEnabled()) {
+		LOGF("FiberTrace: return %s@%p thread %d" "\n", fiber->name, static_cast<void*>(fiber),
+		     Common::Thread::GetThreadIdUnique());
+	}
 
 	if (FiberSaveContext(&fiber->saved_context) == 0) {
 		FiberSetContextValid(fiber, true);

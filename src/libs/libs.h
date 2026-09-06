@@ -51,7 +51,7 @@
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRINT_NAME()                                                                               \
 	static const bool print_name_forced = std::getenv("KYTY_PRINT_NAMES") != nullptr;             \
-	if (PRINT_NAME_ENABLED || print_name_forced) {                                                 \
+	if (PRINT_NAME_ENABLED || print_name_forced || Libs::g_print_name_thread_forced) {            \
 		if (Log::GetDirection() != Log::Direction::Silent) {                                       \
 			const auto print_name_time = Loader::Timer::GetTime().ToString("HH24:MI:SS.FFF");      \
 			LOGF_COLOR(Log::Color::Cyan, "[%d][%s] %s::%s::%s()\n",                                \
@@ -65,6 +65,9 @@ class SymbolDatabase;
 } // namespace Loader
 
 namespace Libs {
+
+// Set for guest threads listed in KYTY_PRINT_NAMES_THREADS (see kernel/pthread.cpp RunThread).
+extern thread_local bool g_print_name_thread_forced;
 
 void InitAll(Loader::SymbolDatabase* s);
 

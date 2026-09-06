@@ -25,6 +25,8 @@
 #include <mutex>
 #include <thread>
 #include <vector>
+#include <cstdlib>
+#include <string>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #ifndef NOMINMAX
@@ -65,11 +67,14 @@
 
 namespace Libs {
 
+
 namespace LibcInternalExt {
 void RunThreadAtexitDestructors();
 } // namespace LibcInternalExt
 
 namespace LibKernel {
+
+static bool PrintNamesForThread(const char* name);
 
 LIB_NAME("libkernel", "libkernel");
 
@@ -1082,6 +1087,7 @@ void PthreadInitSelfForMainThread() {
 #endif
 	g_pthread_self->host_thread_id = os_thread_id;
 	g_pthread_main                 = g_pthread_self;
+	Libs::g_print_name_thread_forced = PrintNamesForThread("MainThread");
 
 	LOGF("\tPthread main self: id = %d, os_thread_id = %" PRIu64 ", stack_addr = 0x%016" PRIx64
 	     ", stack_size = %" PRIu64 "\n",
@@ -3381,11 +3387,44 @@ static void CleanupThread(void* arg) {
 	thread->almost_done = true;
 }
 
+// KYTY_PRINT_NAMES_THREADS=<name>[,<name>...]: PRINT_NAME on the listed guest threads only.
+static bool PrintNamesForThread(const char* name) {
+	static const std::vector<std::string> names = [] {
+		std::vector<std::string> list;
+		std::string              current;
+		for (const char* value = std::getenv("KYTY_PRINT_NAMES_THREADS");
+		     value != nullptr && *value != 0; value++) {
+			if (*value == ',') {
+				if (!current.empty()) {
+					list.push_back(current);
+				}
+				current.clear();
+			} else {
+				current.push_back(*value);
+			}
+		}
+		if (!current.empty()) {
+			list.push_back(current);
+		}
+		return list;
+	}();
+	if (name == nullptr) {
+		return false;
+	}
+	for (const auto& n: names) {
+		if (n == name) {
+			return true;
+		}
+	}
+	return false;
+}
+
 static void* RunThread(void* arg) {
 	auto* thread = static_cast<Pthread>(arg);
 	void* ret    = nullptr;
 
 	thread->unique_id = Common::Thread::GetThreadIdUnique();
+	Libs::g_print_name_thread_forced = PrintNamesForThread(thread->name.c_str());
 
 	g_pthread_self = thread;
 

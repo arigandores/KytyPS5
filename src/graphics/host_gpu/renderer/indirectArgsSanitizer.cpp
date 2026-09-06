@@ -18,12 +18,11 @@ namespace {
 
 struct SanitizeParams {
 	uint32_t source_dword;
-	uint32_t max_x;
-	uint32_t max_y;
-	uint32_t max_z;
+	uint32_t count;
+	uint32_t mode; // 0 = zero all when any exceeds, 1 = clamp each
+	uint32_t pad;
+	uint32_t max[5];
 };
-
-constexpr uint64_t ArgsSize = 3u * sizeof(uint32_t);
 
 } // namespace
 
@@ -94,6 +93,18 @@ IndirectArgsSanitizer::~IndirectArgsSanitizer() {
 std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(vk::CommandBuffer command,
                                                                 const Buffer&     source,
                                                                 uint64_t          source_offset) {
+	const auto& limits = m_graphics.physical_device_properties.limits;
+	return Sanitize(command, source, source_offset, 3,
+	                {limits.maxComputeWorkGroupCount[0], limits.maxComputeWorkGroupCount[1],
+	                 limits.maxComputeWorkGroupCount[2], 0, 0},
+	                false);
+}
+
+std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(
+    vk::CommandBuffer command, const Buffer& source, uint64_t source_offset,
+    uint32_t dword_count, const std::array<uint32_t, 5>& arg_limits, bool clamp) {
+	EXIT_IF(dword_count == 0 || dword_count > 5);
+	const uint64_t ArgsSize = uint64_t {dword_count} * sizeof(uint32_t);
 	EXIT_IF(source_offset + ArgsSize > source.Size());
 
 	// Reuse the ring slot only once the GPU has finished the submission that read it.
@@ -114,9 +125,10 @@ std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(vk::CommandBuffe
 
 	const SanitizeParams params {
 	    static_cast<uint32_t>((source_offset - aligned_offset) / sizeof(uint32_t)),
-	    limits.maxComputeWorkGroupCount[0],
-	    limits.maxComputeWorkGroupCount[1],
-	    limits.maxComputeWorkGroupCount[2],
+	    dword_count,
+	    clamp ? 1u : 0u,
+	    0u,
+	    {arg_limits[0], arg_limits[1], arg_limits[2], arg_limits[3], arg_limits[4]},
 	};
 
 	// The arguments were produced by earlier shaders or transfers; the slot was last read by a

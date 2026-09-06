@@ -1,6 +1,9 @@
-// Copies the three dispatch-indirect group counts into a private slot, replacing them with
-// zeros when any component exceeds the device limit. Guest memory that a shader never wrote
-// (dropped BDA stores, patterns like 0xDEADBEEF) would otherwise hang the host GPU.
+// Copies up to five indirect-argument dwords into a private slot, guarding the consuming
+// vkCmdDispatchIndirect / vkCmdDraw*Indirect against garbage. Guest memory that a shader never
+// wrote (dropped BDA stores, patterns like 0xDEADBEEF) would otherwise hang the host GPU.
+//   mode 0 (dispatch): every argument is zeroed when any component exceeds its limit;
+//   mode 1 (draw):     each argument is clamped to its limit.
+// target_args[count] receives 1 when something was rejected or clamped.
 
 #version 450
 
@@ -16,24 +19,46 @@ layout(std430, binding = 1) writeonly buffer target_buf {
 
 layout(push_constant) uniform Params {
     uint source_dword;
-    uint max_x;
-    uint max_y;
-    uint max_z;
+    uint count;
+    uint mode;
+    uint pad;
+    uint max0;
+    uint max1;
+    uint max2;
+    uint max3;
+    uint max4;
 } params;
 
+uint limit_of(uint i) {
+    if (i == 0u) return params.max0;
+    if (i == 1u) return params.max1;
+    if (i == 2u) return params.max2;
+    if (i == 3u) return params.max3;
+    return params.max4;
+}
+
 void main() {
-    uint x = source_args[params.source_dword + 0u];
-    uint y = source_args[params.source_dword + 1u];
-    uint z = source_args[params.source_dword + 2u];
-    uint rejected = 0u;
-    if (x > params.max_x || y > params.max_y || z > params.max_z) {
-        x = 0u;
-        y = 0u;
-        z = 0u;
-        rejected = 1u;
+    uint values[5];
+    uint flagged = 0u;
+    for (uint i = 0u; i < 5u; i++) {
+        values[i] = 0u;
     }
-    target_args[0] = x;
-    target_args[1] = y;
-    target_args[2] = z;
-    target_args[3] = rejected;
+    for (uint i = 0u; i < params.count && i < 5u; i++) {
+        uint v = source_args[params.source_dword + i];
+        uint limit = limit_of(i);
+        if (v > limit) {
+            flagged = 1u;
+            v = params.mode == 1u ? limit : 0u;
+        }
+        values[i] = v;
+    }
+    if (params.mode == 0u && flagged != 0u) {
+        for (uint i = 0u; i < 5u; i++) {
+            values[i] = 0u;
+        }
+    }
+    for (uint i = 0u; i < params.count && i < 5u; i++) {
+        target_args[i] = values[i];
+    }
+    target_args[min(params.count, 5u)] = flagged;
 }

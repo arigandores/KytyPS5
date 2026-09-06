@@ -17,6 +17,7 @@
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
+#include "graphics/host_gpu/renderer/indirectArgsSanitizer.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/render.h"
@@ -31,6 +32,7 @@
 #include "libs/errno.h"
 
 #include <algorithm>
+#include <tuple>
 #include <array>
 #include <atomic>
 #include <bit>
@@ -783,6 +785,10 @@ struct DrawEmitInfo {
 	int32_t  vertex_offset = 0;
 	uint32_t first_vertex  = 0;
 	uint32_t first_instance = 0;
+	// GPU-side indirect draw: the arguments live in guest memory (sanitized copy bound at emit).
+	uint64_t   indirect_args_addr = 0;
+	vk::Buffer indirect_buffer    = nullptr;
+	uint64_t   indirect_offset    = 0;
 };
 
 struct DrawIndexBufferSource {
@@ -1206,7 +1212,15 @@ static void EmitDrawPrimitives(const HW::UserConfig& ucfg, vk::CommandBuffer vk_
 		case Prospero::PrimitiveType::kTriFan:
 		case Prospero::PrimitiveType::kTriStrip:
 		case Prospero::PrimitiveType::kRectList:
-			if (emit.indexed) {
+			if (emit.indirect_buffer != nullptr) {
+				if (emit.indexed) {
+					vk_buffer.drawIndexedIndirect(emit.indirect_buffer, emit.indirect_offset, 1,
+					                              sizeof(vk::DrawIndexedIndirectCommand));
+				} else {
+					vk_buffer.drawIndirect(emit.indirect_buffer, emit.indirect_offset, 1,
+					                       sizeof(vk::DrawIndirectCommand));
+				}
+			} else if (emit.indexed) {
 				vk_buffer.drawIndexed(draw.index_count, draw.instance_count, 0, emit.vertex_offset,
 				                      emit.first_instance);
 			} else {
@@ -1215,6 +1229,7 @@ static void EmitDrawPrimitives(const HW::UserConfig& ucfg, vk::CommandBuffer vk_
 			}
 			break;
 		case Prospero::PrimitiveType::kRectListLegacy:
+			EXIT_NOT_IMPLEMENTED(emit.indirect_buffer != nullptr);
 			if (emit.indexed) {
 				EXIT("unknown primitive type: %u\n", static_cast<uint32_t>(ucfg.GetPrimType()));
 			}
@@ -1223,6 +1238,7 @@ static void EmitDrawPrimitives(const HW::UserConfig& ucfg, vk::CommandBuffer vk_
 			vk_buffer.draw(4, draw.instance_count, emit.first_vertex, emit.first_instance);
 			break;
 		case Prospero::PrimitiveType::kQuadListLegacy:
+			EXIT_NOT_IMPLEMENTED(emit.indirect_buffer != nullptr);
 			EXIT_NOT_IMPLEMENTED((draw.index_count & 0x3u) != 0);
 			for (uint32_t i = 0; i < draw.index_count; i += 4) {
 				if (emit.indexed) {
@@ -1346,6 +1362,32 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	state.rendering =
 	    AcquireRenderTargets(buffer, state.color_info, state.color_count, state.depth_info);
 	lap.Mark(Common::FrameStats::Counter::DrawAcquireRtNs);
+	DrawEmitInfo emit_info = emit;
+	if (emit_info.indirect_args_addr != 0) {
+		// The arguments were produced by the GPU (culling); reading them on the CPU would drain the
+		// queue. Bind the cached buffer through the sanitizer: counts clamped to the index buffer
+		// size / an instance limit so garbage cannot hang the device.
+		const uint32_t dwords =
+		    emit_info.indexed ? sizeof(vk::DrawIndexedIndirectCommand) / sizeof(uint32_t)
+		                      : sizeof(vk::DrawIndirectCommand) / sizeof(uint32_t);
+		auto [args_buffer, args_offset] = m_context.GetBufferCache().ObtainBuffer(
+		    emit_info.indirect_args_addr, uint64_t {dwords} * sizeof(uint32_t), false);
+		EXIT_IF(args_buffer == nullptr);
+		if (m_indirect_sanitizer == nullptr) {
+			m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(
+			    m_context.GetGraphics(), m_context.GetCommandScheduler());
+		}
+		constexpr uint32_t MaxInstances = 1u << 20u;
+		const std::array<uint32_t, 5> limits =
+		    emit_info.indexed ? std::array<uint32_t, 5> {draw.index_count, MaxInstances, UINT32_MAX,
+		                                                 UINT32_MAX, UINT32_MAX}
+		                      : std::array<uint32_t, 5> {UINT32_MAX, MaxInstances, UINT32_MAX,
+		                                                 UINT32_MAX, 0};
+		m_context.GetCommandScheduler().EndRendering();
+		std::tie(emit_info.indirect_buffer, emit_info.indirect_offset) =
+		    m_indirect_sanitizer->Sanitize(buffer.Handle(), *args_buffer, args_offset, dwords,
+		                                   limits, true);
+	}
 
 	if (log_pipeline_phase) {
 		LogDrawPhase(draw.name, "CreatePipeline");
@@ -1395,7 +1437,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (set_auto_debug) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
 	}
-	EmitDrawPrimitives(ucfg, vk_buffer, state.vs_input_info, draw, emit);
+	EmitDrawPrimitives(ucfg, vk_buffer, state.vs_input_info, draw, emit_info);
 
 	if (set_auto_debug) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
@@ -1548,8 +1590,9 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	        : ResolveVertexOffset(ucfg.GetIndexOffset(), state.vs_input_info) + args.base_vertex;
 
 	DrawEmitInfo emit {};
-	emit.indexed       = true;
-	emit.vertex_offset = vertex_offset;
+	emit.indexed            = true;
+	emit.indirect_args_addr = args.indirect_args_addr;
+	emit.vertex_offset      = vertex_offset;
 	emit.first_instance =
 	    indirect ? args.first_instance : ResolveInstanceOffset(state.vs_input_info);
 
@@ -1655,7 +1698,8 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	             : ResolveVertexOffset(ucfg.GetIndexOffset(), state.vs_input_info) +
 	                   static_cast<int32_t>(args.first_vertex);
 	DrawEmitInfo emit {};
-	emit.first_vertex = static_cast<uint32_t>(vertex_offset);
+	emit.indirect_args_addr = args.indirect_args_addr;
+	emit.first_vertex       = static_cast<uint32_t>(vertex_offset);
 	emit.first_instance =
 	    indirect ? args.first_instance : ResolveInstanceOffset(state.vs_input_info);
 

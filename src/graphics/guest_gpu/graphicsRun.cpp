@@ -1132,6 +1132,39 @@ void CommandProcessor::DrawIndirect(uint32_t data_offset, uint32_t draw_initiato
 	const auto* args_addr =
 	    reinterpret_cast<const void*>(m_draw_indirect_args_base_addr + data_offset);
 
+	// GPU-side indirect draw: the arguments are usually written by a culling compute shader in
+	// the same frame, so reading them here page-faults on a GPU-dirty page and drains the whole
+	// GPU queue (1.5-4 ms per draw). vkCmdDraw*Indirect reads the cached buffer instead; the
+	// index buffer is bound whole (INDEX_BUFFER_SIZE indices) and the counts pass through the
+	// sanitizer. KYTY_INDIRECT_DRAW_CPU=1 restores the CPU path (also used for the legacy
+	// primitive types, 8-bit indices and an unknown index buffer size).
+	static const bool force_cpu = std::getenv("KYTY_INDIRECT_DRAW_CPU") != nullptr;
+	const auto        prim      = m_ucfg.GetPrimType();
+	const bool        legacy    = prim == Prospero::PrimitiveType::kRectListLegacy ||
+	                       prim == Prospero::PrimitiveType::kQuadListLegacy;
+	const bool gpu_path = !force_cpu && !legacy &&
+	                      (!indexed || (m_index_buffer_size != 0 && m_index_type_and_size != 2));
+	if (gpu_path) {
+		const auto address = reinterpret_cast<uint64_t>(args_addr);
+		if (!indexed) {
+			DrawIndexAuto({.vertex_count       = UINT32_MAX,
+			               .instance_count     = 1,
+			               .first_vertex       = 0,
+			               .first_instance     = 0,
+			               .offset_source      = DrawOffsetSource::IndirectArgs,
+			               .indirect_args_addr = address});
+			return;
+		}
+		DrawIndex({.index_count        = m_index_buffer_size,
+		           .index_addr         = reinterpret_cast<const void*>(m_index_base_addr),
+		           .instance_count     = 1,
+		           .base_vertex        = 0,
+		           .first_instance     = 0,
+		           .offset_source      = DrawOffsetSource::IndirectArgs,
+		           .indirect_args_addr = address});
+		return;
+	}
+
 	if (!indexed) {
 		DrawIndirectArgs args {};
 		std::memcpy(&args, args_addr, sizeof(args));

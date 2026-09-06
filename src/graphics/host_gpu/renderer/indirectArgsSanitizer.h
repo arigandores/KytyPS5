@@ -5,6 +5,7 @@
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
+#include <array>
 #include <cstdint>
 #include <utility>
 #include <vector>
@@ -14,7 +15,8 @@ namespace Libs::Graphics {
 struct GraphicContext;
 class CommandScheduler;
 
-// Validates dispatch-indirect group counts on the GPU before vkCmdDispatchIndirect consumes them.
+// Validates indirect arguments on the GPU before vkCmdDispatchIndirect / vkCmdDraw*Indirect consume
+// them.
 // The producing compute shader may never have written the arguments (for example a BDA store to a
 // page that was not cached yet), leaving fill patterns like 0xDEADBEEF in memory; dispatching such
 // counts hangs the host GPU. A one-thread compute pass copies the triple into a private ring
@@ -31,9 +33,18 @@ public:
 	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(vk::CommandBuffer command,
 	                                                        const Buffer&     source,
 	                                                        uint64_t          source_offset);
+	// Generic form: `dword_count` (<= 5) arguments at `source_offset`, each compared with its
+	// limit; clamp=false zeroes all of them when one exceeds (dispatch), clamp=true clamps each
+	// (draw). Returns the buffer and offset holding the sanitized copy.
+	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(vk::CommandBuffer command,
+	                                                        const Buffer&     source,
+	                                                        uint64_t          source_offset,
+	                                                        uint32_t          dword_count,
+	                                                        const std::array<uint32_t, 5>& limits,
+	                                                        bool clamp);
 
 private:
-	static constexpr uint32_t SlotSize  = 16;
+	static constexpr uint32_t SlotSize  = 32;
 	static constexpr uint32_t SlotCount = 4096;
 
 	GraphicContext&         m_graphics;

@@ -21,12 +21,7 @@ namespace Libs::Graphics {
 
 static std::atomic<uint32_t> g_render_color_log_count = 0;
 
-static void ResolveDccClearInfo(RenderColorInfo& info, vk::Format format, bool has_dcc,
-                                uint32_t packed_clear) {
-	// Register-backed DCC clears use the target's packed clear value. Decode one-word guest
-	// formats here; unsupported encodings remain tracked without unsafe materialization.
-	info.metadata_clear_supported =
-	    has_dcc && DecodePackedColorClear(format, packed_clear, info.color_clear_value);
+bool DccFixedClearSupported(vk::Format format) {
 	switch (format) {
 		case vk::Format::eR8Unorm:
 		case vk::Format::eR8G8Unorm:
@@ -48,11 +43,40 @@ static void ResolveDccClearInfo(RenderColorInfo& info, vk::Format format, bool h
 		case vk::Format::eR32Sfloat:
 		case vk::Format::eR32G32Sfloat:
 		case vk::Format::eR32G32B32A32Sfloat:
-		case vk::Format::eB10G11R11UfloatPack32:
-			info.metadata_fixed_clear_supported = has_dcc;
-			break;
-		default: info.metadata_fixed_clear_supported = false; break;
+		case vk::Format::eB10G11R11UfloatPack32: return true;
+		default: return false;
 	}
+}
+
+bool DecodeFixedDccClear(vk::Format format, uint8_t code, vk::ClearColorValue& clear) {
+	clear = {};
+	switch (code) {
+		case 0x00: return true;
+		case 0x40:
+			clear.float32[3] = 1.0f;
+			return DccFixedClearSupported(format);
+		case 0x80:
+			clear.float32[0] = 1.0f;
+			clear.float32[1] = 1.0f;
+			clear.float32[2] = 1.0f;
+			return DccFixedClearSupported(format);
+		case 0xc0:
+			clear.float32[0] = 1.0f;
+			clear.float32[1] = 1.0f;
+			clear.float32[2] = 1.0f;
+			clear.float32[3] = 1.0f;
+			return DccFixedClearSupported(format);
+		default: return false;
+	}
+}
+
+static void ResolveDccClearInfo(RenderColorInfo& info, vk::Format format, bool has_dcc,
+                                uint32_t packed_clear) {
+	// Register-backed DCC clears use the target's packed clear value. Decode one-word guest
+	// formats here; unsupported encodings remain tracked without unsafe materialization.
+	info.metadata_clear_supported =
+	    has_dcc && DecodePackedColorClear(format, packed_clear, info.color_clear_value);
+	info.metadata_fixed_clear_supported = has_dcc && DccFixedClearSupported(format);
 	if (!info.metadata_clear_supported) {
 		info.color_clear_value = {};
 	}

@@ -14,6 +14,7 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/hostMemory.h"
+#include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
@@ -851,6 +852,84 @@ void RenderExecutor::BindImage(ImageId id, bool storage) {
 	TrackImageBinding(id);
 }
 
+// A guest DCC fast clear only rewrites metadata, and ResolveDccAttachmentClear materializes it
+// as a load-op clear when the surface is next bound as a colour attachment. ASTRO BOT clears its
+// scene colour buffer, lights the deferred save-card tiles with compute image stores and only then
+// binds the buffer as an attachment: the load-op clear erased the compute output and the cards
+// stayed black. Clear the host image before any shader binding touches it and consume the
+// metadata state so the later attachment bind loads instead of clearing.
+void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id) {
+	auto& cache = m_context.GetTextureCache();
+	auto& image = cache.GetImage(id);
+	if (image.info.data.Empty() || image.info.IsDepth() || image.backing.image == nullptr ||
+	    image.depth_id || !image.registered ||
+	    image.info.metadata.kind != ImageMetadataKind::Dcc) {
+		return;
+	}
+	const auto address = image.info.metadata.range.address;
+	const auto layers  = std::min(image.info.resources.layers, 32u);
+	uint32_t   fill    = 0xffffffffu;
+	uint32_t   mask    = 0;
+	for (uint32_t layer = 0; layer < layers; layer++) {
+		if (cache.IsMetaCleared(address, layer, &fill)) {
+			mask |= 1u << layer;
+		}
+	}
+	if (mask == 0) {
+		return;
+	}
+	const auto          code    = static_cast<uint8_t>(fill);
+	vk::ClearColorValue clear {};
+	bool                decoded = false;
+	if (code == 0x20) {
+		// Register-backed clear: use the clear word of the colour slot that still addresses the
+		// surface. Without one the attachment path keeps handling it.
+		const auto& hw = buffer.GetRegisters();
+		for (uint32_t slot = 0; slot < 8 && !decoded; slot++) {
+			const auto& rt = hw.GetRenderTarget(slot);
+			if (rt.base.addr == image.info.data.address && rt.dcc_addr.addr == address) {
+				decoded =
+				    DecodePackedColorClear(image.info.pixel_format, rt.clear_word0.word0, clear);
+			}
+		}
+	} else {
+		decoded = DecodeFixedDccClear(image.info.pixel_format, code, clear);
+	}
+	static std::atomic<uint32_t> log_count = 0;
+	if (log_count++ < 32) {
+		LOGF("MaterializeDeferredDccClear: image=0x%016" PRIx64 " dcc=0x%016" PRIx64
+		     " code=0x%02x layers=0x%08x format=%u decoded=%d\n",
+		     image.info.data.address, address, static_cast<uint32_t>(code), mask,
+		     static_cast<uint32_t>(image.info.pixel_format), decoded ? 1 : 0);
+	}
+	if (!decoded) {
+		return;
+	}
+	buffer.EndRendering();
+	image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {},
+	              buffer.Handle());
+	for (uint32_t layer = 0; layer < layers; layer++) {
+		if ((mask & (1u << layer)) == 0) {
+			continue;
+		}
+		uint32_t count = 1;
+		while (layer + count < layers && (mask & (1u << (layer + count))) != 0) {
+			count++;
+		}
+		const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eColor, 0,
+		                                       image.info.resources.levels, layer, count};
+		buffer.Handle().clearColorImage(image.backing.image,
+		                                vk::ImageLayout::eTransferDstOptimal, &clear, 1, &range);
+		for (uint32_t consumed = layer; consumed < layer + count; consumed++) {
+			if (!cache.TouchMeta(address, consumed, false)) {
+				EXIT("failed to consume DCC clear state for a shader binding\n");
+			}
+		}
+		layer += count - 1;
+	}
+	cache.MarkGpuWritten(id);
+}
+
 void RenderExecutor::BindRenderTarget(ImageId id) {
 	auto& image             = m_context.GetTextureCache().GetImage(id);
 	image.binding.is_target = true;
@@ -1086,6 +1165,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+			MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id);
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
 			auto& binding = descriptors.images[i];
 			const auto&                 view = binding.desc.view_info;

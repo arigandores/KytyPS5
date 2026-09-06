@@ -208,6 +208,7 @@ private:
 	[[nodiscard]] bool        ResolveColorTargets(uint64_t submit_id, CommandBuffer& buffer,
 	                                              uint32_t render_target_slice_offset);
 	void                      BindImage(ImageId id, bool storage);
+	void                      MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id);
 	void                      BindRenderTarget(ImageId id);
 	void                      TrackImageBinding(ImageId id);
 	void                      ResetBindings();

@@ -35,6 +35,13 @@ struct RenderColorInfo {
 	vk::ClearColorValue             color_clear_value {};
 };
 
+// Fixed DCC clear codes (0x00, 0x40, 0x80, 0xc0) encode a constant colour without the CB clear
+// word registers. The host clear value is only well defined for these formats.
+[[nodiscard]] bool DccFixedClearSupported(vk::Format format);
+// Decodes a DCC clear code into a host clear value. Returns false for the register-backed code
+// (0x20), unrecognized codes and formats without fixed-clear support.
+[[nodiscard]] bool DecodeFixedDccClear(vk::Format format, uint8_t code, vk::ClearColorValue& clear);
+
 } // namespace Libs::Graphics
 
 #endif // EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_COLORRENDERTARGET_H_

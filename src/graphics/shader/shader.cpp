@@ -17,6 +17,10 @@
 #include "libs/errno.h"
 
 #include <algorithm>
+#include <fmt/format.h>
+#include <cstdlib>
+#include <mutex>
+#include <set>
 #include <atomic>
 #include <bit>
 #include <cstdio>
@@ -508,6 +512,18 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
 		    static_cast<Prospero::VertexAttribFormat>((attrib[in.semantic] >> 5u) & 0x1ffu);
 		uint32_t offset      = (attrib[in.semantic] >> 14u) & 0xfffu;
 		uint32_t fetch_index = (attrib[in.semantic] >> 26u) & 0x1u;
+		// Debug aid (KYTY_VTX_TRACE=1): raw attribute table entry and V# of every semantic.
+		static const bool vtx_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
+		if (vtx_trace && num_input_semantics >= 8) {
+			const auto* vs = &buffer[(attrib[in.semantic] & 0x1fu) * 4];
+			LOGF("VtxTrace: sem[%u]=%u reg=%u size=%u f16=%u custom=%u static_vb=%u static_attr=%u "
+			     "raw=0x%08x index=%zu format=%u offset=%u fetch=%u vsharp=%08x %08x %08x %08x\n",
+			     i, static_cast<uint32_t>(in.semantic), reg, size,
+			     static_cast<uint32_t>(in.is_f16), static_cast<uint32_t>(in.is_custom),
+			     static_cast<uint32_t>(in.static_vb_index),
+			     static_cast<uint32_t>(in.static_attribute), attrib[in.semantic], index,
+			     static_cast<uint32_t>(format), offset, fetch_index, vs[0], vs[1], vs[2], vs[3]);
+		}
 
 		if (fetch_index != 0) {
 			static std::atomic<uint64_t> log_count = 0;
@@ -684,6 +700,24 @@ static void ShaderGetStaticInputInfoPS(
 	EXIT_NOT_IMPLEMENTED(ps_info.input_num > std::size(ps_info.interpolator_settings));
 	ps_info.ps_system_input_base = ShaderCalcPsSystemInputBase(sh);
 	ps_info.vs_export_count      = sh.GetExportCount();
+	static const bool ps_inputs_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
+	if (ps_inputs_trace) {
+		static std::mutex         s_lock2;
+		static std::set<uint64_t> s_seen2;
+		std::scoped_lock          lock2 {s_lock2};
+		const uint64_t            k = (static_cast<uint64_t>(sh.m_spiVsOutConfig) << 32u) |
+		                   (static_cast<uint64_t>(ps_info.input_num) << 8u) | sh.ps_in_control;
+		if (s_seen2.insert(k).second) {
+			std::string offsets;
+			for (uint32_t i = 0; i < ps_info.input_num && i < 32u; i++) {
+				offsets += fmt::format(" {:x}", sh.ps_interpolator_settings[i]);
+			}
+			LOGF("PsInputs: vs_out_config=0x%08x exports=%u ps_in_control=0x%08x input_num=%u "
+			     "cntl=%s\n",
+			     sh.m_spiVsOutConfig, ps_info.vs_export_count, sh.ps_in_control, ps_info.input_num,
+			     offsets.c_str());
+		}
+	}
 	const uint32_t active_inputs = sh.ps_input_ena & sh.ps_input_addr;
 	if ((active_inputs & 0x00000002u) != 0) {
 		ps_info.ps_perspective_center_vgpr = (active_inputs & 0x00000001u) != 0 ? 2u : 0u;

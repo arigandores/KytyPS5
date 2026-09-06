@@ -233,6 +233,9 @@ struct Shader {
 };
 
 struct ShaderMappedData {
+	// Declared AGC hash (or XXH3 of the code), computed when the shader is registered so that
+	// draws never read the code pages (they may share a page with GPU-written data).
+	uint64_t        hash                = 0;
 	ShaderUserData* user_data           = nullptr;
 	ShaderSemantic* input_semantics     = nullptr;
 	uint32_t        num_input_semantics = 0;
@@ -242,6 +245,7 @@ struct ShaderMappedData {
 
 void ShaderInit();
 void ShaderMapUserData(uint64_t addr, const ShaderMappedData& data);
+uint64_t ShaderComputeHash(const void* code, uint32_t size_bytes);
 
 void     ShaderDbgDumpInputInfo(const ShaderVertexInputInfo& info);
 void     ShaderDbgDumpInputInfo(const ShaderPixelInputInfo& info);

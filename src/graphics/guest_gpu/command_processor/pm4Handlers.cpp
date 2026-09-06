@@ -1332,13 +1332,20 @@ KYTY_CP_OP_PARSER(CpOpDispatchIndirect) {
 			uint32_t thread_group_z;
 		};
 
-		auto* args = reinterpret_cast<const DispatchIndirectArgs*>(
-		    buffer[0] | (static_cast<uint64_t>(buffer[1]) << 32u));
-		uint32_t mode = buffer[2];
+		const auto args_addr = buffer[0] | (static_cast<uint64_t>(buffer[1]) << 32u);
+		uint32_t   mode      = buffer[2];
 
-		EXIT_NOT_IMPLEMENTED(args == nullptr);
-		cp.DispatchDirect(args->thread_group_x, args->thread_group_y, args->thread_group_z, mode,
-		                  reinterpret_cast<uint64_t>(args));
+		EXIT_NOT_IMPLEMENTED(args_addr == 0);
+		// The GPU reads the real values. A previous compute shader usually wrote them, so reading
+		// them here page-faults on a GPU-dirty page and drains the whole GPU queue; only the
+		// thread-dimension mode (converted to group counts on the CPU) needs the CPU view.
+		constexpr uint32_t   DispatchInitiatorUseThreadDimensions = 1u << 5u;
+		DispatchIndirectArgs args {};
+		if ((mode & DispatchInitiatorUseThreadDimensions) != 0) {
+			std::memcpy(&args, reinterpret_cast<const void*>(args_addr), sizeof(args));
+		}
+		cp.DispatchDirect(args.thread_group_x, args.thread_group_y, args.thread_group_z, mode,
+		                  args_addr);
 
 		return 3;
 	}
@@ -2312,7 +2319,7 @@ KYTY_CP_OP_PARSER(CpOpReleaseMem) {
 		}
 		if (queued) {
 			Common::FrameStats::SiteScope site_scope("release-mem-irq");
-			cp.BufferFlush();
+			cp.BufferFlushLazy();
 		}
 	};
 
@@ -2353,7 +2360,7 @@ KYTY_CP_OP_PARSER(CpOpReleaseMem) {
 		                      interrupt_selector, interrupt_context_id);
 		{
 			Common::FrameStats::SiteScope site_scope("release-mem-data1");
-			cp.BufferFlush();
+			cp.BufferFlushLazy();
 		}
 
 		return 7;
@@ -2373,7 +2380,7 @@ KYTY_CP_OP_PARSER(CpOpReleaseMem) {
 		                      interrupt_selector, interrupt_context_id);
 		if (interrupt_selector == 0x01) {
 			Common::FrameStats::SiteScope site_scope("release-mem-data5-irq");
-			cp.BufferFlush();
+			cp.BufferFlushLazy();
 		}
 
 		return 7;

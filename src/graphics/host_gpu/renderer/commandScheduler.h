@@ -51,6 +51,8 @@ public:
 	[[nodiscard]] MasterSemaphore& GetMasterSemaphore() noexcept { return m_master; }
 	[[nodiscard]] RenderContext&   Context() const noexcept { return m_context; }
 	[[nodiscard]] GraphicContext&  Graphics() const noexcept { return m_graphics; }
+	// Host time (FrameStats::NowNs) of the last vkQueueSubmit; used to coalesce EOP flushes.
+	[[nodiscard]] uint64_t LastSubmitNs() const noexcept { return m_last_submit_ns; }
 
 private:
 	class CommandPool {
@@ -119,6 +121,7 @@ private:
 	int64_t                                   m_timestamp_slot      = -1;
 	std::deque<std::pair<uint64_t, uint32_t>> m_timestamp_pending;
 	std::mutex                                m_timestamp_mutex;
+	uint64_t                                  m_last_submit_ns = 0;
 };
 
 } // namespace Libs::Graphics

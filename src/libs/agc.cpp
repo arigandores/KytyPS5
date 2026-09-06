@@ -667,6 +667,7 @@ int KYTY_SYSV_ABI AgcCreateShader(Shader** dst, void* header, const volatile voi
 	map.num_input_semantics = h->num_input_semantics;
 	map.code_size_bytes     = h->shader_size;
 	map.scratch_size_dwords = h->scratch_size_dw_per_thread;
+	map.hash                = ShaderComputeHash(const_cast<const void*>(code), h->shader_size);
 
 	ShaderMapUserData(base, map);
 

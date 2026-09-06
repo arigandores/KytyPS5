@@ -483,37 +483,37 @@ private:
 			                          static_cast<unsigned>(value.GetType())));
 			return false;
 		}
-		if (!m_reserved) {
-			m_cache.reserve(m_program.value_storage.size());
-			m_visiting.reserve(m_program.value_storage.size());
-			m_reserved = true;
-		}
 		if (!m_active_mask.IsEmpty() && IsRuntimeSelect(inst->GetOpcode()) &&
 		    inst->NumArgs() == 3 && inst->Arg(0).Resolve() == m_active_mask) {
 			return EvaluateWide(inst->Arg(1), result);
 		}
-		if (const auto found = m_cache.find(inst); found != m_cache.end()) {
-			result = found->second;
-			return true;
+		{
+			const auto& slot = Slot(inst);
+			if (slot.state == SlotDone) {
+				result = slot.value;
+				return true;
+			}
+			if (slot.state == SlotVisiting) {
+				RecordFailure(fmt::format("cyclic dependency through {}",
+				                          ValueOpcodeName(inst->GetOpcode())));
+				return false;
+			}
 		}
-		if (std::ranges::find(m_visiting, inst) != m_visiting.end()) {
-			RecordFailure(fmt::format("cyclic dependency through {}",
-			                          ValueOpcodeName(inst->GetOpcode())));
-			return false;
-		}
-		m_visiting.push_back(inst);
-		uint64_t out = 0;
+		Slot(inst).state = SlotVisiting;
+		uint64_t out     = 0;
 		if (Common::FrameStats::Enabled()) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::MatEvalInsts, 1);
 		}
 		if (!EvaluateInst(*inst, out)) {
 			RecordFailure(fmt::format("cannot evaluate {}", ValueOpcodeName(inst->GetOpcode())));
-			m_visiting.pop_back();
+			// Not memoized (as before): the slot may have moved during the recursion, look it up.
+			Slot(inst).state = SlotEmpty;
 			return false;
 		}
-		m_visiting.pop_back();
-		m_cache.emplace(inst, out);
-		result = out;
+		auto& done = Slot(inst);
+		done.state = SlotDone;
+		done.value = out;
+		result     = out;
 		return true;
 	}
 
@@ -992,14 +992,69 @@ private:
 		return false;
 	}
 
-	const ResourcePlan&                       m_program;
-	const SrtRuntime&                         m_runtime;
-	std::span<const uint8_t>                  m_clean_flat_slots;
-	Evaluator*                                m_clean_evaluator = nullptr;
-	Value                                     m_active_mask;
-	std::unordered_map<const Inst*, uint64_t> m_cache;
-	std::vector<const Inst*>                  m_visiting;
-	bool                                      m_reserved = false;
+	// Per-evaluation memo: open addressing keyed by instruction pointer. A snapshot evaluates
+	// ~100 values per draw, so this runs once per draw; the previous unordered_map allocated a
+	// node per value and the visiting list was scanned linearly.
+	enum : uint8_t { SlotEmpty = 0, SlotVisiting = 1, SlotDone = 2 };
+	struct TableSlot {
+		const Inst* inst  = nullptr;
+		uint64_t    value = 0;
+		uint8_t     state = SlotEmpty;
+	};
+
+	static size_t Hash(const Inst* inst) {
+		auto x = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(inst));
+		x ^= x >> 17u;
+		x *= 0x9E3779B97F4A7C15ull;
+		return static_cast<size_t>(x >> 29u);
+	}
+
+	void Rehash() {
+		auto old = std::move(m_table);
+		m_table.assign(old.empty() ? 256u : old.size() * 2u, {});
+		m_table_used    = 0;
+		const auto mask = m_table.size() - 1u;
+		for (const auto& slot: old) {
+			if (slot.inst == nullptr) {
+				continue;
+			}
+			auto index = Hash(slot.inst) & mask;
+			while (m_table[index].inst != nullptr) {
+				index = (index + 1u) & mask;
+			}
+			m_table[index] = slot;
+			m_table_used++;
+		}
+	}
+
+	// The returned reference is invalidated by the next Slot() call that inserts.
+	TableSlot& Slot(const Inst* inst) {
+		if (m_table.empty() || m_table_used * 2u >= m_table.size()) {
+			Rehash();
+		}
+		const auto mask  = m_table.size() - 1u;
+		auto       index = Hash(inst) & mask;
+		for (;;) {
+			auto& slot = m_table[index];
+			if (slot.inst == inst) {
+				return slot;
+			}
+			if (slot.inst == nullptr) {
+				slot.inst = inst;
+				m_table_used++;
+				return slot;
+			}
+			index = (index + 1u) & mask;
+		}
+	}
+
+	const ResourcePlan&      m_program;
+	const SrtRuntime&        m_runtime;
+	std::span<const uint8_t> m_clean_flat_slots;
+	Evaluator*               m_clean_evaluator = nullptr;
+	Value                    m_active_mask;
+	std::vector<TableSlot>   m_table;
+	size_t                   m_table_used = 0;
 };
 
 const DescriptorSource* Source(const ResourcePlan& program, uint32_t source) {

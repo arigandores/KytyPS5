@@ -867,6 +867,11 @@ bool TryReadBacking(uint64_t vaddr, void* data, uint64_t size) {
 	       g_guest_address_space->TryReadBacking(vaddr, data, size);
 }
 
+bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
+	return g_guest_address_space != nullptr &&
+	       g_guest_address_space->TryGetBackingPointer(vaddr, size, pointer);
+}
+
 bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
 	if (g_gpu_resources != nullptr && IsGpuAddressRange(vaddr, size)) {
 		if (!Graphics::GuestGpu::IsGpuThread() ||

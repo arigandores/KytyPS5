@@ -109,6 +109,8 @@ void                   RegisterCallbacks(callback_func_t alloc_func, callback_fu
 void                   SetFlexibleMemorySize(uint64_t size);
 bool                   TryWriteBacking(uint64_t vaddr, const void* data, uint64_t size);
 bool                   TryReadBacking(uint64_t vaddr, void* data, uint64_t size);
+// Host pointer to the backing of [vaddr, vaddr+size) when the range lies inside one mapping.
+bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
 bool                   TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size);
 bool                   TryReadPrtBacking(uint64_t vaddr, void* data, uint64_t size);
 [[nodiscard]] uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size);

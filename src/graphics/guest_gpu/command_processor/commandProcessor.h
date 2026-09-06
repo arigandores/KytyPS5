@@ -61,6 +61,7 @@ public:
 
 	void            BufferInit();
 	void            BufferFlush();
+	void            BufferFlushLazy();
 	void            BufferFlushAndWait();
 	void            BufferWait();
 	HW::Context&    GetCtx() { return m_ctx; }

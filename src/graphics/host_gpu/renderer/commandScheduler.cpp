@@ -447,6 +447,7 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 		m_timestamp_slot = -1;
 	}
 	HarvestTimestamps();
+	m_last_submit_ns = Common::FrameStats::NowNs();
 	if (submit_t0 != 0) {
 		namespace FS  = Common::FrameStats;
 		const auto ns = FS::NowNs() - submit_t0;

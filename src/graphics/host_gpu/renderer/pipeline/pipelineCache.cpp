@@ -102,13 +102,40 @@ bool ReadShaderGuestMemory(void*, uint64_t address, uint32_t* value) {
 
 // Live guest memory for SRT walking. The evaluator falls back to a raw host memcpy when no
 // reader is installed, which turns an unmapped pointer in a descriptor chain into a host
-// access violation instead of a reported evaluation failure.
-bool ReadShaderLiveMemory(void*, uint64_t address, uint32_t* value) {
+// access violation instead of a reported evaluation failure. The walk reads tens of words per
+// draw, mostly from the same descriptor pages: the caller passes a ShaderReadCache as userdata
+// and each page is validated once per lookup (the validated map lock costs more than the read).
+struct ShaderReadCache {
+	uint64_t       page    = UINT64_MAX;
+	const uint8_t* backing = nullptr;
+};
+
+bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 	if (Common::FrameStats::Enabled()) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ProgReads, 1);
 	}
-	return value != nullptr &&
-	       Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
+	if (value == nullptr) {
+		return false;
+	}
+	auto* cache = static_cast<ShaderReadCache*>(userdata);
+	constexpr uint64_t PageSize = 0x1000;
+	const auto         page     = address & ~(PageSize - 1);
+	if (cache != nullptr && (address & 3u) == 0) {
+		if (cache->page != page) {
+			const void* backing = nullptr;
+			if (Libs::LibKernel::Memory::TryGetBackingPointer(page, PageSize, &backing)) {
+				cache->page    = page;
+				cache->backing = static_cast<const uint8_t*>(backing);
+			} else {
+				cache->page = UINT64_MAX;
+			}
+		}
+		if (cache->page == page) {
+			std::memcpy(value, cache->backing + (address - page), sizeof(*value));
+			return true;
+		}
+	}
+	return Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
 }
 
 void DumpShaderSpirv(const char* stage_name, uint64_t shader_hash,
@@ -318,10 +345,12 @@ struct PipelineCache::ProgramCache {
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
 		ShaderRecompiler::IR::ResourceSnapshot       resources;
 		ShaderRecompiler::IR::ResourceSpecialization specialization;
+		ShaderReadCache                              read_cache;
 		const ShaderRecompiler::IR::SrtRuntime       runtime {
 		    .user_data                  = params.user_data,
 		    .shader_base                = params.Base(),
 		    .read_memory                = ReadShaderLiveMemory,
+		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
 		if (entry != programs.end()) {

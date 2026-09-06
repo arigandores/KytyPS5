@@ -368,6 +368,27 @@ void CommandProcessor::BufferFlush() {
 	GetScheduler().Flush();
 }
 
+// RELEASE_MEM interrupts and label writes used to submit immediately so the CPU saw them as
+// soon as possible. ASTRO BOT emits ~420 of them per frame (one per pass); every vkQueueSubmit
+// costs ~12 us of host time and leaves a bubble on the GPU queue. Submit only when the previous
+// submit is older than KYTY_EOP_FLUSH_US (default 300 us, 0 = always). The deferred completion
+// callbacks are tied to the tick of the current command buffer and run once a later flush
+// submits it (at the end of the submission slice at the latest).
+void CommandProcessor::BufferFlushLazy() {
+	static const int64_t window_us = [] {
+		const char* value = std::getenv("KYTY_EOP_FLUSH_US");
+		return value != nullptr ? std::strtoll(value, nullptr, 10) : 300ll;
+	}();
+	if (window_us <= 0) {
+		BufferFlush();
+		return;
+	}
+	const auto now = Common::FrameStats::NowNs();
+	if (now - GetScheduler().LastSubmitNs() >= static_cast<uint64_t>(window_us) * 1000u) {
+		BufferFlush();
+	}
+}
+
 void CommandProcessor::BufferFlushAndWait() {
 	GetScheduler().FlushAndWait();
 }
@@ -1378,11 +1399,17 @@ void CommandProcessor::DispatchIndirect(uint32_t data_offset, uint32_t mode) {
 	EXIT_NOT_IMPLEMENTED(m_dispatch_indirect_args_base_addr == 0);
 
 	const auto args_addr = m_dispatch_indirect_args_base_addr + data_offset;
-	auto*      args      = reinterpret_cast<const DispatchIndirectArgs*>(args_addr);
 
-	// The CPU view of the arguments is only informational; the GPU reads the real values.
-	DispatchDirect(args->thread_group_x, args->thread_group_y, args->thread_group_z, mode,
-	               args_addr);
+	// The GPU reads the real values. The arguments are usually written by a previous compute
+	// shader, so touching them here page-faults on a GPU-dirty page and drains the whole GPU
+	// queue (~1 ms per indirect dispatch). Only the thread-dimension mode, which the renderer
+	// converts to group counts on the CPU, needs the CPU view.
+	constexpr uint32_t   DispatchInitiatorUseThreadDimensions = 1u << 5u;
+	DispatchIndirectArgs args {};
+	if ((mode & DispatchInitiatorUseThreadDimensions) != 0) {
+		std::memcpy(&args, reinterpret_cast<const void*>(args_addr), sizeof(args));
+	}
+	DispatchDirect(args.thread_group_x, args.thread_group_y, args.thread_group_z, mode, args_addr);
 }
 
 void CommandProcessor::DrawIndexAuto(DrawAutoArgs args) {

@@ -188,6 +188,26 @@ public:
 		    });
 	}
 
+	// Host pointer into the backing for a range that lies inside one mapping. The pointer stays
+	// valid until that range is unmapped, so a caller reading many words from one page can
+	// validate the page once instead of taking the map lock per word.
+	bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
+		if (pointer == nullptr || !IsAvailable() || size == 0 || UINT64_MAX - vaddr < size) {
+			return false;
+		}
+		std::lock_guard lock(m_mutex);
+		MapEntry        entry {};
+		if (!FindContainingUnlocked(vaddr, size, &entry)) {
+			return false;
+		}
+		const auto offset = entry.backing_offset + vaddr - entry.vaddr;
+		if (!RangeOk(offset, size)) {
+			return false;
+		}
+		*pointer = m_backing_base + offset;
+		return true;
+	}
+
 	bool TryReadSparseBacking(uint64_t vaddr, void* data, uint64_t size) {
 		if (!IsAvailable() || data == nullptr || size == 0 || UINT64_MAX - vaddr < size) {
 			return false;
@@ -738,6 +758,10 @@ public:
 
 	bool TryReadBacking(uint64_t vaddr, void* data, uint64_t size) {
 		return m_backing->TryReadBacking(vaddr, data, size);
+	}
+
+	bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
+		return m_backing->TryGetBackingPointer(vaddr, size, pointer);
 	}
 
 	bool TryReadSparseBacking(uint64_t vaddr, void* data, uint64_t size) {

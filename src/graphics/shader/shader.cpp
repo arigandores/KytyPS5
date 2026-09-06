@@ -1,5 +1,7 @@
 #include "graphics/shader/shader.h"
 
+#include "kernel/memory.h"
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -66,6 +68,8 @@ struct ShaderBinaryInfo {
 
 static std::unique_ptr<std::unordered_map<uint64_t, ShaderMappedData>> g_shader_map;
 static std::mutex                                                      g_shader_map_mutex;
+static std::mutex g_shader_hash_mutex;
+static std::unordered_map<uint64_t, std::pair<uint32_t, uint64_t>> g_shader_hash_cache;
 
 void ShaderInit() {
 	EXIT_IF(g_shader_map != nullptr);
@@ -76,9 +80,30 @@ void ShaderInit() {
 void ShaderMapUserData(uint64_t addr, const ShaderMappedData& data) {
 	EXIT_IF(g_shader_map == nullptr);
 
+	{
+		std::scoped_lock lock(g_shader_hash_mutex);
+		g_shader_hash_cache.erase(addr);
+	}
 	std::scoped_lock lock(g_shader_map_mutex);
 
 	(*g_shader_map)[addr] = data;
+}
+
+static const ShaderBinaryInfo* GetBinaryInfo(const uint32_t* code);
+
+uint64_t ShaderComputeHash(const void* code, uint32_t size_bytes) {
+	if (code == nullptr || size_bytes < 8u) {
+		return 0;
+	}
+	const auto* words  = static_cast<const uint32_t*>(code);
+	const auto* header = GetBinaryInfo(words);
+	if (header != nullptr) {
+		const auto hash = (static_cast<uint64_t>(header->hash1) << 32u) | header->hash0;
+		if (hash != 0) {
+			return hash;
+		}
+	}
+	return XXH3_64bits(code, size_bytes & ~3u);
 }
 
 static ShaderMappedData ShaderGetMappedData(uint64_t addr, const char* label) {
@@ -104,9 +129,50 @@ static const ShaderBinaryInfo* GetBinaryInfo(const uint32_t* code) {
 	return nullptr;
 }
 
+// Reads the AGC binary header through the memory backing: the code may share a page with
+// GPU-written data (indirect arguments), and a direct read would page-fault into a full GPU
+// readback drain.
 static uint64_t GetDeclaredShaderHash(uint64_t shader_addr) {
-	const auto* header = GetBinaryInfo(reinterpret_cast<const uint32_t*>(shader_addr));
-	return header != nullptr ? (static_cast<uint64_t>(header->hash1) << 32u) | header->hash0 : 0;
+	uint32_t head[2] {};
+	if (!Libs::LibKernel::Memory::TryReadBacking(shader_addr, head, sizeof(head))) {
+		const auto* header = GetBinaryInfo(reinterpret_cast<const uint32_t*>(shader_addr));
+		return header != nullptr ? (static_cast<uint64_t>(header->hash1) << 32u) | header->hash0
+		                         : 0;
+	}
+	if (head[0] != 0xBEEB03FF) {
+		return 0;
+	}
+	ShaderBinaryInfo info {};
+	const auto       info_addr = shader_addr + (static_cast<uint64_t>(head[1]) + 1u) * 8u;
+	if (!Libs::LibKernel::Memory::TryReadBacking(info_addr, &info, sizeof(info))) {
+		return 0;
+	}
+	return (static_cast<uint64_t>(info.hash1) << 32u) | info.hash0;
+}
+
+// Shader hash per code address (declared AGC hash, else XXH3 of the code), computed once per
+// registration instead of on every draw.
+static uint64_t CachedShaderHash(uint64_t shader_addr, std::span<const uint32_t> code) {
+	const auto code_size = static_cast<uint32_t>(code.size_bytes());
+	{
+		std::scoped_lock lock(g_shader_hash_mutex);
+		if (auto it = g_shader_hash_cache.find(shader_addr);
+		    it != g_shader_hash_cache.end() && it->second.first == code_size) {
+			return it->second.second;
+		}
+	}
+	uint64_t hash = GetDeclaredShaderHash(shader_addr);
+	if (hash == 0) {
+		std::vector<uint32_t> copy(code.size());
+		if (Libs::LibKernel::Memory::TryReadBacking(shader_addr, copy.data(), code.size_bytes())) {
+			hash = XXH3_64bits(copy.data(), code.size_bytes());
+		} else {
+			hash = XXH3_64bits(code.data(), code.size_bytes());
+		}
+	}
+	std::scoped_lock lock(g_shader_hash_mutex);
+	g_shader_hash_cache[shader_addr] = {code_size, hash};
+	return hash;
 }
 
 static ShaderParams GetShaderParams(uint64_t shader_addr, const char* label, uint64_t declared_hash,
@@ -119,11 +185,11 @@ static ShaderParams GetShaderParams(uint64_t shader_addr, const char* label, uin
 	}
 	const auto code_words = data.code_size_bytes / sizeof(uint32_t);
 	const auto code = std::span {reinterpret_cast<const uint32_t*>(shader_addr), code_words};
+	(void)declared_hash;
 	return {
 	    .code      = code,
 	    .user_data = user_data,
-	    .hash      = declared_hash != 0 ? declared_hash
-	                                    : XXH3_64bits(code.data(), code.size_bytes()),
+	    .hash      = data.hash != 0 ? data.hash : CachedShaderHash(shader_addr, code),
 	};
 }
 
@@ -894,7 +960,7 @@ ShaderParams PrepareProgram(const HW::VertexShaderInfo& regs, const HW::ShaderRe
 		EXIT("failed to prepare vertex shader program\n");
 	}
 	return GetShaderParams(
-	    regs.es_regs.data_addr, "ShaderRecompiler VS", GetDeclaredShaderHash(regs.es_regs.data_addr),
+	    regs.es_regs.data_addr, "ShaderRecompiler VS", 0,
 	    std::span<const uint32_t>(regs.gs_user_sgpr.value, regs.gs_regs.rsrc2.user_sgpr), data);
 }
 
@@ -905,7 +971,7 @@ ShaderParams PrepareProgram(
 	const auto data = ShaderGetMappedData(regs.ps_regs.data_addr, "ShaderGetInputInfoPS():");
 	ShaderGetStaticInputInfoPS(regs, sh, target_export_mapping, data, ps_info);
 	return GetShaderParams(
-	    regs.ps_regs.data_addr, "ShaderRecompiler PS", GetDeclaredShaderHash(regs.ps_regs.data_addr),
+	    regs.ps_regs.data_addr, "ShaderRecompiler PS", 0,
 	    std::span<const uint32_t>(regs.ps_user_sgpr.value, regs.ps_regs.rsrc2.user_sgpr), data);
 }
 
@@ -914,7 +980,7 @@ ShaderParams PrepareProgram(const HW::ComputeShaderInfo& regs, const HW::ShaderR
 	const auto data = ShaderGetMappedData(regs.cs_regs.data_addr, "ShaderGetInputInfoCS():");
 	ShaderGetStaticInputInfoCS(regs, sh, data, info);
 	return GetShaderParams(
-	    regs.cs_regs.data_addr, "ShaderRecompiler CS", GetDeclaredShaderHash(regs.cs_regs.data_addr),
+	    regs.cs_regs.data_addr, "ShaderRecompiler CS", 0,
 	    std::span<const uint32_t>(regs.cs_user_sgpr.value, regs.cs_regs.user_sgpr), data);
 }
 

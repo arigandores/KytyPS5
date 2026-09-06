@@ -13,6 +13,7 @@
 
 #include <map>
 #include <span>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -70,6 +71,24 @@ public:
 	void               ProcessFaultBuffer();
 	void               SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size);
 	void               RunGarbageCollector();
+	// Records asynchronous downloads of the GPU-dirty parts of regions the CPU keeps reading
+	// after the GPU wrote them, so that the next CPU read finds the page clean instead of
+	// draining the GPU queue on the GPU thread. Called at the end of every submission slice.
+	void PrefetchHotReadbacks();
+	// A readback split into the GPU-thread part (record the copies, submit) and the waiting part
+	// (done by the guest thread that needs the data), see ReadMemory.
+	struct ReadbackPiece {
+		uint64_t address = 0;
+		uint64_t size    = 0;
+		uint64_t offset  = 0; // in the download ring, relative to base_offset
+	};
+	struct AsyncReadback {
+		std::vector<ReadbackPiece> pieces;
+		uint8_t*                   mapped      = nullptr;
+		uint64_t                   base_offset = 0;
+		uint64_t                   tick        = 0;
+		uint64_t                   seq         = 0;
+	};
 
 private:
 	friend struct BufferCacheTestAccess;
@@ -109,6 +128,8 @@ private:
 	void DownloadBufferMemory(std::span<const DownloadCopy> copies);
 	void WriteHostMemory(uint64_t vaddr, std::span<const uint8_t> data);
 	void ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write);
+	[[nodiscard]] AsyncReadback BeginAsyncReadback(uint64_t vaddr, uint64_t size);
+	bool                        FinishAsyncReadback(const AsyncReadback& job);
 
 	GraphicContext&                                   m_graphics;
 	CommandScheduler&                                 m_scheduler;
@@ -130,6 +151,24 @@ private:
 	uint64_t m_trigger_gc_memory  = 1ull * 1024 * 1024 * 1024;
 	uint64_t m_critical_gc_memory = 2ull * 1024 * 1024 * 1024;
 	uint64_t m_gc_tick            = 0;
+
+	// Readback prefetch state (PrefetchHotReadbacks). A hot region is the 512 KB window around
+	// an address whose CPU read had to drain the GPU; GPU writes are sequence-stamped per 64 KB
+	// bucket so a completed prefetch only clears the dirty state when no newer write landed.
+	struct HotRegion {
+		uint64_t begin          = 0;
+		uint64_t end            = 0;
+		uint32_t hits           = 0;
+		int      last_hit_frame = 0;
+		bool     in_flight      = false;
+	};
+	static constexpr uint32_t HotBucketBits = 16;
+	std::unordered_map<uint64_t, HotRegion> m_hot_regions;
+	std::unordered_map<uint64_t, uint64_t>  m_bucket_write_seq;
+	uint64_t                                m_gpu_write_seq   = 0;
+	uint64_t                                m_large_write_seq = 0;
+	void                   NoteGpuWrite(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] uint64_t LastGpuWriteSeq(uint64_t vaddr, uint64_t size) const;
 };
 
 } // namespace Libs::Graphics

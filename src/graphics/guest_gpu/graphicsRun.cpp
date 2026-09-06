@@ -838,6 +838,7 @@ bool GuestGpu::Process(Submission& submission) {
 				if (complete) {
 					m_renderer.GetGpuResources().RunGarbageCollector();
 				}
+				m_renderer.GetBufferCache().PrefetchHotReadbacks();
 				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
 			} else if (complete) {
@@ -865,6 +866,7 @@ bool GuestGpu::Process(Submission& submission) {
 				if (complete) {
 					m_renderer.GetGpuResources().RunGarbageCollector();
 				}
+				m_renderer.GetBufferCache().PrefetchHotReadbacks();
 				Common::FrameStats::SiteScope site_scope("slice-end-compute");
 				cp.BufferFlush();
 			} else if (complete) {

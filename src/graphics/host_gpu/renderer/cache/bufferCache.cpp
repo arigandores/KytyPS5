@@ -268,8 +268,29 @@ void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
 	}
 	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 	const auto        t0    = std::chrono::steady_clock::now();
-	m_scheduler.Context().GetGpu().SendCommandSync(
-	    [this, vaddr, size, is_write] { ReadMemoryOnGpu(vaddr, size, is_write); });
+	auto&             gpu   = m_scheduler.Context().GetGpu();
+	if (GuestGpu::IsGpuThread() || is_write) {
+		gpu.SendCommandSync([this, vaddr, size, is_write] { ReadMemoryOnGpu(vaddr, size, is_write); });
+	} else {
+		// Guest thread: nothing to do if the page went clean meanwhile (prefetch, another drain).
+		for (uint32_t attempt = 0; attempt < 64 && m_memory_tracker.IsRegionGpuModified(vaddr, size);
+		     attempt++) {
+			AsyncReadback job;
+			gpu.SendCommandSync([this, vaddr, size, &job] { job = BeginAsyncReadback(vaddr, size); });
+			if (job.pieces.empty()) {
+				break;
+			}
+			{
+				Common::FrameStats::SiteScope site_scope("download-guest");
+				m_scheduler.GetMasterSemaphore().Wait(job.tick);
+			}
+			bool complete = false;
+			gpu.SendCommandSync([this, &job, &complete] { complete = FinishAsyncReadback(job); });
+			if (complete) {
+				break;
+			}
+		}
+	}
 	if (trace) {
 		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
 		                    std::chrono::steady_clock::now() - t0)
@@ -308,6 +329,12 @@ void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) 
 		    }
 	    });
 	if (!copies.empty()) {
+		// Remember the window: the same regions are read every frame (PrefetchHotReadbacks).
+		auto& hot = m_hot_regions[vaddr >> HotBucketBits];
+		hot.begin = hot.hits == 0 ? window_begin : std::min(hot.begin, window_begin);
+		hot.end   = hot.hits == 0 ? window_end : std::max(hot.end, window_end);
+		hot.hits++;
+		hot.last_hit_frame = m_scheduler.Context().GetGpu().GetFrameNum();
 		static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 		const auto        t0    = std::chrono::steady_clock::now();
 		DownloadBufferMemory(copies);
@@ -533,6 +560,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	(void)SynchronizeBuffer(*buffer, vaddr, size, is_written, is_texel_buffer);
 	if (is_written) {
 		m_gpu_modified_ranges.Add(vaddr, size);
+		NoteGpuWrite(vaddr, size);
 	}
 	return {buffer, buffer->Offset(vaddr)};
 }
@@ -876,6 +904,237 @@ void BufferCache::RunGarbageCollector() {
 
 void BufferCache::ProcessFaultBuffer() {
 	m_fault_manager.ProcessFaultBuffer();
+}
+
+// ---- Asynchronous readback (guest thread waits, GPU thread keeps going) --------------------------
+//
+// A CPU read of GPU-written memory needs the GPU to reach the copy that brings the data back. The
+// old path executed the whole readback on the GPU thread (record, submit, wait, write back), so
+// every such read stopped PM4 processing for the full GPU queue depth (1.5-4 ms) while the guest
+// thread waited too. Now the GPU thread only records the copies and submits (BeginAsyncReadback);
+// the guest thread waits for that tick itself and then asks the GPU thread to apply the bytes
+// (FinishAsyncReadback), which it does at the next packet boundary unless a newer GPU write to the
+// region was recorded meanwhile - then the read is retried.
+
+BufferCache::AsyncReadback BufferCache::BeginAsyncReadback(uint64_t vaddr, uint64_t size) {
+	AsyncReadback job;
+	if (!IsRegionRegistered(vaddr, size)) {
+		return job;
+	}
+	auto& buffer = m_slot_buffers[FindBuffer(vaddr, size)];
+
+	constexpr uint64_t WindowSize   = 512 * 1024;
+	const auto         buffer_begin = buffer.CpuAddress();
+	const auto         buffer_end   = buffer_begin + buffer.Size();
+	const auto         window_begin = std::max(vaddr & ~(WindowSize - 1), buffer_begin);
+	const auto window_end = std::min(std::max(window_begin + WindowSize, vaddr + size), buffer_end);
+
+	uint64_t packed = 0;
+	m_memory_tracker.ForEachDownloadRange<false>(
+	    window_begin, window_end - window_begin,
+	    [&](uint64_t address, uint64_t bytes) noexcept {
+		    m_memory_tracker.ValidateGpuDirtyPages(m_gpu_modified_ranges, address, bytes,
+		                                           "memory invalidation");
+	    },
+	    [&](uint64_t address, uint64_t bytes) noexcept {
+		    for (const auto range: m_gpu_modified_ranges.Intersections(address, bytes)) {
+			    job.pieces.push_back({range.address, range.size, packed});
+			    packed += AlignDownload(range.size + (range.address & 3u));
+		    }
+	    });
+	if (job.pieces.empty()) {
+		return job;
+	}
+	if (packed > m_download_buffer.Size() / 2) {
+		// Very large readback: use the synchronous path (rare).
+		job.pieces.clear();
+		ReadMemoryOnGpu(vaddr, size, false);
+		return job;
+	}
+	{
+		auto& hot = m_hot_regions[vaddr >> HotBucketBits];
+		hot.begin = hot.hits == 0 ? window_begin : std::min(hot.begin, window_begin);
+		hot.end   = hot.hits == 0 ? window_end : std::max(hot.end, window_end);
+		hot.hits++;
+		hot.last_hit_frame = m_scheduler.Context().GetGpu().GetFrameNum();
+	}
+	Common::FrameStats::Scope download_scope(Common::FrameStats::Counter::DownloadNs,
+	                                         Common::FrameStats::Counter::Downloads);
+	const auto [mapped, base_offset] = m_download_buffer.Map(packed, DOWNLOAD_ALIGNMENT);
+	EXIT_IF(mapped == nullptr);
+	for (const auto& piece: job.pieces) {
+		const auto source_begin = piece.address & ~uint64_t {3};
+		const auto envelope     = piece.size + (piece.address - source_begin);
+		m_download_buffer.CopyFrom(m_scheduler.Current(), buffer, buffer.Offset(source_begin),
+		                           base_offset + piece.offset, envelope,
+		                           vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
+		                           vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
+		                           vk::AccessFlagBits::eHostRead);
+	}
+	m_download_buffer.Commit();
+	job.mapped      = mapped;
+	job.base_offset = base_offset;
+	job.seq         = m_gpu_write_seq;
+	job.tick        = m_scheduler.CurrentTick();
+	{
+		Common::FrameStats::SiteScope site_scope("download-async");
+		m_scheduler.Flush();
+	}
+	return job;
+}
+
+bool BufferCache::FinishAsyncReadback(const AsyncReadback& job) {
+	bool complete = true;
+	for (const auto& piece: job.pieces) {
+		if (LastGpuWriteSeq(piece.address, piece.size) > job.seq) {
+			complete = false;
+			continue;
+		}
+		const auto skew = piece.address & 3u;
+		m_download_buffer.Invalidate(job.base_offset + piece.offset, piece.size + skew);
+		Libs::LibKernel::Memory::WriteBacking(piece.address, job.mapped + piece.offset + skew,
+		                                      piece.size);
+		m_memory_tracker.UnmarkRegionAsGpuModified(piece.address, piece.size);
+		m_gpu_modified_ranges.Subtract(piece.address, piece.size);
+	}
+	return complete;
+}
+
+// ---- Readback prefetch -------------------------------------------------------------------------
+//
+// ASTRO BOT reads a few GPU-written buffers from the CPU every frame (feedback counters and
+// indirect arguments). Each read page-faults on a GPU-dirty page and ReadMemoryOnGpu drains the
+// whole GPU queue on the GPU thread - 1.5-4 ms per read during which no PM4 is processed and the
+// GPU starves afterwards. The regions are the same every frame, so at the end of every submission
+// slice the dirty parts of the hot regions are copied into the download ring behind the work just
+// recorded; when the copy completes (priority thread) the bytes are handed to the GPU thread, which
+// writes them into the guest backing and clears the dirty state - unless a newer GPU write to the
+// same bucket was recorded meanwhile, in which case the data is dropped and the next slice tries
+// again. A CPU read that arrives before the prefetch completes still takes the drain path.
+// KYTY_READBACK_PREFETCH=0 disables the prefetch.
+
+void BufferCache::NoteGpuWrite(uint64_t vaddr, uint64_t size) {
+	const auto seq = ++m_gpu_write_seq;
+	if (size > (16u << 20)) {
+		m_large_write_seq = seq;
+		return;
+	}
+	const auto first = vaddr >> HotBucketBits;
+	const auto last  = (vaddr + size - 1) >> HotBucketBits;
+	for (auto bucket = first; bucket <= last; bucket++) {
+		m_bucket_write_seq[bucket] = seq;
+	}
+}
+
+uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size) const {
+	auto       result = m_large_write_seq;
+	const auto first  = vaddr >> HotBucketBits;
+	const auto last   = (vaddr + size - 1) >> HotBucketBits;
+	for (auto bucket = first; bucket <= last; bucket++) {
+		if (const auto it = m_bucket_write_seq.find(bucket); it != m_bucket_write_seq.end()) {
+			result = std::max(result, it->second);
+		}
+	}
+	return result;
+}
+
+void BufferCache::PrefetchHotReadbacks() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_READBACK_PREFETCH");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (!enabled || m_hot_regions.empty() || m_scheduler.Current().IsInvalid()) {
+		return;
+	}
+	static std::atomic<uint32_t> log_count {0};
+	const auto frame = m_scheduler.Context().GetGpu().GetFrameNum();
+	for (auto& [bucket, hot]: m_hot_regions) {
+		if (hot.hits < 2 || hot.in_flight || frame - hot.last_hit_frame > 120) {
+			continue;
+		}
+		if (!IsRegionRegistered(hot.begin, 1)) {
+			continue;
+		}
+		const auto id = FindBuffer(hot.begin, 1);
+		if (!id) {
+			continue;
+		}
+		auto&      buffer = m_slot_buffers[id];
+		const auto begin  = std::max(hot.begin, buffer.CpuAddress());
+		const auto end    = std::min(hot.end, buffer.CpuAddress() + buffer.Size());
+		if (begin >= end) {
+			continue;
+		}
+		std::vector<ReadbackPiece> pieces;
+		uint64_t           packed = 0;
+		m_memory_tracker.ForEachDownloadRange<false>(
+		    begin, end - begin, [&](uint64_t address, uint64_t bytes) noexcept {
+			    for (const auto range: m_gpu_modified_ranges.Intersections(address, bytes)) {
+				    pieces.push_back({range.address, range.size, packed});
+				    packed += AlignDownload(range.size + (range.address & 3u));
+			    }
+		    });
+		if (pieces.empty() || packed > (4u << 20)) {
+			continue;
+		}
+		const auto [mapped, base_offset] = m_download_buffer.Map(packed, DOWNLOAD_ALIGNMENT);
+		if (mapped == nullptr) {
+			continue;
+		}
+		for (const auto& piece: pieces) {
+			const auto source_begin = piece.address & ~uint64_t {3};
+			const auto envelope     = piece.size + (piece.address - source_begin);
+			m_download_buffer.CopyFrom(m_scheduler.Current(), buffer, buffer.Offset(source_begin),
+			                           base_offset + piece.offset, envelope,
+			                           vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
+			                           vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
+			                           vk::AccessFlagBits::eHostRead);
+		}
+		m_download_buffer.Commit();
+		hot.in_flight  = true;
+		const auto seq = m_gpu_write_seq;
+		if (log_count.fetch_add(1, std::memory_order_relaxed) < 16) {
+			LOGF("ReadbackPrefetch: frame=%d region=0x%016" PRIx64 "-0x%016" PRIx64
+			     " pieces=%zu bytes=0x%" PRIx64 " hits=%u\n",
+			     frame, begin, end, pieces.size(), packed, hot.hits);
+		}
+		auto& gpu = m_scheduler.Context().GetGpu();
+		m_scheduler.DeferPriorityOperation([this, &gpu, bucket, pieces = std::move(pieces), mapped,
+		                                    base_offset, seq]() mutable {
+			// Priority thread: the copies have completed. Take the bytes out of the ring now (the
+			// ring slot is only guarded by the GPU tick) and let the GPU thread apply them.
+			std::vector<uint8_t> data;
+			uint64_t             total = 0;
+			for (const auto& piece: pieces) {
+				total += piece.size;
+			}
+			data.reserve(total);
+			for (const auto& piece: pieces) {
+				const auto skew = piece.address & 3u;
+				m_download_buffer.Invalidate(base_offset + piece.offset, piece.size + skew);
+				const auto* source = mapped + piece.offset + skew;
+				data.insert(data.end(), source, source + piece.size);
+			}
+			if (gpu.IsStopping()) {
+				return;
+			}
+			gpu.SendCommand([this, bucket, pieces = std::move(pieces), data = std::move(data), seq] {
+				if (auto it = m_hot_regions.find(bucket); it != m_hot_regions.end()) {
+					it->second.in_flight = false;
+				}
+				uint64_t cursor = 0;
+				for (const auto& piece: pieces) {
+					if (LastGpuWriteSeq(piece.address, piece.size) <= seq) {
+						Libs::LibKernel::Memory::WriteBacking(piece.address, data.data() + cursor,
+						                                      piece.size);
+						m_memory_tracker.UnmarkRegionAsGpuModified(piece.address, piece.size);
+						m_gpu_modified_ranges.Subtract(piece.address, piece.size);
+					}
+					cursor += piece.size;
+				}
+			});
+		});
+	}
 }
 
 void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {

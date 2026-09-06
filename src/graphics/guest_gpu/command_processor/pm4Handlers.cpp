@@ -4,8 +4,10 @@
 #include "common/stringUtils.h"
 #include "graphics/guest_gpu/command_processor/commandProcessor.h"
 #include "graphics/guest_gpu/command_processor/pm4Dispatch.h"
+
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/presentation/videoOut.h"
@@ -1355,14 +1357,45 @@ KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 	const auto buffer_size = buffer[0];
 	auto*      dst         = reinterpret_cast<void*>((buffer[1] & 0xffffffc0u) |
 	                                                 (static_cast<uint64_t>(buffer[2]) << 32u));
+	const bool report_and_reset = ((buffer[3] >> 19u) & 0x1u) != 0;
+	const bool force_reset      = ((buffer[3] >> 18u) & 0x1u) != 0;
+	// KYTY_LOD_STATS=0 restores the old stub (zeroed record with a valid label);
+	// KYTY_LOD_STATS_TRACE=1 logs every report.
+	static const bool emulate = [] {
+		const char* v = std::getenv("KYTY_LOD_STATS");
+		return v == nullptr || std::strcmp(v, "0") != 0;
+	}();
+	static const bool trace = std::getenv("KYTY_LOD_STATS_TRACE") != nullptr;
 
 	if (dst != nullptr && buffer_size != 0) {
 		memset(dst, 0, buffer_size);
-		// Hack?
 		if (buffer_size >= sizeof(uint32_t)) {
 			auto* label = static_cast<uint32_t*>(dst);
 			*label      = 1;
 		}
+		constexpr uint32_t header = 16 * sizeof(uint32_t);
+		if (emulate && buffer_size >= header + LodStats::BANK_COUNT * sizeof(uint64_t)) {
+			auto*    words   = reinterpret_cast<uint64_t*>(static_cast<uint8_t*>(dst) + header);
+			uint32_t sampled = 0;
+			auto&    banks   = LodStats::Banks();
+			for (uint32_t i = 0; i < LodStats::BANK_COUNT; i++) {
+				const auto count = banks[i].count.load(std::memory_order_relaxed);
+				const auto mip   = banks[i].min_mip.load(std::memory_order_relaxed) & 0xFu;
+				if (count != 0) {
+					sampled++;
+					words[i] = (static_cast<uint64_t>(count & 0xFFFFFFu)) | (static_cast<uint64_t>(mip) << 56u);
+				} else {
+					words[i] = static_cast<uint64_t>(LodStats::NO_SAMPLES) << 56u;
+				}
+			}
+			if (trace) {
+				LOGF("LodStats: report dst=0x%016" PRIx64 " size=%u sampled_banks=%u reset=%d\n",
+				     reinterpret_cast<uint64_t>(dst), buffer_size, sampled, report_and_reset ? 1 : 0);
+			}
+		}
+	}
+	if (emulate && (report_and_reset || force_reset)) {
+		LodStats::Reset();
 	}
 
 	return 4;

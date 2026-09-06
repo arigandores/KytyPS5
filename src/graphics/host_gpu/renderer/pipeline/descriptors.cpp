@@ -13,6 +13,7 @@
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/hostMemory.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/debug.h"
@@ -673,6 +674,22 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		                                                    : TextureCache::BindingType::Texture);
 		const auto id   = texture_cache.FindImage(desc);
 		return {id, nullptr, std::move(desc)};
+	}
+
+	// Texture LOD statistics: count the binding for the T# counter bank (IT_GET_LOD_STATS reports it).
+	if (!storage && descriptor.MipStatsCntEn()) {
+		LodStats::Touch(descriptor.MipStatsCntId(), descriptor.BaseLevel());
+	}
+	static const bool lod_trace = std::getenv("KYTY_LOD_STATS_TRACE") != nullptr;
+	if (lod_trace && !storage) {
+		static std::atomic<uint32_t> traced {0};
+		if (descriptor.Base40() >= 0x1000000000ull && traced.fetch_add(1) < 20000) {
+			LOGF("LodStats: tsharp addr=0x%010" PRIx64 " %ux%u w=%08x %08x %08x %08x %08x %08x %08x %08x\n",
+			     descriptor.Base40(), static_cast<uint32_t>(descriptor.Width5()) + 1u,
+			     static_cast<uint32_t>(descriptor.Height5()) + 1u, descriptor.fields[0], descriptor.fields[1],
+			     descriptor.fields[2], descriptor.fields[3], descriptor.fields[4], descriptor.fields[5],
+			     descriptor.fields[6], descriptor.fields[7]);
+		}
 	}
 
 	const auto address      = descriptor.Base40();

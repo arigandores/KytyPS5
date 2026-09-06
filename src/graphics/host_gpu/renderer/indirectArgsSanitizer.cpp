@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/indirectArgsSanitizer.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/logging/log.h"
 #include "gpu_tiler_shaders/dispatch_indirect_sanitize_spv.h"
@@ -98,6 +100,7 @@ std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(vk::CommandBuffe
 	const auto slot = m_next_slot;
 	m_next_slot     = (m_next_slot + 1) % SlotCount;
 	if (const auto tick = m_slot_ticks[slot]; tick != 0 && !m_scheduler.IsFree(tick)) {
+		Common::FrameStats::SiteScope site_scope("sanitizer-slot");
 		m_scheduler.Wait(tick);
 	}
 	m_slot_ticks[slot]     = m_scheduler.CurrentTick();

@@ -1,6 +1,8 @@
 
 #include "common/logging/log.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
 #include "common/stringUtils.h"
@@ -177,12 +179,28 @@ bool IsSilent() {
 	return g_initialized && g_direction == Direction::Silent;
 }
 
+static void CountWrite(uint64_t t0) {
+	namespace FS = Common::FrameStats;
+	if (t0 != 0) {
+		const auto ns = FS::NowNs() - t0;
+		FS::Add(FS::Counter::LogNs, ns);
+		FS::Add(FS::Counter::Logs, 1);
+		if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+			FS::Add(FS::Counter::LogGpuNs, ns);
+		}
+	}
+}
+
 void Write(std::string_view text) {
+	const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 	WriteImpl(text);
+	CountWrite(t0);
 }
 
 void Write(fmt::text_style style, std::string_view text) {
+	const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 	WriteImpl(text, style);
+	CountWrite(t0);
 }
 
 } // namespace Log

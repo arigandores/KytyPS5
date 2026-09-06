@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
@@ -58,7 +59,21 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	wait_info.pSemaphores    = &m_semaphore;
 	wait_info.pValues        = &tick;
 
-	const auto result = m_graphics.device.waitSemaphores(&wait_info, UINT64_MAX);
+	vk::Result result;
+	{
+		namespace FS  = Common::FrameStats;
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		result        = m_graphics.device.waitSemaphores(&wait_info, UINT64_MAX);
+		if (t0 != 0) {
+			const auto ns = FS::NowNs() - t0;
+			FS::Add(FS::Counter::SemWaitNs, ns);
+			FS::Add(FS::Counter::SemWaits, 1);
+			if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+				FS::Add(FS::Counter::SemWaitGpuNs, ns);
+			}
+			FS::AddSite(FS::Table::WaitSites, FS::CurrentSite(), ns);
+		}
+	}
 	if (result != vk::Result::eSuccess) {
 		LOGF("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
 		     VulkanToString(result).c_str(), static_cast<int>(result), tick);

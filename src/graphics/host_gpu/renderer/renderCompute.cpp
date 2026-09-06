@@ -1,4 +1,6 @@
 #include "common/assert.h"
+
+#include "common/frameStats.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
@@ -175,7 +177,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
                                     uint64_t indirect_args_addr) {
 	EXIT_IF(buffer.IsInvalid());
 	bool indirect = indirect_args_addr != 0;
-	m_context.GetCommandScheduler().PopPendingOperations();
+	{
+		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DispatchPopNs);
+		m_context.GetCommandScheduler().PopPendingOperations();
+	}
 	auto& ctx    = buffer.GetRegisters();
 	auto& sh_ctx = buffer.GetShaders();
 
@@ -219,8 +224,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	ShaderComputeInputInfo input_info {};
 	const bool use_thread_dimensions = (mode & DISPATCH_INITIATOR_USE_THREAD_DIMENSIONS) != 0;
 	input_info.dispatch_thread_dimensions = use_thread_dimensions;
+	Common::FrameStats::Lap lap;
 	const auto compute_program =
 	    m_context.GetPipelineCache().GetComputeProgram(cs_regs, sh_regs, input_info);
+	lap.Mark(Common::FrameStats::Counter::DispatchProgramNs);
 	if (use_thread_dimensions) {
 		input_info.dispatch_threads_num[0]    = thread_group_x;
 		input_info.dispatch_threads_num[1]    = thread_group_y;
@@ -663,6 +670,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	buffer.EndRendering();
 	auto& pipeline =
 	    m_context.GetPipelineCache().CreateComputePipeline(input_info, compute_program);
+	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
 	auto bindings = PrepareBindings(input_info.stage);
 	FindBuffers(bindings);
 	if (program.info.uses_dma) {
@@ -670,6 +678,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	RebindBuffers(bindings);
 	RebindImages(bindings);
+	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
 
 	auto vk_buffer = buffer.Handle();
 
@@ -721,6 +730,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	PreparedBindings* descriptor_stage = &bindings;
 	CommitBindings(buffer, vk::PipelineBindPoint::eCompute, pipeline,
 	               std::span {&descriptor_stage, 1u});
+	lap.Mark(Common::FrameStats::Counter::DispatchCommitNs);
 	bool has_storage_writes = HasShaderBufferWrites(input_info.stage);
 	has_storage_writes =
 	    std::any_of(program.info.images.begin(), program.info.images.end(),
@@ -744,6 +754,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 
 	// The removed host fence also ordered read-only dispatches before later writers.
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
+	lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
 	ResetBindings();
 }
 

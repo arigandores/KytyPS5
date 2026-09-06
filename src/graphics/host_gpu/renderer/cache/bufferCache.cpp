@@ -7,6 +7,7 @@
 #include <atomic>
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/guest_gpu/graphicsRun.h"
@@ -140,6 +141,8 @@ std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& 
 }
 
 void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies) {
+	Common::FrameStats::Scope download_scope(Common::FrameStats::Counter::DownloadNs,
+	                                         Common::FrameStats::Counter::Downloads);
 	std::vector<DownloadCopy> batch;
 	batch.reserve(copies.size());
 	uint64_t                  packed_size = 0;
@@ -158,8 +161,11 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies) {
 		}
 		download.Commit();
 		const auto completion_tick = m_scheduler.CurrentTick();
-		m_scheduler.Finish();
-		m_scheduler.WaitPriorityOperations(completion_tick);
+		{
+			Common::FrameStats::SiteScope site_scope("download");
+			m_scheduler.Finish();
+			m_scheduler.WaitPriorityOperations(completion_tick);
+		}
 		cursor = 0;
 		for (const auto& copy: batch) {
 			const auto [source_begin, envelope_size] = DownloadEnvelope(copy);

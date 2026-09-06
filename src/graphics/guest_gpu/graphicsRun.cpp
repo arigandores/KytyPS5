@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/stringUtils.h"
@@ -463,6 +464,9 @@ void CommandProcessor::WaitRegMem(uint32_t func, const T* addr, T ref, T mask, u
 		}
 	}
 	if (!pass) {
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::WaitRegMemStalls, 1);
+		}
 		SuspendPm4();
 	}
 }
@@ -561,6 +565,8 @@ void CommandProcessor::DmaData(uint8_t engine, uint8_t dst_sel, uint8_t dst_cach
 	if (src_gds && dst_gds) {
 		EXIT("unsupported dmaData GDS-to-GDS copy\n");
 	}
+	Common::FrameStats::Scope dma_scope(Common::FrameStats::Counter::DmaNs,
+	                                    Common::FrameStats::Counter::Dmas);
 	buffer_cache.CopyBuffer(dst_address_or_offset, src_address_or_offset_or_immediate, num_bytes,
 	                        dst_gds, src_gds);
 }
@@ -589,6 +595,7 @@ void GuestGpu::ThreadRun(void* data) {
 	auto* gpu = static_cast<GuestGpu*>(data);
 	EXIT_IF(gpu == nullptr);
 	KYTY_PROFILER_THREAD("Thread_Gpu");
+	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Gpu);
 	g_gpu_thread = true;
 	g_gpu_state  = gpu;
 
@@ -602,7 +609,10 @@ void GuestGpu::ThreadRun(void* data) {
 			while (gpu->m_commands.empty() && gpu->m_submission_count == 0 && !gpu->m_stopping) {
 				gpu->m_processing = false;
 				gpu->m_idle.Signal();
-				gpu->m_work_available.Wait(&gpu->m_queue_mutex);
+				{
+					Common::FrameStats::Scope idle_scope(Common::FrameStats::Counter::GpuThreadIdleNs);
+					gpu->m_work_available.Wait(&gpu->m_queue_mutex);
+				}
 			}
 			if (gpu->m_stopping && gpu->m_commands.empty() && gpu->m_submission_count == 0) {
 				gpu->m_processing = false;
@@ -631,7 +641,10 @@ void GuestGpu::ThreadRun(void* data) {
 					}
 					gpu->m_processing = false;
 					const auto t0 = std::chrono::steady_clock::now();
-					gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+					{
+						Common::FrameStats::Scope blocked_scope(Common::FrameStats::Counter::GpuThreadBlockedNs);
+						gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+					}
 					if (trace_sched) {
 						const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
 						                    std::chrono::steady_clock::now() - t0)
@@ -667,7 +680,10 @@ void GuestGpu::ThreadRun(void* data) {
 
 		if (command) {
 			EXIT_IF(g_current_processor != nullptr);
-			command();
+			{
+				Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
+				command();
+			}
 
 			Common::LockGuard lock(gpu->m_queue_mutex);
 			gpu->m_processing = false;
@@ -678,7 +694,11 @@ void GuestGpu::ThreadRun(void* data) {
 		}
 
 		EXIT_IF(!has_submission);
-		const bool complete = gpu->Process(submission);
+		bool complete = false;
+		{
+			Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
+			complete = gpu->Process(submission);
+		}
 
 		Common::LockGuard lock(gpu->m_queue_mutex);
 		if (!complete) {
@@ -797,6 +817,7 @@ bool GuestGpu::Process(Submission& submission) {
 				if (complete) {
 					m_renderer.GetGpuResources().RunGarbageCollector();
 				}
+				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
 			} else if (complete) {
 				m_renderer.GetGpuResources().RunGarbageCollector();
@@ -823,6 +844,7 @@ bool GuestGpu::Process(Submission& submission) {
 				if (complete) {
 					m_renderer.GetGpuResources().RunGarbageCollector();
 				}
+				Common::FrameStats::SiteScope site_scope("slice-end-compute");
 				cp.BufferFlush();
 			} else if (complete) {
 				m_renderer.GetGpuResources().RunGarbageCollector();
@@ -1018,6 +1040,7 @@ void CommandProcessor::SetNumInstances(uint32_t num_instances) {
 void CommandProcessor::SetPredication(uint32_t condition, uint32_t op, uint32_t wait_op,
                                       const volatile void* address, uint32_t count_in_dwords) {
 	if (wait_op != 0) {
+		Common::FrameStats::SiteScope site_scope("predication");
 		BufferFlushAndWait();
 	}
 
@@ -1060,6 +1083,7 @@ void CommandProcessor::DrawIndex(DrawIndexArgs args) {
 		LOGF("\t draw indexed offsets: base_vertex = %" PRId32 ", first_instance = %" PRIu32 "\n",
 		     args.base_vertex, args.first_instance);
 	}
+	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
 	m_renderer.GetRenderExecutor().DrawIndex(m_submit_id, CurrentBuffer(), args);
 }
 
@@ -1306,8 +1330,12 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 			}
 		}
 
-		m_renderer.GetRenderExecutor().DispatchDirect(m_submit_id, CurrentBuffer(), thread_group_x,
-		                                              thread_group_y, thread_group_z, mode, indirect_args_addr);
+		{
+			Common::FrameStats::Scope dispatch_scope(Common::FrameStats::Counter::DispatchNs, Common::FrameStats::Counter::Dispatches);
+			m_renderer.GetRenderExecutor().DispatchDirect(m_submit_id, CurrentBuffer(), thread_group_x,
+			                                              thread_group_y, thread_group_z, mode,
+			                                              indirect_args_addr);
+		}
 
 		// Debug aid: KYTY_SYNC_DISPATCH=1 submits and drains the queue after every dispatch, so a
 		// device loss is attributed to the dispatch logged last ("SyncDispatch" in the log).
@@ -1363,10 +1391,12 @@ void CommandProcessor::DrawIndexAuto(DrawAutoArgs args) {
 	if (args.instance_count == 0) {
 		args.instance_count = m_num_instances;
 	}
+	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
 	m_renderer.GetRenderExecutor().DrawAuto(m_submit_id, CurrentBuffer(), args);
 }
 
 void CommandProcessor::WaitFlipDone(uint32_t video_out_handle, uint32_t display_buffer_index) {
+	Common::FrameStats::SiteScope site_scope("wait-flip-done");
 	BufferFlush();
 
 	m_renderer.GetVideoOut().WaitFlipDone(static_cast<int>(video_out_handle),
@@ -1762,6 +1792,7 @@ void CommandProcessor::Flip() {
 	                                         m_flip.flip_arg);
 	Sync::WriteAtEndOfPipeOnlyFlip(m_submit_id, command, m_flip.handle, m_flip.index,
 	                               m_flip.flip_mode, m_flip.flip_arg, request);
+	Common::FrameStats::SiteScope site_scope("flip");
 	GetScheduler().Flush();
 }
 
@@ -1782,6 +1813,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	Sync::WriteAtEndOfPipeWithFlip32(m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr),
 	                                 value, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                 m_flip.flip_arg, request);
+	Common::FrameStats::SiteScope site_scope("flip");
 	GetScheduler().Flush();
 }
 
@@ -1808,6 +1840,7 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 	Sync::WriteAtEndOfPipeWithInterruptWriteBackFlip32(
 	    m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr), value, m_flip.handle,
 	    m_flip.index, m_flip.flip_mode, m_flip.flip_arg, request, m_interrupt_event_id);
+	Common::FrameStats::SiteScope site_scope("flip");
 	GetScheduler().Flush();
 }
 
@@ -1823,11 +1856,13 @@ void CommandProcessor::PrepareCpuFlip(uint64_t request_id) {
 	ProcessorScope processor_scope(*this);
 
 	m_renderer.GetVideoOut().PrepareFlip(request_id, CurrentBuffer());
+	Common::FrameStats::SiteScope site_scope("cpu-flip");
 	GetScheduler().Flush();
 	m_renderer.GetVideoOut().CompleteFlip(request_id);
 }
 
 void CommandProcessor::SynchronizeGpu() {
+	Common::FrameStats::SiteScope site_scope("sync-gpu");
 	GetScheduler().Finish();
 }
 

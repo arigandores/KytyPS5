@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/renderDraw.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/file.h"
@@ -1045,6 +1047,7 @@ bool RenderExecutor::PrepareDrawRenderState(uint64_t submit_id, CommandBuffer& b
                                             uint32_t            render_target_slice_offset,
                                             bool log_setup_phases, DrawRenderState& state) {
 	EXIT_IF(draw.name == nullptr);
+	Common::FrameStats::Scope targets_scope(Common::FrameStats::Counter::DrawTargetsNs);
 	auto& ctx = buffer.GetRegisters();
 
 	if (ResolveColorTargets(submit_id, buffer, render_target_slice_offset)) {
@@ -1083,6 +1086,7 @@ bool RenderExecutor::PrepareDrawRenderState(uint64_t submit_id, CommandBuffer& b
 static void RefreshShaders(CommandBuffer& buffer, const DrawCallInfo& draw, bool log_phases,
                            DrawRenderState& state) {
 	EXIT_IF(draw.name == nullptr);
+	Common::FrameStats::Scope programs_scope(Common::FrameStats::Counter::DrawProgramsNs);
 	auto& ctx    = buffer.GetRegisters();
 	auto& sh_ctx = buffer.GetShaders();
 
@@ -1243,9 +1247,11 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	EXIT_IF(draw.name == nullptr);
 	auto& ucfg = buffer.GetUserConfig();
 
+	Common::FrameStats::Lap lap;
 	LogDrawPhase(draw.name, "PrepareBindings");
 	auto bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
 	                                        state.ps_active);
+	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
 	const bool frame_dump =
 	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
 	const auto& dump_addrs = DebugDumpAddresses();
@@ -1336,8 +1342,10 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	auto vertex_bindings = PrepareVertexBuffers(submit_id, buffer, draw, state.vs_input_info);
 	auto index_binding   = PrepareIndexBuffer(buffer, index_source);
+	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
 	state.rendering =
 	    AcquireRenderTargets(buffer, state.color_info, state.color_count, state.depth_info);
+	lap.Mark(Common::FrameStats::Counter::DrawAcquireRtNs);
 
 	if (log_pipeline_phase) {
 		LogDrawPhase(draw.name, "CreatePipeline");
@@ -1346,6 +1354,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	    std::span {state.color_info, state.color_count}, state.depth_info, state.vs_input_info, buffer,
 	    state.ps_active ? &state.ps_input_info : nullptr, topology, primitive_restart_enable,
 	    state.programs.vertex, state.programs.pixel);
+	lap.Mark(Common::FrameStats::Counter::DrawPipelineNs);
 
 	// Resource preparation above may synchronously finish and restart the scheduler. From this
 	// point onward, every operation targets the current command buffer and cannot touch guest
@@ -1371,6 +1380,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline,
 	               std::span {descriptor_stages.data(), descriptor_stage_count});
+	lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
 	CommitIndexBuffer(vk_buffer, index_binding);
 
 	SetGraphicsDynamicParams(buffer, vk_buffer, state.color_info, state.color_count,
@@ -1406,6 +1416,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
 	}
 	RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
+	lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
 }
 
 void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
@@ -1414,7 +1425,10 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 
 	EXIT_IF(buffer.IsInvalid());
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
-	m_context.GetCommandScheduler().PopPendingOperations();
+	{
+		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DrawPopNs);
+		m_context.GetCommandScheduler().PopPendingOperations();
+	}
 	auto& ucfg   = buffer.GetUserConfig();
 	auto& sh_ctx = buffer.GetShaders();
 
@@ -1460,7 +1474,10 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 
 	uc_check(ucfg);
 
-	hw_check(buffer);
+	{
+		Common::FrameStats::Scope check_scope(Common::FrameStats::Counter::DrawCheckNs);
+		hw_check(buffer);
+	}
 
 	vk::PrimitiveTopology topology = vk::PrimitiveTopology::ePointList;
 	if (!GetDrawTopology(ucfg, false, topology)) {
@@ -1547,7 +1564,10 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 
 	EXIT_IF(buffer.IsInvalid());
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
-	m_context.GetCommandScheduler().PopPendingOperations();
+	{
+		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DrawPopNs);
+		m_context.GetCommandScheduler().PopPendingOperations();
+	}
 	auto& ucfg   = buffer.GetUserConfig();
 	auto& sh_ctx = buffer.GetShaders();
 
@@ -1589,7 +1609,10 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 
 	uc_check(ucfg);
 
-	hw_check(buffer);
+	{
+		Common::FrameStats::Scope check_scope(Common::FrameStats::Counter::DrawCheckNs);
+		hw_check(buffer);
+	}
 
 	const DrawCallInfo draw {"DrawIndexAuto", CommandBufferDebugOp::DrawIndexAuto,
 	                         args.vertex_count, args.instance_count, args.first_instance};

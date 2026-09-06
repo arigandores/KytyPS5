@@ -7,6 +7,7 @@
 #include "graphics/host_gpu/renderer/render.h"
 
 #include <condition_variable>
+#include <deque>
 #include <mutex>
 
 #include <queue>
@@ -85,6 +86,13 @@ private:
 	void PopPendingOperations(bool refresh_gpu_tick);
 	void PriorityOperationsThread(std::stop_token stop);
 	void RunOperation(Common::UniqueFunction<void>&& operation);
+	// KYTY_FRAME_TRACE: GPU execution time of every command buffer through timestamp queries
+	// (top-of-pipe after begin, bottom-of-pipe before end), harvested once the master semaphore
+	// shows the batch complete and summed into FrameStats::GpuBusyNs.
+	void InitTimestamps();
+	void BeginTimestamp();
+	void EndTimestamp();
+	void HarvestTimestamps();
 
 	MasterSemaphore              m_master;
 	RenderContext&               m_context;
@@ -102,6 +110,15 @@ private:
 	HW::Context*                 m_registers            = nullptr;
 	HW::UserConfig*              m_user_config          = nullptr;
 	HW::Shader*                  m_shaders              = nullptr;
+
+	static constexpr uint32_t                 TimestampSlots        = 4096;
+	vk::QueryPool                             m_timestamp_pool      = nullptr;
+	double                                    m_timestamp_period_ns = 0.0;
+	uint32_t                                  m_timestamp_bits      = 64;
+	uint32_t                                  m_timestamp_next      = 0;
+	int64_t                                   m_timestamp_slot      = -1;
+	std::deque<std::pair<uint64_t, uint32_t>> m_timestamp_pending;
+	std::mutex                                m_timestamp_mutex;
 };
 
 } // namespace Libs::Graphics

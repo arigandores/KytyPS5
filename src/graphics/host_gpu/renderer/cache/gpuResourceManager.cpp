@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/cache/gpuResourceManager.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/logging/log.h"
 #include "kernel/memory.h"
@@ -86,6 +88,7 @@ void GpuResourceManager::UnmapMemory(uint64_t vaddr, uint64_t size) {
 	const auto unmap = [this, vaddr, size] {
 		if (m_scheduler.Active()) {
 			const auto tick = m_scheduler.CurrentTick();
+			Common::FrameStats::SiteScope site_scope("unmap");
 			m_scheduler.Finish();
 			m_scheduler.WaitPriorityOperations(tick);
 		}

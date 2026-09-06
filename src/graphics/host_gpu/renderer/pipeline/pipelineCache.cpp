@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
@@ -91,6 +93,9 @@ void PipelineCacheLog(fmt::format_string<Args...> format, Args&&... args) {
 }
 
 bool ReadShaderGuestMemory(void*, uint64_t address, uint32_t* value) {
+	if (Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgCleanReads, 1);
+	}
 	return value != nullptr &&
 	       Libs::LibKernel::Memory::TryReadGpuCleanBacking(address, value, sizeof(*value));
 }
@@ -99,6 +104,9 @@ bool ReadShaderGuestMemory(void*, uint64_t address, uint32_t* value) {
 // reader is installed, which turns an unmapped pointer in a descriptor chain into a host
 // access violation instead of a reported evaluation failure.
 bool ReadShaderLiveMemory(void*, uint64_t address, uint32_t* value) {
+	if (Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgReads, 1);
+	}
 	return value != nullptr &&
 	       Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
 }
@@ -300,12 +308,14 @@ struct PipelineCache::ProgramCache {
 			}
 		}();
 
+		Common::FrameStats::Lap lap;
 		lookup_key.stage           = stage;
 		lookup_key.hash            = params.hash;
 		lookup_key.user_data_count = static_cast<uint32_t>(params.user_data.size());
 		lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
 		BuildStageStaticKey(input_info, lookup_key.static_state);
 		auto                                         entry = programs.find(lookup_key);
+		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
 		ShaderRecompiler::IR::ResourceSnapshot       resources;
 		ShaderRecompiler::IR::ResourceSpecialization specialization;
 		const ShaderRecompiler::IR::SrtRuntime       runtime {
@@ -317,6 +327,7 @@ struct PipelineCache::ProgramCache {
 		if (entry != programs.end()) {
 			EXIT_IF(!ShaderRecompiler::IR::MaterializeResources(
 			    entry->second.resource_plan, runtime, resources, specialization));
+			lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
 			if (const auto permutation = std::ranges::find_if(
 			        entry->second.permutations, [&](const Permutation& candidate) {
 				        const auto& layout = candidate.program.bindings;
@@ -329,6 +340,7 @@ struct PipelineCache::ProgramCache {
 				input_info.stage = {.program   = &permutation->program,
 				                    .resources = std::move(resources)};
 				permutation->program.bindings.AdvancePushData(push_data_cursor);
+				lap.Mark(Common::FrameStats::Counter::ProgPermNs);
 				return permutation->handle;
 			}
 		}
@@ -617,11 +629,13 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
     const HW::ShaderRegisters& sh, const HW::Context& context,
     std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping,
     bool pixel_active, ShaderVertexInputInfo& vertex_info, ShaderPixelInputInfo& pixel_info) {
+	Common::FrameStats::Lap lap;
 	const auto vertex_params = PrepareProgram(vertex_regs, sh, vertex_info);
 	ShaderParams pixel_params;
 	if (pixel_active) {
 		pixel_params = PrepareProgram(pixel_regs, sh, target_export_mapping, pixel_info);
 	}
+	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
 	if (context.GetClipControl().clip_disable) {
 		const auto& viewport = context.GetScreenViewport().viewports[0];
 		const auto& limits   = m_graphics.GetPhysicalDeviceProperties().limits;
@@ -650,7 +664,9 @@ ShaderProgram PipelineCache::GetComputeProgram(const HW::ComputeShaderInfo& regs
                                                const HW::ShaderRegisters&   sh,
                                                ShaderComputeInputInfo&      input_info) {
 	input_info.needs_lds_barriers = !m_graphics.compute_wave64_supported;
+	Common::FrameStats::Lap lap;
 	const auto        params      = PrepareProgram(regs, sh, input_info);
+	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
 	Common::LockGuard lock(m_mutex);
 	uint32_t          push_data_cursor = 0;
 	return m_program_cache->Get(params, input_info, push_data_cursor);

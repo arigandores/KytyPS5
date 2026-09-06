@@ -2,6 +2,7 @@
 
 #include "common/abi.h"
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
@@ -23,6 +24,7 @@
 
 #include <algorithm>
 #include <array>
+#include <string>
 #include <list>
 #include <thread>
 #include <vector>
@@ -221,6 +223,7 @@ private:
 		int                         index;
 		int64_t                     flip_arg;
 		uint64_t                    submit_ptc;
+		uint64_t                    reserve_host_ns;
 		FlipRequestSource           source;
 		RequestState                state;
 		Graphics::Presenter::Frame* frame;
@@ -779,6 +782,7 @@ void VideoOutDriver::Impl::VblankEnd() {
 }
 
 void VideoOutDriver::Impl::PresentThread(std::stop_token token) {
+	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Present);
 	const auto frequency = Common::Timer::QueryPerformanceFrequency();
 	EXIT_IF(frequency == 0);
 
@@ -869,6 +873,7 @@ bool FlipQueue::Reserve(VideoOutConfig& cfg, int index, int64_t flip_arg, FlipRe
 	r.index      = index;
 	r.flip_arg   = flip_arg;
 	r.submit_ptc = LibKernel::KernelGetProcessTimeCounter();
+	r.reserve_host_ns = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 	r.source     = source;
 	r.state      = RequestState::Reserved;
 
@@ -1177,6 +1182,106 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     r.cfg->vblank_status.count, r.cfg->flip_status.flipPendingNum, r.cfg->pace_last_base_us,
 			     r.cfg->pace_speed);
 		}
+	}
+	if (Common::FrameStats::Enabled()) {
+		namespace FS = Common::FrameStats;
+		struct Snapshot {
+			uint64_t                                                   host_ns = 0;
+			std::array<uint64_t, static_cast<size_t>(FS::Counter::Count)>    c {};
+			std::array<uint64_t, static_cast<size_t>(FS::ThreadRole::Count)> cpu {};
+			uint64_t                                                   proc = 0;
+		};
+		static Snapshot prev;
+		Snapshot        cur;
+		cur.host_ns = FS::NowNs();
+		for (size_t i = 0; i < cur.c.size(); i++) {
+			cur.c[i] = FS::Read(static_cast<FS::Counter>(i));
+		}
+		for (size_t i = 0; i < cur.cpu.size(); i++) {
+			cur.cpu[i] = FS::ThreadCpuNs(static_cast<FS::ThreadRole>(i));
+		}
+		cur.proc = FS::ProcessCpuNs();
+		if (prev.host_ns != 0) {
+			const auto d = [&](FS::Counter counter) {
+				const auto i = static_cast<size_t>(counter);
+				return static_cast<unsigned long long>(cur.c[i] - prev.c[i]);
+			};
+			const auto dus = [&](FS::Counter counter) { return d(counter) / 1000u; };
+			const auto cpu = [&](FS::ThreadRole role) {
+				const auto i = static_cast<size_t>(role);
+				return static_cast<unsigned long long>((cur.cpu[i] - prev.cpu[i]) / 1000u);
+			};
+			const auto lat_us = r.reserve_host_ns != 0 && cur.host_ns > r.reserve_host_ns
+			                        ? (cur.host_ns - r.reserve_host_ns) / 1000u
+			                        : 0u;
+			LOGF("FrameTrace: n=%" PRIu64 " dt_us=%llu lat_us=%llu gpu_proc=%llu gpu_idle=%llu"
+			     " gpu_blocked=%llu submits=%llu submit_us=%llu semwaits=%llu semwait_us=%llu"
+			     " downloads=%llu download_us=%llu draws=%llu draw_us=%llu dispatches=%llu"
+			     " dispatch_us=%llu faults=%llu fault_us=%llu wrm_stalls=%llu gpu_busy_us=%llu"
+			     " gpu_n=%llu cpu_main_us=%llu cpu_gpu_us=%llu cpu_present_us=%llu"
+			     " cpu_proc_us=%llu faults_gpu=%llu fault_gpu_us=%llu semwait_gpu_us=%llu"
+			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu" "\n",
+			     r.cfg->flip_status.count,
+			     static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),
+			     static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),
+			     dus(FS::Counter::GpuThreadIdleNs), dus(FS::Counter::GpuThreadBlockedNs),
+			     d(FS::Counter::Submits), dus(FS::Counter::SubmitNs), d(FS::Counter::SemWaits),
+			     dus(FS::Counter::SemWaitNs), d(FS::Counter::Downloads),
+			     dus(FS::Counter::DownloadNs), d(FS::Counter::Draws), dus(FS::Counter::DrawNs),
+			     d(FS::Counter::Dispatches), dus(FS::Counter::DispatchNs), d(FS::Counter::Faults),
+			     dus(FS::Counter::FaultNs), d(FS::Counter::WaitRegMemStalls),
+			     dus(FS::Counter::GpuBusyNs), d(FS::Counter::GpuMeasured),
+			     cpu(FS::ThreadRole::Main), cpu(FS::ThreadRole::Gpu), cpu(FS::ThreadRole::Present),
+			     static_cast<unsigned long long>((cur.proc - prev.proc) / 1000u),
+			     d(FS::Counter::FaultsGpu), dus(FS::Counter::FaultGpuNs),
+			     dus(FS::Counter::SemWaitGpuNs), d(FS::Counter::PriorityWaits),
+			     dus(FS::Counter::PriorityWaitNs), d(FS::Counter::Dmas), dus(FS::Counter::DmaNs));
+			LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"
+			     " d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
+			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
+			     " c_commit=%llu c_emit=%llu p_prep=%llu p_key=%llu p_mat=%llu p_perm=%llu"
+			     " p_reads=%llu p_creads=%llu m_eval=%llu m_asm=%llu m_spec=%llu m_insts=%llu"
+			     " m_fail=%llu memo_hit=%llu memo_miss=%llu m_read_us=%llu m_wide=%llu" "\n",
+			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
+			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
+			     dus(FS::Counter::DrawTargetsNs), dus(FS::Counter::DrawProgramsNs),
+			     dus(FS::Counter::DrawBindingsNs), dus(FS::Counter::DrawVertexNs),
+			     dus(FS::Counter::DrawAcquireRtNs), dus(FS::Counter::DrawPipelineNs),
+			     dus(FS::Counter::DrawCommitNs), dus(FS::Counter::DrawEmitNs),
+			     dus(FS::Counter::DispatchPopNs), dus(FS::Counter::DispatchProgramNs),
+			     dus(FS::Counter::DispatchPipelineNs), dus(FS::Counter::DispatchBindingsNs),
+			     dus(FS::Counter::DispatchCommitNs), dus(FS::Counter::DispatchEmitNs),
+			     dus(FS::Counter::ProgPrepareNs), dus(FS::Counter::ProgKeyNs),
+			     dus(FS::Counter::ProgMaterializeNs), dus(FS::Counter::ProgPermNs),
+			     d(FS::Counter::ProgReads), d(FS::Counter::ProgCleanReads),
+			     dus(FS::Counter::MatEvalNs), dus(FS::Counter::MatAssembleNs),
+			     dus(FS::Counter::MatSpecNs), d(FS::Counter::MatEvalInsts),
+			     d(FS::Counter::MatFailures), d(FS::Counter::MatMemoHits),
+			     d(FS::Counter::MatMemoMisses), dus(FS::Counter::MatReadNs),
+			     d(FS::Counter::MatEvalWide));
+			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
+				static std::array<std::array<FS::SiteRow, 48>, static_cast<size_t>(FS::Table::Count)>
+				    prev_sites {};
+				std::array<FS::SiteRow, 48> rows {};
+				const auto                  n = FS::ReadSites(static_cast<FS::Table>(table), rows.data(), rows.size());
+				std::string                 line = table == 0 ? "FrameTrace-wait:" : "FrameTrace-submit:";
+				for (size_t i = 0; i < n; i++) {
+					auto& p = prev_sites[table][i];
+					if (p.name != rows[i].name) {
+						p = {rows[i].name, 0, 0};
+					}
+					const auto dn = rows[i].ns - p.ns;
+					const auto dc = rows[i].count - p.count;
+					if (dc != 0) {
+						line += " " + std::string(rows[i].name) + "=" + std::to_string(dn / 1000u) + "/" +
+						        std::to_string(dc);
+					}
+					p = rows[i];
+				}
+				LOGF("%s" "\n", line.c_str());
+			}
+		}
+		prev = cur;
 	}
 	if (r.source == FlipRequestSource::GpuEop && r.cfg->flip_status.gcQueueNum > 0) {
 		r.cfg->flip_status.gcQueueNum--;

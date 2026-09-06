@@ -3,13 +3,16 @@
 #include <cstdlib>
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdio>
 #include <optional>
+#include <vector>
 
 namespace Libs::Graphics {
 
@@ -105,10 +108,16 @@ bool CommandScheduler::InDeferredOperation() noexcept {
 CommandScheduler::CommandScheduler(RenderContext& context, GraphicContext& graphics)
     : m_master(graphics), m_context(context), m_graphics(graphics),
       m_command_pool(graphics, m_master), m_command(*this),
-      m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }) {}
+      m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }) {
+	InitTimestamps();
+}
 
 CommandScheduler::~CommandScheduler() {
 	Shutdown();
+	if (m_timestamp_pool != nullptr) {
+		m_graphics.device.destroyQueryPool(m_timestamp_pool, nullptr);
+		m_timestamp_pool = nullptr;
+	}
 }
 
 void CommandScheduler::Shutdown() {
@@ -322,6 +331,8 @@ void CommandScheduler::DrainPriorityOperations() {
 
 void CommandScheduler::WaitPriorityOperations(uint64_t tick) {
 	EXIT_IF(g_deferred_callback_scheduler == this);
+	Common::FrameStats::Scope priority_scope(Common::FrameStats::Counter::PriorityWaitNs,
+	                                         Common::FrameStats::Counter::PriorityWaits);
 	std::unique_lock lock(m_operation_mutex);
 	m_operation_available.wait(lock, [this, tick] {
 		const bool active_before_or_at = m_priority_active && m_priority_active_tick <= tick;
@@ -364,6 +375,7 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 	EXIT_IF(!m_command.IsInvalid());
 	m_command.m_buffer = m_command_pool.Commit();
 	m_command.Begin();
+	BeginTimestamp();
 	return m_command;
 }
 
@@ -371,7 +383,9 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 	EXIT_IF(m_command.IsInvalid());
 	EXIT_IF(submit.num_wait_semaphores > SubmitInfo::MaxSemaphores ||
 	        submit.num_signal_semaphores >= SubmitInfo::MaxSemaphores);
+	const auto submit_t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 
+	EndTimestamp();
 	m_command.End();
 	const auto buffer   = m_command.m_buffer;
 	auto&      graphics = m_graphics;
@@ -427,8 +441,113 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 		EXIT_NOT_IMPLEMENTED(idle != vk::Result::eSuccess);
 	}
 
+	if (m_timestamp_slot >= 0) {
+		std::lock_guard lock(m_timestamp_mutex);
+		m_timestamp_pending.emplace_back(tick, static_cast<uint32_t>(m_timestamp_slot));
+		m_timestamp_slot = -1;
+	}
+	HarvestTimestamps();
+	if (submit_t0 != 0) {
+		namespace FS  = Common::FrameStats;
+		const auto ns = FS::NowNs() - submit_t0;
+		FS::Add(FS::Counter::SubmitNs, ns);
+		FS::Add(FS::Counter::Submits, 1);
+		FS::AddSite(FS::Table::SubmitSites, FS::CurrentSite(), ns);
+	}
+
 	m_command.m_buffer = nullptr;
 	return tick;
+}
+
+void CommandScheduler::InitTimestamps() {
+	if (!Common::FrameStats::Enabled()) {
+		return;
+	}
+	const auto& limits = m_graphics.physical_device_properties.limits;
+	if (limits.timestampPeriod <= 0.0f) {
+		return;
+	}
+	uint32_t count = 0;
+	m_graphics.physical_device.getQueueFamilyProperties(&count, nullptr);
+	std::vector<vk::QueueFamilyProperties> families(count);
+	m_graphics.physical_device.getQueueFamilyProperties(&count, families.data());
+	if (m_graphics.queue_family >= count ||
+	    families[m_graphics.queue_family].timestampValidBits == 0) {
+		LOGF("FrameTrace: queue family has no timestamp support, GPU time not measured" "\n");
+		return;
+	}
+	vk::QueryPoolCreateInfo info {};
+	info.sType      = vk::StructureType::eQueryPoolCreateInfo;
+	info.queryType  = vk::QueryType::eTimestamp;
+	info.queryCount = TimestampSlots * 2;
+	if (m_graphics.device.createQueryPool(&info, nullptr, &m_timestamp_pool) !=
+	    vk::Result::eSuccess) {
+		m_timestamp_pool = nullptr;
+		return;
+	}
+	m_timestamp_period_ns = static_cast<double>(limits.timestampPeriod);
+	m_timestamp_bits      = families[m_graphics.queue_family].timestampValidBits;
+}
+
+void CommandScheduler::BeginTimestamp() {
+	m_timestamp_slot = -1;
+	if (m_timestamp_pool == nullptr || m_command.IsInvalid()) {
+		return;
+	}
+	std::lock_guard lock(m_timestamp_mutex);
+	// Slots are handed out round-robin and harvested in order, so with fewer than TimestampSlots
+	// pending the next slot cannot still be in flight.
+	if (m_timestamp_pending.size() >= TimestampSlots) {
+		return;
+	}
+	const auto slot  = m_timestamp_next;
+	m_timestamp_next = (m_timestamp_next + 1) % TimestampSlots;
+	auto cmd         = m_command.Handle();
+	cmd.resetQueryPool(m_timestamp_pool, slot * 2, 2);
+	cmd.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe, m_timestamp_pool, slot * 2);
+	m_timestamp_slot = slot;
+}
+
+void CommandScheduler::EndTimestamp() {
+	if (m_timestamp_slot < 0 || m_command.IsInvalid()) {
+		return;
+	}
+	m_command.Handle().writeTimestamp(vk::PipelineStageFlagBits::eBottomOfPipe, m_timestamp_pool,
+	                                  static_cast<uint32_t>(m_timestamp_slot) * 2 + 1);
+}
+
+void CommandScheduler::HarvestTimestamps() {
+	if (m_timestamp_pool == nullptr) {
+		return;
+	}
+	std::lock_guard lock(m_timestamp_mutex);
+	if (m_timestamp_pending.empty()) {
+		return;
+	}
+	if (!m_master.IsFree(m_timestamp_pending.front().first)) {
+		m_master.Refresh();
+	}
+	while (!m_timestamp_pending.empty() && m_master.IsFree(m_timestamp_pending.front().first)) {
+		const auto              slot = m_timestamp_pending.front().second;
+		std::array<uint64_t, 2> values {};
+		const auto              result = m_graphics.device.getQueryPoolResults(
+            m_timestamp_pool, slot * 2, 2, sizeof(values), values.data(), sizeof(uint64_t),
+            vk::QueryResultFlagBits::e64);
+		if (result == vk::Result::eNotReady) {
+			break;
+		}
+		m_timestamp_pending.pop_front();
+		if (result != vk::Result::eSuccess) {
+			continue;
+		}
+		uint64_t delta = values[1] - values[0];
+		if (m_timestamp_bits < 64) {
+			delta &= (uint64_t {1} << m_timestamp_bits) - 1;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::GpuBusyNs,
+		                        static_cast<uint64_t>(static_cast<double>(delta) * m_timestamp_period_ns));
+		Common::FrameStats::Add(Common::FrameStats::Counter::GpuMeasured, 1);
+	}
 }
 
 void CommandScheduler::BeginNext() {

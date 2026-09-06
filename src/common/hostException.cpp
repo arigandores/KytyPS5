@@ -1,5 +1,9 @@
 #include "common/hostException.h"
 
+#include "common/logging/log.h"
+
+#include "common/frameStats.h"
+
 #include <atomic>
 #include <cstdio>
 
@@ -85,8 +89,32 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 	info.r15 = exception->ContextRecord->R15;
 
 	const auto handler = g_handler.load(std::memory_order_acquire);
-	if (handler != nullptr && handler(info)) {
-		return EXCEPTION_CONTINUE_EXECUTION;
+	if (handler != nullptr) {
+		const auto t0       = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+		const bool resolved = handler(info);
+		if (t0 != 0) {
+			const auto ns = Common::FrameStats::NowNs() - t0;
+			Common::FrameStats::Add(Common::FrameStats::Counter::FaultNs, ns);
+			Common::FrameStats::Add(Common::FrameStats::Counter::Faults, 1);
+			if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultGpuNs, ns);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultsGpu, 1);
+				static std::atomic<uint32_t> logged {0};
+				if (ns >= 20000 && logged.fetch_add(1, std::memory_order_relaxed) < 20000) {
+					const auto base = reinterpret_cast<uint64_t>(GetModuleHandleW(nullptr));
+					LOGF("FaultTrace-gpu: addr=0x%016llx rip=+0x%llx access=%d us=%llu site=%s" "\n",
+					     static_cast<unsigned long long>(info.access_violation_vaddr),
+					     static_cast<unsigned long long>(info.exception_address - base),
+					     static_cast<int>(info.access_violation_type),
+					     static_cast<unsigned long long>(ns / 1000u),
+					     Common::FrameStats::CurrentSite() != nullptr ? Common::FrameStats::CurrentSite()
+					                                                  : "-");
+				}
+			}
+		}
+		if (resolved) {
+			return EXCEPTION_CONTINUE_EXECUTION;
+		}
 	}
 	return EXCEPTION_CONTINUE_SEARCH;
 }

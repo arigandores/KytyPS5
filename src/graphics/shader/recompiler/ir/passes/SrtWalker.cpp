@@ -1,5 +1,7 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
@@ -442,6 +444,9 @@ private:
 	bool        m_memory_read_failed = false;
 
 	void RecordFailure(std::string reason) {
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::MatFailures, 1);
+		}
 		if (m_failure.empty()) {
 			m_failure = std::move(reason);
 		}
@@ -457,6 +462,9 @@ private:
 	static uint64_t Float32Bits(float value) { return std::bit_cast<uint32_t>(value); }
 
 	bool EvaluateWide(Value value, uint64_t& result) {
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::MatEvalWide, 1);
+		}
 		value = value.Resolve();
 		if (value.IsImmediate()) {
 			switch (value.GetType()) {
@@ -495,6 +503,9 @@ private:
 		}
 		m_visiting.push_back(inst);
 		uint64_t out = 0;
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::MatEvalInsts, 1);
+		}
 		if (!EvaluateInst(*inst, out)) {
 			RecordFailure(fmt::format("cannot evaluate {}", ValueOpcodeName(inst->GetOpcode())));
 			m_visiting.pop_back();
@@ -637,6 +648,7 @@ private:
 		}
 		uint32_t word = 0;
 		if (m_runtime.read_memory != nullptr) {
+			Common::FrameStats::Scope read_scope(Common::FrameStats::Counter::MatReadNs);
 			if (!m_runtime.read_memory(m_runtime.userdata, address, &word)) {
 				RecordFailure(fmt::format("guest memory read at 0x{:016x} failed", address));
 				m_memory_read_failed = true;

@@ -1,5 +1,7 @@
 #include "graphics/shader/recompiler/ir/passes/ResourceMaterialization.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "graphics/guest_gpu/gpu_format.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
@@ -293,10 +295,12 @@ static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& r
 	}
 	std::vector<DescriptorValue> values;
 	std::vector<uint32_t>        flattened_srt;
+	Common::FrameStats::Lap lap;
 	if (!EvaluateRuntimeSources(program, program.materialization_sources, runtime, values,
 	                            flattened_srt, program.clean_flat_slots)) {
 		return SpecializationFail("runtime descriptor sources could not be evaluated");
 	}
+	lap.Mark(Common::FrameStats::Counter::MatEvalNs);
 
 	auto& next   = snapshot.resources;
 	auto  cursor = values.begin();
@@ -339,6 +343,7 @@ static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& r
 	}
 	next.samplers.assign(cursor, cursor + program.info.samplers.size());
 	next.user_data.assign(runtime.user_data.begin(), runtime.user_data.end());
+	lap.Mark(Common::FrameStats::Counter::MatAssembleNs);
 	return true;
 }
 
@@ -715,7 +720,11 @@ bool MaterializeResources(const ResourcePlan& program, const SrtRuntime& runtime
 	if (!MaterializeSnapshot(program, runtime, materialized)) {
 		return false;
 	}
-	return BuildResourceSpecialization(program, std::move(materialized), snapshot, specialization);
+	Common::FrameStats::Lap lap;
+	const bool ok =
+	    BuildResourceSpecialization(program, std::move(materialized), snapshot, specialization);
+	lap.Mark(Common::FrameStats::Counter::MatSpecNs);
+	return ok;
 }
 
 void ApplyResourceSpecialization(Program& program, const ResourceSpecialization& specialization) {

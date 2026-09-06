@@ -1,4 +1,6 @@
 #include "common/assert.h"
+
+#include "common/frameStats.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
@@ -158,7 +160,10 @@ public:
 	}
 
 private:
-	void WaitForFrame(Presenter::Frame& frame) { m_scheduler.Wait(frame.present_tick); }
+	void WaitForFrame(Presenter::Frame& frame) {
+		Common::FrameStats::SiteScope site_scope("present-frame");
+		m_scheduler.Wait(frame.present_tick);
+	}
 
 	WindowContext&                                 m_window;
 	CommandScheduler&                              m_scheduler;

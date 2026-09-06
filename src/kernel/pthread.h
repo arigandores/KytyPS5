@@ -211,6 +211,21 @@ uint64_t KYTY_SYSV_ABI KernelGetProcessTime();
 uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounter();
 uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounterFrequency();
 
+// Stall compensation: while a freeze is active the guest-visible TSC-derived clocks (ReadTsc,
+// GetProcessTime, GetProcessTimeCounter, CLOCK_PROCTIME) stand still and the registered listener
+// is told to pause audio output, so host-only stalls (shader compilation) do not desynchronize
+// the game's simulation from its audio. Nestable; KYTY_STALL_FREEZE=0 disables everything.
+void KernelTimeFreezeBegin();
+void KernelTimeFreezeEnd();
+void KernelSetTimeFreezeListener(void (*listener)(bool frozen));
+
+class KernelTimeFreezeScope {
+public:
+	KernelTimeFreezeScope() { KernelTimeFreezeBegin(); }
+	~KernelTimeFreezeScope() { KernelTimeFreezeEnd(); }
+	KYTY_CLASS_NO_COPY(KernelTimeFreezeScope);
+};
+
 } // namespace LibKernel
 
 namespace Posix {

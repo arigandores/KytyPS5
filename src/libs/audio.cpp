@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <limits>
+#include <mutex>
 #include <vector>
 
 #include "libatrac9.h"
@@ -142,6 +143,31 @@ private:
 
 static Audio* g_audio = nullptr;
 
+// Stall compensation (kernel/pthread.h): every open SDL output device is paused while the guest
+// clock is frozen, so audio already queued does not run ahead of the frozen simulation.
+static std::mutex                     g_frozen_devices_mutex;
+static std::vector<SDL_AudioDeviceID> g_frozen_devices;
+static bool                           g_audio_frozen = false;
+
+static void AudioTimeFreezeListener(bool frozen) {
+	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	g_audio_frozen = frozen;
+	for (const auto device: g_frozen_devices) {
+		SDL_PauseAudioDevice(device, frozen ? 1 : 0);
+	}
+}
+
+static void AudioRegisterDevice(SDL_AudioDeviceID device) {
+	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	g_frozen_devices.push_back(device);
+	SDL_PauseAudioDevice(device, g_audio_frozen ? 1 : 0);
+}
+
+static void AudioUnregisterDevice(SDL_AudioDeviceID device) {
+	std::lock_guard<std::mutex> lock(g_frozen_devices_mutex);
+	std::erase(g_frozen_devices, device);
+}
+
 namespace AudioInternal {
 
 int AudioOutOpen(int type, uint32_t samples_num, uint32_t freq, Format format) {
@@ -191,6 +217,7 @@ void Initialize() {
 	EXIT_IF(g_audio != nullptr);
 
 	g_audio = new Audio;
+	LibKernel::KernelSetTimeFreezeListener(AudioTimeFreezeListener);
 }
 
 void Shutdown() {
@@ -250,7 +277,7 @@ bool Audio::OpenSdlDevice(PortOut* port) {
 	}
 
 	port->audio_spec = obtained;
-	SDL_PauseAudioDevice(port->audio_device, 0);
+	AudioRegisterDevice(port->audio_device);
 
 	LOGF("AudioOut: opened SDL device (%d Hz, %u ch, format 0x%04x)\n", obtained.freq,
 	     obtained.channels, obtained.format);
@@ -261,6 +288,7 @@ void Audio::CloseSdlDevice(PortOut* port) {
 	EXIT_IF(port == nullptr);
 
 	if (port->audio_device != 0 && SDL_WasInit(SDL_INIT_AUDIO) != 0) {
+		AudioUnregisterDevice(port->audio_device);
 		SDL_ClearQueuedAudio(port->audio_device);
 		SDL_CloseAudioDevice(port->audio_device);
 	}

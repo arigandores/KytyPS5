@@ -132,12 +132,50 @@ static uint64_t GetHostThreadId() {
 }
 #endif
 
-static uint64_t KernelReadTscNative() {
+static uint64_t KernelReadTscRaw() {
 #if defined(_M_X64) || defined(__x86_64__)
 	return __rdtsc();
 #else
 	return Common::Timer::QueryPerformanceCounter();
 #endif
+}
+
+namespace {
+
+struct TimeFreezeState {
+	std::mutex mutex;
+	uint32_t   depth = 0;
+	uint64_t   start = 0;
+	uint64_t   total = 0;
+	uint64_t   count = 0;
+	void (*listener)(bool) = nullptr;
+};
+
+TimeFreezeState& GetTimeFreezeState() {
+	static TimeFreezeState state;
+	return state;
+}
+
+bool TimeFreezeEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_STALL_FREEZE");
+		return value == nullptr || std::atoi(value) != 0;
+	}();
+	return enabled;
+}
+
+} // namespace
+
+// Guest-visible TSC: the raw counter minus the time spent inside freezes (constant while frozen).
+static uint64_t KernelReadTscNative() {
+	const auto now = KernelReadTscRaw();
+	if (!TimeFreezeEnabled()) {
+		return now;
+	}
+	auto&                       state = GetTimeFreezeState();
+	std::lock_guard<std::mutex> lock(state.mutex);
+	const uint64_t frozen = state.total + (state.depth > 0 && now > state.start ? now - state.start : 0);
+	return now - frozen;
 }
 
 static uint64_t KernelGetTscFrequencyNative() {
@@ -148,15 +186,15 @@ static uint64_t KernelGetTscFrequencyNative() {
 			return uint64_t {1000000000};
 		}
 
-		KernelReadTscNative();
+		KernelReadTscRaw();
 		Common::Thread::Sleep(1);
-		KernelReadTscNative();
+		KernelReadTscRaw();
 
 		const auto host_start = Common::Timer::QueryPerformanceCounter();
-		const auto tsc_start  = KernelReadTscNative();
+		const auto tsc_start  = KernelReadTscRaw();
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		const auto host_end = Common::Timer::QueryPerformanceCounter();
-		const auto tsc_end  = KernelReadTscNative();
+		const auto tsc_end  = KernelReadTscRaw();
 
 		const auto host_delta = host_end - host_start;
 		const auto tsc_delta  = tsc_end - tsc_start;
@@ -4100,6 +4138,74 @@ uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounter() {
 
 uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounterFrequency() {
 	return KernelGetTscFrequencyNative();
+}
+
+void KernelTimeFreezeBegin() {
+	if (!TimeFreezeEnabled()) {
+		return;
+	}
+	auto& state              = GetTimeFreezeState();
+	void (*listener)(bool)   = nullptr;
+	{
+		std::lock_guard<std::mutex> lock(state.mutex);
+		if (state.depth++ == 0) {
+			state.start = KernelReadTscRaw();
+			state.count++;
+			listener = state.listener;
+		}
+	}
+	if (listener != nullptr) {
+		listener(true);
+	}
+}
+
+void KernelTimeFreezeEnd() {
+	if (!TimeFreezeEnabled()) {
+		return;
+	}
+	auto& state              = GetTimeFreezeState();
+	void (*listener)(bool)   = nullptr;
+	bool     ended           = false;
+	uint64_t duration        = 0;
+	uint64_t total           = 0;
+	uint64_t count           = 0;
+	{
+		std::lock_guard<std::mutex> lock(state.mutex);
+		EXIT_IF(state.depth == 0);
+		if (--state.depth == 0) {
+			const auto now = KernelReadTscRaw();
+			duration       = now > state.start ? now - state.start : 0;
+			state.total += duration;
+			ended    = true;
+			listener = state.listener;
+			total    = state.total;
+			count    = state.count;
+		}
+	}
+	if (!ended) {
+		return;
+	}
+	if (listener != nullptr) {
+		listener(false);
+	}
+	static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	if (av_trace) {
+		const auto frequency = KernelGetTscFrequencyNative();
+		const auto to_us     = [frequency](uint64_t tsc) {
+			return frequency != 0 ? static_cast<uint64_t>((static_cast<long double>(tsc) * 1000000.0L) /
+			                                             static_cast<long double>(frequency))
+			                      : 0;
+		};
+		LOGF("AvTrace: freeze end dur_us=%" PRIu64 " total_us=%" PRIu64 " count=%" PRIu64 " t=%" PRIu64
+		     "\n",
+		     to_us(duration), to_us(total), count, KernelGetProcessTime());
+	}
+}
+
+void KernelSetTimeFreezeListener(void (*listener)(bool frozen)) {
+	auto&                       state = GetTimeFreezeState();
+	std::lock_guard<std::mutex> lock(state.mutex);
+	state.listener = listener;
 }
 
 void KYTY_SYSV_ABI KernelSetThreadDtors(thread_dtors_func_t dtors) {

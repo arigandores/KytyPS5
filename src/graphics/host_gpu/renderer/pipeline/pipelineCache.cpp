@@ -15,6 +15,7 @@
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/shaderCompiler.h"
 #include "kernel/memory.h"
+#include "kernel/pthread.h"
 #include "kytyGitVersion.h"
 #include "loader/systemContent.h"
 
@@ -308,7 +309,9 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 
-		ShaderStageInputInfo stage_input {};
+		// Recompiling a shader stalls the guest GPU for tens of milliseconds; keep guest time still.
+		LibKernel::KernelTimeFreezeScope freeze_scope;
+		ShaderStageInputInfo             stage_input {};
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 			stage_input.vertex = &input_info;
 		} else if constexpr (std::is_same_v<InputInfo, ShaderPixelInputInfo>) {
@@ -748,6 +751,7 @@ PipelineCache::GraphicsPipeline& PipelineCache::CreateGraphicsPipeline(
 	if (auto iter = m_graphics_pipelines.find(key); iter != m_graphics_pipelines.end()) {
 		return *iter->second;
 	}
+	LibKernel::KernelTimeFreezeScope freeze_scope;
 
 	if (graphics_debug_dump_enabled()) {
 		ShaderDbgDumpInputInfo(vs_input_info);
@@ -793,6 +797,7 @@ PipelineCache::CreateComputePipeline(ShaderComputeInputInfo& input_info,
 	if (auto iter = m_compute_pipelines.find(key); iter != m_compute_pipelines.end()) {
 		return *iter->second;
 	}
+	LibKernel::KernelTimeFreezeScope freeze_scope;
 
 	if (graphics_debug_dump_enabled()) {
 		ShaderDbgDumpInputInfo(input_info);

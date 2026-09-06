@@ -116,6 +116,9 @@ bool        Structurize(Graph& graph);
 std::string BranchConditionToString(BranchCondition condition);
 std::string FailureKindToString(FailureKind kind);
 std::string GraphToString(const Graph& graph);
+// Structurizer profile (accumulated per process): analysis call counts and times.
+std::string ProfileReport();
+void        ProfileReset();
 
 } // namespace Libs::Graphics::ShaderRecompiler::CFG
 

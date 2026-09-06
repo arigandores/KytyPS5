@@ -3,6 +3,8 @@
 #include "common/assert.h"
 
 #include <algorithm>
+#include <bit>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <fmt/format.h>
@@ -745,69 +747,89 @@ void PruneUnreachableBlocks(Graph& graph) {
 	RebuildPredecessors(graph);
 }
 
-void ComputeDominators(Graph& graph) {
+// Iterative maximal-fixpoint dominance on bitsets. The result is the same set family the
+// sorted-vector formulation produced (a block whose edge list is empty is its own root), but a
+// step costs N/64 words instead of an O(N) merge, and blocks are visited in the direction the
+// information flows (forward for dominators, backward for post-dominators): visiting a backward
+// problem in forward order needs one full sweep per CFG level, which made post-dominators of a
+// 400-block compute shader cost ~7 ms per call and the structurizer 300 ms per shader.
+void ComputeDominanceSets(Graph& graph, bool post) {
 	const auto count = static_cast<uint32_t>(graph.blocks.size());
-	const auto all   = AllBlockIds(count);
+	if (count == 0) {
+		return;
+	}
+	const uint32_t words = (count + 63u) / 64u;
+	const uint64_t tail_mask =
+	    (count % 64u) == 0 ? ~uint64_t {0} : ((uint64_t {1} << (count % 64u)) - 1u);
 
-	for (auto& block: graph.blocks) {
-		block.dominators = (block.id == graph.entry_block ? std::vector<uint32_t> {block.id} : all);
+	auto is_root = [&](const BasicBlock& block) {
+		return post ? block.successors.empty()
+		            : (block.id == graph.entry_block || block.predecessors.empty());
+	};
+	auto edges = [&](const BasicBlock& block) -> const std::vector<uint32_t>& {
+		return post ? block.successors : block.predecessors;
+	};
+
+	std::vector<uint64_t> sets(static_cast<size_t>(count) * words);
+	auto                  set_of = [&](uint32_t id) { return sets.data() + static_cast<size_t>(id) * words; };
+	for (const auto& block: graph.blocks) {
+		auto* set = set_of(block.id);
+		if (is_root(block)) {
+			std::fill(set, set + words, uint64_t {0});
+			set[block.id / 64u] |= uint64_t {1} << (block.id % 64u);
+		} else {
+			std::fill(set, set + words, ~uint64_t {0});
+			set[words - 1] &= tail_mask;
+		}
 	}
 
-	bool changed = true;
+	std::vector<uint64_t> next(words);
+	bool                  changed = true;
 	while (changed) {
 		changed = false;
-		for (auto& block: graph.blocks) {
-			if (block.id == graph.entry_block) {
+		for (uint32_t step = 0; step < count; step++) {
+			const auto& block = graph.blocks[post ? count - 1u - step : step];
+			if (is_root(block)) {
 				continue;
 			}
-			std::vector<uint32_t> next;
-			if (block.predecessors.empty()) {
-				next = {block.id};
-			} else {
-				next = graph.blocks[block.predecessors.front()].dominators;
-				for (uint32_t i = 1; i < block.predecessors.size(); i++) {
-					next = IntersectSorted(next, graph.blocks[block.predecessors[i]].dominators);
+			std::fill(next.begin(), next.end(), ~uint64_t {0});
+			for (const auto edge: edges(block)) {
+				const auto* other = set_of(edge);
+				for (uint32_t w = 0; w < words; w++) {
+					next[w] &= other[w];
 				}
-				AddUnique(next, block.id);
-				SortUnique(next);
 			}
-			if (next != block.dominators) {
-				block.dominators = std::move(next);
-				changed          = true;
+			next[words - 1] &= tail_mask;
+			next[block.id / 64u] |= uint64_t {1} << (block.id % 64u);
+			auto* set = set_of(block.id);
+			if (!std::equal(next.begin(), next.end(), set)) {
+				std::copy(next.begin(), next.end(), set);
+				changed = true;
+			}
+		}
+	}
+
+	for (auto& block: graph.blocks) {
+		auto& out = post ? block.post_dominators : block.dominators;
+		out.clear();
+		const auto* set = set_of(block.id);
+		for (uint32_t w = 0; w < words; w++) {
+			uint64_t word = set[w];
+			while (word != 0) {
+				const auto bit = static_cast<uint32_t>(std::countr_zero(word));
+				out.push_back(w * 64u + bit);
+				word &= word - 1u;
 			}
 		}
 	}
 }
 
+void ComputeDominators(Graph& graph) {
+	ComputeDominanceSets(graph, false);
+}
+
 void ComputePostDominators(Graph& graph) {
-	const auto count = static_cast<uint32_t>(graph.blocks.size());
-	const auto all   = AllBlockIds(count);
-
-	for (auto& block: graph.blocks) {
-		block.post_dominators = block.successors.empty() ? std::vector<uint32_t> {block.id} : all;
-	}
-
-	bool changed = true;
-	while (changed) {
-		changed = false;
-		for (auto& block: graph.blocks) {
-			std::vector<uint32_t> next;
-			if (block.successors.empty()) {
-				next = {block.id};
-			} else {
-				next = graph.blocks[block.successors.front()].post_dominators;
-				for (uint32_t i = 1; i < block.successors.size(); i++) {
-					next = IntersectSorted(next, graph.blocks[block.successors[i]].post_dominators);
-				}
-				AddUnique(next, block.id);
-				SortUnique(next);
-			}
-			if (next != block.post_dominators) {
-				block.post_dominators = std::move(next);
-				changed               = true;
-			}
-		}
-	}
+	ComputeDominanceSets(graph, true);
 }
 
 void ComputeBackEdges(Graph& graph) {
@@ -989,12 +1011,49 @@ void ComputeComponents(Graph& graph) {
 	}
 }
 
+struct CfgProfile {
+	uint64_t recompute_calls = 0;
+	uint64_t dominators_us   = 0;
+	uint64_t post_dom_us     = 0;
+	uint64_t back_edges_us   = 0;
+	uint64_t loops_us        = 0;
+	uint64_t components_us   = 0;
+	uint64_t impl_calls      = 0;
+	uint64_t route_attempts  = 0;
+	uint64_t max_blocks      = 0;
+};
+
+CfgProfile& Profile() {
+	static CfgProfile profile;
+	return profile;
+}
+
+uint64_t ProfileNow() {
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
+	                                 std::chrono::steady_clock::now().time_since_epoch())
+	                                 .count());
+}
+
 void RecomputeAnalyses(Graph& graph) {
+	auto&      profile = Profile();
+	const auto t0      = ProfileNow();
 	ComputeDominators(graph);
+	const auto t1 = ProfileNow();
 	ComputePostDominators(graph);
+	const auto t2 = ProfileNow();
 	ComputeBackEdges(graph);
+	const auto t3 = ProfileNow();
 	ComputeNaturalLoops(graph);
+	const auto t4 = ProfileNow();
 	ComputeComponents(graph);
+	const auto t5 = ProfileNow();
+	profile.recompute_calls++;
+	profile.dominators_us += t1 - t0;
+	profile.post_dom_us += t2 - t1;
+	profile.back_edges_us += t3 - t2;
+	profile.loops_us += t4 - t3;
+	profile.components_us += t5 - t4;
+	profile.max_blocks = std::max<uint64_t>(profile.max_blocks, graph.blocks.size());
 }
 
 uint32_t MoveBlockBefore(Graph& graph, uint32_t block_id, uint32_t before_id) {
@@ -2280,6 +2339,7 @@ Graph BuildGraph(const Decoder::Program& program) {
 namespace {
 
 bool StructurizeImpl(Graph& graph) {
+	Profile().impl_calls++;
 	if (graph.unsupported || graph.irreducible) {
 		if (graph.unsupported_reason.empty()) {
 			graph.unsupported_reason = "unsupported CFG";
@@ -2374,6 +2434,7 @@ bool Structurize(Graph& graph) {
 	// Apply one route at a time and retry. Eagerly routing every matching diamond can
 	// rewrite unrelated selections that were already structurally valid.
 	for (uint32_t route_variable = 0; route_variable < route_budget; route_variable++) {
+		Profile().route_attempts++;
 		if (!RouteSharedSelectionArm(graph, route_variable)) {
 			break;
 		}
@@ -2385,6 +2446,18 @@ bool Structurize(Graph& graph) {
 	}
 	graph = std::move(failed_graph);
 	return false;
+}
+
+std::string ProfileReport() {
+	const auto& p = Profile();
+	return fmt::format("cfg profile: recompute={} impl={} routes={} max_blocks={} dominators={}us "
+	                   "post_dominators={}us back_edges={}us loops={}us components={}us",
+	                   p.recompute_calls, p.impl_calls, p.route_attempts, p.max_blocks, p.dominators_us,
+	                   p.post_dom_us, p.back_edges_us, p.loops_us, p.components_us);
+}
+
+void ProfileReset() {
+	Profile() = CfgProfile {};
 }
 
 std::string BranchConditionToString(BranchCondition condition) {

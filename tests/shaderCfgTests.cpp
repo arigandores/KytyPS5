@@ -12093,6 +12093,53 @@ int main() {
   using namespace Libs::Graphics;
 
   EnsureConfigInitialized();
+  if (const char *bench = std::getenv("KYTY_CFG_BENCH"); bench != nullptr) {
+    // Offline structurizer benchmark: KYTY_CFG_BENCH="a.bin;b.bin" (raw GCN dumps from
+    // _Shaders/original). Prints per-file timings and the accumulated CFG profile.
+    std::string list = bench;
+    size_t pos = 0;
+    while (pos <= list.size()) {
+      const auto next = list.find(';', pos);
+      const auto path = list.substr(pos, next == std::string::npos ? std::string::npos : next - pos);
+      pos = next == std::string::npos ? list.size() + 1 : next + 1;
+      if (path.empty()) {
+        continue;
+      }
+      FILE *file = std::fopen(path.c_str(), "rb");
+      if (file == nullptr) {
+        std::fprintf(stderr, "bench: cannot open %s\n", path.c_str());
+        continue;
+      }
+      std::vector<uint32_t> code;
+      uint32_t word = 0;
+      while (std::fread(&word, sizeof(word), 1, file) == 1) {
+        code.push_back(word);
+      }
+      std::fclose(file);
+      ShaderRecompiler::Decoder::Program decoded;
+      ShaderRecompiler::Decoder::DecodeProgram(std::span<const uint32_t>{code}, decoded);
+      const auto t0 = std::chrono::steady_clock::now();
+      auto graph = ShaderRecompiler::CFG::BuildGraph(decoded);
+      const auto t1 = std::chrono::steady_clock::now();
+      const auto blocks_before = graph.blocks.size();
+      ShaderRecompiler::CFG::ProfileReset();
+      const bool ok = ShaderRecompiler::CFG::Structurize(graph);
+      const auto t2 = std::chrono::steady_clock::now();
+      const auto ms = [](auto a, auto b) {
+        return std::chrono::duration_cast<std::chrono::microseconds>(b - a).count() / 1000.0;
+      };
+      std::printf("bench %s: words=%zu instructions=%zu blocks=%zu->%zu loops=%zu build=%.1fms "
+                  "structurize=%.1fms ok=%d failure=%s\n",
+                  path.c_str(), code.size(), decoded.instructions.size(), blocks_before,
+                  graph.blocks.size(), graph.natural_loops.size(), ms(t0, t1), ms(t1, t2), ok ? 1 : 0,
+                  graph.unsupported_reason.c_str());
+      const auto text = ShaderRecompiler::CFG::GraphToString(graph);
+      std::printf("  graph_hash=%016llx %s\n",
+                  static_cast<unsigned long long>(XXH3_64bits(text.data(), text.size())),
+                  ShaderRecompiler::CFG::ProfileReport().c_str());
+    }
+    return 0;
+  }
   RUN(TestResourceDescriptorClassification);
   RUN(TestNativeShaderResourceDependencies);
   RUN(TestNormalizedImageContracts);

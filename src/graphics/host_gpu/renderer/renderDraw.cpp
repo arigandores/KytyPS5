@@ -1428,6 +1428,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	}
 
 	if (ConsumeMetadataColorOperation(buffer)) {
+		MaterializeBoundTargetDccClears(buffer);
 		ResetBindings();
 		return;
 	}
@@ -1560,6 +1561,7 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	}
 
 	if (ConsumeMetadataColorOperation(buffer)) {
+		MaterializeBoundTargetDccClears(buffer);
 		ResetBindings();
 		return;
 	}

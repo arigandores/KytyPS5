@@ -12,6 +12,7 @@
 #include <bit>
 #include <cmath>
 #include <cstdint>
+#include <limits>
 
 namespace Libs::Graphics {
 
@@ -422,11 +423,47 @@ IsSupportedDisplayRenderTargetTileMode(Prospero::TileMode tile_mode) noexcept {
 	       IsSupportedStandard64RenderTarget(info);
 }
 
+[[nodiscard]] inline float DecodeHalfBits(uint32_t bits) {
+	const uint32_t sign     = (bits >> 15u) & 1u;
+	const uint32_t exponent = (bits >> 10u) & 0x1fu;
+	const uint32_t mantissa = bits & 0x3ffu;
+	float          value    = 0.0f;
+	if (exponent == 0) {
+		value = std::ldexp(static_cast<float>(mantissa), -24);
+	} else if (exponent == 31) {
+		value = mantissa == 0 ? std::numeric_limits<float>::infinity()
+		                      : std::numeric_limits<float>::quiet_NaN();
+	} else {
+		value = std::ldexp(static_cast<float>(mantissa | 0x400u), static_cast<int>(exponent) - 25);
+	}
+	return sign != 0 ? -value : value;
+}
+
+// Unsigned 11-bit (5e6m) and 10-bit (5e5m) floats of the R11G11B10 format.
+[[nodiscard]] inline float DecodeSmallFloatBits(uint32_t bits, uint32_t mantissa_bits) {
+	const uint32_t exponent = (bits >> mantissa_bits) & 0x1fu;
+	const uint32_t mantissa = bits & ((1u << mantissa_bits) - 1u);
+	if (exponent == 0) {
+		return std::ldexp(static_cast<float>(mantissa), -14 - static_cast<int>(mantissa_bits));
+	}
+	if (exponent == 31) {
+		return mantissa == 0 ? std::numeric_limits<float>::infinity()
+		                     : std::numeric_limits<float>::quiet_NaN();
+	}
+	return std::ldexp(static_cast<float>(mantissa | (1u << mantissa_bits)),
+	                  static_cast<int>(exponent) - 15 - static_cast<int>(mantissa_bits));
+}
+
+// CB_COLOR_CLEAR_WORD0/1 hold the clear colour in the target's native packing; formats up to
+// 64 bits per pixel span both words (RGBA16F: word0 = R | G << 16, word1 = B | A << 16).
 [[nodiscard]] inline bool DecodePackedColorClear(vk::Format format, uint32_t packed,
-                                                 vk::ClearColorValue& clear) {
+                                                 uint32_t packed1, vk::ClearColorValue& clear) {
 	vk::ClearColorValue next {};
-	const auto unorm8 = [](uint32_t value) { return static_cast<float>(value & 0xffu) / 255.0f; };
-	const auto srgb8  = [](uint32_t value) {
+	const auto unorm8  = [](uint32_t value) { return static_cast<float>(value & 0xffu) / 255.0f; };
+	const auto unorm16 = [](uint32_t value) {
+		return static_cast<float>(value & 0xffffu) / 65535.0f;
+	};
+	const auto srgb8 = [](uint32_t value) {
 		const auto encoded = static_cast<float>(value & 0xffu) / 255.0f;
 		return encoded <= 0.04045f ? encoded / 12.92f : std::pow((encoded + 0.055f) / 1.055f, 2.4f);
 	};
@@ -437,6 +474,42 @@ IsSupportedDisplayRenderTargetTileMode(Prospero::TileMode tile_mode) noexcept {
 		case vk::Format::eR32Sfloat: next.float32[0] = std::bit_cast<float>(packed); break;
 		case vk::Format::eR32Uint: next.uint32[0] = packed; break;
 		case vk::Format::eR32Sint: next.int32[0] = static_cast<int32_t>(packed); break;
+		case vk::Format::eR32G32Sfloat:
+			next.float32[0] = std::bit_cast<float>(packed);
+			next.float32[1] = std::bit_cast<float>(packed1);
+			break;
+		case vk::Format::eR16Sfloat: next.float32[0] = DecodeHalfBits(packed & 0xffffu); break;
+		case vk::Format::eR16G16Sfloat:
+			next.float32[0] = DecodeHalfBits(packed & 0xffffu);
+			next.float32[1] = DecodeHalfBits(packed >> 16u);
+			break;
+		case vk::Format::eR16G16B16A16Sfloat:
+			next.float32[0] = DecodeHalfBits(packed & 0xffffu);
+			next.float32[1] = DecodeHalfBits(packed >> 16u);
+			next.float32[2] = DecodeHalfBits(packed1 & 0xffffu);
+			next.float32[3] = DecodeHalfBits(packed1 >> 16u);
+			break;
+		case vk::Format::eR16Unorm: next.float32[0] = unorm16(packed); break;
+		case vk::Format::eR16G16Unorm:
+			next.float32[0] = unorm16(packed);
+			next.float32[1] = unorm16(packed >> 16u);
+			break;
+		case vk::Format::eR16G16B16A16Unorm:
+			next.float32[0] = unorm16(packed);
+			next.float32[1] = unorm16(packed >> 16u);
+			next.float32[2] = unorm16(packed1);
+			next.float32[3] = unorm16(packed1 >> 16u);
+			break;
+		case vk::Format::eB10G11R11UfloatPack32:
+			next.float32[0] = DecodeSmallFloatBits(packed & 0x7ffu, 6);
+			next.float32[1] = DecodeSmallFloatBits((packed >> 11u) & 0x7ffu, 6);
+			next.float32[2] = DecodeSmallFloatBits((packed >> 22u) & 0x3ffu, 5);
+			break;
+		case vk::Format::eR8Unorm: next.float32[0] = unorm8(packed); break;
+		case vk::Format::eR8G8Unorm:
+			next.float32[0] = unorm8(packed);
+			next.float32[1] = unorm8(packed >> 8u);
+			break;
 		case vk::Format::eR8G8B8A8Srgb:
 			next.float32[0] = srgb8(packed);
 			next.float32[1] = srgb8(packed >> 8u);
@@ -477,6 +550,11 @@ IsSupportedDisplayRenderTargetTileMode(Prospero::TileMode tile_mode) noexcept {
 	}
 	clear = next;
 	return true;
+}
+
+[[nodiscard]] inline bool DecodePackedColorClear(vk::Format format, uint32_t packed,
+                                                 vk::ClearColorValue& clear) {
+	return DecodePackedColorClear(format, packed, 0u, clear);
 }
 
 [[nodiscard]] inline bool DecodePackedStencilClear(uint32_t packed, uint8_t& clear) {

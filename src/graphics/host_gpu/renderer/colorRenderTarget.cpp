@@ -71,11 +71,12 @@ bool DecodeFixedDccClear(vk::Format format, uint8_t code, vk::ClearColorValue& c
 }
 
 static void ResolveDccClearInfo(RenderColorInfo& info, vk::Format format, bool has_dcc,
-                                uint32_t packed_clear) {
-	// Register-backed DCC clears use the target's packed clear value. Decode one-word guest
-	// formats here; unsupported encodings remain tracked without unsafe materialization.
+                                uint32_t packed_clear, uint32_t packed_clear1) {
+	// Register-backed DCC clears use the target's packed clear value (both clear words for
+	// 64-bit formats). Unsupported encodings remain tracked without unsafe materialization.
 	info.metadata_clear_supported =
-	    has_dcc && DecodePackedColorClear(format, packed_clear, info.color_clear_value);
+	    has_dcc &&
+	    DecodePackedColorClear(format, packed_clear, packed_clear1, info.color_clear_value);
 	info.metadata_fixed_clear_supported = has_dcc && DccFixedClearSupported(format);
 	if (!info.metadata_clear_supported) {
 		info.color_clear_value = {};
@@ -432,7 +433,8 @@ void RenderExecutor::ResolveRenderColorTarget(uint64_t submit_id, CommandBuffer&
 	r.samples                  = samples;
 	r.export_mapping           = target_format.export_mapping;
 	r.color_clear_enable       = false;
-	ResolveDccClearInfo(r, target_format.format, has_dcc, rt.clear_word0.word0);
+	ResolveDccClearInfo(r, target_format.format, has_dcc, rt.clear_word0.word0,
+	                    rt.clear_word1.word1);
 	BindRenderTarget(r.image_id);
 }
 

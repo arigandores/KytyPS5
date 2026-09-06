@@ -209,6 +209,7 @@ private:
 	                                              uint32_t render_target_slice_offset);
 	void                      BindImage(ImageId id, bool storage);
 	void                      MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id);
+	void                      MaterializeBoundTargetDccClears(CommandBuffer& buffer);
 	void                      BindRenderTarget(ImageId id);
 	void                      TrackImageBinding(ImageId id);
 	void                      ResetBindings();

@@ -78,6 +78,16 @@ public:
 	// False may still record PendingDcc state, but the guest dispatch must execute.
 	[[nodiscard]] bool TryConsumeDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
 	[[nodiscard]] bool TouchMeta(uint64_t address, uint32_t slice, bool is_clear);
+	// A shader binding (T# with META_COMPRESS and a metadata address) may be the only user of a
+	// surface that the guest fast-cleared through a metadata fill without ever binding it as a
+	// colour target. Promote a PendingDcc fill at that address to DCC state owned by the image so
+	// the deferred clear becomes visible to MaterializeDeferredDccClear. Returns true when the
+	// image now carries DCC metadata for `metadata_address`.
+	[[nodiscard]] bool AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address);
+	// The registered colour image that starts at `data_address` and owns (or, for a lone
+	// metadata-less candidate, adopts) the DCC allocation at `metadata_address`. Empty when
+	// there is no such image or the ownership is ambiguous.
+	[[nodiscard]] ImageId FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address);
 
 	void UnmapMemory(uint64_t address, uint64_t size);
 	void ProcessDownloadImages();

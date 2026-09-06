@@ -817,11 +817,23 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		ValidateDepthTargetBinding(resource, descriptor, image, pixel_format, size.size);
 		(void)SelectSampledDepthView(image->info.pixel_format, pixel_format,
 		                             descriptor.DstSelXYZW());
-	} else if (storage) {
-		ValidateStorageColorView(image->info.pixel_format, view_format, descriptor.DstSelXYZW());
 	} else {
-		(void)SelectSampledColorView(image->info.pixel_format, pixel_format,
-		                             descriptor.DstSelXYZW());
+		if (storage) {
+			ValidateStorageColorView(image->info.pixel_format, view_format,
+			                         descriptor.DstSelXYZW());
+		} else {
+			(void)SelectSampledColorView(image->info.pixel_format, pixel_format,
+			                             descriptor.DstSelXYZW());
+		}
+		// ASTRO BOT fast-clears a half-resolution RGBA16F surface through a DCC metadata fill
+		// and, in frames with nothing to composite, samples it straight away without ever
+		// binding it as a colour target. The fill stays PendingDcc (only FindRenderTarget
+		// registers DCC), the host image keeps stale memory instead of the (0,0,0,1) clear and
+		// the composite pass overwrites the whole scene with it (black cutscene frames).
+		// Adopt the pending fill here so CommitBindings materializes the clear.
+		if (descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
+			(void)texture_cache.AdoptPendingDccForTexture(id, descriptor.MetaAddr() << 8u);
+		}
 	}
 	return {id, nullptr, std::move(desc)};
 }
@@ -905,15 +917,16 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		for (uint32_t slot = 0; slot < 8 && !decoded; slot++) {
 			const auto& rt = hw.GetRenderTarget(slot);
 			if (rt.base.addr == image.info.data.address && rt.dcc_addr.addr == address) {
-				decoded =
-				    DecodePackedColorClear(image.info.pixel_format, rt.clear_word0.word0, clear);
+				decoded = DecodePackedColorClear(image.info.pixel_format, rt.clear_word0.word0,
+				                                 rt.clear_word1.word1, clear);
 			}
 		}
 	} else {
 		decoded = DecodeFixedDccClear(image.info.pixel_format, code, clear);
 	}
 	static std::atomic<uint32_t> log_count = 0;
-	if (log_count++ < 32) {
+	static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+	if (dcc_trace || log_count++ < 32) {
 		LOGF("MaterializeDeferredDccClear: image=0x%016" PRIx64 " dcc=0x%016" PRIx64
 		     " code=0x%02x layers=0x%08x format=%u decoded=%d\n",
 		     image.info.data.address, address, static_cast<uint32_t>(code), mask,
@@ -945,6 +958,35 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		layer += count - 1;
 	}
 	cache.MarkGpuWritten(id);
+}
+
+// A fast-clear-eliminate / DCC-decompress draw (CB_COLOR_CONTROL.MODE 2/6) binds the surface as
+// a colour target with the CLEAR_WORD registers of its fast clear still loaded. Kyty skips the
+// draw itself (host images are never compressed), but this is the last point where a
+// register-backed clear (code 0x20) is decodable: after it the surface is only sampled and the
+// registers move on to other targets. ASTRO BOT's cutscenes clear RGBA16F G-buffer/upscale
+// surfaces this way and never bind them as attachments again before sampling them.
+void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
+	auto&       cache = m_context.GetTextureCache();
+	const auto& hw    = buffer.GetRegisters();
+	for (uint32_t slot = 0; slot < 8; slot++) {
+		const auto& rt = hw.GetRenderTarget(slot);
+		if (rt.base.addr == 0 || rt.dcc_addr.addr == 0) {
+			continue;
+		}
+		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr);
+		if (!id) {
+			static std::atomic<uint32_t> miss_count = 0;
+			static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+			if (dcc_trace || miss_count++ < 32) {
+				LOGF("MaterializeBoundTargetDccClears: no image for slot=%u base=0x%016" PRIx64
+				     " dcc=0x%016" PRIx64 "\n",
+				     slot, rt.base.addr, rt.dcc_addr.addr);
+			}
+			continue;
+		}
+		MaterializeDeferredDccClear(buffer, id);
+	}
 }
 
 void RenderExecutor::BindRenderTarget(ImageId id) {

@@ -1916,6 +1916,77 @@ bool TextureCache::TryConsumeDccFill(uint64_t address, uint64_t size, uint32_t f
 	return false;
 }
 
+ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint64_t metadata_address) {
+	if (data_address == 0 || metadata_address == 0) {
+		return {};
+	}
+	ImageId  owner {};
+	ImageId  candidate {};
+	uint32_t candidates = 0;
+	{
+		std::scoped_lock lock {m_lock};
+		for (const auto id: FindImagesInRegion(data_address, 1, false)) {
+			const auto* image = m_slot_images.try_get(id);
+			if (image == nullptr || !image->registered || image->info.data.Empty() ||
+			    image->info.IsDepth() || image->depth_id ||
+			    image->info.data.address != data_address) {
+				continue;
+			}
+			if (image->info.metadata.kind == ImageMetadataKind::Dcc) {
+				if (image->info.metadata.range.address == metadata_address) {
+					owner = id;
+					break;
+				}
+				continue;
+			}
+			if (image->info.metadata.kind == ImageMetadataKind::None) {
+				candidate = id;
+				candidates++;
+			}
+		}
+	}
+	if (owner) {
+		return owner;
+	}
+	if (candidates == 1 && AdoptPendingDccForTexture(candidate, metadata_address)) {
+		return candidate;
+	}
+	return {};
+}
+
+bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address) {
+	std::scoped_lock lock {m_lock};
+	auto*            image = m_slot_images.try_get(id);
+	if (image == nullptr || !image->registered || image->info.data.Empty() ||
+	    image->info.IsDepth() || image->depth_id || metadata_address == 0) {
+		return false;
+	}
+	if (image->info.metadata.kind == ImageMetadataKind::Dcc) {
+		return image->info.metadata.range.address == metadata_address;
+	}
+	if (image->info.metadata.kind != ImageMetadataKind::None) {
+		return false;
+	}
+	const auto found = m_surface_metas.find(metadata_address);
+	if (found == m_surface_metas.end() || found->second.type != MetaDataInfo::Type::PendingDcc) {
+		// Only a fill observed through TryConsumeDccFill proves the address is DCC metadata;
+		// never classify an untouched address from a T# alone.
+		return false;
+	}
+	found->second.type                 = MetaDataInfo::Type::Dcc;
+	image->info.metadata.kind          = ImageMetadataKind::Dcc;
+	image->info.metadata.range.address = metadata_address;
+	static std::atomic<uint32_t> log_count = 0;
+	static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+	if (dcc_trace || log_count++ < 32) {
+		LOGF("TextureCache: adopted pending DCC fill for shader binding image=0x%016" PRIx64
+		     " dcc=0x%016" PRIx64 " fill=0x%08x size=0x%" PRIx64 " clear_mask=0x%08x\n",
+		     image->info.data.address, metadata_address, found->second.fill_value,
+		     found->second.fill_size, found->second.clear_mask);
+	}
+	return true;
+}
+
 bool TextureCache::TouchMeta(uint64_t address, uint32_t slice, bool is_clear) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);

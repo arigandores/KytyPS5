@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <deque>
@@ -344,7 +345,28 @@ void CommandProcessor::WaitRegMem(uint32_t func, const T* addr, T ref, T mask, u
 	}
 
 	(void)poll;
-	if (!TestWaitRegMemValue(*addr, ref, mask, func)) {
+	// KYTY_WAIT_TRACE=1: log WAIT_REG_MEM stall/pass transitions of the compute queues
+	// (address, values, queue) and EOP writes into the same region.
+	static const bool trace = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+	const bool        pass  = TestWaitRegMemValue(*addr, ref, mask, func);
+	if (trace && IsAsyncComputeQueue()) {
+		static std::array<const void*, 256> stalled_addrs {};
+		const void*&                        stalled_addr = stalled_addrs[m_interrupt_event_id & 0xffu];
+		if (!pass && stalled_addr != addr) {
+			stalled_addr = addr;
+			LOGF("WaitTrace: stall queue_event=0x%02x addr=0x%016" PRIx64 " value=0x%016" PRIx64
+			     " ref=0x%016" PRIx64 " func=%u" "\n",
+			     m_interrupt_event_id, reinterpret_cast<uint64_t>(addr),
+			     static_cast<uint64_t>(*addr), static_cast<uint64_t>(ref), func);
+		} else if (pass && stalled_addr == addr) {
+			stalled_addr = nullptr;
+			LOGF("WaitTrace: pass  queue_event=0x%02x addr=0x%016" PRIx64 " value=0x%016" PRIx64
+			     "\n",
+			     m_interrupt_event_id, reinterpret_cast<uint64_t>(addr),
+			     static_cast<uint64_t>(*addr));
+		}
+	}
+	if (!pass) {
 		SuspendPm4();
 	}
 }
@@ -451,6 +473,10 @@ void GuestGpu::Enqueue(Submission submission) {
 	EXIT_IF(submission.queue_id >= QueueCount);
 	Common::LockGuard lock(m_queue_mutex);
 	EXIT_IF(!m_accepting);
+	submission.enqueue_ns = static_cast<uint64_t>(
+	    std::chrono::duration_cast<std::chrono::nanoseconds>(
+	        std::chrono::steady_clock::now().time_since_epoch())
+	        .count());
 	m_queues[submission.queue_id].push_back(std::move(submission));
 	m_submission_count++;
 	m_work_available.Signal();
@@ -501,8 +527,25 @@ void GuestGpu::ThreadRun(void* data) {
 					}
 				}
 				if (selected_queue < 0) {
+					static const bool trace_sched = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+					static uint64_t   all_blocked = 0;
+					if (trace_sched && (all_blocked++ % 64) == 0) {
+						LOGF("WaitTrace: all queues blocked (%" PRIu64 " times), sleeping up to 100 ms\n",
+						     all_blocked);
+					}
 					gpu->m_processing = false;
+					const auto t0 = std::chrono::steady_clock::now();
 					gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
+					if (trace_sched) {
+						const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+						                    std::chrono::steady_clock::now() - t0)
+						                    .count();
+						static uint64_t slow = 0;
+						if (ms >= 50 && (slow++ % 16) == 0) {
+							LOGF("WaitTrace: scheduler slept %lld ms with all queues blocked (%" PRIu64 ")\n",
+							     static_cast<long long>(ms), slow);
+						}
+					}
 					for (auto& queue: gpu->m_queues) {
 						if (!queue.empty()) {
 							queue.front().blocked = false;
@@ -578,6 +621,21 @@ static void DebugAutoRenderDocCapture(int frame_num) {
 
 bool GuestGpu::Process(Submission& submission) {
 	const bool first_slice = !submission.started;
+	// KYTY_LAG_TRACE=1: log submissions that waited long between Enqueue and processing.
+	static const bool trace_lag = std::getenv("KYTY_LAG_TRACE") != nullptr;
+	if (trace_lag && first_slice) {
+		const auto now = static_cast<uint64_t>(
+		    std::chrono::duration_cast<std::chrono::nanoseconds>(
+		        std::chrono::steady_clock::now().time_since_epoch())
+		        .count());
+		const auto lag_us = (now - submission.enqueue_ns) / 1000u;
+		static uint64_t logged = 0;
+		if (lag_us >= 2000 && logged++ < 200000) {
+			LOGF("LagTrace: queue=%u type=%u dwords=%zu lag=%llu us" "\n", submission.queue_id,
+			     static_cast<unsigned>(submission.type), submission.commands.size(),
+			     static_cast<unsigned long long>(lag_us));
+		}
+	}
 	if (first_slice) {
 		DebugAutoRenderDocCapture(GetFrameNum());
 	}
@@ -1255,6 +1313,16 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 		default: EXIT("unknown interrupt_selector\n");
 	}
 
+	static const bool trace_eop = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+	if (trace_eop) {
+		const auto dst_u = reinterpret_cast<uint64_t>(dst_gpu_addr);
+		if (dst_u >= 0x400200000ull && dst_u < 0x400204000ull) {
+			LOGF("WaitTrace: eop   queue_event=0x%02x addr=0x%016" PRIx64 " value=0x%016" PRIx64
+			     " bytes=%u src=%u" "\n",
+			     m_interrupt_event_id, dst_u, static_cast<uint64_t>(value),
+			     static_cast<unsigned>(sizeof(T)), event_write_source);
+		}
+	}
 	auto write32 = [&](bool with_writeback) {
 		auto* dst  = static_cast<uint32_t*>(dst_gpu_addr);
 		auto  data = static_cast<uint32_t>(value);

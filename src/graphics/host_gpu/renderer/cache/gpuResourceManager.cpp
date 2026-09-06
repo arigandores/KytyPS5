@@ -1,6 +1,11 @@
 #include "graphics/host_gpu/renderer/cache/gpuResourceManager.h"
 
 #include "common/assert.h"
+#include "common/logging/log.h"
+
+#include <atomic>
+#include <cinttypes>
+#include <cstdlib>
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 namespace Libs::Graphics {
@@ -15,6 +20,16 @@ bool GpuResourceManager::HandleFault(PageFaultAccess access, uint64_t fault_vadd
 	constexpr uint64_t fault_size = 8;
 	if (!IsMapped(fault_vaddr, fault_size)) {
 		return false;
+	}
+	// KYTY_FAULT_TRACE=1: log CPU page faults on GPU-tracked memory (address, access).
+	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	if (trace) {
+		static std::atomic<uint64_t> count {0};
+		const auto n = count.fetch_add(1, std::memory_order_relaxed);
+		if (n < 5000000) {
+			LOGF("FaultTrace: %s addr=0x%016" PRIx64 " n=%" PRIu64 "\n",
+			     access == PageFaultAccess::Write ? "write" : "read ", fault_vaddr, n);
+		}
 	}
 	if (access == PageFaultAccess::Write) {
 		m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);

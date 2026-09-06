@@ -1,4 +1,6 @@
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+#include <chrono>
+#include <cstdlib>
 #include <string>
 #include <cstdlib>
 #include <cstdio>
@@ -258,8 +260,19 @@ void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
 		     "addr=0x%016" PRIx64 " size=0x%016" PRIx64 "\n",
 		     vaddr, size);
 	}
+	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	const auto        t0    = std::chrono::steady_clock::now();
 	m_scheduler.Context().GetGpu().SendCommandSync(
 	    [this, vaddr, size, is_write] { ReadMemoryOnGpu(vaddr, size, is_write); });
+	if (trace) {
+		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+		                    std::chrono::steady_clock::now() - t0)
+		                    .count();
+		if (us >= 500) {
+			LOGF("DrainTrace: ReadMemory %s addr=0x%016" PRIx64 " size=0x%" PRIx64 " took %lld us" "\n",
+			     is_write ? "write" : "read ", vaddr, size, static_cast<long long>(us));
+		}
+	}
 }
 
 void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) {
@@ -289,7 +302,22 @@ void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) 
 		    }
 	    });
 	if (!copies.empty()) {
+		static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+		const auto        t0    = std::chrono::steady_clock::now();
 		DownloadBufferMemory(copies);
+		if (trace) {
+			uint64_t bytes = 0;
+			for (const auto& c: copies) {
+				bytes += c.size;
+			}
+			const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+			                    std::chrono::steady_clock::now() - t0)
+			                    .count();
+			LOGF("DrainTrace: download %s addr=0x%016" PRIx64 " size=0x%" PRIx64 " copies=%zu bytes=0x%" PRIx64
+			     " took %lld us" "\n",
+			     is_write ? "write" : "read ", vaddr, size, copies.size(), bytes,
+			     static_cast<long long>(us));
+		}
 		// The enumeration covered whole dirty pages and every exact interval on them.
 		m_memory_tracker.UnmarkRegionAsGpuModified(window_begin, window_end - window_begin);
 	}

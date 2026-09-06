@@ -7,6 +7,8 @@
 #include "common/threads.h"
 #include "loader/timer.h" // IWYU pragma: keep
 
+#include <cstdlib>
+
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRINT_NAME_ENABLED g_print_name
 
@@ -48,7 +50,8 @@
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRINT_NAME()                                                                               \
-	if (PRINT_NAME_ENABLED) {                                                                      \
+	static const bool print_name_forced = std::getenv("KYTY_PRINT_NAMES") != nullptr;             \
+	if (PRINT_NAME_ENABLED || print_name_forced) {                                                 \
 		if (Log::GetDirection() != Log::Direction::Silent) {                                       \
 			const auto print_name_time = Loader::Timer::GetTime().ToString("HH24:MI:SS.FFF");      \
 			LOGF_COLOR(Log::Color::Cyan, "[%d][%s] %s::%s::%s()\n",                                \

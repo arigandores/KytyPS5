@@ -340,6 +340,42 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			dump_this = base != 0 && dump_addr >= base && dump_addr < base + ImageSpan;
 		}
 	}
+	if (DebugDumpFrame(frame_num)) {
+		LOGF("DumpDispatch: frame=%u shader=0x%016" PRIx64 " groups=%ux%ux%u mode=0x%08" PRIx32
+		     " local=%ux%ux%u indirect=0x%016" PRIx64 " buffers=%zu images=%zu uses_dma=%d\n",
+		     frame_num, program.shader_hash, thread_group_x, thread_group_y, thread_group_z, mode,
+		     input_info.threads_num[0], input_info.threads_num[1], input_info.threads_num[2],
+		     indirect_args_addr, program.info.buffers.size(), program.info.images.size(),
+		     program.info.uses_dma ? 1 : 0);
+		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+			const auto& res  = program.info.buffers[i];
+			const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
+			const auto  base = r.Base48();
+			const auto  size = BufferDescriptorSize(r);
+			LOGF("  DumpCS buffer[%u]: source=%u usage=%s addr=0x%012" PRIx64 " stride=%u "
+			     "records=%u size=0x%" PRIx64 " format=%u\n",
+			     i, res.source, res.written ? "read-write" : "read-only", base, r.Stride(),
+			     r.NumRecords(), size, r.RawFormat());
+		}
+		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+			const auto& image = program.info.images[i];
+			const auto  r     = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+			LOGF("  DumpCS image[%u]: source=%u usage=%s class=%s addr=0x%010" PRIx64
+			     " type=%u fmt=%u extent=%ux%u depth=%u tile=%u dstsel=0x%03x levels=%u..%u"
+			     " maxmip=%u pitch=%u meta=0x%010" PRIx64 " dcc=%d\n",
+			     i, image.source, image.written ? "read-write" : "read-only",
+			     image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled
+			         ? "sampled"
+			         : "storage",
+			     r.Base40(), static_cast<uint32_t>(r.Type()), static_cast<uint32_t>(r.Format()),
+			     static_cast<uint32_t>(r.Width5()) + 1u, static_cast<uint32_t>(r.Height5()) + 1u,
+			     static_cast<uint32_t>(r.Depth()) + 1u, static_cast<uint32_t>(r.TileMode()),
+			     r.DstSelXYZW(), static_cast<uint32_t>(r.BaseLevel()),
+			     static_cast<uint32_t>(r.LastLevel()), static_cast<uint32_t>(r.MaxMip()),
+			     static_cast<uint32_t>(r.ArrayPitch()), r.MetaAddr() << 8u,
+			     r.MetaCompress() ? 1 : 0);
+		}
+	}
 	if (sync_dispatch || dump_this) {
 		LOGF("SyncDispatch: frame=%u shader=0x%016" PRIx64 " cs=0x%016" PRIx64
 		     " groups=%ux%ux%u mode=0x%08" PRIx32 " local=%ux%ux%u indirect=0x%016" PRIx64
@@ -682,6 +718,43 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	ResetBindings();
 }
 
+bool DebugDumpFrame(uint32_t frame) {
+	struct Range {
+		uint32_t first;
+		uint32_t last;
+	};
+	static const std::vector<Range> ranges = [] {
+		std::vector<Range> out;
+		const char*        value = std::getenv("KYTY_DUMP_FRAME");
+		if (value == nullptr) {
+			return out;
+		}
+		std::string_view text(value);
+		while (!text.empty()) {
+			const auto comma = text.find(',');
+			const auto item  = text.substr(0, comma);
+			text             = comma == std::string_view::npos ? std::string_view {}
+			                                                   : text.substr(comma + 1u);
+			if (item.empty()) {
+				continue;
+			}
+			const auto dash  = item.find('-');
+			const auto first = static_cast<uint32_t>(std::strtoul(std::string(item.substr(0, dash)).c_str(), nullptr, 10));
+			const auto last  = dash == std::string_view::npos
+			                       ? first
+			                       : static_cast<uint32_t>(std::strtoul(std::string(item.substr(dash + 1u)).c_str(), nullptr, 10));
+			out.push_back({first, last});
+		}
+		return out;
+	}();
+	for (const auto& range: ranges) {
+		if (frame >= range.first && frame <= range.last) {
+			return true;
+		}
+	}
+	return false;
+}
+
 uint64_t DebugDumpAddress() {
 	static const uint64_t dump_addr = [] {
 		const char* value = std::getenv("KYTY_DUMP_ADDR");
@@ -741,14 +814,46 @@ void DumpShaderStageBindings(RenderContext& context, const char* label,
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		const auto& image = program.info.images[i];
 		const auto  r     = DecodeNativeDescriptor<ShaderTextureResource>(resources.images[i]);
+		const uint64_t probe_size =
+		    static_cast<uint64_t>(static_cast<uint32_t>(r.Width5()) + 1u) *
+		    (static_cast<uint32_t>(r.Height5()) + 1u) *
+		    std::max<uint32_t>(Prospero::NumBytesPerElement(r.Format()), 1u);
+		const bool probe = r.Base40() != 0 && probe_size != 0;
 		LOGF("  Dump%s image[%u]: source=%u usage=%s class=%s addr=0x%010" PRIx64
-		     " type=%u fmt=%u extent=%ux%u depth=%u tile=%u\n",
+		     " type=%u fmt=%u extent=%ux%u depth=%u tile=%u dstsel=0x%03x levels=%u..%u"
+		     " maxmip=%u pitch=%u meta=0x%010" PRIx64 " dcc=%d gpu_modified=%d cpu_modified=%d"
+		     " gpu_dirty=%d\n",
 		     label, i, image.source, image.written ? "read-write" : "read-only",
 		     image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled ? "sampled"
 		                                                                               : "storage",
 		     r.Base40(), static_cast<uint32_t>(r.Type()), static_cast<uint32_t>(r.Format()),
 		     static_cast<uint32_t>(r.Width5()) + 1u, static_cast<uint32_t>(r.Height5()) + 1u,
-		     static_cast<uint32_t>(r.Depth()) + 1u, static_cast<uint32_t>(r.TileMode()));
+		     static_cast<uint32_t>(r.Depth()) + 1u, static_cast<uint32_t>(r.TileMode()),
+		     r.DstSelXYZW(), static_cast<uint32_t>(r.BaseLevel()),
+		     static_cast<uint32_t>(r.LastLevel()), static_cast<uint32_t>(r.MaxMip()),
+		     static_cast<uint32_t>(r.ArrayPitch()), r.MetaAddr() << 8u,
+		     r.MetaCompress() ? 1 : 0,
+		     probe && cache.IsRegionGpuModified(r.Base40(), probe_size) ? 1 : 0,
+		     probe && cache.IsRegionCpuModified(r.Base40(), probe_size) ? 1 : 0,
+		     probe && cache.HasGpuDirtyBytes(r.Base40(), probe_size) ? 1 : 0);
+	}
+	for (uint32_t i = 0; i < program.info.samplers.size() && i < resources.samplers.size(); i++) {
+		const auto r = DecodeNativeDescriptor<ShaderSamplerResource>(resources.samplers[i]);
+		LOGF("  Dump%s sampler[%u]: source=%u raw=%08x %08x %08x %08x clamp=%u/%u/%u filter=%u/%u z=%u"
+		     " mip=%u aniso=%u/%u/%u lod=%u..%u bias=%u/%u unorm_coords=%d force_srgb=%d"
+		     " trunc=%d filter_mode=%u depth_cmp=%u border=%u/%u disable_degamma=%d\n",
+		     label, i, program.info.samplers[i].source, r.fields[0], r.fields[1], r.fields[2],
+		     r.fields[3], static_cast<uint32_t>(r.ClampX()), static_cast<uint32_t>(r.ClampY()),
+		     static_cast<uint32_t>(r.ClampZ()), static_cast<uint32_t>(r.XyMagFilter()),
+		     static_cast<uint32_t>(r.XyMinFilter()), static_cast<uint32_t>(r.ZFilter()),
+		     static_cast<uint32_t>(r.MipFilter()), static_cast<uint32_t>(r.MaxAnisoRatio()),
+		     static_cast<uint32_t>(r.AnisoThreshold()), static_cast<uint32_t>(r.AnisoBias()),
+		     static_cast<uint32_t>(r.MinLod()), static_cast<uint32_t>(r.MaxLod()),
+		     static_cast<uint32_t>(r.LodBias()), static_cast<uint32_t>(r.LodBiasSec()),
+		     r.ForceUnormCoords() ? 1 : 0, r.ForceSrgb() ? 1 : 0, r.TruncCoord() ? 1 : 0,
+		     static_cast<uint32_t>(r.FilterMode()), static_cast<uint32_t>(r.DepthCompareFunc()),
+		     static_cast<uint32_t>(r.BorderColorPtr()), static_cast<uint32_t>(r.BorderColorType()),
+		     r.DisableDegamma() ? 1 : 0);
 	}
 }
 

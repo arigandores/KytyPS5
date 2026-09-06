@@ -15,6 +15,10 @@
 #include "graphics/host_gpu/renderer/render.h"
 #include "kernel/memory.h"
 
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -929,6 +933,36 @@ TextureCache::DownloadPlan TextureCache::BuildDownload(const Image& image) const
 	return plan;
 }
 
+void TextureCache::DebugDumpImage(ImageId id, const std::string& name) {
+	auto* image = m_slot_images.try_get(id);
+	if (image == nullptr || image->backing.image == nullptr) {
+		LOGF("DumpTex: %s: no backing image\n", name.c_str());
+		return;
+	}
+	const auto& info = image->info;
+	const uint64_t size = static_cast<uint64_t>(image->backing.extent.width) *
+	                      image->backing.extent.height * std::max<uint32_t>(info.bytes_per_block, 1u);
+	vk::BufferImageCopy region {};
+	region.bufferOffset     = 0;
+	region.bufferRowLength  = 0;
+	region.bufferImageHeight = 0;
+	region.imageSubresource = {vk::ImageAspectFlagBits::eColor, 0, 0, 1};
+	region.imageExtent      = {image->backing.extent.width, image->backing.extent.height, 1};
+	Buffer download(m_graphics, m_scheduler, MemoryUsage::Download, 0, AllFlags, size);
+	image->Download(std::span<const vk::BufferImageCopy> {&region, 1}, download.Handle(), 0, size);
+	m_scheduler.Finish();
+	download.Invalidate(0, size);
+	if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+		std::fwrite(download.Mapped().data(), 1, static_cast<size_t>(size), f);
+		std::fclose(f);
+	}
+	LOGF("DumpTex: wrote %s (image 0x%012" PRIx64 " backing %ux%u vk_format=%d bpb=%u gpu_modified=%d"
+	     " cpu_dirty=%d buffer_modified=%d)\n",
+	     name.c_str(), info.data.address, image->backing.extent.width, image->backing.extent.height,
+	     static_cast<int>(image->backing.format), info.bytes_per_block, image->IsGpuModified() ? 1 : 0,
+	     image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
+}
+
 void TextureCache::UploadImage(Image& image, const ImageDesc& desc, Buffer& source,
                                uint64_t source_offset) {
 	const auto& info   = image.info;
@@ -960,6 +994,43 @@ void TextureCache::UploadImage(Image& image, const ImageDesc& desc, Buffer& sour
 			linear = m_tiler.SwapBgra16(linear);
 		}
 		upload(plan.regions, linear);
+		// Debug aid: KYTY_DUMP_TEX=<hex guest address> reads the uploaded image back (first three
+		// uploads) into _teximg_<n>.bin using the same copy regions, and logs the regions.
+		static const uint64_t dump_tex = [] {
+			const char* value = std::getenv("KYTY_DUMP_TEX");
+			return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+		}();
+		if (dump_tex != 0 && info.data.address == dump_tex) {
+			static std::atomic<uint32_t> dumped {0};
+			const auto                   n = dumped.fetch_add(1);
+			if (n < 3) {
+				auto regions = TextureBuildImageCopies(plan.layout);
+				for (const auto& r: regions) {
+					LOGF("DumpTex: image 0x%012" PRIx64 " copy region: bufferOffset=0x%" PRIx64
+					     " rowLength=%u imageHeight=%u mip=%u layer=%u extent=%ux%ux%u vk_format=%d"
+					     " backing=%ux%u levels=%u layers=%u source=%s off=0x%" PRIx64 " size=0x%" PRIx64
+					     "\n",
+					     info.data.address, static_cast<uint64_t>(r.bufferOffset), r.bufferRowLength,
+					     r.bufferImageHeight, r.imageSubresource.mipLevel,
+					     r.imageSubresource.baseArrayLayer, r.imageExtent.width, r.imageExtent.height,
+					     r.imageExtent.depth, static_cast<int>(image.backing.format),
+					     image.backing.extent.width, image.backing.extent.height, 0u,
+					     image.backing.layers, plan.tiled ? "detiled" : "linear",
+					     static_cast<uint64_t>(linear.offset), static_cast<uint64_t>(linear.size));
+				}
+				Buffer download(m_graphics, m_scheduler, MemoryUsage::Download, 0, AllFlags,
+				                info.data.size);
+				image.Download(regions, download.Handle(), 0, info.data.size);
+				m_scheduler.Finish();
+				download.Invalidate(0, info.data.size);
+				const auto name = "_teximg_" + std::to_string(n) + ".bin";
+				if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+					std::fwrite(download.Mapped().data(), 1, static_cast<size_t>(info.data.size), f);
+					std::fclose(f);
+				}
+				LOGF("DumpTex: wrote %s\n", name.c_str());
+			}
+		}
 		return;
 	}
 

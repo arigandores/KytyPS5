@@ -1,4 +1,5 @@
 #include "common/common.h"
+#include <cstdlib>
 #include "common/logging/log.h"
 #include "common/magicEnum.h"
 #include "common/stringUtils.h"
@@ -1496,6 +1497,123 @@ private:
 		auto* c = dst + pitch * h;
 		for (int y = 0; y < src->height / 2; y++) {
 			std::memcpy(c + y * pitch, nv12->data[1] + y * nv12->linesize[1], src->width);
+		}
+		// Debug aids: KYTY_VIDEO_TEST=1 replaces the frame with a horizontal luma gradient and
+		// neutral chroma (a clean grey ramp on screen proves the texture path); KYTY_DUMP_VIDEO=1
+		// saves NV12 frames to _video_<n>.nv12 (first four, then every 60th).
+		// KYTY_VIDEO_TEST=1: horizontal luma ramp, neutral chroma. =2: eight SMPTE colour bars
+		// (white, yellow, cyan, green, magenta, red, blue, black; BT.709 limited range) with a
+		// vertical luma ramp in the bottom quarter. =3: the bars scroll 8 px per frame.
+		static const int video_test = [] {
+			const char* v = std::getenv("KYTY_VIDEO_TEST");
+			return v != nullptr ? std::atoi(v) : 0;
+		}();
+		static const bool dump_video = std::getenv("KYTY_DUMP_VIDEO") != nullptr;
+		if (video_test == 1) {
+			for (uint32_t y = 0; y < h; y++) {
+				for (uint32_t x = 0; x < pitch; x++) {
+					dst[static_cast<size_t>(y) * pitch + x] =
+					    static_cast<uint8_t>(16u + (x * 219u) / (pitch - 1u));
+				}
+			}
+			std::memset(c, 128, static_cast<size_t>(pitch) * (h / 2));
+		} else if (video_test == 11) {
+			// Constant luma 128; U ramps vertically over the chroma rows (16..235), V = 128.
+			// The RT blue channel then reveals which chroma row each pixel sampled.
+			std::memset(dst, 128, static_cast<size_t>(pitch) * h);
+			for (uint32_t y = 0; y < h / 2; y++) {
+				auto* row = c + static_cast<size_t>(y) * pitch;
+				const auto u = static_cast<uint8_t>(16u + (y * 219u) / (h / 2 - 1u));
+				for (uint32_t x = 0; x < pitch; x += 2) {
+					row[x]     = u;
+					row[x + 1] = 128;
+				}
+			}
+		} else if (video_test == 10) {
+			// Vertical luma ramp; U ramps horizontally (16..235), V = 128. Tests whether the luma
+			// sample row follows the U value.
+			for (uint32_t y = 0; y < h; y++) {
+				std::memset(dst + static_cast<size_t>(y) * pitch,
+				            static_cast<int>(16u + (y * 219u) / (h - 1u)), pitch);
+			}
+			for (uint32_t y = 0; y < h / 2; y++) {
+				auto* row = c + static_cast<size_t>(y) * pitch;
+				for (uint32_t x = 0; x < pitch; x += 2) {
+					row[x]     = static_cast<uint8_t>(16u + (x * 219u) / (pitch - 1u));
+					row[x + 1] = 128;
+				}
+			}
+		} else if (video_test == 9) {
+			// Vertical luma ramp over the whole plane (16..235), neutral chroma: the RT value gives
+			// the sampled source row directly.
+			for (uint32_t y = 0; y < h; y++) {
+				std::memset(dst + static_cast<size_t>(y) * pitch,
+				            static_cast<int>(16u + (y * 219u) / (h - 1u)), pitch);
+			}
+			std::memset(c, 128, static_cast<size_t>(pitch) * (h / 2));
+		} else if (video_test == 7 || video_test == 8) {
+			// 7: luma encodes the column (16 + x % 128); 8: luma encodes the row (16 + y % 128);
+			// neutral chroma. The RT readback then reveals which texel each pixel sampled.
+			for (uint32_t y = 0; y < h; y++) {
+				auto* row = dst + static_cast<size_t>(y) * pitch;
+				for (uint32_t x = 0; x < pitch; x++) {
+					row[x] = static_cast<uint8_t>(16u + ((video_test == 7 ? x : y) % 128u));
+				}
+			}
+			std::memset(c, 128, static_cast<size_t>(pitch) * (h / 2));
+		} else if (video_test == 6) {
+			// 2D luma gradient (x + y), neutral chroma: shows exactly which luma texels reach the GPU.
+			for (uint32_t y = 0; y < h; y++) {
+				auto* row = dst + static_cast<size_t>(y) * pitch;
+				for (uint32_t x = 0; x < pitch; x++) {
+					row[x] = static_cast<uint8_t>(16u + ((x * 219u) / (pitch - 1u) + (y * 219u) / (h - 1u)) / 2u);
+				}
+			}
+			std::memset(c, 128, static_cast<size_t>(pitch) * (h / 2));
+		} else if (video_test >= 2 && video_test <= 5) {
+			// 4: like 2 but odd luma columns are +1 (breaks runs of identical bytes);
+			// 5: like 2 but neutral chroma is (129, 127) instead of (128, 128).
+			static uint32_t test_frame = 0;
+			const uint32_t  shift      = video_test == 3 ? (test_frame++ * 8u) % pitch : 0u;
+			const uint8_t   dither     = video_test == 4 ? 1u : 0u;
+			const uint8_t   neutral_u  = video_test == 5 ? 129u : 128u;
+			const uint8_t   neutral_v  = video_test == 5 ? 127u : 128u;
+			// Y, U, V for the eight bars.
+			static constexpr uint8_t bars[8][3] = {{235, 128, 128}, {219, 16, 138}, {188, 154, 16},
+			                                       {173, 42, 26},   {78, 214, 230}, {63, 102, 240},
+			                                       {32, 240, 118},  {16, 128, 128}};
+			const uint32_t bar_w = pitch / 8u;
+			for (uint32_t y = 0; y < h; y++) {
+				auto* row = dst + static_cast<size_t>(y) * pitch;
+				for (uint32_t x = 0; x < pitch; x++) {
+					const uint32_t bar = (((x + shift) % pitch) / bar_w) % 8u;
+					row[x] = y >= h * 3u / 4u ? static_cast<uint8_t>(16u + (y - h * 3u / 4u) * 219u / (h / 4u))
+					                          : bars[bar][0];
+					row[x] = static_cast<uint8_t>(std::min<uint32_t>(row[x] + ((x & 1u) != 0u ? dither : 0u), 235u));
+				}
+			}
+			for (uint32_t y = 0; y < h / 2; y++) {
+				auto* row = c + static_cast<size_t>(y) * pitch;
+				for (uint32_t x = 0; x < pitch; x += 2) {
+					const uint32_t bar = (((x + shift) % pitch) / bar_w) % 8u;
+					const bool     ramp = y >= h * 3u / 8u;
+					const bool neutral = ramp || bars[bar][1] == 128;
+					row[x]     = neutral ? neutral_u : bars[bar][1];
+					row[x + 1] = neutral ? neutral_v : bars[bar][2];
+				}
+			}
+		}
+		if (dump_video) {
+			static std::atomic<uint32_t> dumped {0};
+			const auto                   n = dumped.fetch_add(1);
+			if (n < 4 || n % 60 == 0) {
+				const auto name = "_video_" + std::to_string(n) + "_" + std::to_string(pitch) + "x" +
+				                  std::to_string(h) + ".nv12";
+				if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+					std::fwrite(dst, 1, static_cast<size_t>(size), f);
+					std::fclose(f);
+				}
+			}
 		}
 		std::memset(info, 0, sizeof(*info));
 		info->data       = dst;

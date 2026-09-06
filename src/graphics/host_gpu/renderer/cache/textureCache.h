@@ -65,6 +65,8 @@ public:
 	[[nodiscard]] bool ClearImageFromBuffer(CommandBuffer& command, uint64_t address, uint64_t size,
 	                                        uint32_t packed_clear);
 	void               InvalidateMemory(uint64_t address, uint64_t size);
+	// Debug aid: synchronously reads mip 0 of the image back and writes it to `name`.
+	void               DebugDumpImage(ImageId id, const std::string& name);
 	void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size);
 	[[nodiscard]] RegionInfo QueryRegion(uint64_t address, uint64_t size);
 

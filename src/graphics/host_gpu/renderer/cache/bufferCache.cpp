@@ -1,4 +1,8 @@
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+#include <string>
+#include <cstdlib>
+#include <cstdio>
+#include <atomic>
 
 #include "common/assert.h"
 #include "common/logging/log.h"
@@ -541,6 +545,24 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 		EXIT("BufferCache: failed to read mapped guest image backing\n");
 	}
 	m_staging_buffer.Commit();
+	// Debug aid: KYTY_DUMP_TEX=<hex guest address> saves the staging copy of that image source to
+	// _tex_<n>.bin (first three uploads) and logs which upload path is taken.
+	static const uint64_t dump_tex = [] {
+		const char* value = std::getenv("KYTY_DUMP_TEX");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	const bool dump_this = dump_tex != 0 && vaddr == dump_tex;
+	if (dump_this) {
+		static std::atomic<uint32_t> dumped {0};
+		const auto                   n = dumped.fetch_add(1);
+		if (n < 3) {
+			const auto name = "_tex_" + std::to_string(n) + ".bin";
+			if (FILE* f = std::fopen(name.c_str(), "wb"); f != nullptr) {
+				std::fwrite(staging, 1, static_cast<size_t>(size), f);
+				std::fclose(f);
+			}
+		}
+	}
 
 	const bool has_dirty_buffer_source = m_gpu_modified_ranges.Intersects(vaddr, size);
 	auto*      owner                   = find_owner();
@@ -549,6 +571,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 	}
 	if (owner == nullptr ||
 	    (m_memory_tracker.IsRegionGpuModified(vaddr, size) && !has_dirty_buffer_source)) {
+		if (dump_this) {
+			LOGF("DumpTex: image source 0x%012" PRIx64 " size=0x%" PRIx64 " via staging (owner=%d)\n",
+			     vaddr, size, owner != nullptr ? 1 : 0);
+		}
 		return {&m_staging_buffer, stage_offset};
 	}
 
@@ -566,6 +592,18 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 			                    vk::AccessFlagBits::eHostWrite);
 		    }
 	    });
+	if (dump_this) {
+		uint64_t bytes = 0;
+		for (const auto& [address, upload_size]: uploads) {
+			bytes += upload_size;
+		}
+		LOGF("DumpTex: image source 0x%012" PRIx64 " size=0x%" PRIx64 " via owner buffer (offset=0x%" PRIx64
+		     ", owner size=0x%" PRIx64 ") dirty ranges=%zu dirty bytes=0x%" PRIx64 " first=0x%012" PRIx64
+		     "+0x%" PRIx64 "\n",
+		     vaddr, size, owner->Offset(vaddr), owner->Size(), uploads.size(), bytes,
+		     uploads.empty() ? 0ull : uploads.front().first,
+		     uploads.empty() ? 0ull : uploads.front().second);
+	}
 	return {owner, owner->Offset(vaddr)};
 }
 

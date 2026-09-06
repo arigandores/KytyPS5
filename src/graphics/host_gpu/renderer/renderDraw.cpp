@@ -1225,26 +1225,86 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	LogDrawPhase(draw.name, "PrepareBindings");
 	auto bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
 	                                        state.ps_active);
-	if (const auto dump_addr = DebugDumpAddress(); dump_addr != 0) {
+	const bool frame_dump =
+	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
+	if (const auto dump_addr = DebugDumpAddress(); dump_addr != 0 || frame_dump) {
 		const auto& vs     = state.vs_input_info.stage;
 		const auto& ps     = state.ps_input_info.stage;
 		const bool  vs_hit = ShaderStageTouchesAddress(vs, dump_addr);
 		const bool  ps_hit = state.ps_active && ShaderStageTouchesAddress(ps, dump_addr);
+		bool        rt_hit = false;
+		for (uint32_t i = 0; i < state.color_count; i++) {
+			const auto& c = state.color_info[i];
+			if (c.type != RenderColorType::NoColorOutput && c.base_addr != 0 &&
+			    dump_addr >= c.base_addr && dump_addr < c.base_addr + c.buffer_size) {
+				rt_hit = true;
+			}
+		}
 		const bool  bda    = (vs && vs.program->info.uses_dma) ||
 		                 (state.ps_active && ps && ps.program->info.uses_dma);
 		static std::atomic<uint32_t> bda_log_count {0};
-		if (vs_hit || ps_hit ||
-		    (bda && bda_log_count.fetch_add(1, std::memory_order_relaxed) < 4096)) {
+		if (vs_hit || ps_hit || rt_hit || frame_dump ||
+		    (bda && dump_addr != 0 &&
+		     bda_log_count.fetch_add(1, std::memory_order_relaxed) < 4096)) {
 			LOGF("DumpDraw: %s submit=%" PRIu64 " frame=%d vs=0x%016" PRIx64 " ps=0x%016" PRIx64
-			     " touches=%s%s bda=%d\n",
+			     " touches=%s%s%s%s bda=%d index_count=%u instances=%u\n",
 			     draw.name, submit_id, m_context.GetGpu().GetFrameNum(),
 			     vs ? vs.program->shader_hash : 0u,
 			     (state.ps_active && ps) ? ps.program->shader_hash : 0u, vs_hit ? "VS " : "",
-			     ps_hit ? "PS" : "", bda ? 1 : 0);
-			if (vs_hit || ps_hit) {
+			     ps_hit ? "PS " : "", rt_hit ? "RT " : "", frame_dump ? "FRAME" : "", bda ? 1 : 0,
+			     draw.index_count, draw.instance_count);
+			if (vs_hit || ps_hit || rt_hit || frame_dump) {
+				for (uint32_t i = 0; i < state.color_count; i++) {
+					const auto& c = state.color_info[i];
+					if (c.type == RenderColorType::NoColorOutput) {
+						continue;
+					}
+					LOGF("  DumpRT[%u]: addr=0x%010" PRIx64 " size=0x%" PRIx64 " vk_format=%d"
+					     " extent=%ux%u mip=%u export_mapping=0x%02x out_mode=%u\n",
+					     i, c.base_addr, c.buffer_size, static_cast<int>(c.format), c.extent.width,
+					     c.extent.height, c.base_mip_level, c.export_mapping.packed,
+					     state.ps_active ? state.ps_input_info.target_output_mode[i] : 0u);
+				}
 				DumpShaderStageBindings(m_context, "VS", vs);
 				if (state.ps_active) {
 					DumpShaderStageBindings(m_context, "PS", ps);
+				}
+				// KYTY_DUMP_TEX=<hex addr>: when the PS reads that address, read every bound PS image
+				// back at draw time (first three draws) into _texdraw_<n>_<i>.bin.
+				static const uint64_t dump_tex = [] {
+					const char* value = std::getenv("KYTY_DUMP_TEX");
+					return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+				}();
+				if (dump_tex != 0) {
+					// Render target at dump_tex: read it back before this draw runs (content left by
+					// the previous draws), _rtdraw_<n>.bin.
+					for (uint32_t i = 0; i < state.color_count; i++) {
+						const auto& c = state.color_info[i];
+						if (c.type != RenderColorType::NoColorOutput && c.base_addr == dump_tex &&
+						    c.image_id) {
+							static std::atomic<uint32_t> rt_dumped {0};
+							const auto                   n = rt_dumped.fetch_add(1);
+							if (n < 4) {
+								LOGF("DumpTex: RT before draw %s ps=0x%016" PRIx64 "\n", draw.name,
+								     (state.ps_active && ps) ? ps.program->shader_hash : 0u);
+								m_context.GetTextureCache().DebugDumpImage(
+								    c.image_id, "_rtdraw_" + std::to_string(n) + ".bin");
+							}
+						}
+					}
+				}
+				if (dump_tex != 0 && state.ps_active && ps && bindings.pixel.has_value() &&
+				    ShaderStageTouchesAddress(ps, dump_tex)) {
+					static std::atomic<uint32_t> dumped {0};
+					const auto                   n = dumped.fetch_add(1);
+					if (n < 3) {
+						auto& images = bindings.pixel->resources.images;
+						for (uint32_t i = 0; i < images.size(); i++) {
+							m_context.GetTextureCache().DebugDumpImage(
+							    images[i].image_id,
+							    "_texdraw_" + std::to_string(n) + "_" + std::to_string(i) + ".bin");
+						}
+					}
 				}
 			}
 		}

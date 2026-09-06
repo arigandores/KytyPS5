@@ -229,6 +229,9 @@ private:
 // Debug aid (KYTY_DUMP_ADDR=<hex guest address>): find every draw or dispatch whose buffer or
 // image bindings cover the address, and log its bindings.
 [[nodiscard]] uint64_t DebugDumpAddress();
+// KYTY_DUMP_FRAME=<n>[,<n>|<a>-<b>...]: log every draw and dispatch of the listed frames with
+// their render targets and bindings (a whole-frame dependency trace).
+[[nodiscard]] bool DebugDumpFrame(uint32_t frame);
 [[nodiscard]] bool     ShaderStageTouchesAddress(const ShaderStageRuntime& stage, uint64_t address);
 void DumpShaderStageBindings(RenderContext& context, const char* label,
                              const ShaderStageRuntime& stage);

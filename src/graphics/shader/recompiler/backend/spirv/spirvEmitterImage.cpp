@@ -1,6 +1,7 @@
 #include "graphics/guest_gpu/gpu_format.h"
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
 
+#include <cstdlib>
 #include <algorithm>
 #include <bit>
 
@@ -783,10 +784,13 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 			                              result_numeric_class, false, mem, true));
 			return true;
 		}
+		// Debug aid: KYTY_SAMPLE_LOD0=1 emits every pixel-shader sample with an explicit LOD of 0
+		// instead of implicit LOD (isolates derivative/LOD-related host behaviour).
+		static const bool force_lod0 = std::getenv("KYTY_SAMPLE_LOD0") != nullptr;
 		const bool explicit_lod = HasFlag(mem, Decoder::ImageSampleFlagDerivative) ||
 		                          HasFlag(mem, Decoder::ImageSampleFlagLod) ||
 		                          HasFlag(mem, Decoder::ImageSampleFlagLevelZero) ||
-		                          state.stage != ShaderType::Pixel;
+		                          state.stage != ShaderType::Pixel || force_lod0;
 		uint32_t opcode = OpImageSampleImplicitLod;
 		if (explicit_lod) {
 			opcode = native_dref ? OpImageSampleDrefExplicitLod : OpImageSampleExplicitLod;

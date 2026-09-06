@@ -287,7 +287,9 @@ void Translator::WriteRawU32(const Decoder::Operand& operand, IR::U32 value) {
 			ir.SetScalarReg(reg, value);
 			ir.SetThreadBitScalarReg(reg, ThreadBit(value));
 			ir.SetScalarMaskTag(reg, IR::U1(IR::Value(false)));
-			if (IR::RegIndex(reg) > 0u) {
+			// A wave64 mask spans a register pair, so writing its high half invalidates the
+			// pair's tag; wave32 masks are single registers and neighbours stay independent.
+			if (current_wave_size == 64u && IR::RegIndex(reg) > 0u) {
 				ir.SetScalarMaskTag(static_cast<IR::ScalarReg>(IR::RegIndex(reg) - 1u),
 				                    IR::U1(IR::Value(false)));
 			}
@@ -315,6 +317,11 @@ void Translator::WriteRawU32(const Decoder::Operand& operand, IR::U32 value) {
 		case Decoder::OperandKind::VccLo:
 			ir.SetVccLo(IR::U32(value));
 			ir.SetVcc(ThreadBit(IR::U32(value)));
+			// Wave32: an integer write invalidates the VCC_LO mask tag (spare slot 106).
+			if (current_wave_size == 32u) {
+				ir.SetScalarMaskTag(static_cast<IR::ScalarReg>(IR::VccLoScalarReg),
+				                    IR::U1(IR::Value(false)));
+			}
 			break;
 		case Decoder::OperandKind::VccHi:
 			ir.SetVccHi(IR::U32(value));
@@ -684,9 +691,14 @@ IR::U1 Translator::ReadMaskValid(const Decoder::Operand& operand) {
 		case Decoder::OperandKind::PopsExitingWaveId: return IR::U1(IR::Value(true));
 		case Decoder::OperandKind::Sgpr:
 			return ir.GetScalarMaskTag(static_cast<IR::ScalarReg>(operand.reg));
+		case Decoder::OperandKind::VccLo:
+			// Wave32 compilers use vcc_lo as a scratch SGPR: only a compare/mask write tags it.
+			if (current_wave_size == 32u) {
+				return ir.GetScalarMaskTag(static_cast<IR::ScalarReg>(IR::VccLoScalarReg));
+			}
+			return IR::U1(IR::Value(true));
 		case Decoder::OperandKind::ExecLo:
 		case Decoder::OperandKind::ExecHi:
-		case Decoder::OperandKind::VccLo:
 		case Decoder::OperandKind::VccHi:
 		case Decoder::OperandKind::VccZ:
 		case Decoder::OperandKind::ExecZ:
@@ -702,7 +714,8 @@ void Translator::WriteMask(const Decoder::Operand& operand, IR::U1 value) {
 			const auto mask = BallotMask(value);
 			ir.SetThreadBitScalarReg(reg, value);
 			ir.SetScalarMaskTag(reg, IR::U1(IR::Value(true)));
-			if (IR::RegIndex(reg) > 0u) {
+			// Wave64 only: the neighbour below loses its pair tag (see WriteRawU32).
+			if (current_wave_size == 64u && IR::RegIndex(reg) > 0u) {
 				ir.SetScalarMaskTag(static_cast<IR::ScalarReg>(IR::RegIndex(reg) - 1u),
 				                    IR::U1(IR::Value(false)));
 			}
@@ -731,6 +744,9 @@ void Translator::WriteMask(const Decoder::Operand& operand, IR::U1 value) {
 			ir.SetVccLo(mask[0]);
 			if (current_wave_size == 64u) {
 				ir.SetVccHi(mask[1]);
+			} else {
+				ir.SetScalarMaskTag(static_cast<IR::ScalarReg>(IR::VccLoScalarReg),
+				                    IR::U1(IR::Value(true)));
 			}
 			return;
 		}

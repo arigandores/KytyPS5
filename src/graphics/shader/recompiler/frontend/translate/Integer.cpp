@@ -142,6 +142,62 @@ bool Translator::S_U64_MASK(const Decoder::Instruction& inst, IR::ValueOpcode lo
 	return true;
 }
 
+// Wave32 lane masks live in single SGPRs (VCC_LO, EXEC_LO, sN), so the 32-bit scalar logic ops
+// combine masks the way the *_B64 forms do on wave64. The per-lane model stores 1/0 for the
+// current lane, and a bitwise NOT/NOR/NAND/XNOR/ANDN2/ORN2 of that value is no longer a mask
+// (~1 = 0xfffffffe reads as "true" for every lane): ASTRO BOT's DOF blur filters 0*inf with
+// V_CMP_U_F32 + S_NOR_B32 + V_CNDMASK_B32 and the NaN leaked into the whole frame. The
+// integer path stays byte-exact (vcc_lo, sN and literals are plain integers most of the time);
+// only when every source is a proven lane mask (tagged SGPR / tagged VCC_LO / EXEC / literal
+// 0 or -1) are the lane bit, the mask tag and SCC of the destination replaced by the logical
+// result, mirroring S_U64_MASK. Wave64 keeps the plain integer path.
+bool Translator::S_U32_MASK(const Decoder::Instruction& inst, IR::ValueOpcode logical_opcode,
+                            IR::ValueOpcode bit_opcode, bool negate_rhs, bool negate_result,
+                            bool unary) {
+	const bool wave32 = current_wave_size == 32u;
+	IR::U1     mask_valid {IR::Value(false)};
+	IR::U1     lane_result {IR::Value(false)};
+	if (wave32) {
+		// Evaluate before the write: the destination may alias a source.
+		mask_valid = ReadMaskValid(inst.src0);
+		if (inst.src_count > 1u) {
+			mask_valid = ir.LogicalAnd(mask_valid, ReadMaskValid(inst.src1));
+		}
+		lane_result = unary ? ir.LogicalNot(ReadMask(inst.src0))
+		                    : U64MaskBinary(inst, logical_opcode, negate_rhs, negate_result);
+	}
+	bool ok = false;
+	if (unary) {
+		ok = SimpleInteger(inst, IR::ValueOpcode::BitwiseNot32, IR::Type::U32, false, false, true);
+	} else if (!negate_rhs && !negate_result) {
+		ok = SimpleInteger(inst, bit_opcode, IR::Type::U32, false, false, true);
+	} else {
+		ok = ComposedIntegerBinary(inst, bit_opcode, negate_rhs, negate_result, true);
+	}
+	if (!wave32) {
+		return ok;
+	}
+	const auto select_lane = [&](IR::U1 fallback) {
+		return IR::U1(ir.Emit(IR::ValueOpcode::SelectU1, {mask_valid, lane_result, fallback}));
+	};
+	switch (inst.dst.kind) {
+		case Decoder::OperandKind::Sgpr: {
+			const auto dst = static_cast<IR::ScalarReg>(inst.dst.reg);
+			ir.SetThreadBitScalarReg(dst, select_lane(ir.GetThreadBitScalarReg(dst)));
+			ir.SetScalarMaskTag(dst, mask_valid);
+			break;
+		}
+		case Decoder::OperandKind::VccLo:
+			ir.SetVcc(select_lane(ir.GetVcc()));
+			ir.SetScalarMaskTag(static_cast<IR::ScalarReg>(IR::VccLoScalarReg), mask_valid);
+			break;
+		case Decoder::OperandKind::ExecLo: ir.SetExec(select_lane(ir.GetExec())); break;
+		default: break;
+	}
+	ir.SetScc(select_lane(ir.GetScc()));
+	return ok;
+}
+
 bool Translator::SimpleInteger(const Decoder::Instruction& inst, IR::ValueOpcode opcode,
                                IR::Type type, bool reverse, bool mask_shift_count,
                                bool update_scc) {

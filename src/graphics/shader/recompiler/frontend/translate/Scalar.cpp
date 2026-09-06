@@ -148,18 +148,19 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			return SimpleInteger(inst, IR::ValueOpcode::IMul32, IR::Type::U32, false, false, false);
 		case O::S_MUL_HI_U32:
 			return SimpleInteger(inst, IR::ValueOpcode::UMulHi, IR::Type::U32, false, false, false);
+		// Wave32 lane-mask aware on top of the integer forms (S_U32_MASK).
 		case O::S_AND_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::BitwiseAnd32, IR::Type::U32, false, false,
-			                     true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
+			                  false, false, false);
 		case O::S_OR_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::BitwiseOr32, IR::Type::U32, false, false,
-			                     true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, false,
+			                  false, false);
 		case O::S_XOR_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::BitwiseXor32, IR::Type::U32, false, false,
-			                     true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalXor, IR::ValueOpcode::BitwiseXor32,
+			                  false, false, false);
 		case O::S_NOT_B32:
-			return SimpleInteger(inst, IR::ValueOpcode::BitwiseNot32, IR::Type::U32, false, false,
-			                     true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
+			                  false, false, true);
 		case O::S_BREV_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::BitReverse32, IR::Type::U32, false, false,
 			                     false);
@@ -201,15 +202,20 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			                     false, true);
 
 		case O::S_ANDN2_B32:
-			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseAnd32, true, false, true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
+			                  true, false, false);
 		case O::S_ORN2_B32:
-			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseOr32, true, false, true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, true,
+			                  false, false);
 		case O::S_NAND_B32:
-			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseAnd32, false, true, true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
+			                  false, true, false);
 		case O::S_NOR_B32:
-			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseOr32, false, true, true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, false,
+			                  true, false);
 		case O::S_XNOR_B32:
-			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseXor32, false, true, true);
+			return S_U32_MASK(inst, IR::ValueOpcode::LogicalXor, IR::ValueOpcode::BitwiseXor32,
+			                  false, true, false);
 		case O::S_FF1_I32_B64: return S_FF1_I32_B64(inst);
 		case O::S_FLBIT_I32_B32: return V_FFBH_32(inst, false);
 		case O::S_FLBIT_I32_B64: return S_FLBIT_I32_B64(inst);

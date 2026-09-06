@@ -11,6 +11,8 @@ enum class VectorReg : uint16_t {};
 // SGPR, so the translator maps it onto that slot.
 constexpr uint32_t NumScalarRegs = 108;
 constexpr uint32_t VccHiScalarReg = 107;
+// Wave32: slot 106 only carries the mask tag of vcc_lo (its value lives in the VCC state).
+constexpr uint32_t VccLoScalarReg = 106;
 constexpr uint32_t NumVectorRegs = 256;
 
 constexpr uint32_t RegIndex(ScalarReg reg) {

@@ -181,6 +181,8 @@ private:
 	                IR::ValueOpcode bit_opcode, bool negate_rhs, bool negate_result, bool unary);
 	IR::U1 U64MaskBinary(const Decoder::Instruction& inst, IR::ValueOpcode opcode, bool negate_rhs,
 	                     bool negate_result);
+	bool   S_U32_MASK(const Decoder::Instruction& inst, IR::ValueOpcode logical_opcode,
+	                  IR::ValueOpcode bit_opcode, bool negate_rhs, bool negate_result, bool unary);
 	bool SimpleInteger(const Decoder::Instruction& inst, IR::ValueOpcode opcode, IR::Type type,
 	                   bool reverse, bool mask_shift_count, bool update_scc);
 	bool ComposedIntegerBinary(const Decoder::Instruction& inst, IR::ValueOpcode opcode,

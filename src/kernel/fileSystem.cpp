@@ -18,6 +18,7 @@
 #include <mutex>
 #include <string>
 #include <cstdlib>
+#include <thread>
 #include <chrono>
 #include <algorithm>
 #include <atomic>
@@ -687,6 +688,27 @@ void StreamTraceEnd(StreamReadTrace& t, const void* buf, uint64_t bytes_read, co
 
 } // namespace
 
+namespace {
+
+// Storage latency emulation: sleep after every read of at least 64 KiB. Reads served from the
+// host file cache complete in tens of microseconds, far faster than the console's storage path,
+// and that exposes a race in ASTRO BOT's level transition: when the texture streamer finishes
+// its requests before the transition logic on the main thread has advanced, the level context
+// fiber is never entered and the loading screen never ends (the streamer then re-reads the same
+// textures every ~15 frames forever). A 3 ms delay made the load succeed 6/6 times where it hung
+// 9/14 without it. KYTY_READ_DELAY_US=<n> overrides the delay, 0 disables it.
+void ReadDelay(uint32_t bytes_read) {
+	static const long read_delay_us = [] {
+		const char* value = std::getenv("KYTY_READ_DELAY_US");
+		return value != nullptr ? std::strtol(value, nullptr, 10) : 3000L;
+	}();
+	if (read_delay_us > 0 && bytes_read >= (64u << 10)) {
+		std::this_thread::sleep_for(std::chrono::microseconds(read_delay_us));
+	}
+}
+
+} // namespace
+
 int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	PRINT_NAME();
 
@@ -753,6 +775,7 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	}
 
 	LOGF("\tRead %u bytes from: %s\n", bytes_read, Common::PathToString(file->real_name).c_str());
+	ReadDelay(bytes_read);
 	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
 	if (stream_trace && bytes_read >= (1u << 20)) {
 		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
@@ -895,6 +918,7 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 
 	LOGF("\tRead %u bytes (pos = %" PRId64 ") from: %s\n", bytes_read, offset,
 	     Common::PathToString(file->real_name).c_str());
+	ReadDelay(bytes_read);
 
 	return bytes_read;
 }

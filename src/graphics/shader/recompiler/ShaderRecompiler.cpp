@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/logging/log.h"
+#include "common/timer.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "graphics/shader/recompiler/frontend/cfg/ShaderCFG.h"
 #include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
@@ -559,9 +560,18 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 
 	std::string decoded_dump;
 	if (options.dump_ir) {
-		decoded_dump = Decoder::ProgramToString(decoded);
+		const auto dump_begin = Common::Timer::QueryPerformanceCounter();
+		decoded_dump          = Decoder::ProgramToString(decoded);
 		if (options.early_dump) {
 			LOGF("%s decoded RDNA2 (early):\n%s", GetDumpLabel(options), decoded_dump.c_str());
+		}
+		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		if (av_trace) {
+			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
+			LOGF("AvTrace: dump decoded hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",
+			     options.shader_hash,
+			     ((Common::Timer::QueryPerformanceCounter() - dump_begin) * 1000000u) / frequency,
+			     static_cast<uint64_t>(decoded_dump.size()));
 		}
 	}
 
@@ -719,9 +729,18 @@ CompileResult CompileProgram(TranslateResult translated, const CompileOptions& o
 	Spirv::AnalyzeProgramRequirements(ir);
 	std::string ir_dump;
 	if (options.dump_ir) {
-		ir_dump = MakeIrDump(translated.cfg_dump, ir);
+		const auto dump_begin = Common::Timer::QueryPerformanceCounter();
+		ir_dump               = MakeIrDump(translated.cfg_dump, ir);
 		if (options.early_dump) {
 			LOGF("%s native IR and bindings (early):\n%s", GetDumpLabel(options), ir_dump.c_str());
+		}
+		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		if (av_trace) {
+			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
+			LOGF("AvTrace: dump ir hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",
+			     options.shader_hash,
+			     ((Common::Timer::QueryPerformanceCounter() - dump_begin) * 1000000u) / frequency,
+			     static_cast<uint64_t>(ir_dump.size()));
 		}
 	}
 

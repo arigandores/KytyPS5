@@ -239,8 +239,12 @@ private:
 	std::unordered_map<ComputePipelineKey, std::unique_ptr<ComputePipeline>, ComputePipelineKeyHash>
 	              m_compute_pipelines;
 	Common::Mutex m_mutex;
+	uint64_t      m_driver_cache_saved_us    = 0;
+	uint32_t      m_driver_cache_unsaved     = 0;
 
 	void InitializeDriverCache();
+	bool WriteDriverCache();
+	void MaybeWriteDriverCache();
 };
 
 void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_program_id);

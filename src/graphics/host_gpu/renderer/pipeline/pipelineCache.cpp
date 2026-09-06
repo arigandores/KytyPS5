@@ -14,6 +14,7 @@
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/shaderCompiler.h"
+#include "common/timer.h"
 #include "kernel/memory.h"
 #include "kernel/pthread.h"
 #include "kytyGitVersion.h"
@@ -47,6 +48,20 @@ std::string DriverCacheSignature(const vk::PhysicalDeviceProperties& properties)
 	}
 	return fmt::format("KytyPC1:{}:{:08x}:{:08x}:{:08x}:{}\n", KYTY_GIT_REVISION,
 	                   properties.vendorID, properties.deviceID, properties.driverVersion, uuid);
+}
+
+uint64_t HostMicros() {
+	const auto frequency = Common::Timer::QueryPerformanceFrequency();
+	if (frequency == 0) {
+		return 0;
+	}
+	const auto counter = Common::Timer::QueryPerformanceCounter();
+	return (counter / frequency) * 1000000u + ((counter % frequency) * 1000000u) / frequency;
+}
+
+bool AvTraceEnabled() {
+	static const bool enabled = std::getenv("KYTY_AV_TRACE") != nullptr;
+	return enabled;
 }
 
 std::string PipelineCacheTitleId() {
@@ -229,8 +244,10 @@ struct PipelineCache::ProgramCache {
 				return "cs";
 			}
 		}();
+		const auto emit_begin = HostMicros();
 		auto result = ShaderRecompiler::CompileProgram(std::move(translated), options,
 		                                               specialization, push_data_start_dword);
+		const auto emit_end = HostMicros();
 		DumpShaderOriginal(stage_name, options.shader_hash, params.code, result.decoded_dump);
 		if (!ValidateShaderSpirv(options.dump_label, options.shader_hash, result.spirv)) {
 			DumpShaderSpirv(stage_name, options.shader_hash, result.spirv);
@@ -243,10 +260,17 @@ struct PipelineCache::ProgramCache {
 		create_info.sType       = vk::StructureType::eShaderModuleCreateInfo;
 		create_info.codeSize    = result.spirv.size() * sizeof(uint32_t);
 		create_info.pCode       = result.spirv.data();
-		vk::ShaderModule module = nullptr;
+		vk::ShaderModule module       = nullptr;
+		const auto       module_begin = HostMicros();
 		RequireVulkanSuccess(device.createShaderModule(&create_info, nullptr, &module),
 		                     "create recompiled shader module");
 		EXIT_IF(module == nullptr);
+		if (AvTraceEnabled()) {
+			LOGF("AvTrace: shader-emit %s hash=0x%016" PRIx64 " emit_us=%" PRIu64 " validate_us=%" PRIu64
+			     " module_us=%" PRIu64 " words=%" PRIu64 "\n",
+			     stage_name, options.shader_hash, emit_end - emit_begin, module_begin - emit_end,
+			     HostMicros() - module_begin, static_cast<uint64_t>(result.spirv.size()));
+		}
 		if (options.dump_ir) {
 			if (!options.early_dump) {
 				LOGF("%s decoded RDNA2:\n%s", options.dump_label, result.decoded_dump.c_str());
@@ -347,7 +371,9 @@ struct PipelineCache::ProgramCache {
 			options.scratch_dwords = input_info.scratch_size_dwords;
 			options.wave_size      = input_info.wave_size;
 		}
-		auto translated = ShaderRecompiler::TranslateProgram(params.code, options);
+		const auto translate_begin = HostMicros();
+		auto       translated      = ShaderRecompiler::TranslateProgram(params.code, options);
+		const auto translate_end   = HostMicros();
 		if (entry == programs.end()) {
 			auto resource_plan = ShaderRecompiler::IR::ExtractResourcePlan(translated.program);
 			EXIT_IF(!ShaderRecompiler::IR::MaterializeResources(resource_plan, runtime, resources,
@@ -360,6 +386,12 @@ struct PipelineCache::ProgramCache {
 		input_info.stage = {.program = &permutation.program, .resources = std::move(resources)};
 		permutation.program.bindings.AdvancePushData(push_data_cursor);
 
+		if (AvTraceEnabled()) {
+			LOGF("AvTrace: shader %s hash=0x%016" PRIx64 " translate_us=%" PRIu64 " compile_us=%" PRIu64
+			     " permutations=%" PRIu64 "\n",
+			     label, params.hash, translate_end - translate_begin, HostMicros() - translate_end,
+			     static_cast<uint64_t>(entry->second.permutations.size()));
+		}
 		std::printf("Num compiled %u shaders\n", ++num_compiled);
 		return permutation.handle;
 	}
@@ -411,18 +443,17 @@ void PipelineCache::InitializeDriverCache() {
 	if (title_id.empty()) {
 		return;
 	}
-	if (KYTY_BUILD != KYTY_BUILD_RELEASE) {
-		PipelineCacheLog("Vulkan pipeline cache: disabled (non-Release build)");
+	if (const char* env = std::getenv("KYTY_PIPELINE_CACHE"); env != nullptr && std::atoi(env) == 0) {
+		PipelineCacheLog("Vulkan pipeline cache: disabled (KYTY_PIPELINE_CACHE=0)");
 		return;
 	}
+	// The blob is opaque driver data validated by the driver itself (header UUID) and by the
+	// signature below; a dirty or non-Release emulator build cannot poison it, so local builds
+	// get the cache too.
 	const std::string_view git_hash     = KYTY_GIT_HASH;
 	const std::string_view git_revision = KYTY_GIT_REVISION;
 	if (git_hash == "unknown" || git_revision == "unknown") {
 		PipelineCacheLog("Vulkan pipeline cache: disabled (unknown git revision)");
-		return;
-	}
-	if (git_hash.ends_with("-dirty")) {
-		PipelineCacheLog("Vulkan pipeline cache: disabled (dirty build)");
 		return;
 	}
 
@@ -491,6 +522,25 @@ void PipelineCache::InitializeDriverCache() {
 	} else {
 		PipelineCacheLog("Vulkan pipeline cache: initialized empty");
 	}
+	m_driver_cache_saved_us = HostMicros();
+}
+
+// Called with m_mutex held right after a new pipeline was created. The process is often ended
+// without running destructors (the window is closed by the OS, a debugger, a timeout), so the
+// blob is written every 20 s while it keeps growing instead of only from ~PipelineCache().
+void PipelineCache::MaybeWriteDriverCache() {
+	if (m_driver_cache == nullptr) {
+		return;
+	}
+	m_driver_cache_unsaved++;
+	const auto now = HostMicros();
+	if (now - m_driver_cache_saved_us < 20000000u) {
+		return;
+	}
+	if (WriteDriverCache()) {
+		m_driver_cache_unsaved = 0;
+	}
+	m_driver_cache_saved_us = now;
 }
 
 void PipelineCache::Save() {
@@ -498,7 +548,18 @@ void PipelineCache::Save() {
 	if (m_driver_cache == nullptr) {
 		return;
 	}
+	if (m_driver_cache_unsaved != 0 || m_driver_cache_saved_us == 0) {
+		WriteDriverCache();
+	}
+	m_graphics.device.destroyPipelineCache(m_driver_cache, nullptr);
+	m_driver_cache = nullptr;
+}
 
+bool PipelineCache::WriteDriverCache() {
+	if (m_driver_cache == nullptr) {
+		return false;
+	}
+	const auto           write_begin = HostMicros();
 	size_t               size = 0;
 	vk::Result           result;
 	std::vector<uint8_t> payload;
@@ -519,7 +580,7 @@ void PipelineCache::Save() {
 	    size > std::numeric_limits<uint32_t>::max()) {
 		PipelineCacheLog("Vulkan pipeline cache: save failed ({}, {} bytes)",
 		                 VulkanToString(result), size);
-		return;
+		return false;
 	}
 	payload.resize(size);
 	auto       prefix       = DriverCacheSignature(m_graphics.GetPhysicalDeviceProperties());
@@ -527,7 +588,7 @@ void PipelineCache::Save() {
 	prefix.append(reinterpret_cast<const char*>(&payload_hash), sizeof(payload_hash));
 	if (!Common::File::CreateDirectories(m_driver_cache_path.parent_path())) {
 		PipelineCacheLog("Vulkan pipeline cache: failed to create cache directory");
-		return;
+		return false;
 	}
 	auto temp_path = m_driver_cache_path;
 	temp_path += ".tmp";
@@ -544,12 +605,11 @@ void PipelineCache::Save() {
 	    !Common::File::RenameFile(temp_path, m_driver_cache_path)) {
 		PipelineCacheLog("Vulkan pipeline cache: failed to write {}",
 		                 Common::PathToString(m_driver_cache_path));
-		return;
+		return false;
 	}
-	PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {}", payload.size(),
-	                 Common::PathToString(m_driver_cache_path));
-	m_graphics.device.destroyPipelineCache(m_driver_cache, nullptr);
-	m_driver_cache = nullptr;
+	PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {} ({} us)", payload.size(),
+	                 Common::PathToString(m_driver_cache_path), HostMicros() - write_begin);
+	return true;
 }
 
 PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
@@ -765,10 +825,17 @@ PipelineCache::GraphicsPipeline& PipelineCache::CreateGraphicsPipeline(
 
 	auto cached = std::make_unique<GraphicsPipeline>(p);
 	LogPipelineTrace("CreatePipelineInternal begin", vs_id, ps_id);
+	const auto create_begin = HostMicros();
 	CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vs_input_info,
 	                       vertex_program.module, ps_input_info, pixel_program.module,
 	                       static_params, m_driver_cache);
+	if (AvTraceEnabled()) {
+		LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64 "\n",
+		     vs_id, ps_id, HostMicros() - create_begin,
+		     static_cast<uint64_t>(m_graphics_pipelines.size() + 1));
+	}
 	LogPipelineTrace("CreatePipelineInternal done", vs_id, ps_id);
+	MaybeWriteDriverCache();
 
 	EXIT_NOT_IMPLEMENTED(cached->pipeline == nullptr);
 	EXIT_NOT_IMPLEMENTED(cached->pipeline_layout == nullptr);
@@ -803,8 +870,14 @@ PipelineCache::CreateComputePipeline(ShaderComputeInputInfo& input_info,
 		ShaderDbgDumpInputInfo(input_info);
 	}
 
-	auto cached = std::make_unique<ComputePipeline>(p);
+	auto       cached       = std::make_unique<ComputePipeline>(p);
+	const auto create_begin = HostMicros();
 	CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module, m_driver_cache);
+	if (AvTraceEnabled()) {
+		LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64 "\n", p.cs_shader_id,
+		     HostMicros() - create_begin, static_cast<uint64_t>(m_compute_pipelines.size() + 1));
+	}
+	MaybeWriteDriverCache();
 
 	EXIT_NOT_IMPLEMENTED(cached->pipeline == nullptr);
 	EXIT_NOT_IMPLEMENTED(cached->pipeline_layout == nullptr);

@@ -12144,8 +12144,11 @@ int main() {
       std::fprintf(stderr, "recompile: permutation %zu of %zu\n", permutation, entry.permutations.size());
       return 1;
     }
-    if (key.stage != static_cast<uint32_t>(ShaderType::Compute) || key.static_state.size() < 14) {
-      std::fprintf(stderr, "recompile: only compute shaders (stage=%u state=%zu)\n", key.stage,
+    const bool is_compute = key.stage == static_cast<uint32_t>(ShaderType::Compute);
+    const bool is_pixel   = key.stage == static_cast<uint32_t>(ShaderType::Pixel);
+    if ((!is_compute && !is_pixel) || (is_compute && key.static_state.size() < 14) ||
+        (is_pixel && key.static_state.size() < 30)) {
+      std::fprintf(stderr, "recompile: compute or pixel shaders only (stage=%u state=%zu)\n", key.stage,
                    key.static_state.size());
       return 1;
     }
@@ -12154,7 +12157,48 @@ int main() {
                    key.code_size);
     }
     ShaderComputeInputInfo compute {};
+    ShaderPixelInputInfo pixel {};
     const auto &s = key.static_state;
+    if (is_pixel) {
+      // BuildStageStaticKey(ShaderPixelInputInfo) order.
+      size_t i = 0;
+      pixel.scratch_size_dwords = s[i++];
+      pixel.input_num = s[i++];
+      pixel.ps_system_input_base = s[i++];
+      pixel.vs_export_count = s[i++];
+      pixel.custom_interpolation_mask = s[i++];
+      pixel.ps_perspective_center_vgpr = s[i++];
+      for (auto &v : pixel.ps_barycentric_vgpr) {
+        v = s[i++];
+      }
+      pixel.ps_pos_x = s[i++] != 0;
+      pixel.ps_pos_y = s[i++] != 0;
+      pixel.ps_pos_z = s[i++] != 0;
+      pixel.ps_pos_w = s[i++] != 0;
+      pixel.ps_pos_xy = pixel.ps_pos_x && pixel.ps_pos_y;
+      pixel.ps_front_face = s[i++] != 0;
+      pixel.ps_no_perspective = s[i++] != 0;
+      pixel.ps_pixel_kill_enable = s[i++] != 0;
+      pixel.ps_depth_export_enable = s[i++] != 0;
+      pixel.ps_sample_mask_export_enable = s[i++] != 0;
+      pixel.ps_early_z = s[i++] != 0;
+      for (auto &m : pixel.target_output_mode) {
+        m = static_cast<uint8_t>(s[i++]);
+      }
+      for (uint32_t base = 0; base < pixel.target_export_mapping.size(); base += 4u) {
+        const uint32_t packed = s[i++];
+        for (uint32_t k = 0; k < 4u; k++) {
+          pixel.target_export_mapping[base + k].packed = static_cast<uint8_t>(packed >> (k * 8u));
+        }
+      }
+      if (i + pixel.input_num > s.size() || pixel.input_num > 32u) {
+        std::fprintf(stderr, "recompile: pixel static state too short\n");
+        return 1;
+      }
+      for (uint32_t k = 0; k < pixel.input_num; k++) {
+        pixel.interpolator_settings[k] = s[i++];
+      }
+    } else {
     compute.workgroup_register = static_cast<int>(s[0]);
     compute.wave_size = s[1];
     compute.thread_ids_num = static_cast<int>(s[2]);
@@ -12167,20 +12211,27 @@ int main() {
       compute.group_id[i] = s[8 + 2 * i] != 0;
     }
     compute.tg_size_en = s[13] != 0;
+    }
     std::vector<uint32_t> user_data(key.user_data_count, 0u);
     // The game runs on a robustBufferAccess2 device (NVIDIA): no bounds branches, like the
     // in-game SPIR-V. KYTY_ROBUST_LOADS=0 overrides.
     ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(true);
     ShaderRecompiler::CompileOptions options;
-    options.stage = ShaderType::Compute;
+    options.stage = is_pixel ? ShaderType::Pixel : ShaderType::Compute;
     options.shader_hash = key.hash;
     options.user_data = user_data;
     options.dump_ir = false;
     options.early_dump = false;
-    options.dump_label = "ShaderRecompiler CS";
-    options.input_info.compute = &compute;
-    options.scratch_dwords = compute.scratch_size_dwords;
-    options.wave_size = compute.wave_size;
+    options.dump_label = is_pixel ? "ShaderRecompiler PS" : "ShaderRecompiler CS";
+    if (is_pixel) {
+      options.input_info.pixel = &pixel;
+      options.scratch_dwords = pixel.scratch_size_dwords;
+      options.detect_wave_size = true;
+    } else {
+      options.input_info.compute = &compute;
+      options.scratch_dwords = compute.scratch_size_dwords;
+      options.wave_size = compute.wave_size;
+    }
     const auto t0 = std::chrono::steady_clock::now();
     auto translated = ShaderRecompiler::TranslateProgram(std::span<const uint32_t>{code}, options);
     const auto t1 = std::chrono::steady_clock::now();
@@ -12199,12 +12250,13 @@ int main() {
     const auto ms = [](auto a, auto b) {
       return std::chrono::duration_cast<std::chrono::microseconds>(b - a).count() / 1000.0;
     };
-    std::printf("recompile %s: hash=%016llx wave=%u local=%ux%ux%u lds=%u permutations=%zu "
+    std::printf("recompile %s: %s hash=%016llx wave=%u local=%ux%ux%u lds=%u inputs=%u permutations=%zu "
                 "translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",
-                parts[0].c_str(), static_cast<unsigned long long>(key.hash), compute.wave_size,
-                compute.threads_num[0], compute.threads_num[1], compute.threads_num[2],
-                compute.lds_size_dwords, entry.permutations.size(), ms(t0, t1), ms(t1, t2),
-                compiled.spirv.size(), stored.spirv.size(), parts[2].c_str());
+                parts[0].c_str(), is_pixel ? "ps" : "cs", static_cast<unsigned long long>(key.hash),
+                compute.wave_size, compute.threads_num[0], compute.threads_num[1],
+                compute.threads_num[2], compute.lds_size_dwords, pixel.input_num,
+                entry.permutations.size(), ms(t0, t1), ms(t1, t2), compiled.spirv.size(),
+                stored.spirv.size(), parts[2].c_str());
     return 0;
   }
   if (const char *bench = std::getenv("KYTY_CFG_BENCH"); bench != nullptr) {

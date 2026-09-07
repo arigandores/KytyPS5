@@ -836,9 +836,21 @@ bool GuestGpu::Process(Submission& submission) {
 			}
 			if (progressed) {
 				if (complete) {
+					const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 					m_renderer.GetGpuResources().RunGarbageCollector();
+					if (t0 != 0) {
+						Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites, "gc",
+						                            Common::FrameStats::NowNs() - t0);
+					}
 				}
-				m_renderer.GetBufferCache().PrefetchHotReadbacks();
+				{
+					const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+					m_renderer.GetBufferCache().PrefetchHotReadbacks();
+					if (t0 != 0) {
+						Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites, "prefetch",
+						                            Common::FrameStats::NowNs() - t0);
+					}
+				}
 				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
 			} else if (complete) {
@@ -930,6 +942,25 @@ void CommandProcessor::SuspendPm4() {
 	g_current_execution->m_suspended = true;
 }
 
+// Stable names for the PM4 opcode time table ("opXX", NOP sub-opcodes "nopXX").
+static const char* Pm4OpName(uint32_t opcode, uint32_t packet_header) {
+	static std::array<std::string, 256> op_names;
+	static std::array<std::string, 64>  nop_names;
+	if (opcode == Pm4::IT_NOP) {
+		const auto r    = KYTY_PM4_R(packet_header) & 63u;
+		auto&      name = nop_names[r];
+		if (name.empty()) {
+			name = fmt::format("nop{:02x}", r);
+		}
+		return name.c_str();
+	}
+	auto& name = op_names[opcode & 255u];
+	if (name.empty()) {
+		name = fmt::format("op{:02x}", opcode & 255u);
+	}
+	return name.c_str();
+}
+
 void CommandProcessor::ProcessPm4(Pm4Execution& execution, size_t stop_depth) {
 	while (execution.m_buffer_stack.size() > stop_depth) {
 		if (g_gpu_state != nullptr) {
@@ -1016,8 +1047,16 @@ void CommandProcessor::ProcessPm4(Pm4Execution& execution, size_t stop_depth) {
 			     total_dw - remaining_dw, packet_header);
 		}
 
+		// KYTY_PM4_TRACE=1: host time per PM4 opcode (FrameTrace-pm4 line at every flip).
+		static const bool pm4_trace = std::getenv("KYTY_PM4_TRACE") != nullptr;
+		const auto        pm4_t0    = pm4_trace ? Common::FrameStats::NowNs() : 0;
 		const auto packet_dw =
 		    handler(*this, packet_header & ~1u, packet + 1, remaining_dw, total_dw) + 1;
+		if (pm4_trace) {
+			Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites,
+			                            Pm4OpName(opcode, packet_header),
+			                            Common::FrameStats::NowNs() - pm4_t0);
+		}
 		EXIT_IF(packet_dw > remaining_dw);
 		if (execution.m_suspended) {
 			if (execution.m_buffer_stack.size() > buffer_index + 1) {

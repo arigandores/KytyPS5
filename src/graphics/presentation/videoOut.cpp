@@ -1241,7 +1241,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
 			     " c_commit=%llu c_emit=%llu p_prep=%llu p_key=%llu p_mat=%llu p_perm=%llu"
 			     " p_reads=%llu p_creads=%llu m_eval=%llu m_asm=%llu m_spec=%llu m_insts=%llu"
-			     " m_fail=%llu memo_hit=%llu memo_miss=%llu m_read_us=%llu m_wide=%llu" "\n",
+			     " m_fail=%llu memo_hit=%llu memo_miss=%llu m_read_us=%llu m_wide=%llu b_tex=%llu"
+			     " b_texn=%llu b_view=%llu b_viewn=%llu b_buf=%llu b_smp=%llu" "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
 			     dus(FS::Counter::DrawTargetsNs), dus(FS::Counter::DrawProgramsNs),
@@ -1258,13 +1259,21 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     dus(FS::Counter::MatSpecNs), d(FS::Counter::MatEvalInsts),
 			     d(FS::Counter::MatFailures), d(FS::Counter::MatMemoHits),
 			     d(FS::Counter::MatMemoMisses), dus(FS::Counter::MatReadNs),
-			     d(FS::Counter::MatEvalWide));
+			     d(FS::Counter::MatEvalWide), dus(FS::Counter::BindResolveTexNs),
+			     d(FS::Counter::BindResolveTex), dus(FS::Counter::BindFindTexNs),
+			     d(FS::Counter::BindFindTex), dus(FS::Counter::BindBuffersNs),
+			     dus(FS::Counter::BindSamplersNs));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
-				static std::array<std::array<FS::SiteRow, 48>, static_cast<size_t>(FS::Table::Count)>
+				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};
-				std::array<FS::SiteRow, 48> rows {};
+				std::array<FS::SiteRow, 160> rows {};
 				const auto                  n = FS::ReadSites(static_cast<FS::Table>(table), rows.data(), rows.size());
-				std::string                 line = table == 0 ? "FrameTrace-wait:" : "FrameTrace-submit:";
+				std::string                 line = table == 0   ? "FrameTrace-wait:"
+				                                   : table == 1 ? "FrameTrace-submit:"
+				                                                : "FrameTrace-pm4:";
+				if (n == 0) {
+					continue;
+				}
 				for (size_t i = 0; i < n; i++) {
 					auto& p = prev_sites[table][i];
 					if (p.name != rows[i].name) {

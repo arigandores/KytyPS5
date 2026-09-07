@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 
+#include "common/frameStats.h"
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/file.h"
@@ -657,6 +659,7 @@ static ImageViewInfo TextureViewInfo(const ShaderRecompiler::IR::ImageResource& 
 
 TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageResource&   resource,
                                               const ShaderRecompiler::IR::DescriptorValue& value) {
+	Common::FrameStats::Scope resolve_scope(Common::FrameStats::Counter::BindResolveTexNs, Common::FrameStats::Counter::BindResolveTex);
 	auto descriptor = DecodeNativeDescriptor<ShaderTextureResource>(value);
 	const bool storage = resource.written;
 	if (storage) {
@@ -1021,8 +1024,11 @@ PreparedBindings RenderExecutor::PrepareBindings(const ShaderStageRuntime& runti
 		descriptors.images.push_back(binding);
 	}
 	descriptors.samplers.reserve(program.info.samplers.size());
-	for (uint32_t i = 0; i < program.info.samplers.size(); i++) {
-		descriptors.samplers.push_back(NativeSampler(m_context, program, i, snapshot.samplers[i]));
+	{
+		Common::FrameStats::Scope sampler_scope(Common::FrameStats::Counter::BindSamplersNs);
+		for (uint32_t i = 0; i < program.info.samplers.size(); i++) {
+			descriptors.samplers.push_back(NativeSampler(m_context, program, i, snapshot.samplers[i]));
+		}
 	}
 	prepared.shader_data.reserve(program.bindings.ShaderDataDwords());
 	for (const auto reg: program.bindings.user_data_registers) {
@@ -1139,6 +1145,7 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			if (desc.type == TextureCache::BindingType::Storage) {
 				desc.view_info.level_count = 1;
 			}
+			Common::FrameStats::Scope view_scope(Common::FrameStats::Counter::BindFindTexNs, Common::FrameStats::Counter::BindFindTex);
 			binding.image_view = texture_cache.FindTexture(binding.image_id, desc);
 		}
 		auto&      image   = texture_cache.GetImage(binding.image_id);
@@ -1157,17 +1164,20 @@ RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 	if (pixel_active) {
 		bindings.pixel.emplace(PrepareBindings(pixel));
 	}
-	FindBuffers(bindings.vertex);
-	if (bindings.pixel) {
-		FindBuffers(*bindings.pixel);
-	}
-	if (bindings.vertex.program->info.uses_dma ||
-	    (bindings.pixel && bindings.pixel->program->info.uses_dma)) {
-		m_context.GetGpuResources().PrepareBda();
-	}
-	RebindBuffers(bindings.vertex);
-	if (bindings.pixel) {
-		RebindBuffers(*bindings.pixel);
+	{
+		Common::FrameStats::Scope buffers_scope(Common::FrameStats::Counter::BindBuffersNs);
+		FindBuffers(bindings.vertex);
+		if (bindings.pixel) {
+			FindBuffers(*bindings.pixel);
+		}
+		if (bindings.vertex.program->info.uses_dma ||
+		    (bindings.pixel && bindings.pixel->program->info.uses_dma)) {
+			m_context.GetGpuResources().PrepareBda();
+		}
+		RebindBuffers(bindings.vertex);
+		if (bindings.pixel) {
+			RebindBuffers(*bindings.pixel);
+		}
 	}
 	RebindImages(bindings.vertex);
 	if (bindings.pixel) {

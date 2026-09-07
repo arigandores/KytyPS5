@@ -25,7 +25,7 @@ std::array<std::atomic<uint64_t>, static_cast<size_t>(Counter::Count)> g_counter
 thread_local ThreadRole  t_role = ThreadRole::Count;
 thread_local const char* t_site = nullptr;
 
-constexpr size_t MaxSites = 48;
+constexpr size_t MaxSites = 160;
 
 struct SiteTable {
 	std::mutex                                 mutex;

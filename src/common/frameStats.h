@@ -74,12 +74,18 @@ enum class Counter : uint32_t {
 	MatMemoMisses,
 	MatReadNs,     // time inside the SRT memory-read callback
 	MatEvalWide,   // Evaluator::EvaluateWide calls (including immediates and memo hits)
+	BindResolveTexNs, // RenderExecutor::ResolveTexture
+	BindResolveTex,
+	BindFindTexNs, // TextureCache::FindTexture (image views) in RebindImages
+	BindFindTex,
+	BindBuffersNs, // FindBuffers + RebindBuffers
+	BindSamplersNs,
 	Count
 };
 
 // Call-site attribution: a SiteScope names the operation in flight on this thread and the wait /
 // submit paths charge their time to that name.
-enum class Table : uint32_t { WaitSites, SubmitSites, Count };
+enum class Table : uint32_t { WaitSites, SubmitSites, Pm4Sites, Count };
 
 struct SiteRow {
 	const char* name  = nullptr;

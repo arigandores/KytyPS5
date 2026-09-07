@@ -130,6 +130,11 @@ private:
 	void ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write);
 	[[nodiscard]] AsyncReadback BeginAsyncReadback(uint64_t vaddr, uint64_t size);
 	bool                        FinishAsyncReadback(const AsyncReadback& job);
+	// GPU thread: make the GPU-dirty pages around a CPU read readable at once (stale data) and
+	// schedule the download that brings the completed GPU data in later. See ReadMemory.
+	void ServeStaleRead(uint64_t vaddr, uint64_t size);
+	void ApplyReadbackPieces(const std::vector<ReadbackPiece>& pieces, const uint8_t* data,
+	                         uint64_t seq);
 
 	GraphicContext&                                   m_graphics;
 	CommandScheduler&                                 m_scheduler;

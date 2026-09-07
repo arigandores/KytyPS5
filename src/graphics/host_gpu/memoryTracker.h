@@ -28,6 +28,7 @@ public:
 	void               MarkRegionAsCpuModified(uint64_t vaddr, uint64_t size);
 	void               MarkRegionAsGpuModified(uint64_t vaddr, uint64_t size);
 	void               UnmarkRegionAsGpuModified(uint64_t vaddr, uint64_t size);
+	void               MarkRegionAsStaleReadable(uint64_t vaddr, uint64_t size);
 	void               UntrackMemory(uint64_t vaddr, uint64_t size);
 	// Removes protection from a range and flushes GPU-owned data when required.
 	template <typename Flush>

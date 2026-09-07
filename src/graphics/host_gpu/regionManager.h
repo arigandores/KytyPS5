@@ -127,8 +127,26 @@ public:
 		if constexpr (source == DirtySource::Cpu) {
 			UpdateCpuProtection<!enable>();
 		} else {
+			// A new GPU write (or a completed download) ends the stale window of these pages:
+			// the next CPU read faults again and is served from the latest completed data.
+			m_stale.UnsetRange(start, end);
 			UpdateGpuProtection<enable>();
 		}
+	}
+
+	// GPU-dirty pages of [vaddr, vaddr+size) become readable by the CPU without a fault while
+	// their GPU writes are still in flight (BufferCache::ServeStaleRead): the CPU observes the
+	// last completed GPU data, as it would on hardware, instead of draining the queue.
+	void MarkStaleReadable(uint64_t vaddr, uint64_t size) {
+		const auto [start, end] = GetPageRange(vaddr, size);
+		RegionBits range;
+		range.SetRange(start, end);
+		range &= m_gpu_dirty;
+		if (range.None()) {
+			return;
+		}
+		m_stale |= range;
+		UpdateGpuProtection<false>();
 	}
 
 	template <DirtySource source, bool clear, typename Func>
@@ -144,6 +162,7 @@ public:
 			return;
 		}
 		if constexpr (source == DirtySource::Gpu && clear) {
+			m_stale.UnsetRange(start, end);
 			UpdateGpuProtection<false>();
 		}
 		ForEachRange(mask, std::forward<Func>(func));
@@ -164,7 +183,7 @@ private:
 
 	template <bool track>
 	void UpdateGpuProtection() {
-		auto readable = ~m_gpu_dirty;
+		auto readable = ~m_gpu_dirty | m_stale;
 		auto mask     = readable ^ m_readable;
 		m_readable    = readable;
 		if (mask.None()) {
@@ -216,6 +235,7 @@ private:
 	uint64_t     m_cpu_addr = 0;
 	RegionBits   m_cpu_dirty;
 	RegionBits   m_gpu_dirty;
+	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight
 	RegionBits   m_writable;
 	RegionBits   m_readable;
 };

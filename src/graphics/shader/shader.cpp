@@ -19,6 +19,7 @@
 #include "libs/errno.h"
 
 #include <algorithm>
+#include <array>
 #include <fmt/format.h>
 #include <cstdlib>
 #include <mutex>
@@ -70,6 +71,7 @@ static std::unique_ptr<std::unordered_map<uint64_t, ShaderMappedData>> g_shader_
 static std::mutex                                                      g_shader_map_mutex;
 static std::mutex g_shader_hash_mutex;
 static std::unordered_map<uint64_t, std::pair<uint32_t, uint64_t>> g_shader_hash_cache;
+static std::atomic<uint64_t> g_shader_map_generation {0};
 
 void ShaderInit() {
 	EXIT_IF(g_shader_map != nullptr);
@@ -87,6 +89,7 @@ void ShaderMapUserData(uint64_t addr, const ShaderMappedData& data) {
 	std::scoped_lock lock(g_shader_map_mutex);
 
 	(*g_shader_map)[addr] = data;
+	g_shader_map_generation.fetch_add(1, std::memory_order_release);
 }
 
 static const ShaderBinaryInfo* GetBinaryInfo(const uint32_t* code);
@@ -133,13 +136,39 @@ void ShaderMakeHostCopy(ShaderMappedData& data) {
 	data.owner = std::move(copy);
 }
 
-static ShaderMappedData ShaderGetMappedData(uint64_t addr, const char* label) {
+// Looked up three times per draw (VS, PS, and CS per dispatch); the map lock and the copy of
+// the entry (with its shared owner) cost more than the rest of PrepareProgram, so a small
+// per-thread cache holds the recent entries. ShaderMapUserData bumps the generation, which
+// drops every cache. The reference stays valid until the caller looks up 16 other shaders.
+static const ShaderMappedData& ShaderGetMappedData(uint64_t addr, const char* label) {
 	EXIT_IF(g_shader_map == nullptr);
+	struct Cache {
+		uint64_t                         generation = UINT64_MAX;
+		std::array<uint64_t, 16>         addrs {};
+		std::array<ShaderMappedData, 16> data {};
+		size_t                           next = 0;
+	};
+	thread_local Cache cache;
+	const auto         generation = g_shader_map_generation.load(std::memory_order_acquire);
+	if (cache.generation != generation) {
+		cache.addrs.fill(0);
+		cache.generation = generation;
+		cache.next       = 0;
+	}
+	for (size_t i = 0; i < cache.addrs.size(); i++) {
+		if (cache.addrs[i] == addr) {
+			return cache.data[i];
+		}
+	}
 
 	std::scoped_lock lock(g_shader_map_mutex);
 
 	if (auto iter = g_shader_map->find(addr); iter != g_shader_map->end()) {
-		return iter->second;
+		const auto slot   = cache.next;
+		cache.next        = (cache.next + 1u) % cache.addrs.size();
+		cache.addrs[slot] = addr;
+		cache.data[slot]  = iter->second;
+		return cache.data[slot];
 	}
 
 	EXIT("%s shader=0x%016" PRIx64 " is missing from ShaderMap\n", label, addr);
@@ -587,6 +616,34 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
 
 	EXIT_IF(attrib == nullptr || buffer == nullptr);
 
+	// The attribute and vertex-buffer tables live in guest memory that may share a page with
+	// GPU-written data; reading them through the guest pointer would page-fault into a GPU drain.
+	// Copy the used parts through the memory backing (the CPU writes these tables, so the
+	// backing is current); fall back to the direct pointers when the range is not backed.
+	std::array<uint32_t, 256>                               attrib_copy {};
+	std::array<uint32_t, ShaderVertexInputInfo::RES_MAX * 4> buffer_copy {};
+	{
+		uint32_t max_semantic = 0;
+		for (uint32_t i = 0; i < num_input_semantics; i++) {
+			max_semantic = std::max<uint32_t>(max_semantic, input_semantics[i].semantic);
+		}
+		if (Libs::LibKernel::Memory::TryReadBacking(reinterpret_cast<uint64_t>(attrib),
+		                                            attrib_copy.data(),
+		                                            (uint64_t {max_semantic} + 1u) * sizeof(uint32_t))) {
+			attrib = attrib_copy.data();
+			uint32_t max_index = 0;
+			for (uint32_t i = 0; i < num_input_semantics; i++) {
+				max_index = std::max<uint32_t>(max_index, attrib[input_semantics[i].semantic] & 0x1fu);
+			}
+			if (max_index < ShaderVertexInputInfo::RES_MAX &&
+			    Libs::LibKernel::Memory::TryReadBacking(reinterpret_cast<uint64_t>(buffer),
+			                                            buffer_copy.data(),
+			                                            (uint64_t {max_index} + 1u) * 16u)) {
+				buffer = buffer_copy.data();
+			}
+		}
+	}
+
 	for (uint32_t i = 0; i < num_input_semantics; i++) {
 		const auto& in = input_semantics[i];
 
@@ -982,7 +1039,7 @@ void BuildStageStaticKey(const ShaderComputeInputInfo& info, std::vector<uint32_
 
 ShaderParams PrepareProgram(const HW::VertexShaderInfo& regs, const HW::ShaderRegisters& sh,
                             ShaderVertexInputInfo& info) {
-	const auto data = ShaderGetMappedData(regs.es_regs.data_addr, "ShaderGetInputInfoVS():");
+	const auto& data = ShaderGetMappedData(regs.es_regs.data_addr, "ShaderGetInputInfoVS():");
 	if (!ShaderGetStaticInputInfoVS(regs, sh, data, info)) {
 		EXIT("failed to prepare vertex shader program\n");
 	}
@@ -995,7 +1052,7 @@ ShaderParams PrepareProgram(
     const HW::PixelShaderInfo& regs, const HW::ShaderRegisters& sh,
     std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping,
     ShaderPixelInputInfo&                               ps_info) {
-	const auto data = ShaderGetMappedData(regs.ps_regs.data_addr, "ShaderGetInputInfoPS():");
+	const auto& data = ShaderGetMappedData(regs.ps_regs.data_addr, "ShaderGetInputInfoPS():");
 	ShaderGetStaticInputInfoPS(regs, sh, target_export_mapping, data, ps_info);
 	return GetShaderParams(
 	    regs.ps_regs.data_addr, "ShaderRecompiler PS", 0,
@@ -1004,7 +1061,7 @@ ShaderParams PrepareProgram(
 
 ShaderParams PrepareProgram(const HW::ComputeShaderInfo& regs, const HW::ShaderRegisters& sh,
                             ShaderComputeInputInfo& info) {
-	const auto data = ShaderGetMappedData(regs.cs_regs.data_addr, "ShaderGetInputInfoCS():");
+	const auto& data = ShaderGetMappedData(regs.cs_regs.data_addr, "ShaderGetInputInfoCS():");
 	ShaderGetStaticInputInfoCS(regs, sh, data, info);
 	return GetShaderParams(
 	    regs.cs_regs.data_addr, "ShaderRecompiler CS", 0,

@@ -234,6 +234,14 @@ void CommandScheduler::PopPendingOperations() {
 }
 
 void CommandScheduler::PopPendingOperations(bool refresh_gpu_tick) {
+	{
+		// Called before every draw and dispatch; the semaphore query is only worth it when
+		// something waits for a tick.
+		std::lock_guard lock(m_operation_mutex);
+		if (m_pending_operations.empty()) {
+			return;
+		}
+	}
 	if (refresh_gpu_tick) {
 		m_master.Refresh();
 	}

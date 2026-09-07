@@ -3,7 +3,10 @@
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdlib>
+#include <limits>
+#include <vector>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
 namespace {
@@ -135,6 +138,14 @@ uint32_t DeviceAddressFromWords(EmitterState& state, uint32_t low, uint32_t high
 	                           Unary(state, OpUConvert, TypeDeviceAddress(state), high),
 	                           ConstantDeviceAddress(state, 32));
 	return Binary(state, OpBitwiseOr, TypeDeviceAddress(state), low64, high64);
+}
+
+uint32_t ImmediateAddress(EmitterState& state, uint32_t address, int32_t immediate) {
+	return immediate == 0
+	           ? address
+	           : Binary(state, OpIAdd, TypeDeviceAddress(state), address,
+	                    ConstantDeviceAddress(state,
+	                                          static_cast<uint64_t>(static_cast<int64_t>(immediate))));
 }
 
 uint32_t GuestAddress(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem) {
@@ -471,6 +482,231 @@ uint32_t LoadScalarBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const I
 	return values[0];
 }
 
+// One dword of a Flat load at a 64-bit address in null-page mode: the aligned dword loads
+// unconditionally (inactive lanes read a valid page too and get masked by the caller); only the
+// rare dword-crossing second load keeps a branch. Returns the unmasked value.
+uint32_t LoadFlatDwordNullPage(ValueEmitContext& ctx, uint32_t address, uint32_t active_id,
+                               uint32_t bits) {
+	auto&      state   = ctx.state;
+	const auto aligned = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), address,
+	                            ConstantDeviceAddress(state, ~uint64_t {3}));
+	const auto first   = LoadBdaAt(ctx, GetBdaPointer(ctx, aligned, active_id));
+	const auto byte    = Binary(state, OpBitwiseAnd, TypeU32(state),
+	                            Unary(state, OpUConvert, TypeU32(state), address),
+	                            ConstantU32(state, 3));
+	uint32_t value = first;
+	if (bits != 8u) {
+		const auto crosses = Binary(state, bits == 16u ? OpUGreaterThan : OpINotEqual,
+		                            TypeBool(state), byte,
+		                            ConstantU32(state, bits == 16u ? 2u : 0u));
+		const auto second = EmitValueOrZeroIfCondition(state, crosses, [&]() {
+			return LoadBdaAt(
+			    ctx, GetBdaPointer(ctx,
+			                       Binary(state, OpIAdd, TypeDeviceAddress(state), aligned,
+			                              ConstantDeviceAddress(state, sizeof(uint32_t))),
+			                       active_id));
+		});
+		const auto shift = Binary(state, OpShiftLeftLogical, TypeU32(state), byte,
+		                          ConstantU32(state, 3));
+		const auto upper_shift = Binary(
+		    state, OpShiftLeftLogical, TypeU32(state),
+		    Binary(state, OpBitwiseAnd, TypeU32(state),
+		           Binary(state, OpISub, TypeU32(state), ConstantU32(state, 4), byte),
+		           ConstantU32(state, 3)),
+		    ConstantU32(state, 3));
+		value = Binary(state, OpBitwiseOr, TypeU32(state),
+		               Binary(state, OpShiftRightLogical, TypeU32(state), first, shift),
+		               Binary(state, OpShiftLeftLogical, TypeU32(state), second, upper_shift));
+	} else {
+		const auto shift = Binary(state, OpShiftLeftLogical, TypeU32(state), byte,
+		                          ConstantU32(state, 3));
+		value = Binary(state, OpShiftRightLogical, TypeU32(state), first, shift);
+	}
+	if (bits != 32u) {
+		value = Binary(state, OpBitwiseAnd, TypeU32(state), value,
+		               ConstantU32(state, bits == 8u ? 0xffu : 0xffffu));
+	}
+	return value;
+}
+
+// KYTY_FLAT_GROUP: 0 (default) = per-dword Flat loads at their original places; 1 = the dwords of a group
+// load back to back at the first member, each through its own page lookup; 2 = two page
+// lookups per group and selected pointers (A/B; run with KYTY_SHADER_CACHE=0).
+uint32_t FlatGroupMode() {
+	static const uint32_t mode = [] {
+		const char* value = std::getenv("KYTY_FLAT_GROUP");
+		// Default off: on the RenderDoc stand the grouped node loads cut 19 % of the SASS but
+		// raised the register count 191 -> 246 for no time gain (BvhIntersectRay made them moot).
+		return value == nullptr ? 0u : static_cast<uint32_t>(std::atoi(value));
+	}();
+	return mode;
+}
+
+bool FlatGroupEnabled() {
+	return FlatGroupMode() != 0u;
+}
+
+// Grouped Flat dword loads at a full 64-bit address: members are the LoadAddressU32 of the same
+// block with the same (handle, low, high, active) and dword-aligned immediates within one page
+// window (IMAGE_BVH_INTERSECT_RAY reads 28 dwords of a node this way; the generic path cost a
+// page lookup, 64-bit arithmetic and a dword-crossing branch per dword). All members are emitted
+// at the first one, without branches: the RenderDoc stand showed that a fast/slow branch around
+// the group loses the whole gain while any unconditional form (per-dword lookups or 128-bit
+// loads) is 15-25 % faster on the tiled-lighting dispatches. Mode 2 looks the page up twice
+// (aligned start and one past the last dword) and selects each dword's pointer; a dword-crossing
+// (unaligned) base merges neighbouring dwords, the one past the end loaded separately.
+// Null-page mode only (lookups always yield readable pointers). Members are defined eagerly
+// (ctx.grouped_loads); returns the unmasked value of `inst`.
+uint32_t LoadFlatBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
+                          uint32_t active_id) {
+	auto&       state  = ctx.state;
+	const auto  handle = inst.Arg(0).Resolve();
+	const auto  low    = inst.Arg(1).Resolve();
+	const auto  high   = inst.Arg(2).Resolve();
+	const auto  active = inst.Arg(inst.NumArgs() - 1).Resolve();
+	struct Member {
+		const IR::Inst* inst   = nullptr;
+		int32_t         offset = 0;
+	};
+	std::vector<Member> members;
+	members.push_back({&inst, static_cast<int32_t>(mem.offset)});
+	if (ctx.current_block != nullptr) {
+		bool     seen    = false;
+		uint32_t scanned = 0;
+		for (const auto& other: *ctx.current_block) {
+			if (!seen) {
+				seen = &other == &inst;
+				continue;
+			}
+			if (++scanned > 96u) {
+				break;
+			}
+			if (other.GetOpcode() != inst.GetOpcode() || other.NumArgs() != inst.NumArgs() ||
+			    ctx.grouped_loads.contains(&other)) {
+				continue;
+			}
+			const auto& other_mem = ctx.Memory(other);
+			if (other_mem.kind != IR::ResourceKind::Flat || !other_mem.address_is_full ||
+			    (other_mem.offset & 3u) != 0u || !(other.Arg(0).Resolve() == handle) ||
+			    !(other.Arg(1).Resolve() == low) || !(other.Arg(2).Resolve() == high) ||
+			    !(other.Arg(other.NumArgs() - 1).Resolve() == active)) {
+				continue;
+			}
+			const auto offset = static_cast<int32_t>(other_mem.offset);
+			if (std::ranges::any_of(members, [&](const Member& m) { return m.offset == offset; })) {
+				continue;
+			}
+			members.push_back({&other, offset});
+		}
+	}
+	const auto type    = TypeDeviceAddress(state);
+	const auto address = DeviceAddressFromWords(state, ctx.Arg(inst, 1), ctx.Arg(inst, 2));
+	if (members.size() == 1u) {
+		return LoadFlatDwordNullPage(ctx, ImmediateAddress(state, address, mem.offset), active_id, 32u);
+	}
+	int32_t imm_min = members[0].offset;
+	for (const auto& member: members) {
+		imm_min = std::min(imm_min, member.offset);
+	}
+	{
+		std::vector<Member> kept;
+		for (const auto& member: members) {
+			if (static_cast<int64_t>(member.offset) - imm_min + 8 <=
+			    static_cast<int64_t>(BufferCache::CACHING_PAGESIZE)) {
+				kept.push_back(member);
+			}
+		}
+		members.swap(kept);
+	}
+	std::vector<uint32_t> values(members.size(), 0u);
+	if (FlatGroupMode() == 1u) {
+		for (size_t i = 0; i < members.size(); i++) {
+			values[i] = LoadFlatDwordNullPage(
+			    ctx, ImmediateAddress(state, address, members[i].offset), active_id, 32u);
+		}
+	} else {
+		int32_t imm_max = imm_min;
+		for (const auto& member: members) {
+			imm_max = std::max(imm_max, member.offset);
+		}
+		// span covers the members plus one dword past the end (for the unaligned merge).
+		const auto span  = static_cast<uint64_t>(imm_max - imm_min) + 2u * sizeof(uint32_t);
+		const auto start = Binary(state, OpBitwiseAnd, type, ImmediateAddress(state, address, imm_min),
+		                          ConstantDeviceAddress(state, ~uint64_t {3}));
+		const auto page0 = GetBdaPointer(ctx, start, active_id);
+		const auto page1 = GetBdaPointer(
+		    ctx, Binary(state, OpIAdd, type, start, ConstantDeviceAddress(state, span)), active_id);
+		const auto page_offset = Binary(state, OpBitwiseAnd, type, start,
+		                                ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - 1));
+		const auto pointer_at = [&](uint64_t delta) {
+			const auto in_first = Binary(
+			    state, OpULessThan, TypeBool(state), page_offset,
+			    ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - delta));
+			const auto first  = delta == 0 ? page0
+			                               : Binary(state, OpIAdd, type, page0,
+			                                        ConstantDeviceAddress(state, delta));
+			const auto second = Binary(state, OpISub, type, page1,
+			                           ConstantDeviceAddress(state, span - delta));
+			return Select(state, type, in_first, first, second);
+		};
+		// Sorted member order for the neighbour merge.
+		std::vector<size_t> order(members.size());
+		for (size_t i = 0; i < order.size(); i++) {
+			order[i] = i;
+		}
+		std::ranges::sort(order,
+		                  [&](size_t a, size_t b) { return members[a].offset < members[b].offset; });
+		std::vector<uint32_t> raw(members.size(), 0u);
+		for (size_t i = 0; i < members.size(); i++) {
+			raw[i] = LoadBdaAt(ctx, pointer_at(static_cast<uint64_t>(members[i].offset - imm_min)));
+		}
+		const auto byte  = Binary(state, OpBitwiseAnd, TypeU32(state),
+		                          Unary(state, OpUConvert, TypeU32(state),
+		                                ImmediateAddress(state, address, imm_min)),
+		                          ConstantU32(state, 3));
+		const auto shift = Binary(state, OpShiftLeftLogical, TypeU32(state), byte,
+		                          ConstantU32(state, 3));
+		const auto upper_shift = Binary(
+		    state, OpShiftLeftLogical, TypeU32(state),
+		    Binary(state, OpBitwiseAnd, TypeU32(state),
+		           Binary(state, OpISub, TypeU32(state), ConstantU32(state, 4), byte),
+		           ConstantU32(state, 3)),
+		    ConstantU32(state, 3));
+		const auto aligned = Binary(state, OpIEqual, TypeBool(state), byte, ConstantU32(state, 0));
+		uint32_t   tail    = 0; // load one past the last member, shared by all who need it
+		for (size_t k = 0; k < order.size(); k++) {
+			const auto i    = order[k];
+			uint32_t   next = 0;
+			if (k + 1 < order.size() &&
+			    members[order[k + 1]].offset == members[i].offset + static_cast<int32_t>(sizeof(uint32_t))) {
+				next = raw[order[k + 1]];
+			} else if (k + 1 == order.size()) {
+				if (tail == 0) {
+					tail = LoadBdaAt(ctx, pointer_at(static_cast<uint64_t>(members[i].offset - imm_min) +
+					                                 sizeof(uint32_t)));
+				}
+				next = tail;
+			} else {
+				next = LoadBdaAt(ctx, pointer_at(static_cast<uint64_t>(members[i].offset - imm_min) +
+				                                 sizeof(uint32_t)));
+			}
+			const auto merged = Binary(
+			    state, OpBitwiseOr, TypeU32(state),
+			    Binary(state, OpShiftRightLogical, TypeU32(state), raw[i], shift),
+			    Binary(state, OpShiftLeftLogical, TypeU32(state), next, upper_shift));
+			values[i] = Select(state, TypeU32(state), aligned, raw[i], merged);
+		}
+	}
+	for (size_t i = 1; i < members.size(); i++) {
+		const auto masked = active_id == 0 ? values[i]
+		                                   : Select(state, TypeU32(state), active_id, values[i],
+		                                            ConstantU32(state, 0));
+		ctx.Define(*members[i].inst, masked);
+		ctx.grouped_loads.insert(members[i].inst);
+	}
+	return values[0];
+}
+
 uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
 	             uint32_t bits) {
 	auto&      state         = ctx.state;
@@ -528,6 +764,14 @@ uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryIn
 		// Null-page mode: the aligned dword loads unconditionally (inactive lanes read a valid
 		// page too and get masked); only the rare dword-crossing second load keeps a branch.
 		const auto active_id = always_active ? 0u : active;
+		if (bits == 32u && FlatGroupEnabled() && mem.kind == IR::ResourceKind::Flat &&
+		    mem.address_is_full && (mem.offset & 3u) == 0u) {
+			const auto value = LoadFlatBdaGroup(ctx, inst, mem, active_id);
+			if (always_active) {
+				return value;
+			}
+			return Select(state, TypeU32(state), active, value, ConstantU32(state, 0));
+		}
 		const auto aligned   = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), address,
 		                              ConstantDeviceAddress(state, ~uint64_t {3}));
 		const auto first     = LoadBdaAt(ctx, GetBdaPointer(ctx, aligned, active_id));

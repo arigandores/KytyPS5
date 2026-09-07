@@ -1,5 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 
+#include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
+
 #include "common/frameStats.h"
 
 #include "common/assert.h"
@@ -233,6 +235,7 @@ struct PipelineCache::ProgramCache {
 		ShaderRecompiler::IR::ResourceSpecialization specialization;
 		ShaderRecompiler::IR::CompiledShaderInfo     program;
 		ShaderProgram                                handle;
+		std::vector<uint32_t>                        spirv; // kept for the translation cache file
 	};
 
 	struct SourceEntry {
@@ -243,6 +246,7 @@ struct PipelineCache::ProgramCache {
 
 		ShaderRecompiler::IR::ResourcePlan resource_plan;
 		std::vector<Permutation>           permutations;
+		bool                               from_cache = false;
 	};
 
 	struct ProgramKeyHash {
@@ -318,7 +322,105 @@ struct PipelineCache::ProgramCache {
 		    .specialization = std::move(specialization),
 		    .program        = std::move(result.program).TakeCompiledInfo(),
 		    .handle         = {.id = ++next_shader_id, .module = module},
+		    .spirv          = translation_cache.Enabled() ? std::move(result.spirv)
+		                                                  : std::vector<uint32_t> {},
 		};
+	}
+
+	ShaderTranslationCache::Key CacheKey(const ProgramKey& key) const {
+		return {.stage           = static_cast<uint32_t>(key.stage),
+		        .hash            = key.hash,
+		        .user_data_count = key.user_data_count,
+		        .code_size       = key.code_size,
+		        .static_state    = key.static_state};
+	}
+
+	// Disk cache miss path: a translated program (plan + SPIR-V permutations) written earlier.
+	bool LoadFromTranslationCache(const ProgramKey& key,
+	                              std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::iterator& entry) {
+		if (!translation_cache.Enabled()) {
+			return false;
+		}
+		ShaderTranslationCache::Entry cached;
+		if (!translation_cache.Load(CacheKey(key), cached)) {
+			return false;
+		}
+		SourceEntry source(std::move(cached.plan));
+		for (auto& p: cached.permutations) {
+			vk::ShaderModuleCreateInfo create_info {};
+			create_info.sType       = vk::StructureType::eShaderModuleCreateInfo;
+			create_info.codeSize    = p.spirv.size() * sizeof(uint32_t);
+			create_info.pCode       = p.spirv.data();
+			vk::ShaderModule module = nullptr;
+			RequireVulkanSuccess(device.createShaderModule(&create_info, nullptr, &module),
+			                     "create cached shader module");
+			EXIT_IF(module == nullptr);
+			source.permutations.push_back({
+			    .specialization = std::move(p.specialization),
+			    .program        = std::move(p.program),
+			    .handle         = {.id = ++next_shader_id, .module = module},
+			    .spirv          = std::move(p.spirv),
+			});
+		}
+		source.from_cache = true;
+		entry             = programs.try_emplace(key, std::move(source)).first;
+		return true;
+	}
+
+	// KYTY_SHADER_CACHE_VERIFY=1: read the file back and check that the deserialized plan
+	// materializes to the same snapshot and specialization as the live one.
+	void VerifyTranslationCache(const ProgramKey& key, const ShaderRecompiler::IR::SrtRuntime& runtime,
+	                            const ShaderRecompiler::IR::ResourceSnapshot&       resources,
+	                            const ShaderRecompiler::IR::ResourceSpecialization& specialization) {
+		static const bool verify = std::getenv("KYTY_SHADER_CACHE_VERIFY") != nullptr;
+		if (!verify || !translation_cache.Enabled()) {
+			return;
+		}
+		ShaderTranslationCache::Entry cached;
+		if (!translation_cache.Load(CacheKey(key), cached)) {
+			LOGF("ShaderCacheVerify: hash=0x%016" PRIx64 " reload failed\n", key.hash);
+			return;
+		}
+		ShaderRecompiler::IR::ResourceSnapshot       resources2;
+		ShaderRecompiler::IR::ResourceSpecialization specialization2;
+		if (!ShaderRecompiler::IR::MaterializeResources(cached.plan, runtime, resources2,
+		                                                specialization2)) {
+			LOGF("ShaderCacheVerify: hash=0x%016" PRIx64 " materialization FAILED\n", key.hash);
+			return;
+		}
+		const bool same = specialization2 == specialization && resources2.buffers == resources.buffers &&
+		                  resources2.images == resources.images &&
+		                  resources2.samplers == resources.samplers &&
+		                  resources2.flattened_srt == resources.flattened_srt &&
+		                  resources2.user_data == resources.user_data;
+		LOGF("ShaderCacheVerify: hash=0x%016" PRIx64 " %s (values=%zu perms=%zu)\n", key.hash,
+		     same ? "ok" : "MISMATCH", cached.plan.value_storage.size(), cached.permutations.size());
+	}
+
+	void SaveToTranslationCache(const ProgramKey& key, const SourceEntry& source) {
+		if (!translation_cache.Enabled()) {
+			return;
+		}
+		std::vector<ShaderTranslationCache::Permutation> permutations;
+		permutations.reserve(source.permutations.size());
+		for (const auto& p: source.permutations) {
+			if (p.spirv.empty()) {
+				continue;
+			}
+			permutations.push_back({.specialization = p.specialization,
+			                        .program        = p.program,
+			                        .spirv          = p.spirv});
+		}
+		if (permutations.empty()) {
+			return;
+		}
+		const auto t0 = HostMicros();
+		const bool ok = translation_cache.Save(CacheKey(key), source.resource_plan, permutations);
+		if (AvTraceEnabled() || !ok) {
+			LOGF("AvTrace: shader-cache save hash=0x%016" PRIx64 " permutations=%zu ok=%d us=%" PRIu64
+			     "\n",
+			     key.hash, permutations.size(), ok ? 1 : 0, HostMicros() - t0);
+		}
 	}
 
 	template <typename InputInfo>
@@ -342,6 +444,15 @@ struct PipelineCache::ProgramCache {
 		lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
 		BuildStageStaticKey(input_info, lookup_key.static_state);
 		auto                                         entry = programs.find(lookup_key);
+		if (entry == programs.end()) {
+			LibKernel::KernelTimeFreezeScope load_freeze;
+			const auto                       load_begin = HostMicros();
+			if (LoadFromTranslationCache(lookup_key, entry) && AvTraceEnabled()) {
+				LOGF("AvTrace: shader-cache load hash=0x%016" PRIx64 " permutations=%zu us=%" PRIu64
+				     "\n",
+				     params.hash, entry->second.permutations.size(), HostMicros() - load_begin);
+			}
+		}
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
 		ShaderRecompiler::IR::ResourceSnapshot       resources;
 		ShaderRecompiler::IR::ResourceSpecialization specialization;
@@ -353,9 +464,24 @@ struct PipelineCache::ProgramCache {
 		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
+		if (entry != programs.end() &&
+		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
+		                                                resources, specialization)) {
+			if (!entry->second.from_cache) {
+				EXIT("shader resource materialization failed hash=0x%016" PRIx64 "\n", params.hash);
+			}
+			// A cached plan that does not materialize: drop it and translate the shader again.
+			LOGF("Shader translation cache: dropping hash=0x%016" PRIx64 " (materialization failed)\n",
+			     params.hash);
+			for (const auto& permutation: entry->second.permutations) {
+				device.destroyShaderModule(permutation.handle.module, nullptr);
+			}
+			programs.erase(entry);
+			entry = programs.end();
+			resources = {};
+			specialization = {};
+		}
 		if (entry != programs.end()) {
-			EXIT_IF(!ShaderRecompiler::IR::MaterializeResources(
-			    entry->second.resource_plan, runtime, resources, specialization));
 			lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
 			if (const auto permutation = std::ranges::find_if(
 			        entry->second.permutations, [&](const Permutation& candidate) {
@@ -423,7 +549,9 @@ struct PipelineCache::ProgramCache {
 		}
 		entry->second.permutations.push_back(CompilePermutation<stage>(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
+		SaveToTranslationCache(entry->first, entry->second);
 		const auto& permutation = entry->second.permutations.back();
+		VerifyTranslationCache(entry->first, runtime, resources, permutation.specialization);
 		input_info.stage = {.program = &permutation.program, .resources = std::move(resources)};
 		permutation.program.bindings.AdvancePushData(push_data_cursor);
 
@@ -437,7 +565,8 @@ struct PipelineCache::ProgramCache {
 		return permutation.handle;
 	}
 
-	explicit ProgramCache(vk::Device device): device(device) {
+	explicit ProgramCache(vk::Device device)
+	    : device(device), translation_cache(PipelineCacheTitleId()) {
 		lookup_key.static_state.reserve(MaxStaticKeyWords);
 	}
 	~ProgramCache() {
@@ -452,6 +581,7 @@ struct PipelineCache::ProgramCache {
 	std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash> programs;
 	ProgramKey                                                  lookup_key;
 	vk::Device                                                  device;
+	ShaderTranslationCache                                      translation_cache;
 	uint32_t                                                    num_compiled   = 0;
 	uint64_t                                                    next_shader_id = 0;
 };

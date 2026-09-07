@@ -5,6 +5,8 @@
 #define KYTY_GIT_HASH "@KYTY_GIT_HASH@"
 // Full commit identity used for compatibility checks.
 #define KYTY_GIT_REVISION "@KYTY_GIT_REVISION@"
+// Content hash of src/graphics/shader (the translator): key of the shader translation cache.
+#define KYTY_SHADER_SOURCE_HASH "@KYTY_SHADER_SOURCE_HASH@"
 
 /* Build provenance, shown in the window title and in crash reports. */
 #if defined(KYTY_OFFICIAL_BUILD)

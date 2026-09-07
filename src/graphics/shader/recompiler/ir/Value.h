@@ -30,6 +30,9 @@ public:
 
 	static Value F16(uint16_t bits);
 	static Value F32(float value);
+	// Serialization (shader translation cache): an immediate as (type, payload bits).
+	static Value             FromBits(Type type, uint64_t bits);
+	[[nodiscard]] uint64_t   Bits() const { return imm_u64; }
 
 	[[nodiscard]] bool IsEmpty() const;
 	[[nodiscard]] bool IsImmediate() const;

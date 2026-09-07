@@ -25,6 +25,10 @@ Value Value::F32(float value) {
 	return Value(Type::F32, std::bit_cast<uint32_t>(value));
 }
 
+Value Value::FromBits(Type type, uint64_t bits) {
+	return Value(type, bits);
+}
+
 bool Value::IsEmpty() const {
 	return type == Type::Void;
 }

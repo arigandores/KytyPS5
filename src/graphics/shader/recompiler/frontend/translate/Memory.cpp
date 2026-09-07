@@ -853,6 +853,21 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	    ir.LogicalAnd(ir.INotEqual(ir.BitwiseAnd(desc1, U32C(0x80000000u)), U32C(0u)),
 	                  ir.INotEqual(sort_mode, U32C(3u)));
 
+	// KYTY_BVH_NATIVE=0: the IR expansion below (every node type evaluated, selected at the
+	// end). Default: one opcode, the SPIR-V backend branches on the node type.
+	static const bool native_bvh = [] {
+		const char* value = std::getenv("KYTY_BVH_NATIVE");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (native_bvh) {
+		const auto result = ir.Emit(IR::ValueOpcode::BvhIntersectRay,
+		                            {node_lo, node_hi, extent, origin[0], origin[1], origin[2],
+		                             dir[0], dir[1], dir[2], inv_dir[0], inv_dir[1], inv_dir[2],
+		                             desc0, desc1, ir.GetExec()});
+		WriteImageComponents(inst.dst, result, memory, 4u);
+		return true;
+	}
+
 	// --- Node address: the node pointer holds the node type in bits [2:0] and the offset in
 	// 64-byte units in bits [31:3]; the hardware computes (base >> 3) + pointer, then << 3.
 	const IR::U32 node_type = ir.BitwiseAnd(node_lo, U32C(7u));

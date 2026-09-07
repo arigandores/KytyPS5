@@ -292,3 +292,9 @@ VALUE_OPCODE(Sendmsg, Void)
 VALUE_OPCODE(TtraceData, Void)
 VALUE_OPCODE(InstPrefetch, Void)
 VALUE_OPCODE(SelectU32, U32, U1, U32, U32)
+
+// Appended last: translation-cache plans store opcode numbers.
+// RDNA2 IMAGE_BVH_INTERSECT_RAY: node_lo, node_hi, extent, origin xyz, dir xyz, inv_dir xyz,
+// descriptor dwords 0-1, exec. Reads the node through the BDA page table (uses_dma).
+VALUE_OPCODE(BvhIntersectRay, U32x4, U32, U32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32,
+             U32, U32, U1)

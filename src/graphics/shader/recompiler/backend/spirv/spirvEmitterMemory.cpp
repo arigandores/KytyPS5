@@ -1775,9 +1775,317 @@ void DefineGetBdaPointer(EmitterState& state) {
 	state.builder.AddFunction({OpFunctionEnd});
 }
 
+
+// IMAGE_BVH_INTERSECT_RAY (BvhIntersectRay): the node type selects one of three structured
+// branches -- fp16 box node (64 bytes), fp32 box node (128 bytes), triangle node (64 bytes) --
+// so only its loads and math run; a fourth branch yields invalid children. Node addresses are
+// multiples of 64 by the pointer encoding, so every 64-byte half is one page lookup and four
+// 128-bit loads. The math follows the IR version in frontend/translate/Memory.cpp (GPURT
+// IntersectNodeBvh4 / fast_intersect_triangle); min/max are EmitMinMaxF32Value (NaN-suppressing
+// like the HLSL reference), so the explicit NaN selects of the IR version are not needed.
+uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
+	auto&      state = ctx.state;
+	const auto f32t  = TypeF32(state);
+	const auto u32t  = TypeU32(state);
+	const auto boolt = TypeBool(state);
+	const auto addrt = TypeDeviceAddress(state);
+	const auto arg   = [&](size_t index) { return ctx.Arg(inst, index); };
+	const auto node_lo = arg(0);
+	const auto node_hi = arg(1);
+	const auto extent  = arg(2);
+	const std::array<uint32_t, 3> origin {arg(3), arg(4), arg(5)};
+	const std::array<uint32_t, 3> dir {arg(6), arg(7), arg(8)};
+	const std::array<uint32_t, 3> inv_dir {arg(9), arg(10), arg(11)};
+	const auto desc0  = arg(12);
+	const auto desc1  = arg(13);
+	const auto active = arg(14);
+	const bool node64 = !inst.Arg(1).IsImmediate() || inst.Arg(1).U32() != 0u;
+
+	constexpr uint32_t InvalidNode = 0xffffffffu;
+	constexpr float    Infinity    = std::numeric_limits<float>::infinity();
+	const auto U    = [&](uint32_t v) { return ConstantU32(state, v); };
+	const auto F    = [&](float v) { return ConstantF32Value(state, v); };
+	const auto fadd = [&](uint32_t a, uint32_t b) { return Binary(state, OpFAdd, f32t, a, b); };
+	const auto fsub = [&](uint32_t a, uint32_t b) { return Binary(state, OpFSub, f32t, a, b); };
+	const auto fmul = [&](uint32_t a, uint32_t b) { return Binary(state, OpFMul, f32t, a, b); };
+	const auto fmin = [&](uint32_t a, uint32_t b) { return EmitMinMaxF32Value(state, a, b, false); };
+	const auto fmax = [&](uint32_t a, uint32_t b) { return EmitMinMaxF32Value(state, a, b, true); };
+	const auto flt  = [&](uint32_t a, uint32_t b) { return Binary(state, OpFOrdLessThan, boolt, a, b); };
+	const auto fle  = [&](uint32_t a, uint32_t b) { return Binary(state, OpFOrdLessThanEqual, boolt, a, b); };
+	const auto fge  = [&](uint32_t a, uint32_t b) { return Binary(state, OpFOrdGreaterThanEqual, boolt, a, b); };
+	const auto fgt  = [&](uint32_t a, uint32_t b) { return Binary(state, OpFOrdGreaterThan, boolt, a, b); };
+	const auto fnan = [&](uint32_t a) { return Unary(state, OpIsNan, boolt, a); };
+	const auto fsel = [&](uint32_t c, uint32_t a, uint32_t b) { return Select(state, f32t, c, a, b); };
+	const auto usel = [&](uint32_t c, uint32_t a, uint32_t b) { return Select(state, u32t, c, a, b); };
+	const auto lor  = [&](uint32_t a, uint32_t b) { return Binary(state, OpLogicalOr, boolt, a, b); };
+	const auto land = [&](uint32_t a, uint32_t b) { return Binary(state, OpLogicalAnd, boolt, a, b); };
+	const auto f32  = [&](uint32_t v) { return Unary(state, OpBitcast, f32t, v); };
+	const auto u32  = [&](uint32_t v) { return Unary(state, OpBitcast, u32t, v); };
+	const auto ieq  = [&](uint32_t a, uint32_t b) { return Binary(state, OpIEqual, boolt, a, b); };
+	const auto ine  = [&](uint32_t a, uint32_t b) { return Binary(state, OpINotEqual, boolt, a, b); };
+	// NaN-suppressing min/max (EmitMinMaxF32Value returns the other operand for a NaN input).
+	const auto nmax = fmax;
+	const auto nmin = fmin;
+	using Vec3      = std::array<uint32_t, 3>;
+	const auto vsub = [&](const Vec3& a, const Vec3& b) {
+		return Vec3 {fsub(a[0], b[0]), fsub(a[1], b[1]), fsub(a[2], b[2])};
+	};
+	const auto cross = [&](const Vec3& a, const Vec3& b) {
+		return Vec3 {fsub(fmul(a[1], b[2]), fmul(a[2], b[1])),
+		             fsub(fmul(a[2], b[0]), fmul(a[0], b[2])),
+		             fsub(fmul(a[0], b[1]), fmul(a[1], b[0]))};
+	};
+	const auto dot = [&](const Vec3& a, const Vec3& b) {
+		return fadd(fmul(a[0], b[0]), fadd(fmul(a[1], b[1]), fmul(a[2], b[2])));
+	};
+	const auto half2 = [&](uint32_t word) {
+		const auto vec = state.builder.AllocateId();
+		state.builder.AddFunction({OpExtInst, TypeF32Vector(state, 2), vec, GlslStd450(state),
+		                           GlslUnpackHalf2x16, word});
+		const auto lo = state.builder.AllocateId();
+		state.builder.AddFunction({OpCompositeExtract, f32t, lo, vec, 0u});
+		const auto hi = state.builder.AllocateId();
+		state.builder.AddFunction({OpCompositeExtract, f32t, hi, vec, 1u});
+		return std::pair {lo, hi};
+	};
+
+	// --- Descriptor: box sort heuristic (dword1[22:21]), grow (dword1[30:23]), sort enable (31).
+	const auto bfe = [&](uint32_t v, uint32_t offset, uint32_t count) {
+		const auto r = state.builder.AllocateId();
+		state.builder.AddFunction({OpBitFieldUExtract, u32t, r, v, U(offset), U(count)});
+		return r;
+	};
+	const auto box_grow     = bfe(desc1, 23u, 8u);
+	const auto sort_mode    = bfe(desc1, 21u, 2u);
+	const auto sort_enabled = land(ine(Binary(state, OpBitwiseAnd, u32t, desc1, U(0x80000000u)), U(0)),
+	                               ine(sort_mode, U(3u)));
+	const auto grow_factor  = fadd(F(1.0f), fmul(Unary(state, OpConvertUToF, f32t, box_grow),
+	                                              F(5.960464478e-8f)));
+	const auto sort_largest  = ieq(sort_mode, U(1u));
+	const auto sort_midpoint = ieq(sort_mode, U(2u));
+
+	// --- Node address: type in bits [2:0], 64-byte offset in [31:3]; (base >> 3) + ptr, << 3.
+	const auto node_type = Binary(state, OpBitwiseAnd, u32t, node_lo, U(7u));
+	const auto node_off  = Binary(state, OpBitwiseAnd, u32t, node_lo, U(~7u));
+	uint32_t   node_addr = 0;
+	if (node64) {
+		node_addr = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, node_hi),
+		                   ConstantDeviceAddress(state, 3));
+	} else {
+		const auto base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu)));
+		const auto off  = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, U(0)),
+		                         ConstantDeviceAddress(state, 3));
+		node_addr       = Binary(state, OpIAdd, addrt, base, off);
+	}
+	const auto is_box16 = ieq(node_type, U(4u));
+	const auto is_box32 = ieq(node_type, U(5u));
+	const auto is_tri   = Binary(state, OpULessThan, boolt, node_type, U(2u));
+	const auto is_tri1  = ieq(node_type, U(1u));
+
+	// --- Loads: `dwords` consecutive dwords from `address` (64-byte aligned) as 128-bit loads.
+	const auto vec4t   = TypeU32Vector(state, 4);
+	const auto vec4ptr = TypePointer(state, StorageClassPhysicalStorageBuffer, vec4t);
+	const auto load_half = [&](uint32_t address, uint32_t dwords, std::vector<uint32_t>& out) {
+		const auto page = GetBdaPointer(ctx, address, active);
+		if (!BdaNullPageEnabled()) {
+			// Pointer mode: a missing page is a null pointer, LoadBdaAt branches on it per dword.
+			for (uint32_t i = 0; i < dwords; i++) {
+				out.push_back(LoadBdaAt(ctx, i == 0 ? page : Binary(state, OpIAdd, addrt, page, ConstantDeviceAddress(state, i * 4u))));
+			}
+			return;
+		}
+		for (uint32_t i = 0; i < dwords; i += 4u) {
+			const auto ptr = i == 0 ? page : Binary(state, OpIAdd, addrt, page, ConstantDeviceAddress(state, i * 4u));
+			const auto typed = state.builder.AllocateId();
+			state.builder.AddFunction({OpConvertUToPtr, vec4ptr, typed, ptr});
+			const auto vec = state.builder.AllocateId();
+			state.builder.AddFunction({OpLoad, vec4t, vec, typed, MemoryAccessAlignedMask, 16u});
+			for (uint32_t k = 0; k < 4u; k++) {
+				const auto element = state.builder.AllocateId();
+				state.builder.AddFunction({OpCompositeExtract, u32t, element, vec, k});
+				out.push_back(element);
+			}
+		}
+	};
+
+	struct BoxHit {
+		uint32_t min_t, max_t, min_of, max_of;
+	};
+	const auto intersect_box = [&](const Vec3& box_min, const Vec3& box_max) {
+		Vec3 interval_min {}, interval_max {};
+		for (uint32_t axis = 0; axis < 3u; axis++) {
+			const auto t_min    = fmul(fsub(box_min[axis], origin[axis]), inv_dir[axis]);
+			const auto t_max    = fmul(fsub(box_max[axis], origin[axis]), inv_dir[axis]);
+			const auto positive = fge(inv_dir[axis], F(0.0f));
+			interval_min[axis]  = fsel(positive, t_min, t_max);
+			interval_max[axis]  = fsel(positive, t_max, t_min);
+		}
+		auto       min_of = nmax(nmax(interval_min[0], interval_min[1]), interval_min[2]);
+		auto       max_of = nmin(nmin(interval_max[0], interval_max[1]), interval_max[2]);
+		const auto nan    = lor(fnan(min_of), fnan(max_of));
+		const auto min_t  = fsel(nan, F(Infinity), nmax(min_of, F(0.0f)));
+		const auto max_t  = fsel(nan, F(-Infinity), nmin(max_of, extent));
+		min_of            = fsel(fnan(min_of), F(0.0f), min_of);
+		max_of            = fsel(fnan(max_of), F(Infinity), max_of);
+		return BoxHit {min_t, max_t, min_of, max_of};
+	};
+	const auto box_children = [&](const std::array<BoxHit, 4>& hits, const std::vector<uint32_t>& d) {
+		std::array<uint32_t, 4> child {};
+		std::array<uint32_t, 4> key {};
+		for (uint32_t index = 0; index < 4u; index++) {
+			const auto hit  = fle(hits[index].min_t, fmul(hits[index].max_t, grow_factor));
+			child[index]    = usel(hit, d[index], U(InvalidNode));
+			const auto closest  = hits[index].min_t;
+			const auto largest  = fsub(hits[index].min_t, hits[index].max_t);
+			const auto midpoint = fadd(hits[index].min_of, hits[index].max_of);
+			key[index] = fsel(sort_largest, largest, fsel(sort_midpoint, midpoint, closest));
+		}
+		auto       sorted_child = child;
+		auto       sorted_key   = key;
+		const auto sort2        = [&](uint32_t a, uint32_t b) {
+			const auto swap = lor(land(ine(sorted_child[b], U(InvalidNode)), flt(sorted_key[b], sorted_key[a])),
+			                      ieq(sorted_child[a], U(InvalidNode)));
+			const auto new_a = usel(swap, sorted_child[b], sorted_child[a]);
+			const auto new_b = usel(swap, sorted_child[a], sorted_child[b]);
+			const auto key_a = fsel(swap, sorted_key[b], sorted_key[a]);
+			const auto key_b = fsel(swap, sorted_key[a], sorted_key[b]);
+			sorted_child[a]  = new_a;
+			sorted_child[b]  = new_b;
+			sorted_key[a]    = key_a;
+			sorted_key[b]    = key_b;
+		};
+		sort2(0, 2);
+		sort2(1, 3);
+		sort2(0, 1);
+		sort2(2, 3);
+		sort2(1, 2);
+		for (uint32_t index = 0; index < 4u; index++) {
+			child[index] = usel(sort_enabled, sorted_child[index], child[index]);
+		}
+		return child;
+	};
+
+	// if (cond) then_fn() else else_fn(), four values merged by phi.
+	using Result = std::array<uint32_t, 4>;
+	const auto branch = [&](uint32_t cond, auto&& then_fn, auto&& else_fn) -> Result {
+		const auto then_label  = state.builder.AllocateId();
+		const auto else_label  = state.builder.AllocateId();
+		const auto merge_label = state.builder.AllocateId();
+		state.builder.AddFunction({OpSelectionMerge, merge_label, SelectionControlNone});
+		state.builder.AddFunction({OpBranchConditional, cond, then_label, else_label});
+		EmitLabel(state, then_label);
+		const Result then_values = then_fn();
+		const auto   then_exit   = state.current_label;
+		state.builder.AddFunction({OpBranch, merge_label});
+		EmitLabel(state, else_label);
+		const Result else_values = else_fn();
+		const auto   else_exit   = state.current_label;
+		state.builder.AddFunction({OpBranch, merge_label});
+		EmitLabel(state, merge_label);
+		Result out {};
+		for (uint32_t i = 0; i < 4u; i++) {
+			out[i] = state.builder.AllocateId();
+			state.builder.AddFunction({OpPhi, u32t, out[i], then_values[i], then_exit, else_values[i], else_exit});
+		}
+		return out;
+	};
+
+	const auto box16_node = [&]() -> Result {
+		std::vector<uint32_t> d;
+		load_half(node_addr, 16u, d);
+		std::array<BoxHit, 4> hits {};
+		for (uint32_t index = 0; index < 4u; index++) {
+			const uint32_t at = 4u + index * 3u;
+			const auto [a_lo, a_hi] = half2(d[at]);
+			const auto [b_lo, b_hi] = half2(d[at + 1u]);
+			const auto [c_lo, c_hi] = half2(d[at + 2u]);
+			hits[index] = intersect_box({a_lo, a_hi, b_lo}, {b_hi, c_lo, c_hi});
+		}
+		return box_children(hits, d);
+	};
+	const auto box32_node = [&]() -> Result {
+		std::vector<uint32_t> d;
+		load_half(node_addr, 16u, d);
+		load_half(Binary(state, OpIAdd, addrt, node_addr, ConstantDeviceAddress(state, 64)), 12u, d);
+		std::array<BoxHit, 4> hits {};
+		for (uint32_t index = 0; index < 4u; index++) {
+			const uint32_t at = 4u + index * 6u;
+			hits[index] = intersect_box({f32(d[at]), f32(d[at + 1u]), f32(d[at + 2u])},
+			                            {f32(d[at + 3u]), f32(d[at + 4u]), f32(d[at + 5u])});
+		}
+		return box_children(hits, d);
+	};
+	const auto triangle_node = [&]() -> Result {
+		std::vector<uint32_t> d;
+		load_half(node_addr, 16u, d);
+		const auto vertex = [&](uint32_t index) {
+			return Vec3 {f32(d[index * 3u]), f32(d[index * 3u + 1u]), f32(d[index * 3u + 2u])};
+		};
+		const auto vsel = [&](uint32_t c, const Vec3& a, const Vec3& b) {
+			return Vec3 {fsel(c, a[0], b[0]), fsel(c, a[1], b[1]), fsel(c, a[2], b[2])};
+		};
+		const Vec3 v0    = vertex(0);
+		const Vec3 v1    = vertex(1);
+		const Vec3 v2    = vertex(2);
+		const Vec3 v3    = vertex(3);
+		const Vec3 tri_a = vsel(is_tri1, v1, v0);
+		const Vec3 tri_b = vsel(is_tri1, v3, v1);
+		const Vec3 tri_c = v2;
+		const Vec3 e1    = vsub(tri_b, tri_a);
+		const Vec3 e2    = vsub(tri_c, tri_a);
+		const Vec3 e3    = vsub(origin, tri_a);
+		const Vec3 s1    = cross(dir, e2);
+		const Vec3 s2    = cross(e3, e1);
+		const auto rx    = dot(e2, s2);
+		const auto ry    = dot(s1, e1);
+		const auto rz    = dot(e3, s1);
+		const auto rw    = dot(dir, s2);
+		const auto inv_ry = Binary(state, OpFDiv, f32t, F(1.0f), ry);
+		const auto t      = fmul(rx, inv_ry);
+		const auto u      = fmul(rz, inv_ry);
+		const auto v      = fmul(rw, inv_ry);
+		auto missed = lor(flt(u, F(0.0f)), fgt(u, F(1.0f)));
+		missed      = lor(missed, flt(v, F(0.0f)));
+		missed      = lor(missed, fgt(fadd(u, v), F(1.0f)));
+		missed      = lor(missed, flt(t, F(0.0f)));
+		const auto tri_x = fsel(missed, F(Infinity), rx);
+		const auto tri_y = fsel(missed, F(1.0f), ry);
+		const auto triangle_id = d[15];
+		const auto id_shift    = Binary(state, OpShiftLeftLogical, u32t, node_type, U(3u));
+		const auto bary0       = fsub(fsub(tri_y, rz), rw);
+		const auto pick_bary   = [&](uint32_t extra_shift) {
+			const auto index = Binary(
+			    state, OpBitwiseAnd, u32t,
+			    Binary(state, OpShiftRightLogical, u32t, triangle_id,
+			           Binary(state, OpIAdd, u32t, id_shift, U(extra_shift))),
+			    U(3u));
+			return fsel(ieq(index, U(0u)), bary0,
+			            fsel(ieq(index, U(1u)), rz, fsel(ieq(index, U(2u)), rw, F(0.0f))));
+		};
+		return Result {u32(tri_x), u32(tri_y), u32(pick_bary(0u)), u32(pick_bary(2u))};
+	};
+	const auto invalid_node = [&]() -> Result {
+		return Result {U(InvalidNode), U(InvalidNode), U(InvalidNode), U(InvalidNode)};
+	};
+
+	const Result result = branch(
+	    is_box16, box16_node, [&]() -> Result {
+		    return branch(is_box32, box32_node, [&]() -> Result {
+			    return branch(is_tri, triangle_node, invalid_node);
+		    });
+	    });
+	const auto vec = state.builder.AllocateId();
+	state.builder.AddFunction({OpCompositeConstruct, vec4t, vec, result[0], result[1], result[2], result[3]});
+	return vec;
+}
+
 bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst) {
 	auto&      state             = ctx.state;
 	const auto op                = inst.GetOpcode();
+	if (op == IR::ValueOpcode::BvhIntersectRay) {
+		ctx.Define(inst, EmitBvhIntersectRay(ctx, inst));
+		return true;
+	}
 	const auto buffer_components = IR::BufferComponentCount(op);
 	if (buffer_components > 1u) {
 		const auto access = IR::BufferAccessOf(op);

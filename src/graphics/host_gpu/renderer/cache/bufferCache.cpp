@@ -8,6 +8,7 @@
 
 #include "common/assert.h"
 #include "common/frameStats.h"
+#include "common/parallelCopy.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/guest_gpu/graphicsRun.h"
@@ -621,9 +622,20 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 	}
 
 	auto [staging, stage_offset] = m_staging_buffer.Map(size, 16);
-	if (staging == nullptr || (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
-	                           !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size))) {
-		EXIT("BufferCache: failed to read mapped guest image backing\n");
+	if (staging == nullptr) {
+		EXIT("BufferCache: failed to map staging for a guest image\n");
+	}
+	{
+		Common::FrameStats::Scope copy_scope(Common::FrameStats::Counter::ImgCopyNs);
+		const void*               backing = nullptr;
+		if (size >= Common::PARALLEL_COPY_MIN_BYTES &&
+		    Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+			// Large image inside one mapping: spread the copy over the worker pool.
+			Common::ParallelMemcpy(staging, backing, static_cast<size_t>(size));
+		} else if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
+		           !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
+			EXIT("BufferCache: failed to read mapped guest image backing\n");
+		}
 	}
 	m_staging_buffer.Commit();
 	// Debug aid: KYTY_DUMP_TEX=<hex guest address> saves the staging copy of that image source to

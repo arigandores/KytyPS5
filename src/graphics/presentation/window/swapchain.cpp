@@ -14,6 +14,7 @@
 #include "graphics/presentation/imeOverlay.h"
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/videoOut.h"
+#include "graphics/presentation/window/screenshot.h"
 #include "graphics/presentation/window/windowInternal.h"
 
 #include <algorithm>
@@ -327,7 +328,8 @@ private:
 struct Presenter::Impl {
 	explicit Impl(WindowContext& owner)
 	    : renderer(*owner.render_context), window(owner), swapchain(owner),
-	      present_scheduler(renderer, owner.graphic_ctx), frames(owner, present_scheduler) {
+	      present_scheduler(renderer, owner.graphic_ctx), frames(owner, present_scheduler),
+	      screenshot(owner.graphic_ctx, present_scheduler) {
 		EXIT_IF(owner.render_context == nullptr);
 		swapchain.Create();
 		frames.Initialize(swapchain.ImageCount(), swapchain.Format());
@@ -366,6 +368,7 @@ struct Presenter::Impl {
 	Swapchain             swapchain;
 	CommandScheduler      present_scheduler;
 	FramePool             frames;
+	ScreenshotGrabber     screenshot;
 	std::atomic<uint64_t> presented_ime_revision {0};
 };
 
@@ -782,6 +785,7 @@ void Presenter::Present(Frame& frame, bool reuse) {
 
 	const auto ime_visual = GetImeVisualState();
 	auto&      swapchain  = m_impl->swapchain;
+	const bool screenshot = m_impl->screenshot.Poll();
 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
 		auto status = swapchain.AcquireNextImage();
 		if (status != Swapchain::Status::Success) {
@@ -792,6 +796,9 @@ void Presenter::Present(Frame& frame, bool reuse) {
 			Common::LockGuard render_lock(m_impl->renderer.GetMutex());
 			auto&             command          = m_impl->present_scheduler.BeginCommand();
 			const bool        draw_ime_overlay = ime_visual.active && swapchain.PrepareImeOverlay();
+			if (screenshot) {
+				m_impl->screenshot.Record(command, frame.image);
+			}
 			swapchain.RecordPresentCommands(command, frame.image, draw_ime_overlay);
 			frame.present_tick = swapchain.Submit(m_impl->present_scheduler);
 		}
@@ -799,6 +806,9 @@ void Presenter::Present(Frame& frame, bool reuse) {
 		if (status != Swapchain::Status::Success) {
 			m_impl->RecoverSwapchain(status);
 			continue;
+		}
+		if (screenshot) {
+			m_impl->screenshot.Finish(frame.present_tick);
 		}
 
 		m_impl->presented_ime_revision.store(ime_visual.revision, std::memory_order_release);

@@ -300,6 +300,8 @@ enum : uint32_t {
 	GlslInverseSqrt     = 32,
 	GlslFMin            = 37,
 	GlslFMax            = 40,
+	GlslNMin            = 79,
+	GlslNMax            = 80,
 	GlslFClamp          = 43,
 	GlslLdexp           = 53,
 	GlslFma             = 50,

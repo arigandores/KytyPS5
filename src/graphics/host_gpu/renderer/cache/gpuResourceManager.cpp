@@ -26,18 +26,29 @@ bool GpuResourceManager::HandleFault(PageFaultAccess access, uint64_t fault_vadd
 	}
 	// KYTY_FAULT_TRACE=1: log CPU page faults on GPU-tracked memory (address, access).
 	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
-	if (trace) {
-		static std::atomic<uint64_t> count {0};
-		const auto n = count.fetch_add(1, std::memory_order_relaxed);
-		if (n < 5000000) {
-			LOGF("FaultTrace: %s addr=0x%016" PRIx64 " n=%" PRIu64 "\n",
-			     access == PageFaultAccess::Write ? "write" : "read ", fault_vaddr, n);
-		}
-	}
 	if (access == PageFaultAccess::Write) {
+		const auto t0 = trace ? Common::FrameStats::NowNs() : 0;
 		m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);
+		const auto t1 = trace ? Common::FrameStats::NowNs() : 0;
 		m_texture_cache.InvalidateMemory(fault_vaddr, fault_size);
+		if (trace) {
+			static std::atomic<uint64_t> count {0};
+			const auto n = count.fetch_add(1, std::memory_order_relaxed);
+			if (n < 3000000) {
+				const auto t2 = Common::FrameStats::NowNs();
+				LOGF("FaultTrace: write addr=0x%016" PRIx64 " n=%" PRIu64 " buf_us=%llu tex_us=%llu" "\n",
+				     fault_vaddr, n, static_cast<unsigned long long>((t1 - t0) / 1000u),
+				     static_cast<unsigned long long>((t2 - t1) / 1000u));
+			}
+		}
 	} else {
+		if (trace) {
+			static std::atomic<uint64_t> count {0};
+			const auto n = count.fetch_add(1, std::memory_order_relaxed);
+			if (n < 3000000) {
+				LOGF("FaultTrace: read  addr=0x%016" PRIx64 " n=%" PRIu64 "\n", fault_vaddr, n);
+			}
+		}
 		m_buffer_cache.ReadMemory(fault_vaddr, fault_size);
 		if (trace) {
 			// What the CPU is about to read, after the download.

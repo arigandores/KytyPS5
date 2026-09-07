@@ -6,6 +6,7 @@
 
 #include <atomic>
 #include <cstdio>
+#include <cstdlib>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #include <windows.h> // IWYU pragma: keep
@@ -90,9 +91,23 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 
 	const auto handler = g_handler.load(std::memory_order_acquire);
 	if (handler != nullptr) {
-		const auto t0       = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+		// KYTY_FAULT_TRACE=1: every resolved fault, all threads (host tid, RIP, address, time).
+		static const bool fault_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+		const auto t0       = (Common::FrameStats::Enabled() || fault_trace) ? Common::FrameStats::NowNs() : 0;
 		const bool resolved = handler(info);
-		if (t0 != 0) {
+		if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 3000000) {
+				const auto ns = Common::FrameStats::NowNs() - t0;
+				LOGF("FaultTrace-t: tid=%lu rip=0x%llx addr=0x%016llx access=%d us=%llu ok=%d" "\n",
+				     static_cast<unsigned long>(GetCurrentThreadId()),
+				     static_cast<unsigned long long>(info.exception_address),
+				     static_cast<unsigned long long>(info.access_violation_vaddr),
+				     static_cast<int>(info.access_violation_type),
+				     static_cast<unsigned long long>(ns / 1000u), resolved ? 1 : 0);
+			}
+		}
+		if (t0 != 0 && Common::FrameStats::Enabled()) {
 			const auto ns = Common::FrameStats::NowNs() - t0;
 			Common::FrameStats::Add(Common::FrameStats::Counter::FaultNs, ns);
 			Common::FrameStats::Add(Common::FrameStats::Counter::Faults, 1);

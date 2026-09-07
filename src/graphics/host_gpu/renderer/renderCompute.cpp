@@ -671,7 +671,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	auto& pipeline =
 	    m_context.GetPipelineCache().CreateComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
-	auto bindings = PrepareBindings(input_info.stage);
+	auto& bindings = m_compute_bindings;
+	PrepareBindings(input_info.stage, bindings);
 	FindBuffers(bindings);
 	if (program.info.uses_dma) {
 		m_context.GetGpuResources().PrepareBda();

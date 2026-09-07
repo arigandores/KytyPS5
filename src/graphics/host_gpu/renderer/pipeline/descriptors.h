@@ -43,12 +43,34 @@ struct NativeDescriptors {
 	BufferView                  shader_data;
 };
 
+struct BufferSource {
+	ShaderBufferResource descriptor {};
+	BufferId             id {};
+	uint64_t             size = 0; // clamped to the mapped guest range; 0 = null binding
+};
+
+// Scratch for one shader stage of a draw/dispatch. Instances live in RenderExecutor and are
+// reused across draws (Reset keeps the vector capacities): ASTRO BOT issues ~2000 draws per heavy
+// frame and the per-draw allocations were 3% of the GuestGpu thread.
 struct PreparedBindings {
 	const ShaderRecompiler::IR::CompiledShaderInfo* program  = nullptr;
 	const ShaderRecompiler::IR::ResourceSnapshot* snapshot = nullptr;
 	NativeDescriptors                             resources;
-	std::vector<std::pair<ShaderBufferResource, BufferId>> buffer_sources;
+	std::vector<BufferSource>                     buffer_sources;
 	std::vector<uint32_t>                         shader_data;
+
+	void Reset() {
+		program  = nullptr;
+		snapshot = nullptr;
+		resources.buffers.clear();
+		resources.images.clear();
+		resources.samplers.clear();
+		resources.gds           = {};
+		resources.flattened_srt = {};
+		resources.shader_data   = {};
+		buffer_sources.clear();
+		shader_data.clear();
+	}
 };
 
 [[nodiscard]] vk::DescriptorType

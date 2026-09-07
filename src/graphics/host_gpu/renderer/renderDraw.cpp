@@ -1265,8 +1265,8 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 
 	Common::FrameStats::Lap lap;
 	LogDrawPhase(draw.name, "PrepareBindings");
-	auto bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
-	                                        state.ps_active);
+	auto& bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
+	                                         state.ps_active);
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
 	const bool frame_dump =
 	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
@@ -1340,12 +1340,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 						}
 					}
 				}
-				if (dump_tex != 0 && state.ps_active && ps && bindings.pixel.has_value() &&
+				if (dump_tex != 0 && state.ps_active && ps && bindings.pixel_active &&
 				    ShaderStageTouchesAddress(ps, dump_tex)) {
 					static std::atomic<uint32_t> dumped {0};
 					const auto                   n = dumped.fetch_add(1);
 					if (n < 3) {
-						auto& images = bindings.pixel->resources.images;
+						auto& images = bindings.pixel.resources.images;
 						for (uint32_t i = 0; i < images.size(); i++) {
 							m_context.GetTextureCache().DebugDumpImage(
 							    images[i].image_id,
@@ -1410,15 +1410,15 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x200u);
 	}
 	CommitVertexBuffers(vk_buffer, vertex_bindings);
-	if (bindings.pixel.has_value()) {
+	if (bindings.pixel_active) {
 		if (set_auto_debug) {
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x300u);
 		}
 	}
 	std::array<PreparedBindings*, 2> descriptor_stages {&bindings.vertex, nullptr};
-	const size_t                     descriptor_stage_count = bindings.pixel.has_value() ? 2u : 1u;
-	if (bindings.pixel) {
-		descriptor_stages[1] = &*bindings.pixel;
+	const size_t                     descriptor_stage_count = bindings.pixel_active ? 2u : 1u;
+	if (bindings.pixel_active) {
+		descriptor_stages[1] = &bindings.pixel;
 	}
 	CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline,
 	               std::span {descriptor_stages.data(), descriptor_stage_count});

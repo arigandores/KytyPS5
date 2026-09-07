@@ -138,22 +138,15 @@ static BufferView NativeStorageBuffer(RenderContext&                            
                                       const ShaderBufferResource&                 descriptor,
                                       const ShaderRecompiler::IR::BufferResource& resource,
                                       ShaderType stage, uint32_t slot, uint32_t& buffer_offset,
-                                      BufferId id) {
+                                      BufferId id, uint64_t size) {
 	BufferView result;
 	buffer_offset = 0;
 
 	const auto address = descriptor.Base48();
-	const auto stride  = descriptor.Stride();
-	const auto records = descriptor.NumRecords();
-	if (stride != 0 && records > UINT64_MAX / stride) {
-		EXIT("storage buffer descriptor footprint overflow\n");
-	}
-	const auto requested_size = stride != 0 ? static_cast<uint64_t>(stride) * records : records;
-	if (address == 0 || requested_size == 0) {
+	if (address == 0 || size == 0) {
 		BindNullStorageBuffer(context, result);
 		return result;
 	}
-	const auto  size      = Libs::LibKernel::Memory::ClampRangeSize(address, requested_size);
 	const auto& graphics  = context.GetGraphics();
 	const auto  alignment = graphics.StorageMinAlignment();
 	if (alignment == 0 ||
@@ -1051,12 +1044,13 @@ void RenderExecutor::ResetBindings() {
 	m_bound_images.clear();
 }
 
-PreparedBindings RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime) {
+void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime,
+                                     PreparedBindings&         prepared) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(!runtime);
 	const auto& program  = *runtime.program;
 	const auto& snapshot = runtime.resources;
-	PreparedBindings prepared;
+	prepared.Reset();
 	prepared.program  = runtime.program;
 	prepared.snapshot = &runtime.resources;
 	auto& descriptors = prepared.resources;
@@ -1083,7 +1077,6 @@ PreparedBindings RenderExecutor::PrepareBindings(const ShaderStageRuntime& runti
 	        program.bindings, ShaderRecompiler::IR::DescriptorBindingKind::Gds) != nullptr) {
 		descriptors.gds.buffer = m_context.GetBufferCache().GetGdsBuffer()->Handle();
 	}
-	return prepared;
 }
 
 void RenderExecutor::FindBuffers(PreparedBindings& prepared) {
@@ -1106,13 +1099,13 @@ void RenderExecutor::FindBuffers(PreparedBindings& prepared) {
 		EXIT_IF(stride != 0 && records > UINT64_MAX / stride);
 		const auto requested_size = stride != 0 ? static_cast<uint64_t>(stride) * records : records;
 		if (address == 0 || requested_size == 0) {
-			prepared.buffer_sources.emplace_back(descriptor, BufferId {});
+			prepared.buffer_sources.push_back({descriptor, BufferId {}, 0});
 			continue;
 		}
+		// Clamped once here; NativeStorageBuffer reuses it (the range map lookup takes a lock).
 		const auto size = Libs::LibKernel::Memory::ClampRangeSize(address, requested_size);
-		prepared.buffer_sources.emplace_back(descriptor, cache.FindBuffer(address, size));
+		prepared.buffer_sources.push_back({descriptor, cache.FindBuffer(address, size), size});
 	}
-
 }
 
 void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
@@ -1135,11 +1128,11 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		prepared.shader_data[dword] |= offset << shift;
 	};
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
-		const auto& [descriptor, buffer_id] = prepared.buffer_sources[i];
-		uint32_t buffer_offset = 0;
-		resources.buffers.push_back(NativeStorageBuffer(m_context, descriptor,
+		const auto& source        = prepared.buffer_sources[i];
+		uint32_t    buffer_offset = 0;
+		resources.buffers.push_back(NativeStorageBuffer(m_context, source.descriptor,
 		                                                program.info.buffers[i], program.stage, i,
-		                                                buffer_offset, buffer_id));
+		                                                buffer_offset, source.id, source.size));
 		pack_memory_offset(i, buffer_offset);
 	}
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);
@@ -1203,33 +1196,35 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	}
 }
 
-RenderExecutor::GraphicsBindings
+RenderExecutor::GraphicsBindings&
 RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
                                         const ShaderStageRuntime& pixel, bool pixel_active) {
-	GraphicsBindings bindings {
-	    .vertex = PrepareBindings(vertex),
-	};
+	auto& bindings = m_graphics_bindings;
+	PrepareBindings(vertex, bindings.vertex);
+	bindings.pixel_active = pixel_active;
 	if (pixel_active) {
-		bindings.pixel.emplace(PrepareBindings(pixel));
+		PrepareBindings(pixel, bindings.pixel);
+	} else {
+		bindings.pixel.Reset();
 	}
 	{
 		Common::FrameStats::Scope buffers_scope(Common::FrameStats::Counter::BindBuffersNs);
 		FindBuffers(bindings.vertex);
-		if (bindings.pixel) {
-			FindBuffers(*bindings.pixel);
+		if (pixel_active) {
+			FindBuffers(bindings.pixel);
 		}
 		if (bindings.vertex.program->info.uses_dma ||
-		    (bindings.pixel && bindings.pixel->program->info.uses_dma)) {
+		    (pixel_active && bindings.pixel.program->info.uses_dma)) {
 			m_context.GetGpuResources().PrepareBda();
 		}
 		RebindBuffers(bindings.vertex);
-		if (bindings.pixel) {
-			RebindBuffers(*bindings.pixel);
+		if (pixel_active) {
+			RebindBuffers(bindings.pixel);
 		}
 	}
 	RebindImages(bindings.vertex);
-	if (bindings.pixel) {
-		RebindImages(*bindings.pixel);
+	if (pixel_active) {
+		RebindImages(bindings.pixel);
 	}
 	return bindings;
 }

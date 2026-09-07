@@ -179,7 +179,8 @@ public:
 	                    uint32_t thread_group_y, uint32_t thread_group_z, uint32_t mode,
 	                    uint64_t indirect_args_addr = 0);
 
-	[[nodiscard]] PreparedBindings PrepareBindings(const ShaderStageRuntime& runtime);
+	void                           PrepareBindings(const ShaderStageRuntime& runtime,
+	                                               PreparedBindings&         prepared);
 	void                           FindBuffers(PreparedBindings& bindings);
 	void                           RebindBuffers(PreparedBindings& bindings);
 	void                           RebindImages(PreparedBindings& bindings);
@@ -192,15 +193,17 @@ private:
 	void DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const DrawAutoArgs& args);
 
 	struct GraphicsBindings {
-		PreparedBindings                vertex;
-		std::optional<PreparedBindings> pixel;
+		PreparedBindings vertex;
+		PreparedBindings pixel;
+		bool             pixel_active = false;
 	};
 
 	[[nodiscard]] TextureBinding ResolveTexture(const ShaderRecompiler::IR::ImageResource& resource,
 	                                            const ShaderRecompiler::IR::DescriptorValue& value);
-	[[nodiscard]] GraphicsBindings PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
-	                                                       const ShaderStageRuntime& pixel,
-	                                                       bool                      pixel_active);
+	// Returns the executor's scratch (valid until the next Prepare*Bindings call).
+	[[nodiscard]] GraphicsBindings& PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
+	                                                        const ShaderStageRuntime& pixel,
+	                                                        bool                      pixel_active);
 	void ResolveRenderColorTarget(uint64_t submit_id, CommandBuffer& buffer,
 	                              RenderColorInfo& target, uint32_t render_target_slice_offset = 0,
 	                              uint32_t render_target_slot = UINT32_MAX,
@@ -236,6 +239,8 @@ private:
 	std::vector<vk::DescriptorImageInfo>  m_descriptor_images;
 	std::vector<vk::WriteDescriptorSet>   m_descriptor_writes;
 	std::vector<uint32_t>                 m_image_occurrences;
+	GraphicsBindings                      m_graphics_bindings;
+	PreparedBindings                      m_compute_bindings;
 	// Hot-path memos (renderMemo.h); created on first use so the header stays light.
 	std::shared_ptr<RenderExecutorMemo>   m_memo;
 	[[nodiscard]] RenderExecutorMemo&     Memo();

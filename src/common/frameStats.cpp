@@ -194,8 +194,10 @@ struct SampleKey {
 	uint64_t leaf_module = 0; // module base of the leaf frame (0 = unknown)
 	uint64_t leaf_rip    = 0; // leaf rip relative to its module (or absolute if unknown)
 	uint64_t kyty_rva    = 0; // first frame inside the executable (0 = none found)
+	uint64_t chain[3] {};     // the next three frames inside the executable (callers)
 	bool     operator==(const SampleKey& o) const noexcept {
-		return leaf_module == o.leaf_module && leaf_rip == o.leaf_rip && kyty_rva == o.kyty_rva;
+		return leaf_module == o.leaf_module && leaf_rip == o.leaf_rip && kyty_rva == o.kyty_rva &&
+		       chain[0] == o.chain[0] && chain[1] == o.chain[1] && chain[2] == o.chain[2];
 	}
 };
 
@@ -204,6 +206,9 @@ struct SampleKeyHash {
 		uint64_t h = k.leaf_module * 0x9E3779B97F4A7C15ull;
 		h ^= k.leaf_rip + 0x7F4A7C15ull + (h << 6u) + (h >> 2u);
 		h ^= k.kyty_rva * 0xC2B2AE3D27D4EB4Full;
+		h ^= k.chain[0] * 0x9E3779B97F4A7C15ull + (h << 5u);
+		h ^= k.chain[1] * 0xC2B2AE3D27D4EB4Full + (h >> 3u);
+		h ^= k.chain[2] * 0x165667B19E3779F9ull + (h << 7u);
 		return static_cast<size_t>(h ^ (h >> 29u));
 	}
 };
@@ -267,12 +272,20 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 			const auto base  = ModuleBaseOf(rip);
 			key.leaf_module  = base;
 			key.leaf_rip     = base != 0 ? rip - base : rip;
-			// Unwind until the first frame inside this executable (at most 24 frames).
-			uint64_t pc = rip;
-			for (int depth = 0; depth < 24; depth++) {
+			// Unwind until the first frame inside this executable (at most 24 frames), then
+			// three more frames inside it (the callers).
+			uint64_t pc    = rip;
+			int      found = 0;
+			for (int depth = 0; depth < 40; depth++) {
 				if (ModuleBaseOf(pc) == self_base) {
-					key.kyty_rva = pc - self_base;
-					break;
+					if (found == 0) {
+						key.kyty_rva = pc - self_base;
+					} else {
+						key.chain[found - 1] = pc - self_base;
+					}
+					if (++found > 3) {
+						break;
+					}
 				}
 				DWORD64 image_base = 0;
 				auto*   entry      = RtlLookupFunctionEntry(pc, &image_base, nullptr);
@@ -318,10 +331,13 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 				if (shown++ >= 400) {
 					break;
 				}
-				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u\n",
+				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u chain=+0x%llx,+0x%llx,+0x%llx\n",
 				     name_of(k.leaf_module).c_str(), k.leaf_module != 0 ? "+" : "",
 				     static_cast<unsigned long long>(k.leaf_rip),
-				     static_cast<unsigned long long>(k.kyty_rva), n);
+				     static_cast<unsigned long long>(k.kyty_rva), n,
+				     static_cast<unsigned long long>(k.chain[0]),
+				     static_cast<unsigned long long>(k.chain[1]),
+				     static_cast<unsigned long long>(k.chain[2]));
 			}
 			counts.clear();
 			total = 0;

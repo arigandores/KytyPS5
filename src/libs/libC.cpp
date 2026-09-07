@@ -5,6 +5,7 @@
 #include "common/singleton.h"
 #include "common/stringUtils.h"
 #include "graphics/host_gpu/hostMemory.h"
+#include "graphics/presentation/renderDoc.h"
 #include "kernel/pthread.h"
 #include "libs/errno.h"
 #include "libs/guestPrintf.h"
@@ -645,6 +646,7 @@ size_t KYTY_SYSV_ABI fwrite(const void* ptr, size_t size, size_t nmemb, FILE* /*
 		std::string text(static_cast<const char*>(ptr), bytes);
 		LOGF_COLOR(Log::Color::BrightMagenta, "GuestOut: %s%s", text.c_str(),
 		           (text.back() == '\n' ? "" : "\n"));
+		Libs::Graphics::RenderDocNoteGuestText(text.data(), text.size());
 	}
 	return nmemb;
 }

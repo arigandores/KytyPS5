@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <renderdoc_app.h>
 #include <string>
+#include <string_view>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #ifndef NOMINMAX
@@ -118,6 +119,27 @@ void RenderDocInit() {
 }
 
 #endif
+
+static std::atomic<bool> g_rd_level_started {false};
+
+void RenderDocNoteGuestText(const char* text, size_t size) {
+	static const std::string level = [] {
+		const char* value = std::getenv("KYTY_RD_LEVEL");
+		return std::string(value != nullptr ? value : "intro_next");
+	}();
+	if (g_rd_level_started.load(std::memory_order_relaxed) || text == nullptr || size < 20) {
+		return;
+	}
+	const std::string_view view(text, size);
+	const auto             pos = view.find("Level has started: ");
+	if (pos != std::string_view::npos && view.find(level, pos) != std::string_view::npos) {
+		g_rd_level_started.store(true, std::memory_order_release);
+	}
+}
+
+bool RenderDocLevelStarted() {
+	return g_rd_level_started.load(std::memory_order_acquire);
+}
 
 void RenderDocRequestCapture() {
 	if (g_api == nullptr) {

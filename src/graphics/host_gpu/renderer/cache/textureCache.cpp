@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/guest_gpu/gpu_format.h"
@@ -154,6 +155,7 @@ bool TextureCache::SafeToDownload(const Image& image) {
 }
 
 ImageId TextureCache::InsertImage(const ImageInfo& info) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgInserts, 1);
 	const auto id = m_slot_images.insert(m_graphics, m_scheduler, info);
 	if (!info.data.Empty()) {
 		RegisterImage(id);
@@ -239,6 +241,7 @@ void TextureCache::DeleteImage(ImageId id) {
 }
 
 void TextureCache::FreeImage(ImageId id) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgFrees, 1);
 	auto& image = m_slot_images[id];
 	if (image.IsGpuModified()) {
 		image.ClearGpuModified();
@@ -965,6 +968,9 @@ void TextureCache::DebugDumpImage(ImageId id, const std::string& name) {
 
 void TextureCache::UploadImage(Image& image, const ImageDesc& desc, Buffer& source,
                                uint64_t source_offset) {
+	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::ImgUploadNs,
+	                                       Common::FrameStats::Counter::ImgUploads);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, image.info.data.size);
 	const auto& info   = image.info;
 	const auto  upload = [&](std::vector<vk::BufferImageCopy>& copies, TileManager::Result linear) {
 		for (auto& copy: copies) {
@@ -1099,6 +1105,7 @@ void TextureCache::InitializeImage(ImageId id, const ImageDesc& desc) {
 	if (image.info.data.Empty()) {
 		return;
 	}
+	Common::FrameStats::Scope init_scope(Common::FrameStats::Counter::ImgInitNs);
 	TrackImage(id);
 	if (image.info.metadata.compression != VideoOutCompression::Uncompressed) {
 		if (image.IsCpuDirty()) {

@@ -752,20 +752,34 @@ static void DebugAutoRenderDocCapture(int frame_num) {
 		const char* value = std::getenv("KYTY_RD_TIME");
 		return value != nullptr ? std::strtod(value, nullptr) : -1.0;
 	}();
+	// KYTY_RD_LEVEL_FRAME=<n>: n frames after the game logged "Level has started: <KYTY_RD_LEVEL>"
+	// (default intro_next) - independent of when the menu was passed.
+	static const long level_target = [] {
+		const char* value = std::getenv("KYTY_RD_LEVEL_FRAME");
+		return value != nullptr ? std::strtol(value, nullptr, 10) : -1L;
+	}();
 	static const auto start   = std::chrono::steady_clock::now();
 	static bool       requested = false;
+	static long       level_frame = -1;
 	if (requested) {
 		return;
 	}
+	if (level_target >= 0 && level_frame < 0 && RenderDocLevelStarted()) {
+		level_frame = frame_num;
+		LOGF("RenderDoc: level started at frame %d, capture at frame %ld\n", frame_num,
+		     level_frame + level_target);
+	}
 	const bool frame_hit = target >= 0 && frame_num >= target;
+	const bool level_hit = level_target >= 0 && level_frame >= 0 && frame_num >= level_frame + level_target;
 	const bool time_hit =
 	    target_time >= 0 &&
 	    std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count() >= target_time;
-	if (!frame_hit && !time_hit) {
+	if (!frame_hit && !time_hit && !level_hit) {
 		return;
 	}
 	requested = true;
-	LOGF("RenderDoc: auto capture at frame %d (KYTY_RD_FRAME=%ld)\n", frame_num, target);
+	LOGF("RenderDoc: auto capture at frame %d (KYTY_RD_FRAME=%ld, level+%ld)\n", frame_num, target,
+	     level_target);
 	RenderDocRequestCapture();
 }
 

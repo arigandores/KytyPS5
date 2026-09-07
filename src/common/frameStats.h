@@ -102,6 +102,13 @@ enum class Counter : uint32_t {
 	GlobalBarriersSkipped, // EmitGlobalBarrier with nothing recorded since the previous one
 	FaultMainNs,           // page faults taken by the guest main thread (subset of FaultNs)
 	FaultsMain,
+	ImgInserts,      // TextureCache::InsertImage (new host image)
+	ImgFrees,        // TextureCache::FreeImage
+	ImgUploads,      // TextureCache::UploadImage calls
+	ImgUploadBytes,  // guest bytes uploaded to images
+	ImgUploadNs,     // time inside UploadImage (tiler + copy record)
+	ImgInitNs,       // time inside InitializeImage (includes UploadNs)
+	ImgCopyNs,       // guest -> staging copy of image data (ObtainBufferForImage)
 	Count
 };
 

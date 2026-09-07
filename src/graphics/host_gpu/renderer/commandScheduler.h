@@ -37,6 +37,9 @@ public:
 	void                      Shutdown();
 	void                      Wait(uint64_t tick);
 	void                      PopPendingOperations();
+	// Draw/dispatch variant: runs the completed callbacks with the known GPU tick and queries the
+	// semaphore at most every 200 us (a vkGetSemaphoreCounterValue per draw cost 0.6 ms/frame).
+	void                      PopPendingOperationsLazy();
 	void                      DrainPriorityOperations();
 	void                      WaitPriorityOperations(uint64_t tick);
 	void                      DeferOperation(Common::UniqueFunction<void>&& operation);
@@ -81,6 +84,7 @@ private:
 	struct PendingOperation {
 		Common::UniqueFunction<void> callback;
 		uint64_t                     tick = 0;
+		const void*                  site = nullptr; // DeferOperation caller (FrameTrace-pops)
 	};
 
 	void BindCurrent();
@@ -108,6 +112,7 @@ private:
 	std::jthread                 m_priority_thread;
 	bool                         m_priority_active      = false;
 	uint64_t                     m_priority_active_tick = 0;
+	uint64_t                     m_last_tick_refresh_ns = 0;
 	OperationState               m_operation_state      = OperationState::Open;
 	HW::Context*                 m_registers            = nullptr;
 	HW::UserConfig*              m_user_config          = nullptr;

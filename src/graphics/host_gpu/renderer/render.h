@@ -29,6 +29,7 @@ struct ShaderBufferResource;
 struct ShaderComputeInputInfo;
 struct RenderDepthInfo;
 struct RenderColorInfo;
+struct RenderExecutorMemo;
 struct DrawCallInfo;
 struct DrawEmitInfo;
 struct DrawIndexBufferSource;
@@ -121,6 +122,12 @@ public:
 	void EndRendering() const;
 
 	[[nodiscard]] vk::CommandBuffer Handle() const;
+	// Every recording goes through Handle(); a global barrier is redundant when Handle() has not
+	// been used since the previous one (nothing to order). Reset per command buffer.
+	[[nodiscard]] bool GlobalBarrierRedundant() const noexcept {
+		return m_barrier_mark == m_handle_uses;
+	}
+	void MarkGlobalBarrier() const noexcept { m_barrier_mark = m_handle_uses; }
 	[[nodiscard]] GraphicContext&   GetGraphics() const noexcept { return m_graphics; }
 	[[nodiscard]] RenderContext&    GetContext() const noexcept { return m_context; }
 	[[nodiscard]] HW::Context&      GetRegisters() const noexcept { return *m_registers; }
@@ -151,6 +158,8 @@ private:
 	uint64_t            m_debug_arg5      = 0;
 	mutable RenderState m_render_state;
 	mutable bool        m_rendering   = false;
+	mutable uint64_t    m_handle_uses  = 0;
+	mutable uint64_t    m_barrier_mark = 0;
 	HW::Context*        m_registers   = nullptr;
 	HW::UserConfig*     m_user_config = nullptr;
 	HW::Shader*         m_shaders     = nullptr;
@@ -227,6 +236,9 @@ private:
 	std::vector<vk::DescriptorImageInfo>  m_descriptor_images;
 	std::vector<vk::WriteDescriptorSet>   m_descriptor_writes;
 	std::vector<uint32_t>                 m_image_occurrences;
+	// Hot-path memos (renderMemo.h); created on first use so the header stays light.
+	std::shared_ptr<RenderExecutorMemo>   m_memo;
+	[[nodiscard]] RenderExecutorMemo&     Memo();
 
 	friend class CommandProcessor;
 	friend struct RenderExecutorTestAccess;

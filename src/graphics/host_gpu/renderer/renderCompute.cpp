@@ -179,7 +179,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	bool indirect = indirect_args_addr != 0;
 	{
 		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DispatchPopNs);
-		m_context.GetCommandScheduler().PopPendingOperations();
+		m_context.GetCommandScheduler().PopPendingOperationsLazy();
 	}
 	auto& ctx    = buffer.GetRegisters();
 	auto& sh_ctx = buffer.GetShaders();

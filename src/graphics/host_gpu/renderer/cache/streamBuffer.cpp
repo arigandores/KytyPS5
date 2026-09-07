@@ -127,7 +127,12 @@ Buffer::Buffer(GraphicContext& graphics, CommandScheduler& scheduler, MemoryUsag
 Buffer::~Buffer() {
 	if (m_buffer->buffer != nullptr) {
 		VulkanUntrackAllocation(m_buffer->memory);
-		vmaDestroyBuffer(m_graphics->allocator, m_buffer->buffer, m_buffer->memory.allocation);
+		const auto allocator  = m_graphics->allocator;
+		const auto buffer     = m_buffer->buffer;
+		const auto allocation = m_buffer->memory.allocation;
+		VulkanDeferredDestroy([allocator, buffer, allocation] {
+			vmaDestroyBuffer(allocator, buffer, allocation);
+		});
 	}
 }
 

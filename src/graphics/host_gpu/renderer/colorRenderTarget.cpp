@@ -11,11 +11,13 @@
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/renderer/renderMemo.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <cstring>
 
 namespace Libs::Graphics {
 
@@ -103,6 +105,51 @@ void RenderExecutor::ResolveRenderColorTarget(uint64_t submit_id, CommandBuffer&
 	r.target_slot    = rt_slot;
 	r.export_mapping = {};
 
+	// Memo keyed by the slot's raw register block (+ mask, slice offset, slot, flags). A hit
+	// replays the resolved description and only re-validates the image id, like RebindImages.
+	RenderExecutorMemo::ColorTarget* memo_slot = nullptr;
+	std::array<uint8_t, sizeof(HW::RenderTarget)> memo_regs {};
+	uint64_t                                     memo_extra = 0;
+	if (!graphics_debug_dump_enabled()) {
+		std::memcpy(memo_regs.data(), &rt, sizeof(rt));
+		memo_extra = static_cast<uint64_t>(mask) | (static_cast<uint64_t>(render_target_slice_offset) << 8u) |
+		             (static_cast<uint64_t>(rt_slot) << 40u) | (ignore_target_mask ? 1ull << 48u : 0u) |
+		             (exact_format ? 1ull << 49u : 0u);
+		auto& memo = Memo();
+		memo_slot  = &memo.colors[MemoHashBytes(memo_regs.data(), memo_regs.size(), memo_extra) %
+		                          RenderExecutorMemo::ColorSlots];
+		if (memo_slot->valid && memo_slot->extra == memo_extra && memo_slot->regs == memo_regs) {
+			r = memo_slot->info;
+			if (r.type == RenderColorType::RenderTexture) {
+				auto& cache = m_context.GetTextureCache();
+				auto* image = cache.m_slot_images.try_get(r.image_id);
+				if (image == nullptr || (!image->registered && !image->info.data.Empty()) ||
+				    image->binding.needs_rebind) {
+					if (image != nullptr) {
+						image->binding = {};
+					}
+					r.image_id           = cache.FindImage(r.desc, exact_format);
+					memo_slot->info.desc     = r.desc;
+					memo_slot->info.image_id = r.image_id;
+				} else {
+					image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+					cache.TouchImage(*image);
+				}
+				BindRenderTarget(r.image_id);
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::RtMemoHits, 1);
+			return;
+		}
+	}
+	const auto memo_store = [&]() {
+		if (memo_slot != nullptr) {
+			memo_slot->regs  = memo_regs;
+			memo_slot->extra = memo_extra;
+			memo_slot->info  = r;
+			memo_slot->valid = true;
+		}
+	};
+
 	if (rt.base.addr == 0 || mask == 0) {
 		if (graphics_debug_dump_enabled()) {
 			static std::atomic_uint log_count = 0;
@@ -133,6 +180,7 @@ void RenderExecutor::ResolveRenderColorTarget(uint64_t submit_id, CommandBuffer&
 		r.metadata_clear_supported       = false;
 		r.metadata_fixed_clear_supported = false;
 		r.color_clear_value              = {};
+		memo_store();
 		return;
 	}
 	const auto samples = render_sample_count(rt.attrib.num_fragments);
@@ -436,6 +484,7 @@ void RenderExecutor::ResolveRenderColorTarget(uint64_t submit_id, CommandBuffer&
 	ResolveDccClearInfo(r, target_format.format, has_dcc, rt.clear_word0.word0,
 	                    rt.clear_word1.word1);
 	BindRenderTarget(r.image_id);
+	memo_store();
 }
 
 } // namespace Libs::Graphics

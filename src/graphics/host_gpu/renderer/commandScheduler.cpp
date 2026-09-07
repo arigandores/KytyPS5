@@ -1,5 +1,8 @@
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 
+#include <mutex>
+#include <string>
+#include <map>
 #include <cstdlib>
 
 #include "common/assert.h"
@@ -178,6 +181,7 @@ void CommandScheduler::Begin(HW::Context& registers, HW::UserConfig& user_config
 }
 
 void CommandScheduler::BeginRendering(const RenderState& state) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 	Current().BeginRendering(state);
 }
 
@@ -229,7 +233,45 @@ void CommandScheduler::Wait(uint64_t tick) {
 	}
 }
 
+// Stable name ("+0x<rva>") for a DeferOperation call site; the RVA maps to a function through
+// the linker map like the FaultTrace-gpu RIPs.
+static const char* DeferredSiteName(const void* site) {
+	static std::mutex                             mutex;
+	static std::map<const void*, std::string>     names;
+	std::lock_guard                               lock(mutex);
+	auto [it, inserted] = names.try_emplace(site);
+	if (inserted) {
+		char text[32];
+		std::snprintf(text, sizeof(text), "+0x%llx",
+		              static_cast<unsigned long long>(Common::FrameStats::ModuleOffset(site)));
+		it->second = text;
+	}
+	return it->second.c_str();
+}
+
 void CommandScheduler::PopPendingOperations() {
+	PopPendingOperations(true);
+}
+
+void CommandScheduler::PopPendingOperationsLazy() {
+	uint64_t front_tick = 0;
+	{
+		std::lock_guard lock(m_operation_mutex);
+		if (m_pending_operations.empty()) {
+			return;
+		}
+		front_tick = m_pending_operations.front().tick;
+	}
+	if (m_master.IsFree(front_tick)) {
+		PopPendingOperations(false);
+		return;
+	}
+	constexpr uint64_t RefreshIntervalNs = 200'000;
+	const auto         now               = Common::FrameStats::NowNs();
+	if (now - m_last_tick_refresh_ns < RefreshIntervalNs) {
+		return;
+	}
+	m_last_tick_refresh_ns = now;
 	PopPendingOperations(true);
 }
 
@@ -257,7 +299,17 @@ void CommandScheduler::PopPendingOperations(bool refresh_gpu_tick) {
 			m_pending_operations.pop();
 		}
 		WaitPriorityOperations(operation.tick);
-		RunOperation(std::move(operation.callback));
+		{
+			namespace FS  = Common::FrameStats;
+			const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+			RunOperation(std::move(operation.callback));
+			if (t0 != 0) {
+				const auto ns = FS::NowNs() - t0;
+				FS::Add(FS::Counter::PendingOpsNs, ns);
+				FS::Add(FS::Counter::PendingOps, 1);
+				FS::AddSite(FS::Table::PopSites, DeferredSiteName(operation.site), ns);
+			}
+		}
 	}
 }
 
@@ -266,7 +318,7 @@ void CommandScheduler::DeferOperation(Common::UniqueFunction<void>&& operation) 
 	EXIT_IF(!operation);
 	std::unique_lock lock(m_operation_mutex);
 	if (m_operation_state == OperationState::Open) {
-		m_pending_operations.push({std::move(operation), CurrentTick()});
+		m_pending_operations.push({std::move(operation), CurrentTick(), __builtin_return_address(0)});
 		return;
 	}
 	if (g_deferred_callback_scheduler == this) {

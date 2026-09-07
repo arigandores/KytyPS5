@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/image/image.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/profiler.h"
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
@@ -202,6 +203,7 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 	if (barriers.empty()) {
 		return;
 	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImageBarriers, barriers.size());
 	if (m_scheduler != nullptr) {
 		m_scheduler->EndRendering();
 	}
@@ -724,9 +726,21 @@ Image::~Image() {
 	if (m_graphics == nullptr) {
 		return;
 	}
-	for (const auto& cached: views) {
-		if (cached.view != nullptr) {
-			m_graphics->device.destroyImageView(cached.view, nullptr);
+	if (!views.empty()) {
+		std::vector<vk::ImageView> retired;
+		retired.reserve(views.size());
+		for (const auto& cached: views) {
+			if (cached.view != nullptr) {
+				retired.push_back(cached.view);
+			}
+		}
+		if (!retired.empty()) {
+			const auto device = m_graphics->device;
+			VulkanDeferredDestroy([device, retired = std::move(retired)] {
+				for (const auto view: retired) {
+					device.destroyImageView(view, nullptr);
+				}
+			});
 		}
 	}
 	if (backing.image != nullptr) {

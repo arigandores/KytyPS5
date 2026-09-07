@@ -26,12 +26,15 @@ bool CommandBuffer::IsInvalid() const {
 }
 
 vk::CommandBuffer CommandBuffer::Handle() const {
+	m_handle_uses++;
 	EXIT_IF(IsInvalid());
 	return m_buffer;
 }
 
 void CommandBuffer::Begin() {
 	EXIT_IF(m_rendering || IsInvalid());
+	m_handle_uses  = 0;
+	m_barrier_mark = 0;
 	auto buffer = Handle();
 
 	vk::CommandBufferBeginInfo begin_info {};

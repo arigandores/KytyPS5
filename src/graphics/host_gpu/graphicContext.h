@@ -6,6 +6,7 @@
 #include "common/threads.h"
 #include "graphics/host_gpu/vulkanCommon.h" // IWYU pragma: export
 
+#include <functional>
 #include <map>
 #include <mutex>
 #include <tuple>
@@ -17,6 +18,12 @@ namespace Libs::Graphics {
 struct VulkanBuffer;
 struct VulkanImage;
 struct VulkanMemory;
+
+// Runs `destroy` on a worker thread (Vulkan object destruction is externally synchronized only
+// on the object itself, and the objects handed here are already retired). KYTY_ASYNC_DESTROY=0
+// runs it inline. VulkanDeferredDestroyFlush waits for the queue to drain (device shutdown).
+void VulkanDeferredDestroy(std::function<void()>&& destroy);
+void VulkanDeferredDestroyFlush();
 
 inline constexpr uint32_t VULKAN_TARGET_API_VERSION = VK_API_VERSION_1_3;
 

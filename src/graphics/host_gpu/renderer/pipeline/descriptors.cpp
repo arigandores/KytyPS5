@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 
 #include "common/frameStats.h"
+#include "graphics/host_gpu/renderer/renderMemo.h"
 
 #include "common/assert.h"
 #include "common/common.h"
@@ -695,6 +696,34 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		}
 	}
 
+	// Memo: the same T# with the same resource shape resolves to the same image while that image
+	// is alive, registered and not flagged for rediscovery. Exact backing matches only (an
+	// overlap view could be superseded by a later exact image).
+	auto&          memo         = Memo();
+	const uint64_t resource_key = MemoHashBytes(
+	    &resource, reinterpret_cast<const uint8_t*>(&resource.indirect_resources) -
+	                   reinterpret_cast<const uint8_t*>(&resource));
+	auto& memo_slot = memo.textures[MemoHashBytes(descriptor.fields, sizeof(descriptor.fields),
+	                                              resource_key) %
+	                                RenderExecutorMemo::TextureSlots];
+	if (memo_slot.valid && memo_slot.resource_key == resource_key &&
+	    std::memcmp(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields)) == 0) {
+		auto* cached = texture_cache.m_slot_images.try_get(memo_slot.image_id);
+		if (cached != nullptr && cached->registered && !cached->binding.needs_rebind &&
+		    !cached->depth_id && cached->info.data == memo_slot.desc.info.data &&
+		    cached->info.extent == memo_slot.desc.info.extent) {
+			cached->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+			texture_cache.TouchImage(*cached);
+			if (!cached->info.IsDepth() && descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
+				(void)texture_cache.AdoptPendingDccForTexture(memo_slot.image_id,
+				                                              descriptor.MetaAddr() << 8u);
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindTexMemoHits, 1);
+			return {memo_slot.image_id, nullptr, memo_slot.desc};
+		}
+		memo_slot.valid = false;
+	}
+
 	const auto address      = descriptor.Base40();
 	const auto width        = static_cast<uint32_t>(descriptor.Width5()) + 1u;
 	const auto height       = static_cast<uint32_t>(descriptor.Height5()) + 1u;
@@ -838,7 +867,22 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 			(void)texture_cache.AdoptPendingDccForTexture(id, descriptor.MetaAddr() << 8u);
 		}
 	}
+	if (!stencil_association && image->info.data == desc.info.data &&
+	    image->info.extent == desc.info.extent) {
+		std::memcpy(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields));
+		memo_slot.resource_key = resource_key;
+		memo_slot.image_id     = id;
+		memo_slot.desc         = desc;
+		memo_slot.valid        = true;
+	}
 	return {id, nullptr, std::move(desc)};
+}
+
+RenderExecutorMemo& RenderExecutor::Memo() {
+	if (!m_memo) {
+		m_memo = std::make_shared<RenderExecutorMemo>();
+	}
+	return *m_memo;
 }
 
 static vk::Sampler NativeSampler(RenderContext&                       context,
@@ -1049,6 +1093,9 @@ void RenderExecutor::FindBuffers(PreparedBindings& prepared) {
 	const auto& snapshot = *prepared.snapshot;
 	auto&       cache    = m_context.GetBufferCache();
 
+	Common::FrameStats::Scope find_scope(Common::FrameStats::Counter::BindBufFindNs,
+	                                     Common::FrameStats::Counter::Count);
+	Common::FrameStats::Add(Common::FrameStats::Counter::BindBufN, program.info.buffers.size());
 	prepared.buffer_sources.clear();
 	prepared.buffer_sources.reserve(program.info.buffers.size());
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
@@ -1095,6 +1142,7 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		                                                buffer_offset, buffer_id));
 		pack_memory_offset(i, buffer_offset);
 	}
+	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);
 	if (ShaderRecompiler::IR::FindBinding(
 	        layout, ShaderRecompiler::IR::DescriptorBindingKind::FlattenedSrt) != nullptr) {
 		resources.flattened_srt = NativeUpload(m_context, snapshot.flattened_srt);

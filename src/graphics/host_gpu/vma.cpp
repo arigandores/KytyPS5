@@ -20,6 +20,12 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/vma.h"
 
+#include <thread>
+#include <mutex>
+#include <functional>
+#include <deque>
+#include <cstring>
+#include <condition_variable>
 #include <algorithm>
 #include <atomic>
 #include <cinttypes>
@@ -85,10 +91,91 @@ bool GraphicContext::CreateAllocator() {
 	return true;
 }
 
+// ---------------------------------------------------------------------------------------------
+// Deferred destruction worker. vmaDestroyBuffer / vmaDestroyImage / vkDestroyImageView take
+// 100-200 us each on the NVIDIA driver and ASTRO BOT retires several buffers and images per frame
+// on the GuestGpu thread (0.8 ms/frame in the deferred-operation callbacks). VMA is internally
+// synchronized and the objects are already unreachable when they get here.
+namespace {
+
+class DeferredDestroyer {
+public:
+	static DeferredDestroyer& Instance() {
+		// Leaked on purpose: the worker may still be running during static destruction.
+		static auto* instance = new DeferredDestroyer();
+		return *instance;
+	}
+
+	[[nodiscard]] static bool Enabled() {
+		static const bool enabled = [] {
+			const char* value = std::getenv("KYTY_ASYNC_DESTROY");
+			return value == nullptr || std::strcmp(value, "0") != 0;
+		}();
+		return enabled;
+	}
+
+	void Push(std::function<void()>&& fn) {
+		std::lock_guard lock(m_mutex);
+		if (!m_started) {
+			m_started = true;
+			std::thread([this] { Run(); }).detach();
+		}
+		m_queue.push_back(std::move(fn));
+		m_available.notify_one();
+	}
+
+	void Flush() {
+		std::unique_lock lock(m_mutex);
+		m_drained.wait(lock, [this] { return m_queue.empty() && !m_running; });
+	}
+
+private:
+	void Run() {
+		std::unique_lock lock(m_mutex);
+		for (;;) {
+			m_available.wait(lock, [this] { return !m_queue.empty(); });
+			auto fn = std::move(m_queue.front());
+			m_queue.pop_front();
+			m_running = true;
+			lock.unlock();
+			fn();
+			lock.lock();
+			m_running = false;
+			if (m_queue.empty()) {
+				m_drained.notify_all();
+			}
+		}
+	}
+
+	std::mutex                        m_mutex;
+	std::condition_variable           m_available;
+	std::condition_variable           m_drained;
+	std::deque<std::function<void()>> m_queue;
+	bool                              m_started = false;
+	bool                              m_running = false;
+};
+
+} // namespace
+
+void VulkanDeferredDestroy(std::function<void()>&& destroy) {
+	if (!DeferredDestroyer::Enabled()) {
+		destroy();
+		return;
+	}
+	DeferredDestroyer::Instance().Push(std::move(destroy));
+}
+
+void VulkanDeferredDestroyFlush() {
+	if (DeferredDestroyer::Enabled()) {
+		DeferredDestroyer::Instance().Flush();
+	}
+}
+
 void GraphicContext::DestroyAllocator() {
 	if (allocator == nullptr) {
 		return;
 	}
+	VulkanDeferredDestroyFlush();
 	vmaDestroyAllocator(allocator);
 	allocator = nullptr;
 }
@@ -237,7 +324,14 @@ void GraphicContext::DeleteImage(VulkanImage& image) {
 
 	auto& memory = image.memory;
 	VulkanUntrackAllocation(memory);
-	vmaDestroyImage(allocator, image.image, memory.allocation);
+	{
+		const auto vma_allocator = allocator;
+		const auto vk_image      = image.image;
+		const auto allocation    = memory.allocation;
+		VulkanDeferredDestroy([vma_allocator, vk_image, allocation] {
+			vmaDestroyImage(vma_allocator, vk_image, allocation);
+		});
+	}
 	image.image            = nullptr;
 	memory.memory          = nullptr;
 	memory.allocation      = nullptr;

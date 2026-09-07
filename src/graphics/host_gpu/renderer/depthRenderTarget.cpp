@@ -1,5 +1,9 @@
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
 
+#include "graphics/host_gpu/renderer/renderMemo.h"
+#include "common/frameStats.h"
+#include <cstring>
+
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/logging/log.h"
@@ -112,7 +116,52 @@ void RenderExecutor::ResolveRenderDepthTarget(uint64_t submit_id, CommandBuffer&
 	                          rc.depth_clear_enable || rc.copy_depth_to_color;
 	const bool stencil_active =
 	    has_stencil && (dc.stencil_enable || rc.stencil_clear_enable || rc.copy_stencil_to_color);
+	// Memo keyed by every register this function reads. A hit replays the resolved state and
+	// only re-validates the image id (see RebindImages); early returns are cached as "no depth".
+	DepthTargetMemoKey memo_key_value {};
+	std::memset(&memo_key_value, 0, sizeof(memo_key_value));
+	memo_key_value.z             = z;
+	memo_key_value.rc            = rc;
+	memo_key_value.dc            = dc;
+	memo_key_value.sc            = sc;
+	memo_key_value.sm            = sm;
+	memo_key_value.depth_clear   = hw.GetDepthClearValue();
+	memo_key_value.bounds_min    = hw.GetDepthBoundsMin();
+	memo_key_value.bounds_max    = hw.GetDepthBoundsMax();
+	memo_key_value.stencil_clear = hw.GetStencilClearValue();
+	std::array<uint8_t, sizeof(DepthTargetMemoKey)> memo_key {};
+	std::memcpy(memo_key.data(), &memo_key_value, sizeof(memo_key_value));
+	auto& memo_slot = Memo().depths[MemoHashBytes(memo_key.data(), memo_key.size()) %
+	                                RenderExecutorMemo::DepthSlots];
+	if (memo_slot.valid && memo_slot.key == memo_key) {
+		r = memo_slot.info;
+		if (r.image_id) {
+			auto& cache = m_context.GetTextureCache();
+			auto* image = cache.m_slot_images.try_get(r.image_id);
+			if (image == nullptr || (!image->registered && !image->info.data.Empty()) ||
+			    image->binding.needs_rebind) {
+				if (image != nullptr) {
+					image->binding = {};
+				}
+				r.image_id          = cache.FindImage(r.desc);
+				memo_slot.info.desc     = r.desc;
+				memo_slot.info.image_id = r.image_id;
+			} else {
+				image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+				cache.TouchImage(*image);
+			}
+			BindRenderTarget(r.image_id);
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::RtMemoHits, 1);
+		return;
+	}
+	const auto memo_store = [&]() {
+		memo_slot.key   = memo_key;
+		memo_slot.info  = r;
+		memo_slot.valid = true;
+	};
 	if (!depth_active && !stencil_active) {
+		memo_store();
 		return;
 	}
 	if (!z.z_info.HasValidTextureCompatibility() ||
@@ -141,6 +190,7 @@ void RenderExecutor::ResolveRenderDepthTarget(uint64_t submit_id, CommandBuffer&
 		if (!logged.exchange(true, std::memory_order_relaxed)) {
 			LOGF("DepthTarget: ignoring enabled depth/stencil state without a bound attachment\n");
 		}
+		memo_store();
 		return;
 	}
 	const bool has_htile = z.z_info.htile_acceleration;
@@ -333,6 +383,7 @@ void RenderExecutor::ResolveRenderDepthTarget(uint64_t submit_id, CommandBuffer&
 	r.image_id                 = cache.FindImage(r.desc);
 	r.image_view               = nullptr;
 	BindRenderTarget(r.image_id);
+	memo_store();
 }
 
 vk::ImageAspectFlags RenderDepthInfo::AttachmentWriteAspects() const {

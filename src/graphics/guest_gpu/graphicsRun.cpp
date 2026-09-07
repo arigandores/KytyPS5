@@ -1771,6 +1771,24 @@ void CommandProcessor::WriteAtEndOfPipe64(uint32_t cache_policy, uint32_t event_
 
 void CommandProcessor::EmitGlobalBarrier() {
 	CheckBuffer();
+	Common::FrameStats::Add(Common::FrameStats::Counter::GlobalBarriers, 1);
+	// RELEASE_MEM cache actions and CS/PS partial-flush / CB-DB writeback events used to become a
+	// full ALL_COMMANDS -> ALL_COMMANDS barrier each: ~840 per ASTRO BOT frame, i.e. a pipeline
+	// drain before almost every draw. RenderDoc puts the frame's draws and dispatches at 5.4 ms of
+	// GPU time while the timestamps saw 11.6 ms busy; the difference is these drains. On hardware
+	// RELEASE_MEM is an end-of-pipe event that never stalls later work, and every dependency the
+	// event stands for is already expressed by the resource barriers Kyty emits itself (image
+	// layout transitions at bind, shader-write barriers after draws/dispatches, transfer barriers
+	// around copies, fills and uploads; EOP labels are written by the CPU at parse time). Skip the
+	// global barrier unless KYTY_EOP_BARRIER=1 asks for the old behaviour.
+	static const bool emit_eop_barriers = [] {
+		const char* value = std::getenv("KYTY_EOP_BARRIER");
+		return value != nullptr && std::strcmp(value, "1") == 0;
+	}();
+	if (!emit_eop_barriers) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::GlobalBarriersSkipped, 1);
+		return;
+	}
 
 	Common::LockGuard lock(m_renderer.GetMutex());
 
@@ -1784,7 +1802,21 @@ void CommandProcessor::EmitGlobalBarrier() {
 	dependency.memoryBarrierCount = 1;
 	dependency.pMemoryBarriers    = &barrier;
 	GetScheduler().EndRendering();
-	CurrentBuffer().Handle().pipelineBarrier2(dependency);
+	// Experiment (KYTY_BARRIER_DEDUP=1): ASTRO BOT emits ~840 of these per frame (RELEASE_MEM cache
+	// control, partial flushes), ~300 of them back to back with nothing recorded in between. Skipping
+	// those saved no measurable GPU time (a barrier with nothing to drain is cheap) and a RenderDoc
+	// capture with it enabled ended in VK_ERROR_DEVICE_LOST, so it stays off by default.
+	static const bool dedup = [] {
+		const char* value = std::getenv("KYTY_BARRIER_DEDUP");
+		return value != nullptr && std::strcmp(value, "1") == 0;
+	}();
+	auto& command = CurrentBuffer();
+	if (dedup && command.GlobalBarrierRedundant()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::GlobalBarriersSkipped, 1);
+		return;
+	}
+	command.Handle().pipelineBarrier2(dependency);
+	command.MarkGlobalBarrier();
 }
 
 void CommandProcessor::TriggerEopEventAtEndOfPipe(uint32_t interrupt_context_id) {

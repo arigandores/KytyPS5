@@ -14,6 +14,7 @@
 #include "graphics/presentation/imeOverlay.h"
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/videoOut.h"
+#include "graphics/presentation/window/inputScript.h"
 #include "graphics/presentation/window/screenshot.h"
 #include "graphics/presentation/window/windowInternal.h"
 
@@ -369,6 +370,7 @@ struct Presenter::Impl {
 	CommandScheduler      present_scheduler;
 	FramePool             frames;
 	ScreenshotGrabber     screenshot;
+	InputScript           input_script;
 	std::atomic<uint64_t> presented_ime_revision {0};
 };
 
@@ -786,6 +788,7 @@ void Presenter::Present(Frame& frame, bool reuse) {
 	const auto ime_visual = GetImeVisualState();
 	auto&      swapchain  = m_impl->swapchain;
 	const bool screenshot = m_impl->screenshot.Poll();
+	m_impl->input_script.Poll();
 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
 		auto status = swapchain.AcquireNextImage();
 		if (status != Swapchain::Status::Success) {

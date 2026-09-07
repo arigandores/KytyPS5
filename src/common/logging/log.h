@@ -23,6 +23,10 @@ enum class Direction { Silent, Console, File };
 
 Direction GetDirection();
 bool      IsSilent();
+// Per-packet chatter (end-of-pipe signals, event-queue polls, AGC argument dumps: ~1800 lines per
+// frame in ASTRO BOT) goes through LOGV and is written only with KYTY_LOG_VERBOSE=1 or when the
+// graphics debug dump is enabled.
+bool      IsVerbose();
 void      Write(std::string_view text);
 void      Write(fmt::text_style style, std::string_view text);
 void      WriteFatal(std::string_view text);
@@ -59,6 +63,20 @@ inline constexpr auto BrightWhite   = fmt::fg(fmt::terminal_color::bright_white)
 #define LOGF_COLOR(style, ...)                                                                     \
 	do {                                                                                           \
 		if (!::Log::IsSilent()) {                                                                  \
+			::Log::Write((style), ::fmt::sprintf(__VA_ARGS__));                                    \
+		}                                                                                          \
+	} while (false)
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define LOGV(...)                                                                                  \
+	do {                                                                                           \
+		if (::Log::IsVerbose()) {                                                                  \
+			::Log::Write(::fmt::sprintf(__VA_ARGS__));                                             \
+		}                                                                                          \
+	} while (false)
+// NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
+#define LOGV_COLOR(style, ...)                                                                     \
+	do {                                                                                           \
+		if (::Log::IsVerbose()) {                                                                  \
 			::Log::Write((style), ::fmt::sprintf(__VA_ARGS__));                                    \
 		}                                                                                          \
 	} while (false)

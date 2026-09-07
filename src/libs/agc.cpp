@@ -1633,7 +1633,7 @@ int KYTY_SYSV_ABI AgcSuspendPoint() {
 
 uint32_t* KYTY_SYSV_ABI AgcDcbContextStateOp(CommandBuffer* buf, uint32_t operation) {
 	PRINT_NAME();
-	LOGF("\t operation = 0x%08" PRIx32 "\n", operation);
+	LOGV("\t operation = 0x%08" PRIx32 "\n", operation);
 
 	const auto size_dw = context_state_op_size_dw(operation);
 	if (buf == nullptr || size_dw == 0) {
@@ -2813,7 +2813,7 @@ uint32_t* KYTY_SYSV_ABI AgcDcbSetBaseIndirectArgs(CommandBuffer* buf, uint32_t s
                                                   const volatile void* indirect_base_addr) {
 	PRINT_NAME();
 
-	LOGF("\t shader_type        = %" PRIu32 "\n"
+	LOGV("\t shader_type        = %" PRIu32 "\n"
 	     "\t indirect_base_addr = 0x%016" PRIx64 "\n",
 	     shader_type, reinterpret_cast<uint64_t>(indirect_base_addr));
 
@@ -3626,7 +3626,7 @@ uint32_t* KYTY_SYSV_ABI AgcUnknownKRzWekV120(CommandBuffer* buf, uint32_t arg1, 
                                              uint32_t arg3) {
 	PRINT_NAME();
 
-	LOGF("\t argc = 4\n"
+	LOGV("\t argc = 4\n"
 	     "\t arg0 = 0x%016" PRIx64 "\n"
 	     "\t arg1 = 0x%08" PRIx32 "\n"
 	     "\t arg2 = 0x%08" PRIx32 "\n"
@@ -3788,7 +3788,7 @@ int KYTY_SYSV_ABI AgcCondExecPatchSetCommandAddress(uint32_t*                cmd
                                                     const volatile uint32_t* command) {
 	PRINT_NAME();
 
-	LOGF("\t cmd     = 0x%016" PRIx64 "\n"
+	LOGV("\t cmd     = 0x%016" PRIx64 "\n"
 	     "\t command = 0x%016" PRIx64 "\n",
 	     reinterpret_cast<uint64_t>(cmd), reinterpret_cast<uint64_t>(command));
 
@@ -4310,7 +4310,7 @@ static void submit_acb(uint32_t queue, uint32_t* acb, uint32_t size_in_dwords) {
 	}
 
 	for (uint32_t i = 0; i < std::min<uint32_t>(size_in_dwords, 8); i++) {
-		LOGF("\t acb[%u] = 0x%08" PRIx32 "\n", i, acb[i]);
+		LOGV("\t acb[%u] = 0x%08" PRIx32 "\n", i, acb[i]);
 	}
 
 	GraphicsDbgDumpDcb("a", size_in_dwords, acb);

@@ -179,6 +179,11 @@ bool IsSilent() {
 	return g_initialized && g_direction == Direction::Silent;
 }
 
+bool IsVerbose() {
+	static const bool verbose = std::getenv("KYTY_LOG_VERBOSE") != nullptr;
+	return !IsSilent() && (verbose || Config::GraphicsDebugDumpEnabled());
+}
+
 static void CountWrite(uint64_t t0) {
 	namespace FS = Common::FrameStats;
 	if (t0 != 0) {

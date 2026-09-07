@@ -3,6 +3,7 @@
 
 #include "common/common.h"
 #include "common/uniqueFunction.h"
+#include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 #include "graphics/host_gpu/renderer/render.h"
 
@@ -56,6 +57,14 @@ public:
 	[[nodiscard]] GraphicContext&  Graphics() const noexcept { return m_graphics; }
 	// Host time (FrameStats::NowNs) of the last vkQueueSubmit; used to coalesce EOP flushes.
 	[[nodiscard]] uint64_t LastSubmitNs() const noexcept { return m_last_submit_ns; }
+	// KYTY_GPU_TIME=1 (gpuTimeProfiler.h): charge the GPU time up to this point of the current
+	// command buffer to (kind, key, key2).
+	void EnableGpuTime() { m_gpu_time.Enable(); }
+	void GpuMark(GpuTimeProfiler::Kind kind, uint64_t key, uint64_t key2 = 0) {
+		if (GpuTimeProfiler::Enabled() && !m_command.IsInvalid()) {
+			m_gpu_time.Mark(m_command.Handle(), CurrentTick(), kind, key, key2);
+		}
+	}
 
 private:
 	class CommandPool {
@@ -127,6 +136,7 @@ private:
 	std::deque<std::pair<uint64_t, uint32_t>> m_timestamp_pending;
 	std::mutex                                m_timestamp_mutex;
 	uint64_t                                  m_last_submit_ns = 0;
+	GpuTimeProfiler                           m_gpu_time;
 };
 
 } // namespace Libs::Graphics

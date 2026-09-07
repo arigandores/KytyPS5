@@ -990,6 +990,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		                                       image.info.resources.levels, layer, count};
 		buffer.Handle().clearColorImage(image.backing.image,
 		                                vk::ImageLayout::eTransferDstOptimal, &clear, 1, &range);
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 1);
 		for (uint32_t consumed = layer; consumed < layer + count; consumed++) {
 			if (!cache.TouchMeta(address, consumed, false)) {
 				EXIT("failed to consume DCC clear state for a shader binding\n");

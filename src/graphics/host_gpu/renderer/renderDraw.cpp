@@ -712,6 +712,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			buffer.Handle().clearDepthStencilImage(image.backing.image,
 			                                       vk::ImageLayout::eTransferDstOptimal, &clear, 1,
 			                                       &range);
+			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 2);
 			depth.depth_meta_clear_enable = false;
 			depth.depth_load_clear_enable = depth.depth_clear_enable;
 		}
@@ -1387,6 +1388,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		std::tie(emit_info.indirect_buffer, emit_info.indirect_offset) =
 		    m_indirect_sanitizer->Sanitize(buffer.Handle(), *args_buffer, args_offset, dwords,
 		                                   limits, true);
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 	}
 
 	if (log_pipeline_phase) {
@@ -1438,6 +1440,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
 	}
 	EmitDrawPrimitives(ucfg, vk_buffer, state.vs_input_info, draw, emit_info);
+	if (GpuTimeProfiler::Enabled()) {
+		const auto& vs = state.vs_input_info.stage;
+		const auto& ps = state.ps_input_info.stage;
+		m_context.GetCommandScheduler().GpuMark(
+		    GpuTimeProfiler::Kind::Draw, (state.ps_active && ps) ? ps.program->shader_hash : 0u,
+		    vs ? vs.program->shader_hash : 0u);
+	}
 
 	if (set_auto_debug) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
@@ -1452,6 +1461,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (shader_write_stages) {
 		m_context.GetCommandScheduler().EndRendering();
 		ShaderWriteBarrier(vk_buffer, shader_write_stages);
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
 	}
 	LogDrawPhase(draw.name, "DrawComplete");
 	if (set_auto_debug) {

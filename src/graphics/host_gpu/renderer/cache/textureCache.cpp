@@ -1126,6 +1126,7 @@ void TextureCache::InitializeImage(ImageId id, const ImageDesc& desc) {
 		}
 		data_imported = true;
 		UploadImage(image, desc, *source, source_offset);
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
 	}
 	if (data_imported) {
 		image.ClearBufferModified();
@@ -1515,6 +1516,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		command.Handle().clearDepthStencilImage(
 		    image.backing.image, vk::ImageLayout::eTransferDstOptimal, &clear, 1, &range);
 	}
+	m_scheduler.GpuMark(GpuTimeProfiler::Kind::Clear, 3);
 	CommitGpuWrite(image);
 	return true;
 }

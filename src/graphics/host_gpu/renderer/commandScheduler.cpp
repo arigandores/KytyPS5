@@ -111,7 +111,8 @@ bool CommandScheduler::InDeferredOperation() noexcept {
 CommandScheduler::CommandScheduler(RenderContext& context, GraphicContext& graphics)
     : m_master(graphics), m_context(context), m_graphics(graphics),
       m_command_pool(graphics, m_master), m_command(*this),
-      m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }) {
+      m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }),
+      m_gpu_time(graphics, m_master) {
 	InitTimestamps();
 }
 
@@ -436,6 +437,9 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 	m_command.m_buffer = m_command_pool.Commit();
 	m_command.Begin();
 	BeginTimestamp();
+	if (GpuTimeProfiler::Enabled()) {
+		m_gpu_time.Begin(m_command.Handle(), CurrentTick());
+	}
 	return m_command;
 }
 
@@ -507,6 +511,9 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 		m_timestamp_slot = -1;
 	}
 	HarvestTimestamps();
+	if (GpuTimeProfiler::Enabled()) {
+		m_gpu_time.Harvest();
+	}
 	m_last_submit_ns = Common::FrameStats::NowNs();
 	if (submit_t0 != 0) {
 		namespace FS  = Common::FrameStats;

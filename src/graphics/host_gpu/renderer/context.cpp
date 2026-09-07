@@ -121,6 +121,10 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 	Handle().beginRendering(rendering);
 	m_render_state = state;
 	m_rendering    = true;
+	if (GpuTimeProfiler::Enabled()) {
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 1,
+		                                        state.num_color_attachments);
+	}
 }
 
 void CommandBuffer::EndRendering() const {
@@ -130,6 +134,9 @@ void CommandBuffer::EndRendering() const {
 	Handle().endRendering();
 	m_rendering    = false;
 	m_render_state = {};
+	if (GpuTimeProfiler::Enabled()) {
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 2);
+	}
 }
 
 } // namespace Libs::Graphics

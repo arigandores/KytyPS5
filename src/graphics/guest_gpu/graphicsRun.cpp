@@ -1831,6 +1831,7 @@ void CommandProcessor::EmitGlobalBarrier() {
 	}
 	command.Handle().pipelineBarrier2(dependency);
 	command.MarkGlobalBarrier();
+	GetScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 4);
 }
 
 void CommandProcessor::TriggerEopEventAtEndOfPipe(uint32_t interrupt_context_id) {

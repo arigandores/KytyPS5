@@ -714,6 +714,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			}
 			std::tie(indirect_vk_buffer, indirect_vk_offset) =
 			    m_indirect_sanitizer->Sanitize(vk_buffer, *args_buffer, args_offset);
+			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 		} else {
 			indirect_vk_buffer = args_buffer->Handle();
 			indirect_vk_offset = args_offset;
@@ -745,6 +746,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		// A host fence used to serialize every dispatch. Preserve its read-before-write ordering
 		// while allowing the queue to execute asynchronously.
 		ShaderWriteHazardBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 3);
 	}
 	vk_buffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
 	if (indirect) {
@@ -752,9 +754,12 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	} else {
 		vk_buffer.dispatch(thread_group_x, thread_group_y, thread_group_z);
 	}
+	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
+	                                        indirect ? 1u : 0u);
 
 	// The removed host fence also ordered read-only dispatches before later writers.
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
+	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 2);
 	lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
 	ResetBindings();
 }

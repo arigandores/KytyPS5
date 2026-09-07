@@ -14,6 +14,7 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
+#include "graphics/host_gpu/vma.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -1195,6 +1196,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 		};
 		static Snapshot prev;
 		Snapshot        cur;
+		if (r.cfg->flip_status.count % 300 == 0) {
+			Graphics::VulkanLogMemoryStats();
+		}
 		cur.host_ns = FS::NowNs();
 		for (size_t i = 0; i < cur.c.size(); i++) {
 			cur.c[i] = FS::Read(static_cast<FS::Counter>(i));

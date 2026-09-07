@@ -40,6 +40,7 @@ struct MemoryStats {
 };
 
 MemoryStats g_memory_stats;
+const GraphicContext* g_memory_context = nullptr;
 
 void TrackAllocationImpl(const VulkanMemory& memory) {
 	g_memory_stats.allocated[memory.type] += memory.requirements.size;
@@ -88,7 +89,37 @@ bool GraphicContext::CreateAllocator() {
 		LOGF("vmaCreateAllocator failed: %s\n", VulkanToString(result).c_str());
 		return false;
 	}
+	g_memory_context = this;
 	return true;
+}
+
+void VulkanLogMemoryStats() {
+	const auto* context = g_memory_context;
+	if (context == nullptr || context->allocator == nullptr) {
+		return;
+	}
+	const auto& properties = context->GetPhysicalDeviceMemoryProperties();
+	for (uint32_t i = 0; i < properties.memoryTypeCount && i < VK_MAX_MEMORY_TYPES; i++) {
+		const auto count = g_memory_stats.count[i].load();
+		if (count == 0) {
+			continue;
+		}
+		const auto& type = properties.memoryTypes[i];
+		LOGF("MemStats: type=%u heap=%u flags=0x%x count=%" PRIu64 " bytes=%" PRIu64 "\n", i,
+		     type.heapIndex, static_cast<uint32_t>(type.propertyFlags), count,
+		     g_memory_stats.allocated[i].load());
+	}
+	VmaBudget budgets[VK_MAX_MEMORY_HEAPS] {};
+	vmaGetHeapBudgets(context->allocator, budgets);
+	for (uint32_t i = 0; i < properties.memoryHeapCount; i++) {
+		LOGF("MemStats: heap=%u flags=0x%x size=%" PRIu64 " usage=%" PRIu64 " budget=%" PRIu64
+		     " allocation=%" PRIu64 " blocks=%" PRIu64 "\n",
+		     i, static_cast<uint32_t>(properties.memoryHeaps[i].flags),
+		     static_cast<uint64_t>(properties.memoryHeaps[i].size),
+		     static_cast<uint64_t>(budgets[i].usage), static_cast<uint64_t>(budgets[i].budget),
+		     static_cast<uint64_t>(budgets[i].statistics.allocationBytes),
+		     static_cast<uint64_t>(budgets[i].statistics.blockBytes));
+	}
 }
 
 // ---------------------------------------------------------------------------------------------

@@ -9,6 +9,8 @@ namespace Libs::Graphics {
 uint64_t VulkanNextMemoryUniqueId();
 void     VulkanTrackAllocation(const VulkanMemory& memory);
 void     VulkanUntrackAllocation(const VulkanMemory& memory);
+// MemStats: per-memory-type live allocations and per-heap budgets (KYTY_FRAME_TRACE, every 300 flips).
+void     VulkanLogMemoryStats();
 
 } // namespace Libs::Graphics
 

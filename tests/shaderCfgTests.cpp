@@ -8638,7 +8638,11 @@ void TestComputeDispatchWaveSize() {
 }
 
 void TestNewShaderRecompilerBufferLoadsGuardedByExec() {
+  // EXEC comes from a compare so the guard stays per lane (a literal EXEC folds to a constant
+  // condition and the emitter drops the branch).
   const uint32_t shader[] = {
+      EncodeVopc(0xc4, 3 + 256, 2),  // v_cmp_gt_u32 vcc, v3, v2
+      EncodeSop1(0x04, 126, 106),    // s_mov_b64 exec, vcc
       EncodeMubuf0(0x0c),
       EncodeMubuf1(0, 0, 1), // buffer_load_dword
                              // v0
@@ -10130,8 +10134,10 @@ void TestNewShaderRecompilerVertexSystemInputsWithoutMirrors() {
 }
 
 void TestNewShaderRecompilerVertexExportUsesInvocationExecMask() {
+  // EXEC from a compare: a literal EXEC folds to a constant and the guard branch disappears.
   const uint32_t shader[] = {
-      EncodeSop1(0x04, 126, 129), // s_mov_b64 exec, 1
+      EncodeVopc(0xc4, 3 + 256, 2), // v_cmp_gt_u32 vcc, v3, v2
+      EncodeSop1(0x04, 126, 106),   // s_mov_b64 exec, vcc
       EncodeExp0(0x0c, 0xf),
       EncodeExp1(0, 1, 2, 3), // POS0
       0xbf810000u,

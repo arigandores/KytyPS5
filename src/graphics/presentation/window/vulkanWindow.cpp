@@ -16,6 +16,7 @@
 #include "SDL_video.h"
 #include "SDL_vulkan.h"
 #include "common/assert.h"
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
@@ -672,6 +673,12 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 		robustness2.robustImageAccess2  = supported_robustness2.robustImageAccess2;
 		robustness2.nullDescriptor      = supported_robustness2.nullDescriptor;
 	}
+	graphics.robust_buffer_access2_enabled =
+	    robustness2_ext_enabled && robustness2.robustBufferAccess2 == VK_TRUE;
+	ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(graphics.robust_buffer_access2_enabled);
+	LOGF("Vulkan robustBufferAccess2: %s (shader bounds branches %s)\n",
+	     graphics.robust_buffer_access2_enabled ? "enabled" : "unavailable",
+	     ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? "dropped" : "kept");
 
 	const bool subgroup_size_control_enabled =
 	    graphics.compute_subgroup_size_control_enabled &&

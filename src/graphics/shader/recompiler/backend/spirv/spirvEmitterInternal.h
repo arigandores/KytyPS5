@@ -19,6 +19,7 @@
 #include <map>
 #include <string>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -60,6 +61,7 @@ enum : uint32_t {
 	StorageClassInput                        = 1,
 	StorageClassOutput                       = 3,
 	StorageClassWorkgroup                    = 4,
+	StorageClassPrivate                      = 6,
 	StorageClassFunction                     = 7,
 	StorageClassPushConstant                 = 9,
 	StorageClassImage                        = 11,
@@ -367,6 +369,9 @@ struct EmitterState {
 	uint32_t                                         storage_buffer_u64_variable = 0;
 	std::array<uint32_t, IR::ShaderInfo::MaxBuffers> memory_byte_offsets {};
 	uint32_t                                         bda_pagetable_variable  = 0;
+	// Null-page BDA mode: Private u32 holding the last missing page (0 = none), flushed to
+	// the fault buffer at return (see DefineGetBdaPointer).
+	uint32_t                                         bda_fault_page_variable = 0;
 	uint32_t                                         fault_buffer_variable   = 0;
 	uint32_t                                         bda_pointer_function    = 0;
 	// Page lookup shared by the dwords of one scalar pointer load (S_LOAD_DWORDXn): the
@@ -469,6 +474,8 @@ struct ValueEmitContext {
 	const std::unordered_map<const IR::Inst*, uint32_t>*               dispatcher_spills = nullptr;
 	std::unordered_map<const IR::Inst*, std::pair<uint32_t, uint32_t>> dispatcher_block_loads;
 	const IR::Block*                                                   current_block = nullptr;
+	// Scalar pointer loads already emitted as part of a group (see LoadScalarBdaGroup).
+	std::unordered_set<const IR::Inst*>                                grouped_loads;
 	uint32_t                                                           scratch_u32_variable = 0;
 };
 
@@ -664,6 +671,7 @@ MemoryResourceAccess PrepareStorageBufferResourceAccess(EmitterState& state,
 uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess& access,
                                 uint32_t raw_index);
 
+bool     RobustLoadsEnabled();
 uint32_t EmitMemoryElementInBounds(EmitterState& state, const MemoryResourceAccess& access,
                                    uint32_t index);
 
@@ -772,10 +780,16 @@ bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst);
 void EmitProgram(EmitterState& state, const IR::Program& program);
 
 void DefineGetBdaPointer(EmitterState& state);
+bool BdaNullPageEnabled();
+void EmitBdaFaultFlush(EmitterState& state);
 
 // These templates accept local lambdas from several emitter translation units.
 template <typename Fn>
 void EmitIfCondition(EmitterState& state, uint32_t condition, Fn&& fn) {
+	if (condition == ConstantBool(state, true)) {
+		fn();
+		return;
+	}
 	const auto then_label  = state.builder.AllocateId();
 	const auto merge_label = state.builder.AllocateId();
 	state.builder.AddFunction({OpSelectionMerge, merge_label, SelectionControlNone});
@@ -789,6 +803,9 @@ void EmitIfCondition(EmitterState& state, uint32_t condition, Fn&& fn) {
 template <typename Fn>
 uint32_t EmitValueOrDefaultIfCondition(EmitterState& state, uint32_t condition, uint32_t type,
                                        uint32_t default_value, Fn&& fn) {
+	if (condition == ConstantBool(state, true)) {
+		return fn();
+	}
 	const auto then_label  = state.builder.AllocateId();
 	const auto then_exit   = state.builder.AllocateId();
 	const auto else_label  = state.builder.AllocateId();

@@ -188,17 +188,30 @@ void RecordBdaFault(EmitterState& state, uint32_t page) {
 	    {OpStore, pointer, Binary(state, OpBitwiseOr, TypeU32(state), value, bit)});
 }
 
-uint32_t GetBdaPointer(ValueEmitContext& ctx, uint32_t address) {
+uint32_t GetBdaPointer(ValueEmitContext& ctx, uint32_t address, uint32_t active = 0) {
 	auto&      state  = ctx.state;
 	const auto result = state.builder.AllocateId();
+	if (BdaNullPageEnabled()) {
+		if (active == 0) {
+			active = ConstantBool(state, true);
+		}
+		state.builder.AddFunction({OpFunctionCall, TypeDeviceAddress(state), result,
+		                           state.bda_pointer_function, address, active});
+		return result;
+	}
 	state.builder.AddFunction(
 	    {OpFunctionCall, TypeDeviceAddress(state), result, state.bda_pointer_function, address});
 	return result;
 }
 
+uint32_t LoadBdaAt(ValueEmitContext& ctx, uint32_t pointer);
+
 uint32_t LoadBdaDword(ValueEmitContext& ctx, uint32_t address) {
 	auto&      state   = ctx.state;
 	const auto bda     = GetBdaPointer(ctx, address);
+	if (BdaNullPageEnabled()) {
+		return LoadBdaAt(ctx, bda);
+	}
 	const auto present = Binary(state, OpINotEqual, TypeBool(state), bda,
 	                            ConstantDeviceAddress(state, 0));
 	return EmitValueOrZeroIfCondition(state, present, [&]() {
@@ -213,7 +226,16 @@ uint32_t LoadBdaDword(ValueEmitContext& ctx, uint32_t address) {
 }
 
 uint32_t LoadBdaAt(ValueEmitContext& ctx, uint32_t pointer) {
-	auto&      state   = ctx.state;
+	auto& state = ctx.state;
+	if (BdaNullPageEnabled()) {
+		const auto typed = state.builder.AllocateId();
+		state.builder.AddFunction(
+		    {OpConvertUToPtr, TypePhysicalU32Pointer(state), typed, pointer});
+		const auto value = state.builder.AllocateId();
+		state.builder.AddFunction(
+		    {OpLoad, TypeU32(state), value, typed, MemoryAccessAlignedMask, sizeof(uint32_t)});
+		return value;
+	}
 	const auto present = Binary(state, OpINotEqual, TypeBool(state), pointer,
 	                            ConstantDeviceAddress(state, 0));
 	return EmitValueOrZeroIfCondition(state, present, [&]() {
@@ -298,6 +320,157 @@ uint32_t LoadScalarBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::Me
 	return LoadBdaAt(ctx, pointer);
 }
 
+
+// Grouped scalar pointer loads. The translator splits S_LOAD_DWORDXn into n dword loads with the
+// same base V# and SGPR offset and immediates imm, imm+4, ...; each one cost a page lookup. Here
+// the first member looks the page up once and the others load at page_ptr + delta, behind a
+// uniform "the group stays inside the page" check (else: per-dword lookups). Members are
+// defined eagerly; their own emission is skipped through ctx.grouped_loads. Null-page mode only
+// (loads are unconditional there). Returns the value of `inst`.
+bool ScalarGroupTrace() {
+	static const bool enabled = std::getenv("KYTY_SCALAR_GROUP_TRACE") != nullptr;
+	return enabled;
+}
+
+bool ScalarGroupEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_SCALAR_GROUP");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
+uint32_t LoadScalarBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
+                            uint32_t active_id) {
+	auto&       state  = ctx.state;
+	const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+	const auto  low    = inst.Arg(1).Resolve();
+	const auto  active = inst.Arg(inst.NumArgs() - 1).Resolve();
+	struct Member {
+		const IR::Inst* inst   = nullptr;
+		int32_t         offset = 0;
+	};
+	std::vector<Member> members;
+	members.push_back({&inst, static_cast<int32_t>(mem.offset) & ~3});
+	if (ctx.current_block != nullptr) {
+		bool     seen  = false;
+		uint32_t scanned = 0;
+		for (const auto& other: *ctx.current_block) {
+			if (!seen) {
+				seen = &other == &inst;
+				continue;
+			}
+			if (++scanned > 96u) {
+				break;
+			}
+			if (other.GetOpcode() != inst.GetOpcode() || other.NumArgs() != inst.NumArgs() ||
+			    ctx.grouped_loads.contains(&other)) {
+				continue;
+			}
+			const auto& other_mem = ctx.Memory(other);
+			if (other_mem.kind != IR::ResourceKind::ScalarAddress || other_mem.address_is_full ||
+			    other.Arg(0).Resolve().TryInstruction() != handle ||
+			    !(other.Arg(1).Resolve() == low) ||
+			    !(other.Arg(other.NumArgs() - 1).Resolve() == active)) {
+				if (ScalarGroupTrace()) {
+					LOGF("ScalarGroup: reject kind=%d full=%d handle=%d low=%d active=%d off=%d/%d\n",
+					     static_cast<int>(other_mem.kind), other_mem.address_is_full ? 1 : 0,
+					     other.Arg(0).Resolve().TryInstruction() == handle ? 1 : 0,
+					     other.Arg(1).Resolve() == low ? 1 : 0,
+					     other.Arg(other.NumArgs() - 1).Resolve() == active ? 1 : 0,
+					     static_cast<int>(other_mem.offset), static_cast<int>(mem.offset));
+				}
+				continue;
+			}
+			members.push_back({&other, static_cast<int32_t>(other_mem.offset) & ~3});
+		}
+	}
+	if (ScalarGroupTrace()) {
+		LOGF("ScalarGroup: members=%zu first_off=%d\n", members.size(), static_cast<int>(mem.offset));
+	}
+	int32_t imm_min = members[0].offset;
+	int32_t imm_max = members[0].offset;
+	for (const auto& member: members) {
+		imm_min = std::min(imm_min, member.offset);
+		imm_max = std::max(imm_max, member.offset);
+	}
+	// Keep the group within one page window; drop the far members otherwise.
+	{
+		std::vector<Member> kept;
+		for (const auto& member: members) {
+			if (static_cast<int64_t>(member.offset) - imm_min + 4 <=
+			    static_cast<int64_t>(BufferCache::CACHING_PAGESIZE)) {
+				kept.push_back(member);
+			}
+		}
+		members.swap(kept);
+		imm_max = imm_min;
+		for (const auto& member: members) {
+			imm_max = std::max(imm_max, member.offset);
+		}
+	}
+	const auto type       = TypeDeviceAddress(state);
+	const auto base       = DeviceAddressFromWords(state, ctx.Arg(*handle, 0), ctx.Arg(*handle, 1));
+	const auto masked_low = Binary(state, OpBitwiseAnd, TypeU32(state), ctx.Arg(inst, 1),
+	                               ConstantU32(state, ~3u));
+	auto address = Binary(state, OpIAdd, type, base, Unary(state, OpUConvert, type, masked_low));
+	address      = Binary(state, OpBitwiseAnd, type, address, ConstantDeviceAddress(state, ~uint64_t {3}));
+	address      = Binary(state, OpIAdd, type, address,
+	                      ConstantDeviceAddress(state, static_cast<uint64_t>(static_cast<int64_t>(imm_min))));
+	const auto page_ptr = GetBdaPointer(ctx, address, active_id);
+	std::vector<uint32_t> values(members.size(), 0u);
+	if (members.size() == 1u) {
+		values[0] = LoadBdaAt(ctx, page_ptr);
+	} else {
+		const auto span = static_cast<uint64_t>(imm_max - imm_min) + sizeof(uint32_t);
+		const auto page_offset = Binary(state, OpBitwiseAnd, type, address,
+		                                ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - 1));
+		const auto fits = Binary(state, OpULessThanEqual, TypeBool(state), page_offset,
+		                         ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - span));
+		const auto fast_label  = state.builder.AllocateId();
+		const auto slow_label  = state.builder.AllocateId();
+		const auto merge_label = state.builder.AllocateId();
+		state.builder.AddFunction({OpSelectionMerge, merge_label, SelectionControlNone});
+		state.builder.AddFunction({OpBranchConditional, fits, fast_label, slow_label});
+		EmitLabel(state, fast_label);
+		std::vector<uint32_t> fast_values;
+		for (const auto& member: members) {
+			const auto delta = static_cast<uint64_t>(member.offset - imm_min);
+			const auto ptr   = delta == 0 ? page_ptr
+			                              : Binary(state, OpIAdd, type, page_ptr,
+			                                       ConstantDeviceAddress(state, delta));
+			fast_values.push_back(LoadBdaAt(ctx, ptr));
+		}
+		const auto fast_exit = state.current_label;
+		state.builder.AddFunction({OpBranch, merge_label});
+		EmitLabel(state, slow_label);
+		std::vector<uint32_t> slow_values;
+		for (const auto& member: members) {
+			const auto delta = static_cast<uint64_t>(member.offset - imm_min);
+			const auto addr  = delta == 0 ? address
+			                              : Binary(state, OpIAdd, type, address,
+			                                       ConstantDeviceAddress(state, delta));
+			slow_values.push_back(LoadBdaAt(ctx, GetBdaPointer(ctx, addr, active_id)));
+		}
+		const auto slow_exit = state.current_label;
+		state.builder.AddFunction({OpBranch, merge_label});
+		EmitLabel(state, merge_label);
+		for (size_t i = 0; i < members.size(); i++) {
+			values[i] = state.builder.AllocateId();
+			state.builder.AddFunction({OpPhi, TypeU32(state), values[i], fast_values[i], fast_exit,
+			                           slow_values[i], slow_exit});
+		}
+	}
+	for (size_t i = 1; i < members.size(); i++) {
+		const auto masked = active_id == 0 ? values[i]
+		                                   : Select(state, TypeU32(state), active_id, values[i],
+		                                            ConstantU32(state, 0));
+		ctx.Define(*members[i].inst, masked);
+		ctx.grouped_loads.insert(members[i].inst);
+	}
+	return values[0];
+}
+
 uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
 	             uint32_t bits) {
 	auto&      state         = ctx.state;
@@ -309,10 +482,38 @@ uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryIn
 		const char* value = std::getenv("KYTY_SCALAR_BDA");
 		return value == nullptr || value[0] != '0';
 	}();
+	if (ScalarGroupTrace()) {
+		const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+		LOGF("ScalarGroup: load kind=%d bits=%u active=%d full=%d handle_op=%d nargs=%zu off=%d" "\n",
+		     static_cast<int>(mem.kind), bits, always_active ? 1 : 0, mem.address_is_full ? 1 : 0,
+		     handle != nullptr ? static_cast<int>(handle->GetOpcode()) : -1,
+		     handle != nullptr ? handle->NumArgs() : size_t {0}, static_cast<int>(mem.offset));
+	}
 	if (scalar_fast_path && mem.kind == IR::ResourceKind::ScalarAddress && bits == 32u) {
 		// The shared page lookup (fast/slow branch per dword) made the NVIDIA compiler take 2.5 s
 		// per tiled-lighting pipeline instead of 50 ms, for no measurable GPU gain: disabled.
 		constexpr bool kSharePageLookup = false;
+		if (BdaNullPageEnabled()) {
+			// Every lookup yields a readable pointer, so inactive lanes load too and the
+			// result is masked; the fault record honours `active`.
+			const auto  active = always_active ? 0u : ctx.Arg(inst, inst.NumArgs() - 1);
+			const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+			uint32_t    value  = 0;
+			if (ScalarGroupEnabled() && !mem.address_is_full && handle != nullptr &&
+			    handle->GetOpcode() == IR::ValueOpcode::GetAddressResource &&
+			    handle->NumArgs() == 2) {
+				value = LoadScalarBdaGroup(ctx, inst, mem, active);
+			} else {
+				const auto address = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state),
+				                            GuestAddress(ctx, inst, mem),
+				                            ConstantDeviceAddress(state, ~uint64_t {3}));
+				value = LoadBdaAt(ctx, GetBdaPointer(ctx, address, active));
+			}
+			if (always_active) {
+				return value;
+			}
+			return Select(state, TypeU32(state), active, value, ConstantU32(state, 0));
+		}
 		if (always_active) {
 			return LoadScalarBda(ctx, inst, mem, kSharePageLookup);
 		}
@@ -322,6 +523,53 @@ uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryIn
 	}
 	const auto address = GuestAddress(ctx, inst, mem);
 	const auto active  = ctx.Arg(inst, inst.NumArgs() - 1);
+	if (BdaNullPageEnabled()) {
+		// Null-page mode: the aligned dword loads unconditionally (inactive lanes read a valid
+		// page too and get masked); only the rare dword-crossing second load keeps a branch.
+		const auto active_id = always_active ? 0u : active;
+		const auto aligned   = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), address,
+		                              ConstantDeviceAddress(state, ~uint64_t {3}));
+		const auto first     = LoadBdaAt(ctx, GetBdaPointer(ctx, aligned, active_id));
+		const auto byte      = Binary(state, OpBitwiseAnd, TypeU32(state),
+		                              Unary(state, OpUConvert, TypeU32(state), address),
+		                              ConstantU32(state, 3));
+		uint32_t value = first;
+		if (bits != 8u) {
+			const auto crosses = Binary(state, bits == 16u ? OpUGreaterThan : OpINotEqual,
+			                            TypeBool(state), byte,
+			                            ConstantU32(state, bits == 16u ? 2u : 0u));
+			const auto second = EmitValueOrZeroIfCondition(state, crosses, [&]() {
+				return LoadBdaAt(
+				    ctx, GetBdaPointer(ctx,
+				                       Binary(state, OpIAdd, TypeDeviceAddress(state), aligned,
+				                              ConstantDeviceAddress(state, sizeof(uint32_t))),
+				                       active_id));
+			});
+			const auto shift = Binary(state, OpShiftLeftLogical, TypeU32(state), byte,
+			                          ConstantU32(state, 3));
+			const auto upper_shift = Binary(
+			    state, OpShiftLeftLogical, TypeU32(state),
+			    Binary(state, OpBitwiseAnd, TypeU32(state),
+			           Binary(state, OpISub, TypeU32(state), ConstantU32(state, 4), byte),
+			           ConstantU32(state, 3)),
+			    ConstantU32(state, 3));
+			value = Binary(state, OpBitwiseOr, TypeU32(state),
+			               Binary(state, OpShiftRightLogical, TypeU32(state), first, shift),
+			               Binary(state, OpShiftLeftLogical, TypeU32(state), second, upper_shift));
+		} else {
+			const auto shift = Binary(state, OpShiftLeftLogical, TypeU32(state), byte,
+			                          ConstantU32(state, 3));
+			value = Binary(state, OpShiftRightLogical, TypeU32(state), first, shift);
+		}
+		if (bits != 32u) {
+			value = Binary(state, OpBitwiseAnd, TypeU32(state), value,
+			               ConstantU32(state, bits == 8u ? 0xffu : 0xffffu));
+		}
+		if (always_active) {
+			return value;
+		}
+		return Select(state, TypeU32(state), active, value, ConstantU32(state, 0));
+	}
 	return EmitValueOrZeroIfCondition(state, active, [&]() {
 		const auto aligned = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), address,
 		                            ConstantDeviceAddress(state, ~uint64_t {3}));
@@ -414,7 +662,18 @@ uint32_t LoadWordPrepared(ValueEmitContext& ctx, const IR::Inst& inst, const IR:
 }
 
 uint32_t LoadWord(ValueEmitContext& ctx, const IR::Inst& inst, IR::MemoryInfo mem) {
-	return EmitValueOrZeroIfCondition(ctx.state, ctx.Arg(inst, inst.NumArgs() - 1), [&]() {
+	const auto active = ctx.Arg(inst, inst.NumArgs() - 1);
+	if (RobustLoadsEnabled() &&
+	    (mem.kind == IR::ResourceKind::Buffer || mem.kind == IR::ResourceKind::ScalarBuffer)) {
+		// Inactive lanes may load too (robust range), the result is masked.
+		const auto resource = PrepareMemoryResourceAccess(ctx.state, mem);
+		const auto value    = LoadWordPrepared(ctx, inst, mem, resource);
+		if (active == ConstantBool(ctx.state, true)) {
+			return value;
+		}
+		return Select(ctx.state, TypeU32(ctx.state), active, value, ConstantU32(ctx.state, 0));
+	}
+	return EmitValueOrZeroIfCondition(ctx.state, active, [&]() {
 		const auto resource = PrepareMemoryResourceAccess(ctx.state, mem);
 		return LoadWordPrepared(ctx, inst, mem, resource);
 	});
@@ -1107,8 +1366,95 @@ void StoreWideShared(ValueEmitContext& ctx, const IR::Inst& inst, uint32_t compo
 
 } // namespace
 
+bool BdaNullPageEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_BDA_NULLPAGE");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
+// Null-page mode: at shader return, record the last missing page of this invocation.
+void EmitBdaFaultFlush(EmitterState& state) {
+	if (state.bda_fault_page_variable == 0 || state.fault_buffer_variable == 0) {
+		return;
+	}
+	const auto page = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, TypeU32(state), page, state.bda_fault_page_variable});
+	const auto faulted = Binary(state, OpINotEqual, TypeBool(state), page, ConstantU32(state, 0));
+	EmitIfCondition(state, faulted, [&]() { RecordBdaFault(state, page); });
+}
+
+namespace {
+
+// Branchless page lookup: entry 0 of the page table holds the address of a zero-filled
+// page (BufferCache), so a missing page resolves to it instead of a null pointer and the
+// callers load unconditionally. The miss is remembered per invocation (Private variable)
+// and recorded at return, so the CPU still learns about uncached pages a frame later.
+void DefineGetBdaPointerNullPage(EmitterState& state) {
+	const auto type          = TypeDeviceAddress(state);
+	const auto function_type = state.builder.Type(OpTypeFunction, {type, type, TypeBool(state)});
+	state.bda_fault_page_variable = state.builder.DefineGlobalVariable(
+	    TypePointer(state, StorageClassPrivate, TypeU32(state)), StorageClassPrivate);
+	state.builder.AddName(state.bda_fault_page_variable, "bda_fault_page");
+	state.bda_pointer_function = state.builder.AllocateId();
+	const auto address         = state.builder.AllocateId();
+	const auto entry_label     = state.builder.AllocateId();
+	state.builder.AddName(state.bda_pointer_function, "get_bda_pointer");
+	state.builder.AddFunction(
+	    {OpFunction, type, state.bda_pointer_function, FunctionControlNone, function_type});
+	state.builder.AddFunction({OpFunctionParameter, type, address});
+	const auto active = state.builder.AllocateId();
+	state.builder.AddFunction({OpFunctionParameter, TypeBool(state), active});
+	EmitLabel(state, entry_label);
+
+	const auto page64 = Binary(state, OpShiftRightLogical, type, address,
+	                           ConstantDeviceAddress(state, BufferCache::CACHING_PAGEBITS));
+	const auto table_length = state.builder.AllocateId();
+	state.builder.AddFunction({OpArrayLength, TypeU32(state), table_length,
+	                           state.bda_pagetable_variable, 0});
+	const auto in_table = Binary(state, OpULessThan, TypeBool(state), page64,
+	                             Unary(state, OpUConvert, type, table_length));
+	const auto page = Select(state, TypeU32(state), in_table,
+	                         Unary(state, OpUConvert, TypeU32(state), page64),
+	                         ConstantU32(state, 0));
+	const auto entry_pointer = state.builder.AllocateId();
+	state.builder.AddFunction({OpAccessChain, TypeDeviceAddressStoragePointer(state), entry_pointer,
+	                           state.bda_pagetable_variable, ConstantU32(state, 0), page});
+	const auto loaded = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, type, loaded, entry_pointer});
+	const auto null_pointer = state.builder.AllocateId();
+	state.builder.AddFunction({OpAccessChain, TypeDeviceAddressStoragePointer(state), null_pointer,
+	                           state.bda_pagetable_variable, ConstantU32(state, 0),
+	                           ConstantU32(state, 0)});
+	const auto null_base = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, type, null_base, null_pointer});
+	const auto missing = Binary(state, OpLogicalOr, TypeBool(state),
+	                            Unary(state, OpLogicalNot, TypeBool(state), in_table),
+	                            Binary(state, OpIEqual, TypeBool(state), loaded,
+	                                   ConstantDeviceAddress(state, 0)));
+	const auto base = Select(state, type, missing, null_base, loaded);
+	// Remember an in-table miss (page 0 is the null page itself and never misses).
+	const auto previous = state.builder.AllocateId();
+	state.builder.AddFunction({OpLoad, TypeU32(state), previous, state.bda_fault_page_variable});
+	const auto remembered = Select(state, TypeU32(state),
+	                               Binary(state, OpLogicalAnd, TypeBool(state), missing, active),
+	                               page, previous);
+	state.builder.AddFunction({OpStore, state.bda_fault_page_variable, remembered});
+	const auto offset = Binary(state, OpBitwiseAnd, type, address,
+	                           ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - 1));
+	state.builder.AddFunction({OpReturnValue, Binary(state, OpIAdd, type, base, offset)});
+	state.builder.AddFunction({OpFunctionEnd});
+}
+
+} // namespace
+
 void DefineGetBdaPointer(EmitterState& state) {
 	if (!state.program.info.uses_dma) {
+		return;
+	}
+	if (BdaNullPageEnabled()) {
+		DefineGetBdaPointerNullPage(state);
 		return;
 	}
 	const auto type            = TypeDeviceAddress(state);
@@ -1232,6 +1578,9 @@ bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst) {
 	const auto address_info = IR::AddressOpcodeInfoOf(op);
 	const bool load_address = address_info.access == IR::AddressAccess::Read;
 	if (load_address && ctx.Memory(inst).kind != IR::ResourceKind::Scratch) {
+		if (ctx.grouped_loads.contains(&inst)) {
+			return true;
+		}
 		ctx.Define(inst, LoadBda(ctx, inst, ctx.Memory(inst), address_info.data_bits));
 		return true;
 	}

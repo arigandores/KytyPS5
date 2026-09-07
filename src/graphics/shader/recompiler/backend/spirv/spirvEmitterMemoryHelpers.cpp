@@ -171,8 +171,35 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
 	return access.add_index_offset ? EmitAddU32(state, raw_index, access.index_offset) : raw_index;
 }
 
+namespace {
+bool g_robust_buffer_loads = false;
+} // namespace
+
+void SetRobustBufferLoads(bool device_supported) {
+	const char* value = std::getenv("KYTY_ROBUST_LOADS");
+	if (value != nullptr) {
+		g_robust_buffer_loads = value[0] == '1';
+		return;
+	}
+	g_robust_buffer_loads = device_supported;
+}
+
+bool RobustBufferLoads() {
+	return g_robust_buffer_loads;
+}
+
+bool RobustLoadsEnabled() {
+	return RobustBufferLoads();
+}
+
 uint32_t EmitMemoryElementInBounds(EmitterState& state, const MemoryResourceAccess& access,
                                    uint32_t index) {
+	if (RobustLoadsEnabled() &&
+	    (access.kind == IR::ResourceKind::Buffer || access.kind == IR::ResourceKind::ScalarBuffer ||
+	     access.kind == IR::ResourceKind::Gds)) {
+		// robustBufferAccess2: an out-of-range dword reads as zero and stores are dropped.
+		return ConstantBool(state, true);
+	}
 	const auto in_bounds = state.builder.AllocateId();
 	state.builder.AddFunction({OpULessThan, TypeBool(state), in_bounds, index, access.length});
 	return in_bounds;

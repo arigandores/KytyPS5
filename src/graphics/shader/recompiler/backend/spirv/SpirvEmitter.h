@@ -9,6 +9,13 @@
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv {
 
+namespace Emitter {
+// Device robustBufferAccess2: storage-buffer loads emit no bounds branch (KYTY_ROBUST_LOADS=0/1
+// overrides). Part of the translation cache signature.
+void SetRobustBufferLoads(bool device_supported);
+bool RobustBufferLoads();
+} // namespace Emitter
+
 void AnalyzeProgramRequirements(IR::Program& program);
 
 std::vector<uint32_t> EmitProgram(const IR::Program& program,

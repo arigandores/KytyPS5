@@ -3,6 +3,7 @@
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "graphics/shader/recompiler/ir/Value.h"
 #include "kytyGitVersion.h"
 
@@ -542,7 +543,8 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	m_directory = std::filesystem::path("_ShaderCache") / title_id;
 	// Keyed by the translator sources, not the git revision: unrelated commits keep the cache.
 	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +
-	              std::string(translator_hash) + "\n";
+	              std::string(translator_hash) +
+	              (ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? ":robust" : "") + "\n";
 	m_enabled = true;
 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
 }

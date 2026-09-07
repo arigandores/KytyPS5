@@ -85,6 +85,16 @@ void BufferCache::ChangeRegister(BufferId id) {
 		EXIT_IF(!inserted);
 		m_total_used_memory += buffer.Size();
 		buffer.lru_id = m_lru_cache.Insert(id, m_gc_tick);
+		if (!m_bda_null_page_ready) {
+			// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never
+			// mapped) holds a zero-filled page that unmapped addresses resolve to. Written
+			// here, at the first registration, because the constructor has no command buffer.
+			m_bda_null_page_ready = true;
+			m_bda_null_page.Fill(0, CACHING_PAGESIZE, 0);
+			const vk::DeviceAddress null_page_address = m_bda_null_page.BufferDeviceAddress();
+			WriteDataBuffer(m_bda_pagetable_buffer, 0, &null_page_address,
+			                sizeof(null_page_address));
+		}
 		std::vector<vk::DeviceAddress> addresses;
 		addresses.reserve(size_pages);
 		for (uint64_t i = 0; i < size_pages; ++i) {
@@ -211,6 +221,8 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	  m_gds_buffer(graphics, scheduler, MemoryUsage::Stream, 0, AllFlags, GdsBufferSize),
 	  m_bda_pagetable_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 0, AllFlags,
 	                         BDA_PAGETABLE_SIZE),
+	  m_bda_null_page(graphics, scheduler, MemoryUsage::DeviceLocal, 0,
+	                  AllFlags | vk::BufferUsageFlagBits::eShaderDeviceAddress, CACHING_PAGESIZE),
 	  m_memory_tracker(page_manager),
 	  m_staging_buffer(graphics, scheduler, MemoryUsage::Upload, 512 * MiB),
 	  m_stream_buffer(graphics, scheduler, MemoryUsage::Stream, 64 * MiB),
@@ -221,6 +233,9 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	m_gds_buffer.Flush(0, m_gds_buffer.Size());
 	SetVulkanObjectNameF(m_graphics.device, m_bda_pagetable_buffer.Handle(),
 	                     "BDA Page Table Buffer");
+	// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never mapped)
+	// holds a zero-filled page that unmapped addresses resolve to.
+	SetVulkanObjectNameF(m_graphics.device, m_bda_null_page.Handle(), "BDA Null Page");
 	const auto null_id =
 	    m_slot_buffers.insert(m_graphics, m_scheduler, MemoryUsage::DeviceLocal, 0, AllFlags, 16);
 	EXIT_IF(null_id != NULL_BUFFER_ID);

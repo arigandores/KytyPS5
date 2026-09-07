@@ -109,6 +109,7 @@ bool IsEmptyTerminalBlock(const IR::Program& program, uint32_t id) {
 
 void EmitReturn(ValueEmitContext& ctx) {
 	EmitKillIfPixelValidMaskInactive(ctx.state);
+	EmitBdaFaultFlush(ctx.state);
 	ctx.state.builder.AddFunction({OpReturn});
 }
 
@@ -698,6 +699,10 @@ void EmitProgram(EmitterState& state, const IR::Program& program) {
 	if (state.pixel_valid_mask_variable != 0) {
 		state.builder.AddFunction(
 		    {OpStore, state.pixel_valid_mask_variable, ConstantU32(state, 1)});
+	}
+	if (state.bda_fault_page_variable != 0) {
+		state.builder.AddFunction(
+		    {OpStore, state.bda_fault_page_variable, ConstantU32(state, 0)});
 	}
 	EmitMemoryOffsets(state);
 	if (program.blocks.empty()) {

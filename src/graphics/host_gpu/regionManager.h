@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_REGIONMANAGER_H_
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "graphics/host_gpu/pageManager.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 
@@ -32,11 +33,24 @@ public:
 		if (m_owner.load(std::memory_order_relaxed) == thread) {
 			EXIT("recursive region tracking lock\n");
 		}
-		while (m_lock.test_and_set(std::memory_order_acquire)) {
-			if (m_owner.load(std::memory_order_relaxed) == thread) {
-				EXIT("recursive region tracking lock while contended\n");
+		if (m_lock.test_and_set(std::memory_order_acquire)) {
+			// Contended: spin, and account the wait for KYTY_FRAME_TRACE.
+			namespace FS  = Common::FrameStats;
+			const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+			while (m_lock.test_and_set(std::memory_order_acquire)) {
+				if (m_owner.load(std::memory_order_relaxed) == thread) {
+					EXIT("recursive region tracking lock while contended\n");
+				}
+				std::atomic_signal_fence(std::memory_order_seq_cst);
 			}
-			std::atomic_signal_fence(std::memory_order_seq_cst);
+			if (t0 != 0) {
+				const auto ns = FS::NowNs() - t0;
+				FS::Add(FS::Counter::LockSpinNs, ns);
+				FS::Add(FS::Counter::LockSpins, 1);
+				if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+					FS::Add(FS::Counter::LockSpinGpuNs, ns);
+				}
+			}
 		}
 		m_owner.store(thread, std::memory_order_relaxed);
 	}

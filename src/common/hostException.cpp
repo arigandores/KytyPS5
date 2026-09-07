@@ -96,6 +96,10 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 			const auto ns = Common::FrameStats::NowNs() - t0;
 			Common::FrameStats::Add(Common::FrameStats::Counter::FaultNs, ns);
 			Common::FrameStats::Add(Common::FrameStats::Counter::Faults, 1);
+			if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Main) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultMainNs, ns);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultsMain, 1);
+			}
 			if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::FaultGpuNs, ns);
 				Common::FrameStats::Add(Common::FrameStats::Counter::FaultsGpu, 1);

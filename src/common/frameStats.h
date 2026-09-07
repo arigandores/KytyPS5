@@ -80,12 +80,34 @@ enum class Counter : uint32_t {
 	BindFindTex,
 	BindBuffersNs, // FindBuffers + RebindBuffers
 	BindSamplersNs,
+	BindBufFindNs,   // FindBuffers (descriptor decode + BufferCache::FindBuffer)
+	BindBufObtainNs, // BufferCache::ObtainBuffer called from NativeStorageBuffer
+	BindBufSyncNs,   // BufferCache::SynchronizeBuffer (all callers)
+	BindBufUploadNs, // NativeUpload of the flattened SRT / shader data
+	BindBufN,        // storage buffer bindings
+	BindTexMemoHits, // ResolveTexture served from the memo
+	RtMemoHits,      // colour/depth target resolution served from the memo
+	ObtainBufNs,     // BufferCache::ObtainBuffer (all callers)
+	ObtainBufs,
+	SyncBufUploads,  // SynchronizeBuffer copies issued
+	LockSpinNs,      // TrackingSpinLock contended acquisitions (spin time)
+	LockSpins,
+	LockSpinGpuNs,   // ... on the GuestGpu thread
+	GlobalBarriers,  // CommandProcessor::EmitGlobalBarrier (all-commands memory barrier)
+	ImageBarriers,   // vkImageMemoryBarrier2 records issued by Image::Transit
+	ShaderWriteBarriers, // ShaderWriteBarrier after draws with buffer writes
+	RenderPassBegins,    // CommandScheduler::BeginRendering
+	PendingOps,          // deferred operations run by PopPendingOperations
+	PendingOpsNs,
+	GlobalBarriersSkipped, // EmitGlobalBarrier with nothing recorded since the previous one
+	FaultMainNs,           // page faults taken by the guest main thread (subset of FaultNs)
+	FaultsMain,
 	Count
 };
 
 // Call-site attribution: a SiteScope names the operation in flight on this thread and the wait /
 // submit paths charge their time to that name.
-enum class Table : uint32_t { WaitSites, SubmitSites, Pm4Sites, Count };
+enum class Table : uint32_t { WaitSites, SubmitSites, Pm4Sites, PopSites, Count };
 
 struct SiteRow {
 	const char* name  = nullptr;
@@ -96,6 +118,9 @@ struct SiteRow {
 void                      AddSite(Table table, const char* site, uint64_t ns);
 size_t                    ReadSites(Table table, SiteRow* out, size_t max);
 [[nodiscard]] const char* CurrentSite();
+// Address relative to the executable image base (matches the linker map RVAs); the raw
+// address on platforms without module information.
+[[nodiscard]] uint64_t    ModuleOffset(const void* address);
 
 class SiteScope {
 public:
@@ -109,6 +134,10 @@ private:
 };
 
 enum class ThreadRole : uint32_t { Main, Gpu, Present, Count };
+
+// KYTY_SAMPLE_GPU=1: sampling profiler of the thread registered as ThreadRole::Gpu. Started by
+// RegisterCurrentThread; the samples are logged periodically as SampleTrace: lines.
+void                      StartSampler(ThreadRole role);
 
 [[nodiscard]] bool Enabled();
 [[nodiscard]] uint64_t NowNs();

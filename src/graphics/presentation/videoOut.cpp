@@ -1242,7 +1242,12 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " c_commit=%llu c_emit=%llu p_prep=%llu p_key=%llu p_mat=%llu p_perm=%llu"
 			     " p_reads=%llu p_creads=%llu m_eval=%llu m_asm=%llu m_spec=%llu m_insts=%llu"
 			     " m_fail=%llu memo_hit=%llu memo_miss=%llu m_read_us=%llu m_wide=%llu b_tex=%llu"
-			     " b_texn=%llu b_view=%llu b_viewn=%llu b_buf=%llu b_smp=%llu" "\n",
+			     " b_texn=%llu b_view=%llu b_viewn=%llu b_buf=%llu b_smp=%llu"
+			     " bb_find=%llu bb_obtain=%llu bb_sync=%llu bb_upload=%llu bb_n=%llu tex_hits=%llu"
+			     " rt_hits=%llu ob_us=%llu ob_n=%llu sync_ups=%llu spin_us=%llu spins=%llu"
+			     " spin_gpu_us=%llu gbar=%llu ibar=%llu swbar=%llu rp_begin=%llu pops=%llu pop_us=%llu"
+			     " gbar_skip=%llu faults_main=%llu fault_main_us=%llu"
+			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
 			     dus(FS::Counter::DrawTargetsNs), dus(FS::Counter::DrawProgramsNs),
@@ -1262,15 +1267,27 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::MatEvalWide), dus(FS::Counter::BindResolveTexNs),
 			     d(FS::Counter::BindResolveTex), dus(FS::Counter::BindFindTexNs),
 			     d(FS::Counter::BindFindTex), dus(FS::Counter::BindBuffersNs),
-			     dus(FS::Counter::BindSamplersNs));
+			     dus(FS::Counter::BindSamplersNs), dus(FS::Counter::BindBufFindNs),
+			     dus(FS::Counter::BindBufObtainNs), dus(FS::Counter::BindBufSyncNs),
+			     dus(FS::Counter::BindBufUploadNs), d(FS::Counter::BindBufN),
+			     d(FS::Counter::BindTexMemoHits), d(FS::Counter::RtMemoHits),
+			     dus(FS::Counter::ObtainBufNs), d(FS::Counter::ObtainBufs),
+			     d(FS::Counter::SyncBufUploads), dus(FS::Counter::LockSpinNs),
+			     d(FS::Counter::LockSpins), dus(FS::Counter::LockSpinGpuNs),
+			     d(FS::Counter::GlobalBarriers), d(FS::Counter::ImageBarriers),
+			     d(FS::Counter::ShaderWriteBarriers), d(FS::Counter::RenderPassBegins),
+			     d(FS::Counter::PendingOps), dus(FS::Counter::PendingOpsNs),
+			     d(FS::Counter::GlobalBarriersSkipped), d(FS::Counter::FaultsMain),
+			     dus(FS::Counter::FaultMainNs));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};
 				std::array<FS::SiteRow, 160> rows {};
 				const auto                  n = FS::ReadSites(static_cast<FS::Table>(table), rows.data(), rows.size());
-				std::string                 line = table == 0   ? "FrameTrace-wait:"
-				                                   : table == 1 ? "FrameTrace-submit:"
-				                                                : "FrameTrace-pm4:";
+				static constexpr std::array<const char*, static_cast<size_t>(FS::Table::Count)>
+				            table_names {"FrameTrace-wait:", "FrameTrace-submit:", "FrameTrace-pm4:",
+				                         "FrameTrace-pops:"};
+				std::string line = table_names[table];
 				if (n == 0) {
 					continue;
 				}

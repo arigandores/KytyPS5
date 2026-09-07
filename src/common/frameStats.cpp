@@ -1,12 +1,19 @@
 #include "common/frameStats.h"
 
 #include "common/common.h"
+#include "common/logging/log.h"
 
 #include <algorithm>
 #include <array>
 #include <atomic>
 #include <cstdlib>
 #include <mutex>
+#include <vector>
+#include <unordered_map>
+#include <thread>
+#include <string>
+#include <cstring>
+#include <chrono>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #include <intrin.h>
@@ -104,6 +111,12 @@ bool Enabled() {
 
 uint64_t NowNs() {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	// Invariant TSC (calibrated once against QPC): QueryPerformanceCounter cost 8% of the GuestGpu
+	// thread under KYTY_FRAME_TRACE (about 26k timestamps per frame).
+	static const double cycles_per_ns = TscCyclesPerNs();
+	if (cycles_per_ns > 0.0) {
+		return static_cast<uint64_t>(static_cast<double>(__rdtsc()) / cycles_per_ns);
+	}
 	const auto f = QpcFrequency();
 	const auto c = Qpc();
 	return f != 0 ? (c / f) * 1000000000ull + ((c % f) * 1000000000ull) / f : 0;
@@ -123,6 +136,7 @@ uint64_t Read(Counter counter) {
 void RegisterCurrentThread(ThreadRole role) {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	t_role = role;
+	StartSampler(role);
 	if (!Enabled()) {
 		return;
 	}
@@ -163,6 +177,192 @@ size_t ReadSites(Table table, SiteRow* out, size_t max) {
 
 const char* CurrentSite() {
 	return t_site;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Sampling profiler (KYTY_SAMPLE_GPU=1). A helper thread suspends the target thread about once a
+// millisecond, reads RIP, unwinds the stack with RtlVirtualUnwind until the first frame inside
+// this executable and counts (leaf module, leaf rip, kyty frame). Every 10 s the counts are
+// logged and reset:
+//   SampleTrace: t=<s> total=<n> thread=<role>
+//   SampleTrace: leaf=<module> rip=<+rva|abs> at=+0x<kyty rva> n=<count>
+// The kyty RVAs map to functions through the linker map (scripts/s12_samples.py).
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+namespace {
+
+struct SampleKey {
+	uint64_t leaf_module = 0; // module base of the leaf frame (0 = unknown)
+	uint64_t leaf_rip    = 0; // leaf rip relative to its module (or absolute if unknown)
+	uint64_t kyty_rva    = 0; // first frame inside the executable (0 = none found)
+	bool     operator==(const SampleKey& o) const noexcept {
+		return leaf_module == o.leaf_module && leaf_rip == o.leaf_rip && kyty_rva == o.kyty_rva;
+	}
+};
+
+struct SampleKeyHash {
+	size_t operator()(const SampleKey& k) const noexcept {
+		uint64_t h = k.leaf_module * 0x9E3779B97F4A7C15ull;
+		h ^= k.leaf_rip + 0x7F4A7C15ull + (h << 6u) + (h >> 2u);
+		h ^= k.kyty_rva * 0xC2B2AE3D27D4EB4Full;
+		return static_cast<size_t>(h ^ (h >> 29u));
+	}
+};
+
+std::string ModuleBaseName(uint64_t base) {
+	if (base == 0) {
+		return "?";
+	}
+	wchar_t path[MAX_PATH] = {};
+	const auto n = GetModuleFileNameW(reinterpret_cast<HMODULE>(base), path, MAX_PATH);
+	if (n == 0) {
+		return "?";
+	}
+	std::wstring w(path, n);
+	const auto   slash = w.find_last_of(L"\\/");
+	if (slash != std::wstring::npos) {
+		w = w.substr(slash + 1);
+	}
+	std::string s;
+	for (const auto c: w) {
+		s.push_back(c < 128 ? static_cast<char>(c) : '?');
+	}
+	return s;
+}
+
+uint64_t ModuleBaseOf(uint64_t address) {
+	HMODULE module = nullptr;
+	if (GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
+	                           GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+	                       reinterpret_cast<LPCWSTR>(address), &module) == 0) {
+		return 0;
+	}
+	return reinterpret_cast<uint64_t>(module);
+}
+
+void SamplerThread(HANDLE target, ThreadRole role) {
+	const auto self_base = reinterpret_cast<uint64_t>(GetModuleHandleW(nullptr));
+	std::unordered_map<SampleKey, uint32_t, SampleKeyHash> counts;
+	std::unordered_map<uint64_t, std::string>              module_names;
+	const auto  t_start = std::chrono::steady_clock::now();
+	auto        t_dump  = t_start;
+	uint64_t    total   = 0;
+	const auto  name_of = [&](uint64_t base) -> const std::string& {
+		auto it = module_names.find(base);
+		if (it == module_names.end()) {
+			it = module_names.emplace(base, ModuleBaseName(base)).first;
+		}
+		return it->second;
+	};
+	for (;;) {
+		std::this_thread::sleep_for(std::chrono::microseconds(700));
+		if (SuspendThread(target) == static_cast<DWORD>(-1)) {
+			break;
+		}
+		CONTEXT context {};
+		context.ContextFlags = CONTEXT_CONTROL | CONTEXT_INTEGER;
+		const bool ok        = GetThreadContext(target, &context) != 0;
+		SampleKey  key;
+		if (ok) {
+			const auto rip   = context.Rip;
+			const auto base  = ModuleBaseOf(rip);
+			key.leaf_module  = base;
+			key.leaf_rip     = base != 0 ? rip - base : rip;
+			// Unwind until the first frame inside this executable (at most 24 frames).
+			uint64_t pc = rip;
+			for (int depth = 0; depth < 24; depth++) {
+				if (ModuleBaseOf(pc) == self_base) {
+					key.kyty_rva = pc - self_base;
+					break;
+				}
+				DWORD64 image_base = 0;
+				auto*   entry      = RtlLookupFunctionEntry(pc, &image_base, nullptr);
+				if (entry == nullptr) {
+					// Leaf function without unwind info: the return address is at [rsp].
+					uint64_t ret = 0;
+					if (context.Rsp == 0 ||
+					    IsBadReadPtr(reinterpret_cast<const void*>(context.Rsp), 8) != 0) {
+						break;
+					}
+					std::memcpy(&ret, reinterpret_cast<const void*>(context.Rsp), 8);
+					context.Rsp += 8;
+					context.Rip = ret;
+				} else {
+					void*   handler_data = nullptr;
+					DWORD64 establisher  = 0;
+					RtlVirtualUnwind(UNW_FLAG_NHANDLER, image_base, pc, entry, &context,
+					                 &handler_data, &establisher, nullptr);
+				}
+				pc = context.Rip;
+				if (pc == 0) {
+					break;
+				}
+			}
+		}
+		ResumeThread(target);
+		if (ok) {
+			counts[key]++;
+			total++;
+		}
+		const auto now = std::chrono::steady_clock::now();
+		if (now - t_dump >= std::chrono::seconds(10)) {
+			t_dump = now;
+			std::vector<std::pair<SampleKey, uint32_t>> rows(counts.begin(), counts.end());
+			std::sort(rows.begin(), rows.end(),
+			          [](const auto& a, const auto& b) { return a.second > b.second; });
+			const auto t_s =
+			    std::chrono::duration<double>(now - t_start).count();
+			LOGF("SampleTrace: t=%.1f total=%llu thread=%d\n", t_s,
+			     static_cast<unsigned long long>(total), static_cast<int>(role));
+			size_t shown = 0;
+			for (const auto& [k, n]: rows) {
+				if (shown++ >= 400) {
+					break;
+				}
+				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u\n",
+				     name_of(k.leaf_module).c_str(), k.leaf_module != 0 ? "+" : "",
+				     static_cast<unsigned long long>(k.leaf_rip),
+				     static_cast<unsigned long long>(k.kyty_rva), n);
+			}
+			counts.clear();
+			total = 0;
+		}
+	}
+	CloseHandle(target);
+}
+
+} // namespace
+
+void StartSampler(ThreadRole role) {
+	static std::atomic<bool> started {false};
+	const char*              value = std::getenv("KYTY_SAMPLE_GPU");
+	if (value == nullptr) {
+		return;
+	}
+	const bool want_gpu  = std::strcmp(value, "1") == 0 || std::strcmp(value, "gpu") == 0;
+	const bool want_main = std::strcmp(value, "main") == 0;
+	if (!((want_gpu && role == ThreadRole::Gpu) || (want_main && role == ThreadRole::Main)) ||
+	    started.exchange(true)) {
+		return;
+	}
+	HANDLE target = OpenThread(THREAD_SUSPEND_RESUME | THREAD_GET_CONTEXT |
+	                               THREAD_QUERY_INFORMATION,
+	                           FALSE, GetCurrentThreadId());
+	if (target == nullptr) {
+		return;
+	}
+	std::thread(SamplerThread, target, role).detach();
+}
+#else
+void StartSampler(ThreadRole) {}
+#endif
+
+uint64_t ModuleOffset(const void* address) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	const auto base = reinterpret_cast<uint64_t>(GetModuleHandleW(nullptr));
+	return reinterpret_cast<uint64_t>(address) - base;
+#else
+	return reinterpret_cast<uint64_t>(address);
+#endif
 }
 
 SiteScope::SiteScope(const char* site): m_previous(t_site) {

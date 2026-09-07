@@ -48,6 +48,7 @@ enum : uint32_t {
 	CapabilityImageQuery                     = 50,
 	CapabilityStorageImageWriteWithoutFormat = 56,
 	CapabilityGroupNonUniform                = 61,
+	CapabilityGroupNonUniformVote            = 62,
 	CapabilityGroupNonUniformBallot          = 64,
 	CapabilityGroupNonUniformShuffle         = 65,
 	CapabilitySignedZeroInfNanPreserve       = 4466,
@@ -368,6 +369,16 @@ struct EmitterState {
 	uint32_t                                         bda_pagetable_variable  = 0;
 	uint32_t                                         fault_buffer_variable   = 0;
 	uint32_t                                         bda_pointer_function    = 0;
+	// Page lookup shared by the dwords of one scalar pointer load (S_LOAD_DWORDXn): the
+	// translator emits one LoadAddressU32 per dword with the same address handle and offset
+	// operand; the first dword resolves the page, the others reuse it within the same block.
+	struct ScalarBdaCache {
+		const IR::Inst*  handle   = nullptr;
+		const IR::Block* block    = nullptr;
+		uint32_t         low      = 0;
+		uint32_t         address  = 0; // 64-bit aligned base + offset (no immediate)
+		uint32_t         page_ptr = 0; // get_bda_pointer(address), 0 when the page is missing
+	} scalar_bda;
 	// Merge labels synthesized for conditional branches the structurizer left without a merge
 	// block (both arms leave the construct); emitted as unreachable blocks at function end.
 	std::vector<uint32_t>                            synthetic_merge_labels;

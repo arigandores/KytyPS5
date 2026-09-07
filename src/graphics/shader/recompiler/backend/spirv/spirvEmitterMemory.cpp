@@ -3,6 +3,7 @@
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 
 #include <algorithm>
+#include <cstdlib>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
 namespace {
@@ -211,9 +212,114 @@ uint32_t LoadBdaDword(ValueEmitContext& ctx, uint32_t address) {
 	});
 }
 
+uint32_t LoadBdaAt(ValueEmitContext& ctx, uint32_t pointer) {
+	auto&      state   = ctx.state;
+	const auto present = Binary(state, OpINotEqual, TypeBool(state), pointer,
+	                            ConstantDeviceAddress(state, 0));
+	return EmitValueOrZeroIfCondition(state, present, [&]() {
+		const auto typed = state.builder.AllocateId();
+		state.builder.AddFunction(
+		    {OpConvertUToPtr, TypePhysicalU32Pointer(state), typed, pointer});
+		const auto value = state.builder.AllocateId();
+		state.builder.AddFunction(
+		    {OpLoad, TypeU32(state), value, typed, MemoryAccessAlignedMask, sizeof(uint32_t)});
+		return value;
+	});
+}
+
+// Scalar dword load from a pointer (S_LOAD_DWORDXn with an SGPR address). The ISA ignores the low
+// two address bits, so the value never straddles dwords; and the dwords of one instruction share
+// the page lookup: the page pointer of the first dword plus the immediate serves the others while
+// the offset stays inside the page (a compare), otherwise a full lookup runs. ASTRO BOT's tiled
+// lighting shader reads its light records this way inside the per-light loop (~300 dwords): the
+// generic path cost two lookups, two loads and a shift-merge per dword.
+uint32_t LoadScalarBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
+                       bool use_cache) {
+	auto&       state  = ctx.state;
+	const auto* handle = inst.Arg(0).Resolve().TryInstruction();
+	const auto  imm    = static_cast<uint32_t>(static_cast<int32_t>(mem.offset)) & ~3u;
+	if (!use_cache || mem.address_is_full || handle == nullptr ||
+	    handle->GetOpcode() != IR::ValueOpcode::GetAddressResource || handle->NumArgs() != 2 ||
+	    imm + sizeof(uint32_t) > BufferCache::CACHING_PAGESIZE) {
+		const auto address = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state),
+		                            GuestAddress(ctx, inst, mem),
+		                            ConstantDeviceAddress(state, ~uint64_t {3}));
+		return LoadBdaAt(ctx, GetBdaPointer(ctx, address));
+	}
+	const auto low   = ctx.Arg(inst, 1);
+	auto&      cache = state.scalar_bda;
+	if (cache.handle != handle || cache.low != low || cache.block != ctx.current_block) {
+		const auto base = DeviceAddressFromWords(state, ctx.Arg(*handle, 0), ctx.Arg(*handle, 1));
+		const auto masked_low =
+		    Binary(state, OpBitwiseAnd, TypeU32(state), low, ConstantU32(state, ~3u));
+		auto address = Binary(state, OpIAdd, TypeDeviceAddress(state), base,
+		                      Unary(state, OpUConvert, TypeDeviceAddress(state), masked_low));
+		address      = Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), address,
+		                      ConstantDeviceAddress(state, ~uint64_t {3}));
+		cache.handle   = handle;
+		cache.low      = low;
+		cache.block    = ctx.current_block;
+		cache.address  = address;
+		cache.page_ptr = GetBdaPointer(ctx, address);
+	}
+	if (imm == 0) {
+		return LoadBdaAt(ctx, cache.page_ptr);
+	}
+	const auto page_offset =
+	    Binary(state, OpBitwiseAnd, TypeDeviceAddress(state), cache.address,
+	           ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - 1));
+	const auto in_page = Binary(
+	    state, OpULessThanEqual, TypeBool(state), page_offset,
+	    ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - sizeof(uint32_t) - imm));
+	const auto have_page = Binary(state, OpINotEqual, TypeBool(state), cache.page_ptr,
+	                              ConstantDeviceAddress(state, 0));
+	const auto fast      = Binary(state, OpLogicalAnd, TypeBool(state), in_page, have_page);
+	const auto fast_label  = state.builder.AllocateId();
+	const auto slow_label  = state.builder.AllocateId();
+	const auto slow_exit   = state.builder.AllocateId();
+	const auto merge_label = state.builder.AllocateId();
+	state.builder.AddFunction({OpSelectionMerge, merge_label, SelectionControlNone});
+	state.builder.AddFunction({OpBranchConditional, fast, fast_label, slow_label});
+	EmitLabel(state, fast_label);
+	const auto fast_ptr = Binary(state, OpIAdd, TypeDeviceAddress(state), cache.page_ptr,
+	                             ConstantDeviceAddress(state, imm));
+	state.builder.AddFunction({OpBranch, merge_label});
+	EmitLabel(state, slow_label);
+	const auto slow_ptr =
+	    GetBdaPointer(ctx, Binary(state, OpIAdd, TypeDeviceAddress(state), cache.address,
+	                              ConstantDeviceAddress(state, imm)));
+	state.builder.AddFunction({OpBranch, slow_exit});
+	EmitLabel(state, slow_exit);
+	state.builder.AddFunction({OpBranch, merge_label});
+	EmitLabel(state, merge_label);
+	const auto pointer = state.builder.AllocateId();
+	state.builder.AddFunction({OpPhi, TypeDeviceAddress(state), pointer, fast_ptr, fast_label,
+	                           slow_ptr, slow_exit});
+	return LoadBdaAt(ctx, pointer);
+}
+
 uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryInfo& mem,
 	             uint32_t bits) {
-	auto&      state   = ctx.state;
+	auto&      state         = ctx.state;
+	const auto active_value  = inst.Arg(inst.NumArgs() - 1).Resolve();
+	const bool always_active = active_value.IsImmediate() && active_value.U1();
+	// KYTY_SCALAR_BDA=0: the generic path for scalar loads (A/B; run with KYTY_SHADER_CACHE=0,
+	// the translation cache key does not include this switch).
+	static const bool scalar_fast_path = [] {
+		const char* value = std::getenv("KYTY_SCALAR_BDA");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (scalar_fast_path && mem.kind == IR::ResourceKind::ScalarAddress && bits == 32u) {
+		// The shared page lookup (fast/slow branch per dword) made the NVIDIA compiler take 2.5 s
+		// per tiled-lighting pipeline instead of 50 ms, for no measurable GPU gain: disabled.
+		constexpr bool kSharePageLookup = false;
+		if (always_active) {
+			return LoadScalarBda(ctx, inst, mem, kSharePageLookup);
+		}
+		// Inside the activity branch the cached ids would not dominate the next dword's branch.
+		return EmitValueOrZeroIfCondition(state, ctx.Arg(inst, inst.NumArgs() - 1),
+		                                  [&]() { return LoadScalarBda(ctx, inst, mem, false); });
+	}
 	const auto address = GuestAddress(ctx, inst, mem);
 	const auto active  = ctx.Arg(inst, inst.NumArgs() - 1);
 	return EmitValueOrZeroIfCondition(state, active, [&]() {

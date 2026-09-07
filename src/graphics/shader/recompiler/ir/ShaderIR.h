@@ -430,6 +430,7 @@ struct ShaderInfo {
 
 struct SpirvRequirements {
 	bool subgroup_ballot              = false;
+	bool subgroup_vote                = false; // OpGroupNonUniformAny (WaveAny)
 	bool subgroup_shuffle             = false;
 	bool subgroup_local_invocation_id = false;
 	bool compute_derivatives          = false;

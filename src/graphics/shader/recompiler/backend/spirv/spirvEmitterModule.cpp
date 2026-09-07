@@ -720,8 +720,11 @@ void DefineModule(EmitterState& state) {
 		state.builder.RequireCapability(CapabilityImageGatherExtended);
 	}
 	if (state.requirements.subgroup_ballot || state.requirements.subgroup_shuffle ||
-	    state.requirements.subgroup_local_invocation_id) {
+	    state.requirements.subgroup_local_invocation_id || state.requirements.subgroup_vote) {
 		state.builder.RequireCapability(CapabilityGroupNonUniform);
+	}
+	if (state.requirements.subgroup_vote) {
+		state.builder.RequireCapability(CapabilityGroupNonUniformVote);
 	}
 	if (state.requirements.subgroup_ballot) {
 		state.builder.RequireCapability(CapabilityGroupNonUniformBallot);

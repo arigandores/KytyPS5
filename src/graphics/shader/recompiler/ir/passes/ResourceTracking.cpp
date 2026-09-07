@@ -734,10 +734,20 @@ private:
 		if (where == list.end()) {
 			return false;
 		}
-		const auto base_high = block->PrependNewInst(where, ValueOpcode::BitwiseAnd32,
-		                                             {handle->Arg(1), Value(0xffffu)});
-		const auto address   = block->PrependNewInst(where, ValueOpcode::GetAddressResource,
-		                                             {handle->Arg(0), Value(&*base_high)});
+		// One address handle per (V#, block): the SPIR-V emitter shares the BDA page lookup
+		// between the dwords loaded through the same handle in the same block.
+		Inst* address_inst = nullptr;
+		if (const auto cached = m_variant_addresses.find({handle, block});
+		    cached != m_variant_addresses.end()) {
+			address_inst = cached->second;
+		} else {
+			const auto base_high = block->PrependNewInst(where, ValueOpcode::BitwiseAnd32,
+			                                             {handle->Arg(1), Value(0xffffu)});
+			const auto address   = block->PrependNewInst(where, ValueOpcode::GetAddressResource,
+			                                             {handle->Arg(0), Value(&*base_high)});
+			address_inst         = &*address;
+			m_variant_addresses.emplace(std::pair {handle, block}, address_inst);
+		}
 		auto scalar            = memory;
 		scalar.kind            = ResourceKind::ScalarAddress;
 		scalar.resource        = 0;
@@ -751,7 +761,7 @@ private:
 		std::memcpy(&bits, &new_flags, sizeof(new_flags));
 		const auto load = block->PrependNewInst(
 		    where, ValueOpcode::LoadAddressU32,
-		    {Value(&*address), inst.Arg(1), Value(0u), Value(true)}, bits);
+		    {Value(address_inst), inst.Arg(1), Value(0u), Value(true)}, bits);
 		inst.ReplaceUsesWith(Value(&*load), true);
 		std::fprintf(stderr, "shader 0x%016llx: scalar buffer load at pc 0x%08x uses a variant V#, "
 		             "reading through its base address\n",
@@ -910,6 +920,13 @@ private:
 	std::vector<DescriptorSource>  m_sources;
 	std::vector<HandlePatch>       m_handle_patches;
 	std::vector<MemoryPatch>       m_memory_patches;
+	struct VariantAddressKeyHash {
+		size_t operator()(const std::pair<const Inst*, const Block*>& key) const noexcept {
+			return std::hash<const void*> {}(key.first) ^ (std::hash<const void*> {}(key.second) << 1u);
+		}
+	};
+	std::unordered_map<std::pair<const Inst*, const Block*>, Inst*, VariantAddressKeyHash>
+	    m_variant_addresses;
 	std::vector<IndirectImagePlan> m_indirect_images;
 };
 

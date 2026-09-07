@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
+#include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
@@ -12099,6 +12100,113 @@ int main() {
   using namespace Libs::Graphics;
 
   EnsureConfigInitialized();
+  if (const char *recompile = std::getenv("KYTY_RECOMPILE"); recompile != nullptr) {
+    // Offline recompilation: KYTY_RECOMPILE="<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]"
+    // translates a raw GCN dump (_Shaders/original) with the current translator and emits the
+    // SPIR-V of the specialization stored in a translation cache file (compute shaders; the
+    // static state = ShaderComputeInputInfo comes from the file too). For emitter A/B without
+    // running the game.
+    std::vector<std::string> parts;
+    {
+      std::string list = recompile;
+      size_t pos = 0;
+      while (pos <= list.size()) {
+        const auto next = list.find(';', pos);
+        parts.push_back(list.substr(pos, next == std::string::npos ? std::string::npos : next - pos));
+        pos = next == std::string::npos ? list.size() + 1 : next + 1;
+      }
+    }
+    if (parts.size() < 3) {
+      std::fprintf(stderr, "KYTY_RECOMPILE=<gcn.bin>;<cache.bin>;<out.spv>[;<permutation>]\n");
+      return 1;
+    }
+    std::vector<uint32_t> code;
+    {
+      FILE *file = std::fopen(parts[0].c_str(), "rb");
+      if (file == nullptr) {
+        std::fprintf(stderr, "recompile: cannot open %s\n", parts[0].c_str());
+        return 1;
+      }
+      uint32_t word = 0;
+      while (std::fread(&word, sizeof(word), 1, file) == 1) {
+        code.push_back(word);
+      }
+      std::fclose(file);
+    }
+    Libs::Graphics::ShaderTranslationCache::StoredKey key;
+    Libs::Graphics::ShaderTranslationCache::Entry entry;
+    if (!Libs::Graphics::ShaderTranslationCache::ReadFileUnchecked(parts[1], key, entry)) {
+      std::fprintf(stderr, "recompile: cannot read cache file %s\n", parts[1].c_str());
+      return 1;
+    }
+    const size_t permutation = parts.size() > 3 ? static_cast<size_t>(std::atoi(parts[3].c_str())) : 0;
+    if (permutation >= entry.permutations.size()) {
+      std::fprintf(stderr, "recompile: permutation %zu of %zu\n", permutation, entry.permutations.size());
+      return 1;
+    }
+    if (key.stage != static_cast<uint32_t>(ShaderType::Compute) || key.static_state.size() < 14) {
+      std::fprintf(stderr, "recompile: only compute shaders (stage=%u state=%zu)\n", key.stage,
+                   key.static_state.size());
+      return 1;
+    }
+    if (key.code_size != code.size() * sizeof(uint32_t) && key.code_size != code.size()) {
+      std::fprintf(stderr, "recompile: warning: code size %zu words, key says %u\n", code.size(),
+                   key.code_size);
+    }
+    ShaderComputeInputInfo compute {};
+    const auto &s = key.static_state;
+    compute.workgroup_register = static_cast<int>(s[0]);
+    compute.wave_size = s[1];
+    compute.thread_ids_num = static_cast<int>(s[2]);
+    compute.lds_size_dwords = s[3];
+    compute.scratch_size_dwords = s[4];
+    compute.needs_lds_barriers = s[5] != 0;
+    compute.dispatch_thread_dimensions = s[6] != 0;
+    for (int i = 0; i < 3; i++) {
+      compute.threads_num[i] = s[7 + 2 * i];
+      compute.group_id[i] = s[8 + 2 * i] != 0;
+    }
+    compute.tg_size_en = s[13] != 0;
+    std::vector<uint32_t> user_data(key.user_data_count, 0u);
+    // The game runs on a robustBufferAccess2 device (NVIDIA): no bounds branches, like the
+    // in-game SPIR-V. KYTY_ROBUST_LOADS=0 overrides.
+    ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(true);
+    ShaderRecompiler::CompileOptions options;
+    options.stage = ShaderType::Compute;
+    options.shader_hash = key.hash;
+    options.user_data = user_data;
+    options.dump_ir = false;
+    options.early_dump = false;
+    options.dump_label = "ShaderRecompiler CS";
+    options.input_info.compute = &compute;
+    options.scratch_dwords = compute.scratch_size_dwords;
+    options.wave_size = compute.wave_size;
+    const auto t0 = std::chrono::steady_clock::now();
+    auto translated = ShaderRecompiler::TranslateProgram(std::span<const uint32_t>{code}, options);
+    const auto t1 = std::chrono::steady_clock::now();
+    const auto &stored = entry.permutations[permutation];
+    auto compiled = ShaderRecompiler::CompileProgram(
+        std::move(translated), options, stored.specialization,
+        stored.program.bindings.push_data_start_dword);
+    const auto t2 = std::chrono::steady_clock::now();
+    FILE *out = std::fopen(parts[2].c_str(), "wb");
+    if (out == nullptr) {
+      std::fprintf(stderr, "recompile: cannot write %s\n", parts[2].c_str());
+      return 1;
+    }
+    std::fwrite(compiled.spirv.data(), sizeof(uint32_t), compiled.spirv.size(), out);
+    std::fclose(out);
+    const auto ms = [](auto a, auto b) {
+      return std::chrono::duration_cast<std::chrono::microseconds>(b - a).count() / 1000.0;
+    };
+    std::printf("recompile %s: hash=%016llx wave=%u local=%ux%ux%u lds=%u permutations=%zu "
+                "translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",
+                parts[0].c_str(), static_cast<unsigned long long>(key.hash), compute.wave_size,
+                compute.threads_num[0], compute.threads_num[1], compute.threads_num[2],
+                compute.lds_size_dwords, entry.permutations.size(), ms(t0, t1), ms(t1, t2),
+                compiled.spirv.size(), stored.spirv.size(), parts[2].c_str());
+    return 0;
+  }
   if (const char *bench = std::getenv("KYTY_CFG_BENCH"); bench != nullptr) {
     // Offline structurizer benchmark: KYTY_CFG_BENCH="a.bin;b.bin" (raw GCN dumps from
     // _Shaders/original). Prints per-file timings and the accumulated CFG profile.

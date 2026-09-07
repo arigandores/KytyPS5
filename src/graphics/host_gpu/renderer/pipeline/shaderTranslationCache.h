@@ -49,6 +49,19 @@ public:
 	bool Save(const Key& key, const ShaderRecompiler::IR::ResourcePlan& plan,
 	          std::span<const Permutation> permutations);
 
+	// Offline tools: the key stored in a file (owning copy of the static state).
+	struct StoredKey {
+		uint32_t              stage           = 0;
+		uint64_t              hash            = 0;
+		uint32_t              user_data_count = 0;
+		uint32_t              code_size       = 0;
+		std::vector<uint32_t> static_state;
+	};
+	// Reads any cache file regardless of the translator signature (only the payload hash is
+	// checked): shader_cfg_tests KYTY_RECOMPILE re-emits a shader's SPIR-V from its GCN dump and
+	// the specialization stored here.
+	static bool ReadFileUnchecked(const std::filesystem::path& path, StoredKey& key, Entry& entry);
+
 	[[nodiscard]] uint32_t Loaded() const { return m_loaded; }
 	[[nodiscard]] uint32_t Saved() const { return m_saved; }
 

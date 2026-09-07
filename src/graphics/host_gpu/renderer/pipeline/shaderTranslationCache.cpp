@@ -641,6 +641,64 @@ bool ShaderTranslationCache::Load(const Key& key, Entry& entry) {
 	return true;
 }
 
+bool ShaderTranslationCache::ReadFileUnchecked(const std::filesystem::path& path, StoredKey& key,
+                                               Entry& entry) {
+	if (!Common::File::IsFileExisting(path)) {
+		return false;
+	}
+	Common::File file(path, Common::File::Mode::Read);
+	if (file.IsInvalid()) {
+		return false;
+	}
+	const auto           size = file.Size();
+	std::vector<uint8_t> data(static_cast<size_t>(size));
+	uint32_t             read = 0;
+	file.Read(data.data(), static_cast<uint32_t>(data.size()), &read);
+	file.Close();
+	if (read != data.size() || data.size() < 8u) {
+		return false;
+	}
+	// signature = "KytySC<version>:<translator hash>[:robust]\n"
+	const auto newline = std::find(data.begin(), data.end(), static_cast<uint8_t>(10));
+	if (newline == data.end() || std::memcmp(data.data(), "KytySC", 6) != 0) {
+		return false;
+	}
+	const auto signature_size = static_cast<size_t>(newline - data.begin()) + 1u;
+	if (data.size() < signature_size + sizeof(uint64_t)) {
+		return false;
+	}
+	uint64_t stored_hash = 0;
+	std::memcpy(&stored_hash, data.data() + signature_size, sizeof(stored_hash));
+	const auto* payload      = data.data() + signature_size + sizeof(stored_hash);
+	const auto  payload_size = data.size() - signature_size - sizeof(stored_hash);
+	if (XXH3_64bits(payload, payload_size) != stored_hash) {
+		return false;
+	}
+	Reader r(payload, payload_size);
+	key.stage           = r.U32();
+	key.hash            = r.U64();
+	key.user_data_count = r.U32();
+	key.code_size       = r.U32();
+	key.static_state    = r.PodVec<uint32_t>();
+	if (r.Failed() || !ReadPlan(r, entry.plan)) {
+		return false;
+	}
+	const auto n = r.Count();
+	entry.permutations.clear();
+	for (uint32_t i = 0; i < n && !r.Failed(); i++) {
+		Permutation p;
+		if (!ReadSpecialization(r, p.specialization) || !ReadCompiledInfo(r, p.program)) {
+			return false;
+		}
+		p.spirv = r.PodVec<uint32_t>();
+		if (r.Failed() || p.spirv.empty()) {
+			return false;
+		}
+		entry.permutations.push_back(std::move(p));
+	}
+	return !r.Failed() && r.AtEnd();
+}
+
 bool ShaderTranslationCache::Save(const Key& key, const IR::ResourcePlan& plan,
                                   std::span<const Permutation> permutations) {
 	if (!m_enabled) {

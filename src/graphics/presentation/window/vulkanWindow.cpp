@@ -694,6 +694,14 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 #endif
 	features13.robustImageAccess   = supported_features13.robustImageAccess;
 	features13.subgroupSizeControl = subgroup_size_control_enabled ? VK_TRUE : VK_FALSE;
+	vk::PhysicalDevicePipelineExecutablePropertiesFeaturesKHR executable_properties {};
+	executable_properties.sType =
+	    vk::StructureType::ePhysicalDevicePipelineExecutablePropertiesFeaturesKHR;
+	if (graphics.pipeline_stats_enabled) {
+		executable_properties.pipelineExecutableInfo = VK_TRUE;
+		executable_properties.pNext                  = features13.pNext;
+		features13.pNext                             = &executable_properties;
+	}
 
 	LOGF("Vulkan robustness: robustImageAccess=%s robustImageAccess2=%s\n",
 	     features13.robustImageAccess == VK_TRUE ? "true" : "false",
@@ -1083,6 +1091,13 @@ void WindowContext::CreateVulkan() {
 		}
 		if (HasExtension(available_extensions, VK_EXT_ROBUSTNESS_2_EXTENSION_NAME)) {
 			device_extensions.push_back(VK_EXT_ROBUSTNESS_2_EXTENSION_NAME);
+		}
+		if (std::getenv("KYTY_PIPELINE_STATS") != nullptr &&
+		    HasExtension(available_extensions,
+		                 VK_KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME)) {
+			device_extensions.push_back(VK_KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME);
+			graphic_ctx.pipeline_stats_enabled = true;
+			LOGF("Vulkan: pipeline executable statistics enabled (KYTY_PIPELINE_STATS)\n");
 		}
 		// Diagnostic checkpoints attribute a device loss to the draw or dispatch that hung.
 		// Enabled only on request: the markers cost a little per operation.

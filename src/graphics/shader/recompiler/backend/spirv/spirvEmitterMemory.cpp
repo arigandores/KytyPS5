@@ -510,9 +510,10 @@ uint32_t LoadBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::MemoryIn
 				value = LoadBdaAt(ctx, GetBdaPointer(ctx, address, active));
 			}
 			if (always_active) {
-				return value;
+				return UniformHint(state, TypeU32(state), value);
 			}
-			return Select(state, TypeU32(state), active, value, ConstantU32(state, 0));
+			return UniformHint(state, TypeU32(state),
+			                   Select(state, TypeU32(state), active, value, ConstantU32(state, 0)));
 		}
 		if (always_active) {
 			return LoadScalarBda(ctx, inst, mem, kSharePageLookup);
@@ -661,7 +662,17 @@ uint32_t LoadWordPrepared(ValueEmitContext& ctx, const IR::Inst& inst, const IR:
 	    [&]() { return LoadWordInBounds(ctx, access.resource, access.index); });
 }
 
+uint32_t LoadWordImpl(ValueEmitContext& ctx, const IR::Inst& inst, IR::MemoryInfo mem);
+
 uint32_t LoadWord(ValueEmitContext& ctx, const IR::Inst& inst, IR::MemoryInfo mem) {
+	const auto value = LoadWordImpl(ctx, inst, mem);
+	if (mem.kind == IR::ResourceKind::ScalarBuffer) {
+		return UniformHint(ctx.state, TypeU32(ctx.state), value);
+	}
+	return value;
+}
+
+uint32_t LoadWordImpl(ValueEmitContext& ctx, const IR::Inst& inst, IR::MemoryInfo mem) {
 	const auto active = ctx.Arg(inst, inst.NumArgs() - 1);
 	if (RobustLoadsEnabled() &&
 	    (mem.kind == IR::ResourceKind::Buffer || mem.kind == IR::ResourceKind::ScalarBuffer)) {
@@ -1284,7 +1295,11 @@ uint32_t LoadWideBuffer(ValueEmitContext& ctx, const IR::Inst& inst, uint32_t co
 			    values[component] =
 			        LoadWordPrepared(ctx, inst, RebaseRawComponent(mem, component), resource);
 		    }
-		    return ConstructU32Composite(state, components, values);
+		    const auto composite = ConstructU32Composite(state, components, values);
+		    if (mem.kind == IR::ResourceKind::ScalarBuffer) {
+			    return UniformHint(state, TypeU32Composite(state, components), composite);
+		    }
+		    return composite;
 	    });
 }
 
@@ -1553,7 +1568,9 @@ bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst) {
 		state.builder.AddFunction({OpAccessChain, TypeStorageBufferElementPointer(state), pointer,
 		                           state.flattened_srt_variable, ConstantU32(state, 0),
 		                           ctx.Arg(inst, 1)});
-		ctx.Emit(inst, OpLoad, IR::Type::U32, {pointer});
+		const auto loaded = state.builder.AllocateId();
+		state.builder.AddFunction({OpLoad, TypeU32(state), loaded, pointer});
+		ctx.Define(inst, UniformHint(state, TypeU32(state), loaded));
 		return true;
 	}
 	if (op == IR::ValueOpcode::ReadConstBuffer) {
@@ -1566,13 +1583,14 @@ bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst) {
 		const auto access    = PrepareMemoryResourceAccess(state, mem);
 		const auto element   = EmitMemoryElementIndex(state, access, index);
 		const auto condition = EmitMemoryElementInBounds(state, access, element);
-		ctx.Define(inst, EmitValueOrZeroIfCondition(state, condition, [&]() {
-			           const auto value = state.builder.AllocateId();
-			           state.builder.AddFunction(
-			               {OpLoad, TypeU32(state), value,
-			                EmitMemoryElementPointer(state, access, element)});
-			           return value;
-		           }));
+		ctx.Define(inst, UniformHint(state, TypeU32(state),
+		                             EmitValueOrZeroIfCondition(state, condition, [&]() {
+			                             const auto value = state.builder.AllocateId();
+			                             state.builder.AddFunction(
+			                                 {OpLoad, TypeU32(state), value,
+			                                  EmitMemoryElementPointer(state, access, element)});
+			                             return value;
+		                             })));
 		return true;
 	}
 	const auto address_info = IR::AddressOpcodeInfoOf(op);

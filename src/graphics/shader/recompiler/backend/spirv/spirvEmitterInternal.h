@@ -275,6 +275,7 @@ enum : uint32_t {
 	OpReturn                       = 253,
 	OpReturnValue                  = 254,
 	OpGroupNonUniformAny           = 335,
+	OpGroupNonUniformBroadcastFirst = 338,
 	OpGroupNonUniformBallot        = 339,
 	OpGroupNonUniformBallotFindLSB = 343,
 	OpGroupNonUniformShuffle       = 345,
@@ -672,6 +673,10 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
                                 uint32_t raw_index);
 
 bool     RobustLoadsEnabled();
+// Scalar (SGPR) values: OpGroupNonUniformBroadcastFirst marks them uniform for the driver
+// (uniform registers instead of per-lane ones). Experiment, KYTY_SCALAR_UNIFORM=1 enables.
+bool     ScalarUniformHintEnabled();
+uint32_t UniformHint(EmitterState& state, uint32_t type, uint32_t value);
 uint32_t EmitMemoryElementInBounds(EmitterState& state, const MemoryResourceAccess& access,
                                    uint32_t index);
 

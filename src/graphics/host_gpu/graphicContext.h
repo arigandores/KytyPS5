@@ -41,6 +41,8 @@ struct GraphicContext {
 	// VK_EXT_robustness2 robustBufferAccess2: out-of-range storage-buffer dwords read as zero,
 	// so the shader emitter drops its own bounds branches (RobustBufferLoads).
 	bool                               robust_buffer_access2_enabled         = false;
+	// KYTY_PIPELINE_STATS=1: VK_KHR_pipeline_executable_properties (statistics + SASS dumps).
+	bool                               pipeline_stats_enabled                = false;
 	bool                               compute_wave64_supported              = false;
 	bool                               sample_rate_shading_enabled           = false;
 	bool                               diagnostic_checkpoints_enabled        = false;

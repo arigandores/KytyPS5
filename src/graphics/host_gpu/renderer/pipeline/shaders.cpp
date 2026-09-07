@@ -17,7 +17,11 @@
 #include "graphics/shader/shader.h"
 
 #include <algorithm>
+#include <cinttypes>
+#include <cstdio>
 #include <limits>
+#include <string>
+#include <vector>
 #include <span>
 #include <vector>
 
@@ -27,6 +31,104 @@ namespace Libs::Graphics {
 constexpr uint8_t kTemporaryVertexAttribFormat113 =
     static_cast<uint8_t>(Prospero::VertexAttribFormat::k16_16SInt);
 constexpr uint32_t kTemporaryPs5BufferFormat121 = 121u;
+
+
+// KYTY_PIPELINE_STATS=1: per-executable driver statistics (NVIDIA: register count, local memory
+// bytes = spills, binary size...) and internal representations (SASS) of a freshly created pipeline.
+static void LogPipelineExecutableStats(GraphicContext& graphics, vk::Pipeline pipeline,
+                                       const char* kind, uint64_t hash) {
+	if (!graphics.pipeline_stats_enabled || pipeline == nullptr) {
+		return;
+	}
+	vk::PipelineInfoKHR info {};
+	info.sType    = vk::StructureType::ePipelineInfoKHR;
+	info.pipeline = pipeline;
+	uint32_t count = 0;
+	if (graphics.device.getPipelineExecutablePropertiesKHR(&info, &count, nullptr) !=
+	        vk::Result::eSuccess ||
+	    count == 0) {
+		LOGF("PipelineStats: %s %016" PRIx64 " no executables\n", kind, hash);
+		return;
+	}
+	std::vector<vk::PipelineExecutablePropertiesKHR> props(count);
+	for (auto& p: props) {
+		p.sType = vk::StructureType::ePipelineExecutablePropertiesKHR;
+	}
+	(void)graphics.device.getPipelineExecutablePropertiesKHR(&info, &count, props.data());
+	for (uint32_t index = 0; index < count; index++) {
+		vk::PipelineExecutableInfoKHR exec_info {};
+		exec_info.sType           = vk::StructureType::ePipelineExecutableInfoKHR;
+		exec_info.pipeline        = pipeline;
+		exec_info.executableIndex = index;
+		std::string line;
+		uint32_t    stat_count = 0;
+		if (graphics.device.getPipelineExecutableStatisticsKHR(&exec_info, &stat_count, nullptr) ==
+		        vk::Result::eSuccess &&
+		    stat_count != 0) {
+			std::vector<vk::PipelineExecutableStatisticKHR> stats(stat_count);
+			for (auto& s: stats) {
+				s.sType = vk::StructureType::ePipelineExecutableStatisticKHR;
+			}
+			(void)graphics.device.getPipelineExecutableStatisticsKHR(&exec_info, &stat_count,
+			                                                         stats.data());
+			for (const auto& s: stats) {
+				char value[64];
+				switch (s.format) {
+					case vk::PipelineExecutableStatisticFormatKHR::eBool32:
+						snprintf(value, sizeof(value), "%s", s.value.b32 != 0u ? "true" : "false");
+						break;
+					case vk::PipelineExecutableStatisticFormatKHR::eInt64:
+						snprintf(value, sizeof(value), "%" PRId64, static_cast<int64_t>(s.value.i64));
+						break;
+					case vk::PipelineExecutableStatisticFormatKHR::eUint64:
+						snprintf(value, sizeof(value), "%" PRIu64, static_cast<uint64_t>(s.value.u64));
+						break;
+					default: snprintf(value, sizeof(value), "%g", s.value.f64); break;
+				}
+				line += std::string(" ") + s.name.data() + "=" + value;
+			}
+		}
+		LOGF("PipelineStats: %s %016" PRIx64 " exec=%u name=\"%s\" stages=0x%x subgroup=%u%s\n", kind,
+		     hash, index, props[index].name.data(),
+		     static_cast<uint32_t>(props[index].stages), props[index].subgroupSize, line.c_str());
+		uint32_t ir_count = 0;
+		if (graphics.device.getPipelineExecutableInternalRepresentationsKHR(&exec_info, &ir_count,
+		                                                                     nullptr) !=
+		        vk::Result::eSuccess ||
+		    ir_count == 0) {
+			continue;
+		}
+		std::vector<vk::PipelineExecutableInternalRepresentationKHR> irs(ir_count);
+		for (auto& ir: irs) {
+			ir.sType = vk::StructureType::ePipelineExecutableInternalRepresentationKHR;
+		}
+		(void)graphics.device.getPipelineExecutableInternalRepresentationsKHR(&exec_info, &ir_count,
+		                                                                      irs.data());
+		std::vector<std::vector<char>> storage(ir_count);
+		for (uint32_t i = 0; i < ir_count; i++) {
+			storage[i].resize(irs[i].dataSize + 1u);
+			irs[i].pData = storage[i].data();
+		}
+		(void)graphics.device.getPipelineExecutableInternalRepresentationsKHR(&exec_info, &ir_count,
+		                                                                      irs.data());
+		for (uint32_t i = 0; i < ir_count; i++) {
+			char path[256];
+			snprintf(path, sizeof(path), "_Shaders/pipeline_%s_%016" PRIx64 "_%u_%u.txt", kind, hash,
+			         index, i);
+			FILE* file = fopen(path, "wb");
+			if (file != nullptr) {
+				fprintf(file, "; %s: %s (text=%s, %zu bytes)\n", irs[i].name.data(),
+				        irs[i].description.data(), irs[i].isText != 0u ? "yes" : "no",
+				        static_cast<size_t>(irs[i].dataSize));
+				fwrite(storage[i].data(), 1, irs[i].dataSize, file);
+				fclose(file);
+			}
+			LOGF("PipelineStats: %s %016" PRIx64 " exec=%u ir=%u \"%s\" text=%u bytes=%zu -> %s\n", kind,
+			     hash, index, i, irs[i].name.data(), irs[i].isText != 0u ? 1u : 0u,
+			     static_cast<size_t>(irs[i].dataSize), path);
+		}
+	}
+}
 
 static bool NarrowInputFormat(vk::Format& format, uint32_t& size, uint32_t used_components) {
 	if (used_components == 0 || used_components >= size) {
@@ -917,6 +1019,10 @@ void CreatePipelineInternal(
 		     (static_params.with_depth ? "true" : "false"),
 		     (static_params.blend_enable[0] ? "true" : "false"), dynamic_states_count);
 	}
+	if (graphics.pipeline_stats_enabled) {
+		pipeline_info.flags |= vk::PipelineCreateFlagBits::eCaptureStatisticsKHR |
+		                       vk::PipelineCreateFlagBits::eCaptureInternalRepresentationsKHR;
+	}
 	result = graphics.device.createGraphicsPipelines(driver_cache, 1, &pipeline_info, nullptr,
 	                                                 &pipeline.pipeline);
 	if (graphics_debug_dump_enabled()) {
@@ -926,6 +1032,9 @@ void CreatePipelineInternal(
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 
 	EXIT_NOT_IMPLEMENTED(pipeline.pipeline == nullptr);
+	LogPipelineExecutableStats(graphics, pipeline.pipeline, ps_active ? "ps" : "vs",
+	                           ps_active ? ps_input_info->stage.program->shader_hash
+	                                     : vs_input_info.stage.program->shader_hash);
 
 	if (tess_control_shader_module != nullptr) {
 		graphics.device.destroyShaderModule(tess_control_shader_module, nullptr);
@@ -992,6 +1101,10 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::ComputePipe
 	info.sType              = vk::StructureType::eComputePipelineCreateInfo;
 	info.pNext              = nullptr;
 	info.flags              = {};
+	if (graphics.pipeline_stats_enabled) {
+		info.flags |= vk::PipelineCreateFlagBits::eCaptureStatisticsKHR |
+		              vk::PipelineCreateFlagBits::eCaptureInternalRepresentationsKHR;
+	}
 	info.stage              = comp_shader_stage_info;
 	info.layout             = pipeline.pipeline_layout;
 	info.basePipelineHandle = nullptr;
@@ -1008,6 +1121,8 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::ComputePipe
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 
 	EXIT_NOT_IMPLEMENTED(pipeline.pipeline == nullptr);
+	LogPipelineExecutableStats(graphics, pipeline.pipeline, "cs",
+	                           input_info.stage.program->shader_hash);
 }
 
 } // namespace Libs::Graphics

@@ -294,6 +294,29 @@ struct PipelineCache::ProgramCache {
 			     options.shader_hash);
 		}
 		DumpShaderSpirv(stage_name, options.shader_hash, result.spirv);
+		// KYTY_PIPELINE_STATS_SPV=<hex hash>=<file.spv>[;...]: substitute a SPIR-V module (variant
+		// measurement with KYTY_PIPELINE_STATS; needs KYTY_SHADER_CACHE=0).
+		if (const char* subst = std::getenv("KYTY_PIPELINE_STATS_SPV"); subst != nullptr) {
+			char hash_text[24];
+			snprintf(hash_text, sizeof(hash_text), "%016" PRIx64 "=", options.shader_hash);
+			if (const char* at = std::strstr(subst, hash_text); at != nullptr) {
+				std::string path(at + std::strlen(hash_text));
+				if (const auto semi = path.find(';'); semi != std::string::npos) {
+					path.resize(semi);
+				}
+				if (FILE* file = fopen(path.c_str(), "rb"); file != nullptr) {
+					std::vector<uint32_t> words;
+					uint32_t              word = 0;
+					while (fread(&word, sizeof(word), 1, file) == 1) {
+						words.push_back(word);
+					}
+					fclose(file);
+					LOGF("PipelineStats: substituting SPIR-V of %016" PRIx64 " with %s (%zu words)\n",
+					     options.shader_hash, path.c_str(), words.size());
+					result.spirv = std::move(words);
+				}
+			}
+		}
 
 		vk::ShaderModuleCreateInfo create_info {};
 		create_info.sType       = vk::StructureType::eShaderModuleCreateInfo;

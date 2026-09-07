@@ -188,6 +188,26 @@ bool RobustBufferLoads() {
 	return g_robust_buffer_loads;
 }
 
+bool ScalarUniformHintEnabled() {
+	static const bool enabled = [] {
+		// Off by default: on NVIDIA the hint neither lowered the register count (196 vs 191
+		// for the tiled lighting CS) nor the GPU time (slightly worse on the RenderDoc stand).
+		const char* value = std::getenv("KYTY_SCALAR_UNIFORM");
+		return value != nullptr && value[0] == '1';
+	}();
+	return enabled;
+}
+
+uint32_t UniformHint(EmitterState& state, uint32_t type, uint32_t value) {
+	if (!ScalarUniformHintEnabled()) {
+		return value;
+	}
+	const auto result = state.builder.AllocateId();
+	state.builder.AddFunction({OpGroupNonUniformBroadcastFirst, type, result,
+	                           ConstantU32(state, ScopeSubgroup), value});
+	return result;
+}
+
 bool RobustLoadsEnabled() {
 	return RobustBufferLoads();
 }

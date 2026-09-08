@@ -628,6 +628,21 @@ struct PipelineCache::ProgramCache {
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
 		SaveToTranslationCache(entry->first, entry->second);
 		const auto& permutation = entry->second.permutations.back();
+		if (AvTraceEnabled()) {
+			std::string spec;
+			for (const auto& b: permutation.specialization.buffers) {
+				spec += fmt::format(" b:{:x}/{}/{:x}", b.packed_stride, static_cast<int>(b.descriptor_format),
+				                    b.descriptor_swizzle);
+			}
+			for (const auto& i: permutation.specialization.images) {
+				spec += fmt::format(" i:{}/{}/{}/{}/{:x}/{}", static_cast<int>(i.numeric_class),
+				                    static_cast<int>(i.dimension), i.mip_count,
+				                    static_cast<int>(i.conversion_format), i.shader_swizzle,
+				                    i.indirect_root);
+			}
+			LOGF("AvTrace: shader-spec %s hash=0x%016" PRIx64 " perm=%zu%s\n", label, params.hash,
+			     entry->second.permutations.size(), spec.c_str());
+		}
 		VerifyTranslationCache(entry->first, runtime, resources, permutation.specialization);
 		input_info.stage = {.program = &permutation.program, .resources = std::move(resources)};
 		permutation.program.bindings.AdvancePushData(push_data_cursor);

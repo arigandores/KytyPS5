@@ -104,6 +104,30 @@ constexpr uint32_t PackedStrideBaseAlignment(uint32_t packed) {
 	return cls >= 2u ? 16u : 4u << cls;
 }
 
+// Bit 26 of BufferResource::packed_stride ("const bank"): the V# is read only through
+// S_BUFFER_LOAD, never written by this shader and fits a uniform buffer (<= ConstBankMaxBytes).
+// The emitter then loads its constants through the ConstBuffers descriptor array (uniform
+// buffers): NVIDIA reads them with LDC(U) from the constant bank, without the per-dword
+// robustBufferAccess2 bounds check (IADD + LOP3 + ISETP + LDG !P) of storage-buffer loads.
+constexpr uint32_t PackedStrideConstBankShift = 26u;
+constexpr uint32_t PackedStrideConstBankMask  = 1u << PackedStrideConstBankShift;
+// Bits the host adds to the V# stride word (masked by code that compares it with the descriptor).
+constexpr uint32_t PackedStrideHostMask = PackedStrideAlignmentMask | PackedStrideConstBankMask;
+// maxUniformBufferRange (64 KiB) minus the uniform offset alignment the host may add.
+constexpr uint32_t ConstBankMaxBytes = 65536u - 64u;
+constexpr bool     PackedStrideConstBank(uint32_t packed) {
+	return (packed & PackedStrideConstBankMask) != 0u;
+}
+// Const-bank loads are used when the device offers uniformBufferStandardLayout (stride 4/8
+// arrays in uniform blocks) and robustBufferAccess2 (out-of-range reads zero-fill like
+// S_BUFFER_LOAD past NUM_RECORDS) and KYTY_CONST_BANK is not 0. In the translation cache signature.
+void SetConstBankSupported(bool device_supported);
+bool ConstBankEnabled();
+// KYTY_CONST_BANK=2: compute shaders too. Default: graphics stages only - the NVIDIA compiler
+// raised the tiled-lighting CS (5323) from 128 to 177 registers with constant-bank loads (one
+// workgroup per SM instead of two, +45% on the RenderDoc stand); pixel shaders gain 2-6%.
+bool ConstBankForStage(ShaderType stage);
+
 struct BufferResource {
 	static constexpr uint32_t NoImageAlias = UINT32_MAX;
 
@@ -283,11 +307,12 @@ enum class DescriptorBindingKind : uint32_t {
 	FaultBuffer,
 	FlattenedSrt,
 	ShaderData,
+	ConstBuffers, // uniform-buffer views of the const-bank V#s (subset of Buffers)
 	Count,
 };
 
 static_assert(static_cast<uint32_t>(DescriptorBindingKind::Samplers) == 37u);
-static_assert(static_cast<uint32_t>(DescriptorBindingKind::Count) == 43u);
+static_assert(static_cast<uint32_t>(DescriptorBindingKind::Count) == 44u);
 
 struct PushData {
 	static constexpr uint32_t DwordCount = 32;
@@ -443,6 +468,9 @@ struct ShaderInfo {
 	bool operator==(const ShaderInfo& other) const = default;
 };
 
+// Buffer resources with the const-bank bit set, in resource order (the ConstBuffers binding).
+std::vector<uint32_t> ConstBankResources(const ShaderInfo& info);
+
 struct SpirvRequirements {
 	bool subgroup_ballot              = false;
 	bool subgroup_vote                = false; // OpGroupNonUniformAny (WaveAny)
@@ -455,6 +483,7 @@ struct SpirvRequirements {
 	bool pixel_valid_mask             = false;
 	bool buffer_int64_atomics         = false;
 	bool scalar_vector_loads          = false; // uvec4/uvec2 aliases of the buffer array
+	bool const_bank_loads             = false; // ConstBuffers uniform-buffer array is read
 };
 
 struct BlockInfo {

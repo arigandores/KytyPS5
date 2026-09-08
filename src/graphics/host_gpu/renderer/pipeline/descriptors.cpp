@@ -72,6 +72,7 @@ vk::DescriptorType NativeDescriptorType(BindingKind kind) {
 		case BindingKind::FaultBuffer:
 		case BindingKind::FlattenedSrt:
 		case BindingKind::ShaderData: return vk::DescriptorType::eStorageBuffer;
+		case BindingKind::ConstBuffers: return vk::DescriptorType::eUniformBuffer;
 		case BindingKind::Count: EXIT("invalid native descriptor binding kind");
 	}
 	EXIT("invalid native descriptor binding kind");
@@ -147,8 +148,16 @@ static BufferView NativeStorageBuffer(RenderContext&                            
 		BindNullStorageBuffer(context, result);
 		return result;
 	}
-	const auto& graphics  = context.GetGraphics();
-	const auto  alignment = graphics.StorageMinAlignment();
+	const auto& graphics   = context.GetGraphics();
+	const bool  const_bank = ShaderRecompiler::IR::PackedStrideConstBank(resource.packed_stride);
+	// Const-bank V#s are also bound as uniform buffers: align the range start to
+	// minUniformBufferOffsetAlignment (64 on NVIDIA; a multiple of the storage alignment, so the
+	// adjustment stays a multiple of the specialized base alignment).
+	const auto alignment =
+	    const_bank ? std::max<vk::DeviceSize>(
+	                     graphics.StorageMinAlignment(),
+	                     graphics.GetPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment)
+	               : graphics.StorageMinAlignment();
 	if (alignment == 0 ||
 	    size > graphics.GetPhysicalDeviceProperties().limits.maxStorageBufferRange) {
 		EXIT("storage buffer range or device alignment is unsupported\n");
@@ -171,6 +180,11 @@ static BufferView NativeStorageBuffer(RenderContext&                            
 	result.buffer = buffer->Handle();
 	result.offset = aligned_offset;
 	result.range  = static_cast<vk::DeviceSize>(size + adjustment);
+	if (const_bank &&
+	    result.range > graphics.GetPhysicalDeviceProperties().limits.maxUniformBufferRange) {
+		EXIT("storage buffer slot %u: const-bank range 0x%llx exceeds maxUniformBufferRange\n", slot,
+		     static_cast<unsigned long long>(result.range));
+	}
 	if (resource.formatted && resource.written) {
 		context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
 	}
@@ -1337,6 +1351,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			} else {
 				switch (binding.kind) {
 					case BindingKind::Buffers:
+					case BindingKind::ConstBuffers:
+						// ConstBuffers: the same views as uniform-buffer descriptors (the range
+						// was bound at the uniform offset alignment and checked against
+						// maxUniformBufferRange in NativeStorageBuffer).
 						for (const auto resource: binding.resources) {
 							const auto& view = descriptors.buffers.at(resource);
 							EXIT_IF(view.buffer == nullptr);

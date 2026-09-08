@@ -12218,6 +12218,9 @@ int main() {
     ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(true);
     // NVIDIA: fp32 denormal behaviour is not controllable (flush assumed, no execution mode).
     ShaderRecompiler::Spirv::Emitter::SetDenormFlushToZero(false, false);
+    // NVIDIA: uniformBufferStandardLayout + robustBufferAccess2 -> constants through uniform
+    // buffers (KYTY_CONST_BANK=0 overrides). The eligibility bit itself comes from the cache file.
+    ShaderRecompiler::IR::SetConstBankSupported(true);
     ShaderRecompiler::CompileOptions options;
     options.stage = is_pixel ? ShaderType::Pixel : ShaderType::Compute;
     options.shader_hash = key.hash;
@@ -12250,6 +12253,20 @@ int main() {
             (cls << ShaderRecompiler::IR::PackedStrideAlignmentShift);
       }
     }
+    if (const char *cbank = std::getenv("KYTY_RECOMPILE_CBANK"); cbank != nullptr) {
+      // Cache files written before the const-bank bit existed: mark every scalar-read-only
+      // buffer as const-bank (=1) or clear the bit (=0) for stand measurements. The size check
+      // of the real specialization (V# <= 64 KiB - 64) is skipped here.
+      const bool set = cbank[0] == '1';
+      const auto &info = translated.program.info.buffers;
+      for (size_t i = 0; i < specialization.buffers.size() && i < info.size(); i++) {
+        auto &buffer = specialization.buffers[i];
+        buffer.packed_stride &= ~ShaderRecompiler::IR::PackedStrideConstBankMask;
+        if (set && info[i].scalar && !info[i].written && !info[i].atomic) {
+          buffer.packed_stride |= ShaderRecompiler::IR::PackedStrideConstBankMask;
+        }
+      }
+    }
     auto compiled = ShaderRecompiler::CompileProgram(
         std::move(translated), options, specialization,
         stored.program.bindings.push_data_start_dword);
@@ -12267,7 +12284,8 @@ int main() {
     std::string aligns;
     for (const auto &buffer : specialization.buffers) {
       aligns += (aligns.empty() ? "" : ",") +
-                std::to_string(ShaderRecompiler::IR::PackedStrideBaseAlignment(buffer.packed_stride));
+                std::to_string(ShaderRecompiler::IR::PackedStrideBaseAlignment(buffer.packed_stride)) +
+                (ShaderRecompiler::IR::PackedStrideConstBank(buffer.packed_stride) ? "c" : "");
     }
     std::printf("recompile %s: %s hash=%016llx wave=%u local=%ux%ux%u lds=%u inputs=%u permutations=%zu "
                 "buffer_align=[%s] translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",

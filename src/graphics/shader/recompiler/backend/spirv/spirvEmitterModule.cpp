@@ -135,6 +135,28 @@ uint32_t TypeStorageBufferU32VectorElementPointer(EmitterState& state, uint32_t 
 	return TypePointer(state, StorageClassStorageBuffer, TypeU32Vector(state, components));
 }
 
+uint32_t UniformBlockType(EmitterState& state, uint32_t components) {
+	const auto element = components == 1u ? TypeU32(state) : TypeU32Vector(state, components);
+	const auto stride  = components * static_cast<uint32_t>(sizeof(uint32_t));
+	const auto array   = state.builder.DecoratedType(
+	    OpTypeArray, {element, ConstantU32(state, 65536u / stride)},
+	    {{OpDecorate, {DecorationArrayStride, stride}}});
+	return state.builder.DecoratedType(
+	    OpTypeStruct, {array},
+	    {{OpMemberDecorate, {0, DecorationOffset, 0}}, {OpDecorate, {DecorationBlock}}});
+}
+
+uint32_t TypeUniformBlockArrayPointer(EmitterState& state, uint32_t components, uint32_t count) {
+	const auto array_type = state.builder.Type(
+	    OpTypeArray, {UniformBlockType(state, components), ConstantU32(state, count)});
+	return TypePointer(state, StorageClassUniform, array_type);
+}
+
+uint32_t TypeUniformElementPointer(EmitterState& state, uint32_t components) {
+	return TypePointer(state, StorageClassUniform,
+	                   components == 1u ? TypeU32(state) : TypeU32Vector(state, components));
+}
+
 uint32_t TypeDeviceAddressStoragePointer(EmitterState& state) {
 	return TypePointer(state, StorageClassStorageBuffer, TypeDeviceAddress(state));
 }
@@ -219,6 +241,17 @@ void DefineDescriptorVariables(EmitterState& state) {
 			};
 			state.storage_buffer_u32x4_variable = define_vector_alias(4u);
 			state.storage_buffer_u32x2_variable = define_vector_alias(2u);
+		}
+	}
+	if (DescriptorBinding(state, IR::DescriptorBindingKind::ConstBuffers) != nullptr) {
+		const auto count = DescriptorCount(state, IR::DescriptorBindingKind::ConstBuffers);
+		state.const_buffer_variable = state.builder.DefineGlobalVariable(
+		    TypeUniformBlockArrayPointer(state, 1u, count), StorageClassUniform);
+		if (state.requirements.scalar_vector_loads) {
+			state.const_buffer_u32x2_variable = state.builder.DefineGlobalVariable(
+			    TypeUniformBlockArrayPointer(state, 2u, count), StorageClassUniform);
+			state.const_buffer_u32x4_variable = state.builder.DefineGlobalVariable(
+			    TypeUniformBlockArrayPointer(state, 4u, count), StorageClassUniform);
 		}
 	}
 	if (DescriptorBinding(state, IR::DescriptorBindingKind::BdaPagetable) != nullptr) {
@@ -680,6 +713,24 @@ void AddDescriptorAnnotationsAndNames(EmitterState& state) {
 	if (buffers_aliased) {
 		state.builder.AddAnnotation(
 		    {OpDecorate, state.storage_buffer_variable, DecorationAliased});
+	}
+	if (state.const_buffer_variable != 0) {
+		Decorate(state.const_buffer_variable, "cbuffers", IR::DescriptorBindingKind::ConstBuffers);
+		bool       cbuffers_aliased = false;
+		const auto alias_cbuffers   = [&](uint32_t variable, const char* name) {
+			if (variable == 0) {
+				return;
+			}
+			Decorate(variable, name, IR::DescriptorBindingKind::ConstBuffers);
+			state.builder.AddAnnotation({OpDecorate, variable, DecorationAliased});
+			cbuffers_aliased = true;
+		};
+		alias_cbuffers(state.const_buffer_u32x2_variable, "cbuffers_u32x2");
+		alias_cbuffers(state.const_buffer_u32x4_variable, "cbuffers_u32x4");
+		if (cbuffers_aliased) {
+			state.builder.AddAnnotation(
+			    {OpDecorate, state.const_buffer_variable, DecorationAliased});
+		}
 	}
 	if (state.bda_pagetable_variable != 0) {
 		Decorate(state.bda_pagetable_variable, "bda_pagetable",

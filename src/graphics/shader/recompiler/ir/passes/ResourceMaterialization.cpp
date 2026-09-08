@@ -11,6 +11,7 @@
 #include <array>
 #include <bit>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fmt/format.h>
 #include <functional>
@@ -436,6 +437,16 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 		// V# base alignment class (bits 24..25): lets the emitter load S_BUFFER_LOAD_DWORDXn as
 		// one uvec2/uvec4 when the SGPR offset and the immediate are aligned too.
 		packed_stride |= PackedStrideAlignmentClass(descriptor.Base48()) << PackedStrideAlignmentShift;
+		// Const bank (bit 26): scalar-read-only V# that fits a uniform buffer.
+		if (ConstBankEnabled()) {
+			const auto& info    = program.info.buffers[i];
+			const auto  records = static_cast<uint64_t>(descriptor.NumRecords());
+			const auto  size    = stride == 0u ? records : static_cast<uint64_t>(stride) * records;
+			if (info.scalar && !info.written && !info.atomic && size != 0u &&
+			    size <= ConstBankMaxBytes) {
+				packed_stride |= PackedStrideConstBankMask;
+			}
+		}
 		next_specialization.buffers.push_back({
 		    .packed_stride     = packed_stride,
 		    .descriptor_format = program.info.buffers[i].formatted
@@ -730,15 +741,46 @@ bool MaterializeResources(const ResourcePlan& program, const SrtRuntime& runtime
 	return ok;
 }
 
+namespace {
+bool g_const_bank_supported = false;
+} // namespace
+
+void SetConstBankSupported(bool device_supported) {
+	g_const_bank_supported = device_supported;
+}
+
+namespace {
+int ConstBankMode() {
+	static const int mode = [] {
+		const char* value = std::getenv("KYTY_CONST_BANK");
+		return value == nullptr ? 1 : value[0] - '0';
+	}();
+	return mode;
+}
+} // namespace
+
+bool ConstBankEnabled() {
+	return g_const_bank_supported && ConstBankMode() != 0;
+}
+
+bool ConstBankForStage(ShaderType stage) {
+	return ConstBankEnabled() && (stage != ShaderType::Compute || ConstBankMode() == 2);
+}
+
 void ApplyResourceSpecialization(Program& program, const ResourceSpecialization& specialization) {
 	EXIT_IF(!program.resource_tracking_complete || program.shader_info_complete ||
 	        program.binding_layout_complete);
 	EXIT_IF(program.info.buffers.size() != specialization.buffers.size() ||
 	        program.info.images.size() > specialization.images.size());
 
-	auto buffers = program.info.buffers;
+	auto       buffers    = program.info.buffers;
+	const bool const_bank = ConstBankForStage(program.stage);
 	for (size_t index = 0; index < buffers.size(); index++) {
-		buffers[index].packed_stride      = specialization.buffers[index].packed_stride;
+		buffers[index].packed_stride = specialization.buffers[index].packed_stride;
+		if (!const_bank) {
+			// The eligibility bit still splits permutations (V# size class); only its use is off.
+			buffers[index].packed_stride &= ~PackedStrideConstBankMask;
+		}
 		buffers[index].descriptor_format  = specialization.buffers[index].descriptor_format;
 		buffers[index].descriptor_swizzle = specialization.buffers[index].descriptor_swizzle;
 	}

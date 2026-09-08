@@ -101,7 +101,7 @@ bool ResolveComputeImageClear(const ShaderComputeInputInfo& input, uint32_t grou
 	    resource.scalar || resource.max_byte_extent != 16 || descriptor.Stride() != 16 ||
 	    descriptor.Format() != Prospero::BufferFormat::k32_32_32_32UInt ||
 	    descriptor.SwizzleEnabled() || descriptor.IndexStride() != 0 || descriptor.AddTid() ||
-	    (resource.packed_stride & ~ShaderRecompiler::IR::PackedStrideAlignmentMask) !=
+	    (resource.packed_stride & ~ShaderRecompiler::IR::PackedStrideHostMask) !=
 	        descriptor.PackedStride() ||
 	    raw.dword_count != 4 ||
 	    program.user_data_base != 0 || resources.user_data.size() != 8) {

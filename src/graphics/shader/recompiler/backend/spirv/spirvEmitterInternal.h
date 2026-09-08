@@ -60,6 +60,7 @@ enum : uint32_t {
 	CapabilityComputeDerivativeGroupQuadsKHR = 5288,
 	CapabilityPhysicalStorageBufferAddresses = 5347,
 	StorageClassUniformConstant              = 0,
+	StorageClassUniform                      = 2,
 	StorageClassInput                        = 1,
 	StorageClassOutput                       = 3,
 	StorageClassWorkgroup                    = 4,
@@ -284,6 +285,8 @@ enum : uint32_t {
 };
 
 enum : uint32_t {
+	MemoryAccessMaskNone    = 0x0,
+	MemoryAccessVolatileMask = 0x1,
 	MemoryAccessAlignedMask = 0x2,
 };
 
@@ -375,6 +378,11 @@ struct EmitterState {
 	// Aliased uvec4[] / uvec2[] views of the buffer descriptor array (grouped ReadConstBuffer).
 	uint32_t                                         storage_buffer_u32x4_variable = 0;
 	uint32_t                                         storage_buffer_u32x2_variable = 0;
+	// ConstBuffers uniform-buffer array (S_BUFFER_LOAD of const-bank V#s): u32 / uvec2 / uvec4
+	// views of the same descriptors.
+	uint32_t                                         const_buffer_variable       = 0;
+	uint32_t                                         const_buffer_u32x2_variable = 0;
+	uint32_t                                         const_buffer_u32x4_variable = 0;
 	std::array<uint32_t, IR::ShaderInfo::MaxBuffers> memory_byte_offsets {};
 	uint32_t                                         bda_pagetable_variable  = 0;
 	// Null-page BDA mode: Private u32 holding the last missing page (0 = none), flushed to
@@ -447,6 +455,10 @@ uint32_t TypeStorageBufferU64Pointer(EmitterState& state);
 uint32_t TypeStorageBufferU64ElementPointer(EmitterState& state);
 uint32_t TypeStorageBufferU32VectorPointer(EmitterState& state, uint32_t components);
 uint32_t TypeStorageBufferU32VectorElementPointer(EmitterState& state, uint32_t components);
+// Uniform-buffer block { uvecN data[65536 / (4N)] } (uniformBufferStandardLayout: array stride
+// 4N), as `count` descriptors, and the pointer to one element; components 1, 2 or 4.
+uint32_t TypeUniformBlockArrayPointer(EmitterState& state, uint32_t components, uint32_t count);
+uint32_t TypeUniformElementPointer(EmitterState& state, uint32_t components);
 uint32_t TypeDeviceAddressStoragePointer(EmitterState& state);
 uint32_t TypePhysicalU32Pointer(EmitterState& state);
 uint32_t TypePushConstantElementPointer(EmitterState& state);
@@ -687,6 +699,9 @@ bool     DenormFlushToZeroEnabled();
 bool     DenormFlushToZeroDeclared(); // ExecutionMode DenormFlushToZero 32 is emitted
 // S_BUFFER_LOAD_DWORDXn dwords grouped into one uvec2/uvec4 load (KYTY_VEC_CONST=0 disables).
 bool     VectorConstLoadsEnabled();
+// The buffer resource carries the const-bank bit and the ConstBuffers array was emitted:
+// ReadConstBuffer goes through the uniform-buffer descriptor instead of the storage buffer.
+bool     UsesConstBank(const EmitterState& state, uint32_t resource);
 // Scalar (SGPR) values: OpGroupNonUniformBroadcastFirst marks them uniform for the driver
 // (uniform registers instead of per-lane ones). Experiment, KYTY_SCALAR_UNIFORM=1 enables.
 bool     ScalarUniformHintEnabled();

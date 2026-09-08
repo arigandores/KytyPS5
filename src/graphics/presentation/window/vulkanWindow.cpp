@@ -679,6 +679,14 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 	LOGF("Vulkan robustBufferAccess2: %s (shader bounds branches %s)\n",
 	     graphics.robust_buffer_access2_enabled ? "enabled" : "unavailable",
 	     ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? "dropped" : "kept");
+	// Const bank: S_BUFFER_LOAD constants through uniform buffers (stride-4/8 arrays need
+	// uniformBufferStandardLayout; out-of-range zero-fill needs robustBufferAccess2).
+	features12.uniformBufferStandardLayout = supported_features12.uniformBufferStandardLayout;
+	ShaderRecompiler::IR::SetConstBankSupported(features12.uniformBufferStandardLayout == VK_TRUE &&
+	                                            graphics.robust_buffer_access2_enabled);
+	LOGF("Vulkan uniformBufferStandardLayout: %s (const-bank constant loads %s)\n",
+	     features12.uniformBufferStandardLayout == VK_TRUE ? "enabled" : "unavailable",
+	     ShaderRecompiler::IR::ConstBankEnabled() ? "enabled" : "disabled");
 
 	{
 		vk::PhysicalDeviceFloatControlsProperties float_controls {};

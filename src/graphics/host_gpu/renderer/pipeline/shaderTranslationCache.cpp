@@ -546,7 +546,11 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	              std::string(translator_hash) +
 	              (ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? ":robust" : "") +
 	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? ":ftz" : "") +
-	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZeroDeclared() ? ":ftzd" : "") + "\n";
+	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZeroDeclared() ? ":ftzd" : "") +
+	              (ShaderRecompiler::IR::ConstBankEnabled()
+	                   ? (ShaderRecompiler::IR::ConstBankForStage(ShaderType::Compute) ? ":cbank2" : ":cbank")
+	                   : "") +
+	              "\n";
 	m_enabled = true;
 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
 }

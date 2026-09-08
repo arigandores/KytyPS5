@@ -89,6 +89,9 @@ void AllocateBindings(Program& program, uint32_t push_data_start_dword) {
 		}
 		AddBinding(next, DescriptorBindingKind::Buffers, std::move(resources));
 	}
+	if (auto const_bank = ConstBankResources(program.info); !const_bank.empty()) {
+		AddBinding(next, DescriptorBindingKind::ConstBuffers, std::move(const_bank));
+	}
 
 	std::array<std::vector<uint32_t>, ImageBindingCount> image_groups;
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
@@ -145,6 +148,16 @@ void AllocateBindings(Program& program, uint32_t push_data_start_dword) {
 
 	program.bindings                = std::move(next);
 	program.binding_layout_complete = true;
+}
+
+std::vector<uint32_t> ConstBankResources(const ShaderInfo& info) {
+	std::vector<uint32_t> resources;
+	for (uint32_t i = 0; i < info.buffers.size(); i++) {
+		if (PackedStrideConstBank(info.buffers[i].packed_stride)) {
+			resources.push_back(i);
+		}
+	}
+	return resources;
 }
 
 const DescriptorBinding* FindBinding(const BindingLayout& layout, DescriptorBindingKind kind) {

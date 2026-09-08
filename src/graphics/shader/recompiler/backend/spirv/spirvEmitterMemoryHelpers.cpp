@@ -245,6 +245,11 @@ bool RobustLoadsEnabled() {
 	return RobustBufferLoads();
 }
 
+bool UsesConstBank(const EmitterState& state, uint32_t resource) {
+	return state.const_buffer_variable != 0u && resource < state.program.info.buffers.size() &&
+	       IR::PackedStrideConstBank(state.program.info.buffers[resource].packed_stride);
+}
+
 uint32_t EmitMemoryElementInBounds(EmitterState& state, const MemoryResourceAccess& access,
                                    uint32_t index) {
 	if (RobustLoadsEnabled() &&

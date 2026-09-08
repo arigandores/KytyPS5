@@ -37,6 +37,9 @@ void ValidateNativeProgram(const IR::Program& program) {
 	if (!program.info.buffers.empty()) {
 		Expect(Kind::Buffers, Dense(program.info.buffers.size()));
 	}
+	if (auto const_bank = IR::ConstBankResources(program.info); !const_bank.empty()) {
+		Expect(Kind::ConstBuffers, std::move(const_bank));
+	}
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		const auto kind = IR::DescriptorBindingForImage(program.info.images[i]);
 		if (!kind.has_value()) {
@@ -193,9 +196,19 @@ void AnalyzeProgramRequirements(IR::Program& program) {
 			    inst.GetType() == IR::Type::U64) {
 				requirements.buffer_int64_atomics = true;
 			}
-			if (inst.GetOpcode() == IR::ValueOpcode::ReadConstBuffer &&
-			    Emitter::VectorConstLoadsEnabled() && Emitter::RobustLoadsEnabled()) {
-				requirements.scalar_vector_loads = true;
+			if (inst.GetOpcode() == IR::ValueOpcode::ReadConstBuffer) {
+				if (Emitter::VectorConstLoadsEnabled() && Emitter::RobustLoadsEnabled()) {
+					requirements.scalar_vector_loads = true;
+				}
+				const auto memory_index = inst.Flags<IR::MemoryFlags>().index;
+				if (memory_index < program.memory_info.size()) {
+					const auto& memory = program.memory_info[memory_index];
+					if (memory.resource < program.info.buffers.size() &&
+					    IR::PackedStrideConstBank(
+					        program.info.buffers[memory.resource].packed_stride)) {
+						requirements.const_bank_loads = true;
+					}
+				}
 			}
 			const auto address_access = IR::AddressOpcodeInfoOf(inst.GetOpcode()).access;
 			if (address_access != IR::AddressAccess::None) {

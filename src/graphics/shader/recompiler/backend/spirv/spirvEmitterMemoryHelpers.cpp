@@ -213,6 +213,14 @@ bool DenormFlushToZeroEnabled() {
 	return g_denorm_flush_to_zero;
 }
 
+bool VectorConstLoadsEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_VEC_CONST");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
 bool ScalarUniformHintEnabled() {
 	static const bool enabled = [] {
 		// Off by default: on NVIDIA the hint neither lowered the register count (196 vs 191

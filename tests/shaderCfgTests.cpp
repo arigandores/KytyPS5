@@ -12238,8 +12238,20 @@ int main() {
     auto translated = ShaderRecompiler::TranslateProgram(std::span<const uint32_t>{code}, options);
     const auto t1 = std::chrono::steady_clock::now();
     const auto &stored = entry.permutations[permutation];
+    auto specialization = stored.specialization;
+    if (const char *align = std::getenv("KYTY_RECOMPILE_ALIGN"); align != nullptr) {
+      // Cache files written before the alignment class existed carry class 0 (dword): force
+      // the V# base alignment of every buffer (4, 8 or 16) for stand measurements.
+      const auto value = static_cast<uint32_t>(std::strtoul(align, nullptr, 10));
+      const uint32_t cls = value >= 16u ? 2u : value >= 8u ? 1u : 0u;
+      for (auto &buffer : specialization.buffers) {
+        buffer.packed_stride =
+            (buffer.packed_stride & ~ShaderRecompiler::IR::PackedStrideAlignmentMask) |
+            (cls << ShaderRecompiler::IR::PackedStrideAlignmentShift);
+      }
+    }
     auto compiled = ShaderRecompiler::CompileProgram(
-        std::move(translated), options, stored.specialization,
+        std::move(translated), options, specialization,
         stored.program.bindings.push_data_start_dword);
     const auto t2 = std::chrono::steady_clock::now();
     FILE *out = std::fopen(parts[2].c_str(), "wb");
@@ -12252,12 +12264,17 @@ int main() {
     const auto ms = [](auto a, auto b) {
       return std::chrono::duration_cast<std::chrono::microseconds>(b - a).count() / 1000.0;
     };
+    std::string aligns;
+    for (const auto &buffer : specialization.buffers) {
+      aligns += (aligns.empty() ? "" : ",") +
+                std::to_string(ShaderRecompiler::IR::PackedStrideBaseAlignment(buffer.packed_stride));
+    }
     std::printf("recompile %s: %s hash=%016llx wave=%u local=%ux%ux%u lds=%u inputs=%u permutations=%zu "
-                "translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",
+                "buffer_align=[%s] translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",
                 parts[0].c_str(), is_pixel ? "ps" : "cs", static_cast<unsigned long long>(key.hash),
                 compute.wave_size, compute.threads_num[0], compute.threads_num[1],
                 compute.threads_num[2], compute.lds_size_dwords, pixel.input_num,
-                entry.permutations.size(), ms(t0, t1), ms(t1, t2), compiled.spirv.size(),
+                entry.permutations.size(), aligns.c_str(), ms(t0, t1), ms(t1, t2), compiled.spirv.size(),
                 stored.spirv.size(), parts[2].c_str());
     return 0;
   }

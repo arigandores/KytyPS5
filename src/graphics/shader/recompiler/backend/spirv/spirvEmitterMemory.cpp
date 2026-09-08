@@ -332,6 +332,200 @@ uint32_t LoadScalarBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::Me
 }
 
 
+// S_BUFFER_LOAD_DWORDXn as one vector load. The translator split it into n ReadConstBuffer
+// dwords with the same resource and SGPR offset and immediates imm, imm+4, ...; each one cost an
+// access chain, a load and (robustBufferAccess2) a driver bounds check. When the V# base
+// (specialization class), the SGPR offset (static analysis of its definition) and the chunk start
+// are 16- (8-) byte aligned, the dwords of one 16- (8-) byte chunk load as one uvec4 (uvec2)
+// through the aliased view of the descriptor array. Members are defined eagerly and skipped through
+// ctx.grouped_loads. Returns the value of `inst`, or 0 when the scalar path must be used.
+namespace {
+
+uint32_t LowestSetAlignment(uint32_t value) {
+	return value == 0u ? 16u : std::min(16u, value & (0u - value));
+}
+
+// Power-of-two alignment (1..16) provably held by a byte-offset value; unknown = 1.
+uint32_t KnownOffsetAlignment(IR::Value value, uint32_t depth) {
+	value = value.Resolve();
+	if (value.IsImmediate()) {
+		return value.GetType() == IR::Type::U32 ? LowestSetAlignment(value.U32()) : 1u;
+	}
+	const auto* def = value.TryInstruction();
+	if (def == nullptr || depth > 8u) {
+		return 1u;
+	}
+	const auto immediate = [](IR::Value v, uint32_t& out) {
+		v = v.Resolve();
+		if (v.IsImmediate() && v.GetType() == IR::Type::U32) {
+			out = v.U32();
+			return true;
+		}
+		return false;
+	};
+	uint32_t constant = 0;
+	switch (def->GetOpcode()) {
+		case IR::ValueOpcode::IAdd32:
+		case IR::ValueOpcode::ISub32:
+		case IR::ValueOpcode::BitwiseOr32:
+			return std::min(KnownOffsetAlignment(def->Arg(0), depth + 1u),
+			                KnownOffsetAlignment(def->Arg(1), depth + 1u));
+		case IR::ValueOpcode::IMul32:
+			if (immediate(def->Arg(1), constant)) {
+				return std::min(16u, KnownOffsetAlignment(def->Arg(0), depth + 1u) *
+				                         LowestSetAlignment(constant));
+			}
+			if (immediate(def->Arg(0), constant)) {
+				return std::min(16u, KnownOffsetAlignment(def->Arg(1), depth + 1u) *
+				                         LowestSetAlignment(constant));
+			}
+			return 1u;
+		case IR::ValueOpcode::ShiftLeftLogical32:
+			if (immediate(def->Arg(1), constant)) {
+				return std::min(16u, KnownOffsetAlignment(def->Arg(0), depth + 1u)
+				                         << std::min(constant, 4u));
+			}
+			return 1u;
+		case IR::ValueOpcode::BitwiseAnd32:
+			if (immediate(def->Arg(1), constant)) {
+				return std::max(KnownOffsetAlignment(def->Arg(0), depth + 1u),
+				                LowestSetAlignment(constant));
+			}
+			if (immediate(def->Arg(0), constant)) {
+				return std::max(KnownOffsetAlignment(def->Arg(1), depth + 1u),
+				                LowestSetAlignment(constant));
+			}
+			return std::max(KnownOffsetAlignment(def->Arg(0), depth + 1u),
+			                KnownOffsetAlignment(def->Arg(1), depth + 1u));
+		case IR::ValueOpcode::SelectU32:
+			return std::min(KnownOffsetAlignment(def->Arg(1), depth + 1u),
+			                KnownOffsetAlignment(def->Arg(2), depth + 1u));
+		default: return 1u;
+	}
+}
+
+bool VectorConstTrace() {
+	static const bool enabled = std::getenv("KYTY_VEC_CONST_TRACE") != nullptr;
+	return enabled;
+}
+
+} // namespace
+
+uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
+                               const IR::MemoryInfo& mem) {
+	auto& state = ctx.state;
+	if (!VectorConstLoadsEnabled() || !RobustLoadsEnabled() || ctx.current_block == nullptr ||
+	    inst.NumArgs() != 2u || mem.data_bits != 32u || mem.data_dwords != 1u ||
+	    (mem.offset & 3u) != 0u || mem.resource >= state.program.info.buffers.size()) {
+		return 0u;
+	}
+	const auto offset_value = inst.Arg(1).Resolve();
+	const auto alignment    = std::min(
+	    IR::PackedStrideBaseAlignment(state.program.info.buffers[mem.resource].packed_stride),
+	    KnownOffsetAlignment(offset_value, 0u));
+	if (alignment < 8u) {
+		if (VectorConstTrace()) {
+			LOGF("VecConst: scalar pc=0x%x res=%u imm=%u base_align=%u offset_align=%u\n", inst.Flags<IR::MemoryFlags>().pc,
+			     mem.resource,
+			     mem.offset,
+			     IR::PackedStrideBaseAlignment(state.program.info.buffers[mem.resource].packed_stride),
+			     KnownOffsetAlignment(offset_value, 0u));
+		}
+		return 0u;
+	}
+	struct Member {
+		const IR::Inst* inst   = nullptr;
+		uint32_t        offset = 0;
+	};
+	std::vector<Member> members;
+	members.push_back({&inst, mem.offset});
+	bool     seen    = false;
+	uint32_t scanned = 0;
+	for (const auto& other: *ctx.current_block) {
+		if (!seen) {
+			seen = &other == &inst;
+			continue;
+		}
+		if (++scanned > 96u) {
+			break;
+		}
+		if (other.GetOpcode() != IR::ValueOpcode::ReadConstBuffer || other.NumArgs() != 2u ||
+		    ctx.grouped_loads.contains(&other)) {
+			continue;
+		}
+		const auto& other_mem = ctx.Memory(other);
+		if (other_mem.resource != mem.resource || other_mem.planning_only ||
+		    other_mem.data_bits != 32u || other_mem.data_dwords != 1u ||
+		    (other_mem.offset & 3u) != 0u || !(other.Arg(1).Resolve() == offset_value)) {
+			continue;
+		}
+		members.push_back({&other, other_mem.offset});
+	}
+	if (members.size() < 2u) {
+		if (VectorConstTrace()) {
+			LOGF("VecConst: single pc=0x%x res=%u imm=%u align=%u\n", inst.Flags<IR::MemoryFlags>().pc, mem.resource,
+			     mem.offset, alignment);
+		}
+		return 0u;
+	}
+	for (uint32_t width = std::min(alignment, 16u); width >= 8u; width /= 2u) {
+		const uint32_t  start      = mem.offset & ~(width - 1u);
+		const uint32_t  components = width / 4u;
+		const IR::Inst* slots[4]   = {};
+		uint32_t        present    = 0;
+		for (const auto& member: members) {
+			if (member.offset >= start && member.offset < start + width) {
+				auto& slot = slots[(member.offset - start) / 4u];
+				if (slot == nullptr) {
+					slot = member.inst;
+					present++;
+				}
+			}
+		}
+		const auto variable = components == 4u ? state.storage_buffer_u32x4_variable
+		                                       : state.storage_buffer_u32x2_variable;
+		if (present < 2u || variable == 0u) {
+			continue;
+		}
+		const auto access = PrepareStorageBufferResourceAccess(
+		    state, mem, variable, TypeStorageBufferU32VectorPointer(state, components));
+		// Byte address = SGPR offset + chunk immediate + the bound-range adjustment (a multiple of
+		// the base alignment: the host binds at StorageMinAlignment and checks it).
+		auto byte = Binary(state, OpIAdd, TypeU32(state), ctx.Arg(inst, 1), ConstantU32(state, start));
+		byte      = Binary(state, OpIAdd, TypeU32(state), byte, access.byte_offset);
+		const auto index   = Binary(state, OpShiftRightLogical, TypeU32(state), byte,
+		                            ConstantU32(state, components == 4u ? 4u : 3u));
+		const auto pointer = state.builder.AllocateId();
+		state.builder.AddFunction({OpAccessChain,
+		                           TypeStorageBufferU32VectorElementPointer(state, components),
+		                           pointer, access.object_pointer, ConstantU32(state, 0), index});
+		const auto vector = state.builder.AllocateId();
+		state.builder.AddFunction({OpLoad, TypeU32Vector(state, components), vector, pointer});
+		if (VectorConstTrace()) {
+			LOGF("VecConst: group pc=0x%x res=%u start=%u width=%u present=%u members=%zu align=%u\n",
+			     inst.Flags<IR::MemoryFlags>().pc, mem.resource, start, width, present, members.size(), alignment);
+		}
+		uint32_t result = 0;
+		for (uint32_t component = 0; component < components; component++) {
+			const auto* member = slots[component];
+			if (member == nullptr) {
+				continue;
+			}
+			const auto value = state.builder.AllocateId();
+			state.builder.AddFunction({OpCompositeExtract, TypeU32(state), value, vector, component});
+			const auto hinted = UniformHint(state, TypeU32(state), value);
+			if (member == &inst) {
+				result = hinted;
+			} else {
+				ctx.Define(*member, hinted);
+				ctx.grouped_loads.insert(member);
+			}
+		}
+		return result;
+	}
+	return 0u;
+}
+
 // Grouped scalar pointer loads. The translator splits S_LOAD_DWORDXn into n dword loads with the
 // same base V# and SGPR offset and immediates imm, imm+4, ...; each one cost a page lookup. Here
 // the first member looks the page up once and the others load at page_ptr + delta, behind a
@@ -2126,8 +2320,15 @@ bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst) {
 		return true;
 	}
 	if (op == IR::ValueOpcode::ReadConstBuffer) {
+		if (ctx.grouped_loads.contains(&inst)) {
+			return true;
+		}
 		auto mem = ctx.Memory(inst);
 		mem.kind = IR::ResourceKind::ScalarBuffer;
+		if (const auto vector = LoadConstBufferVector(ctx, inst, mem); vector != 0u) {
+			ctx.Define(inst, vector);
+			return true;
+		}
 		const auto address =
 		    Binary(state, OpIAdd, TypeU32(state), ctx.Arg(inst, 1), ConstantU32(state, mem.offset));
 		const auto index =

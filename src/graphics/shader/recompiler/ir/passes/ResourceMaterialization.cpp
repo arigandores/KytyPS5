@@ -433,6 +433,9 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 		} else if (!swizzle) {
 			packed_stride &= ~(3u << 16u);
 		}
+		// V# base alignment class (bits 24..25): lets the emitter load S_BUFFER_LOAD_DWORDXn as
+		// one uvec2/uvec4 when the SGPR offset and the immediate are aligned too.
+		packed_stride |= PackedStrideAlignmentClass(descriptor.Base48()) << PackedStrideAlignmentShift;
 		next_specialization.buffers.push_back({
 		    .packed_stride     = packed_stride,
 		    .descriptor_format = program.info.buffers[i].formatted

@@ -162,6 +162,12 @@ static BufferView NativeStorageBuffer(RenderContext&                            
 		EXIT("storage buffer offset adjustment is unsupported\n");
 	}
 	buffer_offset = static_cast<uint32_t>(adjustment);
+	if (adjustment % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
+		// The shader was specialized on the V# base alignment (uvec2/uvec4 constant loads).
+		EXIT("storage buffer slot %u: bound offset adjustment %u breaks the specialized base alignment %u\n",
+		     slot, buffer_offset,
+		     ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride));
+	}
 	result.buffer = buffer->Handle();
 	result.offset = aligned_offset;
 	result.range  = static_cast<vk::DeviceSize>(size + adjustment);

@@ -89,6 +89,21 @@ struct ExportInfo {
 	bool operator==(const ExportInfo& other) const = default;
 };
 
+// Bits 24..25 of BufferResource::packed_stride: alignment class of the V# base address in the
+// specialization (0 = dword or unknown, 1 = 8 bytes, 2 = 16 bytes). The stride decoders mask
+// their own fields, so the class rides in the same POD (translation cache layout unchanged; old
+// files read as class 0). The emitter loads S_BUFFER_LOAD_DWORDXn as one uvec2/uvec4 when the
+// base, the SGPR offset and the immediate are aligned.
+constexpr uint32_t PackedStrideAlignmentShift = 24u;
+constexpr uint32_t PackedStrideAlignmentMask  = 3u << PackedStrideAlignmentShift;
+constexpr uint32_t PackedStrideAlignmentClass(uint64_t base) {
+	return base % 16u == 0u ? 2u : base % 8u == 0u ? 1u : 0u;
+}
+constexpr uint32_t PackedStrideBaseAlignment(uint32_t packed) {
+	const auto cls = (packed >> PackedStrideAlignmentShift) & 3u;
+	return cls >= 2u ? 16u : 4u << cls;
+}
+
 struct BufferResource {
 	static constexpr uint32_t NoImageAlias = UINT32_MAX;
 
@@ -439,6 +454,7 @@ struct SpirvRequirements {
 	bool function_scratch             = false;
 	bool pixel_valid_mask             = false;
 	bool buffer_int64_atomics         = false;
+	bool scalar_vector_loads          = false; // uvec4/uvec2 aliases of the buffer array
 };
 
 struct BlockInfo {

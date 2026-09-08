@@ -117,6 +117,24 @@ uint32_t TypeStorageBufferU64ElementPointer(EmitterState& state) {
 	return TypePointer(state, StorageClassStorageBuffer, TypeScalarU64(state));
 }
 
+uint32_t StorageBufferU32VectorType(EmitterState& state, uint32_t components) {
+	const auto array = state.builder.DecoratedType(
+	    OpTypeRuntimeArray, {TypeU32Vector(state, components)},
+	    {{OpDecorate, {DecorationArrayStride, components * static_cast<uint32_t>(sizeof(uint32_t))}}});
+	return state.builder.DecoratedType(
+	    OpTypeStruct, {array},
+	    {{OpMemberDecorate, {0, DecorationOffset, 0}}, {OpDecorate, {DecorationBlock}}});
+}
+
+uint32_t TypeStorageBufferU32VectorPointer(EmitterState& state, uint32_t components) {
+	return TypePointer(state, StorageClassStorageBuffer,
+	                   StorageBufferU32VectorType(state, components));
+}
+
+uint32_t TypeStorageBufferU32VectorElementPointer(EmitterState& state, uint32_t components) {
+	return TypePointer(state, StorageClassStorageBuffer, TypeU32Vector(state, components));
+}
+
 uint32_t TypeDeviceAddressStoragePointer(EmitterState& state) {
 	return TypePointer(state, StorageClassStorageBuffer, TypeDeviceAddress(state));
 }
@@ -191,6 +209,16 @@ void DefineDescriptorVariables(EmitterState& state) {
 			state.storage_buffer_u64_variable = state.builder.DefineGlobalVariable(
 			    TypePointer(state, StorageClassStorageBuffer, u64_array_type),
 			    StorageClassStorageBuffer);
+		}
+		if (state.requirements.scalar_vector_loads) {
+			const auto define_vector_alias = [&](uint32_t components) {
+				const auto array_type = state.builder.Type(
+				    OpTypeArray, {StorageBufferU32VectorType(state, components), count});
+				return state.builder.DefineGlobalVariable(
+				    TypePointer(state, StorageClassStorageBuffer, array_type), StorageClassStorageBuffer);
+			};
+			state.storage_buffer_u32x4_variable = define_vector_alias(4u);
+			state.storage_buffer_u32x2_variable = define_vector_alias(2u);
 		}
 	}
 	if (DescriptorBinding(state, IR::DescriptorBindingKind::BdaPagetable) != nullptr) {
@@ -637,13 +665,21 @@ void AddDescriptorAnnotationsAndNames(EmitterState& state) {
 	if (state.storage_buffer_variable != 0) {
 		Decorate(state.storage_buffer_variable, "buffers", IR::DescriptorBindingKind::Buffers);
 	}
-	if (state.storage_buffer_u64_variable != 0) {
-		Decorate(state.storage_buffer_u64_variable, "buffers_u64",
-		         IR::DescriptorBindingKind::Buffers);
+	bool       buffers_aliased = false;
+	const auto alias_buffers   = [&](uint32_t variable, const char* name) {
+		if (variable == 0) {
+			return;
+		}
+		Decorate(variable, name, IR::DescriptorBindingKind::Buffers);
+		state.builder.AddAnnotation({OpDecorate, variable, DecorationAliased});
+		buffers_aliased = true;
+	};
+	alias_buffers(state.storage_buffer_u64_variable, "buffers_u64");
+	alias_buffers(state.storage_buffer_u32x4_variable, "buffers_u32x4");
+	alias_buffers(state.storage_buffer_u32x2_variable, "buffers_u32x2");
+	if (buffers_aliased) {
 		state.builder.AddAnnotation(
 		    {OpDecorate, state.storage_buffer_variable, DecorationAliased});
-		state.builder.AddAnnotation(
-		    {OpDecorate, state.storage_buffer_u64_variable, DecorationAliased});
 	}
 	if (state.bda_pagetable_variable != 0) {
 		Decorate(state.bda_pagetable_variable, "bda_pagetable",

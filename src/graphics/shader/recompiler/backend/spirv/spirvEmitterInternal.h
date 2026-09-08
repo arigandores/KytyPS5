@@ -372,6 +372,9 @@ struct EmitterState {
 	uint32_t                                         wave_size               = 64;
 	uint32_t                                         storage_buffer_variable = 0;
 	uint32_t                                         storage_buffer_u64_variable = 0;
+	// Aliased uvec4[] / uvec2[] views of the buffer descriptor array (grouped ReadConstBuffer).
+	uint32_t                                         storage_buffer_u32x4_variable = 0;
+	uint32_t                                         storage_buffer_u32x2_variable = 0;
 	std::array<uint32_t, IR::ShaderInfo::MaxBuffers> memory_byte_offsets {};
 	uint32_t                                         bda_pagetable_variable  = 0;
 	// Null-page BDA mode: Private u32 holding the last missing page (0 = none), flushed to
@@ -442,6 +445,8 @@ uint32_t TypeStorageBufferPointer(EmitterState& state);
 uint32_t TypeStorageBufferElementPointer(EmitterState& state);
 uint32_t TypeStorageBufferU64Pointer(EmitterState& state);
 uint32_t TypeStorageBufferU64ElementPointer(EmitterState& state);
+uint32_t TypeStorageBufferU32VectorPointer(EmitterState& state, uint32_t components);
+uint32_t TypeStorageBufferU32VectorElementPointer(EmitterState& state, uint32_t components);
 uint32_t TypeDeviceAddressStoragePointer(EmitterState& state);
 uint32_t TypePhysicalU32Pointer(EmitterState& state);
 uint32_t TypePushConstantElementPointer(EmitterState& state);
@@ -680,6 +685,8 @@ bool     RobustLoadsEnabled();
 // fp32 DenormFlushToZero is declared on the module: no manual flush before RCP/RSQ/SQRT/EXP2/LOG2.
 bool     DenormFlushToZeroEnabled();
 bool     DenormFlushToZeroDeclared(); // ExecutionMode DenormFlushToZero 32 is emitted
+// S_BUFFER_LOAD_DWORDXn dwords grouped into one uvec2/uvec4 load (KYTY_VEC_CONST=0 disables).
+bool     VectorConstLoadsEnabled();
 // Scalar (SGPR) values: OpGroupNonUniformBroadcastFirst marks them uniform for the driver
 // (uniform registers instead of per-lane ones). Experiment, KYTY_SCALAR_UNIFORM=1 enables.
 bool     ScalarUniformHintEnabled();

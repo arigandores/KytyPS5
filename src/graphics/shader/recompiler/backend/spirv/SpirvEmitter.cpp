@@ -193,6 +193,10 @@ void AnalyzeProgramRequirements(IR::Program& program) {
 			    inst.GetType() == IR::Type::U64) {
 				requirements.buffer_int64_atomics = true;
 			}
+			if (inst.GetOpcode() == IR::ValueOpcode::ReadConstBuffer &&
+			    Emitter::VectorConstLoadsEnabled() && Emitter::RobustLoadsEnabled()) {
+				requirements.scalar_vector_loads = true;
+			}
 			const auto address_access = IR::AddressOpcodeInfoOf(inst.GetOpcode()).access;
 			if (address_access != IR::AddressAccess::None) {
 				const auto memory_index = inst.Flags<IR::MemoryFlags>().index;

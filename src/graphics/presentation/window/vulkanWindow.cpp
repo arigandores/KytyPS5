@@ -680,6 +680,20 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 	     graphics.robust_buffer_access2_enabled ? "enabled" : "unavailable",
 	     ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? "dropped" : "kept");
 
+	{
+		vk::PhysicalDeviceFloatControlsProperties float_controls {};
+		float_controls.sType = vk::StructureType::ePhysicalDeviceFloatControlsProperties;
+		vk::PhysicalDeviceProperties2 float_properties2 {};
+		float_properties2.sType = vk::StructureType::ePhysicalDeviceProperties2;
+		float_properties2.pNext = &float_controls;
+		physical_device.getProperties2(&float_properties2);
+		ShaderRecompiler::Spirv::Emitter::SetDenormFlushToZero(
+		    float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE);
+		LOGF("Vulkan shaderDenormFlushToZeroFloat32: %s (fp32 denormal flush %s)\n",
+		     float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE ? "supported" : "unavailable",
+		     ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? "declared" : "emulated");
+	}
+
 	const bool subgroup_size_control_enabled =
 	    graphics.compute_subgroup_size_control_enabled &&
 	    supported_features13.subgroupSizeControl == VK_TRUE;

@@ -33,6 +33,7 @@ enum : uint32_t {
 	ExecutionModeEarlyFragmentTests          = 9,
 	ExecutionModeDepthReplacing              = 12,
 	ExecutionModeLocalSize                   = 17,
+	ExecutionModeDenormFlushToZero           = 4460,
 	ExecutionModeSignedZeroInfNanPreserve    = 4461,
 	ExecutionModeDerivativeGroupQuadsKHR     = 5289,
 	AddressingModelLogical                   = 0,
@@ -52,6 +53,7 @@ enum : uint32_t {
 	CapabilityGroupNonUniformVote            = 62,
 	CapabilityGroupNonUniformBallot          = 64,
 	CapabilityGroupNonUniformShuffle         = 65,
+	CapabilityDenormFlushToZero              = 4465,
 	CapabilitySignedZeroInfNanPreserve       = 4466,
 	CapabilityShaderViewportIndexLayerEXT    = 5254,
 	CapabilityFragmentBarycentricKHR         = 5284,
@@ -675,6 +677,8 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
                                 uint32_t raw_index);
 
 bool     RobustLoadsEnabled();
+// fp32 DenormFlushToZero is declared on the module: no manual flush before RCP/RSQ/SQRT/EXP2/LOG2.
+bool     DenormFlushToZeroEnabled();
 // Scalar (SGPR) values: OpGroupNonUniformBroadcastFirst marks them uniform for the driver
 // (uniform registers instead of per-lane ones). Experiment, KYTY_SCALAR_UNIFORM=1 enables.
 bool     ScalarUniformHintEnabled();

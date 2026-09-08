@@ -336,6 +336,10 @@ uint32_t EmitTruncF32Value(EmitterState& state, uint32_t value) {
 }
 
 uint32_t EmitFlushF32DenormToSignedZero(EmitterState& state, uint32_t value) {
+	if (DenormFlushToZeroEnabled()) {
+		// The module declares fp32 DenormFlushToZero: the transcendental unit flushes its input.
+		return value;
+	}
 	const auto bits      = state.builder.AllocateId();
 	const auto abs_bits  = state.builder.AllocateId();
 	const auto sign_bits = state.builder.AllocateId();

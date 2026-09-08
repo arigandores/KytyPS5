@@ -14,6 +14,11 @@ namespace Emitter {
 // overrides). Part of the translation cache signature.
 void SetRobustBufferLoads(bool device_supported);
 bool RobustBufferLoads();
+// Device shaderDenormFlushToZeroFloat32: the module declares DenormFlushToZero for fp32 (the
+// game runs with FLOAT_MODE 0xc0) and the emitter drops its manual denormal flush in front of
+// RCP/RSQ/SQRT/EXP2/LOG2 (KYTY_FTZ=0/1 overrides). Part of the translation cache signature.
+void SetDenormFlushToZero(bool device_supported);
+bool DenormFlushToZero();
 } // namespace Emitter
 
 void AnalyzeProgramRequirements(IR::Program& program);

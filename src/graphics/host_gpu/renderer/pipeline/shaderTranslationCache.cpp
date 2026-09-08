@@ -544,7 +544,8 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	// Keyed by the translator sources, not the git revision: unrelated commits keep the cache.
 	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +
 	              std::string(translator_hash) +
-	              (ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? ":robust" : "") + "\n";
+	              (ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? ":robust" : "") +
+	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? ":ftz" : "") + "\n";
 	m_enabled = true;
 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
 }

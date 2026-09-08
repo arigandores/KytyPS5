@@ -22,6 +22,13 @@ struct SrtRuntime {
 // Collects reachable ReadConst values. Immediate offsets receive compact flat-buffer slots;
 // dynamic offsets remain explicit and are never assigned a fake slot.
 void BuildSrtPlan(Program& program);
+
+// Offline tools (KYTY_RECOMPILE): number the flattened SRT slots like a reference plan so that a
+// re-emitted shader reads the host data captured with the original one. Entries are (load
+// instruction flags = MemoryFlags bits, slot); applied only when every collected read matches a
+// reference entry and the counts agree, otherwise the discovery order is kept and a warning is
+// printed to stderr.
+void SetSrtSlotReference(std::vector<std::pair<uint64_t, uint32_t>> reference);
 bool ValidateRuntimeValue(const ResourcePlan& program, Value value);
 
 bool EvaluateDescriptorSource(const ResourcePlan& program, uint32_t source,

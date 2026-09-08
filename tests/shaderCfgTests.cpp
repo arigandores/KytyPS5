@@ -12237,6 +12237,22 @@ int main() {
       options.scratch_dwords = compute.scratch_size_dwords;
       options.wave_size = compute.wave_size;
     }
+    {
+      // Number the flattened SRT slots like the cached plan so the re-emitted shader reads the
+      // host data captured with the original translation (RenderDoc stand); KYTY_RECOMPILE_SRT_REF=0
+      // keeps the discovery order.
+      const char *ref = std::getenv("KYTY_RECOMPILE_SRT_REF");
+      std::vector<std::pair<uint64_t, uint32_t>> reference;
+      if (ref == nullptr || ref[0] != '0') {
+        for (const auto &read : entry.plan.srt_reads) {
+          const auto *inst = read.value.Resolve().TryInstruction();
+          if (inst != nullptr) {
+            reference.emplace_back(inst->Flags<uint64_t>(), read.flat_offset);
+          }
+        }
+      }
+      ShaderRecompiler::IR::SetSrtSlotReference(std::move(reference));
+    }
     const auto t0 = std::chrono::steady_clock::now();
     auto translated = ShaderRecompiler::TranslateProgram(std::span<const uint32_t>{code}, options);
     const auto t1 = std::chrono::steady_clock::now();

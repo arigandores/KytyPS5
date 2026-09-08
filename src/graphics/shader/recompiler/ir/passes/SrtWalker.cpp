@@ -273,6 +273,15 @@ private:
 	std::unordered_set<const Inst*> m_visiting;
 };
 
+std::vector<std::pair<uint64_t, uint32_t>>& SrtSlotReferenceStorage() {
+	static std::vector<std::pair<uint64_t, uint32_t>> storage;
+	return storage;
+}
+
+const std::vector<std::pair<uint64_t, uint32_t>>& SrtSlotReference() {
+	return SrtSlotReferenceStorage();
+}
+
 class PlanBuilder {
 public:
 	explicit PlanBuilder(Program& program): m_program(program) {}
@@ -314,6 +323,7 @@ public:
 				}
 			}
 		}
+		RenumberToReference();
 		PatchReads();
 	}
 
@@ -379,6 +389,77 @@ private:
 		const auto slot = static_cast<uint32_t>(m_program.srt_reads.size());
 		m_program.srt_reads.push_back({value, slot});
 		m_patches.push_back({inst, slot, true});
+	}
+
+	// Offline stand (KYTY_RECOMPILE): give every collected read the slot the reference plan used
+	// for the same load (matched by MemoryFlags: memory index + pc). Reads the reference does not
+	// know stay real loads (their patch is dropped); reference slots nobody reads any more are
+	// filled with a duplicate of another read so the plan stays dense.
+	void RenumberToReference() {
+		const auto& reference = SrtSlotReference();
+		if (reference.empty()) {
+			return;
+		}
+		const auto            count = m_program.srt_reads.size();
+		const auto            ref_count = reference.size();
+		std::vector<uint32_t> new_slot(count, UINT32_MAX);
+		std::vector<bool>     taken(ref_count, false);
+		size_t                matched = 0;
+		for (uint32_t slot = 0; slot < count; slot++) {
+			const auto* inst = m_program.srt_reads[slot].value.Resolve().TryInstruction();
+			if (inst == nullptr) {
+				continue;
+			}
+			const auto key   = inst->Flags<uint64_t>();
+			const auto found = std::ranges::find_if(
+			    reference, [&](const std::pair<uint64_t, uint32_t>& e) { return e.first == key; });
+			if (found == reference.end() || found->second >= ref_count || taken[found->second]) {
+				std::fprintf(stderr, "srt plan: read %u %s flags=%016llx: %s (kept as a load)\n",
+				             slot, ValueOpcodeName(inst->GetOpcode()).data(),
+				             static_cast<unsigned long long>(key),
+				             found == reference.end() ? "no reference entry"
+				             : found->second >= ref_count ? "reference slot out of range"
+				                                          : "reference slot already taken");
+				continue;
+			}
+			new_slot[slot]       = found->second;
+			taken[found->second] = true;
+			matched++;
+		}
+		if (matched == 0) {
+			std::fprintf(stderr, "srt plan: reference slot numbering not applicable (reads=%zu ref=%zu)\n",
+			             count, ref_count);
+			return;
+		}
+		uint32_t first_matched = 0;
+		while (first_matched < count && new_slot[first_matched] == UINT32_MAX) {
+			first_matched++;
+		}
+		std::vector<SrtRead> reordered(ref_count);
+		for (uint32_t slot = 0; slot < ref_count; slot++) {
+			reordered[slot]             = m_program.srt_reads[first_matched];
+			reordered[slot].flat_offset = slot;
+		}
+		for (uint32_t slot = 0; slot < count; slot++) {
+			if (new_slot[slot] != UINT32_MAX) {
+				reordered[new_slot[slot]]             = m_program.srt_reads[slot];
+				reordered[new_slot[slot]].flat_offset = new_slot[slot];
+			}
+		}
+		if (matched != count || matched != ref_count) {
+			std::fprintf(stderr, "srt plan: reference numbering: reads=%zu matched=%zu ref=%zu\n",
+			             count, matched, ref_count);
+		}
+		m_program.srt_reads = std::move(reordered);
+		std::vector<Patch> patches;
+		for (auto& patch: m_patches) {
+			if (new_slot[patch.slot] == UINT32_MAX) {
+				continue;
+			}
+			patch.slot = new_slot[patch.slot];
+			patches.push_back(patch);
+		}
+		m_patches = std::move(patches);
 	}
 
 	void PatchReads() {
@@ -2063,6 +2144,10 @@ bool EvaluateRuntimeSourcesInterpreted(const ResourcePlan& program, std::span<co
 
 bool ValidateRuntimeValue(const ResourcePlan& program, Value value) {
 	return RuntimeValidator(program).Run(value);
+}
+
+void SetSrtSlotReference(std::vector<std::pair<uint64_t, uint32_t>> reference) {
+	SrtSlotReferenceStorage() = std::move(reference);
 }
 
 void BuildSrtPlan(Program& program) {

@@ -19,6 +19,24 @@
 #include <unordered_set>
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
+
+bool VectorConstStaticAlignmentClass() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_VEC_CONST");
+		return value == nullptr || value[0] != '2';
+	}();
+	return enabled;
+}
+
+// KYTY_CBANK_COPY (default 1): const-bank V#s are specialized as 16-byte aligned regardless of
+// their base; the host copies a misaligned range into the stream ring at draw time.
+bool ConstBankAlignedCopy() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_CBANK_COPY");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
 namespace {
 
 constexpr uint64_t AddressMask            = 0x0000ffffffffffffull;
@@ -434,10 +452,11 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 		} else if (!swizzle) {
 			packed_stride &= ~(3u << 16u);
 		}
-		// V# base alignment class (bits 24..25): lets the emitter load S_BUFFER_LOAD_DWORDXn as
-		// one uvec2/uvec4 when the SGPR offset and the immediate are aligned too.
-		packed_stride |= PackedStrideAlignmentClass(descriptor.Base48()) << PackedStrideAlignmentShift;
+		// V# base alignment class (bits 24..25): only with KYTY_VEC_CONST=1 (static class). By
+		// default the emitter tests the base alignment at run time, so the alignment of every
+		// constant buffer base does not multiply the permutations of the shader.
 		// Const bank (bit 26): scalar-read-only V# that fits a uniform buffer.
+		bool const_bank = false;
 		if (ConstBankEnabled()) {
 			const auto& info    = program.info.buffers[i];
 			const auto  records = static_cast<uint64_t>(descriptor.NumRecords());
@@ -445,7 +464,18 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 			if (info.scalar && !info.written && !info.atomic && size != 0u &&
 			    size <= ConstBankMaxBytes) {
 				packed_stride |= PackedStrideConstBankMask;
+				const_bank = true;
 			}
+		}
+		if (VectorConstStaticAlignmentClass()) {
+			// Const-bank ranges are presented 16-byte aligned by the host (copied when the base
+			// is not): one permutation per shader instead of one per alignment combination.
+			// (Only where the stage really binds the bank: compute keeps SSBO by default and the
+			// bit is stripped by ApplyResourceSpecialization.)
+			const auto cls = const_bank && ConstBankAlignedCopy() && ConstBankForStage(program.stage)
+			                     ? 2u
+			                     : PackedStrideAlignmentClass(descriptor.Base48());
+			packed_stride |= cls << PackedStrideAlignmentShift;
 		}
 		next_specialization.buffers.push_back({
 		    .packed_stride     = packed_stride,

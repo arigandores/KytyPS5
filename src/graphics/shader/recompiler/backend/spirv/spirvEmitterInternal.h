@@ -694,6 +694,7 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
                                 uint32_t raw_index);
 
 bool     RobustLoadsEnabled();
+bool     VectorConstRuntimeAlignment();
 // fp32 DenormFlushToZero is declared on the module: no manual flush before RCP/RSQ/SQRT/EXP2/LOG2.
 bool     DenormFlushToZeroEnabled();
 bool     DenormFlushToZeroDeclared(); // ExecutionMode DenormFlushToZero 32 is emitted

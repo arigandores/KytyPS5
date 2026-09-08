@@ -420,8 +420,11 @@ uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
 		return 0u;
 	}
 	const auto offset_value = inst.Arg(1).Resolve();
+	const bool runtime_base = VectorConstRuntimeAlignment();
 	const auto alignment    = std::min(
-	    IR::PackedStrideBaseAlignment(state.program.info.buffers[mem.resource].packed_stride),
+	    runtime_base
+	        ? 16u
+	        : IR::PackedStrideBaseAlignment(state.program.info.buffers[mem.resource].packed_stride),
 	    KnownOffsetAlignment(offset_value, 0u));
 	if (alignment < 8u) {
 		if (VectorConstTrace()) {
@@ -491,17 +494,22 @@ uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
 			continue;
 		}
 		const auto pointer = state.builder.AllocateId();
+		// Bound-range adjustment (uniform push data): base % StorageMinAlignment. Static mode: a
+		// multiple of the specialized base alignment (the host checks it); run-time mode: tested
+		// below.
+		uint32_t             byte_offset = 0;
+		uint32_t             slot        = 0;
+		MemoryResourceAccess scalar_access {};
+		const auto           chunk = Binary(state, OpIAdd, TypeU32(state), ctx.Arg(inst, 1),
+		                                    ConstantU32(state, start));
 		if (bank) {
 			// Uniform-buffer path: cbuffers_u32xN[slot].data[byte / width]; no bounds check
 			// (robustBufferAccess2 zero-fills past the bound V# range like S_BUFFER_LOAD).
-			const auto slot = ResourceForDescriptor(state, IR::DescriptorBindingKind::ConstBuffers,
-			                                        mem.resource);
+			slot = ResourceForDescriptor(state, IR::DescriptorBindingKind::ConstBuffers, mem.resource);
 			const auto buffer_slot =
 			    ResourceForDescriptor(state, IR::DescriptorBindingKind::Buffers, mem.resource);
-			auto byte = Binary(state, OpIAdd, TypeU32(state), ctx.Arg(inst, 1),
-			                   ConstantU32(state, start));
-			byte      = Binary(state, OpIAdd, TypeU32(state), byte,
-			                   state.memory_byte_offsets[buffer_slot]);
+			byte_offset      = state.memory_byte_offsets[buffer_slot];
+			const auto byte  = Binary(state, OpIAdd, TypeU32(state), chunk, byte_offset);
 			const auto index = Binary(state, OpShiftRightLogical, TypeU32(state), byte,
 			                          ConstantU32(state, components == 4u ? 4u : 3u));
 			state.builder.AddFunction({OpAccessChain, TypeUniformElementPointer(state, components),
@@ -510,16 +518,94 @@ uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
 		} else {
 			const auto access = PrepareStorageBufferResourceAccess(
 			    state, mem, variable, TypeStorageBufferU32VectorPointer(state, components));
-			// Byte address = SGPR offset + chunk immediate + the bound-range adjustment (a
-			// multiple of the base alignment: the host binds at StorageMinAlignment and checks it).
-			auto byte = Binary(state, OpIAdd, TypeU32(state), ctx.Arg(inst, 1),
-			                   ConstantU32(state, start));
-			byte      = Binary(state, OpIAdd, TypeU32(state), byte, access.byte_offset);
+			byte_offset      = access.byte_offset;
+			const auto byte  = Binary(state, OpIAdd, TypeU32(state), chunk, byte_offset);
 			const auto index = Binary(state, OpShiftRightLogical, TypeU32(state), byte,
 			                          ConstantU32(state, components == 4u ? 4u : 3u));
 			state.builder.AddFunction({OpAccessChain,
 			                           TypeStorageBufferU32VectorElementPointer(state, components),
 			                           pointer, access.object_pointer, ConstantU32(state, 0), index});
+			if (runtime_base) {
+				scalar_access = PrepareMemoryResourceAccess(state, mem);
+			}
+		}
+		if (runtime_base) {
+			// Run-time base alignment: `aligned` is uniform (push data), so this is a uniform
+			// branch: one vector load, or one dword load per member when the base is not aligned.
+			const auto aligned = Binary(
+			    state, OpIEqual, TypeBool(state),
+			    Binary(state, OpBitwiseAnd, TypeU32(state), byte_offset, ConstantU32(state, width - 1u)),
+			    ConstantU32(state, 0));
+			const auto fast_label  = state.builder.AllocateId();
+			const auto slow_label  = state.builder.AllocateId();
+			const auto merge_label = state.builder.AllocateId();
+			state.builder.AddFunction({OpSelectionMerge, merge_label, SelectionControlNone});
+			state.builder.AddFunction({OpBranchConditional, aligned, fast_label, slow_label});
+			EmitLabel(state, fast_label);
+			const auto vector = state.builder.AllocateId();
+			state.builder.AddFunction({OpLoad, TypeU32Vector(state, components), vector, pointer});
+			uint32_t fast_values[4] = {};
+			for (uint32_t component = 0; component < components; component++) {
+				if (slots[component] == nullptr) {
+					continue;
+				}
+				fast_values[component] = state.builder.AllocateId();
+				state.builder.AddFunction({OpCompositeExtract, TypeU32(state), fast_values[component],
+				                           vector, component});
+			}
+			const auto fast_exit = state.current_label;
+			state.builder.AddFunction({OpBranch, merge_label});
+			EmitLabel(state, slow_label);
+			uint32_t slow_values[4] = {};
+			for (uint32_t component = 0; component < components; component++) {
+				if (slots[component] == nullptr) {
+					continue;
+				}
+				const auto byte = Binary(state, OpIAdd, TypeU32(state), chunk,
+				                         Binary(state, OpIAdd, TypeU32(state), byte_offset,
+				                                ConstantU32(state, component * 4u)));
+				const auto element =
+				    Binary(state, OpShiftRightLogical, TypeU32(state), byte, ConstantU32(state, 2));
+				const auto dword_ptr = state.builder.AllocateId();
+				if (bank) {
+					state.builder.AddFunction({OpAccessChain, TypeUniformElementPointer(state, 1u),
+					                           dword_ptr, state.const_buffer_variable,
+					                           ConstantU32(state, slot), ConstantU32(state, 0), element});
+				} else {
+					// The bound range already includes the adjustment: index from the object base.
+					state.builder.AddFunction({OpAccessChain, TypeStorageBufferElementPointer(state),
+					                           dword_ptr, scalar_access.object_pointer,
+					                           ConstantU32(state, 0), element});
+				}
+				slow_values[component] = state.builder.AllocateId();
+				state.builder.AddFunction({OpLoad, TypeU32(state), slow_values[component], dword_ptr});
+			}
+			const auto slow_exit = state.current_label;
+			state.builder.AddFunction({OpBranch, merge_label});
+			EmitLabel(state, merge_label);
+			if (VectorConstTrace()) {
+				LOGF("VecConst: group pc=0x%x res=%u start=%u width=%u present=%u members=%zu align=%u bank=%u runtime\n",
+				     inst.Flags<IR::MemoryFlags>().pc, mem.resource, start, width, present, members.size(),
+				     alignment, bank ? 1u : 0u);
+			}
+			uint32_t result = 0;
+			for (uint32_t component = 0; component < components; component++) {
+				const auto* member = slots[component];
+				if (member == nullptr) {
+					continue;
+				}
+				const auto value = state.builder.AllocateId();
+				state.builder.AddFunction({OpPhi, TypeU32(state), value, fast_values[component], fast_exit,
+				                           slow_values[component], slow_exit});
+				const auto hinted = UniformHint(state, TypeU32(state), value);
+				if (member == &inst) {
+					result = hinted;
+				} else {
+					ctx.Define(*member, hinted);
+					ctx.grouped_loads.insert(member);
+				}
+			}
+			return result;
 		}
 		const auto vector = state.builder.AllocateId();
 		state.builder.AddFunction({OpLoad, TypeU32Vector(state, components), vector, pointer});

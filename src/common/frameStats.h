@@ -109,6 +109,9 @@ enum class Counter : uint32_t {
 	ImgUploadNs,     // time inside UploadImage (tiler + copy record)
 	ImgInitNs,       // time inside InitializeImage (includes UploadNs)
 	ImgCopyNs,       // guest -> staging copy of image data (ObtainBufferForImage)
+	CbankCopyCpu,    // const-bank ranges copied to the stream ring from guest memory (misaligned base)
+	CbankCopyGpu,    // ... copied on the GPU (range written by the GPU)
+	CbankCopyBytes,
 	Count
 };
 

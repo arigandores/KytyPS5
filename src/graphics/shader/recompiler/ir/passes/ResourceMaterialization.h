@@ -5,6 +5,12 @@
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
 
+// KYTY_VEC_CONST=1: the V# base alignment class is part of the specialization (static uvec4
+// constant loads); default: decided at run time by the emitter.
+bool VectorConstStaticAlignmentClass();
+// KYTY_CBANK_COPY (default 1): const-bank V#s specialized as 16-byte aligned (host copies).
+bool ConstBankAlignedCopy();
+
 // Canonical module-affecting resource state. Runtime addresses and descriptor payloads remain in
 // ResourceSnapshot and therefore do not create shader permutations.
 struct ResourceSpecialization {

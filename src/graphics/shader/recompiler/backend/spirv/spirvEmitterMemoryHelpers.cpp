@@ -221,6 +221,16 @@ bool VectorConstLoadsEnabled() {
 	return enabled;
 }
 
+// Default: the V# base alignment is tested at run time (uniform branch); KYTY_VEC_CONST=1 uses
+// the specialization class instead.
+bool VectorConstRuntimeAlignment() {
+	static const bool runtime = [] {
+		const char* value = std::getenv("KYTY_VEC_CONST");
+		return value != nullptr && value[0] == '2';
+	}();
+	return runtime;
+}
+
 bool ScalarUniformHintEnabled() {
 	static const bool enabled = [] {
 		// Off by default: on NVIDIA the hint neither lowered the register count (196 vs 191

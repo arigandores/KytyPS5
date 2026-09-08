@@ -172,6 +172,41 @@ static BufferView NativeStorageBuffer(RenderContext&                            
 	}
 	buffer_offset = static_cast<uint32_t>(adjustment);
 	if (adjustment % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
+		if (const_bank && ShaderRecompiler::IR::ConstBankAlignedCopy()) {
+			// The shader was specialized as 16-byte aligned (KYTY_CBANK_COPY): present the range
+			// through an aligned copy in the stream ring. CPU-written constants (the common case)
+			// are copied from guest memory; a range the GPU wrote is copied on the GPU.
+			auto&      cache  = context.GetBufferCache();
+			auto&      stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+			const bool gpu    = cache.IsRegionGpuModified(address, size) || cache.HasGpuDirtyBytes(address, size);
+			auto [data, stream_offset] = stream.Map(size, alignment);
+			EXIT_IF(data == nullptr);
+			if (!gpu) {
+				if (!Libs::LibKernel::Memory::TryReadBacking(address, data, size)) {
+					EXIT("storage buffer slot %u: const-bank copy source 0x%016llx+0x%llx is unreadable\n",
+					     slot, static_cast<unsigned long long>(address), static_cast<unsigned long long>(size));
+				}
+			}
+			stream.Commit();
+			if (gpu) {
+				auto& command = context.GetCommandScheduler().Current();
+				stream.CopyFrom(command, *buffer, offset, stream_offset, size,
+				                vk::AccessFlagBits::eShaderWrite | vk::AccessFlagBits::eTransferWrite,
+				                vk::AccessFlagBits::eHostWrite, vk::AccessFlagBits::eShaderRead,
+				                vk::AccessFlagBits::eUniformRead | vk::AccessFlagBits::eShaderRead);
+			}
+			if (Common::FrameStats::Enabled()) {
+				Common::FrameStats::Add(gpu ? Common::FrameStats::Counter::CbankCopyGpu
+				                            : Common::FrameStats::Counter::CbankCopyCpu,
+				                        1);
+				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyBytes, size);
+			}
+			buffer_offset = 0;
+			result.buffer = stream.Handle();
+			result.offset = stream_offset;
+			result.range  = size;
+			return result;
+		}
 		// The shader was specialized on the V# base alignment (uvec2/uvec4 constant loads).
 		EXIT("storage buffer slot %u: bound offset adjustment %u breaks the specialized base alignment %u\n",
 		     slot, buffer_offset,

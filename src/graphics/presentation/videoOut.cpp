@@ -1278,7 +1278,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " rt_hits=%llu ob_us=%llu ob_n=%llu sync_ups=%llu spin_us=%llu spins=%llu"
 			     " spin_gpu_us=%llu gbar=%llu ibar=%llu swbar=%llu rp_begin=%llu pops=%llu pop_us=%llu"
 			     " gbar_skip=%llu faults_main=%llu fault_main_us=%llu img_new=%llu img_free=%llu"
-			     " img_up=%llu img_up_kb=%llu img_up_us=%llu img_init_us=%llu img_copy_us=%llu"
+			     " img_up=%llu img_up_kb=%llu img_up_us=%llu img_init_us=%llu img_copy_us=%llu cb_copy=%llu cb_copy_gpu=%llu cb_copy_kb=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1313,7 +1313,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     dus(FS::Counter::FaultMainNs), d(FS::Counter::ImgInserts), d(FS::Counter::ImgFrees),
 			     d(FS::Counter::ImgUploads), d(FS::Counter::ImgUploadBytes) / 1024u,
 			     dus(FS::Counter::ImgUploadNs), dus(FS::Counter::ImgInitNs),
-			     dus(FS::Counter::ImgCopyNs));
+			     dus(FS::Counter::ImgCopyNs), d(FS::Counter::CbankCopyCpu), d(FS::Counter::CbankCopyGpu),
+			     d(FS::Counter::CbankCopyBytes) / 1024u);
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

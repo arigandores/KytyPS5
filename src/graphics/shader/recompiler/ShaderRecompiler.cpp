@@ -11,6 +11,7 @@
 #include "graphics/shader/recompiler/ir/passes/BindingLayout.h"
 #include "graphics/shader/recompiler/ir/passes/ConstantPropagation.h"
 #include "graphics/shader/recompiler/ir/passes/DeadCodeElimination.h"
+#include "graphics/shader/recompiler/ir/passes/PredicationElimination.h"
 #include "graphics/shader/recompiler/ir/passes/ReadLaneElimination.h"
 #include "graphics/shader/recompiler/ir/passes/ResourceMaterialization.h"
 #include "graphics/shader/recompiler/ir/passes/ResourceTracking.h"
@@ -22,6 +23,8 @@
 #include <algorithm>
 #include <array>
 #include <chrono>
+#include <cstdio>
+#include <cstdlib>
 #include <fmt/format.h>
 #include <map>
 #include <span>
@@ -668,6 +671,32 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	IR::ResolveControlFlowIdentities(ir);
 	IR::RemoveIdentities(ir.blocks);
 	IR::EliminateDeadCode(ir.blocks);
+	if (const char* dump = std::getenv("KYTY_PRED_DUMP"); dump != nullptr) {
+		std::FILE* f = std::fopen((std::string(dump) + "_before.txt").c_str(), "wb");
+		if (f != nullptr) {
+			const auto text = IR::ProgramToString(ir);
+			std::fwrite(text.data(), 1, text.size(), f);
+			std::fclose(f);
+		}
+	}
+	const auto predication_stats = IR::EliminatePredication(
+	    ir.blocks, IR::PredicationPreserveLiveness(options.stage == ShaderType::Compute));
+	if (const char* dump = std::getenv("KYTY_PRED_DUMP"); dump != nullptr) {
+		std::FILE* f = std::fopen((std::string(dump) + "_after.txt").c_str(), "wb");
+		if (f != nullptr) {
+			const auto text = IR::ProgramToString(ir);
+			std::fwrite(text.data(), 1, text.size(), f);
+			std::fclose(f);
+		}
+	}
+	if (predication_stats.removed_selects != 0 || predication_stats.folded_chains != 0) {
+		LOGF("%s predication elimination: selects=%" PRIu32 " chains=%" PRIu32 "\n",
+		     GetDumpLabel(options), predication_stats.removed_selects,
+		     predication_stats.folded_chains);
+		IR::ConstantPropagationPass(ir.blocks);
+		IR::RemoveIdentities(ir.blocks);
+		IR::EliminateDeadCode(ir.blocks);
+	}
 	const auto read_lane_stats = IR::EliminateReadLane(ir, ir.wave_size);
 	if (read_lane_stats.rewritten_reads != 0) {
 		LOGF("%s read-lane elimination: reads=%" PRIu32 "\n", GetDumpLabel(options),

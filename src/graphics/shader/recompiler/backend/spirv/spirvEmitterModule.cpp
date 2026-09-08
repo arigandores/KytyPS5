@@ -697,7 +697,7 @@ void DefineModule(EmitterState& state) {
 
 	state.builder.RequireCapability(CapabilityShader);
 	state.builder.RequireCapability(CapabilitySignedZeroInfNanPreserve);
-	if (DenormFlushToZeroEnabled()) {
+	if (DenormFlushToZeroDeclared()) {
 		state.builder.RequireCapability(CapabilityDenormFlushToZero);
 	}
 	if (state.program.info.uses_dma) {
@@ -759,9 +759,10 @@ void DefineModule(EmitterState& state) {
 	// GCN/RDNA arithmetic preserves 32-bit signed zero, infinity, and NaN. Declaring that
 	// contract prevents host compilers from treating synthesized IEEE values as finite.
 	state.builder.AddExecutionMode({state.main_func, ExecutionModeSignedZeroInfNanPreserve, 32u});
-	if (DenormFlushToZeroEnabled()) {
-		// FLOAT_MODE 0xc0: fp32 denormals flush in and out (fp16/fp64 keep theirs). Declared, the
-		// host flushes RCP/RSQ/SQRT inputs itself and the emitter skips its manual flush.
+	if (DenormFlushToZeroDeclared()) {
+		// FLOAT_MODE 0xc0: fp32 denormals flush in and out (fp16/fp64 keep theirs). Declared (or
+		// assumed on devices that cannot preserve them), the host flushes RCP/RSQ/SQRT inputs
+		// itself and the emitter skips its manual flush.
 		state.builder.AddExecutionMode({state.main_func, ExecutionModeDenormFlushToZero, 32u});
 	}
 	if (state.stage == ShaderType::Compute) {

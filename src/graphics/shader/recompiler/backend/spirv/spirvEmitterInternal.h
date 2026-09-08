@@ -679,6 +679,7 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
 bool     RobustLoadsEnabled();
 // fp32 DenormFlushToZero is declared on the module: no manual flush before RCP/RSQ/SQRT/EXP2/LOG2.
 bool     DenormFlushToZeroEnabled();
+bool     DenormFlushToZeroDeclared(); // ExecutionMode DenormFlushToZero 32 is emitted
 // Scalar (SGPR) values: OpGroupNonUniformBroadcastFirst marks them uniform for the driver
 // (uniform registers instead of per-lane ones). Experiment, KYTY_SCALAR_UNIFORM=1 enables.
 bool     ScalarUniformHintEnabled();

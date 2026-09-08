@@ -174,6 +174,7 @@ uint32_t EmitMemoryElementIndex(EmitterState& state, const MemoryResourceAccess&
 namespace {
 bool g_robust_buffer_loads = false;
 bool g_denorm_flush_to_zero = false;
+bool g_denorm_flush_to_zero_declared = false;
 } // namespace
 
 void SetRobustBufferLoads(bool device_supported) {
@@ -189,13 +190,19 @@ bool RobustBufferLoads() {
 	return g_robust_buffer_loads;
 }
 
-void SetDenormFlushToZero(bool device_supported) {
+void SetDenormFlushToZero(bool device_can_flush, bool device_can_preserve) {
 	const char* value = std::getenv("KYTY_FTZ");
 	if (value != nullptr) {
-		g_denorm_flush_to_zero = value[0] == '1';
+		g_denorm_flush_to_zero          = value[0] != '0';
+		g_denorm_flush_to_zero_declared = value[0] == '2';
 		return;
 	}
-	g_denorm_flush_to_zero = device_supported;
+	g_denorm_flush_to_zero_declared = device_can_flush;
+	g_denorm_flush_to_zero          = device_can_flush || !device_can_preserve;
+}
+
+bool DenormFlushToZeroDeclared() {
+	return g_denorm_flush_to_zero_declared;
 }
 
 bool DenormFlushToZero() {

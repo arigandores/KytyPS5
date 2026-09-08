@@ -12216,7 +12216,8 @@ int main() {
     // The game runs on a robustBufferAccess2 device (NVIDIA): no bounds branches, like the
     // in-game SPIR-V. KYTY_ROBUST_LOADS=0 overrides.
     ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(true);
-    ShaderRecompiler::Spirv::Emitter::SetDenormFlushToZero(true);
+    // NVIDIA: fp32 denormal behaviour is not controllable (flush assumed, no execution mode).
+    ShaderRecompiler::Spirv::Emitter::SetDenormFlushToZero(false, false);
     ShaderRecompiler::CompileOptions options;
     options.stage = is_pixel ? ShaderType::Pixel : ShaderType::Compute;
     options.shader_hash = key.hash;

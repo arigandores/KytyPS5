@@ -545,7 +545,8 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +
 	              std::string(translator_hash) +
 	              (ShaderRecompiler::Spirv::Emitter::RobustBufferLoads() ? ":robust" : "") +
-	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? ":ftz" : "") + "\n";
+	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? ":ftz" : "") +
+	              (ShaderRecompiler::Spirv::Emitter::DenormFlushToZeroDeclared() ? ":ftzd" : "") + "\n";
 	m_enabled = true;
 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
 }

@@ -688,10 +688,14 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 		float_properties2.pNext = &float_controls;
 		physical_device.getProperties2(&float_properties2);
 		ShaderRecompiler::Spirv::Emitter::SetDenormFlushToZero(
-		    float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE);
-		LOGF("Vulkan shaderDenormFlushToZeroFloat32: %s (fp32 denormal flush %s)\n",
-		     float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE ? "supported" : "unavailable",
-		     ShaderRecompiler::Spirv::Emitter::DenormFlushToZero() ? "declared" : "emulated");
+		    float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE,
+		    float_controls.shaderDenormPreserveFloat32 == VK_TRUE);
+		LOGF("Vulkan fp32 denormals: flush %s, preserve %s (shader denormal flush %s)\n",
+		     float_controls.shaderDenormFlushToZeroFloat32 == VK_TRUE ? "controllable" : "fixed",
+		     float_controls.shaderDenormPreserveFloat32 == VK_TRUE ? "controllable" : "fixed",
+		     ShaderRecompiler::Spirv::Emitter::DenormFlushToZeroDeclared() ? "declared"
+		     : ShaderRecompiler::Spirv::Emitter::DenormFlushToZero()      ? "assumed"
+		                                                                  : "emulated");
 	}
 
 	const bool subgroup_size_control_enabled =

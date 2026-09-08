@@ -14,11 +14,14 @@ namespace Emitter {
 // overrides). Part of the translation cache signature.
 void SetRobustBufferLoads(bool device_supported);
 bool RobustBufferLoads();
-// Device shaderDenormFlushToZeroFloat32: the module declares DenormFlushToZero for fp32 (the
-// game runs with FLOAT_MODE 0xc0) and the emitter drops its manual denormal flush in front of
-// RCP/RSQ/SQRT/EXP2/LOG2 (KYTY_FTZ=0/1 overrides). Part of the translation cache signature.
-void SetDenormFlushToZero(bool device_supported);
-bool DenormFlushToZero();
+// fp32 denormals (the game runs with FLOAT_MODE 0xc0: flushed). shaderDenormFlushToZeroFloat32 ->
+// the module declares DenormFlushToZero; else !shaderDenormPreserveFloat32 (NVIDIA: neither is
+// controllable, the hardware flushes) -> assumed without a declaration. In both cases the emitter
+// drops its manual flush in front of RCP/RSQ/SQRT/EXP2/LOG2. KYTY_FTZ=0 emulate, 1 assume,
+// 2 declare. Part of the translation cache signature.
+void SetDenormFlushToZero(bool device_can_flush, bool device_can_preserve);
+bool DenormFlushToZero();         // manual flush dropped
+bool DenormFlushToZeroDeclared(); // execution mode emitted
 } // namespace Emitter
 
 void AnalyzeProgramRequirements(IR::Program& program);

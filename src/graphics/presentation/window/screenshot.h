@@ -4,8 +4,11 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
+#include <array>
+#include <cstdio>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace Libs::Graphics {
 
@@ -18,6 +21,10 @@ class CommandScheduler;
 // KYTY_SHOT_TIMES=<s>[,<s>...] seconds since the first present. The frame image is copied to a
 // host buffer with the present commands, the present is waited for, and the pixels are written
 // as PNG (downscaled by an integer factor to at most 1920 wide).
+// Recording: KYTY_REC=<file.mp4> writes every presented frame (960 wide, integer downscale) to an
+// ffmpeg process (rawvideo pipe, 60 fps nominal: one video frame per present, independent of the
+// wall clock) and <file.mp4>.idx lines "<video frame> <present> <host seconds>". A ring of three
+// download buffers keeps the present thread from waiting for the GPU.
 class ScreenshotGrabber final {
 public:
 	ScreenshotGrabber(GraphicContext& graphics, CommandScheduler& scheduler);
@@ -45,6 +52,26 @@ private:
 	std::vector<double>     m_times;
 	size_t                  m_next_time = 0;
 	bool                    m_pending   = false;
+	// Recording state.
+	struct RecSlot {
+		std::unique_ptr<Buffer> buffer;
+		uint64_t                tick    = 0;
+		uint32_t                present = 0;
+		double                  time_s  = 0.0;
+		bool                    pending = false;
+	};
+	std::string           m_rec_path;
+	FILE*                 m_rec_pipe = nullptr;
+	FILE*                 m_rec_index = nullptr;
+	std::array<RecSlot, 3> m_rec_slots {};
+	uint32_t              m_rec_next    = 0;
+	uint32_t              m_rec_frames  = 0;
+	std::vector<uint8_t>  m_rec_rgb;
+	bool                  m_rec_frame = false; // this present records a video frame
+	bool PollScreenshot();
+	void RecordVideoFrame(CommandBuffer& command, const VulkanImage& source);
+	void FinishVideoFrame(uint64_t tick);
+	void FlushVideoSlot(RecSlot& slot);
 };
 
 } // namespace Libs::Graphics

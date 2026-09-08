@@ -878,6 +878,10 @@ void DefineModule(EmitterState& state) {
 		state.builder.AddExecutionMode({state.main_func, ExecutionModeDerivativeGroupQuadsKHR});
 	}
 	state.builder.AddName(state.main_func, "main");
+	if (const char* salt = std::getenv("KYTY_SPV_SALT"); salt != nullptr && salt[0] != 0) {
+		// Debug: distinct module bytes for identical code (cold driver shader cache on demand).
+		state.builder.AddName(TypeVoid(state), (std::string("kyty_salt_") + salt).c_str());
+	}
 	if (state.requirements.function_lds) {
 		state.builder.AddName(state.lds_variable, "lds_dwords");
 	}

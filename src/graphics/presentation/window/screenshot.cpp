@@ -202,17 +202,40 @@ ScreenshotGrabber::ScreenshotGrabber(GraphicContext& graphics, CommandScheduler&
 		}
 		std::sort(m_times.begin(), m_times.end());
 	}
+	if (const char* value = std::getenv("KYTY_REC"); value != nullptr && value[0] != 0) {
+		m_rec_path = value;
+	}
 }
 
-ScreenshotGrabber::~ScreenshotGrabber() = default;
+ScreenshotGrabber::~ScreenshotGrabber() {
+	for (auto& slot: m_rec_slots) {
+		if (slot.pending) {
+			FlushVideoSlot(slot);
+		}
+	}
+	if (m_rec_pipe != nullptr) {
+		_pclose(m_rec_pipe);
+		m_rec_pipe = nullptr;
+	}
+	if (m_rec_index != nullptr) {
+		std::fclose(m_rec_index);
+		m_rec_index = nullptr;
+	}
+}
 
 bool ScreenshotGrabber::Poll() {
+	const bool shot = PollScreenshot();
+	return shot || m_rec_frame;
+}
+
+bool ScreenshotGrabber::PollScreenshot() {
 	m_presents++;
 	const auto now = NowSeconds();
 	if (m_first_present_s < 0.0) {
 		m_first_present_s = now;
 	}
 	m_output.clear();
+	m_rec_frame = !m_rec_path.empty();
 	if (m_next_time < m_times.size() && now - m_first_present_s >= m_times[m_next_time]) {
 		m_next_time++;
 		m_output = "_shot_" + std::to_string(m_presents) + ".png";
@@ -243,7 +266,14 @@ bool ScreenshotGrabber::Poll() {
 	return true;
 }
 
+
 void ScreenshotGrabber::Record(CommandBuffer& command, const VulkanImage& source) {
+	if (m_rec_frame) {
+		RecordVideoFrame(command, source);
+	}
+	if (m_output.empty()) {
+		return;
+	}
 	m_pending = false;
 	m_format  = source.format;
 	m_width   = source.extent.width;
@@ -285,7 +315,110 @@ void ScreenshotGrabber::Record(CommandBuffer& command, const VulkanImage& source
 	m_pending = true;
 }
 
+void ScreenshotGrabber::RecordVideoFrame(CommandBuffer& command, const VulkanImage& source) {
+	uint8_t probe[8] {};
+	uint8_t rgb[3] {};
+	if (!TexelToRgb(source.format, probe, rgb)) {
+		m_rec_frame = false;
+		return;
+	}
+	auto& slot = m_rec_slots[m_rec_next % m_rec_slots.size()];
+	if (slot.pending) {
+		FlushVideoSlot(slot); // ring wrapped before the GPU finished: wait for it
+	}
+	m_format = source.format;
+	m_width  = source.extent.width;
+	m_height = source.extent.height;
+	const uint64_t size = static_cast<uint64_t>(m_width) * m_height * BytesPerTexel(m_format);
+	if (slot.buffer == nullptr || slot.buffer->Size() < size) {
+		slot.buffer = std::make_unique<Buffer>(m_graphics, m_scheduler, MemoryUsage::Download, 0,
+		                                       vk::BufferUsageFlagBits::eTransferDst, size);
+	}
+	vk::BufferImageCopy region {};
+	region.imageSubresource.aspectMask = vk::ImageAspectFlagBits::eColor;
+	region.imageSubresource.layerCount = 1;
+	region.imageExtent                 = {m_width, m_height, 1};
+	auto vk_command                    = command.Handle();
+	vk_command.copyImageToBuffer(source.image, vk::ImageLayout::eTransferSrcOptimal,
+	                             slot.buffer->Handle(), 1, &region);
+	vk::BufferMemoryBarrier to_host {};
+	to_host.sType               = vk::StructureType::eBufferMemoryBarrier;
+	to_host.srcAccessMask       = vk::AccessFlagBits::eTransferWrite;
+	to_host.dstAccessMask       = vk::AccessFlagBits::eHostRead;
+	to_host.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	to_host.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	to_host.buffer              = slot.buffer->Handle();
+	to_host.size                = size;
+	vk_command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer, vk::PipelineStageFlagBits::eHost,
+	                           vk::DependencyFlags {}, 0, nullptr, 1, &to_host, 0, nullptr);
+	slot.present = m_presents;
+	slot.time_s  = NowSeconds();
+	slot.pending = true;
+}
+
+// Called after the present was submitted: stores its tick in the newest slot and flushes the
+// oldest one (two presents back), which the GPU has normally finished by now.
+void ScreenshotGrabber::FinishVideoFrame(uint64_t tick) {
+	auto& slot = m_rec_slots[m_rec_next % m_rec_slots.size()];
+	if (!slot.pending) {
+		return;
+	}
+	slot.tick = tick;
+	m_rec_next++;
+	auto& oldest = m_rec_slots[(m_rec_next + 1u) % m_rec_slots.size()];
+	if (oldest.pending && m_scheduler.IsFree(oldest.tick)) {
+		FlushVideoSlot(oldest);
+	}
+}
+
+void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
+	slot.pending = false;
+	m_scheduler.Wait(slot.tick);
+	slot.buffer->Invalidate(0, slot.buffer->Size());
+	const auto     mapped = slot.buffer->Mapped();
+	const uint32_t bpp    = BytesPerTexel(m_format);
+	// Fixed output geometry (the presented image changes size between videos, logos and the game);
+	// nearest sampling with a fractional step.
+	constexpr uint32_t out_w = 960;
+	constexpr uint32_t out_h = 540;
+	if (m_rec_pipe == nullptr) {
+		const auto cmd = std::string("ffmpeg -hide_banner -loglevel error -y -f rawvideo -pix_fmt rgb24 -s ") +
+		                 std::to_string(out_w) + "x" + std::to_string(out_h) +
+		                 " -r 60 -i - -c:v h264_nvenc -preset p4 -cq 24 -g 60 -pix_fmt yuv420p"
+		                 " -movflags +frag_keyframe+empty_moov \"" +
+		                 m_rec_path + "\"";
+		m_rec_pipe  = _popen(cmd.c_str(), "wb");
+		m_rec_index = std::fopen((m_rec_path + ".idx").c_str(), "w");
+		LOGF("Recording: %s %ux%u (source %ux%u) first present=%u pipe=%s\n", m_rec_path.c_str(), out_w,
+		     out_h, m_width, m_height, slot.present, m_rec_pipe != nullptr ? "ok" : "FAILED");
+		if (m_rec_pipe == nullptr) {
+			m_rec_path.clear();
+			return;
+		}
+	}
+	m_rec_rgb.resize(static_cast<size_t>(out_w) * out_h * 3);
+	for (uint32_t y = 0; y < out_h; y++) {
+		const auto  sy  = static_cast<size_t>(static_cast<uint64_t>(y) * m_height / out_h);
+		const auto* row = mapped.data() + sy * m_width * bpp;
+		auto*       out = m_rec_rgb.data() + static_cast<size_t>(y) * out_w * 3;
+		for (uint32_t x = 0; x < out_w; x++) {
+			const auto sx = static_cast<size_t>(static_cast<uint64_t>(x) * m_width / out_w);
+			TexelToRgb(m_format, row + sx * bpp, out + static_cast<size_t>(x) * 3);
+		}
+	}
+	std::fwrite(m_rec_rgb.data(), 1, m_rec_rgb.size(), m_rec_pipe);
+	std::fflush(m_rec_pipe);
+	if (m_rec_index != nullptr) {
+		std::fprintf(m_rec_index, "%u %u %.3f\n", m_rec_frames, slot.present, slot.time_s - m_first_present_s);
+		std::fflush(m_rec_index);
+	}
+	m_rec_frames++;
+}
+
 void ScreenshotGrabber::Finish(uint64_t tick) {
+	if (m_rec_frame) {
+		FinishVideoFrame(tick);
+	}
 	if (!m_pending || m_buffer == nullptr) {
 		return;
 	}

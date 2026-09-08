@@ -5,6 +5,10 @@
 #include <algorithm>
 #include <bit>
 #include <cstdint>
+#include <cstdlib>
+#include <optional>
+#include <unordered_map>
+#include <vector>
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
 namespace {
@@ -194,7 +198,208 @@ bool FoldCompositeExtract(Inst& inst, ValueOpcode construct, size_t components) 
 	return false;
 }
 
-void FoldInstruction(Inst& inst) {
+
+// Known-value sets: a small over-approximation of the values a U32 can take, derived from bit-field
+// extracts / masks and integer arithmetic on them. `IEqual(x, c)` folds to false when c is not in the set.
+// This collapses the select chains of V_MOVRELS/V_MOVRELD (relative VGPR addressing: M0 is usually a
+// small bit field times a stride, but the translator compares it with every VGPR index up to the limit).
+constexpr size_t kKnownValuesMax = 256;
+using KnownValues                = std::vector<uint32_t>; // sorted, unique
+
+struct KnownValueContext {
+	std::unordered_map<const Inst*, std::optional<KnownValues>> memo;
+	bool                                                        enabled = true;
+};
+
+std::optional<KnownValues> NormalizeKnownValues(KnownValues values) {
+	std::sort(values.begin(), values.end());
+	values.erase(std::unique(values.begin(), values.end()), values.end());
+	if (values.empty() || values.size() > kKnownValuesMax) {
+		return std::nullopt;
+	}
+	return values;
+}
+
+std::optional<KnownValues> ComputeKnownValues(Value value, KnownValueContext& ctx, int depth);
+
+template <typename Function>
+std::optional<KnownValues> MapKnownValues2(Value lhs, Value rhs, KnownValueContext& ctx, int depth,
+                                           Function function) {
+	const auto a = ComputeKnownValues(lhs, ctx, depth + 1);
+	if (!a) {
+		return std::nullopt;
+	}
+	const auto b = ComputeKnownValues(rhs, ctx, depth + 1);
+	if (!b || a->size() * b->size() > kKnownValuesMax) {
+		return std::nullopt;
+	}
+	KnownValues out;
+	out.reserve(a->size() * b->size());
+	for (const auto x: *a) {
+		for (const auto y: *b) {
+			out.push_back(static_cast<uint32_t>(function(x, y)));
+		}
+	}
+	return NormalizeKnownValues(std::move(out));
+}
+
+std::optional<KnownValues> ComputeKnownValuesUncached(const Inst& inst, KnownValueContext& ctx,
+                                                      int depth) {
+	const auto arg = [&](size_t index) { return inst.Arg(index).Resolve(); };
+	switch (inst.GetOpcode()) {
+		case ValueOpcode::Phi:
+		case ValueOpcode::SelectU32: {
+			KnownValues out;
+			const size_t first = inst.GetOpcode() == ValueOpcode::SelectU32 ? 1u : 0u;
+			for (size_t index = first; index < inst.NumArgs(); index++) {
+				const auto part = ComputeKnownValues(arg(index), ctx, depth + 1);
+				if (!part || out.size() + part->size() > kKnownValuesMax) {
+					return std::nullopt;
+				}
+				out.insert(out.end(), part->begin(), part->end());
+			}
+			return NormalizeKnownValues(std::move(out));
+		}
+		case ValueOpcode::BitFieldUExtract: {
+			const auto offset = ComputeKnownValues(arg(1), ctx, depth + 1);
+			const auto count  = ComputeKnownValues(arg(2), ctx, depth + 1);
+			if (!offset || !count || offset->size() != 1u || count->size() != 1u) {
+				return std::nullopt;
+			}
+			const auto off = offset->front();
+			const auto cnt = count->front();
+			if (off >= 32u || cnt == 0u || cnt > 32u - off) {
+				return std::nullopt;
+			}
+			const auto mask = cnt == 32u ? UINT32_MAX : (uint32_t {1} << cnt) - 1u;
+			if (const auto source = ComputeKnownValues(arg(0), ctx, depth + 1); source) {
+				KnownValues out;
+				out.reserve(source->size());
+				for (const auto x: *source) {
+					out.push_back((x >> off) & mask);
+				}
+				return NormalizeKnownValues(std::move(out));
+			}
+			if (cnt > 8u) {
+				return std::nullopt;
+			}
+			KnownValues out(size_t {1} << cnt);
+			for (uint32_t i = 0; i < out.size(); i++) {
+				out[i] = i;
+			}
+			return out;
+		}
+		case ValueOpcode::BitwiseAnd32: {
+			const auto a = ComputeKnownValues(arg(0), ctx, depth + 1);
+			const auto b = ComputeKnownValues(arg(1), ctx, depth + 1);
+			if (a && b) {
+				return MapKnownValues2(arg(0), arg(1), ctx, depth,
+				                       [](uint32_t x, uint32_t y) { return x & y; });
+			}
+			const auto* known = a ? &*a : (b ? &*b : nullptr);
+			if (known == nullptr || known->size() != 1u) {
+				return std::nullopt;
+			}
+			const auto mask = known->front();
+			if (std::popcount(mask) > 8) {
+				return std::nullopt;
+			}
+			// Every sub-mask of `mask`.
+			KnownValues out;
+			out.reserve(size_t {1} << std::popcount(mask));
+			for (uint32_t sub = mask;; sub = (sub - 1u) & mask) {
+				out.push_back(sub);
+				if (sub == 0u) {
+					break;
+				}
+			}
+			return NormalizeKnownValues(std::move(out));
+		}
+		case ValueOpcode::IAdd32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth, [](uint32_t x, uint32_t y) { return x + y; });
+		case ValueOpcode::ISub32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth, [](uint32_t x, uint32_t y) { return x - y; });
+		case ValueOpcode::IMul32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth, [](uint32_t x, uint32_t y) { return x * y; });
+		case ValueOpcode::BitwiseOr32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth, [](uint32_t x, uint32_t y) { return x | y; });
+		case ValueOpcode::BitwiseXor32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth, [](uint32_t x, uint32_t y) { return x ^ y; });
+		case ValueOpcode::UMin32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth,
+			                       [](uint32_t x, uint32_t y) { return std::min(x, y); });
+		case ValueOpcode::UMax32:
+			return MapKnownValues2(arg(0), arg(1), ctx, depth,
+			                       [](uint32_t x, uint32_t y) { return std::max(x, y); });
+		case ValueOpcode::ShiftLeftLogical32:
+		case ValueOpcode::ShiftRightLogical32: {
+			// Shift counts >= 32 are left to the emitter's semantics: give up on them.
+			const auto shift = ComputeKnownValues(arg(1), ctx, depth + 1);
+			if (!shift || shift->back() >= 32u) {
+				return std::nullopt;
+			}
+			if (inst.GetOpcode() == ValueOpcode::ShiftLeftLogical32) {
+				return MapKnownValues2(arg(0), arg(1), ctx, depth,
+				                       [](uint32_t x, uint32_t y) { return x << y; });
+			}
+			return MapKnownValues2(arg(0), arg(1), ctx, depth,
+			                       [](uint32_t x, uint32_t y) { return x >> y; });
+		}
+		default: return std::nullopt;
+	}
+}
+
+std::optional<KnownValues> ComputeKnownValues(Value value, KnownValueContext& ctx, int depth) {
+	value = value.Resolve();
+	if (value.IsImmediate()) {
+		if (value.GetType() != Type::U32) {
+			return std::nullopt;
+		}
+		return KnownValues {value.U32()};
+	}
+	auto* inst = value.TryInstruction();
+	if (inst == nullptr || depth > 48) {
+		return std::nullopt;
+	}
+	if (const auto it = ctx.memo.find(inst); it != ctx.memo.end()) {
+		return it->second; // in-progress entries hold nullopt: recursion through phi gives up
+	}
+	ctx.memo.emplace(inst, std::nullopt);
+	auto result     = ComputeKnownValuesUncached(*inst, ctx, depth);
+	ctx.memo[inst]  = result;
+	return result;
+}
+
+// IEqual/INotEqual(x, c) with c outside (or the only member of) the known-value set of x.
+bool FoldCompareByKnownValues(Inst& inst, KnownValueContext& ctx, bool equal) {
+	if (!ctx.enabled) {
+		return false;
+	}
+	auto lhs = Arg(inst, 0);
+	auto rhs = Arg(inst, 1);
+	if (IsImmediate(lhs, Type::U32)) {
+		std::swap(lhs, rhs);
+	}
+	if (!IsImmediate(rhs, Type::U32) || lhs.IsImmediate()) {
+		return false;
+	}
+	const auto known = ComputeKnownValues(lhs, ctx, 0);
+	if (!known) {
+		return false;
+	}
+	const auto c = rhs.U32();
+	if (!std::binary_search(known->begin(), known->end(), c)) {
+		Replace(inst, Value(!equal));
+		return true;
+	}
+	if (known->size() == 1u) {
+		Replace(inst, Value(equal));
+		return true;
+	}
+	return false;
+}
+
+void FoldInstruction(Inst& inst, KnownValueContext& known) {
 	switch (inst.GetOpcode()) {
 		case ValueOpcode::Phi: FoldPhi(inst); return;
 		case ValueOpcode::SelectU1:
@@ -518,10 +723,14 @@ void FoldInstruction(Inst& inst) {
 			FoldU32(inst, [](uint32_t a, uint32_t b) { return std::max(a, b); });
 			return;
 		case ValueOpcode::IEqual32:
-			FoldU32Compare(inst, [](uint32_t a, uint32_t b) { return a == b; });
+			if (!FoldU32Compare(inst, [](uint32_t a, uint32_t b) { return a == b; })) {
+				FoldCompareByKnownValues(inst, known, true);
+			}
 			return;
 		case ValueOpcode::INotEqual32:
-			FoldU32Compare(inst, [](uint32_t a, uint32_t b) { return a != b; });
+			if (!FoldU32Compare(inst, [](uint32_t a, uint32_t b) { return a != b; })) {
+				FoldCompareByKnownValues(inst, known, false);
+			}
 			return;
 		case ValueOpcode::ULessThan32:
 			FoldU32Compare(inst, [](uint32_t a, uint32_t b) { return a < b; });
@@ -617,9 +826,15 @@ void FoldInstruction(Inst& inst) {
 } // namespace
 
 void ConstantPropagationPass(const BlockList& blocks) {
+	static const bool known_values_enabled = [] {
+		const char* value = std::getenv("KYTY_KNOWN_VALUES");
+		return value == nullptr || value[0] != '0';
+	}();
+	KnownValueContext known;
+	known.enabled = known_values_enabled;
 	for (auto* block: blocks) {
 		for (auto& inst: block->Instructions()) {
-			FoldInstruction(inst);
+			FoldInstruction(inst, known);
 		}
 	}
 }

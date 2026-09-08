@@ -455,26 +455,27 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 		// V# base alignment class (bits 24..25): only with KYTY_VEC_CONST=1 (static class). By
 		// default the emitter tests the base alignment at run time, so the alignment of every
 		// constant buffer base does not multiply the permutations of the shader.
-		// Const bank (bit 26): scalar-read-only V# that fits a uniform buffer.
-		bool const_bank = false;
-		if (ConstBankEnabled()) {
+		// Scalar-read-only V# that fits a uniform buffer: const bank (bit 26, used where the
+		// stage binds the bank) and aligned copy (bit 27: the host presents the range 16-byte
+		// aligned, copying it when the base is not - one permutation per shader instead of one
+		// per alignment combination of the constant buffers of a draw).
+		bool small_scalar = false;
+		{
 			const auto& info    = program.info.buffers[i];
 			const auto  records = static_cast<uint64_t>(descriptor.NumRecords());
 			const auto  size    = stride == 0u ? records : static_cast<uint64_t>(stride) * records;
-			if (info.scalar && !info.written && !info.atomic && size != 0u &&
-			    size <= ConstBankMaxBytes) {
-				packed_stride |= PackedStrideConstBankMask;
-				const_bank = true;
-			}
+			small_scalar = info.scalar && !info.written && !info.atomic && size != 0u &&
+			               size <= ConstBankMaxBytes;
+		}
+		if (small_scalar && ConstBankEnabled()) {
+			packed_stride |= PackedStrideConstBankMask;
+		}
+		const bool aligned_copy = small_scalar && ConstBankAlignedCopy();
+		if (aligned_copy) {
+			packed_stride |= PackedStrideAlignedCopyMask;
 		}
 		if (VectorConstStaticAlignmentClass()) {
-			// Const-bank ranges are presented 16-byte aligned by the host (copied when the base
-			// is not): one permutation per shader instead of one per alignment combination.
-			// (Only where the stage really binds the bank: compute keeps SSBO by default and the
-			// bit is stripped by ApplyResourceSpecialization.)
-			const auto cls = const_bank && ConstBankAlignedCopy() && ConstBankForStage(program.stage)
-			                     ? 2u
-			                     : PackedStrideAlignmentClass(descriptor.Base48());
+			const auto cls = aligned_copy ? 2u : PackedStrideAlignmentClass(descriptor.Base48());
 			packed_stride |= cls << PackedStrideAlignmentShift;
 		}
 		next_specialization.buffers.push_back({

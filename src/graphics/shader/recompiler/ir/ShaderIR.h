@@ -111,8 +111,17 @@ constexpr uint32_t PackedStrideBaseAlignment(uint32_t packed) {
 // robustBufferAccess2 bounds check (IADD + LOP3 + ISETP + LDG !P) of storage-buffer loads.
 constexpr uint32_t PackedStrideConstBankShift = 26u;
 constexpr uint32_t PackedStrideConstBankMask  = 1u << PackedStrideConstBankShift;
+// Bit 27 ("aligned copy", KYTY_CBANK_COPY): the V# is scalar-read-only and small enough that the
+// host presents its range 16-byte aligned - copied into the stream ring when the base is not -
+// so the alignment class is always 2 and the base alignment does not multiply permutations.
+constexpr uint32_t PackedStrideAlignedCopyShift = 27u;
+constexpr uint32_t PackedStrideAlignedCopyMask  = 1u << PackedStrideAlignedCopyShift;
+constexpr bool     PackedStrideAlignedCopy(uint32_t packed) {
+	return (packed & PackedStrideAlignedCopyMask) != 0u;
+}
 // Bits the host adds to the V# stride word (masked by code that compares it with the descriptor).
-constexpr uint32_t PackedStrideHostMask = PackedStrideAlignmentMask | PackedStrideConstBankMask;
+constexpr uint32_t PackedStrideHostMask =
+    PackedStrideAlignmentMask | PackedStrideConstBankMask | PackedStrideAlignedCopyMask;
 // maxUniformBufferRange (64 KiB) minus the uniform offset alignment the host may add.
 constexpr uint32_t ConstBankMaxBytes = 65536u - 64u;
 constexpr bool     PackedStrideConstBank(uint32_t packed) {

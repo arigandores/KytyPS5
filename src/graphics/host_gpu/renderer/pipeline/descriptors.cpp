@@ -172,7 +172,7 @@ static BufferView NativeStorageBuffer(RenderContext&                            
 	}
 	buffer_offset = static_cast<uint32_t>(adjustment);
 	if (adjustment % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
-		if (const_bank && ShaderRecompiler::IR::ConstBankAlignedCopy()) {
+		if (ShaderRecompiler::IR::PackedStrideAlignedCopy(resource.packed_stride)) {
 			// The shader was specialized as 16-byte aligned (KYTY_CBANK_COPY): present the range
 			// through an aligned copy in the stream ring. CPU-written constants (the common case)
 			// are copied from guest memory; a range the GPU wrote is copied on the GPU.

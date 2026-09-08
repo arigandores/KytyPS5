@@ -67,6 +67,9 @@ private:
 	};
 
 	void              Enqueue(Submission submission);
+	// KYTY_ASYNC_COMPUTE=1: shadow-walks the submission for compute dispatches and queues their
+	// pipeline compiles; the shadow compute state persists per queue across submissions.
+	void              LookaheadSubmission(const Submission& submission);
 	void              WaitForIdle();
 	void              ProcessCommands();
 	bool              Process(Submission& submission);
@@ -74,6 +77,12 @@ private:
 	CommandProcessor& GetProcessor(uint32_t queue_id);
 
 	RenderContext&                                 m_renderer;
+	struct ComputeLookahead {
+		HW::ComputeShaderInfo cs;
+		bool                  valid = false;
+	};
+	std::array<ComputeLookahead, QueueCount>       m_lookahead {};
+	Common::Mutex                                  m_lookahead_mutex;
 	Common::Mutex                                  m_submission_mutex;
 	Common::Mutex                                  m_queue_mutex;
 	std::mutex                                     m_shutdown_mutex;

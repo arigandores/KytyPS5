@@ -490,9 +490,11 @@ struct PipelineCache::ProgramCache {
 		}
 	}
 
+	// tolerant: the PM4 lookahead reads guest memory that may not be final yet; a resource plan
+	// that does not materialize returns an empty program instead of stopping the emulator.
 	template <typename InputInfo>
 	ShaderProgram Get(const ShaderParams& params, InputInfo& input_info,
-	                  uint32_t& push_data_cursor) {
+	                  uint32_t& push_data_cursor, bool tolerant = false) {
 		constexpr ShaderType stage = [] {
 			if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 				return ShaderType::Vertex;
@@ -535,6 +537,9 @@ struct PipelineCache::ProgramCache {
 		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
 		                                                resources, specialization)) {
 			if (!entry->second.from_cache) {
+				if (tolerant) {
+					return {};
+				}
 				EXIT("shader resource materialization failed hash=0x%016" PRIx64 "\n", params.hash);
 			}
 			// A cached plan that does not materialize: drop it and translate the shader again.
@@ -610,8 +615,13 @@ struct PipelineCache::ProgramCache {
 		const auto translate_end   = HostMicros();
 		if (entry == programs.end()) {
 			auto resource_plan = ShaderRecompiler::IR::ExtractResourcePlan(translated.program);
-			EXIT_IF(!ShaderRecompiler::IR::MaterializeResources(resource_plan, runtime, resources,
-			                                                    specialization));
+			if (!ShaderRecompiler::IR::MaterializeResources(resource_plan, runtime, resources,
+			                                                specialization)) {
+				if (tolerant) {
+					return {};
+				}
+				EXIT("shader resource materialization failed hash=0x%016" PRIx64 "\n", params.hash);
+			}
 			entry = programs.try_emplace(lookup_key, std::move(resource_plan)).first;
 		}
 		entry->second.permutations.push_back(CompilePermutation<stage>(
@@ -1254,6 +1264,70 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	return iter->second.get();
 }
 
+void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
+                                            const HW::ShaderRegisters&   sh,
+                                            ShaderComputeInputInfo       input_info) {
+	if (m_workers.empty()) {
+		return;
+	}
+	input_info.needs_lds_barriers = !m_graphics.compute_wave64_supported;
+	const auto params             = PrepareProgram(regs, sh, input_info);
+	Common::LockGuard lock(m_mutex);
+	uint32_t          push_data_cursor = 0;
+	const auto        program = m_program_cache->Get(params, input_info, push_data_cursor, true);
+	static std::atomic<uint32_t> log_count {0};
+	const bool                   log = log_count.fetch_add(1, std::memory_order_relaxed) < 2048;
+	if (!program) {
+		if (log) {
+			LOGF("AsyncCompute: prefetch hash=0x%016" PRIx64 " failed to materialize\n", params.hash);
+		}
+		return;
+	}
+	ComputePipelineKey key {};
+	key.cs_shader_id = program.id;
+	if (m_compute_pipelines.contains(key)) {
+		return;
+	}
+	if (log) {
+		LOGF("AsyncCompute: prefetch hash=0x%016" PRIx64 " id=%" PRIu64 " queued\n", params.hash, program.id);
+	}
+	auto  entry  = std::make_unique<ComputePipelineEntry>();
+	auto* target = entry.get();
+	target->cs_shader_id = program.id;
+	m_compute_pipelines.emplace(key, std::move(entry));
+	m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
+	// The job owns a copy of the input info (stage.program points into the program cache, which
+	// lives for the process; the resource snapshot is per dispatch and only copied along).
+	auto       job       = std::make_shared<ShaderComputeInputInfo>(input_info);
+	const auto module    = program.module;
+	const auto id        = program.id;
+	const auto hash      = input_info.stage.program->shader_hash;
+	const auto queued_at = HostMicros();
+	EnqueueJob([this, job, target, module, id, hash, queued_at] {
+		const auto create_begin = HostMicros();
+		CreatePipelineInternal(m_graphics, *target, *job, module, m_driver_cache);
+		EXIT_NOT_IMPLEMENTED(target->pipeline == nullptr);
+		EXIT_NOT_IMPLEMENTED(target->pipeline_layout == nullptr);
+		const auto create_end = HostMicros();
+		{
+			Common::LockGuard lock(m_mutex);
+			if (AvTraceEnabled()) {
+				LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64
+				     " async wait_us=%" PRIu64 " hash=0x%016" PRIx64 "\n",
+				     id, create_end - create_begin, static_cast<uint64_t>(m_compute_pipelines.size()),
+				     create_begin - queued_at, hash);
+			}
+			MaybeWriteDriverCache();
+		}
+		{
+			std::lock_guard<std::mutex> lock(m_job_mutex);
+			target->ready.store(true, std::memory_order_release);
+		}
+		m_ready_cv.notify_all();
+		m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
+	});
+}
+
 PipelineCache::ComputePipeline&
 PipelineCache::CreateComputePipeline(ShaderComputeInputInfo& input_info,
                                      const ShaderProgram&    compute_program) {
@@ -1261,38 +1335,59 @@ PipelineCache::CreateComputePipeline(ShaderComputeInputInfo& input_info,
 
 	EXIT_IF(!compute_program);
 
-	Common::LockGuard lock(m_mutex);
+	ComputePipelineEntry* pending = nullptr;
+	{
+		Common::LockGuard lock(m_mutex);
 
-	ComputePipeline p {};
-	p.cs_shader_id = compute_program.id;
+		ComputePipelineKey key {};
+		key.cs_shader_id = compute_program.id;
 
-	ComputePipelineKey key {};
-	key.cs_shader_id = p.cs_shader_id;
+		if (auto iter = m_compute_pipelines.find(key); iter != m_compute_pipelines.end()) {
+			if (iter->second->ready.load(std::memory_order_acquire)) {
+				return *iter->second;
+			}
+			pending = iter->second.get(); // queued by the lookahead, still compiling
+		} else {
+			LibKernel::KernelTimeFreezeScope freeze_scope;
 
-	if (auto iter = m_compute_pipelines.find(key); iter != m_compute_pipelines.end()) {
-		return *iter->second;
+			if (graphics_debug_dump_enabled()) {
+				ShaderDbgDumpInputInfo(input_info);
+			}
+
+			auto cached          = std::make_unique<ComputePipelineEntry>();
+			cached->cs_shader_id = compute_program.id;
+			const auto create_begin = HostMicros();
+			CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module,
+			                       m_driver_cache);
+			if (AvTraceEnabled()) {
+				LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64
+				     " sync hash=0x%016" PRIx64 "\n",
+				     compute_program.id, HostMicros() - create_begin,
+				     static_cast<uint64_t>(m_compute_pipelines.size() + 1),
+				     input_info.stage.program->shader_hash);
+			}
+			MaybeWriteDriverCache();
+
+			EXIT_NOT_IMPLEMENTED(cached->pipeline == nullptr);
+			EXIT_NOT_IMPLEMENTED(cached->pipeline_layout == nullptr);
+			cached->ready.store(true, std::memory_order_release);
+
+			auto [place, inserted] = m_compute_pipelines.emplace(std::move(key), std::move(cached));
+			EXIT_IF(!inserted);
+			return *place->second;
+		}
 	}
+	// A dispatch cannot be skipped: wait for the worker with the guest clock frozen.
 	LibKernel::KernelTimeFreezeScope freeze_scope;
-
-	if (graphics_debug_dump_enabled()) {
-		ShaderDbgDumpInputInfo(input_info);
+	const auto                       wait_begin = HostMicros();
+	{
+		std::unique_lock<std::mutex> lock(m_job_mutex);
+		m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
 	}
-
-	auto       cached       = std::make_unique<ComputePipeline>(p);
-	const auto create_begin = HostMicros();
-	CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module, m_driver_cache);
 	if (AvTraceEnabled()) {
-		LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64 "\n", p.cs_shader_id,
-		     HostMicros() - create_begin, static_cast<uint64_t>(m_compute_pipelines.size() + 1));
+		LOGF("AvTrace: pipeline cs cs=%" PRIu64 " waited_us=%" PRIu64 " hash=0x%016" PRIx64 "\n",
+		     compute_program.id, HostMicros() - wait_begin, input_info.stage.program->shader_hash);
 	}
-	MaybeWriteDriverCache();
-
-	EXIT_NOT_IMPLEMENTED(cached->pipeline == nullptr);
-	EXIT_NOT_IMPLEMENTED(cached->pipeline_layout == nullptr);
-
-	auto [iter, inserted] = m_compute_pipelines.emplace(std::move(key), std::move(cached));
-	EXIT_IF(!inserted);
-
-	return *iter->second;
+	return *pending;
 }
 } // namespace Libs::Graphics

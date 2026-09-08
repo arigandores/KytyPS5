@@ -161,6 +161,11 @@ public:
 	                       const ShaderProgram& vertex_program, const ShaderProgram& pixel_program);
 	ComputePipeline& CreateComputePipeline(ShaderComputeInputInfo& input_info,
 	                                       const ShaderProgram&    compute_program);
+	// PM4 lookahead (KYTY_ASYNC_COMPUTE): translates the program of a future dispatch and queues
+	// its pipeline compile to the worker pool; CreateComputePipeline waits for it if it is still
+	// compiling when the dispatch arrives.
+	void PrefetchComputePipeline(const HW::ComputeShaderInfo& regs, const HW::ShaderRegisters& sh,
+	                             ShaderComputeInputInfo input_info);
 	// Block until every queued graphics pipeline has been compiled.
 	void WaitForPendingPipelines();
 	// Pipelines whose compilation has not finished yet.
@@ -286,8 +291,12 @@ private:
 	void StopWorkers();
 	void WorkerLoop();
 	void EnqueueJob(std::function<void()> job);
-	std::unordered_map<ComputePipelineKey, std::unique_ptr<ComputePipeline>, ComputePipelineKeyHash>
-	              m_compute_pipelines;
+	struct ComputePipelineEntry: ComputePipeline {
+		std::atomic<bool> ready {false};
+	};
+	std::unordered_map<ComputePipelineKey, std::unique_ptr<ComputePipelineEntry>,
+	                   ComputePipelineKeyHash>
+	    m_compute_pipelines;
 	Common::Mutex m_mutex;
 	uint64_t      m_driver_cache_saved_us    = 0;
 	uint32_t      m_driver_cache_unsaved     = 0;

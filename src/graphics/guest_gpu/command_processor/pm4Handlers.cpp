@@ -997,9 +997,9 @@ KYTY_HW_SH_PARSER(HwShIgnoreRegisters) {
 	return reg_num;
 }
 
-static void HwShSetCsRegister(CommandProcessor& cp, uint32_t cmd_offset, uint32_t value) {
-	auto cs_regs = cp.GetShCtx().GetCs().cs_regs;
-
+// Decodes one compute SH register into `cs_regs`; false for registers this parser does not know.
+// Shared by the PM4 handler and the compute pipeline lookahead (shadow state).
+bool ApplyCsShRegister(HW::CsStageRegisters& cs_regs, uint32_t cmd_offset, uint32_t value) {
 	switch (cmd_offset) {
 		case Pm4::COMPUTE_PGM_LO:
 			cs_regs.data_addr &= 0xFFFFFF00000000FFull;
@@ -1062,11 +1062,17 @@ static void HwShSetCsRegister(CommandProcessor& cp, uint32_t cmd_offset, uint32_
 		case Pm4::COMPUTE_RESOURCE_LIMITS:
 		case Pm4::COMPUTE_TMPRING_SIZE:
 		case Pm4::COMPUTE_PACE_ID: HwShIgnoreComputeRegister(cmd_offset, value); break;
-		default:
-			EXIT("unsupported compute SH register 0x%08" PRIx32 " = 0x%08" PRIx32 "\n", cmd_offset,
-			     value);
+		default: return false;
 	}
+	return true;
+}
 
+static void HwShSetCsRegister(CommandProcessor& cp, uint32_t cmd_offset, uint32_t value) {
+	auto cs_regs = cp.GetShCtx().GetCs().cs_regs;
+	if (!ApplyCsShRegister(cs_regs, cmd_offset, value)) {
+		EXIT("unsupported compute SH register 0x%08" PRIx32 " = 0x%08" PRIx32 "\n", cmd_offset,
+		     value);
+	}
 	cp.GetShCtx().SetCsShader(cs_regs);
 }
 

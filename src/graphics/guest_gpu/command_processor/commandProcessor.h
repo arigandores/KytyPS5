@@ -41,6 +41,8 @@ private:
 	bool                      m_made_progress = false;
 };
 
+bool ApplyCsShRegister(HW::CsStageRegisters& cs_regs, uint32_t cmd_offset, uint32_t value);
+
 class CommandProcessor {
 public:
 	struct FlipInfo {
@@ -146,6 +148,9 @@ private:
 	                      void* dst_gpu_addr, T value, uint32_t interrupt_selector,
 	                      uint32_t interrupt_context_id);
 	void ProcessPm4(Pm4Execution& execution, size_t stop_depth);
+	// KYTY_ASYNC_COMPUTE: walks the submission ahead of execution with a shadow copy of the compute
+	// state and queues the driver compile of every compute pipeline it will need.
+	void PrefetchComputePipelines(const Pm4Execution& execution);
 	void SuspendPm4();
 	CommandScheduler&   GetScheduler() const { return m_renderer.GetCommandScheduler(); }
 	CommandBuffer&      CurrentBuffer() { return GetScheduler().Current(); }

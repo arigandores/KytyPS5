@@ -594,6 +594,7 @@ void CommandProcessor::DmaData(uint8_t engine, uint8_t dst_sel, uint8_t dst_cach
 
 void GuestGpu::Enqueue(Submission submission) {
 	EXIT_IF(submission.queue_id >= QueueCount);
+	LookaheadSubmission(submission);
 	Common::LockGuard lock(m_queue_mutex);
 	EXIT_IF(!m_accepting);
 	submission.enqueue_ns = static_cast<uint64_t>(
@@ -916,6 +917,7 @@ Pm4ProcessResult CommandProcessor::Process(Pm4Execution&             execution,
 	EXIT_IF(commands.size() > UINT32_MAX);
 	if (execution.m_buffer_stack.empty() && !commands.empty()) {
 		execution.m_buffer_stack.push_back({commands});
+		PrefetchComputePipelines(execution);
 	}
 	execution.m_suspended     = false;
 	execution.m_made_progress = false;
@@ -938,6 +940,176 @@ Pm4ProcessResult CommandProcessor::Process(Pm4Execution&             execution,
 	ProcessPm4(execution, 0);
 	return execution.m_buffer_stack.empty() ? Pm4ProcessResult::Complete
 	                                        : Pm4ProcessResult::Blocked;
+}
+
+// KYTY_ASYNC_COMPUTE: 0 = compute pipelines compile at the dispatch (guest clock frozen), 1 = the
+// lookahead below runs when the guest submits a command buffer (GuestGpu::Enqueue; the driver
+// compile starts a whole queue of submissions ahead of the dispatch), 2 = it runs when the GuestGpu
+// thread starts processing the submission (lead time = that submission only).
+static int AsyncComputeMode() {
+	static const int mode = [] {
+		const char* value = std::getenv("KYTY_ASYNC_COMPUTE");
+		return value == nullptr ? 1 : std::atoi(value);
+	}();
+	return mode;
+}
+
+struct LookaheadCursor {
+	std::span<const uint32_t> commands;
+	uint32_t                  offset = 0;
+};
+
+// Shadow walk over PM4 (type-3 packets only; nested IT_INDIRECT_BUFFER followed, conditional
+// branches and CE loads are not - a wrong guess costs one extra compile, never a wrong result: the
+// real dispatch looks its pipeline up by the program it translated itself). Compute SH registers
+// (direct and SET_SH_REG_INDIRECT pair tables) and user data are applied to the shadow state `cs`;
+// every DISPATCH_DIRECT/INDIRECT translates its program and queues the pipeline compile.
+static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& cs,
+                                  std::vector<LookaheadCursor> stack, const char* label) {
+	const auto            apply_sh   = [&cs](uint32_t offset, uint32_t value) {
+		if (offset >= Pm4::COMPUTE_USER_DATA_0 && offset <= Pm4::COMPUTE_USER_DATA_15) {
+			const auto slot               = offset - Pm4::COMPUTE_USER_DATA_0;
+			cs.cs_user_sgpr.value[slot] = value;
+			cs.cs_user_sgpr.count       = std::max(cs.cs_user_sgpr.count, slot + 1u);
+		} else if (offset >= Pm4::COMPUTE_NUM_THREAD_X && offset < Pm4::COMPUTE_USER_DATA_0) {
+			ApplyCsShRegister(cs.cs_regs, offset, value);
+		}
+	};
+	uint32_t              dispatches = 0;
+	uint32_t              packets    = 0;
+	std::vector<uint64_t> seen; // (code address, user data) signatures already prefetched
+	const auto            t0    = Common::FrameStats::NowNs();
+	while (!stack.empty()) {
+		auto& cur = stack.back();
+		if (cur.offset >= cur.commands.size()) {
+			stack.pop_back();
+			continue;
+		}
+		const auto* packet    = cur.commands.data() + cur.offset;
+		const auto  remaining = static_cast<uint32_t>(cur.commands.size()) - cur.offset;
+		const auto  header    = packet[0];
+		if (header == 0x80000000u) {
+			cur.offset++;
+			continue;
+		}
+		if ((header >> 30u) != 3u) {
+			break; // only type-3 packets are understood
+		}
+		const auto opcode = (header >> 8u) & 0xffu;
+		const auto len    = KYTY_PM4_LEN(header);
+		if (len < 2u || len > remaining) {
+			break;
+		}
+		packets++;
+		switch (opcode) {
+			case Pm4::IT_SET_SH_REG: {
+				const auto base = packet[1];
+				for (uint32_t i = 0; i + 2u < len; i++) {
+					apply_sh(base + i, packet[2u + i]);
+				}
+				break;
+			}
+			case Pm4::IT_SET_SH_REG_INDIRECT: {
+				// (offset, value) pairs in memory; offsets carry a selector in bits 28..30.
+				if (len != 5u) {
+					break;
+				}
+				const auto* pairs = reinterpret_cast<const uint32_t*>(
+				    (static_cast<uint64_t>(packet[1]) & 0xfffffffcu) |
+				    (static_cast<uint64_t>(packet[2]) << 32u));
+				const auto count = packet[4] & 0x3fffu;
+				if (pairs == nullptr) {
+					break;
+				}
+				for (uint32_t i = 0; i < count; i++) {
+					const auto raw = pairs[2u * i];
+					if (raw == 0xffffffffu) {
+						continue;
+					}
+					apply_sh(raw & ~0x70000000u, pairs[2u * i + 1u]);
+				}
+				break;
+			}
+			case Pm4::IT_INDIRECT_BUFFER:
+				if (len == 4u) {
+					const auto* nested = reinterpret_cast<const uint32_t*>(
+					    packet[1] | (static_cast<uint64_t>(packet[2]) << 32u));
+					const auto nested_dw = packet[3] & 0xfffffu;
+					cur.offset += len; // `cur` is invalidated by the push below
+					if (nested != nullptr && nested_dw != 0u) {
+						stack.push_back({std::span<const uint32_t>(nested, nested_dw), 0u});
+					}
+					continue;
+				}
+				break; // conditional branch: not followed
+			case Pm4::IT_DISPATCH_DIRECT:
+			case Pm4::IT_DISPATCH_INDIRECT: {
+				uint32_t mode = 0;
+				if (opcode == Pm4::IT_DISPATCH_DIRECT && len == 5u) {
+					mode = packet[4];
+				} else if (opcode == Pm4::IT_DISPATCH_INDIRECT && (len == 4u || len == 3u)) {
+					mode = packet[len - 1u];
+				} else {
+					break;
+				}
+				cs.cs_regs.wave_size = Pm4::ComputeWaveSize(mode);
+				if (cs.cs_regs.data_addr == 0 || !ShaderIsMapped(cs.cs_regs.data_addr)) {
+					break;
+				}
+				uint64_t signature = cs.cs_regs.data_addr ^ (static_cast<uint64_t>(mode & 0x20u) << 40u) ^
+				                     (static_cast<uint64_t>(cs.cs_regs.wave_size) << 48u);
+				for (uint32_t i = 0; i < cs.cs_regs.user_sgpr && i < HW::UserSgprInfo::SGPRS_MAX; i++) {
+					signature = signature * 0x9e3779b97f4a7c15ull + cs.cs_user_sgpr.value[i];
+				}
+				if (std::find(seen.begin(), seen.end(), signature) != seen.end()) {
+					break;
+				}
+				seen.push_back(signature);
+				dispatches++;
+				ShaderComputeInputInfo input_info {};
+				input_info.dispatch_thread_dimensions = (mode & (1u << 5u)) != 0u;
+				static const HW::ShaderRegisters no_sh_regs {};
+				cache.PrefetchComputePipeline(cs, no_sh_regs, input_info);
+				break;
+			}
+			default: break;
+		}
+		cur.offset += len;
+	}
+	if (dispatches != 0 && Common::FrameStats::Enabled()) {
+		static std::atomic<uint32_t> log_count {0};
+		if (log_count.fetch_add(1, std::memory_order_relaxed) < 256) {
+			LOGF("AsyncCompute: lookahead%s packets=%u dispatches=%u us=%" PRIu64 "\n", label, packets, dispatches,
+			     (Common::FrameStats::NowNs() - t0) / 1000u);
+		}
+	}
+}
+
+void GuestGpu::LookaheadSubmission(const Submission& submission) {
+	if (AsyncComputeMode() != 1 || submission.commands.empty() ||
+	    submission.type == SubmissionType::FlipPreparation) {
+		return;
+	}
+	Common::LockGuard lock(m_lookahead_mutex);
+	auto&             state = m_lookahead[submission.queue_id];
+	if (submission.reset_processor || !state.valid) {
+		state.cs    = {};
+		state.valid = true;
+	}
+	WalkComputeDispatches(m_renderer.GetPipelineCache(), state.cs, {{submission.commands, 0u}},
+	                      " enqueue");
+}
+
+void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
+	if (AsyncComputeMode() != 2 || execution.m_buffer_stack.empty()) {
+		return;
+	}
+	std::vector<LookaheadCursor> stack;
+	for (const auto& cursor: execution.m_buffer_stack) {
+		stack.push_back({cursor.commands, cursor.offset_dw});
+	}
+	HW::ComputeShaderInfo cs = m_sh_ctx.GetCs();
+	WalkComputeDispatches(m_renderer.GetPipelineCache(), cs, std::move(stack), " process");
 }
 
 void CommandProcessor::ProcessIndirectBuffer(std::span<const uint32_t> commands) {

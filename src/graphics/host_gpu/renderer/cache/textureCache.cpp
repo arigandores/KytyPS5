@@ -1907,12 +1907,17 @@ bool TextureCache::TryConsumeDccFill(uint64_t address, uint64_t size, uint32_t f
 		                                               .clear_mask = dcc_clear_mask,
 		                                               .fill_value = fill_value,
 		                                               .fill_size  = size});
+		m_fill_stamp_address = address;
+		m_fill_stamp_size    = size;
 		return false;
 	}
 	if (found->second.type == MetaDataInfo::Type::PendingDcc) {
 		found->second.clear_mask = dcc_clear_mask;
 		found->second.fill_value = fill_value;
 		found->second.fill_size  = size;
+		found->second.fill_seq   = 0;
+		m_fill_stamp_address     = address;
+		m_fill_stamp_size        = size;
 		return false;
 	}
 	if (found->second.type == MetaDataInfo::Type::Dcc) {
@@ -1963,6 +1968,20 @@ ImageId TextureCache::FindDccSurfaceImage(uint64_t data_address, uint64_t metada
 	return {};
 }
 
+void TextureCache::StampPendingDccFill() {
+	std::scoped_lock lock {m_lock};
+	if (m_fill_stamp_address == 0) {
+		return;
+	}
+	if (auto found = m_surface_metas.find(m_fill_stamp_address);
+	    found != m_surface_metas.end() && found->second.type == MetaDataInfo::Type::PendingDcc) {
+		found->second.fill_seq =
+		    m_buffer_cache.LastGpuWriteSeq(m_fill_stamp_address, m_fill_stamp_size, false);
+	}
+	m_fill_stamp_address = 0;
+	m_fill_stamp_size    = 0;
+}
+
 bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_address) {
 	std::scoped_lock lock {m_lock};
 	auto*            image = m_slot_images.try_get(id);
@@ -1981,6 +2000,32 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 		// Only a fill observed through TryConsumeDccFill proves the address is DCC metadata;
 		// never classify an untouched address from a T# alone.
 		return false;
+	}
+	// A streamed texture's metadata is filled when its mips are allocated and rewritten (DMA of
+	// the real metadata, or CPU) before the texture is bound: adopting that fill would clear the
+	// whole image for a frame. Only a fill nothing overwrote since is still meaningful.
+	static const bool stale_check = [] {
+		const char* value = std::getenv("KYTY_DCC_STALE");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (stale_check && found->second.fill_seq != 0) {
+		const auto last_seq =
+		    m_buffer_cache.LastGpuWriteSeq(metadata_address, found->second.fill_size, false);
+		const bool cpu_written =
+		    m_buffer_cache.IsRegionCpuModified(metadata_address, found->second.fill_size);
+		if (last_seq > found->second.fill_seq || cpu_written) {
+			static std::atomic<uint32_t> stale_count = 0;
+			static const bool dcc_trace_stale = std::getenv("KYTY_DCC_TRACE") != nullptr;
+			if (dcc_trace_stale || stale_count++ < 32) {
+				LOGF("TextureCache: stale pending DCC fill ignored image=0x%016" PRIx64
+				     " dcc=0x%016" PRIx64 " fill=0x%08x size=0x%" PRIx64 " seq=%" PRIu64 " last=%" PRIu64
+				     " cpu=%d\n",
+				     image->info.data.address, metadata_address, found->second.fill_value,
+				     found->second.fill_size, found->second.fill_seq, last_seq, cpu_written ? 1 : 0);
+			}
+			m_surface_metas.erase(found);
+			return false;
+		}
 	}
 	found->second.type                 = MetaDataInfo::Type::Dcc;
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;

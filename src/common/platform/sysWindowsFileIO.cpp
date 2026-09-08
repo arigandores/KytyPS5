@@ -65,7 +65,13 @@ static DWORD GetCacheAccessType(sys_file_cache_type_t t) {
 void SysFileRead(void* data, uint32_t size, sys_file_t& f, uint32_t* bytes_read) {
 	if (f.type == SYS_FILE_FILE) {
 		DWORD w = 0;
-		ReadFile(f.handle, data, size, &w, nullptr);
+		if (ReadFile(f.handle, data, size, &w, nullptr) == FALSE) {
+			static int logged = 0;
+			if (logged++ < 32) {
+				printf("SysFileRead: ReadFile failed, error=%lu size=%u data=%p\n",
+				       static_cast<unsigned long>(GetLastError()), size, data);
+			}
+		}
 		if (bytes_read != nullptr) {
 			*bytes_read = w;
 		}

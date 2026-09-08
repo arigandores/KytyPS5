@@ -12,6 +12,7 @@
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
 #include <map>
+#include <mutex>
 #include <span>
 #include <unordered_map>
 #include <utility>
@@ -175,7 +176,23 @@ private:
 	uint64_t                                m_gpu_write_seq   = 0;
 	uint64_t                                m_large_write_seq = 0;
 	void                   NoteGpuWrite(uint64_t vaddr, uint64_t size);
-	[[nodiscard]] uint64_t LastGpuWriteSeq(uint64_t vaddr, uint64_t size) const;
+
+ public:
+	// Sequence number of the last GPU write to the 64 KB buckets of the range (include_large: also the
+	// floor set by any write larger than 16 MB, which is not tracked per bucket).
+	[[nodiscard]] uint64_t LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool include_large = true) const;
+
+ private:
+
+	// Stream prefetch queue (NoteStreamedRead / PrefetchStreamedRanges).
+	std::mutex                                     m_streamed_mutex;
+	std::vector<std::pair<uint64_t, uint64_t>>     m_streamed_ranges;
+	std::vector<std::pair<uint64_t, uint64_t>>     m_streamed_pending;
+	int                                            m_streamed_frame    = -1;
+	uint64_t                                       m_streamed_spent_ns = 0;
+	uint64_t                                       m_prefetch_pending_bytes = 0;
+	void                                           ClearPrefetchPending(Buffer& buffer);
+	[[nodiscard]] bool IsRegionFullyRegistered(uint64_t vaddr, uint64_t size);
 };
 
 } // namespace Libs::Graphics

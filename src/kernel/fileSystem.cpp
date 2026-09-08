@@ -687,6 +687,32 @@ void StreamTraceEnd(StreamReadTrace& t, const void* buf, uint64_t bytes_read, co
 
 } // namespace
 
+
+// ReadFile writes straight into guest memory, and the kernel refuses a destination whose pages
+// are protected by the GPU caches (ERROR_INVALID_USER_BUFFER / ERROR_NOACCESS) instead of
+// faulting into our handler; the game then received a 0-byte read (observed without any
+// prefetch: a few reads per run, enough for a rare guest crash). On failure the data is read into
+// a host buffer and copied with memcpy, whose page faults the tracker resolves normally.
+void ReadGuestWithRetry(File* file, void* buf, size_t nbytes, uint64_t pos, uint64_t remaining,
+                        uint32_t* bytes_read) {
+	file->f.Read(buf, static_cast<uint32_t>(nbytes), bytes_read);
+	if (*bytes_read != 0 || nbytes == 0 || remaining == 0) {
+		return;
+	}
+	static int logged = 0;
+	if (logged++ < 32) {
+		LOGF("KernelRead: direct read failed, dst=0x%016" PRIx64 " size=0x%" PRIx64
+		     ": reading through a host buffer\n",
+		     reinterpret_cast<uint64_t>(buf), static_cast<uint64_t>(nbytes));
+	}
+	std::vector<uint8_t> temporary(nbytes);
+	file->f.Seek(pos);
+	file->f.Read(temporary.data(), static_cast<uint32_t>(nbytes), bytes_read);
+	if (*bytes_read != 0) {
+		std::memcpy(buf, temporary.data(), *bytes_read);
+	}
+}
+
 int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	PRINT_NAME();
 
@@ -735,7 +761,7 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf),
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
-	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
+	ReadGuestWithRetry(file, buf, nbytes, pos, remaining, &bytes_read);
 	StreamTraceMid(stream_read, buf, bytes_read);
 	// The invalidation above only announces the write. A large read takes milliseconds, and the
 	// GPU thread may synchronize an overlapping buffer meanwhile: it uploads the half-written

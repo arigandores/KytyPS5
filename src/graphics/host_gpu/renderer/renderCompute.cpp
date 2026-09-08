@@ -758,6 +758,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
 	                                        indirect ? 1u : 0u);
+	m_context.GetTextureCache().StampPendingDccFill();
 
 	// The removed host fence also ordered read-only dispatches before later writers.
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);

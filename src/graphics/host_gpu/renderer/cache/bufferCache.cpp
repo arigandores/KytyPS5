@@ -1195,8 +1195,8 @@ void BufferCache::NoteGpuWrite(uint64_t vaddr, uint64_t size) {
 	}
 }
 
-uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size) const {
-	auto       result = m_large_write_seq;
+uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool include_large) const {
+	auto       result = include_large ? m_large_write_seq : uint64_t {0};
 	const auto first  = vaddr >> HotBucketBits;
 	const auto last   = (vaddr + size - 1) >> HotBucketBits;
 	for (auto bucket = first; bucket <= last; bucket++) {

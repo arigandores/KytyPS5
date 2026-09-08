@@ -77,6 +77,8 @@ public:
 	// Returns true when registered DCC absorbed the fill and the caller may skip the dispatch.
 	// False may still record PendingDcc state, but the guest dispatch must execute.
 	[[nodiscard]] bool TryConsumeDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
+	// Called after the fill dispatch is recorded: stamps the PendingDcc entry with its write sequence.
+	void StampPendingDccFill();
 	[[nodiscard]] bool TouchMeta(uint64_t address, uint32_t slice, bool is_clear);
 	// A shader binding (T# with META_COMPRESS and a metadata address) may be the only user of a
 	// surface that the guest fast-cleared through a metadata fill without ever binding it as a
@@ -110,6 +112,7 @@ private:
 		uint32_t clear_mask = 0;
 		uint32_t fill_value = 0xffffffffu;
 		uint64_t fill_size  = 0;
+		uint64_t fill_seq   = 0; // GPU write sequence of the fill dispatch (PendingDcc)
 	};
 
 	struct OverlapResult {
@@ -177,6 +180,8 @@ private:
 	BlitHelper                                        m_blit_helper;
 	TileManager                                       m_tiler;
 	BufferCache&                                      m_buffer_cache;
+	uint64_t                                          m_fill_stamp_address = 0;
+	uint64_t                                          m_fill_stamp_size    = 0;
 	Common::SlotVector<Image>                         m_slot_images;
 	ImagePageTable                                    m_image_page_table;
 	std::unordered_map<vk::Format, ImageId>           m_null_images;

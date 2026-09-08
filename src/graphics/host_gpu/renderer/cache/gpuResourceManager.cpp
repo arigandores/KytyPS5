@@ -74,6 +74,23 @@ bool GpuResourceManager::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	return true;
 }
 
+void GpuResourceManager::NoteStreamedRead(uint64_t vaddr, uint64_t size) {
+	if (!IsMapped(vaddr, size)) {
+		return;
+	}
+	m_buffer_cache.NoteStreamedRead(vaddr, size);
+}
+
+void GpuResourceManager::ReleaseGuestStack(uint64_t vaddr, uint64_t size) {
+	if (!IsMapped(vaddr, size)) {
+		return;
+	}
+	m_scheduler.Context().GetGpu().SendCommandSync([this, vaddr, size] {
+		m_buffer_cache.DeleteBuffersOverlapping(vaddr, size);
+		m_buffer_cache.InvalidateMemory(vaddr, size);
+	});
+}
+
 bool GpuResourceManager::IsMapped(uint64_t vaddr, uint64_t size) const noexcept {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		return false;

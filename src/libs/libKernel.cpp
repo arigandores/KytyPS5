@@ -2596,6 +2596,9 @@ int32_t KYTY_SYSV_ABI FiberInitialize(FiberObject* fiber, const char* name, Fibe
 	std::memset(&fiber->saved_context, 0, sizeof(fiber->saved_context));
 	FiberSetContextValid(fiber, false);
 	fiber->magic_end = FIBER_MAGIC_END;
+	if (addr_context != nullptr) {
+		LibKernel::Memory::RegisterGuestStack(reinterpret_cast<uint64_t>(addr_context), size_context);
+	}
 
 	if (addr_context != nullptr) {
 		*static_cast<uint64_t*>(addr_context) = FIBER_STACK_MAGIC;
@@ -2653,6 +2656,9 @@ int32_t KYTY_SYSV_ABI FiberFinalize(FiberObject* fiber) {
 	}
 	if (!FiberCompareExchangeState(fiber, FIBER_STATE_IDLE, FIBER_STATE_TERMINATED)) {
 		return FIBER_ERROR_STATE;
+	}
+	if (fiber->addr_context != nullptr) {
+		LibKernel::Memory::UnregisterGuestStack(reinterpret_cast<uint64_t>(fiber->addr_context));
 	}
 
 	return OK;

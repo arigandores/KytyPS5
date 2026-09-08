@@ -5,8 +5,10 @@
 #include <algorithm>
 #include <bit>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <optional>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -388,6 +390,17 @@ bool FoldCompareByKnownValues(Inst& inst, KnownValueContext& ctx, bool equal) {
 		return false;
 	}
 	const auto c = rhs.U32();
+	static const bool trace = std::getenv("KYTY_KNOWN_VALUES_TRACE") != nullptr;
+	if (trace) {
+		std::fprintf(stderr, "KnownValues: %s(x, %u) x=%s set[%zu]={", equal ? "IEqual" : "INotEqual", c,
+		             lhs.TryInstruction() != nullptr ? std::string(ValueOpcodeName(lhs.TryInstruction()->GetOpcode())).c_str() : "?",
+		             known->size());
+		for (size_t i = 0; i < known->size() && i < 24; i++) {
+			std::fprintf(stderr, "%s%u", i ? "," : "", (*known)[i]);
+		}
+		std::fprintf(stderr, "%s} -> %s" "\n", known->size() > 24 ? ",..." : "",
+		             std::binary_search(known->begin(), known->end(), c) ? (known->size() == 1 ? "true" : "keep") : "false");
+	}
 	if (!std::binary_search(known->begin(), known->end(), c)) {
 		Replace(inst, Value(!equal));
 		return true;

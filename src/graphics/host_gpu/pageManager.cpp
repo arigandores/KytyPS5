@@ -240,6 +240,26 @@ struct PageManager::Impl {
 	}
 
 	void Protect(uint64_t vaddr, uint64_t size, uint32_t protection) noexcept {
+		static const bool trap = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+		if (trap && protection != READ_WRITE_PROTECTION &&
+		    Libs::LibKernel::Memory::OverlapsGuestStack(vaddr, size)) {
+			static std::atomic<int> logged {0};
+			if (logged.fetch_add(1) < 16) {
+				std::fprintf(stderr, "StackProtect: addr=0x%016llx size=0x%llx prot=0x%x tid=%lu\n",
+				             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size),
+				             protection, static_cast<unsigned long>(GetCurrentThreadId()));
+				void* frames[24] = {};
+				const auto n = static_cast<int>(CaptureStackBackTrace(0, 24, frames, nullptr));
+				const auto image_base = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
+				for (int i = 0; i < n; i++) {
+					const auto address = reinterpret_cast<uintptr_t>(frames[i]);
+					std::fprintf(stderr, "  frame[%d]=0x%016llx image+0x%llx\n", i,
+					             static_cast<unsigned long long>(address),
+					             static_cast<unsigned long long>(address >= image_base ? address - image_base : 0));
+				}
+				std::fflush(stderr);
+			}
+		}
 		if (!Libs::LibKernel::Memory::ProtectGuestHostMemory(vaddr, size,
 		                                                     ToMemoryMode(protection))) {
 			Fatal("address-space protection failed at 0x%016" PRIx64 ", new=0x%08" PRIx32, vaddr,

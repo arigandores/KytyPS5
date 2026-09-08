@@ -73,6 +73,7 @@ public:
 	bool   is_deleted   = false;
 	int    stream_score = 0;
 	size_t lru_id       = 0;
+	bool   prefetch_pending = false; // synchronized by the stream prefetch, not used yet
 
 protected:
 	[[nodiscard]] GraphicContext&   Graphics() const noexcept { return *m_graphics; }

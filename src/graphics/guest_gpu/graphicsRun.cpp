@@ -865,6 +865,7 @@ bool GuestGpu::Process(Submission& submission) {
 						Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites, "prefetch",
 						                            Common::FrameStats::NowNs() - t0);
 					}
+					m_renderer.GetBufferCache().PrefetchStreamedRanges();
 				}
 				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
@@ -894,6 +895,7 @@ bool GuestGpu::Process(Submission& submission) {
 					m_renderer.GetGpuResources().RunGarbageCollector();
 				}
 				m_renderer.GetBufferCache().PrefetchHotReadbacks();
+				m_renderer.GetBufferCache().PrefetchStreamedRanges();
 				Common::FrameStats::SiteScope site_scope("slice-end-compute");
 				cp.BufferFlush();
 			} else if (complete) {

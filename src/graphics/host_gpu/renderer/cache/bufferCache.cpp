@@ -115,9 +115,17 @@ void BufferCache::ChangeRegister(BufferId id) {
 	}
 }
 
-void BufferCache::TouchBuffer(const Buffer& buffer) {
+void BufferCache::TouchBuffer(Buffer& buffer) {
 	if (!buffer.is_deleted) {
 		m_lru_cache.Touch(buffer.lru_id, m_gc_tick);
+		ClearPrefetchPending(buffer);
+	}
+}
+
+void BufferCache::ClearPrefetchPending(Buffer& buffer) {
+	if (buffer.prefetch_pending) {
+		buffer.prefetch_pending = false;
+		m_prefetch_pending_bytes -= std::min(m_prefetch_pending_bytes, buffer.Size());
 	}
 }
 
@@ -126,6 +134,7 @@ void BufferCache::DeleteBuffer(BufferId id) {
 	if (buffer == nullptr || buffer->is_deleted) {
 		return;
 	}
+	ClearPrefetchPending(*buffer);
 	Unregister(id);
 	if (m_scheduler.Active()) {
 		m_scheduler.DeferOperation([this, id] { m_slot_buffers.erase(id); });
@@ -481,9 +490,18 @@ BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 	SetVulkanObjectNameF(m_graphics.device, buffer.Handle(),
 	                     "Kyty.GameBuffer[guest=0x{:016x} size=0x{:x}]", overlap.begin,
 	                     overlap.end - overlap.begin);
+	uint64_t joined_bytes = 0;
+	uint32_t joined       = 0;
 	for (auto it = overlap.first; it != overlap.last;) {
 		const auto old_id = (it++)->second;
+		joined_bytes += m_slot_buffers[old_id].Size();
+		joined++;
 		JoinOverlap(id, old_id, !overlap.has_stream_leap);
+	}
+	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	if (trace && joined_bytes >= (16u << 20)) {
+		LOGF("BufferJoin: new=0x%016" PRIx64 " size=0x%" PRIx64 " joined=%u bytes=%" PRIu64 " leap=%d req=0x%016" PRIx64 "+0x%" PRIx64 "\n",
+		     overlap.begin, overlap.end - overlap.begin, joined, joined_bytes, overlap.has_stream_leap ? 1 : 0, vaddr, size);
 	}
 	Register(id);
 	return id;
@@ -602,6 +620,25 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	return {buffer, buffer->Offset(vaddr)};
 }
 
+namespace {
+bool StreamPrefetchEnabled(); // defined with the stream prefetch below
+} // namespace
+
+// KYTY_STREAM_TRACE=1: where the bytes of each large image upload come from (a synchronized native
+// buffer, or a fresh staging copy of guest memory) with the StreamRead clock, to correlate uploads
+// at scene cuts with the file reads that produced the data.
+void BufferCache::TraceImageUpload(uint64_t vaddr, uint64_t size, const char* path) {
+	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	if (!stream_trace || size < (256u << 10)) {
+		return;
+	}
+	const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+	                    std::chrono::steady_clock::now().time_since_epoch())
+	                    .count();
+	LOGF("ImgUpload: addr=0x%016" PRIx64 " size=0x%" PRIx64 " %s t=%lld" "\n", vaddr, size, path,
+	     static_cast<long long>(us));
+}
+
 std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, uint64_t size) {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: invalid image source\n");
@@ -631,8 +668,19 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 		}
 		if (owner != nullptr && !cpu_modified && (!gpu_modified || has_dirty_buffer_source)) {
 			TouchBuffer(*owner);
+			TraceImageUpload(vaddr, size, "owner");
 			return {owner, owner->Offset(vaddr)};
 		}
+		if (owner == nullptr && !cpu_modified && !gpu_modified && StreamPrefetchEnabled() &&
+		    IsRegionFullyRegistered(vaddr, size)) {
+			// Prefetched as several buffers (chunked file reads): merge them on the GPU.
+			owner = &m_slot_buffers[FindBuffer(vaddr, size)];
+			TouchBuffer(*owner);
+			TraceImageUpload(vaddr, size, "owner:merged");
+			return {owner, owner->Offset(vaddr)};
+		}
+		TraceImageUpload(vaddr, size, owner != nullptr ? (cpu_modified ? "staging:cpu-dirty" : "staging:gpu")
+		                                               : "staging:no-owner");
 		if (has_dirty_buffer_source && owner == nullptr) {
 			EXIT("BufferCache: GPU-dirty image source could not resolve its native owner\n");
 		}
@@ -909,6 +957,9 @@ void BufferCache::RunGarbageCollector() {
 		const bool dirty = m_memory_tracker.IsRegionGpuModified(buffer.CpuAddress(), buffer.Size());
 		if (dirty && !aggressive) {
 			return false;
+		}
+		if (buffer.prefetch_pending && !aggressive) {
+			return false; // streamed data waiting for its first bind
 		}
 		if (dirty) {
 			m_memory_tracker.ForEachDownloadRange<false>(
@@ -1205,6 +1256,265 @@ uint64_t BufferCache::LastGpuWriteSeq(uint64_t vaddr, uint64_t size, bool includ
 		}
 	}
 	return result;
+}
+
+// --- Texture streaming prefetch -------------------------------------------------------------
+// ASTRO BOT streams textures with file reads into fixed slots of its GPU heaps and binds them
+// hundreds of milliseconds (or tens of seconds) later, up to 1 GB at a scene cut. Without
+// prefetch every one of those images is copied guest -> staging in the cut frame (60-100 ms of
+// memcpy). Reads are queued here and synchronized into native buffers ahead of time; the image
+// upload then takes the "owner" path of ObtainBufferForImage.
+
+namespace {
+
+bool StreamPrefetchEnabled() {
+	static const bool enabled = [] {
+		// Experimental (session 21): ahead-of-time synchronization of streamed file data into
+		// native buffers. Halves the staging copies at scene cuts but doubles VRAM use and adds
+		// GC churn (worse p99); off until the mirror has its own budget and eviction policy.
+		const char* value = std::getenv("KYTY_STREAM_PREFETCH");
+		return value != nullptr && value[0] == '1';
+	}();
+	return enabled;
+}
+
+uint64_t StreamPrefetchBudgetNs() {
+	static const uint64_t budget = [] {
+		const char* value = std::getenv("KYTY_STREAM_PREFETCH_US");
+		return (value != nullptr ? std::strtoull(value, nullptr, 10) : 3000ull) * 1000ull;
+	}();
+	return budget;
+}
+
+uint64_t StreamNowNs() {
+	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+	                                 std::chrono::steady_clock::now().time_since_epoch())
+	                                 .count());
+}
+
+} // namespace
+
+void BufferCache::NoteStreamedRead(uint64_t vaddr, uint64_t size) {
+	if (!StreamPrefetchEnabled() || !GuestRange {vaddr, size}.Valid()) {
+		return;
+	}
+	std::lock_guard lock(m_streamed_mutex);
+	if (m_streamed_ranges.size() >= 16384) {
+		m_streamed_ranges.erase(m_streamed_ranges.begin(),
+		                        m_streamed_ranges.begin() + m_streamed_ranges.size() / 2);
+	}
+	m_streamed_ranges.emplace_back(vaddr, size);
+}
+
+bool BufferCache::IsRegionFullyRegistered(uint64_t vaddr, uint64_t size) {
+	// Every byte of [vaddr, vaddr + size) belongs to a live cached buffer.
+	auto cursor = vaddr;
+	const auto end = vaddr + size;
+	while (cursor < end) {
+		auto it = m_buffers.upper_bound(cursor);
+		if (it == m_buffers.begin()) {
+			return false;
+		}
+		--it;
+		const auto& buffer = m_slot_buffers[it->second];
+		const auto  begin  = buffer.CpuAddress();
+		const auto  stop   = begin + buffer.Size();
+		if (begin > cursor || stop <= cursor) {
+			return false;
+		}
+		cursor = stop;
+	}
+	return true;
+}
+
+void BufferCache::PrefetchStreamedRanges() {
+	if (!StreamPrefetchEnabled() || m_scheduler.Current().IsInvalid()) {
+		return;
+	}
+	{
+		std::lock_guard lock(m_streamed_mutex);
+		if (!m_streamed_ranges.empty()) {
+			m_streamed_pending.insert(m_streamed_pending.end(), m_streamed_ranges.begin(),
+			                          m_streamed_ranges.end());
+			m_streamed_ranges.clear();
+		}
+	}
+	if (m_streamed_pending.empty()) {
+		return;
+	}
+	const auto frame = m_scheduler.Context().GetGpu().GetFrameNum();
+	if (frame != m_streamed_frame) {
+		m_streamed_frame    = frame;
+		m_streamed_spent_ns = 0;
+	}
+	const auto budget = StreamPrefetchBudgetNs();
+	if (m_streamed_spent_ns >= budget) {
+		return;
+	}
+	static const uint64_t pending_cap = [] {
+		const char* value = std::getenv("KYTY_STREAM_PREFETCH_MB");
+		return (value != nullptr ? std::strtoull(value, nullptr, 10) : 2048ull) << 20u;
+	}();
+	if (m_prefetch_pending_bytes >= pending_cap) {
+		m_streamed_pending.clear(); // over budget: these will take the staging path when bound
+		return;
+	}
+	// Coalesce: consecutive chunks of one file arrive as separate reads.
+	auto& pending = m_streamed_pending;
+	std::sort(pending.begin(), pending.end());
+	std::vector<std::pair<uint64_t, uint64_t>> merged;
+	merged.reserve(pending.size());
+	for (const auto& [addr, size]: pending) {
+		if (!merged.empty() && addr <= merged.back().first + merged.back().second) {
+			merged.back().second =
+			    std::max(merged.back().first + merged.back().second, addr + size) - merged.back().first;
+		} else {
+			merged.emplace_back(addr, size);
+		}
+	}
+	pending.clear();
+
+	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	const auto        t0    = StreamNowNs();
+	uint64_t          bytes = 0;
+	uint32_t          done  = 0;
+	size_t            index = 0;
+	for (; index < merged.size(); index++) {
+		if (m_streamed_spent_ns + (StreamNowNs() - t0) >= budget) {
+			break;
+		}
+		const auto [addr, size] = merged[index];
+		if (!m_memory_tracker.IsRegionCpuModified(addr, size) ||
+		    m_memory_tracker.IsRegionGpuModified(addr, size)) {
+			continue; // already synchronized, or GPU data that must not be overwritten
+		}
+		// Memory reused for a thread stack must never be write-protected by us: hold the gate so
+		// that a stack registered during the synchronization waits and then unprotects itself.
+		// The buffer is page-rounded (CreateBuffer) and later synchronizations cover the whole
+		// buffer: test the rounded range.
+		const auto rounded_begin = addr & ~(CACHING_PAGESIZE - 1);
+		const auto rounded_end   = (addr + size + CACHING_PAGESIZE - 1) & ~(CACHING_PAGESIZE - 1);
+		Libs::LibKernel::Memory::LockGuestStackGate();
+		if (Libs::LibKernel::Memory::OverlapsGuestStack(rounded_begin, rounded_end - rounded_begin)) {
+			Libs::LibKernel::Memory::UnlockGuestStackGate();
+			continue;
+		}
+		if (trace) {
+			LOGF("StreamPrefetch: obtain addr=0x%016" PRIx64 " size=0x%" PRIx64 "\n", addr, size);
+		}
+		// Edge pages owned by a neighbouring buffer (consecutive reads share a cache page) are
+		// synchronized in place and left out, so the new buffer never overlaps and never joins.
+		auto begin = addr;
+		auto end   = addr + size;
+		const auto owned_by_other = [&](uint64_t page_addr) {
+			const auto* owner = m_page_table.Find(page_addr >> PageTable::kPageBits);
+			return owner != nullptr && *owner;
+		};
+		if (owned_by_other(rounded_begin)) {
+			const auto page_end = std::min(rounded_begin + CACHING_PAGESIZE, end);
+			(void)ObtainBuffer(begin, page_end - begin, false, false);
+			begin = page_end;
+		}
+		if (begin < end && owned_by_other(rounded_end - CACHING_PAGESIZE) &&
+		    rounded_end - CACHING_PAGESIZE >= begin) {
+			const auto page_begin = std::max(rounded_end - CACHING_PAGESIZE, begin);
+			(void)ObtainBuffer(page_begin, end - page_begin, false, false);
+			end = page_begin;
+		}
+		if (begin >= end) {
+			Libs::LibKernel::Memory::UnlockGuestStackGate();
+			bytes += size;
+			done++;
+			continue;
+		}
+		auto [prefetched, prefetched_offset] = ObtainBuffer(begin, end - begin, false, false);
+		(void)prefetched_offset;
+		if (prefetched != nullptr && !prefetched->prefetch_pending && prefetched != &m_stream_buffer) {
+			prefetched->prefetch_pending = true;
+			m_prefetch_pending_bytes += prefetched->Size();
+		}
+		Libs::LibKernel::Memory::UnlockGuestStackGate();
+		bytes += size;
+		done++;
+	}
+	// Leftover goes back to the queue for the next slice.
+	pending.insert(pending.end(), merged.begin() + index, merged.end());
+	const auto spent = StreamNowNs() - t0;
+	m_streamed_spent_ns += spent;
+	if (Common::FrameStats::Enabled()) {
+		Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites, "stream-prefetch", spent);
+	}
+	if (trace && (done != 0 || !pending.empty())) {
+		static std::atomic<uint32_t> log_count {0};
+		if (log_count.fetch_add(1) < 4096) {
+			LOGF("StreamPrefetch: frame=%d ranges=%u bytes=%" PRIu64 " us=%" PRIu64 " left=%zu\n", frame,
+			     done, bytes, spent / 1000u, pending.size());
+		}
+	}
+}
+
+void BufferCache::DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size) {
+	if (!GuestRange {vaddr, size}.Valid()) {
+		return;
+	}
+	std::vector<BufferId> ids;
+	{
+		auto it = m_buffers.lower_bound(vaddr + size);
+		while (it != m_buffers.begin()) {
+			--it;
+			const auto& buffer = m_slot_buffers[it->second];
+			if (buffer.CpuAddress() + buffer.Size() <= vaddr) {
+				break;
+			}
+			ids.push_back(it->second);
+		}
+	}
+	if (ids.empty()) {
+		static const bool trace0 = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+		if (trace0) {
+			std::fprintf(stderr, "GuestStack: no buffers for stack 0x%016llx size=0x%llx" "\n",
+			             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size));
+			std::fflush(stderr);
+		}
+		return;
+	}
+	std::vector<DownloadCopy> copies;
+	std::vector<BufferId>     dirty_buffers;
+	for (const auto id: ids) {
+		auto& buffer = m_slot_buffers[id];
+		if (m_memory_tracker.IsRegionGpuModified(buffer.CpuAddress(), buffer.Size())) {
+			m_memory_tracker.ForEachDownloadRange<false>(
+			    buffer.CpuAddress(), buffer.Size(), [&](uint64_t, uint64_t) noexcept {},
+			    [&](uint64_t dirty_address, uint64_t dirty_size) noexcept {
+				    m_gpu_modified_ranges.ForEachIntersection(
+				        dirty_address, dirty_size, [&](RangeSet::Range range) {
+					        copies.push_back({&buffer, range.address - buffer.CpuAddress(),
+					                          range.address, range.size});
+				        });
+			    });
+			dirty_buffers.push_back(id);
+		} else {
+			m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
+			DeleteBuffer(id);
+		}
+	}
+	if (!copies.empty()) {
+		DownloadBufferMemory(copies);
+	}
+	for (const auto id: dirty_buffers) {
+		auto& buffer = m_slot_buffers[id];
+		m_memory_tracker.UnmarkRegionAsGpuModified(buffer.CpuAddress(), buffer.Size());
+		m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
+		DeleteBuffer(id);
+	}
+	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	if (trace) {
+		std::fprintf(stderr, "GuestStack: released %zu buffers for stack 0x%016llx size=0x%llx" "\n", ids.size(),
+		             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size));
+		std::fflush(stderr);
+		LOGF("GuestStack: released %zu buffers (%zu gpu-dirty) for stack 0x%016" PRIx64 " size=0x%" PRIx64 "\n",
+		     ids.size(), dirty_buffers.size(), vaddr, size);
+	}
 }
 
 void BufferCache::PrefetchHotReadbacks() {

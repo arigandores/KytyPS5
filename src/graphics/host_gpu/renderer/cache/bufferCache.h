@@ -61,6 +61,7 @@ public:
 	[[nodiscard]] Buffer* GetBdaPageTableBuffer() noexcept { return &m_bda_pagetable_buffer; }
 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return m_fault_manager.GetFaultBuffer(); }
 	[[nodiscard]] std::pair<Buffer*, uint64_t> ObtainBufferForImage(uint64_t vaddr, uint64_t size);
+	static void TraceImageUpload(uint64_t vaddr, uint64_t size, const char* path);
 	void FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds);
 	void CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
 	                bool src_gds);
@@ -76,6 +77,14 @@ public:
 	// after the GPU wrote them, so that the next CPU read finds the page clean instead of
 	// draining the GPU queue on the GPU thread. Called at the end of every submission slice.
 	void PrefetchHotReadbacks();
+	// Texture streaming prefetch: file reads queue their destination range (any thread); the GPU
+	// thread synchronizes queued ranges into native buffers under a per-frame budget so that the
+	// image upload at a scene cut finds a synchronized owner instead of copying guest memory.
+	void NoteStreamedRead(uint64_t vaddr, uint64_t size);
+	void PrefetchStreamedRanges();
+	// Drops every cached buffer intersecting the range (GPU-written bytes are downloaded first) and
+	// untracks its pages: used when guest memory becomes a thread stack.
+	void DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size);
 	// A readback split into the GPU-thread part (record the copies, submit) and the waiting part
 	// (done by the guest thread that needs the data), see ReadMemory.
 	struct ReadbackPiece {
@@ -112,7 +121,7 @@ private:
 	}
 	[[nodiscard]] static std::pair<uint64_t, uint64_t> DownloadEnvelope(const DownloadCopy& copy);
 	void WriteDataBuffer(Buffer& buffer, uint64_t address, const void* source, uint64_t size);
-	void TouchBuffer(const Buffer& buffer);
+	void TouchBuffer(Buffer& buffer);
 	[[nodiscard]] OverlapResult ResolveOverlaps(uint64_t vaddr, uint64_t size);
 	void JoinOverlap(BufferId new_id, BufferId overlap_id, bool accumulate_stream_score);
 	[[nodiscard]] BufferId CreateBuffer(uint64_t vaddr, uint64_t size);

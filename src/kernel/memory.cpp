@@ -930,6 +930,91 @@ void InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	(void)GetGpuResources().InvalidateMemory(vaddr, size);
 }
 
+// The whole range lies in direct memory (KernelMapDirectMemory): the game's GPU heaps. Thread
+// stacks and flexible/pooled memory are excluded on purpose - synchronizing (write-protecting)
+// a thread's own stack kills the process at the next exception dispatch.
+bool IsDirectMemoryRange(uint64_t vaddr, uint64_t size) {
+	if (size == 0 || g_virtual_ranges == nullptr || UINT64_MAX - vaddr < size) {
+		return false;
+	}
+	auto       cursor = vaddr;
+	const auto end    = vaddr + size;
+	while (cursor < end) {
+		VirtualRanges::Range range {};
+		if (!g_virtual_ranges->Query(cursor, 0, &range) || range.type != VirtualRangeType::Direct) {
+			return false;
+		}
+		cursor = range.start + range.size;
+	}
+	return true;
+}
+
+static Common::Mutex                              g_guest_stacks_mutex;
+static Common::Mutex                              g_guest_stack_gate;
+
+void LockGuestStackGate() {
+	g_guest_stack_gate.Lock();
+}
+
+void UnlockGuestStackGate() {
+	g_guest_stack_gate.Unlock();
+}
+static std::vector<std::pair<uint64_t, uint64_t>> g_guest_stacks;
+
+void RegisterGuestStack(uint64_t vaddr, uint64_t size) {
+	if (vaddr == 0 || size == 0) {
+		return;
+	}
+	{
+		Common::LockGuard gate(g_guest_stack_gate);
+		Common::LockGuard lock(g_guest_stacks_mutex);
+		bool              found = false;
+		for (auto& [addr, len]: g_guest_stacks) {
+			if (addr == vaddr) {
+				len   = size;
+				found = true;
+			}
+		}
+		if (!found) {
+			g_guest_stacks.emplace_back(vaddr, size);
+		}
+	}
+	// The memory may have been a streamed file buffer before the game's allocator reused it for
+	// this stack. Only the stream prefetch creates buffers over arbitrary heap memory; with it on,
+	// the buffers overlapping the stack are released on the GPU thread so that no later
+	// synchronization can write-protect a live stack (fatal: exceptions cannot be dispatched).
+	static const bool prefetch = [] {
+		const char* value = std::getenv("KYTY_STREAM_PREFETCH");
+		return value != nullptr && value[0] == '1';
+	}();
+	if (prefetch && g_gpu_resources != nullptr) {
+		g_gpu_resources->ReleaseGuestStack(vaddr, size);
+	}
+}
+
+void UnregisterGuestStack(uint64_t vaddr) {
+	Common::LockGuard lock(g_guest_stacks_mutex);
+	std::erase_if(g_guest_stacks, [vaddr](const auto& stack) { return stack.first == vaddr; });
+}
+
+bool OverlapsGuestStack(uint64_t vaddr, uint64_t size) {
+	Common::LockGuard lock(g_guest_stacks_mutex);
+	for (const auto& [addr, len]: g_guest_stacks) {
+		if (addr < vaddr + size && vaddr < addr + len) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void NoteStreamedRead(uint64_t vaddr, uint64_t size) {
+	if (size == 0 || g_gpu_resources == nullptr || !IsDirectMemoryRange(vaddr, size) ||
+	    OverlapsGuestStack(vaddr, size)) {
+		return;
+	}
+	g_gpu_resources->NoteStreamedRead(vaddr, size);
+}
+
 void InstallGpuResources(Graphics::GpuResourceManager* resources) noexcept {
 	EXIT_IF(resources != nullptr && g_gpu_resources != nullptr);
 	g_gpu_resources = resources;

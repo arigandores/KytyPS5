@@ -52,8 +52,35 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 		return EXCEPTION_CONTINUE_EXECUTION;
 	}
 
-	ExceptionInfo info {};
-	info.exception_address = reinterpret_cast<uint64_t>(exception_record->ExceptionAddress);
+	{
+		// Diagnostics: nested faults (a fault inside the fault handler) and non-AV exceptions.
+		static thread_local int depth = 0;
+		struct DepthGuard {
+			int& d;
+			explicit DepthGuard(int& v): d(v) { d++; }
+			~DepthGuard() { d--; }
+		};
+		static DepthGuard* dummy = nullptr;
+		(void)dummy;
+		if (depth > 0 || (exception_record->ExceptionCode != EXCEPTION_ACCESS_VIOLATION &&
+		                  exception_record->ExceptionCode != EXCEPTION_ILLEGAL_INSTRUCTION)) {
+			static std::atomic<int> logged {0};
+			if (logged.fetch_add(1) < 16) {
+				fprintf(stderr, "Exception: code=0x%08lx depth=%d rip=0x%016llx addr=0x%016llx tid=%lu" "\n",
+				        static_cast<unsigned long>(exception_record->ExceptionCode), depth,
+				        reinterpret_cast<unsigned long long>(exception_record->ExceptionAddress),
+				        static_cast<unsigned long long>(exception_record->ExceptionInformation[1]),
+				        static_cast<unsigned long>(GetCurrentThreadId()));
+				fflush(stderr);
+			}
+		}
+		depth++;
+		struct Leave {
+			int& d;
+			~Leave() { d--; }
+		} leave {depth};
+		ExceptionInfo info {};
+		info.exception_address = reinterpret_cast<uint64_t>(exception_record->ExceptionAddress);
 	info.native_code       = exception_record->ExceptionCode;
 	info.native_context    = exception->ContextRecord;
 
@@ -135,7 +162,23 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 			return EXCEPTION_CONTINUE_EXECUTION;
 		}
 	}
+	// Unresolved: the process is about to die silently. Leave a trace of where.
+	{
+		const auto base = reinterpret_cast<uint64_t>(GetModuleHandleW(nullptr));
+		fprintf(stderr,
+		        "Unhandled exception: code=0x%08lx rip=0x%016llx (+0x%llx) addr=0x%016llx access=%d tid=%lu"
+		        " rsp=0x%016llx" "\n",
+		        static_cast<unsigned long>(info.native_code),
+		        static_cast<unsigned long long>(info.exception_address),
+		        static_cast<unsigned long long>(info.exception_address - base),
+		        static_cast<unsigned long long>(info.access_violation_vaddr),
+		        static_cast<int>(info.access_violation_type),
+		        static_cast<unsigned long>(GetCurrentThreadId()),
+		        static_cast<unsigned long long>(info.rsp));
+		fflush(stderr);
+	}
 	return EXCEPTION_CONTINUE_SEARCH;
+	}
 }
 
 #elif defined(__APPLE__)

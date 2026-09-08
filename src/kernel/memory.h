@@ -116,6 +116,17 @@ bool                   TryReadPrtBacking(uint64_t vaddr, void* data, uint64_t si
 [[nodiscard]] uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size);
 void                   WriteBacking(uint64_t vaddr, const void* data, uint64_t size) noexcept;
 void                   InvalidateMemory(uint64_t vaddr, uint64_t size);
+// A file read completed into [vaddr, vaddr + size): the GPU thread may synchronize the range
+// into a native buffer ahead of its first use (texture streaming prefetch).
+void                   NoteStreamedRead(uint64_t vaddr, uint64_t size);
+// Guest stacks (threads, fibers): ranges the GPU caches must never write-protect on their own.
+void                   RegisterGuestStack(uint64_t vaddr, uint64_t size);
+void                   UnregisterGuestStack(uint64_t vaddr);
+[[nodiscard]] bool     OverlapsGuestStack(uint64_t vaddr, uint64_t size);
+// Held by the GPU thread around "check for stacks + synchronize" so that a stack registered
+// meanwhile cannot end up write-protected: RegisterGuestStack waits for it.
+void                   LockGuestStackGate();
+void                   UnlockGuestStackGate();
 // Debug: state of the GPU memory tracker for a range (all false when the range is not GPU memory).
 struct GpuTrackingState {
 	bool gpu_range       = false;

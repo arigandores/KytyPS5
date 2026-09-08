@@ -1159,6 +1159,8 @@ void PthreadInitSelfForMainThread() {
 #endif
 	g_pthread_self->host_thread_id = os_thread_id;
 	g_pthread_main                 = g_pthread_self;
+	Memory::RegisterGuestStack(reinterpret_cast<uint64_t>(g_pthread_self->attr->stack_addr),
+	                           static_cast<uint64_t>(g_pthread_self->attr->stack_size));
 	Libs::g_print_name_thread_forced = PrintNamesForThread("MainThread");
 
 	LOGF("\tPthread main self: id = %d, os_thread_id = %" PRIu64 ", stack_addr = 0x%016" PRIx64
@@ -3456,6 +3458,9 @@ static void CleanupThread(void* arg) {
 	auto* rt = Common::Singleton<Loader::RuntimeLinker>::Instance();
 	rt->DeleteTlss(thread->unique_id);
 
+	if (thread->attr != nullptr) {
+		Memory::UnregisterGuestStack(reinterpret_cast<uint64_t>(thread->attr->stack_addr));
+	}
 	thread->almost_done = true;
 }
 
@@ -3522,6 +3527,9 @@ static void* RunThread(void* arg) {
 			LOGF("TlsTrace: gate opened by thread %s\n", thread->name.c_str());
 		}
 	}
+
+	Memory::RegisterGuestStack(reinterpret_cast<uint64_t>(thread->attr->stack_addr),
+	                           static_cast<uint64_t>(thread->attr->stack_size));
 
 	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-cstyle-cast)
 	pthread_cleanup_push(CleanupThread, thread);

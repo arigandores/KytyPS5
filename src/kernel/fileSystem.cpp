@@ -770,6 +770,9 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	// Mark the region dirty again now that the data is complete.
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
 	StreamTraceEnd(stream_read, buf, bytes_read, Common::PathToString(file->real_name).c_str());
+	if (bytes_read >= (64u << 10)) {
+		Memory::NoteStreamedRead(reinterpret_cast<uint64_t>(buf), bytes_read);
+	}
 
 	file->mutex.Unlock();
 
@@ -911,12 +914,15 @@ int64_t KYTY_SYSV_ABI KernelPread(int d, void* buf, size_t nbytes, int64_t offse
 	                         std::min<uint64_t>(nbytes, remaining));
 	uint32_t bytes_read = 0;
 	file->f.Seek(offset);
-	file->f.Read(buf, static_cast<uint32_t>(nbytes), &bytes_read);
+	ReadGuestWithRetry(file, buf, nbytes, static_cast<uint64_t>(offset), remaining, &bytes_read);
 	file->f.Seek(pos);
 	StreamTraceMid(stream_read, buf, bytes_read);
 	// See KernelRead: re-mark the region CPU-dirty once the data is complete.
 	Memory::InvalidateMemory(reinterpret_cast<uint64_t>(buf), bytes_read);
 	StreamTraceEnd(stream_read, buf, bytes_read, Common::PathToString(file->real_name).c_str());
+	if (bytes_read >= (64u << 10)) {
+		Memory::NoteStreamedRead(reinterpret_cast<uint64_t>(buf), bytes_read);
+	}
 
 	file->mutex.Unlock();
 

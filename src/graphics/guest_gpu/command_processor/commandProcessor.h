@@ -90,6 +90,7 @@ public:
 	                        uint32_t event_write_source, void* dst_gpu_addr, uint64_t value,
 	                        uint32_t interrupt_selector, uint32_t interrupt_context_id = 0);
 	void Flip();
+	void MarkFlipIfIncomplete(CommandBuffer& command, uint64_t request_id);
 	void Flip(void* dst_gpu_addr, uint32_t value);
 	void FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action, void* dst_gpu_addr,
 	                       uint32_t value);

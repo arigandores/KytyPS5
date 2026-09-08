@@ -38,6 +38,9 @@ public:
 	void CompleteFlip(uint64_t request_id);
 	void SubmitFlipPreparation(uint64_t request_id);
 	void WaitForSubmitSlot();
+	// The frame of this GPU flip request is incomplete (draws skipped while their pipelines
+	// compile): with KYTY_ASYNC_HOLD_FRAME the flip completes without presenting it.
+	void MarkFlipIncomplete(uint64_t request_id);
 	void WaitFlipDone(int handle, int index);
 
 	[[nodiscard]] Impl& State() noexcept;

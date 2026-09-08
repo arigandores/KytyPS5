@@ -1928,6 +1928,14 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 	}
 }
 
+// Draws skipped since the previous flip (pipelines still compiling) make this frame incomplete:
+// the video-out keeps the previous image instead of presenting it (KYTY_ASYNC_HOLD_FRAME).
+void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t request_id) {
+	if (m_renderer.GetRenderExecutor().TakeSkippedDraws() != 0) {
+		command.GetContext().GetVideoOut().MarkFlipIncomplete(request_id);
+	}
+}
+
 void CommandProcessor::Flip() {
 	CheckBuffer();
 
@@ -1938,6 +1946,7 @@ void CommandProcessor::Flip() {
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	MarkFlipIfIncomplete(command, request);
 	Sync::WriteAtEndOfPipeOnlyFlip(m_submit_id, command, m_flip.handle, m_flip.index,
 	                               m_flip.flip_mode, m_flip.flip_arg, request);
 	Common::FrameStats::SiteScope site_scope("flip");
@@ -1958,6 +1967,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	MarkFlipIfIncomplete(command, request);
 	Sync::WriteAtEndOfPipeWithFlip32(m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr),
 	                                 value, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                 m_flip.flip_arg, request);
@@ -1985,6 +1995,7 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
+	MarkFlipIfIncomplete(command, request);
 	Sync::WriteAtEndOfPipeWithInterruptWriteBackFlip32(
 	    m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr), value, m_flip.handle,
 	    m_flip.index, m_flip.flip_mode, m_flip.flip_arg, request, m_interrupt_event_id);

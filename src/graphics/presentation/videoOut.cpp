@@ -211,6 +211,7 @@ public:
 	void Prepare(uint64_t request_id, Graphics::CommandBuffer& buffer);
 	void Complete(uint64_t request_id);
 	void WaitForSubmitSlot();
+	void MarkIncomplete(uint64_t request_id);
 	bool Flip(uint32_t micros);
 	void GetFlipStatus(VideoOutConfig& cfg, VideoOutFlipStatus& out);
 	void Wait(VideoOutConfig& cfg, int index);
@@ -229,6 +230,7 @@ private:
 		FlipRequestSource           source;
 		RequestState                state;
 		Graphics::Presenter::Frame* frame;
+		bool                        incomplete = false;
 	};
 
 	Graphics::Presenter& m_presenter;
@@ -1069,6 +1071,16 @@ void FlipQueue::Complete(uint64_t request_id) {
 	}
 }
 
+void FlipQueue::MarkIncomplete(uint64_t request_id) {
+	Common::LockGuard lock(m_mutex);
+	for (auto& request: m_requests) {
+		if (request.id == request_id) {
+			request.incomplete = true;
+			return;
+		}
+	}
+}
+
 void FlipQueue::WaitForSubmitSlot() {
 	Common::LockGuard lock(m_mutex);
 	while (m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) {
@@ -1132,7 +1144,20 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_requests.front().state = RequestState::Presenting;
 	m_mutex.Unlock();
 
-	m_presenter.Present(*r.frame);
+	static const bool hold_incomplete = [] {
+		const char* value = std::getenv("KYTY_ASYNC_HOLD_FRAME");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (r.incomplete && hold_incomplete) {
+		// Keep the previously presented image on screen instead of a frame with missing draws.
+		static std::atomic<uint32_t> held {0};
+		if (held.fetch_add(1, std::memory_order_relaxed) < 64) {
+			LOGF("AsyncPipelines: flip %" PRIu64 " held (incomplete frame)\n", r.id);
+		}
+		m_presenter.Discard(*r.frame);
+	} else {
+		m_presenter.Present(*r.frame);
+	}
 	Graphics::RenderDocOnGuestFlip();
 
 	m_mutex.Lock();
@@ -1674,6 +1699,10 @@ void VideoOutDriver::CompleteFlip(uint64_t request_id) {
 
 void VideoOutDriver::WaitForSubmitSlot() {
 	m_impl->GetFlipQueue().WaitForSubmitSlot();
+}
+
+void VideoOutDriver::MarkFlipIncomplete(uint64_t request_id) {
+	m_impl->GetFlipQueue().MarkIncomplete(request_id);
 }
 
 void VideoOutDriver::WaitFlipDone(int handle, int index) {

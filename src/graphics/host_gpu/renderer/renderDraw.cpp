@@ -1394,11 +1394,29 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (log_pipeline_phase) {
 		LogDrawPhase(draw.name, "CreatePipeline");
 	}
-	auto& pipeline = m_context.GetPipelineCache().CreateGraphicsPipeline(
+	auto* pipeline_ptr = m_context.GetPipelineCache().CreateGraphicsPipeline(
 	    std::span {state.color_info, state.color_count}, state.depth_info, state.vs_input_info, buffer,
 	    state.ps_active ? &state.ps_input_info : nullptr, topology, primitive_restart_enable,
 	    state.programs.vertex, state.programs.pixel);
 	lap.Mark(Common::FrameStats::Counter::DrawPipelineNs);
+	if (pipeline_ptr == nullptr) {
+		// The pipeline is being compiled by a worker thread (KYTY_ASYNC_PIPELINES): skip the draw
+		// instead of freezing the frame; the caller resets the bindings.
+		static std::atomic<uint32_t> skipped {0};
+		const auto                   n = skipped.fetch_add(1, std::memory_order_relaxed);
+		m_skipped_draws.fetch_add(1, std::memory_order_relaxed);
+		if (n < 200000u) {
+			const auto& vs = state.vs_input_info.stage;
+			const auto& ps = state.ps_input_info.stage;
+			LOGF("AsyncPipelines: skipped draw %s frame=%d vs=0x%016" PRIx64 " ps=0x%016" PRIx64
+			     " pending=%u total_skipped=%u\n",
+			     draw.name, m_context.GetGpu().GetFrameNum(), vs ? vs.program->shader_hash : 0u,
+			     (state.ps_active && ps) ? ps.program->shader_hash : 0u,
+			     m_context.GetPipelineCache().PendingPipelineCount(), n + 1u);
+		}
+		return;
+	}
+	auto& pipeline = *pipeline_ptr;
 
 	// Resource preparation above may synchronously finish and restart the scheduler. From this
 	// point onward, every operation targets the current command buffer and cannot touch guest

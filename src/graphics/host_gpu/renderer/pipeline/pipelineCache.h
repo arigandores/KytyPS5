@@ -15,6 +15,14 @@
 #include <span>
 #include <type_traits>
 #include <unordered_map>
+#include <unordered_set>
+#include <atomic>
+#include <condition_variable>
+#include <deque>
+#include <functional>
+#include <mutex>
+#include <thread>
+#include <vector>
 
 namespace Libs::Graphics {
 
@@ -143,7 +151,9 @@ public:
 	                                const HW::ShaderRegisters&   sh,
 	                                ShaderComputeInputInfo&      input_info);
 
-	GraphicsPipeline&
+	// nullptr: the pipeline is still being compiled by a worker thread (KYTY_ASYNC_PIPELINES); the
+	// caller skips the draw and retries with the next one that needs the same pipeline.
+	GraphicsPipeline*
 	CreateGraphicsPipeline(std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
 	                       const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
 	                       const ShaderPixelInputInfo* ps_input_info,
@@ -151,6 +161,12 @@ public:
 	                       const ShaderProgram& vertex_program, const ShaderProgram& pixel_program);
 	ComputePipeline& CreateComputePipeline(ShaderComputeInputInfo& input_info,
 	                                       const ShaderProgram&    compute_program);
+	// Block until every queued graphics pipeline has been compiled.
+	void WaitForPendingPipelines();
+	// Pipelines whose compilation has not finished yet.
+	[[nodiscard]] uint32_t PendingPipelineCount() const {
+		return m_pending_pipelines.load(std::memory_order_relaxed);
+	}
 
 private:
 	struct ProgramCache;
@@ -233,9 +249,43 @@ private:
 	std::unique_ptr<ProgramCache> m_program_cache;
 	vk::PipelineCache             m_driver_cache = nullptr;
 	std::filesystem::path         m_driver_cache_path;
-	std::unordered_map<GraphicsPipelineKey, std::unique_ptr<GraphicsPipeline>,
+	// ready: the worker finished CreatePipelineInternal (release); the draw path reads the
+	// pipeline handles only after observing it (acquire).
+	struct GraphicsPipelineEntry: GraphicsPipeline {
+		std::atomic<bool> ready {false};
+	};
+	// Looks the pipeline up or queues its creation; `queued` = this call queued it. Called with
+	// m_mutex held; the entry may not be ready yet.
+	GraphicsPipelineEntry* CreateGraphicsPipelineLocked(
+	    std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
+	    const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
+	    const ShaderPixelInputInfo* ps_input_info, vk::PrimitiveTopology topology,
+	    bool primitive_restart_enable, const ShaderProgram& vertex_program,
+	    const ShaderProgram& pixel_program, bool& queued);
+	std::condition_variable m_ready_cv; // signalled (under m_job_mutex) when a pipeline is ready
+	std::unordered_map<GraphicsPipelineKey, std::unique_ptr<GraphicsPipelineEntry>,
 	                   GraphicsPipelineKeyHash>
 	    m_graphics_pipelines;
+	// Worker pool for asynchronous pipeline compilation.
+	std::vector<std::thread>          m_workers;
+	std::mutex                        m_job_mutex;
+	std::condition_variable           m_job_cv;
+	std::condition_variable           m_idle_cv;
+	std::deque<std::function<void()>> m_jobs;
+	uint32_t                          m_jobs_active  = 0;
+	bool                              m_stop_workers = false;
+	std::atomic<uint32_t>             m_pending_pipelines {0};
+	// (vs, ps) pairs with at least one finished pipeline: the driver has compiled both modules,
+	// so further state permutations are cheap re-links (~0.2 ms) and are created synchronously —
+	// only the first pipeline of a new shader pair goes to the worker pool (170-700 ms).
+	std::unordered_set<uint64_t>      m_ready_shader_pairs;
+	static uint64_t ShaderPairKey(uint64_t vs_id, uint64_t ps_id) {
+		return vs_id * 0x9e3779b97f4a7c15ull ^ (ps_id + 0x7f4a7c159e3779b9ull);
+	}
+	void StartWorkers();
+	void StopWorkers();
+	void WorkerLoop();
+	void EnqueueJob(std::function<void()> job);
 	std::unordered_map<ComputePipelineKey, std::unique_ptr<ComputePipeline>, ComputePipelineKeyHash>
 	              m_compute_pipelines;
 	Common::Mutex m_mutex;

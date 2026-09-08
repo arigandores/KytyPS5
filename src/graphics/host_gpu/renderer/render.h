@@ -10,6 +10,7 @@
 #include "graphics/host_gpu/renderer/renderTarget.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
+#include <atomic>
 #include <array>
 #include <memory>
 #include <optional>
@@ -235,6 +236,14 @@ private:
 	RenderContext&                        m_context;
 	std::unique_ptr<IndirectArgsSanitizer> m_indirect_sanitizer;
 	std::vector<ImageId>                  m_bound_images;
+	// Draws skipped because their pipeline was still compiling (KYTY_ASYNC_PIPELINES); read and
+	// reset at every flip to mark frames that must not be presented.
+	std::atomic<uint32_t>                 m_skipped_draws {0};
+
+public:
+	uint32_t TakeSkippedDraws() { return m_skipped_draws.exchange(0, std::memory_order_relaxed); }
+
+private:
 	std::vector<vk::DescriptorBufferInfo> m_descriptor_buffers;
 	std::vector<vk::DescriptorImageInfo>  m_descriptor_images;
 	std::vector<vk::WriteDescriptorSet>   m_descriptor_writes;

@@ -872,7 +872,7 @@ bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
 	       g_guest_address_space->TryGetBackingPointer(vaddr, size, pointer);
 }
 
-bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
+static bool IsGpuCleanRange(uint64_t vaddr, uint64_t size) {
 	if (g_gpu_resources != nullptr && IsGpuAddressRange(vaddr, size)) {
 		if (!Graphics::GuestGpu::IsGpuThread() ||
 		    GetGpuResources().GetBufferCache().HasGpuDirtyBytes(vaddr, size) ||
@@ -880,7 +880,15 @@ bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
 			return false;
 		}
 	}
-	return TryReadBacking(vaddr, data, size);
+	return true;
+}
+
+bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
+	return IsGpuCleanRange(vaddr, size) && TryReadBacking(vaddr, data, size);
+}
+
+bool TryGetGpuCleanBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
+	return IsGpuCleanRange(vaddr, size) && TryGetBackingPointer(vaddr, size, pointer);
 }
 
 GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size) {

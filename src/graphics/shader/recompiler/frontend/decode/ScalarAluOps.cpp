@@ -107,6 +107,13 @@ constexpr OpcodeMap SOPP_OPCODE_LIST[] = {
     {0x10u, Opcode::S_SENDMSG},
     {0x12u, Opcode::S_TRAP},
     {0x16u, Opcode::S_TTRACEDATA},
+    // S_CBRANCH_CDBGSYS / CDBGUSER / CDBGSYS_OR_USER / CDBGSYS_AND_USER branch only while a
+    // debugger has raised the corresponding condition; in normal execution they fall through, so
+    // they decode as no-ops (ASTRO BOT's NGG geometry shaders carry one).
+    {0x17u, Opcode::S_NOP},
+    {0x18u, Opcode::S_NOP},
+    {0x19u, Opcode::S_NOP},
+    {0x1au, Opcode::S_NOP},
     {0x20u, Opcode::S_INST_PREFETCH},
     {0x23u, Opcode::S_WAITCNT_DEPCTR},
 };

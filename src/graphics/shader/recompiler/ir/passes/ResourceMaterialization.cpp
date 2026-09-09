@@ -1127,25 +1127,6 @@ void ApplyResourceSpecialization(Program& program, const ResourceSpecialization&
 	EXIT_IF(!BuildSamplerPlan(program.info, images, sampler_plan));
 	auto samplers      = program.info.samplers;
 	auto sampled_pairs = program.info.sampled_pairs;
-	// A sampler shared between a shader-compared image and a natively compared one cannot serve
-	// both: make every image it touches shader-compared, then drop the host compare function.
-	for (bool changed = true; changed;) {
-		changed = false;
-		for (const auto& pair: sampled_pairs) {
-			if (pair.image >= images.size() || pair.sampler >= samplers.size()) {
-				continue;
-			}
-			if (images[pair.image].manual_depth_compare && samplers[pair.sampler].depth_compare) {
-				samplers[pair.sampler].depth_compare = false;
-				changed                              = true;
-			}
-			if (!samplers[pair.sampler].depth_compare && images[pair.image].depth_compare &&
-			    !images[pair.image].manual_depth_compare) {
-				images[pair.image].manual_depth_compare = true;
-				changed                                 = true;
-			}
-		}
-	}
 	samplers.reserve(sampler_plan.sampler_count);
 	for (uint32_t index = 0; index < program.info.samplers.size(); index++) {
 		const auto target = sampler_plan.point_sampler[index];
@@ -1167,6 +1148,27 @@ void ApplyResourceSpecialization(Program& program, const ResourceSpecialization&
 			pair.sampler = sampler_plan.point_sampler[pair.sampler];
 		}
 		samplers[pair.sampler].depth_compare |= images[pair.image].depth_compare;
+	}
+	// A sampler shared between a shader-compared image and a natively compared one cannot serve
+	// both: make every image it touches shader-compared, then drop the host compare function.
+	// Runs after the host compare flags are derived above, so an image whose sampler is only
+	// shared with natively compared images keeps the native dref path.
+	for (bool changed = true; changed;) {
+		changed = false;
+		for (const auto& pair: sampled_pairs) {
+			if (pair.image >= images.size() || pair.sampler >= samplers.size()) {
+				continue;
+			}
+			if (images[pair.image].manual_depth_compare && samplers[pair.sampler].depth_compare) {
+				samplers[pair.sampler].depth_compare = false;
+				changed                              = true;
+			}
+			if (!samplers[pair.sampler].depth_compare && images[pair.image].depth_compare &&
+			    !images[pair.image].manual_depth_compare) {
+				images[pair.image].manual_depth_compare = true;
+				changed                                 = true;
+			}
+		}
 	}
 
 	auto memory_info = program.memory_info;

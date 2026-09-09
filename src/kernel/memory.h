@@ -112,6 +112,9 @@ bool                   TryReadBacking(uint64_t vaddr, void* data, uint64_t size)
 // Host pointer to the backing of [vaddr, vaddr+size) when the range lies inside one mapping.
 bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
 bool                   TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size);
+// TryGetBackingPointer for a range without pending GPU writes (same test as
+// TryReadGpuCleanBacking, evaluated once for the whole range).
+bool TryGetGpuCleanBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
 bool                   TryReadPrtBacking(uint64_t vaddr, void* data, uint64_t size);
 [[nodiscard]] uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size);
 void                   WriteBacking(uint64_t vaddr, const void* data, uint64_t size) noexcept;

@@ -161,14 +161,6 @@ void PipelineCacheLog(fmt::format_string<Args...> format, Args&&... args) {
 	Log::Flush();
 }
 
-bool ReadShaderGuestMemory(void*, uint64_t address, uint32_t* value) {
-	if (Common::FrameStats::Enabled()) {
-		Common::FrameStats::Add(Common::FrameStats::Counter::ProgCleanReads, 1);
-	}
-	return value != nullptr &&
-	       Libs::LibKernel::Memory::TryReadGpuCleanBacking(address, value, sizeof(*value));
-}
-
 // Live guest memory for SRT walking. The evaluator falls back to a raw host memcpy when no
 // reader is installed, which turns an unmapped pointer in a descriptor chain into a host
 // access violation instead of a reported evaluation failure. The walk reads tens of words per
@@ -177,7 +169,42 @@ bool ReadShaderGuestMemory(void*, uint64_t address, uint32_t* value) {
 struct ShaderReadCache {
 	uint64_t       page    = UINT64_MAX;
 	const uint8_t* backing = nullptr;
+	// Page validated as free of pending GPU writes for the specialization ("clean") reads. The
+	// GPU-dirty state only changes between draws on this thread, so the cache is valid for the
+	// one materialization it lives through (the caller holds it on the stack).
+	uint64_t       clean_page    = UINT64_MAX;
+	const uint8_t* clean_backing = nullptr;
 };
+
+// Guest memory for specialization decisions: only words with no pending GPU writes may be read
+// (upstream reads them one at a time with a dirty-range query per word; the SRT control-flow
+// conditions add several per draw, so the whole page is validated once and reused).
+bool ReadShaderGuestMemory(void* userdata, uint64_t address, uint32_t* value) {
+	if (Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgCleanReads, 1);
+	}
+	if (value == nullptr) {
+		return false;
+	}
+	auto* cache = static_cast<ShaderReadCache*>(userdata);
+	constexpr uint64_t PageSize = 0x1000;
+	const auto         page     = address & ~(PageSize - 1);
+	if (cache != nullptr && (address & 3u) == 0) {
+		if (cache->clean_page != page) {
+			const void* backing = nullptr;
+			if (Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, PageSize, &backing)) {
+				cache->clean_page    = page;
+				cache->clean_backing = static_cast<const uint8_t*>(backing);
+			}
+		}
+		if (cache->clean_page == page) {
+			std::memcpy(value, cache->clean_backing + (address - page), sizeof(*value));
+			return true;
+		}
+	}
+	// The page is partly GPU-dirty or not one mapping: decide per word as before.
+	return Libs::LibKernel::Memory::TryReadGpuCleanBacking(address, value, sizeof(*value));
+}
 
 bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 	if (Common::FrameStats::Enabled()) {

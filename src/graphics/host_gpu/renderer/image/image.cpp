@@ -98,6 +98,19 @@ vk::ImageAspectFlags Image::FullAspectMask(vk::Format format) noexcept {
 	}
 }
 
+// A subresource nobody has touched yet (layout undefined, no access) has nothing to wait for:
+// its first transition needs no source stage. The default state says ALL_COMMANDS, which made
+// every freshly created image's first barrier drain the graphics pipeline - once per uploaded
+// texture, 300-450 times in a scene-cut frame. (Recycled memory is safe: an allocation is only
+// reused after the tick that last used it completed.) KYTY_UPLOAD_NARROW=0 keeps the drain.
+static vk::PipelineStageFlags2 SourceStageOf(const VulkanImageState& state) {
+	if (state.layout == vk::ImageLayout::eUndefined && !state.access_mask &&
+	    TileManager::NarrowUploadBarriers()) {
+		return vk::PipelineStageFlagBits2::eTopOfPipe;
+	}
+	return state.pl_stage;
+}
+
 Image::Barriers Image::GetBarriers(vk::ImageLayout                      destination_layout,
                                    vk::AccessFlags2                     destination_access,
                                    vk::PipelineStageFlags2              destination_stage,
@@ -138,7 +151,7 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 				if (subresource_state.layout != destination_layout ||
 				    subresource_state.access_mask != destination_access || repeated_write) {
 					vk::ImageMemoryBarrier2 barrier {};
-					barrier.srcStageMask                    = subresource_state.pl_stage;
+					barrier.srcStageMask                    = SourceStageOf(subresource_state);
 					barrier.srcAccessMask                   = subresource_state.access_mask;
 					barrier.dstStageMask                    = destination_stage;
 					barrier.dstAccessMask                   = destination_access;
@@ -172,7 +185,7 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 		}
 
 		vk::ImageMemoryBarrier2 barrier {};
-		barrier.srcStageMask                    = state.pl_stage;
+		barrier.srcStageMask                    = SourceStageOf(state);
 		barrier.srcAccessMask                   = state.access_mask;
 		barrier.dstStageMask                    = destination_stage;
 		barrier.dstAccessMask                   = destination_access;

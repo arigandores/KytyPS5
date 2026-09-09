@@ -229,6 +229,50 @@ bool TextureCache::SameBacking(const ImageInfo& cached, const ImageInfo& request
 	return true;
 }
 
+namespace {
+
+struct MipDeferConfig {
+	bool     enabled;
+	uint32_t levels;       // top levels left pending
+	uint64_t frame_bytes;  // frame upload volume after which uploads defer
+	uint64_t min_bytes;    // smallest deferred amount worth a second upload
+	uint64_t budget_bytes; // pending bytes completed per frame at sampled binds
+	bool     trace;
+};
+
+const MipDeferConfig& MipDefer() {
+	static const MipDeferConfig config = [] {
+		const auto env_u64 = [](const char* name, uint64_t fallback) {
+			const char* value = std::getenv(name);
+			return value != nullptr ? std::strtoull(value, nullptr, 10) : fallback;
+		};
+		const char* enabled = std::getenv("KYTY_MIP_DEFER");
+		return MipDeferConfig {
+		    .enabled = enabled == nullptr || enabled[0] != '0',
+		    .levels  = static_cast<uint32_t>(
+		        std::clamp<uint64_t>(env_u64("KYTY_MIP_DEFER_LEVELS", 1), 1, 8)),
+		    .frame_bytes  = env_u64("KYTY_MIP_DEFER_FRAME_MB", 32) << 20u,
+		    .min_bytes    = env_u64("KYTY_MIP_DEFER_MIN_KB", 256) << 10u,
+		    .budget_bytes = env_u64("KYTY_MIP_DEFER_BUDGET_MB", 64) << 20u,
+		    .trace        = std::getenv("KYTY_MIP_DEFER_TRACE") != nullptr,
+		};
+	}();
+	return config;
+}
+
+void MipDeferTrace(const char* what, const Image& image, uint64_t bytes) {
+	if (!MipDefer().trace) {
+		return;
+	}
+	LOGF("MipDefer: %s addr=0x%012" PRIx64 " size_kb=%" PRIu64 " %ux%u levels=%u layers=%u fmt=%u"
+	     " pending=%u bytes_kb=%" PRIu64 "\n",
+	     what, image.info.data.address, image.info.data.size / 1024u, image.info.extent.width,
+	     image.info.extent.height, image.info.resources.levels, image.info.resources.layers,
+	     static_cast<uint32_t>(image.info.guest_format), image.pending_levels, bytes / 1024u);
+}
+
+} // namespace
+
 TextureCache::BindingType TextureCache::UploadBinding(const Image& image) {
 	if (image.info.IsDepth()) {
 		if (image.info.tile_mode == Prospero::TileMode::kDepth ||
@@ -568,6 +612,7 @@ void TextureCache::ValidateImageDesc(const ImageDesc& desc) const {
 }
 
 void TextureCache::PrepareImageCopy(Image& image) {
+	CompletePendingUpload(image);
 	if (image.IsCpuDirty()) {
 		image.RefreshComplete();
 	}
@@ -928,7 +973,7 @@ ImageId TextureCache::ExpandImage(const ImageInfo& info, ImageId source_id) {
 	if (source.binding.is_bound || source.binding.is_target) {
 		source.binding.needs_rebind = true;
 	}
-	InitializeImage(expanded_id);
+	InitializeImage(expanded_id, false);
 	CopyImage(expanded_id, source_id);
 	FreeImage(source_id);
 	return expanded_id;
@@ -1070,13 +1115,15 @@ void TextureCache::DebugDumpImage(ImageId id, const std::string& name) {
 	     image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
 }
 
-void TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
-                               uint64_t source_size, bool source_is_host) {
+uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
+                                   uint64_t source_size, bool source_is_host,
+                                   uint32_t first_level, uint32_t level_count) {
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::ImgUploadNs,
 	                                       Common::FrameStats::Counter::ImgUploads);
-	Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, image.info.data.size);
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
+	const bool  partial = first_level != 0 || level_count < info.resources.levels;
+	uint64_t    bytes   = info.data.size;
 	const auto  upload  = [&](std::vector<vk::BufferImageCopy>& copies, TileManager::Result linear) {
 		for (auto& copy: copies) {
 			copy.bufferOffset += linear.offset;
@@ -1099,9 +1146,45 @@ void TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_
 			     info.resources.layers, info.samples);
 		}
 		TileManager::Result linear {source, source_offset, info.data.size};
+		uint64_t            linear_size = plan.LinearSize();
+		if (partial) {
+			// Keep the regions of the requested levels and their tiles (one per region for a
+			// non-volume texture); the linear scratch is rebased to the first kept region.
+			EXIT_IF(plan.tiles.size() != plan.regions.size() || first_level >= info.resources.levels);
+			std::vector<vk::BufferImageCopy> regions;
+			std::vector<GpuTileInfo>         tiles;
+			uint64_t                         base = UINT64_MAX;
+			bytes                                 = 0;
+			for (size_t i = 0; i < plan.regions.size(); i++) {
+				const auto level = plan.regions[i].imageSubresource.mipLevel;
+				if (level < first_level || level - first_level >= level_count) {
+					continue;
+				}
+				regions.push_back(plan.regions[i]);
+				tiles.push_back(plan.tiles[i]);
+				base = std::min(base, plan.tiles[i].linear_offset);
+			}
+			// Guest bytes of the kept levels (tail mips share a tile block; their tiled_size
+			// would overcount).
+			for (uint32_t level = first_level;
+			     level < std::min<uint32_t>(first_level + level_count, info.resources.levels); level++) {
+				bytes += info.mip_layout[level].size;
+			}
+			bytes = std::min(bytes, info.data.size);
+			EXIT_IF(regions.empty());
+			linear_size = 0;
+			for (size_t i = 0; i < tiles.size(); i++) {
+				EXIT_IF(regions[i].bufferOffset != tiles[i].linear_offset);
+				tiles[i].linear_offset -= base;
+				regions[i].bufferOffset -= base;
+				linear_size = std::max(linear_size, tiles[i].linear_offset + tiles[i].linear_size);
+			}
+			plan.regions = std::move(regions);
+			plan.tiles   = std::move(tiles);
+		}
 		if (!plan.tiles.empty()) {
-			linear = m_tiler.Detile(source, source_offset, info.data.size, plan.LinearSize(),
-			                        plan.tiles, source_is_host);
+			linear = m_tiler.Detile(source, source_offset, info.data.size, linear_size, plan.tiles,
+			                        source_is_host);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDetileDispatches,
 			                        plan.tiles.size());
 			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 1, info.data.size >> 20u);
@@ -1112,9 +1195,11 @@ void TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_
 		}
 		upload(plan.regions, linear);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ImgCopyRegions, plan.regions.size());
-		return;
+		Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, bytes);
+		return bytes;
 	}
 
+	EXIT_IF(partial);
 	if (info.samples != 1 || image.backing.samples != 1 ||
 	    info.resources.layers == 0 || info.data.size % info.resources.layers != 0 ||
 	    Prospero::NumBytesPerElement(info.guest_format) != info.bytes_per_block) {
@@ -1154,9 +1239,61 @@ void TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_
 		}
 	}
 	upload(copies, linear);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, bytes);
+	return bytes;
 }
 
-void TextureCache::InitializeImage(ImageId id) {
+void TextureCache::NoteUploadFrame() {
+	const auto frame = GpuTimeProfiler::Frame();
+	if (frame != m_upload_frame) {
+		m_upload_frame        = frame;
+		m_frame_upload_bytes  = 0;
+		m_frame_pending_bytes = 0;
+	}
+}
+
+uint32_t TextureCache::DeferrableLevels(const Image& image, bool source_imported) const {
+	const auto& config = MipDefer();
+	const auto& info   = image.info;
+	if (!config.enabled || !m_graphics.image_view_min_lod_enabled || !source_imported ||
+	    m_frame_upload_bytes < config.frame_bytes || UploadBinding(image) != BindingType::Texture ||
+	    info.IsDepth() || info.IsVolume() || info.samples != 1 || info.HasMetadata() ||
+	    info.bgra16 || info.tile_mode == Prospero::TileMode::kLinear ||
+	    info.resources.levels <= config.levels || info.resources.levels > info.mip_layout.size()) {
+		return 0;
+	}
+	uint64_t bytes = 0;
+	for (uint32_t level = 0; level < config.levels; level++) {
+		bytes += info.mip_layout[level].size;
+	}
+	return bytes >= config.min_bytes ? config.levels : 0;
+}
+
+void TextureCache::CompletePendingUpload(Image& image) {
+	if (image.pending_levels == 0) {
+		return;
+	}
+	Common::FrameStats::Scope init_scope(Common::FrameStats::Counter::ImgInitNs);
+	const auto source =
+	    m_buffer_cache.ObtainBufferForImage(image.info.data.address, image.info.data.size, true);
+	if (source.buffer == nullptr) {
+		EXIT("TextureCache: failed to obtain the source of a pending mip upload\n");
+	}
+	const auto levels    = image.pending_levels;
+	image.pending_levels = 0;
+	NoteUploadFrame();
+	const auto uploaded = UploadImage(image, source.buffer, source.offset, source.size,
+	                                  source.host_written, 0, levels);
+	m_frame_upload_bytes += uploaded;
+	m_frame_pending_bytes += uploaded;
+	image.pending_bytes = 0;
+	m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgPendingUploads, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgPendingBytes, uploaded);
+	MipDeferTrace("complete", image, uploaded);
+}
+
+void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	auto& image = m_slot_images[id];
 	if (image.info.data.Empty()) {
 		return;
@@ -1179,7 +1316,20 @@ void TextureCache::InitializeImage(ImageId id) {
 		if (source.buffer == nullptr) {
 			EXIT("TextureCache: failed to obtain image upload source\n");
 		}
-		UploadImage(image, source.buffer, source.offset, source.size, source.host_written);
+		NoteUploadFrame();
+		const auto deferred = allow_defer ? DeferrableLevels(image, source.imported) : 0u;
+		const auto uploaded =
+		    UploadImage(image, source.buffer, source.offset, source.size, source.host_written,
+		                deferred, image.info.resources.levels - deferred);
+		m_frame_upload_bytes += uploaded;
+		image.pending_levels = deferred;
+		image.pending_bytes  = deferred != 0 ? image.info.data.size - uploaded : 0;
+		if (deferred != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDeferred, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDeferredBytes,
+			                        image.pending_bytes);
+			MipDeferTrace("defer", image, image.pending_bytes);
+		}
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
 		image.ClearBufferModified();
 	}
@@ -1250,13 +1400,16 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	}
 }
 
-void TextureCache::RefreshImage(ImageId id) {
+void TextureCache::RefreshImage(ImageId id, bool allow_partial) {
 	TrackImage(id);
 	auto& image = m_slot_images[id];
 	if (image.IsMaybeCpuDirty()) {
 		const auto hash = image.HashGuestEdges();
 		if (image.NeedsMaybeCpuHash()) {
 			image.SetMaybeCpuHash(hash);
+			if (!allow_partial) {
+				CompletePendingUpload(image);
+			}
 			return;
 		}
 		(void)image.ResolveMaybeCpuHash(hash);
@@ -1268,10 +1421,12 @@ void TextureCache::RefreshImage(ImageId id) {
 		}
 		return;
 	}
-	if (!cpu_dirty) {
-		return;
+	if (cpu_dirty) {
+		InitializeImage(id, allow_partial);
 	}
-	InitializeImage(id);
+	if (!allow_partial) {
+		CompletePendingUpload(image);
+	}
 }
 
 void TextureCache::AssociateStencil(ImageId depth_id, GuestRange stencil) {
@@ -1440,9 +1595,27 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	if (desc.type == BindingType::Storage) {
 		image.MarkGpuModified();
 	}
+	auto view_info = desc.view_info;
 	if (!image.info.data.Empty()) {
 		PrepareDccClear(id, desc);
-		RefreshImage(id);
+		RefreshImage(id, desc.type == BindingType::Texture);
+		if (image.pending_levels != 0) {
+			// Sampled bind of a texture whose top levels are still pending: bring them in within
+			// the frame budget, otherwise clamp this view's LOD to the resident levels.
+			NoteUploadFrame();
+			const uint32_t min_lod = image.pending_levels > view_info.base_level
+			                             ? image.pending_levels - view_info.base_level
+			                             : 0u;
+			if (min_lod != 0) {
+				if (min_lod >= view_info.level_count ||
+				    m_frame_pending_bytes + image.pending_bytes <= MipDefer().budget_bytes) {
+					CompletePendingUpload(image);
+				} else {
+					view_info.min_lod = min_lod;
+					Common::FrameStats::Add(Common::FrameStats::Counter::ImgMinLodViews, 1);
+				}
+			}
+		}
 	}
 	switch (desc.type) {
 		case BindingType::Texture: break;
@@ -1457,8 +1630,8 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 			break;
 		default: EXIT("TextureCache: invalid texture binding\n");
 	}
-	const auto view = image.FindView(desc.view_info);
-	NameImageBinding(m_graphics, image, view, desc.type, desc.view_info);
+	const auto view = image.FindView(view_info);
+	NameImageBinding(m_graphics, image, view, desc.type, view_info);
 	return view;
 }
 
@@ -1532,6 +1705,7 @@ void TextureCache::CommitGpuWrite(Image& image) {
 	if (image.depth_id || image.backing.image == nullptr) {
 		EXIT("TextureCache: stencil association cannot own image contents\n");
 	}
+	CompletePendingUpload(image);
 	image.ClearBufferModified();
 	if (image.IsCpuDirty()) {
 		image.RefreshComplete();

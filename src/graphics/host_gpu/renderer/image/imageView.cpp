@@ -373,6 +373,14 @@ vk::ImageView Image::FindView(const ImageViewInfo& view_info) {
 	create.subresourceRange.levelCount     = normalized.level_count;
 	create.subresourceRange.baseArrayLayer = normalized.base_layer;
 	create.subresourceRange.layerCount     = normalized.layer_count;
+	vk::ImageViewMinLodCreateInfoEXT min_lod {};
+	if (normalized.min_lod != 0) {
+		EXIT_IF(!m_graphics.image_view_min_lod_enabled || is_storage ||
+		        normalized.min_lod >= normalized.level_count);
+		min_lod.minLod = static_cast<float>(normalized.min_lod);
+		min_lod.pNext  = &usage;
+		create.pNext   = &min_lod;
+	}
 
 	vk::ImageView view   = nullptr;
 	const auto    result = m_graphics.device.createImageView(&create, nullptr, &view);

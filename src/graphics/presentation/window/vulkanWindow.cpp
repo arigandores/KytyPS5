@@ -646,8 +646,18 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 		provoking_vertex.pNext = supported_features2.pNext;
 		supported_features2.pNext = &provoking_vertex;
 	}
+	const bool min_lod_extension =
+	    HasExtension(device_extensions, VK_EXT_IMAGE_VIEW_MIN_LOD_EXTENSION_NAME);
+	vk::PhysicalDeviceImageViewMinLodFeaturesEXT supported_min_lod {};
+	if (min_lod_extension) {
+		supported_min_lod.pNext   = supported_features2.pNext;
+		supported_features2.pNext = &supported_min_lod;
+	}
 	physical_device.getFeatures2(&supported_features2);
 	graphics.provoking_vertex_last_enabled = provoking_extension && provoking_vertex.provokingVertexLast;
+	graphics.image_view_min_lod_enabled = min_lod_extension && supported_min_lod.minLod == VK_TRUE;
+	LOGF("Vulkan VK_EXT_image_view_min_lod: %s\n",
+	     graphics.image_view_min_lod_enabled ? "enabled" : "unavailable");
 	graphics.attachment_feedback_loop_enabled =
 	    feedback_extensions && feedback_layout.attachmentFeedbackLoopLayout &&
 	    feedback_dynamic.attachmentFeedbackLoopDynamicState;
@@ -787,6 +797,12 @@ static vk::Device VulkanCreateDevice(vk::PhysicalDevice physical_device, const V
 		executable_properties.pipelineExecutableInfo = VK_TRUE;
 		executable_properties.pNext                  = features13.pNext;
 		features13.pNext                             = &executable_properties;
+	}
+	vk::PhysicalDeviceImageViewMinLodFeaturesEXT min_lod_features {};
+	if (graphics.image_view_min_lod_enabled) {
+		min_lod_features.minLod = VK_TRUE;
+		min_lod_features.pNext  = features13.pNext;
+		features13.pNext        = &min_lod_features;
 	}
 
 	LOGF("Vulkan robustness: robustImageAccess=%s robustImageAccess2=%s\n",
@@ -1229,6 +1245,14 @@ void WindowContext::CreateVulkan() {
 			} else {
 				LOGF("Vulkan: VK_EXT_external_memory_host %s\n",
 				     want_import ? "unavailable" : "disabled (KYTY_HOST_IMPORT=0)");
+			}
+		}
+		// KYTY_MIP_DEFER=0 disables the deferred upload of top mip levels (TextureCache).
+		{
+			const char* mip_defer = std::getenv("KYTY_MIP_DEFER");
+			const bool  want      = mip_defer == nullptr || mip_defer[0] != '0';
+			if (want && HasExtension(available_extensions, VK_EXT_IMAGE_VIEW_MIN_LOD_EXTENSION_NAME)) {
+				device_extensions.push_back(VK_EXT_IMAGE_VIEW_MIN_LOD_EXTENSION_NAME);
 			}
 		}
 		if (HasExtension(available_extensions, VK_EXT_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_EXTENSION_NAME) &&

@@ -49,6 +49,7 @@ public:
 	[[nodiscard]] static bool Enabled();
 	// Guest frame number of the marks recorded from now on (set at every flip).
 	static void SetFrame(uint32_t frame);
+	[[nodiscard]] static uint32_t Frame();
 	// Creates the query pool (only the main GuestGpu scheduler profiles; the present scheduler
 	// does not).
 	void Enable();

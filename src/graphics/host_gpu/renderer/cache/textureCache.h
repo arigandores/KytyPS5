@@ -146,18 +146,33 @@ private:
 	[[nodiscard]] ImageId       ResolveDepthOverlap(const ImageInfo& requested, BindingType binding,
 	                                                ImageId cached);
 	[[nodiscard]] ImageId       ExpandImage(const ImageInfo& info, ImageId source);
-	void                        RefreshImage(ImageId id);
+	// allow_partial: a sampled bind may leave the deferred top mip levels pending; every other
+	// use of the image completes the upload first.
+	void                        RefreshImage(ImageId id, bool allow_partial = false);
 	void                        PrepareDccClear(ImageId id, const ImageDesc& desc);
 	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
 	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
 	                                                uint64_t image_address);
-	void                        InitializeImage(ImageId id);
+	void                        InitializeImage(ImageId id, bool allow_defer = true);
 	[[nodiscard]] TextureTransferPlan
 	BuildTextureTransfer(const Image& image, BindingType binding, TransferDirection direction) const;
 	[[nodiscard]] DownloadPlan BuildDownload(const Image& image) const;
-	void UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
-	                 uint64_t source_size, bool source_is_host);
+	// Uploads levels [first_level, first_level + level_count) (everything by default) and
+	// returns the guest bytes transferred.
+	uint64_t UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
+	                     uint64_t source_size, bool source_is_host, uint32_t first_level = 0,
+	                     uint32_t level_count = UINT32_MAX);
+	// Deferred mip upload (KYTY_MIP_DEFER, default on). A scene cut uploads 300-450 textures
+	// between its draws and the GPU spends most of the frame detiling them; mip 0 alone is 75 %
+	// of the bytes. Once a frame has uploaded KYTY_MIP_DEFER_FRAME_MB, a large sampled texture
+	// from imported guest memory uploads only its tail: its sampled views clamp the LOD to the
+	// resident levels (VK_EXT_image_view_min_lod) and the top levels arrive at a later bind,
+	// KYTY_MIP_DEFER_BUDGET_MB per frame. Any other use (storage, target, copy, download)
+	// completes the upload first. Returns the number of top levels to leave pending.
+	[[nodiscard]] uint32_t DeferrableLevels(const Image& image, bool source_imported) const;
+	void                   CompletePendingUpload(Image& image);
+	void                   NoteUploadFrame();
 	void DownloadImageData(Image& image, Buffer& destination, uint64_t destination_offset,
 	                       uint64_t destination_size, DownloadPlan plan);
 	void DownloadDepth(Image& image, Buffer& destination, uint64_t destination_offset);
@@ -198,6 +213,9 @@ private:
 	uint64_t         m_gc_tick                = 0;
 	mutable uint32_t m_image_query_epoch      = 0;
 	bool             m_readback_linear_images = false;
+	uint32_t         m_upload_frame           = 0; // flip count of the upload counters below
+	uint64_t         m_frame_upload_bytes     = 0; // guest bytes uploaded to images this frame
+	uint64_t         m_frame_pending_bytes    = 0; // ... of which deferred top levels
 
 	friend struct TextureCacheTestAccess;
 	friend class BufferCache;

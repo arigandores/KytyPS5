@@ -72,8 +72,12 @@ public:
 		uint64_t   offset       = 0;
 		uint64_t   size         = 0;
 		bool       host_written = false; // staging ring / imported guest memory (no GPU writer)
+		bool       imported     = false; // one piece of imported guest memory: outlives this tick
 	};
-	[[nodiscard]] ImageSource ObtainBufferForImage(uint64_t vaddr, uint64_t size);
+	// pending_levels: the source of an image whose top mip levels were deferred (TextureCache);
+	// skips the CPU-animated re-upload heuristic of the import path.
+	[[nodiscard]] ImageSource ObtainBufferForImage(uint64_t vaddr, uint64_t size,
+	                                               bool pending_levels = false);
 	static void TraceImageUpload(uint64_t vaddr, uint64_t size, const char* path);
 	void FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds);
 	void CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
@@ -155,7 +159,7 @@ private:
 	// imported backing into a device-local scratch buffer (no host memcpy). False when the range
 	// is not direct memory or the import is unavailable.
 	[[nodiscard]] bool ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
-	                                             ImageSource* result);
+	                                             ImageSource* result, bool reupload_check = true);
 	void NotePendingHostRead(uint64_t vaddr, uint64_t size, uint64_t tick);
 	void ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write);
 	[[nodiscard]] AsyncReadback BeginAsyncReadback(uint64_t vaddr, uint64_t size);

@@ -142,6 +142,11 @@ enum class Counter : uint32_t {
 	HostReadWaitNs,
 	ImgDetileDispatches, // tiler dispatches recorded for image uploads
 	ImgCopyRegions,      // vkCmdCopyBufferToImage regions recorded for image uploads
+	ImgDeferred,         // uploads that left the top mip levels pending (KYTY_MIP_DEFER)
+	ImgDeferredBytes,    // ... bytes left in guest memory
+	ImgPendingUploads,   // pending top levels uploaded later (bind within the frame budget, or forced)
+	ImgPendingBytes,
+	ImgMinLodViews,      // sampled binds served with a min-LOD view (top levels still pending)
 	Count
 };
 

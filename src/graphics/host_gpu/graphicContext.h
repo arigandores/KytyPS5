@@ -56,6 +56,9 @@ struct GraphicContext {
 	// as Vulkan buffers, so texture uploads read guest memory over PCIe without a host copy.
 	bool                               external_memory_host_enabled          = false;
 	uint64_t                           min_imported_host_pointer_alignment   = 0;
+	// VK_EXT_image_view_min_lod (KYTY_MIP_DEFER, default on): sampled views of a texture whose
+	// top mip levels are still pending clamp the LOD to the resident levels (TextureCache).
+	bool                               image_view_min_lod_enabled            = false;
 	bool                               supports_block_texel_view              = false;
 	bool                                      mesh_shader_enabled                   = false;
 	vk::PhysicalDeviceMeshShaderPropertiesEXT mesh_shader_properties                = {};

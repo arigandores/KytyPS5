@@ -151,6 +151,11 @@ public:
 	ImageId          depth_id {};
 	uint64_t         tick_accessed_last = 0;
 	size_t           lru_id             = 0;
+	// Deferred mip upload (TextureCache, KYTY_MIP_DEFER): levels [0, pending_levels) of this
+	// sampled texture are still in guest memory only; sampled views clamp their LOD there until
+	// the top arrives. 0 = complete.
+	uint32_t         pending_levels     = 0;
+	uint64_t         pending_bytes      = 0;
 
 private:
 	friend struct ImageTestAccess;

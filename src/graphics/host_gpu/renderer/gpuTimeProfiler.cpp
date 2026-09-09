@@ -49,6 +49,10 @@ void GpuTimeProfiler::SetFrame(uint32_t frame) {
 	g_frame.store(frame, std::memory_order_relaxed);
 }
 
+uint32_t GpuTimeProfiler::Frame() {
+	return g_frame.load(std::memory_order_relaxed);
+}
+
 GpuTimeProfiler::GpuTimeProfiler(GraphicContext& graphics, MasterSemaphore& master)
     : m_graphics(graphics), m_master(master) {}
 

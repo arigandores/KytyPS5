@@ -692,7 +692,8 @@ void BufferCache::TraceImageUpload(uint64_t vaddr, uint64_t size, const char* pa
 	     static_cast<long long>(us));
 }
 
-BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint64_t size) {
+BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint64_t size,
+                                                           bool pending_levels) {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: invalid image source\n");
 	}
@@ -720,7 +721,7 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 	}();
 	if (vaddr != dump_tex) {
 		ImageSource imported {};
-		if (ObtainImportedImageSource(vaddr, size, &imported)) {
+		if (ObtainImportedImageSource(vaddr, size, &imported, !pending_levels)) {
 			TraceImageUpload(vaddr, size, "import:no-owner");
 			return imported;
 		}
@@ -757,7 +758,7 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 // KYTY_HOST_IMPORT_MIN_KB=<n> (default 64): smaller image sources keep the staging path (a
 // scratch buffer and two barriers per source do not pay off for tiny images).
 bool BufferCache::ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
-                                            ImageSource* result) {
+                                            ImageSource* result, bool reupload_check) {
 	static const uint64_t min_bytes = [] {
 		const char* value = std::getenv("KYTY_HOST_IMPORT_MIN_KB");
 		return (value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {64}) * 1024u;
@@ -773,7 +774,7 @@ bool BufferCache::ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
 		return value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {64};
 	}();
 	const auto tick = m_scheduler.CurrentTick();
-	{
+	if (reupload_check) {
 		if (m_import_last_tick.size() > 4096) {
 			const auto stale = 4 * reupload_ticks;
 			std::erase_if(m_import_last_tick, [tick, stale](const auto& entry) {
@@ -805,7 +806,7 @@ bool BufferCache::ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
 			NotePendingHostRead(vaddr, size, m_scheduler.CurrentTick());
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgImports, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgImportBytes, size);
-			*result = {region.buffer, region.offset, size, true};
+			*result = {region.buffer, region.offset, size, true, true};
 			return true;
 		}
 	}

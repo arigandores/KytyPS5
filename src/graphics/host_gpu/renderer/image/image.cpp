@@ -226,11 +226,15 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 }
 
 void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
-                   uint64_t size) {
+                   uint64_t size, bool buffer_from_tiler) {
 	EXIT_IF(copies.empty() || buffer == nullptr || size == 0);
 	m_scheduler.EndRendering();
 	vk::BufferMemoryBarrier2 buffer_barrier {};
-	buffer_barrier.srcStageMask        = vk::PipelineStageFlagBits2::eAllCommands;
+	buffer_barrier.srcStageMask =
+	    buffer_from_tiler && TileManager::NarrowUploadBarriers()
+	        ? vk::PipelineStageFlagBits2::eComputeShader | vk::PipelineStageFlagBits2::eTransfer |
+	              vk::PipelineStageFlagBits2::eHost
+	        : vk::PipelineStageFlags2 {vk::PipelineStageFlagBits2::eAllCommands};
 	buffer_barrier.srcAccessMask       = vk::AccessFlagBits2::eMemoryWrite;
 	buffer_barrier.dstStageMask        = vk::PipelineStageFlagBits2::eTransfer;
 	buffer_barrier.dstAccessMask       = vk::AccessFlagBits2::eTransferRead;
@@ -252,6 +256,9 @@ void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffe
 	command.pipelineBarrier2(dependency);
 	command.copyBufferToImage(buffer, backing.image, vk::ImageLayout::eTransferDstOptimal,
 	                          static_cast<uint32_t>(copies.size()), copies.data());
+	if (GpuTimeProfiler::Enabled()) {
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 4, copies.size());
+	}
 	buffer_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eTransfer;
 	buffer_barrier.srcAccessMask = vk::AccessFlagBits2::eTransferRead;
 	buffer_barrier.dstStageMask  = vk::PipelineStageFlagBits2::eAllCommands;

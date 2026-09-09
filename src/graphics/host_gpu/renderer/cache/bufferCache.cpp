@@ -275,6 +275,7 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, con
 BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
                          PageManager& page_manager, TextureCache& texture_cache)
     : m_graphics(graphics), m_scheduler(scheduler), m_fault_manager(graphics, scheduler, *this),
+      m_host_import(graphics),
       m_gds_buffer(graphics, scheduler, MemoryUsage::Stream, 0, AllFlags, GdsBufferSize),
       m_bda_pagetable_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 0, AllFlags,
                              BDA_PAGETABLE_SIZE),
@@ -691,7 +692,7 @@ void BufferCache::TraceImageUpload(uint64_t vaddr, uint64_t size, const char* pa
 	     static_cast<long long>(us));
 }
 
-std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, uint64_t size) {
+BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint64_t size) {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: invalid image source\n");
 	}
@@ -702,12 +703,27 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 			TouchBuffer(buffer);
 			(void)SynchronizeBuffer(buffer, vaddr, size, false, false);
 			TraceImageUpload(vaddr, size, "owner");
-			return {&buffer, buffer.Offset(vaddr)};
+			const auto offset = buffer.Offset(vaddr);
+			return {buffer.Handle(), offset, buffer.Size() - offset};
 		}
 	}
 	if (IsRegionGpuModified(vaddr, size)) {
 		TraceImageUpload(vaddr, size, "gpu-buffer");
-		return ObtainBuffer(vaddr, size, false, false);
+		const auto [buffer, offset] = ObtainBuffer(vaddr, size, false, false);
+		return {buffer->Handle(), offset, buffer->Size() - offset};
+	}
+	// Debug aid: KYTY_DUMP_TEX=<hex guest address> saves the staging copy of that image source to
+	// _tex_<n>.bin (first three uploads).
+	static const uint64_t dump_tex = [] {
+		const char* value = std::getenv("KYTY_DUMP_TEX");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	if (vaddr != dump_tex) {
+		ImageSource imported {};
+		if (ObtainImportedImageSource(vaddr, size, &imported)) {
+			TraceImageUpload(vaddr, size, "import:no-owner");
+			return imported;
+		}
 	}
 	TraceImageUpload(vaddr, size, "staging:no-owner");
 
@@ -723,12 +739,6 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 		}
 	}
 	m_staging_buffer.Commit();
-	// Debug aid: KYTY_DUMP_TEX=<hex guest address> saves the staging copy of that image source to
-	// _tex_<n>.bin (first three uploads).
-	static const uint64_t dump_tex = [] {
-		const char* value = std::getenv("KYTY_DUMP_TEX");
-		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
-	}();
 	if (dump_tex != 0 && vaddr == dump_tex) {
 		Common::WaitAsyncCopies();
 		static std::atomic<uint32_t> dumped {0};
@@ -741,7 +751,188 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 			}
 		}
 	}
-	return {&m_staging_buffer, stage_offset};
+	return {m_staging_buffer.Handle(), stage_offset, m_staging_buffer.Size() - stage_offset, true};
+}
+
+// KYTY_HOST_IMPORT_MIN_KB=<n> (default 64): smaller image sources keep the staging path (a
+// scratch buffer and two barriers per source do not pay off for tiny images).
+bool BufferCache::ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
+                                            ImageSource* result) {
+	static const uint64_t min_bytes = [] {
+		const char* value = std::getenv("KYTY_HOST_IMPORT_MIN_KB");
+		return (value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {64}) * 1024u;
+	}();
+	if (!m_host_import.Available() || size < min_bytes || result == nullptr) {
+		return false;
+	}
+	// KYTY_HOST_IMPORT_REUPLOAD_TICKS=<n> (default 64): an image uploaded again within n ticks
+	// of its previous upload is CPU-animated (video frames, UI); it takes the staging snapshot
+	// so the next CPU write does not wait for the GPU read (HostReadWait).
+	static const uint64_t reupload_ticks = [] {
+		const char* value = std::getenv("KYTY_HOST_IMPORT_REUPLOAD_TICKS");
+		return value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {64};
+	}();
+	const auto tick = m_scheduler.CurrentTick();
+	{
+		if (m_import_last_tick.size() > 4096) {
+			const auto stale = 4 * reupload_ticks;
+			std::erase_if(m_import_last_tick, [tick, stale](const auto& entry) {
+				return tick - entry.second > stale;
+			});
+		}
+		auto [it, inserted] = m_import_last_tick.try_emplace(vaddr, tick);
+		if (!inserted) {
+			const auto since = tick - it->second;
+			it->second       = tick;
+			if (since < reupload_ticks) {
+				return false;
+			}
+		}
+	}
+	auto& pieces = m_import_pieces;
+	if (!Libs::LibKernel::Memory::TryGetBackingPieces(vaddr, size, &pieces)) {
+		return false;
+	}
+	// One physical piece inside one chunk (nearly every image): the tiler reads the imported
+	// buffer itself, no copy at all. Otherwise the pieces are gathered into a device-local
+	// scratch buffer on the GPU.
+	if (pieces.size() == 1) {
+		HostImport::Region region {};
+		if (!m_host_import.Resolve(pieces[0].backing_offset, size, &region)) {
+			return false;
+		}
+		if (region.size == size) {
+			NotePendingHostRead(vaddr, size, m_scheduler.CurrentTick());
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgImports, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgImportBytes, size);
+			*result = {region.buffer, region.offset, size, true};
+			return true;
+		}
+	}
+	struct ImportCopy {
+		vk::Buffer     source;
+		vk::BufferCopy region;
+	};
+	static thread_local std::vector<ImportCopy> copies;
+	copies.clear();
+	uint64_t destination = 0;
+	for (const auto& piece: pieces) {
+		auto offset = piece.backing_offset;
+		auto left   = piece.size;
+		while (left != 0) {
+			HostImport::Region region {};
+			if (!m_host_import.Resolve(offset, left, &region)) {
+				return false;
+			}
+			copies.push_back({region.buffer, {region.offset, destination, region.size}});
+			offset += region.size;
+			destination += region.size;
+			left -= region.size;
+		}
+	}
+
+	auto scratch = std::make_unique<Buffer>(m_graphics, m_scheduler, MemoryUsage::DeviceLocal, 0,
+	                                        AllFlags, size);
+	auto& command = m_scheduler.Current();
+	command.EndRendering();
+	const auto native = command.Handle();
+	// No host barrier: the guest wrote the pages before this command buffer is submitted, and
+	// vkQueueSubmit makes prior host writes visible to the device.
+	static thread_local std::vector<vk::BufferCopy> regions;
+	for (size_t i = 0; i < copies.size();) {
+		regions.clear();
+		size_t j = i;
+		while (j < copies.size() && copies[j].source == copies[i].source) {
+			regions.push_back(copies[j].region);
+			j++;
+		}
+		native.copyBuffer(copies[i].source, scratch->Handle(), static_cast<uint32_t>(regions.size()),
+		                  regions.data());
+		i = j;
+	}
+	vk::BufferMemoryBarrier after {};
+	after.srcAccessMask       = vk::AccessFlagBits::eTransferWrite;
+	after.dstAccessMask       = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite;
+	after.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	after.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	after.buffer              = scratch->Handle();
+	after.offset              = 0;
+	after.size                = size;
+	native.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+	                       vk::PipelineStageFlagBits::eAllCommands, {}, 0, nullptr, 1, &after, 0,
+	                       nullptr);
+	NotePendingHostRead(vaddr, size, m_scheduler.CurrentTick());
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgImports, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgImportBytes, size);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgImportPieces, copies.size());
+	*result = {scratch->Handle(), 0, size};
+	m_scheduler.DeferOperation([owner = std::move(scratch)]() mutable { owner.reset(); });
+	return true;
+}
+
+void BufferCache::NotePendingHostRead(uint64_t vaddr, uint64_t size, uint64_t tick) {
+	std::lock_guard lock(m_pending_host_reads_mutex);
+	if (m_pending_host_reads.size() >= 512) {
+		// Drop the entries whose copies the GPU has completed (one semaphore query).
+		const auto known = m_scheduler.IsFree(tick - 1) ? tick - 1
+		                                                 : m_scheduler.GetMasterSemaphore().KnownGpuTick();
+		std::erase_if(m_pending_host_reads,
+		              [known](const PendingHostRead& entry) { return entry.tick <= known; });
+	}
+	m_pending_host_reads.push_back({vaddr, size, tick});
+}
+
+bool BufferCache::WaitPendingHostReads(uint64_t vaddr, uint64_t size) {
+	if (!m_host_import.Available() || size == 0 || UINT64_MAX - vaddr < size) {
+		return false;
+	}
+	uint64_t tick = 0;
+	{
+		std::lock_guard lock(m_pending_host_reads_mutex);
+		if (m_pending_host_reads.empty()) {
+			return false;
+		}
+		const auto known = m_scheduler.GetMasterSemaphore().KnownGpuTick();
+		for (const auto& entry: m_pending_host_reads) {
+			if (entry.tick > known && entry.vaddr < vaddr + size && vaddr < entry.vaddr + entry.size) {
+				tick = std::max(tick, entry.tick);
+			}
+		}
+	}
+	if (tick == 0) {
+		return false;
+	}
+	if (CommandScheduler::InDeferredOperation()) {
+		return false; // a completion callback cannot wait for the queue
+	}
+	Common::FrameStats::Scope wait_scope(Common::FrameStats::Counter::HostReadWaitNs,
+	                                     Common::FrameStats::Counter::HostReadWaits);
+	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	const auto        t0    = trace ? Common::FrameStats::NowNs() : 0;
+	const auto        wait  = [this, tick] {
+		if (!m_scheduler.IsFree(tick)) {
+			Common::FrameStats::SiteScope site_scope("host-read");
+			m_scheduler.Wait(tick); // submits the recording command buffer when tick is current
+		}
+	};
+	if (GuestGpu::IsGpuThread()) {
+		wait();
+	} else {
+		m_scheduler.Context().GetGpu().SendCommandSync(wait);
+	}
+	{
+		std::lock_guard lock(m_pending_host_reads_mutex);
+		std::erase_if(m_pending_host_reads,
+		              [tick](const PendingHostRead& entry) { return entry.tick <= tick; });
+	}
+	if (trace) {
+		LOGF("HostReadWait: addr=0x%016" PRIx64 " size=0x%" PRIx64 " tick=%llu current=%llu %s took %llu us" "\n",
+		     vaddr, size, static_cast<unsigned long long>(tick),
+		     static_cast<unsigned long long>(m_scheduler.CurrentTick()),
+		     GuestGpu::IsGpuThread() ? "gpu-thread" : "guest-thread",
+		     static_cast<unsigned long long>((Common::FrameStats::NowNs() - t0) / 1000u));
+	}
+	return true;
 }
 
 void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds) {

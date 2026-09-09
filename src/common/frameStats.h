@@ -135,6 +135,13 @@ enum class Counter : uint32_t {
 	BufCreateNs,     // Buffer::Buffer (vmaCreateBuffer)
 	BufCreates,
 	AsyncCopyGpuWaits, // submits that made the queue wait for the async-copy semaphore
+	ImgImports,        // image sources copied on the GPU from imported guest memory (HostImport)
+	ImgImportBytes,
+	ImgImportPieces,   // ... physical pieces (vkCmdCopyBuffer regions)
+	HostReadWaits,     // CPU writes that waited for a pending GPU read of guest memory
+	HostReadWaitNs,
+	ImgDetileDispatches, // tiler dispatches recorded for image uploads
+	ImgCopyRegions,      // vkCmdCopyBufferToImage regions recorded for image uploads
 	Count
 };
 

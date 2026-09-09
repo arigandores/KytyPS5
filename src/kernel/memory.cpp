@@ -872,6 +872,19 @@ bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
 	       g_guest_address_space->TryGetBackingPointer(vaddr, size, pointer);
 }
 
+bool TryGetBackingPieces(uint64_t vaddr, uint64_t size, std::vector<BackingPiece>* pieces) {
+	return g_guest_address_space != nullptr &&
+	       g_guest_address_space->TryGetBackingPieces(vaddr, size, pieces);
+}
+
+uint64_t GetBackingBase() {
+	return g_guest_address_space != nullptr ? g_guest_address_space->GetBackingBase() : 0;
+}
+
+uint64_t GetBackingSize() {
+	return g_guest_address_space != nullptr ? g_guest_address_space->GetBackingSize() : 0;
+}
+
 static bool IsGpuCleanRange(uint64_t vaddr, uint64_t size) {
 	if (g_gpu_resources != nullptr && IsGpuAddressRange(vaddr, size)) {
 		if (!Graphics::GuestGpu::IsGpuThread() ||

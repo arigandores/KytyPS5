@@ -328,8 +328,23 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 		}
 		return it->second;
 	};
+	// KYTY_SAMPLE_US=<us>: sampling interval. The default sleeps ~700 us (in practice the Windows
+	// timer rounds this up to ~1.5 ms); a value below 1000 spins on the clock instead, so a scene-cut
+	// frame of 80 ms gets several hundred samples instead of fifty.
+	static const int64_t interval_us = [] {
+		const char* value = std::getenv("KYTY_SAMPLE_US");
+		return value != nullptr ? std::strtoll(value, nullptr, 10) : int64_t {0};
+	}();
+	auto t_next = std::chrono::steady_clock::now();
 	for (;;) {
-		std::this_thread::sleep_for(std::chrono::microseconds(700));
+		if (interval_us <= 0) {
+			std::this_thread::sleep_for(std::chrono::microseconds(700));
+		} else {
+			t_next += std::chrono::microseconds(interval_us);
+			while (std::chrono::steady_clock::now() < t_next) {
+				YieldProcessor();
+			}
+		}
 		if (SuspendThread(target) == static_cast<DWORD>(-1)) {
 			break;
 		}

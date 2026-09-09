@@ -8,6 +8,8 @@
 #include "graphics/host_gpu/memoryTracker.h"
 #include "graphics/host_gpu/rangeSet.h"
 #include "graphics/host_gpu/renderer/cache/faultManager.h"
+#include "graphics/host_gpu/renderer/cache/hostImport.h"
+#include "kernel/memory.h"
 #include "graphics/host_gpu/renderer/cache/multiLevelPageTable.h"
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
@@ -42,6 +44,9 @@ public:
 
 	void                   InvalidateMemory(uint64_t vaddr, uint64_t size);
 	void                   ReadMemory(uint64_t vaddr, uint64_t size, bool is_write = false);
+	// A CPU write is about to land in [vaddr, vaddr + size): wait for the GPU copies that still
+	// read the range straight from guest memory (HostImport). Any thread; true if it waited.
+	bool WaitPendingHostReads(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] Buffer&  GetBuffer(BufferId id) { return m_slot_buffers[id]; }
 	[[nodiscard]] BufferId FindBuffer(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] std::pair<Buffer*, uint64_t> ObtainBuffer(uint64_t vaddr, uint64_t size,
@@ -60,7 +65,15 @@ public:
 	[[nodiscard]] const Buffer* GetGdsBuffer() const noexcept { return &m_gds_buffer; }
 	[[nodiscard]] Buffer* GetBdaPageTableBuffer() noexcept { return &m_bda_pagetable_buffer; }
 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return m_fault_manager.GetFaultBuffer(); }
-	[[nodiscard]] std::pair<Buffer*, uint64_t> ObtainBufferForImage(uint64_t vaddr, uint64_t size);
+	// Source of an image upload: a native buffer that owns the range, a staging copy, or the
+	// imported guest memory itself (HostImport). `size` is what is readable from `offset`.
+	struct ImageSource {
+		vk::Buffer buffer;
+		uint64_t   offset       = 0;
+		uint64_t   size         = 0;
+		bool       host_written = false; // staging ring / imported guest memory (no GPU writer)
+	};
+	[[nodiscard]] ImageSource ObtainBufferForImage(uint64_t vaddr, uint64_t size);
 	static void TraceImageUpload(uint64_t vaddr, uint64_t size, const char* path);
 	void FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds);
 	void CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
@@ -138,6 +151,12 @@ private:
 	void DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason = "read");
 	[[nodiscard]] static uint64_t StagingRingBytes();
 	void CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
+	// Image source through the guest-memory import: the range is copied on the GPU from the
+	// imported backing into a device-local scratch buffer (no host memcpy). False when the range
+	// is not direct memory or the import is unavailable.
+	[[nodiscard]] bool ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
+	                                             ImageSource* result);
+	void NotePendingHostRead(uint64_t vaddr, uint64_t size, uint64_t tick);
 	void ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write);
 	[[nodiscard]] AsyncReadback BeginAsyncReadback(uint64_t vaddr, uint64_t size);
 	bool                        FinishAsyncReadback(const AsyncReadback& job);
@@ -150,6 +169,17 @@ private:
 	GraphicContext&                                   m_graphics;
 	CommandScheduler&                                 m_scheduler;
 	FaultManager                                      m_fault_manager;
+	HostImport                                        m_host_import;
+	struct PendingHostRead {
+		uint64_t vaddr = 0;
+		uint64_t size  = 0;
+		uint64_t tick  = 0;
+	};
+	std::vector<PendingHostRead>                       m_pending_host_reads;
+	std::mutex                                         m_pending_host_reads_mutex;
+	std::vector<Libs::LibKernel::Memory::BackingPiece> m_import_pieces;
+	// Image address -> tick of its last upload through the import (re-upload interval heuristic).
+	std::unordered_map<uint64_t, uint64_t>              m_import_last_tick;
 	Buffer                                            m_gds_buffer;
 	Buffer                                            m_bda_pagetable_buffer;
 	Buffer                                            m_bda_null_page;

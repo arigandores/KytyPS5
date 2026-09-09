@@ -280,10 +280,24 @@ vk::Pipeline TileManager::GetPipeline(uint32_t slot) {
 	return m_pipelines[slot];
 }
 
+// Image uploads at a scene cut (300-450 images, 600 MB) sit between draws; every barrier whose
+// source stage is ALL_COMMANDS drains the graphics pipeline first. The tiler's producers are
+// known exactly (the CPU for the source, the fill / the dispatches for the scratch), so the
+// barriers name them and the draws in flight keep running. KYTY_UPLOAD_NARROW=0 restores the
+// conservative stages for an A/B.
+bool TileManager::NarrowUploadBarriers() {
+	static const bool narrow = [] {
+		const char* value = std::getenv("KYTY_UPLOAD_NARROW");
+		return value == nullptr || value[0] != '0';
+	}();
+	return narrow;
+}
+
 void TileManager::Record(vk::Buffer source, uint64_t source_offset,
                          uint64_t source_capacity, vk::Buffer target, uint64_t target_offset,
                          uint64_t target_capacity, std::span<Dispatch> dispatches,
-                         bool clear_target) {
+                         bool clear_target, bool source_is_host, bool target_for_transfer) {
+	const bool narrow = NarrowUploadBarriers();
 	const auto&    limits = m_graphics.GetPhysicalDeviceProperties().limits;
 	const uint64_t descriptor_alignment =
 	    std::max<uint64_t>(limits.minStorageBufferOffsetAlignment, 4);
@@ -321,8 +335,12 @@ void TileManager::Record(vk::Buffer source, uint64_t source_offset,
 	barriers[2].offset        = dispatches.front().params_offset;
 	barriers[2].size =
 	    dispatches.back().params_offset - dispatches.front().params_offset + sizeof(Push);
+	// A freshly allocated scratch target (Detile) needs no wait either: its memory is recycled
+	// only after the tick that last used it completed (deferred destruction).
+	const bool source_only_host = narrow && source_is_host;
 	command.pipelineBarrier(
-	    vk::PipelineStageFlagBits::eAllCommands | vk::PipelineStageFlagBits::eHost,
+	    source_only_host ? vk::PipelineStageFlags {vk::PipelineStageFlagBits::eHost}
+	                     : vk::PipelineStageFlagBits::eAllCommands | vk::PipelineStageFlagBits::eHost,
 	    vk::PipelineStageFlagBits::eComputeShader | vk::PipelineStageFlagBits::eTransfer, {}, 0,
 	    nullptr, 3, barriers, 0, nullptr);
 	if (clear_target) {
@@ -333,6 +351,9 @@ void TileManager::Record(vk::Buffer source, uint64_t source_offset,
 		command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
 		                        vk::PipelineStageFlagBits::eComputeShader, {}, 0, nullptr, 1,
 		                        &barriers[1], 0, nullptr);
+		if (GpuTimeProfiler::Enabled()) {
+			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 5, target_capacity >> 20u);
+		}
 	}
 
 	const vk::DescriptorBufferInfo source_info {source, source_descriptor_offset, source_range};
@@ -358,14 +379,19 @@ void TileManager::Record(vk::Buffer source, uint64_t source_offset,
 
 	barriers[1].srcAccessMask = vk::AccessFlagBits::eShaderWrite;
 	barriers[1].dstAccessMask = vk::AccessFlagBits::eTransferRead | vk::AccessFlagBits::eMemoryRead;
+	// The detiled scratch is consumed by a transfer only: later draws need not wait for it.
 	command.pipelineBarrier(vk::PipelineStageFlagBits::eComputeShader,
-	                        vk::PipelineStageFlagBits::eAllCommands, {}, 0, nullptr, 1,
-	                        &barriers[1], 0, nullptr);
+	                        narrow && target_for_transfer ? vk::PipelineStageFlags {vk::PipelineStageFlagBits::eTransfer}
+	                                                      : vk::PipelineStageFlags {vk::PipelineStageFlagBits::eAllCommands},
+	                        {}, 0, nullptr, 1, &barriers[1], 0, nullptr);
+	if (GpuTimeProfiler::Enabled()) {
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 6, dispatches.size());
+	}
 }
 
 TileManager::Result TileManager::Detile(vk::Buffer tiled, uint64_t tiled_offset,
                                         uint64_t tiled_capacity, uint64_t linear_capacity,
-                                        std::span<const GpuTileInfo> infos) {
+                                        std::span<const GpuTileInfo> infos, bool source_is_host) {
 	const auto&    limits = m_graphics.GetPhysicalDeviceProperties().limits;
 	const uint64_t descriptor_alignment =
 	    std::max<uint64_t>(limits.minStorageBufferOffsetAlignment, 4);
@@ -375,7 +401,7 @@ TileManager::Result TileManager::Detile(vk::Buffer tiled, uint64_t tiled_offset,
 	auto scratch = AllocateScratch((linear_capacity + 3u) & ~uint64_t {3});
 	DeferDestroy(scratch);
 	Record(tiled, tiled_offset, tiled_capacity, scratch.buffer, 0, scratch.size, dispatches,
-	       true);
+	       true, source_is_host, true);
 	return {scratch.buffer, 0, linear_capacity};
 }
 

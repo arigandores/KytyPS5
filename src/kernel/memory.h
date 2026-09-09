@@ -5,6 +5,8 @@
 #include "common/common.h"
 #include "common/virtualMemory.h"
 
+#include <vector>
+
 namespace Libs::Graphics {
 class GpuResourceManager;
 enum class PageFaultAccess;
@@ -111,6 +113,18 @@ bool                   TryWriteBacking(uint64_t vaddr, const void* data, uint64_
 bool                   TryReadBacking(uint64_t vaddr, void* data, uint64_t size);
 // Host pointer to the backing of [vaddr, vaddr+size) when the range lies inside one mapping.
 bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
+// A physically contiguous piece of a guest range inside the direct-memory backing.
+struct BackingPiece {
+	uint64_t backing_offset = 0;
+	uint64_t size           = 0;
+};
+// Physical pieces of [vaddr, vaddr+size) in the direct-memory backing, in address order and
+// without gaps; false when any part of the range is not direct memory.
+bool TryGetBackingPieces(uint64_t vaddr, uint64_t size, std::vector<BackingPiece>* pieces);
+// Host address and size of the direct-memory backing alias (0 when unavailable). Every byte of
+// direct memory has a fixed address there regardless of where (and whether) the guest maps it.
+uint64_t GetBackingBase();
+uint64_t GetBackingSize();
 bool                   TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size);
 // TryGetBackingPointer for a range without pending GPU writes (same test as
 // TryReadGpuCleanBacking, evaluated once for the whole range).

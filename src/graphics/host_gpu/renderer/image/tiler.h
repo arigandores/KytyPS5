@@ -63,8 +63,11 @@ public:
 	KYTY_CLASS_NO_COPY(TileManager);
 
 	// The returned device-local buffer remains alive through the current scheduler tick.
+	// source_is_host: the tiled data was written by the CPU (staging ring, imported guest memory),
+	// so no GPU stage has to be waited for before the dispatches read it.
 	[[nodiscard]] Result Detile(vk::Buffer tiled, uint64_t tiled_offset, uint64_t tiled_capacity,
-	                            uint64_t linear_capacity, std::span<const GpuTileInfo> infos);
+	                            uint64_t linear_capacity, std::span<const GpuTileInfo> infos,
+	                            bool source_is_host = false);
 	void Tile(vk::Buffer linear, uint64_t linear_offset, uint64_t linear_capacity, vk::Buffer tiled,
 	          uint64_t tiled_offset, uint64_t tiled_capacity, std::span<const GpuTileInfo> infos);
 	void TileImage(Image& image, std::span<const vk::BufferImageCopy> regions, vk::Buffer tiled,
@@ -72,6 +75,8 @@ public:
 	               std::span<const GpuTileInfo> infos,
 	               ColorTransform               transform = ColorTransform::None);
 	[[nodiscard]] Result GetScratchBuffer(uint64_t size);
+	// KYTY_UPLOAD_NARROW=0: image-upload barriers wait for all previous commands, as before.
+	[[nodiscard]] static bool NarrowUploadBarriers();
 	void                 ConvertD16(Result source, Result target, D16Direction direction, bool d32,
 	                                const D16Layout& layout);
 	[[nodiscard]] Result SwapBgra16(Result input);
@@ -127,7 +132,8 @@ private:
 	             std::vector<Dispatch>& dispatches);
 	void Record(vk::Buffer source, uint64_t source_offset, uint64_t source_capacity,
 	            vk::Buffer target, uint64_t target_offset, uint64_t target_capacity,
-	            std::span<Dispatch> dispatches, bool clear_target);
+	            std::span<Dispatch> dispatches, bool clear_target, bool source_is_host = false,
+	            bool target_for_transfer = false);
 	[[nodiscard]] vk::Pipeline GetPipeline(uint32_t slot);
 	void                       SwapBgra16(Result input, Result output, uint32_t pixels);
 

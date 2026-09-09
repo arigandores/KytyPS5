@@ -208,6 +208,52 @@ public:
 		return true;
 	}
 
+	// Physical pieces of [vaddr, vaddr + size) in the backing, in address order and without
+	// gaps (every byte of the range must be mapped): the GPU can read the range straight from
+	// the backing alias (VK_EXT_external_memory_host) piece by piece.
+	bool TryGetBackingPieces(uint64_t vaddr, uint64_t size, std::vector<BackingPiece>* pieces) {
+		if (!IsAvailable() || pieces == nullptr || size == 0 || UINT64_MAX - vaddr < size) {
+			return false;
+		}
+		pieces->clear();
+		std::lock_guard lock(m_mutex);
+		const auto      end   = vaddr + size;
+		auto            first = m_maps.lower_bound(vaddr);
+		if (first != m_maps.begin()) {
+			auto previous = std::prev(first);
+			if (previous->second.vaddr + previous->second.size > vaddr) {
+				first = previous;
+			}
+		}
+		auto cursor = vaddr;
+		for (auto mapping = first; mapping != m_maps.end() && mapping->second.vaddr < end;
+		     ++mapping) {
+			const auto& entry = mapping->second;
+			if (entry.vaddr > cursor) {
+				pieces->clear();
+				return false; // a hole
+			}
+			const auto start  = std::max(cursor, entry.vaddr);
+			const auto bytes  = std::min(end, entry.vaddr + entry.size) - start;
+			const auto offset = entry.backing_offset + start - entry.vaddr;
+			if (bytes == 0 || !RangeOk(offset, bytes)) {
+				pieces->clear();
+				return false;
+			}
+			if (!pieces->empty() && pieces->back().backing_offset + pieces->back().size == offset) {
+				pieces->back().size += bytes; // physically contiguous with the previous piece
+			} else {
+				pieces->push_back({offset, bytes});
+			}
+			cursor = start + bytes;
+		}
+		if (cursor != end) {
+			pieces->clear();
+			return false;
+		}
+		return true;
+	}
+
 	bool TryReadSparseBacking(uint64_t vaddr, void* data, uint64_t size) {
 		if (!IsAvailable() || data == nullptr || size == 0 || UINT64_MAX - vaddr < size) {
 			return false;
@@ -766,6 +812,10 @@ public:
 
 	bool TryReadSparseBacking(uint64_t vaddr, void* data, uint64_t size) {
 		return m_backing->TryReadSparseBacking(vaddr, data, size);
+	}
+
+	bool TryGetBackingPieces(uint64_t vaddr, uint64_t size, std::vector<BackingPiece>* pieces) {
+		return m_backing->TryGetBackingPieces(vaddr, size, pieces);
 	}
 
 	bool BackingContains(uint64_t vaddr, uint64_t size) { return m_backing->Contains(vaddr, size); }

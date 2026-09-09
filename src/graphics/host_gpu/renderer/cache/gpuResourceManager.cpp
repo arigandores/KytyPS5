@@ -30,6 +30,7 @@ bool GpuResourceManager::HandleFault(PageFaultAccess access, uint64_t fault_vadd
 	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 	if (access == PageFaultAccess::Write) {
 		const auto t0 = trace ? Common::FrameStats::NowNs() : 0;
+		(void)m_buffer_cache.WaitPendingHostReads(fault_vaddr & ~uint64_t {4095}, 4096);
 		m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);
 		const auto t1 = trace ? Common::FrameStats::NowNs() : 0;
 		m_texture_cache.InvalidateMemory(fault_vaddr, fault_size);
@@ -71,6 +72,7 @@ bool GpuResourceManager::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	if (!IsMapped(vaddr, size)) {
 		return false;
 	}
+	(void)m_buffer_cache.WaitPendingHostReads(vaddr, size);
 	m_buffer_cache.InvalidateMemory(vaddr, size);
 	m_texture_cache.InvalidateMemory(vaddr, size);
 	return true;

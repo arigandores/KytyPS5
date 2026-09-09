@@ -1070,7 +1070,8 @@ void TextureCache::DebugDumpImage(ImageId id, const std::string& name) {
 	     image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
 }
 
-void TextureCache::UploadImage(Image& image, Buffer& source, uint64_t source_offset) {
+void TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
+                               uint64_t source_size, bool source_is_host) {
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::ImgUploadNs,
 	                                       Common::FrameStats::Counter::ImgUploads);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, image.info.data.size);
@@ -1080,7 +1081,9 @@ void TextureCache::UploadImage(Image& image, Buffer& source, uint64_t source_off
 		for (auto& copy: copies) {
 			copy.bufferOffset += linear.offset;
 		}
-		image.Upload(copies, linear.buffer, linear.offset, linear.size);
+		image.Upload(copies, linear.buffer, linear.offset, linear.size,
+		             linear.buffer != source || source_is_host);
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 3, info.data.size >> 20u);
 	};
 
 	if (binding != BindingType::DepthTarget) {
@@ -1095,15 +1098,20 @@ void TextureCache::UploadImage(Image& image, Buffer& source, uint64_t source_off
 			     info.extent.height, info.extent.depth, info.pitch, info.resources.levels,
 			     info.resources.layers, info.samples);
 		}
-		TileManager::Result linear {source.Handle(), source_offset, info.data.size};
+		TileManager::Result linear {source, source_offset, info.data.size};
 		if (!plan.tiles.empty()) {
-			linear = m_tiler.Detile(source.Handle(), source_offset, info.data.size,
-			                        plan.LinearSize(), plan.tiles);
+			linear = m_tiler.Detile(source, source_offset, info.data.size, plan.LinearSize(),
+			                        plan.tiles, source_is_host);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDetileDispatches,
+			                        plan.tiles.size());
+			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 1, info.data.size >> 20u);
 		}
 		if (plan.swap_bgra16) {
 			linear = m_tiler.SwapBgra16(linear);
+			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 2, info.data.size >> 20u);
 		}
 		upload(plan.regions, linear);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ImgCopyRegions, plan.regions.size());
 		return;
 	}
 
@@ -1115,11 +1123,11 @@ void TextureCache::UploadImage(Image& image, Buffer& source, uint64_t source_off
 	const auto          layers          = info.resources.layers;
 	const auto          full_slice_size = info.data.size / layers;
 	auto                copies          = BuildDepthCopies(info, full_slice_size);
-	TileManager::Result linear {source.Handle(), source_offset, source.Size() - source_offset};
+	TileManager::Result linear {source, source_offset, source_size};
 	if (info.IsTiled()) {
 		const auto tiles = BuildDepthTiles(info);
-		linear =
-		    m_tiler.Detile(source.Handle(), source_offset, info.data.size, info.data.size, tiles);
+		linear = m_tiler.Detile(source, source_offset, info.data.size, info.data.size, tiles,
+		                        source_is_host);
 	}
 	const auto transfer_bytes = DepthAspectTransferBytes(info.pixel_format);
 	if (transfer_bytes != info.bytes_per_block) {
@@ -1166,12 +1174,12 @@ void TextureCache::InitializeImage(ImageId id) {
 	}
 	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
 	if (upload) {
-		const auto [source, source_offset] =
+		const auto source =
 		    m_buffer_cache.ObtainBufferForImage(image.info.data.address, image.info.data.size);
-		if (source == nullptr) {
+		if (source.buffer == nullptr) {
 			EXIT("TextureCache: failed to obtain image upload source\n");
 		}
-		UploadImage(image, *source, source_offset);
+		UploadImage(image, source.buffer, source.offset, source.size, source.host_written);
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
 		image.ClearBufferModified();
 	}

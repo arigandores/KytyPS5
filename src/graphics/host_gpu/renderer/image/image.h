@@ -58,8 +58,10 @@ public:
 	                                   std::optional<ImageSubresourceRange> range);
 	void Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
 	             std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer);
+	// buffer_from_tiler: the source buffer was written by the tiler (compute / fill) or the CPU,
+	// never by a draw: the barrier before the copy names those stages only.
 	void Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
-	            uint64_t size);
+	            uint64_t size, bool buffer_from_tiler = false);
 	void Download(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
 	              uint64_t size);
 	void CopyImage(Image& source);

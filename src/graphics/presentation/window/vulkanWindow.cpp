@@ -1207,6 +1207,30 @@ void WindowContext::CreateVulkan() {
 				device_extensions.push_back(extension);
 			}
 		}
+		// KYTY_HOST_IMPORT=0 disables the guest-memory import (HostImport, bufferCache).
+		{
+			const char* host_import = std::getenv("KYTY_HOST_IMPORT");
+			const bool  want_import = host_import == nullptr || host_import[0] != '0';
+			if (want_import &&
+			    HasExtension(available_extensions, VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME)) {
+				device_extensions.push_back(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME);
+				vk::PhysicalDeviceExternalMemoryHostPropertiesEXT host_properties {};
+				host_properties.sType =
+				    vk::StructureType::ePhysicalDeviceExternalMemoryHostPropertiesEXT;
+				vk::PhysicalDeviceProperties2 properties2 {};
+				properties2.sType = vk::StructureType::ePhysicalDeviceProperties2;
+				properties2.pNext = &host_properties;
+				graphic_ctx.physical_device.getProperties2(&properties2);
+				graphic_ctx.external_memory_host_enabled = true;
+				graphic_ctx.min_imported_host_pointer_alignment =
+				    host_properties.minImportedHostPointerAlignment;
+				LOGF("Vulkan: VK_EXT_external_memory_host enabled (host pointer alignment %llu)\n",
+				     static_cast<unsigned long long>(host_properties.minImportedHostPointerAlignment));
+			} else {
+				LOGF("Vulkan: VK_EXT_external_memory_host %s\n",
+				     want_import ? "unavailable" : "disabled (KYTY_HOST_IMPORT=0)");
+			}
+		}
 		if (HasExtension(available_extensions, VK_EXT_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_EXTENSION_NAME) &&
 		    HasExtension(available_extensions, VK_EXT_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_EXTENSION_NAME)) {
 			device_extensions.push_back(VK_EXT_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_EXTENSION_NAME);

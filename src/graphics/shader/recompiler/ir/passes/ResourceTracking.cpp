@@ -5,10 +5,13 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
 #include <algorithm>
+#include <array>
 #include <cstdio>
 #include <cstring>
 #include <fmt/format.h>
+#include <optional>
 #include <span>
+#include <unordered_map>
 #include <utility>
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
@@ -172,14 +175,14 @@ private:
 	}
 
 	void MakeSource(const Inst& handle, uint32_t width, bool sampler, bool sample_adjust,
-	                DescriptorSource& descriptor, uint32_t pc) const {
+	                DescriptorSource& descriptor, uint32_t pc) {
 		if (handle.NumArgs() != width) {
 			Fail(pc, fmt::format("{} has {} descriptor dwords, expected {}",
 			                     ValueOpcodeName(handle.GetOpcode()), handle.NumArgs(), width));
 		}
 		descriptor.dword_count = width;
 		for (uint32_t i = 0; i < width; i++) {
-			descriptor.dwords[i] = handle.Arg(i).Resolve();
+			descriptor.dwords[i] = LowerUniformPhi(handle.Arg(i).Resolve(), pc);
 		}
 		if (sample_adjust) {
 			descriptor.dwords[3] = CanonicalizeSampleAdjustDword3(descriptor.dwords[3]);
@@ -190,6 +193,111 @@ private:
 			// Border color and its table index are unused unless a clamp axis selects border mode.
 			descriptor.dwords[3] = Value(0u);
 		}
+	}
+
+	// Walks from a phi predecessor up a chain of single-predecessor fall-through blocks to the
+	// conditional branch that selected this path. Reports that block and which of its successors
+	// (0 = true, 1 = false) leads to the phi.
+	bool FindBranchEdge(const Block* pred, const Block* merge, size_t& branch,
+	                    uint32_t& successor) const {
+		if (m_program.block_info.size() != m_program.blocks.size()) {
+			return false;
+		}
+		const auto index_of = [&](const Block* block) -> std::optional<size_t> {
+			const auto found = std::ranges::find(m_program.blocks, block);
+			if (found == m_program.blocks.end()) {
+				return std::nullopt;
+			}
+			return static_cast<size_t>(found - m_program.blocks.begin());
+		};
+		const auto merge_index = index_of(merge);
+		if (!merge_index) {
+			return false;
+		}
+		uint32_t     target_id = m_program.block_info[*merge_index].id;
+		const Block* current   = pred;
+		for (uint32_t step = 0; step < 32u; step++) {
+			const auto current_index = index_of(current);
+			if (!current_index) {
+				return false;
+			}
+			const auto& terminator = m_program.block_info[*current_index].terminator;
+			if (terminator.kind == CFG::TerminatorKind::ConditionalBranch) {
+				const bool via_true  = terminator.true_block == target_id;
+				const bool via_false = terminator.false_block == target_id;
+				if (via_true == via_false) {
+					return false;
+				}
+				branch    = *current_index;
+				successor = via_true ? 0u : 1u;
+				return true;
+			}
+			if (terminator.kind != CFG::TerminatorKind::Branch ||
+			    terminator.true_block != target_id) {
+				return false;
+			}
+			const auto predecessors = current->ImmPredecessors();
+			if (predecessors.size() != 1u) {
+				return false;
+			}
+			target_id = m_program.block_info[*current_index].id;
+			current   = predecessors[0];
+		}
+		return false;
+	}
+
+	// A descriptor word that reaches its use through a phi of a two-way uniform branch (for
+	// example S_CBRANCH_SCC0 skipping a second S_LOAD of the S#, ASTRO BOT PS 0x1974d0d59ab6429f)
+	// has no single value the planner can push, but the host can evaluate the branch condition
+	// exactly like the resource control flow does. Lower the phi to Select(condition, taken,
+	// skipped) for host-side evaluation. The select lives in value_storage only: it is never
+	// emitted into SPIR-V, so its operands need not dominate the merge block.
+	Value LowerUniformPhi(Value value, uint32_t pc, uint32_t depth = 0) {
+		value     = value.Resolve();
+		auto* phi = value.TryInstruction();
+		if (phi == nullptr || phi->GetOpcode() != ValueOpcode::Phi) {
+			return value;
+		}
+		if (const auto cached = m_lowered_phis.find(phi); cached != m_lowered_phis.end()) {
+			return cached->second;
+		}
+		m_lowered_phis.emplace(phi, value); // cycle guard
+		if (depth >= 8u || phi->GetType() != Type::U32 || phi->NumArgs() != 2u ||
+		    phi->NumPhiBlocks() != 2u || !ResolveInvariantPhi(m_program, value).IsEmpty()) {
+			return value;
+		}
+		const Block* merge = phi->Parent();
+		if (merge == nullptr) {
+			return value;
+		}
+		std::array<size_t, 2>   branch {};
+		std::array<uint32_t, 2> successor {};
+		for (size_t index = 0; index < 2u; index++) {
+			const auto* pred = phi->PhiBlock(index);
+			if (pred == nullptr || !FindBranchEdge(pred, merge, branch[index], successor[index])) {
+				return value;
+			}
+		}
+		if (branch[0] != branch[1] || successor[0] == successor[1]) {
+			return value;
+		}
+		const auto condition = m_program.block_info[branch[0]].condition;
+		if (condition.IsEmpty() || condition.Resolve().GetType() != Type::U1 ||
+		    !ValidateRuntimeValue(m_program, condition, RuntimeValueType::Integer)) {
+			return value;
+		}
+		const auto taken   = LowerUniformPhi(phi->Arg(successor[0] == 0u ? 0u : 1u), pc, depth + 1u);
+		const auto skipped = LowerUniformPhi(phi->Arg(successor[0] == 0u ? 1u : 0u), pc, depth + 1u);
+		auto& select = m_program.value_storage.emplace_back(ValueOpcode::SelectU32, uint64_t {0});
+		select.SetArg(0, condition);
+		select.SetArg(1, taken);
+		select.SetArg(2, skipped);
+		std::fprintf(stderr,
+		             "shader 0x%016llx: descriptor word at pc 0x%08x comes from a uniform branch, "
+		             "lowered its phi to a host-evaluated select\n",
+		             static_cast<unsigned long long>(m_program.shader_hash), pc);
+		m_lowered_phis[phi] = Value(&select);
+		return Value(&select);
 	}
 
 	bool ValidateSource(const DescriptorSource& descriptor, uint32_t& bad_dword) const {
@@ -932,6 +1040,7 @@ private:
 	std::unordered_map<std::pair<const Inst*, const Block*>, Inst*, VariantAddressKeyHash>
 	    m_variant_addresses;
 	std::vector<IndirectImagePlan> m_indirect_images;
+	std::unordered_map<const Inst*, Value> m_lowered_phis;
 };
 
 } // namespace

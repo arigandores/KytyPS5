@@ -113,7 +113,12 @@ ResourcePlan& ResourcePlan::operator=(ResourcePlan&& other) noexcept {
 
 Program::~Program() {
 	// Values may cross block boundaries. Detach all arguments before any block starts destroying
-	// its instruction storage so reverse-use links always point to live definitions.
+	// its instruction storage so reverse-use links always point to live definitions. Host-only
+	// values (descriptor selects lowered by resource tracking) reference block instructions and
+	// are detached first.
+	for (auto& inst: value_storage) {
+		inst.Invalidate();
+	}
 	for (auto* block: blocks) {
 		for (auto& inst: *block) {
 			inst.Invalidate();
@@ -276,7 +281,20 @@ void ValidateProgram(const Program& program, bool require_ssa) {
 					return Fail("value IR conditional branch target is missing");
 				}
 				if (!validate_control_value(program.block_info[block_index].condition, Type::U1)) {
-					return Fail("value IR conditional branch condition is invalid");
+					const auto  condition  = program.block_info[block_index].condition;
+					const auto* definition = condition.TryInstruction();
+					return Fail(fmt::format(
+					    "value IR conditional branch condition is invalid: block {} pc 0x{:x}-0x{:x} "
+					    "condition {} type {} definition {}",
+					    program.block_info[block_index].id, program.block_info[block_index].start_pc,
+					    program.block_info[block_index].end_pc,
+					    condition.IsEmpty() ? "empty" : "set", TypeName(condition.GetType()),
+					    definition == nullptr           ? "none"
+					    : definition->Parent() == nullptr ? fmt::format("{} without a block",
+					                                                    ValueOpcodeName(definition->GetOpcode()))
+					                                      : fmt::format("{} in a{} block",
+					                                                    ValueOpcodeName(definition->GetOpcode()),
+					                                                    std::ranges::find(program.blocks, definition->Parent()) == program.blocks.end() ? " foreign" : " known")));
 				}
 				break;
 			case CFG::TerminatorKind::IndirectBranch: {

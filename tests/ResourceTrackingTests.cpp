@@ -9,6 +9,7 @@
 
 #include <array>
 #include <bit>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
@@ -1208,6 +1209,91 @@ void TestPhiValidation() {
         "control-dependent descriptor phi was not rejected transactionally");
 }
 
+// ASTRO BOT PS 0x1974d0d59ab6429f: S_CBRANCH_SCC0 skips a second S_LOAD of the sampler S#, so
+// the image_sample sees a phi of two SRT words. The phi is lowered to a host-evaluated select of
+// the branch condition.
+void TestUniformPhiDescriptorSelect() {
+  namespace CFG = Libs::Graphics::ShaderRecompiler::CFG;
+  Fixture fixture;
+  auto *entry = fixture.block;
+  auto *reload = fixture.AddBlock();
+  auto *merge = fixture.AddBlock();
+  entry->AddBranch(merge);
+  entry->AddBranch(reload);
+  reload->AddBranch(merge);
+  fixture.program.block_info[0].terminator = {
+      .kind = CFG::TerminatorKind::ConditionalBranch, .true_block = 2, .false_block = 1};
+  fixture.program.block_info[1].terminator = {.kind = CFG::TerminatorKind::Branch,
+                                              .true_block = 2};
+
+  const auto control = fixture.Buffer(
+      {fixture.UserData(0), fixture.UserData(1), fixture.UserData(2), fixture.UserData(3)}, 4);
+  MemoryInfo scalar;
+  scalar.kind = ResourceKind::ScalarBuffer;
+  const auto flag = fixture.Emit(ValueOpcode::ReadConstBuffer, {control, Value(0u)},
+                                 fixture.AddMemory(scalar, 4));
+  // S_CMP_LG_U32 0, flag; S_CBRANCH_SCC0 merge.
+  fixture.program.block_info[0].condition =
+      fixture.Emit(ValueOpcode::IEqual32, {flag, Value(0u)});
+
+  std::array<Value, 4> first;
+  std::array<Value, 4> second;
+  std::array<Value, 4> words;
+  for (uint32_t index = 0; index < 4; index++) {
+    first[index] = fixture.UserData(4 + index);
+    second[index] = fixture.Emit(ValueOpcode::GetUserData,
+                                 {Value(static_cast<ScalarReg>(8 + index))}, 0, reload);
+    auto &phi = merge->AppendNewInst(ValueOpcode::Phi, {}, static_cast<uint64_t>(Type::U32));
+    phi.AddPhiOperand(entry, first[index]);
+    phi.AddPhiOperand(reload, second[index]);
+    words[index] = Value(&phi);
+  }
+  std::array<Value, 8> image_words;
+  for (uint32_t index = 0; index < image_words.size(); index++) {
+    image_words[index] = fixture.UserData(12 + index);
+  }
+  const auto image = fixture.Image(image_words, 0x7a8);
+  const auto address = fixture.ImageAddress();
+  const auto sampler = fixture.Emit(ValueOpcode::GetSamplerResource,
+                                    {words[0], words[1], words[2], words[3]},
+                                    MemoryFlags{0, 0x7a8}, merge);
+  MemoryInfo memory;
+  memory.kind = ResourceKind::Image;
+  memory.image_dimension = Decoder::ImageDimension::Dim2D;
+  fixture.Emit(ValueOpcode::ImageSampleRaw, {image, sampler, address},
+               fixture.AddMemory(memory, 0x7a8), merge);
+  fixture.PlanAndTrack();
+
+  Check(fixture.program.info.samplers.size() == 1, "uniform-branch sampler phi was not tracked");
+  const auto &source =
+      fixture.program.descriptor_sources[fixture.program.info.samplers[0].source];
+  const auto *select = source.dwords[0].TryInstruction();
+  Check(select != nullptr && select->GetOpcode() == ValueOpcode::SelectU32 &&
+            select->Parent() == nullptr,
+        "sampler phi was not lowered to a host-only select");
+
+  auto plan = ExtractResourcePlan(fixture.program);
+  std::array<uint32_t, 20> user_data{0x1000, 16u << 16u, 1, 0x4dfac,
+                                     0x11, 0x12, 0x13, 0x14,
+                                     0x21, 0x22, 0x23, 0x24,
+                                     0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
+  TestMemory memory_words;
+  SrtRuntime runtime{.user_data = user_data, .read_memory = ReadTestMemory,
+                     .userdata = &memory_words,
+                     .read_specialization_memory = ReadTestMemory};
+  ResourceSnapshot snapshot;
+  ResourceSpecialization specialization;
+  const auto SamplerIs = [&](std::array<uint32_t, 4> expected) {
+    return MaterializeResources(plan, runtime, snapshot, specialization) &&
+           snapshot.samplers.size() == 1 && snapshot.samplers[0].dword_count == 4 &&
+           std::equal(expected.begin(), expected.end(), snapshot.samplers[0].dwords.begin());
+  };
+  memory_words.words[0] = 0; // SCC0 taken: the reload is skipped
+  Check(SamplerIs({0x11, 0x12, 0x13, 0x14}), "skipped branch did not select the first S#");
+  memory_words.words[0] = 7;
+  Check(SamplerIs({0x21, 0x22, 0x23, 0x24}), "taken branch did not select the reloaded S#");
+}
+
 void TestLoopCycleEnteredThroughRuntimeValue() {
   Fixture fixture;
   auto *entry = fixture.block;
@@ -1846,11 +1932,19 @@ void TestMalformedMemoryKindsRejected() {
 
 int main() {
   try {
-    const auto Run = [](const char *name, auto test) {
+    // KYTY_TESTS_CONTINUE=1: report every failure instead of stopping at the first one.
+    const bool keep_going = std::getenv("KYTY_TESTS_CONTINUE") != nullptr;
+    int failures = 0;
+    const auto Run = [&](const char *name, auto test) {
       try {
         test();
       } catch (const std::exception &exception) {
-        throw std::runtime_error(std::string(name) + ": " + exception.what());
+        if (!keep_going) {
+          throw std::runtime_error(std::string(name) + ": " + exception.what());
+        }
+        std::cerr << "resource tracking test failed: " << name << ": " << exception.what()
+                  << '\n';
+        failures++;
       }
     };
     Run("dense buffers", TestDenseBufferTracking);
@@ -1865,6 +1959,7 @@ int main() {
     Run("SRT runtime", TestSrtFlatteningAndRuntimeMemoization);
     Run("dynamic SRT", TestDynamicSrtReadRemainsExplicit);
     Run("phi validation", TestPhiValidation);
+    Run("uniform phi descriptor select", TestUniformPhiDescriptorSelect);
     Run("runtime-rooted loop", TestLoopCycleEnteredThroughRuntimeValue);
     Run("invariant loop phi", TestInvariantLoopPhi);
     Run("DMA address materialization", TestDmaAddressMaterialization);
@@ -1878,6 +1973,10 @@ int main() {
     Run("graphics push constants", TestGraphicsPushConstantLayout);
     Run("resource limit", TestResourceLimitIsTransactional);
     Run("malformed memory kinds", TestMalformedMemoryKindsRejected);
+    if (failures != 0) {
+      std::cerr << failures << " resource tracking test(s) failed\n";
+      return 1;
+    }
   } catch (const std::exception &exception) {
     std::cerr << "resource tracking test failed: " << exception.what() << '\n';
     return 1;

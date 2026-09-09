@@ -20,6 +20,8 @@ namespace Libs::Graphics {
 namespace {
 
 constexpr const char* REQUEST_FILE = "_screenshot.req";
+constexpr uint32_t    REC_OUT_W    = 960; // recording output geometry (KYTY_REC)
+constexpr uint32_t    REC_OUT_H    = 540;
 
 double NowSeconds() {
 	return std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch())
@@ -208,10 +210,14 @@ ScreenshotGrabber::ScreenshotGrabber(GraphicContext& graphics, CommandScheduler&
 }
 
 ScreenshotGrabber::~ScreenshotGrabber() {
-	for (auto& slot: m_rec_slots) {
-		if (slot.pending) {
-			FlushVideoSlot(slot);
+	FlushPendingVideoSlots(true);
+	if (m_rec_thread.joinable()) {
+		{
+			std::lock_guard lock(m_rec_mutex);
+			m_rec_stop = true;
 		}
+		m_rec_cv.notify_all();
+		m_rec_thread.join();
 	}
 	if (m_rec_pipe != nullptr) {
 		_pclose(m_rec_pipe);
@@ -324,11 +330,16 @@ void ScreenshotGrabber::RecordVideoFrame(CommandBuffer& command, const VulkanIma
 	}
 	auto& slot = m_rec_slots[m_rec_next % m_rec_slots.size()];
 	if (slot.pending) {
-		FlushVideoSlot(slot); // ring wrapped before the GPU finished: wait for it
+		// Ring wrapped before the GPU finished: wait for it. It is the oldest pending slot, so
+		// flushing it keeps the video in present order.
+		FlushPendingVideoSlots(true);
 	}
 	m_format = source.format;
 	m_width  = source.extent.width;
 	m_height = source.extent.height;
+	slot.format = m_format;
+	slot.width  = m_width;
+	slot.height = m_height;
 	const uint64_t size = static_cast<uint64_t>(m_width) * m_height * BytesPerTexel(m_format);
 	if (slot.buffer == nullptr || slot.buffer->Size() < size) {
 		slot.buffer = std::make_unique<Buffer>(m_graphics, m_scheduler, MemoryUsage::Download, 0,
@@ -357,7 +368,9 @@ void ScreenshotGrabber::RecordVideoFrame(CommandBuffer& command, const VulkanIma
 }
 
 // Called after the present was submitted: stores its tick in the newest slot and flushes the
-// oldest one (two presents back), which the GPU has normally finished by now.
+// pending slots the GPU has finished, oldest first. Flushing only "two presents back" used to
+// skip a slot whose GPU work was still running and write the next present before it (frames out
+// of order in the video around scene cuts, where the GPU lags the GuestGpu thread).
 void ScreenshotGrabber::FinishVideoFrame(uint64_t tick) {
 	auto& slot = m_rec_slots[m_rec_next % m_rec_slots.size()];
 	if (!slot.pending) {
@@ -365,9 +378,23 @@ void ScreenshotGrabber::FinishVideoFrame(uint64_t tick) {
 	}
 	slot.tick = tick;
 	m_rec_next++;
-	auto& oldest = m_rec_slots[(m_rec_next + 1u) % m_rec_slots.size()];
-	if (oldest.pending && m_scheduler.IsFree(oldest.tick)) {
+	FlushPendingVideoSlots(false);
+}
+
+// Flushes pending slots in present order while the GPU has finished them (`wait_oldest`: the
+// oldest one is waited for unconditionally).
+void ScreenshotGrabber::FlushPendingVideoSlots(bool wait_oldest) {
+	for (;;) {
+		auto& oldest = m_rec_slots[m_rec_flush_next % m_rec_slots.size()];
+		if (!oldest.pending) {
+			return;
+		}
+		if (!wait_oldest && !m_scheduler.IsFree(oldest.tick)) {
+			return;
+		}
+		wait_oldest = false;
 		FlushVideoSlot(oldest);
+		m_rec_flush_next++;
 	}
 }
 
@@ -375,13 +402,88 @@ void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
 	slot.pending = false;
 	m_scheduler.Wait(slot.tick);
 	slot.buffer->Invalidate(0, slot.buffer->Size());
-	const auto     mapped = slot.buffer->Mapped();
-	const uint32_t bpp    = BytesPerTexel(m_format);
+	const auto mapped = slot.buffer->Mapped();
+	// The slot's own geometry, not m_width/m_height: the source may have changed size since the
+	// copy was recorded (read past the end of a 2 MB slot buffer crashed once the neighbouring
+	// host-visible memory happened to be unmapped).
+	const uint64_t bytes =
+	    static_cast<uint64_t>(slot.width) * slot.height * BytesPerTexel(slot.format);
+	if (slot.width == 0 || slot.height == 0 || bytes > mapped.size()) {
+		return;
+	}
+	// Only the rows the 960x540 output samples, each copied whole (sequential reads: the readback
+	// memory may be write-combined, where scattered reads are slow); buffers are recycled from
+	// the encoder to avoid an 8 MB allocation per frame. The encoder samples the columns.
+	RecJob job;
+	{
+		std::lock_guard lock(m_rec_mutex);
+		if (!m_rec_free.empty()) {
+			job.raw = std::move(m_rec_free.back());
+			m_rec_free.pop_back();
+		}
+	}
+	const uint32_t bpp       = BytesPerTexel(slot.format);
+	const size_t   row_bytes = static_cast<size_t>(slot.width) * bpp;
+	job.raw.resize(row_bytes * REC_OUT_H);
+	for (uint32_t y = 0; y < REC_OUT_H; y++) {
+		const auto sy = static_cast<size_t>(static_cast<uint64_t>(y) * slot.height / REC_OUT_H);
+		std::memcpy(job.raw.data() + static_cast<size_t>(y) * row_bytes, mapped.data() + sy * row_bytes,
+		            row_bytes);
+	}
+	job.format  = slot.format;
+	job.width   = slot.width;
+	job.height  = slot.height;
+	job.present = slot.present;
+	job.time_s  = slot.time_s;
+	{
+		std::unique_lock lock(m_rec_mutex);
+		// Backpressure: the encoder keeps up at 60 fps; a deep backlog means it does not.
+		m_rec_cv.wait(lock, [&] { return m_rec_queue.size() < 8; });
+		m_rec_queue.push_back(std::move(job));
+		if (!m_rec_thread.joinable()) {
+			m_rec_thread = std::thread([this] { RecorderThread(); });
+		}
+	}
+	m_rec_cv.notify_all();
+}
+
+void ScreenshotGrabber::RecorderThread() {
+	for (;;) {
+		RecJob job;
+		{
+			std::unique_lock lock(m_rec_mutex);
+			m_rec_cv.wait(lock, [&] { return m_rec_stop || !m_rec_queue.empty(); });
+			if (m_rec_queue.empty()) {
+				return;
+			}
+			job = std::move(m_rec_queue.front());
+			m_rec_queue.pop_front();
+		}
+		m_rec_cv.notify_all();
+		EncodeVideoFrame(job);
+		std::lock_guard lock(m_rec_mutex);
+		if (m_rec_free.size() < 4) {
+			m_rec_free.push_back(std::move(job.raw));
+		}
+	}
+}
+
+void ScreenshotGrabber::EncodeVideoFrame(RecJob& job) {
+	const auto     format = job.format;
+	const uint32_t width  = job.width;
+	const uint32_t bpp    = BytesPerTexel(format);
+	const auto*    mapped = job.raw.data();
+	if (job.raw.size() < static_cast<size_t>(width) * bpp * REC_OUT_H) {
+		return;
+	}
 	// Fixed output geometry (the presented image changes size between videos, logos and the game);
-	// nearest sampling with a fractional step.
-	constexpr uint32_t out_w = 960;
-	constexpr uint32_t out_h = 540;
+	// nearest sampling with a fractional step. Rows were already selected by FlushVideoSlot.
+	constexpr uint32_t out_w = REC_OUT_W;
+	constexpr uint32_t out_h = REC_OUT_H;
 	if (m_rec_pipe == nullptr) {
+		if (m_rec_path.empty()) {
+			return;
+		}
 		const auto cmd = std::string("ffmpeg -hide_banner -loglevel error -y -f rawvideo -pix_fmt rgb24 -s ") +
 		                 std::to_string(out_w) + "x" + std::to_string(out_h) +
 		                 " -r 60 -i - -c:v h264_nvenc -preset p4 -cq 24 -g 60 -pix_fmt yuv420p"
@@ -390,7 +492,7 @@ void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
 		m_rec_pipe  = _popen(cmd.c_str(), "wb");
 		m_rec_index = std::fopen((m_rec_path + ".idx").c_str(), "w");
 		LOGF("Recording: %s %ux%u (source %ux%u) first present=%u pipe=%s\n", m_rec_path.c_str(), out_w,
-		     out_h, m_width, m_height, slot.present, m_rec_pipe != nullptr ? "ok" : "FAILED");
+		     out_h, width, job.height, job.present, m_rec_pipe != nullptr ? "ok" : "FAILED");
 		if (m_rec_pipe == nullptr) {
 			m_rec_path.clear();
 			return;
@@ -398,18 +500,17 @@ void ScreenshotGrabber::FlushVideoSlot(RecSlot& slot) {
 	}
 	m_rec_rgb.resize(static_cast<size_t>(out_w) * out_h * 3);
 	for (uint32_t y = 0; y < out_h; y++) {
-		const auto  sy  = static_cast<size_t>(static_cast<uint64_t>(y) * m_height / out_h);
-		const auto* row = mapped.data() + sy * m_width * bpp;
+		const auto* row = mapped + static_cast<size_t>(y) * width * bpp;
 		auto*       out = m_rec_rgb.data() + static_cast<size_t>(y) * out_w * 3;
 		for (uint32_t x = 0; x < out_w; x++) {
-			const auto sx = static_cast<size_t>(static_cast<uint64_t>(x) * m_width / out_w);
-			TexelToRgb(m_format, row + sx * bpp, out + static_cast<size_t>(x) * 3);
+			const auto sx = static_cast<size_t>(static_cast<uint64_t>(x) * width / out_w);
+			TexelToRgb(format, row + sx * bpp, out + static_cast<size_t>(x) * 3);
 		}
 	}
 	std::fwrite(m_rec_rgb.data(), 1, m_rec_rgb.size(), m_rec_pipe);
 	std::fflush(m_rec_pipe);
 	if (m_rec_index != nullptr) {
-		std::fprintf(m_rec_index, "%u %u %.3f\n", m_rec_frames, slot.present, slot.time_s - m_first_present_s);
+		std::fprintf(m_rec_index, "%u %u %.3f\n", m_rec_frames, job.present, job.time_s - m_first_present_s);
 		std::fflush(m_rec_index);
 	}
 	m_rec_frames++;

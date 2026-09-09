@@ -5,6 +5,10 @@
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
 #include <array>
+#include <condition_variable>
+#include <deque>
+#include <mutex>
+#include <thread>
 #include <cstdio>
 #include <memory>
 #include <string>
@@ -59,19 +63,45 @@ private:
 		uint32_t                present = 0;
 		double                  time_s  = 0.0;
 		bool                    pending = false;
+		// Geometry of the copy recorded into this slot: the presented image changes size and
+		// format between the logo video, menus and the game, and the slot is flushed up to two
+		// presents later.
+		vk::Format              format  = vk::Format::eUndefined;
+		uint32_t                width   = 0;
+		uint32_t                height  = 0;
 	};
 	std::string           m_rec_path;
 	FILE*                 m_rec_pipe = nullptr;
 	FILE*                 m_rec_index = nullptr;
 	std::array<RecSlot, 3> m_rec_slots {};
 	uint32_t              m_rec_next    = 0;
+	uint32_t              m_rec_flush_next = 0; // oldest slot not yet written to the video
 	uint32_t              m_rec_frames  = 0;
 	std::vector<uint8_t>  m_rec_rgb;
 	bool                  m_rec_frame = false; // this present records a video frame
+	// Encoder thread: FlushVideoSlot hands it the raw texels; it converts to RGB and feeds ffmpeg,
+	// so the GuestGpu thread pays a memcpy per frame instead of the 2-3 ms conversion.
+	struct RecJob {
+		std::vector<uint8_t> raw;
+		vk::Format           format  = vk::Format::eUndefined;
+		uint32_t             width   = 0;
+		uint32_t             height  = 0;
+		uint32_t             present = 0;
+		double               time_s  = 0.0;
+	};
+	std::mutex              m_rec_mutex;
+	std::condition_variable m_rec_cv;
+	std::deque<RecJob>      m_rec_queue;
+	std::vector<std::vector<uint8_t>> m_rec_free; // recycled raw buffers
+	std::thread             m_rec_thread;
+	bool                    m_rec_stop = false;
+	void EncodeVideoFrame(RecJob& job);
+	void RecorderThread();
 	bool PollScreenshot();
 	void RecordVideoFrame(CommandBuffer& command, const VulkanImage& source);
 	void FinishVideoFrame(uint64_t tick);
 	void FlushVideoSlot(RecSlot& slot);
+	void FlushPendingVideoSlots(bool wait_oldest);
 };
 
 } // namespace Libs::Graphics

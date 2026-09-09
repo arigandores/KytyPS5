@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 
 #include <cstring>
+#include <cstdlib>
 #include <limits>
 #include <numeric>
 #include <vk_mem_alloc.h>
@@ -74,8 +75,20 @@ Buffer::Buffer(GraphicContext& graphics, CommandScheduler& scheduler, MemoryUsag
 	buffer_info.usage       = flags;
 
 	const bool with_bda = bool(flags & vk::BufferUsageFlagBits::eShaderDeviceAddress);
+	// Buffer-cache (BDA) buffers used to be dedicated allocations unconditionally: one
+	// vkAllocateMemory per buffer, 50-100 us each, 13+ ms on a scene cut that creates hundreds.
+	// The allocator carries VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT, so sub-allocated
+	// memory works for device addresses too; only large buffers stay dedicated.
+	// KYTY_BUFFER_DEDICATED_KB=<threshold> (default 16384), =1 restores "always dedicated".
+	static const uint64_t dedicated_min_kb = [] {
+		const char* value = std::getenv("KYTY_BUFFER_DEDICATED_KB");
+		return value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {16384};
+	}();
 	const VmaAllocationCreateFlags bda_flag =
-	    with_bda ? VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT : 0;
+	    with_bda && size >= dedicated_min_kb * 1024u ? VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT
+	                                                 : 0;
+	Common::FrameStats::Scope create_scope(Common::FrameStats::Counter::BufCreateNs,
+	                                       Common::FrameStats::Counter::BufCreates);
 	VmaAllocationCreateInfo allocation_info {};
 	allocation_info.flags =
 	    VMA_ALLOCATION_CREATE_WITHIN_BUDGET_BIT | bda_flag | AllocationFlags(usage);

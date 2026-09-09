@@ -244,14 +244,17 @@ const char* CurrentSite() {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 namespace {
 
+std::atomic<uint64_t> g_sample_frame {0};
+
 struct SampleKey {
 	uint64_t leaf_module = 0; // module base of the leaf frame (0 = unknown)
 	uint64_t leaf_rip    = 0; // leaf rip relative to its module (or absolute if unknown)
 	uint64_t kyty_rva    = 0; // first frame inside the executable (0 = none found)
-	uint64_t chain[3] {};     // the next three frames inside the executable (callers)
+	uint64_t chain[6] {};     // the next six frames inside the executable (callers)
 	bool     operator==(const SampleKey& o) const noexcept {
 		return leaf_module == o.leaf_module && leaf_rip == o.leaf_rip && kyty_rva == o.kyty_rva &&
-		       chain[0] == o.chain[0] && chain[1] == o.chain[1] && chain[2] == o.chain[2];
+		       chain[0] == o.chain[0] && chain[1] == o.chain[1] && chain[2] == o.chain[2] &&
+		       chain[3] == o.chain[3] && chain[4] == o.chain[4] && chain[5] == o.chain[5];
 	}
 };
 
@@ -263,6 +266,9 @@ struct SampleKeyHash {
 		h ^= k.chain[0] * 0x9E3779B97F4A7C15ull + (h << 5u);
 		h ^= k.chain[1] * 0xC2B2AE3D27D4EB4Full + (h >> 3u);
 		h ^= k.chain[2] * 0x165667B19E3779F9ull + (h << 7u);
+		h ^= k.chain[3] * 0x9E3779B97F4A7C15ull + (h >> 5u);
+		h ^= k.chain[4] * 0xC2B2AE3D27D4EB4Full + (h << 3u);
+		h ^= k.chain[5] * 0x165667B19E3779F9ull + (h >> 7u);
 		return static_cast<size_t>(h ^ (h >> 29u));
 	}
 };
@@ -305,6 +311,16 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 	const auto  t_start = std::chrono::steady_clock::now();
 	auto        t_dump  = t_start;
 	uint64_t    total   = 0;
+	// KYTY_SAMPLE_FRAME_MS=<ms>: samples of every frame that lasted at least this long are logged
+	// separately (SampleFrame: rows), so the composition of a scene-cut frame is visible.
+	static const uint64_t frame_min_ms = [] {
+		const char* value = std::getenv("KYTY_SAMPLE_FRAME_MS");
+		return value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {0};
+	}();
+	std::unordered_map<SampleKey, uint32_t, SampleKeyHash> frame_counts;
+	uint64_t    frame_total = 0;
+	uint64_t    frame_seq   = g_sample_frame.load();
+	auto        t_frame     = t_start;
 	const auto  name_of = [&](uint64_t base) -> const std::string& {
 		auto it = module_names.find(base);
 		if (it == module_names.end()) {
@@ -326,8 +342,8 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 			const auto base  = ModuleBaseOf(rip);
 			key.leaf_module  = base;
 			key.leaf_rip     = base != 0 ? rip - base : rip;
-			// Unwind until the first frame inside this executable (at most 24 frames), then
-			// three more frames inside it (the callers).
+			// Unwind until the first frame inside this executable (at most 40 frames), then
+			// six more frames inside it (the callers).
 			uint64_t pc    = rip;
 			int      found = 0;
 			for (int depth = 0; depth < 40; depth++) {
@@ -337,7 +353,7 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 					} else {
 						key.chain[found - 1] = pc - self_base;
 					}
-					if (++found > 3) {
+					if (++found > 6) {
 						break;
 					}
 				}
@@ -371,6 +387,45 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 			total++;
 		}
 		const auto now = std::chrono::steady_clock::now();
+		if (frame_min_ms != 0) {
+			const auto seq = g_sample_frame.load();
+			if (seq != frame_seq) {
+				const auto ms = std::chrono::duration<double, std::milli>(now - t_frame).count();
+				if (ms >= static_cast<double>(frame_min_ms) && frame_total != 0) {
+					std::vector<std::pair<SampleKey, uint32_t>> rows(frame_counts.begin(),
+					                                                 frame_counts.end());
+					std::sort(rows.begin(), rows.end(),
+					          [](const auto& a, const auto& b) { return a.second > b.second; });
+					LOGF("SampleFrame: n=%llu dt_ms=%.1f total=%llu thread=%d\n",
+					     static_cast<unsigned long long>(frame_seq), ms,
+					     static_cast<unsigned long long>(frame_total), static_cast<int>(role));
+					size_t shown = 0;
+					for (const auto& [k, n]: rows) {
+						if (shown++ >= 200) {
+							break;
+						}
+						LOGF("SampleFrame: leaf=%s rip=%s0x%llx at=+0x%llx n=%u chain=+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx\n",
+						     name_of(k.leaf_module).c_str(), k.leaf_module != 0 ? "+" : "",
+						     static_cast<unsigned long long>(k.leaf_rip),
+						     static_cast<unsigned long long>(k.kyty_rva), n,
+						     static_cast<unsigned long long>(k.chain[0]),
+						     static_cast<unsigned long long>(k.chain[1]),
+						     static_cast<unsigned long long>(k.chain[2]),
+						     static_cast<unsigned long long>(k.chain[3]),
+						     static_cast<unsigned long long>(k.chain[4]),
+						     static_cast<unsigned long long>(k.chain[5]));
+					}
+				}
+				frame_counts.clear();
+				frame_total = 0;
+				frame_seq   = seq;
+				t_frame     = now;
+			}
+			if (ok) {
+				frame_counts[key]++;
+				frame_total++;
+			}
+		}
 		if (now - t_dump >= std::chrono::seconds(10)) {
 			t_dump = now;
 			std::vector<std::pair<SampleKey, uint32_t>> rows(counts.begin(), counts.end());
@@ -385,13 +440,16 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 				if (shown++ >= 400) {
 					break;
 				}
-				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u chain=+0x%llx,+0x%llx,+0x%llx\n",
+				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u chain=+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx\n",
 				     name_of(k.leaf_module).c_str(), k.leaf_module != 0 ? "+" : "",
 				     static_cast<unsigned long long>(k.leaf_rip),
 				     static_cast<unsigned long long>(k.kyty_rva), n,
 				     static_cast<unsigned long long>(k.chain[0]),
 				     static_cast<unsigned long long>(k.chain[1]),
-				     static_cast<unsigned long long>(k.chain[2]));
+				     static_cast<unsigned long long>(k.chain[2]),
+				     static_cast<unsigned long long>(k.chain[3]),
+				     static_cast<unsigned long long>(k.chain[4]),
+				     static_cast<unsigned long long>(k.chain[5]));
 			}
 			counts.clear();
 			total = 0;
@@ -401,6 +459,10 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 }
 
 } // namespace
+
+void NoteFrame(uint64_t frame) {
+	g_sample_frame.store(frame);
+}
 
 void StartSampler(ThreadRole role) {
 	static std::atomic<bool> started {false};
@@ -424,6 +486,7 @@ void StartSampler(ThreadRole role) {
 }
 #else
 void StartSampler(ThreadRole) {}
+void NoteFrame(uint64_t) {}
 #endif
 
 uint64_t ModuleOffset(const void* address) {

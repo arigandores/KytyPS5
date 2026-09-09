@@ -112,6 +112,8 @@ enum class Counter : uint32_t {
 	CbankCopyCpu,    // const-bank ranges copied to the stream ring from guest memory (misaligned base)
 	CbankCopyGpu,    // ... copied on the GPU (range written by the GPU)
 	CbankCopyBytes,
+	AsyncCopyWaitNs, // WaitAsyncCopies before vkQueueSubmit (guest -> staging copies still running)
+	AsyncCopyWaits,  // ... submits that had to wait
 	Count
 };
 
@@ -148,6 +150,8 @@ enum class ThreadRole : uint32_t { Main, Gpu, Present, Count };
 // KYTY_SAMPLE_GPU=1: sampling profiler of the thread registered as ThreadRole::Gpu. Started by
 // RegisterCurrentThread; the samples are logged periodically as SampleTrace: lines.
 void                      StartSampler(ThreadRole role);
+// Frame boundary for the per-frame sampler dumps (KYTY_SAMPLE_FRAME_MS): called from the flip.
+void                      NoteFrame(uint64_t frame);
 
 [[nodiscard]] bool Enabled();
 [[nodiscard]] uint64_t NowNs();

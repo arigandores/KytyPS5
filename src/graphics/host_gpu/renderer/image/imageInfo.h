@@ -191,8 +191,10 @@ struct ImageViewInfo {
 	uint32_t             layer_count = 1;
 	vk::ComponentMapping mapping     = {};
 	vk::ImageUsageFlags  usage       = vk::ImageUsageFlagBits::eSampled;
-	// VK_EXT_image_view_min_lod: sampling never reads below this level of the view (the image's
-	// top levels are still pending, see TextureCache deferred mip upload). 0 = none.
+	// VK_EXT_image_view_min_lod, 4.8 fixed point (units of 1/256 level, relative to base_level):
+	// sampling never reads below this LOD of the view. Sources: the T# MIN_LOD field (texture
+	// streaming raises it while the top levels are not resident) and TextureCache deferred mip
+	// uploads (whole levels). 0 = none.
 	uint32_t             min_lod     = 0;
 
 	[[nodiscard]] bool operator==(const ImageViewInfo& rhs) const noexcept {

@@ -545,15 +545,44 @@ static void PopulateTextureMipLayout(ImageInfo& info) {
 	}
 }
 
+// KYTY_TSHARP_MIN_LOD=0 disables the T# MIN_LOD clamp (debug A/B).
+static bool TSharpMinLodEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_TSHARP_MIN_LOD");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
 static ImageViewInfo TextureViewInfo(const ShaderRecompiler::IR::ImageResource& resource,
                                      const ShaderTextureResource& descriptor, vk::Format format,
                                      bool shader_conversion, bool storage, uint32_t view_levels,
-                                     uint32_t image_layers) {
+                                     uint32_t image_layers, bool min_lod_views) {
 	ImageViewInfo view {};
 	view.format      = format;
 	view.aspect      = vk::ImageAspectFlagBits::eColor;
 	view.base_level  = descriptor.BaseLevel();
 	view.level_count = view_levels;
+	// T# MIN_LOD (4.8 fixed point, relative to base_level). Texture streaming keeps the mip chain
+	// addressing intact and raises MIN_LOD while the top levels are not resident yet; sampling
+	// below it reads memory the streamer has not filled (ASTRO BOT: 4K wall/prop textures came
+	// out as noise). Without VK_EXT_image_view_min_lod the whole levels are cut from the view.
+	if (!storage && descriptor.MinLod() != 0 && view_levels > 1 && TSharpMinLodEnabled()) {
+		static bool logged = false;
+		if (!logged) {
+			logged = true;
+			LOGF("Texture: T# MIN_LOD %u/256 applied to a sampled view (%s)\n",
+			     static_cast<uint32_t>(descriptor.MinLod()),
+			     min_lod_views ? "VK_EXT_image_view_min_lod" : "base level shift");
+		}
+		if (min_lod_views) {
+			view.min_lod = descriptor.MinLod();
+		} else {
+			const uint32_t whole = std::min<uint32_t>(descriptor.MinLod() >> 8u, view_levels - 1u);
+			view.base_level += whole;
+			view.level_count -= whole;
+		}
+	}
 	view.usage   = storage ? vk::ImageUsageFlagBits::eStorage : vk::ImageUsageFlagBits::eSampled;
 	view.mapping = storage || shader_conversion
 	                   ? vk::ComponentMapping {}
@@ -794,7 +823,8 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		PopulateTextureMipLayout(desc.info);
 	}
 	desc.view_info = TextureViewInfo(resource, descriptor, view_format, shader_conversion, storage,
-	                                 view_levels, desc.info.resources.layers);
+	                                 view_levels, desc.info.resources.layers,
+	                                 m_context.GetGraphics().image_view_min_lod_enabled);
 	desc.type = storage ? TextureCache::BindingType::Storage : TextureCache::BindingType::Texture;
 
 	auto       id                  = texture_cache.FindImage(desc, shader_conversion);

@@ -1611,7 +1611,7 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 				    m_frame_pending_bytes + image.pending_bytes <= MipDefer().budget_bytes) {
 					CompletePendingUpload(image);
 				} else {
-					view_info.min_lod = min_lod;
+					view_info.min_lod = std::max(view_info.min_lod, min_lod << 8u);
 					Common::FrameStats::Add(Common::FrameStats::Counter::ImgMinLodViews, 1);
 				}
 			}

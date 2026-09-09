@@ -6,10 +6,100 @@
 
 #include <algorithm>
 #include <array>
+#include <optional>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv {
 
 namespace {
+
+// Upper bound of a U32 address expression (immediates, lane id, add/shift/and/mul/select/phi
+// of bounded values); nullopt when it depends on something unbounded.
+std::optional<uint64_t> StaticAddressBound(const IR::Value& value_in, int depth) {
+	const auto value = value_in.Resolve();
+	if (value.IsImmediate()) {
+		return value.GetType() == IR::Type::U32 ? std::optional<uint64_t> {value.U32()}
+		                                        : std::nullopt;
+	}
+	const auto* inst = value.TryInstruction();
+	if (inst == nullptr || depth > 12) {
+		return std::nullopt;
+	}
+	const auto arg = [&](size_t i) { return StaticAddressBound(inst->Arg(i), depth + 1); };
+	const auto imm = [&](size_t i) -> std::optional<uint32_t> {
+		const auto v = inst->Arg(i).Resolve();
+		return v.IsImmediate() && v.GetType() == IR::Type::U32 ? std::optional<uint32_t> {v.U32()}
+		                                                       : std::nullopt;
+	};
+	switch (inst->GetOpcode()) {
+		case IR::ValueOpcode::LaneId: return 63u;
+		case IR::ValueOpcode::IAdd32: {
+			const auto a = arg(0);
+			const auto b = arg(1);
+			return a && b ? std::optional<uint64_t> {std::min<uint64_t>(*a + *b, UINT32_MAX)}
+			              : std::nullopt;
+		}
+		case IR::ValueOpcode::ShiftLeftLogical32: {
+			const auto a = arg(0);
+			const auto s = imm(1);
+			return a && s && *s < 32u
+			           ? std::optional<uint64_t> {std::min<uint64_t>(*a << *s, UINT32_MAX)}
+			           : std::nullopt;
+		}
+		case IR::ValueOpcode::BitwiseAnd32: {
+			const auto m0 = imm(0);
+			const auto m1 = imm(1);
+			const auto a  = arg(0);
+			const auto b  = arg(1);
+			uint64_t   bound = UINT32_MAX;
+			bool       known = false;
+			for (const auto& m: {m0, m1}) {
+				if (m) {
+					bound = std::min<uint64_t>(bound, *m);
+					known = true;
+				}
+			}
+			for (const auto& x: {a, b}) {
+				if (x) {
+					bound = std::min<uint64_t>(bound, *x);
+					known = true;
+				}
+			}
+			return known ? std::optional<uint64_t> {bound} : std::nullopt;
+		}
+		case IR::ValueOpcode::IMul32: {
+			const auto a = arg(0);
+			const auto b = arg(1);
+			return a && b ? std::optional<uint64_t> {std::min<uint64_t>(*a * *b, UINT32_MAX)}
+			              : std::nullopt;
+		}
+		case IR::ValueOpcode::SelectU32: {
+			const auto a = arg(1);
+			const auto b = arg(2);
+			return a && b ? std::optional<uint64_t> {std::max(*a, *b)} : std::nullopt;
+		}
+		case IR::ValueOpcode::Phi: {
+			uint64_t bound = 0;
+			for (size_t i = 0; i < inst->NumArgs(); i++) {
+				const auto a = arg(i);
+				if (!a) {
+					return std::nullopt;
+				}
+				bound = std::max(bound, *a);
+			}
+			return bound;
+		}
+		case IR::ValueOpcode::BitFieldUExtract: {
+			const auto count = imm(2);
+			if (!count || *count == 0u || *count > 32u) {
+				return std::nullopt;
+			}
+			const uint64_t mask = *count == 32u ? UINT32_MAX : (uint64_t {1} << *count) - 1u;
+			const auto     a    = arg(0);
+			return a ? std::optional<uint64_t> {std::min(*a, mask)} : std::optional<uint64_t> {mask};
+		}
+		default: return std::nullopt;
+	}
+}
 
 [[noreturn]] void Fail(const IR::Program& program, const char* reason) {
 	EXIT("SPIR-V validation failed: hash=0x%016" PRIx64 " stage=%u reason=%s\n",
@@ -256,6 +346,19 @@ void AnalyzeProgramRequirements(IR::Program& program) {
 				if (program.stage != ShaderType::Compute && program.stage != ShaderType::Mesh &&
 				    kind == IR::ResourceKind::Lds) {
 					requirements.function_lds = true;
+					// The array is private to the invocation: size it by the address bound.
+					const auto& memory = program.memory_info[index];
+					const auto  bound  = shared_access == IR::SharedAccess::Append ||
+					                            shared_access == IR::SharedAccess::Consume
+					                         ? std::nullopt
+					                         : StaticAddressBound(inst.Arg(0), 0);
+					if (!bound) {
+						requirements.function_lds_unbounded = true;
+					} else {
+						const uint64_t end = *bound + memory.offset + memory.data_dwords * 4ull + 4ull;
+						requirements.function_lds_dwords = static_cast<uint32_t>(std::max<uint64_t>(
+						    requirements.function_lds_dwords, std::min<uint64_t>(end / 4u, 8192u)));
+					}
 				}
 				if (shared_access == IR::SharedAccess::Append ||
 				    shared_access == IR::SharedAccess::Consume) {

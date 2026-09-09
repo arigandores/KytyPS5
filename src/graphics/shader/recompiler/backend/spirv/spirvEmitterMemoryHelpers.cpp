@@ -66,7 +66,17 @@ void EmitMemoryOffsets(EmitterState& state) {
 
 uint32_t LdsDwordCount(const EmitterState& state) {
 	const auto* workgroup = ShaderWorkgroupInput(state.stage, state.input_info);
-	return workgroup != nullptr ? workgroup->lds_size_dwords : 8192u;
+	if (workgroup != nullptr) {
+		return workgroup->lds_size_dwords;
+	}
+	// Per-invocation array (pixel/vertex stages): statically bounded DS addresses size it, in
+	// 64-dword steps; the driver reserves local memory for every resident thread, so 8192 dwords
+	// cost ~3 GB of VRAM per such pipeline (PS ab3583abbc20f2ae: 3 dwords per lane via ADDTID).
+	const auto& req = state.requirements;
+	if (req.function_lds_unbounded || req.function_lds_dwords == 0) {
+		return 8192u;
+	}
+	return std::min<uint32_t>(8192u, (req.function_lds_dwords + 63u) & ~63u);
 }
 
 void EnsureLdsStorage(EmitterState& state) {

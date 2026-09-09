@@ -499,6 +499,10 @@ struct SpirvRequirements {
 	bool compute_derivatives          = false;
 	bool image_gather_extended        = false;
 	bool function_lds                 = false;
+	// Dwords of the per-invocation LDS array of non-workgroup stages: the largest statically
+	// bounded byte address of its DS operations (0 = no bound found -> 8192 dwords).
+	uint32_t function_lds_dwords      = 0;
+	bool     function_lds_unbounded   = false;
 	bool function_scratch             = false;
 	bool pixel_valid_mask             = false;
 	bool buffer_int64_atomics         = false;

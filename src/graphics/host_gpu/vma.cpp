@@ -60,7 +60,48 @@ bool GraphicContext::CreateAllocator() {
 		return false;
 	}
 	g_memory_context = this;
+	CreateImagePool();
 	return true;
+}
+
+void GraphicContext::CreateImagePool() {
+	// Measured (session 25): sub-allocated sampled images make the GPU 25-40 % slower on NVIDIA
+	// (56a1 558 -> 950 us, PS 57611 477 -> 751 us at equal clocks) - the driver's preference for a
+	// dedicated allocation is not cosmetic. Opt-in only.
+	const char* env = std::getenv("KYTY_IMAGE_POOL");
+	if (env == nullptr || env[0] != '1') {
+		return;
+	}
+	vk::ImageCreateInfo sample {};
+	sample.imageType   = vk::ImageType::e2D;
+	sample.format      = vk::Format::eBc7UnormBlock;
+	sample.extent      = vk::Extent3D {1024, 1024, 1};
+	sample.mipLevels   = 1;
+	sample.arrayLayers = 1;
+	sample.samples     = vk::SampleCountFlagBits::e1;
+	sample.tiling      = vk::ImageTiling::eOptimal;
+	sample.usage       = vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eTransferDst |
+	               vk::ImageUsageFlagBits::eTransferSrc;
+	VmaAllocationCreateInfo alloc_info {};
+	alloc_info.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+	uint32_t type_index      = 0;
+	auto     result          = static_cast<vk::Result>(vmaFindMemoryTypeIndexForImageInfo(
+        allocator, static_cast<const vk::ImageCreateInfo::NativeType*>(sample), &alloc_info,
+        &type_index));
+	if (result != vk::Result::eSuccess) {
+		LOGF("ImagePool: no memory type for sampled images (%s)\n", vk::to_string(result).c_str());
+		return;
+	}
+	VmaPoolCreateInfo pool_info {};
+	pool_info.memoryTypeIndex = type_index;
+	pool_info.blockSize       = 256ull * 1024 * 1024;
+	result = static_cast<vk::Result>(vmaCreatePool(allocator, &pool_info, &image_pool));
+	if (result != vk::Result::eSuccess) {
+		LOGF("ImagePool: vmaCreatePool failed (%s)\n", vk::to_string(result).c_str());
+		image_pool = nullptr;
+		return;
+	}
+	LOGF("ImagePool: memory type %u, block 256 MB\n", type_index);
 }
 
 void VulkanLogMemoryStats() {
@@ -167,6 +208,10 @@ void GraphicContext::DestroyAllocator() {
 		return;
 	}
 	VulkanDeferredDestroyFlush();
+	if (image_pool != nullptr) {
+		vmaDestroyPool(allocator, image_pool);
+		image_pool = nullptr;
+	}
 	vmaDestroyAllocator(allocator);
 	allocator = nullptr;
 }
@@ -245,11 +290,25 @@ bool GraphicContext::CreateImage(const vk::ImageCreateInfo& image_info, VulkanIm
 
 	VmaAllocationCreateInfo alloc_info {};
 	alloc_info.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
+	const bool attachment    = static_cast<bool>(
+        image_info.usage & (vk::ImageUsageFlagBits::eColorAttachment |
+                            vk::ImageUsageFlagBits::eDepthStencilAttachment));
+	if (image_pool != nullptr && !attachment && image_info.samples == vk::SampleCountFlagBits::e1) {
+		alloc_info.pool = image_pool;
+	}
 
 	vk::Image::CType native_image = VK_NULL_HANDLE;
-	const auto        result       = static_cast<vk::Result>(
+	auto             result       = static_cast<vk::Result>(
 	    vmaCreateImage(allocator, static_cast<const vk::ImageCreateInfo::NativeType*>(image_info),
 	                   &alloc_info, &native_image, &image.allocation, nullptr));
+	if (result != vk::Result::eSuccess && alloc_info.pool != nullptr) {
+		// Memory type or size the pool cannot serve: fall back to the default allocation path.
+		alloc_info.pool = nullptr;
+		native_image    = VK_NULL_HANDLE;
+		result          = static_cast<vk::Result>(vmaCreateImage(
+            allocator, static_cast<const vk::ImageCreateInfo::NativeType*>(image_info), &alloc_info,
+            &native_image, &image.allocation, nullptr));
+	}
 	image.image = native_image;
 	if (result != vk::Result::eSuccess) {
 		LogMemoryBudget();

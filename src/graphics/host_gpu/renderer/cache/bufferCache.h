@@ -135,7 +135,9 @@ private:
 	[[nodiscard]] vk::Buffer UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
 	                                      uint64_t total_size);
 	[[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);
-	void DownloadBufferMemory(std::span<const DownloadCopy> copies);
+	void DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason = "read");
+	[[nodiscard]] static uint64_t StagingRingBytes();
+	void CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
 	void ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write);
 	[[nodiscard]] AsyncReadback BeginAsyncReadback(uint64_t vaddr, uint64_t size);
 	bool                        FinishAsyncReadback(const AsyncReadback& job);

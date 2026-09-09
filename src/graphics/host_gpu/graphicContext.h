@@ -35,6 +35,10 @@ struct GraphicContext {
 	vk::PhysicalDeviceMemoryProperties physical_device_memory_properties     = {};
 	vk::Device                         device                                = nullptr;
 	VmaAllocator                       allocator                             = nullptr;
+	// Sub-allocating pool for sampled images (KYTY_IMAGE_POOL=1, experiment): the driver prefers a
+	// dedicated allocation for every image (vkAllocateMemory + vkBindImageMemory of ~250 images
+	// cost ~35 ms at a scene cut), but sub-allocated images sample 25-40 % slower - off by default.
+	VmaPool                            image_pool                            = nullptr;
 	bool                               memory_budget_ext_enabled             = false;
 	bool                               rt_extensions_enabled                 = false;
 	bool                               compute_subgroup_size_control_enabled = false;
@@ -114,6 +118,7 @@ struct GraphicContext {
 	[[nodiscard]] uint64_t GetDeviceMemoryUsage() const;
 	[[nodiscard]] uint64_t GetTotalMemoryBudget() const;
 	[[nodiscard]] bool     CreateImage(const vk::ImageCreateInfo& info, VulkanImage& image);
+	void                   CreateImagePool();
 	void                   DeleteImage(VulkanImage& image);
 	void                   AppendHardwareRayTracingDeviceExtensions(
 	    const std::vector<vk::ExtensionProperties>& available_extensions,

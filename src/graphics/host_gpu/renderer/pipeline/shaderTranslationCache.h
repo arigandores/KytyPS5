@@ -63,6 +63,8 @@ public:
 	static bool ReadFileUnchecked(const std::filesystem::path& path, StoredKey& key, Entry& entry);
 
 	[[nodiscard]] uint32_t Loaded() const { return m_loaded; }
+	[[nodiscard]] const std::filesystem::path& Directory() const { return m_directory; }
+	[[nodiscard]] const std::string&           Signature() const { return m_signature; }
 	[[nodiscard]] uint32_t Saved() const { return m_saved; }
 
 private:

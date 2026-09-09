@@ -142,6 +142,32 @@ void BufferCache::DeleteBuffer(BufferId id) {
 	}
 }
 
+// KYTY_STAGING_MB=<n>: size of the upload staging ring (default 1024). A scene cut of ASTRO BOT
+// uploads up to ~950 MB of textures in one frame; a 512 MB ring wrapped inside the frame and
+// waited for the GPU to consume the first half (semwait_gpu 13-35 ms per cut).
+uint64_t BufferCache::StagingRingBytes() {
+	const char* value = std::getenv("KYTY_STAGING_MB");
+	const auto  mb    = value != nullptr ? std::strtoull(value, nullptr, 10) : 1024u;
+	return std::clamp<uint64_t>(mb, 64u, 4096u) * MiB;
+}
+
+// Copies a guest range into the staging ring through the backing view. Large ranges inside one
+// mapping are queued to the copy pool (AsyncMemcpy) and complete before the next vkQueueSubmit;
+// the rest is copied inline.
+void BufferCache::CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size) {
+	const void* backing = nullptr;
+	if (size >= Common::ASYNC_COPY_MIN_BYTES &&
+	    Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+		Common::AsyncMemcpy(staging, backing, static_cast<size_t>(size));
+		return;
+	}
+	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
+	    !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
+		// Not backed guest memory (module image, flexible memory): read the guest view directly.
+		std::memcpy(staging, reinterpret_cast<const void*>(vaddr), static_cast<size_t>(size));
+	}
+}
+
 std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& copy) {
 	if (copy.buffer == nullptr || copy.size == 0 || copy.source_offset > copy.buffer->Size() ||
 	    copy.size > copy.buffer->Size() - copy.source_offset) {
@@ -159,9 +185,32 @@ std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& 
 	return {begin, end - begin};
 }
 
-void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies) {
+void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason) {
 	Common::FrameStats::Scope download_scope(Common::FrameStats::Counter::DownloadNs,
 	                                         Common::FrameStats::Counter::Downloads);
+	// KYTY_FAULT_TRACE=1: every synchronous drain with its reason (a CPU write into GPU-written
+	// memory, the buffer garbage collector, a guest stack release).
+	static const bool drain_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	const auto        drain_t0    = drain_trace ? std::chrono::steady_clock::now()
+	                                            : std::chrono::steady_clock::time_point {};
+	uint64_t          drain_bytes = 0;
+	if (drain_trace) {
+		for (const auto& c: copies) {
+			drain_bytes += c.size;
+		}
+	}
+	const auto drain_report = [&] {
+		if (!drain_trace) {
+			return;
+		}
+		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+		                    std::chrono::steady_clock::now() - drain_t0)
+		                    .count();
+		LOGF("DrainTrace: sync download reason=%s copies=%zu bytes=0x%" PRIx64 " first=0x%016" PRIx64
+		     " took %lld us" "\n",
+		     reason, copies.size(), drain_bytes, copies.empty() ? 0u : copies[0].address,
+		     static_cast<long long>(us));
+	};
 	std::vector<DownloadCopy> batch;
 	batch.reserve(copies.size());
 	uint64_t                  packed_size = 0;
@@ -220,6 +269,7 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies) {
 	for (const auto& copy: copies) {
 		m_gpu_modified_ranges.Subtract(copy.address, copy.size);
 	}
+	drain_report();
 }
 
 BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
@@ -231,7 +281,7 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
       m_bda_null_page(graphics, scheduler, MemoryUsage::DeviceLocal, 0,
                       AllFlags | vk::BufferUsageFlagBits::eShaderDeviceAddress, CACHING_PAGESIZE),
       m_memory_tracker(page_manager),
-      m_staging_buffer(graphics, scheduler, MemoryUsage::Upload, 512 * MiB),
+      m_staging_buffer(graphics, scheduler, MemoryUsage::Upload, StagingRingBytes()),
       m_stream_buffer(graphics, scheduler, MemoryUsage::Stream, 64 * MiB),
       m_download_buffer(graphics, scheduler, MemoryUsage::Download, 32 * MiB),
       m_device_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 128 * MiB),
@@ -377,7 +427,7 @@ void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) 
 		hot.last_hit_frame = m_scheduler.Context().GetGpu().GetFrameNum();
 		static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 		const auto        t0    = std::chrono::steady_clock::now();
-		DownloadBufferMemory(copies);
+		DownloadBufferMemory(copies, is_write ? "cpu-write" : "cpu-read");
 		if (trace) {
 			uint64_t bytes = 0;
 			for (const auto& c: copies) {
@@ -562,8 +612,11 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 	if (mapped != nullptr) {
 		for (auto& copy: copies) {
 			const auto address = buffer.CpuAddress() + copy.dstOffset;
-			std::memcpy(mapped + copy.srcOffset, reinterpret_cast<const void*>(address), copy.size);
+			CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size);
 			copy.srcOffset += base_offset;
+		}
+		if (!m_staging_buffer.IsCoherent()) {
+			Common::WaitAsyncCopies(); // Commit flushes the range
 		}
 		m_staging_buffer.Commit();
 		return m_staging_buffer.Handle();
@@ -662,14 +715,9 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 	}
 	{
 		Common::FrameStats::Scope copy_scope(Common::FrameStats::Counter::ImgCopyNs);
-		const void*               backing = nullptr;
-		if (size >= Common::PARALLEL_COPY_MIN_BYTES &&
-		    Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
-			// Large image inside one mapping: spread the copy over the worker pool.
-			Common::ParallelMemcpy(staging, backing, static_cast<size_t>(size));
-		} else if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
-		           !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
-			EXIT("BufferCache: failed to read mapped guest image backing\n");
+		CopyGuestToStaging(staging, vaddr, size);
+		if (!m_staging_buffer.IsCoherent()) {
+			Common::WaitAsyncCopies(); // Commit flushes the range
 		}
 	}
 	m_staging_buffer.Commit();
@@ -680,6 +728,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBufferForImage(uint64_t vaddr, u
 		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
 	}();
 	if (dump_tex != 0 && vaddr == dump_tex) {
+		Common::WaitAsyncCopies();
 		static std::atomic<uint32_t> dumped {0};
 		const auto                   n = dumped.fetch_add(1);
 		if (n < 3) {
@@ -840,19 +889,13 @@ void BufferCache::RunGarbageCollector() {
 			return false; // streamed data waiting for its first bind
 		}
 		if (dirty) {
-			m_memory_tracker.ForEachDownloadRange<false>(
-			    buffer.CpuAddress(), buffer.Size(),
-			    [&](uint64_t dirty_address, uint64_t dirty_size) noexcept {
-				    m_memory_tracker.ValidateGpuDirtyPages(m_gpu_modified_ranges, dirty_address,
-				                                           dirty_size, "garbage collection");
-			    },
-			    [&](uint64_t dirty_address, uint64_t dirty_size) noexcept {
-				    m_gpu_modified_ranges.ForEachIntersection(
-				        dirty_address, dirty_size, [&](RangeSet::Range range) {
-					    copies.push_back({&buffer, range.address - buffer.CpuAddress(),
-					                      range.address, range.size});
-				        });
-				});
+			// Every range the set holds inside the buffer (the tracker pages may disagree after
+			// a stale-readable window; the set is what the download subtracts).
+			m_gpu_modified_ranges.ForEachIntersection(
+			    buffer.CpuAddress(), buffer.Size(), [&](RangeSet::Range range) {
+				    copies.push_back({&buffer, range.address - buffer.CpuAddress(), range.address,
+				                      range.size});
+			    });
 			dirty_buffers.push_back(id);
 		} else {
 			m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
@@ -864,14 +907,28 @@ void BufferCache::RunGarbageCollector() {
 		return;
 	}
 
-	EXIT_IF(copies.empty());
-	DownloadBufferMemory(copies);
+	LOGF("BufferCache: gc drains %zu gpu-dirty buffers (usage %" PRIu64 " MB, trigger %" PRIu64
+	     " MB, critical %" PRIu64 " MB, aggressive=%d)" "\n",
+	     dirty_buffers.size(), m_total_used_memory >> 20u, m_trigger_gc_memory >> 20u,
+	     m_critical_gc_memory >> 20u, aggressive ? 1 : 0);
+	if (!copies.empty()) {
+		DownloadBufferMemory(copies, "gc");
+	}
 	for (const auto id: dirty_buffers) {
 		auto& buffer = m_slot_buffers[id];
 		m_memory_tracker.UnmarkRegionAsGpuModified(buffer.CpuAddress(), buffer.Size());
 		if (m_memory_tracker.IsRegionGpuModified(buffer.CpuAddress(), buffer.Size()) ||
 		    m_gpu_modified_ranges.Intersects(buffer.CpuAddress(), buffer.Size())) {
-			EXIT("BufferCache: garbage collection retained GPU ownership\n");
+			// Tracker and range set disagreed (seen once the usage crossed the critical
+			// threshold): the buffer goes away, so its GPU ownership goes with it.
+			static std::atomic<uint32_t> log_count {0};
+			if (log_count.fetch_add(1, std::memory_order_relaxed) < 32) {
+				LOGF("BufferCache: gc cleared inconsistent GPU ownership of 0x%016" PRIx64
+				     " size=0x%" PRIx64 "\n",
+				     buffer.CpuAddress(), buffer.Size());
+			}
+			m_gpu_modified_ranges.Subtract(buffer.CpuAddress(), buffer.Size());
+			m_memory_tracker.UnmarkRegionAsGpuModified(buffer.CpuAddress(), buffer.Size());
 		}
 		m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
 		Unregister(id);
@@ -1377,7 +1434,7 @@ void BufferCache::DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size) {
 		}
 	}
 	if (!copies.empty()) {
-		DownloadBufferMemory(copies);
+		DownloadBufferMemory(copies, "stack");
 	}
 	for (const auto id: dirty_buffers) {
 		auto& buffer = m_slot_buffers[id];

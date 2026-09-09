@@ -8,6 +8,7 @@
 #include "common/assert.h"
 #include "common/frameStats.h"
 #include "common/logging/log.h"
+#include "common/parallelCopy.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 
@@ -434,6 +435,17 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 	EXIT_IF(submit.num_wait_semaphores > SubmitInfo::MaxSemaphores ||
 	        submit.num_signal_semaphores >= SubmitInfo::MaxSemaphores);
 	const auto submit_t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+
+	// Guest -> staging copies queued by the buffer/texture caches (AsyncMemcpy) must land before
+	// the GPU reads the staging ring.
+	if (Common::PendingAsyncCopies() != 0) {
+		Common::WaitAsyncCopies();
+		if (submit_t0 != 0) {
+			namespace FS = Common::FrameStats;
+			FS::Add(FS::Counter::AsyncCopyWaitNs, FS::NowNs() - submit_t0);
+			FS::Add(FS::Counter::AsyncCopyWaits, 1);
+		}
+	}
 
 	EndTimestamp();
 	m_command.End();

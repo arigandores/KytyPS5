@@ -476,6 +476,7 @@ struct PipelineCache::ProgramCache {
 		}
 		source.from_cache = true;
 		entry             = programs.try_emplace(key, std::move(source)).first;
+		IndexPermutations(entry->first, entry->second);
 		return true;
 	}
 
@@ -589,8 +590,10 @@ struct PipelineCache::ProgramCache {
 			// A cached plan that does not materialize: drop it and translate the shader again.
 			LOGF("Shader translation cache: dropping hash=0x%016" PRIx64 " (materialization failed)\n",
 			     params.hash);
+			// The modules are leaked on purpose: a precached pipeline job on a worker may still
+			// be compiling with them (a few KB each, rare path).
 			for (const auto& permutation: entry->second.permutations) {
-				device.destroyShaderModule(permutation.handle.module, nullptr);
+				by_id.erase(permutation.handle.id);
 			}
 			programs.erase(entry);
 			entry = programs.end();
@@ -674,6 +677,8 @@ struct PipelineCache::ProgramCache {
 		}
 		entry->second.permutations.push_back(CompilePermutation(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
+		by_id[entry->second.permutations.back().handle.id] = {
+		    &entry->first, static_cast<uint32_t>(entry->second.permutations.size() - 1)};
 		SaveToTranslationCache(entry->first, entry->second);
 		const auto& permutation = entry->second.permutations.back();
 		if (AvTraceEnabled()) {
@@ -728,6 +733,97 @@ struct PipelineCache::ProgramCache {
 		}
 	}
 
+	// Pipeline precache: a permutation handle id -> (source key, index in the permutation list;
+	// the list order is the translation-cache file order, so the index is stable across runs).
+	struct PermutationRef {
+		const ProgramKey* key   = nullptr;
+		uint32_t          index = 0;
+	};
+	std::unordered_map<uint64_t, PermutationRef> by_id;
+
+	void IndexPermutations(const ProgramKey& key, const SourceEntry& source) {
+		uint32_t index = 0;
+		for (const auto& permutation: source.permutations) {
+			by_id[permutation.handle.id] = {&key, index++};
+		}
+	}
+
+	bool Lookup(uint64_t id, ShaderTranslationCache::StoredKey& key, uint32_t& index) const {
+		const auto it = by_id.find(id);
+		if (it == by_id.end()) {
+			return false;
+		}
+		key.stage           = static_cast<uint32_t>(it->second.key->stage);
+		key.hash            = it->second.key->hash;
+		key.user_data_count = it->second.key->user_data_count;
+		key.code_size       = it->second.key->code_size;
+		key.static_state    = it->second.key->static_state;
+		index               = it->second.index;
+		return true;
+	}
+
+	static ProgramKey ProgramKeyOf(const ShaderTranslationCache::StoredKey& key) {
+		return {.stage           = static_cast<ShaderType>(key.stage),
+		        .hash            = key.hash,
+		        .user_data_count = key.user_data_count,
+		        .code_size       = key.code_size,
+		        .static_state    = key.static_state};
+	}
+
+	// Precache, outside the cache lock: reads the translation-cache file of a stored key.
+	bool LoadEntry(const ShaderTranslationCache::StoredKey& key,
+	               ShaderTranslationCache::Entry&           entry) {
+		if (!translation_cache.Enabled()) {
+			return false;
+		}
+		const ShaderTranslationCache::Key lookup {.stage           = key.stage,
+		                                          .hash            = key.hash,
+		                                          .user_data_count = key.user_data_count,
+		                                          .code_size       = key.code_size,
+		                                          .static_state    = key.static_state};
+		return translation_cache.Load(lookup, entry);
+	}
+
+	// Precache, under the cache lock: the permutation of a stored key (the source is inserted
+	// from `loaded` when the run has not touched it yet; `loaded` may be empty when the source
+	// is already present).
+	bool Resolve(const ShaderTranslationCache::StoredKey& key, uint32_t index,
+	             ShaderTranslationCache::Entry* loaded, ShaderProgram& handle,
+	             const ShaderRecompiler::IR::CompiledShaderInfo*& program) {
+		auto entry = programs.find(ProgramKeyOf(key));
+		if (entry == programs.end()) {
+			if (loaded == nullptr || loaded->permutations.empty()) {
+				return false;
+			}
+			SourceEntry source(std::move(loaded->plan));
+			for (auto& p: loaded->permutations) {
+				vk::ShaderModuleCreateInfo create_info {};
+				create_info.codeSize    = p.spirv.size() * sizeof(uint32_t);
+				create_info.pCode       = p.spirv.data();
+				vk::ShaderModule module = nullptr;
+				RequireVulkanSuccess(device.createShaderModule(&create_info, nullptr, &module),
+				                     "create precached shader module");
+				EXIT_IF(module == nullptr);
+				source.permutations.push_back({
+				    .specialization = std::move(p.specialization),
+				    .program        = std::move(p.program),
+				    .handle         = {.id = ++next_shader_id, .module = module},
+				    .spirv          = std::move(p.spirv),
+				});
+			}
+			source.from_cache = true;
+			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;
+			IndexPermutations(entry->first, entry->second);
+		}
+		if (index >= entry->second.permutations.size()) {
+			return false;
+		}
+		const auto& permutation = entry->second.permutations[index];
+		handle                  = permutation.handle;
+		program                 = &permutation.program;
+		return true;
+	}
+
 	std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash> programs;
 	ProgramKey                                                  lookup_key;
 	vk::Device                                                  device;
@@ -741,10 +837,15 @@ PipelineCache::PipelineCache(GraphicContext& graphics)
 	InitializeDriverCache();
 	if (AsyncPipelinesMode() != 0) {
 		StartWorkers();
+		StartPrecache();
 	}
 }
 
 PipelineCache::~PipelineCache() {
+	m_precache_stop.store(true);
+	if (m_precache_thread.joinable()) {
+		m_precache_thread.join();
+	}
 	StopWorkers();
 	Save();
 	auto destroy = [this](const auto& pipelines) {
@@ -852,6 +953,7 @@ void PipelineCache::InitializeDriverCache() {
 // without running destructors (the window is closed by the OS, a debugger, a timeout), so the
 // blob is written every 20 s while it keeps growing instead of only from ~PipelineCache().
 void PipelineCache::MaybeWriteDriverCache() {
+	MaybeWriteRecipes();
 	if (m_driver_cache == nullptr) {
 		return;
 	}
@@ -933,6 +1035,9 @@ void PipelineCache::WaitForPendingPipelines() {
 
 void PipelineCache::Save() {
 	Common::LockGuard lock(m_mutex);
+	if (m_recipes_unsaved != 0) {
+		WriteRecipes();
+	}
 	if (m_driver_cache == nullptr) {
 		return;
 	}
@@ -1077,7 +1182,7 @@ PipelineCache::Pipeline* PipelineCache::CreateGraphicsPipeline(
     const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
     const ShaderPixelInputInfo* ps_input_info, vk::PrimitiveTopology topology,
     bool primitive_restart_enable, const ShaderProgram& vertex_program,
-    const ShaderProgram& pixel_program) {
+    const ShaderProgram& pixel_program, bool allow_wait) {
 	bool                   queued = false;
 	GraphicsPipelineEntry* entry  = nullptr;
 	{
@@ -1089,7 +1194,8 @@ PipelineCache::Pipeline* PipelineCache::CreateGraphicsPipeline(
 	if (entry->ready.load(std::memory_order_acquire)) {
 		return entry;
 	}
-	if (queued && AsyncPipelineWaitUs() != 0) {
+	(void)queued; // precached entries are waited for too (bounded: one wait per frame after a skip)
+	if (allow_wait && AsyncPipelineWaitUs() != 0) {
 		std::unique_lock<std::mutex> lock(m_job_mutex);
 		m_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),
 		                    [entry] { return entry->ready.load(std::memory_order_acquire); });
@@ -1239,6 +1345,7 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	if (auto iter = m_graphics_pipelines.find(key); iter != m_graphics_pipelines.end()) {
 		return iter->second.get(); // may still be compiling on a worker
 	}
+	RecordGraphicsRecipe(key, vs_input_info, ps_input_info);
 
 	const auto pair_key = ShaderPairKey(vs_id, ps_id);
 	if (AsyncPipelinesMode() != 0 && !m_ready_shader_pairs.contains(pair_key)) {
@@ -1367,6 +1474,7 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	if (log) {
 		LOGF("AsyncCompute: prefetch hash=0x%016" PRIx64 " id=%" PRIu64 " queued\n", params.hash, program.id);
 	}
+	RecordComputeRecipe(input_info, program.id);
 	auto  entry  = std::make_unique<ComputePipelineEntry>();
 	auto* target = entry.get();
 	m_compute_pipelines.emplace(program.id, std::move(entry));
@@ -1427,6 +1535,7 @@ PipelineCache::CreateComputePipeline(const ShaderComputeInputInfo& input_info,
 				ShaderDbgDumpInputInfo(input_info);
 			}
 
+			RecordComputeRecipe(input_info, compute_program.id);
 			auto       cached       = std::make_unique<ComputePipelineEntry>();
 			const auto create_begin = HostMicros();
 			CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module,
@@ -1463,4 +1572,521 @@ PipelineCache::CreateComputePipeline(const ShaderComputeInputInfo& input_info,
 	}
 	return *pending;
 }
+// ---------------------------------------------------------------------------------------------
+// Pipeline precache (session 25). Warm runs still created 190+ graphics pipelines and ~140
+// compute pipelines in the process (0.2-10 ms each even from the driver cache), 20-33 of them
+// on every scene cut, where the compiling workers also hold the driver lock that
+// vkQueueSubmit / vkBindImageMemory / vkAllocateMemory on the GuestGpu thread need. A recipe
+// is what CreatePipelineInternal reads: the translation-cache key and permutation index of each
+// stage (the SPIR-V and the compiled info come from the translation cache), the POD pipeline
+// state and the stage input infos without their runtime part.
+namespace {
+
+constexpr char RECIPES_MAGIC[] = "KytyPR1\n";
+
+class RecipeWriter {
+public:
+	void U8(uint8_t v) { m_data.push_back(v); }
+	void U32(uint32_t v) { Bytes(&v, sizeof(v)); }
+	void U64(uint64_t v) { Bytes(&v, sizeof(v)); }
+	void Bytes(const void* p, size_t n) {
+		const auto* b = static_cast<const uint8_t*>(p);
+		m_data.insert(m_data.end(), b, b + n);
+	}
+	template <typename T>
+	void Pod(const T& v) {
+		static_assert(std::is_trivially_copyable_v<T>);
+		Bytes(&v, sizeof(T));
+	}
+	void Key(const ShaderTranslationCache::StoredKey& key) {
+		U32(key.stage);
+		U64(key.hash);
+		U32(key.user_data_count);
+		U32(key.code_size);
+		U32(static_cast<uint32_t>(key.static_state.size()));
+		Bytes(key.static_state.data(), key.static_state.size() * sizeof(uint32_t));
+	}
+	// A stage input info without its runtime part (program pointer + resource snapshot).
+	template <typename T>
+	void Info(const T& info) {
+		const auto*  base  = reinterpret_cast<const uint8_t*>(&info);
+		const auto*  stage = reinterpret_cast<const uint8_t*>(&info.stage);
+		const size_t off   = static_cast<size_t>(stage - base);
+		const size_t tail  = off + sizeof(ShaderStageRuntime);
+		std::array<uint8_t, sizeof(T)> bytes {};
+		std::memcpy(bytes.data(), base, off);
+		std::memcpy(bytes.data() + tail, base + tail, sizeof(T) - tail);
+		Bytes(bytes.data(), bytes.size());
+	}
+	[[nodiscard]] const std::vector<uint8_t>& Data() const { return m_data; }
+	std::vector<uint8_t>&                     Data() { return m_data; }
+
+private:
+	std::vector<uint8_t> m_data;
+};
+
+class RecipeReader {
+public:
+	RecipeReader(const uint8_t* data, size_t size): m_data(data), m_size(size) {}
+	[[nodiscard]] bool   Failed() const { return m_failed; }
+	[[nodiscard]] size_t Pos() const { return m_pos; }
+	[[nodiscard]] bool AtEnd() const { return m_pos == m_size; }
+	uint8_t            U8() {
+		uint8_t v = 0;
+		Bytes(&v, 1);
+		return v;
+	}
+	uint32_t U32() {
+		uint32_t v = 0;
+		Bytes(&v, sizeof(v));
+		return v;
+	}
+	uint64_t U64() {
+		uint64_t v = 0;
+		Bytes(&v, sizeof(v));
+		return v;
+	}
+	void Bytes(void* out, size_t n) {
+		if (m_failed || n > m_size - m_pos) {
+			m_failed = true;
+			std::memset(out, 0, n);
+			return;
+		}
+		std::memcpy(out, m_data + m_pos, n);
+		m_pos += n;
+	}
+	template <typename T>
+	void Pod(T& v) {
+		static_assert(std::is_trivially_copyable_v<T>);
+		Bytes(&v, sizeof(T));
+	}
+	void Key(ShaderTranslationCache::StoredKey& key) {
+		key.stage           = U32();
+		key.hash            = U64();
+		key.user_data_count = U32();
+		key.code_size       = U32();
+		const auto n        = U32();
+		if (m_failed || n > 4096u) {
+			m_failed = true;
+			return;
+		}
+		key.static_state.resize(n);
+		Bytes(key.static_state.data(), n * sizeof(uint32_t));
+	}
+	template <typename T>
+	void Info(T& info) {
+		std::array<uint8_t, sizeof(T)> bytes {};
+		Bytes(bytes.data(), bytes.size());
+		if (m_failed) {
+			return;
+		}
+		auto*        base  = reinterpret_cast<uint8_t*>(&info);
+		const auto*  stage = reinterpret_cast<const uint8_t*>(&info.stage);
+		const size_t off   = static_cast<size_t>(stage - base);
+		const size_t tail  = off + sizeof(ShaderStageRuntime);
+		std::memcpy(base, bytes.data(), off);
+		std::memcpy(base + tail, bytes.data() + tail, sizeof(T) - tail);
+	}
+
+private:
+	const uint8_t* m_data;
+	size_t         m_size;
+	size_t         m_pos    = 0;
+	bool           m_failed = false;
+};
+
+// Layout guard: the records embed these structs byte for byte.
+std::string RecipeLayoutSignature() {
+	return fmt::format("{}:{}:{}:{}:{}:{}", sizeof(ShaderVertexInputInfo), sizeof(ShaderPixelInputInfo),
+	                   sizeof(ShaderComputeInputInfo), sizeof(PipelineRenderingState),
+	                   sizeof(PipelineVertexInputState), sizeof(PipelineStaticParameters));
+}
+
+bool PipelinePrecacheEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_PIPELINE_PRECACHE");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
+} // namespace
+
+void PipelineCache::RecordGraphicsRecipe(const GraphicsPipelineKey&   key,
+                                         const ShaderVertexInputInfo& vs_input_info,
+                                         const ShaderPixelInputInfo*  ps_input_info) {
+	if (!PipelinePrecacheEnabled() || !m_program_cache->translation_cache.Enabled()) {
+		return;
+	}
+	ShaderTranslationCache::StoredKey vs_key;
+	ShaderTranslationCache::StoredKey ps_key;
+	uint32_t                          vs_index = 0;
+	uint32_t                          ps_index = 0;
+	if (!m_program_cache->Lookup(key.vs_shader_id, vs_key, vs_index)) {
+		return;
+	}
+	const bool ps_active = ps_input_info != nullptr;
+	if (ps_active && !m_program_cache->Lookup(key.ps_shader_id, ps_key, ps_index)) {
+		return;
+	}
+	RecipeWriter w;
+	w.U8(1);
+	w.Key(vs_key);
+	w.U32(vs_index);
+	w.U8(ps_active ? 1 : 0);
+	if (ps_active) {
+		w.Key(ps_key);
+		w.U32(ps_index);
+	}
+	w.Pod(key.rendering);
+	w.Pod(key.vertex_input);
+	w.Pod(key.static_params);
+	w.Info(vs_input_info);
+	if (ps_active) {
+		w.Info(*ps_input_info);
+	}
+	AppendRecipe(w.Data().data(), w.Data().size());
+}
+
+// Appends one serialized record unless an identical one is already known.
+void PipelineCache::AppendRecipe(const uint8_t* record, size_t size) {
+	if (!m_recipe_hashes.insert(XXH3_64bits(record, size)).second) {
+		return;
+	}
+	m_recipes.insert(m_recipes.end(), record, record + size);
+	m_recipe_sizes.push_back(static_cast<uint32_t>(size));
+	m_recipe_count++;
+	m_recipes_unsaved++;
+}
+
+void PipelineCache::RecordComputeRecipe(const ShaderComputeInputInfo& input_info,
+                                        uint64_t                      program_id) {
+	if (!PipelinePrecacheEnabled() || !m_program_cache->translation_cache.Enabled()) {
+		return;
+	}
+	ShaderTranslationCache::StoredKey key;
+	uint32_t                          index = 0;
+	if (!m_program_cache->Lookup(program_id, key, index)) {
+		return;
+	}
+	RecipeWriter w;
+	w.U8(2);
+	w.Key(key);
+	w.U32(index);
+	w.Info(input_info);
+	AppendRecipe(w.Data().data(), w.Data().size());
+}
+
+void PipelineCache::MaybeWriteRecipes() {
+	if (m_recipes_unsaved == 0 || m_recipes_path.empty()) {
+		return;
+	}
+	const auto now = HostMicros();
+	static uint64_t last_us = 0;
+	if (now - last_us < 20000000u) {
+		return;
+	}
+	last_us = now;
+	WriteRecipes();
+}
+
+// Called with m_mutex held.
+bool PipelineCache::WriteRecipes() {
+	if (m_recipes_path.empty() || m_recipe_count == 0) {
+		return false;
+	}
+	RecipeWriter w;
+	w.Bytes(RECIPES_MAGIC, sizeof(RECIPES_MAGIC) - 1);
+	const auto signature = m_program_cache->translation_cache.Signature() + RecipeLayoutSignature();
+	w.U32(static_cast<uint32_t>(signature.size()));
+	w.Bytes(signature.data(), signature.size());
+	w.U32(m_recipe_count);
+	w.Bytes(m_recipes.data(), m_recipes.size());
+	const auto& payload = w.Data();
+	if (!Common::File::CreateDirectories(m_recipes_path.parent_path())) {
+		return false;
+	}
+	auto temp_path = m_recipes_path;
+	temp_path += ".tmp";
+	Common::File file;
+	uint32_t     written = 0;
+	if (file.Create(temp_path)) {
+		file.Write(payload.data(), static_cast<uint32_t>(payload.size()), &written);
+	}
+	const bool flushed = !file.IsInvalid() && file.Flush();
+	file.Close();
+	if (written != payload.size() || !flushed ||
+	    !Common::File::RenameFile(temp_path, m_recipes_path)) {
+		LOGF("PipelinePrecache: failed to write %s\n", Common::PathToString(m_recipes_path).c_str());
+		return false;
+	}
+	LOGF("PipelinePrecache: saved %u recipes (%zu bytes)\n", m_recipe_count, payload.size());
+	m_recipes_unsaved = 0;
+	return true;
+}
+
+void PipelineCache::StartPrecache() {
+	if (!PipelinePrecacheEnabled() || !m_program_cache->translation_cache.Enabled()) {
+		return;
+	}
+	m_recipes_path = m_program_cache->translation_cache.Directory() / "pipelines.bin";
+	if (!Common::File::IsFileExisting(m_recipes_path)) {
+		LOGF("PipelinePrecache: no %s yet\n", Common::PathToString(m_recipes_path).c_str());
+		return;
+	}
+	m_precache_thread = std::thread([this] { PrecachePipelines(); });
+}
+
+// Background thread: reads the recipes, loads the translation-cache entries they need (file
+// reads outside the cache lock), inserts the programs and queues one job per pipeline. The
+// recipes are kept in memory so the file is rewritten complete when new pipelines are added.
+void PipelineCache::PrecachePipelines() {
+#if defined(_WIN32)
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+#endif
+	const auto           t0 = HostMicros();
+	std::vector<uint8_t> data;
+	{
+		Common::File file(m_recipes_path, Common::File::Mode::Read);
+		if (file.IsInvalid()) {
+			return;
+		}
+		const auto size = file.Size();
+		if (size < sizeof(RECIPES_MAGIC) || size > (256u << 20)) {
+			return;
+		}
+		data.resize(static_cast<size_t>(size));
+		uint32_t read = 0;
+		file.Read(data.data(), static_cast<uint32_t>(data.size()), &read);
+		if (read != data.size()) {
+			return;
+		}
+	}
+	RecipeReader r(data.data(), data.size());
+	char         magic[sizeof(RECIPES_MAGIC) - 1] = {};
+	r.Bytes(magic, sizeof(magic));
+	if (r.Failed() || std::memcmp(magic, RECIPES_MAGIC, sizeof(magic)) != 0) {
+		LOGF("PipelinePrecache: bad magic\n");
+		return;
+	}
+	const auto  signature_size = r.U32();
+	std::string signature(signature_size, '\0');
+	r.Bytes(signature.data(), signature_size);
+	const auto expected = m_program_cache->translation_cache.Signature() + RecipeLayoutSignature();
+	if (r.Failed() || signature != expected) {
+		LOGF("PipelinePrecache: stale recipes (signature mismatch), ignored\n");
+		return;
+	}
+	const auto count = r.U32();
+	uint32_t graphics = 0;
+	uint32_t compute  = 0;
+	uint32_t skipped  = 0;
+	uint32_t loaded_sources = 0;
+	uint32_t max_scratch    = 0; // dwords per thread, over all stages
+	uint32_t with_scratch   = 0;
+	std::vector<std::pair<size_t, size_t>> record_spans;
+	for (uint32_t i = 0; i < count && !r.Failed() && !m_precache_stop.load(); i++) {
+		const size_t record_begin = r.Pos();
+		const auto   kind         = r.U8();
+		// KYTY_PIPELINE_PRECACHE=gfx|cs: only one kind (bisection of memory use).
+		static const char* only = std::getenv("KYTY_PIPELINE_PRECACHE");
+		const bool skip_kind = only != nullptr && ((kind == 1 && std::strcmp(only, "cs") == 0) ||
+		                                           (kind == 2 && std::strcmp(only, "gfx") == 0));
+		if (kind == 1) {
+			ShaderTranslationCache::StoredKey vs_key;
+			ShaderTranslationCache::StoredKey ps_key;
+			r.Key(vs_key);
+			const auto vs_index  = r.U32();
+			const bool ps_active = r.U8() != 0;
+			uint32_t   ps_index  = 0;
+			if (ps_active) {
+				r.Key(ps_key);
+				ps_index = r.U32();
+			}
+			GraphicsPipelineKey key {};
+			r.Pod(key.rendering);
+			r.Pod(key.vertex_input);
+			r.Pod(key.static_params);
+			auto vs_info = std::make_shared<ShaderVertexInputInfo>();
+			auto ps_info = std::make_shared<ShaderPixelInputInfo>();
+			r.Info(*vs_info);
+			if (ps_active) {
+				r.Info(*ps_info);
+			}
+			if (r.Failed()) {
+				break;
+			}
+			record_spans.emplace_back(record_begin, r.Pos());
+			if (skip_kind) {
+				skipped++;
+				continue;
+			}
+			// File reads outside the lock; the entries are only used when the run has not loaded
+			// the source yet.
+			ShaderTranslationCache::Entry vs_entry;
+			ShaderTranslationCache::Entry ps_entry;
+			const bool vs_loaded = m_program_cache->LoadEntry(vs_key, vs_entry);
+			const bool ps_loaded = ps_active && m_program_cache->LoadEntry(ps_key, ps_entry);
+			ShaderProgram                                   vs_program;
+			ShaderProgram                                   ps_program;
+			const ShaderRecompiler::IR::CompiledShaderInfo* vs_compiled = nullptr;
+			const ShaderRecompiler::IR::CompiledShaderInfo* ps_compiled = nullptr;
+			GraphicsPipelineEntry*                          target      = nullptr;
+			{
+				Common::LockGuard lock(m_mutex);
+				if (!m_program_cache->Resolve(vs_key, vs_index, vs_loaded ? &vs_entry : nullptr,
+				                              vs_program, vs_compiled) ||
+				    (ps_active && !m_program_cache->Resolve(ps_key, ps_index,
+				                                            ps_loaded ? &ps_entry : nullptr,
+				                                            ps_program, ps_compiled))) {
+					skipped++;
+					continue;
+				}
+				loaded_sources += (vs_loaded ? 1 : 0) + (ps_loaded ? 1 : 0);
+				key.vs_shader_id = vs_program.id;
+				key.ps_shader_id = ps_active ? ps_program.id : 0;
+				if (m_graphics_pipelines.contains(key)) {
+					skipped++;
+					continue;
+				}
+				auto entry = std::make_unique<GraphicsPipelineEntry>();
+				target     = entry.get();
+				m_graphics_pipelines.emplace(key, std::move(entry));
+				m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
+			}
+			vs_info->stage = {.program = vs_compiled};
+			ps_info->stage = {.program = ps_compiled};
+			{
+				const auto scratch = std::max(vs_info->scratch_size_dwords,
+				                              ps_active ? ps_info->scratch_size_dwords : 0u);
+				max_scratch        = std::max(max_scratch, scratch);
+				with_scratch += scratch != 0 ? 1u : 0u;
+			}
+			const auto pair_key = ShaderPairKey(key.vs_shader_id, key.ps_shader_id);
+			graphics++;
+			EnqueueJob([this, key, vs_info, ps_info, ps_active, vs_program, ps_program, target,
+			            pair_key] {
+				const auto create_begin = HostMicros();
+				CreatePipelineInternal(m_graphics, *target, key.rendering, key.vertex_input, *vs_info,
+				                       vs_program, ps_active ? ps_info.get() : nullptr, ps_program,
+				                       key.static_params, m_driver_cache);
+				EXIT_NOT_IMPLEMENTED(target->pipeline == nullptr);
+				EXIT_NOT_IMPLEMENTED(target->pipeline_layout == nullptr);
+				{
+					Common::LockGuard lock(m_mutex);
+					if (AvTraceEnabled()) {
+						LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64
+						     " total=%" PRIu64 " precache\n",
+						     key.vs_shader_id, key.ps_shader_id, HostMicros() - create_begin,
+						     static_cast<uint64_t>(m_graphics_pipelines.size()));
+					}
+					m_ready_shader_pairs.insert(pair_key);
+				}
+				{
+					std::lock_guard<std::mutex> lock(m_job_mutex);
+					target->ready.store(true, std::memory_order_release);
+				}
+				m_ready_cv.notify_all();
+				m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
+			});
+		} else if (kind == 2) {
+			ShaderTranslationCache::StoredKey cs_key;
+			r.Key(cs_key);
+			const auto index = r.U32();
+			auto       info  = std::make_shared<ShaderComputeInputInfo>();
+			r.Info(*info);
+			if (r.Failed()) {
+				break;
+			}
+			record_spans.emplace_back(record_begin, r.Pos());
+			if (skip_kind) {
+				skipped++;
+				continue;
+			}
+			ShaderTranslationCache::Entry cs_entry;
+			const bool cs_loaded = m_program_cache->LoadEntry(cs_key, cs_entry);
+			ShaderProgram                                   program;
+			const ShaderRecompiler::IR::CompiledShaderInfo* compiled = nullptr;
+			ComputePipelineEntry*                           target   = nullptr;
+			{
+				Common::LockGuard lock(m_mutex);
+				if (!m_program_cache->Resolve(cs_key, index, cs_loaded ? &cs_entry : nullptr, program,
+				                              compiled)) {
+					skipped++;
+					continue;
+				}
+				loaded_sources += cs_loaded ? 1 : 0;
+				if (m_compute_pipelines.contains(program.id)) {
+					skipped++;
+					continue;
+				}
+				auto entry = std::make_unique<ComputePipelineEntry>();
+				target     = entry.get();
+				m_compute_pipelines.emplace(program.id, std::move(entry));
+				m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
+			}
+			info->stage = {.program = compiled};
+			max_scratch = std::max(max_scratch, info->scratch_size_dwords);
+			with_scratch += info->scratch_size_dwords != 0 ? 1u : 0u;
+			compute++;
+			const auto module = program.module;
+			const auto id     = program.id;
+			EnqueueJob([this, info, module, id, target] {
+				const auto create_begin = HostMicros();
+				CreatePipelineInternal(m_graphics, *target, *info, module, m_driver_cache);
+				EXIT_NOT_IMPLEMENTED(target->pipeline == nullptr);
+				EXIT_NOT_IMPLEMENTED(target->pipeline_layout == nullptr);
+				{
+					Common::LockGuard lock(m_mutex);
+					if (AvTraceEnabled()) {
+						LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64
+						     " precache\n",
+						     id, HostMicros() - create_begin,
+						     static_cast<uint64_t>(m_compute_pipelines.size()));
+					}
+				}
+				{
+					std::lock_guard<std::mutex> lock(m_job_mutex);
+					target->ready.store(true, std::memory_order_release);
+				}
+				m_ready_cv.notify_all();
+				m_pending_pipelines.fetch_sub(1, std::memory_order_relaxed);
+			});
+		} else {
+			break;
+		}
+	}
+	const bool complete = !r.Failed() && r.AtEnd();
+	{
+		// Keep the file's recipes (complete file only) so the rewrite carries them forward, then
+		// the records this run added meanwhile; both deduplicated by hash.
+		Common::LockGuard lock(m_mutex);
+		if (complete) {
+			std::vector<uint8_t>  current;
+			std::vector<uint32_t> current_sizes;
+			current.swap(m_recipes);
+			current_sizes.swap(m_recipe_sizes);
+			m_recipe_hashes.clear();
+			m_recipe_count = 0;
+			for (const auto& [begin, end]: record_spans) {
+				AppendRecipe(data.data() + begin, end - begin);
+			}
+			size_t offset = 0;
+			for (const auto size: current_sizes) {
+				AppendRecipe(current.data() + offset, size);
+				offset += size;
+			}
+			m_recipes_unsaved = m_recipe_count > count ? m_recipe_count - count : 0;
+		}
+	}
+	LOGF("PipelinePrecache: %u recipes -> %u graphics + %u compute pipelines queued, %u skipped, "
+	     "%u sources loaded, %s, %" PRIu64 " ms (scratch: %u pipelines, max %u dwords/thread)\n",
+	     count, graphics, compute, skipped, loaded_sources, complete ? "complete" : "TRUNCATED",
+	     (HostMicros() - t0) / 1000u, with_scratch, max_scratch);
+	VulkanLogMemoryStats();
+	WaitForPendingPipelines();
+	LOGF("PipelinePrecache: all pipelines created, %" PRIu64 " ms\n", (HostMicros() - t0) / 1000u);
+	VulkanLogMemoryStats();
+}
+
 } // namespace Libs::Graphics

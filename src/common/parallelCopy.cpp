@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include <cstdlib>
 #include <cstring>
+#include <deque>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -15,6 +16,10 @@ namespace {
 
 constexpr size_t CHUNK_BYTES = 1u << 20u;
 
+// A small pool of copy threads with a FIFO of 1 MiB chunks. AsyncMemcpy queues chunks and
+// returns; WaitAsyncCopies (called before every vkQueueSubmit) helps with the queue and blocks
+// until it is empty. Everything queued is complete when WaitAsyncCopies returns, so a caller
+// that needs synchronous semantics (ParallelMemcpy) just queues and waits.
 class CopyPool final {
 public:
 	static CopyPool& Instance() {
@@ -24,26 +29,42 @@ public:
 
 	[[nodiscard]] bool Enabled() const { return !m_workers.empty(); }
 
-	void Copy(uint8_t* dst, const uint8_t* src, size_t size) {
+	void Enqueue(uint8_t* dst, const uint8_t* src, size_t size) {
 		const size_t chunks = (size + CHUNK_BYTES - 1) / CHUNK_BYTES;
 		{
 			std::lock_guard lock(m_mutex);
-			m_dst    = dst;
-			m_src    = src;
-			m_size.store(size, std::memory_order_relaxed);
-			m_chunks.store(chunks, std::memory_order_relaxed);
-			m_done.store(0, std::memory_order_relaxed);
-			m_next.store(0, std::memory_order_release); // publishes dst/src/size/chunks
-			m_generation++;
+			for (size_t i = 0; i < chunks; i++) {
+				const auto offset = i * CHUNK_BYTES;
+				m_jobs.push_back({dst + offset, src + offset, std::min(CHUNK_BYTES, size - offset)});
+			}
+			m_pending.fetch_add(chunks, std::memory_order_acq_rel);
 		}
-		m_wake.notify_all();
-		Work();
-		// Wait for the chunks other threads took.
-		std::unique_lock lock(m_mutex);
-		m_finished.wait(lock, [&] { return m_done.load(std::memory_order_acquire) == chunks; });
+		if (chunks == 1) {
+			m_wake.notify_one();
+		} else {
+			m_wake.notify_all();
+		}
 	}
 
+	void WaitAll() {
+		if (m_pending.load(std::memory_order_acquire) == 0) {
+			return;
+		}
+		// Help with what is left, then wait for chunks other threads are still copying.
+		Work();
+		std::unique_lock lock(m_mutex);
+		m_finished.wait(lock, [&] { return m_pending.load(std::memory_order_acquire) == 0; });
+	}
+
+	[[nodiscard]] size_t Pending() const { return m_pending.load(std::memory_order_acquire); }
+
 private:
+	struct Job {
+		uint8_t*       dst;
+		const uint8_t* src;
+		size_t         size;
+	};
+
 	CopyPool() {
 		const char* env = std::getenv("KYTY_PARALLEL_COPY");
 		if (env != nullptr && env[0] == '0') {
@@ -69,51 +90,54 @@ private:
 	}
 
 	void WorkerLoop() {
-		uint64_t seen = 0;
 		for (;;) {
 			{
 				std::unique_lock lock(m_mutex);
-				m_wake.wait(lock, [&] { return m_stop || m_generation != seen; });
+				m_wake.wait(lock, [&] { return m_stop || !m_jobs.empty(); });
 				if (m_stop) {
 					return;
 				}
-				seen = m_generation;
 			}
 			Work();
 		}
 	}
 
-	// Takes chunks until none are left; the last finisher signals the caller.
+	// Takes chunks until the queue is empty; the finisher of the last chunk wakes the waiters.
 	void Work() {
 		for (;;) {
-			const auto index  = m_next.fetch_add(1, std::memory_order_acq_rel);
-			const auto chunks = m_chunks.load(std::memory_order_relaxed);
-			if (index >= chunks) {
-				return;
+			Job job {};
+			{
+				std::lock_guard lock(m_mutex);
+				if (m_jobs.empty()) {
+					return;
+				}
+				job = m_jobs.front();
+				m_jobs.pop_front();
 			}
-			const auto offset = index * CHUNK_BYTES;
-			const auto bytes  = std::min(CHUNK_BYTES, m_size.load(std::memory_order_relaxed) - offset);
-			std::memcpy(m_dst + offset, m_src + offset, bytes);
-			if (m_done.fetch_add(1, std::memory_order_acq_rel) + 1 == chunks) {
+			std::memcpy(job.dst, job.src, job.size);
+			if (m_pending.fetch_sub(1, std::memory_order_acq_rel) == 1) {
 				std::lock_guard lock(m_mutex);
 				m_finished.notify_all();
 			}
 		}
 	}
 
-	std::vector<std::thread>  m_workers;
-	std::mutex                m_mutex;
-	std::condition_variable   m_wake;
-	std::condition_variable   m_finished;
-	bool                      m_stop       = false;
-	uint64_t                  m_generation = 0;
-	uint8_t*                  m_dst        = nullptr;
-	const uint8_t*            m_src        = nullptr;
-	std::atomic<size_t>       m_size {0};
-	std::atomic<size_t>       m_chunks {0};
-	std::atomic<size_t>       m_next {0};
-	std::atomic<size_t>       m_done {0};
+	std::vector<std::thread> m_workers;
+	std::mutex               m_mutex;
+	std::condition_variable  m_wake;
+	std::condition_variable  m_finished;
+	bool                     m_stop = false;
+	std::deque<Job>          m_jobs;
+	std::atomic<size_t>      m_pending {0};
 };
+
+bool AsyncCopyEnabled() {
+	static const bool enabled = [] {
+		const char* env = std::getenv("KYTY_ASYNC_COPY");
+		return env == nullptr || env[0] != '0';
+	}();
+	return enabled;
+}
 
 } // namespace
 
@@ -122,10 +146,32 @@ void ParallelMemcpy(void* dst, const void* src, size_t size) {
 		std::memcpy(dst, src, size);
 		return;
 	}
-	// One copy at a time (the pool is shared state); callers are the GuestGpu thread today.
-	static std::mutex serial;
-	std::lock_guard   lock(serial);
-	CopyPool::Instance().Copy(static_cast<uint8_t*>(dst), static_cast<const uint8_t*>(src), size);
+	auto& pool = CopyPool::Instance();
+	pool.Enqueue(static_cast<uint8_t*>(dst), static_cast<const uint8_t*>(src), size);
+	pool.WaitAll();
+}
+
+void AsyncMemcpy(void* dst, const void* src, size_t size) {
+	if (size < ASYNC_COPY_MIN_BYTES || !CopyPool::Instance().Enabled()) {
+		std::memcpy(dst, src, size);
+		return;
+	}
+	if (!AsyncCopyEnabled()) {
+		ParallelMemcpy(dst, src, size);
+		return;
+	}
+	CopyPool::Instance().Enqueue(static_cast<uint8_t*>(dst), static_cast<const uint8_t*>(src),
+	                             size);
+}
+
+void WaitAsyncCopies() {
+	if (CopyPool::Instance().Enabled()) {
+		CopyPool::Instance().WaitAll();
+	}
+}
+
+size_t PendingAsyncCopies() {
+	return CopyPool::Instance().Enabled() ? CopyPool::Instance().Pending() : 0;
 }
 
 } // namespace Common

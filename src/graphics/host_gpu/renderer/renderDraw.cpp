@@ -1409,10 +1409,21 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (log_pipeline_phase) {
 		LogDrawPhase(draw.name, "CreatePipeline");
 	}
+	// Once a draw of this frame was skipped the flip is held anyway (KYTY_ASYNC_HOLD_FRAME), so
+	// waiting for further pipelines of the same frame only lengthens it: a scene cut queues 20-30
+	// new pipelines and every posting draw waited its 4 ms (~50 ms per cut).
+	// KYTY_ASYNC_PIPELINE_WAIT_HELD=1 restores the wait.
+	static const bool wait_when_held = [] {
+		const char* value = std::getenv("KYTY_ASYNC_PIPELINE_WAIT_HELD");
+		const char* hold  = std::getenv("KYTY_ASYNC_HOLD_FRAME");
+		return (value != nullptr && value[0] == '1') || (hold != nullptr && hold[0] == '0');
+	}();
+	const bool allow_pipeline_wait =
+	    wait_when_held || m_skipped_draws.load(std::memory_order_relaxed) == 0;
 	auto* pipeline_ptr = m_context.GetPipelineCache().CreateGraphicsPipeline(
 	    std::span {state.color_info, state.color_count}, state.depth_info, state.vs_input_info, buffer,
 	    state.ps_active ? &state.ps_input_info : nullptr, topology, primitive_restart_enable,
-	    state.programs.vertex, state.programs.pixel);
+	    state.programs.vertex, state.programs.pixel, allow_pipeline_wait);
 	lap.Mark(Common::FrameStats::Counter::DrawPipelineNs);
 	if (pipeline_ptr == nullptr) {
 		// The pipeline is being compiled by a worker thread (KYTY_ASYNC_PIPELINES): skip the draw

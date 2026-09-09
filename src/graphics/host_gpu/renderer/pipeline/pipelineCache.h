@@ -152,7 +152,8 @@ public:
 	                       const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
 	                       const ShaderPixelInputInfo* ps_input_info,
 	                       vk::PrimitiveTopology topology, bool primitive_restart_enable,
-	                       const ShaderProgram& vertex_program, const ShaderProgram& pixel_program);
+	                       const ShaderProgram& vertex_program, const ShaderProgram& pixel_program,
+	                       bool allow_wait = true);
 	Pipeline& CreateComputePipeline(const ShaderComputeInputInfo& input_info,
 	                                const ShaderProgram&          compute_program);
 	// PM4 lookahead (KYTY_ASYNC_COMPUTE): translates the program of a future dispatch and queues
@@ -280,6 +281,25 @@ private:
 	void InitializeDriverCache();
 	bool WriteDriverCache();
 	void MaybeWriteDriverCache();
+
+	// Pipeline precache (session 25): recipes of every pipeline created in a run, replayed on the
+	// worker pool at the next start (_ShaderCache/<title>/pipelines.bin).
+	std::vector<uint8_t>  m_recipes;         // file body: serialized records
+	std::vector<uint32_t> m_recipe_sizes;   // record boundaries inside m_recipes
+	std::unordered_set<uint64_t> m_recipe_hashes; // XXH3 of each record (no duplicates)
+	uint32_t              m_recipe_count   = 0;
+	uint32_t              m_recipes_unsaved = 0;
+	std::filesystem::path m_recipes_path;
+	std::thread           m_precache_thread;
+	std::atomic<bool>     m_precache_stop {false};
+	void RecordGraphicsRecipe(const GraphicsPipelineKey& key, const ShaderVertexInputInfo& vs_input_info,
+	                          const ShaderPixelInputInfo* ps_input_info);
+	void RecordComputeRecipe(const ShaderComputeInputInfo& input_info, uint64_t program_id);
+	void AppendRecipe(const uint8_t* record, size_t size);
+	bool WriteRecipes();
+	void MaybeWriteRecipes();
+	void StartPrecache();
+	void PrecachePipelines();
 };
 
 void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pixel_program_id);

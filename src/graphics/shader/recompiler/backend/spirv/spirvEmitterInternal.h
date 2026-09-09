@@ -45,6 +45,7 @@ enum : uint32_t {
 	CapabilityImageGatherExtended            = 25,
 	CapabilityClipDistance                   = 32,
 	CapabilityCullDistance                   = 33,
+	CapabilitySampleRateShading              = 35,
 	CapabilitySampled1D                      = 43,
 	CapabilityImage1D                        = 44,
 	CapabilityImageQuery                     = 50,
@@ -54,8 +55,9 @@ enum : uint32_t {
 	CapabilityGroupNonUniformBallot          = 64,
 	CapabilityGroupNonUniformShuffle         = 65,
 	CapabilityDenormFlushToZero              = 4465,
+	CapabilityShaderLayer                    = 69,
+	CapabilityShaderViewportIndex            = 70,
 	CapabilitySignedZeroInfNanPreserve       = 4466,
-	CapabilityShaderViewportIndexLayerEXT    = 5254,
 	CapabilityFragmentBarycentricKHR         = 5284,
 	CapabilityComputeDerivativeGroupQuadsKHR = 5288,
 	CapabilityPhysicalStorageBufferAddresses = 5347,
@@ -95,8 +97,10 @@ enum : uint32_t {
 	BuiltInClipDistance              = 3,
 	BuiltInCullDistance              = 4,
 	BuiltInLayer                     = 9,
+	BuiltInViewportIndex              = 10,
 	BuiltInFragCoord                 = 15,
 	BuiltInFrontFacing               = 17,
+	BuiltInSampleId                  = 18,
 	BuiltInSampleMask                = 20,
 	BuiltInHelperInvocation          = 23,
 	BuiltInFragDepth                 = 22,
@@ -205,6 +209,7 @@ enum : uint32_t {
 	OpIMul                         = 132,
 	OpFMul                         = 133,
 	OpUDiv                         = 134,
+	OpUMod                         = 137,
 	OpFDiv                         = 136,
 	OpIAddCarry                    = 149,
 	OpUMulExtended                 = 151,
@@ -337,6 +342,7 @@ struct OutputBinding {
 	uint32_t            location    = 0;
 	uint32_t            variable_id = 0;
 	std::string         debug_name;
+	uint32_t            mesh_data_variable = 0;
 };
 
 using ImageDimension = Decoder::ImageDimension;
@@ -364,15 +370,16 @@ const ImageDimensionInfo& ImageDimensionInfoFor(ImageDimension dimension);
 
 struct EmitterState {
 	EmitterState(const IR::Program& program_, ShaderStageInputInfo input_info_)
-	    : program(program_), input_info(input_info_),
-	      requirements(*program_.spirv_requirements) {}
+	    : builder(program_.stage == ShaderType::Mesh ? 0x00010400u : 0x00010300u),
+	      program(program_), input_info(input_info_), requirements(*program_.spirv_requirements) {}
 
 	Builder                                          builder;
 	const IR::Program&                               program;
 	ShaderStageInputInfo                             input_info;
 	const IR::SpirvRequirements&                     requirements;
 	ShaderType                                       stage                   = ShaderType::Unknown;
-	uint32_t                                         wave_size               = 64;
+	uint32_t                                         lane_count              = 1;
+	uint32_t                                         lane_half               = 0;
 	uint32_t                                         storage_buffer_variable = 0;
 	uint32_t                                         storage_buffer_u64_variable = 0;
 	// Aliased uvec4[] / uvec2[] views of the buffer descriptor array (grouped ReadConstBuffer).
@@ -409,12 +416,18 @@ struct EmitterState {
 	uint32_t                                         shader_data_storage_variable = 0;
 	uint32_t                                         flattened_srt_variable  = 0;
 	uint32_t                                         lds_variable            = 0;
-	uint32_t                                         scratch_variable        = 0;
+	std::array<uint32_t, 2>                          scratch_variable {};
 	std::array<uint32_t, IR::ImageBindingCount>      image_variables {};
 	uint32_t                   sampler_variable                      = 0;
 	uint32_t                   main_func                             = 0;
+	uint32_t                   mesh_guest_func                       = 0;
+	uint32_t                   mesh_allocation                       = 0;
+	uint32_t                   mesh_primitive_data                   = 0;
+	uint32_t                   mesh_primitives                       = 0;
+	uint32_t                   mesh_cull                             = 0;
 	uint32_t                   entry_label                           = 0;
 	uint32_t                   current_label                         = 0;
+	const IR::Block*           current_block                         = nullptr;
 	uint32_t                   pixel_valid_mask_variable             = 0;
 	uint32_t                   subgroup_local_invocation_id_variable = 0;
 	uint32_t                   per_vertex_variable                   = 0;
@@ -422,6 +435,7 @@ struct EmitterState {
 	uint32_t                   clip_distance_variable                = 0;
 	uint32_t                   cull_distance_variable                = 0;
 	uint32_t                   layer_variable                        = 0;
+	uint32_t                   viewport_index_variable               = 0;
 	uint32_t                   clip_distance_count                   = 0;
 	uint32_t                   cull_distance_count                   = 0;
 	uint32_t                   depth_variable                        = 0;
@@ -429,6 +443,7 @@ struct EmitterState {
 	std::vector<InputBinding>  inputs;
 	std::vector<OutputBinding> outputs;
 	std::vector<uint32_t>      interface_variables;
+	std::unordered_map<const IR::Block*, uint32_t> labels;
 };
 
 uint32_t TypeVoid(EmitterState& state);
@@ -470,12 +485,35 @@ inline void EmitLabel(EmitterState& state, uint32_t label) {
 	state.builder.AddFunction({OpLabel, label});
 }
 
+inline uint32_t Unary(EmitterState& state, uint32_t opcode, uint32_t type, uint32_t value) {
+	const auto result = state.builder.AllocateId();
+	state.builder.AddFunction({opcode, type, result, value});
+	return result;
+}
+
+inline uint32_t Binary(EmitterState& state, uint32_t opcode, uint32_t type, uint32_t lhs,
+                            uint32_t rhs) {
+	const auto result = state.builder.AllocateId();
+	state.builder.AddFunction({opcode, type, result, lhs, rhs});
+	return result;
+}
+
+inline uint32_t Select(EmitterState& state, uint32_t type, uint32_t condition,
+                            uint32_t true_value, uint32_t false_value) {
+	const auto result = state.builder.AllocateId();
+	state.builder.AddFunction({OpSelect, type, result, condition, true_value, false_value});
+	return result;
+}
+
 struct ValueEmitContext {
-	ValueEmitContext(EmitterState& state_, const IR::Program& program_)
-	    : state(state_), program(program_) {}
+	explicit ValueEmitContext(EmitterState& state_): state(state_) {}
 
 	uint32_t              Def(IR::Value value);
 	uint32_t              Arg(const IR::Inst& inst, size_t index);
+	uint32_t              HalfArg(const IR::Inst& inst, size_t index, uint32_t half);
+	uint32_t              Ballot(IR::Value predicate);
+	uint32_t              FirstLane(uint32_t ballot);
+	uint32_t              Shuffle(const IR::Inst& inst, size_t index, uint32_t lane);
 	uint32_t              Result(const IR::Inst& inst);
 	uint32_t              TypeId(IR::Type type) const;
 	uint32_t              Emit(const IR::Inst& inst, uint32_t opcode, IR::Type type,
@@ -490,15 +528,14 @@ struct ValueEmitContext {
 	[[noreturn]] void     Fail(const IR::Inst& inst, const char* reason) const;
 
 	EmitterState&                                                      state;
-	const IR::Program&                                                 program;
 	std::unordered_map<const IR::Inst*, uint32_t>                      definitions;
-	std::unordered_map<const IR::Block*, uint32_t>                     labels;
 	const std::unordered_map<const IR::Inst*, uint32_t>*               dispatcher_spills = nullptr;
 	std::unordered_map<const IR::Inst*, std::pair<uint32_t, uint32_t>> dispatcher_block_loads;
-	const IR::Block*                                                   current_block = nullptr;
 	// Scalar pointer loads already emitted as part of a group (see LoadScalarBdaGroup).
 	std::unordered_set<const IR::Inst*>                                grouped_loads;
 	uint32_t                                                           scratch_u32_variable = 0;
+	ValueEmitContext*                                                  other_half = nullptr;
+	uint32_t                                                           half       = 0;
 };
 
 enum class VertexInputScalarKind { Float, Sint, Uint };
@@ -526,8 +563,6 @@ struct F32Class {
 	uint32_t zero = 0;
 };
 
-uint32_t PixelParameterMappedLocation(const EmitterState& state, uint32_t attr);
-
 uint32_t PixelParameterLocation(const EmitterState& state, uint32_t attr);
 
 bool PixelParameterIsFlat(const EmitterState& state, uint32_t attr);
@@ -536,14 +571,9 @@ bool PixelParameterIsCustom(const EmitterState& state, uint32_t attr);
 
 VertexInputScalarKind VertexParameterScalarKind(const EmitterState& state, uint32_t location);
 
-uint32_t VertexParameterComponentCount(const EmitterState& state, const InputBinding& input);
+uint32_t VertexParameterComponentCount(const InputBinding& input);
 
 uint32_t VertexParameterScalarType(EmitterState& state, VertexInputScalarKind kind);
-
-uint32_t VertexParameterScalarPointerType(EmitterState& state, VertexInputScalarKind kind);
-
-uint32_t VertexParameterVectorOrScalarType(EmitterState& state, VertexInputScalarKind kind,
-                                           uint32_t components);
 
 uint32_t VertexParameterInputPointerType(EmitterState& state, VertexInputScalarKind kind,
                                          uint32_t components);
@@ -626,8 +656,11 @@ void DecorateDescriptor(EmitterState& state, uint32_t variable, const char* name
 void AddDescriptorAnnotationsAndNames(EmitterState& state);
 
 void DefineModule(EmitterState& state);
-
-uint32_t EmitTrueBool(EmitterState& state);
+void     DefineMeshOutputs(EmitterState& state);
+void     EmitMeshEntryPoint(EmitterState& state);
+void     EmitMeshAllocate(ValueEmitContext& ctx, const IR::Inst& inst);
+uint32_t MeshOutputPointer(EmitterState& state, IR::StageOutputKind kind, uint32_t index = 0);
+uint32_t MeshPrimitivePointer(EmitterState& state);
 
 DppTargetLane EmitDppQuadPermTargetLane(EmitterState& state, uint32_t subid, uint32_t control);
 
@@ -652,8 +685,6 @@ uint32_t EmitVertexParameterComponentU32(EmitterState& state, const InputBinding
 uint32_t EmitInputComponentU32(EmitterState& state, IR::StageInputKind kind, uint32_t component);
 
 uint32_t EmitLocalInvocationIndex(EmitterState& state);
-bool     WaveAnyNeedsWorkgroupReduction(const EmitterState& state);
-uint32_t WaveAnyFlagsBase(const EmitterState& state);
 void     EnsureLdsStorage(EmitterState& state);
 
 uint32_t EmitBallotLaneActiveBool(EmitterState& state, uint32_t ballot, uint32_t lane);
@@ -717,21 +748,12 @@ uint32_t EmitStorageBufferElementPointer(EmitterState& state,
                                          const MemoryResourceAccess& access, uint32_t index,
                                          uint32_t pointer_type);
 
-uint32_t EmitTBufferBitcastF32ToU32(EmitterState& state, uint32_t value);
-
-uint32_t EmitTBufferBitcastU32ToF32(EmitterState& state, uint32_t value);
-
 uint32_t EmitTBufferBitcastU32ToI32(EmitterState& state, uint32_t value);
-
-uint32_t EmitTBufferCompareU32Constant(EmitterState& state, uint32_t opcode, uint32_t value,
-                                       uint32_t constant);
 
 uint32_t EmitTBufferSelectF32(EmitterState& state, uint32_t condition, uint32_t true_value,
                               uint32_t false_value);
 
 bool IsSignedFormatComponent(Format::ComponentType type);
-
-uint32_t EmitHalfToF32Bits(EmitterState& state, uint32_t raw);
 
 uint32_t EmitUFloatToF32Bits(EmitterState& state, uint32_t raw, uint32_t bits);
 
@@ -783,6 +805,8 @@ uint32_t EmitLogicalOrBool(EmitterState& state, uint32_t lhs, uint32_t rhs);
 
 uint32_t EmitLogicalNotBool(EmitterState& state, uint32_t value);
 
+F32Class EmitClassifyF32Bits(EmitterState& state, uint32_t bits);
+
 F32Class EmitClassifyF32(EmitterState& state, uint32_t value);
 
 uint32_t EmitClassMaskBitMatch(EmitterState& state, uint32_t mask, uint32_t bit,
@@ -812,7 +836,7 @@ bool EmitValueMemory(ValueEmitContext& ctx, const IR::Inst& inst);
 
 bool EmitValueImage(ValueEmitContext& ctx, const IR::Inst& inst);
 
-void EmitProgram(EmitterState& state, const IR::Program& program);
+void EmitProgram(EmitterState& state);
 
 void DefineGetBdaPointer(EmitterState& state);
 bool BdaNullPageEnabled();

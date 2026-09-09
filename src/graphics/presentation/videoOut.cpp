@@ -14,7 +14,6 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
-#include "graphics/host_gpu/vma.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -820,7 +819,7 @@ void VideoOutDriver::Impl::PresentThread(std::stop_token token) {
 
 		VblankBegin();
 		bool presented = m_flip_queue.Flip(0);
-		if (!presented && m_presenter.NeedsImeRefresh()) {
+		if (!presented && m_presenter.NeedsSystemOverlayRefresh()) {
 			if (auto* frame = m_presenter.PrepareLastFrame(); frame != nullptr) {
 				m_presenter.Present(*frame, true);
 				presented = true;
@@ -1158,7 +1157,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 	} else {
 		m_presenter.Present(*r.frame);
 	}
-	Graphics::RenderDocOnGuestFlip();
+	Graphics::RenderDocOnGuestFlip(m_presenter.Renderer());
 
 	m_mutex.Lock();
 	if (m_requests.empty() || m_requests.front().id != r.id ||
@@ -1355,6 +1354,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_submit_slot_cond_var.Signal();
 	m_mutex.Unlock();
 	r.cfg->mutex.Unlock();
+
+	Graphics::RenderDocOnGuestFlip(m_presenter.Renderer());
 
 	if (Config::GraphicsDebugDumpEnabled() &&
 	    Config::GetPrintfDirection() != Config::OutputDirection::Silent) {

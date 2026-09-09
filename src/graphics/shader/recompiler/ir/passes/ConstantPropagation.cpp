@@ -1,4 +1,5 @@
 #include "graphics/shader/recompiler/ir/passes/ConstantPropagation.h"
+#include "graphics/shader/recompiler/ir/ShaderIR.h"
 
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
@@ -11,6 +12,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <unordered_set>
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
 namespace {
@@ -412,7 +414,9 @@ bool FoldCompareByKnownValues(Inst& inst, KnownValueContext& ctx, bool equal) {
 	return false;
 }
 
-void FoldInstruction(Inst& inst, KnownValueContext& known) {
+void FoldInstruction(Block& block, Block::iterator instruction,
+                     std::unordered_set<Inst*>& lowered_ancillary, KnownValueContext& known) {
+	auto& inst = *instruction;
 	switch (inst.GetOpcode()) {
 		case ValueOpcode::Phi: FoldPhi(inst); return;
 		case ValueOpcode::SelectU1:
@@ -443,6 +447,29 @@ void FoldInstruction(Inst& inst, KnownValueContext& known) {
 			const auto value  = Arg(inst, 0);
 			const auto offset = Arg(inst, 1);
 			const auto count  = Arg(inst, 2);
+			auto* source = value.TryInstruction();
+			if (source != nullptr && source->GetOpcode() == ValueOpcode::GetBuiltin &&
+			    source->Arg(0) == Value(static_cast<uint32_t>(StageInputKind::PackedAncillary)) &&
+			    IsImmediate(offset, Type::U32) && IsImmediate(count, Type::U32) && count.U32() != 0u) {
+				constexpr struct {
+					uint32_t       start;
+					uint32_t       end;
+					StageInputKind kind;
+				} fields[] = {{8u, 12u, StageInputKind::SampleId}, {16u, 27u, StageInputKind::Layer}};
+				for (const auto& field: fields) {
+					if (offset.U32() >= field.start && offset.U32() < field.end &&
+					    count.U32() <= field.end - offset.U32()) {
+						// Preserve extraction and sign extension while exposing only the used field.
+						const auto input = block.PrependNewInst(
+						    instruction, ValueOpcode::GetBuiltin,
+						    {Value(static_cast<uint32_t>(field.kind)), Value(0u)});
+						inst.SetArg(0, Value(&*input));
+						inst.SetArg(1, Value(offset.U32() - field.start));
+						lowered_ancillary.insert(source);
+						return;
+					}
+				}
+			}
 			if (!IsImmediate(value, Type::U32) || !IsImmediate(offset, Type::U32) ||
 			    !IsImmediate(count, Type::U32) || offset.U32() > 32u ||
 			    count.U32() > 32u - offset.U32()) {
@@ -561,38 +588,6 @@ void FoldInstruction(Inst& inst, KnownValueContext& known) {
 				ReplaceBinaryIdentity(inst, Type::U64, 1u);
 			}
 			return;
-		case ValueOpcode::WqmMask: {
-			// S_WQM of a pixel wave's initial EXEC (the non-helper lanes) is true for every
-			// existing invocation: Vulkan creates helper invocations only inside quads that
-			// contain a covered pixel, so the whole-quad expansion of "not helper" never leaves
-			// a lane out. Folding it lets every top-level "exec ? new : old" VGPR write select
-			// disappear. Besides being dead weight, those selects miscompile on NVIDIA when the
-			// "old" value is a live coordinate of an earlier image sample and the new value is a
-			// later sample's result (ASTRO BOT video PS 0xe197e307a5f2cb39: the luma sample read
-			// its y coordinate from the register the U sample was still writing).
-			const auto value = Arg(inst, 0);
-			if (IsImmediate(value, Type::U1)) {
-				Replace(inst, Value(value.U1()));
-				return;
-			}
-			auto* compare = value.TryInstruction();
-			if (compare == nullptr || compare->GetOpcode() != ValueOpcode::IEqual32) {
-				return;
-			}
-			const auto lhs     = compare->Arg(0).Resolve();
-			const auto rhs     = compare->Arg(1).Resolve();
-			auto*      builtin = lhs.TryInstruction();
-			if (builtin == nullptr || builtin->GetOpcode() != ValueOpcode::GetBuiltin ||
-			    !IsImmediate(rhs, Type::U32) || rhs.U32() != 0u) {
-				return;
-			}
-			const auto kind = builtin->Arg(0).Resolve();
-			if (IsImmediate(kind, Type::U32) &&
-			    kind.U32() == static_cast<uint32_t>(StageInputKind::HelperInvocation)) {
-				Replace(inst, Value(true));
-			}
-			return;
-		}
 		case ValueOpcode::WqmU64: {
 			const auto value = Arg(inst, 0);
 			if (IsImmediate(value, Type::U64)) {
@@ -845,9 +840,25 @@ void ConstantPropagationPass(const BlockList& blocks) {
 	}();
 	KnownValueContext known;
 	known.enabled = known_values_enabled;
+	std::unordered_set<Inst*> lowered_ancillary;
 	for (auto* block: blocks) {
-		for (auto& inst: block->Instructions()) {
-			FoldInstruction(inst, known);
+		for (auto inst = block->begin(); inst != block->end(); ++inst) {
+			FoldInstruction(*block, inst, lowered_ancillary, known);
+		}
+	}
+	// Normalize retained PHI/select values only after every supported field read has
+	// been lowered; direct raw consumers remain unsupported.
+	for (auto* source: lowered_ancillary) {
+		const bool retained_only = std::ranges::all_of(source->Uses(), [](const Use& use) {
+			const auto& user = *use.user;
+			if (!user.HasUses() && !user.MayHaveSideEffects()) {
+				return true;
+			}
+			return user.GetOpcode() == ValueOpcode::Phi ||
+			       (user.GetOpcode() == ValueOpcode::SelectU32 && use.operand == 2u);
+		});
+		if (retained_only) {
+			Replace(*source, Value(0u));
 		}
 	}
 }

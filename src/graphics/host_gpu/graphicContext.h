@@ -15,15 +15,15 @@
 
 namespace Libs::Graphics {
 
-struct VulkanBuffer;
 struct VulkanImage;
-struct VulkanMemory;
 
 // Runs `destroy` on a worker thread (Vulkan object destruction is externally synchronized only
 // on the object itself, and the objects handed here are already retired). KYTY_ASYNC_DESTROY=0
 // runs it inline. VulkanDeferredDestroyFlush waits for the queue to drain (device shutdown).
 void VulkanDeferredDestroy(std::function<void()>&& destroy);
 void VulkanDeferredDestroyFlush();
+// MemStats: per-heap VMA budgets (KYTY_FRAME_TRACE, every 300 flips).
+void VulkanLogMemoryStats();
 
 inline constexpr uint32_t VULKAN_TARGET_API_VERSION = VK_API_VERSION_1_3;
 
@@ -43,10 +43,14 @@ struct GraphicContext {
 	bool                               robust_buffer_access2_enabled         = false;
 	// KYTY_PIPELINE_STATS=1: VK_KHR_pipeline_executable_properties (statistics + SASS dumps).
 	bool                               pipeline_stats_enabled                = false;
-	bool                               compute_wave64_supported              = false;
 	bool                               sample_rate_shading_enabled           = false;
 	bool                               diagnostic_checkpoints_enabled        = false;
 	bool                               gpu_breadcrumbs_enabled               = false;
+	bool                               attachment_feedback_loop_enabled      = false;
+	bool                               provoking_vertex_last_enabled         = false;
+	bool                               supports_block_texel_view              = false;
+	bool                                      mesh_shader_enabled                   = false;
+	vk::PhysicalDeviceMeshShaderPropertiesEXT mesh_shader_properties                = {};
 	uint32_t                           subgroup_size                         = 0;
 	uint32_t                           min_subgroup_size                     = 0;
 	uint32_t                           max_subgroup_size                     = 0;
@@ -94,6 +98,10 @@ struct GraphicContext {
 		return it->second.first;
 	}
 
+	[[nodiscard]] bool SupportsComputeWave64() const noexcept {
+		return subgroup_size == 64u || compute_subgroup_size_control_enabled;
+	}
+
 	[[nodiscard]] vk::DeviceSize StorageMinAlignment() const {
 		const auto alignment = physical_device_properties.limits.minStorageBufferOffsetAlignment;
 		return alignment != 0 ? alignment : 1;
@@ -105,11 +113,8 @@ struct GraphicContext {
 	[[nodiscard]] bool CanReportMemoryUsage() const noexcept { return memory_budget_ext_enabled; }
 	[[nodiscard]] uint64_t GetDeviceMemoryUsage() const;
 	[[nodiscard]] uint64_t GetTotalMemoryBudget() const;
-	void                   CreateBuffer(uint64_t size, VulkanBuffer& buffer);
 	[[nodiscard]] bool     CreateImage(const vk::ImageCreateInfo& info, VulkanImage& image);
 	void                   DeleteImage(VulkanImage& image);
-	void                   MapMemory(VulkanMemory& memory, void*& data);
-	void                   UnmapMemory(VulkanMemory& memory);
 	void                   AppendHardwareRayTracingDeviceExtensions(
 	    const std::vector<vk::ExtensionProperties>& available_extensions,
 	    std::vector<const char*>&                   device_extensions);
@@ -128,18 +133,6 @@ private:
 	    m_image_format_properties;
 };
 
-struct VulkanMemory {
-	vk::MemoryRequirements  requirements       = {};
-	vk::MemoryPropertyFlags property           = {};
-	vk::MemoryPropertyFlags preferred_property = {};
-	vk::DeviceMemory        memory             = nullptr;
-	VmaAllocation           allocation         = nullptr;
-	VmaAllocationInfo       allocation_info    = {};
-	vk::DeviceSize          offset             = 0;
-	uint32_t                type               = 0;
-	uint64_t                unique_id          = 0;
-};
-
 struct VulkanImageState {
 	vk::PipelineStageFlags2 pl_stage    = vk::PipelineStageFlagBits2::eAllCommands;
 	vk::AccessFlags2        access_mask = vk::AccessFlagBits2::eNone;
@@ -153,7 +146,6 @@ struct VulkanImage {
 	vk::Format                    format      = vk::Format::eUndefined;
 	vk::ImageType                 image_type  = vk::ImageType::e2D;
 	vk::Extent3D                  extent      = {1, 1, 1};
-	uint32_t                      guest_pitch = 0;
 	uint32_t                      layers      = 1;
 	uint32_t                      mip_levels  = 1;
 	uint32_t                      samples     = 1;
@@ -162,15 +154,10 @@ struct VulkanImage {
 	vk::Image                     image       = nullptr;
 	VulkanImageState              state;
 	std::vector<VulkanImageState> subresource_states;
-	Graphics::VulkanMemory        memory;
+	VmaAllocation                allocation = nullptr;
 };
 
-struct VulkanBuffer {
-	vk::Buffer           buffer = nullptr;
-	VulkanMemory         memory;
-	vk::BufferUsageFlags usage       = {};
-	uint64_t             buffer_size = 0;
-};
+
 
 } // namespace Libs::Graphics
 

@@ -19,6 +19,8 @@ struct SrtRuntime {
 	SrtMemoryReader           read_specialization_memory = nullptr;
 };
 
+enum class RuntimeValueType { Any, Integer };
+
 // Collects reachable ReadConst values. Immediate offsets receive compact flat-buffer slots;
 // dynamic offsets remain explicit and are never assigned a fake slot.
 void BuildSrtPlan(Program& program);
@@ -29,7 +31,10 @@ void BuildSrtPlan(Program& program);
 // reference entry and the counts agree, otherwise the discovery order is kept and a warning is
 // printed to stderr.
 void SetSrtSlotReference(std::vector<std::pair<uint64_t, uint32_t>> reference);
-bool ValidateRuntimeValue(const ResourcePlan& program, Value value);
+bool ValidateRuntimeValue(const ResourcePlan& program, Value value,
+                          RuntimeValueType type = RuntimeValueType::Any);
+bool EvaluateUniformValues(const ResourcePlan& program, std::span<const Value> values,
+                            const SrtRuntime& runtime, std::span<uint32_t> results);
 
 bool EvaluateDescriptorSource(const ResourcePlan& program, uint32_t source,
                               const SrtRuntime& runtime, DescriptorValue& result);
@@ -39,11 +44,12 @@ bool EvaluateDescriptorSource(const ResourcePlan& program, uint32_t source,
 bool EvaluateDescriptorSources(const ResourcePlan& program, std::span<const uint32_t> sources,
                                const SrtRuntime& runtime, std::vector<DescriptorValue>& results);
 
-// Evaluates descriptor sources and the flattened immediate SRT with one memoized scalar walk.
-// On failure neither destination is changed.
+// Evaluates potentially reachable descriptor sources and the flattened immediate SRT with one
+// memoized scalar walk. Inactive descriptors are zero; on failure no destination is changed.
 bool EvaluateRuntimeSources(const ResourcePlan& program, std::span<const uint32_t> sources,
                             const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
-                            std::vector<uint32_t>& flat, std::span<const uint8_t> clean_flat_slots);
+                            std::vector<uint32_t>& flat, std::span<const uint8_t> clean_flat_slots,
+                            std::vector<uint8_t>& active_sources);
 
 bool WalkSrt(const ResourcePlan& program, const SrtRuntime& runtime,
              std::vector<uint32_t>& flat);

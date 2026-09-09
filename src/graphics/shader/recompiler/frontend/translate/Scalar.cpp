@@ -8,12 +8,12 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_MOV_B32:
 		case O::S_MOVK_I32: MOV_B32(inst, false); return true;
 		case O::S_MOV_B64: S_MOV_B64(inst); return true;
-		case O::S_WQM_B32: S_WQM_B32(inst); return true;
 		case O::S_WQM_B64: S_WQM_B64(inst); return true;
 		case O::S_GETPC_B64: S_GETPC_B64(inst); return true;
 		case O::S_SETPC_B64: return true;
 		case O::S_CSELECT_B32: S_CSELECT_B32(inst); return true;
-		case O::S_CSELECT_B64: S_CSELECT_B64(inst); return true;
+		case O::S_CSELECT_B64: ScalarSelect64(inst, inst.src1); return true;
+		case O::S_CMOV_B64: ScalarSelect64(inst, inst.dst); return true;
 		case O::S_SETREG_B32: EmitControlNop(); return true;
 		case O::S_WAITCNT: EmitWaitcnt(); return true;
 
@@ -31,22 +31,6 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			return true;
 		case O::S_ORN2_SAVEEXEC_B64:
 			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, true);
-			return true;
-		// D = S0 op EXEC (the N2 forms negate EXEC, the N1 forms negate S0), EXEC = D.
-		case O::S_OR_SAVEEXEC_B32:
-			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, false);
-			return true;
-		case O::S_ANDN2_SAVEEXEC_B32:
-			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, false);
-			return true;
-		case O::S_ORN2_SAVEEXEC_B32:
-			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, false);
-			return true;
-		case O::S_OR_SAVEEXEC_B64:
-			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, true);
-			return true;
-		case O::S_ANDN2_SAVEEXEC_B64:
-			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, true);
 			return true;
 		case O::S_ADD_U32: ADD_U32(inst, false, false); return true;
 		case O::S_ADDC_U32: ADD_U32(inst, false, true); return true;
@@ -148,43 +132,30 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			return SimpleInteger(inst, IR::ValueOpcode::IMul32, IR::Type::U32, false, false, false);
 		case O::S_MUL_HI_U32:
 			return SimpleInteger(inst, IR::ValueOpcode::UMulHi, IR::Type::U32, false, false, false);
-		// Wave32 lane-mask aware on top of the integer forms (S_U32_MASK).
 		case O::S_AND_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
-			                  false, false, false);
+			return SimpleInteger(inst, IR::ValueOpcode::BitwiseAnd32, IR::Type::U32, false, false,
+			                     true);
 		case O::S_OR_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, false,
-			                  false, false);
+			return SimpleInteger(inst, IR::ValueOpcode::BitwiseOr32, IR::Type::U32, false, false,
+			                     true);
 		case O::S_XOR_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalXor, IR::ValueOpcode::BitwiseXor32,
-			                  false, false, false);
+			return SimpleInteger(inst, IR::ValueOpcode::BitwiseXor32, IR::Type::U32, false, false,
+			                     true);
 		case O::S_NOT_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
-			                  false, false, true);
+			return SimpleInteger(inst, IR::ValueOpcode::BitwiseNot32, IR::Type::U32, false, false,
+			                     true);
 		case O::S_BREV_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::BitReverse32, IR::Type::U32, false, false,
 			                     false);
-		// Popcount / find-first-set of lane masks ("s_bcnt1_i32_b64 sN, exec" counts the active
-		// lanes): the wave-wide bit pattern comes from a ballot, see ReadMaskWord.
-		case O::S_BCNT1_I32_B32: {
-			const auto result = IR::U32(
-			    ir.Emit(IR::ValueOpcode::BitCount32, {ReadMaskWord(inst.src0, 0u)}));
-			WriteOperand(DestinationOperand(inst), result);
-			ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
-			return true;
-		}
-		case O::S_BCNT1_I32_B64: {
-			const auto words  = ReadMaskWords64(inst.src0);
-			const auto result = ir.IAdd(IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {words[0]})),
-			                            IR::U32(ir.Emit(IR::ValueOpcode::BitCount32, {words[1]})));
-			WriteOperand(DestinationOperand(inst), result);
-			ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
-			return true;
-		}
+		case O::S_BCNT1_I32_B32:
+			return SimpleInteger(inst, IR::ValueOpcode::BitCount32, IR::Type::U32, false, false,
+			                     true);
+		case O::S_BCNT1_I32_B64:
+			return SimpleInteger(inst, IR::ValueOpcode::BitCount64, IR::Type::U64, false, false,
+			                     true);
 		case O::S_FF1_I32_B32:
-			WriteOperand(DestinationOperand(inst),
-			             IR::U32(ir.Emit(IR::ValueOpcode::FindILsb32, {ReadMaskWord(inst.src0, 0u)})));
-			return true;
+			return SimpleInteger(inst, IR::ValueOpcode::FindILsb32, IR::Type::U32, false, false,
+			                     false);
 		case O::S_LSHL_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::ShiftLeftLogical32, IR::Type::U32, false,
 			                     true, true);
@@ -202,20 +173,15 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			                     false, true);
 
 		case O::S_ANDN2_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
-			                  true, false, false);
+			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseAnd32, true, false, true);
 		case O::S_ORN2_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, true,
-			                  false, false);
+			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseOr32, true, false, true);
 		case O::S_NAND_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalAnd, IR::ValueOpcode::BitwiseAnd32,
-			                  false, true, false);
+			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseAnd32, false, true, true);
 		case O::S_NOR_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalOr, IR::ValueOpcode::BitwiseOr32, false,
-			                  true, false);
+			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseOr32, false, true, true);
 		case O::S_XNOR_B32:
-			return S_U32_MASK(inst, IR::ValueOpcode::LogicalXor, IR::ValueOpcode::BitwiseXor32,
-			                  false, true, false);
+			return ComposedIntegerBinary(inst, IR::ValueOpcode::BitwiseXor32, false, true, true);
 		case O::S_FF1_I32_B64: return S_FF1_I32_B64(inst);
 		case O::S_FLBIT_I32_B32: return V_FFBH_32(inst, false);
 		case O::S_FLBIT_I32_B64: return S_FLBIT_I32_B64(inst);
@@ -243,7 +209,7 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_TRAP: EmitControlNop(); return true;
 		case O::S_WAITCNT_DEPCTR: EmitWaitcnt(); return true;
 		case O::S_BARRIER: S_BARRIER(); return true;
-		case O::S_SENDMSG: S_SENDMSG(); return true;
+		case O::S_SENDMSG: S_SENDMSG(inst); return true;
 		case O::S_TTRACEDATA: S_TTRACEDATA(); return true;
 		case O::S_INST_PREFETCH: S_INST_PREFETCH(); return true;
 		case O::S_BRANCH:

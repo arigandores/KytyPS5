@@ -876,7 +876,7 @@ bool TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64_t size) {
 	if (g_gpu_resources != nullptr && IsGpuAddressRange(vaddr, size)) {
 		if (!Graphics::GuestGpu::IsGpuThread() ||
 		    GetGpuResources().GetBufferCache().HasGpuDirtyBytes(vaddr, size) ||
-		    GetGpuResources().GetTextureCache().QueryRegion(vaddr, size).gpu_image_bytes) {
+		    GetGpuResources().GetTextureCache().IsRegionGpuModified(vaddr, size)) {
 			return false;
 		}
 	}
@@ -892,9 +892,9 @@ GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size) {
 	auto& buffers        = GetGpuResources().GetBufferCache();
 	state.cpu_dirty      = buffers.IsRegionCpuModified(vaddr, size);
 	state.gpu_dirty      = buffers.IsRegionGpuModified(vaddr, size);
-	const auto images    = GetGpuResources().GetTextureCache().QueryRegion(vaddr, size);
-	state.image_bytes    = images.image_bytes;
-	state.gpu_image_bytes = images.gpu_image_bytes;
+	auto& textures        = GetGpuResources().GetTextureCache();
+	state.image_bytes     = static_cast<bool>(textures.FindImageFromRange(vaddr, size, false));
+	state.gpu_image_bytes = textures.IsRegionGpuModified(vaddr, size);
 	return state;
 }
 

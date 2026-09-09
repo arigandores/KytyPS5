@@ -14,7 +14,6 @@
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/renderer/sync.h"
-#include "graphics/presentation/renderDoc.h"
 #include "graphics/presentation/videoOut.h"
 #include "graphics/presentation/window.h"
 #include "graphics/shader/shader.h"
@@ -803,10 +802,6 @@ bool GuestGpu::Process(Submission& submission) {
 	}
 	if (first_slice) {
 		DebugAutoRenderDocCapture(GetFrameNum());
-	}
-	if (first_slice && RenderDocCaptureRequested()) {
-		Common::LockGuard render_lock(m_renderer.GetMutex());
-		RenderDocStartCapture();
 	}
 	auto& cp = GetProcessor(submission.queue_id);
 

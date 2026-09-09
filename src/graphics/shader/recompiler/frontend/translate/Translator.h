@@ -9,18 +9,16 @@ namespace Libs::Graphics::ShaderRecompiler::Frontend {
 
 class Translator {
 public:
-	Translator(IR::Program& program, IR::Block* block, uint32_t vector_limit, uint32_t wave_size)
-	    : program(program), ir(block), current_vector_limit(vector_limit),
-	      current_wave_size(wave_size) {}
+	Translator(IR::Program& program, IR::Block* block, uint32_t vector_limit)
+	    : program(program), ir(block), current_vector_limit(vector_limit) {}
 
 	void TranslateInstruction(const Decoder::Instruction& inst);
-	[[nodiscard]] Decoder::Instruction NormalizeOperands(const Decoder::Instruction& inst) const;
 	void TranslateEmbeddedFetch(const Decoder::Instruction& inst, uint32_t attribute,
-	                            uint32_t component_count);
+	                            uint32_t component_count, const ShaderBufferResource& resource);
 	void AddBranchCondition(const CFG::BasicBlock& source, IR::BlockInfo& info);
 
 private:
-	Decoder::Operand SourceAt(const Decoder::Instruction& inst, uint32_t index);
+	const Decoder::Operand& SourceAt(const Decoder::Instruction& inst, uint32_t index);
 	Decoder::Operand DestinationOperand(const Decoder::Instruction& inst);
 	Decoder::Operand OffsetOperand(const Decoder::Operand& operand, uint32_t offset);
 	Decoder::Operand ScalarDestinationOperand(const Decoder::Operand& operand, uint32_t offset);
@@ -30,14 +28,13 @@ private:
 	IR::U32                ReadScalarCode(uint32_t code);
 	IR::U32                ApplyBitSourceModifiers(const Decoder::Operand& operand, IR::U32 value);
 	IR::Value              ReadOperand(const Decoder::Operand& operand, IR::Type type);
-	IR::U1                 ThreadBit(IR::U32 low);
+	IR::U1                 ThreadBit(const std::array<IR::U32, 2>& mask);
 	void                   WriteRawU32(const Decoder::Operand& operand, IR::U32 value);
 	IR::F32                ApplyF32ResultModifiers(const Decoder::Operand& operand, IR::F32 value);
 	void                   WriteOperand(const Decoder::Operand& operand, IR::Value value);
 	IR::U32                PackHalf2x16(IR::F32 low, IR::F32 high);
 	void                   Write16Bits(const Decoder::Operand& operand, IR::U32 value);
 	void                   WriteF16(const Decoder::Operand& operand, IR::F32 value);
-	void                   WriteU16(const Decoder::Operand& operand, IR::U32 value);
 	IR::U32                ReadU32(const Decoder::Operand& operand);
 	std::array<IR::U32, 2> ReadU32Pair(const Decoder::Operand& operand);
 	IR::U64                ReadU64(const Decoder::Operand& operand);
@@ -50,14 +47,11 @@ private:
 	IR::U32 ReadF16LaneBits(const Decoder::Operand& operand, bool high_lane);
 	std::array<IR::U32, 2> ExtractU64(IR::U64 value);
 	void    WriteU32Pair(const Decoder::Operand& operand, const std::array<IR::U32, 2>& value);
-	IR::U1  ReadCondition(const Decoder::Operand& operand);
 	IR::U32 ConditionBit(const Decoder::Operand& operand);
 	IR::U1  ReadMask(const Decoder::Operand& operand);
 	IR::U1  ReadMaskValid(const Decoder::Operand& operand);
-	IR::U32 ReadMaskWord(const Decoder::Operand& operand, uint32_t word);
-	std::array<IR::U32, 2> ReadMaskWords64(const Decoder::Operand& operand);
-	void    WriteMask(const Decoder::Operand& operand, IR::U1 value);
-	void    WriteMask64(const Decoder::Operand& operand, IR::U1 value);
+	std::array<IR::U32, 2> WriteMask(const Decoder::Operand& operand, IR::U1 value,
+	                                 bool write_64 = false);
 	void    WriteCompareResult(const Decoder::Operand& operand, IR::U1 value);
 
 	IR::MemoryFlags AddMemoryInfo(const IR::MemoryInfo& memory, uint32_t pc);
@@ -181,8 +175,6 @@ private:
 	                IR::ValueOpcode bit_opcode, bool negate_rhs, bool negate_result, bool unary);
 	IR::U1 U64MaskBinary(const Decoder::Instruction& inst, IR::ValueOpcode opcode, bool negate_rhs,
 	                     bool negate_result);
-	bool   S_U32_MASK(const Decoder::Instruction& inst, IR::ValueOpcode logical_opcode,
-	                  IR::ValueOpcode bit_opcode, bool negate_rhs, bool negate_result, bool unary);
 	bool SimpleInteger(const Decoder::Instruction& inst, IR::ValueOpcode opcode, IR::Type type,
 	                   bool reverse, bool mask_shift_count, bool update_scc);
 	bool ComposedIntegerBinary(const Decoder::Instruction& inst, IR::ValueOpcode opcode,
@@ -234,15 +226,14 @@ private:
 	void EmitControlNop();
 	void EmitWaitcnt();
 	void S_BARRIER();
-	void S_SENDMSG();
+	void S_SENDMSG(const Decoder::Instruction& inst);
 	void S_TTRACEDATA();
 	void S_INST_PREFETCH();
 	void S_GETPC_B64(const Decoder::Instruction& inst);
 	void S_CSELECT_B32(const Decoder::Instruction& inst);
-	void S_CSELECT_B64(const Decoder::Instruction& inst);
+	void ScalarSelect64(const Decoder::Instruction& inst, const Decoder::Operand& false_source);
 	void MOV_B32(const Decoder::Instruction& inst, bool apply_float_modifiers);
 	void S_MOV_B64(const Decoder::Instruction& inst);
-	void S_WQM_B32(const Decoder::Instruction& inst);
 	void S_WQM_B64(const Decoder::Instruction& inst);
 	void V_MOVRELS_B32(const Decoder::Instruction& inst);
 	void V_MOVRELD_B32(const Decoder::Instruction& inst);
@@ -265,7 +256,6 @@ private:
 	Decoder::Opcode current_opcode       = Decoder::Opcode::UNKNOWN;
 	uint32_t        current_pc           = 0;
 	uint32_t        current_vector_limit = 1;
-	uint32_t        current_wave_size    = 64;
 };
 
 } // namespace Libs::Graphics::ShaderRecompiler::Frontend

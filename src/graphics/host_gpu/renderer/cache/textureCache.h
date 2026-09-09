@@ -13,6 +13,7 @@
 #include "graphics/host_gpu/renderer/image/tiler.h"
 
 #include <map>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -35,12 +36,6 @@ public:
 		ImageInfo     info;
 		ImageViewInfo view_info;
 		BindingType   type = BindingType::Texture;
-	};
-
-	struct RegionInfo {
-		bool image_pages     = false;
-		bool image_bytes     = false;
-		bool gpu_image_bytes = false;
 	};
 
 	TextureCache(GraphicContext& graphics, CommandScheduler& scheduler, PageManager& page_manager,
@@ -68,15 +63,14 @@ public:
 	// Debug aid: synchronously reads mip 0 of the image back and writes it to `name`.
 	void               DebugDumpImage(ImageId id, const std::string& name);
 	void               InvalidateMemoryFromGPU(uint64_t address, uint64_t size);
-	[[nodiscard]] RegionInfo QueryRegion(uint64_t address, uint64_t size);
+	[[nodiscard]] bool IsRegionGpuModified(uint64_t address, uint64_t size);
 
 	[[nodiscard]] bool IsMeta(uint64_t address);
 	[[nodiscard]] bool IsMetaCleared(uint64_t address, uint32_t slice,
 	                                 uint32_t* fill_value = nullptr);
 	[[nodiscard]] bool ClearMeta(uint64_t address);
-	// Returns true when registered DCC absorbed the fill and the caller may skip the dispatch.
-	// False may still record PendingDcc state, but the guest dispatch must execute.
-	[[nodiscard]] bool TryConsumeDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
+	// Record deferred DCC state while the original guest dispatch writes the metadata.
+	void               TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
 	// Called after the fill dispatch is recorded: stamps the PendingDcc entry with its write sequence.
 	void StampPendingDccFill();
 	[[nodiscard]] bool TouchMeta(uint64_t address, uint32_t slice, bool is_clear);
@@ -97,12 +91,12 @@ public:
 
 private:
 	enum class TransferDirection { Upload, Download };
-	struct ColorTransferPlan;
+	struct TextureTransferPlan;
 	struct DownloadPlan;
 
 	struct MetaDataInfo {
 		// A guest metadata-fill dispatch may initialize DCC before its render target is bound.
-		// PendingDcc retains that exact fill until FindRenderTarget classifies the address,
+		// PendingDcc retains that exact fill until an image binding classifies the address,
 		// without exposing an unconfirmed buffer address to the normal metadata heuristics.
 		// Keep all surface metadata in one entry so CMask/FMask can be
 		// registered beside HTile and DCC without introducing parallel tracking paths.
@@ -152,16 +146,24 @@ private:
 	[[nodiscard]] ImageId       ResolveDepthOverlap(const ImageInfo& requested, BindingType binding,
 	                                                ImageId cached);
 	[[nodiscard]] ImageId       ExpandImage(const ImageInfo& info, ImageId source);
-	void                        RefreshImage(ImageId id, const ImageDesc& desc);
-	void                        InitializeImage(ImageId id, const ImageDesc& desc);
-	[[nodiscard]] ColorTransferPlan BuildColorTransfer(const Image& image, BindingType binding,
-	                                                   TransferDirection direction) const;
-	[[nodiscard]] DownloadPlan      BuildDownload(const Image& image) const;
-	void UploadImage(Image& image, const ImageDesc& desc, Buffer& source, uint64_t source_offset);
+	void                        RefreshImage(ImageId id);
+	void                        PrepareDccClear(ImageId id, const ImageDesc& desc);
+	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
+	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
+	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
+	                                                uint64_t image_address);
+	void                        InitializeImage(ImageId id);
+	[[nodiscard]] TextureTransferPlan
+	BuildTextureTransfer(const Image& image, BindingType binding, TransferDirection direction) const;
+	[[nodiscard]] DownloadPlan BuildDownload(const Image& image) const;
+	void UploadImage(Image& image, Buffer& source, uint64_t source_offset);
 	void DownloadImageData(Image& image, Buffer& destination, uint64_t destination_offset,
 	                       uint64_t destination_size, DownloadPlan plan);
 	void DownloadDepth(Image& image, Buffer& destination, uint64_t destination_offset);
 	void CommitGpuWrite(Image& image);
+	// Caller holds m_lock. Volume layer ranges select depth slices.
+	void ClearImage(CommandBuffer& command, ImageId id, const vk::ImageSubresourceRange& range,
+	                const vk::ClearValue& clear);
 	void PrepareImageCopy(Image& image);
 	void RefreshCopySource(ImageId id);
 	[[nodiscard]] bool CopyD16(Image& destination, Image& source);

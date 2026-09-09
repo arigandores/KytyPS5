@@ -41,13 +41,14 @@ public:
 	// Draw/dispatch variant: runs the completed callbacks with the known GPU tick and queries the
 	// semaphore at most every 200 us (a vkGetSemaphoreCounterValue per draw cost 0.6 ms/frame).
 	void                      PopPendingOperationsLazy();
+	void                      PopPendingOperations(bool refresh_gpu_tick);
 	void                      DrainPriorityOperations();
 	void                      WaitPriorityOperations(uint64_t tick);
 	void                      DeferOperation(Common::UniqueFunction<void>&& operation);
 	void                      DeferPriorityOperation(Common::UniqueFunction<void>&& operation);
 	[[nodiscard]] static bool InDeferredOperation() noexcept;
 
-	[[nodiscard]] bool             Active() const noexcept { return m_registers != nullptr; }
+	[[nodiscard]] bool Active() const noexcept { return m_command.m_registers != nullptr; }
 	void                           CheckActive() const;
 	CommandBuffer&                 Current();
 	[[nodiscard]] uint64_t         CurrentTick() const noexcept { return m_master.CurrentTick(); }
@@ -96,9 +97,7 @@ private:
 		const void*                  site = nullptr; // DeferOperation caller (FrameTrace-pops)
 	};
 
-	void BindCurrent();
 	void BeginNext();
-	void PopPendingOperations(bool refresh_gpu_tick);
 	void PriorityOperationsThread(std::stop_token stop);
 	void RunOperation(Common::UniqueFunction<void>&& operation);
 	// KYTY_FRAME_TRACE: GPU execution time of every command buffer through timestamp queries
@@ -123,10 +122,6 @@ private:
 	uint64_t                     m_priority_active_tick = 0;
 	uint64_t                     m_last_tick_refresh_ns = 0;
 	OperationState               m_operation_state      = OperationState::Open;
-	HW::Context*                 m_registers            = nullptr;
-	HW::UserConfig*              m_user_config          = nullptr;
-	HW::Shader*                  m_shaders              = nullptr;
-
 	static constexpr uint32_t                 TimestampSlots        = 4096;
 	vk::QueryPool                             m_timestamp_pool      = nullptr;
 	double                                    m_timestamp_period_ns = 0.0;

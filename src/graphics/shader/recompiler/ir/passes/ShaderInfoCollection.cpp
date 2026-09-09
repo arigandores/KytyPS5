@@ -43,6 +43,7 @@ void AddOutput(ShaderInfo& info, StageOutputKind kind, uint32_t index, uint32_t 
 void ValidateOptions(const Program& program, const ShaderInfoOptions& options) {
 	switch (program.stage) {
 		case ShaderType::Vertex:
+		case ShaderType::Mesh:
 			if (options.vertex == nullptr) {
 				return Fail("vertex shader has no input metadata");
 			}
@@ -114,6 +115,14 @@ void ValidateValueReferences(const Program& program, const ShaderInfoOptions& op
 					const auto kind      = static_cast<StageInputKind>(inst.Arg(0).U32());
 					const auto component = inst.Arg(1).U32();
 					switch (kind) {
+						case StageInputKind::PackedAncillary:
+							return Fail("packed pixel ancillary input has an unsupported live use");
+						case StageInputKind::Layer:
+						case StageInputKind::SampleId:
+							if (program.stage != ShaderType::Pixel || component != 0u) {
+								return Fail("typed pixel scalar input is invalid");
+							}
+							break;
 						case StageInputKind::VertexIndex:
 						case StageInputKind::InstanceIndex:
 						case StageInputKind::FrontFacing:
@@ -254,6 +263,8 @@ void CollectBuiltinInputs(const Program& program, ShaderInfo& info) {
 				case StageInputKind::HelperInvocation:
 					AddInput(info, kind, 0, 1, "gl_HelperInvocation");
 					break;
+				case StageInputKind::Layer: AddInput(info, kind, 0, 1, "gl_Layer"); break;
+				case StageInputKind::SampleId: AddInput(info, kind, 0, 1, "gl_SampleID"); break;
 				case StageInputKind::BaryCoordSmooth:
 					AddInput(info, kind, 0, 3, "gl_BaryCoordKHR");
 					break;
@@ -272,6 +283,7 @@ void CollectBuiltinInputs(const Program& program, ShaderInfo& info) {
 				case StageInputKind::GlobalInvocationId:
 					AddInput(info, kind, 0, 3, "gl_GlobalInvocationID");
 					break;
+				case StageInputKind::PackedAncillary:
 				case StageInputKind::Parameter: break;
 			}
 		}
@@ -316,7 +328,7 @@ void CollectOutputs(const Program& program, const ShaderVertexInputInfo* vertex,
 						const auto output = DecodePositionExportComponent(
 						    vertex->pa_cl_vs_out_cntl, export_info.index, component);
 						if (output.viewport) {
-							return Fail("vertex viewport-index export is unsupported");
+							AddOutput(info, StageOutputKind::ViewportIndex, 0, 0, "gl_ViewportIndex");
 						}
 						if (output.point_size) {
 							AddOutput(info, StageOutputKind::PointSize, 0, 0, "gl_PointSize");
@@ -369,6 +381,7 @@ void CollectShaderInfo(Program& program, const ShaderInfoOptions& options) {
 	    });
 	switch (program.stage) {
 		case ShaderType::Vertex: CollectVertexInputs(program, options.vertex, next); break;
+		case ShaderType::Mesh: break;
 		case ShaderType::Pixel: CollectPixelInputs(program, options.pixel, next); break;
 		case ShaderType::Compute: CollectComputeInputs(options.compute, next); break;
 		default: return Fail("unsupported shader stage for info collection");

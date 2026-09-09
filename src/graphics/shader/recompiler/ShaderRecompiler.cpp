@@ -731,6 +731,8 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 		     GetDumpLabel(options), predication_stats.removed_selects,
 		     predication_stats.folded_chains);
 		IR::ConstantPropagationPass(ir.blocks);
+		// Branch conditions may now be identities; RemoveIdentities erases those instructions.
+		IR::ResolveControlFlowIdentities(ir);
 		IR::RemoveIdentities(ir.blocks);
 		IR::EliminateDeadCode(ir.blocks);
 	}

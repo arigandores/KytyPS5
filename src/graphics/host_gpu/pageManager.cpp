@@ -1,16 +1,20 @@
 #include "graphics/host_gpu/pageManager.h"
 
+#include "common/frameStats.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 #include "kernel/memory.h"
 
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <condition_variable>
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <deque>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
@@ -161,6 +165,12 @@ struct PageManager::Impl {
 	struct Region {
 		std::atomic_flag                    lock = ATOMIC_FLAG_INIT;
 		std::array<PageState, REGION_PAGES> pages;
+		// Pages whose host protection may lag behind Perms(): a deferred write-watcher edge
+		// (UpdatePageWatchersDeferred) sets the bit, the worker or any synchronous Protect of
+		// the page clears it. Guarded by `lock`.
+		std::array<uint64_t, REGION_PAGES / 64> pending {};
+		bool                                    has_pending = false; // any bit set
+		bool                                    queued      = false; // sits in the worker queue
 	};
 
 	Impl() {
@@ -189,6 +199,7 @@ struct PageManager::Impl {
 	}
 
 	~Impl() {
+		StopWorker();
 		for (const auto& region: region_storage) {
 			SpinGuard lock(region->lock);
 			for (auto& page: region->pages) {
@@ -241,16 +252,86 @@ struct PageManager::Impl {
 				std::fflush(stderr);
 			}
 		}
+		namespace FS  = Common::FrameStats;
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		// The kernel serializes protection changes without fairness: a thread issuing them back
+		// to back starves everyone else for milliseconds. Synchronous callers (GuestGpu thread,
+		// fault handlers) announce themselves and the worker pauses between its calls.
+		if (!t_protect_worker) {
+			sync_waiters.fetch_add(1, std::memory_order_acq_rel);
+		}
 		if (!Libs::LibKernel::Memory::ProtectGuestHostMemory(vaddr, size,
 		                                                     ToMemoryMode(protection))) {
 			Fatal("address-space protection failed at 0x%016" PRIx64 ", new=0x%08" PRIx32, vaddr,
 			      protection);
 		}
+		if (!t_protect_worker) {
+			sync_waiters.fetch_sub(1, std::memory_order_acq_rel);
+		}
+		if (t0 != 0) {
+			const bool worker = t_protect_worker;
+			const auto ns     = FS::NowNs() - t0;
+			const auto pages  = size / PAGE_SIZE;
+			FS::Add(worker ? FS::Counter::ProtectWorkerNs : FS::Counter::ProtectNs, ns);
+			FS::Add(worker ? FS::Counter::ProtectWorkerPages : FS::Counter::ProtectPages, pages);
+			if (!worker) {
+				FS::Add(FS::Counter::ProtectCalls, 1);
+				switch (protection) {
+					case READ_ONLY_PROTECTION:
+						FS::Add(FS::Counter::ProtectRoCalls, 1);
+						FS::Add(FS::Counter::ProtectRoPages, pages);
+						break;
+					case NO_ACCESS_PROTECTION:
+						FS::Add(FS::Counter::ProtectNaCalls, 1);
+						FS::Add(FS::Counter::ProtectNaPages, pages);
+						break;
+					default:
+						FS::Add(FS::Counter::ProtectRwNs, ns);
+						FS::Add(FS::Counter::ProtectRwPages, pages);
+						break;
+				}
+				if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+					FS::Add(FS::Counter::ProtectGpuNs, ns);
+					FS::Add(FS::Counter::ProtectGpuCalls, 1);
+					FS::Add(FS::Counter::ProtectGpuPages, pages);
+				}
+				if (t_protect_masked) {
+					FS::Add(FS::Counter::ProtectMaskedNs, ns);
+					FS::Add(FS::Counter::ProtectMaskedCalls, 1);
+				}
+			}
+		}
 	}
 
+	static void SetPendingRange(Region& region, size_t first, size_t count, bool value) {
+		for (size_t page = first; page < first + count; page++) {
+			auto& word = region.pending[page / 64];
+			const auto bit = uint64_t {1} << (page % 64);
+			if (value) {
+				word |= bit;
+			} else {
+				word &= ~bit;
+			}
+		}
+	}
+
+	// Protects a run of pages under the region lock and marks their host state as current.
+	void ProtectRun(Region& region, uint64_t base_addr, size_t first, size_t count,
+	                uint32_t perms) {
+		Protect(base_addr + first * PAGE_SIZE, count * PAGE_SIZE, perms);
+		if (region.has_pending) {
+			SetPendingRange(region, first, count, false);
+		}
+	}
+
+	// `defer`: instead of protecting the runs now, mark them pending and hand the region to the
+	// worker (only for adding write watchers; see PageManager::UpdatePageWatchersDeferred).
 	template <bool track, bool is_read, bool masked>
 	void UpdateRegionWatchers(Region& region, uint64_t base_addr, size_t first, size_t last,
-	                          const RegionBits* mask = nullptr) {
+	                          const RegionBits* mask = nullptr, bool defer = false) {
+		bool      enqueue = false;
+		t_protect_masked  = masked;
+		{
 		SpinGuard lock(region.lock);
 		auto      perms                 = region.pages[first].Perms();
 		uint64_t  range_begin           = 0;
@@ -259,7 +340,18 @@ struct PageManager::Impl {
 
 		const auto release_pending = [&] {
 			if (range_bytes != 0) {
-				Protect(base_addr + range_begin * PAGE_SIZE, range_bytes, perms);
+				if (defer) {
+					SetPendingRange(region, static_cast<size_t>(range_begin),
+					                static_cast<size_t>(range_bytes / PAGE_SIZE), true);
+					region.has_pending = true;
+					if (!region.queued) {
+						region.queued = true;
+						enqueue       = true;
+					}
+				} else {
+					ProtectRun(region, base_addr, static_cast<size_t>(range_begin),
+					           static_cast<size_t>(range_bytes / PAGE_SIZE), perms);
+				}
 				range_bytes           = 0;
 				potential_range_bytes = 0;
 			}
@@ -297,10 +389,14 @@ struct PageManager::Impl {
 		}
 
 		release_pending();
+		}
+		if (enqueue) {
+			EnqueueRegion(&region, base_addr);
+		}
 	}
 
 	template <bool track, bool is_read>
-	void UpdatePageWatchers(uint64_t vaddr, uint64_t size) {
+	void UpdatePageWatchers(uint64_t vaddr, uint64_t size, bool defer = false) {
 		const auto begin = PageStart(vaddr);
 		const auto end   = PageEnd(vaddr, size);
 		for (auto chunk_begin = begin; chunk_begin < end;) {
@@ -312,15 +408,153 @@ struct PageManager::Impl {
 			}
 			const auto first = static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE);
 			const auto last  = static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE);
-			UpdateRegionWatchers<track, is_read, false>(*region, region_base, first, last);
+			UpdateRegionWatchers<track, is_read, false>(*region, region_base, first, last, nullptr,
+			                                            defer);
 			chunk_begin = chunk_end;
 		}
 	}
 
+	// --- deferred host protection -------------------------------------------------------------
+
+	static bool DeferEnabled() {
+		static const bool enabled = [] {
+			const char* value = std::getenv("KYTY_ASYNC_PROTECT");
+			return value == nullptr || std::atoi(value) != 0;
+		}();
+		return enabled;
+	}
+
+	struct QueuedRegion {
+		Region*  region;
+		uint64_t base_addr;
+	};
+
+	void EnqueueRegion(Region* region, uint64_t base_addr) {
+		{
+			std::lock_guard lock(queue_mutex);
+			if (!worker_started) {
+				worker_started = true;
+				worker         = std::thread([this] { WorkerThread(); });
+			}
+			queue.push_back({region, base_addr});
+			inflight.fetch_add(1, std::memory_order_acq_rel);
+		}
+		queue_cv.notify_one();
+	}
+
+	// Applies the pending runs of one region. Holds the region lock across the VirtualProtect
+	// calls (a region is 4 MB, so at most ~100 us) so that no synchronous change of the same
+	// pages can be overtaken by a stale protection value.
+	void ApplyPending(Region& region, uint64_t base_addr) {
+		SpinGuard lock(region.lock);
+		region.queued = false;
+		if (!region.has_pending) {
+			return;
+		}
+		size_t   page = 0;
+		while (page < REGION_PAGES) {
+			const auto word = region.pending[page / 64];
+			if (word == 0) {
+				page = (page / 64 + 1) * 64;
+				continue;
+			}
+			if ((word & (uint64_t {1} << (page % 64))) == 0) {
+				page++;
+				continue;
+			}
+			const auto perms = region.pages[page].Perms();
+			size_t     end   = page + 1;
+			while (end < REGION_PAGES && end - page < WORKER_CALL_PAGES &&
+			       (region.pending[end / 64] & (uint64_t {1} << (end % 64))) != 0 &&
+			       region.pages[end].Perms() == perms) {
+				end++;
+			}
+			while (sync_waiters.load(std::memory_order_acquire) != 0) {
+				std::this_thread::yield();
+			}
+			Protect(base_addr + page * PAGE_SIZE, (end - page) * PAGE_SIZE, perms);
+			SetPendingRange(region, page, end - page, false);
+			page = end;
+		}
+		region.has_pending = false;
+	}
+
+	void WorkerThread() {
+		t_protect_worker = true;
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+		SetThreadDescription(GetCurrentThread(), L"KytyPageProtect");
+#endif
+		for (;;) {
+			QueuedRegion item {};
+			{
+				std::unique_lock lock(queue_mutex);
+				queue_cv.wait(lock, [this] { return worker_stop || !queue.empty(); });
+				if (queue.empty()) {
+					return;
+				}
+				item = queue.front();
+				queue.pop_front();
+			}
+			ApplyPending(*item.region, item.base_addr);
+			if (inflight.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+				std::lock_guard lock(queue_mutex);
+				drain_cv.notify_all();
+			}
+		}
+	}
+
+	void Drain() {
+		if (inflight.load(std::memory_order_acquire) == 0) {
+			return;
+		}
+		namespace FS = Common::FrameStats;
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		{
+			std::unique_lock lock(queue_mutex);
+			drain_cv.wait(lock, [this] { return inflight.load(std::memory_order_acquire) == 0; });
+		}
+		if (t0 != 0) {
+			FS::Add(FS::Counter::ProtectDrainNs, FS::NowNs() - t0);
+			FS::Add(FS::Counter::ProtectDrains, 1);
+		}
+	}
+
+	void StopWorker() {
+		{
+			std::lock_guard lock(queue_mutex);
+			if (!worker_started) {
+				return;
+			}
+			worker_stop = true;
+		}
+		queue_cv.notify_all();
+		worker.join();
+	}
+
+	// Worker calls are capped at 256 KB so that a synchronous caller queued behind one in the
+	// kernel waits tens of microseconds, not the whole region.
+	static constexpr size_t WORKER_CALL_PAGES = (256u * 1024u) / PAGE_SIZE;
+
+	static thread_local bool t_protect_worker;
+	std::atomic<uint32_t>    sync_waiters {0};
+	static thread_local bool t_protect_masked;
+
 	std::unique_ptr<std::atomic<Region*>[]> regions;
 	std::vector<std::unique_ptr<Region>>    region_storage;
 	std::mutex                              region_mutex;
+
+	std::mutex               queue_mutex;
+	std::condition_variable  queue_cv;
+	std::condition_variable  drain_cv;
+	std::deque<QueuedRegion> queue;
+	std::atomic<uint32_t>    inflight {0}; // queued + being applied
+	std::thread              worker;
+	bool                     worker_started = false;
+	bool                     worker_stop    = false;
 };
+
+thread_local bool PageManager::Impl::t_protect_worker = false;
+thread_local bool PageManager::Impl::t_protect_masked = false;
 
 static_assert(std::atomic<void*>::is_always_lock_free);
 
@@ -339,6 +573,14 @@ void PageManager::UpdatePageWatchers(uint64_t vaddr, uint64_t size) {
 
 template void PageManager::UpdatePageWatchers<true>(uint64_t, uint64_t);
 template void PageManager::UpdatePageWatchers<false>(uint64_t, uint64_t);
+
+void PageManager::UpdatePageWatchersDeferred(uint64_t vaddr, uint64_t size) {
+	m_impl->UpdatePageWatchers<true, false>(vaddr, size, Impl::DeferEnabled());
+}
+
+void PageManager::DrainDeferredProtection() {
+	m_impl->Drain();
+}
 
 template <bool track, bool is_read>
 void PageManager::UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& mask) {

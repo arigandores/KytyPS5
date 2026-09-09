@@ -114,6 +114,26 @@ enum class Counter : uint32_t {
 	CbankCopyBytes,
 	AsyncCopyWaitNs, // WaitAsyncCopies before vkQueueSubmit (guest -> staging copies still running)
 	AsyncCopyWaits,  // ... submits that had to wait
+	ProtectNs,       // synchronous host page-protection changes (VirtualProtect) on the caller
+	ProtectPages,
+	ProtectWorkerNs, // ... applied by the deferred-protection worker (PageManager)
+	ProtectWorkerPages,
+	ProtectDrainNs,  // waits for the worker (flip)
+	ProtectDrains,
+	ProtectCalls,    // synchronous VirtualProtect calls, split by the protection applied
+	ProtectRoCalls,  // ... to read-only (write watchers added)
+	ProtectRoPages,
+	ProtectNaCalls,  // ... to no-access (read watchers added: GPU-dirty pages)
+	ProtectNaPages,
+	ProtectRwNs,     // ... back to read-write (untrack / CPU-dirty), time and pages
+	ProtectRwPages,
+	ProtectMaskedNs, // ... issued from the masked (RegionManager bitmask) path
+	ProtectMaskedCalls,
+	ProtectGpuNs,    // ... issued on the GuestGpu thread (the frame-critical share)
+	ProtectGpuCalls,
+	ProtectGpuPages,
+	BufCreateNs,     // Buffer::Buffer (vmaCreateBuffer)
+	BufCreates,
 	Count
 };
 

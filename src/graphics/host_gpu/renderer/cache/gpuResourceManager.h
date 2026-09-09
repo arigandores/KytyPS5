@@ -34,6 +34,9 @@ public:
 	void               UnmapMemory(uint64_t vaddr, uint64_t size);
 	void               PrepareBda();
 	void               RunGarbageCollector();
+	// Applies every deferred host page protection (TextureCache image tracking); called before
+	// the guest can observe GPU completion of a frame (flip).
+	void               DrainDeferredProtection() { m_page_manager.DrainDeferredProtection(); }
 
 private:
 	PageManager               m_page_manager;

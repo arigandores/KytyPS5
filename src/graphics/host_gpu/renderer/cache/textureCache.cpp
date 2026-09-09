@@ -384,7 +384,7 @@ void TextureCache::TrackImage(ImageId id) {
 	if (!image.IsTracked()) {
 		image.track_addr     = image_begin;
 		image.track_addr_end = image_end;
-		m_page_manager.UpdatePageWatchers<true>(image_begin, image.info.data.size);
+		m_page_manager.UpdatePageWatchersDeferred(image_begin, image.info.data.size);
 		return;
 	}
 	if (image_begin < image.track_addr) {
@@ -409,7 +409,7 @@ void TextureCache::TrackImageHead(ImageId id) {
 	}
 	const auto size  = image.track_addr - image_begin;
 	image.track_addr = image_begin;
-	m_page_manager.UpdatePageWatchers<true>(image_begin, size);
+	m_page_manager.UpdatePageWatchersDeferred(image_begin, size);
 }
 
 void TextureCache::TrackImageTail(ImageId id) {
@@ -427,7 +427,7 @@ void TextureCache::TrackImageTail(ImageId id) {
 	const auto address   = image.track_addr_end;
 	const auto size      = image_end - address;
 	image.track_addr_end = image_end;
-	m_page_manager.UpdatePageWatchers<true>(address, size);
+	m_page_manager.UpdatePageWatchersDeferred(address, size);
 }
 
 void TextureCache::UntrackImage(ImageId id) {

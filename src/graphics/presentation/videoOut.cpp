@@ -1279,6 +1279,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " spin_gpu_us=%llu gbar=%llu ibar=%llu swbar=%llu rp_begin=%llu pops=%llu pop_us=%llu"
 			     " gbar_skip=%llu faults_main=%llu fault_main_us=%llu img_new=%llu img_free=%llu"
 			     " img_up=%llu img_up_kb=%llu img_up_us=%llu img_init_us=%llu img_copy_us=%llu cb_copy=%llu cb_copy_gpu=%llu cb_copy_kb=%llu acopy_wait_us=%llu acopy_waits=%llu"
+			     " prot_us=%llu prot_pages=%llu protw_us=%llu protw_pages=%llu prot_drain_us=%llu prot_drains=%llu"
+			     " prot_calls=%llu prot_ro=%llu prot_ro_pages=%llu prot_na=%llu prot_na_pages=%llu prot_rw_us=%llu prot_rw_pages=%llu prot_mask_us=%llu prot_mask=%llu prot_gpu_us=%llu prot_gpu=%llu prot_gpu_pages=%llu buf_new=%llu buf_new_us=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1315,7 +1317,17 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     dus(FS::Counter::ImgUploadNs), dus(FS::Counter::ImgInitNs),
 			     dus(FS::Counter::ImgCopyNs), d(FS::Counter::CbankCopyCpu), d(FS::Counter::CbankCopyGpu),
 			     d(FS::Counter::CbankCopyBytes) / 1024u, dus(FS::Counter::AsyncCopyWaitNs),
-			     d(FS::Counter::AsyncCopyWaits));
+			     d(FS::Counter::AsyncCopyWaits), dus(FS::Counter::ProtectNs),
+			     d(FS::Counter::ProtectPages), dus(FS::Counter::ProtectWorkerNs),
+			     d(FS::Counter::ProtectWorkerPages), dus(FS::Counter::ProtectDrainNs),
+			     d(FS::Counter::ProtectDrains), d(FS::Counter::ProtectCalls),
+			     d(FS::Counter::ProtectRoCalls), d(FS::Counter::ProtectRoPages),
+			     d(FS::Counter::ProtectNaCalls), d(FS::Counter::ProtectNaPages),
+			     dus(FS::Counter::ProtectRwNs), d(FS::Counter::ProtectRwPages),
+			     dus(FS::Counter::ProtectMaskedNs), d(FS::Counter::ProtectMaskedCalls),
+			     dus(FS::Counter::ProtectGpuNs), d(FS::Counter::ProtectGpuCalls),
+			     d(FS::Counter::ProtectGpuPages), d(FS::Counter::BufCreates),
+			     dus(FS::Counter::BufCreateNs));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

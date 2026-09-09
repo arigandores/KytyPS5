@@ -2108,6 +2108,7 @@ void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t req
 
 void CommandProcessor::Flip() {
 	CheckBuffer();
+	m_renderer.GetGpuResources().DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::Flip()\n");
@@ -2125,6 +2126,7 @@ void CommandProcessor::Flip() {
 
 void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	CheckBuffer();
+	m_renderer.GetGpuResources().DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::Flip()\n"
@@ -2148,6 +2150,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action,
                                          void* dst_gpu_addr, uint32_t value) {
 	CheckBuffer();
+	m_renderer.GetGpuResources().DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::FlipWithInterrupt()\n"

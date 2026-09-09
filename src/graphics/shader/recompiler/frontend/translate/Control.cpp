@@ -267,6 +267,33 @@ void Translator::S_MOV_B64(const Decoder::Instruction& inst) {
 	}
 }
 
+// Wave32 whole-quad mode (ASTRO BOT pixel shaders run wave32, DetectGraphicsWaveSize): the
+// low mask word only, same folding of the pixel wave's initial EXEC as S_WQM_B64.
+void Translator::S_WQM_B32(const Decoder::Instruction& inst) {
+	const auto mask_valid  = ReadMaskValid(inst.src0);
+	const auto exec_before = ir.GetExec();
+	const auto wide        = IR::U64(ir.Emit(
+	    IR::ValueOpcode::WqmU64, {ir.ConstructU64(IR::U32(ReadOperand(inst.src0, IR::Type::U32)),
+	                                              IR::U32(IR::Value(0u)))}));
+	const auto result = ir.CompositeExtract(wide, 0);
+	WriteOperand(DestinationOperand(inst), result);
+	if (program.stage == ShaderType::Pixel && inst.dst.kind == Decoder::OperandKind::ExecLo &&
+	    inst.src0.kind == Decoder::OperandKind::ExecLo && !program.pixel_live_exec.IsEmpty() &&
+	    IR::Value(exec_before).Resolve() == program.pixel_live_exec.Resolve()) {
+		// See S_WQM_B64: WQM of the non-helper lanes covers every existing invocation.
+		const auto all = ir.Emit(IR::ValueOpcode::Ballot, {IR::U1(IR::Value(true))});
+		ir.SetExec(IR::U1(IR::Value(true)));
+		ir.SetExecLo(IR::U32(ir.CompositeExtract(all, 0)));
+		ir.SetExecHi(IR::U32(IR::Value(0u)));
+	}
+	if (inst.dst.kind == Decoder::OperandKind::Sgpr) {
+		const auto dst = static_cast<IR::ScalarReg>(inst.dst.reg);
+		ir.SetThreadBitScalarReg(dst, ThreadBit({result, IR::U32(IR::Value(0u))}));
+		ir.SetScalarMaskTag(dst, mask_valid);
+	}
+	ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
+}
+
 void Translator::S_WQM_B64(const Decoder::Instruction& inst) {
 	const auto mask_valid  = ReadMaskValid(inst.src0);
 	const auto exec_before = ir.GetExec();

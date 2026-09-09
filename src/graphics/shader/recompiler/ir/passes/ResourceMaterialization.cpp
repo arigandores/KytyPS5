@@ -315,6 +315,7 @@ static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& r
 	std::vector<DescriptorValue> values;
 	std::vector<uint32_t>        flattened_srt;
 	std::vector<uint8_t>         active_sources;
+	Common::FrameStats::Lap      lap;
 	if (!EvaluateRuntimeSources(program, program.materialization_sources, runtime, values,
 	                            flattened_srt, program.clean_flat_slots, active_sources)) {
 		return SpecializationFail("runtime descriptor sources could not be evaluated");

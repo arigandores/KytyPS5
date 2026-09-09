@@ -108,6 +108,20 @@ bool IsEmptyTerminalBlock(const IR::Program& program, uint32_t id) {
 	return block->empty();
 }
 
+// True when `id` is a loop merge block, a loop continue target or a loop header (back edge):
+// a conditional branch into such a block is a structured break/continue and needs no
+// selection merge of its own.
+bool IsLoopControlTarget(const IR::Program& program, uint32_t id) {
+	if (id == UINT32_MAX) {
+		return false;
+	}
+	return std::ranges::any_of(program.block_info, [&](const IR::BlockInfo& info) {
+		const auto& term = info.terminator;
+		return term.loop_header &&
+		       (info.id == id || term.merge_block == id || term.continue_block == id);
+	});
+}
+
 void EmitReturn(ValueEmitContext& ctx) {
 	EmitKillIfPixelValidMaskInactive(ctx.state);
 	EmitBdaFaultFlush(ctx.state);
@@ -206,11 +220,12 @@ void EmitStructuredTerminator(ValueEmitContext& ctx, const IR::Block* block,
 			if (merge != nullptr) {
 				ctx.state.builder.AddFunction(
 				    {OpSelectionMerge, ctx.Label(merge), SelectionControlNone});
-			} else {
-				// SPIR-V requires every conditional branch to head a structured selection. When
-				// the structurizer found no merge block (typically both arms break/continue an
-				// enclosing loop, whose merge block cannot be reused), declare a synthetic merge
-				// block that is never reached, like glslang does for "if (c) break; else continue;".
+			} else if (guarded || (!IsLoopControlTarget(program, term.true_block) &&
+			                       !IsLoopControlTarget(program, term.false_block))) {
+				// SPIR-V requires a conditional branch to head a structured selection unless it
+				// is a loop break/continue. When the structurizer found no merge block for any
+				// other branch, declare a synthetic merge block that is never reached, like
+				// glslang does for "if (c) break; else continue;".
 				const auto label = ctx.state.builder.AllocateId();
 				ctx.state.synthetic_merge_labels.push_back(label);
 				ctx.state.builder.AddFunction({OpSelectionMerge, label, SelectionControlNone});

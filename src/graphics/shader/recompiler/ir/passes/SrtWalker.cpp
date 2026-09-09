@@ -1370,6 +1370,8 @@ struct CompiledSrt {
 	std::vector<uint32_t> source_root_start; // per descriptor source -> index into source_roots
 	std::vector<uint32_t> source_roots;
 	std::vector<uint32_t> flat_roots; // per srt_reads slot (None for variant reads)
+	// Per ResourcePlan::control_flow block: the block condition (clean reads), None if absent.
+	std::vector<uint32_t> block_condition_roots;
 	bool                  valid = false;
 };
 
@@ -1401,6 +1403,19 @@ public:
 			const bool clean =
 			    slot < m_plan.clean_flat_slots.size() && m_plan.clean_flat_slots[slot] != 0u;
 			m_out.flat_roots[slot] = Compile(read.value, Ctx {nullptr, clean});
+			if (m_failed) {
+				return false;
+			}
+		}
+		// Resource control flow (upstream): block conditions are evaluated through the clean
+		// reader, like the interpreter does.
+		m_out.block_condition_roots.assign(m_plan.control_flow.size(), CompiledSrt::None);
+		for (uint32_t index = 0; index < m_plan.control_flow.size(); index++) {
+			const auto& block = m_plan.control_flow[index];
+			if (block.condition.IsEmpty()) {
+				continue;
+			}
+			m_out.block_condition_roots[index] = Compile(block.condition, Ctx {nullptr, true});
 			if (m_failed) {
 				return false;
 			}
@@ -1968,7 +1983,7 @@ enum class CompiledResult { Done, Unsupported, HardFailure };
 // HardFailure when the interpreter has to reproduce an evaluation failure.
 CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uint32_t> sources,
                                 const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
-                                std::vector<uint32_t>& flat) {
+                                std::vector<uint32_t>& flat, std::vector<uint8_t>& active_sources) {
 	const auto& compiled = GetCompiledSrt(program);
 	if (!compiled.valid) {
 		return CompiledResult::Unsupported;
@@ -1981,6 +1996,47 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 	}
 	EvaluateCompiledNodes(compiled, program, runtime, values.data(), status.data());
 
+	// Sources guarded by shader control flow (EvaluateRuntimeSourcesInterpreted has the
+	// reference walk): a source of an unreached block is not evaluated and stays zero.
+	std::vector<uint8_t> active(program.descriptor_sources.size(), 1u);
+	if (!program.control_flow.empty()) {
+		if (compiled.block_condition_roots.size() != program.control_flow.size()) {
+			return CompiledResult::HardFailure;
+		}
+		for (const auto& block: program.control_flow) {
+			for (const auto source: block.sources) {
+				if (source >= active.size()) {
+					return CompiledResult::HardFailure;
+				}
+				active[source] = 0u;
+			}
+		}
+		std::vector<uint8_t>  visited(program.control_flow.size());
+		std::vector<uint32_t> pending {0};
+		while (!pending.empty()) {
+			const auto index = pending.back();
+			pending.pop_back();
+			if (index >= visited.size()) {
+				return CompiledResult::HardFailure;
+			}
+			if (visited[index]) {
+				continue;
+			}
+			visited[index]    = 1u;
+			const auto& block = program.control_flow[index];
+			for (const auto source: block.sources) {
+				active[source] = 1u;
+			}
+			const auto root = compiled.block_condition_roots[index];
+			if (root != CompiledSrt::None && runtime.read_specialization_memory != nullptr &&
+			    status[root] == CompiledSrt::StOk && block.successors.size() >= 2u) {
+				pending.push_back(block.successors[values[root] != 0u ? 0u : 1u]);
+			} else {
+				pending.insert(pending.end(), block.successors.begin(), block.successors.end());
+			}
+		}
+	}
+
 	std::vector<DescriptorValue> evaluated;
 	evaluated.reserve(sources.size());
 	for (const auto source_index: sources) {
@@ -1990,6 +2046,10 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 		}
 		DescriptorValue value;
 		value.dword_count = source->dword_count;
+		if (source_index < active.size() && !active[source_index]) {
+			evaluated.push_back(value);
+			continue;
+		}
 		const auto start  = compiled.source_root_start[source_index];
 		for (uint32_t dword = 0; dword < source->dword_count && dword < value.dwords.size(); dword++) {
 			const auto root = compiled.source_roots[start + dword];
@@ -2025,15 +2085,17 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 			default: return CompiledResult::HardFailure;
 		}
 	}
-	results = std::move(evaluated);
-	flat    = std::move(flattened);
+	results        = std::move(evaluated);
+	flat           = std::move(flattened);
+	active_sources = std::move(active);
 	return CompiledResult::Done;
 }
 
 bool EvaluateRuntimeSourcesInterpreted(const ResourcePlan& program, std::span<const uint32_t> sources,
                                        const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
                                        std::vector<uint32_t>& flat, bool evaluate_flat,
-                                       std::span<const uint8_t> clean_flat_slots);
+                                       std::span<const uint8_t> clean_flat_slots,
+                                       std::vector<uint8_t>&    active_sources);
 
 bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uint32_t> sources,
                                 const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
@@ -2056,7 +2118,9 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 	    clean_flat_slots.size() == program.clean_flat_slots.size()) {
 		std::vector<DescriptorValue> compiled_results;
 		std::vector<uint32_t>        compiled_flat;
-		const auto outcome = EvaluateCompiled(program, sources, runtime, compiled_results, compiled_flat);
+		std::vector<uint8_t>         compiled_active;
+		const auto outcome = EvaluateCompiled(program, sources, runtime, compiled_results, compiled_flat,
+		                                      compiled_active);
 		if (outcome == CompiledResult::Done) {
 			if (Common::FrameStats::Enabled()) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::MatMemoHits, 1);
@@ -2064,10 +2128,13 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 			if (verify) {
 				std::vector<DescriptorValue> reference;
 				std::vector<uint32_t>        reference_flat;
+				std::vector<uint8_t>         reference_active;
 				const bool ok = EvaluateRuntimeSourcesInterpreted(program, sources, runtime, reference,
-				                                                  reference_flat, evaluate_flat, clean_flat_slots);
+				                                                  reference_flat, evaluate_flat, clean_flat_slots,
+				                                                  reference_active);
 				static std::atomic<uint32_t> logged {0};
-				if ((!ok || reference != compiled_results || reference_flat != compiled_flat) &&
+				if ((!ok || reference != compiled_results || reference_flat != compiled_flat ||
+				     reference_active != compiled_active) &&
 				    logged.fetch_add(1) < 64) {
 					std::string detail;
 					for (size_t i = 0; i < std::min(reference.size(), compiled_results.size()); i++) {
@@ -2090,8 +2157,9 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 					             compiled_flat.size(), detail.c_str());
 				}
 			}
-			results = std::move(compiled_results);
-			flat    = std::move(compiled_flat);
+			results        = std::move(compiled_results);
+			flat           = std::move(compiled_flat);
+			active_sources = std::move(compiled_active);
 			return true;
 		}
 		if (Common::FrameStats::Enabled()) {
@@ -2099,13 +2167,14 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		}
 	}
 	return EvaluateRuntimeSourcesInterpreted(program, sources, runtime, results, flat, evaluate_flat,
-	                                         clean_flat_slots);
+	                                         clean_flat_slots, active_sources);
 }
 
 bool EvaluateRuntimeSourcesInterpreted(const ResourcePlan& program, std::span<const uint32_t> sources,
                                        const SrtRuntime& runtime, std::vector<DescriptorValue>& results,
                                        std::vector<uint32_t>& flat, bool evaluate_flat,
-                                       std::span<const uint8_t> clean_flat_slots) {
+                                       std::span<const uint8_t> clean_flat_slots,
+                                       std::vector<uint8_t>&    active_sources) {
 	SrtRuntime clean_runtime  = runtime;
 	clean_runtime.read_memory = runtime.read_specialization_memory;
 	Evaluator            clean_evaluator(program, clean_runtime);

@@ -19,7 +19,7 @@ namespace IR = ShaderRecompiler::IR;
 
 namespace {
 
-constexpr uint32_t FORMAT_VERSION = 2;
+constexpr uint32_t FORMAT_VERSION = 3;
 
 // Little binary writer / reader. Every enum is stored as u32, every count as u32; the reader
 // fails (returns false) on truncation and the caller drops the file.
@@ -417,6 +417,18 @@ void WritePlan(Writer& w, const IR::ResourcePlan& plan) {
 	w.Bool(plan.requires_specialization_memory);
 	w.Bool(plan.srt_plan_complete);
 	w.Bool(plan.resource_tracking_complete);
+	// Upstream (merge): resource control flow (sources guarded by shader branches) and the
+	// uniform-fill plan (metadata fill shader detection). Missing them from the cache made the
+	// second run of ASTRO BOT render garbage.
+	w.Vec(plan.control_flow, [&](const IR::ResourceBlock& b) {
+		WriteValue(w, b.condition, index_of);
+		w.PodVec(b.successors);
+		w.PodVec(b.sources);
+	});
+	w.Pod(plan.uniform_fill.fill);
+	for (const auto& v: plan.uniform_fill.values) {
+		WriteValue(w, v, index_of);
+	}
 	WriteShaderInfo(w, plan.info);
 }
 
@@ -524,6 +536,19 @@ bool ReadPlan(Reader& r, IR::ResourcePlan& plan) {
 	plan.requires_specialization_memory = r.Bool();
 	plan.srt_plan_complete              = r.Bool();
 	plan.resource_tracking_complete     = r.Bool();
+	const auto n_blocks = r.Count();
+	plan.control_flow.clear();
+	for (uint32_t i = 0; i < n_blocks && !r.Failed(); i++) {
+		IR::ResourceBlock b;
+		b.condition  = ReadValue(r, insts, ok);
+		b.successors = r.PodVec<uint32_t>();
+		b.sources    = r.PodVec<uint32_t>();
+		plan.control_flow.push_back(std::move(b));
+	}
+	plan.uniform_fill.fill = r.Pod<IR::UniformFill>();
+	for (auto& v: plan.uniform_fill.values) {
+		v = ReadValue(r, insts, ok);
+	}
 	return ok && !r.Failed() && ReadShaderInfo(r, plan.info);
 }
 

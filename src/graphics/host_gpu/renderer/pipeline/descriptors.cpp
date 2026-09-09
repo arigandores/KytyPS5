@@ -386,7 +386,11 @@ static bool IsSupportedStorageTextureDescriptor(const ShaderRecompiler::IR::Imag
 	const bool supported_swizzle =
 	    IsValidImageSwizzle(swizzle) &&
 	    (swizzle == DstSel(4, 5, 6, 7) || !resource.read || resource.atomic);
-	const auto max_mip = resource.r128 ? descriptor.LastLevel() : descriptor.MaxMip();
+	// Storage views ignore max_mip for addressing; accept a stale max_mip below the view level
+	// (ASTRO BOT writes the tail of a mip chain with base/last level above max_mip; the view
+	// builder extends the level count the same way).
+	const auto max_mip = resource.r128 ? descriptor.LastLevel()
+	                                   : std::max(descriptor.MaxMip(), descriptor.LastLevel());
 	const auto view_last_level =
 	    resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage
 	        ? descriptor.LastLevel()

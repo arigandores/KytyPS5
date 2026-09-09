@@ -265,7 +265,7 @@ uint32_t LoadScalarBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::Me
 	}
 	const auto low   = ctx.Arg(inst, 1);
 	auto&      cache = state.scalar_bda;
-	if (cache.handle != handle || cache.low != low || cache.block != ctx.current_block) {
+	if (cache.handle != handle || cache.low != low || cache.block != ctx.state.current_block) {
 		const auto base = DeviceAddressFromWords(state, ctx.Arg(*handle, 0), ctx.Arg(*handle, 1));
 		const auto masked_low =
 		    Binary(state, OpBitwiseAnd, TypeU32(state), low, ConstantU32(state, ~3u));
@@ -275,7 +275,7 @@ uint32_t LoadScalarBda(ValueEmitContext& ctx, const IR::Inst& inst, const IR::Me
 		                      ConstantDeviceAddress(state, ~uint64_t {3}));
 		cache.handle   = handle;
 		cache.low      = low;
-		cache.block    = ctx.current_block;
+		cache.block    = ctx.state.current_block;
 		cache.address  = address;
 		cache.page_ptr = GetBdaPointer(ctx, address);
 	}
@@ -398,7 +398,7 @@ bool VectorConstTrace() {
 uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
                                const IR::MemoryInfo& mem) {
 	auto& state = ctx.state;
-	if (!VectorConstLoadsEnabled() || !RobustLoadsEnabled() || ctx.current_block == nullptr ||
+	if (!VectorConstLoadsEnabled() || !RobustLoadsEnabled() || ctx.state.current_block == nullptr ||
 	    inst.NumArgs() != 2u || mem.data_bits != 32u || mem.data_dwords != 1u ||
 	    (mem.offset & 3u) != 0u || mem.resource >= state.program.info.buffers.size()) {
 		return 0u;
@@ -428,7 +428,7 @@ uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
 	members.push_back({&inst, mem.offset});
 	bool     seen    = false;
 	uint32_t scanned = 0;
-	for (const auto& other: *ctx.current_block) {
+	for (const auto& other: *ctx.state.current_block) {
 		if (!seen) {
 			seen = &other == &inst;
 			continue;
@@ -650,10 +650,10 @@ uint32_t LoadScalarBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const I
 	};
 	std::vector<Member> members;
 	members.push_back({&inst, static_cast<int32_t>(mem.offset) & ~3});
-	if (ctx.current_block != nullptr) {
+	if (ctx.state.current_block != nullptr) {
 		bool     seen  = false;
 		uint32_t scanned = 0;
-		for (const auto& other: *ctx.current_block) {
+		for (const auto& other: *ctx.state.current_block) {
 			if (!seen) {
 				seen = &other == &inst;
 				continue;
@@ -857,10 +857,10 @@ uint32_t LoadFlatBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const IR:
 	};
 	std::vector<Member> members;
 	members.push_back({&inst, static_cast<int32_t>(mem.offset)});
-	if (ctx.current_block != nullptr) {
+	if (ctx.state.current_block != nullptr) {
 		bool     seen    = false;
 		uint32_t scanned = 0;
-		for (const auto& other: *ctx.current_block) {
+		for (const auto& other: *ctx.state.current_block) {
 			if (!seen) {
 				seen = &other == &inst;
 				continue;

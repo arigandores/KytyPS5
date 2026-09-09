@@ -73,9 +73,9 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	}
 	if (result != vk::Result::eSuccess) {
 		LOGF("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
-		     VulkanToString(result).c_str(), static_cast<int>(result), tick);
+		     vk::to_string(result).c_str(), static_cast<int>(result), tick);
 		std::printf("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
-		            VulkanToString(result).c_str(), static_cast<int>(result), tick);
+		            vk::to_string(result).c_str(), static_cast<int>(result), tick);
 		ReportGpuCheckpoints(m_graphics);
 	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);

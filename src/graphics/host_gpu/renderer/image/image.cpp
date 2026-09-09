@@ -217,8 +217,8 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 	dependency.imageMemoryBarrierCount = static_cast<uint32_t>(barriers.size());
 	dependency.pImageMemoryBarriers    = barriers.data();
 	command_buffer.pipelineBarrier2(dependency);
-	if (m_scheduler != nullptr && GpuTimeProfiler::Enabled()) {
-		m_scheduler->GpuMark(GpuTimeProfiler::Kind::ImageBarrier,
+	if (GpuTimeProfiler::Enabled()) {
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageBarrier,
 		                     (static_cast<uint64_t>(barriers.front().oldLayout) << 8u) |
 		                         static_cast<uint64_t>(destination_layout),
 		                     barriers.size());

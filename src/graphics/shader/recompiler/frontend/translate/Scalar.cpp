@@ -8,6 +8,7 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_MOV_B32:
 		case O::S_MOVK_I32: MOV_B32(inst, false); return true;
 		case O::S_MOV_B64: S_MOV_B64(inst); return true;
+		case O::S_WQM_B32: S_WQM_B32(inst); return true;
 		case O::S_WQM_B64: S_WQM_B64(inst); return true;
 		case O::S_GETPC_B64: S_GETPC_B64(inst); return true;
 		case O::S_SETPC_B64: return true;
@@ -31,6 +32,23 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 			return true;
 		case O::S_ORN2_SAVEEXEC_B64:
 			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, true);
+			return true;
+		// Wave32 forms (ASTRO BOT pixel shaders) and the remaining wave64 forms; S_SAVEEXEC
+		// arguments: operation, negate EXEC (the N2 forms), negate source (N1), 64-bit write.
+		case O::S_ORN2_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, true, false, false);
+			return true;
+		case O::S_ANDN2_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, false);
+			return true;
+		case O::S_ANDN2_SAVEEXEC_B64:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalAnd, true, false, true);
+			return true;
+		case O::S_OR_SAVEEXEC_B32:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, false);
+			return true;
+		case O::S_OR_SAVEEXEC_B64:
+			S_SAVEEXEC(inst, IR::ValueOpcode::LogicalOr, false, false, true);
 			return true;
 		case O::S_ADD_U32: ADD_U32(inst, false, false); return true;
 		case O::S_ADDC_U32: ADD_U32(inst, false, true); return true;

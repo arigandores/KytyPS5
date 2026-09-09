@@ -3,16 +3,15 @@
 #include "common/assert.h"
 
 #include <algorithm>
-#include <bit>
-#include <chrono>
-#include <cstdio>
-#include <cstdlib>
 #include <fmt/format.h>
 #include <iterator>
 #include <map>
 #include <set>
 #include <span>
+#include <cstdio>
+#include <cstdlib>
 #include <stack>
+#include <string>
 
 namespace Libs::Graphics::ShaderRecompiler::CFG {
 namespace {
@@ -741,89 +740,69 @@ void PruneUnreachableBlocks(Graph& graph) {
 	RebuildPredecessors(graph);
 }
 
-// Iterative maximal-fixpoint dominance on bitsets. The result is the same set family the
-// sorted-vector formulation produced (a block whose edge list is empty is its own root), but a
-// step costs N/64 words instead of an O(N) merge, and blocks are visited in the direction the
-// information flows (forward for dominators, backward for post-dominators): visiting a backward
-// problem in forward order needs one full sweep per CFG level, which made post-dominators of a
-// 400-block compute shader cost ~7 ms per call and the structurizer 300 ms per shader.
-void ComputeDominanceSets(Graph& graph, bool post) {
+void ComputeDominators(Graph& graph) {
 	const auto count = static_cast<uint32_t>(graph.blocks.size());
-	if (count == 0) {
-		return;
-	}
-	const uint32_t words = (count + 63u) / 64u;
-	const uint64_t tail_mask =
-	    (count % 64u) == 0 ? ~uint64_t {0} : ((uint64_t {1} << (count % 64u)) - 1u);
-
-	auto is_root = [&](const BasicBlock& block) {
-		return post ? block.successors.empty()
-		            : (block.id == graph.entry_block || block.predecessors.empty());
-	};
-	auto edges = [&](const BasicBlock& block) -> const std::vector<uint32_t>& {
-		return post ? block.successors : block.predecessors;
-	};
-
-	std::vector<uint64_t> sets(static_cast<size_t>(count) * words);
-	auto                  set_of = [&](uint32_t id) { return sets.data() + static_cast<size_t>(id) * words; };
-	for (const auto& block: graph.blocks) {
-		auto* set = set_of(block.id);
-		if (is_root(block)) {
-			std::fill(set, set + words, uint64_t {0});
-			set[block.id / 64u] |= uint64_t {1} << (block.id % 64u);
-		} else {
-			std::fill(set, set + words, ~uint64_t {0});
-			set[words - 1] &= tail_mask;
-		}
-	}
-
-	std::vector<uint64_t> next(words);
-	bool                  changed = true;
-	while (changed) {
-		changed = false;
-		for (uint32_t step = 0; step < count; step++) {
-			const auto& block = graph.blocks[post ? count - 1u - step : step];
-			if (is_root(block)) {
-				continue;
-			}
-			std::fill(next.begin(), next.end(), ~uint64_t {0});
-			for (const auto edge: edges(block)) {
-				const auto* other = set_of(edge);
-				for (uint32_t w = 0; w < words; w++) {
-					next[w] &= other[w];
-				}
-			}
-			next[words - 1] &= tail_mask;
-			next[block.id / 64u] |= uint64_t {1} << (block.id % 64u);
-			auto* set = set_of(block.id);
-			if (!std::equal(next.begin(), next.end(), set)) {
-				std::copy(next.begin(), next.end(), set);
-				changed = true;
-			}
-		}
-	}
+	const auto all   = AllBlockIds(count);
 
 	for (auto& block: graph.blocks) {
-		auto& out = post ? block.post_dominators : block.dominators;
-		out.clear();
-		const auto* set = set_of(block.id);
-		for (uint32_t w = 0; w < words; w++) {
-			uint64_t word = set[w];
-			while (word != 0) {
-				const auto bit = static_cast<uint32_t>(std::countr_zero(word));
-				out.push_back(w * 64u + bit);
-				word &= word - 1u;
+		block.dominators = (block.id == graph.entry_block ? std::vector<uint32_t> {block.id} : all);
+	}
+
+	bool changed = true;
+	while (changed) {
+		changed = false;
+		for (auto& block: graph.blocks) {
+			if (block.id == graph.entry_block) {
+				continue;
+			}
+			std::vector<uint32_t> next;
+			if (block.predecessors.empty()) {
+				next = {block.id};
+			} else {
+				next = graph.blocks[block.predecessors.front()].dominators;
+				for (uint32_t i = 1; i < block.predecessors.size(); i++) {
+					next = IntersectSorted(next, graph.blocks[block.predecessors[i]].dominators);
+				}
+				AddUnique(next, block.id);
+				SortUnique(next);
+			}
+			if (next != block.dominators) {
+				block.dominators = std::move(next);
+				changed          = true;
 			}
 		}
 	}
-}
-
-void ComputeDominators(Graph& graph) {
-	ComputeDominanceSets(graph, false);
 }
 
 void ComputePostDominators(Graph& graph) {
-	ComputeDominanceSets(graph, true);
+	const auto count = static_cast<uint32_t>(graph.blocks.size());
+	const auto all   = AllBlockIds(count);
+
+	for (auto& block: graph.blocks) {
+		block.post_dominators = block.successors.empty() ? std::vector<uint32_t> {block.id} : all;
+	}
+
+	bool changed = true;
+	while (changed) {
+		changed = false;
+		for (auto& block: graph.blocks) {
+			std::vector<uint32_t> next;
+			if (block.successors.empty()) {
+				next = {block.id};
+			} else {
+				next = graph.blocks[block.successors.front()].post_dominators;
+				for (uint32_t i = 1; i < block.successors.size(); i++) {
+					next = IntersectSorted(next, graph.blocks[block.successors[i]].post_dominators);
+				}
+				AddUnique(next, block.id);
+				SortUnique(next);
+			}
+			if (next != block.post_dominators) {
+				block.post_dominators = std::move(next);
+				changed               = true;
+			}
+		}
+	}
 }
 
 void ComputeBackEdges(Graph& graph) {
@@ -1005,49 +984,12 @@ void ComputeComponents(Graph& graph) {
 	}
 }
 
-struct CfgProfile {
-	uint64_t recompute_calls = 0;
-	uint64_t dominators_us   = 0;
-	uint64_t post_dom_us     = 0;
-	uint64_t back_edges_us   = 0;
-	uint64_t loops_us        = 0;
-	uint64_t components_us   = 0;
-	uint64_t impl_calls      = 0;
-	uint64_t route_attempts  = 0;
-	uint64_t max_blocks      = 0;
-};
-
-CfgProfile& Profile() {
-	static CfgProfile profile;
-	return profile;
-}
-
-uint64_t ProfileNow() {
-	return static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::microseconds>(
-	                                 std::chrono::steady_clock::now().time_since_epoch())
-	                                 .count());
-}
-
 void RecomputeAnalyses(Graph& graph) {
-	auto&      profile = Profile();
-	const auto t0      = ProfileNow();
 	ComputeDominators(graph);
-	const auto t1 = ProfileNow();
 	ComputePostDominators(graph);
-	const auto t2 = ProfileNow();
 	ComputeBackEdges(graph);
-	const auto t3 = ProfileNow();
 	ComputeNaturalLoops(graph);
-	const auto t4 = ProfileNow();
 	ComputeComponents(graph);
-	const auto t5 = ProfileNow();
-	profile.recompute_calls++;
-	profile.dominators_us += t1 - t0;
-	profile.post_dom_us += t2 - t1;
-	profile.back_edges_us += t3 - t2;
-	profile.loops_us += t4 - t3;
-	profile.components_us += t5 - t4;
-	profile.max_blocks = std::max<uint64_t>(profile.max_blocks, graph.blocks.size());
 }
 
 std::vector<uint32_t> ApplyBlockOrder(Graph& graph, std::vector<BasicBlock> blocks) {
@@ -1262,6 +1204,16 @@ bool IsEnclosingLinearExit(const Graph& graph, uint32_t header, uint32_t block_i
 
 std::string VectorToString(const std::vector<uint32_t>& values);
 
+// Terminal-epilogue cloning is a fallback pass of Structurize (see below).
+bool& EpilogueCloningFlag() {
+	static thread_local bool enabled = false;
+	return enabled;
+}
+
+bool EpilogueCloningEnabled() {
+	return EpilogueCloningFlag();
+}
+
 // The chain of single-successor blocks from `start` down to the shared program terminal (the
 // terminal itself excluded), when `start` is a terminal epilogue that may be duplicated per
 // predecessor: plain branches only, no memory access, few instructions. Empty when `start` is not
@@ -1279,6 +1231,16 @@ std::vector<uint32_t> ClonableTerminalEpilogue(const Graph& graph, uint32_t star
 			return {};
 		}
 		if (block->successors.empty()) {
+			// The program ends in this block: a returning block with instructions (s_endpgm is
+			// not modelled as a branch to a shared empty terminal) is cloned as the last link.
+			if (block->terminator.kind == TerminatorKind::Return &&
+			    block->inst_begin != block->inst_end) {
+				if (block->memory_access ||
+				    instructions + (block->inst_end - block->inst_begin) > MaxEpilogueInstructions) {
+					return {};
+				}
+				chain.push_back(block_id);
+			}
 			return chain;
 		}
 		if (block->successors.size() != 1 || block->terminator.kind != TerminatorKind::Branch ||
@@ -1305,8 +1267,9 @@ uint32_t CloneTerminalEpilogue(Graph& graph, const std::vector<uint32_t>& chain,
 	}
 	// Clones are appended in chain order so every clone precedes the blocks it dominates (SPIR-V
 	// requires that block order).
-	const auto terminal = graph.FindBlock(chain.back())->successors.front();
-	const auto first    = static_cast<uint32_t>(graph.blocks.size());
+	const auto* last     = graph.FindBlock(chain.back());
+	const auto  terminal = last->successors.empty() ? UINT32_MAX : last->successors.front();
+	const auto  first    = static_cast<uint32_t>(graph.blocks.size());
 	for (uint32_t index = 0; index < chain.size(); index++) {
 		BasicBlock clone = *graph.FindBlock(chain[index]);
 		clone.id         = first + index;
@@ -1314,8 +1277,12 @@ uint32_t CloneTerminalEpilogue(Graph& graph, const std::vector<uint32_t>& chain,
 		clone.predecessors.clear();
 		clone.dominators.clear();
 		clone.post_dominators.clear();
-		clone.successors                = {next};
-		clone.terminator.true_block     = next;
+		if (next != UINT32_MAX) {
+			clone.successors            = {next};
+			clone.terminator.true_block = next;
+		} else {
+			clone.successors.clear(); // returning block: terminator kept as is
+		}
 		clone.terminator.false_block    = UINT32_MAX;
 		clone.terminator.merge_block    = UINT32_MAX;
 		clone.terminator.continue_block = UINT32_MAX;
@@ -1360,7 +1327,7 @@ uint32_t FindSelectionMerge(const Graph& graph, const BasicBlock& block) {
 	// header is the whole selection, and control rejoins at the other arm. The common
 	// post-dominator would be the program terminal, which turns the rest of the shader into the
 	// selection region.
-	{
+	if (EpilogueCloningEnabled()) {
 		const auto true_target  = block.terminator.true_block;
 		const auto false_target = block.terminator.false_block;
 		const bool true_exit    = IsPrivateTerminalEpilogue(graph, block.id, true_target);
@@ -1696,7 +1663,10 @@ bool SplitOneSelectionMerge(Graph& graph) {
 		if (external != region.end()) {
 			// A shared terminal epilogue entered from outside the selection gets a private copy
 			// for the header and the region's own predecessors; other blocks cannot be cloned.
-			const auto chain = ClonableTerminalEpilogue(graph, *external);
+			// Fallback only (see Structurize): the first pass fails here like upstream does and
+			// lets shared-arm routing try first.
+			const auto chain = EpilogueCloningEnabled() ? ClonableTerminalEpilogue(graph, *external)
+			                                            : std::vector<uint32_t> {};
 			if (!chain.empty()) {
 				std::vector<uint32_t> local_predecessors;
 				for (const auto predecessor: graph.FindBlock(*external)->predecessors) {
@@ -2198,20 +2168,7 @@ Graph BuildGraph(const Decoder::Program& program) {
 	}
 
 	for (auto& block: graph.blocks) {
-		block.terminator    = {};
-		block.memory_access = std::any_of(
-		    program.instructions.begin() + block.inst_begin,
-		    program.instructions.begin() + block.inst_end, [](const Instruction& inst) {
-			    switch (inst.family) {
-				    case Decoder::Family::SMEM:
-				    case Decoder::Family::MUBUF:
-				    case Decoder::Family::MTBUF:
-				    case Decoder::Family::FLAT:
-				    case Decoder::Family::DS:
-				    case Decoder::Family::MIMG: return true;
-				    default: return false;
-			    }
-		    });
+		block.terminator = {};
 		if (block.inst_begin == block.inst_end) {
 			block.terminator.kind = TerminatorKind::Return;
 			continue;
@@ -2341,7 +2298,6 @@ Graph BuildGraph(const Decoder::Program& program) {
 namespace {
 
 bool StructurizeImpl(Graph& graph) {
-	Profile().impl_calls++;
 	if (graph.unsupported || graph.irreducible) {
 		if (graph.unsupported_reason.empty()) {
 			graph.unsupported_reason = "unsupported CFG";
@@ -2424,7 +2380,7 @@ bool StructurizeImpl(Graph& graph) {
 
 } // namespace
 
-bool Structurize(Graph& graph) {
+bool StructurizeRouted(Graph& graph) {
 	Graph original = graph;
 	if (StructurizeImpl(graph)) {
 		return true;
@@ -2436,7 +2392,6 @@ bool Structurize(Graph& graph) {
 	// Apply one route at a time and retry. Eagerly routing every matching diamond can
 	// rewrite unrelated selections that were already structurally valid.
 	for (uint32_t route_variable = 0; route_variable < route_budget; route_variable++) {
-		Profile().route_attempts++;
 		if (!RouteSharedSelectionArm(graph, route_variable)) {
 			break;
 		}
@@ -2450,17 +2405,30 @@ bool Structurize(Graph& graph) {
 	return false;
 }
 
-std::string ProfileReport() {
-	const auto& p = Profile();
-	return fmt::format("cfg profile: recompute={} impl={} routes={} max_blocks={} dominators={}us "
-	                   "post_dominators={}us back_edges={}us loops={}us components={}us",
-	                   p.recompute_calls, p.impl_calls, p.route_attempts, p.max_blocks, p.dominators_us,
-	                   p.post_dom_us, p.back_edges_us, p.loops_us, p.components_us);
+bool Structurize(Graph& graph) {
+	Graph original = graph;
+	EpilogueCloningFlag() = false;
+	if (StructurizeRouted(graph)) {
+		return true;
+	}
+	// Upstream's passes gave up: retry from the native graph with terminal-epilogue cloning
+	// (SplitOneSelectionMerge) allowed.
+	Graph failed_graph     = std::move(graph);
+	graph                  = std::move(original);
+	EpilogueCloningFlag() = true;
+	const bool structured  = StructurizeRouted(graph);
+	EpilogueCloningFlag() = false;
+	if (!structured) {
+		graph = std::move(failed_graph);
+	}
+	return structured;
 }
 
-void ProfileReset() {
-	Profile() = CfgProfile {};
+std::string ProfileReport() {
+	return {};
 }
+
+void ProfileReset() {}
 
 std::string BranchConditionToString(BranchCondition condition) {
 	switch (condition) {

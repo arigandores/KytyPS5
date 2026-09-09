@@ -563,6 +563,7 @@ struct F32Class {
 	uint32_t zero = 0;
 };
 
+uint32_t PixelParameterMappedLocation(const EmitterState& state, uint32_t attr);
 uint32_t PixelParameterLocation(const EmitterState& state, uint32_t attr);
 
 bool PixelParameterIsFlat(const EmitterState& state, uint32_t attr);

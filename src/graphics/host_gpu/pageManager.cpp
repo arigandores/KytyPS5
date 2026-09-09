@@ -451,7 +451,8 @@ struct PageManager::Impl {
 		if (!region.has_pending) {
 			return;
 		}
-		size_t   page = 0;
+		const auto call_pages = WorkerCallPages();
+		size_t     page       = 0;
 		while (page < REGION_PAGES) {
 			const auto word = region.pending[page / 64];
 			if (word == 0) {
@@ -464,7 +465,7 @@ struct PageManager::Impl {
 			}
 			const auto perms = region.pages[page].Perms();
 			size_t     end   = page + 1;
-			while (end < REGION_PAGES && end - page < WORKER_CALL_PAGES &&
+			while (end < REGION_PAGES && end - page < call_pages &&
 			       (region.pending[end / 64] & (uint64_t {1} << (end % 64))) != 0 &&
 			       region.pages[end].Perms() == perms) {
 				end++;
@@ -531,9 +532,19 @@ struct PageManager::Impl {
 		worker.join();
 	}
 
-	// Worker calls are capped at 256 KB so that a synchronous caller queued behind one in the
-	// kernel waits tens of microseconds, not the whole region.
-	static constexpr size_t WORKER_CALL_PAGES = (256u * 1024u) / PAGE_SIZE;
+	// Worker calls are capped (KYTY_ASYNC_PROTECT_KB, default 256 KB) so that a synchronous caller
+	// queued behind one in the kernel waits tens of microseconds, not the whole region: on a scene
+	// cut the GuestGpu thread still issues ~500 buffer-cache protections while the worker runs.
+	// Measured on the crowd cut: 4 MB calls starve them (15 ms), 64 KB calls make the worker 3x
+	// slower (72 ms, flip drains appear) and the sync share worse (11 ms); 256 KB: 19-23 / 5-8 ms.
+	static size_t WorkerCallPages() {
+		static const size_t pages = [] {
+			const char* value = std::getenv("KYTY_ASYNC_PROTECT_KB");
+			const auto  kb    = value != nullptr ? std::strtoull(value, nullptr, 10) : uint64_t {256};
+			return static_cast<size_t>(std::max<uint64_t>(kb * 1024u / PAGE_SIZE, 1u));
+		}();
+		return pages;
+	}
 
 	static thread_local bool t_protect_worker;
 	std::atomic<uint32_t>    sync_waiters {0};

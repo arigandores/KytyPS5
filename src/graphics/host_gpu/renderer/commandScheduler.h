@@ -124,6 +124,11 @@ private:
 	OperationState               m_operation_state      = OperationState::Open;
 	static constexpr uint32_t                 TimestampSlots        = 4096;
 	vk::QueryPool                             m_timestamp_pool      = nullptr;
+	// Timeline semaphore signalled from the copy pool (host) with the async-copy completed mark;
+	// submits that reference staging filled by AsyncMemcpy wait for it on the GPU.
+	static void SignalCopySemaphore(uint64_t completed, void* user);
+	vk::Semaphore                             m_copy_semaphore      = nullptr;
+	bool                                      m_copy_gpu_wait       = false;
 	double                                    m_timestamp_period_ns = 0.0;
 	uint32_t                                  m_timestamp_bits      = 64;
 	uint32_t                                  m_timestamp_next      = 0;

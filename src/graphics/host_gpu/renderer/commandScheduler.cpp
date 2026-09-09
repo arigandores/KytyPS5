@@ -110,10 +110,46 @@ CommandScheduler::CommandScheduler(RenderContext& context, GraphicContext& graph
       m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }),
       m_gpu_time(graphics, m_master) {
 	InitTimestamps();
+	// KYTY_ASYNC_COPY_GPU_WAIT=0: block the GuestGpu thread in Submit until the async copies
+	// landed (the old behaviour) instead of making the queue wait for them.
+	const char* gpu_wait = std::getenv("KYTY_ASYNC_COPY_GPU_WAIT");
+	if (gpu_wait == nullptr || std::atoi(gpu_wait) != 0) {
+		vk::SemaphoreTypeCreateInfo type_info {};
+		type_info.semaphoreType = vk::SemaphoreType::eTimeline;
+		type_info.initialValue  = 0;
+		vk::SemaphoreCreateInfo create_info {};
+		create_info.pNext = &type_info;
+		const auto result = graphics.device.createSemaphore(&create_info, nullptr, &m_copy_semaphore);
+		EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess || m_copy_semaphore == nullptr);
+		m_copy_gpu_wait = true;
+		Common::AddAsyncCopySignal(&CommandScheduler::SignalCopySemaphore, this);
+	}
+}
+
+// Copy-pool thread: the async-copy completed mark advanced past a value some submit waits for.
+void CommandScheduler::SignalCopySemaphore(uint64_t completed, void* user) {
+	auto*                   self = static_cast<CommandScheduler*>(user);
+	vk::SemaphoreSignalInfo info {};
+	info.semaphore    = self->m_copy_semaphore;
+	info.value        = completed;
+	const auto result = self->m_graphics.device.signalSemaphore(&info);
+	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
+	static const bool trace = std::getenv("KYTY_ACOPY_TRACE") != nullptr;
+	if (trace) {
+		std::fprintf(stderr, "AcopyTrace: signal %llu\n", static_cast<unsigned long long>(completed));
+	}
 }
 
 CommandScheduler::~CommandScheduler() {
+	if (m_copy_gpu_wait) {
+		Common::RemoveAsyncCopySignal(&CommandScheduler::SignalCopySemaphore, this);
+		Common::WaitAsyncCopies();
+	}
 	Shutdown();
+	if (m_copy_semaphore != nullptr) {
+		m_graphics.device.destroySemaphore(m_copy_semaphore, nullptr);
+		m_copy_semaphore = nullptr;
+	}
 	if (m_timestamp_pool != nullptr) {
 		m_graphics.device.destroyQueryPool(m_timestamp_pool, nullptr);
 		m_timestamp_pool = nullptr;
@@ -437,13 +473,34 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 	const auto submit_t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 
 	// Guest -> staging copies queued by the buffer/texture caches (AsyncMemcpy) must land before
-	// the GPU reads the staging ring.
+	// the GPU reads the staging ring: the queue waits for the copy semaphore to reach the number
+	// of chunks queued so far (the pool signals it from a copy thread), or - with
+	// KYTY_ASYNC_COPY_GPU_WAIT=0 - this thread blocks until they are done.
 	if (Common::PendingAsyncCopies() != 0) {
-		Common::WaitAsyncCopies();
-		if (submit_t0 != 0) {
-			namespace FS = Common::FrameStats;
-			FS::Add(FS::Counter::AsyncCopyWaitNs, FS::NowNs() - submit_t0);
-			FS::Add(FS::Counter::AsyncCopyWaits, 1);
+		namespace FS = Common::FrameStats;
+		if (m_copy_gpu_wait) {
+			const auto sequence = Common::AsyncCopySequence();
+			const bool complete = Common::RequestAsyncCopySignal(sequence);
+			if (!complete) {
+				submit.AddWait(m_copy_semaphore, sequence, vk::PipelineStageFlagBits::eAllCommands);
+				FS::Add(FS::Counter::AsyncCopyGpuWaits, 1);
+			}
+			static const bool trace = std::getenv("KYTY_ACOPY_TRACE") != nullptr;
+			if (trace) {
+				uint64_t   value  = 0;
+				const auto result = m_graphics.device.getSemaphoreCounterValue(m_copy_semaphore, &value);
+				std::fprintf(stderr, "AcopyTrace: submit seq=%llu completed=%llu sem=%llu wait=%d (%d)\n",
+				             static_cast<unsigned long long>(sequence),
+				             static_cast<unsigned long long>(Common::AsyncCopyCompleted()),
+				             static_cast<unsigned long long>(value), complete ? 0 : 1,
+				             static_cast<int>(result));
+			}
+		} else {
+			Common::WaitAsyncCopies();
+			if (submit_t0 != 0) {
+				FS::Add(FS::Counter::AsyncCopyWaitNs, FS::NowNs() - submit_t0);
+				FS::Add(FS::Counter::AsyncCopyWaits, 1);
+			}
 		}
 	}
 

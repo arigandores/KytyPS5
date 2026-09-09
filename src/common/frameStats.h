@@ -134,6 +134,7 @@ enum class Counter : uint32_t {
 	ProtectGpuPages,
 	BufCreateNs,     // Buffer::Buffer (vmaCreateBuffer)
 	BufCreates,
+	AsyncCopyGpuWaits, // submits that made the queue wait for the async-copy semaphore
 	Count
 };
 

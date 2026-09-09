@@ -298,3 +298,6 @@ VALUE_OPCODE(SelectU32, U32, U1, U32, U32)
 // descriptor dwords 0-1, exec. Reads the node through the BDA page table (uses_dma).
 VALUE_OPCODE(BvhIntersectRay, U32x4, U32, U32, F32, F32, F32, F32, F32, F32, F32, F32, F32, F32,
              U32, U32, U1)
+// DS_INC_RTN_U32 / DS_DEC_RTN_U32 (upstream e04007a), appended for cache compatibility.
+VALUE_OPCODE(SharedAtomicInc32, U32, U32, U32, U1)
+VALUE_OPCODE(SharedAtomicDec32, U32, U32, U32, U1)

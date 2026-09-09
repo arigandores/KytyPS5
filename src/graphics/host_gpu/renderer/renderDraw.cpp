@@ -1570,6 +1570,10 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 		ResetBindings();
 		return;
 	}
+	if (DepthStencilCopy(buffer)) {
+		ResetBindings();
+		return;
+	}
 
 	if (!DrawHasValidVertexShader(sh_ctx)) {
 		return;
@@ -1695,6 +1699,10 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 
 	if (ConsumeMetadataColorOperation(buffer)) {
 		MaterializeBoundTargetDccClears(buffer);
+		ResetBindings();
+		return;
+	}
+	if (DepthStencilCopy(buffer)) {
 		ResetBindings();
 		return;
 	}

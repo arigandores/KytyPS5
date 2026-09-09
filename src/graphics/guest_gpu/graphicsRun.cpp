@@ -753,34 +753,52 @@ static void DebugAutoRenderDocCapture(int frame_num) {
 		const char* value = std::getenv("KYTY_RD_TIME");
 		return value != nullptr ? std::strtod(value, nullptr) : -1.0;
 	}();
-	// KYTY_RD_LEVEL_FRAME=<n>: n frames after the game logged "Level has started: <KYTY_RD_LEVEL>"
-	// (default intro_next) - independent of when the menu was passed.
-	static const long level_target = [] {
-		const char* value = std::getenv("KYTY_RD_LEVEL_FRAME");
-		return value != nullptr ? std::strtol(value, nullptr, 10) : -1L;
+	// KYTY_RD_LEVEL_FRAME=<n>[,<n>...]: n frames after the game logged "Level has started:
+	// <KYTY_RD_LEVEL>" (default intro_next) - independent of when the menu was passed. Several
+	// ascending frames give one capture each in a single run.
+	static const std::vector<long> level_targets = [] {
+		std::vector<long> result;
+		const char*       value = std::getenv("KYTY_RD_LEVEL_FRAME");
+		while (value != nullptr && *value != '\0') {
+			char* end = nullptr;
+			result.push_back(std::strtol(value, &end, 10));
+			if (end == value) {
+				break;
+			}
+			value = *end == ',' ? end + 1 : end;
+		}
+		std::sort(result.begin(), result.end());
+		return result;
 	}();
-	static const auto start   = std::chrono::steady_clock::now();
-	static bool       requested = false;
+	static const auto start       = std::chrono::steady_clock::now();
+	static bool       requested   = false; // KYTY_RD_FRAME / KYTY_RD_TIME: one capture
+	static size_t     next_level  = 0;
 	static long       level_frame = -1;
+	if (!level_targets.empty() && level_frame < 0 && RenderDocLevelStarted()) {
+		level_frame = frame_num;
+		LOGF("RenderDoc: level started at frame %d, capture at frame %ld (+%zu more)\n", frame_num,
+		     level_frame + level_targets.front(), level_targets.size() - 1);
+	}
+	if (level_frame >= 0 && next_level < level_targets.size() &&
+	    frame_num >= level_frame + level_targets[next_level]) {
+		LOGF("RenderDoc: auto capture at frame %d (level+%ld)\n", frame_num,
+		     level_targets[next_level]);
+		next_level++;
+		RenderDocRequestCapture();
+		return;
+	}
 	if (requested) {
 		return;
 	}
-	if (level_target >= 0 && level_frame < 0 && RenderDocLevelStarted()) {
-		level_frame = frame_num;
-		LOGF("RenderDoc: level started at frame %d, capture at frame %ld\n", frame_num,
-		     level_frame + level_target);
-	}
 	const bool frame_hit = target >= 0 && frame_num >= target;
-	const bool level_hit = level_target >= 0 && level_frame >= 0 && frame_num >= level_frame + level_target;
 	const bool time_hit =
 	    target_time >= 0 &&
 	    std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count() >= target_time;
-	if (!frame_hit && !time_hit && !level_hit) {
+	if (!frame_hit && !time_hit) {
 		return;
 	}
 	requested = true;
-	LOGF("RenderDoc: auto capture at frame %d (KYTY_RD_FRAME=%ld, level+%ld)\n", frame_num, target,
-	     level_target);
+	LOGF("RenderDoc: auto capture at frame %d (KYTY_RD_FRAME=%ld)\n", frame_num, target);
 	RenderDocRequestCapture();
 }
 

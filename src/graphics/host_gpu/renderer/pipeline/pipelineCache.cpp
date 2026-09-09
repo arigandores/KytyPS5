@@ -25,6 +25,9 @@
 #include "loader/systemContent.h"
 
 #include <algorithm>
+#include <cstdlib>
+#include <unordered_set>
+#include <mutex>
 #include <array>
 #include <atomic>
 #include <cctype>
@@ -280,6 +283,45 @@ void DumpShaderOriginal(const char* stage_name, uint64_t shader_hash,
 			file.Write(data, size);
 		}
 	}
+}
+
+// KYTY_DUMP_GCN=1 writes the raw GCN code of every shader to <shader log folder>/gcn/ before it
+// is translated (unlike --graphics-debug-dump, which dumps only after a successful translation
+// and slows the game with IR/SPIR-V text). Failed translations can then be replayed offline.
+void DumpShaderGcn(ShaderType stage, uint64_t shader_hash, std::span<const uint32_t> code) {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_DUMP_GCN");
+		return value != nullptr && value[0] != '0';
+	}();
+	if (!enabled || code.empty()) {
+		return;
+	}
+	static std::mutex                   mutex;
+	static std::unordered_set<uint64_t> written;
+	{
+		std::lock_guard lock(mutex);
+		if (!written.insert(shader_hash ^ (static_cast<uint64_t>(stage) << 56u)).second) {
+			return;
+		}
+	}
+	const char* stage_name = "xx";
+	switch (stage) {
+		case ShaderType::Vertex: stage_name = "vs"; break;
+		case ShaderType::Mesh: stage_name = "ms"; break;
+		case ShaderType::Pixel: stage_name = "ps"; break;
+		case ShaderType::Compute: stage_name = "cs"; break;
+		default: break;
+	}
+	const auto path = Config::GetShaderLogFolder() / "gcn" /
+	                  fmt::format("{}_{:016x}.bin", stage_name, shader_hash);
+	Common::File::CreateDirectories(path.parent_path());
+	Common::File file(path);
+	if (file.IsInvalid()) {
+		const auto path_text = Common::PathToString(path);
+		LOGF_COLOR(Log::Color::BrightRed, "Can't create file: %s\n", path_text.c_str());
+		return;
+	}
+	file.Write(code.data(), code.size_bytes());
 }
 
 bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
@@ -661,6 +703,7 @@ struct PipelineCache::ProgramCache {
 		} else if constexpr (std::is_same_v<InputInfo, ShaderComputeInputInfo>) {
 			options.wave_size = input_info.wave_size;
 		}
+		DumpShaderGcn(options.stage, options.shader_hash, params.code);
 		const auto translate_begin = HostMicros();
 		auto       translated      = ShaderRecompiler::TranslateProgram(params.code, options);
 		const auto translate_end   = HostMicros();

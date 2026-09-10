@@ -659,12 +659,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	return state;
 }
 
-// KYTY_GE_DRAWS=1: run guest GS/NGG draws through the upstream mesh-shader path (default: skip
-// them like before the merge; ASTRO BOT issues ~32 such draws per run).
+// Guest GS/NGG draws use the mesh-shader path, including particle sprites.
+// KYTY_GE_DRAWS=0 restores the diagnostic fallback that skips these draws.
 static bool GeDrawsEnabled() {
 	static const bool enabled = [] {
 		const char* value = std::getenv("KYTY_GE_DRAWS");
-		return value != nullptr && value[0] == '1';
+		return value == nullptr || value[0] != '0';
 	}();
 	return enabled;
 }

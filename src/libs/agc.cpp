@@ -682,6 +682,7 @@ int KYTY_SYSV_ABI AgcCreateShader(Shader** dst, void* header, const volatile voi
 	}
 
 	*dst = h;
+	g_renderer->GetPipelineCache().TraceShaderRegistration(*h, map);
 
 	dbg_dump_shader(h);
 

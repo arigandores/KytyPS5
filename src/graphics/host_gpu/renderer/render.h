@@ -93,6 +93,10 @@ struct SubmitInfo {
 	uint32_t                                          num_wait_semaphores   = 0;
 	uint32_t                                          num_signal_semaphores = 0;
 
+	// WSI binary signals may not depend on a future host timeline signal. The caller
+	// holds the render mutex, which also serializes guest-to-staging copy enqueueing.
+	bool present = false;
+
 	void AddWait(vk::Semaphore semaphore, uint64_t tick = 1,
 	             vk::PipelineStageFlags stage = vk::PipelineStageFlagBits::eAllCommands) {
 		EXIT_IF(semaphore == nullptr || num_wait_semaphores >= MaxSemaphores);
@@ -181,6 +185,7 @@ public:
 	                    uint64_t indirect_args_addr = 0);
 
 	[[nodiscard]] PreparedBindings PrepareBindings(const ShaderStageRuntime& runtime);
+	void PrepareBindings(const ShaderStageRuntime& runtime, PreparedBindings& prepared);
 	void                           FindBuffers(PreparedBindings& bindings);
 	void                           RebindBuffers(PreparedBindings& bindings);
 	void                           RebindImages(PreparedBindings& bindings);
@@ -202,6 +207,14 @@ private:
 	[[nodiscard]] GraphicsBindings PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 	                                                       const ShaderStageRuntime& pixel,
 	                                                       bool                      pixel_active);
+	void PrepareGraphicsBindings(const ShaderStageRuntime& vertex, const ShaderStageRuntime& pixel,
+	                             bool pixel_active, GraphicsBindings& bindings);
+	static bool ReuseBindingsEnabled();
+	// Draw and dispatch preparation is serialized by the render mutex. Keep their storage
+	// separate and reset it before each operation; runtime pointers are valid through commit.
+	GraphicsBindings m_graphics_bindings;
+	PreparedBindings m_compute_bindings;
+
 	void ResolveRenderColorTarget(CommandBuffer& buffer, RenderColorInfo& target,
 	                              uint32_t render_target_slice_offset, uint32_t render_target_slot,
 	                              bool ignore_target_mask = false, bool exact_format = false);

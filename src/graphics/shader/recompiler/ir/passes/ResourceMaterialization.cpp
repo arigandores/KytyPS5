@@ -542,31 +542,32 @@ static bool BuildResourceSpecialization(const ResourcePlan& program, Materialize
 			return SpecializationFail(
 			    fmt::format("storage image descriptor {} has an invalid mip range", i));
 		}
+		image.manual_depth_compare = false;
+		image.depth_compare_op = 0;
+		if (base.depth_compare) {
+			// Preserve the compare function even for native depth images: a sampler shared
+			// with a color image can later force this image onto the shader comparison path.
+			for (const auto& pair: program.info.sampled_pairs) {
+				if (pair.image == base_index && pair.sampler < next_snapshot.samplers.size()) {
+					image.depth_compare_op =
+					    (next_snapshot.samplers[pair.sampler].dwords[0] >> 12u) & 0x7u;
+					break;
+				}
+			}
+			const auto format =
+			    static_cast<Prospero::BufferFormat>((descriptor.dwords[1] >> 20u) & 0x1ffu);
+			// The renderer resolves non-null R32F comparison textures as native D32.
+			// Other color formats require shader comparison, irrespective of byte size.
+			// Null native-comparison descriptors use a D32 placeholder at binding time.
+			image.manual_depth_compare = !NullImageDescriptor(descriptor) &&
+			                             format != Prospero::BufferFormat::k32Float;
+		}
 		if (NullImageDescriptor(descriptor)) {
 			image.numeric_class = base.atomic ? Prospero::TextureNumericClass::Uint
 			                                  : Prospero::TextureNumericClass::Float;
 			image.dimension     = Decoder::ImageDimension::Dim2D;
 			image.cube          = false;
 			continue;
-		}
-		image.manual_depth_compare = false;
-		image.depth_compare_op     = 0;
-		if (base.depth_compare) {
-			// PS5 hardware compares against any format; Vulkan only allows comparison samplers on
-			// depth formats. 16-bit shadow maps rendered as R16 color targets (ASTRO BOT) are
-			// therefore compared in the shader with the sampler compare function baked in.
-			const auto format =
-			    static_cast<Prospero::BufferFormat>((descriptor.dwords[1] >> 20u) & 0x1ffu);
-			if (Prospero::NumBytesPerElement(format) == 2u) {
-				image.manual_depth_compare = true;
-				for (const auto& pair: program.info.sampled_pairs) {
-					if (pair.image == base_index && pair.sampler < next_snapshot.samplers.size()) {
-						image.depth_compare_op =
-						    (next_snapshot.samplers[pair.sampler].dwords[0] >> 12u) & 0x7u;
-						break;
-					}
-				}
-			}
 		}
 		const auto descriptor_dimension = DescriptorDimension(descriptor, base.dimension);
 		if (descriptor_dimension == Decoder::ImageDimension::Unknown) {

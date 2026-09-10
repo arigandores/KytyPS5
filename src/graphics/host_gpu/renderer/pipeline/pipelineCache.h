@@ -163,6 +163,17 @@ public:
 	                             ShaderComputeInputInfo input_info);
 	// Block until every queued graphics pipeline has been compiled.
 	void WaitForPendingPipelines();
+	struct PreparationStatus {
+		bool active;
+		uint32_t total;
+		uint32_t completed;
+		uint32_t skipped;
+	};
+	[[nodiscard]] PreparationStatus GetPreparationStatus() const;
+	// Called before the guest starts, once the precache producer AND its workers have finished.
+	void FinishPreparation();
+	// Queues resource-independent CS translation and optional registration timing diagnostics.
+	void TraceShaderRegistration(const Shader& header, const ShaderMappedData& mapped);
 	// Pipelines whose compilation has not finished yet.
 	[[nodiscard]] uint32_t PendingPipelineCount() const {
 		return m_pending_pipelines.load(std::memory_order_relaxed);
@@ -292,6 +303,11 @@ private:
 	std::filesystem::path m_recipes_path;
 	std::thread           m_precache_thread;
 	std::atomic<bool>     m_precache_stop {false};
+	std::atomic<bool>     m_precache_active {false};
+	std::atomic<uint32_t> m_precache_total {0};
+	std::atomic<uint32_t> m_precache_completed {0};
+	std::atomic<uint32_t> m_precache_skipped {0};
+	void InstallShaderSeed();
 	void RecordGraphicsRecipe(const GraphicsPipelineKey& key, const ShaderVertexInputInfo& vs_input_info,
 	                          const ShaderPixelInputInfo* ps_input_info);
 	void RecordComputeRecipe(const ShaderComputeInputInfo& input_info, uint64_t program_id);

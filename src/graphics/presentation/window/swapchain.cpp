@@ -5,6 +5,7 @@
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
+#include "common/parallelCopy.h"
 #include "common/threads.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/render.h"
@@ -30,6 +31,12 @@
 #define KYTY_DBG_INPUT
 
 namespace Libs::Graphics {
+
+static bool PresentTraceEnabled() {
+	static const bool enabled = std::getenv("KYTY_PRESENT_TRACE") != nullptr;
+	return enabled;
+}
+
 
 struct Presenter::Frame {
 	VulkanImage image;
@@ -91,6 +98,7 @@ public:
 	}
 
 	Presenter::Frame* Acquire() {
+		const auto trace_start = PresentTraceEnabled() ? Common::FrameStats::NowNs() : 0;
 		m_mutex.Lock();
 		if (m_frames.empty()) {
 			EXIT("prepared-frame pool was used before swapchain initialization\n");
@@ -110,7 +118,15 @@ public:
 		frame->reusing_last = false;
 		m_mutex.Unlock();
 
+		const auto wait_start = trace_start ? Common::FrameStats::NowNs() : 0;
 		WaitForFrame(*frame);
+		if (trace_start) {
+			const auto end = Common::FrameStats::NowNs();
+			LOGF("PresentTrace: pool t=%llu frame=%p tick=%llu free_us=%llu gpu_us=%llu pending=%zu\n",
+			     (unsigned long long)end, (void*)frame, (unsigned long long)frame->present_tick,
+			     (unsigned long long)((wait_start-trace_start)/1000),
+			     (unsigned long long)((end-wait_start)/1000), Common::PendingAsyncCopies());
+		}
 		return frame;
 	}
 
@@ -289,7 +305,7 @@ public:
 
 	void                 Create();
 	void                 Recreate(bool surface_lost = false);
-	[[nodiscard]] Status AcquireNextImage();
+	[[nodiscard]] Status AcquireNextImage(CommandScheduler& scheduler);
 	[[nodiscard]] bool   PrepareSystemOverlay();
 	void                 RecordPresentCommands(CommandBuffer& command, VulkanImage& source,
 	                                           bool draw_system_overlay);
@@ -311,6 +327,7 @@ private:
 	std::vector<vk::Image>      m_images;
 	std::vector<vk::ImageView>  m_image_views;
 	std::vector<vk::Semaphore>  m_image_acquired;
+	std::vector<uint64_t>       m_acquire_ticks;
 	std::vector<vk::Semaphore>  m_render_complete;
 	std::unique_ptr<SystemOverlay> m_system_overlay;
 	uint32_t                    m_image_index = static_cast<uint32_t>(-1);
@@ -536,6 +553,7 @@ void Swapchain::Destroy() {
 	m_images.clear();
 	m_image_views.clear();
 	m_image_acquired.clear();
+	m_acquire_ticks.clear();
 	m_render_complete.clear();
 }
 
@@ -554,8 +572,12 @@ void Swapchain::Recreate(bool surface_lost) {
 	Create();
 }
 
-Swapchain::Status Swapchain::AcquireNextImage() {
+Swapchain::Status Swapchain::AcquireNextImage(CommandScheduler& scheduler) {
 	EXIT_IF(m_handle == nullptr || m_frame_index >= m_image_acquired.size());
+	// Track acquire semaphore retirement independently of prepared image ownership:
+	// its previous wait must finish before acquire signals it again.
+	m_acquire_ticks.resize(m_image_acquired.size());
+	scheduler.Wait(m_acquire_ticks[m_frame_index]);
 	m_image_index     = static_cast<uint32_t>(-1);
 	const auto result = m_window.graphic_ctx.device.acquireNextImageKHR(
 	    m_handle, std::numeric_limits<uint64_t>::max(), m_image_acquired[m_frame_index], nullptr,
@@ -673,7 +695,10 @@ uint64_t Swapchain::Submit(CommandScheduler& scheduler) {
 	SubmitInfo submit;
 	submit.AddWait(m_image_acquired[m_frame_index], 1, vk::PipelineStageFlagBits::eTransfer);
 	submit.AddSignal(m_render_complete[m_image_index]);
-	return scheduler.Submit(submit);
+	submit.present = true;
+	const auto tick = scheduler.Submit(submit);
+	m_acquire_ticks[m_frame_index] = tick;
+	return tick;
 }
 
 Swapchain::Status Swapchain::Present() {
@@ -779,16 +804,21 @@ void Presenter::Present(Frame& frame, bool reuse) {
 
 	const auto overlay_visual = GetSystemOverlayVisualState();
 	auto&      swapchain  = m_impl->swapchain;
-	const bool screenshot = m_impl->screenshot.Poll();
-	m_impl->input_script.Poll();
+	const bool preparing = ShaderPreparationOverlayActive();
+	const bool screenshot = !preparing && m_impl->screenshot.Poll();
+	if (!preparing) m_impl->input_script.Poll();
 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
-		auto status = swapchain.AcquireNextImage();
+		const auto trace_start = PresentTraceEnabled() ? Common::FrameStats::NowNs() : 0;
+		auto status = swapchain.AcquireNextImage(m_impl->present_scheduler);
+		const auto acquired = trace_start ? Common::FrameStats::NowNs() : 0;
+		uint64_t locked = 0;
 		if (status != Swapchain::Status::Success) {
 			m_impl->RecoverSwapchain(status);
 			continue;
 		}
 		{
 			Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+			locked = trace_start ? Common::FrameStats::NowNs() : 0;
 			auto&             command          = m_impl->present_scheduler.BeginCommand();
 			const bool        draw_system_overlay =
 			    overlay_visual.active && swapchain.PrepareSystemOverlay();
@@ -798,7 +828,18 @@ void Presenter::Present(Frame& frame, bool reuse) {
 			swapchain.RecordPresentCommands(command, frame.image, draw_system_overlay);
 			frame.present_tick = swapchain.Submit(m_impl->present_scheduler);
 		}
+		const auto submitted = trace_start ? Common::FrameStats::NowNs() : 0;
+		const auto pending = trace_start ? Common::PendingAsyncCopies() : 0;
 		status = swapchain.Present();
+		if (trace_start) {
+			const auto end = Common::FrameStats::NowNs();
+			LOGF("PresentTrace: present t=%llu frame=%p tick=%llu acquire_us=%llu lock_us=%llu submit_us=%llu present_us=%llu pending=%zu\n",
+			     (unsigned long long)end, (void*)&frame, (unsigned long long)frame.present_tick,
+			     (unsigned long long)((acquired-trace_start)/1000),
+			     (unsigned long long)((locked-acquired)/1000),
+			     (unsigned long long)((submitted-locked)/1000),
+			     (unsigned long long)((end-submitted)/1000), pending);
+		}
 		if (status != Swapchain::Status::Success) {
 			m_impl->RecoverSwapchain(status);
 			continue;
@@ -809,7 +850,7 @@ void Presenter::Present(Frame& frame, bool reuse) {
 
 		m_impl->presented_overlay_revision.store(overlay_visual.revision,
 		                                         std::memory_order_release);
-		m_impl->window.UpdateTitle();
+		if (!preparing) m_impl->window.UpdateTitle();
 		m_impl->frames.Release(&frame, true);
 		return;
 	}

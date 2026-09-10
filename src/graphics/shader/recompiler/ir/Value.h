@@ -124,6 +124,10 @@ public:
 	[[nodiscard]] Block*                  PhiBlock(size_t index) const;
 	[[nodiscard]] Block*                  Parent() const;
 	[[nodiscard]] const std::vector<Use>& Uses() const;
+	[[nodiscard]] size_t AllocatedBytes() const {
+		return sizeof(*this) + args.capacity() * sizeof(Value) +
+		       phi_blocks.capacity() * sizeof(Block*) + uses.capacity() * sizeof(Use);
+	}
 
 	void SetParent(Block* block);
 	void SetArg(size_t index, Value value);

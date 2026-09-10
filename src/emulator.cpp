@@ -1,5 +1,6 @@
 #include "emulator.h"
 
+
 #include "common/abi.h"
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
@@ -26,10 +27,22 @@
 #include "loader/timer.h"
 
 #include <cstdlib>
+#include <chrono>
+#include <cstdio>
+#include <string>
 #include <filesystem>
 #include <thread>
 
 namespace Emulator {
+
+static void SetCacheTestEnvironment(const char* key, const char* value) {
+	// SDL_setenv updates SDL's private environment on Windows; cache switches use std::getenv.
+#if defined(_WIN32)
+	EXIT_IF(_putenv_s(key, value) != 0);
+#else
+	EXIT_IF(setenv(key, value, 1) != 0);
+#endif
+}
 
 static void PrintSystemInfo() {
 	const Common::SystemInfo info = Common::GetSystemInfo();
@@ -169,6 +182,9 @@ static void LoadElf(const std::filesystem::path& elf, bool dbg_print_reloc = fal
 }
 
 static void Execute(const std::filesystem::path& game_patch) {
+	if (!Libs::Graphics::WindowPrepareShaders()) {
+		std::quick_exit(0);
+	}
 	auto           patch_path = game_patch;
 	Common::Thread guest_thread(
 	    [](void* param) {
@@ -181,6 +197,22 @@ static void Execute(const std::filesystem::path& game_patch) {
 }
 
 void Run(const RunOptions& options) {
+	// Process-local test overrides: no cache files are removed or modified by the cold mode.
+	// prepare-cold retains the known shader catalogue but forces fresh driver compilation.
+	if (const char* mode = std::getenv("KYTY_CACHE_MODE"); mode != nullptr && mode[0] != 0) {
+		const std::string selected(mode);
+		if (selected != "cold" && selected != "prepare-cold") {
+			EXIT("KYTY_CACHE_MODE must be cold or prepare-cold\n");
+		}
+		SetCacheTestEnvironment("KYTY_PIPELINE_CACHE", "0");
+		if (selected == "cold") {
+			SetCacheTestEnvironment("KYTY_SHADER_CACHE", "0");
+			SetCacheTestEnvironment("KYTY_SHADER_SEED", "0");
+		}
+		const auto salt = std::to_string(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+		SetCacheTestEnvironment("KYTY_PIPELINE_SALT", salt.c_str());
+		std::fprintf(stdout, "Cache test mode: %s (fresh driver namespace %s)\n", selected.c_str(), salt.c_str());
+	}
 	if (options.app0_dir.empty()) {
 		EXIT("app0 directory is required\n");
 	}

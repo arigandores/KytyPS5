@@ -305,17 +305,14 @@ struct Positions {
 	}
 };
 
-const Positions* g_positions         = nullptr;
-bool             g_preserve_liveness = true;
-
-bool FoldSelectChain(Inst& inst) {
+bool FoldSelectChain(Inst& inst, const Positions& positions, bool preserve_liveness) {
 	const auto condition = inst.Arg(0).Resolve();
 	bool       changed   = false;
 	if (auto* inner = inst.Arg(2).Resolve().TryInstruction();
 	    (Mode() & 8u) != 0u && inner != nullptr && IsSelect(inner->GetOpcode()) &&
 	    ImpliesPredicate(inner->Arg(0), condition, (Mode() & 128u) != 0u) &&
-	    (!g_preserve_liveness || (Mode() & 256u) == 0u || g_positions == nullptr ||
-	     g_positions->LiveAfter(inner->Arg(2), inst, *inner))) {
+	    (!preserve_liveness || (Mode() & 256u) == 0u ||
+	     positions.LiveAfter(inner->Arg(2), inst, *inner))) {
 		// condition false => inner condition false => inner == inner.false
 		inst.SetArg(2, inner->Arg(2).Resolve());
 		changed = true;
@@ -323,8 +320,8 @@ bool FoldSelectChain(Inst& inst) {
 	if (auto* inner = inst.Arg(1).Resolve().TryInstruction();
 	    (Mode() & 4u) != 0u && inner != nullptr && IsSelect(inner->GetOpcode()) &&
 	    ImpliesPredicate(condition, inner->Arg(0), (Mode() & 128u) != 0u) &&
-	    (!g_preserve_liveness || (Mode() & 256u) == 0u || g_positions == nullptr ||
-	     g_positions->LiveAfter(inner->Arg(1), inst, *inner))) {
+	    (!preserve_liveness || (Mode() & 256u) == 0u ||
+	     positions.LiveAfter(inner->Arg(1), inst, *inner))) {
 		// condition true => inner condition true => inner == inner.true
 		inst.SetArg(1, inner->Arg(1).Resolve());
 		changed = true;
@@ -355,16 +352,14 @@ PredicationStats EliminatePredication(const BlockList& blocks, bool preserve_liv
 	if (!PredicationEliminationEnabled()) {
 		return stats;
 	}
-	g_preserve_liveness = preserve_liveness;
 	Positions positions(blocks);
-	g_positions = &positions;
 	std::vector<Inst*> selects;
 	for (auto* block: blocks) {
 		for (auto& inst: block->Instructions()) {
 			if (!IsSelect(inst.GetOpcode())) {
 				continue;
 			}
-			if (FoldSelectChain(inst)) {
+			if (FoldSelectChain(inst, positions, preserve_liveness)) {
 				stats.folded_chains++;
 			}
 			if (!inst.Arg(0).Resolve().IsImmediate()) {
@@ -395,7 +390,6 @@ PredicationStats EliminatePredication(const BlockList& blocks, bool preserve_liv
 		select->ReplaceUsesWith(new_value);
 		stats.removed_selects++;
 	}
-	g_positions = nullptr;
 	return stats;
 }
 

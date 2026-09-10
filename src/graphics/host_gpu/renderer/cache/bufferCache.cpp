@@ -560,6 +560,7 @@ BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
+	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
 	std::vector<vk::BufferCopy> copies;
 	uint64_t                    total_size = 0;
 	vk::Buffer                  source;
@@ -641,6 +642,7 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t size,
                                                        bool is_written, bool is_texel_buffer,
                                                        BufferId id) {
+	Common::FrameStats::Scope obtain_scope(Common::FrameStats::Counter::ObtainBufNs);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ObtainBufs, 1);
 	auto& command = m_scheduler.Current();
 	if (command.IsInvalid() || !GuestRange {vaddr, size}.Valid()) {
@@ -1737,6 +1739,44 @@ void BufferCache::PrefetchHotReadbacks() {
 }
 
 void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
+	static const bool dirty_ranges = [] {
+		const auto* value = std::getenv("KYTY_BDA_DIRTY_RANGES");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (dirty_ranges) {
+		// Most guest mappings have no BDA buffer at all. Bound the tracker scan by the
+		// first/last registered owner intersecting this mapping, without scanning the buffer list.
+		const auto end = vaddr + size;
+		auto first = m_buffers.upper_bound(vaddr);
+		if (first != m_buffers.begin()) {
+			const auto previous = std::prev(first);
+			const auto& buffer = m_slot_buffers[previous->second];
+			if (buffer.CpuAddress() + buffer.Size() > vaddr) first = previous;
+		}
+		if (first == m_buffers.end() || first->first >= end) return;
+		const auto last = std::prev(m_buffers.lower_bound(end));
+		const auto& last_buffer = m_slot_buffers[last->second];
+		const auto scan_begin = std::max(vaddr, first->first);
+		const auto scan_end = std::min(end, last_buffer.CpuAddress() + last_buffer.Size());
+		// Enumerate dirtiness once per tracking region, rather than re-locking/reconciling
+		// every registered buffer for every BDA draw. This is only a candidate snapshot:
+		// SynchronizeBuffer still consumes current dirty bits and arms write protection.
+		// CPU writes after the snapshot remain dirty for the next preparation.
+		m_memory_tracker.CollectCpuModifiedRanges(scan_begin, scan_end - scan_begin, m_bda_dirty_ranges);
+		for (const auto& range: m_bda_dirty_ranges) {
+			auto it = m_buffers.upper_bound(range.address);
+			if (it != m_buffers.begin()) --it;
+			for (; it != m_buffers.end() && it->first < range.End(); ++it) {
+				auto& buffer = m_slot_buffers[it->second];
+				const auto start = std::max(buffer.CpuAddress(), range.address);
+				const auto finish = std::min(buffer.CpuAddress() + buffer.Size(), range.End());
+				if (start < finish) {
+					(void)SynchronizeBuffer(buffer, start, finish - start, false, false);
+				}
+			}
+		}
+		return;
+	}
 	const auto end = vaddr + size;
 	auto       it  = m_buffers.upper_bound(vaddr);
 	if (it != m_buffers.begin()) {

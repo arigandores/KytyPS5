@@ -671,8 +671,18 @@ static bool GeDrawsEnabled() {
 
 static std::atomic<uint32_t> g_shader_stage_log_count {0};
 
-static bool ShouldSkipGeShader(const CommandBuffer& buffer) {
-	if (GeDrawsEnabled()) {
+// KYTY_GE_TRACE=1: log every GS/NGG draw (skipped or not) without the 32-line cap.
+static bool GeTraceEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_GE_TRACE");
+		return value != nullptr && value[0] == '1';
+	}();
+	return enabled;
+}
+
+static bool ShouldSkipGeShader(const CommandBuffer& buffer, int frame) {
+	const bool trace = GeTraceEnabled();
+	if (GeDrawsEnabled() && !trace) {
 		return false;
 	}
 	const auto& ctx         = buffer.GetRegisters();
@@ -721,17 +731,19 @@ static bool ShouldSkipGeShader(const CommandBuffer& buffer) {
 		});
 
 		const auto log_id = g_shader_stage_log_count.fetch_add(1);
-		if (log_id < 32) {
-			LOGF("Skipping unsupported GE shader draw: stages=0x%08" PRIx32
+		if (log_id < 32 || trace) {
+			LOGF("%s GE shader draw: frame=%d stages=0x%08" PRIx32
 			     " prim_group=0x%04" PRIx16 " vert_group=0x%04" PRIx16 " ngg=0x%08" PRIx32
 			     " max_out=0x%08" PRIx32 " gs_max_vert=0x%08" PRIx32 " gs_out_prim=0x%08" PRIx32
-			     " es=0x%016" PRIx64 " gs=0x%016" PRIx64 "\n",
-			     stages, ge_cntl.primitive_group_size, ge_cntl.vertex_group_size,
+			     " es=0x%016" PRIx64 " gs=0x%016" PRIx64 " ps=0x%016" PRIx64 " n=%u\n",
+			     GeDrawsEnabled() ? "Running" : "Skipping unsupported", frame, stages,
+			     ge_cntl.primitive_group_size, ge_cntl.vertex_group_size,
 			     sh_regs.m_geNggSubgrpCntl, sh_regs.m_geMaxOutputPerSubgroup,
 			     sh_regs.m_vgtGsMaxVertOut, sh_regs.m_vgtGsOutPrimType,
-			     vertex_info.es_regs.data_addr, vertex_info.gs_regs.data_addr);
+			     vertex_info.es_regs.data_addr, vertex_info.gs_regs.data_addr,
+			     sh_ctx.GetPs().ps_regs.data_addr, log_id + 1u);
 		}
-		return true;
+		return !GeDrawsEnabled();
 	}
 
 	return false;
@@ -1280,8 +1292,10 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	Common::FrameStats::Lap lap;
 	LogDrawPhase(draw.name, "PrepareBindings");
-	auto bindings = PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
-	                                        state.ps_active);
+	GraphicsBindings local_bindings;
+	auto& bindings = ReuseBindingsEnabled() ? m_graphics_bindings : local_bindings;
+	PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
+	                        state.ps_active, bindings);
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
 	const bool frame_dump =
 	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
@@ -1586,7 +1600,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 		return;
 	}
 
-	if (ShouldSkipGeShader(buffer)) {
+	if (ShouldSkipGeShader(buffer, m_context.GetGpu().GetFrameNum())) {
 		return;
 	}
 
@@ -1719,7 +1733,7 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 		return;
 	}
 
-	if (ShouldSkipGeShader(buffer)) {
+	if (ShouldSkipGeShader(buffer, m_context.GetGpu().GetFrameNum())) {
 		return;
 	}
 

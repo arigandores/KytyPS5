@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cstring>
+#include <cmath>
 #include <vector>
 
 namespace Libs::Controller {
@@ -87,6 +88,9 @@ struct ControllerState {
 	uint32_t buttons                               = 0;
 	int      axes[static_cast<int>(Axis::AxisMax)] = {128, 128, 128, 128, 0, 0};
 	Touch    touch[2];
+	float    motion_pitch = 0.0f;
+	bool     motion_enabled = true;
+	bool     motion_shake = false;
 };
 
 class GameController {
@@ -101,6 +105,9 @@ public:
 	void Axis(int id, Axis axis, int value);
 	void RightStick(int id, int x, int y);
 	void TouchPad(int id, int finger, bool down, float x, float y);
+	void MotionPitch(int id, float radians);
+	void MotionShake(int id, bool down);
+	void MotionSensorState(bool enable);
 	void ResetInputState();
 	void ReleaseHostPads();
 	void GetConnectionInfo(bool* flag, int* count);
@@ -113,6 +120,7 @@ public:
 private:
 	static constexpr uint32_t STATES_MAX = 64;
 
+	void RefreshMotion();
 	void CheckActive();
 	void AddState();
 
@@ -145,6 +153,23 @@ static void pad_fill_data(PadData* data, const ControllerState& state, bool conn
 	data->analog_buttons_l2 = state.axes[static_cast<int>(Axis::TriggerLeft)];
 	data->analog_buttons_r2 = state.axes[static_cast<int>(Axis::TriggerRight)];
 	data->orientation_w     = 1.0f;
+	if (state.motion_enabled) {
+		// Virtual keyboard motion, not a real device sensor sample. A static tilt has
+		// unit gravity and zero angular velocity. Shake adds a 4 Hz translation/rotation.
+		float pitch = state.motion_pitch;
+		float linear_z = 0.0f;
+		if (state.motion_shake) {
+			constexpr float omega = 25.13274123f;
+			const float phase = float(state.time % 250000) * (omega / 1000000.0f);
+			pitch += 0.25f * std::sin(phase);
+			linear_z = 3.0f * std::sin(phase);
+			data->angular_velocity_x = 0.25f * omega * std::cos(phase);
+		}
+		data->orientation_x = std::sin(pitch * 0.5f);
+		data->orientation_w = std::cos(pitch * 0.5f);
+		data->acceleration_y = -std::cos(pitch);
+		data->acceleration_z = std::sin(pitch) + linear_z;
+	}
 	for (const auto& touch: state.touch) {
 		if (touch.down) {
 			auto& output = data->touch_data.touch[data->touch_data.touch_num++];
@@ -402,9 +427,49 @@ void GameController::TouchPad(int id, int finger, bool down, float x, float y) {
 	}
 }
 
+void GameController::MotionPitch(int id, float radians) {
+	Common::LockGuard lock(m_mutex);
+	if (m_active_id == id || id == HOST_INPUT_CONTROLLER_ID) {
+		m_state.motion_pitch = std::clamp(radians, -1.4f, 1.4f);
+		LOGF("ControllerMotion: pitch=%.3f enabled=%d\n", m_state.motion_pitch,
+		     m_state.motion_enabled ? 1 : 0);
+		m_state.time = LibKernel::KernelGetProcessTime();
+		AddState();
+	}
+}
+
+void GameController::MotionShake(int id, bool down) {
+	Common::LockGuard lock(m_mutex);
+	if (m_active_id == id || id == HOST_INPUT_CONTROLLER_ID) {
+		m_state.motion_shake = down;
+		m_state.time = LibKernel::KernelGetProcessTime();
+		AddState();
+		LOGF("ControllerMotion: shake=%d enabled=%d\n", down ? 1 : 0,
+		     m_state.motion_enabled ? 1 : 0);
+	}
+}
+
+void GameController::RefreshMotion() {
+	// Called under m_mutex. Keep timestamped samples moving even with a held key;
+	// buffered PadRead and single-sample PadReadState then use the same motion history.
+	if (m_state.motion_enabled && m_state.motion_shake) {
+		m_state.time = LibKernel::KernelGetProcessTime();
+		AddState();
+	}
+}
+
+void GameController::MotionSensorState(bool enable) {
+	Common::LockGuard lock(m_mutex);
+	m_state.motion_enabled = enable;
+	m_state.time = LibKernel::KernelGetProcessTime();
+	AddState();
+}
+
 void GameController::ResetInputState() {
 	Common::LockGuard lock(m_mutex);
+	const bool motion_enabled = m_state.motion_enabled;
 	m_state         = {};
+	m_state.motion_enabled = motion_enabled;
 	m_state.time    = LibKernel::KernelGetProcessTime();
 	m_states_num    = 0;
 	m_first_state   = 0;
@@ -518,6 +583,7 @@ void GameController::ReadState(ControllerState* state, bool* flag, int* count) {
 	EXIT_IF(state == nullptr);
 
 	Common::LockGuard lock(m_mutex);
+	RefreshMotion();
 
 	*flag  = m_connected;
 	*count = m_connected_count;
@@ -531,6 +597,7 @@ int GameController::ReadStates(ControllerState* states, int states_num, bool* fl
 	EXIT_IF(states_num < 1 || states_num > STATES_MAX);
 
 	Common::LockGuard lock(m_mutex);
+	RefreshMotion();
 
 	*flag  = m_connected;
 	*count = m_connected_count;
@@ -574,6 +641,14 @@ void SetAxis(int id, Axis axis, int value) {
 
 void SetRightStick(int id, int x, int y) {
 	g_controller->RightStick(id, x, y);
+}
+
+void SetMotionShake(int id, bool down) {
+	g_controller->MotionShake(id, down);
+}
+
+void SetMotionPitch(int id, float radians) {
+	g_controller->MotionPitch(id, radians);
 }
 
 void SetTouchPad(int id, int finger, bool down, float x, float y) {
@@ -647,6 +722,7 @@ int KYTY_SYSV_ABI PadSetMotionSensorState(int handle, bool enable) {
 
 	LOGF("\t enable = %s\n", (enable ? "true" : "false"));
 
+	g_controller->MotionSensorState(enable);
 	return OK;
 }
 
@@ -669,6 +745,7 @@ int KYTY_SYSV_ABI PadResetOrientation(int handle) {
 		return PAD_ERROR_INVALID_HANDLE;
 	}
 
+	g_controller->MotionPitch(HOST_INPUT_CONTROLLER_ID, 0.0f);
 	return OK;
 }
 

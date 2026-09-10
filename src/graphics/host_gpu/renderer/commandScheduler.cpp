@@ -476,11 +476,28 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 	// the GPU reads the staging ring: the queue waits for the copy semaphore to reach the number
 	// of chunks queued so far (the pool signals it from a copy thread), or - with
 	// KYTY_ASYNC_COPY_GPU_WAIT=0 - this thread blocks until they are done.
-	if (Common::PendingAsyncCopies() != 0) {
+	if (submit.present) {
+		// VUID-vkQueuePresentKHR-pWaitSemaphores-03268: finish host signals before
+		// submitting the binary present signal. WaitAll includes the copy callbacks,
+		// not just memcpy completion. This resolves earlier submits on the same queue
+		// too, without waiting for their GPU work. The render mutex prevents new copies.
+		Common::WaitAsyncCopies();
+		if (submit_t0 != 0) {
+			const auto ns = Common::FrameStats::NowNs() - submit_t0;
+			Common::FrameStats::Add(Common::FrameStats::Counter::AsyncCopyWaitNs, ns);
+		}
+	} else if (Common::PendingAsyncCopies() != 0) {
 		namespace FS = Common::FrameStats;
 		if (m_copy_gpu_wait) {
 			const auto sequence = Common::AsyncCopySequence();
 			const bool complete = Common::RequestAsyncCopySignal(sequence);
+			static const bool present_trace = std::getenv("KYTY_PRESENT_TRACE") != nullptr;
+			if (present_trace && !complete) {
+				LOGF("PresentTrace: copywait t=%llu scheduler=%p tick=%llu seq=%llu completed=%llu binary=%u\n",
+				     (unsigned long long)FS::NowNs(), (void*)this, (unsigned long long)CurrentTick(),
+				     (unsigned long long)sequence, (unsigned long long)Common::AsyncCopyCompleted(),
+				     submit.num_signal_semaphores);
+			}
 			if (!complete) {
 				submit.AddWait(m_copy_semaphore, sequence, vk::PipelineStageFlagBits::eAllCommands);
 				FS::Add(FS::Counter::AsyncCopyGpuWaits, 1);

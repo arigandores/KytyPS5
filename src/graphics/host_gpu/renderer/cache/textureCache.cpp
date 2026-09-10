@@ -1584,6 +1584,8 @@ ImageId TextureCache::FindImageFromRange(uint64_t address, uint64_t size, bool e
 }
 
 vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
+	Common::FrameStats::Scope view_scope(Common::FrameStats::Counter::BindFindTexNs,
+	                                   Common::FrameStats::Counter::BindFindTex);
 	std::scoped_lock lock {m_lock};
 	auto&            image = m_slot_images[id];
 	TouchImage(image);

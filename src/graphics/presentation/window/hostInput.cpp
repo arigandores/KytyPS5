@@ -279,8 +279,20 @@ void SetControl(std::size_t control, bool down) {
 void DefaultKeyboardInput(int key_code, bool down) {
 	static StickKeys left;
 	static StickKeys right;
+	static bool tilt_forward = false;
+	static bool tilt_back = false;
 
 	switch (NormalizeKey(static_cast<SDL_Keycode>(key_code))) {
+		case SDLK_r:
+			Controller::SetMotionShake(Controller::HOST_INPUT_CONTROLLER_ID, down);
+			return;
+		case SDLK_z:
+		case SDLK_x:
+			if (key_code == SDLK_z) tilt_forward = down;
+			else tilt_back = down;
+			Controller::SetMotionPitch(Controller::HOST_INPUT_CONTROLLER_ID,
+			                          0.85f * (int(tilt_back) - int(tilt_forward)));
+			return;
 		case SDLK_BACKSPACE: SetTouchPad(0.25f, down); return;
 		case SDLK_TAB: SetTouchPad(0.75f, down); return;
 		case SDLK_a:

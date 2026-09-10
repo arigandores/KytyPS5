@@ -248,6 +248,70 @@ void TestMixedSamplerDuplicatesTheCorrectSnapshot() {
         "point sampler variant duplicated the wrong runtime descriptor");
 }
 
+void TestDepthComparisonFormatsAndSharedSampler() {
+  using namespace Libs::Graphics;
+  using namespace ShaderRecompiler::IR;
+  const auto build = [](Prospero::BufferFormat format, bool null_image, bool shared) {
+    Program program;
+    program.stage = ShaderType::Compute;
+    program.srt_plan_complete = true;
+    program.resource_tracking_complete = true;
+    AddValueBlock(program);
+    for (uint32_t i = 0; i < (shared ? 2u : 1u); ++i) {
+      DescriptorSource source;
+      source.dword_count = 8;
+      for (auto& word : source.dwords) word = Value(0u);
+      source.dwords[0] = Value(null_image && i == 0 ? 0u : 0x1000u + i * 0x100u);
+      source.dwords[1] = Value(static_cast<uint32_t>(i == 0 ? format : Prospero::BufferFormat::k32Float) << 20u);
+      source.dwords[3] = Value(DstSel(4, 4, 4, 4) |
+          (static_cast<uint32_t>(Prospero::ImageType::kColor2D) << 28u));
+      program.descriptor_sources.push_back(source);
+      ImageResource image;
+      image.source = i;
+      image.resource_class = ImageResourceClass::Sampled;
+      image.numeric_class = Prospero::TextureNumericClass::Float;
+      image.dimension = ShaderRecompiler::Decoder::ImageDimension::Dim2D;
+      image.depth_compare = true;
+      image.read = true;
+      program.info.images.push_back(image);
+      program.info.sampled_pairs.push_back({.image = i, .sampler = 0});
+    }
+    DescriptorSource sampler;
+    sampler.dword_count = 4;
+    for (auto& word : sampler.dwords) word = Value(0u);
+    sampler.dwords[0] = Value(3u << 12u); // less-or-equal
+    program.info.samplers.push_back({.source = static_cast<uint32_t>(program.descriptor_sources.size())});
+    program.descriptor_sources.push_back(sampler);
+    return program;
+  };
+  for (const auto format : {Prospero::BufferFormat::k16UNorm,
+                           Prospero::BufferFormat::k8_8_8_8UNorm,
+                           Prospero::BufferFormat::k32Float}) {
+    auto program = build(format, false, false);
+    auto plan = ExtractResourcePlan(program);
+    ResourceSnapshot snapshot;
+    ResourceSpecialization specialization;
+    Check(MaterializeResources(plan, {}, snapshot, specialization), "depth format materialization failed");
+    Check(specialization.images[0].manual_depth_compare == (format != Prospero::BufferFormat::k32Float) &&
+          specialization.images[0].depth_compare_op == 3u,
+          "depth comparison format or compare function was lost");
+  }
+  auto program = build(Prospero::BufferFormat::k8_8_8_8UNorm, false, true);
+  auto plan = ExtractResourcePlan(program);
+  ResourceSnapshot snapshot;
+  ResourceSpecialization specialization;
+  Check(MaterializeResources(plan, {}, snapshot, specialization), "shared depth sampler materialization failed");
+  ApplyResourceSpecialization(program, specialization);
+  Check(program.info.images[0].manual_depth_compare && program.info.images[1].manual_depth_compare &&
+        program.info.images[1].depth_compare_op == 3u && !program.info.samplers[0].depth_compare,
+        "shared color/depth sampler changed the native image's compare function to Never");
+  auto null_program = build(Prospero::BufferFormat::k32Float, true, false);
+  auto null_plan = ExtractResourcePlan(null_program);
+  Check(MaterializeResources(null_plan, {}, snapshot, specialization) &&
+        !specialization.images[0].manual_depth_compare && specialization.images[0].depth_compare_op == 3u,
+        "null depth descriptor lost its native comparison specialization");
+}
+
 } // namespace
 
 namespace Common {
@@ -270,6 +334,7 @@ int main() {
   TestUnbasedFlatCacheHitMaterializes();
   TestFailedMaterializationPreservesPriorStage();
   TestMixedSamplerDuplicatesTheCorrectSnapshot();
+  TestDepthComparisonFormatsAndSharedSampler();
   std::puts("ResourceMaterializationTests: all cases passed");
   return 0;
 }

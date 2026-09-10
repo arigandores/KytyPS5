@@ -1282,6 +1282,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " prot_us=%llu prot_pages=%llu protw_us=%llu protw_pages=%llu prot_drain_us=%llu prot_drains=%llu"
 			     " prot_calls=%llu prot_ro=%llu prot_ro_pages=%llu prot_na=%llu prot_na_pages=%llu prot_rw_us=%llu prot_rw_pages=%llu prot_mask_us=%llu prot_mask=%llu prot_gpu_us=%llu prot_gpu=%llu prot_gpu_pages=%llu buf_new=%llu buf_new_us=%llu acopy_gpu_waits=%llu img_imp=%llu img_imp_kb=%llu img_imp_pieces=%llu hostread_waits=%llu hostread_wait_us=%llu img_detile=%llu img_regions=%llu"
 			     " img_defer=%llu img_defer_kb=%llu img_pend=%llu img_pend_kb=%llu img_minlod=%llu"
+			     " bda_us=%llu bda_n=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1334,7 +1335,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     dus(FS::Counter::HostReadWaitNs), d(FS::Counter::ImgDetileDispatches),
 			     d(FS::Counter::ImgCopyRegions), d(FS::Counter::ImgDeferred),
 			     d(FS::Counter::ImgDeferredBytes) / 1024u, d(FS::Counter::ImgPendingUploads),
-			     d(FS::Counter::ImgPendingBytes) / 1024u, d(FS::Counter::ImgMinLodViews));
+			     d(FS::Counter::ImgPendingBytes) / 1024u, d(FS::Counter::ImgMinLodViews),
+			     dus(FS::Counter::BdaPrepareNs), d(FS::Counter::BdaPrepares));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

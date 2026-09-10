@@ -22,6 +22,10 @@ void                     ShutdownSystemOverlayInput();
 bool                     ProcessSystemOverlayInput(const SDL_Event& event);
 SystemOverlayVisualState GetSystemOverlayVisualState() noexcept;
 
+// Startup-only screen, set and rendered on the main thread before guest execution.
+void SetShaderPreparationOverlay(bool active, uint32_t completed = 0, uint32_t total = 0);
+bool ShaderPreparationOverlayActive() noexcept;
+
 class SystemOverlay final {
 public:
 	explicit SystemOverlay(GraphicContext& graphics);

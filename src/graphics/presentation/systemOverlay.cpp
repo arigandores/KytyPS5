@@ -17,6 +17,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
 #include <deque>
 #include <mutex>
 #include <span>
@@ -27,6 +28,10 @@
 namespace Libs::Graphics {
 
 namespace {
+
+std::atomic<bool> g_shader_preparation {false};
+uint32_t g_shader_completed = 0;
+uint32_t g_shader_total = 0;
 
 namespace CoreIme   = Libs::Ime;
 namespace DialogIme = Libs::Dialog::ImeDialog;
@@ -459,11 +464,22 @@ void ShutdownSystemOverlayInput() {
 }
 
 SystemOverlayVisualState GetSystemOverlayVisualState() noexcept {
+	if (g_shader_preparation.load()) return {true, 0};
 	const auto core   = CoreIme::GetVisualState();
 	const auto dialog = DialogIme::GetVisualState();
 	const auto error  = ErrorDialog::GetVisualState();
 	return {core.active || dialog.active || error.active,
 	        core.revision + dialog.revision + error.revision};
+}
+
+void SetShaderPreparationOverlay(bool active, uint32_t completed, uint32_t total) {
+	g_shader_completed = completed;
+	g_shader_total = total;
+	g_shader_preparation.store(active);
+}
+
+bool ShaderPreparationOverlayActive() noexcept {
+	return g_shader_preparation.load();
 }
 
 bool ProcessSystemOverlayInput(const SDL_Event& event) {
@@ -943,6 +959,40 @@ struct SystemOverlay::Impl {
 	}
 
 	bool PrepareFrame(vk::Extent2D frame_extent, vk::Format format, uint32_t image_count) {
+		if (g_shader_preparation.load()) {
+			EnsureVulkan(format, image_count);
+			auto& io = ImGui::GetIO();
+			io.DisplaySize = {static_cast<float>(frame_extent.width), static_cast<float>(frame_extent.height)};
+			io.DeltaTime = 1.0f / 30.0f;
+			ImGui_ImplVulkan_NewFrame();
+			ImGui::NewFrame();
+			const auto display = io.DisplaySize;
+			const float scale = std::max(0.5f, display.y / 720.0f);
+			ImGui::GetBackgroundDrawList()->AddRectFilled({0, 0}, display, IM_COL32(14, 20, 33, 255));
+			ImGui::SetNextWindowPos({display.x * 0.5f, display.y * 0.5f}, ImGuiCond_Always, {0.5f, 0.5f});
+			ImGui::SetNextWindowSize({std::min(display.x * 0.85f, 560.0f * scale), 0});
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {28.0f * scale, 28.0f * scale});
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, {12.0f * scale, 18.0f * scale});
+			ImGui::PushFont(nullptr, 22.0f * scale);
+			ImGui::Begin("##ShaderPreparation", nullptr, ImGuiWindowFlags_NoDecoration |
+			    ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings);
+			ImGui::TextUnformatted("Preparing shaders");
+			ImGui::TextWrapped("Preparing this game for smoother playback. The game will start automatically.");
+			if (g_shader_total != 0) {
+				const auto completed = std::min(g_shader_completed, g_shader_total);
+				char label[64];
+				snprintf(label, sizeof(label), "%u / %u", completed, g_shader_total);
+				ImGui::ProgressBar(static_cast<float>(completed) / g_shader_total, {-1, 26.0f * scale}, label);
+			} else {
+				ImGui::TextDisabled("Reading saved shaders...");
+			}
+			ImGui::End();
+			ImGui::PopFont();
+			ImGui::PopStyleVar(2);
+			ImGui::Render();
+			extent = frame_extent;
+			return true;
+		}
 		OverlaySnapshot snapshot;
 		if (!GetOverlaySnapshot(&snapshot)) {
 			return false;

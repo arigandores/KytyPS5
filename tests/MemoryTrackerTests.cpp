@@ -341,6 +341,46 @@ void TestRangeInvalidation() {
   Release(memory);
 }
 
+void TestCpuModifiedSnapshot() {
+  TrackerHarness harness;
+  auto& tracker = harness.tracker;
+  const auto page = harness.page_manager.GetPageSize();
+  auto* memory = Allocate(harness.page_manager, 3);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+  std::vector<GuestRange> ranges;
+  const auto collect = [&] { tracker.CollectCpuModifiedRanges(address + 8, page * 3 - 16, ranges); };
+  collect();
+  Check(ranges == std::vector<GuestRange>{{address + 8, page * 3 - 16}},
+        "untracked CPU snapshot must be dirty and clipped to the requested bytes");
+  Check(IsWritable(memory), "CPU snapshot changed page protection");
+  tracker.ForEachUploadRange(address, page * 3, false,
+                            [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+  collect();
+  Check(ranges.empty(), "CPU snapshot retained uploaded pages");
+  tracker.MarkRegionAsCpuModified(address + page + 17, 4);
+  tracker.MarkRegionAsGpuModified(address, page);
+  collect();
+  Check(ranges == std::vector<GuestRange>{{address + page, page}},
+        "CPU snapshot did not isolate dirty pages from clean/GPU-owned pages");
+  Check(tracker.IsRegionCpuModified(address + page, page) &&
+            tracker.IsRegionGpuModified(address, page) && IsWritable(memory + page),
+        "CPU snapshot consumed dirtiness or changed ownership");
+  tracker.MarkRegionAsCpuModified(address + 2 * page, page);
+  collect();
+  Check(ranges == std::vector<GuestRange>{{address + page, page * 2 - 8}},
+        "CPU snapshot missed a later write or failed to merge adjacent pages");
+  tracker.UnmarkRegionAsGpuModified(address, page);
+  tracker.UntrackMemory(address, page * 3);
+  Release(memory);
+
+  // Missing managers across a region boundary are merged without publishing managers
+  // or accessing guest memory. This is the initial state of newly registered BDA buffers.
+  constexpr uint64_t boundary = Libs::Graphics::TRACKER_REGION_SIZE * 8;
+  tracker.CollectCpuModifiedRanges(boundary - 17, 34, ranges);
+  Check(ranges == std::vector<GuestRange>{{boundary - 17, 34}},
+        "CPU snapshot lost an untracked cross-region interval");
+}
+
 void TestGpuReacquisitionAfterInvalidation() {
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -900,6 +940,9 @@ void TestFaultOnProtectedStack() {
 
 namespace Libs::LibKernel::Memory {
 
+// This standalone harness allocates data pages only, with no registered guest stacks.
+bool OverlapsGuestStack(uint64_t, uint64_t) { return false; }
+
 bool ProtectGuestHostMemory(uint64_t vaddr, uint64_t size,
                             Common::VirtualMemory::Mode mode) {
   return ProtectAddressSpace(vaddr, size, mode);
@@ -916,6 +959,7 @@ int main(int argc, char **argv) {
   TestQueriesDoNotRequireMappedOwnership();
   TestConcurrentRegionPublication();
   TestCpuDirtyUpload();
+  TestCpuModifiedSnapshot();
   TestRangeInvalidation();
   TestGpuReacquisitionAfterInvalidation();
   TestGpuDirtyBits();

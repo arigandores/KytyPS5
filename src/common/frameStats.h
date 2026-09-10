@@ -78,7 +78,7 @@ enum class Counter : uint32_t {
 	BindResolveTex,
 	BindFindTexNs, // TextureCache::FindTexture (image views) in RebindImages
 	BindFindTex,
-	BindBuffersNs, // FindBuffers + RebindBuffers
+	BindBuffersNs, // NativeStorageBuffer (including ObtainBuffer and aligned copies)
 	BindSamplersNs,
 	BindBufFindNs,   // FindBuffers (descriptor decode + BufferCache::FindBuffer)
 	BindBufObtainNs, // BufferCache::ObtainBuffer called from NativeStorageBuffer
@@ -147,6 +147,8 @@ enum class Counter : uint32_t {
 	ImgPendingUploads,   // pending top levels uploaded later (bind within the frame budget, or forced)
 	ImgPendingBytes,
 	ImgMinLodViews,      // sampled binds served with a min-LOD view (top levels still pending)
+	BdaPrepareNs,
+	BdaPrepares,
 	Count
 };
 

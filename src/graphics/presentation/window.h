@@ -10,6 +10,8 @@ class Presenter;
 
 [[nodiscard]] Presenter& WindowInit(uint32_t width, uint32_t height);
 void                     WindowRun();
+// Pumps window events while preparing known pipelines; false if the user closes the window.
+[[nodiscard]] bool       WindowPrepareShaders();
 void                     WindowShutdown();
 
 } // namespace Libs::Graphics

@@ -45,6 +45,19 @@ struct PreparedBindings {
 	vk::DescriptorBufferInfo              flattened_srt;
 	vk::DescriptorBufferInfo              shader_data_buffer;
 	std::vector<uint32_t>                 shader_data;
+
+	void Reset() {
+		// Capacity belongs to the executor; every descriptor belongs to this draw only.
+		runtime = nullptr;
+		buffer_sources.clear();
+		buffers.clear();
+		images.clear();
+		samplers.clear();
+		shader_data.clear();
+		gds = {nullptr, 0, VK_WHOLE_SIZE};
+		flattened_srt = {};
+		shader_data_buffer = {};
+	}
 };
 
 [[nodiscard]] vk::DescriptorType

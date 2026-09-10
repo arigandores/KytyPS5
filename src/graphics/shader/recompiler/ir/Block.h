@@ -46,6 +46,11 @@ public:
 	iterator       end();
 	const_iterator end() const;
 	bool           empty() const;
+	[[nodiscard]] size_t AllocatedBytes() const {
+		size_t bytes = sizeof(*this) + (predecessors.capacity() + successors.capacity()) * sizeof(Block*);
+		for (const auto& inst: instructions) { bytes += inst.AllocatedBytes() + 32; }
+		return bytes;
+	}
 
 	std::array<Value, NumScalarRegs> ssa_sreg_values {};
 	std::array<Value, NumScalarRegs> ssa_thread_bit_sreg_values {};

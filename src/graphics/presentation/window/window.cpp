@@ -32,6 +32,7 @@
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/presentation/renderDoc.h"
+#include "graphics/presentation/presenter.h"
 #include "graphics/presentation/systemOverlay.h"
 #include "graphics/presentation/window/hostInput.h"
 #include "graphics/presentation/window/windowInternal.h"
@@ -895,6 +896,51 @@ void WindowRun() {
 
 	g_window->Run();
 	g_window->render_context->GetPipelineCache().Save();
+}
+
+bool WindowPrepareShaders() {
+	EXIT_IF(g_window == nullptr);
+	if (const char* value = std::getenv("KYTY_SHADER_PREPARE"); value != nullptr && value[0] == '0') {
+		LOGF("ShaderPreparation: startup wait disabled\n");
+		return true;
+	}
+	auto& cache = g_window->render_context->GetPipelineCache();
+	const auto started = SDL_GetTicks64();
+	uint64_t last_log = 0;
+	while (true) {
+		const auto status = cache.GetPreparationStatus();
+		if (!status.active) break;
+		while (SDL_PollEvent(&g_window->loop.event)) {
+			// Keep window/controller lifecycle events, but don't forward game button presses.
+			if (g_window->loop.event.type == SDL_QUIT ||
+			    (g_window->loop.event.type == SDL_WINDOWEVENT &&
+			     g_window->loop.event.window.event == SDL_WINDOWEVENT_CLOSE)) {
+				SetShaderPreparationOverlay(false);
+				return false;
+			}
+			if (g_window->loop.event.type == SDL_WINDOWEVENT || g_window->loop.event.type == SDL_DISPLAYEVENT ||
+			    g_window->loop.event.type == SDL_CONTROLLERDEVICEADDED ||
+			    g_window->loop.event.type == SDL_CONTROLLERDEVICEREMOVED) {
+				g_window->ProcessEvent(0);
+			}
+		}
+		SetShaderPreparationOverlay(true, status.completed, status.total);
+		auto& frame = g_window->presenter->PrepareBlankFrame(
+		    g_window->graphic_ctx.screen_width, g_window->graphic_ctx.screen_height, true);
+		g_window->presenter->Present(frame);
+		const auto now = SDL_GetTicks64();
+		if (last_log == 0 || now - last_log >= 1000) {
+			LOGF("ShaderPreparation: progress %u/%u skipped=%u elapsed_ms=%" PRIu64 "\n",
+			     status.completed, status.total, status.skipped, now - started);
+			last_log = now;
+		}
+		SDL_Delay(16);
+	}
+	// This joins the producer, not just the currently queued jobs (the queue can temporarily empty).
+	cache.FinishPreparation();
+	SetShaderPreparationOverlay(false);
+	LOGF("ShaderPreparation: startup wait finished in %" PRIu64 " ms\n", SDL_GetTicks64() - started);
+	return true;
 }
 
 void WindowShutdown() {

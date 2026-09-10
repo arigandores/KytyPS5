@@ -9,6 +9,7 @@
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
+#include "graphics/host_gpu/renderer/pipeline/computePretranslation.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
@@ -12928,6 +12929,105 @@ void TestNewShaderRecompilerSpirvSizeBaselines() {
     test();                                                                    \
   } while (0)
 
+void TestComputePretranslation() {
+#if defined(__cpp_exceptions)
+  using namespace Libs::Graphics;
+  ShaderComputeInputInfo info;
+  info.threads_num[0] = 64;
+  info.threads_num[1] = info.threads_num[2] = 1;
+  info.thread_ids_num = 1;
+  const std::array<uint32_t, 1> end {0xbf810000}; // s_endpgm
+  ComputePretranslation cache;
+  std::array<uint32_t, 1> owned = end;
+  Check(cache.Enqueue(owned, 123, info, 0), "pretranslate enqueued");
+  owned[0] = 0xffffffff; // registration memory may be reused immediately
+  Check(!cache.Enqueue(end, 123, info, 0), "duplicate registration suppressed");
+  cache.WaitIdle();
+  auto prepared = cache.Take(end, 123, info, 0);
+  Check(prepared.has_value(), "owned source survived guest code mutation");
+  ShaderRecompiler::CompileOptions options;
+  options.shader_hash = 123;
+  options.input_info.compute = &info;
+  options.dump_ir = false;
+  auto normal = ShaderRecompiler::TranslateProgram(end, options);
+  if (prepared) {
+    Check(ShaderRecompiler::IR::ProgramToString(prepared->program) ==
+              ShaderRecompiler::IR::ProgramToString(normal.program), "early IR equals normal IR");
+  }
+  Check(!cache.Take(end, 123, info, 0), "prepared IR consumed exactly once");
+  Check(cache.Enqueue(owned, 124, info, 0), "unsupported shader queued");
+  cache.WaitIdle();
+  Check(cache.GetStats().failed == 1, "unsupported translation recovered without fatal shutdown");
+  Check(cache.Enqueue(end, 125, info, 0), "worker accepts valid shader after failure");
+  cache.WaitIdle();
+  Check(cache.Take(end, 125, info, 0).has_value(), "worker continues after failure");
+
+  // Every component of the existing runtime static key must participate in reuse.
+  std::vector<ShaderComputeInputInfo> variants;
+  for (int i = 0; i < 3; ++i) {
+    auto v = info; ++v.threads_num[i]; variants.push_back(v);
+    v = info; v.group_id[i] = !v.group_id[i]; variants.push_back(v);
+  }
+  auto v = info; v.wave_size = 32; variants.push_back(v);
+  v = info; v.host_subgroup_size = 32; variants.push_back(v);
+  v = info; ++v.workgroup_register; variants.push_back(v);
+  v = info; ++v.thread_ids_num; variants.push_back(v);
+  v = info; ++v.scratch_size_dwords; variants.push_back(v);
+  v = info; ++v.lds_size_dwords; variants.push_back(v);
+  v = info; v.tg_size_en = !v.tg_size_en; variants.push_back(v);
+  v = info; v.dispatch_thread_dimensions = !v.dispatch_thread_dimensions; variants.push_back(v);
+  uint64_t hash = 1000;
+  for (const auto& changed: variants) {
+    ++hash;
+    Check(cache.Enqueue(end, hash, info, 0), "static variant reference queued");
+    cache.WaitIdle();
+    Check(!cache.Take(end, hash, changed, 0), "different static configuration rejected");
+    Check(cache.Take(end, hash, info, 0).has_value(), "exact static configuration retained");
+  }
+  Check(cache.Enqueue(end, 2000, info, 0), "code comparison reference queued");
+  cache.WaitIdle();
+  Check(!cache.Take(owned, 2000, info, 0), "same hash different code rejected");
+  Check(cache.Enqueue(end, 2001, info, 0), "user data reference queued");
+  cache.WaitIdle();
+  Check(!cache.Take(end, 2001, info, 1), "user data count mismatch rejected");
+  Check(cache.Take(end, 2001, info, 0).has_value(), "user data exact count retained");
+
+  ComputePretranslation bounded({1, 4, 1});
+  Check(!bounded.Enqueue(std::array<uint32_t, 2>{end[0], end[0]}, 1, info, 0), "code byte budget enforced");
+  Check(bounded.Enqueue(end, 1, info, 0), "bounded queue first entry");
+  bounded.WaitIdle();
+  Check(!bounded.Take(end, 1, info, 0), "oversize IR discarded");
+  Check(bounded.Enqueue(end, 2, info, 0), "completed entry retired for later registrations");
+  bounded.WaitIdle();
+  ComputePretranslation full({0, 4, 1});
+  Check(!full.Enqueue(end, 1, info, 0), "entry budget enforced");
+  bounded.Stop();
+  Check(!bounded.Enqueue(end, 3, info, 0), "shutdown rejects new work");
+  Check(Common::fatal_interceptor == nullptr, "worker failure scope never affects caller");
+  bool budget_caught = false;
+  try {
+    Common::ScopedFatalInterceptor recover([](const char*, int, std::string_view) {
+      throw std::runtime_error("expected speculative budget failure");
+    });
+    ShaderRecompiler::TranslationBudget exhausted;
+    exhausted.remaining = 0;
+    struct BudgetScope {
+      explicit BudgetScope(ShaderRecompiler::TranslationBudget& b) {
+        ShaderRecompiler::TranslationBudget::current = &b;
+      }
+      ~BudgetScope() { ShaderRecompiler::TranslationBudget::current = nullptr; }
+    } budget_scope(exhausted);
+    auto unused = ShaderRecompiler::TranslateProgram(end, options);
+  } catch (const std::runtime_error&) { budget_caught = true; }
+  Check(budget_caught && Common::fatal_interceptor == nullptr &&
+            ShaderRecompiler::TranslationBudget::current == nullptr,
+        "budget abort unwinds and restores thread-local state");
+  const auto stats = cache.GetStats();
+  std::fprintf(stderr, "pretranslation test: ready=%zu failed=%zu hits=%zu\n",
+               stats.ready, stats.failed, stats.hits);
+#endif
+}
+
 int main() {
   using namespace Libs::Graphics;
 
@@ -13105,10 +13205,27 @@ int main() {
       }
       ShaderRecompiler::IR::SetSrtSlotReference(std::move(reference));
     }
+    ComputePretranslation early;
+    const bool verify_early = !is_vertex && !is_pixel && std::getenv("KYTY_RECOMPILE_EARLY_VERIFY") != nullptr;
+    if (verify_early && !early.Enqueue(code, key.hash, compute, key.user_data_count)) { return 2; }
     const auto t0 = std::chrono::steady_clock::now();
     auto translated = ShaderRecompiler::TranslateProgram(std::span<const uint32_t>{code}, options);
     const auto t1 = std::chrono::steady_clock::now();
     const auto &stored = entry.permutations[permutation];
+    std::optional<ShaderRecompiler::TranslateResult> early_check;
+    if (verify_early) {
+      early.WaitIdle();
+      early_check = early.Take(code, key.hash, compute, key.user_data_count);
+      if (!early_check) {
+        std::fprintf(stderr, "early verify: no prepared result\n");
+        return 2;
+      }
+      if (ShaderRecompiler::IR::ProgramToString(early_check->program) !=
+          ShaderRecompiler::IR::ProgramToString(translated.program)) {
+        std::fprintf(stderr, "early verify: IR mismatch\n");
+        return 2;
+      }
+    }
     auto specialization = stored.specialization;
     if (const char *align = std::getenv("KYTY_RECOMPILE_ALIGN"); align != nullptr) {
       // Cache files written before the alignment class existed carry class 0 (dword): force
@@ -13139,6 +13256,15 @@ int main() {
         std::move(translated), options, specialization,
         stored.program.bindings.push_data_start_dword);
     const auto t2 = std::chrono::steady_clock::now();
+    if (early_check) {
+      auto checked = ShaderRecompiler::CompileProgram(std::move(*early_check), options,
+          specialization, stored.program.bindings.push_data_start_dword);
+      if (checked.spirv != compiled.spirv) {
+        std::fprintf(stderr, "early verify: SPIR-V mismatch\n");
+        return 2;
+      }
+      std::fprintf(stderr, "early verify: identical IR and SPIR-V\n");
+    }
     FILE *out = std::fopen(parts[2].c_str(), "wb");
     if (out == nullptr) {
       std::fprintf(stderr, "recompile: cannot write %s\n", parts[2].c_str());
@@ -13314,6 +13440,7 @@ int main() {
   RUN(TestNewShaderRecompilerVertexSystemInputsWithoutMirrors);
   RUN(TestNewShaderRecompilerVertexExportUsesInvocationExecMask);
   RUN(TestNggPassthroughVertexSubgroupHeader);
+  RUN(TestComputePretranslation);
   RUN(TestNewShaderRecompilerPerInvocationMasksWithoutMirrors);
   RUN(TestNewShaderRecompilerPerInvocationU64Complement);
   RUN(TestNewShaderRecompilerExpPixelOutputs);

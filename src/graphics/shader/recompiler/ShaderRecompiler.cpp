@@ -1,4 +1,5 @@
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
+#include "graphics/shader/recompiler/TranslationBudget.h"
 
 #include "common/assert.h"
 #include "common/logging/log.h"
@@ -580,6 +581,10 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	} else {
 		Decoder::DecodeProgram(code, decoded);
 	}
+	if (TranslationBudget::current) {
+		CheckTranslationBudget(true);
+		EXIT_IF(decoded.instructions.size() > 16384);
+	}
 	LOGF("%s phase end: stage=%s hash=0x%016" PRIx64 " decode instructions=%" PRIu64
 	     " elapsed_ms=%" PRIu64 "\n",
 	     GetDumpLabel(options), StageName(options.stage), options.shader_hash,
@@ -619,6 +624,10 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	LOGF("%s phase begin: stage=%s hash=0x%016" PRIx64 " CFG BuildGraph\n", GetDumpLabel(options),
 	     StageName(options.stage), options.shader_hash);
 	auto cfg = CFG::BuildGraph(decoded);
+	if (TranslationBudget::current) {
+		CheckTranslationBudget(true);
+		EXIT_IF(cfg.blocks.size() > 1024);
+	}
 	LOGF("%s phase end: stage=%s hash=0x%016" PRIx64 " CFG BuildGraph blocks=%" PRIu64
 	     " loops=%" PRIu64 " back_edges=%" PRIu64 " elapsed_ms=%" PRIu64 "\n",
 	     GetDumpLabel(options), StageName(options.stage), options.shader_hash,
@@ -704,6 +713,7 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 	     GetDumpLabel(options), StageName(options.stage), options.shader_hash,
 	     static_cast<uint64_t>(ir.blocks.size()), phase_ms());
 	IR::RewriteToSsa(ir.blocks);
+	CheckTranslationBudget(true);
 	IR::ConstantPropagationPass(ir.blocks);
 	IR::ResolveControlFlowIdentities(ir);
 	IR::RemoveIdentities(ir.blocks);
@@ -746,8 +756,10 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 		IR::EliminateDeadCode(ir.blocks);
 	}
 	IR::BuildSrtPlan(ir);
+	CheckTranslationBudget(true);
 	IR::EliminateDeadCode(ir.blocks);
 	IR::TrackResources(ir);
+	CheckTranslationBudget(true);
 	IR::EliminateDeadCode(ir.blocks);
 	TranslateResult result;
 	result.program = std::move(ir);

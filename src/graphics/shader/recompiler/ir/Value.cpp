@@ -1,4 +1,5 @@
 #include "graphics/shader/recompiler/ir/Value.h"
+#include "graphics/shader/recompiler/TranslationBudget.h"
 
 #include <algorithm>
 #include <cstring>
@@ -140,6 +141,7 @@ bool Value::operator==(const Value& other) const {
 
 Inst::Inst(ValueOpcode value_opcode, uint64_t value_flags)
     : opcode(value_opcode), flags(value_flags) {
+	CheckTranslationBudget();
 	const auto count = NumArgsOf(opcode);
 	if (count != std::numeric_limits<size_t>::max()) {
 		args.resize(count);

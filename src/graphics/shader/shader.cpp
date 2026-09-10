@@ -829,7 +829,7 @@ static void ShaderGetStaticInputInfoPS(
 	}
 }
 
-static void ShaderGetStaticInputInfoCS(const HW::ComputeShaderInfo& regs,
+void ShaderGetStaticInputInfoCS(const HW::ComputeShaderInfo& regs,
                                        const HW::ShaderRegisters& /*sh*/,
                                        const ShaderMappedData& data, ShaderComputeInputInfo& info) {
 	const bool dispatch_thread_dimensions = info.dispatch_thread_dimensions;

@@ -1,4 +1,6 @@
 #include "common/assert.h"
+#include "libs/controller.h"
+#include "libs/padData.h"
 #include "common/emulatorConfig.h"
 #include "common/hostException.h"
 #include "common/logging/log.h"
@@ -402,7 +404,13 @@ struct RenderExecutorTestAccess {
                                       const ShaderStageRuntime &vertex,
                                       const ShaderStageRuntime &pixel,
                                       bool pixel_active) {
-    return executor.PrepareGraphicsBindings(vertex, pixel, pixel_active);
+    // Exercise the draw path's retained scratch across the different stage layouts below.
+    // Return an owned copy so an earlier test snapshot survives the next preparation.
+    if (!executor.ReuseBindingsEnabled()) {
+      return executor.PrepareGraphicsBindings(vertex, pixel, pixel_active);
+    }
+    executor.PrepareGraphicsBindings(vertex, pixel, pixel_active, executor.m_graphics_bindings);
+    return executor.m_graphics_bindings;
   }
 
   static PipelineCache::Pipeline
@@ -1933,6 +1941,23 @@ public:
                 pixel.shader_data ==
                     std::vector<uint32_t>{0x33333333u, 0x44444444u},
             "graphics stages did not commit their shared push data");
+
+    // Reuse a committed stage for a different runtime, then for an empty stage. This
+    // catches stale user-data prefixes and transient descriptors left by the prior draw.
+    context.GetRenderExecutor().PrepareBindings(pixel_runtime, vertex);
+    Require(name, "scratch stage switch",
+            vertex.runtime == &pixel_runtime && vertex.shader_data == pixel.shader_data &&
+                vertex.gds.buffer == nullptr && vertex.flattened_srt.buffer == nullptr &&
+                vertex.shader_data_buffer.buffer == nullptr,
+            "reused bindings retained the preceding stage or committed buffers");
+    ShaderRecompiler::IR::CompiledShaderInfo empty_program{};
+    empty_program.stage = ShaderType::Compute;
+    ShaderStageRuntime empty_runtime{.program = &empty_program};
+    context.GetRenderExecutor().PrepareBindings(empty_runtime, vertex);
+    Require(name, "scratch empty stage",
+            vertex.runtime == &empty_runtime && vertex.shader_data.empty() &&
+                vertex.buffers.empty() && vertex.images.empty() && vertex.samplers.empty(),
+            "reused bindings retained descriptors when the new layout was empty");
     scheduler.Finish();
     RenderExecutorTestAccess::DestroyDescriptorPipelines(
         context.GetRenderExecutor(), std::span {&pipeline, 1u});
@@ -4105,7 +4130,7 @@ public:
       const auto large_image_source =
           cache.ObtainBufferForImage(base + large_offset, sizeof(large_value));
       Require(name, "fixed download after Buffer retirement",
-              large_image_source.first != nullptr &&
+              large_image_source.buffer != nullptr &&
                   &BufferCacheTestAccess::DownloadBuffer(cache) ==
                       fixed_download &&
                   fixed_download->Handle() == fixed_download_handle &&
@@ -4384,6 +4409,119 @@ public:
                 texture_cache.IsMetaCleared(write_only_meta, 0),
             "a metadata write-only fill was not consumed as a clear");
     scheduler.Finish();
+    std::printf("[host]    %-32s ok\n", name);
+  }
+
+  void CheckNullComparisonBindings() {
+    constexpr const char* name = "NullComparisonBindings";
+    EnsureRuntimeContext();
+    RenderContext context(m_runtime_context);
+    auto& scheduler = context.GetCommandScheduler();
+    HW::Context registers{};
+    HW::UserConfig user_config{};
+    HW::Shader shaders{};
+    scheduler.Begin(registers, user_config, shaders);
+    ShaderRecompiler::IR::CompiledShaderInfo program{};
+    program.stage = ShaderType::Compute;
+    ShaderRecompiler::IR::ImageResource resource;
+    resource.resource_class = ShaderRecompiler::IR::ImageResourceClass::Sampled;
+    resource.numeric_class = Prospero::TextureNumericClass::Float;
+    resource.dimension = ShaderRecompiler::Decoder::ImageDimension::Dim2D;
+    resource.read = true;
+    resource.depth_compare = true;
+    program.info.images.push_back(resource);
+    ShaderStageRuntime runtime{.program = &program};
+    runtime.resources.images.resize(1);
+    runtime.resources.images[0].dword_count = 8;
+    auto& executor = context.GetRenderExecutor();
+    auto native = executor.PrepareBindings(runtime);
+    executor.RebindImages(native);
+    Require(name, "native null", native.images[0].image_view != nullptr &&
+        native.images[0].desc.view_info.format == vk::Format::eD32Sfloat &&
+        native.images[0].desc.view_info.aspect == vk::ImageAspectFlagBits::eDepth,
+        "null comparison was bound to a color image view");
+    program.info.images[0].manual_depth_compare = true;
+    auto manual = executor.PrepareBindings(runtime);
+    executor.RebindImages(manual);
+    Require(name, "manual null", manual.images[0].image_view != nullptr &&
+        manual.images[0].desc.view_info.format == vk::Format::eR32Sfloat &&
+        manual.images[0].image_id != native.images[0].image_id,
+        "manual comparison reused the native depth placeholder");
+    scheduler.Finish();
+    std::printf("[host]    %-32s ok\n", name);
+  }
+
+  void CheckBdaDirtyRanges() {
+    constexpr const char* name = "BdaDirtyRanges";
+    constexpr uint64_t base = 0x0000000206000000ull;
+    constexpr uint64_t size = 0x800000;
+    constexpr uint64_t second = 0x400000;
+    EnsureRuntimeContext();
+    auto& context = Renderer();
+    CommandScheduler scheduler(context, m_runtime_context);
+    HW::Context registers{};
+    HW::UserConfig user_config{};
+    HW::Shader shaders{};
+    scheduler.Begin(registers, user_config, shaders);
+    int64_t direct = -1;
+    Require(name, "allocate", LibKernel::Memory::KernelAllocateDirectMemory(
+        0, LibKernel::Memory::KernelGetDirectMemorySize(), size, 0x200000, 0, &direct) == 0,
+        "BDA test allocation failed");
+    void* mapped = reinterpret_cast<void*>(base);
+    Require(name, "map", LibKernel::Memory::KernelMapDirectMemory(
+        &mapped, size, 0x3, 0x10, direct, 0x200000) == 0 &&
+        mapped == reinterpret_cast<void*>(base), "BDA test mapping failed");
+    auto* memory = static_cast<uint8_t*>(mapped);
+    {
+      GpuResourceManager resources(m_runtime_context, scheduler);
+      auto& cache = resources.GetBufferCache();
+      resources.MapMemory(base, size);
+      const uint32_t initial = 0x10203040, other = 0x55667788, changed = 0xabcdef01;
+      std::memcpy(memory, &initial, 4);
+      std::memcpy(memory + second, &other, 4);
+      resources.PrepareBda(); // a mapped range with no registered buffer is a no-op
+      const auto left = cache.FindBuffer(base, BufferCache::CACHING_PAGESIZE);
+      const auto right = cache.FindBuffer(base + second, BufferCache::CACHING_PAGESIZE);
+      const auto read = [&](BufferId id, uint64_t address) {
+        auto& buffer = cache.GetBuffer(id);
+        auto output = CreateHostBuffer(name, 4, vk::BufferUsageFlagBits::eTransferDst, {0});
+        auto command = scheduler.Current().Handle();
+        VulkanMemoryBarrier before{};
+        before.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+        before.dstAccessMask = vk::AccessFlagBits::eTransferRead;
+        command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+            vk::PipelineStageFlagBits::eTransfer, {}, 1, &before, 0, nullptr, 0, nullptr);
+        const vk::BufferCopy copy{buffer.Offset(address), 0, 4};
+        command.copyBuffer(buffer.Handle(), output.buffer, 1, &copy);
+        VulkanMemoryBarrier after{};
+        after.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+        after.dstAccessMask = vk::AccessFlagBits::eHostRead;
+        command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+            vk::PipelineStageFlagBits::eHost, {}, 1, &after, 0, nullptr, 0, nullptr);
+        scheduler.Finish();
+        const auto value = ReadBuffer(name, output, 1)[0];
+        DestroyBuffer(&output);
+        return value;
+      };
+      resources.PrepareBda();
+      Require(name, "initial upload", read(left, base) == initial &&
+          read(right, base + second) == other, "initial untracked BDA data was omitted");
+      resources.PrepareBda();
+      Require(name, "clean repeat", read(left, base) == initial,
+          "clean BDA preparation changed contents");
+      Require(name, "CPU write", resources.HandleFault(PageFaultAccess::Write, base),
+          "BDA write fault was not handled");
+      std::memcpy(memory, &changed, 4);
+      resources.PrepareBda();
+      Require(name, "sparse update", read(left, base) == changed &&
+          read(right, base + second) == other, "sparse BDA update lost dirty or clean data");
+      resources.UnmapMemory(base, size);
+      scheduler.Finish();
+    }
+    Require(name, "unmap", LibKernel::Memory::KernelMunmap(base, size) == 0,
+        "BDA test unmap failed");
+    Require(name, "release", LibKernel::Memory::KernelReleaseDirectMemory(direct, size) == 0,
+        "BDA test release failed");
     std::printf("[host]    %-32s ok\n", name);
   }
 
@@ -5826,7 +5964,7 @@ public:
           resources.GetBufferCache().ObtainBufferForImage(
               base + partial_clean_offset, sizeof(partial_clean_value));
       Require(name, "partial-page clean source",
-              partial_clean_source.first != nullptr,
+              partial_clean_source.buffer != nullptr,
               "clean same-page bytes inherited unrelated buffer ownership");
       Require(name, "partial-page remaining fault",
               resources.HandleFault(PageFaultAccess::Read,
@@ -5860,18 +5998,18 @@ public:
                   TRACKER_PAGE_SIZE);
       const auto partial_cpu_refresh_source =
           resources.GetBufferCache().ObtainBufferForImage(
-              base + partial_clean_offset, sizeof(partial_cpu_refresh_value));
+              base + partial_image_offset, TRACKER_PAGE_SIZE);
       Require(name, "partial-page CPU refresh source",
-              partial_cpu_refresh_source.first != nullptr,
+              partial_cpu_refresh_source.buffer != nullptr,
               "CPU-dirty same-page bytes did not resolve through the cached "
               "buffer");
       auto partial_cpu_refresh_readback =
           CreateHostBuffer(name, TRACKER_PAGE_SIZE,
                            vk::BufferUsageFlagBits::eTransferDst, {0});
       const vk::BufferCopy partial_cpu_refresh_copy{
-          partial_cpu_refresh_source.first->Offset(base + partial_image_offset), 0,
+          partial_cpu_refresh_source.offset, 0,
           TRACKER_PAGE_SIZE};
-      command.Handle().copyBuffer(partial_cpu_refresh_source.first->Handle(),
+      command.Handle().copyBuffer(partial_cpu_refresh_source.buffer,
                                   partial_cpu_refresh_readback.buffer, 1,
                                   &partial_cpu_refresh_copy);
       vk::BufferMemoryBarrier partial_cpu_refresh_barrier{};
@@ -11964,9 +12102,12 @@ public:
       mode.polymode_back_ptype = back;
       mode.provoking_vtx_last = provoking_last;
       registers.SetModeControl(mode);
-      return context.GetPipelineCache().CreateGraphicsPipeline(
+      auto* result = context.GetPipelineCache().CreateGraphicsPipeline(
           std::span{&color, 1u}, depth, vertex, scheduler.Current(), &pixel,
           vk::PrimitiveTopology::eTriangleList, false, vertex_shader, pixel_shader);
+      Require(name, "graphics pipeline", result != nullptr,
+              "graphics pipeline was not ready for the synchronous test");
+      return *result;
     };
     auto &filled = pipeline(true, 2, 2);
     const auto draw = [&](const PipelineCache::Pipeline &selected) {
@@ -13628,9 +13769,12 @@ private:
       RequireVulkanSuccess(m_device.waitIdle(), "vkDeviceWaitIdle");
       DestroyBuffer(&m_fault_buffer);
       DestroyBuffer(&m_bda_pagetable_buffer);
-      if (m_runtime_context.allocator != nullptr) {
-        m_renderer.reset();
-        vmaDestroyAllocator(m_runtime_context.allocator);
+        if (m_runtime_context.allocator != nullptr) {
+          m_renderer.reset();
+          // Image retirement may still own views/allocations on the destruction worker.
+          // Drain it before the allocator and Vulkan device cease to exist.
+          VulkanDeferredDestroyFlush();
+          vmaDestroyAllocator(m_runtime_context.allocator);
         m_runtime_context.allocator = nullptr;
       }
       if (m_command_pool != nullptr) {
@@ -28864,6 +29008,48 @@ int main(int argc, char **argv) {
   std::setvbuf(stdout, nullptr, _IONBF, 0);
   EnsureConfigInitialized();
   CheckLeastRecentlyUsedCacheOrdering();
+  if (argc == 2 && std::strcmp(argv[1], "--controller-motion-only") == 0) {
+    namespace Pad = Libs::Controller;
+    Pad::Initialize();
+    Pad::Connect(Pad::HOST_INPUT_CONTROLLER_ID);
+    // Motion data is available without an explicit enable call, as in the game.
+    Pad::SetMotionPitch(Pad::HOST_INPUT_CONTROLLER_ID, 0.85f);
+    Pad::PadData data{};
+    Pad::PadReadState(1, &data);
+    const auto check = [](bool value) { if (!value) std::abort(); };
+    check(std::abs(data.orientation_x - std::sin(0.425f)) < 1e-6f);
+    check(std::abs(data.orientation_w - std::cos(0.425f)) < 1e-6f);
+    check(std::abs(data.acceleration_y * data.acceleration_y +
+                   data.acceleration_z * data.acceleration_z - 1.0f) < 1e-6f);
+    Pad::PadResetOrientation(1);
+    Pad::PadReadState(1, &data);
+    check(data.orientation_x == 0.0f && data.orientation_w == 1.0f);
+    Pad::SetMotionPitch(Pad::HOST_INPUT_CONTROLLER_ID, -0.85f);
+    Pad::PadReadState(1, &data);
+    check(data.orientation_x < 0.0f && data.acceleration_z < 0.0f);
+    Pad::ResetInputState();
+    Pad::PadReadState(1, &data);
+    check(data.orientation_x == 0.0f && data.acceleration_y == -1.0f);
+    Pad::SetMotionShake(Pad::HOST_INPUT_CONTROLLER_ID, true);
+    Pad::PadReadState(1, &data);
+    const auto first = data;
+    Common::Thread::SleepMicro(20000);
+    Pad::PadReadState(1, &data);
+    check(data.timestamp > first.timestamp &&
+          (data.acceleration_z != first.acceleration_z ||
+           data.angular_velocity_x != first.angular_velocity_x));
+    Pad::SetMotionShake(Pad::HOST_INPUT_CONTROLLER_ID, false);
+    Pad::PadReadState(1, &data);
+    check(data.angular_velocity_x == 0.0f && data.acceleration_z == 0.0f);
+    Pad::PadSetMotionSensorState(1, false);
+    Pad::SetMotionPitch(Pad::HOST_INPUT_CONTROLLER_ID, 0.85f);
+    Pad::PadReadState(1, &data);
+    check(data.orientation_x == 0.0f && data.orientation_w == 1.0f &&
+          data.acceleration_y == 0.0f && data.acceleration_z == 0.0f);
+    Pad::Shutdown();
+    std::puts("[host]    ControllerMotion                ok");
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--error-dialog-only") == 0) {
     CheckErrorDialogLifecycle();
     return 0;
@@ -28928,6 +29114,16 @@ int main(int argc, char **argv) {
   if (argc == 2 && std::strcmp(argv[1], "--scheduler-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckSchedulerTimeline();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--bda-dirty-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckBdaDirtyRanges();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--null-comparison-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckNullComparisonBindings();
     return 0;
   }
   if (argc == 2 && std::strcmp(argv[1], "--host-image-allocation-only") == 0) {
@@ -29266,6 +29462,8 @@ int main(int argc, char **argv) {
   vulkan.CheckStreamBufferRing();
   vulkan.CheckGpuTilerCpuParity();
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+  vulkan.CheckBdaDirtyRanges();
+  vulkan.CheckNullComparisonBindings();
   vulkan.CheckRenderExecutorColorDiscovery();
   vulkan.CheckRenderExecutorColorVolumeDiscovery();
   vulkan.CheckRenderExecutorDccFixedClearFloat();

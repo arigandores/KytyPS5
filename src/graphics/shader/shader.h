@@ -301,6 +301,8 @@ uint64_t ShaderComputeHash(const void* code, uint32_t size_bytes);
 // and repoints the mapped data at the copies, so the per-draw readers never touch the guest
 // header pages (which may share a page with GPU-written data and page-fault into a drain).
 void ShaderMakeHostCopy(ShaderMappedData& data);
+void ShaderGetStaticInputInfoCS(const HW::ComputeShaderInfo& regs, const HW::ShaderRegisters& sh,
+                              const ShaderMappedData& data, ShaderComputeInputInfo& info);
 // True when a shader header is registered at `addr` (the PM4 lookahead skips unknown addresses).
 bool ShaderIsMapped(uint64_t addr);
 

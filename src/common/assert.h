@@ -9,6 +9,21 @@
 
 namespace Common {
 
+// Only the calling thread is intercepted. The callback must throw; returning retains the
+// ordinary fatal policy. Used by speculative CPU translation, never around guest execution.
+using FatalInterceptor = void (*)(const char*, int, std::string_view);
+inline thread_local FatalInterceptor fatal_interceptor = nullptr;
+class ScopedFatalInterceptor {
+public:
+	explicit ScopedFatalInterceptor(FatalInterceptor callback)
+	    : previous(fatal_interceptor) { fatal_interceptor = callback; }
+	~ScopedFatalInterceptor() { fatal_interceptor = previous; }
+	ScopedFatalInterceptor(const ScopedFatalInterceptor&) = delete;
+	ScopedFatalInterceptor& operator=(const ScopedFatalInterceptor&) = delete;
+private:
+	FatalInterceptor previous;
+};
+
 #ifdef __clang__
 int DbgExitHandler(char const* file, int line, std::string_view text)
     __attribute__((analyzer_noreturn));

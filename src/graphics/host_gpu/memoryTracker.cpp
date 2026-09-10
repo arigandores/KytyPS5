@@ -84,6 +84,36 @@ bool MemoryTracker::IsRegionGpuModified(uint64_t vaddr, uint64_t size) {
 	});
 }
 
+void MemoryTracker::CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size,
+                                            std::vector<GuestRange>& ranges) {
+	CheckNotInUploadCallback();
+	ValidateRange(vaddr, size);
+	ranges.clear();
+	const auto end = vaddr + size;
+	const auto append = [&](uint64_t address, uint64_t bytes) noexcept {
+		const auto first = std::max(address, vaddr);
+		const auto last = std::min(address + bytes, end);
+		if (first >= last) return;
+		if (!ranges.empty() && ranges.back().End() == first) {
+			ranges.back().size += last - first;
+		} else {
+			ranges.push_back({first, last - first});
+		}
+	};
+	for (auto cursor = vaddr; cursor < end;) {
+		const auto index = cursor / TRACKER_REGION_SIZE;
+		const auto bytes = std::min(end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
+		auto* manager = m_regions[index].load(std::memory_order_acquire);
+		if (manager == nullptr) {
+			append(cursor, bytes);
+		} else {
+			std::scoped_lock lock(manager->lock);
+			manager->ForEachModifiedRange<DirtySource::Cpu, false>(cursor, bytes, append);
+		}
+		cursor += bytes;
+	}
+}
+
 void MemoryTracker::MarkRegionAsCpuModified(uint64_t vaddr, uint64_t size) {
 	CheckNotInUploadCallback();
 	Iterate<true>(vaddr, size, [](RegionManager* manager, uint64_t offset, uint64_t bytes) {

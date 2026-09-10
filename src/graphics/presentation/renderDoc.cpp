@@ -35,6 +35,8 @@ enum class RenderDocState : uint32_t {
 static RENDERDOC_API_1_6_0*        g_api             = nullptr;
 static std::atomic<RenderDocState> g_state           = RenderDocState::Idle;
 static uint32_t                    g_captured_flips  = 0;
+static std::atomic<uint64_t>       g_gpu_work {0};        // draws + dispatches processed
+static uint64_t                    g_gpu_work_at_flip = 0; // value at the last counted flip
 static std::atomic_bool            g_unavailable_log = false;
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
@@ -174,7 +176,8 @@ static void StartCapture() {
 		LOGF("RenderDoc: capture failed to start\n");
 		return;
 	}
-	g_captured_flips = 0;
+	g_captured_flips   = 0;
+	g_gpu_work_at_flip = g_gpu_work.load(std::memory_order_relaxed);
 	g_state.store(RenderDocState::Capturing, std::memory_order_release);
 	LOGF("RenderDoc: capture started\n");
 }
@@ -189,12 +192,24 @@ static uint32_t RenderDocFlipsPerCapture() {
 	return flips;
 }
 
+void RenderDocNoteGpuWork() {
+	if (g_api != nullptr) {
+		g_gpu_work.fetch_add(1, std::memory_order_relaxed);
+	}
+}
+
 void RenderDocOnGuestFlip(RenderContext& renderer) {
 	const auto state = g_state.load(std::memory_order_acquire);
 	if (g_api == nullptr || state == RenderDocState::Idle) {
 		return;
 	}
 	if (state == RenderDocState::Capturing) {
+		const auto work = g_gpu_work.load(std::memory_order_relaxed);
+		if (work == g_gpu_work_at_flip) {
+			// A queued flip drained without any draw or dispatch in between: not a frame.
+			return;
+		}
+		g_gpu_work_at_flip = work;
 		LOGF("RenderDoc: captured guest flip %u/%u\n", ++g_captured_flips,
 		     RenderDocFlipsPerCapture());
 		if (g_captured_flips < RenderDocFlipsPerCapture()) {

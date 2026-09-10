@@ -13,6 +13,10 @@ void RenderDocNoteGuestText(const char* text, size_t size);
 bool RenderDocLevelStarted();
 // Called by the presentation thread after releasing video-out locks.
 void RenderDocOnGuestFlip(RenderContext& renderer);
+// Called for every guest draw/dispatch: a capture only counts flips between which the GuestGpu
+// thread actually submitted work (the game keeps 2-3 flips queued; draining them back to back
+// produced captures with nothing but the flip blits).
+void RenderDocNoteGpuWork();
 
 } // namespace Libs::Graphics
 

@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "graphics/presentation/renderDoc.h"
 
 #include "common/frameStats.h"
 #include "common/common.h"
@@ -221,6 +222,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
                                     uint32_t thread_group_x, uint32_t thread_group_y,
                                     uint32_t thread_group_z, uint32_t mode,
                                     uint64_t indirect_args_addr) {
+	RenderDocNoteGpuWork();
 	EXIT_IF(buffer.IsInvalid());
 	bool indirect = indirect_args_addr != 0;
 	{

@@ -22,6 +22,33 @@ Decoder::Operand ConditionOperand(Decoder::OperandKind kind) {
 
 } // namespace
 
+void Translator::S_SUBVECTOR_LOOP(const Decoder::Instruction& inst, bool begin) {
+	const auto zero  = IR::U32(IR::Value(0u));
+	const auto lo    = ir.GetExecLo();
+	const auto hi    = ir.GetExecHi();
+	const auto saved = ReadU32(inst.dst);
+	if (begin) {
+		const auto low_active = ir.INotEqual(lo, zero);
+		instruction_branch_condition = ir.IEqual(ir.BitwiseOr(lo, hi), zero);
+		WriteRawU32(inst.dst, ir.Select(instruction_branch_condition, saved,
+		                               ir.Select(low_active, hi, lo)));
+		// Keep the ISA assignment order: SDST may itself name an EXEC half.
+		WriteRawU32(ConditionOperand(Decoder::OperandKind::ExecHi),
+		            ir.Select(low_active, zero, ir.GetExecHi()));
+	} else {
+		const auto high_active = ir.INotEqual(hi, zero);
+		instruction_branch_condition =
+		    ir.LogicalAnd(ir.LogicalNot(high_active), ir.INotEqual(saved, zero));
+		WriteRawU32(ConditionOperand(Decoder::OperandKind::ExecHi),
+		            ir.Select(instruction_branch_condition, saved, hi));
+		WriteRawU32(inst.dst,
+		            ir.Select(instruction_branch_condition, lo, ReadU32(inst.dst)));
+		WriteRawU32(ConditionOperand(Decoder::OperandKind::ExecLo),
+		            ir.Select(high_active, saved,
+		                      ir.Select(instruction_branch_condition, zero, ir.GetExecLo())));
+	}
+}
+
 void Translator::S_SAVEEXEC(const Decoder::Instruction& inst, IR::ValueOpcode operation,
                             bool negate_exec, bool negate_source, bool write_64) {
 	if (!write_64) {
@@ -280,40 +307,28 @@ void Translator::S_MOV_B64(const Decoder::Instruction& inst) {
 	}
 }
 
-// Wave32 whole-quad mode (ASTRO BOT pixel shaders run wave32, DetectGraphicsWaveSize): the
-// low mask word only, same folding of the pixel wave's initial EXEC as S_WQM_B64.
-void Translator::S_WQM_B32(const Decoder::Instruction& inst) {
-	const auto mask_valid  = ReadMaskValid(inst.src0);
+void Translator::S_WQM(const Decoder::Instruction& inst, bool wide) {
 	const auto exec_before = ir.GetExec();
-	const auto wide        = IR::U64(ir.Emit(
-	    IR::ValueOpcode::WqmU64, {ir.ConstructU64(IR::U32(ReadOperand(inst.src0, IR::Type::U32)),
-	                                              IR::U32(IR::Value(0u)))}));
-	const auto result = ir.CompositeExtract(wide, 0);
-	WriteOperand(DestinationOperand(inst), result);
-	if (program.stage == ShaderType::Pixel && inst.dst.kind == Decoder::OperandKind::ExecLo &&
-	    inst.src0.kind == Decoder::OperandKind::ExecLo && !program.pixel_live_exec.IsEmpty() &&
-	    IR::Value(exec_before).Resolve() == program.pixel_live_exec.Resolve()) {
-		// See S_WQM_B64: WQM of the non-helper lanes covers every existing invocation.
-		const auto all = ir.Emit(IR::ValueOpcode::Ballot, {IR::U1(IR::Value(true))});
-		ir.SetExec(IR::U1(IR::Value(true)));
-		ir.SetExecLo(IR::U32(ir.CompositeExtract(all, 0)));
-		ir.SetExecHi(IR::U32(IR::Value(0u)));
+	const auto source = wide ? ReadU64(inst.src0)
+	                         : ir.ConstructU64(ReadU32(inst.src0), IR::U32(IR::Value(0u)));
+	const auto result = IR::U64(ir.Emit(IR::ValueOpcode::WqmU64, {source}));
+	if (!wide) {
+		const auto low = ir.CompositeExtract(result, 0);
+		// Preserve the other EXEC/VCC half and invalidate overlapping SGPR-pair provenance.
+		WriteRawU32(inst.dst, low);
+		ir.SetScc(ir.INotEqual(low, IR::U32(IR::Value(0u))));
+	} else {
+		const auto mask_valid = ReadMaskValid(inst.src0);
+		WriteOperand(DestinationOperand(inst), result);
+		if (inst.dst.kind == Decoder::OperandKind::Sgpr) {
+			const auto dst = static_cast<IR::ScalarReg>(inst.dst.reg);
+			ir.SetThreadBitScalarReg(dst, ThreadBit(ExtractU64(result)));
+			ir.SetScalarMaskTag(dst, mask_valid);
+		}
+		ir.SetScc(IR::U1(ir.Emit(IR::ValueOpcode::INotEqual64, {result, IR::Value(uint64_t {0})})));
 	}
-	if (inst.dst.kind == Decoder::OperandKind::Sgpr) {
-		const auto dst = static_cast<IR::ScalarReg>(inst.dst.reg);
-		ir.SetThreadBitScalarReg(dst, ThreadBit({result, IR::U32(IR::Value(0u))}));
-		ir.SetScalarMaskTag(dst, mask_valid);
-	}
-	ir.SetScc(ir.INotEqual(result, IR::U32(IR::Value(0u))));
-}
-
-void Translator::S_WQM_B64(const Decoder::Instruction& inst) {
-	const auto mask_valid  = ReadMaskValid(inst.src0);
-	const auto exec_before = ir.GetExec();
-	const auto result =
-	    IR::U64(ir.Emit(IR::ValueOpcode::WqmU64, {ReadOperand(inst.src0, IR::Type::U64)}));
-	WriteOperand(DestinationOperand(inst), result);
-	if (program.stage == ShaderType::Pixel && inst.dst.kind == Decoder::OperandKind::ExecLo &&
+	if ((wide || program.wave_size == 32u) && program.stage == ShaderType::Pixel &&
+	    inst.dst.kind == Decoder::OperandKind::ExecLo &&
 	    inst.src0.kind == Decoder::OperandKind::ExecLo && !program.pixel_live_exec.IsEmpty() &&
 	    IR::Value(exec_before).Resolve() == program.pixel_live_exec.Resolve()) {
 		// S_WQM of a pixel wave's initial EXEC (the non-helper lanes) is true for every existing
@@ -330,12 +345,6 @@ void Translator::S_WQM_B64(const Decoder::Instruction& inst) {
 		ir.SetExecHi(program.wave_size == 64u ? IR::U32(ir.CompositeExtract(all, 1))
 		                                      : IR::U32(IR::Value(0u)));
 	}
-	if (inst.dst.kind == Decoder::OperandKind::Sgpr) {
-		const auto dst = static_cast<IR::ScalarReg>(inst.dst.reg);
-		ir.SetThreadBitScalarReg(dst, ThreadBit(ExtractU64(result)));
-		ir.SetScalarMaskTag(dst, mask_valid);
-	}
-	ir.SetScc(IR::U1(ir.Emit(IR::ValueOpcode::INotEqual64, {result, IR::Value(uint64_t {0})})));
 }
 
 void Translator::V_MOVRELS_B32(const Decoder::Instruction& inst) {

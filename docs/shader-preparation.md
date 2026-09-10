@@ -55,12 +55,18 @@ errors. Coverage includes the initial desert and attacks; extraction of the cabl
 subsequent level was not established. Heavy gameplay remains around 35–36 fps in the recorded
 angles despite cheaper BDA preparation. See workspace HANDOFF §2.45 and `C:/kyty/s39/REPORT.md`.
 
-Session 40 changed the translator source signature. The current local catalogue prepares
-447/447 recipes with zero skips. A new offline candidate contains 383 shaders / 447 recipes
-in `C:/kyty/s40/seed_candidate/PPSA21564`; installation and cold-restoration verification are
-pending the user's pause in game testing. The installed historical 380/438 seed is incompatible
-with this new signature and is ignored. See [session 40](local-session-40.md) for the measured
-CPU/depth improvements and remaining validation work.
+Session 41 verified and installed the refreshed seed: **383 shaders / 447 recipes**.
+With the local catalogue moved aside, `prepare-cold` restored the seed and prepared 447/447
+pipelines (350 graphics + 97 compute), zero skipped, before guest execution. Preparation took
+22.285 seconds overall and 10.448 seconds of additional startup waiting, with ordinary Vulkan
+validation enabled. The subsequent gameplay route reached present 21066 without Vulkan
+errors. The 20469-frame recording decodes cleanly, with one observed A-B-A animation
+episode at menu frame 543 whose cause remains unresolved; no other detector candidates appeared.
+A short ordinary menu control rendered at 60 fps; its 3081 reviewed frames had no
+detector candidates or decode errors. That warm launch automatically prepared the grown local
+catalogue, 448/448 recipes with zero skips, in 164 ms overall / 36 ms additional waiting.
+This is bounded intro/desert coverage, not the whole game or cross-GPU portability. See
+[session 41](local-session-41.md) and the [all-title startup design](shader-startup-design.md).
 
 Driver caches use a versioned wrapper plus vendor ID, device ID, driver version and pipeline
 cache UUID. They no longer expire just because the emulator's git revision changed. The Vulkan

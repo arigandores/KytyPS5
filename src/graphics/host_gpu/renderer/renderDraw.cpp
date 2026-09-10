@@ -437,15 +437,19 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, vk::CommandBuf
 	// eColorWriteEnableEXT dynamic state and relies on the static colorWriteMask instead.
 #else
 	vk::Bool32 enable[RENDER_COLOR_ATTACHMENTS_MAX] = {};
+	uint32_t attachment_count = 0;
 	// Color-control operation selects special color-buffer paths, not the normal component write
 	// mask. Attachment availability therefore follows the target write mask.
 	for (uint32_t i = 0; i < color_count; i++) {
-		enable[i] = render_target_mask_slot(ctx.GetRenderTargetMask(), colors[i].target_slot) != 0
+		const auto slot = colors[i].target_slot;
+		EXIT_IF(slot >= RENDER_COLOR_ATTACHMENTS_MAX);
+		attachment_count = std::max(attachment_count, slot + 1);
+		enable[slot] = render_target_mask_slot(ctx.GetRenderTargetMask(), slot) != 0
 		                ? VK_TRUE
 		                : VK_FALSE;
 	}
-	if (color_count != 0) {
-		vk_buffer.setColorWriteEnableEXT(color_count, enable);
+	if (attachment_count != 0) {
+		vk_buffer.setColorWriteEnableEXT(attachment_count, enable);
 	}
 #endif
 }
@@ -489,11 +493,13 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	state.width                 = std::numeric_limits<uint32_t>::max();
 	state.height                = std::numeric_limits<uint32_t>::max();
 	state.num_layers            = std::numeric_limits<uint32_t>::max();
-	state.num_color_attachments = color_count;
 	uint32_t attachment_samples = 0;
 	for (uint32_t i = 0; i < color_count; i++) {
 		auto& target = colors[i];
-		EXIT_IF(!target.image_id);
+		EXIT_IF(!target.image_id || target.target_slot >= RENDER_COLOR_ATTACHMENTS_MAX);
+		// Pixel export locations are guest MRT indices. Disabled lower slots must remain holes,
+		// otherwise a normal-only decal at MRT2 receives the shader's MRT0 color output.
+		state.num_color_attachments = std::max(state.num_color_attachments, target.target_slot + 1);
 		const auto old_image = cache.m_slot_images.try_get(target.image_id);
 		if (old_image == nullptr || (!old_image->registered && !old_image->info.data.Empty()) ||
 		    old_image->binding.needs_rebind) {
@@ -535,7 +541,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		state.width             = std::min(state.width, extent.width);
 		state.height            = std::min(state.height, extent.height);
 		state.num_layers        = std::min(state.num_layers, view.layer_count);
-		auto& attachment        = state.color_attachments[i];
+		auto& attachment        = state.color_attachments[target.target_slot];
 		attachment.image_view   = image_view;
 		attachment.image_layout = layout;
 	}

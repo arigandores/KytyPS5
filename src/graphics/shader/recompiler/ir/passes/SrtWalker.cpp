@@ -1363,6 +1363,7 @@ struct CompiledSrt {
 		uint64_t imm        = 0; // Const value, UserData register, MemRead memory_info index
 		uint32_t list_start = 0; // PhiAgree operands in `lists`
 		uint32_t list_count = 0;
+		bool operator==(const Node&) const = default;
 	};
 
 	std::vector<Node>     nodes;
@@ -1420,6 +1421,15 @@ public:
 				return false;
 			}
 		}
+		if (std::getenv("KYTY_SRT_PLAN_STATS") != nullptr) {
+			const auto reads = std::count_if(m_out.nodes.begin(), m_out.nodes.end(), [](const auto& node) {
+				return node.op == CompiledSrt::Op::MemRead;
+			});
+			std::fprintf(stderr, "SrtPlan: hash=%016llx stage=%u nodes=%zu shared=%u reads=%zu sources=%zu flat=%zu\n",
+			             static_cast<unsigned long long>(m_plan.shader_hash), static_cast<unsigned>(m_plan.stage),
+			             m_out.nodes.size(), m_shared, static_cast<size_t>(reads),
+			             m_plan.descriptor_sources.size(), m_plan.srt_reads.size());
+		}
 		return true;
 	}
 
@@ -1446,8 +1456,26 @@ private:
 	static constexpr uint32_t Visiting = UINT32_MAX - 1u;
 
 	uint32_t Emit(CompiledSrt::Node node) {
+		// Different IR instructions and live/clean walks can compute the same pure value.
+		// Share their calculation within this evaluation, but never coalesce memory reads:
+		// their reader, ordering and failure behavior must remain unchanged.
+		static const bool common_values = [] {
+			const auto* value = std::getenv("KYTY_SRT_COMMON_VALUES");
+			return value == nullptr || value[0] != '0';
+		}();
+		const bool share = common_values && node.op != CompiledSrt::Op::MemRead &&
+		                   node.op != CompiledSrt::Op::PhiAgree &&
+		                   node.op != CompiledSrt::Op::Const;
+		if (share) {
+			if (const auto found = m_common_values.find(node); found != m_common_values.end()) {
+				++m_shared;
+				return found->second;
+			}
+		}
 		m_out.nodes.push_back(node);
-		return static_cast<uint32_t>(m_out.nodes.size() - 1u);
+		const auto index = static_cast<uint32_t>(m_out.nodes.size() - 1u);
+		if (share) m_common_values.emplace(node, index);
+		return index;
 	}
 	uint32_t Fail() {
 		if (m_fail_node == CompiledSrt::None) {
@@ -1722,6 +1750,19 @@ private:
 
 	const ResourcePlan&                         m_plan;
 	CompiledSrt&                                m_out;
+	struct NodeHash {
+		size_t operator()(const CompiledSrt::Node& node) const {
+			uint64_t hash = static_cast<uint8_t>(node.op);
+			for (const auto value: {uint64_t(node.comp), uint64_t(node.a), uint64_t(node.b),
+			                        uint64_t(node.c), uint64_t(node.d), uint64_t(node.e), node.imm,
+			                        uint64_t(node.list_start), uint64_t(node.list_count)}) {
+				hash ^= value + 0x9e3779b97f4a7c15ull + (hash << 6u) + (hash >> 2u);
+			}
+			return static_cast<size_t>(hash);
+		}
+	};
+	std::unordered_map<CompiledSrt::Node, uint32_t, NodeHash> m_common_values;
+	uint32_t m_shared = 0;
 	std::unordered_map<Key, uint32_t, KeyHash>  m_memo;
 	std::unordered_map<uint64_t, uint32_t>       m_constants;
 	uint32_t                                    m_fail_node = CompiledSrt::None;

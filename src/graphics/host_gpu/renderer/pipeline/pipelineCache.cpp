@@ -1336,13 +1336,15 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	key.ps_shader_id            = ps_id;
 	auto& static_params         = key.static_params;
 	auto& rendering             = key.rendering;
-	rendering.color_count       = color_count;
 	uint32_t attachment_samples = 0;
 	for (uint32_t i = 0; i < color_count; i++) {
 		EXIT_IF(!colors[i].image_id || colors[i].desc.view_info.format == vk::Format::eUndefined);
-		static_params.color_mask[i] = colors[i].export_mapping.ApplyMask(
-		    render_target_mask_slot(ctx.GetRenderTargetMask(), colors[i].target_slot));
-		rendering.color_formats[i] = colors[i].desc.view_info.format;
+		const auto slot = colors[i].target_slot;
+		EXIT_IF(slot >= RENDER_COLOR_ATTACHMENTS_MAX);
+		rendering.color_count = std::max(rendering.color_count, slot + 1);
+		static_params.color_mask[slot] = colors[i].export_mapping.ApplyMask(
+		    render_target_mask_slot(ctx.GetRenderTargetMask(), slot));
+		rendering.color_formats[slot] = colors[i].desc.view_info.format;
 		if (attachment_samples == 0) {
 			attachment_samples = colors[i].desc.info.samples;
 		} else if (attachment_samples != colors[i].desc.info.samples) {
@@ -1409,17 +1411,18 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	    ResolvePolygonMode(mc, static_params.cull_front, static_params.cull_back);
 
 	for (uint32_t i = 0; i < color_count; i++) {
-		const auto& rt                        = ctx.GetRenderTarget(colors[i].target_slot);
-		const auto& bc                        = ctx.GetBlendControl(colors[i].target_slot);
-		static_params.color_srcblend[i]       = bc.color_srcblend;
-		static_params.color_comb_fcn[i]       = bc.color_comb_fcn;
-		static_params.color_destblend[i]      = bc.color_destblend;
-		static_params.alpha_srcblend[i]       = bc.alpha_srcblend;
-		static_params.alpha_comb_fcn[i]       = bc.alpha_comb_fcn;
-		static_params.alpha_destblend[i]      = bc.alpha_destblend;
-		static_params.separate_alpha_blend[i] = bc.separate_alpha_blend;
-		static_params.blend_enable[i]         = bc.enable;
-		static_params.blend_bypass[i]         = rt.info.blend_bypass;
+		const auto slot                       = colors[i].target_slot;
+		const auto& rt                        = ctx.GetRenderTarget(slot);
+		const auto& bc                        = ctx.GetBlendControl(slot);
+		static_params.color_srcblend[slot]       = bc.color_srcblend;
+		static_params.color_comb_fcn[slot]       = bc.color_comb_fcn;
+		static_params.color_destblend[slot]      = bc.color_destblend;
+		static_params.alpha_srcblend[slot]       = bc.alpha_srcblend;
+		static_params.alpha_comb_fcn[slot]       = bc.alpha_comb_fcn;
+		static_params.alpha_destblend[slot]      = bc.alpha_destblend;
+		static_params.separate_alpha_blend[slot] = bc.separate_alpha_blend;
+		static_params.blend_enable[slot]         = bc.enable;
+		static_params.blend_bypass[slot]         = rt.info.blend_bypass;
 	}
 	if (vs_input_info.stage.program->stage != ShaderType::Mesh) {
 		EXIT_IF(vs_input_info.buffers_num < 0 ||

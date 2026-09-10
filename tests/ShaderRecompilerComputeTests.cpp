@@ -12183,8 +12183,11 @@ public:
     m_device.destroyShaderModule(module, nullptr);
   }
 
-  void CheckRasterization(bool depth_feedback, bool packed_vertex_color = false) {
-    const char *name = packed_vertex_color ? "PackedFloatVertexColor"
+  void CheckRasterization(bool depth_feedback, bool packed_vertex_color = false,
+                          uint32_t color_slot = 0) {
+    const char *name = color_slot == 2 ? "SparseMrt2Rasterization"
+                      : color_slot == 7 ? "SparseMrt7Rasterization"
+                      : packed_vertex_color ? "PackedFloatVertexColor"
                       : depth_feedback ? "DepthAttachmentFeedback"
                                        : "PolygonModeRasterization";
     const uint32_t extent = depth_feedback ? 8 : 32;
@@ -12196,7 +12199,7 @@ public:
     HW::Context registers{};
     HW::UserConfig user_config{};
     HW::Shader shaders{};
-    registers.SetRenderTargetMask(0xf);
+    registers.SetRenderTargetMask(0xfu << (4 * color_slot));
     scheduler.Begin(registers, user_config, shaders);
     auto &resources = context.GetGpuResources();
     auto &cache = context.GetTextureCache();
@@ -12274,7 +12277,13 @@ public:
         test.fragment_code.push_back(EncodeVintrp(0x02, component, 0, component, 2));
       }
     }
-    test.fragment_code.push_back(EncodeExp0(0x00, 0xf));
+    if (color_slot != 0) {
+      // A different value at MRT0 detects accidental compaction of the live MRT slot.
+      AppendVMovLiteral(&test.fragment_code, 5, 0u);
+      test.fragment_code.push_back(EncodeExp0(0x00, 0xf, false));
+      test.fragment_code.push_back(EncodeExp1(5, 5, 5, 5));
+    }
+    test.fragment_code.push_back(EncodeExp0(color_slot, 0xf));
     test.fragment_code.push_back(packed_vertex_color ? EncodeExp1(0, 1, 2, 3)
                                                     : EncodeExp1(0, 0, 0, 0));
     AppendEnd(&test.fragment_code);
@@ -12312,6 +12321,7 @@ public:
     pixel.stage.resources = std::move(fragment.resources);
 
     RenderColorInfo color{};
+    color.target_slot = color_slot;
     color.desc.type = BindingType::RenderTarget;
     color.desc.info.data = {depth_address + 0x10000, extent * extent * 16};
     color.desc.info.mip_layout[0] = {0, color.desc.info.data.size, extent, extent};
@@ -12375,7 +12385,14 @@ public:
               "feedback was not selected only for an overlapping fragment depth read/write");
       RenderExecutorTestAccess::CommitBindings(
           executor, command, selected, bindings.vertex, *bindings.pixel);
-      rendering.color_attachments[0].is_clear = true;
+      Require(name, "sparse attachment locations",
+              rendering.num_color_attachments == color_slot + 1 &&
+                  rendering.color_attachments[color_slot].image_view != nullptr &&
+                  std::all_of(rendering.color_attachments.begin(),
+                              rendering.color_attachments.begin() + color_slot,
+                              [](const auto &attachment) { return !attachment.image_view; }),
+              "disabled MRT slots were compacted or acquired an attachment");
+      rendering.color_attachments[color_slot].is_clear = true;
       command.BeginRendering(rendering);
       auto cmd = command.Handle();
       cmd.bindPipeline(vk::PipelineBindPoint::eGraphics, selected.pipeline);
@@ -12389,8 +12406,9 @@ public:
       cmd.setDepthWriteEnable(depth.depth_write_enable);
       cmd.setDepthCompareOp(vk::CompareOp::eAlways);
       cmd.setDepthBiasEnable(false);
-      const vk::Bool32 write = true;
-      cmd.setColorWriteEnableEXT(1, &write);
+      std::array<vk::Bool32, RENDER_COLOR_ATTACHMENTS_MAX> write{};
+      write[color_slot] = true;
+      cmd.setColorWriteEnableEXT(color_slot + 1, write.data());
       cmd.setAttachmentFeedbackLoopEnableEXT(
           feedback_enabled ? vk::ImageAspectFlags{vk::ImageAspectFlagBits::eDepth}
                            : vk::ImageAspectFlags{});
@@ -13989,6 +14007,9 @@ private:
     device_features.shaderImageGatherExtended = true;
     device_features.sampleRateShading = true;
     device_features.shaderInt64 = true;
+    Require("VulkanHarness", "graphics", available_features.independentBlend,
+            "independent color attachment blending is required by the renderer");
+    device_features.independentBlend = true;
     device_features.fillModeNonSolid = true;
     device_info.pEnabledFeatures = &device_features;
     constexpr const char *device_extensions[] = {
@@ -29727,6 +29748,12 @@ int main(int argc, char **argv) {
     vulkan.CheckRasterization(false, true);
     return 0;
   }
+  if (argc == 2 && std::strcmp(argv[1], "--sparse-mrt-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckRasterization(false, false, 2);
+    vulkan.CheckRasterization(false, false, 7);
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--htile-clear-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckUnifiedTextureCacheFlow();
@@ -29933,6 +29960,8 @@ int main(int argc, char **argv) {
   vulkan.CheckBgra16Readback();
   vulkan.CheckRasterization(false);
   vulkan.CheckRasterization(false, true);
+  vulkan.CheckRasterization(false, false, 2);
+  vulkan.CheckRasterization(false, false, 7);
   vulkan.CheckBufferCacheDirtyGarbageCollection();
 #endif
   vulkan.CheckUnifiedImageViewCache();

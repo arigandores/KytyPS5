@@ -312,9 +312,23 @@ static bool MaterializeSnapshot(const ResourcePlan& program, const SrtRuntime& r
 	if (program.requires_specialization_memory && runtime.read_specialization_memory == nullptr) {
 		return SpecializationFail("specialization memory reader is not available");
 	}
-	std::vector<DescriptorValue> values;
+	// Keep the caller's temporary arrays too: the compiled walk swaps its scratch storage
+	// into these destinations. Destroying them after every materialization defeats that reuse.
+	// All values are evaluated again; no guest memory contents survive as cached results.
+	struct Scratch {
+		std::vector<DescriptorValue> values;
+		std::vector<uint8_t> active_sources;
+	};
+	static const bool reuse = [] {
+		const auto* value = std::getenv("KYTY_SRT_MATERIAL_SCRATCH");
+		return value == nullptr || value[0] != '0';
+	}();
+	thread_local Scratch retained;
+	Scratch local;
+	auto& scratch = reuse ? retained : local;
+	auto& values = scratch.values;
 	std::vector<uint32_t>        flattened_srt;
-	std::vector<uint8_t>         active_sources;
+	auto& active_sources = scratch.active_sources;
 	Common::FrameStats::Lap      lap;
 	if (!EvaluateRuntimeSources(program, program.materialization_sources, runtime, values,
 	                            flattened_srt, program.clean_flat_slots, active_sources)) {

@@ -325,6 +325,68 @@ void TestDepthComparisonFormatsAndSharedSampler() {
         "null depth descriptor lost its native comparison specialization");
 }
 
+void TestCompiledSrtSharedExpressionsKeepRuntimeReads() {
+  using namespace Libs::Graphics::ShaderRecompiler::IR;
+  Program program;
+  program.stage = Libs::Graphics::ShaderType::Compute;
+  program.srt_plan_complete = true;
+  program.resource_tracking_complete = true;
+  auto &block = AddValueBlock(program);
+  MemoryInfo memory;
+  memory.kind = ResourceKind::ScalarAddress;
+  memory.planning_only = true;
+  program.memory_info.push_back(memory);
+  for (uint32_t i = 0; i < 2; ++i) {
+    auto &data = block.AppendNewInst(ValueOpcode::GetUserData,
+                                    {Value(static_cast<ScalarReg>(0))});
+    auto &sum = block.AppendNewInst(ValueOpcode::IAdd32,
+                                   {Value(&data), Value(7u)});
+    auto &address = block.AppendNewInst(ValueOpcode::GetAddressResource,
+                                       {Value(&sum), Value(0u)});
+    auto &read = block.AppendNewInst(ValueOpcode::LoadAddressU32,
+        {Value(&address), Value(0u), Value(0u), Value(true)});
+    read.SetFlags(MemoryFlags{.index = 0, .pc = 0x40});
+    DescriptorSource source;
+    source.dword_count = 2;
+    source.dwords[0] = Value(&sum);
+    source.dwords[1] = Value(&read);
+    program.descriptor_sources.push_back(source);
+  }
+  auto plan = ExtractResourcePlan(program);
+  struct Reader { uint32_t calls = 0, word = 0; uint64_t address = 0; } reader;
+  const auto read = +[](void *opaque, uint64_t address, uint32_t *word) {
+    auto &state = *static_cast<Reader *>(opaque);
+    ++state.calls;
+    state.address = address;
+    *word = state.word;
+    return true;
+  };
+  uint32_t data = 0;
+  const uint32_t sources[] = {0, 1};
+  std::vector<DescriptorValue> values;
+  std::vector<uint32_t> flat;
+  std::vector<uint8_t> active;
+  const SrtRuntime runtime{std::span(&data, 1), 0, read, &reader};
+  for (const auto input : {0xfffffffdu, 0x1000u}) {
+    data = input;
+    reader.calls = 0;
+    ++reader.word;
+    Check(EvaluateRuntimeSources(plan, sources, runtime, values, flat,
+                                 plan.clean_flat_slots, active),
+          "shared SRT expressions failed");
+    const auto sum = static_cast<uint32_t>(input + 7u);
+    Check(values.size() == 2 && values[0].dwords[0] == sum &&
+          values[1].dwords[0] == sum && values[0].dwords[1] == reader.word &&
+          values[1].dwords[1] == reader.word && reader.address == (sum & ~3u),
+          "shared SRT expression lost overflow or retained a previous runtime value");
+    const bool verifying = std::getenv("KYTY_SRT_VERIFY") != nullptr &&
+        (std::getenv("KYTY_SRT_COMPILED") == nullptr ||
+         std::getenv("KYTY_SRT_COMPILED")[0] != '0');
+    Check(reader.calls == (verifying ? 4u : 2u),
+          "separate SRT memory reads were coalesced");
+  }
+}
+
 } // namespace
 
 namespace Common {
@@ -348,6 +410,7 @@ int main() {
   TestFailedMaterializationPreservesPriorStage();
   TestMixedSamplerDuplicatesTheCorrectSnapshot();
   TestDepthComparisonFormatsAndSharedSampler();
+  TestCompiledSrtSharedExpressionsKeepRuntimeReads();
   std::puts("ResourceMaterializationTests: all cases passed");
   return 0;
 }

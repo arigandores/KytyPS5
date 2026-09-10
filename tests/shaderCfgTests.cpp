@@ -11008,6 +11008,29 @@ void TestNewShaderRecompilerVertexExportUsesInvocationExecMask() {
         "vertex export lost its per-invocation EXEC guard");
 }
 
+void TestNggPassthroughVertexSubgroupHeader() {
+  for (const uint32_t wave_size : {32u, 64u}) {
+    const uint32_t shader[] = {
+        EncodeSop2(0x27, 0, 2, 255), 0x0009000cu, // vertex count from s2
+        EncodeSopp(0x0a), // NGG allocation barrier
+        EncodeSopc(0x06, 0, 128 + wave_size), // s_cmp_eq_u32 count, wave_size
+        EncodeSopp(0x04, 3), // s_cbranch_scc0 end
+        EncodeVop1(0x01, 0, 5 + 256), // v_mov_b32 v0, vertex index
+        EncodeExp0(0x0c, 0xf), EncodeExp1(0, 1, 2, 3),
+        EncodeSopp(0x01),
+    };
+    auto options = MakeCompileOptions(ShaderType::Vertex);
+    options.user_data_base = 8;
+    options.wave_size = wave_size;
+    auto result = RecompileForTest(shader, options);
+    Check(ProgramHasInput(result.program, ShaderRecompiler::IR::StageInputKind::VertexIndex),
+          "NGG subgroup header disabled the vertex export body");
+    Check(!SpirvContainsOpcode(result.spirv, 224u),
+          "NGG vertex prolog retained a workgroup control barrier");
+    CheckSpirvBinaryValidates(result.spirv);
+  }
+}
+
 void TestNewShaderRecompilerPerInvocationMasksWithoutMirrors() {
   const uint32_t local_shader[] = {
       EncodeVopc(0xc1, 5 + 256, 8),    // v_cmp_lt_u32 vcc, v5, v8
@@ -12955,9 +12978,11 @@ int main() {
     }
     const bool is_compute = key.stage == static_cast<uint32_t>(ShaderType::Compute);
     const bool is_pixel   = key.stage == static_cast<uint32_t>(ShaderType::Pixel);
-    if ((!is_compute && !is_pixel) || (is_compute && key.static_state.size() < 14) ||
+    const bool is_vertex  = key.stage == static_cast<uint32_t>(ShaderType::Vertex);
+    if ((!is_compute && !is_pixel && !is_vertex) || (is_compute && key.static_state.size() < 14) ||
+        (is_vertex && key.static_state.size() != 8) ||
         (is_pixel && key.static_state.size() < 30)) {
-      std::fprintf(stderr, "recompile: compute or pixel shaders only (stage=%u state=%zu)\n", key.stage,
+      std::fprintf(stderr, "recompile: unsupported stage/static state (stage=%u state=%zu)\n", key.stage,
                    key.static_state.size());
       return 1;
     }
@@ -12967,8 +12992,20 @@ int main() {
     }
     ShaderComputeInputInfo compute {};
     ShaderPixelInputInfo pixel {};
+    ShaderVertexInputInfo vertex {};
     const auto &s = key.static_state;
-    if (is_pixel) {
+    if (is_vertex) {
+      // Bufferless passthrough VS, including SkyApply's inline constant buffer.
+      // Attribute fetch, clip-space conversion and mesh need additional state.
+      if (s[0] != 0 || s[3] != 0 || s[6] != 0 || s[7] != 0) {
+        std::fprintf(stderr, "recompile: vertex fetch/clip/mesh state is not supported\n");
+        return 1;
+      }
+      vertex.fetch_attrib_reg = s[1];
+      vertex.fetch_buffer_reg = s[2];
+      vertex.scratch_size_dwords = s[4];
+      vertex.pa_cl_vs_out_cntl = s[5];
+    } else if (is_pixel) {
       // BuildStageStaticKey(ShaderPixelInputInfo) order.
       size_t i = 0;
       pixel.scratch_size_dwords = s[i++];
@@ -13032,13 +13069,18 @@ int main() {
     // buffers (KYTY_CONST_BANK=0 overrides). The eligibility bit itself comes from the cache file.
     ShaderRecompiler::IR::SetConstBankSupported(true);
     ShaderRecompiler::CompileOptions options;
-    options.stage = is_pixel ? ShaderType::Pixel : ShaderType::Compute;
+    options.stage = is_vertex ? ShaderType::Vertex : (is_pixel ? ShaderType::Pixel : ShaderType::Compute);
     options.shader_hash = key.hash;
     options.user_data = user_data;
     options.dump_ir = false;
     options.early_dump = false;
-    options.dump_label = is_pixel ? "ShaderRecompiler PS" : "ShaderRecompiler CS";
-    if (is_pixel) {
+    options.dump_label = is_vertex ? "ShaderRecompiler VS" : (is_pixel ? "ShaderRecompiler PS" : "ShaderRecompiler CS");
+    if (is_vertex) {
+      options.input_info.vertex = &vertex;
+      options.user_data_base = 8;
+      options.scratch_dwords = vertex.scratch_size_dwords;
+      options.detect_wave_size = true;
+    } else if (is_pixel) {
       options.input_info.pixel = &pixel;
       options.scratch_dwords = pixel.scratch_size_dwords;
       options.detect_wave_size = true;
@@ -13115,8 +13157,8 @@ int main() {
     }
     std::printf("recompile %s: %s hash=%016llx wave=%u local=%ux%ux%u lds=%u inputs=%u permutations=%zu "
                 "buffer_align=[%s] translate=%.1fms emit=%.1fms spirv=%zu words (cached %zu) -> %s\n",
-                parts[0].c_str(), is_pixel ? "ps" : "cs", static_cast<unsigned long long>(key.hash),
-                compute.wave_size, compute.threads_num[0], compute.threads_num[1],
+                parts[0].c_str(), is_vertex ? "vs" : (is_pixel ? "ps" : "cs"), static_cast<unsigned long long>(key.hash),
+                compiled.program.wave_size, compute.threads_num[0], compute.threads_num[1],
                 compute.threads_num[2], compute.lds_size_dwords, pixel.input_num,
                 entry.permutations.size(), aligns.c_str(), ms(t0, t1), ms(t1, t2), compiled.spirv.size(),
                 stored.spirv.size(), parts[2].c_str());
@@ -13271,6 +13313,7 @@ int main() {
   RUN(TestNewShaderRecompilerZeroInitialRegisterState);
   RUN(TestNewShaderRecompilerVertexSystemInputsWithoutMirrors);
   RUN(TestNewShaderRecompilerVertexExportUsesInvocationExecMask);
+  RUN(TestNggPassthroughVertexSubgroupHeader);
   RUN(TestNewShaderRecompilerPerInvocationMasksWithoutMirrors);
   RUN(TestNewShaderRecompilerPerInvocationU64Complement);
   RUN(TestNewShaderRecompilerExpPixelOutputs);

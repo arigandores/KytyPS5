@@ -1209,6 +1209,15 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 				                      builtin(IR::StageInputKind::PackedAncillary));
 			}
 		} else if (options.stage == ShaderType::Vertex) {
+			if (options.user_data_base == 8u) {
+				// NGG passthrough shaders still read the hardware subgroup header.
+				// Vulkan performs primitive assembly; each host VS invocation is an
+				// active vertex in wave zero, with no primitive-export lanes.
+				entry_ir.SetScalarReg(static_cast<IR::ScalarReg>(2),
+				                      IR::U32(IR::Value(options.wave_size << 12u)));
+				entry_ir.SetScalarReg(static_cast<IR::ScalarReg>(3),
+				                      IR::U32(IR::Value(1u << 28u)));
+			}
 			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(5),
 			                      builtin(IR::StageInputKind::VertexIndex));
 			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(8),

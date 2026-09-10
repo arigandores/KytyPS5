@@ -695,11 +695,15 @@ static bool ShouldSkipGeShader(const CommandBuffer& buffer) {
 		return false;
 	};
 
-	const bool ps5_ngg_vertex_path = stages == 0x02002000 && vertex_info.es_regs.data_addr != 0 &&
-	                                 sh_regs.m_vgtGsMaxVertOut == 0x00000000 &&
-	                                 is_known_gs_out_prim_type(sh_regs.m_vgtGsOutPrimType);
+	// GS_W32_EN selects the wave size; it does not enable a geometry stage. In
+	// particular, fullscreen vertex draws such as ASTRO BOT's SkyApply use it.
+	const auto stage_enables = stages & ~0x00400000u;
+	const bool ps5_ngg_vertex_path =
+	    stage_enables == 0x02002000 && vertex_info.es_regs.data_addr != 0 &&
+	    sh_regs.m_vgtGsMaxVertOut == 0x00000000 &&
+	    is_known_gs_out_prim_type(sh_regs.m_vgtGsOutPrimType);
 
-	const bool unsupported_stage_mask = (stages != 0 && stages != 0x02002000);
+	const bool unsupported_stage_mask = (stage_enables != 0 && stage_enables != 0x02002000);
 	const bool unsupported_gs_stage = (vertex_info.es_regs.data_addr != 0 &&
 	                                   vertex_info.gs_regs.data_addr != 0 && !ps5_ngg_vertex_path);
 	// GE_CNTL group sizes control guest scheduling and do not constrain the host vertex path.

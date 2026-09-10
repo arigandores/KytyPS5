@@ -159,6 +159,12 @@ void Translator::EmitWaitcnt() {
 }
 
 void Translator::S_BARRIER() {
+	// The NGG passthrough prolog synchronizes primitive allocation before vertex
+	// exports. Host vertex shaders delegate that allocation to Vulkan and have
+	// no workgroup to synchronize (a Workgroup barrier is invalid in this stage).
+	if (program.stage == ShaderType::Vertex && program.user_data_base == 8u) {
+		return;
+	}
 	ir.Emit(IR::ValueOpcode::Barrier);
 }
 

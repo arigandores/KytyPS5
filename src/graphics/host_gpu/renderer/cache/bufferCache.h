@@ -65,6 +65,8 @@ public:
 	[[nodiscard]] const Buffer* GetGdsBuffer() const noexcept { return &m_gds_buffer; }
 	[[nodiscard]] Buffer* GetBdaPageTableBuffer() noexcept { return &m_bda_pagetable_buffer; }
 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return m_fault_manager.GetFaultBuffer(); }
+	[[nodiscard]] uint64_t CpuWriteEpoch() const noexcept { return m_memory_tracker.CpuWriteEpoch(); }
+	[[nodiscard]] uint64_t RegistrationEpoch() const noexcept { return m_registration_epoch; }
 	// Source of an image upload: a native buffer that owns the range, a staging copy, or the
 	// imported guest memory itself (HostImport). `size` is what is readable from `offset`.
 	struct ImageSource {
@@ -192,6 +194,7 @@ private:
 	Common::LeastRecentlyUsedCache<BufferId, uint64_t> m_lru_cache;
 	BufferMap                                         m_buffers;
 	std::vector<GuestRange>                            m_bda_dirty_ranges;
+	uint64_t                                          m_registration_epoch = 1;
 	PageTable                                         m_page_table;
 	RangeSet                                          m_gpu_modified_ranges;
 	MemoryTracker                                     m_memory_tracker;

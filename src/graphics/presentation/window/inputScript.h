@@ -20,6 +20,8 @@ namespace Libs::Graphics {
 //                               to 150 ms. "@<n>:<key>" fires at present number n (the game steps
 //                               one fixed frame per present, so this survives shader stalls):
 //                               KYTY_KEYS="@2170:j,@2460:j" reaches intro_next from a cold start.
+//                               Append /@<n> to hold for n presents instead of host milliseconds,
+//                               e.g. "@11000:w/@600" releases at present 11600.
 //   file "_input.req"           in the working directory, same tokens separated by whitespace or
 //                               commas; a token without a time fires immediately, "+<t>" delays
 //                               relative to the previous token. The file is deleted when read
@@ -39,6 +41,8 @@ private:
 		double at_s     = 0.0;
 		uint32_t at_present = 0; // != 0: fire when m_presents reaches it (instead of at_s)
 		double hold_s   = 0.15;
+		uint32_t hold_presents = 0;
+		uint32_t pressed_present = 0;
 		int    key_code = 0;
 		char   name[16] = {};
 		bool   pressed  = false;

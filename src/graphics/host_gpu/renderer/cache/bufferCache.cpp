@@ -34,6 +34,14 @@ namespace {
 constexpr uint64_t MiB           = 1024 * 1024;
 constexpr uint64_t GdsBufferSize = 64 * 1024;
 
+bool BufferUploadEpochEnabled() {
+	static const bool enabled = [] {
+		const auto* value = std::getenv("KYTY_BUFFER_UPLOAD_EPOCH");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
 } // namespace
 
 void BufferCache::WriteDataBuffer(Buffer& buffer, uint64_t address, const void* source,
@@ -67,6 +75,7 @@ void BufferCache::Unregister(BufferId id) {
 
 template <bool insert>
 void BufferCache::ChangeRegister(BufferId id) {
+	++m_registration_epoch;
 	auto& buffer = m_slot_buffers[id];
 	PageTable::PageRange pages {};
 	EXIT_IF(!PageTable::TryGetPageRange(buffer.CpuAddress(), buffer.Size(), pages));
@@ -561,6 +570,10 @@ BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
+	const auto cpu_epoch = m_memory_tracker.CpuWriteEpoch();
+	if (BufferUploadEpochEnabled() && !is_written && buffer.HasCurrentUpload(cpu_epoch, vaddr, size)) {
+		return is_texel_buffer ? SynchronizeBufferFromImage(buffer, vaddr, size) : false;
+	}
 	std::vector<vk::BufferCopy> copies;
 	uint64_t                    total_size = 0;
 	vk::Buffer                  source;
@@ -600,6 +613,11 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::BufferUpload,
 		                    std::bit_width(total_size >> 10u)); // log2 of KiB
 	}
+	// Keep the epoch from before synchronization, so concurrent writes force another upload.
+	// This is only the requested interval: a different part of the same buffer may remain dirty.
+	buffer.upload_epoch = cpu_epoch;
+	buffer.upload_begin = vaddr;
+	buffer.upload_end = vaddr + size;
 	if (is_texel_buffer && !is_written) {
 		return SynchronizeBufferFromImage(buffer, vaddr, size);
 	}
@@ -648,6 +666,14 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	if (command.IsInvalid() || !GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: buffer request requires a recording command buffer\n");
 	}
+	auto* buffer = m_slot_buffers.try_get(id);
+	if (BufferUploadEpochEnabled() && !is_written && buffer != nullptr && !buffer->is_deleted &&
+	    buffer->IsInBounds(vaddr, size) &&
+	    buffer->HasCurrentUpload(m_memory_tracker.CpuWriteEpoch(), vaddr, size)) {
+		TouchBuffer(*buffer);
+		(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
+		return {buffer, buffer->Offset(vaddr)};
+	}
 
 	if (!is_written && size <= CACHING_PAGESIZE &&
 	    !m_memory_tracker.IsRegionGpuModified(vaddr, size) &&
@@ -661,7 +687,6 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		}
 	}
 
-	auto* buffer = m_slot_buffers.try_get(id);
 	if (buffer == nullptr || buffer->is_deleted || !buffer->IsInBounds(vaddr, size)) {
 		id     = FindBuffer(vaddr, size);
 		buffer = &m_slot_buffers[id];

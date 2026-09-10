@@ -4515,6 +4515,37 @@ public:
       resources.PrepareBda();
       Require(name, "sparse update", read(left, base) == changed &&
           read(right, base + second) == other, "sparse BDA update lost dirty or clean data");
+      // Registration after a clean preparation must invalidate the cached scan even when
+      // the CPU writes into an already-writable, previously unregistered page (no fault).
+      const auto third_address = base + second + 0x200000;
+      std::memcpy(reinterpret_cast<void*>(third_address), &other, 4);
+      const auto third = cache.FindBuffer(third_address, BufferCache::CACHING_PAGESIZE);
+      resources.PrepareBda();
+      Require(name, "late registration", read(third, third_address) == other,
+          "new BDA buffer was omitted by epoch reuse");
+      const auto split_address = base + 0x80000;
+      std::memcpy(reinterpret_cast<void*>(split_address), &initial, 4);
+      std::memcpy(reinterpret_cast<void*>(split_address + 0x8000), &other, 4);
+      const auto split = cache.FindBuffer(split_address, 0x10000);
+      (void)cache.ObtainBuffer(split_address, 0x8000, false, false, split);
+      (void)cache.ObtainBuffer(split_address + 0x8000, 0x8000, false, false, split);
+      Require(name, "split uploads", read(split, split_address) == initial &&
+          read(split, split_address + 0x8000) == other,
+          "upload epoch incorrectly covered an unsynchronized part of a buffer");
+      Require(name, "split write fault", resources.HandleFault(PageFaultAccess::Write, split_address),
+          "split buffer write fault was not handled");
+      std::memcpy(reinterpret_cast<void*>(split_address), &changed, 4);
+      (void)cache.ObtainBuffer(split_address + 0x8000, 0x8000, false, false, split);
+      (void)cache.ObtainBuffer(split_address, 0x8000, false, false, split);
+      Require(name, "split dirty update", read(split, split_address) == changed,
+          "a clean interval hid another interval's new CPU write");
+      resources.UnmapMemory(base, size);
+      resources.MapMemory(base, size);
+      std::memcpy(memory, &other, 4);
+      const auto remapped = cache.FindBuffer(base, BufferCache::CACHING_PAGESIZE);
+      resources.PrepareBda();
+      Require(name, "remap", read(remapped, base) == other,
+          "unmap/remap reused a stale BDA preparation");
       resources.UnmapMemory(base, size);
       scheduler.Finish();
     }
@@ -9078,6 +9109,76 @@ public:
                 direct_offset, allocation_size) == 0,
             "depth-tiled color allocation release failed");
     std::printf("[gpu]     %-32s ok\n", name);
+  }
+
+  void CheckReadOnlyDepthPassReuse() {
+    constexpr const char* name = "ReadOnlyDepthPassReuse";
+    constexpr uint64_t base = 0x0000000207000000ull, size = 0x10000;
+    EnsureRuntimeContext();
+    int64_t direct = -1;
+    Require(name, "allocate", LibKernel::Memory::KernelAllocateDirectMemory(
+        0, LibKernel::Memory::KernelGetDirectMemorySize(), size, size, 0, &direct) == 0,
+        "depth reuse allocation failed");
+    void* mapped = reinterpret_cast<void*>(base);
+    Require(name, "map", LibKernel::Memory::KernelMapDirectMemory(
+        &mapped, size, 0x3, 0x10, direct, size) == 0, "depth reuse mapping failed");
+    std::memset(mapped, 0, size);
+    {
+      RenderContext context(m_runtime_context);
+      auto& scheduler = context.GetCommandScheduler();
+      auto& resources = context.GetGpuResources();
+      auto& cache = resources.GetTextureCache();
+      auto& executor = context.GetRenderExecutor();
+      HW::Context registers{};
+      HW::UserConfig user_config{};
+      HW::Shader shaders{};
+      HW::DepthRenderTarget target{};
+      target.z_info.format = Prospero::DepthFormat::kZ32F;
+      target.z_info.texture_compatibility = Prospero::TextureCompatiblePlaneCompression::kEnable;
+      target.z_read_base_addr = base;
+      target.z_write_base_addr = base;
+      target.size.valid = true;
+      registers.SetDepthRenderTarget(target);
+      HW::DepthControl control{};
+      control.z_enable = true;
+      control.zfunc = static_cast<uint8_t>(vk::CompareOp::eLessOrEqual);
+      registers.SetDepthControl(control);
+      scheduler.Begin(registers, user_config, shaders);
+      resources.MapMemory(base, size);
+      RenderDepthInfo depth{};
+      RenderExecutorTestAccess::ResolveRenderDepthTarget(executor, scheduler.Current(), depth);
+      auto& image = cache.GetImage(depth.image_id);
+      // Model the descriptor discovery performed before target acquisition. Shader binding
+      // adds ShaderRead to this same image; the pass should survive the next acquisition.
+      image.binding.is_bound = true;
+      RenderColorInfo no_color{};
+      auto rendering = RenderExecutorTestAccess::AcquireRenderTargets(
+          executor, scheduler.Current(), &no_color, 0, depth);
+      const auto sampled_access = vk::AccessFlagBits2::eDepthStencilAttachmentRead |
+          vk::AccessFlagBits2::eDepthStencilAttachmentWrite | vk::AccessFlagBits2::eShaderRead;
+      image.Transit(rendering.depth_stencil_attachment.image_layout, sampled_access, {},
+                    scheduler.Current().Handle());
+      scheduler.BeginRendering(rendering);
+      (void)RenderExecutorTestAccess::AcquireRenderTargets(
+          executor, scheduler.Current(), &no_color, 0, depth);
+      const auto* setting = std::getenv("KYTY_READONLY_DEPTH_ACCESS");
+      const bool combined = setting == nullptr || setting[0] != '0';
+      Require(name, "repeated sampled attachment", scheduler.Current().IsRendering() == combined,
+          "read-only sampled depth acquisition unnecessarily ended the pass");
+      // Real writes must still end the scope and transition out of the read-only layout.
+      image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite,
+                    {}, scheduler.Current().Handle());
+      Require(name, "write hazard", !scheduler.Current().IsRendering(),
+          "read-only reuse suppressed a real write transition");
+      RenderExecutorTestAccess::ResetBindings(executor);
+      resources.UnmapMemory(base, size);
+      scheduler.Finish();
+    }
+    Require(name, "unmap", LibKernel::Memory::KernelMunmap(base, size) == 0,
+        "depth reuse unmap failed");
+    Require(name, "release", LibKernel::Memory::KernelReleaseDirectMemory(direct, size) == 0,
+        "depth reuse release failed");
+    std::printf("[host]    %-32s ok\n", name);
   }
 
   void CheckRenderExecutorStencilBindingDiscovery() {
@@ -29121,6 +29222,11 @@ int main(int argc, char **argv) {
     vulkan.CheckBdaDirtyRanges();
     return 0;
   }
+  if (argc == 2 && std::strcmp(argv[1], "--readonly-depth-reuse-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckReadOnlyDepthPassReuse();
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--null-comparison-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckNullComparisonBindings();
@@ -29463,6 +29569,7 @@ int main(int argc, char **argv) {
   vulkan.CheckGpuTilerCpuParity();
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
   vulkan.CheckBdaDirtyRanges();
+  vulkan.CheckReadOnlyDepthPassReuse();
   vulkan.CheckNullComparisonBindings();
   vulkan.CheckRenderExecutorColorDiscovery();
   vulkan.CheckRenderExecutorColorVolumeDiscovery();

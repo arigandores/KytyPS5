@@ -107,6 +107,7 @@ void GpuResourceManager::MapMemory(uint64_t vaddr, uint64_t size) {
 	{
 		std::lock_guard lock(m_mapped_ranges_mutex);
 		m_mapped_ranges.Add(vaddr, size);
+		++m_mapping_epoch;
 	}
 }
 
@@ -127,6 +128,7 @@ void GpuResourceManager::UnmapMemory(uint64_t vaddr, uint64_t size) {
 		m_texture_cache.UnmapMemory(vaddr, size);
 		std::lock_guard lock(m_mapped_ranges_mutex);
 		m_mapped_ranges.Subtract(vaddr, size);
+		++m_mapping_epoch;
 	};
 	if (m_gpu == nullptr) {
 		unmap();
@@ -139,10 +141,25 @@ void GpuResourceManager::PrepareBda() {
 	Common::FrameStats::Scope scope(Common::FrameStats::Counter::BdaPrepareNs,
 	                               Common::FrameStats::Counter::BdaPrepares);
 	std::shared_lock lock(m_mapped_ranges_mutex);
+	static const bool reuse = [] {
+		const auto* value = std::getenv("KYTY_BDA_EPOCH_CACHE");
+		return value == nullptr || value[0] != '0';
+	}();
+	const auto cpu_epoch = m_buffer_cache.CpuWriteEpoch();
+	const auto registration_epoch = m_buffer_cache.RegistrationEpoch();
+	m_fault_process_pending = true;
+	if (reuse && cpu_epoch == m_bda_cpu_epoch && registration_epoch == m_bda_registration_epoch &&
+	    m_mapping_epoch == m_bda_mapping_epoch) {
+		return;
+	}
 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
 	});
-	m_fault_process_pending = true;
+	// Save the epochs from BEFORE the scan. A concurrent invalidation must force another scan,
+	// even if it occurred in a region already visited. Never cache guest bytes or clear dirtiness.
+	m_bda_cpu_epoch = cpu_epoch;
+	m_bda_registration_epoch = registration_epoch;
+	m_bda_mapping_epoch = m_mapping_epoch;
 }
 
 void GpuResourceManager::RunGarbageCollector() {

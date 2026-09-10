@@ -381,6 +381,27 @@ void TestCpuModifiedSnapshot() {
         "CPU snapshot lost an untracked cross-region interval");
 }
 
+void TestCpuWriteEpoch() {
+  TrackerHarness harness;
+  auto& tracker = harness.tracker;
+  const auto page = harness.page_manager.GetPageSize();
+  auto* memory = Allocate(harness.page_manager, 1);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+  auto epoch = tracker.CpuWriteEpoch();
+  tracker.ForEachUploadRange(address, page, false, [](uint64_t, uint64_t) noexcept {},
+                             []() noexcept {});
+  Check(tracker.CpuWriteEpoch() == epoch, "upload must not invalidate CPU epoch");
+  tracker.InvalidateRegion(address, page, []() noexcept {});
+  Check(tracker.CpuWriteEpoch() != epoch, "invalidation did not advance CPU epoch");
+  epoch = tracker.CpuWriteEpoch();
+  tracker.MarkRegionAsCpuModified(address, page);
+  Check(tracker.CpuWriteEpoch() != epoch, "repeated dirty notification lost CPU epoch");
+  epoch = tracker.CpuWriteEpoch();
+  tracker.UntrackMemory(address, page);
+  Check(tracker.CpuWriteEpoch() != epoch, "untrack did not advance CPU epoch");
+  Release(memory);
+}
+
 void TestGpuReacquisitionAfterInvalidation() {
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -960,6 +981,7 @@ int main(int argc, char **argv) {
   TestConcurrentRegionPublication();
   TestCpuDirtyUpload();
   TestCpuModifiedSnapshot();
+  TestCpuWriteEpoch();
   TestRangeInvalidation();
   TestGpuReacquisitionAfterInvalidation();
   TestGpuDirtyBits();

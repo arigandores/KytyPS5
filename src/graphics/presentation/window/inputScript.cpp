@@ -11,6 +11,8 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <charconv>
+#include <string_view>
 #include <sstream>
 #include <string>
 
@@ -114,7 +116,19 @@ void InputScript::ParseTokens(const std::string& text, double base_s, bool relat
 		}
 		const auto slash = key.find('/');
 		if (slash != std::string::npos) {
-			action.hold_s = std::strtod(key.substr(slash + 1).c_str(), nullptr) / 1000.0;
+			const auto duration = std::string_view(key).substr(slash + 1);
+			if (duration.starts_with('@')) {
+				const auto digits = duration.substr(1);
+				const auto parsed = std::from_chars(digits.data(), digits.data() + digits.size(),
+				                                    action.hold_presents);
+				if (parsed.ec != std::errc{} || parsed.ptr != digits.data() + digits.size() ||
+				    action.hold_presents == 0) {
+					LOGF("InputScript: bad present duration in token '%s'\n", token.c_str());
+					continue;
+				}
+			} else {
+				action.hold_s = std::strtod(key.substr(slash + 1).c_str(), nullptr) / 1000.0;
+			}
 			key           = key.substr(0, slash);
 			if (action.hold_s <= 0.0) {
 				action.hold_s = 0.15;
@@ -128,6 +142,11 @@ void InputScript::ParseTokens(const std::string& text, double base_s, bool relat
 		std::strncpy(action.name, key.c_str(), sizeof(action.name) - 1);
 		previous_s = action.at_s;
 		m_actions.push_back(action);
+		if (action.hold_presents != 0) {
+			LOGF("InputScript: scheduled %s at present %u / %.2f s (hold %u presents)\n",
+			     action.name, action.at_present, action.at_s, action.hold_presents);
+			continue;
+		}
 		if (action.at_present != 0) {
 			LOGF("InputScript: scheduled %s at present %u (hold %.0f ms)\n", action.name,
 			     action.at_present, action.hold_s * 1000.0);
@@ -177,17 +196,20 @@ void InputScript::Poll() {
 			}
 			HostInputKey(action.key_code, true);
 			action.pressed = true;
+			action.pressed_present = m_presents;
 			action.at_s    = now; // the hold is timed from the actual press
 			LOGF("InputScript: press %s at %.2f s (present %u)\n", action.name, now, m_presents);
 			i++;
 			continue;
 		}
-		if (now < action.at_s + action.hold_s) {
+		if (action.hold_presents != 0
+		        ? m_presents - action.pressed_present < action.hold_presents
+		        : now < action.at_s + action.hold_s) {
 			i++;
 			continue;
 		}
 		HostInputKey(action.key_code, false);
-		LOGF("InputScript: release %s at %.2f s\n", action.name, now);
+		LOGF("InputScript: release %s at %.2f s (present %u)\n", action.name, now, m_presents);
 		m_actions.erase(m_actions.begin() + static_cast<std::ptrdiff_t>(i));
 	}
 }

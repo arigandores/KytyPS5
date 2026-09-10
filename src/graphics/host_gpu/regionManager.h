@@ -85,8 +85,8 @@ static_assert(std::atomic_uint32_t::is_always_lock_free);
 
 class RegionManager final {
 public:
-	RegionManager(PageManager& page_manager, uint64_t cpu_addr)
-	    : m_page_manager(page_manager), m_cpu_addr(cpu_addr) {
+	RegionManager(PageManager& page_manager, uint64_t cpu_addr, std::atomic<uint64_t>& cpu_epoch)
+	    : m_page_manager(page_manager), m_cpu_addr(cpu_addr), m_cpu_epoch(cpu_epoch) {
 		if (m_cpu_addr % TRACKER_REGION_SIZE != 0) {
 			EXIT("invalid region tracking manager construction\n");
 		}
@@ -109,6 +109,9 @@ public:
 	void ChangeState(uint64_t vaddr, uint64_t size) {
 		const auto [start, end] = GetPageRange(vaddr, size);
 		if constexpr (source == DirtySource::Cpu && enable) {
+			// Called with the region lock held. Publish before making guest pages writable;
+			// a BDA scan observing this epoch must acquire this lock before reading dirty bits.
+			m_cpu_epoch.fetch_add(1, std::memory_order_release);
 			if (RegionBits(m_gpu_dirty, start, end).Any()) {
 				EXIT("CPU dirty state conflicts with GPU dirty state\n");
 			}
@@ -233,6 +236,7 @@ private:
 
 	PageManager& m_page_manager;
 	uint64_t     m_cpu_addr = 0;
+	std::atomic<uint64_t>& m_cpu_epoch;
 	RegionBits   m_cpu_dirty;
 	RegionBits   m_gpu_dirty;
 	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight

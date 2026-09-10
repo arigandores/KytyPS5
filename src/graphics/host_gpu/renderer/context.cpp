@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/common.h"
 #include "common/profiler.h"
 #include "common/threads.h"
@@ -74,6 +75,7 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 		return;
 	}
 	EndRendering();
+	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 
 	std::array<vk::RenderingAttachmentInfo, RENDER_COLOR_ATTACHMENTS_MAX> colors {};
 	for (uint32_t i = 0; i < state.num_color_attachments; i++) {

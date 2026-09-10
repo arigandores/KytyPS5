@@ -597,8 +597,20 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		const auto layout = feedback ? vk::ImageLayout::eAttachmentFeedbackLoopOptimalEXT
 		                             : depth_attachment_layout(depth);
 		// The attachment store writes even when guest depth/stencil tests do not.
+		// For a sampled read-only attachment, include the shader read from the first transition.
+		// Otherwise AcquireRenderTargets removes it and CommitBindings adds it again on every
+		// draw, ending the render pass twice despite an unchanged read-only depth image.
+		static const bool combine_readonly_access = [] {
+			const auto* value = std::getenv("KYTY_READONLY_DEPTH_ACCESS");
+			return value == nullptr || value[0] != '0';
+		}();
+		const bool sampled_readonly = combine_readonly_access && image.binding.is_bound &&
+		    (layout == vk::ImageLayout::eDepthReadOnlyOptimal ||
+		     layout == vk::ImageLayout::eStencilReadOnlyOptimal ||
+		     layout == vk::ImageLayout::eDepthStencilReadOnlyOptimal);
 		const auto access = vk::AccessFlagBits2::eDepthStencilAttachmentRead |
-		                    vk::AccessFlagBits2::eDepthStencilAttachmentWrite;
+		                    vk::AccessFlagBits2::eDepthStencilAttachmentWrite |
+		                    (sampled_readonly ? vk::AccessFlagBits2::eShaderRead : vk::AccessFlags2{});
 		image.binding.attachment_layout = layout;
 		image.binding.attachment_access = access;
 		const auto& view                = depth.desc.view_info;
@@ -1259,6 +1271,25 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
                                          const DrawIndexBufferSource& index_source,
                                          bool primitive_restart_enable, bool log_pipeline_phase,
                                          bool set_bind_debug, bool set_auto_debug) {
+	// Diagnostic only: isolate a draw family in a full recorded gameplay run.
+	static const uint64_t skip_ps = [] {
+		const auto* value = std::getenv("KYTY_SKIP_DRAW_PS");
+		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
+	}();
+	static const int skip_after = [] {
+		const auto* value = std::getenv("KYTY_SKIP_DRAW_AFTER_FRAME");
+		return value != nullptr ? std::atoi(value) : 0;
+	}();
+	if (skip_ps != 0 && state.ps_active && state.ps_input_info.stage &&
+	    state.ps_input_info.stage.program->shader_hash == skip_ps &&
+	    m_context.GetGpu().GetFrameNum() >= skip_after) {
+		static bool logged = false;
+		if (!logged) {
+			LOGF("SkipDrawDiagnostic: ps=%016" PRIx64 " after_frame=%d\n", skip_ps, skip_after);
+			logged = true;
+		}
+		return;
+	}
 	auto& ucfg = buffer.GetUserConfig();
 	const bool mesh_active = state.vs_input_info.stage.program->stage == ShaderType::Mesh;
 	uint32_t   mesh_groups = 0;

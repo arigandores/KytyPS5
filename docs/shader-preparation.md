@@ -11,6 +11,12 @@ game starts normally and records newly encountered shaders/pipelines for subsequ
 It cannot predict every unseen shader specialization, or eliminate texture streaming and heavy
 rendering costs. Progress counts processed recipes; skipped/incompatible entries are logged.
 
+Manual per-scene analysis is a regression-testing procedure, not a requirement for using this
+feature. Ordinary play records recipes automatically for all titles. The next architectural
+step is a durable guest replay catalogue that can rebuild known coverage after translator
+updates; see [the all-title startup design](shader-startup-design.md) for the current limitations,
+implementation sequence and acceptance checks. That replay format is not implemented yet.
+
 ## Startup catalogues
 
 An optional `_ShaderSeeds/<TITLE_ID>/` directory supplies a catalogue for a first launch without
@@ -48,6 +54,13 @@ The verified final recording contains 18,809 frames with no detected one-frame g
 errors. Coverage includes the initial desert and attacks; extraction of the cable or reaching a
 subsequent level was not established. Heavy gameplay remains around 35–36 fps in the recorded
 angles despite cheaper BDA preparation. See workspace HANDOFF §2.45 and `C:/kyty/s39/REPORT.md`.
+
+Session 40 changed the translator source signature. The current local catalogue prepares
+447/447 recipes with zero skips. A new offline candidate contains 383 shaders / 447 recipes
+in `C:/kyty/s40/seed_candidate/PPSA21564`; installation and cold-restoration verification are
+pending the user's pause in game testing. The installed historical 380/438 seed is incompatible
+with this new signature and is ignored. See [session 40](local-session-40.md) for the measured
+CPU/depth improvements and remaining validation work.
 
 Driver caches use a versioned wrapper plus vendor ID, device ID, driver version and pipeline
 cache UUID. They no longer expire just because the emulator's git revision changed. The Vulkan

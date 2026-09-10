@@ -47,6 +47,10 @@ private:
 	RangeSet                  m_mapped_ranges;
 	GuestGpu*                 m_gpu = nullptr;
 	bool                      m_fault_process_pending = false;
+	uint64_t                  m_mapping_epoch = 1; // guarded by m_mapped_ranges_mutex
+	uint64_t                  m_bda_mapping_epoch = 0;
+	uint64_t                  m_bda_cpu_epoch = 0;
+	uint64_t                  m_bda_registration_epoch = 0;
 };
 
 } // namespace Libs::Graphics

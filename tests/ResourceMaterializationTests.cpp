@@ -142,7 +142,7 @@ Libs::Graphics::ShaderRecompiler::IR::ResourcePlan MixedSamplerPlan() {
 
 void TestMappedSrtUsesDirectReaderByDefault() {
   using namespace Libs::Graphics::ShaderRecompiler::IR;
-  const uint32_t dword = 0x12345678;
+  uint32_t dword = 0x12345678;
   auto plan = SrtPlan(reinterpret_cast<uint64_t>(&dword));
   uint32_t specialization_reads = 0;
   const SrtRuntime runtime{.userdata = &specialization_reads,
@@ -157,6 +157,19 @@ void TestMappedSrtUsesDirectReaderByDefault() {
   Check(snapshot.flattened_srt.size() == 1 &&
             snapshot.flattened_srt[0] == dword,
         "cache rematerialization did not use the direct reader by default");
+  const auto saved = snapshot;
+  auto other_plan = UserDataBufferPlan();
+  ResourceSnapshot other_snapshot;
+  ResourceSpecialization other_specialization;
+  const std::array<uint32_t, 1> user_data{0x4000};
+  Check(MaterializeResources(other_plan, {.user_data = user_data}, other_snapshot,
+                             other_specialization) && other_snapshot.flattened_srt.empty(),
+        "switching SRT plans retained a stale flat array");
+  dword = 0x87654321;
+  Check(MaterializeResources(plan, runtime, snapshot, specialization) &&
+            snapshot.flattened_srt == std::vector<uint32_t>{dword} &&
+            saved.flattened_srt == std::vector<uint32_t>{0x12345678},
+        "SRT scratch cached a guest value or aliased an earlier result");
 }
 
 void TestIntegerRuntimeValueFollowsSrtReads() {

@@ -210,7 +210,6 @@ void CommandScheduler::Begin(HW::Context& registers, HW::UserConfig& user_config
 }
 
 void CommandScheduler::BeginRendering(const RenderState& state) {
-	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 	Current().BeginRendering(state);
 }
 

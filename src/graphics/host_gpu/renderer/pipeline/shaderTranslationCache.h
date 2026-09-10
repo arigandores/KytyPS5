@@ -16,7 +16,7 @@ namespace Libs::Graphics {
 // each of its specializations). The Vulkan pipeline cache only covers the driver's part; the
 // translation itself took 3-5 s per run of ASTRO BOT (30-60 shaders on every scene cut, each a
 // 0.5-1.3 s freeze). Files: _ShaderCache/<title>/<stage>_<hash>_<state hash>.bin, invalidated
-// by the emulator git revision (the plan is an internal structure).
+// by the translator source signature/options (the plan is an internal structure).
 class ShaderTranslationCache {
 public:
 	struct Permutation {
@@ -38,7 +38,7 @@ public:
 		std::span<const uint32_t>  static_state;
 	};
 
-	// Disabled when the title or the git revision is unknown, or KYTY_SHADER_CACHE=0.
+	// Disabled when the title or translator signature is unknown, or KYTY_SHADER_CACHE=0.
 	explicit ShaderTranslationCache(const std::string& title_id);
 
 	[[nodiscard]] bool Enabled() const { return m_enabled; }

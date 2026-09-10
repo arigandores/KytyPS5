@@ -24,6 +24,9 @@ public:
 	KYTY_CLASS_NO_COPY(MemoryTracker);
 
 	[[nodiscard]] bool IsRegionCpuModified(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] uint64_t CpuWriteEpoch() const noexcept {
+		return m_cpu_epoch.load(std::memory_order_acquire);
+	}
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
 	// Snapshot without clearing bits or changing protection. Missing regions are CPU-dirty,
 	// just as when a manager is first created. Callers must recheck/upload after releasing locks.
@@ -177,6 +180,7 @@ private:
 	RegionManager* GetOrCreateRegion(uint64_t index);
 
 	std::unique_ptr<std::atomic<RegionManager*>[]> m_regions;
+	std::atomic<uint64_t>                         m_cpu_epoch {1};
 	std::vector<std::unique_ptr<RegionManager>>    m_region_storage;
 	std::mutex                                     m_region_mutex;
 	PageManager&                                   m_page_manager;

@@ -1458,10 +1458,21 @@ private:
 		return m_fail_node;
 	}
 	uint32_t Const(uint64_t value) {
+		static const bool deduplicate = [] {
+			const auto* setting = std::getenv("KYTY_SRT_CONST_DEDUP");
+			return setting == nullptr || setting[0] != '0';
+		}();
+		if (deduplicate) {
+			if (const auto found = m_constants.find(value); found != m_constants.end()) {
+				return found->second;
+			}
+		}
 		CompiledSrt::Node node;
 		node.op  = CompiledSrt::Op::Const;
 		node.imm = value;
-		return Emit(node);
+		const auto index = Emit(node);
+		if (deduplicate) m_constants.emplace(value, index);
+		return index;
 	}
 	uint32_t Unary(CompiledSrt::Op op, const Inst& inst, Ctx ctx) {
 		CompiledSrt::Node node;
@@ -1712,6 +1723,7 @@ private:
 	const ResourcePlan&                         m_plan;
 	CompiledSrt&                                m_out;
 	std::unordered_map<Key, uint32_t, KeyHash>  m_memo;
+	std::unordered_map<uint64_t, uint32_t>       m_constants;
 	uint32_t                                    m_fail_node = CompiledSrt::None;
 	bool                                        m_failed    = false;
 };
@@ -1995,10 +2007,24 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 		status.resize(compiled.nodes.size());
 	}
 	EvaluateCompiledNodes(compiled, program, runtime, values.data(), status.data());
+	// These are scratch arrays, not a cache of guest values: reset every entry on each call.
+	struct Scratch {
+		std::vector<uint8_t> active, visited;
+		std::vector<uint32_t> pending, flattened;
+		std::vector<DescriptorValue> evaluated;
+	};
+	static const bool reuse = [] {
+		const auto* value = std::getenv("KYTY_SRT_SCRATCH");
+		return value == nullptr || value[0] != '0';
+	}();
+	thread_local Scratch retained;
+	Scratch local;
+	auto& scratch = reuse ? retained : local;
 
 	// Sources guarded by shader control flow (EvaluateRuntimeSourcesInterpreted has the
 	// reference walk): a source of an unreached block is not evaluated and stays zero.
-	std::vector<uint8_t> active(program.descriptor_sources.size(), 1u);
+	auto& active = scratch.active;
+	active.assign(program.descriptor_sources.size(), 1u);
 	if (!program.control_flow.empty()) {
 		if (compiled.block_condition_roots.size() != program.control_flow.size()) {
 			return CompiledResult::HardFailure;
@@ -2011,8 +2037,10 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 				active[source] = 0u;
 			}
 		}
-		std::vector<uint8_t>  visited(program.control_flow.size());
-		std::vector<uint32_t> pending {0};
+		auto& visited = scratch.visited;
+		auto& pending = scratch.pending;
+		visited.assign(program.control_flow.size(), 0u);
+		pending.assign(1, 0u);
 		while (!pending.empty()) {
 			const auto index = pending.back();
 			pending.pop_back();
@@ -2037,7 +2065,8 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 		}
 	}
 
-	std::vector<DescriptorValue> evaluated;
+	auto& evaluated = scratch.evaluated;
+	evaluated.clear();
 	evaluated.reserve(sources.size());
 	for (const auto source_index: sources) {
 		const auto* source = Source(program, source_index);
@@ -2061,7 +2090,8 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 		}
 		evaluated.push_back(value);
 	}
-	std::vector<uint32_t> flattened(program.srt_reads.size());
+	auto& flattened = scratch.flattened;
+	flattened.resize(program.srt_reads.size());
 	for (uint32_t slot = 0; slot < program.srt_reads.size(); slot++) {
 		const auto& read = program.srt_reads[slot];
 		if (read.variant) {
@@ -2085,9 +2115,9 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 			default: return CompiledResult::HardFailure;
 		}
 	}
-	results        = std::move(evaluated);
-	flat           = std::move(flattened);
-	active_sources = std::move(active);
+	results.swap(evaluated);
+	flat.swap(flattened);
+	active_sources.swap(active);
 	return CompiledResult::Done;
 }
 
@@ -2116,9 +2146,9 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 	static const bool verify = std::getenv("KYTY_SRT_VERIFY") != nullptr;
 	if (compiled_enabled && evaluate_flat && clean_flat_slots.data() == program.clean_flat_slots.data() &&
 	    clean_flat_slots.size() == program.clean_flat_slots.size()) {
-		std::vector<DescriptorValue> compiled_results;
-		std::vector<uint32_t>        compiled_flat;
-		std::vector<uint8_t>         compiled_active;
+		thread_local std::vector<DescriptorValue> compiled_results;
+		thread_local std::vector<uint32_t>        compiled_flat;
+		thread_local std::vector<uint8_t>         compiled_active;
 		const auto outcome = EvaluateCompiled(program, sources, runtime, compiled_results, compiled_flat,
 		                                      compiled_active);
 		if (outcome == CompiledResult::Done) {
@@ -2157,9 +2187,9 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 					             compiled_flat.size(), detail.c_str());
 				}
 			}
-			results        = std::move(compiled_results);
-			flat           = std::move(compiled_flat);
-			active_sources = std::move(compiled_active);
+			results.swap(compiled_results);
+			flat.swap(compiled_flat);
+			active_sources.swap(compiled_active);
 			return true;
 		}
 		if (Common::FrameStats::Enabled()) {

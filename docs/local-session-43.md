@@ -185,8 +185,15 @@ Installed executable SHA256:
 `D9FE630FAE4257E226A2B03B0D4D2A1DA312D2487A198D05CD1B4A36BB0EF2A4`.
 The executable's code matches the reviewed source; its build label predates the final commit.
 
-Remaining: substantial CPU cost with many sand draws, the exact simultaneous 4â€“5-groove
-reproducer, and the general durable guest replay catalogue. No stable 60-fps claim is made.
+User clarification, 2026-09-10: FPS drops with sand trails have already been reproduced
+many times. The uncertainty about exactly 4-5 visually distinct grooves is only a limit
+of the visual count, not a missing reproduction of the performance problem. Do not make
+another reproduction or an exact groove count a prerequisite for optimization.
+
+Next: profile and reduce CPU cost on the existing heavy route, focusing on SRT /
+EvaluateCompiled, resource bindings and thousands of draws. Compare before/after on
+the same route and present windows, with video. The general durable guest replay
+catalogue remains a separate task. No stable 60-fps claim is made.
 The session-42 object/batch assertion remains unexplained. Unrelated PNG deletions inside
 `3rdparty/nlohmann_json` are untouched and excluded from the task commit. No push is authorized.
 Final stdout contains ReadFile error codes 998 and 1784; both codes also occur in the saved

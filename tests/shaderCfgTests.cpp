@@ -13334,6 +13334,11 @@ int main() {
       std::printf("  graph_hash=%016llx %s\n",
                   static_cast<unsigned long long>(XXH3_64bits(text.data(), text.size())),
                   ShaderRecompiler::CFG::ProfileReport().c_str());
+      // KYTY_CFG_BENCH_DUMP=1: print the graph itself (blocks, terminators, merges) so a
+      // dispatcher fallback can be inspected offline without running the game.
+      if (std::getenv("KYTY_CFG_BENCH_DUMP") != nullptr) {
+        std::printf("%s\n", text.c_str());
+      }
     }
     return 0;
   }

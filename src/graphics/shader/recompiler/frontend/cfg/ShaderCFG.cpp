@@ -1123,7 +1123,12 @@ bool IsPrivateTerminalEpilogue(const Graph& graph, uint32_t header, uint32_t sta
 			return false;
 		}
 		if (block->successors.empty()) {
-			return block_id != start;
+			// A single returning block is an epilogue of its own when the header is its only
+			// entry: AGC emits one-block early-outs (s_mov exec, 0; exp null done; s_endpgm)
+			// without an intermediate branch block.
+			return block_id != start ||
+			       (block->terminator.kind == TerminatorKind::Return &&
+			        block->predecessors == std::vector<uint32_t> {header});
 		}
 		if (block->successors.size() != 1 || block->predecessors != std::vector<uint32_t> {previous}) {
 			return false;
@@ -1357,6 +1362,20 @@ uint32_t FindSelectionMerge(const Graph& graph, const BasicBlock& block) {
 				if (graph.Dominates(block.id, true_target) &&
 				    HasLinearPathToTerminal(graph, false_target)) {
 					return true_target;
+				}
+				// `if (c) { return; }` whose continuing arm is also branched to directly by an
+				// enclosing early-out, so the header does not dominate it yet. Offer that arm
+				// anyway: SplitOneSelectionMerge then gives this header a private merge gateway
+				// and the arm becomes dominated. A merge that stays shared is rejected by the
+				// final pass, which falls back to the dispatcher as before.
+				if (EpilogueCloningEnabled()) {
+					const bool true_exit =
+					    IsPrivateTerminalEpilogue(graph, block.id, true_target);
+					const bool false_exit =
+					    IsPrivateTerminalEpilogue(graph, block.id, false_target);
+					if (true_exit != false_exit && true_target != false_target) {
+						return true_exit ? false_target : true_target;
+					}
 				}
 			}
 		}
@@ -2348,6 +2367,16 @@ bool StructurizeImpl(Graph& graph) {
 		if (merge == UINT32_MAX) {
 			SetFailure(graph, FailureKind::StructuredControlFlow, block.id,
 			           fmt::format("conditional block {} has no structured merge", block.id));
+			return false;
+		}
+		// SPIR-V requires a header to dominate the merge block it declares. FindSelectionMerge
+		// may offer a merge that is still shared so that SplitOneSelectionMerge can give this
+		// header a private copy; if that splitting did not happen, emitting the merge here would
+		// produce invalid code, so fail into the dispatcher instead.
+		if (!graph.Dominates(block.id, merge)) {
+			SetFailure(graph, FailureKind::StructuredControlFlow, block.id,
+			           fmt::format("conditional block {} does not dominate its merge block {}",
+			                       block.id, merge));
 			return false;
 		}
 

@@ -74,6 +74,13 @@ void SetMotionPitch(int id, float radians);
 void SetMotionShake(int id, bool down);
 void ResetInputState();
 
+enum class MotionSensor { Accelerometer, Gyroscope };
+// Real pad sensor sample in SDL units: m/s^2 for the accelerometer, rad/s for the gyroscope.
+void SetMotionSensor(int id, MotionSensor sensor, const float* data, uint64_t timestamp_us);
+// Interleaved haptic PCM of an AudioOut vibration port (int16 or float).
+void PushHapticsPcm(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
+                    uint32_t freq);
+
 int KYTY_SYSV_ABI PadInit();
 int KYTY_SYSV_ABI PadOpen(int user_id, int type, int index, const void* param);
 int KYTY_SYSV_ABI PadGetHandle(int user_id, int type, int index);

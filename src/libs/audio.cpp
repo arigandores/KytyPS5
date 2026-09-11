@@ -10,6 +10,7 @@
 #include "kernel/pthread.h"
 #include "kernel/semaphore.h"
 #include "libs/audio_internal.h"
+#include "libs/controller.h"
 #include "libs/errno.h"
 #include "libs/libs.h"
 
@@ -355,6 +356,64 @@ SDL_AudioFormat Audio::SdlFormat(Format format) {
 	return FormatIsFloat(format) ? AUDIO_F32SYS : AUDIO_S16SYS;
 }
 
+// Pick the device for the game's own sound. The pad must not take it: plugging in a DualSense
+// makes it the default output on Windows, and without headphones attached nothing is audible.
+// KYTY_AUDIO_DEVICE=<substring> overrides the choice.
+static const char* ChooseOutputDevice() {
+	static bool        resolved = false;
+	static char        name[256] {};
+	static const char* chosen = nullptr;
+
+	if (resolved) {
+		return chosen;
+	}
+	resolved = true;
+
+	const auto is_pad = [](const char* n) {
+		return n != nullptr && (SDL_strcasestr(n, "DualSense") != nullptr ||
+		                        SDL_strcasestr(n, "Wireless Controller") != nullptr);
+	};
+	const auto select = [](const char* n) {
+		SDL_strlcpy(name, n, sizeof(name));
+		chosen = name;
+		return chosen;
+	};
+
+	if (const char* want = std::getenv("KYTY_AUDIO_DEVICE"); want != nullptr && want[0] != '\0') {
+		for (int i = 0; i < SDL_GetNumAudioDevices(0); i++) {
+			const char* n = SDL_GetAudioDeviceName(i, 0);
+			if (n != nullptr && SDL_strcasestr(n, want) != nullptr) {
+				LOGF("AudioOut: KYTY_AUDIO_DEVICE picked \"%s\"\n", n);
+				return select(n);
+			}
+		}
+		LOGF("AudioOut: no output device matches KYTY_AUDIO_DEVICE=\"%s\", using the default\n", want);
+		return nullptr;
+	}
+
+	char* def      = nullptr;
+	bool  def_pad  = false;
+	if (SDL_GetDefaultAudioInfo(&def, nullptr, 0) == 0 && def != nullptr) {
+		def_pad = is_pad(def);
+		if (def_pad) {
+			LOGF("AudioOut: default output \"%s\" is the pad, picking another device\n", def);
+		}
+		SDL_free(def);
+	}
+	if (!def_pad) {
+		return nullptr;
+	}
+
+	for (int i = 0; i < SDL_GetNumAudioDevices(0); i++) {
+		const char* n = SDL_GetAudioDeviceName(i, 0);
+		if (n != nullptr && !is_pad(n)) {
+			LOGF("AudioOut: using \"%s\" for the game sound\n", n);
+			return select(n);
+		}
+	}
+	return nullptr;
+}
+
 bool Audio::OpenSdlDevice(PortOut* port) {
 	EXIT_IF(port == nullptr);
 
@@ -372,8 +431,10 @@ bool Audio::OpenSdlDevice(PortOut* port) {
 
 	SDL_AudioSpec obtained {};
 
+	const char* device = ChooseOutputDevice();
+
 	port->audio_device =
-	    SDL_OpenAudioDevice(nullptr, 0, &desired, &obtained, SDL_AUDIO_ALLOW_ANY_CHANGE);
+	    SDL_OpenAudioDevice(device, 0, &desired, &obtained, SDL_AUDIO_ALLOW_ANY_CHANGE);
 	if (port->audio_device == 0) {
 		LOGF("AudioOut: SDL_OpenAudioDevice failed: %s\n", SDL_GetError());
 		return false;
@@ -382,8 +443,9 @@ bool Audio::OpenSdlDevice(PortOut* port) {
 	port->audio_spec = obtained;
 	AudioRegisterDevice(port->audio_device);
 
-	LOGF("AudioOut: opened SDL device (%d Hz, %u ch, format 0x%04x)\n", obtained.freq,
-	     obtained.channels, obtained.format);
+	LOGF("AudioOut: opened SDL device \"%s\" (%d Hz, %u ch, format 0x%04x)\n",
+	     device != nullptr ? device : "(system default)", obtained.freq, obtained.channels,
+	     obtained.format);
 	return true;
 }
 
@@ -620,6 +682,9 @@ Audio::Id Audio::AudioOutOpen(int type, uint32_t samples_num, uint32_t freq, For
 
 			if (type != AUDIO_OUT_PORT_TYPE_VIBRATION) {
 				OpenSdlDevice(&port);
+			} else {
+				LOGF("AudioOut: vibration port %d (%u Hz, %d ch, %u frames, %s) -> pad haptics\n", id,
+				     freq, port.channels_num, samples_num, FormatIsFloat(format) ? "float" : "s16");
 			}
 
 			return Id::Create(id);
@@ -730,6 +795,11 @@ uint32_t Audio::AudioOutOutputs(OutputParam* params, uint32_t num, bool blocking
 	for (uint32_t i = 0; i < num; i++) {
 		auto& port = m_out_ports[params[i].handle.GetId()];
 
+		if (port.type == AUDIO_OUT_PORT_TYPE_VIBRATION) {
+			Controller::PushHapticsPcm(params[i].data, port.samples_num,
+			                           static_cast<uint32_t>(port.channels_num),
+			                           FormatIsFloat(port.format), port.freq);
+		}
 		QueueSdlAudio(&port, params[i].data, blocking);
 	}
 

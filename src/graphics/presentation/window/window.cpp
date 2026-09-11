@@ -351,6 +351,18 @@ static void GameEventController([[maybe_unused]] const EventController& f) {
 		auto* pad = SDL_GameControllerOpen(f.id);
 		EXIT_NOT_IMPLEMENTED(pad == nullptr);
 		int id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(pad));
+		for (const auto sensor: {SDL_SENSOR_ACCEL, SDL_SENSOR_GYRO}) {
+			if (SDL_GameControllerHasSensor(pad, sensor) == SDL_TRUE &&
+			    SDL_GameControllerSetSensorEnabled(pad, sensor, SDL_TRUE) != 0) {
+				LOGF("Controller %d: sensor %d enable failed: %s\n", id, static_cast<int>(sensor),
+				     SDL_GetError());
+			}
+		}
+		LOGF("Controller %d: \"%s\" type=%d accel=%d gyro=%d path=%s\n", id,
+		     SDL_GameControllerName(pad), static_cast<int>(SDL_GameControllerGetType(pad)),
+		     SDL_GameControllerIsSensorEnabled(pad, SDL_SENSOR_ACCEL) == SDL_TRUE ? 1 : 0,
+		     SDL_GameControllerIsSensorEnabled(pad, SDL_SENSOR_GYRO) == SDL_TRUE ? 1 : 0,
+		     SDL_GameControllerPath(pad) != nullptr ? SDL_GameControllerPath(pad) : "");
 		Controller::Connect(id);
 	}
 
@@ -703,6 +715,16 @@ void WindowContext::ProcessEvent(double time_s) {
 
 			break;
 		}
+
+		case SDL_CONTROLLERSENSORUPDATE:
+			if (event->csensor.sensor == SDL_SENSOR_ACCEL || event->csensor.sensor == SDL_SENSOR_GYRO) {
+				Controller::SetMotionSensor(event->csensor.which,
+				                            event->csensor.sensor == SDL_SENSOR_ACCEL
+				                                ? Controller::MotionSensor::Accelerometer
+				                                : Controller::MotionSensor::Gyroscope,
+				                            event->csensor.data, event->csensor.timestamp_us);
+			}
+			break;
 
 		case SDL_CONTROLLERTOUCHPADDOWN:
 		case SDL_CONTROLLERTOUCHPADMOTION:

@@ -639,14 +639,19 @@ int KYTY_SYSV_ABI AudioOut2PortCreate(AudioOut2ContextHandle ctx, const AudioOut
 
 	*port = next_port;
 
-	if (next_port <= 16 || (next_port % 600) == 0) {
+	// Object ports are created by the hundred; log them sparsely but every device port.
+	if (next_port <= 16 || (next_port % 600) == 0 || !audioout2_port_type_is_object(params->port_type)) {
 		PRINT_NAME();
 		LOGF("\t ctx           = 0x%016" PRIx64 "\n"
 		     "\t port          = 0x%016" PRIx64 "\n"
 		     "\t port_type     = %" PRIu16 "\n"
 		     "\t data_format   = 0x%08" PRIx32 "\n"
-		     "\t sampling_freq = %" PRIu32 "\n",
-		     ctx, *port, params->port_type, params->data_format, params->sampling_freq);
+		     "\t sampling_freq = %" PRIu32 "\n"
+		     "\t flags         = 0x%08" PRIx32 "\n"
+		     "\t user          = 0x%016" PRIx64 "\n"
+		     "\t audio_handle  = %d\n",
+		     ctx, *port, params->port_type, params->data_format, params->sampling_freq,
+		     params->flags, static_cast<uint64_t>(params->user_handle), audio_handle);
 	}
 
 	return OK;

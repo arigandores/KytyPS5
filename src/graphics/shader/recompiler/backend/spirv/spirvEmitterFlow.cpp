@@ -289,7 +289,7 @@ uint32_t ExportVector(ValueEmitContext& ctx, uint32_t data, const IR::ExportInfo
 			state.builder.AddFunction(
 			    {spv::OpCompositeExtract, TypeU32(state), packed, data, pair});
 			state.builder.AddFunction({spv::OpExtInst, TypeF32Vector(state, 2), unpacked,
-			                           GlslStd450(state), unpack, packed});
+			                           GlslStd450(state), static_cast<uint32_t>(unpack), packed});
 			for (uint32_t lane = 0; lane < 2u; lane++) {
 				const auto component = pair * 2u + lane;
 				if (((exp.en >> component) & 1u) != 0u) {

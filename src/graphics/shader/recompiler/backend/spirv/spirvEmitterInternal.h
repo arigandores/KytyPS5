@@ -233,7 +233,8 @@ uint32_t TypeId(EmitterState& state, IR::Type type);
 template <spv::Op opcode, IR::Type type, typename... Args>
 uint32_t EmitNative(EmitterState& state, Args... args) {
 	const auto result = state.builder.AllocateId();
-	state.builder.AddFunction({opcode, TypeId(state, type), result, args...});
+	state.builder.AddFunction(
+	    {static_cast<uint32_t>(opcode), TypeId(state, type), result, args...});
 	return result;
 }
 
@@ -241,7 +242,8 @@ uint32_t GlslStd450(EmitterState& state);
 
 template <GLSLstd450 opcode, IR::Type type, typename... Args>
 uint32_t EmitGlsl(EmitterState& state, Args... args) {
-	return EmitNative<spv::OpExtInst, type>(state, GlslStd450(state), opcode, args...);
+	return EmitNative<spv::OpExtInst, type>(state, GlslStd450(state),
+	                                        static_cast<uint32_t>(opcode), args...);
 }
 
 inline uint32_t Unary(EmitterState& state, uint32_t opcode, uint32_t type, uint32_t value) {

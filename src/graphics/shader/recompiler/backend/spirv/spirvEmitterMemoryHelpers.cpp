@@ -418,7 +418,7 @@ uint32_t EmitFloatAtomicReplacement(EmitterState& state, uint32_t old, uint32_t 
 	    state, EmitLogicalOrBool(state, source_class.nan, old_class.nan),
 	    EmitLogicalAndBool(state, source_class.zero, old_class.zero));
 	const auto compare = state.builder.AllocateId();
-	state.builder.AddFunction({max_value ? spv::OpUGreaterThan : spv::OpULessThan, TypeBool(state),
+	state.builder.AddFunction({static_cast<uint32_t>(max_value ? spv::OpUGreaterThan : spv::OpULessThan), TypeBool(state),
 	                           compare, source_class.key, old_class.key});
 	return EmitSelectValueU32(
 	    state, EmitLogicalAndBool(state, EmitLogicalNotBool(state, unordered), compare), source,

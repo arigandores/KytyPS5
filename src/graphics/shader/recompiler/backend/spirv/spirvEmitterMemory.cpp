@@ -1325,7 +1325,8 @@ uint32_t LoadFormattedComponent(ValueEmitContext& ctx, const IR::MemoryInfo& mem
 		    type == TypeI32(ctx.state) ? Unary(ctx.state, spv::OpBitcast, type, raw) : raw;
 		const auto extracted = ctx.state.builder.AllocateId();
 		ctx.state.builder.AddFunction(
-		    {IsSignedFormatComponent(info.type) ? spv::OpBitFieldSExtract : spv::OpBitFieldUExtract,
+		    {static_cast<uint32_t>(IsSignedFormatComponent(info.type) ? spv::OpBitFieldSExtract
+		                                                      : spv::OpBitFieldUExtract),
 		     type, extracted, source_value,
 		     ConstantU32(ctx.state, info.component_bit_offset[component]),
 		     ConstantU32(ctx.state, bits)});
@@ -2363,7 +2364,7 @@ uint32_t EmitAppendConsume(ValueEmitContext& ctx, const IR::Inst& inst) {
 	const auto atomic = EmitValueOrZeroIfCondition(state, condition, [&]() {
 		const auto value = state.builder.AllocateId();
 		state.builder.AddFunction(
-		    {append ? spv::OpAtomicIAdd : spv::OpAtomicISub, TypeU32(state), value,
+		    {static_cast<uint32_t>(append ? spv::OpAtomicIAdd : spv::OpAtomicISub), TypeU32(state), value,
 		     EmitMemoryElementPointer(state, access, index),
 		     ConstantU32(state, mem.kind == IR::ResourceKind::Gds ? spv::ScopeDevice
 		                                                          : spv::ScopeWorkgroup),

@@ -55,8 +55,9 @@ void DefineMeshOutputs(EmitterState& state) {
 		} else {
 			state.builder.AddAnnotation(
 			    {spv::OpDecorate, output.variable_id, spv::DecorationBuiltIn,
-			     output.kind == IR::StageOutputKind::Layer ? spv::BuiltInLayer
-			                                               : spv::BuiltInPosition});
+			     static_cast<uint32_t>(output.kind == IR::StageOutputKind::Layer
+			                               ? spv::BuiltInLayer
+			                               : spv::BuiltInPosition)});
 		}
 		if (output.kind == IR::StageOutputKind::Layer) {
 			state.builder.AddAnnotation({spv::OpDecorate, output.variable_id,

@@ -329,7 +329,7 @@ list(APPEND kyty_emulator_src
 list(REMOVE_DUPLICATES kyty_emulator_src)
 
 if (KYTY_CLANG_CL)
-	set_source_files_properties(${kyty_emulator_src} PROPERTIES COMPILE_FLAGS "-Wno-pragma-pack -Wno-deprecated-declarations -Wno-c++11-narrowing -D_TIMESPEC_DEFINED")
+	set_source_files_properties(${kyty_emulator_src} PROPERTIES COMPILE_FLAGS "-Wno-pragma-pack -Wno-deprecated-declarations -D_TIMESPEC_DEFINED")
 endif()
 
 set(kyty_emulator_link_libraries common Vulkan::Headers spirv-tools-opt spirv-tools SDL2-static imgui xxhash FFmpeg::ffmpeg fmt::fmt nlohmann_json::nlohmann_json LibAtrac9 kyty_git_version Zydis::Zydis xbyak::xbyak)
@@ -380,10 +380,6 @@ list(APPEND check_headers
 
 function(add_kyty_full_emulator_test target source)
 	add_executable(${target} EXCLUDE_FROM_ALL ${source} ${kyty_emulator_src})
-	if (KYTY_CLANG_CL)
-		# Same SPIRV-Headers narrowing as the emulator sources (the test includes the emitter).
-		set_source_files_properties(${source} PROPERTIES COMPILE_FLAGS "-Wno-c++11-narrowing")
-	endif()
 	target_link_libraries(${target} ${kyty_emulator_link_libraries})
 	target_include_directories(${target} PRIVATE ${inc_headers})
 	if (WIN32)

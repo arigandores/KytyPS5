@@ -149,7 +149,7 @@ uint32_t BranchCondition(ValueEmitContext& ctx, const IR::BlockInfo& info) {
 	                      kind == CFG::BranchCondition::SccZero;
 	const auto combined =
 	    EmitBinaryU32(ctx.state, zero ? spv::OpBitwiseAnd : spv::OpBitwiseOr, low, high);
-	ctx.state.builder.AddFunction({zero ? spv::OpIEqual : spv::OpINotEqual, TypeBool(ctx.state),
+	ctx.state.builder.AddFunction({static_cast<uint32_t>(zero ? spv::OpIEqual : spv::OpINotEqual), TypeBool(ctx.state),
 	                               result, combined, ConstantU32(ctx.state, zero ? ~0u : 0u)});
 	return result;
 }

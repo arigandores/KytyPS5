@@ -64,7 +64,8 @@ uint32_t TypeF32Vector(EmitterState& state, uint32_t components) {
 }
 
 uint32_t TypePointer(EmitterState& state, spv::StorageClass storage_class, uint32_t pointee) {
-	return state.builder.Type(spv::OpTypePointer, {storage_class, pointee});
+	return state.builder.Type(spv::OpTypePointer,
+	                          {static_cast<uint32_t>(storage_class), pointee});
 }
 
 uint32_t TypeFunction(EmitterState& state) {
@@ -596,7 +597,7 @@ void DefineOutputs(EmitterState& state) {
 		if (variable == 0) {
 			variable = DefineInterfaceVariable(state, type, spv::StorageClassOutput, name);
 			state.builder.AddAnnotation(
-			    {spv::OpDecorate, variable, spv::DecorationBuiltIn, builtin});
+			    {spv::OpDecorate, variable, spv::DecorationBuiltIn, static_cast<uint32_t>(builtin)});
 		}
 		return variable;
 	};
@@ -749,9 +750,10 @@ void DefineModule(EmitterState& state) {
 		state.builder.RequireExtension("SPV_KHR_fragment_shader_barycentric");
 	}
 	state.builder.RequireExtension("SPV_KHR_float_controls");
-	state.builder.AddMemoryModel({state.program.info.uses_dma
-	                                  ? spv::AddressingModelPhysicalStorageBuffer64
-	                                  : spv::AddressingModelLogical,
+	state.builder.AddMemoryModel({static_cast<uint32_t>(
+	                                  state.program.info.uses_dma
+	                                      ? spv::AddressingModelPhysicalStorageBuffer64
+	                                      : spv::AddressingModelLogical),
 	                              spv::MemoryModelGLSL450});
 	// GCN/RDNA arithmetic preserves 32-bit signed zero, infinity, and NaN. Declaring that
 	// contract prevents host compilers from treating synthesized IEEE values as finite.

@@ -196,7 +196,7 @@ private:
 	}
 
 	uint32_t Pointer(spv::StorageClass storage, uint32_t type) {
-		return Type(spv::OpTypePointer, storage, type);
+		return Type(spv::OpTypePointer, static_cast<uint32_t>(storage), type);
 	}
 
 	uint32_t Array(uint32_t type, uint32_t size) {
@@ -206,20 +206,20 @@ private:
 	template <typename... Args>
 	uint32_t Result(spv::Op opcode, uint32_t type, Args... operands) {
 		const auto id = builder.AllocateId();
-		builder.AddFunction({opcode, type, id, operands...});
+		builder.AddFunction({static_cast<uint32_t>(opcode), type, id, operands...});
 		return id;
 	}
 
 	template <typename... Args>
 	uint32_t ResultWithoutType(spv::Op opcode, Args... operands) {
 		const auto id = builder.AllocateId();
-		builder.AddFunction({opcode, id, operands...});
+		builder.AddFunction({static_cast<uint32_t>(opcode), id, operands...});
 		return id;
 	}
 
 	template <typename... Args>
 	void Emit(spv::Op opcode, Args... operands) {
-		builder.AddFunction({opcode, operands...});
+		builder.AddFunction({static_cast<uint32_t>(opcode), operands...});
 	}
 
 	template <typename... Args>
@@ -242,13 +242,15 @@ private:
 	}
 
 	void Decorate(uint32_t target, spv::Decoration decoration, uint32_t value) {
-		builder.AddAnnotation({spv::OpDecorate, target, decoration, value});
+		builder.AddAnnotation(
+		    {spv::OpDecorate, target, static_cast<uint32_t>(decoration), value});
 	}
 
 	void DefineEntry(spv::ExecutionModel model) {
 		builder.RequireCapability(spv::CapabilityShader);
 		builder.RequireCapability(spv::CapabilityTessellation);
-		main = Result(spv::OpFunction, void_type, spv::FunctionControlMaskNone, function_type);
+		main = Result(spv::OpFunction, void_type,
+		              static_cast<uint32_t>(spv::FunctionControlMaskNone), function_type);
 		if (model == spv::ExecutionModelTessellationControl) {
 			builder.AddExecutionMode({main, spv::ExecutionModeOutputVertices, 4u});
 		} else {

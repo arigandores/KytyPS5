@@ -88,7 +88,8 @@ uint32_t EmitMinMaxU32Value(EmitterState& state, uint32_t lhs, uint32_t rhs, boo
 	const auto cond = state.builder.AllocateId();
 	const auto ret  = state.builder.AllocateId();
 	state.builder.AddFunction(
-	    {max_value ? spv::OpUGreaterThan : spv::OpULessThan, TypeBool(state), cond, lhs, rhs});
+	    {static_cast<uint32_t>(max_value ? spv::OpUGreaterThan : spv::OpULessThan), TypeBool(state),
+	     cond, lhs, rhs});
 	state.builder.AddFunction({spv::OpSelect, TypeU32(state), ret, cond, lhs, rhs});
 	return ret;
 }
@@ -97,7 +98,8 @@ uint32_t EmitMinMaxI32Value(EmitterState& state, uint32_t lhs, uint32_t rhs, boo
 	const auto cond = state.builder.AllocateId();
 	const auto ret  = state.builder.AllocateId();
 	state.builder.AddFunction(
-	    {max_value ? spv::OpSGreaterThan : spv::OpSLessThan, TypeBool(state), cond, lhs, rhs});
+	    {static_cast<uint32_t>(max_value ? spv::OpSGreaterThan : spv::OpSLessThan), TypeBool(state),
+	     cond, lhs, rhs});
 	state.builder.AddFunction({spv::OpSelect, TypeU32(state), ret, cond, lhs, rhs});
 	return ret;
 }
@@ -204,7 +206,7 @@ uint32_t EmitMinMaxF32Value(EmitterState& state, uint32_t lhs, uint32_t rhs, boo
 	const auto rhs_class = EmitClassifyF32(state, rhs);
 
 	const auto numeric_cond = state.builder.AllocateId();
-	state.builder.AddFunction({max_value ? spv::OpFOrdGreaterThanEqual : spv::OpFOrdLessThan,
+	state.builder.AddFunction({static_cast<uint32_t>(max_value ? spv::OpFOrdGreaterThanEqual : spv::OpFOrdLessThan),
 	                           TypeBool(state), numeric_cond, lhs, rhs});
 	const auto ordered_bits =
 	    EmitSelectValueU32(state, numeric_cond, lhs_class.bits, rhs_class.bits);

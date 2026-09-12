@@ -1355,6 +1355,22 @@ static void KYTY_SYSV_ABI JsonValueSetValue(JsonValue* self, const JsonValue* va
 	JsonValueCopy(self, &copy);
 	JsonValueClear(&copy);
 }
+
+static void KYTY_SYSV_ABI JsonValueClearMethod(void* self) {
+	PRINT_NAME();
+
+	LOGF("\t self = 0x%016" PRIx64 "\n", reinterpret_cast<uint64_t>(self));
+
+	auto* value = reinterpret_cast<JsonValue*>(self);
+	if (value != nullptr) {
+		auto* parent    = value->parent;
+		auto* rootparam = value->rootparam;
+		JsonValueClear(value);
+		value->parent    = parent;
+		value->rootparam = rootparam;
+	}
+}
+
 LIB_DEFINE(InitNet_1_Json2) {
 	LIB_FUNC("-hJRce8wn1U", LibJson2::JsonMemAllocatorCtor);
 	LIB_FUNC("WSOuge5IsCg", LibJson2::JsonInitParameter2Ctor);
@@ -1425,6 +1441,7 @@ LIB_DEFINE(InitNet_1_Json2) {
 	LIB_FUNC("RBw+4NukeGQ", LibJson2::JsonValueCount);
 	LIB_FUNC("+drDFyAS6u4", LibJson2::JsonInitializerSetGlobalNullAccessCallback);
 	LIB_FUNC("00oCq0RwSAY", LibJson2::JsonInitializerSetGlobalNullAccessCallback);
+	LIB_FUNC("FIjXN2TkuTs", LibJson2::JsonValueClearMethod);
 	LIB_FUNC("9uP25i6ipno", LibJson2::JsonArrayEmpty);
 	LIB_FUNC("bcH5EnFE2xY", LibJson2::JsonArrayBegin);
 	LIB_FUNC("WXF2ihRF+B8", LibJson2::JsonArrayEnd);

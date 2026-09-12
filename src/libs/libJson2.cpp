@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstring>
 #include <map>
+#include <mutex>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -63,6 +64,27 @@ struct JsonValue {
 
 static_assert(sizeof(JsonArray) == 8);
 static_assert(sizeof(JsonValue) == 32 && offsetof(JsonValue, type) == 28);
+
+// The guest dereferences an object iterator and reads the member name at offset 0 and the
+// member value at offset 0x10, so the pair keeps that layout.
+struct JsonObjectPair {
+	JsonString key;
+	uint64_t   reserved;
+	JsonValue  value;
+};
+
+// Both iterators are returned into 8 bytes of guest stack (begin and end land in adjacent
+// slots), so they must stay pointer sized.
+struct JsonArrayIterator {
+	JsonValue* const* pos;
+};
+
+struct JsonObjectIterator {
+	JsonObjectPair* pos;
+};
+
+static_assert(sizeof(JsonObjectPair) == 48 && offsetof(JsonObjectPair, value) == 0x10);
+static_assert(sizeof(JsonArrayIterator) == 8 && sizeof(JsonObjectIterator) == 8);
 
 struct JsonInitParameter2 {
 	void*    allocator;
@@ -194,6 +216,41 @@ static std::map<std::string, JsonValue*>* JsonObjectCopy(const JsonObject* src, 
 	return impl;
 }
 
+// The game checks the value type itself and then reads a number through one of the getters,
+// expecting any numeric type to be readable: a level path stores its point count as
+// {"n": 1682} (unsigned) and then asks for it as an integer. Returning zero for the other
+// numeric types made LevelPath assert on m_points.size() == n. The converted value is kept in
+// thread-local storage because the getters return a pointer into the value.
+static bool JsonValueIsNumber(const JsonValue* self) {
+	return self != nullptr && (self->type == JsonValueTypeInteger ||
+	                          self->type == JsonValueTypeUInteger ||
+	                          self->type == JsonValueTypeReal);
+}
+
+static int64_t JsonValueAsInteger(const JsonValue* self) {
+	switch (self->type) {
+		case JsonValueTypeInteger: return self->integer;
+		case JsonValueTypeUInteger: return static_cast<int64_t>(self->uinteger);
+		default: return static_cast<int64_t>(self->real);
+	}
+}
+
+static uint64_t JsonValueAsUInteger(const JsonValue* self) {
+	switch (self->type) {
+		case JsonValueTypeUInteger: return self->uinteger;
+		case JsonValueTypeInteger: return static_cast<uint64_t>(self->integer);
+		default: return static_cast<uint64_t>(self->real);
+	}
+}
+
+static double JsonValueAsReal(const JsonValue* self) {
+	switch (self->type) {
+		case JsonValueTypeReal: return self->real;
+		case JsonValueTypeInteger: return static_cast<double>(self->integer);
+		default: return static_cast<double>(self->uinteger);
+	}
+}
+
 static void JsonValueSetEmptyType(JsonValue* self, uint32_t type) {
 	if (self == nullptr) {
 		return;
@@ -233,7 +290,76 @@ static void JsonArrayDestroy(JsonArray* self) {
 	}
 }
 
+// Object members live in a std::map, but the guest iterates over pairs by pointer. Each object
+// gets a snapshot of its members; it is rebuilt only when the member list actually changed, so
+// begin() and end() of the same iteration always return pointers into the same storage.
+struct JsonObjectSnapshot {
+	std::vector<std::pair<std::string, const JsonValue*>> signature;
+	std::vector<JsonObjectPair>                           items;
+};
+
+static std::mutex                                       g_object_snapshot_mutex;
+static std::map<const JsonObject*, JsonObjectSnapshot*> g_object_snapshots;
+
+static void JsonObjectSnapshotRelease(JsonObjectSnapshot* snapshot) {
+	for (auto& item: snapshot->items) {
+		delete item.key.impl;
+		item.key.impl = nullptr;
+		JsonValueClear(&item.value);
+	}
+	snapshot->items.clear();
+	snapshot->signature.clear();
+}
+
+static void JsonObjectSnapshotDrop(const JsonObject* self) {
+	JsonObjectSnapshot* snapshot = nullptr;
+	{
+		const std::lock_guard<std::mutex> lock(g_object_snapshot_mutex);
+		const auto                        it = g_object_snapshots.find(self);
+		if (it == g_object_snapshots.end()) {
+			return;
+		}
+		snapshot = it->second;
+		g_object_snapshots.erase(it);
+	}
+	JsonObjectSnapshotRelease(snapshot);
+	delete snapshot;
+}
+
+static JsonObjectSnapshot* JsonObjectSnapshotFor(const JsonObject* self) {
+	const auto* impl = JsonObjectImpl(self);
+
+	std::vector<std::pair<std::string, const JsonValue*>> signature;
+	signature.reserve(impl->size());
+	for (const auto& [key, value]: *impl) {
+		signature.emplace_back(key, value);
+	}
+
+	const std::lock_guard<std::mutex> lock(g_object_snapshot_mutex);
+	auto&                             slot = g_object_snapshots[self];
+	if (slot == nullptr) {
+		slot = new JsonObjectSnapshot;
+	}
+	if (slot->signature == signature) {
+		return slot;
+	}
+
+	JsonObjectSnapshotRelease(slot);
+	slot->items.resize(signature.size());
+	size_t index = 0;
+	for (const auto& [key, value]: signature) {
+		auto& item    = slot->items[index++];
+		item.key.impl = new std::string(key);
+		item.reserved = 0;
+		JsonValueInit(&item.value);
+		JsonValueCopy(&item.value, value);
+	}
+	slot->signature = std::move(signature);
+	return slot;
+}
+
 static void JsonObjectDestroy(JsonObject* self) {
+	JsonObjectSnapshotDrop(self);
 	if (self != nullptr) {
 		if (self->impl != nullptr) {
 			for (auto& item: *self->impl) {
@@ -302,6 +428,7 @@ static JsonValue* JsonObjectLookup(JsonObject* object, const std::string& key, b
 	}
 	auto* value  = JsonValueNew();
 	(*impl)[key] = value;
+	JsonObjectSnapshotDrop(object);
 	return value;
 }
 
@@ -750,15 +877,31 @@ static const bool* KYTY_SYSV_ABI JsonValueGetBoolean(const JsonValue* self) {
 static const int64_t* KYTY_SYSV_ABI JsonValueGetInteger(const JsonValue* self) {
 	PRINT_NAME();
 
-	static const int64_t zero = 0;
-	return (self != nullptr && self->type == JsonValueTypeInteger ? &self->integer : &zero);
+	static const int64_t          zero = 0;
+	static thread_local int64_t   converted;
+	if (!JsonValueIsNumber(self)) {
+		return &zero;
+	}
+	if (self->type == JsonValueTypeInteger) {
+		return &self->integer;
+	}
+	converted = JsonValueAsInteger(self);
+	return &converted;
 }
 
 static const double* KYTY_SYSV_ABI JsonValueGetReal(const JsonValue* self) {
 	PRINT_NAME();
 
-	static const double zero = 0.0;
-	return (self != nullptr && self->type == JsonValueTypeReal ? &self->real : &zero);
+	static const double        zero = 0.0;
+	static thread_local double converted;
+	if (!JsonValueIsNumber(self)) {
+		return &zero;
+	}
+	if (self->type == JsonValueTypeReal) {
+		return &self->real;
+	}
+	converted = JsonValueAsReal(self);
+	return &converted;
 }
 
 static const JsonValue* KYTY_SYSV_ABI JsonValueIndexString(const JsonValue* self, const char* key) {
@@ -950,6 +1093,7 @@ static JsonValue* KYTY_SYSV_ABI JsonObjectIndex(JsonObject* self, const JsonStri
 static void KYTY_SYSV_ABI JsonObjectClear(JsonObject* self) {
 	PRINT_NAME();
 
+	JsonObjectSnapshotDrop(self);
 	auto* impl = JsonObjectImpl(self);
 	if (impl != nullptr) {
 		for (auto& item: *impl) {
@@ -1006,6 +1150,211 @@ static int32_t KYTY_SYSV_ABI JsonValueCount(const JsonValue* self) {
 	}
 }
 
+static bool KYTY_SYSV_ABI JsonArrayEmpty(const JsonArray* self) {
+	PRINT_NAME();
+
+	return JsonArrayImpl(self)->empty();
+}
+
+static JsonArrayIterator* KYTY_SYSV_ABI JsonArrayBegin(JsonArrayIterator* out,
+                                                       const JsonArray*   self) {
+	PRINT_NAME();
+
+	if (out != nullptr) {
+		out->pos = JsonArrayImpl(self)->data();
+	}
+	return out;
+}
+
+static JsonArrayIterator* KYTY_SYSV_ABI JsonArrayEnd(JsonArrayIterator* out,
+                                                     const JsonArray*   self) {
+	PRINT_NAME();
+
+	if (out != nullptr) {
+		const auto* impl = JsonArrayImpl(self);
+		out->pos         = impl->data() + impl->size();
+	}
+	return out;
+}
+
+static JsonArrayIterator* KYTY_SYSV_ABI JsonArrayIteratorNext(JsonArrayIterator* self) {
+	PRINT_NAME();
+
+	if (self != nullptr && self->pos != nullptr) {
+		self->pos++;
+	}
+	return self;
+}
+
+static const JsonValue* KYTY_SYSV_ABI JsonArrayIteratorDeref(const JsonArrayIterator* self) {
+	PRINT_NAME();
+
+	if (self == nullptr || self->pos == nullptr || *self->pos == nullptr) {
+		return JsonStaticNullValue();
+	}
+	return *self->pos;
+}
+
+static bool KYTY_SYSV_ABI JsonArrayIteratorNotEqual(const JsonArrayIterator* self,
+                                                    const JsonArrayIterator* other) {
+	PRINT_NAME();
+
+	if (self == nullptr || other == nullptr) {
+		return false;
+	}
+	return self->pos != other->pos;
+}
+
+static void KYTY_SYSV_ABI JsonArrayIteratorDtor(JsonArrayIterator* self) {
+	PRINT_NAME();
+
+	if (self != nullptr) {
+		self->pos = nullptr;
+	}
+}
+
+static JsonObjectIterator* KYTY_SYSV_ABI JsonObjectBegin(JsonObjectIterator* out,
+                                                         const JsonObject*   self) {
+	PRINT_NAME();
+
+	if (out != nullptr) {
+		auto* snapshot = JsonObjectSnapshotFor(self);
+		out->pos       = snapshot->items.data();
+	}
+	return out;
+}
+
+static JsonObjectIterator* KYTY_SYSV_ABI JsonObjectEnd(JsonObjectIterator* out,
+                                                       const JsonObject*   self) {
+	PRINT_NAME();
+
+	if (out != nullptr) {
+		auto* snapshot = JsonObjectSnapshotFor(self);
+		out->pos       = snapshot->items.data() + snapshot->items.size();
+	}
+	return out;
+}
+
+static JsonObjectIterator* KYTY_SYSV_ABI JsonObjectIteratorNext(JsonObjectIterator* self) {
+	PRINT_NAME();
+
+	if (self != nullptr && self->pos != nullptr) {
+		self->pos++;
+	}
+	return self;
+}
+
+static JsonObjectPair* KYTY_SYSV_ABI JsonObjectIteratorDeref(const JsonObjectIterator* self) {
+	PRINT_NAME();
+
+	static JsonObjectPair empty {{JsonStaticString()->impl}, 0, {}};
+	if (self == nullptr || self->pos == nullptr) {
+		return &empty;
+	}
+	return self->pos;
+}
+
+static bool KYTY_SYSV_ABI JsonObjectIteratorNotEqual(const JsonObjectIterator* self,
+                                                     const JsonObjectIterator* other) {
+	PRINT_NAME();
+
+	if (self == nullptr || other == nullptr) {
+		return false;
+	}
+	return self->pos != other->pos;
+}
+
+static void KYTY_SYSV_ABI JsonObjectIteratorDtor(JsonObjectIterator* self) {
+	PRINT_NAME();
+
+	if (self != nullptr) {
+		self->pos = nullptr;
+	}
+}
+
+static JsonString* KYTY_SYSV_ABI JsonStringCopyCtor(JsonString* self, const JsonString* src) {
+	PRINT_NAME();
+
+	if (self != nullptr) {
+		self->impl = new std::string(*JsonStringImpl(src));
+	}
+	return self;
+}
+
+static bool KYTY_SYSV_ABI JsonStringEmpty(const JsonString* self) {
+	PRINT_NAME();
+
+	return JsonStringImpl(self)->empty();
+}
+
+static bool KYTY_SYSV_ABI JsonStringEqualCString(const JsonString* self, const char* str) {
+	PRINT_NAME();
+
+	return *JsonStringImpl(self) == (str != nullptr ? str : "");
+}
+
+static JsonValue* KYTY_SYSV_ABI JsonValueUIntCtor(JsonValue* self, uint64_t value) {
+	PRINT_NAME();
+
+	JsonValueInit(self);
+	if (self != nullptr) {
+		self->type     = JsonValueTypeUInteger;
+		self->uinteger = value;
+	}
+	return self;
+}
+
+static const uint64_t* KYTY_SYSV_ABI JsonValueGetUInteger(const JsonValue* self) {
+	PRINT_NAME();
+
+	static const uint64_t        zero = 0;
+	static thread_local uint64_t converted;
+	if (!JsonValueIsNumber(self)) {
+		return &zero;
+	}
+	if (self->type == JsonValueTypeUInteger) {
+		return &self->uinteger;
+	}
+	converted = JsonValueAsUInteger(self);
+	return &converted;
+}
+
+static void KYTY_SYSV_ABI JsonValueSetCString(JsonValue* self, const char* value) {
+	PRINT_NAME();
+
+	JsonValueClear(self);
+	if (self != nullptr) {
+		self->type   = JsonValueTypeString;
+		self->string = JsonStringNew(value != nullptr ? value : "");
+	}
+}
+
+static void KYTY_SYSV_ABI JsonValueSetArray(JsonValue* self, const JsonArray* value) {
+	PRINT_NAME();
+
+	if (self != nullptr) {
+		// The source may be this value's array or one of its descendants.
+		auto* array = new JsonArray {JsonArrayCopy(value, self)};
+		JsonValueClear(self);
+		self->type  = JsonValueTypeArray;
+		self->array = array;
+	}
+}
+
+static void KYTY_SYSV_ABI JsonValueSetValue(JsonValue* self, const JsonValue* value) {
+	PRINT_NAME();
+
+	if (self == nullptr || value == nullptr || self == value) {
+		return;
+	}
+
+	// The source may be a descendant of this value, so copy before clearing.
+	JsonValue copy {};
+	JsonValueInit(&copy);
+	JsonValueCopy(&copy, value);
+	JsonValueCopy(self, &copy);
+	JsonValueClear(&copy);
+}
 LIB_DEFINE(InitNet_1_Json2) {
 	LIB_FUNC("-hJRce8wn1U", LibJson2::JsonMemAllocatorCtor);
 	LIB_FUNC("WSOuge5IsCg", LibJson2::JsonInitParameter2Ctor);
@@ -1076,6 +1425,27 @@ LIB_DEFINE(InitNet_1_Json2) {
 	LIB_FUNC("RBw+4NukeGQ", LibJson2::JsonValueCount);
 	LIB_FUNC("+drDFyAS6u4", LibJson2::JsonInitializerSetGlobalNullAccessCallback);
 	LIB_FUNC("00oCq0RwSAY", LibJson2::JsonInitializerSetGlobalNullAccessCallback);
+	LIB_FUNC("9uP25i6ipno", LibJson2::JsonArrayEmpty);
+	LIB_FUNC("bcH5EnFE2xY", LibJson2::JsonArrayBegin);
+	LIB_FUNC("WXF2ihRF+B8", LibJson2::JsonArrayEnd);
+	LIB_FUNC("w5+VCznos5E", LibJson2::JsonArrayIteratorNext);
+	LIB_FUNC("wcgr5mte7T8", LibJson2::JsonArrayIteratorDeref);
+	LIB_FUNC("5AZPp99ogrc", LibJson2::JsonArrayIteratorNotEqual);
+	LIB_FUNC("9yLjn46Ypfs", LibJson2::JsonArrayIteratorDtor);
+	LIB_FUNC("xhAcaIwnrgk", LibJson2::JsonObjectBegin);
+	LIB_FUNC("ivMCitpSQNk", LibJson2::JsonObjectEnd);
+	LIB_FUNC("DlWmn2ZQuWY", LibJson2::JsonObjectIteratorNext);
+	LIB_FUNC("ZCd6IYoD3Bc", LibJson2::JsonObjectIteratorDeref);
+	LIB_FUNC("+isUKw4zud4", LibJson2::JsonObjectIteratorNotEqual);
+	LIB_FUNC("hoINmSMlYjI", LibJson2::JsonObjectIteratorDtor);
+	LIB_FUNC("0CAesfH963Q", LibJson2::JsonStringCopyCtor);
+	LIB_FUNC("wM4LO2iK3s8", LibJson2::JsonStringEmpty);
+	LIB_FUNC("VbFjEs--uiA", LibJson2::JsonStringEqualCString);
+	LIB_FUNC("x4AUdbhpRB0", LibJson2::JsonValueUIntCtor);
+	LIB_FUNC("sn4HNCtNRzY", LibJson2::JsonValueGetUInteger);
+	LIB_FUNC("n6FC+l9DU70", LibJson2::JsonValueSetCString);
+	LIB_FUNC("195ad-jAsTU", LibJson2::JsonValueSetArray);
+	LIB_FUNC("XL8+BUqjB1w", LibJson2::JsonValueSetValue);
 }
 
 } // namespace LibJson2

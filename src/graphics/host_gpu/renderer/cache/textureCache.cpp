@@ -38,6 +38,24 @@ namespace {
 
 constexpr uint64_t NumFramesBeforeRemoval = 32;
 
+bool WatchImageRange(uint64_t address, uint64_t size) {
+	static const uint64_t watched = [] {
+		const auto* value = std::getenv("KYTY_IMAGE_WATCH");
+		return value == nullptr ? uint64_t {0} : std::strtoull(value, nullptr, 0);
+	}();
+	return watched != 0 && size != 0 && address <= watched && watched - address < size;
+}
+
+void TraceWatchedImage(const char* event, const Image& image, uint64_t address = 0, uint64_t size = 0) {
+	if (!WatchImageRange(image.info.data.address, image.info.data.size)) return;
+	LOGF("ImageWatch: frame=%u event=%s image=0x%016" PRIx64 " size=0x%" PRIx64
+	     " affected=0x%016" PRIx64 "+0x%" PRIx64 " cpu=%u buffer=%u gpu=%u meta=%u:0x%016" PRIx64 "+0x%" PRIx64 "\n",
+	     GpuTimeProfiler::Frame(), event, image.info.data.address, image.info.data.size, address, size,
+	     image.IsCpuDirty(), image.IsBufferModified(), image.IsGpuModified(),
+	     static_cast<uint32_t>(image.info.metadata.kind), image.info.metadata.range.address,
+	     image.info.metadata.range.size);
+}
+
 void TraceImageLifetime(const char* event, const ImageInfo& info, const char* reason, uint32_t line,
                         uint32_t last_frame = UINT32_MAX) {
 	static const bool trace = std::getenv("KYTY_IMAGE_LIFETIME_TRACE") != nullptr;
@@ -1416,6 +1434,7 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	}
 	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
 	if (upload) {
+		TraceWatchedImage("upload", image);
 		const auto source =
 		    m_buffer_cache.ObtainBufferForImage(image.SourceRange().address, image.SourceRange().size);
 		if (source.buffer == nullptr) {
@@ -1885,6 +1904,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 void TextureCache::ClearImage(CommandBuffer& command, ImageId id,
                               const vk::ImageSubresourceRange& range, const vk::ClearValue& clear) {
 	auto& image = m_slot_images[id];
+	TraceWatchedImage("clear", image);
 	const auto aspects = image.info.IsDepth() ? ImageViewOps::DepthAspectMask(image.backing.format)
 	                                          : vk::ImageAspectFlagBits::eColor;
 	EXIT_IF(range.baseMipLevel >= image.info.resources.levels);
@@ -2173,6 +2193,7 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 		if (image.depth_id || !image.Overlaps(address, size)) {
 			continue;
 		}
+		TraceWatchedImage("gpu-invalidate", image, address, size);
 		if (image.IsGpuModified()) {
 			image.ClearGpuModified();
 		}
@@ -2203,6 +2224,7 @@ void TextureCache::InvalidateCpuAliases(uint64_t address, uint64_t size) {
 			continue;
 		}
 		if (owner->Overlaps(address, size)) {
+			TraceWatchedImage("cpu-invalidate", *owner, address, size);
 			owner->InvalidateCpuWrite(address, size);
 			UntrackImage(id);
 			continue;

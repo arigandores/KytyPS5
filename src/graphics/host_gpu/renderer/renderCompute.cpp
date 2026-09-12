@@ -192,6 +192,12 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 	                              size)) {
 		return false;
 	}
+	static const bool clear_trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+	if (clear_trace) {
+		LOGF("BufferFillTrace: frame=%u shader=0x%016" PRIx64 " addr=0x%016" PRIx64
+		     " size=0x%" PRIx64 " value=0x%08x\n", GpuTimeProfiler::Frame(),
+		     program.shader_hash, descriptor.Base48(), size, packed_clear);
+	}
 	if (!cache.ClearImageFromBuffer(command, descriptor.Base48(), size, packed_clear)) {
 		// Track deferred DCC state while the original dispatch writes the metadata allocation.
 		cache.TrackDccFill(descriptor.Base48(), size, packed_clear);

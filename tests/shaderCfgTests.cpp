@@ -13518,7 +13518,8 @@ int main() {
     options.stage = is_vertex ? ShaderType::Vertex : (is_pixel ? ShaderType::Pixel : ShaderType::Compute);
     options.shader_hash = key.hash;
     options.user_data = user_data;
-    options.dump_ir = false;
+    const bool dump_recompile = std::getenv("KYTY_RECOMPILE_DUMP") != nullptr;
+    options.dump_ir = dump_recompile;
     options.early_dump = false;
     options.dump_label = is_vertex ? "ShaderRecompiler VS" : (is_pixel ? "ShaderRecompiler PS" : "ShaderRecompiler CS");
     if (is_vertex) {
@@ -13615,6 +13616,23 @@ int main() {
     }
     std::fwrite(compiled.spirv.data(), sizeof(uint32_t), compiled.spirv.size(), out);
     std::fclose(out);
+    if (dump_recompile) {
+      const auto write_dump = [&](const char *suffix, const std::string &contents) {
+        const auto path = parts[2] + suffix;
+        FILE *dump = std::fopen(path.c_str(), "wb");
+        if (dump == nullptr) {
+          std::fprintf(stderr, "recompile: cannot write %s\n", path.c_str());
+          return false;
+        }
+        const bool written = std::fwrite(contents.data(), 1, contents.size(), dump) == contents.size();
+        const bool closed = std::fclose(dump) == 0;
+        return written && closed;
+      };
+      if (!write_dump(".rdna2", compiled.decoded_dump) ||
+          !write_dump(".ir", compiled.ir_dump)) {
+        return 1;
+      }
+    }
     const auto ms = [](auto a, auto b) {
       return std::chrono::duration_cast<std::chrono::microseconds>(b - a).count() / 1000.0;
     };
@@ -13658,6 +13676,9 @@ int main() {
       std::fclose(file);
       ShaderRecompiler::Decoder::Program decoded;
       ShaderRecompiler::Decoder::DecodeProgram(std::span<const uint32_t>{code}, decoded);
+      if (std::getenv("KYTY_CFG_BENCH_DECODE") != nullptr) {
+        std::printf("%s\n", ShaderRecompiler::Decoder::ProgramToString(decoded).c_str());
+      }
       const auto t0 = std::chrono::steady_clock::now();
       auto graph = ShaderRecompiler::CFG::BuildGraph(decoded);
       const auto t1 = std::chrono::steady_clock::now();

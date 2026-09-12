@@ -190,3 +190,37 @@ ALPHA_TO_MASK_DISABLE у двух материалов листвы. Ранее 
 первом фактическом использовании шейдера из translation cache, не только при новой
 трансляции. Спекулятивный PM4 lookahead не считается первым использованием.
 Запуск alpha_trace начат22:05:57, под исправленным watchdog. Пользователь навигирует.
+
+## Offline foliage analysis after alpha_trace (2026-09-12, late session)
+
+alpha_trace was closed with WM_CLOSE at22:14; no emulator remains from that run.
+Saved log_alpha_trace.txt, stdout_alpha_trace.txt, rec_alpha_trace.mp4. Actual leaf
+DB_ALPHA_TO_MASK=0xAA00 (enable bit0 is clear); no forced alpha-to-coverage change.
+Offline PS1a4e22aaa15d8ab3 reproduces captured SPIR-V byte-for-byte (SHA25608b6b9f...).
+KYTY_RECOMPILE_DUMP now saves decoded RDNA2 and IR; KYTY_CFG_BENCH_DECODE prints
+raw decoded vertex instructions without requiring vertex fetch reconstruction.
+
+RenderDoc capture1789235743603059: depth VS e26e4d0ba9675ff2, material VS ae4cca3e4bf70904.
+Most corresponding finite positions match bit-for-bit; a few x/y rounding differences
+exist, so this is not a blanket proof of depth invariance. More importantly, draw237110
+has4872 referenced vertices, ALL positions NaN. DebugVertex(0,0,27718,0) traced the FIRST
+NaN to VS texture sample %4734 at UV(0.7420871854,2.0451242924), image2988 (wind field).
+Its source image827034 already contains36864 pixels with repeated dword0xFFFFFFF0:
+512x64 block at x512..1023,y0..63 plus64x64 at x0..63,y64..127. The SAME bits/regions
+occur in older capture1789223444252358. Do not attribute them to the later GC color fix.
+This pattern resembles a metadata fill; its producer/ownership mistake is not yet proven.
+
+Controlled offline probe only (NOT in emulator): sanitizing NaN at four wind CS texelFetch
+results restores4872/4872 vertices to finite positions. Original and unmodified GLSL
+roundtrip BOTH retain4872/4872 NaN. Artifacts: foliage_offline/nan_probe.log,
+vertex_debug.log, geometry_all.log, vertices.rdna2, position_comparison.txt.
+This establishes a concrete disappearing-geometry mechanism in the capture, not yet
+confirmation that every user-marked video disappearance has the same cause.
+No NaN clamp/workaround has been added to the runtime shader compiler.
+
+New opt-in diagnostics: KYTY_IMAGE_WATCH=<guest address> logs upload, native clear,
+CPU invalidation and GPU-buffer invalidation of containing images, including metadata;
+KYTY_CLEAR_TRACE=1 records every recognized uniform buffer fill, with frame and shader.
+Build succeeded. Next: trace creation/clearing of the interaction input at0x516830000,
+identify why0xFFFFFFF0 reaches color data, fix ownership/clear and validate with video.
+60FPS still unmet; usual scene CPU~82ms/~6000draw. Rare entry hang remains unresolved.

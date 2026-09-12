@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <atomic>
 
+#include "common/alignment.h"
 #include "common/assert.h"
 #include "common/frameStats.h"
 #include "common/parallelCopy.h"
@@ -138,11 +139,10 @@ void BufferCache::ClearPrefetchPending(Buffer& buffer) {
 }
 
 void BufferCache::DeleteBuffer(BufferId id) {
-	auto* buffer = m_slot_buffers.try_get(id);
-	if (buffer == nullptr || buffer->is_deleted) {
+	if (IsBufferInvalid(id)) {
 		return;
 	}
-	ClearPrefetchPending(*buffer);
+	ClearPrefetchPending(m_slot_buffers[id]);
 	Unregister(id);
 	if (m_scheduler.Active()) {
 		m_scheduler.DeferOperation([this, id] { m_slot_buffers.erase(id); });
@@ -182,12 +182,11 @@ std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& 
 	    copy.size > copy.buffer->Size() - copy.source_offset) {
 		EXIT("BufferCache: invalid download copy\n");
 	}
-	const auto begin = copy.source_offset & ~uint64_t {3};
-	if (copy.source_offset > UINT64_MAX - copy.size ||
-	    copy.source_offset + copy.size > UINT64_MAX - 3) {
+	const auto begin = Common::AlignDown(copy.source_offset, 4);
+	if (copy.source_offset + copy.size > UINT64_MAX - 3) {
 		EXIT("BufferCache: download copy alignment overflow\n");
 	}
-	const auto end = (copy.source_offset + copy.size + 3) & ~uint64_t {3};
+	const auto end = Common::AlignUp(copy.source_offset + copy.size, 4);
 	if (end > copy.buffer->Size()) {
 		EXIT("BufferCache: aligned download copy exceeds its owner\n");
 	}
@@ -271,12 +270,6 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, con
 				flush();
 			}
 		}
-	}
-	if (!batch.empty()) {
-		flush();
-	}
-	for (const auto& copy: copies) {
-		m_gpu_modified_ranges.Subtract(copy.address, copy.size);
 	}
 	drain_report();
 }
@@ -417,15 +410,11 @@ void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) 
 
 	std::vector<DownloadCopy> copies;
 	m_memory_tracker.ForEachDownloadRange<false>(
-	    window_begin, window_end - window_begin,
-	    [&](uint64_t address, uint64_t bytes) noexcept {
+	    window_begin, window_end - window_begin, [&](uint64_t address, uint64_t bytes) noexcept {
 		    m_memory_tracker.ValidateGpuDirtyPages(m_gpu_modified_ranges, address, bytes,
 		                                           "memory invalidation");
-	    },
-	    [&](uint64_t address, uint64_t bytes) noexcept {
-		    m_gpu_modified_ranges.ForEachIntersection(address, bytes, [&](RangeSet::Range range) {
-			    copies.push_back(
-			        {&buffer, buffer.Offset(range.address), range.address, range.size});
+		    m_gpu_modified_ranges.ForEachInRange(address, bytes, [&](uint64_t start, uint64_t end) {
+			    copies.push_back({&buffer, buffer.Offset(start), start, end - start});
 		    });
 	    });
 	if (!copies.empty()) {
@@ -507,7 +496,7 @@ BufferCache::OverlapResult BufferCache::ResolveOverlaps(uint64_t vaddr, uint64_t
 		end                       = std::max(end, buffer_end);
 		if (!has_stream_leap && (stream_score += buffer.StreamScore()) > StreamLeapThreshold) {
 			has_stream_leap = true;
-			// Fix the shadPS4 bug that reserves space opposite to the incoming stream's growth.
+			// Reserve space in the incoming stream's direction of growth.
 			// The old buffer extending left of the request predicts growth to the right, and vice versa.
 			if (expands_left) {
 				end += std::min(StreamLeapSize, PageTable::kAddressSpaceSize - end);
@@ -538,8 +527,8 @@ void BufferCache::JoinOverlap(BufferId new_id, BufferId overlap_id, bool accumul
 
 BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 	EXIT_IF(m_scheduler.Current().IsInvalid());
-	const auto end = (vaddr + size + CACHING_PAGESIZE - 1) & ~(CACHING_PAGESIZE - 1);
-	vaddr &= ~(CACHING_PAGESIZE - 1);
+	const auto end = Common::AlignUp(vaddr + size, CACHING_PAGESIZE);
+	vaddr = Common::AlignDown(vaddr, CACHING_PAGESIZE);
 	size               = end - vaddr;
 	const auto overlap = ResolveOverlaps(vaddr, size);
 
@@ -687,17 +676,17 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		}
 	}
 
-	if (buffer == nullptr || buffer->is_deleted || !buffer->IsInBounds(vaddr, size)) {
-		id     = FindBuffer(vaddr, size);
-		buffer = &m_slot_buffers[id];
+	if (IsBufferInvalid(id) || !m_slot_buffers[id].IsInBounds(vaddr, size)) {
+		id = FindBuffer(vaddr, size);
 	}
-	TouchBuffer(*buffer);
-	(void)SynchronizeBuffer(*buffer, vaddr, size, is_written, is_texel_buffer);
+	auto& resolved = m_slot_buffers[id];
+	TouchBuffer(resolved);
+	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer);
 	if (is_written) {
 		m_gpu_modified_ranges.Add(vaddr, size);
 		NoteGpuWrite(vaddr, size);
 	}
-	return {buffer, buffer->Offset(vaddr)};
+	return {&resolved, resolved.Offset(vaddr)};
 }
 
 namespace {
@@ -994,9 +983,7 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	}
 
 	m_texture_cache.InvalidateMemoryFromGPU(vaddr, size);
-	const auto id          = FindBuffer(vaddr, size);
-	auto [dst, dst_offset] = ObtainBuffer(vaddr, size, true, true, id);
-	EXIT_IF(dst == nullptr);
+	auto [dst, dst_offset] = ObtainBuffer(vaddr, size, true, true);
 	dst->Fill(dst_offset, size, value);
 }
 
@@ -1048,10 +1035,6 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 	                                    : std::pair {&m_gds_buffer, src_vaddr};
 	auto [dst, dst_offset] = dst_memory ? ObtainBuffer(dst_vaddr, size, true, true, dst_id)
 	                                    : std::pair {&m_gds_buffer, dst_vaddr};
-	EXIT_IF(src == nullptr || dst == nullptr);
-	if (src == dst && src_offset < dst_offset + size && dst_offset < src_offset + size) {
-		EXIT("BufferCache: resolved Vulkan copy ranges overlap\n");
-	}
 	dst->CopyFrom(command, *src, src_offset, dst_offset, size);
 }
 
@@ -1094,7 +1077,7 @@ void BufferCache::RunGarbageCollector() {
 	const uint64_t age        = std::min<uint64_t>(aggressive ? 80 : 160, tick);
 	const size_t   limit      = aggressive ? 64 : 32;
 
-	std::vector<BufferId> dirty_buffers;
+	std::vector<BufferId>     dirty_buffers;
 	std::vector<DownloadCopy> copies;
 	size_t                    retire_count = 0;
 	m_lru_cache.ForEachItemBelow(tick - age, [&](BufferId id) {
@@ -1112,10 +1095,9 @@ void BufferCache::RunGarbageCollector() {
 		if (dirty) {
 			// Every range the set holds inside the buffer (the tracker pages may disagree after
 			// a stale-readable window; the set is what the download subtracts).
-			m_gpu_modified_ranges.ForEachIntersection(
-			    buffer.CpuAddress(), buffer.Size(), [&](RangeSet::Range range) {
-				    copies.push_back({&buffer, range.address - buffer.CpuAddress(), range.address,
-				                      range.size});
+			m_gpu_modified_ranges.ForEachInRange(
+			    buffer.CpuAddress(), buffer.Size(), [&](uint64_t start, uint64_t end) {
+				    copies.push_back({&buffer, start - buffer.CpuAddress(), start, end - start});
 			    });
 			dirty_buffers.push_back(id);
 		} else {
@@ -1186,16 +1168,13 @@ BufferCache::AsyncReadback BufferCache::BeginAsyncReadback(uint64_t vaddr, uint6
 
 	uint64_t packed = 0;
 	m_memory_tracker.ForEachDownloadRange<false>(
-	    window_begin, window_end - window_begin,
-	    [&](uint64_t address, uint64_t bytes) noexcept {
+	    window_begin, window_end - window_begin, [&](uint64_t address, uint64_t bytes) noexcept {
 		    m_memory_tracker.ValidateGpuDirtyPages(m_gpu_modified_ranges, address, bytes,
 		                                           "memory invalidation");
-	    },
-	    [&](uint64_t address, uint64_t bytes) noexcept {
-		    for (const auto range: m_gpu_modified_ranges.Intersections(address, bytes)) {
-			    job.pieces.push_back({range.address, range.size, packed});
-			    packed += AlignDownload(range.size + (range.address & 3u));
-		    }
+		    m_gpu_modified_ranges.ForEachInRange(address, bytes, [&](uint64_t start, uint64_t end) {
+			    job.pieces.push_back({start, end - start, packed});
+			    packed += AlignDownload((end - start) + (start & 3u));
+		    });
 	    });
 	if (job.pieces.empty()) {
 		return job;
@@ -1278,10 +1257,10 @@ void BufferCache::ServeStaleRead(uint64_t vaddr, uint64_t size) {
 	uint64_t                   packed = 0;
 	m_memory_tracker.ForEachDownloadRange<false>(
 	    window_begin, window_end - window_begin, [&](uint64_t address, uint64_t bytes) noexcept {
-		    for (const auto range: m_gpu_modified_ranges.Intersections(address, bytes)) {
-			    pieces.push_back({range.address, range.size, packed});
-			    packed += AlignDownload(range.size + (range.address & 3u));
-		    }
+		    m_gpu_modified_ranges.ForEachInRange(address, bytes, [&](uint64_t start, uint64_t end) {
+			    pieces.push_back({start, end - start, packed});
+			    packed += AlignDownload((end - start) + (start & 3u));
+		    });
 	    });
 	auto& hot = m_hot_regions[vaddr >> HotBucketBits];
 	hot.begin = hot.hits == 0 ? window_begin : std::min(hot.begin, window_begin);
@@ -1640,12 +1619,12 @@ void BufferCache::DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size) {
 		auto& buffer = m_slot_buffers[id];
 		if (m_memory_tracker.IsRegionGpuModified(buffer.CpuAddress(), buffer.Size())) {
 			m_memory_tracker.ForEachDownloadRange<false>(
-			    buffer.CpuAddress(), buffer.Size(), [&](uint64_t, uint64_t) noexcept {},
+			    buffer.CpuAddress(), buffer.Size(),
 			    [&](uint64_t dirty_address, uint64_t dirty_size) noexcept {
-				    m_gpu_modified_ranges.ForEachIntersection(
-				        dirty_address, dirty_size, [&](RangeSet::Range range) {
-					        copies.push_back({&buffer, range.address - buffer.CpuAddress(),
-					                          range.address, range.size});
+				    m_gpu_modified_ranges.ForEachInRange(
+				        dirty_address, dirty_size, [&](uint64_t start, uint64_t end) {
+					        copies.push_back({&buffer, start - buffer.CpuAddress(), start,
+					                          end - start});
 				        });
 			    });
 			dirty_buffers.push_back(id);
@@ -1704,10 +1683,11 @@ void BufferCache::PrefetchHotReadbacks() {
 		uint64_t           packed = 0;
 		m_memory_tracker.ForEachDownloadRange<false>(
 		    begin, end - begin, [&](uint64_t address, uint64_t bytes) noexcept {
-			    for (const auto range: m_gpu_modified_ranges.Intersections(address, bytes)) {
-				    pieces.push_back({range.address, range.size, packed});
-				    packed += AlignDownload(range.size + (range.address & 3u));
-			    }
+			    m_gpu_modified_ranges.ForEachInRange(
+			        address, bytes, [&](uint64_t first, uint64_t last) {
+				        pieces.push_back({first, last - first, packed});
+				        packed += AlignDownload((last - first) + (first & 3u));
+			        });
 		    });
 		if (pieces.empty() || packed > (4u << 20)) {
 			continue;

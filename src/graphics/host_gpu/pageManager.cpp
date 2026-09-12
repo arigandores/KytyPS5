@@ -1,6 +1,8 @@
 #include "graphics/host_gpu/pageManager.h"
 
+#include "common/alignment.h"
 #include "common/frameStats.h"
+#include "common/virtualMemory.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 #include "kernel/memory.h"
 
@@ -36,18 +38,7 @@ constexpr uint64_t REGION_SIZE  = TRACKER_REGION_SIZE;
 constexpr uint64_t ADDRESS_SIZE = TRACKER_ADDRESS_SIZE;
 constexpr uint64_t REGION_COUNT = ADDRESS_SIZE / REGION_SIZE;
 
-#if KYTY_PLATFORM != KYTY_PLATFORM_WINDOWS
-// The tracker reuses Win32 memory-protection tags as internal page-state values.
-// Mirror their canonical numeric values so the shared state-machine logic is identical.
-constexpr uint32_t PAGE_NOACCESS  = 0x01;
-constexpr uint32_t PAGE_READONLY  = 0x02;
-constexpr uint32_t PAGE_READWRITE = 0x04;
-#endif
 constexpr uint64_t REGION_PAGES = REGION_SIZE / PAGE_SIZE;
-
-constexpr uint32_t NO_ACCESS_PROTECTION  = PAGE_NOACCESS;
-constexpr uint32_t READ_ONLY_PROTECTION  = PAGE_READONLY;
-constexpr uint32_t READ_WRITE_PROTECTION = PAGE_READWRITE;
 
 [[noreturn]] void FailFast(const char* reason = nullptr) noexcept {
 	std::fputs("PageManager fail-fast: ", stderr);
@@ -71,15 +62,6 @@ constexpr uint32_t READ_WRITE_PROTECTION = PAGE_READWRITE;
 	std::_Exit(322);
 }
 
-Common::VirtualMemory::Mode ToMemoryMode(uint32_t protection) {
-	switch (protection) {
-		case NO_ACCESS_PROTECTION: return Common::VirtualMemory::Mode::NoAccess;
-		case READ_ONLY_PROTECTION: return Common::VirtualMemory::Mode::Read;
-		case READ_WRITE_PROTECTION: return Common::VirtualMemory::Mode::ReadWrite;
-		default: Fatal("unmappable protection 0x%08" PRIx32, protection);
-	}
-}
-
 class SpinGuard final {
 public:
 	explicit SpinGuard(std::atomic_flag& lock): m_lock(lock) {
@@ -100,15 +82,6 @@ void ValidateRange(uint64_t vaddr, uint64_t size) {
 	}
 }
 
-uint64_t PageStart(uint64_t vaddr) {
-	return vaddr & ~(PAGE_SIZE - 1);
-}
-
-uint64_t PageEnd(uint64_t vaddr, uint64_t size) {
-	ValidateRange(vaddr, size);
-	return PageStart(vaddr + size - 1) + PAGE_SIZE;
-}
-
 } // namespace
 
 struct PageManager::Impl {
@@ -116,14 +89,14 @@ struct PageManager::Impl {
 		uint8_t write_watchers  : 7 = 0;
 		uint8_t access_watchers : 1 = 0;
 
-		[[nodiscard]] uint32_t Perms() const noexcept {
+		[[nodiscard]] Common::VirtualMemory::Mode Perms() const noexcept {
 			if (access_watchers != 0) {
-				return NO_ACCESS_PROTECTION;
+				return Common::VirtualMemory::Mode::NoAccess;
 			}
 			if (write_watchers != 0) {
-				return READ_ONLY_PROTECTION;
+				return Common::VirtualMemory::Mode::Read;
 			}
-			return READ_WRITE_PROTECTION;
+			return Common::VirtualMemory::Mode::ReadWrite;
 		}
 
 		template <int delta, bool is_read>
@@ -193,9 +166,6 @@ struct PageManager::Impl {
 		}
 #endif
 		regions = std::make_unique<std::atomic<Region*>[]>(REGION_COUNT);
-		for (uint64_t i = 0; i < REGION_COUNT; i++) {
-			regions[i].store(nullptr, std::memory_order_relaxed);
-		}
 	}
 
 	~Impl() {
@@ -231,15 +201,15 @@ struct PageManager::Impl {
 		return ptr;
 	}
 
-	void Protect(uint64_t vaddr, uint64_t size, uint32_t protection) noexcept {
+	void Protect(uint64_t vaddr, uint64_t size, Common::VirtualMemory::Mode mode) noexcept {
 		static const bool trap = std::getenv("KYTY_STREAM_TRACE") != nullptr;
-		if (trap && protection != READ_WRITE_PROTECTION &&
+		if (trap && mode != Common::VirtualMemory::Mode::ReadWrite &&
 		    Libs::LibKernel::Memory::OverlapsGuestStack(vaddr, size)) {
 			static std::atomic<int> logged {0};
 			if (logged.fetch_add(1) < 16) {
-				std::fprintf(stderr, "StackProtect: addr=0x%016llx size=0x%llx prot=0x%x tid=%lu\n",
+				std::fprintf(stderr, "StackProtect: addr=0x%016llx size=0x%llx mode=0x%x tid=%lu\n",
 				             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size),
-				             protection, static_cast<unsigned long>(GetCurrentThreadId()));
+				             static_cast<unsigned>(mode), static_cast<unsigned long>(GetCurrentThreadId()));
 				void* frames[24] = {};
 				const auto n = static_cast<int>(CaptureStackBackTrace(0, 24, frames, nullptr));
 				const auto image_base = reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr));
@@ -260,10 +230,9 @@ struct PageManager::Impl {
 		if (!t_protect_worker) {
 			sync_waiters.fetch_add(1, std::memory_order_acq_rel);
 		}
-		if (!Libs::LibKernel::Memory::ProtectGuestHostMemory(vaddr, size,
-		                                                     ToMemoryMode(protection))) {
-			Fatal("address-space protection failed at 0x%016" PRIx64 ", new=0x%08" PRIx32, vaddr,
-			      protection);
+		if (!Libs::LibKernel::Memory::ProtectGuestHostMemory(vaddr, size, mode)) {
+			Fatal("address-space protection failed at 0x%016" PRIx64 ", mode=0x%08" PRIx32, vaddr,
+			      static_cast<uint32_t>(mode));
 		}
 		if (!t_protect_worker) {
 			sync_waiters.fetch_sub(1, std::memory_order_acq_rel);
@@ -276,12 +245,12 @@ struct PageManager::Impl {
 			FS::Add(worker ? FS::Counter::ProtectWorkerPages : FS::Counter::ProtectPages, pages);
 			if (!worker) {
 				FS::Add(FS::Counter::ProtectCalls, 1);
-				switch (protection) {
-					case READ_ONLY_PROTECTION:
+				switch (mode) {
+					case Common::VirtualMemory::Mode::Read:
 						FS::Add(FS::Counter::ProtectRoCalls, 1);
 						FS::Add(FS::Counter::ProtectRoPages, pages);
 						break;
-					case NO_ACCESS_PROTECTION:
+					case Common::VirtualMemory::Mode::NoAccess:
 						FS::Add(FS::Counter::ProtectNaCalls, 1);
 						FS::Add(FS::Counter::ProtectNaPages, pages);
 						break;
@@ -317,7 +286,7 @@ struct PageManager::Impl {
 
 	// Protects a run of pages under the region lock and marks their host state as current.
 	void ProtectRun(Region& region, uint64_t base_addr, size_t first, size_t count,
-	                uint32_t perms) {
+	                Common::VirtualMemory::Mode perms) {
 		Protect(base_addr + first * PAGE_SIZE, count * PAGE_SIZE, perms);
 		if (region.has_pending) {
 			SetPendingRange(region, first, count, false);
@@ -397,11 +366,12 @@ struct PageManager::Impl {
 
 	template <bool track, bool is_read>
 	void UpdatePageWatchers(uint64_t vaddr, uint64_t size, bool defer = false) {
-		const auto begin = PageStart(vaddr);
-		const auto end   = PageEnd(vaddr, size);
+		ValidateRange(vaddr, size);
+		const auto begin = Common::AlignDown(vaddr, PAGE_SIZE);
+		const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
 		for (auto chunk_begin = begin; chunk_begin < end;) {
-			const auto chunk_end   = std::min(end, (chunk_begin / REGION_SIZE + 1) * REGION_SIZE);
-			const auto region_base = chunk_begin / REGION_SIZE * REGION_SIZE;
+			const auto chunk_end = std::min(end, Common::AlignUp(chunk_begin + 1, REGION_SIZE));
+			const auto region_base = Common::AlignDown(chunk_begin, REGION_SIZE);
 			auto*      region = track ? GetOrCreateRegion(chunk_begin) : FindRegion(chunk_begin);
 			if (region == nullptr) {
 				Fatal("untracking unknown page 0x%016" PRIx64, chunk_begin);

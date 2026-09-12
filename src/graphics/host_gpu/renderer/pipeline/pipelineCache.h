@@ -67,7 +67,6 @@ struct PipelineStaticParameters {
 	uint8_t                    alpha_destblend[RENDER_COLOR_ATTACHMENTS_MAX]      = {};
 	bool                       separate_alpha_blend[RENDER_COLOR_ATTACHMENTS_MAX] = {};
 	bool                       blend_enable[RENDER_COLOR_ATTACHMENTS_MAX]         = {};
-	bool                       blend_bypass[RENDER_COLOR_ATTACHMENTS_MAX]         = {};
 
 	bool operator==(const PipelineStaticParameters& other) const noexcept;
 };
@@ -77,7 +76,7 @@ struct PipelineStaticParameters {
 static_assert(std::is_trivially_copyable_v<PipelineStaticParameters>);
 static_assert(std::is_standard_layout_v<PipelineStaticParameters>);
 static_assert(alignof(PipelineStaticParameters) == 1);
-static_assert(sizeof(PipelineStaticParameters) == 166);
+static_assert(sizeof(PipelineStaticParameters) == 158);
 
 struct PipelineRenderingState {
 	std::array<vk::Format, RENDER_COLOR_ATTACHMENTS_MAX> color_formats {};
@@ -148,13 +147,13 @@ public:
 	// nullptr: the pipeline is still being compiled by a worker thread (KYTY_ASYNC_PIPELINES); the
 	// caller skips the draw and retries with the next one that needs the same pipeline.
 	Pipeline*
-	CreateGraphicsPipeline(std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
+	GetGraphicsPipeline(std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
 	                       const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
 	                       const ShaderPixelInputInfo* ps_input_info,
 	                       vk::PrimitiveTopology topology, bool primitive_restart_enable,
 	                       const ShaderProgram& vertex_program, const ShaderProgram& pixel_program,
 	                       bool allow_wait = true);
-	Pipeline& CreateComputePipeline(const ShaderComputeInputInfo& input_info,
+	Pipeline& GetComputePipeline(const ShaderComputeInputInfo& input_info,
 	                                const ShaderProgram&          compute_program);
 	// PM4 lookahead (KYTY_ASYNC_COMPUTE): translates the program of a future dispatch and queues
 	// its pipeline compile to the worker pool; CreateComputePipeline waits for it if it is still

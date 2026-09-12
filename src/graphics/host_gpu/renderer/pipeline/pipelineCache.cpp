@@ -527,10 +527,6 @@ struct PipelineCache::ProgramCache {
 			     HostMicros() - module_begin, static_cast<uint64_t>(result.spirv.size()));
 		}
 		if (options.dump_ir) {
-			if (!options.early_dump) {
-				LOGF("%s decoded RDNA2:\n%s", options.dump_label, result.decoded_dump.c_str());
-				LOGF("%s IR:\n%s", options.dump_label, result.ir_dump.c_str());
-			}
 			LOGF("%s SPIR-V words=%" PRIu64 " wave_size=%u\n", options.dump_label,
 			     static_cast<uint64_t>(result.spirv.size()), options.wave_size);
 		}
@@ -745,17 +741,16 @@ struct PipelineCache::ProgramCache {
 		options.shader_hash = params.hash;
 		options.user_data   = params.user_data;
 		options.back_code      = params.back_code;
-		options.dump_ir     = Config::GetShaderLogDirection() != Config::ShaderLogDirection::Silent;
+		options.dump_ir     = Config::GetShaderLogDirection() != Config::LogDirection::Silent;
 		options.early_dump  = options.dump_ir;
 		options.dump_label  = label;
 		options.input_info  = stage_input;
-		options.scratch_dwords = input_info.scratch_size_dwords;
+
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 			options.user_data_base = 8;
 			if (stage == ShaderType::Mesh) {
 				options.user_data_base = 0;
 				options.wave_size      = input_info.mesh.wave_size;
-				options.scratch_dwords = input_info.mesh.scratch_size_dwords;
 			} else {
 				options.detect_wave_size = true;
 			}
@@ -1283,7 +1278,7 @@ bool PipelineStaticParameters::operator==(const PipelineStaticParameters& other)
 	return std::memcmp(this, &other, sizeof(*this)) == 0;
 }
 
-PipelineCache::Pipeline* PipelineCache::CreateGraphicsPipeline(
+PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
     std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
     const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
     const ShaderPixelInputInfo* ps_input_info, vk::PrimitiveTopology topology,
@@ -1351,6 +1346,18 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 			EXIT("mixed color attachment sample counts are unsupported: %u and %u\n",
 			     attachment_samples, colors[i].desc.info.samples);
 		}
+		// Blend state is indexed by the target slot, not by the dense loop index: a draw with
+		// sparse MRT slots (sand decals) otherwise gets another slot's blend factors.
+		const auto& rt                           = ctx.GetRenderTarget(slot);
+		const auto& bc                           = ctx.GetBlendControl(slot);
+		static_params.color_srcblend[slot]       = bc.color_srcblend;
+		static_params.color_comb_fcn[slot]       = bc.color_comb_fcn;
+		static_params.color_destblend[slot]      = bc.color_destblend;
+		static_params.alpha_srcblend[slot]       = bc.alpha_srcblend;
+		static_params.alpha_comb_fcn[slot]       = bc.alpha_comb_fcn;
+		static_params.alpha_destblend[slot]      = bc.alpha_destblend;
+		static_params.separate_alpha_blend[slot] = bc.separate_alpha_blend;
+		static_params.blend_enable[slot]         = bc.enable && !rt.info.blend_bypass;
 	}
 	const bool with_depth =
 	    depth.desc.view_info.format != vk::Format::eUndefined && static_cast<bool>(depth.image_id);
@@ -1410,20 +1417,6 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	static_params.polygon_mode =
 	    ResolvePolygonMode(mc, static_params.cull_front, static_params.cull_back);
 
-	for (uint32_t i = 0; i < color_count; i++) {
-		const auto slot                       = colors[i].target_slot;
-		const auto& rt                        = ctx.GetRenderTarget(slot);
-		const auto& bc                        = ctx.GetBlendControl(slot);
-		static_params.color_srcblend[slot]       = bc.color_srcblend;
-		static_params.color_comb_fcn[slot]       = bc.color_comb_fcn;
-		static_params.color_destblend[slot]      = bc.color_destblend;
-		static_params.alpha_srcblend[slot]       = bc.alpha_srcblend;
-		static_params.alpha_comb_fcn[slot]       = bc.alpha_comb_fcn;
-		static_params.alpha_destblend[slot]      = bc.alpha_destblend;
-		static_params.separate_alpha_blend[slot] = bc.separate_alpha_blend;
-		static_params.blend_enable[slot]         = bc.enable;
-		static_params.blend_bypass[slot]         = rt.info.blend_bypass;
-	}
 	if (vs_input_info.stage.program->stage != ShaderType::Mesh) {
 		EXIT_IF(vs_input_info.buffers_num < 0 ||
 		        vs_input_info.buffers_num > ShaderVertexInputInfo::RES_MAX ||
@@ -1621,8 +1614,8 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 }
 
 PipelineCache::Pipeline&
-PipelineCache::CreateComputePipeline(const ShaderComputeInputInfo& input_info,
-                                     const ShaderProgram&          compute_program) {
+PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
+                                  const ShaderProgram&          compute_program) {
 	KYTY_PROFILER_BLOCK("PipelineCache::CreatePipeline(Compute)", profiler::colors::RedA100);
 
 	EXIT_IF(!compute_program);
@@ -1980,7 +1973,7 @@ void PipelineCache::TraceShaderRegistration(const Shader& header, const ShaderMa
 			const auto* code = static_cast<const uint32_t*>(const_cast<const void*>(header.code));
 			if (!known) { m_program_cache->pretranslation.Enqueue({code, mapped.code_size_bytes / 4}, mapped.hash,
 			                                        info, regs.cs_regs.user_sgpr,
-			    Config::GetShaderLogDirection() != Config::ShaderLogDirection::Silent); }
+			    Config::GetShaderLogDirection() != Config::LogDirection::Silent); }
 		}
 	}
 	static const bool trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;

@@ -222,7 +222,6 @@ private:
 				options.stage = ShaderType::Compute;
 				options.shader_hash = job->key.hash;
 				options.wave_size = job->info.wave_size;
-				options.scratch_dwords = job->info.scratch_size_dwords;
 				options.input_info.compute = &job->info;
 				options.user_data = std::span(user_data).first(job->key.user_data_count);
 				options.dump_ir = job->dump_ir;

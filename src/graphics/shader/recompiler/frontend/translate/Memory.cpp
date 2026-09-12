@@ -113,11 +113,6 @@ IR::MemoryInfo MemoryInfoFromDecoded(const Decoder::Instruction& decoded) {
 	memory.image_sample_flags       = decoded.image_sample_flags;
 	memory.image_dimension          = decoded.image_dimension;
 	memory.image_address_components = decoded.image_address_components;
-	memory.image_nsa_dwords         = decoded.image_nsa_dwords;
-	for (uint32_t index = 0; index < Decoder::MaxImageNsaAddressComponents; index++) {
-		memory.image_nsa_addr[index] = decoded.image_nsa_addr[index];
-	}
-	memory.memory_segment = decoded.memory_segment;
 	memory.address_is_full =
 	    memory.kind == ResourceKind::Flat ||
 	    (memory.kind == ResourceKind::Global && decoded.src1.kind == Decoder::OperandKind::Vgpr);
@@ -127,8 +122,6 @@ IR::MemoryInfo MemoryInfoFromDecoded(const Decoder::Instruction& decoded) {
 	memory.image_has_mip = decoded.opcode == Decoder::Opcode::IMAGE_LOAD_MIP ||
 	                       decoded.opcode == Decoder::Opcode::IMAGE_STORE_MIP;
 	memory.image_r128    = decoded.image_r128;
-	memory.glc           = decoded.glc;
-	memory.slc           = decoded.slc;
 	memory.idxen         = decoded.idxen;
 	memory.offen         = decoded.offen;
 	memory.resource      = ResourceIndexFromOperand(decoded.src1);
@@ -794,7 +787,7 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	const auto              base = PlainOperand(MemorySourceAt(inst, 0));
 	std::array<IR::U32, 13> comp {};
 	const auto              nsa_components =
-	    std::min(memory.image_nsa_dwords * 4u, Decoder::MaxImageNsaAddressComponents);
+	    std::min(inst.image_nsa_dwords * 4u, Decoder::MaxImageNsaAddressComponents);
 	const auto component_count =
 	    std::min<uint32_t>(inst.image_address_components, static_cast<uint32_t>(comp.size()));
 	for (uint32_t index = 0; index < component_count; index++) {
@@ -802,7 +795,7 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 			comp[index] = ReadRawU32(base);
 		} else if (index - 1u < nsa_components) {
 			comp[index] =
-			    ir.GetVectorReg(static_cast<IR::VectorReg>(memory.image_nsa_addr[index - 1u]));
+			    ir.GetVectorReg(static_cast<IR::VectorReg>(inst.image_nsa_addr[index - 1u]));
 		} else {
 			comp[index] = ReadRawU32(OffsetOperand(base, index));
 		}

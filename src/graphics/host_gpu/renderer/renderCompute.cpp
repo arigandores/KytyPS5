@@ -46,18 +46,12 @@
 #include <vector>
 
 namespace Libs::Graphics {
-static uint64_t BufferDescriptorSize(const ShaderBufferResource& descriptor) {
-	const uint64_t records = descriptor.NumRecords();
-	const uint64_t stride  = descriptor.Stride();
-	return stride == 0 ? records : records * stride;
-}
-
 static bool FillSourcesDisjoint(std::span<const ShaderRecompiler::IR::DescriptorValue> sources,
                                  GuestRange destination, uint32_t output_buffer = UINT32_MAX) {
 	for (uint32_t i = 0; i < sources.size(); ++i) {
 		if (i == output_buffer) continue;
 		const auto source = DecodeNativeDescriptor<ShaderBufferResource>(sources[i]);
-		const auto bytes  = BufferDescriptorSize(source);
+		const auto bytes  = source.GetSize();
 		if (source.Base48() < destination.End() && destination.address < source.Base48() + bytes)
 			return false;
 	}
@@ -77,7 +71,7 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 		const auto  descriptor = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 		// A metadata resource that is also read is not proven to be a full overwrite. Execute it
 		// conservatively instead of replacing the dispatch with a coarse full-surface clear.
-		if (cache.IsMeta(descriptor.Base48()) && (!resource.written || resource.read)) {
+		if ((!resource.written || resource.read) && cache.IsMeta(descriptor.Base48())) {
 			return false;
 		}
 	}
@@ -125,7 +119,7 @@ bool ResolveComputeBufferFill(const ShaderComputeInputInfo& input, uint32_t grou
 	const uint64_t invocations = input.dispatch_thread_dimensions
 	                                 ? group_x
 	                                 : static_cast<uint64_t>(group_x) * input.threads_num[0];
-	const auto     size        = BufferDescriptorSize(descriptor);
+	const auto     size        = descriptor.GetSize();
 	if (invocations != descriptor.NumRecords() || size == 0 || size > UINT32_MAX ||
 	    (input.dispatch_thread_dimensions &&
 	     (group_x % input.threads_num[0] != 0 || input.dispatch_threads_num[0] != group_x ||
@@ -283,8 +277,6 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 
 	const uint32_t frame_num = static_cast<uint32_t>(m_context.GetGpu().GetFrameNum());
-	const bool     large_workgroup =
-	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
 	const auto& program   = *input_info.stage.program;
 	const auto& resources = input_info.stage.resources;
 	// Refresh the debug record with the shader hash now that the program is known (the checkpoint
@@ -337,14 +329,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		ResetBindings();
 		return;
 	}
-	const auto sampled_images = std::count_if(
-	    program.info.images.begin(), program.info.images.end(), [](const auto& image) {
-		    return image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled;
-	    });
+	const bool large_workgroup =
+	    (input_info.threads_num[0] * input_info.threads_num[1] * input_info.threads_num[2] >= 512);
 	const bool                   has_sampler = !program.info.samplers.empty();
 	static std::atomic<uint32_t> dispatch_log_count {0};
 	if ((large_workgroup || has_sampler) &&
 	    dispatch_log_count.fetch_add(1, std::memory_order_relaxed) < 512) {
+		const auto sampled_images = std::count_if(
+		    program.info.images.begin(), program.info.images.end(), [](const auto& image) {
+			    return image.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled;
+		    });
+		const uint32_t frame_num = static_cast<uint32_t>(m_context.GetGpu().GetFrameNum());
 		LOGF("GraphicsRenderDispatchDirect: frame=%u shader=0x%016" PRIx64
 		     " groups=%ux%ux%u mode=0x%08" PRIx32 " local=%ux%ux%u "
 		     "buffers=%zu textures=%zu sampled=%zu storage=%zu samplers=%zu push=%u\n",
@@ -411,7 +406,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		for (uint32_t i = 0; i < program.info.buffers.size() && !dump_this; i++) {
 			const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 			const auto base = r.Base48();
-			const auto size = BufferDescriptorSize(r);
+			const auto size = r.GetSize();
 			dump_this       = base != 0 && dump_addr >= base && dump_addr < base + size;
 		}
 		for (uint32_t i = 0; i < program.info.images.size() && !dump_this; i++) {
@@ -435,7 +430,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			const auto& res  = program.info.buffers[i];
 			const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 			const auto  base = r.Base48();
-			const auto  size = BufferDescriptorSize(r);
+			const auto  size = r.GetSize();
 			LOGF("  DumpCS buffer[%u]: source=%u usage=%s addr=0x%012" PRIx64 " stride=%u "
 			     "records=%u size=0x%" PRIx64 " format=%u\n",
 			     i, res.source, res.written ? "read-write" : "read-only", base, r.Stride(),
@@ -475,7 +470,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			const auto& res  = program.info.buffers[i];
 			const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 			const auto  base = r.Base48();
-			const auto  size = BufferDescriptorSize(r);
+			const auto  size = r.GetSize();
 			uint32_t    head[8] {};
 			const auto  head_size = static_cast<uint64_t>(std::min<uint64_t>(sizeof(head), size));
 			const bool  readable =
@@ -512,7 +507,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 			const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 			const auto base = r.Base48();
-			const auto size = BufferDescriptorSize(r);
+			const auto size = r.GetSize();
 			if (base == 0 || size == 0 || size > (1u << 20) || program.info.buffers[i].written ||
 			    cache.IsRegionGpuModified(base, size)) {
 				continue;
@@ -545,7 +540,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 				for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 					const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 					const auto base = r.Base48();
-					const auto size = BufferDescriptorSize(r);
+					const auto size = r.GetSize();
 					if (base == 0 || size == 0 || size > (64u << 10)) {
 						continue;
 					}
@@ -572,7 +567,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 				const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 				const auto base = r.Base48();
-				const auto size = std::min<uint64_t>(BufferDescriptorSize(r), 32ull << 20);
+				const auto size = std::min<uint64_t>(r.GetSize(), 32ull << 20);
 				if (base == 0 || size < 8 || !cache.IsRegionGpuModified(base, size)) {
 					continue;
 				}
@@ -717,14 +712,14 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 
 	buffer.EndRendering();
 	auto& pipeline =
-	    m_context.GetPipelineCache().CreateComputePipeline(input_info, compute_program);
+	    m_context.GetPipelineCache().GetComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
 	PreparedBindings local_bindings;
 	auto& bindings = ReuseBindingsEnabled() ? m_compute_bindings : local_bindings;
 	PrepareBindings(input_info.stage, bindings);
 	FindBuffers(bindings);
 	if (program.info.uses_dma) {
-		m_context.GetGpuResources().PrepareBda();
+		m_context.PrepareBda();
 	}
 	RebindBuffers(bindings);
 	RebindImages(bindings);
@@ -888,7 +883,7 @@ bool ShaderStageTouchesAnyBuffer(const ShaderStageRuntime& stage,
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 		const auto base = r.Base48();
-		const auto size = BufferDescriptorSize(r);
+		const auto size = r.GetSize();
 		if (base == 0) {
 			continue;
 		}
@@ -910,7 +905,7 @@ bool ShaderStageTouchesAddress(const ShaderStageRuntime& stage, uint64_t address
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 		const auto base = r.Base48();
-		const auto size = BufferDescriptorSize(r);
+		const auto size = r.GetSize();
 		if (base != 0 && address >= base && address < base + size) {
 			return true;
 		}
@@ -941,7 +936,7 @@ void DumpShaderStageBindings(RenderContext& context, const char* label,
 		const auto& res  = program.info.buffers[i];
 		const auto  r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 		const auto  base = r.Base48();
-		const auto  size = BufferDescriptorSize(r);
+		const auto  size = r.GetSize();
 		LOGF("  Dump%s buffer[%u]: source=%u usage=%s addr=0x%012" PRIx64 " stride=%u records=%u "
 		     "size=0x%" PRIx64 " gpu_modified=%d cpu_modified=%d\n",
 		     label, i, res.source, res.written ? "read-write" : "read-only", base, r.Stride(),

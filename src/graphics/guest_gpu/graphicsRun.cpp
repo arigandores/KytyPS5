@@ -86,7 +86,7 @@ private:
 
 static bool GraphicsRunDebugDumpEnabled() {
 	return Config::GraphicsDebugDumpEnabled() &&
-	       Config::GetPrintfDirection() != Config::OutputDirection::Silent;
+	       Config::GetPrintfDirection() != Config::LogDirection::Silent;
 }
 
 GuestGpu::GuestGpu(RenderContext& renderer): m_renderer(renderer) {
@@ -572,7 +572,7 @@ void CommandProcessor::DmaData(uint8_t engine, uint8_t dst_sel, uint8_t dst_cach
 	if (!decode_gds(dst_sel, dst_gds)) {
 		EXIT("unsupported dmaData destination selector 0x%02" PRIx8 "\n", dst_sel);
 	}
-	auto& buffer_cache = GetGpuResources().GetBufferCache();
+	auto& buffer_cache = m_renderer.GetBufferCache();
 	if (src_sel == 2) {
 		buffer_cache.FillBuffer(
 		    dst_address_or_offset, num_bytes,
@@ -866,7 +866,7 @@ bool GuestGpu::Process(Submission& submission) {
 			if (progressed) {
 				if (complete) {
 					const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
-					m_renderer.GetGpuResources().RunGarbageCollector();
+					m_renderer.RunGarbageCollector();
 					if (t0 != 0) {
 						Common::FrameStats::AddSite(Common::FrameStats::Table::Pm4Sites, "gc",
 						                            Common::FrameStats::NowNs() - t0);
@@ -884,7 +884,7 @@ bool GuestGpu::Process(Submission& submission) {
 				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
 			} else if (complete) {
-				m_renderer.GetGpuResources().RunGarbageCollector();
+				m_renderer.RunGarbageCollector();
 			}
 			break;
 		}
@@ -906,19 +906,19 @@ bool GuestGpu::Process(Submission& submission) {
 			           Pm4ProcessResult::Complete;
 			if (submission.command_execution.MadeProgress()) {
 				if (complete) {
-					m_renderer.GetGpuResources().RunGarbageCollector();
+					m_renderer.RunGarbageCollector();
 				}
 				m_renderer.GetBufferCache().PrefetchHotReadbacks();
 				m_renderer.GetBufferCache().PrefetchStreamedRanges();
 				Common::FrameStats::SiteScope site_scope("slice-end-compute");
 				cp.BufferFlush();
 			} else if (complete) {
-				m_renderer.GetGpuResources().RunGarbageCollector();
+				m_renderer.RunGarbageCollector();
 			}
 			break;
 		}
 		case SubmissionType::FlipPreparation:
-			m_renderer.GetGpuResources().RunGarbageCollector();
+			m_renderer.RunGarbageCollector();
 			cp.PrepareCpuFlip(submission.flip_request_id);
 			break;
 	}
@@ -2126,7 +2126,7 @@ void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t req
 
 void CommandProcessor::Flip() {
 	CheckBuffer();
-	m_renderer.GetGpuResources().DrainDeferredProtection();
+	m_renderer.DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::Flip()\n");
@@ -2144,7 +2144,7 @@ void CommandProcessor::Flip() {
 
 void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	CheckBuffer();
-	m_renderer.GetGpuResources().DrainDeferredProtection();
+	m_renderer.DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::Flip()\n"
@@ -2168,7 +2168,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action,
                                          void* dst_gpu_addr, uint32_t value) {
 	CheckBuffer();
-	m_renderer.GetGpuResources().DrainDeferredProtection();
+	m_renderer.DrainDeferredProtection();
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		LOGF("CommandProcessor::FlipWithInterrupt()\n"

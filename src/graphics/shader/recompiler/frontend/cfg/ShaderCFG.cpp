@@ -2392,40 +2392,49 @@ bool StructurizeImpl(Graph& graph) {
 } // namespace
 
 bool StructurizeRouted(Graph& graph) {
-	Graph original = graph;
-	if (StructurizeImpl(graph)) {
+	Graph structured = graph;
+	if (StructurizeImpl(structured)) {
+		graph = std::move(structured);
 		return true;
 	}
 
-	Graph failed_graph      = std::move(graph);
-	graph                   = std::move(original);
+	const auto failure_kind = structured.failure_kind;
+	// Structurization inserts and renumbers blocks. Recover source identity for a
+	// semantic block; a synthetic block has no corresponding original diagnostic ID.
+	const auto* failed = structured.FindBlock(structured.failure_block);
+	const auto original = std::ranges::find_if(graph.blocks, [&](const BasicBlock& block) {
+		return failed != nullptr && failed->inst_begin != failed->inst_end &&
+		       block.inst_begin == failed->inst_begin && block.inst_end == failed->inst_end &&
+		       block.start_pc == failed->start_pc && block.end_pc == failed->end_pc;
+	});
+	const auto failure_block = original != graph.blocks.end() ? original->id : UINT32_MAX;
+	auto failure_reason = std::move(structured.unsupported_reason);
+	Graph routed = graph;
 	const auto route_budget = static_cast<uint32_t>(graph.blocks.size());
 	// Apply one route at a time and retry. Eagerly routing every matching diamond can
 	// rewrite unrelated selections that were already structurally valid.
 	for (uint32_t route_variable = 0; route_variable < route_budget; route_variable++) {
-		if (!RouteSharedSelectionArm(graph, route_variable)) {
+		if (!RouteSharedSelectionArm(routed, route_variable)) {
 			break;
 		}
-		Graph routed = graph;
-		if (StructurizeImpl(routed)) {
-			graph = std::move(routed);
+		structured = routed;
+		if (StructurizeImpl(structured)) {
+			graph = std::move(structured);
 			return true;
 		}
 	}
-	graph = std::move(failed_graph);
+	SetFailure(graph, failure_kind, failure_block, failure_reason);
 	return false;
 }
 
 bool Structurize(Graph& graph) {
-	Graph original = graph;
 	EpilogueCloningFlag() = false;
 	if (StructurizeRouted(graph)) {
 		return true;
 	}
-	// Upstream's passes gave up: retry from the native graph with terminal-epilogue cloning
-	// (SplitOneSelectionMerge) allowed.
-	Graph failed_graph     = std::move(graph);
-	graph                  = std::move(original);
+	// Upstream's passes gave up and left the original graph with its failure diagnostics:
+	// retry from it with terminal-epilogue cloning (SplitOneSelectionMerge) allowed.
+	Graph failed_graph    = graph;
 	EpilogueCloningFlag() = true;
 	const bool structured  = StructurizeRouted(graph);
 	EpilogueCloningFlag() = false;

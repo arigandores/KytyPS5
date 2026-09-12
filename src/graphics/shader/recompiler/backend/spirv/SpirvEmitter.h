@@ -24,8 +24,6 @@ bool DenormFlushToZero();         // manual flush dropped
 bool DenormFlushToZeroDeclared(); // execution mode emitted
 } // namespace Emitter
 
-void AnalyzeProgramRequirements(IR::Program& program);
-
 std::vector<uint32_t> EmitProgram(const IR::Program& program,
                                   ShaderStageInputInfo input_info);
 

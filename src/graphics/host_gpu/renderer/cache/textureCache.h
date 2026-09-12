@@ -14,6 +14,7 @@
 
 #include <map>
 #include <string>
+#include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -91,8 +92,8 @@ public:
 
 private:
 	enum class TransferDirection { Upload, Download };
-	struct TextureTransferPlan;
-	struct DownloadPlan;
+	struct TextureTransfer;
+	struct ImageDownload;
 
 	struct MetaDataInfo {
 		// A guest metadata-fill dispatch may initialize DCC before its render target is bound.
@@ -117,6 +118,23 @@ private:
 
 	using ImageIds       = InlinePageOwnerList<ImageId, 16>;
 	using ImagePageTable = MultiLevelPageTable<ImageIds, 20, 40, 10>;
+
+	// Callers have validated the nonempty 40-bit range with TryGetPageRange.
+	template <typename Func>
+	static void ForEachPage(uint64_t address, size_t size, Func&& func) {
+		using FuncReturn = typename std::invoke_result<Func, uint64_t>::type;
+		static constexpr bool RETURNS_BOOL = std::is_same_v<FuncReturn, bool>;
+		const uint64_t page_end = (address + size - 1) >> ImagePageTable::kPageBits;
+		for (uint64_t page = address >> ImagePageTable::kPageBits; page <= page_end; ++page) {
+			if constexpr (RETURNS_BOOL) {
+				if (func(page)) {
+					break;
+				}
+			} else {
+				func(page);
+			}
+		}
+	}
 
 	[[nodiscard]] ImageId     InsertImage(const ImageInfo& info);
 	[[nodiscard]] ImageId     GetNullImage(const ImageDesc& desc);
@@ -155,9 +173,9 @@ private:
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,
 	                                                uint64_t image_address);
 	void                        InitializeImage(ImageId id, bool allow_defer = true);
-	[[nodiscard]] TextureTransferPlan
+	[[nodiscard]] TextureTransfer
 	BuildTextureTransfer(const Image& image, BindingType binding, TransferDirection direction) const;
-	[[nodiscard]] DownloadPlan BuildDownload(const Image& image) const;
+	[[nodiscard]] ImageDownload BuildDownload(const Image& image) const;
 	// Uploads levels [first_level, first_level + level_count) (everything by default) and
 	// returns the guest bytes transferred.
 	uint64_t UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
@@ -173,8 +191,8 @@ private:
 	[[nodiscard]] uint32_t DeferrableLevels(const Image& image, bool source_imported) const;
 	void                   CompletePendingUpload(Image& image);
 	void                   NoteUploadFrame();
-	void DownloadImageData(Image& image, Buffer& destination, uint64_t destination_offset,
-	                       uint64_t destination_size, DownloadPlan plan);
+	void DownloadImage(Image& image, Buffer& destination, uint64_t destination_offset,
+	                   uint64_t destination_size, ImageDownload transfer);
 	void DownloadDepth(Image& image, Buffer& destination, uint64_t destination_offset);
 	void CommitGpuWrite(Image& image);
 	// Caller holds m_lock. Volume layer ranges select depth slices.
@@ -189,7 +207,7 @@ private:
 	void ValidateImageDesc(const ImageDesc& desc) const;
 
 	void               InvalidateCpuAliases(uint64_t address, uint64_t size);
-	[[nodiscard]] bool TryDownloadImage(ImageId id);
+	[[nodiscard]] bool DownloadImageMemory(ImageId id);
 
 	GraphicContext&                                   m_graphics;
 	CommandScheduler&                                 m_scheduler;

@@ -5,8 +5,9 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/threads.h"
+#include "graphics/host_gpu/pageManager.h"
+#include "graphics/host_gpu/rangeSet.h"
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
-#include "graphics/host_gpu/renderer/cache/gpuResourceManager.h"
 #include "graphics/host_gpu/renderer/cache/samplerCache.h"
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
@@ -15,6 +16,7 @@
 #include "kernel/eventQueue.h"
 
 #include <memory>
+#include <shared_mutex>
 #include <vector>
 
 namespace Libs::VideoOut {
@@ -42,10 +44,24 @@ public:
 	PipelineCache&      GetPipelineCache() { return m_pipeline_cache; }
 	DescriptorHeap&     GetDescriptorHeap() { return m_descriptor_heap; }
 	SamplerCache&       GetSamplerCache() { return m_sampler_cache; }
-	GpuResourceManager& GetGpuResources() { return m_gpu_resources; }
-	BufferCache&        GetBufferCache() { return m_gpu_resources.GetBufferCache(); }
-	TextureCache&       GetTextureCache() { return m_gpu_resources.GetTextureCache(); }
+	BufferCache&        GetBufferCache() { return m_buffer_cache; }
+	TextureCache&       GetTextureCache() { return m_texture_cache; }
 	RenderExecutor&     GetRenderExecutor() { return m_render_executor; }
+
+	[[nodiscard]] bool HandleFault(PageFaultAccess access, uint64_t fault_vaddr) noexcept;
+	[[nodiscard]] bool InvalidateMemory(uint64_t vaddr, uint64_t size);
+	// A file read completed into the range: prefetch it into native buffers (texture streaming).
+	void               NoteStreamedRead(uint64_t vaddr, uint64_t size);
+	// Drop every native buffer overlapping a freshly registered guest stack.
+	void               ReleaseGuestStack(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] bool IsMapped(uint64_t vaddr, uint64_t size) const noexcept;
+	void               MapMemory(uint64_t vaddr, uint64_t size);
+	void               UnmapMemory(uint64_t vaddr, uint64_t size);
+	void               PrepareBda();
+	void               RunGarbageCollector();
+	// Applies every deferred host page protection (TextureCache image tracking); called before
+	// the guest can observe GPU completion of a frame (flip).
+	void               DrainDeferredProtection() { m_page_manager.DrainDeferredProtection(); }
 
 	void AddInterruptEq(LibKernel::EventQueue::KernelEqueue eq, int event_id);
 	void DeleteInterruptEq(LibKernel::EventQueue::KernelEqueue eq, int event_id);
@@ -64,9 +80,18 @@ private:
 	DescriptorHeap            m_descriptor_heap;
 	PipelineCache             m_pipeline_cache;
 	SamplerCache              m_sampler_cache;
-	GpuResourceManager        m_gpu_resources;
+	PageManager               m_page_manager;
+	BufferCache               m_buffer_cache;
+	TextureCache              m_texture_cache;
+	mutable std::shared_mutex m_mapped_ranges_mutex;
+	RangeSet                  m_mapped_ranges;
 	std::unique_ptr<GuestGpu> m_gpu;
 	VideoOut::VideoOutDriver* m_video_out = nullptr;
+	bool                      m_fault_process_pending = false;
+	uint64_t                  m_mapping_epoch          = 1; // guarded by m_mapped_ranges_mutex
+	uint64_t                  m_bda_mapping_epoch      = 0;
+	uint64_t                  m_bda_cpu_epoch          = 0;
+	uint64_t                  m_bda_registration_epoch = 0;
 
 	Common::Mutex                        m_interrupt_mutex;
 	std::vector<InterruptEqRegistration> m_interrupt_eqs;

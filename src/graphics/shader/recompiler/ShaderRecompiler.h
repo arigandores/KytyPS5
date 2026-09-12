@@ -18,7 +18,6 @@ struct CompileOptions {
 	// of `wave_size`, which the tracked registers do not provide.
 	bool                        detect_wave_size = false;
 	uint32_t                    user_data_base  = 0;
-	uint32_t                    scratch_dwords  = 0;
 	uint64_t                    shader_hash     = 0;
 	bool                        dump_ir                    = true;
 	bool                        early_dump                 = false;

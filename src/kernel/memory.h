@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace Libs::Graphics {
-class GpuResourceManager;
+class RenderContext;
 enum class PageFaultAccess;
 } // namespace Libs::Graphics
 
@@ -153,7 +153,7 @@ struct GpuTrackingState {
 	bool gpu_image_bytes = false;
 };
 [[nodiscard]] GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size);
-void                   InstallGpuResources(Graphics::GpuResourceManager* resources) noexcept;
+void                   InstallGpuResources(Graphics::RenderContext* resources) noexcept;
 [[nodiscard]] bool HandleGpuFault(Graphics::PageFaultAccess access, uint64_t fault_vaddr) noexcept;
 
 int KYTY_SYSV_ABI KernelMapNamedFlexibleMemory(void** addr_in_out, size_t len, int prot, int flags,

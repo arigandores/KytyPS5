@@ -83,9 +83,6 @@ struct ImageInfo {
 	[[nodiscard]] constexpr bool IsVolume() const noexcept {
 		return type == Prospero::ImageType::kColor3D;
 	}
-	[[nodiscard]] constexpr bool IsLayered() const noexcept {
-		return !IsVolume() && resources.layers > 1;
-	}
 	[[nodiscard]] constexpr uint32_t TransferLayers() const noexcept {
 		return IsVolume() ? extent.depth : resources.layers;
 	}
@@ -347,14 +344,6 @@ ClassifyVideoOutCompression(bool compressed, uint64_t metadata_address, uint32_t
 		case DCC_256_64_64: return VideoOutCompression::Dcc256_64_64;
 		default: return VideoOutCompression::Unsupported;
 	}
-}
-
-[[nodiscard]] inline constexpr bool
-CanUseVideoOutNativeWithoutUpload(VideoOutCompression compression, bool render_target,
-                                  bool gpu_modified, bool guest_modified) noexcept {
-	return compression != VideoOutCompression::Uncompressed &&
-	       compression != VideoOutCompression::Unsupported && !guest_modified &&
-	       (render_target || gpu_modified);
 }
 
 struct VideoOutPixelFormatInfo {

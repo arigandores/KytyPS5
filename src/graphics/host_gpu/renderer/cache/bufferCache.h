@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_BUFFERCACHE_H_
 
 #include "common/abi.h"
+#include "common/alignment.h"
 #include "common/common.h"
 #include "common/lruCache.h"
 #include "common/slotVector.h"
@@ -122,6 +123,11 @@ public:
 private:
 	friend struct BufferCacheTestAccess;
 
+	bool IsBufferInvalid(BufferId id) const {
+		const auto* buffer = m_slot_buffers.try_get(id);
+		return buffer == nullptr || buffer->is_deleted;
+	}
+
 	using BufferMap = std::map<uint64_t, BufferId>;
 	struct OverlapResult {
 		BufferMap::iterator first;
@@ -136,7 +142,7 @@ private:
 	static_assert(CACHING_PAGESIZE == (uint64_t {1} << PageTable::kPageBits));
 	static constexpr uint64_t               DOWNLOAD_ALIGNMENT = 64;
 	[[nodiscard]] static constexpr uint64_t AlignDownload(uint64_t size) noexcept {
-		return (size + DOWNLOAD_ALIGNMENT - 1) & ~(DOWNLOAD_ALIGNMENT - 1);
+		return Common::AlignUp(size, DOWNLOAD_ALIGNMENT);
 	}
 	[[nodiscard]] static std::pair<uint64_t, uint64_t> DownloadEnvelope(const DownloadCopy& copy);
 	void WriteDataBuffer(Buffer& buffer, uint64_t address, const void* source, uint64_t size);

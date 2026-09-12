@@ -88,7 +88,10 @@ struct ShaderMeshInputInfo: ShaderWorkgroupInputInfo {
 		}
 	}
 	[[nodiscard]] constexpr uint32_t InputPrimitiveStep() const {
-		return input_primitive == static_cast<uint32_t>(Prospero::PrimitiveType::kTriStrip)
+		// Strips and fans add one rim vertex per primitive. A fan also reuses
+		// the draw's first vertex in every group (handled by the mesh prolog).
+		return (input_primitive == static_cast<uint32_t>(Prospero::PrimitiveType::kTriStrip) ||
+		        input_primitive == static_cast<uint32_t>(Prospero::PrimitiveType::kTriFan))
 		           ? 1u : InputPrimitiveSize();
 	}
 	[[nodiscard]] constexpr uint32_t InputPrimitiveCount(uint32_t vertices) const {

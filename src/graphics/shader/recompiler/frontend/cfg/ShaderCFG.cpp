@@ -2428,13 +2428,24 @@ bool StructurizeRouted(Graph& graph) {
 }
 
 bool Structurize(Graph& graph) {
+	const bool retry_allowed = !graph.unsupported && !graph.irreducible;
 	EpilogueCloningFlag() = false;
 	if (StructurizeRouted(graph)) {
 		return true;
 	}
+	if (!retry_allowed) {
+		return false;
+	}
 	// Upstream's passes gave up and left the original graph with its failure diagnostics:
 	// retry from it with terminal-epilogue cloning (SplitOneSelectionMerge) allowed.
 	Graph failed_graph    = graph;
+	// StructurizeRouted preserves topology but publishes failure diagnostics.
+	// Those belong to the first attempt: leaving unsupported set makes the
+	// cloning retry return immediately at StructurizeImpl's entry guard.
+	graph.unsupported = false;
+	graph.failure_kind = FailureKind::None;
+	graph.failure_block = UINT32_MAX;
+	graph.unsupported_reason.clear();
 	EpilogueCloningFlag() = true;
 	const bool structured  = StructurizeRouted(graph);
 	EpilogueCloningFlag() = false;

@@ -12545,14 +12545,14 @@ public:
       }
 
       const auto blend_pipeline = [&](bool enabled, bool bypass) -> PipelineCache::Pipeline & {
-        auto blend = registers.GetBlendControl(0);
+        auto blend = registers.GetBlendControl(color_slot);
         blend.enable = enabled;
         blend.color_srcblend = static_cast<uint8_t>(Prospero::BlendFactor::kZero);
         blend.alpha_srcblend = static_cast<uint8_t>(Prospero::BlendFactor::kZero);
-        registers.SetBlendControl(0, blend);
-        auto target = registers.GetRenderTarget(0).info;
+        registers.SetBlendControl(color_slot, blend);
+        auto target = registers.GetRenderTarget(color_slot).info;
         target.blend_bypass = bypass;
-        registers.SetColorInfo(0, target);
+        registers.SetColorInfo(color_slot, target);
         return pipeline(true, 2, 2);
       };
       auto &disabled_blend = blend_pipeline(false, false);
@@ -25620,6 +25620,46 @@ void CheckPs5GameExampleImageClearRuntimeShape() {
   std::printf("[host]    %-32s ok\n", "Ps5GameExampleImageClear");
 }
 
+void CheckMeshRestartIndices() {
+  const char *name = "MeshRestartIndices";
+  for (const uint32_t width : {1u, 2u, 4u}) {
+    const uint32_t marker = UINT32_MAX >> ((4u - width) * 8u);
+    const std::vector<uint32_t> source {
+        marker, 7, 9, 11, 13, marker, marker, 21, 23, 25, 27, 29, marker, 4, 5, marker};
+    // Deliberately unaligned: segment addresses need not start on a dword.
+    std::vector<uint8_t> packed(1 + source.size() * width);
+    for (size_t i = 0; i < source.size(); ++i) {
+      std::memcpy(packed.data() + 1 + i * width, &source[i], width);
+    }
+    auto ranges = SplitMeshRestartIndices(std::span{packed}.subspan(1), width);
+    Require(name, "restart segments", ranges.size() == 3 &&
+                ranges[0].first == 1 && ranges[0].count == 4 &&
+                ranges[1].first == 7 && ranges[1].count == 5 &&
+                ranges[2].first == 13 && ranges[2].count == 2,
+            "restart markers changed segment offsets/counts or emitted empty segments");
+    ShaderMeshInputInfo fan{};
+    fan.input_primitive = static_cast<uint32_t>(Prospero::PrimitiveType::kTriFan);
+    std::vector<std::array<uint32_t, 3>> triangles;
+    for (const auto &range : ranges) {
+      for (uint32_t p = 0; p < fan.InputPrimitiveCount(range.count); ++p) {
+        triangles.push_back({source[range.first], source[range.first + p + 1],
+                             source[range.first + p + 2]});
+      }
+    }
+    const std::vector<std::array<uint32_t, 3>> expected {
+        {7, 9, 11}, {7, 11, 13}, {21, 23, 25}, {21, 25, 27}, {21, 27, 29}};
+    Require(name, "fan boundaries", triangles == expected,
+            "fan triangles crossed restart boundaries or used the wrong center");
+    auto tail = SplitMeshRestartIndices(std::span{packed}.subspan(1, 12 * width), width);
+    Require(name, "unterminated tail", tail.size() == 2 && tail.back().count == 5,
+            "the final segment without a restart marker was dropped");
+    Require(name, "empty inputs", SplitMeshRestartIndices({}, width).empty() &&
+                SplitMeshRestartIndices(std::span{packed}.subspan(1, width), width).empty(),
+            "empty or marker-only inputs emitted a segment");
+  }
+  std::puts("[host]    MeshRestartIndices              ok");
+}
+
 void CheckEmbeddedFetchVertexOffset() {
   const auto MakeFetch = [](std::initializer_list<std::pair<u32, u32>> adds,
                             std::optional<std::pair<u32, u32>> late_add = {},
@@ -29746,6 +29786,10 @@ int main(int argc, char **argv) {
     CheckEmbeddedFetchVertexOffset();
     return 0;
   }
+  if (argc == 2 && std::strcmp(argv[1], "--mesh-restart-only") == 0) {
+    CheckMeshRestartIndices();
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--polygon-mode-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckRasterization(false);
@@ -29935,6 +29979,7 @@ int main(int argc, char **argv) {
   CheckPm4RewindResume(vulkan.RuntimeRenderer());
   CheckPm4CeCompletion(vulkan.RuntimeRenderer());
   CheckEmbeddedFetchVertexOffset();
+  CheckMeshRestartIndices();
   CheckEmbeddedFetchLaneSpill();
   CheckRectListShaders();
   CheckIndirectImageKeySwitch();

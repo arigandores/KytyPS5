@@ -8735,6 +8735,44 @@ void TestNewShaderRecompilerCfgAstroBotEarlyExitLadderPS() {
   Check(elapsed_ms < 2000, "ASTRO BOT PS 5457 structurization is too slow");
 }
 
+void TestCfgTerminalCloneRetryClearsFailure() {
+  using namespace ShaderRecompiler;
+  // The inner early return's continuing arm is also entered directly by the
+  // outer execz. This needs the terminal-cloning retry used by the galaxy PS.
+  const auto &shader = Fixtures::kAstroBotGalaxyCfg;
+  Decoder::Program decoded;
+  Decoder::DecodeProgram(std::span{shader}, decoded);
+  auto graph = CFG::BuildGraph(decoded);
+  Check(graph.blocks.size() == 52u && graph.natural_loops.size() == 5u && !graph.unsupported,
+        "terminal-clone retry fixture has the wrong native graph");
+  const auto original = graph;
+  Check(CFG::Structurize(graph), "terminal-clone retry was blocked by the first failure");
+  Check(!graph.unsupported && graph.failure_kind == CFG::FailureKind::None &&
+            graph.failure_block == UINT32_MAX && graph.unsupported_reason.empty(),
+        "successful terminal-clone retry retained failure diagnostics");
+  const auto coverage = CfgInstructionCoverage(graph, decoded.instructions.size());
+  const auto before = CfgInstructionCoverage(original, decoded.instructions.size());
+  for (size_t i = 0; i < coverage.size(); ++i) {
+    Check((coverage[i] != 0) == (before[i] != 0), "terminal cloning changed reachable code");
+  }
+  auto options = MakeCompileOptions(ShaderType::Pixel);
+  const auto result = RecompileForTest(shader, options);
+  Check(!result.program.dispatcher_fallback &&
+            SpirvInstructionOpcodeCount(result.spirv, 251) == 0u,
+        "terminal-clone retry still emitted the dispatcher");
+  CheckSpirvBinaryValidates(result.spirv);
+
+  // A failure supplied by BuildGraph must not be erased by the retry.
+  auto rejected = original;
+  rejected.unsupported = true;
+  rejected.failure_kind = CFG::FailureKind::UnsupportedInstruction;
+  rejected.failure_block = 1u;
+  rejected.unsupported_reason = "pre-existing decode failure";
+  const auto diagnostic = CFG::GraphToString(rejected);
+  Check(!CFG::Structurize(rejected) && CFG::GraphToString(rejected) == diagnostic,
+        "terminal-clone retry erased a pre-existing unsupported graph");
+}
+
 void TestNewShaderRecompilerCfgPrunesUnreachableSelectionEntry() {
   const uint32_t shader[] = {
       EncodeSopp(0x02, 1),    // entry -> header, skipping unreachable entry
@@ -9404,14 +9442,18 @@ void TestMeshExportStorage() {
   struct Case {
     uint32_t subgroup_size, push_data_start;
     bool split;
+    bool fan = false;
   };
   const Case cases[] = {
       {32u, PushData::MeshDrawDwordCount, true}, {64u, PushData::MeshDrawDwordCount, true},
       {32u, PushData::DwordCount, true}, {64u, PushData::DwordCount, true},
       {32u, PushData::MeshDrawDwordCount, false}, {64u, PushData::MeshDrawDwordCount, false},
       {32u, PushData::DwordCount, false}, {64u, PushData::DwordCount, false},
+      {32u, PushData::MeshDrawDwordCount, true, true},
+      {64u, PushData::DwordCount, false, true},
   };
-  for (const auto [subgroup_size, push_data_start, split] : cases) {
+  for (const auto [subgroup_size, push_data_start, split, fan] : cases) {
+    mesh.input_primitive = fan ? static_cast<uint32_t>(Prospero::PrimitiveType::kTriFan) : 0u;
     mesh.host_subgroup_size = subgroup_size;
     options.back_code = split ? std::span{back} : std::span<const uint32_t>{};
     const auto result = RecompileForTest(
@@ -9724,6 +9766,32 @@ void TestMeshInputAssembly() {
        0x40000305, 1, 2, 3, 0, 15, false},
       {Prospero::PrimitiveType::kTriStrip, 5, 8, 0, 1, 0, 0, 11,
        0x40000305, 2, 1, 3, 0, 12, false},
+      // Fan groups retain draw vertex zero as their center; rim vertices
+      // overlap across groups without alternating the triangle winding.
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 0, 1, 0, 0, 11,
+       0x40000305, 0, 2, 3, 0, 12, false},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 1, 0, 0, 0, 11,
+       0x40000305, 0, 1, 2, 0, 11, false},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 1, 1, 0, 0, 11,
+       0x40000305, 0, 2, 3, 0, 15, false},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 2, 0, 2, 0x1002, 11,
+       0x40000204, 0, 1, 2, 0, 0xabd8, true},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 2, 1, 2, 0x1002, 11,
+       0x40000204, 0, 2, 3, 16, 0x12e, true},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 2, 4, 2, 0x1002, 0,
+       0x40000204, 0, 5, 6, 20, 0, false},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 2, 0, 4, 0x1000, UINT32_MAX,
+       0x40000204, 0, 1, 2, 0, 0xabcd0122, true},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 2, 1, 1, 0x1000, 5,
+       0x40000204, 0, 2, 3, 4, 0xb0, true},
+      {Prospero::PrimitiveType::kTriFan, 5, 10, 1, 64, 4, 0x1000, 0,
+       0x41000000, 0, 65, 66, 268, 0, false},
+      {Prospero::PrimitiveType::kTriFan, 32, 3, 0, 0, 0, 0, 11,
+       0x40000103, 0, 1, 2, 0, 11, false},
+      {Prospero::PrimitiveType::kTriFan, 32, 2, 0, 0, 0, 0, 11,
+       0x40000002, 0, 1, 2, 0, 11, false},
+      {Prospero::PrimitiveType::kTriFan, 32, 0, 0, 0, 0, 0, 11,
+       0x40000000, 0, 1, 2, 0, 11, false},
       {Prospero::PrimitiveType::kLineList, 5, 17, 3, 0, 0, 0, 11,
        0x40000204, 0, 1, 0, 0, 23, false},
       {Prospero::PrimitiveType::kLineList, 6, 17, 2, 4, 2, 0x1002, 11,
@@ -13684,6 +13752,7 @@ int main() {
   RUN(TestNewShaderRecompilerCfgNestedEarlyExitLoopForwarders);
   RUN(TestNewShaderRecompilerCfgExecSccSharedArm);
   RUN(TestNewShaderRecompilerCfgAstroBotEarlyExitLadderPS);
+  RUN(TestCfgTerminalCloneRetryClearsFailure);
   RUN(TestSharedReturnPreservesDescriptorDominance);
   RUN(TestNewShaderRecompilerCfgNestedTailEarlyExit);
   RUN(TestNewShaderRecompilerCfgSharedReturnAfterNestedSelections);

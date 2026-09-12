@@ -1133,12 +1133,14 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 			                                                     vertex_count)));
 			// GS adjacency addresses local ES records in LDS. Strip winding alternates
 			// with the global primitive number, including across subgroup boundaries.
+			const bool fan = mesh.input_primitive ==
+			                 static_cast<uint32_t>(Prospero::PrimitiveType::kTriFan);
 			const auto parity = mesh.input_primitive ==
 			                            static_cast<uint32_t>(Prospero::PrimitiveType::kTriStrip)
 			                        ? entry_ir.BitwiseAnd(entry_ir.IAdd(primitive_chunk, local), u32(1))
 			                        : u32(0);
 			const auto vertex = entry_ir.IMul(local, step);
-			const auto first  = entry_ir.IAdd(vertex, parity);
+			const auto first  = fan ? u32(0) : entry_ir.IAdd(vertex, parity);
 			const auto second = mesh.InputPrimitiveSize() >= 2u
 			                        ? entry_ir.ISub(entry_ir.IAdd(vertex, u32(1)), parity)
 			                        : u32(0);
@@ -1150,7 +1152,12 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 			                                         entry_ir.ShiftLeftLogical(second, u32(18))));
 			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(1),
 			                      entry_ir.ShiftLeftLogical(third, u32(2)));
-			const auto input_vertex = entry_ir.IAdd(chunk, local);
+			// Each fan group stages [draw vertex 0, chunk+1, chunk+2, ...].
+			// Adjacency then addresses [0, lane+1, lane+2] in that local LDS array.
+			const auto input_vertex = fan
+			    ? entry_ir.Select(entry_ir.IEqual(local, u32(0)), u32(0),
+			                      entry_ir.IAdd(chunk, local))
+			    : entry_ir.IAdd(chunk, local);
 			const auto index_bytes  = draw(3);
 			const auto indexed      = entry_ir.INotEqual(index_bytes, u32(0));
 			const auto index_low    = draw(4);

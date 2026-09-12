@@ -224,3 +224,32 @@ KYTY_CLEAR_TRACE=1 records every recognized uniform buffer fill, with frame and 
 Build succeeded. Next: trace creation/clearing of the interaction input at0x516830000,
 identify why0xFFFFFFF0 reaches color data, fix ownership/clear and validate with video.
 60FPS still unmet; usual scene CPU~82ms/~6000draw. Rare entry hang remains unresolved.
+
+## Image initialization trace and metadata-output guard (late session)
+
+image_watch ran22:36:52..22:42:26 and was closed by WM_CLOSE; scene confirmed,
+first Mesh16204, last watcher frame16861,VMA8984MB. No hang. Logs/video archived.
+At frame4, buffer fill shader a572ee17a880e71c writes0xFFFFFFF0 at0x516870000,
+size0x48000: precisely the offset/length of corrupt field texels. At15839 the field
+image0x516830000 is recreated and uploaded from dirty backing after an overlapping
+3328x1872 image at0x515db0000 is freed. No native clear of the field was logged.
+Do not confuse binding's preliminary gpu-modified flag with an already executed draw.
+
+TryConsumeComputeMetaClear had a separate proven bug: returning at the first metadata
+output discarded ordinary buffer/image writes and ignored later metadata outputs.
+Now it marks all eligible metadata outputs and executes the dispatch if other writes
+remain. KYTY_META_CLEAR_ALL_WRITES=0 restores the old behavior. The classification
+regression passes; control0 fails on loss of the ordinary second buffer write.
+Additional tests cover storage output and two independent metadata outputs.
+The25sec automatic startup probe logged1153 metadata cases, all images0/buffers1;
+this does NOT establish that the new guard fixes the foliage problem.
+
+Classification passed under validation (settings deprecation warning, not a clean-all
+claim). Separate --htile-clear-only failed at partial-page readback values BOTH with
+the guard and with control0: actual image/buffer0/0 vs31415926/27182818. Not fixed.
+The test now prints actual values. Full gameplay validation not done.
+ImageWatchDraw now identifies each draw into the watched field; optional
+KYTY_IMAGE_WATCH_BINDINGS dumps first16 bindings after frame14000, no GPU readback.
+Official ISA PDF supplied by user was read locally, extracted to rdna2-official.txt.
+Legacy0*x behavior exists for explicit legacy instructions; no blanket NaN arithmetic
+change is justified or implemented. Native sampler at the failing vertex is Wrap/Wrap.

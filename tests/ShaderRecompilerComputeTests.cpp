@@ -4493,6 +4493,43 @@ public:
             write_only_consumed &&
                 texture_cache.IsMetaCleared(write_only_meta, 0),
             "a metadata write-only fill was not consumed as a clear");
+
+    constexpr uint64_t mixed_meta = write_only_meta + 0x1000;
+    TextureCacheTestAccess::RegisterHtileMeta(texture_cache, mixed_meta);
+    ShaderRecompiler::IR::CompiledShaderInfo mixed_program{};
+    auto mixed_input = MakeInput(mixed_meta, false, true, mixed_program);
+    auto second_input = MakeInput(mixed_meta + 0x100, false, true, mixed_program);
+    mixed_input.stage.resources.buffers.push_back(second_input.stage.resources.buffers[0]);
+    Require(name, "ordinary buffer output preserved",
+            !RenderExecutorTestAccess::TryConsumeComputeMetaClear(executor, mixed_input, command) &&
+                texture_cache.IsMetaCleared(mixed_meta, 0),
+            "metadata emulation discarded a second ordinary buffer write");
+
+    constexpr uint64_t image_meta = mixed_meta + 0x2000;
+    TextureCacheTestAccess::RegisterHtileMeta(texture_cache, image_meta);
+    ShaderRecompiler::IR::CompiledShaderInfo image_program{};
+    const auto image_input = MakeInput(image_meta, false, true, image_program);
+    ShaderRecompiler::IR::ImageResource image_output{};
+    image_output.written = true;
+    image_output.resource_class = ShaderRecompiler::IR::ImageResourceClass::Storage;
+    image_program.info.images.push_back(image_output);
+    Require(name, "storage image output preserved",
+            !RenderExecutorTestAccess::TryConsumeComputeMetaClear(executor, image_input, command) &&
+                texture_cache.IsMetaCleared(image_meta, 0),
+            "metadata emulation discarded a storage image write");
+
+    constexpr uint64_t pair_meta = image_meta + 0x2000;
+    TextureCacheTestAccess::RegisterHtileMeta(texture_cache, pair_meta);
+    TextureCacheTestAccess::RegisterHtileMeta(texture_cache, pair_meta + 0x100);
+    ShaderRecompiler::IR::CompiledShaderInfo pair_program{};
+    auto pair_input = MakeInput(pair_meta, false, true, pair_program);
+    const auto pair_second = MakeInput(pair_meta + 0x100, false, true, pair_program);
+    pair_input.stage.resources.buffers.push_back(pair_second.stage.resources.buffers[0]);
+    Require(name, "all metadata outputs cleared",
+            RenderExecutorTestAccess::TryConsumeComputeMetaClear(executor, pair_input, command) &&
+                texture_cache.IsMetaCleared(pair_meta, 0) &&
+                texture_cache.IsMetaCleared(pair_meta + 0x100, 0),
+            "metadata emulation returned before clearing the second output");
     scheduler.Finish();
     std::printf("[host]    %-32s ok\n", name);
   }
@@ -6319,6 +6356,10 @@ public:
       uint32_t partial_image_backing = 0;
       std::memcpy(&partial_image_backing, memory + partial_image_offset,
                   sizeof(partial_image_backing));
+      if (partial_image_backing != partial_image_value || partial_buffer_backing != partial_buffer_value) {
+        std::fprintf(stderr, "partial-page actual image=%08x buffer=%08x expected=%08x/%08x\n",
+                     partial_image_backing, partial_buffer_backing, partial_image_value, partial_buffer_value);
+      }
       Require(name, "partial-page readback values",
               partial_image_backing == partial_image_value &&
                   partial_buffer_backing == partial_buffer_value,
@@ -30052,6 +30093,11 @@ int main(int argc, char **argv) {
   if (argc == 2 && std::strcmp(argv[1], "--htile-clear-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckUnifiedTextureCacheFlow();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--compute-meta-classification-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckComputeMetaClearClassification();
     return 0;
   }
   if (argc == 2 && std::strcmp(argv[1], "--compute-meta-clear-only") == 0) {

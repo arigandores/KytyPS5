@@ -77,16 +77,36 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 	}
 
 	if (!program.info.has_bitwise_xor) {
+		static const bool all_writes = [] {
+			const auto* value = std::getenv("KYTY_META_CLEAR_ALL_WRITES");
+			return value == nullptr || value[0] != '0';
+		}();
+		bool cleared_metadata = false;
+		bool other_writes = std::any_of(program.info.images.begin(), program.info.images.end(),
+		                               [](const auto& image) { return image.written || image.atomic; });
 		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 			const auto& resource = program.info.buffers[i];
 			if (resource.written) {
 				const auto descriptor =
 				    DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 				if (cache.ClearMeta(descriptor.Base48())) {
-					return true;
+					if (!all_writes) return true;
+					cleared_metadata = true;
+					static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+					if (trace) {
+						LOGF("MetaClearTrace: frame=%u shader=0x%016" PRIx64
+						     " addr=0x%016" PRIx64 " size=0x%" PRIx64 " images=%zu buffers=%zu\n",
+						     GpuTimeProfiler::Frame(), program.shader_hash, descriptor.Base48(),
+						     descriptor.GetSize(), program.info.images.size(), program.info.buffers.size());
+					}
+				} else {
+					other_writes = true;
 				}
 			}
 		}
+		// A dispatch can clear several metadata planes and also initialize ordinary images or
+		// buffers. Apply every logical metadata clear, but retain the dispatch for other writes.
+		return cleared_metadata && !other_writes;
 	}
 	return false;
 }

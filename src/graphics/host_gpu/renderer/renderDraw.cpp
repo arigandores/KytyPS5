@@ -1421,6 +1421,33 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	PrepareGraphicsBindings(state.vs_input_info.stage, state.ps_input_info.stage,
 	                        state.ps_active, bindings);
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
+	static const uint64_t watched_image = [] {
+		const auto* value = std::getenv("KYTY_IMAGE_WATCH");
+		return value == nullptr ? uint64_t {0} : std::strtoull(value, nullptr, 0);
+	}();
+	if (watched_image != 0) {
+		for (uint32_t i = 0; i < state.color_count; ++i) {
+			const auto& color = state.color_info[i];
+			if (!color.image_id || color.desc.info.data.address != watched_image) continue;
+			const auto& ctx = buffer.GetRegisters();
+			const auto& rt = ctx.GetRenderTarget(color.target_slot);
+			LOGF("ImageWatchDraw: frame=%u image=0x%016" PRIx64 " slot=%u vs=0x%016" PRIx64
+			     " ps=0x%016" PRIx64 " indices=%u instances=%u mask=0x%x mode=%u"
+			     " clear=%08x/%08x cmask=0x%016" PRIx64 " dcc=0x%016" PRIx64 "\n",
+			     GpuTimeProfiler::Frame(), watched_image, color.target_slot,
+			     DrawShaderHash(state.vs_input_info.stage),
+			     state.ps_active ? DrawShaderHash(state.ps_input_info.stage) : 0u,
+			     draw.index_count, draw.instance_count, ctx.GetRenderTargetMask(),
+			     ctx.GetColorControl().mode, rt.clear_word0.word0, rt.clear_word1.word1,
+			     rt.cmask.addr, rt.dcc_addr.addr);
+			static const bool dump_watched = std::getenv("KYTY_IMAGE_WATCH_BINDINGS") != nullptr;
+			static uint32_t watched_dumps = 0;
+			if (dump_watched && GpuTimeProfiler::Frame() >= 14000 && watched_dumps++ < 16) {
+				DumpShaderStageBindings(m_context, "WatchVS", state.vs_input_info.stage);
+				if (state.ps_active) DumpShaderStageBindings(m_context, "WatchPS", state.ps_input_info.stage);
+			}
+		}
+	}
 	const bool frame_dump =
 	    DebugDumpFrame(static_cast<uint32_t>(m_context.GetGpu().GetFrameNum()));
 	const auto& dump_addrs = DebugDumpAddresses();

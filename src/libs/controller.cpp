@@ -1,7 +1,6 @@
 #include "libs/controller.h"
 
 #include "SDL.h"
-#include "SDL_hidapi.h"
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -16,15 +15,10 @@
 #include <algorithm>
 #include <atomic>
 #include <chrono>
-#include <cinttypes>
-#include <condition_variable>
 #include <cstdlib>
 #include <cstring>
 #include <cmath>
-#include <deque>
-#include <iterator>
 #include <mutex>
-#include <thread>
 #include <vector>
 
 namespace Libs::Controller {
@@ -86,14 +80,11 @@ struct DualSenseEffects {
 
 static_assert(sizeof(DualSenseEffects) == 32);
 
-// Haptic PCM of the guest's vibration port, sent to the pad in one of three ways:
-//   * "audio": a USB DualSense is a 4-channel audio device whose channels 3/4 drive the voice
-//     coils. This is the real thing, as on the console, and needs no resampling (both are 48 kHz).
-//   * "bt": HID output report 0x32 with 32 frames of signed 8-bit stereo PCM at 3 kHz (layout from
-//     the SAxense research, https://apps.sdore.me/SAxense). Windows pads every HID write to the
-//     largest output report (547 bytes) and the pad then drops it, so this needs a host that writes
-//     the report at its declared length. Off by default.
-//   * "rumble": the haptic envelope drives the rumble motors. Coarse, but works over Bluetooth.
+// Haptic PCM of the guest's vibration port, streamed to the pad. A USB DualSense is a 4-channel
+// audio device whose channels 3/4 drive the voice coils: that is how the console feels, and it
+// needs no resampling since both sides run at 48 kHz. Over Bluetooth the pad exposes no such
+// device and takes haptics only through HID output report 0x32, which Windows cannot send at its
+// declared length (docs/local-session-44.md), so a Bluetooth pad simply stays quiet.
 class HapticsOutput {
 public:
 	HapticsOutput() = default;
@@ -103,58 +94,26 @@ public:
 
 	void Start();
 	void Stop();
-	void Attach(SDL_GameController* pad);
 	void Push(const void* pcm, uint32_t frames, uint32_t channels, bool is_float, uint32_t freq);
-	bool PushAudio(const void* pcm, uint32_t frames, uint32_t channels, bool is_float, uint32_t freq);
-	[[nodiscard]] bool RumbleActive() const { return m_rumble_active.load(std::memory_order_relaxed); }
 
 private:
-	static constexpr uint8_t  REPORT_ID     = 0x32;
-	static constexpr uint32_t REPORT_SIZE   = 141;
-	static constexpr uint32_t REPORT_FRAMES = 32;
-	static constexpr uint32_t RATE          = 3000;
-	static constexpr size_t   QUEUE_MAX     = size_t {REPORT_FRAMES} * 2 * 8; // ~85 ms of latency
-	static constexpr uint64_t IDLE_US       = 500000;
+	static constexpr uint32_t FREQ     = 48000;
+	static constexpr uint32_t CHANNELS = 4;
+	static constexpr uint64_t RETRY_US = 3000000;
+	// Keep at most ~60 ms queued so the haptics stay in step with the picture.
+	static constexpr uint32_t MAX_QUEUED = FREQ * CHANNELS * sizeof(int16_t) * 60 / 1000;
 
 	static uint64_t NowUs();
-	static uint32_t Crc32(const uint8_t* data, size_t size);
-	bool            OpenAudioDevice();
-	void            CloseAudioDevice();
-	void            Run();
-	void            Send(const int8_t* samples);
-	void            Idle();
+	bool            OpenLocked();
+	void            CloseLocked();
 
-	std::mutex              m_mutex; // queue and resampler
-	std::condition_variable m_cv;
-	std::thread             m_thread;
-	bool                    m_quit         = false;
-	std::deque<int8_t>      m_queue; // interleaved left/right
-	uint64_t                m_last_push_us = 0;
-	double                  m_phase        = 0.0;
-	float                   m_sum[2]       = {};
-	uint32_t                m_count        = 0;
-	float                   m_gain         = 1.0f;
-	uint64_t                m_pushes       = 0;
-	float                   m_peak         = 0.0f;
-
-	enum class Mode { Audio, Rumble, Bluetooth, Off };
-
-	std::mutex           m_audio_mutex; // pad audio device (USB)
-	SDL_AudioDeviceID    m_audio_dev    = 0;
-	uint64_t             m_audio_try_us = 0;
-	uint64_t             m_audio_pushes = 0;
-	std::vector<int16_t> m_audio_buf;
-
-	std::mutex          m_dev_mutex; // pad, HID device and output mode
-	Mode                m_mode      = Mode::Audio;
-	SDL_GameController* m_pad       = nullptr;
-	SDL_hid_device*     m_dev       = nullptr;
-	bool                m_bt_ok     = false;
-	bool                m_bt_failed = false;
-	uint32_t            m_bt_errors = 0;
-	uint8_t             m_counter   = 0;
-	uint64_t            m_reports   = 0;
-	std::atomic_bool    m_rumble_active {false};
+	std::mutex           m_mutex;
+	SDL_AudioDeviceID    m_device   = 0;
+	uint64_t             m_retry_us = 0;
+	uint64_t             m_pushes   = 0;
+	float                m_gain     = 1.0f;
+	bool                 m_enabled  = true;
+	std::vector<int16_t> m_buffer;
 };
 
 static HapticsOutput* g_haptics = nullptr;
@@ -165,105 +124,31 @@ uint64_t HapticsOutput::NowUs() {
 	                                 .count());
 }
 
-uint32_t HapticsOutput::Crc32(const uint8_t* data, size_t size) {
-	// CRC-32 over the Bluetooth HID output header byte 0xA2 followed by the report.
-	uint32_t   crc  = 0xffffffffu;
-	const auto step = [&crc](uint8_t byte) {
-		crc ^= byte;
-		for (int i = 0; i < 8; i++) {
-			crc = (crc >> 1u) ^ (0xedb88320u & (0u - (crc & 1u)));
-		}
-	};
-	step(0xa2);
-	for (size_t i = 0; i < size; i++) {
-		step(data[i]);
-	}
-	return ~crc;
-}
-
 void HapticsOutput::Start() {
 	if (const char* value = std::getenv("KYTY_HAPTICS"); value != nullptr && value[0] == '0') {
+		m_enabled = false;
 		LOGF("Haptics: disabled by KYTY_HAPTICS=0\n");
 		return;
 	}
 	if (const char* gain = std::getenv("KYTY_HAPTICS_GAIN"); gain != nullptr) {
 		m_gain = std::clamp(static_cast<float>(std::atof(gain)), 0.0f, 8.0f);
 	}
-	if (const char* mode = std::getenv("KYTY_HAPTICS_MODE"); mode != nullptr) {
-		if (std::strcmp(mode, "bt") == 0) {
-			m_mode = Mode::Bluetooth;
-		} else if (std::strcmp(mode, "rumble") == 0) {
-			m_mode = Mode::Rumble;
-		} else if (std::strcmp(mode, "off") == 0) {
-			m_mode = Mode::Off;
-		}
-	}
-	LOGF("Haptics: mode %s, gain %.2f\n",
-	     m_mode == Mode::Audio
-	         ? "audio (USB pad haptics, rumble when absent)"
-	         : (m_mode == Mode::Bluetooth ? "bt (report 0x32)"
-	                                      : (m_mode == Mode::Off ? "off" : "rumble motors")),
-	     m_gain);
-	if (m_mode == Mode::Off) {
-		return;
-	}
-	m_thread = std::thread([this] { Run(); });
 }
 
 void HapticsOutput::Stop() {
-	{
-		std::lock_guard lock(m_mutex);
-		m_quit = true;
-	}
-	m_cv.notify_all();
-	if (m_thread.joinable()) {
-		m_thread.join();
-	}
-	Attach(nullptr);
-	{
-		std::lock_guard lock(m_audio_mutex);
-		CloseAudioDevice();
-	}
+	std::lock_guard lock(m_mutex);
+	m_enabled = false;
+	CloseLocked();
 }
 
-void HapticsOutput::Attach(SDL_GameController* pad) {
-	std::lock_guard lock(m_dev_mutex);
-	if (pad == m_pad) {
-		return;
-	}
-	if (m_dev != nullptr) {
-		SDL_hid_close(m_dev);
-		m_dev = nullptr;
-	}
-	if (m_pad != nullptr && m_rumble_active.exchange(false)) {
-		(void)SDL_GameControllerRumble(m_pad, 0, 0, 0);
-	}
-	m_pad       = pad;
-	m_bt_ok     = false;
-	m_bt_failed = false;
-	m_bt_errors = 0;
-	if (pad == nullptr || m_mode != Mode::Bluetooth ||
-	    SDL_GameControllerGetType(pad) != SDL_CONTROLLER_TYPE_PS5) {
-		m_bt_failed = true;
-		return;
-	}
-	const char* path = SDL_GameControllerPath(pad);
-	if (path != nullptr) {
-		m_dev = SDL_hid_open_path(path, 0);
-	}
-	m_bt_failed = (m_dev == nullptr);
-	LOGF("Haptics: DualSense %s: %s\n", path != nullptr ? path : "(no path)",
-	     m_dev != nullptr ? "HID device opened for report 0x32" : "HID open failed, rumble fallback");
-}
-
-bool HapticsOutput::OpenAudioDevice() {
+bool HapticsOutput::OpenLocked() {
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0) {
 		return false;
 	}
 	SDL_AudioSpec want {};
-	want.freq     = 48000;
+	want.freq     = FREQ;
 	want.format   = AUDIO_S16SYS;
-	want.channels = 4;
+	want.channels = CHANNELS;
 	want.samples  = 512;
 	SDL_AudioSpec have {};
 	for (int i = 0; i < SDL_GetNumAudioDevices(0); i++) {
@@ -272,12 +157,12 @@ bool HapticsOutput::OpenAudioDevice() {
 		                        SDL_strcasestr(name, "Wireless Controller") == nullptr)) {
 			continue;
 		}
-		m_audio_dev = SDL_OpenAudioDevice(name, 0, &want, &have, 0);
-		if (m_audio_dev == 0) {
+		m_device = SDL_OpenAudioDevice(name, 0, &want, &have, 0);
+		if (m_device == 0) {
 			LOGF("Haptics: pad audio device \"%s\" failed: %s\n", name, SDL_GetError());
 			continue;
 		}
-		SDL_PauseAudioDevice(m_audio_dev, 0);
+		SDL_PauseAudioDevice(m_device, 0);
 		LOGF("Haptics: pad audio device \"%s\" opened (%d Hz, %u ch)\n", name, have.freq,
 		     have.channels);
 		return true;
@@ -285,37 +170,39 @@ bool HapticsOutput::OpenAudioDevice() {
 	return false;
 }
 
-void HapticsOutput::CloseAudioDevice() {
-	if (m_audio_dev != 0) {
-		SDL_ClearQueuedAudio(m_audio_dev);
-		SDL_CloseAudioDevice(m_audio_dev);
-		m_audio_dev = 0;
+void HapticsOutput::CloseLocked() {
+	if (m_device != 0) {
+		SDL_ClearQueuedAudio(m_device);
+		SDL_CloseAudioDevice(m_device);
+		m_device = 0;
 	}
 }
 
-bool HapticsOutput::PushAudio(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
-                              uint32_t freq) {
-	if (freq != 48000) {
-		return false;
+void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
+                         uint32_t freq) {
+	if (pcm == nullptr || frames == 0 || channels == 0 || freq != FREQ) {
+		return;
 	}
 
-	std::lock_guard lock(m_audio_mutex);
-	if (m_audio_dev == 0) {
-		// A USB pad shows up as an audio device; over Bluetooth there is none, so this stays shut
-		// and the caller falls back to the motors. Retry rarely, the pad may be plugged in later.
+	std::lock_guard lock(m_mutex);
+	if (!m_enabled) {
+		return;
+	}
+	if (m_device == 0) {
+		// Only a USB pad has this device; retry rarely, one may be plugged in later.
 		const auto now = NowUs();
-		if (m_audio_try_us != 0 && now - m_audio_try_us < 3000000) {
-			return false;
+		if (m_retry_us != 0 && now - m_retry_us < RETRY_US) {
+			return;
 		}
-		m_audio_try_us = now;
-		if (!OpenAudioDevice()) {
-			return false;
+		m_retry_us = now;
+		if (!OpenLocked()) {
+			return;
 		}
 	}
 
 	const uint32_t left  = channels >= 4 ? 2 : 0;
 	const uint32_t right = channels >= 4 ? 3 : (channels >= 2 ? 1 : 0);
-	m_audio_buf.assign(size_t {frames} * 4, 0);
+	m_buffer.assign(size_t {frames} * CHANNELS, 0);
 	for (uint32_t i = 0; i < frames; i++) {
 		float l = 0.0f;
 		float r = 0.0f;
@@ -329,204 +216,26 @@ bool HapticsOutput::PushAudio(const void* pcm, uint32_t frames, uint32_t channel
 			r             = static_cast<float>(s[right]) / 32768.0f;
 		}
 		// Channels 1/2 are the pad speaker, 3/4 the voice coils.
-		m_audio_buf[i * 4 + 2] =
+		m_buffer[i * CHANNELS + 2] =
 		    static_cast<int16_t>(std::lround(std::clamp(l * m_gain, -1.0f, 1.0f) * 32767.0f));
-		m_audio_buf[i * 4 + 3] =
+		m_buffer[i * CHANNELS + 3] =
 		    static_cast<int16_t>(std::lround(std::clamp(r * m_gain, -1.0f, 1.0f) * 32767.0f));
 	}
 
-	// Keep at most ~60 ms queued so the haptics stay in step with the picture.
-	constexpr uint32_t MAX_QUEUED = 48000 * 4 * sizeof(int16_t) * 60 / 1000;
-	if (SDL_GetQueuedAudioSize(m_audio_dev) > MAX_QUEUED) {
-		SDL_ClearQueuedAudio(m_audio_dev);
+	if (SDL_GetQueuedAudioSize(m_device) > MAX_QUEUED) {
+		SDL_ClearQueuedAudio(m_device);
 	}
-	if (SDL_QueueAudio(m_audio_dev, m_audio_buf.data(),
-	                   static_cast<uint32_t>(m_audio_buf.size() * sizeof(int16_t))) < 0) {
+	if (SDL_QueueAudio(m_device, m_buffer.data(),
+	                   static_cast<uint32_t>(m_buffer.size() * sizeof(int16_t))) < 0) {
 		LOGF("Haptics: pad audio queue failed: %s\n", SDL_GetError());
-		CloseAudioDevice();
-		return false;
-	}
-	if (m_audio_pushes++ == 0) {
-		LOGF("Haptics: streaming to the pad audio device\n");
-	}
-	return true;
-}
-
-void HapticsOutput::Push(const void* pcm, uint32_t frames, uint32_t channels, bool is_float,
-                         uint32_t freq) {
-	if (pcm == nullptr || frames == 0 || channels == 0 || freq < RATE) {
+		CloseLocked();
 		return;
 	}
-	if (m_mode == Mode::Audio && PushAudio(pcm, frames, channels, is_float, freq)) {
-		return;
-	}
-	// Two actuator channels: a 4-channel stream carries them in channels 3/4, as on USB audio.
-	const uint32_t left  = channels >= 4 ? 2 : 0;
-	const uint32_t right = channels >= 4 ? 3 : (channels >= 2 ? 1 : 0);
-	const double   ratio = static_cast<double>(freq) / RATE;
-	bool           wake  = false;
-	{
-		std::lock_guard lock(m_mutex);
-		if (m_quit || !m_thread.joinable()) {
-			return;
-		}
-		wake = m_queue.empty();
-		for (uint32_t i = 0; i < frames; i++) {
-			float l = 0.0f;
-			float r = 0.0f;
-			if (is_float) {
-				const auto* s = static_cast<const float*>(pcm) + size_t {i} * channels;
-				l             = s[left];
-				r             = s[right];
-			} else {
-				const auto* s = static_cast<const int16_t*>(pcm) + size_t {i} * channels;
-				l             = static_cast<float>(s[left]) / 32768.0f;
-				r             = static_cast<float>(s[right]) / 32768.0f;
-			}
-			m_sum[0] += l;
-			m_sum[1] += r;
-			m_count++;
-			m_phase += 1.0;
-			if (m_phase >= ratio) {
-				// Box-filter decimation to 3 kHz.
-				m_phase -= ratio;
-				for (float& sum: m_sum) {
-					const float v = std::clamp(sum / static_cast<float>(m_count) * m_gain, -1.0f, 1.0f);
-					m_peak        = std::max(m_peak, std::abs(v));
-					m_queue.push_back(static_cast<int8_t>(std::lround(v * 127.0f)));
-					sum = 0.0f;
-				}
-				m_count = 0;
-			}
-		}
-		while (m_queue.size() > QUEUE_MAX) {
-			m_queue.pop_front();
-			m_queue.pop_front();
-		}
-		m_last_push_us = NowUs();
-		if (m_pushes++ == 0) {
-			LOGF("Haptics: first vibration PCM: %u frames, %u ch, %s, %u Hz\n", frames, channels,
-			     is_float ? "float" : "s16", freq);
-		}
-	}
-	if (wake) {
-		m_cv.notify_one();
+	if (m_pushes++ == 0) {
+		LOGF("Haptics: streaming to the pad haptics, gain %.2f\n", m_gain);
 	}
 }
 
-void HapticsOutput::Idle() {
-	std::lock_guard lock(m_dev_mutex);
-	if (m_pad != nullptr && m_rumble_active.exchange(false)) {
-		(void)SDL_GameControllerRumble(m_pad, 0, 0, 0);
-	}
-}
-
-void HapticsOutput::Send(const int8_t* samples) {
-	std::lock_guard lock(m_dev_mutex);
-	if (m_pad == nullptr) {
-		return;
-	}
-	if (m_dev != nullptr && !m_bt_failed) {
-		uint8_t report[REPORT_SIZE] = {};
-		report[0]                   = REPORT_ID;
-		report[1]                   = 0x00;        // tag 0, sequence 0
-		report[2]                   = 0x80 | 0x11; // sized packet 0x11: control
-		report[3]                   = 7;
-		report[4]                   = 0xfe;
-		report[9]                   = 0xff;
-		report[10]                  = m_counter++;
-		report[11]                  = 0x80 | 0x12; // sized packet 0x12: PCM
-		report[12]                  = REPORT_FRAMES * 2;
-		std::memcpy(report + 13, samples, REPORT_FRAMES * 2);
-		const uint32_t crc = Crc32(report, REPORT_SIZE - 4);
-		for (int i = 0; i < 4; i++) {
-			report[REPORT_SIZE - 4 + i] = static_cast<uint8_t>(crc >> (8u * i));
-		}
-		if (SDL_hid_write(m_dev, report, REPORT_SIZE) >= 0) {
-			if (!m_bt_ok) {
-				LOGF("Haptics: first report 0x32 sent\n");
-			}
-			m_bt_ok = true;
-			m_reports++;
-			return;
-		}
-		m_bt_errors++;
-		if (m_bt_errors <= 3) {
-			LOGF("Haptics: report 0x32 write failed (%u)\n", m_bt_errors);
-		}
-		if (!m_bt_ok && m_bt_errors >= 3) {
-			m_bt_failed = true;
-			LOGF("Haptics: report 0x32 rejected, using rumble fallback\n");
-		}
-		return;
-	}
-	// Rumble fallback: RMS of each actuator channel drives the corresponding motor.
-	float energy[2] = {};
-	for (uint32_t i = 0; i < REPORT_FRAMES; i++) {
-		for (int c = 0; c < 2; c++) {
-			const float v = static_cast<float>(samples[i * 2 + c]) / 127.0f;
-			energy[c] += v * v;
-		}
-	}
-	const auto level = [](float e) {
-		const float rms = std::sqrt(e / static_cast<float>(REPORT_FRAMES));
-		// The motors need a good deal more amplitude than the voice coils to be felt.
-		return static_cast<uint16_t>(std::clamp(rms * 2.5f, 0.0f, 1.0f) * 65535.0f);
-	};
-	const uint16_t low  = level(energy[0]);
-	const uint16_t high = level(energy[1]);
-	if (low != 0 || high != 0 || m_rumble_active.load(std::memory_order_relaxed)) {
-		(void)SDL_GameControllerRumble(m_pad, low, high, 100);
-		m_rumble_active = (low != 0 || high != 0);
-	}
-}
-
-void HapticsOutput::Run() {
-	using Clock       = std::chrono::steady_clock;
-	const auto period = std::chrono::nanoseconds(uint64_t {1000000000} * REPORT_FRAMES / RATE);
-	auto       next   = Clock::now();
-	uint64_t   stats  = NowUs();
-	for (;;) {
-		int8_t samples[REPORT_FRAMES * 2] = {};
-		{
-			std::unique_lock lock(m_mutex);
-			if (m_quit) {
-				break;
-			}
-			if (m_queue.empty() && NowUs() - m_last_push_us > IDLE_US) {
-				lock.unlock();
-				Idle();
-				lock.lock();
-				m_cv.wait(lock, [this] { return m_quit || !m_queue.empty(); });
-				if (m_quit) {
-					break;
-				}
-				next = Clock::now();
-			}
-			const size_t n = std::min(m_queue.size(), std::size(samples));
-			std::copy_n(m_queue.begin(), n, samples);
-			m_queue.erase(m_queue.begin(), m_queue.begin() + static_cast<std::ptrdiff_t>(n));
-			if (NowUs() - stats >= 10000000) {
-				stats = NowUs();
-				LOGF("Haptics: pushes=%" PRIu64 " reports=%" PRIu64 " peak=%.3f mode=%s errors=%u\n",
-				     m_pushes, m_reports, m_peak, m_bt_ok ? "bt" : (m_bt_failed ? "rumble" : "pending"),
-				     m_bt_errors);
-				m_peak = 0.0f;
-			}
-		}
-		Send(samples);
-		next += period;
-		const auto now = Clock::now();
-		if (next + period * 4 < now) {
-			next = now;
-		}
-		if (next > now) {
-			Common::Thread::SleepMicro(static_cast<uint32_t>(
-			    std::chrono::duration_cast<std::chrono::microseconds>(next - now).count()));
-		}
-	}
-	Idle();
-}
 
 struct ControllerState {
 	struct Touch {
@@ -822,12 +531,6 @@ void GameController::CheckActive() {
 	m_orientation[0] = m_orientation[1] = m_orientation[2] = 0.0f;
 	m_orientation[3] = 1.0f;
 	m_gyro_timestamp = 0;
-
-	if (g_haptics != nullptr) {
-		g_haptics->Attach(new_active_id >= 0
-		                      ? SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(new_active_id))
-		                      : nullptr);
-	}
 }
 
 void GameController::AddState() {
@@ -1067,11 +770,6 @@ void GameController::SetVibration(uint8_t large_motor, uint8_t small_motor) {
 	if (m_active_id == HOST_INPUT_CONTROLLER_ID) {
 		return;
 	}
-	// While the haptic envelope drives the motors, the game's "motors off" must not cut it.
-	if (large_motor == 0 && small_motor == 0 && g_haptics != nullptr && g_haptics->RumbleActive()) {
-		return;
-	}
-
 	auto* pad = SDL_GameControllerFromInstanceID(static_cast<SDL_JoystickID>(m_active_id));
 	if (pad == nullptr) {
 		return;

@@ -165,6 +165,14 @@ struct BufferCacheTestAccess {
     return cache.m_download_buffer;
   }
 
+  static void AddConservativeGpuDirtyAlias(BufferCache &cache, GuestRange range) {
+    cache.m_gpu_modified_ranges.Add(range.address, range.size);
+  }
+
+  static void RemoveConservativeGpuDirtyAlias(BufferCache &cache, GuestRange range) {
+    cache.m_gpu_modified_ranges.Subtract(range.address, range.size);
+  }
+
   static bool SynchronizeBufferFromImage(BufferCache &cache, Buffer &buffer,
                                          uint64_t address, uint64_t size) {
     return cache.SynchronizeBufferFromImage(buffer, address, size);
@@ -4796,6 +4804,17 @@ public:
       Require(name, "progress", !TextureCacheTestAccess::Contains(cache, ids[i]),
           "pinned oldest images starved reclaimable images behind them");
     }
+    // An older dirty buffer alias can coexist with a newer render-target write.
+    // Failure to download is not permission to discard that image's GPU contents.
+    BufferCacheTestAccess::AddConservativeGpuDirtyAlias(context.GetBufferCache(),
+        cache.GetImage(ids[0]).info.data);
+    TextureCacheTestAccess::ConfigureGarbageCollection(cache, std::array{ids[0]}, 500, 0);
+    cache.RunGarbageCollector();
+    Require(name, "overlapping dirty buffer", TextureCacheTestAccess::Contains(cache, ids[0]) &&
+        cache.GetImage(ids[0]).IsGpuModified(),
+        "a dirty buffer alias caused loss of the image's GPU contents without readback");
+    BufferCacheTestAccess::RemoveConservativeGpuDirtyAlias(context.GetBufferCache(),
+        cache.GetImage(ids[0]).info.data);
     std::printf("[gpu]     %-32s ok\n", name);
   }
 

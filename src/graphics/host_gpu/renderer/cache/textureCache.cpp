@@ -413,6 +413,13 @@ void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgFrees, 1);
 	auto& image = m_slot_images[id];
 	TraceImageLifetime("free", image.info, reason, line, image.frame_accessed_last);
+	static const bool state_trace = std::getenv("KYTY_IMAGE_STATE_TRACE") != nullptr;
+	if (state_trace && image.info.data.size >= (1u << 20u)) {
+		LOGF("ImageStateFree: frame=%u guest=0x%016" PRIx64 " reason=%s gpu=%d cpu=%d maybe=%d buffer=%d metadata=%u\n",
+		     GpuTimeProfiler::Frame(), image.info.data.address, reason,
+		     image.IsGpuModified(), image.IsDefinitelyCpuDirty(), image.IsMaybeCpuDirty(),
+		     image.IsBufferModified(), static_cast<uint32_t>(image.info.metadata.kind));
+	}
 	if (image.IsGpuModified()) {
 		image.ClearGpuModified();
 	}
@@ -2442,6 +2449,10 @@ void TextureCache::RunGarbageCollector() {
 		const auto* value = std::getenv("KYTY_IMAGE_GC_PROGRESS");
 		return value == nullptr || value[0] != '0';
 	}();
+	static const bool preserve_gpu = [] {
+		const auto* value = std::getenv("KYTY_IMAGE_GC_PRESERVE_GPU");
+		return value == nullptr || value[0] != '0';
+	}();
 	static const bool frame_guard = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_GC_FRAME_GUARD");
 		return value != nullptr && value[0] == '1';
@@ -2529,7 +2540,15 @@ void TextureCache::RunGarbageCollector() {
 			}
 			if (owner->IsGpuModified()) {
 				const bool safe = SafeToDownload(*owner);
-				if (safe && owner->info.IsTiled()) {
+				// A dirty buffer alias can prevent downloading this image. It does not
+				// prove that the buffer contains the image's latest GPU writes. Keep
+				// tiled GPU contents until an actual CPU/buffer invalidation supersedes them.
+				if (owner->info.IsTiled() && (preserve_gpu ? owner->SafeToDownload() : safe)) {
+					static const bool state_trace = std::getenv("KYTY_IMAGE_STATE_TRACE") != nullptr;
+					if (state_trace && !safe) {
+						LOGF("ImageGcKeepOverlap: frame=%u guest=0x%016" PRIx64 " bytes=%" PRIu64 "\n",
+						     frame, owner->info.data.address, owner->info.data.size);
+					}
 					retry_later();
 					continue;
 				}

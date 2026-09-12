@@ -652,9 +652,17 @@ struct PipelineCache::ProgramCache {
 		lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
 		BuildStageStaticKey(input_info, lookup_key.static_state);
 		static const bool register_trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;
-		if (register_trace && first_used.emplace(static_cast<uint32_t>(stage), params.hash).second) {
-			LOGF("ShaderFirstUse: hash=%016" PRIx64 " stage=%u words=%zu ud=%zu host_us=%" PRIu64 "\n",
-			     params.hash, static_cast<uint32_t>(stage), params.code.size(), params.user_data.size(), HostMicros());
+		static const bool dump_gcn = [] {
+			const auto* value = std::getenv("KYTY_DUMP_GCN");
+			return value != nullptr && value[0] != '0';
+		}();
+		if (!tolerant && (register_trace || dump_gcn) &&
+		    first_used.emplace(static_cast<uint32_t>(stage), params.hash).second) {
+			if (register_trace) {
+				LOGF("ShaderFirstUse: hash=%016" PRIx64 " stage=%u words=%zu ud=%zu host_us=%" PRIu64 "\n",
+				     params.hash, static_cast<uint32_t>(stage), params.code.size(), params.user_data.size(), HostMicros());
+			}
+			DumpShaderGcn(stage, params.hash, params.code);
 		}
 		auto                                         entry = programs.find(lookup_key);
 		if (entry == programs.end()) {
@@ -1398,6 +1406,20 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	static_params.topology                 = topology;
 	static_params.primitive_restart_enable = primitive_restart_enable;
 	static_params.samples                  = attachment_samples;
+	static const bool alpha_trace = std::getenv("KYTY_ALPHA_TRACE") != nullptr;
+	if (alpha_trace && ps_active && ps_input_info->stage.program &&
+	    (ps_input_info->stage.program->shader_hash == 0x1a4e22aaa15d8ab3ull ||
+	     ps_input_info->stage.program->shader_hash == 0xaef08e7e8c990db9ull)) {
+		static uint32_t last_frame = UINT32_MAX;
+		const auto frame = GpuTimeProfiler::Frame();
+		if (last_frame != frame) {
+			last_frame = frame;
+			LOGF("AlphaTrace: frame=%u ps=%016" PRIx64 " reg=0x%08x disabled=%d samples=%u\n",
+			     frame, ps_input_info->stage.program->shader_hash, ctx.GetAlphaToMask(),
+			     ctx.GetShaderRegisters().db_shader_control.alpha_to_mask_disable,
+			     attachment_samples);
+		}
+	}
 	static_params.sample_shading_enable =
 	    ps_active && attachment_samples > 1 && ps_input_info->ps_sample_shading;
 	if (static_params.sample_shading_enable && !m_graphics.sample_rate_shading_enabled) {

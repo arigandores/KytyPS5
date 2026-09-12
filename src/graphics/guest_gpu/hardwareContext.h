@@ -840,6 +840,8 @@ public:
 	void SetScanModeControl(const ScanModeControl& control) { m_scan_mode_control = control; }
 	[[nodiscard]] const AaSampleControl& GetAaSampleControl() const { return m_aa_sample_control; }
 	void SetAaSampleControl(const AaSampleControl& control) { m_aa_sample_control = control; }
+	[[nodiscard]] uint32_t GetAlphaToMask() const { return m_alpha_to_mask; }
+	void SetAlphaToMask(uint32_t value) { m_alpha_to_mask = value; }
 	[[nodiscard]] const AaConfig& GetAaConfig() const { return m_aa_config; }
 	void                          SetAaConfig(const AaConfig& config) { m_aa_config = config; }
 
@@ -913,6 +915,7 @@ private:
 	ScanModeControl m_scan_mode_control;
 
 	AaSampleControl m_aa_sample_control;
+	uint32_t        m_alpha_to_mask = 0;
 	AaConfig        m_aa_config;
 
 	uint32_t m_shader_stages = 0;

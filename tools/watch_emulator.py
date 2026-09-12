@@ -18,7 +18,7 @@ parser.add_argument('output', type=pathlib.Path)
 parser.add_argument('--dump-tool', required=True, type=pathlib.Path)
 parser.add_argument('--stall-seconds', type=float, default=12)
 parser.add_argument('--min-frame', type=int, default=14000)
-parser.add_argument('--memory-limit-mb', type=int, default=14900)
+parser.add_argument('--memory-limit-mb', type=int, default=13900)
 args = parser.parse_args()
 kernel = ctypes.WinDLL('kernel32', use_last_error=True)
 user = ctypes.WinDLL('user32', use_last_error=True)
@@ -75,7 +75,8 @@ try:
         raise RuntimeError('Refusing to control a process outside the specified emulator directory')
     if not args.dump_tool.is_file():
         raise RuntimeError('Missing stack dump helper')
-    position, frame, last_frame, high_memory = 0, 0, 0, 0
+    position, frame, last_frame = 0, 0, 0
+    used, budget = None, None
     pending = b''
     capture = False
     last_progress = time.monotonic()
@@ -97,21 +98,20 @@ try:
                     last_progress = time.monotonic()
                 elif line.startswith((b'ImageMemory:', b'GpuWaitSlow:')):
                     print(line.decode(errors='replace'), flush=True)
+                elif line.startswith(b'VMA heap 0:'):
+                    match = re.search(rb'usage=(\d+), budget=(\d+)', line)
+                    if match:
+                        used, budget = (int(value) // (1 << 20) for value in match.groups())
         if frame != last_frame:
             last_frame = frame
             last_progress = time.monotonic()
         stalled = time.monotonic() - last_progress
-        used = None
-        try:
-            result = subprocess.check_output(
-                ['nvidia-smi', '--query-gpu=memory.used', '--format=csv,noheader,nounits'],
-                creationflags=0x08000000, text=True, timeout=2)
-            used = int(result.strip().splitlines()[0])
-        except (OSError, ValueError, subprocess.SubprocessError):
-            pass
+        # Do not query the graphics driver here. Even killing a timed-out
+        # nvidia-smi process can block during a driver hang. Existing VMA log
+        # samples suffice for the independent memory-pressure check.
         print(json.dumps(dict(time=time.strftime('%H:%M:%S'), frame=frame,
-                              stalled_s=round(stalled, 1), capture=capture, vram_mb=used)), flush=True)
-        high_memory = high_memory + 1 if used and used >= args.memory_limit_mb else 0
+                              stalled_s=round(stalled, 1), capture=capture,
+                              vma_mb=used, budget_mb=budget)), flush=True)
         if not capture and frame >= args.min_frame and stalled >= args.stall_seconds:
             print('Saving hang diagnostic before closing emulator', flush=True)
             helper = subprocess.Popen([str(args.dump_tool), str(args.pid), str(args.output)],
@@ -126,9 +126,15 @@ try:
                     kernel.TerminateProcess(handle, 1)
                 helper.kill()
                 helper.wait()
-            stop_emulator()
+            # A hung display can also stall window-manager calls. Data has been
+            # collected; terminate this process directly instead of querying windows.
+            if alive():
+                print('Terminating stalled emulator after snapshot', flush=True)
+                if not kernel.TerminateProcess(handle, 1):
+                    raise ctypes.WinError(ctypes.get_last_error())
             break
-        if not capture and frame >= args.min_frame and high_memory >= 2:
+        memory_limit = min(args.memory_limit_mb, max(0, budget - 512)) if budget else args.memory_limit_mb
+        if not capture and frame >= args.min_frame and used and used >= memory_limit:
             print('Memory threshold reached', flush=True)
             stop_emulator()
             break

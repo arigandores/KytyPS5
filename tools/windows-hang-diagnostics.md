@@ -17,15 +17,20 @@ Preserve the emulator's matching linker map before rebuilding.
 records in the log. It validates that the PID's executable is `kyty_emulator.exe`
 beside that log, and retains the process handle to avoid acting on a reused PID.
 After frame14000, twelve seconds without a new frame triggers the external dump.
-The watcher then posts WM_CLOSE, waits five seconds, and terminates that same
-process if it has not exited. It never resets the graphics driver.
+The watcher then terminates that same process directly, avoiding calls to a
+potentially stalled window manager. It never resets the graphics driver.
 
 An active user-triggered RenderDoc capture suspends the frame and memory checks
 until its finish/failure log record. The watcher neither captures nor records
-input. It also closes a non-capturing run after two NVIDIA memory readings above
-the configured threshold (default14900 MiB, intended for the local16 GB GPU).
+input. It also closes a non-capturing run when the logged VMA device-heap usage
+reaches the configured threshold (default13900 MiB, or512 MiB below the logged
+budget if lower, intended for the local16 GB GPU). Memory pressure uses WM_CLOSE
+first and termination after five seconds if needed.
 Set `--memory-limit-mb`, `--min-frame`, and `--stall-seconds` for other hardware
-and routes. A missing or timed-out NVIDIA query does not prevent hang detection.
+and routes. Enable `KYTY_IMAGE_MEMORY_TRACE=1` for memory samples. The watchdog
+makes no driver queries: a previous nvidia-smi timeout itself blocked during an
+actual driver hang, preventing timely stack collection. Missing VMA samples do
+not prevent hang detection.
 
 This is an opt-in diagnostic, not proof that a GPU hang can always be recovered
 by terminating its process. The minidump is written to the local output path only.

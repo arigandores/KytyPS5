@@ -98,7 +98,9 @@ void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
 		command.updateBuffer(g_breadcrumbs->Handle(), 0, sizeof(record), &record);
 	}
 	if (graphics.diagnostic_checkpoints_enabled) {
-		command.setCheckpointNV(&record);
+		// Select the raw-pointer overload. The enhanced T const& overload would
+		// record the address of a temporary pointer on this thread's stack.
+		command.setCheckpointNV(static_cast<const void*>(&record));
 	}
 }
 

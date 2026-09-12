@@ -14,6 +14,7 @@
 #include <string>
 #include <cstring>
 #include <chrono>
+#include <fstream>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #include <intrin.h>
@@ -150,6 +151,14 @@ bool Enabled() {
 	static const bool enabled = std::getenv("KYTY_FRAME_TRACE") != nullptr ||
 	                            std::getenv("KYTY_AV_TRACE") != nullptr;
 	return enabled;
+}
+
+bool TimingsEnabled() {
+	static const bool detailed = [] {
+		const auto* value = std::getenv("KYTY_FRAME_TRACE");
+		return value == nullptr || std::strcmp(value, "lite") != 0;
+	}();
+	return detailed && Enabled();
 }
 
 uint64_t NowNs() {
@@ -336,7 +345,33 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 		return value != nullptr ? std::strtoll(value, nullptr, 10) : int64_t {0};
 	}();
 	auto t_next = std::chrono::steady_clock::now();
+	// Optional gate lets one run supply an ordinary FPS window followed by CPU samples.
+	// Only the helper polls this file; with the gate off it never suspends the game thread.
+	const auto* gate_path = std::getenv("KYTY_SAMPLE_GATE");
+	bool sampling = gate_path == nullptr;
+	auto gate_next = t_next;
 	for (;;) {
+		if (gate_path != nullptr) {
+			const auto now = std::chrono::steady_clock::now();
+			if (now >= gate_next) {
+				gate_next = now + std::chrono::milliseconds(100);
+				char value = '0';
+				std::ifstream(gate_path).get(value);
+				const bool requested = value == '1';
+				if (requested != sampling) {
+					sampling = requested;
+					counts.clear();
+					frame_counts.clear();
+					total = frame_total = 0;
+					t_dump = t_frame = t_next = now;
+					LOGF("SampleGate: enabled=%d\n", sampling ? 1 : 0);
+				}
+			}
+			if (!sampling) {
+				std::this_thread::sleep_for(std::chrono::milliseconds(50));
+				continue;
+			}
+		}
 		if (interval_us <= 0) {
 			std::this_thread::sleep_for(std::chrono::microseconds(700));
 		} else {

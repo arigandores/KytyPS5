@@ -1160,9 +1160,10 @@ void WindowContext::CreateVulkan() {
 		}
 		// Diagnostic checkpoints attribute a device loss to the draw or dispatch that hung.
 		// Enabled only on request: the markers cost a little per operation.
-		if (std::getenv("KYTY_GPU_CHECKPOINTS") != nullptr) {
-			graphic_ctx.gpu_breadcrumbs_enabled = true;
-			LOGF("Vulkan: GPU breadcrumbs enabled\n");
+		if (const auto* checkpoints = std::getenv("KYTY_GPU_CHECKPOINTS"); checkpoints != nullptr) {
+			graphic_ctx.gpu_breadcrumbs_enabled = std::strcmp(checkpoints, "nv") != 0;
+			LOGF("Vulkan: GPU checkpoints mode=%s\n",
+			     graphic_ctx.gpu_breadcrumbs_enabled ? "breadcrumbs+NV" : "NV only");
 			if (HasExtension(available_extensions,
 			                 VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME)) {
 				device_extensions.push_back(VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME);

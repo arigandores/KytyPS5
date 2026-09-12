@@ -72,11 +72,12 @@ public:
 	void CopyMip(Image& source, uint32_t mip, uint32_t layer);
 
 	void InvalidateCpuWrite(uint64_t vaddr, uint64_t size) {
-		if (ImageRangeOverlaps(info.data.address, info.data.size, vaddr, size)) {
+		const auto range = SourceRange();
+		if (ImageRangeOverlaps(range.address, range.size, vaddr, size)) {
 			m_cpu_dirty        = true;
 			m_maybe_cpu_dirty  = false;
 			m_maybe_hash_valid = false;
-		} else if (ImagePageRangesOverlap(info.data.address, info.data.size, vaddr, size)) {
+		} else if (ImagePageRangesOverlap(range.address, range.size, vaddr, size)) {
 			m_maybe_cpu_dirty = true;
 		}
 	}
@@ -128,8 +129,12 @@ public:
 
 	[[nodiscard]] bool Overlaps(uint64_t address, uint64_t size,
 	                            bool pages = false) const noexcept {
-		return pages ? ImagePageRangesOverlap(info.data.address, info.data.size, address, size)
-		             : ImageRangeOverlaps(info.data.address, info.data.size, address, size);
+		const auto range = SourceRange();
+		return pages ? ImagePageRangesOverlap(range.address, range.size, address, size)
+		             : ImageRangeOverlaps(range.address, range.size, address, size);
+	}
+	[[nodiscard]] GuestRange SourceRange() const noexcept {
+		return {info.data.address, source_size != 0 ? source_size : info.data.size};
 	}
 	[[nodiscard]] bool SafeToDownload() const noexcept {
 		return IsGpuModified() && !IsBufferModified() && !IsCpuDirty();
@@ -151,6 +156,9 @@ public:
 	uint64_t         track_addr_end = 0;
 	ImageId          depth_id {};
 	uint64_t         tick_accessed_last = 0;
+	uint32_t         frame_accessed_last = 0;
+	uint32_t         source_first_level = 0;
+	uint64_t         source_size = 0;
 	size_t           lru_id             = 0;
 	// Deferred mip upload (TextureCache, KYTY_MIP_DEFER): levels [0, pending_levels) of this
 	// sampled texture are still in guest memory only; sampled views clamp their LOD there until

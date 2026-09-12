@@ -3,6 +3,8 @@
 
 namespace Common::FrameStats {
 
+bool TimingsEnabled() { return false; }
+
 bool Enabled() {
 	return false;
 }

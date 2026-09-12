@@ -19,11 +19,15 @@ class CommandScheduler;
 //    that started last and never completed. vkCmdUpdateBuffer is illegal inside a render pass
 //    instance, so markers recorded while rendering skip the breadcrumb write;
 //  - VK_NV_device_diagnostic_checkpoints markers, when the extension is available.
+// KYTY_GPU_CHECKPOINTS=nv records only NV markers, without bracketing draw barriers.
+// GPU checkpoint data is queried only after DeviceLost, as required by Vulkan.
 void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
                          vk::CommandBuffer command, bool inside_rendering, uint32_t op,
                          uint64_t submit_id, uint32_t arg0, uint32_t arg1, uint32_t arg2,
                          uint32_t arg3, uint64_t arg4, uint64_t arg5);
 void ReportGpuCheckpoints(GraphicContext& graphics);
+// CPU recording history only: safe before device loss. This is not GPU completion data.
+void ReportGpuCheckpointHistory();
 
 } // namespace Libs::Graphics
 

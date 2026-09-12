@@ -289,6 +289,8 @@ void TestCpuDirtyUpload() {
   const auto address = reinterpret_cast<uint64_t>(memory);
   Check(tracker.IsRegionCpuModified(address + 16, 32),
         "new region was not CPU dirty");
+  Check(tracker.IsRegionCpuModifiedAndGpuClean(address + 16, 32),
+        "new CPU-owned range was not eligible for a streaming read");
 
   uint32_t ranges = 0;
   bool uploaded = false;
@@ -304,6 +306,13 @@ void TestCpuDirtyUpload() {
             !tracker.IsRegionCpuModified(address, page_size) &&
             Protection(memory) == PAGE_READONLY,
         "upload did not clear CPU dirty state and arm protection");
+  Check(!tracker.IsRegionCpuModifiedAndGpuClean(address, page_size) &&
+        tracker.IsRegionCpuModifiedAndGpuClean(address, page_size * 2),
+        "combined dirty query lost clean/CPU-dirty page distinctions");
+  tracker.MarkRegionAsGpuModified(address, page_size);
+  Check(!tracker.IsRegionCpuModifiedAndGpuClean(address, page_size * 2),
+        "combined dirty query accepted mixed CPU/GPU ownership");
+  tracker.UnmarkRegionAsGpuModified(address, page_size);
 
   tracker.MarkRegionAsCpuModified(address + 16, 32);
   Check(tracker.IsRegionCpuModified(address, page_size) && IsWritable(memory),

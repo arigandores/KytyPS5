@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <cstring>
 #include <vector>
+#include <mutex>
 
 namespace Libs::Graphics {
 
@@ -33,6 +34,7 @@ constexpr size_t RingSize = size_t {1} << 17;
 
 std::array<CheckpointRecord, RingSize> g_ring {};
 std::atomic<uint64_t>                  g_sequence {0};
+std::mutex                             g_ring_mutex;
 
 // Host-visible breadcrumb buffer. Deliberately never destroyed: it is only created in the debug
 // mode and must stay readable while the device loss is being reported.
@@ -80,7 +82,10 @@ void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
 	}
 	const auto sequence = g_sequence.fetch_add(1, std::memory_order_relaxed) + 1;
 	auto&      record   = g_ring[sequence % RingSize];
-	record              = {sequence, submit_id, arg4, arg5, op, arg0, arg1, arg2, arg3};
+	{
+		std::lock_guard lock(g_ring_mutex);
+		record = {sequence, submit_id, arg4, arg5, op, arg0, arg1, arg2, arg3};
+	}
 
 	// vkCmdUpdateBuffer must be recorded outside a render pass instance.
 	if (graphics.gpu_breadcrumbs_enabled && !inside_rendering) {
@@ -95,6 +100,21 @@ void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
 	if (graphics.diagnostic_checkpoints_enabled) {
 		command.setCheckpointNV(&record);
 	}
+}
+
+void ReportGpuCheckpointHistory() {
+	std::vector<CheckpointRecord> records;
+	{
+		std::lock_guard lock(g_ring_mutex);
+		const auto latest = g_sequence.load(std::memory_order_relaxed);
+		const auto first = latest > 16 ? latest - 15 : uint64_t {1};
+		for (auto sequence = first; sequence <= latest; ++sequence) {
+			const auto& record = g_ring[sequence % RingSize];
+			if (record.sequence == sequence) records.push_back(record);
+		}
+	}
+	for (const auto& record: records) Print("cpu-recorded (not GPU completion)", record);
+	std::fflush(stdout);
 }
 
 void ReportGpuCheckpoints(GraphicContext& graphics) {
@@ -134,7 +154,12 @@ void ReportGpuCheckpoints(GraphicContext& graphics) {
 					     static_cast<const void*>(marker));
 					continue;
 				}
-				Print(stage, *marker);
+				CheckpointRecord record;
+				{
+					std::lock_guard lock(g_ring_mutex);
+					record = *marker;
+				}
+				Print(stage, record);
 			}
 		}
 	}

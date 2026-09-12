@@ -216,6 +216,15 @@ struct TextureCacheTestAccess {
     return std::unique_lock(cache.m_lock);
   }
 
+  static void TouchImage(TextureCache &cache, ImageId id) {
+    cache.TouchImage(cache.m_slot_images[id]);
+  }
+  static void InitializeTexture(TextureCache &cache, ImageId id) {
+    auto lock = Lock(cache);
+    cache.InitializeImage(id, false);
+    cache.m_page_manager.DrainDeferredProtection();
+  }
+
   static void ClearImage(TextureCache &cache, CommandBuffer &command, ImageId id,
                          const vk::ImageSubresourceRange &range,
                          const vk::ClearValue &clear) {
@@ -225,10 +234,11 @@ struct TextureCacheTestAccess {
 
   static void ConfigureGarbageCollection(TextureCache &cache,
                                          std::span<const ImageId> oldest,
-                                         uint64_t tick, uint64_t pressure) {
+                                         uint64_t tick, uint64_t pressure,
+                                         uint64_t critical = UINT64_MAX) {
     cache.m_trigger_gc_memory = 0;
     cache.m_pressure_gc_memory = pressure;
-    cache.m_critical_gc_memory = UINT64_MAX;
+    cache.m_critical_gc_memory = critical;
     cache.m_gc_tick = tick;
     std::vector<ImageId> live;
     cache.m_lru_cache = {};
@@ -4620,6 +4630,224 @@ public:
     Require(name, "release", LibKernel::Memory::KernelReleaseDirectMemory(direct, size) == 0,
         "BDA test release failed");
     std::printf("[host]    %-32s ok\n", name);
+  }
+
+  void CheckResidentMipUpload() {
+    constexpr const char* name = "ResidentMipUpload";
+    constexpr uint64_t base = 0x203600000ull, mapped_size = 0x20000;
+    EnsureRuntimeContext();
+    // Only source selection/upload is exercised here, without creating an EXT min-LOD
+    // image view; production view creation is unchanged and requires the device feature.
+    const bool old_min_lod = m_runtime_context.image_view_min_lod_enabled;
+    m_runtime_context.image_view_min_lod_enabled = true;
+    RenderContext context(m_runtime_context);
+    auto& scheduler = context.GetCommandScheduler();
+    HW::Context registers{}; HW::UserConfig user_config{}; HW::Shader shaders{};
+    scheduler.Begin(registers, user_config, shaders);
+    int64_t direct = -1;
+    Require(name, "allocate", LibKernel::Memory::KernelAllocateDirectMemory(0,
+        LibKernel::Memory::KernelGetDirectMemorySize(), mapped_size, 0x10000, 0, &direct)==0,
+        "resident tail allocation failed");
+    void* mapped = reinterpret_cast<void*>(base);
+    Require(name, "map", LibKernel::Memory::KernelMapDirectMemory(&mapped, mapped_size,
+        3, 0x10, direct, 0x10000)==0 && mapped==reinterpret_cast<void*>(base),
+        "resident tail mapping failed");
+    context.MapMemory(base, mapped_size);
+    auto* words = static_cast<uint32_t*>(mapped);
+    for (size_t i=0;i<mapped_size/4;++i) {
+      words[i] = static_cast<uint32_t>((i * 0x9e3779b9u) ^ (i >> 3u) ^ 0xa16312b7u);
+    }
+    ImageDesc desc{};
+    desc.info.guest_format=Prospero::BufferFormat::kBc5UNorm;
+    desc.info.pixel_format=vk::Format::eBc5UnormBlock;
+    desc.info.type=Prospero::ImageType::kColor2D;
+    desc.info.tile_mode=Prospero::TileMode::kStandard64KB;
+    desc.info.extent={4096,4096,1};desc.info.resources={13,1};
+    desc.info.pitch=4096;desc.info.bytes_per_block=16;desc.info.samples=1;
+    TileSizeAlign total{};TileSizeOffset levels[16]{};TilePaddedSize padded[16]{};
+    TileGetTextureSize(desc.info.guest_format,4096,4096,13,desc.info.tile_mode,&total,levels,padded);
+    desc.info.data={base,total.size};
+    TileSurfaceLayout reference{};
+    Require(name, "reference layout", TileGetTiledTextureLayout(
+        {desc.info.guest_format, desc.info.tile_mode, TileSurfaceDimension::Dim2D,
+         4096, 4096, 1, 13, 1}, reference), "CPU mip layout failed");
+    for (uint32_t i=0;i<13;++i) desc.info.mip_layout[i]={
+        levels[i].src_size?levels[i].src_offset:levels[i].offset,
+        levels[i].src_size?levels[i].src_size:levels[i].size,
+        padded[i].width>>2,padded[i].height>>2};
+    desc.view_info.format=desc.info.pixel_format;desc.view_info.type=vk::ImageViewType::e2D;
+    desc.view_info.aspect=vk::ImageAspectFlagBits::eColor;
+    desc.view_info.usage=vk::ImageUsageFlagBits::eSampled;
+    desc.view_info.level_count=13;desc.view_info.layer_count=1;desc.view_info.min_lod=5*256;
+    auto& cache=context.GetTextureCache();
+    const auto first=cache.FindImage(desc);
+    Require(name,"resident footprint",desc.source_first_level==5 && desc.source_size==0x10000 &&
+        cache.GetImage(first).SourceRange().size==0x10000 && total.size>mapped_size,
+        "min-LOD view retained the unresident high mip footprint");
+    TextureCacheTestAccess::InitializeTexture(cache,first);
+    const auto check_mip = [&](uint32_t level) {
+    auto& image=cache.GetImage(first);
+    const uint32_t width=std::max(4096u>>level,1u), blocks=(width+3u)/4u;
+    const uint32_t output_bytes=blocks*blocks*16u;
+    auto output=CreateHostBuffer(name,output_bytes,vk::BufferUsageFlagBits::eTransferDst,{0});
+    auto command=scheduler.Current().Handle();
+    image.Transit(vk::ImageLayout::eTransferSrcOptimal,vk::AccessFlagBits2::eTransferRead,
+                  ImageSubresourceRange{level,1,0,1},command);
+    vk::BufferImageCopy copy{};copy.imageSubresource={vk::ImageAspectFlagBits::eColor,level,0,1};
+    copy.imageExtent={width,width,1};
+    command.copyImageToBuffer(image.backing.image,vk::ImageLayout::eTransferSrcOptimal,
+                              output.buffer,1,&copy);
+    VulkanMemoryBarrier after{};after.srcAccessMask=vk::AccessFlagBits::eTransferWrite;
+    after.dstAccessMask=vk::AccessFlagBits::eHostRead;
+    command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,vk::PipelineStageFlagBits::eHost,
+                             {},1,&after,0,nullptr,0,nullptr);
+    scheduler.Finish();
+    const auto result=ReadBuffer(name,output,output_bytes/4);DestroyBuffer(&output);
+    const auto& mip=reference.mips[level];
+    const auto& block=reference.texture.block;
+    const uint32_t columns=(mip.padded_width+block.block_width-1u)/block.block_width;
+    for(uint32_t y=0;y<blocks;++y) for(uint32_t x=0;x<blocks;++x) {
+      const uint32_t bx=x/block.block_width, by=y/block.block_height;
+      const bool tail=level>=reference.first_tail_level;
+      uint32_t local=0, block_xor=0;
+      Require(name,"reference address",TileGetBlockOffset(block,
+          tail?x+mip.tail_x:x%block.block_width,
+          tail?y+mip.tail_y:y%block.block_height,0,local) &&
+          TileGetBlockXor(block,bx,by,0,block_xor),"CPU block address failed");
+      const auto offset=mip.offset+(static_cast<uint64_t>(by)*columns+bx)*block.block_size+
+          (local^block_xor);
+      Require(name,"resident source",offset+16<=mapped_size,"CPU reference escaped mapped tail");
+      Require(name,"tail contents",std::memcmp(result.data()+(y*blocks+x)*4u,
+          reinterpret_cast<const uint8_t*>(mapped)+offset,16)==0,
+          "resident mip data differs from CPU tiling reference");
+    }
+    };
+    for (uint32_t level=5;level<13;++level) check_mip(level);
+    // A neighboring tail must not be covered by the first texture's logical 22 MB span.
+    const auto neighbor_word=words[0x10000/4];
+    words[0x10000/4]=0x12345678;
+    for(int i=0;i<40;++i) scheduler.Flush();
+    auto neighbor=desc;neighbor.info.data.address+=0x10000;
+    const auto second=cache.FindImage(neighbor);
+    Require(name,"neighbor alias",second!=first && TextureCacheTestAccess::Contains(cache,first) &&
+        !cache.GetImage(first).Overlaps(base+0x10000,0x10000),
+        "unresident mips caused eviction or overlap of a neighboring texture");
+    words[0x10000/4]=neighbor_word;
+    auto expanded=desc;expanded.view_info.min_lod=4*256;
+    Require(name,"lower clamp",cache.FindImage(expanded)==first &&
+        expanded.source_size==mapped_size && cache.GetImage(first).source_first_level==4 &&
+        cache.GetImage(first).IsBufferModified(), "lower MIN_LOD did not require newly resident data");
+    TextureCacheTestAccess::InitializeTexture(cache,first);
+    for (uint32_t level=4;level<13;++level) check_mip(level);
+    cache.GetImage(first).binding.is_bound=true;
+    cache.ConfigureImageSource(first,desc);
+    Require(name,"shared draw",cache.GetImage(first).source_first_level==4,
+        "a second binding hid mips required by the first binding");
+    cache.GetImage(first).binding.is_bound=false;
+    cache.ConfigureImageSource(first,desc);
+    Require(name,"raise clamp",cache.GetImage(first).source_first_level==5 &&
+        cache.GetImage(first).SourceRange().size==0x10000,"higher MIN_LOD did not release the source span");
+    cache.InvalidateMemory(base+0x10000,4);
+    Require(name,"neighbor invalidation",!cache.GetImage(first).IsCpuDirty(),
+        "a neighboring texture dirtied unresident mip addresses");
+    context.UnmapMemory(base,mapped_size);scheduler.Finish();
+    Require(name,"unmap",LibKernel::Memory::KernelMunmap(base,mapped_size)==0,"resident unmap failed");
+    Require(name,"release",LibKernel::Memory::KernelReleaseDirectMemory(direct,mapped_size)==0,"resident release failed");
+    m_runtime_context.image_view_min_lod_enabled=old_min_lod;
+    std::printf("[gpu]     %-32s ok\n",name);
+  }
+
+  void CheckImageGcProgress() {
+    constexpr const char* name = "ImageGcProgress";
+    EnsureRuntimeContext();
+    RenderContext context(m_runtime_context);
+    auto& cache = context.GetTextureCache();
+    ImageInfo info{};
+    info.data = {0x200600000ull, 4096};
+    info.pixel_format = vk::Format::eR32Uint;
+    info.guest_format = Prospero::BufferFormat::k32UInt;
+    info.type = Prospero::ImageType::kColor2D;
+    info.extent = {32,32,1};
+    info.resources = {1,1};
+    info.pitch = 32;
+    info.bytes_per_block = 4;
+    info.samples = 1;
+    info.tile_mode = Prospero::TileMode::kStandard4KB;
+    info.mip_layout[0] = {0,4096,32,32};
+    std::vector<ImageId> ids;
+    for (int i = 0; i < 48; ++i) {
+      const auto id = TextureCacheTestAccess::InsertImage(cache, info);
+      ids.push_back(id);
+      if (i < 40) {
+        auto& image = cache.GetImage(id);
+        image.RefreshComplete();
+        image.ClearBufferModified();
+        image.MarkGpuModified();
+      }
+      info.data.address += 0x10000;
+    }
+    TextureCacheTestAccess::ConfigureGarbageCollection(cache, ids, 200, 0);
+    for (int i = 0; i < 4; ++i) cache.RunGarbageCollector();
+    for (int i = 0; i < 40; ++i) {
+      Require(name, "GPU contents", TextureCacheTestAccess::Contains(cache, ids[i]) &&
+          cache.GetImage(ids[i]).IsGpuModified(), "GC discarded pinned tiled GPU contents");
+    }
+    for (int i = 40; i < 48; ++i) {
+      Require(name, "progress", !TextureCacheTestAccess::Contains(cache, ids[i]),
+          "pinned oldest images starved reclaimable images behind them");
+    }
+    std::printf("[gpu]     %-32s ok\n", name);
+  }
+
+  void CheckImageGcFrameGuard() {
+    constexpr const char* name = "ImageGcFrameGuard";
+    EnsureRuntimeContext();
+    RenderContext context(m_runtime_context);
+    auto& cache = context.GetTextureCache();
+    const auto saved_frame = GpuTimeProfiler::Frame();
+    GpuTimeProfiler::SetFrame(99);
+    ImageDesc desc{};
+    desc.info.data = {0x200600000ull, 4};
+    desc.info.pixel_format = vk::Format::eR32Uint;
+    desc.info.guest_format = Prospero::BufferFormat::k32UInt;
+    desc.info.type = Prospero::ImageType::kColor2D;
+    desc.info.extent = {1,1,1};
+    desc.info.resources = {1,1};
+    desc.info.pitch = 1;
+    desc.info.bytes_per_block = 4;
+    desc.info.samples = 1;
+    desc.info.tile_mode = Prospero::TileMode::kLinear;
+    desc.info.mip_layout[0] = {0,4,1,1};
+    const auto first = TextureCacheTestAccess::InsertImage(cache, desc.info);
+    desc.info.data.address += 0x1000;
+    const auto second = TextureCacheTestAccess::InsertImage(cache, desc.info);
+    const std::array ids{first, second};
+    GpuTimeProfiler::SetFrame(100);
+    for (const auto id: ids) TextureCacheTestAccess::TouchImage(cache, id);
+    TextureCacheTestAccess::ConfigureGarbageCollection(cache, ids, 81, 0);
+    for (int i=0;i<200;++i) cache.RunGarbageCollector();
+    Require(name, "current frame", TextureCacheTestAccess::Contains(cache, first) &&
+        TextureCacheTestAccess::Contains(cache, second),
+        "submission-age GC retired the current-frame working set");
+    GpuTimeProfiler::SetFrame(101);
+    for (int i=0;i<200;++i) cache.RunGarbageCollector();
+    Require(name, "previous frame", TextureCacheTestAccess::Contains(cache, first) &&
+        TextureCacheTestAccess::Contains(cache, second),
+        "submission-age GC retired the previous-frame working set");
+    GpuTimeProfiler::SetFrame(102);
+    cache.RunGarbageCollector();
+    Require(name, "expired frame", !TextureCacheTestAccess::Contains(cache, first) &&
+        !TextureCacheTestAccess::Contains(cache, second),
+        "frame guard retained expired images");
+    GpuTimeProfiler::SetFrame(200);
+    const auto critical = TextureCacheTestAccess::InsertImage(cache, desc.info);
+    const std::array critical_ids{critical};
+    TextureCacheTestAccess::ConfigureGarbageCollection(cache, critical_ids, 200, 0, 0);
+    cache.RunGarbageCollector();
+    Require(name, "critical pressure", !TextureCacheTestAccess::Contains(cache, critical),
+        "frame guard prevented critical-pressure retirement");
+    GpuTimeProfiler::SetFrame(saved_frame);
+    std::printf("[gpu]     %-32s ok\n", name);
   }
 
   void CheckUnifiedTextureCacheFlow() {
@@ -29825,6 +30053,21 @@ int main(int argc, char **argv) {
   if (argc == 2 && std::strcmp(argv[1], "--image-view-cache-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckUnifiedImageViewCache();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--image-gc-progress-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckImageGcProgress();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--image-gc-frame-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckImageGcFrameGuard();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--resident-mip-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckResidentMipUpload();
     return 0;
   }
   if (argc == 2 && std::strcmp(argv[1], "--storage-sampled-only") == 0) {

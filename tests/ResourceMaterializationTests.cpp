@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <memory>
 #include <chrono>
+#include <bit>
+#include <functional>
 
 namespace {
 
@@ -466,6 +468,115 @@ void TestCompiledScalarAddressPlan() {
   }
 }
 
+void TestSrtNativeArithmetic() {
+  using namespace Libs::Graphics::ShaderRecompiler::IR;
+  using Op = ValueOpcode;
+  struct Case { Op op; bool wide; std::function<uint64_t(uint64_t,uint64_t)> eval; };
+  const Case cases[] = {
+    {Op::IAdd32,false,[](auto a,auto b){return uint32_t(a+b);}},
+    {Op::IAdd64,true,[](auto a,auto b){return a+b;}},
+    {Op::ISub32,false,[](auto a,auto b){return uint32_t(a-b);}},
+    {Op::ISub64,true,[](auto a,auto b){return a-b;}},
+    {Op::IMul32,false,[](auto a,auto b){return uint32_t(a*b);}},
+    {Op::IMul64,true,[](auto a,auto b){return a*b;}},
+    {Op::BitwiseAnd32,false,[](auto a,auto b){return uint32_t(a&b);}},
+    {Op::BitwiseAnd64,true,[](auto a,auto b){return a&b;}},
+    {Op::BitwiseOr32,false,[](auto a,auto b){return uint32_t(a|b);}},
+    {Op::BitwiseXor32,false,[](auto a,auto b){return uint32_t(a^b);}},
+    {Op::ShiftLeftLogical32,false,[](auto a,auto b){return uint32_t(a)<<(b&31);}},
+    {Op::ShiftLeftLogical64,true,[](auto a,auto b){return a<<(b&63);}},
+    {Op::ShiftRightLogical32,false,[](auto a,auto b){return uint32_t(a)>>(b&31);}},
+    {Op::ShiftRightLogical64,true,[](auto a,auto b){return a>>(b&63);}},
+    {Op::ShiftRightArithmetic32,false,[](auto a,auto b){return uint32_t(std::bit_cast<int32_t>(uint32_t(a))>>(b&31));}},
+    {Op::ShiftRightArithmetic64,true,[](auto a,auto b){return uint64_t(std::bit_cast<int64_t>(a)>>(b&63));}},
+    {Op::IEqual32,false,[](auto a,auto b){return uint32_t(a)==uint32_t(b);}},
+    {Op::INotEqual32,false,[](auto a,auto b){return uint32_t(a)!=uint32_t(b);}},
+    {Op::ULessThan32,false,[](auto a,auto b){return uint32_t(a)<uint32_t(b);}},
+    {Op::UGreaterThan32,false,[](auto a,auto b){return uint32_t(a)>uint32_t(b);}},
+    {Op::UMin32,false,[](auto a,auto b){return std::min(uint32_t(a),uint32_t(b));}},
+  };
+  Program program;
+  program.srt_plan_complete = program.resource_tracking_complete = true;
+  auto &block = AddValueBlock(program);
+  Value data[4];
+  for (uint32_t i=0;i<4;++i) data[i] = Value(&block.AppendNewInst(Op::GetUserData,
+      {Value(static_cast<ScalarReg>(i))}));
+  const auto a64 = Value(&block.AppendNewInst(Op::CompositeConstructU64,{data[0],data[2]}));
+  const auto b64 = Value(&block.AppendNewInst(Op::CompositeConstructU64,{data[1],data[3]}));
+  std::vector<uint32_t> sources;
+  const auto add = [&](Value root, bool wide) {
+    DescriptorSource source;
+    source.dword_count = wide ? 2 : 1;
+    source.dwords[0] = wide ? Value(&block.AppendNewInst(Op::CompositeExtractU64,{root,Value(0u)})) : root;
+    if (wide) source.dwords[1] = Value(&block.AppendNewInst(Op::CompositeExtractU64,{root,Value(1u)}));
+    sources.push_back(static_cast<uint32_t>(program.descriptor_sources.size()));
+    program.descriptor_sources.push_back(source);
+  };
+  for (const auto &c: cases) {
+    add(Value(&block.AppendNewInst(c.op,{c.wide?a64:data[0],c.wide?b64:data[1]})),c.wide);
+  }
+  const auto extracted = Value(&block.AppendNewInst(Op::BitFieldUExtract,{data[0],Value(3u),Value(17u)}));
+  add(Value(&block.AppendNewInst(Op::IAdd32,{extracted,data[1]})),false);
+  add(Value(&block.AppendNewInst(Op::SelectU32,{data[2],data[0],data[1]})),false);
+  add(Value(&block.AppendNewInst(Op::BitwiseNot32,{data[0]})),false);
+  auto plan = ExtractResourcePlan(program);
+  uint32_t words[4]{};
+  const SrtRuntime runtime{.user_data=words};
+  std::vector<DescriptorValue> values;
+  std::vector<uint32_t> flat;
+  std::vector<uint8_t> active;
+  uint64_t seed=0x483912abcdef1234ull;
+  for (uint32_t pass=0;pass<2048;++pass) {
+    for (auto &word: words) { seed^=seed<<13; seed^=seed>>7; seed^=seed<<17; word=uint32_t(seed); }
+    if (pass<128) { words[0]=pass&1?0xffffffffu:0; words[1]=pass/2; words[2]=pass&1?0xffffffffu:0; }
+    Check(EvaluateRuntimeSources(plan,sources,runtime,values,flat,plan.clean_flat_slots,active),
+          "native arithmetic plan evaluation failed");
+    const uint64_t a=uint64_t(words[0])|(uint64_t(words[2])<<32);
+    const uint64_t b=uint64_t(words[1])|(uint64_t(words[3])<<32);
+    for (size_t i=0;i<std::size(cases);++i) {
+      const auto expected=cases[i].eval(a,b);
+      Check(values[i].dwords[0]==uint32_t(expected) &&
+            (!cases[i].wide || values[i].dwords[1]==uint32_t(expected>>32)),
+            "native arithmetic differs from host arithmetic");
+    }
+    const auto offset=std::size(cases);
+    Check(values[offset].dwords[0]==uint32_t(((words[0]>>3)&0x1ffffu)+words[1]),
+          "native execution did not resume after portable node range");
+    Check(values[offset+1].dwords[0]==(words[2]?words[0]:words[1]) &&
+          values[offset+2].dwords[0]==~words[0], "native select/not mismatch");
+  }
+}
+
+void TestSrtReaderExceptionUnwinds() {
+  using namespace Libs::Graphics::ShaderRecompiler::IR;
+  struct ReadException {};
+  bool reject = true;
+  auto plan = SrtPlan(0x10000);
+  const auto read = +[](void *opaque, uint64_t, uint32_t *word) {
+    if (*static_cast<bool *>(opaque)) throw ReadException{};
+    *word = 123;
+    return true;
+  };
+  const SrtRuntime runtime{.read_memory = read, .userdata = &reject};
+  const uint32_t sources[] = {0};
+  std::vector<DescriptorValue> values;
+  std::vector<uint32_t> flat;
+  std::vector<uint8_t> active;
+  bool caught = false;
+  try {
+    (void)EvaluateRuntimeSources(plan, sources, runtime, values, flat,
+                                 plan.clean_flat_slots, active);
+  } catch (const ReadException &) {
+    caught = true;
+  }
+  Check(caught, "SRT reader exception did not unwind to its caller");
+  reject = false;
+  Check(EvaluateRuntimeSources(plan, sources, runtime, values, flat,
+                                plan.clean_flat_slots, active) &&
+        values[0].dwords[0] == 123,
+        "SRT evaluation did not recover after a reader exception");
+}
+
 } // namespace
 
 namespace Common {
@@ -491,6 +602,8 @@ int main() {
   TestDepthComparisonFormatsAndSharedSampler();
   TestCompiledSrtSharedExpressionsKeepRuntimeReads();
   TestCompiledScalarAddressPlan();
+  TestSrtReaderExceptionUnwinds();
+  TestSrtNativeArithmetic();
   std::puts("ResourceMaterializationTests: all cases passed");
   return 0;
 }

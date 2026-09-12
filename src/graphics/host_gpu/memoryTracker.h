@@ -28,6 +28,9 @@ public:
 		return m_cpu_epoch.load(std::memory_order_acquire);
 	}
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
+	// Combined streaming-read query: some CPU-dirty bytes and no GPU-dirty pages,
+	// with a single lock acquisition per tracking region. Does not change ownership.
+	[[nodiscard]] bool IsRegionCpuModifiedAndGpuClean(uint64_t vaddr, uint64_t size);
 	// Snapshot without clearing bits or changing protection. Missing regions are CPU-dirty,
 	// just as when a manager is first created. Callers must recheck/upload after releasing locks.
 	void CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size, std::vector<GuestRange>& ranges);

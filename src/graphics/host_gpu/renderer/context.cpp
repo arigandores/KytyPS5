@@ -35,6 +35,7 @@ void CommandBuffer::Begin() {
 	EXIT_IF(m_rendering || IsInvalid());
 	m_handle_uses  = 0;
 	m_barrier_mark = 0;
+	InvalidateGraphicsState();
 	auto buffer = Handle();
 
 	vk::CommandBufferBeginInfo begin_info {};

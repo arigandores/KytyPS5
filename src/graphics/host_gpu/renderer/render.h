@@ -16,6 +16,8 @@
 #include <optional>
 #include <span>
 #include <vector>
+#include <cstdlib>
+#include <cstring>
 
 namespace Libs::Graphics {
 
@@ -112,6 +114,12 @@ struct SubmitInfo {
 	}
 };
 
+enum class GraphicsStateSlot : uint32_t {
+	Viewports, Scissors, LineWidth, BlendConstants, DepthTest, DepthWrite, DepthCompare,
+	DepthBiasEnable, DepthBias, StencilCompare, StencilWrite, StencilReference,
+	ColorWrite, FeedbackLoop, Pipeline, Count
+};
+
 class CommandBuffer {
 public:
 	~CommandBuffer() = default;
@@ -127,6 +135,32 @@ public:
 	void EndRendering() const;
 
 	[[nodiscard]] vk::CommandBuffer Handle() const;
+	// Values belong to one native command-buffer recording. Utility graphics pipelines
+	// must invalidate them because static state can invalidate previously set dynamic state.
+	bool GraphicsStateChanged(GraphicsStateSlot slot, const void* bytes, size_t size) const {
+		static const bool enabled = [] {
+			const auto* value = std::getenv("KYTY_DYNAMIC_STATE_CACHE");
+			return value == nullptr || value[0] != '0';
+		}();
+		if (!enabled) return true;
+		auto& cached = m_graphics_state[static_cast<size_t>(slot)];
+		if (cached.valid && cached.bytes.size() == size &&
+		    std::memcmp(cached.bytes.data(), bytes, size) == 0) return false;
+		cached.bytes.resize(size);
+		std::memcpy(cached.bytes.data(), bytes, size);
+		cached.valid = true;
+		return true;
+	}
+	template <typename T>
+	bool GraphicsStateChanged(GraphicsStateSlot slot, const T& value) const {
+		return GraphicsStateChanged(slot, &value, sizeof(value));
+	}
+	void InvalidateGraphicsState() const {
+		for (auto& state: m_graphics_state) state.valid = false;
+	}
+	void InvalidateGraphicsState(GraphicsStateSlot slot) const {
+		m_graphics_state[static_cast<size_t>(slot)].valid = false;
+	}
 	// Every recording goes through Handle(); a global barrier is redundant when Handle() has not
 	// been used since the previous one (nothing to order). Reset per command buffer.
 	[[nodiscard]] bool GlobalBarrierRedundant() const noexcept {
@@ -165,6 +199,8 @@ private:
 	mutable bool        m_rendering   = false;
 	mutable uint64_t    m_handle_uses  = 0;
 	mutable uint64_t    m_barrier_mark = 0;
+	struct GraphicsStateValue { std::vector<uint8_t> bytes; bool valid = false; };
+	mutable std::array<GraphicsStateValue, static_cast<size_t>(GraphicsStateSlot::Count)> m_graphics_state;
 	HW::Context*        m_registers   = nullptr;
 	HW::UserConfig*     m_user_config = nullptr;
 	HW::Shader*         m_shaders     = nullptr;

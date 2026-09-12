@@ -189,6 +189,8 @@ void                      StartSampler(ThreadRole role);
 void                      NoteFrame(uint64_t frame);
 
 [[nodiscard]] bool Enabled();
+// KYTY_FRAME_TRACE=lite retains counters and per-frame CPU time without fine-grained clocks.
+[[nodiscard]] bool TimingsEnabled();
 [[nodiscard]] uint64_t NowNs();
 void                   Add(Counter counter, uint64_t value);
 [[nodiscard]] uint64_t Read(Counter counter);
@@ -202,13 +204,13 @@ void                   RegisterCurrentThread(ThreadRole role);
 class Scope {
 public:
 	explicit Scope(Counter ns, Counter count = Counter::Count)
-	    : m_ns(ns), m_count(count), m_t0(Enabled() ? NowNs() : 0) {}
+	    : m_ns(ns), m_count(count), m_t0(TimingsEnabled() ? NowNs() : 0) {}
 	~Scope() {
 		if (m_t0 != 0) {
 			Add(m_ns, NowNs() - m_t0);
-			if (m_count != Counter::Count) {
-				Add(m_count, 1);
-			}
+		}
+		if (m_count != Counter::Count) {
+			Add(m_count, 1);
 		}
 	}
 	Scope(const Scope&)            = delete;
@@ -224,7 +226,7 @@ private:
 // to counter c.
 class Lap {
 public:
-	Lap(): m_t(Enabled() ? NowNs() : 0) {}
+	Lap(): m_t(TimingsEnabled() ? NowNs() : 0) {}
 	void Mark(Counter counter) {
 		if (m_t != 0) {
 			const auto now = NowNs();

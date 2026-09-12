@@ -664,9 +664,14 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		return {buffer, buffer->Offset(vaddr)};
 	}
 
+	static const bool combined_query = [] {
+		const auto* value = std::getenv("KYTY_BUFFER_COMBINED_QUERY");
+		return value == nullptr || value[0] != '0';
+	}();
 	if (!is_written && size <= CACHING_PAGESIZE &&
-	    !m_memory_tracker.IsRegionGpuModified(vaddr, size) &&
-	    m_memory_tracker.IsRegionCpuModified(vaddr, size)) {
+	    (combined_query ? m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size)
+	                    : (!m_memory_tracker.IsRegionGpuModified(vaddr, size) &&
+	                       m_memory_tracker.IsRegionCpuModified(vaddr, size)))) {
 		const auto alignment = std::max<uint64_t>(
 		    m_graphics.physical_device_properties.limits.minUniformBufferOffsetAlignment, 1);
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);

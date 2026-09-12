@@ -37,6 +37,8 @@ public:
 		ImageInfo     info;
 		ImageViewInfo view_info;
 		BindingType   type = BindingType::Texture;
+		uint32_t      source_first_level = 0;
+		uint64_t      source_size = 0; // zero means the full logical footprint
 	};
 
 	TextureCache(GraphicContext& graphics, CommandScheduler& scheduler, PageManager& page_manager,
@@ -45,6 +47,7 @@ public:
 	KYTY_CLASS_NO_COPY(TextureCache);
 
 	[[nodiscard]] ImageId       FindImage(ImageDesc& desc, bool exact_format = false);
+	void ConfigureImageSource(ImageId id, const ImageDesc& desc);
 	void                        UpdateImage(ImageId id);
 	[[nodiscard]] ImageId       FindImageFromRange(uint64_t address, uint64_t size,
 	                                               bool ensure_valid = true);
@@ -141,7 +144,7 @@ private:
 	void                      RegisterImage(ImageId id);
 	void                      UnregisterImage(ImageId id);
 	void                      DeleteImage(ImageId id);
-	void                      FreeImage(ImageId id);
+	void                      FreeImage(ImageId id, const char* reason = "unknown", uint32_t line = 0);
 	void                      TouchImage(Image& image);
 	void                      TrackImage(ImageId id);
 	void                      TrackImageHead(ImageId id);
@@ -175,6 +178,10 @@ private:
 	void                        InitializeImage(ImageId id, bool allow_defer = true);
 	[[nodiscard]] TextureTransfer
 	BuildTextureTransfer(const Image& image, BindingType binding, TransferDirection direction) const;
+	[[nodiscard]] TextureTransfer BuildTextureTransfer(const ImageInfo& info, uint32_t native_samples,
+	    BindingType binding, TransferDirection direction) const;
+	void ConstrainSampledSource(ImageDesc& desc) const;
+	void ConfigureImageSourceUnlocked(ImageId id, const ImageDesc& desc);
 	[[nodiscard]] ImageDownload BuildDownload(const Image& image) const;
 	// Uploads levels [first_level, first_level + level_count) (everything by default) and
 	// returns the guest bytes transferred.
@@ -198,7 +205,8 @@ private:
 	// Caller holds m_lock. Volume layer ranges select depth slices.
 	void ClearImage(CommandBuffer& command, ImageId id, const vk::ImageSubresourceRange& range,
 	                const vk::ClearValue& clear);
-	void PrepareImageCopy(Image& image);
+	void PrepareImageCopy(ImageId id);
+	void RestoreFullImageSource(ImageId id);
 	void RefreshCopySource(ImageId id);
 	[[nodiscard]] bool CopyD16(Image& destination, Image& source);
 	void               CopyImage(ImageId destination, ImageId source);

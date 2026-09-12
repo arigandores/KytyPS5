@@ -668,6 +668,7 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		if (cached != nullptr && cached->registered && !cached->binding.needs_rebind &&
 		    !cached->depth_id && cached->info.data == memo_slot.desc.info.data &&
 		    cached->info.extent == memo_slot.desc.info.extent) {
+			texture_cache.ConfigureImageSource(memo_slot.image_id, memo_slot.desc);
 			cached->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
 			texture_cache.TouchImage(*cached);
 			if (!cached->info.IsDepth() && descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {

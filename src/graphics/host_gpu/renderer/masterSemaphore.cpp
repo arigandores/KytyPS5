@@ -33,6 +33,9 @@ MasterSemaphore::~MasterSemaphore() {
 void MasterSemaphore::Refresh() {
 	uint64_t   counter = 0;
 	const auto result  = m_graphics.device.getSemaphoreCounterValue(m_semaphore, &counter);
+	if (result == vk::Result::eErrorDeviceLost) {
+		ReportGpuCheckpoints(m_graphics);
+	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 
 	auto known = m_gpu_tick.load(std::memory_order_acquire);
@@ -60,7 +63,21 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	{
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
-		result        = m_graphics.device.waitSemaphores(&wait_info, UINT64_MAX);
+		const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled;
+		bool reported = false;
+		do {
+			result = m_graphics.device.waitSemaphores(&wait_info,
+			    diagnostic ? uint64_t {2000000000} : UINT64_MAX);
+			if (diagnostic && result == vk::Result::eTimeout && !reported) {
+				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 "\n",
+				     static_cast<uint32_t>(FS::CurrentRole()), tick, m_gpu_tick.load(std::memory_order_acquire));
+				std::printf("GpuWaitSlow: role=%u requested=%" PRIu64 "\n",
+				            static_cast<uint32_t>(FS::CurrentRole()), tick);
+				ReportGpuCheckpointHistory();
+				Log::Flush();
+				reported = true;
+			}
+		} while (diagnostic && result == vk::Result::eTimeout);
 		if (t0 != 0) {
 			const auto ns = FS::NowNs() - t0;
 			FS::Add(FS::Counter::SemWaitNs, ns);
@@ -76,7 +93,8 @@ void MasterSemaphore::Wait(uint64_t tick) {
 		     vk::to_string(result).c_str(), static_cast<int>(result), tick);
 		std::printf("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
 		            vk::to_string(result).c_str(), static_cast<int>(result), tick);
-		ReportGpuCheckpoints(m_graphics);
+		if (result == vk::Result::eErrorDeviceLost) ReportGpuCheckpoints(m_graphics);
+		else ReportGpuCheckpointHistory();
 	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 	Refresh();

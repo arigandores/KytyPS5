@@ -16,6 +16,15 @@
 #include <memory>
 #include <unordered_map>
 #include <unordered_set>
+#include <mutex>
+#include <stdexcept>
+#include <deque>
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <xbyak/xbyak.h>
+#endif
 
 namespace Libs::Graphics::ShaderRecompiler::IR {
 namespace {
@@ -1376,6 +1385,9 @@ struct CompiledSrt {
 	// Per ResourcePlan::control_flow block: the block condition (clean reads), None if absent.
 	std::vector<uint32_t> block_condition_roots;
 	bool                  valid = false;
+	mutable std::once_flag native_once;
+	mutable std::shared_ptr<void> native_owner;
+	mutable void (*native_eval)(void*) = nullptr;
 };
 
 namespace {
@@ -1811,11 +1823,13 @@ const CompiledSrt& GetCompiledSrt(const ResourcePlan& plan) {
 
 // Evaluates every node in order; values/status must hold nodes.size() entries.
 void EvaluateCompiledNodes(const CompiledSrt& compiled, const ResourcePlan& plan,
-                           const SrtRuntime& runtime, uint64_t* values, uint8_t* status) {
+                           const SrtRuntime& runtime, uint64_t* values, uint8_t* status,
+                           uint32_t first = 0, uint32_t last = UINT32_MAX) {
 	using Op   = CompiledSrt::Op;
 	const auto float32 = [](uint64_t bits) { return std::bit_cast<float>(static_cast<uint32_t>(bits)); };
 	const auto bits32  = [](float value) { return static_cast<uint64_t>(std::bit_cast<uint32_t>(value)); };
-	for (uint32_t index = 0; index < compiled.nodes.size(); index++) {
+	last = std::min(last, static_cast<uint32_t>(compiled.nodes.size()));
+	for (uint32_t index = first; index < last; index++) {
 		const auto& node = compiled.nodes[index];
 		uint64_t&   out  = values[index];
 		uint8_t&    st   = status[index];
@@ -2085,6 +2099,8 @@ void EvaluateCompiledNodes(const CompiledSrt& compiled, const ResourcePlan& plan
 
 enum class CompiledResult { Done, Unsupported, HardFailure };
 
+#include "graphics/shader/recompiler/ir/passes/SrtNative.inc"
+
 // Fast path of EvaluateRuntimeSourcesImpl for the materialization call (all flat slots, the
 // plan's own clean-slot table). Returns Unsupported when the plan could not be compiled and
 // HardFailure when the interpreter has to reproduce an evaluation failure.
@@ -2101,7 +2117,9 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 		values.resize(compiled.nodes.size());
 		status.resize(compiled.nodes.size());
 	}
-	EvaluateCompiledNodes(compiled, program, runtime, values.data(), status.data());
+	if (!EvaluateNativeSrt(compiled, program, runtime, values.data(), status.data())) {
+		EvaluateCompiledNodes(compiled, program, runtime, values.data(), status.data());
+	}
 	// These are scratch arrays, not a cache of guest values: reset every entry on each call.
 	struct Scratch {
 		std::vector<uint8_t> active, visited;
@@ -2239,6 +2257,12 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		return value == nullptr || value[0] != '0';
 	}();
 	static const bool verify = std::getenv("KYTY_SRT_VERIFY") != nullptr;
+	static const uint64_t verify_every = [] {
+		const auto* value = std::getenv("KYTY_SRT_VERIFY_EVERY");
+		return value == nullptr ? uint64_t {1}
+		                        : std::max(uint64_t {1}, static_cast<uint64_t>(std::strtoull(value, nullptr, 10)));
+	}();
+	static thread_local uint64_t verify_calls = 0;
 	if (compiled_enabled && evaluate_flat && clean_flat_slots.data() == program.clean_flat_slots.data() &&
 	    clean_flat_slots.size() == program.clean_flat_slots.size()) {
 		thread_local std::vector<DescriptorValue> compiled_results;
@@ -2250,7 +2274,7 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 			if (Common::FrameStats::Enabled()) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::MatMemoHits, 1);
 			}
-			if (verify) {
+			if (verify && (++verify_calls % verify_every) == 0) {
 				std::vector<DescriptorValue> reference;
 				std::vector<uint32_t>        reference_flat;
 				std::vector<uint8_t>         reference_active;

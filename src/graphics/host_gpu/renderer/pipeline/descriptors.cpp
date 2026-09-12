@@ -985,6 +985,15 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 	const auto& hw    = buffer.GetRegisters();
 	for (uint32_t slot = 0; slot < 8; slot++) {
 		const auto& rt = hw.GetRenderTarget(slot);
+		if (rt.base.addr != 0 && rt.cmask.addr != 0 && rt.info.cmask_fast_clear_enable &&
+		    !rt.info.dcc_compression_enable) {
+			RenderColorInfo color {};
+			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
+			if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
+				(void)cache.FindRenderTarget(color.image_id, color.desc);
+			}
+			continue;
+		}
 		if (rt.base.addr == 0 || rt.dcc_addr.addr == 0) {
 			continue;
 		}

@@ -171,6 +171,7 @@ private:
 	// use of the image completes the upload first.
 	void                        RefreshImage(ImageId id, bool allow_partial = false);
 	void                        PrepareDccClear(ImageId id, const ImageDesc& desc);
+	void                        PrepareCmaskClear(ImageId id, const ImageDesc& desc);
 	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
 	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,

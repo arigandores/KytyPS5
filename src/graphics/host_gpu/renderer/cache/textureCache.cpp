@@ -413,6 +413,8 @@ void TextureCache::DeleteImage(ImageId id) {
 		if (metadata != m_surface_metas.end() &&
 		    ((image->info.metadata.kind == ImageMetadataKind::Dcc &&
 		      metadata->second.type == MetaDataInfo::Type::Dcc) ||
+		     (image->info.metadata.kind == ImageMetadataKind::Cmask &&
+		      metadata->second.type == MetaDataInfo::Type::CMask) ||
 		     (image->info.metadata.kind == ImageMetadataKind::Htile &&
 		      metadata->second.type == MetaDataInfo::Type::HTile))) {
 			// A later binding may have reused this address for another metadata type.
@@ -1525,6 +1527,47 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	}
 }
 
+void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
+	static const bool enabled = [] {
+		const auto* value = std::getenv("KYTY_CMASK_CLEAR");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (!enabled || desc.info.metadata.kind != ImageMetadataKind::Cmask ||
+	    desc.type != BindingType::RenderTarget || desc.info.samples != 1 ||
+	    desc.info.resources.levels != 1 || desc.info.IsVolume()) return;
+	auto& image = m_slot_images[id];
+	image.info.metadata = desc.info.metadata;
+	auto [entry, inserted] = m_surface_metas.try_emplace(
+	    desc.info.metadata.range.address, MetaDataInfo {.type = MetaDataInfo::Type::CMask});
+	auto& metadata = entry->second;
+	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
+		if (PendingDccFillStale(desc.info.metadata.range.address, metadata, image.info.data.address)) {
+			metadata = MetaDataInfo {};
+		}
+		metadata.type = MetaDataInfo::Type::CMask;
+		if (metadata.fill_value != 0) metadata.clear_mask = 0;
+	} else if (metadata.type != MetaDataInfo::Type::CMask) {
+		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
+	}
+	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
+	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) return;
+	vk::ClearValue clear {};
+	if (!DecodePackedColorClear(image.backing.format, desc.info.metadata.cmask_clear_words[0],
+	                           desc.info.metadata.cmask_clear_words[1], clear.color)) return;
+	const auto& view = desc.view_info;
+	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) return;
+	for (uint32_t layer = view.base_layer; layer < view.base_layer + view.layer_count; ++layer) {
+		if ((metadata.clear_mask & (1u << layer)) == 0) continue;
+		ClearImage(m_scheduler.Current(), id, {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
+		metadata.clear_mask &= ~(1u << layer);
+		static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+		if (trace) LOGF("CmaskClear: frame=%u image=0x%016" PRIx64 " meta=0x%016" PRIx64
+		               " layer=%u words=%08x/%08x\n", GpuTimeProfiler::Frame(), image.info.data.address,
+		               desc.info.metadata.range.address, layer, desc.info.metadata.cmask_clear_words[0],
+		               desc.info.metadata.cmask_clear_words[1]);
+	}
+}
+
 void TextureCache::RefreshImage(ImageId id, bool allow_partial) {
 	TrackImage(id);
 	auto& image = m_slot_images[id];
@@ -1775,6 +1818,7 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc) 
 	image.MarkGpuModified();
 	image.usage.render_target = true;
 	PrepareDccClear(id, desc);
+	PrepareCmaskClear(id, desc);
 	RefreshImage(id);
 	CommitGpuWrite(image);
 	TrackImageDownload(id, image);
@@ -2264,9 +2308,9 @@ bool TextureCache::ClearMeta(uint64_t address) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);
 	if (found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc ||
-	    found->second.type == MetaDataInfo::Type::Dcc) {
-		// Preserve the broad metadata-clear operation for CMask/FMask/HTile. DCC requires a
-		// validated fill value, so an arbitrary compute write must not clear it.
+	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
+		// DCC and CMASK need a validated fill value and coverage. Keep the legacy operation
+		// for FMask/HTile; an arbitrary write must not imply a color fast clear.
 		return false;
 	}
 	found->second.clear_mask = UINT32_MAX;
@@ -2298,8 +2342,9 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 	// image descriptor confirms its role; never reinterpret CMask/FMask/HTile as DCC.
 	const auto found = m_surface_metas.try_emplace(address).first;
 	if (found->second.type == MetaDataInfo::Type::PendingDcc ||
-	    found->second.type == MetaDataInfo::Type::Dcc) {
-		found->second.clear_mask = dcc_clear_mask;
+	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
+		found->second.clear_mask = found->second.type == MetaDataInfo::Type::CMask
+		    ? (fill_value == 0 ? UINT32_MAX : 0u) : dcc_clear_mask;
 		found->second.fill_value = fill_value;
 		found->second.fill_size  = size;
 		if (found->second.type == MetaDataInfo::Type::PendingDcc) {

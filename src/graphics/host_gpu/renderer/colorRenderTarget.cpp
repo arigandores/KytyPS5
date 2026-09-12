@@ -417,6 +417,15 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 		desc.info.metadata.dcc_clear_word           = rt.clear_word0.word0;
 		desc.info.metadata.dcc_clear_register_valid = true;
 		desc.info.metadata.dcc_alpha_msb            = DccAlphaOnMsb(rt.info);
+	} else if (rt.info.cmask_fast_clear_enable && rt.cmask.addr != 0 && samples == 1 &&
+	           levels == 1 && !volume && width % 1024 == 0 && height % 1024 == 0) {
+		// Single-sample CMASK has one four-bit code per 8x8 color tile. Limit this path
+		// to complete 1024x1024 metadata blocks; smaller/padded and MSAA layouts need
+		// their own layout validation before a partial metadata fill can imply a clear.
+		desc.info.metadata.kind = ImageMetadataKind::Cmask;
+		desc.info.metadata.range = {rt.cmask.addr,
+		    static_cast<uint64_t>(width) * height * view.image_layers / 128u};
+		desc.info.metadata.cmask_clear_words = {rt.clear_word0.word0, rt.clear_word1.word1};
 	}
 	for (uint32_t level = 0; level < levels; level++) {
 		if (volume) {

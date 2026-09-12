@@ -253,3 +253,35 @@ KYTY_IMAGE_WATCH_BINDINGS dumps first16 bindings after frame14000, no GPU readba
 Official ISA PDF supplied by user was read locally, extracted to rdna2-official.txt.
 Legacy0*x behavior exists for explicit legacy instructions; no blanket NaN arithmetic
 change is justified or implemented. Native sampler at the failing vertex is Wrap/Wrap.
+
+## CMASK cause identified and implementation (2026-09-12,23:17)
+
+field_init ran22:58:59..23:05:02, closed by WM_CLOSE; Mesh17494, no hang.
+First watched draw17030: target0x516830000, CMASK0x56c05e000, DCC0,
+CLEAR_WORD0/1=38003800/00005650 -> RGBA16F(0.5,0.5,101,0).
+Slots0/1 share the target, masksRG/BA. Native ImageMetadataKind had NO CMASK;
+only DCC was copied from color registers into metadata descriptors. CMASK0 was filled
+but never applied, leaving old0xFFFFFFF0 HTile bytes in the color image.
+The old NaN blocks are therefore consistent with a missing CMASK register fast clear.
+This run still showed no mixed metadata dispatch cases (the separate guard is not
+claimed to fix the observed disappearance).
+
+Added ImageMetadataKind::Cmask and two clear words; CMASK zero-fill is classified only
+after an enabled color descriptor confirms its role. Validate fill size and code,
+clear native attachment before upload, consume per layer once, rearm on next zero fill.
+ClearMeta no longer turns arbitrary CMASK writes into clears. Delete drops its metadata.
+Fast-clear-eliminate discovers and materializes a CMASK target even before normal draw.
+Current support is deliberately limited to single-sample,single-mip,non-volume targets
+with whole1024x1024 blocks (8192CMASK bytes each); smaller/padded/MSAA layouts are not
+claimed supported. KYTY_CMASK_CLEAR=0 is the runtime control.
+
+GPU test --cmask-clear-only passes with Vulkan+sync validation: initial NaN storage,
+partial fill preserved, full fill clears both words and distant corner, rebinding does
+not erase subsequent writes, nonzero expanded code does not clear, new zero fill rearms,
+and eliminate before image creation/current register values work. Control0 fails the
+expected native color assertion. DCC fixed-float and sampled-clear regressions pass;
+later existing storage-mip test still fails00958, so the broad group is not clean.
+Build installed in build/install; game directory will receive it on next run.
+Gameplay video confirmation of the CMASK fix is still pending. 60FPS still unmet.
+Source reference for single-sample CMASK0 register-clear encoding:
+https://chromium.googlesource.com/external/gitlab.freedesktop.org/mesa/mesa/+/418c4cfa6708a0e0b1175e72fb8fd27d3ca1615a/src/amd/common/ac_descriptors.h

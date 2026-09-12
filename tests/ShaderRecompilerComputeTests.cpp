@@ -398,6 +398,9 @@ struct TextureCacheTestAccess {
 };
 
 struct RenderExecutorTestAccess {
+  static void MaterializeColorClears(RenderExecutor& executor, CommandBuffer& command) {
+    executor.MaterializeBoundTargetDccClears(command);
+  }
   static bool TryConsumeComputeImageClear(RenderExecutor &executor,
       const ShaderComputeInputInfo &input, CommandBuffer &command,
       uint32_t x, uint32_t y, uint32_t z, uint32_t mode) {
@@ -8931,6 +8934,93 @@ public:
             Libs::LibKernel::Memory::KernelReleaseDirectMemory(
                 direct_offset, allocation_size) == 0,
             "fixed-clear direct-memory allocation release failed");
+    std::printf("[gpu]     %-32s ok\n", name);
+  }
+
+  void CheckCmaskRegisterClear() {
+    constexpr const char* name = "CmaskRegisterClear";
+    constexpr uintptr_t base = 0x0000000206000000ull;
+    constexpr uint64_t allocation_size = 0x900000;
+    constexpr uint64_t meta = base + 0x800000;
+    EnsureRuntimeContext();
+    int64_t direct = -1;
+    Require(name, "allocate", Libs::LibKernel::Memory::KernelAllocateDirectMemory(
+        0, Libs::LibKernel::Memory::KernelGetDirectMemorySize(), allocation_size, 0x10000, 0, &direct) == 0,
+        "CMASK test allocation failed");
+    void* mapped = reinterpret_cast<void*>(base);
+    Require(name, "map", Libs::LibKernel::Memory::KernelMapDirectMemory(
+        &mapped, allocation_size, 3, 0x10, direct, 0x10000) == 0,
+        "CMASK test mapping failed");
+    std::memset(mapped, 0xff, allocation_size);
+    {
+      RenderContext context(m_runtime_context);
+      auto& scheduler = context.GetCommandScheduler();
+      HW::Context registers {};
+      HW::UserConfig user_config {};
+      HW::Shader shaders {};
+      registers.SetColorBase(0, {.addr = base});
+      registers.SetColorInfo(0, {.cmask_fast_clear_enable = true,
+          .format = Prospero::ChannelLayout::k16_16_16_16,
+          .channel_type = Prospero::ChannelType::kFloat,
+          .channel_order = Prospero::ChannelOrder::kStandard});
+      registers.SetColorAttrib2(0, {.height = 1023, .width = 1023});
+      registers.SetColorAttrib3(0, {.tile_mode = Prospero::TileMode::kRenderTarget,
+          .dimension = 1, .metadata_pipe_aligned = true});
+      registers.SetColorCmask(0, {.addr = meta});
+      registers.SetColorClearWord0(0, {.word0 = 0x38003800});
+      registers.SetColorClearWord1(0, {.word1 = 0x00005650});
+      registers.SetRenderTargetMask(0x0f);
+      scheduler.Begin(registers, user_config, shaders);
+      context.MapMemory(base, allocation_size);
+      auto& cache = context.GetTextureCache();
+      auto& executor = context.GetRenderExecutor();
+      cache.TrackDccFill(meta, 0x1000, 0);
+      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
+      Require(name, "eliminate before image exists", static_cast<bool>(cache.FindImageFromRange(base, 0x800000, false)),
+          "CMASK eliminate did not discover the target before its first normal draw");
+      RenderColorInfo color {};
+      RenderExecutorTestAccess::ResolveRenderColorTarget(executor, scheduler.Current(), color, 0);
+      Require(name, "descriptor", color.desc.info.metadata.kind == ImageMetadataKind::Cmask &&
+          color.desc.info.metadata.range.size == 0x2000, "CMASK range was not identified");
+      (void)cache.FindRenderTarget(color.image_id, color.desc);
+      Require(name, "partial fill preserved", ReadCachedTexel(name, context, color.image_id) ==
+          std::vector<u32>{0xffffffff, 0xffffffff}, "partial CMASK fill cleared the whole image");
+      cache.TrackDccFill(meta, 0x2000, 0);
+      (void)cache.FindRenderTarget(color.image_id, color.desc);
+      const std::vector<u32> expected {0x38003800, 0x00005650};
+      Require(name, "clear both words and far corner",
+          ReadCachedTexel(name, context, color.image_id) == expected &&
+          ReadCachedTexel(name, context, color.image_id, {1023, 1023, 0}) == expected,
+          "CMASK did not replace stale NaNs with the register clear color");
+      vk::ClearValue painted {};
+      painted.color.float32 = std::array<float, 4>{1, 1, 1, 1};
+      TextureCacheTestAccess::ClearImage(cache, scheduler.Current(), color.image_id,
+          {vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1}, painted);
+      color.desc.info.metadata.cmask_clear_words = {0, 0};
+      (void)cache.FindRenderTarget(color.image_id, color.desc);
+      const std::vector<u32> white {0x3c003c00, 0x3c003c00};
+      Require(name, "second attachment preserves draw", ReadCachedTexel(name, context, color.image_id) == white,
+          "rebinding the same CMASK cleared previously rendered pixels");
+      cache.TrackDccFill(meta, 0x2000, 0xffffffff);
+      (void)cache.FindRenderTarget(color.image_id, color.desc);
+      Require(name, "expanded code preserves draw", ReadCachedTexel(name, context, color.image_id) == white,
+          "non-clear CMASK code was treated as a fast clear");
+      cache.TrackDccFill(meta, 0x2000, 0);
+      (void)cache.FindRenderTarget(color.image_id, color.desc);
+      Require(name, "new fill clears again", ReadCachedTexel(name, context, color.image_id) ==
+          std::vector<u32>{0, 0}, "new CMASK clear was not consumed");
+      cache.TrackDccFill(meta, 0x2000, 0);
+      RenderExecutorTestAccess::MaterializeColorClears(executor, scheduler.Current());
+      Require(name, "eliminate uses current register words", ReadCachedTexel(name, context, color.image_id) == expected,
+          "CMASK eliminate lost the clear register words");
+      RenderExecutorTestAccess::ResetBindings(executor);
+      context.UnmapMemory(base, allocation_size);
+      scheduler.Finish();
+    }
+    Require(name, "unmap", Libs::LibKernel::Memory::KernelMunmap(base, allocation_size) == 0,
+        "CMASK test unmap failed");
+    Require(name, "release", Libs::LibKernel::Memory::KernelReleaseDirectMemory(direct, allocation_size) == 0,
+        "CMASK test release failed");
     std::printf("[gpu]     %-32s ok\n", name);
   }
 
@@ -30093,6 +30183,11 @@ int main(int argc, char **argv) {
   if (argc == 2 && std::strcmp(argv[1], "--htile-clear-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckUnifiedTextureCacheFlow();
+    return 0;
+  }
+  if (argc == 2 && std::strcmp(argv[1], "--cmask-clear-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckCmaskRegisterClear();
     return 0;
   }
   if (argc == 2 && std::strcmp(argv[1], "--compute-meta-classification-only") == 0) {

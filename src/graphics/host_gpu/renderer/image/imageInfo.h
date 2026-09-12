@@ -18,13 +18,14 @@ namespace Libs::Graphics {
 
 enum class VideoOutCompression : uint8_t { Uncompressed, Dcc256_256_0, Dcc256_64_64, Unsupported };
 
-enum class ImageMetadataKind : uint8_t { None, Htile, Dcc };
+enum class ImageMetadataKind : uint8_t { None, Htile, Dcc, Cmask };
 
 struct ImageMetadataInfo {
 	GuestRange          range;
 	ImageMetadataKind   kind               = ImageMetadataKind::None;
 	uint32_t            control            = 0;
 	uint32_t            dcc_clear_word           = 0;
+	std::array<uint32_t, 2> cmask_clear_words {};
 	VideoOutCompression compression        = VideoOutCompression::Uncompressed;
 	bool                stencil_compressed = false;
 	bool                dcc_clear_register_valid = false;

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
+#include <chrono>
 
 namespace {
 
@@ -387,6 +388,84 @@ void TestCompiledSrtSharedExpressionsKeepRuntimeReads() {
   }
 }
 
+void TestCompiledScalarAddressPlan() {
+  using namespace Libs::Graphics::ShaderRecompiler::IR;
+  Program program;
+  program.srt_plan_complete = true;
+  program.resource_tracking_complete = true;
+  auto &block = AddValueBlock(program);
+  auto &low = block.AppendNewInst(ValueOpcode::GetUserData,
+      {Value(static_cast<ScalarReg>(0))});
+  auto &high = block.AppendNewInst(ValueOpcode::GetUserData,
+      {Value(static_cast<ScalarReg>(1))});
+  auto &address = block.AppendNewInst(ValueOpcode::GetAddressResource,
+      {Value(&low), Value(&high)});
+  std::vector<uint32_t> sources;
+  for (uint32_t i = 0; i < 128; ++i) {
+    MemoryInfo memory;
+    memory.kind = ResourceKind::ScalarAddress;
+    memory.planning_only = true;
+    memory.offset = static_cast<uint32_t>(-5);
+    program.memory_info.push_back(memory);
+    auto &read = block.AppendNewInst(ValueOpcode::LoadAddressU32,
+        {Value(&address), Value(i * 4u + 3u), Value(0u), Value(true)});
+    read.SetFlags(MemoryFlags{.index = i, .pc = 0x40});
+    DescriptorSource source;
+    source.dword_count = 1;
+    source.dwords[0] = Value(&read);
+    sources.push_back(i);
+    program.descriptor_sources.push_back(source);
+  }
+  auto plan = ExtractResourcePlan(program);
+  struct Reader { uint64_t first = 0; uint32_t calls = 0, salt = 0; bool fail = false; } reader;
+  const auto read = +[](void *opaque, uint64_t address, uint32_t *word) {
+    auto &state = *static_cast<Reader *>(opaque);
+    Check(address == state.first + (state.calls++ % 128u) * 4u,
+          "scalar address plan changed masking, signed offset or read order");
+    *word = static_cast<uint32_t>(address) ^ state.salt;
+    return !state.fail;
+  };
+  uint32_t data[2] = {0, 0};
+  const SrtRuntime runtime{data, 0, read, &reader};
+  std::vector<DescriptorValue> values;
+  std::vector<uint32_t> flat;
+  std::vector<uint8_t> active;
+  const auto evaluate = [&] {
+    reader.calls = 0;
+    Check(EvaluateRuntimeSources(plan, sources, runtime, values, flat,
+                                 plan.clean_flat_slots, active),
+          "scalar address plan evaluation failed");
+    Check(values.size() == 128, "scalar address plan lost sources");
+    for (uint32_t i = 0; i < 128; ++i) {
+      Check(values[i].dwords[0] == (reader.fail ? 0u :
+          (static_cast<uint32_t>(reader.first + i * 4u) ^ reader.salt)),
+          "scalar address plan kept stale memory or lost read failure");
+    }
+  };
+  for (const auto base : {uint64_t{0x1003}, uint64_t{0xabc100000007},
+                         uint64_t{0xffff000100000009}}) {
+    data[0] = static_cast<uint32_t>(base);
+    data[1] = static_cast<uint32_t>(base >> 32u);
+    reader.first = (base & 0x0000fffffffffffcull) - 8;
+    ++reader.salt;
+    evaluate();
+    reader.fail = true;
+    evaluate();
+    reader.fail = false;
+  }
+  if (const auto *setting = std::getenv("KYTY_SRT_BENCH")) {
+    const auto iterations = std::strtoul(setting, nullptr, 10);
+    const auto start = std::chrono::steady_clock::now();
+    for (unsigned long i = 0; i < iterations; ++i) {
+      ++reader.salt;
+      evaluate();
+    }
+    const auto ns = std::chrono::duration<double, std::nano>(
+        std::chrono::steady_clock::now() - start).count();
+    std::printf("SrtBench: iterations=%lu ns_per_128_reads=%.1f\n", iterations, ns / iterations);
+  }
+}
+
 } // namespace
 
 namespace Common {
@@ -411,6 +490,7 @@ int main() {
   TestMixedSamplerDuplicatesTheCorrectSnapshot();
   TestDepthComparisonFormatsAndSharedSampler();
   TestCompiledSrtSharedExpressionsKeepRuntimeReads();
+  TestCompiledScalarAddressPlan();
   std::puts("ResourceMaterializationTests: all cases passed");
   return 0;
 }

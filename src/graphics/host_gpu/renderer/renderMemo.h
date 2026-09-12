@@ -10,15 +10,28 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <xxhash.h>
 
 namespace Libs::Graphics {
 
-// FNV-1a over raw bytes. Padding bytes of register structs are stable (the HW context is built
-// once and updated field by field), so a byte key can only produce misses, never false hits.
+inline bool FastRenderMemoEnabled() noexcept {
+	static const bool enabled = [] {
+		const auto* value = std::getenv("KYTY_RENDER_MEMO_FAST");
+		return value == nullptr || value[0] != '0';
+	}();
+	return enabled;
+}
+
+// Transient lookup hash only; persisted shader/pipeline keys do not use this helper.
+// Register keys are compared byte for byte after hashing, including their padding.
 inline uint64_t MemoHashBytes(const void* data, size_t size,
                               uint64_t seed = 0xcbf29ce484222325ull) noexcept {
+	if (FastRenderMemoEnabled()) {
+		return XXH3_64bits_withSeed(data, size, seed);
+	}
 	const auto* bytes = static_cast<const uint8_t*>(data);
 	uint64_t    hash  = seed;
 	for (size_t i = 0; i < size; i++) {

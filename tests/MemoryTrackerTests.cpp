@@ -970,6 +970,43 @@ void TestFaultOnProtectedStack() {
 }
 #endif
 
+void TestTrackingLockContention() {
+  Libs::Graphics::TrackingSpinLock lock;
+  uint64_t value = 0, mirror = ~uint64_t{0};
+  std::atomic<uint32_t> ready{0};
+  std::atomic<bool> start{false};
+  constexpr uint32_t threads = 6, iterations = 20000;
+  std::vector<std::jthread> workers;
+  for (uint32_t i = 0; i < threads; ++i) {
+    workers.emplace_back([&] {
+      ready.fetch_add(1);
+      while (!start.load(std::memory_order_acquire)) {
+        std::this_thread::yield();
+      }
+      for (uint32_t j = 0; j < iterations; ++j) {
+        std::scoped_lock guard(lock);
+        Check(mirror == ~value, "tracking lock did not publish protected state");
+        ++value;
+        mirror = ~value;
+      }
+    });
+  }
+  while (ready.load() != threads) {
+    std::this_thread::yield();
+  }
+  const auto begin = std::chrono::steady_clock::now();
+  start.store(true, std::memory_order_release);
+  workers.clear();
+  Check(value == uint64_t{threads} * iterations && mirror == ~value,
+        "tracking lock lost concurrent updates");
+  if (std::getenv("KYTY_TRACKING_BENCH") != nullptr) {
+    const auto ms = std::chrono::duration<double, std::milli>(
+        std::chrono::steady_clock::now() - begin).count();
+    std::printf("TrackingBench: threads=%u acquisitions=%llu ms=%.3f\n", threads,
+                static_cast<unsigned long long>(value), ms);
+  }
+}
+
 } // namespace
 
 namespace Libs::LibKernel::Memory {
@@ -987,6 +1024,10 @@ bool ProtectGuestHostMemory(uint64_t vaddr, uint64_t size,
 int main(int argc, char **argv) {
   if (argc == 3 && std::strcmp(argv[1], "--death") == 0) {
     RunDeathCase(argv[2]);
+  }
+  TestTrackingLockContention();
+  if (argc == 2 && std::strcmp(argv[1], "--tracking-lock-only") == 0) {
+    return 0;
   }
   TestGuestRange();
   TestRangeSet();

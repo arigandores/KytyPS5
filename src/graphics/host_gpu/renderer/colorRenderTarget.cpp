@@ -108,6 +108,12 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 
 	r             = {};
 	r.target_slot = rt_slot;
+	// An inactive slot has no image or cached state to resolve. Preserve its slot number,
+	// and leave the diagnostic path below intact when register dumping is requested.
+	if (FastRenderMemoEnabled() && !graphics_debug_dump_enabled() &&
+	    (rt.base.addr == 0 || mask == 0)) {
+		return;
+	}
 
 	// Memo keyed by the slot's raw register block (+ mask, slice offset, slot, flags). A hit
 	// replays the resolved description and only re-validates the image id, like RebindImages.

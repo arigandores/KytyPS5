@@ -1344,6 +1344,8 @@ struct CompiledSrt {
 		ExtractCarry,
 		Extract64,
 		PhiAgree,
+		Address48,
+		MemReadScalar,
 	};
 	static constexpr uint32_t None = UINT32_MAX;
 	// Node status after evaluation.
@@ -1423,7 +1425,7 @@ public:
 		}
 		if (std::getenv("KYTY_SRT_PLAN_STATS") != nullptr) {
 			const auto reads = std::count_if(m_out.nodes.begin(), m_out.nodes.end(), [](const auto& node) {
-				return node.op == CompiledSrt::Op::MemRead;
+				return node.op == CompiledSrt::Op::MemRead || node.op == CompiledSrt::Op::MemReadScalar;
 			});
 			std::fprintf(stderr, "SrtPlan: hash=%016llx stage=%u nodes=%zu shared=%u reads=%zu sources=%zu flat=%zu\n",
 			             static_cast<unsigned long long>(m_plan.shader_hash), static_cast<unsigned>(m_plan.stage),
@@ -1464,6 +1466,7 @@ private:
 			return value == nullptr || value[0] != '0';
 		}();
 		const bool share = common_values && node.op != CompiledSrt::Op::MemRead &&
+		                   node.op != CompiledSrt::Op::MemReadScalar &&
 		                   node.op != CompiledSrt::Op::PhiAgree &&
 		                   node.op != CompiledSrt::Op::Const;
 		if (share) {
@@ -1616,6 +1619,29 @@ private:
 			}
 			node.d = Compile(handle->Arg(2), ctx);
 			node.e = Compile(handle->Arg(3), ctx);
+		}
+		// Scalar descriptor loads usually share a base and have a constant byte offset.
+		// Prepare the address expression once instead of decoding MemoryInfo per dword.
+		// The load itself is never shared: live/clean reads and their order stay intact.
+		static const bool address_plan = [] {
+			const auto* value = std::getenv("KYTY_SRT_ADDRESS_PLAN");
+			return value == nullptr || value[0] != '0';
+		}();
+		if (address_plan && !const_buffer && !m_failed &&
+		    m_out.nodes[node.c].op == CompiledSrt::Op::Const) {
+			const auto relative =
+			    (static_cast<int64_t>(static_cast<int32_t>(m_plan.memory_info[flags.index].offset)) &
+			     ~int64_t {3}) +
+			    static_cast<int64_t>(static_cast<uint32_t>(m_out.nodes[node.c].imm) & ~3u);
+			CompiledSrt::Node base;
+			base.op = CompiledSrt::Op::Address48;
+			base.a = node.a;
+			base.b = node.b;
+			node.a = Emit(base);
+			node.b = CompiledSrt::None;
+			node.c = CompiledSrt::None;
+			node.op = CompiledSrt::Op::MemReadScalar;
+			node.imm = std::bit_cast<uint64_t>(relative);
 		}
 		return Emit(node);
 	}
@@ -1823,6 +1849,34 @@ void EvaluateCompiledNodes(const CompiledSrt& compiled, const ResourcePlan& plan
 			}
 			case Op::ShaderBase: out = runtime.shader_base; break;
 			case Op::Fail: st = CompiledSrt::StHardFail; break;
+			case Op::Address48:
+				if (dep(node.a) && dep(node.b)) {
+					out = ((B() << 32u) | static_cast<uint32_t>(A())) & (AddressMask & ~uint64_t {3});
+				}
+				break;
+			case Op::MemReadScalar: {
+				if (!dep(node.a)) {
+					break;
+				}
+				uint64_t address = 0;
+				if (!AddSignedAddress(A(), std::bit_cast<int64_t>(node.imm), address)) {
+					st = CompiledSrt::StHardFail;
+					break;
+				}
+				uint32_t word = 0;
+				const bool clean = (node.comp & 2u) != 0;
+				const auto reader = clean ? runtime.read_specialization_memory : runtime.read_memory;
+				if (reader != nullptr) {
+					if (!reader(runtime.userdata, address, &word)) {
+						st = clean ? CompiledSrt::StCleanMemFail : CompiledSrt::StMemFail;
+						break;
+					}
+				} else {
+					std::memcpy(&word, reinterpret_cast<const void*>(address), sizeof(word));
+				}
+				out = word;
+				break;
+			}
 			case Op::MemRead: {
 				if (!dep(node.a) || !dep(node.b) || !dep(node.c)) {
 					break;

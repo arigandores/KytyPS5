@@ -7,6 +7,7 @@
 #include "graphics/host_gpu/regionDefinitions.h"
 
 #include <atomic>
+#include <cstdlib>
 #include <mutex>
 #include <utility>
 
@@ -37,11 +38,31 @@ public:
 			// Contended: spin, and account the wait for KYTY_FRAME_TRACE.
 			namespace FS  = Common::FrameStats;
 			const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+			static const bool relaxed_spin = [] {
+				const auto* value = std::getenv("KYTY_TRACKING_RELAXED_SPIN");
+				return value == nullptr || value[0] != '0';
+			}();
 			while (m_lock.test_and_set(std::memory_order_acquire)) {
 				if (m_owner.load(std::memory_order_relaxed) == thread) {
 					EXIT("recursive region tracking lock while contended\n");
 				}
-				std::atomic_signal_fence(std::memory_order_seq_cst);
+				if (relaxed_spin) {
+					// Wait with shared reads instead of repeatedly invalidating the owner's
+					// cache line. The acquire RMW above still grants exclusive ownership.
+					while (m_lock.test(std::memory_order_relaxed)) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+						YieldProcessor();
+#elif defined(__x86_64__) || defined(__i386__)
+						__builtin_ia32_pause();
+#elif defined(__aarch64__)
+						asm volatile("yield");
+#else
+						std::atomic_signal_fence(std::memory_order_seq_cst);
+#endif
+					}
+				} else {
+					std::atomic_signal_fence(std::memory_order_seq_cst);
+				}
 			}
 			if (t0 != 0) {
 				const auto ns = FS::NowNs() - t0;

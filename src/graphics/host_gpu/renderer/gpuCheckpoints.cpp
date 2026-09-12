@@ -9,6 +9,7 @@
 #include <atomic>
 #include <cinttypes>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <vector>
 #include <mutex>
@@ -35,6 +36,23 @@ constexpr size_t RingSize = size_t {1} << 17;
 std::array<CheckpointRecord, RingSize> g_ring {};
 std::atomic<uint64_t>                  g_sequence {0};
 std::mutex                             g_ring_mutex;
+
+const bool g_queue_trace_enabled = [] {
+	const auto* value = std::getenv("KYTY_QUEUE_TRACE");
+	return value != nullptr && value[0] != '0';
+}();
+struct SubmissionRecord {
+	uint64_t sequence = 0;
+	const void* scheduler = nullptr;
+	vk::Semaphore master;
+	uint64_t tick = 0;
+	SubmitInfo submit;
+	bool returned = false;
+	vk::Result result = vk::Result::eNotReady;
+};
+std::array<SubmissionRecord, 512> g_submissions;
+uint64_t g_submission_sequence = 0;
+std::mutex g_submission_mutex;
 
 // Host-visible breadcrumb buffer. Deliberately never destroyed: it is only created in the debug
 // mode and must stay readable while the device loss is being reported.
@@ -71,6 +89,51 @@ void Print(const char* stage, const CheckpointRecord& record) {
 }
 
 } // namespace
+
+bool GpuQueueTraceEnabled() { return g_queue_trace_enabled; }
+
+void RecordGpuSubmission(const void* scheduler, vk::Semaphore master, uint64_t tick,
+                         const SubmitInfo& submit, bool returned, vk::Result result) {
+	if (!g_queue_trace_enabled) return;
+	std::lock_guard lock(g_submission_mutex);
+	const auto seq = ++g_submission_sequence;
+	g_submissions[seq % g_submissions.size()] = {seq, scheduler, master, tick, submit, returned, result};
+}
+
+void ReportGpuSubmissionHistory() {
+	if (!g_queue_trace_enabled) return;
+	std::vector<SubmissionRecord> records;
+	records.reserve(g_submissions.size());
+	{
+		std::lock_guard lock(g_submission_mutex);
+		const auto first = g_submission_sequence >= g_submissions.size()
+		                       ? g_submission_sequence - g_submissions.size() + 1 : uint64_t {1};
+		for (auto seq = first; seq <= g_submission_sequence; ++seq) {
+			records.push_back(g_submissions[seq % g_submissions.size()]);
+		}
+	}
+	const auto handle = [](vk::Semaphore sem) {
+		return static_cast<unsigned long long>(reinterpret_cast<uintptr_t>(static_cast<VkSemaphore>(sem)));
+	};
+	for (const auto& r: records) {
+		LOGF("GpuSubmitHistory: seq=%llu scheduler=%p master=%016llx tick=%llu phase=%s result=%d present=%d\n",
+		     static_cast<unsigned long long>(r.sequence), r.scheduler, handle(r.master),
+		     static_cast<unsigned long long>(r.tick), r.returned ? "returned" : "before-api",
+		     static_cast<int>(r.result), r.submit.present ? 1 : 0);
+		for (uint32_t j = 0; j < r.submit.num_wait_semaphores; ++j) {
+			LOGF("GpuSubmitWait: seq=%llu semaphore=%016llx value=%llu stages=%x\n",
+			     static_cast<unsigned long long>(r.sequence), handle(r.submit.wait_semaphores[j]),
+			     static_cast<unsigned long long>(r.submit.wait_ticks[j]),
+			     static_cast<uint32_t>(r.submit.wait_stages[j]));
+		}
+		for (uint32_t j = 0; j < r.submit.num_signal_semaphores; ++j) {
+			LOGF("GpuSubmitSignal: seq=%llu semaphore=%016llx value=%llu\n",
+			     static_cast<unsigned long long>(r.sequence), handle(r.submit.signal_semaphores[j]),
+			     static_cast<unsigned long long>(r.submit.signal_ticks[j]));
+		}
+	}
+	Log::Flush();
+}
 
 void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
                          vk::CommandBuffer command, bool inside_rendering, uint32_t op,

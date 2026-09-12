@@ -9,6 +9,7 @@ namespace Libs::Graphics {
 
 struct GraphicContext;
 class CommandScheduler;
+struct SubmitInfo;
 
 // GPU progress markers for attributing a device loss to the draw or dispatch that hung
 // (enabled with KYTY_GPU_CHECKPOINTS=1):
@@ -28,6 +29,13 @@ void RecordGpuCheckpoint(GraphicContext& graphics, CommandScheduler& scheduler,
 void ReportGpuCheckpoints(GraphicContext& graphics);
 // CPU recording history only: safe before device loss. This is not GPU completion data.
 void ReportGpuCheckpointHistory();
+
+// KYTY_QUEUE_TRACE: bounded CPU history of queue.submit arguments/results. No GPU
+// markers or driver inspection; entries do not prove that the GPU completed a submit.
+bool GpuQueueTraceEnabled();
+void RecordGpuSubmission(const void* scheduler, vk::Semaphore master, uint64_t tick,
+                         const SubmitInfo& submit, bool returned, vk::Result result);
+void ReportGpuSubmissionHistory();
 
 } // namespace Libs::Graphics
 

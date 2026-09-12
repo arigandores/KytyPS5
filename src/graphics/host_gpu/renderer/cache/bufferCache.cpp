@@ -131,6 +131,13 @@ void BufferCache::TouchBuffer(Buffer& buffer) {
 	}
 }
 
+bool BufferCache::TouchReadOnlyBuffer(BufferId id, uint64_t vaddr, uint64_t size) {
+	auto* buffer = m_slot_buffers.try_get(id);
+	if (buffer == nullptr || buffer->is_deleted || !buffer->IsInBounds(vaddr, size)) return false;
+	TouchBuffer(*buffer);
+	return true;
+}
+
 void BufferCache::ClearPrefetchPending(Buffer& buffer) {
 	if (buffer.prefetch_pending) {
 		buffer.prefetch_pending = false;

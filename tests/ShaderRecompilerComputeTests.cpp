@@ -2,6 +2,7 @@
 #include "libs/controller.h"
 #include "libs/padData.h"
 #include "common/emulatorConfig.h"
+#include "common/frameStats.h"
 #include "common/hostException.h"
 #include "common/logging/log.h"
 #include "common/subsystems.h"
@@ -22,6 +23,7 @@
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/image/blitHelper.h"
 #include "graphics/host_gpu/renderer/image/image.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
@@ -186,6 +188,12 @@ struct BufferCacheTestAccess {
 
   static bool IsBufferAllocated(const BufferCache &cache, BufferId id) {
     return cache.m_slot_buffers.is_allocated(id);
+  }
+
+  static void DiscardVerifiedGpuWrite(BufferCache &cache, uint64_t address, uint64_t size) {
+    // Test teardown after checking the GPU result; this mapping is about to be discarded.
+    cache.m_gpu_modified_ranges.Subtract(address, size);
+    cache.m_memory_tracker.UnmarkRegionAsGpuModified(address, size);
   }
 };
 
@@ -1877,22 +1885,57 @@ public:
       HW::Shader shaders{};
       scheduler.Begin(registers, user_config, shaders);
 
-      const auto commit = [&] {
-        const auto set = context.GetDescriptorHeap().Commit(layout);
+      auto &heap = context.GetDescriptorHeap();
+      constexpr uint32_t phase_sets = 1100; // also exhaust drivers that overallocate descriptor types
+      std::vector<vk::DescriptorSet> issued;
+      const auto commit = [&](vk::DescriptorSetLayout requested = nullptr) {
+        const auto set = heap.Commit(requested ? requested : layout);
         Require("DescriptorHeapLargeSet", "allocation", set != nullptr,
                 "ordinary descriptor heap could not allocate an oversized sampler set");
+        Require("DescriptorHeapLargeSet", "in-flight uniqueness",
+                std::find(issued.begin(), issued.end(), set) == issued.end(),
+                "descriptor set was reissued before this submission completed");
+        issued.push_back(set);
         scheduler.Current().Handle().bindDescriptorSets(
             vk::PipelineBindPoint::eCompute, pipeline_layout, 0, 1, &set, 0,
             nullptr);
       };
 
-      for (uint32_t i = 0; i < 22; i++) {
+      for (uint32_t i = 0; i < phase_sets; i++) {
         commit();
       }
+      Require("DescriptorHeapLargeSet", "pending pools", heap.GetStatistics().reused_sets == 0,
+              "a pool was recycled before its timeline completed");
       scheduler.Finish();
-      for (uint32_t i = 0; i < 21; i++) {
+      issued.clear();
+      for (uint32_t i = 0; i < phase_sets; i++) {
         commit();
       }
+      const auto *control = std::getenv("KYTY_DESCRIPTOR_REUSE");
+      const bool reuse = control == nullptr || control[0] != '0';
+      Require("DescriptorHeapLargeSet", "completed pools",
+              (heap.GetStatistics().reused_sets != 0) == reuse,
+              "completed descriptor allocations did not follow the reuse policy");
+      scheduler.Finish();
+      issued.clear();
+      // Distinct but compatible layout: full retired pools contain only the old
+      // layout's allocations. They must be reset before issuing a set for this one.
+      vk::DescriptorSetLayout alternate = nullptr;
+      RequireVk("DescriptorHeapLargeSet", "alternate layout",
+                m_device.createDescriptorSetLayout(&create, nullptr, &alternate),
+                "vkCreateDescriptorSetLayout");
+      for (uint32_t i = 0; i < phase_sets; i++) commit(alternate);
+      Require("DescriptorHeapLargeSet", "layout turnover", heap.GetStatistics().pool_resets != 0,
+              "a full retired pool could not adapt to a new layout");
+      scheduler.Finish();
+      issued.clear();
+      for (uint32_t i = 0; i < phase_sets; i++) commit();
+      scheduler.Finish();
+      std::printf("DescriptorHeap: allocation_calls=%llu resets=%llu reused=%llu\n",
+                  static_cast<unsigned long long>(heap.GetStatistics().allocation_calls),
+                  static_cast<unsigned long long>(heap.GetStatistics().pool_resets),
+                  static_cast<unsigned long long>(heap.GetStatistics().reused_sets));
+      m_device.destroyDescriptorSetLayout(alternate, nullptr);
     }
 
     m_device.destroyPipelineLayout(pipeline_layout, nullptr);
@@ -2125,6 +2168,7 @@ public:
     Require("SchedulerTimeline", "shutdown drain",
             reentrant == 2 && concurrent_completed.load(),
             "shutdown lost reentrant or concurrent deferred work");
+    if (GpuQueueTraceEnabled()) ReportGpuSubmissionHistory();
     std::printf("[host]    %-32s ok\n", "SchedulerTimeline");
   }
 
@@ -4574,6 +4618,124 @@ public:
         "manual comparison reused the native depth placeholder");
     scheduler.Finish();
     std::printf("[host]    %-32s ok\n", name);
+  }
+
+  void CheckDirectConstantCopy() {
+    constexpr const char *name = "DirectConstantCopy";
+    constexpr uint64_t base = 0x0000000206800000ull;
+    constexpr uint64_t allocation_size = 0x20000;
+    constexpr uint64_t address = base + 4;
+    constexpr uint64_t bytes = 64;
+    EnsureRuntimeContext();
+    RenderContext resources(m_runtime_context);
+    auto &scheduler = resources.GetCommandScheduler();
+    auto &cache = resources.GetBufferCache();
+    auto &executor = resources.GetRenderExecutor();
+    HW::Context registers{};
+    HW::UserConfig user_config{};
+    HW::Shader shaders{};
+    scheduler.Begin(registers, user_config, shaders);
+    int64_t direct = -1;
+    Require(name, "allocate", LibKernel::Memory::KernelAllocateDirectMemory(
+        0, LibKernel::Memory::KernelGetDirectMemorySize(), allocation_size, 0x10000, 0, &direct) == 0,
+        "constant test allocation failed");
+    void *mapped = reinterpret_cast<void *>(base);
+    Require(name, "map", LibKernel::Memory::KernelMapDirectMemory(
+        &mapped, allocation_size, 0x3, 0x10, direct, 0x10000) == 0 &&
+        mapped == reinterpret_cast<void *>(base), "constant test mapping failed");
+    resources.MapMemory(base, allocation_size);
+    std::array<uint32_t, bytes / 4> expected{};
+    for (uint32_t i = 0; i < expected.size(); ++i) expected[i] = 0x12340000u + i;
+    std::memcpy(reinterpret_cast<void *>(address), expected.data(), bytes);
+
+    ShaderRecompiler::IR::Program ir{};
+    ir.stage = ShaderType::Compute;
+    ir.resource_tracking_complete = true;
+    ir.shader_info_complete = true;
+    ir.info.buffers.resize(1);
+    ir.info.buffers[0].read = true;
+    ir.info.buffers[0].scalar = true;
+    ir.info.buffers[0].packed_stride = ShaderRecompiler::IR::PackedStrideAlignedCopyMask |
+        (2u << ShaderRecompiler::IR::PackedStrideAlignmentShift);
+    ShaderRecompiler::IR::AllocateBindings(ir);
+    ShaderRecompiler::IR::CompiledShaderInfo program{};
+    program.stage = ir.stage;
+    program.info = std::move(ir.info);
+    program.bindings = std::move(ir.bindings);
+    ShaderStageRuntime runtime{.program = &program};
+    ShaderBufferResource descriptor{};
+    descriptor.UpdateAddress48(address);
+    descriptor.fields[2] = bytes;
+    auto &value = runtime.resources.buffers.emplace_back();
+    std::memcpy(value.dwords.data(), descriptor.fields, sizeof(descriptor.fields));
+    value.dword_count = 4;
+    auto bindings = executor.PrepareBindings(runtime);
+    executor.FindBuffers(bindings);
+    resources.PrepareBda();
+    scheduler.Finish();
+    const auto verify = [&](const char *phase) {
+      const auto &binding = bindings.buffers.at(0);
+      auto &stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+      Require(name, phase, binding.buffer == stream.Handle() && binding.offset % 16 == 0 &&
+          binding.range == bytes, "constant copy did not produce a complete aligned stream view");
+      auto output = CreateHostBuffer(name, bytes, vk::BufferUsageFlagBits::eTransferDst, {0});
+      VulkanMemoryBarrier barrier{};
+      barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite | vk::AccessFlagBits::eHostWrite;
+      barrier.dstAccessMask = vk::AccessFlagBits::eTransferRead;
+      auto command = scheduler.Current().Handle();
+      command.pipelineBarrier(
+          vk::PipelineStageFlagBits::eTransfer | vk::PipelineStageFlagBits::eHost,
+          vk::PipelineStageFlagBits::eTransfer, {}, 1, &barrier, 0, nullptr, 0, nullptr);
+      const vk::BufferCopy copy{binding.offset, 0, bytes};
+      command.copyBuffer(binding.buffer, output.buffer, 1, &copy);
+      barrier.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+      barrier.dstAccessMask = vk::AccessFlagBits::eHostRead;
+      command.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+          vk::PipelineStageFlagBits::eHost, {}, 1, &barrier, 0, nullptr, 0, nullptr);
+      scheduler.Finish();
+      const auto actual = ReadBuffer(name, output, expected.size());
+      Require(name, phase, std::equal(actual.begin(), actual.end(), expected.begin()),
+              "aligned binding lost CPU or GPU contents");
+      DestroyBuffer(&output);
+    };
+    const auto obtains = Common::FrameStats::Read(Common::FrameStats::Counter::ObtainBufs);
+    executor.RebindBuffers(bindings);
+    if (Common::FrameStats::Enabled()) {
+      const auto *control = std::getenv("KYTY_CBUFFER_DIRECT_COPY");
+      const bool fast = control != nullptr && control[0] == '1';
+      const auto calls = Common::FrameStats::Read(Common::FrameStats::Counter::ObtainBufs) - obtains;
+      Require(name, "direct path", calls == (fast ? 0u : 1u),
+              "CPU-only aligned copy did not follow the selected buffer path");
+    }
+    verify("clean CPU source");
+    Require(name, "CPU fault", resources.HandleFault(PageFaultAccess::Write, address),
+            "constant CPU write fault failed");
+    for (auto &word: expected) word ^= 0xfeedbeefu;
+    std::memcpy(reinterpret_cast<void *>(address), expected.data(), bytes);
+    executor.RebindBuffers(bindings);
+    verify("changed CPU source");
+    // A later discovery may coalesce away the stored BufferId. It must fall back.
+    const auto old_id = bindings.buffer_sources[0].id;
+    const auto merged = cache.FindBuffer(base, allocation_size);
+    Require(name, "coalescing", merged != old_id, "test did not replace the discovered owner");
+    executor.RebindBuffers(bindings);
+    verify("replaced owner");
+
+    auto [owner, offset] = cache.ObtainBuffer(address, bytes, true, false, merged);
+    expected.fill(0xa5b6c7d8u);
+    owner->Fill(offset, bytes, expected[0]);
+    executor.RebindBuffers(bindings);
+    verify("GPU-written source");
+    Require(name, "GPU ownership", cache.IsRegionGpuModified(address, bytes) &&
+            cache.HasGpuDirtyBytes(address, bytes), "copy consumed the source's GPU ownership");
+    BufferCacheTestAccess::DiscardVerifiedGpuWrite(cache, address, bytes);
+    resources.UnmapMemory(base, allocation_size);
+    scheduler.Finish();
+    Require(name, "unmap", LibKernel::Memory::KernelMunmap(base, allocation_size) == 0,
+            "constant test unmap failed");
+    Require(name, "release", LibKernel::Memory::KernelReleaseDirectMemory(direct, allocation_size) == 0,
+            "constant test release failed");
+    std::printf("[host/gpu] %-32s ok\n", name);
   }
 
   void CheckBdaDirtyRanges() {
@@ -30011,6 +30173,11 @@ int main(int argc, char **argv) {
     vulkan.CheckBdaDirtyRanges();
     return 0;
   }
+  if (argc == 2 && std::strcmp(argv[1], "--direct-constant-copy-only") == 0) {
+    VulkanHarness vulkan;
+    vulkan.CheckDirectConstantCopy();
+    return 0;
+  }
   if (argc == 2 && std::strcmp(argv[1], "--readonly-depth-reuse-only") == 0) {
     VulkanHarness vulkan;
     vulkan.CheckReadOnlyDepthPassReuse();
@@ -30396,6 +30563,7 @@ int main(int argc, char **argv) {
   vulkan.CheckGpuTilerCpuParity();
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
   vulkan.CheckBdaDirtyRanges();
+  vulkan.CheckDirectConstantCopy();
   vulkan.CheckReadOnlyDepthPassReuse();
   vulkan.CheckNullComparisonBindings();
   vulkan.CheckRenderExecutorColorDiscovery();

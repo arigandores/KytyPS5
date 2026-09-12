@@ -549,7 +549,9 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 		submit_info.signalSemaphoreCount = submit.num_signal_semaphores;
 		submit_info.pSignalSemaphores    = submit.signal_semaphores.data();
 
+		RecordGpuSubmission(this, m_master.Handle(), tick, submit, false, vk::Result::eNotReady);
 		result = graphics.queue.submit(1, &submit_info, nullptr);
+		RecordGpuSubmission(this, m_master.Handle(), tick, submit, true, result);
 	}
 
 	if (result != vk::Result::eSuccess) {

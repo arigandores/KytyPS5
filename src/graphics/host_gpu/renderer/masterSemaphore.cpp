@@ -63,17 +63,20 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	{
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
-		const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled;
+		const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled ||
+		                        GpuQueueTraceEnabled();
 		bool reported = false;
 		do {
 			result = m_graphics.device.waitSemaphores(&wait_info,
 			    diagnostic ? uint64_t {2000000000} : UINT64_MAX);
 			if (diagnostic && result == vk::Result::eTimeout && !reported) {
-				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 "\n",
-				     static_cast<uint32_t>(FS::CurrentRole()), tick, m_gpu_tick.load(std::memory_order_acquire));
+				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64 " master=%p\n",
+				     static_cast<uint32_t>(FS::CurrentRole()), tick, m_gpu_tick.load(std::memory_order_acquire),
+				     CurrentTick(), static_cast<void*>(m_semaphore));
 				std::printf("GpuWaitSlow: role=%u requested=%" PRIu64 "\n",
 				            static_cast<uint32_t>(FS::CurrentRole()), tick);
 				ReportGpuCheckpointHistory();
+				ReportGpuSubmissionHistory();
 				Log::Flush();
 				reported = true;
 			}

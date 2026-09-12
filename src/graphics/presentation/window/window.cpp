@@ -54,7 +54,7 @@
 // IWYU pragma: no_include <intrin.h>
 
 #define KYTY_ENABLE_DEBUG_PRINTF
-#define KYTY_DBG_INPUT
+// Input event logging is opt-in through the KYTY_DBG_INPUT build definition.
 
 namespace Libs::Graphics {
 

@@ -3881,7 +3881,7 @@ static uint32_t* get_agc_wait_packet(uint32_t* cmd) {
 int KYTY_SYSV_ABI AgcWaitRegMemPatchAddress(uint32_t* cmd, const volatile void* address) {
 	PRINT_NAME();
 
-	LOGF("\t cmd     = 0x%016" PRIx64 "\n"
+	LOGV("\t cmd     = 0x%016" PRIx64 "\n"
 	     "\t address = 0x%016" PRIx64 "\n",
 	     reinterpret_cast<uint64_t>(cmd), reinterpret_cast<uint64_t>(address));
 
@@ -3905,7 +3905,7 @@ int KYTY_SYSV_ABI AgcWaitRegMemPatchAddress(uint32_t* cmd, const volatile void* 
 int KYTY_SYSV_ABI AgcWaitRegMemPatchReference(uint32_t* cmd, uint64_t reference) {
 	PRINT_NAME();
 
-	LOGF("\t cmd       = 0x%016" PRIx64 "\n"
+	LOGV("\t cmd       = 0x%016" PRIx64 "\n"
 	     "\t reference = 0x%016" PRIx64 "\n",
 	     reinterpret_cast<uint64_t>(cmd), reference);
 
@@ -3926,7 +3926,7 @@ int KYTY_SYSV_ABI AgcQueueEndOfPipeActionPatchAddress(uint32_t*             cmd,
 
 	// Not sure
 
-	LOGF("\t cmd     = 0x%016" PRIx64 "\n"
+	LOGV("\t cmd     = 0x%016" PRIx64 "\n"
 	     "\t address = 0x%016" PRIx64 "\n",
 	     reinterpret_cast<uint64_t>(cmd), reinterpret_cast<uint64_t>(address));
 
@@ -3953,7 +3953,7 @@ int KYTY_SYSV_ABI AgcQueueEndOfPipeActionPatchAddress(uint32_t*             cmd,
 int KYTY_SYSV_ABI AgcQueueEndOfPipeActionPatchData(uint32_t* cmd, uint64_t data) {
 	PRINT_NAME();
 
-	LOGF("\t cmd  = 0x%016" PRIx64 "\n"
+	LOGV("\t cmd  = 0x%016" PRIx64 "\n"
 	     "\t data = 0x%016" PRIx64 "\n",
 	     reinterpret_cast<uint64_t>(cmd), data);
 

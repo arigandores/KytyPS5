@@ -7,6 +7,7 @@
 #include <array>
 #include <deque>
 #include <unordered_map>
+#include <vector>
 
 namespace Libs::Graphics {
 
@@ -20,24 +21,40 @@ public:
 	KYTY_CLASS_NO_COPY(DescriptorHeap);
 
 	[[nodiscard]] vk::DescriptorSet Commit(vk::DescriptorSetLayout layout);
+	struct Statistics {
+		uint64_t allocation_calls = 0;
+		uint64_t pool_resets = 0;
+		uint64_t reused_sets = 0;
+	};
+	[[nodiscard]] const Statistics& GetStatistics() const noexcept { return m_statistics; }
 
 private:
 	static constexpr uint32_t DescriptorSetBatch = 32;
 
 	struct Batch {
-		std::array<vk::DescriptorSet, DescriptorSetBatch> sets {};
-		uint32_t                                          size       = 0;
-		uint32_t                                          allocation = DescriptorSetBatch;
+		std::vector<vk::DescriptorSet> sets;
+		size_t                         cursor     = 0;
+		size_t                         retained   = 0;
+		uint32_t                       allocation = DescriptorSetBatch;
+		bool                           exhausted  = false;
+	};
+	struct Pool {
+		vk::DescriptorPool handle = nullptr;
+		std::unordered_map<vk::DescriptorSetLayout, Batch> sets;
+		uint64_t tick = 0;
+		uint32_t allocated_count = 0;
+		bool used = false;
 	};
 
 	[[nodiscard]] bool Allocate(vk::DescriptorSetLayout layout, Batch& batch);
 	void               CreateDescriptorPool();
+	void               ResetPool();
 
 	GraphicContext&                                     m_graphics;
 	MasterSemaphore&                                    m_master_semaphore;
-	vk::DescriptorPool                                  m_current_pool = nullptr;
-	std::deque<std::pair<vk::DescriptorPool, uint64_t>> m_pending_pools;
-	std::unordered_map<vk::DescriptorSetLayout, Batch>  m_sets;
+	Pool                                                m_current_pool;
+	std::deque<Pool>                                    m_pending_pools;
+	Statistics                                         m_statistics;
 };
 
 } // namespace Libs::Graphics

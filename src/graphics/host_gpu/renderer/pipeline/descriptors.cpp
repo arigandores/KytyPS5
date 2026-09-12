@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <atomic>
 #include <cstdlib>
+#include <cstdio>
 #include <cstring>
 #include <bit>
 #include <fmt/format.h>
@@ -55,6 +56,34 @@ namespace Libs::Graphics {
 namespace {
 
 using BindingKind = ShaderRecompiler::IR::DescriptorBindingKind;
+
+// Read once at process startup: ordinary bindings need neither getenv nor a TLS
+// initialization guard. The optional file control is for same-run CPU comparisons.
+const bool DirectConstantCopyDefault = [] {
+	const auto* value = std::getenv("KYTY_CBUFFER_DIRECT_COPY");
+	// Correctness is covered, but the same-run gameplay benchmark was interrupted.
+	return value != nullptr && value[0] == '1';
+}();
+const char* const DirectConstantCopyGate = std::getenv("KYTY_CBUFFER_COPY_GATE");
+
+bool DirectConstantCopyEnabled() {
+	if (DirectConstantCopyGate == nullptr) return DirectConstantCopyDefault;
+	thread_local uint32_t last_frame = UINT32_MAX;
+	thread_local bool enabled = DirectConstantCopyDefault;
+	const auto frame = GpuTimeProfiler::Frame();
+	if (last_frame != frame) {
+		last_frame = frame;
+		if (auto* file = std::fopen(DirectConstantCopyGate, "rb")) {
+			const auto value = std::fgetc(file);
+			std::fclose(file);
+			if ((value == '0' || value == '1') && enabled != (value == '1')) {
+				enabled = value == '1';
+				LOGF("ConstantCopyGate: frame=%u enabled=%d\n", frame, enabled ? 1 : 0);
+			}
+		}
+	}
+	return enabled;
+}
 
 } // namespace
 
@@ -140,7 +169,7 @@ static bool IsMultisampledTexture(Prospero::ImageType type) {
 static vk::DescriptorBufferInfo
 NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource& source,
                     const ShaderRecompiler::IR::BufferResource& resource, ShaderType stage,
-                    uint32_t slot, uint32_t& buffer_offset) {
+                    uint32_t slot, uint32_t& buffer_offset, bool direct_copy) {
 	Common::FrameStats::Scope binding_scope(Common::FrameStats::Counter::BindBuffersNs);
 	buffer_offset = 0;
 
@@ -161,6 +190,32 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	if (alignment == 0 ||
 	    size > graphics.GetPhysicalDeviceProperties().limits.maxStorageBufferRange) {
 		EXIT("storage buffer range or device alignment is unsupported\n");
+	}
+	if (direct_copy && !resource.written && !resource.formatted && (address & 3u) == 0 &&
+	    ShaderRecompiler::IR::PackedStrideAlignedCopy(resource.packed_stride) &&
+	    address % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
+		auto& cache = context.GetBufferCache();
+		if (!cache.IsRegionGpuModified(address, size) && !cache.HasGpuDirtyBytes(address, size) &&
+		    cache.TouchReadOnlyBuffer(id, address, size)) {
+			// This read-only binding needs an aligned copy anyway. Prepare that final
+			// copy directly, keeping the ordinary buffer's dirty bits intact for any
+			// later BDA/descriptor use. GPU-owned data follows ObtainBuffer below.
+			if (const_bank && size > graphics.GetPhysicalDeviceProperties().limits.maxUniformBufferRange) {
+				EXIT("const-bank copy exceeds maxUniformBufferRange\n");
+			}
+			auto& stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+			auto [data, stream_offset] = stream.Map(size, alignment);
+			EXIT_IF(data == nullptr);
+			if (!Libs::LibKernel::Memory::TryReadBacking(address, data, size)) {
+				EXIT("storage buffer slot %u: direct const-bank source is unreadable\n", slot);
+			}
+			stream.Commit();
+			if (Common::FrameStats::Enabled()) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyCpu, 1);
+				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyBytes, size);
+			}
+			return {stream.Handle(), stream_offset, size};
+		}
 	}
 	auto [buffer, offset] = context.GetBufferCache().ObtainBuffer(address, size, resource.written,
 	                                                              resource.formatted, id);
@@ -1112,11 +1167,12 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		const auto shift = (index % 4u) * 8u;
 		prepared.shader_data[dword] |= offset << shift;
 	};
+	const bool direct_copy = DirectConstantCopyEnabled();
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		uint32_t buffer_offset = 0;
 		prepared.buffers.push_back(NativeStorageBuffer(m_context, prepared.buffer_sources[i],
 		                                               program.info.buffers[i], program.stage, i,
-		                                               buffer_offset));
+		                                               buffer_offset, direct_copy));
 		pack_memory_offset(i, buffer_offset);
 	}
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);

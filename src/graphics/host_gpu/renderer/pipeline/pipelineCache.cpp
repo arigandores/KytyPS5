@@ -1286,6 +1286,24 @@ bool PipelineStaticParameters::operator==(const PipelineStaticParameters& other)
 	return std::memcmp(this, &other, sizeof(*this)) == 0;
 }
 
+void PipelineCache::PipelineKeyHash::MixStaticParams(std::size_t& hash,
+                                                    const PipelineStaticParameters& params) {
+	static const bool fast = [] {
+		const auto* value = std::getenv("KYTY_PIPELINE_FAST_HASH");
+		return value == nullptr || value[0] != '0';
+	}();
+	if (fast) {
+		// Transient map lookup only. Equality already compares these packed bytes, and
+		// the persisted pipeline recipes serialize the parameters themselves, not this hash.
+		hash = static_cast<std::size_t>(XXH3_64bits_withSeed(&params, sizeof(params), hash));
+		return;
+	}
+	const auto* bytes = reinterpret_cast<const uint8_t*>(&params);
+	for (std::size_t i = 0; i < sizeof(params); i++) {
+		Mix(hash, bytes[i]);
+	}
+}
+
 PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
     std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
     const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,

@@ -151,6 +151,12 @@ enum class Counter : uint32_t {
 	BdaPrepares,
 	SrtPageMisses,   // SRT page translations that had to take the backing-store lock
 	ClampMemoMisses, // ClampRangeSize queries that had to take the range-table lock
+	SrtMemoHits,     // materializations answered from the recorded-read memo
+	SrtMemoMisses,   // ... key not in the memo
+	SrtMemoStale,    // ... key found but a recorded guest word had changed
+	SrtMemoSkips,    // ... results that could not be recorded (too many reads, or inconsistent)
+	SrtMemoReads,    // guest words re-read to validate a memo entry
+	BufEpochHits,    // buffer bindings served by the upload-epoch fast path
 	Count
 };
 

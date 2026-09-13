@@ -418,6 +418,38 @@ void TestCpuWriteEpoch() {
   Release(memory);
 }
 
+// The per-range epoch is the witness a cached upload is checked against: it must stay put while
+// nothing announces a write to that range, move when one does, and refuse to answer at all for a
+// range that is not fully tracked.
+void TestRangeWriteEpoch() {
+  TrackerHarness harness;
+  auto& tracker = harness.tracker;
+  const auto page = harness.page_manager.GetPageSize();
+  auto* memory = Allocate(harness.page_manager, 2);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+  const auto far_address = address + 64ull * 1024ull * 1024ull; // a different, untracked region
+
+  Check(tracker.RangeWriteEpoch(far_address, page) == 0, "untracked range must not report an epoch");
+
+  tracker.MarkRegionAsCpuModified(address, page); // creates the region
+  const auto epoch = tracker.RangeWriteEpoch(address, page);
+  Check(epoch != 0, "tracked range must report an epoch");
+  Check(tracker.RangeWriteEpoch(address, page) == epoch, "epoch moved with nothing written");
+
+  tracker.ForEachUploadRange(address, page, false, [](uint64_t, uint64_t) noexcept {},
+                             []() noexcept {});
+  Check(tracker.RangeWriteEpoch(address, page) == epoch, "upload must not move the range epoch");
+
+  tracker.InvalidateRegion(address, page, []() noexcept {});
+  const auto after_write = tracker.RangeWriteEpoch(address, page);
+  Check(after_write != epoch, "announced CPU write did not move the range epoch");
+
+  tracker.UntrackMemory(address, page);
+  Check(tracker.RangeWriteEpoch(address, page) != after_write,
+        "untrack did not move the range epoch");
+  Release(memory);
+}
+
 void TestGpuReacquisitionAfterInvalidation() {
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -1045,6 +1077,7 @@ int main(int argc, char **argv) {
   TestCpuDirtyUpload();
   TestCpuModifiedSnapshot();
   TestCpuWriteEpoch();
+  TestRangeWriteEpoch();
   TestRangeInvalidation();
   TestGpuReacquisitionAfterInvalidation();
   TestGpuDirtyBits();

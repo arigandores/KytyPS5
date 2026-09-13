@@ -77,9 +77,14 @@ public:
 	uint64_t upload_epoch = 0;
 	uint64_t upload_begin = 0;
 	uint64_t upload_end = 0;
-	[[nodiscard]] bool HasCurrentUpload(uint64_t epoch, uint64_t address, uint64_t size) const {
-		return upload_epoch == epoch && address >= upload_begin && address <= upload_end &&
-		       size <= upload_end - address;
+	// Which clock upload_epoch was taken from: the global CPU epoch or the epochs of the regions
+	// covering the uploaded range. The gate can change between two uploads of the same buffer, so
+	// the two number spaces must not be compared with each other.
+	uint8_t  upload_epoch_kind = 0;
+	[[nodiscard]] bool HasCurrentUpload(uint64_t epoch, uint8_t kind, uint64_t address,
+	                                    uint64_t size) const {
+		return epoch != 0 && upload_epoch == epoch && upload_epoch_kind == kind &&
+		       address >= upload_begin && address <= upload_end && size <= upload_end - address;
 	}
 
 protected:

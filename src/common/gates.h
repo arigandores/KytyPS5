@@ -13,6 +13,9 @@ enum class Gate : uint32_t {
 	ConstantCopy,   // KYTY_CBUFFER_DIRECT_COPY, file name "copy"
 	SrtPagePersist, // KYTY_SRT_PAGE_PERSIST,    file name "srtpages"
 	ClampMemo,      // KYTY_CLAMP_MEMO,          file name "clamp"
+	RegionEpoch,    // KYTY_REGION_EPOCH,        file name "regionepoch"
+	SrtMemo,        // KYTY_SRT_MEMO,            file name "srtmemo"
+	SrtMemoCheck,   // KYTY_SRT_MEMO_VERIFY,     file name "smemocheck"
 	Count,
 };
 

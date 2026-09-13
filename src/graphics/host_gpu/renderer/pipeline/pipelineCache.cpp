@@ -292,7 +292,73 @@ struct ShaderReadCache {
 	Pages                        own_live;
 	Pages                        clean;
 	Pages*                       live = nullptr;
+	struct SrtReadLog*           log  = nullptr; // set while a materialization is being recorded
 };
+
+// The guest words one materialization read. Every read of the SRT walk goes through the two
+// SrtRuntime callbacks, so this is the complete input of that walk besides the plan, the user data
+// and the shader base: while all these addresses still hold these values, repeating the walk would
+// produce the same snapshot (see the materialization memo below).
+struct SrtReadLog {
+	struct Entry {
+		uint64_t address = 0;
+		uint32_t value   = 0;
+		uint8_t  clean   = 0; // read through the GPU-clean (specialization) reader
+		uint8_t  ok      = 0;
+		uint8_t  paged   = 0; // served from a validated page (may be checked as part of a run)
+	};
+
+	static constexpr size_t MaxEntries = 1024;
+
+	std::vector<Entry> entries;
+	bool               overflow = false;
+
+	void Note(uint64_t address, uint32_t value, bool clean, bool ok, bool paged) {
+		if (entries.size() >= MaxEntries) {
+			overflow = true;
+			return;
+		}
+		entries.push_back({address, value, static_cast<uint8_t>(clean ? 1 : 0),
+		                   static_cast<uint8_t>(ok ? 1 : 0), static_cast<uint8_t>(paged ? 1 : 0)});
+	}
+};
+
+constexpr uint64_t ShaderPageSize = 0x1000;
+
+// Validated host pointer to a guest page, or nullptr. Shared by the readers below and by the memo
+// validation, which compares whole runs of recorded words with one memcmp instead of re-reading
+// them one at a time.
+const uint8_t* LiveBackingPage(ShaderReadCache* cache, uint64_t page) {
+	if (cache == nullptr) {
+		return nullptr;
+	}
+	if (!cache->live->Find(page)) {
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SrtPageMisses, 1);
+		}
+		const void* backing = nullptr;
+		if (Libs::LibKernel::Memory::TryGetBackingPointer(page, ShaderPageSize, &backing)) {
+			cache->live->Store(page, backing);
+		} else {
+			cache->live->last = {};
+			return nullptr;
+		}
+	}
+	return cache->live->last.address == page ? cache->live->last.backing : nullptr;
+}
+
+const uint8_t* CleanBackingPage(ShaderReadCache* cache, uint64_t page) {
+	if (cache == nullptr) {
+		return nullptr;
+	}
+	if (!cache->clean.Find(page)) {
+		const void* backing = nullptr;
+		if (Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, ShaderPageSize, &backing)) {
+			cache->clean.Store(page, backing);
+		}
+	}
+	return cache->clean.last.address == page ? cache->clean.last.backing : nullptr;
+}
 
 // Guest memory for specialization decisions: only words with no pending GPU writes may be read
 // (upstream reads them one at a time with a dirty-range query per word; the SRT control-flow
@@ -304,23 +370,23 @@ bool ReadShaderGuestMemory(void* userdata, uint64_t address, uint32_t* value) {
 	if (value == nullptr) {
 		return false;
 	}
-	auto* cache = static_cast<ShaderReadCache*>(userdata);
-	constexpr uint64_t PageSize = 0x1000;
-	const auto         page     = address & ~(PageSize - 1);
+	auto*      cache = static_cast<ShaderReadCache*>(userdata);
+	const auto page  = address & ~(ShaderPageSize - 1);
 	if (cache != nullptr && (address & 3u) == 0) {
-		if (!cache->clean.Find(page)) {
-			const void* backing = nullptr;
-			if (Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, PageSize, &backing)) {
-				cache->clean.Store(page, backing);
+		if (const auto* backing = CleanBackingPage(cache, page); backing != nullptr) {
+			std::memcpy(value, backing + (address - page), sizeof(*value));
+			if (cache->log != nullptr) {
+				cache->log->Note(address, *value, true, true, true);
 			}
-		}
-		if (cache->clean.last.address == page) {
-			std::memcpy(value, cache->clean.last.backing + (address - page), sizeof(*value));
 			return true;
 		}
 	}
 	// The page is partly GPU-dirty or not one mapping: decide per word as before.
-	return Libs::LibKernel::Memory::TryReadGpuCleanBacking(address, value, sizeof(*value));
+	const bool ok = Libs::LibKernel::Memory::TryReadGpuCleanBacking(address, value, sizeof(*value));
+	if (cache != nullptr && cache->log != nullptr) {
+		cache->log->Note(address, ok ? *value : 0u, true, ok, false);
+	}
+	return ok;
 }
 
 bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
@@ -330,27 +396,22 @@ bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 	if (value == nullptr) {
 		return false;
 	}
-	auto* cache = static_cast<ShaderReadCache*>(userdata);
-	constexpr uint64_t PageSize = 0x1000;
-	const auto         page     = address & ~(PageSize - 1);
+	auto*      cache = static_cast<ShaderReadCache*>(userdata);
+	const auto page  = address & ~(ShaderPageSize - 1);
 	if (cache != nullptr && (address & 3u) == 0) {
-		if (!cache->live->Find(page)) {
-			if (Common::FrameStats::Enabled()) {
-				Common::FrameStats::Add(Common::FrameStats::Counter::SrtPageMisses, 1);
+		if (const auto* backing = LiveBackingPage(cache, page); backing != nullptr) {
+			std::memcpy(value, backing + (address - page), sizeof(*value));
+			if (cache->log != nullptr) {
+				cache->log->Note(address, *value, false, true, true);
 			}
-			const void* backing = nullptr;
-			if (Libs::LibKernel::Memory::TryGetBackingPointer(page, PageSize, &backing)) {
-				cache->live->Store(page, backing);
-			} else {
-				cache->live->last = {};
-			}
-		}
-		if (cache->live->last.address == page) {
-			std::memcpy(value, cache->live->last.backing + (address - page), sizeof(*value));
 			return true;
 		}
 	}
-	return Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
+	const bool ok = Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
+	if (cache != nullptr && cache->log != nullptr) {
+		cache->log->Note(address, ok ? *value : 0u, false, ok, false);
+	}
+	return ok;
 }
 
 void DumpShaderSpirv(const char* stage_name, uint64_t shader_hash,
@@ -599,7 +660,7 @@ struct PipelineCache::ProgramCache {
 	}
 
 	// Disk cache miss path: a translated program (plan + SPIR-V permutations) written earlier.
-	bool LoadFromTranslationCache(const ProgramKey& key,
+	[[gnu::noinline]] bool LoadFromTranslationCache(const ProgramKey& key,
 	                              std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::iterator& entry) {
 		if (!translation_cache.Enabled()) {
 			return false;
@@ -681,6 +742,177 @@ struct PipelineCache::ProgramCache {
 		}
 	}
 
+	// Materialization memo (gate "srtmemo"). MaterializeResources is a pure function of the
+	// resource plan, the user data registers, the shader base and the guest words it reads, and
+	// all of those reads go through the two SrtRuntime callbacks. Recording them therefore gives a
+	// witness: while every recorded address still holds its recorded value the walk would take the
+	// same path and build the same snapshot, so the stored result may be handed out instead of
+	// walking the plan again. Consecutive words of one page are checked with a single memcmp.
+	struct MemoEntry {
+		struct Run { // consecutive dwords inside one guest page, read through one reader
+			uint64_t address = 0;
+			uint32_t first   = 0; // index into that reader's value array
+			uint32_t count   = 0;
+		};
+		struct Single { // a read the page path could not serve (unaligned, or unreadable)
+			uint64_t address = 0;
+			uint32_t value   = 0;
+			bool     clean   = false;
+			bool     ok      = false;
+		};
+
+		bool                  valid       = false;
+		uint64_t              generation  = 0;
+		const SourceEntry*    source      = nullptr;
+		uint64_t              shader_base = 0;
+		std::vector<Run>      live_runs;
+		std::vector<uint32_t> live_values;
+		std::vector<Run>      clean_runs;
+		std::vector<uint32_t> clean_values;
+		std::vector<Single>   singles;
+		// The snapshot carries the user data registers, which are the rest of the key.
+		ShaderRecompiler::IR::ResourceSnapshot snapshot;
+		Permutation*                           permutation        = nullptr;
+		uint32_t                               push_data_start    = 0;
+		uint32_t                               shader_data_dwords = 0;
+		ShaderProgram                          handle {};
+	};
+
+	static constexpr size_t MemoSlots = 16384;
+
+	std::vector<MemoEntry> memo = std::vector<MemoEntry>(MemoSlots);
+	// Bumped when a source entry is dropped: the stored permutation pointers belong to one.
+	uint64_t memo_generation = 1;
+
+	static uint64_t MemoHash(const SourceEntry* source, uint64_t shader_base,
+	                         std::span<const uint32_t> user_data) {
+		const auto seed = (reinterpret_cast<uintptr_t>(source) * 0x9e3779b97f4a7c15ull) ^ shader_base;
+		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), seed);
+	}
+
+	[[gnu::noinline]] MemoEntry* MemoFind(const SourceEntry* source, uint64_t shader_base,
+	                    std::span<const uint32_t> user_data) {
+		auto& slot = memo[MemoHash(source, shader_base, user_data) % MemoSlots];
+		if (!slot.valid || slot.generation != memo_generation || slot.source != source ||
+		    slot.shader_base != shader_base ||
+		    slot.snapshot.user_data.size() != user_data.size() ||
+		    !std::equal(user_data.begin(), user_data.end(), slot.snapshot.user_data.begin())) {
+			return nullptr;
+		}
+		return &slot;
+	}
+
+	[[gnu::noinline]] static bool MemoVerify(const MemoEntry& entry, ShaderReadCache& cache) {
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoReads,
+			                        entry.live_values.size() + entry.clean_values.size() +
+			                            entry.singles.size());
+		}
+		for (const auto& run: entry.live_runs) {
+			const auto* backing = LiveBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
+			if (backing == nullptr ||
+			    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
+			                &entry.live_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+				return false;
+			}
+		}
+		for (const auto& run: entry.clean_runs) {
+			const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
+			if (backing == nullptr ||
+			    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
+			                &entry.clean_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+				return false;
+			}
+		}
+		for (const auto& single: entry.singles) {
+			uint32_t   value = 0;
+			const bool ok    = single.clean ? ReadShaderGuestMemory(&cache, single.address, &value)
+			                                : ReadShaderLiveMemory(&cache, single.address, &value);
+			if (ok != single.ok || (ok && value != single.value)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	static bool SameSnapshot(const ShaderRecompiler::IR::ResourceSnapshot& a,
+	                         const ShaderRecompiler::IR::ResourceSnapshot& b) {
+		return a.buffers == b.buffers && a.images == b.images && a.samplers == b.samplers &&
+		       a.flattened_srt == b.flattened_srt && a.user_data == b.user_data &&
+		       a.uniform_fill == b.uniform_fill;
+	}
+
+	// Gate "smemocheck": walk the plan anyway and report where the memo would have answered with
+	// something else. Diagnostic only - the memo answer is still the one used, so what the run
+	// shows is what the game would have been given.
+	[[gnu::noinline]] void MemoCheck(const ProgramKey& key, const SourceEntry& entry,
+	               const ShaderRecompiler::IR::SrtRuntime& runtime, const MemoEntry& memo_entry) {
+		ShaderRecompiler::IR::ResourceSnapshot       fresh;
+		ShaderRecompiler::IR::ResourceSpecialization fresh_specialization;
+		const bool ok = ShaderRecompiler::IR::MaterializeResources(entry.resource_plan, runtime,
+		                                                           fresh, fresh_specialization);
+		const bool same = ok && SameSnapshot(fresh, memo_entry.snapshot) &&
+		                  fresh_specialization == memo_entry.permutation->specialization;
+		if (same) {
+			memo_checks_ok++;
+			return;
+		}
+		memo_checks_bad++;
+		if (memo_checks_bad <= 40) {
+			LOGF("SrtMemoVerify: MISMATCH hash=0x%016" PRIx64 " stage=%u materialized=%d "
+			     "snapshot=%d specialization=%d (ok=%" PRIu64 " bad=%" PRIu64 ")\n",
+			     key.hash, static_cast<uint32_t>(key.stage), ok ? 1 : 0,
+			     ok && SameSnapshot(fresh, memo_entry.snapshot) ? 1 : 0,
+			     ok && fresh_specialization == memo_entry.permutation->specialization ? 1 : 0,
+			     memo_checks_ok, memo_checks_bad);
+		}
+	}
+
+	uint64_t memo_checks_ok  = 0;
+	uint64_t memo_checks_bad = 0;
+
+	[[gnu::noinline]] void MemoStore(const SourceEntry* source, uint64_t shader_base, const SrtReadLog& log,
+	               const ShaderRecompiler::IR::ResourceSnapshot& snapshot, Permutation* permutation,
+	               ShaderProgram handle) {
+		if (log.overflow || permutation == nullptr) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoSkips, 1);
+			return;
+		}
+		auto& slot = memo[MemoHash(source, shader_base, snapshot.user_data) % MemoSlots];
+		slot.valid = false;
+		slot.live_runs.clear();
+		slot.live_values.clear();
+		slot.clean_runs.clear();
+		slot.clean_values.clear();
+		slot.singles.clear();
+		for (const auto& read: log.entries) {
+			if (read.ok == 0 || read.paged == 0) {
+				slot.singles.push_back({read.address, read.value, read.clean != 0, read.ok != 0});
+				continue;
+			}
+			auto&      runs   = read.clean != 0 ? slot.clean_runs : slot.live_runs;
+			auto&      values = read.clean != 0 ? slot.clean_values : slot.live_values;
+			const bool joins =
+			    !runs.empty() && runs.back().address + runs.back().count * sizeof(uint32_t) == read.address &&
+			    ((runs.back().address ^ read.address) & ~(ShaderPageSize - 1)) == 0;
+			if (joins) {
+				runs.back().count++;
+			} else {
+				runs.push_back({read.address, static_cast<uint32_t>(values.size()), 1});
+			}
+			values.push_back(read.value);
+		}
+		slot.snapshot           = snapshot;
+		slot.source             = source;
+		slot.shader_base        = shader_base;
+		slot.permutation        = permutation;
+		slot.handle             = handle;
+		slot.push_data_start    = permutation->program.bindings.push_data_start_dword;
+		slot.shader_data_dwords = permutation->program.bindings.ShaderDataDwords();
+		slot.generation         = memo_generation;
+		slot.valid              = true;
+	}
+
 	// tolerant: the PM4 lookahead reads guest memory that may not be final yet; a resource plan
 	// that does not materialize returns an empty program instead of stopping the emulator.
 	template <typename InputInfo>
@@ -736,6 +968,33 @@ struct PipelineCache::ProgramCache {
 		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
+		const bool memo_enabled = Common::Gates::Enabled(Common::Gates::Gate::SrtMemo);
+		SrtReadLog memo_log;
+		if (memo_enabled && entry != programs.end()) {
+			auto* memo_entry = MemoFind(&entry->second, params.Base(), params.user_data);
+			if (memo_entry != nullptr && MemoVerify(*memo_entry, read_cache) &&
+			    memo_entry->push_data_start ==
+			        ShaderRecompiler::IR::PushData::StartFor(push_data_cursor,
+			                                                 memo_entry->shader_data_dwords)) {
+				if (Common::Gates::Enabled(Common::Gates::Gate::SrtMemoCheck)) {
+					MemoCheck(lookup_key, entry->second, runtime, *memo_entry);
+				}
+				input_info.stage.program   = &memo_entry->permutation->program;
+				input_info.stage.resources = memo_entry->snapshot;
+				memo_entry->permutation->program.bindings.AdvancePushData(push_data_cursor);
+				Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoHits, 1);
+				lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
+				return memo_entry->handle;
+			}
+			// A key that is not stored at all, against one whose recorded words have changed
+			// (or whose push data no longer lines up): the two say different things about why
+			// the frame's materializations have to run.
+			Common::FrameStats::Add(memo_entry == nullptr
+			                            ? Common::FrameStats::Counter::SrtMemoMisses
+			                            : Common::FrameStats::Counter::SrtMemoStale,
+			                        1);
+			read_cache.log = &memo_log;
+		}
 		if (entry != programs.end() &&
 		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
 		                                                resources, specialization)) {
@@ -754,6 +1013,7 @@ struct PipelineCache::ProgramCache {
 				by_id.erase(permutation.handle.id);
 			}
 			programs.erase(entry);
+			memo_generation++; // the memo holds permutation pointers of the dropped entry
 			entry = programs.end();
 			resources = {};
 			specialization = {};
@@ -769,6 +1029,10 @@ struct PipelineCache::ProgramCache {
 				               candidate.specialization == specialization;
 			        });
 			    permutation != entry->second.permutations.end()) {
+				if (memo_enabled) {
+					MemoStore(&entry->second, params.Base(), memo_log, resources, &*permutation,
+					          permutation->handle);
+				}
 				input_info.stage = {.program   = &permutation->program,
 				                    .resources = std::move(resources)};
 				permutation->program.bindings.AdvancePushData(push_data_cursor);
@@ -777,6 +1041,22 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 
+		return Compile(params, input_info, push_data_cursor, tolerant, stage, entry, runtime,
+		               resources, specialization);
+	}
+
+	// The cold half of Get: translate the shader, or add a permutation of an already translated
+	// one. Kept out of line because its inlined callees (translation, SPIR-V emission, the
+	// translation cache) reserve tens of kilobytes of stack, and Get itself runs on guest threads
+	// whose stacks are small.
+	template <typename InputInfo>
+	[[gnu::noinline]] ShaderProgram
+	Compile(const ShaderParams& params, InputInfo& input_info, uint32_t& push_data_cursor,
+	        bool tolerant, ShaderType stage,
+	        typename std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::iterator entry,
+	        const ShaderRecompiler::IR::SrtRuntime&       runtime,
+	        ShaderRecompiler::IR::ResourceSnapshot&       resources,
+	        ShaderRecompiler::IR::ResourceSpecialization& specialization) {
 		// Recompiling a shader stalls the guest GPU for tens of milliseconds; keep guest time still.
 		LibKernel::KernelTimeFreezeScope freeze_scope;
 		ShaderStageInputInfo             stage_input {};

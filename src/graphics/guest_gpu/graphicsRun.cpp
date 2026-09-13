@@ -962,10 +962,15 @@ Pm4ProcessResult CommandProcessor::Process(Pm4Execution&             execution,
 // lookahead below runs when the guest submits a command buffer (GuestGpu::Enqueue; the driver
 // compile starts a whole queue of submissions ahead of the dispatch), 2 = it runs when the GuestGpu
 // thread starts processing the submission (lead time = that submission only).
+// Default 2 since session 52: mode 1 walks on the guest's own thread and ends in
+// PipelineCache::ProgramCache::Get, whose stack frame is 66 KiB after link-time inlining. That
+// overflowed a guest stack while Sky Garden was loading (access violation in Get's prologue) and
+// made the level unenterable; mode 2 does the same prefetch from the GuestGpu thread, whose stack
+// is the emulator's own. Mode 1 becomes the right default again once that frame is small.
 static int AsyncComputeMode() {
 	static const int mode = [] {
 		const char* value = std::getenv("KYTY_ASYNC_COMPUTE");
-		return value == nullptr ? 1 : std::atoi(value);
+		return value == nullptr ? 2 : std::atoi(value);
 	}();
 	return mode;
 }

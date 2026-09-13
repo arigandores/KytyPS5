@@ -119,6 +119,12 @@ public:
 	KYTY_CLASS_NO_COPY(RegionManager);
 
 	[[nodiscard]] uint64_t GetCpuAddr() const { return m_cpu_addr; }
+	// Write epoch of this region only. The global CPU epoch moves on every page fault anywhere
+	// in the address space, which makes it useless as a "did this range change" witness; this
+	// one moves only when a page of this 4 MiB region is announced as CPU-written.
+	[[nodiscard]] uint64_t Epoch() const noexcept {
+		return m_epoch.load(std::memory_order_acquire);
+	}
 	template <DirtySource source>
 	[[nodiscard]] bool IsModified(uint64_t offset, uint64_t size) const {
 		const auto [start, end] = GetPageRange(m_cpu_addr + offset, size);
@@ -133,6 +139,7 @@ public:
 			// Called with the region lock held. Publish before making guest pages writable;
 			// a BDA scan observing this epoch must acquire this lock before reading dirty bits.
 			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+			m_epoch.fetch_add(1, std::memory_order_release);
 			if (m_gpu_dirty.AnyInRange(start, end)) {
 				EXIT("CPU dirty state conflicts with GPU dirty state\n");
 			}
@@ -238,6 +245,7 @@ private:
 	PageManager& m_page_manager;
 	uint64_t     m_cpu_addr = 0;
 	std::atomic<uint64_t>& m_cpu_epoch;
+	std::atomic<uint64_t>  m_epoch {1};
 	RegionBits   m_cpu_dirty;
 	RegionBits   m_gpu_dirty;
 	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight

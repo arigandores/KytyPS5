@@ -22,6 +22,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_CBUFFER_DIRECT_COPY", "copy", true},
     {"KYTY_SRT_PAGE_PERSIST", "srtpages", true},
     {"KYTY_CLAMP_MEMO", "clamp", true},
+    {"KYTY_REGION_EPOCH", "regionepoch", false},
+    {"KYTY_SRT_MEMO", "srtmemo", false},
+    {"KYTY_SRT_MEMO_VERIFY", "smemocheck", false},
 }};
 
 using State = std::array<std::atomic<bool>, static_cast<size_t>(Gate::Count)>;

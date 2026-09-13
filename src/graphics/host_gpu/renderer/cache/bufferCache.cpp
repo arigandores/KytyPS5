@@ -8,6 +8,7 @@
 
 #include "common/alignment.h"
 #include "common/assert.h"
+#include "common/gates.h"
 #include "common/frameStats.h"
 #include "common/parallelCopy.h"
 #include "common/logging/log.h"
@@ -563,11 +564,24 @@ BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 	return id;
 }
 
+// Witness for "nothing has written this range since it was uploaded". The global CPU epoch is
+// bumped by every page fault in the process, so with it a recorded upload is stale within the same
+// frame; the region epochs of the range itself only move when that range is written (gate
+// "regionepoch").
+std::pair<uint64_t, uint8_t> BufferCache::UploadEpoch(uint64_t vaddr, uint64_t size) {
+	if (Common::Gates::Enabled(Common::Gates::Gate::RegionEpoch)) {
+		return {m_memory_tracker.RangeWriteEpoch(vaddr, size), 1};
+	}
+	return {m_memory_tracker.CpuWriteEpoch(), 0};
+}
+
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
-	const auto cpu_epoch = m_memory_tracker.CpuWriteEpoch();
-	if (BufferUploadEpochEnabled() && !is_written && buffer.HasCurrentUpload(cpu_epoch, vaddr, size)) {
+	const auto [cpu_epoch, epoch_kind] = UploadEpoch(vaddr, size);
+	if (BufferUploadEpochEnabled() && !is_written &&
+	    buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochHits, 1);
 		return is_texel_buffer ? SynchronizeBufferFromImage(buffer, vaddr, size) : false;
 	}
 	std::vector<vk::BufferCopy> copies;
@@ -612,6 +626,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	// Keep the epoch from before synchronization, so concurrent writes force another upload.
 	// This is only the requested interval: a different part of the same buffer may remain dirty.
 	buffer.upload_epoch = cpu_epoch;
+	buffer.upload_epoch_kind = epoch_kind;
 	buffer.upload_begin = vaddr;
 	buffer.upload_end = vaddr + size;
 	if (is_texel_buffer && !is_written) {
@@ -663,9 +678,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		EXIT("BufferCache: buffer request requires a recording command buffer\n");
 	}
 	auto* buffer = m_slot_buffers.try_get(id);
+	const auto [current_epoch, current_kind] = UploadEpoch(vaddr, size);
 	if (BufferUploadEpochEnabled() && !is_written && buffer != nullptr && !buffer->is_deleted &&
 	    buffer->IsInBounds(vaddr, size) &&
-	    buffer->HasCurrentUpload(m_memory_tracker.CpuWriteEpoch(), vaddr, size)) {
+	    buffer->HasCurrentUpload(current_epoch, current_kind, vaddr, size)) {
 		TouchBuffer(*buffer);
 		(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
 		return {buffer, buffer->Offset(vaddr)};

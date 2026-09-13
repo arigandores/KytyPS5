@@ -27,6 +27,29 @@ public:
 	[[nodiscard]] uint64_t CpuWriteEpoch() const noexcept {
 		return m_cpu_epoch.load(std::memory_order_acquire);
 	}
+	// Combined write epoch of the regions covering one range: a witness for "no CPU write has
+	// been announced to this range since". Zero means the range is not fully tracked, and nothing
+	// may be assumed about it. Lock free - each region publishes its epoch under its own lock
+	// before the pages become writable, exactly like the global epoch above.
+	[[nodiscard]] uint64_t RangeWriteEpoch(uint64_t vaddr, uint64_t size) noexcept {
+		ValidateRange(vaddr, size);
+		uint64_t mixed     = 0x9e3779b97f4a7c15ull;
+		uint64_t remaining = size;
+		uint64_t index     = vaddr / TRACKER_REGION_SIZE;
+		uint64_t offset    = vaddr % TRACKER_REGION_SIZE;
+		while (remaining != 0) {
+			const auto bytes   = std::min(TRACKER_REGION_SIZE - offset, remaining);
+			auto*      manager = m_regions[index].load(std::memory_order_acquire);
+			if (manager == nullptr) {
+				return 0; // an untracked region is CPU-dirty by definition
+			}
+			mixed = (mixed ^ manager->Epoch()) * 0x100000001b3ull;
+			remaining -= bytes;
+			offset = 0;
+			index++;
+		}
+		return mixed == 0 ? 1 : mixed;
+	}
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
 	// Combined streaming-read query: some CPU-dirty bytes and no GPU-dirty pages,
 	// with a single lock acquisition per tracking region. Does not change ownership.

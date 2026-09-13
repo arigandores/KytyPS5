@@ -9,8 +9,28 @@
 
 #include <cinttypes>
 #include <cstdio>
+#include <cstdlib>
 
 namespace Libs::Graphics {
+
+namespace {
+
+// Diagnostic runs give up on a queue that stopped completing work instead of waiting forever:
+// a wedged submission keeps the whole host GPU busy, so the sooner the process exits, the sooner
+// the driver recovers. Counted in 2 s wait timeouts; KYTY_GPU_HANG_ABORT_S=0 waits forever.
+uint32_t HangAbortTimeouts() {
+	static const uint32_t timeouts = [] {
+		const auto* value   = std::getenv("KYTY_GPU_HANG_ABORT_S");
+		const auto  seconds = value != nullptr ? std::strtoul(value, nullptr, 10) : 8u;
+		if (seconds == 0) {
+			return UINT32_MAX;
+		}
+		return static_cast<uint32_t>((seconds + 1u) / 2u);
+	}();
+	return timeouts;
+}
+
+} // namespace
 
 MasterSemaphore::MasterSemaphore(GraphicContext& graphics): m_graphics(graphics) {
 	vk::SemaphoreTypeCreateInfo type_info {};
@@ -66,9 +86,30 @@ void MasterSemaphore::Wait(uint64_t tick) {
 		const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled ||
 		                        GpuQueueTraceEnabled();
 		bool reported = false;
+		uint32_t timeouts = 0;
 		do {
 			result = m_graphics.device.waitSemaphores(&wait_info,
 			    diagnostic ? uint64_t {2000000000} : UINT64_MAX);
+			if (diagnostic && result == vk::Result::eTimeout) {
+				timeouts++;
+			}
+			if (diagnostic && result == vk::Result::eTimeout && timeouts >= HangAbortTimeouts()) {
+				// The queue stopped completing work. Waiting longer keeps the host GPU busy with a
+				// wedged submission (the desktop freezes with it), so report once more and leave:
+				// the process exit releases the queue and lets the driver recover.
+				LOGF("GpuHangAbort: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64
+				     " master=%p after=%us\n",
+				     static_cast<uint32_t>(FS::CurrentRole()), tick,
+				     m_gpu_tick.load(std::memory_order_acquire), CurrentTick(),
+				     static_cast<void*>(m_semaphore), timeouts * 2u);
+				std::printf("GpuHangAbort: requested=%" PRIu64 " known=%" PRIu64 " after=%us\n",
+				            tick, m_gpu_tick.load(std::memory_order_acquire), timeouts * 2u);
+				ReportGpuCheckpointHistory();
+				ReportGpuSubmissionHistory();
+				Log::Flush();
+				std::fflush(stdout);
+				EXIT("GPU stopped completing submissions\n");
+			}
 			if (diagnostic && result == vk::Result::eTimeout && !reported) {
 				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64 " master=%p\n",
 				     static_cast<uint32_t>(FS::CurrentRole()), tick, m_gpu_tick.load(std::memory_order_acquire),

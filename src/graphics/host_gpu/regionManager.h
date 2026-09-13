@@ -123,7 +123,7 @@ public:
 	[[nodiscard]] bool IsModified(uint64_t offset, uint64_t size) const {
 		const auto [start, end] = GetPageRange(m_cpu_addr + offset, size);
 		const auto& bits        = GetBits<source>();
-		return RegionBits(bits, start, end).Any();
+		return bits.AnyInRange(start, end);
 	}
 
 	template <DirtySource source, bool enable>
@@ -133,12 +133,12 @@ public:
 			// Called with the region lock held. Publish before making guest pages writable;
 			// a BDA scan observing this epoch must acquire this lock before reading dirty bits.
 			m_cpu_epoch.fetch_add(1, std::memory_order_release);
-			if (RegionBits(m_gpu_dirty, start, end).Any()) {
+			if (m_gpu_dirty.AnyInRange(start, end)) {
 				EXIT("CPU dirty state conflicts with GPU dirty state\n");
 			}
 		}
 		if constexpr (source == DirtySource::Gpu && enable) {
-			if (RegionBits(m_cpu_dirty, start, end).Any()) {
+			if (m_cpu_dirty.AnyInRange(start, end)) {
 				EXIT("GPU dirty state conflicts with CPU dirty state\n");
 			}
 		}

@@ -1,5 +1,6 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 
+#include "common/gates.h"
 #include "common/alignment.h"
 #include "common/frameStats.h"
 #include "graphics/host_gpu/lodStats.h"
@@ -57,32 +58,10 @@ namespace {
 
 using BindingKind = ShaderRecompiler::IR::DescriptorBindingKind;
 
-// Read once at process startup: ordinary bindings need neither getenv nor a TLS
-// initialization guard. The optional file control is for same-run CPU comparisons.
-const bool DirectConstantCopyDefault = [] {
-	const auto* value = std::getenv("KYTY_CBUFFER_DIRECT_COPY");
-	// Correctness is covered, but the same-run gameplay benchmark was interrupted.
-	return value != nullptr && value[0] == '1';
-}();
-const char* const DirectConstantCopyGate = std::getenv("KYTY_CBUFFER_COPY_GATE");
-
+// KYTY_CBUFFER_DIRECT_COPY, switchable during a run through the shared gate file so that one
+// gameplay run can compare the direct copy against the ObtainBuffer path on the same scene.
 bool DirectConstantCopyEnabled() {
-	if (DirectConstantCopyGate == nullptr) return DirectConstantCopyDefault;
-	thread_local uint32_t last_frame = UINT32_MAX;
-	thread_local bool enabled = DirectConstantCopyDefault;
-	const auto frame = GpuTimeProfiler::Frame();
-	if (last_frame != frame) {
-		last_frame = frame;
-		if (auto* file = std::fopen(DirectConstantCopyGate, "rb")) {
-			const auto value = std::fgetc(file);
-			std::fclose(file);
-			if ((value == '0' || value == '1') && enabled != (value == '1')) {
-				enabled = value == '1';
-				LOGF("ConstantCopyGate: frame=%u enabled=%d\n", frame, enabled ? 1 : 0);
-			}
-		}
-	}
-	return enabled;
+	return Common::Gates::Enabled(Common::Gates::Gate::ConstantCopy);
 }
 
 } // namespace

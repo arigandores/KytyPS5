@@ -158,6 +158,11 @@ public:
 
 	[[nodiscard]] uint64_t GetBackingSize() const { return m_size; }
 
+	// Incremented (under m_mutex) whenever the guest map table changes. A caller that kept a
+	// backing pointer from TryGetBackingPointer can compare this value instead of validating the
+	// page again; an unchanged epoch means no mapping was added, split or removed meanwhile.
+	[[nodiscard]] uint64_t MapEpoch() const { return m_map_epoch.load(std::memory_order_acquire); }
+
 	bool ZeroRange(uint64_t backing_offset, uint64_t size) {
 		if (!IsAvailable() || !RangeOk(backing_offset, size)) {
 			return false;
@@ -313,6 +318,7 @@ public:
 		{
 			std::lock_guard lock(m_mutex);
 			EXIT_IF(!m_maps.emplace(vaddr, MapEntry {vaddr, size, backing_offset, mode}).second);
+			m_map_epoch.fetch_add(1, std::memory_order_release);
 		}
 		SetFailure(failure_reason, FailureReason::None);
 		return true;
@@ -324,6 +330,7 @@ public:
 		{
 			std::lock_guard lock(m_mutex);
 			EXIT_IF(!m_maps.emplace(vaddr, MapEntry {vaddr, size, backing_offset, mode}).second);
+			m_map_epoch.fetch_add(1, std::memory_order_release);
 		}
 		SetFailure(failure_reason, FailureReason::None);
 		return true;
@@ -415,6 +422,7 @@ public:
 					m_maps.erase(entry);
 				}
 			}
+			m_map_epoch.fetch_add(1, std::memory_order_release);
 		}
 
 		if (old.size == 0) {
@@ -428,6 +436,7 @@ public:
 			if (!unmapped) {
 				std::lock_guard lock(m_mutex);
 				m_maps.emplace(old.vaddr, old);
+				m_map_epoch.fetch_add(1, std::memory_order_release);
 				return false;
 			}
 			if (placeholder_preserved != nullptr) {
@@ -482,11 +491,13 @@ public:
 		}
 		std::lock_guard lock(m_mutex);
 		m_maps.emplace(old.vaddr, old);
+		m_map_epoch.fetch_add(1, std::memory_order_release);
 		return false;
 #else
 		if (!UnmapViewPreservePlaceholder(reinterpret_cast<void*>(old.vaddr), old.size)) {
 			std::lock_guard lock(m_mutex);
 			m_maps.emplace(old.vaddr, old);
+			m_map_epoch.fetch_add(1, std::memory_order_release);
 			return false;
 		}
 
@@ -713,6 +724,7 @@ private:
 	uint64_t                     m_size         = 0;
 	std::mutex                   m_mutex;
 	std::map<uint64_t, MapEntry> m_maps;
+	std::atomic<uint64_t>        m_map_epoch {1};
 };
 
 class GuestAddressSpace {
@@ -809,6 +821,8 @@ public:
 	bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {
 		return m_backing->TryGetBackingPointer(vaddr, size, pointer);
 	}
+
+	[[nodiscard]] uint64_t BackingMapEpoch() const { return m_backing->MapEpoch(); }
 
 	bool TryReadSparseBacking(uint64_t vaddr, void* data, uint64_t size) {
 		return m_backing->TryReadSparseBacking(vaddr, data, size);

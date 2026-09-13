@@ -1358,6 +1358,64 @@ void TestMunmapAcrossAdjacentFlexibleMappings() {
 	std::printf("[host]    %-48s ok\n", test);
 }
 
+// Repeated ClampRangeSize queries are answered from a per-thread memo; it must follow the range
+// table, so the same address has to report the new limit as soon as a mapping changes.
+void TestClampRangeSizeMemoFollowsMapChanges() {
+	const char* test    = "ClampRangeSizeMemoFollowsMapChanges";
+	void*       reserve = nullptr;
+
+	CheckOk(test,
+	        Libs::LibKernel::Memory::KernelReserveVirtualRange(&reserve, SceKernelPageSize * 2, 0,
+	                                                           SceKernelPageSize),
+	        "KernelReserveVirtualRange");
+	const auto base = reinterpret_cast<uint64_t>(reserve);
+
+	void* left  = reinterpret_cast<void*>(base);
+	void* right = reinterpret_cast<void*>(base + SceKernelPageSize);
+	CheckOk(test,
+	        Libs::LibKernel::Memory::KernelMapNamedFlexibleMemory(
+	            &left, SceKernelPageSize, SceKernelProtCpuRw, SceKernelMapFixed, "memo_left"),
+	        "KernelMapNamedFlexibleMemory(left)");
+	CheckOk(test,
+	        Libs::LibKernel::Memory::KernelMapNamedFlexibleMemory(
+	            &right, SceKernelPageSize, SceKernelProtCpuRw, SceKernelMapFixed, "memo_right"),
+	        "KernelMapNamedFlexibleMemory(right)");
+
+	const auto probe = base + SceKernelPageSize - 0x100;
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x200) == 0x200,
+	      "first query did not cross adjacent committed mappings");
+	// Repeat: served from the memo, and a smaller request must stay exact.
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x200) == 0x200,
+	      "repeated query changed its answer");
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x80) == 0x80,
+	      "smaller repeated query was clamped");
+	// Larger than the remembered probe: must be measured again, and both pages are still mapped.
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x100 + SceKernelPageSize) == 0x100 + SceKernelPageSize,
+	      "larger query did not re-measure the committed run");
+
+	CheckOk(test,
+	        Libs::LibKernel::Memory::KernelMunmap(base + SceKernelPageSize, SceKernelPageSize),
+	        "KernelMunmap(right)");
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x200) == 0x100,
+	      "memo kept the answer of a mapping that was unmapped");
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x200) == 0x100,
+	      "repeated query after the unmap changed its answer");
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x40) == 0x40,
+	      "smaller query after the unmap was clamped below the committed run");
+
+	CheckOk(test,
+	        Libs::LibKernel::Memory::KernelMapNamedFlexibleMemory(
+	            &right, SceKernelPageSize, SceKernelProtCpuRw, SceKernelMapFixed, "memo_right2"),
+	        "KernelMapNamedFlexibleMemory(right again)");
+	Check(test, Libs::LibKernel::Memory::ClampRangeSize(probe, 0x200) == 0x200,
+	      "memo kept the clamped answer after the mapping came back");
+
+	CheckOk(test, Libs::LibKernel::Memory::KernelMunmap(base, SceKernelPageSize * 2),
+	        "KernelMunmap(memo cleanup)");
+
+	std::printf("[host]    %-48s ok\n", test);
+}
+
 void TestNonzeroDirectOffsetAliasesSharedBacking() {
 	const char* test = "NonzeroDirectOffsetAliasesSharedBacking";
 
@@ -2527,6 +2585,7 @@ int main(int argc, char** argv) {
 	RunTest(TestFixedNoOverwriteRejectsReservedRange);
 	RunTest(TestReleasedReserveCanBeReused);
 	RunTest(TestMunmapAcrossAdjacentFlexibleMappings);
+	RunTest(TestClampRangeSizeMemoFollowsMapChanges);
 	RunTest(TestDirectMapQueryOffsetAndPartialMunmap);
 	RunTest(TestDirectPartialProtectUnmapPreservesNeighbors);
 	RunTest(TestDirectMapValidationBeforeOwnerMutation);

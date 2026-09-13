@@ -5,6 +5,7 @@
 #include "graphics/guest_gpu/command_processor/commandProcessor.h"
 #include "graphics/guest_gpu/pm4.h"
 
+#include "common/gates.h"
 #include "common/frameStats.h"
 
 #include "common/assert.h"
@@ -216,23 +217,32 @@ struct ShaderReadCache {
 		uint64_t address = UINT64_MAX;
 		const uint8_t* backing = nullptr;
 	};
-	struct Pages {
-		Page last;
-		std::array<Page, 8> entries;
 
+	// A view over a direct-mapped table of validated pages. The per-call tables are small (they
+	// are constructed on every lookup); the persistent one is large enough for the descriptor
+	// pages of a whole frame.
+	struct Pages {
+		Page   last;
+		Page*  entries = nullptr;
+		size_t mask    = 0;
+
+		void Bind(Page* storage, size_t count) {
+			entries = storage;
+			mask    = count - 1;
+		}
 		bool Find(uint64_t page) {
 			if (last.address == page) return true;
-			if (!Enabled()) return false;
-			const auto& entry = entries[Slot(page)];
+			if (entries == nullptr || !Enabled()) return false;
+			const auto& entry = entries[Slot(page) & mask];
 			if (entry.address != page) return false;
 			last = entry;
 			return true;
 		}
 		void Store(uint64_t page, const void* backing) {
 			last = {page, static_cast<const uint8_t*>(backing)};
-			if (Enabled()) entries[Slot(page)] = last;
+			if (entries != nullptr && Enabled()) entries[Slot(page) & mask] = last;
 		}
-		static size_t Slot(uint64_t page) { return ((page >> 12u) ^ (page >> 19u)) & 7u; }
+		static size_t Slot(uint64_t page) { return (page >> 12u) ^ (page >> 19u); }
 		static bool Enabled() {
 			static const bool enabled = [] {
 				const auto* value = std::getenv("KYTY_SRT_PAGE_CACHE");
@@ -241,9 +251,47 @@ struct ShaderReadCache {
 			return enabled;
 		}
 	};
-	// Keep live and GPU-clean validations separate, and never keep them across lookups.
-	Pages live;
-	Pages clean;
+
+	static constexpr size_t CALL_SLOTS       = 8;
+	static constexpr size_t PERSISTENT_SLOTS = 4096;
+
+	// The same descriptor pages are walked by every stage of every draw. A validated live
+	// translation stays correct until the guest map table changes, so keep it per thread and drop
+	// the whole table when the backing map epoch moves. The gate "srtpages" restores the
+	// per-call table.
+	struct Persistent {
+		uint64_t                           epoch = 0;
+		Pages                              pages;
+		std::array<Page, PERSISTENT_SLOTS> storage {};
+	};
+
+	static Pages* PersistentLive() {
+		thread_local Persistent cache;
+		if (cache.pages.entries == nullptr) {
+			cache.pages.Bind(cache.storage.data(), PERSISTENT_SLOTS);
+		}
+		const auto epoch = Libs::LibKernel::Memory::BackingMapEpoch();
+		if (cache.epoch != epoch) {
+			cache.epoch      = epoch;
+			cache.storage    = {};
+			cache.pages.last = {};
+		}
+		return &cache.pages;
+	}
+
+	ShaderReadCache() {
+		own_live.Bind(own_live_storage.data(), CALL_SLOTS);
+		clean.Bind(clean_storage.data(), CALL_SLOTS);
+		live = Common::Gates::Enabled(Common::Gates::Gate::SrtPagePersist) ? PersistentLive()
+		                                                                  : &own_live;
+	}
+
+	// GPU-clean validations stay per lookup: they depend on the GPU dirty state, not on the map.
+	std::array<Page, CALL_SLOTS> own_live_storage {};
+	std::array<Page, CALL_SLOTS> clean_storage {};
+	Pages                        own_live;
+	Pages                        clean;
+	Pages*                       live = nullptr;
 };
 
 // Guest memory for specialization decisions: only words with no pending GPU writes may be read
@@ -286,16 +334,19 @@ bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 	constexpr uint64_t PageSize = 0x1000;
 	const auto         page     = address & ~(PageSize - 1);
 	if (cache != nullptr && (address & 3u) == 0) {
-		if (!cache->live.Find(page)) {
+		if (!cache->live->Find(page)) {
+			if (Common::FrameStats::Enabled()) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SrtPageMisses, 1);
+			}
 			const void* backing = nullptr;
 			if (Libs::LibKernel::Memory::TryGetBackingPointer(page, PageSize, &backing)) {
-				cache->live.Store(page, backing);
+				cache->live->Store(page, backing);
 			} else {
-				cache->live.last = {};
+				cache->live->last = {};
 			}
 		}
-		if (cache->live.last.address == page) {
-			std::memcpy(value, cache->live.last.backing + (address - page), sizeof(*value));
+		if (cache->live->last.address == page) {
+			std::memcpy(value, cache->live->last.backing + (address - page), sizeof(*value));
 			return true;
 		}
 	}

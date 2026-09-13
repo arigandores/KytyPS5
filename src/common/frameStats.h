@@ -149,6 +149,8 @@ enum class Counter : uint32_t {
 	ImgMinLodViews,      // sampled binds served with a min-LOD view (top levels still pending)
 	BdaPrepareNs,
 	BdaPrepares,
+	SrtPageMisses,   // SRT page translations that had to take the backing-store lock
+	ClampMemoMisses, // ClampRangeSize queries that had to take the range-table lock
 	Count
 };
 

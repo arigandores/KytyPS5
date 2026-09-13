@@ -1,6 +1,8 @@
 #include "kernel/memory.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/magicEnum.h"
 #include "common/stringUtils.h"
@@ -215,6 +217,7 @@ public:
 	bool Add(uint64_t start, uint64_t size, uint64_t offset, int protection, int memory_type,
 	         VirtualRangeType type, const char* name, bool disallow_merge = false) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		if (start == 0 || size == 0) {
 			return false;
@@ -245,6 +248,7 @@ public:
 
 	bool Remove(uint64_t start, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		auto position = LowerBound(start);
 		if (position != m_ranges.end() && position->start == start && position->size == size) {
@@ -276,6 +280,7 @@ public:
 
 	bool ReleaseReserved(uint64_t start, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		for (size_t index = 0; index < m_ranges.size(); index++) {
 			auto& r = m_ranges[index];
@@ -290,6 +295,7 @@ public:
 	bool ConsumeReserved(uint64_t start, uint64_t size,
 	                     VirtualRangeType type = VirtualRangeType::Reserved) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		auto end = End(start, size);
 		for (const auto& r: m_ranges) {
@@ -306,6 +312,7 @@ public:
 	bool ConsumeReservedSpan(uint64_t start, uint64_t size, Range* first_range = nullptr,
 	                         VirtualRangeType type = VirtualRangeType::Reserved) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		if (size == 0) {
 			return false;
@@ -337,6 +344,7 @@ public:
 
 	void Rename(uint64_t start, uint64_t size, const char* name) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		auto position = LowerBound(start);
 		if (position != m_ranges.end() && position->start == start && position->size == size) {
@@ -349,12 +357,14 @@ public:
 
 	void Protect(uint64_t start, uint64_t size, int protection) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		EditUnlocked(start, size, [protection](Range* r) { r->protection = protection; });
 	}
 
 	void SetMemoryType(uint64_t start, uint64_t size, int memory_type) {
 		Common::LockGuard lock(m_mutex);
+		m_epoch.fetch_add(1, std::memory_order_release);
 
 		EditUnlocked(start, size, [memory_type](Range* r) { r->memory_type = memory_type; });
 	}
@@ -418,6 +428,8 @@ public:
 		out->clear();
 		return false;
 	}
+
+	[[nodiscard]] uint64_t Epoch() const { return m_epoch.load(std::memory_order_acquire); }
 
 	uint64_t ClampRangeSize(uint64_t virtual_addr, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
@@ -645,6 +657,9 @@ private:
 
 	std::vector<Range> m_ranges;
 	Common::Mutex      m_mutex;
+	// Bumped by every mutating entry point (under the lock) so that lock-free readers can tell
+	// that a memoized answer about the range table is still the current one.
+	std::atomic<uint64_t> m_epoch {1};
 };
 
 #if defined(KYTY_VIRTUAL_MEMORY_ALLOCATION_TESTS)
@@ -877,6 +892,10 @@ bool TryGetBackingPieces(uint64_t vaddr, uint64_t size, std::vector<BackingPiece
 	       g_guest_address_space->TryGetBackingPieces(vaddr, size, pieces);
 }
 
+uint64_t BackingMapEpoch() {
+	return g_guest_address_space != nullptr ? g_guest_address_space->BackingMapEpoch() : 0;
+}
+
 uint64_t GetBackingBase() {
 	return g_guest_address_space != nullptr ? g_guest_address_space->GetBackingBase() : 0;
 }
@@ -919,8 +938,74 @@ GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size) {
 	return state;
 }
 
+// Buffer bindings ask for the committed size of the same descriptor addresses on every draw.
+// The answer only changes with the range table, so keep the last answers per thread and check
+// the table epoch instead of taking its lock. A probe that came back unclamped proves the run
+// covers at least that many bytes; a clamped one gives the exact run length from that address.
+namespace {
+
+struct ClampMemo {
+	struct Entry {
+		uint64_t epoch   = 0; // range-table epoch this answer was measured under
+		uint64_t vaddr   = 0;
+		uint64_t probed  = 0; // size passed to VirtualRanges::ClampRangeSize
+		uint64_t clamped = 0; // its answer
+	};
+
+	static constexpr size_t SLOTS = 4096;
+
+	std::array<Entry, SLOTS> entries {};
+
+	static size_t Slot(uint64_t vaddr) {
+		const auto page = vaddr >> 12u;
+		return static_cast<size_t>((page ^ (page >> 7u) ^ (page >> 17u)) & (SLOTS - 1));
+	}
+};
+
+bool ClampMemoEnabled() {
+	return Common::Gates::Enabled(Common::Gates::Gate::ClampMemo);
+}
+
+} // namespace
+
 uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size) {
 	EXIT_IF(g_virtual_ranges == nullptr);
+
+	if (ClampMemoEnabled() && vaddr != 0 && size != 0) {
+		thread_local ClampMemo memo;
+		const auto             epoch = g_virtual_ranges->Epoch();
+		auto&                  entry = memo.entries[ClampMemo::Slot(vaddr)];
+		if (entry.epoch == epoch && entry.vaddr == vaddr && entry.probed != 0) {
+			if (entry.clamped < entry.probed) {
+				// The committed run from this address ends after exactly clamped bytes.
+				return std::min(size, entry.clamped);
+			}
+			if (size <= entry.probed) {
+				// The run covers the whole probe, so it covers this smaller request too.
+				return size;
+			}
+		}
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClampMemoMisses, 1);
+		}
+		const auto clamped_size = g_virtual_ranges->ClampRangeSize(vaddr, size);
+		if (clamped_size == 0) {
+			EXIT("Memory: attempted to access invalid address 0x%016" PRIx64
+			     " with size 0x%016" PRIx64 "\n",
+			     vaddr, size);
+		}
+		if (clamped_size != size) {
+			LOGF("Memory: clamped buffer range addr=0x%016" PRIx64 " size=0x%016" PRIx64
+			     " to 0x%016" PRIx64 "\n",
+			     vaddr, size, clamped_size);
+		}
+		// Store only when the epoch still matches: a mutation racing with the query above would
+		// otherwise leave an answer from the old table behind under the new epoch.
+		if (epoch == g_virtual_ranges->Epoch()) {
+			entry = {epoch, vaddr, size, clamped_size};
+		}
+		return clamped_size;
+	}
 
 	const auto clamped_size = g_virtual_ranges->ClampRangeSize(vaddr, size);
 	if (clamped_size == 0) {

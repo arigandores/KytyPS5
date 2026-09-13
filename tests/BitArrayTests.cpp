@@ -297,10 +297,42 @@ void TestTrackerSizedRandomizedDifferential() {
   }
 }
 
+// AnyInRange must answer exactly what the masked copy would: every start/end pair over a
+// two-word array, against every single-bit array plus the empty and full ones.
+void TestAnyInRangeMatchesMaskedCopy() {
+  for (size_t set_bit = 0; set_bit <= 128; set_bit++) {
+    Bits bits;
+    if (set_bit < 128) {
+      bits.Set(set_bit);
+    }
+    for (size_t start = 0; start <= 130; start++) {
+      for (size_t end = 0; end <= 130; end++) {
+        const bool expected = Bits(bits, start, end).Any();
+        Check(bits.AnyInRange(start, end) == expected,
+              "AnyInRange diverged from the masked copy");
+      }
+    }
+  }
+
+  Bits full;
+  full.Fill();
+  Check(full.AnyInRange(0, 128) && full.AnyInRange(127, 128) && !full.AnyInRange(5, 5) &&
+            !full.AnyInRange(9, 3) && !full.AnyInRange(0, 129),
+        "AnyInRange mishandled full-array or invalid ranges");
+
+  // Tracker-sized: runs that span whole intermediate words.
+  Common::BitArray<1024> wide;
+  wide.Set(700);
+  Check(wide.AnyInRange(0, 1024) && wide.AnyInRange(700, 701) && !wide.AnyInRange(0, 700) &&
+            !wide.AnyInRange(701, 1024),
+        "tracker-sized AnyInRange diverged");
+}
+
 } // namespace
 
 int main() {
   TestPointAndRangeOperations();
+  TestAnyInRangeMatchesMaskedCopy();
   TestMaskedConstructionAndBitwiseOperations();
   TestRangeDiscoveryAndIteration();
   TestRandomizedDifferential();

@@ -113,6 +113,9 @@ bool                   TryWriteBacking(uint64_t vaddr, const void* data, uint64_
 bool                   TryReadBacking(uint64_t vaddr, void* data, uint64_t size);
 // Host pointer to the backing of [vaddr, vaddr+size) when the range lies inside one mapping.
 bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
+// Changes whenever a guest mapping is added, split or removed: a host pointer obtained from
+// TryGetBackingPointer stays valid for its range while this value is unchanged.
+[[nodiscard]] uint64_t BackingMapEpoch();
 // A physically contiguous piece of a guest range inside the direct-memory backing.
 struct BackingPiece {
 	uint64_t backing_offset = 0;

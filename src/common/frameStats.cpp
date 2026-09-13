@@ -487,7 +487,9 @@ void SamplerThread(HANDLE target, ThreadRole role) {
 			     static_cast<unsigned long long>(total), static_cast<int>(role));
 			size_t shown = 0;
 			for (const auto& [k, n]: rows) {
-				if (shown++ >= 400) {
+				// Every row: with call chains in the key the top 400 rows held only about half the
+				// samples, and the shares printed by the scripts were of that half.
+				if (shown++ >= 20000) {
 					break;
 				}
 				LOGF("SampleTrace: leaf=%s rip=%s0x%llx at=+0x%llx n=%u chain=+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx,+0x%llx\n",

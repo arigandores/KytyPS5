@@ -642,7 +642,7 @@ CommandBuffer& CommandScheduler::Current() {
 CommandRecorder* CommandScheduler::Recorder() {
 	if (m_recorder == nullptr) {
 		m_recorder = std::make_unique<CommandRecorder>(&CommandScheduler::CommitPoolBuffer, this,
-		                                              &m_command.m_buffer);
+		                                              &m_command.m_buffer, m_graphics.device);
 	}
 	return m_recorder.get();
 }
@@ -672,6 +672,12 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 		// The gate went off while a buffer was queued: the record thread owns the command pool
 		// until its queue is empty, and the direct path below takes a buffer from it.
 		m_recorder->Drain();
+	}
+	if ((wanted != nullptr) != m_record_thread_on) {
+		// Gate "recordthread" moves only here, at a buffer boundary; switching off drained above.
+		m_record_thread_on = wanted != nullptr;
+		LOGF("RecordThread: scheduler=%p record thread %s from tick %llu\n", static_cast<void*>(this),
+		     m_record_thread_on ? "on" : "off", static_cast<unsigned long long>(CurrentTick()));
 	}
 	m_command.m_recorder = wanted;
 	m_command.m_active   = true;

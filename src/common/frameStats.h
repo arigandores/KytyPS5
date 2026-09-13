@@ -262,6 +262,72 @@ enum class Counter : uint32_t {
 	RpRestartDownload,
 	RpRestartSubmit,
 	RpRestartOther,
+	// Session 56. Printed by name in the FrameTrace-x line (videoOut.cpp), so a counter added here
+	// needs one table row there and no change to the long format strings.
+	DescriptorRingSets,  // descriptor sets allocated by the per-layout rings (gate "dsring")
+	DescriptorRingGrows, // ... vkAllocateDescriptorSets calls made by the rings
+	DescriptorRingIssued, // ... sets handed out by the rings
+	RecordPackDraws,      // draw tails published as records (gate "recpack")
+	RecordPackDispatches, // ... dispatch tails
+	RecordPackBinds,      // push-constant and descriptor sections published as records
+	RecordPackBytes,      // bytes of the pass, bindings and command records
+	RecordDirectBusy,     // Handle() calls that found the record queue not empty (each one waits)
+	RecordSpinNs,         // record thread time polling an empty queue before it sleeps
+	RecordSleeps,         // record thread sleeps on its condition variable
+	ProtectSpinNs, // VirtualProtect issued while the thread holds a tracker spin lock (patch E)
+	ProtectSpinCalls, // ...
+	ProtectSpinPages, // ...
+	ProtectSpinGpuNs, // ... on the GuestGpu thread
+	ProtectSpinGpuCalls, // ...
+	ProtectSpinGpuPages, // ...
+	SyncNoop, // read-only SynchronizeBuffer past the epoch check that uploaded nothing
+	SyncFreeSkips, // ... answered without the region locks (gate "syncfree")
+	SyncFreeMismatch, // ... lock-free answers the locked query contradicted
+	TexInvalidations, // TextureCache::InvalidateMemory calls
+	TexInvalidateEmpty, // ... that found no image on the range
+	TexHintZero, // ... whose page hint read zero (skipped with gate "texfaulthint")
+	BatchPages, // pages whose write-watcher protection was deferred to a batch scope (gate "protbatch")
+	BatchFlushes, // batch-scope flushes of a region window
+	BatchRuns, // VirtualProtect calls issued by flushes
+	BatchKb, // KiB protected by flushes
+	BatchMerged, // scope flushes that found their pages already applied by another thread
+	ApplyWaitNs, // waits for the apply lock of a page-manager region
+	ApplyWaitGpuNs, // ... on the GuestGpu thread
+	BatchInvalidateFlushes, // invalidation flushes of the invalidated range (protbatch)
+	BatchRefault, // ... that applied a change deferred by another thread
+	BatchStuck, // a thread write-faulted 8 (or 100000) times in a row on one page; must stay 0
+	BatchChecks, // host protections compared with the page state (pbcheck)
+	BatchCheckBad, // ... pages expected read-only/no-access but writable (a lost guest write)
+	BatchCheckBadRw, // ... any other difference
+	DrawAheadRequests,    // M1 requests that had a hint (the unit of da_fan)
+	DrawAheadFan,         // ... distinct plan fingerprints among the hint's static variants, summed
+	DrawAheadFanCanon,    // ... distinct canonical plan classes among them (gate "daclass" queues these)
+	DrawAheadUnused,      // worker results (Ready/Failed) overwritten or queued again with no draw taking them
+	DrawAheadUnusedPixel, // ... of them pixel-stage results
+	DrawAheadMeshStages,  // draws whose vertex program runs as a mesh stage (no lookahead for it)
+	DrawAheadPixelOff,    // draws with a pixel program address but an inactive pixel stage
+	DrawAheadClasses,     // canonical plan classes created
+	DrawAheadClassShared, // source entries that joined an existing class (merged static variants)
+	DrawAheadClassNs,     // time building and comparing canonical plans
+	DrawAheadClones,      // results copied out by their last user (gate "daclone")
+	DrawAheadCrossCcd,    // tasks a worker ran in another L3 group than the GuestGpu thread's last one
+	// Patch D (bindings), printed in FrameTrace-x.
+	TexLruTouches,     // TouchImage calls on registered images
+	TexLruRepeats,     // ... of which the image was already touched in this GC tick (skipped by "texlru")
+	TexFastOk,         // RebindImages sampled bindings answered from the memo view (gate "texfast")
+	TexFastNo,         // ... bindings that ran FindTexture while the gate was on
+	TexFastNoStamp,    // ... a recorded view refused: the image was invalidated since (bind_stamp)
+	TexFastNoState,    // ... a recorded view refused: pending top mips or BC source trim changed
+	TexFastRecord,     // views recorded into memo slots
+	TexFastBad,        // gate "texfastcheck": memo view differed from FindTexture
+	TexMemoEmpty,      // ResolveTexture memo miss: the slot was empty
+	TexMemoCollide,    // ... the slot held another key
+	TexMemoStale,      // ... same key, the cached image failed validation
+	TexMemoKeyMisses,  // gate "texmemo2": resource key computed (pointer cache miss)
+	ClampMissEpoch,    // ClampRangeSize memo miss: same address, older range-table epoch
+	ClampMissKey,      // ... other/empty entry or a larger size than probed
+	ClampVmaMisses,    // gate "clampvma": committed run looked up under the range-table lock
+	SamplerMemoMisses, // gate "smpmemo": GetSampler went to the locked map
 	Count
 };
 

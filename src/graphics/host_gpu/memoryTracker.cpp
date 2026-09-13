@@ -132,6 +132,26 @@ bool MemoryTracker::IsRegionCpuModifiedAndGpuCleanFast(uint64_t vaddr, uint64_t 
 	return cpu_dirty || untracked;
 }
 
+bool MemoryTracker::IsRegionCpuCleanFast(uint64_t vaddr, uint64_t size) {
+	CheckNotInUploadCallback();
+	ValidateRange(vaddr, size);
+	uint64_t remaining = size;
+	uint64_t index     = vaddr / TRACKER_REGION_SIZE;
+	uint64_t offset    = vaddr % TRACKER_REGION_SIZE;
+	while (remaining != 0) {
+		const auto bytes   = std::min(TRACKER_REGION_SIZE - offset, remaining);
+		auto*      manager = m_regions[index].load(std::memory_order_acquire);
+		// A missing region is CPU-dirty by definition, and the locked path would create it.
+		if (manager == nullptr || manager->IsModifiedRelaxed<DirtySource::Cpu>(offset, bytes)) {
+			return false;
+		}
+		remaining -= bytes;
+		offset = 0;
+		index++;
+	}
+	return true;
+}
+
 void MemoryTracker::CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size,
                                             std::vector<GuestRange>& ranges) {
 	CheckNotInUploadCallback();

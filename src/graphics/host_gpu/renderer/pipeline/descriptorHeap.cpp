@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 
+#include <algorithm>
 #include <cstdlib>
 
 namespace Libs::Graphics {
@@ -39,12 +40,95 @@ DescriptorHeap::~DescriptorHeap() {
 		m_master_semaphore.Wait(pool.tick);
 		m_graphics.device.destroyDescriptorPool(pool.handle, nullptr);
 	}
+	if (!m_ring_pools.empty()) {
+		m_master_semaphore.Wait(m_ring_last_tick);
+		for (const auto pool: m_ring_pools) {
+			m_graphics.device.destroyDescriptorPool(pool, nullptr);
+		}
+	}
+}
+
+vk::DescriptorSet DescriptorHeap::CommitRing(vk::DescriptorSetLayout layout) {
+	auto* ring = m_ring_last;
+	if (layout != m_ring_last_layout || ring == nullptr) {
+		ring               = &m_rings[layout];
+		m_ring_last_layout = layout;
+		m_ring_last        = ring;
+	}
+	const auto tick = m_master_semaphore.CurrentTick();
+	if (ring->sets.empty() || !m_master_semaphore.IsFree(ring->ticks[ring->hint])) {
+		// The known GPU tick is refreshed by the draw path every 200 us; ask the driver once
+		// before growing, so a ring does not grow only because that value is stale.
+		if (!ring->sets.empty()) {
+			m_master_semaphore.Refresh();
+		}
+		if (ring->sets.empty() || !m_master_semaphore.IsFree(ring->ticks[ring->hint])) {
+			// Rings never give memory back; past the cap a burst is served by the pools instead.
+			static constexpr size_t RingMaxSets = 1024;
+			if (ring->sets.size() >= RingMaxSets) {
+				return nullptr;
+			}
+			GrowRing(layout, *ring);
+		}
+	}
+	const auto index   = ring->hint;
+	ring->ticks[index] = tick;
+	ring->hint         = (index + 1) % ring->sets.size();
+	m_ring_last_tick   = tick;
+	Common::FrameStats::Add(Common::FrameStats::Counter::DescriptorRingIssued, 1);
+	return ring->sets[index];
+}
+
+void DescriptorHeap::GrowRing(vk::DescriptorSetLayout layout, Ring& ring) {
+	// Double the ring, at least 4 and at most one allocation call's worth of sets.
+	auto count = static_cast<uint32_t>(std::clamp<size_t>(ring.sets.size(), 4, DescriptorSetBatch));
+	std::array<vk::DescriptorSetLayout, DescriptorSetBatch> layouts;
+	layouts.fill(layout);
+	std::array<vk::DescriptorSet, DescriptorSetBatch> allocated;
+	bool fresh_pool = false;
+	if (m_ring_pools.empty()) {
+		m_ring_pools.push_back(CreatePool(4096));
+		fresh_pool = true;
+	}
+	for (;;) {
+		vk::DescriptorSetAllocateInfo allocate {};
+		allocate.descriptorPool     = m_ring_pools.back();
+		allocate.descriptorSetCount = count;
+		allocate.pSetLayouts        = layouts.data();
+		const auto result = m_graphics.device.allocateDescriptorSets(&allocate, allocated.data());
+		Common::FrameStats::Add(Common::FrameStats::Counter::DescriptorRingGrows, 1);
+		if (result == vk::Result::eSuccess) {
+			break;
+		}
+		EXIT_IF(result != vk::Result::eErrorOutOfPoolMemory &&
+		        result != vk::Result::eErrorFragmentedPool);
+		if (!fresh_pool) {
+			m_ring_pools.push_back(CreatePool(4096));
+			fresh_pool = true;
+			continue;
+		}
+		// A fresh pool cannot hold this many sets of this layout: ask for fewer.
+		EXIT_IF(count == 1);
+		count /= 2;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::DescriptorRingSets, count);
+	// New sets are free (tick 0) and go in front of the oldest one, which keeps the ring ordered
+	// by the tick each set was last handed out for, starting at hint.
+	const auto at = static_cast<std::ptrdiff_t>(ring.hint);
+	ring.sets.insert(ring.sets.begin() + at, allocated.begin(), allocated.begin() + count);
+	ring.ticks.insert(ring.ticks.begin() + at, count, uint64_t {0});
 }
 
 vk::DescriptorSet DescriptorHeap::Commit(vk::DescriptorSetLayout layout) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(layout == nullptr);
 
+	if (Common::Gates::Enabled(Common::Gates::Gate::DescriptorRing)) {
+		if (const auto set = CommitRing(layout); set != nullptr) {
+			return set;
+		}
+		// The ring of this layout is at its cap and busy: the pooled path below serves this draw.
+	}
 	static const bool reuse_sets = [] {
 		const auto* value = std::getenv("KYTY_DESCRIPTOR_REUSE");
 		return value == nullptr || value[0] != '0';
@@ -139,7 +223,11 @@ bool DescriptorHeap::Allocate(vk::DescriptorSetLayout layout, Batch& batch) {
 }
 
 void DescriptorHeap::CreateDescriptorPool() {
-	const auto                     sets = DescriptorHeapSets();
+	m_current_pool.handle = CreatePool(DescriptorHeapSets());
+}
+
+vk::DescriptorPool DescriptorHeap::CreatePool(uint32_t sets) const {
+	vk::DescriptorPool             handle     = nullptr;
 	const std::array               pool_sizes = {
         vk::DescriptorPoolSize {vk::DescriptorType::eStorageBuffer, 8 * sets},
         vk::DescriptorPoolSize {vk::DescriptorType::eUniformBuffer, 4 * sets},
@@ -151,8 +239,9 @@ void DescriptorHeap::CreateDescriptorPool() {
 	create.maxSets       = sets;
 	create.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
 	create.pPoolSizes    = pool_sizes.data();
-	EXIT_IF(m_graphics.device.createDescriptorPool(&create, nullptr, &m_current_pool.handle) !=
+	EXIT_IF(m_graphics.device.createDescriptorPool(&create, nullptr, &handle) !=
 	        vk::Result::eSuccess);
+	return handle;
 }
 
 } // namespace Libs::Graphics

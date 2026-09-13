@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/renderTarget.h"
 
+#include <atomic>
 #include <compare>
 #include <limits>
 #include <optional>
@@ -79,6 +80,7 @@ public:
 	void CopyMip(Image& source, uint32_t mip, uint32_t layer);
 
 	void InvalidateCpuWrite(uint64_t vaddr, uint64_t size) {
+		bind_stamp.fetch_add(1); // before the change (gate "texfast", see bind_stamp)
 		const auto range = SourceRange();
 		if (ImageRangeOverlaps(range.address, range.size, vaddr, size)) {
 			m_cpu_dirty        = true;
@@ -93,6 +95,7 @@ public:
 	[[nodiscard]] bool IsDefinitelyCpuDirty() const { return m_cpu_dirty; }
 	[[nodiscard]] bool IsMaybeCpuDirty() const { return m_maybe_cpu_dirty; }
 	void               MarkMaybeCpuDirty() {
+		bind_stamp.fetch_add(1);
 		if (!m_cpu_dirty) {
 			m_maybe_cpu_dirty = true;
 		}
@@ -131,7 +134,10 @@ public:
 	void               ClearGpuModified() noexcept { m_gpu_modified = false; }
 
 	[[nodiscard]] bool IsBufferModified() const noexcept { return m_buffer_modified; }
-	void               MarkBufferModified() noexcept { m_buffer_modified = true; }
+	void               MarkBufferModified() noexcept {
+		bind_stamp.fetch_add(1);
+		m_buffer_modified = true;
+	}
 	void               ClearBufferModified() noexcept { m_buffer_modified = false; }
 
 	[[nodiscard]] bool Overlaps(uint64_t address, uint64_t size,
@@ -170,6 +176,14 @@ public:
 	uint32_t         source_first_level = 0;
 	uint64_t         source_size = 0;
 	size_t           lru_id             = 0;
+	// Gate "texlru": TextureCache::m_gc_tick of this image's last LRU touch. Touch keeps an item's
+	// tick monotonic, so a second touch in the same tick only confirms that by loading the node.
+	uint64_t         lru_touch_tick     = UINT64_MAX;
+	// Gate "texfast": moves before every change that can make a sampled bind do work again - CPU
+	// invalidation and maybe-dirty marking (fault handlers of guest threads, always under
+	// TextureCache::m_lock), tracking cuts (Untrack*) and buffer-side modification. A view that
+	// RenderExecutor recorded for this image stays usable while the stamp is unchanged.
+	std::atomic<uint32_t> bind_stamp {0};
 	// Deferred mip upload (TextureCache, KYTY_MIP_DEFER): levels [0, pending_levels) of this
 	// sampled texture are still in guest memory only; sampled views clamp their LOD there until
 	// the top arrives. 0 = complete.

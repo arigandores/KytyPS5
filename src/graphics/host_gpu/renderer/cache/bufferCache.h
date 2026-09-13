@@ -48,6 +48,9 @@ public:
 	// A CPU write is about to land in [vaddr, vaddr + size): wait for the GPU copies that still
 	// read the range straight from guest memory (HostImport). Any thread; true if it waited.
 	bool WaitPendingHostReads(uint64_t vaddr, uint64_t size);
+	// RenderContext::HandleFault, after both caches handled a CPU write fault: the repeated-fault
+	// watchdog (pb_stuck) and the sampled protection check (gate "pbcheck"). Any thread.
+	void NoteWriteFault(uint64_t fault_vaddr);
 	[[nodiscard]] Buffer&  GetBuffer(BufferId id) { return m_slot_buffers[id]; }
 	[[nodiscard]] BufferId FindBuffer(uint64_t vaddr, uint64_t size);
 	// Keep an already discovered owner alive when the binding uses a direct CPU copy.
@@ -177,6 +180,8 @@ private:
 	[[nodiscard]] std::pair<uint64_t, uint8_t> UploadEpoch(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size,
 	                                     bool is_written, bool is_texel_buffer);
+	// Gate "syncfree": true when a read-only synchronization may skip the region locks.
+	[[nodiscard]] bool SyncFreeSkip(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] vk::Buffer UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
 	                                      uint64_t total_size);
 	[[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);

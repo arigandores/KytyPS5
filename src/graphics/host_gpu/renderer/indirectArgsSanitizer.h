@@ -27,17 +27,19 @@ public:
 	~IndirectArgsSanitizer();
 	KYTY_CLASS_NO_COPY(IndirectArgsSanitizer);
 
-	// Records the sanitizing pass into `command`. `source` must hold the 12-byte argument triple at
-	// `source_offset`. Returns the buffer and offset to pass to vkCmdDispatchIndirect. Must be
-	// recorded before the consuming pipeline's descriptors are pushed: it binds its own layout.
-	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(vk::CommandBuffer command,
-	                                                        const Buffer&     source,
-	                                                        uint64_t          source_offset);
+	// Records the sanitizing pass into the scheduler's current command buffer, through a handle it
+	// takes itself after waiting for a free ring slot: when the slot was last used in the buffer
+	// being recorded, that wait submits it, and a handle the caller took before would name a buffer
+	// already handed to the submit thread. The caller must not keep a vk::CommandBuffer across the
+	// call. `source` must hold the 12-byte argument triple at `source_offset`. Returns the buffer and
+	// offset to pass to vkCmdDispatchIndirect. Must be recorded before the consuming pipeline's
+	// descriptors are pushed: it binds its own layout.
+	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(const Buffer& source,
+	                                                        uint64_t      source_offset);
 	// Generic form: `dword_count` (<= 5) arguments at `source_offset`, each compared with its
 	// limit; clamp=false zeroes all of them when one exceeds (dispatch), clamp=true clamps each
 	// (draw). Returns the buffer and offset holding the sanitized copy.
-	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(vk::CommandBuffer command,
-	                                                        const Buffer&     source,
+	[[nodiscard]] std::pair<vk::Buffer, uint64_t> Sanitize(const Buffer&     source,
 	                                                        uint64_t          source_offset,
 	                                                        uint32_t          dword_count,
 	                                                        const std::array<uint32_t, 5>& limits,

@@ -145,10 +145,6 @@ public:
 	void ChangeState(uint64_t vaddr, uint64_t size) {
 		const auto [start, end] = GetPageRange(vaddr, size);
 		if constexpr (source == DirtySource::Cpu && enable) {
-			// Called with the region lock held. Publish before making guest pages writable;
-			// a BDA scan observing this epoch must acquire this lock before reading dirty bits.
-			m_cpu_epoch.fetch_add(1, std::memory_order_release);
-			m_epoch.fetch_add(1, std::memory_order_release);
 			if (m_gpu_dirty.AnyInRange(start, end)) {
 				EXIT("CPU dirty state conflicts with GPU dirty state\n");
 			}
@@ -170,6 +166,16 @@ public:
 			}
 		} else {
 			bits.UnsetRange(start, end);
+		}
+		if constexpr (source == DirtySource::Cpu && enable) {
+			// Called with the region lock held, after the bits and before the pages become
+			// writable (UpdateProtection below). Bits first, epochs second: a lock-free reader of
+			// the bits (gate "syncfree") takes its epoch snapshot before it reads them, so an
+			// announcement it missed moves the epochs after that snapshot and the next
+			// HasCurrentUpload check fails. A BDA scan observing these epochs still acquires this
+			// lock before it reads dirty bits, so the order does not matter to it.
+			m_cpu_epoch.fetch_add(1, std::memory_order_release);
+			m_epoch.fetch_add(1, std::memory_order_release);
 		}
 		if constexpr (source == DirtySource::Cpu) {
 			UpdateProtection<!enable, false>();
@@ -231,6 +237,7 @@ private:
 		// is exactly the time the region lock stays held across the host protection change
 		// (VirtualProtect plus the address-space mutex behind it). Diagnostic, no gate.
 		Common::FrameStats::Scope held(Common::FrameStats::Counter::ProtectHeldNs);
+		PageManager::SpinHeld    spin_held; // prot_spin_*: `lock` is held across the calls below
 		m_page_manager.UpdatePageWatchersForRegion<track, is_read>(m_cpu_addr, mask);
 	}
 

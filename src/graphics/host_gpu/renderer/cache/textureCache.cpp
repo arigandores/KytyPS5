@@ -4,6 +4,8 @@
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/guest_gpu/gpu_format.h"
@@ -368,11 +370,14 @@ void TextureCache::RegisterImage(ImageId id) {
 		EXIT("TextureCache: image registration is outside the guest address space\n");
 	}
 	ForEachPage(image.info.data.address, image.info.data.size, [this, id](uint64_t page) {
+		// Gate "texfaulthint": raised before the image becomes findable (see InvalidateMemory).
+		m_image_page_hint[page].fetch_add(1, std::memory_order_acq_rel);
 		m_image_page_table[page].push_back(id);
 	});
 	image.registered = true;
 	image.frame_accessed_last = GpuTimeProfiler::Frame();
 	image.lru_id     = m_lru_cache.Insert(id, m_gc_tick);
+	image.lru_touch_tick = m_gc_tick;
 	m_total_used_memory += image.AccountedSize();
 }
 
@@ -391,6 +396,7 @@ void TextureCache::UnregisterImage(ImageId id) {
 		if (owners == nullptr || !owners->Erase(id)) {
 			EXIT("TextureCache: image missing from page owner index\n");
 		}
+		m_image_page_hint[page].fetch_sub(1, std::memory_order_acq_rel);
 	});
 	m_lru_cache.Free(image.lru_id);
 	const auto accounted = image.AccountedSize();
@@ -469,6 +475,19 @@ void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 void TextureCache::TouchImage(Image& image) {
 	if (image.registered) {
 		image.frame_accessed_last = GpuTimeProfiler::Frame();
+		m_lru_touch_calls++;
+		// A bind touches its image 5-6 times; the LRU node (a separate deque block) is cold and
+		// Touch returns on `item.tick >= tick` for all but the first touch of a GC tick. The copy is
+		// only ever set to a tick Touch/Insert was called with, so a matching copy proves the item
+		// already holds this tick (items are re-inserted at m_gc_tick, which only grows).
+		const bool repeat    = image.lru_touch_tick == m_gc_tick;
+		image.lru_touch_tick = m_gc_tick;
+		if (repeat) {
+			m_lru_touch_repeats++;
+			if (Common::Gates::Enabled(Common::Gates::Gate::TexLru)) {
+				return;
+			}
+		}
 		m_lru_cache.Touch(image.lru_id, m_gc_tick);
 	}
 }
@@ -547,9 +566,11 @@ void TextureCache::UntrackImage(ImageId id) {
 	}
 	const auto address   = image.track_addr;
 	const auto size      = image.track_addr_end - image.track_addr;
+	image.bind_stamp.fetch_add(1);
 	image.track_addr     = 0;
 	image.track_addr_end = 0;
 	if (size != 0) {
+		PageManager::SpinHeld spin_held; // callers hold m_lock (prot_spin_*)
 		m_page_manager.UpdatePageWatchers<false>(address, size);
 	}
 }
@@ -562,11 +583,13 @@ void TextureCache::UntrackImageHead(ImageId id) {
 	}
 	const auto address = Common::AlignDown(begin + TRACKER_PAGE_SIZE, TRACKER_PAGE_SIZE);
 	const auto size    = address - begin;
+	image.bind_stamp.fetch_add(1);
 	image.track_addr   = address;
 	if (image.track_addr == image.track_addr_end) {
 		MarkAsMaybeDirty(id, image);
 	}
 	if (size != 0) {
+		PageManager::SpinHeld spin_held; // callers hold m_lock (prot_spin_*)
 		m_page_manager.UpdatePageWatchers<false>(begin, size);
 	}
 }
@@ -579,11 +602,13 @@ void TextureCache::UntrackImageTail(ImageId id) {
 	}
 	const auto address   = Common::AlignDown(end, TRACKER_PAGE_SIZE);
 	const auto size      = end - address;
+	image.bind_stamp.fetch_add(1);
 	image.track_addr_end = address;
 	if (image.track_addr == image.track_addr_end) {
 		MarkAsMaybeDirty(id, image);
 	}
 	if (size != 0) {
+		PageManager::SpinHeld spin_held; // callers hold m_lock (prot_spin_*)
 		m_page_manager.UpdatePageWatchers<false>(address, size);
 	}
 }
@@ -2067,6 +2092,25 @@ void TextureCache::InvalidateMemory(uint64_t address, uint64_t size) {
 	if (!GuestRange {address, size}.Valid()) {
 		EXIT("TextureCache: invalid memory-invalidation range\n");
 	}
+	// Gate "texfaulthint". Every CPU write fault takes this global lock, and most land on pages
+	// without any image (tex_inval_empty). m_image_page_hint[page] counts the images of one page
+	// of m_image_page_table: raised under m_lock before an image is added to that page, lowered
+	// after it is removed. A lock-free zero therefore means no image was indexed on the page at
+	// the moment of the read, which is where a locked call could also have run - before any
+	// registration still in flight - and found no candidate (InvalidateCpuAliases walks exactly
+	// these pages). A false "zero" cannot happen: a registered image keeps the count above zero
+	// until UnregisterImage has untracked it and removed it from the index. A registration in
+	// flight is ordered after this call either way; its first upload reads guest memory later.
+	// A nonzero hint ("maybe") only costs the lock.
+	const bool hint_gate = Common::Gates::Enabled(Common::Gates::Gate::TexFaultHint);
+	if ((hint_gate || Common::FrameStats::Enabled()) && !MayHaveImages(address, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexHintZero, 1);
+		if (hint_gate) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::TexInvalidations, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::TexInvalidateEmpty, 1);
+			return;
+		}
+	}
 	std::scoped_lock lock {m_lock};
 	InvalidateCpuAliases(address, size);
 }
@@ -2303,10 +2347,28 @@ bool TextureCache::IsRegionGpuModified(uint64_t address, uint64_t size) {
 	return false;
 }
 
+bool TextureCache::MayHaveImages(uint64_t address, uint64_t size) const noexcept {
+	ImagePageTable::PageRange pages {};
+	if (!ImagePageTable::TryGetPageRange(address, size, pages)) {
+		return true; // outside the index: leave it to the locked path
+	}
+	bool found = false;
+	ForEachPage(address, size, [&](uint64_t page) {
+		found = m_image_page_hint[page].load(std::memory_order_acquire) != 0;
+		return found;
+	});
+	return found;
+}
+
 void TextureCache::InvalidateCpuAliases(uint64_t address, uint64_t size) {
 	const auto page_begin = Common::AlignDown(address, TRACKER_PAGE_SIZE);
 	const auto page_end   = Common::AlignUp(address + size, TRACKER_PAGE_SIZE);
-	for (const auto id: FindImagesInRegion(address, size, true)) {
+	const auto candidates = FindImagesInRegion(address, size, true);
+	Common::FrameStats::Add(Common::FrameStats::Counter::TexInvalidations, 1);
+	if (candidates.empty()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexInvalidateEmpty, 1);
+	}
+	for (const auto id: candidates) {
 		auto owner = m_slot_images.try_get(id);
 		if (owner == nullptr) {
 			continue;
@@ -2567,6 +2629,10 @@ void TextureCache::UnmapMemory(uint64_t address, uint64_t size) {
 void TextureCache::RunGarbageCollector() {
 	std::scoped_lock lock {m_lock};
 	const uint64_t   tick = m_gc_tick++;
+	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruTouches, m_lru_touch_calls);
+	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruRepeats, m_lru_touch_repeats);
+	m_lru_touch_calls   = 0;
+	m_lru_touch_repeats = 0;
 	const auto frame = GpuTimeProfiler::Frame();
 	static const bool gc_progress = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_GC_PROGRESS");

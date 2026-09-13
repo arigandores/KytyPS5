@@ -345,8 +345,9 @@ void BufferCache::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: invalid memory-invalidation range\n");
 	}
-	m_memory_tracker.InvalidateRegion(vaddr, size,
-	                                  [this, vaddr, size] { ReadMemory(vaddr, size, true); });
+	m_memory_tracker.InvalidateRegion(
+		vaddr, size, [this, vaddr, size] { ReadMemory(vaddr, size, true); },
+		Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
 }
 
 void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
@@ -580,6 +581,74 @@ std::pair<uint64_t, uint8_t> BufferCache::UploadEpoch(uint64_t vaddr, uint64_t s
 	return {m_memory_tracker.CpuWriteEpoch(), 0};
 }
 
+// Gate "syncfree". A read-only synchronization of a range whose tracking regions all exist and
+// hold no CPU-dirty page does nothing under the region locks: the mask of ForEachModifiedRange is
+// empty, clearing it changes no bit, and UpdateProtection finds m_writable == m_cpu_dirty (every
+// locked writer of m_cpu_dirty republishes m_writable before it releases the lock). The lock is
+// skipped when a lock-free read says the range is clean. Why a stale "clean" is safe:
+// - CPU-dirty bits are cleared only on this thread (ForEachUploadRange runs on the GuestGpu
+//   thread), so a clear bit was not being cleared under this read; every other writer sets bits
+//   through BitArray::SetRangeRelaxed, which a relaxed read may observe word by word.
+// - A guest thread announcing a write after this read publishes the bits BEFORE the epochs
+//   (RegionManager::ChangeState). Its epochs therefore move after this read, and this read comes
+//   after the epoch snapshot SynchronizeBuffer took first and stores as the buffer's upload
+//   epoch: the next HasCurrentUpload check fails and the next synchronization finds the bits
+//   under the lock. The write itself resumes only after its announcement, i.e. after this read.
+// Only the GuestGpu thread may skip.
+bool BufferCache::SyncFreeSkip(uint64_t vaddr, uint64_t size) {
+	if (!Common::Gates::Enabled(Common::Gates::Gate::SyncFree) || !GuestGpu::IsGpuThread() ||
+		!m_memory_tracker.IsRegionCpuCleanFast(vaddr, size)) {
+		return false;
+	}
+	if (Common::Gates::Enabled(Common::Gates::Gate::SyncFreeVerify) &&
+		m_memory_tracker.IsRegionCpuModified(vaddr, size)) {
+		// A guest thread may have announced a write between the two queries; only a second
+		// lock-free answer that still reads "clean" contradicts the locked one.
+		if (m_memory_tracker.IsRegionCpuCleanFast(vaddr, size)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeMismatch, 1);
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+				LOGF("SyncFreeVerify: MISMATCH addr=0x%016" PRIx64 " size=0x%" PRIx64 "\n", vaddr, size);
+			}
+		}
+		return false; // take the locked path
+	}
+	return true;
+}
+
+void BufferCache::NoteWriteFault(uint64_t fault_vaddr) {
+	const auto page = fault_vaddr & ~(TRACKER_PAGE_SIZE - 1);
+	// pb_stuck: one thread faulting on one page again and again means its handler returns while the
+	// host protection still denies the write. Must stay 0 (with and without "protbatch").
+	// Repeats alone are normal: the upload of every frame clears the CPU-dirty bits and arms the
+	// write watcher again, so a guest thread that keeps writing one buffer faults on the same page
+	// every frame. A handler that returns on a page the host still protects faults again at once,
+	// so the watchdog measures repeats inside one millisecond.
+	static thread_local uint64_t last_page = 0;
+	static thread_local uint64_t last_ns   = 0;
+	static thread_local uint32_t repeats   = 0;
+	const auto                   now_ns    = Common::FrameStats::NowNs();
+	if (page != last_page || now_ns - last_ns > 1000000u) {
+		last_page = page;
+		repeats   = 0;
+	}
+	last_ns = now_ns;
+	if (page == last_page && ++repeats >= 32 && (repeats & (repeats - 1u)) == 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BatchStuck, 1);
+		static std::atomic<uint32_t> logged {0};
+		if (logged.fetch_add(1, std::memory_order_relaxed) < 16) {
+			LOGF("ProtectBatch: STUCK write faults addr=0x%016" PRIx64 " repeats=%u\n", fault_vaddr,
+				 repeats);
+		}
+	}
+	if (Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
+		static thread_local uint32_t sample = 0;
+		if ((sample++ & 7u) == 0) {
+			m_memory_tracker.VerifyProtection(page, TRACKER_PAGE_SIZE);
+		}
+	}
+}
+
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
@@ -592,13 +661,24 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	std::vector<vk::BufferCopy> copies;
 	uint64_t                    total_size = 0;
 	vk::Buffer                  source;
-	m_memory_tracker.ForEachUploadRange(
-	    vaddr, size, is_written,
-	    [&](uint64_t address, uint64_t bytes) noexcept {
-		    copies.emplace_back(total_size, buffer.Offset(address), bytes);
-		    total_size += bytes;
-	    },
-	    [&]() noexcept { source = UploadCopies(buffer, copies, total_size); });
+	if (!is_written && SyncFreeSkip(vaddr, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
+	} else {
+		m_memory_tracker.ForEachUploadRange(
+			vaddr, size, is_written,
+			[&](uint64_t address, uint64_t bytes) noexcept {
+				copies.emplace_back(total_size, buffer.Offset(address), bytes);
+				total_size += bytes;
+			},
+			[&]() noexcept { source = UploadCopies(buffer, copies, total_size); },
+			Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+		if (source && Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
+			m_memory_tracker.VerifyProtection(vaddr, size);
+		}
+	}
+	if (!is_written && copies.empty()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SyncNoop, 1);
+	}
 	if (source) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
 		auto& command = m_scheduler.Current();

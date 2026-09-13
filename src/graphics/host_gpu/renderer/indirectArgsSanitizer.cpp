@@ -90,18 +90,17 @@ IndirectArgsSanitizer::~IndirectArgsSanitizer() {
 	m_graphics.device.destroyDescriptorSetLayout(m_desc_layout, nullptr);
 }
 
-std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(vk::CommandBuffer command,
-                                                                const Buffer&     source,
-                                                                uint64_t          source_offset) {
+std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(const Buffer& source,
+                                                                uint64_t      source_offset) {
 	const auto& limits = m_graphics.physical_device_properties.limits;
-	return Sanitize(command, source, source_offset, 3,
+	return Sanitize(source, source_offset, 3,
 	                {limits.maxComputeWorkGroupCount[0], limits.maxComputeWorkGroupCount[1],
 	                 limits.maxComputeWorkGroupCount[2], 0, 0},
 	                false);
 }
 
 std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(
-    vk::CommandBuffer command, const Buffer& source, uint64_t source_offset,
+    const Buffer& source, uint64_t source_offset,
     uint32_t dword_count, const std::array<uint32_t, 5>& arg_limits, bool clamp) {
 	EXIT_IF(dword_count == 0 || dword_count > 5);
 	const uint64_t ArgsSize = uint64_t {dword_count} * sizeof(uint32_t);
@@ -115,6 +114,8 @@ std::pair<vk::Buffer, uint64_t> IndirectArgsSanitizer::Sanitize(
 		m_scheduler.Wait(tick);
 	}
 	m_slot_ticks[slot]     = m_scheduler.CurrentTick();
+	// Only now: the wait above submits the buffer being recorded when the slot was last used in it.
+	const auto command     = m_scheduler.Current().Handle();
 	const auto slot_offset = uint64_t {slot} * SlotSize;
 
 	const auto& limits = m_graphics.physical_device_properties.limits;

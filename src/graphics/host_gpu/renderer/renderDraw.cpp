@@ -18,6 +18,7 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
+#include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
@@ -337,7 +338,10 @@ static void LogDrawInputState(const CommandBuffer& buffer, const RenderColorInfo
 	}
 }
 
-static void SetGraphicsDynamicParams(const CommandBuffer& buffer, vk::CommandBuffer vk_buffer,
+// Sink: vk::CommandBuffer, or RecordCommandWriter on the gate "recpack" path; both spell the calls
+// alike, so the decisions below are shared.
+template <typename Sink>
+static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffer,
                                      const ShaderVertexInputInfo& vs_input_info,
                                      const RenderColorInfo* colors, uint32_t color_count,
                                      const RenderDepthInfo& depth) {
@@ -590,7 +594,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		image.Transit(layout, image.binding.attachment_access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
-		              buffer.Handle(), RenderPassEnd::TargetTransit);
+		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
 		const auto extent       = target.Extent();
 		state.width             = std::min(state.width, extent.width);
 		state.height            = std::min(state.height, extent.height);
@@ -699,7 +703,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		image.Transit(layout, access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
-		              buffer.Handle(), RenderPassEnd::TargetTransit);
+		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
 		state.width               = std::min(state.width, depth.desc.info.extent.width);
 		state.height              = std::min(state.height, depth.desc.info.extent.height);
 		state.num_layers          = std::min(state.num_layers, view.layer_count);
@@ -1232,8 +1236,8 @@ static PreparedIndexBuffer PrepareIndexBuffer(CommandBuffer&               buffe
 	return prepared;
 }
 
-static void CommitVertexBuffers(vk::CommandBuffer            vk_buffer,
-                                const PreparedVertexBuffers& prepared) {
+template <typename Sink>
+static void CommitVertexBuffers(Sink& vk_buffer, const PreparedVertexBuffers& prepared) {
 	for (uint32_t i = 0; i < prepared.count; i++) {
 		EXIT_IF(prepared.buffers[i] == nullptr);
 	}
@@ -1243,7 +1247,8 @@ static void CommitVertexBuffers(vk::CommandBuffer            vk_buffer,
 	}
 }
 
-static void CommitIndexBuffer(vk::CommandBuffer vk_buffer, const PreparedIndexBuffer& prepared) {
+template <typename Sink>
+static void CommitIndexBuffer(Sink& vk_buffer, const PreparedIndexBuffer& prepared) {
 	if (prepared.buffer == nullptr) {
 		return;
 	}
@@ -1270,7 +1275,8 @@ static void LogDrawStateIfNeeded(const CommandBuffer& buffer, const DrawCallInfo
 	                  draw.index_count, index_addr);
 }
 
-static void EmitDrawPrimitives(const HW::UserConfig& ucfg, vk::CommandBuffer vk_buffer,
+template <typename Sink>
+static void EmitDrawPrimitives(const HW::UserConfig& ucfg, Sink& vk_buffer,
                                const ShaderVertexInputInfo& vs_input_info, const DrawCallInfo& draw,
                                const DrawEmitInfo& emit) {
 	switch (ucfg.GetPrimType()) {
@@ -1350,6 +1356,10 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	auto& ucfg = buffer.GetUserConfig();
 	const bool mesh_active = state.vs_input_info.stage.program->stage == ShaderType::Mesh;
 	uint32_t   mesh_groups = 0;
+	// Gate "recpack", decided once for the whole draw (CommandBuffer::PacketsWanted). MeshRestart
+	// and the legacy quad lists emit a variable number of draws and keep the direct path.
+	const bool packet = buffer.PacketsWanted() && !(mesh_active && primitive_restart_enable) &&
+	                    ucfg.GetPrimType() != Prospero::PrimitiveType::kQuadListLegacy;
 	std::vector<MeshIndexRange> restart_ranges;
 	if (mesh_active) {
 		const auto& mesh = state.vs_input_info.mesh;
@@ -1573,7 +1583,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                                               UINT32_MAX, UINT32_MAX, 0};
 		m_context.GetCommandScheduler().EndRendering(RenderPassEnd::Sanitize);
 		std::tie(emit_info.indirect_buffer, emit_info.indirect_offset) =
-		    m_indirect_sanitizer->Sanitize(buffer.Handle(), *args_buffer, args_offset, dwords,
+		    m_indirect_sanitizer->Sanitize(*args_buffer, args_offset, dwords,
 		                                   limits, true);
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 	}
@@ -1616,10 +1626,124 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	auto& pipeline = *pipeline_ptr;
 
+	// Gate "recpack" (commandRecorder.h): nothing below records on this thread. Every decision -
+	// pass state, the dynamic-state cache, the shader-write debt, the descriptor set - is taken
+	// here exactly as on the direct path, and the record thread receives the resulting calls.
+	// Buffer order: the direct barriers of CommitBindings (fresh handles), its bindings record, the
+	// pass records, then the tail of this draw. The vertex and index binds follow the bindings
+	// instead of preceding them: they are state setters, independent of descriptors, barriers and
+	// pass boundaries, and the mesh push constants still land over the 128 bytes of the bindings.
+	// A submit during preparation may have given this draw a buffer without a record thread; that
+	// draw takes the direct path.
+	if (packet && buffer.Recorder() != nullptr) {
+		SetDrawDebugPhase(buffer, submit_id, draw, state, draw.IsIndexed() ? 0x100u : 0x200u);
+		std::array<PreparedBindings*, 2> packet_stages {&bindings.vertex, nullptr};
+		const size_t                     packet_stage_count = bindings.pixel.has_value() ? 2u : 1u;
+		if (bindings.pixel) {
+			packet_stages[1] = &*bindings.pixel;
+		}
+		CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline,
+		               std::span {packet_stages.data(), packet_stage_count}, true);
+		lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
+
+		LogDrawPhase(draw.Name(), "BeginRendering");
+		if (!draw.IsIndexed()) {
+			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
+		}
+		buffer.BeginRenderingPacket(rendering);
+		RecordCommandWriter tail(*buffer.Recorder());
+		buffer.NoteHandleUse();
+		if (!mesh_active) {
+			CommitVertexBuffers(tail, vertex_bindings);
+			CommitIndexBuffer(tail, index_binding);
+		}
+		SetGraphicsDynamicParams(buffer, tail, state.vs_input_info, state.color_info,
+		                         state.color_count, state.depth_info);
+		if (m_context.GetGraphics().attachment_feedback_loop_enabled) {
+			const auto feedback =
+			    rendering.depth_stencil_attachment.image_layout ==
+			            vk::ImageLayout::eAttachmentFeedbackLoopOptimalEXT
+			        ? vk::ImageAspectFlags {vk::ImageAspectFlagBits::eDepth}
+			        : vk::ImageAspectFlags {};
+			if (buffer.GraphicsStateChanged(GraphicsStateSlot::FeedbackLoop, feedback)) {
+				tail.setAttachmentFeedbackLoopEnableEXT(feedback);
+			}
+		}
+		if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {
+			tail.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.pipeline);
+		}
+		if (rendering.num_color_attachments == 0) {
+			// This pipeline does not declare dynamic color-write enables.
+			buffer.InvalidateGraphicsState(GraphicsStateSlot::ColorWrite);
+		}
+		if (!draw.IsIndexed()) {
+			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
+		}
+		if (mesh_active) {
+			const uint32_t draw_data[] {
+			    draw.index_count,
+			    draw.IsIndexed() ? static_cast<uint32_t>(emit.vertex_offset) : emit.first_vertex,
+			    emit.first_instance, index_source.guest_element_size,
+			    static_cast<uint32_t>(index_source.address),
+			    static_cast<uint32_t>(index_source.address >> 32u)};
+			static_assert(std::size(draw_data) == ShaderRecompiler::IR::PushData::MeshDrawDwordCount);
+			tail.pushConstants(pipeline.pipeline_layout,
+			                   vk::ShaderStageFlagBits::eMeshEXT | vk::ShaderStageFlagBits::eFragment,
+			                   0, sizeof(draw_data), draw_data);
+			tail.drawMeshTasksEXT(mesh_groups, draw.instance_count, 1);
+		} else {
+			EmitDrawPrimitives(ucfg, tail, state.vs_input_info, draw, emit_info);
+		}
+		if (!draw.IsIndexed()) {
+			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
+		}
+		vk::PipelineStageFlags packet_write_stages = {};
+		bool                   packet_atomic_only  = true;
+		if (HasShaderBufferWrites(state.vs_input_info.stage, packet_atomic_only)) {
+			packet_write_stages |= mesh_active ? vk::PipelineStageFlagBits::eMeshShaderEXT
+			                                   : vk::PipelineStageFlagBits::eVertexShader;
+		}
+		if (state.ps_active && HasShaderBufferWrites(state.ps_input_info.stage, packet_atomic_only)) {
+			packet_write_stages |= vk::PipelineStageFlagBits::eFragmentShader;
+		}
+		bool wide_barrier = false;
+		if (packet_write_stages) {
+			Common::FrameStats::Add(packet_atomic_only
+			                            ? Common::FrameStats::Counter::ShaderWriteBarriersDeferrable
+			                            : Common::FrameStats::Counter::ShaderWriteBarriersPlain,
+			                        1);
+			if (packet_atomic_only && buffer.IsRendering() &&
+			    Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteDefer)) {
+				buffer.NotePendingShaderWrite(packet_write_stages);
+				Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersDeferred, 1);
+			} else if (Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal) &&
+			           m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
+			           buffer.IsRendering() &&
+			           !(packet_write_stages & ~FramebufferSpaceStages())) {
+				tail.shaderWriteBarrierLocal(packet_write_stages);
+				buffer.NotePendingShaderWrite(packet_write_stages);
+			} else {
+				wide_barrier = true;
+			}
+		}
+		tail.Commit(false);
+		if (wide_barrier) {
+			buffer.EndRenderingPacket(RenderPassEnd::ShaderWrite);
+			buffer.ShaderWriteBarrierPacket(packet_write_stages);
+		}
+		LogDrawPhase(draw.Name(), "DrawComplete");
+		if (!draw.IsIndexed()) {
+			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
+		}
+		lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
+		return;
+	}
+
 	// Resource preparation above may synchronously finish and restart the scheduler. From this
 	// point onward, every operation targets the current command buffer and cannot touch guest
 	// memory.
-	auto vk_buffer = buffer.Handle();
+	auto       vk_buffer    = buffer.Handle();
+	const auto publish_mark = buffer.PublishMark();
 	RecordDrawStartBreadcrumb(m_context, buffer, submit_id, draw, state);
 	SetDrawDebugPhase(buffer, submit_id, draw, state, draw.IsIndexed() ? 0x100u : 0x200u);
 	if (!mesh_active) {
@@ -1638,6 +1762,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline,
 	               std::span {descriptor_stages.data(), descriptor_stage_count});
 	lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
+	buffer.CheckNoPublish(publish_mark);
 	if (!mesh_active) {
 		CommitIndexBuffer(vk_buffer, index_binding);
 	}
@@ -1660,6 +1785,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 	}
 	m_context.GetCommandScheduler().BeginRendering(rendering);
+	buffer.CheckNoPublish(publish_mark);
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {
 		vk_buffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.pipeline);
 	}
@@ -1752,10 +1878,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                   buffer.IsRendering() &&
 		                   !(shader_write_stages & ~FramebufferSpaceStages());
 		if (local) {
+			buffer.CheckNoPublish(publish_mark);
 			ShaderWriteBarrierLocal(vk_buffer, shader_write_stages);
 			buffer.NotePendingShaderWrite(shader_write_stages);
 		} else {
 			m_context.GetCommandScheduler().EndRendering(RenderPassEnd::ShaderWrite);
+			buffer.CheckNoPublish(publish_mark);
 			ShaderWriteBarrier(vk_buffer, shader_write_stages);
 		}
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);

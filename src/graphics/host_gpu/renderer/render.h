@@ -136,6 +136,27 @@ public:
 	void BeginRendering(const RenderState& state) const;
 	// why: charged when a pass is actually open (FrameTrace-rp).
 	void EndRendering(RenderPassEnd why = RenderPassEnd::Other) const;
+	// Gate "recpack" (commandRecorder.h): this draw or dispatch publishes its commands to the record
+	// thread. Needs a record thread and no GPU-time marks (those record through Handle()).
+	[[nodiscard]] bool PacketsWanted() const;
+	// BeginRendering / EndRendering with the same state bookkeeping, published as records, and the
+	// wide shader-write barrier as a record. The caller must not use a vk::CommandBuffer it
+	// obtained before any of these.
+	void BeginRenderingPacket(const RenderState& state) const;
+	void EndRenderingPacket(RenderPassEnd why = RenderPassEnd::Other) const;
+	void ShaderWriteBarrierPacket(vk::PipelineStageFlags stages) const;
+	// Push constants and descriptor writes of one draw or dispatch as one record (copied).
+	void PushBindingsPacket(vk::PipelineBindPoint bind_point, vk::PipelineLayout layout,
+	                        vk::DescriptorSet set, vk::ShaderStageFlags push_stages,
+	                        std::span<const uint32_t>                 push,
+	                        std::span<const vk::WriteDescriptorSet>   writes,
+	                        std::span<const vk::DescriptorBufferInfo> buffers,
+	                        std::span<const vk::DescriptorImageInfo>  images) const;
+	// KYTY_RECORD_CHECK=1: PublishMark() counts the records published to this buffer's record
+	// thread; CheckNoPublish(mark) exits when one was published since `mark`, i.e. when a handle
+	// taken at `mark` could be recorded into by the record thread at the same time.
+	[[nodiscard]] uint64_t PublishMark() const noexcept;
+	void                   CheckNoPublish(uint64_t mark) const;
 
 	// Records on the calling thread. With a record thread (gate "recordthread") this first waits
 	// for everything published to it, so the direct commands land in publication order.
@@ -232,6 +253,9 @@ private:
 	// thread, which also hands an asynchronous submit to the submit thread.
 	void BeginRecorded(uint64_t tick);
 	void EndRecorded(const RecordSubmit& request) const;
+	// packet: publish the pass changes instead of recording them (gate "recpack").
+	void BeginRenderingImpl(const RenderState& state, bool packet) const;
+	void EndRenderingImpl(RenderPassEnd why, bool packet) const;
 
 	RenderContext&      m_context;
 	GraphicContext&     m_graphics;
@@ -287,9 +311,11 @@ public:
 	void                           FindBuffers(PreparedBindings& bindings);
 	void                           RebindBuffers(PreparedBindings& bindings);
 	void                           RebindImages(PreparedBindings& bindings);
+	// packet (gate "recpack"): the push constants and descriptor writes are published as one
+	// record (CommandBuffer::PushBindingsPacket); barriers stay direct and take fresh handles.
 	void CommitBindings(CommandBuffer& buffer, vk::PipelineBindPoint pipeline_bind_point,
 	                    const PipelineCache::Pipeline&     pipeline,
-	                    std::span<PreparedBindings* const> bindings);
+	                    std::span<PreparedBindings* const> bindings, bool packet = false);
 
 private:
 	void DrawIndex(uint64_t submit_id, CommandBuffer& buffer, const DrawIndexArgs& args);
@@ -334,6 +360,8 @@ private:
 	// atomic: this descriptor writes the image with image atomics only (ImageResource::atomic).
 	void                      BindImage(ImageId id, bool storage, bool atomic = false);
 	void                      MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id);
+	// image: the image of `id`, already looked up (and LRU-touched) by the caller.
+	void MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image);
 	void                      MaterializeBoundTargetDccClears(CommandBuffer& buffer);
 	void                      BindRenderTarget(ImageId id);
 	void                      ResetBindings();

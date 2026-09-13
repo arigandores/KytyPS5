@@ -1438,6 +1438,88 @@ bool FlipQueue::Flip(uint32_t micros) {
 				     r.cfg->flip_status.count, rp_ends, rp_starts, end_text.c_str(),
 				     restart_text.c_str());
 			}
+			{
+				// Counters added from session 56 on, by name.
+				struct NamedCounter {
+					const char* name;
+					FS::Counter counter;
+					bool        micros;
+				};
+				static constexpr NamedCounter named[] = {
+				    {"ds_ring_new", FS::Counter::DescriptorRingSets, false},
+				    {"ds_ring_grow", FS::Counter::DescriptorRingGrows, false},
+				    {"ds_ring_n", FS::Counter::DescriptorRingIssued, false},
+				    {"rec_pack", FS::Counter::RecordPackDraws, false},
+				    {"rec_pack_cs", FS::Counter::RecordPackDispatches, false},
+				    {"rec_bind", FS::Counter::RecordPackBinds, false},
+				    // A byte counter through the micros column: kB (1000 bytes).
+				    {"rec_pack_kb", FS::Counter::RecordPackBytes, true},
+				    {"rec_direct_busy", FS::Counter::RecordDirectBusy, false},
+				    {"rec_spin_us", FS::Counter::RecordSpinNs, true},
+				    {"rec_sleep", FS::Counter::RecordSleeps, false},
+				    {"prot_spin_us", FS::Counter::ProtectSpinNs, true},
+				    {"prot_spin_calls", FS::Counter::ProtectSpinCalls, false},
+				    {"prot_spin_pages", FS::Counter::ProtectSpinPages, false},
+				    {"prot_spin_gpu_us", FS::Counter::ProtectSpinGpuNs, true},
+				    {"prot_spin_gpu_calls", FS::Counter::ProtectSpinGpuCalls, false},
+				    {"prot_spin_gpu_pages", FS::Counter::ProtectSpinGpuPages, false},
+				    {"sync_noop", FS::Counter::SyncNoop, false},
+				    {"sf_skip", FS::Counter::SyncFreeSkips, false},
+				    {"sf_bad", FS::Counter::SyncFreeMismatch, false},
+				    {"tex_inval", FS::Counter::TexInvalidations, false},
+				    {"tex_inval_empty", FS::Counter::TexInvalidateEmpty, false},
+				    {"tex_hint_zero", FS::Counter::TexHintZero, false},
+				    {"pb_pages", FS::Counter::BatchPages, false},
+				    {"pb_flush", FS::Counter::BatchFlushes, false},
+				    {"pb_runs", FS::Counter::BatchRuns, false},
+				    {"pb_kb", FS::Counter::BatchKb, false},
+				    {"pb_merged", FS::Counter::BatchMerged, false},
+				    {"pb_wait_us", FS::Counter::ApplyWaitNs, true},
+				    {"pb_wait_gpu_us", FS::Counter::ApplyWaitGpuNs, true},
+				    {"pb_inval_flush", FS::Counter::BatchInvalidateFlushes, false},
+				    {"pb_refault", FS::Counter::BatchRefault, false},
+				    {"pb_stuck", FS::Counter::BatchStuck, false},
+				    {"pb_check", FS::Counter::BatchChecks, false},
+				    {"pb_bad", FS::Counter::BatchCheckBad, false},
+				    {"pb_bad_rw", FS::Counter::BatchCheckBadRw, false},
+				    {"da_req", FS::Counter::DrawAheadRequests, false},
+				    {"da_fan", FS::Counter::DrawAheadFan, false},
+				    {"da_fan_canon", FS::Counter::DrawAheadFanCanon, false},
+				    {"da_unused", FS::Counter::DrawAheadUnused, false},
+				    {"da_unused_ps", FS::Counter::DrawAheadUnusedPixel, false},
+				    {"da_mesh_vs", FS::Counter::DrawAheadMeshStages, false},
+				    {"da_px_off", FS::Counter::DrawAheadPixelOff, false},
+				    {"da_classes", FS::Counter::DrawAheadClasses, false},
+				    {"da_class_join", FS::Counter::DrawAheadClassShared, false},
+				    {"da_class_us", FS::Counter::DrawAheadClassNs, true},
+				    {"da_clone", FS::Counter::DrawAheadClones, false},
+				    {"da_ccd_x", FS::Counter::DrawAheadCrossCcd, false},
+				    {"texlru_n", FS::Counter::TexLruTouches, false},
+				    {"texlru_rep", FS::Counter::TexLruRepeats, false},
+				    {"texfast_ok", FS::Counter::TexFastOk, false},
+				    {"texfast_no", FS::Counter::TexFastNo, false},
+				    {"texfast_no_stamp", FS::Counter::TexFastNoStamp, false},
+				    {"texfast_no_state", FS::Counter::TexFastNoState, false},
+				    {"texfast_rec", FS::Counter::TexFastRecord, false},
+				    {"texfast_bad", FS::Counter::TexFastBad, false},
+				    {"texmemo_empty", FS::Counter::TexMemoEmpty, false},
+				    {"texmemo_collide", FS::Counter::TexMemoCollide, false},
+				    {"texmemo_stale", FS::Counter::TexMemoStale, false},
+				    {"texmemo_key_miss", FS::Counter::TexMemoKeyMisses, false},
+				    {"clamp_miss_epoch", FS::Counter::ClampMissEpoch, false},
+				    {"clamp_miss_key", FS::Counter::ClampMissKey, false},
+				    {"clampvma_miss", FS::Counter::ClampVmaMisses, false},
+				    {"smp_miss", FS::Counter::SamplerMemoMisses, false},
+				};
+				std::string text;
+				for (const auto& counter: named) {
+					text += ' ';
+					text += counter.name;
+					text += '=';
+					text += std::to_string(counter.micros ? dus(counter.counter) : d(counter.counter));
+				}
+				LOGF("FrameTrace-x: n=%" PRIu64 "%s" "\n", r.cfg->flip_status.count, text.c_str());
+			}
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

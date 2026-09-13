@@ -162,6 +162,8 @@ private:
 	std::mutex                                m_timestamp_mutex;
 	uint64_t                                  m_last_submit_ns = 0;
 	GpuTimeProfiler                           m_gpu_time;
+	// Gate "recordthread": whether the current native buffer has a record thread (logged on change).
+	bool                                      m_record_thread_on = false;
 	// Declared last: its destructor stops the record thread before anything it points at dies.
 	std::unique_ptr<CommandRecorder>          m_recorder;
 };

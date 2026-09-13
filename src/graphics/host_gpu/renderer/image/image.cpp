@@ -248,6 +248,11 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImageBarriers, barriers.size());
 	m_scheduler.EndRendering(why);
+	if (command_buffer == nullptr) {
+		// Lazy handle (AcquireRenderTargets, CommitBindings): taken only when a barrier is issued,
+		// and after EndRendering, which records through Handle() itself.
+		command_buffer = m_scheduler.Current().Handle();
+	}
 	vk::DependencyInfo dependency {};
 	dependency.imageMemoryBarrierCount = static_cast<uint32_t>(barriers.size());
 	dependency.pImageMemoryBarriers    = barriers.data();

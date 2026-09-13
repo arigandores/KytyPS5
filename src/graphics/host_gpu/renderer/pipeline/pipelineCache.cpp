@@ -50,6 +50,8 @@
 #include <utility>
 #include <vector>
 #include <xxhash.h>
+#include <xmmintrin.h>
+#include <bit>
 
 #if defined(_WIN32)
 #define WIN32_LEAN_AND_MEAN
@@ -676,7 +678,426 @@ bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
 	return false;
 }
 
+// Gate "daclass" (session 56): the canonical form of a resource plan.
+// ShaderTranslationCache::PlanFingerprint hashes the plan exactly as the translation cache writes it,
+// and those bytes are not canonical: IR::Value keeps immediates in a union whose ScalarReg/VectorReg/
+// U1/U8/U16/U32 constructors set only the low bytes, while WriteValue stores Bits(), the whole 64-bit
+// member (a plan loaded from the cache keeps the bytes of its file), and POD vectors are written with
+// their struct padding. Static variants of one program - the vertex layout of the mesh, which the
+// plan does not depend on - got different fingerprints for the same plan (session 56: 68 of 69
+// multi-variant programs of the cache had one canonical plan), and the lookahead queued one task per
+// variant. This writes the fields WritePlan writes, in the same order, with every immediate masked to
+// the width its accessors read (Bits() has no reader outside serialization) and PODs field by field.
+// Equal bytes therefore mean plans that differ at most in bits no accessor reads - the equivalence the
+// translation cache itself relies on (a plan read back from its file materializes like the live one) -
+// so MaterializeResources gives them the same snapshot and specialization for the same runtime. The
+// stage interface (inputs, outputs, vertex fetch) is compared too although materialization does not
+// read it: "equal" stays stricter than needed. Kept out of shaderTranslationCache.cpp and
+// graphics/shader/**, whose contents key the translation cache.
+struct CanonicalPlanWriter {
+	std::vector<uint8_t> data;
+
+	void Bytes(const void* bytes, size_t size) {
+		const auto* p = static_cast<const uint8_t*>(bytes);
+		data.insert(data.end(), p, p + size);
+	}
+	void U8(uint8_t value) { data.push_back(value); }
+	void U32(uint32_t value) { Bytes(&value, sizeof(value)); }
+	void U64(uint64_t value) { Bytes(&value, sizeof(value)); }
+	void Bool(bool value) { U8(value ? 1u : 0u); }
+	void Str(const std::string& value) {
+		U32(static_cast<uint32_t>(value.size()));
+		Bytes(value.data(), value.size());
+	}
+	void U32s(const std::vector<uint32_t>& values) {
+		U32(static_cast<uint32_t>(values.size()));
+		Bytes(values.data(), values.size() * sizeof(uint32_t));
+	}
+};
+
+// A field added to one of these PODs must be added to CanonicalPlanBytes as well (the sizes are those
+// of the translation cache files, parsed in session 56).
+static_assert(sizeof(ShaderRecompiler::IR::MemoryInfo) == 72);
+static_assert(sizeof(ShaderRecompiler::IR::BufferResource) == 36);
+static_assert(sizeof(ShaderRecompiler::IR::SamplerResource) == 12);
+static_assert(sizeof(ShaderRecompiler::IR::SampledResourcePair) == 12);
+static_assert(sizeof(ShaderRecompiler::IR::DescriptorSource::IndirectImage) == 20);
+static_assert(sizeof(ShaderRecompiler::IR::UniformFill) == 28);
+
+uint64_t CanonicalImmediate(ShaderRecompiler::IR::Type type, uint64_t bits) {
+	using Type = ShaderRecompiler::IR::Type;
+	switch (type) {
+		case Type::Void: return 0;
+		case Type::U1:
+		case Type::U8: return bits & 0xffu;
+		case Type::ScalarReg:
+		case Type::VectorReg:
+		case Type::U16:
+		case Type::F16: return bits & 0xffffu;
+		case Type::U32:
+		case Type::F32: return bits & 0xffffffffu;
+		default: return bits; // wider or unusual immediates: all bits (only ever splits a class)
+	}
+}
+
+void CanonicalValue(CanonicalPlanWriter& w, const ShaderRecompiler::IR::Value& value,
+					const std::unordered_map<const ShaderRecompiler::IR::Inst*, uint32_t>& index_of) {
+	if (!value.IsImmediate()) {
+		w.U32(static_cast<uint32_t>(ShaderRecompiler::IR::Type::Opaque));
+		const ShaderRecompiler::IR::Inst* inst = value.TryInstruction();
+		const auto found = inst != nullptr ? index_of.find(inst) : index_of.end();
+		w.U64(inst == nullptr ? UINT64_MAX : found != index_of.end() ? found->second : UINT64_MAX - 1u);
+		return;
+	}
+	const auto type = value.GetType();
+	w.U32(static_cast<uint32_t>(type));
+	w.U64(CanonicalImmediate(type, value.Bits()));
+}
+
+[[gnu::noinline]] std::vector<uint8_t> CanonicalPlanBytes(const ShaderRecompiler::IR::ResourcePlan& plan) {
+	namespace IR = ShaderRecompiler::IR;
+	CanonicalPlanWriter w;
+	w.data.reserve(4096);
+	w.U32(static_cast<uint32_t>(plan.stage));
+	w.U64(plan.shader_hash);
+	w.U32(plan.user_data_base);
+	w.U32(plan.user_data_count);
+	std::unordered_map<const IR::Inst*, uint32_t> index_of;
+	index_of.reserve(plan.value_storage.size());
+	for (const auto& inst: plan.value_storage) {
+		index_of.emplace(&inst, static_cast<uint32_t>(index_of.size()));
+	}
+	w.U32(static_cast<uint32_t>(plan.value_storage.size()));
+	for (const auto& inst: plan.value_storage) {
+		w.U32(static_cast<uint32_t>(inst.GetOpcode()));
+		w.U64(inst.Flags<uint64_t>());
+		w.U32(static_cast<uint32_t>(inst.NumArgs()));
+		for (size_t i = 0; i < inst.NumArgs(); i++) {
+			CanonicalValue(w, inst.Arg(i), index_of);
+		}
+	}
+	w.U32(static_cast<uint32_t>(plan.memory_info.size()));
+	for (const auto& m: plan.memory_info) {
+		for (const uint32_t field: {static_cast<uint32_t>(m.kind), m.resource, m.sampler, m.offset,
+									m.secondary_offset, m.dmask, m.data_dwords, m.data_bits,
+									m.component_index, m.component_count, m.data_format,
+									m.number_format, m.image_sample_flags,
+									static_cast<uint32_t>(m.image_dimension),
+									m.image_address_components}) {
+			w.U32(field);
+		}
+		for (const bool flag: {m.address_is_full, m.data_signed, m.typed, m.formatted, m.image_has_mip,
+							   m.image_r128, m.idxen, m.offen, m.planning_only}) {
+			w.Bool(flag);
+		}
+	}
+	w.U32(static_cast<uint32_t>(plan.descriptor_sources.size()));
+	for (const auto& source: plan.descriptor_sources) {
+		w.U32(source.dword_count);
+		for (const auto& dword: source.dwords) {
+			CanonicalValue(w, dword, index_of);
+		}
+		w.Bool(source.indirect_image.has_value());
+		if (source.indirect_image.has_value()) {
+			const auto& image = *source.indirect_image;
+			for (const uint32_t field: {image.material_source, image.heap_source, image.selector_stride,
+										image.selector_offset, image.key_arg}) {
+				w.U32(field);
+			}
+		}
+	}
+	w.U32s(plan.materialization_sources);
+	w.U32(static_cast<uint32_t>(plan.srt_reads.size()));
+	for (const auto& read: plan.srt_reads) {
+		CanonicalValue(w, read.value, index_of);
+		w.U32(read.flat_offset);
+		w.Bool(read.variant);
+	}
+	w.U32(static_cast<uint32_t>(plan.clean_flat_slots.size()));
+	w.Bytes(plan.clean_flat_slots.data(), plan.clean_flat_slots.size());
+	w.Bool(plan.requires_specialization_memory);
+	w.Bool(plan.srt_plan_complete);
+	w.Bool(plan.resource_tracking_complete);
+	w.U32(static_cast<uint32_t>(plan.control_flow.size()));
+	for (const auto& block: plan.control_flow) {
+		CanonicalValue(w, block.condition, index_of);
+		w.U32s(block.successors);
+		w.U32s(block.sources);
+	}
+	const auto& fill = plan.uniform_fill.fill;
+	for (const uint32_t field: {static_cast<uint32_t>(fill.kind), fill.resource, fill.group_stride[0],
+								fill.group_stride[1], fill.group_stride[2], fill.words, fill.value}) {
+		w.U32(field);
+	}
+	for (const auto& value: plan.uniform_fill.values) {
+		CanonicalValue(w, value, index_of);
+	}
+	const auto& info = plan.info;
+	w.U32(static_cast<uint32_t>(info.buffers.size()));
+	for (const auto& b: info.buffers) {
+		for (const uint32_t field: {b.source, b.first_use_pc, b.max_byte_extent, b.packed_stride,
+									static_cast<uint32_t>(b.descriptor_format), b.descriptor_swizzle,
+									b.image_alias}) {
+			w.U32(field);
+		}
+		for (const bool flag: {b.read, b.written, b.atomic, b.formatted, b.scalar}) {
+			w.Bool(flag);
+		}
+	}
+	w.U32(static_cast<uint32_t>(info.images.size()));
+	for (const auto& i: info.images) {
+		for (const uint32_t field: {i.source, i.first_use_pc, static_cast<uint32_t>(i.resource_class),
+									static_cast<uint32_t>(i.numeric_class),
+									static_cast<uint32_t>(i.dimension), static_cast<uint32_t>(i.mip_mode),
+									i.mip_count, static_cast<uint32_t>(i.conversion_format),
+									i.shader_swizzle}) {
+			w.U32(field);
+		}
+		for (const bool flag: {i.read, i.written, i.atomic, i.depth_compare, i.cube, i.r128,
+							   i.manual_depth_compare}) {
+			w.Bool(flag);
+		}
+		for (const uint32_t field: {i.depth_compare_op, i.indirect_root, i.indirect_mapping_offset,
+									i.indirect_search_iterations}) {
+			w.U32(field);
+		}
+		w.U32s(i.indirect_resources);
+	}
+	w.U32(static_cast<uint32_t>(info.samplers.size()));
+	for (const auto& s: info.samplers) {
+		w.U32(s.source);
+		w.U32(s.first_use_pc);
+		w.Bool(s.force_point_filtering);
+		w.Bool(s.depth_compare);
+	}
+	w.U32(static_cast<uint32_t>(info.sampled_pairs.size()));
+	for (const auto& p: info.sampled_pairs) {
+		w.U32(p.image);
+		w.U32(p.sampler);
+		w.U32(p.first_use_pc);
+	}
+	w.U32(static_cast<uint32_t>(info.inputs.size()));
+	for (const auto& in: info.inputs) {
+		w.U32(static_cast<uint32_t>(in.kind));
+		w.U32(in.location);
+		w.U32(in.component_count);
+		w.Str(in.debug_name);
+		w.Bool(in.per_vertex);
+	}
+	w.U32(static_cast<uint32_t>(info.outputs.size()));
+	for (const auto& out: info.outputs) {
+		w.U32(static_cast<uint32_t>(out.kind));
+		w.U32(out.index);
+		w.U32(out.location);
+		w.Str(out.debug_name);
+	}
+	w.Bytes(info.vertex_fetch_components.data(), info.vertex_fetch_components.size());
+	w.U32(static_cast<uint32_t>(info.vertex_offset_sgpr));
+	w.U32(static_cast<uint32_t>(info.instance_offset_sgpr));
+	w.Bool(info.has_bitwise_xor);
+	w.Bool(info.uses_dma);
+	return std::move(w.data);
+}
+
+// Gate "daprefetch": the first lines of a vector's heap block.
+template <typename T>
+void PrefetchVectorData(const std::vector<T>& values) {
+	if (values.empty()) {
+		return;
+	}
+	const auto* bytes = reinterpret_cast<const char*>(values.data());
+	const auto  size  = std::min<size_t>(values.size() * sizeof(T), 192u);
+	for (size_t offset = 0; offset < size; offset += 64u) {
+		_mm_prefetch(bytes + offset, _MM_HINT_T0);
+	}
+}
+
+// Knob "dapin" and counter da_ccd_x (session 56): the L3 caches of processor group 0. On the Ryzen 9
+// 9955HX3D the two CCDs have separate L3 caches, so a result a DrawAhead worker built on one CCD is
+// cold for a GuestGpu thread running on the other.
+struct DrawAheadCacheTopology {
+	std::vector<uint64_t>   l3_masks; // group-0 affinity mask of every L3 cache
+	std::vector<uint64_t>   l3_sizes; // its size in bytes
+	std::array<uint8_t, 64> l3_of {}; // logical processor -> index in l3_masks, 0xff unknown
+	uint64_t                process_mask = 0;
+};
+
+const DrawAheadCacheTopology& DrawAheadTopology() {
+	static const DrawAheadCacheTopology topology = [] {
+		DrawAheadCacheTopology result;
+		result.l3_of.fill(0xffu);
+#if defined(_WIN32)
+		DWORD length = 0;
+		GetLogicalProcessorInformationEx(RelationCache, nullptr, &length);
+		std::vector<uint8_t> buffer(length);
+		if (length != 0 &&
+			GetLogicalProcessorInformationEx(
+				RelationCache, reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data()),
+				&length) != FALSE) {
+			for (DWORD offset = 0; offset < length;) {
+				const auto* entry =
+					reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(buffer.data() + offset);
+				if (entry->Size == 0) {
+					break;
+				}
+				const auto& cache = entry->Cache;
+				if (entry->Relationship == RelationCache && cache.Level == 3 &&
+					(cache.Type == CacheUnified || cache.Type == CacheData) &&
+					cache.GroupMask.Group == 0 && result.l3_masks.size() < 0xffu) {
+					const auto mask = static_cast<uint64_t>(cache.GroupMask.Mask);
+					for (uint32_t cpu = 0; cpu < 64u; cpu++) {
+						if (((mask >> cpu) & 1u) != 0) {
+							result.l3_of[cpu] = static_cast<uint8_t>(result.l3_masks.size());
+						}
+					}
+					result.l3_masks.push_back(mask);
+					result.l3_sizes.push_back(cache.CacheSize);
+				}
+				offset += entry->Size;
+			}
+		}
+		DWORD_PTR process = 0;
+		DWORD_PTR system  = 0;
+		if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system) != FALSE) {
+			result.process_mask = static_cast<uint64_t>(process);
+		}
+#endif
+		return result;
+	}();
+	return topology;
+}
+
+uint8_t DrawAheadCurrentL3() {
+#if defined(_WIN32)
+	const auto cpu = GetCurrentProcessorNumber();
+	return cpu < 64u ? DrawAheadTopology().l3_of[cpu] : static_cast<uint8_t>(0xffu);
+#else
+	return 0xffu;
+#endif
+}
+
+std::atomic<uint8_t>  g_draw_ahead_gpu_l3 {0xffu}; // L3 index the GuestGpu thread last queued from
+std::atomic<uint64_t> g_draw_ahead_gpu_mask {0};   // dapin=2: the mask the GuestGpu thread chose
+// Knob "procpin": bumped whenever the process mask changes. SetProcessAffinityMask resets the mask of
+// every thread, so a thread that pinned itself through "dapin" pins itself again.
+std::atomic<uint32_t> g_process_pin_epoch {0};
+
+// The process mask procpin last set (0 = the mask the process started with, topology.process_mask).
+std::atomic<uint64_t> g_process_pin_mask {0};
+
 } // namespace
+
+// Knob "dapin" (session 56), for the "workers on the GuestGpu thread's CCD" experiment:
+// 0 = leave affinity alone (a thread this pinned goes back to the process mask),
+// 1 = the L3 group with the largest cache (the 3D-cache CCD of an X3D processor),
+// 2 = the L3 group of the processor the GuestGpu thread is on when it applies the knob; the workers
+//     follow the mask it chose,
+// other = raw affinity mask of processor group 0 (decimal in the gate file; 1 and 2 are taken).
+// Each thread applies it to itself: the GuestGpu thread once per submission, a DrawAhead worker at
+// every task it claims (a thread-local compare when nothing changed).
+void DrawAheadApplyPin(bool gpu_thread) {
+#if defined(_WIN32)
+	thread_local uint32_t applied_mode = 0;
+	thread_local uint64_t applied_mask = 0;
+	thread_local uint32_t applied_epoch = 0;
+	const auto& topology = DrawAheadTopology();
+	if (gpu_thread) {
+		// Knob "procpin", applied by the GuestGpu thread for the whole process.
+		static uint32_t applied_process = 0;
+		const auto      process_mode    = Common::Gates::Value(Common::Gates::Knob::ProcessPin);
+		if (process_mode != applied_process) {
+			uint64_t mask = process_mode;
+			if (process_mode == 0) {
+				mask = topology.process_mask;
+			} else if (process_mode == 1) {
+				mask = 0;
+				size_t best = 0;
+				for (size_t index = 0; index < topology.l3_masks.size(); index++) {
+					if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
+						best = index;
+						mask = topology.l3_masks[index];
+					}
+				}
+			}
+			if (process_mode != 0 && topology.process_mask != 0) {
+				mask &= topology.process_mask;
+			}
+			// Remembered whether or not it works: a refused mask is not retried every submission.
+			applied_process = process_mode;
+			if (process_mode != 0 && std::popcount(mask) < 4) {
+				LOGF("ProcessPin: mode=%u mask=0x%016" PRIx64 " refused (fewer than 4 processors)\n",
+				     process_mode, mask);
+			} else if (mask != 0 &&
+			           SetProcessAffinityMask(GetCurrentProcess(), static_cast<DWORD_PTR>(mask)) != FALSE) {
+				g_process_pin_mask.store(process_mode == 0 ? 0 : mask, std::memory_order_relaxed);
+				g_process_pin_epoch.fetch_add(1, std::memory_order_relaxed);
+				LOGF("ProcessPin: mode=%u mask=0x%016" PRIx64 "\n", process_mode, mask);
+			} else {
+				LOGF("ProcessPin: mode=%u mask=0x%016" PRIx64 " failed\n", process_mode, mask);
+			}
+		}
+	}
+	if (const auto epoch = g_process_pin_epoch.load(std::memory_order_relaxed); epoch != applied_epoch) {
+		// The process mask changed under this thread: whatever it had applied is gone.
+		applied_epoch = epoch;
+		applied_mode  = 0;
+		applied_mask  = 0;
+	}
+	const auto  mode     = Common::Gates::Value(Common::Gates::Knob::DrawAheadPin);
+	if (mode == 0) {
+		if (applied_mode != 0) {
+			const auto pinned       = g_process_pin_mask.load(std::memory_order_relaxed);
+			if (const auto process_mask = pinned != 0 ? pinned : topology.process_mask; process_mask != 0) {
+				SetThreadAffinityMask(GetCurrentThread(), static_cast<DWORD_PTR>(process_mask));
+			}
+			if (gpu_thread) {
+				g_draw_ahead_gpu_mask.store(0, std::memory_order_relaxed);
+			}
+			LOGF("DrawAheadPin: %s released\n", gpu_thread ? "GuestGpu" : "DrawAhead");
+			applied_mode = 0;
+			applied_mask = 0;
+		}
+		return;
+	}
+	if (gpu_thread && mode == applied_mode) {
+		return; // the GuestGpu thread keeps the group chosen when the knob changed
+	}
+	uint64_t mask = mode;
+	if (mode == 1) {
+		mask = 0;
+		size_t best = 0;
+		for (size_t index = 0; index < topology.l3_masks.size(); index++) {
+			if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
+				best = index;
+				mask = topology.l3_masks[index];
+			}
+		}
+	} else if (mode == 2) {
+		if (gpu_thread) {
+			const auto l3 = DrawAheadCurrentL3();
+			mask          = l3 < topology.l3_masks.size() ? topology.l3_masks[l3] : 0;
+			g_draw_ahead_gpu_mask.store(mask, std::memory_order_relaxed);
+		} else {
+			mask = g_draw_ahead_gpu_mask.load(std::memory_order_relaxed);
+		}
+	}
+	const auto pinned = g_process_pin_mask.load(std::memory_order_relaxed);
+	if (const auto process_mask = pinned != 0 ? pinned : topology.process_mask; process_mask != 0) {
+		mask &= process_mask;
+	}
+	if (mask == 0 || (mode == applied_mode && mask == applied_mask)) {
+		return; // unknown topology, the GuestGpu thread has not chosen yet, or nothing changed
+	}
+	// Remembered whether or not it works: a DrawAhead worker applies the knob on every task.
+	applied_mode     = mode;
+	applied_mask     = mask;
+	const bool fixed = SetThreadAffinityMask(GetCurrentThread(), static_cast<DWORD_PTR>(mask)) != 0;
+	LOGF("DrawAheadPin: %s mode=%u mask=0x%016" PRIx64 "%s\n", gpu_thread ? "GuestGpu" : "DrawAhead",
+	     mode, mask, fixed ? "" : " failed");
+#else
+	(void)gpu_thread;
+#endif
+}
 
 struct PipelineCache::ProgramCache {
 	ComputePretranslation pretranslation;
@@ -697,6 +1118,13 @@ struct PipelineCache::ProgramCache {
 		std::vector<uint32_t>                        spirv; // kept for the translation cache file
 	};
 
+	// Gate "daclass": static variants of programs whose plans are canonically equal
+	// (CanonicalPlanBytes). Never freed: slots and source entries keep pointers to it.
+	struct PlanClass {
+		std::vector<uint8_t> bytes;
+		uint64_t             hash = 0; // XXH3 of `bytes` | 1: the slot fingerprint in class mode
+	};
+
 	struct SourceEntry {
 		explicit SourceEntry(ShaderRecompiler::IR::ResourcePlan plan)
 		    : resource_plan(std::move(plan)) {}
@@ -705,6 +1133,8 @@ struct PipelineCache::ProgramCache {
 		// ShaderTranslationCache::PlanFingerprint of the plan (| 1, 0 = not computed yet); only
 		// the holder of PipelineCache::m_mutex computes and reads it.
 		mutable uint64_t                   plan_fingerprint = 0;
+		// Canonical class of the plan (ClassOf), same ownership as plan_fingerprint.
+		mutable const PlanClass* plan_class = nullptr;
 		// deque: draws and asynchronous pipeline jobs keep pointers to a permutation's program
 		// while later permutations of the same source are appended.
 		std::deque<Permutation>            permutations;
@@ -1008,6 +1438,12 @@ struct PipelineCache::ProgramCache {
 
 	struct AheadSlot {
 		std::atomic<uint8_t> state {AheadEmpty};
+		// Holder of m_mutex only (workers never read them): a draw took this result (da_unused counts
+		// results that went without), and the stage it was queued for.
+		uint8_t taken = 0;
+		uint8_t pixel = 0;
+		// Gate "daclass": the canonical class of the key (nullptr = keyed by plan fingerprint alone).
+		const PlanClass* plan_class = nullptr;
 		// key (holder of m_mutex); `source` is one entry with this plan, for the worker
 		const SourceEntry*                                 source      = nullptr;
 		uint64_t                                           fingerprint = 0;
@@ -1022,9 +1458,9 @@ struct PipelineCache::ProgramCache {
 		ShaderRecompiler::IR::ResourceSnapshot       snapshot;
 		ShaderRecompiler::IR::ResourceSpecialization specialization;
 
-		[[nodiscard]] bool Matches(uint64_t key_fingerprint, uint64_t base, uint64_t key_generation,
+		[[nodiscard]] bool Matches(uint64_t key_fingerprint, const PlanClass* key_class, uint64_t base, uint64_t key_generation,
 		                           std::span<const uint32_t> key_user_data) const {
-			return fingerprint == key_fingerprint && shader_base == base && generation == key_generation &&
+			return fingerprint == key_fingerprint && plan_class == key_class && shader_base == base && generation == key_generation &&
 			       count == key_user_data.size() &&
 			       std::equal(key_user_data.begin(), key_user_data.end(), user_data.begin());
 		}
@@ -1117,6 +1553,7 @@ struct PipelineCache::ProgramCache {
 		const auto count = static_cast<uint32_t>(user_data.size());
 		auto&      hint  = ahead_hints[AheadHintIndex(stage, base, count)];
 		if (hint.sources[1] != nullptr && hint.base == base && hint.count == count &&
+			!Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass) &&
 		    hint.stage == stage && hint.generation == memo_generation) {
 			const auto key = AheadVariantKey(stage, base, UserDataHash(user_data));
 			ahead_variants[key % AheadVariantCount] = {key, source};
@@ -1139,6 +1576,45 @@ struct PipelineCache::ProgramCache {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadHintFlip, 1);
 		hint.sources[hint.next % hint.sources.size()] = source;
 		hint.next++;
+	}
+
+	// Canonical class of a source entry's plan (gate "daclass", counter da_fan_canon): built once per
+	// entry by the holder of PipelineCache::m_mutex, by exact comparison of canonical bytes, so equal
+	// pointers mean equal plans and a hash collision cannot merge two classes. Never freed.
+	std::unordered_map<uint64_t, std::vector<std::unique_ptr<PlanClass>>> plan_classes;
+
+	[[gnu::noinline]] const PlanClass* ClassOf(const SourceEntry& source) {
+		if (source.plan_class != nullptr) {
+			return source.plan_class;
+		}
+		namespace FS      = Common::FrameStats;
+		const bool timed  = FS::Enabled();
+		const auto t0     = timed ? FS::NowNs() : 0;
+		auto       bytes  = CanonicalPlanBytes(source.resource_plan);
+		const auto hash   = XXH3_64bits(bytes.data(), bytes.size()) | 1u;
+		auto&      bucket = plan_classes[hash];
+		const PlanClass* found = nullptr;
+		for (const auto& candidate: bucket) {
+			if (candidate->bytes == bytes) {
+				found = candidate.get();
+				break;
+			}
+		}
+		if (found == nullptr) {
+			auto created   = std::make_unique<PlanClass>();
+			created->bytes = std::move(bytes);
+			created->hash  = hash;
+			found          = created.get();
+			bucket.push_back(std::move(created));
+			FS::Add(FS::Counter::DrawAheadClasses, 1);
+		} else {
+			FS::Add(FS::Counter::DrawAheadClassShared, 1);
+		}
+		source.plan_class = found;
+		if (timed) {
+			FS::Add(FS::Counter::DrawAheadClassNs, FS::NowNs() - t0);
+		}
+		return found;
 	}
 
 	void AheadStartThreads(uint32_t wanted) {
@@ -1180,16 +1656,22 @@ struct PipelineCache::ProgramCache {
 		uint64_t busy    = 0;
 		uint64_t predicted = 0;
 		uint64_t probes    = 0; // slots looked at, the cost of the table itself
+		uint64_t requests     = 0; // requests with a hint
+		uint64_t fan          = 0; // distinct fingerprints among their variants
+		uint64_t fan_canon    = 0; // distinct canonical classes among them
+		uint64_t unused       = 0; // results dropped without a take
+		uint64_t unused_pixel = 0;
 	};
 
 	// Holder of m_mutex: queue one request for one source entry, or find it already queued.
-	void QueueAheadSource(const SourceEntry* source, const PipelineCache::DrawAheadRequest& request,
+	void QueueAheadSource(const SourceEntry* source, const PlanClass* plan_class,
+						  const PipelineCache::DrawAheadRequest& request,
 	                      AheadQueueStats& stats, std::vector<uint32_t>& batch) {
 		if (source->resource_plan.srt_compiled == nullptr) {
 			stats.no_plan++;
 			return;
 		}
-		const auto fingerprint = Fingerprint(*source);
+		const auto fingerprint = plan_class != nullptr ? plan_class->hash : Fingerprint(*source);
 		const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
 		const auto hash        = AheadHash(fingerprint, request.base, request.user_hash);
 		AheadSlot* victim      = nullptr;
@@ -1198,7 +1680,7 @@ struct PipelineCache::ProgramCache {
 			stats.probes++;
 			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
 			const auto state = slot.state.load(std::memory_order_acquire);
-			if (state != AheadEmpty && slot.Matches(fingerprint, request.base, memo_generation, user_data)) {
+			if (state != AheadEmpty && slot.Matches(fingerprint, plan_class, request.base, memo_generation, user_data)) {
 				if (slot.walk == ahead_walk) {
 					slot.uses += request.uses;
 					stats.present++;
@@ -1208,6 +1690,12 @@ struct PipelineCache::ProgramCache {
 					slot.walk = ahead_walk;
 					slot.uses = request.uses;
 					slot.state.store(AheadQueued, std::memory_order_release);
+					if (slot.taken == 0) {
+						stats.unused++;
+						stats.unused_pixel += slot.pixel;
+					}
+					slot.taken = 0;
+					slot.pixel = request.pixel ? 1u : 0u;
 					batch.push_back(static_cast<uint32_t>(&slot - ahead_slots.get()));
 					stats.refresh++;
 				} else {
@@ -1249,6 +1737,16 @@ struct PipelineCache::ProgramCache {
 		victim->uses        = request.uses;
 		victim->count       = request.count;
 		std::copy(user_data.begin(), user_data.end(), victim->user_data.begin());
+		{
+			const auto previous = victim->state.load(std::memory_order_acquire);
+			if ((previous == AheadReady || previous == AheadFailed) && victim->taken == 0) {
+				stats.unused++;
+				stats.unused_pixel += victim->pixel;
+			}
+		}
+		victim->taken      = 0;
+		victim->pixel      = request.pixel ? 1u : 0u;
+		victim->plan_class = plan_class;
 		victim->state.store(AheadQueued, std::memory_order_release);
 		batch.push_back(static_cast<uint32_t>(victim - ahead_slots.get()));
 	}
@@ -1267,11 +1765,16 @@ struct PipelineCache::ProgramCache {
 			ahead_queue = std::make_unique<uint32_t[]>(AheadQueueSize);
 		}
 		AheadStartThreads(wanted);
+		if (FS::Enabled()) {
+			g_draw_ahead_gpu_l3.store(DrawAheadCurrentL3(), std::memory_order_relaxed);
+		}
 		if (first_batch) {
 			ahead_walk++;
 		}
 		AheadQueueStats                    stats;
 		thread_local std::vector<uint32_t> batch;
+		const bool class_mode = Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass);
+		const bool counting   = FS::Enabled();
 		batch.clear();
 		for (const auto& request: requests) {
 			const auto  stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
@@ -1282,13 +1785,57 @@ struct PipelineCache::ProgramCache {
 				stats.no_hint++;
 				continue;
 			}
+			// Session 56: the distinct plan identities among the static variants the hint holds - by
+			// fingerprint (one task each without the gate) and by canonical class (gate "daclass").
+			stats.requests++;
+			std::array<const SourceEntry*, 4> print_sources {};
+			std::array<const SourceEntry*, 4> class_sources {};
+			std::array<const PlanClass*, 4>   classes {};
+			size_t                            prints      = 0;
+			size_t                            class_count = 0;
+			for (const auto* source: hint.sources) {
+				if (source == nullptr) {
+					continue;
+				}
+				const auto print   = Fingerprint(*source);
+				size_t     earlier = 0;
+				while (earlier < prints && Fingerprint(*print_sources[earlier]) != print) {
+					earlier++;
+				}
+				if (earlier == prints) {
+					print_sources[prints++] = source;
+				}
+				if (class_mode || counting) {
+					const auto* plan_class = ClassOf(*source);
+					size_t      index      = 0;
+					while (index < class_count && classes[index] != plan_class) {
+						index++;
+					}
+					if (index == class_count) {
+						classes[class_count]       = plan_class;
+						class_sources[class_count] = source;
+						class_count++;
+					} else if (class_sources[index]->resource_plan.srt_compiled == nullptr) {
+						// Any member computes the result; prefer one whose plan is compiled.
+						class_sources[index] = source;
+					}
+				}
+			}
+			stats.fan += prints;
+			stats.fan_canon += class_count;
+			if (class_mode) {
+				for (size_t index = 0; index < class_count; index++) {
+					QueueAheadSource(class_sources[index], classes[index], request, stats, batch);
+				}
+				continue;
+			}
 			if (hint.sources[1] != nullptr) {
 				const auto  key       = AheadVariantKey(stage, request.base, request.user_hash);
 				const auto& predicted = ahead_variants[key % AheadVariantCount];
 				if (predicted.key == key &&
 				    std::find(hint.sources.begin(), hint.sources.end(), predicted.source) !=
 				        hint.sources.end()) {
-					QueueAheadSource(predicted.source, request, stats, batch);
+					QueueAheadSource(predicted.source, nullptr, request, stats, batch);
 					stats.predicted++;
 					continue;
 				}
@@ -1306,7 +1853,7 @@ struct PipelineCache::ProgramCache {
 					          Fingerprint(*hint.sources[earlier]) == fingerprint;
 				}
 				if (!shared) {
-					QueueAheadSource(source, request, stats, batch);
+					QueueAheadSource(source, nullptr, request, stats, batch);
 				}
 			}
 		}
@@ -1348,6 +1895,11 @@ struct PipelineCache::ProgramCache {
 			FS::Add(FS::Counter::DrawAheadPresent, stats.present);
 			FS::Add(FS::Counter::DrawAheadBusy, stats.busy);
 			FS::Add(FS::Counter::DrawAheadPredicted, stats.predicted);
+			FS::Add(FS::Counter::DrawAheadRequests, stats.requests);
+			FS::Add(FS::Counter::DrawAheadFan, stats.fan);
+			FS::Add(FS::Counter::DrawAheadFanCanon, stats.fan_canon);
+			FS::Add(FS::Counter::DrawAheadUnused, stats.unused);
+			FS::Add(FS::Counter::DrawAheadUnusedPixel, stats.unused_pixel);
 		}
 	}
 
@@ -1393,6 +1945,7 @@ struct PipelineCache::ProgramCache {
 	}
 
 	[[gnu::noinline]] static void AheadRun(AheadSlot& slot) {
+		DrawAheadApplyPin(false); // knob "dapin"
 		namespace FS  = Common::FrameStats;
 		auto expected = static_cast<uint8_t>(AheadQueued);
 		if (!slot.state.compare_exchange_strong(expected, AheadRunning, std::memory_order_acq_rel)) {
@@ -1421,6 +1974,11 @@ struct PipelineCache::ProgramCache {
 		if (timed) {
 			FS::Add(ok ? FS::Counter::DrawAheadDone : FS::Counter::DrawAheadFailed, 1);
 			FS::Add(FS::Counter::DrawAheadWorkerNs, FS::NowNs() - t0);
+			const auto l3     = DrawAheadCurrentL3();
+			const auto gpu_l3 = g_draw_ahead_gpu_l3.load(std::memory_order_relaxed);
+			if (l3 != 0xffu && gpu_l3 != 0xffu && l3 != gpu_l3) {
+				FS::Add(FS::Counter::DrawAheadCrossCcd, 1);
+			}
 		}
 		slot.state.store(ok ? AheadReady : AheadFailed, std::memory_order_release);
 	}
@@ -1435,7 +1993,9 @@ struct PipelineCache::ProgramCache {
 		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || ahead_slots == nullptr) {
 			return false;
 		}
-		const auto fingerprint = Fingerprint(source);
+		const PlanClass* plan_class =
+			Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass) ? ClassOf(source) : nullptr;
+		const auto fingerprint = plan_class != nullptr ? plan_class->hash : Fingerprint(source);
 		const auto hash = AheadHash(fingerprint, params.Base(), UserDataHash(params.user_data));
 		// Handed to the counters once, on the way out: this function leaves from six places, and
 		// an Add per probe (~16k a frame) would have cost more than it measures.
@@ -1450,7 +2010,7 @@ struct PipelineCache::ProgramCache {
 		} probe_counter {probes};
 		for (size_t probe = 0; probe < 2; probe++) {
 			auto& slot = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
-			if (!slot.Matches(fingerprint, params.Base(), memo_generation, params.user_data)) {
+			if (!slot.Matches(fingerprint, plan_class, params.Base(), memo_generation, params.user_data)) {
 				continue;
 			}
 			probes     = probe + 1;
@@ -1474,6 +2034,23 @@ struct PipelineCache::ProgramCache {
 			if (state != AheadReady) {
 				break;
 			}
+			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadPrefetch)) {
+				// A worker built these, usually on another core: start loading the witness for
+				// the comparison below and the snapshot for this draw's bindings (session 56:
+				// their first touches in PrepareBindings, FindBuffers, ResolveTexture,
+				// StreamBuffer::Copy and ~ResourceSnapshot were ~5 % of the thread).
+				PrefetchVectorData(slot.witness.live_runs);
+				PrefetchVectorData(slot.witness.live_values);
+				PrefetchVectorData(slot.witness.clean_runs);
+				PrefetchVectorData(slot.witness.clean_values);
+				PrefetchVectorData(slot.snapshot.buffers);
+				PrefetchVectorData(slot.snapshot.images);
+				PrefetchVectorData(slot.snapshot.samplers);
+				PrefetchVectorData(slot.snapshot.flattened_srt);
+				PrefetchVectorData(slot.snapshot.user_data);
+				PrefetchVectorData(slot.specialization.buffers);
+				PrefetchVectorData(slot.specialization.images);
+			}
 			if (FS::Enabled()) {
 				FS::Add(FS::Counter::DrawAheadWords, slot.witness.Words());
 				FS::Add(FS::Counter::DrawAheadCleanWords, slot.witness.clean_values.size());
@@ -1495,12 +2072,23 @@ struct PipelineCache::ProgramCache {
 			} else {
 				// The last draw of this walk that asked for it: take the vectors, and retire the
 				// slot, which no longer holds a result.
-				std::swap(resources, slot.snapshot);
-				std::swap(specialization, slot.specialization);
+				if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClone)) {
+					// Gate "daclone": copy on this thread and leave the worker's vectors in the
+					// slot, so they are freed by the worker that allocated them when it
+					// materializes into this slot again, not by the draw path after the draw (a
+					// cross-thread HeapFree of cold blocks). The slot keeps that memory until then.
+					resources      = slot.snapshot;
+					specialization = slot.specialization;
+					FS::Add(FS::Counter::DrawAheadClones, 1);
+				} else {
+					std::swap(resources, slot.snapshot);
+					std::swap(specialization, slot.specialization);
+				}
 				slot.uses = 0;
 				slot.state.store(AheadEmpty, std::memory_order_release);
 				FS::Add(FS::Counter::DrawAheadMoves, 1);
 			}
+			slot.taken = 1;
 			FS::Add(FS::Counter::DrawAheadHits, 1);
 			return true;
 		}
@@ -2218,6 +2806,15 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 		pixel_params = PrepareProgram(pixel_regs, sh, target_export_mapping, pixel_info);
 	}
 	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
+	if (Common::FrameStats::Enabled()) {
+		// Draw stages the lookahead cannot serve (session 56 ceiling counters).
+		if (mesh_active) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadMeshStages, 1);
+		}
+		if (!pixel_active && pixel_regs.ps_regs.data_addr != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadPixelOff, 1);
+		}
+	}
 	if (context.GetClipControl().clip_disable) {
 		const auto& viewport = context.GetScreenViewport().viewports[0];
 		const auto& limits   = m_graphics.GetPhysicalDeviceProperties().limits;

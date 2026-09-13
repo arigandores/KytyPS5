@@ -1264,6 +1264,9 @@ void GuestGpu::LookaheadSubmission(const Submission& submission) {
 }
 
 void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
+	// Knob "dapin": the GuestGpu thread applies it to itself once per submission, whatever the
+	// other gates say.
+	DrawAheadApplyPin(true);
 	// The walk also carries the graphics shadow state of docs/parallel-draw-path.md, so it runs
 	// when either the compute prefetch or the draw lookahead asks for it.
 	if ((AsyncComputeMode() != 2 && !Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) ||

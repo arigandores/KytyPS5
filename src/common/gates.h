@@ -24,7 +24,7 @@ enum class Gate : uint32_t {
 	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
 	AsyncSubmit,    // KYTY_ASYNC_SUBMIT,        file name "asyncsubmit"
 	ImageRecycle,   // KYTY_IMAGE_RECYCLE,       file name "imgrecycle"
-	RecordThread,   // KYTY_RECORD_THREAD,       start-only, "recordthread" in the file is ignored
+	RecordThread,   // KYTY_RECORD_THREAD,       file name "recordthread", taken per command buffer
 	TrackLockFree,  // KYTY_TRACK_LOCKFREE,      file name "trackfree"
 	TrackLockFreeVerify, // KYTY_TRACK_LOCKFREE_VERIFY, file name "tfcheck"
 	ProtectFast,    // KYTY_PROTECT_FAST,        file name "protfast"
@@ -32,6 +32,23 @@ enum class Gate : uint32_t {
 	ShaderWriteDefer, // KYTY_SHADER_WRITE_DEFER, file name "swdefer"
 	GdsEpoch,       // KYTY_GDS_EPOCH,           file name "gdsepoch"
 	AtomicImageBarrier, // KYTY_ATOMIC_IMAGE_NO_BARRIER, file name "atomimg"
+	DescriptorRing, // KYTY_DESCRIPTOR_RING,     file name "dsring"
+	RecordPackets,  // KYTY_RECORD_PACKETS,      file name "recpack"
+	SyncFree,       // KYTY_SYNC_FREE,           file name "syncfree"
+	SyncFreeVerify, // KYTY_SYNC_FREE_VERIFY,    file name "sfcheck"
+	ProtectBatch,   // KYTY_PROTECT_BATCH,       file name "protbatch"
+	ProtectBatchVerify, // KYTY_PROTECT_BATCH_VERIFY, file name "pbcheck"
+	TexFaultHint,   // KYTY_TEX_FAULT_HINT,      file name "texfaulthint"
+	DrawAheadClass,    // KYTY_DRAW_AHEAD_CLASS,    file name "daclass"
+	DrawAheadPrefetch, // KYTY_DRAW_AHEAD_PREFETCH, file name "daprefetch"
+	DrawAheadClone,    // KYTY_DRAW_AHEAD_CLONE,    file name "daclone"
+	TexLru,         // KYTY_TEX_LRU,             file name "texlru"
+	TexFast,        // KYTY_TEX_FAST,            file name "texfast"
+	TexFastCheck,   // KYTY_TEX_FAST_VERIFY,     file name "texfastcheck"
+	TexMemo2,       // KYTY_TEX_MEMO2,           file name "texmemo2"
+	ClampVma,       // KYTY_CLAMP_VMA,           file name "clampvma"
+	SamplerMemo,    // KYTY_SAMPLER_MEMO,        file name "smpmemo"
+	BindSpare,      // KYTY_BIND_SPARE,          file name "bindspare"
 	Count,
 };
 
@@ -41,6 +58,9 @@ enum class Knob : uint32_t {
 	RecordArenaMb,    // KYTY_RECORD_ARENA_MB,    file name "recarena"
 	DescriptorSetBatch, // KYTY_DESCRIPTOR_BATCH,  file name "dsbatch"
 	DescriptorPoolSets, // KYTY_DESCRIPTOR_POOL,   file name "dspool"
+	RecordSpinUs,       // KYTY_RECORD_SPIN_US,    file name "recspin" (record thread poll, us)
+	DrawAheadPin,       // KYTY_DRAW_AHEAD_PIN,    file name "dapin" (0 off, 1/2 L3 group, else mask)
+	ProcessPin,         // KYTY_PROCESS_PIN,       file name "procpin" (0 start mask, 1 L3 group, else mask)
 	Count,
 };
 

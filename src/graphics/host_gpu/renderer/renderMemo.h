@@ -65,6 +65,25 @@ struct RenderExecutorMemo {
 		bool                    valid        = false;
 		ImageId                 image_id;
 		TextureCache::ImageDesc desc;
+		// Moves whenever the slot is filled or invalidated: a TextureBinding remembers it, so a
+		// slot rewritten later in the same draw is not mistaken for the one it was resolved from.
+		uint32_t                version    = 0;
+		// Gate "texfast": FindTexture's view for (image_id, desc), valid while the image's
+		// bind_stamp still equals fast_stamp (RebindImages).
+		uint32_t                fast_stamp = 0;
+		vk::ImageView           fast_view  = nullptr;
+	};
+	// Gate "texmemo2": tag of each slot for the two-way lookup; neighbours form a set.
+	struct TextureWay {
+		uint64_t hash = 0; // MemoHashBytes of the slot key when it was filled
+		uint64_t use  = 0; // texture_clock at the last fill or hit, 0 = never filled
+	};
+	// Gate "texmemo2": resource key by ImageResource address. The 64 key bytes are compared on
+	// every use, so the answer does not depend on the object staying where it was.
+	struct ResourceKey {
+		const void*             resource = nullptr;
+		std::array<uint64_t, 8> words {};
+		uint64_t                key = 0;
 	};
 	struct ColorTarget {
 		std::array<uint8_t, sizeof(HW::RenderTarget)> regs {};
@@ -79,10 +98,14 @@ struct RenderExecutorMemo {
 	};
 
 	static constexpr size_t TextureSlots = 4096;
+	static constexpr size_t ResourceKeySlots = 1024;
 	static constexpr size_t ColorSlots   = 512;
 	static constexpr size_t DepthSlots   = 64;
 
 	std::vector<Texture>     textures {TextureSlots};
+	std::vector<TextureWay>  texture_ways {TextureSlots};
+	uint64_t                 texture_clock = 0;
+	std::vector<ResourceKey> resource_keys {ResourceKeySlots};
 	std::vector<ColorTarget> colors {ColorSlots};
 	std::vector<DepthTarget> depths {DepthSlots};
 };

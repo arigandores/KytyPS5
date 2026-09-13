@@ -219,6 +219,7 @@ public:
 	         VirtualRangeType type, const char* name, bool disallow_merge = false) {
 		Common::LockGuard lock(m_mutex);
 		m_epoch.fetch_add(1, std::memory_order_release);
+		m_layout_epoch.fetch_add(1, std::memory_order_release);
 
 		if (start == 0 || size == 0) {
 			return false;
@@ -250,6 +251,7 @@ public:
 	bool Remove(uint64_t start, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
 		m_epoch.fetch_add(1, std::memory_order_release);
+		m_layout_epoch.fetch_add(1, std::memory_order_release);
 
 		auto position = LowerBound(start);
 		if (position != m_ranges.end() && position->start == start && position->size == size) {
@@ -282,6 +284,7 @@ public:
 	bool ReleaseReserved(uint64_t start, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
 		m_epoch.fetch_add(1, std::memory_order_release);
+		m_layout_epoch.fetch_add(1, std::memory_order_release);
 
 		for (size_t index = 0; index < m_ranges.size(); index++) {
 			auto& r = m_ranges[index];
@@ -297,6 +300,7 @@ public:
 	                     VirtualRangeType type = VirtualRangeType::Reserved) {
 		Common::LockGuard lock(m_mutex);
 		m_epoch.fetch_add(1, std::memory_order_release);
+		m_layout_epoch.fetch_add(1, std::memory_order_release);
 
 		auto end = End(start, size);
 		for (const auto& r: m_ranges) {
@@ -314,6 +318,7 @@ public:
 	                         VirtualRangeType type = VirtualRangeType::Reserved) {
 		Common::LockGuard lock(m_mutex);
 		m_epoch.fetch_add(1, std::memory_order_release);
+		m_layout_epoch.fetch_add(1, std::memory_order_release);
 
 		if (size == 0) {
 			return false;
@@ -431,6 +436,48 @@ public:
 	}
 
 	[[nodiscard]] uint64_t Epoch() const { return m_epoch.load(std::memory_order_acquire); }
+	// Moved only by the entry points that change which addresses are committed: Add, Remove,
+	// ReleaseReserved, ConsumeReserved, ConsumeReservedSpan. Rename, Protect and SetMemoryType
+	// split and merge ranges (EditUnlocked) but never change a range's type or the covered span,
+	// so no answer of ClampRangeSize depends on them.
+	[[nodiscard]] uint64_t LayoutEpoch() const {
+		return m_layout_epoch.load(std::memory_order_acquire);
+	}
+
+	// Gate "clampvma": the committed run holding virtual_addr - from the start of its range
+	// through every directly following committed range. The walk stops after max_ranges ranges;
+	// `exact` then is false and `end` only a lower bound of the run.
+	bool CommittedRun(uint64_t virtual_addr, uint64_t* begin, uint64_t* end, bool* exact,
+	                  size_t max_ranges) {
+		Common::LockGuard lock(m_mutex);
+		auto vma = std::upper_bound(
+		    m_ranges.begin(), m_ranges.end(), virtual_addr,
+		    [](uint64_t value, const Range& range) { return value < range.start; });
+		if (vma == m_ranges.begin()) {
+			return false;
+		}
+		--vma;
+		const auto vma_end = End(vma->start, vma->size);
+		if (virtual_addr < vma->start || virtual_addr >= vma_end ||
+		    !IsCommittedRangeType(vma->type)) {
+			return false;
+		}
+		*begin         = vma->start;
+		auto   expected = vma_end;
+		size_t walked   = 0;
+		for (++vma; vma != m_ranges.end() && vma->start == expected && IsCommittedRangeType(vma->type);
+		     ++vma) {
+			if (walked++ == max_ranges) {
+				*end   = expected;
+				*exact = false;
+				return true;
+			}
+			expected = End(vma->start, vma->size);
+		}
+		*end   = expected;
+		*exact = true;
+		return true;
+	}
 
 	uint64_t ClampRangeSize(uint64_t virtual_addr, uint64_t size) {
 		Common::LockGuard lock(m_mutex);
@@ -661,6 +708,8 @@ private:
 	// Bumped by every mutating entry point (under the lock) so that lock-free readers can tell
 	// that a memoized answer about the range table is still the current one.
 	std::atomic<uint64_t> m_epoch {1};
+	// See LayoutEpoch().
+	std::atomic<uint64_t> m_layout_epoch {1};
 };
 
 #if defined(KYTY_VIRTUAL_MEMORY_ALLOCATION_TESTS)
@@ -1041,10 +1090,77 @@ bool ClampMemoEnabled() {
 	return Common::Gates::Enabled(Common::Gates::Gate::ClampMemo);
 }
 
+// Gate "clampvma". The memo above keys on the exact address in a slot picked by its page, so
+// constant buffers packed into one page evict each other (Sky Garden: ~58 % misses). A committed
+// run answers every address inside it: ClampRangeSize(vaddr, size) = min(size, run end - vaddr).
+struct ClampRuns {
+	struct Run {
+		uint64_t epoch = 0; // VirtualRanges::LayoutEpoch() the run was measured under (starts at 1)
+		uint64_t begin = 0;
+		uint64_t end   = 0;
+		bool     exact = false; // `end` is the end of the run, not a walk limit
+	};
+
+	static constexpr size_t SLOTS      = 8;
+	static constexpr size_t MAX_RANGES = 256;
+
+	std::array<Run, SLOTS> runs {};
+
+	// 0 = the run cannot answer (the request goes past a walk limit).
+	[[nodiscard]] static uint64_t Answer(const Run& run, uint64_t vaddr, uint64_t size) {
+		const auto available = run.end - vaddr;
+		return size <= available ? size : (run.exact ? available : 0);
+	}
+};
+
+bool ClampVmaEnabled() {
+	return Common::Gates::Enabled(Common::Gates::Gate::ClampVma);
+}
+
 } // namespace
 
 uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size) {
 	EXIT_IF(g_virtual_ranges == nullptr);
+
+	if (ClampVmaEnabled() && vaddr != 0 && size != 0 && size <= UINT64_MAX - vaddr) {
+		thread_local ClampRuns memo;
+		const auto             epoch = g_virtual_ranges->LayoutEpoch();
+		for (size_t i = 0; i < ClampRuns::SLOTS; i++) {
+			const auto& run = memo.runs[i];
+			if (run.epoch != epoch || vaddr < run.begin || vaddr >= run.end) {
+				continue;
+			}
+			const auto answer = ClampRuns::Answer(run, vaddr, size);
+			if (answer != 0) {
+				if (i != 0) {
+					std::swap(memo.runs[0], memo.runs[i]);
+				}
+				return answer;
+			}
+			break;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClampVmaMisses, 1);
+		ClampRuns::Run fresh {};
+		if (g_virtual_ranges->CommittedRun(vaddr, &fresh.begin, &fresh.end, &fresh.exact,
+		                                   ClampRuns::MAX_RANGES)) {
+			fresh.epoch       = epoch;
+			const auto answer = ClampRuns::Answer(fresh, vaddr, size);
+			// Keep it only if no layout change raced with the query (as the memo below does).
+			if (epoch == g_virtual_ranges->LayoutEpoch()) {
+				std::move_backward(memo.runs.begin(), memo.runs.end() - 1, memo.runs.end());
+				memo.runs[0] = fresh;
+			}
+			if (answer != 0) {
+				if (answer != size) {
+					LOGF("Memory: clamped buffer range addr=0x%016" PRIx64 " size=0x%016" PRIx64
+					     " to 0x%016" PRIx64 "\n",
+					     vaddr, size, answer);
+				}
+				return answer;
+			}
+		}
+		// Not committed, or past a walk limit: the paths below answer (and report bad addresses).
+	}
 
 	if (ClampMemoEnabled() && vaddr != 0 && size != 0) {
 		thread_local ClampMemo memo;
@@ -1062,6 +1178,11 @@ uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size) {
 		}
 		if (Common::FrameStats::Enabled()) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClampMemoMisses, 1);
+			const bool same_address = entry.vaddr == vaddr && entry.probed != 0;
+			Common::FrameStats::Add(same_address && entry.epoch != epoch
+			                            ? Common::FrameStats::Counter::ClampMissEpoch
+			                            : Common::FrameStats::Counter::ClampMissKey,
+			                        1);
 		}
 		const auto clamped_size = g_virtual_ranges->ClampRangeSize(vaddr, size);
 		if (clamped_size == 0) {

@@ -1,6 +1,8 @@
 #include "graphics/host_gpu/renderer/cache/samplerCache.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "graphics/guest_gpu/gpu_defs.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -15,6 +17,29 @@ SamplerCache::~SamplerCache() {
 }
 
 vk::Sampler SamplerCache::GetSampler(const ShaderSamplerResource& r) {
+	if (!Common::Gates::Enabled(Common::Gates::Gate::SamplerMemo)) {
+		return FindOrCreate(r);
+	}
+	// Gate "smpmemo": the four dwords are the whole key of the map below, and a sampler is only
+	// destroyed with its cache, so an answer stays good for this cache object (m_instance).
+	struct Entry {
+		SamplerKey  key {};
+		uint64_t    instance = 0;
+		vk::Sampler sampler  = nullptr;
+	};
+	thread_local std::array<Entry, 256> memo {};
+	const SamplerKey key {r.fields[0], r.fields[1], r.fields[2], r.fields[3]};
+	auto&            entry = memo[SamplerKeyHash {}(key) & (memo.size() - 1)];
+	if (entry.instance == m_instance && entry.key == key) {
+		return entry.sampler;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SamplerMemoMisses, 1);
+	const auto sampler = FindOrCreate(r);
+	entry              = {key, m_instance, sampler};
+	return sampler;
+}
+
+vk::Sampler SamplerCache::FindOrCreate(const ShaderSamplerResource& r) {
 	Common::LockGuard lock(m_mutex);
 
 	const SamplerKey key {r.fields[0], r.fields[1], r.fields[2], r.fields[3]};

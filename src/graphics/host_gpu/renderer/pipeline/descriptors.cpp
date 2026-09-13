@@ -648,6 +648,77 @@ static ImageViewInfo TextureViewInfo(const ShaderRecompiler::IR::ImageResource& 
 	return view;
 }
 
+static TextureBinding MakeTextureBinding(ImageId id, const TextureCache::ImageDesc& desc,
+                                         uint32_t memo_index, uint32_t memo_version) {
+	return TextureBinding {id, nullptr, desc, vk::ImageLayout::eUndefined, {}, memo_index, memo_version};
+}
+
+// Gate "texmemo2": MemoHashBytes of the ImageResource key bytes, which are constant per program
+// resource, without hashing them on every binding.
+static uint64_t MemoResourceKey(RenderExecutorMemo&                        memo,
+                                const ShaderRecompiler::IR::ImageResource& resource) {
+	const auto size = static_cast<size_t>(
+	    reinterpret_cast<const uint8_t*>(&resource.indirect_resources) -
+	    reinterpret_cast<const uint8_t*>(&resource));
+	RenderExecutorMemo::ResourceKey probe {};
+	if (size != sizeof(probe.words)) {
+		return MemoHashBytes(&resource, size);
+	}
+	std::memcpy(probe.words.data(), &resource, sizeof(probe.words));
+	const auto address = reinterpret_cast<uintptr_t>(&resource);
+	auto&      entry   = memo.resource_keys[((address >> 6u) ^ (address >> 17u)) &
+	                                        (RenderExecutorMemo::ResourceKeySlots - 1)];
+	uint64_t   differ  = 0;
+	for (size_t i = 0; i < probe.words.size(); i++) {
+		differ |= entry.words[i] ^ probe.words[i];
+	}
+	if (entry.resource == &resource && differ == 0) {
+		return entry.key;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::TexMemoKeyMisses, 1);
+	entry.resource = &resource;
+	entry.words    = probe.words;
+	entry.key      = MemoHashBytes(&resource, size);
+	return entry.key;
+}
+
+// Gate "texmemo2": the slot of a two-way set - the way whose tag matches, else the one to fill
+// (an unused way, else the one used longer ago). The key itself is still compared on the slot.
+static uint32_t MemoTextureWay(const RenderExecutorMemo& memo, uint64_t hash) {
+	const auto  first = static_cast<uint32_t>(hash & (RenderExecutorMemo::TextureSlots - 2));
+	const auto& a     = memo.texture_ways[first];
+	const auto& b     = memo.texture_ways[first + 1];
+	if (a.use != 0 && a.hash == hash) {
+		return first;
+	}
+	if (b.use != 0 && b.hash == hash) {
+		return first + 1;
+	}
+	if (a.use == 0) {
+		return first;
+	}
+	if (b.use == 0) {
+		return first + 1;
+	}
+	return a.use <= b.use ? first : first + 1;
+}
+
+// Gate "texfast": whether TextureCache::ConfigureImageSourceUnlocked(id, desc) would leave the
+// image as it is - the same test on the same fields, all of which only the GuestGpu thread writes.
+static bool TextureSourceSettled(const Image& image, const TextureCache::ImageDesc& desc) {
+	if (!image.info.IsBlock() || image.IsGpuModified()) {
+		return true;
+	}
+	const bool same  = image.info.data == desc.info.data && image.info.extent == desc.info.extent &&
+	                   image.info.resources == desc.info.resources;
+	const auto first = same ? desc.source_first_level : 0u;
+	const auto size  = same && desc.source_size != 0 ? desc.source_size : image.info.data.size;
+	if (image.binding.is_bound && first > image.source_first_level) {
+		return true;
+	}
+	return first == image.source_first_level && size == image.SourceRange().size;
+}
+
 TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageResource&   resource,
                                               const ShaderRecompiler::IR::DescriptorValue& value) {
 	Common::FrameStats::Scope resolve_scope(Common::FrameStats::Counter::BindResolveTexNs,
@@ -691,14 +762,27 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 	// is alive, registered and not flagged for rediscovery. Exact backing matches only (an
 	// overlap view could be superseded by a later exact image).
 	auto&          memo         = Memo();
-	const uint64_t resource_key = MemoHashBytes(
-	    &resource, reinterpret_cast<const uint8_t*>(&resource.indirect_resources) -
-	                   reinterpret_cast<const uint8_t*>(&resource));
-	auto& memo_slot = memo.textures[MemoHashBytes(descriptor.fields, sizeof(descriptor.fields),
-	                                              resource_key) %
-	                                RenderExecutorMemo::TextureSlots];
-	if (memo_slot.valid && memo_slot.resource_key == resource_key &&
-	    std::memcmp(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields)) == 0) {
+	const bool     memo2        = Common::Gates::Enabled(Common::Gates::Gate::TexMemo2);
+	const uint64_t resource_key =
+	    memo2 ? MemoResourceKey(memo, resource)
+	          : MemoHashBytes(&resource,
+	                          reinterpret_cast<const uint8_t*>(&resource.indirect_resources) -
+	                              reinterpret_cast<const uint8_t*>(&resource));
+	const uint64_t memo_hash =
+	    MemoHashBytes(descriptor.fields, sizeof(descriptor.fields), resource_key);
+	const uint32_t memo_index =
+	    memo2 ? MemoTextureWay(memo, memo_hash)
+	          : static_cast<uint32_t>(memo_hash % RenderExecutorMemo::TextureSlots);
+	auto& memo_slot = memo.textures[memo_index];
+	const bool memo_key_match =
+	    memo_slot.valid && memo_slot.resource_key == resource_key &&
+	    std::memcmp(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields)) == 0;
+	if (!memo_key_match) {
+		Common::FrameStats::Add(memo_slot.valid ? Common::FrameStats::Counter::TexMemoCollide
+		                                        : Common::FrameStats::Counter::TexMemoEmpty,
+		                        1);
+	}
+	if (memo_key_match) {
 		auto* cached = texture_cache.m_slot_images.try_get(memo_slot.image_id);
 		if (cached != nullptr && cached->registered && !cached->binding.needs_rebind &&
 		    !cached->depth_id && cached->info.data == memo_slot.desc.info.data &&
@@ -720,9 +804,16 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 				}
 			}
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindTexMemoHits, 1);
-			return {memo_slot.image_id, nullptr, memo_slot.desc};
+			if (memo2) {
+				memo.texture_ways[memo_index].use = ++memo.texture_clock;
+			}
+			return MakeTextureBinding(memo_slot.image_id, memo_slot.desc, memo_index,
+			                          memo_slot.version);
 		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexMemoStale, 1);
 		memo_slot.valid = false;
+		memo_slot.version++;
+		memo_slot.fast_view = nullptr;
 	}
 
 	const auto address      = descriptor.Base40();
@@ -882,15 +973,22 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 			(void)texture_cache.AdoptPendingDccForTexture(id, descriptor.MetaAddr() << 8u);
 		}
 	}
-	if (!stencil_association && image->info.data == desc.info.data &&
-	    image->info.extent == desc.info.extent) {
+	const bool store = !stencil_association && image->info.data == desc.info.data &&
+	                   image->info.extent == desc.info.extent;
+	if (store) {
 		std::memcpy(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields));
 		memo_slot.resource_key = resource_key;
 		memo_slot.image_id     = id;
 		memo_slot.desc         = desc;
 		memo_slot.valid        = true;
+		memo_slot.version++;
+		memo_slot.fast_view = nullptr;
+		if (memo2) {
+			memo.texture_ways[memo_index] = {memo_hash, ++memo.texture_clock};
+		}
 	}
-	return {id, nullptr, std::move(desc)};
+	return MakeTextureBinding(id, desc, store ? memo_index : UINT32_MAX,
+	                          store ? memo_slot.version : 0u);
 }
 
 RenderExecutorMemo& RenderExecutor::Memo() {
@@ -953,8 +1051,11 @@ void RenderExecutor::BindImage(ImageId id, bool storage, bool atomic) {
 // stayed black. Clear the host image before any shader binding touches it and consume the
 // metadata state so the later attachment bind loads instead of clearing.
 void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id) {
+	MaterializeDeferredDccClear(buffer, id, m_context.GetTextureCache().GetImage(id));
+}
+
+void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image) {
 	auto& cache = m_context.GetTextureCache();
-	auto& image = cache.GetImage(id);
 	if (image.info.data.Empty() || image.info.IsDepth() || image.backing.image == nullptr ||
 	    image.depth_id || !image.registered ||
 	    image.info.metadata.kind != ImageMetadataKind::Dcc) {
@@ -1210,10 +1311,96 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			          program.info.images[i].atomic);
 		}
 	}
+	// Gate "texfast": a sampled binding resolved from a memo slot takes the view recorded in that
+	// slot instead of calling FindTexture, while nothing FindTexture would act on has happened:
+	//  - CPU invalidation, maybe-dirty marking, tracking cuts and buffer-side modification move
+	//    Image::bind_stamp before they change the image. Guest-thread fault handlers do so under
+	//    TextureCache::m_lock (InvalidateCpuAliases); every other writer is this thread.
+	//  - what this thread owns is re-checked directly: registration, rebind flag, stencil
+	//    association, pending top mips, the BC source trim (TextureSourceSettled), and the slot
+	//    (version, image id) that pins the desc the view was made for.
+	// A view is recorded only after FindTexture left the image clean, with the stamp read before
+	// FindTexture and unchanged after the checks: a writer bumps first and holds the lock, so no
+	// invalidation can slip in between the two reads unseen. DCC descs, storage and dynamic
+	// storage bindings always run FindTexture. Also skipped on this path: the desc copy and the
+	// GetImage (another LRU touch) after FindTexture.
+	const bool fast       = Common::Gates::Enabled(Common::Gates::Gate::TexFast) &&
+	                        !Config::GraphicsDebugDumpEnabled();
+	const bool fast_check = fast && Common::Gates::Enabled(Common::Gates::Gate::TexFastCheck);
+	auto*      memo       = fast ? &Memo() : nullptr;
+	uint64_t   fast_ok = 0, fast_no = 0, fast_no_stamp = 0, fast_no_state = 0, fast_record = 0;
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		auto& binding = images[i];
 		binding.mip_views.clear();
 		const auto& resource = program.info.images[i];
+		if (fast && resource.mip_mode != ShaderRecompiler::IR::ImageMipMode::DynamicStorage &&
+		    binding.desc.type != TextureCache::BindingType::Storage) {
+			auto&      image    = texture_cache.m_slot_images[binding.image_id];
+			auto*      slot     = binding.memo_index < RenderExecutorMemo::TextureSlots
+			                          ? &memo->textures[binding.memo_index]
+			                          : nullptr;
+			const bool eligible = slot != nullptr && slot->valid &&
+			                      slot->version == binding.memo_version &&
+			                      slot->image_id == binding.image_id &&
+			                      binding.desc.info.metadata.kind != ImageMetadataKind::Dcc &&
+			                      image.registered && !image.depth_id &&
+			                      !image.binding.needs_rebind;
+			vk::ImageView view = nullptr;
+			if (eligible && slot->fast_view != nullptr) {
+				if (image.bind_stamp.load(std::memory_order_acquire) != slot->fast_stamp) {
+					fast_no_stamp++;
+				} else if (image.pending_levels != 0 || !TextureSourceSettled(image, binding.desc)) {
+					fast_no_state++;
+				} else {
+					view = slot->fast_view;
+				}
+			}
+			if (view != nullptr) {
+				fast_ok++;
+				if (fast_check) {
+					// Beyond the view: work FindTexture would have done that the fast path skipped
+					// (a dirty or partly untracked image), seen under an unchanged stamp so that a
+					// fault racing with this check does not count.
+					const auto before     = image.bind_stamp.load(std::memory_order_acquire);
+					const auto range      = image.SourceRange();
+					const bool needs_work = image.IsCpuDirty() || image.IsBufferModified() ||
+					                        !image.IsTracked() || image.track_addr != range.address ||
+					                        image.track_addr_end != range.End();
+					const bool unchanged  = before == slot->fast_stamp &&
+					                        image.bind_stamp.load(std::memory_order_acquire) == before;
+					const auto full = texture_cache.FindTexture(binding.image_id, binding.desc);
+					if (full != view || (needs_work && unchanged)) {
+						Common::FrameStats::Add(Common::FrameStats::Counter::TexFastBad, 1);
+						static std::atomic<uint32_t> logged {0};
+						if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+							LOGF("TexFastVerify: MISMATCH image=0x%016" PRIx64 " needs_work=%d memo_view=%p view=%p\n",
+							     image.info.data.address, needs_work ? 1 : 0,
+							     static_cast<void*>(static_cast<VkImageView>(view)),
+							     static_cast<void*>(static_cast<VkImageView>(full)));
+						}
+						slot->fast_view = nullptr;
+						view            = full;
+					}
+				}
+				binding.image_view = view;
+			} else {
+				fast_no++;
+				const auto stamp   = image.bind_stamp.load(std::memory_order_acquire);
+				binding.image_view = texture_cache.FindTexture(binding.image_id, binding.desc);
+				const auto source  = image.SourceRange();
+				if (eligible && image.pending_levels == 0 && !image.IsCpuDirty() &&
+				    !image.IsBufferModified() && image.IsTracked() &&
+				    image.track_addr == source.address && image.track_addr_end == source.End() &&
+				    TextureSourceSettled(image, binding.desc) &&
+				    image.bind_stamp.load(std::memory_order_acquire) == stamp) {
+					slot->fast_view  = binding.image_view;
+					slot->fast_stamp = stamp;
+					fast_record++;
+				}
+			}
+			image.usage.texture = true;
+			continue;
+		}
 		if (resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage) {
 			EXIT_IF(resource.mip_count == 0u ||
 			        resource.mip_count != binding.desc.view_info.level_count);
@@ -1237,6 +1424,13 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 		image.usage.storage |= storage;
 		image.usage.texture |= !storage;
 	}
+	if (fast && Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastOk, fast_ok);
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNo, fast_no);
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNoStamp, fast_no_stamp);
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNoState, fast_no_state);
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastRecord, fast_record);
+	}
 }
 
 RenderExecutor::GraphicsBindings
@@ -1251,12 +1445,23 @@ void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
                                              const ShaderStageRuntime& pixel, bool pixel_active,
                                              GraphicsBindings& bindings) {
 	PrepareBindings(vertex, bindings.vertex);
+	// Gate "bindspare": depth-only draws reset the pixel stage, which freed every vector of it
+	// (vector<TextureBinding>::_Tidy from ~PreparedBindings) and the next draw allocated them
+	// again. Park the storage in a spare instead; PrepareBindings resets the contents anyway.
+	thread_local PreparedBindings pixel_spare;
+	const bool                    spare = Common::Gates::Enabled(Common::Gates::Gate::BindSpare);
 	if (pixel_active) {
 		if (!bindings.pixel) {
 			bindings.pixel.emplace();
+			if (spare) {
+				std::swap(*bindings.pixel, pixel_spare);
+			}
 		}
 		PrepareBindings(pixel, *bindings.pixel);
 	} else {
+		if (spare && bindings.pixel) {
+			std::swap(*bindings.pixel, pixel_spare);
+		}
 		bindings.pixel.reset();
 	}
 	FindBuffers(bindings.vertex);
@@ -1280,9 +1485,12 @@ void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
                                     vk::PipelineBindPoint              pipeline_bind_point,
                                     const PipelineCache::Pipeline&     pipeline,
-                                    std::span<PreparedBindings* const> prepared_bindings) {
+                                    std::span<PreparedBindings* const> prepared_bindings,
+                                    bool                               packet) {
 	KYTY_PROFILER_FUNCTION();
-	auto   vk_buffer        = buffer.Handle();
+	// No handle up front: the GDS barrier takes a fresh one after its EndRendering, the transitions
+	// take one only when they issue a barrier, and the direct writes at the end take one right
+	// before they record. Gate "recpack" takes none.
 	size_t descriptor_count = 0;
 	size_t write_count      = 0;
 	ShaderRecompiler::IR::PushData push_data;
@@ -1333,7 +1541,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				Common::FrameStats::Add(Common::FrameStats::Counter::GdsBarriers, 1);
 				buffer.EndRendering(RenderPassEnd::Gds);
 				const auto barrier = MakeGdsDependency(descriptors.gds.buffer);
-				vk_buffer.pipelineBarrier(
+				buffer.Handle().pipelineBarrier(
 				    vk::PipelineStageFlagBits::eHost | vk::PipelineStageFlagBits::eTransfer |
 				        vk::PipelineStageFlagBits::eAllGraphics |
 				        vk::PipelineStageFlagBits::eComputeShader,
@@ -1346,8 +1554,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
-			MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id);
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
+			MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id, image);
 			auto& binding = descriptors.images[i];
 			const auto&                 view = binding.desc.view_info;
 			const ImageSubresourceRange range {view.base_level, view.level_count, view.base_layer,
@@ -1364,7 +1572,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              storage ? vk::AccessFlagBits2::eShaderRead |
 				                            vk::AccessFlagBits2::eShaderWrite
 				                      : vk::AccessFlagBits2::eShaderRead,
-				              range, vk_buffer, RenderPassEnd::BindingTransit,
+				              range, vk::CommandBuffer {}, RenderPassEnd::BindingTransit,
 				              storage && atomic_write);
 			} else if (image.binding.is_target) {
 				const auto layout = image.binding.attachment_layout;
@@ -1394,22 +1602,22 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              image.binding.attachment_access | vk::AccessFlagBits2::eShaderRead |
 				                  (image.binding.shader_write ? vk::AccessFlagBits2::eShaderWrite
 				                                              : vk::AccessFlags2 {}),
-				              {}, vk_buffer, RenderPassEnd::BindingTransit, atomic_write);
+				              {}, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write);
 			} else if (image.binding.force_general && !image.info.IsDepth()) {
 				const vk::AccessFlags2 storage_access = image.binding.shader_write
 				                                            ? vk::AccessFlagBits2::eShaderWrite
 				                                            : vk::AccessFlags2 {};
 				image.Transit(vk::ImageLayout::eGeneral,
-				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk_buffer,
+				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk::CommandBuffer {},
 				              RenderPassEnd::BindingTransit, atomic_write);
 			} else if (storage) {
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
-				              range, vk_buffer, RenderPassEnd::BindingTransit, atomic_write);
+				              range, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write);
 			} else {
 				image.Transit(image.info.IsDepth() ? vk::ImageLayout::eDepthStencilReadOnlyOptimal
 				                                   : vk::ImageLayout::eShaderReadOnlyOptimal,
-				              vk::AccessFlagBits2::eShaderRead, range, vk_buffer,
+				              vk::AccessFlagBits2::eShaderRead, range, vk::CommandBuffer {},
 				              RenderPassEnd::BindingTransit);
 			}
 			binding.layout = image.backing.state.layout;
@@ -1501,6 +1709,32 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 	}
 
+	if (packet) {
+		// Gate "recpack": the push constants and the writes go to the record thread as one record
+		// holding copies of the writes and their infos; it issues pushConstants and push
+		// descriptors, or vkUpdateDescriptorSets + bind. The set is still handed out here:
+		// DescriptorHeap stamps it with this thread's tick, and the record thread's update of it runs
+		// before that tick can complete, so no two updates of a set ever overlap.
+		EXIT_IF(buffer.Recorder() == nullptr);
+		vk::DescriptorSet set = nullptr;
+		if (!m_descriptor_writes.empty()) {
+			EXIT_IF(pipeline.descriptor_set_layout == nullptr);
+			if (!pipeline.uses_push_descriptors) {
+				set = m_context.GetDescriptorHeap().Commit(pipeline.descriptor_set_layout);
+			}
+		}
+		if (has_push_data || !m_descriptor_writes.empty()) {
+			buffer.PushBindingsPacket(
+			    pipeline_bind_point, pipeline.pipeline_layout, set, push_stages,
+			    has_push_data ? std::span<const uint32_t> {push_data.dwords}
+			                  : std::span<const uint32_t> {},
+			    m_descriptor_writes, m_descriptor_buffers, m_descriptor_images);
+		}
+		return;
+	}
+	// Taken after every barrier above, right before the writes that use it.
+	const auto vk_buffer    = buffer.Handle();
+	const auto publish_mark = buffer.PublishMark();
 	if (has_push_data) {
 		vk_buffer.pushConstants(pipeline.pipeline_layout, push_stages, 0, sizeof(push_data),
 		                        push_data.dwords.data());
@@ -1520,6 +1754,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			m_context.GetGraphics().device.updateDescriptorSets(
 			    static_cast<uint32_t>(m_descriptor_writes.size()), m_descriptor_writes.data(), 0,
 			    nullptr);
+			buffer.CheckNoPublish(publish_mark);
 			vk_buffer.bindDescriptorSets(pipeline_bind_point, pipeline.pipeline_layout, 0, 1, &set,
 			                             0, nullptr);
 		}

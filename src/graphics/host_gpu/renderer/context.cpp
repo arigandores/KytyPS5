@@ -1,5 +1,6 @@
 #include "common/assert.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/common.h"
 #include "common/profiler.h"
 #include "common/threads.h"
@@ -72,6 +73,9 @@ bool CommandBuffer::IsInvalid() const {
 vk::CommandBuffer CommandBuffer::Handle() const {
 	m_handle_uses++;
 	EXIT_IF(IsInvalid());
+	// A command recorded here while a packet is being filled would be executed before that packet,
+	// not after it: the drain below only waits for what is already published.
+	EXIT_IF(m_recorder != nullptr && m_recorder->HasOpenRecord());
 	if (m_recorder != nullptr) {
 		// Transitional (M3 step 0): this site still records vkCmd* itself. Let the record thread
 		// finish everything published so far - that also publishes m_buffer - and then record
@@ -80,6 +84,10 @@ vk::CommandBuffer CommandBuffer::Handle() const {
 		// record thread would call vkCmd* on the same VkCommandBuffer while they still record.
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
+		if (m_recorder->Backlog() != 0) {
+			// The costly kind: this thread now waits for the record thread (rec_direct_busy).
+			FS::Add(FS::Counter::RecordDirectBusy, 1);
+		}
 		m_recorder->Drain();
 		FS::Add(FS::Counter::RecordDirect, 1);
 		if (t0 != 0) {
@@ -91,7 +99,9 @@ vk::CommandBuffer CommandBuffer::Handle() const {
 
 void CommandBuffer::BeginRecorded(uint64_t tick) {
 	EXIT_IF(m_rendering || m_recorder == nullptr);
-	m_handle_uses          = 0;
+	// One use for beginning the buffer, as the direct path counts through Begin()'s Handle(): with
+	// zero uses the first global barrier of the recording would look redundant (KYTY_BARRIER_DEDUP).
+	m_handle_uses          = 1;
 	m_barrier_mark         = 0;
 	m_pending_shader_write = {};
 	// Same reset as Begin(): the GDS barrier state belongs to one recording, and the first
@@ -105,7 +115,13 @@ void CommandBuffer::BeginRecorded(uint64_t tick) {
 
 void CommandBuffer::EndRecorded(const RecordSubmit& request) const {
 	EXIT_IF(m_recorder == nullptr);
-	EndRendering(RenderPassEnd::Submit);
+	// Nothing holds a handle here, so with gate "recpack" the pass end is a record too: a direct
+	// one would make every submit wait until the whole buffer has been recorded.
+	if (PacketsWanted()) {
+		EndRenderingPacket(RenderPassEnd::Submit);
+	} else {
+		EndRendering(RenderPassEnd::Submit);
+	}
 	m_recorder->PushEndBuffer(request);
 }
 
@@ -155,13 +171,68 @@ void CommandBuffer::SetDebugInfo(uint32_t op, uint64_t submit_id, uint32_t arg0,
 	                    op, submit_id, arg0, arg1, arg2, arg3, arg4, arg5);
 }
 
+bool CommandBuffer::PacketsWanted() const {
+	return m_recorder != nullptr && Common::Gates::Enabled(Common::Gates::Gate::RecordPackets) &&
+	       !GpuTimeProfiler::Enabled();
+}
+
+uint64_t CommandBuffer::PublishMark() const noexcept {
+	return m_recorder != nullptr ? m_recorder->Published() : uint64_t {0};
+}
+
+void CommandBuffer::CheckNoPublish(uint64_t mark) const {
+	static const bool check = [] {
+		const auto* value = std::getenv("KYTY_RECORD_CHECK");
+		return value != nullptr && value[0] == '1';
+	}();
+	if (check && PublishMark() != mark) {
+		EXIT("RecordCheck: a record was published while a vk::CommandBuffer taken before it was still "
+		     "in use (published: %llu at take, %llu now)\n",
+		     static_cast<unsigned long long>(mark), static_cast<unsigned long long>(PublishMark()));
+	}
+}
+
 void CommandBuffer::BeginRendering(const RenderState& state) const {
+	BeginRenderingImpl(state, false);
+}
+
+void CommandBuffer::BeginRenderingPacket(const RenderState& state) const {
+	BeginRenderingImpl(state, true);
+}
+
+void CommandBuffer::EndRendering(RenderPassEnd why) const {
+	EndRenderingImpl(why, false);
+}
+
+void CommandBuffer::EndRenderingPacket(RenderPassEnd why) const {
+	EndRenderingImpl(why, true);
+}
+
+void CommandBuffer::ShaderWriteBarrierPacket(vk::PipelineStageFlags stages) const {
+	EXIT_IF(m_recorder == nullptr || !stages);
+	m_handle_uses++;
+	m_recorder->PushPassEnd(false, stages);
+}
+
+void CommandBuffer::PushBindingsPacket(vk::PipelineBindPoint bind_point, vk::PipelineLayout layout,
+                                       vk::DescriptorSet set, vk::ShaderStageFlags push_stages,
+                                       std::span<const uint32_t>                 push,
+                                       std::span<const vk::WriteDescriptorSet>   writes,
+                                       std::span<const vk::DescriptorBufferInfo> buffers,
+                                       std::span<const vk::DescriptorImageInfo>  images) const {
+	EXIT_IF(m_recorder == nullptr);
+	m_handle_uses++;
+	m_recorder->PushBindings(bind_point, layout, set, push_stages, push, writes, buffers, images);
+}
+
+void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) const {
 	if (m_rendering && m_render_state == state) {
 		return;
 	}
 	EXIT_IF(state.width == 0 || state.height == 0 || state.num_layers == 0 ||
 	        state.num_color_attachments > RENDER_COLOR_ATTACHMENTS_MAX);
-	EndRendering(RenderPassEnd::State);
+	EXIT_IF(packet && m_recorder == nullptr);
+	EndRenderingImpl(RenderPassEnd::State, packet);
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 	if (m_closed_valid) {
 		m_closed_valid = false;
@@ -171,6 +242,21 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 		}
 	}
 
+	if (packet) {
+		m_handle_uses++;
+		m_recorder->PushPassBegin(state);
+	} else {
+		RecordBeginRendering(Handle(), state);
+	}
+	m_render_state = state;
+	m_rendering    = true;
+	if (!packet && GpuTimeProfiler::Enabled()) {
+		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 1,
+		                                        state.num_color_attachments);
+	}
+}
+
+void RecordBeginRendering(vk::CommandBuffer command, const RenderState& state) {
 	std::array<vk::RenderingAttachmentInfo, RENDER_COLOR_ATTACHMENTS_MAX> colors {};
 	for (uint32_t i = 0; i < state.num_color_attachments; i++) {
 		const auto& attachment = state.color_attachments[i];
@@ -206,16 +292,12 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 	rendering.pColorAttachments    = colors.data();
 	rendering.pDepthAttachment     = depth_stencil.has_depth ? &depth : nullptr;
 	rendering.pStencilAttachment   = depth_stencil.has_stencil ? &stencil : nullptr;
-	Handle().beginRendering(rendering);
-	m_render_state = state;
-	m_rendering    = true;
-	if (GpuTimeProfiler::Enabled()) {
-		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 1,
-		                                        state.num_color_attachments);
-	}
+	command.beginRendering(rendering);
 }
 
-void CommandBuffer::EndRendering(RenderPassEnd why) const {
+void CommandBuffer::EndRenderingImpl(RenderPassEnd why, bool packet) const {
+	// Packet pass changes are taken only where GPU-time marks are off: marks record through Handle().
+	EXIT_IF(packet && (m_recorder == nullptr || GpuTimeProfiler::Enabled()));
 	if (!m_rendering) {
 		// A debt without an open pass cannot happen today (it is only taken on while rendering),
 		// but if it ever does, paying it here is the difference between a barrier and no barrier.
@@ -223,11 +305,18 @@ void CommandBuffer::EndRendering(RenderPassEnd why) const {
 			const auto stages      = m_pending_shader_write;
 			m_pending_shader_write = {};
 			Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
-			ShaderWriteBarrier(Handle(), stages);
+			if (packet) {
+				m_handle_uses++;
+				m_recorder->PushPassEnd(false, stages);
+			} else {
+				ShaderWriteBarrier(Handle(), stages);
+			}
 		}
 		return;
 	}
-	Handle().endRendering();
+	if (!packet) {
+		Handle().endRendering();
+	}
 	m_rendering = false;
 	if (Common::FrameStats::Enabled()) {
 		Common::FrameStats::Add(RenderPassEndCounter(Common::FrameStats::Counter::RpEndState, why),
@@ -237,13 +326,19 @@ void CommandBuffer::EndRendering(RenderPassEnd why) const {
 		m_closed_valid = true;
 	}
 	m_render_state = {};
-	if (GpuTimeProfiler::Enabled()) {
+	if (!packet && GpuTimeProfiler::Enabled()) {
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 2);
 	}
-	if (m_pending_shader_write) {
-		const auto stages      = m_pending_shader_write;
-		m_pending_shader_write = {};
+	const auto stages      = m_pending_shader_write;
+	m_pending_shader_write = {};
+	if (stages) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
+	}
+	if (packet) {
+		// One record: the pass end, then the wide barrier the pass owed.
+		m_handle_uses++;
+		m_recorder->PushPassEnd(true, stages);
+	} else if (stages) {
 		ShaderWriteBarrier(Handle(), stages);
 	}
 }

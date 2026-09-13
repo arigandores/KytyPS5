@@ -75,6 +75,7 @@ bool RenderContext::HandleFault(PageFaultAccess access, uint64_t fault_vaddr) no
 		m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);
 		const auto t1 = trace ? Common::FrameStats::NowNs() : 0;
 		m_texture_cache.InvalidateMemory(fault_vaddr, fault_size);
+		m_buffer_cache.NoteWriteFault(fault_vaddr);
 		if (trace) {
 			static std::atomic<uint64_t> count {0};
 			const auto                   n = count.fetch_add(1, std::memory_order_relaxed);

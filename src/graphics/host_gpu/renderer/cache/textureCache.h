@@ -220,6 +220,8 @@ private:
 	void ValidateImageDesc(const ImageDesc& desc) const;
 
 	void               InvalidateCpuAliases(uint64_t address, uint64_t size);
+	// Gate "texfaulthint": false when no image is registered on the pages of the range.
+	[[nodiscard]] bool MayHaveImages(uint64_t address, uint64_t size) const noexcept;
 	[[nodiscard]] bool DownloadImageMemory(ImageId id);
 
 	GraphicContext&                                   m_graphics;
@@ -233,6 +235,10 @@ private:
 	uint64_t                                          m_fill_stamp_size    = 0;
 	Common::SlotVector<Image>                         m_slot_images;
 	ImagePageTable                                    m_image_page_table;
+	// Gate "texfaulthint": images per page of m_image_page_table. Written under m_lock (raised
+	// before an image is added to a page, lowered after it is removed), read without it.
+	std::unique_ptr<std::atomic<uint32_t>[]> m_image_page_hint =
+	    std::make_unique<std::atomic<uint32_t>[]>(ImagePageTable::kPageCount);
 	std::unordered_map<vk::Format, ImageId>           m_null_images;
 	Common::LeastRecentlyUsedCache<ImageId, uint64_t> m_lru_cache;
 	std::unordered_set<ImageId>                       m_download_images;
@@ -242,6 +248,9 @@ private:
 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;
 	uint64_t         m_critical_gc_memory     = 3ull * 1024 * 1024 * 1024;
 	uint64_t         m_gc_tick                = 0;
+	// TouchImage counters (FrameTrace-x texlru_n / texlru_rep), flushed by RunGarbageCollector.
+	uint64_t         m_lru_touch_calls        = 0;
+	uint64_t         m_lru_touch_repeats      = 0;
 	mutable uint32_t m_image_query_epoch      = 0;
 	bool             m_readback_linear_images = false;
 	uint32_t         m_upload_frame           = 0; // flip count of the upload counters below

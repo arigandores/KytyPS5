@@ -13,6 +13,7 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
@@ -736,7 +737,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		return;
 	}
 
-	buffer.EndRendering(RenderPassEnd::Dispatch);
+	// Gate "recpack", decided once for the whole dispatch (see ExecutePreparedDraw).
+	const bool packet = buffer.PacketsWanted();
+	if (packet) {
+		buffer.EndRenderingPacket(RenderPassEnd::Dispatch);
+	} else {
+		buffer.EndRendering(RenderPassEnd::Dispatch);
+	}
 	auto& pipeline =
 	    m_context.GetPipelineCache().GetComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
@@ -751,7 +758,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	RebindImages(bindings);
 	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
 
-	auto vk_buffer = buffer.Handle();
+	// No handle here: the sanitizer below may submit this buffer while it waits for a ring slot, so
+	// every write takes its own handle after the points that can do that.
 
 	// Indirect arguments: the triple is read by the GPU from the cached buffer that mirrors guest
 	// memory, so results of the compute shader that produced it are used, not the stale CPU copy
@@ -783,7 +791,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 				    m_context.GetGraphics(), m_context.GetCommandScheduler());
 			}
 			std::tie(indirect_vk_buffer, indirect_vk_offset) =
-			    m_indirect_sanitizer->Sanitize(vk_buffer, *args_buffer, args_offset);
+			    m_indirect_sanitizer->Sanitize(*args_buffer, args_offset);
 			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 		} else {
 			indirect_vk_buffer = args_buffer->Handle();
@@ -793,15 +801,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			barrier.srcAccessMask =
 			    vk::AccessFlagBits::eShaderWrite | vk::AccessFlagBits::eTransferWrite;
 			barrier.dstAccessMask = vk::AccessFlagBits::eIndirectCommandRead;
-			vk_buffer.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
+			buffer.Handle().pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
 			                          vk::PipelineStageFlagBits::eDrawIndirect,
 			                          vk::DependencyFlags {}, 1, &barrier, 0, nullptr, 0, nullptr);
 		}
 	}
 
 	PreparedBindings* descriptor_stage = &bindings;
+	// The sanitizer may have submitted the buffer and begun one without a record thread.
+	const bool packet_now = packet && buffer.Recorder() != nullptr;
 	CommitBindings(buffer, vk::PipelineBindPoint::eCompute, pipeline,
-	               std::span {&descriptor_stage, 1u});
+	               std::span {&descriptor_stage, 1u}, packet_now);
 	lap.Mark(Common::FrameStats::Counter::DispatchCommitNs);
 	bool has_storage_writes = HasShaderBufferWrites(input_info.stage);
 	has_storage_writes =
@@ -812,6 +822,29 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		                           ShaderRecompiler::IR::ImageResourceClass::Storage;
 	                }) ||
 	    has_storage_writes;
+	if (packet_now) {
+		// Gate "recpack": the same calls, in the same order, as one record.
+		RecordCommandWriter tail(*buffer.Recorder());
+		buffer.NoteHandleUse();
+		if (has_storage_writes) {
+			tail.shaderWriteHazardBarrier(vk::PipelineStageFlagBits::eComputeShader);
+		}
+		tail.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
+		if (indirect) {
+			tail.dispatchIndirect(indirect_vk_buffer, indirect_vk_offset);
+		} else {
+			tail.dispatch(thread_group_x, thread_group_y, thread_group_z);
+		}
+		tail.shaderAccessBarrier(vk::PipelineStageFlagBits::eComputeShader);
+		tail.Commit(true);
+		m_context.GetTextureCache().StampPendingDccFill();
+		lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
+		ResetBindings();
+		return;
+	}
+	// Taken after the sanitizer and CommitBindings, right before the writes (KYTY_RECORD_CHECK).
+	auto       vk_buffer    = buffer.Handle();
+	const auto publish_mark = buffer.PublishMark();
 	if (has_storage_writes) {
 		// A host fence used to serialize every dispatch. Preserve its read-before-write ordering
 		// while allowing the queue to execute asynchronously.
@@ -829,6 +862,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	m_context.GetTextureCache().StampPendingDccFill();
 
 	// The removed host fence also ordered read-only dispatches before later writers.
+	buffer.CheckNoPublish(publish_mark);
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
 	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 2);
 	lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);

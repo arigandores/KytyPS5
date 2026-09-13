@@ -9,6 +9,7 @@
 #include "graphics/shader/shaderBindings.h"
 
 #include <array>
+#include <atomic>
 #include <cstddef>
 #include <unordered_map>
 
@@ -29,6 +30,15 @@ public:
 private:
 	using SamplerKey = std::array<uint32_t, 4>;
 
+	// The locked lookup (and creation) behind GetSampler.
+	vk::Sampler FindOrCreate(const ShaderSamplerResource& r);
+
+	// Gate "smpmemo": tells the per-thread memo entries of different cache objects apart.
+	static uint64_t NextInstance() {
+		static std::atomic<uint64_t> next {1};
+		return next.fetch_add(1, std::memory_order_relaxed);
+	}
+
 	struct SamplerKeyHash {
 		std::size_t operator()(const SamplerKey& key) const {
 			std::size_t hash = 0;
@@ -44,6 +54,7 @@ private:
 	GraphicContext&                                             m_graphics;
 	Common::Mutex                                               m_mutex;
 	std::unordered_map<SamplerKey, vk::Sampler, SamplerKeyHash> m_samplers;
+	uint64_t                                                    m_instance = NextInstance();
 };
 
 } // namespace Libs::Graphics

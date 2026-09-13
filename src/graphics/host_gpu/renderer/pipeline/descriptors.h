@@ -24,6 +24,10 @@ struct TextureBinding {
 	TextureCache::ImageDesc    desc;
 	vk::ImageLayout            layout = vk::ImageLayout::eUndefined;
 	std::vector<vk::ImageView> mip_views;
+	// RenderExecutorMemo::textures slot this binding was resolved from, and that slot's version
+	// then (UINT32_MAX: none). RebindImages (gate "texfast") reuses the slot's view.
+	uint32_t                   memo_index   = UINT32_MAX;
+	uint32_t                   memo_version = 0;
 };
 
 struct PreparedBindings {

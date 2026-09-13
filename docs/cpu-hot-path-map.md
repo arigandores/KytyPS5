@@ -4,6 +4,16 @@
 Цель документа — не искать это заново: где именно уходит CPU на кадр и какие кэши/эпохи уже есть
 в дереве.
 
+**Измерено в сессии 54 в Sky Garden (все правки сессии включены, ~4750 draw, CPU 50,6 мс/кадр,
+семплер потока GuestGpu, упор в CPU):** `TrackingSpinLock::lock` 14,3 % (`ObtainBuffer` →
+`IsRegionCpuModifiedAndGpuClean` 3,6 %, `PrepareBda` → `SynchronizeBuffer` 2,1 %, `FindTexture` 1,8 %,
+`IsRegionGpuModified` 1,3 %, `FindRenderTarget` 1,0 %); M1 — `VerifyWitness` 9,8 %, `QueueAheadSource`
+4,6 %, `QueueAhead` 4,4 %, `AheadTake` 2,9 % (итого 21,7 %, выигрыша M1 здесь нет); `ProtectMappedUnlocked`
+6,4 % (`SynchronizeBuffer` → `PageManager::UpdatePageWatchers`); привязки ≈21 % (`ResolveTexture` 5,3,
+`CommitBindings` 4,4, `PrepareBindings` 4,4, `FindBuffers` 3,3, `DescriptorHeap::Allocate` 2,1,
+`StreamBuffer::Copy` 1,7); листья драйвера `nvoglv64` 7,1 %. Разрывы прохода: 931 на кадр, 768 —
+shader-write барьер, 766 из них перезапускаются на тех же целях.
+
 **Измерено в сессии 54 (игровая пустыня, 755 draw, семплер потока GuestGpu):**
 
 - **`vkQueueSubmit` был 9,9 % всех семплов (17 % работы потока)** — в драйвере; вынесен на отдельный

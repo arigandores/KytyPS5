@@ -375,6 +375,10 @@ struct PageManager::Impl {
 					FS::Add(FS::Counter::ProtectMaskedNs, ns);
 					FS::Add(FS::Counter::ProtectMaskedCalls, 1);
 				}
+				if (t_pass != nullptr) {
+					// pb2_vp*: which calls of this dirty-range pass phase 2 would merge away.
+					t_pass->NoteProtect(vaddr, size, static_cast<uint32_t>(mode));
+				}
 			}
 		}
 	}
@@ -620,8 +624,15 @@ struct PageManager::Impl {
 	// Under region.lock: takes the first pending run of [first, last) - consecutive pending pages
 	// with the same host protection, at most max_pages - and clears its bits. The protection is
 	// read here, inside the caller's apply hold (Region::apply). False if the window has none.
+	// `swallow_gaps` (gate "protbatch2"): the run may also cover pages that are not pending, as long
+	// as their Perms() equals the run's protection and that protection is not ReadWrite. Such a page
+	// is protected exactly as Perms() says (Region::apply, P), so re-applying its own value changes
+	// nothing, and a page whose Perms() is not ReadWrite carries a watcher, i.e. it is mapped and was
+	// protected successfully before - the host call cannot fail on it. This is what turns the runs of
+	// a whole pass into one call per region. The run never reaches past its last pending page, so it
+	// touches nothing beyond what the caller's window already covers.
 	static bool TakePendingRun(Region& region, size_t first, size_t last, size_t max_pages,
-							   size_t* run_first, size_t* run_pages,
+							   bool swallow_gaps, size_t* run_first, size_t* run_pages,
 							   Common::VirtualMemory::Mode* perms) {
 		if (!region.has_pending) {
 			return false;
@@ -638,10 +649,28 @@ struct PageManager::Impl {
 				break;
 			}
 			const auto protection = region.pages[page].Perms();
-			size_t     end        = page + 1;
-			while (end < last && end - page < max_pages && IsPending(region, end) &&
+			const bool swallow = swallow_gaps && protection != Common::VirtualMemory::Mode::ReadWrite;
+			size_t     end     = page + 1;
+			size_t     taken   = end; // one past the last pending page of the run
+			uint64_t   gaps    = 0;
+			while (end < last && end - page < max_pages &&
 				   region.pages[end].Perms() == protection) {
+				const bool pending = IsPending(region, end);
+				if (!pending && !swallow) {
+					break;
+				}
 				end++;
+				if (pending) {
+					taken = end;
+				} else {
+					gaps++;
+				}
+			}
+			gaps -= end - taken; // trailing swallowed pages are dropped again
+			end = taken;
+			if (gaps != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::PassGapRuns, 1);
+				Common::FrameStats::Add(Common::FrameStats::Counter::PassGapPages, gaps);
 			}
 			if (region.applying_run.load(std::memory_order_relaxed) != 0) {
 				// pb_inflight_bad: the previous run of an application was never withdrawn.
@@ -688,8 +717,8 @@ struct PageManager::Impl {
 			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
 			{
 				SpinGuard lock(region.lock);
-				if (!TakePendingRun(region, 0, REGION_PAGES, call_pages, &run_first, &run_pages,
-									&perms)) {
+				if (!TakePendingRun(region, 0, REGION_PAGES, call_pages, false, &run_first,
+									&run_pages, &perms)) {
 					break;
 				}
 			}
@@ -730,6 +759,14 @@ struct PageManager::Impl {
 		                 would ? FS::Counter::ApplySkipWouldWaitGpuNs : FS::Counter::Count);
 		t_protect_masked      = false;
 		const auto call_pages = WorkerCallPages();
+		// Gate "protbatch2": a flush of a whole pass finds the pending runs of several buffers in one
+		// region; letting a run cover the already read-only pages between them makes it one host call.
+		// Only the flushes of the pass itself: every other flush (fault handler, protection worker,
+		// texture invalidation) carries the runs of one caller, where swallowing only widens the
+		// host call and makes pb2_gap* count someone else's pages. Without "protbatch" nothing is
+		// deferred on this path anyway, so the pass owning its flush is not enough on its own.
+		const bool swallow_gaps = t_pass != nullptr && t_pass->m_owns_flush &&
+		                          Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch);
 		uint32_t   runs       = 0;
 		uint64_t   pages      = 0;
 		for (;;) {
@@ -738,8 +775,8 @@ struct PageManager::Impl {
 			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
 			{
 				SpinGuard lock(region.lock);
-				if (!TakePendingRun(region, first, last, call_pages, &run_first, &run_pages,
-									&perms)) {
+				if (!TakePendingRun(region, first, last, call_pages, swallow_gaps, &run_first,
+									&run_pages, &perms)) {
 					break;
 				}
 			}
@@ -927,6 +964,8 @@ struct PageManager::Impl {
 	static thread_local bool t_protect_masked;
 	// The open BatchScope of this thread (gate "protbatch"), innermost first.
 	static thread_local PageManager::BatchScope* t_batch;
+	// The open PassScope of this thread (gate "protbatch2"), innermost first.
+	static thread_local PageManager::PassScope* t_pass;
 
 	std::unique_ptr<std::atomic<Region*>[]> regions;
 	std::vector<std::unique_ptr<Region>>    region_storage;
@@ -945,6 +984,7 @@ struct PageManager::Impl {
 thread_local bool PageManager::Impl::t_protect_worker = false;
 thread_local bool PageManager::Impl::t_protect_masked = false;
 thread_local PageManager::BatchScope* PageManager::Impl::t_batch = nullptr;
+thread_local PageManager::PassScope*  PageManager::Impl::t_pass  = nullptr;
 
 static_assert(std::atomic<void*>::is_always_lock_free);
 
@@ -1004,6 +1044,101 @@ void PageManager::BatchScope::Flush() noexcept {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BatchMerged, 1);
 		}
 	}
+}
+
+PageManager::PassScope::PassScope(PageManager& manager, bool owns_flush) noexcept
+	: m_manager(manager), m_owns_flush(owns_flush) {
+	m_previous     = Impl::t_pass;
+	Impl::t_pass   = this;
+}
+
+PageManager::PassScope::~PassScope() {
+	if (m_owns_flush) {
+		Flush(); // a pass that already flushed leaves nothing here; a path that forgot is covered
+	}
+	Impl::t_pass = m_previous;
+}
+
+void PageManager::PassScope::Note(uint64_t vaddr, uint64_t size) {
+	if (!m_owns_flush && !Common::FrameStats::Enabled()) {
+		// With the gate off this scope flushes nothing, and the only thing left to do here is the
+		// pb2_reg ceiling count: without the counters the pass must not pay for the walk at all.
+		return;
+	}
+	if (!GuestRange {vaddr, size}.Valid()) {
+		return;
+	}
+	auto       begin = Common::AlignDown(vaddr, PAGE_SIZE);
+	const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
+	while (begin < end) {
+		const auto base  = Common::AlignDown(begin, REGION_SIZE);
+		const auto chunk = std::min(end, base + REGION_SIZE);
+		uint32_t   index = 0;
+		for (; index < m_count; index++) {
+			if (m_windows[index].base == base) {
+				break;
+			}
+		}
+		if (index == m_count) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassRegions, 1);
+			if (m_count < Capacity) {
+				m_windows[m_count++] = {base, begin, chunk};
+				begin                = chunk;
+				continue;
+			}
+			// Full. Nothing may be closed here, and nothing may be flushed here: Note runs BEFORE
+			// the pages of its range are armed, so a window flushed now has nothing pending yet -
+			// a protection another caller left deferred on those pages (the texture cache arms its
+			// watchers through the protection worker) would stay unapplied, the pages would stay
+			// writable on the host with their CPU-dirty bits already taken, and a guest write into
+			// them would be lost. One range can cover more regions than Capacity by itself, so
+			// dropping a window is not a corner case. A window may span several regions instead -
+			// FlushProtection walks every region of its range - so the chunk joins the window that
+			// has to stretch the least for it and Flush() keeps covering everything that was noted.
+			uint32_t best = 0;
+			uint64_t cost = UINT64_MAX;
+			for (uint32_t i = 0; i < m_count; i++) {
+				const auto added = (std::max(m_windows[i].end, chunk) -
+				                    std::min(m_windows[i].begin, begin)) -
+				                   (m_windows[i].end - m_windows[i].begin);
+				if (added < cost) {
+					cost = added;
+					best = i;
+				}
+			}
+			index = best;
+		}
+		m_windows[index].begin = std::min(m_windows[index].begin, begin);
+		m_windows[index].end   = std::max(m_windows[index].end, chunk);
+		begin                  = chunk;
+	}
+}
+
+void PageManager::PassScope::Flush() {
+	const auto count = m_count;
+	m_count          = 0;
+	for (uint32_t index = 0; index < count; index++) {
+		const auto& window = m_windows[index];
+		m_manager.FlushProtection(window.begin, window.end - window.begin);
+	}
+}
+
+void PageManager::PassScope::NoteProtect(uint64_t vaddr, uint64_t size, uint32_t mode) noexcept {
+	namespace FS = Common::FrameStats;
+	FS::Add(FS::Counter::PassProtectCalls, 1);
+	FS::Add(FS::Counter::PassProtectPages, size / PAGE_SIZE);
+	const auto base = Common::AlignDown(vaddr, REGION_SIZE);
+	if (m_last_seen && m_last_base == base && m_last_mode == mode) {
+		// Phase 2 applies one merged run per region per pass: a call continuing the previous one
+		// disappears into it, and one with a gap in between disappears as well once the run may
+		// swallow the pages there (they carry that protection already).
+		FS::Add(vaddr == m_last_end ? FS::Counter::PassProtectAdjacent : FS::Counter::PassProtectNear,
+		        1);
+	}
+	m_last_seen = true;
+	m_last_base = base;
+	m_last_end  = vaddr + size;
+	m_last_mode = mode;
 }
 
 void PageManager::FlushProtection(uint64_t vaddr, uint64_t size) {

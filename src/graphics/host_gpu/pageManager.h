@@ -72,6 +72,54 @@ public:
 		bool                       m_enabled = false;
 	};
 
+	// Gate "protbatch2" (session 58, phase 2 of "protbatch"). One pass of read-only buffer
+	// synchronizations - the BDA dirty-range scan of PrepareBda, which pays one scope flush and one
+	// range flush per buffer today. Every range whose CPU-dirty bits the pass is about to consume is
+	// noted here before it consumes them, and Flush() applies, once per tracking region, both the
+	// write watchers the pass deferred into its BatchScope and any protection another caller left
+	// pending on those ranges. The scope also attributes the host protection calls made inside it to
+	// the pass (pb2_vp, pb2_vp_adj, pb2_vp_near), which measures the ceiling of the merge while the
+	// gate is still off. At most Capacity windows are open at once; a further region joins the
+	// window that has to stretch the least for it - a window may span several regions, because
+	// FlushProtection walks every region of its range. Nothing is ever closed early: a range is
+	// noted BEFORE its pages are armed, so a window flushed here would have nothing pending yet
+	// and would leave the deferred protection of another caller on its pages unapplied.
+	class PassScope final {
+	public:
+		// `owns_flush`: the caller relies on this scope for the protection of its ranges (gate on).
+		// Without it the scope only counts and the per-synchronization flushes stay where they are.
+		PassScope(PageManager& manager, bool owns_flush) noexcept;
+		~PassScope();
+		KYTY_CLASS_NO_COPY(PassScope);
+
+		// The pass is about to clear the CPU-dirty bits of this range. Does nothing when the
+		// scope owns no flush and the counters are off: there is no one left to serve then.
+		void Note(uint64_t vaddr, uint64_t size);
+		// Must return before the pass reads a guest byte of any range it noted.
+		void Flush();
+
+	private:
+		friend struct PageManager::Impl;
+		static constexpr uint32_t Capacity = 8;
+		struct Window {
+			uint64_t base  = 0; // tracking region the window lies in
+			uint64_t begin = 0;
+			uint64_t end   = 0;
+		};
+		void NoteProtect(uint64_t vaddr, uint64_t size, uint32_t mode) noexcept;
+
+		PageManager&                 m_manager;
+		PassScope*                   m_previous = nullptr;
+		std::array<Window, Capacity> m_windows {};
+		uint32_t                     m_count      = 0;
+		bool                         m_owns_flush = false;
+		// The previous host protection call of this pass, for the merge counters above.
+		uint64_t                     m_last_end  = 0;
+		uint64_t                     m_last_base = 0;
+		uint32_t                     m_last_mode = 0;
+		bool                         m_last_seen = false;
+	};
+
 	// Applies protection changes of [vaddr, vaddr + size) that are still pending, waiting for one
 	// another thread is applying right now (gate "protbatch": an invalidation must not return
 	// while its page is logically writable but still protected on the host).

@@ -68,6 +68,16 @@ enum class Gate : uint32_t {
 	DrawStateReuse, // KYTY_DRAW_STATE_REUSE,    file name "drawstate" (B1: per-thread draw state)
 	SnapshotKeep,   // KYTY_SNAPSHOT_KEEP,       file name "snapkeep" (B4: kept snapshot storage)
 	BufLru,         // KYTY_BUF_LRU,             file name "buflru"
+	// Session 58, B4 follow-up (snapshot copies).
+	SnapshotDiff,   // KYTY_SNAPSHOT_DIFF,       file name "snapdiff" (assign changed vectors only)
+	SnapshotSwap,   // KYTY_SNAPSHOT_SWAP,       file name "snapswap" (swap on a slot's last use)
+	// Session 58, M2 step 1 (buffer request memo).
+	BufFast,        // KYTY_BUF_FAST,            file name "buffast"
+	BufFastCheck,   // KYTY_BUF_FAST_VERIFY,     file name "buffastcheck"
+	// Session 58, A3 phase 2 (one host protection flush per BDA dirty-range pass).
+	ProtectBatchPass, // KYTY_PROTECT_BATCH2,     file name "protbatch2"
+	// Session 58, Sky Garden hang: liveness of the async-copy timeline semaphore.
+	AsyncCopyIdleSignal, // KYTY_ASYNC_COPY_IDLE_SIGNAL, file name "acopyidle"
 	Count,
 };
 

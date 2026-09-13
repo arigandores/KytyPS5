@@ -36,6 +36,7 @@
 #include "kernel/memory.h"
 
 #include <algorithm>
+#include <array>
 #include <atomic>
 #include <cstdlib>
 #include <cstdio>
@@ -197,8 +198,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			return {stream.Handle(), stream_offset, size};
 		}
 	}
+	// The last argument (gate "buffast"): this binding asks for the same range every draw.
 	auto [buffer, offset] = context.GetBufferCache().ObtainBuffer(address, size, resource.written,
-	                                                              resource.formatted, id);
+	                                                              resource.formatted, id, true);
 	const auto aligned_offset = Common::AlignDown(offset, alignment);
 	const auto adjustment     = offset - aligned_offset;
 	const auto max_range      = graphics.GetPhysicalDeviceProperties().limits.maxStorageBufferRange;
@@ -1509,7 +1511,18 @@ void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 // to one pipeline) and with the previous graphics write. With dynamic storage buffers only the
 // offset moves: the handle and the range stay in the set, so "base" compares handles with ranges.
 // CommitBindings runs under the render mutex on the GuestGpu thread: plain globals.
+//
+// Session 58, B9: "base" says that a write repeats up to its offsets, not how many offsets moved.
+// Every moved offset costs one dynamic descriptor, and a device grants only
+// maxDescriptorSet{Storage,Uniform}BuffersDynamic of them per pipeline layout, so the slot keeps
+// the offsets themselves as well: the repeating writes then split into the ones that would fit
+// that budget and the ones that never can.
 namespace {
+
+// Buffer descriptors whose offset is kept per layout. One stage binds up to ShaderInfo::MaxBuffers
+// storage views plus their const-bank aliases and the five fixed buffer bindings, so two stages can
+// pass this; the sets that do are counted apart (e9_dyn_cap) instead of being measured wrong.
+constexpr uint32_t SetStatMaxBuffers = 64;
 
 struct DescriptorSetStat {
 	uint64_t layout  = 0;
@@ -1517,19 +1530,87 @@ struct DescriptorSetStat {
 	uint64_t buffers = 0;
 	uint64_t ranges  = 0;
 	uint64_t full    = 0;
+	// B9. An offset is kept as its low 32 bits: every buffer bound here is far below 4 GiB.
+	// `moved` accumulates over the layout and not over the write, because the descriptor type is
+	// declared on the set layout: one draw that moves a descriptor makes it dynamic for all draws.
+	uint32_t                                buffer_count = 0;
+	uint64_t                                moved        = 0;
+	uint64_t                                uniforms     = 0;
+	std::array<uint32_t, SetStatMaxBuffers> offsets {};
 };
 
 constinit DescriptorSetStat g_set_stats[16384] {};
 constinit DescriptorSetStat g_set_last {};
 constinit uint32_t          g_set_run = 0;
+constinit bool              g_dyn_limits_noted = false;
 
 constexpr uint64_t SetStatMix(uint64_t hash, uint64_t value) noexcept {
 	return hash ^ (value + 0x9e3779b97f4a7c15ull + (hash << 6u) + (hash >> 2u));
 }
 
+// B9: how many buffer descriptors would have to carry a dynamic offset for this write to reuse the
+// set of `last`, and whether the device budget stretches that far. Called for the writes that
+// already repeat the images, the handles and the ranges -- everything else of them is in place.
+void NoteDynamicOffsetStat(RenderContext& context, const DescriptorSetStat& last,
+                           DescriptorSetStat& current) {
+	using Counter              = Common::FrameStats::Counter;
+	const auto& limits         = context.GetGraphics().GetPhysicalDeviceProperties().limits;
+	const auto  storage_budget = limits.maxDescriptorSetStorageBuffersDynamic;
+	const auto  uniform_budget = limits.maxDescriptorSetUniformBuffersDynamic;
+	if (!g_dyn_limits_noted) {
+		// Once: the trace line prints per-frame deltas, so the two budgets show up in the first
+		// frame that carries a counted write and stay out of every other frame's numbers.
+		g_dyn_limits_noted = true;
+		Common::FrameStats::Add(Counter::E9DynLimit, storage_budget);
+		Common::FrameStats::Add(Counter::E9DynLimitUniform, uniform_budget);
+	}
+	if (current.buffer_count > SetStatMaxBuffers || last.buffer_count != current.buffer_count) {
+		// Not measurable, counted apart instead of measured wrong: above the cap the offsets of
+		// both writes are truncated, and a different buffer count behind an equal `ranges` hash is
+		// a collision of that hash - the two writes do not repeat each other at all, and the tail
+		// of the longer one would be compared against the zeros of the shorter and reported as
+		// moved. `last.buffer_count > SetStatMaxBuffers` falls into the same check.
+		Common::FrameStats::Add(Counter::E9DynCapped, 1);
+		return;
+	}
+	uint64_t moved = 0;
+	for (uint32_t i = 0; i < current.buffer_count; i++) {
+		moved |= last.offsets[i] != current.offsets[i] ? uint64_t {1} << i : uint64_t {0};
+	}
+	current.moved |= moved;
+	const auto storage_n = static_cast<uint32_t>(std::popcount(moved & ~current.uniforms));
+	const auto uniform_n = static_cast<uint32_t>(std::popcount(moved & current.uniforms));
+	const auto needed    = storage_n + uniform_n;
+	Common::FrameStats::Add(storage_n <= storage_budget && uniform_n <= uniform_budget
+	                            ? Counter::E9DynOk
+	                            : Counter::E9DynOver,
+	                        1);
+	if (needed != 0) {
+		// 1 | 2 | 3-4 | 5-8 | >8: the budget is a small power of two, so a bucket edge sits on it.
+		const auto bucket = needed == 1u   ? 0u
+		                    : needed <= 2u ? 1u
+		                    : needed <= 4u ? 2u
+		                    : needed <= 8u ? 3u
+		                                   : 4u;
+		Common::FrameStats::Add(
+		    static_cast<Counter>(static_cast<uint32_t>(Counter::E9DynNeed1) + bucket), 1);
+	}
+	// The layout, not this pair of writes: a descriptor that ever moves is dynamic in every draw,
+	// so a layout past the budget stays past it whatever the two writes at hand look like.
+	const auto layout_storage =
+	    static_cast<uint32_t>(std::popcount(current.moved & ~current.uniforms));
+	const auto layout_uniform =
+	    static_cast<uint32_t>(std::popcount(current.moved & current.uniforms));
+	Common::FrameStats::Add(Counter::E9DynLayoutOver, layout_storage > storage_budget ||
+	                                                          layout_uniform > uniform_budget
+	                                                      ? 1u
+	                                                      : 0u);
+}
+
 void NoteDescriptorSetStat(RenderContext& context, const PipelineCache::Pipeline& pipeline,
                            std::span<const vk::DescriptorImageInfo>  images,
-                           std::span<const vk::DescriptorBufferInfo> buffers) {
+                           std::span<const vk::DescriptorBufferInfo> buffers,
+                           std::span<const vk::WriteDescriptorSet>   writes) {
 	using Counter = Common::FrameStats::Counter;
 	if (pipeline.uses_push_descriptors) {
 		Common::FrameStats::Add(Counter::E9Push, 1);
@@ -1545,13 +1626,34 @@ void NoteDescriptorSetStat(RenderContext& context, const PipelineCache::Pipeline
 		current.images = SetStatMix(current.images, reinterpret_cast<uintptr_t>(static_cast<VkImageView>(image.imageView)));
 		current.images = SetStatMix(current.images, static_cast<uint64_t>(image.imageLayout));
 	}
-	uint64_t streams = 0;
-	for (const auto& buffer: buffers) {
+	uint64_t streams     = 0;
+	current.buffer_count = static_cast<uint32_t>(buffers.size());
+	for (uint32_t i = 0; i < buffers.size(); i++) {
+		const auto& buffer = buffers[i];
 		const auto handle = reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(buffer.buffer));
 		current.buffers   = SetStatMix(current.buffers, handle);
 		current.ranges    = SetStatMix(SetStatMix(current.ranges, handle), buffer.range);
 		current.full      = SetStatMix(SetStatMix(SetStatMix(current.full, handle), buffer.range), buffer.offset);
 		streams += handle == stream ? 1u : 0u;
+		if (i < SetStatMaxBuffers) {
+			current.offsets[i] = static_cast<uint32_t>(buffer.offset);
+		}
+	}
+	// B9: a uniform view spends the separate maxDescriptorSetUniformBuffersDynamic budget. The
+	// infos of one write are a contiguous slice of `buffers`, so a descriptor's index is the
+	// distance from its front (the vector is reserved before the writes are built, and the write
+	// keeps the pointer it got then).
+	for (const auto& write: writes) {
+		if (write.pBufferInfo == nullptr ||
+		    write.descriptorType != vk::DescriptorType::eUniformBuffer) {
+			continue;
+		}
+		const auto first = static_cast<size_t>(write.pBufferInfo - buffers.data());
+		for (uint32_t i = 0; i < write.descriptorCount; i++) {
+			if (first + i < SetStatMaxBuffers) {
+				current.uniforms |= uint64_t {1} << (first + i);
+			}
+		}
 	}
 	Common::FrameStats::Add(Counter::E9Sets, 1);
 	Common::FrameStats::Add(Counter::E9BufferInfos, buffers.size());
@@ -1567,6 +1669,11 @@ void NoteDescriptorSetStat(RenderContext& context, const PipelineCache::Pipeline
 		Common::FrameStats::Add(Counter::E9SameBufferRanges, same_ranges ? 1u : 0u);
 		Common::FrameStats::Add(Counter::E9SameBase, same_images && same_ranges ? 1u : 0u);
 		Common::FrameStats::Add(Counter::E9SameFull, same_images && last.full == current.full ? 1u : 0u);
+		// B9 lives inside e9_base, and the moved descriptors of the layout carry over the slot.
+		current.moved = last.moved;
+		if (same_images && same_ranges) {
+			NoteDynamicOffsetStat(context, last, current);
+		}
 	}
 	const bool adjacent = g_set_last.layout == current.layout;
 	Common::FrameStats::Add(Counter::E9Adjacent, adjacent ? 1u : 0u);
@@ -1588,6 +1695,9 @@ void NoteDescriptorSetStat(RenderContext& context, const PipelineCache::Pipeline
 static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::E9RunDraws64) -
                   static_cast<uint32_t>(Common::FrameStats::Counter::E9RunDraws1) ==
               6u);
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::E9DynNeedMore) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::E9DynNeed1) ==
+              4u);
 
 } // namespace
 
@@ -1822,7 +1932,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 
 	if (Common::DrawStat::On() && pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
 	    !m_descriptor_writes.empty()) {
-		NoteDescriptorSetStat(m_context, pipeline, m_descriptor_images, m_descriptor_buffers);
+		NoteDescriptorSetStat(m_context, pipeline, m_descriptor_images, m_descriptor_buffers,
+		                      m_descriptor_writes);
 	}
 	if (packet) {
 		// Gate "recpack": the push constants and the writes go to the record thread as one record

@@ -74,6 +74,16 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_DRAW_STATE_REUSE", "drawstate", true},
     {"KYTY_SNAPSHOT_KEEP", "snapkeep", true},
     {"KYTY_BUF_LRU", "buflru", true},
+    // Session 58, B4 follow-up (snapshot copies).
+    {"KYTY_SNAPSHOT_DIFF", "snapdiff", true},
+    {"KYTY_SNAPSHOT_SWAP", "snapswap", true},
+    // Session 58, M2 step 1 (buffer request memo).
+    {"KYTY_BUF_FAST", "buffast", false},
+    {"KYTY_BUF_FAST_VERIFY", "buffastcheck", false},
+    // Session 58, A3 phase 2 (one host protection flush per BDA dirty-range pass).
+    {"KYTY_PROTECT_BATCH2", "protbatch2", false},
+    // Session 58, Sky Garden hang: liveness of the async-copy timeline semaphore.
+    {"KYTY_ASYNC_COPY_IDLE_SIGNAL", "acopyidle", true},
 }};
 
 struct KnobDefinition {

@@ -90,6 +90,12 @@ public:
 	// CPU-dirty, read without the region locks. GuestGpu thread only (BufferCache::SyncFreeSkip
 	// checks it and documents why a stale answer is safe).
 	[[nodiscard]] bool IsRegionCpuCleanFast(uint64_t vaddr, uint64_t size);
+	// The page manager behind this tracker. The buffer cache opens the batch and the pass scope of
+	// one dirty-range pass on it (gates "protbatch" / "protbatch2"); nothing else reaches past this.
+	[[nodiscard]] PageManager& Pages() noexcept { return m_page_manager; }
+	// Gate "protbatch2": applies what another caller left pending on a range, see
+	// PageManager::FlushProtection.
+	void FlushProtection(uint64_t vaddr, uint64_t size) { m_page_manager.FlushProtection(vaddr, size); }
 	// Gate "pbcheck", see PageManager::VerifyProtection.
 	void VerifyProtection(uint64_t vaddr, uint64_t size) { m_page_manager.VerifyProtection(vaddr, size); }
 	// Snapshot without clearing bits or changing protection. Missing regions are CPU-dirty,
@@ -262,13 +268,20 @@ public:
 		});
 	}
 
+	// pass_batch (gate "protbatch2", read-only uploads only): the caller owns both the batch scope
+	// and the flush of a whole pass of uploads and copies nothing until that flush returned
+	// (BufferCache::SynchronizeBuffersOfDirtyRangesBatched). Opening a scope here would become the
+	// innermost one and undo the merge, and flushing here would be one flush per buffer again.
 	template <typename RangeFunc, typename UploadFunc>
 	void ForEachUploadRange(uint64_t vaddr, uint64_t size, bool is_written, RangeFunc&& range_func,
 	                        UploadFunc&& upload_func, bool batch_protect = false,
-	                        const StickyUploadStat* sticky_stat = nullptr) {
+	                        const StickyUploadStat* sticky_stat = nullptr, bool pass_batch = false) {
 		static_assert(std::is_nothrow_invocable_v<RangeFunc&, uint64_t, uint64_t>);
 		static_assert(std::is_nothrow_invocable_v<UploadFunc&>);
 		CheckNotInUploadCallback();
+		if (pass_batch && is_written) {
+			EXIT("upload pass batch on a written range\n");
+		}
 		Iterate<true>(vaddr, size, [](RegionManager*, uint64_t, uint64_t) {});
 		const auto* previous_upload_owner = std::exchange(s_upload_owner, this);
 		{
@@ -276,7 +289,7 @@ public:
 			// by clearing the CPU-dirty bits are applied after every region lock is released and
 			// BEFORE upload_func copies the bytes, so a guest write either precedes the protection
 			// and is part of the copy, or faults. Written uploads keep everything under the lock.
-			PageManager::BatchScope batch(m_page_manager, batch_protect && !is_written);
+			PageManager::BatchScope batch(m_page_manager, batch_protect && !is_written && !pass_batch);
 			Iterate<false>(vaddr, size, [&](RegionManager* manager, uint64_t offset, uint64_t bytes) {
 				manager->lock.lock();
 				if (sticky_stat != nullptr && !is_written) {
@@ -289,17 +302,20 @@ public:
 					manager->lock.unlock();
 				}
 			});
-			batch.Flush();
-			if (!is_written) {
-				// Whatever the scope held, and whether or not the gate is on: a page of this range
-				// may carry a deferred protection of another caller (the texture cache arms its
-				// watchers through the protection worker), and the copy below must not read a page
-				// the host still lets the guest write. The scope only covers its first regions.
-				Iterate<false>(vaddr, size,
-				               [&](RegionManager* manager, uint64_t offset, uint64_t bytes) {
-					               m_page_manager.FlushProtection(manager->GetCpuAddr() + offset,
-					                                              bytes);
-				               });
+			if (!pass_batch) {
+				batch.Flush();
+				if (!is_written) {
+					// Whatever the scope held, and whether or not the gate is on: a page of this
+					// range may carry a deferred protection of another caller (the texture cache
+					// arms its watchers through the protection worker), and the copy below must not
+					// read a page the host still lets the guest write. The scope only covers its
+					// first regions.
+					Iterate<false>(vaddr, size,
+					               [&](RegionManager* manager, uint64_t offset, uint64_t bytes) {
+						               m_page_manager.FlushProtection(manager->GetCpuAddr() + offset,
+						                                              bytes);
+					               });
+				}
 			}
 		}
 		upload_func();

@@ -14,6 +14,7 @@
 #include "graphics/host_gpu/renderer/cache/multiLevelPageTable.h"
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 
+#include <atomic>
 #include <map>
 #include <mutex>
 #include <span>
@@ -65,10 +66,14 @@ public:
 	// Keep an already discovered owner alive when the binding uses a direct CPU copy.
 	// A replaced/coalesced owner requires the ordinary ObtainBuffer path instead.
 	[[nodiscard]] bool TouchReadOnlyBuffer(BufferId id, uint64_t vaddr, uint64_t size);
+	// memoizable (gate "buffast"): this caller asks for the same guest range again draw after
+	// draw and may take a remembered answer. Only the descriptor bindings do; every other caller
+	// asks once, for a range it is about to write or to hand to an image upload.
 	[[nodiscard]] std::pair<Buffer*, uint64_t> ObtainBuffer(uint64_t vaddr, uint64_t size,
 	                                                        bool     is_written,
 	                                                        bool     is_texel_buffer = false,
-	                                                        BufferId id              = {});
+	                                                        BufferId id              = {},
+	                                                        bool     memoizable      = false);
 	[[nodiscard]] StreamBuffer&                GetUtilityBuffer(MemoryUsage usage) noexcept {
 		switch (usage) {
 			case MemoryUsage::Upload: return m_staging_buffer;
@@ -193,6 +198,14 @@ private:
 	[[nodiscard]] bool SyncFreeSkip(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] vk::Buffer UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
 	                                      uint64_t total_size);
+	// Records the staging -> buffer copies of one synchronization (no-op without a source).
+	void RecordBufferCopies(Buffer& buffer, vk::Buffer source,
+	                        std::span<const vk::BufferCopy> copies, uint64_t total_size);
+	// Gate "protbatch2": the first half of a read-only SynchronizeBuffer - everything up to the
+	// copy. True when the range has bytes to copy once the caller's pass flush returned.
+	[[nodiscard]] bool CollectBufferUpload(Buffer& buffer, uint64_t vaddr, uint64_t size,
+	                                       std::vector<vk::BufferCopy>& copies,
+	                                       uint64_t& total_size);
 	[[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);
 	void DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason = "read");
 	[[nodiscard]] static uint64_t StagingRingBytes();
@@ -245,6 +258,21 @@ private:
 	uint64_t                                           m_bda_stamp_generation = 1;
 	void SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end);
 	void SynchronizeBuffersOfDirtyRanges();
+	void SynchronizeBuffersOfDirtyRangesBatched(PageManager::PassScope& pass);
+	// Gate "protbatch2": one collected synchronization of the current pass, copied after its flush.
+	struct PassUpload {
+		BufferId                    id;
+		uint64_t                    vaddr      = 0;
+		uint64_t                    size       = 0;
+		uint64_t                    total_size = 0;
+		std::vector<vk::BufferCopy> copies;
+	};
+	// Storage kept between passes (177 passes a frame): only the first entries are live.
+	std::vector<PassUpload>                            m_pass_uploads;
+	size_t                                             m_pass_upload_count = 0;
+	// The entries above are object state that outlives the collection phase: a reentrant pass
+	// would take them over while this one still copies from them.
+	bool                                               m_in_pass = false;
 	uint64_t                                          m_registration_epoch = 1;
 	PageTable                                         m_page_table;
 	RangeSet                                          m_gpu_modified_ranges;
@@ -258,6 +286,12 @@ private:
 	uint64_t m_trigger_gc_memory  = 1ull * 1024 * 1024 * 1024;
 	uint64_t m_critical_gc_memory = 2ull * 1024 * 1024 * 1024;
 	uint64_t m_gc_tick            = 0;
+	// Gate "buffast": tells the per-thread memo entries of different cache objects apart.
+	static uint64_t NextInstance() {
+		static std::atomic<uint64_t> next {1};
+		return next.fetch_add(1, std::memory_order_relaxed);
+	}
+	uint64_t m_instance = NextInstance();
 
 	// Readback prefetch state (PrefetchHotReadbacks). A hot region is the 512 KB window around
 	// an address whose CPU read had to drain the GPU; GPU writes are sequence-stamped per 64 KB

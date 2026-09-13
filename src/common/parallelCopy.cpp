@@ -1,5 +1,7 @@
 #include "common/parallelCopy.h"
 
+#include "common/gates.h"
+
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -68,6 +70,11 @@ public:
 	}
 
 	[[nodiscard]] uint64_t Completed() const { return m_completed.load(std::memory_order_acquire); }
+
+	[[nodiscard]] uint64_t Signaled() {
+		std::lock_guard lock(m_signal_mutex);
+		return m_signaled;
+	}
 
 	void AddSignal(void (*signal)(uint64_t, void*), void* user) {
 		std::lock_guard lock(m_signal_mutex);
@@ -154,6 +161,9 @@ private:
 			std::memcpy(job.dst, job.src, job.size);
 			Complete(job.sequence);
 			if (m_pending.fetch_sub(1, std::memory_order_acq_rel) == 1) {
+				if (Gates::Enabled(Gates::Gate::AsyncCopyIdleSignal)) {
+					SignalIdle();
+				}
 				std::lock_guard lock(m_mutex);
 				m_finished.notify_all();
 			}
@@ -193,6 +203,36 @@ private:
 				for (const auto& s: m_signals) {
 					s.signal(mark, s.user);
 				}
+			}
+		}
+	}
+
+	// Gate "acopyidle": the last queued chunk landed, so publish the completed mark even
+	// when no recorded request crossed it. Complete() only signals on a request boundary,
+	// which makes the liveness of an already submitted batch depend on the m_requests /
+	// m_signaled bookkeeping; a submit whose request did not survive it would wait on the
+	// queue for a value the pool never sends again, and every batch behind it - including
+	// the presents - stops with it. The mark is a prefix that really landed and it only
+	// grows, so an extra signal can never release a batch too early; at most one extra
+	// vkSignalSemaphore is issued per drain of the pool.
+	void SignalIdle() {
+		uint64_t mark = 0;
+		{
+			std::lock_guard lock(m_mutex);
+			if (!m_jobs.empty()) {
+				// Queued again while this chunk was copied: the new tail signals instead.
+				return;
+			}
+			mark = m_completed.load(std::memory_order_acquire);
+			while (!m_requests.empty() && m_requests.front() <= mark) {
+				m_requests.pop_front();
+			}
+		}
+		std::lock_guard lock(m_signal_mutex);
+		if (mark > m_signaled) {
+			m_signaled = mark;
+			for (const auto& s: m_signals) {
+				s.signal(mark, s.user);
 			}
 		}
 	}
@@ -266,6 +306,10 @@ uint64_t AsyncCopySequence() {
 
 uint64_t AsyncCopyCompleted() {
 	return CopyPool::Instance().Enabled() ? CopyPool::Instance().Completed() : 0;
+}
+
+uint64_t AsyncCopySignaled() {
+	return CopyPool::Instance().Enabled() ? CopyPool::Instance().Signaled() : 0;
 }
 
 void AddAsyncCopySignal(void (*signal)(uint64_t, void*), void* user) {

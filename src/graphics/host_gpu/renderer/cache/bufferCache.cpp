@@ -48,6 +48,27 @@ bool BufferUploadEpochEnabled() {
 	return enabled;
 }
 
+// Gate "buffast": one remembered answer of a read-only buffer request, keyed by the guest range
+// the binding asks for. ASTRO BOT makes ~9.6 requests per draw out of a few thousand distinct
+// ranges, so the table is sized like the texture memo rather than like the sampler one.
+constexpr size_t BufFastSlots = 2048;
+static_assert((BufFastSlots & (BufFastSlots - 1)) == 0);
+
+struct BufFastSlot {
+	uint64_t vaddr        = 0;
+	uint64_t size         = 0;
+	uint64_t region_epoch = 0; // MemoryTracker::RangeWriteEpoch, taken before the answer was made
+	uint64_t registration = 0; // BufferCache::m_registration_epoch
+	uint64_t touch_tick   = 0; // BufferCache::m_gc_tick of the last TouchBuffer through this slot
+	uint64_t instance     = 0; // which BufferCache the answer belongs to (0 = the slot is empty)
+	BufferId id {};
+};
+
+size_t BufFastIndex(uint64_t vaddr, uint64_t size) noexcept {
+	const auto mixed = (vaddr >> 4u) * 0x9e3779b97f4a7c15ull + size * 0xff51afd7ed558ccdull;
+	return static_cast<size_t>(mixed >> 32u) & (BufFastSlots - 1);
+}
+
 } // namespace
 
 void BufferCache::WriteDataBuffer(Buffer& buffer, uint64_t address, const void* source,
@@ -758,36 +779,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	if (!is_written && copies.empty()) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncNoop, 1);
 	}
-	if (source) {
-		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
-		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploadBytes, total_size);
-		auto& command = m_scheduler.Current();
-		command.EndRendering(RenderPassEnd::BufferUpload);
-		const auto native = command.Handle();
-		vk::BufferMemoryBarrier before {};
-		before.srcAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite |
-		                       vk::AccessFlagBits::eTransferRead |
-		                       vk::AccessFlagBits::eTransferWrite;
-		before.dstAccessMask       = vk::AccessFlagBits::eTransferWrite;
-		before.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		before.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-		before.buffer              = buffer.Handle();
-		before.offset              = 0;
-		before.size                = buffer.Size();
-		native.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
-		                       vk::PipelineStageFlagBits::eTransfer,
-		                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &before, 0, nullptr);
-		native.copyBuffer(source, buffer.Handle(), static_cast<uint32_t>(copies.size()),
-		                  copies.data());
-		auto after          = before;
-		after.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
-		after.dstAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite;
-		native.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
-		                       vk::PipelineStageFlagBits::eAllCommands,
-		                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &after, 0, nullptr);
-		m_scheduler.GpuMark(GpuTimeProfiler::Kind::BufferUpload,
-		                    std::bit_width(total_size >> 10u)); // log2 of KiB
-	}
+	RecordBufferCopies(buffer, source, copies, total_size);
 	// Keep the epoch from before synchronization, so concurrent writes force another upload.
 	// This is only the requested interval: a different part of the same buffer may remain dirty.
 	buffer.upload_epoch = cpu_epoch;
@@ -798,6 +790,40 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 		return SynchronizeBufferFromImage(buffer, vaddr, size);
 	}
 	return false;
+}
+
+void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
+                                     std::span<const vk::BufferCopy> copies, uint64_t total_size) {
+	if (!source) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploadBytes, total_size);
+	auto& command = m_scheduler.Current();
+	command.EndRendering(RenderPassEnd::BufferUpload);
+	const auto native = command.Handle();
+	vk::BufferMemoryBarrier before {};
+	before.srcAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite |
+	                       vk::AccessFlagBits::eTransferRead |
+	                       vk::AccessFlagBits::eTransferWrite;
+	before.dstAccessMask       = vk::AccessFlagBits::eTransferWrite;
+	before.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	before.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	before.buffer              = buffer.Handle();
+	before.offset              = 0;
+	before.size                = buffer.Size();
+	native.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
+	                       vk::PipelineStageFlagBits::eTransfer,
+	                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &before, 0, nullptr);
+	native.copyBuffer(source, buffer.Handle(), static_cast<uint32_t>(copies.size()), copies.data());
+	auto after          = before;
+	after.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+	after.dstAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite;
+	native.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+	                       vk::PipelineStageFlagBits::eAllCommands,
+	                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &after, 0, nullptr);
+	m_scheduler.GpuMark(GpuTimeProfiler::Kind::BufferUpload,
+	                    std::bit_width(total_size >> 10u)); // log2 of KiB
 }
 
 vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
@@ -837,9 +863,117 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 
 std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t size,
                                                        bool is_written, bool is_texel_buffer,
-                                                       BufferId id) {
+                                                       BufferId id, bool memoizable) {
 	Common::FrameStats::Scope obtain_scope(Common::FrameStats::Counter::ObtainBufNs);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ObtainBufs, 1);
+	// Gate "buffast": a read-only binding asking for a guest range it already asked for takes the
+	// buffer the previous request resolved, instead of FindBuffer + TouchBuffer +
+	// SynchronizeBuffer, while nothing those would act on has happened:
+	//  - a CPU write to the range moves the write epochs of its tracking regions
+	//    (RegionManager::ChangeState<Cpu, true>) - the witness the "regionepoch" gate already
+	//    gives HasCurrentUpload, but kept per range here instead of per buffer, where the ranges
+	//    of one buffer overwrite each other's upload interval. The epochs are published under
+	//    the region lock after the dirty bits and before the pages become writable, so a write
+	//    that crossed an upload always moves them after the snapshot below (see SyncFreeSkip).
+	//    Untracking announces itself the same way (UntrackMemory marks CPU-dirty), and a range
+	//    whose regions do not all exist stamps as 0 and is never remembered.
+	//  - creating, joining or deleting a buffer moves m_registration_epoch (ChangeRegister), so
+	//    an unchanged one means this id still owns this range, at the same address and size.
+	//  - the LRU is left where the slow path leaves it: the first hit of a GC tick still touches,
+	//    which is all TouchBuffer does with "buflru" on and what keeps the collector from
+	//    retiring a buffer that only memo hits use (it also clears prefetch_pending once a tick).
+	// A GPU write needs no witness of its own: it lands in the owner buffer the answer names, and
+	// the stream-ring shortcut below is only taken for a CPU-dirty range, which moves the epochs.
+	// Written requests take ownership and texel requests ask the texture cache for an image
+	// download on every call, so neither is ever answered or recorded here.
+	BufFastSlot* fast_slot  = nullptr;
+	uint64_t     fast_epoch = 0;
+	if (memoizable && Common::Gates::Enabled(Common::Gates::Gate::BufFast)) {
+		// The cache has no lock of its own and is written by the GuestGpu thread only, so only
+		// that thread may read m_registration_epoch, the slot vector and the page table here.
+		// The memo answers before the sanity check of the slow path below, so a request made
+		// without a recording command buffer has to reach that check instead of being served here.
+		if (is_written || is_texel_buffer || !GuestGpu::IsGpuThread() ||
+		    !GuestRange {vaddr, size}.Valid() || m_scheduler.Current().IsInvalid()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufFastSkip, 1);
+		} else {
+			thread_local std::vector<BufFastSlot> slots;
+			if (slots.empty()) {
+				slots.resize(BufFastSlots);
+			}
+			fast_slot = &slots[BufFastIndex(vaddr, size)];
+			// Taken before every answer below, so that the recording at the end can prove that
+			// no write was announced while the answer was being made.
+			fast_epoch = m_memory_tracker.RangeWriteEpoch(vaddr, size);
+			if (fast_slot->instance != m_instance || fast_slot->vaddr != vaddr ||
+			    fast_slot->size != size) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BufFastNo, 1);
+			} else {
+				// Kept beside the pointer for the self-check below: FindBuffer may create a
+				// buffer, and creating one joins and deletes the buffers it overlaps - the
+				// remembered one among them, whose slot is then handed out again at the same
+				// address. The identity of an answer is its id, not where the Buffer lives.
+				const auto remembered_id = fast_slot->id;
+				auto* remembered = fast_slot->registration == m_registration_epoch &&
+				                           fast_epoch != 0 && fast_slot->region_epoch == fast_epoch
+				                       ? m_slot_buffers.try_get(fast_slot->id)
+				                       : nullptr;
+				if (remembered == nullptr || remembered->is_deleted) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BufFastStale, 1);
+				} else {
+					if (fast_slot->touch_tick != m_gc_tick) {
+						TouchBuffer(*remembered);
+						fast_slot->touch_tick = m_gc_tick;
+					}
+					Common::FrameStats::Add(Common::FrameStats::Counter::BufFastOk, 1);
+					if (!Common::Gates::Enabled(Common::Gates::Gate::BufFastCheck)) {
+						return {remembered, remembered->Offset(vaddr)};
+					}
+					// Gate "buffastcheck": beside every hit, the work the gate replaced. A write
+					// announced between the two epoch reads is a race, not a mismatch, so only an
+					// unchanged witness may accuse the memo of having skipped an upload.
+					const bool dirty = m_memory_tracker.IsRegionCpuModified(vaddr, size);
+					const bool unchanged =
+					    m_memory_tracker.RangeWriteEpoch(vaddr, size) == fast_epoch;
+					auto full_id = id;
+					if (IsBufferInvalid(full_id) ||
+					    !m_slot_buffers[full_id].IsInBounds(vaddr, size)) {
+						full_id = FindBuffer(vaddr, size);
+					}
+					auto& full = m_slot_buffers[full_id];
+					TouchBuffer(full);
+					(void)SynchronizeBuffer(full, vaddr, size, false, false);
+					if (full_id != remembered_id || (dirty && unchanged)) {
+						Common::FrameStats::Add(Common::FrameStats::Counter::BufFastBad, 1);
+						static std::atomic<uint32_t> logged {0};
+						if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+							LOGF("BufFastVerify: MISMATCH addr=0x%016" PRIx64 " size=0x%" PRIx64
+							     " cpu_dirty=%d memo=%" PRIu32 " full=%" PRIu32 "\n",
+							     vaddr, size, dirty && unchanged ? 1 : 0, remembered_id.index,
+							     full_id.index);
+						}
+						*fast_slot = {};
+					}
+					return {&full, full.Offset(vaddr)};
+				}
+			}
+		}
+	}
+	// Records what the paths below answered. The witness was taken before them and has to be
+	// unchanged after: an announcement that crossed the upload leaves bytes the upload missed,
+	// and its epoch move is the only thing that tells the next request about them.
+	const auto remember = [&](BufferId resolved_id) {
+		if (fast_slot == nullptr) {
+			return;
+		}
+		if (fast_epoch != 0 && m_memory_tracker.RangeWriteEpoch(vaddr, size) == fast_epoch) {
+			*fast_slot = {vaddr, size, fast_epoch, m_registration_epoch, m_gc_tick, m_instance,
+			              resolved_id};
+		} else {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufFastSkip, 1);
+			*fast_slot = {};
+		}
+	};
 	if (!is_written && size <= CACHING_PAGESIZE &&
 	    Common::Gates::Enabled(Common::Gates::Gate::StickyStat) && Common::FrameStats::Enabled() &&
 	    GuestRange {vaddr, size}.Valid() &&
@@ -859,6 +993,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	    buffer->HasCurrentUpload(current_epoch, current_kind, vaddr, size)) {
 		TouchBuffer(*buffer);
 		(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
+		remember(id);
 		return {buffer, buffer->Offset(vaddr)};
 	}
 
@@ -875,6 +1010,12 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);
 		if (mapped != nullptr && Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size)) {
 			m_stream_buffer.Commit();
+			if (fast_slot != nullptr) {
+				// A ring offset is fresh on every call: there is nothing to remember, and the
+				// range is CPU-dirty anyway (that is why this path was taken).
+				Common::FrameStats::Add(Common::FrameStats::Counter::BufFastSkip, 1);
+				*fast_slot = {};
+			}
 			return {&m_stream_buffer, offset};
 		}
 	}
@@ -891,6 +1032,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		m_gpu_modified_ranges.Add(vaddr, size);
 		NoteGpuWrite(vaddr, size);
 	}
+	remember(id);
 	return {&resolved, resolved.Offset(vaddr)};
 }
 
@@ -2025,8 +2167,132 @@ void BufferCache::PrefetchHotReadbacks() {
 	}
 }
 
+// Gate "protbatch2": the collecting half of a read-only synchronization of the dirty-range pass.
+// Consumes the CPU-dirty bits of the range and arms its write watchers into the pass batch scope,
+// where they only become pending; the caller applies them and only then copies the bytes.
+// The statistics of gate "stkstat" (session 57, A1 ceiling) are not collected on this path.
+bool BufferCache::CollectBufferUpload(Buffer& buffer, uint64_t vaddr, uint64_t size,
+                                      std::vector<vk::BufferCopy>& copies, uint64_t& total_size) {
+	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
+	const auto [cpu_epoch, epoch_kind] = UploadEpoch(vaddr, size);
+	if (BufferUploadEpochEnabled() && buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochHits, 1);
+		return false;
+	}
+	if (SyncFreeSkip(vaddr, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
+	} else {
+		m_memory_tracker.ForEachUploadRange(
+		    vaddr, size, false,
+		    [&](uint64_t address, uint64_t bytes) noexcept {
+			    copies.emplace_back(total_size, buffer.Offset(address), bytes);
+			    total_size += bytes;
+		    },
+		    []() noexcept {}, true, nullptr, true);
+	}
+	// Keep the epoch from before synchronization, so concurrent writes force another upload.
+	// This is only the requested interval: a different part of the same buffer may remain dirty.
+	buffer.upload_epoch      = cpu_epoch;
+	buffer.upload_epoch_kind = epoch_kind;
+	buffer.upload_begin      = vaddr;
+	buffer.upload_end        = vaddr + size;
+	if (copies.empty()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SyncNoop, 1);
+		return false;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::PassUploads, 1);
+	return true;
+}
+
+// Gate "protbatch2" (phase 2 of "protbatch"). The pass arms the write watchers of every buffer it
+// synchronizes behind one flush per tracking region instead of one scope flush and one range flush
+// per buffer: the CPU-dirty bits of all of them are consumed first (every watcher change only marks
+// its pages pending), the flush applies the merged runs, and only then are the guest bytes copied.
+// Why no guest write is lost: what ForEachUploadRange has to guarantee is that a page whose CPU-dirty
+// bit it cleared is read-only on the host before anything reads that page. The single flush covers
+// every range the pass noted and returns before the first copy of the pass, so it holds for all of
+// them. A guest write landing before the flush precedes every copy and is part of it; one landing
+// after it faults, which marks the page CPU-dirty again for the next pass, exactly as before.
+void BufferCache::SynchronizeBuffersOfDirtyRangesBatched(PageManager::PassScope& pass) {
+	if (m_in_pass) {
+		// The collected uploads are members, and they stay live across the copy phase below, where
+		// UploadCopies may wait for the GPU and run deferred operations. No path reaches a second
+		// pass from there today; if one ever does, it would silently copy this pass's ranges from
+		// the wrong buffers instead of being noticed here.
+		EXIT("BufferCache: reentrant dirty-range pass\n");
+	}
+	m_in_pass           = true;
+	m_pass_upload_count = 0;
+	{
+		// One scope for the whole pass: the watcher changes of every buffer below land in its slots
+		// and are applied together, so runs of neighbouring buffers become one host call.
+		PageManager::BatchScope batch(m_memory_tracker.Pages(), true);
+		for (const auto& range: m_bda_dirty_ranges) {
+			auto it = m_buffers.upper_bound(range.address);
+			if (it != m_buffers.begin()) --it;
+			for (; it != m_buffers.end() && it->first < range.End(); ++it) {
+				const auto id     = it->second;
+				auto&      buffer = m_slot_buffers[id];
+				const auto start  = std::max(buffer.CpuAddress(), range.address);
+				const auto finish = std::min(buffer.CpuAddress() + buffer.Size(), range.End());
+				if (start >= finish) {
+					continue;
+				}
+				Common::FrameStats::Add(Common::FrameStats::Counter::PassSyncs, 1);
+				// Noted before the bits are consumed: the flush of this window has to cover
+				// whatever the collection below arms inside it.
+				pass.Note(start, finish - start);
+				if (m_pass_upload_count == m_pass_uploads.size()) {
+					m_pass_uploads.emplace_back();
+				}
+				auto& upload      = m_pass_uploads[m_pass_upload_count];
+				upload.id         = id;
+				upload.vaddr      = start;
+				upload.size       = finish - start;
+				upload.total_size = 0;
+				upload.copies.clear();
+				if (CollectBufferUpload(buffer, start, finish - start, upload.copies,
+				                        upload.total_size)) {
+					m_pass_upload_count++;
+				}
+			}
+		}
+		batch.Flush(); // the watchers this pass deferred
+		pass.Flush();  // and whatever another caller left pending on the same ranges
+		if (Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
+			// Self-check "pbcheck": after the single flush every range of the pass must already read
+			// back as read-only on the host, exactly as after a flush of its own.
+			for (size_t index = 0; index < m_pass_upload_count; index++) {
+				const auto& upload = m_pass_uploads[index];
+				m_memory_tracker.VerifyProtection(upload.vaddr, upload.size);
+			}
+		}
+	}
+	for (size_t index = 0; index < m_pass_upload_count; index++) {
+		auto&      upload = m_pass_uploads[index];
+		auto&      buffer = m_slot_buffers[upload.id];
+		const auto source = UploadCopies(buffer, upload.copies, upload.total_size);
+		RecordBufferCopies(buffer, source, upload.copies, upload.total_size);
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::PassPasses, 1);
+	m_in_pass = false;
+}
+
 // Uploads the CPU-written parts of every registered buffer intersecting m_bda_dirty_ranges.
 void BufferCache::SynchronizeBuffersOfDirtyRanges() {
+	if (m_bda_dirty_ranges.empty()) {
+		return;
+	}
+	// The pass scope attributes the host protection calls of this pass to it (pb2_vp*) with the gate
+	// off as well, which is how the ceiling of the merge is read before it is switched on. It only
+	// owns the protection of the ranges - and therefore only flushes - on the batched path.
+	const bool batched = Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchPass) &&
+	                     Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch);
+	PageManager::PassScope pass(m_memory_tracker.Pages(), batched);
+	if (batched) {
+		SynchronizeBuffersOfDirtyRangesBatched(pass);
+		return;
+	}
 	for (const auto& range: m_bda_dirty_ranges) {
 		auto it = m_buffers.upper_bound(range.address);
 		if (it != m_buffers.begin()) --it;
@@ -2035,10 +2301,13 @@ void BufferCache::SynchronizeBuffersOfDirtyRanges() {
 			const auto start  = std::max(buffer.CpuAddress(), range.address);
 			const auto finish = std::min(buffer.CpuAddress() + buffer.Size(), range.End());
 			if (start < finish) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::PassSyncs, 1);
+				pass.Note(start, finish - start); // pb2_reg only: this scope flushes nothing
 				(void)SynchronizeBuffer(buffer, start, finish - start, false, false);
 			}
 		}
 	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::PassPasses, 1);
 }
 
 // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last

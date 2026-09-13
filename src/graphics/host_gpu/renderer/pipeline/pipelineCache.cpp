@@ -931,6 +931,68 @@ void PrefetchVectorData(const std::vector<T>& values) {
 	}
 }
 
+// Session 58 (B4 follow-up): what one snapshot copy carried, for the ceiling counters. Filled
+// only while the counters run; the copy itself never looks at it.
+struct SnapshotCopyStats {
+	uint64_t bytes        = 0;
+	uint64_t same_bytes   = 0;
+	uint32_t vectors      = 0;
+	uint32_t same_vectors = 0;
+};
+
+// One vector of a copy into the kept snapshot storage (gate "snapkeep"). Gate "snapdiff"
+// (`diff`) leaves a destination that already holds the same elements alone: what a reader sees
+// is the same either way, and not storing it keeps the line clean and exclusive to this thread.
+// The comparison stops at the first element that differs, so a changed vector pays little before
+// its copy, and an equal one only reads memory the copy would have read anyway.
+template <typename T>
+void CopySnapshotVector(std::vector<T>& to, const std::vector<T>& from, bool diff,
+                        SnapshotCopyStats* stats) {
+	if (stats == nullptr) [[likely]] {
+		if (diff && to == from) {
+			return;
+		}
+		to = from;
+		return;
+	}
+	const auto bytes = from.size() * sizeof(T);
+	const bool same  = to == from;
+	// Both under the same condition: a vector that is empty on both sides is no copy at all and is
+	// counted nowhere. Counting it as equal alone broke snap_cp_eq (the snapshots whose vectors all
+	// compare equal), which is read as same_vectors == vectors.
+	if (bytes != 0 || !to.empty()) {
+		stats->bytes += bytes;
+		stats->vectors++;
+		if (same) {
+			stats->same_bytes += bytes;
+			stats->same_vectors++;
+		}
+	}
+	if (same && diff) {
+		return;
+	}
+	to = from;
+}
+
+// The five vectors of a snapshot. uniform_fill is a few words inside the struct: always stored.
+void CopySnapshot(const ShaderRecompiler::IR::ResourceSnapshot& from,
+                  ShaderRecompiler::IR::ResourceSnapshot& to, bool diff,
+                  SnapshotCopyStats* stats) {
+	CopySnapshotVector(to.buffers, from.buffers, diff, stats);
+	CopySnapshotVector(to.images, from.images, diff, stats);
+	CopySnapshotVector(to.samplers, from.samplers, diff, stats);
+	CopySnapshotVector(to.flattened_srt, from.flattened_srt, diff, stats);
+	CopySnapshotVector(to.user_data, from.user_data, diff, stats);
+	to.uniform_fill = from.uniform_fill;
+}
+
+void CopySpecialization(const ShaderRecompiler::IR::ResourceSpecialization& from,
+                        ShaderRecompiler::IR::ResourceSpecialization& to, bool diff,
+                        SnapshotCopyStats* stats) {
+	CopySnapshotVector(to.buffers, from.buffers, diff, stats);
+	CopySnapshotVector(to.images, from.images, diff, stats);
+}
+
 // Knob "dapin" and counter da_ccd_x (session 56): the L3 caches of processor group 0. On the Ryzen 9
 // 9955HX3D the two CCDs have separate L3 caches, so a result a DrawAhead worker built on one CCD is
 // cold for a GuestGpu thread running on the other.
@@ -2077,23 +2139,55 @@ struct PipelineCache::ProgramCache {
 	// the two assignments the callers made before.
 	static void CopyAheadResult(const AheadSlot& slot, ShaderRecompiler::IR::ResourceSnapshot& resources,
 	                            ShaderRecompiler::IR::ResourceSpecialization& specialization,
-	                            bool kept) {
+	                            bool kept, bool last_use) {
+		// Gate "snapdiff" says something only with `kept`: there the destination still holds this
+		// stage's snapshot of the previous draw, which half of a frame's descriptor sets repeat
+		// (session 57, E9). A fresh local is empty and every comparison against it would fail.
+		const bool diff = kept && Common::Gates::Enabled(Common::Gates::Gate::SnapshotDiff);
 		if (kept && Common::FrameStats::Enabled()) {
-			const auto& from = slot.snapshot;
-			const bool  grow = resources.buffers.capacity() < from.buffers.size() ||
-			                  resources.images.capacity() < from.images.size() ||
-			                  resources.samplers.capacity() < from.samplers.size() ||
-			                  resources.flattened_srt.capacity() < from.flattened_srt.size() ||
-			                  resources.user_data.capacity() < from.user_data.size() ||
-			                  specialization.buffers.capacity() < slot.specialization.buffers.size() ||
-			                  specialization.images.capacity() < slot.specialization.images.size();
-			Common::FrameStats::Add(Common::FrameStats::Counter::SnapKeepCopies, 1);
-			if (grow) {
-				Common::FrameStats::Add(Common::FrameStats::Counter::SnapKeepGrows, 1);
-			}
+			CopyAheadResultCounted(slot, resources, specialization, diff, last_use);
+			return;
 		}
-		resources      = slot.snapshot;
-		specialization = slot.specialization;
+		CopySnapshot(slot.snapshot, resources, diff, nullptr);
+		CopySpecialization(slot.specialization, specialization, diff, nullptr);
+	}
+
+	// The same copy with the session 58 ceiling counters around it: how much it moves, how much of
+	// that the destination already held (what "snapdiff" leaves out) and whether it was a slot's
+	// last use (what "snapswap" turns into two swaps). Out of line - it runs under FRAME_TRACE only,
+	// and the capacities have to be read before the copy changes them.
+	[[gnu::noinline]] static void
+	CopyAheadResultCounted(const AheadSlot& slot, ShaderRecompiler::IR::ResourceSnapshot& resources,
+	                       ShaderRecompiler::IR::ResourceSpecialization& specialization, bool diff,
+	                       bool last_use) {
+		namespace FS     = Common::FrameStats;
+		const auto& from = slot.snapshot;
+		const bool  grow = resources.buffers.capacity() < from.buffers.size() ||
+		                  resources.images.capacity() < from.images.size() ||
+		                  resources.samplers.capacity() < from.samplers.size() ||
+		                  resources.flattened_srt.capacity() < from.flattened_srt.size() ||
+		                  resources.user_data.capacity() < from.user_data.size() ||
+		                  specialization.buffers.capacity() < slot.specialization.buffers.size() ||
+		                  specialization.images.capacity() < slot.specialization.images.size();
+		const bool        same_fill = resources.uniform_fill == from.uniform_fill;
+		SnapshotCopyStats stats;
+		CopySnapshot(from, resources, diff, &stats);
+		CopySpecialization(slot.specialization, specialization, diff, &stats);
+		FS::Add(FS::Counter::SnapKeepCopies, 1);
+		if (grow) {
+			FS::Add(FS::Counter::SnapKeepGrows, 1);
+		}
+		FS::Add(FS::Counter::SnapCopyBytes, stats.bytes);
+		FS::Add(FS::Counter::SnapCopySameBytes, stats.same_bytes);
+		FS::Add(FS::Counter::SnapCopyVectors, stats.vectors);
+		FS::Add(FS::Counter::SnapCopySameVectors, stats.same_vectors);
+		if (same_fill && stats.same_vectors == stats.vectors) {
+			FS::Add(FS::Counter::SnapCopyUnchanged, 1);
+		}
+		if (last_use) {
+			FS::Add(FS::Counter::SnapLastUseCopies, 1);
+			FS::Add(FS::Counter::SnapLastUseBytes, stats.bytes);
+		}
 	}
 
 	// Holder of m_mutex, on a draw: the worker result for this program and user data, if its
@@ -2182,18 +2276,25 @@ struct PipelineCache::ProgramCache {
 			}
 			if (slot.uses > 1) {
 				slot.uses--;
-				CopyAheadResult(slot, resources, specialization, kept);
+				CopyAheadResult(slot, resources, specialization, kept, false);
 			} else {
 				// The last draw of this walk that asked for it: take the vectors, and retire the
 				// slot, which no longer holds a result.
 				// Gate "snapkeep" copies too: its destination already has the capacity (da_clone
-				// then counts these copies as well).
-				if (kept || Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClone)) {
+				// then counts these copies as well). Gate "snapswap" takes the swap even then: the
+				// slot is retired here under m_mutex, and the worker that materializes into it next
+				// move-assigns over its vectors, so the kept storage handed over is freed there
+				// exactly like the worker's own blocks are today. What it trades away is a
+				// destination that stayed hot across draws - the same trade "daclone" measures.
+				const bool clone =
+				    (kept && !Common::Gates::Enabled(Common::Gates::Gate::SnapshotSwap)) ||
+				    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClone);
+				if (clone) {
 					// Gate "daclone": copy on this thread and leave the worker's vectors in the
 					// slot, so they are freed by the worker that allocated them when it
 					// materializes into this slot again, not by the draw path after the draw (a
 					// cross-thread HeapFree of cold blocks). The slot keeps that memory until then.
-					CopyAheadResult(slot, resources, specialization, kept);
+					CopyAheadResult(slot, resources, specialization, kept, true);
 					FS::Add(FS::Counter::DrawAheadClones, 1);
 				} else {
 					std::swap(resources, slot.snapshot);
@@ -2333,7 +2434,10 @@ struct PipelineCache::ProgramCache {
 				input_info.stage.program   = &memo_entry->permutation->program;
 				if (kept >= 0) {
 					// Through the kept storage, which then moves into the input info like below.
-					resources                  = memo_entry->snapshot;
+					// Gate "snapdiff" holds here for the same reason as on the lookahead path; the
+					// ceiling counters cover that path only, where the default configuration copies.
+					CopySnapshot(memo_entry->snapshot, resources,
+					             Common::Gates::Enabled(Common::Gates::Gate::SnapshotDiff), nullptr);
 					input_info.stage.resources = std::move(resources);
 				} else {
 					input_info.stage.resources = memo_entry->snapshot;

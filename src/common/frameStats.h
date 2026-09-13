@@ -460,11 +460,54 @@ enum class Counter : uint32_t {
 	E9RunDraws16, // ...
 	E9RunDraws32, // ...
 	E9RunDraws64, // ...
+	// Session 58, B9 (gate "drawstat"): reuse of a repeating set through dynamic offsets. The
+	// three below split e9_base: ok + over + cap = e9_base.
+	E9DynOk, // ... repeating writes whose moved offsets fit the device's dynamic budget
+	E9DynOver, // ... whose moved offsets do not: this set can never be reused
+	E9DynCapped, // ... with more buffer descriptors than the statistic keeps (not measured)
+	E9DynLayoutOver, // ... whose layout has by now moved more offsets than the budget
+	E9DynNeed1, // moved offsets of a repeating write: 1 | 2 | 3-4 | 5-8 | >8
+	E9DynNeed2, // ...
+	E9DynNeed4, // ...
+	E9DynNeed8, // ...
+	E9DynNeedMore, // ...
+	E9DynLimit, // maxDescriptorSetStorageBuffersDynamic, added once (a delta of one frame)
+	E9DynLimitUniform, // maxDescriptorSetUniformBuffersDynamic, added once
 	// Session 57, A6/A7 and track B.
 	SnapKeepCopies, // gate "snapkeep": lookahead results copied into the kept snapshot storage
 	SnapKeepGrows,  // ... of which a vector still had to grow (allocated on this thread)
 	BufLruTouches, // BufferCache::TouchBuffer calls on live buffers
 	BufLruRepeats, // ... of which the buffer was already touched in this GC tick (skipped by "buflru")
+	// Session 58, B4 follow-up (the snapshot copies of gate "snapkeep").
+	SnapCopyBytes,       // bytes the vectors of one frame's kept copies move (snapshot + specialization)
+	SnapCopySameBytes,   // ... of them in vectors the destination already held (ceiling of "snapdiff")
+	SnapCopyVectors,     // non-empty vectors in those copies
+	SnapCopySameVectors, // ... of them equal to the destination's
+	SnapCopyUnchanged,   // copies whose whole snapshot repeats what this stage had on the previous draw
+	SnapLastUseCopies,   // copies taking a slot's last use (ceiling of "snapswap")
+	SnapLastUseBytes,    // bytes of those copies
+	// Session 58, M2 step 1 (buffer request memo).
+	BufFastOk,    // read-only buffer requests answered from the per-thread memo (gate "buffast")
+	BufFastNo,    // ... requests whose slot held another guest range
+	BufFastStale, // ... requests whose slot matched but whose witness had moved (CPU write, re-registration)
+	BufFastSkip,  // ... requests the memo cannot answer or record (written, texel, stream copy, untracked)
+	BufFastBad,   // gate "buffastcheck": the memo answer differed from the full path
+	// Session 58, A3 phase 2 (gate "protbatch2"). Read with the gate OFF they are its ceiling: of
+	// the pb2_vp calls a pass issues today, pb2_vp_adj continue the previous call of the same pass
+	// exactly (one merged run swallows them) and pb2_vp_near share its region and protection with a
+	// gap in between (a run swallows them too, at the price of pb2_gap_pages re-protected pages).
+	// So the calls left after the merge are pb2_vp - pb2_vp_adj - pb2_vp_near, and never fewer than
+	// pb2_reg. With the gate on the same counters show what the pass actually issued.
+	PassPasses,          // BDA dirty-range passes with at least one buffer to synchronize
+	PassSyncs,           // buffer synchronizations in them (today: two apply-lock holds each)
+	PassRegions,         // tracking-region windows of those passes (phase 2 flushes this many)
+	PassProtectCalls,    // synchronous host protection calls issued inside a pass
+	PassProtectPages,    // ... pages they covered
+	PassProtectAdjacent, // ... calls continuing the previous call of their pass exactly
+	PassProtectNear,     // ... calls in its region and protection with a gap in between
+	PassGapRuns,         // flush runs extended over pages that were not pending (gate on)
+	PassGapPages,        // ... those pages, re-protected with the value they already had
+	PassUploads,         // synchronizations whose copies were deferred to the pass copy phase
 	Count
 };
 

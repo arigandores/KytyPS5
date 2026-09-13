@@ -33,6 +33,9 @@ void WaitAsyncCopies();
 // needed). RemoveAsyncCopySignal before the semaphore behind a signal is destroyed.
 [[nodiscard]] uint64_t AsyncCopySequence();
 [[nodiscard]] uint64_t AsyncCopyCompleted();
+// The last mark handed to the registered signals (diagnostics: a value below
+// AsyncCopyCompleted() means a landed prefix was never published to the semaphores).
+[[nodiscard]] uint64_t AsyncCopySignaled();
 void                   AddAsyncCopySignal(void (*signal)(uint64_t completed, void* user), void* user);
 void                   RemoveAsyncCopySignal(void (*signal)(uint64_t completed, void* user), void* user);
 [[nodiscard]] bool     RequestAsyncCopySignal(uint64_t sequence);

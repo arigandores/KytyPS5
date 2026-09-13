@@ -1642,11 +1642,48 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"e9_rd_16", FS::Counter::E9RunDraws16, false},
 				    {"e9_rd_32", FS::Counter::E9RunDraws32, false},
 				    {"e9_rd_64", FS::Counter::E9RunDraws64, false},
+				    // Session 58, B9 (dynamic offsets).
+				    {"e9_dyn_ok", FS::Counter::E9DynOk, false},
+				    {"e9_dyn_over", FS::Counter::E9DynOver, false},
+				    {"e9_dyn_cap", FS::Counter::E9DynCapped, false},
+				    {"e9_dyn_lay", FS::Counter::E9DynLayoutOver, false},
+				    {"e9_dyn_n1", FS::Counter::E9DynNeed1, false},
+				    {"e9_dyn_n2", FS::Counter::E9DynNeed2, false},
+				    {"e9_dyn_n4", FS::Counter::E9DynNeed4, false},
+				    {"e9_dyn_n8", FS::Counter::E9DynNeed8, false},
+				    {"e9_dyn_nmore", FS::Counter::E9DynNeedMore, false},
+				    {"e9_dyn_limit", FS::Counter::E9DynLimit, false},
+				    {"e9_dyn_ulimit", FS::Counter::E9DynLimitUniform, false},
 				    // Session 57, A6/A7 and track B.
 				    {"snap_keep_copy", FS::Counter::SnapKeepCopies, false},
 				    {"snap_keep_grow", FS::Counter::SnapKeepGrows, false},
 				    {"buflru_n", FS::Counter::BufLruTouches, false},
 				    {"buflru_rep", FS::Counter::BufLruRepeats, false},
+				    // Session 58, B4 follow-up (snapshot copies).
+				    {"snap_cp_b", FS::Counter::SnapCopyBytes, false},
+				    {"snap_cp_same_b", FS::Counter::SnapCopySameBytes, false},
+				    {"snap_cp_vec", FS::Counter::SnapCopyVectors, false},
+				    {"snap_cp_same_vec", FS::Counter::SnapCopySameVectors, false},
+				    {"snap_cp_eq", FS::Counter::SnapCopyUnchanged, false},
+				    {"snap_last_cp", FS::Counter::SnapLastUseCopies, false},
+				    {"snap_last_b", FS::Counter::SnapLastUseBytes, false},
+				    // Session 58, M2 step 1 (buffer request memo).
+				    {"bfast_hit", FS::Counter::BufFastOk, false},
+				    {"bfast_miss", FS::Counter::BufFastNo, false},
+				    {"bfast_stale", FS::Counter::BufFastStale, false},
+				    {"bfast_skip", FS::Counter::BufFastSkip, false},
+				    {"bfast_bad", FS::Counter::BufFastBad, false},
+				    // Session 58, A3 phase 2 (gate "protbatch2").
+				    {"pb2_pass", FS::Counter::PassPasses, false},
+				    {"pb2_sync", FS::Counter::PassSyncs, false},
+				    {"pb2_reg", FS::Counter::PassRegions, false},
+				    {"pb2_vp", FS::Counter::PassProtectCalls, false},
+				    {"pb2_vp_pages", FS::Counter::PassProtectPages, false},
+				    {"pb2_vp_adj", FS::Counter::PassProtectAdjacent, false},
+				    {"pb2_vp_near", FS::Counter::PassProtectNear, false},
+				    {"pb2_gap", FS::Counter::PassGapRuns, false},
+				    {"pb2_gap_pages", FS::Counter::PassGapPages, false},
+				    {"pb2_up", FS::Counter::PassUploads, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

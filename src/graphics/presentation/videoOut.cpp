@@ -1290,6 +1290,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " bda_scan=%llu bda_skip=%llu bpage_hit=%llu bpage_miss=%llu"
 			     " m_nodes=%llu m_nodes_need=%llu m_rnodes=%llu m_rnodes_need=%llu"
 			     " m_srcs=%llu m_srcs_off=%llu"
+			     " da_draws=%llu da_ready=%llu da_walks=%llu da_walk_us=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1352,7 +1353,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::BackingPageHits), d(FS::Counter::BackingPageMisses),
 			     d(FS::Counter::MatNodes), d(FS::Counter::MatNodesNeeded),
 			     d(FS::Counter::MatReadNodes), d(FS::Counter::MatReadNodesNeeded),
-			     d(FS::Counter::MatSources), d(FS::Counter::MatSourcesOff));
+			     d(FS::Counter::MatSources), d(FS::Counter::MatSourcesOff),
+			     d(FS::Counter::DrawAheadSeen), d(FS::Counter::DrawAheadReady),
+			     d(FS::Counter::DrawAheadWalks), dus(FS::Counter::DrawAheadNs));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

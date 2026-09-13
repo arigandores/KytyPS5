@@ -20,6 +20,7 @@ enum class Gate : uint32_t {
 	BackingPages,   // KYTY_BACKING_PAGES,       file name "backpages"
 	SrtStat,        // KYTY_SRT_STAT,            file name "srtstat"
 	MetaLock,       // KYTY_META_LOCK,           file name "metalock"
+	DrawAhead,      // KYTY_DRAW_AHEAD,          file name "drawahead"
 	Count,
 };
 

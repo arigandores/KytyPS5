@@ -167,6 +167,10 @@ enum class Counter : uint32_t {
 	MatReadNodesNeeded, // ... of them reachable from the active sources and the flat slots
 	MatSources,        // descriptor sources of those materializations
 	MatSourcesOff,     // ... sources skipped because their shader block is not reached
+	DrawAheadSeen,     // draws the PM4 shadow walk saw before they executed
+	DrawAheadReady,    // ... of them with both stage programs and their user data known
+	DrawAheadWalks,    // shadow walks performed
+	DrawAheadNs,       // time spent in them
 	Count
 };
 

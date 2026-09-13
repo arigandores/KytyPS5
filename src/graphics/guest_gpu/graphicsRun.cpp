@@ -3,6 +3,7 @@
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/stringUtils.h"
@@ -980,14 +981,53 @@ struct LookaheadCursor {
 	uint32_t                  offset = 0;
 };
 
+// Shadow copy of the graphics stage state the materialization of a draw needs: the program
+// address of the vertex (GS/NGG) and pixel stages and their user data registers. Milestone M0 of
+// docs/parallel-draw-path.md only counts what the walk can see; M1 turns this into the key of a
+// materialization task handed to a worker.
+struct GraphicsShadow {
+	struct Stage {
+		uint64_t                 address = 0;
+		uint32_t                 count   = 0; // user SGPRs the stage declares
+		std::array<uint32_t, 16> user_data {};
+	};
+	Stage vertex;
+	Stage pixel;
+
+	[[nodiscard]] bool Ready() const noexcept {
+		return vertex.address != 0 && vertex.count != 0 && pixel.address != 0;
+	}
+};
+
 // Shadow walk over PM4 (type-3 packets only; nested IT_INDIRECT_BUFFER followed, conditional
 // branches and CE loads are not - a wrong guess costs one extra compile, never a wrong result: the
 // real dispatch looks its pipeline up by the program it translated itself). Compute SH registers
 // (direct and SET_SH_REG_INDIRECT pair tables) and user data are applied to the shadow state `cs`;
 // every DISPATCH_DIRECT/INDIRECT translates its program and queues the pipeline compile.
 static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& cs,
-                                  std::vector<LookaheadCursor> stack, const char* label) {
-	const auto            apply_sh   = [&cs](uint32_t offset, uint32_t value) {
+                                  std::vector<LookaheadCursor> stack, const char* label,
+                                  bool prefetch_compute) {
+	GraphicsShadow gfx;
+	uint64_t       draws_seen  = 0;
+	uint64_t       draws_ready = 0;
+	const auto            apply_gfx  = [&gfx](uint32_t offset, uint32_t value) {
+		const auto stage_register = [&](GraphicsShadow::Stage& stage, uint32_t base) {
+			if (offset == base) {
+				stage.address = (stage.address & ~uint64_t {0xffffffffu}) | value;
+			} else if (offset == base + 1u) {
+				stage.address = (stage.address & 0xffffffffu) |
+				                (static_cast<uint64_t>(value & 0xffu) << 32u);
+			} else if (offset == base + 3u) { // RSRC2: user SGPR count in bits 1..5
+				stage.count = (value >> 1u) & 0x1fu;
+			} else if (offset >= base + 4u && offset < base + 4u + stage.user_data.size()) {
+				stage.user_data[offset - (base + 4u)] = value;
+			}
+		};
+		stage_register(gfx.pixel, Pm4::SPI_SHADER_PGM_LO_PS);
+		stage_register(gfx.vertex, Pm4::SPI_SHADER_PGM_LO_GS);
+	};
+	const auto            apply_sh   = [&cs, &apply_gfx](uint32_t offset, uint32_t value) {
+		apply_gfx(offset, value);
 		if (offset >= Pm4::COMPUTE_USER_DATA_0 && offset <= Pm4::COMPUTE_USER_DATA_15) {
 			const auto slot               = offset - Pm4::COMPUTE_USER_DATA_0;
 			cs.cs_user_sgpr.value[slot] = value;
@@ -1085,6 +1125,9 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 				if (std::find(seen.begin(), seen.end(), signature) != seen.end()) {
 					break;
 				}
+				if (!prefetch_compute) {
+					break;
+				}
 				seen.push_back(signature);
 				dispatches++;
 				ShaderComputeInputInfo input_info {};
@@ -1093,9 +1136,26 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 				cache.PrefetchComputePipeline(cs, no_sh_regs, input_info);
 				break;
 			}
+			case Pm4::IT_DRAW_INDIRECT:
+			case Pm4::IT_DRAW_INDEX_INDIRECT:
+			case Pm4::IT_DRAW_INDEX_2:
+			case Pm4::IT_DRAW_INDIRECT_MULTI:
+			case Pm4::IT_DRAW_INDEX_AUTO:
+			case Pm4::IT_DRAW_INDEX_OFFSET_2:
+			case Pm4::IT_DRAW_INDEX_INDIRECT_MULTI:
+				draws_seen++;
+				draws_ready += gfx.Ready() ? 1u : 0u;
+				break;
 			default: break;
 		}
 		cur.offset += len;
+	}
+	if (draws_seen != 0 && Common::FrameStats::Enabled()) {
+		namespace FS = Common::FrameStats;
+		FS::Add(FS::Counter::DrawAheadSeen, draws_seen);
+		FS::Add(FS::Counter::DrawAheadReady, draws_ready);
+		FS::Add(FS::Counter::DrawAheadWalks, 1);
+		FS::Add(FS::Counter::DrawAheadNs, Common::FrameStats::NowNs() - t0);
 	}
 	if (dispatches != 0 && Common::FrameStats::Enabled()) {
 		static std::atomic<uint32_t> log_count {0};
@@ -1118,11 +1178,14 @@ void GuestGpu::LookaheadSubmission(const Submission& submission) {
 		state.valid = true;
 	}
 	WalkComputeDispatches(m_renderer.GetPipelineCache(), state.cs, {{submission.commands, 0u}},
-	                      " enqueue");
+	                      " enqueue", true);
 }
 
 void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
-	if (AsyncComputeMode() != 2 || execution.m_buffer_stack.empty()) {
+	// The walk also carries the graphics shadow state of docs/parallel-draw-path.md, so it runs
+	// when either the compute prefetch or the draw lookahead asks for it.
+	if ((AsyncComputeMode() != 2 && !Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) ||
+	    execution.m_buffer_stack.empty()) {
 		return;
 	}
 	std::vector<LookaheadCursor> stack;
@@ -1130,7 +1193,8 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 		stack.push_back({cursor.commands, cursor.offset_dw});
 	}
 	HW::ComputeShaderInfo cs = m_sh_ctx.GetCs();
-	WalkComputeDispatches(m_renderer.GetPipelineCache(), cs, std::move(stack), " process");
+	WalkComputeDispatches(m_renderer.GetPipelineCache(), cs, std::move(stack), " process",
+	                      AsyncComputeMode() == 2);
 }
 
 void CommandProcessor::ProcessIndirectBuffer(std::span<const uint32_t> commands) {

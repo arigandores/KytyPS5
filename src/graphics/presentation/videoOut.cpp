@@ -1291,6 +1291,11 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " m_nodes=%llu m_nodes_need=%llu m_rnodes=%llu m_rnodes_need=%llu"
 			     " m_srcs=%llu m_srcs_off=%llu"
 			     " da_draws=%llu da_ready=%llu da_walks=%llu da_walk_us=%llu"
+			     " da_q=%llu da_nohint=%llu da_present=%llu da_busy=%llu da_done=%llu da_fail=%llu"
+			     " da_work_us=%llu da_hit=%llu da_stale=%llu da_late=%llu da_miss=%llu da_words=%llu"
+			     " da_noplan=%llu da_flip=%llu da_refresh=%llu da_stale_old=%llu da_predicted=%llu"
+			     " da_move=%llu da_take_us=%llu da_queue_us=%llu da_words_clean=%llu"
+			     " img_ins_us=%llu img_free_us=%llu img_ovl_us=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1355,7 +1360,19 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::MatReadNodes), d(FS::Counter::MatReadNodesNeeded),
 			     d(FS::Counter::MatSources), d(FS::Counter::MatSourcesOff),
 			     d(FS::Counter::DrawAheadSeen), d(FS::Counter::DrawAheadReady),
-			     d(FS::Counter::DrawAheadWalks), dus(FS::Counter::DrawAheadNs));
+			     d(FS::Counter::DrawAheadWalks), dus(FS::Counter::DrawAheadNs),
+			     d(FS::Counter::DrawAheadQueued), d(FS::Counter::DrawAheadNoHint),
+			     d(FS::Counter::DrawAheadPresent), d(FS::Counter::DrawAheadBusy),
+			     d(FS::Counter::DrawAheadDone), d(FS::Counter::DrawAheadFailed),
+			     dus(FS::Counter::DrawAheadWorkerNs), d(FS::Counter::DrawAheadHits),
+			     d(FS::Counter::DrawAheadStale), d(FS::Counter::DrawAheadLate),
+			     d(FS::Counter::DrawAheadMisses), d(FS::Counter::DrawAheadWords),
+			     d(FS::Counter::DrawAheadNoPlan), d(FS::Counter::DrawAheadHintFlip),
+			     d(FS::Counter::DrawAheadRefresh), d(FS::Counter::DrawAheadStaleOld),
+			     d(FS::Counter::DrawAheadPredicted), d(FS::Counter::DrawAheadMoves),
+			     dus(FS::Counter::DrawAheadTakeNs), dus(FS::Counter::DrawAheadQueueNs),
+			     d(FS::Counter::DrawAheadCleanWords), dus(FS::Counter::ImgInsertNs),
+			     dus(FS::Counter::ImgFreeNs), dus(FS::Counter::ImgOverlapNs));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

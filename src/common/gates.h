@@ -21,11 +21,21 @@ enum class Gate : uint32_t {
 	SrtStat,        // KYTY_SRT_STAT,            file name "srtstat"
 	MetaLock,       // KYTY_META_LOCK,           file name "metalock"
 	DrawAhead,      // KYTY_DRAW_AHEAD,          file name "drawahead"
+	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
+	Count,
+};
+
+// Numeric settings with the same life cycle as the gates ("name=<decimal>" in the gate file).
+enum class Knob : uint32_t {
+	DrawAheadThreads, // KYTY_DRAW_AHEAD_THREADS, file name "dathreads"
 	Count,
 };
 
 // Relaxed read of the current state. Safe to call from any thread and from hot paths.
 [[nodiscard]] bool Enabled(Gate gate) noexcept;
+
+// Relaxed read of a knob's current value.
+[[nodiscard]] uint32_t Value(Knob knob) noexcept;
 
 // Re-reads the gate file (if any) and publishes changes. Called once per flip.
 void Poll(uint32_t frame) noexcept;

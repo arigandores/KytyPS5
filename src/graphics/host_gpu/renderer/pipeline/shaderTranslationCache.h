@@ -43,6 +43,10 @@ public:
 
 	[[nodiscard]] bool Enabled() const { return m_enabled; }
 
+	// Hash of a resource plan in its serialized (cache file) form: plans with the same fingerprint
+	// materialize identically.
+	static uint64_t PlanFingerprint(const ShaderRecompiler::IR::ResourcePlan& plan);
+
 	// Reads the entry of a key; false when there is none or it does not match (stale version).
 	bool Load(const Key& key, Entry& entry);
 	// Writes (replaces) the entry of a key.

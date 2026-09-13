@@ -171,6 +171,30 @@ enum class Counter : uint32_t {
 	DrawAheadReady,    // ... of them with both stage programs and their user data known
 	DrawAheadWalks,    // shadow walks performed
 	DrawAheadNs,       // time spent in them
+	DrawAheadQueued,   // materialization tasks handed to the workers
+	DrawAheadNoHint,   // draws whose program the draw path has not named yet (no task)
+	DrawAheadPresent,  // tasks already queued or answered for the same key
+	DrawAheadBusy,     // tasks dropped: both slots of the key hold work of the same walk
+	DrawAheadDone,     // tasks the workers materialized
+	DrawAheadFailed,   // ... that did not materialize (or overflowed the read log)
+	DrawAheadWorkerNs, // worker time spent materializing
+	DrawAheadHits,     // draw stages served by a worker result
+	DrawAheadStale,    // ... results whose witness no longer held
+	DrawAheadLate,     // ... results still queued or running when the draw needed them
+	DrawAheadMisses,   // draw stages with no result for their key
+	DrawAheadWords,    // guest words compared to validate results
+	DrawAheadNoPlan,   // requests whose plan has no compiled SRT yet
+	DrawAheadHintFlip, // a program's hint moved to another source entry (static variants)
+	DrawAheadRefresh,  // keys answered by an older walk, queued again
+	DrawAheadStaleOld, // stale results that came from an older walk
+	DrawAheadPredicted, // requests of multi-variant programs queued for the predicted variant only
+	DrawAheadMoves,    // results taken by their last predicted user without a copy
+	DrawAheadTakeNs,   // critical-thread time looking up and validating worker results
+	DrawAheadQueueNs,  // walk time spent queueing tasks
+	DrawAheadCleanWords, // validated words read through the GPU-clean reader
+	ImgInsertNs,       // TextureCache::InsertImage (host image creation and registration)
+	ImgFreeNs,         // TextureCache::FreeImage
+	ImgOverlapNs,      // TextureCache::ResolveDepthOverlap (insert + copy + free of a reinterpretation)
 	Count
 };
 

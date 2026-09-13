@@ -417,6 +417,123 @@ bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 	return ok;
 }
 
+// The specialization reader of a draw-lookahead worker. Whether a word has pending GPU writes can
+// only be asked on the GuestGpu thread, so the worker reads the word as it is and records the read
+// as a clean one: the draw validates it through the clean reader, which fails exactly where a
+// clean read would have failed, and the result is then materialized again.
+bool ReadShaderAheadClean(void* userdata, uint64_t address, uint32_t* value) {
+	if (value == nullptr) {
+		return false;
+	}
+	auto*      cache = static_cast<ShaderReadCache*>(userdata);
+	const auto page  = address & ~(ShaderPageSize - 1);
+	if (cache != nullptr && (address & 3u) == 0) {
+		if (const auto* backing = LiveBackingPage(cache, page); backing != nullptr) {
+			std::memcpy(value, backing + (address - page), sizeof(*value));
+			if (cache->log != nullptr) {
+				cache->log->Note(address, *value, true, true, true);
+			}
+			return true;
+		}
+	}
+	const bool ok = Libs::LibKernel::Memory::TryReadBacking(address, value, sizeof(*value));
+	if (cache != nullptr && cache->log != nullptr) {
+		cache->log->Note(address, ok ? *value : 0u, true, ok, false);
+	}
+	return ok;
+}
+
+// The recorded reads of one materialization in the form they are validated in: consecutive dwords
+// inside one guest page read through the same reader form a run checked with one memcmp.
+struct Witness {
+	struct Run {
+		uint64_t address = 0;
+		uint32_t first   = 0; // index into that reader's value array
+		uint32_t count   = 0;
+	};
+	struct Single { // a read the page path could not serve (unaligned, or unreadable)
+		uint64_t address = 0;
+		uint32_t value   = 0;
+		bool     clean   = false;
+		bool     ok      = false;
+	};
+
+	std::vector<Run>      live_runs;
+	std::vector<uint32_t> live_values;
+	std::vector<Run>      clean_runs;
+	std::vector<uint32_t> clean_values;
+	std::vector<Single>   singles;
+
+	[[nodiscard]] size_t Words() const {
+		return live_values.size() + clean_values.size() + singles.size();
+	}
+
+	void Build(const SrtReadLog& log) {
+		live_runs.clear();
+		live_values.clear();
+		clean_runs.clear();
+		clean_values.clear();
+		singles.clear();
+		for (const auto& read: log.entries) {
+			if (read.ok == 0 || read.paged == 0) {
+				singles.push_back({read.address, read.value, read.clean != 0, read.ok != 0});
+				continue;
+			}
+			auto&      runs   = read.clean != 0 ? clean_runs : live_runs;
+			auto&      values = read.clean != 0 ? clean_values : live_values;
+			const bool joins  = !runs.empty() &&
+			                   runs.back().address + runs.back().count * sizeof(uint32_t) == read.address &&
+			                   ((runs.back().address ^ read.address) & ~(ShaderPageSize - 1)) == 0;
+			if (joins) {
+				runs.back().count++;
+			} else {
+				runs.push_back({read.address, static_cast<uint32_t>(values.size()), 1});
+			}
+			values.push_back(read.value);
+		}
+	}
+};
+
+// True while every recorded word still reads back, through its reader, as recorded.
+bool VerifyWitness(const Witness& witness, ShaderReadCache& cache) {
+	for (const auto& run: witness.live_runs) {
+		const auto* backing = LiveBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
+		if (backing == nullptr ||
+		    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
+		                &witness.live_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+			return false;
+		}
+	}
+	for (const auto& run: witness.clean_runs) {
+		const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
+		if (backing != nullptr) {
+			if (std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
+			                &witness.clean_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+				return false;
+			}
+			continue;
+		}
+		// The page is not GPU-clean as a whole any more: the clean reader decides per word, and
+		// so does the check.
+		for (uint32_t i = 0; i < run.count; i++) {
+			uint32_t value = 0;
+			if (!ReadShaderGuestMemory(&cache, run.address + i * sizeof(uint32_t), &value) ||
+			    value != witness.clean_values[run.first + i]) {
+				return false;
+			}
+		}
+	}
+	for (const auto& single: witness.singles) {
+		uint32_t   value = 0;
+		const bool ok    = single.clean ? ReadShaderGuestMemory(&cache, single.address, &value)
+		                                : ReadShaderLiveMemory(&cache, single.address, &value);
+		if (ok != single.ok || (ok && value != single.value)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void DumpShaderSpirv(const char* stage_name, uint64_t shader_hash,
                      const std::vector<uint32_t>& spirv) {
 	if (!Config::GraphicsDebugDumpEnabled()) {
@@ -560,6 +677,9 @@ struct PipelineCache::ProgramCache {
 		    : resource_plan(std::move(plan)) {}
 
 		ShaderRecompiler::IR::ResourcePlan resource_plan;
+		// ShaderTranslationCache::PlanFingerprint of the plan (| 1, 0 = not computed yet); only
+		// the holder of PipelineCache::m_mutex computes and reads it.
+		mutable uint64_t                   plan_fingerprint = 0;
 		// deque: draws and asynchronous pipeline jobs keep pointers to a permutation's program
 		// while later permutations of the same source are appended.
 		std::deque<Permutation>            permutations;
@@ -752,27 +872,11 @@ struct PipelineCache::ProgramCache {
 	// same path and build the same snapshot, so the stored result may be handed out instead of
 	// walking the plan again. Consecutive words of one page are checked with a single memcmp.
 	struct MemoEntry {
-		struct Run { // consecutive dwords inside one guest page, read through one reader
-			uint64_t address = 0;
-			uint32_t first   = 0; // index into that reader's value array
-			uint32_t count   = 0;
-		};
-		struct Single { // a read the page path could not serve (unaligned, or unreadable)
-			uint64_t address = 0;
-			uint32_t value   = 0;
-			bool     clean   = false;
-			bool     ok      = false;
-		};
-
 		bool                  valid       = false;
 		uint64_t              generation  = 0;
 		const SourceEntry*    source      = nullptr;
 		uint64_t              shader_base = 0;
-		std::vector<Run>      live_runs;
-		std::vector<uint32_t> live_values;
-		std::vector<Run>      clean_runs;
-		std::vector<uint32_t> clean_values;
-		std::vector<Single>   singles;
+		Witness               witness;
 		// The snapshot carries the user data registers, which are the rest of the key.
 		ShaderRecompiler::IR::ResourceSnapshot snapshot;
 		Permutation*                           permutation        = nullptr;
@@ -807,35 +911,9 @@ struct PipelineCache::ProgramCache {
 
 	[[gnu::noinline]] static bool MemoVerify(const MemoEntry& entry, ShaderReadCache& cache) {
 		if (Common::FrameStats::Enabled()) {
-			Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoReads,
-			                        entry.live_values.size() + entry.clean_values.size() +
-			                            entry.singles.size());
+			Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoReads, entry.witness.Words());
 		}
-		for (const auto& run: entry.live_runs) {
-			const auto* backing = LiveBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
-			if (backing == nullptr ||
-			    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
-			                &entry.live_values[run.first], run.count * sizeof(uint32_t)) != 0) {
-				return false;
-			}
-		}
-		for (const auto& run: entry.clean_runs) {
-			const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
-			if (backing == nullptr ||
-			    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
-			                &entry.clean_values[run.first], run.count * sizeof(uint32_t)) != 0) {
-				return false;
-			}
-		}
-		for (const auto& single: entry.singles) {
-			uint32_t   value = 0;
-			const bool ok    = single.clean ? ReadShaderGuestMemory(&cache, single.address, &value)
-			                                : ReadShaderLiveMemory(&cache, single.address, &value);
-			if (ok != single.ok || (ok && value != single.value)) {
-				return false;
-			}
-		}
-		return true;
+		return VerifyWitness(entry.witness, cache);
 	}
 
 	static bool SameSnapshot(const ShaderRecompiler::IR::ResourceSnapshot& a,
@@ -883,28 +961,7 @@ struct PipelineCache::ProgramCache {
 		}
 		auto& slot = memo[MemoHash(source, shader_base, snapshot.user_data) % MemoSlots];
 		slot.valid = false;
-		slot.live_runs.clear();
-		slot.live_values.clear();
-		slot.clean_runs.clear();
-		slot.clean_values.clear();
-		slot.singles.clear();
-		for (const auto& read: log.entries) {
-			if (read.ok == 0 || read.paged == 0) {
-				slot.singles.push_back({read.address, read.value, read.clean != 0, read.ok != 0});
-				continue;
-			}
-			auto&      runs   = read.clean != 0 ? slot.clean_runs : slot.live_runs;
-			auto&      values = read.clean != 0 ? slot.clean_values : slot.live_values;
-			const bool joins =
-			    !runs.empty() && runs.back().address + runs.back().count * sizeof(uint32_t) == read.address &&
-			    ((runs.back().address ^ read.address) & ~(ShaderPageSize - 1)) == 0;
-			if (joins) {
-				runs.back().count++;
-			} else {
-				runs.push_back({read.address, static_cast<uint32_t>(values.size()), 1});
-			}
-			values.push_back(read.value);
-		}
+		slot.witness.Build(log);
 		slot.snapshot           = snapshot;
 		slot.source             = source;
 		slot.shader_base        = shader_base;
@@ -914,6 +971,460 @@ struct PipelineCache::ProgramCache {
 		slot.shader_data_dwords = permutation->program.bindings.ShaderDataDwords();
 		slot.generation         = memo_generation;
 		slot.valid              = true;
+	}
+
+	// Draw lookahead (gates "drawahead"/"dause", docs/parallel-draw-path.md M1). A slot holds one
+	// materialization task and, once a worker has run it, its result and witness.
+	// Ownership: the key fields are written only by the holder of PipelineCache::m_mutex while no
+	// worker can touch the slot (state Empty, Ready or Failed). A worker claims a Queued slot with a
+	// compare-exchange, writes only the result fields and publishes Ready or Failed; after that it
+	// never touches the slot again, so the holder of m_mutex reads the result without a lock.
+	enum AheadState : uint8_t { AheadEmpty, AheadQueued, AheadRunning, AheadReady, AheadFailed };
+
+	struct AheadSlot {
+		std::atomic<uint8_t> state {AheadEmpty};
+		// key (holder of m_mutex); `source` is one entry with this plan, for the worker
+		const SourceEntry*                                 source      = nullptr;
+		uint64_t                                           fingerprint = 0;
+		uint64_t                                           shader_base = 0;
+		uint64_t                                           generation  = 0;
+		uint64_t                                           walk        = 0;
+		uint32_t                                           uses        = 0; // draws still to take it
+		uint32_t                                           count       = 0;
+		std::array<uint32_t, HW::UserSgprInfo::SGPRS_MAX> user_data {};
+		// result (worker, published by the state)
+		Witness                                      witness;
+		ShaderRecompiler::IR::ResourceSnapshot       snapshot;
+		ShaderRecompiler::IR::ResourceSpecialization specialization;
+
+		[[nodiscard]] bool Matches(uint64_t key_fingerprint, uint64_t base, uint64_t key_generation,
+		                           std::span<const uint32_t> key_user_data) const {
+			return fingerprint == key_fingerprint && shader_base == base && generation == key_generation &&
+			       count == key_user_data.size() &&
+			       std::equal(key_user_data.begin(), key_user_data.end(), user_data.begin());
+		}
+	};
+
+	// The source entry the draw path last used for a program: the static part of a program's key
+	// (vertex fetch, pixel inputs, render target exports) depends on context state the PM4 walk
+	// does not follow, so the walk asks which entry that program resolved to the last time. A wrong
+	// guess costs a task whose result no draw matches.
+	struct AheadHint {
+		std::array<const SourceEntry*, 4> sources {}; // static variants seen, replaced in turn
+		uint64_t                          base       = 0;
+		uint64_t                          generation = 0;
+		uint32_t                          count      = 0;
+		uint32_t                          next       = 0; // variant slot replaced next
+		ShaderType                        stage      = ShaderType::Unknown;
+	};
+
+	static constexpr size_t AheadSlotCount = 32768;
+	static constexpr size_t AheadHintCount = 16384;
+	static constexpr size_t AheadBatch     = 16;
+
+	std::unique_ptr<AheadSlot[]>          ahead_slots; // allocated by the first queued walk
+	std::array<AheadHint, AheadHintCount> ahead_hints {};
+	uint64_t                              ahead_walk = 0;
+	// The static variant a multi-variant program last ran with for given user data: which source
+	// entry the walk should materialize a request for.
+	struct AheadVariant {
+		uint64_t           key    = 0;
+		const SourceEntry* source = nullptr;
+	};
+	static constexpr size_t                     AheadVariantCount = 16384;
+	std::array<AheadVariant, AheadVariantCount> ahead_variants {};
+
+	static uint64_t AheadVariantKey(ShaderType stage, uint64_t base, std::span<const uint32_t> user_data) {
+		const auto seed = (base * 0x9e3779b97f4a7c15ull) ^ static_cast<uint64_t>(stage);
+		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), seed) | 1u;
+	}
+
+	static uint64_t Fingerprint(const SourceEntry& source) {
+		if (source.plan_fingerprint == 0) {
+			source.plan_fingerprint = ShaderTranslationCache::PlanFingerprint(source.resource_plan) | 1u;
+		}
+		return source.plan_fingerprint;
+	}
+
+	static uint64_t AheadHash(uint64_t fingerprint, uint64_t shader_base,
+	                          std::span<const uint32_t> user_data) {
+		const auto seed = (fingerprint * 0x9e3779b97f4a7c15ull) ^ shader_base;
+		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), seed);
+	}
+	std::mutex                            ahead_mutex;
+	std::condition_variable               ahead_cv;
+	std::deque<uint32_t>                  ahead_queue; // slot indices (ahead_mutex)
+	bool                                  ahead_stop = false; // ahead_mutex
+	std::vector<std::thread>              ahead_threads;
+
+	static size_t AheadHintIndex(ShaderType stage, uint64_t base, uint32_t count) {
+		return static_cast<size_t>((base >> 2u) ^ (base >> 17u) ^ (uint64_t {count} * 0x9e37u) ^
+		                           (static_cast<uint64_t>(stage) << 11u)) &
+		       (AheadHintCount - 1);
+	}
+
+	void AheadNote(ShaderType stage, uint64_t base, std::span<const uint32_t> user_data,
+	               const SourceEntry* source) {
+		const auto count = static_cast<uint32_t>(user_data.size());
+		auto&      hint  = ahead_hints[AheadHintIndex(stage, base, count)];
+		if (hint.sources[1] != nullptr && hint.base == base && hint.count == count &&
+		    hint.stage == stage && hint.generation == memo_generation) {
+			const auto key = AheadVariantKey(stage, base, user_data);
+			ahead_variants[key % AheadVariantCount] = {key, source};
+		}
+		if (hint.base != base || hint.count != count || hint.stage != stage ||
+		    hint.generation != memo_generation) {
+			hint            = {};
+			hint.sources[0] = source;
+			hint.base       = base;
+			hint.generation = memo_generation;
+			hint.count      = count;
+			hint.next       = 1;
+			hint.stage      = stage;
+			return;
+		}
+		if (std::find(hint.sources.begin(), hint.sources.end(), source) != hint.sources.end()) {
+			return;
+		}
+		// Another static variant of the same program.
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadHintFlip, 1);
+		hint.sources[hint.next % hint.sources.size()] = source;
+		hint.next++;
+	}
+
+	void AheadStartThreads(uint32_t wanted) {
+		if (ahead_threads.size() >= wanted) {
+			return;
+		}
+		{
+			std::lock_guard<std::mutex> lock(ahead_mutex);
+			if (ahead_stop) {
+				return; // shutting down: nobody would join a new thread
+			}
+		}
+		while (ahead_threads.size() < wanted) {
+			const auto index = static_cast<uint32_t>(ahead_threads.size());
+			ahead_threads.emplace_back([this, index] {
+				SetThreadDescription(GetCurrentThread(), L"DrawAhead");
+				AheadWorker(index);
+			});
+		}
+	}
+
+	void AheadStopThreads() {
+		{
+			std::lock_guard<std::mutex> lock(ahead_mutex);
+			ahead_stop = true;
+		}
+		ahead_cv.notify_all();
+		for (auto& thread: ahead_threads) {
+			thread.join();
+		}
+		ahead_threads.clear();
+	}
+
+	struct AheadQueueStats {
+		uint64_t no_hint = 0;
+		uint64_t no_plan = 0;
+		uint64_t present = 0;
+		uint64_t refresh = 0;
+		uint64_t busy    = 0;
+		uint64_t predicted = 0;
+	};
+
+	// Holder of m_mutex: queue one request for one source entry, or find it already queued.
+	void QueueAheadSource(const SourceEntry* source, const PipelineCache::DrawAheadRequest& request,
+	                      AheadQueueStats& stats, std::vector<uint32_t>& batch) {
+		if (source->resource_plan.srt_compiled == nullptr) {
+			stats.no_plan++;
+			return;
+		}
+		const auto fingerprint = Fingerprint(*source);
+		const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
+		const auto hash        = AheadHash(fingerprint, request.base, user_data);
+		AheadSlot* victim      = nullptr;
+		uint32_t   victim_rank = UINT32_MAX;
+		for (size_t probe = 0; probe < 2; probe++) {
+			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
+			const auto state = slot.state.load(std::memory_order_acquire);
+			if (state != AheadEmpty && slot.Matches(fingerprint, request.base, memo_generation, user_data)) {
+				if (slot.walk == ahead_walk) {
+					slot.uses += request.uses;
+					stats.present++;
+				} else if (state == AheadReady || state == AheadFailed) {
+					// Answered by an older walk from guest words that may have moved since:
+					// answer it again for this walk.
+					slot.walk = ahead_walk;
+					slot.uses = request.uses;
+					slot.state.store(AheadQueued, std::memory_order_release);
+					batch.push_back(static_cast<uint32_t>(&slot - ahead_slots.get()));
+					stats.refresh++;
+				} else {
+					slot.walk = ahead_walk; // still queued or running: fresh enough
+					slot.uses = request.uses;
+					stats.present++;
+				}
+				return;
+			}
+			// Free first, then work of an older walk; never work of this walk.
+			uint32_t rank = UINT32_MAX;
+			if (state == AheadEmpty || state == AheadFailed) {
+				rank = 0;
+			} else if (slot.walk != ahead_walk && state == AheadReady) {
+				rank = 1;
+			} else if (slot.walk != ahead_walk && state == AheadQueued) {
+				rank = 2; // cancelled below if chosen
+			}
+			if (rank < victim_rank) {
+				victim      = &slot;
+				victim_rank = rank;
+			}
+		}
+		if (victim != nullptr && victim_rank == 2) {
+			auto expected = static_cast<uint8_t>(AheadQueued);
+			if (!victim->state.compare_exchange_strong(expected, AheadEmpty, std::memory_order_acq_rel)) {
+				victim = nullptr; // a worker claimed it meanwhile
+			}
+		}
+		if (victim == nullptr) {
+			stats.busy++;
+			return;
+		}
+		victim->source      = source;
+		victim->fingerprint = fingerprint;
+		victim->shader_base = request.base;
+		victim->generation  = memo_generation;
+		victim->walk        = ahead_walk;
+		victim->uses        = request.uses;
+		victim->count       = request.count;
+		std::copy(user_data.begin(), user_data.end(), victim->user_data.begin());
+		victim->state.store(AheadQueued, std::memory_order_release);
+		batch.push_back(static_cast<uint32_t>(victim - ahead_slots.get()));
+	}
+
+	// Holder of m_mutex.
+	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, bool first_batch) {
+		namespace FS     = Common::FrameStats;
+		const auto wanted = Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+		if (wanted == 0) {
+			return;
+		}
+		AheadStartThreads(wanted);
+		if (first_batch) {
+			ahead_walk++;
+		}
+		if (ahead_slots == nullptr) {
+			ahead_slots = std::make_unique<AheadSlot[]>(AheadSlotCount);
+		}
+		AheadQueueStats                    stats;
+		thread_local std::vector<uint32_t> batch;
+		batch.clear();
+		for (const auto& request: requests) {
+			const auto  stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
+			const auto& hint  = ahead_hints[AheadHintIndex(stage, request.base, request.count)];
+			if (request.count > HW::UserSgprInfo::SGPRS_MAX || hint.sources[0] == nullptr ||
+			    hint.stage != stage || hint.base != request.base || hint.count != request.count ||
+			    hint.generation != memo_generation) {
+				stats.no_hint++;
+				continue;
+			}
+			if (hint.sources[1] != nullptr) {
+				const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
+				const auto  key       = AheadVariantKey(stage, request.base, user_data);
+				const auto& predicted = ahead_variants[key % AheadVariantCount];
+				if (predicted.key == key &&
+				    std::find(hint.sources.begin(), hint.sources.end(), predicted.source) !=
+				        hint.sources.end()) {
+					QueueAheadSource(predicted.source, request, stats, batch);
+					stats.predicted++;
+					continue;
+				}
+			}
+			for (size_t variant = 0; variant < hint.sources.size(); variant++) {
+				const auto* source = hint.sources[variant];
+				if (source == nullptr) {
+					continue;
+				}
+				// Variants with the same plan share one task.
+				const auto fingerprint = Fingerprint(*source);
+				bool       shared      = false;
+				for (size_t earlier = 0; earlier < variant; earlier++) {
+					shared |= hint.sources[earlier] != nullptr &&
+					          Fingerprint(*hint.sources[earlier]) == fingerprint;
+				}
+				if (!shared) {
+					QueueAheadSource(source, request, stats, batch);
+				}
+			}
+		}
+		if (!batch.empty()) {
+			{
+				std::lock_guard<std::mutex> lock(ahead_mutex);
+				ahead_queue.insert(ahead_queue.end(), batch.begin(), batch.end());
+			}
+			// All: a worker that the knob has made ineligible must not be the only one woken.
+			ahead_cv.notify_all();
+		}
+		if (FS::Enabled()) {
+			FS::Add(FS::Counter::DrawAheadQueued, batch.size() - stats.refresh);
+			FS::Add(FS::Counter::DrawAheadNoHint, stats.no_hint);
+			FS::Add(FS::Counter::DrawAheadNoPlan, stats.no_plan);
+			FS::Add(FS::Counter::DrawAheadRefresh, stats.refresh);
+			FS::Add(FS::Counter::DrawAheadPresent, stats.present);
+			FS::Add(FS::Counter::DrawAheadBusy, stats.busy);
+			FS::Add(FS::Counter::DrawAheadPredicted, stats.predicted);
+		}
+	}
+
+	void AheadWorker(uint32_t index) {
+		std::array<uint32_t, AheadBatch> taken {};
+		for (;;) {
+			size_t count = 0;
+			{
+				std::unique_lock<std::mutex> lock(ahead_mutex);
+				ahead_cv.wait(lock, [&] {
+					return ahead_stop ||
+					       (!ahead_queue.empty() &&
+					        index < Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads));
+				});
+				if (ahead_stop) {
+					return;
+				}
+				while (count < taken.size() && !ahead_queue.empty()) {
+					taken[count++] = ahead_queue.front();
+					ahead_queue.pop_front();
+				}
+			}
+			for (size_t i = 0; i < count; i++) {
+				AheadRun(ahead_slots[taken[i]]);
+			}
+		}
+	}
+
+	[[gnu::noinline]] static void AheadRun(AheadSlot& slot) {
+		namespace FS  = Common::FrameStats;
+		auto expected = static_cast<uint8_t>(AheadQueued);
+		if (!slot.state.compare_exchange_strong(expected, AheadRunning, std::memory_order_acq_rel)) {
+			return; // cancelled, or claimed through an older queue entry
+		}
+		const auto             t0 = FS::NowNs();
+		thread_local SrtReadLog log;
+		log.entries.clear();
+		log.overflow = false;
+		ShaderReadCache cache;
+		cache.log = &log;
+		const ShaderRecompiler::IR::SrtRuntime runtime {
+		    .user_data                  = std::span<const uint32_t>(slot.user_data.data(), slot.count),
+		    .shader_base                = slot.shader_base,
+		    .read_memory                = ReadShaderLiveMemory,
+		    .userdata                   = &cache,
+		    .read_specialization_memory = ReadShaderAheadClean,
+		};
+		const bool ok = ShaderRecompiler::IR::MaterializeResources(
+		                    slot.source->resource_plan, runtime, slot.snapshot, slot.specialization) &&
+		                !log.overflow;
+		if (ok) {
+			slot.witness.Build(log);
+		}
+		if (FS::Enabled()) {
+			FS::Add(ok ? FS::Counter::DrawAheadDone : FS::Counter::DrawAheadFailed, 1);
+			FS::Add(FS::Counter::DrawAheadWorkerNs, FS::NowNs() - t0);
+		}
+		slot.state.store(ok ? AheadReady : AheadFailed, std::memory_order_release);
+	}
+
+	// Holder of m_mutex, on a draw: the worker result for this program and user data, if its
+	// witness still holds.
+	[[gnu::noinline]] bool AheadTake(const SourceEntry& source, const ShaderParams& params,
+	                                 ShaderReadCache&                              cache,
+	                                 ShaderRecompiler::IR::ResourceSnapshot&       resources,
+	                                 ShaderRecompiler::IR::ResourceSpecialization& specialization) {
+		namespace FS = Common::FrameStats;
+		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || ahead_slots == nullptr) {
+			return false;
+		}
+		const auto fingerprint = Fingerprint(source);
+		const auto hash        = AheadHash(fingerprint, params.Base(), params.user_data);
+		for (size_t probe = 0; probe < 2; probe++) {
+			auto& slot = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
+			if (!slot.Matches(fingerprint, params.Base(), memo_generation, params.user_data)) {
+				continue;
+			}
+			auto state = slot.state.load(std::memory_order_acquire);
+			if (state == AheadQueued) {
+				if (slot.uses > 1) {
+					slot.uses--; // later draws of this walk still want it
+				} else {
+					// Nobody will need it after this draw: let the workers skip it.
+					auto expected = static_cast<uint8_t>(AheadQueued);
+					slot.state.compare_exchange_strong(expected, AheadEmpty, std::memory_order_acq_rel);
+				}
+				FS::Add(FS::Counter::DrawAheadLate, 1);
+				return false;
+			}
+			if (state == AheadRunning) {
+				slot.uses -= slot.uses != 0 ? 1u : 0u;
+				FS::Add(FS::Counter::DrawAheadLate, 1);
+				return false;
+			}
+			if (state != AheadReady) {
+				break;
+			}
+			if (FS::Enabled()) {
+				FS::Add(FS::Counter::DrawAheadWords, slot.witness.Words());
+				FS::Add(FS::Counter::DrawAheadCleanWords, slot.witness.clean_values.size());
+			}
+			if (!VerifyWitness(slot.witness, cache)) {
+				FS::Add(slot.walk == ahead_walk ? FS::Counter::DrawAheadStale
+				                                : FS::Counter::DrawAheadStaleOld,
+				        1);
+				// Guest words moved since the worker read them: no later draw can use it either.
+				slot.uses = 0;
+				slot.state.store(AheadEmpty, std::memory_order_release);
+				return false;
+			}
+			if (slot.uses > 1) {
+				slot.uses--;
+				resources      = slot.snapshot;
+				specialization = slot.specialization;
+			} else {
+				// The last draw of this walk that asked for it: take the vectors, and retire the
+				// slot, which no longer holds a result.
+				std::swap(resources, slot.snapshot);
+				std::swap(specialization, slot.specialization);
+				slot.uses = 0;
+				slot.state.store(AheadEmpty, std::memory_order_release);
+				FS::Add(FS::Counter::DrawAheadMoves, 1);
+			}
+			FS::Add(FS::Counter::DrawAheadHits, 1);
+			return true;
+		}
+		FS::Add(FS::Counter::DrawAheadMisses, 1);
+		return false;
+	}
+
+	// Gate "smemocheck" with a lookahead hit: walk the plan anyway and report a different answer.
+	[[gnu::noinline]] void AheadCheck(const ProgramKey& key, const SourceEntry& entry,
+	                                  const ShaderRecompiler::IR::SrtRuntime&             runtime,
+	                                  const ShaderRecompiler::IR::ResourceSnapshot&       resources,
+	                                  const ShaderRecompiler::IR::ResourceSpecialization& specialization) {
+		ShaderRecompiler::IR::ResourceSnapshot       fresh;
+		ShaderRecompiler::IR::ResourceSpecialization fresh_specialization;
+		const bool ok = ShaderRecompiler::IR::MaterializeResources(entry.resource_plan, runtime, fresh,
+		                                                           fresh_specialization);
+		const bool same_snapshot       = ok && SameSnapshot(fresh, resources);
+		const bool same_specialization = ok && fresh_specialization == specialization;
+		if (same_snapshot && same_specialization) {
+			memo_checks_ok++;
+			return;
+		}
+		memo_checks_bad++;
+		if (memo_checks_bad <= 40) {
+			LOGF("DrawAheadVerify: MISMATCH hash=0x%016" PRIx64 " stage=%u materialized=%d "
+			     "snapshot=%d specialization=%d (ok=%" PRIu64 " bad=%" PRIu64 ")\n",
+			     key.hash, static_cast<uint32_t>(key.stage), ok ? 1 : 0, same_snapshot ? 1 : 0,
+			     same_specialization ? 1 : 0, memo_checks_ok, memo_checks_bad);
+		}
 	}
 
 	// tolerant: the PM4 lookahead reads guest memory that may not be final yet; a resource plan
@@ -971,7 +1482,22 @@ struct PipelineCache::ProgramCache {
 		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
-		const bool memo_enabled = Common::Gates::Enabled(Common::Gates::Gate::SrtMemo);
+		bool ahead_hit = false;
+		if (entry != programs.end() && (stage == ShaderType::Vertex || stage == ShaderType::Pixel) &&
+		    Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) {
+			AheadNote(stage, params.Base(), params.user_data, &entry->second);
+			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadUse)) {
+				const auto take_begin = Common::FrameStats::NowNs();
+				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization);
+				Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
+				                        Common::FrameStats::NowNs() - take_begin);
+				if (ahead_hit && Common::Gates::Enabled(Common::Gates::Gate::SrtMemoCheck)) {
+					AheadCheck(lookup_key, entry->second, runtime, resources, specialization);
+				}
+			}
+		}
+		const bool memo_enabled =
+		    !ahead_hit && Common::Gates::Enabled(Common::Gates::Gate::SrtMemo);
 		SrtReadLog memo_log;
 		if (memo_enabled && entry != programs.end()) {
 			auto* memo_entry = MemoFind(&entry->second, params.Base(), params.user_data);
@@ -998,7 +1524,7 @@ struct PipelineCache::ProgramCache {
 			                        1);
 			read_cache.log = &memo_log;
 		}
-		if (entry != programs.end() &&
+		if (entry != programs.end() && !ahead_hit &&
 		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
 		                                                resources, specialization)) {
 			if (!entry->second.from_cache) {
@@ -1015,7 +1541,8 @@ struct PipelineCache::ProgramCache {
 			for (const auto& permutation: entry->second.permutations) {
 				by_id.erase(permutation.handle.id);
 			}
-			programs.erase(entry);
+			// Not freed: a lookahead worker may still be materializing with its plan.
+			retired_sources.push_back(programs.extract(entry));
 			memo_generation++; // the memo holds permutation pointers of the dropped entry
 			entry = programs.end();
 			resources = {};
@@ -1174,6 +1701,7 @@ struct PipelineCache::ProgramCache {
 		lookup_key.static_state.reserve(MaxStaticKeyWords);
 	}
 	~ProgramCache() {
+		AheadStopThreads();
 		pretranslation.Stop();
 		for (const auto& [key, entry]: programs) {
 			(void)key;
@@ -1270,6 +1798,7 @@ struct PipelineCache::ProgramCache {
 	}
 
 	std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash> programs;
+	std::vector<std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::node_type> retired_sources;
 	std::set<std::pair<uint32_t, uint64_t>>                     first_used;
 	ProgramKey                                                  lookup_key;
 	vk::Device                                                  device;
@@ -1602,6 +2131,17 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	}
 	result.vertex = m_program_cache->Get(vertex_params, vertex_info, push_data_cursor);
 	return result;
+}
+
+void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, bool first_batch) {
+	if (requests.empty()) {
+		return;
+	}
+	const auto        queue_begin = Common::FrameStats::NowNs();
+	Common::LockGuard lock(m_mutex);
+	m_program_cache->QueueAhead(requests, first_batch);
+	Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
+	                        Common::FrameStats::NowNs() - queue_begin);
 }
 
 ShaderProgram PipelineCache::GetComputeProgram(const HW::ComputeShaderInfo& regs,

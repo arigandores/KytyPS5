@@ -38,6 +38,14 @@ namespace {
 
 constexpr uint64_t NumFramesBeforeRemoval = 32;
 
+// Wall time of a scope, also in lite frame tracing (a few calls per frame; Scope times only with
+// detailed timers).
+struct LiteTimer {
+	Common::FrameStats::Counter counter;
+	uint64_t                    t0 = Common::FrameStats::NowNs();
+	~LiteTimer() { Common::FrameStats::Add(counter, Common::FrameStats::NowNs() - t0); }
+};
+
 bool WatchImageRange(uint64_t address, uint64_t size) {
 	static const uint64_t watched = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_WATCH");
@@ -59,7 +67,11 @@ void TraceWatchedImage(const char* event, const Image& image, uint64_t address =
 void TraceImageLifetime(const char* event, const ImageInfo& info, const char* reason, uint32_t line,
                         uint32_t last_frame = UINT32_MAX) {
 	static const bool trace = std::getenv("KYTY_IMAGE_LIFETIME_TRACE") != nullptr;
-	if (!trace || info.data.size < (1u << 20u)) return;
+	static const uint64_t min_bytes = [] {
+		const auto* value = std::getenv("KYTY_IMAGE_LIFETIME_MIN_KB");
+		return value == nullptr ? uint64_t {1u << 20u} : std::strtoull(value, nullptr, 10) << 10u;
+	}();
+	if (!trace || info.data.size < min_bytes) return;
 	static const uint32_t first_frame = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_LIFETIME_FROM");
 		return value == nullptr ? 0u : static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
@@ -336,6 +348,7 @@ bool TextureCache::SafeToDownload(const Image& image) {
 }
 
 ImageId TextureCache::InsertImage(const ImageInfo& info) {
+	LiteTimer insert_timer {Common::FrameStats::Counter::ImgInsertNs};
 	TraceImageLifetime("create", info, __func__, __LINE__);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgInserts, 1);
 	const auto id = m_slot_images.insert(m_graphics, m_scheduler, info);
@@ -430,6 +443,7 @@ void TextureCache::DeleteImage(ImageId id) {
 }
 
 void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
+	LiteTimer free_timer {Common::FrameStats::Counter::ImgFreeNs};
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgFrees, 1);
 	auto& image = m_slot_images[id];
 	TraceImageLifetime("free", image.info, reason, line, image.frame_accessed_last);
@@ -812,6 +826,7 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 
 ImageId TextureCache::ResolveDepthOverlap(const ImageInfo& requested, BindingType binding,
                                           ImageId cached_id) {
+	LiteTimer overlap_timer {Common::FrameStats::Counter::ImgOverlapNs};
 	auto& cached = m_slot_images[cached_id];
 	if (!cached.info.IsDepth() && !requested.IsDepth()) {
 		return {};
@@ -1437,10 +1452,33 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
 	if (upload) {
 		TraceWatchedImage("upload", image);
+		const bool buffer_modified = image.IsBufferModified();
+		const bool cpu_definite    = image.IsDefinitelyCpuDirty();
+		const bool cpu_maybe       = image.IsMaybeCpuDirty();
 		const auto source =
 		    m_buffer_cache.ObtainBufferForImage(image.SourceRange().address, image.SourceRange().size);
 		if (source.buffer == nullptr) {
 			EXIT("TextureCache: failed to obtain image upload source\n");
+		}
+		static const bool upload_trace = std::getenv("KYTY_IMAGE_UPLOAD_TRACE") != nullptr;
+		if (upload_trace) {
+			static const uint32_t first_frame = [] {
+				const auto* value = std::getenv("KYTY_IMAGE_UPLOAD_FROM");
+				return value == nullptr ? 0u : static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
+			}();
+			const auto frame = GpuTimeProfiler::Frame();
+			if (frame >= first_frame) {
+				LOGF("ImgUploadWhy: frame=%u id=%u guest=0x%016" PRIx64 " bytes=%" PRIu64
+				     " w=%u h=%u mips=%u layers=%u fmt=%u tile=%u buffer=%d cpu=%d maybe=%d"
+				     " imported=%d host_written=%d last_frame=%u gpu=%d\n",
+				     frame, id.index, image.info.data.address, image.SourceRange().size,
+				     image.info.extent.width, image.info.extent.height, image.info.resources.levels,
+				     image.info.resources.layers, static_cast<uint32_t>(image.info.pixel_format),
+				     static_cast<uint32_t>(image.info.tile_mode), buffer_modified ? 1 : 0,
+				     cpu_definite ? 1 : 0, cpu_maybe ? 1 : 0, source.imported ? 1 : 0,
+				     source.host_written ? 1 : 0, image.frame_accessed_last,
+				     image.IsGpuModified() ? 1 : 0);
+			}
 		}
 		NoteUploadFrame();
 		const auto deferred = allow_defer ? DeferrableLevels(image, source.imported) : 0u;

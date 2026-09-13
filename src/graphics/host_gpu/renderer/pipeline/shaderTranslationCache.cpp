@@ -730,6 +730,12 @@ bool ShaderTranslationCache::ReadFileUnchecked(const std::filesystem::path& path
 	return !r.Failed() && r.AtEnd();
 }
 
+uint64_t ShaderTranslationCache::PlanFingerprint(const IR::ResourcePlan& plan) {
+	Writer w;
+	WritePlan(w, plan);
+	return XXH3_64bits(w.Data().data(), w.Data().size());
+}
+
 bool ShaderTranslationCache::Save(const Key& key, const IR::ResourcePlan& plan,
                                   std::span<const Permutation> permutations) {
 	if (!m_enabled) {

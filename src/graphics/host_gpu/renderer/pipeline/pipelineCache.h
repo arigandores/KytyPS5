@@ -16,6 +16,7 @@
 #include <type_traits>
 #include <unordered_map>
 #include <unordered_set>
+#include <array>
 #include <atomic>
 #include <condition_variable>
 #include <deque>
@@ -160,6 +161,18 @@ public:
 	// compiling when the dispatch arrives.
 	void PrefetchComputePipeline(const HW::ComputeShaderInfo& regs, const HW::ShaderRegisters& sh,
 	                             ShaderComputeInputInfo input_info);
+	// Draw lookahead (docs/parallel-draw-path.md, M1): a vertex or pixel program the PM4 walk
+	// expects a coming draw to run, with the user data it will run with.
+	struct DrawAheadRequest {
+		uint64_t                 base  = 0; // program address (the shader base of the SRT walk)
+		uint32_t                 count = 0; // user SGPRs of the stage
+		uint32_t                 uses  = 1; // draws of the walk that will ask for it
+		bool                     pixel = false;
+		std::array<uint32_t, 32> user_data {};
+	};
+	// Queues the materialization of these programs to worker threads. `first_batch` starts a
+	// new walk (results of an older walk may be overwritten, those of this walk are kept).
+	void QueueDrawAhead(std::span<const DrawAheadRequest> requests, bool first_batch);
 	// Block until every queued graphics pipeline has been compiled.
 	void WaitForPendingPipelines();
 	struct PreparationStatus {

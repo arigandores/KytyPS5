@@ -981,21 +981,38 @@ struct LookaheadCursor {
 	uint32_t                  offset = 0;
 };
 
-// Shadow copy of the graphics stage state the materialization of a draw needs: the program
-// address of the vertex (GS/NGG) and pixel stages and their user data registers. Milestone M0 of
-// docs/parallel-draw-path.md only counts what the walk can see; M1 turns this into the key of a
-// materialization task handed to a worker.
+// Shadow copy of the graphics stage state the materialization of a draw needs, kept like the live
+// SH context keeps it (pm4Handlers.cpp): the vertex program is the ES program with the GS user data
+// and the GS user SGPR count, the pixel program has its own. Seeded from the live context, which at
+// the start of a submission holds exactly the state the previous submission of the queue left.
 struct GraphicsShadow {
 	struct Stage {
-		uint64_t                 address = 0;
-		uint32_t                 count   = 0; // user SGPRs the stage declares
-		std::array<uint32_t, 16> user_data {};
+		uint64_t                                          address = 0;
+		uint32_t                                          count   = 0; // user SGPRs the stage declares
+		std::array<uint32_t, HW::UserSgprInfo::SGPRS_MAX> user_data {};
+
+		[[nodiscard]] bool SameRequest(const Stage& other) const noexcept {
+			return address == other.address && count == other.count &&
+			       std::equal(user_data.begin(), user_data.begin() + std::min<size_t>(count, user_data.size()),
+			                  other.user_data.begin());
+		}
 	};
 	Stage vertex;
 	Stage pixel;
 
+	void Seed(const HW::Shader& live) {
+		const auto& vs = live.GetVs();
+		vertex.address = vs.es_regs.data_addr;
+		vertex.count   = vs.gs_regs.rsrc2.user_sgpr;
+		std::copy(std::begin(vs.gs_user_sgpr.value), std::end(vs.gs_user_sgpr.value), vertex.user_data.begin());
+		const auto& ps = live.GetPs();
+		pixel.address  = ps.ps_regs.data_addr;
+		pixel.count    = ps.ps_regs.rsrc2.user_sgpr;
+		std::copy(std::begin(ps.ps_user_sgpr.value), std::end(ps.ps_user_sgpr.value), pixel.user_data.begin());
+	}
+
 	[[nodiscard]] bool Ready() const noexcept {
-		return vertex.address != 0 && vertex.count != 0 && pixel.address != 0;
+		return vertex.address != 0 && pixel.address != 0;
 	}
 };
 
@@ -1006,25 +1023,75 @@ struct GraphicsShadow {
 // every DISPATCH_DIRECT/INDIRECT translates its program and queues the pipeline compile.
 static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& cs,
                                   std::vector<LookaheadCursor> stack, const char* label,
-                                  bool prefetch_compute) {
+                                  bool prefetch_compute, const HW::Shader* seed = nullptr,
+                                  bool draw_ahead = false) {
 	GraphicsShadow gfx;
+	if (seed != nullptr) {
+		gfx.Seed(*seed);
+	}
 	uint64_t       draws_seen  = 0;
 	uint64_t       draws_ready = 0;
 	const auto            apply_gfx  = [&gfx](uint32_t offset, uint32_t value) {
-		const auto stage_register = [&](GraphicsShadow::Stage& stage, uint32_t base) {
-			if (offset == base) {
-				stage.address = (stage.address & ~uint64_t {0xffffffffu}) | value;
-			} else if (offset == base + 1u) {
-				stage.address = (stage.address & 0xffffffffu) |
-				                (static_cast<uint64_t>(value & 0xffu) << 32u);
-			} else if (offset == base + 3u) { // RSRC2: user SGPR count in bits 1..5
-				stage.count = (value >> 1u) & 0x1fu;
-			} else if (offset >= base + 4u && offset < base + 4u + stage.user_data.size()) {
-				stage.user_data[offset - (base + 4u)] = value;
-			}
+		const auto low = [](uint64_t address, uint32_t word) {
+			return (address & 0xFFFFFF00000000FFull) | (static_cast<uint64_t>(word) << 8u);
 		};
-		stage_register(gfx.pixel, Pm4::SPI_SHADER_PGM_LO_PS);
-		stage_register(gfx.vertex, Pm4::SPI_SHADER_PGM_LO_GS);
+		const auto high = [](uint64_t address, uint32_t word) {
+			return (address & 0xFFFF00FFFFFFFFFFull) | ((static_cast<uint64_t>(word) & 0xffu) << 40u);
+		};
+		const auto user_sgpr = [](uint32_t word) { // RSRC2: bits 1..5 and the MSB in bit 27
+			return ((word >> 1u) & 0x1fu) + (((word >> 27u) & 1u) << 5u);
+		};
+		if (offset == Pm4::SPI_SHADER_PGM_LO_ES) {
+			gfx.vertex.address = low(gfx.vertex.address, value);
+		} else if (offset == Pm4::SPI_SHADER_PGM_HI_ES) {
+			gfx.vertex.address = high(gfx.vertex.address, value);
+		} else if (offset == Pm4::SPI_SHADER_PGM_RSRC2_GS) {
+			gfx.vertex.count = user_sgpr(value);
+		} else if (offset >= Pm4::SPI_SHADER_USER_DATA_GS_0 && offset <= Pm4::SPI_SHADER_USER_DATA_GS_31) {
+			gfx.vertex.user_data[offset - Pm4::SPI_SHADER_USER_DATA_GS_0] = value;
+		} else if (offset == Pm4::SPI_SHADER_PGM_LO_PS) {
+			gfx.pixel.address = low(gfx.pixel.address, value);
+		} else if (offset == Pm4::SPI_SHADER_PGM_HI_PS) {
+			gfx.pixel.address = high(gfx.pixel.address, value);
+		} else if (offset == Pm4::SPI_SHADER_PGM_RSRC2_PS) {
+			gfx.pixel.count = user_sgpr(value);
+		} else if (offset >= Pm4::SPI_SHADER_USER_DATA_PS_0 && offset <= Pm4::SPI_SHADER_USER_DATA_PS_31) {
+			gfx.pixel.user_data[offset - Pm4::SPI_SHADER_USER_DATA_PS_0] = value;
+		}
+	};
+	std::vector<PipelineCache::DrawAheadRequest> requests;
+	GraphicsShadow::Stage last_vertex;
+	GraphicsShadow::Stage last_pixel;
+	// Index in `requests` of the last request of each stage (SIZE_MAX once flushed): a draw that
+	// repeats it only adds a use.
+	size_t                last_vertex_index = SIZE_MAX;
+	size_t                last_pixel_index  = SIZE_MAX;
+	bool                  first_batch = true;
+	const auto            flush       = [&] {
+		if (!requests.empty()) {
+			cache.QueueDrawAhead(requests, first_batch);
+			first_batch = false;
+			requests.clear();
+			last_vertex_index = SIZE_MAX;
+			last_pixel_index  = SIZE_MAX;
+		}
+	};
+	const auto request = [&](const GraphicsShadow::Stage& stage, GraphicsShadow::Stage& last, bool pixel) {
+		if (stage.address == 0 || stage.count > HW::UserSgprInfo::SGPRS_MAX) {
+			return;
+		}
+		auto& last_index = pixel ? last_pixel_index : last_vertex_index;
+		if (stage.SameRequest(last) && last_index != SIZE_MAX) {
+			requests[last_index].uses++;
+			return;
+		}
+		last       = stage;
+		last_index = requests.size();
+		auto& next  = requests.emplace_back();
+		next.base   = stage.address;
+		next.count  = stage.count;
+		next.pixel  = pixel;
+		std::copy(stage.user_data.begin(), stage.user_data.end(), next.user_data.begin());
 	};
 	const auto            apply_sh   = [&cs, &apply_gfx](uint32_t offset, uint32_t value) {
 		apply_gfx(offset, value);
@@ -1145,11 +1212,19 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 			case Pm4::IT_DRAW_INDEX_INDIRECT_MULTI:
 				draws_seen++;
 				draws_ready += gfx.Ready() ? 1u : 0u;
+				if (draw_ahead) {
+					request(gfx.vertex, last_vertex, false);
+					request(gfx.pixel, last_pixel, true);
+					if (requests.size() >= 64u) {
+						flush();
+					}
+				}
 				break;
 			default: break;
 		}
 		cur.offset += len;
 	}
+	flush();
 	if (draws_seen != 0 && Common::FrameStats::Enabled()) {
 		namespace FS = Common::FrameStats;
 		FS::Add(FS::Counter::DrawAheadSeen, draws_seen);
@@ -1194,7 +1269,8 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 	}
 	HW::ComputeShaderInfo cs = m_sh_ctx.GetCs();
 	WalkComputeDispatches(m_renderer.GetPipelineCache(), cs, std::move(stack), " process",
-	                      AsyncComputeMode() == 2);
+	                      AsyncComputeMode() == 2, &m_sh_ctx,
+	                      Common::Gates::Enabled(Common::Gates::Gate::DrawAhead));
 }
 
 void CommandProcessor::ProcessIndirectBuffer(std::span<const uint32_t> commands) {

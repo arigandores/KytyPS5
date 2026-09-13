@@ -24,6 +24,7 @@ enum class Gate : uint32_t {
 	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
 	AsyncSubmit,    // KYTY_ASYNC_SUBMIT,        file name "asyncsubmit"
 	ImageRecycle,   // KYTY_IMAGE_RECYCLE,       file name "imgrecycle"
+	ShaderWriteLocal, // KYTY_SHADER_WRITE_LOCAL, file name "swlocal"
 	Count,
 };
 

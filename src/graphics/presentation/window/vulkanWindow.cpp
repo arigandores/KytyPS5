@@ -571,6 +571,13 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 		supported_min_lod.pNext   = supported_features2.pNext;
 		supported_features2.pNext = &supported_min_lod;
 	}
+	const bool local_read_extension =
+	    HasExtension(device_extensions, VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME);
+	vk::PhysicalDeviceDynamicRenderingLocalReadFeatures supported_local_read {};
+	if (local_read_extension) {
+		supported_local_read.pNext = supported_features2.pNext;
+		supported_features2.pNext  = &supported_local_read;
+	}
 	physical_device.getFeatures2(&supported_features2);
 	graphics.mesh_shader_enabled = mesh_extension && supported_mesh.meshShader;
 
@@ -604,6 +611,10 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 	     graphics.SupportsComputeWave64() ? "true" : "false");
 	graphics.provoking_vertex_last_enabled = provoking_extension && provoking_vertex.provokingVertexLast;
 	graphics.image_view_min_lod_enabled = min_lod_extension && supported_min_lod.minLod == VK_TRUE;
+	graphics.dynamic_rendering_local_read_enabled =
+	    local_read_extension && supported_local_read.dynamicRenderingLocalRead == VK_TRUE;
+	LOGF("Vulkan dynamic rendering local read: %s\n",
+	     graphics.dynamic_rendering_local_read_enabled ? "enabled" : "unavailable");
 	LOGF("Vulkan VK_EXT_image_view_min_lod: %s\n",
 	     graphics.image_view_min_lod_enabled ? "enabled" : "unavailable");
 	graphics.attachment_feedback_loop_enabled =
@@ -715,6 +726,12 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 		min_lod_features.minLod = VK_TRUE;
 		min_lod_features.pNext  = features13.pNext;
 		features13.pNext        = &min_lod_features;
+	}
+	vk::PhysicalDeviceDynamicRenderingLocalReadFeatures local_read_features {};
+	if (graphics.dynamic_rendering_local_read_enabled) {
+		local_read_features.dynamicRenderingLocalRead = VK_TRUE;
+		local_read_features.pNext                     = features13.pNext;
+		features13.pNext                              = &local_read_features;
 	}
 
 	LOGF("Vulkan robustness: robustImageAccess=%s robustImageAccess2=%s\n",
@@ -1145,6 +1162,15 @@ void WindowContext::CreateVulkan() {
 			const bool  want      = mip_defer == nullptr || mip_defer[0] != '0';
 			if (want && HasExtension(available_extensions, VK_EXT_IMAGE_VIEW_MIN_LOD_EXTENSION_NAME)) {
 				device_extensions.push_back(VK_EXT_IMAGE_VIEW_MIN_LOD_EXTENSION_NAME);
+			}
+		}
+		// KYTY_LOCAL_READ=0 keeps the old behaviour (no barriers inside a dynamic render pass).
+		{
+			const char* local_read = std::getenv("KYTY_LOCAL_READ");
+			const bool  want       = local_read == nullptr || local_read[0] != '0';
+			if (want && HasExtension(available_extensions,
+			                         VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME)) {
+				device_extensions.push_back(VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME);
 			}
 		}
 		if (HasExtension(available_extensions, VK_EXT_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_EXTENSION_NAME) &&

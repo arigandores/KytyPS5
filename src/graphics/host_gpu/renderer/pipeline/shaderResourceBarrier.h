@@ -18,6 +18,11 @@ void ShaderAccessBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags sou
 void ShaderWriteHazardBarrier(vk::CommandBuffer      vk_buffer,
                               vk::PipelineStageFlags destination_stages);
 void ShaderWriteBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages);
+// Stages a barrier may name inside a render pass instance started with vkCmdBeginRendering
+// (VUID-vkCmdPipelineBarrier-srcStageMask-09556 with VK_KHR_dynamic_rendering_local_read).
+[[nodiscard]] vk::PipelineStageFlags FramebufferSpaceStages() noexcept;
+// By-region fragment -> fragment form of ShaderWriteBarrier, legal inside a render pass.
+void ShaderWriteBarrierLocal(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages);
 
 } // namespace Libs::Graphics
 

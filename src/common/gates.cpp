@@ -33,6 +33,7 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_DRAW_AHEAD_USE", "dause", true},
     {"KYTY_ASYNC_SUBMIT", "asyncsubmit", true},
     {"KYTY_IMAGE_RECYCLE", "imgrecycle", true},
+    {"KYTY_SHADER_WRITE_LOCAL", "swlocal", false},
 }};
 
 struct KnobDefinition {

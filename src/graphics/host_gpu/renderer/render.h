@@ -168,6 +168,12 @@ public:
 		return m_barrier_mark == m_handle_uses;
 	}
 	void MarkGlobalBarrier() const noexcept { m_barrier_mark = m_handle_uses; }
+	// Gate "swlocal": the shader-write barrier of a draw was recorded inside the open render pass
+	// as a by-region fragment -> fragment dependency; the wide barrier is owed to everything that
+	// can only observe the writes once the pass is closed, and EndRendering pays it.
+	void NotePendingShaderWrite(vk::PipelineStageFlags stages) const noexcept {
+		m_pending_shader_write |= stages;
+	}
 	[[nodiscard]] GraphicContext&   GetGraphics() const noexcept { return m_graphics; }
 	[[nodiscard]] RenderContext&    GetContext() const noexcept { return m_context; }
 	[[nodiscard]] HW::Context&      GetRegisters() const noexcept { return *m_registers; }
@@ -203,6 +209,7 @@ private:
 	mutable RenderState   m_closed_state;
 	mutable RenderPassEnd m_closed_why   = RenderPassEnd::Other;
 	mutable bool          m_closed_valid = false;
+	mutable vk::PipelineStageFlags m_pending_shader_write {};
 	mutable uint64_t    m_handle_uses  = 0;
 	mutable uint64_t    m_barrier_mark = 0;
 	struct GraphicsStateValue { std::vector<uint8_t> bytes; bool valid = false; };

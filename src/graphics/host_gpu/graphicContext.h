@@ -58,6 +58,11 @@ struct GraphicContext {
 	// VK_EXT_image_view_min_lod (KYTY_MIP_DEFER, default on): sampled views of a texture whose
 	// top mip levels are still pending clamp the LOD to the resident levels (TextureCache).
 	bool                               image_view_min_lod_enabled            = false;
+	// VK_KHR_dynamic_rendering_local_read (KYTY_LOCAL_READ, default on): a pipeline barrier whose
+	// two stage masks are framebuffer-space stages may be recorded inside a render pass instance
+	// started with vkCmdBeginRendering, so a shader-write barrier between two draws of the same
+	// pass no longer has to end and restart the pass.
+	bool                               dynamic_rendering_local_read_enabled  = false;
 	bool                               supports_block_texel_view              = false;
 	bool                                      mesh_shader_enabled                   = false;
 	vk::PhysicalDeviceMeshShaderPropertiesEXT mesh_shader_properties                = {};

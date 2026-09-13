@@ -3,6 +3,7 @@
 #include "graphics/presentation/renderDoc.h"
 
 #include "common/frameStats.h"
+#include "common/gates.h"
 
 #include "common/assert.h"
 #include "common/common.h"
@@ -1721,8 +1722,19 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		shader_write_stages |= vk::PipelineStageFlagBits::eFragmentShader;
 	}
 	if (shader_write_stages) {
-		m_context.GetCommandScheduler().EndRendering(RenderPassEnd::ShaderWrite);
-		ShaderWriteBarrier(vk_buffer, shader_write_stages);
+		// Gate "swlocal": a fragment-only shader-write barrier can be recorded inside the open
+		// pass instead of tearing it down, and the wide barrier is owed until the pass closes.
+		const bool local = Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal) &&
+		                   m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
+		                   buffer.IsRendering() &&
+		                   !(shader_write_stages & ~FramebufferSpaceStages());
+		if (local) {
+			ShaderWriteBarrierLocal(vk_buffer, shader_write_stages);
+			buffer.NotePendingShaderWrite(shader_write_stages);
+		} else {
+			m_context.GetCommandScheduler().EndRendering(RenderPassEnd::ShaderWrite);
+			ShaderWriteBarrier(vk_buffer, shader_write_stages);
+		}
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
 	}
 	LogDrawPhase(draw.Name(), "DrawComplete");

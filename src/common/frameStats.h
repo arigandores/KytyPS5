@@ -202,6 +202,8 @@ enum class Counter : uint32_t {
 	AsyncSubmitDrainNs, // ... time they waited
 	ImgRecycleHits,    // host images created from the recycle pool
 	ImgRecyclePuts,    // retired host images kept in the pool
+	ShaderWriteBarriersLocal, // shader-write barriers recorded inside the pass (gate "swlocal")
+	ShaderWriteBarriersFlushed, // wide shader-write barriers issued when such a pass closed
 	// Render passes closed by CommandBuffer::EndRendering, one counter per RenderPassEnd reason in
 	// that enum's order (renderTarget.h). RpRestart*: the next pass began on the same targets
 	// (attachments, layouts, render area; clears aside), i.e. the restart that reason cost.

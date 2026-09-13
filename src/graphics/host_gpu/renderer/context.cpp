@@ -9,6 +9,7 @@
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
+#include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/vulkanCommon.h"
@@ -75,6 +76,7 @@ void CommandBuffer::Begin() {
 	EXIT_IF(m_rendering || IsInvalid());
 	m_handle_uses  = 0;
 	m_barrier_mark = 0;
+	m_pending_shader_write = {};
 	InvalidateGraphicsState();
 	auto buffer = Handle();
 
@@ -185,6 +187,12 @@ void CommandBuffer::EndRendering(RenderPassEnd why) const {
 	m_render_state = {};
 	if (GpuTimeProfiler::Enabled()) {
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 2);
+	}
+	if (m_pending_shader_write) {
+		const auto stages      = m_pending_shader_write;
+		m_pending_shader_write = {};
+		Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
+		ShaderWriteBarrier(Handle(), stages);
 	}
 }
 

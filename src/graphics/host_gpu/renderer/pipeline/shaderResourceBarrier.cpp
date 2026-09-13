@@ -104,6 +104,27 @@ void ShaderWriteHazardBarrier(vk::CommandBuffer      vk_buffer,
 	                          vk::DependencyFlags {}, 1, &barrier, 0, nullptr, 0, nullptr);
 }
 
+vk::PipelineStageFlags FramebufferSpaceStages() noexcept {
+	return vk::PipelineStageFlagBits::eFragmentShader |
+	       vk::PipelineStageFlagBits::eEarlyFragmentTests |
+	       vk::PipelineStageFlagBits::eLateFragmentTests |
+	       vk::PipelineStageFlagBits::eColorAttachmentOutput;
+}
+
+void ShaderWriteBarrierLocal(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages) {
+	EXIT_IF(vk_buffer == nullptr || !source_stages);
+	EXIT_IF(static_cast<bool>(source_stages & ~FramebufferSpaceStages()));
+	Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersLocal, 1);
+	// Only accesses the fragment stage supports: a wider destination is not allowed here and is
+	// covered by the deferred wide barrier issued when the pass closes.
+	VulkanMemoryBarrier barrier {};
+	barrier.srcAccessMask = vk::AccessFlagBits::eShaderWrite;
+	barrier.dstAccessMask = vk::AccessFlagBits::eShaderRead | vk::AccessFlagBits::eShaderWrite;
+	vk_buffer.pipelineBarrier(source_stages, vk::PipelineStageFlagBits::eFragmentShader,
+	                          vk::DependencyFlagBits::eByRegion, 1, &barrier, 0, nullptr, 0,
+	                          nullptr);
+}
+
 void ShaderWriteBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages) {
 	EXIT_IF(vk_buffer == nullptr || !source_stages);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriers, 1);

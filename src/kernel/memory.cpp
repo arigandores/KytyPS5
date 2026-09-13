@@ -877,9 +877,83 @@ bool TryWriteBacking(uint64_t vaddr, const void* data, uint64_t size) {
 	       g_guest_address_space->TryWriteBacking(vaddr, data, size);
 }
 
+namespace {
+
+constexpr uint64_t BACKING_PAGE_SIZE = 4096;
+
+// Thread-local guest page translations (gate "backpages"). The backing map changes only under the
+// backing store's mutex and every change bumps its epoch, so a host pointer validated for a whole
+// page stays correct while that epoch stands still.
+struct BackingPageTable {
+	static constexpr size_t SLOTS = 512;
+	struct Entry {
+		uint64_t       page    = 0; // guest page base; 0 is never a valid guest page
+		const uint8_t* backing = nullptr;
+	};
+	uint64_t                 epoch = 0;
+	std::array<Entry, SLOTS> entries {};
+};
+
+const uint8_t* CachedBackingPage(uint64_t page) {
+	thread_local BackingPageTable table;
+	const auto epoch = g_guest_address_space->BackingMapEpoch();
+	if (table.epoch != epoch) {
+		table.epoch = epoch;
+		// In place: clearing with `entries = {}` would build an array temporary, and inlining
+		// puts such a temporary in the caller's stack frame (that is what made
+		// ProgramCache::Get reserve 66 KiB and overflow guest stacks).
+		table.entries.fill(BackingPageTable::Entry {});
+	}
+	auto& slot = table.entries[((page >> 12u) ^ (page >> 21u)) % BackingPageTable::SLOTS];
+	if (slot.page == page) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BackingPageHits, 1);
+		return slot.backing;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BackingPageMisses, 1);
+	const void* backing = nullptr;
+	if (page == 0 || !g_guest_address_space->TryGetBackingPointer(page, BACKING_PAGE_SIZE, &backing)) {
+		return nullptr;
+	}
+	slot = {page, static_cast<const uint8_t*>(backing)};
+	return slot.backing;
+}
+
+} // namespace
+
 bool TryReadBacking(uint64_t vaddr, void* data, uint64_t size) {
-	return g_guest_address_space != nullptr &&
-	       g_guest_address_space->TryReadBacking(vaddr, data, size);
+	if (g_guest_address_space == nullptr) {
+		return false;
+	}
+	if (Common::Gates::Enabled(Common::Gates::Gate::BackingPages) && data != nullptr && size != 0 &&
+	    UINT64_MAX - vaddr >= size) {
+		// Translate every page before copying anything: a read that cannot be served must leave
+		// the destination untouched, exactly as the backing store's own two-pass transfer does.
+		std::array<const uint8_t*, 4> pages {};
+		const auto                    first = vaddr / BACKING_PAGE_SIZE;
+		const auto                    last  = (vaddr + size - 1) / BACKING_PAGE_SIZE;
+		if (last - first < pages.size()) {
+			bool ok = true;
+			for (auto page = first; page <= last && ok; page++) {
+				pages[page - first] = CachedBackingPage(page * BACKING_PAGE_SIZE);
+				ok                  = pages[page - first] != nullptr;
+			}
+			if (ok) {
+				auto*    out  = static_cast<uint8_t*>(data);
+				uint64_t done = 0;
+				while (done < size) {
+					const auto address = vaddr + done;
+					const auto page    = address / BACKING_PAGE_SIZE;
+					const auto offset  = address - page * BACKING_PAGE_SIZE;
+					const auto bytes   = std::min(size - done, BACKING_PAGE_SIZE - offset);
+					std::memcpy(out + done, pages[page - first] + offset,
+					            static_cast<size_t>(bytes));
+					done += bytes;
+				}
+				return true;
+			}
+		}
+	}
+	return g_guest_address_space->TryReadBacking(vaddr, data, size);
 }
 
 bool TryGetBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer) {

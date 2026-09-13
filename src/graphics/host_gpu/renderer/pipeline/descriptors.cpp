@@ -706,8 +706,17 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 			cached->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
 			texture_cache.TouchImage(*cached);
 			if (!cached->info.IsDepth() && descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
-				(void)texture_cache.AdoptPendingDccForTexture(memo_slot.image_id,
-				                                              descriptor.MetaAddr() << 8u);
+				// The adoption itself only ever turns an image with no metadata into a DCC one;
+				// for an image that already carries this exact DCC range it locks the cache to
+				// answer "yes". That answer is readable here, on the same fields this path
+				// already reads.
+				const auto meta_address = descriptor.MetaAddr() << 8u;
+				const bool settled      = Common::Gates::Enabled(Common::Gates::Gate::MetaLock) &&
+				                     cached->info.metadata.kind == ImageMetadataKind::Dcc &&
+				                     cached->info.metadata.range.address == meta_address;
+				if (!settled) {
+					(void)texture_cache.AdoptPendingDccForTexture(memo_slot.image_id, meta_address);
+				}
 			}
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindTexMemoHits, 1);
 			return {memo_slot.image_id, nullptr, memo_slot.desc};
@@ -946,9 +955,14 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	const auto layers  = std::min(image.info.resources.layers, 32u);
 	uint32_t   fill    = 0xffffffffu;
 	uint32_t   mask    = 0;
-	for (uint32_t layer = 0; layer < layers; layer++) {
-		if (cache.IsMetaCleared(address, layer, &fill)) {
-			mask |= 1u << layer;
+	if (Common::Gates::Enabled(Common::Gates::Gate::MetaLock)) {
+		const auto layer_mask = layers >= 32u ? UINT32_MAX : (uint32_t {1} << layers) - 1u;
+		mask                  = cache.MetaClearMask(address, &fill) & layer_mask;
+	} else {
+		for (uint32_t layer = 0; layer < layers; layer++) {
+			if (cache.IsMetaCleared(address, layer, &fill)) {
+				mask |= 1u << layer;
+			}
 		}
 	}
 	if (mask == 0) {

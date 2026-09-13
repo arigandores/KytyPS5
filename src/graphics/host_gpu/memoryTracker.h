@@ -50,6 +50,24 @@ public:
 		}
 		return mixed == 0 ? 1 : mixed;
 	}
+	// Witness for "no CPU write has been announced to this tracking region since": the region's
+	// manager together with its write epoch. A region that does not exist yet stamps as
+	// {nullptr, 0}; managers are never destroyed, so an equal stamp means the same region with no
+	// announcement in between. Lock free - RegionManager publishes the epoch under its own lock
+	// before the pages become writable (see BufferCache::SynchronizeBuffersInRange).
+	struct RegionStamp {
+		const void* manager = nullptr;
+		uint64_t    epoch   = 0;
+		bool        operator==(const RegionStamp&) const noexcept = default;
+	};
+	[[nodiscard]] static constexpr size_t RegionCount() noexcept { return REGION_COUNT; }
+	[[nodiscard]] RegionStamp RegionWriteStamp(uint64_t index) const noexcept {
+		if (index >= REGION_COUNT) {
+			return {};
+		}
+		const auto* manager = m_regions[index].load(std::memory_order_acquire);
+		return manager == nullptr ? RegionStamp {} : RegionStamp {manager, manager->Epoch()};
+	}
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
 	// Combined streaming-read query: some CPU-dirty bytes and no GPU-dirty pages,
 	// with a single lock acquisition per tracking region. Does not change ownership.

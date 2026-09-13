@@ -16,6 +16,10 @@ enum class Gate : uint32_t {
 	RegionEpoch,    // KYTY_REGION_EPOCH,        file name "regionepoch"
 	SrtMemo,        // KYTY_SRT_MEMO,            file name "srtmemo"
 	SrtMemoCheck,   // KYTY_SRT_MEMO_VERIFY,     file name "smemocheck"
+	BdaRegionStamps, // KYTY_BDA_REGION_STAMPS,  file name "bdastamp"
+	BackingPages,   // KYTY_BACKING_PAGES,       file name "backpages"
+	SrtStat,        // KYTY_SRT_STAT,            file name "srtstat"
+	MetaLock,       // KYTY_META_LOCK,           file name "metalock"
 	Count,
 };
 

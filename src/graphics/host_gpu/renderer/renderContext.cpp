@@ -195,6 +195,12 @@ void RenderContext::PrepareBda() {
 	    m_mapping_epoch == m_bda_mapping_epoch) {
 		return;
 	}
+	// A newly registered buffer may cover pages whose dirty bits an earlier scan left alone, and
+	// a changed guest map moves bytes between regions: in both cases the per-region witnesses of
+	// the incremental scan no longer say anything about the buffers.
+	if (registration_epoch != m_bda_registration_epoch || m_mapping_epoch != m_bda_mapping_epoch) {
+		m_buffer_cache.InvalidateBdaRegionStamps();
+	}
 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
 	});

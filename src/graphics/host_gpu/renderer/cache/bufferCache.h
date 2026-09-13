@@ -95,6 +95,9 @@ public:
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
 	void               ProcessFaultBuffer();
 	void               SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size);
+	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
+	// dropped and when the guest map changes, because those make unscanned bytes relevant again.
+	void               InvalidateBdaRegionStamps() noexcept { m_bda_stamp_generation++; }
 	void               RunGarbageCollector();
 	// Records asynchronous downloads of the GPU-dirty parts of regions the CPU keeps reading
 	// after the GPU wrote them, so that the next CPU read finds the page clean instead of
@@ -204,6 +207,15 @@ private:
 	Common::LeastRecentlyUsedCache<BufferId, uint64_t> m_lru_cache;
 	BufferMap                                         m_buffers;
 	std::vector<GuestRange>                            m_bda_dirty_ranges;
+	struct BdaRegionStamp {
+		MemoryTracker::RegionStamp stamp;
+		uint64_t                   generation = 0;
+	};
+	// One entry per tracking region, filled lazily on the first incremental scan.
+	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
+	uint64_t                                           m_bda_stamp_generation = 1;
+	void SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end);
+	void SynchronizeBuffersOfDirtyRanges();
 	uint64_t                                          m_registration_epoch = 1;
 	PageTable                                         m_page_table;
 	RangeSet                                          m_gpu_modified_ranges;

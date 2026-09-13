@@ -272,8 +272,11 @@ struct ShaderReadCache {
 		}
 		const auto epoch = Libs::LibKernel::Memory::BackingMapEpoch();
 		if (cache.epoch != epoch) {
-			cache.epoch      = epoch;
-			cache.storage    = {};
+			cache.epoch = epoch;
+			// In place: `storage = {}` builds a 64 KiB array temporary, and inlining puts that
+			// temporary in the caller's stack frame (it is what made ProgramCache::Get reserve
+			// 66 KiB and overflow guest stacks).
+			cache.storage.fill(Page {});
 			cache.pages.last = {};
 		}
 		return &cache.pages;

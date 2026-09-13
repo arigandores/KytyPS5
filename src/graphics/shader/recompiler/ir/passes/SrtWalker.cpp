@@ -1,6 +1,7 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
 #include "common/frameStats.h"
+#include "common/gates.h"
 
 #include "common/assert.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
@@ -2101,6 +2102,92 @@ enum class CompiledResult { Done, Unsupported, HardFailure };
 
 #include "graphics/shader/recompiler/ir/passes/SrtNative.inc"
 
+// Ceiling of a demand-driven walk (gate "srtstat"), for the frame counters only: the nodes and
+// the guest reads reachable from the flat slots, the sources this draw actually uses and the
+// conditions of the blocks it visits, against everything the full pass computes. Operands always
+// have smaller indices than the node that uses them (the compiler emits children first), so one
+// backward sweep marks the whole cone; a back edge would make the count too low and is reported.
+void SurveyCompiledWork(const CompiledSrt& compiled, const ResourcePlan& program,
+                        std::span<const uint32_t> sources, std::span<const uint8_t> active,
+                        std::span<const uint8_t> visited) {
+	thread_local std::vector<uint8_t> needed;
+	needed.assign(compiled.nodes.size(), 0u);
+	const auto mark = [](uint32_t node) {
+		if (node != CompiledSrt::None && node < needed.size()) {
+			needed[node] = 1u;
+		}
+	};
+	for (uint32_t slot = 0; slot < program.srt_reads.size() && slot < compiled.flat_roots.size();
+	     slot++) {
+		if (!program.srt_reads[slot].variant) {
+			mark(compiled.flat_roots[slot]);
+		}
+	}
+	for (const auto source_index: sources) {
+		if (source_index >= compiled.source_root_start.size() ||
+		    (source_index < active.size() && active[source_index] == 0u)) {
+			continue;
+		}
+		const auto* source = Source(program, source_index);
+		if (source == nullptr) {
+			continue;
+		}
+		const auto start = compiled.source_root_start[source_index];
+		for (uint32_t dword = 0; dword < source->dword_count && dword < source->dwords.size();
+		     dword++) {
+			if (start + dword < compiled.source_roots.size()) {
+				mark(compiled.source_roots[start + dword]);
+			}
+		}
+	}
+	for (uint32_t block = 0; block < compiled.block_condition_roots.size(); block++) {
+		if (block < visited.size() && visited[block] != 0u) {
+			mark(compiled.block_condition_roots[block]);
+		}
+	}
+	uint64_t   needed_nodes = 0;
+	uint64_t   needed_reads = 0;
+	uint64_t   total_reads  = 0;
+	uint32_t   back_edges   = 0;
+	const auto operand      = [&](uint32_t index, uint32_t node) {
+		if (node != CompiledSrt::None && node >= index) {
+			back_edges++;
+		}
+		mark(node);
+	};
+	for (uint32_t index = static_cast<uint32_t>(compiled.nodes.size()); index-- > 0;) {
+		const auto& node = compiled.nodes[index];
+		const bool  read = node.op == CompiledSrt::Op::MemRead ||
+		                  node.op == CompiledSrt::Op::MemReadScalar;
+		total_reads += read ? 1u : 0u;
+		if (needed[index] == 0u) {
+			continue;
+		}
+		needed_nodes++;
+		needed_reads += read ? 1u : 0u;
+		operand(index, node.a);
+		operand(index, node.b);
+		operand(index, node.c);
+		operand(index, node.d);
+		operand(index, node.e);
+		for (uint32_t i = 0; i < node.list_count && node.list_start + i < compiled.lists.size();
+		     i++) {
+			operand(index, compiled.lists[node.list_start + i]);
+		}
+	}
+	if (back_edges != 0) {
+		static std::atomic<uint32_t> logged {0};
+		if (logged.fetch_add(1) < 8) {
+			fprintf(stderr, "SrtStat: %u operands are not in topological order\n", back_edges);
+		}
+	}
+	namespace FS = Common::FrameStats;
+	FS::Add(FS::Counter::MatNodes, compiled.nodes.size());
+	FS::Add(FS::Counter::MatNodesNeeded, needed_nodes);
+	FS::Add(FS::Counter::MatReadNodes, total_reads);
+	FS::Add(FS::Counter::MatReadNodesNeeded, needed_reads);
+}
+
 // Fast path of EvaluateRuntimeSourcesImpl for the materialization call (all flat slots, the
 // plan's own clean-slot table). Returns Unsupported when the plan could not be compiled and
 // HardFailure when the interpreter has to reproduce an evaluation failure.
@@ -2226,6 +2313,17 @@ CompiledResult EvaluateCompiled(const ResourcePlan& program, std::span<const uin
 				flattened[slot] = 0;
 				break;
 			default: return CompiledResult::HardFailure;
+		}
+	}
+	if (Common::FrameStats::Enabled()) {
+		uint64_t inactive = 0;
+		for (const auto flag: active) {
+			inactive += flag == 0u ? 1u : 0u;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::MatSources, active.size());
+		Common::FrameStats::Add(Common::FrameStats::Counter::MatSourcesOff, inactive);
+		if (Common::Gates::Enabled(Common::Gates::Gate::SrtStat)) {
+			SurveyCompiledWork(compiled, program, sources, active, scratch.visited);
 		}
 	}
 	results.swap(evaluated);

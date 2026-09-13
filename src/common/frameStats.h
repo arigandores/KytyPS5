@@ -157,6 +157,16 @@ enum class Counter : uint32_t {
 	SrtMemoSkips,    // ... results that could not be recorded (too many reads, or inconsistent)
 	SrtMemoReads,    // guest words re-read to validate a memo entry
 	BufEpochHits,    // buffer bindings served by the upload-epoch fast path
+	BdaRegionsScanned, // tracking regions a BDA preparation had to scan
+	BdaRegionsSkipped, // ... regions skipped because their write stamp had not moved
+	BackingPageHits,   // guest reads served from a thread-local page translation
+	BackingPageMisses, // ... reads that had to take the backing-store lock
+	MatNodes,          // compiled SRT nodes evaluated (the whole graph, once per materialization)
+	MatNodesNeeded,    // ... nodes a demand-driven walk would evaluate (survey, gate "srtstat")
+	MatReadNodes,      // guest-memory nodes in those graphs
+	MatReadNodesNeeded, // ... of them reachable from the active sources and the flat slots
+	MatSources,        // descriptor sources of those materializations
+	MatSourcesOff,     // ... sources skipped because their shader block is not reached
 	Count
 };
 

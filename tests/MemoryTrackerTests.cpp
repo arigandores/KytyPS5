@@ -450,6 +450,60 @@ void TestRangeWriteEpoch() {
   Release(memory);
 }
 
+// The witness the incremental BDA scan skips a region by: it must be per region (a write to a
+// neighbour must not move it), it must move whenever a CPU write is announced to this region, and
+// it must never move because a buffer upload consumed the dirty bits.
+void TestRegionWriteStamp() {
+  TrackerHarness harness;
+  auto& tracker = harness.tracker;
+  const auto page = harness.page_manager.GetPageSize();
+  auto* memory = Allocate(harness.page_manager, 2);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+  const auto index = address / Libs::Graphics::TRACKER_REGION_SIZE;
+  const auto empty = Libs::Graphics::MemoryTracker::RegionStamp {};
+
+  const auto untracked_index = index + 4096; // far enough to be its own, unused region
+  Check(tracker.RegionWriteStamp(untracked_index) == empty,
+        "an untracked region must stamp as empty");
+  Check(tracker.RegionWriteStamp(Libs::Graphics::MemoryTracker::RegionCount()) == empty,
+        "an out of range index must stamp as empty");
+
+  tracker.MarkRegionAsCpuModified(address, page); // creates the region
+  const auto created = tracker.RegionWriteStamp(index);
+  Check(!(created == empty), "a tracked region must stamp as itself");
+  Check(tracker.RegionWriteStamp(index) == created, "stamp moved with nothing written");
+
+  tracker.ForEachUploadRange(address, page, false, [](uint64_t, uint64_t) noexcept {},
+                             []() noexcept {});
+  Check(tracker.RegionWriteStamp(index) == created, "an upload must not move the stamp");
+
+  // A write announced to another region must leave this region's witness alone (that is the
+  // whole point of it: the global CPU epoch moves on every fault anywhere).
+  auto* neighbour = static_cast<uint8_t*>(
+      VirtualAlloc(reinterpret_cast<void*>(address + Libs::Graphics::TRACKER_REGION_SIZE * 2),
+                   page, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE));
+  if (neighbour != nullptr) {
+    const auto neighbour_address = reinterpret_cast<uint64_t>(neighbour);
+    const auto neighbour_index = neighbour_address / Libs::Graphics::TRACKER_REGION_SIZE;
+    Check(neighbour_index != index, "the neighbour landed in the same tracking region");
+    tracker.MarkRegionAsCpuModified(neighbour_address, page);
+    Check(tracker.RegionWriteStamp(index) == created,
+          "a write to another region moved this region's stamp");
+    Check(!(tracker.RegionWriteStamp(neighbour_index) == empty),
+          "the written neighbour region did not get a stamp");
+    tracker.UntrackMemory(neighbour_address, page);
+    Release(neighbour);
+  }
+
+  tracker.InvalidateRegion(address, page, []() noexcept {});
+  const auto written = tracker.RegionWriteStamp(index);
+  Check(!(written == created), "announced CPU write did not move the stamp");
+
+  tracker.UntrackMemory(address, page);
+  Check(!(tracker.RegionWriteStamp(index) == written), "untrack did not move the stamp");
+  Release(memory);
+}
+
 void TestGpuReacquisitionAfterInvalidation() {
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -1078,6 +1132,7 @@ int main(int argc, char **argv) {
   TestCpuModifiedSnapshot();
   TestCpuWriteEpoch();
   TestRangeWriteEpoch();
+  TestRegionWriteStamp();
   TestRangeInvalidation();
   TestGpuReacquisitionAfterInvalidation();
   TestGpuDirtyBits();

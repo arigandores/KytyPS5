@@ -70,6 +70,10 @@ public:
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t address, uint64_t size);
 
 	[[nodiscard]] bool IsMeta(uint64_t address);
+	// Cleared layers of one surface in a single acquisition (bit per layer, 0 when the address
+	// is not a finished metadata clear). IsMetaCleared answers the same question one layer at a
+	// time and is kept for the callers that only look at a single layer.
+	[[nodiscard]] uint32_t MetaClearMask(uint64_t address, uint32_t* fill_value);
 	[[nodiscard]] bool IsMetaCleared(uint64_t address, uint32_t slice,
 	                                 uint32_t* fill_value = nullptr);
 	[[nodiscard]] bool ClearMeta(uint64_t address);

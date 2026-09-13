@@ -1287,6 +1287,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " bda_us=%llu bda_n=%llu srt_miss=%llu clamp_miss=%llu"
 			     " smemo_hit=%llu smemo_miss=%llu smemo_stale=%llu smemo_skip=%llu"
 			     " smemo_reads=%llu bufepoch=%llu"
+			     " bda_scan=%llu bda_skip=%llu bpage_hit=%llu bpage_miss=%llu"
+			     " m_nodes=%llu m_nodes_need=%llu m_rnodes=%llu m_rnodes_need=%llu"
+			     " m_srcs=%llu m_srcs_off=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1344,7 +1347,12 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::SrtPageMisses), d(FS::Counter::ClampMemoMisses),
 			     d(FS::Counter::SrtMemoHits), d(FS::Counter::SrtMemoMisses),
 			     d(FS::Counter::SrtMemoStale), d(FS::Counter::SrtMemoSkips),
-			     d(FS::Counter::SrtMemoReads), d(FS::Counter::BufEpochHits));
+			     d(FS::Counter::SrtMemoReads), d(FS::Counter::BufEpochHits),
+			     d(FS::Counter::BdaRegionsScanned), d(FS::Counter::BdaRegionsSkipped),
+			     d(FS::Counter::BackingPageHits), d(FS::Counter::BackingPageMisses),
+			     d(FS::Counter::MatNodes), d(FS::Counter::MatNodesNeeded),
+			     d(FS::Counter::MatReadNodes), d(FS::Counter::MatReadNodesNeeded),
+			     d(FS::Counter::MatSources), d(FS::Counter::MatSourcesOff));
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

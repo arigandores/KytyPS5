@@ -2291,6 +2291,18 @@ bool TextureCache::IsMeta(uint64_t address) {
 	return found != m_surface_metas.end() && found->second.type != MetaDataInfo::Type::PendingDcc;
 }
 
+uint32_t TextureCache::MetaClearMask(uint64_t address, uint32_t* fill_value) {
+	std::scoped_lock lock {m_lock};
+	const auto       found = m_surface_metas.find(address);
+	if (found == m_surface_metas.end() || found->second.type == MetaDataInfo::Type::PendingDcc) {
+		return 0;
+	}
+	if (fill_value != nullptr) {
+		*fill_value = found->second.fill_value;
+	}
+	return found->second.clear_mask;
+}
+
 bool TextureCache::IsMetaCleared(uint64_t address, uint32_t slice, uint32_t* fill_value) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);

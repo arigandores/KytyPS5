@@ -1771,6 +1771,48 @@ void BufferCache::PrefetchHotReadbacks() {
 	}
 }
 
+// Uploads the CPU-written parts of every registered buffer intersecting m_bda_dirty_ranges.
+void BufferCache::SynchronizeBuffersOfDirtyRanges() {
+	for (const auto& range: m_bda_dirty_ranges) {
+		auto it = m_buffers.upper_bound(range.address);
+		if (it != m_buffers.begin()) --it;
+		for (; it != m_buffers.end() && it->first < range.End(); ++it) {
+			auto&      buffer = m_slot_buffers[it->second];
+			const auto start  = std::max(buffer.CpuAddress(), range.address);
+			const auto finish = std::min(buffer.CpuAddress() + buffer.Size(), range.End());
+			if (start < finish) {
+				(void)SynchronizeBuffer(buffer, start, finish - start, false, false);
+			}
+		}
+	}
+}
+
+// Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
+// scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
+// write racing with the scan is seen by the next preparation instead of being lost.
+void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end) {
+	if (m_bda_region_stamps.empty()) {
+		m_bda_region_stamps.resize(MemoryTracker::RegionCount());
+	}
+	for (auto cursor = scan_begin; cursor < scan_end;) {
+		const auto index = cursor / TRACKER_REGION_SIZE;
+		const auto bytes =
+		    std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
+		const auto stamp = m_memory_tracker.RegionWriteStamp(index);
+		auto&      seen  = m_bda_region_stamps[index];
+		if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsSkipped, 1);
+			cursor += bytes;
+			continue;
+		}
+		seen = {stamp, m_bda_stamp_generation};
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
+		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+		SynchronizeBuffersOfDirtyRanges();
+		cursor += bytes;
+	}
+}
+
 void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 	static const bool dirty_ranges = [] {
 		const auto* value = std::getenv("KYTY_BDA_DIRTY_RANGES");
@@ -1795,19 +1837,12 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 		// every registered buffer for every BDA draw. This is only a candidate snapshot:
 		// SynchronizeBuffer still consumes current dirty bits and arms write protection.
 		// CPU writes after the snapshot remain dirty for the next preparation.
-		m_memory_tracker.CollectCpuModifiedRanges(scan_begin, scan_end - scan_begin, m_bda_dirty_ranges);
-		for (const auto& range: m_bda_dirty_ranges) {
-			auto it = m_buffers.upper_bound(range.address);
-			if (it != m_buffers.begin()) --it;
-			for (; it != m_buffers.end() && it->first < range.End(); ++it) {
-				auto& buffer = m_slot_buffers[it->second];
-				const auto start = std::max(buffer.CpuAddress(), range.address);
-				const auto finish = std::min(buffer.CpuAddress() + buffer.Size(), range.End());
-				if (start < finish) {
-					(void)SynchronizeBuffer(buffer, start, finish - start, false, false);
-				}
-			}
+		if (Common::Gates::Enabled(Common::Gates::Gate::BdaRegionStamps)) {
+			SynchronizeBuffersByRegion(scan_begin, scan_end);
+			return;
 		}
+		m_memory_tracker.CollectCpuModifiedRanges(scan_begin, scan_end - scan_begin, m_bda_dirty_ranges);
+		SynchronizeBuffersOfDirtyRanges();
 		return;
 	}
 	const auto end = vaddr + size;

@@ -145,8 +145,9 @@ bool RenderContext::HandleFault(PageFaultAccess access, uint64_t fault_vaddr) no
 		const bool sample_armed = Common::FrameStats::Enabled() && NoteFaultWindowCounters(fault_vaddr);
 		// Knob "faultkb": the buffer tracker opens the aligned window around the faulting page in one
 		// host protection change. Images still see only the faulting byte: a wider range would
-		// invalidate the neighbouring images, whole re-uploads of bytes nobody wrote. At one page (the
-		// default, 4 KiB) `window` is the faulting page and the calls are the ones made before.
+		// invalidate the neighbouring images, whole re-uploads of bytes nobody wrote. At one page
+		// (4 KiB) `window` is the faulting page and the calls are the ones made before; the default is
+		// 64 KiB (session 57: 8.3k write faults a frame in Sky Garden became 1.3k).
 		auto window = WriteFaultWindow(fault_vaddr);
 		if (window.size != TRACKER_PAGE_SIZE && m_buffer_cache.HasPendingHostReads(window.address, window.size)) {
 			// A host-import copy still reads a page of the window: open only the faulting page

@@ -71,9 +71,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_DRAW_STAT", "drawstat", false},
     {"KYTY_DRAW_STAT_SLOW", "dpslow", false},
     // Session 57, A6/A7 and track B.
-    {"KYTY_DRAW_STATE_REUSE", "drawstate", false},
-    {"KYTY_SNAPSHOT_KEEP", "snapkeep", false},
-    {"KYTY_BUF_LRU", "buflru", false},
+    {"KYTY_DRAW_STATE_REUSE", "drawstate", true},
+    {"KYTY_SNAPSHOT_KEEP", "snapkeep", true},
+    {"KYTY_BUF_LRU", "buflru", true},
 }};
 
 struct KnobDefinition {
@@ -91,7 +91,7 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_RECORD_SPIN_US", "recspin", 300, 100000},
     {"KYTY_DRAW_AHEAD_PIN", "dapin", 1, 0xffffffffu},
     {"KYTY_PROCESS_PIN", "procpin", 0, 0xffffffffu},
-    {"KYTY_FAULT_WINDOW_KB", "faultkb", 4, 4096},
+    {"KYTY_FAULT_WINDOW_KB", "faultkb", 64, 4096},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

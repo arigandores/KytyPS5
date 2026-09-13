@@ -2,6 +2,7 @@
 
 #include "common/alignment.h"
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/emulatorConfig.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
@@ -353,6 +354,7 @@ ImageId TextureCache::InsertImage(const ImageInfo& info) {
 	LiteTimer insert_timer {Common::FrameStats::Counter::ImgInsertNs};
 	TraceImageLifetime("create", info, __func__, __LINE__);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgInserts, 1);
+	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	const auto id = m_slot_images.insert(m_graphics, m_scheduler, info);
 	if (!info.data.Empty()) {
 		RegisterImage(id);
@@ -457,6 +459,7 @@ void TextureCache::DeleteImage(ImageId id) {
 void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 	LiteTimer free_timer {Common::FrameStats::Counter::ImgFreeNs};
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgFrees, 1);
+	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	auto& image = m_slot_images[id];
 	TraceImageLifetime("free", image.info, reason, line, image.frame_accessed_last);
 	static const bool state_trace = std::getenv("KYTY_IMAGE_STATE_TRACE") != nullptr;
@@ -474,19 +477,22 @@ void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 
 void TextureCache::TouchImage(Image& image) {
 	if (image.registered) {
-		image.frame_accessed_last = GpuTimeProfiler::Frame();
+		// Stored only on change: an equal store still dirties the line.
+		if (const auto frame = GpuTimeProfiler::Frame(); image.frame_accessed_last != frame) {
+			image.frame_accessed_last = frame;
+		}
 		m_lru_touch_calls++;
 		// A bind touches its image 5-6 times; the LRU node (a separate deque block) is cold and
 		// Touch returns on `item.tick >= tick` for all but the first touch of a GC tick. The copy is
 		// only ever set to a tick Touch/Insert was called with, so a matching copy proves the item
 		// already holds this tick (items are re-inserted at m_gc_tick, which only grows).
-		const bool repeat    = image.lru_touch_tick == m_gc_tick;
-		image.lru_touch_tick = m_gc_tick;
-		if (repeat) {
+		if (image.lru_touch_tick == m_gc_tick) {
 			m_lru_touch_repeats++;
 			if (Common::Gates::Enabled(Common::Gates::Gate::TexLru)) {
 				return;
 			}
+		} else {
+			image.lru_touch_tick = m_gc_tick;
 		}
 		m_lru_cache.Touch(image.lru_id, m_gc_tick);
 	}
@@ -805,6 +811,8 @@ bool TextureCache::CopyD16(Image& destination, Image& source) {
 }
 
 void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
+	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	RefreshCopySource(source_id);
 	auto& destination = m_slot_images[destination_id];
 	auto& source      = m_slot_images[source_id];
@@ -842,6 +850,8 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 
 void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint32_t mip,
                                 uint32_t layer) {
+	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	RefreshCopySource(source_id);
 	auto& destination = m_slot_images[destination_id];
 	auto& source      = m_slot_images[source_id];
@@ -1212,6 +1222,7 @@ void TextureCache::ConfigureImageSourceUnlocked(ImageId id, const ImageDesc& des
 	// Several bindings in one draw may expose different LOD ranges of the same image.
 	if (image.binding.is_bound && first > image.source_first_level) return;
 	if (first == image.source_first_level && size == image.SourceRange().size) return;
+	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
 	if (size != image.SourceRange().size) UntrackImage(id);
 	if (first < image.source_first_level) image.MarkBufferModified();
 	image.source_first_level = first;
@@ -1291,6 +1302,8 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
                                    uint32_t first_level, uint32_t level_count) {
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::ImgUploadNs,
 	                                       Common::FrameStats::Counter::ImgUploads);
+	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
 	const bool  partial = first_level != 0 || level_count < info.resources.levels;
@@ -1417,6 +1430,7 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 void TextureCache::NoteUploadFrame() {
 	const auto frame = GpuTimeProfiler::Frame();
 	if (frame != m_upload_frame) {
+		Common::DrawStat::Mark(Common::DrawStat::Memo);
 		m_upload_frame        = frame;
 		m_frame_upload_bytes  = 0;
 		m_frame_pending_bytes = 0;
@@ -1543,13 +1557,18 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	auto [entry, inserted] = m_surface_metas.try_emplace(
 	    desc.info.metadata.range.address, MetaDataInfo {.type = MetaDataInfo::Type::Dcc});
 	auto& metadata = entry->second;
+	if (inserted) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
+	}
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
 		                        image.info.data.address)) {
 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
 		}
 		metadata.type = MetaDataInfo::Type::Dcc;
 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		// PS5 allocations reuse metadata storage across surface types; the new image defines it.
 		static std::atomic<uint32_t> log_count {0};
 		if (log_count.fetch_add(1, std::memory_order_relaxed) < 32) {
@@ -1609,13 +1628,18 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	auto [entry, inserted] = m_surface_metas.try_emplace(
 	    desc.info.metadata.range.address, MetaDataInfo {.type = MetaDataInfo::Type::CMask});
 	auto& metadata = entry->second;
+	if (inserted) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
+	}
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata, image.info.data.address)) {
 			metadata = MetaDataInfo {};
 		}
 		metadata.type = MetaDataInfo::Type::CMask;
 		if (metadata.fill_value != 0) metadata.clear_mask = 0;
 	} else if (metadata.type != MetaDataInfo::Type::CMask) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
 	}
 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
@@ -1641,6 +1665,7 @@ void TextureCache::RefreshImage(ImageId id, bool allow_partial) {
 	TrackImage(id);
 	auto& image = m_slot_images[id];
 	if (image.IsMaybeCpuDirty()) {
+		Common::DrawStat::Mark(Common::DrawStat::ImgUp);
 		const auto hash = image.HashGuestEdges();
 		if (image.NeedsMaybeCpuHash()) {
 			image.SetMaybeCpuHash(hash);
@@ -1704,6 +1729,7 @@ ImageId TextureCache::FindImage(ImageDesc& desc, bool exact_format) {
 		std::scoped_lock lock {m_lock};
 		return GetNullImage(desc);
 	}
+	Common::DrawStat::Mark(Common::DrawStat::TexSlow);
 
 	ImageId result {};
 	{
@@ -1830,11 +1856,13 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	auto&            image = m_slot_images[id];
 	TouchImage(image);
 	if (!image.info.data.Empty()) {
+		Common::DrawStat::Mark(Common::DrawStat::TexSlow);
 		if (!image.registered || image.depth_id || image.binding.needs_rebind) {
 			EXIT("TextureCache: texture requires rediscovery before final acquisition\n");
 		}
 	}
 	if (desc.type == BindingType::Storage) {
+		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		image.MarkGpuModified();
 	}
 	auto view_info = desc.view_info;
@@ -2018,6 +2046,8 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id,
                               const vk::ImageSubresourceRange& range, const vk::ClearValue& clear) {
 	auto& image = m_slot_images[id];
 	TraceWatchedImage("clear", image);
+	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	const auto aspects = image.info.IsDepth() ? ImageViewOps::DepthAspectMask(image.backing.format)
 	                                          : vk::ImageAspectFlagBits::eColor;
 	EXIT_IF(range.baseMipLevel >= image.info.resources.levels);
@@ -2116,6 +2146,8 @@ void TextureCache::InvalidateMemory(uint64_t address, uint64_t size) {
 }
 
 void TextureCache::DownloadDepth(Image& image, Buffer& destination, uint64_t destination_offset) {
+	Common::DrawStat::Mark(Common::DrawStat::BufUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	const auto&    info             = image.info;
 	const auto     layers           = info.resources.layers;
 	const auto     full_slice_size  = info.data.size / layers;
@@ -2173,6 +2205,8 @@ void TextureCache::DownloadDepth(Image& image, Buffer& destination, uint64_t des
 
 void TextureCache::DownloadImage(Image& image, Buffer& destination, uint64_t destination_offset,
                                      uint64_t destination_size, ImageDownload transfer) {
+	Common::DrawStat::Mark(Common::DrawStat::BufUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	if (!transfer.valid) {
 		EXIT("TextureCache: invalid image download transfer\n");
 	}
@@ -2326,6 +2360,7 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 			continue;
 		}
 		TraceWatchedImage("gpu-invalidate", image, address, size);
+		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		if (image.IsGpuModified()) {
 			image.ClearGpuModified();
 		}
@@ -2431,6 +2466,7 @@ bool TextureCache::ClearMeta(uint64_t address) {
 		// for FMask/HTile; an arbitrary write must not imply a color fast clear.
 		return false;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	found->second.clear_mask = UINT32_MAX;
 	return true;
 }
@@ -2574,9 +2610,11 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 		return false;
 	}
 	if (PendingDccFillStale(metadata_address, found->second, image->info.data.address)) {
+		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		m_surface_metas.erase(found);
 		return false;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	found->second.type                 = MetaDataInfo::Type::Dcc;
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
 	image->info.metadata.range.address = metadata_address;
@@ -2598,6 +2636,7 @@ bool TextureCache::TouchMeta(uint64_t address, uint32_t slice, bool is_clear) {
 	    slice >= 32) {
 		return false;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	if (is_clear) {
 		found->second.clear_mask |= 1u << slice;
 	} else {

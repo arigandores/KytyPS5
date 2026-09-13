@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -74,6 +75,7 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	if (IsFree(tick)) {
 		return;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::Sync);
 
 	vk::SemaphoreWaitInfo wait_info {};
 	wait_info.semaphoreCount = 1;

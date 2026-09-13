@@ -1,6 +1,7 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/emulatorConfig.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
@@ -2148,6 +2149,7 @@ void CommandProcessor::EmitGlobalBarrier() {
 	}
 
 	Common::LockGuard lock(m_renderer.GetMutex());
+	Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 
 	vk::MemoryBarrier2 barrier {};
 	barrier.srcStageMask  = vk::PipelineStageFlagBits2::eAllCommands;

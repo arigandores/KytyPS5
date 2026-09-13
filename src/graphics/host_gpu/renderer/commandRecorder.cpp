@@ -6,6 +6,7 @@
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
+#include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/presentation/renderDoc.h"
 
@@ -21,6 +22,11 @@
 
 #if defined(_M_X64) || defined(__x86_64__)
 #include <immintrin.h>
+#endif
+
+#if defined(_WIN32)
+// processthreadsapi.h (gate "recrelax"), declared here so this file does not include <windows.h>.
+extern "C" __declspec(dllimport) void __stdcall FlushProcessWriteBuffers(void);
 #endif
 
 namespace Libs::Graphics {
@@ -45,6 +51,13 @@ void CpuPause() noexcept {
 // sleeps.
 uint64_t SpinNs() noexcept {
 	return uint64_t {Common::Gates::Value(Common::Gates::Knob::RecordSpinUs)} * 1000u;
+}
+
+// Gate "recbatch" (session 57, A4): the pass and bindings records of a draw are staged and
+// published with its Commands record - one head store per draw instead of about 2.2. Read per
+// record; flipping it at any point is safe, since every publish makes all staged records visible.
+bool BatchWanted() noexcept {
+	return Common::Gates::Enabled(Common::Gates::Gate::RecordBatch);
 }
 
 struct Payloads {
@@ -100,6 +113,10 @@ CommandRecorder::CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer*
 	m_capacity = ArenaBytes();
 	m_mask     = m_capacity - 1;
 	m_data     = std::make_unique<uint8_t[]>(static_cast<size_t>(m_capacity));
+	// Before the thread starts, so the record thread reads it without a race. The scheduler creates
+	// its recorder lazily in BeginCommand, on the thread that owns the scheduler.
+	m_gpu   = Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu;
+	m_stats = Common::FrameStats::Enabled();
 	// The thread first, the registry after: DrainRecordQueues() reads m_thread through Drain(),
 	// and it may run on another thread as soon as this recorder is in the list. Nothing can be
 	// owed to an unregistered recorder - only its owner publishes, and it has no pointer yet.
@@ -108,8 +125,8 @@ CommandRecorder::CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer*
 		std::lock_guard lock(RecordersMutex());
 		Recorders().push_back(this);
 	}
-	LOGF("RecordThread: started recorder=%p arena=%lluKiB\n", static_cast<void*>(this),
-	     static_cast<unsigned long long>(m_capacity / 1024u));
+	LOGF("RecordThread: started recorder=%p arena=%lluKiB gpu=%d\n", static_cast<void*>(this),
+	     static_cast<unsigned long long>(m_capacity / 1024u), m_gpu ? 1 : 0);
 }
 
 CommandRecorder::~CommandRecorder() {
@@ -128,6 +145,9 @@ void CommandRecorder::Stop() {
 	if (!m_thread.joinable()) {
 		return;
 	}
+	// From the destructor: the producer is done, and what it staged (gate "recbatch") is published so
+	// the drain below records it.
+	PublishStaged();
 	Drain();
 	m_stop.store(true, std::memory_order_release);
 	{
@@ -144,11 +164,13 @@ void CommandRecorder::Stop() {
 size_t CommandRecorder::Backlog() const noexcept {
 	const auto head = m_head.load(std::memory_order_acquire);
 	const auto tail = m_tail.load(std::memory_order_acquire);
+	Common::FrameStats::Add(Common::FrameStats::Counter::RecordTailReads, 1);
 	return static_cast<size_t>(head - tail);
 }
 
 void CommandRecorder::WakeConsumer() {
 	if (m_consumer_waiting.load(std::memory_order_seq_cst)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::RecordWakes, 1);
 		std::lock_guard lock(m_mutex);
 		m_pending.notify_one();
 	}
@@ -165,16 +187,27 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 	EXIT_IF(bytes == 0 || (bytes % RecordAlign) != 0 ||
 	        static_cast<uint64_t>(bytes) > m_capacity / 2u);
 	for (;;) {
-		const auto head       = m_head.load(std::memory_order_relaxed);
+		// This thread's own head: every ended record, published or staged. The shared m_head line is
+		// only ever written by this thread, never read by it.
+		const auto head       = m_head_local;
 		const auto index      = static_cast<uint32_t>(head & m_mask);
 		const auto contiguous = static_cast<uint32_t>(m_capacity - index);
 		// A record never straddles the end of the ring: when it does not fit, a Pad record fills
 		// the remainder and the reservation restarts at offset 0.
 		const auto want = bytes <= contiguous ? bytes : contiguous + bytes;
-		const auto used = head - m_tail.load(std::memory_order_acquire);
-		if (m_capacity - used < want) {
-			namespace FS  = Common::FrameStats;
+		// m_tail_seen is a tail this thread read before. The tail only grows, so the free space
+		// computed from it is a lower bound; the record thread's line is read only when that bound is
+		// not enough. Staged records and Pad bytes are part of head, so they count as used.
+		namespace FS = Common::FrameStats;
+		if (m_capacity - (head - m_tail_seen) < want) {
+			m_tail_seen = m_tail.load(std::memory_order_acquire);
+			FS::Add(FS::Counter::RecordTailReads, 1);
+		}
+		if (m_capacity - (head - m_tail_seen) < want) {
 			const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
+			// The record thread frees only what it can see: a wait over staged records (gate
+			// "recbatch") would never end. After this, head is the published head.
+			PublishStaged();
 			// Before the wait, not after it: a sleeping record thread would otherwise be told only
 			// once this thread has already lost a wait slice.
 			WakeConsumer();
@@ -187,6 +220,8 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 				});
 				m_waiters.fetch_sub(1, std::memory_order_seq_cst);
 			}
+			m_tail_seen = m_tail.load(std::memory_order_acquire);
+			FS::Add(FS::Counter::RecordTailReads, 1);
 			FS::Add(FS::Counter::RecordFull, 1);
 			if (t0 != 0) {
 				FS::Add(FS::Counter::RecordFullNs, FS::NowNs() - t0);
@@ -206,26 +241,63 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 		if (bytes > contiguous) {
 			const RecordHeader pad {contiguous, static_cast<uint16_t>(RecordOp::Pad), 0};
 			std::memcpy(m_data.get() + index, &pad, sizeof(pad));
-			m_head.store(head + contiguous, std::memory_order_seq_cst);
-			WakeConsumer();
+			// Published at once, together with any staged records before it.
+			m_head_local = head + contiguous;
+			Publish();
 			continue;
 		}
 		return m_data.get() + index;
 	}
 }
 
-void CommandRecorder::Publish(uint32_t bytes) {
-	const auto head = m_head.load(std::memory_order_relaxed);
-	m_head.store(head + bytes, std::memory_order_seq_cst);
+void CommandRecorder::Publish() {
+	m_published = m_head_local;
+	// Dekker handshake with Loop, which stores its flag and then looks at the head: this stores the
+	// head and then looks at the flag. Gate "recrelax" off: a sequentially consistent store (xchg
+	// on x64). On: a plain store, which does not hold up retirement while the spinning record thread
+	// owns the line; it may still sit in this processor's store buffer when the flag is read, so
+	// Loop calls FlushProcessWriteBuffers between its flag store and its last look at the head once
+	// m_relaxed_ever is set. That flag is stored sequentially consistent before the first relaxed
+	// store: if Loop reads it false, every relaxed store comes after Loop's flag store, and the look
+	// at the flag below sees it. Flipping the gate stays safe at any moment.
+#if defined(_WIN32)
+	// The GuestGpu recorder only: the presentation recorder sleeps on every present, and an
+	// m_relaxed_ever set there would cost an IPI round per present.
+	if (m_gpu && Common::Gates::Enabled(Common::Gates::Gate::RecordRelaxed)) {
+		if (!m_relaxed_ever.load(std::memory_order_relaxed)) {
+			m_relaxed_ever.store(true, std::memory_order_seq_cst);
+		}
+		m_head.store(m_published, std::memory_order_relaxed);
+	} else {
+		m_head.store(m_published, std::memory_order_seq_cst);
+	}
+#else
+	m_head.store(m_published, std::memory_order_seq_cst);
+#endif
+	Common::FrameStats::Add(Common::FrameStats::Counter::RecordPublishes, 1);
 	WakeConsumer();
 }
 
-void CommandRecorder::PushRecord(RecordOp op, const void* payload, uint32_t payload_size) {
+void CommandRecorder::PublishStaged() {
+	if (m_published != m_head_local) {
+		static const bool record_check = [] {
+			const auto* value = std::getenv("KYTY_RECORD_CHECK");
+			return value != nullptr && value[0] == '1';
+		}();
+		// Producer fields: a publish from another thread could move m_head back under the tail.
+		EXIT_IF(record_check && m_producer != std::this_thread::get_id());
+		Common::FrameStats::Add(Common::FrameStats::Counter::RecordForcedPublishes, 1);
+		Publish();
+	}
+}
+
+void CommandRecorder::PushRecord(RecordOp op, const void* payload, uint32_t payload_size,
+                                 bool publish) {
 	auto* slot = BeginRecord(op, payload_size);
 	if (payload_size != 0) {
 		std::memcpy(slot, payload, payload_size);
 	}
-	EndRecord(payload_size);
+	EndRecord(payload_size, publish);
 }
 
 uint8_t* CommandRecorder::BeginRecord(RecordOp op, uint32_t max_payload) {
@@ -247,7 +319,7 @@ uint8_t* CommandRecorder::BeginRecord(RecordOp op, uint32_t max_payload) {
 	return m_open_slot + sizeof(RecordHeader);
 }
 
-void CommandRecorder::EndRecord(uint32_t payload_size) {
+void CommandRecorder::EndRecord(uint32_t payload_size, bool publish) {
 	EXIT_IF(m_open_slot == nullptr);
 	uint32_t bytes = static_cast<uint32_t>(sizeof(RecordHeader)) + payload_size;
 	bytes          = (bytes + RecordAlign - 1u) & ~(RecordAlign - 1u);
@@ -257,17 +329,19 @@ void CommandRecorder::EndRecord(uint32_t payload_size) {
 	const auto op = m_open_op;
 	m_open_slot   = nullptr;
 	m_records++;
-	Publish(bytes);
-	const auto backlog =
-	    m_head.load(std::memory_order_relaxed) - m_tail.load(std::memory_order_acquire);
-	if (backlog > m_peak_backlog) {
-		m_peak_backlog = backlog;
-	}
+	// Visible to the record thread once m_head moves past it: now, or at the next publish (gate
+	// "recbatch"). No tail read here: the record thread measures the backlog peak itself.
+	m_head_local += bytes;
 	namespace FS = Common::FrameStats;
 	FS::Add(FS::Counter::RecordPackets, 1);
 	FS::Add(FS::Counter::RecordBytes, bytes);
 	if (op >= RecordOp::PassEnd) {
 		FS::Add(FS::Counter::RecordPackBytes, bytes);
+	}
+	if (publish) {
+		Publish();
+	} else {
+		FS::Add(FS::Counter::RecordStaged, 1);
 	}
 }
 
@@ -301,11 +375,11 @@ void CommandRecorder::PushGeneric(Common::UniqueFunction<void, vk::CommandBuffer
 
 void CommandRecorder::PushPassEnd(bool end_pass, vk::PipelineStageFlags shader_write_stages) {
 	const RecordPassEnd payload {end_pass ? 1u : 0u, static_cast<uint32_t>(shader_write_stages)};
-	PushRecord(RecordOp::PassEnd, &payload, sizeof(payload));
+	PushRecord(RecordOp::PassEnd, &payload, sizeof(payload), !BatchWanted());
 }
 
 void CommandRecorder::PushPassBegin(const RenderState& state) {
-	PushRecord(RecordOp::PassBegin, &state, sizeof(state));
+	PushRecord(RecordOp::PassBegin, &state, sizeof(state), !BatchWanted());
 }
 
 void CommandRecorder::PushBindings(vk::PipelineBindPoint bind_point, vk::PipelineLayout layout,
@@ -363,7 +437,7 @@ void CommandRecorder::PushBindings(vk::PipelineBindPoint bind_point, vk::Pipelin
 	if (!images.empty()) {
 		std::memcpy(cursor, images.data(), images.size_bytes());
 	}
-	EndRecord(size);
+	EndRecord(size, !BatchWanted());
 	Common::FrameStats::Add(Common::FrameStats::Counter::RecordPackBinds, 1);
 }
 
@@ -373,23 +447,27 @@ void RecordCommandWriter::Commit(bool dispatch) {
 	if (stream == 0) {
 		m_recorder.AbandonRecord();
 		m_data = nullptr;
+		// No record of this draw to carry the staged ones (gate "recbatch").
+		m_recorder.PublishStaged();
 		return;
 	}
 	const uint32_t words[2] {stream, 0u};
 	std::memcpy(m_data, words, sizeof(words));
 	m_data = nullptr;
-	m_recorder.EndRecord(m_used);
+	// Always published: with gate "recbatch" this carries the draw's staged pass and bindings records.
+	m_recorder.EndRecord(m_used, true);
 	namespace FS = Common::FrameStats;
 	FS::Add(dispatch ? FS::Counter::RecordPackDispatches : FS::Counter::RecordPackDraws, 1);
 }
 
 void CommandRecorder::Drain() {
 	EXIT_IF(std::this_thread::get_id() == m_thread.get_id());
+	namespace FS      = Common::FrameStats;
 	const auto target = m_head.load(std::memory_order_acquire);
+	FS::Add(FS::Counter::RecordTailReads, 1);
 	if (m_tail.load(std::memory_order_acquire) >= target) {
 		return;
 	}
-	namespace FS  = Common::FrameStats;
 	const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
 	WakeConsumer();
 	// A short spin first: an awake record thread finishes the records of a draw well within it,
@@ -413,6 +491,7 @@ void CommandRecorder::Drain() {
 		}
 	}
 	if (!done) {
+		FS::Add(FS::Counter::RecordDrainLocks, 1);
 		std::unique_lock lock(m_mutex);
 		// Dekker handshake with WakeWaiters: the waiter count is visible before this last look at
 		// the tail, and the record thread looks at the count after it moved the tail; it notifies
@@ -730,15 +809,24 @@ bool CommandRecorder::SpinFor(uint64_t tail) {
 			break;
 		}
 	}
-	FS::Add(FS::Counter::RecordSpinNs, FS::NowNs() - start);
+	const auto spun = FS::NowNs() - start;
+	FS::Add(FS::Counter::RecordSpinNs, spun);
+	if (m_gpu) {
+		FS::Add(FS::Counter::RecordSpinNsGpu, spun);
+	}
 	return arrived;
 }
 
 void CommandRecorder::Loop() {
 	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Record);
+	// m_data and m_mask never change after the constructor: local copies keep this loop off the
+	// line of the fields around them.
+	const auto* const data = m_data.get();
+	const auto        mask = m_mask;
 	for (;;) {
 		const auto tail = m_tail.load(std::memory_order_relaxed);
-		if (m_head.load(std::memory_order_acquire) == tail) {
+		const auto head = m_head.load(std::memory_order_acquire);
+		if (head == tail) {
 			if (m_stop.load(std::memory_order_acquire)) {
 				return;
 			}
@@ -748,12 +836,26 @@ void CommandRecorder::Loop() {
 			namespace FS  = Common::FrameStats;
 			const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
 			{
-				std::unique_lock lock(m_mutex);
 				// Dekker handshake with Publish: this flag is visible before the last look at the
 				// head, and Publish looks at the flag after it moved the head, both sequentially
 				// consistent, so at least one of the two sees the other. Publish notifies under the
-				// mutex, which this thread releases only inside the wait: no notify is lost.
+				// mutex, which this thread releases only inside the wait: no notify is lost. The flag
+				// store and the flush precede the lock: a publisher that saw the flag takes the
+				// mutex (draining its store buffer) before it notifies.
 				m_consumer_waiting.store(true, std::memory_order_seq_cst);
+#if defined(_WIN32)
+				// Gate "recrelax": Publish may store the head without a lock prefix, and that store may
+				// still sit in the publisher's store buffer while it reads the flag. The IPI makes every
+				// processor of the process commit the stores it has retired and re-execute what it has
+				// not, so the look below sees the head, or the publisher's look at the flag comes after
+				// the store above. Only once the producer has used the gate (m_relaxed_ever, see
+				// Publish): an IPI round to every processor per sleep is not free.
+				if (m_relaxed_ever.load(std::memory_order_seq_cst)) {
+					FlushProcessWriteBuffers();
+					FS::Add(FS::Counter::RecordFlushBuffers, 1);
+				}
+#endif
+				std::unique_lock lock(m_mutex);
 				while (!m_stop.load(std::memory_order_acquire) &&
 				       m_head.load(std::memory_order_seq_cst) == tail) {
 					m_pending.wait_for(lock, SleepSlice);
@@ -761,19 +863,41 @@ void CommandRecorder::Loop() {
 				m_consumer_waiting.store(false, std::memory_order_seq_cst);
 			}
 			FS::Add(FS::Counter::RecordSleeps, 1);
+			if (m_gpu) {
+				FS::Add(FS::Counter::RecordSleepsGpu, 1);
+			}
 			if (t0 != 0) {
 				FS::Add(FS::Counter::RecordIdleNs, FS::NowNs() - t0);
 			}
 			continue;
 		}
-		const auto   index = static_cast<uint32_t>(tail & m_mask);
+		if (head - tail > m_peak_backlog) {
+			m_peak_backlog = head - tail;
+		}
+		const auto   index = static_cast<uint32_t>(tail & mask);
 		RecordHeader header {};
-		std::memcpy(&header, m_data.get() + index, sizeof(header));
+		std::memcpy(&header, data + index, sizeof(header));
 		EXIT_IF(header.size < sizeof(RecordHeader));
+		if (m_gpu) {
+			namespace FS = Common::FrameStats;
+			if (static_cast<RecordOp>(header.op) == RecordOp::BeginBuffer) {
+				// Gate "recpin", once per native command buffer: a thread-local compare when nothing
+				// changed, back to the process mask when the gate went off.
+				DrawAheadApplyRecordPin(Common::Gates::Enabled(Common::Gates::Gate::RecordPin));
+			}
+			if (m_stats && (++m_ccd_tick & 255u) == 0) {
+				// The GuestGpu thread's group is known only while M1 queues work (gate "drawahead").
+				FS::Add(FS::Counter::RecordCcdChecks, 1);
+				const auto gpu_l3 = DrawAheadGpuL3();
+				if (gpu_l3 != 0xffu && DrawAheadCurrentL3() != gpu_l3) {
+					FS::Add(FS::Counter::RecordCrossCcd, 1);
+				}
+			}
+		}
 		{
 			namespace FS  = Common::FrameStats;
 			const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
-			Execute(header, m_data.get() + index + sizeof(RecordHeader));
+			Execute(header, data + index + sizeof(RecordHeader));
 			if (t0 != 0) {
 				FS::Add(FS::Counter::RecordWorkNs, FS::NowNs() - t0);
 			}

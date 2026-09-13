@@ -1,6 +1,8 @@
 #ifndef KYTY_COMMON_FRAMESTATS_H_
 #define KYTY_COMMON_FRAMESTATS_H_
 
+#include <array>
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
 
@@ -328,6 +330,141 @@ enum class Counter : uint32_t {
 	ClampMissKey,      // ... other/empty entry or a larger size than probed
 	ClampVmaMisses,    // gate "clampvma": committed run looked up under the range-table lock
 	SamplerMemoMisses, // gate "smpmemo": GetSampler went to the locked map
+	// Session 57, A2/A3 (page protection).
+	ApplyWaitSyncNs,          // apply-lock waits of synchronous watcher changes (pb_wait_sync_us)
+	ApplyWaitScopeNs,         // ... of BatchScope flushes
+	ApplyWaitRangeNs,         // ... of range flushes (FlushProtection)
+	ApplyWaitWorkerNs,        // ... of the protection worker
+	ApplySkipWould,           // FlushRegion windows with nothing pending or in flight (gate "applyskip")
+	ApplySkipWouldWaitNs,     // ... the apply-lock wait they still paid (gate off): the ceiling of A2
+	ApplySkipWouldWaitGpuNs,  // ... on the GuestGpu thread
+	ApplySkips,               // ... skipped without the lock (gate on)
+	ApplySkipBlockRw,         // FlushRegion windows held only by an in-flight ReadWrite run
+	ApplySkipBlockRo,         // ... by an in-flight run of another protection
+	ApplySyncNoProtect,       // synchronous watcher changes that took the apply lock and made no host call (A2b)
+	ApplySyncNoProtectWaitNs, // ... their apply-lock wait
+	ApplyInflightBad,         // a run published while the previous one was not withdrawn; must stay 0
+	FaultWrites,              // CPU write faults on GPU-tracked memory (knob "faultkb")
+	FaultWinSame,             // ... in the 64 KiB window of the same thread's previous fault (this frame)
+	FaultWinRecent,           // ... in one of the thread's last four 64 KiB windows (this frame)
+	FaultWinSeq,              // ... on the page right after the thread's previous fault
+	FaultWinArmed,            // CPU-clean pages a fault window opens beyond the faulting page (1/16 x16 at 4 KiB)
+	FaultWidened,             // pages a fault window opened beyond the faulting page
+	FaultRefault,             // the same thread faulted on the same page again within 1 ms
+	SyncBufUploadBytes,       // bytes copied by SynchronizeBuffer uploads (sync_up_kb)
+	// Session 57, A4 (record publish).
+	RecordPublishes,       // stores of the record head (EndRecord with publish, Pad, PublishStaged)
+	RecordStaged,          // records ended without a publish (gate "recbatch")
+	RecordForcedPublishes, // PublishStaged calls that found staged records (Handle, Reserve, Stop, barrier)
+	RecordWakes,           // WakeConsumer calls that found the record thread asleep (mutex + notify_one)
+	RecordDrainLocks,      // Drain calls that went past their spin to the mutex
+	RecordTailReads,       // record-tail reads outside the record thread (Reserve refresh, Backlog, Drain)
+	RecordCcdChecks,       // L3 checks of the GuestGpu record thread (one per 256 records, with frame stats)
+	RecordCrossCcd,        // ... that found it outside the L3 group the GuestGpu thread last queued M1 from
+	RecordSleepsGpu,       // RecordSleeps of the GuestGpu recorder only
+	RecordSpinNsGpu,       // RecordSpinNs of the GuestGpu recorder only
+	RecordFlushBuffers,    // FlushProcessWriteBuffers calls of record threads going to sleep
+	// Session 57, A1 (sticky pages).
+	StickyFaults,          // gate "stkstat": CPU write faults on GPU-tracked memory
+	StickyFaultRepeat,     // ... on a page that write-faulted in this or the previous frame as well
+	StickyFaultRepeatSame, // ... earlier in this same frame (armed again and refaulted within it)
+	StickyFaultRepeatGpu,  // ... on the GuestGpu thread (WriteData, FillBuffer/CopyBuffer CPU paths)
+	StickyFaultRepeatImg,  // ... on a page with an indexed image (texture page hint)
+	StickyArmPages,        // pages a read-only upload armed read-only again (GuestGpu)
+	StickyArmHot,          // ... armed in this or the previous frame already and CPU-dirty again
+	StickyArmHotBda,       // ... inside the BDA scan of PrepareBda
+	StickyArmHotImg,       // ... with an indexed image (never sticky)
+	StickyHotPages,        // distinct hot pages this frame (first hot arm of a page in the frame)
+	StickyCandidates,      // ... hot 3 frames in a row without an image (a sticky mechanism keeps them)
+	StickySavedCalls,      // region watcher changes of an upload that would be empty for candidates
+	StickyCheckEstimate,   // candidate pages in the range of each synchronization (shadow compares)
+	StickyStreamHot,       // small read-only ObtainBuffer requests over a candidate (stream copies)
+	// Session 57, E1/E2/E9 (draw statistics).
+	DrawBetweenHard, // counted draws preceded by hard work since the previous one (cuts E1 runs)
+	DrawStatDraws, // draws that reached their draw command (gate "drawstat", common/drawStat.h)
+	DrawStatPure, // ... whose preparation set no hard bit (a pre-resolver need not give them up)
+	DrawStatFast, // ... and no slow bit (memo and upload-epoch hits only: M2 as planned in C4)
+	DrawStatClean, // ... and no bit at all
+	DrawDirtyImgNew, // draws whose preparation inserted, freed or copied a host image
+	DrawDirtyImgUp, // ... uploaded or cleared an image, or changed its source/maybe-dirty state
+	DrawDirtyMeta, // ... changed DCC/CMASK/HTile metadata state
+	DrawDirtyProt, // ... changed page watchers (host protection)
+	DrawDirtyBufNew, // ... created (joined) a host buffer
+	DrawDirtyBufUp, // ... uploaded, copied or downloaded buffer contents
+	DrawDirtyGpuWrite, // ... marked guest memory GPU-written (written buffers, storage images)
+	DrawDirtyObjNew, // ... created an image view, sampler, program or pipeline
+	DrawDirtySync, // ... submitted, waited for the GPU or drained a download
+	DrawDirtyTexSlow, // ... looked an image/texture/sampler up under the cache lock
+	DrawDirtyBufSlow, // ... obtained a buffer off the upload-epoch fast path
+	DrawDirtyLru, // ... moved an LRU entry (first touch in a GC tick)
+	DrawDirtyMemo, // ... wrote a texture/target memo slot
+	DrawDirtyM1, // ... took or retired a DrawAhead (M1) slot
+	DrawDirtyStream, // ... wrapped a stream ring
+	DrawDirtyBarrier, // ... issued a barrier (image transit, GDS)
+	DrawTailHard, // draws whose tail (AcquireRenderTargets .. draw command) set a hard bit
+	DrawTailImgUp, // ... of them the image-upload bit
+	DrawTailMeta, // ... the metadata bit
+	DrawTailProt, // ... the protection bit
+	DrawTailSync, // ... the synchronization bit
+	DrawTailBarrier, // ... the barrier bit
+	DrawStreamMaps, // StreamBuffer::Map calls while the gate is on (all rings)
+	DrawPureRuns1, // E1 runs of unblocked draws closed, by length 1|2-3|4-7|8-15|16-31|32-63|64+
+	DrawPureRuns2, // ...
+	DrawPureRuns4, // ...
+	DrawPureRuns8, // ...
+	DrawPureRuns16, // ...
+	DrawPureRuns32, // ...
+	DrawPureRuns64, // ...
+	DrawPureRunDraws1, // ... draws in those runs, same buckets
+	DrawPureRunDraws2, // ...
+	DrawPureRunDraws4, // ...
+	DrawPureRunDraws8, // ...
+	DrawPureRunDraws16, // ...
+	DrawPureRunDraws32, // ...
+	DrawPureRunDraws64, // ...
+	EdgeRuns1, // E2 runs of draws between hard boundaries, same buckets
+	EdgeRuns2, // ...
+	EdgeRuns4, // ...
+	EdgeRuns8, // ...
+	EdgeRuns16, // ...
+	EdgeRuns32, // ...
+	EdgeRuns64, // ...
+	EdgeRunDraws1, // ... draws in those runs, same buckets
+	EdgeRunDraws2, // ...
+	EdgeRunDraws4, // ...
+	EdgeRunDraws8, // ...
+	EdgeRunDraws16, // ...
+	EdgeRunDraws32, // ...
+	EdgeRunDraws64, // ...
+	EdgeCutPass, // E2 runs cut by a closed render pass (boundaries of a cut may overlap)
+	EdgeCutDispatch, // ... by a dispatch
+	EdgeCutBarrier, // ... by a barrier
+	EdgeCutUpload, // ... by an upload, copy, clear or download
+	EdgeCutSubmit, // ... by a submit
+	E9Sets, // E9: graphics descriptor-set writes (CommitBindings, gate "drawstat")
+	E9Push, // ... pipelines with push descriptors (not in e9_n)
+	E9Adjacent, // writes with the set layout of the previous graphics write
+	E9Seen, // writes whose layout had an earlier write in the table
+	E9SameImages, // ... with the same image views, layouts and samplers as that write
+	E9SameBuffers, // ... with the same buffer handles (offsets and ranges ignored)
+	E9SameBufferRanges, // ... with the same buffer handles and ranges
+	E9SameBase, // ... same images and same handles+ranges (dynamic offsets could reuse the set)
+	E9SameFull, // ... identical write (images, handles, ranges, offsets)
+	E9AdjacentBase, // writes equal to the previous graphics write up to buffer offsets
+	E9BufferInfos, // buffer infos in the counted writes
+	E9StreamInfos, // ... of them in the stream ring (a new offset every draw)
+	E9RunDraws1, // E9 writes in runs of e9_adj_base, same buckets
+	E9RunDraws2, // ...
+	E9RunDraws4, // ...
+	E9RunDraws8, // ...
+	E9RunDraws16, // ...
+	E9RunDraws32, // ...
+	E9RunDraws64, // ...
+	// Session 57, A6/A7 and track B.
+	SnapKeepCopies, // gate "snapkeep": lookahead results copied into the kept snapshot storage
+	SnapKeepGrows,  // ... of which a vector still had to grow (allocated on this thread)
+	BufLruTouches, // BufferCache::TouchBuffer calls on live buffers
+	BufLruRepeats, // ... of which the buffer was already touched in this GC tick (skipped by "buflru")
 	Count
 };
 
@@ -368,10 +505,48 @@ void                      StartSampler(ThreadRole role);
 void                      NoteFrame(uint64_t frame);
 
 [[nodiscard]] bool Enabled();
+
+namespace Detail {
+
+struct Shard {
+	alignas(64) std::array<std::atomic<uint64_t>, static_cast<size_t>(Counter::Count)> counters {};
+};
+
+// Counters with an index below the limit are counted: Counter::Count with KYTY_FRAME_TRACE or
+// KYTY_AV_TRACE, 0 without them, and only the counters of the FrameTrace main line in the lean
+// mode (gate "fslean"). Zero until frameStats.cpp is initialized.
+inline constinit std::atomic<uint32_t> g_count_limit {0};
+inline constinit bool                  g_timings = false;
+// No initializer to run, so no TLS guard: the shard is attached by the first Add of a thread.
+inline constinit thread_local Shard*   t_shard   = nullptr;
+
+[[nodiscard]] Shard* AttachShard();
+
+} // namespace Detail
+
 // KYTY_FRAME_TRACE=lite retains counters and per-frame CPU time without fine-grained clocks.
-[[nodiscard]] bool TimingsEnabled();
+inline bool TimingsEnabled() {
+	return Detail::g_timings;
+}
+
 [[nodiscard]] uint64_t NowNs();
-void                   Add(Counter counter, uint64_t value);
+
+// Inline: about 250 counts per draw on the GuestGpu thread.
+inline void Add(Counter counter, uint64_t value) {
+	const auto index = static_cast<uint32_t>(counter);
+	if (index >= Detail::g_count_limit.load(std::memory_order_relaxed)) {
+		return;
+	}
+	auto* shard = Detail::t_shard;
+	if (shard == nullptr) [[unlikely]] {
+		shard = Detail::AttachShard();
+	}
+	auto& slot = shard->counters[index];
+	slot.store(slot.load(std::memory_order_relaxed) + value, std::memory_order_relaxed);
+}
+
+// Gate "fslean": count only the FrameTrace main line (draws, CPU and GPU time, faults).
+void                   SetLean(bool lean);
 [[nodiscard]] uint64_t Read(Counter counter);
 
 void                   RegisterCurrentThread(ThreadRole role);

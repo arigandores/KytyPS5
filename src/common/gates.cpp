@@ -58,6 +58,22 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_CLAMP_VMA", "clampvma", true},
     {"KYTY_SAMPLER_MEMO", "smpmemo", true},
     {"KYTY_BIND_SPARE", "bindspare", false},
+    {"KYTY_FRAME_STATS_LEAN", "fslean", false},
+    // Session 57, A2/A3 (page protection).
+    {"KYTY_APPLY_SKIP", "applyskip", false},
+    // Session 57, A4 (record publish).
+    {"KYTY_RECORD_BATCH", "recbatch", false},
+    {"KYTY_RECORD_RELAXED", "recrelax", false},
+    {"KYTY_RECORD_PIN", "recpin", false},
+    // Session 57, A1 (sticky pages).
+    {"KYTY_STICKY_STAT", "stkstat", false},
+    // Session 57, E1/E2/E9 (draw statistics).
+    {"KYTY_DRAW_STAT", "drawstat", false},
+    {"KYTY_DRAW_STAT_SLOW", "dpslow", false},
+    // Session 57, A6/A7 and track B.
+    {"KYTY_DRAW_STATE_REUSE", "drawstate", false},
+    {"KYTY_SNAPSHOT_KEEP", "snapkeep", false},
+    {"KYTY_BUF_LRU", "buflru", false},
 }};
 
 struct KnobDefinition {
@@ -75,13 +91,28 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_RECORD_SPIN_US", "recspin", 300, 100000},
     {"KYTY_DRAW_AHEAD_PIN", "dapin", 1, 0xffffffffu},
     {"KYTY_PROCESS_PIN", "procpin", 0, 0xffffffffu},
+    {"KYTY_FAULT_WINDOW_KB", "faultkb", 4, 4096},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;
+using State     = std::array<std::atomic<bool>, static_cast<size_t>(Gate::Count)>;
+
+void Initialize();
 
 KnobState& KnobStates() {
-	static KnobState states;
+	Initialize();
+	return Detail::g_knobs;
+}
+
+State& States() {
+	Initialize();
+	return Detail::g_gates;
+}
+
+// Environment values of every gate and knob, then g_ready (the inline fast reads).
+void Initialize() {
 	static const bool initialized = [] {
+		auto& states = Detail::g_knobs;
 		for (size_t index = 0; index < states.size(); index++) {
 			const auto& definition = KNOB_DEFINITIONS[index];
 			const auto* value      = std::getenv(definition.environment);
@@ -92,27 +123,17 @@ KnobState& KnobStates() {
 			states[index].store(parsed < definition.limit ? parsed : definition.limit,
 			                    std::memory_order_relaxed);
 		}
-		return true;
-	}();
-	(void)initialized;
-	return states;
-}
-
-using State = std::array<std::atomic<bool>, static_cast<size_t>(Gate::Count)>;
-
-State& States() {
-	static State states;
-	static const bool initialized = [] {
-		for (size_t index = 0; index < states.size(); index++) {
+		auto& gates = Detail::g_gates;
+		for (size_t index = 0; index < gates.size(); index++) {
 			const auto& definition = DEFINITIONS[index];
 			const auto* value      = std::getenv(definition.environment);
-			states[index].store(value != nullptr ? value[0] == '1' : definition.fallback,
-			                    std::memory_order_relaxed);
+			gates[index].store(value != nullptr ? value[0] == '1' : definition.fallback,
+			                   std::memory_order_relaxed);
 		}
+		Detail::g_ready.store(true, std::memory_order_relaxed);
 		return true;
 	}();
 	(void)initialized;
-	return states;
 }
 
 // The value text after "name=" for a whole-word name in the gate file, or nullptr. A name that is
@@ -138,11 +159,11 @@ const char* GateFile() {
 
 } // namespace
 
-bool Enabled(Gate gate) noexcept {
+bool Detail::EnabledSlow(Gate gate) noexcept {
 	return States()[static_cast<size_t>(gate)].load(std::memory_order_relaxed);
 }
 
-uint32_t Value(Knob knob) noexcept {
+uint32_t Detail::ValueSlow(Knob knob) noexcept {
 	return KnobStates()[static_cast<size_t>(knob)].load(std::memory_order_relaxed);
 }
 

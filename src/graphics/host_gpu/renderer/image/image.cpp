@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/image/image.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/profiler.h"
@@ -247,6 +248,8 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 		return;
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImageBarriers, barriers.size());
+	Common::DrawStat::Mark(Common::DrawStat::Barrier);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 	m_scheduler.EndRendering(why);
 	if (command_buffer == nullptr) {
 		// Lazy handle (AcquireRenderTargets, CommitBindings): taken only when a barrier is issued,

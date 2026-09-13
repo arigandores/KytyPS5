@@ -44,13 +44,22 @@ public:
 	KYTY_CLASS_NO_COPY(BufferCache);
 
 	void                   InvalidateMemory(uint64_t vaddr, uint64_t size);
+	// Knob "faultkb": a CPU write fault that opens the window around the faulting page at once
+	// (MemoryTracker::InvalidateWriteFault). The window lies inside one tracking region.
+	void InvalidateWriteFault(uint64_t fault_vaddr, uint64_t window_begin, uint64_t window_size);
+	// fw_win_armed at one page (diagnostic): MemoryTracker::WriteFaultArmedPages.
+	[[nodiscard]] uint64_t WriteFaultArmedPages(uint64_t fault_vaddr, uint64_t window_begin,
+	                                            uint64_t window_size);
 	void                   ReadMemory(uint64_t vaddr, uint64_t size, bool is_write = false);
 	// A CPU write is about to land in [vaddr, vaddr + size): wait for the GPU copies that still
 	// read the range straight from guest memory (HostImport). Any thread; true if it waited.
 	bool WaitPendingHostReads(uint64_t vaddr, uint64_t size);
+	// Whether WaitPendingHostReads(vaddr, size) would wait (no waiting here).
+	[[nodiscard]] bool HasPendingHostReads(uint64_t vaddr, uint64_t size);
 	// RenderContext::HandleFault, after both caches handled a CPU write fault: the repeated-fault
 	// watchdog (pb_stuck) and the sampled protection check (gate "pbcheck"). Any thread.
-	void NoteWriteFault(uint64_t fault_vaddr);
+	// The window is the range the fault opened in the buffer tracker (the faulting page at 4 KiB).
+	void NoteWriteFault(uint64_t fault_vaddr, uint64_t window_begin, uint64_t window_size);
 	[[nodiscard]] Buffer&  GetBuffer(BufferId id) { return m_slot_buffers[id]; }
 	[[nodiscard]] BufferId FindBuffer(uint64_t vaddr, uint64_t size);
 	// Keep an already discovered owner alive when the binding uses a direct CPU copy.

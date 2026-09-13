@@ -6,6 +6,7 @@
 #include "common/gates.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/common.h"
 #include "common/file.h"
 #include "common/logging/log.h"
@@ -510,6 +511,133 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffe
 #endif
 }
 
+// Session 57, E1/E2 (gate "drawstat", common/drawStat.h). A draw's preparation runs from the
+// render mutex to AcquireRenderTargets and its tail from there to the draw command; both masks are
+// counted when the draw command is recorded (packet and direct path), where runs close too. Draws
+// that return early (metadata/copy draws, no targets, pipeline still compiling) are not counted.
+namespace {
+
+constinit thread_local uint32_t t_draw_pure_run = 0; // E1: draws of the open run without blocking bits
+constinit thread_local uint32_t t_draw_edge_run = 0; // E2: draws since the last hard boundary
+
+void DrawStatAdd(Common::FrameStats::Counter first, uint32_t index, uint64_t value) {
+	Common::FrameStats::Add(static_cast<Common::FrameStats::Counter>(static_cast<uint32_t>(first) + index),
+	                        value);
+}
+
+void DrawStatCloseRun(uint32_t& run, Common::FrameStats::Counter runs, Common::FrameStats::Counter draws) {
+	if (run != 0) {
+		const auto bucket = Common::DrawStat::RunBucket(run);
+		DrawStatAdd(runs, bucket, 1);
+		DrawStatAdd(draws, bucket, run);
+		run = 0;
+	}
+}
+
+void DrawStatBegin() {
+	const bool on = Common::Gates::Enabled(Common::Gates::Gate::DrawStat) && Common::FrameStats::Enabled();
+	if (Common::DrawStat::On() != on) {
+		Common::DrawStat::g_on.store(on, std::memory_order_relaxed);
+		t_draw_pure_run           = 0;
+		t_draw_edge_run           = 0;
+		Common::DrawStat::t_edges = 0;
+	}
+	if (on) {
+		Common::DrawStat::t_between |= Common::DrawStat::t_mask;
+		Common::DrawStat::t_mask  = 0;
+		Common::DrawStat::t_shift = 0;
+	}
+}
+
+void DrawStatTail() {
+	if (Common::DrawStat::On()) {
+		Common::DrawStat::t_shift = 16;
+	}
+}
+
+void DrawStatEmit() {
+	namespace DS  = Common::DrawStat;
+	using Counter = Common::FrameStats::Counter;
+	if (!DS::On()) {
+		return;
+	}
+	const uint32_t prep = DS::t_mask & 0xffffu;
+	const uint32_t tail = DS::t_mask >> 16u;
+	Common::FrameStats::Add(Counter::DrawStatDraws, 1);
+	if ((prep & DS::HardMask) == 0) {
+		Common::FrameStats::Add(Counter::DrawStatPure, 1);
+	}
+	if ((prep & (DS::HardMask | DS::SlowMask)) == 0) {
+		Common::FrameStats::Add(Counter::DrawStatFast, 1);
+	}
+	if (prep == 0) {
+		Common::FrameStats::Add(Counter::DrawStatClean, 1);
+	}
+	for (uint32_t bits = prep; bits != 0; bits &= bits - 1u) {
+		DrawStatAdd(Counter::DrawDirtyImgNew, static_cast<uint32_t>(std::countr_zero(bits)), 1);
+	}
+	if ((tail & DS::HardMask) != 0) {
+		Common::FrameStats::Add(Counter::DrawTailHard, 1);
+		Common::FrameStats::Add(Counter::DrawTailImgUp, (tail & DS::ImgUp) != 0 ? 1u : 0u);
+		Common::FrameStats::Add(Counter::DrawTailMeta, (tail & DS::Meta) != 0 ? 1u : 0u);
+		Common::FrameStats::Add(Counter::DrawTailProt, (tail & DS::Prot) != 0 ? 1u : 0u);
+		Common::FrameStats::Add(Counter::DrawTailSync, (tail & DS::Sync) != 0 ? 1u : 0u);
+		Common::FrameStats::Add(Counter::DrawTailBarrier, (tail & DS::Barrier) != 0 ? 1u : 0u);
+	}
+	// Gate "dpslow": runs are cut by the slow bits too (M2 restricted to memo and epoch hits).
+	const uint32_t blocking = Common::Gates::Enabled(Common::Gates::Gate::DrawStatSlow)
+	                              ? (DS::HardMask | DS::SlowMask)
+	                              : DS::HardMask;
+	// Hard work since the previous counted draw (its tail after the draw command, early exits,
+	// dispatches, DMA) invalidates what a worker would have resolved ahead: it cuts the run too.
+	const uint32_t between = (DS::t_between | (DS::t_between >> 16u)) & 0xffffu;
+	DS::t_between          = 0;
+	if ((between & DS::HardMask) != 0) {
+		Common::FrameStats::Add(Counter::DrawBetweenHard, 1);
+	}
+	if ((prep & blocking) == 0 && (between & blocking) == 0) {
+		t_draw_pure_run++;
+	} else {
+		DrawStatCloseRun(t_draw_pure_run, Counter::DrawPureRuns1, Counter::DrawPureRunDraws1);
+	}
+	// A boundary noted since the previous draw command starts a new run with this draw.
+	if (DS::t_edges != 0) {
+		DrawStatCloseRun(t_draw_edge_run, Counter::EdgeRuns1, Counter::EdgeRunDraws1);
+		for (uint32_t bits = DS::t_edges; bits != 0; bits &= bits - 1u) {
+			DrawStatAdd(Counter::EdgeCutPass, static_cast<uint32_t>(std::countr_zero(bits)), 1);
+		}
+		DS::t_edges = 0;
+	}
+	t_draw_edge_run++;
+	// What follows the draw command is work between this draw and the next one (t_between).
+	DS::t_mask  = 0;
+	DS::t_shift = 16;
+}
+
+using DrawStatCounter = Common::FrameStats::Counter;
+static_assert(Common::DrawStat::Barrier == (1u << 15u) &&
+              static_cast<uint32_t>(DrawStatCounter::DrawDirtyBarrier) -
+                      static_cast<uint32_t>(DrawStatCounter::DrawDirtyImgNew) ==
+                  15u);
+static_assert(static_cast<uint32_t>(DrawStatCounter::DrawPureRuns64) -
+                      static_cast<uint32_t>(DrawStatCounter::DrawPureRuns1) ==
+                  6u &&
+              static_cast<uint32_t>(DrawStatCounter::DrawPureRunDraws64) -
+                      static_cast<uint32_t>(DrawStatCounter::DrawPureRunDraws1) ==
+                  6u);
+static_assert(static_cast<uint32_t>(DrawStatCounter::EdgeRuns64) -
+                      static_cast<uint32_t>(DrawStatCounter::EdgeRuns1) ==
+                  6u &&
+              static_cast<uint32_t>(DrawStatCounter::EdgeRunDraws64) -
+                      static_cast<uint32_t>(DrawStatCounter::EdgeRunDraws1) ==
+                  6u);
+static_assert(Common::DrawStat::EdgeSubmit == (1u << 4u) &&
+              static_cast<uint32_t>(DrawStatCounter::EdgeCutSubmit) -
+                      static_cast<uint32_t>(DrawStatCounter::EdgeCutPass) ==
+                  4u);
+
+} // namespace
+
 static bool DrawHasValidVertexShader(const HW::Shader& sh_ctx) {
 
 	const auto& vs = sh_ctx.GetVs();
@@ -531,6 +659,64 @@ struct DrawRenderState {
 	ShaderPixelInputInfo  ps_input_info;
 	PipelineCache::GraphicsPrograms programs;
 };
+
+namespace {
+
+// Gate "drawstate" (session 57, B1): where a draw keeps its DrawRenderState. Off: a local
+// value-initialized at the point `DrawRenderState state {}` was (16 208 B zeroed per draw). On: one
+// state per thread that runs draws - the GuestGpu command processor; the thread_local is created
+// only once the gate is on, on the first draw of that thread - and only the fields no writer
+// covers are reset. Written before any read on every draw:
+//  - color_info: ResolveRenderColorTarget writes every slot it hands out (reset or memo copy);
+//  - depth_info: ResolveRenderDepthTarget resets it on a memo miss, copies it on a hit;
+//  - vs_input_info: PrepareProgram(VS) runs `info = {}` on the vertex and on the mesh path;
+//  - ps_input_info: RefreshShaders resets it.
+// A nested draw on the same thread (none is known) takes the local. The state owns no Vulkan
+// object (PipelineCache::GraphicsPrograms holds plain handles): its thread-exit destructor only
+// frees the vectors of the two resource snapshots.
+class DrawStateLease {
+public:
+	DrawStateLease() {
+		if (Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse)) {
+			auto& slot = Slot();
+			if (!slot.in_use) {
+				slot.in_use            = true;
+				slot.state.color_count = 0;
+				slot.state.ps_active   = true;
+				slot.state.programs    = {};
+				m_reused               = &slot;
+				m_state                = &slot.state;
+				return;
+			}
+		}
+		m_state = &m_local.emplace();
+	}
+	~DrawStateLease() {
+		if (m_reused != nullptr) {
+			m_reused->in_use = false;
+		}
+	}
+	DrawStateLease(const DrawStateLease&)            = delete;
+	DrawStateLease& operator=(const DrawStateLease&) = delete;
+
+	[[nodiscard]] DrawRenderState& State() const { return *m_state; }
+
+private:
+	struct ThreadState {
+		DrawRenderState state;
+		bool            in_use = false;
+	};
+	static ThreadState& Slot() {
+		thread_local ThreadState slot;
+		return slot;
+	}
+
+	std::optional<DrawRenderState> m_local;
+	ThreadState*                   m_reused = nullptr;
+	DrawRenderState*               m_state  = nullptr;
+};
+
+} // namespace
 
 struct DrawCallInfo {
 	CommandBufferDebugOp debug_op       = CommandBufferDebugOp::DrawIndex;
@@ -687,6 +873,8 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			// probe into the 1920x1080 depth buffer before the depth pre-pass: a load-op clear
 			// leaves the rest of the buffer stale and every later scene draw fails its depth test
 			// there. Clear the attached slice explicitly instead.
+			Common::DrawStat::Mark(Common::DrawStat::ImgUp);
+			Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 			buffer.EndRendering(RenderPassEnd::Clear);
 			image.Transit(vk::ImageLayout::eTransferDstOptimal,
 			              vk::AccessFlagBits2::eTransferWrite, {}, buffer.Handle());
@@ -1195,7 +1383,18 @@ static void RefreshShaders(CommandBuffer& buffer, const DrawCallInfo& draw,
 	const auto& shader_regs        = ctx.GetShaderRegisters();
 
 	state.programs      = {};
-	state.ps_input_info = {};
+	if (Common::Gates::Enabled(Common::Gates::Gate::SnapshotKeep) &&
+	    Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse)) {
+		// Gate "snapkeep" (session 57, B4): the reset keeps the snapshot storage an earlier draw's
+		// pixel stage left here; PipelineCache::GetGraphicsPrograms takes it back for this one. Until
+		// then stage.program is null and no reader looks at an inactive pixel stage's resources.
+		ShaderRecompiler::IR::ResourceSnapshot kept;
+		std::swap(kept, state.ps_input_info.stage.resources);
+		state.ps_input_info = {};
+		std::swap(kept, state.ps_input_info.stage.resources);
+	} else {
+		state.ps_input_info = {};
+	}
 	std::array<Prospero::ColorComponentMapping, RENDER_COLOR_ATTACHMENTS_MAX>
 	    target_export_mapping {};
 	for (uint32_t i = 0; i < state.color_count; i++) {
@@ -1556,6 +1755,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		index_binding   = PrepareIndexBuffer(buffer, index_source);
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
+	DrawStatTail();
 	const auto rendering =
 	    AcquireRenderTargets(buffer, state.color_info, state.color_count, state.depth_info,
 	                         bindings.pixel);
@@ -1651,6 +1851,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 		}
 		buffer.BeginRenderingPacket(rendering);
+		DrawStatEmit();
 		RecordCommandWriter tail(*buffer.Recorder());
 		buffer.NoteHandleUse();
 		if (!mesh_active) {
@@ -1785,6 +1986,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 	}
 	m_context.GetCommandScheduler().BeginRendering(rendering);
+	DrawStatEmit();
 	buffer.CheckNoPublish(publish_mark);
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {
 		vk_buffer.bindPipeline(vk::PipelineBindPoint::eGraphics, pipeline.pipeline);
@@ -1915,6 +2117,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	                    reinterpret_cast<uint64_t>(args.index_addr));
 
 	Common::LockGuard lock(m_context.GetMutex());
+	DrawStatBegin();
 	if (args.index_count == 0 || args.instance_count == 0) {
 		return;
 	}
@@ -1999,7 +2202,8 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 
 	const DrawCallInfo draw {CommandBufferDebugOp::DrawIndex, args.index_count,
 	                        args.instance_count, args.first_instance};
-	DrawRenderState state {};
+	DrawStateLease state_lease; // gate "drawstate"
+	auto&          state = state_lease.State();
 	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
 		ResetBindings();
 		return;
@@ -2044,6 +2248,7 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	                    args.first_instance);
 
 	Common::LockGuard lock(m_context.GetMutex());
+	DrawStatBegin();
 	if (args.vertex_count == 0 || args.instance_count == 0) {
 		return;
 	}
@@ -2089,7 +2294,8 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	const DrawCallInfo draw {CommandBufferDebugOp::DrawIndexAuto,
 	                         args.vertex_count, args.instance_count, args.first_instance};
 
-	DrawRenderState state {};
+	DrawStateLease state_lease; // gate "drawstate"
+	auto&          state = state_lease.State();
 	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
 		ResetBindings();
 		return;

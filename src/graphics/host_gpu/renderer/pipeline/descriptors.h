@@ -19,6 +19,12 @@ namespace Libs::Graphics {
 struct ShaderStageRuntime;
 
 struct TextureBinding {
+	TextureBinding() = default;
+	// Session 57, B2a: PrepareBindings builds the binding in its vector element (one ImageDesc copy).
+	TextureBinding(ImageId id, const TextureCache::ImageDesc& binding_desc, uint32_t index,
+	               uint32_t version)
+	    : image_id(id), desc(binding_desc), memo_index(index), memo_version(version) {}
+
 	ImageId                    image_id;
 	vk::ImageView              image_view = nullptr;
 	TextureCache::ImageDesc    desc;

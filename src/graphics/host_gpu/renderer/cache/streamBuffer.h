@@ -75,6 +75,8 @@ public:
 	bool   is_deleted   = false;
 	int    stream_score = 0;
 	size_t lru_id       = 0;
+	// Gate "buflru": BufferCache::m_gc_tick of the last LRU touch (see Image::lru_touch_tick).
+	uint64_t lru_touch_tick = UINT64_MAX;
 	bool   prefetch_pending = false; // synchronized by the stream prefetch, not used yet
 	// BufferCache's last CPU synchronization interval. GPU ownership is tracked separately.
 	uint64_t upload_epoch = 0;

@@ -201,16 +201,24 @@ public:
 	// In-place publication, one open record at a time: BeginRecord reserves `max_payload` bytes
 	// and returns them, EndRecord publishes the first `payload_size` of them, AbandonRecord none.
 	[[nodiscard]] uint8_t* BeginRecord(RecordOp op, uint32_t max_payload);
-	void                   EndRecord(uint32_t payload_size);
+	// publish=false (gate "recbatch"): the record stays invisible to the record thread until the next
+	// publish - an EndRecord with publish=true, PublishStaged, a Pad or a wait for arena space.
+	void                   EndRecord(uint32_t payload_size, bool publish = true);
 	void                   AbandonRecord() noexcept { m_open_slot = nullptr; }
 	// True between BeginRecord and EndRecord/AbandonRecord: nothing may be recorded directly into
 	// the command buffer while a record is being filled (CommandBuffer::Handle).
 	[[nodiscard]] bool     HasOpenRecord() const noexcept { return m_open_slot != nullptr; }
-	// Records published so far; producer thread (KYTY_RECORD_CHECK).
+	// Records ended so far, published or staged; producer thread (KYTY_RECORD_CHECK).
 	[[nodiscard]] uint64_t Published() const noexcept { return m_records; }
+	// Gate "recbatch": makes every staged record visible to the record thread. Producer thread only.
+	// CommandBuffer::Handle calls it before its drain, so a direct write never lands ahead of a
+	// staged record.
+	void                   PublishStaged();
+	// Records ended and not published yet; producer thread (KYTY_RECORD_CHECK).
+	[[nodiscard]] bool     HasStaged() const noexcept { return m_published != m_head_local; }
 
 	// Waits until everything published before this call has been recorded. Never call it from the
-	// record thread.
+	// record thread. Staged records are not published by it: the producer calls PublishStaged first.
 	void Drain();
 	// Bytes published and not recorded yet (diagnostics).
 	[[nodiscard]] size_t Backlog() const noexcept;
@@ -224,44 +232,64 @@ private:
 	void     ExecuteCommands(const uint8_t* payload);
 	void     Stop();
 	uint8_t* Reserve(uint32_t bytes);
-	void     Publish(uint32_t bytes);
-	void     PushRecord(RecordOp op, const void* payload, uint32_t payload_size);
+	void     Publish();
+	void     PushRecord(RecordOp op, const void* payload, uint32_t payload_size, bool publish = true);
 	void     Execute(const RecordHeader& header, const uint8_t* payload);
 	void     WakeConsumer();
 	void     WakeWaiters();
 
-	CommitFn           m_commit  = nullptr;
-	void*              m_user    = nullptr;
-	vk::CommandBuffer* m_current = nullptr;
-	vk::CommandBuffer  m_buffer   = nullptr; // record thread only
-	vk::Device         m_device   = nullptr;
-	// Record thread only: the vk::WriteDescriptorSet array rebuilt for each Bindings record.
-	std::vector<vk::WriteDescriptorSet> m_writes;
-	// Producer only: the record between BeginRecord and EndRecord.
-	uint8_t*           m_open_slot  = nullptr;
-	uint32_t           m_open_bytes = 0;
-	RecordOp           m_open_op    = RecordOp::Pad;
+	// Session 57, A4: grouped by the thread that writes them, one cache line per group, so neither
+	// thread writes a line the other reads for every record (the open-slot fields used to share a
+	// line with m_data/m_mask, which the record thread reads per record).
 
-	std::unique_ptr<uint8_t[]> m_data;
+	// Read-only once the constructor has returned; both threads.
+	alignas(64) std::unique_ptr<uint8_t[]> m_data;
 	uint64_t                   m_capacity = 0;
 	uint64_t                   m_mask     = 0;
+	CommitFn                   m_commit   = nullptr;
+	void*                      m_user     = nullptr;
+	vk::CommandBuffer*         m_current  = nullptr;
+	vk::Device                 m_device   = nullptr;
+	// The producer is the GuestGpu thread (its role when it created the recorder): the *_gpu
+	// counters and gate "recpin" apply to this recorder, not to the presentation thread's.
+	bool                       m_gpu      = false;
+	bool                       m_stats    = false; // FrameStats::Enabled() at construction
 
-	alignas(64) std::atomic<uint64_t> m_head {0}; // published bytes (producer)
-	alignas(64) std::atomic<uint64_t> m_tail {0}; // recorded bytes (consumer)
+	// Producer only. The ring is single-producer and m_producer is the assert that says so.
+	alignas(64) uint8_t*       m_open_slot  = nullptr; // the record between BeginRecord and EndRecord
+	uint32_t                   m_open_bytes = 0;
+	RecordOp                   m_open_op    = RecordOp::Pad;
+	uint64_t                   m_head_local = 0; // bytes of every ended record, published or staged
+	uint64_t                   m_published  = 0; // the value of the last m_head store
+	uint64_t                   m_tail_seen  = 0; // an m_tail read before: a lower bound of the tail
+	std::thread::id            m_producer;
+	uint64_t                   m_records    = 0;
+	uint64_t                   m_full       = 0;
+
+	// Written by the producer, polled by the record thread. The flag sits here because the producer
+	// reads it right after its head store, from a line it then owns; the record thread writes it
+	// only on its way to sleep.
+	alignas(64) std::atomic<uint64_t> m_head {0}; // published bytes
+	std::atomic<bool>                 m_consumer_waiting {false};
+	std::atomic<bool>                 m_stop {false};
+	// Set (sequentially consistent) before this producer's first relaxed head store (gate
+	// "recrelax"); from then on the record thread flushes store buffers before it sleeps.
+	std::atomic<bool>                 m_relaxed_ever {false};
+
+	// Record thread (m_waiters: drains, rarely written).
+	alignas(64) std::atomic<uint64_t> m_tail {0}; // recorded bytes
+	std::atomic<uint32_t>             m_waiters {0};
+	vk::CommandBuffer                 m_buffer       = nullptr;
+	uint64_t                          m_peak_backlog = 0; // read by Stop after the join
+	uint32_t                          m_ccd_tick     = 0;
+	// The vk::WriteDescriptorSet array rebuilt for each Bindings record.
+	std::vector<vk::WriteDescriptorSet> m_writes;
+
+	// Sleeping and waking.
 	alignas(64) std::mutex            m_mutex;
 	std::condition_variable           m_progress; // tail advanced: space and drains
 	std::condition_variable           m_pending;  // head advanced: work for the consumer
-	std::atomic<uint32_t>             m_waiters {0};
-	std::atomic<bool>                 m_consumer_waiting {false};
-	std::atomic<bool>                 m_stop {false};
 	std::thread                       m_thread;
-
-	// Diagnostics. Touched by the producer only, so they need no synchronization: the ring is
-	// single-producer and m_producer is the assert that says so.
-	std::thread::id                   m_producer;
-	uint64_t                          m_records      = 0;
-	uint64_t                          m_peak_backlog = 0;
-	uint64_t                          m_full         = 0;
 };
 
 // Gate "recpack": one RecordOp::Commands record, built in place in the arena. The method names and

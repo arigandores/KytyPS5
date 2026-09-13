@@ -7,7 +7,9 @@
 #include "graphics/host_gpu/regionDefinitions.h"
 
 #include <atomic>
+#include <array>
 #include <cstdlib>
+#include <memory>
 #include <mutex>
 #include <utility>
 
@@ -103,6 +105,18 @@ private:
 };
 
 static_assert(std::atomic_uint32_t::is_always_lock_free);
+
+// Gate "stkstat" (session 57, A1 ceiling; statistics only): what a read-only upload passes to
+// RegionManager::NoteUploadStat.
+struct StickyUploadStat {
+	uint32_t frame = 0;     // flip number of the synchronization (the caller's clock)
+	bool     bda   = false; // it runs for the BDA scan of PrepareBda
+	// True when an image is indexed on the page (texture page hint): such a page is never sticky.
+	bool (*may_have_images)(void* context, uint64_t page) noexcept = nullptr;
+	void* context = nullptr;
+};
+// Frames in a row a page has to be hot to count as a sticky candidate (stk_cand).
+inline constexpr uint8_t STICKY_STAT_STREAK = 3;
 
 class RegionManager final {
 public:
@@ -202,6 +216,40 @@ public:
 		UpdateProtection<false, true>();
 	}
 
+	// Knob "faultkb" (MemoryTracker::InvalidateWriteFault), under `lock`: the pages of
+	// [window_begin, window_begin + window_size) contiguous with the page of `vaddr` that hold no
+	// GPU-owned bytes, as {address, size}. The page of `vaddr` must not be GPU-dirty. A GPU-dirty
+	// page ends the run, so a CPU-dirty change of the result never meets GPU-owned state (read
+	// watchers, stale-readable pages). `armed` receives how many of these pages other than the
+	// page of `vaddr` are CPU-clean now, i.e. would gain a dirty bit.
+	[[nodiscard]] std::pair<uint64_t, uint64_t> GpuCleanRunAround(uint64_t vaddr, uint64_t window_begin,
+	                                                              uint64_t window_size,
+	                                                              uint64_t* armed) const {
+		const auto [window_first, window_last] = GetPageRange(window_begin, window_size);
+		const auto page = static_cast<size_t>((vaddr - m_cpu_addr) / TRACKER_PAGE_SIZE);
+		if (vaddr < m_cpu_addr || page < window_first || page >= window_last) {
+			EXIT("write-fault page lies outside its window\n");
+		}
+		size_t first = page;
+		size_t last  = page + 1;
+		while (first > window_first && !m_gpu_dirty.Get(first - 1)) {
+			first--;
+		}
+		while (last < window_last && !m_gpu_dirty.Get(last)) {
+			last++;
+		}
+		if (armed != nullptr) {
+			uint64_t clean = 0;
+			for (size_t index = first; index < last; index++) {
+				if (index != page && !m_cpu_dirty.Get(index)) {
+					clean++;
+				}
+			}
+			*armed = clean;
+		}
+		return {m_cpu_addr + first * TRACKER_PAGE_SIZE, (last - first) * TRACKER_PAGE_SIZE};
+	}
+
 	template <DirtySource source, bool clear, typename Func>
 	void ForEachModifiedRange(uint64_t vaddr, uint64_t size, Func&& func) {
 		const auto [start, end] = GetPageRange(vaddr, size);
@@ -219,6 +267,136 @@ public:
 		for (const auto [first, last]: mask) {
 			func(m_cpu_addr + first * TRACKER_PAGE_SIZE, (last - first) * TRACKER_PAGE_SIZE);
 		}
+	}
+
+	// Gate "stkstat" (session 57, A1 ceiling; statistics only). A CPU write fault at `vaddr`, a page
+	// of this region: 2 when the page write-faulted earlier in this frame, 1 when in the previous
+	// frame, else 0. Any thread, from the fault handler: one relaxed exchange of a stamp allocated
+	// with the region, no lock. Concurrent faults of one page may both read "this frame".
+	[[nodiscard]] uint32_t NoteWriteFaultStat(uint64_t vaddr, uint32_t frame) noexcept {
+		const auto page     = static_cast<size_t>((vaddr - m_cpu_addr) / TRACKER_PAGE_SIZE);
+		const auto now      = StickyStamp(frame);
+		const auto previous = m_sticky_stat->fault_frame[page].exchange(now, std::memory_order_relaxed);
+		if (previous == now) {
+			return 2;
+		}
+		return previous != 0 && static_cast<uint16_t>(now - previous) == 1u ? 1 : 0;
+	}
+
+	// Gate "stkstat", under `lock` on the GuestGpu thread, before a read-only upload clears the
+	// CPU-dirty bits of [vaddr, vaddr + size): each of those pages gets its write watcher again
+	// (stk_arm). A page armed in this or the previous frame already and CPU-dirty again is hot
+	// (stk_arm_hot); hot in STICKY_STAT_STREAK frames in a row and without an indexed image it is a
+	// candidate a sticky mechanism would keep writable (stk_cand, counted once a frame).
+	// stk_vp_save: every armed page of this call is a candidate, so its watcher change would be empty.
+	// Changes no dirty bit and no watcher: the stamps and candidate maps are statistics only.
+	void NoteUploadStat(uint64_t vaddr, uint64_t size, const StickyUploadStat& stat) {
+		namespace FS            = Common::FrameStats;
+		const auto [start, end] = GetPageRange(vaddr, size);
+		const RegionBits mask(m_cpu_dirty, start, end);
+		if (mask.None()) {
+			return;
+		}
+		auto&      pages = *m_sticky_stat;
+		const auto now   = StickyStamp(stat.frame);
+		if (pages.cand_stamp != now) {
+			// First update of this frame in this region: rotate the two maps instead of walking them.
+			const bool previous = pages.cand_stamp != 0 && static_cast<uint16_t>(now - pages.cand_stamp) == 1u;
+			pages.cand_prev      = previous ? pages.cand_cur : RegionBits {};
+			pages.cand_cur       = RegionBits {};
+			pages.cand_stamp     = now;
+		}
+		uint64_t armed          = 0;
+		uint64_t hot            = 0;
+		uint64_t hot_images     = 0;
+		uint64_t distinct       = 0;
+		uint64_t candidates     = 0;
+		bool     all_candidates = true;
+		for (const auto [first, last]: mask) {
+			armed += last - first;
+			for (size_t page = first; page < last; page++) {
+				const auto armed_at  = pages.arm_frame[page];
+				pages.arm_frame[page] = now;
+				if (armed_at == 0 || (armed_at != now && static_cast<uint16_t>(now - armed_at) != 1u)) {
+					all_candidates = false;
+					continue;
+				}
+				// Written, not only re-dirtied: a fault window (knob "faultkb") opens clean neighbours.
+				const auto faulted_at = pages.fault_frame[page].load(std::memory_order_relaxed);
+				if (faulted_at == 0 || (faulted_at != now && static_cast<uint16_t>(now - faulted_at) != 1u)) {
+					all_candidates = false;
+					continue;
+				}
+				hot++;
+				const bool images = stat.may_have_images != nullptr &&
+				                    stat.may_have_images(stat.context, m_cpu_addr + page * TRACKER_PAGE_SIZE);
+				if (images) {
+					hot_images++;
+				}
+				if (pages.hot_frame[page] != now) {
+					const auto last_hot   = pages.hot_frame[page];
+					const bool in_a_row   = last_hot != 0 && static_cast<uint16_t>(now - last_hot) == 1u;
+					const auto run        = pages.streak[page];
+					pages.streak[page]    = in_a_row ? (run < 255u ? static_cast<uint8_t>(run + 1u) : run) : uint8_t {1};
+					pages.hot_frame[page] = now;
+					distinct++;
+					if (!images && pages.streak[page] >= STICKY_STAT_STREAK) {
+						candidates++;
+					}
+				}
+				if (images || pages.streak[page] < STICKY_STAT_STREAK) {
+					all_candidates = false;
+					continue;
+				}
+				pages.cand_cur.Set(page);
+			}
+		}
+		FS::Add(FS::Counter::StickyArmPages, armed);
+		if (hot != 0) {
+			FS::Add(FS::Counter::StickyArmHot, hot);
+			if (stat.bda) {
+				FS::Add(FS::Counter::StickyArmHotBda, hot);
+			}
+			if (hot_images != 0) {
+				FS::Add(FS::Counter::StickyArmHotImg, hot_images);
+			}
+		}
+		if (distinct != 0) {
+			FS::Add(FS::Counter::StickyHotPages, distinct);
+			if (candidates != 0) {
+				FS::Add(FS::Counter::StickyCandidates, candidates);
+			}
+		}
+		if (all_candidates) {
+			FS::Add(FS::Counter::StickySavedCalls, 1);
+		}
+	}
+
+	// Gate "stkstat": candidate pages of [vaddr, vaddr + size) in this or the previous frame; with
+	// `any`, 1 as soon as there is one. GuestGpu thread only, without `lock`: that thread is the only
+	// writer of the candidate maps (NoteUploadStat).
+	[[nodiscard]] uint64_t StickyCandidatePages(uint64_t vaddr, uint64_t size, uint32_t frame, bool any) const {
+		const auto& pages   = *m_sticky_stat;
+		const auto  now     = StickyStamp(frame);
+		const bool  current = pages.cand_stamp == now;
+		if (!current && (pages.cand_stamp == 0 || static_cast<uint16_t>(now - pages.cand_stamp) != 1u)) {
+			return 0;
+		}
+		const auto [start, end] = GetPageRange(vaddr, size);
+		const bool in_current   = pages.cand_cur.AnyInRange(start, end);
+		const bool in_previous  = current && pages.cand_prev.AnyInRange(start, end);
+		if (!in_current && !in_previous) {
+			return 0;
+		}
+		if (any) {
+			return 1;
+		}
+		const RegionBits live = current ? (pages.cand_cur | pages.cand_prev) : pages.cand_cur;
+		uint64_t         count = 0;
+		for (const auto [first, last]: RegionBits(live, start, end)) {
+			count += last - first;
+		}
+		return count;
 	}
 
 	TrackingSpinLock lock;
@@ -281,6 +459,23 @@ private:
 	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight
 	RegionBits   m_writable;
 	RegionBits   m_readable;
+	// Gate "stkstat" (statistics only). Allocated with the region, so the fault path allocates
+	// nothing (fault handlers never create regions). Stamps are StickyStamp(frame), 0 = never.
+	// fault_frame: the fault handlers of any thread (relaxed exchange). Everything else: the
+	// GuestGpu thread, under `lock` (NoteUploadStat) or without it (StickyCandidatePages).
+	struct StickyStatPages {
+		std::array<std::atomic<uint16_t>, TRACKER_REGION_PAGES> fault_frame {};
+		std::array<uint16_t, TRACKER_REGION_PAGES>              arm_frame {};
+		std::array<uint16_t, TRACKER_REGION_PAGES>              hot_frame {};
+		std::array<uint8_t, TRACKER_REGION_PAGES>               streak {};
+		RegionBits cand_cur;       // candidates of the frame cand_stamp
+		RegionBits cand_prev;      // ... of the frame before it
+		uint16_t   cand_stamp = 0;
+	};
+	[[nodiscard]] static constexpr uint16_t StickyStamp(uint32_t frame) noexcept {
+		return static_cast<uint16_t>(frame % 0xffffu + 1u);
+	}
+	std::unique_ptr<StickyStatPages> m_sticky_stat = std::make_unique<StickyStatPages>();
 };
 
 } // namespace Libs::Graphics

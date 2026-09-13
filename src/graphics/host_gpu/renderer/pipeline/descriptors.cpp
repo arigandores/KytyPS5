@@ -8,6 +8,7 @@
 #include "graphics/host_gpu/renderer/renderMemo.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/common.h"
 #include "common/file.h"
 #include "common/logging/log.h"
@@ -648,11 +649,6 @@ static ImageViewInfo TextureViewInfo(const ShaderRecompiler::IR::ImageResource& 
 	return view;
 }
 
-static TextureBinding MakeTextureBinding(ImageId id, const TextureCache::ImageDesc& desc,
-                                         uint32_t memo_index, uint32_t memo_version) {
-	return TextureBinding {id, nullptr, desc, vk::ImageLayout::eUndefined, {}, memo_index, memo_version};
-}
-
 // Gate "texmemo2": MemoHashBytes of the ImageResource key bytes, which are constant per program
 // resource, without hashing them on every binding.
 static uint64_t MemoResourceKey(RenderExecutorMemo&                        memo,
@@ -719,8 +715,13 @@ static bool TextureSourceSettled(const Image& image, const TextureCache::ImageDe
 	return first == image.source_first_level && size == image.SourceRange().size;
 }
 
-TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageResource&   resource,
-                                              const ShaderRecompiler::IR::DescriptorValue& value) {
+// Session 57, B2a: every result goes out through `emit`; the three returns hand it the same
+// fields MakeTextureBinding / the brace initializer did (image_view null, layout undefined, no
+// mip views, memo index UINT32_MAX / version 0 unless given).
+template <typename Emit>
+decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::ImageResource&   resource,
+                                                  const ShaderRecompiler::IR::DescriptorValue& value,
+                                                  Emit&&                                       emit) {
 	Common::FrameStats::Scope resolve_scope(Common::FrameStats::Counter::BindResolveTexNs,
 	                                        Common::FrameStats::Counter::BindResolveTex);
 	auto descriptor = DecodeNativeDescriptor<ShaderTextureResource>(value);
@@ -739,7 +740,7 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 		auto       desc = NullTextureDesc(resource, storage ? TextureCache::BindingType::Storage
 		                                                    : TextureCache::BindingType::Texture);
 		const auto id   = texture_cache.FindImage(desc);
-		return {id, nullptr, std::move(desc)};
+		return emit(id, desc);
 	}
 
 	// Texture LOD statistics: count the binding for the T# counter bank (IT_GET_LOD_STATS reports it).
@@ -807,10 +808,11 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 			if (memo2) {
 				memo.texture_ways[memo_index].use = ++memo.texture_clock;
 			}
-			return MakeTextureBinding(memo_slot.image_id, memo_slot.desc, memo_index,
+			return emit(memo_slot.image_id, memo_slot.desc, memo_index,
 			                          memo_slot.version);
 		}
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexMemoStale, 1);
+		Common::DrawStat::Mark(Common::DrawStat::Memo);
 		memo_slot.valid = false;
 		memo_slot.version++;
 		memo_slot.fast_view = nullptr;
@@ -977,6 +979,7 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 	                   image->info.extent == desc.info.extent;
 	if (store) {
 		std::memcpy(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields));
+		Common::DrawStat::Mark(Common::DrawStat::Memo);
 		memo_slot.resource_key = resource_key;
 		memo_slot.image_id     = id;
 		memo_slot.desc         = desc;
@@ -987,8 +990,17 @@ TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageR
 			memo.texture_ways[memo_index] = {memo_hash, ++memo.texture_clock};
 		}
 	}
-	return MakeTextureBinding(id, desc, store ? memo_index : UINT32_MAX,
+	return emit(id, desc, store ? memo_index : UINT32_MAX,
 	                          store ? memo_slot.version : 0u);
+}
+
+TextureBinding RenderExecutor::ResolveTexture(const ShaderRecompiler::IR::ImageResource&   resource,
+                                              const ShaderRecompiler::IR::DescriptorValue& value) {
+	return ResolveTextureWith(resource, value,
+	                          [](ImageId id, const TextureCache::ImageDesc& desc,
+	                             uint32_t index = UINT32_MAX, uint32_t version = 0) {
+		                          return TextureBinding(id, desc, index, version);
+	                          });
 }
 
 RenderExecutorMemo& RenderExecutor::Memo() {
@@ -1106,6 +1118,8 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	if (!decoded) {
 		return;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::ImgUp | Common::DrawStat::Meta);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	buffer.EndRendering(RenderPassEnd::Clear);
 	image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {},
 	              buffer.Handle());
@@ -1208,10 +1222,17 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	prepared.runtime = &runtime;
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
-		auto binding = ResolveTexture(program.info.images[i], snapshot.images[i]);
+		// Session 57, B2a: built in its vector element - one ImageDesc copy where the returned
+		// binding and push_back made two. Reserved above, so no reallocation; BindImage does not
+		// look at prepared.images, so running it after the insertion changes nothing.
+		auto& binding = ResolveTextureWith(
+		    program.info.images[i], snapshot.images[i],
+		    [&prepared](ImageId id, const TextureCache::ImageDesc& desc, uint32_t index = UINT32_MAX,
+		                uint32_t version = 0) -> TextureBinding& {
+			    return prepared.images.emplace_back(id, desc, index, version);
+		    });
 		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage,
 		          program.info.images[i].atomic);
-		prepared.images.push_back(std::move(binding));
 	}
 	prepared.samplers.reserve(program.info.samplers.size());
 	for (uint32_t i = 0; i < program.info.samplers.size(); i++) {
@@ -1396,6 +1417,7 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 					slot->fast_view  = binding.image_view;
 					slot->fast_stamp = stamp;
 					fast_record++;
+					Common::DrawStat::Mark(Common::DrawStat::Memo);
 				}
 			}
 			image.usage.texture = true;
@@ -1482,6 +1504,93 @@ void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 	}
 }
 
+// Session 57, E9 (gate "drawstat"): the ceiling of descriptor-set reuse with dynamic offsets (B9).
+// Each graphics write is compared with the last write of the same set layout (a set layout belongs
+// to one pipeline) and with the previous graphics write. With dynamic storage buffers only the
+// offset moves: the handle and the range stay in the set, so "base" compares handles with ranges.
+// CommitBindings runs under the render mutex on the GuestGpu thread: plain globals.
+namespace {
+
+struct DescriptorSetStat {
+	uint64_t layout  = 0;
+	uint64_t images  = 0;
+	uint64_t buffers = 0;
+	uint64_t ranges  = 0;
+	uint64_t full    = 0;
+};
+
+constinit DescriptorSetStat g_set_stats[16384] {};
+constinit DescriptorSetStat g_set_last {};
+constinit uint32_t          g_set_run = 0;
+
+constexpr uint64_t SetStatMix(uint64_t hash, uint64_t value) noexcept {
+	return hash ^ (value + 0x9e3779b97f4a7c15ull + (hash << 6u) + (hash >> 2u));
+}
+
+void NoteDescriptorSetStat(RenderContext& context, const PipelineCache::Pipeline& pipeline,
+                           std::span<const vk::DescriptorImageInfo>  images,
+                           std::span<const vk::DescriptorBufferInfo> buffers) {
+	using Counter = Common::FrameStats::Counter;
+	if (pipeline.uses_push_descriptors) {
+		Common::FrameStats::Add(Counter::E9Push, 1);
+		return;
+	}
+	const auto stream = reinterpret_cast<uintptr_t>(
+	    static_cast<VkBuffer>(context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream).Handle()));
+	DescriptorSetStat current {};
+	current.layout = reinterpret_cast<uintptr_t>(static_cast<VkDescriptorSetLayout>(pipeline.descriptor_set_layout));
+	// Field by field: DescriptorImageInfo has padding after its layout.
+	for (const auto& image: images) {
+		current.images = SetStatMix(current.images, reinterpret_cast<uintptr_t>(static_cast<VkSampler>(image.sampler)));
+		current.images = SetStatMix(current.images, reinterpret_cast<uintptr_t>(static_cast<VkImageView>(image.imageView)));
+		current.images = SetStatMix(current.images, static_cast<uint64_t>(image.imageLayout));
+	}
+	uint64_t streams = 0;
+	for (const auto& buffer: buffers) {
+		const auto handle = reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(buffer.buffer));
+		current.buffers   = SetStatMix(current.buffers, handle);
+		current.ranges    = SetStatMix(SetStatMix(current.ranges, handle), buffer.range);
+		current.full      = SetStatMix(SetStatMix(SetStatMix(current.full, handle), buffer.range), buffer.offset);
+		streams += handle == stream ? 1u : 0u;
+	}
+	Common::FrameStats::Add(Counter::E9Sets, 1);
+	Common::FrameStats::Add(Counter::E9BufferInfos, buffers.size());
+	Common::FrameStats::Add(Counter::E9StreamInfos, streams);
+
+	auto& last = g_set_stats[((current.layout >> 6u) ^ (current.layout >> 17u)) & (std::size(g_set_stats) - 1u)];
+	if (last.layout == current.layout) {
+		const bool same_images = last.images == current.images;
+		const bool same_ranges = last.ranges == current.ranges;
+		Common::FrameStats::Add(Counter::E9Seen, 1);
+		Common::FrameStats::Add(Counter::E9SameImages, same_images ? 1u : 0u);
+		Common::FrameStats::Add(Counter::E9SameBuffers, last.buffers == current.buffers ? 1u : 0u);
+		Common::FrameStats::Add(Counter::E9SameBufferRanges, same_ranges ? 1u : 0u);
+		Common::FrameStats::Add(Counter::E9SameBase, same_images && same_ranges ? 1u : 0u);
+		Common::FrameStats::Add(Counter::E9SameFull, same_images && last.full == current.full ? 1u : 0u);
+	}
+	const bool adjacent = g_set_last.layout == current.layout;
+	Common::FrameStats::Add(Counter::E9Adjacent, adjacent ? 1u : 0u);
+	if (adjacent && g_set_last.images == current.images && g_set_last.ranges == current.ranges) {
+		Common::FrameStats::Add(Counter::E9AdjacentBase, 1);
+		g_set_run++;
+	} else {
+		if (g_set_run != 0) {
+			Common::FrameStats::Add(
+			    static_cast<Counter>(static_cast<uint32_t>(Counter::E9RunDraws1) + Common::DrawStat::RunBucket(g_set_run)),
+			    g_set_run);
+		}
+		g_set_run = 1;
+	}
+	last       = current;
+	g_set_last = current;
+}
+
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::E9RunDraws64) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::E9RunDraws1) ==
+              6u);
+
+} // namespace
+
 void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
                                     vk::PipelineBindPoint              pipeline_bind_point,
                                     const PipelineCache::Pipeline&     pipeline,
@@ -1539,6 +1648,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			    Common::Gates::Enabled(Common::Gates::Gate::GdsEpoch));
 			if (gds_needed) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::GdsBarriers, 1);
+				Common::DrawStat::Mark(Common::DrawStat::Barrier);
+				Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 				buffer.EndRendering(RenderPassEnd::Gds);
 				const auto barrier = MakeGdsDependency(descriptors.gds.buffer);
 				buffer.Handle().pipelineBarrier(
@@ -1709,6 +1820,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 	}
 
+	if (Common::DrawStat::On() && pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
+	    !m_descriptor_writes.empty()) {
+		NoteDescriptorSetStat(m_context, pipeline, m_descriptor_images, m_descriptor_buffers);
+	}
 	if (packet) {
 		// Gate "recpack": the push constants and the writes go to the record thread as one record
 		// holding copies of the writes and their infos; it issues pushConstants and push

@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/guest_gpu/gpu_defs.h"
@@ -106,12 +107,12 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 		mask = 0x0f;
 	}
 
-	r             = {};
-	r.target_slot = rt_slot;
 	// An inactive slot has no image or cached state to resolve. Preserve its slot number,
 	// and leave the diagnostic path below intact when register dumping is requested.
 	if (FastRenderMemoEnabled() && !graphics_debug_dump_enabled() &&
 	    (rt.base.addr == 0 || mask == 0)) {
+		r             = {};
+		r.target_slot = rt_slot;
 		return;
 	}
 
@@ -141,6 +142,7 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 					r.image_id           = cache.FindImage(r.desc, exact_format);
 					memo_slot->info.desc     = r.desc;
 					memo_slot->info.image_id = r.image_id;
+					Common::DrawStat::Mark(Common::DrawStat::Memo);
 				} else {
 					image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
 					cache.TouchImage(*image);
@@ -157,9 +159,14 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 			memo_slot->extra = memo_extra;
 			memo_slot->info  = r;
 			memo_slot->valid = true;
+			Common::DrawStat::Mark(Common::DrawStat::Memo);
 		}
 	};
 
+	// Session 57, B1c: a memo hit assigns every member of `r`; every other path starts here, before
+	// anything reads `r` (memo_store above is only defined).
+	r             = {};
+	r.target_slot = rt_slot;
 	if (rt.base.addr == 0 || mask == 0) {
 		if (graphics_debug_dump_enabled()) {
 			static std::atomic_uint log_count = 0;

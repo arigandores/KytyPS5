@@ -8,6 +8,7 @@
 
 #include "common/alignment.h"
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/gates.h"
 #include "common/frameStats.h"
 #include "common/parallelCopy.h"
@@ -35,6 +36,9 @@ namespace {
 
 constexpr uint64_t MiB           = 1024 * 1024;
 constexpr uint64_t GdsBufferSize = 64 * 1024;
+
+// Gate "stkstat": SynchronizeBuffersInRange (the BDA scan of PrepareBda) runs on this thread.
+constinit thread_local bool t_sticky_bda_scan = false;
 
 bool BufferUploadEpochEnabled() {
 	static const bool enabled = [] {
@@ -98,7 +102,8 @@ void BufferCache::ChangeRegister(BufferId id) {
 		(void)it;
 		EXIT_IF(!inserted);
 		m_total_used_memory += buffer.Size();
-		buffer.lru_id = m_lru_cache.Insert(id, m_gc_tick);
+		buffer.lru_id         = m_lru_cache.Insert(id, m_gc_tick);
+		buffer.lru_touch_tick = m_gc_tick;
 		if (!m_bda_null_page_ready) {
 			// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never
 			// mapped) holds a zero-filled page that unmapped addresses resolve to. Written
@@ -131,7 +136,19 @@ void BufferCache::ChangeRegister(BufferId id) {
 
 void BufferCache::TouchBuffer(Buffer& buffer) {
 	if (!buffer.is_deleted) {
-		m_lru_cache.Touch(buffer.lru_id, m_gc_tick);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufLruTouches, 1);
+		// Touch returns on `item.tick >= tick` for all but the first touch of a GC tick, and the
+		// LRU node is cold (a deque block of its own). The copy is only set to a tick Insert/Touch
+		// ran with and item ticks never decrease, so a matching copy proves the node holds it.
+		if (buffer.lru_touch_tick == m_gc_tick) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufLruRepeats, 1);
+			if (!Common::Gates::Enabled(Common::Gates::Gate::BufLru)) {
+				m_lru_cache.Touch(buffer.lru_id, m_gc_tick);
+			}
+		} else {
+			buffer.lru_touch_tick = m_gc_tick;
+			m_lru_cache.Touch(buffer.lru_id, m_gc_tick);
+		}
 		ClearPrefetchPending(buffer);
 	}
 }
@@ -206,6 +223,7 @@ std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& 
 }
 
 void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason) {
+	Common::DrawStat::Mark(Common::DrawStat::Sync);
 	Common::FrameStats::Scope download_scope(Common::FrameStats::Counter::DownloadNs,
 	                                         Common::FrameStats::Counter::Downloads);
 	// KYTY_FAULT_TRACE=1: every synchronous drain with its reason (a CPU write into GPU-written
@@ -348,6 +366,20 @@ void BufferCache::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	m_memory_tracker.InvalidateRegion(
 		vaddr, size, [this, vaddr, size] { ReadMemory(vaddr, size, true); },
 		Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+}
+
+void BufferCache::InvalidateWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
+                                       uint64_t window_size) {
+	// on_flush reads the faulting byte only, as InvalidateMemory(fault_vaddr, 1) does.
+	m_memory_tracker.InvalidateWriteFault(
+		fault_vaddr, window_begin, window_size,
+		[this, fault_vaddr] { ReadMemory(fault_vaddr, 1, true); },
+		Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+}
+
+uint64_t BufferCache::WriteFaultArmedPages(uint64_t fault_vaddr, uint64_t window_begin,
+                                           uint64_t window_size) {
+	return m_memory_tracker.WriteFaultArmedPages(fault_vaddr, window_begin, window_size);
 }
 
 void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
@@ -541,6 +573,7 @@ void BufferCache::JoinOverlap(BufferId new_id, BufferId overlap_id, bool accumul
 
 BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 	EXIT_IF(m_scheduler.Current().IsInvalid());
+	Common::DrawStat::Mark(Common::DrawStat::BufNew);
 	const auto end = Common::AlignUp(vaddr + size, CACHING_PAGESIZE);
 	vaddr = Common::AlignDown(vaddr, CACHING_PAGESIZE);
 	size               = end - vaddr;
@@ -616,8 +649,29 @@ bool BufferCache::SyncFreeSkip(uint64_t vaddr, uint64_t size) {
 	return true;
 }
 
-void BufferCache::NoteWriteFault(uint64_t fault_vaddr) {
+void BufferCache::NoteWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
+                                 uint64_t window_size) {
 	const auto page = fault_vaddr & ~(TRACKER_PAGE_SIZE - 1);
+	if (Common::Gates::Enabled(Common::Gates::Gate::StickyStat) && Common::FrameStats::Enabled()) {
+		// A1 ceiling (gate "stkstat"): did this page write-fault in this or the previous frame as well.
+		// The faulting page only, whatever the "faultkb" window opened. No lock and no allocation here
+		// (a vectored exception handler of any thread): the stamps live in the tracking region.
+		namespace FS    = Common::FrameStats;
+		const auto kind = m_memory_tracker.NoteWriteFaultStat(fault_vaddr, GpuTimeProfiler::Frame());
+		FS::Add(FS::Counter::StickyFaults, 1);
+		if (kind != 0) {
+			FS::Add(FS::Counter::StickyFaultRepeat, 1);
+			if (kind == 2) {
+				FS::Add(FS::Counter::StickyFaultRepeatSame, 1);
+			}
+			if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+				FS::Add(FS::Counter::StickyFaultRepeatGpu, 1);
+			}
+			if (m_texture_cache.MayHaveImages(page, TRACKER_PAGE_SIZE)) {
+				FS::Add(FS::Counter::StickyFaultRepeatImg, 1);
+			}
+		}
+	}
 	// pb_stuck: one thread faulting on one page again and again means its handler returns while the
 	// host protection still denies the write. Must stay 0 (with and without "protbatch").
 	// Repeats alone are normal: the upload of every frame clears the CPU-dirty bits and arms the
@@ -644,7 +698,12 @@ void BufferCache::NoteWriteFault(uint64_t fault_vaddr) {
 	if (Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
 		static thread_local uint32_t sample = 0;
 		if ((sample++ & 7u) == 0) {
-			m_memory_tracker.VerifyProtection(page, TRACKER_PAGE_SIZE);
+			// The faulting page first (Verify probes three pages of a range), then the range the
+			// fault opened (knob "faultkb").
+			m_memory_tracker.VerifyProtection(fault_vaddr & ~(TRACKER_PAGE_SIZE - 1), TRACKER_PAGE_SIZE);
+			if (window_size != TRACKER_PAGE_SIZE) {
+				m_memory_tracker.VerifyProtection(window_begin, window_size);
+			}
 		}
 	}
 }
@@ -652,6 +711,25 @@ void BufferCache::NoteWriteFault(uint64_t fault_vaddr) {
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
+	// Gate "stkstat" (A1 ceiling; statistics only): the candidate pages a sticky mechanism would
+	// compare with their shadow on this synchronization - every one but a small read-only ObtainBuffer
+	// request, which would take the stream copy instead (stk_stream_hot) - and the arm history of the
+	// upload below (RegionManager::NoteUploadStat).
+	const bool       sticky_stat = !is_written && Common::Gates::Enabled(Common::Gates::Gate::StickyStat) &&
+	                               Common::FrameStats::Enabled();
+	StickyUploadStat upload_stat {};
+	if (sticky_stat) {
+		upload_stat.frame           = GpuTimeProfiler::Frame();
+		upload_stat.bda             = t_sticky_bda_scan;
+		upload_stat.may_have_images = [](void* context, uint64_t page) noexcept {
+			return static_cast<BufferCache*>(context)->m_texture_cache.MayHaveImages(page, TRACKER_PAGE_SIZE);
+		};
+		upload_stat.context = this;
+		if (upload_stat.bda || size > CACHING_PAGESIZE) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::StickyCheckEstimate,
+			                        m_memory_tracker.StickyCandidatePages(vaddr, size, upload_stat.frame, false));
+		}
+	}
 	const auto [cpu_epoch, epoch_kind] = UploadEpoch(vaddr, size);
 	if (BufferUploadEpochEnabled() && !is_written &&
 	    buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
@@ -671,7 +749,8 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 				total_size += bytes;
 			},
 			[&]() noexcept { source = UploadCopies(buffer, copies, total_size); },
-			Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+			Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch),
+			sticky_stat ? &upload_stat : nullptr);
 		if (source && Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
 			m_memory_tracker.VerifyProtection(vaddr, size);
 		}
@@ -681,6 +760,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	}
 	if (source) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploadBytes, total_size);
 		auto& command = m_scheduler.Current();
 		command.EndRendering(RenderPassEnd::BufferUpload);
 		const auto native = command.Handle();
@@ -725,6 +805,8 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 	if (copies.empty()) {
 		return nullptr;
 	}
+	Common::DrawStat::Mark(Common::DrawStat::BufUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 
 	auto [mapped, base_offset] = m_staging_buffer.Map(total_size, 4);
 	if (mapped != nullptr) {
@@ -758,6 +840,14 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
                                                        BufferId id) {
 	Common::FrameStats::Scope obtain_scope(Common::FrameStats::Counter::ObtainBufNs);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ObtainBufs, 1);
+	if (!is_written && size <= CACHING_PAGESIZE &&
+	    Common::Gates::Enabled(Common::Gates::Gate::StickyStat) && Common::FrameStats::Enabled() &&
+	    GuestRange {vaddr, size}.Valid() &&
+	    m_memory_tracker.StickyCandidatePages(vaddr, size, GpuTimeProfiler::Frame(), true) != 0) {
+		// Gate "stkstat": a sticky page keeps this small read-only request CPU-dirty - a stream copy on
+		// every call instead of the upload-epoch fast path.
+		Common::FrameStats::Add(Common::FrameStats::Counter::StickyStreamHot, 1);
+	}
 	auto& command = m_scheduler.Current();
 	if (command.IsInvalid() || !GuestRange {vaddr, size}.Valid()) {
 		EXIT("BufferCache: buffer request requires a recording command buffer\n");
@@ -789,6 +879,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		}
 	}
 
+	Common::DrawStat::Mark(Common::DrawStat::BufSlow);
 	if (IsBufferInvalid(id) || !m_slot_buffers[id].IsInBounds(vaddr, size)) {
 		id = FindBuffer(vaddr, size);
 	}
@@ -796,6 +887,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	TouchBuffer(resolved);
 	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer);
 	if (is_written) {
+		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		m_gpu_modified_ranges.Add(vaddr, size);
 		NoteGpuWrite(vaddr, size);
 	}
@@ -1012,6 +1104,23 @@ void BufferCache::NotePendingHostRead(uint64_t vaddr, uint64_t size, uint64_t ti
 	m_pending_host_reads.push_back({vaddr, size, tick});
 }
 
+bool BufferCache::HasPendingHostReads(uint64_t vaddr, uint64_t size) {
+	if (!m_host_import.Available() || size == 0 || UINT64_MAX - vaddr < size) {
+		return false;
+	}
+	std::lock_guard lock(m_pending_host_reads_mutex);
+	if (m_pending_host_reads.empty()) {
+		return false;
+	}
+	const auto known = m_scheduler.GetMasterSemaphore().KnownGpuTick();
+	for (const auto& entry: m_pending_host_reads) {
+		if (entry.tick > known && entry.vaddr < vaddr + size && vaddr < entry.vaddr + entry.size) {
+			return true;
+		}
+	}
+	return false;
+}
+
 bool BufferCache::WaitPendingHostReads(uint64_t vaddr, uint64_t size) {
 	if (!m_host_import.Available() || size == 0 || UINT64_MAX - vaddr < size) {
 		return false;
@@ -1066,6 +1175,7 @@ bool BufferCache::WaitPendingHostReads(uint64_t vaddr, uint64_t size) {
 }
 
 void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool is_gds) {
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	static const uint64_t peek_addr_fill = [] {
 		const char* value = std::getenv("KYTY_PEEK_ADDR");
 		return value != nullptr ? std::strtoull(value, nullptr, 16) : uint64_t {0};
@@ -1105,6 +1215,7 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 
 void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
                              bool src_gds) {
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	// KYTY_PEEK_ADDR=<hex>: log DMA copies whose destination covers the address.
 	static const uint64_t peek_addr = [] {
 		const char* value = std::getenv("KYTY_PEEK_ADDR");
@@ -1957,6 +2068,13 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 }
 
 void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
+	// Gate "stkstat": the synchronizations below run for the BDA scan (stk_arm_hot_bda, stk_chk_est).
+	struct BdaScanScope {
+		BdaScanScope() noexcept { t_sticky_bda_scan = true; }
+		~BdaScanScope() { t_sticky_bda_scan = false; }
+		BdaScanScope(const BdaScanScope&)            = delete;
+		BdaScanScope& operator=(const BdaScanScope&) = delete;
+	} bda_scan_scope;
 	static const bool dirty_ranges = [] {
 		const auto* value = std::getenv("KYTY_BDA_DIRTY_RANGES");
 		return value == nullptr || value[0] != '0';

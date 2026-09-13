@@ -1,4 +1,5 @@
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/common.h"
@@ -77,6 +78,9 @@ vk::CommandBuffer CommandBuffer::Handle() const {
 	// not after it: the drain below only waits for what is already published.
 	EXIT_IF(m_recorder != nullptr && m_recorder->HasOpenRecord());
 	if (m_recorder != nullptr) {
+		// Gate "recbatch": records ended without a publish go first. The drain below waits only for
+		// published records, and this direct write would otherwise be recorded ahead of them.
+		m_recorder->PublishStaged();
 		// Transitional (M3 step 0): this site still records vkCmd* itself. Let the record thread
 		// finish everything published so far - that also publishes m_buffer - and then record
 		// into the same buffer on this thread. Callers keep the returned handle for a whole draw
@@ -209,9 +213,13 @@ void CommandBuffer::EndRenderingPacket(RenderPassEnd why) const {
 }
 
 void CommandBuffer::ShaderWriteBarrierPacket(vk::PipelineStageFlags stages) const {
+	Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 	EXIT_IF(m_recorder == nullptr || !stages);
 	m_handle_uses++;
 	m_recorder->PushPassEnd(false, stages);
+	// Gate "recbatch": this barrier follows its draw's Commands record (renderDraw.cpp), so no later
+	// record of that draw carries it; publish it together with the pass end staged before it.
+	m_recorder->PublishStaged();
 }
 
 void CommandBuffer::PushBindingsPacket(vk::PipelineBindPoint bind_point, vk::PipelineLayout layout,
@@ -305,6 +313,7 @@ void CommandBuffer::EndRenderingImpl(RenderPassEnd why, bool packet) const {
 			const auto stages      = m_pending_shader_write;
 			m_pending_shader_write = {};
 			Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
+			Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 			if (packet) {
 				m_handle_uses++;
 				m_recorder->PushPassEnd(false, stages);
@@ -318,6 +327,7 @@ void CommandBuffer::EndRenderingImpl(RenderPassEnd why, bool packet) const {
 		Handle().endRendering();
 	}
 	m_rendering = false;
+	Common::DrawStat::Cut(Common::DrawStat::EdgePass);
 	if (Common::FrameStats::Enabled()) {
 		Common::FrameStats::Add(RenderPassEndCounter(Common::FrameStats::Counter::RpEndState, why),
 		                        1);
@@ -333,6 +343,7 @@ void CommandBuffer::EndRenderingImpl(RenderPassEnd why, bool packet) const {
 	m_pending_shader_write = {};
 	if (stages) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
+		Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 	}
 	if (packet) {
 		// One record: the pass end, then the wide barrier the pass owed.

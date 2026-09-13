@@ -5,6 +5,7 @@
 #include <cstring>
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/common.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -272,6 +273,7 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 				r.image_id          = cache.FindImage(r.desc);
 				memo_slot.info.desc     = r.desc;
 				memo_slot.info.image_id = r.image_id;
+				Common::DrawStat::Mark(Common::DrawStat::Memo);
 			} else {
 				image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
 				cache.TouchImage(*image);
@@ -285,7 +287,12 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 		memo_slot.key   = memo_key;
 		memo_slot.info  = r;
 		memo_slot.valid = true;
+		Common::DrawStat::Mark(Common::DrawStat::Memo);
 	};
+	// Session 57, B1b (gate "drawstate"): a miss starts from a reset target. The early "no depth"
+	// returns store `r` as it came in, and a reused draw state still holds the previous draw's.
+	// Every caller used to pass a fresh value-initialized target, so this assigns the same values.
+	r = {};
 	if (!depth_active && !stencil_active) {
 		memo_store();
 		return;

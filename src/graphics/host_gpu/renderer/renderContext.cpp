@@ -2,18 +2,88 @@
 
 #include "common/assert.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "graphics/guest_gpu/graphicsRun.h"
+#include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 #include "graphics/presentation/videoOut.h"
 #include "kernel/memory.h"
 #include "libs/errno.h"
 
 #include <algorithm>
 #include <atomic>
+#include <bit>
 #include <cinttypes>
 #include <cstdlib>
 
 namespace Libs::Graphics {
+
+namespace {
+
+// The window of the fw_* counters: the size knob "faultkb" is meant to reach.
+constexpr uint64_t FaultCounterWindow = 64u * 1024u;
+
+// Per-thread state of the fw_* counters. Plain data with constant initialization: no TLS guard,
+// no constructor and no allocation inside the vectored exception handler that runs HandleFault.
+struct FaultWindowTrace {
+	uint64_t windows[4];
+	uint64_t last_window;
+	uint64_t last_page;
+	uint64_t last_ns;
+	uint32_t frame;
+	uint32_t next;
+	uint32_t sample;
+};
+constinit thread_local FaultWindowTrace t_fault_window {};
+
+// KYTY_FRAME_TRACE only. fw_n: write faults; fw_refault: the same page again within 1 ms on this
+// thread; fw_seq: the page right after this thread's previous fault; fw_win_same / fw_win_recent:
+// the 64 KiB window of this thread's previous fault / of one of its last four windows in this
+// frame - a fault a 64 KiB window could have saved, unless its page was armed again in between.
+// True for one fault of 16: the caller samples fw_win_armed.
+bool NoteFaultWindowCounters(uint64_t fault_vaddr) noexcept {
+	namespace FS = Common::FrameStats;
+	auto&      state  = t_fault_window;
+	const auto page   = fault_vaddr & ~(TRACKER_PAGE_SIZE - 1);
+	const auto window = fault_vaddr & ~(FaultCounterWindow - 1);
+	const auto now    = FS::NowNs();
+	const auto frame  = GpuTimeProfiler::Frame();
+	FS::Add(FS::Counter::FaultWrites, 1);
+	if (state.last_page != 0 && page == state.last_page && now - state.last_ns <= 1000000u) {
+		FS::Add(FS::Counter::FaultRefault, 1);
+	}
+	if (state.last_page != 0 && page == state.last_page + TRACKER_PAGE_SIZE) {
+		FS::Add(FS::Counter::FaultWinSeq, 1);
+	}
+	state.last_page = page;
+	state.last_ns   = now;
+	if (state.frame != frame) {
+		state.frame       = frame;
+		state.next        = 0;
+		state.last_window = 0;
+		for (auto& entry: state.windows) {
+			entry = 0;
+		}
+	}
+	if (window != 0) {
+		if (window == state.last_window) {
+			FS::Add(FS::Counter::FaultWinSame, 1);
+		}
+		bool recent = false;
+		for (const auto entry: state.windows) {
+			recent = recent || entry == window;
+		}
+		if (recent) {
+			FS::Add(FS::Counter::FaultWinRecent, 1);
+		} else {
+			state.windows[state.next++ & 3u] = window;
+		}
+		state.last_window = window;
+	}
+	return (state.sample++ & 15u) == 0;
+}
+
+} // namespace
 
 RenderContext::RenderContext(GraphicContext& graphics)
     : m_graphics(graphics), m_render_executor(*this), m_command_scheduler(*this, graphics),
@@ -71,11 +141,34 @@ bool RenderContext::HandleFault(PageFaultAccess access, uint64_t fault_vaddr) no
 	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 	if (access == PageFaultAccess::Write) {
 		const auto t0 = trace ? Common::FrameStats::NowNs() : 0;
-		(void)m_buffer_cache.WaitPendingHostReads(fault_vaddr & ~uint64_t {4095}, 4096);
-		m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);
+		// fw_*: would a wider write-fault window have saved this fault (KYTY_FRAME_TRACE only).
+		const bool sample_armed = Common::FrameStats::Enabled() && NoteFaultWindowCounters(fault_vaddr);
+		// Knob "faultkb": the buffer tracker opens the aligned window around the faulting page in one
+		// host protection change. Images still see only the faulting byte: a wider range would
+		// invalidate the neighbouring images, whole re-uploads of bytes nobody wrote. At one page (the
+		// default, 4 KiB) `window` is the faulting page and the calls are the ones made before.
+		auto window = WriteFaultWindow(fault_vaddr);
+		if (window.size != TRACKER_PAGE_SIZE && m_buffer_cache.HasPendingHostReads(window.address, window.size)) {
+			// A host-import copy still reads a page of the window: open only the faulting page
+			// rather than wait for copies of bytes this fault did not write.
+			window = {fault_vaddr & ~(TRACKER_PAGE_SIZE - 1), TRACKER_PAGE_SIZE};
+		}
+		(void)m_buffer_cache.WaitPendingHostReads(window.address, window.size);
+		if (window.size == TRACKER_PAGE_SIZE) {
+			m_buffer_cache.InvalidateMemory(fault_vaddr, fault_size);
+			if (sample_armed) {
+				// fw_win_armed at one page, one fault of 16 (a second, read-only hold of the region lock).
+				const auto counter_window = fault_vaddr & ~(FaultCounterWindow - 1u);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultWinArmed,
+				                        16u * m_buffer_cache.WriteFaultArmedPages(fault_vaddr, counter_window,
+				                                                                FaultCounterWindow));
+			}
+		} else {
+			m_buffer_cache.InvalidateWriteFault(fault_vaddr, window.address, window.size);
+		}
 		const auto t1 = trace ? Common::FrameStats::NowNs() : 0;
 		m_texture_cache.InvalidateMemory(fault_vaddr, fault_size);
-		m_buffer_cache.NoteWriteFault(fault_vaddr);
+		m_buffer_cache.NoteWriteFault(fault_vaddr, window.address, window.size);
 		if (trace) {
 			static std::atomic<uint64_t> count {0};
 			const auto                   n = count.fetch_add(1, std::memory_order_relaxed);
@@ -145,6 +238,25 @@ bool RenderContext::IsMapped(uint64_t vaddr, uint64_t size) const noexcept {
 	}
 	std::shared_lock lock(m_mapped_ranges_mutex);
 	return m_mapped_ranges.Contains(vaddr, size);
+}
+
+// The largest power of two KiB not above the knob, aligned - so it never crosses a 4 MiB tracking
+// region - and entirely inside the guest mappings (a guessed width must not reach an unmapped
+// page: see HandleFault). The faulting page when the knob is at most 4 or the window is not
+// entirely mapped.
+GuestRange RenderContext::WriteFaultWindow(uint64_t fault_vaddr) const noexcept {
+	const GuestRange page {fault_vaddr & ~(TRACKER_PAGE_SIZE - 1), TRACKER_PAGE_SIZE};
+	const auto       kb = Common::Gates::Value(Common::Gates::Knob::FaultWindowKb);
+	if (kb <= TRACKER_PAGE_SIZE / 1024u) {
+		return page;
+	}
+	const auto bytes =
+	    std::bit_floor(std::min<uint64_t>(kb, TRACKER_REGION_SIZE / 1024u)) * uint64_t {1024};
+	const auto begin = fault_vaddr & ~(bytes - 1u);
+	if (bytes <= TRACKER_PAGE_SIZE || !IsMapped(begin, bytes)) {
+		return page;
+	}
+	return {begin, bytes};
 }
 
 void RenderContext::MapMemory(uint64_t vaddr, uint64_t size) {

@@ -1,6 +1,8 @@
 #ifndef EMULATOR_SRC_COMMON_LRUCACHE_H_
 #define EMULATOR_SRC_COMMON_LRUCACHE_H_
 
+#include "common/drawStat.h"
+
 #include <cstddef>
 #include <deque>
 #include <type_traits>
@@ -33,6 +35,7 @@ public:
 			return;
 		}
 		item.tick = tick;
+		Common::DrawStat::Mark(Common::DrawStat::Lru);
 		if (&item != m_last) {
 			Detach(item);
 			Attach(item);

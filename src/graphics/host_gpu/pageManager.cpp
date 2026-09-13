@@ -1,7 +1,9 @@
 #include "graphics/host_gpu/pageManager.h"
 
 #include "common/alignment.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/virtualMemory.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 #include "kernel/memory.h"
@@ -81,7 +83,14 @@ private:
 // pauses and after a while yields instead of spinning hot; the wait is counted (pb_wait_us).
 class ApplyGuard final {
 public:
-	ApplyGuard(std::atomic_flag& lock, bool engage): m_lock(engage ? &lock : nullptr) {
+	// `site`, `extra` and `extra_gpu` (GuestGpu thread only) also receive the wait; Counter::Count
+	// is none. Only a contended acquisition under KYTY_FRAME_TRACE touches them or m_wait_ns: the
+	// uncontended path is the single test_and_set it was.
+	ApplyGuard(std::atomic_flag& lock, bool engage,
+	           Common::FrameStats::Counter site      = Common::FrameStats::Counter::Count,
+	           Common::FrameStats::Counter extra     = Common::FrameStats::Counter::Count,
+	           Common::FrameStats::Counter extra_gpu = Common::FrameStats::Counter::Count)
+	    : m_lock(engage ? &lock : nullptr) {
 		if (m_lock == nullptr || !m_lock->test_and_set(std::memory_order_acquire)) {
 			return;
 		}
@@ -104,9 +113,19 @@ public:
 		} while (m_lock->test_and_set(std::memory_order_acquire));
 		if (t0 != 0) {
 			const auto ns = FS::NowNs() - t0;
+			m_wait_ns     = ns;
 			FS::Add(FS::Counter::ApplyWaitNs, ns);
+			if (site != FS::Counter::Count) {
+				FS::Add(site, ns);
+			}
+			if (extra != FS::Counter::Count) {
+				FS::Add(extra, ns);
+			}
 			if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
 				FS::Add(FS::Counter::ApplyWaitGpuNs, ns);
+				if (extra_gpu != FS::Counter::Count) {
+					FS::Add(extra_gpu, ns);
+				}
 			}
 		}
 	}
@@ -117,8 +136,12 @@ public:
 	}
 	KYTY_CLASS_NO_COPY(ApplyGuard);
 
+	// The contended wait in ns; 0 when uncontended or without KYTY_FRAME_TRACE.
+	[[nodiscard]] uint64_t WaitedNs() const noexcept { return m_wait_ns; }
+
 private:
 	std::atomic_flag* m_lock;
+	uint64_t          m_wait_ns = 0;
 };
 
 void ValidateRange(uint64_t vaddr, uint64_t size) {
@@ -207,10 +230,17 @@ struct PageManager::Impl {
 		std::array<PageState, REGION_PAGES> pages;
 		// Pages whose host protection may lag behind Perms(): a deferred write-watcher edge
 		// (UpdatePageWatchersDeferred) or a batched one (BatchScope) sets the bit, and any
-		// application covering the page clears it. Guarded by `lock`.
+		// application covering the page clears it. Written under `lock`, through std::atomic_ref:
+		// FlushBlocker (gate "applyskip") reads the words without it.
 		std::array<uint64_t, REGION_PAGES / 64> pending {};
 		bool                                    has_pending = false; // any bit set
 		bool                                    queued      = false; // sits in the worker queue
+		// The run the holder of `apply` took out of `pending` and is applying now:
+		// first | last << 16 | protection << 32, 0 when none. Published under `lock` before the bits
+		// are cleared (TakePendingRun) and withdrawn after the host call returned, before `apply` is
+		// released (ApplyPending, FlushRegion). `apply` is exclusive, so this one run is every
+		// application in flight on the region. Read without any lock by FlushBlocker.
+		std::atomic<uint64_t>                   applying_run {0};
 	};
 
 	Impl() {
@@ -351,13 +381,12 @@ struct PageManager::Impl {
 
 	static void SetPendingRange(Region& region, size_t first, size_t count, bool value) {
 		for (size_t page = first; page < first + count; page++) {
-			auto& word = region.pending[page / 64];
-			const auto bit = uint64_t {1} << (page % 64);
-			if (value) {
-				word |= bit;
-			} else {
-				word &= ~bit;
-			}
+			// Writers hold `lock`, so the read-modify-write need not be atomic; std::atomic_ref only
+			// for the lock-free reads of FlushBlocker.
+			std::atomic_ref<uint64_t> word(region.pending[page / 64]);
+			const auto                bit  = uint64_t {1} << (page % 64);
+			const auto                bits = word.load(std::memory_order_relaxed);
+			word.store(value ? (bits | bit) : (bits & ~bit), std::memory_order_relaxed);
 		}
 	}
 
@@ -387,9 +416,10 @@ struct PageManager::Impl {
 		}
 		const bool batch         = slot != nullptr;
 		uint64_t   batched_pages = 0;
+		bool       protected_any = false; // pb_sync_noprot
 		// Order apply -> lock (see Region::apply). Marking pages pending changes no host
 		// protection and does not need the apply lock.
-		ApplyGuard apply(region.apply, !batch && !defer);
+		ApplyGuard apply(region.apply, !batch && !defer, Common::FrameStats::Counter::ApplyWaitSyncNs);
 		{
 		SpinGuard lock(region.lock);
 		auto      perms                 = region.pages[first].Perms();
@@ -412,6 +442,7 @@ struct PageManager::Impl {
 						enqueue       = true;
 					}
 				} else {
+					protected_any = true;
 					ProtectRun(region, base_addr, static_cast<size_t>(range_begin),
 					           static_cast<size_t>(range_bytes / PAGE_SIZE), perms);
 				}
@@ -457,6 +488,13 @@ struct PageManager::Impl {
 		}
 
 		release_pending();
+		}
+		if (!batch && !defer && !protected_any) {
+			// pb_sync_noprot: the apply lock was taken and no page changed Perms() - the ceiling of
+			// taking it only when an edge exists (A2b, not implemented).
+			Common::FrameStats::Add(Common::FrameStats::Counter::ApplySyncNoProtect, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ApplySyncNoProtectWaitNs,
+			                        apply.WaitedNs());
 		}
 		if (batched_pages != 0) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BatchPages, batched_pages);
@@ -518,6 +556,47 @@ struct PageManager::Impl {
 		return ((region.pending[page / 64] >> (page % 64)) & 1u) != 0;
 	}
 
+	// Gate "applyskip": why FlushRegion of [first, last) would have to take the apply lock, read
+	// without any lock. 0 - nothing: no page of the window is pending and no run of it is in
+	// flight; 1 - a pending page; 2 - an in-flight run with ReadWrite intersects the window; 3 - an
+	// in-flight run with another protection does.
+	// Why 0 is safe (Region::apply, R): TakePendingRun publishes a run in `applying_run` (seq_cst)
+	// before it clears the bits, and the run is withdrawn only after its host call returned, with
+	// `apply` still held. The bits are read first and `applying_run` second, so a bit seen clear was
+	// cleared either by a run still visible below or by one whose change is in effect. The
+	// synchronous path (ProtectRun) clears its bits only after its host call. A change a caller
+	// built on was made under a lock the caller took afterwards, so its bit is visible here; a
+	// bit set after the read belongs to a change the caller could not observe - its author
+	// flushes it (BatchScope) or the worker applies it before the flip.
+	[[nodiscard]] static int FlushBlocker(Region& region, size_t first, size_t last) noexcept {
+		last = std::min(last, static_cast<size_t>(REGION_PAGES));
+		if (first >= last) {
+			return 0;
+		}
+		const auto first_word = first / 64;
+		const auto last_word  = (last - 1) / 64;
+		for (size_t word = first_word; word <= last_word; word++) {
+			auto bits = std::atomic_ref<uint64_t>(region.pending[word]).load(std::memory_order_acquire);
+			if (word == first_word) {
+				bits &= ~uint64_t {0} << (first % 64);
+			}
+			if (word == last_word && last % 64 != 0) {
+				bits &= (uint64_t {1} << (last % 64)) - 1u;
+			}
+			if (bits != 0) {
+				return 1;
+			}
+		}
+		const auto run       = region.applying_run.load(std::memory_order_acquire);
+		const auto run_first = static_cast<size_t>(run & 0xffffu);
+		const auto run_last  = static_cast<size_t>((run >> 16u) & 0xffffu);
+		if (run_first >= run_last || run_last <= first || run_first >= last) {
+			return 0;
+		}
+		const auto protection = static_cast<Common::VirtualMemory::Mode>(static_cast<uint32_t>(run >> 32u));
+		return protection == Common::VirtualMemory::Mode::ReadWrite ? 2 : 3;
+	}
+
 	static PageManager::BatchScope::Slot* ReserveSlot(PageManager::BatchScope& scope, Region& region,
 													  uint64_t base_addr) {
 		for (uint32_t index = 0; index < scope.m_count; index++) {
@@ -564,6 +643,14 @@ struct PageManager::Impl {
 				   region.pages[end].Perms() == protection) {
 				end++;
 			}
+			if (region.applying_run.load(std::memory_order_relaxed) != 0) {
+				// pb_inflight_bad: the previous run of an application was never withdrawn.
+				Common::FrameStats::Add(Common::FrameStats::Counter::ApplyInflightBad, 1);
+			}
+			// Visible before the bits are cleared and until the host call returned (FlushBlocker).
+			region.applying_run.store(static_cast<uint64_t>(page) | (static_cast<uint64_t>(end) << 16u) |
+			                          (uint64_t {static_cast<uint32_t>(protection)} << 32u),
+			                      std::memory_order_seq_cst);
 			SetPendingRange(region, page, end - page, false);
 			*run_first = page;
 			*run_pages = end - page;
@@ -595,7 +682,7 @@ struct PageManager::Impl {
 			while (sync_waiters.load(std::memory_order_acquire) != 0) {
 				std::this_thread::yield();
 			}
-			ApplyGuard                  apply(region.apply, true);
+			ApplyGuard                  apply(region.apply, true, Common::FrameStats::Counter::ApplyWaitWorkerNs);
 			size_t                      run_first = 0;
 			size_t                      run_pages = 0;
 			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
@@ -607,15 +694,40 @@ struct PageManager::Impl {
 				}
 			}
 			Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms);
+			region.applying_run.store(0, std::memory_order_release); // before `apply` is released
 		}
 	}
 
 	// Applies the pending runs of [first, last) of one region (a BatchScope flush, or an
 	// invalidation making sure a change deferred by another thread is in effect). The spin lock is
 	// released before every host call, only the apply lock is held across them. Takes the apply
-	// lock even when nothing is pending (Region::apply, R). Returns the number of host calls.
-	uint32_t FlushRegion(Region& region, uint64_t base_addr, size_t first, size_t last) {
-		ApplyGuard apply(region.apply, true);
+	// lock even when nothing is pending (Region::apply, R) - unless gate "applyskip" is on and
+	// FlushBlocker finds nothing to wait for. `site` receives the apply-lock wait. Returns the
+	// number of host calls.
+	uint32_t FlushRegion(Region& region, uint64_t base_addr, size_t first, size_t last,
+	                     Common::FrameStats::Counter site) {
+		namespace FS = Common::FrameStats;
+		// With the gate off the lock-free answer is computed only for the counters (trace runs).
+		const bool skip    = Common::Gates::Enabled(Common::Gates::Gate::ApplySkip);
+		int        blocker = -1;
+		if (skip || FS::Enabled()) {
+			blocker = FlushBlocker(region, first, last);
+			if (blocker == 0) {
+				FS::Add(FS::Counter::ApplySkipWould, 1);
+				if (skip) {
+					FS::Add(FS::Counter::ApplySkips, 1);
+					return 0;
+				}
+			} else if (blocker == 2) {
+				FS::Add(FS::Counter::ApplySkipBlockRw, 1);
+			} else if (blocker == 3) {
+				FS::Add(FS::Counter::ApplySkipBlockRo, 1);
+			}
+		}
+		const bool would = blocker == 0;
+		ApplyGuard apply(region.apply, true, site,
+		                 would ? FS::Counter::ApplySkipWouldWaitNs : FS::Counter::Count,
+		                 would ? FS::Counter::ApplySkipWouldWaitGpuNs : FS::Counter::Count);
 		t_protect_masked      = false;
 		const auto call_pages = WorkerCallPages();
 		uint32_t   runs       = 0;
@@ -632,6 +744,7 @@ struct PageManager::Impl {
 				}
 			}
 			Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms);
+			region.applying_run.store(0, std::memory_order_release); // before `apply` is released
 			runs++;
 			pages += run_pages;
 		}
@@ -653,7 +766,8 @@ struct PageManager::Impl {
 				Common::FrameStats::Add(Common::FrameStats::Counter::BatchInvalidateFlushes, 1);
 				if (FlushRegion(*region, region_base,
 								static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE),
-								static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE)) != 0) {
+								static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE),
+								Common::FrameStats::Counter::ApplyWaitRangeNs) != 0) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::BatchRefault, 1);
 				}
 			}
@@ -844,6 +958,7 @@ uint64_t PageManager::GetPageSize() const {
 
 template <bool track>
 void PageManager::UpdatePageWatchers(uint64_t vaddr, uint64_t size) {
+	Common::DrawStat::Mark(Common::DrawStat::Prot);
 	m_impl->UpdatePageWatchers<track, false>(vaddr, size);
 }
 
@@ -851,6 +966,7 @@ template void PageManager::UpdatePageWatchers<true>(uint64_t, uint64_t);
 template void PageManager::UpdatePageWatchers<false>(uint64_t, uint64_t);
 
 void PageManager::UpdatePageWatchersDeferred(uint64_t vaddr, uint64_t size) {
+	Common::DrawStat::Mark(Common::DrawStat::Prot);
 	m_impl->UpdatePageWatchers<true, false>(vaddr, size, Impl::DeferEnabled());
 }
 
@@ -883,7 +999,8 @@ void PageManager::BatchScope::Flush() noexcept {
 		}
 		Common::FrameStats::Add(Common::FrameStats::Counter::BatchFlushes, 1);
 		if (m_manager.m_impl->FlushRegion(*static_cast<Impl::Region*>(slot.region), slot.base,
-										  slot.first, slot.last) == 0) {
+										  slot.first, slot.last,
+										  Common::FrameStats::Counter::ApplyWaitScopeNs) == 0) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BatchMerged, 1);
 		}
 	}
@@ -899,6 +1016,7 @@ void PageManager::VerifyProtection(uint64_t vaddr, uint64_t size) {
 
 template <bool track, bool is_read>
 void PageManager::UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& mask) {
+	Common::DrawStat::Mark(Common::DrawStat::Prot);
 	if (base_addr % REGION_SIZE != 0 || base_addr >= ADDRESS_SIZE ||
 	    REGION_SIZE > ADDRESS_SIZE - base_addr) {
 		Fatal("invalid tracking region base 0x%016" PRIx64, base_addr);

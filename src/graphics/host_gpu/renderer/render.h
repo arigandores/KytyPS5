@@ -328,6 +328,11 @@ private:
 
 	[[nodiscard]] TextureBinding ResolveTexture(const ShaderRecompiler::IR::ImageResource& resource,
 	                                            const ShaderRecompiler::IR::DescriptorValue& value);
+	// Session 57, B2a: ResolveTexture handing its result to `emit(id, desc[, memo_index,
+	// memo_version])`, whose return value it returns. Defined (and only used) in descriptors.cpp.
+	template <typename Emit>
+	decltype(auto) ResolveTextureWith(const ShaderRecompiler::IR::ImageResource& resource,
+	                                  const ShaderRecompiler::IR::DescriptorValue& value, Emit&& emit);
 	[[nodiscard]] GraphicsBindings PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 	                                                       const ShaderStageRuntime& pixel,
 	                                                       bool                      pixel_active);

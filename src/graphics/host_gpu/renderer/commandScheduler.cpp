@@ -6,6 +6,7 @@
 #include <cstdlib>
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -702,6 +703,8 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 
 uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	EXIT_IF(m_command.IsInvalid());
+	Common::DrawStat::Mark(Common::DrawStat::Sync);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeSubmit);
 	EXIT_IF(submit.num_wait_semaphores > SubmitInfo::MaxSemaphores ||
 	        submit.num_signal_semaphores >= SubmitInfo::MaxSemaphores);
 	const auto submit_t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;

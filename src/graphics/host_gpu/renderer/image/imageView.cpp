@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/image/imageView.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/image/image.h"
 
@@ -332,6 +333,8 @@ vk::ImageView Image::FindView(const ImageViewInfo& view_info) {
 		}
 	}
 
+	// No cached view matched: this call creates one.
+	Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 	const bool format_compatible = normalized.format != vk::Format::eUndefined &&
 	                               ImageViewOps::FormatsCompatible(image.format, normalized.format);
 	const bool slice_view =

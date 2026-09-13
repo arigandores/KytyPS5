@@ -332,6 +332,13 @@ void LogPipelineTrace(const char* phase, uint64_t vertex_program_id, uint64_t pi
 // Knob "dapin" (session 56): applies the DrawAhead affinity experiment to the calling thread.
 // `gpu_thread` is true on the GuestGpu thread (it chooses the L3 group of dapin=2).
 void DrawAheadApplyPin(bool gpu_thread);
+// Index of the L3 cache group of the calling thread's processor, and of the group the GuestGpu
+// thread last queued DrawAhead work from; 0xff when unknown (counters rec_ccd_n / rec_ccd_x).
+[[nodiscard]] uint8_t DrawAheadCurrentL3();
+[[nodiscard]] uint8_t DrawAheadGpuL3();
+// Gate "recpin" (session 57, A4): pins the calling record thread as knob "dapin" says (wanted),
+// or returns it to the process mask. A thread-local compare when nothing changed.
+void DrawAheadApplyRecordPin(bool wanted);
 void CreatePipelineInternal(
     GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
     const PipelineRenderingState& rendering, const PipelineVertexInputState& vertex_input,

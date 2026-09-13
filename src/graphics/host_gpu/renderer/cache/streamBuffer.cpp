@@ -4,6 +4,7 @@
 #include "common/frameStats.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/profiler.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
@@ -180,6 +181,8 @@ void Buffer::CopyFrom(CommandBuffer& command, const Buffer& source, uint64_t sou
                       uint64_t destination_offset, uint64_t size, vk::AccessFlags source_before,
                       vk::AccessFlags destination_before, vk::AccessFlags source_after,
                       vk::AccessFlags destination_after, RenderPassEnd why) {
+	Common::DrawStat::Mark(Common::DrawStat::BufUp);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	if (size == 0 || source_offset > source.Size() || size > source.Size() - source_offset ||
 	    destination_offset > Size() || size > Size() - destination_offset) {
 		EXIT("Buffer: invalid copy range\n");
@@ -279,6 +282,7 @@ std::pair<uint8_t*, uint64_t> StreamBuffer::Map(uint64_t size, uint64_t alignmen
 	const bool wrap = aligned_offset > Size() - mapped_size;
 	if (wrap) {
 		aligned_offset = 0;
+		Common::DrawStat::Mark(Common::DrawStat::Stream);
 	}
 
 	auto wait_cursor = wrap ? size_t {0} : m_wait_cursor;
@@ -300,6 +304,9 @@ std::pair<uint8_t*, uint64_t> StreamBuffer::Map(uint64_t size, uint64_t alignmen
 	m_wait_bound  = wait_bound;
 	m_offset      = aligned_offset;
 	m_mapped_size = mapped_size;
+	if (Common::DrawStat::On()) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawStreamMaps, 1);
+	}
 	return {Mapped().data() + m_offset, m_offset};
 }
 

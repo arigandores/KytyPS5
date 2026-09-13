@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/cache/samplerCache.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -40,6 +41,7 @@ vk::Sampler SamplerCache::GetSampler(const ShaderSamplerResource& r) {
 }
 
 vk::Sampler SamplerCache::FindOrCreate(const ShaderSamplerResource& r) {
+	Common::DrawStat::Mark(Common::DrawStat::TexSlow);
 	Common::LockGuard lock(m_mutex);
 
 	const SamplerKey key {r.fields[0], r.fields[1], r.fields[2], r.fields[3]};
@@ -47,6 +49,7 @@ vk::Sampler SamplerCache::FindOrCreate(const ShaderSamplerResource& r) {
 		return iter->second;
 	}
 
+	Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 	float      aniso_ratio = 1.0f;
 	const auto mag_filter  = r.XyMagFilter();
 	const auto min_filter  = r.XyMinFilter();

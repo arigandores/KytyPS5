@@ -9,6 +9,7 @@
 #include "common/frameStats.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
 #include "common/logging/log.h"
@@ -284,6 +285,18 @@ struct ShaderReadCache {
 		return &cache.pages;
 	}
 
+	// One add per lookup instead of one per guest word (about 440k words a frame).
+	~ShaderReadCache() {
+		if (live_reads != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgReads, live_reads);
+		}
+		if (clean_reads != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgCleanReads, clean_reads);
+		}
+	}
+	ShaderReadCache(const ShaderReadCache&)            = delete;
+	ShaderReadCache& operator=(const ShaderReadCache&) = delete;
+
 	ShaderReadCache() {
 		own_live.Bind(own_live_storage.data(), CALL_SLOTS);
 		clean.Bind(clean_storage.data(), CALL_SLOTS);
@@ -298,6 +311,8 @@ struct ShaderReadCache {
 	Pages                        clean;
 	Pages*                       live = nullptr;
 	struct SrtReadLog*           log  = nullptr; // set while a materialization is being recorded
+	uint32_t                     live_reads  = 0;
+	uint32_t                     clean_reads = 0;
 };
 
 // The guest words one materialization read. Every read of the SRT walk goes through the two
@@ -369,13 +384,15 @@ const uint8_t* CleanBackingPage(ShaderReadCache* cache, uint64_t page) {
 // (upstream reads them one at a time with a dirty-range query per word; the SRT control-flow
 // conditions add several per draw, so the whole page is validated once and reused).
 bool ReadShaderGuestMemory(void* userdata, uint64_t address, uint32_t* value) {
-	if (Common::FrameStats::Enabled()) {
+	auto* cache = static_cast<ShaderReadCache*>(userdata);
+	if (cache != nullptr) {
+		cache->clean_reads++;
+	} else {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ProgCleanReads, 1);
 	}
 	if (value == nullptr) {
 		return false;
 	}
-	auto*      cache = static_cast<ShaderReadCache*>(userdata);
 	const auto page  = address & ~(ShaderPageSize - 1);
 	if (cache != nullptr && (address & 3u) == 0) {
 		if (const auto* backing = CleanBackingPage(cache, page); backing != nullptr) {
@@ -395,13 +412,15 @@ bool ReadShaderGuestMemory(void* userdata, uint64_t address, uint32_t* value) {
 }
 
 bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
-	if (Common::FrameStats::Enabled()) {
+	auto* cache = static_cast<ShaderReadCache*>(userdata);
+	if (cache != nullptr) {
+		cache->live_reads++;
+	} else {
 		Common::FrameStats::Add(Common::FrameStats::Counter::ProgReads, 1);
 	}
 	if (value == nullptr) {
 		return false;
 	}
-	auto*      cache = static_cast<ShaderReadCache*>(userdata);
 	const auto page  = address & ~(ShaderPageSize - 1);
 	if (cache != nullptr && (address & 3u) == 0) {
 		if (const auto* backing = LiveBackingPage(cache, page); backing != nullptr) {
@@ -967,6 +986,9 @@ const DrawAheadCacheTopology& DrawAheadTopology() {
 	return topology;
 }
 
+} // namespace
+
+// Declared in pipelineCache.h: the record thread counts rec_ccd_x with it (session 57, A4).
 uint8_t DrawAheadCurrentL3() {
 #if defined(_WIN32)
 	const auto cpu = GetCurrentProcessorNumber();
@@ -975,6 +997,8 @@ uint8_t DrawAheadCurrentL3() {
 	return 0xffu;
 #endif
 }
+
+namespace {
 
 std::atomic<uint8_t>  g_draw_ahead_gpu_l3 {0xffu}; // L3 index the GuestGpu thread last queued from
 std::atomic<uint64_t> g_draw_ahead_gpu_mask {0};   // dapin=2: the mask the GuestGpu thread chose
@@ -1096,6 +1120,64 @@ void DrawAheadApplyPin(bool gpu_thread) {
 	     mode, mask, fixed ? "" : " failed");
 #else
 	(void)gpu_thread;
+#endif
+}
+
+uint8_t DrawAheadGpuL3() {
+	return g_draw_ahead_gpu_l3.load(std::memory_order_relaxed);
+}
+
+// Gate "recpin" (session 57, A4). The record thread of the GuestGpu scheduler reads the ring the
+// GuestGpu thread writes and shares the head and tail lines with it, so it follows knob "dapin" the
+// way a DrawAhead worker does: 1 = the L3 group with the largest cache, 2 = the mask the GuestGpu
+// thread chose, other = a raw mask. Gate off, dapin=0 or no mask yet: back to the process mask (the
+// one "procpin" set, else the start mask). Called by the record thread once per command buffer.
+void DrawAheadApplyRecordPin(bool wanted) {
+#if defined(_WIN32)
+	thread_local uint64_t applied_mask  = 0; // 0: this thread runs on the process mask
+	thread_local uint32_t applied_epoch = 0;
+	const auto&           topology      = DrawAheadTopology();
+	if (const auto epoch = g_process_pin_epoch.load(std::memory_order_relaxed); epoch != applied_epoch) {
+		// SetProcessAffinityMask put every thread back on the new process mask.
+		applied_epoch = epoch;
+		applied_mask  = 0;
+	}
+	const auto mode = wanted ? Common::Gates::Value(Common::Gates::Knob::DrawAheadPin) : 0u;
+	uint64_t   mask = 0;
+	if (mode == 1) {
+		size_t best = 0;
+		for (size_t index = 0; index < topology.l3_masks.size(); index++) {
+			if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
+				best = index;
+				mask = topology.l3_masks[index];
+			}
+		}
+	} else if (mode == 2) {
+		mask = g_draw_ahead_gpu_mask.load(std::memory_order_relaxed);
+	} else if (mode != 0) {
+		mask = mode;
+	}
+	const auto pinned       = g_process_pin_mask.load(std::memory_order_relaxed);
+	const auto process_mask = pinned != 0 ? pinned : topology.process_mask;
+	if (process_mask != 0) {
+		mask &= process_mask;
+	}
+	if (mask == applied_mask) {
+		return;
+	}
+	// Remembered whether or not it works, as DrawAheadApplyPin does.
+	applied_mask = mask;
+	if (mask == 0) {
+		if (process_mask != 0) {
+			SetThreadAffinityMask(GetCurrentThread(), static_cast<DWORD_PTR>(process_mask));
+		}
+		LOGF("DrawAheadPin: Record released\n");
+		return;
+	}
+	const bool fixed = SetThreadAffinityMask(GetCurrentThread(), static_cast<DWORD_PTR>(mask)) != 0;
+	LOGF("DrawAheadPin: Record mode=%u mask=0x%016" PRIx64 "%s\n", mode, mask, fixed ? "" : " failed");
+#else
+	(void)wanted;
 #endif
 }
 
@@ -1406,6 +1488,12 @@ struct PipelineCache::ProgramCache {
 
 	uint64_t memo_checks_ok  = 0;
 	uint64_t memo_checks_bad = 0;
+
+	// Gate "snapkeep" (session 57, B4): per graphics stage (0 = vertex or mesh, 1 = pixel) the
+	// snapshot and specialization storage Get works in. Only GetGraphicsPrograms passes an index,
+	// and only the GuestGpu draw path calls it, so nothing else ever touches these.
+	std::array<ShaderRecompiler::IR::ResourceSnapshot, 2>       kept_snapshots;
+	std::array<ShaderRecompiler::IR::ResourceSpecialization, 2> kept_specializations;
 
 	[[gnu::noinline]] void MemoStore(const SourceEntry* source, uint64_t shader_base, const SrtReadLog& log,
 	               const ShaderRecompiler::IR::ResourceSnapshot& snapshot, Permutation* permutation,
@@ -1983,12 +2071,38 @@ struct PipelineCache::ProgramCache {
 		slot.state.store(ok ? AheadReady : AheadFailed, std::memory_order_release);
 	}
 
+	// A lookahead result copied out of its slot. With `kept` (gate "snapkeep") the destination is
+	// the kept storage of the draw's stage, whose capacity the vector copies reuse: no allocation
+	// here, and the worker's blocks stay in the slot for the worker to free. Without it these are
+	// the two assignments the callers made before.
+	static void CopyAheadResult(const AheadSlot& slot, ShaderRecompiler::IR::ResourceSnapshot& resources,
+	                            ShaderRecompiler::IR::ResourceSpecialization& specialization,
+	                            bool kept) {
+		if (kept && Common::FrameStats::Enabled()) {
+			const auto& from = slot.snapshot;
+			const bool  grow = resources.buffers.capacity() < from.buffers.size() ||
+			                  resources.images.capacity() < from.images.size() ||
+			                  resources.samplers.capacity() < from.samplers.size() ||
+			                  resources.flattened_srt.capacity() < from.flattened_srt.size() ||
+			                  resources.user_data.capacity() < from.user_data.size() ||
+			                  specialization.buffers.capacity() < slot.specialization.buffers.size() ||
+			                  specialization.images.capacity() < slot.specialization.images.size();
+			Common::FrameStats::Add(Common::FrameStats::Counter::SnapKeepCopies, 1);
+			if (grow) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SnapKeepGrows, 1);
+			}
+		}
+		resources      = slot.snapshot;
+		specialization = slot.specialization;
+	}
+
 	// Holder of m_mutex, on a draw: the worker result for this program and user data, if its
 	// witness still holds.
 	[[gnu::noinline]] bool AheadTake(const SourceEntry& source, const ShaderParams& params,
 	                                 ShaderReadCache&                              cache,
 	                                 ShaderRecompiler::IR::ResourceSnapshot&       resources,
-	                                 ShaderRecompiler::IR::ResourceSpecialization& specialization) {
+	                                 ShaderRecompiler::IR::ResourceSpecialization& specialization,
+	                                 bool kept = false) {
 		namespace FS = Common::FrameStats;
 		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || ahead_slots == nullptr) {
 			return false;
@@ -2060,6 +2174,7 @@ struct PipelineCache::ProgramCache {
 				FS::Add(slot.walk == ahead_walk ? FS::Counter::DrawAheadStale
 				                                : FS::Counter::DrawAheadStaleOld,
 				        1);
+				Common::DrawStat::Mark(Common::DrawStat::M1);
 				// Guest words moved since the worker read them: no later draw can use it either.
 				slot.uses = 0;
 				slot.state.store(AheadEmpty, std::memory_order_release);
@@ -2067,18 +2182,18 @@ struct PipelineCache::ProgramCache {
 			}
 			if (slot.uses > 1) {
 				slot.uses--;
-				resources      = slot.snapshot;
-				specialization = slot.specialization;
+				CopyAheadResult(slot, resources, specialization, kept);
 			} else {
 				// The last draw of this walk that asked for it: take the vectors, and retire the
 				// slot, which no longer holds a result.
-				if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClone)) {
+				// Gate "snapkeep" copies too: its destination already has the capacity (da_clone
+				// then counts these copies as well).
+				if (kept || Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClone)) {
 					// Gate "daclone": copy on this thread and leave the worker's vectors in the
 					// slot, so they are freed by the worker that allocated them when it
 					// materializes into this slot again, not by the draw path after the draw (a
 					// cross-thread HeapFree of cold blocks). The slot keeps that memory until then.
-					resources      = slot.snapshot;
-					specialization = slot.specialization;
+					CopyAheadResult(slot, resources, specialization, kept);
 					FS::Add(FS::Counter::DrawAheadClones, 1);
 				} else {
 					std::swap(resources, slot.snapshot);
@@ -2089,6 +2204,7 @@ struct PipelineCache::ProgramCache {
 				FS::Add(FS::Counter::DrawAheadMoves, 1);
 			}
 			slot.taken = 1;
+			Common::DrawStat::Mark(Common::DrawStat::M1);
 			FS::Add(FS::Counter::DrawAheadHits, 1);
 			return true;
 		}
@@ -2124,7 +2240,7 @@ struct PipelineCache::ProgramCache {
 	// that does not materialize returns an empty program instead of stopping the emulator.
 	template <typename InputInfo>
 	ShaderProgram Get(const ShaderParams& params, InputInfo& input_info,
-	                  uint32_t& push_data_cursor, bool tolerant = false) {
+	                  uint32_t& push_data_cursor, bool tolerant = false, int kept = -1) {
 		ShaderType stage;
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 			stage = input_info.mesh.threads_num[0] != 0 ? ShaderType::Mesh : ShaderType::Vertex;
@@ -2156,6 +2272,7 @@ struct PipelineCache::ProgramCache {
 		}
 		auto                                         entry = programs.find(lookup_key);
 		if (entry == programs.end()) {
+			Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 			LibKernel::KernelTimeFreezeScope load_freeze;
 			const auto                       load_begin = HostMicros();
 			if (LoadFromTranslationCache(lookup_key, entry) && AvTraceEnabled()) {
@@ -2165,8 +2282,14 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
-		ShaderRecompiler::IR::ResourceSnapshot       resources;
-		ShaderRecompiler::IR::ResourceSpecialization specialization;
+		// Gate "snapkeep" (kept >= 0): the stage's kept storage instead of fresh locals. Every path
+		// below overwrites both before reading them (lookahead copy, MaterializeResources, the reset
+		// on a dropped plan, or Compile's own materialization when no entry exists).
+		ShaderRecompiler::IR::ResourceSnapshot       local_resources;
+		ShaderRecompiler::IR::ResourceSpecialization local_specialization;
+		auto& resources = kept >= 0 ? kept_snapshots[static_cast<size_t>(kept)] : local_resources;
+		auto& specialization =
+		    kept >= 0 ? kept_specializations[static_cast<size_t>(kept)] : local_specialization;
 		ShaderReadCache                              read_cache;
 		const ShaderRecompiler::IR::SrtRuntime       runtime {
 		    .user_data                  = params.user_data,
@@ -2184,7 +2307,8 @@ struct PipelineCache::ProgramCache {
 				// counters are being collected.
 				const bool timed      = Common::FrameStats::Enabled();
 				const auto take_begin = timed ? Common::FrameStats::NowNs() : 0;
-				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization);
+				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization,
+				                      kept >= 0);
 				if (timed) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
 					                        Common::FrameStats::NowNs() - take_begin);
@@ -2207,7 +2331,13 @@ struct PipelineCache::ProgramCache {
 					MemoCheck(lookup_key, entry->second, runtime, *memo_entry);
 				}
 				input_info.stage.program   = &memo_entry->permutation->program;
-				input_info.stage.resources = memo_entry->snapshot;
+				if (kept >= 0) {
+					// Through the kept storage, which then moves into the input info like below.
+					resources                  = memo_entry->snapshot;
+					input_info.stage.resources = std::move(resources);
+				} else {
+					input_info.stage.resources = memo_entry->snapshot;
+				}
 				memo_entry->permutation->program.bindings.AdvancePushData(push_data_cursor);
 				Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoHits, 1);
 				lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
@@ -2269,6 +2399,7 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 
+		Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 		return Compile(params, input_info, push_data_cursor, tolerant, stage, entry, runtime,
 		               resources, specialization);
 	}
@@ -2781,6 +2912,15 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
     std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping, bool pixel_active,
     ShaderVertexInputInfo& vertex_info, ShaderPixelInputInfo& pixel_info) {
 	Common::FrameStats::Lap lap;
+	// Gate "snapkeep" (session 57, B4; needs "drawstate", which makes these input infos the draw
+	// state reused across draws): their snapshots still hold the storage of the previous draw.
+	// Take it back before PrepareProgram resets them, so Get copies into warm capacity and the end
+	// of the draw frees nothing. Outside m_mutex: only this (GuestGpu draw) path uses the storage.
+	const bool keep_snapshots = Common::Gates::Enabled(Common::Gates::Gate::SnapshotKeep) &&
+	                            Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse);
+	if (keep_snapshots) {
+		std::swap(m_program_cache->kept_snapshots[0], vertex_info.stage.resources);
+	}
 	const auto vertex_params = PrepareProgram(vertex_regs, context, user_config, vertex_info);
 	const bool mesh_active   = vertex_info.mesh.threads_num[0] != 0;
 	if (mesh_active) {
@@ -2803,6 +2943,9 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	}
 	ShaderParams pixel_params;
 	if (pixel_active) {
+		if (keep_snapshots) {
+			std::swap(m_program_cache->kept_snapshots[1], pixel_info.stage.resources);
+		}
 		pixel_params = PrepareProgram(pixel_regs, sh, target_export_mapping, pixel_info);
 	}
 	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
@@ -2834,9 +2977,11 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	    mesh_active ? ShaderRecompiler::IR::PushData::MeshDrawDwordCount : 0;
 	GraphicsPrograms  result;
 	if (pixel_active) {
-		result.pixel = m_program_cache->Get(pixel_params, pixel_info, push_data_cursor);
+		result.pixel = m_program_cache->Get(pixel_params, pixel_info, push_data_cursor, false,
+		                                    keep_snapshots ? 1 : -1);
 	}
-	result.vertex = m_program_cache->Get(vertex_params, vertex_info, push_data_cursor);
+	result.vertex = m_program_cache->Get(vertex_params, vertex_info, push_data_cursor, false,
+	                                     keep_snapshots ? 0 : -1);
 	return result;
 }
 
@@ -3103,6 +3248,7 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		auto  entry  = std::make_unique<GraphicsPipelineEntry>();
 		auto* target = entry.get();
 		auto [iter, inserted] = m_graphics_pipelines.emplace(std::move(key), std::move(entry));
+		Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 		EXIT_IF(!inserted);
 		m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
 		const auto queued_at = HostMicros();
@@ -3170,6 +3316,7 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	m_ready_shader_pairs.insert(pair_key);
 
 	auto [iter, inserted] = m_graphics_pipelines.emplace(std::move(key), std::move(cached));
+	Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 	EXIT_IF(!inserted);
 
 	return iter->second.get();

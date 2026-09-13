@@ -137,6 +137,107 @@ public:
 			}
 		});
 	}
+	// Knob "faultkb": a CPU write fault at `fault_vaddr` opens, in one host protection change,
+	// every page of [window_begin, window_begin + window_size) contiguous with the faulting page
+	// that holds no GPU-owned bytes (RegionManager::GpuCleanRunAround), instead of one fault per
+	// page. The window holds the fault and lies inside its tracking region (the caller aligns it
+	// to a power of two). A GPU-dirty faulting page opens nothing else and flushes as
+	// InvalidateRegion(fault_vaddr, 1) does; `on_flush` must read the faulting byte only. The
+	// opened pages are ordinary CPU-dirty pages: the next synchronization uploads them and arms
+	// their watchers again (ForEachUploadRange), with the copy-after-protection order of any
+	// written page. Order of the scope and the lock as in InvalidateRegion.
+	template <typename Flush>
+	void InvalidateWriteFault(uint64_t fault_vaddr, uint64_t window_begin, uint64_t window_size,
+	                          Flush&& on_flush, bool batch_protect = false) noexcept {
+		static_assert(std::is_invocable_v<Flush&>);
+		CheckNotInUploadCallback();
+		auto* manager = WriteFaultManager(fault_vaddr, window_begin, window_size);
+		if (manager == nullptr) {
+			return; // as InvalidateRegion: no tracking region, no watcher of this tracker
+		}
+		uint64_t open_begin   = fault_vaddr & ~(TRACKER_PAGE_SIZE - 1);
+		uint64_t open_size    = TRACKER_PAGE_SIZE;
+		bool     should_flush = false;
+		{
+			// Destroyed in reverse order: the region lock first, then the scope applies what it
+			// deferred - after the lock, before the flush below and before on_flush.
+			PageManager::BatchScope batch(m_page_manager, batch_protect);
+			std::scoped_lock        lock(manager->lock);
+			if (manager->IsModified<DirtySource::Gpu>(fault_vaddr - manager->GetCpuAddr(), 1)) {
+				should_flush = true;
+			} else {
+				uint64_t   armed = 0;
+				const auto run   = manager->GpuCleanRunAround(fault_vaddr, window_begin, window_size,
+				                                              Common::FrameStats::Enabled() ? &armed : nullptr);
+				open_begin       = run.first;
+				open_size        = run.second;
+				manager->ChangeState<DirtySource::Cpu, true>(open_begin, open_size);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultWinArmed, armed);
+				Common::FrameStats::Add(Common::FrameStats::Counter::FaultWidened,
+				                        open_size / TRACKER_PAGE_SIZE - 1u);
+			}
+		}
+		if (batch_protect) {
+			m_page_manager.FlushProtection(open_begin, open_size);
+		}
+		if (should_flush) {
+			on_flush();
+		}
+	}
+	// fw_win_armed while the knob is at one page (diagnostic, read only): how many pages
+	// InvalidateWriteFault would open beyond the faulting one that are CPU-clean now. 0 for a window
+	// outside the tracked address space, a missing region or a GPU-dirty faulting page.
+	[[nodiscard]] uint64_t WriteFaultArmedPages(uint64_t fault_vaddr, uint64_t window_begin,
+	                                            uint64_t window_size) {
+		CheckNotInUploadCallback();
+		if (!GuestRange {window_begin, window_size}.Valid()) {
+			return 0;
+		}
+		auto* manager = WriteFaultManager(fault_vaddr, window_begin, window_size);
+		if (manager == nullptr) {
+			return 0;
+		}
+		std::scoped_lock lock(manager->lock);
+		if (manager->IsModified<DirtySource::Gpu>(fault_vaddr - manager->GetCpuAddr(), 1)) {
+			return 0;
+		}
+		uint64_t armed = 0;
+		(void)manager->GpuCleanRunAround(fault_vaddr, window_begin, window_size, &armed);
+		return armed;
+	}
+	// Gate "stkstat" (session 57, A1 ceiling; statistics only), RegionManager::NoteWriteFaultStat for
+	// a CPU write fault: 2 this frame, 1 the previous frame, 0 otherwise or without a tracking region.
+	// Any thread, from the fault handler: no lock, no allocation.
+	[[nodiscard]] uint32_t NoteWriteFaultStat(uint64_t fault_vaddr, uint32_t frame) noexcept {
+		if (fault_vaddr >= TRACKER_ADDRESS_SIZE) {
+			return 0;
+		}
+		auto* manager = m_regions[fault_vaddr / TRACKER_REGION_SIZE].load(std::memory_order_acquire);
+		return manager == nullptr ? 0 : manager->NoteWriteFaultStat(fault_vaddr, frame);
+	}
+	// Gate "stkstat": RegionManager::StickyCandidatePages over the regions of a range (missing regions
+	// hold none, none is created). GuestGpu thread only.
+	[[nodiscard]] uint64_t StickyCandidatePages(uint64_t vaddr, uint64_t size, uint32_t frame, bool any) {
+		ValidateRange(vaddr, size);
+		uint64_t pages     = 0;
+		uint64_t remaining = size;
+		uint64_t index     = vaddr / TRACKER_REGION_SIZE;
+		uint64_t offset    = vaddr % TRACKER_REGION_SIZE;
+		while (remaining != 0) {
+			const auto  bytes   = std::min(TRACKER_REGION_SIZE - offset, remaining);
+			const auto* manager = m_regions[index].load(std::memory_order_acquire);
+			if (manager != nullptr) {
+				pages += manager->StickyCandidatePages(manager->GetCpuAddr() + offset, bytes, frame, any);
+				if (any && pages != 0) {
+					return pages;
+				}
+			}
+			remaining -= bytes;
+			offset = 0;
+			index++;
+		}
+		return pages;
+	}
 #if KYTY_BUILD == KYTY_BUILD_DEBUG
 	void ValidateGpuDirtyPages(const RangeSet& dirty, uint64_t vaddr, uint64_t size,
 	                           const char* operation) const noexcept;
@@ -163,7 +264,8 @@ public:
 
 	template <typename RangeFunc, typename UploadFunc>
 	void ForEachUploadRange(uint64_t vaddr, uint64_t size, bool is_written, RangeFunc&& range_func,
-	                        UploadFunc&& upload_func, bool batch_protect = false) {
+	                        UploadFunc&& upload_func, bool batch_protect = false,
+	                        const StickyUploadStat* sticky_stat = nullptr) {
 		static_assert(std::is_nothrow_invocable_v<RangeFunc&, uint64_t, uint64_t>);
 		static_assert(std::is_nothrow_invocable_v<UploadFunc&>);
 		CheckNotInUploadCallback();
@@ -177,6 +279,10 @@ public:
 			PageManager::BatchScope batch(m_page_manager, batch_protect && !is_written);
 			Iterate<false>(vaddr, size, [&](RegionManager* manager, uint64_t offset, uint64_t bytes) {
 				manager->lock.lock();
+				if (sticky_stat != nullptr && !is_written) {
+					// Gate "stkstat": statistics of the pages the call below arms again.
+					manager->NoteUploadStat(manager->GetCpuAddr() + offset, bytes, *sticky_stat);
+				}
 				manager->ForEachModifiedRange<DirtySource::Cpu, true>(manager->GetCpuAddr() + offset,
 																	  bytes, range_func);
 				if (!is_written) {
@@ -211,6 +317,18 @@ public:
 private:
 	static constexpr size_t REGION_COUNT = TRACKER_ADDRESS_SIZE / TRACKER_REGION_SIZE;
 	inline static thread_local const MemoryTracker* s_upload_owner = nullptr;
+
+	// The tracking region of a write-fault window, nullptr while it does not exist. The window must
+	// hold the faulting address and lie inside one tracking region.
+	RegionManager* WriteFaultManager(uint64_t fault_vaddr, uint64_t window_begin, uint64_t window_size) {
+		ValidateRange(window_begin, window_size);
+		const auto index = window_begin / TRACKER_REGION_SIZE;
+		if (fault_vaddr < window_begin || fault_vaddr - window_begin >= window_size ||
+		    (window_begin + window_size - 1) / TRACKER_REGION_SIZE != index) {
+			EXIT("invalid write-fault window\n");
+		}
+		return m_regions[index].load(std::memory_order_acquire);
+	}
 
 	void CheckNotInUploadCallback() const noexcept {
 		if (s_upload_owner == this) {

@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 
 #include "common/assert.h"
+#include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "graphics/shader/shader.h"
 #include "graphics/shader/shaderBindings.h"
@@ -137,6 +138,7 @@ void ShaderWriteBarrierLocal(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags
 void ShaderWriteBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages) {
 	EXIT_IF(vk_buffer == nullptr || !source_stages);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriers, 1);
+	Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 	const auto barrier = MakeShaderWriteDependency();
 	vk_buffer.pipelineBarrier(source_stages,
 	                          vk::PipelineStageFlagBits::eComputeShader |

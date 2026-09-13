@@ -68,6 +68,9 @@ public:
 	void TriggerInterrupt(int event_id, uint32_t context_id);
 
 private:
+	// Knob "faultkb": the range a CPU write fault opens in the buffer tracker (HandleFault).
+	[[nodiscard]] GuestRange WriteFaultWindow(uint64_t fault_vaddr) const noexcept;
+
 	struct InterruptEqRegistration {
 		LibKernel::EventQueue::KernelEqueue eq       = LibKernel::EventQueue::KERNEL_EQUEUE_INVALID;
 		int                                 event_id = 0;

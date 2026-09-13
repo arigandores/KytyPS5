@@ -33,9 +33,7 @@ namespace {
 // owns a shard (plain relaxed loads/stores, no RMW); Read() sums the live shards and the totals
 // of exited threads. The registry is leaked on purpose: thread-local destructors may run after
 // static destruction.
-struct Shard {
-	alignas(64) std::array<std::atomic<uint64_t>, static_cast<size_t>(Counter::Count)> counters {};
-};
+using Shard = Detail::Shard;
 
 struct ShardRegistry {
 	std::mutex                                                          mutex;
@@ -48,29 +46,39 @@ ShardRegistry& Registry() {
 	return *registry;
 }
 
+// Counts of a thread that already retired its shard (thread-local destructors of other objects
+// can still count) go here and are never read.
+Shard& SinkShard() {
+	static auto* sink = new Shard;
+	return *sink;
+}
+
 struct ShardOwner {
 	Shard* shard = nullptr;
-	ShardOwner() {
-		shard = new Shard;
-		auto&           registry = Registry();
-		std::lock_guard lock(registry.mutex);
-		registry.live.push_back(shard);
-	}
 	~ShardOwner() {
-		auto&           registry = Registry();
-		std::lock_guard lock(registry.mutex);
-		for (size_t i = 0; i < shard->counters.size(); i++) {
-			registry.retired[i].fetch_add(shard->counters[i].load(std::memory_order_relaxed),
-			                              std::memory_order_relaxed);
+		if (shard == nullptr) {
+			return;
 		}
-		registry.live.erase(std::find(registry.live.begin(), registry.live.end(), shard));
+		{
+			auto&           registry = Registry();
+			std::lock_guard lock(registry.mutex);
+			for (size_t i = 0; i < shard->counters.size(); i++) {
+				registry.retired[i].fetch_add(shard->counters[i].load(std::memory_order_relaxed),
+				                              std::memory_order_relaxed);
+			}
+			registry.live.erase(std::find(registry.live.begin(), registry.live.end(), shard));
+		}
+		Detail::t_shard = &SinkShard();
 		delete shard;
+		shard = nullptr;
 	}
 };
 
-Shard& LocalShard() {
-	static thread_local ShardOwner owner;
-	return *owner.shard;
+thread_local ShardOwner t_owner;
+
+bool TimingsFromEnvironment() {
+	const auto* value = std::getenv("KYTY_FRAME_TRACE");
+	return value == nullptr || std::strcmp(value, "lite") != 0;
 }
 
 thread_local ThreadRole  t_role = ThreadRole::Count;
@@ -153,12 +161,36 @@ bool Enabled() {
 	return enabled;
 }
 
-bool TimingsEnabled() {
-	static const bool detailed = [] {
-		const auto* value = std::getenv("KYTY_FRAME_TRACE");
-		return value == nullptr || std::strcmp(value, "lite") != 0;
-	}();
-	return detailed && Enabled();
+namespace {
+
+// The inline Add and TimingsEnabled read these; before this runs they count and time nothing.
+const bool g_published = [] {
+	Detail::g_timings = TimingsFromEnvironment() && Enabled();
+	Detail::g_count_limit.store(Enabled() ? static_cast<uint32_t>(Counter::Count) : 0u,
+	                            std::memory_order_relaxed);
+	return true;
+}();
+
+} // namespace
+
+Detail::Shard* Detail::AttachShard() {
+	auto& owner = t_owner;
+	if (owner.shard == nullptr) {
+		owner.shard              = new Shard;
+		auto&           registry = Registry();
+		std::lock_guard lock(registry.mutex);
+		registry.live.push_back(owner.shard);
+	}
+	t_shard = owner.shard;
+	return owner.shard;
+}
+
+void SetLean(bool lean) {
+	(void)g_published;
+	const auto limit = !Enabled() ? 0u
+	                   : lean     ? static_cast<uint32_t>(Counter::LogNs)
+	                              : static_cast<uint32_t>(Counter::Count);
+	Detail::g_count_limit.store(limit, std::memory_order_relaxed);
 }
 
 uint64_t NowNs() {
@@ -175,14 +207,6 @@ uint64_t NowNs() {
 #else
 	return 0;
 #endif
-}
-
-void Add(Counter counter, uint64_t value) {
-	if (!Enabled()) {
-		return;
-	}
-	auto& slot = LocalShard().counters[static_cast<size_t>(counter)];
-	slot.store(slot.load(std::memory_order_relaxed) + value, std::memory_order_relaxed);
 }
 
 uint64_t Read(Counter counter) {

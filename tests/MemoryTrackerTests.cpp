@@ -936,6 +936,125 @@ void TestFullRegionGpuUnmarkBatching() {
   Release(memory);
 }
 
+// The lock-free queries must answer exactly what the locked ones answer whenever nothing
+// is changing concurrently. This is the contract the gate "trackfree" relies on.
+void TestLockFreeQueriesMatchLocked() {
+  constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
+  TrackerHarness harness;
+  auto &tracker = harness.tracker;
+  auto *memory = Allocate(harness.page_manager, 8);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+
+  const auto agree = [&](uint64_t vaddr, uint64_t size, const char *what) {
+    Check(tracker.IsRegionGpuModifiedFast(vaddr, size) ==
+              tracker.IsRegionGpuModified(vaddr, size),
+          what);
+    Check(tracker.IsRegionCpuModifiedAndGpuCleanFast(vaddr, size) ==
+              tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size),
+          what);
+  };
+
+  // Untracked memory reads CPU-dirty and GPU-clean without creating the region (the
+  // locked query would create it, so it is deliberately not run on this address).
+  const auto untracked = address + Libs::Graphics::TRACKER_REGION_SIZE * 64;
+  Check(!tracker.IsRegionGpuModifiedFast(untracked, page_size),
+        "an untracked region must not read GPU-dirty");
+  Check(tracker.IsRegionCpuModifiedAndGpuCleanFast(untracked, page_size),
+        "an untracked region must read CPU-dirty and GPU-clean");
+
+  // Fresh pages: CPU-dirty by construction, no GPU owner.
+  agree(address, page_size * 8, "lock-free query disagreed on a fresh range");
+  Check(tracker.IsRegionCpuModifiedAndGpuCleanFast(address, page_size * 8),
+        "a fresh range must read CPU-dirty and GPU-clean");
+
+  // Uploaded: the CPU bits of that interval are gone.
+  tracker.ForEachUploadRange(address, page_size * 4, false,
+                             [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+  agree(address, page_size * 4, "lock-free query disagreed after an upload");
+  Check(!tracker.IsRegionCpuModifiedAndGpuCleanFast(address, page_size * 4),
+        "an uploaded range must not read CPU-dirty");
+
+  // GPU ownership of the upper half.
+  tracker.ForEachUploadRange(address + page_size * 4, page_size * 4, true,
+                             [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+  agree(address + page_size * 4, page_size * 4,
+        "lock-free query disagreed after a GPU write");
+  Check(tracker.IsRegionGpuModifiedFast(address + page_size * 4, page_size * 4),
+        "a GPU-written range must read GPU-dirty");
+  Check(!tracker.IsRegionCpuModifiedAndGpuCleanFast(address + page_size * 4, page_size),
+        "a GPU-written range must never read GPU-clean");
+
+  // A range that mixes clean, CPU-dirty and GPU-dirty pages is never GPU-clean.
+  tracker.InvalidateRegion(address, page_size, []() noexcept {});
+  agree(address, page_size, "lock-free query disagreed after an announced CPU write");
+  Check(tracker.IsRegionCpuModifiedAndGpuCleanFast(address, page_size),
+        "an announced CPU write must read CPU-dirty");
+  agree(address, page_size * 8, "lock-free query disagreed on a mixed range");
+  Check(!tracker.IsRegionCpuModifiedAndGpuCleanFast(address, page_size * 8),
+        "a range with GPU-owned bytes must not read GPU-clean");
+
+  // Across the page boundary of a word of the bit map, and for a single page of each kind.
+  for (uint64_t page = 0; page < 8; page++) {
+    agree(address + page * page_size, page_size, "lock-free query disagreed on a page");
+  }
+  agree(address + page_size * 3, page_size * 2,
+        "lock-free query disagreed across the CPU/GPU boundary");
+
+  tracker.UnmarkRegionAsGpuModified(address + page_size * 4, page_size * 4);
+  tracker.UntrackMemory(address, page_size * 8);
+  Release(memory);
+}
+
+// The safety property under concurrency: while guest threads announce CPU writes to one
+// half of a tracking region, the thread that owns GPU state must never see a lock-free
+// answer claiming its GPU-dirty pages are clean, nor claiming clean pages are GPU-dirty.
+void TestLockFreeQueriesUnderConcurrentFaults() {
+  constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
+  constexpr uint64_t pages = 16;
+  TrackerHarness harness;
+  auto &tracker = harness.tracker;
+  auto *memory = Allocate(harness.page_manager, pages);
+  const auto address = reinterpret_cast<uint64_t>(memory);
+  const auto owned = address + page_size * (pages / 2);
+  const auto owned_size = page_size * (pages / 2);
+
+  // Clear the constructor's CPU bits so the GPU half can take ownership.
+  tracker.ForEachUploadRange(address, page_size * pages, false,
+                             [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+
+  std::atomic<bool> stop{false};
+  std::atomic<uint64_t> announced{0};
+  std::jthread writer([&] {
+    while (!stop.load(std::memory_order_acquire)) {
+      for (uint64_t page = 0; page < pages / 2; page++) {
+        tracker.InvalidateRegion(address + page * page_size, page_size,
+                                 []() noexcept {});
+        announced.fetch_add(1, std::memory_order_relaxed);
+      }
+    }
+  });
+
+  for (uint32_t round = 0; round < 4000; round++) {
+    tracker.ForEachUploadRange(owned, owned_size, true,
+                               [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+    Check(tracker.IsRegionGpuModifiedFast(owned, owned_size),
+          "lock-free query lost GPU ownership of its own range");
+    Check(!tracker.IsRegionCpuModifiedAndGpuCleanFast(owned, page_size),
+          "lock-free query called a GPU-owned page clean");
+    Check(!tracker.IsRegionGpuModifiedFast(address, page_size * (pages / 2)),
+          "lock-free query invented GPU ownership of the faulting half");
+    tracker.UnmarkRegionAsGpuModified(owned, owned_size);
+    Check(!tracker.IsRegionGpuModifiedFast(owned, owned_size),
+          "lock-free query kept GPU ownership after it was released");
+  }
+
+  stop.store(true, std::memory_order_release);
+  writer.join();
+  Check(announced.load() != 0, "the concurrent writer never announced a CPU write");
+  tracker.UntrackMemory(address, page_size * pages);
+  Release(memory);
+}
+
 [[noreturn]] void RunDeathCase(const char *name) {
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -1143,6 +1262,8 @@ int main(int argc, char **argv) {
   TestDownloadDoesNotSerializeDisjointRegion();
   TestGpuUnmarkUsesRegionMask();
   TestFullRegionGpuUnmarkBatching();
+  TestLockFreeQueriesMatchLocked();
+  TestLockFreeQueriesUnderConcurrentFaults();
   TestFatalPaths();
 #if KYTY_PLATFORM == KYTY_PLATFORM_LINUX
   TestFaultOnProtectedStack();

@@ -5,6 +5,7 @@
 #include "common/threads.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
+#include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
@@ -63,13 +64,47 @@ CommandBuffer::CommandBuffer(CommandScheduler& scheduler)
     : m_context(scheduler.Context()), m_graphics(scheduler.Graphics()) {}
 
 bool CommandBuffer::IsInvalid() const {
-	return m_buffer == nullptr;
+	// Not m_buffer: with a record thread the handle belongs to that thread until the queue is
+	// drained, while "a command buffer is open" is a decision of the resolving thread.
+	return !m_active;
 }
 
 vk::CommandBuffer CommandBuffer::Handle() const {
 	m_handle_uses++;
 	EXIT_IF(IsInvalid());
+	if (m_recorder != nullptr) {
+		// Transitional (M3 step 0): this site still records vkCmd* itself. Let the record thread
+		// finish everything published so far - that also publishes m_buffer - and then record
+		// into the same buffer on this thread.
+		namespace FS  = Common::FrameStats;
+		const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
+		m_recorder->Drain();
+		FS::Add(FS::Counter::RecordDirect, 1);
+		if (t0 != 0) {
+			FS::Add(FS::Counter::RecordDirectNs, FS::NowNs() - t0);
+		}
+	}
 	return m_buffer;
+}
+
+void CommandBuffer::BeginRecorded(uint64_t tick) {
+	EXIT_IF(m_rendering || m_recorder == nullptr);
+	m_handle_uses          = 0;
+	m_barrier_mark         = 0;
+	m_pending_shader_write = {};
+	// Same reset as Begin(): the GDS barrier state belongs to one recording, and the first
+	// consumer of a new command buffer has to pay its barrier again.
+	m_gds_barrier_host_epoch   = 0;
+	m_gds_barrier_shader_epoch = 0;
+	m_gds_barrier_consumer     = 0;
+	InvalidateGraphicsState();
+	m_recorder->PushBeginBuffer(tick);
+}
+
+void CommandBuffer::EndRecorded(const RecordSubmit& request) const {
+	EXIT_IF(m_recorder == nullptr);
+	EndRendering(RenderPassEnd::Submit);
+	m_recorder->PushEndBuffer(request);
 }
 
 void CommandBuffer::Begin() {
@@ -77,6 +112,9 @@ void CommandBuffer::Begin() {
 	m_handle_uses  = 0;
 	m_barrier_mark = 0;
 	m_pending_shader_write = {};
+	m_gds_barrier_host_epoch   = 0;
+	m_gds_barrier_shader_epoch = 0;
+	m_gds_barrier_consumer     = 0;
 	InvalidateGraphicsState();
 	auto buffer = Handle();
 
@@ -173,6 +211,14 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 
 void CommandBuffer::EndRendering(RenderPassEnd why) const {
 	if (!m_rendering) {
+		// A debt without an open pass cannot happen today (it is only taken on while rendering),
+		// but if it ever does, paying it here is the difference between a barrier and no barrier.
+		if (m_pending_shader_write) {
+			const auto stages      = m_pending_shader_write;
+			m_pending_shader_write = {};
+			Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersFlushed, 1);
+			ShaderWriteBarrier(Handle(), stages);
+		}
 		return;
 	}
 	Handle().endRendering();

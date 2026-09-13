@@ -174,7 +174,7 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	    ShaderRecompiler::IR::PackedStrideAlignedCopy(resource.packed_stride) &&
 	    address % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
 		auto& cache = context.GetBufferCache();
-		if (!cache.IsRegionGpuModified(address, size) && !cache.HasGpuDirtyBytes(address, size) &&
+		if (!cache.IsRegionGpuModifiedFromGpu(address, size) && !cache.HasGpuDirtyBytes(address, size) &&
 		    cache.TouchReadOnlyBuffer(id, address, size)) {
 			// This read-only binding needs an aligned copy anyway. Prepare that final
 			// copy directly, keeping the ordinary buffer's dirty bits intact for any
@@ -212,7 +212,8 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			// are copied from guest memory; a range the GPU wrote is copied on the GPU.
 			auto&      cache  = context.GetBufferCache();
 			auto&      stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
-			const bool gpu    = cache.IsRegionGpuModified(address, size) || cache.HasGpuDirtyBytes(address, size);
+			const bool gpu = cache.IsRegionGpuModifiedFromGpu(address, size) ||
+			                 cache.HasGpuDirtyBytes(address, size);
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
 			if (!gpu) {
@@ -924,7 +925,7 @@ static vk::DescriptorBufferInfo NativeUpload(RenderContext&            context,
 	return {buffer.Handle(), offset, data.size_bytes()};
 }
 
-void RenderExecutor::BindImage(ImageId id, bool storage) {
+void RenderExecutor::BindImage(ImageId id, bool storage, bool atomic) {
 	auto& image = m_context.GetTextureCache().GetImage(id);
 	if (image.info.data.Empty()) {
 		return;
@@ -934,6 +935,14 @@ void RenderExecutor::BindImage(ImageId id, bool storage) {
 	}
 	image.binding.is_bound = true;
 	image.binding.shader_write |= storage;
+	// Gate "atomimg": the claim is per image, not per descriptor. One plain store through any
+	// binding of this draw disqualifies the image even if another binding is atomic-only.
+	// ImageResource::atomic says the shader uses image atomics on this resource, not that it
+	// uses nothing else: ResourceTracking merges Write and Atomic into the same `written` flag.
+	// A scan of this title's whole translation cache found 18 atomic-only descriptors, 104
+	// plain-store-only and no mixed one, which is what makes the predicate exact here -- and
+	// why the gate stays off by default.
+	image.binding.shader_write_plain |= storage && !atomic;
 	m_bound_images.push_back(id);
 }
 
@@ -1099,7 +1108,8 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		auto binding = ResolveTexture(program.info.images[i], snapshot.images[i]);
-		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage);
+		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage,
+		          program.info.images[i].atomic);
 		prepared.images.push_back(std::move(binding));
 	}
 	prepared.samplers.reserve(program.info.samplers.size());
@@ -1196,7 +1206,8 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			}
 			images[i] = ResolveTexture(program.info.images[i], snapshot.images[i]);
 			BindImage(images[i].image_id,
-			          images[i].desc.type == TextureCache::BindingType::Storage);
+			          images[i].desc.type == TextureCache::BindingType::Storage,
+			          program.info.images[i].atomic);
 		}
 	}
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
@@ -1309,13 +1320,29 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		const auto  shader_stage  = NativeShaderStage(program.stage);
 		const auto  shader_stages = ShaderPipelineStages(shader_stage);
 		if (descriptors.gds.buffer != nullptr) {
-			buffer.EndRendering(RenderPassEnd::Gds);
-			const auto barrier = MakeGdsDependency(descriptors.gds.buffer);
-			vk_buffer.pipelineBarrier(
-			    vk::PipelineStageFlagBits::eHost | vk::PipelineStageFlagBits::eTransfer |
-			        vk::PipelineStageFlagBits::eAllGraphics |
-			        vk::PipelineStageFlagBits::eComputeShader,
-			    shader_stages, vk::DependencyFlags {}, 0, nullptr, 1, &barrier, 0, nullptr);
+			// Gate "gdsepoch": skipping must not call EndRendering(Gds) -- leaving the pass open
+			// is the whole point, and this barrier is the first closer of every OIT draw once the
+			// shader-write barrier stays inside the pass (gate "swlocal").
+			auto&      gds_cache    = m_context.GetBufferCache();
+			const auto gds_consumer =
+			    pipeline_bind_point == vk::PipelineBindPoint::eGraphics ? 1u : 2u;
+			const bool gds_needed = buffer.ClaimGdsBarrier(
+			    gds_cache.GdsHostEpoch(), gds_cache.GdsShaderEpoch(), gds_consumer,
+			    Common::Gates::Enabled(Common::Gates::Gate::GdsEpoch));
+			if (gds_needed) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::GdsBarriers, 1);
+				buffer.EndRendering(RenderPassEnd::Gds);
+				const auto barrier = MakeGdsDependency(descriptors.gds.buffer);
+				vk_buffer.pipelineBarrier(
+				    vk::PipelineStageFlagBits::eHost | vk::PipelineStageFlagBits::eTransfer |
+				        vk::PipelineStageFlagBits::eAllGraphics |
+				        vk::PipelineStageFlagBits::eComputeShader,
+				    shader_stages, vk::DependencyFlags {}, 0, nullptr, 1, &barrier, 0, nullptr);
+			} else {
+				Common::FrameStats::Add(Common::FrameStats::Counter::GdsBarriersSkipped, 1);
+			}
+			// This stage is itself a GDS producer for whoever comes next.
+			gds_cache.NoteGdsShaderAccess();
 		}
 
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
@@ -1326,12 +1353,19 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			const ImageSubresourceRange range {view.base_level, view.level_count, view.base_layer,
 			                                   view.layer_count};
 			const bool storage = binding.desc.type == TextureCache::BindingType::Storage;
+			// Gate "atomimg" (C1): every storage binding of this image in this draw writes it
+			// with image atomics only, so two such draws need no barrier between them. Graphics
+			// only -- a dispatch closes the pass anyway and must keep its real dependency.
+			const bool atomic_write =
+			    pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
+			    image.binding.shader_write && !image.binding.shader_write_plain;
 			if (image.info.data.Empty()) {
 				image.Transit(vk::ImageLayout::eGeneral,
 				              storage ? vk::AccessFlagBits2::eShaderRead |
 				                            vk::AccessFlagBits2::eShaderWrite
 				                      : vk::AccessFlagBits2::eShaderRead,
-				              range, vk_buffer, RenderPassEnd::BindingTransit);
+				              range, vk_buffer, RenderPassEnd::BindingTransit,
+				              storage && atomic_write);
 			} else if (image.binding.is_target) {
 				const auto layout = image.binding.attachment_layout;
 				EXIT_IF(layout == vk::ImageLayout::eUndefined);
@@ -1360,18 +1394,18 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              image.binding.attachment_access | vk::AccessFlagBits2::eShaderRead |
 				                  (image.binding.shader_write ? vk::AccessFlagBits2::eShaderWrite
 				                                              : vk::AccessFlags2 {}),
-				              {}, vk_buffer, RenderPassEnd::BindingTransit);
+				              {}, vk_buffer, RenderPassEnd::BindingTransit, atomic_write);
 			} else if (image.binding.force_general && !image.info.IsDepth()) {
 				const vk::AccessFlags2 storage_access = image.binding.shader_write
 				                                            ? vk::AccessFlagBits2::eShaderWrite
 				                                            : vk::AccessFlags2 {};
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk_buffer,
-				              RenderPassEnd::BindingTransit);
+				              RenderPassEnd::BindingTransit, atomic_write);
 			} else if (storage) {
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
-				              range, vk_buffer, RenderPassEnd::BindingTransit);
+				              range, vk_buffer, RenderPassEnd::BindingTransit, atomic_write);
 			} else {
 				image.Transit(image.info.IsDepth() ? vk::ImageLayout::eDepthStencilReadOnlyOptimal
 				                                   : vk::ImageLayout::eShaderReadOnlyOptimal,

@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_COMMON_BITARRAY_H_
 
 #include <array>
+#include <atomic>
 #include <bit>
 #include <cstddef>
 #include <cstdint>
@@ -90,6 +91,37 @@ public:
 
 	constexpr void Unset(size_t index) {
 		m_data[index / BITS_PER_WORD] &= ~(uint64_t {1} << (index % BITS_PER_WORD));
+	}
+
+	// SetRange for a map a lock-free reader (AnyInRangeRelaxed) may be scanning right now.
+	// Writers are still excluded from each other by the region lock, so the read-modify-write
+	// itself need not be atomic -- only each individual access to a word.
+	void SetRangeRelaxed(size_t start, size_t end) noexcept {
+		if (start >= end || end > N) {
+			return;
+		}
+		const auto load = [this](size_t word) noexcept {
+			return std::atomic_ref<uint64_t>(m_data[word]).load(std::memory_order_relaxed);
+		};
+		const auto store = [this](size_t word, uint64_t value) noexcept {
+			std::atomic_ref<uint64_t>(m_data[word]).store(value, std::memory_order_relaxed);
+		};
+		const auto first_word = start / BITS_PER_WORD;
+		const auto last_word  = (end - 1) / BITS_PER_WORD;
+		const auto start_bit  = start % BITS_PER_WORD;
+		const auto end_bit    = (end - 1) % BITS_PER_WORD;
+		const auto start_mask = ~uint64_t {0} << start_bit;
+		const auto end_mask =
+		    end_bit == BITS_PER_WORD - 1 ? ~uint64_t {0} : (uint64_t {1} << (end_bit + 1)) - 1;
+		if (first_word == last_word) {
+			store(first_word, load(first_word) | (start_mask & end_mask));
+			return;
+		}
+		store(first_word, load(first_word) | start_mask);
+		for (auto word = first_word + 1; word < last_word; word++) {
+			store(word, ~uint64_t {0});
+		}
+		store(last_word, load(last_word) | end_mask);
 	}
 
 	constexpr void SetRange(size_t start, size_t end) {
@@ -184,6 +216,45 @@ public:
 			}
 		}
 		return (m_data[last_word] & end_mask) != 0;
+	}
+
+	// AnyInRange for a reader that holds no lock: every word is read through
+	// std::atomic_ref. That only rules out a data race if the racing writer uses atomic_ref
+	// too, which is why the one write that can run concurrently with this scan - setting
+	// CPU-dirty bits from a guest thread - goes through SetRangeRelaxed; every other write of
+	// a map read this way is made by the reading thread itself. Relaxed on purpose: the only
+	// caller (MemoryTracker's *Fast queries) documents why each possible stale answer is
+	// harmless. Never use it to decide a state change.
+	[[nodiscard]] bool AnyInRangeRelaxed(size_t start, size_t end) noexcept {
+		if (start >= end || end > N) {
+			return false;
+		}
+
+		const auto load = [this](size_t word) noexcept {
+			return std::atomic_ref<uint64_t>(m_data[word]).load(std::memory_order_relaxed);
+		};
+
+		const auto first_word = start / BITS_PER_WORD;
+		const auto last_word  = (end - 1) / BITS_PER_WORD;
+		const auto start_bit  = start % BITS_PER_WORD;
+		const auto end_bit    = (end - 1) % BITS_PER_WORD;
+		const auto start_mask = ~uint64_t {0} << start_bit;
+		const auto end_mask =
+		    end_bit == BITS_PER_WORD - 1 ? ~uint64_t {0} : (uint64_t {1} << (end_bit + 1)) - 1;
+
+		if (first_word == last_word) {
+			return (load(first_word) & start_mask & end_mask) != 0;
+		}
+
+		if ((load(first_word) & start_mask) != 0) {
+			return true;
+		}
+		for (auto word = first_word + 1; word < last_word; word++) {
+			if (load(word) != 0) {
+				return true;
+			}
+		}
+		return (load(last_word) & end_mask) != 0;
 	}
 
 	[[nodiscard]] constexpr Range FirstRangeFrom(size_t start) const {

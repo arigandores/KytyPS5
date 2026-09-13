@@ -44,6 +44,8 @@ struct ImageBinding {
 	bool             needs_rebind  = false;
 	bool             force_general = false;
 	bool             shader_write  = false;
+	// Gate "atomimg": some binding of this draw stores into the image without an atomic.
+	bool             shader_write_plain = false;
 };
 
 class Image final {
@@ -54,14 +56,16 @@ public:
 
 	[[nodiscard]] vk::ImageView FindView(const ImageViewInfo& view_info);
 	using Barriers = std::vector<vk::ImageMemoryBarrier2>;
+	// atomic_write: the requested access writes the image with image atomics only.
 	[[nodiscard]] Barriers GetBarriers(vk::ImageLayout                      destination_layout,
 	                                   vk::AccessFlags2                     destination_access,
 	                                   vk::PipelineStageFlags2              destination_stage,
-	                                   std::optional<ImageSubresourceRange> range);
+	                                   std::optional<ImageSubresourceRange> range,
+	                                   bool                                 atomic_write = false);
 	// why: charged if the transition closes a render pass (FrameTrace-rp).
 	void Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
 	             std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
-	             RenderPassEnd why = RenderPassEnd::Other);
+	             RenderPassEnd why = RenderPassEnd::Other, bool atomic_write = false);
 	// buffer_from_tiler: the source buffer was written by the tiler (compute / fill) or the CPU,
 	// never by a draw: the barrier before the copy names those stages only.
 	void Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
@@ -151,6 +155,9 @@ public:
 	ImageInfo        info;
 	VulkanImage      backing;
 	std::vector<CachedImageView> views;
+	// Index in `views` that answered the previous FindView on this image; almost every bind of a
+	// frame repeats the previous one, so the list walk becomes a single comparison.
+	uint32_t                     view_hint = 0;
 	ImageUsage       usage;
 	ImageBinding     binding;
 	bool             registered     = false;

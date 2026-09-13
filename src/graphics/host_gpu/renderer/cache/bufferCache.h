@@ -67,6 +67,13 @@ public:
 		EXIT("BufferCache: invalid utility-buffer usage\n");
 	}
 	[[nodiscard]] const Buffer* GetGdsBuffer() const noexcept { return &m_gds_buffer; }
+	// Gate "gdsepoch": the GDS barrier of a consumer only has to order producers that actually
+	// ran since the previous one. The host epoch moves on a host or transfer write to GDS (those
+	// are rare: the initial clear, a DMA fill, a DMA copy); the shader epoch moves whenever a
+	// draw or dispatch stage with a Gds descriptor is committed.
+	[[nodiscard]] uint64_t GdsHostEpoch() const noexcept { return m_gds_host_epoch; }
+	[[nodiscard]] uint64_t GdsShaderEpoch() const noexcept { return m_gds_shader_epoch; }
+	void                   NoteGdsShaderAccess() noexcept { m_gds_shader_epoch++; }
 	[[nodiscard]] Buffer* GetBdaPageTableBuffer() noexcept { return &m_bda_pagetable_buffer; }
 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return m_fault_manager.GetFaultBuffer(); }
 	[[nodiscard]] uint64_t CpuWriteEpoch() const noexcept { return m_memory_tracker.CpuWriteEpoch(); }
@@ -93,6 +100,12 @@ public:
 	[[nodiscard]] bool HasGpuDirtyBytes(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool IsRegionCpuModified(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t vaddr, uint64_t size);
+	// The same two questions asked from the GuestGpu thread, where the tracker's bit maps
+	// may be read without taking TrackingSpinLock (gate "trackfree", self-check "tfcheck";
+	// see MemoryTracker::IsRegionGpuModifiedFast for why every stale answer is safe there).
+	// Callers outside the GuestGpu thread must keep using the plain forms above.
+	[[nodiscard]] bool IsRegionGpuModifiedFromGpu(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size);
 	void               ProcessFaultBuffer();
 	void               SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size);
 	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
@@ -200,6 +213,8 @@ private:
 	// Image address -> tick of its last upload through the import (re-upload interval heuristic).
 	std::unordered_map<uint64_t, uint64_t>              m_import_last_tick;
 	Buffer                                            m_gds_buffer;
+	uint64_t                                          m_gds_host_epoch   = 1;
+	uint64_t                                          m_gds_shader_epoch = 1;
 	Buffer                                            m_bda_pagetable_buffer;
 	Buffer                                            m_bda_null_page;
 	bool                                              m_bda_null_page_ready = false;

@@ -145,6 +145,10 @@ bool RenderDocLevelStarted() {
 	return g_rd_level_started.load(std::memory_order_acquire);
 }
 
+bool RenderDocCapturing() {
+	return g_state.load(std::memory_order_acquire) != RenderDocState::Idle;
+}
+
 void RenderDocRequestCapture() {
 	if (g_api == nullptr) {
 		if (!g_unavailable_log.exchange(true)) {

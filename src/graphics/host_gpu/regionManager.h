@@ -132,6 +132,15 @@ public:
 		return bits.AnyInRange(start, end);
 	}
 
+	// IsModified without holding `lock` (gate "trackfree", see MemoryTracker for the
+	// ownership argument that makes each possible stale answer safe). Non-const because the
+	// words are read through std::atomic_ref, which does not bind to a const object.
+	template <DirtySource source>
+	[[nodiscard]] bool IsModifiedRelaxed(uint64_t offset, uint64_t size) {
+		const auto [start, end] = GetPageRange(m_cpu_addr + offset, size);
+		return GetBits<source>().AnyInRangeRelaxed(start, end);
+	}
+
 	template <DirtySource source, bool enable>
 	void ChangeState(uint64_t vaddr, uint64_t size) {
 		const auto [start, end] = GetPageRange(vaddr, size);
@@ -151,7 +160,14 @@ public:
 		}
 		auto& bits = GetBits<source>();
 		if constexpr (enable) {
-			bits.SetRange(start, end);
+			if constexpr (source == DirtySource::Cpu) {
+				// m_cpu_dirty is set from guest threads (InvalidateRegion) while the GuestGpu
+				// thread may be scanning it without this lock, so every word it touches has to
+				// be written atomically. Nothing else writes either map off that thread.
+				bits.SetRangeRelaxed(start, end);
+			} else {
+				bits.SetRange(start, end);
+			}
 		} else {
 			bits.UnsetRange(start, end);
 		}
@@ -211,6 +227,10 @@ private:
 			return;
 		}
 		previous = protection;
+		// prot_held_us: every caller of UpdateProtection already holds `lock`, so this scope
+		// is exactly the time the region lock stays held across the host protection change
+		// (VirtualProtect plus the address-space mutex behind it). Diagnostic, no gate.
+		Common::FrameStats::Scope held(Common::FrameStats::Counter::ProtectHeldNs);
 		m_page_manager.UpdatePageWatchersForRegion<track, is_read>(m_cpu_addr, mask);
 	}
 
@@ -246,7 +266,10 @@ private:
 	uint64_t     m_cpu_addr = 0;
 	std::atomic<uint64_t>& m_cpu_epoch;
 	std::atomic<uint64_t>  m_epoch {1};
-	RegionBits   m_cpu_dirty;
+	// The dirty maps are read without the lock (IsModifiedRelaxed); give them their own
+	// cache lines so those reads do not fight `lock`, which otherwise shares a line with
+	// the first words of m_cpu_dirty.
+	alignas(64) RegionBits m_cpu_dirty;
 	RegionBits   m_gpu_dirty;
 	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight
 	RegionBits   m_writable;

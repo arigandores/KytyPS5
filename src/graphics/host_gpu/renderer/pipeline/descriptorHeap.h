@@ -29,13 +29,14 @@ public:
 	[[nodiscard]] const Statistics& GetStatistics() const noexcept { return m_statistics; }
 
 private:
-	static constexpr uint32_t DescriptorSetBatch = 32;
+	// Upper bound of one vkAllocateDescriptorSets; the knob "dsbatch" picks the value used.
+	static constexpr uint32_t DescriptorSetBatch = 256;
 
 	struct Batch {
 		std::vector<vk::DescriptorSet> sets;
 		size_t                         cursor     = 0;
 		size_t                         retained   = 0;
-		uint32_t                       allocation = DescriptorSetBatch;
+		uint32_t                       allocation = 0; // set from the knob on first use
 		bool                           exhausted  = false;
 	};
 	struct Pool {

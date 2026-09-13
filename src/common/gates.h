@@ -24,13 +24,22 @@ enum class Gate : uint32_t {
 	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
 	AsyncSubmit,    // KYTY_ASYNC_SUBMIT,        file name "asyncsubmit"
 	ImageRecycle,   // KYTY_IMAGE_RECYCLE,       file name "imgrecycle"
+	RecordThread,   // KYTY_RECORD_THREAD,       file name "recordthread"
+	TrackLockFree,  // KYTY_TRACK_LOCKFREE,      file name "trackfree"
+	TrackLockFreeVerify, // KYTY_TRACK_LOCKFREE_VERIFY, file name "tfcheck"
+	ProtectFast,    // KYTY_PROTECT_FAST,        file name "protfast"
 	ShaderWriteLocal, // KYTY_SHADER_WRITE_LOCAL, file name "swlocal"
+	GdsEpoch,       // KYTY_GDS_EPOCH,           file name "gdsepoch"
+	AtomicImageBarrier, // KYTY_ATOMIC_IMAGE_NO_BARRIER, file name "atomimg"
 	Count,
 };
 
 // Numeric settings with the same life cycle as the gates ("name=<decimal>" in the gate file).
 enum class Knob : uint32_t {
 	DrawAheadThreads, // KYTY_DRAW_AHEAD_THREADS, file name "dathreads"
+	RecordArenaMb,    // KYTY_RECORD_ARENA_MB,    file name "recarena"
+	DescriptorSetBatch, // KYTY_DESCRIPTOR_BATCH,  file name "dsbatch"
+	DescriptorPoolSets, // KYTY_DESCRIPTOR_POOL,   file name "dspool"
 	Count,
 };
 

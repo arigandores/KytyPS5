@@ -33,7 +33,13 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_DRAW_AHEAD_USE", "dause", true},
     {"KYTY_ASYNC_SUBMIT", "asyncsubmit", true},
     {"KYTY_IMAGE_RECYCLE", "imgrecycle", true},
+    {"KYTY_RECORD_THREAD", "recordthread", false},
+    {"KYTY_TRACK_LOCKFREE", "trackfree", false},
+    {"KYTY_TRACK_LOCKFREE_VERIFY", "tfcheck", false},
+    {"KYTY_PROTECT_FAST", "protfast", false},
     {"KYTY_SHADER_WRITE_LOCAL", "swlocal", false},
+    {"KYTY_GDS_EPOCH", "gdsepoch", false},
+    {"KYTY_ATOMIC_IMAGE_NO_BARRIER", "atomimg", false},
 }};
 
 struct KnobDefinition {
@@ -45,6 +51,9 @@ struct KnobDefinition {
 
 constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFINITIONS {{
     {"KYTY_DRAW_AHEAD_THREADS", "dathreads", 4, 64},
+    {"KYTY_RECORD_ARENA_MB", "recarena", 16, 256},
+    {"KYTY_DESCRIPTOR_BATCH", "dsbatch", 32, 256},
+    {"KYTY_DESCRIPTOR_POOL", "dspool", 1024, 16384},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

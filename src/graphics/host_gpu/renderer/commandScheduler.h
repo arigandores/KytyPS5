@@ -3,6 +3,7 @@
 
 #include "common/common.h"
 #include "common/uniqueFunction.h"
+#include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
 #include "graphics/host_gpu/renderer/render.h"
@@ -11,6 +12,7 @@
 #include <deque>
 #include <mutex>
 
+#include <memory>
 #include <queue>
 
 #include <thread>
@@ -18,10 +20,15 @@
 
 namespace Libs::Graphics {
 
-// Blocks until every command buffer queued for the submit thread (gate "asyncsubmit") has been
-// handed to vkQueueSubmit. Call it before using the queue in a way that depends on all work queued
-// so far (waitIdle, capture boundaries, shutdown), and never while holding graphics.queue_mutex.
+// Blocks until every command buffer of every scheduler has been recorded (gate "recordthread")
+// and handed to vkQueueSubmit (gate "asyncsubmit"). Call it before using the queue in a way that
+// depends on all work queued so far (waitIdle, capture boundaries, a present submit, shutdown),
+// and never while holding graphics.queue_mutex.
 void DrainAsyncSubmits();
+// Hands a command buffer the record thread has just ended to the submit thread. The tick was
+// reserved by CommandScheduler::Submit on the resolving thread and its signal is already part of
+// request.submit; the FIFO order is the order that thread published the ends in.
+void EnqueueAsyncSubmit(const RecordSubmit& request, vk::CommandBuffer buffer);
 // Submits queued for the submit thread and not yet handed to vkQueueSubmit (diagnostics).
 [[nodiscard]] size_t AsyncSubmitBacklog();
 
@@ -72,7 +79,7 @@ public:
 	void EnableGpuTime() { m_gpu_time.Enable(); }
 	void GpuMark(GpuTimeProfiler::Kind kind, uint64_t key, uint64_t key2 = 0) {
 		if (GpuTimeProfiler::Enabled() && !m_command.IsInvalid()) {
-			m_gpu_time.Mark(m_command.Handle(), CurrentTick(), kind, key, key2);
+			GpuMarkSlow(kind, key, key2);
 		}
 	}
 
@@ -84,6 +91,9 @@ private:
 		KYTY_CLASS_NO_COPY(CommandPool);
 
 		vk::CommandBuffer Commit();
+		// Stamped with the tick the buffer will signal. The record thread passes the tick the
+		// resolving thread saw when it began the buffer, not the one current by then.
+		vk::CommandBuffer Commit(uint64_t tick);
 
 	private:
 		static constexpr size_t GrowStep = 4;
@@ -106,6 +116,12 @@ private:
 		const void*                  site = nullptr; // DeferOperation caller (FrameTrace-pops)
 	};
 
+	// Gate "recordthread": the record thread of this scheduler, created on first use, and the
+	// pool hook it records through (the pool belongs to that thread while it runs).
+	[[nodiscard]] CommandRecorder* Recorder();
+	static vk::CommandBuffer       CommitPoolBuffer(void* user, uint64_t tick);
+	void                           GpuMarkSlow(GpuTimeProfiler::Kind kind, uint64_t key,
+	                                           uint64_t key2);
 	void BeginNext();
 	void PriorityOperationsThread(std::stop_token stop);
 	void RunOperation(Common::UniqueFunction<void>&& operation);
@@ -146,6 +162,8 @@ private:
 	std::mutex                                m_timestamp_mutex;
 	uint64_t                                  m_last_submit_ns = 0;
 	GpuTimeProfiler                           m_gpu_time;
+	// Declared last: its destructor stops the record thread before anything it points at dies.
+	std::unique_ptr<CommandRecorder>          m_recorder;
 };
 
 } // namespace Libs::Graphics

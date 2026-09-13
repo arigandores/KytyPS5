@@ -1,6 +1,8 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptorHeap.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -11,14 +13,12 @@
 namespace Libs::Graphics {
 namespace {
 
-constexpr uint32_t   DescriptorHeapCount = 1024;
-constexpr std::array DescriptorPoolSizes = {
-    vk::DescriptorPoolSize {vk::DescriptorType::eStorageBuffer, 8192},
-    vk::DescriptorPoolSize {vk::DescriptorType::eUniformBuffer, 4096},
-    vk::DescriptorPoolSize {vk::DescriptorType::eSampledImage, 8192},
-    vk::DescriptorPoolSize {vk::DescriptorType::eStorageImage, 1024},
-    vk::DescriptorPoolSize {vk::DescriptorType::eSampler, 1024},
-};
+// Sets per pool and the descriptors backing them; both follow the knob "dspool" so one run can
+// compare pool sizes. The pool sizes keep the ratios the 1024-set pool was built with.
+uint32_t DescriptorHeapSets() {
+	const auto value = Common::Gates::Value(Common::Gates::Knob::DescriptorPoolSets);
+	return value < 64 ? 64u : value;
+}
 
 } // namespace
 
@@ -100,11 +100,16 @@ bool DescriptorHeap::Allocate(vk::DescriptorSetLayout layout, Batch& batch) {
 	if (batch.exhausted) return false;
 	// Some drivers permit allocations beyond the pool sizes. Keep retained host
 	// storage bounded and make retirement independent of that implementation choice.
-	if (m_current_pool.allocated_count == DescriptorHeapCount) {
+	const auto pool_sets = DescriptorHeapSets();
+	if (m_current_pool.allocated_count >= pool_sets) {
 		batch.exhausted = true;
 		return false;
 	}
-	batch.allocation = std::min(batch.allocation, DescriptorHeapCount - m_current_pool.allocated_count);
+	if (batch.allocation == 0) {
+		const auto knob  = Common::Gates::Value(Common::Gates::Knob::DescriptorSetBatch);
+		batch.allocation = knob == 0 ? 1u : std::min(knob, DescriptorSetBatch);
+	}
+	batch.allocation = std::min(batch.allocation, pool_sets - m_current_pool.allocated_count);
 	std::array<vk::DescriptorSetLayout, DescriptorSetBatch> layouts;
 	layouts.fill(layout);
 	std::array<vk::DescriptorSet, DescriptorSetBatch> allocated;
@@ -119,6 +124,7 @@ bool DescriptorHeap::Allocate(vk::DescriptorSetLayout layout, Batch& batch) {
 		const auto result = m_graphics.device.allocateDescriptorSets(&allocate, allocated.data());
 		if (result == vk::Result::eSuccess) {
 			m_current_pool.allocated_count += batch.allocation;
+			Common::FrameStats::Add(Common::FrameStats::Counter::DescriptorAllocations, 1);
 			batch.sets.insert(batch.sets.end(), allocated.begin(), allocated.begin() + batch.allocation);
 			return true;
 		}
@@ -133,10 +139,18 @@ bool DescriptorHeap::Allocate(vk::DescriptorSetLayout layout, Batch& batch) {
 }
 
 void DescriptorHeap::CreateDescriptorPool() {
+	const auto                     sets = DescriptorHeapSets();
+	const std::array               pool_sizes = {
+        vk::DescriptorPoolSize {vk::DescriptorType::eStorageBuffer, 8 * sets},
+        vk::DescriptorPoolSize {vk::DescriptorType::eUniformBuffer, 4 * sets},
+        vk::DescriptorPoolSize {vk::DescriptorType::eSampledImage, 8 * sets},
+        vk::DescriptorPoolSize {vk::DescriptorType::eStorageImage, 1 * sets},
+        vk::DescriptorPoolSize {vk::DescriptorType::eSampler, 1 * sets},
+    };
 	vk::DescriptorPoolCreateInfo create {};
-	create.maxSets       = DescriptorHeapCount;
-	create.poolSizeCount = static_cast<uint32_t>(DescriptorPoolSizes.size());
-	create.pPoolSizes    = DescriptorPoolSizes.data();
+	create.maxSets       = sets;
+	create.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
+	create.pPoolSizes    = pool_sizes.data();
 	EXIT_IF(m_graphics.device.createDescriptorPool(&create, nullptr, &m_current_pool.handle) !=
 	        vk::Result::eSuccess);
 }

@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/profiler.h"
 #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
@@ -114,9 +115,12 @@ static vk::PipelineStageFlags2 SourceStageOf(const VulkanImageState& state) {
 Image::Barriers Image::GetBarriers(vk::ImageLayout                      destination_layout,
                                    vk::AccessFlags2                     destination_access,
                                    vk::PipelineStageFlags2              destination_stage,
-                                   std::optional<ImageSubresourceRange> range) {
+                                   std::optional<ImageSubresourceRange> range, bool atomic_write) {
 	auto& state              = backing.state;
 	auto& subresource_states = backing.subresource_states;
+	// Gate "atomimg", read once: the partial path below loops over levels x layers.
+	const bool atomic_relaxation =
+	    atomic_write && Common::Gates::Enabled(Common::Gates::Gate::AtomicImageBarrier);
 	if (range && info.IsVolume()) {
 		range->base_layer  = 0;
 		range->layer_count = 1;
@@ -148,8 +152,18 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 				                              vk::AccessFlagBits2::eMemoryWrite;
 				const bool     repeated_write =
 				    static_cast<bool>(subresource_state.access_mask & write_access);
-				if (subresource_state.layout != destination_layout ||
-				    subresource_state.access_mask != destination_access || repeated_write) {
+				const bool     same_state =
+				    subresource_state.layout == destination_layout &&
+				    subresource_state.access_mask == destination_access;
+				// Gate "atomimg": a repeated write is free when both writes are image atomics on
+				// an otherwise identical state -- device-scope atomics order themselves.
+				const bool     atomic_pair    = atomic_relaxation && subresource_state.atomic_write;
+				const bool     needs_barrier  = !same_state || (repeated_write && !atomic_pair);
+				if (!needs_barrier && repeated_write) {
+					Common::FrameStats::Add(
+					    Common::FrameStats::Counter::ImageWriteBarriersSkipped, 1);
+				}
+				if (needs_barrier) {
 					vk::ImageMemoryBarrier2 barrier {};
 					barrier.srcStageMask                    = SourceStageOf(subresource_state);
 					barrier.srcAccessMask                   = subresource_state.access_mask;
@@ -166,7 +180,8 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 					barrier.subresourceRange.baseArrayLayer = layer;
 					barrier.subresourceRange.layerCount     = 1;
 					barriers.push_back(barrier);
-					subresource_state = {destination_stage, destination_access, destination_layout};
+					subresource_state = {destination_stage, destination_access, destination_layout,
+					                     atomic_write};
 				}
 			}
 		}
@@ -179,8 +194,13 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 		                                vk::AccessFlagBits2::eShaderWrite |
 		                                vk::AccessFlagBits2::eMemoryWrite;
 		const bool     repeated_write = static_cast<bool>(state.access_mask & write_access);
+		// Gate "atomimg": see the partial path above.
+		const bool     atomic_pair    = atomic_relaxation && state.atomic_write;
 		if (state.layout == destination_layout && state.access_mask == destination_access &&
-		    !repeated_write) {
+		    (!repeated_write || atomic_pair)) {
+			if (repeated_write) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::ImageWriteBarriersSkipped, 1);
+			}
 			return {};
 		}
 
@@ -202,13 +222,13 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 		barriers.push_back(barrier);
 	}
 
-	state = {destination_stage, destination_access, destination_layout};
+	state = {destination_stage, destination_access, destination_layout, atomic_write};
 	return barriers;
 }
 
 void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
                     std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
-                    RenderPassEnd why) {
+                    RenderPassEnd why, bool atomic_write) {
 	const auto transfer_access =
 	    vk::AccessFlagBits2::eTransferRead | vk::AccessFlagBits2::eTransferWrite;
 	vk::PipelineStageFlags2 destination_stage {};
@@ -221,7 +241,8 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 		    vk::PipelineStageFlagBits2::eAllGraphics | vk::PipelineStageFlagBits2::eComputeShader;
 	}
 	const auto barriers =
-	    GetBarriers(destination_layout, destination_access, destination_stage, range);
+	    GetBarriers(destination_layout, destination_access, destination_stage, range,
+	                atomic_write);
 	if (barriers.empty()) {
 		return;
 	}

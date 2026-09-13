@@ -152,6 +152,9 @@ struct VulkanImageState {
 	vk::PipelineStageFlags2 pl_stage    = vk::PipelineStageFlagBits2::eAllCommands;
 	vk::AccessFlags2        access_mask = vk::AccessFlagBits2::eNone;
 	vk::ImageLayout         layout      = vk::ImageLayout::eUndefined;
+	// Gate "atomimg": the write recorded here was made with image atomics only. Two such writes
+	// in a row need no barrier between them; every other repeated write still does.
+	bool                    atomic_write = false;
 };
 
 struct VulkanImage {

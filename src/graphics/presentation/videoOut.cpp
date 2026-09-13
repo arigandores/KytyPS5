@@ -1298,7 +1298,14 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " img_ins_us=%llu img_free_us=%llu img_ovl_us=%llu"
 			     " as_n=%llu as_us=%llu as_lock_us=%llu as_drain=%llu as_drain_us=%llu"
 			     " img_rec_hit=%llu img_rec_put=%llu"
-			     " swbar_loc=%llu swbar_flush=%llu"
+			     " rec_n=%llu rec_kb=%llu rec_direct=%llu rec_direct_us=%llu"
+			     " rec_drain=%llu rec_drain_us=%llu rec_full=%llu rec_full_us=%llu"
+			     " rec_work_us=%llu rec_idle_us=%llu cpu_record_us=%llu"
+			     " tf_free=%llu tf_lock=%llu tf_bad=%llu"
+			     " pmap_hit=%llu pmap_miss=%llu prot_held_us=%llu"
+			     " gds_bar=%llu gds_skip=%llu img_ww_skip=%llu"
+			     " swbar_loc=%llu swbar_flush=%llu ds_alloc=%llu"
+			     " da_runs=%llu da_probe=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1380,8 +1387,21 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     dus(FS::Counter::AsyncSubmitLockNs),
 			     d(FS::Counter::AsyncSubmitDrains), dus(FS::Counter::AsyncSubmitDrainNs),
 			     d(FS::Counter::ImgRecycleHits), d(FS::Counter::ImgRecyclePuts),
+			     d(FS::Counter::RecordPackets), d(FS::Counter::RecordBytes) / 1024u,
+			     d(FS::Counter::RecordDirect), dus(FS::Counter::RecordDirectNs),
+			     d(FS::Counter::RecordDrains), dus(FS::Counter::RecordDrainNs),
+			     d(FS::Counter::RecordFull), dus(FS::Counter::RecordFullNs),
+			     dus(FS::Counter::RecordWorkNs), dus(FS::Counter::RecordIdleNs),
+			     cpu(FS::ThreadRole::Record),
+			     d(FS::Counter::TrackFreeHits), d(FS::Counter::TrackFreeLocked),
+			     d(FS::Counter::TrackFreeMismatch), d(FS::Counter::ProtectMapHits),
+			     d(FS::Counter::ProtectMapMisses), dus(FS::Counter::ProtectHeldNs),
+			     d(FS::Counter::GdsBarriers), d(FS::Counter::GdsBarriersSkipped),
+			     d(FS::Counter::ImageWriteBarriersSkipped),
 			     d(FS::Counter::ShaderWriteBarriersLocal),
-			     d(FS::Counter::ShaderWriteBarriersFlushed));
+			     d(FS::Counter::ShaderWriteBarriersFlushed),
+			     d(FS::Counter::DescriptorAllocations),
+			     d(FS::Counter::DrawAheadRuns), d(FS::Counter::DrawAheadProbes));
 			{
 				// Why render passes ended this frame (end_*), and how many of those ends were followed
 				// by a pass on the same targets (restart_*), per RenderPassEnd reason.

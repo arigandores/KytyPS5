@@ -164,11 +164,14 @@ public:
 	// Draw lookahead (docs/parallel-draw-path.md, M1): a vertex or pixel program the PM4 walk
 	// expects a coming draw to run, with the user data it will run with.
 	struct DrawAheadRequest {
-		uint64_t                 base  = 0; // program address (the shader base of the SRT walk)
-		uint32_t                 count = 0; // user SGPRs of the stage
-		uint32_t                 uses  = 1; // draws of the walk that will ask for it
-		bool                     pixel = false;
-		std::array<uint32_t, 32> user_data {};
+		uint64_t                 base      = 0; // program address (the shader base of the SRT walk)
+		// XXH3 of user_data[0, count), hashed once by the walk: the slot hash and the static
+		// variant key mix it with integers instead of hashing the block again per variant.
+		uint64_t                 user_hash = 0;
+		uint32_t                 count     = 0; // user SGPRs of the stage
+		uint32_t                 uses      = 1; // draws of the walk that will ask for it
+		bool                     pixel     = false;
+		std::array<uint32_t, 32> user_data {}; // only [0, count) is written or read
 	};
 	// Queues the materialization of these programs to worker threads. `first_batch` starts a
 	// new walk (results of an older walk may be overwritten, those of this walk are kept).

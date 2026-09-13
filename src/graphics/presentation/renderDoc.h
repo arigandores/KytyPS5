@@ -7,6 +7,9 @@ class RenderContext;
 
 void RenderDocInit();
 void RenderDocRequestCapture();
+// A capture is requested or running: paths that change which thread records the frame (the M3
+// record thread) stay out of the way until it is finished.
+[[nodiscard]] bool RenderDocCapturing();
 // The game's log text passes through here (libc fwrite): "Level has started: <KYTY_RD_LEVEL>"
 // arms the level-relative trigger KYTY_RD_LEVEL_FRAME (see DebugAutoRenderDocCapture).
 void RenderDocNoteGuestText(const char* text, size_t size);

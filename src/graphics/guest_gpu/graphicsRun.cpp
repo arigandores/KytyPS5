@@ -36,6 +36,7 @@
 #include <semaphore>
 #include <thread>
 #include <vector>
+#include <xxhash.h>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #include <windows.h>
@@ -1091,7 +1092,13 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 		next.base   = stage.address;
 		next.count  = stage.count;
 		next.pixel  = pixel;
-		std::copy(stage.user_data.begin(), stage.user_data.end(), next.user_data.begin());
+		// Only the registers the stage declares: nothing downstream looks past `count`
+		// (PipelineCache::AheadSlot::Matches compares exactly that many words), and copying all
+		// 32 was 128 bytes for every one of ~10800 requests a frame.
+		std::copy_n(stage.user_data.begin(), stage.count, next.user_data.begin());
+		// Hashed here, once per request, instead of once per static variant inside QueueAhead.
+		next.user_hash = XXH3_64bits_withSeed(next.user_data.data(),
+		                                      size_t {stage.count} * sizeof(uint32_t), 0);
 	};
 	const auto            apply_sh   = [&cs, &apply_gfx](uint32_t offset, uint32_t value) {
 		apply_gfx(offset, value);

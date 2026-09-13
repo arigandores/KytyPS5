@@ -88,6 +88,20 @@ public:
 		return static_cast<size_t>(m_enqueued - m_submitted);
 	}
 
+	// The tick is already reserved and signalled by record.submit (gate "recordthread").
+	void EnqueueReserved(Record record) {
+		{
+			std::lock_guard lock(m_mutex);
+			if (!m_thread.joinable()) {
+				m_thread = std::thread([this] { Loop(); });
+			}
+			m_queue.push_back(std::move(record));
+			m_enqueued++;
+		}
+		m_available.notify_one();
+		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmits, 1);
+	}
+
 	void Drain() {
 		std::unique_lock lock(m_mutex);
 		const auto target = m_enqueued;
@@ -174,7 +188,29 @@ private:
 } // namespace
 
 void DrainAsyncSubmits() {
+	// Commands that are not written yet are queued work too: the presenter submits on its own
+	// scheduler from a buffer the GuestGpu thread filled, so the record queues go first.
+	DrainRecordQueues();
 	AsyncSubmitter::Get().Drain();
+}
+
+void EnqueueAsyncSubmit(const RecordSubmit& request, vk::CommandBuffer buffer) {
+	EXIT_IF(request.graphics == nullptr || buffer == nullptr);
+	AsyncSubmitter::Record record;
+	record.graphics     = request.graphics;
+	record.scheduler    = request.scheduler;
+	record.master       = request.master;
+	record.buffer       = buffer;
+	record.submit       = request.submit;
+	record.tick         = request.tick;
+	record.debug_op     = request.debug_op;
+	record.debug_submit = request.debug_submit;
+	record.arg0         = request.arg0;
+	record.arg1         = request.arg1;
+	record.arg2         = request.arg2;
+	record.arg3         = request.arg3;
+	record.arg4         = request.arg4;
+	AsyncSubmitter::Get().EnqueueReserved(std::move(record));
 }
 
 size_t AsyncSubmitBacklog() {
@@ -211,11 +247,15 @@ size_t CommandScheduler::CommandPool::Grow() {
 }
 
 vk::CommandBuffer CommandScheduler::CommandPool::Commit() {
+	return Commit(m_master.CurrentTick());
+}
+
+vk::CommandBuffer CommandScheduler::CommandPool::Commit(uint64_t tick) {
 	auto       gpu_tick = m_master.KnownGpuTick();
-	const auto search   = [this, &gpu_tick](size_t begin, size_t end) -> std::optional<size_t> {
+	const auto search   = [this, &gpu_tick, tick](size_t begin, size_t end) -> std::optional<size_t> {
 		for (size_t index = begin; index < end; ++index) {
 			if (gpu_tick >= m_ticks[index]) {
-				m_ticks[index] = m_master.CurrentTick();
+				m_ticks[index] = tick;
 				return index;
 			}
 		}
@@ -233,7 +273,7 @@ vk::CommandBuffer CommandScheduler::CommandPool::Commit() {
 	}
 	if (!found) {
 		found           = Grow();
-		m_ticks[*found] = m_master.CurrentTick();
+		m_ticks[*found] = tick;
 	}
 
 	m_hint = (*found + 1) % m_ticks.size();
@@ -328,6 +368,10 @@ void CommandScheduler::Shutdown() {
 	if (m_priority_thread.joinable()) {
 		m_priority_thread.join();
 	}
+	// Nothing records after this point: stop the record thread while the pool, the profiler and
+	// the command buffer it points at are all still alive.
+	m_command.m_recorder = nullptr;
+	m_recorder.reset();
 	{
 		std::lock_guard lock(m_operation_mutex);
 		EXIT_IF(!m_pending_operations.empty() || !m_priority_operations.empty() ||
@@ -595,13 +639,55 @@ CommandBuffer& CommandScheduler::Current() {
 	return m_command;
 }
 
+CommandRecorder* CommandScheduler::Recorder() {
+	if (m_recorder == nullptr) {
+		m_recorder = std::make_unique<CommandRecorder>(&CommandScheduler::CommitPoolBuffer, this,
+		                                              &m_command.m_buffer, &m_gpu_time);
+	}
+	return m_recorder.get();
+}
+
+vk::CommandBuffer CommandScheduler::CommitPoolBuffer(void* user, uint64_t tick) {
+	EXIT_IF(user == nullptr);
+	return static_cast<CommandScheduler*>(user)->m_command_pool.Commit(tick);
+}
+
+void CommandScheduler::GpuMarkSlow(GpuTimeProfiler::Kind kind, uint64_t key, uint64_t key2) {
+	if (m_command.m_recorder != nullptr) {
+		m_command.m_recorder->PushGpuTime(CurrentTick(), false, kind, key, key2);
+		return;
+	}
+	m_gpu_time.Mark(m_command.Handle(), CurrentTick(), kind, key, key2);
+}
+
 CommandBuffer& CommandScheduler::BeginCommand() {
 	EXIT_IF(!m_command.IsInvalid());
-	m_command.m_buffer = m_command_pool.Commit();
-	m_command.Begin();
+	// The choice is made once per native command buffer, so the dynamic-state cache and the
+	// global-barrier mark keep belonging to exactly one recording.
+	auto* wanted = RecordThreadWanted(m_graphics) ? Recorder() : nullptr;
+	if (wanted == nullptr && m_recorder != nullptr) {
+		// The gate went off while a buffer was queued: the record thread owns the command pool
+		// until its queue is empty, and the direct path below takes a buffer from it.
+		m_recorder->Drain();
+	}
+	m_command.m_recorder = wanted;
+	m_command.m_active   = true;
+	if (m_command.m_recorder != nullptr) {
+		// CurrentTick() is the tick this buffer will signal: the same value the direct path
+		// stamps the pooled buffer with.
+		m_command.BeginRecorded(CurrentTick());
+	} else {
+		m_command.m_buffer = m_command_pool.Commit();
+		m_command.Begin();
+	}
 	BeginTimestamp();
 	if (GpuTimeProfiler::Enabled()) {
-		m_gpu_time.Begin(m_command.Handle(), CurrentTick());
+		if (m_command.m_recorder != nullptr) {
+			m_command.m_recorder->PushGpuTime(CurrentTick(), true, GpuTimeProfiler::Kind::Idle, 0,
+			                                  0);
+		} else {
+			m_gpu_time.Begin(m_command.Handle(), CurrentTick());
+		}
 	}
 	return m_command;
 }
@@ -665,29 +751,59 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	}
 
 	EndTimestamp();
-	m_command.End();
-	const auto buffer   = m_command.m_buffer;
-	auto&      graphics = m_graphics;
+	auto& graphics = m_graphics;
 	EXIT_IF(graphics.queue == nullptr);
 
 	static const bool sync_submit = std::getenv("KYTY_SYNC_SUBMIT") != nullptr;
 	uint64_t          tick        = 0;
-	if (allow_async && !sync_submit && !submit.present && !caller_semaphores &&
-	    Common::Gates::Enabled(Common::Gates::Gate::AsyncSubmit)) {
-		AsyncSubmitter::Record record;
-		record.graphics     = &graphics;
-		record.scheduler    = this;
-		record.master       = m_master.Handle();
-		record.buffer       = buffer;
-		record.submit       = submit;
-		record.debug_op     = m_command.m_debug_op;
-		record.debug_submit = m_command.m_debug_submit_id;
-		record.arg0         = m_command.m_debug_arg0;
-		record.arg1         = m_command.m_debug_arg1;
-		record.arg2         = m_command.m_debug_arg2;
-		record.arg3         = m_command.m_debug_arg3;
-		record.arg4         = m_command.m_debug_arg4;
-		tick                = AsyncSubmitter::Get().Enqueue(std::move(record), m_master);
+	const bool        async = allow_async && !sync_submit && !submit.present && !caller_semaphores &&
+	                          Common::Gates::Enabled(Common::Gates::Gate::AsyncSubmit);
+	auto* recorder = m_command.m_recorder;
+	if (recorder != nullptr) {
+		// Gate "recordthread": the record thread ends the buffer and, for an asynchronous submit,
+		// queues it. The tick is reserved here, on this thread, because CurrentTick() has to keep
+		// naming the command buffer being filled - the stream-buffer watches, the descriptor
+		// pools, the sanitiser slots and the deferred operations stamp their ownership with it.
+		RecordSubmit request;
+		request.async = async;
+		if (async) {
+			tick = m_master.NextTick();
+			submit.AddSignal(m_master.Handle(), tick);
+			request.graphics     = &graphics;
+			request.scheduler    = this;
+			request.master       = m_master.Handle();
+			request.submit       = submit;
+			request.tick         = tick;
+			request.debug_op     = m_command.m_debug_op;
+			request.debug_submit = m_command.m_debug_submit_id;
+			request.arg0         = m_command.m_debug_arg0;
+			request.arg1         = m_command.m_debug_arg1;
+			request.arg2         = m_command.m_debug_arg2;
+			request.arg3         = m_command.m_debug_arg3;
+			request.arg4         = m_command.m_debug_arg4;
+		}
+		m_command.EndRecorded(request);
+	} else {
+		m_command.End();
+	}
+	if (async) {
+		if (recorder == nullptr) {
+			AsyncSubmitter::Record record;
+			record.graphics     = &graphics;
+			record.scheduler    = this;
+			record.master       = m_master.Handle();
+			record.buffer       = m_command.m_buffer;
+			record.submit       = submit;
+			record.debug_op     = m_command.m_debug_op;
+			record.debug_submit = m_command.m_debug_submit_id;
+			record.arg0         = m_command.m_debug_arg0;
+			record.arg1         = m_command.m_debug_arg1;
+			record.arg2         = m_command.m_debug_arg2;
+			record.arg3         = m_command.m_debug_arg3;
+			record.arg4         = m_command.m_debug_arg4;
+			tick                = AsyncSubmitter::Get().Enqueue(std::move(record), m_master);
+			m_command.m_buffer  = nullptr;
+		}
 		if (m_timestamp_slot >= 0) {
 			std::lock_guard lock(m_timestamp_mutex);
 			m_timestamp_pending.emplace_back(tick, static_cast<uint32_t>(m_timestamp_slot));
@@ -705,11 +821,14 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 			FS::Add(FS::Counter::Submits, 1);
 			FS::AddSite(FS::Table::SubmitSites, FS::CurrentSite(), ns);
 		}
-		m_command.m_buffer = nullptr;
+		m_command.m_active = false;
 		return tick;
 	}
-	// Synchronous: everything queued before goes first.
-	AsyncSubmitter::Get().Drain();
+	// Synchronous: everything queued before goes first, including commands no record thread has
+	// written yet. After it the handle belongs to this thread again.
+	DrainAsyncSubmits();
+	const auto buffer = m_command.m_buffer;
+	EXIT_IF(buffer == nullptr);
 	if (submit.present) {
 		// A submit drained ahead of this one may have queued a copy since the wait above; the
 		// binary present signal must not depend on a host signal still to come.
@@ -783,6 +902,7 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	}
 
 	m_command.m_buffer = nullptr;
+	m_command.m_active = false;
 	return tick;
 }
 
@@ -829,14 +949,23 @@ void CommandScheduler::BeginTimestamp() {
 	}
 	const auto slot  = m_timestamp_next;
 	m_timestamp_next = (m_timestamp_next + 1) % TimestampSlots;
-	auto cmd         = m_command.Handle();
-	cmd.resetQueryPool(m_timestamp_pool, slot * 2, 2);
-	cmd.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe, m_timestamp_pool, slot * 2);
+	if (m_command.m_recorder != nullptr) {
+		m_command.m_recorder->PushTimestamp(m_timestamp_pool, slot * 2, 2, false);
+	} else {
+		auto cmd = m_command.Handle();
+		cmd.resetQueryPool(m_timestamp_pool, slot * 2, 2);
+		cmd.writeTimestamp(vk::PipelineStageFlagBits::eTopOfPipe, m_timestamp_pool, slot * 2);
+	}
 	m_timestamp_slot = slot;
 }
 
 void CommandScheduler::EndTimestamp() {
 	if (m_timestamp_slot < 0 || m_command.IsInvalid()) {
+		return;
+	}
+	if (m_command.m_recorder != nullptr) {
+		m_command.m_recorder->PushTimestamp(
+		    m_timestamp_pool, static_cast<uint32_t>(m_timestamp_slot) * 2 + 1, 0, true);
 		return;
 	}
 	m_command.Handle().writeTimestamp(vk::PipelineStageFlagBits::eBottomOfPipe, m_timestamp_pool,

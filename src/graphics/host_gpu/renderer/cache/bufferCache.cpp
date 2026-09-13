@@ -303,6 +303,7 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
       m_texture_cache(texture_cache) {
 	std::memset(m_gds_buffer.Mapped().data(), 0, static_cast<size_t>(m_gds_buffer.Size()));
 	m_gds_buffer.Flush(0, m_gds_buffer.Size());
+	m_gds_host_epoch++;
 	SetVulkanObjectNameF(m_graphics.device, m_bda_pagetable_buffer.Handle(),
 	                     "BDA Page Table Buffer");
 	// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never mapped)
@@ -696,8 +697,8 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		return value == nullptr || value[0] != '0';
 	}();
 	if (!is_written && size <= CACHING_PAGESIZE &&
-	    (combined_query ? m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size)
-	                    : (!m_memory_tracker.IsRegionGpuModified(vaddr, size) &&
+	    (combined_query ? IsRegionCpuModifiedAndGpuCleanFromGpu(vaddr, size)
+	                    : (!IsRegionGpuModifiedFromGpu(vaddr, size) &&
 	                       m_memory_tracker.IsRegionCpuModified(vaddr, size)))) {
 		const auto alignment = std::max<uint64_t>(
 		    m_graphics.physical_device_properties.limits.minUniformBufferOffsetAlignment, 1);
@@ -756,7 +757,7 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 			return {buffer.Handle(), offset, buffer.Size() - offset};
 		}
 	}
-	if (IsRegionGpuModified(vaddr, size)) {
+	if (IsRegionGpuModifiedFromGpu(vaddr, size)) {
 		TraceImageUpload(vaddr, size, "gpu-buffer");
 		const auto [buffer, offset] = ObtainBuffer(vaddr, size, false, false);
 		return {buffer->Handle(), offset, buffer->Size() - offset};
@@ -1001,6 +1002,9 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 			EXIT("BufferCache: GDS fill range is out of bounds\n");
 		}
 		m_gds_buffer.Fill(vaddr, size, value);
+		// Buffer::Fill brackets the transfer itself; the epoch makes the next GDS consumer pay
+		// its barrier even when the lazy gate is on.
+		m_gds_host_epoch++;
 		return;
 	}
 	if (vaddr == 0) {
@@ -1068,6 +1072,9 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 	auto [dst, dst_offset] = dst_memory ? ObtainBuffer(dst_vaddr, size, true, true, dst_id)
 	                                    : std::pair {&m_gds_buffer, dst_vaddr};
 	dst->CopyFrom(command, *src, src_offset, dst_offset, size);
+	if (dst_gds) {
+		m_gds_host_epoch++;
+	}
 }
 
 bool BufferCache::IsRegionRegistered(uint64_t vaddr, uint64_t size) {
@@ -1086,6 +1093,58 @@ bool BufferCache::IsRegionRegistered(uint64_t vaddr, uint64_t size) {
 
 bool BufferCache::IsRegionGpuModified(uint64_t vaddr, uint64_t size) {
 	return m_memory_tracker.IsRegionGpuModified(vaddr, size);
+}
+
+// Gate "tfcheck": a lock-free answer disagreed with the locked one. For the GPU query any
+// mismatch is a real defect (this thread is the only writer of GPU-dirty state). For the
+// combined query a guest thread may have announced a CPU write between the two calls, so
+// the caller re-reads the lock-free answer once and only reports what still disagrees.
+static void ReportTrackFreeMismatch(const char* query, uint64_t vaddr, uint64_t size,
+                                    bool fast, bool locked) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeMismatch, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+		LOGF("TrackFreeVerify: MISMATCH %s addr=0x%016" PRIx64 " size=0x%" PRIx64
+		     " fast=%d locked=%d" "\n",
+		     query, vaddr, size, fast ? 1 : 0, locked ? 1 : 0);
+	}
+}
+
+bool BufferCache::IsRegionGpuModifiedFromGpu(uint64_t vaddr, uint64_t size) {
+	// The lock-free answer is only exact on the thread that owns every change of the GPU-dirty
+	// bits. Any other caller takes the locked query, in release builds too.
+	if (!GuestGpu::IsGpuThread() ||
+	    !Common::Gates::Enabled(Common::Gates::Gate::TrackLockFree)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeLocked, 1);
+		return m_memory_tracker.IsRegionGpuModified(vaddr, size);
+	}
+	const bool fast = m_memory_tracker.IsRegionGpuModifiedFast(vaddr, size);
+	Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeHits, 1);
+	if (Common::Gates::Enabled(Common::Gates::Gate::TrackLockFreeVerify)) {
+		const bool locked = m_memory_tracker.IsRegionGpuModified(vaddr, size);
+		if (locked != fast && m_memory_tracker.IsRegionGpuModifiedFast(vaddr, size) != locked) {
+			ReportTrackFreeMismatch("gpu", vaddr, size, fast, locked);
+		}
+	}
+	return fast;
+}
+
+bool BufferCache::IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size) {
+	if (!GuestGpu::IsGpuThread() ||
+	    !Common::Gates::Enabled(Common::Gates::Gate::TrackLockFree)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeLocked, 1);
+		return m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size);
+	}
+	const bool fast = m_memory_tracker.IsRegionCpuModifiedAndGpuCleanFast(vaddr, size);
+	Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeHits, 1);
+	if (Common::Gates::Enabled(Common::Gates::Gate::TrackLockFreeVerify)) {
+		const bool locked = m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size);
+		if (locked != fast &&
+		    m_memory_tracker.IsRegionCpuModifiedAndGpuCleanFast(vaddr, size) != locked) {
+			ReportTrackFreeMismatch("combined", vaddr, size, fast, locked);
+		}
+	}
+	return fast;
 }
 
 bool BufferCache::HasGpuDirtyBytes(uint64_t vaddr, uint64_t size) {

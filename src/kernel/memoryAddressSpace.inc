@@ -847,6 +847,48 @@ public:
 			return false;
 		}
 
+		// Gate "protfast": the memory tracker re-protects pages of the same guest mapping
+		// thousands of times a frame, and every one of those calls took this process-global
+		// mutex and walked m_mapped while the kernel call was in flight - under the tracker's
+		// own spin lock. A thread-local witness of the last confirmed mapping, validated by
+		// the epoch of m_mapped, answers "this range lies inside one live mapping" without
+		// either. Protecting such a range whole is exactly what ProtectMappedUnlocked does.
+		if (Common::Gates::Enabled(Common::Gates::Gate::ProtectFast)) {
+			static thread_local const void* memo_owner = nullptr;
+			static thread_local uint64_t    memo_epoch = 0;
+			static thread_local uint64_t    memo_begin = 0;
+			static thread_local uint64_t    memo_end   = 0;
+			if (memo_owner == this && memo_epoch != 0 && vaddr >= memo_begin &&
+			    vaddr + size <= memo_end) {
+				// Shared, not none: the walk of m_mapped and the serialization of protections
+				// against each other are what the gate removes, but the range must not be
+				// unmapped and remapped between the epoch check and the kernel call.
+				std::shared_lock shared(m_mutex);
+				if (memo_epoch == m_mapped_epoch.load(std::memory_order_acquire) &&
+				    VirtualMemory::Protect(vaddr, size, mode)) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::ProtectMapHits, 1);
+					return true;
+				}
+				// Either the map moved, or the host view under this range is a placeholder
+				// while the backing store rebuilds it. Drop the witness and let the locked
+				// path decide; it protects exactly what it finds, as before.
+				memo_epoch = 0;
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProtectMapMisses, 1);
+			std::lock_guard lock(m_mutex);
+			const auto      epoch = m_mapped_epoch.load(std::memory_order_relaxed);
+			const auto      it    = FindMappedContainingUnlocked(vaddr);
+			if (it != m_mapped.end() && size <= it->second.vaddr + it->second.size - vaddr) {
+				memo_owner = this;
+				memo_epoch = epoch;
+				memo_begin = it->second.vaddr;
+				memo_end   = it->second.vaddr + it->second.size;
+			} else {
+				memo_epoch = 0;
+			}
+			return ProtectMappedUnlocked(vaddr, size, mode);
+		}
+
 		std::lock_guard lock(m_mutex);
 		return ProtectMappedUnlocked(vaddr, size, mode);
 	}
@@ -1130,13 +1172,19 @@ private:
 				return false;
 			}
 		}
-		return m_mapped.emplace(vaddr, MappedRegion {vaddr, size, type}).second;
+		const bool added = m_mapped.emplace(vaddr, MappedRegion {vaddr, size, type}).second;
+		if (added) {
+			m_mapped_epoch.fetch_add(1, std::memory_order_release);
+		}
+		return added;
 	}
 
 	bool RemoveMappedUnlocked(uint64_t vaddr, uint64_t size, MappingType type) {
 		if (!ContainsMappedUnlocked(vaddr, size, type)) {
 			return false;
 		}
+		// Announce the removal before it happens: a witness taken now must not survive it.
+		m_mapped_epoch.fetch_add(1, std::memory_order_release);
 		const auto end     = vaddr + size;
 		auto       current = vaddr;
 		while (current < end) {
@@ -1436,9 +1484,15 @@ private:
 #endif
 	}
 
-	std::mutex                                 m_mutex;
+	// Shared for the protfast fast path (ProtectTransient), exclusive for every mutation of
+	// the map: std::lock_guard on a shared_mutex still takes it exclusively.
+	std::shared_mutex                          m_mutex;
 	std::map<uint64_t, uint64_t>               m_free;
 	std::map<uint64_t, MappedRegion>            m_mapped;
+	// Incremented (under m_mutex) whenever m_mapped changes, so that a caller holding the
+	// bounds of a mapping can tell that they are still the bounds of a live mapping without
+	// taking the mutex again (ProtectTransient, gate "protfast").
+	std::atomic<uint64_t>                      m_mapped_epoch {1};
 	std::vector<std::pair<uint64_t, uint64_t>> m_owned;
 	uint64_t                                   m_granularity = 0x10000;
 	GuestBackingStore*                         m_backing     = nullptr;

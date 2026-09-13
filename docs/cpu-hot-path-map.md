@@ -4,6 +4,33 @@
 Цель документа — не искать это заново: где именно уходит CPU на кадр и какие кэши/эпохи уже есть
 в дереве.
 
+**Сессия 55 — что изменилось в карте:**
+
+- **`Image::FindView` (`imageView.cpp`) больше не всегда перебирает список** — образ помнит индекс
+  view, ответившего в прошлый раз (`Image::view_hint`). Чистый кэш, без гейта.
+- **Безлоковые чтения битовых карт трекера** (`MemoryTracker::IsRegionGpuModifiedFast`,
+  `IsRegionCpuModifiedAndGpuCleanFast`, `BitArray::AnyInRangeRelaxed`, `RegionManager::IsModifiedRelaxed`;
+  гейт `trackfree`, по умолчанию 0). Обоснование, которое надо беречь: **GPU-грязные биты ставит
+  только `ForEachUploadRange(is_written=true)` из `SynchronizeBuffer`, снимают
+  `UnmarkRegionAsGpuModified` и `ForEachDownloadRange<true>` — все с потока GuestGpu**; CPU-грязные
+  биты ставятся с гостевых потоков через `ChangeState<Cpu,true>`, и эта запись идёт через
+  `BitArray::SetRangeRelaxed` (`std::atomic_ref`), иначе безлоковое чтение было бы гонкой. Обёртки
+  `BufferCache::IsRegion*FromGpu` сами уходят на залоченный путь с любого другого потока.
+- **`AddressSpace::ProtectTransient` получил быстрый путь** (гейт `protfast`, по умолчанию 0):
+  потоко-локальный memo последней подтверждённой `MappedRegion` со свидетелем-эпохой карты гостя.
+  `GuestAddressSpace::m_mutex` стал `std::shared_mutex`; быстрый путь держит его **shared** — снимается
+  обход `std::map` и сериализация защит между собой, но не исключение против map/unmap.
+- **Shader-write барьер может не рвать проход** (гейт `swlocal`): при
+  `VK_KHR_dynamic_rendering_local_read` он пишется внутри прохода как by-region fragment→fragment,
+  а широкий барьер платится в `CommandBuffer::EndRendering`. Порядок закрытий прохода внутри
+  OIT-draw: `GDS-барьер → Transit → BeginRendering → draw → shader-write барьер`, и `FrameTrace-rp`
+  заряжает первого — поэтому `end_gds=0` в профиле Sky Garden не означает, что GDS-барьера нет.
+- **Стоимость дескрипторов измерима только в Sky Garden**: на пустыне `ds_alloc=0` (755 draw
+  укладываются в удержанные наборы пула), в Sky Garden `DescriptorHeap::Allocate` — 2,1 % семплов,
+  целиком внутри драйвера. Ручки `dsbatch` / `dspool`.
+- **GPU Sky Garden (из `GpuTime` сессии 53):** 11,4 мс работы + 7,2 мс простоя между отправками
+  внутри кадра; draw 6,5 мс, dispatch 3,4 мс, загрузки образов 0,46 мс, барьеры 0,6 мс.
+
 **Измерено в сессии 54 в Sky Garden (все правки сессии включены, ~4750 draw, CPU 50,6 мс/кадр,
 семплер потока GuestGpu, упор в CPU):** `TrackingSpinLock::lock` 14,3 % (`ObtainBuffer` →
 `IsRegionCpuModifiedAndGpuClean` 3,6 %, `PrepareBda` → `SynchronizeBuffer` 2,1 %, `FindTexture` 1,8 %,

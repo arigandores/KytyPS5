@@ -72,6 +72,20 @@ public:
 	// Combined streaming-read query: some CPU-dirty bytes and no GPU-dirty pages,
 	// with a single lock acquisition per tracking region. Does not change ownership.
 	[[nodiscard]] bool IsRegionCpuModifiedAndGpuClean(uint64_t vaddr, uint64_t size);
+	// Lock-free forms of the two queries above (gate "trackfree", wrapped by BufferCache).
+	// GPU-dirty state is moved only by the GuestGpu thread: it is set by
+	// ForEachUploadRange(is_written = true) out of BufferCache::SynchronizeBuffer, and cleared
+	// by UnmarkRegionAsGpuModified and ForEachDownloadRange<true> (UntrackMemory does not
+	// touch it, and MarkRegionAsGpuModified has no caller outside tests). On that thread the
+	// GPU
+	// half of the answer is exact and "GPU clean while GPU-dirty" - the only unsound answer
+	// - cannot happen. The CPU half may miss a bit that a guest thread is announcing right
+	// now (InvalidateRegion); the answer then reads "not CPU modified" and the caller falls
+	// back to the ordinary buffer path, which re-reads the bits under the lock.
+	// Callers must be the GuestGpu thread; this class cannot check that (it is built into
+	// targets that have no GuestGpu), BufferCache does.
+	[[nodiscard]] bool IsRegionGpuModifiedFast(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFast(uint64_t vaddr, uint64_t size);
 	// Snapshot without clearing bits or changing protection. Missing regions are CPU-dirty,
 	// just as when a manager is first created. Callers must recheck/upload after releasing locks.
 	void CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size, std::vector<GuestRange>& ranges);

@@ -322,9 +322,13 @@ vk::ImageView Image::FindView(const ImageViewInfo& view_info) {
 		normalized.aspect = vk::ImageAspectFlagBits::eStencil;
 	}
 	normalized.usage = is_storage ? vk::ImageUsageFlagBits::eStorage : vk::ImageUsageFlags {};
-	for (const auto& cached: views) {
-		if (cached.info == normalized) {
-			return cached.view;
+	if (view_hint < static_cast<uint32_t>(views.size()) && views[view_hint].info == normalized) {
+		return views[view_hint].view;
+	}
+	for (uint32_t index = 0; index < static_cast<uint32_t>(views.size()); index++) {
+		if (views[index].info == normalized) {
+			view_hint = index;
+			return views[index].view;
 		}
 	}
 

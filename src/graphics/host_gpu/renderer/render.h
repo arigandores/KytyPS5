@@ -39,6 +39,8 @@ struct DrawIndexBufferSource;
 struct DrawRenderState;
 class RenderContext;
 class CommandScheduler;
+class CommandRecorder;
+struct RecordSubmit;
 struct RenderExecutorTestAccess;
 
 enum class CommandBufferDebugOp : uint32_t {
@@ -135,7 +137,18 @@ public:
 	// why: charged when a pass is actually open (FrameTrace-rp).
 	void EndRendering(RenderPassEnd why = RenderPassEnd::Other) const;
 
+	// Records on the calling thread. With a record thread (gate "recordthread") this first waits
+	// for everything published to it, so the direct commands land in publication order.
 	[[nodiscard]] vk::CommandBuffer Handle() const;
+	// A site that only marks the buffer as used for the end-of-pipe bookkeeping
+	// (GlobalBarrierRedundant) without recording anything: no drain is owed.
+	void NoteHandleUse() const {
+		EXIT_IF(IsInvalid());
+		m_handle_uses++;
+	}
+	// The record thread of this buffer, or nullptr when it is recorded directly. Chosen once per
+	// native command buffer, in CommandScheduler::BeginCommand.
+	[[nodiscard]] CommandRecorder* Recorder() const noexcept { return m_recorder; }
 	// Values belong to one native command-buffer recording. Utility graphics pipelines
 	// must invalidate them because static state can invalidate previously set dynamic state.
 	bool GraphicsStateChanged(GraphicsStateSlot slot, const void* bytes, size_t size) const {
@@ -174,6 +187,31 @@ public:
 	void NotePendingShaderWrite(vk::PipelineStageFlags stages) const noexcept {
 		m_pending_shader_write |= stages;
 	}
+	// Gate "gdsepoch": true when this GDS consumer must issue the barrier. Records the state it
+	// leaves behind either way, so the gate can be flipped between two flips without a hole.
+	// consumer: 1 graphics, 2 compute.
+	[[nodiscard]] bool ClaimGdsBarrier(uint64_t host_epoch, uint64_t shader_epoch,
+	                                   uint32_t consumer, bool lazy) const noexcept {
+		const bool first    = m_gds_barrier_consumer == 0;
+		const bool host     = host_epoch != m_gds_barrier_host_epoch;
+		const bool produced = shader_epoch != m_gds_barrier_shader_epoch;
+		const bool kind     = consumer != m_gds_barrier_consumer;
+		m_gds_barrier_host_epoch   = host_epoch;
+		m_gds_barrier_shader_epoch = shader_epoch;
+		m_gds_barrier_consumer     = consumer;
+		// A host or transfer write to GDS, and the first consumer of a recording, always pay.
+		if (first || host) {
+			return true;
+		}
+		// Nothing reached GDS since the last barrier. Only the gate may act on that: with the
+		// gate off the barrier is issued exactly as before.
+		if (lazy && !produced) {
+			return false;
+		}
+		// Shader -> shader. The GDS accesses of these shaders are DS_APPEND / DS_CONSUME, emitted
+		// as device-scope atomics, which order themselves; a change of consumer kind still pays.
+		return !lazy || kind;
+	}
 	[[nodiscard]] GraphicContext&   GetGraphics() const noexcept { return m_graphics; }
 	[[nodiscard]] RenderContext&    GetContext() const noexcept { return m_context; }
 	[[nodiscard]] HW::Context&      GetRegisters() const noexcept { return *m_registers; }
@@ -190,10 +228,18 @@ private:
 
 	void Begin();
 	void End() const;
+	// Gate "recordthread": the native buffer is taken from the pool, begun and ended by the record
+	// thread, which also hands an asynchronous submit to the submit thread.
+	void BeginRecorded(uint64_t tick);
+	void EndRecorded(const RecordSubmit& request) const;
 
 	RenderContext&      m_context;
 	GraphicContext&     m_graphics;
+	// Owned by the record thread while its queue is not empty; the resolving thread may read it
+	// after a drain. Whether a buffer is open is m_active, not this handle.
 	vk::CommandBuffer   m_buffer          = nullptr;
+	bool                m_active          = false;
+	CommandRecorder*    m_recorder        = nullptr;
 	uint32_t            m_debug_op        = 0;
 	uint64_t            m_debug_submit_id = 0;
 	uint32_t            m_debug_arg0      = 0;
@@ -210,6 +256,9 @@ private:
 	mutable RenderPassEnd m_closed_why   = RenderPassEnd::Other;
 	mutable bool          m_closed_valid = false;
 	mutable vk::PipelineStageFlags m_pending_shader_write {};
+	mutable uint64_t    m_gds_barrier_host_epoch   = 0;
+	mutable uint64_t    m_gds_barrier_shader_epoch = 0;
+	mutable uint32_t    m_gds_barrier_consumer     = 0;
 	mutable uint64_t    m_handle_uses  = 0;
 	mutable uint64_t    m_barrier_mark = 0;
 	struct GraphicsStateValue { std::vector<uint8_t> bytes; bool valid = false; };
@@ -282,7 +331,8 @@ private:
 	                                               const std::optional<PreparedBindings>& pixel = std::nullopt);
 	[[nodiscard]] bool        ResolveColorTargets(CommandBuffer& buffer,
 	                                              uint32_t render_target_slice_offset);
-	void                      BindImage(ImageId id, bool storage);
+	// atomic: this descriptor writes the image with image atomics only (ImageResource::atomic).
+	void                      BindImage(ImageId id, bool storage, bool atomic = false);
 	void                      MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id);
 	void                      MaterializeBoundTargetDccClears(CommandBuffer& buffer);
 	void                      BindRenderTarget(ImageId id);

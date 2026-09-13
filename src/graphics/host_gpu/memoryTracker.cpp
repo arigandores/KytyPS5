@@ -94,6 +94,44 @@ bool MemoryTracker::IsRegionCpuModifiedAndGpuClean(uint64_t vaddr, uint64_t size
 	return cpu_dirty && !gpu_dirty;
 }
 
+bool MemoryTracker::IsRegionGpuModifiedFast(uint64_t vaddr, uint64_t size) {
+	CheckNotInUploadCallback();
+	return Iterate<false>(vaddr, size,
+	                      [](RegionManager* manager, uint64_t offset, uint64_t bytes) {
+		                      return manager->IsModifiedRelaxed<DirtySource::Gpu>(offset, bytes);
+	                      });
+}
+
+bool MemoryTracker::IsRegionCpuModifiedAndGpuCleanFast(uint64_t vaddr, uint64_t size) {
+	CheckNotInUploadCallback();
+	ValidateRange(vaddr, size);
+	// Same answer as the locked query, without creating the regions it walks: a region that
+	// does not exist yet is CPU-dirty and has no GPU-owned bytes (that is exactly the state
+	// the locked query would have created, RegionManager fills m_cpu_dirty on construction
+	// and issues no protection call).
+	bool     cpu_dirty = false;
+	bool     untracked = false;
+	uint64_t remaining = size;
+	uint64_t index     = vaddr / TRACKER_REGION_SIZE;
+	uint64_t offset    = vaddr % TRACKER_REGION_SIZE;
+	while (remaining != 0) {
+		const auto bytes   = std::min(TRACKER_REGION_SIZE - offset, remaining);
+		auto*      manager = m_regions[index].load(std::memory_order_acquire);
+		if (manager == nullptr) {
+			untracked = true;
+		} else {
+			if (manager->IsModifiedRelaxed<DirtySource::Gpu>(offset, bytes)) {
+				return false;
+			}
+			cpu_dirty |= manager->IsModifiedRelaxed<DirtySource::Cpu>(offset, bytes);
+		}
+		remaining -= bytes;
+		offset = 0;
+		index++;
+	}
+	return cpu_dirty || untracked;
+}
+
 void MemoryTracker::CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size,
                                             std::vector<GuestRange>& ranges) {
 	CheckNotInUploadCallback();

@@ -1,5 +1,6 @@
 #include "common/emulatorConfig.h"
 #include "common/file.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/subsystems.h"
 #include "common/threads.h"
@@ -15,6 +16,7 @@
 #include <cinttypes>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <string>
@@ -1004,6 +1006,119 @@ void TestFixedNoOverwriteRejectsReservedRange() {
 	      "range");
 
 	std::printf("[host]    %-48s ok\n", test);
+}
+
+// Gate "protfast": ProtectTransient answers from a thread-local witness of the last
+// confirmed mapping. The witness must not survive a change of the guest map, or the
+// tracker would protect pages of a mapping that is gone.
+void TestProtectTransientMemoFollowsMapChanges() {
+  const char* test    = "ProtectTransientMemoFollowsMapChanges";
+  void*       reserve = nullptr;
+
+  // The gate is off by default. Drive it through a gate file of our own; Gates::Poll is
+  // only called by the flip loop, which does not run in this binary, so this is the first
+  // call and KYTY_GATE_FILE is read here. If something did poll before us the gate stays
+  // off and the test still covers the locked path.
+  const auto gate_file = (std::filesystem::temp_directory_path() / "kyty_protfast.gate").string();
+  const auto set_gate  = [&](bool on) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+    _putenv_s("KYTY_GATE_FILE", gate_file.c_str());
+#else
+    setenv("KYTY_GATE_FILE", gate_file.c_str(), 1);
+#endif
+    if (FILE* f = std::fopen(gate_file.c_str(), "wb"); f != nullptr) {
+      std::fprintf(f, "protfast=%d", on ? 1 : 0);
+      std::fclose(f);
+    }
+    Common::Gates::Poll(0);
+    return Common::Gates::Enabled(Common::Gates::Gate::ProtectFast) == on;
+  };
+
+  CheckOk(test,
+          Libs::LibKernel::Memory::KernelReserveVirtualRange(&reserve, SceKernelPageSize * 2, 0,
+                                                             SceKernelPageSize),
+          "KernelReserveVirtualRange");
+  const auto base = reinterpret_cast<uint64_t>(reserve);
+  void*      both = reinterpret_cast<void*>(base);
+  CheckOk(test,
+          Libs::LibKernel::Memory::KernelMapNamedFlexibleMemory(
+              &both, SceKernelPageSize * 2, SceKernelProtCpuRw, SceKernelMapFixed, "protfast"),
+          "KernelMapNamedFlexibleMemory(two pages)");
+
+  const bool fast = set_gate(true);
+  if (!fast) {
+    std::printf("[host]    %-48s (fast path not exercised: gate file unavailable)\n", test);
+  }
+
+  // Fill the witness with the whole two-page mapping, then read it back from the memo.
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base, SceKernelPageSize * 2,
+                                                        Common::VirtualMemory::Mode::Read),
+        "protect of a mapped range failed");
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base, SceKernelPageSize,
+                                                        Common::VirtualMemory::Mode::ReadWrite),
+        "repeated protect of a mapped range failed");
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+  MEMORY_BASIC_INFORMATION info{};
+  Check(test, VirtualQuery(reinterpret_cast<void*>(base), &info, sizeof(info)) != 0,
+        "VirtualQuery failed");
+  Check(test, info.Protect == PAGE_READWRITE, "protect did not reach the host page");
+#endif
+
+  // Split the mapping: the second page goes away, the witness must go with it.
+  CheckOk(test, Libs::LibKernel::Memory::KernelMunmap(base + SceKernelPageSize, SceKernelPageSize),
+          "KernelMunmap(second page)");
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base, SceKernelPageSize * 2,
+                                                        Common::VirtualMemory::Mode::Read),
+        "protect across an unmapped page did not fall back to the locked path");
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+  Check(test, VirtualQuery(reinterpret_cast<void*>(base), &info, sizeof(info)) != 0,
+        "VirtualQuery failed after the unmap");
+  Check(test, info.Protect == PAGE_READONLY,
+        "the surviving page did not take the protection");
+  MEMORY_BASIC_INFORMATION gone{};
+  Check(test,
+        VirtualQuery(reinterpret_cast<void*>(base + SceKernelPageSize), &gone, sizeof(gone)) != 0,
+        "VirtualQuery failed on the unmapped page");
+  Check(test, gone.State != MEM_COMMIT,
+        "the protection kept the unmapped page committed");
+#endif
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base, SceKernelPageSize,
+                                                        Common::VirtualMemory::Mode::ReadWrite),
+        "protect of the surviving page failed");
+
+  // Bring the page back: the witness of the split mapping must not cover it either.
+  void* right = reinterpret_cast<void*>(base + SceKernelPageSize);
+  CheckOk(test,
+          Libs::LibKernel::Memory::KernelMapNamedFlexibleMemory(
+              &right, SceKernelPageSize, SceKernelProtCpuRw, SceKernelMapFixed, "protfast2"),
+          "KernelMapNamedFlexibleMemory(second page again)");
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base + SceKernelPageSize, SceKernelPageSize,
+                                                        Common::VirtualMemory::Mode::Read),
+        "protect of the remapped page failed");
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+  Check(test,
+        VirtualQuery(reinterpret_cast<void*>(base + SceKernelPageSize), &info, sizeof(info)) != 0,
+        "VirtualQuery failed after the remap");
+  Check(test, info.Protect == PAGE_READONLY, "the remapped page did not take the protection");
+#endif
+  Check(test,
+        Libs::LibKernel::Memory::ProtectGuestHostMemory(base + SceKernelPageSize, SceKernelPageSize,
+                                                        Common::VirtualMemory::Mode::ReadWrite),
+        "restoring the remapped page failed");
+
+  CheckOk(test, Libs::LibKernel::Memory::KernelMunmap(base, SceKernelPageSize * 2),
+          "KernelMunmap(cleanup)");
+  if (fast) {
+    (void)set_gate(false);
+  }
+  std::remove(gate_file.c_str());
+
+  std::printf("[host]    %-48s ok\n", test);
 }
 
 void TestDirectMapQueryOffsetAndPartialMunmap() {
@@ -2586,6 +2701,7 @@ int main(int argc, char** argv) {
 	RunTest(TestReleasedReserveCanBeReused);
 	RunTest(TestMunmapAcrossAdjacentFlexibleMappings);
 	RunTest(TestClampRangeSizeMemoFollowsMapChanges);
+	RunTest(TestProtectTransientMemoFollowsMapChanges);
 	RunTest(TestDirectMapQueryOffsetAndPartialMunmap);
 	RunTest(TestDirectPartialProtectUnmapPreservesNeighbors);
 	RunTest(TestDirectMapValidationBeforeOwnerMutation);

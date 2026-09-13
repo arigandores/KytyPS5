@@ -468,6 +468,12 @@ struct Witness {
 		return live_values.size() + clean_values.size() + singles.size();
 	}
 
+	// What validation actually costs: one page lookup and one comparison per run. A single
+	// counts as one of its own - it is a separate guest read.
+	[[nodiscard]] size_t Runs() const {
+		return live_runs.size() + clean_runs.size() + singles.size();
+	}
+
 	void Build(const SrtReadLog& log) {
 		live_runs.clear();
 		live_values.clear();
@@ -494,21 +500,40 @@ struct Witness {
 	}
 };
 
+// One recorded run against the guest words it was read from. The runs are short - a run is a
+// V# or a T#, four or eight dwords - and a memcmp call each was 6.4 % of all GuestGpu samples in
+// Sky Garden, so compare short runs here and leave memcmp the rare long one. The guest bytes are
+// read through memcpy: the backing pointer carries no alignment or type guarantee.
+[[nodiscard]] bool SameRecordedWords(const uint8_t* backing, const uint32_t* recorded,
+                                     uint32_t count) noexcept {
+	if (count > 8) {
+		return std::memcmp(backing, recorded, count * sizeof(uint32_t)) == 0;
+	}
+	for (uint32_t i = 0; i < count; i++) {
+		uint32_t word = 0;
+		std::memcpy(&word, backing + i * sizeof(uint32_t), sizeof(word));
+		if (word != recorded[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 // True while every recorded word still reads back, through its reader, as recorded.
 bool VerifyWitness(const Witness& witness, ShaderReadCache& cache) {
 	for (const auto& run: witness.live_runs) {
 		const auto* backing = LiveBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
 		if (backing == nullptr ||
-		    std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
-		                &witness.live_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+		    !SameRecordedWords(backing + (run.address & (ShaderPageSize - 1)),
+		                       &witness.live_values[run.first], run.count)) {
 			return false;
 		}
 	}
 	for (const auto& run: witness.clean_runs) {
 		const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
 		if (backing != nullptr) {
-			if (std::memcmp(backing + (run.address & (ShaderPageSize - 1)),
-			                &witness.clean_values[run.first], run.count * sizeof(uint32_t)) != 0) {
+			if (!SameRecordedWords(backing + (run.address & (ShaderPageSize - 1)),
+			                       &witness.clean_values[run.first], run.count)) {
 				return false;
 			}
 			continue;
@@ -1034,9 +1059,26 @@ struct PipelineCache::ProgramCache {
 	static constexpr size_t                     AheadVariantCount = 16384;
 	std::array<AheadVariant, AheadVariantCount> ahead_variants {};
 
-	static uint64_t AheadVariantKey(ShaderType stage, uint64_t base, std::span<const uint32_t> user_data) {
-		const auto seed = (base * 0x9e3779b97f4a7c15ull) ^ static_cast<uint64_t>(stage);
-		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), seed) | 1u;
+	// The user data is hashed once per request (the PM4 walk fills DrawAheadRequest::user_hash)
+	// and once per draw stage; the two keys below mix that value with the plan fingerprint, the
+	// shader base and the stage by integer math. Before this, a program with four static variants
+	// ran XXH3 over the whole user-data block five times for one request - ~35k hashes a frame on
+	// the critical thread in Sky Garden.
+	static uint64_t UserDataHash(std::span<const uint32_t> user_data) {
+		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), 0);
+	}
+
+	static uint64_t SplitMix64(uint64_t value) {
+		value += 0x9e3779b97f4a7c15ull;
+		value = (value ^ (value >> 30u)) * 0xbf58476d1ce4e5b9ull;
+		value = (value ^ (value >> 27u)) * 0x94d049bb133111ebull;
+		return value ^ (value >> 31u);
+	}
+
+	static uint64_t AheadVariantKey(ShaderType stage, uint64_t base, uint64_t user_hash) {
+		return SplitMix64(user_hash ^ (base * 0x9e3779b97f4a7c15ull) ^
+		                  (static_cast<uint64_t>(stage) << 56u)) |
+		       1u;
 	}
 
 	static uint64_t Fingerprint(const SourceEntry& source) {
@@ -1046,14 +1088,21 @@ struct PipelineCache::ProgramCache {
 		return source.plan_fingerprint;
 	}
 
-	static uint64_t AheadHash(uint64_t fingerprint, uint64_t shader_base,
-	                          std::span<const uint32_t> user_data) {
-		const auto seed = (fingerprint * 0x9e3779b97f4a7c15ull) ^ shader_base;
-		return XXH3_64bits_withSeed(user_data.data(), user_data.size_bytes(), seed);
+	static uint64_t AheadHash(uint64_t fingerprint, uint64_t shader_base, uint64_t user_hash) {
+		return SplitMix64(user_hash ^ (fingerprint * 0x9e3779b97f4a7c15ull) ^ shader_base);
 	}
 	std::mutex                            ahead_mutex;
 	std::condition_variable               ahead_cv;
-	std::deque<uint32_t>                  ahead_queue; // slot indices (ahead_mutex)
+	// Slot indices waiting for a worker. A fixed ring rather than std::deque: MSVC puts four
+	// uint32_t in one heap block, so a Sky Garden frame's ~19k tasks cost ~4.7k allocations and
+	// as many frees, taken and given back under this very lock - the samples of QueueAhead inside
+	// ntdll. head and tail are free-running counters; tail - head is the fill, which can never
+	// reach 2^32. A full ring drops the task exactly like a key whose slots are busy: the draw
+	// materializes it itself.
+	static constexpr uint32_t             AheadQueueSize   = 65536; // power of two
+	std::unique_ptr<uint32_t[]>           ahead_queue;              // ahead_mutex
+	uint32_t                              ahead_queue_head = 0;     // ahead_mutex, pop position
+	uint32_t                              ahead_queue_tail = 0;     // ahead_mutex, push position
 	bool                                  ahead_stop = false; // ahead_mutex
 	std::vector<std::thread>              ahead_threads;
 
@@ -1069,7 +1118,7 @@ struct PipelineCache::ProgramCache {
 		auto&      hint  = ahead_hints[AheadHintIndex(stage, base, count)];
 		if (hint.sources[1] != nullptr && hint.base == base && hint.count == count &&
 		    hint.stage == stage && hint.generation == memo_generation) {
-			const auto key = AheadVariantKey(stage, base, user_data);
+			const auto key = AheadVariantKey(stage, base, UserDataHash(user_data));
 			ahead_variants[key % AheadVariantCount] = {key, source};
 		}
 		if (hint.base != base || hint.count != count || hint.stage != stage ||
@@ -1130,6 +1179,7 @@ struct PipelineCache::ProgramCache {
 		uint64_t refresh = 0;
 		uint64_t busy    = 0;
 		uint64_t predicted = 0;
+		uint64_t probes    = 0; // slots looked at, the cost of the table itself
 	};
 
 	// Holder of m_mutex: queue one request for one source entry, or find it already queued.
@@ -1141,10 +1191,11 @@ struct PipelineCache::ProgramCache {
 		}
 		const auto fingerprint = Fingerprint(*source);
 		const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
-		const auto hash        = AheadHash(fingerprint, request.base, user_data);
+		const auto hash        = AheadHash(fingerprint, request.base, request.user_hash);
 		AheadSlot* victim      = nullptr;
 		uint32_t   victim_rank = UINT32_MAX;
 		for (size_t probe = 0; probe < 2; probe++) {
+			stats.probes++;
 			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
 			const auto state = slot.state.load(std::memory_order_acquire);
 			if (state != AheadEmpty && slot.Matches(fingerprint, request.base, memo_generation, user_data)) {
@@ -1209,12 +1260,15 @@ struct PipelineCache::ProgramCache {
 		if (wanted == 0) {
 			return;
 		}
+		if (ahead_slots == nullptr) {
+			// Both before any worker exists: a worker reads the ring under ahead_mutex and would
+			// otherwise have to check the pointer on every wake-up.
+			ahead_slots = std::make_unique<AheadSlot[]>(AheadSlotCount);
+			ahead_queue = std::make_unique<uint32_t[]>(AheadQueueSize);
+		}
 		AheadStartThreads(wanted);
 		if (first_batch) {
 			ahead_walk++;
-		}
-		if (ahead_slots == nullptr) {
-			ahead_slots = std::make_unique<AheadSlot[]>(AheadSlotCount);
 		}
 		AheadQueueStats                    stats;
 		thread_local std::vector<uint32_t> batch;
@@ -1229,8 +1283,7 @@ struct PipelineCache::ProgramCache {
 				continue;
 			}
 			if (hint.sources[1] != nullptr) {
-				const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
-				const auto  key       = AheadVariantKey(stage, request.base, user_data);
+				const auto  key       = AheadVariantKey(stage, request.base, request.user_hash);
 				const auto& predicted = ahead_variants[key % AheadVariantCount];
 				if (predicted.key == key &&
 				    std::find(hint.sources.begin(), hint.sources.end(), predicted.source) !=
@@ -1257,16 +1310,38 @@ struct PipelineCache::ProgramCache {
 				}
 			}
 		}
+		size_t dropped = 0;
 		if (!batch.empty()) {
 			{
 				std::lock_guard<std::mutex> lock(ahead_mutex);
-				ahead_queue.insert(ahead_queue.end(), batch.begin(), batch.end());
+				for (const auto index: batch) {
+					if (ahead_queue_tail - ahead_queue_head >= AheadQueueSize) {
+						// The ring is full: hand the slot back, the draw will materialize it
+						// itself. A worker that has already claimed it wins the exchange.
+						auto expected = static_cast<uint8_t>(AheadQueued);
+						ahead_slots[index].state.compare_exchange_strong(
+						    expected, AheadEmpty, std::memory_order_acq_rel);
+						dropped++;
+						continue;
+					}
+					ahead_queue[ahead_queue_tail & (AheadQueueSize - 1)] = index;
+					ahead_queue_tail++;
+				}
 			}
-			// All: a worker that the knob has made ineligible must not be the only one woken.
-			ahead_cv.notify_all();
+			// One waiter is enough: a worker that takes work hands the wake on while the ring is
+			// not empty (AheadWorker). A worker the knob has made ineligible goes back to sleep
+			// without handing it on, so wake everybody while such a thread exists.
+			if (ahead_threads.size() > wanted) {
+				ahead_cv.notify_all();
+			} else {
+				ahead_cv.notify_one();
+			}
 		}
+		stats.busy += dropped;
 		if (FS::Enabled()) {
-			FS::Add(FS::Counter::DrawAheadQueued, batch.size() - stats.refresh);
+			const auto queued = batch.size() - stats.refresh;
+			FS::Add(FS::Counter::DrawAheadQueued, queued > dropped ? queued - dropped : 0);
+			FS::Add(FS::Counter::DrawAheadProbes, stats.probes);
 			FS::Add(FS::Counter::DrawAheadNoHint, stats.no_hint);
 			FS::Add(FS::Counter::DrawAheadNoPlan, stats.no_plan);
 			FS::Add(FS::Counter::DrawAheadRefresh, stats.refresh);
@@ -1279,20 +1354,36 @@ struct PipelineCache::ProgramCache {
 	void AheadWorker(uint32_t index) {
 		std::array<uint32_t, AheadBatch> taken {};
 		for (;;) {
-			size_t count = 0;
+			size_t count    = 0;
+			bool   more     = false;
+			bool   wake_all = false;
 			{
 				std::unique_lock<std::mutex> lock(ahead_mutex);
 				ahead_cv.wait(lock, [&] {
 					return ahead_stop ||
-					       (!ahead_queue.empty() &&
+					       (ahead_queue_tail != ahead_queue_head &&
 					        index < Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads));
 				});
 				if (ahead_stop) {
 					return;
 				}
-				while (count < taken.size() && !ahead_queue.empty()) {
-					taken[count++] = ahead_queue.front();
-					ahead_queue.pop_front();
+				while (count < taken.size() && ahead_queue_tail != ahead_queue_head) {
+					taken[count++] = ahead_queue[ahead_queue_head & (AheadQueueSize - 1)];
+					ahead_queue_head++;
+				}
+				more = ahead_queue_tail != ahead_queue_head;
+				wake_all =
+				    ahead_threads.size() > Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+			}
+			if (more) {
+				// The producer wakes one worker per batch: pass the wake on, outside the lock, so
+				// the others do not sleep through a ring that still holds work. A worker the knob
+				// has made ineligible would go back to sleep without handing it on, so while such
+				// a thread exists everybody is woken, exactly as the producer does.
+				if (wake_all) {
+					ahead_cv.notify_all();
+				} else {
+					ahead_cv.notify_one();
 				}
 			}
 			for (size_t i = 0; i < count; i++) {
@@ -1307,7 +1398,8 @@ struct PipelineCache::ProgramCache {
 		if (!slot.state.compare_exchange_strong(expected, AheadRunning, std::memory_order_acq_rel)) {
 			return; // cancelled, or claimed through an older queue entry
 		}
-		const auto             t0 = FS::NowNs();
+		const bool              timed = FS::Enabled();
+		const auto              t0    = timed ? FS::NowNs() : 0;
 		thread_local SrtReadLog log;
 		log.entries.clear();
 		log.overflow = false;
@@ -1326,7 +1418,7 @@ struct PipelineCache::ProgramCache {
 		if (ok) {
 			slot.witness.Build(log);
 		}
-		if (FS::Enabled()) {
+		if (timed) {
 			FS::Add(ok ? FS::Counter::DrawAheadDone : FS::Counter::DrawAheadFailed, 1);
 			FS::Add(FS::Counter::DrawAheadWorkerNs, FS::NowNs() - t0);
 		}
@@ -1344,12 +1436,24 @@ struct PipelineCache::ProgramCache {
 			return false;
 		}
 		const auto fingerprint = Fingerprint(source);
-		const auto hash        = AheadHash(fingerprint, params.Base(), params.user_data);
+		const auto hash = AheadHash(fingerprint, params.Base(), UserDataHash(params.user_data));
+		// Handed to the counters once, on the way out: this function leaves from six places, and
+		// an Add per probe (~16k a frame) would have cost more than it measures.
+		size_t probes = 2;
+		struct ProbeCounter {
+			const size_t& probes;
+			~ProbeCounter() {
+				if (Common::FrameStats::Enabled()) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadProbes, probes);
+				}
+			}
+		} probe_counter {probes};
 		for (size_t probe = 0; probe < 2; probe++) {
 			auto& slot = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
 			if (!slot.Matches(fingerprint, params.Base(), memo_generation, params.user_data)) {
 				continue;
 			}
+			probes     = probe + 1;
 			auto state = slot.state.load(std::memory_order_acquire);
 			if (state == AheadQueued) {
 				if (slot.uses > 1) {
@@ -1373,6 +1477,7 @@ struct PipelineCache::ProgramCache {
 			if (FS::Enabled()) {
 				FS::Add(FS::Counter::DrawAheadWords, slot.witness.Words());
 				FS::Add(FS::Counter::DrawAheadCleanWords, slot.witness.clean_values.size());
+				FS::Add(FS::Counter::DrawAheadRuns, slot.witness.Runs());
 			}
 			if (!VerifyWitness(slot.witness, cache)) {
 				FS::Add(slot.walk == ahead_walk ? FS::Counter::DrawAheadStale
@@ -1487,10 +1592,15 @@ struct PipelineCache::ProgramCache {
 		    Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) {
 			AheadNote(stage, params.Base(), params.user_data, &entry->second);
 			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadUse)) {
-				const auto take_begin = Common::FrameStats::NowNs();
+				// Two rdtsc per stage, ~19k a frame in Sky Garden: only pay them while the
+				// counters are being collected.
+				const bool timed      = Common::FrameStats::Enabled();
+				const auto take_begin = timed ? Common::FrameStats::NowNs() : 0;
 				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization);
-				Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
-				                        Common::FrameStats::NowNs() - take_begin);
+				if (timed) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
+					                        Common::FrameStats::NowNs() - take_begin);
+				}
 				if (ahead_hit && Common::Gates::Enabled(Common::Gates::Gate::SrtMemoCheck)) {
 					AheadCheck(lookup_key, entry->second, runtime, resources, specialization);
 				}
@@ -2137,11 +2247,14 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, b
 	if (requests.empty()) {
 		return;
 	}
-	const auto        queue_begin = Common::FrameStats::NowNs();
+	const bool        timed       = Common::FrameStats::Enabled();
+	const auto        queue_begin = timed ? Common::FrameStats::NowNs() : 0;
 	Common::LockGuard lock(m_mutex);
 	m_program_cache->QueueAhead(requests, first_batch);
-	Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
-	                        Common::FrameStats::NowNs() - queue_begin);
+	if (timed) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
+		                        Common::FrameStats::NowNs() - queue_begin);
+	}
 }
 
 ShaderProgram PipelineCache::GetComputeProgram(const HW::ComputeShaderInfo& regs,

@@ -192,6 +192,8 @@ enum class Counter : uint32_t {
 	DrawAheadTakeNs,   // critical-thread time looking up and validating worker results
 	DrawAheadQueueNs,  // walk time spent queueing tasks
 	DrawAheadCleanWords, // validated words read through the GPU-clean reader
+	DrawAheadRuns,     // runs (and singles) a validated result was compared in
+	DrawAheadProbes,   // slot probes made in the lookahead table (queueing and taking)
 	ImgInsertNs,       // TextureCache::InsertImage (host image creation and registration)
 	ImgFreeNs,         // TextureCache::FreeImage
 	ImgOverlapNs,      // TextureCache::ResolveDepthOverlap (insert + copy + free of a reinterpretation)
@@ -202,8 +204,28 @@ enum class Counter : uint32_t {
 	AsyncSubmitDrainNs, // ... time they waited
 	ImgRecycleHits,    // host images created from the recycle pool
 	ImgRecyclePuts,    // retired host images kept in the pool
+	RecordPackets,     // records published to the record thread (gate "recordthread")
+	RecordBytes,       // ... bytes of the ring arena they took
+	RecordDirect,      // Handle() calls that still record on the resolving thread
+	RecordDirectNs,    // ... time they spent draining the record queue first
+	RecordDrains,      // explicit drains: synchronous submit, wait, capture boundary, shutdown
+	RecordDrainNs,     // ... time they waited
+	RecordFull,        // publishes that had to wait for arena space (back pressure)
+	RecordFullNs,      // ... time they waited
+	RecordWorkNs,      // record thread time inside vkBegin/vkEnd/vkCmd*
+	RecordIdleNs,      // record thread time waiting for records
+	TrackFreeHits,     // tracker queries answered without the region lock (gate "trackfree")
+	TrackFreeLocked,   // ... queries that still took it
+	TrackFreeMismatch, // ... answers that disagreed with the locked query (gate "tfcheck")
+	ProtectMapHits,    // ProtectTransient served from the mapping memo (gate "protfast")
+	ProtectMapMisses,  // ... calls that took the address-space mutex and walked the map
+	ProtectHeldNs,     // region lock held across a host protection change (diagnostic)
+	DescriptorAllocations, // vkAllocateDescriptorSets calls (knobs "dsbatch" / "dspool")
 	ShaderWriteBarriersLocal, // shader-write barriers recorded inside the pass (gate "swlocal")
 	ShaderWriteBarriersFlushed, // wide shader-write barriers issued when such a pass closed
+	GdsBarriers,        // GDS buffer barriers issued by CommitBindings
+	GdsBarriersSkipped, // ... skipped: no GDS producer since the last one (gate "gdsepoch")
+	ImageWriteBarriersSkipped, // repeated-write image barriers skipped (gate "atomimg")
 	// Render passes closed by CommandBuffer::EndRendering, one counter per RenderPassEnd reason in
 	// that enum's order (renderTarget.h). RpRestart*: the next pass began on the same targets
 	// (attachments, layouts, render area; clears aside), i.e. the restart that reason cost.
@@ -268,7 +290,7 @@ private:
 	const char* m_previous;
 };
 
-enum class ThreadRole : uint32_t { Main, Gpu, Present, Count };
+enum class ThreadRole : uint32_t { Main, Gpu, Present, Record, Count };
 
 // KYTY_SAMPLE_GPU=1: sampling profiler of the thread registered as ThreadRole::Gpu. Started by
 // RegisterCurrentThread; the samples are logged periodically as SampleTrace: lines.

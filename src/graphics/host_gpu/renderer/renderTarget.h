@@ -11,6 +11,29 @@ namespace Libs::Graphics {
 
 static constexpr uint32_t RENDER_COLOR_ATTACHMENTS_MAX = 8;
 
+// Why CommandBuffer::EndRendering closed a render pass (KYTY_FRAME_TRACE: FrameTrace-rp counts the
+// ends per reason, and the ends followed by a pass on the same targets). The first closer of a
+// pass is charged; later closers of the same gap find no pass open. Counter::RpEnd* and
+// Counter::RpRestart* (common/frameStats.h) follow this order.
+enum class RenderPassEnd : uint8_t {
+	State,          // BeginRendering with a different render state
+	TargetTransit,  // attachment layout transition (AcquireRenderTargets)
+	BindingTransit, // layout transition of a bound image (CommitBindings)
+	Gds,            // GDS buffer barrier (CommitBindings)
+	ShaderWrite,    // shader-write barrier after a draw with buffer writes
+	Dispatch,       // compute dispatch
+	BufferUpload,   // CPU -> buffer synchronization
+	BufferCopy,     // buffer copy or fill on the GPU (DMA, overlap join, const-bank copy)
+	ImageUpload,    // guest -> image upload
+	Tiler,          // tiler compute (detile, D16 conversion, BGRA16 swap)
+	Clear,          // image clears outside a pass (HTile slice, DCC, ClearImage)
+	Sanitize,       // indirect draw argument sanitizer
+	Download,       // readbacks and image -> buffer copies
+	Submit,         // command buffer end at submit
+	Other,
+	Count
+};
+
 struct RenderAttachment {
 	vk::ImageView           image_view    = nullptr;
 	vk::ImageLayout         image_layout  = vk::ImageLayout::eUndefined;

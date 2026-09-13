@@ -996,7 +996,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	if (!decoded) {
 		return;
 	}
-	buffer.EndRendering();
+	buffer.EndRendering(RenderPassEnd::Clear);
 	image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {},
 	              buffer.Handle());
 	for (uint32_t layer = 0; layer < layers; layer++) {
@@ -1309,7 +1309,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		const auto  shader_stage  = NativeShaderStage(program.stage);
 		const auto  shader_stages = ShaderPipelineStages(shader_stage);
 		if (descriptors.gds.buffer != nullptr) {
-			buffer.EndRendering();
+			buffer.EndRendering(RenderPassEnd::Gds);
 			const auto barrier = MakeGdsDependency(descriptors.gds.buffer);
 			vk_buffer.pipelineBarrier(
 			    vk::PipelineStageFlagBits::eHost | vk::PipelineStageFlagBits::eTransfer |
@@ -1331,7 +1331,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              storage ? vk::AccessFlagBits2::eShaderRead |
 				                            vk::AccessFlagBits2::eShaderWrite
 				                      : vk::AccessFlagBits2::eShaderRead,
-				              range, vk_buffer);
+				              range, vk_buffer, RenderPassEnd::BindingTransit);
 			} else if (image.binding.is_target) {
 				const auto layout = image.binding.attachment_layout;
 				EXIT_IF(layout == vk::ImageLayout::eUndefined);
@@ -1360,21 +1360,23 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              image.binding.attachment_access | vk::AccessFlagBits2::eShaderRead |
 				                  (image.binding.shader_write ? vk::AccessFlagBits2::eShaderWrite
 				                                              : vk::AccessFlags2 {}),
-				              {}, vk_buffer);
+				              {}, vk_buffer, RenderPassEnd::BindingTransit);
 			} else if (image.binding.force_general && !image.info.IsDepth()) {
 				const vk::AccessFlags2 storage_access = image.binding.shader_write
 				                                            ? vk::AccessFlagBits2::eShaderWrite
 				                                            : vk::AccessFlags2 {};
 				image.Transit(vk::ImageLayout::eGeneral,
-				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk_buffer);
+				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk_buffer,
+				              RenderPassEnd::BindingTransit);
 			} else if (storage) {
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
-				              range, vk_buffer);
+				              range, vk_buffer, RenderPassEnd::BindingTransit);
 			} else {
 				image.Transit(image.info.IsDepth() ? vk::ImageLayout::eDepthStencilReadOnlyOptimal
 				                                   : vk::ImageLayout::eShaderReadOnlyOptimal,
-				              vk::AccessFlagBits2::eShaderRead, range, vk_buffer);
+				              vk::AccessFlagBits2::eShaderRead, range, vk_buffer,
+				              RenderPassEnd::BindingTransit);
 			}
 			binding.layout = image.backing.state.layout;
 		}

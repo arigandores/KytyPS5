@@ -132,7 +132,8 @@ public:
 	                  uint32_t arg2 = 0, uint32_t arg3 = 0, uint64_t arg4 = 0, uint64_t arg5 = 0);
 	[[nodiscard]] bool IsRendering() const noexcept { return m_rendering; }
 	void BeginRendering(const RenderState& state) const;
-	void EndRendering() const;
+	// why: charged when a pass is actually open (FrameTrace-rp).
+	void EndRendering(RenderPassEnd why = RenderPassEnd::Other) const;
 
 	[[nodiscard]] vk::CommandBuffer Handle() const;
 	// Values belong to one native command-buffer recording. Utility graphics pipelines
@@ -197,6 +198,11 @@ private:
 	uint64_t            m_debug_arg5      = 0;
 	mutable RenderState m_render_state;
 	mutable bool        m_rendering   = false;
+	// KYTY_FRAME_TRACE: the last pass EndRendering closed and why; the next real BeginRendering on
+	// the same targets counts a restart for that reason.
+	mutable RenderState   m_closed_state;
+	mutable RenderPassEnd m_closed_why   = RenderPassEnd::Other;
+	mutable bool          m_closed_valid = false;
 	mutable uint64_t    m_handle_uses  = 0;
 	mutable uint64_t    m_barrier_mark = 0;
 	struct GraphicsStateValue { std::vector<uint8_t> bytes; bool valid = false; };

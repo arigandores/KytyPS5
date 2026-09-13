@@ -126,6 +126,9 @@ struct GraphicContext {
 	[[nodiscard]] bool     CreateImage(const vk::ImageCreateInfo& info, VulkanImage& image);
 	void                   CreateImagePool();
 	void                   DeleteImage(VulkanImage& image);
+	// Keeps a retired image for CreateImage to hand out again (gate "imgrecycle"). The caller
+	// guarantees the GPU no longer uses it; falls back to DeleteImage when it cannot be kept.
+	void                   RecycleImage(VulkanImage& image);
 
 	uint32_t screen_width  = 0;
 	uint32_t screen_height = 0;

@@ -1296,6 +1296,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " da_noplan=%llu da_flip=%llu da_refresh=%llu da_stale_old=%llu da_predicted=%llu"
 			     " da_move=%llu da_take_us=%llu da_queue_us=%llu da_words_clean=%llu"
 			     " img_ins_us=%llu img_free_us=%llu img_ovl_us=%llu"
+			     " as_n=%llu as_us=%llu as_lock_us=%llu as_drain=%llu as_drain_us=%llu"
+			     " img_rec_hit=%llu img_rec_put=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
 			     dus(FS::Counter::LogGpuNs), dus(FS::Counter::DrawPopNs), dus(FS::Counter::DrawCheckNs),
@@ -1372,7 +1374,43 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::DrawAheadPredicted), d(FS::Counter::DrawAheadMoves),
 			     dus(FS::Counter::DrawAheadTakeNs), dus(FS::Counter::DrawAheadQueueNs),
 			     d(FS::Counter::DrawAheadCleanWords), dus(FS::Counter::ImgInsertNs),
-			     dus(FS::Counter::ImgFreeNs), dus(FS::Counter::ImgOverlapNs));
+			     dus(FS::Counter::ImgFreeNs), dus(FS::Counter::ImgOverlapNs),
+			     d(FS::Counter::AsyncSubmits), dus(FS::Counter::AsyncSubmitNs),
+			     dus(FS::Counter::AsyncSubmitLockNs),
+			     d(FS::Counter::AsyncSubmitDrains), dus(FS::Counter::AsyncSubmitDrainNs),
+			     d(FS::Counter::ImgRecycleHits), d(FS::Counter::ImgRecyclePuts));
+			{
+				// Why render passes ended this frame (end_*), and how many of those ends were followed
+				// by a pass on the same targets (restart_*), per RenderPassEnd reason.
+				static constexpr std::array<const char*, 15> rp_names {
+				    "state",    "target",   "binding",  "gds",   "shader_write",
+				    "dispatch", "buf_upload", "buf_copy", "img_upload", "tiler",
+				    "clear",    "sanitize", "download", "submit", "other"};
+				static_assert(static_cast<size_t>(FS::Counter::RpRestartState) -
+				                  static_cast<size_t>(FS::Counter::RpEndState) ==
+				              rp_names.size());
+				static_assert(static_cast<size_t>(FS::Counter::RpRestartOther) -
+				                  static_cast<size_t>(FS::Counter::RpRestartState) + 1 ==
+				              rp_names.size());
+				const auto         rp_end     = static_cast<size_t>(FS::Counter::RpEndState);
+				const auto         rp_restart = static_cast<size_t>(FS::Counter::RpRestartState);
+				unsigned long long rp_ends    = 0;
+				unsigned long long rp_starts  = 0;
+				std::string        end_text;
+				std::string        restart_text;
+				for (size_t i = 0; i < rp_names.size(); i++) {
+					const auto ends     = d(static_cast<FS::Counter>(rp_end + i));
+					const auto restarts = d(static_cast<FS::Counter>(rp_restart + i));
+					rp_ends += ends;
+					rp_starts += restarts;
+					end_text += std::string(" end_") + rp_names[i] + "=" + std::to_string(ends);
+					restart_text +=
+					    std::string(" restart_") + rp_names[i] + "=" + std::to_string(restarts);
+				}
+				LOGF("FrameTrace-rp: n=%" PRIu64 " ends=%llu restarts=%llu%s%s" "\n",
+				     r.cfg->flip_status.count, rp_ends, rp_starts, end_text.c_str(),
+				     restart_text.c_str());
+			}
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>
 				    prev_sites {};

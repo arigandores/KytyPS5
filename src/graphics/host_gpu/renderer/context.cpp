@@ -18,6 +18,46 @@
 #include <cstring>
 namespace Libs::Graphics {
 
+namespace {
+
+[[nodiscard]] Common::FrameStats::Counter RenderPassEndCounter(Common::FrameStats::Counter first,
+                                                              RenderPassEnd              why) {
+	return static_cast<Common::FrameStats::Counter>(static_cast<uint32_t>(first) +
+	                                                static_cast<uint32_t>(why));
+}
+
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::RpEndOther) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::RpEndState) ==
+              static_cast<uint32_t>(RenderPassEnd::Other));
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::RpRestartState) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::RpEndState) ==
+              static_cast<uint32_t>(RenderPassEnd::Count));
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::RpRestartOther) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::RpRestartState) ==
+              static_cast<uint32_t>(RenderPassEnd::Other));
+
+// The beginning pass records to the same attachments, in the same layouts, over the same render
+// area as the pass that ended: the two differ at most in their load-op clears.
+[[nodiscard]] bool SameRenderTargets(const RenderState& a, const RenderState& b) {
+	const auto same = [](const RenderAttachment& x, const RenderAttachment& y) {
+		return x.image_view == y.image_view && x.image_layout == y.image_layout &&
+		       x.has_depth == y.has_depth && x.has_stencil == y.has_stencil;
+	};
+	if (a.width != b.width || a.height != b.height || a.num_layers != b.num_layers ||
+	    a.num_color_attachments != b.num_color_attachments ||
+	    !same(a.depth_stencil_attachment, b.depth_stencil_attachment)) {
+		return false;
+	}
+	for (uint32_t i = 0; i < a.num_color_attachments; i++) {
+		if (!same(a.color_attachments[i], b.color_attachments[i])) {
+			return false;
+		}
+	}
+	return true;
+}
+
+} // namespace
+
 CommandBuffer::CommandBuffer(CommandScheduler& scheduler)
     : m_context(scheduler.Context()), m_graphics(scheduler.Graphics()) {}
 
@@ -47,7 +87,7 @@ void CommandBuffer::Begin() {
 }
 
 void CommandBuffer::End() const {
-	EndRendering();
+	EndRendering(RenderPassEnd::Submit);
 	auto buffer = Handle();
 
 	auto result = buffer.end();
@@ -75,8 +115,15 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 	}
 	EXIT_IF(state.width == 0 || state.height == 0 || state.num_layers == 0 ||
 	        state.num_color_attachments > RENDER_COLOR_ATTACHMENTS_MAX);
-	EndRendering();
+	EndRendering(RenderPassEnd::State);
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
+	if (m_closed_valid) {
+		m_closed_valid = false;
+		if (SameRenderTargets(m_closed_state, state)) {
+			Common::FrameStats::Add(
+			    RenderPassEndCounter(Common::FrameStats::Counter::RpRestartState, m_closed_why), 1);
+		}
+	}
 
 	std::array<vk::RenderingAttachmentInfo, RENDER_COLOR_ATTACHMENTS_MAX> colors {};
 	for (uint32_t i = 0; i < state.num_color_attachments; i++) {
@@ -122,12 +169,19 @@ void CommandBuffer::BeginRendering(const RenderState& state) const {
 	}
 }
 
-void CommandBuffer::EndRendering() const {
+void CommandBuffer::EndRendering(RenderPassEnd why) const {
 	if (!m_rendering) {
 		return;
 	}
 	Handle().endRendering();
-	m_rendering    = false;
+	m_rendering = false;
+	if (Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(RenderPassEndCounter(Common::FrameStats::Counter::RpEndState, why),
+		                        1);
+		m_closed_state = m_render_state;
+		m_closed_why   = why;
+		m_closed_valid = true;
+	}
 	m_render_state = {};
 	if (GpuTimeProfiler::Enabled()) {
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::RenderPass, 2);

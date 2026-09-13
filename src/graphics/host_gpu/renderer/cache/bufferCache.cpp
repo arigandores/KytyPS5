@@ -53,7 +53,11 @@ void BufferCache::WriteDataBuffer(Buffer& buffer, uint64_t address, const void* 
 		const auto chunk  = std::min(size, m_staging_buffer.Size());
 		const auto offset = m_staging_buffer.Copy(bytes, chunk, 4);
 		buffer.CopyFrom(m_scheduler.Current(), m_staging_buffer, offset, buffer.Offset(address),
-		                chunk, vk::AccessFlagBits::eHostWrite);
+		                chunk, vk::AccessFlagBits::eHostWrite,
+		                vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
+		                vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
+		                vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
+		                RenderPassEnd::BufferUpload);
 		bytes += chunk;
 		address += chunk;
 		size -= chunk;
@@ -240,7 +244,7 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, con
 			download.CopyFrom(m_scheduler.Current(), *copy.buffer, source_begin, base_offset + cursor,
 			                  envelope_size, vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
 			                  vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
-			                  vk::AccessFlagBits::eHostRead);
+			                  vk::AccessFlagBits::eHostRead, RenderPassEnd::Download);
 			cursor += AlignDownload(envelope_size);
 		}
 		download.Commit();
@@ -597,7 +601,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	if (source) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
 		auto& command = m_scheduler.Current();
-		command.EndRendering();
+		command.EndRendering(RenderPassEnd::BufferUpload);
 		const auto native = command.Handle();
 		vk::BufferMemoryBarrier before {};
 		before.srcAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite |
@@ -879,7 +883,7 @@ bool BufferCache::ObtainImportedImageSource(uint64_t vaddr, uint64_t size,
 	auto scratch = std::make_unique<Buffer>(m_graphics, m_scheduler, MemoryUsage::DeviceLocal, 0,
 	                                        AllFlags, size);
 	auto& command = m_scheduler.Current();
-	command.EndRendering();
+	command.EndRendering(RenderPassEnd::ImageUpload);
 	const auto native = command.Handle();
 	// No host barrier: the guest wrote the pages before this command buffer is submitted, and
 	// vkQueueSubmit makes prior host writes visible to the device.
@@ -1231,7 +1235,7 @@ BufferCache::AsyncReadback BufferCache::BeginAsyncReadback(uint64_t vaddr, uint6
 		                           base_offset + piece.offset, envelope,
 		                           vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
 		                           vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
-		                           vk::AccessFlagBits::eHostRead);
+		                           vk::AccessFlagBits::eHostRead, RenderPassEnd::Download);
 	}
 	m_download_buffer.Commit();
 	job.mapped      = mapped;
@@ -1323,7 +1327,7 @@ void BufferCache::ServeStaleRead(uint64_t vaddr, uint64_t size) {
 		                           base_offset + piece.offset, envelope,
 		                           vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
 		                           vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
-		                           vk::AccessFlagBits::eHostRead);
+		                           vk::AccessFlagBits::eHostRead, RenderPassEnd::Download);
 	}
 	m_download_buffer.Commit();
 	hot.in_flight     = true;
@@ -1731,7 +1735,7 @@ void BufferCache::PrefetchHotReadbacks() {
 			                           base_offset + piece.offset, envelope,
 			                           vk::AccessFlagBits::eMemoryWrite, vk::AccessFlags {},
 			                           vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
-			                           vk::AccessFlagBits::eHostRead);
+			                           vk::AccessFlagBits::eHostRead, RenderPassEnd::Download);
 		}
 		m_download_buffer.Commit();
 		hot.in_flight  = true;

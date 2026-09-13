@@ -179,7 +179,7 @@ vk::BufferMemoryBarrier Buffer::Barrier(uint64_t offset, uint64_t size, vk::Acce
 void Buffer::CopyFrom(CommandBuffer& command, const Buffer& source, uint64_t source_offset,
                       uint64_t destination_offset, uint64_t size, vk::AccessFlags source_before,
                       vk::AccessFlags destination_before, vk::AccessFlags source_after,
-                      vk::AccessFlags destination_after) {
+                      vk::AccessFlags destination_after, RenderPassEnd why) {
 	if (size == 0 || source_offset > source.Size() || size > source.Size() - source_offset ||
 	    destination_offset > Size() || size > Size() - destination_offset) {
 		EXIT("Buffer: invalid copy range\n");
@@ -188,7 +188,7 @@ void Buffer::CopyFrom(CommandBuffer& command, const Buffer& source, uint64_t sou
 	    destination_offset < source_offset + size) {
 		EXIT("Buffer: overlapping self-copy\n");
 	}
-	command.EndRendering();
+	command.EndRendering(why);
 	const vk::BufferMemoryBarrier before[] = {
 	    source.Barrier(source_offset, size, source_before, vk::AccessFlagBits::eTransferRead),
 	    Barrier(destination_offset, size, destination_before, vk::AccessFlagBits::eTransferWrite),
@@ -215,12 +215,12 @@ void Buffer::CopyFrom(CommandBuffer& command, const Buffer& source, uint64_t sou
 	                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 2, after, 0, nullptr);
 }
 
-void Buffer::Fill(uint64_t offset, uint64_t size, uint32_t value) {
+void Buffer::Fill(uint64_t offset, uint64_t size, uint32_t value, RenderPassEnd why) {
 	if (((offset | size) & 3u) != 0) {
 		EXIT("Buffer: fill range must be dword aligned\n");
 	}
 	auto& command = Scheduler().Current();
-	command.EndRendering();
+	command.EndRendering(why);
 	const auto before =
 	    Barrier(offset, size, vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite,
 	            vk::AccessFlagBits::eTransferWrite);

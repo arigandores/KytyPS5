@@ -589,7 +589,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		image.Transit(layout, image.binding.attachment_access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
-		              buffer.Handle());
+		              buffer.Handle(), RenderPassEnd::TargetTransit);
 		const auto extent       = target.Extent();
 		state.width             = std::min(state.width, extent.width);
 		state.height            = std::min(state.height, extent.height);
@@ -682,7 +682,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			// probe into the 1920x1080 depth buffer before the depth pre-pass: a load-op clear
 			// leaves the rest of the buffer stale and every later scene draw fails its depth test
 			// there. Clear the attached slice explicitly instead.
-			buffer.EndRendering();
+			buffer.EndRendering(RenderPassEnd::Clear);
 			image.Transit(vk::ImageLayout::eTransferDstOptimal,
 			              vk::AccessFlagBits2::eTransferWrite, {}, buffer.Handle());
 			const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eDepth,
@@ -698,7 +698,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		image.Transit(layout, access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
-		              buffer.Handle());
+		              buffer.Handle(), RenderPassEnd::TargetTransit);
 		state.width               = std::min(state.width, depth.desc.info.extent.width);
 		state.height              = std::min(state.height, depth.desc.info.extent.height);
 		state.num_layers          = std::min(state.num_layers, view.layer_count);
@@ -1570,7 +1570,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                                               UINT32_MAX, UINT32_MAX, UINT32_MAX}
 		                     : std::array<uint32_t, 5> {UINT32_MAX, MaxInstances,
 		                                               UINT32_MAX, UINT32_MAX, 0};
-		m_context.GetCommandScheduler().EndRendering();
+		m_context.GetCommandScheduler().EndRendering(RenderPassEnd::Sanitize);
 		std::tie(emit_info.indirect_buffer, emit_info.indirect_offset) =
 		    m_indirect_sanitizer->Sanitize(buffer.Handle(), *args_buffer, args_offset, dwords,
 		                                   limits, true);
@@ -1721,7 +1721,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		shader_write_stages |= vk::PipelineStageFlagBits::eFragmentShader;
 	}
 	if (shader_write_stages) {
-		m_context.GetCommandScheduler().EndRendering();
+		m_context.GetCommandScheduler().EndRendering(RenderPassEnd::ShaderWrite);
 		ShaderWriteBarrier(vk_buffer, shader_write_stages);
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
 	}

@@ -4,6 +4,7 @@
 #include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
@@ -98,10 +99,10 @@ void MasterSemaphore::Wait(uint64_t tick) {
 				// wedged submission (the desktop freezes with it), so report once more and leave:
 				// the process exit releases the queue and lets the driver recover.
 				LOGF("GpuHangAbort: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64
-				     " master=%p after=%us\n",
+				     " master=%p after=%us submit_backlog=%zu\n",
 				     static_cast<uint32_t>(FS::CurrentRole()), tick,
 				     m_gpu_tick.load(std::memory_order_acquire), CurrentTick(),
-				     static_cast<void*>(m_semaphore), timeouts * 2u);
+				     static_cast<void*>(m_semaphore), timeouts * 2u, AsyncSubmitBacklog());
 				std::printf("GpuHangAbort: requested=%" PRIu64 " known=%" PRIu64 " after=%us\n",
 				            tick, m_gpu_tick.load(std::memory_order_acquire), timeouts * 2u);
 				ReportGpuCheckpointHistory();
@@ -111,9 +112,10 @@ void MasterSemaphore::Wait(uint64_t tick) {
 				EXIT("GPU stopped completing submissions\n");
 			}
 			if (diagnostic && result == vk::Result::eTimeout && !reported) {
-				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64 " master=%p\n",
+				LOGF("GpuWaitSlow: role=%u requested=%" PRIu64 " known=%" PRIu64 " current=%" PRIu64
+				     " master=%p submit_backlog=%zu\n",
 				     static_cast<uint32_t>(FS::CurrentRole()), tick, m_gpu_tick.load(std::memory_order_acquire),
-				     CurrentTick(), static_cast<void*>(m_semaphore));
+				     CurrentTick(), static_cast<void*>(m_semaphore), AsyncSubmitBacklog());
 				std::printf("GpuWaitSlow: role=%u requested=%" PRIu64 "\n",
 				            static_cast<uint32_t>(FS::CurrentRole()), tick);
 				ReportGpuCheckpointHistory();

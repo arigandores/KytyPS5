@@ -6,6 +6,7 @@
 #include "common/slotVector.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
+#include "graphics/host_gpu/renderer/renderTarget.h"
 
 #include <compare>
 #include <limits>
@@ -57,8 +58,10 @@ public:
 	                                   vk::AccessFlags2                     destination_access,
 	                                   vk::PipelineStageFlags2              destination_stage,
 	                                   std::optional<ImageSubresourceRange> range);
+	// why: charged if the transition closes a render pass (FrameTrace-rp).
 	void Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
-	             std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer);
+	             std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
+	             RenderPassEnd why = RenderPassEnd::Other);
 	// buffer_from_tiler: the source buffer was written by the tiler (compute / fill) or the CPU,
 	// never by a draw: the barrier before the copy names those stages only.
 	void Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
@@ -165,6 +168,9 @@ public:
 	// the top arrives. 0 = complete.
 	uint32_t         pending_levels     = 0;
 	uint64_t         pending_bytes      = 0;
+	// Set by the texture cache when the image is destroyed only after the GPU finished with it:
+	// its Vulkan image may then be recycled (gate "imgrecycle").
+	bool             recycle_backing    = false;
 
 private:
 	friend struct ImageTestAccess;

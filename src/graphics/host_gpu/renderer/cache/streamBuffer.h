@@ -3,6 +3,7 @@
 
 #include "common/abi.h"
 #include "common/common.h"
+#include "graphics/host_gpu/renderer/renderTarget.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 
 #include <cstdint>
@@ -65,8 +66,10 @@ public:
 	              vk::AccessFlags source_after       = vk::AccessFlagBits::eMemoryRead |
 	                                                   vk::AccessFlagBits::eMemoryWrite,
 	              vk::AccessFlags destination_after  = vk::AccessFlagBits::eMemoryRead |
-	                                                   vk::AccessFlagBits::eMemoryWrite);
-	void Fill(uint64_t offset, uint64_t size, uint32_t value);
+	                                                   vk::AccessFlagBits::eMemoryWrite,
+	              RenderPassEnd   why                = RenderPassEnd::BufferCopy);
+	void Fill(uint64_t offset, uint64_t size, uint32_t value,
+	          RenderPassEnd why = RenderPassEnd::BufferCopy);
 
 	// BufferCache state lives directly on the resource.
 	bool   is_deleted   = false;

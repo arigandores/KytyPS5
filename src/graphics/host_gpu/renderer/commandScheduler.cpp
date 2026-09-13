@@ -7,6 +7,7 @@
 
 #include "common/assert.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/parallelCopy.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -39,7 +40,146 @@ void ReportVulkanFatal(GraphicContext& graphics, const char* what, vk::Result re
 	std::fflush(stdout);
 }
 
+// One thread that calls vkQueueSubmit for every scheduler, in the order the submits were queued.
+class AsyncSubmitter {
+public:
+	struct Record {
+		GraphicContext*   graphics  = nullptr;
+		const void*       scheduler = nullptr;
+		vk::Semaphore     master    = nullptr;
+		vk::CommandBuffer buffer    = nullptr;
+		SubmitInfo        submit;
+		uint64_t          tick         = 0;
+		uint32_t          debug_op     = 0;
+		uint64_t          debug_submit = 0;
+		uint32_t          arg0 = 0, arg1 = 0, arg2 = 0, arg3 = 0;
+		uint64_t          arg4 = 0;
+	};
+
+	static AsyncSubmitter& Get() {
+		// Leaked on purpose: schedulers may submit until the process exits.
+		static auto* submitter = new AsyncSubmitter;
+		return *submitter;
+	}
+
+	// Takes the tick of `master` and queues the submit under one lock, so ticks reach the queue in
+	// order. Returns the tick.
+	uint64_t Enqueue(Record record, MasterSemaphore& master) {
+		uint64_t tick = 0;
+		{
+			std::lock_guard lock(m_mutex);
+			if (!m_thread.joinable()) {
+				m_thread = std::thread([this] { Loop(); });
+			}
+			tick = master.NextTick();
+			record.tick = tick;
+			record.submit.AddSignal(master.Handle(), tick);
+			m_queue.push_back(std::move(record));
+			m_enqueued++;
+		}
+		m_available.notify_one();
+		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmits, 1);
+		return tick;
+	}
+
+	// Waits for the submits queued before this call (later ones may still be queued).
+	[[nodiscard]] size_t Backlog() {
+		std::lock_guard lock(m_mutex);
+		return static_cast<size_t>(m_enqueued - m_submitted);
+	}
+
+	void Drain() {
+		std::unique_lock lock(m_mutex);
+		const auto target = m_enqueued;
+		if (m_submitted >= target) {
+			return;
+		}
+		EXIT_IF(std::this_thread::get_id() == m_thread.get_id());
+		const auto t0 = Common::FrameStats::NowNs();
+		m_drained.wait(lock, [this, target] { return m_submitted >= target; });
+		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitDrains, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitDrainNs,
+		                        Common::FrameStats::NowNs() - t0);
+	}
+
+private:
+	void Loop() {
+		for (;;) {
+			Record record;
+			{
+				std::unique_lock lock(m_mutex);
+				m_available.wait(lock, [this] { return !m_queue.empty(); });
+				record = std::move(m_queue.front());
+				m_queue.pop_front();
+				m_busy = true;
+			}
+			const auto t0       = Common::FrameStats::NowNs();
+			auto&      graphics = *record.graphics;
+			vk::Result result;
+			uint64_t   locked_ns = 0;
+			{
+				Common::LockGuard lock(graphics.queue_mutex);
+				locked_ns    = Common::FrameStats::NowNs();
+				auto& submit = record.submit;
+
+				vk::TimelineSemaphoreSubmitInfo timeline_info {};
+				timeline_info.waitSemaphoreValueCount   = submit.num_wait_semaphores;
+				timeline_info.pWaitSemaphoreValues      = submit.wait_ticks.data();
+				timeline_info.signalSemaphoreValueCount = submit.num_signal_semaphores;
+				timeline_info.pSignalSemaphoreValues    = submit.signal_ticks.data();
+
+				vk::SubmitInfo submit_info {};
+				submit_info.pNext                = &timeline_info;
+				submit_info.waitSemaphoreCount   = submit.num_wait_semaphores;
+				submit_info.pWaitSemaphores      = submit.wait_semaphores.data();
+				submit_info.pWaitDstStageMask    = submit.wait_stages.data();
+				submit_info.commandBufferCount   = 1;
+				submit_info.pCommandBuffers      = &record.buffer;
+				submit_info.signalSemaphoreCount = submit.num_signal_semaphores;
+				submit_info.pSignalSemaphores    = submit.signal_semaphores.data();
+
+				RecordGpuSubmission(record.scheduler, record.master, record.tick, submit, false,
+				                    vk::Result::eNotReady);
+				result = graphics.queue.submit(1, &submit_info, nullptr);
+				RecordGpuSubmission(record.scheduler, record.master, record.tick, submit, true, result);
+			}
+			if (result != vk::Result::eSuccess) {
+				ReportVulkanFatal(graphics, "vkQueueSubmit(async)", result, record.tick, record.debug_op,
+				                  record.debug_submit, record.arg0, record.arg1, record.arg2, record.arg3,
+				                  record.arg4);
+			}
+			EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
+			Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitLockNs, locked_ns - t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::AsyncSubmitNs,
+			                        Common::FrameStats::NowNs() - locked_ns);
+			{
+				std::lock_guard lock(m_mutex);
+				m_busy = false;
+				m_submitted++;
+			}
+			m_drained.notify_all();
+		}
+	}
+
+	std::mutex              m_mutex;
+	std::condition_variable m_available;
+	std::condition_variable m_drained;
+	std::deque<Record>      m_queue;
+	bool                    m_busy      = false;
+	uint64_t                m_enqueued  = 0;
+	uint64_t                m_submitted = 0;
+	std::thread             m_thread;
+};
+
 } // namespace
+
+void DrainAsyncSubmits() {
+	AsyncSubmitter::Get().Drain();
+}
+
+size_t AsyncSubmitBacklog() {
+	return AsyncSubmitter::Get().Backlog();
+}
 
 CommandScheduler::CommandPool::CommandPool(GraphicContext& graphics, MasterSemaphore& master)
     : m_graphics(graphics), m_master(master) {
@@ -179,6 +319,7 @@ void CommandScheduler::Shutdown() {
 	if (!m_command.IsInvalid()) {
 		Submit();
 	}
+	DrainAsyncSubmits();
 	m_master.Wait(CurrentTick() - 1);
 	PopPendingOperations();
 	DrainPriorityOperations();
@@ -213,9 +354,9 @@ void CommandScheduler::BeginRendering(const RenderState& state) {
 	Current().BeginRendering(state);
 }
 
-void CommandScheduler::EndRendering() {
+void CommandScheduler::EndRendering(RenderPassEnd why) {
 	if (Active() && !m_command.IsInvalid()) {
-		Current().EndRendering();
+		Current().EndRendering(why);
 	}
 }
 
@@ -230,7 +371,7 @@ void CommandScheduler::Flush(SubmitInfo& submit) {
 }
 
 void CommandScheduler::FlushAndWait() {
-	const auto tick = Submit();
+	const auto tick = Submit({}, false);
 	m_master.Wait(tick);
 	BeginNext();
 }
@@ -238,7 +379,7 @@ void CommandScheduler::FlushAndWait() {
 void CommandScheduler::Finish() {
 	CheckActive();
 	if (!m_command.IsInvalid()) {
-		Submit();
+		Submit({}, false);
 	}
 	m_master.Wait(CurrentTick() - 1);
 	BeginNext();
@@ -252,7 +393,7 @@ void CommandScheduler::Wait(uint64_t tick) {
 		// A stream-buffer wrap can wait while a draw is being prepared through a reference to
 		// Current(). The wrapper stays stable while its pooled Vulkan buffer is retired. Deferred
 		// resources are released only at the next GPU operation boundary.
-		const auto submitted_tick = Submit();
+		const auto submitted_tick = Submit({}, false);
 		EXIT_IF(submitted_tick != tick);
 		m_master.Wait(tick);
 		BeginNext();
@@ -465,11 +606,14 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 	return m_command;
 }
 
-uint64_t CommandScheduler::Submit(SubmitInfo submit) {
+uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	EXIT_IF(m_command.IsInvalid());
 	EXIT_IF(submit.num_wait_semaphores > SubmitInfo::MaxSemaphores ||
 	        submit.num_signal_semaphores >= SubmitInfo::MaxSemaphores);
 	const auto submit_t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+	// Semaphores the caller brought (WSI) are observed outside the scheduler's timeline: such a
+	// submit is made synchronously.
+	const bool caller_semaphores = submit.num_wait_semaphores != 0 || submit.num_signal_semaphores != 0;
 
 	// Guest -> staging copies queued by the buffer/texture caches (AsyncMemcpy) must land before
 	// the GPU reads the staging ring: the queue waits for the copy semaphore to reach the number
@@ -526,8 +670,53 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 	auto&      graphics = m_graphics;
 	EXIT_IF(graphics.queue == nullptr);
 
+	static const bool sync_submit = std::getenv("KYTY_SYNC_SUBMIT") != nullptr;
+	uint64_t          tick        = 0;
+	if (allow_async && !sync_submit && !submit.present && !caller_semaphores &&
+	    Common::Gates::Enabled(Common::Gates::Gate::AsyncSubmit)) {
+		AsyncSubmitter::Record record;
+		record.graphics     = &graphics;
+		record.scheduler    = this;
+		record.master       = m_master.Handle();
+		record.buffer       = buffer;
+		record.submit       = submit;
+		record.debug_op     = m_command.m_debug_op;
+		record.debug_submit = m_command.m_debug_submit_id;
+		record.arg0         = m_command.m_debug_arg0;
+		record.arg1         = m_command.m_debug_arg1;
+		record.arg2         = m_command.m_debug_arg2;
+		record.arg3         = m_command.m_debug_arg3;
+		record.arg4         = m_command.m_debug_arg4;
+		tick                = AsyncSubmitter::Get().Enqueue(std::move(record), m_master);
+		if (m_timestamp_slot >= 0) {
+			std::lock_guard lock(m_timestamp_mutex);
+			m_timestamp_pending.emplace_back(tick, static_cast<uint32_t>(m_timestamp_slot));
+			m_timestamp_slot = -1;
+		}
+		HarvestTimestamps();
+		if (GpuTimeProfiler::Enabled()) {
+			m_gpu_time.Harvest();
+		}
+		m_last_submit_ns = Common::FrameStats::NowNs();
+		if (submit_t0 != 0) {
+			namespace FS  = Common::FrameStats;
+			const auto ns = FS::NowNs() - submit_t0;
+			FS::Add(FS::Counter::SubmitNs, ns);
+			FS::Add(FS::Counter::Submits, 1);
+			FS::AddSite(FS::Table::SubmitSites, FS::CurrentSite(), ns);
+		}
+		m_command.m_buffer = nullptr;
+		return tick;
+	}
+	// Synchronous: everything queued before goes first.
+	AsyncSubmitter::Get().Drain();
+	if (submit.present) {
+		// A submit drained ahead of this one may have queued a copy since the wait above; the
+		// binary present signal must not depend on a host signal still to come.
+		Common::WaitAsyncCopies();
+	}
+
 	vk::Result result;
-	uint64_t   tick;
 	{
 		Common::LockGuard lock(graphics.queue_mutex);
 		tick = m_master.NextTick();
@@ -564,7 +753,6 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit) {
 
 	// Debug aid: KYTY_SYNC_SUBMIT=1 drains the queue after every submit so a device loss is
 	// reported on the submit that caused it, together with its debug ids.
-	static const bool sync_submit = std::getenv("KYTY_SYNC_SUBMIT") != nullptr;
 	if (sync_submit) {
 		const auto idle = graphics.queue.waitIdle();
 		if (idle != vk::Result::eSuccess) {

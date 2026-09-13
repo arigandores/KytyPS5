@@ -22,6 +22,8 @@ enum class Gate : uint32_t {
 	MetaLock,       // KYTY_META_LOCK,           file name "metalock"
 	DrawAhead,      // KYTY_DRAW_AHEAD,          file name "drawahead"
 	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
+	AsyncSubmit,    // KYTY_ASYNC_SUBMIT,        file name "asyncsubmit"
+	ImageRecycle,   // KYTY_IMAGE_RECYCLE,       file name "imgrecycle"
 	Count,
 };
 

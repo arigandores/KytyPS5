@@ -16,6 +16,7 @@
 #include "SDL_video.h"
 #include "SDL_vulkan.h"
 #include "common/assert.h"
+#include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -1216,7 +1217,8 @@ WindowContext::~WindowContext() {
 	render_context.reset();
 
 	if (graphic_ctx.device != nullptr) {
-		RequireVulkanSuccess(graphic_ctx.device.waitIdle(), "wait for Vulkan device shutdown");
+		DrainAsyncSubmits();
+	RequireVulkanSuccess(graphic_ctx.device.waitIdle(), "wait for Vulkan device shutdown");
 		graphic_ctx.DestroyAllocator();
 		graphic_ctx.device.destroy(nullptr);
 		graphic_ctx.device = nullptr;

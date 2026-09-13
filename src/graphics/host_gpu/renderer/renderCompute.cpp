@@ -736,7 +736,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		return;
 	}
 
-	buffer.EndRendering();
+	buffer.EndRendering(RenderPassEnd::Dispatch);
 	auto& pipeline =
 	    m_context.GetPipelineCache().GetComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);

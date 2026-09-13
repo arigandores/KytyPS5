@@ -207,7 +207,8 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 }
 
 void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
-                    std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer) {
+                    std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
+                    RenderPassEnd why) {
 	const auto transfer_access =
 	    vk::AccessFlagBits2::eTransferRead | vk::AccessFlagBits2::eTransferWrite;
 	vk::PipelineStageFlags2 destination_stage {};
@@ -225,7 +226,7 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 		return;
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImageBarriers, barriers.size());
-	m_scheduler.EndRendering();
+	m_scheduler.EndRendering(why);
 	vk::DependencyInfo dependency {};
 	dependency.imageMemoryBarrierCount = static_cast<uint32_t>(barriers.size());
 	dependency.pImageMemoryBarriers    = barriers.data();
@@ -241,7 +242,7 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
                    uint64_t size, bool buffer_from_tiler) {
 	EXIT_IF(copies.empty() || buffer == nullptr || size == 0);
-	m_scheduler.EndRendering();
+	m_scheduler.EndRendering(RenderPassEnd::ImageUpload);
 	vk::BufferMemoryBarrier2 buffer_barrier {};
 	buffer_barrier.srcStageMask =
 	    buffer_from_tiler && TileManager::NarrowUploadBarriers()
@@ -287,7 +288,7 @@ void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffe
 void Image::Download(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer,
                      uint64_t offset, uint64_t size) {
 	EXIT_IF(copies.empty() || buffer == nullptr || size == 0);
-	m_scheduler.EndRendering();
+	m_scheduler.EndRendering(RenderPassEnd::Download);
 	vk::BufferMemoryBarrier2 buffer_barrier {};
 	buffer_barrier.srcStageMask = vk::PipelineStageFlagBits2::eAllCommands;
 	buffer_barrier.srcAccessMask =
@@ -759,7 +760,11 @@ Image::~Image() {
 		}
 	}
 	if (backing.image != nullptr) {
-		m_graphics.DeleteImage(backing);
+		if (recycle_backing) {
+			m_graphics.RecycleImage(backing);
+		} else {
+			m_graphics.DeleteImage(backing);
+		}
 	}
 }
 

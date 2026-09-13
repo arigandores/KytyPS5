@@ -15,6 +15,8 @@
 #endif
 
 #include "common/assert.h"
+#include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -203,10 +205,15 @@ void VulkanDeferredDestroyFlush() {
 	}
 }
 
+namespace {
+void ReleaseRecycledImages();
+} // namespace
+
 void GraphicContext::DestroyAllocator() {
 	if (allocator == nullptr) {
 		return;
 	}
+	ReleaseRecycledImages();
 	VulkanDeferredDestroyFlush();
 	if (image_pool != nullptr) {
 		vmaDestroyPool(allocator, image_pool);
@@ -284,9 +291,117 @@ uint64_t GraphicContext::GetTotalMemoryBudget() const {
 	return std::max(local, available > system_reserve ? available - system_reserve : uint64_t {0});
 }
 
+namespace {
+
+// Retired images of the texture cache kept for reuse (gate "imgrecycle").
+struct RecycledImage {
+	VmaAllocator         allocator  = nullptr;
+	vk::Format           format     = vk::Format::eUndefined;
+	vk::ImageType        image_type = vk::ImageType::e2D;
+	vk::Extent3D         extent     = {};
+	uint32_t             layers     = 0;
+	uint32_t             mip_levels = 0;
+	uint32_t             samples    = 0;
+	vk::ImageUsageFlags  usage      = {};
+	vk::ImageCreateFlags flags      = {};
+	vk::Image            image      = nullptr;
+	VmaAllocation        allocation = nullptr;
+	uint64_t             bytes      = 0;
+	uint64_t             retired_ns = 0;
+};
+
+constexpr uint64_t RecycleMaxBytes = 256ull << 20u;
+constexpr size_t   RecycleMaxCount = 64;
+constexpr uint64_t RecycleMaxAgeNs = 2'000'000'000ull;
+
+std::mutex                g_recycle_mutex;
+std::deque<RecycledImage> g_recycled;
+uint64_t                  g_recycled_bytes = 0;
+
+// g_recycle_mutex held: destroys entries beyond the limits (all of them with `everything`),
+// oldest first.
+void TrimRecycledImages(uint64_t now_ns, bool everything = false) {
+	while (!g_recycled.empty() &&
+	       (everything || g_recycled_bytes > RecycleMaxBytes || g_recycled.size() > RecycleMaxCount ||
+	        now_ns - g_recycled.front().retired_ns > RecycleMaxAgeNs)) {
+		const auto entry = g_recycled.front();
+		g_recycled.pop_front();
+		g_recycled_bytes -= entry.bytes;
+		VulkanDeferredDestroy([entry] {
+			vmaDestroyImage(entry.allocator, entry.image, entry.allocation);
+		});
+	}
+}
+
+void ReleaseRecycledImages() {
+	std::lock_guard lock(g_recycle_mutex);
+	TrimRecycledImages(0, true);
+}
+
+} // namespace
+
+void GraphicContext::RecycleImage(VulkanImage& image) {
+	EXIT_IF(allocator == nullptr || image.image == nullptr || image.allocation == nullptr);
+	if (image_pool != nullptr || !Common::Gates::Enabled(Common::Gates::Gate::ImageRecycle)) {
+		ReleaseRecycledImages(); // the gate may have been switched off with entries still kept
+		DeleteImage(image);
+		return;
+	}
+	VmaAllocationInfo allocation_info {};
+	vmaGetAllocationInfo(allocator, image.allocation, &allocation_info);
+	{
+		std::lock_guard lock(g_recycle_mutex);
+		const auto      now = Common::FrameStats::NowNs();
+		g_recycled.push_back({allocator, image.format, image.image_type, image.extent, image.layers,
+		                      image.mip_levels, image.samples, image.usage, image.flags, image.image,
+		                      image.allocation, allocation_info.size, now});
+		g_recycled_bytes += allocation_info.size;
+		TrimRecycledImages(now);
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImgRecyclePuts, 1);
+	image.image      = nullptr;
+	image.allocation = nullptr;
+}
+
 bool GraphicContext::CreateImage(const vk::ImageCreateInfo& image_info, VulkanImage& image) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(allocator == nullptr || image.image != nullptr || image.allocation != nullptr);
+
+	if (image_pool == nullptr && image_info.pNext == nullptr &&
+	    image_info.tiling == vk::ImageTiling::eOptimal &&
+	    image_info.sharingMode == vk::SharingMode::eExclusive &&
+	    Common::Gates::Enabled(Common::Gates::Gate::ImageRecycle)) {
+		std::lock_guard lock(g_recycle_mutex);
+		TrimRecycledImages(Common::FrameStats::NowNs());
+		const auto found = std::find_if(g_recycled.begin(), g_recycled.end(), [&](const RecycledImage& entry) {
+			return entry.allocator == allocator &&
+			       entry.format == image_info.format && entry.image_type == image_info.imageType &&
+			       entry.extent == image_info.extent && entry.layers == image_info.arrayLayers &&
+			       entry.mip_levels == image_info.mipLevels &&
+			       entry.samples == static_cast<uint32_t>(image_info.samples) &&
+			       entry.usage == image_info.usage && entry.flags == image_info.flags;
+		});
+		if (found != g_recycled.end()) {
+			image.image      = found->image;
+			image.allocation = found->allocation;
+			g_recycled_bytes -= found->bytes;
+			g_recycled.erase(found);
+			image.format     = image_info.format;
+			image.image_type = image_info.imageType;
+			image.extent     = image_info.extent;
+			image.layers     = image_info.arrayLayers;
+			image.mip_levels = image_info.mipLevels;
+			image.samples    = static_cast<uint32_t>(image_info.samples);
+			image.usage      = image_info.usage;
+			image.flags      = image_info.flags;
+			// Whatever layout the image was left in, the first transition from undefined is valid
+			// and discards the old content, as for a new image.
+			image.state      = {.layout = vk::ImageLayout::eUndefined};
+			image.subresource_states.clear();
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImgRecycleHits, 1);
+			return true;
+		}
+	}
 
 	VmaAllocationCreateInfo alloc_info {};
 	alloc_info.requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -301,6 +416,15 @@ bool GraphicContext::CreateImage(const vk::ImageCreateInfo& image_info, VulkanIm
 	auto             result       = static_cast<vk::Result>(
 	    vmaCreateImage(allocator, static_cast<const vk::ImageCreateInfo::NativeType*>(image_info),
 	                   &alloc_info, &native_image, &image.allocation, nullptr));
+	if (result != vk::Result::eSuccess && alloc_info.pool == nullptr) {
+		// Memory kept for reuse may be what is missing.
+		ReleaseRecycledImages();
+		VulkanDeferredDestroyFlush();
+		native_image = VK_NULL_HANDLE;
+		result       = static_cast<vk::Result>(vmaCreateImage(
+            allocator, static_cast<const vk::ImageCreateInfo::NativeType*>(image_info), &alloc_info,
+            &native_image, &image.allocation, nullptr));
+	}
 	if (result != vk::Result::eSuccess && alloc_info.pool != nullptr) {
 		// Memory type or size the pool cannot serve: fall back to the default allocation path.
 		alloc_info.pool = nullptr;

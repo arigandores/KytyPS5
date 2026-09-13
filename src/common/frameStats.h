@@ -195,6 +195,46 @@ enum class Counter : uint32_t {
 	ImgInsertNs,       // TextureCache::InsertImage (host image creation and registration)
 	ImgFreeNs,         // TextureCache::FreeImage
 	ImgOverlapNs,      // TextureCache::ResolveDepthOverlap (insert + copy + free of a reinterpretation)
+	AsyncSubmits,      // command buffers handed to the submit thread
+	AsyncSubmitNs,     // submit thread time in vkQueueSubmit
+	AsyncSubmitLockNs, // submit thread time waiting for the queue lock
+	AsyncSubmitDrains, // synchronous submits / queue users that waited for the submit thread
+	AsyncSubmitDrainNs, // ... time they waited
+	ImgRecycleHits,    // host images created from the recycle pool
+	ImgRecyclePuts,    // retired host images kept in the pool
+	// Render passes closed by CommandBuffer::EndRendering, one counter per RenderPassEnd reason in
+	// that enum's order (renderTarget.h). RpRestart*: the next pass began on the same targets
+	// (attachments, layouts, render area; clears aside), i.e. the restart that reason cost.
+	RpEndState,
+	RpEndTargetTransit,
+	RpEndBindingTransit,
+	RpEndGds,
+	RpEndShaderWrite,
+	RpEndDispatch,
+	RpEndBufferUpload,
+	RpEndBufferCopy,
+	RpEndImageUpload,
+	RpEndTiler,
+	RpEndClear,
+	RpEndSanitize,
+	RpEndDownload,
+	RpEndSubmit,
+	RpEndOther,
+	RpRestartState,
+	RpRestartTargetTransit,
+	RpRestartBindingTransit,
+	RpRestartGds,
+	RpRestartShaderWrite,
+	RpRestartDispatch,
+	RpRestartBufferUpload,
+	RpRestartBufferCopy,
+	RpRestartImageUpload,
+	RpRestartTiler,
+	RpRestartClear,
+	RpRestartSanitize,
+	RpRestartDownload,
+	RpRestartSubmit,
+	RpRestartOther,
 	Count
 };
 

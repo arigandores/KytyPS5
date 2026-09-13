@@ -8,6 +8,7 @@
 #include "common/parallelCopy.h"
 #include "common/threads.h"
 #include "graphics/host_gpu/graphicContext.h"
+#include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/vulkanCommon.h"
@@ -519,6 +520,7 @@ void Swapchain::Destroy() {
 	auto& graphics = m_window.graphic_ctx;
 
 	{
+		DrainAsyncSubmits();
 		Common::LockGuard queue_lock(graphics.queue_mutex);
 		RequireVulkanSuccess(graphics.queue.waitIdle(), "wait for swapchain queue");
 	}

@@ -18,6 +18,13 @@
 
 namespace Libs::Graphics {
 
+// Blocks until every command buffer queued for the submit thread (gate "asyncsubmit") has been
+// handed to vkQueueSubmit. Call it before using the queue in a way that depends on all work queued
+// so far (waitIdle, capture boundaries, shutdown), and never while holding graphics.queue_mutex.
+void DrainAsyncSubmits();
+// Submits queued for the submit thread and not yet handed to vkQueueSubmit (diagnostics).
+[[nodiscard]] size_t AsyncSubmitBacklog();
+
 class CommandScheduler {
 public:
 	CommandScheduler(RenderContext& context, GraphicContext& graphics);
@@ -26,13 +33,15 @@ public:
 
 	void           Begin(HW::Context& registers, HW::UserConfig& user_config, HW::Shader& shaders);
 	void           BeginRendering(const RenderState& state);
-	void           EndRendering();
+	void           EndRendering(RenderPassEnd why = RenderPassEnd::Other);
 	void           Flush();
 	void           Flush(SubmitInfo& submit);
 	void           FlushAndWait();
 	void           Finish();
 	CommandBuffer& BeginCommand();
-	uint64_t       Submit(SubmitInfo submit = {});
+	// allow_async = false: the caller waits for this submit right away, so it is made on this
+	// thread (after the queued ones) instead of through the submit thread.
+	uint64_t       Submit(SubmitInfo submit = {}, bool allow_async = true);
 	// Deferred callbacks can observe an externally owned drain, but cannot initiate shutdown:
 	// the priority runner cannot join itself.
 	void                      Shutdown();

@@ -436,7 +436,13 @@ void TextureCache::DeleteImage(ImageId id) {
 	}
 	UnregisterImage(id);
 	if (m_scheduler.Active()) {
-		m_scheduler.DeferOperation([this, id] { m_slot_images.erase(id); });
+		m_scheduler.DeferOperation([this, id] {
+			// Erased once the GPU finished the tick that last used the image.
+			if (auto* retired = m_slot_images.try_get(id)) {
+				retired->recycle_backing = true;
+			}
+			m_slot_images.erase(id);
+		});
 	} else {
 		m_slot_images.erase(id);
 	}
@@ -2008,7 +2014,7 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id,
 			EXIT("TextureCache: image clear retained guest ownership\n");
 		}
 	}
-	command.EndRendering();
+	command.EndRendering(RenderPassEnd::Clear);
 	if (image.info.IsVolume() && !full_image) {
 		EXIT_NOT_IMPLEMENTED(range.aspectMask != vk::ImageAspectFlagBits::eColor ||
 		                     range.levelCount != 1);
@@ -2254,7 +2260,7 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 	barrier.buffer              = download.Handle();
 	barrier.offset              = offset;
 	barrier.size                = range.size;
-	m_scheduler.EndRendering();
+	m_scheduler.EndRendering(RenderPassEnd::Download);
 	m_scheduler.Current().Handle().pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
 	                                               vk::PipelineStageFlagBits::eHost, {}, 0, nullptr,
 	                                               1, &barrier, 0, nullptr);

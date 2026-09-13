@@ -4,6 +4,24 @@
 Цель документа — не искать это заново: где именно уходит CPU на кадр и какие кэши/эпохи уже есть
 в дереве.
 
+**Измерено в сессии 54 (игровая пустыня, 755 draw, семплер потока GuestGpu):**
+
+- **`vkQueueSubmit` был 9,9 % всех семплов (17 % работы потока)** — в драйвере; вынесен на отдельный
+  поток (`asyncsubmit`), осталось 0,7 %. На пустыне 28 отправок на кадр, в Sky Garden ~43.
+- **Пересоздание образов при переинтерпретации одной поверхности** (цвет ↔ D32 ↔ R32F, 5 раз за
+  кадр; `ResolveDepthOverlap`/`ResolveOverlap`, `textureCache.cpp`): `vmaCreateImage` →
+  `AllocateDedicatedMemory` 4,1 % + `BindImageMemory` до 1,6 %; `InsertImage` 520 мкс/кадр. Снято
+  пулом переиспользования `VkImage` (`imgrecycle`, `vma.cpp`). Частота — от `safe_to_delete`,
+  который сравнивает тики (43 на кадр) с порогом `NumFramesBeforeRemoval = 32`.
+- **M1 (материализация на воркерах)**: проверка результата `VerifyWitness` 2,5 %, постановка задач
+  `QueueAheadSource`+`QueueAhead` 2,6 %, `AheadTake` 0,7 % — это теперь крупнейший остаток, при
+  материализации ≈1 мкс на стадию.
+- Остальное после правок: `TrackingSpinLock::lock` 3,7 %, `ProtectMappedUnlocked` 2,9 % (синхронный
+  `VirtualProtect` из `BufferCache::SynchronizeBuffer` → `PageManager`), привязки ≈6,3 %,
+  `BufferCache::CopyBuffer` (DMA) 2,0 %; ожидание flip 57,4 %.
+- В Sky Garden разрывы прохода — OIT (15 пиксельных шейдеров linked list), см.
+  `docs/parallel-draw-path.md` §6.2; причины закрытия прохода теперь считает `FrameTrace-rp`.
+
 **Измерено в сессии 53 — два закрытых вопроса:**
 
 - **Демандный (по достижимости) обход SRT бесполезен.** Опрос `KYTY_SRT_STAT` считает, что

@@ -24,11 +24,12 @@ enum class Gate : uint32_t {
 	DrawAheadUse,   // KYTY_DRAW_AHEAD_USE,      file name "dause"
 	AsyncSubmit,    // KYTY_ASYNC_SUBMIT,        file name "asyncsubmit"
 	ImageRecycle,   // KYTY_IMAGE_RECYCLE,       file name "imgrecycle"
-	RecordThread,   // KYTY_RECORD_THREAD,       file name "recordthread"
+	RecordThread,   // KYTY_RECORD_THREAD,       start-only, "recordthread" in the file is ignored
 	TrackLockFree,  // KYTY_TRACK_LOCKFREE,      file name "trackfree"
 	TrackLockFreeVerify, // KYTY_TRACK_LOCKFREE_VERIFY, file name "tfcheck"
 	ProtectFast,    // KYTY_PROTECT_FAST,        file name "protfast"
 	ShaderWriteLocal, // KYTY_SHADER_WRITE_LOCAL, file name "swlocal"
+	ShaderWriteDefer, // KYTY_SHADER_WRITE_DEFER, file name "swdefer"
 	GdsEpoch,       // KYTY_GDS_EPOCH,           file name "gdsepoch"
 	AtomicImageBarrier, // KYTY_ATOMIC_IMAGE_NO_BARRIER, file name "atomimg"
 	Count,

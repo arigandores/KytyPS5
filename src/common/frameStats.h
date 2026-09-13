@@ -221,6 +221,9 @@ enum class Counter : uint32_t {
 	ProtectMapMisses,  // ... calls that took the address-space mutex and walked the map
 	ProtectHeldNs,     // region lock held across a host protection change (diagnostic)
 	DescriptorAllocations, // vkAllocateDescriptorSets calls (knobs "dsbatch" / "dspool")
+	ShaderWriteBarriersDeferrable, // draws whose written buffers are all flagged atomic
+	ShaderWriteBarriersPlain,     // ... and draws with at least one plainly written buffer
+	ShaderWriteBarriersDeferred,  // barriers actually deferred (gate "swdefer")
 	ShaderWriteBarriersLocal, // shader-write barriers recorded inside the pass (gate "swlocal")
 	ShaderWriteBarriersFlushed, // wide shader-write barriers issued when such a pass closed
 	GdsBarriers,        // GDS buffer barriers issued by CommitBindings

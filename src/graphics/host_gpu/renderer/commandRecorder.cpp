@@ -3,13 +3,17 @@
 #include "common/assert.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
+#include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/presentation/renderDoc.h"
 
+#include <atomic>
 #include <chrono>
+#include <cstdlib>
 #include <cstring>
 #include <mutex>
+#include <thread>
 #include <vector>
 
 namespace Libs::Graphics {
@@ -24,16 +28,13 @@ struct Payloads {
 	struct BeginBuffer {
 		uint64_t tick;
 	};
+	// Query-pool timestamps of the command-buffer boundaries only. GPU-time marks used to travel
+	// through here and were the reason a second thread recorded into a live command buffer.
 	struct Timestamp {
 		vk::QueryPool pool;
-		uint64_t      tick;
-		uint64_t      key;
-		uint64_t      key2;
 		uint32_t      query;
 		uint32_t      reset;
 		uint32_t      bottom;
-		uint32_t      kind;
-		uint32_t      gpu_begin;
 	};
 	struct Generic {
 		Common::UniqueFunction<void, vk::CommandBuffer>* command;
@@ -69,18 +70,22 @@ uint64_t ArenaBytes() {
 
 } // namespace
 
-CommandRecorder::CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer* current,
-                                 GpuTimeProfiler* gpu_time)
-    : m_commit(commit), m_user(user), m_current(current), m_gpu_time(gpu_time) {
+CommandRecorder::CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer* current)
+    : m_commit(commit), m_user(user), m_current(current) {
 	EXIT_IF(commit == nullptr || current == nullptr);
 	m_capacity = ArenaBytes();
 	m_mask     = m_capacity - 1;
 	m_data     = std::make_unique<uint8_t[]>(static_cast<size_t>(m_capacity));
+	// The thread first, the registry after: DrainRecordQueues() reads m_thread through Drain(),
+	// and it may run on another thread as soon as this recorder is in the list. Nothing can be
+	// owed to an unregistered recorder - only its owner publishes, and it has no pointer yet.
+	m_thread = std::thread([this] { Loop(); });
 	{
 		std::lock_guard lock(RecordersMutex());
 		Recorders().push_back(this);
 	}
-	m_thread = std::thread([this] { Loop(); });
+	LOGF("RecordThread: started recorder=%p arena=%lluKiB\n", static_cast<void*>(this),
+	     static_cast<unsigned long long>(m_capacity / 1024u));
 }
 
 CommandRecorder::~CommandRecorder() {
@@ -106,6 +111,10 @@ void CommandRecorder::Stop() {
 		m_pending.notify_all();
 	}
 	m_thread.join();
+	LOGF("RecordThread: stopped recorder=%p records=%llu peak_backlog=%lluB full=%llu\n",
+	     static_cast<void*>(this), static_cast<unsigned long long>(m_records),
+	     static_cast<unsigned long long>(m_peak_backlog),
+	     static_cast<unsigned long long>(m_full));
 }
 
 size_t CommandRecorder::Backlog() const noexcept {
@@ -155,6 +164,15 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 			if (t0 != 0) {
 				FS::Add(FS::Counter::RecordFullNs, FS::NowNs() - t0);
 			}
+			// With only the buffer boundaries published the arena never fills; if it does, the
+			// record thread is not keeping up and the size of the backlog says by how much.
+			if (++m_full <= 8) {
+				LOGF("RecordThread: arena full recorder=%p want=%u used=%llu capacity=%llu\n",
+				     static_cast<void*>(this), want,
+				     static_cast<unsigned long long>(head -
+				                                     m_tail.load(std::memory_order_acquire)),
+				     static_cast<unsigned long long>(m_capacity));
+			}
 			WakeConsumer();
 			continue;
 		}
@@ -176,6 +194,16 @@ void CommandRecorder::Publish(uint32_t bytes) {
 }
 
 void CommandRecorder::PushRecord(RecordOp op, const void* payload, uint32_t payload_size) {
+	// One producer per recorder: the ring is single-producer, and a second publisher would
+	// interleave its reservation with this one and hand the record thread a half-written record.
+	// The owner is the thread that drives this scheduler (GuestGpu for the renderer, the
+	// presentation thread for the swapchain).
+	const auto self = std::this_thread::get_id();
+	if (m_records == 0) {
+		m_producer = self;
+	}
+	EXIT_IF(m_producer != self);
+	m_records++;
 	uint32_t bytes = static_cast<uint32_t>(sizeof(RecordHeader)) + payload_size;
 	bytes          = (bytes + RecordAlign - 1u) & ~(RecordAlign - 1u);
 	auto*              slot = Reserve(bytes);
@@ -185,6 +213,11 @@ void CommandRecorder::PushRecord(RecordOp op, const void* payload, uint32_t payl
 		std::memcpy(slot + sizeof(RecordHeader), payload, payload_size);
 	}
 	Publish(bytes);
+	const auto backlog =
+	    m_head.load(std::memory_order_relaxed) - m_tail.load(std::memory_order_acquire);
+	if (backlog > m_peak_backlog) {
+		m_peak_backlog = backlog;
+	}
 	namespace FS = Common::FrameStats;
 	FS::Add(FS::Counter::RecordPackets, 1);
 	FS::Add(FS::Counter::RecordBytes, bytes);
@@ -207,17 +240,6 @@ void CommandRecorder::PushTimestamp(vk::QueryPool pool, uint32_t query, uint32_t
 	payload.query  = query;
 	payload.reset  = reset;
 	payload.bottom = bottom ? 1u : 0u;
-	PushRecord(RecordOp::Timestamp, &payload, sizeof(payload));
-}
-
-void CommandRecorder::PushGpuTime(uint64_t tick, bool begin, GpuTimeProfiler::Kind kind,
-                                  uint64_t key, uint64_t key2) {
-	Payloads::Timestamp payload {};
-	payload.tick      = tick;
-	payload.key       = key;
-	payload.key2      = key2;
-	payload.kind      = static_cast<uint32_t>(kind);
-	payload.gpu_begin = begin ? 1u : 0u;
 	PushRecord(RecordOp::Timestamp, &payload, sizeof(payload));
 }
 
@@ -287,6 +309,10 @@ void CommandRecorder::Execute(const RecordHeader& header, const uint8_t* payload
 			Payloads::Timestamp mark {};
 			std::memcpy(&mark, payload, sizeof(mark));
 			EXIT_IF(m_buffer == nullptr);
+			// Impossible state: a timestamp without a query pool used to mean a GPU-time mark,
+			// which is published in the middle of a command buffer. Recording it here put a
+			// second thread inside the same VkCommandBuffer.
+			EXIT_IF(mark.pool == nullptr);
 			if (mark.pool != nullptr) {
 				if (mark.reset != 0) {
 					m_buffer.resetQueryPool(mark.pool, mark.query, mark.reset);
@@ -294,14 +320,6 @@ void CommandRecorder::Execute(const RecordHeader& header, const uint8_t* payload
 				m_buffer.writeTimestamp(mark.bottom != 0 ? vk::PipelineStageFlagBits::eBottomOfPipe
 				                                         : vk::PipelineStageFlagBits::eTopOfPipe,
 				                        mark.pool, mark.query);
-			} else if (m_gpu_time != nullptr) {
-				if (mark.gpu_begin != 0) {
-					m_gpu_time->Begin(m_buffer, mark.tick);
-				} else {
-					m_gpu_time->Mark(m_buffer, mark.tick,
-					                 static_cast<GpuTimeProfiler::Kind>(mark.kind), mark.key,
-					                 mark.key2);
-				}
 			}
 			break;
 		}
@@ -374,13 +392,34 @@ size_t RecordBacklog() {
 }
 
 bool RecordThreadWanted(const GraphicContext& graphics) {
+	// Latched once, before the first command buffer, from the environment only. The mechanism
+	// moves the ownership of the command pool and of the native command buffer between two
+	// threads; a value that changes between two frames changes who owns them mid-run, and the
+	// gate file is re-read from the flip. A sweep that wants this on has to set the variable and
+	// restart the process.
+	static const bool wanted = [] {
+		const auto* value = std::getenv("KYTY_RECORD_THREAD");
+		const bool  on    = value != nullptr && value[0] == '1';
+		LOGF("RecordThread: KYTY_RECORD_THREAD=%d, fixed at start (the gate file cannot move it)\n",
+		     on ? 1 : 0);
+		return on;
+	}();
+	if (!wanted) {
+		static std::atomic<bool> warned {false};
+		if (Common::Gates::Enabled(Common::Gates::Gate::RecordThread) &&
+		    !warned.exchange(true, std::memory_order_relaxed)) {
+			LOGF("RecordThread: the gate file asked for recordthread=1; ignored, this gate is "
+			     "read once at start\n");
+		}
+		return false;
+	}
 	if (graphics.gpu_breadcrumbs_enabled || graphics.diagnostic_checkpoints_enabled) {
 		return false;
 	}
 	if (RenderDocCapturing()) {
 		return false;
 	}
-	return Common::Gates::Enabled(Common::Gates::Gate::RecordThread);
+	return true;
 }
 
 } // namespace Libs::Graphics

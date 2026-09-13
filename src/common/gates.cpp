@@ -38,6 +38,7 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_TRACK_LOCKFREE_VERIFY", "tfcheck", false},
     {"KYTY_PROTECT_FAST", "protfast", false},
     {"KYTY_SHADER_WRITE_LOCAL", "swlocal", false},
+    {"KYTY_SHADER_WRITE_DEFER", "swdefer", true},
     {"KYTY_GDS_EPOCH", "gdsepoch", false},
     {"KYTY_ATOMIC_IMAGE_NO_BARRIER", "atomimg", false},
 }};

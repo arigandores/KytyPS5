@@ -75,7 +75,9 @@ vk::CommandBuffer CommandBuffer::Handle() const {
 	if (m_recorder != nullptr) {
 		// Transitional (M3 step 0): this site still records vkCmd* itself. Let the record thread
 		// finish everything published so far - that also publishes m_buffer - and then record
-		// into the same buffer on this thread.
+		// into the same buffer on this thread. Callers keep the returned handle for a whole draw
+		// or dispatch, so nothing may be published to the recorder before the next Handle(): the
+		// record thread would call vkCmd* on the same VkCommandBuffer while they still record.
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
 		m_recorder->Drain();
@@ -145,8 +147,12 @@ void CommandBuffer::SetDebugInfo(uint32_t op, uint64_t submit_id, uint32_t arg0,
 	m_debug_arg3      = arg3;
 	m_debug_arg4      = arg4;
 	m_debug_arg5      = arg5;
-	RecordGpuCheckpoint(m_graphics, m_context.GetCommandScheduler(), m_buffer, m_rendering, op,
-	                    submit_id, arg0, arg1, arg2, arg3, arg4, arg5);
+	// m_buffer belongs to the record thread until the next drain, so it must not be read here.
+	// Nothing is lost: RecordThreadWanted refuses the record thread whenever a checkpoint or
+	// breadcrumb mode is on, so the two are never both active.
+	RecordGpuCheckpoint(m_graphics, m_context.GetCommandScheduler(),
+	                    m_recorder != nullptr ? vk::CommandBuffer {nullptr} : m_buffer, m_rendering,
+	                    op, submit_id, arg0, arg1, arg2, arg3, arg4, arg5);
 }
 
 void CommandBuffer::BeginRendering(const RenderState& state) const {

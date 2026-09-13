@@ -1714,14 +1714,37 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
 	}
 	vk::PipelineStageFlags shader_write_stages = {};
-	if (HasShaderBufferWrites(state.vs_input_info.stage)) {
+	bool                   atomic_only         = true;
+	if (HasShaderBufferWrites(state.vs_input_info.stage, atomic_only)) {
 		shader_write_stages |= mesh_active ? vk::PipelineStageFlagBits::eMeshShaderEXT
 		                                   : vk::PipelineStageFlagBits::eVertexShader;
 	}
-	if (state.ps_active && HasShaderBufferWrites(state.ps_input_info.stage)) {
+	if (state.ps_active && HasShaderBufferWrites(state.ps_input_info.stage, atomic_only)) {
 		shader_write_stages |= vk::PipelineStageFlagBits::eFragmentShader;
 	}
 	if (shader_write_stages) {
+		// The ceiling of gate "swdefer", counted whether or not it is on: BufferResource::atomic
+		// means "an atomic was seen", so a draw only counts when every buffer it writes has it.
+		Common::FrameStats::Add(atomic_only
+		                            ? Common::FrameStats::Counter::ShaderWriteBarriersDeferrable
+		                            : Common::FrameStats::Counter::ShaderWriteBarriersPlain,
+		                        1);
+		// Gate "swdefer": while the pass is open and every written buffer of this draw is only
+		// ever written atomically, the barrier is owed rather than issued, and the pass survives.
+		// Device-scope atomics order themselves; EndRendering pays the wide barrier.
+		if (atomic_only && buffer.IsRendering() &&
+		    Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteDefer)) {
+			buffer.NotePendingShaderWrite(shader_write_stages);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersDeferred, 1);
+			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
+			LogDrawPhase(draw.Name(), "DrawComplete");
+			if (!draw.IsIndexed()) {
+				SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
+			}
+			RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
+			lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
+			return;
+		}
 		// Gate "swlocal": a fragment-only shader-write barrier can be recorded inside the open
 		// pass instead of tearing it down, and the wide barrier is owed until the pass closes.
 		const bool local = Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal) &&

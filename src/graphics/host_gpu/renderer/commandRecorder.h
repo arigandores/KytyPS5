@@ -25,10 +25,18 @@ struct GraphicContext;
 // consumes them in publication order and records into one primary command buffer.
 //
 // Step 0 moves only the lifetime of the native buffer (the pool, vkBeginCommandBuffer,
-// vkEndCommandBuffer, the hand-off to the submit thread) and the timestamps. Every other site
-// still records on the resolving thread: CommandBuffer::Handle() drains this queue first and then
-// writes into the same buffer, so the order of commands is exactly the order it is today and
-// sites can be moved one at a time.
+// vkEndCommandBuffer, the hand-off to the submit thread) and the two query-pool timestamps that
+// bracket it. Every other site still records on the resolving thread: CommandBuffer::Handle()
+// drains this queue first and then writes into the same buffer, so the order of commands is
+// exactly the order it is today and sites can be moved one at a time.
+//
+// The invariant that makes the transitional state safe: a record may only be published at a point
+// where the resolving thread holds no vk::CommandBuffer it is about to record into. Handle()
+// drains, but the hot sites cache what it returned for a whole draw or dispatch (renderDraw.cpp
+// and renderCompute.cpp keep `vk_buffer`), so a record published in the middle of a buffer lets
+// the record thread call vkCmd* on the same VkCommandBuffer at the same time. That is a host
+// external-synchronization violation: it corrupts the driver's command-pool block allocator and
+// the process dies inside the driver, not inside the emulator. Only the buffer boundaries publish.
 //
 // The producer is the single thread that owns the scheduler (GuestGpu for the renderer, the
 // presentation thread for the swapchain); the consumer is the record thread. Head and tail are
@@ -39,7 +47,7 @@ enum class RecordOp : uint16_t {
 	Pad = 0,     // filler up to the end of the ring; no work
 	BeginBuffer, // take the next free buffer from the scheduler's pool and begin it
 	EndBuffer,   // end it and, for an asynchronous submit, hand it to the submit thread
-	Timestamp,   // query-pool timestamps (KYTY_FRAME_TRACE) and GpuTimeProfiler marks
+	Timestamp,   // the query-pool timestamps that bracket the buffer (KYTY_FRAME_TRACE)
 	Generic,     // an arbitrary recording callback, for the rare sites
 };
 
@@ -78,8 +86,7 @@ public:
 	// may read it once Drain() has returned.
 	using CommitFn = vk::CommandBuffer (*)(void* user, uint64_t tick);
 
-	CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer* current,
-	                GpuTimeProfiler* gpu_time);
+	CommandRecorder(CommitFn commit, void* user, vk::CommandBuffer* current);
 	~CommandRecorder();
 	KYTY_CLASS_NO_COPY(CommandRecorder);
 
@@ -88,9 +95,8 @@ public:
 	void PushEndBuffer(const RecordSubmit& request);
 	// reset != 0: vkCmdResetQueryPool(pool, query, reset) before the write (outside a pass only).
 	void PushTimestamp(vk::QueryPool pool, uint32_t query, uint32_t reset, bool bottom);
-	// begin: GpuTimeProfiler::Begin, otherwise ::Mark.
-	void PushGpuTime(uint64_t tick, bool begin, GpuTimeProfiler::Kind kind, uint64_t key,
-	                 uint64_t key2);
+	// No GPU-time marks here: they are published in the middle of a command buffer, where the
+	// resolving thread still owns the handle (see the note above and CommandScheduler::GpuMarkSlow).
 	void PushGeneric(Common::UniqueFunction<void, vk::CommandBuffer>&& command);
 
 	// Waits until everything published before this call has been recorded. Never call it from the
@@ -114,7 +120,6 @@ private:
 	CommitFn           m_commit  = nullptr;
 	void*              m_user    = nullptr;
 	vk::CommandBuffer* m_current = nullptr;
-	GpuTimeProfiler*   m_gpu_time = nullptr;
 	vk::CommandBuffer  m_buffer   = nullptr; // record thread only
 
 	std::unique_ptr<uint8_t[]> m_data;
@@ -130,16 +135,25 @@ private:
 	std::atomic<bool>                 m_consumer_waiting {false};
 	std::atomic<bool>                 m_stop {false};
 	std::thread                       m_thread;
+
+	// Diagnostics. Touched by the producer only, so they need no synchronization: the ring is
+	// single-producer and m_producer is the assert that says so.
+	std::thread::id                   m_producer;
+	uint64_t                          m_records      = 0;
+	uint64_t                          m_peak_backlog = 0;
+	uint64_t                          m_full         = 0;
 };
 
 // Waits for every recorder in the process; part of DrainAsyncSubmits().
 void DrainRecordQueues();
 // Bytes published and not recorded yet across every recorder (diagnostics).
 [[nodiscard]] size_t RecordBacklog();
-// Gate "recordthread", plus the cases the record thread has to stay out of: the breadcrumb and
-// checkpoint modes record their own commands from CommandBuffer::SetDebugInfo and exist to name
-// the last command before a hang, and a RenderDoc capture must see the frame recorded the way the
-// thread that resolved it wrote it.
+// KYTY_RECORD_THREAD, read once at process start. The gate file cannot move it: the command pool
+// and the native command buffer change owner with it, and the file is re-read from the flip. On
+// top of that value, the cases the record thread has to stay out of - and those do change while
+// the process runs: the breadcrumb and checkpoint modes record their own commands from
+// CommandBuffer::SetDebugInfo and exist to name the last command before a hang, and a RenderDoc
+// capture must see the frame recorded the way the thread that resolved it wrote it.
 [[nodiscard]] bool RecordThreadWanted(const GraphicContext& graphics);
 
 } // namespace Libs::Graphics

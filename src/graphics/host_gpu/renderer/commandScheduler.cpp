@@ -642,7 +642,7 @@ CommandBuffer& CommandScheduler::Current() {
 CommandRecorder* CommandScheduler::Recorder() {
 	if (m_recorder == nullptr) {
 		m_recorder = std::make_unique<CommandRecorder>(&CommandScheduler::CommitPoolBuffer, this,
-		                                              &m_command.m_buffer, &m_gpu_time);
+		                                              &m_command.m_buffer);
 	}
 	return m_recorder.get();
 }
@@ -653,10 +653,13 @@ vk::CommandBuffer CommandScheduler::CommitPoolBuffer(void* user, uint64_t tick) 
 }
 
 void CommandScheduler::GpuMarkSlow(GpuTimeProfiler::Kind kind, uint64_t key, uint64_t key2) {
-	if (m_command.m_recorder != nullptr) {
-		m_command.m_recorder->PushGpuTime(CurrentTick(), false, kind, key, key2);
-		return;
-	}
+	// Always on this thread, through Handle(), which drains the record thread first. A GPU-time
+	// mark lands in the middle of a command buffer, and every caller of GpuMark is holding a
+	// vk::CommandBuffer it took from Handle() earlier in the same draw or dispatch
+	// (renderDraw.cpp:1622, renderCompute.cpp:754) and keeps recording into it right after the
+	// mark. Publishing the mark instead put the record thread inside the same VkCommandBuffer at
+	// the same time: an external-synchronization violation that corrupts the driver's command
+	// pool and kills the process inside nvoglv64.
 	m_gpu_time.Mark(m_command.Handle(), CurrentTick(), kind, key, key2);
 }
 
@@ -682,12 +685,11 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 	}
 	BeginTimestamp();
 	if (GpuTimeProfiler::Enabled()) {
-		if (m_command.m_recorder != nullptr) {
-			m_command.m_recorder->PushGpuTime(CurrentTick(), true, GpuTimeProfiler::Kind::Idle, 0,
-			                                  0);
-		} else {
-			m_gpu_time.Begin(m_command.Handle(), CurrentTick());
-		}
+		// Same rule as GpuMarkSlow. Handle() drains, so the record thread has already taken the
+		// buffer from the pool and begun it by the time the chunk reset is recorded here, and the
+		// order is the one the direct path produces: vkBeginCommandBuffer, the frame-trace
+		// top-of-pipe timestamp, then the GPU-time chunk.
+		m_gpu_time.Begin(m_command.Handle(), CurrentTick());
 	}
 	return m_command;
 }

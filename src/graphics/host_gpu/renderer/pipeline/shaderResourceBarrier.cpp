@@ -68,7 +68,7 @@ vk::BufferMemoryBarrier MakeGdsDependency(vk::Buffer buffer) {
 	return barrier;
 }
 
-bool HasShaderBufferWrites(const ShaderStageRuntime& runtime) {
+bool HasShaderBufferWrites(const ShaderStageRuntime& runtime, bool& atomic_only) {
 	EXIT_IF(!runtime);
 	const auto& program   = *runtime.program;
 	const auto& resources = runtime.resources;
@@ -84,9 +84,18 @@ bool HasShaderBufferWrites(const ShaderStageRuntime& runtime) {
 		std::memcpy(descriptor.fields, value.dwords.data(), sizeof(descriptor.fields));
 		// A zero stride means byte addressing. For either addressing mode a nonzero record
 		// count is exactly the condition for a nonempty descriptor range.
-		has_writes |= descriptor.Base48() != 0 && descriptor.NumRecords() != 0;
+		if (descriptor.Base48() == 0 || descriptor.NumRecords() == 0) {
+			continue;
+		}
+		has_writes = true;
+		atomic_only &= program.info.buffers[i].atomic;
 	}
 	return has_writes;
+}
+
+bool HasShaderBufferWrites(const ShaderStageRuntime& runtime) {
+	bool atomic_only = true;
+	return HasShaderBufferWrites(runtime, atomic_only);
 }
 
 void ShaderAccessBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages) {

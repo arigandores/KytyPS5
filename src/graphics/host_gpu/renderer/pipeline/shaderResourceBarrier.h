@@ -14,6 +14,9 @@ VulkanMemoryBarrier     MakeShaderWriteHazardDependency();
 VulkanMemoryBarrier     MakeShaderWriteDependency();
 vk::BufferMemoryBarrier MakeGdsDependency(vk::Buffer buffer);
 bool HasShaderBufferWrites(const ShaderStageRuntime& runtime);
+// Same walk, and whether every nonempty written buffer of the stage carries the IR's atomic flag.
+// `atomic_only` is left untouched when the stage writes nothing.
+bool HasShaderBufferWrites(const ShaderStageRuntime& runtime, bool& atomic_only);
 void ShaderAccessBarrier(vk::CommandBuffer vk_buffer, vk::PipelineStageFlags source_stages);
 void ShaderWriteHazardBarrier(vk::CommandBuffer      vk_buffer,
                               vk::PipelineStageFlags destination_stages);

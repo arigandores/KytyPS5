@@ -1305,6 +1305,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " pmap_hit=%llu pmap_miss=%llu prot_held_us=%llu"
 			     " gds_bar=%llu gds_skip=%llu img_ww_skip=%llu"
 			     " swbar_loc=%llu swbar_flush=%llu ds_alloc=%llu"
+			     " swdefer_ok=%llu swdefer_no=%llu swdefer_n=%llu"
 			     " da_runs=%llu da_probe=%llu"
 			     "\n",
 			     r.cfg->flip_status.count, d(FS::Counter::Logs), dus(FS::Counter::LogNs),
@@ -1401,6 +1402,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     d(FS::Counter::ShaderWriteBarriersLocal),
 			     d(FS::Counter::ShaderWriteBarriersFlushed),
 			     d(FS::Counter::DescriptorAllocations),
+			     d(FS::Counter::ShaderWriteBarriersDeferrable),
+			     d(FS::Counter::ShaderWriteBarriersPlain),
+			     d(FS::Counter::ShaderWriteBarriersDeferred),
 			     d(FS::Counter::DrawAheadRuns), d(FS::Counter::DrawAheadProbes));
 			{
 				// Why render passes ended this frame (end_*), and how many of those ends were followed

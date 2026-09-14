@@ -1,3 +1,4 @@
+#include "common/gates.h"
 #include "common/hostException.h"
 #include "common/virtualMemory.h"
 #include "graphics/host_gpu/memoryTracker.h"
@@ -302,10 +303,66 @@ void TestCpuDirtyUpload() {
         ranges++;
       },
       [&]() noexcept { uploaded = true; });
-  Check(ranges == 1 && uploaded &&
-            !tracker.IsRegionCpuModified(address, page_size) &&
-            Protection(memory) == PAGE_READONLY,
-        "upload did not clear CPU dirty state and arm protection");
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    // Session 60, gate "armdefer": the first upload copies the page and leaves it dirty with its
+    // write watcher requested; the worker applies the protection; a write before that lands
+    // silently; the next upload copies the page again and only then settles it.
+    Check(ranges == 1 && uploaded && tracker.IsRegionCpuModified(address, page_size),
+          "deferred-arm upload cleared the CPU dirty state at once");
+    page_manager.DrainDeferredProtection();
+    Check(Protection(memory) == PAGE_READONLY,
+          "deferred-arm upload did not arm the protection through the worker");
+    ranges = 0;
+    tracker.ForEachUploadRange(
+        address + 16, 32, false,
+        [&](uint64_t upload_address, uint64_t upload_size) noexcept {
+          Check(upload_address == address && upload_size == page_size,
+                "second deferred-arm upload range was not page aligned");
+          ranges++;
+        },
+        []() noexcept {});
+    Check(ranges == 1 && !tracker.IsRegionCpuModified(address, page_size) &&
+              Protection(memory) == PAGE_READONLY,
+          "second upload did not settle the armed page");
+    // A third upload finds nothing.
+    ranges = 0;
+    tracker.ForEachUploadRange(
+        address + 16, 32, false, [&](uint64_t, uint64_t) noexcept { ranges++; },
+        []() noexcept {});
+    Check(ranges == 0, "settled page was uploaded again");
+    // The fault handler's path withdraws an arming: request, then invalidate before the worker
+    // settles it, then upload - the page must be copied and requested again, never settled early.
+    tracker.MarkRegionAsCpuModified(address, page_size);
+    ranges = 0;
+    tracker.ForEachUploadRange(
+        address + 16, 32, false, [&](uint64_t, uint64_t) noexcept { ranges++; },
+        []() noexcept {});
+    Check(ranges == 1 && tracker.IsRegionCpuModified(address, page_size),
+          "re-dirtied page was not requested again");
+    tracker.MarkRegionAsCpuModified(address, page_size); // the write fault after the arming
+    Check(IsWritable(memory), "withdrawn arming left the page read-only");
+    page_manager.DrainDeferredProtection();
+    ranges = 0;
+    tracker.ForEachUploadRange(
+        address + 16, 32, false, [&](uint64_t, uint64_t) noexcept { ranges++; },
+        []() noexcept {});
+    Check(ranges == 1 && tracker.IsRegionCpuModified(address, page_size),
+          "page dirtied after its arming was settled without a second copy");
+    page_manager.DrainDeferredProtection();
+    ranges = 0;
+    tracker.ForEachUploadRange(
+        address + 16, 32, false, [&](uint64_t, uint64_t) noexcept { ranges++; },
+        []() noexcept {});
+    Check(ranges == 1 && !tracker.IsRegionCpuModified(address, page_size) &&
+              Protection(memory) == PAGE_READONLY,
+          "re-armed page did not settle");
+  } else {
+    Check(ranges == 1 && uploaded &&
+              !tracker.IsRegionCpuModified(address, page_size) &&
+              Protection(memory) == PAGE_READONLY,
+          "upload did not clear CPU dirty state and arm protection");
+  }
   Check(!tracker.IsRegionCpuModifiedAndGpuClean(address, page_size) &&
         tracker.IsRegionCpuModifiedAndGpuClean(address, page_size * 2),
         "combined dirty query lost clean/CPU-dirty page distinctions");
@@ -371,6 +428,16 @@ void TestCpuModifiedSnapshot() {
   Check(IsWritable(memory), "CPU snapshot changed page protection");
   tracker.ForEachUploadRange(address, page * 3, false,
                             [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    // Session 60, gate "armdefer": the pages stay dirty until an upload after the worker's
+    // protection settles them.
+    collect();
+    Check(!ranges.empty(), "deferred-arm upload cleared the CPU snapshot at once");
+    harness.page_manager.DrainDeferredProtection();
+    tracker.ForEachUploadRange(address, page * 3, false,
+                              [](uint64_t, uint64_t) noexcept {}, []() noexcept {});
+  }
   collect();
   Check(ranges.empty(), "CPU snapshot retained uploaded pages");
   tracker.MarkRegionAsCpuModified(address + page + 17, 4);
@@ -398,6 +465,10 @@ void TestCpuModifiedSnapshot() {
 }
 
 void TestCpuWriteEpoch() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   TrackerHarness harness;
   auto& tracker = harness.tracker;
   const auto page = harness.page_manager.GetPageSize();
@@ -422,6 +493,10 @@ void TestCpuWriteEpoch() {
 // nothing announces a write to that range, move when one does, and refuse to answer at all for a
 // range that is not fully tracked.
 void TestRangeWriteEpoch() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   TrackerHarness harness;
   auto& tracker = harness.tracker;
   const auto page = harness.page_manager.GetPageSize();
@@ -454,6 +529,10 @@ void TestRangeWriteEpoch() {
 // neighbour must not move it), it must move whenever a CPU write is announced to this region, and
 // it must never move because a buffer upload consumed the dirty bits.
 void TestRegionWriteStamp() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   TrackerHarness harness;
   auto& tracker = harness.tracker;
   const auto page = harness.page_manager.GetPageSize();
@@ -576,6 +655,10 @@ void TestGpuDirtyBits() {
 }
 
 void TestExactDirtyIntervalsSharingTrackerPage() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": the worker's host protection calls land in the log at any time
+  }
   TrackerHarness harness;
   auto &tracker = harness.tracker;
   auto &page_manager = harness.page_manager;
@@ -621,6 +704,10 @@ void TestExactDirtyIntervalsSharingTrackerPage() {
 }
 
 void TestGpuDownloadProtectionMirrors() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": the worker's host protection calls land in the log at any time
+  }
   TrackerHarness harness;
   auto &tracker = harness.tracker;
   auto &page_manager = harness.page_manager;
@@ -697,6 +784,10 @@ void TestGpuDownloadProtectionMirrors() {
 }
 
 void TestCrossRegionUpload() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   constexpr uintptr_t base = 0x0000000200010000ull;
   constexpr uint64_t region_size = 4ull * 1024ull * 1024ull;
   TrackerHarness harness;
@@ -777,6 +868,10 @@ void TestUploadDoesNotSerializeDisjointRegion() {
 }
 
 void TestDownloadDoesNotSerializeDisjointRegion() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   constexpr auto region_size = Libs::Graphics::TRACKER_REGION_SIZE;
   constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
   TrackerHarness harness;
@@ -835,6 +930,10 @@ void TestDownloadDoesNotSerializeDisjointRegion() {
 }
 
 void TestGpuUnmarkUsesRegionMask() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": the worker's host protection calls land in the log at any time
+  }
   constexpr auto region_size = Libs::Graphics::TRACKER_REGION_SIZE;
   constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
   TrackerHarness harness;
@@ -896,6 +995,10 @@ void TestGpuUnmarkUsesRegionMask() {
 }
 
 void TestFullRegionGpuUnmarkBatching() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   constexpr auto region_size = Libs::Graphics::TRACKER_REGION_SIZE;
   constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
   TrackerHarness harness;
@@ -939,6 +1042,10 @@ void TestFullRegionGpuUnmarkBatching() {
 // The lock-free queries must answer exactly what the locked ones answer whenever nothing
 // is changing concurrently. This is the contract the gate "trackfree" relies on.
 void TestLockFreeQueriesMatchLocked() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
   TrackerHarness harness;
   auto &tracker = harness.tracker;
@@ -1009,6 +1116,10 @@ void TestLockFreeQueriesMatchLocked() {
 // half of a tracking region, the thread that owns GPU state must never see a lock-free
 // answer claiming its GPU-dirty pages are clean, nor claiming clean pages are GPU-dirty.
 void TestLockFreeQueriesUnderConcurrentFaults() {
+  if (Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+      Libs::Graphics::PageManager::DeferEnabled()) {
+    return; // gate "armdefer": read-only uploads settle at a later upload, see TestCpuDirtyUpload
+  }
   constexpr auto page_size = Libs::Graphics::TRACKER_PAGE_SIZE;
   constexpr uint64_t pages = 16;
   TrackerHarness harness;

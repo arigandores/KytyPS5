@@ -658,6 +658,9 @@ struct DrawRenderState {
 	ShaderVertexInputInfo vs_input_info;
 	ShaderPixelInputInfo  ps_input_info;
 	PipelineCache::GraphicsPrograms programs;
+	// Session 60, B3 (gate "progmemo"): the GetGraphicsPrograms call that last recorded into or
+	// served from this object; 0 for a state no call has seen (a nested draw's local).
+	uint64_t prog_memo_serial = 0;
 };
 
 namespace {
@@ -1482,8 +1485,16 @@ static void RefreshShaders(CommandBuffer& buffer, const DrawCallInfo& draw,
 	const auto& shader_regs        = ctx.GetShaderRegisters();
 
 	state.programs      = {};
-	if (Common::Gates::Enabled(Common::Gates::Gate::SnapshotKeep) &&
-	    Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse)) {
+	// Session 60, B3 (gate "progmemo"): an active pixel stage keeps the previous draw's input
+	// info; PipelineCache::GetGraphicsPrograms resets it itself when the registers differ and
+	// serves the draw from it when they do not. An inactive stage is reset as before, so that
+	// stage.program stays null for it.
+	const bool keep_pixel_info = state.ps_active &&
+	                             Common::Gates::Enabled(Common::Gates::Gate::ProgMemo) &&
+	                             Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse);
+	if (keep_pixel_info) {
+	} else if (Common::Gates::Enabled(Common::Gates::Gate::SnapshotKeep) &&
+	           Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse)) {
 		// Gate "snapkeep" (session 57, B4): the reset keeps the snapshot storage an earlier draw's
 		// pixel stage left here; PipelineCache::GetGraphicsPrograms takes it back for this one. Until
 		// then stage.program is null and no reader looks at an inactive pixel stage's resources.
@@ -1505,7 +1516,8 @@ static void RefreshShaders(CommandBuffer& buffer, const DrawCallInfo& draw,
 	}
 	state.programs = pipeline_cache.GetGraphicsPrograms(
 	    vertex_shader_info, pixel_shader_info, shader_regs, ctx, buffer.GetUserConfig(),
-	    target_export_mapping, state.ps_active, state.vs_input_info, state.ps_input_info);
+	    target_export_mapping, state.ps_active, state.vs_input_info, state.ps_input_info,
+	    &state.prog_memo_serial);
 }
 
 static PreparedIndexBuffer PrepareIndexBuffer(CommandBuffer&               buffer,

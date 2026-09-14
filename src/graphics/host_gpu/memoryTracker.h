@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_MEMORYTRACKER_H_
 
 #include "common/assert.h"
+#include "common/gates.h"
 #include "graphics/host_gpu/pageManager.h"
 #include "graphics/host_gpu/rangeSet.h"
 #include "graphics/host_gpu/regionManager.h"
@@ -272,8 +273,10 @@ public:
 	// and the flush of a whole pass of uploads and copies nothing until that flush returned
 	// (BufferCache::SynchronizeBuffersOfDirtyRangesBatched). Opening a scope here would become the
 	// innermost one and undo the merge, and flushing here would be one flush per buffer again.
+	// Returns true (gate "armdefer") when pages of the range were left CPU-dirty for a later
+	// synchronization to settle: the caller must not record the upload as current.
 	template <typename RangeFunc, typename UploadFunc>
-	void ForEachUploadRange(uint64_t vaddr, uint64_t size, bool is_written, RangeFunc&& range_func,
+	bool ForEachUploadRange(uint64_t vaddr, uint64_t size, bool is_written, RangeFunc&& range_func,
 	                        UploadFunc&& upload_func, bool batch_protect = false,
 	                        const StickyUploadStat* sticky_stat = nullptr, bool pass_batch = false) {
 		static_assert(std::is_nothrow_invocable_v<RangeFunc&, uint64_t, uint64_t>);
@@ -282,6 +285,14 @@ public:
 		if (pass_batch && is_written) {
 			EXIT("upload pass batch on a written range\n");
 		}
+		// Session 60, gate "armdefer" (read-only uploads outside a pass): the write watchers are
+		// armed by the protection worker, see RegionManager::ForEachUploadRangeArmDeferred.
+		const bool arm_defer = !is_written && !pass_batch &&
+		                       Common::Gates::Enabled(Common::Gates::Gate::ArmDefer) &&
+		                       PageManager::DeferEnabled();
+		const bool arm_verify =
+		    arm_defer && Common::Gates::Enabled(Common::Gates::Gate::ArmDeferCheck);
+		bool provisional = false;
 		Iterate<true>(vaddr, size, [](RegionManager*, uint64_t, uint64_t) {});
 		const auto* previous_upload_owner = std::exchange(s_upload_owner, this);
 		{
@@ -296,15 +307,22 @@ public:
 					// Gate "stkstat": statistics of the pages the call below arms again.
 					manager->NoteUploadStat(manager->GetCpuAddr() + offset, bytes, *sticky_stat);
 				}
-				manager->ForEachModifiedRange<DirtySource::Cpu, true>(manager->GetCpuAddr() + offset,
-																	  bytes, range_func);
+				if (arm_defer) {
+					if (manager->ForEachUploadRangeArmDeferred(manager->GetCpuAddr() + offset, bytes,
+					                                           arm_verify, range_func)) {
+						provisional = true;
+					}
+				} else {
+					manager->ForEachModifiedRange<DirtySource::Cpu, true>(
+					    manager->GetCpuAddr() + offset, bytes, range_func);
+				}
 				if (!is_written) {
 					manager->lock.unlock();
 				}
 			});
 			if (!pass_batch) {
 				batch.Flush();
-				if (!is_written) {
+				if (!is_written && !arm_defer) {
 					// Whatever the scope held, and whether or not the gate is on: a page of this
 					// range may carry a deferred protection of another caller (the texture cache
 					// arms its watchers through the protection worker), and the copy below must not
@@ -315,6 +333,10 @@ public:
 						               m_page_manager.FlushProtection(manager->GetCpuAddr() + offset,
 						                                              bytes);
 					               });
+				} else if (arm_defer) {
+					// A page copied under a lagging protection keeps its dirty bit (whoever's
+					// pending change it is) and is copied again once the protection is in effect.
+					Common::FrameStats::Add(Common::FrameStats::Counter::ArmFlushSkips, 1);
 				}
 			}
 		}
@@ -328,6 +350,7 @@ public:
 			               });
 		}
 		s_upload_owner = previous_upload_owner;
+		return provisional;
 	}
 
 private:

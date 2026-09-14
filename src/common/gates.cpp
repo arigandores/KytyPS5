@@ -87,6 +87,12 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 59, M1 producer off the critical thread.
     {"KYTY_DRAW_AHEAD_WALK", "dawalk", false},
     {"KYTY_RT_FAST", "rtfast", true},
+    // Session 60, B3.
+    {"KYTY_PROG_MEMO", "progmemo", true},
+    {"KYTY_PROG_MEMO_VERIFY", "progmemocheck", false},
+    // Session 60, item 4.
+    {"KYTY_ARM_DEFER", "armdefer", false},
+    {"KYTY_ARM_DEFER_VERIFY", "armcheck", false},
 }};
 
 struct KnobDefinition {

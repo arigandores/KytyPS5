@@ -81,6 +81,12 @@ enum class Gate : uint32_t {
 	// Session 59, M1 producer off the critical thread.
 	DrawAheadWalk,  // KYTY_DRAW_AHEAD_WALK,     file name "dawalk" (shadow walk on its own thread at submit)
 	RenderTargetFast, // KYTY_RT_FAST,           file name "rtfast" (reuse the target views of the previous draw)
+	// Session 60, B3: program lookup served by the previous draw's register inputs.
+	ProgMemo,       // KYTY_PROG_MEMO,           file name "progmemo"
+	ProgMemoCheck,  // KYTY_PROG_MEMO_VERIFY,    file name "progmemocheck"
+	// Session 60, item 4: write watchers of read-only uploads armed by the protection worker.
+	ArmDefer,       // KYTY_ARM_DEFER,           file name "armdefer"
+	ArmDeferCheck,  // KYTY_ARM_DEFER_VERIFY,    file name "armcheck"
 	Count,
 };
 

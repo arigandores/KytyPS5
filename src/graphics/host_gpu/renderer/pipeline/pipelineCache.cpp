@@ -1295,8 +1295,19 @@ struct PipelineCache::ProgramCache {
 			PipelineKeyHash::Mix(hash, key.user_data_count);
 			PipelineKeyHash::Mix(hash, key.code_size);
 			PipelineKeyHash::Mix(hash, key.static_state.size());
-			// Bucket same-shape static variants by source. ProgramKey equality performs the one
-			// exact state comparison needed on a stable hit without hashing up to 429 words first.
+			// Session 60, B6 (KYTY_PROG_KEY_DIGEST, default 1, read once: a map's hash cannot
+			// change while it holds entries): the state content too, so that the static variants
+			// of one source spread over buckets instead of one chain compared word by word on
+			// every draw. Without it, same-shape variants share a bucket and ProgramKey equality
+			// does the exact comparison.
+			static const bool digest = [] {
+				const auto* value = std::getenv("KYTY_PROG_KEY_DIGEST");
+				return value == nullptr || value[0] != '0';
+			}();
+			if (digest && !key.static_state.empty()) {
+				hash = static_cast<std::size_t>(XXH3_64bits_withSeed(
+				    key.static_state.data(), key.static_state.size() * sizeof(uint32_t), hash));
+			}
 			return hash;
 		}
 	};
@@ -1404,6 +1415,7 @@ struct PipelineCache::ProgramCache {
 		}
 		source.from_cache = true;
 		entry             = programs.try_emplace(key, std::move(source)).first;
+		programs_epoch++;
 		IndexPermutations(entry->first, entry->second);
 		return true;
 	}
@@ -2353,9 +2365,12 @@ struct PipelineCache::ProgramCache {
 
 	// tolerant: the PM4 lookahead reads guest memory that may not be final yet; a resource plan
 	// that does not materialize returns an empty program instead of stopping the emulator.
+	// slot: which lookup key (0 draw VS, 1 draw PS, 2 other); key_hit (gate "progmemo"): the
+	// slot's inputs equal the previous draw's, so its key and find result are this draw's too.
 	template <typename InputInfo>
 	ShaderProgram Get(const ShaderParams& params, InputInfo& input_info,
-	                  uint32_t& push_data_cursor, bool tolerant = false, int kept = -1) {
+	                  uint32_t& push_data_cursor, bool tolerant = false, int kept = -1,
+	                  int slot = 2, bool key_hit = false) {
 		ShaderType stage;
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 			stage = input_info.mesh.threads_num[0] != 0 ? ShaderType::Mesh : ShaderType::Vertex;
@@ -2367,25 +2382,35 @@ struct PipelineCache::ProgramCache {
 		}
 
 		Common::FrameStats::Lap lap;
-		lookup_key.stage           = stage;
-		lookup_key.hash            = params.hash;
-		lookup_key.user_data_count = static_cast<uint32_t>(params.user_data.size());
-		lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
-		BuildStageStaticKey(input_info, lookup_key.static_state);
-		static const bool register_trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;
-		static const bool dump_gcn = [] {
-			const auto* value = std::getenv("KYTY_DUMP_GCN");
-			return value != nullptr && value[0] != '0';
-		}();
-		if (!tolerant && (register_trace || dump_gcn) &&
-		    first_used.emplace(static_cast<uint32_t>(stage), params.hash).second) {
-			if (register_trace) {
-				LOGF("ShaderFirstUse: hash=%016" PRIx64 " stage=%u words=%zu ud=%zu host_us=%" PRIu64 "\n",
-				     params.hash, static_cast<uint32_t>(stage), params.code.size(), params.user_data.size(), HostMicros());
+		EXIT_IF(slot < 0 || slot >= static_cast<int>(lookup_keys.size()));
+		ProgramKey& lookup_key = lookup_keys[static_cast<size_t>(slot)];
+		auto        entry      = programs.end();
+		if (key_hit) {
+			auto& memo = prog_memo[static_cast<size_t>(slot)];
+			entry      = memo.entry_valid && memo.programs_epoch == programs_epoch
+			                 ? memo.entry
+			                 : programs.find(lookup_key);
+		} else {
+			lookup_key.stage           = stage;
+			lookup_key.hash            = params.hash;
+			lookup_key.user_data_count = static_cast<uint32_t>(params.user_data.size());
+			lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
+			BuildStageStaticKey(input_info, lookup_key.static_state);
+			static const bool register_trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;
+			static const bool dump_gcn = [] {
+				const auto* value = std::getenv("KYTY_DUMP_GCN");
+				return value != nullptr && value[0] != '0';
+			}();
+			if (!tolerant && (register_trace || dump_gcn) &&
+			    first_used.emplace(static_cast<uint32_t>(stage), params.hash).second) {
+				if (register_trace) {
+					LOGF("ShaderFirstUse: hash=%016" PRIx64 " stage=%u words=%zu ud=%zu host_us=%" PRIu64 "\n",
+					     params.hash, static_cast<uint32_t>(stage), params.code.size(), params.user_data.size(), HostMicros());
+				}
+				DumpShaderGcn(stage, params.hash, params.code);
 			}
-			DumpShaderGcn(stage, params.hash, params.code);
+			entry = programs.find(lookup_key);
 		}
-		auto                                         entry = programs.find(lookup_key);
 		if (entry == programs.end()) {
 			Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 			LibKernel::KernelTimeFreezeScope load_freeze;
@@ -2397,6 +2422,12 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
+		if (slot < 2) {
+			auto& memo          = prog_memo[static_cast<size_t>(slot)];
+			memo.entry          = entry;
+			memo.entry_valid    = entry != programs.end();
+			memo.programs_epoch = programs_epoch;
+		}
 		// Gate "snapkeep" (kept >= 0): the stage's kept storage instead of fresh locals. Every path
 		// below overwrites both before reading them (lookahead copy, MaterializeResources, the reset
 		// on a dropped plan, or Compile's own materialization when no entry exists).
@@ -2489,6 +2520,7 @@ struct PipelineCache::ProgramCache {
 			}
 			// Not freed: a lookahead worker may still be materializing with its plan.
 			retired_sources.push_back(programs.extract(entry));
+			programs_epoch++;
 			memo_generation++; // the memo holds permutation pointers of the dropped entry
 			entry = programs.end();
 			resources = {};
@@ -2518,8 +2550,8 @@ struct PipelineCache::ProgramCache {
 		}
 
 		Common::DrawStat::Mark(Common::DrawStat::ObjNew);
-		return Compile(params, input_info, push_data_cursor, tolerant, stage, entry, runtime,
-		               resources, specialization);
+		return Compile(params, input_info, push_data_cursor, tolerant, stage, lookup_key, entry,
+		               runtime, resources, specialization);
 	}
 
 	// The cold half of Get: translate the shader, or add a permutation of an already translated
@@ -2529,7 +2561,7 @@ struct PipelineCache::ProgramCache {
 	template <typename InputInfo>
 	[[gnu::noinline]] ShaderProgram
 	Compile(const ShaderParams& params, InputInfo& input_info, uint32_t& push_data_cursor,
-	        bool tolerant, ShaderType stage,
+	        bool tolerant, ShaderType stage, const ProgramKey& lookup_key,
 	        typename std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::iterator entry,
 	        const ShaderRecompiler::IR::SrtRuntime&       runtime,
 	        ShaderRecompiler::IR::ResourceSnapshot&       resources,
@@ -2597,6 +2629,7 @@ struct PipelineCache::ProgramCache {
 				EXIT("shader resource materialization failed hash=0x%016" PRIx64 "\n", params.hash);
 			}
 			entry = programs.try_emplace(lookup_key, std::move(resource_plan)).first;
+			programs_epoch++;
 		}
 		entry->second.permutations.push_back(CompilePermutation(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
@@ -2643,9 +2676,418 @@ struct PipelineCache::ProgramCache {
 		return permutation.handle;
 	}
 
+	// Session 60, B3 (gate "progmemo"). Everything PrepareProgram reads for a draw stage, as
+	// bytes: the stage registers, HW::ShaderRegisters, the shader-stage mask, clip control and
+	// viewport 0 (the clip-space transform), the provoking vertex, primitive type and GE control
+	// (the mesh path), the target export mapping (pixel), the registration epoch of the shader map
+	// (ShaderGetMappedData) and, for an embedded vertex fetch, the two table pointers. Two draws
+	// with equal witnesses (and, for a vertex stage, equal attribute / V# table entries in guest
+	// memory) get byte-equal PrepareProgram results up to the user-data words, which a hit
+	// re-reads from the live registers. The struct is zeroed before it is filled and compared
+	// with memcmp; every member type is padding-free, so equal bytes mean equal values and
+	// stray padding could only cost a miss, never a false hit.
+	struct ProgMemoWitness {
+		uint64_t              data_addr         = 0;
+		uint64_t              gs_data_addr      = 0;
+		uint64_t              gs_user_data_addr = 0;
+		uint64_t              registrations     = 0;
+		uint32_t              shader_stages     = 0;
+		uint32_t              user_sgpr_count   = 0;
+		uint32_t              prim_type         = 0;
+		uint32_t              provoking_last    = 0;
+		uint32_t              ge_primitive      = 0;
+		uint32_t              ge_vertex         = 0;
+		uint32_t              clip_disable      = 0;
+		uint32_t              viewport[4]       = {}; // xscale, yscale, xoffset, yoffset (bits)
+		uint32_t              table_regs[4]     = {}; // attribute / V# table pointer words
+		HW::ShaderRegisters   sh;
+		HW::ClipControl       clip;
+		HW::GsShaderResource1 gs_rsrc1;
+		HW::GsShaderResource2 gs_rsrc2;
+		HW::PsShaderResource1 ps_rsrc1;
+		HW::PsShaderResource2 ps_rsrc2;
+		std::array<Prospero::ColorComponentMapping, 8> export_mapping {};
+	};
+
+	struct ProgMemo {
+		ProgMemoWitness witness {};
+		ShaderParams    params;             // user_data is rebuilt from the registers on a hit
+		const void*     info      = nullptr; // the draw-state input info the record describes
+		uint64_t        serial    = 0;       // GetGraphicsPrograms call that recorded / last used it
+		bool            valid     = false;
+		bool            ngg       = false;   // vertex: NGG user-data prefix
+		bool            gs_front  = false;   // vertex: GS back half, user-data pointer in s0:s1
+		int             attrib_reg = -1;     // vertex: user SGPR pair of the attribute table
+		int             buffer_reg = -1;     // ... of the V# table
+		int             table_count = 0;     // vertex: witnessed table entries (resources_num)
+		uint32_t        attrib_max = 0;      // highest attribute-table index read
+		std::array<uint8_t, ShaderVertexInputInfo::RES_MAX>                 semantics {};
+		std::array<uint32_t, ShaderVertexInputInfo::RES_MAX>                attrib_words {};
+		std::array<std::array<uint32_t, 4>, ShaderVertexInputInfo::RES_MAX> vsharps {};
+		// The programs.find result of the last Get for this slot (Get keeps it up to date).
+		uint64_t                                                              programs_epoch = 0;
+		std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::iterator entry;
+		bool                                                                  entry_valid = false;
+	};
+
+	struct PipelineMemo {
+		GraphicsPipelineKey    key {};
+		GraphicsPipelineEntry* entry = nullptr;
+	};
+
+	static constexpr uint32_t AttribTableMax = 256; // ShaderApplyAttribSemantics' copy
+
+	// The attribute words and V#s of `count` semantics, read the way ShaderApplyAttribSemantics
+	// reads them: the attribute prefix [0, attrib_max] through the memory backing (the CPU writes
+	// the tables, so it is current), the V# prefix through the backing only when that succeeded,
+	// and otherwise the used entries through the guest pointer. Same tree on record and check.
+	static void ReadVertexTables(uint64_t attrib_ptr, uint64_t buffer_ptr,
+	                             std::span<const uint8_t> semantics, uint32_t attrib_max,
+	                             uint32_t* words, std::array<uint32_t, 4>* vsharps) {
+		std::array<uint32_t, AttribTableMax> attrib {};
+		const bool attrib_backed = Libs::LibKernel::Memory::TryReadBacking(
+		    attrib_ptr, attrib.data(), (uint64_t {attrib_max} + 1u) * sizeof(uint32_t));
+		const auto* attrib_direct = reinterpret_cast<const uint32_t*>(attrib_ptr);
+		uint32_t    vsharp_max    = 0;
+		for (size_t i = 0; i < semantics.size(); i++) {
+			words[i]   = attrib_backed ? attrib[semantics[i]] : attrib_direct[semantics[i]];
+			vsharp_max = std::max(vsharp_max, words[i] & 0x1fu);
+		}
+		std::array<uint32_t, ShaderVertexInputInfo::RES_MAX * 4> copy {};
+		const bool vsharp_backed = attrib_backed && Libs::LibKernel::Memory::TryReadBacking(
+		                                                buffer_ptr, copy.data(),
+		                                                (uint64_t {vsharp_max} + 1u) * 16u);
+		const auto* buffer_direct = reinterpret_cast<const uint32_t*>(buffer_ptr);
+		for (size_t i = 0; i < semantics.size(); i++) {
+			const auto index = words[i] & 0x1fu;
+			std::memcpy(vsharps[i].data(), vsharp_backed ? &copy[index * 4u] : buffer_direct + index * 4u,
+			            16);
+		}
+	}
+
+	static std::pair<uint64_t, uint64_t> VertexTablePointers(const HW::VertexShaderInfo& regs,
+	                                                         int attrib_reg, int buffer_reg) {
+		const auto& sgpr = regs.gs_user_sgpr.value;
+		return {static_cast<uint64_t>(sgpr[attrib_reg]) | (static_cast<uint64_t>(sgpr[attrib_reg + 1]) << 32u),
+		        static_cast<uint64_t>(sgpr[buffer_reg]) | (static_cast<uint64_t>(sgpr[buffer_reg + 1]) << 32u)};
+	}
+
+	// The recorded table entries, read now, against the record.
+	bool VertexTablesUnchanged(const ProgMemo& memo, const HW::VertexShaderInfo& regs) const {
+		if (memo.table_count == 0) {
+			return true;
+		}
+		const auto [attrib_ptr, buffer_ptr] = VertexTablePointers(regs, memo.attrib_reg, memo.buffer_reg);
+		std::array<uint32_t, ShaderVertexInputInfo::RES_MAX>                words {};
+		std::array<std::array<uint32_t, 4>, ShaderVertexInputInfo::RES_MAX> vsharps {};
+		const auto count = static_cast<size_t>(memo.table_count);
+		ReadVertexTables(attrib_ptr, buffer_ptr, std::span(memo.semantics.data(), count),
+		                 memo.attrib_max, words.data(), vsharps.data());
+		return std::memcmp(words.data(), memo.attrib_words.data(), count * sizeof(uint32_t)) == 0 &&
+		       std::memcmp(vsharps.data(), memo.vsharps.data(), count * 16u) == 0;
+	}
+
+	// The resource ShaderApplyAttribSemantics builds from an attribute word and its V#
+	// (shader.cpp): the validation of a record against the info PrepareProgram produced.
+	static ShaderBufferResource ResourceOf(uint32_t word, const std::array<uint32_t, 4>& vsharp) {
+		ShaderBufferResource r;
+		std::memcpy(r.fields, vsharp.data(), 16);
+		const auto format = (word >> 5u) & 0x1ffu;
+		const auto offset = (word >> 14u) & 0xfffu;
+		if (format != static_cast<uint32_t>(Prospero::VertexAttribFormat::kInvalid)) {
+			const auto buffer_format = format >> 2u;
+			const auto channels      = (format & 3u) + 1u;
+			r.fields[3] = (r.fields[3] & ~((0x7fu << 12u) | 0xfffu)) | (buffer_format << 12u) |
+			              DstSel(4, channels > 1u ? 5u : 0u, channels > 2u ? 6u : 0u,
+			                     channels > 3u ? 7u : 1u);
+		}
+		if (offset != 0) {
+			r.UpdateAddress48(r.Base48() + offset);
+		}
+		return r;
+	}
+
+	// Records the table entries PrepareProgram(VS) read for `info` (resources_dst[i].attr_id is
+	// the semantic of resource i; the V# index is in its attribute word), and validates them
+	// against the resources it built: a table written between its read and this one leaves the
+	// record invalid instead of describing a different draw. False: not memoizable.
+	bool RecordVertexTables(ProgMemo& memo, const HW::VertexShaderInfo& regs,
+	                        const ShaderVertexInputInfo& info) {
+		memo.table_count = 0;
+		memo.attrib_reg  = -1;
+		memo.buffer_reg  = -1;
+		if (!info.fetch_embedded) {
+			return true;
+		}
+		if (info.fetch_attrib_reg < 0 || info.fetch_attrib_reg + 1 >= HW::UserSgprInfo::SGPRS_MAX ||
+		    info.fetch_buffer_reg < 0 || info.fetch_buffer_reg + 1 >= HW::UserSgprInfo::SGPRS_MAX ||
+		    info.resources_num < 0 || info.resources_num > ShaderVertexInputInfo::RES_MAX) {
+			return false;
+		}
+		uint32_t attrib_max = 0;
+		for (int i = 0; i < info.resources_num; i++) {
+			const auto semantic = info.resources_dst[i].attr_id;
+			if (semantic < 0 || semantic >= static_cast<int>(AttribTableMax)) {
+				return false;
+			}
+			memo.semantics[static_cast<size_t>(i)] = static_cast<uint8_t>(semantic);
+			attrib_max = std::max(attrib_max, static_cast<uint32_t>(semantic));
+		}
+		const auto [attrib_ptr, buffer_ptr] =
+		    VertexTablePointers(regs, info.fetch_attrib_reg, info.fetch_buffer_reg);
+		if (attrib_ptr == 0 || buffer_ptr == 0) {
+			return false;
+		}
+		const auto count = static_cast<size_t>(info.resources_num);
+		ReadVertexTables(attrib_ptr, buffer_ptr, std::span(memo.semantics.data(), count), attrib_max,
+		                 memo.attrib_words.data(), memo.vsharps.data());
+		for (size_t i = 0; i < count; i++) {
+			const auto word = memo.attrib_words[i];
+			if (info.resources_dst[i].fetch_index != ((word >> 26u) & 0x1u)) {
+				return false;
+			}
+			const auto expected = ResourceOf(word, memo.vsharps[i]);
+			if (std::memcmp(expected.fields, info.resources[i].fields, 16) != 0) {
+				return false;
+			}
+		}
+		memo.attrib_reg  = info.fetch_attrib_reg;
+		memo.buffer_reg  = info.fetch_buffer_reg;
+		memo.attrib_max  = attrib_max;
+		memo.table_count = info.resources_num;
+		return true;
+	}
+
+	static void FillWitnessCommon(ProgMemoWitness& w, const HW::ShaderRegisters& sh,
+	                              uint64_t registrations) {
+		std::memset(&w, 0, sizeof(w));
+		w.sh            = sh;
+		w.registrations = registrations;
+	}
+
+	// The vertex-stage witness of the live state; `attrib_reg` / `buffer_reg` name the table
+	// pointer registers (the record's, or -1 before the first record).
+	static void FillVertexWitness(ProgMemoWitness& w, const HW::VertexShaderInfo& regs,
+	                              const HW::Context& context, const HW::UserConfig& user_config,
+	                              uint64_t registrations, int attrib_reg, int buffer_reg) {
+		FillWitnessCommon(w, context.GetShaderRegisters(), registrations);
+		w.data_addr         = regs.es_regs.data_addr;
+		w.gs_data_addr      = regs.gs_regs.data_addr;
+		w.gs_user_data_addr = regs.gs_regs.user_data_addr;
+		w.gs_rsrc1          = regs.gs_regs.rsrc1;
+		w.gs_rsrc2          = regs.gs_regs.rsrc2;
+		w.shader_stages     = context.GetShaderStages();
+		w.user_sgpr_count   = regs.gs_regs.rsrc2.user_sgpr;
+		w.prim_type         = static_cast<uint32_t>(user_config.GetPrimType());
+		w.provoking_last    = context.GetModeControl().provoking_vtx_last ? 1u : 0u;
+		w.ge_primitive      = user_config.GetGeControl().primitive_group_size;
+		w.ge_vertex         = user_config.GetGeControl().vertex_group_size;
+		w.clip              = context.GetClipControl();
+		if (w.clip.clip_disable) {
+			const auto& viewport = context.GetScreenViewport().viewports[0];
+			w.clip_disable       = 1;
+			w.viewport[0]        = std::bit_cast<uint32_t>(viewport.xscale);
+			w.viewport[1]        = std::bit_cast<uint32_t>(viewport.yscale);
+			w.viewport[2]        = std::bit_cast<uint32_t>(viewport.xoffset);
+			w.viewport[3]        = std::bit_cast<uint32_t>(viewport.yoffset);
+		}
+		if (attrib_reg >= 0 && buffer_reg >= 0) {
+			w.table_regs[0] = regs.gs_user_sgpr.value[attrib_reg];
+			w.table_regs[1] = regs.gs_user_sgpr.value[attrib_reg + 1];
+			w.table_regs[2] = regs.gs_user_sgpr.value[buffer_reg];
+			w.table_regs[3] = regs.gs_user_sgpr.value[buffer_reg + 1];
+		}
+	}
+
+	static void FillPixelWitness(ProgMemoWitness& w, const HW::PixelShaderInfo& regs,
+	                             const HW::ShaderRegisters& sh,
+	                             std::span<const Prospero::ColorComponentMapping, 8> mapping,
+	                             uint64_t registrations) {
+		FillWitnessCommon(w, sh, registrations);
+		w.data_addr       = regs.ps_regs.data_addr;
+		w.ps_rsrc1        = regs.ps_regs.rsrc1;
+		w.ps_rsrc2        = regs.ps_regs.rsrc2;
+		w.user_sgpr_count = regs.ps_regs.rsrc2.user_sgpr;
+		std::copy(mapping.begin(), mapping.end(), w.export_mapping.begin());
+	}
+
+	// PrepareProgram's user data of the vertex stage, as GetShaderParams and the NGG path build it.
+	static ShaderUserSgprs VertexUserData(const HW::VertexShaderInfo& regs, bool ngg, bool gs_front) {
+		ShaderUserSgprs user_data(
+		    std::span<const uint32_t>(regs.gs_user_sgpr.value, regs.gs_regs.rsrc2.user_sgpr));
+		if (ngg) {
+			user_data.PrependZeros(8u);
+			if (gs_front) {
+				user_data[0] = static_cast<uint32_t>(regs.gs_regs.user_data_addr);
+				user_data[1] = static_cast<uint32_t>(regs.gs_regs.user_data_addr >> 32u);
+			}
+		}
+		return user_data;
+	}
+
+	// Gate "progmemo": whether the vertex stage of this draw has the previous draw's inputs.
+	// A hit continues the chain (memo.serial); the caller then takes memo.params with the user
+	// data rebuilt and leaves `info` as the previous draw left it.
+	bool MemoMatchVertex(const HW::VertexShaderInfo& regs, const HW::Context& context,
+	                     const HW::UserConfig& user_config, const ShaderVertexInputInfo& info,
+	                     uint64_t serial, uint64_t registrations) {
+		auto& memo = prog_memo[0];
+		if (!memo.valid || memo.info != &info || memo.serial + 1 != serial) {
+			return false;
+		}
+		ProgMemoWitness w;
+		FillVertexWitness(w, regs, context, user_config, registrations, memo.attrib_reg,
+		                  memo.buffer_reg);
+		if (std::memcmp(&w, &memo.witness, sizeof(w)) != 0) {
+			return false;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoEqVs, 1);
+		if (!VertexTablesUnchanged(memo, regs)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoStale, 1);
+			return false;
+		}
+		memo.serial = serial;
+		return true;
+	}
+
+	bool MemoMatchPixel(const HW::PixelShaderInfo& regs, const HW::ShaderRegisters& sh,
+	                    std::span<const Prospero::ColorComponentMapping, 8> mapping,
+	                    const ShaderPixelInputInfo& info, uint64_t serial, uint64_t registrations) {
+		auto& memo = prog_memo[1];
+		if (!memo.valid || memo.info != &info || memo.serial + 1 != serial) {
+			return false;
+		}
+		ProgMemoWitness w;
+		FillPixelWitness(w, regs, sh, mapping, registrations);
+		if (std::memcmp(&w, &memo.witness, sizeof(w)) != 0) {
+			return false;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoEqPs, 1);
+		memo.serial = serial;
+		return true;
+	}
+
+	// After PrepareProgram(VS) ran for `info`: the record the next draw is compared with.
+	void MemoRecordVertex(const HW::VertexShaderInfo& regs, const HW::Context& context,
+	                      const HW::UserConfig& user_config, const ShaderVertexInputInfo& info,
+	                      const ShaderParams& params, uint64_t serial, uint64_t registrations) {
+		auto& memo    = prog_memo[0];
+		memo.valid    = false;
+		memo.info     = &info;
+		memo.serial   = serial;
+		memo.params   = params;
+		memo.ngg      = (context.GetShaderStages() & 0x20u) != 0;
+		memo.gs_front = !params.back_code.empty();
+		if (!RecordVertexTables(memo, regs, info)) {
+			return;
+		}
+		FillVertexWitness(memo.witness, regs, context, user_config, registrations, memo.attrib_reg,
+		                  memo.buffer_reg);
+		memo.valid = true;
+	}
+
+	void MemoRecordPixel(const HW::PixelShaderInfo& regs, const HW::ShaderRegisters& sh,
+	                     std::span<const Prospero::ColorComponentMapping, 8> mapping,
+	                     const ShaderPixelInputInfo& info, const ShaderParams& params,
+	                     uint64_t serial, uint64_t registrations) {
+		auto& memo  = prog_memo[1];
+		memo.info   = &info;
+		memo.serial = serial;
+		memo.params = params;
+		FillPixelWitness(memo.witness, regs, sh, mapping, registrations);
+		memo.valid = true;
+	}
+
+	static bool SameParams(const ShaderParams& a, const ShaderParams& b) {
+		return a.hash == b.hash && a.code.data() == b.code.data() && a.code.size() == b.code.size() &&
+		       a.back_code.data() == b.back_code.data() && a.back_code.size() == b.back_code.size() &&
+		       a.user_data.size() == b.user_data.size() &&
+		       std::equal(a.user_data.begin(), a.user_data.end(), b.user_data.begin());
+	}
+
+	void MemoMismatch(const char* stage, const char* what, const ShaderParams& params) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoBad, 1);
+		static std::atomic<uint32_t> log_count {0};
+		if (log_count.fetch_add(1, std::memory_order_relaxed) < 40) {
+			LOGF("ProgMemoVerify: MISMATCH stage=%s what=%s hash=0x%016" PRIx64 "\n", stage, what,
+			     params.hash);
+		}
+	}
+
+	// Gate "progmemocheck": the served vertex stage against a fresh PrepareProgram.
+	void MemoCheckVertex(const HW::VertexShaderInfo& regs, const HW::Context& context,
+	                     const HW::UserConfig& user_config, const ShaderVertexInputInfo& served,
+	                     const ShaderParams& served_params) {
+		static thread_local ShaderVertexInputInfo fresh;
+		static thread_local std::vector<uint32_t> fresh_key, served_key;
+		fresh.stage        = {};
+		const auto params  = PrepareProgram(regs, context, user_config, fresh);
+		if (!SameParams(params, served_params)) {
+			MemoMismatch("vs", "params", params);
+		}
+		// The clip-space transform and the mesh host subgroup size are the caller's
+		// (GetGraphicsPrograms, after PrepareProgram) and come from witnessed or constant inputs:
+		// taken over rather than recomputed.
+		fresh.clip_space              = served.clip_space;
+		fresh.mesh.host_subgroup_size = served.mesh.host_subgroup_size;
+		BuildStageStaticKey(fresh, fresh_key);
+		BuildStageStaticKey(served, served_key);
+		if (fresh_key != served_key) {
+			MemoMismatch("vs", "static-key", params);
+			static std::atomic<uint32_t> diff_count {0};
+			if (diff_count.fetch_add(1, std::memory_order_relaxed) < 8) {
+				const auto n = std::min(fresh_key.size(), served_key.size());
+				size_t     at = 0;
+				while (at < n && fresh_key[at] == served_key[at]) {
+					at++;
+				}
+				LOGF("ProgMemoVerify: static-key sizes %zu/%zu first diff at %zu: fresh=0x%08x served=0x%08x"
+				     " mesh=%u\n",
+				     fresh_key.size(), served_key.size(), at, at < fresh_key.size() ? fresh_key[at] : 0u,
+				     at < served_key.size() ? served_key[at] : 0u, fresh.mesh.threads_num[0]);
+			}
+		}
+		bool same = fresh.resources_num == served.resources_num &&
+		            fresh.buffers_num == served.buffers_num &&
+		            fresh.fetch_embedded == served.fetch_embedded &&
+		            fresh.fetch_external == served.fetch_external;
+		for (int i = 0; same && i < fresh.resources_num; i++) {
+			same = std::memcmp(&fresh.resources[i], &served.resources[i], sizeof(ShaderBufferResource)) == 0 &&
+			       std::memcmp(&fresh.resources_dst[i], &served.resources_dst[i],
+			                   sizeof(ShaderVertexDestination)) == 0;
+		}
+		for (int i = 0; same && i < fresh.buffers_num; i++) {
+			same = std::memcmp(&fresh.buffers[i], &served.buffers[i], sizeof(ShaderVertexInputBuffer)) == 0;
+		}
+		if (!same) {
+			MemoMismatch("vs", "inputs", params);
+		}
+		fresh.stage = {};
+	}
+
+	void MemoCheckPixel(const HW::PixelShaderInfo& regs, const HW::ShaderRegisters& sh,
+	                    std::span<const Prospero::ColorComponentMapping, 8> mapping,
+	                    const ShaderPixelInputInfo& served, const ShaderParams& served_params) {
+		static thread_local ShaderPixelInputInfo   fresh;
+		static thread_local std::vector<uint32_t> fresh_key, served_key;
+		const auto params = PrepareProgram(regs, sh, mapping, fresh);
+		if (!SameParams(params, served_params)) {
+			MemoMismatch("ps", "params", params);
+		}
+		BuildStageStaticKey(fresh, fresh_key);
+		BuildStageStaticKey(served, served_key);
+		if (fresh_key != served_key || fresh.ps_sample_shading != served.ps_sample_shading ||
+		    fresh.ps_execute_on_noop != served.ps_execute_on_noop) {
+			MemoMismatch("ps", "inputs", params);
+		}
+		fresh.stage = {};
+	}
+
 	explicit ProgramCache(vk::Device device)
 	    : device(device), translation_cache(PipelineCacheTitleId()) {
-		lookup_key.static_state.reserve(MaxStaticKeyWords);
+		for (auto& key: lookup_keys) {
+			key.static_state.reserve(MaxStaticKeyWords);
+		}
 	}
 	~ProgramCache() {
 		AheadStopThreads();
@@ -2733,6 +3175,7 @@ struct PipelineCache::ProgramCache {
 			}
 			source.from_cache = true;
 			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;
+			programs_epoch++;
 			IndexPermutations(entry->first, entry->second);
 		}
 		if (index >= entry->second.permutations.size()) {
@@ -2747,7 +3190,15 @@ struct PipelineCache::ProgramCache {
 	std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash> programs;
 	std::vector<std::unordered_map<ProgramKey, SourceEntry, ProgramKeyHash>::node_type> retired_sources;
 	std::set<std::pair<uint32_t, uint64_t>>                     first_used;
-	ProgramKey                                                  lookup_key;
+	// One key per caller slot: 0 the draw's vertex stage, 1 its pixel stage, 2 everything else
+	// (compute, lookahead). A "progmemo" hit reuses the slot's key of the previous draw.
+	std::array<ProgramKey, 3>                                   lookup_keys;
+	std::array<ProgMemo, 2>                                     prog_memo;
+	PipelineMemo                                                pipeline_memo;
+	uint64_t                                                    prog_memo_serial = 0;
+	// Bumped on every insertion into and extraction from `programs`: the validity of the
+	// iterators the memo keeps.
+	uint64_t                                                    programs_epoch = 0;
 	vk::Device                                                  device;
 	ShaderTranslationCache                                      translation_cache;
 	uint64_t                                                    next_shader_id = 0;
@@ -3028,7 +3479,7 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
     const HW::VertexShaderInfo& vertex_regs, const HW::PixelShaderInfo& pixel_regs,
     const HW::ShaderRegisters& sh, const HW::Context& context, const HW::UserConfig& user_config,
     std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping, bool pixel_active,
-    ShaderVertexInputInfo& vertex_info, ShaderPixelInputInfo& pixel_info) {
+    ShaderVertexInputInfo& vertex_info, ShaderPixelInputInfo& pixel_info, uint64_t* state_serial) {
 	Common::FrameStats::Lap lap;
 	// Gate "snapkeep" (session 57, B4; needs "drawstate", which makes these input infos the draw
 	// state reused across draws): their snapshots still hold the storage of the previous draw.
@@ -3036,12 +3487,75 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	// of the draw frees nothing. Outside m_mutex: only this (GuestGpu draw) path uses the storage.
 	const bool keep_snapshots = Common::Gates::Enabled(Common::Gates::Gate::SnapshotKeep) &&
 	                            Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse);
-	if (keep_snapshots) {
-		std::swap(m_program_cache->kept_snapshots[0], vertex_info.stage.resources);
+	// Session 60, B3 (gate "progmemo"; needs "drawstate", the input infos must be the state the
+	// previous draw left): a stage whose register inputs equal the previous draw's keeps that
+	// draw's PrepareProgram result in the input info and skips the static key and programs.find
+	// in Get. With the gate off, "drawstat" still runs the comparison for the ceiling counters.
+	auto&      cache        = *m_program_cache;
+	// The memo state is one per program cache and unlocked: only the GuestGpu draw thread may
+	// use it. `state_serial` belongs to the draw state object and says whether that object was
+	// the one the previous call recorded into (a nested draw's stack local carries 0).
+	const bool memo_on      = Common::Gates::Enabled(Common::Gates::Gate::ProgMemo) &&
+	                          Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse) &&
+	                          state_serial != nullptr &&
+	                          Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu;
+	const bool memo_compare = memo_on || Common::Gates::Enabled(Common::Gates::Gate::DrawStat);
+	const auto serial       = ++cache.prog_memo_serial;
+	const bool same_state   = state_serial != nullptr && *state_serial + 1 == serial;
+	if (state_serial != nullptr) {
+		*state_serial = serial;
 	}
-	const auto vertex_params = PrepareProgram(vertex_regs, context, user_config, vertex_info);
-	const bool mesh_active   = vertex_info.mesh.threads_num[0] != 0;
-	if (mesh_active) {
+	// Before the shader map is read (PrepareProgram): a registration landing in between moves
+	// the epoch past the one recorded, and the next draw misses.
+	const auto registrations = ShaderRegistrations();
+	bool       vertex_hit    = false;
+	bool       pixel_hit     = false;
+	if (memo_compare) {
+		const bool timed       = Common::FrameStats::Enabled();
+		const auto check_begin = timed ? Common::FrameStats::NowNs() : 0;
+		vertex_hit = same_state && cache.MemoMatchVertex(vertex_regs, context, user_config,
+		                                                 vertex_info, serial, registrations);
+		if (pixel_active) {
+			pixel_hit = same_state && cache.MemoMatchPixel(pixel_regs, sh, target_export_mapping,
+			                                               pixel_info, serial, registrations);
+		}
+		if (timed) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoCheckNs,
+			                        Common::FrameStats::NowNs() - check_begin);
+		}
+		if (!memo_on) {
+			vertex_hit = pixel_hit = false;
+		} else {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoHit,
+			                        (vertex_hit ? 1u : 0u) + (pixel_hit ? 1u : 0u));
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoMiss,
+			                        (vertex_hit ? 0u : 1u) + (pixel_active && !pixel_hit ? 1u : 0u));
+		}
+	}
+	const bool memo_check = memo_on && Common::Gates::Enabled(Common::Gates::Gate::ProgMemoCheck);
+	if (keep_snapshots) {
+		std::swap(cache.kept_snapshots[0], vertex_info.stage.resources);
+	}
+	ShaderParams vertex_params;
+	if (vertex_hit) {
+		// What PrepareProgram would reset; every path of Get overwrites it, like after a reset.
+		vertex_info.stage = {};
+		auto& memo        = cache.prog_memo[0];
+		vertex_params     = memo.params;
+		vertex_params.user_data =
+		    ProgramCache::VertexUserData(vertex_regs, memo.ngg, memo.gs_front);
+		if (memo_check) {
+			cache.MemoCheckVertex(vertex_regs, context, user_config, vertex_info, vertex_params);
+		}
+	} else {
+		vertex_params = PrepareProgram(vertex_regs, context, user_config, vertex_info);
+		if (memo_compare) {
+			cache.MemoRecordVertex(vertex_regs, context, user_config, vertex_info, vertex_params,
+			                       serial, registrations);
+		}
+	}
+	const bool mesh_active = vertex_info.mesh.threads_num[0] != 0;
+	if (mesh_active && !vertex_hit) {
 		EXIT_NOT_IMPLEMENTED(!m_graphics.mesh_shader_enabled);
 		auto& mesh              = vertex_info.mesh;
 		mesh.host_subgroup_size = m_graphics.subgroup_size;
@@ -3062,9 +3576,23 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	ShaderParams pixel_params;
 	if (pixel_active) {
 		if (keep_snapshots) {
-			std::swap(m_program_cache->kept_snapshots[1], pixel_info.stage.resources);
+			std::swap(cache.kept_snapshots[1], pixel_info.stage.resources);
 		}
-		pixel_params = PrepareProgram(pixel_regs, sh, target_export_mapping, pixel_info);
+		if (pixel_hit) {
+			pixel_info.stage = {};
+			pixel_params     = cache.prog_memo[1].params;
+			pixel_params.user_data.Assign(std::span<const uint32_t>(
+			    pixel_regs.ps_user_sgpr.value, pixel_regs.ps_regs.rsrc2.user_sgpr));
+			if (memo_check) {
+				cache.MemoCheckPixel(pixel_regs, sh, target_export_mapping, pixel_info, pixel_params);
+			}
+		} else {
+			pixel_params = PrepareProgram(pixel_regs, sh, target_export_mapping, pixel_info);
+			if (memo_compare) {
+				cache.MemoRecordPixel(pixel_regs, sh, target_export_mapping, pixel_info,
+				                      pixel_params, serial, registrations);
+			}
+		}
 	}
 	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
 	if (Common::FrameStats::Enabled()) {
@@ -3095,12 +3623,24 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	    mesh_active ? ShaderRecompiler::IR::PushData::MeshDrawDwordCount : 0;
 	GraphicsPrograms  result;
 	if (pixel_active) {
-		result.pixel = m_program_cache->Get(pixel_params, pixel_info, push_data_cursor, false,
-		                                    keep_snapshots ? 1 : -1);
+		result.pixel = cache.Get(pixel_params, pixel_info, push_data_cursor, false,
+		                         keep_snapshots ? 1 : -1, 1, pixel_hit);
 	}
-	result.vertex = m_program_cache->Get(vertex_params, vertex_info, push_data_cursor, false,
-	                                     keep_snapshots ? 0 : -1);
+	result.vertex = cache.Get(vertex_params, vertex_info, push_data_cursor, false,
+	                          keep_snapshots ? 0 : -1, 0, vertex_hit);
 	return result;
+}
+
+namespace {
+std::atomic<uint64_t> g_shader_registrations {0};
+} // namespace
+
+void PipelineCache::NoteShaderRegistered() noexcept {
+	g_shader_registrations.fetch_add(1, std::memory_order_release);
+}
+
+uint64_t PipelineCache::ShaderRegistrations() noexcept {
+	return g_shader_registrations.load(std::memory_order_acquire);
 }
 
 void PipelineCache::NoteDrawAheadProcessing(uint64_t walk) {
@@ -3339,7 +3879,17 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		EXIT_IF(attributes_num != static_cast<uint32_t>(vs_input_info.resources_num));
 	}
 
+	// Session 60, B3 (gate "progmemo"): most draws build the key of the previous draw's
+	// pipeline; entries are never erased, so the pointer found then still names it.
+	auto& memo = m_program_cache->pipeline_memo;
+	if (memo.entry != nullptr && Common::Gates::Enabled(Common::Gates::Gate::ProgMemo) &&
+	    key == memo.key) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgMemoPipe, 1);
+		return memo.entry;
+	}
 	if (auto iter = m_graphics_pipelines.find(key); iter != m_graphics_pipelines.end()) {
+		memo.key   = key;
+		memo.entry = iter->second.get();
 		return iter->second.get(); // may still be compiling on a worker
 	}
 	RecordGraphicsRecipe(key, vs_input_info, ps_input_info);

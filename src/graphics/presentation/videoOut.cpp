@@ -1705,6 +1705,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"rt_fast_stale", FS::Counter::RtFastStale, false},
 				    {"rt_fast_rec", FS::Counter::RtFastRecord, false},
 				    {"rt_fast_stencil", FS::Counter::RtFastStencil, false},
+				    // Session 60, B3 (gate "progmemo").
+				    {"pmemo_hit", FS::Counter::ProgMemoHit, false},
+				    {"pmemo_miss", FS::Counter::ProgMemoMiss, false},
+				    {"pmemo_stale", FS::Counter::ProgMemoStale, false},
+				    {"pmemo_bad", FS::Counter::ProgMemoBad, false},
+				    {"pmemo_eq_vs", FS::Counter::ProgMemoEqVs, false},
+				    {"pmemo_eq_ps", FS::Counter::ProgMemoEqPs, false},
+				    {"pmemo_pipe", FS::Counter::ProgMemoPipe, false},
+				    {"pmemo_chk_us", FS::Counter::ProgMemoCheckNs, true},
+				    // Session 60, item 4 (gate "armdefer").
+				    {"arm_req", FS::Counter::ArmRequestPages, false},
+				    {"arm_settled", FS::Counter::ArmSettledPages, false},
+				    {"arm_wait", FS::Counter::ArmWaitPages, false},
+				    {"arm_flush", FS::Counter::ArmSyncFlushes, false},
+				    {"arm_noflush", FS::Counter::ArmFlushSkips, false},
+				    {"arm_bad", FS::Counter::ArmBad, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

@@ -676,10 +676,13 @@ struct PageManager::Impl {
 				// pb_inflight_bad: the previous run of an application was never withdrawn.
 				Common::FrameStats::Add(Common::FrameStats::Counter::ApplyInflightBad, 1);
 			}
-			// Visible before the bits are cleared and until the host call returned (FlushBlocker).
+			// Visible before the bits are cleared and until the host call returned (FlushBlocker,
+			// KeepApplied). The fence orders the relaxed clears below after the store: a reader
+			// that sees a bit clear and no run in flight sees an application that completed.
 			region.applying_run.store(static_cast<uint64_t>(page) | (static_cast<uint64_t>(end) << 16u) |
 			                          (uint64_t {static_cast<uint32_t>(protection)} << 32u),
 			                      std::memory_order_seq_cst);
+			std::atomic_thread_fence(std::memory_order_release);
 			SetPendingRange(region, page, end - page, false);
 			*run_first = page;
 			*run_pages = end - page;
@@ -1012,6 +1015,75 @@ void PageManager::UpdatePageWatchersDeferred(uint64_t vaddr, uint64_t size) {
 
 void PageManager::DrainDeferredProtection() {
 	m_impl->Drain();
+}
+
+bool PageManager::DeferEnabled() {
+	return Impl::DeferEnabled();
+}
+
+void PageManager::UpdatePageWatchersForRegionDeferred(uint64_t base_addr, RegionBits& mask) {
+	Common::DrawStat::Mark(Common::DrawStat::Prot);
+	if (base_addr % REGION_SIZE != 0 || base_addr >= ADDRESS_SIZE ||
+	    REGION_SIZE > ADDRESS_SIZE - base_addr) {
+		Fatal("invalid tracking region base 0x%016" PRIx64, base_addr);
+	}
+	const auto start_range = mask.FirstRange();
+	const auto end_range   = mask.LastRange();
+	if (start_range.first == REGION_PAGES) {
+		FailFast("empty region watcher mask");
+	}
+	const auto first = start_range.first;
+	const auto last  = end_range.second;
+	const bool defer = Impl::DeferEnabled();
+	if (start_range.second == end_range.second) {
+		m_impl->UpdatePageWatchers<true, false>(base_addr + first * PAGE_SIZE,
+		                                        (last - first) * PAGE_SIZE, defer);
+		return;
+	}
+	auto* region = m_impl->GetOrCreateRegion(base_addr);
+	m_impl->UpdateRegionWatchers<true, false, true>(*region, base_addr, first, last, &mask, defer);
+}
+
+void PageManager::KeepApplied(uint64_t base_addr, RegionBits& mask) {
+	auto* region = m_impl->FindRegion(base_addr);
+	if (region == nullptr) {
+		mask.Clear(); // never watched: protected as mapped, i.e. writable
+		return;
+	}
+	// Bits first, the run in flight second (FlushBlocker): a bit seen clear was cleared by a run
+	// still visible below or by one whose host call has returned.
+	const RegionBits requested = mask;
+	for (const auto [first, last]: requested) {
+		for (size_t page = first; page < last; page++) {
+			const auto word =
+			    std::atomic_ref<uint64_t>(region->pending[page / 64]).load(std::memory_order_acquire);
+			if (((word >> (page % 64)) & 1u) != 0) {
+				mask.Unset(page);
+			}
+		}
+	}
+	const auto run       = region->applying_run.load(std::memory_order_acquire);
+	const auto run_first = static_cast<size_t>(run & 0xffffu);
+	const auto run_last  = static_cast<size_t>((run >> 16u) & 0xffffu);
+	for (size_t page = run_first; page < run_last && page < REGION_PAGES; page++) {
+		mask.Unset(page);
+	}
+}
+
+bool PageManager::IsHostWritable(uint64_t vaddr) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+	MEMORY_BASIC_INFORMATION info {};
+	if (VirtualQuery(reinterpret_cast<LPCVOID>(vaddr), &info, sizeof(info)) == 0 ||
+	    info.State != MEM_COMMIT) {
+		return false;
+	}
+	const auto protect = static_cast<uint32_t>(info.Protect & 0xffu);
+	return protect == PAGE_READWRITE || protect == PAGE_WRITECOPY ||
+	       protect == PAGE_EXECUTE_READWRITE || protect == PAGE_EXECUTE_WRITECOPY;
+#else
+	(void)vaddr;
+	return false;
+#endif
 }
 
 PageManager::BatchScope::BatchScope(PageManager& manager, bool enabled) noexcept

@@ -8,6 +8,7 @@
 
 #include <atomic>
 #include <array>
+#include <cstdio>
 #include <cstdlib>
 #include <memory>
 #include <mutex>
@@ -128,6 +129,7 @@ public:
 		m_cpu_dirty.Fill();
 		m_writable.Fill();
 		m_readable.Fill();
+		m_armed.Clear();
 	}
 
 	KYTY_CLASS_NO_COPY(RegionManager);
@@ -164,6 +166,16 @@ public:
 			}
 		}
 		if constexpr (source == DirtySource::Gpu && enable) {
+			// Gate "armdefer": a page uploaded and left dirty for its arming is superseded by
+			// the GPU write (its bytes are on the GPU already, as a clean page's would be): the
+			// pending arming is applied and withdrawn, and the page is clean before the check.
+			if (m_armed.AnyInRange(start, end)) {
+				const RegionBits armed(m_armed, start, end);
+				SettleArmedSync(start, end);
+				for (const auto [first, last]: armed) {
+					m_cpu_dirty.UnsetRange(first, last);
+				}
+			}
 			if (m_cpu_dirty.AnyInRange(start, end)) {
 				EXIT("GPU dirty state conflicts with CPU dirty state\n");
 			}
@@ -175,11 +187,17 @@ public:
 				// thread may be scanning it without this lock, so every word it touches has to
 				// be written atomically. Nothing else writes either map off that thread.
 				bits.SetRangeRelaxed(start, end);
+				// Gate "armdefer": the pages become writable, so an arming requested for them
+				// is withdrawn (the next synchronization copies and requests again).
+				m_armed.UnsetRange(start, end);
 			} else {
 				bits.SetRange(start, end);
 			}
 		} else {
 			bits.UnsetRange(start, end);
+			if constexpr (source == DirtySource::Cpu) {
+				SettleArmedSync(start, end);
+			}
 		}
 		if constexpr (source == DirtySource::Cpu && enable) {
 			// Called with the region lock held, after the bits and before the pages become
@@ -256,6 +274,9 @@ public:
 		auto&      bits         = GetBits<source>();
 		RegionBits mask(bits, start, end);
 		if constexpr (clear) {
+			if constexpr (source == DirtySource::Cpu) {
+				SettleArmedSync(start, end);
+			}
 			bits.UnsetRange(start, end);
 			if constexpr (source == DirtySource::Cpu) {
 				UpdateProtection<true, false>();
@@ -267,6 +288,88 @@ public:
 		for (const auto [first, last]: mask) {
 			func(m_cpu_addr + first * TRACKER_PAGE_SIZE, (last - first) * TRACKER_PAGE_SIZE);
 		}
+	}
+
+	// Session 60, gate "armdefer": a synchronous path is about to clear CPU-dirty bits of
+	// [start, end) and relies on the protection being in effect before its caller copies
+	// (Region::apply, R). Pages armed through the worker may still lag: their pending changes are
+	// applied here, and the arming is withdrawn (the dirty bit goes with it).
+	void SettleArmedSync(size_t start, size_t end) {
+		if (!m_armed.AnyInRange(start, end)) {
+			return;
+		}
+		for (const auto [first, last]: RegionBits(m_armed, start, end)) {
+			m_page_manager.FlushProtection(m_cpu_addr + first * TRACKER_PAGE_SIZE,
+			                               (last - first) * TRACKER_PAGE_SIZE);
+		}
+		m_armed.UnsetRange(start, end);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ArmSyncFlushes, 1);
+	}
+
+	// Session 60, gate "armdefer": the read-only upload of the CPU-dirty pages of [vaddr, vaddr +
+	// size), with their write watchers armed by the protection worker instead of this thread.
+	// A dirty page is copied and keeps its dirty bit; its watcher is requested (m_armed) and the
+	// worker applies it. A page that is dirty, requested earlier and whose host protection is in
+	// effect now (PageManager::KeepApplied) is copied once more and only then loses its dirty bit.
+	// Every write that landed before the protection took effect is in one of the two copies, and
+	// every later one faults: ChangeState<Cpu, true> withdraws the arming with the fault, so a page
+	// with m_armed set has had its watcher since the request. Returns true while pages of the
+	// range are still dirty (the caller must not record a current upload).
+	template <typename Func>
+	bool ForEachUploadRangeArmDeferred(uint64_t vaddr, uint64_t size, bool verify, Func&& func) {
+		namespace FS = Common::FrameStats;
+		const auto [start, end] = GetPageRange(vaddr, size);
+		const RegionBits mask(m_cpu_dirty, start, end);
+		if (mask.None()) {
+			return false;
+		}
+		const RegionBits armed_before = mask & m_armed;
+		RegionBits       settled      = armed_before;
+		if (settled.Any()) {
+			m_page_manager.KeepApplied(m_cpu_addr, settled);
+		}
+		const RegionBits request = mask & ~m_armed;
+		uint64_t         settled_pages = 0;
+		uint64_t         armed_pages   = 0;
+		uint64_t         request_pages = 0;
+		for (const auto [first, last]: settled) {
+			if (verify && PageManager::IsHostWritable(m_cpu_addr + first * TRACKER_PAGE_SIZE)) {
+				FS::Add(FS::Counter::ArmBad, 1);
+				static std::atomic<uint32_t> logged {0};
+				if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+					std::fprintf(stderr, "ArmDeferVerify: MISMATCH settled page 0x%016llx is writable\n",
+					             static_cast<unsigned long long>(m_cpu_addr + first * TRACKER_PAGE_SIZE));
+					std::fflush(stderr);
+				}
+			}
+			m_cpu_dirty.UnsetRange(first, last);
+			m_armed.UnsetRange(first, last);
+			settled_pages += last - first;
+		}
+		for (const auto [first, last]: armed_before) {
+			armed_pages += last - first;
+		}
+		for (const auto [first, last]: request) {
+			m_armed.SetRange(first, last);
+			request_pages += last - first;
+		}
+		UpdateProtection<true, false>(true);
+		FS::Add(FS::Counter::ArmRequestPages, request_pages);
+		FS::Add(FS::Counter::ArmSettledPages, settled_pages);
+		FS::Add(FS::Counter::ArmWaitPages, armed_pages - settled_pages);
+		for (const auto [first, last]: mask) {
+			func(m_cpu_addr + first * TRACKER_PAGE_SIZE, (last - first) * TRACKER_PAGE_SIZE);
+		}
+		const bool provisional = request_pages != 0 || armed_pages != settled_pages;
+		if (provisional) {
+			// Pages stay dirty without a fault having announced them: the region's write epoch
+			// moves so that the BDA dirty-range scan (gate "bdastamp", RegionWriteStamp) and the
+			// buffer-request memo (gate "buffast", RangeWriteEpoch) come back for the settling
+			// upload instead of skipping the region as unchanged. Not the global CPU epoch: that
+			// one witnesses other buffers' uploads and nothing of theirs changed.
+			m_epoch.fetch_add(1, std::memory_order_release);
+		}
+		return provisional;
 	}
 
 	// Gate "stkstat" (session 57, A1 ceiling; statistics only). A CPU write fault at `vaddr`, a page
@@ -402,9 +505,12 @@ public:
 	TrackingSpinLock lock;
 
 private:
+	// `defer` (gate "armdefer", write side only): the watchers are added to the page state now
+	// and their host protection is applied by the worker. A page in m_armed is read-only although
+	// CPU-dirty (ForEachUploadRangeArmDeferred).
 	template <bool track, bool is_read>
-	void UpdateProtection() {
-		const auto protection = is_read ? (~m_gpu_dirty | m_stale) : m_cpu_dirty;
+	void UpdateProtection(bool defer = false) {
+		const auto protection = is_read ? (~m_gpu_dirty | m_stale) : (m_cpu_dirty & ~m_armed);
 		auto&      previous   = is_read ? m_readable : m_writable;
 		auto       mask       = protection ^ previous;
 		if (mask.None()) {
@@ -416,6 +522,12 @@ private:
 		// (VirtualProtect plus the address-space mutex behind it). Diagnostic, no gate.
 		Common::FrameStats::Scope held(Common::FrameStats::Counter::ProtectHeldNs);
 		PageManager::SpinHeld    spin_held; // prot_spin_*: `lock` is held across the calls below
+		if constexpr (track && !is_read) {
+			if (defer) {
+				m_page_manager.UpdatePageWatchersForRegionDeferred(m_cpu_addr, mask);
+				return;
+			}
+		}
 		m_page_manager.UpdatePageWatchersForRegion<track, is_read>(m_cpu_addr, mask);
 	}
 
@@ -459,6 +571,10 @@ private:
 	RegionBits   m_stale; // subset of m_gpu_dirty: readable by the CPU while GPU writes are in flight
 	RegionBits   m_writable;
 	RegionBits   m_readable;
+	// Gate "armdefer": subset of m_cpu_dirty whose write watcher was requested through the
+	// worker; such a page is read-only in the page state and stays dirty until a later upload
+	// finds the protection in effect. Written under `lock` only.
+	RegionBits   m_armed;
 	// Gate "stkstat" (statistics only). Allocated with the region, so the fault path allocates
 	// nothing (fault handlers never create regions). Stamps are StickyStamp(frame), 0 = never.
 	// fault_frame: the fault handlers of any thread (relaxed exchange). Everything else: the

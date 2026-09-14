@@ -760,10 +760,11 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	std::vector<vk::BufferCopy> copies;
 	uint64_t                    total_size = 0;
 	vk::Buffer                  source;
+	bool                        provisional = false; // gate "armdefer": pages left dirty to settle
 	if (!is_written && SyncFreeSkip(vaddr, size)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
 	} else {
-		m_memory_tracker.ForEachUploadRange(
+		provisional = m_memory_tracker.ForEachUploadRange(
 			vaddr, size, is_written,
 			[&](uint64_t address, uint64_t bytes) noexcept {
 				copies.emplace_back(total_size, buffer.Offset(address), bytes);
@@ -782,7 +783,9 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	RecordBufferCopies(buffer, source, copies, total_size);
 	// Keep the epoch from before synchronization, so concurrent writes force another upload.
 	// This is only the requested interval: a different part of the same buffer may remain dirty.
-	buffer.upload_epoch = cpu_epoch;
+	// A provisional upload (gate "armdefer") records no current epoch: its pages are still dirty
+	// and the next synchronization has to find them.
+	buffer.upload_epoch = provisional ? 0 : cpu_epoch;
 	buffer.upload_epoch_kind = epoch_kind;
 	buffer.upload_begin = vaddr;
 	buffer.upload_end = vaddr + size;

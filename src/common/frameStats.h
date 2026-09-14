@@ -529,6 +529,22 @@ enum class Counter : uint32_t {
 	RtFastStale,    // ... of them because the stamp or the metadata epoch had moved
 	RtFastRecord,   // views recorded after a slow acquisition
 	RtFastStencil,  // depth acquisitions kept slow by a stencil plane
+	// Session 60, B3 (gate "progmemo"): program lookup served by the previous draw's inputs.
+	ProgMemoHit,     // draw stages whose PrepareProgram, static key and programs.find were skipped
+	ProgMemoMiss,    // draw stages whose register inputs differed from the previous draw's
+	ProgMemoStale,   // ... equal in registers, but the vertex tables / entry / chain had moved
+	ProgMemoBad,     // self-check mismatches (gate "progmemocheck")
+	ProgMemoEqVs,    // ceiling: vertex stages whose inputs equal the previous draw's (memo on or "drawstat")
+	ProgMemoEqPs,    // ... pixel stages
+	ProgMemoPipe,    // graphics pipeline lookups served by the previous draw's key
+	ProgMemoCheckNs, // building and comparing the witnesses (both stages)
+	// Session 60, item 4 (gate "armdefer"): watchers of read-only uploads armed by the worker.
+	ArmRequestPages, // dirty pages copied and handed to the worker for their write watcher
+	ArmSettledPages, // ... copied again with the protection in effect, and cleaned
+	ArmWaitPages,    // ... copied again while their protection was still pending / in flight
+	ArmSyncFlushes,  // synchronous paths that flushed a pending arming before clearing dirty bits
+	ArmFlushSkips,   // read-only uploads that skipped the range protection flush
+	ArmBad,          // self-check (gate "armcheck"): a settled page found host-writable
 	Count
 };
 

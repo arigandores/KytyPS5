@@ -134,13 +134,18 @@ public:
 		ShaderProgram pixel;
 	};
 
+	// Session 60, B3: registrations of shader headers (libs/agc.cpp, after ShaderMapUserData),
+	// the witness of the mapped shader data PrepareProgram reads through ShaderGetMappedData.
+	static void     NoteShaderRegistered() noexcept;
+	static uint64_t ShaderRegistrations() noexcept;
+
 	GraphicsPrograms
 	GetGraphicsPrograms(const HW::VertexShaderInfo& vertex_regs,
 	                    const HW::PixelShaderInfo& pixel_regs, const HW::ShaderRegisters& sh,
 	                    const HW::Context& context, const HW::UserConfig& user_config,
 	                    std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping,
 	                    bool pixel_active, ShaderVertexInputInfo& vertex_info,
-	                    ShaderPixelInputInfo& pixel_info);
+	                    ShaderPixelInputInfo& pixel_info, uint64_t* state_serial = nullptr);
 	ShaderProgram GetComputeProgram(const HW::ComputeShaderInfo& regs,
 	                                const HW::ShaderRegisters&   sh,
 	                                ShaderComputeInputInfo&      input_info);

@@ -39,6 +39,18 @@ public:
 	void UpdatePageWatchersDeferred(uint64_t vaddr, uint64_t size);
 	// Waits until every deferred protection change has been applied.
 	void DrainDeferredProtection();
+	// KYTY_ASYNC_PROTECT: whether UpdatePageWatchersDeferred defers at all.
+	[[nodiscard]] static bool DeferEnabled();
+	// Session 60, gate "armdefer": UpdatePageWatchersForRegion<true, false> whose host protection
+	// change is applied by the worker (pending bits, like UpdatePageWatchersDeferred). The tracker
+	// state is current at once; the pages become read-only on the host when the worker gets to them.
+	void UpdatePageWatchersForRegionDeferred(uint64_t base_addr, RegionBits& mask);
+	// Session 60, gate "armdefer": drops from `mask` every page whose host protection may still
+	// lag behind its page state - a pending page, or one inside the application in flight. What
+	// stays is protected as its page state says (Region::apply, P). Lock free, like FlushBlocker.
+	void KeepApplied(uint64_t base_addr, RegionBits& mask);
+	// Gate "armcheck": the host says the page is writable (VirtualQuery; false off Windows).
+	[[nodiscard]] static bool IsHostWritable(uint64_t vaddr);
 
 	// Gate "protbatch". While an enabled scope is alive on a thread, the write-watcher changes
 	// this thread makes through this manager (not read watchers, not the deferred texture path)

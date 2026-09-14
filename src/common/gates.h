@@ -78,6 +78,9 @@ enum class Gate : uint32_t {
 	ProtectBatchPass, // KYTY_PROTECT_BATCH2,     file name "protbatch2"
 	// Session 58, Sky Garden hang: liveness of the async-copy timeline semaphore.
 	AsyncCopyIdleSignal, // KYTY_ASYNC_COPY_IDLE_SIGNAL, file name "acopyidle"
+	// Session 59, M1 producer off the critical thread.
+	DrawAheadWalk,  // KYTY_DRAW_AHEAD_WALK,     file name "dawalk" (shadow walk on its own thread at submit)
+	RenderTargetFast, // KYTY_RT_FAST,           file name "rtfast" (reuse the target views of the previous draw)
 	Count,
 };
 
@@ -91,6 +94,7 @@ enum class Knob : uint32_t {
 	DrawAheadPin,       // KYTY_DRAW_AHEAD_PIN,    file name "dapin" (0 off, 1/2 L3 group, else mask)
 	ProcessPin,         // KYTY_PROCESS_PIN,       file name "procpin" (0 start mask, 1 L3 group, else mask)
 	FaultWindowKb,      // KYTY_FAULT_WINDOW_KB,   file name "faultkb" (CPU write-fault window, KiB; 4 = one page, default 64)
+	DrawAheadWalkLead,  // KYTY_DRAW_AHEAD_WALK_LEAD, file name "dawalklead" (gate "dawalk": walk at most this many submissions ahead of processing, 0 = no hold)
 	Count,
 };
 

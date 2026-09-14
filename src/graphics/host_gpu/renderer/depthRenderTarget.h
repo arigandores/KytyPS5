@@ -39,6 +39,9 @@ struct RenderDepthInfo {
 	PipelineStencilDynamicState stencil_dynamic_front;
 	PipelineStencilDynamicState stencil_dynamic_back;
 	ImageId                     image_id;
+	// Gate "rtfast": see RenderColorInfo::memo_slot.
+	uint32_t                    memo_slot    = UINT32_MAX;
+	uint32_t                    memo_version = 0;
 
 	[[nodiscard]] vk::ImageAspectFlags AttachmentWriteAspects() const;
 };

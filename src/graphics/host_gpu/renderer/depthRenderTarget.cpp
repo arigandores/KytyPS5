@@ -2,6 +2,7 @@
 
 #include "graphics/host_gpu/renderer/renderMemo.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include <cstring>
 
 #include "common/assert.h"
@@ -258,10 +259,15 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 	memo_key_value.stencil_clear = hw.GetStencilClearValue();
 	std::array<uint8_t, sizeof(DepthTargetMemoKey)> memo_key {};
 	std::memcpy(memo_key.data(), &memo_key_value, sizeof(memo_key_value));
-	auto& memo_slot = Memo().depths[MemoHashBytes(memo_key.data(), memo_key.size()) %
-	                                RenderExecutorMemo::DepthSlots];
+	const auto memo_index = static_cast<uint32_t>(MemoHashBytes(memo_key.data(), memo_key.size()) %
+	                                              RenderExecutorMemo::DepthSlots);
+	auto& memo_slot = Memo().depths[memo_index];
 	if (memo_slot.valid && memo_slot.key == memo_key) {
-		r = memo_slot.info;
+		// Gate "rtfast": see ResolveRenderColorTarget.
+		if (!(Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) &&
+		      r.memo_slot == memo_index && r.memo_version == memo_slot.version)) {
+			r = memo_slot.info;
+		}
 		if (r.image_id) {
 			auto& cache = m_context.GetTextureCache();
 			auto* image = cache.m_slot_images.try_get(r.image_id);
@@ -271,8 +277,13 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 					image->binding = {};
 				}
 				r.image_id          = cache.FindImage(r.desc);
+				memo_slot.version++; // gate "rtfast": a store like any other
+				r.memo_slot             = memo_index;
+				r.memo_version          = memo_slot.version;
 				memo_slot.info.desc     = r.desc;
 				memo_slot.info.image_id = r.image_id;
+				memo_slot.info.memo_slot    = r.memo_slot;
+				memo_slot.info.memo_version = r.memo_version;
 				Common::DrawStat::Mark(Common::DrawStat::Memo);
 			} else {
 				image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
@@ -284,6 +295,9 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 		return;
 	}
 	const auto memo_store = [&]() {
+		memo_slot.version++;
+		r.memo_slot     = memo_index;
+		r.memo_version  = memo_slot.version;
 		memo_slot.key   = memo_key;
 		memo_slot.info  = r;
 		memo_slot.valid = true;

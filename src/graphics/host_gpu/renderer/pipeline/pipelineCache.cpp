@@ -1635,7 +1635,12 @@ struct PipelineCache::ProgramCache {
 
 	std::unique_ptr<AheadSlot[]>          ahead_slots; // allocated by the first queued walk
 	std::array<AheadHint, AheadHintCount> ahead_hints {};
-	uint64_t                              ahead_walk = 0;
+	uint64_t                              ahead_walk = 0; // latest walk id queued (m_mutex)
+	// Walk id of the graphics submission the GuestGpu thread is processing (that thread stores,
+	// QueueAhead reads), and the value QueueAhead uses for one call: slots of walks below it may
+	// be refreshed or evicted, the others are pending work of unfinished submissions.
+	std::atomic<uint64_t>                 ahead_processing {0};
+	uint64_t                              ahead_fresh = 0;
 	// The static variant a multi-variant program last ran with for given user data: which source
 	// entry the walk should materialize a request for.
 	struct AheadVariant {
@@ -1831,7 +1836,12 @@ struct PipelineCache::ProgramCache {
 			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
 			const auto state = slot.state.load(std::memory_order_acquire);
 			if (state != AheadEmpty && slot.Matches(fingerprint, plan_class, request.base, memo_generation, user_data)) {
-				if (slot.walk == ahead_walk) {
+				if (slot.walk >= ahead_fresh) {
+					// Queued for a submission the GuestGpu thread has not finished (gate "dawalk":
+					// the walker runs ahead, so this may be an earlier submission than `walk`
+					// whose draws still take from the slot). The uses add up; the witness is
+					// checked at every take.
+					slot.walk = std::max(slot.walk, ahead_walk);
 					slot.uses += request.uses;
 					stats.present++;
 				} else if (state == AheadReady || state == AheadFailed) {
@@ -1855,13 +1865,14 @@ struct PipelineCache::ProgramCache {
 				}
 				return;
 			}
-			// Free first, then work of an older walk; never work of this walk.
+			// Free first, then work of a walk already processed; never work of a submission
+			// that is still to come or being processed.
 			uint32_t rank = UINT32_MAX;
 			if (state == AheadEmpty || state == AheadFailed) {
 				rank = 0;
-			} else if (slot.walk != ahead_walk && state == AheadReady) {
+			} else if (slot.walk < ahead_fresh && state == AheadReady) {
 				rank = 1;
-			} else if (slot.walk != ahead_walk && state == AheadQueued) {
+			} else if (slot.walk < ahead_fresh && state == AheadQueued) {
 				rank = 2; // cancelled below if chosen
 			}
 			if (rank < victim_rank) {
@@ -1902,12 +1913,17 @@ struct PipelineCache::ProgramCache {
 	}
 
 	// Holder of m_mutex.
-	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, bool first_batch) {
+	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, uint64_t walk) {
 		namespace FS     = Common::FrameStats;
 		const auto wanted = Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
 		if (wanted == 0) {
 			return;
 		}
+		// The walk ids grow in submission order; a walker that runs ahead (gate "dawalk") may
+		// queue a later walk while an earlier one is still pending, and the slot table protects
+		// every walk from the processing one up.
+		ahead_walk  = std::max(ahead_walk, walk);
+		ahead_fresh = std::min(ahead_processing.load(std::memory_order_relaxed), walk);
 		if (ahead_slots == nullptr) {
 			// Both before any worker exists: a worker reads the ring under ahead_mutex and would
 			// otherwise have to check the pointer on every wake-up.
@@ -1917,9 +1933,6 @@ struct PipelineCache::ProgramCache {
 		AheadStartThreads(wanted);
 		if (FS::Enabled()) {
 			g_draw_ahead_gpu_l3.store(DrawAheadCurrentL3(), std::memory_order_relaxed);
-		}
-		if (first_batch) {
-			ahead_walk++;
 		}
 		AheadQueueStats                    stats;
 		thread_local std::vector<uint32_t> batch;
@@ -2265,8 +2278,9 @@ struct PipelineCache::ProgramCache {
 				FS::Add(FS::Counter::DrawAheadRuns, slot.witness.Runs());
 			}
 			if (!VerifyWitness(slot.witness, cache)) {
-				FS::Add(slot.walk == ahead_walk ? FS::Counter::DrawAheadStale
-				                                : FS::Counter::DrawAheadStaleOld,
+				FS::Add(slot.walk >= ahead_processing.load(std::memory_order_relaxed)
+				            ? FS::Counter::DrawAheadStale
+				            : FS::Counter::DrawAheadStaleOld,
 				        1);
 				Common::DrawStat::Mark(Common::DrawStat::M1);
 				// Guest words moved since the worker read them: no later draw can use it either.
@@ -3089,14 +3103,22 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	return result;
 }
 
-void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, bool first_batch) {
+void PipelineCache::NoteDrawAheadProcessing(uint64_t walk) {
+	m_program_cache->ahead_processing.store(walk, std::memory_order_relaxed);
+}
+
+uint64_t PipelineCache::DrawAheadProcessing() const {
+	return m_program_cache->ahead_processing.load(std::memory_order_relaxed);
+}
+
+void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, uint64_t walk) {
 	if (requests.empty()) {
 		return;
 	}
 	const bool        timed       = Common::FrameStats::Enabled();
 	const auto        queue_begin = timed ? Common::FrameStats::NowNs() : 0;
 	Common::LockGuard lock(m_mutex);
-	m_program_cache->QueueAhead(requests, first_batch);
+	m_program_cache->QueueAhead(requests, walk);
 	if (timed) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
 		                        Common::FrameStats::NowNs() - queue_begin);

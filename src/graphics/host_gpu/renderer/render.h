@@ -395,6 +395,29 @@ private:
 	std::shared_ptr<RenderExecutorMemo>   m_memo;
 	[[nodiscard]] RenderExecutorMemo&     Memo();
 
+	// Gate "rtfast" (session 59): the view AcquireRenderTargets got for a target slot, with what
+	// pinned it - the image and its backing, the view info, the image's bind_stamp and the
+	// texture cache's metadata epoch as they were right after FindRenderTarget / FindDepthTarget.
+	struct TargetViewFast {
+		ImageId       image_id;
+		vk::Image     backing            = nullptr;
+		vk::ImageView view               = nullptr;
+		ImageViewInfo view_info {};
+		ImageId       stencil_record; // depth with a stencil plane: AssociateStencil's record
+		ImageMetadataInfo metadata {};   // the desc's metadata the view was acquired with
+		uint32_t      htile_clear_mask   = 0; // depth: Image::info.htile_clear_mask then
+		uint64_t      meta_epoch         = 0;
+		uint64_t      source_size        = 0;
+		uint32_t      source_first_level = 0;
+		uint32_t      stamp              = 0;
+		bool          valid              = false;
+	};
+	std::array<TargetViewFast, RENDER_COLOR_ATTACHMENTS_MAX> m_color_view_fast {};
+	TargetViewFast                                          m_depth_view_fast {};
+	[[nodiscard]] vk::ImageView AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
+	                                              const TextureCache::ImageDesc& desc,
+	                                              TargetViewFast& fast, bool depth_target);
+
 	friend class CommandProcessor;
 	friend struct RenderExecutorTestAccess;
 };

@@ -508,6 +508,27 @@ enum class Counter : uint32_t {
 	PassGapRuns,         // flush runs extended over pages that were not pending (gate on)
 	PassGapPages,        // ... those pages, re-protected with the value they already had
 	PassUploads,         // synchronizations whose copies were deferred to the pass copy phase
+	// Session 59, B9 ceiling (gate "drawstat"): CommitBindings split per pooled / push set.
+	CommitPoolSets,     // graphics CommitBindings calls that wrote a pooled descriptor set
+	CommitPoolTransitNs, // ... their image transitions (both stages)
+	CommitPoolWriteNs,  // ... building the write list (both stages)
+	CommitPoolEmitNs,   // ... heap commit + packet copy, or the direct update + bind
+	CommitPushSets,     // ... the same for push-descriptor pipelines
+	CommitPushTransitNs, // ...
+	CommitPushWriteNs,  // ...
+	CommitPushEmitNs,   // ...
+	// Session 59, gate "dawalk": the shadow walk on its own thread.
+	DrawAheadWalkJobs,  // submissions walked by the walker thread
+	DrawAheadWalkLagNs, // enqueue -> start of their walk
+	DrawAheadWalkDepth, // jobs still queued when one was taken (sum; /jobs = mean depth)
+	DrawAheadWalkSkipped, // process-time walks skipped because the walker had done them
+	DrawAheadWalkDropped, // jobs dropped unwalked: the GuestGpu thread had passed them
+	// Session 59, gate "rtfast": target views reused across draws.
+	RtFastOk,       // target acquisitions served by the recorded view
+	RtFastNo,       // ... that went through FindRenderTarget / FindDepthTarget
+	RtFastStale,    // ... of them because the stamp or the metadata epoch had moved
+	RtFastRecord,   // views recorded after a slow acquisition
+	RtFastStencil,  // depth acquisitions kept slow by a stencil plane
 	Count
 };
 

@@ -1740,6 +1740,34 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	m_descriptor_buffers.reserve(descriptor_count);
 	m_descriptor_images.reserve(descriptor_count);
 	m_descriptor_writes.reserve(write_count);
+	// Session 59, B9 ceiling (gate "drawstat"): the cost of a set on this thread, split into the
+	// transitions, the write-list build and the emit, per pooled / push pipeline.
+	namespace FS            = Common::FrameStats;
+	const bool cb_timed     = Common::DrawStat::On() &&
+	                      pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
+	const bool cb_pool      = !pipeline.uses_push_descriptors;
+	uint64_t   cb_t         = cb_timed ? FS::NowNs() : 0;
+	uint64_t   cb_transit   = 0;
+	uint64_t   cb_write     = 0;
+	const auto cb_lap       = [&](uint64_t& sum) {
+		if (cb_timed) {
+			const auto now = FS::NowNs();
+			sum += now - cb_t;
+			cb_t = now;
+		}
+	};
+	const auto cb_finish = [&]() {
+		if (!cb_timed) {
+			return;
+		}
+		const auto emit = FS::NowNs() - cb_t;
+		FS::Add(cb_pool ? FS::Counter::CommitPoolSets : FS::Counter::CommitPushSets, 1);
+		FS::Add(cb_pool ? FS::Counter::CommitPoolTransitNs : FS::Counter::CommitPushTransitNs,
+		        cb_transit);
+		FS::Add(cb_pool ? FS::Counter::CommitPoolWriteNs : FS::Counter::CommitPushWriteNs,
+		        cb_write);
+		FS::Add(cb_pool ? FS::Counter::CommitPoolEmitNs : FS::Counter::CommitPushEmitNs, emit);
+	};
 
 	for (auto* prepared: prepared_bindings) {
 		const auto& program       = *prepared->runtime->program;
@@ -1843,6 +1871,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			}
 			binding.layout = image.backing.state.layout;
 		}
+		cb_lap(cb_transit);
 
 		m_image_occurrences.assign(descriptors.images.size(), 0);
 		for (const auto& binding: program.bindings.descriptors) {
@@ -1928,6 +1957,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			                  push_data.dwords.begin() + program.bindings.push_data_start_dword);
 			has_push_data = true;
 		}
+		cb_lap(cb_write);
 	}
 
 	if (Common::DrawStat::On() && pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
@@ -1956,6 +1986,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			                  : std::span<const uint32_t> {},
 			    m_descriptor_writes, m_descriptor_buffers, m_descriptor_images);
 		}
+		cb_finish();
 		return;
 	}
 	// Taken after every barrier above, right before the writes that use it.
@@ -1985,6 +2016,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			                             0, nullptr);
 		}
 	}
+	cb_finish();
 }
 
 } // namespace Libs::Graphics

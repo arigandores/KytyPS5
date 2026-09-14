@@ -728,6 +728,100 @@ struct DrawCallInfo {
 	[[nodiscard]] const char* Name() const { return IsIndexed() ? "DrawIndex" : "DrawIndexAuto"; }
 };
 
+// Gate "rtfast" (session 59): FindRenderTarget / FindDepthTarget for a slot whose previous
+// acquisition recorded the same image, backing and view, while the image's bind_stamp and the
+// metadata epoch have not moved since, is answered from the record. What those calls do on an
+// unchanged image and are still applied here: the flags a download may have cleared
+// (MarkGpuModified, usage) and the download enrolment. Everything else they do is either keyed by
+// the stamp (RefreshImage: CPU-dirty, maybe-dirty, buffer-modified, tracking cuts), by the epoch
+// (PrepareDccClear, PrepareCmaskClear, the HTile entry), by the checks below (registration,
+// rebind, stencil association, pending top mips, the BC source trim) or is a debug name. The
+// LRU touch is ResolveRender*Target's. A stencil plane always takes the slow path
+// (AssociateStencil), and so does the debug-dump configuration (names, logs).
+// Gate "rtfast": the metadata fields FindRenderTarget / FindDepthTarget act on.
+static bool SameTargetMetadata(const ImageMetadataInfo& a, const ImageMetadataInfo& b) noexcept {
+	return a.kind == b.kind && a.range.address == b.range.address && a.range.size == b.range.size &&
+	       a.control == b.control && a.dcc_clear_word == b.dcc_clear_word &&
+	       a.cmask_clear_words == b.cmask_clear_words && a.compression == b.compression &&
+	       a.stencil_compressed == b.stencil_compressed &&
+	       a.dcc_clear_register_valid == b.dcc_clear_register_valid &&
+	       a.dcc_alpha_msb == b.dcc_alpha_msb;
+}
+
+vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
+                                                const TextureCache::ImageDesc& desc,
+                                                TargetViewFast& fast, bool depth_target) {
+	namespace FS      = Common::FrameStats;
+	// The linear-readback configuration enrols the image under the lock on every acquisition.
+	const bool gate   = Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) &&
+	                  !graphics_debug_dump_enabled() && !cache.m_readback_linear_images;
+	const bool stencil = depth_target && desc.info.HasStencil();
+	const auto source  = image.SourceRange();
+	// A stencil plane: AssociateStencil's record must still exist, cover the range and point at
+	// this depth image (a freed record drops depth_id before its slot is reused).
+	const auto stencil_kept = [&] {
+		if (!stencil) {
+			return true;
+		}
+		const auto* record = cache.m_slot_images.try_get(fast.stencil_record);
+		return record != nullptr && record->depth_id == id &&
+		       record->info.data.address == desc.info.stencil.address;
+	};
+	if (gate && fast.valid && fast.image_id == id &&
+	    fast.backing == image.backing.image && image.registered && !image.depth_id &&
+	    !image.binding.needs_rebind && image.pending_levels == 0 &&
+	    fast.source_size == image.source_size &&
+	    fast.source_first_level == image.source_first_level && fast.view_info == desc.view_info &&
+	    SameTargetMetadata(fast.metadata, desc.info.metadata) &&
+	    (!depth_target || fast.htile_clear_mask == image.info.htile_clear_mask)) {
+		if (image.bind_stamp.load(std::memory_order_acquire) == fast.stamp &&
+		    cache.MetaEpoch() == fast.meta_epoch && stencil_kept()) {
+			image.MarkGpuModified();
+			if (depth_target) {
+				image.usage.depth_target = true;
+			} else {
+				image.usage.render_target = true;
+			}
+			FS::Add(FS::Counter::RtFastOk, 1);
+			return fast.view;
+		}
+		FS::Add(FS::Counter::RtFastStale, 1);
+	}
+	const auto stamp = image.bind_stamp.load(std::memory_order_acquire);
+	const auto view  = depth_target ? cache.FindDepthTarget(id, desc) : cache.FindRenderTarget(id, desc);
+	fast.valid       = false;
+	FS::Add(FS::Counter::RtFastNo, 1);
+	ImageId stencil_record;
+	if (stencil) {
+		FS::Add(FS::Counter::RtFastStencil, 1);
+		if (gate) {
+			stencil_record = cache.FindStencilAssociation(desc.info.stencil);
+		}
+	}
+	// Recorded only after a call that left the image with nothing to do next time, and under a
+	// stamp that did not move across it (a fault racing the call would otherwise be lost).
+	if (gate && (!stencil || stencil_record) && image.pending_levels == 0 && !image.IsCpuDirty() &&
+	    SameTargetMetadata(desc.info.metadata, image.info.metadata) &&
+	    !image.IsBufferModified() && image.IsTracked() && image.track_addr == source.address &&
+	    image.track_addr_end == source.End() &&
+	    image.bind_stamp.load(std::memory_order_acquire) == stamp) {
+		fast.image_id           = id;
+		fast.backing            = image.backing.image;
+		fast.view               = view;
+		fast.view_info          = desc.view_info;
+		fast.stencil_record     = stencil_record;
+		fast.metadata           = desc.info.metadata;
+		fast.htile_clear_mask   = image.info.htile_clear_mask;
+		fast.meta_epoch         = cache.MetaEpoch();
+		fast.source_size        = image.source_size;
+		fast.source_first_level = image.source_first_level;
+		fast.stamp              = stamp;
+		fast.valid              = true;
+		FS::Add(FS::Counter::RtFastRecord, 1);
+	}
+	return view;
+}
+
 RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderColorInfo* colors,
                                                  uint32_t color_count, RenderDepthInfo& depth,
                                                  const std::optional<PreparedBindings>& pixel) {
@@ -753,8 +847,11 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			target.image_id = cache.FindImage(target.desc);
 			BindRenderTarget(target.image_id);
 		}
-		const auto image_view = cache.FindRenderTarget(target.image_id, target.desc);
-		auto&      image      = cache.GetImage(target.image_id);
+		// Gate "rtfast": the LRU touch GetImage did is ResolveRenderColorTarget's (its memo hit
+		// and FindImage both touch).
+		auto&      image      = cache.m_slot_images[target.image_id];
+		const auto image_view = AcquireTargetView(cache, image, target.image_id, target.desc,
+		                                          m_color_view_fast[target.target_slot], false);
 		SetVulkanObjectNameF(m_context.GetGraphics().device, image.backing.image,
 		                     "Kyty.MRT{}.Image[guest=0x{:016x} size=0x{:x} format={}]",
 		                     target.target_slot, image.info.data.address, image.info.data.size,
@@ -794,7 +891,9 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		if (owner == nullptr || !owner->registered || owner->binding.needs_rebind) {
 			EXIT("depth target changed after render-state discovery\n");
 		}
-		const auto  image_view = cache.FindDepthTarget(depth.image_id, depth.desc);
+		auto&       depth_image = cache.m_slot_images[depth.image_id];
+		const auto  image_view  = AcquireTargetView(cache, depth_image, depth.image_id, depth.desc,
+		                                            m_depth_view_fast, true);
 		const auto& metadata   = depth.desc.info.metadata;
 		if (metadata.kind == ImageMetadataKind::Htile && depth.depth_clear_enable &&
 		    !cache.ClearMeta(metadata.range.address)) {
@@ -808,7 +907,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		    !cache.TouchMeta(metadata.range.address, depth.desc.view_info.base_layer, false)) {
 			EXIT("failed to consume HTile clear state\n");
 		}
-		auto& image = cache.GetImage(depth.image_id);
+		auto& image = depth_image; // touched by ResolveRenderDepthTarget already
 		SetVulkanObjectNameF(m_context.GetGraphics().device, image.backing.image,
 		                     "Kyty.DepthTarget.Image[guest=0x{:016x} size=0x{:x} format={}]",
 		                     image.info.data.address, image.info.data.size,

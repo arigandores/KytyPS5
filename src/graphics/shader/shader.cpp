@@ -252,7 +252,7 @@ static ShaderParams GetShaderParams(uint64_t shader_addr, const char* label, uin
 	(void)declared_hash;
 	return {
 	    .code      = code,
-	    .user_data = std::vector<uint32_t>(user_data.begin(), user_data.end()),
+	    .user_data = ShaderUserSgprs(user_data),
 	    .hash      = data.hash != 0 ? data.hash : CachedShaderHash(shader_addr, code),
 	};
 }
@@ -577,9 +577,11 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
 		}
 
 		if (fetch_index != 0) {
+			// Session 59, B7: read before the xadd - the quota is spent in the first seconds and
+			// the shared line was bumped for every attribute of every draw after that.
 			static std::atomic<uint64_t> log_count = 0;
-			auto                         log_id    = log_count.fetch_add(1);
-			if (log_id < 64) {
+			if (log_count.load(std::memory_order_relaxed) < 64 &&
+			    log_count.fetch_add(1, std::memory_order_relaxed) < 64) {
 				LOGF("\t temporary: PS5 vertex attrib semantic %u uses fetch index %u, buffer "
 				     "index %zu\n",
 				     static_cast<uint32_t>(in.semantic), fetch_index, index);
@@ -607,8 +609,8 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
 			const auto                   buffer_format = format_raw >> 2u;
 			const auto                   channels      = (format_raw & 3u) + 1u;
 			static std::atomic<uint64_t> log_count      = 0;
-			auto                         log_id         = log_count.fetch_add(1);
-			if (log_id < 64) {
+			if (log_count.load(std::memory_order_relaxed) < 64 &&
+			    log_count.fetch_add(1, std::memory_order_relaxed) < 64) { // session 59, B7
 				LOGF("\t PS5 vertex attrib semantic %u uses attrib format %u -> buffer "
 				     "format %u, offset %u, buffer index %zu\n",
 				     static_cast<uint32_t>(in.semantic), static_cast<uint32_t>(format),
@@ -691,7 +693,7 @@ static bool ShaderGetStaticInputInfoVS(const HW::VertexShaderInfo& regs,
 	                                   ShaderVertexInputInfo& info) {
 	KYTY_PROFILER_FUNCTION();
 
-	info = {};
+	info.Reset(); // session 59, B1d: the entries the previous draw used, not all 9.9 KB
 
 	info.pa_cl_vs_out_cntl = sh.m_paClVsOutCntl;
 
@@ -968,8 +970,8 @@ ShaderParams PrepareProgram(const HW::VertexShaderInfo& regs, const HW::Context&
 	}
 	// NGG user SGPRs start at s8; a separately compiled GS back half also receives
 	// its user-data pointer in s0:s1.
-	params.user_data.insert(params.user_data.begin(), 8u, 0u);
-	info                     = {};
+	params.user_data.PrependZeros(8u);
+	info.Reset(); // session 59, B1d
 	info.pa_cl_vs_out_cntl   = sh.m_paClVsOutCntl;
 	auto& mesh               = info.mesh;
 	mesh.input_primitive     = static_cast<uint32_t>(user_config.GetPrimType());

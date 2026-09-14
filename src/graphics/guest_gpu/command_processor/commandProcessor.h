@@ -26,6 +26,12 @@ enum class ContextStateOperation : uint32_t {
 class Pm4Execution {
 public:
 	[[nodiscard]] bool MadeProgress() const noexcept { return m_made_progress; }
+	// Draw lookahead: the walk id of the submission and whether the walker thread already
+	// walked it (gate "dawalk"), set by GuestGpu before the first slice is processed.
+	void SetDrawAheadWalk(uint64_t walk_id, bool walked_ahead) noexcept {
+		m_walk_id      = walk_id;
+		m_walked_ahead = walked_ahead;
+	}
 
 private:
 	friend class CommandProcessor;
@@ -39,6 +45,10 @@ private:
 	std::vector<BufferCursor> m_buffer_stack;
 	bool                      m_suspended     = false;
 	bool                      m_made_progress = false;
+	// Draw lookahead (docs/parallel-draw-path.md, M1): the walk id of the submission (0: not a
+	// graphics submission) and whether the walker thread already walked it (gate "dawalk").
+	uint64_t                  m_walk_id       = 0;
+	bool                      m_walked_ahead  = false;
 };
 
 bool ApplyCsShRegister(HW::CsStageRegisters& cs_regs, uint32_t cmd_offset, uint32_t value);

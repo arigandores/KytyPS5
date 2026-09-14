@@ -12,6 +12,7 @@
 #include "graphics/host_gpu/renderer/image/image.h"
 #include "graphics/host_gpu/renderer/image/tiler.h"
 
+#include <atomic>
 #include <map>
 #include <string>
 #include <type_traits>
@@ -54,6 +55,13 @@ public:
 	[[nodiscard]] vk::ImageView FindTexture(ImageId id, const ImageDesc& desc);
 	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc);
 	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc);
+	// Gate "rtfast": see m_meta_epoch.
+	[[nodiscard]] uint64_t MetaEpoch() const noexcept {
+		return m_meta_epoch.load(std::memory_order_relaxed);
+	}
+	// Gate "rtfast": the image record AssociateStencil left for this stencil range (the one whose
+	// data address is the range's, as AssociateStencil selects it), or none.
+	[[nodiscard]] ImageId FindStencilAssociation(GuestRange stencil);
 	[[nodiscard]] Image&        GetImage(ImageId id) {
 		auto& image = m_slot_images[id];
 		TouchImage(image);
@@ -243,6 +251,11 @@ private:
 	Common::LeastRecentlyUsedCache<ImageId, uint64_t> m_lru_cache;
 	std::unordered_set<ImageId>                       m_download_images;
 	std::map<uint64_t, MetaDataInfo>                  m_surface_metas;
+	// Gate "rtfast": moves on every change of m_surface_metas (entries, types, fills, clear
+	// masks). A recorded target view is only reused while it is unchanged, so the DCC / CMASK /
+	// HTile work FindRenderTarget / FindDepthTarget would do is never skipped past a change.
+	std::atomic<uint64_t>                             m_meta_epoch {0};
+	void BumpMetaEpoch() noexcept { m_meta_epoch.fetch_add(1, std::memory_order_relaxed); }
 	uint64_t                                          m_total_used_memory  = 0;
 	uint64_t                                          m_trigger_gc_memory  = 0;
 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;

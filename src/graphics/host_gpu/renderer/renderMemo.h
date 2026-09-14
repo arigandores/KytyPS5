@@ -89,11 +89,14 @@ struct RenderExecutorMemo {
 		std::array<uint8_t, sizeof(HW::RenderTarget)> regs {};
 		uint64_t                                     extra = 0;
 		bool                                         valid = false;
+		// Gate "rtfast": moves with every store; the info copied out remembers it (memo_version).
+		uint32_t                                     version = 0;
 		RenderColorInfo                              info;
 	};
 	struct DepthTarget {
 		std::array<uint8_t, sizeof(DepthTargetMemoKey)> key {};
-		bool                                           valid = false;
+		bool                                           valid   = false;
+		uint32_t                                       version = 0; // gate "rtfast", as above
 		RenderDepthInfo                                info;
 	};
 

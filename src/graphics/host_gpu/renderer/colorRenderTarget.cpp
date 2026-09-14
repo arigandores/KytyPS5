@@ -16,6 +16,7 @@
 #include "graphics/host_gpu/renderer/renderMemo.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "common/frameStats.h"
+#include "common/gates.h"
 
 #include <algorithm>
 #include <array>
@@ -127,10 +128,16 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 		             (static_cast<uint64_t>(rt_slot) << 40u) | (ignore_target_mask ? 1ull << 48u : 0u) |
 		             (exact_format ? 1ull << 49u : 0u);
 		auto& memo = Memo();
-		memo_slot  = &memo.colors[MemoHashBytes(memo_regs.data(), memo_regs.size(), memo_extra) %
-		                          RenderExecutorMemo::ColorSlots];
+		const auto memo_index = static_cast<uint32_t>(
+		    MemoHashBytes(memo_regs.data(), memo_regs.size(), memo_extra) % RenderExecutorMemo::ColorSlots);
+		memo_slot = &memo.colors[memo_index];
 		if (memo_slot->valid && memo_slot->extra == memo_extra && memo_slot->regs == memo_regs) {
-			r = memo_slot->info;
+			// Gate "rtfast": `r` still holds this slot's info from an earlier draw (the same
+			// slot at the same version): nothing to copy.
+			if (!(Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) &&
+			      r.memo_slot == memo_index && r.memo_version == memo_slot->version)) {
+				r = memo_slot->info;
+			}
 			if (r.image_id) {
 				auto& cache = m_context.GetTextureCache();
 				auto* image = cache.m_slot_images.try_get(r.image_id);
@@ -140,8 +147,13 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 						image->binding = {};
 					}
 					r.image_id           = cache.FindImage(r.desc, exact_format);
+					memo_slot->version++; // gate "rtfast": a store like any other
+					r.memo_slot              = memo_index;
+					r.memo_version           = memo_slot->version;
 					memo_slot->info.desc     = r.desc;
 					memo_slot->info.image_id = r.image_id;
+					memo_slot->info.memo_slot    = r.memo_slot;
+					memo_slot->info.memo_version = r.memo_version;
 					Common::DrawStat::Mark(Common::DrawStat::Memo);
 				} else {
 					image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
@@ -155,6 +167,9 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 	}
 	const auto memo_store = [&]() {
 		if (memo_slot != nullptr) {
+			memo_slot->version++;
+			r.memo_slot      = static_cast<uint32_t>(memo_slot - Memo().colors.data());
+			r.memo_version   = memo_slot->version;
 			memo_slot->regs  = memo_regs;
 			memo_slot->extra = memo_extra;
 			memo_slot->info  = r;

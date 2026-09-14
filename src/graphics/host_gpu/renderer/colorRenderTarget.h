@@ -19,6 +19,10 @@ struct RenderColorInfo {
 	uint32_t                        guest_mip_level   = 0;
 	uint32_t                        guest_array_layer = 0;
 	Prospero::ColorComponentMapping export_mapping;
+	// Gate "rtfast": the RenderExecutorMemo colour slot this info was copied from and that slot's
+	// version then (UINT32_MAX: none). A hit on the same slot at the same version skips the copy.
+	uint32_t                        memo_slot    = UINT32_MAX;
+	uint32_t                        memo_version = 0;
 
 	[[nodiscard]] vk::Extent2D Extent() const {
 		return {std::max(desc.info.extent.width >> guest_mip_level, 1u),

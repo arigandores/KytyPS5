@@ -173,9 +173,14 @@ public:
 		bool                     pixel     = false;
 		std::array<uint32_t, 32> user_data {}; // only [0, count) is written or read
 	};
-	// Queues the materialization of these programs to worker threads. `first_batch` starts a
-	// new walk (results of an older walk may be overwritten, those of this walk are kept).
-	void QueueDrawAhead(std::span<const DrawAheadRequest> requests, bool first_batch);
+	// Queues the materialization of these programs to worker threads. `walk` is the id of the
+	// graphics submission the requests belong to (GuestGpu assigns them in submission order);
+	// results of walks below the one being processed (NoteDrawAheadProcessing) may be
+	// overwritten, those of the processing walk and of later ones are kept.
+	void QueueDrawAhead(std::span<const DrawAheadRequest> requests, uint64_t walk);
+	// The GuestGpu thread starts processing the graphics submission with this walk id.
+	void NoteDrawAheadProcessing(uint64_t walk);
+	[[nodiscard]] uint64_t DrawAheadProcessing() const;
 	// Block until every queued graphics pipeline has been compiled.
 	void WaitForPendingPipelines();
 	struct PreparationStatus {

@@ -28,6 +28,7 @@
 #include <array>
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -47,6 +48,10 @@ namespace Libs::Graphics {
 
 static thread_local CommandProcessor* g_current_processor = nullptr;
 static thread_local Pm4Execution*     g_current_execution = nullptr;
+// Gate "dawalk": the shadow walk of a submission on its own thread (defined with the walk).
+static void DrawAheadWalkerPost(PipelineCache& cache, uint32_t queue_id, bool reset,
+                                std::span<const uint32_t> commands, uint64_t walk_id);
+static void DrawAheadWalkerStop();
 static thread_local bool              g_gpu_mutex_owned   = false;
 static thread_local bool              g_gpu_thread        = false;
 static thread_local GuestGpu*         g_gpu_state         = nullptr;
@@ -117,6 +122,7 @@ void GuestGpu::Shutdown() {
 	if (m_thread.joinable()) {
 		m_thread.join();
 	}
+	DrawAheadWalkerStop();
 	m_shutdown_complete = true;
 }
 
@@ -179,6 +185,7 @@ void GuestGpu::Submit(std::span<const uint32_t> draw_commands,
 	submission.commands          = draw_commands;
 	submission.constant_commands = constant_commands;
 	submission.reset_processor   = m_graphics_done;
+	submission.walk_id           = ++m_walk_ids;
 	m_graphics_done              = false;
 	Enqueue(std::move(submission));
 }
@@ -836,6 +843,10 @@ bool GuestGpu::Process(Submission& submission) {
 		cp.SetSubmitId(++m_submit_id);
 		cp.ResetDeCe();
 		cp.SetFlip({});
+		if (submission.walk_id != 0) {
+			m_renderer.GetPipelineCache().NoteDrawAheadProcessing(submission.walk_id);
+		}
+		submission.command_execution.SetDrawAheadWalk(submission.walk_id, submission.walked_ahead);
 	}
 
 	cp.BufferInit();
@@ -1026,9 +1037,13 @@ struct GraphicsShadow {
 static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& cs,
                                   std::vector<LookaheadCursor> stack, const char* label,
                                   bool prefetch_compute, const HW::Shader* seed = nullptr,
-                                  bool draw_ahead = false) {
-	GraphicsShadow gfx;
-	if (seed != nullptr) {
+                                  bool draw_ahead = false, uint64_t walk_id = 0,
+                                  GraphicsShadow* shadow = nullptr) {
+	// Gate "dawalk": `shadow` is the walker's per-queue state, carried across submissions like
+	// `cs`; without it the state of this walk is seeded from the live context.
+	GraphicsShadow  local_gfx;
+	GraphicsShadow& gfx = shadow != nullptr ? *shadow : local_gfx;
+	if (shadow == nullptr && seed != nullptr) {
 		gfx.Seed(*seed);
 	}
 	uint64_t       draws_seen  = 0;
@@ -1068,11 +1083,9 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 	// repeats it only adds a use.
 	size_t                last_vertex_index = SIZE_MAX;
 	size_t                last_pixel_index  = SIZE_MAX;
-	bool                  first_batch = true;
 	const auto            flush       = [&] {
 		if (!requests.empty()) {
-			cache.QueueDrawAhead(requests, first_batch);
-			first_batch = false;
+			cache.QueueDrawAhead(requests, walk_id);
 			requests.clear();
 			last_vertex_index = SIZE_MAX;
 			last_pixel_index  = SIZE_MAX;
@@ -1249,9 +1262,187 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 	}
 }
 
-void GuestGpu::LookaheadSubmission(const Submission& submission) {
-	if (AsyncComputeMode() != 1 || submission.commands.empty() ||
-	    submission.type == SubmissionType::FlipPreparation) {
+// Gate "dawalk": one thread walks every submission when the guest enqueues it - compute prefetch
+// (unless KYTY_ASYNC_COMPUTE=0) and the draw lookahead both - with the shadow state of each queue
+// carried across submissions, as mode 1 carries the compute state. The GuestGpu thread then skips
+// its own walk of that submission (PrefetchComputePipelines). The queue is FIFO, so the walk ids
+// reach the slot table in submission order.
+namespace {
+
+struct DrawAheadWalker {
+	struct Job {
+		PipelineCache*            cache      = nullptr;
+		std::span<const uint32_t> commands;
+		uint64_t                  walk_id    = 0;
+		uint64_t                  seq        = 0; // enqueue order over all queues
+		uint64_t                  enqueue_ns = 0;
+		uint32_t                  queue_id   = 0;
+		bool                      reset      = false;
+	};
+	// A job this many enqueues behind the latest one is dropped: the guest keeps the command
+	// memory only until the GPU completes the submission, and a walker that far behind reads
+	// memory the guest may have reused.
+	static constexpr uint64_t MaxLag = 24;
+	struct State {
+		HW::ComputeShaderInfo cs;
+		GraphicsShadow        gfx;
+		bool                  valid = false;
+	};
+
+	std::mutex              mutex;
+	std::condition_variable cv;
+	std::deque<Job>         jobs;
+	uint64_t                latest_seq = 0; // mutex
+	bool                    stop = false;
+	std::thread             thread;
+	std::vector<State>      states; // per queue id, grown on demand (walker thread only)
+
+	void Run() {
+		SetThreadDescription(GetCurrentThread(), L"DrawAheadWalk");
+		namespace FS = Common::FrameStats;
+		for (;;) {
+			Job      job;
+			size_t   depth  = 0;
+			uint64_t latest = 0;
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				cv.wait(lock, [&] { return stop || !jobs.empty(); });
+				if (stop && jobs.empty()) {
+					return;
+				}
+				job = jobs.front();
+				jobs.pop_front();
+				depth  = jobs.size();
+				latest = latest_seq;
+			}
+			// Dropped unwalked: the GuestGpu thread already started (or finished) this
+			// submission, or the walker is too far behind for its memory to be trusted.
+			if ((job.walk_id != 0 && job.walk_id < job.cache->DrawAheadProcessing()) ||
+			    latest - job.seq > MaxLag) {
+				FS::Add(FS::Counter::DrawAheadWalkDropped, 1);
+				continue;
+			}
+			// Knob "dawalklead": a graphics job waits until the GuestGpu thread is at most that
+			// many submissions behind it, so results are not built a frame early (cold by the
+			// time they are taken, and two frames of requests in the slot table).
+			if (job.walk_id != 0) {
+				for (;;) {
+					const auto lead = Common::Gates::Value(Common::Gates::Knob::DrawAheadWalkLead);
+					if (lead == 0 || job.cache->DrawAheadProcessing() + lead >= job.walk_id) {
+						break;
+					}
+					std::unique_lock<std::mutex> lock(mutex);
+					if (stop) {
+						return;
+					}
+					cv.wait_for(lock, std::chrono::microseconds(200));
+				}
+				if (job.walk_id < job.cache->DrawAheadProcessing()) {
+					FS::Add(FS::Counter::DrawAheadWalkDropped, 1);
+					continue;
+				}
+			}
+			DrawAheadApplyPin(false); // knob "dapin": next to the GuestGpu thread and the workers
+			if (FS::Enabled()) {
+				const auto now = static_cast<uint64_t>(
+				    std::chrono::duration_cast<std::chrono::nanoseconds>(
+				        std::chrono::steady_clock::now().time_since_epoch())
+				        .count());
+				FS::Add(FS::Counter::DrawAheadWalkJobs, 1);
+				FS::Add(FS::Counter::DrawAheadWalkLagNs, now > job.enqueue_ns ? now - job.enqueue_ns : 0);
+				FS::Add(FS::Counter::DrawAheadWalkDepth, depth);
+			}
+			if (job.queue_id >= states.size()) {
+				states.resize(static_cast<size_t>(job.queue_id) + 1);
+			}
+			auto& state = states[job.queue_id];
+			if (job.reset || !state.valid) {
+				state.cs    = {};
+				state.gfx   = {};
+				state.valid = true;
+			}
+			WalkComputeDispatches(*job.cache, state.cs, {{job.commands, 0u}}, " walk",
+			                      AsyncComputeMode() != 0, nullptr,
+			                      Common::Gates::Enabled(Common::Gates::Gate::DrawAhead),
+			                      job.walk_id, &state.gfx);
+		}
+	}
+};
+
+// Creation, every post and the stop all run under g_draw_ahead_walker_mutex: Stop takes the
+// walker out under it, so no Post can hold a pointer to a walker Stop is about to destroy, and
+// a Post after Stop (a guest thread still submitting during shutdown) finds the mark and returns.
+std::mutex                       g_draw_ahead_walker_mutex;
+std::unique_ptr<DrawAheadWalker> g_draw_ahead_walker;
+bool                             g_draw_ahead_walker_stopped = false; // g_draw_ahead_walker_mutex
+uint64_t                         g_draw_ahead_walker_seq     = 0;     // g_draw_ahead_walker_mutex
+
+} // namespace
+
+static void DrawAheadWalkerPost(PipelineCache& cache, uint32_t queue_id, bool reset,
+                                std::span<const uint32_t> commands, uint64_t walk_id) {
+	std::lock_guard<std::mutex> lock(g_draw_ahead_walker_mutex);
+	if (g_draw_ahead_walker_stopped) {
+		return;
+	}
+	if (g_draw_ahead_walker == nullptr) {
+		g_draw_ahead_walker         = std::make_unique<DrawAheadWalker>();
+		g_draw_ahead_walker->thread = std::thread([walker = g_draw_ahead_walker.get()] {
+			walker->Run();
+		});
+	}
+	auto* walker = g_draw_ahead_walker.get();
+	DrawAheadWalker::Job job;
+	job.cache      = &cache;
+	job.commands   = commands;
+	job.walk_id    = walk_id;
+	job.seq        = ++g_draw_ahead_walker_seq;
+	job.queue_id   = queue_id;
+	job.reset      = reset;
+	job.enqueue_ns = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(
+	                                           std::chrono::steady_clock::now().time_since_epoch())
+	                                           .count());
+	{
+		std::lock_guard<std::mutex> walker_lock(walker->mutex);
+		walker->latest_seq = job.seq;
+		walker->jobs.push_back(job);
+	}
+	walker->cv.notify_one();
+}
+
+static void DrawAheadWalkerStop() {
+	std::unique_ptr<DrawAheadWalker> walker;
+	{
+		std::lock_guard<std::mutex> lock(g_draw_ahead_walker_mutex);
+		g_draw_ahead_walker_stopped = true;
+		walker                      = std::move(g_draw_ahead_walker);
+	}
+	if (walker == nullptr) {
+		return;
+	}
+	{
+		std::lock_guard<std::mutex> lock(walker->mutex);
+		walker->stop = true;
+		walker->jobs.clear();
+	}
+	walker->cv.notify_all();
+	if (walker->thread.joinable()) {
+		walker->thread.join();
+	}
+}
+
+void GuestGpu::LookaheadSubmission(Submission& submission) {
+	if (submission.commands.empty() || submission.type == SubmissionType::FlipPreparation) {
+		return;
+	}
+	if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadWalk) &&
+	    (AsyncComputeMode() != 0 || Common::Gates::Enabled(Common::Gates::Gate::DrawAhead))) {
+		submission.walked_ahead = true;
+		DrawAheadWalkerPost(m_renderer.GetPipelineCache(), submission.queue_id,
+		                    submission.reset_processor, submission.commands, submission.walk_id);
+		return;
+	}
+	if (AsyncComputeMode() != 1) {
 		return;
 	}
 	Common::LockGuard lock(m_lookahead_mutex);
@@ -1274,6 +1465,11 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 	    execution.m_buffer_stack.empty()) {
 		return;
 	}
+	if (execution.m_walked_ahead) {
+		// Gate "dawalk": the walker thread did this at enqueue.
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadWalkSkipped, 1);
+		return;
+	}
 	std::vector<LookaheadCursor> stack;
 	for (const auto& cursor: execution.m_buffer_stack) {
 		stack.push_back({cursor.commands, cursor.offset_dw});
@@ -1281,7 +1477,8 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 	HW::ComputeShaderInfo cs = m_sh_ctx.GetCs();
 	WalkComputeDispatches(m_renderer.GetPipelineCache(), cs, std::move(stack), " process",
 	                      AsyncComputeMode() == 2, &m_sh_ctx,
-	                      Common::Gates::Enabled(Common::Gates::Gate::DrawAhead));
+	                      Common::Gates::Enabled(Common::Gates::Gate::DrawAhead),
+	                      execution.m_walk_id);
 }
 
 void CommandProcessor::ProcessIndirectBuffer(std::span<const uint32_t> commands) {

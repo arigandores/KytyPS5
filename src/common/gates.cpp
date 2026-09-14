@@ -84,6 +84,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_PROTECT_BATCH2", "protbatch2", false},
     // Session 58, Sky Garden hang: liveness of the async-copy timeline semaphore.
     {"KYTY_ASYNC_COPY_IDLE_SIGNAL", "acopyidle", true},
+    // Session 59, M1 producer off the critical thread.
+    {"KYTY_DRAW_AHEAD_WALK", "dawalk", false},
+    {"KYTY_RT_FAST", "rtfast", true},
 }};
 
 struct KnobDefinition {
@@ -102,6 +105,7 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_DRAW_AHEAD_PIN", "dapin", 1, 0xffffffffu},
     {"KYTY_PROCESS_PIN", "procpin", 0, 0xffffffffu},
     {"KYTY_FAULT_WINDOW_KB", "faultkb", 64, 4096},
+    {"KYTY_DRAW_AHEAD_WALK_LEAD", "dawalklead", 1, 64},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

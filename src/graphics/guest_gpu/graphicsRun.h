@@ -64,12 +64,18 @@ private:
 		bool                      blocked           = false;
 		uint64_t                  flip_request_id   = 0;
 		uint64_t                  enqueue_ns        = 0;
+		// Draw lookahead: id of a graphics submission in submission order (0 otherwise), and
+		// whether the walker thread walked it at enqueue (gate "dawalk").
+		uint64_t                  walk_id           = 0;
+		bool                      walked_ahead      = false;
 	};
 
 	void              Enqueue(Submission submission);
 	// KYTY_ASYNC_COMPUTE=1: shadow-walks the submission for compute dispatches and queues their
 	// pipeline compiles; the shadow compute state persists per queue across submissions.
-	void              LookaheadSubmission(const Submission& submission);
+	// Gate "dawalk": hands the submission to the walker thread instead (compute prefetch and
+	// draw lookahead both), and marks it walked.
+	void              LookaheadSubmission(Submission& submission);
 	void              WaitForIdle();
 	void              ProcessCommands();
 	bool              Process(Submission& submission);
@@ -103,6 +109,7 @@ private:
 	std::array<std::unique_ptr<CommandProcessor>, ComputeQueueCount> m_compute_cp;
 
 	uint64_t        m_submit_id = 0;
+	uint64_t        m_walk_ids  = 0; // m_submission_mutex
 	std::atomic_int m_done_num  = 0;
 	std::jthread    m_thread;
 

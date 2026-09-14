@@ -7,6 +7,7 @@
 #include "graphics/shader/recompiler/ir/ResourceSnapshot.h"
 #include "graphics/shader/shaderBindings.h"
 
+#include <algorithm>
 #include <memory>
 #include <array>
 #include <span>
@@ -120,6 +121,33 @@ struct ShaderVertexInputInfo {
 	ShaderMeshInputInfo      mesh;
 	bool                    fetch_external      = false;
 	bool                    fetch_embedded      = false;
+
+	// Session 59, B1d: what `*this = {}` did, without touching the array entries no draw used.
+	// Every reader stops at resources_num / buffers_num / attr_num and every writer fills an
+	// entry before it raises the count; the used prefix is cleared anyway so that a partial
+	// write can never inherit a value from an earlier draw. Keep in step with the members above.
+	void Reset() {
+		const int used_resources = std::clamp(resources_num, 0, RES_MAX);
+		const int used_buffers   = std::clamp(buffers_num, 0, RES_MAX);
+		for (int i = 0; i < used_resources; i++) {
+			resources[i]     = {};
+			resources_dst[i] = {};
+		}
+		for (int i = 0; i < used_buffers; i++) {
+			buffers[i] = {};
+		}
+		stage               = {};
+		resources_num       = 0;
+		fetch_attrib_reg    = 0;
+		fetch_buffer_reg    = 0;
+		buffers_num         = 0;
+		scratch_size_dwords = 0;
+		pa_cl_vs_out_cntl   = 0;
+		clip_space          = {};
+		mesh                = {};
+		fetch_external      = false;
+		fetch_embedded      = false;
+	}
 };
 
 struct ShaderComputeInputInfo: ShaderWorkgroupInputInfo {

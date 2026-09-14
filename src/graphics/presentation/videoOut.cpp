@@ -1684,6 +1684,27 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"pb2_gap", FS::Counter::PassGapRuns, false},
 				    {"pb2_gap_pages", FS::Counter::PassGapPages, false},
 				    {"pb2_up", FS::Counter::PassUploads, false},
+				    // Session 59, B9 ceiling (gate "drawstat").
+				    {"cb_pool_n", FS::Counter::CommitPoolSets, false},
+				    {"cb_pool_tr_us", FS::Counter::CommitPoolTransitNs, true},
+				    {"cb_pool_wr_us", FS::Counter::CommitPoolWriteNs, true},
+				    {"cb_pool_em_us", FS::Counter::CommitPoolEmitNs, true},
+				    {"cb_push_n", FS::Counter::CommitPushSets, false},
+				    {"cb_push_tr_us", FS::Counter::CommitPushTransitNs, true},
+				    {"cb_push_wr_us", FS::Counter::CommitPushWriteNs, true},
+				    {"cb_push_em_us", FS::Counter::CommitPushEmitNs, true},
+				    // Session 59, gate "dawalk".
+				    {"da_wjobs", FS::Counter::DrawAheadWalkJobs, false},
+				    {"da_wlag_us", FS::Counter::DrawAheadWalkLagNs, true},
+				    {"da_wdepth", FS::Counter::DrawAheadWalkDepth, false},
+				    {"da_wskip", FS::Counter::DrawAheadWalkSkipped, false},
+				    {"da_wdrop", FS::Counter::DrawAheadWalkDropped, false},
+				    // Session 59, gate "rtfast".
+				    {"rt_fast_ok", FS::Counter::RtFastOk, false},
+				    {"rt_fast_no", FS::Counter::RtFastNo, false},
+				    {"rt_fast_stale", FS::Counter::RtFastStale, false},
+				    {"rt_fast_rec", FS::Counter::RtFastRecord, false},
+				    {"rt_fast_stencil", FS::Counter::RtFastStencil, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

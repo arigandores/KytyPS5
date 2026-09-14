@@ -440,6 +440,7 @@ void TextureCache::DeleteImage(ImageId id) {
 		      metadata->second.type == MetaDataInfo::Type::HTile))) {
 			// A later binding may have reused this address for another metadata type.
 			m_surface_metas.erase(metadata);
+			BumpMetaEpoch();
 		}
 	}
 	UnregisterImage(id);
@@ -1559,9 +1560,11 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	auto& metadata = entry->second;
 	if (inserted) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 	}
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata,
 		                        image.info.data.address)) {
 			metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
@@ -1569,6 +1572,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		metadata.type = MetaDataInfo::Type::Dcc;
 	} else if (metadata.type != MetaDataInfo::Type::Dcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 		// PS5 allocations reuse metadata storage across surface types; the new image defines it.
 		static std::atomic<uint32_t> log_count {0};
 		if (log_count.fetch_add(1, std::memory_order_relaxed) < 32) {
@@ -1612,6 +1616,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		            layer - start},
 		           clear);
 		metadata.clear_mask &= ~mask;
+		BumpMetaEpoch();
 	}
 }
 
@@ -1630,9 +1635,11 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	auto& metadata = entry->second;
 	if (inserted) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 	}
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 		if (PendingDccFillStale(desc.info.metadata.range.address, metadata, image.info.data.address)) {
 			metadata = MetaDataInfo {};
 		}
@@ -1640,6 +1647,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		if (metadata.fill_value != 0) metadata.clear_mask = 0;
 	} else if (metadata.type != MetaDataInfo::Type::CMask) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
+		BumpMetaEpoch();
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
 	}
 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
@@ -1653,6 +1661,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		if ((metadata.clear_mask & (1u << layer)) == 0) continue;
 		ClearImage(m_scheduler.Current(), id, {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
 		metadata.clear_mask &= ~(1u << layer);
+		BumpMetaEpoch();
 		static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
 		if (trace) LOGF("CmaskClear: frame=%u image=0x%016" PRIx64 " meta=0x%016" PRIx64
 		               " layer=%u words=%08x/%08x\n", GpuTimeProfiler::Frame(), image.info.data.address,
@@ -1716,6 +1725,21 @@ void TextureCache::AssociateStencil(ImageId depth_id, GuestRange stencil) {
 	auto& record = m_slot_images[association];
 	TouchImage(record);
 	record.depth_id = depth_id;
+}
+
+ImageId TextureCache::FindStencilAssociation(GuestRange stencil) {
+	if (!stencil.Valid()) {
+		return {};
+	}
+	std::scoped_lock lock {m_lock};
+	ImageId          association {};
+	for (const auto id: FindImagesInRegion(stencil.address, stencil.size, false)) {
+		const auto owner = m_slot_images.try_get(id);
+		if (owner != nullptr && owner->info.data.address == stencil.address) {
+			association = id;
+		}
+	}
+	return association;
 }
 
 ImageId TextureCache::FindImage(ImageDesc& desc, bool exact_format) {
@@ -1943,11 +1967,15 @@ vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc) {
 		    m_surface_metas.try_emplace(desc.info.metadata.range.address,
 		                                MetaDataInfo {.type       = MetaDataInfo::Type::HTile,
 		                                              .clear_mask = image.info.htile_clear_mask});
+		if (inserted) {
+			BumpMetaEpoch();
+		}
 		if (!inserted && metadata->second.type != MetaDataInfo::Type::HTile) {
 			// PS5 allocations can reuse DCC storage as HTile while the old color image is cached.
 			// The depth binding defines the new type; incompatible fill state cannot carry over.
 			metadata->second = {.type       = MetaDataInfo::Type::HTile,
 			                    .clear_mask = image.info.htile_clear_mask};
+			BumpMetaEpoch();
 		}
 	}
 	CommitGpuWrite(image);
@@ -2468,6 +2496,7 @@ bool TextureCache::ClearMeta(uint64_t address) {
 	}
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	found->second.clear_mask = UINT32_MAX;
+	BumpMetaEpoch();
 	return true;
 }
 
@@ -2507,6 +2536,7 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 			m_fill_stamp_size      = size;
 		}
 	}
+	BumpMetaEpoch(); // the try_emplace above may have inserted as well
 }
 
 void TextureCache::StampPendingDccFill() {
@@ -2518,6 +2548,7 @@ void TextureCache::StampPendingDccFill() {
 	    found != m_surface_metas.end() && found->second.type == MetaDataInfo::Type::PendingDcc) {
 		found->second.fill_seq =
 		    m_buffer_cache.LastGpuWriteSeq(m_fill_stamp_address, m_fill_stamp_size, false);
+		BumpMetaEpoch();
 	}
 	m_fill_stamp_address = 0;
 	m_fill_stamp_size    = 0;
@@ -2612,9 +2643,11 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	if (PendingDccFillStale(metadata_address, found->second, image->info.data.address)) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		m_surface_metas.erase(found);
+		BumpMetaEpoch();
 		return false;
 	}
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
+	BumpMetaEpoch();
 	found->second.type                 = MetaDataInfo::Type::Dcc;
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
 	image->info.metadata.range.address = metadata_address;
@@ -2642,6 +2675,7 @@ bool TextureCache::TouchMeta(uint64_t address, uint32_t slice, bool is_clear) {
 	} else {
 		found->second.clear_mask &= ~(1u << slice);
 	}
+	BumpMetaEpoch();
 	return true;
 }
 
@@ -2654,6 +2688,7 @@ void TextureCache::UnmapMemory(uint64_t address, uint64_t size) {
 	for (auto metadata = m_surface_metas.lower_bound(address);
 	     metadata != m_surface_metas.end() && metadata->first < end;) {
 		metadata = m_surface_metas.erase(metadata);
+		BumpMetaEpoch();
 	}
 	auto images = FindImagesInRegion(address, size, false);
 	for (const auto id: images) {

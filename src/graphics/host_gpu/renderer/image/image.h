@@ -64,9 +64,13 @@ public:
 	                                   std::optional<ImageSubresourceRange> range,
 	                                   bool                                 atomic_write = false);
 	// why: charged if the transition closes a render pass (FrameTrace-rp).
+	// packet_ok (gate "recimg"): a lazy-handle transition may be published as records - only
+	// when the caller holds no vk::CommandBuffer taken before (CommitBindings passes its own
+	// packet decision: the direct draw path keeps its handle across the transit loop).
 	void Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
 	             std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
-	             RenderPassEnd why = RenderPassEnd::Other, bool atomic_write = false);
+	             RenderPassEnd why = RenderPassEnd::Other, bool atomic_write = false,
+	             bool packet_ok = true);
 	// buffer_from_tiler: the source buffer was written by the tiler (compute / fill) or the CPU,
 	// never by a draw: the barrier before the copy names those stages only.
 	void Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,

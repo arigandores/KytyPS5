@@ -152,6 +152,12 @@ public:
 	                        std::span<const vk::WriteDescriptorSet>   writes,
 	                        std::span<const vk::DescriptorBufferInfo> buffers,
 	                        std::span<const vk::DescriptorImageInfo>  images) const;
+	// Session 62 (gates "recimg", "recup"): an image transition / a buffer upload as one record.
+	// Same rule as the other packets: the caller holds no vk::CommandBuffer taken before.
+	void PushImageBarriersPacket(std::span<const vk::ImageMemoryBarrier2> barriers) const;
+	void PushBufferUploadPacket(vk::Buffer source, vk::Buffer destination,
+	                            uint64_t destination_size,
+	                            std::span<const vk::BufferCopy> copies) const;
 	// KYTY_RECORD_CHECK=1: PublishMark() counts the records published to this buffer's record
 	// thread; CheckNoPublish(mark) exits when one was published since `mark`, i.e. when a handle
 	// taken at `mark` could be recorded into by the record thread at the same time.

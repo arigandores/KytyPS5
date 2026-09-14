@@ -812,6 +812,14 @@ void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
 		last_ops = Common::DrawStat::t_ops;
 	}
 	auto& command = m_scheduler.Current();
+	if (Common::Gates::Enabled(Common::Gates::Gate::RecordUploads) && command.PacketsWanted()) {
+		// Gate "recup": the pass end and the barrier / copy / barrier as records. The staging
+		// ring slot behind `source` was committed above; the destination buffer outlives the
+		// submission (deferred destruction). No GPU-time mark: packets exclude the profiler.
+		command.EndRenderingPacket(RenderPassEnd::BufferUpload);
+		command.PushBufferUploadPacket(source, buffer.Handle(), buffer.Size(), copies);
+		return;
+	}
 	command.EndRendering(RenderPassEnd::BufferUpload);
 	const auto native = command.Handle();
 	vk::BufferMemoryBarrier before {};
@@ -1019,9 +1027,19 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	                       m_memory_tracker.IsRegionCpuModified(vaddr, size)))) {
 		const auto alignment = std::max<uint64_t>(
 		    m_graphics.physical_device_properties.limits.minUniformBufferOffsetAlignment, 1);
+		const auto stream_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);
 		if (mapped != nullptr && Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size)) {
 			m_stream_buffer.Commit();
+			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamCopies, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamBytes, size);
+			if (stream_t0 != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamNs,
+				                        Common::FrameStats::NowNs() - stream_t0);
+			}
+			if (Common::Gates::Enabled(Common::Gates::Gate::CbStat)) [[unlikely]] {
+				NoteStreamCopy(vaddr, size, offset);
+			}
 			if (fast_slot != nullptr) {
 				// A ring offset is fresh on every call: there is nothing to remember, and the
 				// range is CPU-dirty anyway (that is why this path was taken).
@@ -1472,6 +1490,52 @@ bool BufferCache::IsRegionGpuModifiedFromGpu(uint64_t vaddr, uint64_t size) {
 		}
 	}
 	return fast;
+}
+
+void BufferCache::NoteStreamCopy(uint64_t vaddr, uint64_t size, uint64_t ring_offset) {
+	namespace FS = Common::FrameStats;
+	if (!GuestGpu::IsGpuThread() || size == 0) {
+		return;
+	}
+	const auto t0 = FS::NowNs();
+	// The guest bytes, never the ring slot: the ring is device-local host-visible memory and
+	// reading it back costs a PCIe round trip per line.
+	const void* backing = nullptr;
+	if (!Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+		return;
+	}
+	const auto* data = static_cast<const uint8_t*>(backing);
+	if (m_stream_shadows.size() > 65536 || m_stream_shadow_bytes > (64u << 20u)) {
+		m_stream_shadows.clear();
+		m_stream_shadow_bytes = 0;
+	}
+	const auto key        = vaddr ^ (size << 48u) ^ (size >> 16u);
+	const auto epoch      = m_memory_tracker.RangeWriteEpoch(vaddr, size);
+	const auto generation = m_stream_buffer.Generation();
+	auto [it, inserted]   = m_stream_shadows.try_emplace(key);
+	auto& shadow          = it->second;
+	if (inserted || shadow.bytes.size() != size) {
+		m_stream_shadow_bytes += size - shadow.bytes.size();
+		FS::Add(FS::Counter::CbNew, 1);
+	} else if (std::memcmp(shadow.bytes.data(), data, static_cast<size_t>(size)) == 0) {
+		FS::Add(FS::Counter::CbSame, 1);
+		if (epoch != 0 && epoch == shadow.epoch) {
+			FS::Add(FS::Counter::CbSameEpoch, 1);
+		}
+		if (generation == shadow.generation) {
+			FS::Add(FS::Counter::CbSameRing, 1);
+		}
+	} else {
+		FS::Add(FS::Counter::CbDiff, 1);
+		if (epoch != 0 && epoch == shadow.epoch) {
+			FS::Add(FS::Counter::CbDiffEpoch, 1);
+		}
+	}
+	shadow.bytes.assign(data, data + size);
+	shadow.epoch       = epoch;
+	shadow.generation  = generation;
+	shadow.ring_offset = ring_offset;
+	FS::Add(FS::Counter::CbStatNs, FS::NowNs() - t0);
 }
 
 bool BufferCache::IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size) {

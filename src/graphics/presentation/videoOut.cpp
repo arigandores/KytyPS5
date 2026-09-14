@@ -1732,6 +1732,20 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"da_unchecked", FS::Counter::DrawAheadUnchecked, false},
 				    {"da_direct", FS::Counter::DrawAheadDirect, false},
 				    {"da_direct_no", FS::Counter::DrawAheadDirectNo, false},
+				    // Session 62 ceilings (item 3).
+				    {"ob_stream", FS::Counter::ObtainStreamCopies, false},
+				    {"ob_stream_kb", FS::Counter::ObtainStreamBytes, true},
+				    {"cb_same", FS::Counter::CbSame, false},
+				    {"cb_diff", FS::Counter::CbDiff, false},
+				    {"cb_new", FS::Counter::CbNew, false},
+				    {"cb_same_ep", FS::Counter::CbSameEpoch, false},
+				    {"cb_diff_ep", FS::Counter::CbDiffEpoch, false},
+				    {"cb_same_ring", FS::Counter::CbSameRing, false},
+				    {"cb_stat_us", FS::Counter::CbStatNs, true},
+				    {"ob_stream_us", FS::Counter::ObtainStreamNs, true},
+				    {"cb_copy_us", FS::Counter::CbankCopyNs, true},
+				    {"rec_img", FS::Counter::RecordImageBarrierPackets, false},
+				    {"rec_up", FS::Counter::RecordUploadPackets, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -1749,7 +1763,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				const auto                  n = FS::ReadSites(static_cast<FS::Table>(table), rows.data(), rows.size());
 				static constexpr std::array<const char*, static_cast<size_t>(FS::Table::Count)>
 				            table_names {"FrameTrace-wait:", "FrameTrace-submit:", "FrameTrace-pm4:",
-				                         "FrameTrace-pops:"};
+				                         "FrameTrace-pops:", "FrameTrace-direct:"};
 				std::string line = table_names[table];
 				if (n == 0) {
 					continue;

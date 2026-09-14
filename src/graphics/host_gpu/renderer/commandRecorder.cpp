@@ -389,6 +389,32 @@ void CommandRecorder::PushGeneric(Common::UniqueFunction<void, vk::CommandBuffer
 	PushRecord(RecordOp::Generic, &payload, sizeof(payload));
 }
 
+void CommandRecorder::PushImageBarriers(std::span<const vk::ImageMemoryBarrier2> barriers) {
+	EXIT_IF(barriers.empty());
+	const auto bytes = static_cast<uint32_t>(barriers.size_bytes());
+	auto*      out   = BeginRecord(RecordOp::ImageBarriers, 8u + bytes);
+	const uint32_t head[2] {static_cast<uint32_t>(barriers.size()), 0u};
+	std::memcpy(out, head, sizeof(head));
+	std::memcpy(out + 8, barriers.data(), bytes);
+	EndRecord(8u + bytes, !BatchWanted());
+}
+
+void CommandRecorder::PushBufferUpload(vk::Buffer source, vk::Buffer destination,
+                                       uint64_t                        destination_size,
+                                       std::span<const vk::BufferCopy> copies) {
+	EXIT_IF(copies.empty() || source == nullptr || destination == nullptr);
+	const auto bytes = static_cast<uint32_t>(copies.size_bytes());
+	auto* out = BeginRecord(RecordOp::BufferUpload, static_cast<uint32_t>(sizeof(RecordBufferUpload)) + bytes);
+	RecordBufferUpload head {};
+	head.source           = source;
+	head.destination      = destination;
+	head.destination_size = destination_size;
+	head.count            = static_cast<uint32_t>(copies.size());
+	std::memcpy(out, &head, sizeof(head));
+	std::memcpy(out + sizeof(head), copies.data(), bytes);
+	EndRecord(static_cast<uint32_t>(sizeof(RecordBufferUpload)) + bytes, !BatchWanted());
+}
+
 void CommandRecorder::PushPassEnd(bool end_pass, vk::PipelineStageFlags shader_write_stages) {
 	const RecordPassEnd payload {end_pass ? 1u : 0u, static_cast<uint32_t>(shader_write_stages)};
 	PushRecord(RecordOp::PassEnd, &payload, sizeof(payload), !BatchWanted());
@@ -608,6 +634,49 @@ void CommandRecorder::Execute(const RecordHeader& header, const uint8_t* payload
 		}
 		case RecordOp::Bindings: ExecuteBindings(payload); break;
 		case RecordOp::Commands: ExecuteCommands(payload); break;
+		case RecordOp::ImageBarriers: {
+			EXIT_IF(m_buffer == nullptr);
+			uint32_t count = 0;
+			std::memcpy(&count, payload, sizeof(count));
+			// 16-aligned record, 8 bytes of header: the array is 8-aligned in place.
+			vk::DependencyInfo dependency {};
+			dependency.imageMemoryBarrierCount = count;
+			dependency.pImageMemoryBarriers =
+			    reinterpret_cast<const vk::ImageMemoryBarrier2*>(payload + 8);
+			m_buffer.pipelineBarrier2(dependency);
+			break;
+		}
+		case RecordOp::BufferUpload: {
+			EXIT_IF(m_buffer == nullptr);
+			RecordBufferUpload upload {};
+			std::memcpy(&upload, payload, sizeof(upload));
+			const auto* copies =
+			    reinterpret_cast<const vk::BufferCopy*>(payload + sizeof(RecordBufferUpload));
+			vk::BufferMemoryBarrier before {};
+			before.srcAccessMask = vk::AccessFlagBits::eMemoryRead |
+			                       vk::AccessFlagBits::eMemoryWrite |
+			                       vk::AccessFlagBits::eTransferRead |
+			                       vk::AccessFlagBits::eTransferWrite;
+			before.dstAccessMask       = vk::AccessFlagBits::eTransferWrite;
+			before.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+			before.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+			before.buffer              = upload.destination;
+			before.offset              = 0;
+			before.size                = upload.destination_size;
+			m_buffer.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
+			                         vk::PipelineStageFlagBits::eTransfer,
+			                         vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &before, 0,
+			                         nullptr);
+			m_buffer.copyBuffer(upload.source, upload.destination, upload.count, copies);
+			auto after          = before;
+			after.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
+			after.dstAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite;
+			m_buffer.pipelineBarrier(vk::PipelineStageFlagBits::eTransfer,
+			                         vk::PipelineStageFlagBits::eAllCommands,
+			                         vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &after, 0,
+			                         nullptr);
+			break;
+		}
 	}
 }
 

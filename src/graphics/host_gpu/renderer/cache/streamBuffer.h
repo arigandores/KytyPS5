@@ -122,6 +122,9 @@ public:
 	                                                bool allow_wait = true);
 	void                                        Commit();
 	[[nodiscard]] uint64_t Copy(const void* source, uint64_t size, uint64_t alignment = 0);
+	// Counts the wraps of the ring: a mapped range is intact while the generation it was mapped in
+	// is still the current one (offsets only grow inside a generation).
+	[[nodiscard]] uint64_t Generation() const noexcept { return m_generation; }
 
 private:
 	friend struct StreamBufferTestAccess;
@@ -140,6 +143,7 @@ private:
 
 	uint64_t              m_offset      = 0;
 	uint64_t              m_mapped_size = 0;
+	uint64_t              m_generation  = 1;
 	std::vector<Watch>    m_current_watches;
 	size_t                m_current_watch_cursor = 0;
 	std::optional<size_t> m_invalidation_mark;

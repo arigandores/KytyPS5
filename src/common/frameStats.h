@@ -558,12 +558,27 @@ enum class Counter : uint32_t {
 	DrawAheadUnchecked,    // M1 results taken with the witness check skipped (gate "dawitness" off)
 	DrawAheadDirect,       // witnesses verified through the recorded host pointers (gate "dawitptr")
 	DrawAheadDirectNo,     // ... that fell back to the page lookups (map epoch moved, or no pointers)
+	// Session 62 ceilings. Item 3: copies of guest ranges into the stream ring.
+	ObtainStreamCopies,    // ObtainBuffer answers served by a copy into the stream ring (CPU-dirty small reads)
+	ObtainStreamBytes,     // ... bytes
+	CbSame,                // gate "cbstat": stream copies whose bytes equal the previous copy of the same range
+	CbDiff,                // ... whose bytes differ
+	CbNew,                 // ... of a range not seen before (or evicted)
+	CbSameEpoch,           // ... equal bytes and the range's write epoch unchanged
+	CbDiffEpoch,           // ... different bytes and the write epoch unchanged: an epoch witness is unsound here
+	CbSameRing,            // ... equal bytes and the previous ring slot still intact (ring generation unchanged)
+	CbStatNs,              // time inside the shadow compare (diagnostic cost)
+	ObtainStreamNs,        // ObtainBuffer stream copies: map, guest read into the ring, commit
+	CbankCopyNs,           // const-bank copies of descriptors.cpp: the same three steps
+	// Session 62, item 2: direct writes turned into records.
+	RecordImageBarrierPackets, // image transitions published as records (gate "recimg")
+	RecordUploadPackets,       // buffer uploads published as records (gate "recup")
 	Count
 };
 
 // Call-site attribution: a SiteScope names the operation in flight on this thread and the wait /
 // submit paths charge their time to that name.
-enum class Table : uint32_t { WaitSites, SubmitSites, Pm4Sites, PopSites, Count };
+enum class Table : uint32_t { WaitSites, SubmitSites, Pm4Sites, PopSites, DirectSites, Count };
 
 struct SiteRow {
 	const char* name  = nullptr;
@@ -577,6 +592,9 @@ size_t                    ReadSites(Table table, SiteRow* out, size_t max);
 // Address relative to the executable image base (matches the linker map RVAs); the raw
 // address on platforms without module information.
 [[nodiscard]] uint64_t    ModuleOffset(const void* address);
+// A stable site name for a code address ("+0x<rva>"), interned once per address: a return address
+// can then key a site table (AddSite compares name pointers).
+[[nodiscard]] const char* SiteName(const void* address);
 
 class SiteScope {
 public:

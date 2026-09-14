@@ -123,6 +123,11 @@ public:
 	// Callers outside the GuestGpu thread must keep using the plain forms above.
 	[[nodiscard]] bool IsRegionGpuModifiedFromGpu(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size);
+	// Session 62, item 3 ceiling (gate "cbstat", GuestGpu thread only): `data` was just copied
+	// from guest range [vaddr, vaddr + size) into the stream ring at `ring_offset`; compare it
+	// with the shadow of the previous copy of the same range (cb_same / cb_diff / cb_new and the
+	// epoch / ring witnesses).
+	void               NoteStreamCopy(uint64_t vaddr, uint64_t size, uint64_t ring_offset);
 	void               ProcessFaultBuffer();
 	void               SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size);
 	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
@@ -279,6 +284,15 @@ private:
 	MemoryTracker                                     m_memory_tracker;
 	StreamBuffer                                      m_staging_buffer;
 	StreamBuffer                                      m_stream_buffer;
+	// Gate "cbstat": shadows of the stream-ring constant copies, keyed by (address, size).
+	struct StreamCopyShadow {
+		std::vector<uint8_t> bytes;
+		uint64_t             epoch       = 0;
+		uint64_t             generation  = 0;
+		uint64_t             ring_offset = 0;
+	};
+	std::unordered_map<uint64_t, StreamCopyShadow>    m_stream_shadows;
+	uint64_t                                          m_stream_shadow_bytes = 0;
 	StreamBuffer                                      m_download_buffer;
 	StreamBuffer                                      m_device_buffer;
 	TextureCache&                                     m_texture_cache;

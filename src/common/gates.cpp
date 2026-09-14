@@ -96,6 +96,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_DRAW_AHEAD_WITNESS", "dawitness", true},
     {"KYTY_DRAW_AHEAD_WITNESS_PTR", "dawitptr", false},
     {"KYTY_DRAW_AHEAD_QUEUE_PREFETCH", "daqpre", false},
+    {"KYTY_CB_STAT", "cbstat", false},
+    {"KYTY_RECORD_IMAGE_BARRIERS", "recimg", false},
+    {"KYTY_RECORD_UPLOADS", "recup", false},
 }};
 
 struct KnobDefinition {

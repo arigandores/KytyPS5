@@ -185,12 +185,20 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				EXIT("const-bank copy exceeds maxUniformBufferRange\n");
 			}
 			auto& stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+			const auto copy_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
 			if (!Libs::LibKernel::Memory::TryReadBacking(address, data, size)) {
 				EXIT("storage buffer slot %u: direct const-bank source is unreadable\n", slot);
 			}
 			stream.Commit();
+			if (copy_t0 != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyNs,
+				                        Common::FrameStats::NowNs() - copy_t0);
+			}
+			if (Common::Gates::Enabled(Common::Gates::Gate::CbStat)) [[unlikely]] {
+				cache.NoteStreamCopy(address, size, stream_offset);
+			}
 			if (Common::FrameStats::Enabled()) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyCpu, 1);
 				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyBytes, size);
@@ -217,6 +225,7 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			auto&      stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
 			const bool gpu = cache.IsRegionGpuModifiedFromGpu(address, size) ||
 			                 cache.HasGpuDirtyBytes(address, size);
+			const auto copy_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
 			if (!gpu) {
@@ -226,6 +235,13 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				}
 			}
 			stream.Commit();
+			if (!gpu && copy_t0 != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyNs,
+				                        Common::FrameStats::NowNs() - copy_t0);
+			}
+			if (!gpu && Common::Gates::Enabled(Common::Gates::Gate::CbStat)) [[unlikely]] {
+				cache.NoteStreamCopy(address, size, stream_offset);
+			}
 			if (gpu) {
 				auto& command = context.GetCommandScheduler().Current();
 				stream.CopyFrom(command, *buffer, offset, stream_offset, size,
@@ -1822,7 +1838,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				                            vk::AccessFlagBits2::eShaderWrite
 				                      : vk::AccessFlagBits2::eShaderRead,
 				              range, vk::CommandBuffer {}, RenderPassEnd::BindingTransit,
-				              storage && atomic_write);
+				              storage && atomic_write, packet);
 			} else if (image.binding.is_target) {
 				const auto layout = image.binding.attachment_layout;
 				EXIT_IF(layout == vk::ImageLayout::eUndefined);
@@ -1851,23 +1867,25 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				              image.binding.attachment_access | vk::AccessFlagBits2::eShaderRead |
 				                  (image.binding.shader_write ? vk::AccessFlagBits2::eShaderWrite
 				                                              : vk::AccessFlags2 {}),
-				              {}, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write);
+				              {}, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write,
+				              packet);
 			} else if (image.binding.force_general && !image.info.IsDepth()) {
 				const vk::AccessFlags2 storage_access = image.binding.shader_write
 				                                            ? vk::AccessFlagBits2::eShaderWrite
 				                                            : vk::AccessFlags2 {};
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | storage_access, {}, vk::CommandBuffer {},
-				              RenderPassEnd::BindingTransit, atomic_write);
+				              RenderPassEnd::BindingTransit, atomic_write, packet);
 			} else if (storage) {
 				image.Transit(vk::ImageLayout::eGeneral,
 				              vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eShaderWrite,
-				              range, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write);
+				              range, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, atomic_write,
+				              packet);
 			} else {
 				image.Transit(image.info.IsDepth() ? vk::ImageLayout::eDepthStencilReadOnlyOptimal
 				                                   : vk::ImageLayout::eShaderReadOnlyOptimal,
 				              vk::AccessFlagBits2::eShaderRead, range, vk::CommandBuffer {},
-				              RenderPassEnd::BindingTransit);
+				              RenderPassEnd::BindingTransit, false, packet);
 			}
 			binding.layout = image.backing.state.layout;
 		}

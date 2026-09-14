@@ -20,6 +20,15 @@
 #include <algorithm>
 #include <bit>
 #include <cstring>
+
+#if defined(_MSC_VER) && !defined(__clang__)
+#include <intrin.h>
+#define KYTY_NOINLINE __declspec(noinline)
+#define KYTY_RETURN_ADDRESS() _ReturnAddress()
+#else
+#define KYTY_NOINLINE __attribute__((noinline))
+#define KYTY_RETURN_ADDRESS() __builtin_return_address(0)
+#endif
 namespace Libs::Graphics {
 
 namespace {
@@ -71,7 +80,8 @@ bool CommandBuffer::IsInvalid() const {
 	return !m_active;
 }
 
-vk::CommandBuffer CommandBuffer::Handle() const {
+// Not inlined: the site table below keys the direct writes by the caller's return address.
+KYTY_NOINLINE vk::CommandBuffer CommandBuffer::Handle() const {
 	m_handle_uses++;
 	EXIT_IF(IsInvalid());
 	// A command recorded here while a packet is being filled would be executed before that packet,
@@ -96,6 +106,11 @@ vk::CommandBuffer CommandBuffer::Handle() const {
 		FS::Add(FS::Counter::RecordDirect, 1);
 		if (t0 != 0) {
 			FS::Add(FS::Counter::RecordDirectNs, FS::NowNs() - t0);
+		}
+		if (FS::Enabled()) {
+			// Session 62, item 2 ceiling: the direct writes by call site (FrameTrace-direct:).
+			FS::AddSite(FS::Table::DirectSites, FS::SiteName(KYTY_RETURN_ADDRESS()),
+			            t0 != 0 ? FS::NowNs() - t0 : 0);
 		}
 	}
 	return m_buffer;
@@ -231,6 +246,23 @@ void CommandBuffer::PushBindingsPacket(vk::PipelineBindPoint bind_point, vk::Pip
 	EXIT_IF(m_recorder == nullptr);
 	m_handle_uses++;
 	m_recorder->PushBindings(bind_point, layout, set, push_stages, push, writes, buffers, images);
+}
+
+void CommandBuffer::PushImageBarriersPacket(
+    std::span<const vk::ImageMemoryBarrier2> barriers) const {
+	EXIT_IF(m_recorder == nullptr || IsInvalid());
+	m_handle_uses++;
+	m_recorder->PushImageBarriers(barriers);
+	Common::FrameStats::Add(Common::FrameStats::Counter::RecordImageBarrierPackets, 1);
+}
+
+void CommandBuffer::PushBufferUploadPacket(vk::Buffer source, vk::Buffer destination,
+                                           uint64_t                        destination_size,
+                                           std::span<const vk::BufferCopy> copies) const {
+	EXIT_IF(m_recorder == nullptr || IsInvalid());
+	m_handle_uses++;
+	m_recorder->PushBufferUpload(source, destination, destination_size, copies);
+	Common::FrameStats::Add(Common::FrameStats::Counter::RecordUploadPackets, 1);
 }
 
 void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) const {

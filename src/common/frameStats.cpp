@@ -7,6 +7,7 @@
 #include <array>
 #include <atomic>
 #include <cstdlib>
+#include <map>
 #include <mutex>
 #include <vector>
 #include <unordered_map>
@@ -572,6 +573,20 @@ uint64_t ModuleOffset(const void* address) {
 #else
 	return reinterpret_cast<uint64_t>(address);
 #endif
+}
+
+const char* SiteName(const void* address) {
+	static std::mutex                         mutex;
+	static std::map<const void*, std::string> names;
+	std::lock_guard                           lock(mutex);
+	auto [it, inserted] = names.try_emplace(address);
+	if (inserted) {
+		char text[32];
+		std::snprintf(text, sizeof(text), "+0x%llx",
+		              static_cast<unsigned long long>(ModuleOffset(address)));
+		it->second = text;
+	}
+	return it->second.c_str();
 }
 
 SiteScope::SiteScope(const char* site): m_previous(t_site) {

@@ -229,7 +229,7 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 
 void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destination_access,
                     std::optional<ImageSubresourceRange> range, vk::CommandBuffer command_buffer,
-                    RenderPassEnd why, bool atomic_write) {
+                    RenderPassEnd why, bool atomic_write, bool packet_ok) {
 	const auto transfer_access =
 	    vk::AccessFlagBits2::eTransferRead | vk::AccessFlagBits2::eTransferWrite;
 	vk::PipelineStageFlags2 destination_stage {};
@@ -250,6 +250,19 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImageBarriers, barriers.size());
 	Common::DrawStat::Mark(Common::DrawStat::Barrier);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
+	if (command_buffer == nullptr && packet_ok &&
+	    Common::Gates::Enabled(Common::Gates::Gate::RecordImageBarriers)) {
+		// Gate "recimg": a lazy-handle transition is published as records (the pass end it
+		// forces, then the barrier) instead of draining the record thread for a direct write.
+		// The layout bookkeeping above stays on this thread; the record carries copies. No
+		// GPU-time mark: packets are wanted only while the profiler is off.
+		auto& command = m_scheduler.Current();
+		if (!command.IsInvalid() && command.PacketsWanted()) {
+			command.EndRenderingPacket(why);
+			command.PushImageBarriersPacket(barriers);
+			return;
+		}
+	}
 	m_scheduler.EndRendering(why);
 	if (command_buffer == nullptr) {
 		// Lazy handle (AcquireRenderTargets, CommitBindings): taken only when a barrier is issued,

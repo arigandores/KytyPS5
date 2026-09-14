@@ -62,6 +62,9 @@ enum class RecordOp : uint16_t {
 	PassBegin,   // RenderState: vkCmdBeginRendering
 	Bindings,    // RecordBindings: push constants, then push descriptors or update + bind
 	Commands,    // RecordCmd stream: the tail of one draw or one dispatch
+	// Session 62 (gates "recimg", "recup"): the two direct-write sites of the draw thread.
+	ImageBarriers, // uint32_t count, uint32_t reserved, vk::ImageMemoryBarrier2[count]: vkCmdPipelineBarrier2
+	BufferUpload,  // RecordBufferUpload, vk::BufferCopy[count]: barrier, vkCmdCopyBuffer, barrier
 };
 
 struct alignas(16) RecordHeader {
@@ -122,6 +125,19 @@ struct RecordDescriptorWrite {
 static_assert(std::is_trivially_copyable_v<RecordBindings>);
 static_assert(std::is_trivially_copyable_v<RecordDescriptorWrite>);
 static_assert(sizeof(RecordBindings) == 40 && sizeof(RecordDescriptorWrite) == 24);
+
+// RecordOp::BufferUpload: this header, then vk::BufferCopy[count]. The same three calls as the
+// direct path of BufferCache::RecordBufferCopies (a whole-buffer barrier pair around the copy).
+struct RecordBufferUpload {
+	vk::Buffer source;
+	vk::Buffer destination;
+	uint64_t   destination_size;
+	uint32_t   count;
+	uint32_t   reserved;
+};
+static_assert(std::is_trivially_copyable_v<RecordBufferUpload> && sizeof(RecordBufferUpload) == 32);
+static_assert(std::is_trivially_copyable_v<vk::ImageMemoryBarrier2> &&
+              alignof(vk::ImageMemoryBarrier2) <= 8 && alignof(vk::BufferCopy) <= 8);
 static_assert(sizeof(vk::DescriptorBufferInfo) == 24 && sizeof(vk::DescriptorImageInfo) == 24);
 static_assert(sizeof(vk::Buffer) == 8 && sizeof(vk::Pipeline) == 8 &&
               sizeof(vk::PipelineLayout) == 8 && sizeof(vk::DeviceSize) == 8);
@@ -198,6 +214,11 @@ public:
 	                  std::span<const vk::WriteDescriptorSet>   writes,
 	                  std::span<const vk::DescriptorBufferInfo> buffers,
 	                  std::span<const vk::DescriptorImageInfo>  images);
+	// Session 62. The barriers are copied; the handles inside stay valid until the buffer is
+	// submitted (deferred destruction). Draw-stream records: throttled by knob "recpubn".
+	void PushImageBarriers(std::span<const vk::ImageMemoryBarrier2> barriers);
+	void PushBufferUpload(vk::Buffer source, vk::Buffer destination, uint64_t destination_size,
+	                      std::span<const vk::BufferCopy> copies);
 	// In-place publication, one open record at a time: BeginRecord reserves `max_payload` bytes
 	// and returns them, EndRecord publishes the first `payload_size` of them, AbandonRecord none.
 	[[nodiscard]] uint8_t* BeginRecord(RecordOp op, uint32_t max_payload);

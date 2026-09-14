@@ -95,6 +95,11 @@ enum class Gate : uint32_t {
 	DrawAheadWitnessPtr, // KYTY_DRAW_AHEAD_WITNESS_PTR, file name "dawitptr"
 	// Session 61: the M1 walk prefetches the slot probes of a request a few requests ahead.
 	DrawAheadQueuePrefetch, // KYTY_DRAW_AHEAD_QUEUE_PREFETCH, file name "daqpre"
+	// Session 62, item 3 ceiling (diagnostic): shadow compare of every stream-ring constant copy.
+	CbStat,         // KYTY_CB_STAT,             file name "cbstat"
+	// Session 62, item 2: lazy-handle image transitions and buffer uploads as records.
+	RecordImageBarriers, // KYTY_RECORD_IMAGE_BARRIERS, file name "recimg"
+	RecordUploads,       // KYTY_RECORD_UPLOADS,        file name "recup"
 	Count,
 };
 

@@ -545,6 +545,19 @@ enum class Counter : uint32_t {
 	ArmSyncFlushes,  // synchronous paths that flushed a pending arming before clearing dirty bits
 	ArmFlushSkips,   // read-only uploads that skipped the range protection flush
 	ArmBad,          // self-check (gate "armcheck"): a settled page found host-writable
+	// Session 61 ceilings. Item 2: buffer uploads recorded back to back.
+	SyncBufUploadSeries, // uploads with no draw or dispatch of this thread since the previous upload
+	// Item 3: an M1 witness by tracking-region write epochs instead of guest words.
+	DrawAheadEpochSame,    // verified witnesses whose regions' write epochs had not moved since the worker built them
+	DrawAheadEpochMoved,   // ... whose epochs had moved: an epoch witness would have been stale here
+	DrawAheadEpochRegions, // tracking regions per verified witness (sum)
+	DrawAheadStaleFirst,   // stale witnesses whose first run already differed
+	DrawAheadStaleEpochSame, // stale witnesses whose epochs had not moved: an epoch witness would be unsound here
+	// Session 61, knob "recpubn".
+	RecordThrottled,       // draw-stream records staged by the publish throttle
+	DrawAheadUnchecked,    // M1 results taken with the witness check skipped (gate "dawitness" off)
+	DrawAheadDirect,       // witnesses verified through the recorded host pointers (gate "dawitptr")
+	DrawAheadDirectNo,     // ... that fell back to the page lookups (map epoch moved, or no pointers)
 	Count
 };
 

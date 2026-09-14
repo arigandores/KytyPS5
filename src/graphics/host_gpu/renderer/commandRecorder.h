@@ -261,6 +261,7 @@ private:
 	RecordOp                   m_open_op    = RecordOp::Pad;
 	uint64_t                   m_head_local = 0; // bytes of every ended record, published or staged
 	uint64_t                   m_published  = 0; // the value of the last m_head store
+	uint32_t                   m_since_publish = 0; // draw-stream records ended since it (knob "recpubn")
 	uint64_t                   m_tail_seen  = 0; // an m_tail read before: a lower bound of the tail
 	std::thread::id            m_producer;
 	uint64_t                   m_records    = 0;

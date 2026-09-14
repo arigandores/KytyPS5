@@ -93,6 +93,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 60, item 4.
     {"KYTY_ARM_DEFER", "armdefer", false},
     {"KYTY_ARM_DEFER_VERIFY", "armcheck", false},
+    {"KYTY_DRAW_AHEAD_WITNESS", "dawitness", true},
+    {"KYTY_DRAW_AHEAD_WITNESS_PTR", "dawitptr", false},
+    {"KYTY_DRAW_AHEAD_QUEUE_PREFETCH", "daqpre", false},
 }};
 
 struct KnobDefinition {
@@ -112,6 +115,7 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_PROCESS_PIN", "procpin", 0, 0xffffffffu},
     {"KYTY_FAULT_WINDOW_KB", "faultkb", 64, 4096},
     {"KYTY_DRAW_AHEAD_WALK_LEAD", "dawalklead", 1, 64},
+    {"KYTY_RECORD_PUBLISH_N", "recpubn", 0, 4096},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

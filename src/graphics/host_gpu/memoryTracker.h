@@ -62,6 +62,13 @@ public:
 		bool        operator==(const RegionStamp&) const noexcept = default;
 	};
 	[[nodiscard]] static constexpr size_t RegionCount() noexcept { return REGION_COUNT; }
+	// The tracker of the buffer cache, for lock-free epoch reads off the GuestGpu thread (session
+	// 61, M1 epoch-witness ceiling). The first tracker built is the primary one and unregisters
+	// itself when destroyed; the tests build their own and never ask.
+	[[nodiscard]] static const MemoryTracker* Primary() noexcept {
+		return s_primary.load(std::memory_order_acquire);
+	}
+	inline static std::atomic<const MemoryTracker*> s_primary {nullptr};
 	[[nodiscard]] RegionStamp RegionWriteStamp(uint64_t index) const noexcept {
 		if (index >= REGION_COUNT) {
 			return {};

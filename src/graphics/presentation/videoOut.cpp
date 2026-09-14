@@ -1721,6 +1721,17 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"arm_flush", FS::Counter::ArmSyncFlushes, false},
 				    {"arm_noflush", FS::Counter::ArmFlushSkips, false},
 				    {"arm_bad", FS::Counter::ArmBad, false},
+				    // Session 61 ceilings (items 2 and 3).
+				    {"up_series", FS::Counter::SyncBufUploadSeries, false},
+				    {"da_ep_same", FS::Counter::DrawAheadEpochSame, false},
+				    {"da_ep_moved", FS::Counter::DrawAheadEpochMoved, false},
+				    {"da_ep_regions", FS::Counter::DrawAheadEpochRegions, false},
+				    {"da_stale_r1", FS::Counter::DrawAheadStaleFirst, false},
+				    {"da_stale_ep_same", FS::Counter::DrawAheadStaleEpochSame, false},
+				    {"rec_throttle", FS::Counter::RecordThrottled, false},
+				    {"da_unchecked", FS::Counter::DrawAheadUnchecked, false},
+				    {"da_direct", FS::Counter::DrawAheadDirect, false},
+				    {"da_direct_no", FS::Counter::DrawAheadDirectNo, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

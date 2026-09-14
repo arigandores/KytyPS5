@@ -53,6 +53,9 @@ inline constinit thread_local uint32_t t_shift = 0;
 inline constinit thread_local uint32_t t_edges = 0;
 // Marks between two counted draws (after a draw command, early exits, dispatches), both zones.
 inline constinit thread_local uint32_t t_between = 0;
+// Session 61 (item 2 ceiling, always on): draws and dispatches started by this thread. A buffer
+// upload that finds it unchanged since the previous upload followed that upload back to back.
+inline constinit thread_local uint32_t t_ops = 0;
 
 [[nodiscard]] inline bool On() noexcept {
 	return g_on.load(std::memory_order_relaxed);

@@ -251,7 +251,8 @@ uint8_t* CommandRecorder::Reserve(uint32_t bytes) {
 }
 
 void CommandRecorder::Publish() {
-	m_published = m_head_local;
+	m_published     = m_head_local;
+	m_since_publish = 0;
 	// Dekker handshake with Loop, which stores its flag and then looks at the head: this stores the
 	// head and then looks at the flag. Gate "recrelax" off: a sequentially consistent store (xchg
 	// on x64). On: a plain store, which does not hold up retirement while the spinning record thread
@@ -337,6 +338,21 @@ void CommandRecorder::EndRecord(uint32_t payload_size, bool publish) {
 	FS::Add(FS::Counter::RecordBytes, bytes);
 	if (op >= RecordOp::PassEnd) {
 		FS::Add(FS::Counter::RecordPackBytes, bytes);
+		if (publish) {
+			// Knob "recpubn" (session 61): the head store is an xchg on the line the spinning
+			// record thread reads, from the other CCD most of the time - 4.6 % of the GuestGpu
+			// thread at that one instruction in Sky Garden, ~10.6k publishes a frame. Publish the
+			// draw stream at most every N records; the record thread is idle most of the frame,
+			// and everything that needs the records visible now publishes the staged tail itself,
+			// exactly as with gate "recbatch": a direct Handle() before its drain, a submit
+			// (EndBuffer is not a draw-stream record and is never throttled), a wait for ring
+			// space, Stop. Records below PassEnd are not throttled either.
+			const auto every = Common::Gates::Value(Common::Gates::Knob::RecordPublishEvery);
+			if (every > 1u && ++m_since_publish < every) {
+				publish = false;
+				FS::Add(FS::Counter::RecordThrottled, 1); // counted in rec_staged as well
+			}
+		}
 	}
 	if (publish) {
 		Publish();
@@ -454,7 +470,9 @@ void RecordCommandWriter::Commit(bool dispatch) {
 	const uint32_t words[2] {stream, 0u};
 	std::memcpy(m_data, words, sizeof(words));
 	m_data = nullptr;
-	// Always published: with gate "recbatch" this carries the draw's staged pass and bindings records.
+	// Published (unless knob "recpubn" stages it too): with gate "recbatch" this carries the draw's
+	// staged pass and bindings records; a staged tail is published by Handle(), a submit, Reserve
+	// or Stop.
 	m_recorder.EndRecord(m_used, true);
 	namespace FS = Common::FrameStats;
 	FS::Add(dispatch ? FS::Counter::RecordPackDispatches : FS::Counter::RecordPackDraws, 1);
@@ -462,6 +480,12 @@ void RecordCommandWriter::Commit(bool dispatch) {
 
 void CommandRecorder::Drain() {
 	EXIT_IF(std::this_thread::get_id() == m_thread.get_id());
+	if (m_producer == std::this_thread::get_id()) {
+		// A drain by the producer means "everything recorded so far": what it staged (gate
+		// "recbatch", knob "recpubn") is part of that. Another thread cannot publish and waits
+		// for the published head only - what is staged belongs to a buffer not yet ended.
+		PublishStaged();
+	}
 	namespace FS      = Common::FrameStats;
 	const auto target = m_head.load(std::memory_order_acquire);
 	FS::Add(FS::Counter::RecordTailReads, 1);

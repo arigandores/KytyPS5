@@ -1701,6 +1701,7 @@ void CommandProcessor::DrawIndex(DrawIndexArgs args) {
 		     args.base_vertex, args.first_instance);
 	}
 	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
+	Common::DrawStat::t_ops++;
 	m_renderer.GetRenderExecutor().DrawIndex(m_submit_id, CurrentBuffer(), args);
 }
 
@@ -1982,6 +1983,7 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 
 		{
 			Common::FrameStats::Scope dispatch_scope(Common::FrameStats::Counter::DispatchNs, Common::FrameStats::Counter::Dispatches);
+			Common::DrawStat::t_ops++;
 			m_renderer.GetRenderExecutor().DispatchDirect(m_submit_id, CurrentBuffer(), thread_group_x,
 			                                              thread_group_y, thread_group_z, mode,
 			                                              indirect_args_addr);
@@ -2048,6 +2050,7 @@ void CommandProcessor::DrawIndexAuto(DrawAutoArgs args) {
 		args.instance_count = m_num_instances;
 	}
 	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
+	Common::DrawStat::t_ops++;
 	m_renderer.GetRenderExecutor().DrawAuto(m_submit_id, CurrentBuffer(), args);
 }
 

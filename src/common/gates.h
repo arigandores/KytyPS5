@@ -87,6 +87,14 @@ enum class Gate : uint32_t {
 	// Session 60, item 4: write watchers of read-only uploads armed by the protection worker.
 	ArmDefer,       // KYTY_ARM_DEFER,           file name "armdefer"
 	ArmDeferCheck,  // KYTY_ARM_DEFER_VERIFY,    file name "armcheck"
+	// Session 61, ceiling experiment: M1 results taken without the witness check (UNSOUND - a
+	// guest write between the worker read and the draw goes unnoticed; measurement only).
+	DrawAheadWitness, // KYTY_DRAW_AHEAD_WITNESS, file name "dawitness" (default 1; 0 = skip the check)
+	// Session 61: the witness compares live runs through the worker's host pointers (backing map
+	// epoch as witness), prefetched up front, instead of a page-cache lookup per run.
+	DrawAheadWitnessPtr, // KYTY_DRAW_AHEAD_WITNESS_PTR, file name "dawitptr"
+	// Session 61: the M1 walk prefetches the slot probes of a request a few requests ahead.
+	DrawAheadQueuePrefetch, // KYTY_DRAW_AHEAD_QUEUE_PREFETCH, file name "daqpre"
 	Count,
 };
 
@@ -101,6 +109,7 @@ enum class Knob : uint32_t {
 	ProcessPin,         // KYTY_PROCESS_PIN,       file name "procpin" (0 start mask, 1 L3 group, else mask)
 	FaultWindowKb,      // KYTY_FAULT_WINDOW_KB,   file name "faultkb" (CPU write-fault window, KiB; 4 = one page, default 64)
 	DrawAheadWalkLead,  // KYTY_DRAW_AHEAD_WALK_LEAD, file name "dawalklead" (gate "dawalk": walk at most this many submissions ahead of processing, 0 = no hold)
+	RecordPublishEvery, // KYTY_RECORD_PUBLISH_N,  file name "recpubn" (session 61: publish the record head at most every N draw-stream records; 0/1 = every record)
 	Count,
 };
 

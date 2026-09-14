@@ -802,6 +802,15 @@ void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploads, 1);
 	Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploadBytes, total_size);
+	{
+		// Session 61, item 2 ceiling: an upload with no draw or dispatch started by this thread
+		// since the previous upload could have shared its barrier pair and pass break.
+		thread_local uint32_t last_ops = UINT32_MAX;
+		if (last_ops == Common::DrawStat::t_ops) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SyncBufUploadSeries, 1);
+		}
+		last_ops = Common::DrawStat::t_ops;
+	}
 	auto& command = m_scheduler.Current();
 	command.EndRendering(RenderPassEnd::BufferUpload);
 	const auto native = command.Handle();

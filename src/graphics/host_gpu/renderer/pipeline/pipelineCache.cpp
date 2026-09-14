@@ -21,6 +21,7 @@
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/memoryTracker.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/shaderCompiler.h"
 #include "common/timer.h"
@@ -326,6 +327,8 @@ struct SrtReadLog {
 		uint8_t  clean   = 0; // read through the GPU-clean (specialization) reader
 		uint8_t  ok      = 0;
 		uint8_t  paged   = 0; // served from a validated page (may be checked as part of a run)
+		// Host pointer the word was read through (live paged reads only; gate "dawitptr").
+		const uint8_t* backing = nullptr;
 	};
 
 	static constexpr size_t MaxEntries = 1024;
@@ -333,13 +336,15 @@ struct SrtReadLog {
 	std::vector<Entry> entries;
 	bool               overflow = false;
 
-	void Note(uint64_t address, uint32_t value, bool clean, bool ok, bool paged) {
+	void Note(uint64_t address, uint32_t value, bool clean, bool ok, bool paged,
+	          const uint8_t* backing = nullptr) {
 		if (entries.size() >= MaxEntries) {
 			overflow = true;
 			return;
 		}
 		entries.push_back({address, value, static_cast<uint8_t>(clean ? 1 : 0),
-		                   static_cast<uint8_t>(ok ? 1 : 0), static_cast<uint8_t>(paged ? 1 : 0)});
+		                   static_cast<uint8_t>(ok ? 1 : 0), static_cast<uint8_t>(paged ? 1 : 0),
+		                   backing});
 	}
 };
 
@@ -426,7 +431,7 @@ bool ReadShaderLiveMemory(void* userdata, uint64_t address, uint32_t* value) {
 		if (const auto* backing = LiveBackingPage(cache, page); backing != nullptr) {
 			std::memcpy(value, backing + (address - page), sizeof(*value));
 			if (cache->log != nullptr) {
-				cache->log->Note(address, *value, false, true, true);
+				cache->log->Note(address, *value, false, true, true, backing + (address - page));
 			}
 			return true;
 		}
@@ -471,6 +476,8 @@ struct Witness {
 		uint64_t address = 0;
 		uint32_t first   = 0; // index into that reader's value array
 		uint32_t count   = 0;
+		// Host pointer of the first word as the worker read it (live runs; gate "dawitptr").
+		const uint8_t* backing = nullptr;
 	};
 	struct Single { // a read the page path could not serve (unaligned, or unreadable)
 		uint64_t address = 0;
@@ -484,6 +491,17 @@ struct Witness {
 	std::vector<Run>      clean_runs;
 	std::vector<uint32_t> clean_values;
 	std::vector<Single>   singles;
+	// Session 61, item 3 ceiling: the tracking regions the recorded words lie in, with their write
+	// epochs as they stood when the witness was built (lock free, MemoryTracker::RegionWriteStamp).
+	// Statistics only: nothing decides on them.
+	struct Region {
+		uint32_t                   index = 0;
+		MemoryTracker::RegionStamp stamp;
+	};
+	std::vector<Region> regions;
+	// Gate "dawitptr": the guest backing map epoch the worker read under, taken before its first
+	// read; 0 when the pointers may not be used (a memo built on the draw thread).
+	uint64_t map_epoch = 0;
 
 	[[nodiscard]] size_t Words() const {
 		return live_values.size() + clean_values.size() + singles.size();
@@ -495,7 +513,8 @@ struct Witness {
 		return live_runs.size() + clean_runs.size() + singles.size();
 	}
 
-	void Build(const SrtReadLog& log) {
+	void Build(const SrtReadLog& log, uint64_t epoch = 0) {
+		map_epoch = epoch;
 		live_runs.clear();
 		live_values.clear();
 		clean_runs.clear();
@@ -510,13 +529,39 @@ struct Witness {
 			auto&      values = read.clean != 0 ? clean_values : live_values;
 			const bool joins  = !runs.empty() &&
 			                   runs.back().address + runs.back().count * sizeof(uint32_t) == read.address &&
-			                   ((runs.back().address ^ read.address) & ~(ShaderPageSize - 1)) == 0;
+			                   ((runs.back().address ^ read.address) & ~(ShaderPageSize - 1)) == 0 &&
+			                   (runs.back().backing == nullptr
+			                        ? read.backing == nullptr
+			                        : runs.back().backing + runs.back().count * sizeof(uint32_t) ==
+			                              read.backing);
 			if (joins) {
 				runs.back().count++;
 			} else {
-				runs.push_back({read.address, static_cast<uint32_t>(values.size()), 1});
+				runs.push_back({read.address, static_cast<uint32_t>(values.size()), 1, read.backing});
 			}
 			values.push_back(read.value);
+		}
+		regions.clear();
+		if (const auto* tracker = MemoryTracker::Primary();
+		    tracker != nullptr && Common::FrameStats::Enabled()) {
+			auto note = [&](uint64_t address) {
+				const auto index = static_cast<uint32_t>(address / TRACKER_REGION_SIZE);
+				for (const auto& region: regions) {
+					if (region.index == index) {
+						return;
+					}
+				}
+				regions.push_back({index, tracker->RegionWriteStamp(index)});
+			};
+			for (const auto& run: live_runs) {
+				note(run.address); // a run never leaves its page
+			}
+			for (const auto& run: clean_runs) {
+				note(run.address);
+			}
+			for (const auto& single: singles) {
+				note(single.address);
+			}
 		}
 	}
 };
@@ -541,22 +586,64 @@ struct Witness {
 }
 
 // True while every recorded word still reads back, through its reader, as recorded.
-bool VerifyWitness(const Witness& witness, ShaderReadCache& cache) {
+// `failed_run`, when given, receives the ordinal (over live runs, clean runs, singles) of the
+// first run that differed (session 61, item 3 ceiling).
+bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* failed_run = nullptr) {
+	uint32_t ordinal = 0;
+	// Gate "dawitptr": while the guest backing map is the one the worker read under, the host
+	// pointers it read through are still the pages' pointers (the same witness the persistent
+	// page table of ShaderReadCache relies on), so the live runs compare through them - the
+	// lines prefetched together first, one page-cache lookup per run saved.
+	const bool direct = witness.map_epoch != 0 &&
+	                    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadWitnessPtr) &&
+	                    witness.map_epoch == Libs::LibKernel::Memory::BackingMapEpoch();
+	if (Common::FrameStats::Enabled() && witness.map_epoch != 0 &&
+	    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadWitnessPtr)) {
+		// Only witnesses the gate could have served: a fallback here means the map epoch moved.
+		Common::FrameStats::Add(direct ? Common::FrameStats::Counter::DrawAheadDirect
+		                               : Common::FrameStats::Counter::DrawAheadDirectNo,
+		                        1);
+	}
+	if (direct) {
+		for (const auto& run: witness.live_runs) {
+			if (run.backing != nullptr) {
+				_mm_prefetch(reinterpret_cast<const char*>(run.backing), _MM_HINT_T0);
+			}
+		}
+	}
 	for (const auto& run: witness.live_runs) {
+		if (direct && run.backing != nullptr) {
+			if (!SameRecordedWords(run.backing, &witness.live_values[run.first], run.count)) {
+				if (failed_run != nullptr) {
+					*failed_run = ordinal;
+				}
+				return false;
+			}
+			ordinal++;
+			continue;
+		}
 		const auto* backing = LiveBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
 		if (backing == nullptr ||
 		    !SameRecordedWords(backing + (run.address & (ShaderPageSize - 1)),
 		                       &witness.live_values[run.first], run.count)) {
+			if (failed_run != nullptr) {
+				*failed_run = ordinal;
+			}
 			return false;
 		}
+		ordinal++;
 	}
 	for (const auto& run: witness.clean_runs) {
 		const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
 		if (backing != nullptr) {
 			if (!SameRecordedWords(backing + (run.address & (ShaderPageSize - 1)),
 			                       &witness.clean_values[run.first], run.count)) {
+				if (failed_run != nullptr) {
+					*failed_run = ordinal;
+				}
 				return false;
 			}
+			ordinal++;
 			continue;
 		}
 		// The page is not GPU-clean as a whole any more: the clean reader decides per word, and
@@ -565,15 +652,37 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache) {
 			uint32_t value = 0;
 			if (!ReadShaderGuestMemory(&cache, run.address + i * sizeof(uint32_t), &value) ||
 			    value != witness.clean_values[run.first + i]) {
+				if (failed_run != nullptr) {
+					*failed_run = ordinal;
+				}
 				return false;
 			}
 		}
+		ordinal++;
 	}
 	for (const auto& single: witness.singles) {
 		uint32_t   value = 0;
 		const bool ok    = single.clean ? ReadShaderGuestMemory(&cache, single.address, &value)
 		                                : ReadShaderLiveMemory(&cache, single.address, &value);
 		if (ok != single.ok || (ok && value != single.value)) {
+			if (failed_run != nullptr) {
+				*failed_run = ordinal;
+			}
+			return false;
+		}
+		ordinal++;
+	}
+	return true;
+}
+
+// Session 61, item 3 ceiling: would a witness made only of the regions' write epochs still hold?
+bool WitnessEpochsHold(const Witness& witness) {
+	const auto* tracker = MemoryTracker::Primary();
+	if (tracker == nullptr) {
+		return false;
+	}
+	for (const auto& region: witness.regions) {
+		if (!(tracker->RegionWriteStamp(region.index) == region.stamp)) {
 			return false;
 		}
 	}
@@ -1951,7 +2060,53 @@ struct PipelineCache::ProgramCache {
 		const bool class_mode = Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass);
 		const bool counting   = FS::Enabled();
 		batch.clear();
-		for (const auto& request: requests) {
+		// Gate "daqpre" (session 61): the slot probes of a request `lookahead` requests ahead are
+		// prefetched (first two lines of each probe: the state, key and the start of the user
+		// data that Matches reads). Same hint and key rules as the loop below; a source whose
+		// class is not built yet is skipped - the loop builds it and takes the miss once.
+		const bool   prefetch_slots =
+		    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadQueuePrefetch) && ahead_slots != nullptr;
+		constexpr size_t lookahead = 4;
+		auto prefetch_request = [&](const PipelineCache::DrawAheadRequest& ahead) {
+			const auto  ahead_stage = ahead.pixel ? ShaderType::Pixel : ShaderType::Vertex;
+			const auto& ahead_hint  = ahead_hints[AheadHintIndex(ahead_stage, ahead.base, ahead.count)];
+			if (ahead.count > HW::UserSgprInfo::SGPRS_MAX || ahead_hint.sources[0] == nullptr ||
+			    ahead_hint.stage != ahead_stage || ahead_hint.base != ahead.base ||
+			    ahead_hint.count != ahead.count || ahead_hint.generation != memo_generation) {
+				return;
+			}
+			for (const auto* source: ahead_hint.sources) {
+				if (source == nullptr) {
+					continue;
+				}
+				uint64_t key = 0;
+				if (class_mode) {
+					if (source->plan_class == nullptr) {
+						continue;
+					}
+					key = source->plan_class->hash;
+				} else {
+					key = Fingerprint(*source);
+				}
+				const auto hash = AheadHash(key, ahead.base, ahead.user_hash);
+				for (size_t probe = 0; probe < 2; probe++) {
+					const auto* lines = reinterpret_cast<const char*>(
+					    &ahead_slots[(hash + probe) & (AheadSlotCount - 1)]);
+					_mm_prefetch(lines, _MM_HINT_T0);
+					_mm_prefetch(lines + 64, _MM_HINT_T0);
+				}
+			}
+		};
+		if (prefetch_slots) {
+			for (size_t index = 0; index < std::min(lookahead, requests.size()); index++) {
+				prefetch_request(requests[index]);
+			}
+		}
+		for (size_t request_index = 0; request_index < requests.size(); request_index++) {
+			const auto& request = requests[request_index];
+			if (prefetch_slots && request_index + lookahead < requests.size()) {
+				prefetch_request(requests[request_index + lookahead]);
+			}
 			const auto  stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
 			const auto& hint  = ahead_hints[AheadHintIndex(stage, request.base, request.count)];
 			if (request.count > HW::UserSgprInfo::SGPRS_MAX || hint.sources[0] == nullptr ||
@@ -2131,6 +2286,10 @@ struct PipelineCache::ProgramCache {
 		thread_local SrtReadLog log;
 		log.entries.clear();
 		log.overflow = false;
+		// Before the read cache validates its page table (gate "dawitptr"): a map change after this
+		// point - during the walk, or between this and the table check - reads as a moved epoch at
+		// the draw, and the recorded pointers are not used.
+		const auto map_epoch = Libs::LibKernel::Memory::BackingMapEpoch();
 		ShaderReadCache cache;
 		cache.log = &log;
 		const ShaderRecompiler::IR::SrtRuntime runtime {
@@ -2144,7 +2303,7 @@ struct PipelineCache::ProgramCache {
 		                    slot.source->resource_plan, runtime, slot.snapshot, slot.specialization) &&
 		                !log.overflow;
 		if (ok) {
-			slot.witness.Build(log);
+			slot.witness.Build(log, map_epoch);
 		}
 		if (timed) {
 			FS::Add(ok ? FS::Counter::DrawAheadDone : FS::Counter::DrawAheadFailed, 1);
@@ -2289,16 +2448,39 @@ struct PipelineCache::ProgramCache {
 				FS::Add(FS::Counter::DrawAheadCleanWords, slot.witness.clean_values.size());
 				FS::Add(FS::Counter::DrawAheadRuns, slot.witness.Runs());
 			}
-			if (!VerifyWitness(slot.witness, cache)) {
+			uint32_t failed_run = 0;
+			// Gate "dawitness" off (session 61, ceiling experiment, UNSOUND): take the result
+			// without comparing the recorded words.
+			const bool checked = Common::Gates::Enabled(Common::Gates::Gate::DrawAheadWitness);
+			if (!checked) {
+				FS::Add(FS::Counter::DrawAheadUnchecked, 1);
+			}
+			if (checked && !VerifyWitness(slot.witness, cache, &failed_run)) {
 				FS::Add(slot.walk >= ahead_processing.load(std::memory_order_relaxed)
 				            ? FS::Counter::DrawAheadStale
 				            : FS::Counter::DrawAheadStaleOld,
 				        1);
+				if (FS::Enabled()) {
+					// Session 61, item 3 ceiling.
+					if (failed_run == 0) {
+						FS::Add(FS::Counter::DrawAheadStaleFirst, 1);
+					}
+					if (!slot.witness.regions.empty() && WitnessEpochsHold(slot.witness)) {
+						FS::Add(FS::Counter::DrawAheadStaleEpochSame, 1);
+					}
+				}
 				Common::DrawStat::Mark(Common::DrawStat::M1);
 				// Guest words moved since the worker read them: no later draw can use it either.
 				slot.uses = 0;
 				slot.state.store(AheadEmpty, std::memory_order_release);
 				return false;
+			}
+			if (FS::Enabled() && !slot.witness.regions.empty()) {
+				// Session 61, item 3 ceiling: the words held; would the epochs have?
+				FS::Add(FS::Counter::DrawAheadEpochRegions, slot.witness.regions.size());
+				FS::Add(WitnessEpochsHold(slot.witness) ? FS::Counter::DrawAheadEpochSame
+				                                        : FS::Counter::DrawAheadEpochMoved,
+				        1);
 			}
 			if (slot.uses > 1) {
 				slot.uses--;

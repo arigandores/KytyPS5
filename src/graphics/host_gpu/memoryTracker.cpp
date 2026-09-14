@@ -9,9 +9,14 @@ static_assert(std::atomic<void*>::is_always_lock_free);
 
 MemoryTracker::MemoryTracker(PageManager& page_manager): m_page_manager(page_manager) {
 	m_regions = std::make_unique<std::atomic<RegionManager*>[]>(REGION_COUNT);
+	const MemoryTracker* expected = nullptr;
+	s_primary.compare_exchange_strong(expected, this, std::memory_order_acq_rel);
 }
 
-MemoryTracker::~MemoryTracker() = default;
+MemoryTracker::~MemoryTracker() {
+	const MemoryTracker* self = this;
+	s_primary.compare_exchange_strong(self, nullptr, std::memory_order_acq_rel);
+}
 
 #if KYTY_BUILD == KYTY_BUILD_DEBUG
 void MemoryTracker::ValidateGpuDirtyPages(const RangeSet& dirty, uint64_t vaddr, uint64_t size,

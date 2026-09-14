@@ -64,7 +64,8 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 57, A4 (record publish).
     {"KYTY_RECORD_BATCH", "recbatch", false},
     {"KYTY_RECORD_RELAXED", "recrelax", false},
-    {"KYTY_RECORD_PIN", "recpin", false},
+    // Session 63: on by default (Sky Garden -2.3...-3.6 % CPU per draw, three repeats).
+    {"KYTY_RECORD_PIN", "recpin", true},
     // Session 57, A1 (sticky pages).
     {"KYTY_STICKY_STAT", "stkstat", false},
     // Session 57, E1/E2/E9 (draw statistics).

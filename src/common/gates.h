@@ -58,7 +58,7 @@ enum class Gate : uint32_t {
 	// Session 57, A4 (record publish).
 	RecordBatch,    // KYTY_RECORD_BATCH,        file name "recbatch" (one publish per draw)
 	RecordRelaxed,  // KYTY_RECORD_RELAXED,      file name "recrelax" (head store without lock prefix)
-	RecordPin,      // KYTY_RECORD_PIN,          file name "recpin" (record thread follows "dapin")
+	RecordPin,      // KYTY_RECORD_PIN,          file name "recpin" (record thread follows "dapin"; default 1 since session 63)
 	// Session 57, A1 (sticky pages).
 	StickyStat,     // KYTY_STICKY_STAT,         file name "stkstat" (A1 ceiling counters only)
 	// Session 57, E1/E2/E9 (draw statistics).

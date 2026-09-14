@@ -96,8 +96,10 @@ KYTY_NOINLINE vk::CommandBuffer CommandBuffer::Handle() const {
 		// into the same buffer on this thread. Callers keep the returned handle for a whole draw
 		// or dispatch, so nothing may be published to the recorder before the next Handle(): the
 		// record thread would call vkCmd* on the same VkCommandBuffer while they still record.
-		namespace FS  = Common::FrameStats;
-		const auto t0 = FS::TimingsEnabled() ? FS::NowNs() : 0;
+		namespace FS = Common::FrameStats;
+		// Session 63: timed in lite frame trace as well (rec_direct_us, FrameTrace-direct:) - the
+		// wait for the record thread is the price of every direct write that is not a record yet.
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
 		if (m_recorder->Backlog() != 0) {
 			// The costly kind: this thread now waits for the record thread (rec_direct_busy).
 			FS::Add(FS::Counter::RecordDirectBusy, 1);
@@ -105,12 +107,10 @@ KYTY_NOINLINE vk::CommandBuffer CommandBuffer::Handle() const {
 		m_recorder->Drain();
 		FS::Add(FS::Counter::RecordDirect, 1);
 		if (t0 != 0) {
-			FS::Add(FS::Counter::RecordDirectNs, FS::NowNs() - t0);
-		}
-		if (FS::Enabled()) {
+			const auto spent = FS::NowNs() - t0;
+			FS::Add(FS::Counter::RecordDirectNs, spent);
 			// Session 62, item 2 ceiling: the direct writes by call site (FrameTrace-direct:).
-			FS::AddSite(FS::Table::DirectSites, FS::SiteName(KYTY_RETURN_ADDRESS()),
-			            t0 != 0 ? FS::NowNs() - t0 : 0);
+			FS::AddSite(FS::Table::DirectSites, FS::SiteName(KYTY_RETURN_ADDRESS()), spent);
 		}
 	}
 	return m_buffer;

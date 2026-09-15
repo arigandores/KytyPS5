@@ -20,6 +20,7 @@
 #include "libs/agc.h"
 #include "libs/audio.h"
 #include "libs/controller.h"
+#include "libs/libSaveData.h"
 #include "libs/libs.h"
 #include "libs/network.h"
 #include "loader/runtimeLinker.h"
@@ -159,6 +160,7 @@ static void Init(const Config::ConfigOptions& cfg, const std::filesystem::path& 
 	subsystems.Initialize<Libs::Network::Lifecycle>();
 	subsystems.Initialize<Libs::LibKernel::Memory::Lifecycle>();
 	subsystems.Initialize<Libs::LibKernel::FileSystem::Lifecycle>();
+	subsystems.Initialize<Libs::SaveData::Lifecycle>();
 	subsystems.Initialize<Libs::Controller::Lifecycle>();
 	subsystems.Initialize<Libs::Audio::Lifecycle>();
 	subsystems.Initialize<Libs::Graphics::Lifecycle>();

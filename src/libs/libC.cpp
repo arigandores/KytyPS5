@@ -55,10 +55,12 @@ struct CContext {
 	std::list<atexit_func_t> atexit;
 };
 
+// Mirrors Loader::EntryParams: the loader builds the block at the top of the guest stack, so the
+// array continues past this declaration and libc cannot know its capacity.
 struct InitEnvParams {
 	int         argc;
 	uint32_t    pad;
-	const char* argv[3];
+	const char* argv[1];
 };
 
 static int                g_argc = 0;
@@ -272,9 +274,9 @@ static KYTY_SYSV_ABI void init_env(const InitEnvParams* params) {
 		return;
 	}
 
-	constexpr int argv_capacity = static_cast<int>(sizeof(params->argv) / sizeof(params->argv[0]));
-
-	EXIT_NOT_IMPLEMENTED(params->argc < 0 || params->argc >= argv_capacity);
+	// Only a value that is obviously not an argument count is rejected; the block is the loader's
+	// and its capacity (Loader::GUEST_ARGV_MAX) is not visible here.
+	EXIT_NOT_IMPLEMENTED(params->argc < 0 || params->argc > 1024);
 
 	g_argc = params->argc;
 	g_argv = params->argv;
@@ -810,8 +812,10 @@ LIB_DEFINE(InitLibcInternal_1) {
 	LIB_FUNC("Q3VBxCXhUHs", LibcInternal::memcpy);
 	LIB_FUNC("+P6FRGH4LfA", LibcInternal::memmove);
 	LIB_FUNC("DfivPArhucg", LibcInternal::memcmp);
-	LIB_FUNC("aesyjrHVWy4", LibcInternal::strcmp);
-	LIB_FUNC("Ovb2dSJOAuE", LibcInternal::strncmp);
+	// The NIDs are sha1("strcmp" + salt) and sha1("strncmp" + salt); they were swapped here, so
+	// the guest's strcmp ran as strncmp with an uninitialised length (session 67, C:/kyty/s67/nid).
+	LIB_FUNC("Ovb2dSJOAuE", LibcInternal::strcmp);
+	LIB_FUNC("aesyjrHVWy4", LibcInternal::strncmp);
 	LIB_FUNC("j4ViWNHEgww", LibcInternal::strlen);
 	LIB_FUNC("5Xa2ACNECdo", LibcInternal::strcpy);
 	LIB_FUNC("6sJWiWSRuqk", LibcInternal::strncpy);

@@ -1261,7 +1261,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " dispatch_us=%llu faults=%llu fault_us=%llu wrm_stalls=%llu gpu_busy_us=%llu"
 			     " gpu_n=%llu cpu_main_us=%llu cpu_gpu_us=%llu cpu_present_us=%llu"
 			     " cpu_proc_us=%llu faults_gpu=%llu fault_gpu_us=%llu semwait_gpu_us=%llu"
-			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu" "\n",
+			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu"
+			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u" "\n",
 			     r.cfg->flip_status.count,
 			     static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),
 			     static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),
@@ -1276,7 +1277,12 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     static_cast<unsigned long long>((cur.proc - prev.proc) / 1000u),
 			     d(FS::Counter::FaultsGpu), dus(FS::Counter::FaultGpuNs),
 			     dus(FS::Counter::SemWaitGpuNs), d(FS::Counter::PriorityWaits),
-			     dus(FS::Counter::PriorityWaitNs), d(FS::Counter::Dmas), dus(FS::Counter::DmaNs));
+			     dus(FS::Counter::PriorityWaitNs), d(FS::Counter::Dmas), dus(FS::Counter::DmaNs),
+			     // The arm of the interval this line reports: Gates::Poll above ran before it and
+			     // already moved the schedule on, so the reported arm is the previous one.
+			     Common::Gates::ReportedArm(), Common::Gates::ReportedBlock(),
+			     FS::TakeMax(FS::Gauge::RtWidth), FS::TakeMax(FS::Gauge::RtHeight),
+			     FS::TakeMax(FS::Gauge::VpWidth), FS::TakeMax(FS::Gauge::VpHeight));
 			LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"
 			     " d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
 			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
@@ -1776,6 +1782,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"sh_lock_us", FS::Counter::ShadowLockNs, true},
 				    {"sh_trk_us", FS::Counter::ShadowTrackerNs, true},
 				    {"sh_wake", FS::Counter::ShadowWakes, false},
+				    // Session 67 watchdog (see the FrameTrace main line for the maxima).
+				    {"rt_att", FS::Counter::RtAttachments, false},
+				    {"rt_kpx", FS::Counter::RtPixelsK, false},
+				    {"vp_kpx", FS::Counter::VpPixelsK, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

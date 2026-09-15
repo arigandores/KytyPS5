@@ -390,6 +390,19 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffe
 	const auto& ctx = buffer.GetRegisters();
 
 	const auto&  vp = ctx.GetScreenViewport();
+	{
+		// Session 67 watchdog: the guest viewport, read from the registers rather than from the
+		// `viewports` array built below, whose clip_disable branch writes maxViewportDimensions and
+		// would pin the maximum for the rest of the run. yscale is negative on a flipped viewport.
+		const auto& guest  = vp.viewports[0];
+		const auto  width  = static_cast<uint64_t>(std::lround(std::fabs(guest.xscale) * 2.0F));
+		const auto  height = static_cast<uint64_t>(std::lround(std::fabs(guest.yscale) * 2.0F));
+		Common::FrameStats::NoteMax(Common::FrameStats::Gauge::VpWidth,
+		                            static_cast<uint32_t>(width));
+		Common::FrameStats::NoteMax(Common::FrameStats::Gauge::VpHeight,
+		                            static_cast<uint32_t>(height));
+		Common::FrameStats::Add(Common::FrameStats::Counter::VpPixelsK, width * height / 1024U);
+	}
 	vk::Extent2D framebuffer_extent {};
 	if (color_count > 0 && colors[0].image_id) {
 		framebuffer_extent = colors[0].Extent();
@@ -909,6 +922,14 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		                                     view.layer_count},
 		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
 		const auto extent       = target.Extent();
+		// Session 67 watchdog: the frame's largest colour target. Taken here, inside the loop over
+		// the attachments a draw actually binds, because `state` ends up clamped by the smallest of
+		// them and falls back to maxFramebufferWidth when a draw binds none.
+		Common::FrameStats::NoteMax(Common::FrameStats::Gauge::RtWidth, extent.width);
+		Common::FrameStats::NoteMax(Common::FrameStats::Gauge::RtHeight, extent.height);
+		Common::FrameStats::Add(Common::FrameStats::Counter::RtAttachments, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::RtPixelsK,
+		                        static_cast<uint64_t>(extent.width) * extent.height / 1024U);
 		state.width             = std::min(state.width, extent.width);
 		state.height            = std::min(state.height, extent.height);
 		state.num_layers        = std::min(state.num_layers, view.layer_count);

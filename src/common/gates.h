@@ -102,6 +102,10 @@ enum class Gate : uint32_t {
 	RecordUploads,       // KYTY_RECORD_UPLOADS,        file name "recup"
 	// Session 64, E6: the read-only binding resolution repeated inline on the GuestGpu thread.
 	ShadowInline,        // KYTY_SHADOW_INLINE,         file name "shadowinline"
+	// Session 67, infrastructure: the guest's save-data memory is kept on disk between runs. Read
+	// once when the game sets its memory up (about seven seconds in), so turning this on mid-run
+	// only enables writing.
+	SavePersist,         // KYTY_SAVE_PERSIST,          file name "savepersist"
 	Count,
 };
 
@@ -131,6 +135,14 @@ inline constinit std::array<std::atomic<bool>, static_cast<size_t>(Gate::Count)>
 inline constinit std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)> g_knobs {};
 inline constinit std::atomic<bool>                                                   g_ready {false};
 
+// KYTY_GATE_SCHEDULE: the arm and block of the schedule running now, and the ones of the frame
+// interval the caller is about to report. Poll runs before that line is logged, so the interval
+// it reports was lived under the previous arm.
+inline constinit std::atomic<uint32_t> g_arm {0};
+inline constinit std::atomic<uint32_t> g_block {0};
+inline constinit std::atomic<uint32_t> g_arm_reported {0};
+inline constinit std::atomic<uint32_t> g_block_reported {0};
+
 [[nodiscard]] bool     EnabledSlow(Gate gate) noexcept;
 [[nodiscard]] uint32_t ValueSlow(Knob knob) noexcept;
 
@@ -152,7 +164,16 @@ inline uint32_t Value(Knob knob) noexcept {
 	return Detail::g_knobs[static_cast<size_t>(knob)].load(std::memory_order_relaxed);
 }
 
-// Re-reads the gate file (if any) and publishes changes. Called once per flip.
+// The arm and block of the interval a caller is about to report (see g_arm_reported).
+inline uint32_t ReportedArm() noexcept {
+	return Detail::g_arm_reported.load(std::memory_order_relaxed);
+}
+inline uint32_t ReportedBlock() noexcept {
+	return Detail::g_block_reported.load(std::memory_order_relaxed);
+}
+
+// Re-reads the gate file (if any), advances the schedule (if any) and publishes changes. Called
+// once per flip.
 void Poll(uint32_t frame) noexcept;
 
 } // namespace Common::Gates

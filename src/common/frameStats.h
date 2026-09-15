@@ -597,6 +597,23 @@ enum class Counter : uint32_t {
 	ShadowLockNs,     // time acquiring TextureCache::m_lock inside the probes
 	ShadowTrackerNs,  // time in the locked tracker queries inside the buffer probes
 	ShadowWakes,      // condition-variable wake-ups the producer issued
+	// Session 67 watchdog: the resolution of the work itself, not of the largest target. Divided
+	// by rt_att and by draws they are the mean pixel area of an attachment and of a viewport, and
+	// those are what a step of the resolution ladder moves.
+	RtAttachments,    // colour attachments bound by the draws of this frame (rt_att)
+	RtPixelsK,        // ... their width * height, in units of 1024 pixels (rt_kpx)
+	VpPixelsK,        // guest viewport area per draw, same units (vp_kpx)
+	Count
+};
+
+// Session 67 watchdog: per-frame values that are not sums. A gauge holds the largest value a
+// frame saw and the flip takes it and resets it, so it is independent of the lean limit of
+// Counter and of the shard sum. Printed at the end of the FrameTrace main line.
+enum class Gauge : uint32_t {
+	RtWidth,  // widest colour render target a draw of this frame bound (rt_w)
+	RtHeight, // ... its height (rt_h)
+	VpWidth,  // widest guest viewport of this frame, |xscale| * 2 (vp_w)
+	VpHeight, // ... |yscale| * 2 (vp_h)
 	Count
 };
 
@@ -654,6 +671,9 @@ inline constinit std::atomic<uint32_t> g_count_limit {0};
 inline constinit bool                  g_timings = false;
 // No initializer to run, so no TLS guard: the shard is attached by the first Add of a thread.
 inline constinit thread_local Shard*   t_shard   = nullptr;
+// Gauges are global rather than sharded: a maximum does not sum across threads. Read-mostly, so
+// the relaxed load of NoteMax stays in the local cache while the frame's maximum does not grow.
+inline constinit std::array<std::atomic<uint32_t>, static_cast<size_t>(Gauge::Count)> g_gauges {};
 
 [[nodiscard]] Shard* AttachShard();
 
@@ -679,6 +699,18 @@ inline void Add(Counter counter, uint64_t value) {
 	auto& slot = shard->counters[index];
 	slot.store(slot.load(std::memory_order_relaxed) + value, std::memory_order_relaxed);
 }
+
+// Raises a gauge to `value` if the frame has not seen a larger one. One relaxed load per call and
+// a store only while the maximum grows, which after the first draws of a frame is never.
+inline void NoteMax(Gauge gauge, uint32_t value) {
+	auto& slot = Detail::g_gauges[static_cast<size_t>(gauge)];
+	if (slot.load(std::memory_order_relaxed) < value) {
+		slot.store(value, std::memory_order_relaxed);
+	}
+}
+
+// Reads a gauge and resets it for the next frame. Called once per flip.
+[[nodiscard]] uint32_t TakeMax(Gauge gauge);
 
 // Gate "fslean": count only the FrameTrace main line (draws, CPU and GPU time, faults).
 void                   SetLean(bool lean);

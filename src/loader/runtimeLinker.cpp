@@ -82,6 +82,75 @@ static uint64_t AlignUp(uint64_t value, uint64_t alignment) {
 	return alignment != 0 ? (value + alignment - 1) & ~(alignment - 1) : value;
 }
 
+// Splits a command line the way the guest's own argument file is split: single spaces, with
+// quotes so that a value may contain one.
+static std::vector<std::string> SplitGuestArguments(const char* text, size_t size) {
+	std::vector<std::string> out;
+	std::string              current;
+	bool                     started = false;
+	char                     quote   = 0;
+	for (size_t i = 0; i < size && text[i] != '\0'; i++) {
+		const char c = text[i];
+		if (quote != 0) {
+			if (c == quote) {
+				quote = 0;
+			} else {
+				current.push_back(c);
+			}
+			continue;
+		}
+		if (c == '"' || c == '\'') {
+			quote   = c;
+			started = true;
+			continue;
+		}
+		if (c == ' ' || c == '\t' || c == '\r' || c == '\n') {
+			if (started) {
+				out.push_back(current);
+				current.clear();
+				started = false;
+			}
+			continue;
+		}
+		current.push_back(c);
+		started = true;
+	}
+	if (started) {
+		out.push_back(current);
+	}
+	return out;
+}
+
+// KYTY_GUEST_ARGS="<tokens>" - the command line the guest sees as argv[1...]. Unset (the default)
+// means argv[0] only, which is what the guest saw before this variable existed; the game reads
+// /app0/args.txt by itself either way. "@" reads that file, "@<path>" reads another one - useful
+// because the options the game parses late (-lvl, -sequence, -room, -skipIntro, -debugSettings)
+// read dangling pointers when they come from the file, the engine having parsed it into a stack
+// buffer of AppBase's constructor frame.
+static std::vector<std::string> ReadGuestArguments(const std::filesystem::path& game_dir,
+                                                   const char**                 source) {
+	*source = "none";
+	const char* value = std::getenv("KYTY_GUEST_ARGS");
+	if (value == nullptr) {
+		return {};
+	}
+	if (value[0] != '@') {
+		*source = "KYTY_GUEST_ARGS";
+		return SplitGuestArguments(value, std::strlen(value));
+	}
+	const auto path = value[1] != '\0' ? std::filesystem::path(value + 1) : game_dir / "args.txt";
+	std::vector<char> text(4096, '\0');
+	auto*             file = std::fopen(Common::PathToString(path).c_str(), "rb");
+	if (file == nullptr) {
+		LOGF("GuestArgs: cannot read %s\n", Common::PathToString(path).c_str());
+		return {};
+	}
+	const auto read = std::fread(text.data(), 1, text.size() - 1, file);
+	std::fclose(file);
+	*source = "file";
+	return SplitGuestArguments(text.data(), read);
+}
+
 ThreadLocalStorage::~ThreadLocalStorage() {
 	for (auto& [_, block]: tlss) {
 		FreeTlsBlock(&block);
@@ -90,13 +159,21 @@ ThreadLocalStorage::~ThreadLocalStorage() {
 
 #pragma pack(1)
 
+// The guest entry point reads argc as a dword at offset 0 and the argv array at offset 8, so this
+// is only the head of a larger block: Execute() reserves GUEST_ENTRY_RESERVE bytes at the top of
+// the main guest stack and fills argv[0..argc-1], a null argv terminator and an empty envp.
 struct EntryParams {
 	int         argc;
 	uint32_t    pad;
-	const char* argv[3];
+	const char* argv[1];
 };
 
 #pragma pack()
+
+// Bytes of the main guest stack reserved for the entry block. RunEntry() still starts the guest
+// stack 0x1000 bytes below it, so the block and the stack cannot meet.
+constexpr uintptr_t GUEST_ENTRY_RESERVE = 0x400;
+constexpr size_t    GUEST_ARGV_MAX      = GUEST_ENTRY_RESERVE / sizeof(const char*) - 4;
 
 using atexit_func_t = KYTY_SYSV_ABI void (*)();
 using entry_func_t  = KYTY_SYSV_ABI void (*)(EntryParams* params, atexit_func_t atexit_func);
@@ -1485,12 +1562,38 @@ void RuntimeLinker::Execute(const std::filesystem::path& game_patch) {
 	LOGF_COLOR(Log::Color::BrightYellow, "---\n--- Execute: %s\n---\n", "Main");
 
 	if (auto entry = GetEntry(); entry != 0) {
-		auto* params = reinterpret_cast<EntryParams*>(
-		    (reinterpret_cast<uintptr_t>(main_stack_top) - 0x100u) & ~static_cast<uintptr_t>(0x0f));
-		std::memset(params, 0, sizeof(EntryParams));
-		params->argc    = 1;
-		params->argv[0] = "KytyEmu";
+		// The guest keeps the pointers, never the characters (AppConfig::SetArgs copies the array
+		// and the level selector reads it again from the next sequence), so the strings have to
+		// outlive this call: a function-local static, like the "KytyEmu" literal it joins.
+		static const char* arguments_source = "none";
+		static const std::vector<std::string> arguments = ReadGuestArguments(
+		    m_programs.empty() ? std::filesystem::path {} : m_programs.front()->file_name.parent_path(),
+		    &arguments_source);
 
+		auto* params = reinterpret_cast<EntryParams*>(
+		    (reinterpret_cast<uintptr_t>(main_stack_top) - GUEST_ENTRY_RESERVE) &
+		    ~static_cast<uintptr_t>(0x0f));
+		std::memset(params, 0, GUEST_ENTRY_RESERVE);
+		auto** argv = const_cast<const char**>(&params->argv[0]);
+		// argv[0] stays "KytyEmu": the engine skips index 0 for most flags (-worldmap, -title,
+		// -skipIntro and -showLogo all require a positive index), so it must not become an option.
+		argv[0]      = "KytyEmu";
+		size_t count = 1;
+		for (const auto& argument: arguments) {
+			if (count >= GUEST_ARGV_MAX) {
+				LOGF("GuestArgs: only the first %zu arguments fit the entry block\n", count - 1);
+				break;
+			}
+			argv[count++] = argument.c_str();
+		}
+		params->argc = static_cast<int>(count);
+		// argv[count] and argv[count + 1] stay null: the argv terminator and an empty envp, which
+		// is what LibC::init_env reads as argv + argc + 1.
+
+		LOGF("GuestArgs: source=%s argc=%d\n", arguments_source, params->argc);
+		for (size_t i = 0; i < count; i++) {
+			LOGF("GuestArgs:   argv[%zu] = %s\n", i, argv[i]);
+		}
 		LOGF("stack_addr = %" PRIx64 "\n", reinterpret_cast<uint64_t>(params));
 
 		RunEntry(entry, params, ProgramExitHandler,

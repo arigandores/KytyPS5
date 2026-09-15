@@ -2,11 +2,13 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/file.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "common/threads.h"
 #include "kernel/fileSystem.h"
 #include "libs/errno.h"
+#include "libs/libSaveData.h"
 #include "libs/libs.h"
 #include "libs/saveDataMountSlots.h"
 #include "loader/symbolDatabase.h"
@@ -233,10 +235,35 @@ static constexpr uint32_t SAVE_DATA_EVENT_TYPE_BACKUP_END        = 2u;
 static constexpr uint32_t SAVE_DATA_EVENT_TYPE_COMMIT_BACKUP_END = 4u;
 
 static std::vector<uint8_t>      g_save_data_memory(0x10000);
+// Guards g_save_data_memory: Setup, Get and Set all resize it, and the persist flush copies it
+// from another thread.
+static Common::Mutex            g_save_data_memory_mutex;
+static bool                     g_save_data_memory_loaded = false;
+static bool                     g_save_data_memory_dirty  = false;
+static double                   g_save_data_memory_saved_ms = 0.0;
 static int32_t                   g_next_transaction_resource = 1;
 static std::deque<SaveDataEvent> g_save_data_events;
 static SaveDataMountSlots        g_mount_slots;
 static Common::Mutex             g_mount_mutex;
+
+// _SaveData/<title>/sce_sdmemory/memory.bin. The sce_ prefix keeps the directory out of the
+// game's own save-slot search (SaveDataDirNameSearch skips it), and it is where a PS5 keeps this
+// data as well.
+static constexpr char     SAVE_MEMORY_DIR[]      = "sce_sdmemory";
+static constexpr char     SAVE_MEMORY_FILE[]     = "memory.bin";
+static constexpr char     SAVE_MEMORY_MAGIC[]    = "KYTYSDM1";
+static constexpr uint64_t SAVE_MEMORY_MAX        = 64ULL << 20U;
+static constexpr double   SAVE_MEMORY_DEBOUNCE_MS = 1000.0;
+
+// FNV-1a: a truncated or half-written file must not reach the game, whose own asserts about the
+// block size would fire far away from here.
+static uint64_t save_memory_hash(const uint8_t* data, size_t size) {
+	uint64_t hash = 0xcbf29ce484222325ULL;
+	for (size_t i = 0; i < size; i++) {
+		hash = (hash ^ data[i]) * 0x100000001b3ULL;
+	}
+	return hash;
+}
 
 static std::string get_title_id() {
 	std::string title_id;
@@ -294,6 +321,142 @@ static bool dir_name_match(const char* str, const char* pattern) {
 	return *str == '\0' && *pattern == '\0';
 }
 
+static std::filesystem::path save_memory_path() {
+	return std::filesystem::path(SAVE_DATA_DIR) / get_title_id() / SAVE_MEMORY_DIR /
+	       SAVE_MEMORY_FILE;
+}
+
+// Called with g_save_data_memory_mutex held, once per process.
+static void load_save_memory() {
+	if (g_save_data_memory_loaded) {
+		return;
+	}
+	g_save_data_memory_loaded = true;
+	if (!Common::Gates::Enabled(Common::Gates::Gate::SavePersist)) {
+		return;
+	}
+	const auto   path = save_memory_path();
+	Common::File file(path, Common::File::Mode::Read);
+	if (file.IsInvalid()) {
+		LOGF("SavePersist: no %s, the guest starts a new game\n",
+		     Common::PathToString(path).c_str());
+		return;
+	}
+	constexpr uint32_t header_size = 8 + 8 + 8;
+	const auto         size        = file.Size();
+	if (size < header_size || size > SAVE_MEMORY_MAX + header_size) {
+		LOGF("SavePersist: %s has an implausible size %" PRIu64 ", ignored\n",
+		     Common::PathToString(path).c_str(), size);
+		return;
+	}
+	std::vector<uint8_t> header(header_size);
+	uint32_t             read = 0;
+	file.Read(header.data(), header_size, &read);
+	if (read != header_size || std::memcmp(header.data(), SAVE_MEMORY_MAGIC, 8) != 0) {
+		LOGF("SavePersist: %s is not a save-memory image, ignored\n",
+		     Common::PathToString(path).c_str());
+		return;
+	}
+	uint64_t payload_size = 0;
+	uint64_t payload_hash = 0;
+	std::memcpy(&payload_size, header.data() + 8, sizeof(payload_size));
+	std::memcpy(&payload_hash, header.data() + 16, sizeof(payload_hash));
+	if (payload_size != size - header_size || payload_size > SAVE_MEMORY_MAX) {
+		LOGF("SavePersist: %s is truncated, ignored\n", Common::PathToString(path).c_str());
+		return;
+	}
+	std::vector<uint8_t> payload(static_cast<size_t>(payload_size));
+	read = 0;
+	file.Read(payload.data(), static_cast<uint32_t>(payload.size()), &read);
+	if (read != payload.size() || save_memory_hash(payload.data(), payload.size()) != payload_hash) {
+		LOGF("SavePersist: %s failed its checksum, ignored\n", Common::PathToString(path).c_str());
+		return;
+	}
+	if (payload.size() > g_save_data_memory.size()) {
+		g_save_data_memory.resize(payload.size());
+	}
+	std::memcpy(g_save_data_memory.data(), payload.data(), payload.size());
+	LOGF("SavePersist: loaded %zu bytes from %s\n", payload.size(),
+	     Common::PathToString(path).c_str());
+}
+
+// Called with g_save_data_memory_mutex held. Never fails the caller: a locked file (OneDrive
+// syncs this directory) leaves the memory dirty and the next Set tries again.
+static void write_save_memory() {
+	const auto path    = save_memory_path();
+	const auto payload = g_save_data_memory.size();
+	if (payload == 0 || payload > SAVE_MEMORY_MAX) {
+		return;
+	}
+	if (!Common::File::CreateDirectories(path.parent_path())) {
+		LOGF("SavePersist: cannot create %s\n", Common::PathToString(path.parent_path()).c_str());
+		return;
+	}
+	uint8_t header[24] = {};
+	std::memcpy(header, SAVE_MEMORY_MAGIC, 8);
+	const uint64_t payload_size = payload;
+	const uint64_t payload_hash = save_memory_hash(g_save_data_memory.data(), payload);
+	std::memcpy(header + 8, &payload_size, sizeof(payload_size));
+	std::memcpy(header + 16, &payload_hash, sizeof(payload_hash));
+
+	auto temp = path;
+	temp += ".tmp";
+	Common::File file;
+	uint32_t     written_header  = 0;
+	uint32_t     written_payload = 0;
+	if (file.Create(temp)) {
+		file.Write(header, sizeof(header), &written_header);
+		file.Write(g_save_data_memory.data(), static_cast<uint32_t>(payload), &written_payload);
+	}
+	const bool flushed = !file.IsInvalid() && file.Flush();
+	file.Close();
+	if (written_header != sizeof(header) || written_payload != payload || !flushed) {
+		LOGF("SavePersist: failed to write %s\n", Common::PathToString(temp).c_str());
+		Common::File::DeleteFile(temp);
+		return;
+	}
+	// RenameFile deletes the destination first, so keep the previous image until the new one is
+	// in place: a crash inside that window would otherwise lose the save.
+	auto backup = path;
+	backup += ".bak";
+	if (Common::File::IsFileExisting(path)) {
+		if (Common::File::IsFileExisting(backup)) {
+			Common::File::DeleteFile(backup);
+		}
+		Common::File::RenameFile(path, backup);
+	}
+	if (!Common::File::RenameFile(temp, path)) {
+		LOGF("SavePersist: failed to rename %s\n", Common::PathToString(temp).c_str());
+		Common::File::DeleteFile(temp);
+		return;
+	}
+	g_save_data_memory_dirty    = false;
+	g_save_data_memory_saved_ms = Loader::Timer::GetTimeMs();
+}
+
+// Called with g_save_data_memory_mutex held.
+static void flush_save_memory(bool force) {
+	if (!g_save_data_memory_dirty || !Common::Gates::Enabled(Common::Gates::Gate::SavePersist)) {
+		return;
+	}
+	const auto now = Loader::Timer::GetTimeMs();
+	if (!force && now - g_save_data_memory_saved_ms < SAVE_MEMORY_DEBOUNCE_MS) {
+		return;
+	}
+	write_save_memory();
+}
+
+void Initialize() {
+	LOGF("SavePersist: %s\n", Common::Gates::Enabled(Common::Gates::Gate::SavePersist)
+	                              ? "on (KYTY_SAVE_PERSIST)"
+	                              : "off");
+}
+
+void FlushMemoryPersist() {
+	Common::LockGuard lock(g_save_data_memory_mutex);
+	flush_save_memory(true);
+}
+
 static int mount_save_data(int slot, std::string_view dir_name, const std::string& directory,
                            uint32_t status, SaveDataMountResult* result) {
 	const std::string mount_point = SaveDataMountSlots::MountPoint(static_cast<size_t>(slot));
@@ -316,6 +479,8 @@ int KYTY_SYSV_ABI SaveDataInitialize3(const void* /*init*/) {
 
 int KYTY_SYSV_ABI SaveDataTerminate() {
 	PRINT_NAME();
+
+	FlushMemoryPersist();
 
 	Common::LockGuard lock(g_mount_mutex);
 	if (!g_mount_slots.Empty()) {
@@ -493,9 +658,14 @@ int KYTY_SYSV_ABI SaveDataSetupSaveDataMemory2(const SaveDataMemorySetup2* setup
 	     setup_param->option, setup_param->user_id, static_cast<uint64_t>(setup_param->memory_size),
 	     static_cast<uint64_t>(setup_param->icon_memory_size), setup_param->slot_id);
 
+	Common::LockGuard lock(g_save_data_memory_mutex);
 	if (setup_param->memory_size > g_save_data_memory.size()) {
 		g_save_data_memory.resize(setup_param->memory_size);
 	}
+	// The return code stays OK and existed_memory_size stays the buffer size, as before: on real
+	// hardware an existing save answers SAVE_DATA_ERROR_EXISTS here, but the game reads the memory
+	// four times right after this call either way, and an unexplored branch is not worth the risk.
+	load_save_memory();
 
 	if (result != nullptr) {
 		*result                     = {};
@@ -527,7 +697,8 @@ int KYTY_SYSV_ABI SaveDataGetSaveDataMemory2(SaveDataMemoryGet2* get_param) {
 			return SAVE_DATA_ERROR_PARAMETER;
 		}
 
-		const auto offset = static_cast<size_t>(data->offset);
+		Common::LockGuard lock(g_save_data_memory_mutex);
+		const auto        offset = static_cast<size_t>(data->offset);
 		if (offset + data->buf_size > g_save_data_memory.size()) {
 			g_save_data_memory.resize(offset + data->buf_size);
 		}
@@ -562,6 +733,7 @@ int KYTY_SYSV_ABI SaveDataSetSaveDataMemory2(const SaveDataMemorySet2* set_param
 
 	const uint32_t data_num = (set_param->data_num == 0 ? 1 : set_param->data_num);
 	if (set_param->data != nullptr) {
+		Common::LockGuard lock(g_save_data_memory_mutex);
 		for (uint32_t i = 0; i < data_num; i++) {
 			const auto& data = set_param->data[i];
 			if (data.buf == nullptr || data.offset < 0) {
@@ -574,6 +746,10 @@ int KYTY_SYSV_ABI SaveDataSetSaveDataMemory2(const SaveDataMemorySet2* set_param
 			}
 			std::memcpy(g_save_data_memory.data() + offset, data.buf, data.buf_size);
 		}
+		g_save_data_memory_dirty = true;
+		// The game writes in pairs; one image per second is enough and keeps the 2 MiB write off
+		// the caller's back.
+		flush_save_memory(false);
 	}
 
 	return OK;
@@ -764,6 +940,9 @@ int KYTY_SYSV_ABI SaveDataSyncSaveDataMemory(const void* sync_param) {
 	PRINT_NAME();
 
 	LOGF("\t sync_param = 0x%016" PRIx64 "\n", reinterpret_cast<uint64_t>(sync_param));
+
+	// This is what the call means: put the memory where it survives the process.
+	FlushMemoryPersist();
 
 	return OK;
 }

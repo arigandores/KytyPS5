@@ -102,6 +102,8 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_RECORD_UPLOADS", "recup", false},
     // Session 64, E6 (measurement only).
     {"KYTY_SHADOW_INLINE", "shadowinline", false},
+    // Session 67, infrastructure.
+    {"KYTY_SAVE_PERSIST", "savepersist", false},
 }};
 
 struct KnobDefinition {
@@ -189,17 +191,125 @@ const char* GateFile() {
 	return path;
 }
 
-} // namespace
+// KYTY_GATE_SCHEDULE="<N>[+<start>]:<arm>|<arm>[|...]" alternates the arms in blocks of N
+// presents from frame <start> on. An arm is the text of a gate file, so the parser below is the
+// same FindAssignment and a name an arm does not list keeps its state, exactly as in the file.
+// Two textually identical arms are the idle A/A run that declares a run's own threshold.
+constexpr size_t SCHEDULE_ARMS_MAX = 8;
+constexpr size_t SCHEDULE_TEXT_MAX = 512;
 
-bool Detail::EnabledSlow(Gate gate) noexcept {
-	return States()[static_cast<size_t>(gate)].load(std::memory_order_relaxed);
+struct Schedule {
+	uint32_t period = 0; // presents per block; 0 = no schedule
+	uint32_t start  = 0; // first frame the schedule applies to
+	uint32_t arms   = 0;
+	bool     abba   = false; // two arms in the order A B B A instead of A B A B
+	std::array<std::array<char, SCHEDULE_TEXT_MAX>, SCHEDULE_ARMS_MAX> text {};
+	// Names any arm assigns: the gate file must not fight the schedule over them, or every flip
+	// would write them twice and log a change.
+	std::array<bool, static_cast<size_t>(Gate::Count)> owns_gate {};
+	std::array<bool, static_cast<size_t>(Knob::Count)> owns_knob {};
+};
+
+const Schedule& ScheduleOf() {
+	static const Schedule schedule = [] {
+		Schedule    s {};
+		const auto* value = std::getenv("KYTY_GATE_SCHEDULE");
+		if (value == nullptr || value[0] < '0' || value[0] > '9') {
+			return s;
+		}
+		char*      tail   = nullptr;
+		const auto period = std::strtoul(value, &tail, 10);
+		if (period == 0 || period > 100000 || tail == nullptr) {
+			return Schedule {};
+		}
+		unsigned long start = 0;
+		if (*tail == '+') {
+			start = std::strtoul(tail + 1, &tail, 10);
+		}
+		if (tail == nullptr || *tail != ':') {
+			return Schedule {};
+		}
+		const char* cursor = tail + 1;
+		while (s.arms < SCHEDULE_ARMS_MAX) {
+			const char*  bar = std::strchr(cursor, '|');
+			const size_t length =
+			    bar != nullptr ? static_cast<size_t>(bar - cursor) : std::strlen(cursor);
+			if (length == 0 || length >= SCHEDULE_TEXT_MAX) {
+				return Schedule {};
+			}
+			std::memcpy(s.text[s.arms].data(), cursor, length);
+			s.text[s.arms][length] = '\0';
+			s.arms++;
+			if (bar == nullptr) {
+				break;
+			}
+			cursor = bar + 1;
+		}
+		if (s.arms == 0) {
+			return Schedule {};
+		}
+		for (uint32_t arm = 0; arm < s.arms; arm++) {
+			for (size_t index = 0; index < s.owns_gate.size(); index++) {
+				s.owns_gate[index] = s.owns_gate[index] ||
+				                     FindAssignment(s.text[arm].data(), DEFINITIONS[index].name) != nullptr;
+			}
+			for (size_t index = 0; index < s.owns_knob.size(); index++) {
+				s.owns_knob[index] =
+				    s.owns_knob[index] ||
+				    FindAssignment(s.text[arm].data(), KNOB_DEFINITIONS[index].name) != nullptr;
+			}
+		}
+		// KYTY_GATE_SCHEDULE_ABBA=1 counterbalances a two-arm schedule: the block index runs
+		// through a Gray code, so the arms go A B B A A B B A and neither of them is always the
+		// second of its cycle. Session 67 measured a +0.36 % bias on the idle A/A run without it.
+		const auto* abba = std::getenv("KYTY_GATE_SCHEDULE_ABBA");
+		s.abba           = abba != nullptr && abba[0] == '1' && s.arms == 2;
+		s.period         = static_cast<uint32_t>(period);
+		s.start          = static_cast<uint32_t>(start);
+		return s;
+	}();
+	return schedule;
 }
 
-uint32_t Detail::ValueSlow(Knob knob) noexcept {
-	return KnobStates()[static_cast<size_t>(knob)].load(std::memory_order_relaxed);
+// Applies the text of a gate file or of a schedule arm. `skip_*` are the names the schedule owns
+// when the text comes from the file.
+void ApplyText(const char* text, uint32_t frame, const bool* skip_gate,
+               const bool* skip_knob) noexcept {
+	auto& states = States();
+	for (size_t index = 0; index < states.size(); index++) {
+		if (skip_gate != nullptr && skip_gate[index]) {
+			continue;
+		}
+		const auto& definition = DEFINITIONS[index];
+		const auto* value      = FindAssignment(text, definition.name);
+		if (value == nullptr || (value[0] != '0' && value[0] != '1')) {
+			continue;
+		}
+		const bool wanted = value[0] == '1';
+		if (states[index].exchange(wanted, std::memory_order_relaxed) != wanted) {
+			LOGF("Gate: %s=%d frame=%u\n", definition.name, wanted ? 1 : 0, frame);
+		}
+	}
+
+	auto& knobs = KnobStates();
+	for (size_t index = 0; index < knobs.size(); index++) {
+		if (skip_knob != nullptr && skip_knob[index]) {
+			continue;
+		}
+		const auto& definition = KNOB_DEFINITIONS[index];
+		const auto* value      = FindAssignment(text, definition.name);
+		if (value == nullptr || value[0] < '0' || value[0] > '9') {
+			continue;
+		}
+		auto wanted = static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
+		wanted      = wanted < definition.limit ? wanted : definition.limit;
+		if (knobs[index].exchange(wanted, std::memory_order_relaxed) != wanted) {
+			LOGF("Gate: %s=%u frame=%u\n", definition.name, wanted, frame);
+		}
+	}
 }
 
-void Poll(uint32_t frame) noexcept {
+void PollGateFile(uint32_t frame) noexcept {
 	const auto* path = GateFile();
 	if (path == nullptr) {
 		return;
@@ -225,32 +335,51 @@ void Poll(uint32_t frame) noexcept {
 	}
 	text[read] = '\0';
 
-	auto& states = States();
-	for (size_t index = 0; index < states.size(); index++) {
-		const auto& definition = DEFINITIONS[index];
-		const auto* value      = FindAssignment(text.data(), definition.name);
-		if (value == nullptr || (value[0] != '0' && value[0] != '1')) {
-			continue;
-		}
-		const bool wanted = value[0] == '1';
-		if (states[index].exchange(wanted, std::memory_order_relaxed) != wanted) {
-			LOGF("Gate: %s=%d frame=%u\n", definition.name, wanted ? 1 : 0, frame);
-		}
-	}
+	const auto& schedule = ScheduleOf();
+	ApplyText(text.data(), frame, schedule.owns_gate.data(), schedule.owns_knob.data());
+}
 
-	auto& knobs = KnobStates();
-	for (size_t index = 0; index < knobs.size(); index++) {
-		const auto& definition = KNOB_DEFINITIONS[index];
-		const auto* value      = FindAssignment(text.data(), definition.name);
-		if (value == nullptr || value[0] < '0' || value[0] > '9') {
-			continue;
-		}
-		auto wanted = static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
-		wanted      = wanted < definition.limit ? wanted : definition.limit;
-		if (knobs[index].exchange(wanted, std::memory_order_relaxed) != wanted) {
-			LOGF("Gate: %s=%u frame=%u\n", definition.name, wanted, frame);
-		}
+// Exact block boundaries in flips: this runs once per flip with a monotonic counter.
+void PollSchedule(uint32_t frame) noexcept {
+	const auto& schedule = ScheduleOf();
+	// The line the caller logs after this reports the interval that ran under the previous arm.
+	Detail::g_arm_reported.store(Detail::g_arm.load(std::memory_order_relaxed),
+	                             std::memory_order_relaxed);
+	Detail::g_block_reported.store(Detail::g_block.load(std::memory_order_relaxed),
+	                               std::memory_order_relaxed);
+	if (schedule.period == 0 || frame < schedule.start) {
+		return;
 	}
+	const auto block = (frame - schedule.start) / schedule.period;
+	const auto arm   = schedule.abba ? (((block >> 1U) ^ block) & 1U) : block % schedule.arms;
+	Detail::g_arm.store(arm, std::memory_order_relaxed);
+	Detail::g_block.store(block, std::memory_order_relaxed);
+	// One producer: Poll only ever runs on the presentation thread.
+	static uint32_t applied = 0xffffffffu;
+	if (block == applied) {
+		return;
+	}
+	applied = block;
+	LOGF("GateArm: arm=%u arms=%u block=%u frame=%u period=%u abba=%u text=%s\n", arm,
+	     schedule.arms, block, frame, schedule.period, schedule.abba ? 1U : 0U,
+	     schedule.text[arm].data());
+	ApplyText(schedule.text[arm].data(), frame, nullptr, nullptr);
+}
+
+} // namespace
+
+bool Detail::EnabledSlow(Gate gate) noexcept {
+	return States()[static_cast<size_t>(gate)].load(std::memory_order_relaxed);
+}
+
+uint32_t Detail::ValueSlow(Knob knob) noexcept {
+	return KnobStates()[static_cast<size_t>(knob)].load(std::memory_order_relaxed);
+}
+
+void Poll(uint32_t frame) noexcept {
+	PollGateFile(frame);
+	// The schedule owns the names its arms assign, so the file above skipped them.
+	PollSchedule(frame);
 }
 
 } // namespace Common::Gates

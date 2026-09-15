@@ -221,6 +221,10 @@ uint64_t Read(Counter counter) {
 	return total;
 }
 
+uint32_t TakeMax(Gauge gauge) {
+	return Detail::g_gauges[static_cast<size_t>(gauge)].exchange(0, std::memory_order_relaxed);
+}
+
 void RegisterCurrentThread(ThreadRole role) {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	t_role = role;

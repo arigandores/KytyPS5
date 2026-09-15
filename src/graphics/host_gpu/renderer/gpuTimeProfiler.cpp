@@ -231,6 +231,43 @@ void GpuTimeProfiler::FlushFrame(uint32_t frame, FrameTable& table) {
 	}
 	kinds += '\n';
 	LOGF("%s", kinds.c_str());
+	// Session 71, candidate C1: the detile / copyBufferToImage split. GpuTime-kind collapses all
+	// seven ImageUpload phases into one field and GpuTime-top is capped at 32 rows and 20 us, so
+	// neither can show it. This is a second pass over the same table, summed by key with key2
+	// folded away and with NO cap, so it is complete by construction. Keys:
+	//   0 whole upload (textureCache.cpp)          4 copyBufferToImage (image.cpp)
+	//   1 Detile envelope (textureCache.cpp)       5 scratch fill + barrier (tiler.cpp)
+	//   2 SwapBgra16 (textureCache.cpp)            6 detile dispatches + barrier (tiler.cpp)
+	//   3 Upload envelope (textureCache.cpp)       other: anything else
+	// Each field is <us>/<marks>. The mark count is there so that the ~29 % mark loss of heavy
+	// frames can be checked per phase against img_detile and img_up of the same frame instead of
+	// being assumed uniform.
+	{
+		static const char* const upload_names[8] = {"all",  "env_detile", "swap",   "env_copy",
+		                                            "copy", "fill",       "detile", "other"};
+		uint64_t                 upload_ns[8] {};
+		uint64_t                 upload_n[8] {};
+		for (const auto& [ek, e]: table.entries) {
+			if (static_cast<Kind>(ek >> 56u) != Kind::ImageUpload) {
+				continue;
+			}
+			const auto key    = table.keys[ek].first;
+			const auto bucket = key < 7 ? static_cast<size_t>(key) : size_t {7};
+			upload_ns[bucket] += e.ns;
+			upload_n[bucket] += e.n;
+		}
+		std::string uploads = "GpuTime-imgup: frame=" + std::to_string(frame);
+		for (size_t k = 0; k < 8; k++) {
+			uploads += ' ';
+			uploads += upload_names[k];
+			uploads += '=';
+			uploads += std::to_string(upload_ns[k] / 1000u);
+			uploads += '/';
+			uploads += std::to_string(upload_n[k]);
+		}
+		uploads += '\n';
+		LOGF("%s", uploads.c_str());
+	}
 	std::vector<std::pair<uint64_t, Entry>> sorted(table.entries.begin(), table.entries.end());
 	std::sort(sorted.begin(), sorted.end(),
 	          [](const auto& a, const auto& b) { return a.second.ns > b.second.ns; });

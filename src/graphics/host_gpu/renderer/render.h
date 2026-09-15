@@ -427,9 +427,12 @@ private:
 	};
 	std::array<TargetViewFast, RENDER_COLOR_ATTACHMENTS_MAX> m_color_view_fast {};
 	TargetViewFast                                          m_depth_view_fast {};
+	// guest_clear_regs: session 71, C3 premise (counters only) - the binding's guest fast-clear
+	// registers as parsed, see TextureCache::kReg*. Changes no decision here or below.
 	[[nodiscard]] vk::ImageView AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
 	                                              const TextureCache::ImageDesc& desc,
-	                                              TargetViewFast& fast, bool depth_target);
+	                                              TargetViewFast& fast, bool depth_target,
+	                                              uint32_t guest_clear_regs = 0);
 
 	friend class CommandProcessor;
 	friend struct RenderExecutorTestAccess;

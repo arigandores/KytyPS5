@@ -57,6 +57,44 @@ struct RenderState {
 	bool operator==(const RenderState&) const = default;
 };
 
+// Session 71 (gate G-area): the FrameTrace-x bucket of a render pass. Both counter tables are
+// contiguous runs of Common::FrameStats::Counter, so a bucket is an offset from their first
+// enumerator (PassShape0 / PassExtent0 / PassDraw0 in common/frameStats.h). constexpr, no
+// state, no allocation: a pure classifier, not a decision.
+[[nodiscard]] inline constexpr uint32_t RenderPassShapeBucket(uint32_t color_attachments) {
+	return color_attachments < RENDER_COLOR_ATTACHMENTS_MAX ? color_attachments
+	                                                        : RENDER_COLOR_ATTACHMENTS_MAX;
+}
+
+// `kpx` is width * height / 1024 of the pass. The edges put the three surfaces this scene is
+// known to render each in a bucket of its own: the two rungs of the game's resolution ladder
+// (1920x1080 = 2025 kpx -> bucket 3, 2432x1368 = 3249 kpx -> bucket 4; session 70 section 3)
+// and the output target (3840x2160 = 8100 kpx -> bucket 6).
+[[nodiscard]] inline constexpr uint32_t RenderPassExtentBucket(uint64_t kpx) {
+	if (kpx < 128) {
+		return 0;
+	}
+	if (kpx < 512) {
+		return 1;
+	}
+	if (kpx < 1536) {
+		return 2;
+	}
+	if (kpx < 2304) {
+		return 3;
+	}
+	if (kpx < 4096) {
+		return 4;
+	}
+	if (kpx < 7168) {
+		return 5;
+	}
+	if (kpx < 9216) {
+		return 6;
+	}
+	return 7;
+}
+
 [[nodiscard]] inline constexpr uint32_t render_sample_count(uint32_t encoded_samples) {
 	return encoded_samples <= 3 ? 1u << encoded_samples : 0;
 }

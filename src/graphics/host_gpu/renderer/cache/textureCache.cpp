@@ -1475,10 +1475,78 @@ void TextureCache::CompletePendingUpload(Image& image) {
 	m_frame_upload_bytes += uploaded;
 	m_frame_pending_bytes += uploaded;
 	image.pending_bytes = 0;
-	m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
+	// Session 71, C1: key 0 = "the whole upload", so that keys 1..6 stay a clean phase
+	// namespace. The two-argument overload used to put the size in MiB in the KEY slot, where it
+	// collided with the phase keys for every image of 1-6 MiB. GpuTime only; nothing else reads
+	// these marks.
+	m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 0, image.info.data.size >> 20u);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgPendingUploads, 1);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ImgPendingBytes, uploaded);
 	MipDeferTrace("complete", image, uploaded);
+}
+
+// Session 71, candidate C3 (counters only, no gate, no decision changed). The upload C3 wants
+// to suppress is decided in InitializeImage, far below the binding that caused it, and only
+// the BINDING knows whether this is a write target, a sampled read, or the clear path bringing
+// in the texels a partial clear will not write. Predicting the upload at the binding would
+// diverge whenever RefreshImage resolves a maybe-CPU-dirty hash and flips m_cpu_dirty, which
+// removes the image from the population - so the binding publishes a site on a thread-local
+// RAII scope and the counting happens below, next to the gate predicate. The attribution is
+// then exact by construction, and the prediction error is itself measurable
+// (c3_ct_pop - c3_ct_canc - c3_ct_up).
+//
+// Each scope covers RefreshImage - or, inside ClearImage, InitializeImage - ALONE, never
+// PrepareDccClear / PrepareCmaskClear. Those reach ClearImage, whose partial-clear path
+// uploads the image itself, and attributing that upload to the binding it happened under
+// would feed C3's decision rule with an upload the clear CAUSED.
+namespace {
+
+enum class UploadSite : uint8_t { Other, ColorTarget, DepthTarget, StorageImage, Sampled, ClearOp };
+
+struct UploadSiteState {
+	UploadSite site       = UploadSite::Other;
+	bool       reg_clear  = false; // the guest fast-clear registers of the binding said "clear"
+	bool       fill_clear = false; // an unconsumed metadata fill was pending for the bound layers
+};
+
+thread_local UploadSiteState t_upload_site {};
+// Population uploads performed from inside ClearImage (a partial clear uploads first).
+// FindRenderTarget snapshots it across PrepareDccClear / PrepareCmaskClear so that "the clear
+// cancelled this upload" never counts a case where the clear CAUSED one instead.
+thread_local uint32_t t_clear_caused_uploads = 0;
+
+class UploadSiteScope final {
+public:
+	UploadSiteScope(UploadSite site, bool reg_clear, bool fill_clear): m_previous(t_upload_site) {
+		t_upload_site = UploadSiteState {site, reg_clear, fill_clear};
+	}
+	~UploadSiteScope() { t_upload_site = m_previous; }
+	UploadSiteScope(const UploadSiteScope&)            = delete;
+	UploadSiteScope& operator=(const UploadSiteScope&) = delete;
+
+private:
+	UploadSiteState m_previous;
+};
+
+} // namespace
+
+bool TextureCache::MetaFillPendingLocked(const ImageDesc& desc) const {
+	if (desc.info.metadata.kind == ImageMetadataKind::None ||
+	    desc.info.metadata.range.address == 0) {
+		return false;
+	}
+	const auto found = m_surface_metas.find(desc.info.metadata.range.address);
+	if (found == m_surface_metas.end() || found->second.clear_mask == 0) {
+		return false;
+	}
+	const auto& view = desc.view_info;
+	if (view.base_layer >= 32) {
+		return false;
+	}
+	const auto count = std::min(view.layer_count, 32u - view.base_layer);
+	const auto mask =
+	    count >= 32u ? UINT32_MAX : (((uint32_t {1} << count) - 1u) << view.base_layer);
+	return (found->second.clear_mask & mask) != 0;
 }
 
 void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
@@ -1506,11 +1574,66 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 	// ObtainBufferForImage + detile + copyBufferToImage round trip is dropped and the image keeps
 	// the texels it already holds. The buffer-modified flag must still be cleared: ClearImage,
 	// CopyImageMip and ResolveDepthOverlap all EXIT on an image that stayed guest-owned.
-	const bool skip_gpu_stale =
+	// Session 71, candidate C3: the imgskip predicate WITHOUT the gate, so the counters below
+	// size C3 on an ordinary defaults run and still sum to img_skip / img_skip_kb when the gate
+	// is on. skip_gpu_stale below is the same boolean it always was - `population && Enabled()`
+	// differs from the old chain only in short-circuit order, and every operand is a pure read.
+	// One expression, so the counted population and the gated population cannot drift apart.
+	const bool population =
 	    upload && image.IsBufferModified() && !image.IsCpuDirty() &&
-	    Common::Gates::Enabled(Common::Gates::Gate::ImageSkipGpuStale) &&
 	    image.SourceRange().size >=
 	        static_cast<uint64_t>(Common::Gates::Value(Common::Gates::Knob::ImageSkipKb)) * 1024u;
+	if (population) {
+		namespace FS       = Common::FrameStats;
+		// KiB at the increment site, printed with micros = false (the s69 img_skip_kb defect).
+		const auto note_kb = image.SourceRange().size / 1024u;
+		FS::Add(FS::Counter::C3Population, 1);
+		FS::Add(FS::Counter::C3PopulationKb, note_kb);
+		switch (t_upload_site.site) {
+			case UploadSite::ColorTarget:
+				FS::Add(FS::Counter::C3ColorUploads, 1);
+				FS::Add(FS::Counter::C3ColorUploadsKb, note_kb);
+				if (t_upload_site.reg_clear) {
+					FS::Add(FS::Counter::C3ColorUploadsReg, 1);
+					FS::Add(FS::Counter::C3ColorUploadsRegKb, note_kb);
+				}
+				if (t_upload_site.fill_clear) {
+					FS::Add(FS::Counter::C3ColorUploadsFill, 1);
+					FS::Add(FS::Counter::C3ColorUploadsFillKb, note_kb);
+				}
+				break;
+			case UploadSite::DepthTarget:
+				FS::Add(FS::Counter::C3DepthUploads, 1);
+				FS::Add(FS::Counter::C3DepthUploadsKb, note_kb);
+				if (t_upload_site.reg_clear) {
+					FS::Add(FS::Counter::C3DepthUploadsReg, 1);
+					FS::Add(FS::Counter::C3DepthUploadsRegKb, note_kb);
+				}
+				break;
+			case UploadSite::StorageImage:
+				FS::Add(FS::Counter::C3StorageUploads, 1);
+				FS::Add(FS::Counter::C3StorageUploadsKb, note_kb);
+				break;
+			case UploadSite::Sampled:
+				// The pass READS this surface, so C3 must never touch these.
+				FS::Add(FS::Counter::C3SampledUploads, 1);
+				FS::Add(FS::Counter::C3SampledUploadsKb, note_kb);
+				break;
+			case UploadSite::ClearOp:
+				// An upload the clear CAUSED, not one it cancelled: ClearImage brings the guest
+				// contents in before clearing a partial range. Never part of C3's ceiling.
+				t_clear_caused_uploads++;
+				FS::Add(FS::Counter::C3ClearUploads, 1);
+				FS::Add(FS::Counter::C3ClearUploadsKb, note_kb);
+				break;
+			case UploadSite::Other:
+				FS::Add(FS::Counter::C3OtherUploads, 1);
+				FS::Add(FS::Counter::C3OtherUploadsKb, note_kb);
+				break;
+		}
+	}
+	const bool skip_gpu_stale =
+	    population && Common::Gates::Enabled(Common::Gates::Gate::ImageSkipGpuStale);
 	if (skip_gpu_stale) {
 		// NoteUploadFrame like every other upload path: it is the only place that rolls
 		// m_frame_upload_bytes over at a frame boundary, and DeferrableLevels judges the mip-defer
@@ -1566,7 +1689,8 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 			                        image.pending_bytes);
 			MipDeferTrace("defer", image, image.pending_bytes);
 		}
-		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, image.info.data.size >> 20u);
+		// Session 71, C1: key 0, see CompletePendingUpload above.
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 0, image.info.data.size >> 20u);
 		image.ClearBufferModified();
 	}
 	if (image.IsCpuDirty()) {
@@ -1972,7 +2096,19 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	auto view_info = desc.view_info;
 	if (!image.info.data.Empty()) {
 		PrepareDccClear(id, desc);
-		RefreshImage(id, desc.type == BindingType::Texture);
+		{
+			// Session 71, candidate C3 (counters only): a storage binding writes the image too, but
+			// with scattered texels, so "the pass overwrites it anyway" is far weaker there than
+			// for an attachment; a sampled binding READS it and C3 must never touch those. The
+			// switch below EXITs on any other binding type, so these two are exhaustive. The scope
+			// covers RefreshImage alone - PrepareDccClear above can reach ClearImage, which
+			// publishes UploadSite::ClearOp for the upload its partial-clear path performs itself.
+			const UploadSiteScope upload_site {desc.type == BindingType::Storage
+			                                       ? UploadSite::StorageImage
+			                                       : UploadSite::Sampled,
+			                                   false, false};
+			RefreshImage(id, desc.type == BindingType::Texture);
+		}
 		if (image.pending_levels != 0) {
 			// Sampled bind of a texture whose top levels are still pending: bring them in within
 			// the frame budget, otherwise clamp this view's LOD to the resident levels.
@@ -2006,7 +2142,8 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	return view;
 }
 
-vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc) {
+vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
+                                             uint32_t guest_clear_regs) {
 	if (desc.type != BindingType::RenderTarget) {
 		EXIT("TextureCache: invalid color-target binding\n");
 	}
@@ -2018,9 +2155,73 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc) 
 	TouchImage(image);
 	image.MarkGpuModified();
 	image.usage.render_target = true;
+	// Session 71, candidate C3 (counters only). Observed HERE, before PrepareDccClear and
+	// PrepareCmaskClear: when they succeed on a whole image, ClearImage ends in CommitGpuWrite,
+	// which drops m_buffer_modified, and the upload this is about to size no longer exists.
+	bool     c3_reg_clear = false;
+	bool     c3_fill      = false;
+	bool     c3_pop       = false;
+	uint64_t c3_note_kb   = 0;
+	const auto c3_clear_uploads_before = t_clear_caused_uploads;
+	if (Common::FrameStats::Enabled()) {
+		namespace FS       = Common::FrameStats;
+		const bool reg_fc  = (guest_clear_regs & (kRegColorFastClear | kRegColorCmaskAddr)) ==
+		                    (kRegColorFastClear | kRegColorCmaskAddr);
+		const bool reg_dcc = (guest_clear_regs & (kRegColorDccEnable | kRegColorDccAddr)) ==
+		                     (kRegColorDccEnable | kRegColorDccAddr);
+		const bool reg_key = reg_dcc && (guest_clear_regs & kRegColorDccKey) != 0;
+		const bool kind_ok = desc.info.metadata.kind != ImageMetadataKind::None;
+		c3_fill            = MetaFillPendingLocked(desc);
+		c3_reg_clear       = reg_fc || reg_key;
+		c3_note_kb         = image.SourceRange().size / 1024u;
+		c3_pop =
+		    image.IsBufferModified() && !image.IsCpuDirty() &&
+		    image.SourceRange().size >=
+		        static_cast<uint64_t>(Common::Gates::Value(Common::Gates::Knob::ImageSkipKb)) *
+		            1024u;
+		FS::Add(FS::Counter::C3ColorAcquires, 1);
+		if (reg_fc) {
+			FS::Add(FS::Counter::C3ColorRegFastClear, 1);
+		}
+		if (reg_dcc) {
+			FS::Add(FS::Counter::C3ColorRegDcc, 1);
+		}
+		if (reg_key) {
+			FS::Add(FS::Counter::C3ColorRegDccKey, 1);
+		}
+		if (kind_ok) {
+			FS::Add(FS::Counter::C3ColorMetaKind, 1);
+		}
+		if ((reg_fc || reg_dcc) && !kind_ok) {
+			// Register-backed clear state that colorRenderTarget.cpp dropped to kind = None - for
+			// CMASK that is its width%1024 / height%1024 guard, which no extent of the imgskip
+			// population can pass.
+			FS::Add(FS::Counter::C3ColorRegDropped, 1);
+		}
+		if (c3_fill) {
+			FS::Add(FS::Counter::C3ColorFillPending, 1);
+		}
+		if (c3_pop) {
+			FS::Add(FS::Counter::C3ColorPop, 1);
+			FS::Add(FS::Counter::C3ColorPopKb, c3_note_kb);
+		}
+	}
 	PrepareDccClear(id, desc);
 	PrepareCmaskClear(id, desc);
-	RefreshImage(id);
+	// Those two calls are the ONLY thing between the observation and the upload decision, so an
+	// image that left the population here left it because a recognised guest clear cancelled its
+	// upload - unless the clear performed the upload itself, which the thread-local counter
+	// separates out. NOTHING in the tree reports this number today.
+	if (c3_pop && !image.IsBufferModified() &&
+	    t_clear_caused_uploads == c3_clear_uploads_before) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::C3ColorCancelled, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::C3ColorCancelledKb, c3_note_kb);
+	}
+	{
+		// The scope covers RefreshImage ALONE - never the two Prepare*Clear calls above.
+		const UploadSiteScope upload_site {UploadSite::ColorTarget, c3_reg_clear, c3_fill};
+		RefreshImage(id);
+	}
 	CommitGpuWrite(image);
 	TrackImageDownload(id, image);
 	const auto view = image.FindView(desc.view_info);
@@ -2028,7 +2229,8 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc) 
 	return view;
 }
 
-vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc) {
+vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc,
+                                            uint32_t guest_clear_regs) {
 	if (desc.type != BindingType::DepthTarget) {
 		EXIT("TextureCache: invalid depth-target binding\n");
 	}
@@ -2040,7 +2242,16 @@ vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc) {
 	TouchImage(image);
 	image.MarkGpuModified();
 	image.usage.depth_target = true;
-	RefreshImage(id);
+	// Session 71, candidate C3 (counters only): depth is the ONE attachment whose clear the guest
+	// states per pass, in DB_RENDER_CONTROL.DEPTH_CLEAR_ENABLE. Colour has no analogue of that
+	// register, which is the whole reason C3's premise is in question. No fill reading here: no
+	// counter would read it.
+	Common::FrameStats::Add(Common::FrameStats::Counter::C3DepthAcquires, 1);
+	{
+		const UploadSiteScope upload_site {UploadSite::DepthTarget,
+		                                   (guest_clear_regs & kRegDepthClear) != 0, false};
+		RefreshImage(id);
+	}
 	if (desc.info.HasMetadata()) {
 		image.info.metadata = desc.info.metadata;
 		auto [metadata, inserted] =
@@ -2219,6 +2430,10 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format for
 	                        range.baseArrayLayer == 0 && range.layerCount == layers;
 	TrackImage(id);
 	if (!full_image && (image.IsBufferModified() || image.IsCpuDirty())) {
+		// Session 71, candidate C3 (counters only): a PARTIAL clear must first bring in the texels
+		// it is not going to write, so this upload is CAUSED by the clear. Publishing the site
+		// here keeps it out of the colour-target ceiling and out of c3_ct_canc.
+		const UploadSiteScope upload_site {UploadSite::ClearOp, false, false};
 		InitializeImage(id);
 		if (image.info.samples == 1 && (image.IsBufferModified() || image.IsCpuDirty())) {
 			EXIT("TextureCache: image clear retained guest ownership\n");

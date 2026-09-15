@@ -1265,7 +1265,17 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 			RenderColorInfo color {};
 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
 			if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
-				(void)cache.FindRenderTarget(color.image_id, color.desc);
+				// Session 71, candidate C3 (counters only): the second entrance into
+				// FindRenderTarget, which rt_fast_no never sees. Hand it the same registers the
+				// branch above already tested, so c3_ct covers it and c3_ct + c3_dt - rt_fast_no
+				// measures how often this path runs.
+				(void)cache.FindRenderTarget(
+				    color.image_id, color.desc,
+				    (rt.info.cmask_fast_clear_enable ? TextureCache::kRegColorFastClear : 0u) |
+				        (rt.cmask.addr != 0 ? TextureCache::kRegColorCmaskAddr : 0u) |
+				        (rt.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
+				        (rt.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
+				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u));
 			}
 			continue;
 		}

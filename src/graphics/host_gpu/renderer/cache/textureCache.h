@@ -52,9 +52,25 @@ public:
 	void                        UpdateImage(ImageId id);
 	[[nodiscard]] ImageId       FindImageFromRange(uint64_t address, uint64_t size,
 	                                               bool ensure_valid = true);
+	// Session 71, candidate C3 (counters only, no decision changed): the guest fast-clear
+	// REGISTERS of a binding, as pm4Handlers decoded them into HW::RenderTarget and
+	// HW::RenderControl - read BEFORE ResolveRenderColorTarget turns them into an
+	// ImageMetadataKind and before its width%1024 / height%1024 guard can drop a CMASK fast
+	// clear. The texture cache cannot reach the register file, so the binding hands the bits
+	// over. guest_clear_regs = 0 keeps every existing caller unchanged.
+	static constexpr uint32_t kRegColorFastClear = 1u << 0u; // CB_COLOR*_INFO.FAST_CLEAR
+	static constexpr uint32_t kRegColorCmaskAddr = 1u << 1u; // CB_COLOR*_CMASK_BASE != 0
+	static constexpr uint32_t kRegColorDccEnable = 1u << 2u; // CB_COLOR*_INFO.DCC_ENABLE
+	static constexpr uint32_t kRegColorDccAddr   = 1u << 3u; // CB_COLOR*_DCC_BASE != 0
+	static constexpr uint32_t kRegColorDccKey    = 1u << 4u; // DCC_CONTROL.KEY_CLEAR_ENABLE
+	static constexpr uint32_t kRegDepthClear     = 1u << 5u; // DB_RENDER_CONTROL.DEPTH_CLEAR
+	static constexpr uint32_t kRegStencilClear   = 1u << 6u; // ... STENCIL_CLEAR, as resolved
+
 	[[nodiscard]] vk::ImageView FindTexture(ImageId id, const ImageDesc& desc);
-	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc);
-	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc);
+	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc,
+	                                             uint32_t guest_clear_regs = 0);
+	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc,
+	                                            uint32_t guest_clear_regs = 0);
 	// Gate "rtfast": see m_meta_epoch.
 	[[nodiscard]] uint64_t MetaEpoch() const noexcept {
 		return m_meta_epoch.load(std::memory_order_relaxed);
@@ -212,6 +228,11 @@ private:
 	void                        RefreshImage(ImageId id, bool allow_partial = false);
 	void                        PrepareDccClear(ImageId id, const ImageDesc& desc);
 	void                        PrepareCmaskClear(ImageId id, const ImageDesc& desc);
+	// Caller holds m_lock (IsMetaCleared / MetaClearMask take it themselves and the
+	// TrackingSpinLock EXITs on recursion). Session 71, C3 premise: is there an unconsumed
+	// metadata FILL - the state PrepareDccClear / PrepareCmaskClear act on - for a bound layer?
+	// Deliberately NOT the register state; the two are counted apart and never conflated.
+	[[nodiscard]] bool          MetaFillPendingLocked(const ImageDesc& desc) const;
 	// Caller holds m_lock. A PendingDcc fill that the GPU or CPU has overwritten since (streamed
 	// textures fill new mips' metadata and then DMA the real one) must not be adopted as a clear.
 	[[nodiscard]] bool          PendingDccFillStale(uint64_t address, const MetaDataInfo& meta,

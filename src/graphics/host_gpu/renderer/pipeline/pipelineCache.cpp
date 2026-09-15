@@ -2217,6 +2217,12 @@ struct PipelineCache::ProgramCache {
 			const auto queued = batch.size() - stats.refresh;
 			FS::Add(FS::Counter::DrawAheadQueued, queued > dropped ? queued - dropped : 0);
 			FS::Add(FS::Counter::DrawAheadProbes, stats.probes);
+			// Session 71: the same value to a second counter. DrawAheadProbes is Added here AND in
+			// AheadTake's probe loop, so da_probe has always been the sum and neither half is
+			// readable. Counting the queue side apart (~5 calls a frame, against 8 685 on the take
+			// side) makes take-side probes = da_probe - da_probe_q WITHOUT changing what da_probe
+			// means in any session-61/69/70 log.
+			FS::Add(FS::Counter::DrawAheadQueueProbes, stats.probes);
 			FS::Add(FS::Counter::DrawAheadNoHint, stats.no_hint);
 			FS::Add(FS::Counter::DrawAheadNoPlan, stats.no_plan);
 			FS::Add(FS::Counter::DrawAheadRefresh, stats.refresh);
@@ -2445,6 +2451,11 @@ struct PipelineCache::ProgramCache {
 				FS::Add(FS::Counter::DrawAheadWords, slot.witness.Words());
 				FS::Add(FS::Counter::DrawAheadCleanWords, slot.witness.clean_values.size());
 				FS::Add(FS::Counter::DrawAheadRuns, slot.witness.Runs());
+				// Session 71: Words() and Runs() already read these two headers. Naming them splits
+				// the live-run loop of VerifyWitness from the clean-run loop and the singles, which
+				// no existing log can do - da_runs and da_words are sums of all three.
+				FS::Add(FS::Counter::DrawAheadCleanRuns, slot.witness.clean_runs.size());
+				FS::Add(FS::Counter::DrawAheadSingles, slot.witness.singles.size());
 			}
 			uint32_t failed_run = 0;
 			// Gate "dawitness" off (session 61, ceiling experiment, UNSOUND): take the result

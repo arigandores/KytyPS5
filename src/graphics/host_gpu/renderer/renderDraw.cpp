@@ -782,7 +782,8 @@ static bool SameTargetMetadata(const ImageMetadataInfo& a, const ImageMetadataIn
 
 vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
                                                 const TextureCache::ImageDesc& desc,
-                                                TargetViewFast& fast, bool depth_target) {
+                                                TargetViewFast& fast, bool depth_target,
+                                                uint32_t guest_clear_regs) {
 	namespace FS      = Common::FrameStats;
 	// The linear-readback configuration enrols the image under the lock on every acquisition.
 	const bool gate   = Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) &&
@@ -893,8 +894,22 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		// Gate "rtfast": the LRU touch GetImage did is ResolveRenderColorTarget's (its memo hit
 		// and FindImage both touch).
 		auto&      image      = cache.m_slot_images[target.image_id];
+		// Session 71, candidate C3 (counters only): this slot's guest fast-clear registers, raw.
+		// The same register block ResolveRenderColorTarget read for this draw - nothing between
+		// PrepareDrawRenderState and here parses PM4 - but read BEFORE that function's
+		// metadata-kind decision and its width%1024 / height%1024 guard, which is the point:
+		// c3_ct_drop measures what the guard throws away, and no extent of the imgskip population
+		// can pass it.
+		const auto&    rt_regs = buffer.GetRegisters().GetRenderTarget(target.target_slot);
+		const uint32_t guest_clear_regs =
+		    (rt_regs.info.cmask_fast_clear_enable ? TextureCache::kRegColorFastClear : 0u) |
+		    (rt_regs.cmask.addr != 0 ? TextureCache::kRegColorCmaskAddr : 0u) |
+		    (rt_regs.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
+		    (rt_regs.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
+		    (rt_regs.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u);
 		const auto image_view = AcquireTargetView(cache, image, target.image_id, target.desc,
-		                                          m_color_view_fast[target.target_slot], false);
+		                                          m_color_view_fast[target.target_slot], false,
+		                                          guest_clear_regs);
 		SetVulkanObjectNameF(m_context.GetGraphics().device, image.backing.image,
 		                     "Kyty.MRT{}.Image[guest=0x{:016x} size=0x{:x} format={}]",
 		                     target.target_slot, image.info.data.address, image.info.data.size,
@@ -943,8 +958,16 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			EXIT("depth target changed after render-state discovery\n");
 		}
 		auto&       depth_image = cache.m_slot_images[depth.image_id];
+		// Session 71, candidate C3 (counters only). depth_clear_enable is the raw DB_RENDER_CONTROL
+		// bit; stencil_clear_enable is already AND-ed with the format and the write mask in
+		// depthRenderTarget.cpp, so it is the resolved form and is labelled as such. Depth is the
+		// ONE attachment whose clear the guest states per pass - colour has no analogue, which is
+		// the whole reason C3's premise is in question.
+		const uint32_t guest_clear_regs =
+		    (depth.depth_clear_enable ? TextureCache::kRegDepthClear : 0u) |
+		    (depth.stencil_clear_enable ? TextureCache::kRegStencilClear : 0u);
 		const auto  image_view  = AcquireTargetView(cache, depth_image, depth.image_id, depth.desc,
-		                                            m_depth_view_fast, true);
+		                                            m_depth_view_fast, true, guest_clear_regs);
 		const auto& metadata   = depth.desc.info.metadata;
 		if (metadata.kind == ImageMetadataKind::Htile && depth.depth_clear_enable &&
 		    !cache.ClearMeta(metadata.range.address)) {
@@ -2109,6 +2132,18 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		return;
 	}
 	auto& pipeline = *pipeline_ptr;
+	// Session 71, gate G-area: which pass shape this draw goes into. One Add, no loop, no
+	// decision; Add self-guards on the count limit, which is zero unless FrameStats is enabled.
+	// Keyed by the attachment SLOT count - the same key GpuMark(RenderPass, 1,
+	// num_color_attachments) uses in context.cpp, so a KYTY_GPU_TIME run and FrameTrace-x line
+	// up. Placed after the async-pipeline skip return and before the recpack / direct split, so
+	// one site covers both paths and no skipped draw is counted. sum(rpd_aN) must equal draws,
+	// and sum(N * rpd_aN) must equal rt_att whenever rpa_slot == rpa_att.
+	Common::FrameStats::Add(
+	    static_cast<Common::FrameStats::Counter>(
+	        static_cast<uint32_t>(Common::FrameStats::Counter::PassDraw0) +
+	        RenderPassShapeBucket(rendering.num_color_attachments)),
+	    1);
 
 	// Gate "recpack" (commandRecorder.h): nothing below records on this thread. Every decision -
 	// pass state, the dynamic-state cache, the shader-write debt, the descriptor set - is taken
@@ -2200,14 +2235,28 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			    Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteDefer)) {
 				buffer.NotePendingShaderWrite(packet_write_stages);
 				Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersDeferred, 1);
-			} else if (Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal) &&
-			           m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
-			           buffer.IsRendering() &&
-			           !(packet_write_stages & ~FramebufferSpaceStages())) {
-				tail.shaderWriteBarrierLocal(packet_write_stages);
-				buffer.NotePendingShaderWrite(packet_write_stages);
 			} else {
-				wide_barrier = true;
+				// Session 71: the predicate of gate "swlocal", evaluated and counted whether or not
+				// the gate is on. The gate still chooses the branch below, so no decision changes -
+				// this only sizes the population (swbar_loc is 0 in every s69/s70 log).
+				const auto packet_blocked = packet_write_stages & ~FramebufferSpaceStages();
+				const bool packet_local_ok =
+				    m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
+				    buffer.IsRendering() && !packet_blocked;
+				Common::FrameStats::Add(
+				    packet_local_ok ? Common::FrameStats::Counter::ShaderWriteLocalEligible
+				    : (packet_blocked & vk::PipelineStageFlagBits::eMeshShaderEXT)
+				        ? Common::FrameStats::Counter::ShaderWriteLocalMeshBlocked
+				    : packet_blocked ? Common::FrameStats::Counter::ShaderWriteLocalStageBlocked
+				                     : Common::FrameStats::Counter::ShaderWriteLocalClosed,
+				    1);
+				if (packet_local_ok &&
+				    Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal)) {
+					tail.shaderWriteBarrierLocal(packet_write_stages);
+					buffer.NotePendingShaderWrite(packet_write_stages);
+				} else {
+					wide_barrier = true;
+				}
 			}
 		}
 		tail.Commit(false);
@@ -2359,10 +2408,19 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		}
 		// Gate "swlocal": a fragment-only shader-write barrier can be recorded inside the open
 		// pass instead of tearing it down, and the wide barrier is owed until the pass closes.
-		const bool local = Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal) &&
-		                   m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
-		                   buffer.IsRendering() &&
-		                   !(shader_write_stages & ~FramebufferSpaceStages());
+		// Session 71: the predicate is evaluated and counted whether or not the gate is on; the
+		// gate still chooses the branch, so no decision changes.
+		const auto blocked  = shader_write_stages & ~FramebufferSpaceStages();
+		const bool local_ok = m_context.GetGraphics().dynamic_rendering_local_read_enabled &&
+		                      buffer.IsRendering() && !blocked;
+		Common::FrameStats::Add(
+		    local_ok ? Common::FrameStats::Counter::ShaderWriteLocalEligible
+		    : (blocked & vk::PipelineStageFlagBits::eMeshShaderEXT)
+		        ? Common::FrameStats::Counter::ShaderWriteLocalMeshBlocked
+		    : blocked ? Common::FrameStats::Counter::ShaderWriteLocalStageBlocked
+		              : Common::FrameStats::Counter::ShaderWriteLocalClosed,
+		    1);
+		const bool local = local_ok && Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteLocal);
 		if (local) {
 			buffer.CheckNoPublish(publish_mark);
 			ShaderWriteBarrierLocal(vk_buffer, shader_write_stages);

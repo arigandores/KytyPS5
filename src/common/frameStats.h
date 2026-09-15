@@ -677,6 +677,139 @@ enum class Counter : uint32_t {
 	                  // for its format (imageInfo.h DecodePackedColorClear and friends)
 	ClearOverlapOnly, // clr_over: images that overlapped the fill range without claiming it
 	                  // exactly, summed over declined fills - sizes widening "exact" to "contained"
+	// ------------------------------------------------------------------------------------------
+	// Session 71, gate G-area: the census of the render passes rp_begin counts. rt_att and
+	// rt_kpx (session 67) are per-DRAW sums - AcquireRenderTargets runs once per draw - so they
+	// cannot tell "more passes" from "more attachments per pass" from "the same passes larger".
+	// Booked once per pass in CommandBuffer::BeginRenderingImpl (one loop over at most 8 slots
+	// plus 5-7 Adds, ~188 passes a frame) plus one Add per draw. No gate, no decision changed.
+	// Identities the first run must satisfy: sum(rpa_aN) == sum(rpa_eN) == rp_begin;
+	// sum(N * rpa_aN) == rpa_att; sum(rpd_aN) == draws; rpa_slot - rpa_att == attachment holes.
+	// rpa_a0..a8, rpa_e0..e7 and rpd_a0..a8 are CONTIGUOUS runs indexed by the classifiers of
+	// renderTarget.h; context.cpp static_asserts their length. Do not insert into the middle.
+	PassSlots,          // rpa_slot: colour attachment SLOTS of the pass (num_color_attachments, holes in)
+	PassAttachments,    // rpa_att: LIVE colour attachments (image_view != nullptr)
+	PassPixelsK,        // rpa_kpx: live * width * height / 1024, summed over PASSES
+	PassDepth,          // rpa_dep: passes with a depth/stencil attachment
+	PassDepthPixelsK,   // rpa_dkpx: their width * height / 1024
+	PassLayered,        // rpa_lay: passes with num_layers > 1 - self-check for rpa_kpx
+	PassRestartPixelsK, // rpa_re_kpx: colour area of a pass begun on the targets just ended
+	PassShape0,         // rpa_a0: passes with 0 live colour attachments
+	PassShape1,         // rpa_a1: passes with 1 live colour attachments
+	PassShape2,         // rpa_a2: passes with 2 live colour attachments
+	PassShape3,         // rpa_a3: passes with 3 live colour attachments
+	PassShape4,         // rpa_a4: passes with 4 live colour attachments
+	PassShape5,         // rpa_a5: passes with 5 live colour attachments
+	PassShape6,         // rpa_a6: passes with 6 live colour attachments
+	PassShape7,         // rpa_a7: passes with 7 live colour attachments
+	PassShape8,         // rpa_a8: passes with 8 live colour attachments
+	PassExtent0,        // rpa_e0: passes in colour-area bucket 0
+	PassExtent1,        // rpa_e1: passes in colour-area bucket 1
+	PassExtent2,        // rpa_e2: passes in colour-area bucket 2
+	PassExtent3,        // rpa_e3: passes in colour-area bucket 3
+	PassExtent4,        // rpa_e4: passes in colour-area bucket 4
+	PassExtent5,        // rpa_e5: passes in colour-area bucket 5
+	PassExtent6,        // rpa_e6: passes in colour-area bucket 6
+	PassExtent7,        // rpa_e7: passes in colour-area bucket 7
+	PassDraw0,          // rpd_a0: draws emitted into a pass with 0 attachment slots
+	PassDraw1,          // rpd_a1: draws emitted into a pass with 1 attachment slots
+	PassDraw2,          // rpd_a2: draws emitted into a pass with 2 attachment slots
+	PassDraw3,          // rpd_a3: draws emitted into a pass with 3 attachment slots
+	PassDraw4,          // rpd_a4: draws emitted into a pass with 4 attachment slots
+	PassDraw5,          // rpd_a5: draws emitted into a pass with 5 attachment slots
+	PassDraw6,          // rpd_a6: draws emitted into a pass with 6 attachment slots
+	PassDraw7,          // rpd_a7: draws emitted into a pass with 7 attachment slots
+	PassDraw8,          // rpd_a8: draws emitted into a pass with 8 attachment slots
+	// ------------------------------------------------------------------------------------------
+	// Session 71, gate G-wit: what the M1 witness is made of. Witness::Words() and Runs()
+	// (pipelineCache.cpp) are sums over live runs, clean runs and singles, and VerifyWitness
+	// spends its 2.016 ms in three separate loops over them. With these the three separate:
+	//   clean_runs = da_runs_clean, singles = da_singles,
+	//   live_runs  = da_runs  - da_runs_clean - da_singles,
+	//   live_words = da_words - da_words_clean - da_singles, clean_words = da_words_clean.
+	DrawAheadCleanRuns,   // da_runs_clean: GPU-clean runs of a verified witness (sum)
+	DrawAheadSingles,     // da_singles: singles of a verified witness (sum)
+	DrawAheadQueueProbes, // da_probe_q: the QUEUE-side half of da_probe (da_probe unchanged)
+	// ------------------------------------------------------------------------------------------
+	// Session 71: the census of the gate "swlocal" predicate (renderDraw.cpp, both the recpack
+	// tail and the direct path). Counted for every shader-write draw the gate "swdefer" did not
+	// take, whether or not "swlocal" is on - swbar_loc is 0 in every s69/s70 log, so a plain
+	// baseline run sizes the opportunity. The four are exclusive and sum to the draws that
+	// reach the branch.
+	ShaderWriteLocalEligible,     // swloc_ok: framebuffer-space stages only AND a pass open
+	ShaderWriteLocalMeshBlocked,  // swloc_mesh: blocked by eMeshShaderEXT in the write mask
+	ShaderWriteLocalStageBlocked, // swloc_vtx: blocked by another non-framebuffer stage
+	ShaderWriteLocalClosed,       // swloc_shut: stages fine, but no pass open (or no local_read)
+	// ------------------------------------------------------------------------------------------
+	// Session 71: where the closer MIGRATES to if "swlocal" stops closing the pass. One Add in
+	// the early-return branch of EndRenderingImpl, indexed by the RenderPassEnd reason and
+	// qualified by "the pass was closed by a ShaderWrite" - so every closer is covered, not just
+	// the GDS barrier session 55 warned about. CONTIGUOUS and in RenderPassEnd order, like
+	// RpEnd* and RpRestart*; context.cpp static_asserts it. swmig_state counts the episodes
+	// exactly (BeginRenderingImpl clears m_closed_valid), the other fourteen are an UPPER bound
+	// on migrated closes because every hidden closer of an episode is counted, not just the
+	// first. swmig_state - sum(the other fourteen) is therefore a LOWER bound on the restarts
+	// "swlocal" would really remove.
+	SwMigState,          // swmig_state: a BeginRendering - one per episode, so this counts the episodes
+	SwMigTargetTransit,  // swmig_tt: attachment layout transition (AcquireRenderTargets)
+	SwMigBindingTransit, // swmig_bt: layout transition of a bound image (CommitBindings)
+	SwMigGds,            // swmig_gds: GDS buffer barrier - the closer session 55 warned about
+	SwMigShaderWrite,    // swmig_sw: another shader-write barrier with no pass open
+	SwMigDispatch,       // swmig_disp: compute dispatch
+	SwMigBufferUpload,   // swmig_bup: CPU -> buffer synchronization
+	SwMigBufferCopy,     // swmig_bcp: buffer copy or fill on the GPU
+	SwMigImageUpload,    // swmig_iup: guest -> image upload
+	SwMigTiler,          // swmig_tiler: tiler compute
+	SwMigClear,          // swmig_clr: image clears outside a pass
+	SwMigSanitize,       // swmig_san: indirect draw argument sanitizer
+	SwMigDownload,       // swmig_dl: readbacks and image -> buffer copies
+	SwMigSubmit,         // swmig_sub: command buffer end at submit
+	SwMigOther,          // swmig_oth: everything else
+	// ------------------------------------------------------------------------------------------
+	// Session 71, candidate C3 (suppress the guest upload of an image bound as a write target).
+	// RenderAttachment::is_clear (renderTarget.h) is never assigned true anywhere under src/, so
+	// every colour attachment takes loadOp = eLoad and C3's premise has no support in the tree.
+	// These counters say what the GUEST states: the fast-clear registers of the binding as
+	// pm4Handlers decoded them, read BEFORE ResolveRenderColorTarget turns them into an
+	// ImageMetadataKind and before its width%1024 / height%1024 guard, which no extent of the
+	// imgskip population can pass. Register state and metadata-FILL state are counted apart and
+	// never conflated. Identities the first run must satisfy:
+	//   c3_ct_up + c3_dt_up + c3_st_up + c3_smp_up + c3_clr_up + c3_oth_up == c3_pop, and the
+	//   same for the _kb rows against c3_pop_kb, EVERY frame and at any gate setting;
+	//   c3_ct + c3_dt - rt_fast_no >= 0 (the excess is descriptors.cpp's second entrance);
+	//   c3_ct_pop - c3_ct_canc - c3_ct_up >= 0 (the maybe-CPU-dirty divergence - quote it).
+	C3ColorAcquires,      // c3_ct: acquisitions that reached TextureCache::FindRenderTarget
+	C3ColorRegFastClear,  // c3_ct_fc: CB_COLOR*_INFO.FAST_CLEAR set AND CB_COLOR*_CMASK_BASE != 0
+	C3ColorRegDcc,        // c3_ct_dcc: CB_COLOR*_INFO.DCC_ENABLE set AND CB_COLOR*_DCC_BASE != 0
+	C3ColorRegDccKey,     // c3_ct_key: ... and CB_COLOR*_DCC_CONTROL.KEY_CLEAR_ENABLE set
+	C3ColorMetaKind,      // c3_ct_kind: metadata.kind survived to Dcc or Cmask
+	C3ColorRegDropped,    // c3_ct_drop: register clear state that colorRenderTarget.cpp dropped
+	C3ColorFillPending,   // c3_ct_fill: an unconsumed metadata FILL for the bound layers
+	C3ColorPop,           // c3_ct_pop: acquisitions in the imgskip population ON ENTRY
+	C3ColorPopKb,         // c3_ct_pop_kb: KiB of their guest source (KiB at the increment site)
+	C3ColorCancelled,     // c3_ct_canc: left the population across the two Prepare*Clear calls
+	C3ColorCancelledKb,   // c3_ct_canc_kb: KiB of those
+	C3DepthAcquires,      // c3_dt: acquisitions that reached FindDepthTarget
+	C3Population,         // c3_pop: population members reaching the upload decision, any site
+	C3PopulationKb,       // c3_pop_kb: KiB of those
+	C3ColorUploads,       // c3_ct_up: population uploads at a colour-target binding - C3s ceiling
+	C3ColorUploadsKb,     // c3_ct_up_kb: KiB of those
+	C3ColorUploadsReg,    // c3_ct_up_reg: ... whose guest fast-clear REGISTERS were set
+	C3ColorUploadsRegKb,  // c3_ct_up_reg_kb: the bytes the G-img3 question asks for
+	C3ColorUploadsFill,   // c3_ct_up_fill: ... with an unconsumed metadata fill still pending
+	C3ColorUploadsFillKb, // c3_ct_up_fill_kb: KiB of those
+	C3DepthUploads,       // c3_dt_up: population uploads at a depth-target binding
+	C3DepthUploadsKb,     // c3_dt_up_kb: KiB of those
+	C3DepthUploadsReg,    // c3_dt_up_reg: ... with DB_RENDER_CONTROL.DEPTH_CLEAR_ENABLE
+	C3DepthUploadsRegKb,  // c3_dt_up_reg_kb: KiB of those - the second half of R
+	C3StorageUploads,     // c3_st_up: population uploads at a storage-image binding
+	C3StorageUploadsKb,   // c3_st_up_kb: KiB of those
+	C3SampledUploads,     // c3_smp_up: population uploads at a SAMPLED binding - the pass READS it
+	C3SampledUploadsKb,   // c3_smp_up_kb: KiB of those - the direct test of s70s gpu= proxy
+	C3ClearUploads,       // c3_clr_up: uploads ClearImages partial-clear path performs ITSELF
+	C3ClearUploadsKb,     // c3_clr_up_kb: KiB of those
+	C3OtherUploads,       // c3_oth_up: population uploads from every other site
+	C3OtherUploadsKb,     // c3_oth_up_kb: KiB of those
 	Count
 };
 

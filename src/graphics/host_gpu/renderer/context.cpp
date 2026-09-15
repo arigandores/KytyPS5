@@ -49,6 +49,21 @@ static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::RpRestartOther)
                   static_cast<uint32_t>(Common::FrameStats::Counter::RpRestartState) ==
               static_cast<uint32_t>(RenderPassEnd::Other));
 
+// Session 71: the four new contiguous tables are exactly as long as the thing that indexes
+// them. A counter inserted in the middle of one stops the build here instead of silently
+// mis-binning a pass or a closer.
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::PassShape8) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::PassShape0) ==
+              RENDER_COLOR_ATTACHMENTS_MAX);
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::PassExtent7) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::PassExtent0) == 7);
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::PassDraw8) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::PassDraw0) ==
+              RENDER_COLOR_ATTACHMENTS_MAX);
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::SwMigOther) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::SwMigState) ==
+              static_cast<uint32_t>(RenderPassEnd::Other));
+
 // The beginning pass records to the same attachments, in the same layouts, over the same render
 // area as the pass that ended: the two differ at most in their load-op clears.
 [[nodiscard]] bool SameRenderTargets(const RenderState& a, const RenderState& b) {
@@ -274,11 +289,54 @@ void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) co
 	EXIT_IF(packet && m_recorder == nullptr);
 	EndRenderingImpl(RenderPassEnd::State, packet);
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
+	// Session 71, gate G-area: the census of this pass. Enabled(), NOT TimingsEnabled(): a
+	// measurement run is KYTY_FRAME_TRACE=lite, where g_timings is false and every counter is
+	// live. Placed after the early return at the top of the function, so it counts exactly the
+	// population rp_begin counts, and before the restart branch, so that branch reuses the area
+	// instead of computing it twice. state.width/height is already the MINIMUM over the
+	// attachments of the pass, and num_color_attachments is max(slot + 1), so a hole has
+	// image_view == nullptr and is counted in rpa_slot but not in rpa_att.
+	uint64_t pass_color_kpx = 0;
+	if (Common::FrameStats::Enabled()) {
+		uint32_t live = 0;
+		for (uint32_t i = 0; i < state.num_color_attachments; i++) {
+			if (state.color_attachments[i].image_view != nullptr) {
+				live++;
+			}
+		}
+		const uint64_t kpx = static_cast<uint64_t>(state.width) * state.height / 1024U;
+		pass_color_kpx     = kpx * live;
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassSlots,
+		                        state.num_color_attachments);
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassAttachments, live);
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassPixelsK, pass_color_kpx);
+		Common::FrameStats::Add(static_cast<Common::FrameStats::Counter>(
+		                            static_cast<uint32_t>(Common::FrameStats::Counter::PassShape0) +
+		                            RenderPassShapeBucket(live)),
+		                        1);
+		Common::FrameStats::Add(
+		    static_cast<Common::FrameStats::Counter>(
+		        static_cast<uint32_t>(Common::FrameStats::Counter::PassExtent0) +
+		        RenderPassExtentBucket(kpx)),
+		    1);
+		if (state.depth_stencil_attachment.image_view != nullptr) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassDepth, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassDepthPixelsK, kpx);
+		}
+		if (state.num_layers > 1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassLayered, 1);
+		}
+	}
 	if (m_closed_valid) {
 		m_closed_valid = false;
 		if (SameRenderTargets(m_closed_state, state)) {
 			Common::FrameStats::Add(
 			    RenderPassEndCounter(Common::FrameStats::Counter::RpRestartState, m_closed_why), 1);
+			// The area this restart re-begins. FrameTrace-rp already says how many restarts there
+			// are and why; it has never said how large they are, and a restart pays loadOp = eLoad
+			// plus storeOp = eStore over exactly this area.
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassRestartPixelsK,
+			                        pass_color_kpx);
 		}
 	}
 
@@ -339,6 +397,16 @@ void CommandBuffer::EndRenderingImpl(RenderPassEnd why, bool packet) const {
 	// Packet pass changes are taken only where GPU-time marks are off: marks record through Handle().
 	EXIT_IF(packet && (m_recorder == nullptr || GpuTimeProfiler::Enabled()));
 	if (!m_rendering) {
+		// Session 71: something wants to close a pass and the pass is already gone because a
+		// shader-write barrier closed it. Indexed by the reason, so EVERY closer is covered - not
+		// just the GDS barrier session 55 warned about. If the gate "swlocal" kept the pass open,
+		// whichever of these came first would become the closer instead, and the restart would
+		// move rather than disappear. One Add, no new state, no decision; m_closed_* is only
+		// maintained under FrameStats::Enabled(), so this is silent when counters are off.
+		if (m_closed_valid && m_closed_why == RenderPassEnd::ShaderWrite) {
+			Common::FrameStats::Add(
+			    RenderPassEndCounter(Common::FrameStats::Counter::SwMigState, why), 1);
+		}
 		// A debt without an open pass cannot happen today (it is only taken on while rendering),
 		// but if it ever does, paying it here is the difference between a barrier and no barrier.
 		if (m_pending_shader_write) {

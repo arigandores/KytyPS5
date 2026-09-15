@@ -1882,11 +1882,26 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		bindings.pixel.reset();
 	}
 	const auto stages = std::span {descriptor_stages.data(), stage_count};
+	// Session 68, gate "pxstat": time the binding interval separately for depth-only draws (24 % of
+	// them bind no pixel resources - do they still pay the full price?).
+	const auto px_t0 = Common::Gates::Enabled(Common::Gates::Gate::PixelOffStat) &&
+	                           Common::FrameStats::Enabled()
+	                       ? Common::FrameStats::NowNs()
+	                       : 0;
 	// Upstream dd408ff passes the color targets in: their identities are resolved with the
 	// image aliases, before the buffer uploads of RebindBuffers.
 	PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});
 	// Session 64 (shadowResolve.h), measurement only, both gates default 0.
 	ShadowQueue(stages);
+	if (px_t0 != 0) {
+		const auto spent = Common::FrameStats::NowNs() - px_t0;
+		Common::FrameStats::Add(state.ps_active ? Common::FrameStats::Counter::PxOnBindNs
+		                                        : Common::FrameStats::Counter::PxOffBindNs,
+		                        spent);
+		Common::FrameStats::Add(state.ps_active ? Common::FrameStats::Counter::PxOnDraws
+		                                        : Common::FrameStats::Counter::PxOffDraws,
+		                        1);
+	}
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
 	// Session 68, gate "amut": the rest of this function is the apply-and-record half of the draw -
 	// vertex and index buffers, the pipeline lookup (which creates pipelines), CommitBindings,

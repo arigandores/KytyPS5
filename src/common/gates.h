@@ -113,6 +113,9 @@ enum class Gate : uint32_t {
 	// Session 68, the serial floor A: the mutating part of the draw path, timed in place. The
 	// intervals nest, so only the outermost one counts (MutScope in frameStats.h).
 	MutateTime,          // KYTY_A_MUTATE,              file name "amut"
+	// Session 68: the binding interval of a draw, split by whether the pixel stage is live. Answers
+	// whether the 24 % of draws that are depth-only (counter da_px_off) pay the full price.
+	PixelOffStat,        // KYTY_PX_STAT,               file name "pxstat"
 	Count,
 };
 

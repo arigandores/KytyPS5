@@ -107,6 +107,7 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 68, measurement only.
     {"KYTY_OCCLUSION_ZERO", "occzero", false},
     {"KYTY_A_MUTATE", "amut", false},
+    {"KYTY_PX_STAT", "pxstat", false},
 }};
 
 struct KnobDefinition {

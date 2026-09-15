@@ -1802,6 +1802,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bat_park_us", FS::Counter::BatonParkNs, true},
 				    {"bat_wake_us", FS::Counter::BatonWakeNs, true},
 				    {"bat_drop", FS::Counter::BatonDropped, false},
+				    {"px_on_n", FS::Counter::PxOnDraws, false},
+				    {"px_on_bind_us", FS::Counter::PxOnBindNs, true},
+				    {"px_off_n", FS::Counter::PxOffDraws, false},
+				    {"px_off_bind_us", FS::Counter::PxOffBindNs, true},
 				};
 				std::string text;
 				for (const auto& counter: named) {

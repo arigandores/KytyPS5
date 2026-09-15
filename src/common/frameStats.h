@@ -627,6 +627,11 @@ enum class Counter : uint32_t {
 	BatonParkNs,      // bat_park_us: GuestGpu time from handing the range over to getting it back
 	BatonWakeNs,      // bat_wake_us: relay-thread time from being woken to starting the range
 	BatonDropped,     // bat_drop: ranges the relay could not take (it was busy)
+	// Gate "pxstat": the binding interval of a draw, split by whether the pixel stage is live.
+	PxOnDraws,        // px_on_n
+	PxOnBindNs,       // px_on_bind_us
+	PxOffDraws,       // px_off_n: depth-only draws (the same population as da_px_off)
+	PxOffBindNs,      // px_off_bind_us
 	Count
 };
 

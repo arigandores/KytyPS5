@@ -1753,6 +1753,9 @@ ImageId TextureCache::FindStencilAssociation(GuestRange stencil) {
 }
 
 ImageId TextureCache::FindImage(ImageDesc& desc, bool exact_format) {
+	// Session 68, gate "amut": creates and merges host images.
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	auto& command = m_scheduler.Current();
 	if (command.IsInvalid()) {
 		EXIT("TextureCache: image lookup requires a valid command buffer\n");
@@ -1925,6 +1928,10 @@ TextureCache::ShadowImageAnswer TextureCache::ShadowProbe(const ShadowImageQuery
 vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	Common::FrameStats::Scope view_scope(Common::FrameStats::Counter::BindFindTexNs,
 	                                   Common::FrameStats::Counter::BindFindTex);
+	// Session 68, gate "amut": everything below mutates - the source configuration, the LRU touch,
+	// the DCC clear, the upload of the image, the download tracking and the view cache.
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	std::scoped_lock lock {m_lock};
 	ConfigureImageSourceUnlocked(id, desc);
 	auto&            image = m_slot_images[id];

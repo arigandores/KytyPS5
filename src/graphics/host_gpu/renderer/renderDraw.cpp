@@ -1888,6 +1888,11 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// Session 64 (shadowResolve.h), measurement only, both gates default 0.
 	ShadowQueue(stages);
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
+	// Session 68, gate "amut": the rest of this function is the apply-and-record half of the draw -
+	// vertex and index buffers, the pipeline lookup (which creates pipelines), CommitBindings,
+	// BeginRendering, the dynamic state, EmitDrawPrimitives. None of it can leave the serial path.
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	static const uint64_t watched_image = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_WATCH");
 		return value == nullptr ? uint64_t {0} : std::strtoull(value, nullptr, 0);
@@ -2373,7 +2378,14 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	                    args.index_count, 0, 1, args.instance_count,
 	                    reinterpret_cast<uint64_t>(args.index_addr));
 
-	Common::LockGuard lock(m_context.GetMutex());
+	// Session 68, gate "amut": the render mutex is one object for draw, dispatch and present, so
+	// the time it is held is the serial floor of any threading scheme (renderContext.h:80).
+	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	                             Common::FrameStats::Enabled()
+	                         ? Common::FrameStats::NowNs()
+	                         : 0;
+	Common::LockGuard            lock(m_context.GetMutex());
+	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	DrawStatBegin();
 	if (args.index_count == 0 || args.instance_count == 0) {
 		return;
@@ -2504,7 +2516,13 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	                    args.vertex_count, 0, args.first_vertex, args.instance_count,
 	                    args.first_instance);
 
-	Common::LockGuard lock(m_context.GetMutex());
+	// Session 68, gate "amut": see DrawIndex above.
+	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	                             Common::FrameStats::Enabled()
+	                         ? Common::FrameStats::NowNs()
+	                         : 0;
+	Common::LockGuard            lock(m_context.GetMutex());
+	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	DrawStatBegin();
 	if (args.vertex_count == 0 || args.instance_count == 0) {
 		return;

@@ -106,6 +106,13 @@ enum class Gate : uint32_t {
 	// once when the game sets its memory up (about seven seconds in), so turning this on mid-run
 	// only enables writing.
 	SavePersist,         // KYTY_SAVE_PERSIST,          file name "savepersist"
+	// Session 68, ceiling of the occlusion emulation (measurement only: the game stops seeing
+	// anything and the picture breaks). The dump publishes a ready result of 0 samples instead of
+	// the synthetic counter, so the guest's visibility tests answer "not visible".
+	OcclusionZero,       // KYTY_OCCLUSION_ZERO,        file name "occzero"
+	// Session 68, the serial floor A: the mutating part of the draw path, timed in place. The
+	// intervals nest, so only the outermost one counts (MutScope in frameStats.h).
+	MutateTime,          // KYTY_A_MUTATE,              file name "amut"
 	Count,
 };
 
@@ -123,6 +130,7 @@ enum class Knob : uint32_t {
 	RecordPublishEvery, // KYTY_RECORD_PUBLISH_N,  file name "recpubn" (session 61: publish the record head at most every N draw-stream records; 0/1 = every record)
 	ShadowResolve,      // KYTY_SHADOW_RESOLVE,    file name "shadowresolve" (session 64, E4: K shadow readers of the binding resolution, 0 = off)
 	ShadowMask,         // KYTY_SHADOW_MASK,       file name "shadowmask" (session 64: 1 = image probes, 2 = buffer probes, 3 = both)
+	M4Baton,            // KYTY_M4_BATON,          file name "m4baton" (session 68: draws of the PM4 range a second thread runs while GuestGpu is parked, 0 = off)
 	Count,
 };
 

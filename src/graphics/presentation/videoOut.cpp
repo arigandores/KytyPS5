@@ -1786,6 +1786,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"rt_att", FS::Counter::RtAttachments, false},
 				    {"rt_kpx", FS::Counter::RtPixelsK, false},
 				    {"vp_kpx", FS::Counter::VpPixelsK, false},
+				    // Session 68: occlusion ceiling, the serial floor A, and the relay.
+				    {"occ_dump", FS::Counter::OcclusionDumps, false},
+				    {"a_mut_us", FS::Counter::MutateNs, true},
+				    {"a_mut_n", FS::Counter::MutateIntervals, false},
+				    {"a_hold_us", FS::Counter::LockHoldNs, true},
+				    {"a_hold_n", FS::Counter::LockHolds, false},
+				    {"a_wait_us", FS::Counter::LockWaitNs, true},
+				    {"bat_ranges", FS::Counter::BatonRanges, false},
+				    {"bat_work_us", FS::Counter::BatonWorkNs, true},
+				    {"bat_work_draws", FS::Counter::BatonWorkDraws, false},
+				    {"bat_self_us", FS::Counter::BatonSelfNs, true},
+				    {"bat_self_draws", FS::Counter::BatonSelfDraws, false},
+				    {"bat_self_ranges", FS::Counter::BatonSelfRanges, false},
+				    {"bat_park_us", FS::Counter::BatonParkNs, true},
+				    {"bat_wake_us", FS::Counter::BatonWakeNs, true},
+				    {"bat_drop", FS::Counter::BatonDropped, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

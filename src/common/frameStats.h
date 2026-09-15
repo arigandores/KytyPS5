@@ -603,6 +603,30 @@ enum class Counter : uint32_t {
 	RtAttachments,    // colour attachments bound by the draws of this frame (rt_att)
 	RtPixelsK,        // ... their width * height, in units of 1024 pixels (rt_kpx)
 	VpPixelsK,        // guest viewport area per draw, same units (vp_kpx)
+	// Session 68. The occlusion dump is counted always (it costs one add per dump); everything
+	// below is zero unless its gate or knob is on.
+	OcclusionDumps,   // event 0x39 dumps of the frame (occ_dump)
+	// Gate "amut": the mutating part of the draw path, timed in place. Only the outermost interval
+	// counts, so the total is the union of the intervals and not their sum.
+	MutateNs,         // a_mut_us
+	MutateIntervals,  // a_mut_n
+	// The render mutex of renderContext.h:80. Draw, dispatch and present all take this one object,
+	// so the time it is held is the serial floor of every threading scheme, M4 included.
+	LockHoldNs,       // a_hold_us
+	LockHolds,        // a_hold_n
+	LockWaitNs,       // a_wait_us
+	// Knob "m4baton": a second thread runs a real PM4 range while GuestGpu is parked. The ranges
+	// alternate inside one run - one on the relay thread, the next on GuestGpu - so f_full is the
+	// ratio of the two per-draw times of the SAME run.
+	BatonRanges,      // bat_ranges: ranges handed to the relay thread
+	BatonWorkNs,      // bat_work_us: relay-thread time inside such a range
+	BatonWorkDraws,   // bat_work_draws
+	BatonSelfNs,      // bat_self_us: GuestGpu time inside a control range of the same shape
+	BatonSelfDraws,   // bat_self_draws
+	BatonSelfRanges,  // bat_self_ranges
+	BatonParkNs,      // bat_park_us: GuestGpu time from handing the range over to getting it back
+	BatonWakeNs,      // bat_wake_us: relay-thread time from being woken to starting the range
+	BatonDropped,     // bat_drop: ranges the relay could not take (it was busy)
 	Count
 };
 
@@ -668,6 +692,9 @@ struct Shard {
 // KYTY_AV_TRACE, 0 without them, and only the counters of the FrameTrace main line in the lean
 // mode (gate "fslean"). Zero until frameStats.cpp is initialized.
 inline constinit std::atomic<uint32_t> g_count_limit {0};
+// Session 68, gate "amut": the nesting depth and the start of the outermost mutating interval.
+inline thread_local uint32_t t_mut_depth = 0;
+inline thread_local uint64_t t_mut_t0    = 0;
 inline constinit bool                  g_timings = false;
 // No initializer to run, so no TLS guard: the shard is attached by the first Add of a thread.
 inline constinit thread_local Shard*   t_shard   = nullptr;
@@ -741,6 +768,65 @@ private:
 	Counter  m_ns;
 	Counter  m_count;
 	uint64_t m_t0;
+};
+
+// Session 68: the render mutex of renderContext.h:80. Constructed right after the LockGuard with
+// the timestamp taken right before it, so it charges the wait to one counter and the hold to
+// another. Zero means "not measuring" (gate "amut" off, or FrameStats off).
+class MutexMark {
+public:
+	explicit MutexMark(uint64_t before): m_t(before) {
+		if (m_t != 0) {
+			const auto now = NowNs();
+			Add(Counter::LockWaitNs, now - m_t);
+			Add(Counter::LockHolds, 1);
+			m_t = now;
+		}
+	}
+	~MutexMark() {
+		if (m_t != 0) {
+			Add(Counter::LockHoldNs, NowNs() - m_t);
+		}
+	}
+	MutexMark(const MutexMark&)            = delete;
+	MutexMark& operator=(const MutexMark&) = delete;
+
+private:
+	uint64_t m_t;
+};
+
+// Session 68, gate "amut": the union of the mutating intervals of the draw path (the serial floor
+// A). Constructed with the gate's value; when it is off nothing is read and nothing is written.
+// Nested scopes do not time themselves - the outermost one already covers them - so the total is
+// the union of the intervals, which is what A is. Enabled() and not TimingsEnabled(): a
+// measurement run is KYTY_FRAME_TRACE=lite, where g_timings is false.
+class MutScope {
+public:
+	explicit MutScope(bool on): m_active(on && Enabled()) {
+		if (!m_active) {
+			return;
+		}
+		m_outer = Detail::t_mut_depth++ == 0;
+		if (m_outer) {
+			Detail::t_mut_t0 = NowNs();
+		}
+	}
+	~MutScope() {
+		if (!m_active) {
+			return;
+		}
+		Detail::t_mut_depth--;
+		if (m_outer) {
+			Add(Counter::MutateNs, NowNs() - Detail::t_mut_t0);
+			Add(Counter::MutateIntervals, 1);
+		}
+	}
+	MutScope(const MutScope&)            = delete;
+	MutScope& operator=(const MutScope&) = delete;
+
+private:
+	bool m_active;
+	bool m_outer = false;
 };
 
 // Splits a sequence of phases: Mark(c) charges the time since the previous Mark (or construction)

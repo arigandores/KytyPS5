@@ -732,6 +732,10 @@ void BufferCache::NoteWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
+	// Session 68, gate "amut": clears dirty bits, re-protects pages and records the copies. Usually
+	// nested inside ObtainBuffer, where the outer scope already covers it.
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	// Gate "stkstat" (A1 ceiling; statistics only): the candidate pages a sticky mechanism would
 	// compare with their shadow on this synchronization - every one but a small read-only ObtainBuffer
 	// request, which would take the stream copy instead (stk_stream_hot) - and the arm history of the
@@ -885,6 +889,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
                                                        bool is_written, bool is_texel_buffer,
                                                        BufferId id, bool memoizable) {
 	Common::FrameStats::Scope obtain_scope(Common::FrameStats::Counter::ObtainBufNs);
+	// Session 68, gate "amut": the LRU touch, SynchronizeBuffer, the stream-ring copies and the
+	// buffer creation all live below this line.
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	Common::FrameStats::Add(Common::FrameStats::Counter::ObtainBufs, 1);
 	// Gate "buffast": a read-only binding asking for a guest range it already asked for takes the
 	// buffer the previous request resolved, instead of FindBuffer + TouchBuffer +

@@ -301,6 +301,19 @@ void CommandRecorder::PushRecord(RecordOp op, const void* payload, uint32_t payl
 	EndRecord(payload_size, publish);
 }
 
+std::thread::id CommandRecorder::AdoptProducer(std::thread::id owner) {
+	// Session 68, knob "m4baton". A handover in the middle of a record would give half of it to the
+	// other thread, so this is only legal between records. Nothing else is asserted: the caller
+	// guarantees exclusion (the relay runs only while the GuestGpu thread is parked), and the owner
+	// at that moment is not necessarily either of them - the first BeginRecord of the process claims
+	// the ring, and that can be the thread that built the first command buffer. Whoever it was is
+	// returned and put back when the range ends.
+	EXIT_IF(m_open_slot != nullptr);
+	const auto previous = m_producer;
+	m_producer          = owner;
+	return previous;
+}
+
 uint8_t* CommandRecorder::BeginRecord(RecordOp op, uint32_t max_payload) {
 	// One producer per recorder: the ring is single-producer, and a second publisher would
 	// interleave its reservation with this one and hand the record thread a half-written record.

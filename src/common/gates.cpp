@@ -104,6 +104,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_SHADOW_INLINE", "shadowinline", false},
     // Session 67, infrastructure.
     {"KYTY_SAVE_PERSIST", "savepersist", false},
+    // Session 68, measurement only.
+    {"KYTY_OCCLUSION_ZERO", "occzero", false},
+    {"KYTY_A_MUTATE", "amut", false},
 }};
 
 struct KnobDefinition {
@@ -126,6 +129,7 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_RECORD_PUBLISH_N", "recpubn", 0, 4096},
     {"KYTY_SHADOW_RESOLVE", "shadowresolve", 0, 16},
     {"KYTY_SHADOW_MASK", "shadowmask", 3, 3},
+    {"KYTY_M4_BATON", "m4baton", 0, 4096},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

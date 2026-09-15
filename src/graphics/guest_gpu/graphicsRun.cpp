@@ -13,6 +13,7 @@
 #include "graphics/guest_gpu/command_processor/pm4Dispatch.h"
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/guest_gpu/pm4.h"
+#include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/renderer/sync.h"
@@ -52,8 +53,15 @@ static thread_local Pm4Execution*     g_current_execution = nullptr;
 static void DrawAheadWalkerPost(PipelineCache& cache, uint32_t queue_id, bool reset,
                                 std::span<const uint32_t> commands, uint64_t walk_id);
 static void DrawAheadWalkerStop();
+// Knob "m4baton" (session 68): a range of the PM4 stream executed by a second thread while this
+// one parks. Returns false when the relay could not take it, and the caller runs it itself.
+static bool BatonRelayRun(CommandProcessor& processor, Pm4Execution& execution, size_t stop_depth,
+                          uint32_t length, CommandRecorder* recorder);
+static void BatonRelayStop();
 static thread_local bool              g_gpu_mutex_owned   = false;
 static thread_local bool              g_gpu_thread        = false;
+// Knob "m4baton": set on the relay thread, so the range it runs does not cut itself into ranges.
+static thread_local bool              g_baton_thread      = false;
 static thread_local GuestGpu*         g_gpu_state         = nullptr;
 
 struct DrawIndirectArgs {
@@ -123,6 +131,7 @@ void GuestGpu::Shutdown() {
 		m_thread.join();
 	}
 	DrawAheadWalkerStop();
+	BatonRelayStop(); // knob "m4baton": after the producer it borrows from is gone
 	m_shutdown_complete = true;
 }
 
@@ -1431,6 +1440,165 @@ static void DrawAheadWalkerStop() {
 	}
 }
 
+// ---------------------------------------------------------------------------------------------
+// Session 68, knob "m4baton": the relay.
+//
+// The relay borrows the identity of the GuestGpu thread for the length of a range: g_gpu_thread
+// (seventeen call sites decide "run here or queue to the GuestGpu thread" by it - queueing to a
+// parked thread deadlocks), the execution scope, and the producer of the record ring. It does NOT
+// borrow g_gpu_state (the parked thread still owes the guest its commands) and does NOT register
+// as ThreadRole::Gpu (FrameStats keeps one handle per role, and cpu_gpu_us is that handle's CPU
+// time - swapping it would corrupt the metric this session lives on).
+
+namespace {
+
+struct BatonRelay {
+	CommandProcessor* processor  = nullptr;
+	Pm4Execution*     execution  = nullptr;
+	CommandRecorder*  recorder   = nullptr;
+	size_t            stop_depth = 0;
+	uint32_t          length     = 0;
+	uint64_t          posted_ns = 0;
+
+	std::mutex              mutex;
+	std::condition_variable to_relay;
+	std::condition_variable to_owner;
+	bool                    has_job = false;
+	bool                    done    = false;
+	bool                    stop    = false;
+	std::thread             thread;
+
+	void Run() {
+		namespace FS = Common::FrameStats;
+		SetThreadDescription(GetCurrentThread(), L"M4Baton");
+		g_baton_thread = true;
+		for (;;) {
+			CommandProcessor* job_processor = nullptr;
+			Pm4Execution*     job_execution = nullptr;
+			CommandRecorder*  job_recorder  = nullptr;
+			size_t            job_depth     = 0;
+			uint32_t          job_length    = 0;
+			uint64_t          job_posted = 0;
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				to_relay.wait(lock, [this] { return stop || has_job; });
+				if (stop && !has_job) {
+					g_baton_thread = false;
+					return;
+				}
+				job_processor = processor;
+				job_execution = execution;
+				job_recorder  = recorder;
+				job_depth     = stop_depth;
+				job_length    = length;
+				job_posted    = posted_ns;
+			}
+			const auto woke = FS::Enabled() ? FS::NowNs() : 0;
+			if (woke != 0 && job_posted != 0) {
+				FS::Add(FS::Counter::BatonWakeNs, woke - job_posted);
+			}
+			DrawAheadApplyPin(false); // knob "dapin": next to the GuestGpu thread, like M1
+			auto* const previous_processor = g_current_processor;
+			auto* const previous_execution = g_current_execution;
+			g_gpu_thread        = true;
+			g_current_processor = job_processor;
+			g_current_execution = job_execution;
+			std::thread::id previous_producer;
+			if (job_recorder != nullptr) {
+				previous_producer = job_recorder->AdoptProducer(std::this_thread::get_id());
+			}
+			const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+			const auto d0 = job_processor->RangeDraws();
+			job_processor->ProcessPm4Range(*job_execution, job_depth, job_length);
+			if (t0 != 0) {
+				FS::Add(FS::Counter::BatonWorkNs, FS::NowNs() - t0);
+				FS::Add(FS::Counter::BatonWorkDraws, job_processor->RangeDraws() - d0);
+			}
+			if (job_recorder != nullptr) {
+				job_recorder->AdoptProducer(previous_producer);
+			}
+			g_current_processor = previous_processor;
+			g_current_execution = previous_execution;
+			g_gpu_thread        = false;
+			{
+				std::lock_guard<std::mutex> lock(mutex);
+				has_job = false;
+				done    = true;
+			}
+			to_owner.notify_one();
+		}
+	}
+};
+
+std::mutex                  g_baton_mutex;
+std::unique_ptr<BatonRelay> g_baton;
+bool                        g_baton_stopped = false;
+
+} // namespace
+
+static bool BatonRelayRun(CommandProcessor& processor, Pm4Execution& execution, size_t stop_depth,
+                          uint32_t length, CommandRecorder* recorder) {
+	namespace FS = Common::FrameStats;
+	BatonRelay*  relay = nullptr;
+	{
+		std::lock_guard<std::mutex> lock(g_baton_mutex);
+		if (g_baton_stopped) {
+			return false;
+		}
+		if (g_baton == nullptr) {
+			g_baton         = std::make_unique<BatonRelay>();
+			g_baton->thread = std::thread([relay = g_baton.get()] { relay->Run(); });
+		}
+		relay = g_baton.get();
+	}
+	const auto park_t0 = FS::Enabled() ? FS::NowNs() : 0;
+	{
+		std::lock_guard<std::mutex> lock(relay->mutex);
+		if (relay->has_job || relay->stop) {
+			FS::Add(FS::Counter::BatonDropped, 1);
+			return false;
+		}
+		relay->processor  = &processor;
+		relay->execution  = &execution;
+		relay->recorder   = recorder;
+		relay->stop_depth = stop_depth;
+		relay->length     = length;
+		relay->posted_ns  = park_t0;
+		relay->has_job    = true;
+		relay->done       = false;
+	}
+	relay->to_relay.notify_one();
+	{
+		std::unique_lock<std::mutex> lock(relay->mutex);
+		relay->to_owner.wait(lock, [relay] { return relay->done; });
+	}
+	if (park_t0 != 0) {
+		FS::Add(FS::Counter::BatonParkNs, FS::NowNs() - park_t0);
+	}
+	FS::Add(FS::Counter::BatonRanges, 1);
+	return true;
+}
+
+static void BatonRelayStop() {
+	std::unique_ptr<BatonRelay> relay;
+	{
+		std::lock_guard<std::mutex> lock(g_baton_mutex);
+		g_baton_stopped = true;
+		relay           = std::move(g_baton);
+	}
+	if (relay == nullptr) {
+		return;
+	}
+	{
+		std::lock_guard<std::mutex> lock(relay->mutex);
+		relay->stop = true;
+	}
+	relay->to_relay.notify_all();
+	if (relay->thread.joinable()) {
+		relay->thread.join();
+	}
+}
+
 void GuestGpu::LookaheadSubmission(Submission& submission) {
 	if (submission.commands.empty() || submission.type == SubmissionType::FlipPreparation) {
 		return;
@@ -1481,6 +1649,40 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 	                      execution.m_walk_id);
 }
 
+// Session 68, knob "m4baton": cut the submission into ranges and alternate them between the relay
+// thread and this one. The alternation is what makes f_full a ratio inside one run: both sides see
+// the same scene, the same frame mix and the same machine.
+void CommandProcessor::ProcessPm4Baton(Pm4Execution& execution, size_t stop_depth,
+                                       uint32_t length) {
+	namespace FS = Common::FrameStats;
+	while (execution.m_buffer_stack.size() > stop_depth) {
+		// The pump the ranges no longer do, once per range, on the thread that owes it.
+		if (g_gpu_state != nullptr) {
+			g_gpu_state->ProcessCommands();
+		}
+		const bool to_relay = (m_baton_turn++ & 1u) != 0;
+		if (to_relay && BatonRelayRun(*this, execution, stop_depth, length,
+		                              CurrentBuffer().Recorder())) {
+			if (execution.m_suspended) {
+				return;
+			}
+			continue;
+		}
+		// The control range: the same shape of work, on this thread, timed the same way.
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		const auto d0 = m_range_draws;
+		ProcessPm4Range(execution, stop_depth, length);
+		if (t0 != 0) {
+			FS::Add(FS::Counter::BatonSelfNs, FS::NowNs() - t0);
+			FS::Add(FS::Counter::BatonSelfDraws, m_range_draws - d0);
+			FS::Add(FS::Counter::BatonSelfRanges, 1);
+		}
+		if (execution.m_suspended) {
+			return;
+		}
+	}
+}
+
 void CommandProcessor::ProcessIndirectBuffer(std::span<const uint32_t> commands) {
 	EXIT_IF(g_current_execution == nullptr);
 	if (commands.empty()) {
@@ -1517,8 +1719,32 @@ static const char* Pm4OpName(uint32_t opcode, uint32_t packet_header) {
 }
 
 void CommandProcessor::ProcessPm4(Pm4Execution& execution, size_t stop_depth) {
+	// Session 68, knob "m4baton": at the top level of a submission the stream is cut into ranges and
+	// every other range is executed by the relay thread while this one parks. Nested calls (an
+	// indirect buffer, stop_depth != 0) and the relay thread itself take the plain path.
+	const auto baton = Common::Gates::Value(Common::Gates::Knob::M4Baton);
+	if (baton != 0 && stop_depth == 0 && g_gpu_thread && !g_baton_thread) {
+		ProcessPm4Baton(execution, stop_depth, baton);
+		return;
+	}
+	ProcessPm4Range(execution, stop_depth, 0);
+}
+
+// Session 68, knob "m4baton". draw_budget 0 keeps the original behaviour: run until the stack is
+// back at stop_depth. Otherwise the loop also stops once the range has executed that many draws
+// and dispatches, leaving the cursor where it is - the caller simply calls again.
+void CommandProcessor::ProcessPm4Range(Pm4Execution& execution, size_t stop_depth,
+                                       uint32_t draw_budget) {
+	const auto draws_at_entry = m_range_draws;
 	while (execution.m_buffer_stack.size() > stop_depth) {
-		if (g_gpu_state != nullptr) {
+		if (draw_budget != 0 && m_range_draws - draws_at_entry >= draw_budget) {
+			return;
+		}
+		// Session 68, knob "m4baton": inside a relay range the guest-command pump is skipped, because
+		// the relay thread cannot run it (g_gpu_state is null there on purpose) and the control range
+		// would otherwise be the only side paying for it - a bias of about 4 % straight into f_full.
+		// ProcessPm4Baton pumps once between ranges instead.
+		if (draw_budget == 0 && g_gpu_state != nullptr) {
 			g_gpu_state->ProcessCommands();
 		}
 		const auto buffer_index = execution.m_buffer_stack.size() - 1;
@@ -1702,6 +1928,7 @@ void CommandProcessor::DrawIndex(DrawIndexArgs args) {
 	}
 	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
 	Common::DrawStat::t_ops++;
+	m_range_draws++; // knob "m4baton": the budget of a relay range
 	m_renderer.GetRenderExecutor().DrawIndex(m_submit_id, CurrentBuffer(), args);
 }
 
@@ -1973,6 +2200,7 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 		{
 			Common::FrameStats::Scope dispatch_scope(Common::FrameStats::Counter::DispatchNs, Common::FrameStats::Counter::Dispatches);
 			Common::DrawStat::t_ops++;
+			m_range_draws++; // knob "m4baton": a dispatch is work of the range too
 			m_renderer.GetRenderExecutor().DispatchDirect(m_submit_id, CurrentBuffer(), thread_group_x,
 			                                              thread_group_y, thread_group_z, mode,
 			                                              indirect_args_addr);
@@ -2040,6 +2268,7 @@ void CommandProcessor::DrawIndexAuto(DrawAutoArgs args) {
 	}
 	Common::FrameStats::Scope draw_scope(Common::FrameStats::Counter::DrawNs, Common::FrameStats::Counter::Draws);
 	Common::DrawStat::t_ops++;
+	m_range_draws++; // knob "m4baton"
 	m_renderer.GetRenderExecutor().DrawAuto(m_submit_id, CurrentBuffer(), args);
 }
 
@@ -2441,7 +2670,12 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 			constexpr uint64_t ready_bit    = 1ull << 63u;
 			constexpr uint64_t counter_mask = ready_bit - 1u;
 			auto*              results      = reinterpret_cast<volatile uint64_t*>(event_address);
-			const auto         value        = ready_bit | m_synthetic_occlusion_counter;
+			// Session 68, gate "occzero" (measurement only): publish a ready result of zero samples, so
+			// the guest's visibility tests answer "not visible" and we can read the ceiling of real
+			// occlusion queries off the draw count. The ready bit stays: the guest waits for it.
+			const bool occlusion_zero = Common::Gates::Enabled(Common::Gates::Gate::OcclusionZero);
+			const auto         value        = ready_bit | (occlusion_zero ? 0ull : m_synthetic_occlusion_counter);
+			Common::FrameStats::Add(Common::FrameStats::Counter::OcclusionDumps, 1);
 			// KYTY_FAULT_TRACE=1: log the dump destination and the tracker state before the write.
 			static const bool occlusion_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 			if (occlusion_trace) {

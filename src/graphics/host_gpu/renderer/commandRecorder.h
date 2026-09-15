@@ -198,6 +198,14 @@ public:
 	~CommandRecorder();
 	KYTY_CLASS_NO_COPY(CommandRecorder);
 
+	// Session 68, knob "m4baton": hand the single-producer ring to another thread for the length of
+	// a PM4 range and hand it back. Only legal between records (m_open_slot == nullptr); the caller
+	// guarantees that nobody else is recording, because the relay runs only while the GuestGpu
+	// thread is parked. Returns the previous owner, which the relay puts back when the range ends -
+	// the owner before a range is not necessarily the GuestGpu thread, since the ring belongs to
+	// whichever thread called BeginRecord on it first.
+	std::thread::id AdoptProducer(std::thread::id owner);
+
 	// tick: the tick this buffer will signal, for the pool's reuse bookkeeping.
 	void PushBeginBuffer(uint64_t tick);
 	void PushEndBuffer(const RecordSubmit& request);

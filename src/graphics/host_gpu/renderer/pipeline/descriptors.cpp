@@ -1050,6 +1050,9 @@ static vk::Sampler NativeSampler(RenderContext&                       context,
 static vk::DescriptorBufferInfo NativeUpload(RenderContext&            context,
                                              std::span<const uint32_t> data) {
 	EXIT_IF(data.empty());
+	// Session 68, gate "amut": a copy into the stream ring (the flattened SRT and the shader data).
+	Common::FrameStats::MutScope mutate_scope(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutateTime));
 	auto& command_buffer = context.GetCommandScheduler().Current();
 	EXIT_IF(command_buffer.IsInvalid());
 	auto&      buffer = context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream);

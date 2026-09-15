@@ -158,6 +158,14 @@ private:
 	                      void* dst_gpu_addr, T value, uint32_t interrupt_selector,
 	                      uint32_t interrupt_context_id);
 	void ProcessPm4(Pm4Execution& execution, size_t stop_depth);
+	// Session 68, knob "m4baton": the relay thread runs ranges of the stream itself, so the loop and
+	// the draw counter are public. draw_budget 0 means "to the end", as before.
+public:
+	void ProcessPm4Range(Pm4Execution& execution, size_t stop_depth, uint32_t draw_budget);
+	[[nodiscard]] uint64_t RangeDraws() const { return m_range_draws; }
+
+private:
+	void ProcessPm4Baton(Pm4Execution& execution, size_t stop_depth, uint32_t length);
 	// KYTY_ASYNC_COMPUTE: walks the submission ahead of execution with a shadow copy of the compute
 	// state and queues the driver compile of every compute pipeline it will need.
 	void PrefetchComputePipelines(const Pm4Execution& execution);
@@ -192,6 +200,11 @@ private:
 	uint64_t  m_submit_id                   = 0;
 	uint64_t  m_synthetic_occlusion_counter = 0;
 	bool      m_predicate_skip              = false;
+	// Session 68, knob "m4baton": draws executed by this processor, and which side of the relay the
+	// next range belongs to. Only one thread executes a processor at a time, so neither needs an
+	// atomic: the relay runs while GuestGpu is parked.
+	uint64_t  m_range_draws                 = 0;
+	uint32_t  m_baton_turn                  = 0;
 };
 
 } // namespace Libs::Graphics

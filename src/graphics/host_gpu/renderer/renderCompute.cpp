@@ -3,6 +3,7 @@
 #include "graphics/presentation/renderDoc.h"
 
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/file.h"
@@ -264,7 +265,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	                    thread_group_x, thread_group_y, thread_group_z, mode,
 	                    sh_ctx.GetCs().cs_regs.data_addr);
 
-	Common::LockGuard lock(m_context.GetMutex());
+	// Session 68, gate "amut": the same render mutex the draws take (renderContext.h:80).
+	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	                             Common::FrameStats::Enabled()
+	                         ? Common::FrameStats::NowNs()
+	                         : 0;
+	Common::LockGuard            lock(m_context.GetMutex());
+	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeDispatch);
 	if (sh_ctx.GetCs().cs_regs.data_addr == 0) {
 		LOGF("GraphicsRenderDispatchDirect: temporary: ignoring dispatch with null CS shader, "

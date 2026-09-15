@@ -1,6 +1,7 @@
 #include "common/assert.h"
 
 #include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
 #include "common/logging/log.h"
@@ -744,7 +745,25 @@ Presenter::Frame& Presenter::PrepareFrame(CommandBuffer& buffer, const ImageInfo
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(buffer.IsInvalid());
 	auto*             frame = m_impl->frames.Acquire();
+	// Session 69: the present thread is the only other taker of this object, and it takes it while
+	// the draws hold it 88-92 % of the frame. a_wait_us does not cover it (MutexMark lives in the
+	// draw and dispatch paths), so the wait is timed here - three timestamps per frame.
+	const auto present_wait_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutexSites) &&
+	                                     Common::FrameStats::Enabled()
+	                                 ? Common::FrameStats::NowNs()
+	                                 : 0;
 	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+	if (present_wait_t0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::HoldPresentWaitNs,
+		                        Common::FrameStats::NowNs() - present_wait_t0);
+	}
+	// Session 69, gate "mutsite": the present holds the same object as every draw, on the other
+	// thread. Session 68's a_hold_us does not contain it (MutexMark sits only in the draw and
+	// dispatch paths), so this is the first measurement of that part of the serial floor.
+	Common::FrameStats::HoldLap hold_lap(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutexSites),
+	    Common::FrameStats::Counter::HoldPresentNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldPresents);
 	auto&             image = m_impl->ResolveSurface(info);
 	if (image.backing.format == vk::Format::eUndefined) {
 		EXIT("unsupported presentation source, image=%p\n", static_cast<const void*>(&image));
@@ -767,7 +786,22 @@ Presenter::Frame& Presenter::PrepareBlankFrame(uint32_t width, uint32_t height, 
 	KYTY_PROFILER_FUNCTION();
 	auto              format = m_impl->frames.GetFormat();
 	auto*             frame  = m_impl->frames.Acquire();
+	// Session 69: the present thread is the only other taker of this object, and it takes it while
+	// the draws hold it 88-92 % of the frame. a_wait_us does not cover it (MutexMark lives in the
+	// draw and dispatch paths), so the wait is timed here - three timestamps per frame.
+	const auto present_wait_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutexSites) &&
+	                                     Common::FrameStats::Enabled()
+	                                 ? Common::FrameStats::NowNs()
+	                                 : 0;
 	Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+	if (present_wait_t0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::HoldPresentWaitNs,
+		                        Common::FrameStats::NowNs() - present_wait_t0);
+	}
+	Common::FrameStats::HoldLap hold_lap(
+	    Common::Gates::Enabled(Common::Gates::Gate::MutexSites),
+	    Common::FrameStats::Counter::HoldPresentNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldPresents);
 	frame->Configure(m_impl->window.graphic_ctx, {width, height}, format);
 	vk::ClearColorValue clear {};
 	clear.float32[3] = opaque ? 1.0f : 0.0f;
@@ -819,7 +853,20 @@ void Presenter::Present(Frame& frame, bool reuse) {
 			continue;
 		}
 		{
+			const auto present_wait_t0 =
+			    Common::Gates::Enabled(Common::Gates::Gate::MutexSites) &&
+			            Common::FrameStats::Enabled()
+			        ? Common::FrameStats::NowNs()
+			        : 0;
 			Common::LockGuard render_lock(m_impl->renderer.GetMutex());
+			if (present_wait_t0 != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::HoldPresentWaitNs,
+				                        Common::FrameStats::NowNs() - present_wait_t0);
+			}
+			Common::FrameStats::HoldLap hold_lap(
+			    Common::Gates::Enabled(Common::Gates::Gate::MutexSites),
+			    Common::FrameStats::Counter::HoldPresentNs);
+			Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldPresents);
 			locked = trace_start ? Common::FrameStats::NowNs() : 0;
 			auto&             command          = m_impl->present_scheduler.BeginCommand();
 			const bool        draw_system_overlay =

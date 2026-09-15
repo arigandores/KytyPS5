@@ -1806,6 +1806,25 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"px_on_bind_us", FS::Counter::PxOnBindNs, true},
 				    {"px_off_n", FS::Counter::PxOffDraws, false},
 				    {"px_off_bind_us", FS::Counter::PxOffBindNs, true},
+				    // Session 69, gate "mutsite": the phases of the render-mutex hold.
+				    {"mh_n", FS::Counter::HoldEntries, false},
+				    {"mh_draws", FS::Counter::HoldDraws, false},
+				    {"mh_pro_us", FS::Counter::HoldPrologueNs, true},
+				    {"mh_rt_us", FS::Counter::HoldTargetsNs, true},
+				    {"mh_prog_us", FS::Counter::HoldProgramsNs, true},
+				    {"mh_bind_us", FS::Counter::HoldBindingsNs, true},
+				    {"mh_emit_us", FS::Counter::HoldEmitNs, true},
+				    {"mh_tail_us", FS::Counter::HoldTailNs, true},
+				    {"mh_disp_n", FS::Counter::HoldDispatches, false},
+				    {"mh_disp_us", FS::Counter::HoldDispatchNs, true},
+				    {"mh_pres_n", FS::Counter::HoldPresents, false},
+				    {"mh_pres_us", FS::Counter::HoldPresentNs, true},
+				    {"mh_pres_wait_us", FS::Counter::HoldPresentWaitNs, true},
+				    // Session 69, gate "imgskip": img_skip + img_up == the baseline img_up.
+				    {"img_skip", FS::Counter::ImgSkipped, false},
+				    // KiB already, so micros = false: the "micros" path divides by 1000 and would put
+				    // this on a different scale from img_up_kb, which is bytes / 1024.
+				    {"img_skip_kb", FS::Counter::ImgSkippedKb, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

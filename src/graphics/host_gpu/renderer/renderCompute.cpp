@@ -266,12 +266,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	                    sh_ctx.GetCs().cs_regs.data_addr);
 
 	// Session 68, gate "amut": the same render mutex the draws take (renderContext.h:80).
-	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	// Session 69, gate "mutsite": the whole 614-line critical section is one bucket - a dispatch
+	// has no phase structure in common with a draw, and there are only ~315 of them per frame.
+	const bool mut_site = Common::Gates::Enabled(Common::Gates::Gate::MutexSites);
+	const auto lock_t0  = (Common::Gates::Enabled(Common::Gates::Gate::MutateTime) || mut_site) &&
 	                             Common::FrameStats::Enabled()
 	                         ? Common::FrameStats::NowNs()
 	                         : 0;
 	Common::LockGuard            lock(m_context.GetMutex());
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
+	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldDispatchNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeDispatch);
 	if (sh_ctx.GetCs().cs_regs.data_addr == 0) {
 		LOGF("GraphicsRenderDispatchDirect: temporary: ignoring dispatch with null CS shader, "

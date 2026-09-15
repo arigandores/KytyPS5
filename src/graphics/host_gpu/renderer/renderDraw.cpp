@@ -1903,6 +1903,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                        1);
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);
+	// Session 69, gate "mutsite": everything above this line, back to the mh_prog_us mark, is the
+	// bindings half of the draw (descriptors, texture cache, buffer cache, sampler cache, uploads).
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldBindingsNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDraws);
+	// The rest of this function is mh_emit_us, closed by a destructor because the function has
+	// three exits and the default one (gate "recpack", line ~2220) is in the middle of it.
+	Common::FrameStats::HoldPhase emit_phase(Common::FrameStats::Counter::HoldEmitNs);
 	// Session 68, gate "amut": the rest of this function is the apply-and-record half of the draw -
 	// vertex and index buffers, the pipeline lookup (which creates pipelines), CommitBindings,
 	// BeginRendering, the dynamic state, EmitDrawPrimitives. None of it can leave the serial path.
@@ -2395,12 +2402,18 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 
 	// Session 68, gate "amut": the render mutex is one object for draw, dispatch and present, so
 	// the time it is held is the serial floor of any threading scheme (renderContext.h:80).
-	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	// Session 69, gate "mutsite": arms the same MutexMark and adds the phase chain below.
+	const bool mut_site = Common::Gates::Enabled(Common::Gates::Gate::MutexSites);
+	const auto lock_t0  = (Common::Gates::Enabled(Common::Gates::Gate::MutateTime) || mut_site) &&
 	                             Common::FrameStats::Enabled()
 	                         ? Common::FrameStats::NowNs()
 	                         : 0;
 	Common::LockGuard            lock(m_context.GetMutex());
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
+	// The destructor books whatever is left to mh_tail_us, so the draws that return early out of
+	// the middle of the critical section still account for their whole hold.
+	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	DrawStatBegin();
 	if (args.index_count == 0 || args.instance_count == 0) {
 		return;
@@ -2488,12 +2501,15 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	                        args.instance_count, args.first_instance};
 	DrawStateLease state_lease; // gate "drawstate"
 	auto&          state = state_lease.State();
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldPrologueNs);
 	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
 		ResetBindings();
 		return;
 	}
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldTargetsNs);
 
 	RefreshShaders(buffer, draw, state);
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	LogDrawStateIfNeeded(buffer, draw, state, args.index_type_and_size,
 	                     args.index_addr);
@@ -2531,13 +2547,16 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	                    args.vertex_count, 0, args.first_vertex, args.instance_count,
 	                    args.first_instance);
 
-	// Session 68, gate "amut": see DrawIndex above.
-	const auto lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::MutateTime) &&
+	// Session 68, gate "amut", and session 69 gate "mutsite": see DrawIndex above.
+	const bool mut_site = Common::Gates::Enabled(Common::Gates::Gate::MutexSites);
+	const auto lock_t0  = (Common::Gates::Enabled(Common::Gates::Gate::MutateTime) || mut_site) &&
 	                             Common::FrameStats::Enabled()
 	                         ? Common::FrameStats::NowNs()
 	                         : 0;
 	Common::LockGuard            lock(m_context.GetMutex());
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
+	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
+	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	DrawStatBegin();
 	if (args.vertex_count == 0 || args.instance_count == 0) {
 		return;
@@ -2586,17 +2605,21 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 
 	DrawStateLease state_lease; // gate "drawstate"
 	auto&          state = state_lease.State();
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldPrologueNs);
 	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
 		ResetBindings();
 		return;
 	}
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldTargetsNs);
 
+	// Unlike DrawIndex the topology is resolved here, so its cost lands in mh_prog_us.
 	vk::PrimitiveTopology topology = vk::PrimitiveTopology::ePointList;
 	if (!GetDrawTopology(ucfg, true, topology)) {
 		ResetBindings();
 		return;
 	}
 	RefreshShaders(buffer, draw, state);
+	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	const bool rect_list = ucfg.GetPrimType() == Prospero::PrimitiveType::kRectList;
 	if (rect_list && state.vertex_info[0].buffers_num == 0 &&

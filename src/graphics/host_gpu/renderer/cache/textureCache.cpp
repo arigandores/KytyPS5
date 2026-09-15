@@ -1498,7 +1498,30 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 		return;
 	}
 	const bool upload = image.IsBufferModified() || image.IsCpuDirty();
-	if (upload) {
+	// Session 69, gate "imgskip" (default 0) - MEASUREMENT ONLY, the picture is allowed to break.
+	// The ceiling of the guest<->GPU image ping-pong: 95.0 % of the bytes of Sky Garden's ~100 MB
+	// of image uploads per frame exist only because a GPU buffer wrote over the guest range
+	// (ImgUploadWhy buffer=1 cpu=0; descriptors.cpp:277 -> InvalidateMemoryFromGPU, :2473-2476, which
+	// also drops m_gpu_modified). The data never left the GPU, so the whole
+	// ObtainBufferForImage + detile + copyBufferToImage round trip is dropped and the image keeps
+	// the texels it already holds. The buffer-modified flag must still be cleared: ClearImage,
+	// CopyImageMip and ResolveDepthOverlap all EXIT on an image that stayed guest-owned.
+	const bool skip_gpu_stale =
+	    upload && image.IsBufferModified() && !image.IsCpuDirty() &&
+	    Common::Gates::Enabled(Common::Gates::Gate::ImageSkipGpuStale) &&
+	    image.SourceRange().size >=
+	        static_cast<uint64_t>(Common::Gates::Value(Common::Gates::Knob::ImageSkipKb)) * 1024u;
+	if (skip_gpu_stale) {
+		// NoteUploadFrame like every other upload path: it is the only place that rolls
+		// m_frame_upload_bytes over at a frame boundary, and DeferrableLevels judges the mip-defer
+		// budget against it. Without this, a frame in which the gate skipped everything would size
+		// that budget from the previous frame's total.
+		NoteUploadFrame();
+		Common::FrameStats::Add(Common::FrameStats::Counter::ImgSkipped, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ImgSkippedKb,
+		                        image.SourceRange().size / 1024u);
+		image.ClearBufferModified();
+	} else if (upload) {
 		TraceWatchedImage("upload", image);
 		const bool buffer_modified = image.IsBufferModified();
 		const bool cpu_definite    = image.IsDefinitelyCpuDirty();

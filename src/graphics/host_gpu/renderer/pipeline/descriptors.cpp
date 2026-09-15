@@ -1396,8 +1396,32 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		prepared.shader_data[dword] |= offset << shift;
 	};
 	const bool direct_copy = DirectConstantCopyEnabled();
+	// Session 69: the writer half of ImgUploadWhy. A written storage buffer marks every image over
+	// its range stale (NativeStorageBuffer -> InvalidateMemoryFromGPU), which is where 95 % of the
+	// ~100 MB of image uploads per frame come from. Same env var as the image trace, so one run
+	// prints both sides; large ranges only, so the four addresses that carry 90 MB stand out.
+	static const bool writer_trace = std::getenv("KYTY_IMAGE_UPLOAD_TRACE") != nullptr;
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		uint32_t buffer_offset = 0;
+		if (writer_trace && program.info.buffers[i].written) {
+			static const uint64_t min_bytes = [] {
+				const auto* value = std::getenv("KYTY_IMAGE_WRITER_MIN_KB");
+				return (value == nullptr ? uint64_t {1024} : std::strtoull(value, nullptr, 10)) * 1024u;
+			}();
+			static const uint32_t first_frame = [] {
+				const auto* value = std::getenv("KYTY_IMAGE_UPLOAD_FROM");
+				return value == nullptr ? 0u : static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
+			}();
+			const auto& src = prepared.buffer_sources[i];
+			if (src.size >= min_bytes && GpuTimeProfiler::Frame() >= first_frame) {
+				LOGF("ImgWriter: frame=%u shader=0x%016" PRIx64 " stage=%u slot=%u"
+				     " guest=0x%016" PRIx64 " bytes=%" PRIu64 " read=%d formatted=%d\n",
+				     GpuTimeProfiler::Frame(), program.shader_hash,
+				     static_cast<uint32_t>(program.stage), i, src.address, src.size,
+				     program.info.buffers[i].read ? 1 : 0,
+				     program.info.buffers[i].formatted ? 1 : 0);
+			}
+		}
 		prepared.buffers.push_back(NativeStorageBuffer(m_context, prepared.buffer_sources[i],
 		                                               program.info.buffers[i], program.stage, i,
 		                                               buffer_offset, direct_copy));

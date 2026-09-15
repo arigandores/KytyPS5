@@ -632,6 +632,33 @@ enum class Counter : uint32_t {
 	PxOnBindNs,       // px_on_bind_us
 	PxOffDraws,       // px_off_n: depth-only draws (the same population as da_px_off)
 	PxOffBindNs,      // px_off_bind_us
+	// Session 69, gate "mutsite": the phases of the render-mutex hold. The first six sum to the
+	// hold of a draw, mh_disp_us is a whole dispatch and mh_pres_us a whole present; together they
+	// must account for a_hold_us (plus the present, which a_hold_us does not contain).
+	HoldEntries,      // mh_n: times a draw function took the render mutex
+	HoldDraws,        // mh_draws: of those, the ones that reached the bindings
+	HoldPrologueNs,   // mh_pro_us
+	HoldTargetsNs,    // mh_rt_us: PrepareDrawRenderState / AcquireRenderTargets
+	HoldProgramsNs,   // mh_prog_us: RefreshShaders / GetGraphicsPrograms
+	HoldBindingsNs,   // mh_bind_us: PrepareGraphicsBindings and everything it calls
+	HoldEmitNs,       // mh_emit_us: the apply-and-record tail of ExecutePreparedDraw
+	HoldTailNs,       // mh_tail_us: ResetBindings, and the whole hold of an early return
+	HoldDispatches,   // mh_disp_n
+	HoldDispatchNs,   // mh_disp_us
+	HoldPresents,     // mh_pres_n: ACQUISITIONS, not presents - a displayed frame costs two of
+	                  // them (PrepareFrame and Present), so mh_pres_us/mh_pres_n is the cost of one
+	                  // acquisition
+	HoldPresentNs,    // mh_pres_us
+	HoldPresentWaitNs, // mh_pres_wait_us: how long the present thread waits for the render mutex -
+	                   // the only contention this object sees today, and the number that decides
+	                   // whether splitting it buys anything
+	// Session 69, gate "imgskip": the uploads the ceiling gate refused, so that
+	// img_skip + img_up equals the baseline img_up and img_skip_kb is the source it did not read.
+	ImgSkipped,       // img_skip
+	ImgSkippedKb,     // img_skip_kb: KiB, accumulated as size/1024 at the increment site so that it
+	                  // is on the same scale as img_up_kb (which is a byte counter divided by 1024
+	                  // at print time). Do NOT print it through the "micros" path - that divides
+	                  // by 1000 and the two stop being addable.
 	Count
 };
 
@@ -700,6 +727,10 @@ inline constinit std::atomic<uint32_t> g_count_limit {0};
 // Session 68, gate "amut": the nesting depth and the start of the outermost mutating interval.
 inline thread_local uint32_t t_mut_depth = 0;
 inline thread_local uint64_t t_mut_t0    = 0;
+// Session 69, gate "mutsite": the cursor of the render-mutex phase chain (HoldLap). Thread-local
+// so that ExecutePreparedDraw can add a boundary without the lap in its signature, and so that the
+// present thread keeps its own chain. Zero means "not measuring".
+inline thread_local uint64_t t_hold_t0   = 0;
 inline constinit bool                  g_timings = false;
 // No initializer to run, so no TLS guard: the shard is attached by the first Add of a thread.
 inline constinit thread_local Shard*   t_shard   = nullptr;
@@ -832,6 +863,62 @@ public:
 private:
 	bool m_active;
 	bool m_outer = false;
+};
+
+// Session 69, gate "mutsite": a lap over the phases of the render-mutex hold. Same shape as Lap
+// below, with three differences that it needs and Lap must not have:
+//   * it reads Enabled(), not TimingsEnabled() - a measurement run is KYTY_FRAME_TRACE=lite,
+//     where g_timings is false and every Lap::Mark is a no-op (the trap session 68 hit);
+//   * the destructor charges whatever is left to a counter chosen at construction, so a draw that
+//     returns early out of the middle of the critical section still books its whole hold;
+//   * Mark is static and the cursor is thread-local, so ExecutePreparedDraw can add a boundary
+//     without the lap being plumbed through its signature. The chain never nests: DrawIndex,
+//     DrawAuto and DispatchDirect each construct one and ExecutePreparedDraw is called only from
+//     the first two, while the present sites run on another thread and have their own cursor.
+class HoldLap {
+public:
+	HoldLap(bool on, Counter rest): m_rest(rest) {
+		Detail::t_hold_t0 = on && Enabled() ? NowNs() : 0;
+	}
+	~HoldLap() {
+		if (Detail::t_hold_t0 != 0) {
+			Add(m_rest, NowNs() - Detail::t_hold_t0);
+			Detail::t_hold_t0 = 0;
+		}
+	}
+	static void Mark(Counter counter) {
+		if (Detail::t_hold_t0 != 0) {
+			const auto now = NowNs();
+			Add(counter, now - Detail::t_hold_t0);
+			Detail::t_hold_t0 = now;
+		}
+	}
+	// Adds one to a population counter only while the chain is running, so the population and the
+	// phases always come from the same set of draws and nothing is counted when the gate is off.
+	static void Count(Counter counter) {
+		if (Detail::t_hold_t0 != 0) {
+			Add(counter, 1);
+		}
+	}
+	HoldLap(const HoldLap&)            = delete;
+	HoldLap& operator=(const HoldLap&) = delete;
+
+private:
+	Counter m_rest;
+};
+
+// Closes one phase of a HoldLap chain at scope exit rather than at a statement, so a function with
+// several `return`s charges its whole span to that phase without a mark at each of them.
+// ExecutePreparedDraw has three exits and the default one (gate "recpack") is in the middle.
+class HoldPhase {
+public:
+	explicit HoldPhase(Counter counter): m_counter(counter) {}
+	~HoldPhase() { HoldLap::Mark(m_counter); }
+	HoldPhase(const HoldPhase&)            = delete;
+	HoldPhase& operator=(const HoldPhase&) = delete;
+
+private:
+	Counter m_counter;
 };
 
 // Splits a sequence of phases: Mark(c) charges the time since the previous Mark (or construction)

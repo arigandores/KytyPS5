@@ -2660,8 +2660,17 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 			}
 			static std::once_flag warning_once;
 			std::call_once(warning_once, [] {
-				std::printf("Warning: game uses occlusion queries, which are currently treated as "
-				            "always visible; GPU usage may be higher and FPS may be lower.\n");
+				// Sessions 68 and 69 measured what this costs, in both scenes the emulator can
+				// reach: gate "occzero" answers every query with zero visible samples, and the
+				// number of draws the game issues does not move - Sky Garden -0.061 % against a
+				// 0.33 % stand threshold (113 ABBA pairs), the desert -0.905 % +- 1.663 % (119
+				// pairs), against a bar of 15 %. The picture is unchanged in both. So the old
+				// wording ("GPU usage may be higher and FPS may be lower") was false and sent
+				// several sessions after a lead worth nothing.
+				std::printf("Note: game uses occlusion queries; they are answered \"everything is "
+				            "visible\". Measured in Sky Garden and in the desert: the game does not "
+				            "cull on the answer, so this costs no draws and no frame time. Real "
+				            "queries would be a correctness fix, not a performance one.\n");
 			});
 
 			// Until host occlusion queries are implemented, publish an always-visible result. The

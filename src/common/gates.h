@@ -116,6 +116,15 @@ enum class Gate : uint32_t {
 	// Session 68: the binding interval of a draw, split by whether the pixel stage is live. Answers
 	// whether the 24 % of draws that are depth-only (counter da_px_off) pay the full price.
 	PixelOffStat,        // KYTY_PX_STAT,               file name "pxstat"
+	// Session 69: the phases of the render-mutex hold (mh_* in FrameTrace-x). Session 68 measured
+	// the hold at 29.5 ms of a 34.0 ms frame but not what runs inside it. One timestamp per phase
+	// boundary; it also arms MutexMark, so a_hold_us/a_wait_us come with it.
+	MutexSites,          // KYTY_MUT_SITE,              file name "mutsite"
+	// Session 69, ceiling of the guest<->GPU image ping-pong (measurement only: the surface keeps
+	// whatever texels it already holds, so the picture may break). Skips the re-upload of an image
+	// whose only staleness came from a GPU buffer write and whose guest source is at least
+	// "imgskipkb" KiB.
+	ImageSkipGpuStale,   // KYTY_IMG_SKIP_GPU_STALE,    file name "imgskip"
 	Count,
 };
 
@@ -134,6 +143,7 @@ enum class Knob : uint32_t {
 	ShadowResolve,      // KYTY_SHADOW_RESOLVE,    file name "shadowresolve" (session 64, E4: K shadow readers of the binding resolution, 0 = off)
 	ShadowMask,         // KYTY_SHADOW_MASK,       file name "shadowmask" (session 64: 1 = image probes, 2 = buffer probes, 3 = both)
 	M4Baton,            // KYTY_M4_BATON,          file name "m4baton" (session 68: draws of the PM4 range a second thread runs while GuestGpu is parked, 0 = off)
+	ImageSkipKb,        // KYTY_IMG_SKIP_KB,       file name "imgskipkb" (gate "imgskip": smallest guest source of a skipped upload, KiB; 0 = every buffer-only stale image)
 	Count,
 };
 

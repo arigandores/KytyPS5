@@ -1872,6 +1872,46 @@ ImageId TextureCache::FindImageFromRange(uint64_t address, uint64_t size, bool e
 	return selected;
 }
 
+TextureCache::ShadowImageAnswer TextureCache::ShadowProbe(const ShadowImageQuery& query) {
+	namespace FS  = Common::FrameStats;
+	const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+	m_lock.lock();
+	if (t0 != 0) {
+		FS::Add(FS::Counter::ShadowLockNs, FS::NowNs() - t0);
+	}
+	std::lock_guard<TrackingSpinLock> guard(m_lock, std::adopt_lock);
+	const auto* image = m_slot_images.try_get(query.id);
+	if (image == nullptr) {
+		return ShadowImageAnswer::Gone;
+	}
+	// ResolveTextureWith, memo hit.
+	if (!image->registered || image->binding.needs_rebind || image->depth_id ||
+	    image->info.data != query.data || image->info.extent != query.extent) {
+		return ShadowImageAnswer::Stale;
+	}
+	if (!query.eligible) {
+		return ShadowImageAnswer::Slow;
+	}
+	// RebindImages, gate "texfast".
+	if (!query.has_view || image->bind_stamp.load(std::memory_order_acquire) != query.fast_stamp ||
+	    image->pending_levels != 0) {
+		return ShadowImageAnswer::View;
+	}
+	// TextureSourceSettled (descriptors.cpp).
+	if (image->info.IsBlock() && !image->IsGpuModified()) {
+		const bool same = image->info.data == query.data && image->info.extent == query.extent &&
+		                  image->info.resources == query.resources;
+		const auto first = same ? query.source_first_level : 0u;
+		const auto size  = same && query.source_size != 0 ? query.source_size : image->info.data.size;
+		const bool settled = (image->binding.is_bound && first > image->source_first_level) ||
+		                     (first == image->source_first_level && size == image->SourceRange().size);
+		if (!settled) {
+			return ShadowImageAnswer::View;
+		}
+	}
+	return ShadowImageAnswer::Fast;
+}
+
 vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	Common::FrameStats::Scope view_scope(Common::FrameStats::Counter::BindFindTexNs,
 	                                   Common::FrameStats::Counter::BindFindTex);

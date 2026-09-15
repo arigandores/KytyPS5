@@ -494,7 +494,12 @@ void GameController::Disconnect(int id) {
 	Common::LockGuard lock(m_mutex);
 
 	const auto it = std::find(m_connected_ids.begin(), m_connected_ids.end(), id);
-	EXIT_IF(it == m_connected_ids.end());
+	if (it == m_connected_ids.end()) {
+		// Session 64: SDL reported the removal of a pad this list never saw (a device that
+		// disappeared before its add was processed, or whose open failed). Nothing to undo.
+		LOGF("Controller: disconnect of unknown id %d ignored\n", id);
+		return;
+	}
 
 	m_connected_ids.erase(it);
 

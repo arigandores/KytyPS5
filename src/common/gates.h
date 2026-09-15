@@ -100,6 +100,8 @@ enum class Gate : uint32_t {
 	// Session 62, item 2: lazy-handle image transitions and buffer uploads as records.
 	RecordImageBarriers, // KYTY_RECORD_IMAGE_BARRIERS, file name "recimg"
 	RecordUploads,       // KYTY_RECORD_UPLOADS,        file name "recup"
+	// Session 64, E6: the read-only binding resolution repeated inline on the GuestGpu thread.
+	ShadowInline,        // KYTY_SHADOW_INLINE,         file name "shadowinline"
 	Count,
 };
 
@@ -115,6 +117,8 @@ enum class Knob : uint32_t {
 	FaultWindowKb,      // KYTY_FAULT_WINDOW_KB,   file name "faultkb" (CPU write-fault window, KiB; 4 = one page, default 64)
 	DrawAheadWalkLead,  // KYTY_DRAW_AHEAD_WALK_LEAD, file name "dawalklead" (gate "dawalk": walk at most this many submissions ahead of processing, 0 = no hold)
 	RecordPublishEvery, // KYTY_RECORD_PUBLISH_N,  file name "recpubn" (session 61: publish the record head at most every N draw-stream records; 0/1 = every record)
+	ShadowResolve,      // KYTY_SHADOW_RESOLVE,    file name "shadowresolve" (session 64, E4: K shadow readers of the binding resolution, 0 = off)
+	ShadowMask,         // KYTY_SHADOW_MASK,       file name "shadowmask" (session 64: 1 = image probes, 2 = buffer probes, 3 = both)
 	Count,
 };
 

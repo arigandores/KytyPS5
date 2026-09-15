@@ -62,6 +62,27 @@ public:
 	// Gate "rtfast": the image record AssociateStencil left for this stencil range (the one whose
 	// data address is the range's, as AssociateStencil selects it), or none.
 	[[nodiscard]] ImageId FindStencilAssociation(GuestRange stencil);
+	// Session 64 (shadowResolve.h): the reads a memo-hit sampled bind makes on its image, taken
+	// under m_lock and answered without touching anything. `has_view`/`fast_stamp`: the memo slot
+	// holds a recorded view for this stamp (gate "texfast"); `eligible`: sampled, no DCC, not a
+	// dynamic storage binding - the conditions of the recorded-view path.
+	struct ShadowImageQuery {
+		ImageId           id;
+		GuestRange        data;
+		vk::Extent3D      extent;
+		ImageSubresources resources;
+		uint32_t          source_first_level = 0;
+		uint64_t          source_size        = 0;
+		uint32_t          fast_stamp         = 0;
+		bool              has_view           = false;
+		bool              eligible           = false;
+	};
+	// Gone: the id is not allocated. Stale: the memo checks fail (registration, rebind, stencil,
+	// backing). Slow: not eligible for the recorded view. View: eligible, but FindTexture would
+	// run (no recorded view, stamp moved, pending levels, source not settled). Fast: the recorded
+	// view would be taken as it is.
+	enum class ShadowImageAnswer : uint8_t { Gone, Stale, Slow, View, Fast };
+	[[nodiscard]] ShadowImageAnswer ShadowProbe(const ShadowImageQuery& query);
 	[[nodiscard]] Image&        GetImage(ImageId id) {
 		auto& image = m_slot_images[id];
 		TouchImage(image);

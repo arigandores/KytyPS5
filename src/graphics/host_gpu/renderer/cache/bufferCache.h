@@ -66,6 +66,14 @@ public:
 	// Keep an already discovered owner alive when the binding uses a direct CPU copy.
 	// A replaced/coalesced owner requires the ordinary ObtainBuffer path instead.
 	[[nodiscard]] bool TouchReadOnlyBuffer(BufferId id, uint64_t vaddr, uint64_t size);
+	// Session 64 (shadowResolve.h): what ObtainBuffer would answer for a descriptor binding,
+	// read without changing anything and without a lock (the cache has none: a measurement).
+	// None: no range. Fast: the per-thread request memo (gate "buffast" logic) still answers.
+	// Epoch: the buffer's upload interval is current. Stream: a small CPU-dirty read (a copy into
+	// the stream ring). Slow: SynchronizeBuffer would run. New: no buffer owns the range.
+	enum class ShadowBufferAnswer : uint8_t { None, Fast, Epoch, Stream, Slow, New };
+	[[nodiscard]] ShadowBufferAnswer ShadowProbe(uint64_t vaddr, uint64_t size, BufferId id,
+	                                             bool written);
 	// memoizable (gate "buffast"): this caller asks for the same guest range again draw after
 	// draw and may take a remembered answer. Only the descriptor bindings do; every other caller
 	// asks once, for a range it is about to write or to hand to an image upload.

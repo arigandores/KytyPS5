@@ -573,6 +573,30 @@ enum class Counter : uint32_t {
 	// Session 62, item 2: direct writes turned into records.
 	RecordImageBarrierPackets, // image transitions published as records (gate "recimg")
 	RecordUploadPackets,       // buffer uploads published as records (gate "recup")
+	// Session 64, E4/E6 (knob "shadowresolve", gate "shadowinline"): the read-only binding
+	// resolution repeated and discarded (shadowResolve.h).
+	ShadowJobs,       // draws whose bindings were re-read (workers and inline together)
+	ShadowDropped,    // jobs the full ring dropped
+	ShadowOver,       // draws with more bindings than a job holds
+	ShadowImages,     // image bindings probed
+	ShadowImgGone,    // ... whose image id was gone
+	ShadowImgStale,   // ... whose memo checks failed
+	ShadowImgSlow,    // ... not eligible for the recorded view (storage, DCC, dynamic storage)
+	ShadowImgView,    // ... eligible, but FindTexture would run
+	ShadowImgFast,    // ... served by the recorded view
+	ShadowBuffers,    // buffer bindings probed
+	ShadowBufNone,    // ... with no range
+	ShadowBufFast,    // ... answered by the shadow's own request memo
+	ShadowBufEpoch,   // ... whose upload interval is current
+	ShadowBufStream,  // ... small CPU-dirty reads (a stream-ring copy)
+	ShadowBufSlow,    // ... that SynchronizeBuffer would handle
+	ShadowBufNew,     // ... that no buffer owns
+	ShadowWorkerNs,   // worker time in Run
+	ShadowInlineNs,   // GuestGpu time in Run (gate "shadowinline")
+	ShadowPushNs,     // GuestGpu time building and queueing the job
+	ShadowLockNs,     // time acquiring TextureCache::m_lock inside the probes
+	ShadowTrackerNs,  // time in the locked tracker queries inside the buffer probes
+	ShadowWakes,      // condition-variable wake-ups the producer issued
 	Count
 };
 

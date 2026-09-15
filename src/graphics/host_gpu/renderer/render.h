@@ -344,6 +344,9 @@ private:
 	                                                       bool                      pixel_active);
 	void PrepareGraphicsBindings(const ShaderStageRuntime& vertex, const ShaderStageRuntime& pixel,
 	                             bool pixel_active, GraphicsBindings& bindings);
+	// Session 64 (shadowResolve.h): the read-only resolution of these bindings repeated inline
+	// (gate "shadowinline") and / or on the shadow workers (knob "shadowresolve").
+	void ShadowQueue(const GraphicsBindings& bindings);
 	static bool ReuseBindingsEnabled();
 	// Draw and dispatch preparation is serialized by the render mutex. Keep their storage
 	// separate and reset it before each operation; runtime pointers are valid through commit.

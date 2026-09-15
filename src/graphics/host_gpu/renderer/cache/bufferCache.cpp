@@ -1066,6 +1066,75 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	return {&resolved, resolved.Offset(vaddr)};
 }
 
+BufferCache::ShadowBufferAnswer BufferCache::ShadowProbe(uint64_t vaddr, uint64_t size,
+                                                         BufferId id, bool written) {
+	namespace FS = Common::FrameStats;
+	if (vaddr == 0 || size == 0 || !GuestRange {vaddr, size}.Valid()) {
+		return ShadowBufferAnswer::None;
+	}
+	// Gate "buffast" logic on a per-thread table of this experiment's own.
+	const auto epoch = m_memory_tracker.RangeWriteEpoch(vaddr, size);
+	thread_local std::vector<BufFastSlot> slots;
+	if (slots.empty()) {
+		slots.resize(BufFastSlots);
+	}
+	auto& slot = slots[BufFastIndex(vaddr, size)];
+	if (!written && slot.instance == m_instance && slot.vaddr == vaddr && slot.size == size &&
+	    slot.registration == m_registration_epoch && epoch != 0 && slot.region_epoch == epoch) {
+		const auto* remembered = m_slot_buffers.try_get(slot.id);
+		if (remembered != nullptr && !remembered->is_deleted) {
+			return ShadowBufferAnswer::Fast;
+		}
+	}
+	// FindBuffer without CreateBuffer.
+	const auto* buffer = m_slot_buffers.try_get(id);
+	if (buffer == nullptr || buffer->is_deleted || !buffer->IsInBounds(vaddr, size)) {
+		buffer = nullptr;
+		if (const auto* owner = m_page_table.Find(vaddr >> PageTable::kPageBits);
+		    owner != nullptr && *owner) {
+			const auto* candidate = m_slot_buffers.try_get(*owner);
+			if (candidate != nullptr && !candidate->is_deleted && candidate->IsInBounds(vaddr, size)) {
+				buffer = candidate;
+				id     = *owner;
+			}
+		}
+		if (buffer == nullptr) {
+			return ShadowBufferAnswer::New;
+		}
+	}
+	if (!written) {
+		const auto [current_epoch, current_kind] = UploadEpoch(vaddr, size);
+		if (BufferUploadEpochEnabled() &&
+		    buffer->HasCurrentUpload(current_epoch, current_kind, vaddr, size)) {
+			if (epoch != 0 && m_memory_tracker.RangeWriteEpoch(vaddr, size) == epoch) {
+				slot = {vaddr, size, epoch, m_registration_epoch, m_gc_tick, m_instance, id};
+			}
+			return ShadowBufferAnswer::Epoch;
+		}
+	}
+	// The locked tracker queries every thread but GuestGpu has to use (see
+	// IsRegionCpuModifiedAndGpuCleanFromGpu).
+	const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+	bool       cpu_dirty = false;
+	bool       gpu_dirty = false;
+	if (GuestGpu::IsGpuThread() && Common::Gates::Enabled(Common::Gates::Gate::TrackLockFree)) {
+		// Inline on the GuestGpu thread (gate "shadowinline"): the lock-free answers the
+		// production path takes there.
+		cpu_dirty = !m_memory_tracker.IsRegionCpuCleanFast(vaddr, size);
+		gpu_dirty = m_memory_tracker.IsRegionGpuModifiedFast(vaddr, size);
+	} else {
+		cpu_dirty = m_memory_tracker.IsRegionCpuModified(vaddr, size);
+		gpu_dirty = m_memory_tracker.IsRegionGpuModified(vaddr, size);
+	}
+	if (t0 != 0) {
+		FS::Add(FS::Counter::ShadowTrackerNs, FS::NowNs() - t0);
+	}
+	if (!written && size <= CACHING_PAGESIZE && cpu_dirty && !gpu_dirty) {
+		return ShadowBufferAnswer::Stream;
+	}
+	return ShadowBufferAnswer::Slow;
+}
+
 namespace {
 bool StreamPrefetchEnabled(); // defined with the stream prefetch below
 } // namespace

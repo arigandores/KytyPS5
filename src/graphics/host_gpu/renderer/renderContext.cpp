@@ -1,4 +1,5 @@
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/renderer/shadowResolve.h"
 
 #include "common/assert.h"
 #include "common/frameStats.h"
@@ -97,6 +98,7 @@ RenderContext::RenderContext(GraphicContext& graphics)
 
 RenderContext::~RenderContext() {
 	ShutdownGpu();
+	ShadowResolve::Stop(); // session 64: after the producer (GuestGpu), before the caches
 	m_command_scheduler.Shutdown();
 }
 

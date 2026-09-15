@@ -6,6 +6,7 @@
 #include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/renderMemo.h"
+#include "graphics/host_gpu/renderer/shadowResolve.h"
 
 #include "common/assert.h"
 #include "common/drawStat.h"
@@ -1519,6 +1520,88 @@ void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
 	RebindImages(bindings.vertex);
 	if (bindings.pixel) {
 		RebindImages(*bindings.pixel);
+	}
+	ShadowQueue(bindings);
+}
+
+void RenderExecutor::ShadowQueue(const GraphicsBindings& bindings) {
+	namespace FS      = Common::FrameStats;
+	const auto workers    = Common::Gates::Value(Common::Gates::Knob::ShadowResolve);
+	const bool inline_run = Common::Gates::Enabled(Common::Gates::Gate::ShadowInline);
+	if (workers == 0 && !inline_run) {
+		return;
+	}
+	const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+	thread_local ShadowResolve::Job job;
+	job.context      = &m_context;
+	job.image_count  = 0;
+	job.buffer_count = 0;
+	const auto* memo      = m_memo.get();
+	const bool  fast_gate = Common::Gates::Enabled(Common::Gates::Gate::TexFast) &&
+	                        !Config::GraphicsDebugDumpEnabled();
+	const auto add_stage = [&](const PreparedBindings& prepared) {
+		const auto& program = *prepared.runtime->program;
+		if (job.image_count + prepared.images.size() > ShadowResolve::MaxImages ||
+		    job.buffer_count + prepared.buffer_sources.size() > ShadowResolve::MaxBuffers) {
+			return false;
+		}
+		for (size_t i = 0; i < prepared.images.size(); i++) {
+			const auto& binding  = prepared.images[i];
+			const auto& resource = program.info.images[i];
+			auto&       query    = job.images[job.image_count++];
+			query.id                 = binding.image_id;
+			query.data               = binding.desc.info.data;
+			query.extent             = binding.desc.info.extent;
+			query.resources          = binding.desc.info.resources;
+			query.source_first_level = binding.desc.source_first_level;
+			query.source_size        = binding.desc.source_size;
+			query.eligible = fast_gate &&
+			                 resource.mip_mode != ShaderRecompiler::IR::ImageMipMode::DynamicStorage &&
+			                 binding.desc.type != TextureCache::BindingType::Storage &&
+			                 binding.desc.info.metadata.kind != ImageMetadataKind::Dcc;
+			query.has_view   = false;
+			query.fast_stamp = 0;
+			if (memo != nullptr && binding.memo_index < RenderExecutorMemo::TextureSlots) {
+				const auto& slot = memo->textures[binding.memo_index];
+				if (slot.valid && slot.version == binding.memo_version &&
+				    slot.image_id == binding.image_id && slot.fast_view != nullptr) {
+					query.has_view   = true;
+					query.fast_stamp = slot.fast_stamp;
+				}
+			}
+		}
+		for (size_t i = 0; i < prepared.buffer_sources.size(); i++) {
+			const auto& source = prepared.buffer_sources[i];
+			auto&       query  = job.buffers[job.buffer_count++];
+			query.address = source.address;
+			query.size    = source.size;
+			query.id      = source.id;
+			query.written = program.info.buffers[i].written;
+		}
+		return true;
+	};
+	bool ok = add_stage(bindings.vertex);
+	if (ok && bindings.pixel) {
+		ok = add_stage(*bindings.pixel);
+	}
+	if (!ok) {
+		FS::Add(FS::Counter::ShadowOver, 1);
+		return;
+	}
+	if (t0 != 0) {
+		FS::Add(FS::Counter::ShadowPushNs, FS::NowNs() - t0);
+	}
+	if (inline_run) {
+		ShadowResolve::Run(job, true);
+	}
+	if (workers != 0) {
+		const auto t1 = t0 != 0 ? FS::NowNs() : 0;
+		if (!ShadowResolve::Push(job)) {
+			FS::Add(FS::Counter::ShadowDropped, 1);
+		}
+		if (t1 != 0) {
+			FS::Add(FS::Counter::ShadowPushNs, FS::NowNs() - t1);
+		}
 	}
 }
 

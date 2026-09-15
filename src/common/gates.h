@@ -125,6 +125,11 @@ enum class Gate : uint32_t {
 	// whose only staleness came from a GPU buffer write and whose guest source is at least
 	// "imgskipkb" KiB.
 	ImageSkipGpuStale,   // KYTY_IMG_SKIP_GPU_STALE,    file name "imgskip"
+	// Session 70: two formats the packed-clear decoder was missing, R8_UINT/R8_SINT for colour and
+	// D16_UNORM for depth. Without them a clear the guest asked for is discarded, the compute fill
+	// writes guest memory instead, and the texture cache re-uploads the surface out of it - 8.65 MiB
+	// per frame in Sky Garden, one colour and one depth target. Same pixels, less work.
+	ClearDecodeWide,     // KYTY_CLEAR_DECODE_WIDE,     file name "cleardec"
 	Count,
 };
 

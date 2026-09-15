@@ -659,6 +659,24 @@ enum class Counter : uint32_t {
 	                  // is on the same scale as img_up_kb (which is a byte counter divided by 1024
 	                  // at print time). Do NOT print it through the "micros" path - that divides
 	                  // by 1000 and the two stop being addable.
+	// Session 70: why a recognised guest compute clear is not consumed. ResolveComputeBufferFill
+	// accepts 21.6 fills per frame in Sky Garden (run clr70a), so everything below happens inside
+	// TextureCache::ClearImageFromBuffer, and the four outcomes call for four different fixes.
+	// No gate: they cost one Add per fill and change no decision, so a plain baseline run sizes
+	// the opportunity.
+	ClearConsumed,    // clr_ok: fills turned into a vkCmdClearColorImage / ClearDepthStencilImage
+	ClearConsumedKb,  // clr_ok_kb: KiB of their guest ranges (KiB at the increment site)
+	ClearAmbiguous,   // clr_ambig: declined because two or more live images claim the same
+	                  // (address, size) - the guest keeps both rungs of its resolution ladder
+	                  // registered, and the fill cannot tell which one it means
+	ClearAmbiguousKb, // clr_ambig_kb: KiB of those ranges
+	ClearNoMatch,     // clr_none: no image claims the range - the genuine metadata fills that
+	                  // TrackDccFill picks up. Not a missed clear.
+	ClearNoMatchKb,   // clr_none_kb
+	ClearDecodeFail,  // clr_decode: an image claimed the range but the packed value had no decoder
+	                  // for its format (imageInfo.h DecodePackedColorClear and friends)
+	ClearOverlapOnly, // clr_over: images that overlapped the fill range without claiming it
+	                  // exactly, summed over declined fills - sizes widening "exact" to "contained"
 	Count
 };
 

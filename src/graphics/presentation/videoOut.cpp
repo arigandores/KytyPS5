@@ -1825,6 +1825,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // KiB already, so micros = false: the "micros" path divides by 1000 and would put
 				    // this on a different scale from img_up_kb, which is bytes / 1024.
 				    {"img_skip_kb", FS::Counter::ImgSkippedKb, false},
+				    // Session 70: the four outcomes of ClearImageFromBuffer. KiB counters are KiB
+				    // already, so micros = false for them too.
+				    {"clr_ok", FS::Counter::ClearConsumed, false},
+				    {"clr_ok_kb", FS::Counter::ClearConsumedKb, false},
+				    {"clr_ambig", FS::Counter::ClearAmbiguous, false},
+				    {"clr_ambig_kb", FS::Counter::ClearAmbiguousKb, false},
+				    {"clr_none", FS::Counter::ClearNoMatch, false},
+				    {"clr_none_kb", FS::Counter::ClearNoMatchKb, false},
+				    {"clr_decode", FS::Counter::ClearDecodeFail, false},
+				    {"clr_over", FS::Counter::ClearOverlapOnly, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

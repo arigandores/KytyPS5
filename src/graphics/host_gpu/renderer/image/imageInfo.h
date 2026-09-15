@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_IMAGEINFO_H_
 
 #include "common/assert.h"
+#include "common/gates.h"
 #include "graphics/guest_gpu/gpu_defs.h"
 #include "graphics/guest_gpu/gpu_format.h"
 #include "graphics/host_gpu/regionDefinitions.h"
@@ -482,6 +483,24 @@ IsSupportedDisplayRenderTargetTileMode(Prospero::TileMode tile_mode) noexcept {
 			next.float32[2] = DecodeSmallFloatBits((packed >> 22u) & 0x3ffu, 5);
 			break;
 		case vk::Format::eR8Unorm: next.float32[0] = unorm8(packed); break;
+		// Session 70, gate "cleardec": a guest compute fill writes 32-bit records, so an 8-bit target
+		// is cleared with the byte replicated four times - the shape DecodePackedStencilClear tests
+		// below. A 2432x1368 R8_UINT surface cleared to 0 is discarded once per frame without this,
+		// and re-uploaded out of guest memory instead.
+		case vk::Format::eR8Uint:
+			if (!Common::Gates::Enabled(Common::Gates::Gate::ClearDecodeWide) ||
+			    packed != (packed & 0xffu) * 0x01010101u) {
+				return false;
+			}
+			next.uint32[0] = packed & 0xffu;
+			break;
+		case vk::Format::eR8Sint:
+			if (!Common::Gates::Enabled(Common::Gates::Gate::ClearDecodeWide) ||
+			    packed != (packed & 0xffu) * 0x01010101u) {
+				return false;
+			}
+			next.int32[0] = static_cast<int32_t>(static_cast<int8_t>(packed & 0xffu));
+			break;
 		case vk::Format::eR8G8Unorm:
 			next.float32[0] = unorm8(packed);
 			next.float32[1] = unorm8(packed >> 8u);
@@ -543,6 +562,18 @@ IsSupportedDisplayRenderTargetTileMode(Prospero::TileMode tile_mode) noexcept {
 }
 
 [[nodiscard]] inline bool DecodePackedDepthClear(vk::Format format, uint32_t packed, float& clear) {
+	// Session 70, gate "cleardec": a 16-bit depth target is filled with the half replicated twice,
+	// the same shape the stencil decoder tests. A 1920x1080 D16_UNORM cleared to 0xffff (depth 1.0)
+	// is discarded once per frame without this case.
+	if ((format == vk::Format::eD16Unorm || format == vk::Format::eD16UnormS8Uint) &&
+	    Common::Gates::Enabled(Common::Gates::Gate::ClearDecodeWide)) {
+		const auto half = packed & 0xffffu;
+		if (packed != half * 0x00010001u) {
+			return false;
+		}
+		clear = static_cast<float>(half) / 65535.0f;
+		return true;
+	}
 	if (format != vk::Format::eD32Sfloat && format != vk::Format::eD32SfloatS8Uint) {
 		return false;
 	}

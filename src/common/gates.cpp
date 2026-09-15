@@ -111,6 +111,8 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 69, measurement only.
     {"KYTY_MUT_SITE", "mutsite", false},
     {"KYTY_IMG_SKIP_GPU_STALE", "imgskip", false},
+    // Session 70, a behaviour change: two missing cases in the packed-clear decoder.
+    {"KYTY_CLEAR_DECODE_WIDE", "cleardec", false},
 }};
 
 struct KnobDefinition {

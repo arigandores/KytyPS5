@@ -2089,6 +2089,34 @@ void TextureCache::CommitGpuWrite(Image& image) {
 	image.MarkGpuModified();
 }
 
+// Session 70: clr_decode reads 1.000 per frame, so exactly one recognised clear per frame is lost
+// in the decoder. Whether that is worth fixing depends on which surface it is, and the counter
+// cannot say. Print each distinct format once, at most 16 lines for the whole run.
+static void LogClearDecodeFailure(const Image& image, const char* aspect, uint32_t packed_clear,
+                                  uint64_t address, uint64_t size) {
+	static std::mutex                            seen_mutex;
+	static std::vector<std::pair<uint32_t, int>> seen;
+	const auto key = static_cast<uint32_t>(image.info.pixel_format);
+	{
+		std::scoped_lock lock {seen_mutex};
+		if (seen.size() >= 16) {
+			return;
+		}
+		for (const auto& entry: seen) {
+			if (entry.first == key && entry.second == static_cast<int>(aspect[0])) {
+				return;
+			}
+		}
+		seen.emplace_back(key, static_cast<int>(aspect[0]));
+	}
+	LOGF("ClearDecodeFail: aspect=%s vkformat=%u pixel_format=%u addr=0x%016" PRIx64
+	     " size=0x%" PRIx64 " value=0x%08" PRIx32 " extent=%ux%u levels=%u layers=%u tile=%u\n",
+	     aspect, static_cast<uint32_t>(image.backing.format),
+	     static_cast<uint32_t>(image.info.pixel_format), address, size, packed_clear,
+	     image.info.extent.width, image.info.extent.height, image.info.resources.levels,
+	     image.backing.layers, static_cast<uint32_t>(image.info.tile_mode));
+}
+
 bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address, uint64_t size,
                                         uint32_t packed_clear) {
 	if (command.IsInvalid() || !GuestRange {address, size}.Valid()) {
@@ -2097,6 +2125,11 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 	std::scoped_lock     lock {m_lock};
 	ImageId              selected {};
 	vk::ImageAspectFlags aspect {};
+	// Session 70: count the outcome. The four declines below mean different things and want
+	// different fixes, so they are counted apart. KiB at the increment site, never through the
+	// "micros" print path.
+	const auto note_kb = static_cast<uint64_t>(size / 1024u);
+	uint64_t   overlap_only = 0;
 	for (const auto id: FindImagesInRegion(address, size, false)) {
 		auto owner = m_slot_images.try_get(id);
 		if (owner == nullptr) {
@@ -2118,21 +2151,30 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 			                                  : vk::ImageAspectFlagBits::eColor;
 		}
 		if (!candidate) {
+			overlap_only++;
 			continue;
 		}
 		if (selected && selected != candidate_id) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClearAmbiguous, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClearAmbiguousKb, note_kb);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClearOverlapOnly, overlap_only);
 			return false;
 		}
 		selected = candidate_id;
 		aspect   = candidate;
 	}
 	if (!selected) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClearNoMatch, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClearNoMatchKb, note_kb);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClearOverlapOnly, overlap_only);
 		return false;
 	}
 	auto&          image = m_slot_images[selected];
 	vk::ClearValue clear {};
 	if (aspect == vk::ImageAspectFlagBits::eColor) {
 		if (!DecodePackedColorClear(image.info.pixel_format, packed_clear, clear.color)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClearDecodeFail, 1);
+			LogClearDecodeFailure(image, "color", packed_clear, address, size);
 			return false;
 		}
 	} else {
@@ -2141,12 +2183,17 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		     !DecodePackedDepthClear(image.info.pixel_format, packed_clear, clear.depthStencil.depth)) ||
 		    (aspect == vk::ImageAspectFlagBits::eStencil &&
 		     !DecodePackedStencilClear(packed_clear, stencil_clear))) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ClearDecodeFail, 1);
+			LogClearDecodeFailure(image, aspect == vk::ImageAspectFlagBits::eDepth ? "depth" : "stencil",
+			                      packed_clear, address, size);
 			return false;
 		}
 		clear.depthStencil.stencil = stencil_clear;
 	}
 	ClearImage(command, selected, image.backing.format,
 	           {aspect, 0, image.info.resources.levels, 0, image.info.TransferLayers()}, clear);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ClearConsumed, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::ClearConsumedKb, note_kb);
 	return true;
 }
 

@@ -49,9 +49,17 @@ uint32_t EmitBuiltinU32(EmitterState& state, IR::StageInputKind kind, uint32_t c
 		const auto value = state.builder.AllocateId();
 		const auto bits  = state.builder.AllocateId();
 		state.builder.AddFunction(spv::OpLoad, TypeBool(state), value, variable);
-		// PS5 initializes v_front_face with float +1.0/-1.0 bits.
+		// PS5 initializes v_front_face with float +1.0/-1.0 bits (upstream 7b5a33f). Helper
+		// invocations are ours and are not a VGPR the hardware preloads: the pixel prologue
+		// (Translate.cpp, "helper lanes start inactive") compares the value against 0 to build
+		// the initial EXEC, so it must stay 1/0 -- with the float bits both cases are non-zero
+		// and every pixel wave would start with EXEC = 0.
+		const auto one =
+		    kind == IR::StageInputKind::FrontFacing ? 0x3f800000u : 1u;
+		const auto zero =
+		    kind == IR::StageInputKind::FrontFacing ? 0xbf800000u : 0u;
 		state.builder.AddFunction(spv::OpSelect, TypeU32(state), bits, value,
-		                          ConstantU32(state, 0x3f800000u), ConstantU32(state, 0xbf800000u));
+		                          ConstantU32(state, one), ConstantU32(state, zero));
 		return bits;
 	}
 	if (kind == IR::StageInputKind::VertexIndex || kind == IR::StageInputKind::InstanceIndex ||

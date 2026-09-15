@@ -23,7 +23,6 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/hostMemory.h"
-#include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
@@ -46,6 +45,7 @@
 #include <bit>
 #include <fmt/format.h>
 #include <limits>
+#include <mutex>
 #include <span>
 #include <vector>
 
@@ -264,8 +264,15 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		EXIT("storage buffer slot %u: const-bank range 0x%llx exceeds maxUniformBufferRange\n", slot,
 		     static_cast<unsigned long long>(result.range));
 	}
-	// Upstream 01df42a: a plain (unformatted) storage write can be a DCC metadata write, so
-	// every written range has to reach the texture cache, not only the formatted ones.
+	// Upstream 01df42a widened this from "resource.formatted && resource.written" to every
+	// written range. Its own reason -- reaching the content-based DCC metadata invalidation
+	// (InvalidateDccMetadata) it added to InvalidateMemoryFromGPU -- does NOT apply here: this
+	// merge kept our PendingDcc tracking and rejected that rework, so no metadata state is
+	// touched by this call at all. What is left is the image half: InvalidateMemoryFromGPU marks
+	// every image overlapping the range buffer-modified, so a plain (unformatted) storage write
+	// into memory an image is built from is not read back later as stale texels. The widening is
+	// kept because it can only cost an extra image upload, while the narrow condition can hand a
+	// draw stale contents; it is also pure cost for the (common) writes that alias no image.
 	if (resource.written) {
 		context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
 	}
@@ -1071,6 +1078,38 @@ void RenderExecutor::BindImage(ImageId id, bool storage, bool atomic) {
 	m_bound_images.push_back(id);
 }
 
+namespace {
+
+// Upstream ea092a9: a DCC fast clear is encoded in the format its consumer views the surface
+// through, not in the format of the host allocation. An image whose allocation is UNORM can be
+// reused for a FLOAT descriptor (SameBacking / FormatsCompatible), and then the clear has to be
+// written as 0x3c00, not as the UNORM 0xffff a transfer clear produces -- the FLOAT view reads
+// that back as NaN. TextureCache::PrepareDccClear takes the format from the ImageDesc it is
+// called with; RenderExecutor::MaterializeDeferredDccClear is declared in render.h without one
+// and its two callers differ: the shader-binding path (CommitBindings) knows the view format of
+// the binding that is about to read the surface, the fast-clear-eliminate register scan
+// (MaterializeBoundTargetDccClears) has no descriptor at all. The binding path publishes its
+// view format here for the duration of the call; eUndefined means "no consumer known" and the
+// clear is then encoded in the allocation format, exactly as before.
+// TODO(merge): give both MaterializeDeferredDccClear overloads a `vk::Format view_format`
+// parameter in render.h and drop this hint.
+thread_local vk::Format g_dcc_clear_view_format = vk::Format::eUndefined;
+
+class DccClearViewFormat {
+public:
+	explicit DccClearViewFormat(vk::Format format) noexcept : m_saved(g_dcc_clear_view_format) {
+		g_dcc_clear_view_format = format;
+	}
+	// Restores rather than clears: a nested call (none today) must not lose the outer hint.
+	~DccClearViewFormat() { g_dcc_clear_view_format = m_saved; }
+	KYTY_CLASS_NO_COPY(DccClearViewFormat);
+
+private:
+	vk::Format m_saved;
+};
+
+} // namespace
+
 // A guest DCC fast clear only rewrites metadata, and the attachment path materializes it as a
 // load-op clear when the surface is next bound as a colour attachment. ASTRO BOT clears its
 // scene colour buffer, lights the deferred save-card tiles with compute image stores and only then
@@ -1105,30 +1144,61 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	if (mask == 0) {
 		return;
 	}
-	const auto          code    = static_cast<uint8_t>(fill);
+	// Encode the clear in the format its consumer views the surface through (ea092a9) -- the
+	// same rule TextureCache::PrepareDccClear applies to the metadata state it owns. The
+	// aliased encoding goes through TextureCache::ClearImage, which renders the clear into a view
+	// of that format; it can only do that for a single-level, single-sample, non-volume colour
+	// image, so every other case keeps the transfer clear in the allocation format this path
+	// always used. `g_dcc_clear_view_format` is the binding's view format, or eUndefined when the
+	// caller has no descriptor (the register scan below).
+	const auto native_format = image.info.pixel_format; // allocation format, == backing.format
+	const bool can_alias = g_dcc_clear_view_format != vk::Format::eUndefined &&
+	                       g_dcc_clear_view_format != image.backing.format &&
+	                       image.info.resources.levels == 1 && image.info.samples == 1 &&
+	                       !image.info.IsVolume();
+	auto                clear_format = can_alias ? g_dcc_clear_view_format : native_format;
+	const auto          code         = static_cast<uint8_t>(fill);
 	vk::ClearColorValue clear {};
-	bool                decoded = false;
-	if (code == 0x20) {
-		// Register-backed clear: use the clear word of the colour slot that still addresses the
-		// surface. Without one the attachment path keeps handling it.
-		const auto& hw = buffer.GetRegisters();
-		for (uint32_t slot = 0; slot < 8 && !decoded; slot++) {
-			const auto& rt = hw.GetRenderTarget(slot);
-			if (rt.base.addr == image.info.data.address && rt.dcc_addr.addr == address) {
-				decoded = DecodePackedColorClear(image.info.pixel_format, rt.clear_word0.word0,
-				                                 rt.clear_word1.word1, clear);
+	// Decodes the pending key into `clear` the way `format` encodes it. Both the value and the
+	// union member it lands in belong to that format, so the clear has to be written through
+	// that very format and no other.
+	const auto decode = [&](vk::Format format) -> bool {
+		if (code == 0x20) {
+			// Register-backed clear: use the clear word of the colour slot that still addresses
+			// the surface. Without one the attachment path keeps handling it.
+			const auto& hw = buffer.GetRegisters();
+			for (uint32_t slot = 0; slot < 8; slot++) {
+				const auto& rt = hw.GetRenderTarget(slot);
+				if (rt.base.addr == image.info.data.address && rt.dcc_addr.addr == address &&
+				    DecodePackedColorClear(format, rt.clear_word0.word0, rt.clear_word1.word1,
+				                           clear)) {
+					return true;
+				}
 			}
+			return false;
 		}
-	} else {
-		decoded = DecodeFixedDccClear(image.info.pixel_format, code, clear);
+		return DecodeFixedDccClear(format, code, clear);
+	};
+	bool decoded = decode(clear_format);
+	if (!decoded && can_alias) {
+		// The consumer's view format has no DCC clear encoding of its own (a scaled or snorm
+		// alias of the allocation, say): fall back to the allocation format and the transfer
+		// clear this path always used. Declining instead would leave the surface stale AND its
+		// metadata unconsumed, so the next attachment bind would load-op clear it over whatever
+		// the shader wrote -- the exact bug this path exists to avoid.
+		clear_format = native_format;
+		decoded      = decode(clear_format);
 	}
+	// ClearImage's own condition for rendering through a view instead of a transfer clear.
+	const bool aliased = clear_format != image.backing.format;
 	static std::atomic<uint32_t> log_count = 0;
 	static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
 	if (dcc_trace || log_count++ < 32) {
 		LOGF("MaterializeDeferredDccClear: image=0x%016" PRIx64 " dcc=0x%016" PRIx64
-		     " code=0x%02x layers=0x%08x format=%u decoded=%d\n",
+		     " code=0x%02x layers=0x%08x format=%u view=%u decoded=%d\n",
 		     image.info.data.address, address, static_cast<uint32_t>(code), mask,
-		     static_cast<uint32_t>(image.info.pixel_format), decoded ? 1 : 0);
+		     static_cast<uint32_t>(image.info.pixel_format),
+		     static_cast<uint32_t>(clear_format), decoded ? 1 : 0);
 	}
 	if (!decoded) {
 		return;
@@ -1136,8 +1206,10 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp | Common::DrawStat::Meta);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	buffer.EndRendering(RenderPassEnd::Clear);
-	image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {},
-	              buffer.Handle());
+	if (!aliased) {
+		image.Transit(vk::ImageLayout::eTransferDstOptimal, vk::AccessFlagBits2::eTransferWrite, {},
+		              buffer.Handle());
+	}
 	for (uint32_t layer = 0; layer < layers; layer++) {
 		if ((mask & (1u << layer)) == 0) {
 			continue;
@@ -1148,8 +1220,21 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		}
 		const vk::ImageSubresourceRange range {vk::ImageAspectFlagBits::eColor, 0,
 		                                       image.info.resources.levels, layer, count};
-		buffer.Handle().clearColorImage(image.backing.image,
-		                                vk::ImageLayout::eTransferDstOptimal, &clear, 1, &range);
+		if (aliased) {
+			// Reuse the encoder upstream fixed instead of repeating it: ClearImage transits the
+			// image, renders the clear through a view of `clear_format` and commits the GPU
+			// write. It reads and writes texture cache state, so it runs under the cache lock
+			// like every other caller; nothing here holds that lock (MetaClearMask above and
+			// TouchMeta below take it themselves).
+			vk::ClearValue value {};
+			value.color = clear;
+			std::scoped_lock lock {cache.m_lock};
+			cache.ClearImage(buffer, id, clear_format, range, value);
+		} else {
+			buffer.Handle().clearColorImage(image.backing.image,
+			                                vk::ImageLayout::eTransferDstOptimal, &clear, 1,
+			                                &range);
+		}
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 1);
 		for (uint32_t consumed = layer; consumed < layer + count; consumed++) {
 			if (!cache.TouchMeta(address, consumed, false)) {
@@ -1495,6 +1580,27 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 			target.desc.view_info.base_level = target.guest_mip_level;
 			target.desc.view_info.base_layer = target.guest_array_layer;
 			target.image_id = cache.FindImage(target.desc);
+			// Gate "rtfast": this re-find rewrote the description the target was memoized with,
+			// so the memo slot has to move with it -- exactly like the re-finds in
+			// ResolveRenderColorTarget / ResolveRenderDepthTarget. Without the write-back a
+			// later "same slot, same version" hit keeps the rewritten description (gate on)
+			// while a gate-off run replays the stored one, and the gate would change results
+			// instead of only cost. The slot is written only while it still holds this very
+			// info: another target may have taken it since, and then its key no longer matches
+			// what is stored (a version mismatch already forces the full copy on the next hit).
+			if (target.memo_slot != UINT32_MAX && m_memo != nullptr &&
+			    target.memo_slot < m_memo->colors.size()) {
+				auto& slot = m_memo->colors[target.memo_slot];
+				if (slot.valid && slot.version == target.memo_version) {
+					slot.version++; // a store like any other
+					target.memo_version          = slot.version;
+					slot.info.desc               = target.desc;
+					slot.info.image_id           = target.image_id;
+					slot.info.memo_slot          = target.memo_slot;
+					slot.info.memo_version       = target.memo_version;
+					Common::DrawStat::Mark(Common::DrawStat::Memo);
+				}
+			}
 			BindRenderTarget(target.image_id);
 		}
 	}
@@ -1891,7 +1997,13 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
-			MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id, image);
+			{
+				// This binding is the consumer of a deferred DCC clear still pending on the
+				// image, so its view format is the one the clear has to be encoded in (ea092a9,
+				// see the hint above MaterializeDeferredDccClear).
+				const DccClearViewFormat clear_view {descriptors.images[i].desc.view_info.format};
+				MaterializeDeferredDccClear(buffer, descriptors.images[i].image_id, image);
+			}
 			auto& binding = descriptors.images[i];
 			const auto&                 view = binding.desc.view_info;
 			const ImageSubresourceRange range {view.base_level, view.level_count, view.base_layer,

@@ -343,11 +343,11 @@ static void LogDrawInputState(const CommandBuffer& buffer, const RenderColorInfo
 // Upstream bce8924 / 586cbd4 / 940e42f / 29e9ea6 / 9a74ef1: the stencil test, the per-face ops,
 // masks and reference are dynamic state now (the pipeline no longer bakes them, see the dynamic
 // state list in shaders.cpp), and the two faces carry independent values.
-// The record thread of gate "recpack" (commandRecorder.h) has no commands for
-// setStencilTestEnable / setStencilOp, so this state is emitted through a real command buffer;
-// the packet path takes a direct handle for it, and only when it actually changes. The
-// dynamic-state cache of session 57 decides that: a scene keeps one stencil setup for hundreds
-// of draws, so the direct write (and its record drain) is rare.
+// The record sink of gate "recpack" carries all five commands (RecordCmd::SetStencilTestEnable,
+// SetStencilOp and the three masks, commandRecorder.h), so this state goes through the same
+// sink as the rest of the dynamic state instead of draining the record ring for a direct
+// handle. The dynamic-state cache of session 57 still decides whether anything is emitted at
+// all: a scene keeps one stencil setup for hundreds of draws.
 static bool StencilDynamicParamsChanged(const CommandBuffer& buffer, const RenderDepthInfo& depth) {
 	// No short-circuit: every slot that describes the state we are about to emit must be updated.
 	bool changed =
@@ -361,7 +361,8 @@ static bool StencilDynamicParamsChanged(const CommandBuffer& buffer, const Rende
 	return changed;
 }
 
-static void SetStencilDynamicParams(vk::CommandBuffer vk_buffer, const RenderDepthInfo& depth) {
+template <typename Sink>
+static void SetStencilDynamicParams(Sink& vk_buffer, const RenderDepthInfo& depth) {
 	vk_buffer.setStencilTestEnable(depth.stencil_test_enable ? VK_TRUE : VK_FALSE);
 	if (depth.stencil_test_enable) {
 		const auto set_stencil = [&](vk::StencilFaceFlagBits face, const vk::StencilOpState& state) {
@@ -497,9 +498,9 @@ static void SetGraphicsDynamicParams(const CommandBuffer& buffer, Sink& vk_buffe
 		}
 	}
 
-	// The stencil dynamic state is not written here: it is the one piece of it the record
-	// thread cannot express, so it goes through StencilDynamicParamsChanged /
-	// SetStencilDynamicParams on a real command buffer (see above).
+	// The stencil dynamic state is not written here: it is guarded as a group by
+	// StencilDynamicParamsChanged / SetStencilDynamicParams (see above), which both draw paths
+	// call on the same sink right after this function.
 
 #if defined(__APPLE__)
 	// MoltenVK has no VK_EXT_color_write_enable; the pipeline is created without the
@@ -867,6 +868,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			if (old_image != nullptr) {
 				old_image->binding = {};
 			}
+			// Restore the guest view before re-finding, exactly as the shared pass does
+			// (PrepareGraphicsBindings): FindImage overwrites base_level/base_layer when it remaps
+			// the view onto a container image, so a second FindImage over the already remapped
+			// descriptor would resolve a level relative to a level, not to the guest surface.
+			target.desc.view_info.base_level = target.guest_mip_level;
+			target.desc.view_info.base_layer = target.guest_array_layer;
 			target.image_id = cache.FindImage(target.desc);
 			BindRenderTarget(target.image_id);
 		}
@@ -1099,17 +1106,61 @@ static bool ShouldSkipGeShader(const CommandBuffer& buffer, int frame) {
 	    sh_regs.m_vgtGsMaxVertOut == 0x00000000 &&
 	    is_known_gs_out_prim_type(sh_regs.m_vgtGsOutPrimType);
 
-	const bool unsupported_stage_mask = (stage_enables != 0 && stage_enables != 0x02002000);
+	// Tessellation. The merge brought upstream's native LS/HS/TES path, which this pre-filter
+	// used to hide: a patch draw sets HS_EN, which is outside {0, 0x02002000}, so every one of
+	// them was logged as an unsupported GE draw and dropped.
+	// AgcCreatePrimState (src/libs/agc.cpp) builds VGT_SHADER_STAGES_EN of a patch draw as the
+	// GS half's register OR'ed with the HS half's, so the mask is one of the two vertex masks
+	// above plus the tessellation stage bits. Field layout (gfx10.3; the wave-size bits are the
+	// ones agc.cpp compares between the two halves, 1<<21 for HS and 1<<22 for GS, and the
+	// HS_EN/GS_EN tests in shader/shader.cpp use bits 0x4 and 0x20):
+	//   LS_EN 1:0, HS_EN 2, ES_EN 4:3, GS_EN 5, VS_EN 7:6, DYNAMIC_HS 8,
+	//   HS_W32_EN 21, GS_W32_EN 22.
+	// Extra bits a tessellated draw may carry: LS_EN | HS_EN | ES_EN | DYNAMIC_HS = 0x11f.
+	// Deliberately still rejected, so that a skipped draw never becomes an abort inside the
+	// shader front end: GS_EN (0x20) and the two wave32 bits (0x00600000), each of which
+	// PrepareTessellationPrograms refuses with EXIT_NOT_IMPLEMENTED, and any tessellator
+	// configuration other than the triangle / fractional-odd / clockwise one that
+	// DefineTessellationExecutionModes (spirvEmitterTessellation.cpp) implements.
+	constexpr uint32_t tess_stage_bits   = 0x0000011fu;
+	constexpr uint32_t tess_reject_bits  = 0x00600020u;
+	const uint32_t     tess_rest         = stage_enables & ~tess_stage_bits;
+	const uint32_t     tf_param          = sh_regs.m_vgtTfParam;
+	const bool         patch_draw        = ucfg.GetPrimType() == Prospero::PrimitiveType::kPatch;
+	const bool tessellation_draw =
+	    patch_draw && (stages & 0x00000004u) != 0 && (stages & tess_reject_bits) == 0 &&
+	    (tess_rest == 0 || tess_rest == 0x02002000) && vertex_info.ls_regs.data_addr != 0 &&
+	    vertex_info.hs_regs.data_addr != 0 && vertex_info.es_regs.data_addr != 0 &&
+	    vertex_info.gs_regs.data_addr == 0 && (tf_param & 0x3u) == 1u &&
+	    ((tf_param >> 2u) & 0x3u) == 2u && ((tf_param >> 5u) & 0x3u) == 2u;
+
+	const bool unsupported_stage_mask =
+	    !tessellation_draw && (stage_enables != 0 && stage_enables != 0x02002000);
 	const bool unsupported_gs_stage = (vertex_info.es_regs.data_addr != 0 &&
 	                                   vertex_info.gs_regs.data_addr != 0 && !ps5_ngg_vertex_path);
 	// GE_CNTL group sizes control guest scheduling and do not constrain the host vertex path.
+	// These registers describe the GS a tessellation assembly does not have (its own state is
+	// VGT_LS_HS_CONFIG / VGT_TF_PARAM, read by PrepareTessellationPrograms), so they are not
+	// applied to a recognized patch draw - otherwise GE_NGG_SUBGRP_CNTL alone would keep the
+	// whole path dead.
 	const bool ge_shader_regs =
-	    (sh_regs.m_geNggSubgrpCntl != 0x00000000 && sh_regs.m_geNggSubgrpCntl != 0x00000001) ||
-	    sh_regs.m_vgtGsMaxVertOut != 0x00000000 ||
-	    !is_known_gs_out_prim_type(sh_regs.m_vgtGsOutPrimType) ||
-	    sh_regs.m_geMaxOutputPerSubgroup > 0x00000040;
+	    !tessellation_draw &&
+	    ((sh_regs.m_geNggSubgrpCntl != 0x00000000 && sh_regs.m_geNggSubgrpCntl != 0x00000001) ||
+	     sh_regs.m_vgtGsMaxVertOut != 0x00000000 ||
+	     !is_known_gs_out_prim_type(sh_regs.m_vgtGsOutPrimType) ||
+	     sh_regs.m_geMaxOutputPerSubgroup > 0x00000040);
+	// The primitive type alone decides tess_active in PipelineCache::GetGraphicsPrograms
+	// (pipelineCache.cpp), so every kPatch draw that is not the assembly recognized above still
+	// reaches PrepareTessellationPrograms and aborts there: EXIT_NOT_IMPLEMENTED on the stage
+	// mask, on a program that is not kHsFront/kHsBack/kGs, or in
+	// DefineTessellationExecutionModes. Before the merge kPatch had no host topology and
+	// GetDrawTopology skipped such a draw; keep that outcome as a logged skip instead of a dead
+	// emulator. This only ever adds skips: today every kPatch draw that gets past this function
+	// aborts, so no draw that currently renders can be caught by it.
+	const bool unsupported_patch_draw = patch_draw && !tessellation_draw;
 
-	if (unsupported_stage_mask || unsupported_gs_stage || ge_shader_regs) {
+	if (unsupported_stage_mask || unsupported_gs_stage || ge_shader_regs ||
+	    unsupported_patch_draw) {
 		static std::once_flag warning_once;
 		std::call_once(warning_once, [] {
 			std::printf("Warning: game uses unsupported graphics pipelines; some draw calls were "
@@ -1282,17 +1333,27 @@ static PreparedVertexBuffers AcquireVertexBuffers(CommandBuffer&               b
 
 	// Rebuild slot bindings, offsetting non-empty slots into their acquired merged range.
 	PreparedVertexBuffers prepared;
-	prepared.count         = static_cast<uint32_t>(vs_input_info.buffers_num);
-	vk::Buffer null_buffer = nullptr;
+	prepared.count             = static_cast<uint32_t>(vs_input_info.buffers_num);
+	vk::Buffer     null_buffer = nullptr;
+	vk::DeviceSize null_size   = 0;
 	for (int i = 0; i < vs_input_info.buffers_num; i++) {
 		const auto& vertex = vs_input_info.buffers[i];
 		const auto  size   = VertexBufferDescriptorSize(vertex, vs_input_info);
 		if (size == 0) {
 			if (null_buffer == nullptr) {
-				null_buffer = cache.GetBuffer(NULL_BUFFER_ID).Handle();
+				const auto& null = cache.GetBuffer(NULL_BUFFER_ID);
+				null_buffer      = null.Handle();
+				null_size        = null.Size();
 			}
 			prepared.buffers[i] = null_buffer;
 			prepared.offsets[i] = 0;
+			// Upstream 3f80151 made CommitVertexBuffers bind sized (bindVertexBuffers2), and
+			// prepared.sizes is zero-initialized: an unused slot left at 0 would be bound as a
+			// zero-byte range, so every fetch from it would leave its own binding and depend on
+			// robustBufferAccess2 for the zeros. Bind the whole null buffer instead. (VK_WHOLE_SIZE
+			// is also legal here - VUID-vkCmdBindVertexBuffers2-pSizes-03358 exempts it - but the
+			// explicit size is what the descriptor path already hands out for this buffer.)
+			prepared.sizes[i]   = null_size;
 			continue;
 		}
 
@@ -1577,19 +1638,10 @@ static void CommitVertexBuffers(Sink& vk_buffer, const PreparedVertexBuffers& pr
 	if (prepared.count != 0) {
 		// Guest descriptor bounds must survive allocation merging in the cache (upstream 3f80151):
 		// a fetch past the guest descriptor must read zeros, not the neighbour that shares the
-		// merged allocation.
-		if constexpr (std::is_same_v<std::remove_cv_t<Sink>, vk::CommandBuffer>) {
-			vk_buffer.bindVertexBuffers2(0, prepared.count, prepared.buffers.data(),
-			                             prepared.offsets.data(), prepared.sizes.data(), nullptr);
-		} else {
-			// TODO(merge): the record thread of gate "recpack" (commandRecorder.h) has no sized
-			// vertex bind, so a packet draw still binds to the end of the merged allocation, as
-			// before 3f80151. Adding RecordCmd::BindVertexBuffers2 (buffers, offsets, sizes) to
-			// commandRecorder.h/.cpp removes this branch; until then KYTY_RECORD_PACKETS=0 gives
-			// every draw the bounded binding.
-			vk_buffer.bindVertexBuffers(0, prepared.count, prepared.buffers.data(),
-			                            prepared.offsets.data());
-		}
+		// merged allocation. Both sinks bind sized: RecordCommandWriter carries the sizes through
+		// RecordCmd::BindVertexBuffers2, so gate "recpack" keeps the same bounds as a direct draw.
+		vk_buffer.bindVertexBuffers2(0, prepared.count, prepared.buffers.data(),
+		                             prepared.offsets.data(), prepared.sizes.data(), nullptr);
 	}
 }
 
@@ -2021,11 +2073,6 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// draw takes the direct path.
 	if (packet && buffer.Recorder() != nullptr) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, draw.IsIndexed() ? 0x100u : 0x200u);
-		// The record thread has no stencil-op / stencil-test commands: emit that dynamic state
-		// directly, before any record of this draw, and only when it changed (upstream bce8924).
-		if (StencilDynamicParamsChanged(buffer, state.depth_info)) {
-			SetStencilDynamicParams(buffer.Handle(), state.depth_info);
-		}
 		CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline, stages, true);
 		lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
 
@@ -2043,6 +2090,10 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		}
 		SetGraphicsDynamicParams(buffer, tail, vertex_stages.back(), state.color_info,
 		                         state.color_count, state.depth_info);
+		// Same sink and the same place in the draw tail as on the direct path below.
+		if (StencilDynamicParamsChanged(buffer, state.depth_info)) {
+			SetStencilDynamicParams(tail, state.depth_info);
+		}
 		if (m_context.GetGraphics().attachment_feedback_loop_enabled) {
 			const auto feedback =
 			    rendering.depth_stencil_attachment.image_layout ==

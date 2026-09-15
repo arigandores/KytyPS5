@@ -740,6 +740,12 @@ void CommandRecorder::ExecuteCommands(const uint8_t* payload) {
 				m_buffer.bindVertexBuffers(0, aux, reinterpret_cast<const vk::Buffer*>(data),
 				                           reinterpret_cast<const vk::DeviceSize*>(data + aux * 8u));
 				break;
+			case RecordCmd::BindVertexBuffers2:
+				m_buffer.bindVertexBuffers2(
+				    0, aux, reinterpret_cast<const vk::Buffer*>(data),
+				    reinterpret_cast<const vk::DeviceSize*>(data + aux * 8u),
+				    reinterpret_cast<const vk::DeviceSize*>(data + aux * 16u), nullptr);
+				break;
 			case RecordCmd::BindIndexBuffer: {
 				vk::Buffer     buffer;
 				vk::DeviceSize index_offset = 0;
@@ -776,6 +782,17 @@ void CommandRecorder::ExecuteCommands(const uint8_t* payload) {
 				float values[3] {};
 				std::memcpy(values, data, sizeof(values));
 				m_buffer.setDepthBias(values[0], values[1], values[2]);
+				break;
+			}
+			case RecordCmd::SetStencilTestEnable: m_buffer.setStencilTestEnable(aux); break;
+			case RecordCmd::SetStencilOp: {
+				uint32_t values[4] {};
+				std::memcpy(values, data, sizeof(values));
+				m_buffer.setStencilOp(vk::StencilFaceFlags(aux),
+				                      static_cast<vk::StencilOp>(values[0]),
+				                      static_cast<vk::StencilOp>(values[1]),
+				                      static_cast<vk::StencilOp>(values[2]),
+				                      static_cast<vk::CompareOp>(values[3]));
 				break;
 			}
 			case RecordCmd::SetStencilCompareMask:

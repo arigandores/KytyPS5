@@ -147,6 +147,7 @@ static_assert(sizeof(vk::Buffer) == 8 && sizeof(vk::Pipeline) == 8 &&
 // 16-aligned record, so the arrays can be handed to the driver in place.
 enum class RecordCmd : uint16_t {
 	BindVertexBuffers,        // aux count: vk::Buffer[count], vk::DeviceSize[count]
+	BindVertexBuffers2,       // aux count: vk::Buffer[count], offsets[count], sizes[count]
 	BindIndexBuffer,          // aux vk::IndexType: vk::Buffer, vk::DeviceSize
 	SetViewports,             // aux count: vk::Viewport[count]
 	SetScissors,              // aux count: vk::Rect2D[count]
@@ -157,6 +158,8 @@ enum class RecordCmd : uint16_t {
 	SetDepthCompareOp,        // aux
 	SetDepthBiasEnable,       // aux
 	SetDepthBias,             // float constant, clamp, slope
+	SetStencilTestEnable,     // aux
+	SetStencilOp,             // aux face: uint32_t fail, pass, depth fail, compare
 	SetStencilCompareMask,    // aux face: uint32_t
 	SetStencilWriteMask,      // aux face: uint32_t
 	SetStencilReference,      // aux face: uint32_t
@@ -320,8 +323,9 @@ private:
 // is open (CommandRecorder::BeginRecord allows one open record).
 class RecordCommandWriter final {
 public:
-	// A draw tail needs about 1.5 KiB at most (32 vertex buffers, 16 viewports and scissors, all
-	// dynamic state, one draw); a dispatch well under 100 bytes.
+	// A draw tail needs about 2 KiB at most (32 sized vertex buffers, 16 viewports and
+	// scissors, all dynamic state including the five stencil commands, one draw); a dispatch
+	// well under 100 bytes. Append() exits rather than overrun the slot.
 	static constexpr uint32_t MaxBytes = 4096;
 
 	explicit RecordCommandWriter(CommandRecorder& recorder)
@@ -345,6 +349,20 @@ public:
 		auto* out = Append(RecordCmd::BindVertexBuffers, count, count * 16u);
 		std::memcpy(out, buffers, count * sizeof(vk::Buffer));
 		std::memcpy(out + count * sizeof(vk::Buffer), offsets, count * sizeof(vk::DeviceSize));
+	}
+	// Sized form (upstream 3f80151): the guest descriptor bounds must survive allocation
+	// merging in the buffer cache, so a fetch past the descriptor reads zeros instead of the
+	// neighbour that shares the merged allocation. Strides stay implicit, as at the call site.
+	void bindVertexBuffers2(uint32_t first, uint32_t count, const vk::Buffer* buffers,
+	                        const vk::DeviceSize* offsets, const vk::DeviceSize* sizes,
+	                        const vk::DeviceSize* strides) {
+		EXIT_IF(first != 0);
+		EXIT_IF(strides != nullptr);
+		auto* out = Append(RecordCmd::BindVertexBuffers2, count, count * 24u);
+		std::memcpy(out, buffers, count * sizeof(vk::Buffer));
+		std::memcpy(out + count * sizeof(vk::Buffer), offsets, count * sizeof(vk::DeviceSize));
+		std::memcpy(out + count * (sizeof(vk::Buffer) + sizeof(vk::DeviceSize)), sizes,
+		            count * sizeof(vk::DeviceSize));
 	}
 	void bindIndexBuffer(vk::Buffer buffer, vk::DeviceSize offset, vk::IndexType type) {
 		auto* out = Append(RecordCmd::BindIndexBuffer, static_cast<uint32_t>(type), 16u);
@@ -379,6 +397,17 @@ public:
 	void setDepthBias(float constant, float clamp, float slope) {
 		const float values[] {constant, clamp, slope};
 		std::memcpy(Append(RecordCmd::SetDepthBias, 0, sizeof(values)), values, sizeof(values));
+	}
+	void setStencilTestEnable(vk::Bool32 enable) {
+		(void)Append(RecordCmd::SetStencilTestEnable, enable, 0);
+	}
+	void setStencilOp(vk::StencilFaceFlags face, vk::StencilOp fail_op, vk::StencilOp pass_op,
+	                  vk::StencilOp depth_fail_op, vk::CompareOp compare_op) {
+		const uint32_t values[] {
+		    static_cast<uint32_t>(fail_op), static_cast<uint32_t>(pass_op),
+		    static_cast<uint32_t>(depth_fail_op), static_cast<uint32_t>(compare_op)};
+		std::memcpy(Append(RecordCmd::SetStencilOp, static_cast<uint32_t>(face), sizeof(values)),
+		            values, sizeof(values));
 	}
 	void setStencilCompareMask(vk::StencilFaceFlags face, uint32_t mask) {
 		Value(RecordCmd::SetStencilCompareMask, static_cast<uint32_t>(face), mask);

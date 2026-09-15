@@ -204,7 +204,7 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 		                                       1, view.base_layer, view.layer_count};
 		vk::ClearValue clear {};
 		clear.depthStencil = vk::ClearDepthStencilValue {0.0f, fill.value};
-		cache.ClearImage(command, binding.image_id, range, clear);
+		cache.ClearImage(command, binding.image_id, image.backing.format, range, clear);
 		return true;
 	}
 	ShaderBufferResource descriptor;
@@ -221,6 +221,12 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 		     program.shader_hash, descriptor.Base48(), size, packed_clear);
 	}
 	if (!cache.ClearImageFromBuffer(command, descriptor.Base48(), size, packed_clear)) {
+		// Upstream 01df42a deletes the three lines below together with its content-based
+		// metadata rework (MetaDataInfo without PendingDcc, revision/dirty tracking). This merge
+		// KEPT our PendingDcc tracking in textureCache.h/.cpp, so the deletion must not be taken:
+		// TrackDccFill is the only producer of PendingDcc entries, and without it PrepareDccClear,
+		// AdoptPendingDccForTexture, FindDccSurfaceImage and MaterializeDeferredDccClear are dead
+		// and the ASTRO BOT "crowd silhouette" flashes come back (sessions 9 and 21, gate dccstale).
 		// Track deferred DCC state while the original dispatch writes the metadata allocation.
 		cache.TrackDccFill(descriptor.Base48(), size, packed_clear);
 		static std::atomic<uint32_t> logged_metadata_clears {0};
@@ -756,8 +762,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	if (program.info.uses_dma) {
 		m_context.PrepareBda();
 	}
-	RebindBuffers(bindings);
 	RebindImages(bindings);
+	// Upstream dd408ff: the buffer reservations follow the image rebinds, so an alias
+	// discovered while resolving the images cannot be uploaded from a stale identity.
+	RebindBuffers(bindings);
 	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
 
 	// No handle here: the sanitizer below may submit this buffer while it waits for a ring slot, so

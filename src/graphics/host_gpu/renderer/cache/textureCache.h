@@ -107,6 +107,13 @@ public:
 	                                 uint32_t* fill_value = nullptr);
 	[[nodiscard]] bool ClearMeta(uint64_t address);
 	// Record deferred DCC state while the original guest dispatch writes the metadata.
+	// This merge kept our PendingDcc tracking instead of upstream's content-based
+	// MaterializeDccClear (437e69e/01df42a), so this call is the ONLY producer of PendingDcc
+	// entries: it must stay wired to the compute metadata-fill path in renderCompute.cpp, on the
+	// branch where ClearImageFromBuffer declines the fill. Without it PrepareDccClear,
+	// AdoptPendingDccForTexture, FindDccSurfaceImage and RenderExecutor's
+	// MaterializeDeferredDccClear / MaterializeBoundTargetDccClears are all dead code and DCC
+	// fast clears are never materialized (ASTRO BOT: the "crowd silhouette" flashes come back).
 	void               TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_value);
 	// Called after the fill dispatch is recorded: stamps the PendingDcc entry with its write sequence.
 	void StampPendingDccFill();
@@ -237,8 +244,8 @@ private:
 	void DownloadDepth(Image& image, Buffer& destination, uint64_t destination_offset);
 	void CommitGpuWrite(Image& image);
 	// Caller holds m_lock. Volume layer ranges select depth slices.
-	void ClearImage(CommandBuffer& command, ImageId id, const vk::ImageSubresourceRange& range,
-	                const vk::ClearValue& clear);
+	void ClearImage(CommandBuffer& command, ImageId id, vk::Format format,
+	                const vk::ImageSubresourceRange& range, const vk::ClearValue& clear);
 	void PrepareImageCopy(ImageId id);
 	void RestoreFullImageSource(ImageId id);
 	void RefreshCopySource(ImageId id);

@@ -89,21 +89,23 @@ void TraceImageLifetime(const char* event, const ImageInfo& info, const char* re
 	     info.pitch, info.bytes_per_block, last_frame);
 }
 
-[[nodiscard]] bool DecodeDccClear(const TextureCache::ImageDesc& desc, vk::Format format,
-                                  uint32_t fill, vk::ClearColorValue& clear) {
-	const auto code = static_cast<uint8_t>(fill);
-	if (fill != static_cast<uint32_t>(code) * 0x01010101u) {
-		return false;
+[[nodiscard]] bool DecodeDccClear(const TextureCache::ImageDesc& desc, uint8_t code,
+                                  vk::ClearColorValue& clear) {
+	switch (code) {
+		case 0x00:
+		case 0x20:
+		case 0x40:
+		case 0x80:
+		case 0xc0: break;
+		default: return false;
 	}
 	const auto& metadata = desc.info.metadata;
+	const auto  format   = desc.view_info.format;
 	if (code == 0x20) {
 		// Clear-to-register is a color-buffer operation; the texture pipe cannot decode it.
 		return desc.type == TextureCache::BindingType::RenderTarget &&
 		       metadata.dcc_clear_register_valid &&
 		       DecodePackedColorClear(format, metadata.dcc_clear_word, clear);
-	}
-	if (code != 0x00 && code != 0x40 && code != 0x80 && code != 0xc0) {
-		return false;
 	}
 	clear = {};
 	if (code == 0x00) {
@@ -159,6 +161,17 @@ void TraceImageLifetime(const char* event, const ImageInfo& info, const char* re
 	}
 	clear.float32 = channels;
 	return true;
+}
+
+// A recorded metadata fill is a dword; the decoder above takes the repeated byte code of a DCC
+// key. Callers that hold a fill value validate the repetition here.
+[[nodiscard]] bool DecodeDccClearFill(const TextureCache::ImageDesc& desc, uint32_t fill,
+                                      vk::ClearColorValue& clear) {
+	const auto code = static_cast<uint8_t>(fill);
+	if (fill != static_cast<uint32_t>(code) * 0x01010101u) {
+		return false;
+	}
+	return DecodeDccClear(desc, code, clear);
 }
 
 [[nodiscard]] const char* BindingTypeName(TextureCache::BindingType type) {
@@ -980,17 +993,10 @@ TextureCache::OverlapResult TextureCache::ResolveOverlap(const ImageInfo& reques
 	const bool safe_to_delete =
 	    current_tick - std::min(current_tick, cached.tick_accessed_last) > NumFramesBeforeRemoval;
 
-	if (requested.data.address == cached.info.data.address) {
-		const uint32_t requested_block = requested.bytes_per_block * requested.samples;
-		const uint32_t cached_block    = cached.info.bytes_per_block * cached.info.samples;
-		if (requested.BlockExtent() != cached.info.BlockExtent() ||
-		    requested_block != cached_block) {
-			if (safe_to_delete) {
-				FreeImage(cached_id, __func__, __LINE__);
-			}
-			return {merged_id};
-		}
-
+	const uint32_t requested_block = requested.bytes_per_block * requested.samples;
+	const uint32_t cached_block    = cached.info.bytes_per_block * cached.info.samples;
+	if (requested.data.address == cached.info.data.address &&
+	    requested.BlockExtent() == cached.info.BlockExtent() && requested_block == cached_block) {
 		if (const auto depth_id = ResolveDepthOverlap(requested, binding, cached_id)) {
 			return {depth_id};
 		}
@@ -1043,38 +1049,27 @@ TextureCache::OverlapResult TextureCache::ResolveOverlap(const ImageInfo& reques
 		     static_cast<uint32_t>(cached.info.tile_mode));
 	}
 
-	if (requested.data.address > cached.info.data.address) {
-		const int32_t mip = requested.MipOf(cached.info);
-		if (mip >= 0) {
-			const int32_t layer = requested.SliceOf(cached.info, mip);
-			if (layer >= 0) {
-				return {cached_id, mip, layer};
-			}
-		}
-		if (safe_to_delete) {
-			FreeImage(cached_id, __func__, __LINE__);
-		}
-		return {};
+	const int32_t requested_mip = requested.MipOf(cached.info);
+	if (requested_mip >= 0) {
+		const int32_t layer = requested.SliceOf(cached.info, requested_mip);
+		return {cached_id, requested_mip, layer};
 	}
 
 	const int32_t mip = cached.info.MipOf(requested);
 	if (mip >= 0) {
 		const int32_t layer = cached.info.SliceOf(requested, mip);
-		if (layer >= 0) {
-			if (cached.binding.is_target) {
-				cached.binding.needs_rebind = true;
-				if (merged_id) {
-					m_slot_images[merged_id].binding.is_target = true;
-				}
-				FreeImage(cached_id, __func__, __LINE__);
-				return {merged_id};
-			}
-			if (merged_id) {
-				CopyImageMip(merged_id, cached_id, static_cast<uint32_t>(mip),
-				             static_cast<uint32_t>(layer));
-				FreeImage(cached_id, __func__, __LINE__);
-			}
+		if (!merged_id) {
+			return {ExpandImage(requested, cached_id)};
 		}
+		cached.binding.needs_rebind |= cached.binding.is_bound || cached.binding.is_target;
+		m_slot_images[merged_id].binding.is_target |= cached.binding.is_target;
+		CopyImageMip(merged_id, cached_id, static_cast<uint32_t>(mip),
+		             static_cast<uint32_t>(layer));
+		FreeImage(cached_id, __func__, __LINE__);
+		return {merged_id};
+	}
+	if (requested.data.address >= cached.info.data.address && safe_to_delete) {
+		FreeImage(cached_id, __func__, __LINE__);
 	}
 	return {merged_id};
 }
@@ -1089,7 +1084,14 @@ ImageId TextureCache::ExpandImage(const ImageInfo& info, ImageId source_id) {
 		source.binding.needs_rebind = true;
 	}
 	InitializeImage(expanded_id, false);
-	CopyImage(expanded_id, source_id);
+	const int32_t mip   = source.info.MipOf(info);
+	const int32_t layer = source.info.SliceOf(info, mip);
+	if (layer >= 0) {
+		CopyImageMip(expanded_id, source_id, static_cast<uint32_t>(mip),
+		             static_cast<uint32_t>(layer));
+	} else {
+		CopyImage(expanded_id, source_id);
+	}
 	FreeImage(source_id, __func__, __LINE__);
 	return expanded_id;
 }
@@ -1587,15 +1589,22 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
 		return;
 	}
+	const auto& view = desc.view_info;
 	vk::ClearValue clear {};
-	if (!DecodeDccClear(desc, image.backing.format, metadata.fill_value, clear.color)) {
+	// Upstream ea092a9: a DCC key encodes in the format the binding views the surface through,
+	// not in the backing format of the image; ClearImage encodes through that same view below.
+	if (!DecodeDccClearFill(desc, metadata.fill_value, clear.color)) {
 		return;
 	}
-	const auto& view           = desc.view_info;
-	const bool  volume_texture = image.info.IsVolume() && view.type == vk::ImageViewType::e3D;
-	const auto  first          = volume_texture ? 0u : view.base_layer;
-	const auto  count = volume_texture ? std::max(image.info.extent.depth >> view.base_level, 1u)
-	                                   : view.layer_count;
+	const bool volume_texture = image.info.IsVolume() && view.type == vk::ImageViewType::e3D;
+	// TODO(merge): upstream 01df42a indexes the metadata slices with the base layer the
+	// descriptor had before FindImage remapped it onto a merged image, while this path runs
+	// after the remap and indexes clear_mask with the image layer. TrackDccFill marks every
+	// layer of an allocation, so the two agree today; a per-slice fill would need the
+	// pre-remap layer threaded down to here.
+	const auto first = volume_texture ? 0u : view.base_layer;
+	const auto count = volume_texture ? std::max(image.info.extent.depth >> view.base_level, 1u)
+	                                  : view.layer_count;
 	if (first >= 32 || count > 32 - first) {
 		return;
 	}
@@ -1611,7 +1620,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		do {
 			mask |= 1u << layer++;
 		} while (layer < first + count && (metadata.clear_mask & (1u << layer)) != 0);
-		ClearImage(m_scheduler.Current(), id,
+		ClearImage(m_scheduler.Current(), id, view.format,
 		           {vk::ImageAspectFlagBits::eColor, view.base_level, view.level_count, start,
 		            layer - start},
 		           clear);
@@ -1659,7 +1668,8 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	if (view.base_level != 0 || view.base_layer >= 32 || view.layer_count > 32 - view.base_layer) return;
 	for (uint32_t layer = view.base_layer; layer < view.base_layer + view.layer_count; ++layer) {
 		if ((metadata.clear_mask & (1u << layer)) == 0) continue;
-		ClearImage(m_scheduler.Current(), id, {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
+		ClearImage(m_scheduler.Current(), id, image.backing.format,
+		           {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
 		metadata.clear_mask &= ~(1u << layer);
 		BumpMetaEpoch();
 		static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
@@ -2105,12 +2115,12 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		}
 		clear.depthStencil.stencil = stencil_clear;
 	}
-	ClearImage(command, selected,
+	ClearImage(command, selected, image.backing.format,
 	           {aspect, 0, image.info.resources.levels, 0, image.info.TransferLayers()}, clear);
 	return true;
 }
 
-void TextureCache::ClearImage(CommandBuffer& command, ImageId id,
+void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format format,
                               const vk::ImageSubresourceRange& range, const vk::ClearValue& clear) {
 	auto& image = m_slot_images[id];
 	TraceWatchedImage("clear", image);
@@ -2138,11 +2148,12 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id,
 		}
 	}
 	command.EndRendering(RenderPassEnd::Clear);
-	if (image.info.IsVolume() && !full_image) {
+	// Transfer clears use the backing format; aliased clears must encode through their view.
+	if (format != image.backing.format || (image.info.IsVolume() && !full_image)) {
 		EXIT_NOT_IMPLEMENTED(range.aspectMask != vk::ImageAspectFlagBits::eColor ||
 		                     range.levelCount != 1);
 		ImageViewInfo view {};
-		view.format = image.backing.format;
+		view.format = format;
 		view.type   = range.layerCount == 1 ? vk::ImageViewType::e2D : vk::ImageViewType::e2DArray;
 		view.base_level  = range.baseMipLevel;
 		view.base_layer  = range.baseArrayLayer;

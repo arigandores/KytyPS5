@@ -419,7 +419,9 @@ public:
 				auto entry = std::prev(next);
 				if (vaddr + size <= entry->second.vaddr + entry->second.size) {
 					old = entry->second;
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 					m_maps.erase(entry);
+#endif
 				}
 			}
 			m_map_epoch.fetch_add(1, std::memory_order_release);
@@ -429,6 +431,12 @@ public:
 			return false;
 		}
 
+		const uint64_t left_size  = vaddr - old.vaddr;
+		const uint64_t right_addr = vaddr + size;
+		const uint64_t old_end    = old.vaddr + old.size;
+		const uint64_t right_size = old_end - right_addr;
+
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 		const bool exact_unmap = (vaddr == old.vaddr && size == old.size);
 		if (exact_unmap) {
 			const bool unmapped =
@@ -445,12 +453,6 @@ public:
 			return true;
 		}
 
-		const uint64_t left_size  = vaddr - old.vaddr;
-		const uint64_t right_addr = vaddr + size;
-		const uint64_t old_end    = old.vaddr + old.size;
-		const uint64_t right_size = old_end - right_addr;
-
-#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 		if (UnmapViewPreservePlaceholder(reinterpret_cast<void*>(old.vaddr), old.size)) {
 			bool ok = true;
 			if (left_size != 0 && left_size != old.size) {
@@ -494,40 +496,29 @@ public:
 		m_map_epoch.fetch_add(1, std::memory_order_release);
 		return false;
 #else
-		if (!UnmapViewPreservePlaceholder(reinterpret_cast<void*>(old.vaddr), old.size)) {
-			std::lock_guard lock(m_mutex);
-			m_maps.emplace(old.vaddr, old);
-			m_map_epoch.fetch_add(1, std::memory_order_release);
+		// Replace only the requested range so concurrent accesses and GPU watch
+		// protections on the surviving mappings remain intact.
+		if (!UnmapViewPreservePlaceholder(reinterpret_cast<void*>(vaddr), size)) {
 			return false;
 		}
 
-		bool ok = true;
+		std::lock_guard lock(m_mutex);
+		m_maps.erase(old.vaddr);
 		if (left_size != 0) {
-			ok = MapExistingPlaceholderFixed(old.vaddr, left_size, old.backing_offset, old.mode) &&
-			     ok;
+			m_maps.emplace(old.vaddr,
+			               MapEntry {old.vaddr, left_size, old.backing_offset, old.mode});
 		}
 		if (right_size != 0) {
-			ok = MapExistingPlaceholderFixed(right_addr, right_size,
-			                                 old.backing_offset + (right_addr - old.vaddr),
-			                                 old.mode) &&
-			     ok;
+			m_maps.emplace(right_addr,
+			               MapEntry {right_addr, right_size,
+			                         old.backing_offset + right_addr - old.vaddr, old.mode});
 		}
-		if (!ok) {
-			if (left_size != 0 && Contains(old.vaddr, left_size)) {
-				EXIT_IF(!UnmapOne(old.vaddr, left_size));
-			}
-			if (right_size != 0 && Contains(right_addr, right_size)) {
-				EXIT_IF(!UnmapOne(right_addr, right_size));
-			}
-			EXIT_IF(
-			    !MapExistingPlaceholderFixed(old.vaddr, old.size, old.backing_offset, old.mode));
-			return false;
-		}
+		m_map_epoch.fetch_add(1, std::memory_order_release);
 
 		if (placeholder_preserved != nullptr) {
 			*placeholder_preserved = true;
 		}
-		return ok;
+		return true;
 #endif
 	}
 

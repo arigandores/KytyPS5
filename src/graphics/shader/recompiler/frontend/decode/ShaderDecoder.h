@@ -194,6 +194,7 @@ enum class Opcode {
 	V_CEIL_F16,
 	V_TRUNC_F16,
 	V_RNDNE_F16,
+	V_FRACT_F16,
 	V_SIN_F16,
 	V_COS_F16,
 	V_SIN_F32,
@@ -399,6 +400,7 @@ enum class Opcode {
 	V_CMP_EQ_U16,
 	V_CMP_LE_U16,
 	V_CMP_GT_U16,
+	V_CMPX_LT_U16,
 	V_CMPX_GT_U16,
 	V_CMP_NE_U16,
 	V_CMP_GE_U16,
@@ -726,6 +728,7 @@ struct Program {
 Family GetInstructionFamily(uint32_t word);
 // The output object must be freshly initialized.
 void DecodeInstruction(std::span<const uint32_t> code, uint32_t word_index, Instruction& inst);
+Program DecodeFrontProgram(std::span<const uint32_t> front);
 void DecodeProgram(std::span<const uint32_t> code, Program& program);
 bool IsConditionalBranch(Opcode opcode);
 bool IsDirectBranch(Opcode opcode);

@@ -118,7 +118,7 @@ struct SubmitInfo {
 
 enum class GraphicsStateSlot : uint32_t {
 	Viewports, Scissors, LineWidth, BlendConstants, DepthTest, DepthWrite, DepthCompare,
-	DepthBiasEnable, DepthBias, StencilCompare, StencilWrite, StencilReference,
+	DepthBiasEnable, DepthBias, StencilTestEnable, StencilFront, StencilBack,
 	ColorWrite, FeedbackLoop, Pipeline, Count
 };
 
@@ -328,7 +328,7 @@ private:
 	void DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const DrawAutoArgs& args);
 
 	struct GraphicsBindings {
-		PreparedBindings                vertex;
+		std::array<PreparedBindings, 3> vertex;
 		std::optional<PreparedBindings> pixel;
 	};
 
@@ -339,14 +339,18 @@ private:
 	template <typename Emit>
 	decltype(auto) ResolveTextureWith(const ShaderRecompiler::IR::ImageResource& resource,
 	                                  const ShaderRecompiler::IR::DescriptorValue& value, Emit&& emit);
-	[[nodiscard]] GraphicsBindings PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
-	                                                       const ShaderStageRuntime& pixel,
-	                                                       bool                      pixel_active);
-	void PrepareGraphicsBindings(const ShaderStageRuntime& vertex, const ShaderStageRuntime& pixel,
-	                             bool pixel_active, GraphicsBindings& bindings);
+	// Upstream 6d1ba58 (shared preparation across stages) + 7516068 (up to three vertex
+	// stages: LS/HS/TES) + dd408ff (image aliases and the color targets resolved before the
+	// buffer uploads): one pass over the stages the draw actually runs. The per-stage
+	// PrepareBindings, the reuse of m_graphics_bindings and the pixel spare (gate
+	// "bindspare") now live at the call site in renderDraw.cpp.
+	void PrepareGraphicsBindings(std::span<PreparedBindings* const> stages,
+	                             std::span<RenderColorInfo> colors);
 	// Session 64 (shadowResolve.h): the read-only resolution of these bindings repeated inline
-	// (gate "shadowinline") and / or on the shadow workers (knob "shadowresolve").
-	void ShadowQueue(const GraphicsBindings& bindings);
+	// (gate "shadowinline") and / or on the shadow workers (knob "shadowresolve"). Takes the
+	// same stage span as PrepareGraphicsBindings since a draw may run more than one vertex
+	// stage; called once per draw, right after the bindings are prepared.
+	void ShadowQueue(std::span<PreparedBindings* const> stages);
 	static bool ReuseBindingsEnabled();
 	// Draw and dispatch preparation is serialized by the render mutex. Keep their storage
 	// separate and reset it before each operation; runtime pointers are valid through commit.

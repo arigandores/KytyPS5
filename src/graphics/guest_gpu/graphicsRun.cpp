@@ -1958,17 +1958,6 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 		// local_x        = std::max(cs.num_thread_x, 1u);
 		// local_y        = std::max(cs.num_thread_y, 1u);
 		// local_z        = std::max(cs.num_thread_z, 1u);
-		if (cs.wave_size == 64u) {
-			static std::atomic_bool logged_wave64_shader {false};
-			if (!logged_wave64_shader.exchange(true, std::memory_order_relaxed)) {
-				LOGF("warning: executing wave64 compute shader cs=0x%016" PRIx64 "\n",
-				     cs.data_addr);
-				std::printf("warning: executing wave64 compute shader cs=0x%016" PRIx64 "\n",
-				            cs.data_addr);
-				std::fflush(stdout);
-			}
-		}
-
 		if (IsAsyncComputeQueue()) {
 			static std::atomic<uint32_t> async_log_count {0};
 			if (async_log_count.fetch_add(1, std::memory_order_relaxed) < 256) {
@@ -2205,6 +2194,7 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 								break;
 							case 0x14:
 							case 0x28:
+							case 0x2f:
 								if (event_index == 0x00) {
 									write64(false);
 									return;
@@ -2212,7 +2202,6 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 								break;
 							case 0x2b:
 							case 0x2d:
-							case 0x2f:
 							case 0x30:
 								if (event_index == 0x00 && !with_interrupt) {
 									write64(false);

@@ -29,6 +29,7 @@ bool      IsSilent();
 bool      IsVerbose();
 void      Write(std::string_view text);
 void      Write(fmt::text_style style, std::string_view text);
+void      WriteToConsoleAndLog(std::string_view text);
 void      WriteFatal(std::string_view text);
 void      WriteFatal(fmt::text_style style, std::string_view text);
 void      Flush();

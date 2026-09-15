@@ -22,6 +22,7 @@
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/memoryTracker.h"
+#include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/shader/recompiler/ShaderRecompiler.h"
 #include "graphics/shader/shaderCompiler.h"
 #include "common/timer.h"
@@ -177,12 +178,7 @@ vk::ShaderModule CreateCachedModule(vk::Device device, const std::vector<uint32_
 		salted.insert(salted.begin() + names, instruction.begin(), instruction.end());
 		words = &salted;
 	}
-	vk::ShaderModuleCreateInfo info {};
-	info.codeSize = words->size() * sizeof(uint32_t);
-	info.pCode = words->data();
-	vk::ShaderModule module = nullptr;
-	RequireVulkanSuccess(device.createShaderModule(&info, nullptr, &module), "create shader module");
-	return module;
+	return CompileSPV(*words, device);
 }
 
 std::string PipelineCacheTitleId() {
@@ -203,12 +199,7 @@ template <typename... Args>
 void PipelineCacheLog(fmt::format_string<Args...> format, Args&&... args) {
 	auto message = fmt::format(format, std::forward<Args>(args)...);
 	message += '\n';
-	if (Log::GetDirection() != Log::Direction::Console) {
-		std::fwrite(message.data(), 1, message.size(), stdout);
-		std::fflush(stdout);
-	}
-	Log::Write(message);
-	Log::Flush();
+	Log::WriteToConsoleAndLog(message);
 }
 
 // Live guest memory for SRT walking. The evaluator falls back to a raw host memcpy when no
@@ -760,6 +751,10 @@ void DumpShaderGcn(ShaderType stage, uint64_t shader_hash, std::span<const uint3
 	switch (stage) {
 		case ShaderType::Vertex: stage_name = "vs"; break;
 		case ShaderType::Mesh: stage_name = "ms"; break;
+		// Upstream tessellation stages, named as CompilePermutation names them.
+		case ShaderType::Local: stage_name = "ls"; break;
+		case ShaderType::TessellationControl: stage_name = "hs"; break;
+		case ShaderType::TessellationEvaluation: stage_name = "ds"; break;
 		case ShaderType::Pixel: stage_name = "ps"; break;
 		case ShaderType::Compute: stage_name = "cs"; break;
 		default: break;
@@ -1432,6 +1427,9 @@ struct PipelineCache::ProgramCache {
 		switch (options.stage) {
 			case ShaderType::Vertex: stage_name = "vs"; break;
 			case ShaderType::Mesh: stage_name = "ms"; break;
+			case ShaderType::Local: stage_name = "ls"; break;
+			case ShaderType::TessellationControl: stage_name = "hs"; break;
+			case ShaderType::TessellationEvaluation: stage_name = "ds"; break;
 			case ShaderType::Pixel: stage_name = "ps"; break;
 			case ShaderType::Compute: stage_name = "cs"; break;
 			default: EXIT("invalid pipeline shader stage\n");
@@ -2555,7 +2553,7 @@ struct PipelineCache::ProgramCache {
 	                  int slot = 2, bool key_hit = false) {
 		ShaderType stage;
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
-			stage = input_info.mesh.threads_num[0] != 0 ? ShaderType::Mesh : ShaderType::Vertex;
+			stage = input_info.logical_stage;
 		} else if constexpr (std::is_same_v<InputInfo, ShaderPixelInputInfo>) {
 			stage = ShaderType::Pixel;
 		} else {
@@ -2762,6 +2760,9 @@ struct PipelineCache::ProgramCache {
 		switch (stage) {
 			case ShaderType::Vertex: label = "ShaderRecompiler VS"; break;
 			case ShaderType::Mesh: label = "ShaderRecompiler MS"; break;
+			case ShaderType::Local: label = "ShaderRecompiler LS"; break;
+			case ShaderType::TessellationControl: label = "ShaderRecompiler HS"; break;
+			case ShaderType::TessellationEvaluation: label = "ShaderRecompiler DS"; break;
 			case ShaderType::Pixel: label = "ShaderRecompiler PS"; break;
 			case ShaderType::Compute: label = "ShaderRecompiler CS"; break;
 			default: EXIT("invalid pipeline shader stage\n");
@@ -2778,13 +2779,19 @@ struct PipelineCache::ProgramCache {
 
 		if constexpr (std::is_same_v<InputInfo, ShaderVertexInputInfo>) {
 			options.user_data_base = 8;
-			if (stage == ShaderType::Mesh) {
+			if (stage == ShaderType::Mesh || stage == ShaderType::TessellationControl) {
 				options.user_data_base = 0;
-				options.wave_size      = input_info.mesh.wave_size;
+				options.wave_size = stage == ShaderType::Mesh ? input_info.mesh.wave_size : 64u;
 			} else {
+				// The registers Kyty tracks do not carry the wave size of a plain vertex-like stage:
+				// the translator reads it from the code (wave32 uses the _B32 EXEC forms).
 				options.detect_wave_size = true;
 			}
 		} else if constexpr (std::is_same_v<InputInfo, ShaderPixelInputInfo>) {
+			// Upstream 968cf3c: SPI_PS_IN_CONTROL.PS_W32_EN names the native pixel wave width. It
+			// is the starting point; the detection from the code below still decides, and covers
+			// the stages and programs that register bit does not describe.
+			options.wave_size        = input_info.wave_size;
 			options.detect_wave_size = true;
 		} else if constexpr (std::is_same_v<InputInfo, ShaderComputeInputInfo>) {
 			options.wave_size = input_info.wave_size;
@@ -2845,16 +2852,19 @@ struct PipelineCache::ProgramCache {
 			     static_cast<uint64_t>(entry->second.permutations.size()));
 		}
 
-		std::array<size_t, static_cast<size_t>(ShaderType::Mesh) + 1> counts {};
+		std::array<size_t, static_cast<size_t>(ShaderType::TessellationEvaluation) + 1> counts {};
 		for (const auto& [key, source]: programs) {
 			counts[static_cast<size_t>(key.stage)] += source.permutations.size();
 		}
 		// Guest geometry shaders are compiled through the host mesh stage.
-		std::printf("Shaders: VS %zu | PS %zu | CS %zu | GS %zu\n",
+		std::printf("Shaders: VS %zu | PS %zu | CS %zu | GS %zu | LS %zu | HS %zu | TES %zu\n",
 		            counts[static_cast<size_t>(ShaderType::Vertex)],
 		            counts[static_cast<size_t>(ShaderType::Pixel)],
 		            counts[static_cast<size_t>(ShaderType::Compute)],
-		            counts[static_cast<size_t>(ShaderType::Mesh)]);
+		            counts[static_cast<size_t>(ShaderType::Mesh)],
+		            counts[static_cast<size_t>(ShaderType::Local)],
+		            counts[static_cast<size_t>(ShaderType::TessellationControl)],
+		            counts[static_cast<size_t>(ShaderType::TessellationEvaluation)]);
 		return permutation.handle;
 	}
 
@@ -3661,8 +3671,13 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
     const HW::VertexShaderInfo& vertex_regs, const HW::PixelShaderInfo& pixel_regs,
     const HW::ShaderRegisters& sh, const HW::Context& context, const HW::UserConfig& user_config,
     std::span<const Prospero::ColorComponentMapping, 8> target_export_mapping, bool pixel_active,
-    ShaderVertexInputInfo& vertex_info, ShaderPixelInputInfo& pixel_info, uint64_t* state_serial) {
+    std::array<ShaderVertexInputInfo, 3>& vertex_info, ShaderPixelInputInfo& pixel_info,
+    uint64_t* state_serial) {
 	Common::FrameStats::Lap lap;
+	// Upstream tessellation: a patch primitive runs the guest's LS/HS/TES trio through three
+	// host stages. vertex_info[0] is then the LS that fetches the vertex attributes and
+	// vertex_info[2] the TES that exports to the pixel stage.
+	const bool tess_active = user_config.GetPrimType() == Prospero::PrimitiveType::kPatch;
 	// Gate "snapkeep" (session 57, B4; needs "drawstate", which makes these input infos the draw
 	// state reused across draws): their snapshots still hold the storage of the previous draw.
 	// Take it back before PrepareProgram resets them, so Get copies into warm capacity and the end
@@ -3673,15 +3688,18 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	// previous draw left): a stage whose register inputs equal the previous draw's keeps that
 	// draw's PrepareProgram result in the input info and skips the static key and programs.find
 	// in Get. With the gate off, "drawstat" still runs the comparison for the ceiling counters.
+	// A tessellation draw takes no part in it: its three stages do not fit the one-stage witness,
+	// so it neither matches nor records, and the memo's own serial chain misses on the next draw.
 	auto&      cache        = *m_program_cache;
 	// The memo state is one per program cache and unlocked: only the GuestGpu draw thread may
 	// use it. `state_serial` belongs to the draw state object and says whether that object was
 	// the one the previous call recorded into (a nested draw's stack local carries 0).
 	const bool memo_on      = Common::Gates::Enabled(Common::Gates::Gate::ProgMemo) &&
 	                          Common::Gates::Enabled(Common::Gates::Gate::DrawStateReuse) &&
-	                          state_serial != nullptr &&
+	                          state_serial != nullptr && !tess_active &&
 	                          Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu;
-	const bool memo_compare = memo_on || Common::Gates::Enabled(Common::Gates::Gate::DrawStat);
+	const bool memo_compare =
+	    (memo_on || Common::Gates::Enabled(Common::Gates::Gate::DrawStat)) && !tess_active;
 	const auto serial       = ++cache.prog_memo_serial;
 	const bool same_state   = state_serial != nullptr && *state_serial + 1 == serial;
 	if (state_serial != nullptr) {
@@ -3696,7 +3714,7 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 		const bool timed       = Common::FrameStats::Enabled();
 		const auto check_begin = timed ? Common::FrameStats::NowNs() : 0;
 		vertex_hit = same_state && cache.MemoMatchVertex(vertex_regs, context, user_config,
-		                                                 vertex_info, serial, registrations);
+		                                                 vertex_info[0], serial, registrations);
 		if (pixel_active) {
 			pixel_hit = same_state && cache.MemoMatchPixel(pixel_regs, sh, target_export_mapping,
 			                                               pixel_info, serial, registrations);
@@ -3716,30 +3734,34 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	}
 	const bool memo_check = memo_on && Common::Gates::Enabled(Common::Gates::Gate::ProgMemoCheck);
 	if (keep_snapshots) {
-		std::swap(cache.kept_snapshots[0], vertex_info.stage.resources);
+		std::swap(cache.kept_snapshots[0], vertex_info[0].stage.resources);
 	}
-	ShaderParams vertex_params;
+	std::array<ShaderParams, 3> vertex_params;
 	if (vertex_hit) {
 		// What PrepareProgram would reset; every path of Get overwrites it, like after a reset.
-		vertex_info.stage = {};
-		auto& memo        = cache.prog_memo[0];
-		vertex_params     = memo.params;
-		vertex_params.user_data =
+		vertex_info[0].stage = {};
+		auto& memo           = cache.prog_memo[0];
+		vertex_params[0]     = memo.params;
+		vertex_params[0].user_data =
 		    ProgramCache::VertexUserData(vertex_regs, memo.ngg, memo.gs_front);
 		if (memo_check) {
-			cache.MemoCheckVertex(vertex_regs, context, user_config, vertex_info, vertex_params);
+			cache.MemoCheckVertex(vertex_regs, context, user_config, vertex_info[0],
+			                      vertex_params[0]);
 		}
+	} else if (tess_active) {
+		vertex_params = PrepareTessellationPrograms(vertex_regs, context, vertex_info);
 	} else {
-		vertex_params = PrepareProgram(vertex_regs, context, user_config, vertex_info);
+		vertex_params[0] = PrepareProgram(vertex_regs, context, user_config, vertex_info[0]);
 		if (memo_compare) {
-			cache.MemoRecordVertex(vertex_regs, context, user_config, vertex_info, vertex_params,
-			                       serial, registrations);
+			cache.MemoRecordVertex(vertex_regs, context, user_config, vertex_info[0],
+			                       vertex_params[0], serial, registrations);
 		}
 	}
-	const bool mesh_active = vertex_info.mesh.threads_num[0] != 0;
+	const uint32_t vertex_count = tess_active ? 3u : 1u;
+	const bool     mesh_active  = vertex_info[0].logical_stage == ShaderType::Mesh;
 	if (mesh_active && !vertex_hit) {
 		EXIT_NOT_IMPLEMENTED(!m_graphics.mesh_shader_enabled);
-		auto& mesh              = vertex_info.mesh;
+		auto& mesh              = vertex_info[0].mesh;
 		mesh.host_subgroup_size = m_graphics.subgroup_size;
 		const auto& limits      = m_graphics.mesh_shader_properties;
 		const auto  logical_threads =
@@ -3789,7 +3811,7 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	if (context.GetClipControl().clip_disable) {
 		const auto& viewport = context.GetScreenViewport().viewports[0];
 		const auto& limits   = m_graphics.GetPhysicalDeviceProperties().limits;
-		auto&       clip     = vertex_info.clip_space;
+		auto&       clip     = vertex_info[tess_active ? 2u : 0u].clip_space;
 		clip.scale[0]        = viewport.xscale;
 		clip.scale[1]        = viewport.yscale;
 		clip.offset[0]       = viewport.xoffset;
@@ -3808,8 +3830,12 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 		result.pixel = cache.Get(pixel_params, pixel_info, push_data_cursor, false,
 		                         keep_snapshots ? 1 : -1, 1, pixel_hit);
 	}
-	result.vertex = cache.Get(vertex_params, vertex_info, push_data_cursor, false,
-	                          keep_snapshots ? 0 : -1, 0, vertex_hit);
+	result.vertex[0] = cache.Get(vertex_params[0], vertex_info[0], push_data_cursor, false,
+	                             keep_snapshots ? 0 : -1, 0, vertex_hit);
+	// Tessellation: the hull and evaluation stages have no memo slot and no kept snapshot.
+	for (uint32_t i = 1; i < vertex_count; i++) {
+		result.vertex[i] = cache.Get(vertex_params[i], vertex_info[i], push_data_cursor);
+	}
 	return result;
 }
 
@@ -3883,17 +3909,15 @@ void PipelineCache::PipelineKeyHash::MixStaticParams(std::size_t& hash,
 
 PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
     std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
-    const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
+    std::span<const ShaderVertexInputInfo> vertex_info, CommandBuffer& command,
     const ShaderPixelInputInfo* ps_input_info, vk::PrimitiveTopology topology,
-    bool primitive_restart_enable, const ShaderProgram& vertex_program,
-    const ShaderProgram& pixel_program, bool allow_wait) {
+    bool primitive_restart_enable, const GraphicsPrograms& programs, bool allow_wait) {
 	bool                   queued = false;
 	GraphicsPipelineEntry* entry  = nullptr;
 	{
 		Common::LockGuard lock(m_mutex);
-		entry = CreateGraphicsPipelineLocked(colors, depth, vs_input_info, command, ps_input_info,
-		                                     topology, primitive_restart_enable, vertex_program,
-		                                     pixel_program, queued);
+		entry = CreateGraphicsPipelineLocked(colors, depth, vertex_info, command, ps_input_info,
+		                                     topology, primitive_restart_enable, programs, queued);
 	}
 	if (entry->ready.load(std::memory_order_acquire)) {
 		return entry;
@@ -3909,10 +3933,12 @@ PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
 
 PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocked(
     std::span<const RenderColorInfo> colors, const RenderDepthInfo& depth,
-    const ShaderVertexInputInfo& vs_input_info, CommandBuffer& command,
+    std::span<const ShaderVertexInputInfo> vertex_info, CommandBuffer& command,
     const ShaderPixelInputInfo* ps_input_info, vk::PrimitiveTopology topology,
-    bool primitive_restart_enable, const ShaderProgram& vertex_program,
-    const ShaderProgram& pixel_program, bool& queued) {
+    bool primitive_restart_enable, const GraphicsPrograms& programs, bool& queued) {
+	const auto& vs_input_info  = vertex_info.front();
+	const auto& vertex_program = programs.vertex[0];
+	const auto& pixel_program  = programs.pixel;
 	KYTY_PROFILER_BLOCK("PipelineCache::CreatePipeline(Gfx)", profiler::colors::DeepOrangeA200);
 	queued = false;
 
@@ -3930,7 +3956,9 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	const auto ps_id = ps_active ? pixel_program.id : 0;
 
 	GraphicsPipelineKey key {};
-	key.vs_shader_id            = vs_id;
+	for (uint32_t i = 0; i < programs.vertex.size(); i++) {
+		key.vertex_shader_ids[i] = programs.vertex[i].id;
+	}
 	key.ps_shader_id            = ps_id;
 	auto& static_params         = key.static_params;
 	auto& rendering             = key.rendering;
@@ -4023,10 +4051,8 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	static_params.depth_bounds_test_enable = depth.depth_bounds_test_enable;
 	static_params.depth_min_bounds         = depth.depth_min_bounds;
 	static_params.depth_max_bounds         = depth.depth_max_bounds;
-	static_params.stencil_test_enable      = depth.stencil_test_enable;
-	static_params.stencil_front            = depth.stencil_static_front;
-	static_params.stencil_back             = depth.stencil_static_back;
-	const bool rect_list     = topology == vk::PrimitiveTopology::ePatchList;
+	const bool rect_list =
+	    command.GetUserConfig().GetPrimType() == Prospero::PrimitiveType::kRectList;
 	static_params.cull_back  = !rect_list && mc.cull_back;
 	static_params.cull_front = !rect_list && mc.cull_front;
 	static_params.face       = mc.face;
@@ -4074,7 +4100,10 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		memo.entry = iter->second.get();
 		return iter->second.get(); // may still be compiling on a worker
 	}
-	RecordGraphicsRecipe(key, vs_input_info, ps_input_info);
+	// Recipes describe one vertex stage; a tessellation trio is not replayed from them.
+	if (programs.VertexStageCount() == 1) {
+		RecordGraphicsRecipe(key, vs_input_info, ps_input_info);
+	}
 
 	const auto pair_key = ShaderPairKey(vs_id, ps_id);
 	if (AsyncPipelinesMode() != 0 && !m_ready_shader_pairs.contains(pair_key)) {
@@ -4082,25 +4111,27 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		// the input infos belong to the current draw, only the shader modules and the compiled
 		// program infos (owned by the program cache for the process lifetime) are shared.
 		struct Job {
-			PipelineRenderingState   rendering;
-			PipelineVertexInputState vertex_input;
-			ShaderVertexInputInfo    vs_input_info;
-			ShaderProgram            vertex_program;
-			bool                     ps_active = false;
-			ShaderPixelInputInfo     ps_input_info;
-			ShaderProgram            pixel_program;
-			PipelineStaticParameters static_params;
+			PipelineRenderingState                rendering;
+			PipelineVertexInputState              vertex_input;
+			// One entry per host vertex stage: 1 normally, 3 for a tessellated draw (LS/HS/TES).
+			std::array<ShaderVertexInputInfo, 3>  vertex_info;
+			uint32_t                              vertex_count = 1;
+			GraphicsPrograms                      programs;
+			bool                                  ps_active = false;
+			ShaderPixelInputInfo                  ps_input_info;
+			PipelineStaticParameters              static_params;
 		};
-		auto job            = std::make_shared<Job>();
-		job->rendering      = rendering;
-		job->vertex_input   = key.vertex_input;
-		job->vs_input_info  = vs_input_info;
-		job->vertex_program = vertex_program;
-		job->ps_active      = ps_active;
+		auto job           = std::make_shared<Job>();
+		job->rendering     = rendering;
+		job->vertex_input  = key.vertex_input;
+		job->vertex_count  = static_cast<uint32_t>(vertex_info.size());
+		EXIT_IF(job->vertex_count == 0 || job->vertex_count > job->vertex_info.size());
+		std::copy(vertex_info.begin(), vertex_info.end(), job->vertex_info.begin());
+		job->programs      = programs;
+		job->ps_active     = ps_active;
 		if (ps_active) {
 			job->ps_input_info = *ps_input_info;
 		}
-		job->pixel_program = pixel_program;
 		job->static_params = static_params;
 
 		auto  entry  = std::make_unique<GraphicsPipelineEntry>();
@@ -4112,10 +4143,11 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		const auto queued_at = HostMicros();
 		EnqueueJob([this, job, target, vs_id, ps_id, pair_key, queued_at] {
 			const auto create_begin = HostMicros();
-			CreatePipelineInternal(m_graphics, *target, job->rendering, job->vertex_input,
-			                       job->vs_input_info, job->vertex_program,
-			                       job->ps_active ? &job->ps_input_info : nullptr,
-			                       job->pixel_program, job->static_params, m_driver_cache);
+			CreatePipelineInternal(
+			    m_graphics, *target, job->rendering, job->vertex_input,
+			    std::span<const ShaderVertexInputInfo>(job->vertex_info.data(), job->vertex_count),
+			    job->ps_active ? &job->ps_input_info : nullptr, job->programs, job->static_params,
+			    m_driver_cache);
 			EXIT_NOT_IMPLEMENTED(target->pipeline == nullptr);
 			EXIT_NOT_IMPLEMENTED(target->pipeline_layout == nullptr);
 			const auto create_end = HostMicros();
@@ -4157,9 +4189,8 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	auto cached = std::make_unique<GraphicsPipelineEntry>();
 	LogPipelineTrace("CreatePipelineInternal begin", vs_id, ps_id);
 	const auto create_begin = HostMicros();
-	CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vs_input_info,
-	                       vertex_program, ps_input_info, pixel_program, static_params,
-	                       m_driver_cache);
+	CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vertex_info,
+	                       ps_input_info, programs, static_params, m_driver_cache);
 	if (AvTraceEnabled()) {
 		LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64 "\n",
 		     vs_id, ps_id, HostMicros() - create_begin,
@@ -4453,7 +4484,7 @@ void PipelineCache::RecordGraphicsRecipe(const GraphicsPipelineKey&   key,
 	ShaderTranslationCache::StoredKey ps_key;
 	uint32_t                          vs_index = 0;
 	uint32_t                          ps_index = 0;
-	if (!m_program_cache->Lookup(key.vs_shader_id, vs_key, vs_index)) {
+	if (!m_program_cache->Lookup(key.vertex_shader_ids[0], vs_key, vs_index)) {
 		return;
 	}
 	const bool ps_active = ps_input_info != nullptr;
@@ -4861,7 +4892,8 @@ void PipelineCache::PrecachePipelines() {
 					continue;
 				}
 				loaded_sources += (vs_loaded ? 1 : 0) + (ps_loaded ? 1 : 0);
-				key.vs_shader_id = vs_program.id;
+				key.vertex_shader_ids    = {};
+				key.vertex_shader_ids[0] = vs_program.id;
 				key.ps_shader_id = ps_active ? ps_program.id : 0;
 				if (m_graphics_pipelines.contains(key)) {
 					skipped++;
@@ -4882,13 +4914,17 @@ void PipelineCache::PrecachePipelines() {
 				max_scratch        = std::max(max_scratch, scratch);
 				with_scratch += scratch != 0 ? 1u : 0u;
 			}
-			const auto pair_key = ShaderPairKey(key.vs_shader_id, key.ps_shader_id);
+			const auto pair_key = ShaderPairKey(key.vertex_shader_ids[0], key.ps_shader_id);
 			graphics++;
 			EnqueueJob([this, key, vs_info, ps_info, ps_active, vs_program, ps_program, target,
 			            pair_key] {
 				const auto create_begin = HostMicros();
-				CreatePipelineInternal(m_graphics, *target, key.rendering, key.vertex_input, *vs_info,
-				                       vs_program, ps_active ? ps_info.get() : nullptr, ps_program,
+				GraphicsPrograms programs;
+				programs.vertex[0] = vs_program;
+				programs.pixel     = ps_program;
+				CreatePipelineInternal(m_graphics, *target, key.rendering, key.vertex_input,
+				                       std::span<const ShaderVertexInputInfo>(vs_info.get(), 1),
+				                       ps_active ? ps_info.get() : nullptr, programs,
 				                       key.static_params, m_driver_cache);
 				EXIT_NOT_IMPLEMENTED(target->pipeline == nullptr);
 				EXIT_NOT_IMPLEMENTED(target->pipeline_layout == nullptr);
@@ -4897,7 +4933,7 @@ void PipelineCache::PrecachePipelines() {
 					if (AvTraceEnabled()) {
 						LOGF("AvTrace: pipeline gfx vs=%" PRIu64 " ps=%" PRIu64 " us=%" PRIu64
 						     " total=%" PRIu64 " precache\n",
-						     key.vs_shader_id, key.ps_shader_id, HostMicros() - create_begin,
+						     key.vertex_shader_ids[0], key.ps_shader_id, HostMicros() - create_begin,
 						     static_cast<uint64_t>(m_graphics_pipelines.size()));
 					}
 					m_ready_shader_pairs.insert(pair_key);

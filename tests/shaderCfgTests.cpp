@@ -1207,37 +1207,90 @@ void TestNativeShaderResourceDependencies() {
 }
 
 void TestNormalizedImageContracts() {
+  // Captured PS5 256x256 atlas: each layer is a 0x56000-byte mip chain.
   ImageInfo container{};
-  container.data = {0x10000, 0x15000};
+  container.data = {0x241741000, 0x2198000};
   container.pixel_format = vk::Format::eR8G8B8A8Unorm;
   container.guest_format = Prospero::BufferFormat::k8_8_8_8UNorm;
   container.type = Prospero::ImageType::kColor2D;
-  container.extent = {64, 64, 1};
-  container.resources = {3, 4};
-  container.pitch = 64;
+  container.extent = {256, 256, 1};
+  container.resources = {9, 100};
+  container.pitch = 256;
   container.bytes_per_block = 4;
   container.samples = 1;
-  container.tile_mode = Prospero::TileMode::kStandard64KB;
-  container.mip_layout[0] = {0, 0x10000, 64, 64};
-  container.mip_layout[1] = {0x10000, 0x4000, 32, 32};
-  container.mip_layout[2] = {0x14000, 0x1000, 16, 16};
+  container.tile_mode = Prospero::TileMode::kStandard4KB;
+  container.mip_layout[0] = {0x16000, 0x1900000, 256, 256};
+  container.mip_layout[1] = {0x6000, 0x640000, 128, 128};
+  container.mip_layout[2] = {0x2000, 0x190000, 64, 64};
+  container.mip_layout[3] = {0x1000, 0x64000, 32, 32};
+  for (uint32_t level = 4; level < container.resources.levels; ++level) {
+    container.mip_layout[level] = {0, 0x64000, 32, 32};
+  }
 
   ImageInfo subresource = container;
-  subresource.data = {0x22000, 0x1000};
-  subresource.extent = {32, 32, 1};
+  subresource.data = {0x2417ad000, 0x40000};
   subresource.resources = {1, 1};
-  subresource.pitch = 32;
   subresource.mip_layout = {};
-  subresource.mip_layout[0] = {0, 0x1000, 32, 32};
+  subresource.mip_layout[0] = {0, 0x40000, 256, 256};
 
-  Check(container.BlockExtent() == vk::Extent2D{64, 64},
+  Check(container.BlockExtent() == vk::Extent2D{256, 256},
         "normalized image block extent changed");
   Check(subresource.IsCompatible(container),
         "normalized compatible image was rejected");
-  Check(subresource.MipOf(container) == 1,
-        "normalized mip lookup missed a subresource");
-  Check(subresource.SliceOf(container, 1) == 2,
-        "normalized slice lookup missed a subresource");
+  Check(subresource.MipOf(container) == 0 &&
+            subresource.SliceOf(container, 0) == 1,
+        "PS5 mip-chain stride did not resolve the captured second array layer");
+
+  auto smaller = subresource;
+  smaller.data = {0x241747000, 0x10000};
+  smaller.extent = {128, 128, 1};
+  smaller.pitch = 128;
+  smaller.mip_layout[0] = {0, 0x10000, 128, 128};
+  Check(smaller.MipOf(container) == 1 && smaller.SliceOf(container, 1) == 0,
+        "PS5 reversed mip ordering did not resolve the captured smaller mip");
+
+  auto boundary = subresource;
+  boundary.data.address = container.data.address + 99 * 0x56000 + 0x16000;
+  Check(boundary.SliceOf(container, 0) == 99,
+        "PS5 array lookup rejected the final complete layer");
+  boundary.data.address += 0x56000;
+  Check(boundary.MipOf(container) == -1,
+        "PS5 array lookup accepted a layer beyond the parent range");
+  boundary = subresource;
+  boundary.data.address += 0x1000;
+  Check(boundary.MipOf(container) == -1,
+        "PS5 array lookup accepted a misaligned layer address");
+  boundary = subresource;
+  boundary.resources.layers = 2;
+  boundary.data.size *= 2;
+  boundary.mip_layout[0].size *= 2;
+  Check(boundary.MipOf(container) == -1,
+        "PS5 array lookup accepted contiguous child layers with a different stride");
+  boundary = subresource;
+  boundary.mip_layout[0].pitch *= 2;
+  Check(boundary.MipOf(container) == -1,
+        "PS5 array lookup accepted a different storage pitch");
+
+  auto small_atlas = container;
+  small_atlas.data = {0x239001000, 0x64000};
+  small_atlas.extent = {32, 32, 1};
+  small_atlas.pitch = 32;
+  small_atlas.resources = {6, 50};
+  small_atlas.mip_layout[0] = {0x1000, 0x32000, 32, 32};
+  for (uint32_t level = 1; level < small_atlas.resources.levels; ++level) {
+    small_atlas.mip_layout[level] = {0, 0x32000, 32, 32};
+  }
+  auto small_child = subresource;
+  small_child.data = {0x23900e000, 0x1000};
+  small_child.extent = {32, 32, 1};
+  small_child.pitch = 32;
+  small_child.mip_layout[0] = {0, 0x1000, 32, 32};
+  Check(small_child.MipOf(small_atlas) == 0 &&
+            small_child.SliceOf(small_atlas, 0) == 6,
+        "PS5 array lookup doubled the captured small-atlas layer index");
+  small_child.data.address = 0x23900d000;
+  Check(small_child.MipOf(small_atlas) == -1,
+        "PS5 array lookup treated a packed tail block as the full-size mip");
 
   auto incompatible = subresource;
   incompatible.samples = 2;
@@ -4194,6 +4247,24 @@ void TestNewShaderDecoderArchitecture() {
             !sin_f16.src0.absolute,
         "decoder rejected the VOP1 SDWA V_SIN_F16 instruction");
 
+  std::vector<uint32_t> fract_f16_code(0x9b0u / 4u, EncodeSopp(0x00));
+  fract_f16_code.push_back(0x7e12bf07u);
+  fract_f16_code.push_back(EncodeSopp(0x01));
+  Instruction fract_f16;
+  ShaderRecompiler::Decoder::DecodeInstruction(fract_f16_code, 0x9b0u / 4u,
+                                               fract_f16);
+  Check(fract_f16.pc == 0x9b0u && fract_f16.family == Family::VOP1 &&
+            fract_f16.opcode == Opcode::V_FRACT_F16 &&
+            fract_f16.opcode_id == 0x5fu && fract_f16.word_count == 1u &&
+            fract_f16.dst.kind == OperandKind::Vgpr && fract_f16.dst.reg == 9u &&
+            fract_f16.src_count == 1u &&
+            fract_f16.src0.kind == OperandKind::Vgpr && fract_f16.src0.reg == 7u,
+        "decoder rejected captured V_FRACT_F16 at pc 0x9b0");
+  ShaderRecompiler::Decoder::Program fract_program;
+  ShaderRecompiler::Decoder::DecodeProgram(fract_f16_code, fract_program);
+  Check(!ShaderRecompiler::CFG::BuildGraph(fract_program).unsupported,
+        "captured V_FRACT_F16 still fails CFG construction");
+
   const uint32_t literal_code[] = {EncodeVop1(0x01, 2, 255u), 0x12345678u};
   Instruction literal;
   ShaderRecompiler::Decoder::DecodeInstruction(literal_code, 0u, literal);
@@ -4502,6 +4573,62 @@ void TestNewShaderRecompilerWave32VccHiIsScalarRegister() {
   options.wave_size = 32u;
   auto result = RecompileForTest(shader, options);
   CheckSpirvBinaryValidates(result.spirv);
+}
+
+void TestNewShaderRecompilerCapturedVopcSdwaCmpxLtU16() {
+  using namespace ShaderRecompiler;
+
+  const uint32_t shader[] = {
+      0x7d72d4f9u, 0x86060000u, // v_cmpx_lt_u16 v0, vcc_lo (SDWA)
+      EncodeSopp(0x01),
+  };
+  Decoder::Instruction decoded;
+  Decoder::DecodeInstruction(shader, 0u, decoded);
+  Check(decoded.family == Decoder::Family::VOPC &&
+            decoded.opcode == Decoder::Opcode::V_CMPX_LT_U16 &&
+            decoded.opcode_id == 0xb9u && decoded.word_count == 2u &&
+            decoded.raw[0] == shader[0] && decoded.raw[1] == shader[1] &&
+            decoded.dst.kind == Decoder::OperandKind::ExecLo &&
+            decoded.src_count == 2u &&
+            decoded.src0.kind == Decoder::OperandKind::Vgpr &&
+            decoded.src0.reg == 0u && decoded.src0.sdwa_sel == 6u &&
+            decoded.src1.kind == Decoder::OperandKind::VccLo &&
+            decoded.src1.sdwa_sel == 6u &&
+            !decoded.src0.sdwa_sext && !decoded.src1.sdwa_sext &&
+            !decoded.src0.negate && !decoded.src1.negate &&
+            !decoded.src0.absolute && !decoded.src1.absolute,
+        "decoder rejected captured SDWA V_CMPX_LT_U16 fields");
+
+  Decoder::Program program;
+  Decoder::DecodeProgram(shader, program);
+  Check(!CFG::BuildGraph(program).unsupported,
+        "captured SDWA V_CMPX_LT_U16 still fails CFG construction");
+  auto result = RecompileForTest(shader, MakeCompileOptions(ShaderType::Pixel));
+  Check(Common::ContainsStr(result.decoded_dump,
+                            "V_CMPX_LT_U16 exec_lo, v0, vcc_lo"),
+        "captured SDWA V_CMPX_LT_U16 is missing from decoded dump");
+  CheckSpirvBinaryValidates(result.spirv);
+
+  // Independently assembled gfx1030 compact and VOP3 encodings.
+  const uint32_t compact[] = {0x7d720300u};
+  const uint32_t vop3[] = {0xd4b9007eu, 0x00020300u};
+  for (auto words : {std::span<const uint32_t>(compact),
+                     std::span<const uint32_t>(vop3)}) {
+    Decoder::DecodeInstruction(words, 0u, decoded);
+    Check(decoded.opcode == Decoder::Opcode::V_CMPX_LT_U16 &&
+              decoded.dst.kind == Decoder::OperandKind::ExecLo &&
+              decoded.src0.kind == Decoder::OperandKind::Vgpr &&
+              decoded.src0.reg == 0u &&
+              decoded.src1.kind == Decoder::OperandKind::Vgpr &&
+              decoded.src1.reg == 1u,
+          "compact/VOP3 V_CMPX_LT_U16 does not decode to an EXEC compare");
+  }
+  const uint32_t dpp[] = {EncodeVopc(0xb9u, 250u, 1u), EncodeVop2Dpp(0u)};
+  Decoder::DecodeInstruction(dpp, 0u, decoded);
+  Check(decoded.opcode == Decoder::Opcode::UNSUPPORTED &&
+            Common::ContainsStr(decoded.unsupported_reason,
+                                "VOPC DPP modifier is not supported for opcode"),
+        "V_CMPX_LT_U16 accepted an unsupported DPP encoding");
 }
 
 void TestNewShaderRecompilerIrLookupMissFailsExplicitly() {
@@ -9631,6 +9758,54 @@ void TestMergedShaderUserDataSnapshot() {
   }
 }
 
+void TestEmbeddedFetchPreservesSharedScalarLoad() {
+  using namespace ShaderRecompiler;
+  const uint32_t code[] = {
+      EncodeSMovB32(5, 255), 0x47f,
+      EncodeSmem0(0x03, 0, 11), (125u << 25u) | 4u, // s_load_dwordx8 s[0:7], s[22:23], 4
+      EncodeSop2(0x1e, 9, 0, 132), // s_lshl_b32 s9, s0, 4
+      EncodeSop2(0x0e, 9, 9, 255), 0x1f0,
+      EncodeSmem0(0x02, 24, 10), 9u << 25u,
+      EncodeVop2(0x01, 0, 256 + 8, 5), // vertex/instance index selection
+      EncodeMubuf0(0x02), EncodeMubuf1(9, 6, 0), // replaced vertex fetch
+      EncodeSop2(0x1e, 9, 5, 132), // another component of the same scalar load
+      EncodeSop2(0x0e, 9, 9, 255), 0x1f0,
+      EncodeSmem0(0x02, 28, 10), 9u << 25u,
+      EncodeMubuf0(0x0c), EncodeMubuf1(12, 7, 1),
+      EncodeExp0(0x0c, 0xf), EncodeExp1(9, 10, 11, 12), EncodeSopp(0x01),
+  };
+  std::array<std::array<uint32_t, 4>, 32> buffers{};
+  buffers[2] = {0x12340000, 0, 64, 0x00027000};
+  buffers[31] = {0x56780000, 0, 64, 0x00027000};
+  const std::array<uint32_t, 9> attributes = {0, 0, 0, 0, 0, 0, 2, 0, 0};
+  std::array<uint32_t, 16> user_data{};
+  const uint64_t tables[] = {reinterpret_cast<uint64_t>(buffers.data()),
+                             reinterpret_cast<uint64_t>(attributes.data())};
+  std::memcpy(user_data.data() + 12, tables, sizeof(tables));
+  ShaderVertexInputInfo input{};
+  input.fetch_embedded = true;
+  input.fetch_buffer_reg = 12;
+  input.fetch_attrib_reg = 14;
+  input.resources_num = 1;
+  input.resources_dst[0].attr_id = 1;
+  input.resources[0].fields[1] = 12u << 16u;
+  input.resources[0].fields[2] = 1;
+  input.resources[0].fields[3] =
+      (static_cast<uint32_t>(Prospero::BufferFormat::k32_32_32Float) << 12u) |
+      DstSel(4, 5, 6, 7);
+  auto options = MakeCompileOptions(ShaderType::Vertex);
+  options.user_data_base = 8;
+  options.user_data = user_data;
+  options.input_info.vertex = &input;
+  auto result = RecompileForTest(code, options);
+  Check(result.program.info.vertex_fetch_components[0] == 3 &&
+            result.resources.buffers.size() == 1 &&
+            std::equal(buffers[2].begin(), buffers[2].end(),
+                       result.resources.buffers[0].dwords.begin()),
+        "embedded fetch discarded a scalar-load component used by another buffer read");
+  CheckSpirvBinaryValidates(result.spirv);
+}
+
 void TestEmbeddedVertexFormatSwizzle() {
   using namespace ShaderRecompiler;
   using namespace ShaderRecompiler::IR;
@@ -10154,10 +10329,10 @@ void TestNewShaderRecompilerAuxPositionExports() {
                 std::vector<uint32_t>({UINT32_MAX}),
         "MISC point-size/layer stores are missing");
   Check(SpirvStoredBuiltInElements(all.spirv, 3u) ==
-            std::vector<uint32_t>({0u, 3u}) &&
+            std::vector<uint32_t>({0u, 3u, 4u}) &&
             SpirvStoredBuiltInElements(all.spirv, 4u) ==
                 std::vector<uint32_t>({0u, 1u, 2u}),
-        "partial clip/cull exports used the wrong dense elements");
+        "partial clip/cull exports or the appended clipping-error plane used the wrong elements");
   Check(SpirvHasDecorationValue(all.spirv, 11u, 1u) &&
             SpirvHasDecorationValue(all.spirv, 11u, 3u) &&
             SpirvHasDecorationValue(all.spirv, 11u, 4u) &&
@@ -10191,7 +10366,7 @@ void TestNewShaderRecompilerAuxPositionExports() {
   CheckSpirvBinaryValidates(dense.spirv);
   Check(SpirvStoredBuiltInElements(dense.spirv, 0u).size() == 1u &&
             SpirvStoredBuiltInElements(dense.spirv, 3u) ==
-                std::vector<uint32_t>({1u}) &&
+                std::vector<uint32_t>({1u, 2u}) &&
             SpirvStoredBuiltInElements(dense.spirv, 4u) ==
                 std::vector<uint32_t>({0u}),
         "CCDIST1 was not densely packed into POS1");
@@ -10206,10 +10381,23 @@ void TestNewShaderRecompilerAuxPositionExports() {
   CheckSpirvBinaryValidates(shifted.spirv);
   Check(SpirvStoredBuiltInElements(shifted.spirv, 1u).size() == 1u &&
             SpirvStoredBuiltInElements(shifted.spirv, 3u) ==
-                std::vector<uint32_t>({0u}) &&
+                std::vector<uint32_t>({0u, 1u}) &&
             SpirvStoredBuiltInElements(shifted.spirv, 4u) ==
                 std::vector<uint32_t>({0u}),
         "CCDIST1 did not shift across a disabled CCDIST0 vector");
+
+  const uint32_t full_distances[] = {
+      EncodeExp0(0x0c, 0xf, false), EncodeExp1(0, 1, 2, 3),
+      EncodeExp0(0x0d, 0xf, false), EncodeExp1(4, 5, 6, 7),
+      EncodeExp0(0x0e, 0xf), EncodeExp1(8, 9, 10, 11), 0xbf810000u,
+  };
+  const auto full = compile(full_distances, 0x00c0f00fu);
+  CheckSpirvBinaryValidates(full.spirv);
+  Check(SpirvStoredBuiltInElements(full.spirv, 3u) ==
+            std::vector<uint32_t>({0u, 1u, 2u, 3u}) &&
+            SpirvStoredBuiltInElements(full.spirv, 4u) ==
+                std::vector<uint32_t>({0u, 1u, 2u, 3u}),
+        "clipping-error plane exceeded eight combined components or replaced a guest distance");
 
   const uint32_t unmapped[] = {
       EncodeExp0(0x0d, 0x4, false), EncodeExp1(0, 0, 8, 0),
@@ -10248,11 +10436,120 @@ void TestNewShaderRecompilerAuxPositionExports() {
         "PA_CL_VS_OUT_CNTL is absent from the vertex shader cache key");
 }
 
+void TestTypedSpirvSerialization() {
+  // Parameters exercise runtime enums, which cannot narrow implicitly to a
+  // uint32_t initializer list when the enum uses the Windows signed ABI.
+  const auto check_serialization = [](spv::StorageClass storage_class,
+                                      spv::FunctionControlMask control,
+                                      spv::Decoration decoration,
+                                      GLSLstd450 glsl_opcode,
+                                      int32_t signed_literal,
+                                      uint32_t high_bit_literal) {
+    ShaderRecompiler::Spirv::Builder builder;
+    builder.RequireCapability(spv::CapabilityShader);
+    const auto glsl = builder.Import("GLSL.std.450");
+    builder.AddMemoryModel(spv::AddressingModelLogical, spv::MemoryModelGLSL450);
+    const auto void_type = builder.Type(spv::OpTypeVoid);
+    const std::vector<uint32_t> uint_operands{32u, 0u};
+    const auto uint_type = builder.Type(spv::OpTypeInt, uint_operands);
+    Check(uint_type == builder.Type(spv::OpTypeInt, 32u, 0u) &&
+              uint_type == builder.Type(spv::OpTypeInt,
+                                        std::span<const uint32_t>{uint_operands}),
+          "typed, vector and span type operands produced different declarations");
+    const auto float_type = builder.Type(spv::OpTypeFloat, 32u);
+    const auto vector_type = builder.Type(spv::OpTypeVector, uint_type, 2u);
+    const auto pointer_type =
+        builder.Type(spv::OpTypePointer, storage_class, uint_type);
+    const auto function_type = builder.Type(spv::OpTypeFunction, void_type);
+    const auto all_bits =
+        builder.Constant(spv::OpConstant, uint_type, signed_literal);
+    Check(all_bits == builder.Constant(spv::OpConstant, uint_type, UINT32_MAX),
+          "signed and unsigned constant operands produced different declarations");
+    const auto high_bit =
+        builder.Constant(spv::OpConstant, uint_type, high_bit_literal);
+    const auto one = builder.Constant(spv::OpConstant, float_type, 0x3f800000u);
+    const std::vector<uint32_t> components{all_bits, high_bit};
+    const auto constant_vector = builder.Constant(
+        spv::OpConstantComposite, vector_type,
+        std::span<const uint32_t>{components});
+    Check(constant_vector == builder.Constant(spv::OpConstantComposite,
+                                              vector_type, components),
+          "vector and span constant operands produced different declarations");
+    const auto variable =
+        builder.DefineGlobalVariable(pointer_type, storage_class);
+    const auto function = builder.AllocateId();
+    const auto label = builder.AllocateId();
+    const auto absolute = builder.AllocateId();
+    const auto constructed = builder.AllocateId();
+    const auto shuffled = builder.AllocateId();
+    const auto loaded = builder.AllocateId();
+    builder.AddEntryPoint(spv::ExecutionModelGLCompute, function, "main", {});
+    builder.AddExecutionMode(function, spv::ExecutionModeLocalSize, 1u, 2u, 3u);
+    builder.AddAnnotation(spv::OpDecorate, one, decoration);
+    builder.AddFunction(spv::OpFunction, void_type, function, control,
+                        function_type);
+    const std::vector<uint32_t> label_words{248u, label};
+    builder.AddFunction(label_words);
+    builder.AddFunction(spv::OpExtInst, float_type, absolute, glsl, glsl_opcode,
+                        one);
+    builder.AddFunction(spv::OpCompositeConstruct, vector_type, constructed,
+                        components);
+    const std::array<uint32_t, 2> selectors{1u, 2u};
+    builder.AddFunction(spv::OpVectorShuffle, vector_type, shuffled,
+                        constant_vector, constructed,
+                        std::span<const uint32_t>{selectors});
+    builder.AddFunction(spv::OpLoad, uint_type, loaded, variable,
+                        spv::MemoryAccessAlignedMask, 4u);
+    builder.AddFunction(std::vector<uint32_t>{});
+    const std::array<uint32_t, 1> return_words{253u};
+    builder.AddFunction(std::span<const uint32_t>{return_words});
+    builder.AddFunction(spv::OpFunctionEnd);
+
+    // Literal headers and enum values keep this independent of the builder's
+    // instruction word counts, operand conversion and range flattening.
+    const std::vector<uint32_t> expected{
+        0x07230203u, 0x00010300u, 0u, loaded + 1u, 0u,
+        0x00020011u, 1u, // OpCapability Shader
+        0x0006000bu, glsl, 0x4c534c47u, 0x6474732eu, 0x3035342eu, 0u,
+        0x0003000eu, 0u, 1u, // OpMemoryModel Logical GLSL450
+        0x0005000fu, 5u, function, 0x6e69616du, 0u,
+        0x00060010u, function, 17u, 1u, 2u, 3u,
+        0x00030047u, one, 0u, // OpDecorate RelaxedPrecision
+        0x00020013u, void_type,
+        0x00040015u, uint_type, 32u, 0u,
+        0x00030016u, float_type, 32u,
+        0x00040017u, vector_type, uint_type, 2u,
+        0x00040020u, pointer_type, 6u, uint_type,
+        0x00030021u, function_type, void_type,
+        0x0004002bu, uint_type, all_bits, 0xffffffffu,
+        0x0004002bu, uint_type, high_bit, 0x80000000u,
+        0x0004002bu, float_type, one, 0x3f800000u,
+        0x0005002cu, vector_type, constant_vector, all_bits, high_bit,
+        0x0004003bu, pointer_type, variable, 6u,
+        0x00050036u, void_type, function, 0u, function_type,
+        0x000200f8u, label,
+        0x0006000cu, float_type, absolute, glsl, 4u, one,
+        0x00050050u, vector_type, constructed, all_bits, high_bit,
+        0x0007004fu, vector_type, shuffled, constant_vector, constructed, 1u, 2u,
+        0x0006003du, uint_type, loaded, variable, 2u, 4u,
+        0x000100fdu,
+        0x00010038u,
+    };
+    const auto binary = builder.Build();
+    Check(binary == expected,
+          "typed SPIR-V serialization changed instruction words or operand order");
+    CheckSpirvBinaryValidates(binary);
+  };
+  check_serialization(spv::StorageClassPrivate, spv::FunctionControlMaskNone,
+                      spv::DecorationRelaxedPrecision, GLSLstd450FAbs, -1,
+                      0x80000000u);
+}
+
 void TestDeferredSpirvPhiPatching() {
   ShaderRecompiler::Spirv::Builder builder;
-  const auto type = builder.Type(spv::OpTypeInt, {32u, 0u});
-  const auto zero = builder.Constant(spv::OpConstant, type, {0u});
-  const auto one = builder.Constant(spv::OpConstant, type, {1u});
+  const auto type = builder.Type(spv::OpTypeInt, 32u, 0u);
+  const auto zero = builder.Constant(spv::OpConstant, type, 0u);
+  const auto one = builder.Constant(spv::OpConstant, type, 1u);
   const auto left = builder.AllocateId();
   const auto right = builder.AllocateId();
   const auto result = builder.AllocateId();
@@ -10303,35 +10600,36 @@ void TestDemandDrivenSpirvDeclarations() {
   using ShaderRecompiler::Spirv::Builder;
 
   Builder declarations;
-  const auto uint_type = declarations.Type(spv::OpTypeInt, {32u, 0u});
-  Check(uint_type == declarations.Type(spv::OpTypeInt, {32u, 0u}),
+  const auto uint_type = declarations.Type(spv::OpTypeInt, 32u, 0u);
+  Check(uint_type == declarations.Type(spv::OpTypeInt, 32u, 0u),
         "structural type interning returned different IDs");
-  const auto zero = declarations.Constant(spv::OpConstant, uint_type, {0u});
-  Check(zero == declarations.Constant(spv::OpConstant, uint_type, {0u}),
+  const auto zero = declarations.Constant(spv::OpConstant, uint_type, 0u);
+  Check(zero == declarations.Constant(spv::OpConstant, uint_type, 0u),
         "constant interning returned different IDs");
   Check(declarations.Import("GLSL.std.450") ==
             declarations.Import("GLSL.std.450"),
         "extended-instruction import was duplicated");
   declarations.RequireCapability(spv::CapabilityShader);
   declarations.RequireCapability(spv::CapabilityShader);
-  const auto plain_array =
-      declarations.Type(spv::OpTypeArray, {uint_type, zero});
+  const auto plain_array = declarations.Type(spv::OpTypeArray, uint_type, zero);
   const auto decorated_array = declarations.DecoratedType(
-      spv::OpTypeArray, {uint_type, zero},
-      {{spv::OpDecorate, {spv::DecorationArrayStride, sizeof(uint32_t)}}});
+      spv::OpTypeArray,
+      {{spv::OpDecorate, {spv::DecorationArrayStride, sizeof(uint32_t)}}},
+      uint_type, zero);
   Check(decorated_array ==
             declarations.DecoratedType(
-                spv::OpTypeArray, {uint_type, zero},
+                spv::OpTypeArray,
                 {{spv::OpDecorate,
-                  {spv::DecorationArrayStride, sizeof(uint32_t)}}}),
+                  {spv::DecorationArrayStride, sizeof(uint32_t)}}},
+                uint_type, zero),
         "decorated type interning returned different IDs");
   Check(plain_array != decorated_array,
         "decorated and undecorated aggregate types were aliased");
-  Check(declarations.DecoratedType(spv::OpTypeArray, {uint_type, zero}, {}) ==
+  Check(declarations.DecoratedType(spv::OpTypeArray, {}, uint_type, zero) ==
             plain_array,
         "empty decorated type request bypassed structural interning");
   const auto ptr = declarations.Type(spv::OpTypePointer,
-                                     {spv::StorageClassFunction, uint_type});
+                                     spv::StorageClassFunction, uint_type);
   Check(declarations.DefineGlobalVariable(ptr, spv::StorageClassFunction) !=
             declarations.DefineGlobalVariable(ptr, spv::StorageClassFunction),
         "distinct variables were structurally interned");
@@ -12996,7 +13294,8 @@ void TestRepeatedExportsHaveOneInterface() {
     }
     offset += result.spirv[offset] >> spv::WordCountShift;
   }
-  Check(outputs == 1, "repeated exports produced duplicate output variables");
+  Check(outputs == 2 && SpirvHasDecorationValue(result.spirv, 11u, 3u),
+        "repeated exports duplicated Position or its clipping-error plane");
 }
 
 void TestNewShaderRecompilerSpirvSizeBaselines() {
@@ -13216,10 +13515,10 @@ void TestNewShaderRecompilerSpirvSizeBaselines() {
   };
   const auto wqm_result = compile("wqm", wqm,
                                   {.words = 407,
-                                   .instructions = 98,
+                                   .instructions = 99,
                                    .variables = 4,
                                    .loads = 3,
-                                   .stores = 1,
+                                   .stores = 2,
                                    .labels = 6,
                                    .selection_merges = 1,
                                    .branches = 4,
@@ -13711,6 +14010,7 @@ int main() {
   RUN(TestNativeShaderResourceDependencies);
   RUN(TestNormalizedImageContracts);
   RUN(TestSpirvRequirementsAnalysis);
+  RUN(TestTypedSpirvSerialization);
   RUN(TestDeferredSpirvPhiPatching);
   RUN(TestCompilerStageInputOwnership);
   RUN(TestSpirvEmissionOwnsRequirements);
@@ -13736,6 +14036,7 @@ int main() {
   RUN(TestImageAddressOperands);
   RUN(TestSopkCompareImmediateExtension);
   RUN(TestNewShaderRecompilerCapturedVopcSdwaCmpxClass);
+  RUN(TestNewShaderRecompilerCapturedVopcSdwaCmpxLtU16);
   RUN(TestNewShaderRecompilerIrLookupMissFailsExplicitly);
   RUN(TestNewShaderRecompilerRejectsDppOn64BitCompares);
   RUN(TestPsInputCountRegisterDecode);
@@ -13800,6 +14101,7 @@ int main() {
   RUN(TestMeshExportStorage);
   RUN(TestMergedShaderUserDataSnapshot);
   RUN(TestMeshInputAssembly);
+  RUN(TestEmbeddedFetchPreservesSharedScalarLoad);
   RUN(TestEmbeddedVertexFormatSwizzle);
   RUN(TestNewShaderRecompilerSetpcJumpTable);
   RUN(TestNewShaderRecompilerPrunesUnreachableSetpcMetadata);

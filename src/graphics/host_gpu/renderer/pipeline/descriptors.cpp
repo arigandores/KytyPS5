@@ -23,6 +23,7 @@
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/hostMemory.h"
+#include "graphics/host_gpu/renderer/colorRenderTarget.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/image/imageView.h"
 #include "graphics/host_gpu/renderer/image/textureCommon.h"
@@ -112,19 +113,12 @@ static const char* ShaderStageResourceName(ShaderType stage) {
 	switch (stage) {
 		case ShaderType::Vertex: return "Vertex";
 		case ShaderType::Mesh: return "Mesh";
+		case ShaderType::Local: return "Local";
+		case ShaderType::TessellationControl: return "Hull";
+		case ShaderType::TessellationEvaluation: return "Domain";
 		case ShaderType::Pixel: return "Pixel";
 		case ShaderType::Compute: return "Compute";
 		default: return "Unknown";
-	}
-}
-
-static vk::ShaderStageFlags NativeShaderStage(ShaderType stage) {
-	switch (stage) {
-		case ShaderType::Vertex: return vk::ShaderStageFlagBits::eVertex;
-		case ShaderType::Mesh: return vk::ShaderStageFlagBits::eMeshEXT;
-		case ShaderType::Pixel: return vk::ShaderStageFlagBits::eFragment;
-		case ShaderType::Compute: return vk::ShaderStageFlagBits::eCompute;
-		default: EXIT("unknown native shader stage\n");
 	}
 }
 
@@ -270,7 +264,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		EXIT("storage buffer slot %u: const-bank range 0x%llx exceeds maxUniformBufferRange\n", slot,
 		     static_cast<unsigned long long>(result.range));
 	}
-	if (resource.formatted && resource.written) {
+	// Upstream 01df42a: a plain (unformatted) storage write can be a DCC metadata write, so
+	// every written range has to reach the texture cache, not only the formatted ones.
+	if (resource.written) {
 		context.GetTextureCache().InvalidateMemoryFromGPU(address, size);
 	}
 	const char* access = "Read";
@@ -1474,57 +1470,42 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	}
 }
 
-RenderExecutor::GraphicsBindings
-RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
-                                        const ShaderStageRuntime& pixel, bool pixel_active) {
-	GraphicsBindings bindings;
-	PrepareGraphicsBindings(vertex, pixel, pixel_active, bindings);
-	return bindings;
-}
-
-void RenderExecutor::PrepareGraphicsBindings(const ShaderStageRuntime& vertex,
-                                             const ShaderStageRuntime& pixel, bool pixel_active,
-                                             GraphicsBindings& bindings) {
-	PrepareBindings(vertex, bindings.vertex);
-	// Gate "bindspare": depth-only draws reset the pixel stage, which freed every vector of it
-	// (vector<TextureBinding>::_Tidy from ~PreparedBindings) and the next draw allocated them
-	// again. Park the storage in a spare instead; PrepareBindings resets the contents anyway.
-	thread_local PreparedBindings pixel_spare;
-	const bool                    spare = Common::Gates::Enabled(Common::Gates::Gate::BindSpare);
-	if (pixel_active) {
-		if (!bindings.pixel) {
-			bindings.pixel.emplace();
-			if (spare) {
-				std::swap(*bindings.pixel, pixel_spare);
-			}
-		}
-		PrepareBindings(pixel, *bindings.pixel);
-	} else {
-		if (spare && bindings.pixel) {
-			std::swap(*bindings.pixel, pixel_spare);
-		}
-		bindings.pixel.reset();
+void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> stages,
+                                             std::span<RenderColorInfo> colors) {
+	bool uses_dma = false;
+	for (auto* stage: stages) {
+		FindBuffers(*stage);
+		uses_dma |= stage->runtime->program->info.uses_dma;
 	}
-	FindBuffers(bindings.vertex);
-	if (bindings.pixel) {
-		FindBuffers(*bindings.pixel);
-	}
-	if (bindings.vertex.runtime->program->info.uses_dma ||
-	    (bindings.pixel && bindings.pixel->runtime->program->info.uses_dma)) {
+	if (uses_dma) {
 		m_context.PrepareBda();
 	}
-	RebindBuffers(bindings.vertex);
-	if (bindings.pixel) {
-		RebindBuffers(*bindings.pixel);
+	for (auto* stage: stages) {
+		RebindImages(*stage);
 	}
-	RebindImages(bindings.vertex);
-	if (bindings.pixel) {
-		RebindImages(*bindings.pixel);
+	auto& cache = m_context.GetTextureCache();
+	for (auto& target: colors) {
+		EXIT_IF(!target.image_id);
+		const auto old_image = cache.m_slot_images.try_get(target.image_id);
+		if (old_image == nullptr || (!old_image->registered && !old_image->info.data.Empty()) ||
+		    old_image->binding.needs_rebind) {
+			if (old_image != nullptr) {
+				old_image->binding = {};
+			}
+			target.desc.view_info.base_level = target.guest_mip_level;
+			target.desc.view_info.base_layer = target.guest_array_layer;
+			target.image_id = cache.FindImage(target.desc);
+			BindRenderTarget(target.image_id);
+		}
 	}
-	ShadowQueue(bindings);
+	// Discovery can read back PS5 metadata and submit the scheduler. Reserve draw buffers only
+	// after image identities are final; attachment layout transitions follow buffer alias copies.
+	for (auto* stage: stages) {
+		RebindBuffers(*stage);
+	}
 }
 
-void RenderExecutor::ShadowQueue(const GraphicsBindings& bindings) {
+void RenderExecutor::ShadowQueue(std::span<PreparedBindings* const> stages) {
 	namespace FS      = Common::FrameStats;
 	const auto workers    = Common::Gates::Value(Common::Gates::Knob::ShadowResolve);
 	const bool inline_run = Common::Gates::Enabled(Common::Gates::Gate::ShadowInline);
@@ -1580,9 +1561,15 @@ void RenderExecutor::ShadowQueue(const GraphicsBindings& bindings) {
 		}
 		return true;
 	};
-	bool ok = add_stage(bindings.vertex);
-	if (ok && bindings.pixel) {
-		ok = add_stage(*bindings.pixel);
+	bool ok = true;
+	// The same stage span the draw just prepared: one vertex stage (VS or mesh) or the three
+	// tessellation stages, plus the pixel stage when it is active. A slot without a runtime never
+	// reaches this span, but the guard keeps the probe out of undefined memory if one ever does.
+	for (const auto* stage: stages) {
+		if (!ok || stage == nullptr || stage->runtime == nullptr) {
+			continue;
+		}
+		ok = add_stage(*stage);
 	}
 	if (!ok) {
 		FS::Add(FS::Counter::ShadowOver, 1);
@@ -1813,9 +1800,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	size_t write_count      = 0;
 	ShaderRecompiler::IR::PushData push_data;
 	bool                           has_push_data = false;
-	constexpr auto                 GraphicsStages = vk::ShaderStageFlagBits::eVertex |
-	                                                vk::ShaderStageFlagBits::eMeshEXT |
-	                                                vk::ShaderStageFlagBits::eFragment;
+	constexpr auto                 GraphicsStages =
+	    vk::ShaderStageFlagBits::eVertex | vk::ShaderStageFlagBits::eMeshEXT |
+	    vk::ShaderStageFlagBits::eTessellationControl |
+	    vk::ShaderStageFlagBits::eTessellationEvaluation | vk::ShaderStageFlagBits::eFragment;
 	vk::ShaderStageFlags push_stages = pipeline_bind_point == vk::PipelineBindPoint::eGraphics
 	                                       ? vk::ShaderStageFlagBits::eFragment
 	                                       : vk::ShaderStageFlags {};

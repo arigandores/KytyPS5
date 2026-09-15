@@ -115,7 +115,6 @@ int KYTY_SYSV_ABI     PthreadGetthreadid();
 // (pass __builtin_frame_address(0) + 2 from a directly-called library entry point).
 std::string GuestBacktrace(void* stack_ptr, int depth);
 int KYTY_SYSV_ABI     PthreadGetaffinity(Pthread thread, KernelCpumask* mask);
-int                   PthreadGetUniqueId(Pthread thread);
 uint64_t              PthreadGetHostThreadId(Pthread thread);
 void                  PthreadWakeForSignal(Pthread thread);
 void                  PthreadQueuePendingSignal(Pthread thread, int signum);

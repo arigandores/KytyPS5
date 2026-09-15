@@ -789,15 +789,6 @@ const EmbeddedFetchLoad* FindEmbeddedFetchLoad(const EmbeddedFetchPlan* plan, ui
 	return found != plan->loads.end() ? &*found : nullptr;
 }
 
-bool IsEmbeddedFetchPrologLoad(const EmbeddedFetchPlan* plan, uint32_t pc) {
-	if (plan == nullptr) {
-		return false;
-	}
-	return std::ranges::any_of(plan->loads, [pc](const auto& load) {
-		return std::ranges::find(load.prolog_loads, pc) != load.prolog_loads.end();
-	});
-}
-
 int ResolveEmbeddedFetchResource(const ShaderVertexInputInfo& input,
                                  const EmbeddedFetchLoad&     load) {
 	if (load.attrib_id >= 0 && load.attrib_id < input.resources_num &&
@@ -817,22 +808,6 @@ int ResolveEmbeddedFetchResource(const ShaderVertexInputInfo& input,
 		}
 	}
 	return -1;
-}
-
-bool IsScalarMemoryLoad(Decoder::Opcode opcode) {
-	switch (opcode) {
-		case Decoder::Opcode::S_LOAD_DWORD:
-		case Decoder::Opcode::S_LOAD_DWORDX2:
-		case Decoder::Opcode::S_LOAD_DWORDX4:
-		case Decoder::Opcode::S_LOAD_DWORDX8:
-		case Decoder::Opcode::S_LOAD_DWORDX16:
-		case Decoder::Opcode::S_BUFFER_LOAD_DWORD:
-		case Decoder::Opcode::S_BUFFER_LOAD_DWORDX2:
-		case Decoder::Opcode::S_BUFFER_LOAD_DWORDX4:
-		case Decoder::Opcode::S_BUFFER_LOAD_DWORDX8:
-		case Decoder::Opcode::S_BUFFER_LOAD_DWORDX16: return true;
-		default: return false;
-	}
 }
 
 bool IsBufferDwordLoad(Decoder::Opcode opcode) {
@@ -898,11 +873,15 @@ void ValidateTranslateOptions(const TranslateOptions& options) {
 	if (options.wave_size != 32u && options.wave_size != 64u) {
 		EXIT("shader translation requires wave32 or wave64, got %u", options.wave_size);
 	}
-	if (options.embedded_fetch != nullptr && options.stage != ShaderType::Vertex) {
-		EXIT("embedded fetch requires the vertex shader stage");
+	if (options.embedded_fetch != nullptr && options.stage != ShaderType::Vertex &&
+	    options.stage != ShaderType::Local) {
+		EXIT("embedded fetch requires a vertex or local shader");
 	}
 	switch (options.stage) {
 		case ShaderType::Vertex:
+		case ShaderType::Local:
+		case ShaderType::TessellationControl:
+		case ShaderType::TessellationEvaluation:
 		case ShaderType::Mesh:
 			if (options.input_info.vertex == nullptr) {
 				EXIT("vertex shader translation has no vertex input metadata");
@@ -941,6 +920,9 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 	result.user_data_count     = options.user_data_count;
 	switch (options.stage) {
 		case ShaderType::Vertex:
+		case ShaderType::Local:
+		case ShaderType::TessellationControl:
+		case ShaderType::TessellationEvaluation:
 			result.scratch_dwords = options.input_info.vertex->scratch_size_dwords;
 			break;
 		case ShaderType::Mesh:
@@ -1182,6 +1164,42 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 			entry_ir.SetVectorReg(
 			    static_cast<IR::VectorReg>(8),
 			    entry_ir.IAdd(draw(2), builtin(IR::StageInputKind::WorkgroupId, 1)));
+		} else if (options.stage == ShaderType::Local) {
+			entry_ir.SetScalarReg(static_cast<IR::ScalarReg>(3), IR::U32(IR::Value(64u)));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(2),
+			                      builtin(IR::StageInputKind::VertexIndex));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(3), IR::U32(IR::Value(0u)));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(5),
+			                      builtin(IR::StageInputKind::InstanceIndex));
+		} else if (options.stage == ShaderType::TessellationControl) {
+			const auto& tess = options.input_info.vertex->tess;
+			entry_ir.SetScalarReg(
+			    static_cast<IR::ScalarReg>(2),
+			    IR::U32(entry_ir.Emit(IR::ValueOpcode::TessellationBase, {IR::Value(0u)})));
+			entry_ir.SetScalarReg(
+			    static_cast<IR::ScalarReg>(4),
+			    IR::U32(entry_ir.Emit(IR::ValueOpcode::TessellationBase, {IR::Value(1u)})));
+			entry_ir.SetScalarReg(static_cast<IR::ScalarReg>(3),
+			                      IR::U32(IR::Value(0x81010000u | tess.input_control_points |
+			                                        (tess.output_control_points << 8u))));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(0),
+			                      builtin(IR::StageInputKind::PrimitiveId));
+			entry_ir.SetVectorReg(
+			    static_cast<IR::VectorReg>(1),
+			    entry_ir.ShiftLeftLogical(builtin(IR::StageInputKind::InvocationId),
+			                              IR::U32(IR::Value(8u))));
+		} else if (options.stage == ShaderType::TessellationEvaluation) {
+			entry_ir.SetScalarReg(static_cast<IR::ScalarReg>(3), IR::U32(IR::Value(64u)));
+			entry_ir.SetScalarReg(
+			    static_cast<IR::ScalarReg>(4),
+			    IR::U32(entry_ir.Emit(IR::ValueOpcode::TessellationBase, {IR::Value(0u)})));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(5),
+			                      builtin(IR::StageInputKind::TessCoord, 0));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(6),
+			                      builtin(IR::StageInputKind::TessCoord, 1));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(7), IR::U32(IR::Value(0u)));
+			entry_ir.SetVectorReg(static_cast<IR::VectorReg>(8),
+			                      builtin(IR::StageInputKind::PrimitiveId));
 		} else if (options.stage == ShaderType::Pixel) {
 			const auto* ps = options.input_info.pixel;
 			// Every enabled interpolation mode gets its I/J pair: persp modes read the
@@ -1252,10 +1270,6 @@ IR::Program TranslateProgram(const Decoder::Program& decoded, const CFG::Graph& 
 		for (uint32_t index = cfg_block.inst_begin; index < cfg_block.inst_end; index++) {
 			const auto& instruction = decoded.instructions[index];
 			if (IsCodeTableLoad(cfg, instruction.pc)) {
-				continue;
-			}
-			if (IsScalarMemoryLoad(instruction.opcode) &&
-			    IsEmbeddedFetchPrologLoad(options.embedded_fetch, instruction.pc)) {
 				continue;
 			}
 			const auto* embedded = FindEmbeddedFetchLoad(options.embedded_fetch, instruction.pc);

@@ -171,25 +171,25 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // pairs, daprefetch=1|0, cpu/draw +3.064 % +/- 0.244 %, t = +25.14, whole-arm cpu/fr
     // 31 950 -> 32 926 us, draws 0.001 % apart).
     //
-    // SHIPPED ON 1 IN SESSION 76, measured by TWO independent ABBAs on the session-75 binary:
-    //   pfh76a  period 30, 117 pairs: cpu/draw -1.305 % +/- 0.246 % (2*SE), t = -10.62,
-    //           whole-arm cpu/fr 32 558 -> 32 145 us = -413 us, draws 0.046 % apart,
-    //           whole-arm/paired gap 0.009 pp, da_take_us -162 us.
-    //   pfh76b  period 10, 348 pairs: cpu/draw -1.814 % +/- 0.340 % (2*SE), t = -10.67,
-    //           whole-arm cpu/fr 32 675 -> 32 193 us = -482 us, draws 0.381 % apart,
-    //           whole-arm/paired gap 0.036 pp, da_take_us -236 us. guards 9 PASS 0 FAIL.
-    // QUOTE THE WALL, NOT cpu/draw: the two runs differ by 0.509 pp on cpu/draw against a
-    // combined 2*SE of 0.420 pp, and the whole of that gap is the draws normalisation (their
-    // arms differ in work by 0.046 % and 0.381 %). On per-frame CPU, which does not divide by
-    // draws, they agree comfortably: -1.254 % +/- 0.292 % against -1.360 % +/- 0.548 %.
-    // THE SHIPPED FIGURE IS 0.41-0.48 ms of CPU wall per frame.
-    // Arming is proved by a counter in each run, never by the launcher: arm1 pf_l1 against
-    // da_hit reads 99.996 % (pfh76a) and 99.988 % (pfh76b), arm0 reads 0.34 and 1.08.
-    // A prefetch changes no value and no decision, so the arms are behaviourally identical by
-    // construction and no self-check is needed; guards check 2 read 11/11 on both runs.
-    // Neither run met the >= 90 % area-match gate (62/112 and 188/333) - but in BOTH runs the
-    // matched and dropped subsets agree inside their error, which is the test that the effect
-    // is not an area artefact, and it is exactly what separated these runs from s75's pfh75a.
+    // SHIPPED ON 1 IN SESSION 76, on ONE area-clean ABBA. pfh76a and pfh76b, which this comment
+    // used to quote at -413 us and -482 us, are VOID: their whole-arm rt_kpx/rt_att split reads
+    // +2.191 % and +3.621 %, further from arm equality than the run session 75 voided at +1.74 %,
+    // and they matched only 62/112 and 188/333 pairs against the >= 90 % pre-registered. Session
+    // 76 substituted that criterion after it failed and an adversary falsified the substitute;
+    // the original rule is reinstated and NOTHING is quoted from those two runs.
+    //   pfh76c  period 30, 121 pairs, on the installed binary with pfcap=1024 in BOTH arms - the
+    //           first pfhint ABBA in the programme to pass every criterion stated in advance:
+    //           area split +0.446 %, match 109/121 = 90.1 %, work +0.044 %, gap 0.026 pp;
+    //           cpu/draw -0.777 % +/- 0.482 %, t = -3.23; matched -0.882 % +/- 0.360 %, t = -4.91;
+    //           whole-arm cpu/fr 32 208 -> 31 963 us = -245 us; da_take_us -133 us = 54 % of it.
+    // THE SHIPPED FIGURE IS 0.25 ms of CPU wall per frame, ON A SINGLE CLEAN RUN, and it is an
+    // INCREMENT measured at pfcap=1024: do NOT add it to the pfcap figure, the two overlap.
+    // Arming is proved by a counter in the run, never by the launcher: arm1 pf_l1 8629.075
+    // against da_hit 8629.471 = 99.995 %, arm0 2.838; guards check 2 read 11/11.
+    // A prefetch changes no value and no decision: the arms are identical by construction.
+    // The bracketing timer da_take_us moves with this gate: -130.7 us +/- 21.2, t = -12.35 over
+    // the 109 area-matched pairs, because the guest lines it touches are consumed by
+    // SameRecordedWords inside VerifyWitness, inside that timer. For pfcap it nets to zero.
     // Set the gate to 0 to get the old PREFETCHT2 form back, bit for bit.
     {"KYTY_PREFETCH_HINT_L1", "pfhint", true},
 }};
@@ -219,27 +219,27 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 72, measurement ceiling (default 0 = today's behaviour; 1 and 2 are UNSOUND).
     {"KYTY_DA_WITNESS_LOOP", "dawitloop", 0, 2},
     // Session 76, W3. Measured population, base75a, 6467 frames: da_pf_b 12 535 382 B/frame
-    // offered against da_pf_cap_b 7 382 040 B let through, so the shipped 192 truncates
+    // offered against da_pf_cap_b 7 382 040 B let through, so the old 192 truncated
     // 5 153 342 B = 80 521 cache lines a frame = 41.1 % of the offer (1452 B offered, 855 B
-    // prefetched, 597 B truncated per take). The PRIZE is NOT MEASURED; an ABBA on this knob
-    // measures it. Default 192 = today, byte for byte.
-    // SHIPPED ON 1024 IN SESSION 76 (W3), measured by TWO ABBAs, both with pfhint=1 in both
-    // arms, on the session-76 binary:
+    // prefetched, 597 B truncated per take). 192 is kept as a compile-time path for the A/B.
+    // SHIPPED ON 1024 IN SESSION 76 (W3), measured by TWO area-clean ABBAs, both with pfhint=1
+    // in both arms, on the session-76 binary 240edc02:
     //   cap76a  period 30, 131 pairs: cpu/draw -0.916 % +/- 0.163 % (2*SE), t = -11.27,
     //           whole-arm cpu/fr 31 303 -> 30 997 us = -306 us, draws 0.059 % apart,
     //           whole-arm/paired gap 0.004 pp, area 126/126 matched at |d| <= 0.087 %.
     //   cap76b  period 15, 243 pairs: cpu/draw -1.083 % +/- 0.155 % (2*SE), t = -13.98,
     //           whole-arm cpu/fr 31 322 -> 31 030 us = -292 us, draws 0.166 % apart,
     //           whole-arm/paired gap 0.012 pp, area 231/233 matched (99.1 %).
-    // They agree: 0.167 pp apart against a combined 2*SE of 0.225 pp. SHIPPED FIGURE
-    // 0.29-0.31 ms of CPU wall a frame, and it is a LOWER BOUND, because the winning arm reached
-    // the prefetch through the runtime, non-unrolled overload while the control used the
-    // compile-time form - a bias declared before the run and running against the winner.
+    // They agree 0.167 pp apart against a combined 2*SE of 0.225 pp. SESSION 77, BY OPCODE SCAN:
+    // clang RUNTIME-UNROLLS the runtime overload by eight and leaves the compile-time <1024>
+    // ROLLED, so session 76's "lower bound" reasoning is wrong. But the runtime form also pays
+    // ~13 extra fixed instructions per vector, repaid only above 8 lines, and the mean vector is
+    // ~2 lines: the SIGN of the shape term is UNDETERMINED, its size is under ~70 us, and the
+    // stand resolves 53 us. NEITHER bound is established. Re-take with both arms compile-time.
     // Arming is proved by a counter in each run: da_pf_cap_b / da_pf_b goes 58.8 % -> 94.4 % of
     // the bytes the eleven vectors offer, i.e. ~69 500 extra cache lines prefetched per frame.
-    // NOT MEASURED: whether the last 5.6 % (an unbounded cap) is worth anything, and whether a
-    // smaller cap such as 384 buys most of this more cheaply. Each is one ABBA.
-    // 192 is the value that shipped before this session and is still a compile-time path.
+    // 1024 is the operating point: 1024|4096 read +0.200 % +/- 0.166 %, inside its own predicted
+    // band; arm1 used the runtime form, so no cause is attributable. 384/512 is OPEN.
     {"KYTY_PREFETCH_CAP_B", "pfcap", 1024, 4096},
 }};
 

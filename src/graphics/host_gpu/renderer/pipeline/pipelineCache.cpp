@@ -1269,12 +1269,12 @@ void CanonicalValue(CanonicalPlanWriter& w, const ShaderRecompiler::IR::Value& v
 // Gate "daprefetch": the first lines of a vector's heap block. Returns the bytes the vector
 // OFFERED, which the caller sums against the bytes the cap let through - that difference is W3's
 // population and nothing else in the tree measures it. Gate "pfhint" picks the cache level; knob
-// "pfcap" picks the cap (default 192 = what shipped before session 76). `cap` is passed in, NOT
-// read here, because this runs once per vector and the knob must be read once per TAKE.
-// The SHIPPED form: CAP is a compile-time constant, so the loop keeps the bound clang needs to
-// unroll it to three instructions. At CAP == 192 this is byte for byte the code that shipped
-// before session 76 - verified by an opcode scan of the binary, which is how the first attempt at
-// this knob was caught changing it (a runtime bound cost +66 prefetch instructions).
+// "pfcap" picks the cap (shipped 1024; 192 is the pre-session-76 value, kept for the A/B).
+// The cap is passed in, NOT read here: this runs once per vector, the knob once per TAKE.
+// WHAT CLANG ACTUALLY EMITS, measured on 79680f59 with llvm-objdump, per vector per cache level:
+// CAP == 192 peels to three guarded prefetches; CAP == 1024 stays a ROLLED loop of one prefetch
+// and three loop instructions per line; the runtime overload below is runtime-unrolled by eight.
+// 33 + 11 + 99 = 143 prefetches of each form in AheadTake. Scan opcodes, do not assume a shape.
 template <size_t CAP, typename T>
 size_t PrefetchVectorData(const std::vector<T>& values, bool l1) {
 	if (values.empty()) {
@@ -1289,9 +1289,9 @@ size_t PrefetchVectorData(const std::vector<T>& values, bool l1) {
 	return total;
 }
 
-// The MEASUREMENT form, reached only when knob "pfcap" is off its default. Its bound is a runtime
-// value, so this loop is NOT unrolled and the arm that uses it pays for that on top of the extra
-// lines it fetches. That bias runs AGAINST W3 and is stated so in the session record.
+// The MEASUREMENT form, reached only for a cap value with no compile-time branch above. Its bound
+// is a runtime value and clang RUNTIME-UNROLLS it by eight, so an arm that reaches the prefetch
+// this way runs a CHEAPER loop than the shipped rolled <1024> - a bias that FAVOURS such an arm.
 template <typename T>
 size_t PrefetchVectorData(const std::vector<T>& values, bool l1, size_t cap) {
 	if (values.empty()) {
@@ -2709,9 +2709,9 @@ struct PipelineCache::ProgramCache {
 				// their first touches in PrepareBindings, FindBuffers, ResolveTexture,
 				// StreamBuffer::Copy and ~ResourceSnapshot were ~5 % of the thread).
 				// Gate "pfhint" and knob "pfcap": read ONCE for the whole block, never per
-				// line and never per vector. Session 76 shipped pfhint on 1 (0.41-0.48 ms of CPU
-				// wall a frame, pfh76a and pfh76b); pfcap still defaults to the 192 that shipped
-				// before it, so this block is byte for byte what it was until the knob is moved.
+				// line and never per vector. Session 76 shipped pfhint on 1 (0.25 ms, pfh76c;
+				// pfh76a and pfh76b are area-VOID and are not quoted) and pfcap on 1024
+				// (0.29-0.31 ms, an UPPER bound - see the knob's comment in gates.cpp).
 				const bool   pf_l1      = Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1);
 				const size_t pf_cap     = Common::Gates::Value(Common::Gates::Knob::PrefetchCapBytes);
 				size_t       pf_offered = 0;
@@ -2722,11 +2722,11 @@ struct PipelineCache::ProgramCache {
 					pf_offered += total;
 					pf_capped += std::min<size_t>(total, cap);
 				};
-				// ONE branch per take. Both SHIPPED cap values are compile-time constants, so the
-				// prefetch loop keeps the bound clang needs to unroll it; only a knob value that
-				// was never shipped falls through to the runtime form, and that form exists for
-				// measurement alone. Session 76 shipped 1024 (W3); 192 is what shipped before it
-				// and is kept so the A/B that decided this can be re-run at any time.
+				// ONE branch per take. Both SHIPPED cap values are compile-time constants; only a
+				// knob value that was never shipped falls through to the runtime form, and that
+				// form exists for measurement alone - but note it is the RUNTIME form that clang
+				// unrolls, so a runtime arm is not a fair control. Session 76 shipped 1024 (W3);
+				// 192 is what shipped before it, kept so the A/B can be re-run at any time.
 				if (pf_cap == 1024) {
 					pf(PrefetchVectorData<1024>(slot.witness.live_runs, pf_l1), 1024u);
 					pf(PrefetchVectorData<1024>(slot.witness.live_values, pf_l1), 1024u);

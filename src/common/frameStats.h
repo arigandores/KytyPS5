@@ -933,14 +933,14 @@ enum class Counter : uint32_t {
 	// AheadTake prefetch blocks that issued the L1 form. It must equal da_hit in the armed arm and
 	// read exactly 0.000 in the other, the same shape as c1_fuse against c1_fz_ok.
 	PrefetchHintL1Takes, // pf_l1: takes whose prefetch block issued __builtin_prefetch(..., 3)
-	// Session 75, W3 - the 192-byte cap of PrefetchVectorData. da_pf_b is what the eleven vectors
-	// of one take OFFER; da_pf_cap_b is what the cap lets through (the sum of min(bytes, 192)).
-	// Their DIFFERENCE is the truncated remainder, which is exactly W3's population and which no
-	// existing log can produce - session 75's recon reader called that population empty from the
-	// per-frame mean and its adversary refuted it from the same log (>= 561 truncated cache lines
-	// per frame from live_values alone), and neither had the per-TAKE distribution that decides it.
+	// Session 75, W3 - the per-vector byte cap of PrefetchVectorData, knob "pfcap". da_pf_b is what
+	// the eleven vectors of one take OFFER; da_pf_cap_b is what the cap lets through, the sum of
+	// min(bytes, pfcap) with whatever value the knob currently holds - NOT a fixed 192. Their
+	// DIFFERENCE is the truncated remainder. At the shipped pfcap=1024 the ratio reads 94.4 %
+	// (acc76a); at the 192 that shipped before session 76 it read 58.8 %. The pair is also the
+	// ARMING PROOF of any ABBA on the knob: the ratio must move between the arms or it did not arm.
 	DrawAheadPrefetchBytes,    // da_pf_b: bytes offered to PrefetchVectorData, summed over a take
-	DrawAheadPrefetchCapBytes, // da_pf_cap_b: ... of those, the bytes the 192-byte cap prefetched
+	DrawAheadPrefetchCapBytes, // da_pf_cap_b: ... of those, the bytes the "pfcap" cap prefetched
 	// ------------------------------------------------------------------------------------------
 	// Session 75, M4 second question. A SUBMISSION SLICE is one call of CommandProcessor::Process
 	// that reaches ProcessPm4 with a non-empty buffer stack. Session 74 showed a baton range

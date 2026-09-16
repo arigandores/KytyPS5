@@ -157,6 +157,13 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // routes the clean misses through LiveBackingPage's own table. Set it to 0 to get the two
     // extra locks back.
     {"KYTY_DA_CLEAN_PAGE", "dawitcp", true},
+    // Session 74, W8: the M1 witness's clean-page table survives the AheadTake call, keyed on
+    // (BackingMapEpoch, GpuDirtyGen) and tag-invalidated. SHIPPED: -0.31...-0.32 ms of CPU wall
+    // per frame (cg74b, 116 ABBA pairs, cpu/draw -0.956 % +- 0.162 %, t = -11.84, guards 10 PASS,
+    // 0 FAIL); da_cl_miss 15 140.6 -> 1 406.3 per frame. The self-check below stays off by default
+    // and read da_cl_bad = 0 over ~98 million checks on cgv74a.
+    {"KYTY_DA_CLEAN_GEN", "dawitcg", true},
+    {"KYTY_DA_CLEAN_GEN_VERIFY", "dawitcgcheck", false},
 }};
 
 struct KnobDefinition {

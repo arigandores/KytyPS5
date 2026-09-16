@@ -451,6 +451,11 @@ void CommandProcessor::IncrementCe() {
 }
 
 void CommandProcessor::WriteConstRam(uint32_t offset, const uint32_t* src, uint32_t dw_num) {
+	// Session 74, M4: m_const_ram is 49 152 of the 55 955 bytes a register-context fork would copy
+	// (87.8 %). If this reads 0 per frame in the steady state the fork is 6 803 bytes and the copy
+	// question evaporates. One Add, no decision changed. The full spelling is deliberate: every
+	// "namespace FS" in this file is block-scoped and none of them reaches this function.
+	Common::FrameStats::Add(Common::FrameStats::Counter::ConstRamWrites, 1);
 	memcpy(m_const_ram + offset / 4, src, static_cast<size_t>(dw_num) * 4);
 }
 
@@ -1655,11 +1660,25 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 void CommandProcessor::ProcessPm4Baton(Pm4Execution& execution, size_t stop_depth,
                                        uint32_t length) {
 	namespace FS = Common::FrameStats;
+	// Session 74, M4: is a hand-off also a state boundary? A range boundary is chosen by a DRAW
+	// BUDGET (ProcessPm4Range below) with no regard to the render pass, so a fork that recorded the
+	// two sides into separate command buffers would have to close and reopen every pass that is
+	// open here - 1.537 us of GPU each, session 71. The FIRST iteration of this loop is the start
+	// of a submission slice, not a hand-off between two ranges, so it is not counted: rng_total is
+	// exactly the number of hand-offs a forked transport would have to pay at.
+	bool boundary = false;
 	while (execution.m_buffer_stack.size() > stop_depth) {
 		// The pump the ranges no longer do, once per range, on the thread that owes it.
 		if (g_gpu_state != nullptr) {
 			g_gpu_state->ProcessCommands();
 		}
+		if (boundary && FS::Enabled()) {
+			FS::Add(FS::Counter::BatonRangesTotal, 1);
+			if (CurrentBuffer().IsRendering()) {
+				FS::Add(FS::Counter::BatonRangesInPass, 1);
+			}
+		}
+		boundary            = true;
 		const bool to_relay = (m_baton_turn++ & 1u) != 0;
 		if (to_relay && BatonRelayRun(*this, execution, stop_depth, length,
 		                              CurrentBuffer().Recorder())) {

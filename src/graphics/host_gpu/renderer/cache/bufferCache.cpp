@@ -1,3 +1,4 @@
+#include "graphics/host_gpu/gpuDirtyGen.h"
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 #include <chrono>
 #include <cstdlib>
@@ -1067,7 +1068,17 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer);
 	if (is_written) {
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
-		m_gpu_modified_ranges.Add(vaddr, size);
+		// Session 74, W8: Add now reports whether the covered set actually GREW, which is the only
+		// case a cache of GPU-CLEAN verdicts has to hear about, and the report is exactly
+		// !Contains(vaddr, size). 24.5 of the 1041.6 Adds a frame grow it; the other 97.6 % land
+		// inside a range that is already covered. NoteGpuWrite's ++m_gpu_write_seq below moves on
+		// EVERY Add and is therefore the coarse form of the same witness - dg_buf_all is its rate,
+		// and 1041.6 against 8 700 tables is why the coarse form cannot carry a persistent table.
+		if (m_gpu_modified_ranges.Add(vaddr, size)) {
+			GpuDirtyGen::Bump();
+			Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenBuffer, 1);
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenBufferAll, 1);
 		NoteGpuWrite(vaddr, size);
 	}
 	remember(id);

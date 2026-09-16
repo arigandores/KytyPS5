@@ -1,3 +1,4 @@
+#include "graphics/host_gpu/gpuDirtyGen.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 
 #include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
@@ -211,6 +212,11 @@ struct ShaderReadCache {
 	struct Page {
 		uint64_t address = UINT64_MAX;
 		const uint8_t* backing = nullptr;
+		// Session 74, W8: the tag an entry was stamped with. A table whose witness moved bumps its
+		// own key instead of clearing 4096 entries, so a drop is O(1). Tables that never move
+		// their key - the per-call ones and the persistent LIVE one - compare 0 against 0 on every
+		// lookup and behave exactly as before.
+		uint64_t key = 0;
 	};
 
 	// A view over a direct-mapped table of validated pages. The per-call tables are small (they
@@ -220,22 +226,33 @@ struct ShaderReadCache {
 		Page   last;
 		Page*  entries = nullptr;
 		size_t mask    = 0;
+		// Session 74, W8: the current tag, and the GPU-dirty generation it was validated under.
+		// Both stay 0 for every table that is dropped by clearing rather than by tagging, which
+		// keeps those tables bit-identical to session 73.
+		uint64_t key     = 0;
+		uint64_t key_gen = 0;
 
 		void Bind(Page* storage, size_t count) {
 			entries = storage;
 			mask    = count - 1;
 		}
 		bool Find(uint64_t page) {
-			if (last.address == page) return true;
+			if (last.address == page && last.key == key) return true;
 			if (entries == nullptr || !Enabled()) return false;
 			const auto& entry = entries[Slot(page) & mask];
-			if (entry.address != page) return false;
+			if (entry.address != page || entry.key != key) return false;
 			last = entry;
 			return true;
 		}
 		void Store(uint64_t page, const void* backing) {
-			last = {page, static_cast<const uint8_t*>(backing)};
+			last = {page, static_cast<const uint8_t*>(backing), key};
 			if (entries != nullptr && Enabled()) entries[Slot(page) & mask] = last;
+		}
+		// Session 74, W8: forget one page. Used by the self-check so a caught stale entry is not
+		// re-served and re-counted on every following lookup until the witness moves.
+		void Evict(uint64_t page) {
+			if (entries != nullptr) entries[Slot(page) & mask] = Page {};
+			last = Page {};
 		}
 		static size_t Slot(uint64_t page) { return (page >> 12u) ^ (page >> 19u); }
 		static bool Enabled() {
@@ -259,6 +276,34 @@ struct ShaderReadCache {
 		Pages                              pages;
 		std::array<Page, PERSISTENT_SLOTS> storage {};
 	};
+
+	// Session 74, W8: the same table for GPU-CLEAN verdicts, with a two-part key. A cached
+	// "this page is GPU-clean and translates to q" stops being true when the guest map moves (the
+	// witness the live table already uses) OR when something GPU-clean becomes GPU-dirty, which is
+	// what GpuDirtyGen witnesses. Only POSITIVE verdicts are ever stored, here as before, so the
+	// table can never serve a stale "dirty".
+	//
+	// Invalidation is by TAG, not by clearing: the generation moves 44.8 times a frame, which is
+	// 45 x 96 KiB of memset a frame on the GuestGpu thread inside the render mutex if the table is
+	// wiped. PersistentLive can afford to wipe because the backing map moves a handful of times in
+	// a whole run; this one cannot.
+	static Pages* PersistentClean() {
+		thread_local Persistent cache;
+		if (cache.pages.entries == nullptr) {
+			cache.pages.Bind(cache.storage.data(), PERSISTENT_SLOTS);
+			cache.pages.key = 1; // 0 is what a default-constructed entry carries
+		}
+		const auto epoch = Libs::LibKernel::Memory::BackingMapEpoch();
+		const auto gen   = GpuDirtyGen::Read();
+		if (cache.epoch != epoch || cache.pages.key_gen != gen) {
+			cache.epoch           = epoch;
+			cache.pages.key_gen   = gen;
+			cache.pages.key++;
+			cache.pages.last = Page {};
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanDrop, 1);
+		}
+		return &cache.pages;
+	}
 
 	static Pages* PersistentLive() {
 		thread_local Persistent cache;
@@ -291,17 +336,25 @@ struct ShaderReadCache {
 
 	ShaderReadCache() {
 		own_live.Bind(own_live_storage.data(), CALL_SLOTS);
-		clean.Bind(clean_storage.data(), CALL_SLOTS);
+		own_clean.Bind(clean_storage.data(), CALL_SLOTS);
 		live = Common::Gates::Enabled(Common::Gates::Gate::SrtPagePersist) ? PersistentLive()
 		                                                                  : &own_live;
+		// `clean` is deliberately left null and bound on the first CleanBackingPage call. The M1
+		// draw-ahead workers construct a ShaderReadCache too (AheadRun) but install
+		// ReadShaderAheadClean, which only ever calls LiveBackingPage - IsGpuCleanRange returns
+		// false off GuestGpu, so a worker can never store a clean verdict. Binding here would give
+		// each of the four workers a table it never queries and would inflate da_cl_drop fivefold.
 	}
 
-	// GPU-clean validations stay per lookup: they depend on the GPU dirty state, not on the map.
+	// Session 73's note said GPU-clean validations must stay per lookup because they depend on
+	// the GPU dirty state rather than on the map. Session 74 gave that dependency a witness
+	// (GpuDirtyGen), so behind gate "dawitcg" they no longer have to.
 	std::array<Page, CALL_SLOTS> own_live_storage {};
 	std::array<Page, CALL_SLOTS> clean_storage {};
 	Pages                        own_live;
-	Pages                        clean;
-	Pages*                       live = nullptr;
+	Pages                        own_clean;
+	Pages*                       clean = nullptr; // bound lazily, see the constructor
+	Pages*                       live  = nullptr;
 	struct SrtReadLog*           log  = nullptr; // set while a materialization is being recorded
 	uint32_t                     live_reads  = 0;
 	uint32_t                     clean_reads = 0;
@@ -378,8 +431,78 @@ const uint8_t* CleanBackingPage(ShaderReadCache* cache, uint64_t page) {
 	const bool stats = Common::FrameStats::Enabled();
 	if (stats) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanLookup, 1);
+		// Session 74, W8 step one: WOULD a persistent clean-page table have held this page?
+		// Same 4096 slots and the same slot function ShaderReadCache::Pages uses, stamped with a
+		// monotonic key that moves whenever either witness moves. Never filled - a stamp mismatch
+		// is what makes an entry stale, so a "drop" costs one increment. Nothing is read back:
+		// the only output is da_cl_pmiss, which IS the predicted post-patch da_cl_miss.
+		// It does NOT model Pages::last, the one-entry cache Find consults first, so it can only
+		// over-count misses. Conservative in the direction that protects the decision.
+		struct ProbeEntry {
+			uint64_t page = 0;
+			uint64_t key  = 0;
+		};
+		static constexpr size_t              PROBE_SLOTS = ShaderReadCache::PERSISTENT_SLOTS;
+		thread_local std::array<ProbeEntry, PROBE_SLOTS> probe {};
+		thread_local uint64_t                probe_key   = 0;
+		thread_local uint64_t                probe_epoch = 0;
+		thread_local uint64_t                probe_gen   = 0;
+		const auto map_epoch = Libs::LibKernel::Memory::BackingMapEpoch();
+		const auto dirty_gen = GpuDirtyGen::Read();
+		if (probe_epoch != map_epoch || probe_gen != dirty_gen) {
+			probe_epoch = map_epoch;
+			probe_gen   = dirty_gen;
+			probe_key++;
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanProbeDrop, 1);
+		}
+		auto& entry = probe[((page >> 12u) ^ (page >> 19u)) & (PROBE_SLOTS - 1)];
+		if (entry.page != page || entry.key != probe_key) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanProbeMiss, 1);
+			entry = {page, probe_key};
+		}
 	}
-	if (!cache->clean.Find(page)) {
+	// Session 74, W8. Bound here and not in the constructor so that the M1 workers, which never
+	// reach this function, never build the table. The bind validates BOTH witnesses; afterwards
+	// only the GPU-dirty generation can move inside one call, and re-reading it is an inline
+	// relaxed load. The map epoch keeps the cadence the shipped live table already uses - once per
+	// ShaderReadCache.
+	if (cache->clean == nullptr) {
+		cache->clean = Common::Gates::Enabled(Common::Gates::Gate::DrawAheadCleanGen)
+		                   ? ShaderReadCache::PersistentClean()
+		                   : &cache->own_clean;
+	} else if (cache->clean != &cache->own_clean) {
+		const auto gen = GpuDirtyGen::Read();
+		if (cache->clean->key_gen != gen) {
+			cache->clean->key_gen = gen;
+			cache->clean->key++;
+			cache->clean->last = ShaderReadCache::Page {};
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanDrop, 1);
+		}
+	}
+	if (cache->clean->Find(page)) {
+		// Self-check "dawitcgcheck": the table served this verdict; evaluate the real predicate as
+		// well and say so if they disagree. Capped at 40 lines exactly as progmemocheck is - a
+		// systematic staleness is ~31 900 hits a frame, and an uncapped print would flush the log
+		// and the console a million times a second on GuestGpu inside the render mutex. da_cl_bad
+		// survives the cap and is the authority.
+		if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadCleanGenVerify)) {
+			const void* truth = nullptr;
+			const bool  ok =
+			    Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, ShaderPageSize, &truth);
+			const auto* served =
+			    cache->clean->last.address == page ? cache->clean->last.backing : nullptr;
+			if (!ok || truth != served) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanBad, 1);
+				cache->clean->Evict(page);
+				static std::atomic<uint32_t> logged {0};
+				if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+					PipelineCacheLog(
+					    "DaCleanGenVerify: MISMATCH page=0x{:x} served={} truth={} ok={}", page,
+					    fmt::ptr(served), fmt::ptr(truth), ok);
+				}
+			}
+		}
+	} else {
 		if (stats) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanMiss, 1);
 		}
@@ -402,12 +525,12 @@ const uint8_t* CleanBackingPage(ShaderReadCache* cache, uint64_t page) {
 		}
 		if (backing != nullptr ||
 		    Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, ShaderPageSize, &backing)) {
-			cache->clean.Store(page, backing);
+			cache->clean->Store(page, backing);
 		} else if (stats) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanFail, 1);
 		}
 	}
-	return cache->clean.last.address == page ? cache->clean.last.backing : nullptr;
+	return cache->clean->last.address == page ? cache->clean->last.backing : nullptr;
 }
 
 // Guest memory for specialization decisions: only words with no pending GPU writes may be read

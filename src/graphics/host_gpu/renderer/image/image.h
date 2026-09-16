@@ -3,6 +3,8 @@
 
 #include "common/alignment.h"
 #include "common/assert.h"
+#include "common/frameStats.h"
+#include "graphics/host_gpu/gpuDirtyGen.h"
 #include "common/slotVector.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
@@ -138,8 +140,29 @@ public:
 	}
 
 	[[nodiscard]] bool IsGpuModified() const noexcept { return m_gpu_modified; }
-	void               MarkGpuModified() noexcept { m_gpu_modified = true; }
-	void               ClearGpuModified() noexcept { m_gpu_modified = false; }
+	// Session 74, measurement only: count the TRANSITIONS, not the calls. The seven MarkGpuModified
+	// sites fire 18 000-27 000 times a frame (rt_fast_ok is renderDraw.cpp:812 alone), but an image
+	// only returns to false at FreeImage and InvalidateMemoryFromGPU, so the transition count is
+	// bounded by img_free + the invalidation rate. That difference is the whole question for a
+	// monotonic GPU-dirty generation, and counting it here means no call site can be missed.
+	// The branch is predicted not-taken on a line the store already dirties.
+	void MarkGpuModified() noexcept {
+		if (!m_gpu_modified) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenImage, 1);
+			m_gpu_modified = true;
+			// Session 74, W8: the clean -> dirty transition, the only direction a cache of
+			// GPU-CLEAN verdicts has to hear about. 20.3 of these a frame against 8 700 tables.
+			// AFTER the store, never before: a generation published while the image still reads
+			// clean would let a reader stamp a stale CLEAN verdict with the new generation.
+			GpuDirtyGen::Bump();
+		}
+	}
+	void ClearGpuModified() noexcept {
+		if (m_gpu_modified) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenImageClr, 1);
+			m_gpu_modified = false;
+		}
+	}
 
 	[[nodiscard]] bool IsBufferModified() const noexcept { return m_buffer_modified; }
 	void               MarkBufferModified() noexcept {

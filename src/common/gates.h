@@ -154,6 +154,11 @@ enum class Gate : uint32_t {
 	// tree's own lock-free MayHaveImages would answer, and the address translation is the one the
 	// persistent live page table already holds. Same answers, fewer locks.
 	DrawAheadCleanPage, // KYTY_DA_CLEAN_PAGE,      file name "dawitcp"
+	// Session 74, W8: the clean-page table of the M1 witness survives the AheadTake call, keyed on
+	// (BackingMapEpoch, GpuDirtyGen) and tag-invalidated. Predicted before it was written by the
+	// probe of patch_cleanprobe.py: da_cl_pmiss 1402.9 against today's da_cl_miss 15 098.4.
+	DrawAheadCleanGen,       // KYTY_DA_CLEAN_GEN,        file name "dawitcg"
+	DrawAheadCleanGenVerify, // KYTY_DA_CLEAN_GEN_VERIFY, file name "dawitcgcheck"
 	Count,
 };
 

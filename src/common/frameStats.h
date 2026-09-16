@@ -877,6 +877,42 @@ enum class Counter : uint32_t {
 	TexGpuModifiedCalls,  // tgm_call: TextureCache::IsRegionGpuModified calls
 	TexGpuModifiedHint,   // tgm_hint: of those, answered by the lock-free page hint alone
 	// ------------------------------------------------------------------------------------------
+	// Session 74, M4 / G-split. The transport fork's two open numbers, neither of which any
+	// existing log answers. rng_inpass / rng_total is the share of baton range HAND-OFFS (the
+	// first iteration of each ProcessPm4Baton call is a slice start, not a hand-off, and is not
+	// counted) that would force a render-pass close and reopen if the two sides recorded into
+	// separate command buffers - session 71 measured open+close at 1.537 us of GPU. cram_write
+	// decides 87.8 % of the 55 955-byte register fork, because m_const_ram is 49 152 of it and may
+	// well be dead in this title; it is NOT gated on m4baton and is live in any traced run.
+	BatonRangesTotal,  // rng_total: baton range hand-offs (iterations after the first)
+	BatonRangesInPass, // rng_inpass: of those, taken with a render pass open
+	ConstRamWrites,    // cram_write: CommandProcessor::WriteConstRam calls
+	// ------------------------------------------------------------------------------------------
+	// Session 74: how often would a MONOTONIC GPU-dirty generation have to move? It is the witness
+	// a clean-page table would need to survive the AheadTake call, the way PersistentLive survives
+	// the frame under BackingMapEpoch. IsGpuCleanRange (kernel/memory.cpp:1031-1040) reads exactly
+	// two things - BufferCache::HasGpuDirtyBytes and TextureCache::IsRegionGpuModified - so these
+	// four counters close the whole surface. A generation bumped at every site is already refuted:
+	// rt_fast_ok alone is 2.0-2.5x the clean-table count. Only the TRANSITION-guarded form can
+	// work, and dg_img + dg_buf is exactly its bump rate. Compare against da_hit + da_miss.
+	GpuDirtyGenImage,     // dg_img: image clean->dirty transitions (inside Image::MarkGpuModified)
+	GpuDirtyGenImageClr,  // dg_img_cl: image dirty->clean transitions
+	GpuDirtyGenBuffer,    // dg_buf: GPU-modified-range Adds that actually grew the covered set
+	GpuDirtyGenBufferAll, // dg_buf_all: all GPU-modified-range Adds, the denominator
+	// Session 74, W8 step one. A probe, not a table: it answers "would a persistent clean-page
+	// table keyed on (BackingMapEpoch, GpuDirtyGen) have held this page?" without building one.
+	// da_cl_pmiss IS the predicted post-patch da_cl_miss, against today's 15 086. It does not
+	// model Pages::last, so it can only OVER-count misses - conservative for the decision.
+	DrawAheadCleanProbeMiss, // da_cl_pmiss: the probe would have missed
+	DrawAheadCleanProbeDrop, // da_cl_pdrop: the probe's stamp moved (generation or map epoch)
+	// Session 74, W8, the table itself (gate "dawitcg").
+	DrawAheadCleanDrop, // da_cl_drop: the persistent clean table was tag-invalidated. Reachable
+	                    // only through the gated bind, so it reads exactly 0 with the gate off and
+	                    // is the arming proof. It cannot say WHICH witness moved: the bind checks
+	                    // both and the per-lookup re-check sees only the generation.
+	DrawAheadCleanBad,  // da_cl_bad: dawitcgcheck disagreements - MUST read 0. guards.py check 2
+	                    // judges it (patch_guards_cleangen.py adds the row).
+	// ------------------------------------------------------------------------------------------
 	// Session 73, C1 (gate "imgfuse"). Session 72's c1_si_dt says how many uploads COULD have had
 	// their detile fused by format and usage alone; these say how many actually qualify once the
 	// destination subresource, the channel swap and the image shape are taken into account, and

@@ -73,8 +73,12 @@ public:
 	             bool packet_ok = true);
 	// buffer_from_tiler: the source buffer was written by the tiler (compute / fill) or the CPU,
 	// never by a draw: the barrier before the copy names those stages only.
+	// fuse_candidate (session 72, measurement only): the caller classified this upload as one a
+	// fused detile could have written straight into the image. It changes nothing but the
+	// GpuTime key, so that a KYTY_GPU_TIME run splits the copy phase by time instead of the
+	// caller having to apportion 836.5 us by bytes.
 	void Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
-	            uint64_t size, bool buffer_from_tiler = false);
+	            uint64_t size, bool buffer_from_tiler = false, bool fuse_candidate = false);
 	void Download(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
 	              uint64_t size);
 	void CopyImage(Image& source);

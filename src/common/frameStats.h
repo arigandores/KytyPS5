@@ -810,6 +810,48 @@ enum class Counter : uint32_t {
 	C3ClearUploadsKb,     // c3_clr_up_kb: KiB of those
 	C3OtherUploads,       // c3_oth_up: population uploads from every other site
 	C3OtherUploadsKb,     // c3_oth_up_kb: KiB of those
+	// ------------------------------------------------------------------------------------------
+	// Session 72: proof that the knob "dawitloop" armed, and the population it removed. Counts the
+	// RUNS of the loop VerifyWitness skipped, so the run checks itself: at dawitloop=1 this equals
+	// da_runs_clean, at 2 it equals da_runs - da_runs_clean - da_singles, at 0 (the default) it is
+	// zero. The knob is a measurement ceiling and is UNSOUND to ship - see pipelineCache.cpp.
+	DrawAheadLoopSkip, // da_loop_skip: witness runs the ceiling knob did not compare
+	// ------------------------------------------------------------------------------------------
+	// Session 72, C1: which image uploads could have had their detile fused straight into the
+	// image, so that session 71's 836.5 us copy-phase CEILING can be cut down to an ACHIEVABLE
+	// one before a shader is written. Every upload lands in exactly one of four cells, by
+	// (the image can take a storage write) x (this upload went through detile). The predicate is
+	// image.backing.usage & eStorage, which is what the driver accepted at create time
+	// (image.cpp:53-77, :747-757), not a format list of ours. Two byte counters per cell because
+	// they are different numbers: _kb is the GUEST source (the unit img_up_kb is in, so the
+	// identity holds) and _cp_kb is the LINEAR size copyBufferToImage actually moves (the unit
+	// the 836.5 us is spent in, and therefore the right weight for the ceiling).
+	C1StorageDetile,       // c1_si_dt: storage-capable image, upload went through detile - THE ACHIEVABLE CELL
+	C1StorageDetileKb,     // c1_si_dt_kb: KiB of GUEST source bytes in that cell
+	C1StorageDetileCopyKb, // c1_si_dt_cp_kb: KiB copyBufferToImage really moves there
+	C1StorageDirect,       // c1_si_nd: storage-capable image, no detile - nothing to fuse into
+	C1StorageDirectKb,     // c1_si_nd_kb: KiB of GUEST source bytes in that cell
+	C1StorageDirectCopyKb, // c1_si_nd_cp_kb: KiB copyBufferToImage really moves there
+	C1NoStorageDetile,     // c1_ns_dt: detiled, but the image cannot take a storage write
+	C1NoStorageDetileKb,   // c1_ns_dt_kb: KiB of GUEST source bytes in that cell
+	C1NoStorageDetileCopyKb, // c1_ns_dt_cp_kb: KiB copyBufferToImage really moves there
+	C1NoStorageDirect,     // c1_ns_nd: neither
+	C1NoStorageDirectKb,   // c1_ns_nd_kb: KiB of GUEST source bytes in that cell
+	C1NoStorageDirectCopyKb, // c1_ns_nd_cp_kb: KiB copyBufferToImage really moves there
+	// ------------------------------------------------------------------------------------------
+	// Session 72: the render passes the session-71 census cannot see, and the area it understates.
+	// Three sites call vkCmdBeginRendering without going through CommandBuffer::BeginRenderingImpl,
+	// so rp_begin never counts them; two of the three call EndRendering first, so they also charge
+	// a closure to the census while contributing no opening. Their frequency was NOT MEASURED.
+	PassAliasClear,    // rpa_alias: ClearImage's aliased-format pass (textureCache.cpp)
+	PassAliasClearKpx, // rpa_alias_kpx: Kpx of its render area x layers
+	PassBlitMsDepth,   // rpa_blit: BlitHelper::ReinterpretColorAsMsDepth (its draw is not in draws)
+	PassOverlay,       // rpa_ovl: the ImGui system-overlay pass, present thread
+	// And the area: state.width/height is the MINIMUM over the pass's attachments, so rpa_kpx
+	// understates a pass that mixes extents. rpa_tkpx uses each attachment's own extent and is
+	// equal to rpa_kpx when they agree, so rpa_tkpx - rpa_kpx IS the understatement in Kpx.
+	PassTrueColorPixelsK, // rpa_tkpx: colour area from each attachment's OWN extent
+	PassMixedExtents,     // rpa_mix: passes whose attachments did not all share an extent
 	Count
 };
 

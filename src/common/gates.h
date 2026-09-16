@@ -130,6 +130,11 @@ enum class Gate : uint32_t {
 	// writes guest memory instead, and the texture cache re-uploads the surface out of it - 8.65 MiB
 	// per frame in Sky Garden, one colour and one depth target. Same pixels, less work.
 	ClearDecodeWide,     // KYTY_CLEAR_DECODE_WIDE,     file name "cleardec"
+	// Session 71, measurement only (default 1 = as before): the session-61 epoch-witness ceiling.
+	// Witness::Build stamps the tracking regions of every recorded read and AheadTake walks them
+	// again on every hit, inside the interval da_take_us times. Session 70 closed the question it
+	// answers, so this exists to size what the answer still costs.
+	DrawAheadEpochCeiling, // KYTY_DA_EPOCH_CEILING,    file name "daepceil"
 	Count,
 };
 
@@ -149,6 +154,11 @@ enum class Knob : uint32_t {
 	ShadowMask,         // KYTY_SHADOW_MASK,       file name "shadowmask" (session 64: 1 = image probes, 2 = buffer probes, 3 = both)
 	M4Baton,            // KYTY_M4_BATON,          file name "m4baton" (session 68: draws of the PM4 range a second thread runs while GuestGpu is parked, 0 = off)
 	ImageSkipKb,        // KYTY_IMG_SKIP_KB,       file name "imgskipkb" (gate "imgskip": smallest guest source of a skipped upload, KiB; 0 = every buffer-only stale image)
+	// Session 72, measurement only and UNSOUND to ship: which loop of VerifyWitness to skip, so
+	// that the 2.016 ms of the M1 witness can be divided between them by an A/B instead of being
+	// modelled from the word census. 0 = today (compare everything), 1 = skip the clean-run loop,
+	// 2 = skip the live-run loop. Proof it armed: the counter da_loop_skip.
+	DrawAheadWitnessLoop, // KYTY_DA_WITNESS_LOOP,  file name "dawitloop" (0 off, 1 skip clean, 2 skip live)
 	Count,
 };
 

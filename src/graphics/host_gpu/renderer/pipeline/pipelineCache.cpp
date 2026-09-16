@@ -533,8 +533,11 @@ struct Witness {
 			values.push_back(read.value);
 		}
 		regions.clear();
+		// Gate "daepceil" (default 1): leaving the vector empty is enough to switch the whole
+		// ceiling off - AheadTake reaches WitnessEpochsHold only through !regions.empty().
 		if (const auto* tracker = MemoryTracker::Primary();
-		    tracker != nullptr && Common::FrameStats::Enabled()) {
+		    tracker != nullptr && Common::FrameStats::Enabled() &&
+		    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadEpochCeiling)) {
 			auto note = [&](uint64_t address) {
 				const auto index = static_cast<uint32_t>(address / TRACKER_REGION_SIZE);
 				for (const auto& region: regions) {
@@ -581,6 +584,17 @@ struct Witness {
 // first run that differed (session 61, item 3 ceiling).
 bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* failed_run = nullptr) {
 	uint32_t ordinal = 0;
+	// Knob "dawitloop" - a MEASUREMENT CEILING, UNSOUND TO SHIP, default 0 = compare everything.
+	// 1 leaves the clean runs uncompared, 2 leaves the live runs uncompared; either way some
+	// recorded guest word is no longer checked and a stale M1 result can be taken. It exists so
+	// that an ABBA against dawitloop=0 can say how the 2.016 ms of this function divides between
+	// its two loops, which the word census of session 71 cannot decide (11.6 % of the words sit
+	// behind 33.6 % of the runs). Set it back to 0 after the measurement.
+	const uint32_t skip_loop = Common::Gates::Value(Common::Gates::Knob::DrawAheadWitnessLoop);
+	if (skip_loop != 0 && Common::FrameStats::Enabled()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadLoopSkip,
+		                        skip_loop == 1 ? witness.clean_runs.size() : witness.live_runs.size());
+	}
 	// Gate "dawitptr": while the guest backing map is the one the worker read under, the host
 	// pointers it read through are still the pages' pointers (the same witness the persistent
 	// page table of ShaderReadCache relies on), so the live runs compare through them - the
@@ -603,6 +617,10 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* fai
 		}
 	}
 	for (const auto& run: witness.live_runs) {
+		if (skip_loop == 2) { // ceiling only
+			ordinal++;
+			continue;
+		}
 		if (direct && run.backing != nullptr) {
 			if (!SameRecordedWords(run.backing, &witness.live_values[run.first], run.count)) {
 				if (failed_run != nullptr) {
@@ -625,6 +643,10 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* fai
 		ordinal++;
 	}
 	for (const auto& run: witness.clean_runs) {
+		if (skip_loop == 1) { // ceiling only
+			ordinal++;
+			continue;
+		}
 		const auto* backing = CleanBackingPage(&cache, run.address & ~(ShaderPageSize - 1));
 		if (backing != nullptr) {
 			if (!SameRecordedWords(backing + (run.address & (ShaderPageSize - 1)),

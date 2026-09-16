@@ -1311,12 +1311,37 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 	const auto  binding = UploadBinding(image);
 	const bool  partial = first_level != 0 || level_count < info.resources.levels;
 	uint64_t    bytes   = info.data.size;
+	// Session 72, C1 (measurement only, no decision changes). Can the detile write this image
+	// directly instead of a scratch buffer that copyBufferToImage then moves? Two independent
+	// conditions, and the four cells below measure their joint distribution. `storage_ok` is the
+	// usage the driver ACCEPTED at create time (image.cpp:53-77 grants eStorage exactly to
+	// non-block, non-depth, samples == 1 images; :747-757 validates it), so it needs no format
+	// list of ours. `detiled` is set in the two branches that call TileManager::Detile.
+	const bool storage_ok =
+	    static_cast<bool>(image.backing.usage & vk::ImageUsageFlagBits::eStorage);
+	bool        detiled = false;
 	const auto  upload  = [&](std::vector<vk::BufferImageCopy>& copies, TileManager::Result linear) {
 		for (auto& copy: copies) {
 			copy.bufferOffset += linear.offset;
 		}
+		const bool fusable = storage_ok && detiled;
 		image.Upload(copies, linear.buffer, linear.offset, linear.size,
-		             linear.buffer != source || source_is_host);
+		             linear.buffer != source || source_is_host, fusable);
+		if (Common::FrameStats::Enabled()) {
+			using C = Common::FrameStats::Counter;
+			const auto cell = fusable         ? C::C1StorageDetile
+			                  : storage_ok    ? C::C1StorageDirect
+			                  : detiled       ? C::C1NoStorageDetile
+			                                  : C::C1NoStorageDirect;
+			const auto step = static_cast<uint32_t>(C::C1StorageDetileKb) -
+			                  static_cast<uint32_t>(C::C1StorageDetile);
+			const auto index = static_cast<uint32_t>(cell);
+			Common::FrameStats::Add(cell, 1);
+			// KiB at the increment site, never bytes - the printed micros flag divides by 1000
+			// and would be wrong for bytes (session 69's img_skip_kb defect).
+			Common::FrameStats::Add(static_cast<C>(index + step), bytes >> 10u);
+			Common::FrameStats::Add(static_cast<C>(index + 2 * step), linear.size >> 10u);
+		}
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 3, info.data.size >> 20u);
 	};
 
@@ -1372,6 +1397,7 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 		if (!transfer.tiles.empty()) {
 			linear = m_tiler.Detile(source, source_offset, source_size, linear_size, transfer.tiles,
 			                        source_is_host);
+			detiled = true; // session 72, C1 classification
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDetileDispatches,
 			                        transfer.tiles.size());
 			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 1, info.data.size >> 20u);
@@ -1400,6 +1426,7 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 		const auto tiles = BuildDepthTiles(info);
 		linear = m_tiler.Detile(source, source_offset, info.data.size, info.data.size, tiles,
 		                        source_is_host);
+		detiled = true; // session 72, C1 classification
 	}
 	const auto transfer_bytes = DepthAspectTransferBytes(info.pixel_format);
 	if (transfer_bytes != info.bytes_per_block) {
@@ -2328,8 +2355,17 @@ static void LogClearDecodeFailure(const Image& image, const char* aspect, uint32
 	     image.backing.layers, static_cast<uint32_t>(image.info.tile_mode));
 }
 
+// Session 71: the outcome of the last ClearImageFromBuffer on this thread, for KYTY_CLEAR_TRACE.
+// Written at every exit, read only by the trace in renderCompute.cpp. Never changes a decision.
+static thread_local const char* g_last_clear_outcome = "invalid";
+
+const char* TextureCacheLastClearOutcome() {
+	return g_last_clear_outcome;
+}
+
 bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address, uint64_t size,
                                         uint32_t packed_clear) {
+	g_last_clear_outcome = "invalid";
 	if (command.IsInvalid() || !GuestRange {address, size}.Valid()) {
 		EXIT("TextureCache: invalid image clear\n");
 	}
@@ -2366,6 +2402,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 			continue;
 		}
 		if (selected && selected != candidate_id) {
+			g_last_clear_outcome = "ambig";
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClearAmbiguous, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClearAmbiguousKb, note_kb);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClearOverlapOnly, overlap_only);
@@ -2375,6 +2412,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		aspect   = candidate;
 	}
 	if (!selected) {
+		g_last_clear_outcome = "none";
 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearNoMatch, 1);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearNoMatchKb, note_kb);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ClearOverlapOnly, overlap_only);
@@ -2384,6 +2422,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 	vk::ClearValue clear {};
 	if (aspect == vk::ImageAspectFlagBits::eColor) {
 		if (!DecodePackedColorClear(image.info.pixel_format, packed_clear, clear.color)) {
+			g_last_clear_outcome = "decode";
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClearDecodeFail, 1);
 			LogClearDecodeFailure(image, "color", packed_clear, address, size);
 			return false;
@@ -2394,6 +2433,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 		     !DecodePackedDepthClear(image.info.pixel_format, packed_clear, clear.depthStencil.depth)) ||
 		    (aspect == vk::ImageAspectFlagBits::eStencil &&
 		     !DecodePackedStencilClear(packed_clear, stencil_clear))) {
+			g_last_clear_outcome = "decode";
 			Common::FrameStats::Add(Common::FrameStats::Counter::ClearDecodeFail, 1);
 			LogClearDecodeFailure(image, aspect == vk::ImageAspectFlagBits::eDepth ? "depth" : "stencil",
 			                      packed_clear, address, size);
@@ -2403,6 +2443,7 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 	}
 	ClearImage(command, selected, image.backing.format,
 	           {aspect, 0, image.info.resources.levels, 0, image.info.TransferLayers()}, clear);
+	g_last_clear_outcome = "ok";
 	Common::FrameStats::Add(Common::FrameStats::Counter::ClearConsumed, 1);
 	Common::FrameStats::Add(Common::FrameStats::Counter::ClearConsumedKb, note_kb);
 	return true;
@@ -2467,6 +2508,14 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format for
 		rendering.colorAttachmentCount = 1;
 		rendering.pColorAttachments    = &attachment;
 		command.Handle().beginRendering(&rendering);
+		// Session 72: this pass never reaches CommandBuffer::BeginRenderingImpl, so rp_begin does
+		// not count it - and the EndRendering above charged a closure to the census that has no
+		// matching opening. One Add per pass; no decision touched.
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassAliasClear, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassAliasClearKpx,
+		                        static_cast<uint64_t>(rendering.renderArea.extent.width) *
+		                            rendering.renderArea.extent.height / 1024U *
+		                            rendering.layerCount);
 		command.Handle().endRendering();
 		CommitGpuWrite(image);
 		return;

@@ -1878,6 +1878,29 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"da_runs_clean", FS::Counter::DrawAheadCleanRuns, false},
 				    {"da_singles", FS::Counter::DrawAheadSingles, false},
 				    {"da_probe_q", FS::Counter::DrawAheadQueueProbes, false},
+				    // Session 72: the knob "dawitloop" ceiling (measurement only, never shipped).
+				    {"da_loop_skip", FS::Counter::DrawAheadLoopSkip, false},
+				    // Session 72, C1: the achievable half of the 836.5 us copy phase
+				    // (textureCache.cpp). c1_si_dt is the cell a fused detile would remove.
+				    {"c1_si_dt", FS::Counter::C1StorageDetile, false},
+				    {"c1_si_dt_kb", FS::Counter::C1StorageDetileKb, false},
+				    {"c1_si_dt_cp_kb", FS::Counter::C1StorageDetileCopyKb, false},
+				    {"c1_si_nd", FS::Counter::C1StorageDirect, false},
+				    {"c1_si_nd_kb", FS::Counter::C1StorageDirectKb, false},
+				    {"c1_si_nd_cp_kb", FS::Counter::C1StorageDirectCopyKb, false},
+				    {"c1_ns_dt", FS::Counter::C1NoStorageDetile, false},
+				    {"c1_ns_dt_kb", FS::Counter::C1NoStorageDetileKb, false},
+				    {"c1_ns_dt_cp_kb", FS::Counter::C1NoStorageDetileCopyKb, false},
+				    {"c1_ns_nd", FS::Counter::C1NoStorageDirect, false},
+				    {"c1_ns_nd_kb", FS::Counter::C1NoStorageDirectKb, false},
+				    {"c1_ns_nd_cp_kb", FS::Counter::C1NoStorageDirectCopyKb, false},
+				    // Session 72: the passes the census cannot see, and the area it understates.
+				    {"rpa_alias", FS::Counter::PassAliasClear, false},
+				    {"rpa_alias_kpx", FS::Counter::PassAliasClearKpx, false},
+				    {"rpa_blit", FS::Counter::PassBlitMsDepth, false},
+				    {"rpa_ovl", FS::Counter::PassOverlay, false},
+				    {"rpa_tkpx", FS::Counter::PassTrueColorPixelsK, false},
+				    {"rpa_mix", FS::Counter::PassMixedExtents, false},
 				    // The gate "swlocal" predicate census (renderDraw.cpp).
 				    {"swloc_ok", FS::Counter::ShaderWriteLocalEligible, false},
 				    {"swloc_mesh", FS::Counter::ShaderWriteLocalMeshBlocked, false},

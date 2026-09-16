@@ -2,6 +2,7 @@
 
 #include "SDL.h"
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "common/stringUtils.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "imgui.h"
@@ -1052,6 +1053,9 @@ struct SystemOverlay::Impl {
 		rendering.colorAttachmentCount = 1;
 		rendering.pColorAttachments    = &color;
 		command.beginRendering(rendering);
+		// Session 72: invisible to rp_begin. Present thread, before that thread s
+		// FrameTrace snapshot of the same flip; expected 0 outside IME / error box.
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassOverlay, 1);
 		{
 			Common::LockGuard queue_lock(graphics.queue_mutex);
 			ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(),

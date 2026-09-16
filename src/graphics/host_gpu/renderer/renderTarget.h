@@ -57,6 +57,20 @@ struct RenderState {
 	bool operator==(const RenderState&) const = default;
 };
 
+// Session 72: the extents AcquireRenderTargets saw BEFORE RenderState::width/height was clamped to
+// their minimum, handed to BeginRenderingImpl so that rpa_tkpx / rpa_mix can say how much area the
+// minimum hides. Deliberately NOT a RenderState field: RenderState's defaulted operator== is what
+// context.cpp:284 compares to decide whether a pass restarts, so a field there would change pass
+// decisions. AcquireRenderTargets has one call site and both BeginRendering paths follow it on the
+// same thread, so a thread_local carries it safely; `mixed` is false when a draw binds nothing.
+struct PassExtentWitness {
+	uint32_t max_width  = 0;
+	uint32_t max_height = 0;
+	uint64_t true_kpx   = 0; // sum over attachments of (own width * own height / 1024)
+};
+
+inline thread_local PassExtentWitness g_pass_extents {};
+
 // Session 71 (gate G-area): the FrameTrace-x bucket of a render pass. Both counter tables are
 // contiguous runs of Common::FrameStats::Counter, so a bucket is an offset from their first
 // enumerator (PassShape0 / PassExtent0 / PassDraw0 in common/frameStats.h). constexpr, no

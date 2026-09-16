@@ -282,7 +282,7 @@ void Image::Transit(vk::ImageLayout destination_layout, vk::AccessFlags2 destina
 }
 
 void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffer, uint64_t offset,
-                   uint64_t size, bool buffer_from_tiler) {
+                   uint64_t size, bool buffer_from_tiler, bool fuse_candidate) {
 	EXIT_IF(copies.empty() || buffer == nullptr || size == 0);
 	m_scheduler.EndRendering(RenderPassEnd::ImageUpload);
 	vk::BufferMemoryBarrier2 buffer_barrier {};
@@ -313,7 +313,10 @@ void Image::Upload(std::span<const vk::BufferImageCopy> copies, vk::Buffer buffe
 	command.copyBufferToImage(buffer, backing.image, vk::ImageLayout::eTransferDstOptimal,
 	                          static_cast<uint32_t>(copies.size()), copies.data());
 	if (GpuTimeProfiler::Enabled()) {
-		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 4, copies.size());
+		// Session 72: key 7 is the same copy, for uploads a fused detile could have written
+		// directly. Splitting the key splits the 836.5 us copy phase of GpuTime-imgup by TIME.
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, fuse_candidate ? 7 : 4,
+		                     copies.size());
 	}
 	buffer_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eTransfer;
 	buffer_barrier.srcAccessMask = vk::AccessFlagBits2::eTransferRead;

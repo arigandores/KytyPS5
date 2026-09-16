@@ -864,6 +864,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	state.width                 = std::numeric_limits<uint32_t>::max();
 	state.height                = std::numeric_limits<uint32_t>::max();
 	state.num_layers            = std::numeric_limits<uint32_t>::max();
+	g_pass_extents              = {}; // session 72: rpa_tkpx / rpa_mix, see renderTarget.h
 	uint32_t attachment_samples = 0;
 	for (uint32_t i = 0; i < color_count; i++) {
 		auto& target = colors[i];
@@ -948,6 +949,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		state.width             = std::min(state.width, extent.width);
 		state.height            = std::min(state.height, extent.height);
 		state.num_layers        = std::min(state.num_layers, view.layer_count);
+		// Session 72: the same attachment measured by its OWN extent, so the pass census can say
+		// how much area the minimum above hides (rpa_tkpx, rpa_mix).
+		g_pass_extents.max_width  = std::max(g_pass_extents.max_width, extent.width);
+		g_pass_extents.max_height = std::max(g_pass_extents.max_height, extent.height);
+		g_pass_extents.true_kpx +=
+		    static_cast<uint64_t>(extent.width) * extent.height / 1024U;
 		auto& attachment        = state.color_attachments[target.target_slot];
 		attachment.image_view   = image_view;
 		attachment.image_layout = layout;
@@ -1068,6 +1075,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		state.width               = std::min(state.width, depth.desc.info.extent.width);
 		state.height              = std::min(state.height, depth.desc.info.extent.height);
 		state.num_layers          = std::min(state.num_layers, view.layer_count);
+		// Session 72: the depth attachment joins the extent witness for rpa_mix only - its area is
+		// already reported separately as rpa_dkpx, so it is not added to true_kpx.
+		g_pass_extents.max_width =
+		    std::max(g_pass_extents.max_width, depth.desc.info.extent.width);
+		g_pass_extents.max_height =
+		    std::max(g_pass_extents.max_height, depth.desc.info.extent.height);
 		const auto aspects        = ImageViewOps::DepthAspectMask(depth.desc.view_info.format);
 		auto&      attachment     = state.depth_stencil_attachment;
 		attachment.image_view     = image_view;

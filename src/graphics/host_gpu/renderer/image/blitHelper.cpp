@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/image/blitHelper.h"
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "gpu_blit_shaders/gpu_blit_color_to_ms_depth_spv.h"
 #include "gpu_blit_shaders/gpu_blit_fs_triangle_spv.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -168,6 +169,9 @@ void BlitHelper::ReinterpretColorAsMsDepth(Image& source, Image& destination) {
 	rendering.layerCount        = 1;
 	rendering.pDepthAttachment  = &depth_attachment;
 	command.beginRendering(&rendering);
+	// Session 72: invisible to rp_begin - this pass never reaches BeginRenderingImpl,
+	// and the full-screen draw below is invisible to `draws` as well.
+	Common::FrameStats::Add(Common::FrameStats::Counter::PassBlitMsDepth, 1);
 
 	vk::DescriptorImageInfo descriptor_image {};
 	descriptor_image.imageView   = source_view;

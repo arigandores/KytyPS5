@@ -95,7 +95,14 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_ARM_DEFER", "armdefer", false},
     {"KYTY_ARM_DEFER_VERIFY", "armcheck", false},
     {"KYTY_DRAW_AHEAD_WITNESS", "dawitness", true},
-    {"KYTY_DRAW_AHEAD_WITNESS_PTR", "dawitptr", false},
+    // Session 72 ships this: measured with ABBA on bac1155d (wpt71a, 121 pairs) at
+    // cpu/draw -0.467 % +/- 0.207 %, t = -4.50, which is 1.23x the stand threshold of 0.380 %,
+    // for -0.152 ms of wall per frame. Behaviour is bit-identical: da_direct matched da_hit to
+    // 0.0025 %, da_direct_no was 0, every da_stale* counter was 0 by sum AND by maximum in both
+    // arms, and da_hit/da_miss/pmemo_* moved only with the draw count. Every recorded word is
+    // still compared - the gate only changes the pointer the live runs are read through, while
+    // AddressSpace::MapEpoch() (memoryAddressSpace.inc:164) witnesses that translation.
+    {"KYTY_DRAW_AHEAD_WITNESS_PTR", "dawitptr", true},
     {"KYTY_DRAW_AHEAD_QUEUE_PREFETCH", "daqpre", false},
     {"KYTY_CB_STAT", "cbstat", false},
     {"KYTY_RECORD_IMAGE_BARRIERS", "recimg", false},
@@ -113,6 +120,19 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_IMG_SKIP_GPU_STALE", "imgskip", false},
     // Session 70, a behaviour change: two missing cases in the packed-clear decoder.
     {"KYTY_CLEAR_DECODE_WIDE", "cleardec", false},
+    // Session 71, measurement only: default 1 keeps the session-61 epoch ceiling exactly as it
+    // was, 0 removes it from inside da_take_us.
+    // Session 72 ships 0: the regions vector exists ONLY to answer "would an epoch witness
+    // have held?", and session 70 closed that question - regionManager.h:202-210 bumps the
+    // region epoch only on the protected->writable transition and :128-131 starts every region
+    // all-dirty, so an epoch witness is unsound whatever the counters say. Building it costs
+    // 11 005 RegionWriteStamp reads and 6110 WitnessEpochsHold calls per frame INSIDE the
+    // timed region of AheadTake. Measured with ABBA on 136ebeb6 (dep72a, 108 pairs):
+    // cpu/draw -0.522 % +/- 0.284 %, t = -3.68, = -0.190 ms of wall per frame, with da_hit
+    // 8633.658 -> 8633.016 (0.007 %) and every da_stale* zero in both arms - the decision path
+    // never reads the vector (pipelineCache.cpp:697, :2499, :2509 are its only readers, all
+    // ceiling diagnostics). Setting it back to 1 restores the diagnostic da_ep_* counters.
+    {"KYTY_DA_EPOCH_CEILING", "daepceil", false},
 }};
 
 struct KnobDefinition {
@@ -137,6 +157,8 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_SHADOW_MASK", "shadowmask", 3, 3},
     {"KYTY_M4_BATON", "m4baton", 0, 4096},
     {"KYTY_IMG_SKIP_KB", "imgskipkb", 4096, 1048576},
+    // Session 72, measurement ceiling (default 0 = today's behaviour; 1 and 2 are UNSOUND).
+    {"KYTY_DA_WITNESS_LOOP", "dawitloop", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

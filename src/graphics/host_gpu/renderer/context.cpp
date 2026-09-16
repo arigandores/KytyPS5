@@ -310,6 +310,15 @@ void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) co
 		                        state.num_color_attachments);
 		Common::FrameStats::Add(Common::FrameStats::Counter::PassAttachments, live);
 		Common::FrameStats::Add(Common::FrameStats::Counter::PassPixelsK, pass_color_kpx);
+		// Session 72: the same area from each attachment's own extent. Equal to pass_color_kpx
+		// when the extents agree, so the difference per frame IS what the minimum hides. A pass
+		// that binds nothing leaves the witness zero and contributes nothing to either.
+		Common::FrameStats::Add(Common::FrameStats::Counter::PassTrueColorPixelsK,
+		                        g_pass_extents.true_kpx);
+		if (g_pass_extents.max_width != 0 && (g_pass_extents.max_width != state.width ||
+		                                      g_pass_extents.max_height != state.height)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PassMixedExtents, 1);
+		}
 		Common::FrameStats::Add(static_cast<Common::FrameStats::Counter>(
 		                            static_cast<uint32_t>(Common::FrameStats::Counter::PassShape0) +
 		                            RenderPassShapeBucket(live)),

@@ -324,6 +324,11 @@ private:
 	friend class RenderExecutor;
 };
 
+// Session 72, measurement only (KYTY_CLEAR_TRACE): the outcome the last ClearImageFromBuffer on
+// this thread took - "ok", "none", "ambig", "decode" or "invalid". Written at every exit of that
+// function, read only by the BufferFillTrace print. Never changes a decision.
+const char* TextureCacheLastClearOutcome();
+
 } // namespace Libs::Graphics
 
 #endif // EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_TEXTURECACHE_H_

@@ -216,12 +216,17 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 		return false;
 	}
 	static const bool clear_trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+	// Session 71: the trace is printed AFTER the call so it can name the outcome. Without the
+	// outcome the line says which fills exist but not which of them the cache turned into a
+	// clear, and sessions 69/70 left no single log carrying both halves.
+	const bool clear_taken = cache.ClearImageFromBuffer(command, descriptor.Base48(), size, packed_clear);
 	if (clear_trace) {
 		LOGF("BufferFillTrace: frame=%u shader=0x%016" PRIx64 " addr=0x%016" PRIx64
-		     " size=0x%" PRIx64 " value=0x%08x\n", GpuTimeProfiler::Frame(),
-		     program.shader_hash, descriptor.Base48(), size, packed_clear);
+		     " size=0x%" PRIx64 " value=0x%08x outcome=%s\n", GpuTimeProfiler::Frame(),
+		     program.shader_hash, descriptor.Base48(), size, packed_clear,
+		     TextureCacheLastClearOutcome());
 	}
-	if (!cache.ClearImageFromBuffer(command, descriptor.Base48(), size, packed_clear)) {
+	if (!clear_taken) {
 		// Upstream 01df42a deletes the three lines below together with its content-based
 		// metadata rework (MetaDataInfo without PendingDcc, revision/dirty tracking). This merge
 		// KEPT our PendingDcc tracking in textureCache.h/.cpp, so the deletion must not be taken:

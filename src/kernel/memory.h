@@ -132,6 +132,10 @@ bool                   TryReadGpuCleanBacking(uint64_t vaddr, void* data, uint64
 // TryGetBackingPointer for a range without pending GPU writes (same test as
 // TryReadGpuCleanBacking, evaluated once for the whole range).
 bool TryGetGpuCleanBackingPointer(uint64_t vaddr, uint64_t size, const void** pointer);
+// Session 73: the GPU-clean half of the two above, on its own, for a caller that already holds a
+// validated host pointer for the range and would otherwise translate it a second time. It IS the
+// same predicate those two use - not a copy of it.
+[[nodiscard]] bool IsGpuClean(uint64_t vaddr, uint64_t size);
 bool                   TryReadPrtBacking(uint64_t vaddr, void* data, uint64_t size);
 [[nodiscard]] uint64_t ClampRangeSize(uint64_t vaddr, uint64_t size);
 void                   WriteBacking(uint64_t vaddr, const void* data, uint64_t size) noexcept;

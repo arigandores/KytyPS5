@@ -135,6 +135,25 @@ enum class Gate : uint32_t {
 	// again on every hit, inside the interval da_take_us times. Session 70 closed the question it
 	// answers, so this exists to size what the answer still costs.
 	DrawAheadEpochCeiling, // KYTY_DA_EPOCH_CEILING,    file name "daepceil"
+	// Session 73, W6: the first candidate written for the CLEAN loop of the M1 witness, measured by
+	// session 72 at 1.033 ms of wall per frame - 53.6 % of the whole verify on 11.6 % of the words.
+	// When the clean loop's page lookup fails it decides per word through ReadShaderGuestMemory,
+	// whose first act is to retry the same doomed page lookup; the gate asks the range predicate
+	// about the RUN once instead. Same answer by construction (pipelineCache.cpp), less work.
+	DrawAheadCleanRange, // KYTY_DA_CLEAN_RANGE,      file name "dawitfb"
+	// Session 73, C1: the tiler's detile dispatch writes the destination image directly through a
+	// UINT storage view, so the scratch buffer, the fill that gave its pad bytes a defined value
+	// and the vkCmdCopyBufferToImage that moved it all disappear. Session 72 measured the ceiling
+	// BY TIME - copy_fuse 1115.7 us + the fusable share of the fill 126.0 us = 1241.7 us per frame,
+	// 8.06 % of non-idle GPU, 42x what the stand resolves. Everything that does not qualify keeps
+	// the scratch path unchanged.
+	ImageDetileFuse, // KYTY_IMAGE_DETILE_FUSE,   file name "imgfuse"
+	// Session 73, W7: the M1 witness's clean loop pays 15 097 GPU-clean page predicates per frame
+	// (da_cl_miss) and every one of them answers "clean" (da_cl_fail = 0). Two of those predicates'
+	// three parts are avoidable: TextureCache::IsRegionGpuModified takes a spin lock where the
+	// tree's own lock-free MayHaveImages would answer, and the address translation is the one the
+	// persistent live page table already holds. Same answers, fewer locks.
+	DrawAheadCleanPage, // KYTY_DA_CLEAN_PAGE,      file name "dawitcp"
 	Count,
 };
 

@@ -367,10 +367,44 @@ const uint8_t* CleanBackingPage(ShaderReadCache* cache, uint64_t page) {
 	if (cache == nullptr) {
 		return nullptr;
 	}
+	// Session 73: this table is the 8-entry PER-CALL one, while the live reader gets the
+	// 4096-entry table that lives for the whole frame (CALL_SLOTS / PERSISTENT_SLOTS above, and
+	// the note at the declaration: GPU-cleanliness depends on the GPU dirty state, not on the map
+	// epoch). A miss therefore pays IsGpuCleanRange over the whole page - IsGpuThread +
+	// BufferCache::HasGpuDirtyBytes + TextureCache::IsRegionGpuModified, kernel/memory.cpp:1031 -
+	// and session 72 measured the clean loop that calls this at 1.033 ms of wall per frame, 53.6 %
+	// of the whole witness on 11.6 % of its words. da_cl_fb proved the per-word fallback below is
+	// never taken, so the cost is here; these three counters say which half of "here".
+	const bool stats = Common::FrameStats::Enabled();
+	if (stats) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanLookup, 1);
+	}
 	if (!cache->clean.Find(page)) {
+		if (stats) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanMiss, 1);
+		}
 		const void* backing = nullptr;
-		if (Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, ShaderPageSize, &backing)) {
+		// Gate "dawitcp", half (b): TryGetGpuCleanBackingPointer is exactly
+		// `IsGpuCleanRange(page, n) && TryGetBackingPointer(page, n, &p)`. The second operand is
+		// the translation the PERSISTENT live table already holds, validated under the same
+		// BackingMapEpoch witness (PersistentLive above), so evaluate the conjunction with the
+		// operands swapped and take the pointer from there. Same pointer, same predicate, same
+		// answer - only the second address-space translation goes away. If the live table has no
+		// entry either, fall through to exactly what this line did before.
+		if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadCleanPage)) {
+			const auto* live = LiveBackingPage(cache, page);
+			if (live != nullptr && Libs::LibKernel::Memory::IsGpuClean(page, ShaderPageSize)) {
+				backing = live;
+				if (stats) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanLive, 1);
+				}
+			}
+		}
+		if (backing != nullptr ||
+		    Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(page, ShaderPageSize, &backing)) {
 			cache->clean.Store(page, backing);
+		} else if (stats) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanFail, 1);
 		}
 	}
 	return cache->clean.last.address == page ? cache->clean.last.backing : nullptr;
@@ -661,6 +695,40 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* fai
 		}
 		// The page is not GPU-clean as a whole any more: the clean reader decides per word, and
 		// so does the check.
+		//
+		// Session 73, W6. That per-word decision is where the clean loop's 1.033 ms of wall lives
+		// (session 72, wlp72a: 53.6 % of the whole verify on 11.6 % of the words). Each word calls
+		// ReadShaderGuestMemory, whose first act is to ask CleanBackingPage for THE PAGE WHOSE
+		// LOOKUP JUST FAILED one line above - a full IsGpuCleanRange(page, 4096) that cannot
+		// succeed - before paying a second IsGpuCleanRange(address, 4) inside
+		// TryReadGpuCleanBacking. At the measured 1.848 words per clean run that is ~4.70 range
+		// predicates where two would do.
+		if (Common::FrameStats::Enabled()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanFallback, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadCleanFallbackWords,
+			                        run.count);
+		}
+		// Gate "dawitfb": ask the range predicate about the RUN once. IsGpuCleanRange is already a
+		// range predicate over [vaddr, vaddr + size) (kernel/memory.cpp:1031-1040) and a run is
+		// contiguous and never crosses a page (the builder splits on the page number, :523), so the
+		// words it decides over are exactly the words the loop below would ask about. If the run is
+		// partly dirty the lookup fails and the loop below runs untouched and reaches the same
+		// verdict: the gate can remove work, never change a decision.
+		if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadCleanRange)) {
+			const void* range = nullptr;
+			if (Libs::LibKernel::Memory::TryGetGpuCleanBackingPointer(
+			        run.address, static_cast<uint64_t>(run.count) * sizeof(uint32_t), &range)) {
+				if (!SameRecordedWords(static_cast<const uint8_t*>(range),
+				                       &witness.clean_values[run.first], run.count)) {
+					if (failed_run != nullptr) {
+						*failed_run = ordinal;
+					}
+					return false;
+				}
+				ordinal++;
+				continue;
+			}
+		}
 		for (uint32_t i = 0; i < run.count; i++) {
 			uint32_t value = 0;
 			if (!ReadShaderGuestMemory(&cache, run.address + i * sizeof(uint32_t), &value) ||

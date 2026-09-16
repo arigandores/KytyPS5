@@ -1300,6 +1300,51 @@ void TextureCache::DebugDumpImage(ImageId id, const std::string& name) {
 	     image->IsCpuDirty() ? 1 : 0, image->IsBufferModified() ? 1 : 0);
 }
 
+namespace {
+
+// Session 73, C1. One UINT format per tiler element size, and the only five that Vulkan makes
+// MANDATORY for STORAGE_IMAGE, SAMPLED_IMAGE and COLOR_ATTACHMENT at once - which matters because
+// Image::FindView hands a storage view the image's WHOLE usage set (imageView.cpp:367-371), and
+// the image carries eSampled and eColorAttachment as well (image.cpp:60-75). Never eR64Uint /
+// eR64G64Uint: they sit in the same compatibility classes (imageView.cpp:236, :247) and have
+// neither feature, so the view creation would EXIT. The FormatsCompatible call is the second
+// guard, not the first: the first is backing.usage & eStorage, which is what the driver accepted.
+[[nodiscard]] vk::Format FuseViewFormat(vk::Format base, uint32_t bytes_per_element) noexcept {
+	const auto view = bytes_per_element == 1    ? vk::Format::eR8Uint
+	                  : bytes_per_element == 2  ? vk::Format::eR16Uint
+	                  : bytes_per_element == 4  ? vk::Format::eR32Uint
+	                  : bytes_per_element == 8  ? vk::Format::eR32G32Uint
+	                  : bytes_per_element == 16 ? vk::Format::eR32G32B32A32Uint
+	                                            : vk::Format::eUndefined;
+	return view != vk::Format::eUndefined && ImageViewOps::FormatsCompatible(base, view)
+	           ? view
+	           : vk::Format::eUndefined;
+}
+
+// Every clause is an assumption the fused shader makes about where its texels land. The mip level
+// becomes the view's base_level and the array layer becomes the dispatch's z, so a region that is
+// not exactly one whole colour (level, layer) starting at the origin cannot be fused.
+[[nodiscard]] bool FusableRegions(const std::vector<vk::BufferImageCopy>& regions,
+                                  const VulkanImage&                     backing) noexcept {
+	for (const auto& region: regions) {
+		if (region.imageSubresource.aspectMask != vk::ImageAspectFlagBits::eColor ||
+		    region.imageSubresource.layerCount != 1 ||
+		    region.imageSubresource.mipLevel >= backing.mip_levels ||
+		    region.imageSubresource.baseArrayLayer >= backing.layers ||
+		    region.imageOffset.x != 0 || region.imageOffset.y != 0 ||
+		    region.imageOffset.z != 0 || region.imageExtent.depth != 1 ||
+		    // Non-zero only on the linear path, which never builds tiles; if that ever changed,
+		    // tile_info.height would exceed imageExtent.height and the dispatch would write rows
+		    // past the bottom of the level (textureCommon.cpp:354-359 against :259).
+		    region.bufferImageHeight != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+} // namespace
+
 uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t source_offset,
                                    uint64_t source_size, bool source_is_host,
                                    uint32_t first_level, uint32_t level_count) {
@@ -1320,6 +1365,30 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 	const bool storage_ok =
 	    static_cast<bool>(image.backing.usage & vk::ImageUsageFlagBits::eStorage);
 	bool        detiled = false;
+	bool        fused   = false; // session 73, gate "imgfuse"
+	// Session 73: the four C1 cells moved out of the `upload` lambda so that the FUSED path, which
+	// never calls Image::Upload, counts them too. Without this the session-72 identities
+	// sum(c1_*) == img_up and sum(c1_*_kb) == img_up_kb break the moment the gate is armed and
+	// check_s71_counters.py FAILs - and by the harness rule no number from that group could then
+	// be quoted. `copy_bytes` is what copyBufferToImage moves, or would have moved.
+	const auto classify = [&](uint64_t copy_bytes) {
+		if (!Common::FrameStats::Enabled()) {
+			return;
+		}
+		using C = Common::FrameStats::Counter;
+		const auto cell = (storage_ok && detiled) ? C::C1StorageDetile
+		                  : storage_ok            ? C::C1StorageDirect
+		                  : detiled               ? C::C1NoStorageDetile
+		                                          : C::C1NoStorageDirect;
+		const auto step = static_cast<uint32_t>(C::C1StorageDetileKb) -
+		                  static_cast<uint32_t>(C::C1StorageDetile);
+		const auto index = static_cast<uint32_t>(cell);
+		Common::FrameStats::Add(cell, 1);
+		// KiB at the increment site, never bytes - the printed micros flag divides by 1000
+		// and would be wrong for bytes (session 69's img_skip_kb defect).
+		Common::FrameStats::Add(static_cast<C>(index + step), bytes >> 10u);
+		Common::FrameStats::Add(static_cast<C>(index + 2 * step), copy_bytes >> 10u);
+	};
 	const auto  upload  = [&](std::vector<vk::BufferImageCopy>& copies, TileManager::Result linear) {
 		for (auto& copy: copies) {
 			copy.bufferOffset += linear.offset;
@@ -1327,21 +1396,7 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 		const bool fusable = storage_ok && detiled;
 		image.Upload(copies, linear.buffer, linear.offset, linear.size,
 		             linear.buffer != source || source_is_host, fusable);
-		if (Common::FrameStats::Enabled()) {
-			using C = Common::FrameStats::Counter;
-			const auto cell = fusable         ? C::C1StorageDetile
-			                  : storage_ok    ? C::C1StorageDirect
-			                  : detiled       ? C::C1NoStorageDetile
-			                                  : C::C1NoStorageDirect;
-			const auto step = static_cast<uint32_t>(C::C1StorageDetileKb) -
-			                  static_cast<uint32_t>(C::C1StorageDetile);
-			const auto index = static_cast<uint32_t>(cell);
-			Common::FrameStats::Add(cell, 1);
-			// KiB at the increment site, never bytes - the printed micros flag divides by 1000
-			// and would be wrong for bytes (session 69's img_skip_kb defect).
-			Common::FrameStats::Add(static_cast<C>(index + step), bytes >> 10u);
-			Common::FrameStats::Add(static_cast<C>(index + 2 * step), linear.size >> 10u);
-		}
+		classify(linear.size);
 		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 3, info.data.size >> 20u);
 	};
 
@@ -1394,19 +1449,63 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 			transfer.regions = std::move(regions);
 			transfer.tiles   = std::move(tiles);
 		}
+		// Session 73, C1 (gate "imgfuse"): can this upload's detile write the image itself?
+		// The classification runs with the gate OFF as well, so an ordinary base run says what
+		// share of session 72's 1241.7 us ceiling the first cut reaches before anything is armed.
+		// Each clause is a defect the adversarial read of this session found - see
+		// C:/kyty/s73/patch_imgfuse.py for the list and what each one would have broken.
+		const auto& tex_layout  = transfer.layout.surface.texture;
+		const auto  fuse_format = FuseViewFormat(image.backing.format, info.bytes_per_block);
+		const bool  fuse_cell   = storage_ok && !transfer.tiles.empty();
+		const bool  fuse_shape =
+		    fuse_cell && !transfer.swap_bgra16 && !info.IsVolume() && !info.IsDepth() &&
+		    !info.IsBlock() && info.samples == 1 && image.backing.samples == 1 &&
+		    image.backing.image_type == vk::ImageType::e2D && tex_layout.texel_width == 1 &&
+		    tex_layout.texel_height == 1 &&
+		    tex_layout.block.bytes_per_element == info.bytes_per_block &&
+		    transfer.tiles.size() == transfer.regions.size() &&
+		    FusableRegions(transfer.regions, image.backing);
+		const bool fuse_ok = fuse_shape && fuse_format != vk::Format::eUndefined;
+		if (fuse_cell && Common::FrameStats::Enabled()) {
+			using C = Common::FrameStats::Counter;
+			Common::FrameStats::Add(fuse_ok                ? C::C1FuseReady
+			                        : transfer.swap_bgra16 ? C::C1FuseSwap
+			                        : !fuse_shape          ? C::C1FuseShape
+			                                               : C::C1FuseFormat,
+			                        1);
+			if (fuse_ok) {
+				Common::FrameStats::Add(C::C1FuseReadyKb, bytes >> 10u);
+				Common::FrameStats::Add(C::C1FuseReadyCopyKb, linear_size >> 10u);
+			}
+		}
 		if (!transfer.tiles.empty()) {
-			linear = m_tiler.Detile(source, source_offset, source_size, linear_size, transfer.tiles,
-			                        source_is_host);
+			if (fuse_ok && Common::Gates::Enabled(Common::Gates::Gate::ImageDetileFuse)) {
+				m_tiler.DetileToImage(image, fuse_format, source, source_offset, source_size,
+				                      linear_size, transfer.tiles, transfer.regions,
+				                      source_is_host);
+				fused = true;
+			} else {
+				linear = m_tiler.Detile(source, source_offset, source_size, linear_size,
+				                        transfer.tiles, source_is_host);
+			}
 			detiled = true; // session 72, C1 classification
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgDetileDispatches,
 			                        transfer.tiles.size());
 			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 1, info.data.size >> 20u);
 		}
-		if (transfer.swap_bgra16) {
-			linear = m_tiler.SwapBgra16(linear);
-			m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 2, info.data.size >> 20u);
+		if (fused) {
+			// No scratch, no copy: the dispatch already wrote the image. Everything else on this
+			// path is counted exactly as the scratch path counts it, so the arms stay comparable.
+			classify(linear_size);
+			Common::FrameStats::Add(Common::FrameStats::Counter::C1Fused, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::C1FusedKb, bytes >> 10u);
+		} else {
+			if (transfer.swap_bgra16) {
+				linear = m_tiler.SwapBgra16(linear);
+				m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 2, info.data.size >> 20u);
+			}
+			upload(transfer.regions, linear);
 		}
-		upload(transfer.regions, linear);
 		Common::FrameStats::Add(Common::FrameStats::Counter::ImgCopyRegions, transfer.regions.size());
 		Common::FrameStats::Add(Common::FrameStats::Counter::ImgUploadBytes, bytes);
 		return bytes;
@@ -2790,6 +2889,19 @@ void TextureCache::InvalidateMemoryFromGPU(uint64_t address, uint64_t size) {
 
 bool TextureCache::IsRegionGpuModified(uint64_t address, uint64_t size) {
 	if (!GuestRange {address, size}.Valid()) {
+		return false;
+	}
+	// Session 73, W7. This is one of the three parts of IsGpuCleanRange (kernel/memory.cpp:1031),
+	// which the M1 witness's clean loop evaluates 15 097 times per frame on the GuestGpu thread,
+	// inside the render mutex - and it takes the TrackingSpinLock every time. MayHaveImages reads
+	// the atomic m_image_page_hint index without any lock and returns true for anything outside
+	// that index, so "no page of this range has an image hint" means FindImagesInRegion below
+	// would return an empty list and this function would return false anyway: the short-circuit is
+	// the same answer, not a weaker one. Gate "dawitcp".
+	Common::FrameStats::Add(Common::FrameStats::Counter::TexGpuModifiedCalls, 1);
+	if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadCleanPage) &&
+	    !MayHaveImages(address, size)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TexGpuModifiedHint, 1);
 		return false;
 	}
 	std::scoped_lock lock {m_lock};

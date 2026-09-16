@@ -852,6 +852,46 @@ enum class Counter : uint32_t {
 	// equal to rpa_kpx when they agree, so rpa_tkpx - rpa_kpx IS the understatement in Kpx.
 	PassTrueColorPixelsK, // rpa_tkpx: colour area from each attachment's OWN extent
 	PassMixedExtents,     // rpa_mix: passes whose attachments did not all share an extent
+	// ------------------------------------------------------------------------------------------
+	// Session 73: how much of the clean loop of VerifyWitness takes the per-word fallback. Session
+	// 72 measured that loop at 1.033 ms of wall per frame (53.6 % of the witness) while it carries
+	// 11.6 % of the words, and named the fallback at pipelineCache.cpp:662-673 as the suspect
+	// without measuring how often it fires. One Add per fallback run, no decision changed, so an
+	// ordinary base run sizes the ceiling of gate "dawitfb" before the gate is ever armed.
+	// Identities: da_cl_fb <= da_runs_clean, da_cl_fb_w <= da_clean_words, and at dawitloop=1
+	// both are 0 because the loop did not run.
+	DrawAheadCleanFallback,      // da_cl_fb: clean runs whose page lookup failed
+	DrawAheadCleanFallbackWords, // da_cl_fb_w: words compared one at a time because of it
+	// Session 73: da_cl_fb read EXACTLY ZERO on the first run, so the clean loop's 1.033 ms is not
+	// its per-word fallback. These three say what it is instead. CleanBackingPage looks a page up
+	// in an 8-entry per-call table (CALL_SLOTS) while the live reader gets a 4096-entry table that
+	// lives for the whole frame, and every miss pays IsGpuCleanRange over the page - IsGpuThread +
+	// BufferCache::HasGpuDirtyBytes + TextureCache::IsRegionGpuModified.
+	// Reading: da_cl_look - da_runs_clean is the specialization reader's share of the calls;
+	// da_cl_miss / da_cl_look is the 8-slot table's miss rate; da_cl_fail >= da_cl_fb always.
+	DrawAheadCleanLookup, // da_cl_look: CleanBackingPage calls
+	DrawAheadCleanMiss,   // da_cl_miss: of those, the ones that paid the range predicate
+	DrawAheadCleanFail,   // da_cl_fail: of those, the ones where the page was not GPU-clean
+	// Session 73, W7 (gate "dawitcp"), the two halves of that predicate it makes cheaper.
+	DrawAheadCleanLive,   // da_cl_live: clean misses whose translation came from the live table
+	TexGpuModifiedCalls,  // tgm_call: TextureCache::IsRegionGpuModified calls
+	TexGpuModifiedHint,   // tgm_hint: of those, answered by the lock-free page hint alone
+	// ------------------------------------------------------------------------------------------
+	// Session 73, C1 (gate "imgfuse"). Session 72's c1_si_dt says how many uploads COULD have had
+	// their detile fused by format and usage alone; these say how many actually qualify once the
+	// destination subresource, the channel swap and the image shape are taken into account, and
+	// they are counted with the gate OFF so an ordinary base run sizes the reachable share of the
+	// 1241.7 us ceiling before a single pipeline is compiled.
+	// Identity: c1_fz_ok + c1_fz_swap + c1_fz_shape + c1_fz_fmt == c1_si_dt.
+	C1FuseReady,        // c1_fz_ok: passes every clause of the fuse predicate
+	C1FuseReadyKb,      // c1_fz_ok_kb: KiB of guest source in that cell
+	C1FuseReadyCopyKb,  // c1_fz_ok_cp_kb: KiB the copy would have moved - the ceiling's own weight
+	C1FuseSwap,         // c1_fz_swap: declined, a bgra16 channel swap sits between detile and copy
+	C1FuseShape,        // c1_fz_shape: declined, volume / 1D / MSAA / block texel / region shape
+	C1FuseFormat,       // c1_fz_fmt: declined, no mandatory UINT view format of that element size
+	// The arming proof. Identically zero while imgfuse=0; equal to c1_fz_ok while imgfuse=1.
+	C1Fused,            // c1_fuse: uploads whose detile wrote the image directly
+	C1FusedKb,          // c1_fuse_kb: KiB of guest source in those
 	Count
 };
 

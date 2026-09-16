@@ -244,26 +244,29 @@ void GpuTimeProfiler::FlushFrame(uint32_t frame, FrameTable& table) {
 	//                                                copy_fuse are two separate times, not one
 	//                                                apportioned by bytes
 	//                                              other: anything else
-	// Each field is <us>/<marks>. The mark count is there so that the ~29 % mark loss of heavy
-	// frames can be checked per phase against img_detile and img_up of the same frame instead of
-	// being assumed uniform.
+	// Each field is <us>/<marks>. The mark count is there so that the mark loss of heavy frames
+	// (re-measured at 2.96 % on gpt72a, p95 7.81 %, max 11.51 % - the old ~29 % came from another
+	// title's reference log and is dead) can be checked per phase against img_detile and img_up of
+	// the same frame instead of being assumed uniform.
 	{
-		static const char* const upload_names[9] = {"all",  "env_detile", "swap",
-		                                            "env_copy", "copy", "fill",
-		                                            "detile", "copy_fuse", "other"};
-		uint64_t                 upload_ns[9] {};
-		uint64_t                 upload_n[9] {};
+		// Session 73 adds key 8, the FUSED dispatch (gate "imgfuse"): the detile that wrote the
+		// image itself, so it is neither the old "detile" (key 6, scratch destination) nor a copy.
+		static const char* const upload_names[10] = {"all",   "env_detile", "swap",     "env_copy",
+		                                             "copy",  "fill",       "detile",   "copy_fuse",
+		                                             "fuse",  "other"};
+		uint64_t                 upload_ns[10] {};
+		uint64_t                 upload_n[10] {};
 		for (const auto& [ek, e]: table.entries) {
 			if (static_cast<Kind>(ek >> 56u) != Kind::ImageUpload) {
 				continue;
 			}
 			const auto key    = table.keys[ek].first;
-			const auto bucket = key < 8 ? static_cast<size_t>(key) : size_t {8};
+			const auto bucket = key < 9 ? static_cast<size_t>(key) : size_t {9};
 			upload_ns[bucket] += e.ns;
 			upload_n[bucket] += e.n;
 		}
 		std::string uploads = "GpuTime-imgup: frame=" + std::to_string(frame);
-		for (size_t k = 0; k < 9; k++) {
+		for (size_t k = 0; k < 10; k++) {
 			uploads += ' ';
 			uploads += upload_names[k];
 			uploads += '=';

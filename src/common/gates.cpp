@@ -133,6 +133,30 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // never reads the vector (pipelineCache.cpp:697, :2499, :2509 are its only readers, all
     // ceiling diagnostics). Setting it back to 1 restores the diagnostic da_ep_* counters.
     {"KYTY_DA_EPOCH_CEILING", "daepceil", false},
+    // Session 73, W6: one range predicate per clean run instead of one per word in the fallback.
+    // Removes work only - if the run is partly GPU-dirty the lookup fails and the untouched
+    // per-word loop runs exactly as before.
+    {"KYTY_DA_CLEAN_RANGE", "dawitfb", false},
+    // Session 73, C1: fuse the detile into a storage-image write. SHIPPED at 1 after fus73a,
+    // 114 ABBA pairs: gpu_busy_us -8.599 % +/- 0.469 %, t = -36.69, i.e. 14 665 -> 13 397 us =
+    // -1.268 ms of GPU per frame, and cpu/draw -0.554 % +/- 0.178 %, t = -6.22 = -0.182 ms of
+    // wall, with draws 0.014 % apart. That is 102 % of the 1241.7 us session 72 measured as the
+    // ceiling by time; the excess is the four barrier commands, the scratch allocation and the
+    // sub-dword atomics the fused path also removes. Arming proved by c1_fuse == c1_fz_ok in the
+    // armed arm and 0.000 in the other. Set it to 0 to get the scratch path back.
+    {"KYTY_IMAGE_DETILE_FUSE", "imgfuse", true},
+    // Session 73, W7: cheapen the GPU-clean page predicate of the witness's clean loop.
+    // SHIPPED at 1 after wcp73a, 124 ABBA pairs on 0af8fed6: cpu/draw -0.588 % +/- 0.177 %,
+    // t = -6.66, whole-arm cpu/fr 32 678 -> 32 447 us = -0.231 ms of wall per frame (paired
+    // -0.591 % of 32.56 ms = -0.191 ms; quote the interval 0.19-0.23 ms), gpu_busy_us +0.066 %
+    // = noise, FPS 30.26 -> 30.48, draws 0.118 % apart. da_take_us 3298.5 -> 3018.9 us.
+    // Both halves armed on 99.995 % of the misses they aim at: da_cl_live 15 071.6 of da_cl_miss
+    // 15 072.4, tgm_hint 15 071.6 of tgm_call 15 072.4. Behaviour identical - da_hit = da_direct
+    // in both arms, da_miss 74.06 / 73.90, every da_stale* and pmemo_bad zero (guards check 2,
+    // 10/10). Expected and declared side effect: srt_miss 901.9 -> 1508.2, because half (b)
+    // routes the clean misses through LiveBackingPage's own table. Set it to 0 to get the two
+    // extra locks back.
+    {"KYTY_DA_CLEAN_PAGE", "dawitcp", true},
 }};
 
 struct KnobDefinition {

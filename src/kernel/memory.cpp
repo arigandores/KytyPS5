@@ -1047,6 +1047,10 @@ bool TryGetGpuCleanBackingPointer(uint64_t vaddr, uint64_t size, const void** po
 	return IsGpuCleanRange(vaddr, size) && TryGetBackingPointer(vaddr, size, pointer);
 }
 
+bool IsGpuClean(uint64_t vaddr, uint64_t size) {
+	return IsGpuCleanRange(vaddr, size);
+}
+
 GpuTrackingState QueryGpuTracking(uint64_t vaddr, uint64_t size) {
 	GpuTrackingState state {};
 	if (size == 0 || g_gpu_resources == nullptr || !IsGpuAddressRange(vaddr, size)) {

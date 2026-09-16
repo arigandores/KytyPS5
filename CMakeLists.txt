@@ -266,6 +266,40 @@ foreach(shader_name IN LISTS gpu_tiler_shader_names)
 	list(APPEND gpu_tiler_shader_headers "${shader_header}")
 endforeach()
 
+# Session 73, C1 (gate "imgfuse"): the same nine detile sources compiled a second time with
+# -DTARGET_IMAGE=1, so the dispatch writes the destination image through a UINT storage view
+# instead of a scratch buffer that copyBufferToImage then moves. No new shader source file: the
+# variant is a preprocessor branch inside gpu_tiler_common.inc, exactly as fault_buffer_process
+# below already takes -D macros.
+set(gpu_tiler_image_shader_names
+	standard256
+	standard4
+	standard4_3d
+	standard64
+	standard64_3d
+	prt
+	prt_3d
+	render_target
+	depth
+)
+foreach(shader_name IN LISTS gpu_tiler_image_shader_names)
+	set(shader_source "${gpu_tiler_shader_dir}/gpu_tiler_${shader_name}.comp")
+	set(shader_spv "${gpu_tiler_generated_dir}/gpu_tiler_${shader_name}_img.spv")
+	set(shader_header "${gpu_tiler_generated_dir}/gpu_tiler_${shader_name}_img_spv.h")
+	string(TOUPPER "GPU_TILER_${shader_name}_IMG_SPV" shader_symbol)
+	add_custom_command(
+		OUTPUT "${shader_header}"
+		COMMAND ${CMAKE_COMMAND} -E make_directory "${gpu_tiler_generated_dir}"
+		COMMAND "${KYTY_GLSLANG_VALIDATOR}" -V --target-env vulkan1.3 -Os -DTARGET_IMAGE=1
+		        "-I${gpu_tiler_shader_dir}" -o "${shader_spv}" "${shader_source}"
+		COMMAND ${CMAKE_COMMAND} -DINPUT=${shader_spv} -DOUTPUT=${shader_header}
+		        -DSYMBOL=${shader_symbol} -P "${KYTY_SOURCE_DIR}/embed_spirv.cmake"
+		DEPENDS "${shader_source}" ${gpu_tiler_shader_includes}
+		VERBATIM
+	)
+	list(APPEND gpu_tiler_shader_headers "${shader_header}")
+endforeach()
+
 set(fault_buffer_shader_source "${gpu_tiler_shader_dir}/fault_buffer_process.comp")
 set(fault_buffer_shader_spv "${gpu_tiler_generated_dir}/fault_buffer_process.spv")
 set(fault_buffer_shader_header "${gpu_tiler_generated_dir}/fault_buffer_process_spv.h")

@@ -3,15 +3,24 @@
 #include "common/alignment.h"
 #include "common/assert.h"
 #include "gpu_tiler_shaders/gpu_tiler_demote_d16_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_depth_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_depth_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_promote_d16_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_prt_3d_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_prt_3d_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_prt_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_prt_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_render_target_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_render_target_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_standard256_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_standard256_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_standard4_3d_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_standard4_3d_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_standard4_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_standard4_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_standard64_3d_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_standard64_3d_spv.h"
+#include "gpu_tiler_shaders/gpu_tiler_standard64_img_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_standard64_spv.h"
 #include "gpu_tiler_shaders/gpu_tiler_swap_bgra16_spv.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -31,7 +40,7 @@ TileManager::TileManager(GraphicContext& graphics, CommandScheduler& scheduler,
                          StreamBuffer& stream_buffer)
     : m_graphics(graphics), m_scheduler(scheduler), m_stream_buffer(stream_buffer) {
 	static_assert(FamilyCount == 9);
-	static_assert(sizeof(Push) == 52);
+	static_assert(sizeof(Push) == 56);
 	std::array<vk::DescriptorSetLayoutBinding, 3> bindings {};
 	for (uint32_t index = 0; index < 2; index++) {
 		bindings[index] = {index, vk::DescriptorType::eStorageBuffer, 1,
@@ -57,6 +66,19 @@ TileManager::TileManager(GraphicContext& graphics, CommandScheduler& scheduler,
 	RequireVulkanSuccess(
 	    m_graphics.device.createPipelineLayout(&layout_info, nullptr, &m_pipeline_layout),
 	    "create TileManager pipeline layout");
+
+	// Session 73, C1: the same three bindings with binding 1 as a storage IMAGE. Created
+	// unconditionally (two Vulkan objects, no pipelines until the gate is armed) so that arming
+	// "imgfuse" mid-run through the gate file cannot race a lazy layout creation.
+	bindings[1] = {1, vk::DescriptorType::eStorageImage, 1, vk::ShaderStageFlagBits::eCompute,
+	               nullptr};
+	RequireVulkanSuccess(m_graphics.device.createDescriptorSetLayout(&descriptor_info, nullptr,
+	                                                                 &m_image_descriptor_layout),
+	                     "create TileManager image descriptor layout");
+	layout_info.pSetLayouts = &m_image_descriptor_layout;
+	RequireVulkanSuccess(
+	    m_graphics.device.createPipelineLayout(&layout_info, nullptr, &m_image_pipeline_layout),
+	    "create TileManager image pipeline layout");
 }
 
 TileManager::~TileManager() {
@@ -80,11 +102,22 @@ TileManager::~TileManager() {
 	if (m_swap_bgra16 != nullptr) {
 		m_graphics.device.destroyPipeline(m_swap_bgra16, nullptr);
 	}
+	for (auto pipeline: m_image_pipelines) {
+		if (pipeline != nullptr) {
+			m_graphics.device.destroyPipeline(pipeline, nullptr);
+		}
+	}
 	if (m_pipeline_layout != nullptr) {
 		m_graphics.device.destroyPipelineLayout(m_pipeline_layout, nullptr);
 	}
+	if (m_image_pipeline_layout != nullptr) {
+		m_graphics.device.destroyPipelineLayout(m_image_pipeline_layout, nullptr);
+	}
 	if (m_descriptor_layout != nullptr) {
 		m_graphics.device.destroyDescriptorSetLayout(m_descriptor_layout, nullptr);
+	}
+	if (m_image_descriptor_layout != nullptr) {
+		m_graphics.device.destroyDescriptorSetLayout(m_image_descriptor_layout, nullptr);
 	}
 }
 
@@ -114,7 +147,8 @@ void TileManager::DeferDestroy(Scratch scratch) {
 
 void TileManager::Prepare(bool tile, uint64_t tiled_capacity, uint64_t linear_capacity,
                           std::span<const GpuTileInfo> infos, uint64_t source_base,
-                          uint64_t target_base, std::vector<Dispatch>& dispatches) {
+                          uint64_t target_base, std::vector<Dispatch>& dispatches,
+                          std::span<const vk::BufferImageCopy> regions) {
 	EXIT_IF(infos.empty() || tiled_capacity == 0 || linear_capacity == 0);
 	const auto& limits = m_graphics.GetPhysicalDeviceProperties().limits;
 	EXIT_NOT_IMPLEMENTED(tiled_capacity > UINT32_MAX || linear_capacity > UINT32_MAX);
@@ -129,8 +163,10 @@ void TileManager::Prepare(bool tile, uint64_t tiled_capacity, uint64_t linear_ca
 		return size != 0 && offset <= capacity && size <= capacity - offset;
 	};
 
+	EXIT_IF(!regions.empty() && regions.size() != infos.size());
 	dispatches.clear();
 	dispatches.reserve(infos.size());
+	size_t info_index = 0;
 	for (const auto& info: infos) {
 		TileBlockLayout block {};
 		const uint32_t  tiled_width  = info.tiled_width != 0 ? info.tiled_width : info.pitch;
@@ -217,6 +253,14 @@ void TileManager::Prepare(bool tile, uint64_t tiled_capacity, uint64_t linear_ca
 		dispatch.push.tail_x           = info.tail_x;
 		dispatch.push.tail_y           = info.tail_y;
 		dispatch.push.tail             = info.tail;
+		// Session 73, C1: the image variant's destination subresource. The mip level is the view
+		// the caller binds; only the array layer has to travel with the dispatch, and it is read
+		// from the copy region because GpuTileInfo does not carry it (surface_z is the layer for
+		// only two of the nine families, textureCommon.cpp:343-346). Zero for the buffer variant,
+		// whose shader does not declare the field's use at all.
+		dispatch.push.base_layer =
+		    regions.empty() ? 0u : regions[info_index].imageSubresource.baseArrayLayer;
+		info_index++;
 		dispatches.push_back(dispatch);
 	}
 
@@ -275,6 +319,51 @@ vk::Pipeline TileManager::GetPipeline(uint32_t slot) {
 	m_graphics.device.destroyShaderModule(module, nullptr);
 	RequireVulkanSuccess(result, "create TileManager pipeline");
 	return m_pipelines[slot];
+}
+
+// Session 73, C1: the detile half of the table again, compiled from the same nine sources with
+// -DTARGET_IMAGE=1 (CMakeLists.txt) so that binding 1 is a storage image. TILE is pinned to 0 -
+// an image destination is never a tiling target.
+vk::Pipeline TileManager::GetImagePipeline(uint32_t slot) {
+	EXIT_IF(slot >= m_image_pipelines.size());
+	if (m_image_pipelines[slot] != nullptr) {
+		return m_image_pipelines[slot];
+	}
+	struct Shader {
+		const uint32_t* code;
+		size_t          words;
+	};
+	static constexpr std::array<Shader, FamilyCount> shaders {{
+	    {GPU_TILER_STANDARD256_IMG_SPV, std::size(GPU_TILER_STANDARD256_IMG_SPV)},
+	    {GPU_TILER_STANDARD4_IMG_SPV, std::size(GPU_TILER_STANDARD4_IMG_SPV)},
+	    {GPU_TILER_STANDARD4_3D_IMG_SPV, std::size(GPU_TILER_STANDARD4_3D_IMG_SPV)},
+	    {GPU_TILER_STANDARD64_IMG_SPV, std::size(GPU_TILER_STANDARD64_IMG_SPV)},
+	    {GPU_TILER_STANDARD64_3D_IMG_SPV, std::size(GPU_TILER_STANDARD64_3D_IMG_SPV)},
+	    {GPU_TILER_PRT_IMG_SPV, std::size(GPU_TILER_PRT_IMG_SPV)},
+	    {GPU_TILER_PRT_3D_IMG_SPV, std::size(GPU_TILER_PRT_3D_IMG_SPV)},
+	    {GPU_TILER_RENDER_TARGET_IMG_SPV, std::size(GPU_TILER_RENDER_TARGET_IMG_SPV)},
+	    {GPU_TILER_DEPTH_IMG_SPV, std::size(GPU_TILER_DEPTH_IMG_SPV)},
+	}};
+	const uint32_t                   element_index = slot % BytesPerElementCount;
+	const uint32_t                   family_index  = slot / BytesPerElementCount;
+	const uint32_t                   values[] {1u << element_index, 0u};
+	const vk::SpecializationMapEntry entries[] {{0, 0, 4}, {1, 4, 4}};
+	const vk::SpecializationInfo     specialization {2, entries, sizeof(values), values};
+	const auto module =
+	    CompileSPV({shaders[family_index].code, shaders[family_index].words}, m_graphics.device);
+	vk::PipelineShaderStageCreateInfo stage {};
+	stage.stage               = vk::ShaderStageFlagBits::eCompute;
+	stage.module              = module;
+	stage.pName               = "main";
+	stage.pSpecializationInfo = &specialization;
+	vk::ComputePipelineCreateInfo create {};
+	create.stage  = stage;
+	create.layout = m_image_pipeline_layout;
+	const auto result = m_graphics.device.createComputePipelines(nullptr, 1, &create, nullptr,
+	                                                             &m_image_pipelines[slot]);
+	m_graphics.device.destroyShaderModule(module, nullptr);
+	RequireVulkanSuccess(result, "create TileManager image pipeline");
+	return m_image_pipelines[slot];
 }
 
 // Image uploads at a scene cut (300-450 images, 600 MB) sit between draws; every barrier whose
@@ -400,6 +489,124 @@ TileManager::Result TileManager::Detile(vk::Buffer tiled, uint64_t tiled_offset,
 	Record(tiled, tiled_offset, tiled_capacity, scratch.buffer, 0, scratch.size, dispatches,
 	       true, source_is_host, true);
 	return {scratch.buffer, 0, linear_capacity};
+}
+
+// Session 73, C1 (gate "imgfuse"). The scratch buffer, its deferred destruction, the fillBuffer
+// that gave its pad bytes a defined value, and the vkCmdCopyBufferToImage that moved it all
+// disappear; what is left is the same dispatch writing the image. The caller owns the predicate
+// (TextureCache::UploadImage) - every EXIT_IF below is one of its clauses, asserted not decided.
+void TileManager::DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+                                uint64_t tiled_offset, uint64_t tiled_capacity,
+                                uint64_t linear_capacity, std::span<const GpuTileInfo> infos,
+                                std::span<const vk::BufferImageCopy> regions,
+                                bool                                 source_is_host) {
+	EXIT_IF(infos.empty() || infos.size() != regions.size() ||
+	        view_format == vk::Format::eUndefined || image.backing.image == nullptr);
+	const auto&    limits = m_graphics.GetPhysicalDeviceProperties().limits;
+	const uint64_t descriptor_alignment =
+	    std::max<uint64_t>(limits.minStorageBufferOffsetAlignment, 4);
+	const uint64_t source_descriptor_offset = Common::AlignDown(tiled_offset, descriptor_alignment);
+	const uint64_t source_base              = tiled_offset - source_descriptor_offset;
+	const uint64_t source_range             = Common::AlignUp(source_base + tiled_capacity, 4);
+	EXIT_NOT_IMPLEMENTED(source_range > limits.maxStorageBufferRange);
+
+	std::vector<Dispatch> dispatches;
+	Prepare(false, tiled_capacity, linear_capacity, infos, source_base, 0, dispatches, regions);
+
+	m_scheduler.EndRendering(RenderPassEnd::Tiler);
+	auto command = m_scheduler.Current().Handle();
+
+	const bool               narrow = NarrowUploadBarriers();
+	vk::BufferMemoryBarrier2 buffer_barriers[2] {};
+	buffer_barriers[0].srcStageMask =
+	    narrow && source_is_host
+	        ? vk::PipelineStageFlags2 {vk::PipelineStageFlagBits2::eHost}
+	        : vk::PipelineStageFlagBits2::eAllCommands | vk::PipelineStageFlagBits2::eHost;
+	buffer_barriers[0].srcAccessMask =
+	    vk::AccessFlagBits2::eMemoryWrite | vk::AccessFlagBits2::eHostWrite;
+	buffer_barriers[0].dstStageMask        = vk::PipelineStageFlagBits2::eComputeShader;
+	buffer_barriers[0].dstAccessMask       = vk::AccessFlagBits2::eShaderRead;
+	buffer_barriers[0].srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	buffer_barriers[0].dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+	buffer_barriers[0].buffer              = tiled;
+	buffer_barriers[0].offset              = tiled_offset;
+	buffer_barriers[0].size                = tiled_capacity;
+	buffer_barriers[1]                     = buffer_barriers[0];
+	buffer_barriers[1].srcStageMask        = vk::PipelineStageFlagBits2::eHost;
+	buffer_barriers[1].srcAccessMask       = vk::AccessFlagBits2::eHostWrite;
+	buffer_barriers[1].dstAccessMask       = vk::AccessFlagBits2::eUniformRead;
+	buffer_barriers[1].buffer              = m_stream_buffer.Handle();
+	buffer_barriers[1].offset              = dispatches.front().params_offset;
+	buffer_barriers[1].size =
+	    dispatches.back().params_offset - dispatches.front().params_offset + sizeof(Push);
+
+	// The acquire must come from the image's own state machine: GetBarriers is the only entry
+	// point that takes an explicit destination stage (Transit always ORs eAllGraphics), and it is
+	// what keeps backing.state truthful for the next consumer. atomic_write stays false - these
+	// are plain imageStores, and claiming otherwise would let gate "atomimg" drop a needed
+	// write-after-write barrier.
+	const auto image_barriers =
+	    image.GetBarriers(vk::ImageLayout::eGeneral, vk::AccessFlagBits2::eShaderWrite,
+	                      vk::PipelineStageFlagBits2::eComputeShader, {});
+	vk::DependencyInfo dependency {};
+	dependency.bufferMemoryBarrierCount = 2;
+	dependency.pBufferMemoryBarriers    = buffer_barriers;
+	dependency.imageMemoryBarrierCount  = static_cast<uint32_t>(image_barriers.size());
+	dependency.pImageMemoryBarriers     = image_barriers.data();
+	command.pipelineBarrier2(dependency);
+
+	const vk::DescriptorBufferInfo source_info {tiled, source_descriptor_offset, source_range};
+	for (size_t index = 0; index < dispatches.size(); index++) {
+		const auto& dispatch = dispatches[index];
+		const auto& region   = regions[index];
+		// One view per mip level, spanning every layer, so the shader's z coordinate is the array
+		// layer. Built from scratch, never copied from a sampled binding: min_lod must be 0 or
+		// FindView aborts on a storage view (imageView.cpp:384-385), and the mapping must be
+		// identity for a raw-bits write.
+		ImageViewInfo view {};
+		view.format      = view_format;
+		view.type        = vk::ImageViewType::e2DArray;
+		view.aspect      = vk::ImageAspectFlagBits::eColor;
+		view.base_level  = region.imageSubresource.mipLevel;
+		view.level_count = 1;
+		view.base_layer  = 0;
+		view.layer_count = image.backing.layers;
+		view.mapping     = {};
+		view.usage       = vk::ImageUsageFlagBits::eStorage;
+		view.min_lod     = 0;
+		const vk::DescriptorImageInfo target_info {nullptr, image.FindView(view),
+		                                           vk::ImageLayout::eGeneral};
+		const vk::DescriptorBufferInfo params_info {m_stream_buffer.Handle(),
+		                                            dispatch.params_offset, sizeof(Push)};
+		std::array<vk::WriteDescriptorSet, 3> writes {};
+		writes[0].dstBinding      = 0;
+		writes[0].descriptorCount = 1;
+		writes[0].descriptorType  = vk::DescriptorType::eStorageBuffer;
+		writes[0].pBufferInfo     = &source_info;
+		writes[1].dstBinding      = 1;
+		writes[1].descriptorCount = 1;
+		writes[1].descriptorType  = vk::DescriptorType::eStorageImage;
+		writes[1].pImageInfo      = &target_info;
+		writes[2].dstBinding      = 2;
+		writes[2].descriptorCount = 1;
+		writes[2].descriptorType  = vk::DescriptorType::eUniformBuffer;
+		writes[2].pBufferInfo     = &params_info;
+		command.pushDescriptorSetKHR(vk::PipelineBindPoint::eCompute, m_image_pipeline_layout, 0,
+		                             static_cast<uint32_t>(writes.size()), writes.data());
+		command.bindPipeline(vk::PipelineBindPoint::eCompute,
+		                     GetImagePipeline(dispatch.pipeline_slot));
+		// Every dispatch of this call writes a different (level, layer), so they need no barrier
+		// between them.
+		command.dispatch((dispatch.push.width + 7u) / 8u, (dispatch.push.height + 7u) / 8u,
+		                 dispatch.push.depth);
+	}
+	if (GpuTimeProfiler::Enabled()) {
+		m_scheduler.GpuMark(GpuTimeProfiler::Kind::ImageUpload, 8, dispatches.size());
+	}
+	// The release the scratch path got from Image::Upload's tail (image.cpp:329-330), verbatim.
+	image.Transit(vk::ImageLayout::eGeneral,
+	              vk::AccessFlagBits2::eShaderRead | vk::AccessFlagBits2::eTransferRead, {},
+	              command);
 }
 
 void TileManager::Tile(vk::Buffer linear, uint64_t linear_offset, uint64_t linear_capacity,

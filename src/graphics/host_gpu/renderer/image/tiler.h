@@ -68,6 +68,15 @@ public:
 	[[nodiscard]] Result Detile(vk::Buffer tiled, uint64_t tiled_offset, uint64_t tiled_capacity,
 	                            uint64_t linear_capacity, std::span<const GpuTileInfo> infos,
 	                            bool source_is_host = false);
+	// Session 73, C1 (gate "imgfuse"): the same detile, writing the destination image directly
+	// through a UINT storage view instead of a scratch buffer a copyBufferToImage then moves.
+	// `regions` must pair 1:1 with `infos` - it carries the destination subresource, which
+	// GpuTileInfo does not have. The caller owns the predicate (TextureCache::UploadImage): this
+	// function asserts it rather than deciding it.
+	void DetileToImage(Image& image, vk::Format view_format, vk::Buffer tiled,
+	                   uint64_t tiled_offset, uint64_t tiled_capacity, uint64_t linear_capacity,
+	                   std::span<const GpuTileInfo>         infos,
+	                   std::span<const vk::BufferImageCopy> regions, bool source_is_host);
 	void Tile(vk::Buffer linear, uint64_t linear_offset, uint64_t linear_capacity, vk::Buffer tiled,
 	          uint64_t tiled_offset, uint64_t tiled_capacity, std::span<const GpuTileInfo> infos);
 	void TileImage(Image& image, std::span<const vk::BufferImageCopy> regions, vk::Buffer tiled,
@@ -89,6 +98,8 @@ private:
 	static constexpr uint32_t BytesPerElementCount = 5;
 	static constexpr uint32_t DirectionCount       = 2;
 	static constexpr uint32_t PipelineCount = FamilyCount * BytesPerElementCount * DirectionCount;
+	// Detile direction only: an image destination is never a tiling target.
+	static constexpr uint32_t ImagePipelineCount = FamilyCount * BytesPerElementCount;
 
 	struct Push {
 		uint32_t src_base;
@@ -104,6 +115,9 @@ private:
 		uint32_t tail_x;
 		uint32_t tail_y;
 		uint32_t tail;
+		// Session 73: destination array layer for the image variant; the mip level is the view.
+		// Zero for every buffer-destination dispatch, which never reads it.
+		uint32_t base_layer;
 	};
 	struct Dispatch {
 		Push     push {};
@@ -129,12 +143,14 @@ private:
 	void                          DeferDestroy(Scratch scratch);
 	void Prepare(bool tile, uint64_t tiled_capacity, uint64_t linear_capacity,
 	             std::span<const GpuTileInfo> infos, uint64_t source_base, uint64_t target_base,
-	             std::vector<Dispatch>& dispatches);
+	             std::vector<Dispatch>&               dispatches,
+	             std::span<const vk::BufferImageCopy> regions = {});
 	void Record(vk::Buffer source, uint64_t source_offset, uint64_t source_capacity,
 	            vk::Buffer target, uint64_t target_offset, uint64_t target_capacity,
 	            std::span<Dispatch> dispatches, bool clear_target, bool source_is_host = false,
 	            bool target_for_transfer = false);
 	[[nodiscard]] vk::Pipeline GetPipeline(uint32_t slot);
+	[[nodiscard]] vk::Pipeline GetImagePipeline(uint32_t slot);
 	void                       SwapBgra16(Result input, Result output, uint32_t pixels);
 
 	GraphicContext&                         m_graphics;
@@ -143,6 +159,11 @@ private:
 	vk::DescriptorSetLayout                 m_descriptor_layout = nullptr;
 	vk::PipelineLayout                      m_pipeline_layout   = nullptr;
 	std::array<vk::Pipeline, PipelineCount> m_pipelines {};
+	// Session 73, C1: a second layout whose binding 1 is a storage IMAGE, and its own pipelines.
+	// vk::DescriptorSetLayoutBinding fixes the descriptor type, so this cannot share the first.
+	vk::DescriptorSetLayout                     m_image_descriptor_layout = nullptr;
+	vk::PipelineLayout                          m_image_pipeline_layout   = nullptr;
+	std::array<vk::Pipeline, ImagePipelineCount> m_image_pipelines {};
 	vk::Pipeline                            m_d16_to_d24  = nullptr;
 	vk::Pipeline                            m_d16_to_d32  = nullptr;
 	vk::Pipeline                            m_d24_to_d16  = nullptr;

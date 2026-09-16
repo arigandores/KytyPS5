@@ -605,3 +605,5 @@ in the timer the programme has been watching, its best predictor is the run's ow
 and a knob that was already in the tree buys **0.86 FPS** for no code while doing something to the
 GPU that nobody has explained. **60 FPS still needs about 15 ms off the CPU path, and the programme
 still cannot say what state it is measuring in — but it now knows which number to condition on.**
+
+Commit **270ae1f** (branch `merge-upstream`, base `29ded80`, 2 files, +805) — `docs/local-session-79.md` and `docs/next-session-80.md` only. **No source file changed and nothing was rebuilt this session.** Not pushed.

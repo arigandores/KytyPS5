@@ -4,7 +4,8 @@
 on the named log. Where a number is an estimate it says so in those words. Where something was not
 measured it says NOT MEASURED and names what would measure it.
 
-Tree: `merge-upstream`, base `ca2a8ae` (session 73's `d04cff7` plus its doc commit).
+Tree: `merge-upstream`, base `ca2a8ae` (session 73's `d04cff7` plus its doc commit);
+this session is commit **b8fd302**, 12 files, +932 / -15, not pushed.
 Installed binary: **`017FC03107D569CA047E24F802CCCE0D9187A21AFF747EE7A0F622D8E42631C3`**
 (short `017fc031`), 23 555 584 bytes.
 Five binaries carried runs; each run's `<tag>.json` records which, and guards check 10 verifies it:

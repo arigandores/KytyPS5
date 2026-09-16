@@ -1,6 +1,6 @@
 # Session 75 — prompt
 
-Session 74's commit is on `merge-upstream`, base `ca2a8ae`.
+Session 74's commit is **b8fd302** on `merge-upstream`, base `ca2a8ae`.
 Installed binary — **`017FC03107D569CA047E24F802CCCE0D9187A21AFF747EE7A0F622D8E42631C3`**
 (short `017fc031`), 23 555 584 bytes. Harness — **`C:/kyty/s74`**, port it to `C:/kyty/s75`.
 

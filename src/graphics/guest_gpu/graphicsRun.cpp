@@ -954,11 +954,25 @@ bool GuestGpu::Process(Submission& submission) {
 	return complete;
 }
 
+// Session 75, M4: the previous submission slice, for slc_cp_same and slc_newcb. Process has
+// exactly three call sites (:877, :884, :933), all inside GuestGpu::Process, whose one caller is
+// ThreadRun on the single GuestGpu thread - so these are single-threaded by construction and need
+// no atomics. They live here rather than with the baton statics 554 lines below because a
+// namespace-scope name must be declared before its use.
+namespace {
+const CommandProcessor* g_last_slice_processor = nullptr;
+uint64_t                g_last_slice_tick      = 0;
+} // namespace
+
 Pm4ProcessResult CommandProcessor::Process(Pm4Execution&             execution,
                                            std::span<const uint32_t> commands) {
 	KYTY_PROFILER_BLOCK("CommandProcessor::Process");
 	EXIT_IF(g_current_execution != nullptr);
 	EXIT_IF(commands.size() > UINT32_MAX);
+	// Session 75, M4: taken BEFORE the push below, which is exactly what distinguishes a slice that
+	// starts a fresh command span from one that resumes a cursor the previous slice left behind.
+	// Two slices that share execution.m_buffer_stack are not a fork pair under any transport.
+	const bool slice_resume = !execution.m_buffer_stack.empty();
 	if (execution.m_buffer_stack.empty() && !commands.empty()) {
 		execution.m_buffer_stack.push_back({commands});
 		PrefetchComputePipelines(execution);
@@ -981,7 +995,53 @@ Pm4ProcessResult CommandProcessor::Process(Pm4Execution&             execution,
 		Pm4Execution*     previous_execution;
 	} execution_scope(*this, execution);
 
+	// Session 75, M4 second question: is the submission slice a state boundary? Session 74 answered
+	// the TRANSPORT negatively - 93-94 % of baton range hand-offs land inside an open render pass at
+	// every L - and showed the boundaries collapse onto ~12.5 submission slices a frame, invariant
+	// in L. This is that slice, counted at the shipping defaults with no baton at all. Declared in
+	// the function body, not inside the guard: the histogram below reads it after ProcessPm4.
+	// The full Common::FrameStats spelling is deliberate - every "namespace FS" in this file is
+	// block-scoped and all five of them sit below this function.
+	const auto slice_draws0 = m_range_draws;
+	const bool slice_counts = !execution.m_buffer_stack.empty() && Common::FrameStats::Enabled();
+	if (slice_counts) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SliceTotal, 1);
+		// The byte-identical predicate session 74 used for rng_inpass. NOTE the difference in the
+		// POINT, which makes the two ratios comparable only with this said: rng_inpass is evaluated
+		// after g_gpu_state->ProcessCommands() has pumped queued callbacks, this is evaluated
+		// before any pump has run in this call. CurrentBuffer() is safe here because cp.BufferInit()
+		// runs at :866 before every cp.Process, so the scheduler is Active().
+		if (CurrentBuffer().IsRendering()) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SliceInPass, 1);
+		}
+		if (slice_resume) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SliceResume, 1);
+		}
+		if (g_last_slice_processor == this) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SliceSameProcessor, 1);
+		}
+		const auto tick = GetScheduler().CurrentTick();
+		if (tick != g_last_slice_tick) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SliceNewBuffer, 1);
+		}
+		g_last_slice_processor = this;
+		g_last_slice_tick      = tick;
+	}
+
 	ProcessPm4(execution, 0);
+
+	// The concentration. m_range_draws is incremented at :1950, :2222 and :2290 - the same three
+	// sites that feed Counter::Draws and Counter::Dispatches - so this histogram is an exact
+	// partition of draws + dispatches over the slices, not a proxy.
+	if (slice_counts) {
+		const auto items  = m_range_draws - slice_draws0;
+		const auto bucket = items < 128    ? Common::FrameStats::Counter::SliceDraws0
+		                    : items < 512  ? Common::FrameStats::Counter::SliceDraws1
+		                    : items < 1024 ? Common::FrameStats::Counter::SliceDraws2
+		                    : items < 2048 ? Common::FrameStats::Counter::SliceDraws3
+		                                   : Common::FrameStats::Counter::SliceDraws4;
+		Common::FrameStats::Add(bucket, 1);
+	}
 	return execution.m_buffer_stack.empty() ? Pm4ProcessResult::Complete
 	                                        : Pm4ProcessResult::Blocked;
 }

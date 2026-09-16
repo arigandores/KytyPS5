@@ -164,6 +164,14 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // and read da_cl_bad = 0 over ~98 million checks on cgv74a.
     {"KYTY_DA_CLEAN_GEN", "dawitcg", true},
     {"KYTY_DA_CLEAN_GEN_VERIFY", "dawitcgcheck", false},
+    // Session 75: the M1 prefetch asks for L2 where the source says L1, because winnt.h:3649
+    // defines _MM_HINT_T0 as 1 (MSVC numbering) UNGUARDED and wins over clang's 3 in
+    // pipelineCache.cpp, whose <xmmintrin.h> sits below fifty-six project headers. Measured before
+    // the gate was written: the prefetch itself is worth 0.98 ms of CPU per frame (dpf75a, 125 ABBA
+    // pairs, daprefetch=1|0, cpu/draw +3.064 % +/- 0.244 %, t = +25.14, whole-arm cpu/fr
+    // 31 950 -> 32 926 us, draws 0.001 % apart). What the CORRECT hint is worth on top of that is
+    // NOT MEASURED; an ABBA on this gate measures it. Default 0 = today, bit for bit.
+    {"KYTY_PREFETCH_HINT_L1", "pfhint", false},
 }};
 
 struct KnobDefinition {

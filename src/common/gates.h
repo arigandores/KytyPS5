@@ -159,6 +159,15 @@ enum class Gate : uint32_t {
 	// probe of patch_cleanprobe.py: da_cl_pmiss 1402.9 against today's da_cl_miss 15 098.4.
 	DrawAheadCleanGen,       // KYTY_DA_CLEAN_GEN,        file name "dawitcg"
 	DrawAheadCleanGenVerify, // KYTY_DA_CLEAN_GEN_VERIFY, file name "dawitcgcheck"
+	// Session 75: pipelineCache.cpp includes <xmmintrin.h> below fifty-six project headers, one of
+	// which has already pulled in winnt.h, whose UNGUARDED "#define _MM_HINT_T0 1" (MSVC numbering,
+	// winnt.h:3649) therefore wins over clang's 3. clang lowers _mm_prefetch(p, sel) as
+	// __builtin_prefetch(p, 0, sel) with GCC locality, where 1 == T2, so every prefetch of the M1
+	// witness path emits PREFETCHT2 - L2, never L1 - while the source asks for L1. The installed
+	// 017fc031 carries 50 prefetcht2 against 13 prefetcht0. This gate selects the intended L1 form;
+	// at 0 the emitted instruction is byte-identical to today's. A prefetch changes no value and no
+	// decision, so the arms are behaviourally identical by construction.
+	PrefetchHintL1, // KYTY_PREFETCH_HINT_L1,    file name "pfhint"
 	Count,
 };
 

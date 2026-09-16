@@ -928,6 +928,38 @@ enum class Counter : uint32_t {
 	// The arming proof. Identically zero while imgfuse=0; equal to c1_fz_ok while imgfuse=1.
 	C1Fused,            // c1_fuse: uploads whose detile wrote the image directly
 	C1FusedKb,          // c1_fuse_kb: KiB of guest source in those
+	// ------------------------------------------------------------------------------------------
+	// Session 75, gate "pfhint". pf_l1 is the ARMING PROOF and nothing else: the number of
+	// AheadTake prefetch blocks that issued the L1 form. It must equal da_hit in the armed arm and
+	// read exactly 0.000 in the other, the same shape as c1_fuse against c1_fz_ok.
+	PrefetchHintL1Takes, // pf_l1: takes whose prefetch block issued __builtin_prefetch(..., 3)
+	// Session 75, W3 - the 192-byte cap of PrefetchVectorData. da_pf_b is what the eleven vectors
+	// of one take OFFER; da_pf_cap_b is what the cap lets through (the sum of min(bytes, 192)).
+	// Their DIFFERENCE is the truncated remainder, which is exactly W3's population and which no
+	// existing log can produce - session 75's recon reader called that population empty from the
+	// per-frame mean and its adversary refuted it from the same log (>= 561 truncated cache lines
+	// per frame from live_values alone), and neither had the per-TAKE distribution that decides it.
+	DrawAheadPrefetchBytes,    // da_pf_b: bytes offered to PrefetchVectorData, summed over a take
+	DrawAheadPrefetchCapBytes, // da_pf_cap_b: ... of those, the bytes the 192-byte cap prefetched
+	// ------------------------------------------------------------------------------------------
+	// Session 75, M4 second question. A SUBMISSION SLICE is one call of CommandProcessor::Process
+	// that reaches ProcessPm4 with a non-empty buffer stack. Session 74 showed a baton range
+	// boundary is a pass boundary 93-94 % of the time and that the boundaries collapse onto ~12.5
+	// slices a frame invariant in L; these say what a slice IS. All of them work at m4baton=0 and
+	// fire about 12.5 times a frame, so they cost nothing.
+	SliceTotal,         // slc_total: submission slices (predicted in advance: 11.0-14.0 / frame)
+	SliceInPass,        // slc_inpass: ... taken with a render pass open (bounded in [0, 2.01])
+	SliceResume,        // slc_resume: ... resuming a cursor the previous slice left, so not a fork point
+	SliceSameProcessor, // slc_cp_same: ... whose predecessor ran on the same CommandProcessor
+	SliceNewBuffer,     // slc_newcb: ... at which the scheduler tick moved (floor 0.838, not 0)
+	// The concentration, which is what actually decides whether a two-way slice split has a prize.
+	// One bucket per slice by the draws + dispatches it executed (m_range_draws delta, whose three
+	// increment sites are the same three that feed Counter::Draws and Counter::Dispatches).
+	SliceDraws0, // slc_d0: slices that executed < 128 draws+dispatches
+	SliceDraws1, // slc_d1: 128 .. 511
+	SliceDraws2, // slc_d2: 512 .. 1023
+	SliceDraws3, // slc_d3: 1024 .. 2047
+	SliceDraws4, // slc_d4: >= 2048
 	Count
 };
 

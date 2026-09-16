@@ -717,6 +717,27 @@ struct Witness {
 	}
 };
 
+// Gate "pfhint". WHY THIS IS NOT _mm_prefetch: in THIS translation unit `_MM_HINT_T0` does not
+// come from <xmmintrin.h> (included at line 57) but from `winnt.h:3649`, which defines it UNGUARDED
+// as 1 in the MSVC numbering; a project header above line 57 has already set the xmmintrin include
+// guard, so clang's own value of 3 is never defined. clang lowers `_mm_prefetch(p, sel)` as
+// `__builtin_prefetch(p, 0, sel)` with GCC LOCALITY, where 1 == T2 - so every
+// `_mm_prefetch(..., _MM_HINT_T0)` in this file has been emitting PREFETCHT2, L2 and never L1,
+// while the source said L1. Confirmed in the shipped 017fc031: 50 prefetcht2 against 13 prefetcht0,
+// and the 0 / 0x40 / 0x80 chain of PrefetchVectorData among them.
+//
+// The locality argument of __builtin_prefetch must be a compile-time constant, so the choice is a
+// branch. Every caller reads the gate ONCE and passes the result down; the hot loop over live_runs
+// duplicates its body instead, so neither arm pays a per-line test. At `l1 == false` the emitted
+// instruction is today's, bit for bit.
+inline void PrefetchLine(const void* address, bool l1) noexcept {
+	if (l1) {
+		__builtin_prefetch(address, 0, 3); // prefetcht0 - what the source always meant
+	} else {
+		__builtin_prefetch(address, 0, 1); // prefetcht2 - what it has been emitting
+	}
+}
+
 // One recorded run against the guest words it was read from. The runs are short - a run is a
 // V# or a T#, four or eight dwords - and a memcmp call each was 6.4 % of all GuestGpu samples in
 // Sky Garden, so compare short runs here and leave memcmp the rare long one. The guest bytes are
@@ -767,9 +788,19 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* fai
 		                        1);
 	}
 	if (direct) {
-		for (const auto& run: witness.live_runs) {
-			if (run.backing != nullptr) {
-				_mm_prefetch(reinterpret_cast<const char*>(run.backing), _MM_HINT_T0);
+		// Gate "pfhint": one test for the whole pass, not one per run. The two bodies differ only
+		// in the locality argument, which must be a literal.
+		if (Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1)) {
+			for (const auto& run: witness.live_runs) {
+				if (run.backing != nullptr) {
+					__builtin_prefetch(run.backing, 0, 3); // prefetcht0
+				}
+			}
+		} else {
+			for (const auto& run: witness.live_runs) {
+				if (run.backing != nullptr) {
+					__builtin_prefetch(run.backing, 0, 1); // prefetcht2 - today, bit for bit
+				}
 			}
 		}
 	}
@@ -1235,17 +1266,21 @@ void CanonicalValue(CanonicalPlanWriter& w, const ShaderRecompiler::IR::Value& v
 	return std::move(w.data);
 }
 
-// Gate "daprefetch": the first lines of a vector's heap block.
+// Gate "daprefetch": the first lines of a vector's heap block. Returns the bytes the vector
+// OFFERED, which the caller sums against the bytes the 192-byte cap let through - that difference
+// is W3's population and nothing else in the tree measures it. Gate "pfhint" picks the cache level.
 template <typename T>
-void PrefetchVectorData(const std::vector<T>& values) {
+size_t PrefetchVectorData(const std::vector<T>& values, bool l1) {
 	if (values.empty()) {
-		return;
+		return 0;
 	}
 	const auto* bytes = reinterpret_cast<const char*>(values.data());
-	const auto  size  = std::min<size_t>(values.size() * sizeof(T), 192u);
+	const auto  total = values.size() * sizeof(T);
+	const auto  size  = std::min<size_t>(total, 192u);
 	for (size_t offset = 0; offset < size; offset += 64u) {
-		_mm_prefetch(bytes + offset, _MM_HINT_T0);
+		PrefetchLine(bytes + offset, l1);
 	}
+	return total;
 }
 
 // Session 58 (B4 follow-up): what one snapshot copy carried, for the ceiling counters. Filled
@@ -2300,11 +2335,13 @@ struct PipelineCache::ProgramCache {
 					key = Fingerprint(*source);
 				}
 				const auto hash = AheadHash(key, ahead.base, ahead.user_hash);
+				// Gate "pfhint": one gate read for both probes and both lines.
+				const bool pf_l1 = Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1);
 				for (size_t probe = 0; probe < 2; probe++) {
 					const auto* lines = reinterpret_cast<const char*>(
 					    &ahead_slots[(hash + probe) & (AheadSlotCount - 1)]);
-					_mm_prefetch(lines, _MM_HINT_T0);
-					_mm_prefetch(lines + 64, _MM_HINT_T0);
+					PrefetchLine(lines, pf_l1);
+					PrefetchLine(lines + 64, pf_l1);
 				}
 			}
 		};
@@ -2648,17 +2685,34 @@ struct PipelineCache::ProgramCache {
 				// the comparison below and the snapshot for this draw's bindings (session 56:
 				// their first touches in PrepareBindings, FindBuffers, ResolveTexture,
 				// StreamBuffer::Copy and ~ResourceSnapshot were ~5 % of the thread).
-				PrefetchVectorData(slot.witness.live_runs);
-				PrefetchVectorData(slot.witness.live_values);
-				PrefetchVectorData(slot.witness.clean_runs);
-				PrefetchVectorData(slot.witness.clean_values);
-				PrefetchVectorData(slot.snapshot.buffers);
-				PrefetchVectorData(slot.snapshot.images);
-				PrefetchVectorData(slot.snapshot.samplers);
-				PrefetchVectorData(slot.snapshot.flattened_srt);
-				PrefetchVectorData(slot.snapshot.user_data);
-				PrefetchVectorData(slot.specialization.buffers);
-				PrefetchVectorData(slot.specialization.images);
+				// Gate "pfhint": read ONCE for the whole block, never per line.
+				const bool pf_l1      = Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1);
+				size_t     pf_offered = 0;
+				size_t     pf_capped  = 0;
+				// W3: what the eleven vectors offer against what the 192-byte cap lets through.
+				const auto pf = [&pf_offered, &pf_capped](size_t total) {
+					pf_offered += total;
+					pf_capped += std::min<size_t>(total, 192u);
+				};
+				pf(PrefetchVectorData(slot.witness.live_runs, pf_l1));
+				pf(PrefetchVectorData(slot.witness.live_values, pf_l1));
+				pf(PrefetchVectorData(slot.witness.clean_runs, pf_l1));
+				pf(PrefetchVectorData(slot.witness.clean_values, pf_l1));
+				pf(PrefetchVectorData(slot.snapshot.buffers, pf_l1));
+				pf(PrefetchVectorData(slot.snapshot.images, pf_l1));
+				pf(PrefetchVectorData(slot.snapshot.samplers, pf_l1));
+				pf(PrefetchVectorData(slot.snapshot.flattened_srt, pf_l1));
+				pf(PrefetchVectorData(slot.snapshot.user_data, pf_l1));
+				pf(PrefetchVectorData(slot.specialization.buffers, pf_l1));
+				pf(PrefetchVectorData(slot.specialization.images, pf_l1));
+				if (FS::Enabled()) {
+					// The arming proof of "pfhint": da_hit in the armed arm, exactly 0 in the other.
+					if (pf_l1) {
+						FS::Add(FS::Counter::PrefetchHintL1Takes, 1);
+					}
+					FS::Add(FS::Counter::DrawAheadPrefetchBytes, pf_offered);
+					FS::Add(FS::Counter::DrawAheadPrefetchCapBytes, pf_capped);
+				}
 			}
 			if (FS::Enabled()) {
 				FS::Add(FS::Counter::DrawAheadWords, slot.witness.Words());

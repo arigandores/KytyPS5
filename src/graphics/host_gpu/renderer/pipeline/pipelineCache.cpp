@@ -1267,16 +1267,39 @@ void CanonicalValue(CanonicalPlanWriter& w, const ShaderRecompiler::IR::Value& v
 }
 
 // Gate "daprefetch": the first lines of a vector's heap block. Returns the bytes the vector
-// OFFERED, which the caller sums against the bytes the 192-byte cap let through - that difference
-// is W3's population and nothing else in the tree measures it. Gate "pfhint" picks the cache level.
-template <typename T>
+// OFFERED, which the caller sums against the bytes the cap let through - that difference is W3's
+// population and nothing else in the tree measures it. Gate "pfhint" picks the cache level; knob
+// "pfcap" picks the cap (default 192 = what shipped before session 76). `cap` is passed in, NOT
+// read here, because this runs once per vector and the knob must be read once per TAKE.
+// The SHIPPED form: CAP is a compile-time constant, so the loop keeps the bound clang needs to
+// unroll it to three instructions. At CAP == 192 this is byte for byte the code that shipped
+// before session 76 - verified by an opcode scan of the binary, which is how the first attempt at
+// this knob was caught changing it (a runtime bound cost +66 prefetch instructions).
+template <size_t CAP, typename T>
 size_t PrefetchVectorData(const std::vector<T>& values, bool l1) {
 	if (values.empty()) {
 		return 0;
 	}
 	const auto* bytes = reinterpret_cast<const char*>(values.data());
 	const auto  total = values.size() * sizeof(T);
-	const auto  size  = std::min<size_t>(total, 192u);
+	const auto  size  = std::min<size_t>(total, CAP);
+	for (size_t offset = 0; offset < size; offset += 64u) {
+		PrefetchLine(bytes + offset, l1);
+	}
+	return total;
+}
+
+// The MEASUREMENT form, reached only when knob "pfcap" is off its default. Its bound is a runtime
+// value, so this loop is NOT unrolled and the arm that uses it pays for that on top of the extra
+// lines it fetches. That bias runs AGAINST W3 and is stated so in the session record.
+template <typename T>
+size_t PrefetchVectorData(const std::vector<T>& values, bool l1, size_t cap) {
+	if (values.empty()) {
+		return 0;
+	}
+	const auto* bytes = reinterpret_cast<const char*>(values.data());
+	const auto  total = values.size() * sizeof(T);
+	const auto  size  = std::min<size_t>(total, cap);
 	for (size_t offset = 0; offset < size; offset += 64u) {
 		PrefetchLine(bytes + offset, l1);
 	}
@@ -2685,26 +2708,62 @@ struct PipelineCache::ProgramCache {
 				// the comparison below and the snapshot for this draw's bindings (session 56:
 				// their first touches in PrepareBindings, FindBuffers, ResolveTexture,
 				// StreamBuffer::Copy and ~ResourceSnapshot were ~5 % of the thread).
-				// Gate "pfhint": read ONCE for the whole block, never per line.
-				const bool pf_l1      = Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1);
-				size_t     pf_offered = 0;
-				size_t     pf_capped  = 0;
-				// W3: what the eleven vectors offer against what the 192-byte cap lets through.
-				const auto pf = [&pf_offered, &pf_capped](size_t total) {
+				// Gate "pfhint" and knob "pfcap": read ONCE for the whole block, never per
+				// line and never per vector. Session 76 shipped pfhint on 1 (0.41-0.48 ms of CPU
+				// wall a frame, pfh76a and pfh76b); pfcap still defaults to the 192 that shipped
+				// before it, so this block is byte for byte what it was until the knob is moved.
+				const bool   pf_l1      = Common::Gates::Enabled(Common::Gates::Gate::PrefetchHintL1);
+				const size_t pf_cap     = Common::Gates::Value(Common::Gates::Knob::PrefetchCapBytes);
+				size_t       pf_offered = 0;
+				size_t       pf_capped  = 0;
+				// W3: what the eleven vectors offer against what the cap lets through. The counter
+				// follows the knob, or it stops meaning "what the cap let through".
+				const auto pf = [&pf_offered, &pf_capped](size_t total, size_t cap) {
 					pf_offered += total;
-					pf_capped += std::min<size_t>(total, 192u);
+					pf_capped += std::min<size_t>(total, cap);
 				};
-				pf(PrefetchVectorData(slot.witness.live_runs, pf_l1));
-				pf(PrefetchVectorData(slot.witness.live_values, pf_l1));
-				pf(PrefetchVectorData(slot.witness.clean_runs, pf_l1));
-				pf(PrefetchVectorData(slot.witness.clean_values, pf_l1));
-				pf(PrefetchVectorData(slot.snapshot.buffers, pf_l1));
-				pf(PrefetchVectorData(slot.snapshot.images, pf_l1));
-				pf(PrefetchVectorData(slot.snapshot.samplers, pf_l1));
-				pf(PrefetchVectorData(slot.snapshot.flattened_srt, pf_l1));
-				pf(PrefetchVectorData(slot.snapshot.user_data, pf_l1));
-				pf(PrefetchVectorData(slot.specialization.buffers, pf_l1));
-				pf(PrefetchVectorData(slot.specialization.images, pf_l1));
+				// ONE branch per take. Both SHIPPED cap values are compile-time constants, so the
+				// prefetch loop keeps the bound clang needs to unroll it; only a knob value that
+				// was never shipped falls through to the runtime form, and that form exists for
+				// measurement alone. Session 76 shipped 1024 (W3); 192 is what shipped before it
+				// and is kept so the A/B that decided this can be re-run at any time.
+				if (pf_cap == 1024) {
+					pf(PrefetchVectorData<1024>(slot.witness.live_runs, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.witness.live_values, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.witness.clean_runs, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.witness.clean_values, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.snapshot.buffers, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.snapshot.images, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.snapshot.samplers, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.snapshot.flattened_srt, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.snapshot.user_data, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.specialization.buffers, pf_l1), 1024u);
+					pf(PrefetchVectorData<1024>(slot.specialization.images, pf_l1), 1024u);
+				} else if (pf_cap == 192) {
+					pf(PrefetchVectorData<192>(slot.witness.live_runs, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.witness.live_values, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.witness.clean_runs, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.witness.clean_values, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.snapshot.buffers, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.snapshot.images, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.snapshot.samplers, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.snapshot.flattened_srt, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.snapshot.user_data, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.specialization.buffers, pf_l1), 192u);
+					pf(PrefetchVectorData<192>(slot.specialization.images, pf_l1), 192u);
+				} else {
+					pf(PrefetchVectorData(slot.witness.live_runs, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.witness.live_values, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.witness.clean_runs, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.witness.clean_values, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.snapshot.buffers, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.snapshot.images, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.snapshot.samplers, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.snapshot.flattened_srt, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.snapshot.user_data, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.specialization.buffers, pf_l1, pf_cap), pf_cap);
+					pf(PrefetchVectorData(slot.specialization.images, pf_l1, pf_cap), pf_cap);
+				}
 				if (FS::Enabled()) {
 					// The arming proof of "pfhint": da_hit in the armed arm, exactly 0 in the other.
 					if (pf_l1) {

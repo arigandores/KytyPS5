@@ -169,9 +169,29 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // pipelineCache.cpp, whose <xmmintrin.h> sits below fifty-six project headers. Measured before
     // the gate was written: the prefetch itself is worth 0.98 ms of CPU per frame (dpf75a, 125 ABBA
     // pairs, daprefetch=1|0, cpu/draw +3.064 % +/- 0.244 %, t = +25.14, whole-arm cpu/fr
-    // 31 950 -> 32 926 us, draws 0.001 % apart). What the CORRECT hint is worth on top of that is
-    // NOT MEASURED; an ABBA on this gate measures it. Default 0 = today, bit for bit.
-    {"KYTY_PREFETCH_HINT_L1", "pfhint", false},
+    // 31 950 -> 32 926 us, draws 0.001 % apart).
+    //
+    // SHIPPED ON 1 IN SESSION 76, measured by TWO independent ABBAs on the session-75 binary:
+    //   pfh76a  period 30, 117 pairs: cpu/draw -1.305 % +/- 0.246 % (2*SE), t = -10.62,
+    //           whole-arm cpu/fr 32 558 -> 32 145 us = -413 us, draws 0.046 % apart,
+    //           whole-arm/paired gap 0.009 pp, da_take_us -162 us.
+    //   pfh76b  period 10, 348 pairs: cpu/draw -1.814 % +/- 0.340 % (2*SE), t = -10.67,
+    //           whole-arm cpu/fr 32 675 -> 32 193 us = -482 us, draws 0.381 % apart,
+    //           whole-arm/paired gap 0.036 pp, da_take_us -236 us. guards 9 PASS 0 FAIL.
+    // QUOTE THE WALL, NOT cpu/draw: the two runs differ by 0.509 pp on cpu/draw against a
+    // combined 2*SE of 0.420 pp, and the whole of that gap is the draws normalisation (their
+    // arms differ in work by 0.046 % and 0.381 %). On per-frame CPU, which does not divide by
+    // draws, they agree comfortably: -1.254 % +/- 0.292 % against -1.360 % +/- 0.548 %.
+    // THE SHIPPED FIGURE IS 0.41-0.48 ms of CPU wall per frame.
+    // Arming is proved by a counter in each run, never by the launcher: arm1 pf_l1 against
+    // da_hit reads 99.996 % (pfh76a) and 99.988 % (pfh76b), arm0 reads 0.34 and 1.08.
+    // A prefetch changes no value and no decision, so the arms are behaviourally identical by
+    // construction and no self-check is needed; guards check 2 read 11/11 on both runs.
+    // Neither run met the >= 90 % area-match gate (62/112 and 188/333) - but in BOTH runs the
+    // matched and dropped subsets agree inside their error, which is the test that the effect
+    // is not an area artefact, and it is exactly what separated these runs from s75's pfh75a.
+    // Set the gate to 0 to get the old PREFETCHT2 form back, bit for bit.
+    {"KYTY_PREFETCH_HINT_L1", "pfhint", true},
 }};
 
 struct KnobDefinition {
@@ -198,6 +218,29 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_IMG_SKIP_KB", "imgskipkb", 4096, 1048576},
     // Session 72, measurement ceiling (default 0 = today's behaviour; 1 and 2 are UNSOUND).
     {"KYTY_DA_WITNESS_LOOP", "dawitloop", 0, 2},
+    // Session 76, W3. Measured population, base75a, 6467 frames: da_pf_b 12 535 382 B/frame
+    // offered against da_pf_cap_b 7 382 040 B let through, so the shipped 192 truncates
+    // 5 153 342 B = 80 521 cache lines a frame = 41.1 % of the offer (1452 B offered, 855 B
+    // prefetched, 597 B truncated per take). The PRIZE is NOT MEASURED; an ABBA on this knob
+    // measures it. Default 192 = today, byte for byte.
+    // SHIPPED ON 1024 IN SESSION 76 (W3), measured by TWO ABBAs, both with pfhint=1 in both
+    // arms, on the session-76 binary:
+    //   cap76a  period 30, 131 pairs: cpu/draw -0.916 % +/- 0.163 % (2*SE), t = -11.27,
+    //           whole-arm cpu/fr 31 303 -> 30 997 us = -306 us, draws 0.059 % apart,
+    //           whole-arm/paired gap 0.004 pp, area 126/126 matched at |d| <= 0.087 %.
+    //   cap76b  period 15, 243 pairs: cpu/draw -1.083 % +/- 0.155 % (2*SE), t = -13.98,
+    //           whole-arm cpu/fr 31 322 -> 31 030 us = -292 us, draws 0.166 % apart,
+    //           whole-arm/paired gap 0.012 pp, area 231/233 matched (99.1 %).
+    // They agree: 0.167 pp apart against a combined 2*SE of 0.225 pp. SHIPPED FIGURE
+    // 0.29-0.31 ms of CPU wall a frame, and it is a LOWER BOUND, because the winning arm reached
+    // the prefetch through the runtime, non-unrolled overload while the control used the
+    // compile-time form - a bias declared before the run and running against the winner.
+    // Arming is proved by a counter in each run: da_pf_cap_b / da_pf_b goes 58.8 % -> 94.4 % of
+    // the bytes the eleven vectors offer, i.e. ~69 500 extra cache lines prefetched per frame.
+    // NOT MEASURED: whether the last 5.6 % (an unbounded cap) is worth anything, and whether a
+    // smaller cap such as 384 buys most of this more cheaply. Each is one ABBA.
+    // 192 is the value that shipped before this session and is still a compile-time path.
+    {"KYTY_PREFETCH_CAP_B", "pfcap", 1024, 4096},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

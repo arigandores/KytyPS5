@@ -192,6 +192,11 @@ enum class Knob : uint32_t {
 	// modelled from the word census. 0 = today (compare everything), 1 = skip the clean-run loop,
 	// 2 = skip the live-run loop. Proof it armed: the counter da_loop_skip.
 	DrawAheadWitnessLoop, // KYTY_DA_WITNESS_LOOP,  file name "dawitloop" (0 off, 1 skip clean, 2 skip live)
+	// Session 76, W3: the per-vector byte cap of PrefetchVectorData. base75a measured that the
+	// shipped 192 truncates 41.1 % of what the eleven vectors offer - 80 521 cache lines a frame.
+	// Whether those lines are worth fetching is what an ABBA on this knob measures. Default 192
+	// = today, byte for byte. Read ONCE PER TAKE, never per vector.
+	PrefetchCapBytes, // KYTY_PREFETCH_CAP_B,   file name "pfcap" (bytes; 192 = today)
 	Count,
 };
 

@@ -518,3 +518,6 @@ while the total frame cost is not, and it is worth up to 1.4 ms a frame — as m
 programme has shipped since session 72.** Quoting any prefetch gate as a single number remains
 wrong, and this session can now say that the right conditioning variable is not the run's total CPU
 either.
+
+Commit **56fc550** (branch `merge-upstream`, base `599f309`, 2 files, +714) — documents
+only; **no source file changed and nothing was rebuilt this session**. Not pushed.

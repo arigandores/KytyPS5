@@ -335,3 +335,8 @@ is the one it did not set out to find: **the programme's stand has a between-run
 never measured and never controlled, and it is three to five times the error bar every shipped
 figure is quoted with.** Finding that variable is now worth more than any single gate on the list —
 and the first thing to try is instrumenting the CPU, which this harness does not measure at all.
+
+Commit **45fd423** (branch `merge-upstream`, base `aefbbc8`, 6 files, +60 / -60 in source
+plus two docs), not pushed. Report: `C:/kyty/s77/FACTS.md` (the single source of truth),
+`C:/kyty/s77/README.md`, in git `docs/local-session-77.md`; the next prompt is
+`docs/next-session-78.md`.

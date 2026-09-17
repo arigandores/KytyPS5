@@ -296,6 +296,18 @@ enum class Gate : uint32_t {
 	// a value check: both halves read the same shadow table, and the previous draw's value
 	// exists nowhere else - the limitation pred/02 of session 85 stated for sl_bad.
 	DrawMergeVerify,    // KYTY_DRAW_MERGE_VERIFY,  file name "drawmergecheck"
+	// Session 87, MEASUREMENT ONLY (ROADMAP.md route C and D3): which half of the 65.25 ns an
+	// image slot costs in PrepareBindings is ResolveTextureWith and which is BindImage.  ONE
+	// timestamp a slot, taken after the resolve on half the stages and after the bind on the
+	// other half, so an interval that opens after a bind and closes after a resolve is exactly
+	// one resolve; the per-stage phase alternates, so every slot index is sampled in half the
+	// stages.  NOT a two-pass split: deferring BindImage past the next slot's resolve would
+	// break the is_bound ordering contract that ConfigureImageSourceUnlocked
+	// (textureCache.cpp:1226), ResolveOverlap, ResolveDepthOverlap and ExpandImage all read,
+	// and FindImage can free an id the deferred BindImage would then index.  Nothing is
+	// reordered and nothing is skipped: the mark's own cost rides in the sampled intervals AND
+	// in the loop total, so it cancels in the difference.  Needs "bindlap" to arm.
+	BindAlt,            // KYTY_BIND_ALT,           file name "bindalt"
 	Count,
 };
 

@@ -223,6 +223,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 86, measurement only: route D4, the consecutive-draw mergeability census.
     {"KYTY_DRAW_MERGE", "drawmerge", false},
     {"KYTY_DRAW_MERGE_VERIFY", "drawmergecheck", false},
+    // Session 87, measurement only: which half of an image slot in PrepareBindings is the
+    // resolve and which is BindImage.  One timestamp a slot, alternating phase a stage.
+    {"KYTY_BIND_ALT", "bindalt", false},
 }};
 
 struct KnobDefinition {

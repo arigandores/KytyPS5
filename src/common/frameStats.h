@@ -1172,6 +1172,39 @@ enum class Counter : uint32_t {
 	                    //         with the independent memcmp.  MUST read 0
 	ProgLapPerms,       // pg_perm: permutations EXAMINED by the find_if (the Add is inside the
 	                    //          predicate, so it is work and not the deque's size)
+	// Session 87, gate "bindalt" (MEASUREMENT ONLY): the sampled halves of the image loop of
+	// PrepareBindings.  An interval that opens after a BindImage and closes after a
+	// ResolveTextureWith is exactly one resolve; each carries exactly one mark's overhead, and
+	// so does each slot of bl_res_us, so the overhead cancels in bl_res_us/n - bl_rsv_us/n.
+	BindAltResolveNs,   // bl_rsv_us: sampled resolve intervals, slot index >= 1
+	BindAltResolves,    // bl_rsv_n: ... how many.  Expect ~0.5 x bl_res_n
+	BindAltResolve0Ns,  // bl_rsv0_us: the sampled interval at slot index 0, which also contains
+	                    //             prepared.images.reserve - separated so that can be said
+	BindAltResolve0s,   // bl_rsv0_n: ... how many (one per phase-0 stage with any image)
+	// Session 87, gate "proglap" extended (MEASUREMENT ONLY, ROADMAP.md route D2): the five
+	// phases of the block session 86 measured as a RESIDUAL (pg_get_us - pg_key_us = 3 764 us a
+	// frame) and called "resource materialisation".  A rolling mark chain seeded from the
+	// timestamp pg_key_us already takes, closed before each reachable return.  slot < 2 only.
+	// NOTE: ProgMaterializeNs is NOT MaterializeResources - it is marked twice and both marks
+	// charge everything since ProgKeyNs.  These five are the division it never was.
+	ProgLapLocalNs,     // pg_loc_us: the prog_memo write-back, the ResourceSnapshot and
+	                    //            ResourceSpecialization locals, read_cache, SrtRuntime
+	ProgLapAheadNs,     // pg_ahead_us: AheadNote + AheadTake + AheadCheck.  da_take_us is an
+	                    //              independent lite-visible timer of AheadTake INSIDE this,
+	                    //              so pg_ahead_us >= da_take_us in every frame and the
+	                    //              difference is the price of AheadNote
+	ProgLapAheads,      // pg_ahead_n: calls whose lookahead block body ran
+	ProgLapMemoNs,      // pg_memo_us: MemoFind + MemoVerify + the push-data check + the hit copy.
+	                    //             srtmemo is default 0, so this reads ~0 and is an arming
+	                    //             proof rather than a measurement
+	ProgLapMemos,       // pg_memo_n: calls whose SRT-memo block body ran
+	ProgLapMatNs,       // pg_mat_us: MaterializeResources ON THE DRAW THREAD, under the pipeline
+	                    //            cache lock, plus the dropped-plan path
+	ProgLapMats,        // pg_mat_n: calls where MaterializeResources was actually invoked - the
+	                    //           self-selected population the lookahead MISSED, whose price is
+	                    //           not the price of the 97 % it hits
+	ProgLapPermPhaseNs, // pg_pm_us: the permutation find_if + MemoStore + the snapshot move
+	ProgLapPermPhases,  // pg_pm_n: calls reaching that phase
 	Count
 };
 

@@ -1510,6 +1510,25 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	// above; the Enabled() half deliberately matches LapScope, so the split cannot record
 	// into counters the frame will not print.
 	uint64_t bl_t = bind_lap && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+	// Session 87, gate "bindalt" (MEASUREMENT ONLY): ONE timestamp a slot, taken after the
+	// resolve on half the stages and after the bind on the other half, so that an interval which
+	// opens after a bind and closes after a resolve is exactly one ResolveTextureWith.  The
+	// per-stage phase alternates, so every slot index is sampled in half the stages and the
+	// sample is unbiased for the whole population.  Nothing is reordered: a two-pass split would
+	// defer BindImage past the next slot's resolve, and BindImage writes Image::binding.is_bound,
+	// which ConfigureImageSourceUnlocked (textureCache.cpp:1226 - "several bindings in one draw
+	// may expose different LOD ranges of the same image"), ResolveOverlap, ResolveDepthOverlap
+	// and ExpandImage all read, and which FindImage can invalidate by freeing the id outright.
+	// The mark's own cost rides in every sampled interval AND once in every slot of bl_res_us,
+	// so it cancels in bl_res_us/n - bl_rsv_us/n (pred/01 section 4).
+	const bool                   bind_alt = bl_t != 0 && Common::Gates::Enabled(Common::Gates::Gate::BindAlt);
+	static thread_local uint32_t bl_alt_stage = 0;
+	const uint32_t               bl_alt_phase = bind_alt ? (bl_alt_stage++ & 1u) : 0;
+	uint64_t                     bl_alt_t     = bl_t;
+	uint64_t                     bl_alt_acc = 0;
+	uint64_t                     bl_alt_acc0 = 0;
+	uint32_t                     bl_alt_n = 0;
+	uint32_t                     bl_alt_n0 = 0;
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		// Session 57, B2a: built in its vector element - one ImageDesc copy where the returned
@@ -1521,8 +1540,22 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		                uint32_t version = 0) -> TextureBinding& {
 			    return prepared.images.emplace_back(id, desc, index, version);
 		    });
+		if (bind_alt && (i & 1u) == bl_alt_phase) {
+			const auto bl_alt_now = Common::FrameStats::NowNs();
+			if (i == 0) {
+				bl_alt_acc0 = bl_alt_now - bl_alt_t;
+				bl_alt_n0   = 1;
+			} else {
+				bl_alt_acc += bl_alt_now - bl_alt_t;
+				bl_alt_n++;
+			}
+			bl_alt_t = bl_alt_now;
+		}
 		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage,
 		          program.info.images[i].atomic);
+		if (bind_alt && (i & 1u) != bl_alt_phase) {
+			bl_alt_t = Common::FrameStats::NowNs();
+		}
 	}
 	if (bl_t != 0) {
 		const auto bl_now = Common::FrameStats::NowNs();
@@ -1550,6 +1583,15 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	if (bl_t != 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapDataNs,
 		                        Common::FrameStats::NowNs() - bl_t);
+	}
+	// Session 87, gate "bindalt": published here, past the last bindlap mark, so the four Adds
+	// land in the DERIVED remainder of bl_prep_us and contaminate neither bl_res_us (the
+	// quantity being split) nor bl_smp_us nor bl_sd_us.
+	if (bind_alt) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolveNs, bl_alt_acc);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolves, bl_alt_n);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolve0Ns, bl_alt_acc0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolve0s, bl_alt_n0);
 	}
 	const bool has_gds =
 	    (prepared.kind_mask & KIND_COMPUTED) != 0

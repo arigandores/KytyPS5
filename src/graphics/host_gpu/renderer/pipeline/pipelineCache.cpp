@@ -3005,6 +3005,10 @@ struct PipelineCache::ProgramCache {
 				     params.hash, entry->second.permutations.size(), HostMicros() - load_begin);
 			}
 		}
+		// Session 87, gate "proglap" extended: the rolling chain that divides what session 86
+		// could only measure as a residual is SEEDED from the timestamp pg_key_us already takes,
+		// so the first mark of the chain is free.
+		uint64_t pg_t = 0;
 		if (pg_key_t0 != 0) {
 			const auto pg_now = Common::FrameStats::NowNs();
 			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeyNs, pg_now - pg_key_t0);
@@ -3014,8 +3018,19 @@ struct PipelineCache::ProgramCache {
 				                        pg_now - pg_key_t0);
 				Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeyHits, 1);
 			}
+			pg_t = pg_now;
 		}
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
+		// One NowNs a phase, closed before each reachable return.  The tolerant return at the
+		// materialisation failure and the Compile return do not close the chain; pg_compile_n and
+		// pg_cold_n count both and read 0.00 in this scene, so the parts still sum.
+		const auto pg_mark = [&pg_t](Common::FrameStats::Counter counter) {
+			if (pg_t != 0) {
+				const auto pg_phase_now = Common::FrameStats::NowNs();
+				Common::FrameStats::Add(counter, pg_phase_now - pg_t);
+				pg_t = pg_phase_now;
+			}
+		};
 		if (slot < 2) {
 			auto& memo          = prog_memo[static_cast<size_t>(slot)];
 			memo.entry          = entry;
@@ -3038,9 +3053,14 @@ struct PipelineCache::ProgramCache {
 		    .userdata                   = &read_cache,
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
-		bool ahead_hit = false;
-		if (entry != programs.end() && (stage == ShaderType::Vertex || stage == ShaderType::Pixel) &&
-		    Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) {
+		pg_mark(Common::FrameStats::Counter::ProgLapLocalNs);
+		bool       ahead_hit     = false;
+		// Hoisted out of the if so pg_ahead_n counts the same calls the block runs on; the
+		// operands have no side effects, so the short circuit is unchanged.
+		const bool pg_ahead_ran  = entry != programs.end() &&
+		                          (stage == ShaderType::Vertex || stage == ShaderType::Pixel) &&
+		                          Common::Gates::Enabled(Common::Gates::Gate::DrawAhead);
+		if (pg_ahead_ran) {
 			AheadNote(stage, params.Base(), params.user_data, &entry->second);
 			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadUse)) {
 				// Two rdtsc per stage, ~19k a frame in Sky Garden: only pay them while the
@@ -3058,10 +3078,15 @@ struct PipelineCache::ProgramCache {
 				}
 			}
 		}
+		pg_mark(Common::FrameStats::Counter::ProgLapAheadNs);
+		if (pg_t != 0 && pg_ahead_ran) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapAheads, 1);
+		}
 		const bool memo_enabled =
 		    !ahead_hit && Common::Gates::Enabled(Common::Gates::Gate::SrtMemo);
 		SrtReadLog memo_log;
-		if (memo_enabled && entry != programs.end()) {
+		const bool pg_memo_ran = memo_enabled && entry != programs.end();
+		if (pg_memo_ran) {
 			auto* memo_entry = MemoFind(&entry->second, params.Base(), params.user_data);
 			if (memo_entry != nullptr && MemoVerify(*memo_entry, read_cache) &&
 			    memo_entry->push_data_start ==
@@ -3084,6 +3109,10 @@ struct PipelineCache::ProgramCache {
 				memo_entry->permutation->program.bindings.AdvancePushData(push_data_cursor);
 				Common::FrameStats::Add(Common::FrameStats::Counter::SrtMemoHits, 1);
 				lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
+				pg_mark(Common::FrameStats::Counter::ProgLapMemoNs);
+				if (pg_t != 0) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapMemos, 1);
+				}
 				return memo_entry->handle;
 			}
 			// A key that is not stored at all, against one whose recorded words have changed
@@ -3095,7 +3124,14 @@ struct PipelineCache::ProgramCache {
 			                        1);
 			read_cache.log = &memo_log;
 		}
-		if (entry != programs.end() && !ahead_hit &&
+		pg_mark(Common::FrameStats::Counter::ProgLapMemoNs);
+		if (pg_t != 0 && pg_memo_ran) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapMemos, 1);
+		}
+		// Hoisted for the same reason as pg_ahead_ran: pg_mat_n must count the calls where
+		// MaterializeResources actually ran, which the short circuit otherwise hides.
+		const bool pg_mat_ran = entry != programs.end() && !ahead_hit;
+		if (pg_mat_ran &&
 		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
 		                                                resources, specialization)) {
 			if (!entry->second.from_cache) {
@@ -3120,6 +3156,10 @@ struct PipelineCache::ProgramCache {
 			resources = {};
 			specialization = {};
 		}
+		pg_mark(Common::FrameStats::Counter::ProgLapMatNs);
+		if (pg_t != 0 && pg_mat_ran) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapMats, 1);
+		}
 		if (entry != programs.end()) {
 			lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
 			if (const auto permutation = std::ranges::find_if(
@@ -3142,6 +3182,10 @@ struct PipelineCache::ProgramCache {
 				                    .resources = std::move(resources)};
 				permutation->program.bindings.AdvancePushData(push_data_cursor);
 				lap.Mark(Common::FrameStats::Counter::ProgPermNs);
+				pg_mark(Common::FrameStats::Counter::ProgLapPermPhaseNs);
+				if (pg_t != 0) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPermPhases, 1);
+				}
 				return permutation->handle;
 			}
 		}

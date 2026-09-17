@@ -2125,6 +2125,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"dm_mesh", FS::Counter::DrawMergeMesh, false},
 				    {"dm_over", FS::Counter::DrawMergeOver, false},
 				    {"dm_bad", FS::Counter::DrawMergeBad, false},
+				    // Session 87, gate "bindalt": the sampled halves of the image loop.
+				    {"bl_rsv_us", FS::Counter::BindAltResolveNs, true},
+				    {"bl_rsv_n", FS::Counter::BindAltResolves, false},
+				    {"bl_rsv0_us", FS::Counter::BindAltResolve0Ns, true},
+				    {"bl_rsv0_n", FS::Counter::BindAltResolve0s, false},
+				    // Session 87, gate "proglap" extended: the five phases of the block session 86
+				    // measured as a residual.
+				    {"pg_loc_us", FS::Counter::ProgLapLocalNs, true},
+				    {"pg_ahead_us", FS::Counter::ProgLapAheadNs, true},
+				    {"pg_ahead_n", FS::Counter::ProgLapAheads, false},
+				    {"pg_memo_us", FS::Counter::ProgLapMemoNs, true},
+				    {"pg_memo_n", FS::Counter::ProgLapMemos, false},
+				    {"pg_mat_us", FS::Counter::ProgLapMatNs, true},
+				    {"pg_mat_n", FS::Counter::ProgLapMats, false},
+				    {"pg_pm_us", FS::Counter::ProgLapPermPhaseNs, true},
+				    {"pg_pm_n", FS::Counter::ProgLapPermPhases, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

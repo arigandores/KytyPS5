@@ -2161,6 +2161,24 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // Session 89, section 3.3: the search half of the permutation phase.  From this
 				    // binary on, pg_pm_us is the TAKE alone; the old quantity is pg_pmf_us + pg_pm_us.
 				    {"pg_pmf_us", FS::Counter::ProgLapPermFindNs, true},
+				    // Session 90, knob "bufimp": the guest-memory import for buffer uploads.  Every
+				    // one of these reads EXACTLY 0 while the knob is 0, and that is the arming proof.
+				    {"bi_try", FS::Counter::BufImportTries, false},
+				    {"bi_ok", FS::Counter::BufImportTakes, false},
+				    {"bi_b", FS::Counter::BufImportBytes, false},
+				    {"bi_reg", FS::Counter::BufImportRegions, false},
+				    {"bi_split", FS::Counter::BufImportSplits, false},
+				    {"bi_noback", FS::Counter::BufImportNoBacking, false},
+				    {"bi_nochunk", FS::Counter::BufImportNoChunk, false},
+				    {"bi_bad", FS::Counter::BufImportBad, false},
+				    {"bi_us", FS::Counter::BufImportResolveNs, true},
+				    // Session 90, section 3.2: the two halves of the find_if predicate.
+				    {"pg_pmp_us", FS::Counter::ProgLapPmPushNs, true},
+				    {"pg_pms_us", FS::Counter::ProgLapPmSpecNs, true},
+				    {"pg_pmp_no", FS::Counter::ProgLapPmPushNo, false},
+				    // Session 90: the arming proof of bufimp = 2.  0 in the census arm, == bi_ok in the
+				    // import arm.
+				    {"bi_cp", FS::Counter::BufImportCopies, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

@@ -321,6 +321,13 @@ enum class Gate : uint32_t {
 	// comparison loops, and the take.  It changes no value and no decision; its own price is
 	// the within-run difference of its two arms and is reported, never hidden.
 	TakeLap,            // KYTY_TAKE_LAP,           file name "takelap"
+	// Session 90, SELF-CHECK of knob "bufimp" (ROADMAP.md route D1).  Beside every region
+	// the import resolved with TryGetBackingPointer, recompute it with
+	// TryGetBackingPieces - a SECOND, independent walk of the same mapping table, with its
+	// own loop - and accuse a disagreement.  TryGetBackingPointer answers only for a range
+	// inside ONE mapping, so a second piece, a different backing offset or a short piece is
+	// a contradiction between two implementations and not a race.  bi_bad must read 0.
+	BufImportVerify,    // KYTY_BUF_IMPORT_VERIFY,  file name "bufimpcheck"
 	Count,
 };
 
@@ -377,6 +384,33 @@ enum class Knob : uint32_t {
 	// can only be taken on the memo-hit path, so slots that miss it are accumulated separately
 	// and are identical code in both arms - a null control.  Needs "bindlap" to arm.
 	BindWitness,      // KYTY_BIND_WIT,           file name "bindwit" (0 off, 1 mark after the resolve, 2 mark at the memo-hit decision)
+	// Session 90, ROADMAP.md route D1 - the largest untouched ceiling in the record, and
+	// the only block this programme has opened since session 85 that is neither a proof
+	// nor a shipped default.  BufferCache::UploadCopies copies the guest bytes of every
+	// dirty range into the staging ring by hand and then has the GPU copy the ring into
+	// the buffer: sync_up_kb = 22 803.8 KiB a frame over sync_ups = 75.8 uploads, and
+	// bda_up_us (gate "bdasplit") = 2 118.3 us a frame - both read off blp85a, both on
+	// disk since session 85.  The IMAGE path has not paid that memcpy since session 28:
+	// it resolves the guest range into the VK_EXT_external_memory_host alias of the
+	// backing store (HostImport) and lets the GPU read the guest pages.  This knob does
+	// the same for a buffer upload, per copy region: TryGetBackingPointer gives the
+	// backing offset, HostImport::Resolve gives the imported chunk buffer, and
+	// RecordBufferCopies issues the copies from there.  The DESTINATION does not change -
+	// same device-local Buffer, same handle, same device address, same descriptor -
+	// because the imported chunks carry only eTransferSrc | eStorageBuffer and no device
+	// address (hostImport.cpp) and can never be anything but a copy source.
+	// THE HAZARD IS THE ONE THE IMAGE PATH ALREADY CLOSES, and it is why this ships at 0:
+	// the GPU now reads the guest pages when the command buffer EXECUTES, not when
+	// UploadCopies returns, so a CPU write into an imported range has to wait for that
+	// read.  NotePendingHostRead publishes the range and RenderContext::HandleFault waits
+	// on it for ANY guest range, images and buffers alike (renderContext.cpp:154-160).
+	// Buffers are re-written by the CPU every frame BY DEFINITION - that is why they are
+	// in the dirty ranges at all - and this scene already takes 1 265 write faults a
+	// frame, so the cost of that wait is the open question the run answers.
+	// hostread_waits and hostread_wait_us are printed already and are the diagnostic.
+	// 0 = today.  1 = resolve and count, still copy (prices the resolution alone).
+	// 2 = take the import.  An upload is taken only when EVERY region resolves.
+	BufImport,        // KYTY_BUF_IMPORT,         file name "bufimp" (0 off, 1 census, 2 import)
 	Count,
 };
 

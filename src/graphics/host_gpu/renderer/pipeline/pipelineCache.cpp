@@ -3211,14 +3211,30 @@ struct PipelineCache::ProgramCache {
 			lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
 			if (const auto permutation = std::ranges::find_if(
 			        entry->second.permutations, [&](const Permutation& candidate) {
-				        if (prog_lap) {
-					        Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPerms, 1);
-				        }
 				        const auto& layout = candidate.program.bindings;
-				        return layout.push_data_start_dword ==
-				                   ShaderRecompiler::IR::PushData::StartFor(
-				                       push_data_cursor, layout.ShaderDataDwords()) &&
-				               candidate.specialization == specialization;
+				        if (!prog_lap) {
+					        return layout.push_data_start_dword ==
+					                   ShaderRecompiler::IR::PushData::StartFor(
+					                       push_data_cursor, layout.ShaderDataDwords()) &&
+					               candidate.specialization == specialization;
+				        }
+				        // Session 90, section 3.2: session 89 divided pg_pm_us into a 337.0 us search and
+				        // a 178.4 us take and left OPEN which of the two comparisons the search is.  Two
+				        // marks of the same "proglap" chain divide it here.  The halves are evaluated
+				        // UNCONDITIONALLY so that a mark can sit between them, which is why the shipped
+				        // short-circuit above is kept verbatim for proglap = 0, and why pg_pmp_no counts
+				        // exactly the candidates on which the two forms differ.
+				        Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPerms, 1);
+				        const bool push_ok = layout.push_data_start_dword ==
+				                             ShaderRecompiler::IR::PushData::StartFor(
+				                                 push_data_cursor, layout.ShaderDataDwords());
+				        pg_mark(Common::FrameStats::Counter::ProgLapPmPushNs);
+				        const bool spec_ok = candidate.specialization == specialization;
+				        pg_mark(Common::FrameStats::Counter::ProgLapPmSpecNs);
+				        if (!push_ok) {
+					        Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPmPushNo, 1);
+				        }
+				        return push_ok && spec_ok;
 			        });
 			    permutation != entry->second.permutations.end()) {
 				// Session 89, section 3.3: close the SEARCH the moment find_if returns, so that the

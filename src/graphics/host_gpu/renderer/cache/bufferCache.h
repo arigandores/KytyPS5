@@ -227,6 +227,14 @@ private:
 	void DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason = "read");
 	[[nodiscard]] static uint64_t StagingRingBytes();
 	void CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
+	// Knob "bufimp" (route D1): resolve every copy region of one upload into the
+	// VK_EXT_external_memory_host alias of the guest backing store, so that the GPU can
+	// read the guest pages instead of a staging copy of them.  Fills the thread-local
+	// region list RecordBufferCopies consumes, and returns true ONLY when every region
+	// resolved; the caller keeps the staging path otherwise.  Counts its population
+	// either way, which is what knob value 1 is for.
+	[[nodiscard]] bool TryImportUploadCopies(Buffer& buffer,
+	                                        std::span<const vk::BufferCopy> copies);
 	// Image source through the guest-memory import: the range is copied on the GPU from the
 	// imported backing into a device-local scratch buffer (no host memcpy). False when the range
 	// is not direct memory or the import is unavailable.

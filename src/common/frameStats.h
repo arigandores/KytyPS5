@@ -1269,6 +1269,50 @@ enum class Counter : uint32_t {
 	TakeLapReady,       // da_t_hit_n: of those, calls whose slot was AheadReady, i.e. that
 	                    //             reached da_t_pfa_us.  Identity:
 	                    //             == da_hit + da_stale + da_stale_old
+	// Session 90, knob "bufimp" (ROADMAP.md route D1).  Every one of these is counted only
+	// when the knob is non-zero, so its reading in the other arm of the run is EXACTLY
+	// zero and the arming proof is free and exact, the way takelap got one in session 89.
+	BufImportTries,     // bi_try: UploadCopies calls that attempted the resolution
+	BufImportTakes,     // bi_ok: of those, calls where EVERY copy region resolved.  At knob
+	                    //        2 these are the uploads that took the import and paid no
+	                    //        host memcpy; at knob 1 they took the staging path anyway
+	BufImportBytes,     // bi_b: BYTES of the taken uploads.  Bytes - not calls, not KiB;
+	                    //       the comparable quantity is sync_up_kb * 1024
+	BufImportRegions,   // bi_reg: copy regions resolved (a call has one or more)
+	BufImportSplits,    // bi_split: of those, regions that crossed an import chunk boundary
+	                    //           and needed more than one copy
+	BufImportNoBacking, // bi_noback: regions TryGetBackingPointer refused - not direct
+	                    //            memory, or not inside ONE mapping.  One is enough to
+	                    //            abandon the whole upload, so this counts uploads lost
+	                    //            as much as regions
+	BufImportNoChunk,   // bi_nochunk: regions HostImport::Resolve refused (the chunk is not
+	                    //             imported yet, or its import failed).  Expected 0 here:
+	                    //             the log says all 27 chunks preload before the guest runs
+	BufImportBad,       // bi_bad: gate "bufimpcheck" - TryGetBackingPieces disagreed with
+	                    //         TryGetBackingPointer.  MUST READ 0
+	BufImportResolveNs, // bi_us: wall time of the resolution itself, on the calling thread.
+	                    //        This is what the census costs; the memcpy it replaces is
+	                    //        inside bda_up_us = 2 118.3 us a frame (blp85a)
+	// Session 90, section 3.2 (a debt of docs/next-session-90.md and FACTS s89 section 5):
+	// pg_pmf_us is 337.0 us a frame and nobody knows which of its two comparisons it is.
+	// Two marks INSIDE the find_if predicate, in the same "proglap" chain, divide it.  They
+	// REDEFINE pg_pmf_us, which from this binary on is the loop bookkeeping left over:
+	//     pg_pmp_us + pg_pms_us + pg_pmf_us == session 89 pg_pmf_us + the two new marks.
+	ProgLapPmPushNs,    // pg_pmp_us: per CANDIDATE - the loop iteration, the ProgLapPerms
+	                    //            Add and push_data_start_dword == PushData::StartFor(cursor,
+	                    //            layout.ShaderDataDwords()).  NOT StartFor alone: the loop
+	                    //            iteration rides in it, and that is named here, not hidden
+	ProgLapPmSpecNs,    // pg_pms_us: per candidate - candidate.specialization == specialization
+	ProgLapPmPushNo,    // pg_pmp_no: candidates whose push half was FALSE.  With proglap = 1
+	                    //            the two halves are evaluated unconditionally so a mark can
+	                    //            sit between them, so pg_pms_us contains this many compares
+	                    //            the shipped short-circuit would not run.  It is the exact
+	                    //            size of that bias, and it is printed
+	// Session 90: the arming proof of knob "bufimp" = 2.  Incremented in
+	// RecordBufferCopies on the imported branch ONLY, so it is EXACTLY 0 whenever the
+	// knob is below 2 - including in the census arm, which pays everything else the
+	// import arm pays.  Identity in the import arm: bi_cp == bi_ok.
+	BufImportCopies,    // bi_cp: uploads whose copies were issued from imported guest pages
 	Count
 };
 

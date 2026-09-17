@@ -232,6 +232,10 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // six marks a call against ~8 690 calls a frame, and session 87 measured a mark of this
     // shape at 7.5 ns (pgl87a, +448.5 us for the six of "proglap").
     {"KYTY_TAKE_LAP", "takelap", false},
+    // Session 90: the cross-implementation self-check of knob "bufimp" -
+    // TryGetBackingPieces recomputed beside every TryGetBackingPointer the import used.
+    // bi_bad must read 0, and it is parsed only because guards.py SELF_CHECKS has a row.
+    {"KYTY_BUF_IMPORT_VERIFY", "bufimpcheck", false},
 }};
 
 struct KnobDefinition {
@@ -293,6 +297,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 88, measurement only: where the one timestamp a slot of the image loop is
     // taken - after ResolveTextureWith (1) or at the memo-hit decision inside it (2).
     {"KYTY_BIND_WIT", "bindwit", 0, 2},
+    // Session 90, route D1: the guest-memory import for BUFFER uploads instead of the
+    // host memcpy into the staging ring.  0 = today, 1 = census only, 2 = take it.
+    // Ships at 0: the import moves the guest read from UploadCopies to command-buffer
+    // execution, and a CPU write into the range then waits for it (hostread_waits).
+    {"KYTY_BUF_IMPORT", "bufimp", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

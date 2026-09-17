@@ -800,6 +800,42 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	return false;
 }
 
+namespace {
+// Session 90, knob "bufimp": the imported-backing regions of the upload UploadCopies has
+// just resolved, consumed by RecordBufferCopies on the same thread a few statements
+// later.  UploadCopies clears it on entry, so a list can never survive into another
+// upload, and it is thread-local because ObtainBufferForImage reaches this file from
+// threads other than GuestGpu.
+constexpr const char* BUF_IMPORT_MISMATCH_FMT =
+	"BufImportVerify: MISMATCH addr=0x%016" PRIx64 " size=0x%" PRIx64 " off=0x%" PRIx64
+	"\n";
+
+// Gate "bufimpcheck": TryGetBackingPieces walks the same mapping table as
+// TryGetBackingPointer, with its own loop.  TryGetBackingPointer answered only because
+// ONE mapping contains the whole range, so anything but a single piece at the same
+// backing offset is a contradiction between two implementations, not a race.
+void VerifyImportOffsetImpl(uint64_t address, uint64_t size, uint64_t offset) {
+	static thread_local std::vector<Libs::LibKernel::Memory::BackingPiece> pieces;
+	const bool same =
+	    Libs::LibKernel::Memory::TryGetBackingPieces(address, size, &pieces) &&
+	    pieces.size() == 1 && pieces[0].backing_offset == offset && pieces[0].size == size;
+	if (same) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportBad, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF(BUF_IMPORT_MISMATCH_FMT, address, size, offset);
+	}
+}
+
+struct ImportUploadRegion {
+	vk::Buffer     source;
+	vk::BufferCopy region;
+};
+thread_local std::vector<ImportUploadRegion> t_import_upload;
+} // namespace
+
 void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
                                      std::span<const vk::BufferCopy> copies, uint64_t total_size) {
 	if (!source) {
@@ -840,7 +876,30 @@ void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
 	native.pipelineBarrier(vk::PipelineStageFlagBits::eAllCommands,
 	                       vk::PipelineStageFlagBits::eTransfer,
 	                       vk::DependencyFlagBits::eByRegion, 0, nullptr, 1, &before, 0, nullptr);
-	native.copyBuffer(source, buffer.Handle(), static_cast<uint32_t>(copies.size()), copies.data());
+	if (t_import_upload.empty()) {
+		native.copyBuffer(source, buffer.Handle(), static_cast<uint32_t>(copies.size()),
+		                  copies.data());
+	} else {
+		// Session 90, knob "bufimp" = 2: the bytes come from the imported guest pages, grouped
+		// by source buffer exactly as the multi-piece image import does.  No host barrier:
+		// the guest wrote the pages before this command buffer is submitted, and
+		// vkQueueSubmit makes prior host writes visible to the device.
+		static thread_local std::vector<vk::BufferCopy> regions;
+		for (size_t i = 0; i < t_import_upload.size();) {
+			regions.clear();
+			size_t j = i;
+			while (j < t_import_upload.size() &&
+			       t_import_upload[j].source == t_import_upload[i].source) {
+				regions.push_back(t_import_upload[j].region);
+				j++;
+			}
+			native.copyBuffer(t_import_upload[i].source, buffer.Handle(),
+			                  static_cast<uint32_t>(regions.size()), regions.data());
+			i = j;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufImportCopies, 1);
+		t_import_upload.clear();
+	}
 	auto after          = before;
 	after.srcAccessMask = vk::AccessFlagBits::eTransferWrite;
 	after.dstAccessMask = vk::AccessFlagBits::eMemoryRead | vk::AccessFlagBits::eMemoryWrite;
@@ -851,6 +910,85 @@ void BufferCache::RecordBufferCopies(Buffer& buffer, vk::Buffer source,
 	                    std::bit_width(total_size >> 10u)); // log2 of KiB
 }
 
+// Session 90, knob "bufimp" (ROADMAP.md route D1).  The staging path of an upload pays a
+// host memcpy of the guest bytes (CopyGuestToStaging) and then a GPU copy of the ring
+// into the buffer.  On disk since session 85 and unquoted until now: sync_up_kb =
+// 22 803.8 KiB a frame over sync_ups = 75.8 uploads, and bda_up_us - the timer around
+// SynchronizeBuffersOfDirtyRanges behind gate "bdasplit" - 2 118.3 us a frame (blp85a,
+// 7 317 frames).  The image path has not paid that memcpy since session 28.  This is
+// the same resolution as ObtainImportedImageSource, per copy region of one upload:
+//     guest address -> TryGetBackingPointer (one containing mapping, one lock) ->
+//     backing offset -> HostImport::Resolve -> {imported chunk buffer, offset in it}.
+// An upload is taken only when EVERY region resolves: a partial import would need both
+// paths inside one barrier pair, and the population that would need it is counted
+// instead (bi_noback, bi_nochunk).
+bool BufferCache::TryImportUploadCopies(Buffer& buffer,
+                                        std::span<const vk::BufferCopy> copies) {
+	t_import_upload.clear();
+	if (!m_host_import.Available() || copies.empty()) {
+		return false;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportTries, 1);
+	const uint64_t t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+	const auto backing_base = Libs::LibKernel::Memory::GetBackingBase();
+	const bool verify = Common::Gates::Enabled(Common::Gates::Gate::BufImportVerify);
+	bool       ok     = backing_base != 0;
+	uint64_t   bytes  = 0;
+	for (const auto& copy: copies) {
+		if (!ok) {
+			break;
+		}
+		const auto  address = buffer.CpuAddress() + copy.dstOffset;
+		const void* pointer = nullptr;
+		if (!Libs::LibKernel::Memory::TryGetBackingPointer(address, copy.size, &pointer)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufImportNoBacking, 1);
+			ok = false;
+			break;
+		}
+		const auto offset = reinterpret_cast<uint64_t>(pointer) - backing_base;
+		if (verify) {
+			VerifyImportOffsetImpl(address, copy.size, offset);
+		}
+		auto     cursor      = offset;
+		uint64_t destination = copy.dstOffset;
+		uint64_t left        = copy.size;
+		uint32_t parts       = 0;
+		while (left != 0) {
+			HostImport::Region region {};
+			if (!m_host_import.Resolve(cursor, left, &region)) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BufImportNoChunk, 1);
+				ok = false;
+				break;
+			}
+			t_import_upload.push_back(
+			    {region.buffer, {region.offset, destination, region.size}});
+			cursor += region.size;
+			destination += region.size;
+			left -= region.size;
+			parts++;
+		}
+		if (!ok) {
+			break;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufImportRegions, 1);
+		if (parts > 1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufImportSplits, 1);
+		}
+		bytes += copy.size;
+	}
+	if (t0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufImportResolveNs,
+		                        Common::FrameStats::NowNs() - t0);
+	}
+	if (!ok) {
+		t_import_upload.clear();
+		return false;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportTakes, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportBytes, bytes);
+	return true;
+}
+
 vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
                                      uint64_t total_size) {
 	if (copies.empty()) {
@@ -858,6 +996,28 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 	}
 	Common::DrawStat::Mark(Common::DrawStat::BufUp);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
+
+	// Session 90, knob "bufimp" (route D1).  Read once a call, outside every loop.  Gate
+	// "recup" is excluded because PushBufferUploadPacket carries ONE source buffer and an
+	// import can produce several; recup is 0 by default and 0 in every run of this session.
+	const auto import_mode = Common::Gates::Value(Common::Gates::Knob::BufImport);
+	if (import_mode != 0 && !Common::Gates::Enabled(Common::Gates::Gate::RecordUploads) &&
+	    TryImportUploadCopies(buffer, copies) && import_mode >= 2) {
+		// The GPU will read these guest pages when the command buffer executes, so a CPU
+		// write into them has to wait for that read.  ONE entry for the whole upload - the
+		// union of its regions - which is conservative (a write into a gap waits too) and
+		// takes the pending-read lock once instead of once per region.
+		uint64_t first = UINT64_MAX;
+		uint64_t last  = 0;
+		for (const auto& copy: copies) {
+			first = std::min<uint64_t>(first, copy.dstOffset);
+			last  = std::max<uint64_t>(last, copy.dstOffset + copy.size);
+		}
+		NotePendingHostRead(buffer.CpuAddress() + first, last - first,
+		                    m_scheduler.CurrentTick());
+		return t_import_upload.front().source;
+	}
+	t_import_upload.clear();
 
 	auto [mapped, base_offset] = m_staging_buffer.Map(total_size, 4);
 	if (mapped != nullptr) {

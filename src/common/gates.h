@@ -184,6 +184,14 @@ enum class Gate : uint32_t {
 	// memory. The map is a conservative superset of "the stamp moved" - a clear bit PROVES the
 	// stamp is unchanged, a set bit proves nothing and falls through to today's code unchanged -
 	// so the arms answer identically by construction. Proof it armed: bda_bskip, which is 0 at 0.
+	// MEASURED AND IT DOES NOT PAY - kept at 0. bdb82a, a valid ABBA (area split -0.004 %, pair
+	// match 100 %, work -0.146 %), armed perfectly (bda_bskip 0 against 20 601 a frame, 99.95 % of
+	// all skips, bda_scan 1 066 in BOTH arms, bda_bit_bad 0) and read -50.8 us +- 87.5 (2*SE):
+	// inside the A/A noise floor of +-75...92 us. The 17 518 skipped region visits a frame were
+	// therefore NOT costing the ~1 ms the population suggested - the ~103 managers are re-read by
+	// all 180 PrepareBda calls of the frame and stay hot, so the loads saved were already cheap.
+	// What bda_us 2 181 us a frame is actually spent on is NOT MEASURED; the m_buffers std::map
+	// lookups of SynchronizeBuffersInRange are the next candidate.
 	BdaWriteBits,       // KYTY_BDA_WRITE_BITS,      file name "bdabits"
 	// Runs the stamp comparison anyway on a skipped region and counts disagreements in
 	// bda_bit_bad, which must read 0. Costs the loads the gate exists to avoid - measurement only.

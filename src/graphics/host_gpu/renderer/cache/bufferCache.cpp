@@ -2494,18 +2494,31 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		const auto index = cursor / TRACKER_REGION_SIZE;
 		const auto bytes =
 		    std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
-		if (use_bits && !BdaTakeRegionWrite(index)) {
+		// The bit is tested and cleared whatever happens next: a region that falls through
+		// without clearing it would never become skippable again. The skip itself needs BOTH
+		// halves of today's condition - no announcement since the clear (the bit) AND a stamp
+		// stored under the current generation (the vector, contiguous and cheap to read). The
+		// generation half is what the first cut of this gate omitted, and omitting it skipped
+		// regions that had never been scanned at all.
+		const bool bit_clear = use_bits && !BdaTakeRegionWrite(index);
+		if (bit_clear && m_bda_region_stamps[index].generation == m_bda_stamp_generation) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsBitSkipped, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsSkipped, 1);
 			if (bits_check) {
-				// Self-check: the stamp the skip claims cannot have moved. Reads it without
-				// storing it, so the check cannot repair a disagreement it finds.
-				const auto& checked = m_bda_region_stamps[index];
-				if (checked.generation != m_bda_stamp_generation ||
-				    checked.stamp != m_memory_tracker.RegionWriteStamp(index)) {
+				// Self-check: the stamp this skip claims cannot have moved. Read, never stored,
+				// so the check cannot repair a disagreement it finds.
+				// A write announced between the clear above and this read sets the bit again,
+				// so the next preparation scans the region and the skip was still sound. Only a
+				// stamp that moved while the bit stayed clear contradicts it (the shape of
+				// SyncFreeVerify at :662).
+				if (m_bda_region_stamps[index].stamp != m_memory_tracker.RegionWriteStamp(index) &&
+				    !BdaRegionWritePending(index)) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::BdaBitMismatches, 1);
-					LOGF("BdaBitsVerify: MISMATCH region=%llu\n",
-					     static_cast<unsigned long long>(index));
+					static std::atomic<uint32_t> logged {0};
+					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("BdaBitsVerify: MISMATCH region=%llu\n",
+						     static_cast<unsigned long long>(index));
+					}
 				}
 			}
 			cursor += bytes;

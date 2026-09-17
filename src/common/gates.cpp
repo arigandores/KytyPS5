@@ -212,7 +212,14 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_DESCRIPTOR_BATCH", "dsbatch", 32, 256},
     {"KYTY_DESCRIPTOR_POOL", "dspool", 1024, 16384},
     {"KYTY_RECORD_SPIN_US", "recspin", 300, 100000},
-    {"KYTY_DRAW_AHEAD_PIN", "dapin", 1, 0xffffffffu},
+    // Session 82: SHIPPED ON 3. One logical processor per physical core of the largest L3
+    // group. dap82b, a valid ABBA on this binary, reads dt_us -820.7 us (30.791 -> 31.590 FPS,
+    // cpu/draw -2.175 % +- 0.153 %, t = -28.46 over 123 matched pairs, area split +0.003 %,
+    // work +0.088 %), replicating the -732.5 us [-798.5, -666.4] of sessions 79 and 81 whose
+    // arm was the raw mask 21845 that mode 3 derives. OPEN: the GPU side costs +1.238 %
+    // (+147.1 us), replicated a fourth time and STILL UNEXPLAINED; it does not bind here
+    // (gpu_busy 12.56 ms of a 32.5 ms frame). dapin=1 restores the previous default.
+    {"KYTY_DRAW_AHEAD_PIN", "dapin", 3, 0xffffffffu},
     {"KYTY_PROCESS_PIN", "procpin", 0, 0xffffffffu},
     {"KYTY_FAULT_WINDOW_KB", "faultkb", 64, 4096},
     {"KYTY_DRAW_AHEAD_WALK_LEAD", "dawalklead", 1, 64},

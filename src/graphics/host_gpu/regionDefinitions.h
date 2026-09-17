@@ -29,6 +29,14 @@ inline void BdaNoteRegionWrite(uint64_t index) noexcept {
 	}
 }
 
+// Reads the bit without clearing it: the self-check uses it to tell a write that arrived after
+// its clear (bit set again, skip still sound) from a stamp that moved with the bit left clear.
+inline bool BdaRegionWritePending(uint64_t index) noexcept {
+	const auto word = index / 64u;
+	return word >= TRACKER_BDA_WORDS ||
+	       (g_bda_write_bits[word].load(std::memory_order_acquire) & (uint64_t {1} << (index % 64u))) != 0;
+}
+
 // Test and clear, for the consumer.  True means "an announcement may have happened": the caller
 // must fall through to the stamp.  Cleared BEFORE the region is read, so a racing write re-sets it.
 inline bool BdaTakeRegionWrite(uint64_t index) noexcept {

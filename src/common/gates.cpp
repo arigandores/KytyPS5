@@ -200,6 +200,8 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 83, route B: the binding-path package (PLAN_82_bind.md items 1, 4, 9).
     {"KYTY_BIND_PACK", "bindpack", false},
     {"KYTY_BIND_PACK_VERIFY", "bindpackcheck", false},
+    // Session 83, measurement only: the hold of PipelineCache::m_mutex, site by site.
+    {"KYTY_PIPE_LOCK_STAT", "plkstat", false},
 }};
 
 struct KnobDefinition {

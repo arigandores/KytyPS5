@@ -1,7 +1,7 @@
 # Session 84 — the brief
 
 Session 83's commit is on `merge-upstream`. **Source changed and the binary was rebuilt**; the
-installed `kyty_emulator.exe` is `4588d793c8919e515e6b…`, 23 578 624 bytes. Harness —
+installed `kyty_emulator.exe` is `8efb990cb741223afdd3…`, 23581184 bytes. Harness —
 **`C:/kyty/s83`**, port it to `C:/kyty/s84`.
 
 **The programme's goal changed in session 83 and you must read that before anything else.**
@@ -13,8 +13,9 @@ installed `kyty_emulator.exe` is `4588d793c8919e515e6b…`, 23 578 624 bytes. Ha
    **Route A — parallel command recording — is CLOSED by kill criterion K2, by a measurement, not by
    an argument.** Do not build any step of `docs/DESIGN_82_parallel.md`. It is now a closed design.
 1. `C:/kyty/s83/FACTS.md` — the single source of truth. **§2 (the floor and its three caveats),
-   §2.6 (the one thing that could reopen route A), §3 (where `bda_us` does NOT go), §4.5 (a package
-   that missed its own threshold by 10 µs), §5 (seven corrections to the record).**
+   §2.7 (the caveat that could have reopened route A, measured and closed), §3 (where `bda_us` does
+   NOT go), §4.7 (a package pooled over two runs and still below its own threshold), §5 (seven
+   corrections to the record).**
 2. `C:/kyty/s83/README.md` — the standing traps.
 3. `docs/PLAN_82_bind.md` — route B, thirteen ranked items. Item 5's premise is now bounded out.
 
@@ -40,11 +41,20 @@ installed `kyty_emulator.exe` is `4588d793c8919e515e6b…`, 23 578 624 bytes. Ha
   frame, 0.18–0.35 ms at any plausible unit price, not 2.2 ms. **And `bda_us` reads 0 under `lite`,
   so nothing in session 83 timed the BDA path at all** — the 2 181 µs of `bind78a` was a
   full-tracing figure that includes its own nested instrumentation.
-* **The binding-path package is correct and measured and did not ship.** `bindpack` =
-  `PLAN_82_bind.md` items 1, 4 and 9. `bpk83a` is VALID (125/125 pairs, split +0.000 %, work
-  +0.109 %) and reads `cpu/draw` **−0.548 % ± 0.146 %, t = −7.49**; the pre-registered endpoint
-  `cpu_net_us` reads **−139.8 ± 81.2 µs** against a **−150 µs** ship threshold. It missed by 10.2 µs
-  and **the threshold was not moved**. Gate stays 0.
+* **The binding-path package is correct, measured TWICE, and did not ship.** `bindpack` =
+  `PLAN_82_bind.md` items 1, 4 and 9. Two VALID runs (125/125 and 126/126 pairs), pooled under
+  `pred/03_pool.md` which was sealed *between* them with exactly two runs fixed:
+  **−137.9 ± 58.4 µs, t = −4.72, Q = 0.005** — the runs agree to **4 µs**. Against the **−150 µs**
+  threshold: **NOT PAID FOR, finally.** The package is worth ~138 µs; the threshold was not
+  unlucky. **There is no third run**, and the gate stays 0 until a fourth item joins the package.
+* **The one caveat that could have reopened route A is measured and closed.** Gate `plkstat` put a
+  wait/hold split on all three `PipelineCache::m_mutex` acquisitions: **`pl_prog_hold_us` = 4 108 µs
+  of `mh_prog_us` 5 959 = 68.9 %**, against a pre-registered 60 % line. The whole mutex holds
+  **4 998 µs of a 28 632 µs frame = 17.5 %** at a wait of 92 µs — uncontended only because one
+  thread takes it. **Even granting the entire hold as parallel, `S` = 15 840 µs against the
+  design's `S ≤ 14 100`. Route A is closed with margin.** The session's own prediction S3 was a
+  MISS: a memo that saves `PrepareProgram` does not save the lock, because every draw takes it and
+  calls `ProgramCache::Get` per stage regardless.
 * **The video debt is discharged.** `bpc83a`, `bindpack=1`, 5 732 recorded presents, **0 one-frame
   glitches**, `bp_bad` 0.
 
@@ -61,14 +71,7 @@ installed `kyty_emulator.exe` is `4588d793c8919e515e6b…`, 23 578 624 bytes. Ha
 The rule is unchanged and not negotiable: **the session ends with a source change that was A/B'd on
 this machine, or it failed.**
 
-### 3.1 First, the cheapest real win on the shelf (one run, no code)
-
-**Pre-register a two-run pool for `bindpack` and take the second run.** One valid run reads
-−139.8 ± 81.2 µs; a second halves the interval. Write the pooling rule and the threshold **before**
-the run — pooling after seeing run 1 is optional stopping, which is why session 83 did not do it.
-If the pool crosses −150 µs, ship `bindpack` default 0 → 1; the video pass is already done.
-
-### 3.2 Then route C, which is now the only route with an unmeasured ceiling
+### 3.1 Route C, which is now the only route with an unmeasured ceiling
 
 `ROADMAP.md` §2 C: ~5 060 draws and ~95 000 descriptor slots a frame, of which **~5–7 ms is the
 price of CHECKING memos that hit**. That price can only be removed by binding fewer slots. **No
@@ -77,16 +80,15 @@ the same stage bound in the previous draw** — `bk82a` tried and was invalid in
 one-slot comparison answered the wrong question anyway. That counter is the first move, and
 `PLAN_82_bind.md` item 0 specifies it (split key, N-way, XXH3, six counters).
 
-### 3.3 The one thing that could reopen route A
+### 3.2 `bindpack` — what it would take to ship it
 
-`FACTS` s83 §2.6: `mh_prog_us` (5 850 µs) is inside `S` because it is wrapped **whole**, yet 74.8 %
-of draws take the program memo, which is a **read**. `DESIGN` §5.3 says `ProgramCache`'s maps must
-stay exclusive while the memo holds **iterators**, and names `SourceEntry*` + a validating key as
-the precondition for splitting them. If that is possible, `S` falls towards ~15 ms. **This is a
-source-reading question, not a run.** It is worth one careful read before route C, because the
-answer decides whether a closed direction is really closed.
+The package is worth **138 µs** and the bar is **150**. Do not re-run it and do not move the bar.
+Add a **fourth** item from `PLAN_82_bind.md` — item 11's descset bundle (80–240 µs, a different
+container, `mh_emit_us`) is the obvious candidate — pre-register the four-item package with its own
+threshold, and measure that. The self-check and the video pass of the present three are already
+done and stay valid.
 
-### 3.4 The debts
+### 3.3 The debts
 
 * **`dapin`'s GPU cost** +1.238 %, replicated four times, unexplained for a fifth session. One
   `KYTY_GPU_TIME` pair on a `dapin` ABBA.
@@ -125,8 +127,10 @@ population without a measured unit price; `dt_us` is not an endpoint inside the 
 | article | measured | state |
 |---|---|---|
 | the sequential floor `S` | **20 838 µs**, `flr83b`, all six criteria | **MEASURED — closes route A** |
-| route A's requirement | `S ≤ 14 ms` **and** `f_eff ≤ 0.125` | **UNREACHABLE** |
-| `bindpack` package | `cpu_net_us` −139.8 ± 81.2 µs; `cpu/draw` −0.548 %, t = −7.49 | **VALID, gate 0** (threshold −150) |
+| route A's requirement | `S ≤ 14 100 µs` **and** `f_eff ≤ 0.125` | **UNREACHABLE** |
+| …even granting the whole pipeline mutex as parallel | `S` = 15 840 µs | **still unreachable** |
+| `PipelineCache::m_mutex` hold | **4 998 µs/frame = 17.5 % of `a_hold_us`**, wait 92 µs | **MEASURED** |
+| `bindpack` package, two runs pooled | `cpu_net_us` **−137.9 ± 58.4 µs**, t = −4.72, Q = 0.005 | **VALID, gate 0** (threshold −150) |
 | `bda_us`'s map candidate | ~1 754 descents/frame ⇒ ≤ 0.35 ms | **BOUNDED OUT** |
 | `bda_us` itself | reads 0 under `lite` | **NOT MEASURED** |
 | route C's ceiling | — | **NOT MEASURED — the only one left** |
@@ -134,7 +138,9 @@ population without a measured unit price; `dt_us` is not an endpoint inside the 
 
 **The honest statement of the task.** Session 83 spent its budget on the one number that decided
 whether a months-long rewrite was worth starting, and the answer was no — the serial part of the
-frame is larger than a whole 60-FPS frame. What remains is route B (≤ 2.5 ms, ships in packages, one
-package is already built and 10 µs short) and route C, whose ceiling nobody has measured and which
-is the only thing left that could in principle reach 60. **Measure route C's ceiling before promising
-anything about 60 FPS again.**
+frame is larger than a whole 60-FPS frame, and it stays larger than the design's condition even if
+the single biggest lever anyone has named is granted in full and for free. What remains is route B
+(≤ 2.5 ms, ships in packages; the first package is built, correct, video-clean and worth 138 µs
+against a 150 µs bar) and route C, whose ceiling nobody has measured and which is the only thing
+left that could in principle reach 60. **Measure route C's ceiling before promising anything about
+60 FPS again.**

@@ -213,6 +213,12 @@ enum class Gate : uint32_t {
 	// Recomputes the real predicate beside every fast answer and counts disagreements in
 	// bp_bad, which must read 0. Costs everything the gate saves - measurement only.
 	BindPackVerify, // KYTY_BIND_PACK_VERIFY,  file name "bindpackcheck"
+	// Session 83, MEASUREMENT ONLY: the wait and the HOLD of PipelineCache::m_mutex at its
+	// three per-draw and per-dispatch acquisitions.  The floor of session 83 wraps the whole of
+	// RefreshShaders (5 850 us) because it CONTAINS mutation; this says how much of it actually
+	// runs under the only lock it takes, which is what decides whether that 5 850 us is serial
+	// or merely serialised by the instrument.  DESIGN_82_parallel.md section 6 item 13.
+	PipeLockStat,   // KYTY_PIPE_LOCK_STAT,     file name "plkstat"
 	Count,
 };
 

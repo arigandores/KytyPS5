@@ -4211,7 +4211,18 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 		    static_cast<float>(std::min(limits.maxViewportDimensions[1], 16384u)) * 0.5f;
 		clip.enabled = true;
 	}
+	// Session 83, gate "plkstat": the only lock RefreshShaders takes. mh_prog_us is 5 850 us
+	// and the floor of this session counts all of it as serial; this says how much of it runs
+	// under the lock.
+	const auto prog_lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::PipeLockStat) &&
+	                                  Common::FrameStats::Enabled()
+	                              ? Common::FrameStats::NowNs()
+	                              : 0;
 	Common::LockGuard lock(m_mutex);
+	Common::FrameStats::LockSplit prog_lock_split(
+	    prog_lock_t0, Common::FrameStats::Counter::PipeLockProgWaitNs,
+	    Common::FrameStats::Counter::PipeLockProgHoldNs,
+	    Common::FrameStats::Counter::PipeLockProgN);
 	uint32_t          push_data_cursor =
 	    mesh_active ? ShaderRecompiler::IR::PushData::MeshDrawDwordCount : 0;
 	GraphicsPrograms  result;
@@ -4269,7 +4280,16 @@ ShaderProgram PipelineCache::GetComputeProgram(const HW::ComputeShaderInfo& regs
 	Common::FrameStats::Lap lap;
 	const auto        params      = PrepareProgram(regs, sh, input_info);
 	lap.Mark(Common::FrameStats::Counter::ProgPrepareNs);
+	// Session 83, gate "plkstat": the dispatch twin of the lock in GetGraphicsPrograms.
+	const auto cs_lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::PipeLockStat) &&
+	                                Common::FrameStats::Enabled()
+	                            ? Common::FrameStats::NowNs()
+	                            : 0;
 	Common::LockGuard lock(m_mutex);
+	Common::FrameStats::LockSplit cs_lock_split(
+	    cs_lock_t0, Common::FrameStats::Counter::PipeLockCsWaitNs,
+	    Common::FrameStats::Counter::PipeLockCsHoldNs,
+	    Common::FrameStats::Counter::PipeLockCsN);
 	uint32_t          push_data_cursor = 0;
 	return m_program_cache->Get(params, input_info, push_data_cursor);
 }
@@ -4304,7 +4324,17 @@ PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
 	bool                   queued = false;
 	GraphicsPipelineEntry* entry  = nullptr;
 	{
+		// Session 83, gate "plkstat": this one is inside mh_emit_us, NOT mh_prog_us. Reported
+		// separately so the two are never added together.
+		const auto pipe_lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::PipeLockStat) &&
+		                                  Common::FrameStats::Enabled()
+		                              ? Common::FrameStats::NowNs()
+		                              : 0;
 		Common::LockGuard lock(m_mutex);
+		Common::FrameStats::LockSplit pipe_lock_split(
+		    pipe_lock_t0, Common::FrameStats::Counter::PipeLockPipeWaitNs,
+		    Common::FrameStats::Counter::PipeLockPipeHoldNs,
+		    Common::FrameStats::Counter::PipeLockPipeN);
 		entry = CreateGraphicsPipelineLocked(colors, depth, vertex_info, command, ps_input_info,
 		                                     topology, primitive_restart_enable, programs, queued);
 	}

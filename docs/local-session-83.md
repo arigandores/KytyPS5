@@ -1,7 +1,7 @@
 # Session 83 — the sequential floor, measured; route A closed
 
 *This is `C:/kyty/s83/FACTS.md` verbatim, carried into git as the session's report.*
-*The harness, the logs and the pre-registrations live in `C:/kyty/s83`.*
+*The harness, the logs and the four pre-registrations live in `C:/kyty/s83`.*
 
 ---
 
@@ -28,7 +28,9 @@ and the rest of the session went to the binding path.
 | `bpv83a` | `fc92cd24…` | `bindpack=1 bindpackcheck=1`, self-check | **the check FIRED** — §4.2 |
 | `bpv83b` | `4588d793…` | the same after the fix | **`bp_bad` = 0** |
 | `bpk83a` | `4588d793…` | ABBA `bindpack=0\|1`, 300 s | **VALID, below the ship threshold** |
-| `bpc83a` | `4588d793…` | `bindpack=1`, 180 s, recorded | the video pass |
+| `bpc83a` | `4588d793…` | `bindpack=1`, 180 s, recorded | the video pass, **0 glitches** |
+| `bpk83b` | `4588d793…` | ABBA `bindpack=0\|1`, 300 s, the sealed pool | **VALID** — §4.7 |
+| `plk83a` | `8efb990c…` | A/A `plkstat=1`, 240 s, census | **the `mh_prog` question** |
 
 Sky Garden (`-lvl underwater_aerial_garden`) everywhere, settled window **n ≥ 2100**,
 `KYTY_FRAME_TRACE=lite`. Both floor runs entered on the first attempt (15.4 s and 14.8 s); no entry
@@ -143,7 +145,11 @@ plausible `S`.
 
 ### 2.6 What this number does NOT say — three caveats, all load-bearing
 
-1. **It is the floor at the granularity of four named surfaces** [I]. `mh_prog_us` (5 850 µs) is
+1. **It is the floor at the granularity of four named surfaces** [I]. **MEASURED AND CLOSED in
+   §2.7 of this same session: 68.9 % of `mh_prog` runs under `PipelineCache::m_mutex`, held out to
+   everyone.** The caveat is kept below as it was written, because it was written before the
+   measurement and the measurement went against the session's own prediction. `mh_prog_us`
+   (5 850 µs) is
    wrapped **whole**, and `progmemo` reports that **74.8 %** of draws repeat the previous draw's
    register inputs and take the memo, which is a *read*. If `ProgramCache` lookup could be made
    genuinely shared — `DESIGN` §5.3 says it cannot while the memo holds **iterators**, and names
@@ -160,6 +166,61 @@ plausible `S`.
    the instrument, i.e. **1.8 %**; `S_hi` subtracts all of it, which makes `S_hi` conservative only
    if every microsecond of `P` falls inside a wide interval. Any that does not makes `S_hi` an
    under-estimate, so the true floor is at least this.
+
+### 2.7 THE CAVEAT, MEASURED — and it closes against the session's own prediction
+
+`pred/04_plkstat.md` was sealed before the instrument existed, with the decision rule fixed:
+`H` = `pl_prog_hold_us`, `M` = `mh_prog_us`, and **`H/M` ≥ 0.60 → the floor stands as published;
+`H/M` ≤ 0.25 → the floor is an over-estimate by up to `M − H`.**
+
+Gate **`plkstat`** (`KYTY_PIPE_LOCK_STAT`, default 0) puts a `FrameStats::LockSplit` — session 68's
+`MutexMark` shape, timestamp taken right before the `LockGuard` — on each of the **three**
+`PipelineCache::m_mutex` acquisitions of the per-draw and per-dispatch path. **Wait and hold are
+never summed**, and the three sites sit in three different containers and are never added together.
+
+`plk83a`, A/A (`plkstat=1 amut=1 mutsite=1 mutwide=15` in both arms), 5 407 settled frames, guards
+check 2 and check 10 PASS. Medians [M]:
+
+| site | container | `n` | wait µs | **hold µs** | hold / container |
+|---|---|---:|---:|---:|---:|
+| `GetGraphicsPrograms` | `mh_prog_us` 5 959 | 5 057 | 42 | **4 108** | **68.9 %** |
+| `GetGraphicsPipeline` | `mh_emit_us` 7 598 | 5 057 | 48 | 653 | 8.6 % |
+| `GetComputeProgram` | `mh_disp_us` 2 190 | 268 | 2 | 237 | 10.8 % |
+| **all three** | `a_hold_us` 28 632 | | 92 | **4 998** | **17.5 %** |
+
+Arming, by identity: `pl_prog_n` **5 057** against `mh_n` **5 077** = **−0.39 %**; `pl_cs_n` **268**
+against `dispatches` **268**, exactly. Both inside the pre-registered 2 %.
+
+**`H/M` = 0.689 ≥ 0.60. The floor stands as published, and caveat 1 of §2.6 is closed against
+reopening route A.** More than two thirds of `RefreshShaders` is spent holding a single mutex out to
+every other thread, so wrapping the phase whole was not an over-estimate of consequence.
+
+**Prediction S3 — `H/M` < 0.50 — is a MISS, and it was the discriminating one.** The reasoning
+behind it was wrong in a way worth recording: `progmemo` short-circuits `PrepareProgram`, which is
+the work *before* the lock, but **every draw still takes the lock and calls `ProgramCache::Get` once
+per stage regardless of the memo**. A memo that saves the expensive preparation does not save the
+lock. S1, S2, S4 and S5 hit.
+
+**What this adds beyond the caveat.** One mutex holds out **5.0 ms of a 28.6 ms frame** — 17.5 % —
+at a wait of **92 µs**, i.e. essentially uncontended **because exactly one thread takes it today**.
+Under N record contexts that 5.0 ms is not parallel work; it is a serialiser, and
+`DESIGN_82_parallel.md` §5.3 says it cannot be split while the memo holds **iterators**. Route A is
+therefore closed twice over: by `S` = 20.8 ms, and by the largest single component of the part
+`mutwide` newly revealed being exclusive lock hold rather than instrument artefact.
+
+**A third independent reading of the floor, for free:** `plk83a` reads `a_mut_us` **20 998** on a
+different binary with a different instrument armed, against `flr83b`'s **20 973** — **0.12 %** apart.
+
+**What this run cannot show, as stated before it ran:** that the 31 % of `mh_prog` outside the lock
+is *parallelisable*. It shows only that it is not protected by *that* lock. No revision of the K2
+verdict follows from it, and none is made.
+
+**The most generous hypothetical the record allows, and it still does not reach the condition.**
+Grant, against `DESIGN` §5.3, that the **entire** 4 998 µs of `PipelineCache::m_mutex` hold becomes
+parallel. Then `S` = 20 838 − 4 998 = **15 840 µs**. The design's own 60-FPS condition is
+**`S ≤ 14 100 µs` AND `f_eff ≤ 0.125` simultaneously** (`DESIGN` §1). 15 840 > 14 100. **Route A is
+closed with margin, not by a hair**, and the single largest lever anyone has named does not move it
+far enough even when granted in full and for free.
 
 ## 3. WHERE `bda_us` GOES — the `std::map` candidate is bounded and small
 
@@ -296,6 +357,41 @@ arm 0's 32 366 µs/frame; the µs estimator on the same pairs reads **−140**. 
 differences. The threshold was written in µs, so the µs estimator decides — but had it been written
 in percent, the same run would have shipped.
 
+### 4.7 THE TWO-RUN POOL — pre-registered before the second run, and it returns the same verdict
+
+`bpk83a` missed the ship threshold by 10.2 µs, which is exactly the shape of result that tempts a
+programme to move a threshold. Instead `pred/03_pool.md` was sealed — **after** `bpk83a` and
+**before** `bpk83b` existed — fixing the estimator, the weights, `E_a` = −139.8 and `SE_a` = 40.6,
+**exactly two runs with no third under any outcome**, and the unchanged −150 µs rule. §1 of it
+states the bias it carries in its own words: *the decision to take a second run is data-dependent,
+and that is a selection effect*; it is bounded and declared, not removed.
+
+`bpk83b` is **VALID** on every criterion — pair match **100.0 % (126/126)**, split **+0.002 %**,
+work **+0.007 %**, guards check 2 and check 10 PASS, `da_take_us` 277.7 → 277.9 ns — and its arming
+is exact: `tnull_hit` 0 → 1 496, `tnull_miss` 1 490 → 0, `bp_mask` 0 → 9 620, `bp_bad` 0 in both,
+null population **+0.40 %** apart (inside `pred/02`'s 0.5 %, where `bpk83a` read +0.68 %).
+
+| run | `cpu_net_us`, matched pairs | `cpu/draw` |
+|---|---:|---:|
+| `bpk83a` | −139.8 ± 81.2 (SE 40.6), 125 pairs | −0.548 % ± 0.146 %, t = −7.49 |
+| `bpk83b` | −135.8 ± 84.0 (SE 42.0), 126 pairs | −0.457 % ± 0.123 %, t = −7.42 |
+| **pool** | **−137.9 ± 58.4 (2·SE), t = −4.72** | |
+
+**Q on 1 d.f. = 0.005 (p = 0.945)**: the two runs agree to **4.0 µs**. That is the finding that
+matters more than the verdict — **the package is not "10 µs short of 150", it is worth about 138 µs
+and the threshold was not unlucky.** The pooled interval is [−196.2, −79.5].
+
+`pred/03_pool.md` §5: SHIP iff `E_pool` ≤ −150 **and** the upper bound is below zero. The upper
+bound is below zero; **−137.9 is not ≤ −150**. → **NOT PAID FOR, finally. `bindpack` stays at 0, and
+there is no third run.** Predictions R1–R6 all HIT, including **R4**, the discriminating one, which
+was written as "the pool does **not** clear −150" and would have cost something had the package
+shipped.
+
+**The effect is real and small.** It is 0.43 % of the CPU frame, it is correct (`bp_bad` 0 over
+1831 frames), and it is video-clean (5 732 presents, 0 one-frame glitches). What the rule rejects is
+not its existence but its size. The disposition is the one `bdabits` got: the code stays in the
+tree, the gate stays at 0, and the package ships when a fourth item pushes the pool past the line.
+
 ### 4.6 The video pass — session 82's standing debt, discharged
 
 `bpc83a`: `bindpack=1` in both arms, 180 s held, recorder on. **5 732 recorded presents, 960x540,
@@ -351,11 +447,17 @@ this programme and none is claimed.
 * **`bda_us` is not timed by anything in this session** (§3) — a `Lap` inside `PrepareBda` is the
   named next step.
 * **No second valid floor run beyond `flr83b`**; `flr83a` agrees to 0.3 % but is void.
-* **The `mh_prog` question of §2.6 is not measured** — whether `ProgramCache` lookup is genuinely
-  serial decides whether S is 20.8 ms or ~15 ms, and nothing here answers it.
-* **No second `bindpack` run.** One valid run reads −139.8 ± 81.2 µs against a −150 µs threshold;
-  pooling a second would halve the interval, and taking it after seeing this one is optional
-  stopping. It is a pre-registration for session 84, not a decision for session 83.
+* ~~The `mh_prog` question of §2.6~~ — **measured in §2.7 after the first draft of this file was
+  written: 68.9 % of it is `PipelineCache::m_mutex` hold, the floor stands, and the session's own
+  prediction S3 was wrong.**
+* **Whether the 31 % of `mh_prog` outside that lock is parallelisable is [NM]** — it is only known
+  not to be protected by *that* lock. Naming the other reasons it might be serial is a
+  source-reading task nobody has done.
+* **Whether `PipelineCache::m_mutex` can be split** is [NM] and is now the load-bearing question
+  behind 5.0 ms a frame. `DESIGN` §5.3 names the precondition: `programs` + `programs_epoch` must
+  stop being reachable through **iterators** held by the memo (`SourceEntry*` + a validating key).
+* ~~No second `bindpack` run.~~ **Taken under `pred/03_pool.md`, sealed between the two runs; the
+  pool reads −137.9 ± 58.4 and the verdict is unchanged (§4.7).** There is no third run.
 * **Route C is not started.** `ROADMAP.md` §2 C is now the only route with an unmeasured ceiling and
   nothing in this session measured it.
 
@@ -373,8 +475,10 @@ gap has to make the serial work itself smaller — route C of `ROADMAP.md` — b
 longer a route that makes it run in parallel.
 
 **What this session shipped, plainly.** No default changed, and the scoreboard did not move: the
-binding-path package measured **−139.8 ± 81.2 µs** against the **−150 µs** threshold this session
-wrote for itself before the run, and the threshold was not moved. What did change is the direction:
+binding-path package pooled over two valid runs measured **−137.9 ± 58.4 µs** against the
+**−150 µs** threshold this session wrote for itself before the first run, and the threshold was not
+moved — the second run showed the package is worth about 138 µs rather than being unluckily short of
+150. What did change is the direction:
 **route A is closed by a measurement instead of by an argument**, and the three source changes
 (`mutwide`, `bindpack`, the corrected self-check) are in the tree, armed by counters, self-checked
 clean and A/B'd on this machine.

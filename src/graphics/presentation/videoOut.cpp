@@ -1711,6 +1711,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"tnull_miss", FS::Counter::NullTexMisses, false},
 				    {"bp_mask", FS::Counter::BindKindMasks, false},
 				    {"bp_bad", FS::Counter::BindPackBad, false},
+				    // Session 83, gate "plkstat": PipelineCache::m_mutex, site by site.
+				    {"pl_prog_wait_us", FS::Counter::PipeLockProgWaitNs, true},
+				    {"pl_prog_hold_us", FS::Counter::PipeLockProgHoldNs, true},
+				    {"pl_prog_n", FS::Counter::PipeLockProgN, false},
+				    {"pl_pipe_wait_us", FS::Counter::PipeLockPipeWaitNs, true},
+				    {"pl_pipe_hold_us", FS::Counter::PipeLockPipeHoldNs, true},
+				    {"pl_pipe_n", FS::Counter::PipeLockPipeN, false},
+				    {"pl_cs_wait_us", FS::Counter::PipeLockCsWaitNs, true},
+				    {"pl_cs_hold_us", FS::Counter::PipeLockCsHoldNs, true},
+				    {"pl_cs_n", FS::Counter::PipeLockCsN, false},
 				    // Session 59, B9 ceiling (gate "drawstat").
 				    {"cb_pool_n", FS::Counter::CommitPoolSets, false},
 				    {"cb_pool_tr_us", FS::Counter::CommitPoolTransitNs, true},

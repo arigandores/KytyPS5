@@ -995,6 +995,19 @@ enum class Counter : uint32_t {
 	NullTexMisses,  // tnull_miss: ... and those that had to call FindImage
 	BindKindMasks,  // bp_mask: binding-kind masks computed, one per prepared stage
 	BindPackBad,    // bp_bad: gate "bindpackcheck" disagreements - must read 0
+	// Session 83, gate "plkstat": PipelineCache::m_mutex, per acquisition site. WAIT is time
+	// this thread was blocked by another holder; HOLD is time it held the lock out. They are
+	// different quantities and are never summed. pl_prog_* is inside mh_prog_us, pl_pipe_* is
+	// inside mh_emit_us and pl_cs_* is inside mh_disp_us - the three do not share a container.
+	PipeLockProgWaitNs, // pl_prog_wait_us: GetGraphicsPrograms, blocked
+	PipeLockProgHoldNs, // pl_prog_hold_us: ... holding
+	PipeLockProgN,      // pl_prog_n: ... acquisitions
+	PipeLockPipeWaitNs, // pl_pipe_wait_us: GetGraphicsPipeline, blocked
+	PipeLockPipeHoldNs, // pl_pipe_hold_us: ... holding
+	PipeLockPipeN,      // pl_pipe_n: ... acquisitions
+	PipeLockCsWaitNs,   // pl_cs_wait_us: GetComputeProgram, blocked
+	PipeLockCsHoldNs,   // pl_cs_hold_us: ... holding
+	PipeLockCsN,        // pl_cs_n: ... acquisitions
 	Count
 };
 
@@ -1165,6 +1178,34 @@ public:
 
 private:
 	uint64_t m_t;
+};
+
+// Session 83, gate "plkstat": splits one lock acquisition into the wait and the hold.
+// Constructed with a timestamp taken right BEFORE the LockGuard, exactly like MutexMark of
+// session 68; zero means "not measuring". Same shape, different counters, because the render
+// mutex and the pipeline-cache mutex are different objects and must never share a number.
+class LockSplit {
+public:
+	LockSplit(uint64_t before, Counter wait, Counter hold, Counter count)
+	    : m_t(before), m_hold(hold) {
+		if (m_t != 0) {
+			const auto now = NowNs();
+			Add(wait, now - m_t);
+			Add(count, 1);
+			m_t = now;
+		}
+	}
+	~LockSplit() {
+		if (m_t != 0) {
+			Add(m_hold, NowNs() - m_t);
+		}
+	}
+	LockSplit(const LockSplit&)            = delete;
+	LockSplit& operator=(const LockSplit&) = delete;
+
+private:
+	uint64_t m_t;
+	Counter  m_hold;
 };
 
 // Session 68, gate "amut": the union of the mutating intervals of the draw path (the serial floor

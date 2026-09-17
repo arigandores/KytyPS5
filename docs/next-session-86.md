@@ -1,7 +1,10 @@
 # Session 86 — the brief
 
-**Session 85 closed route C at per-slot granularity after this brief's first draft was written.**
-§1 and §3.2 carry the verdict; read them before anything else in here.
+**Session 85 closed route C at per-slot granularity after this brief's first draft was written**,
+and opened **route D** — the four blocks of the frame nobody has ever touched, in `ROADMAP.md`
+§2 D. §1 and §3.2 carry route C's verdict; **§3.0 is the work.** Read `ROADMAP.md` **§0.1** first:
+it separates *"three routes with a measured ceiling do not reach 60 FPS"* (proved) from
+*"60 FPS is unreachable"* (**not** proved), and those two get conflated every time.
 
 Session 85's commit is on `merge-upstream`. **Source changed and the binary was rebuilt, but NO
 default changed**: the installed `kyty_emulator.exe` is `24476c7b7a66a652…`, 23 595 520 bytes, and
@@ -115,6 +118,48 @@ only.**
 * Everything in `ROADMAP.md` §3.
 
 ## 3. The work — THIS IS A CODING SESSION
+
+### 3.0 ROUTE D FIRST — three counters, one prong each, and none of them is an optimisation
+
+`ROADMAP.md` §2 D is the only part of the map with no measured ceiling anywhere in it. A, B and C
+all made a draw **cheaper**; nothing has ever tried to make the work **smaller**. Take these in this
+order, because the order is by cost of the question and not by size of the prize:
+
+**D4 — is anything mergeable at all? (first, because it has no ceiling even as a guess.)**
+5 154 draws and 268 dispatches a frame. Nobody has measured what fraction of consecutive draws
+share a pipeline and differ only in push constants or one buffer binding. **One counter, one run,
+and it either opens a fourth route or closes it honestly.** Shape: at the top of the draw path,
+compare this draw's `(pipeline key, the image and sampler slot handles, the buffer slot handles)`
+against the previous draw's and classify into `dm_same` (everything equal — a candidate for an
+instanced merge), `dm_push` (only push constants differ), `dm_buf1` (exactly one buffer slot
+differs), `dm_no`. It rides in any ABBA. **Pre-register the routing rule before the run**, the way
+`pred/02` of session 84 did: what value of `dm_push + dm_buf1` licenses a merge attempt, and what
+value closes route D.
+
+**D3 — split `bl_prep_us`.** 3 991 µs a frame, 428.64 ns a stage, the largest unsplit block of the
+bind phase. Three more `bindlap` counters on the idiom already in the tree — `bl_res_us` /
+`bl_res_n` around the image loop, `bl_smp_us` around the sampler loop, the remainder being
+`shader_data`. **Until this splits, the image half of every route-C number has an unmeasured second
+term.**
+
+**D2 — decompose `mh_prog`.** 5 850 µs a frame, **18.5 % of the frame**, 1.13 µs a draw *just to
+find a program*, and 68.9 % of it under `PipelineCache::m_mutex`. Session 83 closed "make it
+parallel"; **"make it cheaper" has never been attempted, and it has never been decomposed.**
+`mutsite`/`plkstat` exist; what is missing is the split of the 5 850 into the memo hit, the key
+build, the map lookup and the lock.
+
+**D1 — LAST, and it is a rewrite, not a measurement.** `BufferCache::UploadCopies`
+(`bufferCache.cpp:854`) still does `CopyGuestToStaging` → staging → `vkCmdCopyBuffer`; session 28
+built the `VK_EXT_external_memory_host` path **for images only**. That copy is **22 761 KiB a frame
+at 11 GB/s** and session 85 measured it as **92.7 % of the whole `PrepareBda` scan**. Its ceiling —
+**~2.1 ms** — is the only real number in route D. Re-read session 28's caveats
+(`KYTY_HOST_IMPORT_REUPLOAD_TICKS`, the first-piece stalls) before touching it.
+
+**Say the odds out loud before starting.** 16.7 ms needs ~15 ms removed, i.e. half the frame. The
+upper bounds of D sum to ≈ 12 ms, and upper bounds in this programme have been wrong by **2–20×**
+(the `std::map` bound by 20, the shader-change bound by 2.6, the "5–7 ms" premise by 2.3). The
+realistic expectation from route D is **single-digit milliseconds, not fifteen** — and that is not a
+reason to skip it, it is a reason not to promise 60 FPS on the strength of it.
 
 The rule is unchanged and not negotiable: **the session ends with a source change that was A/B'd on
 this machine, or it failed.** A measurement gate's own ABBA satisfies it — sessions 83 and 85 both

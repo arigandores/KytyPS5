@@ -500,6 +500,26 @@ void ValidateStorageTexture(const ShaderRecompiler::IR::ImageResource& resource,
 	     descriptor.fields[5], descriptor.fields[6], descriptor.fields[7]);
 }
 
+// Session 83, gate "bindpack": the key of the null-T# memo. NullTextureDesc below reads
+// exactly three things - the numeric class, whether the binding is storage, and whether it is
+// a native depth compare - so three by three keys cover every answer it can give. Nine.
+static uint32_t NullTextureKey(const ShaderRecompiler::IR::ImageResource& resource,
+                               TextureCache::BindingType                  binding) {
+	uint32_t numeric = 0;
+	switch (resource.numeric_class) {
+		case Prospero::TextureNumericClass::Float: numeric = 0; break;
+		case Prospero::TextureNumericClass::Uint: numeric = 1; break;
+		case Prospero::TextureNumericClass::Sint: numeric = 2; break;
+		default: EXIT("null image has unsupported numeric class\n");
+	}
+	const bool native_compare = binding == TextureCache::BindingType::Texture &&
+	                            resource.depth_compare && !resource.manual_depth_compare;
+	const uint32_t shape = binding == TextureCache::BindingType::Storage ? 2u
+	                       : native_compare                             ? 1u
+	                                                                    : 0u;
+	return numeric * 3u + shape;
+}
+
 static TextureCache::ImageDesc NullTextureDesc(const ShaderRecompiler::IR::ImageResource& resource,
                                                TextureCache::BindingType                  binding) {
 	TextureCache::ImageDesc desc {};
@@ -759,9 +779,58 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	const bool tail_mip_storage = storage && !descriptor.IsNull() && !resource.r128 &&
 	                              descriptor.LastLevel() > descriptor.MaxMip();
 	if (descriptor.IsNull() || (skip_tail_mip_storage && tail_mip_storage)) {
-		auto       desc = NullTextureDesc(resource, storage ? TextureCache::BindingType::Storage
-		                                                    : TextureCache::BindingType::Texture);
+		const auto binding = storage ? TextureCache::BindingType::Storage
+		                             : TextureCache::BindingType::Texture;
+		// Session 83, gate "bindpack" (PLAN_82_bind.md item 1). Both emit lambdas take
+		// `const ImageDesc&`, so a hit copies nothing; the slot is re-validated against the
+		// live image every time, which GetNullImage does not do for m_null_images.
+		if (Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
+			auto& slot = Memo().null_textures[NullTextureKey(resource, binding)];
+			if (slot.valid && texture_cache.m_slot_images.try_get(slot.image_id) != nullptr) {
+				if (Common::Gates::Enabled(Common::Gates::Gate::BindPackVerify)) {
+					auto       check_desc = NullTextureDesc(resource, binding);
+					const auto check_id   = texture_cache.FindImage(check_desc);
+					// Field-wise and NOT memcmp: ImageDesc is an aggregate with padding, its copy
+					// assignment is member-wise and carries none of it, and aggregate
+					// initialisation leaves it indeterminate - so memcmp compares bytes that no
+					// consumer of the desc ever loads. These are every field NullTextureDesc
+					// writes, plus the ImageId, which is the only thing that can genuinely vary.
+					const bool id_same   = check_id == slot.image_id;
+					const bool type_same = check_desc.type == slot.desc.type;
+					const bool fmt_same  = check_desc.info.pixel_format == slot.desc.info.pixel_format &&
+					                      check_desc.info.guest_format == slot.desc.info.guest_format &&
+					                      check_desc.info.type == slot.desc.info.type &&
+					                      check_desc.info.extent == slot.desc.info.extent &&
+					                      check_desc.info.bytes_per_block ==
+					                          slot.desc.info.bytes_per_block &&
+					                      check_desc.info.samples == slot.desc.info.samples;
+					const bool view_same = check_desc.view_info == slot.desc.view_info;
+					if (!id_same || !type_same || !fmt_same || !view_same) {
+						Common::FrameStats::Add(Common::FrameStats::Counter::BindPackBad, 1);
+						static std::atomic<uint32_t> logged {0};
+						if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+							LOGF("BindPackVerify: MISMATCH null texture key=%u id=%u type=%u fmt=%u"
+							     " view=%u\n",
+							     NullTextureKey(resource, binding),
+							     static_cast<uint32_t>(id_same), static_cast<uint32_t>(type_same),
+							     static_cast<uint32_t>(fmt_same), static_cast<uint32_t>(view_same));
+						}
+					}
+				}
+				Common::FrameStats::Add(Common::FrameStats::Counter::NullTexHits, 1);
+				return emit(slot.image_id, slot.desc);
+			}
+			auto       desc = NullTextureDesc(resource, binding);
+			const auto id   = texture_cache.FindImage(desc);
+			slot.desc       = desc;
+			slot.image_id   = id;
+			slot.valid      = true;
+			Common::FrameStats::Add(Common::FrameStats::Counter::NullTexMisses, 1);
+			return emit(id, desc);
+		}
+		auto       desc = NullTextureDesc(resource, binding);
 		const auto id   = texture_cache.FindImage(desc);
+		Common::FrameStats::Add(Common::FrameStats::Counter::NullTexMisses, 1);
 		return emit(id, desc);
 	}
 
@@ -1331,6 +1400,51 @@ namespace {
 // Session 82, gate "bindkey" (measurement only).  FNV-1a over the inputs a binding memo would have
 // to key on: the shader, every descriptor dword of the snapshot, and the user-data dwords the
 // program reads.  Nothing here is used for a decision - see gates.h.
+// Session 83, gate "bindpack" (PLAN_82_bind.md item 4). IR::FindBinding is an out-of-line
+// linear scan of layout.descriptors, and a stage asks it three questions about the SAME
+// layout: Gds here, FlattenedSrt and ShaderData in FindBuffers, whose `layout` IS
+// program.bindings. One pass answers all three. Bit 3 marks the mask computed, so a zero
+// mask can never be mistaken for "nothing present".
+constexpr uint32_t KIND_GDS           = 1u;
+constexpr uint32_t KIND_FLATTENED_SRT = 2u;
+constexpr uint32_t KIND_SHADER_DATA   = 4u;
+constexpr uint32_t KIND_COMPUTED      = 8u;
+
+uint32_t BindingKindMask(const ShaderRecompiler::IR::BindingLayout& layout) {
+	uint32_t mask = KIND_COMPUTED;
+	for (const auto& binding: layout.descriptors) {
+		switch (binding.kind) {
+			case ShaderRecompiler::IR::DescriptorBindingKind::Gds: mask |= KIND_GDS; break;
+			case ShaderRecompiler::IR::DescriptorBindingKind::FlattenedSrt:
+				mask |= KIND_FLATTENED_SRT;
+				break;
+			case ShaderRecompiler::IR::DescriptorBindingKind::ShaderData:
+				mask |= KIND_SHADER_DATA;
+				break;
+			default: break;
+		}
+	}
+	return mask;
+}
+
+// The self-check of gate "bindpackcheck": the bit and the scan must agree, always.
+void VerifyKind(uint32_t mask, uint32_t bit,
+                const ShaderRecompiler::IR::BindingLayout&  layout,
+                ShaderRecompiler::IR::DescriptorBindingKind kind) {
+	const bool fast = (mask & bit) != 0;
+	const bool slow = ShaderRecompiler::IR::FindBinding(layout, kind) != nullptr;
+	if (fast == slow) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BindPackBad, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("BindPackVerify: MISMATCH kind=%u fast=%u slow=%u\n",
+		     static_cast<uint32_t>(kind), static_cast<uint32_t>(fast),
+		     static_cast<uint32_t>(slow));
+	}
+}
+
 uint64_t BindingInputKey(const ShaderRecompiler::IR::CompiledShaderInfo& program,
                          const ShaderRecompiler::IR::ResourceSnapshot& snapshot) {
 	uint64_t h = 1469598103934665603ULL;
@@ -1369,6 +1483,10 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	const auto& snapshot = runtime.resources;
 	prepared.Reset();
 	prepared.runtime = &runtime;
+	if (Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
+		prepared.kind_mask = BindingKindMask(program.bindings);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindKindMasks, 1);
+	}
 	if (Common::Gates::Enabled(Common::Gates::Gate::BindKeyStat)) {
 		// One slot per shader stage: consecutive draws are compared stage against stage.
 		thread_local std::array<uint64_t, 16> previous_key {};
@@ -1403,8 +1521,16 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		prepared.shader_data.push_back(snapshot.user_data[reg - program.user_data_base]);
 	}
 	prepared.shader_data.resize(program.bindings.ShaderDataDwords());
-	if (ShaderRecompiler::IR::FindBinding(
-	        program.bindings, ShaderRecompiler::IR::DescriptorBindingKind::Gds) != nullptr) {
+	const bool has_gds =
+	    (prepared.kind_mask & KIND_COMPUTED) != 0
+	        ? (prepared.kind_mask & KIND_GDS) != 0
+	        : ShaderRecompiler::IR::FindBinding(
+	              program.bindings, ShaderRecompiler::IR::DescriptorBindingKind::Gds) != nullptr;
+	if (Common::Gates::Enabled(Common::Gates::Gate::BindPackVerify)) {
+		VerifyKind(prepared.kind_mask, KIND_GDS, program.bindings,
+		           ShaderRecompiler::IR::DescriptorBindingKind::Gds);
+	}
+	if (has_gds) {
 		prepared.gds.buffer = m_context.GetBufferCache().GetGdsBuffer()->Handle();
 	}
 }
@@ -1485,12 +1611,27 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		pack_memory_offset(i, buffer_offset);
 	}
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);
-	if (ShaderRecompiler::IR::FindBinding(
-	        layout, ShaderRecompiler::IR::DescriptorBindingKind::FlattenedSrt) != nullptr) {
+	const bool kinds_known = (prepared.kind_mask & KIND_COMPUTED) != 0;
+	const bool has_srt =
+	    kinds_known
+	        ? (prepared.kind_mask & KIND_FLATTENED_SRT) != 0
+	        : ShaderRecompiler::IR::FindBinding(
+	              layout, ShaderRecompiler::IR::DescriptorBindingKind::FlattenedSrt) != nullptr;
+	const bool has_shader_data =
+	    kinds_known ? (prepared.kind_mask & KIND_SHADER_DATA) != 0
+	                : ShaderRecompiler::IR::FindBinding(
+	                      program.bindings,
+	                      ShaderRecompiler::IR::DescriptorBindingKind::ShaderData) != nullptr;
+	if (Common::Gates::Enabled(Common::Gates::Gate::BindPackVerify)) {
+		VerifyKind(prepared.kind_mask, KIND_FLATTENED_SRT, layout,
+		           ShaderRecompiler::IR::DescriptorBindingKind::FlattenedSrt);
+		VerifyKind(prepared.kind_mask, KIND_SHADER_DATA, program.bindings,
+		           ShaderRecompiler::IR::DescriptorBindingKind::ShaderData);
+	}
+	if (has_srt) {
 		prepared.flattened_srt = NativeUpload(m_context, snapshot.flattened_srt);
 	}
-	if (ShaderRecompiler::IR::FindBinding(
-	        program.bindings, ShaderRecompiler::IR::DescriptorBindingKind::ShaderData) != nullptr) {
+	if (has_shader_data) {
 		prepared.shader_data_buffer = NativeUpload(m_context, prepared.shader_data);
 	}
 }

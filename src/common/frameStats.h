@@ -971,6 +971,30 @@ enum class Counter : uint32_t {
 	SliceDraws2, // slc_d2: 512 .. 1023
 	SliceDraws3, // slc_d3: 1024 .. 2047
 	SliceDraws4, // slc_d4: >= 2048
+	// ------------------------------------------------------------------------------------------
+	// Session 83, W1: where bda_us 2 181 us a frame goes.  Session 82 proved it is NOT the
+	// 18 582 region visits - gate "bdabits" armed to 99.95 % of them and read -50.8 +- 87.5 us,
+	// inside the A/A floor.  These four divide the 181 PrepareBda calls of a frame instead:
+	// how many are served by the three-epoch cache without scanning at all (bda_hit), how many
+	// mapped ranges the scanning ones walk (bda_rng), how many of those hold no registered
+	// buffer (bda_rng_e, an early return before any region is touched), and how many dirty
+	// ranges the walk then feeds to the upload pass (bda_drng) - which is also the number of
+	// m_buffers map lookups it costs, the candidate the session-82 FACTS names next.
+	// All four are Add-style, so unlike bda_us (a Scope, which needs TimingsEnabled) they read
+	// in a KYTY_FRAME_TRACE=lite measurement run.
+	BdaPrepareHits, // bda_hit: PrepareBda calls served by the three-epoch cache
+	BdaRanges,      // bda_rng: SynchronizeBuffersInRange calls
+	BdaRangesEmpty, // bda_rng_e: ... of those, mappings with no registered buffer intersecting
+	BdaDirtyRanges, // bda_drng: dirty ranges fed to SynchronizeBuffersOfDirtyRanges
+	// Session 83: the arming proof of knob "mutwide" - the wide MutScopes that armed. 0.000 at
+	// mutwide=0, and 2*draws + dispatches + bda_n at mutwide=15.
+	MutWideScopes,  // mw_n: MutScopes constructed with an arming counter and an active bit
+	// Session 83, gate "bindpack". tnull_hit + tnull_miss is the null-T# population and must be
+	// EQUAL in both arms: it is the same predicate either way. tnull_hit is 0.000 at bindpack=0.
+	NullTexHits,    // tnull_hit: null-T# resolutions served by the nine-entry memo
+	NullTexMisses,  // tnull_miss: ... and those that had to call FindImage
+	BindKindMasks,  // bp_mask: binding-kind masks computed, one per prepared stage
+	BindPackBad,    // bp_bad: gate "bindpackcheck" disagreements - must read 0
 	Count
 };
 
@@ -1150,9 +1174,16 @@ private:
 // measurement run is KYTY_FRAME_TRACE=lite, where g_timings is false.
 class MutScope {
 public:
-	explicit MutScope(bool on): m_active(on && Enabled()) {
+	// Session 83: `arm` is the counter that proves this scope armed, for sites added behind a
+	// knob. Counter::Count = none, which is what the six sites of session 68 pass by omission,
+	// so they are unchanged. The count lands INSIDE the interval on purpose - it is part of the
+	// instrument's price and the ABBA on the knob measures it with everything else.
+	explicit MutScope(bool on, Counter arm = Counter::Count): m_active(on && Enabled()) {
 		if (!m_active) {
 			return;
+		}
+		if (arm != Counter::Count) {
+			Add(arm, 1);
 		}
 		m_outer = Detail::t_mut_depth++ == 0;
 		if (m_outer) {

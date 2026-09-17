@@ -197,6 +197,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 82, W1: the write map of the BDA region walk, and its self-check.
     {"KYTY_BDA_WRITE_BITS", "bdabits", false},
     {"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
+    // Session 83, route B: the binding-path package (PLAN_82_bind.md items 1, 4, 9).
+    {"KYTY_BIND_PACK", "bindpack", false},
+    {"KYTY_BIND_PACK_VERIFY", "bindpackcheck", false},
 }};
 
 struct KnobDefinition {
@@ -253,6 +256,8 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // 1024 is the operating point: 1024|4096 read +0.200 % +/- 0.166 %, inside its own predicted
     // band; arm1 used the runtime form, so no cause is attributable. 384/512 is OPEN.
     {"KYTY_PREFETCH_CAP_B", "pfcap", 1024, 4096},
+    // Session 83, measurement only: which phases of the render-mutex hold carry a MutScope.
+    {"KYTY_MUT_WIDE", "mutwide", 0, 15},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

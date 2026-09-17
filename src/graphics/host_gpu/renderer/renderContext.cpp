@@ -299,6 +299,12 @@ void RenderContext::UnmapMemory(uint64_t vaddr, uint64_t size) {
 void RenderContext::PrepareBda() {
 	Common::FrameStats::Scope scope(Common::FrameStats::Counter::BdaPrepareNs,
 	                                Common::FrameStats::Counter::BdaPrepares);
+	// Session 83, knob "mutwide" bit 3: PrepareBda mutates the buffer cache and is spine-only
+	// in any slice-parallel scheme (DESIGN_82_parallel.md 5.4).  The lock acquisition is inside
+	// the interval on purpose - waiting for it is part of what stays serial.
+	Common::FrameStats::MutScope wide_bda(
+	    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 8u) != 0,
+	    Common::FrameStats::Counter::MutWideScopes);
 	std::shared_lock          lock(m_mapped_ranges_mutex);
 	static const bool         reuse = [] {
 		const auto* value = std::getenv("KYTY_BDA_EPOCH_CACHE");
@@ -309,6 +315,9 @@ void RenderContext::PrepareBda() {
 	m_fault_process_pending       = true;
 	if (reuse && cpu_epoch == m_bda_cpu_epoch && registration_epoch == m_bda_registration_epoch &&
 	    m_mapping_epoch == m_bda_mapping_epoch) {
+		// Session 83: how many of the 181 calls a frame never scan at all.  If this reads ~0 the
+		// three-epoch cache is dead in this scene and bda_us is 181 full walks, not 181 probes.
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaPrepareHits, 1);
 		return;
 	}
 	// A newly registered buffer may cover pages whose dirty bits an earlier scan left alone, and

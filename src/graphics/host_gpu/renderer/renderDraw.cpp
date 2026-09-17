@@ -1891,8 +1891,16 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	                             ? Common::FrameStats::NowNs()
 	                             : 0;
 	LogDrawPhase(draw.Name(), "PrepareBindings");
-	GraphicsBindings local_bindings;
-	auto& bindings = ReuseBindingsEnabled() ? m_graphics_bindings : local_bindings;
+	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9): while ReuseBindingsEnabled() is on -
+	// the default - `bindings` binds to m_graphics_bindings and this object is never read, but it
+	// is still array<PreparedBindings,3> with five vectors each: fifteen empty-vector
+	// constructors and destructors on the stack of every draw.
+	const bool reuse_bindings = ReuseBindingsEnabled();
+	std::optional<GraphicsBindings> local_bindings;
+	if (!reuse_bindings || !Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
+		local_bindings.emplace();
+	}
+	auto& bindings = reuse_bindings ? m_graphics_bindings : *local_bindings;
 	// Upstream 6d1ba58 + 7516068: a draw runs one vertex stage (VS or mesh) or the three
 	// tessellation stages LS/HS/TES; every one of them is prepared, then one shared resource
 	// pass covers them all. Ours keeps preparing in place (gate "reusebindings"): the vectors
@@ -2592,13 +2600,28 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	DrawStateLease state_lease; // gate "drawstate"
 	auto&          state = state_lease.State();
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldPrologueNs);
-	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
-		ResetBindings();
-		return;
+	{
+		// Session 83, knob "mutwide" bit 0: PrepareDrawRenderState reaches FindRenderTarget and
+		// FindDepthTarget, which DESIGN_82_parallel.md 4 classifies EXCLUSIVE on
+		// TextureCache::m_lock, yet mh_rt_us carries no MutScope and so sits outside a_mut_us.
+		Common::FrameStats::MutScope wide_rt(
+		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 1u) != 0,
+		    Common::FrameStats::Counter::MutWideScopes);
+		if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
+			ResetBindings();
+			return;
+		}
 	}
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldTargetsNs);
 
-	RefreshShaders(buffer, draw, state);
+	{
+		// Session 83, knob "mutwide" bit 1: RefreshShaders reaches ProgramCache and PipelineCache,
+		// whose maps DESIGN_82_parallel.md 5.3 keeps EXCLUSIVE while the memo holds iterators.
+		Common::FrameStats::MutScope wide_prog(
+		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 2u) != 0,
+		    Common::FrameStats::Counter::MutWideScopes);
+		RefreshShaders(buffer, draw, state);
+	}
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	LogDrawStateIfNeeded(buffer, draw, state, args.index_type_and_size,
@@ -2696,19 +2719,34 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	DrawStateLease state_lease; // gate "drawstate"
 	auto&          state = state_lease.State();
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldPrologueNs);
-	if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
-		ResetBindings();
-		return;
+	{
+		// Session 83, knob "mutwide" bit 0: PrepareDrawRenderState reaches FindRenderTarget and
+		// FindDepthTarget, which DESIGN_82_parallel.md 4 classifies EXCLUSIVE on
+		// TextureCache::m_lock, yet mh_rt_us carries no MutScope and so sits outside a_mut_us.
+		Common::FrameStats::MutScope wide_rt(
+		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 1u) != 0,
+		    Common::FrameStats::Counter::MutWideScopes);
+		if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
+			ResetBindings();
+			return;
+		}
 	}
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldTargetsNs);
 
 	// Unlike DrawIndex the topology is resolved here, so its cost lands in mh_prog_us.
 	vk::PrimitiveTopology topology = vk::PrimitiveTopology::ePointList;
-	if (!GetDrawTopology(ucfg, true, topology)) {
-		ResetBindings();
-		return;
+	{
+		// Session 83, knob "mutwide" bit 1: RefreshShaders reaches ProgramCache and PipelineCache,
+		// whose maps DESIGN_82_parallel.md 5.3 keeps EXCLUSIVE while the memo holds iterators.
+		Common::FrameStats::MutScope wide_prog(
+		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 2u) != 0,
+		    Common::FrameStats::Counter::MutWideScopes);
+		if (!GetDrawTopology(ucfg, true, topology)) {
+			ResetBindings();
+			return;
+		}
+		RefreshShaders(buffer, draw, state);
 	}
-	RefreshShaders(buffer, draw, state);
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	const bool rect_list = ucfg.GetPrimType() == Prospero::PrimitiveType::kRectList;

@@ -196,6 +196,23 @@ enum class Gate : uint32_t {
 	// Runs the stamp comparison anyway on a skipped region and counts disagreements in
 	// bda_bit_bad, which must read 0. Costs the loads the gate exists to avoid - measurement only.
 	BdaWriteBitsVerify, // KYTY_BDA_WRITE_BITS_VERIFY, file name "bdabitscheck"
+	// Session 83, route B: the binding-path package of PLAN_82_bind.md items 1, 4 and 9.  One
+	// gate for three changes, because ROADMAP.md 5.3 fixes that route B ships in packages: each
+	// of the three is individually inside the A/A noise floor of +-75...92 us.
+	//   1 - the null T# descriptor memo. 1 418.1 resolutions a frame build a ~584-byte ImageDesc
+	//       and call FindImage (scheduler, validate, constrain, spin lock, map) for an answer
+	//       that is a pure function of three fields with at most NINE distinct values. Validated
+	//       on every hit against the live slot, which is strictly more than GetNullImage does.
+	//   4 - IR::FindBinding, an out-of-line linear scan, asked three questions about the SAME
+	//       BindingLayout at 9 131 stages a frame. One pass answers all three. No cache and no
+	//       invalidation: the mask is recomputed per stage and handed over in PreparedBindings.
+	//   9 - GraphicsBindings local_bindings, fifteen empty-vector constructors and destructors
+	//       per draw that are never read while ReuseBindingsEnabled() is on (the default).
+	// Arming: tnull_hit and bp_mask, both exactly 0.000 in the arm at 0.
+	BindPack,      // KYTY_BIND_PACK,          file name "bindpack"
+	// Recomputes the real predicate beside every fast answer and counts disagreements in
+	// bp_bad, which must read 0. Costs everything the gate saves - measurement only.
+	BindPackVerify, // KYTY_BIND_PACK_VERIFY,  file name "bindpackcheck"
 	Count,
 };
 
@@ -229,6 +246,16 @@ enum class Knob : uint32_t {
 	// 58.8 % of the offered bytes through at 192 and lets 94.4 % through at 1024; 4096 releases
 	// essentially all of them and does not pay. Read ONCE PER TAKE, never per vector.
 	PrefetchCapBytes, // KYTY_PREFETCH_CAP_B,   file name "pfcap" (bytes; default 1024, limit 4096)
+	// Session 83, MEASUREMENT ONLY - it changes no value and no decision.  A BITMASK of the
+	// phases of the render-mutex hold that get a MutScope of their own, so that a_mut_us stops
+	// being built from six sites that leave mh_rt_us (806 us), mh_prog_us (5 831 us),
+	// mh_disp_us (2 419 us) and PrepareBda (2 181 us) outside it.  1 = PrepareDrawRenderState,
+	// 2 = RefreshShaders, 4 = the dispatch critical section, 8 = PrepareBda.  The scopes nest
+	// with the existing six, so the total stays the UNION of the intervals - which is what the
+	// serial floor S is - and the inner ones stop paying for their own clock reads.
+	// The instrument is NOT free (amut alone costs 0.949-0.979 ms a frame, +958.4 us of it
+	// inside mh_bind_us), so any floor quoted from it must come from an ABBA on this knob.
+	MutWide,          // KYTY_MUT_WIDE,           file name "mutwide" (bitmask, 0 = today)
 	Count,
 };
 

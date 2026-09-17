@@ -59,6 +59,12 @@ struct PreparedBindings {
 	// whether it equalled the previous draw's.  Both are zero/false unless the gate is on.
 	uint64_t                              key     = 0;
 	bool                                  key_hit = false;
+	// Session 83, gate "bindpack" (PLAN_82_bind.md item 4): which of the three binding kinds
+	// the three FindBinding scans of a stage ask about are present in program.bindings, with
+	// bit 3 set to mark the mask computed. Written by PrepareBindings, read by FindBuffers,
+	// which already takes the same PreparedBindings. Recomputed for every stage of every draw:
+	// it is not a cache and has no invalidation source.
+	uint32_t                              kind_mask = 0;
 
 	void Reset() {
 		// Capacity belongs to the executor; every descriptor belongs to this draw only.
@@ -71,8 +77,9 @@ struct PreparedBindings {
 		gds = {nullptr, 0, VK_WHOLE_SIZE};
 		flattened_srt = {};
 		shader_data_buffer = {};
-		key     = 0;
-		key_hit = false;
+		key       = 0;
+		key_hit   = false;
+		kind_mask = 0;
 	}
 };
 

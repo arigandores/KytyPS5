@@ -100,6 +100,17 @@ struct RenderExecutorMemo {
 		RenderDepthInfo                                info;
 	};
 
+	// Session 83, gate "bindpack" (PLAN_82_bind.md item 1): the answer to a null T# is a pure
+	// function of (numeric class, storage, native depth compare) - at most nine values in the
+	// whole run - so it is kept by key and not looked up. Validated on every hit against the
+	// live slot, which is more than GetNullImage does with m_null_images.
+	struct NullTexture {
+		bool                    valid = false;
+		ImageId                 image_id;
+		TextureCache::ImageDesc desc;
+	};
+	static constexpr size_t NullTextureSlots = 9;
+
 	static constexpr size_t TextureSlots = 4096;
 	static constexpr size_t ResourceKeySlots = 1024;
 	static constexpr size_t ColorSlots   = 512;
@@ -111,6 +122,7 @@ struct RenderExecutorMemo {
 	std::vector<ResourceKey> resource_keys {ResourceKeySlots};
 	std::vector<ColorTarget> colors {ColorSlots};
 	std::vector<DepthTarget> depths {DepthSlots};
+	std::array<NullTexture, NullTextureSlots> null_textures {};
 };
 
 } // namespace Libs::Graphics

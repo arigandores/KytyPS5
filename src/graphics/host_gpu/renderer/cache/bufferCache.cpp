@@ -2447,6 +2447,10 @@ void BufferCache::SynchronizeBuffersOfDirtyRanges() {
 	if (m_bda_dirty_ranges.empty()) {
 		return;
 	}
+	// Session 83: the dirty ranges of this pass, which is also the number of m_buffers map
+	// lookups it costs (one upper_bound per range, plus the walk from it).
+	Common::FrameStats::Add(Common::FrameStats::Counter::BdaDirtyRanges,
+	                        static_cast<uint64_t>(m_bda_dirty_ranges.size()));
 	// The pass scope attributes the host protection calls of this pass to it (pb2_vp*) with the gate
 	// off as well, which is how the ceiling of the merge is read before it is switched on. It only
 	// owns the protection of the ranges - and therefore only flushes - on the batched path.
@@ -2547,6 +2551,8 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 		BdaScanScope(const BdaScanScope&)            = delete;
 		BdaScanScope& operator=(const BdaScanScope&) = delete;
 	} bda_scan_scope;
+	// Session 83: one per mapped range walked by a scanning PrepareBda.
+	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRanges, 1);
 	static const bool dirty_ranges = [] {
 		const auto* value = std::getenv("KYTY_BDA_DIRTY_RANGES");
 		return value == nullptr || value[0] != '0';
@@ -2561,7 +2567,12 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 			const auto& buffer = m_slot_buffers[previous->second];
 			if (buffer.CpuAddress() + buffer.Size() > vaddr) first = previous;
 		}
-		if (first == m_buffers.end() || first->first >= end) return;
+		if (first == m_buffers.end() || first->first >= end) {
+			// Session 83: a mapping with no registered buffer at all - two map lookups and out,
+			// before any tracking region is touched.
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRangesEmpty, 1);
+			return;
+		}
 		const auto last = std::prev(m_buffers.lower_bound(end));
 		const auto& last_buffer = m_slot_buffers[last->second];
 		const auto scan_begin = std::max(vaddr, first->first);

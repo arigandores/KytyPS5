@@ -1699,6 +1699,18 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"pb2_gap", FS::Counter::PassGapRuns, false},
 				    {"pb2_gap_pages", FS::Counter::PassGapPages, false},
 				    {"pb2_up", FS::Counter::PassUploads, false},
+				    // Session 83, W1: the division of bda_us.
+				    {"bda_hit", FS::Counter::BdaPrepareHits, false},
+				    {"bda_rng", FS::Counter::BdaRanges, false},
+				    {"bda_rng_e", FS::Counter::BdaRangesEmpty, false},
+				    {"bda_drng", FS::Counter::BdaDirtyRanges, false},
+				    // Session 83: the arming proof of knob "mutwide".
+				    {"mw_n", FS::Counter::MutWideScopes, false},
+				    // Session 83, gate "bindpack" and its self-check.
+				    {"tnull_hit", FS::Counter::NullTexHits, false},
+				    {"tnull_miss", FS::Counter::NullTexMisses, false},
+				    {"bp_mask", FS::Counter::BindKindMasks, false},
+				    {"bp_bad", FS::Counter::BindPackBad, false},
 				    // Session 59, B9 ceiling (gate "drawstat").
 				    {"cb_pool_n", FS::Counter::CommitPoolSets, false},
 				    {"cb_pool_tr_us", FS::Counter::CommitPoolTransitNs, true},

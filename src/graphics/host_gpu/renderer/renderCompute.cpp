@@ -44,6 +44,7 @@
 #include <tuple>
 #include <limits>
 #include <mutex>
+#include <optional>
 #include <span>
 #include <unordered_map>
 #include <vector>
@@ -282,6 +283,11 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldDispatchNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
+	// Session 83, knob "mutwide" bit 2: the dispatch critical section as one interval.  Nothing
+	// in it carries a MutScope today, so all 2 419 us of mh_disp_us sits outside a_mut_us.
+	Common::FrameStats::MutScope wide_disp(
+	    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 4u) != 0,
+	    Common::FrameStats::Counter::MutWideScopes);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeDispatch);
 	if (sh_ctx.GetCs().cs_regs.data_addr == 0) {
 		LOGF("GraphicsRenderDispatchDirect: temporary: ignoring dispatch with null CS shader, "
@@ -772,8 +778,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	auto& pipeline =
 	    m_context.GetPipelineCache().GetComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
-	PreparedBindings local_bindings;
-	auto& bindings = ReuseBindingsEnabled() ? m_compute_bindings : local_bindings;
+	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9), the dispatch's copy of the same.
+	const bool reuse_bindings = ReuseBindingsEnabled();
+	std::optional<PreparedBindings> local_bindings;
+	if (!reuse_bindings || !Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
+		local_bindings.emplace();
+	}
+	auto& bindings = reuse_bindings ? m_compute_bindings : *local_bindings;
 	PrepareBindings(input_info.stage, bindings);
 	FindBuffers(bindings);
 	if (program.info.uses_dma) {

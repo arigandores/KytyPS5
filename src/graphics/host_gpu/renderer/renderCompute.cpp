@@ -783,6 +783,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	std::optional<PreparedBindings> local_bindings;
 	if (!reuse_bindings || !Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
 		local_bindings.emplace();
+		// Session 84: the dispatch's half of item 9's symmetric arming.
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackLocalMake, 1);
+	} else {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackLocalSkip, 1);
 	}
 	auto& bindings = reuse_bindings ? m_compute_bindings : *local_bindings;
 	PrepareBindings(input_info.stage, bindings);

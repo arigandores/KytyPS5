@@ -197,11 +197,17 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 82, W1: the write map of the BDA region walk, and its self-check.
     {"KYTY_BDA_WRITE_BITS", "bdabits", false},
     {"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
-    // Session 83, route B: the binding-path package (PLAN_82_bind.md items 1, 4, 9).
-    {"KYTY_BIND_PACK", "bindpack", false},
+    // Session 83, route B: the binding-path package (PLAN_82_bind.md items 1, 4, 9), plus
+    // session 84's item 11.  SHIPPED in session 84 at -251.7 +- 82.8 us of cpu_net_us on
+    // bpk84a, against the -150 us threshold pred/01_bindpack4.md fixed before the run.
+    {"KYTY_BIND_PACK", "bindpack", true},
     {"KYTY_BIND_PACK_VERIFY", "bindpackcheck", false},
     // Session 83, measurement only: the hold of PipelineCache::m_mutex, site by site.
     {"KYTY_PIPE_LOCK_STAT", "plkstat", false},
+    // Session 84, measurement only: the per-slot repeat census of route C.
+    {"KYTY_SLOT_STAT", "slotstat", false},
+    // Session 84, measurement only: the probe/scan split of PrepareBda.
+    {"KYTY_BDA_LAP", "bdalap", false},
 }};
 
 struct KnobDefinition {

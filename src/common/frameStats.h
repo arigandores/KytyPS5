@@ -1008,6 +1008,40 @@ enum class Counter : uint32_t {
 	PipeLockCsWaitNs,   // pl_cs_wait_us: GetComputeProgram, blocked
 	PipeLockCsHoldNs,   // pl_cs_hold_us: ... holding
 	PipeLockCsN,        // pl_cs_n: ... acquisitions
+	// Session 84, gate "slotstat" (MEASUREMENT ONLY): the route-C census.  All Add-style, so
+	// unlike bda_us they read in a KYTY_FRAME_TRACE=lite measurement run.  Counted in
+	// CommitBindings, per prepared stage, where every value a descriptor write consumes is
+	// final; "previous draw" therefore means previous COMMITTED draw (an AsyncPipelines skip
+	// never reaches this site) and, for the Pixel stage, previous PIXEL-ACTIVE draw, because a
+	// depth-only draw resets that stage.  sl_img_same demands view AND layout (an identical
+	// descriptor); sl_img_view demands only the view (an identical resolution) - ResetBindings
+	// re-derives the layout every draw, so the two are different ceilings.
+	SlotStages,         // sl_stage_n: prepared stages examined
+	SlotStagesAll,      // sl_stage_all: ... of those, stages where EVERY slot repeated
+	SlotImages,         // sl_img_n: image slots examined (identity: == b_texn)
+	SlotImagesSame,     // sl_img_same: ... same VkImageView and same layout
+	SlotImagesView,     // sl_img_view: ... same VkImageView, layout ignored
+	SlotSamplers,       // sl_smp_n: sampler slots examined (no prior denominator existed)
+	SlotSamplersSame,   // sl_smp_same: ... same VkSampler
+	SlotBuffers,        // sl_buf_n: buffer slots examined (identity: == bb_n)
+	SlotBuffersSame,    // sl_buf_same: ... same {VkBuffer, offset, range}
+	SlotBuffersRing,    // sl_buf_ring: ... of those, stream-ring views, which CANNOT repeat
+	SlotOverflow,       // sl_over: slots past the table bounds, not measured; must read 0
+	// Session 84, gate "bindpack", the package's fourth item (PLAN_82_bind.md item 11).
+	// bp_dsc arms D1 and reads 0.000 in the arm at 0; bp_local_make and bp_local_skip arm
+	// item 9 of session 83, which shipped with no arming counter, and are deliberately ONE Add
+	// in EACH arm so the proof costs the same on both sides of the contrast.
+	BindPackDescSets,   // bp_dsc: commits that took the cached descriptor-set numbers
+	BindPackLocalMake,  // bp_local_make: draws/dispatches that built the unread GraphicsBindings
+	BindPackLocalSkip,  // bp_local_skip: ... and those that did not
+	// Session 84, gate "bdalap" (MEASUREMENT ONLY): the two halves of PrepareBda.  Timed with
+	// the plkstat idiom - a timestamp under Enabled(), differenced by hand - because both Scope
+	// and Lap take theirs under TimingsEnabled(), which is false in a lite measurement run, and
+	// that is why bda_us has never been read in one.  bda_probe_us is paid by every call,
+	// bda_scan_us only by the calls the three-epoch cache does not serve.
+	BdaProbeNs,         // bda_probe_us: entry through the three-epoch comparison
+	BdaScanNs,          // bda_scan_us: the ForEach walk of the mapped ranges
+	BdaLaps,            // bda_lap_n: the arming proof; == bda_n on, 0 off
 	Count
 };
 

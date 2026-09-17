@@ -305,6 +305,13 @@ void RenderContext::PrepareBda() {
 	Common::FrameStats::MutScope wide_bda(
 	    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 8u) != 0,
 	    Common::FrameStats::Counter::MutWideScopes);
+	// Session 84, gate "bdalap" (MEASUREMENT ONLY): taken ABOVE the shared_lock, because waiting
+	// for that lock is part of what all ~179 calls a frame pay.  Enabled(), not TimingsEnabled():
+	// a measurement run is KYTY_FRAME_TRACE=lite, where every Scope and every Lap reads 0.
+	uint64_t lap_t = Common::Gates::Enabled(Common::Gates::Gate::BdaLap) &&
+	                         Common::FrameStats::Enabled()
+	                     ? Common::FrameStats::NowNs()
+	                     : 0;
 	std::shared_lock          lock(m_mapped_ranges_mutex);
 	static const bool         reuse = [] {
 		const auto* value = std::getenv("KYTY_BDA_EPOCH_CACHE");
@@ -313,8 +320,17 @@ void RenderContext::PrepareBda() {
 	const auto cpu_epoch          = m_buffer_cache.CpuWriteEpoch();
 	const auto registration_epoch = m_buffer_cache.RegistrationEpoch();
 	m_fault_process_pending       = true;
-	if (reuse && cpu_epoch == m_bda_cpu_epoch && registration_epoch == m_bda_registration_epoch &&
-	    m_mapping_epoch == m_bda_mapping_epoch) {
+	const bool bda_cached = reuse && cpu_epoch == m_bda_cpu_epoch &&
+	                        registration_epoch == m_bda_registration_epoch &&
+	                        m_mapping_epoch == m_bda_mapping_epoch;
+	if (lap_t != 0) {
+		// Everything above this line is what EVERY call pays; below it only a miss goes on.
+		const auto now = Common::FrameStats::NowNs();
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaProbeNs, now - lap_t);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaLaps, 1);
+		lap_t = now;
+	}
+	if (bda_cached) {
 		// Session 83: how many of the 181 calls a frame never scan at all.  If this reads ~0 the
 		// three-epoch cache is dead in this scene and bda_us is 181 full walks, not 181 probes.
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaPrepareHits, 1);
@@ -329,6 +345,10 @@ void RenderContext::PrepareBda() {
 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
 	});
+	if (lap_t != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaScanNs,
+		                        Common::FrameStats::NowNs() - lap_t);
+	}
 	// Save the epochs from BEFORE the scan. A concurrent invalidation must force another scan,
 	// even if it occurred in a region already visited. Never cache guest bytes or clear dirtiness.
 	m_bda_cpu_epoch          = cpu_epoch;

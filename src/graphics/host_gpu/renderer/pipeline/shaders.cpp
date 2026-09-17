@@ -296,6 +296,11 @@ static void CreateDescriptorLayout(GraphicContext& graphics, PipelineCache::Pipe
 		descriptor_count += binding.descriptorCount;
 	}
 	pipeline.uses_push_descriptors = descriptor_count <= graphics.max_push_descriptors;
+	// Session 84, gate "bindpack" (item 11): the same two sums CommitBindings recomputes per draw.
+	// descriptorCount here IS NativeDescriptorCount(binding) (AddLayoutBindings), and one layout
+	// binding is one descriptor write.
+	pipeline.descriptor_count = descriptor_count;
+	pipeline.write_count      = static_cast<uint32_t>(bindings.size());
 
 	vk::DescriptorSetLayoutCreateInfo create {};
 	create.flags        = pipeline.uses_push_descriptors
@@ -546,6 +551,11 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
 		                  vk::ShaderStageFlagBits::eFragment);
 	}
 	CreateDescriptorLayout(graphics, pipeline, descriptor_bindings);
+	// Session 84, gate "bindpack" (item 11): CommitBindings seeds eFragment and ORs
+	// NativeShaderStage(program.stage) over the prepared stages; program.stage IS logical_stage
+	// and the pixel stage only re-contributes the seed, so the two are equal by construction -
+	// and they must be, because this is the stageFlags of the layout's push-constant range.
+	pipeline.push_stages = graphics_stages;
 	const vk::PushConstantRange push_constants {graphics_stages, 0,
 	                                            ShaderRecompiler::IR::NativePushConstantSize};
 
@@ -694,6 +704,8 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
 	AddLayoutBindings(descriptor_bindings, *input_info.stage.program,
 	                  vk::ShaderStageFlagBits::eCompute);
 	CreateDescriptorLayout(graphics, pipeline, descriptor_bindings);
+	// Session 84, gate "bindpack" (item 11): a compute commit seeds {} and ORs exactly eCompute.
+	pipeline.push_stages = vk::ShaderStageFlagBits::eCompute;
 	const vk::PushConstantRange push_constants {vk::ShaderStageFlagBits::eCompute, 0,
 	                                            ShaderRecompiler::IR::NativePushConstantSize};
 

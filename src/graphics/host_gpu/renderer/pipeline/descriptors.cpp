@@ -2116,6 +2116,158 @@ static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::E9DynNeedMore) 
                   static_cast<uint32_t>(Common::FrameStats::Counter::E9DynNeed1) ==
               4u);
 
+// Session 84, gate "slotstat" (MEASUREMENT ONLY): the route-C census, pred/02_slotstat.md.
+// How many of the ~95 000 descriptor slots a frame are identical to the slot the same stage bound
+// in the previous committed draw.  bindkey hashes a whole stage into one key and
+// NoteDescriptorSetStat hashes a whole set into four words; neither can say how many individual
+// slots repeated, which is the only quantity on this path with a ceiling above 1 ms.
+//
+// Capacities are the translation-time hard bounds of ShaderInfo (MaxImages 64, MaxSamplers 32,
+// MaxBuffers 32) and ShaderType's nine values, all < 16.  A slot past them is counted in sl_over
+// and NOT measured, rather than aliased onto another slot's history.  Plain globals in the house
+// style of g_set_stats above: CommitBindings runs on the GuestGpu thread under the render mutex.
+constexpr uint32_t SlotStatStages   = 16;
+constexpr uint32_t SlotStatImages   = 64;
+constexpr uint32_t SlotStatSamplers = 32;
+constexpr uint32_t SlotStatBuffers  = 32;
+
+struct SlotStatPrev {
+	std::array<uint64_t, SlotStatStages * SlotStatImages>   image_view {};
+	std::array<uint32_t, SlotStatStages * SlotStatImages>   image_layout {};
+	std::array<uint64_t, SlotStatStages * SlotStatSamplers> sampler {};
+	std::array<uint64_t, SlotStatStages * SlotStatBuffers>  buffer_handle {};
+	std::array<uint64_t, SlotStatStages * SlotStatBuffers>  buffer_offset {};
+	std::array<uint64_t, SlotStatStages * SlotStatBuffers>  buffer_range {};
+};
+
+// The self-check of gate "bindpackcheck" for item 11: the numbers cached on the Pipeline and the
+// numbers the per-draw walk produces must agree, always.  Field by field, with the failing one
+// named in the log - session 83's first cut compared padding bytes with memcmp and reported 177
+// false disagreements a frame.
+void VerifyDescSetCounts(const PipelineCache::Pipeline&     pipeline,
+                         std::span<PreparedBindings* const> prepared_bindings,
+                         vk::PipelineBindPoint              pipeline_bind_point) {
+	size_t               descriptor_count = 0;
+	size_t               write_count      = 0;
+	vk::ShaderStageFlags push_stages      = pipeline_bind_point == vk::PipelineBindPoint::eGraphics
+	                                            ? vk::ShaderStageFlags {vk::ShaderStageFlagBits::eFragment}
+	                                            : vk::ShaderStageFlags {};
+	for (const auto* prepared: prepared_bindings) {
+		const auto& program = *prepared->runtime->program;
+		write_count += program.bindings.descriptors.size();
+		for (const auto& binding: program.bindings.descriptors) {
+			descriptor_count += NativeDescriptorCount(binding);
+		}
+		push_stages |= NativeShaderStage(program.stage);
+	}
+	const bool same_desc  = descriptor_count == pipeline.descriptor_count;
+	const bool same_write = write_count == pipeline.write_count;
+	const bool same_stage = push_stages == pipeline.push_stages;
+	if (same_desc && same_write && same_stage) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BindPackBad, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("BindPackVerify: MISMATCH descset field=%s cached=%u live=%u\n",
+		     !same_desc ? "descriptor_count" : (!same_write ? "write_count" : "push_stages"),
+		     !same_desc ? pipeline.descriptor_count
+		                : (!same_write ? pipeline.write_count
+		                               : static_cast<uint32_t>(
+		                                     static_cast<VkShaderStageFlags>(pipeline.push_stages))),
+		     !same_desc ? static_cast<uint32_t>(descriptor_count)
+		                : (!same_write ? static_cast<uint32_t>(write_count)
+		                               : static_cast<uint32_t>(
+		                                     static_cast<VkShaderStageFlags>(push_stages))));
+	}
+}
+
+constinit SlotStatPrev g_slot_prev {};
+
+void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t stream) {
+	using Counter    = Common::FrameStats::Counter;
+	const uint32_t s = static_cast<uint32_t>(stage) % SlotStatStages;
+	uint64_t       over = 0;
+
+	uint64_t img_n = 0, img_same = 0, img_view = 0;
+	for (uint32_t i = 0; i < prepared.images.size(); i++) {
+		if (i >= SlotStatImages) {
+			over++;
+			continue;
+		}
+		const auto key =
+		    static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+		        static_cast<VkImageView>(prepared.images[i].image_view)));
+		const auto layout      = static_cast<uint32_t>(prepared.images[i].layout);
+		auto&      prev_view   = g_slot_prev.image_view[s * SlotStatImages + i];
+		auto&      prev_layout = g_slot_prev.image_layout[s * SlotStatImages + i];
+		// A null view was never bound, so it is never "the same slot as last time".
+		const bool same_view = key != 0 && key == prev_view;
+		img_n++;
+		img_view += same_view ? 1u : 0u;
+		img_same += (same_view && layout == prev_layout) ? 1u : 0u;
+		prev_view   = key;
+		prev_layout = layout;
+	}
+
+	uint64_t smp_n = 0, smp_same = 0;
+	for (uint32_t i = 0; i < prepared.samplers.size(); i++) {
+		if (i >= SlotStatSamplers) {
+			over++;
+			continue;
+		}
+		const auto key = static_cast<uint64_t>(
+		    reinterpret_cast<uintptr_t>(static_cast<VkSampler>(prepared.samplers[i])));
+		auto& prev = g_slot_prev.sampler[s * SlotStatSamplers + i];
+		smp_n++;
+		smp_same += (key != 0 && key == prev) ? 1u : 0u;
+		prev = key;
+	}
+
+	uint64_t buf_n = 0, buf_same = 0, buf_ring = 0;
+	for (uint32_t i = 0; i < prepared.buffers.size(); i++) {
+		if (i >= SlotStatBuffers) {
+			over++;
+			continue;
+		}
+		const auto& view = prepared.buffers[i];
+		const auto  handle = static_cast<uint64_t>(
+		     reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(view.buffer)));
+		const auto offset = static_cast<uint64_t>(view.offset);
+		const auto range  = static_cast<uint64_t>(view.range);
+		auto&      prev_handle = g_slot_prev.buffer_handle[s * SlotStatBuffers + i];
+		auto&      prev_offset = g_slot_prev.buffer_offset[s * SlotStatBuffers + i];
+		auto&      prev_range  = g_slot_prev.buffer_range[s * SlotStatBuffers + i];
+		buf_n++;
+		buf_same += (handle != 0 && handle == prev_handle && offset == prev_offset &&
+		             range == prev_range)
+		                ? 1u
+		                : 0u;
+		// A const-bank copy and every NativeUpload take a fresh stream-ring offset every draw, so
+		// these slots cannot repeat by construction.  Counted apart so the denominator can be
+		// corrected rather than quietly biased down.
+		buf_ring += (handle != 0 && handle == stream) ? 1u : 0u;
+		prev_handle = handle;
+		prev_offset = offset;
+		prev_range  = range;
+	}
+
+	namespace FS = Common::FrameStats;
+	FS::Add(Counter::SlotStages, 1);
+	const bool all_same = (img_n + smp_n + buf_n) != 0 && over == 0 && img_same == img_n &&
+	                      smp_same == smp_n && buf_same == buf_n;
+	FS::Add(Counter::SlotStagesAll, all_same ? 1u : 0u);
+	FS::Add(Counter::SlotImages, img_n);
+	FS::Add(Counter::SlotImagesSame, img_same);
+	FS::Add(Counter::SlotImagesView, img_view);
+	FS::Add(Counter::SlotSamplers, smp_n);
+	FS::Add(Counter::SlotSamplersSame, smp_same);
+	FS::Add(Counter::SlotBuffers, buf_n);
+	FS::Add(Counter::SlotBuffersSame, buf_same);
+	FS::Add(Counter::SlotBuffersRing, buf_ring);
+	FS::Add(Counter::SlotOverflow, over);
+}
+
 } // namespace
 
 void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
@@ -2138,19 +2290,37 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	vk::ShaderStageFlags push_stages = pipeline_bind_point == vk::PipelineBindPoint::eGraphics
 	                                       ? vk::ShaderStageFlagBits::eFragment
 	                                       : vk::ShaderStageFlags {};
+	// Session 84, gate "bindpack" (PLAN_82_bind.md item 11, D1): the three numbers this loop
+	// builds are constants of the pipeline and are cached on it.  Only the inner descriptor walk
+	// is skipped - both EXIT_IFs stay, so a null prepared and a stage/bind-point mismatch still
+	// abort by name instead of turning into a null dereference further down.
+	const bool bind_pack = Common::Gates::Enabled(Common::Gates::Gate::BindPack);
 	for (const auto* prepared: prepared_bindings) {
 		EXIT_IF(prepared == nullptr || prepared->runtime == nullptr || !*prepared->runtime);
 		const auto& program = *prepared->runtime->program;
-		write_count += program.bindings.descriptors.size();
-		for (const auto& binding: program.bindings.descriptors) {
-			descriptor_count += NativeDescriptorCount(binding);
+		if (!bind_pack) {
+			write_count += program.bindings.descriptors.size();
+			for (const auto& binding: program.bindings.descriptors) {
+				descriptor_count += NativeDescriptorCount(binding);
+			}
 		}
 		const auto shader_stage = NativeShaderStage(program.stage);
-		push_stages |= shader_stage;
+		if (!bind_pack) {
+			push_stages |= shader_stage;
+		}
 		EXIT_IF((pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
 		         (shader_stage & GraphicsStages) == vk::ShaderStageFlags {}) ||
 		        (pipeline_bind_point == vk::PipelineBindPoint::eCompute &&
 		         shader_stage != vk::ShaderStageFlagBits::eCompute));
+	}
+	if (bind_pack) {
+		descriptor_count = pipeline.descriptor_count;
+		write_count      = pipeline.write_count;
+		push_stages      = pipeline.push_stages;
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackDescSets, 1);
+		if (Common::Gates::Enabled(Common::Gates::Gate::BindPackVerify)) {
+			VerifyDescSetCounts(pipeline, prepared_bindings, pipeline_bind_point);
+		}
 	}
 	m_descriptor_buffers.clear();
 	m_descriptor_images.clear();
@@ -2186,6 +2356,14 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		        cb_write);
 		FS::Add(cb_pool ? FS::Counter::CommitPoolEmitNs : FS::Counter::CommitPushEmitNs, emit);
 	};
+
+	// Session 84, gate "slotstat": the stream-ring handle the census needs, taken once per
+	// commit rather than once per stage, and only when the gate is on.
+	const bool     slot_stat   = Common::Gates::Enabled(Common::Gates::Gate::SlotStat);
+	const uint64_t slot_stream =
+	    slot_stat ? static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(
+	                    m_context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream).Handle())))
+	              : 0;
 
 	for (auto* prepared: prepared_bindings) {
 		const auto& program       = *prepared->runtime->program;
@@ -2299,6 +2477,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 		cb_lap(cb_transit);
 
+		if (slot_stat) {
+			NoteSlotStat(program.stage, descriptors, slot_stream);
+		}
+
 		m_image_occurrences.assign(descriptors.images.size(), 0);
 		for (const auto& binding: program.bindings.descriptors) {
 			vk::WriteDescriptorSet write {};
@@ -2368,12 +2550,18 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			}
 			m_descriptor_writes.push_back(write);
 		}
-		for (uint32_t i = 0; i < descriptors.images.size(); i++) {
-			const auto expected =
-			    descriptors.images[i].mip_views.empty()
-			        ? 1u
-			        : static_cast<uint32_t>(descriptors.images[i].mip_views.size());
-			EXIT_IF(m_image_occurrences[i] != expected);
+		// Session 84, gate "bindpack" (PLAN_82_bind.md item 11, D2): a pure assertion with no
+		// consumer, run per stage per draw over every bound image.  The vector's load-bearing
+		// uses - the assign above and the at(resource)++ that selects mip_views[element] - are
+		// untouched.  It stays available through gate "drawstat".
+		if (!bind_pack || Common::DrawStat::On()) {
+			for (uint32_t i = 0; i < descriptors.images.size(); i++) {
+				const auto expected =
+				    descriptors.images[i].mip_views.empty()
+				        ? 1u
+				        : static_cast<uint32_t>(descriptors.images[i].mip_views.size());
+				EXIT_IF(m_image_occurrences[i] != expected);
+			}
 		}
 
 		const auto shader_data_dwords = program.bindings.ShaderDataDwords();

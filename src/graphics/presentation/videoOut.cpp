@@ -1711,6 +1711,26 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"tnull_miss", FS::Counter::NullTexMisses, false},
 				    {"bp_mask", FS::Counter::BindKindMasks, false},
 				    {"bp_bad", FS::Counter::BindPackBad, false},
+				    // Session 84, gate "bdalap": what PrepareBda actually costs.
+				    {"bda_probe_us", FS::Counter::BdaProbeNs, true},
+				    {"bda_scan_us", FS::Counter::BdaScanNs, true},
+				    {"bda_lap_n", FS::Counter::BdaLaps, false},
+				    // Session 84, gate "bindpack", the package's fourth item.
+				    {"bp_dsc", FS::Counter::BindPackDescSets, false},
+				    {"bp_local_make", FS::Counter::BindPackLocalMake, false},
+				    {"bp_local_skip", FS::Counter::BindPackLocalSkip, false},
+				    // Session 84, gate "slotstat": the route-C per-slot census.
+				    {"sl_stage_n", FS::Counter::SlotStages, false},
+				    {"sl_stage_all", FS::Counter::SlotStagesAll, false},
+				    {"sl_img_n", FS::Counter::SlotImages, false},
+				    {"sl_img_same", FS::Counter::SlotImagesSame, false},
+				    {"sl_img_view", FS::Counter::SlotImagesView, false},
+				    {"sl_smp_n", FS::Counter::SlotSamplers, false},
+				    {"sl_smp_same", FS::Counter::SlotSamplersSame, false},
+				    {"sl_buf_n", FS::Counter::SlotBuffers, false},
+				    {"sl_buf_same", FS::Counter::SlotBuffersSame, false},
+				    {"sl_buf_ring", FS::Counter::SlotBuffersRing, false},
+				    {"sl_over", FS::Counter::SlotOverflow, false},
 				    // Session 83, gate "plkstat": PipelineCache::m_mutex, site by site.
 				    {"pl_prog_wait_us", FS::Counter::PipeLockProgWaitNs, true},
 				    {"pl_prog_hold_us", FS::Counter::PipeLockProgHoldNs, true},

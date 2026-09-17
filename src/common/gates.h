@@ -208,7 +208,19 @@ enum class Gate : uint32_t {
 	//       invalidation: the mask is recomputed per stage and handed over in PreparedBindings.
 	//   9 - GraphicsBindings local_bindings, fifteen empty-vector constructors and destructors
 	//       per draw that are never read while ReuseBindingsEnabled() is on (the default).
-	// Arming: tnull_hit and bp_mask, both exactly 0.000 in the arm at 0.
+	// Session 84 adds a FOURTH item and SHIPS the package (default 0 -> 1):
+	//  11 - the descset bundle, two of its three edits.  descriptor_count / write_count /
+	//       push_stages are constants of the pipeline and are cached on it, so CommitBindings
+	//       stops rebuilding them per draw by walking program.bindings.descriptors; and the
+	//       m_image_occurrences invariant loop - a pure assertion with no consumer - moves
+	//       behind DrawStat::On().  Item 11's third edit, a sub-range push-constant write, was
+	//       REFUSED: it leaves the remainder undefined rather than zero and no self-check can
+	//       detect the failure.
+	// Measured on bpk84a, VALID on all six criteria: cpu_net_us -251.7 +- 82.8 us (2*SE),
+	// t = -6.08, against the -150 us threshold sealed before the run; cpu/draw -0.817 % +-
+	// 0.140 %, t = -11.70 over 117 matched pairs; gpu_busy_us +0.069 %, inside its own noise.
+	// Video: bpc84a, 0 one-frame glitches.
+	// Arming: tnull_hit, bp_mask, bp_dsc and the symmetric pair bp_local_make / bp_local_skip.
 	BindPack,      // KYTY_BIND_PACK,          file name "bindpack"
 	// Recomputes the real predicate beside every fast answer and counts disagreements in
 	// bp_bad, which must read 0. Costs everything the gate saves - measurement only.
@@ -219,6 +231,17 @@ enum class Gate : uint32_t {
 	// runs under the only lock it takes, which is what decides whether that 5 850 us is serial
 	// or merely serialised by the instrument.  DESIGN_82_parallel.md section 6 item 13.
 	PipeLockStat,   // KYTY_PIPE_LOCK_STAT,     file name "plkstat"
+	// Session 84, MEASUREMENT ONLY (PLAN_82_bind.md item 0, ROADMAP.md route C): how many of the
+	// ~95 000 descriptor slots a frame are identical to the slot the SAME STAGE bound in the
+	// previous COMMITTED draw.  One site in CommitBindings, eleven Add-counters, no lock, no
+	// allocation and no Scope, so all of them read under KYTY_FRAME_TRACE=lite.  Arming: every
+	// sl_* is exactly 0.000 in the arm at 0, sl_img_n matches b_texn and sl_buf_n matches bb_n
+	// to 2 %, and sl_over - slots past the translation-time bounds - must read 0.
+	SlotStat,       // KYTY_SLOT_STAT,          file name "slotstat"
+	// Session 84, MEASUREMENT ONLY: PrepareBda split into the probe every call pays and the scan
+	// only a miss reaches.  bda_us reads 0 under KYTY_FRAME_TRACE=lite because it is a Scope, and
+	// FrameStats::Lap would too, so this uses the plkstat idiom instead.  Arming: bda_lap_n.
+	BdaLap,         // KYTY_BDA_LAP,            file name "bdalap"
 	Count,
 };
 

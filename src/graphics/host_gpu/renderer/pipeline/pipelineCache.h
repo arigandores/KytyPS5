@@ -124,6 +124,14 @@ public:
 		vk::Pipeline            pipeline              = nullptr;
 		vk::DescriptorSetLayout descriptor_set_layout = nullptr;
 		bool                    uses_push_descriptors = false;
+		// Session 84, gate "bindpack" (PLAN_82_bind.md item 11): the three numbers CommitBindings
+		// recomputes for every draw by walking program.bindings.descriptors.  They are constants
+		// of the pipeline: the key pins the permutation ids, which pin the binding layout, so
+		// nothing can change them without producing a different Pipeline.  Written only in
+		// CreatePipelineInternal, before ready.store(release); read only after ready.load(acquire).
+		uint32_t                descriptor_count      = 0;
+		uint32_t                write_count           = 0;
+		vk::ShaderStageFlags    push_stages {};
 	};
 
 	struct GraphicsPrograms {

@@ -1899,6 +1899,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	std::optional<GraphicsBindings> local_bindings;
 	if (!reuse_bindings || !Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
 		local_bindings.emplace();
+		// Session 84: item 9 shipped in session 83 with no arming counter, which the
+		// pre-registration could not admit.  One Add in EACH arm - symmetric, so proving the
+		// arming cannot bias the contrast in either direction.
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackLocalMake, 1);
+	} else {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackLocalSkip, 1);
 	}
 	auto& bindings = reuse_bindings ? m_graphics_bindings : *local_bindings;
 	// Upstream 6d1ba58 + 7516068: a draw runs one vertex stage (VS or mesh) or the three

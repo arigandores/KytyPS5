@@ -1,5 +1,8 @@
 # Session 86 — the brief
 
+**Session 85 closed route C at per-slot granularity after this brief's first draft was written.**
+§1 and §3.2 carry the verdict; read them before anything else in here.
+
 Session 85's commit is on `merge-upstream`. **Source changed and the binary was rebuilt, but NO
 default changed**: the installed `kyty_emulator.exe` is `24476c7b7a66a652…`, 23 595 520 bytes, and
 all five gates session 85 added are **0**. Harness — **`C:/kyty/s85`**, port it to `C:/kyty/s86`.
@@ -7,16 +10,18 @@ all five gates session 85 added are **0**. Harness — **`C:/kyty/s85`**, port i
 ## 0. Read first
 
 0. **`docs/ROADMAP.md` §0 and §2 C.** Route A is closed by measurement (`S` = 20 838 µs against a
-   16 667 µs frame budget; session 83). Route C now has a **unit price** as well as a ceiling:
-   **22.82 ns an image slot, 77.07 ns a buffer slot**, so its exploitable ceiling is **≈ 2.1 ms a
-   frame** in the reuse path plus an **unsplit 3 991 µs a frame in `PrepareBindings`**. Do not
-   build any step of `docs/DESIGN_82_parallel.md`; it is a closed design.
-1. `C:/kyty/s85/FACTS.md` — the single source of truth. **§2 (six corrections to the record, all
-   found by reading before any number), §3 (the unit price, the ceiling in µs, and §3.5 where the
-   regression was declared uninformative by a rule fixed in advance), §4 (the census with two
-   biases measured and one found to be ZERO), §5 (`bda_scan_us` is a `memcpy`), §6 (the package
-   that did not pay and the three items refused), §8 (two corrected designs), §10 (all
-   twenty-nine predictions scored).**
+   16 667 µs frame budget; session 83). **Route C is closed at per-slot granularity by measurement
+   (session 85):** the descriptor write costs ~1 ns, deciding to skip it costs more than skipping
+   it saves, and the recoverable part was cashed by `texfast` in session 59 and is worth 1 527 µs a
+   frame. What remains of route C is **one unmeasured idea** (§3.2) and **one unsplit block**
+   (§3.1). Do not build any step of `docs/DESIGN_82_parallel.md`; it is a closed design.
+1. `C:/kyty/s85/FACTS.md` — the single source of truth. **§12 FIRST (the price of the exploit and
+   route C's verdict), then §2 (six corrections to the record, all found by reading before any
+   number), §3 (the unit price, and §3.5 where the regression was declared uninformative by a rule
+   fixed in advance — note §3.4 carries a retraction the same session issued against itself),
+   §4 (the census with two biases measured and one found to be ZERO), §5 (`bda_scan_us` is a
+   `memcpy`), §6 (the package that did not pay and the three items refused), §8 (two corrected
+   designs), §10 (all forty-six predictions scored).**
 2. `C:/kyty/s85/README.md` — the standing traps. The two that will bite first: **a mechanism the
    brief asks you to build may already be shipped** (twice in three sessions now), and **a
    measurement the record prescribes may be the wrong instrument** (six sessions of `dapin` went
@@ -77,6 +82,18 @@ only.**
   `KYTY_GPU_TIME` pair the brief asked for, reads **+0.095 % ± 0.186 %** at 6.7× the resolution
   needed: **that instrument cannot see the effect.** `rcp85a` killed the obvious candidate:
   moving the record thread (`rec_ccd_x` 34 → 0) costs **+0.098 % ± 0.186 %** of GPU — nothing.
+* **AND THEN ROUTE C WAS CLOSED, in the same session, by the measurement this brief's §3.2 was
+  written to commission.** A microbenchmark outside the game (`C:/kyty/tools/dsbench`) priced the
+  exploit: **a sampled-image descriptor — the kind that repeats 84.9 % of the time — costs 0.95 ns
+  to write**; removing **every** descriptor write in the frame saves **312 µs**; the split layout
+  saves **+137 µs** while merely **deciding** which slots repeat costs **272 µs**. Then `tfs85a`
+  contrasted the shipped gate **`texfast`** — the source of variation §3.4 below asks for — and
+  found the repeat **already cashed**: a slot resolved through `FindTexture` costs **55.02 ns**, a
+  slot served by the memo view **19.66 ns**, and the shipped fast path is worth **1 527 µs a
+  frame, since session 59.** The remaining 19.66 ns is the **validity witness** a sound skip would
+  have to reproduce. **Route C at per-slot granularity is a ceiling with nothing behind it**, and
+  `FACTS.md` §3.4's image figure was corrected by its own session from 928 to 799 µs.
+  **Everything in §3.2 below is therefore already done, and its answer is no.**
 
 ## 2. What is settled — do not reopen
 
@@ -88,6 +105,13 @@ only.**
 * **The record thread as the carrier of `dapin`'s GPU cost** — refuted by `rcp85a`.
 * **`KYTY_GPU_TIME` as the instrument for that question** — it cannot see the effect.
 * **`PLAN_82_bind.md` item 6b** — unsound as written.
+* **Route C at PER-SLOT granularity** — priced and closed (session 85, §1). Do not re-open it with
+  a partial-update scheme, a split set layout, or push descriptors: 0.95 ns a descriptor, 312 µs
+  for all of them, 272 µs to decide, and the split additionally needs a **translator** change
+  because both `spv::DecorationDescriptorSet` emissions are hard-coded to set 0.
+* **The buffer half of route C** — a repeating `{VkBuffer, offset, range}` carries no information
+  about whether the guest wrote the bytes under it, and 34.9 % of buffer slots are stream-ring
+  views that cannot repeat by construction.
 * Everything in `ROADMAP.md` §3.
 
 ## 3. The work — THIS IS A CODING SESSION
@@ -110,23 +134,29 @@ timestamps per stage more, so the instrument grows by about a quarter. **It ride
 as anything else you build.** Pre-register `P_res` as a ratio of sums, in ns per image slot, and
 pre-register the combined image price `P_res + P_img` and the ceiling it implies.
 
-### 3.2 The price of the EXPLOIT — the number that decides whether route C is worth building
+### 3.2 DONE IN SESSION 85 — and the one idea it leaves standing
 
-The ceiling prices the work a per-slot skip would **remove**. Nothing prices the skip itself.
-`pred/02` §4.4 of session 85 refused to call 2.1 ms a saving for exactly this reason. Two candidate
-mechanisms, and both must be costed **on a microbenchmark outside the game** before a line of
-either is written in the emulator:
+The measurement this section commissioned was taken in session 85 and **retired route C at per-slot
+granularity**. `C:/kyty/tools/dsbench` is in the tree, with its build script, and `FACTS.md` §12
+carries the numbers and the verdict against the rule `pred/03` §4 fixed beforehand.
+**Do not re-run it and do not re-argue it.**
 
-1. **Partial descriptor update** — `vkUpdateDescriptorSets` with fewer writes, or
-   `VK_EXT_descriptor_buffer` / update-after-bind, on this driver. What does one skipped write
-   actually save, against the cost of deciding to skip it?
-2. **A split set layout** — the static image and sampler descriptors in one set bound once, the
-   volatile buffer descriptors in another. 84.9 % of image slots and 89.5 % of sampler slots repeat
-   under the same shader; **49.1 % of buffer slots do not**, which is what makes the split the
-   obvious shape.
+**What survives is one mechanism, and it is not a per-slot skip: amortise the WITNESS across the
+slots of a stage.** The 19.66 ns a repeating image slot costs is the liveness re-check, the memo
+eligibility test, the `bind_stamp` acquire load, `pending_levels` and `TextureSourceSettled`. When
+several slots of one stage name the **same image**, that witness is evaluated once per slot and
+could be evaluated once per image. `R_stage_sh` = 2.21 % does **not** rule this out, because it does
+not require the whole stage to repeat.
 
-`C:/kyty/tools/` already holds several standalone benches (`pipestat`, `csrun`, `xfer`, `vprot`) —
-the pattern exists. **This is the one measurement that can retire route C or license it.**
+**Measure first, as always.** One counter: the number of image slots a stage binds that share an
+`image_id` with an earlier slot of the same stage — call it `sl_img_dup`. It costs one small
+per-stage set or a linear scan over ≤ 8 entries, it rides in any ABBA, and it is the entire
+question. If `sl_img_dup` is near zero the idea is dead and route C is closed outright; if it is
+30–50 % the ceiling is `sl_img_dup × ~15 ns`, which is the part of the witness that is a load rather
+than a compare.
+
+**Do not build the amortisation before that counter reads.** Session 85's own lesson is that a
+measured population turned out to be a photograph of an optimisation shipped six sessions earlier.
 
 ### 3.3 Route B, from the corrected designs and not from the plan
 
@@ -156,9 +186,11 @@ without it is a guess.
   3 would separate existence from affinity in one run.
 * **`PipelineCache::m_mutex`, 5.0 ms a frame of hold, whether it can be split** — [NM] since
   session 83. It no longer revives route A, but it is 5 ms.
-* **The marginal per-slot price** — the OLS is degenerate in this scene (VIF 60.9). It needs a
-  different **source of variation**, not a different population: a knob that moves the hit rate
-  without moving the stage count would do it.
+* ~~**The marginal per-slot price**~~ — **closed in session 85 by the route this line named**: the
+  shipped gate `texfast` is exactly a knob that moves the hit rate without moving the stage count,
+  and `tfs85a` used it to identify X = 55.02 ns and F = 19.66 ns. The same trick is available for
+  the buffer half (`buffast`, default 0) and **has not been used**; it would split the 77.07 ns a
+  buffer slot costs the way `texfast` split the image side. One run.
 
 ## 4. Do NOT
 
@@ -206,7 +238,10 @@ parsed**, so add the row before the first run; `dt_us` is not an endpoint inside
 | **route C's UNIT PRICE** | **22.82 ns image / 77.07 ns buffer** | **MEASURED, session 85** |
 | **route C's ceiling, in µs** | **≈ 2 105 µs a frame**, reuse path | **MEASURED — buffer half an upper attribution** |
 | …plus `PrepareBindings`, unsplit | 3 991 µs a frame | **NOT SPLIT — §3.1** |
-| **the price of the EXPLOIT** | — | **NOT MEASURED — §3.2, and it decides route C** |
+| **the price of the EXPLOIT** | **0.95 ns an image descriptor; 312 µs for all of them; 272 µs to decide** | **MEASURED, session 85 — route C CLOSED at per-slot granularity** |
+| the shipped `texfast` fast path | **1 527 µs a frame**, since session 59 | **MEASURED — the repeat was already cashed** |
+| a repeating image slot, corrected | **19.66 ns**, and it is the validity witness | **MEASURED** |
+| amortising the witness across a stage's slots | — | **NOT MEASURED — §3.2, one counter** |
 | `bda_scan_us` | **92.7 % staging `memcpy`, 22 761 KiB at 11 GB/s** | **MEASURED, session 85** |
 | route B, `bindpack2` (item 6a) | −35.9 ± 81.2 µs | **NOT PAID FOR, gate 0** |
 | `dapin`'s GPU cost | +1.961 % ± 0.165 %, ×5 | **UNEXPLAINED, seventh session; one candidate eliminated** |
@@ -214,8 +249,14 @@ parsed**, so add the row before the first run; `dt_us` is not an endpoint inside
 
 **The honest statement of the task.** Session 83 closed the direction that would have made the frame
 parallel. Session 84 measured how much of the frame's descriptor work repeats. Session 85 priced
-that work: **about 2.1 ms a frame is recoverable in the reuse path, with another 4.0 ms not yet
-divided** — the largest measured lever in this record, and still not enough on its own against a
-15 ms gap and a 20.8 ms serial floor. **The next number is not a bigger ceiling. It is the price of
-the mechanism that would collect it**, and if that price is not well under 22.8 ns a slot, route C
-is a ceiling with nothing behind it.
+both sides of that repetition and **closed route C at per-slot granularity**: the descriptor write
+costs ~1 ns, deciding to skip it costs more than skipping it saves, and the part that was genuinely
+recoverable was cashed by `texfast` in session 59 and is worth 1 527 µs a frame today.
+
+**All three routes now have a measured ceiling and none of them reaches 60 FPS.** A is closed by
+`S` = 20.8 ms against a 16.7 ms budget; C is closed at slot granularity; B sums to 0.7–2.5 ms and
+has shipped −252 µs in four sessions. **The honest goal is the one `ROADMAP` §0 has carried since
+session 83 — maximum FPS under unshakeable correctness — and session 86 should either find a route
+nobody has named, or stop looking for one and spend itself on the two largest unattributed blocks
+left: `PrepareBindings` at 3 991 µs and `mh_prog` at 5 850 µs.** Those are 9.8 ms of a 31.6 ms
+frame and neither has ever been divided.

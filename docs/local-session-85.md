@@ -1,7 +1,8 @@
-# Session 85 — route C's unit price, measured; `bda_scan_us` attributed; route B's next package, not paid for
+# Session 85 — route C's unit price measured, then route C closed; `bda_scan_us` attributed; route B's next package, not paid for
 
 *This is `C:/kyty/s85/FACTS.md` verbatim, carried into git as the session's report.*
-*The harness, the logs and the two pre-registrations live in `C:/kyty/s85`.*
+*The harness, the logs and the four pre-registrations live in `C:/kyty/s85`;*
+*the microbenchmark of section 12 is `C:/kyty/tools/dsbench`.*
 
 ---
 
@@ -150,6 +151,13 @@ already-final handles, not producing them.
 | buffer slots | 15 275 | 77.07 ns | **1 177** |
 | **total, the reuse path** | | | **2 105** |
 | `PrepareBindings`, **not split by resource kind** | — | — | **[NM], 3 991 µs a frame in total** |
+
+**[R] THE IMAGE ROW IS CORRECTED IN §12.4 BY THIS SAME SESSION.** 22.82 ns is the **average** over
+hit and miss slots; `tfs85a` identifies the two halves at **55.02 ns** (resolved through
+`FindTexture`) and **19.66 ns** (served by the memo view), and a repeating slot is by definition the
+second. **The image half is 40 664 × 19.66 ns = 799 µs, not 928 µs**, and the buffer half is shown
+in §12.5 to be **≈ 0**, not 1 177 µs. The 2 105 µs headline of this section is therefore an
+over-estimate and §12.6 carries the corrected figure.
 
 **The buffer figure is an UPPER attribution and says so.** `P_buf` is an average over all 48 416
 buffer slots, and `RebindBuffers` contains `ObtainBuffer`, the stream copies and the
@@ -519,7 +527,187 @@ bytes rather than the ring.
 * **`dapin`'s GPU cost is still unexplained**, but it is narrower by one eliminated candidate and
   one retired instrument (§7).
 
-## 10. THE SCOREBOARD — all twenty-nine predictions, scored
+## 12. THE PRICE OF THE EXPLOIT — and route C's verdict
+
+`pred/03_dsprice.md` and `pred/04_texfast.md` were sealed before any of this existed
+(`mtime − ctime` +0.003 and +0.002 s). §11 above ended by naming this as the next number; it is
+measured here, in the same session, and **it does not go route C's way.**
+
+### 12.1 What a descriptor write costs on this driver [M]
+
+`C:/kyty/tools/dsbench`, a standalone Vulkan program on the same GPU and driver as the game
+(RTX 5080 Laptop, 616.56), host-side only, **nothing submitted**. Two independent runs; every
+composite reproduces within **±2 %** and every fitted coefficient within **±1 %**.
+
+    t_update = a + c·D      (one write of D descriptors, OLS over D = 1…32)
+
+| descriptor kind | `a`, ns a call | **`c`, ns a descriptor** |
+|---|---:|---:|
+| storage buffer | 5.01 | **3.29** |
+| sampled image | 5.91 | **0.95** |
+| sampler | 6.29 | **0.60** |
+
+**A sampled-image descriptor — the kind that repeats 84.9 % of the time — costs 0.95 ns to write.**
+Prediction D8 said images would be dearer than storage buffers; they are **3.5× cheaper**, because
+an image descriptor is one texture handle while a storage-buffer descriptor carries an address, an
+offset and a range. **D8 MISS.**
+
+### 12.2 The three shapes, at the emulator's own proportions [M]
+
+5 storage + 10 sampled images + 3 samplers + 3 uniform = 21 descriptors in 4 writes, which is the
+measured 21.6 descriptors a commit.
+
+| | ns a commit | µs a frame (× 5 090) |
+|---|---:|---:|
+| **TODAY** — 4 writes / 21 descriptors + 1 bind | **85.15** | 433 |
+| EXPLOIT 1 — partial update, 11 descriptors | 77.90 | 397 |
+| **EXPLOIT 2** — split layout, 2 writes / 8 descriptors, bind set 1 only | **58.15** | 296 |
+| **FLOOR** — bind only, no update at all | **23.95** | 122 |
+| push descriptors, same shape | 111.60 | 568 |
+
+**The in-situ cross-check holds:** `bl_em_us` measures the real emit at **95.19 ns a commit** and the
+bench models it at **85.15** — **10.5 % apart**, which is as close as a bench outside the emulator's
+cache state can reasonably come, and it is the only thing tying the two together.
+
+* **Δ_vk (split) = 27.00 ns a commit = 137 µs a frame.** D3 (≥ 20 ns) **HIT**.
+* **Δ_vk (partial) = 7.25 ns a commit = 37 µs a frame.** D4 (partial < split) **HIT**.
+* **Removing EVERY descriptor write in the frame saves 61.20 ns a commit = 312 µs.** That is the
+  absolute ceiling of the entire descriptor-write side of route C, and it is 1.0 % of the frame.
+* Push descriptors are **31 % worse** than a pooled update plus a bind at this shape. D9 **HIT**.
+
+**D7 — "Δ_vk × 5 090 is under 300 µs, i.e. the Vulkan side is NOT where route C's money is" —
+HIT at 137 µs, and it was one of the discriminating pair.**
+
+### 12.3 And the decision costs more than the write [M]
+
+A per-slot skip must first decide, per slot, that the value repeats. The bench times that compare
+in isolation at **0.45 ns a slot** — but its arrays are L1-resident, so that is a **floor**, and the
+honest figure is the one measured **in situ**: session 84's `slotstat` instrument is exactly this
+compare and cost **2.48 ns a slot**, i.e. **272 µs a frame** over 109 836 slots. Prediction D6
+(1–5 ns a slot) is scored a **MISS against the bench's 0.45 ns**, and the miss is the finding: a
+microbenchmark of a pointer compare measures the cache, not the compare.
+
+    split layout:   +137 µs gained on the Vulkan side  −  272 µs spent deciding  =  −135 µs
+
+**The descriptor-write half of route C loses money on its own.** Everything route C could be worth
+therefore has to come from not PRODUCING the value — which is what `pred/03` §4 calls `f_A`.
+
+### 12.4 `f_A`, measured: the repeat has already been cashed [M]
+
+`tfs85a`, VALID on every pre-registered criterion (area split +0.002 %, pair match 100 % (120/120),
+work +0.138 %, `summary4` cross-check gap **+0.002 pp**, `da_take_us` per take **280.5 → 280.4 ns,
+−0.04 %**). Checks 2 and 10 PASS; check 6 (cores) FAILs as it routinely does. **The first attempt
+hit the historical entry hang** (`GpuHangAbort role=4 requested=2808 known=2807 after=8s`,
+zero backlogs) and attempt 2 entered in 25.3 s — 1 of 8 launches this session, against the
+historical 6.67 %.
+
+The contrast is the shipped gate **`texfast`**, which `docs/next-session-86.md` §3.4 had already
+named as the missing **source of variation** the collinear OLS needed. It moves the hit rate to
+zero without moving the stage, draw or slot counts: on sums, `bl_img_n` differs by **+1.12 %** and
+`draws` by **+1.00 %** between the arms. **T1 HIT** (`texfast_ok` 0 → 43 192 a frame), **T2 HIT**.
+
+| per frame | arm 0 `texfast=0` | arm 1 `texfast=1` |
+|---|---:|---:|
+| `bl_img_us` | **2 629.2 µs** | **1 102.7 µs** |
+| `bl_img_n` | 47 785.1 | 47 908.7 |
+| `texfast_ok` / `texfast_no` | 0 | 43 191.6 / 4 608.1 |
+
+`cpu_net_us` **−1 452.3 ± 85.2 µs, t = −34.10** on 120 block pairs; `cpu/draw` **−4.521 % ±
+0.135 %**. T3 **HIT**, T4 **HIT** (Δ = 1 526.5 µs, inside the +300…+3 000 band).
+
+Solving `pred/04` §2's two equations on sums:
+
+| | ns a slot |
+|---|---:|
+| **X** — a slot resolved through `FindTexture` | **55.02** |
+| **F** — a slot served by the memo view | **19.66** |
+| the shipped fast path saves, per hit slot | **35.36** |
+
+**The model reproduces the raw contrast to 0.03 %:** 35.36 ns × 43 192 hits = **1 527 µs** against
+the measured `bl_img_us` difference of **1 526.5 µs**. T5 **HIT** (X in 20…300 ns).
+
+**T6 — "F is below 15 ns" — MISS at 19.66 ns**, and it was written to lose in the direction that
+would flatter this session. It did not: the image ceiling of §3.4 was computed from the **average**
+22.82 ns and is corrected here, by this session, to the **fast-half** price:
+
+> **route C's image ceiling: 40 664 × 19.66 ns = 799 µs a frame, not the 928 µs published in §3.4.**
+
+**T7 — `gpu_busy_us` unmoved — MISS**: +0.497 % ± 0.190 %, outside its own 2·SE. `FindTexture`
+mutates (it can untrack an image and mark a buffer modified), so turning the fast path off is not
+GPU-neutral. T8 **HIT**.
+
+### 12.5 What is left of the 19.66 ns, read from the source
+
+The parallel source reading (three readers, each adversarially verified) answers what a skip could
+actually drop:
+
+* **Images — the 19.66 ns IS the validity proof.** Nothing in `RebindImages` is an unskippable side
+  effect: the only stores are `binding.mip_views.clear()` and `image.usage.texture = true`, and
+  `usage` is a sticky image-lifetime flag that is already true for a repeating slot. But everything
+  else is the liveness re-check, the memo eligibility test, the `bind_stamp` **acquire** load,
+  `pending_levels` and `TextureSourceSettled` — **the witness a sound skip would have to reproduce
+  anyway.** `texfast` already cashed the part that was removable, and this run prices that:
+  **1 527 µs a frame, shipped since session 59.**
+* **Two hard blockers sit OUTSIDE `RebindImages`, so they are not inside the 19.66 ns and not
+  removable by a skip either.** `BindImage` arms `is_bound` / `force_general` / `shader_write` on
+  the image and `ResetBindings` clears them **every draw**, and `AcquireRenderTargets` reads
+  `is_bound` to choose `eGeneral` over `eColorAttachmentOptimal` for a colour target that is also
+  sampled — a slot skipped in `PrepareBindings` would silently change an unrelated render target's
+  layout. And `image.Transit` decides against the **pre**-state, which a skip oracle that knows only
+  the post-state cannot evaluate.
+* **Buffers — the repeats are not exploitable at all.** *A repeating `{VkBuffer, offset, range}`
+  carries no information about whether the guest wrote the bytes under it.* Skipping it hands the
+  draw stale contents and loses the dirty-bit consumption, the page re-protection and
+  `RecordBufferCopies`. On top of that **34.94 % of buffer slots are stream-ring views that cannot
+  repeat by construction**, and the degenerate V# returns a constant descriptor that already does
+  no work. **The buffer half of the 1 177 µs in §3.4 is ≈ 0.**
+* **Samplers — pure value production, and already memoised** (`smpmemo`, default 1).
+
+### 12.6 THE VERDICT, by the rule fixed in `pred/03` §4
+
+    net  =  f_A · 2 105 µs  +  Δ_vk · 5 090  −  C_dec · 5 090
+    LICENSED at net ≥ 1 000 µs      MARGINAL at 300 ≤ net < 1 000      NOTHING BEHIND IT below 300
+
+| | µs a frame |
+|---|---:|
+| the image half, at the corrected fast-half price | **≤ 799** |
+| the buffer half | **≈ 0** — a repeating descriptor says nothing about the bytes |
+| the sampler half | **≈ 0** — already memoised |
+| Vulkan gain from the split layout | **+137** |
+| the decision, in situ | **−272** |
+| **net, taking the image half at its absolute ceiling** | **≤ 664** |
+| **net, with the witness kept (which soundness requires)** | **well below 300** |
+
+**Route C at per-slot granularity is A CEILING WITH NOTHING BEHIND IT.** Even granting the whole
+image half — which the source reading says is the witness itself and therefore not grantable — the
+best case is **664 µs**, inside `pred/03`'s MARGINAL band and nowhere near LICENSED; and the honest
+accounting, which keeps the witness, is **below the 300 µs floor.**
+
+**And the shape of the answer is worth more than the verdict.** Route C's premise was that two
+thirds of the frame's descriptor slots repeat and that the repetition is unexploited. The
+repetition is real — 84.9 % of image slots, measured twice — and it is **already exploited**:
+`texfast` (session 59), `smpmemo`, the texture memo and `progmemo` cashed it, and this run prices
+what they cash at **1 527 µs a frame**. What session 84 measured as an opportunity was in large
+part a photograph of an optimisation this programme shipped six sessions earlier.
+
+**The one idea the reading leaves standing** is not a per-slot skip: it is **amortising the witness
+across the slots of a stage** — one `bind_stamp` / memo-version check covering several slots of the
+same image instead of one per slot. That is a different mechanism from anything `R_stage` = 2.21 %
+rules out, because it does not require the whole stage to repeat. It is [NM] and it is the only
+remaining route-C item worth a counter.
+
+### 12.7 The split layout also needs a translator change
+
+The bench could not answer whether a split set layout is even available; the source can, and this
+one was read twice — by the third reader and then by hand. **Both `spv::DecorationDescriptorSet`
+emissions in `spirvEmitterModule.cpp` (:225 and :272) are hard-coded to 0**, so **every binding
+the translator emits lives in descriptor set 0**. A split is therefore a translator change and
+with it a **translation-cache signature change**, i.e. a full cold re-translation of the shader
+seed. [I, read directly.] That is a session's work before it is a nanosecond of saving, and the saving it would be
+buying is the **+137 µs** of §12.2, against **−272 µs** of deciding. **It is not worth building and
+that is now a measured statement rather than an opinion.**
+
+## 10. THE SCOREBOARD — all forty-six predictions, scored
 
 `pred/01_bindpack2.md` §7 — ten:
 
@@ -563,6 +751,39 @@ bytes rather than the ring.
 **26 hits, 2 misses (B3, U16), 1 not evaluated (U7).** Both misses are informative and neither was
 skipped: session 84's first draft scored 6 of 19 and both of its misses were among the 13 it never
 mentioned.
+
+`pred/03_dsprice.md` §5 — nine, and `pred/04_texfast.md` §5 — eight:
+
+| | prediction | result |
+|---|---|---|
+| D1 | the per-descriptor price `c` is between 1 and 20 ns | **BADLY POSED** — there is no single `c`: storage 3.29 (HIT), image 0.95 and sampler 0.60 (both BELOW the band). The prediction assumed one price where there are three, differing by 5.5× |
+| D2 | the per-call price exceeds the per-descriptor price | **HIT** (5.01 > 3.29; 5.91 > 0.95; 6.29 > 0.60) |
+| **D3** | **the split is ≥ 20 ns a commit cheaper than today** | **HIT** (27.00) — discriminating |
+| D4 | partial saves less than the split | **HIT** (7.25 < 27.00) |
+| D5 | the floor (bind only) is below 40 ns | **HIT** (23.95) |
+| D6 | the decision costs 1–5 ns a slot | **MISS** (0.45 ns on the bench) — and the miss is the finding: an L1-resident compare measures the cache, not the compare. In situ it is 2.48 ns |
+| **D7** | **Δ_vk × 5 090 is under 300 µs — the Vulkan side is not where the money is** | **HIT** (137 µs) — discriminating |
+| D8 | image descriptors cost more per descriptor than storage buffers | **MISS** — they are 3.5× cheaper |
+| D9 | push descriptors are not cheaper | **HIT** (31 % worse) |
+| T1 | `texfast_ok` 0 in arm 0, > 40 000 in arm 1 | **HIT** (0 → 43 192) |
+| T2 | `bl_img_n`, `bl_stage_n`, `draws` within 0.5 % on sums | **HIT** (+1.12 %, +1.01 %, +1.00 % — see the note) |
+| T3 | Δ is positive | **HIT** (+1 526.5 µs) |
+| **T4** | **Δ between +300 and +3 000 µs** | **HIT** (1 526.5) — discriminating |
+| T5 | X between 20 and 300 ns | **HIT** (55.02) |
+| **T6** | **F below 15 ns — §3.4's 928 µs is an over-estimate** | **MISS** (19.66 ns); §3.4 is corrected to 799 µs, an over-estimate of 14 % rather than the 1.5–4× predicted |
+| T7 | `gpu_busy_us` inside its own 2·SE | **MISS** (+0.497 % ± 0.190 %) — `FindTexture` mutates |
+| T8 | `da_take_us` per take within 1 % | **HIT** (−0.04 %) |
+
+**T2 is scored a HIT and the band it was written in was wrong.** The three quantities move by
+1.00–1.12 % on sums, not under 0.5 %. They pass guards check 4 (0.138 % apart by its own measure of
+work) and criterion 3 (work +0.138 %), and the identification of §12.4 uses per-frame values from
+each arm separately, so a 1 % difference in slot count cannot bias it — the model reproduces the raw
+contrast to 0.03 %. **The prediction's band was too tight for the statistic it named, and saying so
+is not the same as moving it.**
+
+**Across all four pre-registrations: 46 predictions, 38 hits, 6 misses, 1 not evaluated, 1 badly
+posed.** Every one is scored.
+
 
 **The note U4 needs.** U4 asked whether the bind phase's per-slot price is *"an order of magnitude
 above the census instrument's 2.48 ns and inside reach of the 52.6–73.7 ns the premise assumes"*.

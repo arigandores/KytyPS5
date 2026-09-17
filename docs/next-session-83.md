@@ -11,6 +11,11 @@ is no longer 28.61 FPS: **session 82 shipped a default and the confirmation run 
 
 ## 0. Read first
 
+0. **`KytyPS5/docs/ROADMAP.md` — the only plan above the session level.** Where we are, the
+   three routes and the measured ceiling of each, what is closed and by what, the decision
+   order, and the session rule. **`HANDOFF.md` §3 is frozen at session 43 and is NOT a plan.**
+   Update ROADMAP in one edit at the end of the session; if you changed nothing in it, you
+   changed no direction.
 1. `C:/kyty/s82/FACTS.md` — the single source of truth. **§2 (what shipped and on what evidence),
    §3.4 (three defects found by a self-check), §4 (four corrections to the record), §5 (the first
    full CPU frame decomposition), §7 (the vblank plateau — it governs your endpoint choice).**

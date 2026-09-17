@@ -192,6 +192,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // SameRecordedWords inside VerifyWitness, inside that timer. For pfcap it nets to zero.
     // Set the gate to 0 to get the old PREFETCHT2 form back, bit for bit.
     {"KYTY_PREFETCH_HINT_L1", "pfhint", true},
+    // Session 82, measurement only: the repeat rate of a draw's binding inputs.
+    {"KYTY_BIND_KEY", "bindkey", false},
+    // Session 82, W1: the write map of the BDA region walk, and its self-check.
+    {"KYTY_BDA_WRITE_BITS", "bdabits", false},
+    {"KYTY_BDA_WRITE_BITS_VERIFY", "bdabitscheck", false},
 }};
 
 struct KnobDefinition {

@@ -68,6 +68,9 @@ RegionManager* MemoryTracker::GetOrCreateRegion(uint64_t index) {
 	auto* ptr     = manager.get();
 	m_region_storage.push_back(std::move(manager));
 	m_regions[index].store(ptr, std::memory_order_release);
+	// Gate "bdabits": RegionWriteStamp goes from {nullptr, 0} to {ptr, epoch} here, which is a
+	// stamp move like any other and therefore has to set the bit.
+	BdaNoteRegionWrite(index);
 	return ptr;
 }
 

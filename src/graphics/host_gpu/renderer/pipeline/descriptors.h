@@ -55,6 +55,10 @@ struct PreparedBindings {
 	vk::DescriptorBufferInfo              flattened_srt;
 	vk::DescriptorBufferInfo              shader_data_buffer;
 	std::vector<uint32_t>                 shader_data;
+	// Session 82, gate "bindkey" (measurement only): the hash of this stage's binding inputs and
+	// whether it equalled the previous draw's.  Both are zero/false unless the gate is on.
+	uint64_t                              key     = 0;
+	bool                                  key_hit = false;
 
 	void Reset() {
 		// Capacity belongs to the executor; every descriptor belongs to this draw only.
@@ -67,6 +71,8 @@ struct PreparedBindings {
 		gds = {nullptr, 0, VK_WHOLE_SIZE};
 		flattened_srt = {};
 		shader_data_buffer = {};
+		key     = 0;
+		key_hit = false;
 	}
 };
 

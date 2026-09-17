@@ -208,6 +208,8 @@ public:
 			// lock before it reads dirty bits, so the order does not matter to it.
 			m_cpu_epoch.fetch_add(1, std::memory_order_release);
 			m_epoch.fetch_add(1, std::memory_order_release);
+			// Gate "bdabits": the map mirrors this epoch, so it is set here and never later.
+			BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 		}
 		if constexpr (source == DirtySource::Cpu) {
 			UpdateProtection<!enable, false>();
@@ -368,6 +370,8 @@ public:
 			// upload instead of skipping the region as unchanged. Not the global CPU epoch: that
 			// one witnesses other buffers' uploads and nothing of theirs changed.
 			m_epoch.fetch_add(1, std::memory_order_release);
+			// Gate "bdabits": the second publisher of this epoch, so the second setter of the bit.
+			BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 		}
 		return provisional;
 	}

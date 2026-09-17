@@ -1372,9 +1372,10 @@ void CopySpecialization(const ShaderRecompiler::IR::ResourceSpecialization& from
 // 9955HX3D the two CCDs have separate L3 caches, so a result a DrawAhead worker built on one CCD is
 // cold for a GuestGpu thread running on the other.
 struct DrawAheadCacheTopology {
-	std::vector<uint64_t>   l3_masks; // group-0 affinity mask of every L3 cache
-	std::vector<uint64_t>   l3_sizes; // its size in bytes
-	std::array<uint8_t, 64> l3_of {}; // logical processor -> index in l3_masks, 0xff unknown
+	std::vector<uint64_t>   l3_masks;   // group-0 affinity mask of every L3 cache
+	std::vector<uint64_t>   l3_sizes;   // its size in bytes
+	std::array<uint8_t, 64> l3_of {};   // logical processor -> index in l3_masks, 0xff unknown
+	std::vector<uint64_t>   core_masks; // group-0 affinity mask of every physical core (SMT siblings)
 	uint64_t                process_mask = 0;
 };
 
@@ -1412,6 +1413,29 @@ const DrawAheadCacheTopology& DrawAheadTopology() {
 				offset += entry->Size;
 			}
 		}
+		// Knob "dapin" mode 3 needs the SMT siblings, which RelationCache does not carry.
+		DWORD core_length = 0;
+		GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &core_length);
+		std::vector<uint8_t> core_buffer(core_length);
+		if (core_length != 0 &&
+		    GetLogicalProcessorInformationEx(
+		        RelationProcessorCore,
+		        reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(core_buffer.data()),
+		        &core_length) != FALSE) {
+			for (DWORD offset = 0; offset < core_length;) {
+				const auto* entry = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(
+				    core_buffer.data() + offset);
+				if (entry->Size == 0) {
+					break;
+				}
+				if (entry->Relationship == RelationProcessorCore && entry->Processor.GroupCount >= 1 &&
+				    entry->Processor.GroupMask[0].Group == 0) {
+					result.core_masks.push_back(
+					    static_cast<uint64_t>(entry->Processor.GroupMask[0].Mask));
+				}
+				offset += entry->Size;
+			}
+		}
 		DWORD_PTR process = 0;
 		DWORD_PTR system  = 0;
 		if (GetProcessAffinityMask(GetCurrentProcess(), &process, &system) != FALSE) {
@@ -1421,6 +1445,38 @@ const DrawAheadCacheTopology& DrawAheadTopology() {
 		return result;
 	}();
 	return topology;
+}
+
+// Knob "dapin" modes 1 and 3: the affinity mask of the L3 cache group with the most bytes - the
+// 3D-cache CCD of an X3D processor. 0 when the topology could not be read.
+uint64_t DrawAheadLargestL3Mask(const DrawAheadCacheTopology& topology) {
+	uint64_t mask = 0;
+	size_t   best = 0;
+	for (size_t index = 0; index < topology.l3_masks.size(); index++) {
+		if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
+			best = index;
+			mask = topology.l3_masks[index];
+		}
+	}
+	return mask;
+}
+
+// Knob "dapin" mode 3: one logical processor per physical core of `group` - the lowest of each
+// core's SMT siblings. This is the topology-derived form of the raw mask 21845 = 0x5555 that
+// sessions 79 and 81 measured at -732.5 us [-798.5, -666.4] over three runs on this machine.
+// Falls back to `group` unchanged when no core information exists: a mask that drops every sibling
+// because the query failed would be far worse than one that drops none.
+uint64_t DrawAheadSmtPrimaryMask(const DrawAheadCacheTopology& topology, uint64_t group) {
+	if (group == 0 || topology.core_masks.empty()) {
+		return group;
+	}
+	uint64_t mask = 0;
+	for (const auto core: topology.core_masks) {
+		if (const auto inside = core & group; inside != 0) {
+			mask |= inside & (0ULL - inside); // the lowest sibling of this core inside the group
+		}
+	}
+	return mask != 0 ? mask : group;
 }
 
 } // namespace
@@ -1453,7 +1509,12 @@ std::atomic<uint64_t> g_process_pin_mask {0};
 // 1 = the L3 group with the largest cache (the 3D-cache CCD of an X3D processor),
 // 2 = the L3 group of the processor the GuestGpu thread is on when it applies the knob; the workers
 //     follow the mask it chose,
-// other = raw affinity mask of processor group 0 (decimal in the gate file; 1 and 2 are taken).
+// 3 = one logical processor per physical core of the group mode 1 picks (session 82). This is the
+//     portable form of the raw mask 21845 that sessions 79 and 81 measured three times at
+//     -732.5 us [-798.5, -666.4] of frame time, i.e. +0.86 FPS, and which could not ship because it
+//     was a constant of this machine's topology. Mode 3 is computed the same way on every thread,
+//     so - unlike mode 2 - it needs no mask published by the GuestGpu thread.
+// other = raw affinity mask of processor group 0 (decimal in the gate file; 1, 2 and 3 are taken).
 // Each thread applies it to itself: the GuestGpu thread once per submission, a DrawAhead worker at
 // every task it claims (a thread-local compare when nothing changed).
 void DrawAheadApplyPin(bool gpu_thread) {
@@ -1525,14 +1586,9 @@ void DrawAheadApplyPin(bool gpu_thread) {
 	}
 	uint64_t mask = mode;
 	if (mode == 1) {
-		mask = 0;
-		size_t best = 0;
-		for (size_t index = 0; index < topology.l3_masks.size(); index++) {
-			if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
-				best = index;
-				mask = topology.l3_masks[index];
-			}
-		}
+		mask = DrawAheadLargestL3Mask(topology);
+	} else if (mode == 3) {
+		mask = DrawAheadSmtPrimaryMask(topology, DrawAheadLargestL3Mask(topology));
 	} else if (mode == 2) {
 		if (gpu_thread) {
 			const auto l3 = DrawAheadCurrentL3();
@@ -1582,13 +1638,9 @@ void DrawAheadApplyRecordPin(bool wanted) {
 	const auto mode = wanted ? Common::Gates::Value(Common::Gates::Knob::DrawAheadPin) : 0u;
 	uint64_t   mask = 0;
 	if (mode == 1) {
-		size_t best = 0;
-		for (size_t index = 0; index < topology.l3_masks.size(); index++) {
-			if (mask == 0 || topology.l3_sizes[index] > topology.l3_sizes[best]) {
-				best = index;
-				mask = topology.l3_masks[index];
-			}
-		}
+		mask = DrawAheadLargestL3Mask(topology);
+	} else if (mode == 3) {
+		mask = DrawAheadSmtPrimaryMask(topology, DrawAheadLargestL3Mask(topology));
 	} else if (mode == 2) {
 		mask = g_draw_ahead_gpu_mask.load(std::memory_order_relaxed);
 	} else if (mode != 0) {

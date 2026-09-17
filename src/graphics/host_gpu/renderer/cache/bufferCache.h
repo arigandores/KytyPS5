@@ -141,6 +141,10 @@ public:
 	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
 	// dropped and when the guest map changes, because those make unscanned bytes relevant again.
 	void               InvalidateBdaRegionStamps() noexcept { m_bda_stamp_generation++; }
+	// Gate "bdabits": the generation the write map was last consulted under. While it lags
+	// m_bda_stamp_generation the map is bypassed, because a generation bump invalidates stamps
+	// without any region having announced a write.
+	uint64_t           m_bda_bits_generation = 0;
 	void               RunGarbageCollector();
 	// Records asynchronous downloads of the GPU-dirty parts of regions the CPU keeps reading
 	// after the GPU wrote them, so that the next CPU read finds the page clean instead of

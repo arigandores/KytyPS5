@@ -168,6 +168,26 @@ enum class Gate : uint32_t {
 	// at 0 the emitted instruction is byte-identical to today's. A prefetch changes no value and no
 	// decision, so the arms are behaviourally identical by construction.
 	PrefetchHintL1, // KYTY_PREFETCH_HINT_L1,    file name "pfhint"
+	// Session 82, MEASUREMENT ONLY - it changes no behaviour and no output.  The binding phase
+	// (mh_bind_us, about 10.5 ms of a 32.8 ms CPU frame) rebuilds PreparedBindings on every draw:
+	// ~9.5 texture resolves and ~9.5 ObtainBuffer calls each, 48 000 of each per frame.  The
+	// program memo says 74.8 % of draws repeat the previous draw's register inputs (pmemo_hit
+	// 6519.7 against pmemo_miss 2200.2), but whether the RESOURCE SNAPSHOT repeats with them -
+	// the thing a binding memo would key on - has never been measured.  This gate hashes the
+	// binding inputs of each stage, counts the repeats (bk_hit / bk_miss, bk_draw_hit /
+	// bk_draw_miss) and splits the binding phase by them (bk_hit_us / bk_miss_us), so the ceiling
+	// of that optimisation is known before it is written.
+	BindKeyStat,    // KYTY_BIND_KEY,            file name "bindkey"
+	// Session 82, W1: the BDA region walk consults a write map before the per-region stamp.
+	// bind78a pays 18 582 region visits a frame (bda_skip 17 518 + bda_scan 1 064) across 181
+	// PrepareBda calls of 12.05 us each, and every visit is two dependent loads of scattered
+	// memory. The map is a conservative superset of "the stamp moved" - a clear bit PROVES the
+	// stamp is unchanged, a set bit proves nothing and falls through to today's code unchanged -
+	// so the arms answer identically by construction. Proof it armed: bda_bskip, which is 0 at 0.
+	BdaWriteBits,       // KYTY_BDA_WRITE_BITS,      file name "bdabits"
+	// Runs the stamp comparison anyway on a skipped region and counts disagreements in
+	// bda_bit_bad, which must read 0. Costs the loads the gate exists to avoid - measurement only.
+	BdaWriteBitsVerify, // KYTY_BDA_WRITE_BITS_VERIFY, file name "bdabitscheck"
 	Count,
 };
 
@@ -178,7 +198,11 @@ enum class Knob : uint32_t {
 	DescriptorSetBatch, // KYTY_DESCRIPTOR_BATCH,  file name "dsbatch"
 	DescriptorPoolSets, // KYTY_DESCRIPTOR_POOL,   file name "dspool"
 	RecordSpinUs,       // KYTY_RECORD_SPIN_US,    file name "recspin" (record thread poll, us)
-	DrawAheadPin,       // KYTY_DRAW_AHEAD_PIN,    file name "dapin" (0 off, 1/2 L3 group, else mask)
+	// Session 82: mode 3 added. 0 = off, 1 = the largest L3 group, 2 = the GuestGpu thread's L3
+	// group, 3 = one logical processor per physical core of the largest L3 group - the portable form
+	// of the raw mask 21845 that sessions 79 and 81 measured three times at -732.5 us
+	// [-798.5, -666.4] of frame time. Anything else is still a raw mask, so 3 is no longer one.
+	DrawAheadPin,       // KYTY_DRAW_AHEAD_PIN,    file name "dapin" (0 off, 1/2/3 modes, else mask)
 	ProcessPin,         // KYTY_PROCESS_PIN,       file name "procpin" (0 start mask, 1 L3 group, else mask)
 	FaultWindowKb,      // KYTY_FAULT_WINDOW_KB,   file name "faultkb" (CPU write-fault window, KiB; 4 = one page, default 64)
 	DrawAheadWalkLead,  // KYTY_DRAW_AHEAD_WALK_LEAD, file name "dawalklead" (gate "dawalk": walk at most this many submissions ahead of processing, 0 = no hold)

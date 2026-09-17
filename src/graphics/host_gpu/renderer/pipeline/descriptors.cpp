@@ -1326,6 +1326,42 @@ PreparedBindings RenderExecutor::PrepareBindings(const ShaderStageRuntime& runti
 	return prepared;
 }
 
+namespace {
+
+// Session 82, gate "bindkey" (measurement only).  FNV-1a over the inputs a binding memo would have
+// to key on: the shader, every descriptor dword of the snapshot, and the user-data dwords the
+// program reads.  Nothing here is used for a decision - see gates.h.
+uint64_t BindingInputKey(const ShaderRecompiler::IR::CompiledShaderInfo& program,
+                         const ShaderRecompiler::IR::ResourceSnapshot& snapshot) {
+	uint64_t h = 1469598103934665603ULL;
+	auto mix   = [&h](uint64_t value) {
+		for (int i = 0; i < 8; i++) {
+			h ^= static_cast<uint8_t>(value >> (i * 8));
+			h *= 1099511628211ULL;
+		}
+	};
+	mix(program.shader_hash);
+	auto mix_values = [&](const std::vector<ShaderRecompiler::IR::DescriptorValue>& values) {
+		mix(values.size());
+		for (const auto& value: values) {
+			mix(value.dword_count);
+			for (uint32_t i = 0; i < value.dword_count && i < value.dwords.size(); i++) {
+				mix(value.dwords[i]);
+			}
+		}
+	};
+	mix_values(snapshot.images);
+	mix_values(snapshot.samplers);
+	mix_values(snapshot.buffers);
+	for (const auto reg: program.bindings.user_data_registers) {
+		const auto index = reg - program.user_data_base;
+		mix(index < snapshot.user_data.size() ? snapshot.user_data[index] : 0u);
+	}
+	return h == 0 ? 1 : h;
+}
+
+} // namespace
+
 void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, PreparedBindings& prepared) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(!runtime);
@@ -1333,6 +1369,17 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	const auto& snapshot = runtime.resources;
 	prepared.Reset();
 	prepared.runtime = &runtime;
+	if (Common::Gates::Enabled(Common::Gates::Gate::BindKeyStat)) {
+		// One slot per shader stage: consecutive draws are compared stage against stage.
+		thread_local std::array<uint64_t, 16> previous_key {};
+		const auto slot  = static_cast<uint32_t>(program.stage) % previous_key.size();
+		prepared.key     = BindingInputKey(program, snapshot);
+		prepared.key_hit = (previous_key[slot] != 0 && previous_key[slot] == prepared.key);
+		previous_key[slot] = prepared.key;
+		Common::FrameStats::Add(prepared.key_hit ? Common::FrameStats::Counter::BindKeyHit
+		                                         : Common::FrameStats::Counter::BindKeyMiss,
+		                        1);
+	}
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		// Session 57, B2a: built in its vector element - one ImageDesc copy where the returned

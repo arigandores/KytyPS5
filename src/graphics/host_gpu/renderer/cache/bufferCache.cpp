@@ -2481,10 +2481,36 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 	if (m_bda_region_stamps.empty()) {
 		m_bda_region_stamps.resize(MemoryTracker::RegionCount());
 	}
+	// Gate "bdabits" (session 82): consult the write map before the stamp. A clear bit means no
+	// announcement since this scan last cleared it, which is exactly the skip condition below, so
+	// the two scattered loads of RegionWriteStamp are not paid. The map is a conservative superset
+	// and the stamp stays the authority; a generation bump bypasses the map for one whole pass,
+	// because InvalidateBdaRegionStamps makes unscanned bytes relevant again without any write.
+	const bool use_bits = Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBits) &&
+	                      m_bda_bits_generation == m_bda_stamp_generation;
+	const bool bits_check = use_bits && Common::Gates::Enabled(Common::Gates::Gate::BdaWriteBitsVerify);
+	m_bda_bits_generation = m_bda_stamp_generation;
 	for (auto cursor = scan_begin; cursor < scan_end;) {
 		const auto index = cursor / TRACKER_REGION_SIZE;
 		const auto bytes =
 		    std::min(scan_end - cursor, TRACKER_REGION_SIZE - cursor % TRACKER_REGION_SIZE);
+		if (use_bits && !BdaTakeRegionWrite(index)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsBitSkipped, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsSkipped, 1);
+			if (bits_check) {
+				// Self-check: the stamp the skip claims cannot have moved. Reads it without
+				// storing it, so the check cannot repair a disagreement it finds.
+				const auto& checked = m_bda_region_stamps[index];
+				if (checked.generation != m_bda_stamp_generation ||
+				    checked.stamp != m_memory_tracker.RegionWriteStamp(index)) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BdaBitMismatches, 1);
+					LOGF("BdaBitsVerify: MISMATCH region=%llu\n",
+					     static_cast<unsigned long long>(index));
+				}
+			}
+			cursor += bytes;
+			continue;
+		}
 		const auto stamp = m_memory_tracker.RegionWriteStamp(index);
 		auto&      seen  = m_bda_region_stamps[index];
 		if (seen.generation == m_bda_stamp_generation && seen.stamp == stamp) {

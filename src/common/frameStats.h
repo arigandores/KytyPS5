@@ -161,6 +161,8 @@ enum class Counter : uint32_t {
 	BufEpochHits,    // buffer bindings served by the upload-epoch fast path
 	BdaRegionsScanned, // tracking regions a BDA preparation had to scan
 	BdaRegionsSkipped, // ... regions skipped because their write stamp had not moved
+	BdaRegionsBitSkipped, // ... of those, skipped on the write map without reading the stamp
+	BdaBitMismatches,     // gate "bdabitscheck": a map skip whose stamp had in fact moved (must be 0)
 	BackingPageHits,   // guest reads served from a thread-local page translation
 	BackingPageMisses, // ... reads that had to take the backing-store lock
 	MatNodes,          // compiled SRT nodes evaluated (the whole graph, once per materialization)
@@ -627,6 +629,15 @@ enum class Counter : uint32_t {
 	BatonParkNs,      // bat_park_us: GuestGpu time from handing the range over to getting it back
 	BatonWakeNs,      // bat_wake_us: relay-thread time from being woken to starting the range
 	BatonDropped,     // bat_drop: ranges the relay could not take (it was busy)
+	// Session 82, gate "bindkey" (measurement only): does a draw's binding input repeat the
+	// previous draw's?  Per stage for the hit counters, per draw for the rest; a draw counts as a
+	// hit only when EVERY stage of it hit.
+	BindKeyHit,       // bk_hit: stages whose (shader, snapshot, user data) equal the previous ones
+	BindKeyMiss,      // bk_miss
+	BindKeyDrawHit,   // bk_draw_hit: draws where every stage hit
+	BindKeyDrawMiss,  // bk_draw_miss
+	BindKeyHitNs,     // bk_hit_us: the binding phase of the draws that fully hit
+	BindKeyMissNs,    // bk_miss_us
 	// Gate "pxstat": the binding interval of a draw, split by whether the pixel stage is live.
 	PxOnDraws,        // px_on_n
 	PxOnBindNs,       // px_on_bind_us

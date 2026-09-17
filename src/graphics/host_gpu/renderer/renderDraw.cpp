@@ -1884,6 +1884,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                              index_source.guest_element_size);
 	}
 	Common::FrameStats::Lap lap;
+	// Session 82, gate "bindkey" (measurement only): time the whole binding phase and split it by
+	// whether every stage's binding input repeated the previous draw's.
+	const auto bind_key_t0 = Common::Gates::Enabled(Common::Gates::Gate::BindKeyStat) &&
+	                                 Common::FrameStats::Enabled()
+	                             ? Common::FrameStats::NowNs()
+	                             : 0;
 	LogDrawPhase(draw.Name(), "PrepareBindings");
 	GraphicsBindings local_bindings;
 	auto& bindings = ReuseBindingsEnabled() ? m_graphics_bindings : local_bindings;
@@ -1936,6 +1942,19 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                        spent);
 		Common::FrameStats::Add(state.ps_active ? Common::FrameStats::Counter::PxOnDraws
 		                                        : Common::FrameStats::Counter::PxOffDraws,
+		                        1);
+	}
+	if (bind_key_t0 != 0) {
+		bool all_hit = stage_count > 0;
+		for (uint32_t i = 0; i < stage_count; i++) {
+			all_hit = all_hit && descriptor_stages[i]->key_hit;
+		}
+		const auto spent = Common::FrameStats::NowNs() - bind_key_t0;
+		Common::FrameStats::Add(all_hit ? Common::FrameStats::Counter::BindKeyHitNs
+		                                : Common::FrameStats::Counter::BindKeyMissNs,
+		                        spent);
+		Common::FrameStats::Add(all_hit ? Common::FrameStats::Counter::BindKeyDrawHit
+		                                : Common::FrameStats::Counter::BindKeyDrawMiss,
 		                        1);
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawBindingsNs);

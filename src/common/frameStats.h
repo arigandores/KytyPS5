@@ -1056,6 +1056,16 @@ enum class Counter : uint32_t {
 	BindLapWriteNs,     // bl_wr_us: ... the write-list build
 	BindLapEmitNs,      // bl_em_us: ... the emit (update + bind)
 	BindLapCommits,     // bl_cmt_n: commits timed (graphics only, like cb_pool_n)
+	// Session 86, gate "bindlap", task D3 (ROADMAP.md route D3): the 3 991 us a frame of
+	// PrepareBindings, split by resource kind.  A rolling mark chain - the three loops are
+	// separate and contiguous and the function has one exit, so the parts are additive by
+	// construction and the remainder (prologue, reserves, has_gds, and these marks) is
+	// DERIVED rather than counted.
+	BindLapResolveNs,   // bl_res_us: the image loop, ResolveTextureWith AND BindImage
+	BindLapResolves,    // bl_res_n: image slots in it (identity: == bl_img_n, 1:1 calls)
+	BindLapSamplerNs,   // bl_smp_us: the sampler loop, NativeSampler
+	BindLapSamplers,    // bl_smp_n: sampler slots in it
+	BindLapDataNs,      // bl_sd_us: the shader_data copy loop
 	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): the division of the scan half of
 	// PrepareBda.  bda_first_us is the one that tests the FIXED cost directly.
 	BdaSplitBoundNs,    // bda_bound_us: the two m_buffers descents, paid by every call
@@ -1087,6 +1097,20 @@ enum class Counter : uint32_t {
 	SlotImageElements,  // sl_img_elem: sum of max(1, mip_views.size()) - the descriptor
 	                    //              ELEMENTS behind the image BINDINGS - bias 2
 	SlotSamplerElements, // sl_smp_elem: sampler elements the write list actually emits
+	// Session 86, gate "slotstat" (ROADMAP.md route C, its last idea): duplicates WITHIN one
+	// stage.  The witness a repeating image slot re-evaluates is per IMAGE; these say how much
+	// of it could be evaluated once an image instead of once a slot.
+	SlotImageDups,      // sl_img_dup: image slots whose image_id equals an EARLIER slot of the
+	                    //             SAME stage.  Not the same quantity as sl_img_view, which
+	                    //             compares the same slot INDEX against the previous draw.
+	SlotImageDupViews,  // sl_img_dupv: ... of those, slots whose VkImageView also matches - a
+	                    //              byte-identical descriptor element, and the exploitable
+	                    //              half, because a duplicate with another desc still runs
+	                    //              FindTexture
+	SlotImageDupStages, // sl_img_dstage: stages holding at least one duplicate
+	SlotImageSq,        // sl_img_sq: sum over stages of n(n-1)/2 - the second moment of the
+	                    //            per-stage image count AND the exact worst case of the
+	                    //            duplicate scan itself
 	SlotBad,            // sl_bad: gate "slotstatcheck" - element counts that disagree with the
 	                    //         compiled layout.  MUST read 0.
 	// Session 85, gate "bindpack2" (PLAN_82_bind.md item 6a) and its self-check.
@@ -1096,6 +1120,58 @@ enum class Counter : uint32_t {
 	                    //          the window the change widens, measured rather than assumed
 	BufEpochFastBad,    // bp2_bad: the epoch did NOT move and the recomputation still
 	                    //          disagreed - a contradiction.  MUST read 0.
+	// Session 86, gate "proglap" (MEASUREMENT ONLY, ROADMAP.md route D2): the phases of
+	// mh_prog_us that FrameStats::Lap cannot report under KYTY_FRAME_TRACE=lite, re-emitted
+	// on the LapScope idiom.  The lock half is plkstat's and the memo compare is
+	// pmemo_chk_us's; neither is rebuilt here.
+	ProgLapPreNs,       // pg_pre_us: GetGraphicsPrograms before the lock.  An UPPER bound on
+	                    //            PrepareProgram: it also holds ShaderRegistrations, the
+	                    //            keep_snapshots swaps, the mesh-limit block and the clip
+	                    //            block
+	ProgLapCalls,       // pg_n: ... its calls (identity: == pl_prog_n, exactly)
+	ProgLapKeyNs,       // pg_key_us: ProgramCache::Get up to Mark(ProgKeyNs) - the key build
+	                    //            or the memo iterator, plus programs.find, plus the
+	                    //            translation-cache load on a cold miss (pg_cold_n)
+	ProgLapKeys,        // pg_key_n: ... those calls, slot < 2 only
+	ProgLapKeyHitNs,    // pg_key_hit_us: the same interval, key_hit only - the numerator of
+	                    //                the two-equation solve of pred/03
+	ProgLapKeyHits,     // pg_key_hit_n: ... those calls (identity: == pmemo_hit when armed)
+	ProgLapGetNs,       // pg_get_us: ProgramCache::Get, whole body, slot < 2 only.  Covers all
+	                    //            four of its returns, INCLUDING the Compile path
+	ProgLapGets,        // pg_get_n: ... those calls
+	ProgLapCold,        // pg_cold_n: ... of those, calls that missed `programs` and reached
+	                    //            the translation cache.  Contamination, counted
+	ProgLapCompiles,    // pg_compile_n: ... and those that reached Compile.  Milliseconds when
+	                    //               it fires; must be ~0 in a settled scene
+	// Session 86, gate "drawmerge" (MEASUREMENT ONLY, ROADMAP.md route D4): how many
+	// consecutive draws are merge candidates.  Classification is FIRST MATCH WINS in the order
+	// below, and a LENGTH change is dm_no, never a silent one-slot difference.
+	DrawMergeDraws,     // dm_n: draws classified - the denominator.  dm_n <= draws, because
+	                    //       `draws` is counted at the PM4 handler before the early returns
+	                    //       and the AsyncPipelines skip.  The gap is quoted, not assumed 0
+	DrawMergePipe,      // dm_pipe: ... whose VkPipeline equals the previous classified draw's
+	                    //          (cross-check: within 2 % of pmemo_pipe)
+	DrawMergeSame,      // dm_same: dm_pipe AND every image, sampler and buffer slot equal AND
+	                    //          every shader_data dword equal
+	DrawMergePush,      // dm_push: ... all slots equal, shader_data differs
+	DrawMergeBuf1,      // dm_buf1: ... images and samplers equal, EXACTLY ONE buffer differs
+	DrawMergeNo,        // dm_no: everything else, including every length change
+	DrawMergeSameNr,    // dm_same_nr: the same three with stream-ring buffer slots EXCLUDED
+	DrawMergePushNr,    //             from the difference count.  ~35 % of buffer slots take a
+	DrawMergeBuf1Nr,    //             fresh ring offset every draw by construction (s84: 34.94 %)
+	DrawMergeRing,      // dm_ring: buffer slots whose handle is the stream ring
+	DrawMergeBufSlots,  // dm_bufn: buffer slots examined - dm_ring's denominator
+	DrawMergeImageDiffs,   // dm_img_d: per-slot differences, for the consistency reading
+	DrawMergeSamplerDiffs, // dm_smp_d: ... against slotstat, which keys differently and is
+	DrawMergeBufferDiffs,  // dm_buf_d: ... written from another function - a reading, NOT an identity
+	DrawMergeMesh,      // dm_mesh: mesh draws, bucketed apart: their 6-dword draw_data push
+	                    //          block changes by construction and would read as dm_push
+	DrawMergeOver,      // dm_over: draws past the table bounds, EXCLUDED from classification
+	                    //          rather than truncated into a match.  Must read 0
+	DrawMergeBad,       // dm_bad: gate "drawmergecheck" - the field-wise verdict disagreed
+	                    //         with the independent memcmp.  MUST read 0
+	ProgLapPerms,       // pg_perm: permutations EXAMINED by the find_if (the Add is inside the
+	                    //          predicate, so it is work and not the deque's size)
 	Count
 };
 

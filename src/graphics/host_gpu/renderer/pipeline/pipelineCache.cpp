@@ -2952,6 +2952,18 @@ struct PipelineCache::ProgramCache {
 
 		Common::FrameStats::Lap lap;
 		EXIT_IF(slot < 0 || slot >= static_cast<int>(lookup_keys.size()));
+		// Session 86, gate "proglap", D2.  slot < 2 is the DRAW path only: GetComputeProgram
+		// and PrefetchComputePipeline pass slot 2 and live in other phases entirely, and
+		// tessellation HS/TES do too.  The LapScope covers all FOUR returns of this function,
+		// including the Compile path, which pg_compile_n counts so it can be excluded.
+		const bool prog_lap = slot < 2 && Common::Gates::Enabled(Common::Gates::Gate::ProgLap);
+		Common::FrameStats::LapScope pg_get_scope(prog_lap,
+		                                          Common::FrameStats::Counter::ProgLapGetNs);
+		const uint64_t pg_key_t0 =
+		    prog_lap && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+		if (pg_key_t0 != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapGets, 1);
+		}
 		ProgramKey& lookup_key = lookup_keys[static_cast<size_t>(slot)];
 		auto        entry      = programs.end();
 		if (key_hit) {
@@ -2981,6 +2993,9 @@ struct PipelineCache::ProgramCache {
 			entry = programs.find(lookup_key);
 		}
 		if (entry == programs.end()) {
+			if (prog_lap) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapCold, 1);
+			}
 			Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 			LibKernel::KernelTimeFreezeScope load_freeze;
 			const auto                       load_begin = HostMicros();
@@ -2988,6 +3003,16 @@ struct PipelineCache::ProgramCache {
 				LOGF("AvTrace: shader-cache load hash=0x%016" PRIx64 " permutations=%zu us=%" PRIu64
 				     "\n",
 				     params.hash, entry->second.permutations.size(), HostMicros() - load_begin);
+			}
+		}
+		if (pg_key_t0 != 0) {
+			const auto pg_now = Common::FrameStats::NowNs();
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeyNs, pg_now - pg_key_t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeys, 1);
+			if (key_hit) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeyHitNs,
+				                        pg_now - pg_key_t0);
+				Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapKeyHits, 1);
 			}
 		}
 		lap.Mark(Common::FrameStats::Counter::ProgKeyNs);
@@ -3099,6 +3124,9 @@ struct PipelineCache::ProgramCache {
 			lap.Mark(Common::FrameStats::Counter::ProgMaterializeNs);
 			if (const auto permutation = std::ranges::find_if(
 			        entry->second.permutations, [&](const Permutation& candidate) {
+				        if (prog_lap) {
+					        Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPerms, 1);
+				        }
 				        const auto& layout = candidate.program.bindings;
 				        return layout.push_data_start_dword ==
 				                   ShaderRecompiler::IR::PushData::StartFor(
@@ -3118,6 +3146,9 @@ struct PipelineCache::ProgramCache {
 			}
 		}
 
+		if (prog_lap) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapCompiles, 1);
+		}
 		Common::DrawStat::Mark(Common::DrawStat::ObjNew);
 		return Compile(params, input_info, push_data_cursor, tolerant, stage, lookup_key, entry,
 		               runtime, resources, specialization);
@@ -4063,6 +4094,12 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
     std::array<ShaderVertexInputInfo, 3>& vertex_info, ShaderPixelInputInfo& pixel_info,
     uint64_t* state_serial) {
 	Common::FrameStats::Lap lap;
+	// Session 86, gate "proglap", D2: everything before the lock.  A hand-differenced pair is
+	// safe here because this function has exactly ONE return and it is after the lock.
+	const uint64_t pg_t0 = Common::Gates::Enabled(Common::Gates::Gate::ProgLap) &&
+	                               Common::FrameStats::Enabled()
+	                           ? Common::FrameStats::NowNs()
+	                           : 0;
 	// Upstream tessellation: a patch primitive runs the guest's LS/HS/TES trio through three
 	// host stages. vertex_info[0] is then the LS that fetches the vertex attributes and
 	// vertex_info[2] the TES that exports to the pixel stage.
@@ -4214,6 +4251,11 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	// Session 83, gate "plkstat": the only lock RefreshShaders takes. mh_prog_us is 5 850 us
 	// and the floor of this session counts all of it as serial; this says how much of it runs
 	// under the lock.
+	if (pg_t0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapPreNs,
+		                        Common::FrameStats::NowNs() - pg_t0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapCalls, 1);
+	}
 	const auto prog_lock_t0 = Common::Gates::Enabled(Common::Gates::Gate::PipeLockStat) &&
 	                                  Common::FrameStats::Enabled()
 	                              ? Common::FrameStats::NowNs()

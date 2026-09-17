@@ -1506,6 +1506,10 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		                                         : Common::FrameStats::Counter::BindKeyMiss,
 		                        1);
 	}
+	// Session 86, D3: the rolling mark chain.  `bind_lap` is the gate value already read
+	// above; the Enabled() half deliberately matches LapScope, so the split cannot record
+	// into counters the frame will not print.
+	uint64_t bl_t = bind_lap && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		// Session 57, B2a: built in its vector element - one ImageDesc copy where the returned
@@ -1520,15 +1524,33 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage,
 		          program.info.images[i].atomic);
 	}
+	if (bl_t != 0) {
+		const auto bl_now = Common::FrameStats::NowNs();
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapResolveNs, bl_now - bl_t);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapResolves,
+		                        program.info.images.size());
+		bl_t = bl_now;
+	}
 	prepared.samplers.reserve(program.info.samplers.size());
 	for (uint32_t i = 0; i < program.info.samplers.size(); i++) {
 		prepared.samplers.push_back(NativeSampler(m_context, program, i, snapshot.samplers[i]));
+	}
+	if (bl_t != 0) {
+		const auto bl_now = Common::FrameStats::NowNs();
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapSamplerNs, bl_now - bl_t);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapSamplers,
+		                        program.info.samplers.size());
+		bl_t = bl_now;
 	}
 	prepared.shader_data.reserve(program.bindings.ShaderDataDwords());
 	for (const auto reg: program.bindings.user_data_registers) {
 		prepared.shader_data.push_back(snapshot.user_data[reg - program.user_data_base]);
 	}
 	prepared.shader_data.resize(program.bindings.ShaderDataDwords());
+	if (bl_t != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapDataNs,
+		                        Common::FrameStats::NowNs() - bl_t);
+	}
 	const bool has_gds =
 	    (prepared.kind_mask & KIND_COMPUTED) != 0
 	        ? (prepared.kind_mask & KIND_GDS) != 0
@@ -2232,6 +2254,14 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 
 	uint64_t img_n = 0, img_same = 0, img_view = 0;
 	uint64_t img_same_sh = 0, img_null = 0, img_elem = 0;
+	// Session 86: duplicates WITHIN this stage.  The 64-bit filter decides only whether to
+	// SCAN, never whether a slot is a duplicate, so it has no false negatives.  NO value
+	// initialiser on the two arrays - "{}" would memset 768 bytes on every stage; only the
+	// first seen_n entries are ever read.
+	uint64_t img_dup = 0, img_dupv = 0, seen_mask = 0;
+	uint32_t seen_n = 0;
+	std::array<uint32_t, SlotStatImages> seen_id;
+	std::array<uint64_t, SlotStatImages> seen_view;
 	for (uint32_t i = 0; i < prepared.images.size(); i++) {
 		if (i >= SlotStatImages) {
 			over++;
@@ -2258,6 +2288,31 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 		img_elem += prepared.images[i].mip_views.empty()
 		                ? 1u
 		                : static_cast<uint64_t>(prepared.images[i].mip_views.size());
+		// Session 86: image_id is the identity RebindImages indexes m_slot_images with, and it
+		// is the granularity of the witness.  The VIEW is the stronger key: two slots sharing a
+		// VkImageView share a VkImage, and for a non-depth image binding.layout is a function of
+		// the image, so the descriptor ELEMENT is identical too.  The scan keeps going after an
+		// id match and breaks only on the stronger one.
+		const uint32_t id_index = prepared.images[i].image_id.index;
+		const uint64_t id_bit   = uint64_t {1} << (id_index & 63u);
+		if ((seen_mask & id_bit) != 0) {
+			bool dup = false, dupv = false;
+			for (uint32_t j = 0; j < seen_n; j++) {
+				if (seen_id[j] == id_index) {
+					dup = true;
+					if (key != 0 && seen_view[j] == key) {
+						dupv = true;
+						break;
+					}
+				}
+			}
+			img_dup  += dup ? 1u : 0u;
+			img_dupv += dupv ? 1u : 0u;
+		}
+		seen_mask |= id_bit;
+		seen_id[seen_n]   = id_index;
+		seen_view[seen_n] = key;
+		seen_n++;
 		prev_view   = key;
 		prev_layout = slot_layout;
 	}
@@ -2353,6 +2408,18 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 		// img_elem < img_n would mean the census counted bindings the write list never emits.
 		// The SAMPLER identity is NOT guaranteed by anything in the tree and is therefore only
 		// measured (sl_smp_elem), never accused.
+		// Session 86: a VkImageView belongs to exactly one live image, so a view duplicate is
+		// ALWAYS an id duplicate.  img_dupv > img_dup can only mean the scan is wrong.
+		if (img_dupv > img_dup) {
+			FS::Add(Counter::SlotBad, 1);
+			static std::atomic<uint32_t> dup_logged {0};
+			if (dup_logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+				LOGF("SlotStatVerify: MISMATCH stage=%u img_dup=%llu img_dupv=%llu img_n=%llu\n",
+				     s, static_cast<unsigned long long>(img_dup),
+				     static_cast<unsigned long long>(img_dupv),
+				     static_cast<unsigned long long>(img_n));
+			}
+		}
 		const bool elem_ok = layout_img_elem == img_elem && img_elem >= img_n;
 		if (!elem_ok && over == 0) {
 			FS::Add(Counter::SlotBad, 1);
@@ -2368,6 +2435,11 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 			}
 		}
 	}
+	FS::Add(Counter::SlotImageDups, img_dup);
+	FS::Add(Counter::SlotImageDupViews, img_dupv);
+	FS::Add(Counter::SlotImageDupStages, img_dup != 0 ? 1u : 0u);
+	FS::Add(Counter::SlotImageSq,
+	        static_cast<uint64_t>(seen_n) * (seen_n > 0 ? seen_n - 1u : 0u) / 2u);
 	FS::Add(Counter::SlotImages, img_n);
 	FS::Add(Counter::SlotImagesSame, img_same);
 	FS::Add(Counter::SlotImagesView, img_view);

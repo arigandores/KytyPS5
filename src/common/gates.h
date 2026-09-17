@@ -273,6 +273,29 @@ enum class Gate : uint32_t {
 	// Recomputes the replaced predicate beside every short circuit AND calls SynchronizeBuffer
 	// anyway, so the checked arm does the work the gate removes.  bp2_bad must read 0.
 	BufEpochFastVerify, // KYTY_BUF_EPOCH_VERIFY, file name "bindpack2check"
+	// Session 86, MEASUREMENT ONLY (ROADMAP.md route D2): mh_prog_us is 5 850 us a frame and
+	// nobody has ever asked what it IS.  Three of its four parts are already instrumented -
+	// the lock by "plkstat", the memo compare by pmemo_chk_us - but the key build, the map
+	// lookup and the materialisation are FrameStats::Lap, which reads 0 under
+	// KYTY_FRAME_TRACE=lite.  This re-emits them on the LapScope idiom and adds the
+	// key_hit / key_miss split that does not exist, so the shipped gate "progmemo" can serve
+	// as the source of variation a collinear regression could not supply (the texfast trick
+	// of session 85).  Every counter is restricted to slot < 2 - the draw's VS and PS - or
+	// the denominator swallows dispatch and prefetch.  Arming: pg_n == pl_prog_n exactly.
+	ProgLap,            // KYTY_PROG_LAP,           file name "proglap"
+	// Session 86, MEASUREMENT ONLY (ROADMAP.md route D4): how many consecutive draws differ by
+	// nothing, by push constants alone, or by exactly one buffer binding.  The necessary
+	// condition - the same pipeline - is ALREADY measured by progmemo's pmemo_pipe at 77.2 %
+	// of draws, so the open question is the descriptor delta and that is what this counts.
+	// One site in ExecutePreparedDraw, past the AsyncPipelines skip, before the packet/direct
+	// split.  Every bucket has an _nr twin with stream-ring slots excluded, because ~35 % of
+	// buffer slots take a fresh ring offset every draw BY CONSTRUCTION.
+	DrawMerge,          // KYTY_DRAW_MERGE,         file name "drawmerge"
+	// Recomputes the equality verdict by memcmp over the live prefix of each shadow array and
+	// counts disagreements in dm_bad, which must read 0.  A CROSS-IMPLEMENTATION check and not
+	// a value check: both halves read the same shadow table, and the previous draw's value
+	// exists nowhere else - the limitation pred/02 of session 85 stated for sl_bad.
+	DrawMergeVerify,    // KYTY_DRAW_MERGE_VERIFY,  file name "drawmergecheck"
 	Count,
 };
 

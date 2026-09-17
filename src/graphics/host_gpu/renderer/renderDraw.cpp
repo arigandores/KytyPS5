@@ -1785,6 +1785,190 @@ static void EmitDrawPrimitives(const HW::UserConfig& ucfg, Sink& vk_buffer,
 	}
 }
 
+namespace {
+
+// Session 86, gate "drawmerge" (MEASUREMENT ONLY, ROADMAP.md route D4).  The bounds are the
+// translator's own hard caps, so exceeding one is a condition the translator forbids; a draw that
+// does exceed one is EXCLUDED (dm_over) rather than truncated into a false match.
+constexpr uint32_t DrawMergeStages   = 4;
+constexpr uint32_t DrawMergeImages   = 64;
+constexpr uint32_t DrawMergeSamplers = 32;
+constexpr uint32_t DrawMergeBuffers  = 32;
+
+struct DrawMergePrev {
+	uint64_t pipeline = 0;
+	bool     valid    = false;
+	uint32_t img_n = 0, smp_n = 0, buf_n = 0, sd_n = 0;
+	std::array<uint64_t, DrawMergeStages * DrawMergeImages>   image_view {};
+	std::array<uint64_t, DrawMergeStages * DrawMergeSamplers> sampler {};
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  buffer_handle {};
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  buffer_offset {};
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  buffer_range {};
+	// Session 86, correction 1: ONE FNV-1a HASH A STAGE, not raw dwords.  ShaderDataDwords()
+	// is not bounded by any translator cap, so a fixed array made dm_over read 454 a frame
+	// instead of 0 and silently deleted 8.7 % of the population.  A hash has no cap.
+	std::array<uint64_t, DrawMergeStages>                     shader_data {};
+};
+
+constinit DrawMergePrev g_draw_merge_prev {};
+
+void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages, uint64_t stream,
+                   bool mesh, bool verify) {
+	namespace FS  = Common::FrameStats;
+	using Counter = FS::Counter;
+
+	// NO value-initialisers: only the live prefixes are read, and zeroing 6.6 KiB on every one of
+	// ~5 000 draws a frame would cost more than the census it serves.
+	std::array<uint64_t, DrawMergeStages * DrawMergeImages>   img;
+	std::array<uint64_t, DrawMergeStages * DrawMergeSamplers> smp;
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  bufh;
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  bufo;
+	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  bufr;
+	std::array<uint8_t, DrawMergeStages * DrawMergeBuffers>   bufring;
+	std::array<uint64_t, DrawMergeStages>                     sd;
+	uint32_t img_n = 0, smp_n = 0, buf_n = 0, sd_n = 0, ring = 0;
+	bool     over  = stages.size() > DrawMergeStages;
+	for (const auto* prepared: stages) {
+		if (over) {
+			break;
+		}
+		// The three bounds left are the translator's own hard caps - MaxImages 64,
+		// MaxSamplers 32, MaxBuffers 32 - which sl_over = 0 has proved every frame since
+		// session 84, so dm_over now counts a condition the translator forbids.
+		if (prepared->images.size() > DrawMergeImages ||
+		    prepared->samplers.size() > DrawMergeSamplers ||
+		    prepared->buffers.size() > DrawMergeBuffers) {
+			over = true;
+			break;
+		}
+		for (const auto& binding: prepared->images) {
+			img[img_n++] = static_cast<uint64_t>(
+			    reinterpret_cast<uintptr_t>(static_cast<VkImageView>(binding.image_view)));
+		}
+		for (const auto sampler: prepared->samplers) {
+			smp[smp_n++] = static_cast<uint64_t>(
+			    reinterpret_cast<uintptr_t>(static_cast<VkSampler>(sampler)));
+		}
+		for (const auto& view: prepared->buffers) {
+			const auto handle = static_cast<uint64_t>(
+			    reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(view.buffer)));
+			bufring[buf_n] = (handle != 0 && handle == stream) ? uint8_t {1} : uint8_t {0};
+			ring += bufring[buf_n];
+			bufh[buf_n] = handle;
+			bufo[buf_n] = static_cast<uint64_t>(view.offset);
+			bufr[buf_n] = static_cast<uint64_t>(view.range);
+			buf_n++;
+		}
+		uint64_t hash = 1469598103934665603ull;
+		for (const auto dword: prepared->shader_data) {
+			hash = (hash ^ dword) * 1099511628211ull;
+		}
+		sd[sd_n++] = hash;
+	}
+	FS::Add(Counter::DrawMergeDraws, 1);
+	if (over) {
+		// The previous signature is not comparable with anything after an excluded draw.
+		FS::Add(Counter::DrawMergeOver, 1);
+		g_draw_merge_prev.valid = false;
+		return;
+	}
+	FS::Add(Counter::DrawMergeBufSlots, buf_n);
+	FS::Add(Counter::DrawMergeRing, ring);
+	FS::Add(Counter::DrawMergeMesh, mesh ? 1u : 0u);
+
+	auto&      prev      = g_draw_merge_prev;
+	const bool same_pipe = prev.valid && prev.pipeline == pipeline;
+	// Session 86, correction 2: the per-slot DIFFERENCE counters are accumulated whenever the
+	// LENGTHS match, whether or not the pipeline does, so that dm_img_d is a usable
+	// consistency reading against slotstat, which compares every commit.  The CLASSIFICATION
+	// is unchanged and still requires the pipeline.
+	const bool same_len = prev.valid && prev.img_n == img_n && prev.smp_n == smp_n &&
+	                      prev.buf_n == buf_n && prev.sd_n == sd_n;
+	const bool same_shape = same_pipe && same_len;
+	uint32_t d_img = 0, d_smp = 0, d_buf = 0, d_bufnr = 0, d_sd = 0;
+	if (same_len) {
+		for (uint32_t i = 0; i < img_n; i++) {
+			d_img += (img[i] != prev.image_view[i]) ? 1u : 0u;
+		}
+		for (uint32_t i = 0; i < smp_n; i++) {
+			d_smp += (smp[i] != prev.sampler[i]) ? 1u : 0u;
+		}
+		for (uint32_t i = 0; i < buf_n; i++) {
+			const bool differs = bufh[i] != prev.buffer_handle[i] ||
+			                     bufo[i] != prev.buffer_offset[i] ||
+			                     bufr[i] != prev.buffer_range[i];
+			d_buf += differs ? 1u : 0u;
+			d_bufnr += (differs && bufring[i] == 0) ? 1u : 0u;
+		}
+		for (uint32_t i = 0; i < sd_n; i++) {
+			d_sd += (sd[i] != prev.shader_data[i]) ? 1u : 0u;
+		}
+		FS::Add(Counter::DrawMergeImageDiffs, d_img);
+		FS::Add(Counter::DrawMergeSamplerDiffs, d_smp);
+		FS::Add(Counter::DrawMergeBufferDiffs, d_buf);
+	}
+	FS::Add(Counter::DrawMergePipe, same_pipe ? 1u : 0u);
+
+	// First match wins, in this order.  !same_shape (which includes !same_pipe and every length
+	// change) falls straight through to dm_no.
+	const auto classify = [&](uint32_t buffer_diffs, Counter same, Counter push, Counter one) {
+		if (!same_shape || d_img != 0 || d_smp != 0) {
+			return false;
+		}
+		if (buffer_diffs == 0) {
+			FS::Add(d_sd == 0 ? same : push, 1);
+			return true;
+		}
+		if (buffer_diffs == 1) {
+			FS::Add(one, 1);
+			return true;
+		}
+		return false;
+	};
+	const bool hit = classify(d_buf, Counter::DrawMergeSame, Counter::DrawMergePush,
+	                          Counter::DrawMergeBuf1);
+	classify(d_bufnr, Counter::DrawMergeSameNr, Counter::DrawMergePushNr,
+	         Counter::DrawMergeBuf1Nr);
+	FS::Add(Counter::DrawMergeNo, hit ? 0u : 1u);
+
+	if (verify && same_len) {
+		// The independent second implementation.  These are plain arrays of uint64_t / uint32_t,
+		// which carry NO padding - session 83's bp_bad = 177 came from memcmp over a padded
+		// AGGREGATE, which this deliberately is not - and only the live prefix is compared.
+		const bool memcmp_same =
+		    std::memcmp(img.data(), prev.image_view.data(), size_t {img_n} * sizeof(uint64_t)) == 0 &&
+		    std::memcmp(smp.data(), prev.sampler.data(), size_t {smp_n} * sizeof(uint64_t)) == 0 &&
+		    std::memcmp(bufh.data(), prev.buffer_handle.data(), size_t {buf_n} * sizeof(uint64_t)) == 0 &&
+		    std::memcmp(bufo.data(), prev.buffer_offset.data(), size_t {buf_n} * sizeof(uint64_t)) == 0 &&
+		    std::memcmp(bufr.data(), prev.buffer_range.data(), size_t {buf_n} * sizeof(uint64_t)) == 0 &&
+		    std::memcmp(sd.data(), prev.shader_data.data(), size_t {sd_n} * sizeof(uint64_t)) == 0;
+		const bool fields_same = d_img == 0 && d_smp == 0 && d_buf == 0 && d_sd == 0;
+		if (memcmp_same != fields_same) {
+			FS::Add(Counter::DrawMergeBad, 1);
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+				LOGF("DrawMergeVerify: MISMATCH memcmp=%d fields=%d img=%u smp=%u buf=%u sd=%u\n",
+				     memcmp_same ? 1 : 0, fields_same ? 1 : 0, d_img, d_smp, d_buf, d_sd);
+			}
+		}
+	}
+
+	prev.pipeline = pipeline;
+	prev.valid    = true;
+	prev.img_n    = img_n;
+	prev.smp_n    = smp_n;
+	prev.buf_n    = buf_n;
+	prev.sd_n     = sd_n;
+	std::memcpy(prev.image_view.data(), img.data(), size_t {img_n} * sizeof(uint64_t));
+	std::memcpy(prev.sampler.data(), smp.data(), size_t {smp_n} * sizeof(uint64_t));
+	std::memcpy(prev.buffer_handle.data(), bufh.data(), size_t {buf_n} * sizeof(uint64_t));
+	std::memcpy(prev.buffer_offset.data(), bufo.data(), size_t {buf_n} * sizeof(uint64_t));
+	std::memcpy(prev.buffer_range.data(), bufr.data(), size_t {buf_n} * sizeof(uint64_t));
+	std::memcpy(prev.shader_data.data(), sd.data(), size_t {sd_n} * sizeof(uint64_t));
+}
+
+} // namespace
+
 void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buffer,
                                          const DrawCallInfo& draw, DrawRenderState& state,
                                          vk::PrimitiveTopology topology, const DrawEmitInfo& emit,
@@ -2190,6 +2374,22 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	        static_cast<uint32_t>(Common::FrameStats::Counter::PassDraw0) +
 	        RenderPassShapeBucket(rendering.num_color_attachments)),
 	    1);
+
+	// Session 86, gate "drawmerge" (MEASUREMENT ONLY, ROADMAP.md route D4): placed exactly
+	// where the session-71 pass-shape Add is placed and for the same reason - past the
+	// async-pipeline skip return and before the recpack / direct split, so one site covers
+	// both paths and no skipped draw is counted.  Dispatches never reach this function.
+	if (Common::Gates::Enabled(Common::Gates::Gate::DrawMerge)) {
+		NoteDrawMerge(static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+		                  static_cast<VkPipeline>(pipeline.pipeline))),
+		              stages,
+		              static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(
+		                  m_context.GetBufferCache()
+		                      .GetUtilityBuffer(MemoryUsage::Stream)
+		                      .Handle()))),
+		              mesh_active,
+		              Common::Gates::Enabled(Common::Gates::Gate::DrawMergeVerify));
+	}
 
 	// Gate "recpack" (commandRecorder.h): nothing below records on this thread. Every decision -
 	// pass state, the dynamic-state cache, the shader-write debt, the descriptor set - is taken

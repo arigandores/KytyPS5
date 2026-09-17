@@ -218,6 +218,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // self-check.  PLAN_82_bind.md item 6a.
     {"KYTY_BUF_EPOCH_FAST", "bindpack2", false},
     {"KYTY_BUF_EPOCH_VERIFY", "bindpack2check", false},
+    // Session 86, measurement only: what mh_prog_us actually is, under lite.
+    {"KYTY_PROG_LAP", "proglap", false},
+    // Session 86, measurement only: route D4, the consecutive-draw mergeability census.
+    {"KYTY_DRAW_MERGE", "drawmerge", false},
+    {"KYTY_DRAW_MERGE_VERIFY", "drawmergecheck", false},
 }};
 
 struct KnobDefinition {

@@ -256,7 +256,7 @@ Two further facts the census gives for free: the three-epoch early return of `Pr
 building exactly that mechanism, and it is already shipped; and `SynchronizeBuffersInRange` spends
 **three quarters of its calls** proving a mapping holds no registered buffer at all.
 
-## 4. THE BINDING-PATH PACKAGE — gate `bindpack`: correct, armed, and 10 µs short of shipping
+## 4. THE BINDING-PATH PACKAGE — gate `bindpack`: correct, armed, and worth 138 µs against a 150 µs bar
 
 ### 4.1 What is in it
 

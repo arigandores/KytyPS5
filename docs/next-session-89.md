@@ -23,7 +23,8 @@ port it to `C:/kyty/s89`.
    caught the session's own instrument, and what it cost), §3.3–3.5 (the split, the verdict and the
    four reasons it is still an upper bound), §4.1 (the correction to session 87), §4.3 (what the
    residue is), §6 (a debt taken, run, and failed on admission) and §8 (all forty-seven
-   predictions, including the two defects in predictions I wrote myself).**
+   predictions, including the three defects in predictions I wrote myself, and what the independent
+   audit moved).**
 2. `C:/kyty/s88/README.md` — the standing traps. The three that will bite first: **a null control
    you wrote before the run can catch your own instrument — write it so it can fail, and then
    believe it**; **where an `rdtsc` sits changes what it COSTS, not only what it reads**; and
@@ -60,34 +61,42 @@ it — which is also what gives every new counter a free arming proof in the pre
 ## 1. What session 88 settled
 
 * **The memo-hit tail of `ResolveTextureWith` is 15.00 ns a slot; the proof is the other 50 %.**
-  `W1` = 37.49, `W2` = 22.48 ns, and the mark's price cancels exactly because both arms take one
-  timestamp a slot in the same kind of place.
+  `W1` = 37.49, `W2` = 22.48 ns; the mark's price cancels because both arms take one timestamp a
+  slot in the same kind of place — **to the precision null control C8 certifies, which is ±32 %**,
+  so `skip88` is 10…20 ns and `ceiling88` is 440…590 µs. MARGINAL throughout.
 * **`ceiling88` = `sl_img_dupv` × (19.66 + 15.00) = 514 µs a frame ⇒ MARGINAL**, against session
   87's 1 107 µs. **Route C's image half does not stay re-opened.** Margin +71 % above 300 and −49 %
   below 1 000 — **not near either edge**, unlike session 86's 2.5 % and session 87's 10.7 %.
   `sl_img_dupv` = 14 831.7 a frame, measured in that session's own run: the borrowed number was
   right to 0.3 %; the term nobody had measured was the one that moved.
-* **A memo-MISS `ResolveTextureWith` costs 284 ns — 12.6× a hit — on 6.3 % of slots.** First price
-  of the population the memo and `texfast` exist to avoid.
+* **A slot whose resolve does NOT take the memo-hit path costs 284 ns — 7.6× a hit — on 6.4 % of
+  slots**, and **48.1 % of that population is the cheap null-descriptor path**, so the memo miss
+  alone is **284…548 ns and is [NM]**. Splitting it is one counter, and `tnull_hit` already
+  separates the population on the `FrameTrace-x` line.
 * **The M1 witness loops inside the pipeline-cache lock cost 567.4 µs (clean) + 285.1 µs (live) =
   852.5 µs a frame = 34.7 % of `AheadTake` and 21.1 % of the 4 049 µs block** — against the ~82 % /
   ~48 % session 87 quoted from session 72 on a different binary and **honestly labelled a
-  quotation**. A factor of 2.4, and the label is what made the check cheap.
+  quotation**. A factor of **2.4** on the `AheadTake` share, which is within-run and [M], and
+  **2.3** on the block share, whose 4 049 µs denominator is session 87's and is therefore [I].
 * **816 µs of the 4.5 ms `PipelineCache::m_mutex` hold is the witness loops**, measured on
   `pl_prog_hold_us` moving with the knob in both runs.
 * **A pre-registered null control caught the session's own instrument** — the first time in this
   record. `bl_res_us/bl_res_n` read −3.78 % between two arms that each take one timestamp a slot,
   because an `rdtsc` followed by dependent work costs a whole mark more than one followed by
   independent work. The defective instrument returned 24.05 ns where the repaired one returns
-  15.00 — a 38 % overstatement, in the direction that re-opens a route.
+  15.00 — the repair moved the answer by 38 %, and the defective reading was **60 % too high**, in
+  the direction that re-opens a route.
 
 ## 2. What is settled — do not reopen
 
 * **Route A in every form** (`S` = 20.8 ms > 16.7 ms).
 * **Route C at per-slot granularity** (session 85) **and route C's image half at per-stage
-  granularity** (session 88: 514 µs, MARGINAL, with four unmeasured reductions still inside it).
+  granularity** (session 88: 514 µs, MARGINAL, `skip88` known to ±32 %, with four unmeasured
+  reductions still inside it). **The verdict is not robust to the sealed rule's own allocation**:
+  reading `FACTS` s85 §12.6c strictly — the 19.66 ns **is** the proof — gives **222 µs, CLOSED FOR
+  GOOD**; the loosest reading gives 738 µs, still MARGINAL. **Every reading says do not build it.**
   **Do not re-open it without a NEW measured term**; the only one left — the witness share of the
-  19.66 ns of `RebindImages` — **can only make it smaller**.
+  19.66 ns — **can only make it smaller**.
 * **The two-pass split of the image loop** — refused on reading, `FACTS` s87 §2.1.
 * **"Make the program lookup cheaper"** — 28.74 ns a call, 255 µs a frame.
 * **Merging consecutive draws** — 0.668 % share an identical descriptor set.
@@ -210,8 +219,8 @@ ten entries in session 88, every one absorbed by `--warmup-first` or a second at
 |---|---|---|
 | the sequential floor `S` | **20 838 µs**, `flr83b` | **MEASURED — closes route A** |
 | **the memo-hit tail of `ResolveTextureWith`** | **15.00 ns a slot; the proof is the other 50 %** | **MEASURED (s88)** |
-| **route C's image half, by the sealed rule** | **514 µs, MARGINAL** | **NOT RE-OPENED; s87's 1 107 µs did not survive its missing term** |
-| a memo-MISS `ResolveTextureWith` | **284 ns, 12.6× a hit, on 6.3 % of slots** | **MEASURED (s88)** |
+| **route C's image half, by the sealed rule** | **514 µs, MARGINAL** (±32 %; 222 µs under a stricter allocation, 738 under a looser one) | **NOT RE-OPENED; s87's 1 107 µs did not survive its missing term** |
+| a slot that does NOT take the memo-hit path | **284 ns, 7.6× a hit, on 6.4 % of slots** | **MEASURED (s88); 48.1 % of it is the null path, so the memo miss alone is 284…548 ns, [NM]** |
 | **D2: the M1 witness loops inside the lock** | **567.4 + 285.1 = 852.5 µs = 34.7 % of `AheadTake`** | **MEASURED (s88); s72's quotation was 2.4× high** |
 | **D2: the residue of `AheadTake`** | **1 607 µs a frame, 65 %** | **NOT SPLIT — §3.1, and now the largest unsplit block** |
 | of the 4.5 ms `PipelineCache::m_mutex` hold, the witness | **816 µs** | **MEASURED (s88) — §3.2** |

@@ -760,7 +760,12 @@ inline void PrefetchLine(const void* address, bool l1) noexcept {
 // True while every recorded word still reads back, through its reader, as recorded.
 // `failed_run`, when given, receives the ordinal (over live runs, clean runs, singles) of the
 // first run that differed (session 61, item 3 ceiling).
-bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* failed_run = nullptr) {
+// `lap` (session 89, gate "takelap") is the rolling mark chain of AheadTake, threaded through
+// so that this function's own live-run prefetch pass can be separated from its two comparison
+// loops.  It is non-null ONLY from AheadTake and only while the chain is armed; MemoVerify's
+// call site passes nothing, and gate "srtmemo" is 0 in gates_base.txt in any case.
+bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* failed_run = nullptr,
+                   uint64_t* lap = nullptr) {
 	uint32_t ordinal = 0;
 	// Knob "dawitloop" - a MEASUREMENT CEILING, UNSOUND TO SHIP, default 0 = compare everything.
 	// 1 leaves the clean runs uncompared, 2 leaves the live runs uncompared; either way some
@@ -803,6 +808,14 @@ bool VerifyWitness(const Witness& witness, ShaderReadCache& cache, uint32_t* fai
 				}
 			}
 		}
+	}
+	// Session 89, gate "takelap": close the phase holding this function's entry and the
+	// live-run prefetch pass above.  skip_loop is tested INSIDE the two loops below, so
+	// neither dawitloop=1 nor dawitloop=2 removes that pass and session 88 did not measure it.
+	if (lap != nullptr && *lap != 0) {
+		const auto lap_now = Common::FrameStats::NowNs();
+		Common::FrameStats::Add(Common::FrameStats::Counter::TakeLapPrefetchRunNs, lap_now - *lap);
+		*lap = lap_now;
 	}
 	for (const auto& run: witness.live_runs) {
 		if (skip_loop == 2) { // ceiling only
@@ -2709,8 +2722,20 @@ struct PipelineCache::ProgramCache {
 	                                 ShaderReadCache&                              cache,
 	                                 ShaderRecompiler::IR::ResourceSnapshot&       resources,
 	                                 ShaderRecompiler::IR::ResourceSpecialization& specialization,
-	                                 bool kept = false) {
+	                                 bool kept = false, uint64_t lap_t0 = 0) {
 		namespace FS = Common::FrameStats;
+		// Session 89, gate "takelap": the rolling chain that divides what session 88 could only
+		// derive as a remainder.  SEEDED from `lap_t0` - the timestamp Cache::Get already takes
+		// for da_take_us at :3069 - so the first mark is free.  The caller passes 0 when the
+		// gate is off, and every mark is then one predictable test on a register.
+		uint64_t   lap_t     = lap_t0;
+		const auto take_mark = [&lap_t](Common::FrameStats::Counter counter) {
+			if (lap_t != 0) {
+				const auto lap_now = Common::FrameStats::NowNs();
+				Common::FrameStats::Add(counter, lap_now - lap_t);
+				lap_t = lap_now;
+			}
+		};
 		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || ahead_slots == nullptr) {
 			return false;
 		}
@@ -2718,6 +2743,10 @@ struct PipelineCache::ProgramCache {
 			Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass) ? ClassOf(source) : nullptr;
 		const auto fingerprint = plan_class != nullptr ? plan_class->hash : Fingerprint(source);
 		const auto hash = AheadHash(fingerprint, params.Base(), UserDataHash(params.user_data));
+		take_mark(Common::FrameStats::Counter::TakeLapKeyNs);
+		if (lap_t != 0) {
+			FS::Add(FS::Counter::TakeLapCalls, 1);
+		}
 		// Handed to the counters once, on the way out: this function leaves from six places, and
 		// an Add per probe (~16k a frame) would have cost more than it measures.
 		size_t probes = 2;
@@ -2754,6 +2783,10 @@ struct PipelineCache::ProgramCache {
 			}
 			if (state != AheadReady) {
 				break;
+			}
+			take_mark(Common::FrameStats::Counter::TakeLapProbeNs);
+			if (lap_t != 0) {
+				FS::Add(FS::Counter::TakeLapReady, 1);
 			}
 			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadPrefetch)) {
 				// A worker built these, usually on another core: start loading the witness for
@@ -2835,6 +2868,7 @@ struct PipelineCache::ProgramCache {
 				FS::Add(FS::Counter::DrawAheadCleanRuns, slot.witness.clean_runs.size());
 				FS::Add(FS::Counter::DrawAheadSingles, slot.witness.singles.size());
 			}
+			take_mark(Common::FrameStats::Counter::TakeLapPrefetchNs);
 			uint32_t failed_run = 0;
 			// Gate "dawitness" off (session 61, ceiling experiment, UNSOUND): take the result
 			// without comparing the recorded words.
@@ -2842,7 +2876,15 @@ struct PipelineCache::ProgramCache {
 			if (!checked) {
 				FS::Add(FS::Counter::DrawAheadUnchecked, 1);
 			}
-			if (checked && !VerifyWitness(slot.witness, cache, &failed_run)) {
+			// Session 89, gate "takelap": `checked && !VerifyWitness(...)` became
+			// `!checked || VerifyWitness(...)` so the mark closes on BOTH outcomes.  The short
+			// circuit is unchanged - at checked == false VerifyWitness is still not called - and so
+			// is every branch taken below.  At dawitness = 0 the pass-B mark never fires and this
+			// phase absorbs it; gates_base.txt pins dawitness = 1 and no arm here changes it.
+			const bool witness_ok =
+			    !checked || VerifyWitness(slot.witness, cache, &failed_run, &lap_t);
+			take_mark(Common::FrameStats::Counter::TakeLapVerifyNs);
+			if (!witness_ok) {
 				FS::Add(slot.walk >= ahead_processing.load(std::memory_order_relaxed)
 				            ? FS::Counter::DrawAheadStale
 				            : FS::Counter::DrawAheadStaleOld,
@@ -2899,6 +2941,7 @@ struct PipelineCache::ProgramCache {
 				slot.state.store(AheadEmpty, std::memory_order_release);
 				FS::Add(FS::Counter::DrawAheadMoves, 1);
 			}
+			take_mark(Common::FrameStats::Counter::TakeLapTakeNs);
 			slot.taken = 1;
 			Common::DrawStat::Mark(Common::DrawStat::M1);
 			FS::Add(FS::Counter::DrawAheadHits, 1);
@@ -3066,9 +3109,13 @@ struct PipelineCache::ProgramCache {
 				// Two rdtsc per stage, ~19k a frame in Sky Garden: only pay them while the
 				// counters are being collected.
 				const bool timed      = Common::FrameStats::Enabled();
+				// Session 89, gate "takelap": read the gate HERE, BEFORE take_begin, so the gate read
+				// stays outside da_take_us.  The chain inside AheadTake is then seeded from take_begin
+				// itself, which is why its first mark costs nothing.
+				const bool take_lap   = timed && Common::Gates::Enabled(Common::Gates::Gate::TakeLap);
 				const auto take_begin = timed ? Common::FrameStats::NowNs() : 0;
 				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization,
-				                      kept >= 0);
+				                      kept >= 0, take_lap ? take_begin : 0);
 				if (timed) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
 					                        Common::FrameStats::NowNs() - take_begin);
@@ -3174,6 +3221,13 @@ struct PipelineCache::ProgramCache {
 				               candidate.specialization == specialization;
 			        });
 			    permutation != entry->second.permutations.end()) {
+				// Session 89, section 3.3: close the SEARCH the moment find_if returns, so that the
+				// 52.10 ns a call of pg_pm_us stops being one undivided number.  This REDEFINES
+				// pg_pm_us as the TAKE alone - MemoStore, the ResourceSnapshot move into
+				// input_info.stage, and AdvancePushData - and the old quantity is now
+				// pg_pmf_us + pg_pm_us.  Same population as pg_pm_n: both marks fire only when a
+				// permutation was found.
+				pg_mark(Common::FrameStats::Counter::ProgLapPermFindNs);
 				if (memo_enabled) {
 					MemoStore(&entry->second, params.Base(), memo_log, resources, &*permutation,
 					          permutation->handle);

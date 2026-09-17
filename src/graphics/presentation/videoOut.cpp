@@ -2148,6 +2148,19 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bl_wnh_n", FS::Counter::BindWitMisses, false},
 				    {"bl_wit0_us", FS::Counter::BindWit0Ns, true},
 				    {"bl_wit0_n", FS::Counter::BindWit0s, false},
+				    // Session 89, gate "takelap": the six phases of AheadTake and their two
+				    // populations.  The tail is derived by the readout, not printed.
+				    {"da_t_key_us", FS::Counter::TakeLapKeyNs, true},
+				    {"da_t_prb_us", FS::Counter::TakeLapProbeNs, true},
+				    {"da_t_pfa_us", FS::Counter::TakeLapPrefetchNs, true},
+				    {"da_t_pfb_us", FS::Counter::TakeLapPrefetchRunNs, true},
+				    {"da_t_ver_us", FS::Counter::TakeLapVerifyNs, true},
+				    {"da_t_cpy_us", FS::Counter::TakeLapTakeNs, true},
+				    {"da_t_n", FS::Counter::TakeLapCalls, false},
+				    {"da_t_hit_n", FS::Counter::TakeLapReady, false},
+				    // Session 89, section 3.3: the search half of the permutation phase.  From this
+				    // binary on, pg_pm_us is the TAKE alone; the old quantity is pg_pmf_us + pg_pm_us.
+				    {"pg_pmf_us", FS::Counter::ProgLapPermFindNs, true},
 				};
 				std::string text;
 				for (const auto& counter: named) {

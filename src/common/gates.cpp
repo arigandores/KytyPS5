@@ -226,6 +226,12 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 87, measurement only: which half of an image slot in PrepareBindings is the
     // resolve and which is BindImage.  One timestamp a slot, alternating phase a stage.
     {"KYTY_BIND_ALT", "bindalt", false},
+    // Session 89, measurement only: the six-phase division of AheadTake (ROADMAP.md route D2),
+    // seeded free from the timestamp da_take_us already takes.  Needs FrameStats enabled, which
+    // every run of this programme has.  Its own price is measured by its own ABBA and declared:
+    // six marks a call against ~8 690 calls a frame, and session 87 measured a mark of this
+    // shape at 7.5 ns (pgl87a, +448.5 us for the six of "proglap").
+    {"KYTY_TAKE_LAP", "takelap", false},
 }};
 
 struct KnobDefinition {

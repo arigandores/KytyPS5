@@ -308,6 +308,19 @@ enum class Gate : uint32_t {
 	// reordered and nothing is skipped: the mark's own cost rides in the sampled intervals AND
 	// in the loop total, so it cancels in the difference.  Needs "bindlap" to arm.
 	BindAlt,            // KYTY_BIND_ALT,           file name "bindalt"
+	// Session 89, MEASUREMENT ONLY (ROADMAP.md route D2): the residue of AheadTake, 1 607 us
+	// a frame and 65 % of da_take_us, which is the largest unsplit block in the record now
+	// that session 88 has priced the two VerifyWitness comparison loops at 852.5 us.  This is
+	// the "proglap" rolling mark chain applied ONE LEVEL DOWN, inside AheadTake, SEEDED from
+	// the timestamp Cache::Get already takes for da_take_us at pipelineCache.cpp:3069 - so
+	// the first mark is free, and the gate is read BEFORE that timestamp, outside the timer.
+	// Six marks divide the call into the key build, the probe loop, prefetch pass A (the
+	// eleven PrefetchVectorData of gate "daprefetch"), prefetch pass B (one
+	// __builtin_prefetch a live run, inside VerifyWitness at :790-806, which NEITHER value
+	// of knob "dawitloop" skips and which session 88 therefore did not measure), the two
+	// comparison loops, and the take.  It changes no value and no decision; its own price is
+	// the within-run difference of its two arms and is reported, never hidden.
+	TakeLap,            // KYTY_TAKE_LAP,           file name "takelap"
 	Count,
 };
 

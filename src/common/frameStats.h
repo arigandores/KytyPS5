@@ -1220,6 +1220,55 @@ enum class Counter : uint32_t {
 	BindWit0Ns,         // bl_wit0_us: the sampled interval at slot index 0, which also contains
 	                    //             prepared.images.reserve - excluded from the estimator
 	BindWit0s,          // bl_wit0_n: ... how many (one per phase-0 stage with any image)
+	// Session 89, gate "takelap" (MEASUREMENT ONLY): the six phases of AheadTake.  The chain
+	// is seeded from the timestamp da_take_us already takes (pipelineCache.cpp:3069), so the
+	// first mark is free and the six counters below carry FIVE marks of overhead between
+	// them, not six.  Early returns - a miss (73.8 a frame) and a late/running slot (0.4 a
+	// frame) - leave the chain unclosed ON PURPOSE, which can only make the parts smaller
+	// than the whole, never larger.  The TAIL is DERIVED and is never a counter:
+	// da_take_us - sum(the six), and it holds slot.taken, the DrawStat mark, the da_hit Add,
+	// the return, and the marks themselves.
+	TakeLapKeyNs,       // da_t_key_us: ClassOf + Fingerprint + AheadHash + UserDataHash, on
+	                    //              every call
+	TakeLapProbeNs,     // da_t_prb_us: the probe loop - slot.Matches and the state checks.
+	                    //              Take-side probes are da_probe - da_probe_q, which read
+	                    //              1.0432 a call in log_dwl88c: the "two-probe" loop is
+	                    //              one probe on 95.7 % of calls
+	TakeLapPrefetchNs,  // da_t_pfa_us: prefetch pass A (eleven PrefetchVectorData behind gate
+	                    //              "daprefetch", 184 477 cache lines a frame) plus the
+	                    //              five census Adds that follow it
+	TakeLapPrefetchRunNs, // da_t_pfb_us: VerifyWitness entry (skip_loop, BackingMapEpoch,
+	                    //              `direct`) plus prefetch pass B - one __builtin_prefetch
+	                    //              per live run, 54 855 a frame.  NEITHER value of
+	                    //              "dawitloop" skips it, because skip_loop is tested
+	                    //              INSIDE the two comparison loops, after this pass
+	TakeLapVerifyNs,    // da_t_ver_us: the live-run and clean-run comparison loops and the
+	                    //              singles loop (da_singles = 0.000 in this scene).
+	                    //              Session 88 priced the two loops at 567.4 + 285.1 =
+	                    //              852.5 us a frame on binary 25fd4f2e; this counter
+	                    //              contains exactly them plus the loop bookkeeping, so it
+	                    //              is a NULL CONTROL THAT CAN FAIL - band [600, 1400] us,
+	                    //              and it is cross-binary, so a control, never a measure
+	TakeLapTakeNs,      // da_t_cpy_us: CopyAheadResult or the two std::swap, and the slot
+	                    //              retire.  92.2 % of hits swap (gate "snapswap", shipped
+	                    //              in session 58) and the 7.79 % that copy move 235 B each
+	// Session 89, section 3.3 (a debt of docs/next-session-89.md): pg_pm_us reads 462 us a
+	// frame at 52.10 ns a call and is UNATTRIBUTED.  The brief names two candidates inside it,
+	// PushData::StartFor and the `specialization ==` compare - and OMITS the other three the
+	// phase contains: MemoStore, the move-assignment of the whole ResourceSnapshot into
+	// input_info.stage, and AdvancePushData.  ONE mark, taken the moment the find_if returns,
+	// separates the search from the take.  IT REDEFINES pg_pm_us: from this binary on,
+	// pg_pm_us is the TAKE alone and the old quantity is pg_pmf_us + pg_pm_us.  It rides in
+	// the "proglap" chain, so it is on in BOTH arms of any run of this session and the two
+	// arms agreeing is a free null control.
+	ProgLapPermFindNs,  // pg_pmf_us: the permutation find_if - PushData::StartFor,
+	                    //            ShaderDataDwords and the specialization compare, over
+	                    //            pg_perm / pg_get_n = 1.059 candidates a call
+	TakeLapCalls,       // da_t_n: calls that reached the first mark.  Identity:
+	                    //         == da_hit + da_miss + da_late + da_stale + da_stale_old
+	TakeLapReady,       // da_t_hit_n: of those, calls whose slot was AheadReady, i.e. that
+	                    //             reached da_t_pfa_us.  Identity:
+	                    //             == da_hit + da_stale + da_stale_old
 	Count
 };
 

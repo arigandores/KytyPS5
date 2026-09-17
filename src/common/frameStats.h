@@ -1205,6 +1205,21 @@ enum class Counter : uint32_t {
 	                    //           not the price of the 97 % it hits
 	ProgLapPermPhaseNs, // pg_pm_us: the permutation find_if + MemoStore + the snapshot move
 	ProgLapPermPhases,  // pg_pm_n: calls reaching that phase
+	// Session 88, knob "bindwit" (MEASUREMENT ONLY): the witness share of a memo-hit
+	// ResolveTextureWith.  The sampled interval opens after the previous BindImage and closes
+	// either after the resolve returns (bindwit=1) or at the memo-hit decision inside it
+	// (bindwit=2).  Both carry exactly one mark overhead, so it cancels in the difference, and
+	// the difference is what a per-stage amortisation could skip.
+	BindWitNs,          // bl_wit_us: sampled intervals of slots whose resolve took the MEMO-HIT
+	                    //            path, slot index >= 1
+	BindWits,           // bl_wit_n: ... how many
+	BindWitMissNs,      // bl_wnh_us: the same for slots whose resolve did NOT take that path.
+	                    //            Identical code at bindwit=1 and at 2, so the two arms must
+	                    //            agree - a null control that CAN fail
+	BindWitMisses,      // bl_wnh_n: ... how many
+	BindWit0Ns,         // bl_wit0_us: the sampled interval at slot index 0, which also contains
+	                    //             prepared.images.reserve - excluded from the estimator
+	BindWit0s,          // bl_wit0_n: ... how many (one per phase-0 stage with any image)
 	Count
 };
 

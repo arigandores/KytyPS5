@@ -2141,6 +2141,13 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"pg_mat_n", FS::Counter::ProgLapMats, false},
 				    {"pg_pm_us", FS::Counter::ProgLapPermPhaseNs, true},
 				    {"pg_pm_n", FS::Counter::ProgLapPermPhases, false},
+				    // Session 88, knob "bindwit": the witness share of a memo-hit resolve.
+				    {"bl_wit_us", FS::Counter::BindWitNs, true},
+				    {"bl_wit_n", FS::Counter::BindWits, false},
+				    {"bl_wnh_us", FS::Counter::BindWitMissNs, true},
+				    {"bl_wnh_n", FS::Counter::BindWitMisses, false},
+				    {"bl_wit0_us", FS::Counter::BindWit0Ns, true},
+				    {"bl_wit0_n", FS::Counter::BindWit0s, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

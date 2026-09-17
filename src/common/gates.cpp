@@ -284,6 +284,9 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_PREFETCH_CAP_B", "pfcap", 1024, 4096},
     // Session 83, measurement only: which phases of the render-mutex hold carry a MutScope.
     {"KYTY_MUT_WIDE", "mutwide", 0, 15},
+    // Session 88, measurement only: where the one timestamp a slot of the image loop is
+    // taken - after ResolveTextureWith (1) or at the memo-hit decision inside it (2).
+    {"KYTY_BIND_WIT", "bindwit", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

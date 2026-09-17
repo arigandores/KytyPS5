@@ -351,6 +351,19 @@ enum class Knob : uint32_t {
 	// The instrument is NOT free (amut alone costs 0.949-0.979 ms a frame, +958.4 us of it
 	// inside mh_bind_us), so any floor quoted from it must come from an ABBA on this knob.
 	MutWide,          // KYTY_MUT_WIDE,           file name "mutwide" (bitmask, 0 = today)
+	// Session 88, MEASUREMENT ONLY (ROADMAP.md route C): the witness share of the 54.75 ns
+	// ResolveTextureWith session 87 measured but could not divide.  ONE timestamp a slot in the
+	// image loop of PrepareBindings, with a per-stage phase that alternates, exactly as
+	// "bindalt" - but the mark MOVES rather than being added: at 1 it is taken after the
+	// resolve returns, at 2 it is taken INSIDE the resolve, at the point the memo-hit decision
+	// is complete (descriptors.cpp, immediately before ConfigureImageSource).  Both values pay
+	// exactly one timestamp a slot, so the price of the mark cancels EXACTLY in the difference
+	// of the two arms and never has to be estimated.  That difference is the part of a memo-hit
+	// resolve which runs AFTER the proof that the earlier resolution is still valid, i.e. the
+	// most a per-stage amortisation of a duplicate image slot could ever remove.  The mark at 2
+	// can only be taken on the memo-hit path, so slots that miss it are accumulated separately
+	// and are identical code in both arms - a null control.  Needs "bindlap" to arm.
+	BindWitness,      // KYTY_BIND_WIT,           file name "bindwit" (0 off, 1 mark after the resolve, 2 mark at the memo-hit decision)
 	Count,
 };
 

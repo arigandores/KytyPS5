@@ -757,6 +757,17 @@ static bool TextureSourceSettled(const Image& image, const TextureCache::ImageDe
 	return first == image.source_first_level && size == image.SourceRange().size;
 }
 
+// Session 88, knob "bindwit" (MEASUREMENT ONLY): PrepareBindings arms these for the duration
+// of its image loop ONLY, so the other call site of this template - ResolveTexture, reached
+// from the repair loop of RebindImages - never marks and the two populations stay separate
+// (b_texn reads 50 087 a frame against bl_res_n 47 727).  g_bind_wit_arm carries the knob
+// value; the resolve writes g_bind_wit_mark at the point the memo-hit decision is complete -
+// a real NowNs() at 2, the sentinel 1 at 1, which says "this call took the memo-hit path" and
+// costs no timestamp.  So both values pay exactly ONE timestamp a slot and the price of the
+// mark cancels in the difference of the arms.
+static thread_local uint32_t g_bind_wit_arm  = 0;
+static thread_local uint64_t g_bind_wit_mark = 0;
+
 // Session 57, B2a: every result goes out through `emit`; the three returns hand it the same
 // fields MakeTextureBinding / the brace initializer did (image_view null, layout undefined, no
 // mip views, memo index UINT32_MAX / version 0 unless given).
@@ -879,6 +890,19 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		if (cached != nullptr && cached->registered && !cached->binding.needs_rebind &&
 		    !cached->depth_id && cached->info.data == memo_slot.desc.info.data &&
 		    cached->info.extent == memo_slot.desc.info.extent) {
+			// Session 88, knob "bindwit": THE MEMO-HIT DECISION IS COMPLETE HERE.  Everything
+			// above is the proof that the earlier resolution of this descriptor is still valid -
+			// DecodeNativeDescriptor, the resource key, the hash over the eight T# dwords, the
+			// memo index, the 32-byte memcmp, the slot lookup and the five-field liveness check.
+			// Everything below - ConfigureImageSource, tick_accessed_last, TouchImage, the DCC
+			// adoption, the way clock and emit - is not, and is what a per-stage amortisation of a
+			// duplicate image slot could skip.  NOTE: ConfigureImageSource has its own early-out
+			// (textureCache.cpp:1244-1247) which is a liveness test in substance; it is counted on
+			// the SKIPPABLE side, which makes the measured witness a LOWER bound and the ceiling
+			// built on it an UPPER one.  pred/01 section 2 says so before the run.
+			if (g_bind_wit_arm == 2) {
+				g_bind_wit_mark = Common::FrameStats::NowNs();
+			}
 			texture_cache.ConfigureImageSource(memo_slot.image_id, memo_slot.desc);
 			cached->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
 			texture_cache.TouchImage(*cached);
@@ -898,6 +922,15 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindTexMemoHits, 1);
 			if (memo2) {
 				memo.texture_ways[memo_index].use = ++memo.texture_clock;
+			}
+			// Session 88, knob "bindwit" = 1: the END of the memo-hit tail.  It is taken HERE, in
+			// the same function and with the same independent work still ahead of it, rather than
+			// in the caller after the resolve returns: on wit88a the caller position exposed the
+			// rdtsc latency the inside position hides, the two arms differed by 2.84 ns a slot in
+			// bl_res_us, and null control C8 FAILED at -3.78 % against its +-3 % band.  The
+			// interval therefore excludes emit, which an amortisation would still have to do.
+			if (g_bind_wit_arm == 1) {
+				g_bind_wit_mark = Common::FrameStats::NowNs();
 			}
 			return emit(memo_slot.image_id, memo_slot.desc, memo_index,
 			                          memo_slot.version);
@@ -1529,8 +1562,33 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	uint64_t                     bl_alt_acc0 = 0;
 	uint32_t                     bl_alt_n = 0;
 	uint32_t                     bl_alt_n0 = 0;
+	// Session 88, knob "bindwit" (MEASUREMENT ONLY): the same one-mark-a-slot,
+	// alternating-phase idiom as bindalt, with the mark MOVED rather than added.  At 1 it
+	// closes after ResolveTextureWith returns, where bindalt closes it; at 2 it closes at the
+	// memo-hit decision inside the resolve.  Both pay exactly one timestamp a slot, so the
+	// price of the mark cancels EXACTLY in the arm difference and never has to be estimated -
+	// the defect that made session 87 prediction A8 unevaluable.  Slots whose resolve did not
+	// take the memo-hit path cannot be marked inside and go to bl_wnh_* instead: identical
+	// code in both arms, so they are a null control that CAN fail.
+	const uint32_t bind_wit = bl_t != 0 ? Common::Gates::Value(Common::Gates::Knob::BindWitness) : 0;
+	static thread_local uint32_t bl_wit_stage = 0;
+	const uint32_t               bl_wit_phase = bind_wit != 0 ? (bl_wit_stage++ & 1u) : 0;
+	uint64_t                     bl_wit_t     = bl_t;
+	uint64_t                     bl_wit_acc   = 0;
+	uint64_t                     bl_wit_acc0  = 0;
+	uint64_t                     bl_wnh_acc   = 0;
+	uint32_t                     bl_wit_n     = 0;
+	uint32_t                     bl_wit_n0    = 0;
+	uint32_t                     bl_wnh_n     = 0;
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
+		if (bind_wit != 0) {
+			// Armed PER SLOT, not for the whole loop: a stamp taken on a slot the alternating
+			// phase does not sample is read by nobody and would be a SECOND timestamp on about
+			// half the memo hits, breaking the symmetry that lets the price of the mark cancel.
+			g_bind_wit_mark = 0;
+			g_bind_wit_arm  = ((i & 1u) == bl_wit_phase) ? bind_wit : 0;
+		}
 		// Session 57, B2a: built in its vector element - one ImageDesc copy where the returned
 		// binding and push_back made two. Reserved above, so no reallocation; BindImage does not
 		// look at prepared.images, so running it after the insertion changes nothing.
@@ -1551,12 +1609,37 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 			}
 			bl_alt_t = bl_alt_now;
 		}
+		if (bind_wit != 0 && (i & 1u) == bl_wit_phase) {
+			// g_bind_wit_mark is 0 when the resolve did not take the memo-hit path, 1 when it did
+			// but this arm takes no timestamp inside, and a timestamp when it did and this arm
+			// does.  Exactly one NowNs() is paid either way.
+			const uint64_t stamped    = g_bind_wit_mark;
+			const bool     hit        = stamped != 0;
+			const uint64_t bl_wit_now = hit ? stamped : Common::FrameStats::NowNs();
+			if (i == 0) {
+				bl_wit_acc0 = bl_wit_now - bl_wit_t;
+				bl_wit_n0   = 1;
+			} else if (hit) {
+				bl_wit_acc += bl_wit_now - bl_wit_t;
+				bl_wit_n++;
+			} else {
+				bl_wnh_acc += bl_wit_now - bl_wit_t;
+				bl_wnh_n++;
+			}
+			bl_wit_t = bl_wit_now;
+		}
 		BindImage(binding.image_id, binding.desc.type == TextureCache::BindingType::Storage,
 		          program.info.images[i].atomic);
 		if (bind_alt && (i & 1u) != bl_alt_phase) {
 			bl_alt_t = Common::FrameStats::NowNs();
 		}
+		if (bind_wit != 0 && (i & 1u) != bl_wit_phase) {
+			bl_wit_t = Common::FrameStats::NowNs();
+		}
 	}
+	// The repair loop of RebindImages calls the same template through ResolveTexture; it must
+	// not mark, so the arming ends with the loop.
+	g_bind_wit_arm = 0;
 	if (bl_t != 0) {
 		const auto bl_now = Common::FrameStats::NowNs();
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapResolveNs, bl_now - bl_t);
@@ -1592,6 +1675,17 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolves, bl_alt_n);
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolve0Ns, bl_alt_acc0);
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindAltResolve0s, bl_alt_n0);
+	}
+	// Session 88, knob "bindwit": published beside bindalt, past the last bindlap mark, so the
+	// six Adds land in the DERIVED remainder of bl_prep_us and contaminate neither bl_res_us
+	// (the quantity being divided) nor bl_smp_us nor bl_sd_us.
+	if (bind_wit != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWitNs, bl_wit_acc);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWits, bl_wit_n);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWitMissNs, bl_wnh_acc);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWitMisses, bl_wnh_n);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWit0Ns, bl_wit_acc0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindWit0s, bl_wit_n0);
 	}
 	const bool has_gds =
 	    (prepared.kind_mask & KIND_COMPUTED) != 0

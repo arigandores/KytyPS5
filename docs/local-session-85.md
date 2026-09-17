@@ -191,9 +191,10 @@ all: `bfast_hit` / `bfast_miss` read 0 because gate `buffast` is 0, which the to
 t = +19.92**; `summary4` +1.113 % ± 0.112 %, cross-check gap +0.003 pp. Prediction U6 — between
 +300 and +1 500 µs — **HIT**. `gpu_busy_us` +0.005 % ± 0.170 %, noise.
 
-That is **357 µs for 4 × 9 265 + 4 × 5 090 ≈ 57 400 `NowNs()` calls a frame = 6.2 ns a call**, and
-it is the reason the instrument was built at stage granularity rather than slot granularity: at
-~48 800 image slots a frame a per-slot pair would have added ~12 ns to a 22.82 ns quantity.
+That is **357 µs over 2 × 3 × 9 265 stage timestamps plus ~4 × 5 090 commit ones ≈ 75 950
+`NowNs()` calls a frame = 4.7 ns a call**, and it is the reason the instrument was built at stage
+granularity rather than slot granularity: at ~48 800 image slots a frame a per-slot pair would
+have added ~9 ns to a 22.82 ns quantity.
 
 ## 4. THE CENSUS — two biases MEASURED, one ELIMINATED, one found to be ZERO
 

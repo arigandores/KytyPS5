@@ -342,9 +342,30 @@ void RenderContext::PrepareBda() {
 	if (registration_epoch != m_bda_registration_epoch || m_mapping_epoch != m_bda_mapping_epoch) {
 		m_buffer_cache.InvalidateBdaRegionStamps();
 	}
+	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): FACTS s84 5 read bda_scan_us =
+	// 1 875.1 + 16.53 x misses, i.e. ~1.88 ms a frame is paid by whichever call scans FIRST.
+	// That was an OLS intercept; this charges the frame's first scanning call apart and reads
+	// the same claim directly.  Only misses reach this line - the three-epoch cache returned
+	// above - so the frame marker is advanced only by calls that really scan.
+	static thread_local uint32_t t_bda_split_frame = UINT32_MAX;
+	const bool                   bda_split = Common::Gates::Enabled(Common::Gates::Gate::BdaSplit) &&
+	                                         Common::FrameStats::Enabled();
+	const uint32_t               bda_split_frame = bda_split ? GpuTimeProfiler::Frame() : 0;
+	const bool                   bda_split_first = bda_split && t_bda_split_frame != bda_split_frame;
+	const uint64_t               bda_split_t0    = bda_split ? Common::FrameStats::NowNs() : 0;
 	m_mapped_ranges.ForEach([this](uint64_t start, uint64_t end) {
 		m_buffer_cache.SynchronizeBuffersInRange(start, end - start);
 	});
+	if (bda_split) {
+		const auto bda_split_spent = Common::FrameStats::NowNs() - bda_split_t0;
+		t_bda_split_frame          = bda_split_frame;
+		Common::FrameStats::Add(bda_split_first ? Common::FrameStats::Counter::BdaSplitFirstNs
+		                                        : Common::FrameStats::Counter::BdaSplitLateNs,
+		                        bda_split_spent);
+		Common::FrameStats::Add(bda_split_first ? Common::FrameStats::Counter::BdaSplitFirsts
+		                                        : Common::FrameStats::Counter::BdaSplitLates,
+		                        1);
+	}
 	if (lap_t != 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaScanNs,
 		                        Common::FrameStats::NowNs() - lap_t);

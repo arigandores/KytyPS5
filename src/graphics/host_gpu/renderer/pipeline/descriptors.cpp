@@ -1481,6 +1481,14 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	EXIT_IF(!runtime);
 	const auto& program  = *runtime.program;
 	const auto& snapshot = runtime.resources;
+	// Session 85, gate "bindlap" (MEASUREMENT ONLY): the whole body, because every return
+	// path has to be covered and a hand-written epilogue on each is how a lap gets lost.
+	const bool                   bind_lap = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
+	Common::FrameStats::LapScope bind_lap_scope(bind_lap,
+	                                            Common::FrameStats::Counter::BindLapPrepareNs);
+	if (bind_lap) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapPrepares, 1);
+	}
 	prepared.Reset();
 	prepared.runtime = &runtime;
 	if (Common::Gates::Enabled(Common::Gates::Gate::BindPack)) {
@@ -1566,6 +1574,15 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	const auto& program   = *prepared.runtime->program;
 	const auto& snapshot  = prepared.runtime->resources;
 	const auto& layout    = program.bindings;
+	// Session 85, gate "bindlap": the buffer half.  bb_n is the prior denominator this must
+	// match, exactly as sl_buf_n does.
+	const bool                   bind_lap = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
+	Common::FrameStats::LapScope bind_lap_scope(bind_lap,
+	                                            Common::FrameStats::Counter::BindLapBufferNs);
+	if (bind_lap) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapBuffers,
+		                        program.info.buffers.size());
+	}
 	EXIT_IF(prepared.buffer_sources.size() != program.info.buffers.size());
 
 	prepared.buffers.clear();
@@ -1642,6 +1659,18 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	const auto& program  = *prepared.runtime->program;
 	const auto& snapshot = prepared.runtime->resources;
 	auto&       images   = prepared.images;
+	// Session 85, gate "bindlap": bl_img_us over bl_img_n is the average ns an image slot
+	// costs here, and the per-outcome split comes from the OLS of price85.py against
+	// texfast_ok / texfast_no, which this same function already counts.  bl_stage_n is the
+	// arming proof AND the regressor that absorbs the instrument's own per-stage overhead.
+	const bool                   bind_lap = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
+	Common::FrameStats::LapScope bind_lap_scope(bind_lap,
+	                                            Common::FrameStats::Counter::BindLapImageNs);
+	if (bind_lap) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapStages, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapImages,
+		                        program.info.images.size());
+	}
 	EXIT_IF(images.size() != program.info.images.size());
 	auto& texture_cache = m_context.GetTextureCache();
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
@@ -2132,6 +2161,12 @@ constexpr uint32_t SlotStatSamplers = 32;
 constexpr uint32_t SlotStatBuffers  = 32;
 
 struct SlotStatPrev {
+	// Session 85: WHICH SHADER filled this row.  FACTS s84 3.5 bias 3 - the row was keyed
+	// (ShaderType, positional index) with no shader identity, so index i denoted a different
+	// logical binding whenever the previous commit on that stage ran another shader, and a
+	// positional match there is not skippable by any partial update.  One comparison per
+	// stage removes the bias instead of bounding it.
+	std::array<uint64_t, SlotStatStages>                    shader {};
 	std::array<uint64_t, SlotStatStages * SlotStatImages>   image_view {};
 	std::array<uint32_t, SlotStatStages * SlotStatImages>   image_layout {};
 	std::array<uint64_t, SlotStatStages * SlotStatSamplers> sampler {};
@@ -2184,12 +2219,19 @@ void VerifyDescSetCounts(const PipelineCache::Pipeline&     pipeline,
 
 constinit SlotStatPrev g_slot_prev {};
 
-void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t stream) {
+void NoteSlotStat(ShaderType stage, uint64_t shader,
+                  const ShaderRecompiler::IR::BindingLayout& layout,
+                  const PreparedBindings& prepared, uint64_t stream, uint64_t null_buffer,
+                  bool verify) {
 	using Counter    = Common::FrameStats::Counter;
 	const uint32_t s = static_cast<uint32_t>(stage) % SlotStatStages;
 	uint64_t       over = 0;
+	// Session 85: did the SAME shader fill this row last time?  Read before anything is
+	// stored, written after every loop, so the whole commit sees one answer.
+	const bool same_shader = shader != 0 && shader == g_slot_prev.shader[s];
 
 	uint64_t img_n = 0, img_same = 0, img_view = 0;
+	uint64_t img_same_sh = 0, img_null = 0, img_elem = 0;
 	for (uint32_t i = 0; i < prepared.images.size(); i++) {
 		if (i >= SlotStatImages) {
 			over++;
@@ -2198,19 +2240,29 @@ void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t s
 		const auto key =
 		    static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
 		        static_cast<VkImageView>(prepared.images[i].image_view)));
-		const auto layout      = static_cast<uint32_t>(prepared.images[i].layout);
+		const auto slot_layout = static_cast<uint32_t>(prepared.images[i].layout);
 		auto&      prev_view   = g_slot_prev.image_view[s * SlotStatImages + i];
 		auto&      prev_layout = g_slot_prev.image_layout[s * SlotStatImages + i];
 		// A null view was never bound, so it is never "the same slot as last time".
 		const bool same_view = key != 0 && key == prev_view;
 		img_n++;
 		img_view += same_view ? 1u : 0u;
-		img_same += (same_view && layout == prev_layout) ? 1u : 0u;
+		img_same += (same_view && slot_layout == prev_layout) ? 1u : 0u;
+		// Session 85.  Bias 3 removed: a positional match under a different shader is not a
+		// repeat of anything.  Bias 1 measured: a null T# resolves through FindImage to a REAL
+		// shared 1x1 image with a stable view, so it can never fail the key != 0 guard.  Bias 2
+		// measured: this is ONE binding but max(1, mip_views.size()) descriptor ELEMENTS, and
+		// only element 0 is compared.
+		img_same_sh += (same_view && slot_layout == prev_layout && same_shader) ? 1u : 0u;
+		img_null += prepared.images[i].desc.info.data.Empty() ? 1u : 0u;
+		img_elem += prepared.images[i].mip_views.empty()
+		                ? 1u
+		                : static_cast<uint64_t>(prepared.images[i].mip_views.size());
 		prev_view   = key;
-		prev_layout = layout;
+		prev_layout = slot_layout;
 	}
 
-	uint64_t smp_n = 0, smp_same = 0;
+	uint64_t smp_n = 0, smp_same = 0, smp_same_sh = 0;
 	for (uint32_t i = 0; i < prepared.samplers.size(); i++) {
 		if (i >= SlotStatSamplers) {
 			over++;
@@ -2221,10 +2273,11 @@ void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t s
 		auto& prev = g_slot_prev.sampler[s * SlotStatSamplers + i];
 		smp_n++;
 		smp_same += (key != 0 && key == prev) ? 1u : 0u;
+		smp_same_sh += (key != 0 && key == prev && same_shader) ? 1u : 0u;
 		prev = key;
 	}
 
-	uint64_t buf_n = 0, buf_same = 0, buf_ring = 0;
+	uint64_t buf_n = 0, buf_same = 0, buf_ring = 0, buf_same_sh = 0, buf_null = 0;
 	for (uint32_t i = 0; i < prepared.buffers.size(); i++) {
 		if (i >= SlotStatBuffers) {
 			over++;
@@ -2243,13 +2296,40 @@ void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t s
 		             range == prev_range)
 		                ? 1u
 		                : 0u;
+		buf_same_sh += (handle != 0 && handle == prev_handle && offset == prev_offset &&
+		                range == prev_range && same_shader)
+		                   ? 1u
+		                   : 0u;
 		// A const-bank copy and every NativeUpload take a fresh stream-ring offset every draw, so
 		// these slots cannot repeat by construction.  Counted apart so the denominator can be
 		// corrected rather than quietly biased down.
 		buf_ring += (handle != 0 && handle == stream) ? 1u : 0u;
+		// Session 85, bias 1's unmeasured half: NativeStorageBuffer returns a CONSTANT
+		// {GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16} for address == 0 || size == 0, so a
+		// degenerate buffer slot is a guaranteed repeat of a descriptor nothing chose.
+		buf_null += (null_buffer != 0 && handle == null_buffer && offset == 0 && range == 16)
+		                ? 1u
+		                : 0u;
 		prev_handle = handle;
 		prev_offset = offset;
 		prev_range  = range;
+	}
+
+	g_slot_prev.shader[s] = shader;
+
+	// Session 85, gate "slotstatcheck": the ELEMENTS the write list will emit for this stage,
+	// derived from the compiled layout rather than from the runtime vectors.  binding.resources
+	// .size() and NOT NativeDescriptorCount is the right quantity here: the emit loop of
+	// CommitBindings iterates binding.resources, so an image binding with no resources emits
+	// zero elements although NativeDescriptorCount answers 1.
+	uint64_t layout_img_elem = 0, layout_smp_elem = 0;
+	for (const auto& binding: layout.descriptors) {
+		if (binding.kind == ShaderRecompiler::IR::DescriptorBindingKind::Samplers) {
+			layout_smp_elem += binding.resources.size();
+		} else if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
+		           ShaderRecompiler::IR::ImageResourceClass::None) {
+			layout_img_elem += binding.resources.size();
+		}
 	}
 
 	namespace FS = Common::FrameStats;
@@ -2257,6 +2337,37 @@ void NoteSlotStat(ShaderType stage, const PreparedBindings& prepared, uint64_t s
 	const bool all_same = (img_n + smp_n + buf_n) != 0 && over == 0 && img_same == img_n &&
 	                      smp_same == smp_n && buf_same == buf_n;
 	FS::Add(Counter::SlotStagesAll, all_same ? 1u : 0u);
+	FS::Add(Counter::SlotStagesAllShader, (all_same && same_shader) ? 1u : 0u);
+	FS::Add(Counter::SlotShaderChanges, same_shader ? 0u : 1u);
+	FS::Add(Counter::SlotImagesSameShader, img_same_sh);
+	FS::Add(Counter::SlotSamplersSameShader, smp_same_sh);
+	FS::Add(Counter::SlotBuffersSameShader, buf_same_sh);
+	FS::Add(Counter::SlotImagesNull, img_null);
+	FS::Add(Counter::SlotBuffersNull, buf_null);
+	FS::Add(Counter::SlotImageElements, img_elem);
+	FS::Add(Counter::SlotSamplerElements, layout_smp_elem);
+	if (verify) {
+		// The image identity is GUARANTEED: session 84's D2 assertion requires
+		// m_image_occurrences[i] == max(1, mip_views.size()) for EVERY i, so every entry of
+		// prepared.images is referenced at least once and the two sums must agree exactly.
+		// img_elem < img_n would mean the census counted bindings the write list never emits.
+		// The SAMPLER identity is NOT guaranteed by anything in the tree and is therefore only
+		// measured (sl_smp_elem), never accused.
+		const bool elem_ok = layout_img_elem == img_elem && img_elem >= img_n;
+		if (!elem_ok && over == 0) {
+			FS::Add(Counter::SlotBad, 1);
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+				LOGF("SlotStatVerify: MISMATCH stage=%u layout_img_elem=%llu img_elem=%llu "
+				     "img_n=%llu smp_elem=%llu smp_n=%llu\n",
+				     s, static_cast<unsigned long long>(layout_img_elem),
+				     static_cast<unsigned long long>(img_elem),
+				     static_cast<unsigned long long>(img_n),
+				     static_cast<unsigned long long>(layout_smp_elem),
+				     static_cast<unsigned long long>(smp_n));
+			}
+		}
+	}
 	FS::Add(Counter::SlotImages, img_n);
 	FS::Add(Counter::SlotImagesSame, img_same);
 	FS::Add(Counter::SlotImagesView, img_view);
@@ -2331,7 +2442,14 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// Session 59, B9 ceiling (gate "drawstat"): the cost of a set on this thread, split into the
 	// transitions, the write-list build and the emit, per pooled / push pipeline.
 	namespace FS            = Common::FrameStats;
-	const bool cb_timed     = Common::DrawStat::On() &&
+	// Session 85, gate "bindlap": the commit-side split already exists here and is NOT
+	// TimingsEnabled-gated (DrawStat::On() is Gates::Enabled(DrawStat) && FrameStats::
+	// Enabled(), renderDraw.cpp DrawStatBegin), so it reads under lite whenever drawstat=1 -
+	// it has read 0 in every session only because that gate is off.  bindlap therefore takes
+	// no second set of timestamps; it reuses these and writes its own counters.  The
+	// cb_pool_* / cb_push_* Adds stay behind DrawStat::On() so their meaning is unchanged.
+	const bool bind_lap     = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
+	const bool cb_timed     = (Common::DrawStat::On() || bind_lap) &&
 	                      pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
 	const bool cb_pool      = !pipeline.uses_push_descriptors;
 	uint64_t   cb_t         = cb_timed ? FS::NowNs() : 0;
@@ -2349,12 +2467,20 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			return;
 		}
 		const auto emit = FS::NowNs() - cb_t;
-		FS::Add(cb_pool ? FS::Counter::CommitPoolSets : FS::Counter::CommitPushSets, 1);
-		FS::Add(cb_pool ? FS::Counter::CommitPoolTransitNs : FS::Counter::CommitPushTransitNs,
-		        cb_transit);
-		FS::Add(cb_pool ? FS::Counter::CommitPoolWriteNs : FS::Counter::CommitPushWriteNs,
-		        cb_write);
-		FS::Add(cb_pool ? FS::Counter::CommitPoolEmitNs : FS::Counter::CommitPushEmitNs, emit);
+		if (Common::DrawStat::On()) {
+			FS::Add(cb_pool ? FS::Counter::CommitPoolSets : FS::Counter::CommitPushSets, 1);
+			FS::Add(cb_pool ? FS::Counter::CommitPoolTransitNs : FS::Counter::CommitPushTransitNs,
+			        cb_transit);
+			FS::Add(cb_pool ? FS::Counter::CommitPoolWriteNs : FS::Counter::CommitPushWriteNs,
+			        cb_write);
+			FS::Add(cb_pool ? FS::Counter::CommitPoolEmitNs : FS::Counter::CommitPushEmitNs, emit);
+		}
+		if (bind_lap) {
+			FS::Add(FS::Counter::BindLapCommits, 1);
+			FS::Add(FS::Counter::BindLapTransitNs, cb_transit);
+			FS::Add(FS::Counter::BindLapWriteNs, cb_write);
+			FS::Add(FS::Counter::BindLapEmitNs, emit);
+		}
 	};
 
 	// Session 84, gate "slotstat": the stream-ring handle the census needs, taken once per
@@ -2364,6 +2490,15 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	    slot_stat ? static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(
 	                    m_context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream).Handle())))
 	              : 0;
+	// Session 85: the CONSTANT descriptor NativeStorageBuffer returns for a degenerate V#,
+	// taken once a commit exactly as the stream handle is.  FACTS s84 3.5 left this
+	// population [NM]; it is the half of bias 1 nobody has ever counted.
+	const uint64_t slot_null =
+	    slot_stat ? static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(
+	                    m_context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle())))
+	              : 0;
+	const bool slot_verify =
+	    slot_stat && Common::Gates::Enabled(Common::Gates::Gate::SlotStatVerify);
 
 	for (auto* prepared: prepared_bindings) {
 		const auto& program       = *prepared->runtime->program;
@@ -2478,7 +2613,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		cb_lap(cb_transit);
 
 		if (slot_stat) {
-			NoteSlotStat(program.stage, descriptors, slot_stream);
+			NoteSlotStat(program.stage, program.shader_hash, program.bindings, descriptors,
+			             slot_stream, slot_null, slot_verify);
 		}
 
 		m_image_occurrences.assign(descriptors.images.size(), 0);

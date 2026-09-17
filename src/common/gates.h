@@ -242,6 +242,37 @@ enum class Gate : uint32_t {
 	// only a miss reaches.  bda_us reads 0 under KYTY_FRAME_TRACE=lite because it is a Scope, and
 	// FrameStats::Lap would too, so this uses the plkstat idiom instead.  Arming: bda_lap_n.
 	BdaLap,         // KYTY_BDA_LAP,            file name "bdalap"
+	// Session 85, MEASUREMENT ONLY (ROADMAP.md route C): what one descriptor slot costs in
+	// the BIND phase, split by outcome.  Every existing timer of that phase is a
+	// FrameStats::Scope and reads 0 under KYTY_FRAME_TRACE=lite; this uses the plkstat
+	// idiom (LapScope) instead.  Two timestamps per stage, never per slot - a per-slot pair
+	// would cost as much as the thing it measures.  Arming: bl_stage_n, and bl_img_n against
+	// b_texn / bl_buf_n against bb_n.
+	BindLap,        // KYTY_BIND_LAP,           file name "bindlap"
+	// Session 85, MEASUREMENT ONLY: the ~1.88 ms FIXED part of bda_scan_us, which session 84
+	// measured as an OLS intercept and could not attribute.  Splits the scan into the
+	// m_buffers descents, the region walk, the dirty-bit collection and the uploads, and
+	// charges the frame's FIRST scanning call apart from every later one.  Arming:
+	// bda_bound_n against bda_rng, bda_first_n + bda_late_n against bda_n - bda_hit.
+	BdaSplit,       // KYTY_BDA_SPLIT,          file name "bdasplit"
+	// Session 85: the self-check PLAN.md of session 84 declared for the census and never
+	// built.  It is NOT a value check - the previous draw's value exists nowhere but in the
+	// shadow table - it is an ELEMENT-COUNT check derived from the compiled BindingLayout
+	// rather than from the runtime vectors, and it is exactly what would have caught the
+	// DynamicStorage bias (sl_img_n counts bindings, the write list emits elements).
+	// Costs a second walk of program.bindings.descriptors per stage - measurement only.
+	SlotStatVerify, // KYTY_SLOT_STAT_VERIFY,   file name "slotstatcheck"
+	// Session 85, route B: PLAN_82_bind.md item 6a.  ObtainBuffer asks UploadEpoch +
+	// HasCurrentUpload about a range and, on "already current", calls SynchronizeBuffer -
+	// whose first act is the same two evaluations of the same range on the same thread,
+	// followed by return.  ~8 486 calls a frame.  The arms differ only in that a guest write
+	// landing between the two reads is picked up one binding later instead of at once; the
+	// dirty bits are untouched, so the next request for that range uploads it.  be_race
+	// MEASURES how often that window is entered instead of assuming it is empty.
+	BufEpochFast,       // KYTY_BUF_EPOCH_FAST,   file name "bindpack2"
+	// Recomputes the replaced predicate beside every short circuit AND calls SynchronizeBuffer
+	// anyway, so the checked arm does the work the gate removes.  bp2_bad must read 0.
+	BufEpochFastVerify, // KYTY_BUF_EPOCH_VERIFY, file name "bindpack2check"
 	Count,
 };
 

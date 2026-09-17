@@ -1021,7 +1021,44 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	    buffer->IsInBounds(vaddr, size) &&
 	    buffer->HasCurrentUpload(current_epoch, current_kind, vaddr, size)) {
 		TouchBuffer(*buffer);
-		(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
+		// Session 85, gate "bindpack2" (PLAN_82_bind.md item 6a): the first act of
+		// SynchronizeBuffer on this path is UploadEpoch + HasCurrentUpload on THIS range, on
+		// THIS thread, for THIS buffer, followed by return - and the answer was just read two
+		// lines up.  is_texel_buffer keeps the call: there the early return is not "false", it
+		// is SynchronizeBufferFromImage.  BufEpochHits is re-added so bufepoch keeps counting
+		// the same population in both arms.
+		const bool be_fast = !is_texel_buffer &&
+		                     Common::Gates::Enabled(Common::Gates::Gate::BufEpochFast);
+		if (be_fast) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochHits, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochFastHits, 1);
+			if (Common::Gates::Enabled(Common::Gates::Gate::BufEpochFastVerify)) {
+				// The replaced question, asked again.  When the epoch has NOT moved the two
+				// answers cannot differ, so a disagreement there is a real contradiction; when it
+				// HAS moved the disagreement is legitimate and is counted as the race it is.
+				// SynchronizeBuffer is called anyway, so the checked arm does the removed work and
+				// the check cannot hide a missing upload behind itself.
+				const auto [check_epoch, check_kind] = UploadEpoch(vaddr, size);
+				const bool still =
+				    buffer->HasCurrentUpload(check_epoch, check_kind, vaddr, size);
+				const bool moved = check_epoch != current_epoch || check_kind != current_kind;
+				if (moved) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochFastRaces, 1);
+				} else if (!still) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochFastBad, 1);
+					static std::atomic<uint32_t> logged {0};
+					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("BindPack2Verify: MISMATCH vaddr=0x%016llx size=0x%llx epoch=%llu\n",
+						     static_cast<unsigned long long>(vaddr),
+						     static_cast<unsigned long long>(size),
+						     static_cast<unsigned long long>(current_epoch));
+					}
+				}
+				(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
+			}
+		} else {
+			(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
+		}
 		remember(id);
 		return {buffer, buffer->Offset(vaddr)};
 	}
@@ -2482,6 +2519,15 @@ void BufferCache::SynchronizeBuffersOfDirtyRanges() {
 // scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
 // write racing with the scan is seen by the next preparation instead of being lost.
 void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end) {
+	// Session 85, gate "bdasplit": the whole walk.  The per-region visit - the loop that runs
+	// ~21 000 times a frame and skips almost all of it - is bda_walk_us minus the two inner
+	// timers below, so that hot loop takes no timestamps of its own.
+	const bool bda_split = Common::Gates::Enabled(Common::Gates::Gate::BdaSplit);
+	Common::FrameStats::LapScope bda_walk_scope(bda_split,
+	                                            Common::FrameStats::Counter::BdaSplitWalkNs);
+	if (bda_split) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitWalks, 1);
+	}
 	if (m_bda_region_stamps.empty()) {
 		m_bda_region_stamps.resize(MemoryTracker::RegionCount());
 	}
@@ -2537,8 +2583,18 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		}
 		seen = {stamp, m_bda_stamp_generation};
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
+		const uint64_t bda_scan_t0 =
+		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+		const uint64_t bda_scan_t1 = bda_scan_t0 != 0 ? Common::FrameStats::NowNs() : 0;
 		SynchronizeBuffersOfDirtyRanges();
+		if (bda_scan_t0 != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitCollectNs,
+			                        bda_scan_t1 - bda_scan_t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitUploadNs,
+			                        Common::FrameStats::NowNs() - bda_scan_t1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitUploads, 1);
+		}
 		cursor += bytes;
 	}
 }
@@ -2553,6 +2609,13 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 	} bda_scan_scope;
 	// Session 83: one per mapped range walked by a scanning PrepareBda.
 	Common::FrameStats::Add(Common::FrameStats::Counter::BdaRanges, 1);
+	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): everything up to scan_begin/scan_end is
+	// the std::map half session 83 bounded at <= 0.35 ms - measured here rather than bounded,
+	// and measured on ALL calls, including the ~75 % that find no registered buffer and
+	// return.  Enabled(), not TimingsEnabled(): a measurement run is lite.
+	const bool     bda_split = Common::Gates::Enabled(Common::Gates::Gate::BdaSplit) &&
+	                           Common::FrameStats::Enabled();
+	const uint64_t bda_split_t0 = bda_split ? Common::FrameStats::NowNs() : 0;
 	static const bool dirty_ranges = [] {
 		const auto* value = std::getenv("KYTY_BDA_DIRTY_RANGES");
 		return value == nullptr || value[0] != '0';
@@ -2571,12 +2634,22 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 			// Session 83: a mapping with no registered buffer at all - two map lookups and out,
 			// before any tracking region is touched.
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaRangesEmpty, 1);
+			if (bda_split) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitBoundNs,
+				                        Common::FrameStats::NowNs() - bda_split_t0);
+				Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitBounds, 1);
+			}
 			return;
 		}
 		const auto last = std::prev(m_buffers.lower_bound(end));
 		const auto& last_buffer = m_slot_buffers[last->second];
 		const auto scan_begin = std::max(vaddr, first->first);
 		const auto scan_end = std::min(end, last_buffer.CpuAddress() + last_buffer.Size());
+		if (bda_split) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitBoundNs,
+			                        Common::FrameStats::NowNs() - bda_split_t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaSplitBounds, 1);
+		}
 		// Enumerate dirtiness once per tracking region, rather than re-locking/reconciling
 		// every registered buffer for every BDA draw. This is only a candidate snapshot:
 		// SynchronizeBuffer still consumes current dirty bits and arms write protection.

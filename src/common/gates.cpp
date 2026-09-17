@@ -208,6 +208,16 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_SLOT_STAT", "slotstat", false},
     // Session 84, measurement only: the probe/scan split of PrepareBda.
     {"KYTY_BDA_LAP", "bdalap", false},
+    // Session 85, measurement only: the per-slot price of the binding phase.
+    {"KYTY_BIND_LAP", "bindlap", false},
+    // Session 85, measurement only: where the fixed part of bda_scan_us goes.
+    {"KYTY_BDA_SPLIT", "bdasplit", false},
+    // Session 85: the element-count self-check of the route-C census.
+    {"KYTY_SLOT_STAT_VERIFY", "slotstatcheck", false},
+    // Session 85, route B: the duplicated upload-epoch evaluation of ObtainBuffer, and its
+    // self-check.  PLAN_82_bind.md item 6a.
+    {"KYTY_BUF_EPOCH_FAST", "bindpack2", false},
+    {"KYTY_BUF_EPOCH_VERIFY", "bindpack2check", false},
 }};
 
 struct KnobDefinition {

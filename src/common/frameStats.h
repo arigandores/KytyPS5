@@ -1042,6 +1042,60 @@ enum class Counter : uint32_t {
 	BdaProbeNs,         // bda_probe_us: entry through the three-epoch comparison
 	BdaScanNs,          // bda_scan_us: the ForEach walk of the mapped ranges
 	BdaLaps,            // bda_lap_n: the arming proof; == bda_n on, 0 off
+	// Session 85, gate "bindlap" (MEASUREMENT ONLY): the binding phase timed with the
+	// plkstat idiom, two timestamps per STAGE.  bl_img_n and bl_buf_n are the denominators
+	// the unit price is divided by and are also the arming identities (== b_texn, == bb_n).
+	BindLapStages,      // bl_stage_n: RebindImages calls; the arming proof and the regressor
+	BindLapPrepareNs,   // bl_prep_us: PrepareBindings, whole body (full resolution)
+	BindLapPrepares,    // bl_prep_n: ... calls
+	BindLapImageNs,     // bl_img_us: RebindImages, whole body
+	BindLapImages,      // bl_img_n: image slots in it (identity: == b_texn)
+	BindLapBufferNs,    // bl_buf_us: RebindBuffers, whole body
+	BindLapBuffers,     // bl_buf_n: buffer slots in it (identity: == bb_n)
+	BindLapTransitNs,   // bl_tr_us: CommitBindings, the image transitions
+	BindLapWriteNs,     // bl_wr_us: ... the write-list build
+	BindLapEmitNs,      // bl_em_us: ... the emit (update + bind)
+	BindLapCommits,     // bl_cmt_n: commits timed (graphics only, like cb_pool_n)
+	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): the division of the scan half of
+	// PrepareBda.  bda_first_us is the one that tests the FIXED cost directly.
+	BdaSplitBoundNs,    // bda_bound_us: the two m_buffers descents, paid by every call
+	BdaSplitBounds,     // bda_bound_n: ... those calls (identity: == bda_rng)
+	BdaSplitWalkNs,     // bda_walk_us: SynchronizeBuffersByRegion, whole
+	BdaSplitWalks,      // bda_walk_n: ... its calls
+	BdaSplitCollectNs,  // bda_collect_us: CollectCpuModifiedRanges (region lock + bit walk)
+	BdaSplitUploadNs,   // bda_up_us: SynchronizeBuffersOfDirtyRanges (buffer walk + copies)
+	BdaSplitUploads,    // bda_up_n: ... its calls (identity: == bda_scan)
+	BdaSplitFirstNs,    // bda_first_us: the frame's FIRST scanning PrepareBda, charged apart
+	BdaSplitFirsts,     // bda_first_n: ... those calls (one a frame while the scene is settled)
+	BdaSplitLateNs,     // bda_late_us: every later scanning PrepareBda of the same frame
+	BdaSplitLates,      // bda_late_n: ... those calls
+	// Session 85, gate "slotstat": the three biases FACTS s84 3.5 left unquantified.  The
+	// counters above keep their logic unchanged, so the s84 ratios reproduce beside these and
+	// the DIFFERENCE is the measured bias.
+	SlotShaderChanges,  // sl_shader_chg: stage commits whose shader differs from the previous
+	                    //                commit on the same row - bias 3, measured
+	SlotImagesSameShader,   // sl_img_same_sh: sl_img_same, but only when the row's previous
+	                        //                 commit ran the SAME shader - bias 3, eliminated
+	SlotSamplersSameShader, // sl_smp_same_sh: the same for samplers
+	SlotBuffersSameShader,  // sl_buf_same_sh: ... and for buffers
+	SlotStagesAllShader,    // sl_stage_all_sh: sl_stage_all under the same restriction
+	SlotBuffersNull,    // sl_buf_null: slots that are the CONSTANT null descriptor
+	                    //              {GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16} - bias 1's
+	                    //              unmeasured half; they repeat by construction
+	SlotImagesNull,     // sl_img_null: image slots resolved from a null T# (desc.info.data
+	                    //              empty), per SLOT rather than per resolution
+	SlotImageElements,  // sl_img_elem: sum of max(1, mip_views.size()) - the descriptor
+	                    //              ELEMENTS behind the image BINDINGS - bias 2
+	SlotSamplerElements, // sl_smp_elem: sampler elements the write list actually emits
+	SlotBad,            // sl_bad: gate "slotstatcheck" - element counts that disagree with the
+	                    //         compiled layout.  MUST read 0.
+	// Session 85, gate "bindpack2" (PLAN_82_bind.md item 6a) and its self-check.
+	BufEpochFastHits,   // be_fast: ObtainBuffer answered the upload-epoch question itself
+	                    //          instead of asking SynchronizeBuffer the same question
+	BufEpochFastRaces,  // be_race: ... and the epoch HAD moved between the two reads.  This is
+	                    //          the window the change widens, measured rather than assumed
+	BufEpochFastBad,    // bp2_bad: the epoch did NOT move and the recomputation still
+	                    //          disagreed - a contradiction.  MUST read 0.
 	Count
 };
 
@@ -1240,6 +1294,29 @@ public:
 private:
 	uint64_t m_t;
 	Counter  m_hold;
+};
+
+// Session 85, gate "bindlap": the plkstat idiom as a scope - a timestamp under Enabled()
+// and NOT under TimingsEnabled(), differenced by hand in the destructor, so that it reads
+// in a KYTY_FRAME_TRACE=lite measurement run where every Scope and every Lap reads exactly
+// 0 (the trap session 68 hit and session 84 nearly repeated).  Constructed with the gate's
+// value: while the gate is off nothing is read and nothing is written.  Unlike Scope it
+// carries no count - the population counters are explicit Adds at the call site, because
+// they are the arming identities and must be visible where they are claimed.
+class LapScope {
+public:
+	LapScope(bool on, Counter ns): m_ns(ns), m_t0(on && Enabled() ? NowNs() : 0) {}
+	~LapScope() {
+		if (m_t0 != 0) {
+			Add(m_ns, NowNs() - m_t0);
+		}
+	}
+	LapScope(const LapScope&)            = delete;
+	LapScope& operator=(const LapScope&) = delete;
+
+private:
+	Counter  m_ns;
+	uint64_t m_t0;
 };
 
 // Session 68, gate "amut": the union of the mutating intervals of the draw path (the serial floor

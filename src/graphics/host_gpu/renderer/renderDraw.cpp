@@ -1825,9 +1825,14 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  bufo;
 	std::array<uint64_t, DrawMergeStages * DrawMergeBuffers>  bufr;
 	std::array<uint8_t, DrawMergeStages * DrawMergeBuffers>   bufring;
+	// Session 93, gate "bdacap": the BdaCapClass NativeStorageBuffer gave each buffer slot,
+	// carried over from PreparedBindings so dm_buf1_ok can name the class of the ONE slot
+	// that differs.  Filled ONLY while bdacap is armed, and read only under the same gate.
+	std::array<uint8_t, DrawMergeStages * DrawMergeBuffers>   bufcls;
 	std::array<uint64_t, DrawMergeStages>                     sd;
 	uint32_t img_n = 0, smp_n = 0, buf_n = 0, sd_n = 0, ring = 0;
 	bool     over  = stages.size() > DrawMergeStages;
+	const bool bdacap = Common::Gates::Enabled(Common::Gates::Gate::BdaCap);
 	for (const auto* prepared: stages) {
 		if (over) {
 			break;
@@ -1849,6 +1854,7 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 			smp[smp_n++] = static_cast<uint64_t>(
 			    reinterpret_cast<uintptr_t>(static_cast<VkSampler>(sampler)));
 		}
+		const uint32_t stage_base = buf_n;
 		for (const auto& view: prepared->buffers) {
 			const auto handle = static_cast<uint64_t>(
 			    reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(view.buffer)));
@@ -1858,6 +1864,15 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 			bufo[buf_n] = static_cast<uint64_t>(view.offset);
 			bufr[buf_n] = static_cast<uint64_t>(view.range);
 			buf_n++;
+		}
+		// Session 93, gate "bdacap": buffer_class is parallel to buffers by construction; the
+		// size guard is belt and braces, and at bdacap = 0 this loop does not run at all.
+		if (bdacap) {
+			for (uint32_t bi = 0; bi < static_cast<uint32_t>(prepared->buffers.size()); bi++) {
+				bufcls[stage_base + bi] = bi < prepared->buffer_class.size()
+				                              ? prepared->buffer_class[bi]
+				                              : uint8_t {0};
+			}
 		}
 		uint64_t hash = 1469598103934665603ull;
 		for (const auto dword: prepared->shader_data) {
@@ -1886,6 +1901,9 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	                      prev.buf_n == buf_n && prev.sd_n == sd_n;
 	const bool same_shape = same_pipe && same_len;
 	uint32_t d_img = 0, d_smp = 0, d_buf = 0, d_bufnr = 0, d_sd = 0;
+	// Session 93, gate "bdacap": WHICH non-ring slot differed.  Meaningless unless
+	// d_bufnr == 1, and read only then.
+	uint32_t nr_index = 0;
 	if (same_len) {
 		for (uint32_t i = 0; i < img_n; i++) {
 			d_img += (img[i] != prev.image_view[i]) ? 1u : 0u;
@@ -1899,6 +1917,7 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 			                     bufr[i] != prev.buffer_range[i];
 			d_buf += differs ? 1u : 0u;
 			d_bufnr += (differs && bufring[i] == 0) ? 1u : 0u;
+			nr_index = (differs && bufring[i] == 0) ? i : nr_index;
 		}
 		for (uint32_t i = 0; i < sd_n; i++) {
 			d_sd += (sd[i] != prev.shader_data[i]) ? 1u : 0u;
@@ -1929,6 +1948,15 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	                          Counter::DrawMergeBuf1);
 	classify(d_bufnr, Counter::DrawMergeSameNr, Counter::DrawMergePushNr,
 	         Counter::DrawMergeBuf1Nr);
+	// Session 93, gate "bdacap": of the draws dm_buf1_nr counts, those whose ONE differing
+	// non-ring buffer slot NativeStorageBuffer classified bc_ok.  The predicate is the
+	// dm_buf1_nr branch of classify() written out, because classify() also answers true for
+	// its two zero-difference branches.  same_shape implies same_len, so nr_index was
+	// written by the loop above, and bufcls was filled because bdacap is the first operand.
+	if (bdacap && same_shape && d_img == 0 && d_smp == 0 && d_bufnr == 1 &&
+	    bufcls[nr_index] == static_cast<uint8_t>(BdaCapClass::Ok)) {
+		FS::Add(Counter::DrawMergeBuf1Ok, 1);
+	}
 	FS::Add(Counter::DrawMergeNo, hit ? 0u : 1u);
 
 	if (verify && same_len) {

@@ -36,6 +36,19 @@ struct TextureBinding {
 	uint32_t                   memo_version = 0;
 };
 
+// Session 93, gate "bdacap" (MEASUREMENT ONLY, pred/01_bdacap.md): the class
+// NativeStorageBuffer gave a buffer slot.  Exactly one per slot, first match wins in the
+// order below.  Written only while the gate is armed, so every slot of an unarmed run
+// stays None; it feeds no value, no decision and no side effect.
+enum class BdaCapClass : uint8_t {
+	None      = 0,
+	Null      = 1,
+	Formatted = 2,
+	ConstBank = 3,
+	Ring      = 4,
+	Ok        = 5,
+};
+
 struct PreparedBindings {
 	struct BufferSource {
 		uint64_t address = 0;
@@ -49,6 +62,11 @@ struct PreparedBindings {
 	// become stale and need resolving again when bindings are rebound.
 	std::vector<BufferSource>             buffer_sources;
 	std::vector<vk::DescriptorBufferInfo> buffers;
+	// Session 93, gate "bdacap" (MEASUREMENT ONLY): buffer_class[i] is the BdaCapClass of
+	// buffers[i], pushed beside it by RebindBuffers and read by the dm_buf1_ok census in
+	// renderDraw.cpp.  Parallel to buffers by construction (one push_back each, same loop).
+	// All None unless the gate is armed.
+	std::vector<uint8_t>                  buffer_class;
 	std::vector<TextureBinding>           images;
 	std::vector<vk::Sampler>              samplers;
 	vk::DescriptorBufferInfo              gds {nullptr, 0, VK_WHOLE_SIZE};
@@ -71,6 +89,7 @@ struct PreparedBindings {
 		runtime = nullptr;
 		buffer_sources.clear();
 		buffers.clear();
+		buffer_class.clear();
 		images.clear();
 		samplers.clear();
 		shader_data.clear();

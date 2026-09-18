@@ -145,16 +145,69 @@ static bool IsMultisampledTexture(Prospero::ImageType type) {
 static vk::DescriptorBufferInfo
 NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource& source,
                     const ShaderRecompiler::IR::BufferResource& resource, ShaderType stage,
-                    uint32_t slot, uint32_t& buffer_offset, bool direct_copy) {
+                    uint32_t slot, uint32_t& buffer_offset, bool direct_copy,
+                    uint8_t& buffer_class) {
 	Common::FrameStats::Scope binding_scope(Common::FrameStats::Counter::BindBuffersNs);
+	// Session 93, gate "bdacap" (MEASUREMENT ONLY, pred/01_bdacap.md).  The gate is the
+	// FIRST operand of the &&, is read ONCE per call, and is read BEFORE cap_t0, so the
+	// read lies OUTSIDE the interval it arms: at bdacap = 0 not one NowNs() and not one Add
+	// below is executed and buffer_class stays None.  Enabled() and NOT TimingsEnabled(),
+	// because a measurement run is KYTY_FRAME_TRACE=lite, where the Scope above records no
+	// nanoseconds at all.  Nothing here feeds a value, a decision or a side effect: the
+	// descriptor this function returns is byte for byte the same at either setting.
+	const bool     cap    = Common::Gates::Enabled(Common::Gates::Gate::BdaCap) &&
+	                        Common::FrameStats::Enabled();
+	const uint64_t cap_t0 = cap ? Common::FrameStats::NowNs() : 0;
+	buffer_class          = static_cast<uint8_t>(BdaCapClass::None);
+	// Called exactly once on every path that RETURNS, so bc_null + bc_fmt + bc_cb +
+	// bc_ring + bc_ok is the number of calls (control A2).  The EXIT() sites abort the
+	// process and do not return, so they need no class.
+	const auto cap_note = [cap, cap_t0, &buffer_class](BdaCapClass cls, uint64_t bytes) {
+		if (!cap) {
+			return;
+		}
+		buffer_class     = static_cast<uint8_t>(cls);
+		const auto    ns = Common::FrameStats::NowNs() - cap_t0;
+		auto          which = Common::FrameStats::Counter::BdaCapOk;
+		switch (cls) {
+			case BdaCapClass::Null: which = Common::FrameStats::Counter::BdaCapNull; break;
+			case BdaCapClass::Formatted:
+				which = Common::FrameStats::Counter::BdaCapFormatted;
+				break;
+			case BdaCapClass::ConstBank:
+				which = Common::FrameStats::Counter::BdaCapConstBank;
+				break;
+			case BdaCapClass::Ring: which = Common::FrameStats::Counter::BdaCapRing; break;
+			default: break;
+		}
+		Common::FrameStats::Add(which, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapAllNs, ns);
+		if (cls == BdaCapClass::Ok) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkNs, ns);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkBytes, bytes);
+		}
+	};
 	buffer_offset = 0;
 
 	const auto& [address, size, id] = source;
 	if (address == 0 || size == 0) {
+		cap_note(BdaCapClass::Null, 0);
 		return {context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16};
 	}
 	const auto& graphics   = context.GetGraphics();
 	const bool  const_bank = ShaderRecompiler::IR::PackedStrideConstBank(resource.packed_stride);
+	// Session 93, gate "bdacap": the class of every return BELOW the null one.  First match
+	// wins -- formatted and const-bank are decided AHEAD of the ring, because neither can be
+	// expressed through a device address wherever its bytes happen to live.
+	const auto cap_class = [&resource, const_bank](bool ring) {
+		if (resource.formatted) {
+			return BdaCapClass::Formatted;
+		}
+		if (const_bank) {
+			return BdaCapClass::ConstBank;
+		}
+		return ring ? BdaCapClass::Ring : BdaCapClass::Ok;
+	};
 	// Const-bank V#s are also bound as uniform buffers: align the range start to
 	// minUniformBufferOffsetAlignment (64 on NVIDIA; a multiple of the storage alignment, so the
 	// adjustment stays a multiple of the specialized base alignment).
@@ -198,6 +251,8 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyCpu, 1);
 				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyBytes, size);
 			}
+			// Session 93, gate "bdacap": ring return 1 of 3 - the direct const-bank copy.
+			cap_note(cap_class(true), size);
 			return {stream.Handle(), stream_offset, size};
 		}
 	}
@@ -251,6 +306,8 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				Common::FrameStats::Add(Common::FrameStats::Counter::CbankCopyBytes, size);
 			}
 			buffer_offset = 0;
+			// Session 93, gate "bdacap": ring return 2 of 3 - the aligned const-bank copy.
+			cap_note(cap_class(true), size);
 			return {stream.Handle(), stream_offset, size};
 		}
 		// The shader was specialized on the V# base alignment (uvec2/uvec4 constant loads).
@@ -286,6 +343,14 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	    graphics.device, result.buffer,
 	    "Kyty.{}.StorageBuffer[slot={} guest=0x{:016x} size=0x{:x} access={} formatted={}]",
 	    ShaderStageResourceName(stage), slot, address, size, access, resource.formatted);
+	// Session 93, gate "bdacap": the last return, and the THIRD ring path - ObtainBuffer can
+	// hand back the stream ring itself (bufferCache.cpp:1314), which no local flag records,
+	// so the handle is compared with the ring's exactly as the slotstat buf_ring column does.
+	// The comparison sits behind `cap`, so it is not made at bdacap = 0.
+	const bool cap_ring = cap && result.buffer == context.GetBufferCache()
+	                                                  .GetUtilityBuffer(MemoryUsage::Stream)
+	                                                  .Handle();
+	cap_note(cap_class(cap_ring), size);
 	return result;
 }
 
@@ -1745,6 +1810,9 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 
 	prepared.buffers.clear();
 	prepared.buffers.reserve(program.info.buffers.size());
+	// Session 93, gate "bdacap": parallel to buffers, cleared and reserved with it.
+	prepared.buffer_class.clear();
+	prepared.buffer_class.reserve(program.info.buffers.size());
 	EXIT_IF(prepared.shader_data.size() != layout.ShaderDataDwords());
 	std::fill(prepared.shader_data.begin() + layout.memory_offset_dword,
 	          prepared.shader_data.end(), 0);
@@ -1761,6 +1829,8 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	static const bool writer_trace = std::getenv("KYTY_IMAGE_UPLOAD_TRACE") != nullptr;
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		uint32_t buffer_offset = 0;
+		// Session 93, gate "bdacap": out-parameter, BdaCapClass::None unless the gate is armed.
+		uint8_t  buffer_class  = static_cast<uint8_t>(BdaCapClass::None);
 		if (writer_trace && program.info.buffers[i].written) {
 			static const uint64_t min_bytes = [] {
 				const auto* value = std::getenv("KYTY_IMAGE_WRITER_MIN_KB");
@@ -1782,7 +1852,8 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		}
 		prepared.buffers.push_back(NativeStorageBuffer(m_context, prepared.buffer_sources[i],
 		                                               program.info.buffers[i], program.stage, i,
-		                                               buffer_offset, direct_copy));
+		                                               buffer_offset, direct_copy, buffer_class));
+		prepared.buffer_class.push_back(buffer_class);
 		pack_memory_offset(i, buffer_offset);
 	}
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);
@@ -1973,6 +2044,14 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 	for (auto* stage: stages) {
 		FindBuffers(*stage);
 		uses_dma |= stage->runtime->program->info.uses_dma;
+	}
+	// Session 93, gate "bdacap" (MEASUREMENT ONLY): draws where at least one stage already
+	// sets info.uses_dma, i.e. where PrepareBda runs anyway and a slot converted to a device
+	// address would cost no new binding.  Gate FIRST and read once per draw; at bdacap = 0
+	// nothing is counted and nothing about the draw changes.
+	if (Common::Gates::Enabled(Common::Gates::Gate::BdaCap) && Common::FrameStats::Enabled() &&
+	    uses_dma) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapDmaDraws, 1);
 	}
 	if (uses_dma) {
 		m_context.PrepareBda();

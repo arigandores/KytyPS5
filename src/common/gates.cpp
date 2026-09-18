@@ -241,6 +241,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // CopyPool::Enqueue; stg_pool_ns itself is untouched and is the total the parts are
     // checked against.  Default 0, and at 0 nothing new is timed or counted.
     {"KYTY_STAGE_LAP", "stglap", false},
+    // Session 93, measurement only: the BDA ceiling census of buffer descriptor slots
+    // (bc_null / bc_fmt / bc_cb / bc_ring / bc_ok, their bytes and their two timers).
+    // It changes nothing the emulator decides; at 0 no NowNs() and no Add of this
+    // session runs.  LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_BDA_CAP", "bdacap", false},
 }};
 
 struct KnobDefinition {

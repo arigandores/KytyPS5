@@ -2226,6 +2226,20 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"stg_waken_n", FS::Counter::StagingWakeManyCalls, false},
 				    {"stg_spin_ns", FS::Counter::StagingSpinNs, false},
 				    {"stg_spin_hit", FS::Counter::StagingSpinHits, false},
+				    // Session 93, gate "bdacap": the BDA ceiling census of buffer descriptor
+				    // slots.  bc_null + bc_fmt + bc_cb + bc_ring + bc_ok == bb_n (control A2).
+				    // Bytes are RAW BYTES and times are RAW ns (micros = false), like stg_*.
+				    // All ten read 0 unless the gate is armed.
+				    {"bc_null", FS::Counter::BdaCapNull, false},
+				    {"bc_fmt", FS::Counter::BdaCapFormatted, false},
+				    {"bc_cb", FS::Counter::BdaCapConstBank, false},
+				    {"bc_ring", FS::Counter::BdaCapRing, false},
+				    {"bc_ok", FS::Counter::BdaCapOk, false},
+				    {"bc_ok_b", FS::Counter::BdaCapOkBytes, false},
+				    {"bc_ok_ns", FS::Counter::BdaCapOkNs, false},
+				    {"bc_all_ns", FS::Counter::BdaCapAllNs, false},
+				    {"bc_dma", FS::Counter::BdaCapDmaDraws, false},
+				    {"dm_buf1_ok", FS::Counter::DrawMergeBuf1Ok, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

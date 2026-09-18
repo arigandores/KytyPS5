@@ -338,6 +338,15 @@ enum class Gate : uint32_t {
 	// the session 91 timer stg_pool_ns is left whole as the total to check against.  At
 	// 0 not one timestamp and not one Add of this session is taken.
 	StageLap,           // KYTY_STAGE_LAP,          file name "stglap"
+	// Session 93, MEASUREMENT ONLY (pred/01_bdacap.md): the ceiling of moving V# buffer
+	// slots onto a buffer device address instead of a descriptor.  Every buffer slot
+	// NativeStorageBuffer builds is classified into exactly one of five classes --
+	// degenerate, formatted (texel), const-bank (uniform), stream-ring, and the candidate
+	// population "a cached buffer with a stable handle" -- and the time the function
+	// spends on the candidates is measured DIRECTLY, not as a rate times a population.
+	// Nothing is converted: no value, no decision and no side effect depends on it, and
+	// at 0 not one timestamp and not one Add of this session is taken.
+	BdaCap,             // KYTY_BDA_CAP,            file name "bdacap"
 	Count,
 };
 

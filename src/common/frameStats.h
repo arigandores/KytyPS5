@@ -1410,6 +1410,34 @@ enum class Counter : uint32_t {
 	                       //               lock decides that, and another worker may get
 	                       //               there first - so it is an UPPER BOUND on the
 	                       //               kernel wake-ups the spin saved
+	// Session 93, gate "bdacap" (MEASUREMENT ONLY, pred/01_bdacap.md): the class every
+	// buffer descriptor slot of a draw belongs to, decided in NativeStorageBuffer,
+	// EXACTLY ONE per call, first match wins in the order written here.  formatted and
+	// const-bank are decided AHEAD of the ring because neither can be expressed through a
+	// device address wherever its bytes happen to live.  The five sum to the calls, which
+	// is checked against bb_n (control A2).  All ten below read EXACTLY 0 unless the gate
+	// is armed -- not one of them is Add-ed on the unarmed path.
+	BdaCapNull,         // bc_null: address == 0 || size == 0, the early return - no buffer
+	BdaCapFormatted,    // bc_fmt:  resource.formatted - a texel buffer needs a descriptor
+	BdaCapConstBank,    // bc_cb:   PackedStrideConstBank - a uniform view needs a descriptor
+	BdaCapRing,         // bc_ring: the slot got a stream-ring handle (either aligned copy, or
+	                    //          ObtainBuffer's own ring return), so its offset is new every
+	                    //          draw by construction and an address buys nothing
+	BdaCapOk,           // bc_ok:   everything else - a cached buffer with a stable handle.
+	                    //          THE CANDIDATE POPULATION
+	BdaCapOkBytes,      // bc_ok_b: the guest ranges of the bc_ok slots, RAW BYTES
+	BdaCapOkNs,         // bc_ok_ns:  RAW ns NativeStorageBuffer spent on the bc_ok slots - the
+	                    //            ceiling measured directly, not a rate times a population
+	BdaCapAllNs,        // bc_all_ns: the same timer over all five classes, so the parts can be
+	                    //            checked against the whole and against bb_us (control A3)
+	BdaCapDmaDraws,     // bc_dma: draws where at least one stage already sets info.uses_dma,
+	                    //         i.e. where PrepareBda has already run and a converted slot
+	                    //         would cost no new binding
+	// Session 93, gate "bdacap" AND gate "drawmerge" (armed in BOTH arms of the contrast,
+	// so its price cancels): of the draws dm_buf1_nr counts - same pipeline, same shape,
+	// images and samplers equal, EXACTLY ONE non-ring buffer slot different - those whose
+	// one differing slot NativeStorageBuffer classified bc_ok.
+	DrawMergeBuf1Ok,    // dm_buf1_ok
 	Count
 };
 

@@ -2310,6 +2310,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"fr_pay_n", FS::Counter::FrameRepPayN, false},
 				    {"fr_bad", FS::Counter::FrameRepBad, false},
 				    {"fr_over", FS::Counter::FrameRepOverflow, false},
+				    {"fr_id1r", FS::Counter::FrameRepIdR1, false},
+				    {"fr_id2r", FS::Counter::FrameRepIdR2, false},
+				    {"fr_id3r", FS::Counter::FrameRepIdR3, false},
+				    {"fr_idr_ns", FS::Counter::FrameRepIdRNs, false},
+				    {"fr_id1m", FS::Counter::FrameRepIdM1, false},
+				    {"fr_idm_ns", FS::Counter::FrameRepIdMNs, false},
+				    {"fr_okring", FS::Counter::FrameRepOkRing, false},
+				    {"fr_okslot", FS::Counter::FrameRepOkSlots, false},
+				    {"fr_img", FS::Counter::FrameRepImgN, false},
+				    {"fr_buf", FS::Counter::FrameRepBufN, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

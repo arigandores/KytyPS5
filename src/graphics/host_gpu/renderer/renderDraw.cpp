@@ -2469,6 +2469,8 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 					const auto own = pre + post;
 					FS::Add(FS::Counter::FrameRepAllNs, own);
 					FS::Add(FS::Counter::FrameRepIdNs, fr.hit_id ? own : 0u);
+					FS::Add(FS::Counter::FrameRepIdRNs, fr.hit_idr ? own : 0u);
+					FS::Add(FS::Counter::FrameRepIdMNs, fr.hit_idm ? own : 0u);
 					FS::Add(FS::Counter::FrameRepPayNs, fr.hit_pay ? own : 0u);
 					FS::Add(FS::Counter::FrameRepFullNs, fr.hit_full ? own : 0u);
 				}
@@ -2489,6 +2491,8 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			fr.pre_ns  = 0;
 			fr.post_ns = 0;
 			fr.armed   = false;
+			fr.hit_idr = false;
+			fr.hit_idm = false;
 		}
 	};
 	uint64_t merge_t1 = 0;

@@ -3188,6 +3188,8 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 	                      Common::FrameStats::Enabled();
 	fr.armed    = fr_armed;
 	fr.hit_id   = false;
+	fr.hit_idr  = false;
+	fr.hit_idm  = false;
 	fr.hit_pay  = false;
 	fr.hit_full = false;
 	fr.hit_ring = false;
@@ -3201,6 +3203,8 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 			fr.frame = frame_now;
 			fr.cur   = (fr.cur + 1u) & 3u;
 			fr.id[fr.cur].Clear();
+			fr.idr[fr.cur].Clear();
+			fr.idm[fr.cur].Clear();
 			fr.pay[fr.cur].Clear();
 			fr.full[fr.cur].Clear();
 		}
@@ -3425,31 +3429,57 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 			FS::Add(Counter::FrameRepBad, 1);
 		} else {
 			uint64_t h_ident = 0x9e3779b97f4a7c15ull;
+			// Session 95 repair: the same accumulator with the ring-served convertible slots
+			// collapsed (their address is fresh every draw by construction), and the one with
+			// every convertible slot masked - session 94's signature, the ceiling.
+			uint64_t h_identr = 0x9e3779b97f4a7c15ull;
+			uint64_t h_identm = 0x9e3779b97f4a7c15ull;
 			uint64_t h_pay   = 0xff51afd7ed558ccdull;
 			size_t   j       = 0;
 			size_t   k       = 0;
 			bool     ring    = false;
+			bool     ok_ring = false;
+			uint32_t ok_slots = 0;
+			uint32_t n_img   = 0;
+			uint32_t n_buf   = 0;
 			bool     walk_ok = true;
 			for (size_t i = 0; i < mc.prev_sig.size();) {
 				const uint8_t tg = mc.prev_tag[i];
 				if (tg == TagRing) {
 					// The ring offset is fresh every draw by construction: a fixed marker.
-					h_ident = FrameRepMix(h_ident, 0x8b1a9953c4611296ull);
-					ring    = true;
+					h_ident  = FrameRepMix(h_ident, 0x8b1a9953c4611296ull);
+					h_identr = FrameRepMix(h_identr, 0x8b1a9953c4611296ull);
+					h_identm = FrameRepMix(h_identm, 0x8b1a9953c4611296ull);
+					ring     = true;
 					i += 3;
 				} else if (tg == TagOk) {
-					// Session 94 masked these; the replay question needs them UNMASKED.
-					for (int q = 0; q < 3; q++) {
-						if (j >= mc.prev_ok_raw.size()) {
-							walk_ok = false;
-							break;
+					// Session 94 masked these; the strict reading needs them UNMASKED - but a
+					// convertible slot SERVED BY THE RING carries a fresh offset every draw, so
+					// the repaired reading collapses exactly those, and the masked reading
+					// collapses all of them (session 94's signature).
+					ok_slots++;
+					h_identm = FrameRepMix(h_identm, 0x0b0b0b0b0b0b0b0bull);
+					if (j + 3 > mc.prev_ok_raw.size()) {
+						walk_ok = false;
+					} else if (mc.prev_ok_raw[j] != 0 && mc.prev_ok_raw[j] == stream) {
+						ok_ring  = true;
+						h_identr = FrameRepMix(h_identr, 0x8b1a9953c4611296ull);
+						for (int q = 0; q < 3; q++) {
+							h_ident = FrameRepMix(h_ident, mc.prev_ok_raw[j++]);
 						}
-						h_ident = FrameRepMix(h_ident, mc.prev_ok_raw[j++]);
+					} else {
+						for (int q = 0; q < 3; q++) {
+							const uint64_t v = mc.prev_ok_raw[j++];
+							h_ident  = FrameRepMix(h_ident, v);
+							h_identr = FrameRepMix(h_identr, v);
+						}
 					}
 					i += 3;
 				} else if (tg == TagSrt) {
 					// The descriptor is a ring slice: a marker for H_ident, the PAYLOAD for H_pay.
-					h_ident = FrameRepMix(h_ident, 0x2545f4914f6cdd1dull);
+					h_ident  = FrameRepMix(h_ident, 0x2545f4914f6cdd1dull);
+					h_identr = FrameRepMix(h_identr, 0x2545f4914f6cdd1dull);
+					h_identm = FrameRepMix(h_identm, 0x2545f4914f6cdd1dull);
 					if (k >= fr.srt_h.size()) {
 						walk_ok = false;
 					} else {
@@ -3457,7 +3487,11 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 					}
 					i += 3;
 				} else {
-					h_ident = FrameRepMix(h_ident, mc.prev_sig[i]);
+					h_ident  = FrameRepMix(h_ident, mc.prev_sig[i]);
+					h_identr = FrameRepMix(h_identr, mc.prev_sig[i]);
+					h_identm = FrameRepMix(h_identm, mc.prev_sig[i]);
+					n_img += (tg == TagImage) ? 1u : 0u;
+					n_buf += (tg == TagBuffer) ? 1u : 0u;
 					i += 1;
 				}
 				if (!walk_ok) {
@@ -3468,8 +3502,12 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 				FS::Add(Counter::FrameRepBad, 1);
 			} else {
 				h_ident |= static_cast<uint64_t>(h_ident == 0);
-				const uint64_t hp = FrameRepMix(h_ident, h_pay) |
-				                    static_cast<uint64_t>(FrameRepMix(h_ident, h_pay) == 0);
+				h_identr |= static_cast<uint64_t>(h_identr == 0);
+				h_identm |= static_cast<uint64_t>(h_identm == 0);
+				// H_pay and H_full are built on the REPAIRED identity: a replay decision would
+				// be taken on a canonicalised identity, not on fresh ring addresses.
+				const uint64_t hp = FrameRepMix(h_identr, h_pay) |
+				                    static_cast<uint64_t>(FrameRepMix(h_identr, h_pay) == 0);
 				const uint64_t hf = FrameRepMix(hp, fr.args) |
 				                    static_cast<uint64_t>(FrameRepMix(hp, fr.args) == 0);
 				const uint32_t p1 = (fr.cur + 3u) & 3u;
@@ -3479,6 +3517,18 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 				FS::Add(Counter::FrameRepId1, i1 ? 1u : 0u);
 				FS::Add(Counter::FrameRepId2, fr.id[p2].Take(h_ident) ? 1u : 0u);
 				FS::Add(Counter::FrameRepId3, fr.id[p3].Take(h_ident) ? 1u : 0u);
+				const bool     r1 = fr.idr[p1].Take(h_identr);
+				FS::Add(Counter::FrameRepIdR1, r1 ? 1u : 0u);
+				FS::Add(Counter::FrameRepIdR2, fr.idr[p2].Take(h_identr) ? 1u : 0u);
+				FS::Add(Counter::FrameRepIdR3, fr.idr[p3].Take(h_identr) ? 1u : 0u);
+				const bool     m1 = fr.idm[p1].Take(h_identm);
+				FS::Add(Counter::FrameRepIdM1, m1 ? 1u : 0u);
+				FS::Add(Counter::FrameRepOkRing, ok_ring ? 1u : 0u);
+				FS::Add(Counter::FrameRepOkSlots, ok_slots);
+				FS::Add(Counter::FrameRepImgN, n_img);
+				FS::Add(Counter::FrameRepBufN, n_buf);
+				fr.hit_idr = r1;
+				fr.hit_idm = m1;
 				const bool y1 = fr.pay[p1].Take(hp);
 				FS::Add(Counter::FrameRepPay1, y1 ? 1u : 0u);
 				const bool f1 = fr.full[p1].Take(hf);
@@ -3491,9 +3541,12 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 				fr.hit_full = f1;
 				fr.hit_ring = ring;
 				const bool o1 = fr.id[fr.cur].Insert(h_ident);
+				const bool o4 = fr.idr[fr.cur].Insert(h_identr);
+				const bool o5 = fr.idm[fr.cur].Insert(h_identm);
 				const bool o2 = fr.pay[fr.cur].Insert(hp);
 				const bool o3 = fr.full[fr.cur].Insert(hf);
-				FS::Add(Counter::FrameRepOverflow, (o1 && o2 && o3) ? 0u : 1u);
+				FS::Add(Counter::FrameRepOverflow,
+				        (o1 && o2 && o3 && o4 && o5) ? 0u : 1u);
 			}
 		}
 		const auto fr_spent = FS::NowNs() - fr_t0;

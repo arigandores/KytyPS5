@@ -497,6 +497,11 @@ private:
 		uint64_t              args     = 0;
 		std::vector<uint64_t> srt_h;
 		Table                 id[4], pay[4], full[4];
+		// Session 95 repair: the ring-canonicalised identity and the fully-masked one
+		// (session 94's own signature, the ceiling of any canonicalisation).
+		Table                 idr[4], idm[4];
+		bool                  hit_idr = false;
+		bool                  hit_idm = false;
 	};
 	FrameRepState m_frame_rep;
 	void           MergeCostCensus(const PipelineCache::Pipeline&     pipeline,

@@ -1522,6 +1522,18 @@ enum class Counter : uint32_t {
 	FrameRepPayN,          // fr_pay_n:    payload hashes taken
 	FrameRepBad,           // fr_bad:      the second walk did not line up (must read 0)
 	FrameRepOverflow,      // fr_over:     a per-frame table ran out of room (must read 0)
+	// Session 95 repair (pred/02_framerep_ring.md): two more readings of the SAME walk,
+	// counted beside the strict one, so one run says which of them repeats.
+	FrameRepIdR1,          // fr_id1r:     H_identr (ring-served convertible slots masked)
+	FrameRepIdR2,          // fr_id2r:     ... in N-2
+	FrameRepIdR3,          // fr_id3r:     ... in N-3
+	FrameRepIdRNs,         // fr_idr_ns:   the draw brackets of the fr_id1r draws
+	FrameRepIdM1,          // fr_id1m:     H_identm (ALL convertible slots masked, s94's)
+	FrameRepIdMNs,         // fr_idm_ns:   the draw brackets of the fr_id1m draws
+	FrameRepOkRing,        // fr_okring:   draws with >= 1 ring-served convertible slot
+	FrameRepOkSlots,       // fr_okslot:   convertible slots the walk saw
+	FrameRepImgN,          // fr_img:      image-view values the walk saw
+	FrameRepBufN,          // fr_buf:      non-ring buffer values the walk saw
 	Count
 };
 

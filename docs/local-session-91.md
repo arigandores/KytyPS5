@@ -16,17 +16,19 @@ between-run; **[K]** known before the sealing that scores it (not a blind test).
 
 **The game's dynamic resolution reads GPU timestamps, and on this emulator a GPU timestamp is the
 pacer-scaled CPU clock written by the GuestGpu thread at PM4 parse — so a CPU-side knob moves the
-DRS rung; that is why two knobs were unmeasurable, and it gives the estimator the brief asked for a
-concrete form: a one-site, per-process pin of that clock (`KYTY_GPU_CLOCK_PIN`), built, with a
-positive control, sealed and NOT YET RUN because the game was not opened in this session.**
-Meanwhile the fallback estimator (TB, the total effect with a bracket) was sealed, validated on 20
-archived runs and applied to both blocked contrasts without a run: **D1 (`bufimp`) is CLOSED as a
-frame-time regression** — +13.4 % `dt` at matched area in the window where the game latched both
-arms LOW (`area_verdict` VALID there: split −0.001 %, 51/51, work −0.075 %), carried by **4.6 ms a
-flip of GuestGpu blocked in forced host-read drains** that the census arm does not have (1.6 µs) —
-and **`dapin=3` with the record path off cuts GuestGpu CPU per draw by 9.19 % (t −133)**, while its
-GPU cost stays UNDETERMINED: the rung-mediated share is the whole answer there, and only the pin
-can read it.
+DRS rung; that is why two knobs were unmeasurable, and a one-site, per-process pin of that clock
+(`KYTY_GPU_CLOCK_PIN`) removes it: pinned, the two contrasts that failed admission in sessions 88
+and 90 (`dap88a` split +12.93 %, pairs 33 %; `bim90a` −21.88 %, 42.9 %) pass it at +0.001 % /
+110/110 and +0.002 % / 123/123, and the positive control drives the rung the other way — to native
+4K in 100 % of flips. By the rule sealed before the runs, THE PIN IS ADOPTED.** It then settled
+two debts: **`dapin=3` costs GPU time with the record path off, +0.817 % ± 0.146 % (2SE), t +11.2**
+— the record thread is not the carrier — and saves **8.67 %** of GuestGpu CPU per draw; and **D1
+(`bufimp`) is a frame-time regression over the whole run at a fixed rung, `dt` +11.48 %, t +84.7**,
+carried by forced host-read drains (GuestGpu 3.8 ms a flip) and by guest threads stalled 10.9 ms a
+flip waiting for GuestGpu to run them. The fallback estimator (TB), sealed and validated on 20
+archived runs before the game was opened, had read both from disk first; its CPU bracket for
+`dap88a` missed the pinned value by 0.22 pp and its CPU bracket for `bim90a` missed it by 0.27 pp,
+the latter for the in-run price defect named below.
 
 ### 0.1 Defects of my own text, listed first
 
@@ -48,7 +50,7 @@ can read it.
 5. **`PLAN` §0 A said "real Vulkan GPU time never reaches the guest" — overstated.** EOP interrupts
    and flip completions arrive at REAL GPU completion (`commandScheduler.cpp:569-586`), stamped with
    the pacer-scaled clock; only the timestamp VALUES are parse-time. The pin does not cover those
-   channels, and only a pinned run can say whether they matter.
+   channels — **and the pinned runs show they do not drive the rung** (§8.1).
 6. **`PLAN` §0 A's "the guest then sees the wall span ≈ 31 ms" is a prediction**, not a reading:
    what holds by construction is that the pinned G is today's G divided by the speed (≈ ×2).
 7. **W's pair set is the refused matched subset of `bim90a`, to the digit**: the full run's 51
@@ -64,6 +66,10 @@ can read it.
    evidence of a null.
 9. **The scoreboard below is inflated in substance**: T1, T2, T4, T6, T7 bracketed magnitudes that
    were on disk or published before sealing [K].
+10. **`pred/03` R4'a — the repair of item 4 — missed in `pin91c`'s census arm (94.42 % against
+    ≥ 96 %)**, because its fragment rule (`rt_att` < 25 % of p50, borrowed from `rcv81`) does not
+    catch one-vblank fragments carrying 25–35 % of the attachments. Not the pin: R4'b and R4'c HIT
+    (§9.1). **The repair file repeated the class of defect it was written to repair.**
 
 ---
 
@@ -75,9 +81,9 @@ can read it.
 | the reading (`PLAN.md` §0), five readers | done — mechanism, prior art, empirics, anchors, plumbing |
 | `pred/01_shift.md` sealed **before `shift91.py` ran on any log** | 10 161 B, sha256 `82877f4a23e1f15a…`, mtime − ctime +0.003 s |
 | TB validation (V1–V4) and targets (§5, §6, W) | done, §3–§5 |
-| `patch_s91.py` + `patch_s91b.py` (the pin, its positive control, the counters) | built: **`887ede9f8323297f…`, 23 623 680 B**; NOT installed in the game folder (`enter_scene` installs it); the installed exe is still `12b0940a…` |
-| `pred/02_pin.md` (three pinned runs) and `pred/03_repair.md` (R4') | sealed: 8 360 B `ebf4b9f041c9a308…` +0.000 s; 2 747 B `7c9fae4cc4bc58b4…` +0.000 s |
-| **the pinned runs `pin91a/b/c`** | **NOT RUN — the user asked that the game not be opened until they say so** |
+| `patch_s91.py` + `patch_s91b.py` (the pin, its positive control, the counters) | built: **`887ede9f8323297f…`, 23 623 680 B**; installed into the game folder by `enter_scene` at `pin91a` and not rebuilt since (guards check 10 PASS on all three runs) |
+| `pred/02_pin.md` (three pinned runs) and `pred/03_repair.md` (R4') | sealed: 8 360 B `ebf4b9f041c9a308…` +0.000 s; 2 747 B `7c9fae4cc4bc58b4…` +0.000 s — both BEFORE the game was opened |
+| **the pinned runs `pin91a/b/c`** | **run after the user allowed it**, all on `887ede9f…` (installed by `enter_scene`), `pred/02` hash in each `<tag>.json`; `pin91a`'s warm-up hit the known first-entry hang (`GpuHangAbort role=4`, absorbed by `--warmup-first`), every counted attempt reached the scene in 14.8–26.8 s; `guards.py` 1/2/3/4/7/10 PASS in all three, check 6 FAIL (not a criterion), 3b/5 WARN |
 | tests | `memory_tracker_tests` all cases passed; `resource_materialization_tests` all cases passed; `resource_tracking_tests` output **byte-identical to session 90's** (the known "SRT runtime" failure, then the process ends the same way) |
 
 ---
@@ -217,10 +223,96 @@ not settled by TB**: the rung carries +2.3…+3.9 % of T `gpu/draw`, and the rem
 
 ---
 
-## 8. The pinned runs — PENDING
+## 8. The pinned runs [M]
 
-`pred/02_pin.md` §1 carries the three commands; `accept91.sh <tag>` reads each. Not run: the user
-asked that the game not be opened until they say so.
+### 8.1 The pin holds the rung — and the positive control moves it
+
+| | `dap88a` unpinned (s88) | **`pin91a`, mode 1** | **`pin91b`, mode 2** | `bim90a` unpinned (s90) | **`pin91c`, mode 1** |
+|---|---|---|---|---|---|
+| contrast | `dapin=0\|3`, record off | same | same | `bufimp=1\|2` | same (no `proglap`) |
+| HIGH share arm0 / arm1 | 45.4 / 73.7 % | **0.00 / 0.00 %** | **100.00 / 100.00 %** | 56.9 / 3.3 % | **0.00 / 0.00 %** |
+| area per attachment | two rungs | 2 007.8 / 2 007.8 | **8 025.7 / 8 025.9 = 3840×2160** | two rungs | 2 007.8 / 2 007.8 |
+| area split | +12.93 % | **+0.001 %** | +0.002 % | −21.877 % | **+0.002 %** |
+| pair match | 33.0 % | **110/110** | 108/108 | 42.9 % | **123/123** |
+| work | — | +0.003 % | +0.246 % | −0.156 % | +0.119 % |
+| `area_verdict` | INVALID | **VALID** | VALID | INVALID | **VALID** |
+| `gclk_adv / gclk_sadv` (by value) | — | 2.181 / 2.097 = 1/speed | **0.500 / 0.500** | — | 1.878 / 1.999 |
+| `gclk_n` a flip | — | 299.1 | 299.0 | — | 299.0 |
+| `gclk_back` | — | 0 | 0 | — | 0 |
+
+**Rule `pred/02` §4: A-R1 holds and B-Q2 holds ⇒ THE PIN IS ADOPTED as this programme's instrument
+for rung-moving knobs.** The budget model survived both directions: doubling the guest GPU spans
+held the lowest step, halving them sent the game to the top of its ladder — **which is native 4K,
+not the 2432×1368 the record called "HIGH"** (GPU 19 976 µs a flip there against 12 137 at LOW).
+Comparisons with the unpinned runs are between-run [I]; the within-run facts are the pinned runs'
+own admissions.
+
+### 8.2 `dapin`'s GPU cost — the ELEVENTH-session debt, settled for the record-off configuration
+
+`pin91a`, 115 cycles, dh 0.000 pp:
+
+| endpoint | T | t |
+|---|---:|---:|
+| **`gpu/draw`** | **+0.817 %**, SE 0.073 | **+11.20** |
+| `cpu_net/draw` | −8.666 %, SE 0.120 | −72.19 |
+| `dt` | −6.754 %, SE 0.154 | −43.99 |
+| `cpu_net_us` (`endpoint84`, 111 pairs) | **−3 119.7 µs** ± 128.7 | −48.46 |
+| work | +0.069 % | +0.87 |
+
+**Rule `pred/02` E3: t ≥ +3 ⇒ "dapin=3 costs GPU time with the record thread off — the record
+thread is not the carrier".** The size, +0.82 %, is under half the +1.96 % that `dap85a` read with
+the record path on — [I], a different configuration and binary. At the top rung (`pin91b`, no
+verdict by `pred/02` §4) the same contrast reads `gpu/draw` −0.102 %, t −1.30, and `cpu_net/draw`
+−10.95 %.
+
+**TB's first out-of-sample test (E2):** pinned −8.666 % against TB's `dap88a` D bracket
+[−9.386, −8.881] % — **outside by 0.215 pp, inside the ±1 pp the band allowed for between-run
+drift.** TB's GPU bracket [−0.156, +2.774] contains the pinned +0.817.
+
+### 8.3 D1 over the whole run at a fixed rung (`pin91c`, 128 cycles)
+
+| | T | t |
+|---|---:|---:|
+| **`dt`** | **+11.479 %**, SE 0.136 | **+84.68** |
+| `cpu_net/draw` | −1.129 %, SE 0.055 | −20.68 |
+| `gpu/draw` | −2.276 %, SE 0.077 | −29.50 |
+| `cpu_net_us` (`endpoint84`, 123 pairs) | −289.9 µs ± 77.7 | −7.46 |
+
+**The host-read hazard, import arm, per flip** (`hr_*`, lite-live for the first time):
+
+| counter | per flip |
+|---|---:|
+| `hostread_waits` (hazard hits) | 18.312 |
+| `hr_free` — tick already free after refresh | 10.927 |
+| `hr_gpuw` / `hr_gpuw_us` — waits on a submitted buffer | 0.604 / 264.8 µs |
+| **`hr_forced` / `hr_forced_us` — forced submit of the RECORDING buffer + drain** | **6.782 / 3 831.3 µs** (565 µs each) |
+| **`hr_sync` / `hr_sync_us` — calls from guest threads, whole stall in `SendCommandSync`** | **16.257 / 10 880.6 µs** |
+| `hr_call_us` | 13 136.3 µs |
+| `FrameTrace-wait` / `-submit` host-read | 3 899.4 / 184.2 µs |
+
+J1 (free + gpuw + forced = hazard hits) 1.00000, J2 (forced = submit-site events) 0.99984, J3
+1.050, J4 (off-GuestGpu share) **0.888** — all HIT. **88.8 % of the hazards fire on guest threads
+(write faults), and those threads wait 10.9 ms a flip for GuestGpu to reach a `ProcessCommands`
+point and run the drain.** TB's CPU bracket for `bim90a`, [−0.859, +0.024], misses the pinned
+−1.129 % by 0.27 pp — the in-run price defect of §0.1 item 8 (the A/A-reference bracket
+[−1.388, −0.695] contains it). **D1 stays CLOSED; the whole run agrees with W.**
+
+### 8.4 The 64 KiB split — the number session 90 left open [M]
+
+| census arm (`bufimp=1`, `pin91c`), per flip | pooled (≥ 64 KiB) | inline (< 64 KiB) |
+|---|---:|---:|
+| regions | 40.33 | **35.39** (46.7 % of regions) |
+| bytes | 22 040 441 | **777 640 (3.41 % of the bytes)** |
+| GuestGpu time | **173.6 µs to hand them to the pool** | **48.4 µs of memcpy** |
+
+`pin91a` (bufimp 0 in both arms) reads the same shape: inline 3.01 % / 3.00 % of staged bytes,
+32.6 regions, 44–51 µs; hand-over 164 µs. **The split is bimodal, as the mean could not show: half
+the regions, 3.4 % of the bytes.** C7 `bi_b_small / stg_in_b` = **1.00001** and C8 `stg_in_n /
+bi_reg_small` = **0.99999** — the census and the copy path agree region for region. `stg_inbig_n`
+= 0, `up_tmp_n` = 0, `stg_in_gpu_b / stg_in_b` = 1.000 (every inline copy on GuestGpu), I1
+(pool + inline + tmp) / `sync_up_kb × 1000` = 1.00002. **So the most D1 could ever have saved on
+GuestGpu was ≈ 222 µs a flip — and the hand-over to the pool (174 µs) is larger than the inline
+memcpy (48 µs), a lever nobody has looked at.**
 
 ---
 
@@ -253,9 +345,32 @@ asked that the game not be opened until they say so.
 
 **22 entries, 21 hits by wording, 1 miss; counting H1/H5 once and setting the [K] items aside, the
 blind part is 12 entries, 11 hits, 1 miss.** The miss is a premise I wrote (item 4 of `PLAN` §0 A
-applied to a run whose in-run price contradicts it). **Four defects of my own text are listed in
-§0.1 before a single pinned run exists — the fifth consecutive session in which my own defects
-outnumber the world proving me wrong.**
+applied to a run whose in-run price contradicts it).
+
+### 9.1 `pred/02_pin.md` + `pred/03_repair.md` — the pinned runs, all blind
+
+| run | bands scored by `pin91.py` (+ `area_verdict`'s pair match) | result |
+|---|---|---|
+| **A `pin91a`** | P1–P4 (10), R1–R3 (4 + match), R4/R4m (4), R4'a–c (6), S1–S4, E1–E5, C1–C6 ×2 | **45/45 HIT** + match 110/110 |
+| **B `pin91b`** | P1, P2 (6), Q1 ×2, P4, **Q2**, S1–S4 | **15/15 HIT** + match 108/108 |
+| **C `pin91c`** | P1–P4, R1–R3, R4/R4m, R4'a–c, S1–S4, F1–F2, J1–J4, C7–C8 | **34/36** + match 123/123 |
+
+**The two misses are both mine, both in the same band, both in `pin91c`'s census arm:**
+* **R4** (arm0 83.83 %) — the band `pred/03` had already superseded before any run, for fragments.
+* **R4'a (arm0 94.42 % against ≥ 96 %) — a defect of the REPAIR itself.** The 183 flips outside
+  [1990, 2030) sit at 1 959–1 986 Kpx with `rt_att` 25–35 % of its p50, ~3 000 draws and one vblank
+  (dt ≈ 17.1 ms): they ARE fragments, which the 25 %-of-p50 rule borrowed from `rcv81` does not
+  catch. The census arm carries 16.5 % one-vblank flips. R4'b (lowest non-fragment 1 954.8) and
+  R4'c (p5 2 006.6) HIT — no new mode below 1080p. **The repair file repeated the class of defect
+  it was written to repair, for the second session running.**
+
+A tool defect, not a band: `pin91.py` first scored C1–C6 for run C, which `pred/02` §5 does not
+seal, and its C2 there added `bi_b` in the census arm (2.00004 — a MISS that was never a band).
+Fixed before this table; C1–C6 for run C are printed as unsealed readings.
+
+**Session total: 22 (`pred/01`) + 96 (`pred/02`/`pred/03`) scored entries; the pinned 96 were blind
+and read 94 hits and 2 misses, both in a band I wrote. Five defects of my own text (§0.1 items 1–4
+and R4'a) against zero cases of the world contradicting a sealed prediction.**
 
 ---
 
@@ -263,18 +378,24 @@ outnumber the world proving me wrong.**
 
 | debt | next number | since |
 |---|---|---|
-| **The pin works or not** | `pin91a` (R1–R4' against the unpinned dh +28.4 pp) and `pin91b` (the positive control) | **91** |
-| **`dapin`'s GPU cost, ELEVENTH session** | `pin91a` E3 at a fixed rung; TB left it in [−0.16, +2.77] % [I] | 79 → 91 |
-| **the 64 KiB split of the upload bytes** | `stg_in_b / (stg_in_b + stg_pool_b)`, live in every run now — first reading in `pin91a` | 90 → 91 |
+| ~~the pin works or not~~ | **ADOPTED (s91): `pin91a` 0 % HIGH against +28.4 pp unpinned, `pin91b` 100 % at 4K** | 91 |
+| ~~`dapin`'s GPU cost~~ | **settled for the record-off configuration: +0.817 %, t +11.2 — the record thread is not the carrier.** With the record path ON it is not re-measured pinned (`dap85a` read +1.96 % VALID at LOW, unpinned) | 79 → **91** |
+| ~~the 64 KiB split of the upload bytes~~ | **bimodal: 46.7 % of regions, 3.41 % of bytes, 48 µs inline on GuestGpu** | 90 → **91** |
+| **the pool hand-over: 174 µs a flip on GuestGpu to queue ~40 regions to `AsyncMemcpy`** | larger than the inline memcpy it avoids; `stg_pool_ns` is live in every run. Where it goes (1 MiB job split, the queue lock, the wake) is not measured | **91** |
+| **guest threads stalled 10.9 ms a flip in `SendCommandSync`** (only with `bufimp=2`) | closed with D1; noted because any future host-read hazard pays it the same way | 91 |
+| **every rung-moving knob, re-measured pinned** | `pfhint`, `pfcap`, `dapin` with the record path on — each was read at whatever rung its run happened to hold | 91 |
 | the `ObtainBuffer` stream ring (19.66 MB/flip, 13 380 copies) | its timer is 0 in lite: a lite-live timer, the `hr_*` idiom | 90 |
 | the per-element price of `ResourceSpecialization::operator==` | a counter on the vector lengths | 90 |
 | prefetch lines read (s89), the take unsplit (s89), the witness share of `RebindImages` (s88), route B items 2, 8, 10, 12, 3 | unchanged | 83–89 |
 | ~~D1: import guest memory for buffers~~ | **CLOSED in session 91: +13.4 % frame time at matched area, 4.6 ms/flip of forced host-read drains** | 85 → **91** |
 | ~~where `bim90a`'s 4.1 ms went~~ | **CLOSED: GuestGpu blocked in forced host-read drains, 4 609.6 µs/flip wait + 210.6 submit** | 90 → **91** |
-| ~~an estimator that survives a DRS shift~~ | **BUILT, NOT YET TESTED ON A RUN**: the pin (primary) and TB (fallback, validated on the record) | 79 → 91 |
+| ~~an estimator that survives a DRS shift~~ | **CLOSED: the pin, adopted by its sealed rule; TB kept as the fallback for runs already on disk, CPU D labelled [I]** | 79 → **91** |
 
 ## 11. The arithmetic
 
 60 FPS = 16 667 µs; shipped 31 642 µs (`acc82a`, not re-measured); floor `S` 20 838 µs. **Nothing
-here removes work.** D1 is closed with a loss, not a gain. The pin turns two knobs from unmeasurable
-into measurable; what they then measure is hundreds of microseconds at most.
+here removes work, and no default moved.** D1 is closed with a loss. The pin made two knobs
+measurable and measured them; the largest thing it revealed that is not already shipped is the
+174 µs pool hand-over — hundreds of microseconds, as every lever left in this programme. **The
+knob that moved most (`dapin`, −8.7 % CPU per draw) is already shipped at 3; what was measured is
+its price on the GPU, not a new saving.**

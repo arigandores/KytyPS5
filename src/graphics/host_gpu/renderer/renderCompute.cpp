@@ -791,7 +791,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	auto& bindings = reuse_bindings ? m_compute_bindings : *local_bindings;
 	PrepareBindings(input_info.stage, bindings);
 	FindBuffers(bindings);
-	if (program.info.uses_dma) {
+	// Session 94, gate "bdaall" (MEASUREMENT ONLY, pred/02_bdaall.md): the dispatch half of
+	// the census in PrepareGraphicsBindings.
+	bool bda_all = false;
+	if (!program.info.uses_dma && Common::Gates::Enabled(Common::Gates::Gate::BdaAll)) {
+		bda_all = BdaAllCandidate(program.info);
+		Common::FrameStats::Add(bda_all ? Common::FrameStats::Counter::BdaAllCalls
+		                                : Common::FrameStats::Counter::BdaAllNoCandidate,
+		                        1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaAllDispatch, bda_all ? 1u : 0u);
+	}
+	if (program.info.uses_dma || bda_all) {
 		m_context.PrepareBda();
 	}
 	RebindImages(bindings);

@@ -1812,7 +1812,9 @@ struct DrawMergePrev {
 
 constinit DrawMergePrev g_draw_merge_prev {};
 
-void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages, uint64_t stream,
+// Session 94: returns the dm_buf1_ok verdict of THIS draw (false when bdacap is off), so the
+// mergecost census can book the draw's time by it.  Nothing else changed.
+bool NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages, uint64_t stream,
                    bool mesh, bool verify) {
 	namespace FS  = Common::FrameStats;
 	using Counter = FS::Counter;
@@ -1885,7 +1887,7 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 		// The previous signature is not comparable with anything after an excluded draw.
 		FS::Add(Counter::DrawMergeOver, 1);
 		g_draw_merge_prev.valid = false;
-		return;
+		return false;
 	}
 	FS::Add(Counter::DrawMergeBufSlots, buf_n);
 	FS::Add(Counter::DrawMergeRing, ring);
@@ -1953,8 +1955,9 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	// dm_buf1_nr branch of classify() written out, because classify() also answers true for
 	// its two zero-difference branches.  same_shape implies same_len, so nr_index was
 	// written by the loop above, and bufcls was filled because bdacap is the first operand.
-	if (bdacap && same_shape && d_img == 0 && d_smp == 0 && d_bufnr == 1 &&
-	    bufcls[nr_index] == static_cast<uint8_t>(BdaCapClass::Ok)) {
+	const bool buf1_ok = bdacap && same_shape && d_img == 0 && d_smp == 0 && d_bufnr == 1 &&
+	                     bufcls[nr_index] == static_cast<uint8_t>(BdaCapClass::Ok);
+	if (buf1_ok) {
 		FS::Add(Counter::DrawMergeBuf1Ok, 1);
 	}
 	FS::Add(Counter::DrawMergeNo, hit ? 0u : 1u);
@@ -1993,6 +1996,7 @@ void NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	std::memcpy(prev.buffer_offset.data(), bufo.data(), size_t {buf_n} * sizeof(uint64_t));
 	std::memcpy(prev.buffer_range.data(), bufr.data(), size_t {buf_n} * sizeof(uint64_t));
 	std::memcpy(prev.shader_data.data(), sd.data(), size_t {sd_n} * sizeof(uint64_t));
+	return buf1_ok;
 }
 
 } // namespace
@@ -2407,8 +2411,23 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// where the session-71 pass-shape Add is placed and for the same reason - past the
 	// async-pipeline skip return and before the recpack / direct split, so one site covers
 	// both paths and no skipped draw is counted.  Dispatches never reach this function.
+	// Session 94, gate "mergecost" (MEASUREMENT ONLY, pred/01_mergecost.md): the class point.
+	// The draw is armed iff the gate was on at its entry; the stamp before NoteDrawMerge closes
+	// the PRE-CLASS interval, the stamp after it opens the POST-CLASS one, so the drawmerge
+	// census's own time (mc_dm_ns) lies in neither.  The scope below books both by what the
+	// census and CommitBindings decided (dm_buf1_ok, P) when the function exits.
+	const bool     merge_armed = m_merge_cost.draw_t0 != 0;
+	const uint64_t merge_t0    = merge_armed ? Common::FrameStats::NowNs() : 0;
+	m_merge_cost.armed  = merge_armed;
+	m_merge_cost.ok     = false;
+	m_merge_cost.p      = false;
+	m_merge_cost.sig_ns = 0;
+	if (!merge_armed) {
+		// An unarmed block must not leave a stale previous signature for the next armed one.
+		m_merge_cost.prev_valid = false;
+	}
 	if (Common::Gates::Enabled(Common::Gates::Gate::DrawMerge)) {
-		NoteDrawMerge(static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+		m_merge_cost.ok = NoteDrawMerge(static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
 		                  static_cast<VkPipeline>(pipeline.pipeline))),
 		              stages,
 		              static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(
@@ -2418,6 +2437,43 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		              mesh_active,
 		              Common::Gates::Enabled(Common::Gates::Gate::DrawMergeVerify));
 	}
+	struct MergeCostScope {
+		MergeCostState& mc;
+		uint64_t        pre_ns;
+		uint64_t        t0;
+		~MergeCostScope() {
+			namespace FS = Common::FrameStats;
+			if (t0 != 0) {
+				const auto raw  = FS::NowNs() - t0;
+				const auto post = raw > mc.sig_ns ? raw - mc.sig_ns : 0;
+				FS::Add(FS::Counter::MergeCostDraws, 1);
+				FS::Add(FS::Counter::MergeCostPreNs, pre_ns);
+				FS::Add(FS::Counter::MergeCostPostNs, post);
+				if (mc.p) {
+					FS::Add(FS::Counter::MergeCostPrePNs, pre_ns);
+					FS::Add(FS::Counter::MergeCostPostPNs, post);
+				}
+				if (mc.ok) {
+					FS::Add(FS::Counter::MergeCostOkDraws, 1);
+					FS::Add(FS::Counter::MergeCostPreOkNs, pre_ns);
+					FS::Add(FS::Counter::MergeCostPostOkNs, post);
+					FS::Add(FS::Counter::MergeCostSameOk, mc.p ? 1u : 0u);
+					FS::Add(FS::Counter::MergeCostPostPOkNs, mc.p ? post : 0u);
+				}
+			}
+			mc.armed   = false;
+			mc.draw_t0 = 0;
+		}
+	};
+	uint64_t merge_t1 = 0;
+	if (merge_armed) {
+		merge_t1 = Common::FrameStats::NowNs();
+		Common::FrameStats::Add(Common::FrameStats::Counter::MergeCostCensusNs,
+		                        merge_t1 - merge_t0);
+	}
+	MergeCostScope merge_scope {m_merge_cost,
+	                            merge_armed ? merge_t0 - m_merge_cost.draw_t0 : 0,
+	                            merge_t1};
 
 	// Gate "recpack" (commandRecorder.h): nothing below records on this thread. Every decision -
 	// pass state, the dynamic-state cache, the shader-write debt, the descriptor set - is taken
@@ -2746,6 +2802,12 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	// the middle of the critical section still account for their whole hold.
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
+	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
+	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&
+	                               Common::FrameStats::Enabled()
+	                           ? Common::FrameStats::NowNs()
+	                           : 0;
 	DrawStatBegin();
 	if (args.index_count == 0 || args.instance_count == 0) {
 		return;
@@ -2904,6 +2966,12 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
+	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
+	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&
+	                               Common::FrameStats::Enabled()
+	                           ? Common::FrameStats::NowNs()
+	                           : 0;
 	DrawStatBegin();
 	if (args.vertex_count == 0 || args.instance_count == 0) {
 		return;

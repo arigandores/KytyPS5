@@ -1438,6 +1438,70 @@ enum class Counter : uint32_t {
 	// images and samplers equal, EXACTLY ONE non-ring buffer slot different - those whose
 	// one differing slot NativeStorageBuffer classified bc_ok.
 	DrawMergeBuf1Ok,    // dm_buf1_ok
+	// Session 94, gate "bdacap": RAW ns NativeStorageBuffer spent on the bc_cb slots, the
+	// const-bank uniform views BDA cannot express (58 % of all buffer slots in s93).
+	BdaCapConstBankNs,  // bc_cb_ns
+	// Session 94, gate "mergecost" (MEASUREMENT ONLY, pred/01_mergecost.md).  A draw is
+	// ARMED when the gate was on at its entry; its PRE-CLASS time runs from right after the
+	// render mutex to just before NoteDrawMerge, its POST-CLASS time from just after
+	// NoteDrawMerge to the exit of ExecutePreparedDraw minus the census's own time.  P is
+	// "the post-conversion signature equals the previous graphics commit's under the same
+	// pipeline layout": bc_ok buffer entries masked, every other descriptor kept.  All times
+	// are RAW ns.  Every one reads 0 unless the gate is armed.
+	MergeCostDraws,        // mc_n:        armed draws that reached the class point
+	MergeCostPreNs,        // mc_pre_ns:   mutex -> class point, all armed draws
+	MergeCostPostNs,       // mc_post_ns:  class point -> exit, census excluded
+	MergeCostCensusNs,     // mc_dm_ns:    NoteDrawMerge's own time (the drawmerge census)
+	MergeCostSigNs,        // mc_sig_ns:   the signature census's own time
+	MergeCostSigDraws,     // mc_sig:      graphics commits whose signature was built
+	MergeCostBad,          // mc_bad:      commits whose walk ran out of bounds (not compared)
+	MergeCostOkSlots,      // mc_okslot:   bc_ok buffer entries masked in the signatures
+	MergeCostSame,         // mc_p:        P - the converted draw could reuse the previous set
+	                       //              (same layout DEFINITION, same command buffer, every
+	                       //              descriptor equal after masking the convertible slots)
+	MergeCostSamePipe,     // mc_p_pipe:   P and the same VkPipeline as the previous commit
+	MergeCostSameEqPipe,   // mc_p_eq:     ... and even the bc_ok entries equal (set equal TODAY)
+	MergeCostOkDraws,      // mc_ok:       armed draws NoteDrawMerge classified dm_buf1_ok
+	MergeCostSameOk,       // mc_p_ok:     mc_ok and P
+	MergeCostPrePNs,       // mc_pre_p_ns
+	MergeCostPostPNs,      // mc_post_p_ns
+	MergeCostPreOkNs,      // mc_pre_ok_ns
+	MergeCostPostOkNs,     // mc_post_ok_ns
+	MergeCostTransitNs,    // mc_tr_ns:    CommitBindings image transitions (+ GDS check)
+	MergeCostWriteNs,      // mc_wr_ns:    ... write-list build (+ push-data copy)
+	MergeCostEmitNs,       // mc_em_ns:    ... set hand-out + bindings packet / Vulkan calls
+	MergeCostTransitPNs,   // mc_tr_p_ns:  the same three over the P commits only
+	MergeCostWritePNs,     // mc_wr_p_ns
+	MergeCostEmitPNs,      // mc_em_p_ns
+	// Why a signature differed (a commit may carry several; none of these is P):
+	MergeCostDiffFirst,       // mc_d_first:   no previous commit to compare with
+	MergeCostDiffShape,       // mc_d_shape:   pipeline layout, stages, kinds or counts
+	MergeCostDiffImage,       // mc_d_img:     an image view or layout
+	MergeCostDiffSampler,     // mc_d_smp:     a sampler
+	MergeCostDiffRing,        // mc_d_ring:    a stream-ring buffer entry (new offset a draw)
+	MergeCostDiffBuffer,      // mc_d_buf:     a non-ring buffer entry that is not bc_ok
+	MergeCostDiffSrt,         // mc_d_srt:     the flattened-SRT or shader-data upload
+	MergeCostDiffFixed,       // mc_d_fix:     GDS, BDA page table or fault buffer
+	MergeCostDiffRingSrtOnly, // mc_d_rs:      differed ONLY in ring and/or SRT entries
+	// Session 94, gate "bdaall" (MEASUREMENT ONLY, pred/02_bdaall.md): PrepareBda calls
+	// made ONLY because the gate is armed (no stage of the draw/dispatch set uses_dma).
+	BdaAllCalls,           // bda_all_n
+	// Session 94, second patch (review of the first, before any run):
+	MergeCostDiffCb,       // mc_d_cb:     the scheduler tick moved - a new command buffer
+	MergeCostHasRing,      // mc_has_ring: commits with at least one unmasked ring entry
+	MergeCostHasSrt,       // mc_has_srt:  commits with a flattened-SRT or shader-data upload
+	MergeCostSamePush,     // mc_p_push:   P on a push-descriptor pipeline
+	MergeCostPostPOkNs,    // mc_post_pok_ns: post-class time of draws that are P AND dm_buf1_ok
+	MergeCostMaskOk,       // mc_mask_ok:  masked (convertible) entries whose bdacap class is Ok
+	MergeCostMaskOther,    // mc_mask_x:   masked entries of any other class (ring, null, none)
+	MergeCostWrittenSlots, // mc_wslot:    non-texel non-const-bank entries KEPT because written
+	MergeCostPacket,       // mc_pkt:      commits on the recpack path (record thread does Vulkan)
+	BdaCapOkWritten,       // bc_ok_w:     bc_ok slots that are written or atomic (gate bdacap)
+	BdaCapOkWrittenNs,     // bc_ok_w_ns:  their RAW ns - s93's Ceiling_bind counted them
+	BdaAllDispatch,        // bda_all_disp: the dispatch half of bda_all_n
+	BdaAllNoCandidate,     // bda_all_skip: gate on, no uses_dma, no convertible slot - no call
+	FaultProcN,            // fbp_n:       ProcessFaultBuffer calls from the garbage collector
+	FaultProcNs,           // fbp_ns:      their RAW ns (Enabled(), lite-live)
 	Count
 };
 

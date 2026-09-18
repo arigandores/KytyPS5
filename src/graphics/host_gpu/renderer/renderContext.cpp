@@ -380,7 +380,17 @@ void RenderContext::PrepareBda() {
 void RenderContext::RunGarbageCollector() {
 	if (m_fault_process_pending) {
 		m_fault_process_pending = false;
+		// Session 94: every PrepareBda call arms this pass (an EndRendering, a dispatch over
+		// the whole fault bitmap, barriers, and a wait once its 8 areas wrap), so gate
+		// "bdaall" multiplies it.  Counted and timed in every run (Enabled(), lite-live).
+		const uint64_t fbp_t0 =
+		    Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 		m_buffer_cache.ProcessFaultBuffer();
+		if (fbp_t0 != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::FaultProcN, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::FaultProcNs,
+			                        Common::FrameStats::NowNs() - fbp_t0);
+		}
 	}
 	m_texture_cache.ProcessDownloadImages();
 	m_texture_cache.RunGarbageCollector();

@@ -404,6 +404,29 @@ private:
 	std::vector<vk::DescriptorImageInfo>  m_descriptor_images;
 	std::vector<vk::WriteDescriptorSet>   m_descriptor_writes;
 	std::vector<uint32_t>                 m_image_occurrences;
+	// Session 94, gate "mergecost" (MEASUREMENT ONLY, pred/01_mergecost.md): the state of
+	// the post-conversion signature census.  Armed per draw at its entry (draw_t0 != 0) and
+	// at its class point (armed), never by a gate read in between, so a flip landing inside
+	// a draw cannot arm half of it.  Feeds no value, no decision and no side effect.
+	struct MergeCostState {
+		uint64_t              draw_t0       = 0;
+		uint64_t              sig_ns        = 0;
+		bool                  armed         = false;
+		bool                  ok            = false;
+		bool                  p             = false;
+		bool                  prev_valid    = false;
+		uint64_t              prev_layout   = 0;
+		uint64_t              prev_pipeline = 0;
+		uint64_t              prev_tick     = 0;
+		std::vector<uint64_t> sig, prev_sig;
+		std::vector<uint8_t>  tag, prev_tag;
+		std::vector<uint64_t> ok_raw, prev_ok_raw;
+	};
+	MergeCostState m_merge_cost;
+	void           MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
+	                               std::span<PreparedBindings* const> prepared_bindings,
+	                               uint64_t transit_ns, uint64_t write_ns, uint64_t emit_ns,
+	                               bool packet);
 	// Hot-path memos (renderMemo.h); created on first use so the header stays light.
 	std::shared_ptr<RenderExecutorMemo>   m_memo;
 	[[nodiscard]] RenderExecutorMemo&     Memo();

@@ -246,6 +246,14 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // It changes nothing the emulator decides; at 0 no NowNs() and no Add of this
     // session runs.  LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_BDA_CAP", "bdacap", false},
+    // Session 94, measurement only: the post-conversion descriptor-set signature census
+    // (mc_*).  It changes nothing the emulator decides; at 0 no NowNs() of it runs.
+    {"KYTY_MERGE_COST", "mergecost", false},
+    // Session 94, measurement only: PrepareBda on every draw and dispatch with a
+    // convertible buffer slot (bda_all_n).  It changes WHEN guest writes are synchronised
+    // and therefore which slots take the stream ring; never shipped.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_BDA_ALL", "bdaall", false},
 }};
 
 struct KnobDefinition {

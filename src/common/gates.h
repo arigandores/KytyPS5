@@ -347,6 +347,20 @@ enum class Gate : uint32_t {
 	// Nothing is converted: no value, no decision and no side effect depends on it, and
 	// at 0 not one timestamp and not one Add of this session is taken.
 	BdaCap,             // KYTY_BDA_CAP,            file name "bdacap"
+	// Session 94, MEASUREMENT ONLY (pred/01_mergecost.md): what a draw that merges into its
+	// predecessor would really save once the bc_ok V# slots are carried by a device address.
+	// Every graphics commit gets a post-conversion signature (bc_ok buffer entries masked,
+	// everything else kept) compared with the previous commit's, and the commit phases and
+	// the draw's time before and after its class point are booked by the outcome.  It feeds
+	// no value, no decision and no side effect; at 0 not one timestamp of it is taken.
+	MergeCost,          // KYTY_MERGE_COST,         file name "mergecost"
+	// Session 94, MEASUREMENT ONLY (pred/02_bdaall.md): PrepareBda on every draw and
+	// dispatch that has a statically convertible buffer slot (not formatted, not const-bank,
+	// not written, not atomic) -- exactly where moving those slots onto BDA would set
+	// info.uses_dma.  No slot is converted and no shader changes; the contrast prices the
+	// extra calls and their side effects, which include WHICH slots then take the stream
+	// ring (PrepareBda clears the CPU-dirty ranges first).  Never to be shipped.
+	BdaAll,             // KYTY_BDA_ALL,            file name "bdaall"
 	Count,
 };
 

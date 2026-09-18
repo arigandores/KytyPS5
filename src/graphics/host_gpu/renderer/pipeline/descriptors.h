@@ -49,6 +49,25 @@ enum class BdaCapClass : uint8_t {
 	Ok        = 5,
 };
 
+// Session 94, gates "bdaall" and "mergecost" (MEASUREMENT ONLY): a buffer slot a shader
+// could read through a device address instead of a descriptor -- not a texel view, not a
+// const-bank uniform view, and never written or atomic (the backend has no BDA store path:
+// SpirvEmitter rejects writable FLAT/GLOBAL addresses).  A static property of the resource.
+[[nodiscard]] inline bool BdaConvertible(const ShaderRecompiler::IR::BufferResource& res) {
+	return !res.formatted && !ShaderRecompiler::IR::PackedStrideConstBank(res.packed_stride) &&
+	       !res.written && !res.atomic;
+}
+
+template <typename Info>
+[[nodiscard]] inline bool BdaAllCandidate(const Info& info) {
+	for (const auto& res: info.buffers) {
+		if (BdaConvertible(res)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 struct PreparedBindings {
 	struct BufferSource {
 		uint64_t address = 0;

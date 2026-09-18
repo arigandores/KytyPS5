@@ -162,7 +162,8 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	// Called exactly once on every path that RETURNS, so bc_null + bc_fmt + bc_cb +
 	// bc_ring + bc_ok is the number of calls (control A2).  The EXIT() sites abort the
 	// process and do not return, so they need no class.
-	const auto cap_note = [cap, cap_t0, &buffer_class](BdaCapClass cls, uint64_t bytes) {
+	const auto cap_note = [cap, cap_t0, &buffer_class, &resource](BdaCapClass cls,
+	                                                                uint64_t    bytes) {
 		if (!cap) {
 			return;
 		}
@@ -185,6 +186,17 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		if (cls == BdaCapClass::Ok) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkNs, ns);
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkBytes, bytes);
+		}
+		// Session 94: the const-bank slots' own time (bc_cb_ns) -- the 58 % of all buffer
+		// slots that BDA cannot express get a measured binding price of their own.
+		if (cls == BdaCapClass::ConstBank) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapConstBankNs, ns);
+		}
+		// Session 94: the bc_ok slots a shader WRITES (or updates atomically) cannot move onto
+		// BDA -- there is no store path -- yet s93's Ceiling_bind counted them.
+		if (cls == BdaCapClass::Ok && (resource.written || resource.atomic)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkWritten, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapOkWrittenNs, ns);
 		}
 	};
 	buffer_offset = 0;
@@ -2053,7 +2065,22 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 	    uses_dma) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaCapDmaDraws, 1);
 	}
-	if (uses_dma) {
+	// Session 94, gate "bdaall" (MEASUREMENT ONLY, pred/02_bdaall.md): what PrepareBda
+	// would cost if every draw needed the device-address table, which is what moving the
+	// bc_ok V# slots onto BDA would make true.  The draw is otherwise untouched -- no slot is
+	// converted, no shader changes -- so the contrast prices exactly the extra calls and
+	// their side effects (earlier uploads, re-armed pages, pass ends).  bda_all_n counts the
+	// calls made ONLY because of the gate; at 0 nothing here runs.
+	bool bda_all = false;
+	if (!uses_dma && Common::Gates::Enabled(Common::Gates::Gate::BdaAll)) {
+		for (auto* stage: stages) {
+			bda_all = bda_all || BdaAllCandidate(stage->runtime->program->info);
+		}
+		Common::FrameStats::Add(bda_all ? Common::FrameStats::Counter::BdaAllCalls
+		                                : Common::FrameStats::Counter::BdaAllNoCandidate,
+		                        1);
+	}
+	if (uses_dma || bda_all) {
 		m_context.PrepareBda();
 	}
 	for (auto* stage: stages) {
@@ -2736,7 +2763,11 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// no second set of timestamps; it reuses these and writes its own counters.  The
 	// cb_pool_* / cb_push_* Adds stay behind DrawStat::On() so their meaning is unchanged.
 	const bool bind_lap     = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
-	const bool cb_timed     = (Common::DrawStat::On() || bind_lap) &&
+	// Session 94, gate "mergecost": armed per draw at its class point (renderDraw.cpp), never
+	// by a gate read here, so a flip landing inside a draw cannot arm half of it.
+	const bool merge_cost   = m_merge_cost.armed &&
+	                        pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
+	const bool cb_timed     = (Common::DrawStat::On() || bind_lap || merge_cost) &&
 	                      pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
 	const bool cb_pool      = !pipeline.uses_push_descriptors;
 	uint64_t   cb_t         = cb_timed ? FS::NowNs() : 0;
@@ -2749,11 +2780,13 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			cb_t = now;
 		}
 	};
+	uint64_t   cb_emit      = 0;
 	const auto cb_finish = [&]() {
 		if (!cb_timed) {
 			return;
 		}
 		const auto emit = FS::NowNs() - cb_t;
+		cb_emit         = emit;
 		if (Common::DrawStat::On()) {
 			FS::Add(cb_pool ? FS::Counter::CommitPoolSets : FS::Counter::CommitPushSets, 1);
 			FS::Add(cb_pool ? FS::Counter::CommitPoolTransitNs : FS::Counter::CommitPushTransitNs,
@@ -3024,6 +3057,9 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			    m_descriptor_writes, m_descriptor_buffers, m_descriptor_images);
 		}
 		cb_finish();
+		if (merge_cost) {
+			MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, true);
+		}
 		return;
 	}
 	// Taken after every barrier above, right before the writes that use it.
@@ -3054,6 +3090,254 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 	}
 	cb_finish();
+	if (merge_cost) {
+		MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, false);
+	}
+}
+
+// Session 94, gate "mergecost" (MEASUREMENT ONLY, pred/01_mergecost.md).  Runs AFTER the
+// commit was timed and walks the writes CommitBindings just built, in the order it built
+// them, into the signature the set would have once every bc_ok buffer slot were carried by
+// a device address: a bc_ok entry becomes a fixed sentinel (its triplet is kept aside for
+// mc_p_eq), every other entry is kept as it is -- image views with their layouts, samplers,
+// const-bank / ring / formatted / null buffers, the flattened-SRT and shader-data uploads,
+// GDS, the BDA table and the fault buffer.  Equal to the previous graphics commit's
+// signature under the same pipeline layout (P) means the converted draw could reuse that
+// set.  The walk needs the bdacap classes, so a commit without them is counted mc_bad and
+// never compared.  Its own time is handed to the draw's post-class timer, which subtracts it.
+void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
+                                     std::span<PreparedBindings* const> prepared_bindings,
+                                     uint64_t transit_ns, uint64_t write_ns,
+                                     uint64_t emit_ns, bool packet) {
+	namespace FS  = Common::FrameStats;
+	using Counter = FS::Counter;
+	using ShaderRecompiler::IR::DescriptorBindingKind;
+	constexpr uint8_t  TagShape   = 0;
+	constexpr uint8_t  TagImage   = 1;
+	constexpr uint8_t  TagSampler = 2;
+	constexpr uint8_t  TagRing    = 3;
+	constexpr uint8_t  TagBuffer  = 4;
+	constexpr uint8_t  TagOk      = 5;
+	constexpr uint8_t  TagSrt     = 6;
+	constexpr uint8_t  TagFixed   = 7;
+	constexpr uint32_t WhyFirst   = 1u << 8u;
+	constexpr uint32_t WhyCb      = 1u << 9u;
+	constexpr uint64_t OkSentinel = 0x0b0b0b0b0b0b0b0bull;
+	const uint64_t     t0         = FS::NowNs();
+	auto&              mc         = m_merge_cost;
+	const auto handle_of = [](vk::Buffer b) {
+		return static_cast<uint64_t>(reinterpret_cast<uintptr_t>(static_cast<VkBuffer>(b)));
+	};
+	const uint64_t stream =
+	    handle_of(m_context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream).Handle());
+	mc.sig.clear();
+	mc.tag.clear();
+	mc.ok_raw.clear();
+	const auto put = [&mc](uint8_t tag, uint64_t value) {
+		mc.sig.push_back(value);
+		mc.tag.push_back(tag);
+	};
+	const auto put3 = [&put](uint8_t tag, const vk::DescriptorBufferInfo& info, uint64_t h) {
+		put(tag, h);
+		put(tag, static_cast<uint64_t>(info.offset));
+		put(tag, static_cast<uint64_t>(info.range));
+	};
+	bool     bad      = false;
+	uint32_t ok_slots = 0;
+	uint32_t mask_x   = 0;
+	uint32_t wslots   = 0;
+	// The layout DEFINITION: push-descriptor flag and push stages; the stage, kind and count
+	// words below carry the rest.  One VkPipelineLayout is created per pipeline, so its
+	// handle would make "same layout" mean "same pipeline".
+	put(TagShape, (pipeline.uses_push_descriptors ? (1ull << 40u) : 0ull) |
+	                  static_cast<uint64_t>(static_cast<VkShaderStageFlags>(pipeline.push_stages)));
+	size_t   bi       = 0;
+	size_t   ii       = 0;
+	for (const auto* prepared: prepared_bindings) {
+		if (bad) {
+			break;
+		}
+		const auto& program = *prepared->runtime->program;
+		put(TagShape, (static_cast<uint64_t>(program.stage) << 32u) |
+		                  static_cast<uint64_t>(program.bindings.descriptors.size()));
+		for (const auto& binding: program.bindings.descriptors) {
+			if (bad) {
+				break;
+			}
+			put(TagShape, (static_cast<uint64_t>(binding.kind) << 32u) |
+			                  static_cast<uint64_t>(binding.resources.size()));
+			if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
+			    ShaderRecompiler::IR::ImageResourceClass::None) {
+				for (size_t r = 0; r < binding.resources.size(); r++) {
+					if (ii >= m_descriptor_images.size()) {
+						bad = true;
+						break;
+					}
+					const auto& info = m_descriptor_images[ii++];
+					put(TagImage, static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+					                  static_cast<VkImageView>(info.imageView))));
+					put(TagImage, static_cast<uint64_t>(info.imageLayout));
+					put(TagImage, static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+					                  static_cast<VkSampler>(info.sampler))));
+				}
+				continue;
+			}
+			switch (binding.kind) {
+				case DescriptorBindingKind::Buffers:
+				case DescriptorBindingKind::ConstBuffers:
+					for (const auto resource: binding.resources) {
+						if (bi >= m_descriptor_buffers.size() ||
+						    resource >= program.info.buffers.size()) {
+							bad = true;
+							break;
+						}
+						const auto& info = m_descriptor_buffers[bi++];
+						const auto  h    = handle_of(info.buffer);
+						const auto& res  = program.info.buffers[resource];
+						// The mask is the slot's STATIC convertibility, so a convertible slot served by
+						// the ring in one draw and by a cached buffer in the next is masked in both;
+						// its bdacap class only labels it.  ConstBuffers views are const-bank.
+						if (binding.kind == DescriptorBindingKind::Buffers && BdaConvertible(res)) {
+							const bool cls_ok = resource < prepared->buffer_class.size() &&
+							                    prepared->buffer_class[resource] ==
+							                        static_cast<uint8_t>(BdaCapClass::Ok);
+							put(TagOk, OkSentinel);
+							put(TagOk, 0);
+							put(TagOk, 0);
+							mc.ok_raw.push_back(h);
+							mc.ok_raw.push_back(static_cast<uint64_t>(info.offset));
+							mc.ok_raw.push_back(static_cast<uint64_t>(info.range));
+							ok_slots += cls_ok ? 1u : 0u;
+							mask_x += cls_ok ? 0u : 1u;
+						} else {
+							if (binding.kind == DescriptorBindingKind::Buffers && !res.formatted &&
+							    !ShaderRecompiler::IR::PackedStrideConstBank(res.packed_stride)) {
+								wslots++;
+							}
+							put3((h != 0 && h == stream) ? TagRing : TagBuffer, info, h);
+						}
+					}
+					break;
+				case DescriptorBindingKind::FlattenedSrt:
+				case DescriptorBindingKind::ShaderData:
+				case DescriptorBindingKind::BdaPagetable:
+				case DescriptorBindingKind::FaultBuffer:
+				case DescriptorBindingKind::Gds: {
+					if (bi >= m_descriptor_buffers.size()) {
+						bad = true;
+						break;
+					}
+					const auto& info = m_descriptor_buffers[bi++];
+					const bool  srt  = binding.kind == DescriptorBindingKind::FlattenedSrt ||
+					                 binding.kind == DescriptorBindingKind::ShaderData;
+					put3(srt ? TagSrt : TagFixed, info, handle_of(info.buffer));
+					break;
+				}
+				case DescriptorBindingKind::Samplers:
+					for (size_t r = 0; r < binding.resources.size(); r++) {
+						if (ii >= m_descriptor_images.size()) {
+							bad = true;
+							break;
+						}
+						const auto& info = m_descriptor_images[ii++];
+						put(TagSampler, static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+						                    static_cast<VkSampler>(info.sampler))));
+					}
+					break;
+				default: bad = true; break;
+			}
+		}
+	}
+	if (bi != m_descriptor_buffers.size() || ii != m_descriptor_images.size()) {
+		bad = true;
+	}
+	const uint64_t layout = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+	    static_cast<VkPipelineLayout>(pipeline.pipeline_layout)));
+	const uint64_t tick   = m_context.GetCommandScheduler().CurrentTick();
+	const uint64_t pipe   = static_cast<uint64_t>(
+	    reinterpret_cast<uintptr_t>(static_cast<VkPipeline>(pipeline.pipeline)));
+	if (bad) {
+		FS::Add(Counter::MergeCostBad, 1);
+		mc.prev_valid = false;
+		mc.p          = false;
+	} else {
+		uint32_t why = 0;
+		if (!mc.prev_valid) {
+			why |= WhyFirst;
+		} else {
+			// A new command buffer has no set bound: never P, whatever the signature says.
+			if (mc.prev_tick != tick) {
+				why |= WhyCb;
+			}
+			if (mc.prev_sig.size() != mc.sig.size()) {
+				why |= 1u << TagShape;
+			} else {
+				for (size_t i = 0; i < mc.sig.size(); i++) {
+					const auto a = mc.tag[i];
+					const auto b = mc.prev_tag[i];
+					if (a != b) {
+						// A kept buffer entry that went ring <-> cached is a ring difference.
+						const bool bufs = (a == TagRing || a == TagBuffer) &&
+						                  (b == TagRing || b == TagBuffer);
+						why |= bufs ? (1u << TagRing) : (1u << TagShape);
+					} else if (mc.sig[i] != mc.prev_sig[i]) {
+						why |= 1u << a;
+					}
+				}
+			}
+		}
+		bool has_ring = false;
+		bool has_srt  = false;
+		for (const auto t: mc.tag) {
+			has_ring = has_ring || t == TagRing;
+			has_srt  = has_srt || t == TagSrt;
+		}
+		const bool p         = why == 0;
+		const bool same_pipe = mc.prev_valid && mc.prev_pipeline == pipe;
+		FS::Add(Counter::MergeCostSigDraws, 1);
+		FS::Add(Counter::MergeCostOkSlots, ok_slots);
+		FS::Add(Counter::MergeCostMaskOk, ok_slots);
+		FS::Add(Counter::MergeCostMaskOther, mask_x);
+		FS::Add(Counter::MergeCostWrittenSlots, wslots);
+		FS::Add(Counter::MergeCostPacket, packet ? 1u : 0u);
+		FS::Add(Counter::MergeCostHasRing, has_ring ? 1u : 0u);
+		FS::Add(Counter::MergeCostHasSrt, has_srt ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffCb, (why & WhyCb) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostTransitNs, transit_ns);
+		FS::Add(Counter::MergeCostWriteNs, write_ns);
+		FS::Add(Counter::MergeCostEmitNs, emit_ns);
+		FS::Add(Counter::MergeCostDiffFirst, (why & WhyFirst) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffShape, (why & (1u << TagShape)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffImage, (why & (1u << TagImage)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffSampler, (why & (1u << TagSampler)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffRing, (why & (1u << TagRing)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffBuffer, (why & (1u << TagBuffer)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffSrt, (why & (1u << TagSrt)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffFixed, (why & (1u << TagFixed)) != 0 ? 1u : 0u);
+		FS::Add(Counter::MergeCostDiffRingSrtOnly,
+		        (why != 0 && (why & ~((1u << TagRing) | (1u << TagSrt))) == 0) ? 1u : 0u);
+		if (p) {
+			FS::Add(Counter::MergeCostSame, 1);
+			FS::Add(Counter::MergeCostTransitPNs, transit_ns);
+			FS::Add(Counter::MergeCostWritePNs, write_ns);
+			FS::Add(Counter::MergeCostEmitPNs, emit_ns);
+			FS::Add(Counter::MergeCostSamePipe, same_pipe ? 1u : 0u);
+			FS::Add(Counter::MergeCostSamePush, pipeline.uses_push_descriptors ? 1u : 0u);
+			FS::Add(Counter::MergeCostSameEqPipe,
+			        (same_pipe && mc.ok_raw == mc.prev_ok_raw) ? 1u : 0u);
+		}
+		mc.p = p;
+		std::swap(mc.sig, mc.prev_sig);
+		std::swap(mc.tag, mc.prev_tag);
+		std::swap(mc.ok_raw, mc.prev_ok_raw);
+		mc.prev_layout   = layout;
+		mc.prev_tick     = tick;
+		mc.prev_pipeline = pipe;
+		mc.prev_valid    = true;
+	}
+	const auto spent = FS::NowNs() - t0;
+	mc.sig_ns += spent;
+	FS::Add(Counter::MergeCostSigNs, spent);
 }
 
 } // namespace Libs::Graphics

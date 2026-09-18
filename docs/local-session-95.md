@@ -49,7 +49,14 @@ written before the emulator was opened) and **`M1_RESULT.md`**. In short:
   narrow places carry 16.8 % of it);
 * **verdict: route P is CLOSED.** Robustness: writing off both narrow places as spin still
   gives 10.07 CPUs; subtracting the four M1 draw-ahead workers as well gives 9.16. For P to
-  survive, another ~19 % of the whole process's CPU would have to be spin.
+  survive, another ~19 % of the whole process's CPU would have to be spin;
+* **an independent recount** (a fresh reader given only the sealed rule, the CSV and the logs)
+  reproduced the record to better than 0.001 % and reached the same two verdicts, and it
+  corrected three things in my arithmetic, all of which make the verdict stronger:
+  the CPU deltas cover 30.048 s while flips 853…1778 cover **31.383 s**, so dividing by 925
+  UNDERSTATES W_out — normalised consistently it is **11.42 CPUs**; the third subtraction (the
+  6 656 ms thread) rests on ETW evidence rather than on a counter, and **without it W_out is
+  11.26 CPUs**; and prediction P2 is not checkable from that CSV at all.
 
 **The tension, recorded for the user's decision.** The rule fired on its letter, but its stated
 reason — "there are no free cores to move the work onto" — does not follow on THIS machine

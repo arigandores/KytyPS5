@@ -226,7 +226,9 @@ private:
 	[[nodiscard]] bool SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uint64_t size);
 	void DownloadBufferMemory(std::span<const DownloadCopy> copies, const char* reason = "read");
 	[[nodiscard]] static uint64_t StagingRingBytes();
-	void CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
+	// Returns true when the region was handed to Common::AsyncMemcpy (session 91: the callers
+	// count the two branches where the decision is taken).
+	bool CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
 	// Knob "bufimp" (route D1): resolve every copy region of one upload into the
 	// VK_EXT_external_memory_host alias of the guest backing store, so that the GPU can
 	// read the guest pages instead of a staging copy of them.  Fills the thread-local

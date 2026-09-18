@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/threads.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -13,6 +14,7 @@
 #include "kernel/pthread.h"
 #include "libs/errno.h"
 
+#include <cstdlib>
 #include <cstring>
 #include <limits>
 
@@ -42,10 +44,57 @@ bool ScaleReferenceClock(uint64_t host_ticks, uint64_t host_frequency, uint64_t&
 	return true;
 }
 
+// Session 91, MEASUREMENT ONLY (PLAN s91 section 0 A, route P).  The game's dynamic resolution
+// is PREDICTED (pred/02_pin.md) to budget against the GPU timestamps this function produces,
+// which are the pacer-scaled TSC read at PM4 parse on the GuestGpu thread - so a CPU-side knob
+// can move the DRS rung.  KYTY_GPU_CLOCK_PIN changes the rate of THIS clock only (freezes stay
+// excluded; CPU clocks, flip and vblank stamps keep the pacer):
+//   1 = the pacer speed is dropped: every guest GPU span grows by 1/speed (~2x); the rung is
+//       predicted to stay on its lowest step;
+//   2 = POSITIVE CONTROL: the scaled clock at half rate; spans shrink 2x; the rung is predicted
+//       to climb.
+// Read ONCE per process: switching mid-run would break the clock's monotonicity, so it can
+// never be a schedule arm.  Arming is proved by VALUE: gclk_adv / gclk_sadv (the guest
+// clock's advance over the scaled clock's between consecutive reads on one thread) is 1/speed
+// at 1 and 0.5 at 2; gclk_back counts backward steps.  None of the three is Added at 0.
+static uint32_t GpuClockPinMode() {
+	static const uint32_t mode = [] {
+		const char*    value = std::getenv("KYTY_GPU_CLOCK_PIN");
+		const int      v     = value != nullptr ? std::atoi(value) : 0;
+		const uint32_t m     = (v == 1 || v == 2) ? static_cast<uint32_t>(v) : 0u;
+		if (m != 0) {
+			LOGF("GpuClockPin: mode %u - the guest GPU clock %s (KYTY_GPU_CLOCK_PIN)" "\n", m,
+			     m == 1 ? "ignores the pacer speed" : "runs at half the scaled rate");
+		}
+		return m;
+	}();
+	return mode;
+}
+
 uint64_t ReadReferenceClock() {
-	const auto host_frequency = LibKernel::KernelGetTscFrequency();
-	const auto host_ticks     = LibKernel::KernelReadTsc();
-	uint64_t   value          = 0;
+	const auto     host_frequency = LibKernel::KernelGetTscFrequency();
+	const uint32_t pin            = GpuClockPinMode();
+	const auto     scaled_ticks   = LibKernel::KernelReadTsc();
+	const auto     host_ticks     = pin == 1   ? LibKernel::KernelReadTscBase()
+	                                : pin == 2 ? scaled_ticks / 2
+	                                           : scaled_ticks;
+	Common::FrameStats::Add(Common::FrameStats::Counter::GpuClockReads, 1);
+	if (pin != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::GpuClockPinnedReads, 1);
+		thread_local uint64_t t_last_host   = 0;
+		thread_local uint64_t t_last_scaled = 0;
+		if (t_last_host != 0) {
+			if (host_ticks < t_last_host) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::GpuClockBackward, 1);
+			} else if (scaled_ticks >= t_last_scaled) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::GpuClockAdvance, host_ticks - t_last_host);
+				Common::FrameStats::Add(Common::FrameStats::Counter::GpuClockScaledAdvance, scaled_ticks - t_last_scaled);
+			}
+		}
+		t_last_host   = host_ticks;
+		t_last_scaled = scaled_ticks;
+	}
+	uint64_t value = 0;
 	if (!ScaleReferenceClock(host_ticks, host_frequency, value)) {
 		EXIT("cannot scale host clock, ticks=0x%016" PRIx64 " frequency=%" PRIu64 "\n", host_ticks,
 		     host_frequency);

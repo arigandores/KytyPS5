@@ -2179,6 +2179,36 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // Session 90: the arming proof of bufimp = 2.  0 in the census arm, == bi_ok in the
 				    // import arm.
 				    {"bi_cp", FS::Counter::BufImportCopies, false},
+				    // Session 91: the guest GPU clock pin.  gclk_pin is EXACTLY 0 without KYTY_GPU_CLOCK_PIN.
+				    {"gclk_n", FS::Counter::GpuClockReads, false},
+				    {"gclk_pin", FS::Counter::GpuClockPinnedReads, false},
+				    {"gclk_adv", FS::Counter::GpuClockAdvance, false},
+				    {"gclk_sadv", FS::Counter::GpuClockScaledAdvance, false},
+				    {"gclk_back", FS::Counter::GpuClockBackward, false},
+				    // Session 91: the upload memcpy split.  *_b are RAW BYTES (micros = false), not kB.
+				    {"stg_pool_n", FS::Counter::StagingPoolCopies, false},
+				    {"stg_pool_b", FS::Counter::StagingPoolBytes, false},
+				    {"stg_pool_ns", FS::Counter::StagingPoolNs, false},
+				    {"stg_in_n", FS::Counter::StagingInlineCopies, false},
+				    {"stg_inbig_n", FS::Counter::StagingInlineBigCopies, false},
+				    {"stg_in_b", FS::Counter::StagingInlineBytes, false},
+				    {"stg_in_gpu_b", FS::Counter::StagingInlineGpuBytes, false},
+				    {"stg_in_ns", FS::Counter::StagingInlineNs, false},
+				    {"up_tmp_n", FS::Counter::UploadTempCopies, false},
+				    {"up_tmp_b", FS::Counter::UploadTempBytes, false},
+				    {"stg_img_pool_b", FS::Counter::StagingImgPoolBytes, false},
+				    {"stg_img_in_b", FS::Counter::StagingImgInlineBytes, false},
+				    {"bi_reg_small", FS::Counter::BufImportSmallRegions, false},
+				    {"bi_b_small", FS::Counter::BufImportSmallBytes, false},
+				    // Session 91: host-read waits, lite-live (hostread_wait_us is not: TimingsEnabled).
+				    {"hr_free", FS::Counter::HostReadFree, false},
+				    {"hr_gpuw", FS::Counter::HostReadGpuWaits, false},
+				    {"hr_gpuw_us", FS::Counter::HostReadGpuWaitNs, true},
+				    {"hr_forced", FS::Counter::HostReadForced, false},
+				    {"hr_forced_us", FS::Counter::HostReadForcedNs, true},
+				    {"hr_sync", FS::Counter::HostReadSync, false},
+				    {"hr_sync_us", FS::Counter::HostReadSyncNs, true},
+				    {"hr_call_us", FS::Counter::HostReadCallNs, true},
 				};
 				std::string text;
 				for (const auto& counter: named) {

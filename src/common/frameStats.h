@@ -1313,6 +1313,41 @@ enum class Counter : uint32_t {
 	// knob is below 2 - including in the census arm, which pays everything else the
 	// import arm pays.  Identity in the import arm: bi_cp == bi_ok.
 	BufImportCopies,    // bi_cp: uploads whose copies were issued from imported guest pages
+	// Session 91: the guest GPU clock (Sync::ReadReferenceClock), the value every RELEASE_MEM
+	// data_sel 3 / COPY_DATA-from-clock writes into guest memory at PM4 parse.
+	GpuClockReads,         // gclk_n: guest GPU-clock reads, every mode
+	GpuClockPinnedReads,   // gclk_pin: of those, served by KYTY_GPU_CLOCK_PIN (1 or 2).  EXACTLY 0
+	                       //           in a process without the pin, == gclk_n with it
+	GpuClockAdvance,       // gclk_adv: pinned only - the guest clock's advance between consecutive
+	                       //           reads on one thread, TSC ticks
+	GpuClockScaledAdvance, // gclk_sadv: the scaled (shipped) clock's advance over the same reads.
+	                       //           gclk_adv / gclk_sadv = 1/speed at mode 1, 0.5 at mode 2
+	GpuClockBackward,      // gclk_back: pinned reads that went BACKWARDS against the previous one
+	// Session 91: the upload memcpy split at ASYNC_COPY_MIN_BYTES, counted where
+	// CopyGuestToStaging takes the decision.  Live in every run; bytes are RAW bytes.
+	StagingPoolCopies,     // stg_pool_n: upload regions handed to AsyncMemcpy (>= 64 KiB, one mapping)
+	StagingPoolBytes,      // stg_pool_b
+	StagingPoolNs,         // stg_pool_ns: the caller's time to hand them over (printed raw ns)
+	StagingInlineCopies,   // stg_in_n: upload regions < 64 KiB, copied inline
+	StagingInlineBigCopies, // stg_inbig_n: >= 64 KiB copied inline - TryGetBackingPointer refused
+	StagingInlineBytes,    // stg_in_b: bytes of both inline kinds
+	StagingInlineGpuBytes, // stg_in_gpu_b: of those, on the thread registered as ThreadRole::Gpu
+	StagingInlineNs,       // stg_in_ns: the inline memcpy on the calling thread (printed raw ns)
+	UploadTempCopies,      // up_tmp_n: regions of the temporary-buffer fallback (staging Map failed)
+	UploadTempBytes,       // up_tmp_b
+	StagingImgPoolBytes,   // stg_img_pool_b: image "staging:no-owner" bytes handed to AsyncMemcpy
+	StagingImgInlineBytes, // stg_img_in_b: image "staging:no-owner" bytes copied inline
+	BufImportSmallRegions, // bi_reg_small: census regions < 64 KiB of TAKEN uploads (bufimp >= 1)
+	BufImportSmallBytes,   // bi_b_small: their bytes; census arm: == stg_in_b while bi_noback = 0
+	// Session 91: WaitPendingHostReads, timed with Enabled() so the times live in lite.
+	HostReadFree,          // hr_free: counted calls whose tick was already free
+	HostReadGpuWaits,      // hr_gpuw: waits on an already submitted buffer
+	HostReadGpuWaitNs,     // hr_gpuw_us
+	HostReadForced,        // hr_forced: waits that forced the RECORDING buffer's submit
+	HostReadForcedNs,      // hr_forced_us: submit + drain + BeginNext
+	HostReadSync,          // hr_sync: calls made off the GuestGpu thread (SendCommandSync)
+	HostReadSyncNs,        // hr_sync_us: the calling thread's whole stall in SendCommandSync
+	HostReadCallNs,        // hr_call_us: every counted call up to the wait's end (not the erase)
 	Count
 };
 

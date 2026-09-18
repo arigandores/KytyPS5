@@ -206,6 +206,9 @@ int KYTY_SYSV_ABI      KernelConvertUtcToLocaltime(int64_t utc_time, int64_t* lo
                                                    KernelTimesec* st, uint64_t* dst_sec);
 uint64_t KYTY_SYSV_ABI KernelGetTscFrequency();
 uint64_t KYTY_SYSV_ABI KernelReadTsc();
+// Session 91: the guest TSC base - freezes excluded, the pacer speed NOT applied.  Host-side
+// only (the GPU clock pin, KYTY_GPU_CLOCK_PIN); never exported to the guest.
+uint64_t               KernelReadTscBase();
 uint64_t KYTY_SYSV_ABI KernelGetProcessTime();
 uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounter();
 uint64_t KYTY_SYSV_ABI KernelGetProcessTimeCounterFrequency();

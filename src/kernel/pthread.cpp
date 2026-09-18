@@ -3983,6 +3983,20 @@ uint64_t KYTY_SYSV_ABI KernelReadTsc() {
 	return KernelReadTscNative();
 }
 
+// Session 91: KernelReadTscNative without ScaledTscLocked - the same base, so it equals the
+// guest TSC until the pacer first slows the guest, and runs at host rate after that.
+uint64_t KernelReadTscBase() {
+	if (!TimeFreezeEnabled()) {
+		return KernelReadTscRaw();
+	}
+	auto&                       state = GetTimeFreezeState();
+	std::lock_guard<std::mutex> lock(state.mutex);
+	// rdtsc INSIDE the lock: KernelTimeFreezeEnd adds (now - start) to total under this mutex, so
+	// a raw read taken before the lock could fall inside a freeze that ended meanwhile and step
+	// back.  (KernelReadTscNative keeps the shipped order; its step is scaled by the speed.)
+	return BaseTscLocked(state, KernelReadTscRaw());
+}
+
 uint64_t KYTY_SYSV_ABI KernelGetProcessTime() {
 	const auto frequency = KernelGetTscFrequencyNative();
 	if (frequency == 0) {

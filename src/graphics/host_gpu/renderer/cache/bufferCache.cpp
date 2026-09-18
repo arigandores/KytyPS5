@@ -214,18 +214,39 @@ uint64_t BufferCache::StagingRingBytes() {
 // Copies a guest range into the staging ring through the backing view. Large ranges inside one
 // mapping are queued to the copy pool (AsyncMemcpy) and complete before the next vkQueueSubmit;
 // the rest is copied inline.
-void BufferCache::CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size) {
+bool BufferCache::CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size) {
 	const void* backing = nullptr;
 	if (size >= Common::ASYNC_COPY_MIN_BYTES &&
 	    Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
 		Common::AsyncMemcpy(staging, backing, static_cast<size_t>(size));
-		return;
+		return true;
 	}
 	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
 	    !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
 		// Not backed guest memory (module image, flexible memory): read the guest view directly.
 		std::memcpy(staging, reinterpret_cast<const void*>(vaddr), static_cast<size_t>(size));
 	}
+	return false;
+}
+
+// Session 91: the upload memcpy split, counted at the caller from CopyGuestToStaging's own
+// decision.  "pooled" means handed to AsyncMemcpy, which queues it unless KYTY_PARALLEL_COPY=0
+// or KYTY_ASYNC_COPY=0 turns the pool off.
+static void NoteStagingCopy(bool pooled, uint64_t size, uint64_t ns) {
+	if (pooled) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::StagingPoolCopies, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::StagingPoolBytes, size);
+		Common::FrameStats::Add(Common::FrameStats::Counter::StagingPoolNs, ns);
+		return;
+	}
+	Common::FrameStats::Add((size >= Common::ASYNC_COPY_MIN_BYTES ? Common::FrameStats::Counter::StagingInlineBigCopies
+	                        : Common::FrameStats::Counter::StagingInlineCopies),
+	                        1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::StagingInlineBytes, size);
+	if (Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::StagingInlineGpuBytes, size);
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::StagingInlineNs, ns);
 }
 
 std::pair<uint64_t, uint64_t> BufferCache::DownloadEnvelope(const DownloadCopy& copy) {
@@ -934,6 +955,8 @@ bool BufferCache::TryImportUploadCopies(Buffer& buffer,
 	const bool verify = Common::Gates::Enabled(Common::Gates::Gate::BufImportVerify);
 	bool       ok     = backing_base != 0;
 	uint64_t   bytes  = 0;
+	uint64_t   small_bytes   = 0; // session 91: regions < ASYNC_COPY_MIN_BYTES
+	uint64_t   small_regions = 0;
 	for (const auto& copy: copies) {
 		if (!ok) {
 			break;
@@ -975,6 +998,10 @@ bool BufferCache::TryImportUploadCopies(Buffer& buffer,
 			Common::FrameStats::Add(Common::FrameStats::Counter::BufImportSplits, 1);
 		}
 		bytes += copy.size;
+		if (copy.size < Common::ASYNC_COPY_MIN_BYTES) {
+			small_bytes += copy.size;
+			small_regions++;
+		}
 	}
 	if (t0 != 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BufImportResolveNs,
@@ -986,6 +1013,8 @@ bool BufferCache::TryImportUploadCopies(Buffer& buffer,
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportTakes, 1);
 	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportBytes, bytes);
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportSmallBytes, small_bytes);
+	Common::FrameStats::Add(Common::FrameStats::Counter::BufImportSmallRegions, small_regions);
 	return true;
 }
 
@@ -1022,8 +1051,10 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 	auto [mapped, base_offset] = m_staging_buffer.Map(total_size, 4);
 	if (mapped != nullptr) {
 		for (auto& copy: copies) {
-			const auto address = buffer.CpuAddress() + copy.dstOffset;
-			CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size);
+			const auto     address = buffer.CpuAddress() + copy.dstOffset;
+			const uint64_t c0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+			const bool     pooled  = CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size);
+			NoteStagingCopy(pooled, copy.size, c0 != 0 ? Common::FrameStats::NowNs() - c0 : 0);
 			copy.srcOffset += base_offset;
 		}
 		if (!m_staging_buffer.IsCoherent()) {
@@ -1039,6 +1070,8 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 		const auto address = buffer.CpuAddress() + copy.dstOffset;
 		std::memcpy(temporary->Mapped().data() + copy.srcOffset,
 		            reinterpret_cast<const void*>(address), copy.size);
+		Common::FrameStats::Add(Common::FrameStats::Counter::UploadTempCopies, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::UploadTempBytes, copy.size);
 	}
 	temporary->Flush(0, total_size);
 	const auto handle = temporary->Handle();
@@ -1412,7 +1445,9 @@ BufferCache::ImageSource BufferCache::ObtainBufferForImage(uint64_t vaddr, uint6
 	}
 	{
 		Common::FrameStats::Scope copy_scope(Common::FrameStats::Counter::ImgCopyNs);
-		CopyGuestToStaging(staging, vaddr, size);
+		const bool                pooled = CopyGuestToStaging(staging, vaddr, size);
+		Common::FrameStats::Add((pooled ? Common::FrameStats::Counter::StagingImgPoolBytes : Common::FrameStats::Counter::StagingImgInlineBytes),
+		                        size);
 		if (!m_staging_buffer.IsCoherent()) {
 			Common::WaitAsyncCopies(); // Commit flushes the range
 		}
@@ -1605,16 +1640,35 @@ bool BufferCache::WaitPendingHostReads(uint64_t vaddr, uint64_t size) {
 	                                     Common::FrameStats::Counter::HostReadWaits);
 	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
 	const auto        t0    = trace ? Common::FrameStats::NowNs() : 0;
+	// Session 91: the Scope above stamps only under TimingsEnabled() - never in lite - so its ns
+	// column reads 0 in every measurement run.  These counters use Enabled() (the LapScope idiom).
+	const uint64_t    c0    = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 	const auto        wait  = [this, tick] {
 		if (!m_scheduler.IsFree(tick)) {
 			Common::FrameStats::SiteScope site_scope("host-read");
+			// Only GuestGpu moves CurrentTick, and this lambda runs on it: the branch Wait takes is
+			// known exactly here.
+			const bool     forced = tick == m_scheduler.CurrentTick();
+			const uint64_t w0     = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 			m_scheduler.Wait(tick); // submits the recording command buffer when tick is current
+			const uint64_t ns = w0 != 0 ? Common::FrameStats::NowNs() - w0 : 0;
+			Common::FrameStats::Add((forced ? Common::FrameStats::Counter::HostReadForced : Common::FrameStats::Counter::HostReadGpuWaits), 1);
+			Common::FrameStats::Add((forced ? Common::FrameStats::Counter::HostReadForcedNs : Common::FrameStats::Counter::HostReadGpuWaitNs), ns);
+		} else {
+			Common::FrameStats::Add(Common::FrameStats::Counter::HostReadFree, 1);
 		}
 	};
 	if (GuestGpu::IsGpuThread()) {
 		wait();
 	} else {
+		Common::FrameStats::Add(Common::FrameStats::Counter::HostReadSync, 1);
 		m_scheduler.Context().GetGpu().SendCommandSync(wait);
+		if (c0 != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::HostReadSyncNs, Common::FrameStats::NowNs() - c0);
+		}
+	}
+	if (c0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::HostReadCallNs, Common::FrameStats::NowNs() - c0);
 	}
 	{
 		std::lock_guard lock(m_pending_host_reads_mutex);

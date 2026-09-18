@@ -216,8 +216,23 @@ uint64_t BufferCache::StagingRingBytes() {
 // the rest is copied inline.
 bool BufferCache::CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size) {
 	const void* backing = nullptr;
+	// Session 92, gate "stglap" (measurement only, default 0).  The gate is read ONCE,
+	// HERE, before the timestamp it arms, so the gate read itself can never be inside the
+	// interval it measures.  The mark is taken only when the resolve will really run
+	// (size >= ASYNC_COPY_MIN_BYTES) and is closed between TryGetBackingPointer and
+	// AsyncMemcpy, so stg_res_ns is the resolve of a POOLED region and nothing else.  The
+	// image "staging:no-owner" caller shares this function, so it is in there too.
+	// The session 91 timer stg_pool_ns at the UploadCopies caller is untouched and stays
+	// the whole these parts are checked against.  At stglap = 0 no NowNs() and no Add.
+	const bool     lap = Common::Gates::Enabled(Common::Gates::Gate::StageLap) &&
+	                     Common::FrameStats::Enabled() && size >= Common::ASYNC_COPY_MIN_BYTES;
+	const uint64_t r0  = lap ? Common::FrameStats::NowNs() : 0;
 	if (size >= Common::ASYNC_COPY_MIN_BYTES &&
 	    Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+		if (lap) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::StagingResolveNs,
+			                        Common::FrameStats::NowNs() - r0);
+		}
 		Common::AsyncMemcpy(staging, backing, static_cast<size_t>(size));
 		return true;
 	}
@@ -1050,12 +1065,23 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 
 	auto [mapped, base_offset] = m_staging_buffer.Map(total_size, 4);
 	if (mapped != nullptr) {
+		// Session 92, gate "stglap": read ONCE, outside the loop and outside every timer.
+		// The loop itself only ORs a bool that is already live (pooled, which
+		// NoteStagingCopy consumes in every run), so at stglap = 0 this adds no timestamp
+		// and no Add - stg_up_n is the only thing the gate turns on here.
+		const bool lap        = Common::Gates::Enabled(Common::Gates::Gate::StageLap) &&
+		                        Common::FrameStats::Enabled();
+		bool       any_pooled = false;
 		for (auto& copy: copies) {
 			const auto     address = buffer.CpuAddress() + copy.dstOffset;
 			const uint64_t c0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 			const bool     pooled  = CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size);
 			NoteStagingCopy(pooled, copy.size, c0 != 0 ? Common::FrameStats::NowNs() - c0 : 0);
+			any_pooled = any_pooled || pooled;
 			copy.srcOffset += base_offset;
+		}
+		if (lap && any_pooled) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::StagingUploadCalls, 1);
 		}
 		if (!m_staging_buffer.IsCoherent()) {
 			Common::WaitAsyncCopies(); // Commit flushes the range

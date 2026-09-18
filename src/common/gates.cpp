@@ -236,6 +236,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // TryGetBackingPieces recomputed beside every TryGetBackingPointer the import used.
     // bi_bad must read 0, and it is parsed only because guards.py SELF_CHECKS has a row.
     {"KYTY_BUF_IMPORT_VERIFY", "bufimpcheck", false},
+    // Session 92, measurement only: the three-way split of stg_pool_ns (the price of
+    // handing an upload region to the copy pool).  Marks in CopyGuestToStaging and
+    // CopyPool::Enqueue; stg_pool_ns itself is untouched and is the total the parts are
+    // checked against.  Default 0, and at 0 nothing new is timed or counted.
+    {"KYTY_STAGE_LAP", "stglap", false},
 }};
 
 struct KnobDefinition {
@@ -302,6 +307,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Ships at 0: the import moves the guest read from UploadCopies to command-buffer
     // execution, and a CPU write into the range then waits for it (hostread_waits).
     {"KYTY_BUF_IMPORT", "bufimp", 0, 2},
+    // Session 92: how the copy pool is woken.  93.80 % of the price of handing a
+    // region to the pool is the notify (4.27 us a region), because the workers are
+    // asleep.  0 = today (notify_all on a multi-chunk enqueue), 1 = at most one
+    // notify_one per chunk, 2 = 1 plus a 20 us worker spin before the wait.
+    // Read at every enqueue and every worker drain, so it CAN be a schedule arm.
+    {"KYTY_COPY_WAKE", "copywake", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

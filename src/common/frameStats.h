@@ -1348,6 +1348,68 @@ enum class Counter : uint32_t {
 	HostReadSync,          // hr_sync: calls made off the GuestGpu thread (SendCommandSync)
 	HostReadSyncNs,        // hr_sync_us: the calling thread's whole stall in SendCommandSync
 	HostReadCallNs,        // hr_call_us: every counted call up to the wait's end (not the erase)
+	// Session 92, gate "stglap" (default 0, MEASUREMENT ONLY): the split of session 91's
+	// stg_pool_ns - the 173.6 us/frame GuestGpu spends handing 40.33 upload regions to the
+	// copy pool.  stg_pool_ns is left WHOLE and is the total these parts are checked
+	// against; the residual is what no part covers plus the instrument's own price, which
+	// is the within-run difference of the two arms.  Nothing here is touched at stglap = 0.
+	// Times are RAW NANOSECONDS, like stg_pool_ns and stg_in_ns.
+	StagingResolveNs,      // stg_res_ns: TryGetBackingPointer inside CopyGuestToStaging,
+	                       //             closed between the resolve and AsyncMemcpy, so only a
+	                       //             POOLED region is counted.  A REFUSED resolve pays its
+	                       //             mark and records nothing - that population is stg_inbig_n,
+	                       //             which reads 0.0000 on every archived arm; if it ever
+	                       //             stops reading 0, stg_res_ns undercounts the resolves
+	StagingLockNs,         // stg_lock_ns: CopyPool::Enqueue from entry to the end of its
+	                       //              lock_guard block - the queue lock and the push_back loop
+	StagingWakeNs,         // stg_wake_ns: the notify_one / notify_all after that block
+	StagingQueueDepth,     // stg_q: sum of PendingAsyncCopies() sampled BEFORE the enqueue
+	                       //        (an atomic load; the queue lock is NOT taken).  Says whether the
+	                       //        pool was asleep or already working when the region arrived.
+	                       //        COUNTED IN CHUNKS, NOT REGIONS - m_pending counts 1 MiB jobs,
+	                       //        so stg_q / stg_pool_n is jobs outstanding per region queued
+	StagingUploadCalls,    // stg_up_n: BufferCache::UploadCopies calls in which at least one
+	                       //           region went to the pool, so stg_pool_n / stg_up_n is regions
+	                       //           per upload and separates the fixed price of an upload from
+	                       //           the per-region price
+	StagingChunks,         // stg_chunks: sum of ceil(size / CHUNK_BYTES), CHUNK_BYTES = 1 MiB
+	                       //             - the jobs the pool really received.
+	                       //             TWO POPULATIONS: stg_lock_ns, stg_wake_ns, stg_q and
+	                       //             stg_chunks are counted in parallelCopy.cpp and stg_res_ns
+	                       //             in CopyGuestToStaging, and BOTH callers of AsyncMemcpy pass
+	                       //             there: the buffer uploads (stg_pool_n / stg_pool_b) and the
+	                       //             image "staging:no-owner" path (stg_img_pool_b).  They are
+	                       //             deliberately NOT separated in code
+	// Session 92b, gate "stglap" (default 0): stg_wake_ns divided by the branch that
+	// took it.  stg_wake_ns stays WHOLE - the same interval is added twice, once to the
+	// total and once to its branch - so both identities hold BY CONSTRUCTION:
+	//     stg_wake1_ns + stg_waken_ns == stg_wake_ns
+	//     stg_wake1_n  + stg_waken_n  == the enqueues (stg_pool_n plus the image
+	//                                    "staging:no-owner" enqueues, the same two
+	//                                    populations stg_chunks already carries)
+	// They price apart the 71.2 % of regions that are one chunk and take notify_one
+	// from the 28.8 % that are more and take the broadcast (knob "copywake" = 0) or up
+	// to one notify_one per chunk (copywake >= 1).
+	StagingWakeOneNs,      // stg_wake1_ns: the notify of a ONE-chunk enqueue
+	StagingWakeOneCalls,   // stg_wake1_n:  how many of those
+	StagingWakeManyNs,     // stg_waken_ns: the notify of a MULTI-chunk enqueue
+	StagingWakeManyCalls,  // stg_waken_n:  how many of those
+	// Session 92b, gate "stglap" AND knob "copywake" = 2: the price of the worker spin,
+	// paid on copy-worker cores and not on GuestGpu.  Both read EXACTLY 0 below
+	// copywake = 2, where the spin is not compiled out but is never entered.
+	StagingSpinNs,         // stg_spin_ns: the whole time copy workers spent spinning
+	                       //              instead of sleeping, summed over the workers.
+	                       //              A timed-out spin is about WORKER_SPIN_NS, so
+	                       //              stg_spin_ns / 20000 - stg_spin_hit is roughly
+	                       //              the number of spins that caught nothing
+	StagingSpinHits,       // stg_spin_hit: spins that ended because m_pending ROSE above
+	                       //               the lowest value that spin had seen, i.e. a
+	                       //               chunk was queued while the worker stayed
+	                       //               awake.  It does NOT claim this worker then
+	                       //               copied it - the wait predicate under the queue
+	                       //               lock decides that, and another worker may get
+	                       //               there first - so it is an UPPER BOUND on the
+	                       //               kernel wake-ups the spin saved
 	Count
 };
 

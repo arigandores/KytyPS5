@@ -2209,6 +2209,23 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"hr_sync", FS::Counter::HostReadSync, false},
 				    {"hr_sync_us", FS::Counter::HostReadSyncNs, true},
 				    {"hr_call_us", FS::Counter::HostReadCallNs, true},
+				    // Session 92, gate "stglap": the split of stg_pool_ns.  Times are RAW ns (micros =
+				    // false), like stg_pool_ns itself.  All six read 0 unless the gate is armed.
+				    {"stg_res_ns", FS::Counter::StagingResolveNs, false},
+				    {"stg_lock_ns", FS::Counter::StagingLockNs, false},
+				    {"stg_wake_ns", FS::Counter::StagingWakeNs, false},
+				    {"stg_q", FS::Counter::StagingQueueDepth, false},
+				    {"stg_up_n", FS::Counter::StagingUploadCalls, false},
+				    {"stg_chunks", FS::Counter::StagingChunks, false},
+				    // Session 92b, gate "stglap": stg_wake_ns split by the branch that took it, and
+				    // the price of knob "copywake" = 2.  RAW ns (micros = false), like stg_wake_ns.
+				    // stg_wake1_ns + stg_waken_ns == stg_wake_ns by construction.
+				    {"stg_wake1_ns", FS::Counter::StagingWakeOneNs, false},
+				    {"stg_wake1_n", FS::Counter::StagingWakeOneCalls, false},
+				    {"stg_waken_ns", FS::Counter::StagingWakeManyNs, false},
+				    {"stg_waken_n", FS::Counter::StagingWakeManyCalls, false},
+				    {"stg_spin_ns", FS::Counter::StagingSpinNs, false},
+				    {"stg_spin_hit", FS::Counter::StagingSpinHits, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

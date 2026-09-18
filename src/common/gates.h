@@ -328,6 +328,16 @@ enum class Gate : uint32_t {
 	// inside ONE mapping, so a second piece, a different backing offset or a short piece is
 	// a contradiction between two implementations and not a race.  bi_bad must read 0.
 	BufImportVerify,    // KYTY_BUF_IMPORT_VERIFY,  file name "bufimpcheck"
+	// Session 92, MEASUREMENT ONLY: the split of stg_pool_ns, the 173.6 us/frame GuestGpu
+	// pays to hand 40.33 upload regions to the copy pool (FACTS s91 section 5, "the new
+	// lever").  Three marks - the backing resolve in CopyGuestToStaging, the pool queue
+	// lock in CopyPool::Enqueue, the wake after it - plus three shape counters (regions
+	// per upload, chunks per region, the pool queue depth sampled before the hand-over),
+	// because the price per region FALLS with the regions in the frame and only the
+	// division can say which part does that.  It changes no value and no decision, and
+	// the session 91 timer stg_pool_ns is left whole as the total to check against.  At
+	// 0 not one timestamp and not one Add of this session is taken.
+	StageLap,           // KYTY_STAGE_LAP,          file name "stglap"
 	Count,
 };
 
@@ -411,6 +421,31 @@ enum class Knob : uint32_t {
 	// 0 = today.  1 = resolve and count, still copy (prices the resolution alone).
 	// 2 = take the import.  An upload is taken only when EVERY region resolves.
 	BufImport,        // KYTY_BUF_IMPORT,         file name "bufimp" (0 off, 1 census, 2 import)
+	// Session 92: the wake of the copy pool.  A valid ABBA split stg_pool_ns, the
+	// 185.0 us/frame GuestGpu pays to hand 40.6 upload regions to the pool, into
+	// stg_res_ns 1.18 %, stg_lock_ns 3.13 % and stg_wake_ns 93.80 % - 4.27 us a region
+	// in notify_one / notify_all alone.  That is the price of bringing a SLEEPING
+	// thread back through the kernel: a notify with no waiter is tens of nanoseconds.
+	// The pool really is asleep (stg_q / stg_pool_n = 0.430) and 28.8 % of the regions
+	// are multi-chunk (stg_chunks / stg_pool_n = 1.2884) and take notify_all, which
+	// wakes ALL 2-7 workers for what is at most chunks jobs.
+	//   0 = today.  notify_all on a multi-chunk enqueue; a worker whose queue ran dry
+	//       goes straight back to m_wake.wait.
+	//   1 = no thundering herd: at most one notify_one per chunk, capped by the worker
+	//       count.  It cannot lose work - ANY single woken worker drains the whole
+	//       FIFO - so the count decides parallelism, never whether the queue is served.
+	//   2 = 1 plus a bounded worker spin (parallelCopy.cpp WORKER_SPIN_NS, 20 us)
+	//       before the worker returns to m_wake.wait, so the next notify finds it
+	//       awake.  It is a LATENCY optimisation only: the spin never decides to
+	//       sleep, and the only sleep decision stays the wait predicate under the
+	//       queue mutex.  It burns worker cores, and stg_spin_ns is that price.
+	// READ AT EVERY DECISION - on each enqueue and on each drain of a worker - so that it
+	// CAN be a schedule arm, which is the only A/B this programme accepts (between-run
+	// comparisons of cpu/draw are closed, ROADMAP.md section 3).  A mid-run flip is safe
+	// because neither half owns state: the notify branch is chosen per enqueue, and a
+	// worker that stops spinning merely reaches the wait sooner.  The read is one inline
+	// relaxed atomic load against a notify that costs 4.27 us.
+	CopyWake,         // KYTY_COPY_WAKE,          file name "copywake" (0 off, 1 no herd, 2 + spin)
 	Count,
 };
 

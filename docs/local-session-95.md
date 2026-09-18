@@ -145,7 +145,7 @@ therefore the CEILING of any canonicalisation. Its rule, sealed before the run:
 
 **Run `fr95b`, admitted in full** (guards criteria PASS; `area_verdict` VALID; counter
 identities 10/10; controls **7 HIT, 0 MISS**; predictions **9 HIT, 0 MISS**; instrument
-**+2 334.6 ± 108.1 µs, t = +43.19** on 114 pairs, 0.718 µs a draw). Binary ``b3161c1029c6930f…` (23655424 B)`.
+**+2 334.6 ± 108.1 µs, t = +43.19** on 114 pairs, 0.718 µs a draw). Binary `b3161c1029c6930f…`, 23 655 424 B.
 
 | reading | hits a draw | coverage |
 |---|---:|---:|

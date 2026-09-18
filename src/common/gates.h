@@ -369,6 +369,24 @@ enum class Gate : uint32_t {
 	// answers whether a replay COULD exist.  Requires mergecost=1 in the same arm for
 	// the per-draw brackets.  Never to be shipped.
 	FrameRep,           // KYTY_FRAME_REP,          file name "framerep"
+	// Session 96, measurement only (pred/01_pathlap.md): the two splits ROADMAP.md:1051-1052
+	// names as part of M3 - the time the GuestGpu thread spends OUTSIDE the render mutex
+	// (4.05 ms, never split) and mh_emit beyond CommitBindings (~5 ms, never split).  The
+	// chain already exists in renderDraw.cpp as a FrameStats::Lap and reads identically zero
+	// in every lite run, because Lap times under TimingsEnabled().  This gate re-takes it with
+	// PathLap, which times under Enabled().  Feeds no value, no decision and no side effect.
+	// Never to be shipped: it is pure instrument price.
+	PathLap,            // KYTY_PATH_LAP,           file name "pathlap"
+	// Session 96, MEASUREMENT ONLY (ROADMAP.md:1048-1053), route E measurement M3: the
+	// CEILING STUB.  It REMOVES AheadTake, MaterializeResources, PrepareBindings,
+	// RebindBuffers / RebindImages and the per-slot synchronisations, and binds stubs (the
+	// null buffer, the null images, one sampler, a zero shader_data) while KEEPING the whole
+	// emit half - the descriptor writes, the set commit, the push constants, BeginRendering,
+	// the dynamic state, EmitDrawPrimitives and the gate "recpack" record path.  THE PICTURE
+	// IS ALLOWED TO BREAK: that is sealed at ROADMAP.md:1048 and is the only reason this may
+	// exist.  It binds WRONG data by construction and can NEVER be shipped.
+	// LAST row, matching the LAST enum entry before Gate::Count.
+	BindFloor,          // KYTY_BIND_FLOOR,         file name "bindfloor"
 	Count,
 };
 
@@ -452,6 +470,14 @@ enum class Knob : uint32_t {
 	// 0 = today.  1 = resolve and count, still copy (prices the resolution alone).
 	// 2 = take the import.  An upload is taken only when EVERY region resolves.
 	BufImport,        // KYTY_BUF_IMPORT,         file name "bufimp" (0 off, 1 census, 2 import)
+	// Session 96, measurement only: add a PrepareBda at a COARSE granularity, to price the
+	// "+0,5 ms (synchronisation)" term the M3 rule assumes (ROADMAP.md:1052-1053) instead of
+	// assuming it.  ADDITIVE: it never removes the calls the code already makes, so arm 0 is
+	// today's binary exactly.  0 = today; 1 = plus one call per submission (~8 a frame,
+	// judge.md:116, count from judge.md:95); 2 = plus one call per label write (~420 a frame,
+	// gpu-driven.md:136).  Session 94 measured the per-DRAW version (gate bdaall) at
+	// +10 807.8 us a frame in the OLD regime -- ALWAYS report the regime with the number.
+	BdaEvery,         // KYTY_BDA_EVERY,          file name "bdaevery" (0 today, 1 submit, 2 label)
 	// Session 92: the wake of the copy pool.  A valid ABBA split stg_pool_ns, the
 	// 185.0 us/frame GuestGpu pays to hand 40.6 upload regions to the pool, into
 	// stg_res_ns 1.18 %, stg_lock_ns 3.13 % and stg_wake_ns 93.80 % - 4.27 us a region
@@ -477,6 +503,16 @@ enum class Knob : uint32_t {
 	// worker that stops spinning merely reaches the wait sooner.  The read is one inline
 	// relaxed atomic load against a notify that costs 4.27 us.
 	CopyWake,         // KYTY_COPY_WAKE,          file name "copywake" (0 off, 1 no herd, 2 + spin)
+	// Session 96, measurement only, read ONLY while gate "bindfloor" is on: how much of the
+	// floor is taken.  1 (and 0) = the full stub; 2 = BINDINGS ONLY, that is AheadTake and
+	// MaterializeResources stay and only the binding half is stubbed (the spare arm for the
+	// fork in the sealed rule, rewrite94/gpu-driven.md:141); 3 = 1 plus the calibrated idle.
+	BindFloorMode,    // KYTY_BIND_FLOOR_MODE,    file name "bfmode" (1 full, 2 bindings, 3 burn)
+	// Session 96, measurement only, read only at bfmode=3: microseconds the translation
+	// thread busy-waits per frame, spread over that frame's draws and dispatches, so the
+	// floor arm keeps arm A's frame length and the DRS step cannot move between the arms
+	// (ROADMAP.md:1062-1065).  bf_burn_ns reports what was really burned.
+	BindFloorBurn,    // KYTY_BIND_FLOOR_BURN,    file name "bfburn" (us a frame, 0 = none)
 	Count,
 };
 

@@ -135,6 +135,17 @@ NativeDescriptorCount(const ShaderRecompiler::IR::DescriptorBinding& binding);
 [[nodiscard]] vk::DescriptorImageInfo MakeImageInfo(const TextureBinding& texture,
                                                     uint32_t              element = 0);
 
+// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E measurement
+// M3, the ceiling stub.  BindFloorStageSupported: whether the floor can express this stage's
+// image resources as null images - NullTextureDesc aborts the process on a numeric class it
+// does not know, and on the floor EVERY image slot goes through it, so the draw is screened
+// first and counted bf_skip when it is not expressible.  BindFloorPrepareStage: the whole of
+// what the floor puts into a PreparedBindings - the runtime pointer (CommitBindings reads the
+// binding SHAPE out of it) and a zero shader_data of exactly the declared length, so the
+// EXIT_IF on that length still holds.  Every other field stays empty on purpose.
+[[nodiscard]] bool BindFloorStageSupported(const ShaderStageRuntime& runtime);
+void BindFloorPrepareStage(const ShaderStageRuntime& runtime, PreparedBindings& prepared);
+
 template <typename T>
 [[nodiscard]] T DecodeNativeDescriptor(const ShaderRecompiler::IR::DescriptorValue& value) {
 	static_assert(std::is_trivially_copyable_v<T>);

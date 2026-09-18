@@ -154,6 +154,9 @@ void GuestGpu::SendCommand(Common::UniqueFunction<void>&& command) {
 }
 
 void GuestGpu::ProcessCommands() {
+	Common::FrameStats::PathSpan pl_cmd(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathCmdNs, Common::FrameStats::Counter::PathCmdN);
 	EXIT_IF(!IsGpuThread());
 	while (m_pending_commands.load(std::memory_order_acquire) != 0) {
 		Common::UniqueFunction<void> command;
@@ -384,6 +387,12 @@ void CommandProcessor::BufferInit() {
 }
 
 void CommandProcessor::BufferFlush() {
+	// Depth-guarded: BufferFlushLazy calls BufferFlush, and both are pl_sub.  Only the
+	// outermost arms, so a lazy flush that really flushed is charged once, not twice.
+	Common::FrameStats::PathSpan pl_sub(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathSubNs, Common::FrameStats::Counter::PathSubN,
+	    Common::FrameStats::Detail::t_path_sub_depth);
 	GetScheduler().Flush();
 }
 
@@ -394,6 +403,12 @@ void CommandProcessor::BufferFlush() {
 // callbacks are tied to the tick of the current command buffer and run once a later flush
 // submits it (at the end of the submission slice at the latest).
 void CommandProcessor::BufferFlushLazy() {
+	// Depth-guarded: BufferFlushLazy calls BufferFlush, and both are pl_sub.  Only the
+	// outermost arms, so a lazy flush that really flushed is charged once, not twice.
+	Common::FrameStats::PathSpan pl_sub(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathSubNs, Common::FrameStats::Counter::PathSubN,
+	    Common::FrameStats::Detail::t_path_sub_depth);
 	static const int64_t window_us = [] {
 		const char* value = std::getenv("KYTY_EOP_FLUSH_US");
 		return value != nullptr ? std::strtoll(value, nullptr, 10) : 300ll;
@@ -826,7 +841,40 @@ static void DebugAutoRenderDocCapture(int frame_num) {
 	RenderDocRequestCapture();
 }
 
+// Session 96, knob "bdaevery" (MEASUREMENT ONLY): one extra PrepareBda at a coarse
+// granularity.  `at` is the knob value this site answers to, so a site fires only in its own
+// arm and arm 0 adds nothing at all.  Timed under Enabled() (not TimingsEnabled()), so it
+// reads in a KYTY_FRAME_TRACE=lite run.
+static void BdaEveryHook(RenderContext& renderer, uint32_t at) {
+	if (Common::Gates::Value(Common::Gates::Knob::BdaEvery) != at) {
+		return;
+	}
+	// The render mutex is MANDATORY here, and it is not defensive: PrepareBda mutates the
+	// buffer cache (renderContext.cpp:302-304, :343, :356-358) and takes only its own
+	// shared_lock on m_mapped_ranges_mutex.  Every shipped caller (descriptors.cpp,
+	// renderCompute.cpp) already runs under it; these two sites are on the PM4 parse path and
+	// do not.  Common::Mutex is not recursive, so re-entrancy was CHECKED, not assumed: all
+	// five callers of WriteAtEndOfPipe32/64 are PM4 handlers (pm4Handlers.cpp:1850, :1873,
+	// :2375, :2395, :2422), and the head of GuestGpu::Process runs before any draw takes the
+	// mutex.  The timestamp is taken ABOVE the lock on purpose, exactly as PrepareBda takes
+	// its own: a real synchronisation point would wait for that lock too, and waiting is part
+	// of the price this knob exists to measure.
+	const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+	{
+		Common::LockGuard lock(renderer.GetMutex());
+		renderer.PrepareBda();
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BdaEveryCalls, 1);
+	if (t0 != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaEveryNs,
+		                        Common::FrameStats::NowNs() - t0);
+	}
+}
+
 bool GuestGpu::Process(Submission& submission) {
+	Common::FrameStats::PathSpan pl_proc(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathProcNs, Common::FrameStats::Counter::PathProcN);
 	const bool first_slice = !submission.started;
 	// KYTY_LAG_TRACE=1: log submissions that waited long between Enqueue and processing.
 	static const bool trace_lag = std::getenv("KYTY_LAG_TRACE") != nullptr;
@@ -852,6 +900,12 @@ bool GuestGpu::Process(Submission& submission) {
 		cp.Reset();
 	}
 
+	// Session 96, knob "bdaevery"=1: the synchronisation term at SUBMISSION granularity
+	// (judge.md:116 asks for "an arm with PrepareBda once per submission"; the count
+	// "5 graphics command buffers + ~3 compute" a frame is judge.md:95, U2).
+	if (first_slice) {
+		BdaEveryHook(m_renderer, 1);
+	}
 	if (first_slice) {
 		submission.started = true;
 		cp.SetSubmitId(++m_submit_id);
@@ -893,6 +947,9 @@ bool GuestGpu::Process(Submission& submission) {
 			}
 			if (progressed) {
 				if (complete) {
+					Common::FrameStats::PathSpan pl_gc(
+					    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+					    Common::FrameStats::Counter::PathGcNs, Common::FrameStats::Counter::PathGcN);
 					const auto t0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 					m_renderer.RunGarbageCollector();
 					if (t0 != 0) {
@@ -912,6 +969,9 @@ bool GuestGpu::Process(Submission& submission) {
 				Common::FrameStats::SiteScope site_scope("slice-end-gfx");
 				cp.BufferFlush();
 			} else if (complete) {
+				Common::FrameStats::PathSpan pl_gc(
+				    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+				    Common::FrameStats::Counter::PathGcNs, Common::FrameStats::Counter::PathGcN);
 				m_renderer.RunGarbageCollector();
 			}
 			break;
@@ -934,6 +994,9 @@ bool GuestGpu::Process(Submission& submission) {
 			           Pm4ProcessResult::Complete;
 			if (submission.command_execution.MadeProgress()) {
 				if (complete) {
+					Common::FrameStats::PathSpan pl_gc(
+					    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+					    Common::FrameStats::Counter::PathGcNs, Common::FrameStats::Counter::PathGcN);
 					m_renderer.RunGarbageCollector();
 				}
 				m_renderer.GetBufferCache().PrefetchHotReadbacks();
@@ -941,11 +1004,17 @@ bool GuestGpu::Process(Submission& submission) {
 				Common::FrameStats::SiteScope site_scope("slice-end-compute");
 				cp.BufferFlush();
 			} else if (complete) {
+				Common::FrameStats::PathSpan pl_gc(
+				    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+				    Common::FrameStats::Counter::PathGcNs, Common::FrameStats::Counter::PathGcN);
 				m_renderer.RunGarbageCollector();
 			}
 			break;
 		}
 		case SubmissionType::FlipPreparation:
+			Common::FrameStats::PathSpan pl_gc(
+			    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+			    Common::FrameStats::Counter::PathGcNs, Common::FrameStats::Counter::PathGcN);
 			m_renderer.RunGarbageCollector();
 			cp.PrepareCpuFlip(submission.flip_request_id);
 			break;
@@ -1665,6 +1734,9 @@ static void BatonRelayStop() {
 }
 
 void GuestGpu::LookaheadSubmission(Submission& submission) {
+	Common::FrameStats::PathSpan pl_look(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathLookNs, Common::FrameStats::Counter::PathLookN);
 	if (submission.commands.empty() || submission.type == SubmissionType::FlipPreparation) {
 		return;
 	}
@@ -1689,6 +1761,9 @@ void GuestGpu::LookaheadSubmission(Submission& submission) {
 }
 
 void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
+	Common::FrameStats::PathSpan pl_pref(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathPrefNs, Common::FrameStats::Counter::PathPrefN);
 	// Knob "dapin": the GuestGpu thread applies it to itself once per submission, whatever the
 	// other gates say.
 	DrawAheadApplyPin(true);
@@ -2368,6 +2443,11 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 	static_assert(sizeof(T) == sizeof(uint32_t) || sizeof(T) == sizeof(uint64_t));
 
 	CheckBuffer();
+	// Session 96, knob "bdaevery"=2: the synchronisation term at LABEL granularity
+	// (gpu-driven.md:136, "at every RELEASE_MEM"; ~420 a frame, graphicsRun.cpp comment at the
+	// head of BufferFlushLazy).  This template is the single body of WriteAtEndOfPipe32 and 64,
+	// so one site covers every end-of-pipe label the CPU writes at parse time.
+	BdaEveryHook(m_renderer, 2);
 
 	if (GraphicsRunDebugDumpEnabled()) {
 		const auto bits      = static_cast<unsigned>(sizeof(T) * 8u);
@@ -2625,6 +2705,9 @@ void CommandProcessor::WriteAtEndOfPipe64(uint32_t cache_policy, uint32_t event_
 }
 
 void CommandProcessor::EmitGlobalBarrier() {
+	Common::FrameStats::PathSpan pl_bar(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathBarNs, Common::FrameStats::Counter::PathBarN);
 	CheckBuffer();
 	Common::FrameStats::Add(Common::FrameStats::Counter::GlobalBarriers, 1);
 	// RELEASE_MEM cache actions and CS/PS partial-flush / CB-DB writeback events used to become a
@@ -2677,6 +2760,9 @@ void CommandProcessor::EmitGlobalBarrier() {
 }
 
 void CommandProcessor::TriggerEopEventAtEndOfPipe(uint32_t interrupt_context_id) {
+	Common::FrameStats::PathSpan pl_eop(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathEopNs, Common::FrameStats::Counter::PathEopN);
 	CheckBuffer();
 
 	Sync::TriggerEopEventAtEndOfPipe(CurrentBuffer(), m_interrupt_event_id, interrupt_context_id);

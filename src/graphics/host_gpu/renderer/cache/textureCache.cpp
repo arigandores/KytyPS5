@@ -2839,6 +2839,49 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 	auto [mapped, offset] =
 	    download.Map(range.size, std::max<uint64_t>(image.info.bytes_per_block, 4));
 	if (mapped == nullptr) {
+		// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053).  The ceiling
+		// stub is licensed to break the PICTURE; it is not licensed to end the RUN, and run
+		// bf96a ended here 38 frames after arming.
+		// Map returns null in five places and four of them are unreachable on this call, so
+		// the cause is not in doubt: Mapped() is non-empty (this ring was mapped thousands of
+		// times in the unarmed arm of the same run), NormalizeReservation would need an
+		// overflow of an alignment of at most 16, AlignUp likewise, and WaitPendingOperations
+		// can only fail with allow_wait = false, which this call does not pass (it defaults to
+		// true, streamBuffer.h) - a FULL ring waits, it does not return null.  What is left is
+		// `mapped_size > Size()`: the image's guest range is larger than the whole 32 MiB
+		// download ring (bufferCache.cpp, m_download_buffer).  Deterministic in the size, not a
+		// pressure or pacing effect.
+		// It becomes reachable under the floor because the floor halves the frame, the game's
+		// DRS answers by raising the resolution (bf96a: rt_kpx/rt_att 2 010 -> 8 040 Kpx,
+		// 1080p -> 2160p over 30 frames, 4.00x the area) and a linear colour target - which
+		// FindColorTarget enrols for readback through TrackImageDownload, a path the floor
+		// keeps - passes 32 MiB.  That is the DRS trap of ROADMAP.md:1062-1065 and the reason
+		// knob "bfmode"=3 with "bfburn" exists; bf96a ran bfmode=1 and bf_burn_ns=0.
+		// Abandoning the readback removes NO work from the measured path: the download could
+		// not be performed at all, and until now the process died in its place.  It leaves the
+		// guest with stale bytes for this image, which is a broken picture.  Both callers
+		// already handle false - RunGarbageCollector postpones the image (retry_later) and
+		// ProcessDownloadImages discards the result.
+		// A NONZERO bf_dlskip IS ALSO A VERDICT ON THE RUN: it can only happen when the arms
+		// are drawing different areas, so that run's frame numbers are void whatever else the
+		// guards say.
+		// The EXIT below is kept verbatim for every run without the gate, so a floor-less
+		// binary behaves exactly as before.
+		if (Common::Gates::Enabled(Common::Gates::Gate::BindFloor)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkip, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkipKb,
+			                        range.size >> 10u);
+			static std::atomic<uint32_t> floor_dl_logged {0};
+			if (floor_dl_logged.fetch_add(1, std::memory_order_relaxed) < 8) {
+				LOGF("BindFloor: image readback abandoned, guest range does not fit the download"
+				     " ring guest=0x%016" PRIx64 " bytes=%" PRIu64 " ring=%" PRIu64 " tiled=%d"
+				     " extent=%ux%u bpb=%u\n",
+				     range.address, range.size, download.Size(),
+				     image.info.IsTiled() ? 1 : 0, image.info.extent.width,
+				     image.info.extent.height, image.info.bytes_per_block);
+			}
+			return false;
+		}
 		EXIT("TextureCache: failed to map reusable download buffer\n");
 	}
 	download.Commit();

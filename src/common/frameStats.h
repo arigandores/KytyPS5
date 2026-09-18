@@ -1534,6 +1534,94 @@ enum class Counter : uint32_t {
 	FrameRepOkSlots,       // fr_okslot:   convertible slots the walk saw
 	FrameRepImgN,          // fr_img:      image-view values the walk saw
 	FrameRepBufN,          // fr_buf:      non-ring buffer values the walk saw
+	// Session 96, gate "pathlap" (MEASUREMENT ONLY, pred/01_pathlap.md): the two splits
+	// ROADMAP.md:1051-1052 names as part of M3.  Every one of these is written by PathLap,
+	// which times under Enabled() and not TimingsEnabled(), so unlike the DrawVertexNs /
+	// DrawAcquireRtNs / DrawPipelineNs / DrawCommitNs / DrawEmitNs chain beside it they are
+	// not identically zero in a KYTY_FRAME_TRACE=lite run.  Raw ns, printed raw.
+	// (a) OUTSIDE the render mutex.  pl_proc_ns is the whole submission on the GuestGpu
+	// thread, so the residue is
+	//     pl_proc_ns - 1000 * (a_hold_us - mh_pres_us) - sum(the named ones)
+	// and THAT residue is the 4.05 ms no session has ever attributed.  THE FACTOR 1000 IS NOT
+	// DECORATION: every pl_* here is RAW NANOSECONDS (micros=false in videoOut.cpp's table),
+	// while a_hold_us and mh_pres_us print in MICROseconds (micros=true).  Taken off the
+	// FrameTrace-x line without it, the formula is out by three orders of magnitude.
+	// `named` is pl_pref + pl_eop + pl_bar + pl_sub + pl_gc + pl_cmd.  It does NOT include
+	// pl_look: LookaheadSubmission's only caller is GuestGpu::Enqueue (graphicsRun.cpp:630),
+	// which runs on the GUEST SUBMIT thread, outside GuestGpu::Process entirely, so its time
+	// is not inside pl_proc_ns and subtracting it would subtract another thread's work from
+	// this one's.
+	PathProcNs,   // pl_proc_ns: wall of GuestGpu::Process, the whole submission
+	PathProcN,    // pl_proc_n:  submissions it ran on
+	PathLookNs,   // pl_look_ns: LookaheadSubmission (the draw-ahead / compute walk post).
+	              //             ON THE GUEST SUBMIT THREAD, not GuestGpu, and therefore NOT
+	              //             part of `named` and NOT inside pl_proc_ns.  Reported on its
+	              //             own line: what the submitting thread pays for the lookahead.
+	PathLookN,    // pl_look_n
+	PathPrefNs,   // pl_pref_ns: PrefetchComputePipelines (the PM4 look-ahead walk)
+	PathPrefN,    // pl_pref_n
+	PathEopNs,    // pl_eop_ns:  TriggerEopEventAtEndOfPipe - the ~420 labels a frame the
+	              //             CPU writes at parse time (gpu-driven.md:36, the design
+	              //             constraint that killed zero-copy in s66 and D1 in s91)
+	PathEopN,     // pl_eop_n
+	PathBarNs,    // pl_bar_ns:  EmitGlobalBarrier.  Outside the render mutex at the
+	              //             default, where the barrier is skipped before the lock;
+	              //             with KYTY_EOP_BARRIER=1 it takes the mutex and this
+	              //             then includes that hold
+	PathBarN,     // pl_bar_n
+	PathSubNs,    // pl_sub_ns:  BufferFlush and BufferFlushLazy (the submission handoff),
+	              //             depth-guarded: the lazy one CALLS the plain one, so a
+	              //             flush is charged once and counted once
+	PathSubN,     // pl_sub_n
+	PathGcNs,     // pl_gc_ns:   RunGarbageCollector - ALL FIVE call sites of
+	              //             GuestGpu::Process, including the one on flip preparation
+	PathGcN,      // pl_gc_n
+	PathCmdNs,    // pl_cmd_ns:  ProcessCommands, the guest-command pump inside the PM4 loop
+	PathCmdN,     // pl_cmd_n
+	// (b) INSIDE the render mutex, the emit half of a draw (mh_emit_us).  The chain starts
+	// where HoldPhase(HoldEmitNs) starts and ends where it ends, so sum(pl_em_*) == mh_emit_us
+	// on the draws that ran it, up to the price of the marks themselves.
+	PathEmVtxNs,  // pl_em_vtx_ns:  AcquireVertexBuffers + PrepareIndexBuffer
+	PathEmRtNs,   // pl_em_rt_ns:   AcquireRenderTargets
+	PathEmPipeNs, // pl_em_pipe_ns: GetGraphicsPipeline (creates pipelines)
+	PathEmComNs,  // pl_em_com_ns:  CommitBindings - the 2.03 ms the rest is measured against
+	PathEmRecNs,  // pl_em_rec_ns:  BeginRendering, dynamic state, EmitDrawPrimitives, record
+	PathEmRestNs, // pl_em_rest_ns: the remainder of mh_emit (debug dumps, the early exits)
+	PathEmN,      // pl_em_n:       draws whose emit chain ran
+	// Session 96, knob "bdaevery" (MEASUREMENT ONLY, pred/03_bdaevery.md): the price of the
+	// synchronisation term of M3's sealed rule, at the two granularities the sources disagree
+	// about.  Raw ns / raw counts.  ALWAYS quote them with the BDA regime (regime94.py).
+	BdaEveryCalls, // be_n:  PrepareBda calls this knob caused (0 when the knob is 0)
+	BdaEveryNs,    // be_ns: their wall time on the GuestGpu thread
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+	// measurement M3: the CEILING STUB.  The picture is allowed to break; these twelve say
+	// what the stub actually did, and every one of them is written inside a branch the gate
+	// opened, so at bindfloor=0 all twelve read exactly 0.  Raw counts and raw ns.
+	BindFloorDraws,     // bf_n:       draws that took the floor path
+	BindFloorDispatch,  // bf_disp:    dispatches that took it
+	BindFloorPush,      // bf_push:    commits emitted through push descriptors
+	BindFloorPool,      // bf_pool:    commits emitted through a pooled descriptor set
+	BindFloorImages,    // bf_img:     stub image-view descriptors written
+	BindFloorBuffers,   // bf_buf:     stub buffer-view descriptors written
+	BindFloorSamplers,  // bf_smp:     stub sampler descriptors written
+	BindFloorNullTrans, // bf_null_tr: transitions of the <= 9 null images (per class, per
+	                    //             commit - NOT a per-slot synchronisation)
+	BindFloorMat,       // bf_mat:     real MaterializeResources calls under the floor
+	BindFloorReuse,     // bf_reuse:   materialisations answered from the last one instead
+	BindFloorBurnNs,    // bf_burn_ns: time the calibrated idle (bfmode=3) actually burned
+	BindFloorSkips,     // bf_skip:    draws / dispatches the floor did NOT take (reason in
+	                    //             the log for the first 64)
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053): image readbacks
+	// the floor had to abandon because the image's guest range does not fit the 32 MiB
+	// download ring.  Run bf96a died on exactly this (textureCache.cpp, DownloadImageMemory):
+	// the floor halves the frame, the game's DRS answers with 4.00x the area (rt_kpx/rt_att
+	// 2 010 -> 8 040 Kpx in 30 frames) and a linear colour target passes 32 MiB.  A nonzero
+	// bf_dlskip therefore means TWO things and both must be reported: the readback was
+	// skipped (stale guest bytes - a broken picture, which the floor is licensed to produce)
+	// AND the arms are drawing different areas, so the frame numbers of that run are void
+	// until bfmode=3 / bfburn hold the frame length.  Written only while the gate is on.
+	BindFloorDlSkip,   // bf_dlskip:    readbacks abandoned
+	BindFloorDlSkipKb, // bf_dlskip_kb: their guest ranges, KiB
 	Count
 };
 
@@ -1606,6 +1694,16 @@ inline thread_local uint64_t t_mut_t0    = 0;
 // so that ExecutePreparedDraw can add a boundary without the lap in its signature, and so that the
 // present thread keeps its own chain. Zero means "not measuring".
 inline thread_local uint64_t t_hold_t0   = 0;
+// Session 96, gate "pathlap": nesting depth of the named outside-mutex spans that CAN nest.
+// BufferFlushLazy calls BufferFlush, and both are named regions charged to pl_sub; without a
+// guard the inner one charges the same interval a second time.  One counter per nestable
+// group, so the guard never reaches a span that legitimately sits inside another (pl_proc
+// contains every other span by construction and must not suppress them).
+inline thread_local uint32_t t_path_sub_depth = 0;
+// Session 96, gate "pathlap": the cursor of a PathLap chain.  Separate from t_hold_t0 so the
+// emit chain can run inside the mh_* chain, and so the GuestGpu thread's outside-mutex chain
+// and a draw's emit chain never share one.  Zero means "not measuring".
+inline thread_local uint64_t t_path_t0   = 0;
 inline constinit bool                  g_timings = false;
 // No initializer to run, so no TLS guard: the shard is attached by the first Add of a thread.
 inline constinit thread_local Shard*   t_shard   = nullptr;
@@ -1852,6 +1950,93 @@ public:
 
 private:
 	Counter m_counter;
+};
+
+// Session 96, gate "pathlap": one named region of the GuestGpu thread OUTSIDE the render
+// mutex, timed and counted together so the population and the time always come from the same
+// entries.  Enabled() and not TimingsEnabled(), like LapScope, so it reads in a lite run.
+// It refuses to arm while a HoldLap chain is running (Detail::t_hold_t0 != 0), so a region
+// that can also be reached from inside the render mutex is never charged twice - once to the
+// hold and once to the residue.  That check is the reason gate "pathlap" REQUIRES gate
+// "mutsite" in the same arm: t_hold_t0 is the only "inside the mutex" signal there is, and
+// gates_base.txt pins mutsite=0.
+class PathSpan {
+public:
+	PathSpan(bool on, Counter ns, Counter n)
+	    : m_ns(ns), m_t0(on && Enabled() && Detail::t_hold_t0 == 0 ? NowNs() : 0) {
+		if (m_t0 != 0) {
+			Add(n, 1);
+		}
+	}
+	// Depth-guarded form, for a region that can be entered from inside ITSELF through another
+	// function: BufferFlushLazy calls BufferFlush and both are pl_sub.  Only the outermost
+	// span of the nest arms, so the interval is charged once and the population counts one
+	// flush, not two.  The depth is always stepped, even when the gate is off, so a nest that
+	// starts while the gate is off cannot arm halfway through.
+	PathSpan(bool on, Counter ns, Counter n, uint32_t& depth)
+	    : m_ns(ns),
+	      m_t0(on && Enabled() && Detail::t_hold_t0 == 0 && depth == 0 ? NowNs() : 0),
+	      m_depth(&depth) {
+		++depth;
+		if (m_t0 != 0) {
+			Add(n, 1);
+		}
+	}
+	~PathSpan() {
+		if (m_depth != nullptr) {
+			--*m_depth;
+		}
+		if (m_t0 != 0) {
+			Add(m_ns, NowNs() - m_t0);
+		}
+	}
+	PathSpan(const PathSpan&)            = delete;
+	PathSpan& operator=(const PathSpan&) = delete;
+
+private:
+	Counter   m_ns;
+	uint64_t  m_t0;
+	uint32_t* m_depth = nullptr;
+};
+
+// Session 96, gate "pathlap": HoldLap's shape with its OWN thread-local cursor, so a chain
+// can run INSIDE the mh_* chain (the emit half of a draw) without disturbing it, and a second
+// one can run on the GuestGpu thread outside the render mutex.  Enabled() and NOT
+// TimingsEnabled(), which is the whole point: Lap (below) and every Scope read exactly 0 in a
+// KYTY_FRAME_TRACE=lite measurement run, and that is why mh_emit was never split.
+// Constructed with the gate's value; while the gate is off nothing is read and nothing is
+// written.  The destructor charges what is left to `rest`, so a function with several exits
+// still books its whole span.
+class PathLap {
+public:
+	PathLap(bool on, Counter rest): m_rest(rest) {
+		Detail::t_path_t0 = on && Enabled() ? NowNs() : 0;
+	}
+	~PathLap() {
+		if (Detail::t_path_t0 != 0) {
+			Add(m_rest, NowNs() - Detail::t_path_t0);
+			Detail::t_path_t0 = 0;
+		}
+	}
+	static void Mark(Counter counter) {
+		if (Detail::t_path_t0 != 0) {
+			const auto now = NowNs();
+			Add(counter, now - Detail::t_path_t0);
+			Detail::t_path_t0 = now;
+		}
+	}
+	// Population counter, added only while the chain is running, so the population and the
+	// phases always come from the same set of draws.
+	static void Count(Counter counter) {
+		if (Detail::t_path_t0 != 0) {
+			Add(counter, 1);
+		}
+	}
+	PathLap(const PathLap&)            = delete;
+	PathLap& operator=(const PathLap&) = delete;
+
+private:
+	Counter m_rest;
 };
 
 // Splits a sequence of phases: Mark(c) charges the time since the previous Mark (or construction)

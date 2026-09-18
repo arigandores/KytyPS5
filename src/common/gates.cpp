@@ -257,8 +257,17 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 95, measurement only: the frame-to-frame content census (fr_n).  It only
     // hashes what the mergecost census already built, and hashes the SRT / shader-data
     // payload bytes; it changes nothing the renderer does.
-    // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_FRAME_REP", "framerep", false},
+    // Session 96, measurement only: the outside-mutex and mh_emit splits of M3.  It only
+    // takes timestamps and adds to counters at the end of the enum; it changes nothing the
+    // renderer does.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_PATH_LAP", "pathlap", false},
+    // Session 96, measurement only: the M3 ceiling stub.  It REMOVES real work and binds
+    // stubs, so the picture breaks by construction (allowed: ROADMAP.md:1048).  At 0 not a
+    // single branch of it is taken and the renderer behaves exactly as before.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_BIND_FLOOR", "bindfloor", false},
 }};
 
 struct KnobDefinition {
@@ -325,12 +334,22 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Ships at 0: the import moves the guest read from UploadCopies to command-buffer
     // execution, and a CPU write into the range then waits for it (hostread_waits).
     {"KYTY_BUF_IMPORT", "bufimp", 0, 2},
+    // Session 96, measurement only: an EXTRA PrepareBda at a coarse granularity, to price
+    // the synchronisation term of M3.  0 = today (nothing added), 1 = per submission,
+    // 2 = per end-of-pipe label write.  Read at every site, so it CAN be a schedule arm.
+    {"KYTY_BDA_EVERY", "bdaevery", 0, 2},
     // Session 92: how the copy pool is woken.  93.80 % of the price of handing a
     // region to the pool is the notify (4.27 us a region), because the workers are
     // asleep.  0 = today (notify_all on a multi-chunk enqueue), 1 = at most one
     // notify_one per chunk, 2 = 1 plus a 20 us worker spin before the wait.
     // Read at every enqueue and every worker drain, so it CAN be a schedule arm.
     {"KYTY_COPY_WAKE", "copywake", 0, 2},
+    // Session 96, measurement only, read only while gate "bindfloor" is on: how much of
+    // the floor is taken (1 full, 2 bindings only, 3 full + the calibrated idle), and how
+    // many microseconds a frame that idle burns.  Read at every site, so both CAN be
+    // schedule arms.  LAST rows, matching the LAST enum entries before Knob::Count.
+    {"KYTY_BIND_FLOOR_MODE", "bfmode", 1, 3},
+    {"KYTY_BIND_FLOOR_BURN", "bfburn", 0, 40000},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

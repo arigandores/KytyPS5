@@ -1722,6 +1722,21 @@ struct PipelineCache::ProgramCache {
 		// deque: draws and asynchronous pipeline jobs keep pointers to a permutation's program
 		// while later permutations of the same source are appended.
 		std::deque<Permutation>            permutations;
+		// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+		// measurement M3, knob "bfmode" 1 and 3: the LAST materialisation of this program.
+		// The floor runs neither AheadTake nor MaterializeResources; it reuses the last
+		// permutation of each program (rewrite94/gpu-driven.md:135).  The FIRST materialisation
+		// of a program still runs - otherwise no permutation and no pipeline of it would ever
+		// exist - and every one after it is this copy.  ResourceSpecialization is part of the
+		// pipeline key, so reusing it deliberately PINS the pipeline population; that is the
+		// point of the floor, not a side effect - and it pins the permutations the compute
+		// PREFETCH creates as well, because PrefetchComputePipeline calls Get too.  Written
+		// and read only inside ProgramCache::Get, whose every caller holds PipelineCache::
+		// m_mutex, which is what serialises it - NOT the draw thread, since Get also runs on
+		// the guest submit thread (KYTY_ASYNC_COMPUTE=1) and on DrawAheadWalk (dawalk=1).
+		ShaderRecompiler::IR::ResourceSnapshot       floor_snapshot;
+		ShaderRecompiler::IR::ResourceSpecialization floor_specialization;
+		bool                                        floor_valid = false;
 		bool                               from_cache = false;
 	};
 
@@ -3097,12 +3112,20 @@ struct PipelineCache::ProgramCache {
 		    .read_specialization_memory = ReadShaderGuestMemory,
 		};
 		pg_mark(Common::FrameStats::Counter::ProgLapLocalNs);
+		// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053): at bfmode 1
+		// and 3 the floor removes BOTH AheadTake (below) and MaterializeResources (further
+		// down).  bfmode=2 is the BINDINGS-ONLY arm and leaves this function alone entirely
+		// (rewrite94/gpu-driven.md:141), so it is excluded here and only here.
+		const bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor) &&
+		                        Common::Gates::Value(Common::Gates::Knob::BindFloorMode) != 2;
 		bool       ahead_hit     = false;
 		// Hoisted out of the if so pg_ahead_n counts the same calls the block runs on; the
 		// operands have no side effects, so the short circuit is unchanged.
 		const bool pg_ahead_ran  = entry != programs.end() &&
 		                          (stage == ShaderType::Vertex || stage == ShaderType::Pixel) &&
-		                          Common::Gates::Enabled(Common::Gates::Gate::DrawAhead);
+		                          Common::Gates::Enabled(Common::Gates::Gate::DrawAhead) &&
+		                          // Session 96, gate "bindfloor": AheadTake removed.
+		                          !bind_floor;
 		if (pg_ahead_ran) {
 			AheadNote(stage, params.Base(), params.user_data, &entry->second);
 			if (Common::Gates::Enabled(Common::Gates::Gate::DrawAheadUse)) {
@@ -3178,7 +3201,16 @@ struct PipelineCache::ProgramCache {
 		// Hoisted for the same reason as pg_ahead_ran: pg_mat_n must count the calls where
 		// MaterializeResources actually ran, which the short circuit otherwise hides.
 		const bool pg_mat_ran = entry != programs.end() && !ahead_hit;
-		if (pg_mat_ran &&
+		// Session 96, gate "bindfloor": reuse the LAST materialisation of this program
+		// instead of running MaterializeResources.  bf_reuse counts the copies.
+		bool floor_reused = false;
+		if (bind_floor && pg_mat_ran && entry->second.floor_valid) {
+			resources      = entry->second.floor_snapshot;
+			specialization = entry->second.floor_specialization;
+			floor_reused   = true;
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorReuse, 1);
+		}
+		if (pg_mat_ran && !floor_reused &&
 		    !ShaderRecompiler::IR::MaterializeResources(entry->second.resource_plan, runtime,
 		                                                resources, specialization)) {
 			if (!entry->second.from_cache) {
@@ -3202,6 +3234,16 @@ struct PipelineCache::ProgramCache {
 			entry = programs.end();
 			resources = {};
 			specialization = {};
+		}
+		// Session 96, gate "bindfloor": the first materialisation of each program is kept, and
+		// every later draw of it reads the copy above.  Taken BEFORE `resources` is moved into
+		// input_info.stage below.  Guarded on entry != programs.end() because the drop path just
+		// above extracts the entry.  bf_mat counts the real ones.
+		if (bind_floor && pg_mat_ran && !floor_reused && entry != programs.end()) {
+			entry->second.floor_snapshot       = resources;
+			entry->second.floor_specialization = specialization;
+			entry->second.floor_valid          = true;
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorMat, 1);
 		}
 		pg_mark(Common::FrameStats::Counter::ProgLapMatNs);
 		if (pg_t != 0 && pg_mat_ran) {

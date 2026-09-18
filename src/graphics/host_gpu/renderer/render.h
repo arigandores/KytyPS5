@@ -504,6 +504,39 @@ private:
 		bool                  hit_idm = false;
 	};
 	FrameRepState m_frame_rep;
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+	// measurement M3: everything the ceiling stub needs that must outlive one draw.  Touched
+	// on the GuestGpu thread under the render mutex only, exactly where the mergecost and
+	// framerep state above is touched, so there is no lock and no atomic here.  Every field
+	// stays at its initial value while the gate is off.
+	struct BindFloorState {
+		// The nine answers NullTextureDesc can give (NullTextureKey: numeric class x shape).
+		// Rebuilt once a frame rather than validated per slot: a per-slot liveness check is
+		// the very kind of work the floor exists to remove, and nine FindImage / FindTexture
+		// calls a frame cost nothing.
+		struct NullSlot {
+			bool          valid  = false;
+			ImageId       image_id;
+			vk::ImageView view   = nullptr;
+			uint64_t      transit = 0; // the commit this slot was last transited in
+		};
+		std::array<NullSlot, 9> nulls {};
+		vk::Sampler             sampler     = nullptr; // GetSampler(ShaderSamplerResource{})
+		uint64_t                commit      = 0;       // commits the floor has taken
+		int                     nulls_frame = -1;      // frame the nine slots were built in
+		// Knob "bfburn" at bfmode=3: the calibrated idle.  budget_ns is this frame's target,
+		// burned_ns what was really spent, and last_draws the previous frame's population,
+		// which is how the budget is spread without knowing the draw count in advance.
+		int                     burn_frame = -1;
+		uint64_t                budget_ns  = 0;
+		uint64_t                burned_ns  = 0;
+		uint64_t                draws      = 0;
+		uint64_t                last_draws = 0;
+	};
+	BindFloorState m_bind_floor;
+	// Knob "bfburn" at bfmode=3 only; a no-op at every other setting.  Called from the draw
+	// and dispatch paths exactly where the removed work stood.
+	void           BindFloorBurnSlice();
 	void           MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
 	                               std::span<PreparedBindings* const> prepared_bindings,
 	                               uint64_t transit_ns, uint64_t write_ns, uint64_t emit_ns,

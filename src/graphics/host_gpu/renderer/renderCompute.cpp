@@ -789,8 +789,35 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindPackLocalSkip, 1);
 	}
 	auto& bindings = reuse_bindings ? m_compute_bindings : *local_bindings;
-	PrepareBindings(input_info.stage, bindings);
-	FindBuffers(bindings);
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+	// measurement M3: the dispatch half of the ceiling stub.  THE PICTURE IS ALLOWED TO BREAK
+	// (ROADMAP.md:1048).  Read ONCE per dispatch, here, before anything is prepared.
+	// REMOVED: PrepareBindings, FindBuffers, PrepareBda, RebindImages, RebindBuffers.
+	// KEPT: the PM4 parse, the pipeline lookup, CommitBindings' emit half, the shader-write
+	// hazard barrier and the whole "recpack" record tail.
+	bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	if (bind_floor) {
+		bind_floor = BindFloorStageSupported(input_info.stage);
+		Common::FrameStats::Add(bind_floor ? Common::FrameStats::Counter::BindFloorDispatch
+		                                   : Common::FrameStats::Counter::BindFloorSkips,
+		                        1);
+		if (!bind_floor) {
+			static std::atomic<uint32_t> floor_logged {0};
+			if (floor_logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+				LOGF("BindFloor: skipped dispatch frame=%d cs=0x%016" PRIx64
+				     " reason=image-numeric-class\n",
+				     m_context.GetGpu().GetFrameNum(), program.shader_hash);
+			}
+		}
+	}
+	if (bind_floor) {
+		BindFloorPrepareStage(input_info.stage, bindings);
+		// Knob "bfburn" at bfmode=3: burned where the removed work stood.
+		BindFloorBurnSlice();
+	} else {
+		PrepareBindings(input_info.stage, bindings);
+		FindBuffers(bindings);
+	}
 	// Session 94, gate "bdaall" (MEASUREMENT ONLY, pred/02_bdaall.md): the dispatch half of
 	// the census in PrepareGraphicsBindings.
 	bool bda_all = false;
@@ -801,13 +828,20 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		                        1);
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaAllDispatch, bda_all ? 1u : 0u);
 	}
-	if (program.info.uses_dma || bda_all) {
+	// Session 96, gate "bindfloor": PrepareBda is one of the three things the floor
+	// removes from a dispatch.
+	if ((program.info.uses_dma || bda_all) && !bind_floor) {
 		m_context.PrepareBda();
 	}
-	RebindImages(bindings);
+	// Session 96, gate "bindfloor": removed by the floor.
+	if (!bind_floor) {
+		RebindImages(bindings);
+	}
 	// Upstream dd408ff: the buffer reservations follow the image rebinds, so an alias
 	// discovered while resolving the images cannot be uploaded from a stale identity.
-	RebindBuffers(bindings);
+	if (!bind_floor) {
+		RebindBuffers(bindings);
+	}
 	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
 
 	// No handle here: the sanitizer below may submit this buffer while it waits for a ring slot, so

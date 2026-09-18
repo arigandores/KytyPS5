@@ -635,6 +635,40 @@ static TextureCache::ImageDesc NullTextureDesc(const ShaderRecompiler::IR::Image
 	return desc;
 }
 
+// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E measurement
+// M3.  NullTextureDesc above aborts on a numeric class it cannot express.  Today that is
+// reachable only from a genuinely null T#, which is rare; on the floor EVERY image slot goes
+// through it, so a single such shader would kill the run.  A draw carrying one keeps the real
+// path and is counted bf_skip instead.  Read-only, no side effect, no timestamp.
+bool BindFloorStageSupported(const ShaderStageRuntime& runtime) {
+	if (!runtime) {
+		return false;
+	}
+	for (const auto& image: runtime.program->info.images) {
+		switch (image.numeric_class) {
+			case Prospero::TextureNumericClass::Float:
+			case Prospero::TextureNumericClass::Uint:
+			case Prospero::TextureNumericClass::Sint: break;
+			default: return false;
+		}
+	}
+	return true;
+}
+
+// Session 96, gate "bindfloor": the floor's replacement for PrepareBindings.  It writes the
+// two things CommitBindings' emit half reads out of a PreparedBindings and nothing else:
+// `runtime`, which carries program.bindings.descriptors (the SHAPE of the descriptor writes,
+// which the floor does not change), and a zero shader_data of exactly ShaderDataDwords()
+// entries, which keeps EXIT_IF(prepared->shader_data.size() != shader_data_dwords) true and
+// gives the push constants a defined value.  images / buffers / samplers / gds /
+// flattened_srt / shader_data_buffer stay EMPTY: the stubs are supplied in CommitBindings.
+void BindFloorPrepareStage(const ShaderStageRuntime& runtime, PreparedBindings& prepared) {
+	EXIT_IF(!runtime);
+	prepared.Reset();
+	prepared.runtime = &runtime;
+	prepared.shader_data.assign(runtime.program->bindings.ShaderDataDwords(), 0u);
+}
+
 static void PopulateTextureMipLayout(ImageInfo& info) {
 	if (info.IsVolume() && info.tile_mode != Prospero::TileMode::kLinear) {
 		TileSurfaceLayout            surface {};
@@ -2741,6 +2775,58 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 
 } // namespace
 
+// Session 96, knob "bfburn" at "bfmode"=3 (MEASUREMENT ONLY, ROADMAP.md:1062-1065): the
+// calibrated idle.  The floor makes the frame SHORTER, and a shorter frame lets DRS raise the
+// resolution, so the two arms would no longer draw the same area and every per-frame number
+// would be comparing two different scenes.  This burns the difference back on the very thread
+// and at the very point the removed work occupied - the translation thread, inside the render
+// mutex - so the arms keep the same frame length.  The budget is a whole frame's worth of
+// microseconds and is spread over the draws and dispatches by the PREVIOUS frame's
+// population, which is the only count available before the frame ends.  bf_burn_ns is what
+// was really burned, never what was asked for.  At any other mode this returns on the first
+// line and costs one relaxed atomic load.
+void RenderExecutor::BindFloorBurnSlice() {
+	if (Common::Gates::Value(Common::Gates::Knob::BindFloorMode) != 3) {
+		return;
+	}
+	const uint64_t budget_us = Common::Gates::Value(Common::Gates::Knob::BindFloorBurn);
+	if (budget_us == 0) {
+		return;
+	}
+	auto&     floor = m_bind_floor;
+	const int frame = m_context.GetGpu().GetFrameNum();
+	if (frame != floor.burn_frame) {
+		// The first frame has no population to spread over; 5 000 is this scene's order of
+		// magnitude and it self-corrects on the next frame.
+		floor.last_draws = floor.draws != 0 ? floor.draws : 5000u;
+		floor.burn_frame = frame;
+		floor.draws      = 0;
+		floor.burned_ns  = 0;
+		floor.budget_ns  = budget_us * 1000ull;
+	}
+	floor.draws++;
+	if (floor.burned_ns >= floor.budget_ns) {
+		return;
+	}
+	// Cumulative target, so a budget smaller than the draw count is still burned (the slice
+	// is zero on most draws and one tick on the rest) instead of being rounded away.
+	const uint64_t target = floor.budget_ns * floor.draws / floor.last_draws;
+	if (target <= floor.burned_ns) {
+		return;
+	}
+	uint64_t slice = target - floor.burned_ns;
+	if (slice > floor.budget_ns - floor.burned_ns) {
+		slice = floor.budget_ns - floor.burned_ns;
+	}
+	const uint64_t begin = Common::FrameStats::NowNs();
+	uint64_t       now   = begin;
+	while (now - begin < slice) {
+		now = Common::FrameStats::NowNs();
+	}
+	floor.burned_ns += now - begin;
+	Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnNs, now - begin);
+}
+
 void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
                                     vk::PipelineBindPoint              pipeline_bind_point,
                                     const PipelineCache::Pipeline&     pipeline,
@@ -2752,6 +2838,39 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// before they record. Gate "recpack" takes none.
 	size_t descriptor_count = 0;
 	size_t write_count      = 0;
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+	// measurement M3: the CEILING STUB.  THE PICTURE IS ALLOWED TO BREAK - sealed at
+	// ROADMAP.md:1048, and the only reason this may exist.  Read ONCE per commit, before
+	// anything below is decided, so a schedule flip landing inside a commit cannot arm half
+	// of it.  Never to be shipped: it binds WRONG data by construction.
+	// REMOVED below: the per-slot image transitions and their MaterializeDeferredDccClear
+	// (the loop runs zero times), the GDS barrier and its EndRendering (the floor's
+	// PreparedBindings carry no GDS buffer, so that block is not entered), the slot census,
+	// and every SOURCE of the descriptor writes.
+	// KEPT, byte for byte: the SHAPE of the writes (program.bindings.descriptors, still read
+	// out of prepared->runtime->program - which is why `prepared` and `runtime` are still
+	// needed), the dstSet, updateDescriptorSets, bindDescriptorSets, pushDescriptorSetKHR,
+	// the push constants, the gate "recpack" packet and the census hooks.
+	const bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	if (bind_floor) {
+		m_bind_floor.commit++;
+		// The nine null-image slots are rebuilt once a frame instead of being validated per
+		// slot: a per-slot liveness check is exactly the per-slot work the floor removes.
+		if (const int frame_now = m_context.GetGpu().GetFrameNum();
+		    frame_now != m_bind_floor.nulls_frame) {
+			m_bind_floor.nulls_frame = frame_now;
+			for (auto& null_slot: m_bind_floor.nulls) {
+				null_slot.valid = false;
+			}
+		}
+	}
+	// The CONSTANT triplet NativeStorageBuffer already returns for a degenerate V# (the
+	// `address == 0 || size == 0` return of this file).  The floor binds it for every buffer
+	// view; taken once a commit, and only while the gate is on.
+	const vk::DescriptorBufferInfo floor_buffer =
+	    bind_floor ? vk::DescriptorBufferInfo {
+	                     m_context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16}
+	               : vk::DescriptorBufferInfo {};
 	ShaderRecompiler::IR::PushData push_data;
 	bool                           has_push_data = false;
 	constexpr auto                 GraphicsStages =
@@ -2866,6 +2985,97 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	const bool slot_verify =
 	    slot_stat && Common::Gates::Enabled(Common::Gates::Gate::SlotStatVerify);
 
+	// Session 96, gate "bindfloor": the stub SOURCES of one descriptor binding, pushed into
+	// the same two vectors and in the same order the real sources are pushed in, so the write
+	// built around them below is identical in shape, count and order.  Written as a lambda
+	// inside CommitBindings on purpose: the floor is a BRANCH of this function, not a second
+	// copy of it, and everything past the write-building loop stays untouched code.
+	//   image views -> the existing null image (NullTextureDesc + FindImage + FindTexture),
+	//                  memoised in nine slots and transited to eGeneral once a commit;
+	//   samplers    -> one stable handle from the sampler cache, which is never cleared;
+	//   buffer views-> the null-buffer triplet above;
+	//   BdaPagetable / FaultBuffer -> UNCHANGED, they never came from PreparedBindings.
+	const auto floor_sources = [&](const ShaderRecompiler::IR::CompiledShaderInfo& program,
+	                               const ShaderRecompiler::IR::DescriptorBinding&  binding) {
+		if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
+		    ShaderRecompiler::IR::ImageResourceClass::None) {
+			auto& texture_cache = m_context.GetTextureCache();
+			for (const auto resource: binding.resources) {
+				const auto& image_resource = program.info.images.at(resource);
+				const auto  type           = image_resource.written
+				                                 ? TextureCache::BindingType::Storage
+				                                 : TextureCache::BindingType::Texture;
+				auto& slot = m_bind_floor.nulls.at(NullTextureKey(image_resource, type));
+				if (!slot.valid) {
+					auto desc       = NullTextureDesc(image_resource, type);
+					slot.image_id   = texture_cache.FindImage(desc);
+					slot.view       = texture_cache.FindTexture(slot.image_id, desc);
+					slot.transit    = 0;
+					slot.valid      = true;
+				}
+				if (slot.transit != m_bind_floor.commit) {
+					// Once per commit per CLASS, at most nine times, and the same eGeneral the
+					// shipped path gives a null image (the info.data.Empty() branch above).  Not a
+					// per-slot synchronisation: it does not depend on the slot's contents at all.
+					slot.transit = m_bind_floor.commit;
+					auto& null_image = texture_cache.GetImage(slot.image_id);
+					null_image.Transit(vk::ImageLayout::eGeneral,
+					                   type == TextureCache::BindingType::Storage
+					                       ? vk::AccessFlagBits2::eShaderRead |
+					                             vk::AccessFlagBits2::eShaderWrite
+					                       : vk::AccessFlags2 {vk::AccessFlagBits2::eShaderRead},
+					                   {}, vk::CommandBuffer {}, RenderPassEnd::BindingTransit, false,
+					                   packet);
+					Common::FrameStats::Add(
+					    Common::FrameStats::Counter::BindFloorNullTrans, 1);
+				}
+				m_descriptor_images.emplace_back(nullptr, slot.view, vk::ImageLayout::eGeneral);
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorImages,
+			                        binding.resources.size());
+			return;
+		}
+		switch (binding.kind) {
+			case BindingKind::Buffers:
+			case BindingKind::ConstBuffers:
+				for ([[maybe_unused]] const auto resource: binding.resources) {
+					m_descriptor_buffers.push_back(floor_buffer);
+				}
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBuffers,
+				                        binding.resources.size());
+				break;
+			case BindingKind::BdaPagetable:
+			case BindingKind::FaultBuffer: {
+				// Unchanged: these two are properties of the buffer cache, not of a draw's
+				// bindings, so the floor has nothing to take away from them.
+				auto&       cache      = m_context.GetBufferCache();
+				const auto* bda_buffer = binding.kind == BindingKind::BdaPagetable
+				                             ? cache.GetBdaPageTableBuffer()
+				                             : cache.GetFaultBuffer();
+				m_descriptor_buffers.emplace_back(bda_buffer->Handle(), 0, bda_buffer->Size());
+				break;
+			}
+			case BindingKind::FlattenedSrt:
+			case BindingKind::ShaderData:
+			case BindingKind::Gds:
+				m_descriptor_buffers.push_back(floor_buffer);
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBuffers, 1);
+				break;
+			case BindingKind::Samplers:
+				if (m_bind_floor.sampler == nullptr) {
+					m_bind_floor.sampler =
+					    m_context.GetSamplerCache().GetSampler(ShaderSamplerResource {});
+				}
+				for ([[maybe_unused]] const auto resource: binding.resources) {
+					m_descriptor_images.emplace_back(m_bind_floor.sampler, nullptr,
+					                                 vk::ImageLayout::eUndefined);
+				}
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorSamplers,
+				                        binding.resources.size());
+				break;
+			case BindingKind::Count: EXIT("invalid descriptor binding kind");
+		}
+	};
 	for (auto* prepared: prepared_bindings) {
 		const auto& program       = *prepared->runtime->program;
 		auto&       descriptors   = *prepared;
@@ -2899,7 +3109,14 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			gds_cache.NoteGdsShaderAccess();
 		}
 
-		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+		// Session 96, gate "bindfloor": on the floor there is nothing here to transit -
+		// descriptors.images is empty and the <= 9 null images are transited once a commit
+		// inside floor_sources below (bf_null_tr).  Everything this loop does - the deferred
+		// DCC materialisation, the per-slot layout decision and its barrier - IS the per-slot
+		// synchronisation the floor exists to remove.
+		const uint32_t floor_transit_count =
+		    bind_floor ? 0u : static_cast<uint32_t>(program.info.images.size());
+		for (uint32_t i = 0; i < floor_transit_count; i++) {
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
 			{
 				// This binding is the consumer of a deferred DCC clear still pending on the
@@ -2978,7 +3195,9 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 		cb_lap(cb_transit);
 
-		if (slot_stat) {
+		// Session 96, gate "bindfloor": the census walks PreparedBindings, which the floor
+		// leaves empty; the two gates are not combinable and the census stands down.
+		if (slot_stat && !bind_floor) {
 			NoteSlotStat(program.stage, program.shader_hash, program.bindings, descriptors,
 			             slot_stream, slot_null, slot_verify);
 		}
@@ -2991,7 +3210,12 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			write.descriptorCount   = NativeDescriptorCount(binding);
 			const auto buffer_start = m_descriptor_buffers.size();
 			const auto image_start  = m_descriptor_images.size();
-			if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
+			// Session 96, gate "bindfloor": the ONE line that swaps the sources.  The
+			// write itself - dstBinding, descriptorType, descriptorCount, pBufferInfo,
+			// pImageInfo and the push_back below - is the shipped code, unchanged.
+			if (bind_floor) {
+				floor_sources(program, binding);
+			} else if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
 			    ShaderRecompiler::IR::ImageResourceClass::None) {
 				for (const auto resource: binding.resources) {
 					m_descriptor_images.push_back(MakeImageInfo(
@@ -3076,6 +3300,13 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		cb_lap(cb_write);
 	}
 
+	// Session 96, gate "bindfloor": which emit this commit went out through.  bf_push +
+	// bf_pool is the number of commits the floor took, draws and dispatches together.
+	if (bind_floor) {
+		Common::FrameStats::Add(cb_pool ? Common::FrameStats::Counter::BindFloorPool
+		                                : Common::FrameStats::Counter::BindFloorPush,
+		                        1);
+	}
 	if (Common::DrawStat::On() && pipeline_bind_point == vk::PipelineBindPoint::eGraphics &&
 	    !m_descriptor_writes.empty()) {
 		NoteDescriptorSetStat(m_context, pipeline, m_descriptor_images, m_descriptor_buffers,

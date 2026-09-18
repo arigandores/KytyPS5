@@ -2116,6 +2116,43 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	                             ? Common::FrameStats::NowNs()
 	                             : 0;
 	LogDrawPhase(draw.Name(), "PrepareBindings");
+	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
+	// measurement M3: the CEILING STUB.  THE PICTURE IS ALLOWED TO BREAK (ROADMAP.md:1048).
+	// Read ONCE per draw, HERE, before anything is prepared, so a schedule flip landing inside
+	// a draw cannot arm half of it: the draw takes the floor end to end or none of it.
+	// REMOVED from this function: PrepareBindings (the SRT resolve of every image, buffer and
+	// sampler slot of every stage), PrepareGraphicsBindings (RebindImages, RebindBuffers, the
+	// buffer uploads, PrepareBda, the per-slot synchronisations) and the pixel bindings
+	// AcquireRenderTargets reads.  KEPT: the PM4 parse above, the render targets, the vertex
+	// and index buffers, the pipeline lookup, CommitBindings' emit half and the whole record /
+	// "recpack" tail.  bf_skip: a stage whose image numeric class NullTextureDesc cannot
+	// express would abort the process, so that draw keeps the real path.
+	bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	if (bind_floor) {
+		for (uint32_t i = 0; i < vertex_stages.size() && bind_floor; i++) {
+			bind_floor = BindFloorStageSupported(state.vertex_info[i].stage);
+		}
+		if (bind_floor && state.ps_active) {
+			bind_floor = BindFloorStageSupported(state.ps_input_info.stage);
+		}
+		Common::FrameStats::Add(bind_floor ? Common::FrameStats::Counter::BindFloorDraws
+		                                   : Common::FrameStats::Counter::BindFloorSkips,
+		                        1);
+		if (!bind_floor) {
+			static std::atomic<uint32_t> floor_logged {0};
+			if (floor_logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+				LOGF("BindFloor: skipped draw %s frame=%d vs=0x%016" PRIx64 " ps=0x%016" PRIx64
+				     " reason=image-numeric-class\n",
+				     draw.Name(), m_context.GetGpu().GetFrameNum(),
+				     state.vertex_info[0].stage
+				         ? state.vertex_info[0].stage.program->shader_hash
+				         : uint64_t {0},
+				     (state.ps_active && state.ps_input_info.stage)
+				         ? state.ps_input_info.stage.program->shader_hash
+				         : uint64_t {0});
+			}
+		}
+	}
 	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9): while ReuseBindingsEnabled() is on -
 	// the default - `bindings` binds to m_graphics_bindings and this object is never read, but it
 	// is still array<PreparedBindings,3> with five vectors each: fifteen empty-vector
@@ -2139,7 +2176,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	std::array<PreparedBindings*, 4> descriptor_stages {};
 	uint32_t                         stage_count = 0;
 	for (uint32_t i = 0; i < vertex_stages.size(); i++) {
-		PrepareBindings(state.vertex_info[i].stage, bindings.vertex[i]);
+		// Session 96, gate "bindfloor": the floor fills only `runtime` and a zero shader_data of
+		// the declared length - every field CommitBindings' emit half reads.
+		if (bind_floor) {
+			BindFloorPrepareStage(state.vertex_info[i].stage, bindings.vertex[i]);
+		} else {
+			PrepareBindings(state.vertex_info[i].stage, bindings.vertex[i]);
+		}
 		descriptor_stages[stage_count++] = &bindings.vertex[i];
 	}
 	// Gate "bindspare": depth-only draws reset the pixel stage, which freed every vector of it
@@ -2154,7 +2197,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 				std::swap(*bindings.pixel, pixel_spare);
 			}
 		}
-		PrepareBindings(state.ps_input_info.stage, *bindings.pixel);
+		// Session 96, gate "bindfloor": as for the vertex stages above.
+		if (bind_floor) {
+			BindFloorPrepareStage(state.ps_input_info.stage, *bindings.pixel);
+		} else {
+			PrepareBindings(state.ps_input_info.stage, *bindings.pixel);
+		}
 		descriptor_stages[stage_count++] = &*bindings.pixel;
 	} else {
 		if (spare && bindings.pixel) {
@@ -2171,7 +2219,15 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	                       : 0;
 	// Upstream dd408ff passes the color targets in: their identities are resolved with the
 	// image aliases, before the buffer uploads of RebindBuffers.
-	PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});
+	// Session 96, gate "bindfloor": THIS CALL is the floor's main target - RebindImages,
+	// RebindBuffers, the buffer uploads, PrepareBda and the per-slot synchronisations all live
+	// inside it.  At bfmode=3 the calibrated idle is burned exactly where it stood, on this
+	// thread and inside the render mutex (ROADMAP.md:1062-1065).
+	if (!bind_floor) {
+		PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});
+	} else {
+		BindFloorBurnSlice();
+	}
 	// Session 64 (shadowResolve.h), measurement only, both gates default 0.
 	ShadowQueue(stages);
 	if (px_t0 != 0) {
@@ -2204,6 +2260,14 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// The rest of this function is mh_emit_us, closed by a destructor because the function has
 	// three exits and the default one (gate "recpack", line ~2220) is in the middle of it.
 	Common::FrameStats::HoldPhase emit_phase(Common::FrameStats::Counter::HoldEmitNs);
+	// Session 96, gate "pathlap" (MEASUREMENT ONLY, pred/01_pathlap.md): the same chain as the
+	// FrameStats::Lap above, re-taken with an idiom that reads in a KYTY_FRAME_TRACE=lite run.
+	// Its own thread-local cursor, so it does not disturb the mh_* chain it sits inside.  Opened
+	// where HoldPhase(HoldEmitNs) is opened, so sum(pl_em_*) == mh_emit_us on these draws.
+	Common::FrameStats::PathLap path_emit(
+	    Common::Gates::Enabled(Common::Gates::Gate::PathLap),
+	    Common::FrameStats::Counter::PathEmRestNs);
+	Common::FrameStats::PathLap::Count(Common::FrameStats::Counter::PathEmN);
 	// Session 68, gate "amut": the rest of this function is the apply-and-record half of the draw -
 	// vertex and index buffers, the pipeline lookup (which creates pipelines), CommitBindings,
 	// BeginRendering, the dynamic state, EmitDrawPrimitives. None of it can leave the serial path.
@@ -2333,11 +2397,21 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		index_binding   = PrepareIndexBuffer(buffer, index_source);
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
+	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmVtxNs);
 	DrawStatTail();
+	// Session 96, gate "bindfloor": AcquireRenderTargets walks bindings.pixel->images to decide
+	// the depth feedback loop, and on the floor that vector is EMPTY while image.views is not,
+	// so the floor passes no pixel bindings at all (the std::nullopt default).  The ONLY thing
+	// this changes is that decision; the targets themselves are acquired identically, which is
+	// what "keep the render-target capture" means.  Two calls, not a ternary on the optional:
+	// a ternary would copy the whole PreparedBindings in the non-floor arm.
 	const auto rendering =
-	    AcquireRenderTargets(buffer, state.color_info, state.color_count, state.depth_info,
-	                         bindings.pixel);
+	    bind_floor ? AcquireRenderTargets(buffer, state.color_info, state.color_count,
+	                                      state.depth_info)
+	               : AcquireRenderTargets(buffer, state.color_info, state.color_count,
+	                                      state.depth_info, bindings.pixel);
 	lap.Mark(Common::FrameStats::Counter::DrawAcquireRtNs);
+	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRtNs);
 	DrawEmitInfo emit_info = emit;
 	if (emit_info.indirect_args_addr != 0 && !mesh_active) {
 		// The arguments were produced by the GPU (culling); reading them on the CPU would drain the
@@ -2385,6 +2459,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	    state.ps_active ? &state.ps_input_info : nullptr, topology, primitive_restart_enable,
 	    state.programs, allow_pipeline_wait);
 	lap.Mark(Common::FrameStats::Counter::DrawPipelineNs);
+	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmPipeNs);
 	if (pipeline_ptr == nullptr) {
 		// The pipeline is being compiled by a worker thread (KYTY_ASYNC_PIPELINES): skip the draw
 		// instead of freezing the frame; the caller resets the bindings.
@@ -2553,6 +2628,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SetDrawDebugPhase(buffer, submit_id, draw, state, draw.IsIndexed() ? 0x100u : 0x200u);
 		CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline, stages, true);
 		lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
+		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmComNs);
 
 		LogDrawPhase(draw.Name(), "BeginRendering");
 		if (!draw.IsIndexed()) {
@@ -2664,6 +2740,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
 		}
 		lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
+		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 		return;
 	}
 
@@ -2684,6 +2761,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	CommitBindings(buffer, vk::PipelineBindPoint::eGraphics, pipeline, stages);
 	lap.Mark(Common::FrameStats::Counter::DrawCommitNs);
+	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmComNs);
 	buffer.CheckNoPublish(publish_mark);
 	if (!mesh_active) {
 		CommitIndexBuffer(vk_buffer, index_binding);
@@ -2799,6 +2877,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			}
 			RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
 			lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
+			Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 			return;
 		}
 		// Gate "swlocal": a fragment-only shader-write barrier can be recorded inside the open
@@ -2833,6 +2912,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
 	lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
+	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 }
 
 void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,

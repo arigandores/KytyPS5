@@ -423,6 +423,82 @@ private:
 		std::vector<uint64_t> ok_raw, prev_ok_raw;
 	};
 	MergeCostState m_merge_cost;
+	// Session 95, gate "framerep" (MEASUREMENT ONLY, pred/01_framerep.md): the multisets
+	// of the last three frames' draw hashes.  Built and read on the GuestGpu thread under
+	// the render mutex only (the same place the mergecost census runs), so there is no
+	// lock and no atomic here; a flip rotates them when GetFrameNum() changes.
+	struct FrameRepState {
+		static constexpr uint32_t kSlots = 1u << 15u;  // 32768 for the scene's ~5 040 draws
+		static constexpr uint32_t kMask  = kSlots - 1u;
+		// Open addressing, linear probing, counts for a MULTISET: a hit consumes one
+		// occurrence.  An emptied slot keeps its key, which is why Take() stops at key 0
+		// and Insert() reuses a key it finds.  Cleared once a frame.
+		struct Table {
+			std::vector<uint64_t> key;
+			std::vector<uint32_t> count;
+			void                  Clear() {
+				if (key.size() != kSlots) {
+					key.assign(kSlots, 0);
+					count.assign(kSlots, 0);
+					return;
+				}
+				std::fill(key.begin(), key.end(), 0);
+				std::fill(count.begin(), count.end(), 0);
+			}
+			bool Insert(uint64_t h) {
+				if (key.size() != kSlots) {
+					Clear();
+				}
+				uint32_t i = static_cast<uint32_t>(h) & kMask;
+				for (uint32_t n = 0; n < kSlots; n++) {
+					if (key[i] == h) {
+						count[i]++;
+						return true;
+					}
+					if (key[i] == 0) {
+						key[i]   = h;
+						count[i] = 1;
+						return true;
+					}
+					i = (i + 1u) & kMask;
+				}
+				return false;
+			}
+			bool Take(uint64_t h) {
+				if (key.size() != kSlots) {
+					return false;
+				}
+				uint32_t i = static_cast<uint32_t>(h) & kMask;
+				for (uint32_t n = 0; n < kSlots; n++) {
+					if (key[i] == h) {
+						if (count[i] == 0) {
+							return false;
+						}
+						count[i]--;
+						return true;
+					}
+					if (key[i] == 0) {
+						return false;
+					}
+					i = (i + 1u) & kMask;
+				}
+				return false;
+			}
+		};
+		bool                  armed    = false;
+		bool                  hit_id   = false;
+		bool                  hit_pay  = false;
+		bool                  hit_full = false;
+		bool                  hit_ring = false;
+		int                   frame    = -1;
+		uint32_t              cur      = 0;
+		uint64_t              pre_ns   = 0;
+		uint64_t              post_ns  = 0;
+		uint64_t              args     = 0;
+		std::vector<uint64_t> srt_h;
+		Table                 id[4], pay[4], full[4];
+	};
+	FrameRepState m_frame_rep;
 	void           MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
 	                               std::span<PreparedBindings* const> prepared_bindings,
 	                               uint64_t transit_ns, uint64_t write_ns, uint64_t emit_ns,

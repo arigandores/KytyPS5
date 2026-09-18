@@ -361,6 +361,14 @@ enum class Gate : uint32_t {
 	// extra calls and their side effects, which include WHICH slots then take the stream
 	// ring (PrepareBda clears the CPU-dirty ranges first).  Never to be shipped.
 	BdaAll,             // KYTY_BDA_ALL,            file name "bdaall"
+	// Session 95, MEASUREMENT ONLY (pred/01_framerep.md), route E measurement M2: the
+	// frame-to-frame repetition of a draw's CONTENT.  The signature census of gate
+	// "mergecost" is walked a second time into three canonical hashes (resources only,
+	// + payload bytes, + draw arguments) and each is looked up in the multiset of the
+	// previous three frames.  Feeds no value, no decision and no side effect; it only
+	// answers whether a replay COULD exist.  Requires mergecost=1 in the same arm for
+	// the per-draw brackets.  Never to be shipped.
+	FrameRep,           // KYTY_FRAME_REP,          file name "framerep"
 	Count,
 };
 

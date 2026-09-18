@@ -1502,6 +1502,26 @@ enum class Counter : uint32_t {
 	BdaAllNoCandidate,     // bda_all_skip: gate on, no uses_dma, no convertible slot - no call
 	FaultProcN,            // fbp_n:       ProcessFaultBuffer calls from the garbage collector
 	FaultProcNs,           // fbp_ns:      their RAW ns (Enabled(), lite-live)
+	// Session 95, gate "framerep" (MEASUREMENT ONLY).  All RAW counts / ns.
+	FrameRepDraws,         // fr_n:        draws the census saw with framerep armed
+	FrameRepId1,           // fr_id1:      H_ident present in the multiset of frame N-1
+	FrameRepId2,           // fr_id2:      ... of N-2
+	FrameRepId3,           // fr_id3:      ... of N-3
+	FrameRepPay1,          // fr_pay1:     H_pay (H_ident + payload bytes) present in N-1
+	FrameRepFull1,         // fr_full1:    H_full (H_pay + draw args + VB/IB) present in N-1
+	FrameRepFull2,         // fr_full2:    ... of N-2
+	FrameRepFull3,         // fr_full3:    ... of N-3
+	FrameRepIdNs,          // fr_id_ns:    the draw brackets (pre+post) of the fr_id1 draws
+	FrameRepPayNs,         // fr_pay_ns:   ... of the fr_pay1 draws
+	FrameRepFullNs,        // fr_full_ns:  ... of the fr_full1 draws
+	FrameRepAllNs,         // fr_all_ns:   ... of ALL fr_n draws - the rule's denominator
+	FrameRepRing,          // fr_ring:     fr_id1 hits carrying at least one ring entry
+	FrameRepSigNs,         // fr_sig_ns:   the framerep walk's own time (post-class side)
+	FrameRepPreNs,         // fr_pre_ns:   the payload hashing's own time (pre-class side)
+	FrameRepPayBytes,      // fr_pay_b:    bytes hashed as SRT / shader-data payload
+	FrameRepPayN,          // fr_pay_n:    payload hashes taken
+	FrameRepBad,           // fr_bad:      the second walk did not line up (must read 0)
+	FrameRepOverflow,      // fr_over:     a per-frame table ran out of room (must read 0)
 	Count
 };
 

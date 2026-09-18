@@ -750,6 +750,15 @@ private:
 
 } // namespace
 
+// Session 95, gate "framerep" (measurement only): the same FNV-1a mixer descriptors.cpp
+// uses for the signature; kept local to each translation unit rather than exported,
+// because it is a measurement detail and not an interface.
+static inline uint64_t FrameRepMixDraw(uint64_t h, uint64_t v) {
+	h ^= v;
+	h *= 0x100000001b3ull;
+	return h;
+}
+
 struct DrawCallInfo {
 	CommandBufferDebugOp debug_op       = CommandBufferDebugOp::DrawIndex;
 	uint32_t             index_count    = 0;
@@ -2439,23 +2448,37 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	}
 	struct MergeCostScope {
 		MergeCostState& mc;
+		FrameRepState&  fr;
 		uint64_t        pre_ns;
 		uint64_t        t0;
 		~MergeCostScope() {
 			namespace FS = Common::FrameStats;
 			if (t0 != 0) {
 				const auto raw  = FS::NowNs() - t0;
-				const auto post = raw > mc.sig_ns ? raw - mc.sig_ns : 0;
+				// Session 95: the framerep walk and the payload hashing are subtracted the same
+				// way the mergecost census is, so mc_pre_ns / mc_post_ns keep meaning what they
+				// meant in session 94 and the two arms are comparable.  Both are 0 when off.
+				const auto sub  = mc.sig_ns + fr.post_ns;
+				const auto post = raw > sub ? raw - sub : 0;
+				const auto pre  = pre_ns > fr.pre_ns ? pre_ns - fr.pre_ns : 0;
 				FS::Add(FS::Counter::MergeCostDraws, 1);
-				FS::Add(FS::Counter::MergeCostPreNs, pre_ns);
+				FS::Add(FS::Counter::MergeCostPreNs, pre);
 				FS::Add(FS::Counter::MergeCostPostNs, post);
+				FS::Add(FS::Counter::FrameRepPreNs, fr.pre_ns);
+				if (fr.armed) {
+					const auto own = pre + post;
+					FS::Add(FS::Counter::FrameRepAllNs, own);
+					FS::Add(FS::Counter::FrameRepIdNs, fr.hit_id ? own : 0u);
+					FS::Add(FS::Counter::FrameRepPayNs, fr.hit_pay ? own : 0u);
+					FS::Add(FS::Counter::FrameRepFullNs, fr.hit_full ? own : 0u);
+				}
 				if (mc.p) {
-					FS::Add(FS::Counter::MergeCostPrePNs, pre_ns);
+					FS::Add(FS::Counter::MergeCostPrePNs, pre);
 					FS::Add(FS::Counter::MergeCostPostPNs, post);
 				}
 				if (mc.ok) {
 					FS::Add(FS::Counter::MergeCostOkDraws, 1);
-					FS::Add(FS::Counter::MergeCostPreOkNs, pre_ns);
+					FS::Add(FS::Counter::MergeCostPreOkNs, pre);
 					FS::Add(FS::Counter::MergeCostPostOkNs, post);
 					FS::Add(FS::Counter::MergeCostSameOk, mc.p ? 1u : 0u);
 					FS::Add(FS::Counter::MergeCostPostPOkNs, mc.p ? post : 0u);
@@ -2463,6 +2486,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			}
 			mc.armed   = false;
 			mc.draw_t0 = 0;
+			fr.pre_ns  = 0;
+			fr.post_ns = 0;
+			fr.armed   = false;
 		}
 	};
 	uint64_t merge_t1 = 0;
@@ -2471,9 +2497,44 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		Common::FrameStats::Add(Common::FrameStats::Counter::MergeCostCensusNs,
 		                        merge_t1 - merge_t0);
 	}
-	MergeCostScope merge_scope {m_merge_cost,
+	MergeCostScope merge_scope {m_merge_cost, m_frame_rep,
 	                            merge_armed ? merge_t0 - m_merge_cost.draw_t0 : 0,
 	                            merge_t1};
+	// Session 95, gate "framerep": the draw's own arguments and its index / vertex buffer
+	// identities, hashed here because this is the one place that has all of them, and
+	// BEFORE CommitBindings so the census can fold them into H_full.  Cheap and
+	// unconditional in shape; the hash itself is skipped when the gate is off.
+	if (Common::Gates::Enabled(Common::Gates::Gate::FrameRep) &&
+	    Common::FrameStats::Enabled()) {
+		const auto fr_a0 = Common::FrameStats::NowNs();
+		uint64_t   a     = 0x27d4eb2f165667c5ull;
+		a = FrameRepMixDraw(a, static_cast<uint64_t>(draw.debug_op));
+		a = FrameRepMixDraw(a, draw.index_count);
+		a = FrameRepMixDraw(a, draw.instance_count);
+		a = FrameRepMixDraw(a, draw.first_instance);
+		a = FrameRepMixDraw(a, static_cast<uint64_t>(static_cast<uint32_t>(emit.vertex_offset)));
+		a = FrameRepMixDraw(a, emit.first_vertex);
+		a = FrameRepMixDraw(a, emit.first_instance);
+		a = FrameRepMixDraw(a, emit.indirect_args_addr);
+		a = FrameRepMixDraw(a, emit.indirect_offset);
+		a = FrameRepMixDraw(a, index_source.address);
+		a = FrameRepMixDraw(a, index_source.size);
+		a = FrameRepMixDraw(a, static_cast<uint64_t>(index_source.type));
+		a = FrameRepMixDraw(a, index_source.guest_element_size);
+		a = FrameRepMixDraw(a, static_cast<uint64_t>(topology));
+		a = FrameRepMixDraw(a, primitive_restart_enable ? 1u : 0u);
+		a = FrameRepMixDraw(a, vertex_bindings.count);
+		for (uint32_t v = 0; v < vertex_bindings.count; v++) {
+			a = FrameRepMixDraw(a, static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
+			                           static_cast<VkBuffer>(vertex_bindings.buffers[v]))));
+			a = FrameRepMixDraw(a, static_cast<uint64_t>(vertex_bindings.offsets[v]));
+			a = FrameRepMixDraw(a, static_cast<uint64_t>(vertex_bindings.sizes[v]));
+		}
+		m_frame_rep.args = a;
+		m_frame_rep.pre_ns += Common::FrameStats::NowNs() - fr_a0;
+	} else {
+		m_frame_rep.args = 0;
+	}
 
 	// Gate "recpack" (commandRecorder.h): nothing below records on this thread. Every decision -
 	// pass state, the dynamic-state cache, the shader-write debt, the descriptor set - is taken

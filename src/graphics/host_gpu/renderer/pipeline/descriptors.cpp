@@ -1226,6 +1226,30 @@ static vk::Sampler NativeSampler(RenderContext&                       context,
 	return context.GetSamplerCache().GetSampler(descriptor);
 }
 
+// Session 95, gate "framerep" (measurement only): FNV-1a over 64-bit words.  Cheap, and
+// the question it answers is "are these bytes the same as some draw's last frame", which
+// a non-cryptographic hash answers at a collision rate far below the counters' resolution
+// (2^-64 a pair against ~5 000 draws a frame).
+static inline uint64_t FrameRepMix(uint64_t h, uint64_t v) {
+	h ^= v;
+	h *= 0x100000001b3ull;
+	return h;
+}
+
+static uint64_t FrameRepWords(std::span<const uint32_t> data) {
+	uint64_t     h = 0xcbf29ce484222325ull;
+	const size_t n = data.size();
+	size_t       i = 0;
+	for (; i + 1 < n; i += 2) {
+		h = FrameRepMix(h, (static_cast<uint64_t>(data[i + 1]) << 32u) |
+		                       static_cast<uint64_t>(data[i]));
+	}
+	if (i < n) {
+		h = FrameRepMix(h, static_cast<uint64_t>(data[i]));
+	}
+	return FrameRepMix(h, static_cast<uint64_t>(n));
+}
+
 static vk::DescriptorBufferInfo NativeUpload(RenderContext&            context,
                                              std::span<const uint32_t> data) {
 	EXIT_IF(data.empty());
@@ -1886,11 +1910,33 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		VerifyKind(prepared.kind_mask, KIND_SHADER_DATA, program.bindings,
 		           ShaderRecompiler::IR::DescriptorBindingKind::ShaderData);
 	}
+	// Session 95, gate "framerep": the payload bytes are hashed HERE, where the span is
+	// already in hand and about to be copied into the ring anyway.  The time is booked to
+	// fr_pre_ns and subtracted from mc_pre_ns by the draw's scope, exactly as the mergecost
+	// census subtracts mc_sig_ns from mc_post_ns; with the gate off nothing here runs.
+	const bool fr_pay = Common::Gates::Enabled(Common::Gates::Gate::FrameRep) &&
+	                    Common::FrameStats::Enabled();
+	const auto fr_t0  = fr_pay ? Common::FrameStats::NowNs() : 0;
 	if (has_srt) {
+		if (fr_pay) {
+			prepared.srt_hash = FrameRepWords(snapshot.flattened_srt);
+			Common::FrameStats::Add(Common::FrameStats::Counter::FrameRepPayBytes,
+			                        snapshot.flattened_srt.size() * sizeof(uint32_t));
+			Common::FrameStats::Add(Common::FrameStats::Counter::FrameRepPayN, 1);
+		}
 		prepared.flattened_srt = NativeUpload(m_context, snapshot.flattened_srt);
 	}
 	if (has_shader_data) {
+		if (fr_pay) {
+			prepared.data_hash = FrameRepWords(prepared.shader_data);
+			Common::FrameStats::Add(Common::FrameStats::Counter::FrameRepPayBytes,
+			                        prepared.shader_data.size() * sizeof(uint32_t));
+			Common::FrameStats::Add(Common::FrameStats::Counter::FrameRepPayN, 1);
+		}
 		prepared.shader_data_buffer = NativeUpload(m_context, prepared.shader_data);
+	}
+	if (fr_pay) {
+		m_frame_rep.pre_ns += Common::FrameStats::NowNs() - fr_t0;
 	}
 }
 
@@ -3133,6 +3179,32 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 	mc.sig.clear();
 	mc.tag.clear();
 	mc.ok_raw.clear();
+	// Session 95, gate "framerep": the gate is read ONCE per census, and the draw is armed
+	// by that single read.  RebindBuffers read it a few microseconds earlier for the payload
+	// hashes; the two can only disagree on the single draw that straddles a schedule block
+	// boundary, which costs that draw a miss and nothing else.
+	auto&      fr       = m_frame_rep;
+	const bool fr_armed = Common::Gates::Enabled(Common::Gates::Gate::FrameRep) &&
+	                      Common::FrameStats::Enabled();
+	fr.armed    = fr_armed;
+	fr.hit_id   = false;
+	fr.hit_pay  = false;
+	fr.hit_full = false;
+	fr.hit_ring = false;
+	fr.srt_h.clear();
+	const uint64_t fr_t0 = fr_armed ? FS::NowNs() : 0;
+	if (fr_armed) {
+		const int frame_now = m_context.GetGpu().GetFrameNum();
+		if (frame_now != fr.frame) {
+			// Rotate: the frame being built becomes N-1, and the oldest table is cleared and
+			// becomes the new current one.  Indices, never a copy of 384 KiB tables.
+			fr.frame = frame_now;
+			fr.cur   = (fr.cur + 1u) & 3u;
+			fr.id[fr.cur].Clear();
+			fr.pay[fr.cur].Clear();
+			fr.full[fr.cur].Clear();
+		}
+	}
 	const auto put = [&mc](uint8_t tag, uint64_t value) {
 		mc.sig.push_back(value);
 		mc.tag.push_back(tag);
@@ -3231,6 +3303,12 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 					const bool  srt  = binding.kind == DescriptorBindingKind::FlattenedSrt ||
 					                 binding.kind == DescriptorBindingKind::ShaderData;
 					put3(srt ? TagSrt : TagFixed, info, handle_of(info.buffer));
+					if (srt && fr_armed) {
+						// In the walk's own order, so the second walk can consume them by tag.
+						fr.srt_h.push_back(binding.kind == DescriptorBindingKind::FlattenedSrt
+						                       ? prepared->srt_hash
+						                       : prepared->data_hash);
+					}
 					break;
 				}
 				case DescriptorBindingKind::Samplers:
@@ -3338,6 +3416,90 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 	const auto spent = FS::NowNs() - t0;
 	mc.sig_ns += spent;
 	FS::Add(Counter::MergeCostSigNs, spent);
+	// ---- session 95, gate "framerep": the second walk -----------------------------------
+	// It runs over the signature the census just built, in the SAME order, and consumes
+	// ok_raw and srt_h by tag.  A walk that does not line up sets fr_bad and scores nothing.
+	if (fr_armed) {
+		FS::Add(Counter::FrameRepDraws, 1);
+		if (bad) {
+			FS::Add(Counter::FrameRepBad, 1);
+		} else {
+			uint64_t h_ident = 0x9e3779b97f4a7c15ull;
+			uint64_t h_pay   = 0xff51afd7ed558ccdull;
+			size_t   j       = 0;
+			size_t   k       = 0;
+			bool     ring    = false;
+			bool     walk_ok = true;
+			for (size_t i = 0; i < mc.prev_sig.size();) {
+				const uint8_t tg = mc.prev_tag[i];
+				if (tg == TagRing) {
+					// The ring offset is fresh every draw by construction: a fixed marker.
+					h_ident = FrameRepMix(h_ident, 0x8b1a9953c4611296ull);
+					ring    = true;
+					i += 3;
+				} else if (tg == TagOk) {
+					// Session 94 masked these; the replay question needs them UNMASKED.
+					for (int q = 0; q < 3; q++) {
+						if (j >= mc.prev_ok_raw.size()) {
+							walk_ok = false;
+							break;
+						}
+						h_ident = FrameRepMix(h_ident, mc.prev_ok_raw[j++]);
+					}
+					i += 3;
+				} else if (tg == TagSrt) {
+					// The descriptor is a ring slice: a marker for H_ident, the PAYLOAD for H_pay.
+					h_ident = FrameRepMix(h_ident, 0x2545f4914f6cdd1dull);
+					if (k >= fr.srt_h.size()) {
+						walk_ok = false;
+					} else {
+						h_pay = FrameRepMix(h_pay, fr.srt_h[k++]);
+					}
+					i += 3;
+				} else {
+					h_ident = FrameRepMix(h_ident, mc.prev_sig[i]);
+					i += 1;
+				}
+				if (!walk_ok) {
+					break;
+				}
+			}
+			if (!walk_ok || j != mc.prev_ok_raw.size() || k != fr.srt_h.size()) {
+				FS::Add(Counter::FrameRepBad, 1);
+			} else {
+				h_ident |= static_cast<uint64_t>(h_ident == 0);
+				const uint64_t hp = FrameRepMix(h_ident, h_pay) |
+				                    static_cast<uint64_t>(FrameRepMix(h_ident, h_pay) == 0);
+				const uint64_t hf = FrameRepMix(hp, fr.args) |
+				                    static_cast<uint64_t>(FrameRepMix(hp, fr.args) == 0);
+				const uint32_t p1 = (fr.cur + 3u) & 3u;
+				const uint32_t p2 = (fr.cur + 2u) & 3u;
+				const uint32_t p3 = (fr.cur + 1u) & 3u;
+				const bool     i1 = fr.id[p1].Take(h_ident);
+				FS::Add(Counter::FrameRepId1, i1 ? 1u : 0u);
+				FS::Add(Counter::FrameRepId2, fr.id[p2].Take(h_ident) ? 1u : 0u);
+				FS::Add(Counter::FrameRepId3, fr.id[p3].Take(h_ident) ? 1u : 0u);
+				const bool y1 = fr.pay[p1].Take(hp);
+				FS::Add(Counter::FrameRepPay1, y1 ? 1u : 0u);
+				const bool f1 = fr.full[p1].Take(hf);
+				FS::Add(Counter::FrameRepFull1, f1 ? 1u : 0u);
+				FS::Add(Counter::FrameRepFull2, fr.full[p2].Take(hf) ? 1u : 0u);
+				FS::Add(Counter::FrameRepFull3, fr.full[p3].Take(hf) ? 1u : 0u);
+				FS::Add(Counter::FrameRepRing, (i1 && ring) ? 1u : 0u);
+				fr.hit_id   = i1;
+				fr.hit_pay  = y1;
+				fr.hit_full = f1;
+				fr.hit_ring = ring;
+				const bool o1 = fr.id[fr.cur].Insert(h_ident);
+				const bool o2 = fr.pay[fr.cur].Insert(hp);
+				const bool o3 = fr.full[fr.cur].Insert(hf);
+				FS::Add(Counter::FrameRepOverflow, (o1 && o2 && o3) ? 0u : 1u);
+			}
+		}
+		const auto fr_spent = FS::NowNs() - fr_t0;
+		fr.post_ns += fr_spent;
+		FS::Add(Counter::FrameRepSigNs, fr_spent);
+	}
 }
 
 } // namespace Libs::Graphics

@@ -96,6 +96,11 @@ struct PreparedBindings {
 	// whether it equalled the previous draw's.  Both are zero/false unless the gate is on.
 	uint64_t                              key     = 0;
 	bool                                  key_hit = false;
+	// Session 95, gate "framerep" (measurement only): hashes of the payload BYTES this
+	// stage uploads into the stream ring, taken where the span is already in hand.  Both
+	// stay 0 unless the gate is on, and neither is read by anything but the census.
+	uint64_t                              srt_hash  = 0;
+	uint64_t                              data_hash = 0;
 	// Session 83, gate "bindpack" (PLAN_82_bind.md item 4): which of the three binding kinds
 	// the three FindBinding scans of a stage ask about are present in program.bindings, with
 	// bit 3 set to mark the mask computed. Written by PrepareBindings, read by FindBuffers,
@@ -118,6 +123,8 @@ struct PreparedBindings {
 		key       = 0;
 		key_hit   = false;
 		kind_mask = 0;
+		srt_hash  = 0;
+		data_hash = 0;
 	}
 };
 

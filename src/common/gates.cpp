@@ -254,6 +254,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // and therefore which slots take the stream ring; never shipped.
     // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_BDA_ALL", "bdaall", false},
+    // Session 95, measurement only: the frame-to-frame content census (fr_n).  It only
+    // hashes what the mergecost census already built, and hashes the SRT / shader-data
+    // payload bytes; it changes nothing the renderer does.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_FRAME_REP", "framerep", false},
 }};
 
 struct KnobDefinition {

@@ -1,0 +1,535 @@
+{
+  "tag": "bf99g",
+  "strict": true,
+  "errors": [],
+  "fatal_log_lines": [],
+  "markers": {
+    "BindFloorGcAudit": 16542,
+    "BindFloorCpu": 479162
+  },
+  "raw_sha256": {
+    "log_bf99g.txt": "a9422bebb226a27771c81efd5c54f37e52312a9ccd28db7dceedada0de4560f8",
+    "bf99g.json": "f127acbd3a8021bfabec03a566901a7ddffb4ca811a3309f72a0ced8437915d5",
+    "stdout_bf99g.txt": "1499066fbdbc1936699c2a346db97144e9aa9a4be08856fe009e429cb262734e"
+  },
+  "range": [
+    2,
+    18200
+  ],
+  "stream_counts": {
+    "FrameTrace": 18199,
+    "FrameTrace-draw": 18199,
+    "FrameTrace-x": 18199
+  },
+  "gates": 183,
+  "falls": 45,
+  "edge_total": 91,
+  "edge_indices": {
+    "0": 91
+  },
+  "metrics": {
+    "draws_U_A": [
+      5058.672805642634,
+      5046.251959247649
+    ],
+    "work_pct": -0.2455356745178272,
+    "area_U_A": [
+      2007.7775470701029,
+      2007.7975866386469
+    ],
+    "area_pct": 0.0009980970537837308,
+    "dt_U_A_us": [
+      50153.81700626959,
+      49968.867946708466
+    ],
+    "dt_pct": 0.3687636766270607,
+    "match": [
+      88,
+      88
+    ],
+    "pairs": 88,
+    "rows_per_arm": [
+      2552,
+      2552
+    ]
+  },
+  "totals": {
+    "be_fast": 0,
+    "be_race": 0,
+    "be_n": 0,
+    "be_ns": 0,
+    "bf_n": 41047461,
+    "bf_disp": 2016658,
+    "bf_push": 21441155,
+    "bf_pool": 21622963,
+    "bf_img": 390917097,
+    "bf_buf": 693621189,
+    "bf_smp": 91058001,
+    "bf_null_tr": 0,
+    "bf_mat": 0,
+    "bf_reuse": 0,
+    "bf_live_ahead": 70530146,
+    "bf_live_mat": 6420160,
+    "bf_live_memo": 0,
+    "bf_burn_ns": 145002647934,
+    "bf_burn_cpu_ns": 149439288233,
+    "bf_burn_cpu_n": 42402603,
+    "bf_burn_cpu_bad": 0,
+    "bf_burn_probe_ns": 14310035228,
+    "bf_skip": 0,
+    "bf_dlskip": 0,
+    "bf_dlskip_kb": 0,
+    "bf_gc_hold": 65404,
+    "bf_igc_checks": 145873,
+    "bf_igc_hold": 65404,
+    "bf_igc_bad": 0,
+    "bf_igc_critical": 0,
+    "bf_igc_evict": 0,
+    "bf_edge": 91,
+    "bf_bgc_hold": 65404,
+    "bf_ndesc": 1084538286,
+    "bf_xover": 92,
+    "bf_xover_acb": 92,
+    "bf_mixed": 0,
+    "bf_defer": 92,
+    "bf_defer_force": 0,
+    "bf_trig_fire": 0,
+    "bf_trig_wait": 0,
+    "bf_trig_fb": 0,
+    "bf_clr_skip": 0,
+    "gm_ops": 0,
+    "gm_ok": 0,
+    "gm_bad": 0,
+    "gm_unsup": 0,
+    "gm_live": 0,
+    "gm_live_top": 0,
+    "bf_skip_drop": 0
+  },
+  "pairs": [
+    [
+      4,
+      5
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      8,
+      9
+    ],
+    [
+      10,
+      11
+    ],
+    [
+      12,
+      13
+    ],
+    [
+      14,
+      15
+    ],
+    [
+      16,
+      17
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      20,
+      21
+    ],
+    [
+      22,
+      23
+    ],
+    [
+      24,
+      25
+    ],
+    [
+      26,
+      27
+    ],
+    [
+      28,
+      29
+    ],
+    [
+      30,
+      31
+    ],
+    [
+      32,
+      33
+    ],
+    [
+      34,
+      35
+    ],
+    [
+      36,
+      37
+    ],
+    [
+      38,
+      39
+    ],
+    [
+      40,
+      41
+    ],
+    [
+      42,
+      43
+    ],
+    [
+      44,
+      45
+    ],
+    [
+      46,
+      47
+    ],
+    [
+      48,
+      49
+    ],
+    [
+      50,
+      51
+    ],
+    [
+      52,
+      53
+    ],
+    [
+      54,
+      55
+    ],
+    [
+      56,
+      57
+    ],
+    [
+      58,
+      59
+    ],
+    [
+      60,
+      61
+    ],
+    [
+      62,
+      63
+    ],
+    [
+      64,
+      65
+    ],
+    [
+      66,
+      67
+    ],
+    [
+      68,
+      69
+    ],
+    [
+      70,
+      71
+    ],
+    [
+      72,
+      73
+    ],
+    [
+      74,
+      75
+    ],
+    [
+      76,
+      77
+    ],
+    [
+      78,
+      79
+    ],
+    [
+      80,
+      81
+    ],
+    [
+      82,
+      83
+    ],
+    [
+      84,
+      85
+    ],
+    [
+      86,
+      87
+    ],
+    [
+      88,
+      89
+    ],
+    [
+      90,
+      91
+    ],
+    [
+      92,
+      93
+    ],
+    [
+      94,
+      95
+    ],
+    [
+      96,
+      97
+    ],
+    [
+      98,
+      99
+    ],
+    [
+      100,
+      101
+    ],
+    [
+      102,
+      103
+    ],
+    [
+      104,
+      105
+    ],
+    [
+      106,
+      107
+    ],
+    [
+      108,
+      109
+    ],
+    [
+      110,
+      111
+    ],
+    [
+      112,
+      113
+    ],
+    [
+      114,
+      115
+    ],
+    [
+      116,
+      117
+    ],
+    [
+      118,
+      119
+    ],
+    [
+      120,
+      121
+    ],
+    [
+      122,
+      123
+    ],
+    [
+      124,
+      125
+    ],
+    [
+      126,
+      127
+    ],
+    [
+      128,
+      129
+    ],
+    [
+      130,
+      131
+    ],
+    [
+      132,
+      133
+    ],
+    [
+      134,
+      135
+    ],
+    [
+      136,
+      137
+    ],
+    [
+      138,
+      139
+    ],
+    [
+      140,
+      141
+    ],
+    [
+      142,
+      143
+    ],
+    [
+      144,
+      145
+    ],
+    [
+      146,
+      147
+    ],
+    [
+      148,
+      149
+    ],
+    [
+      150,
+      151
+    ],
+    [
+      152,
+      153
+    ],
+    [
+      154,
+      155
+    ],
+    [
+      156,
+      157
+    ],
+    [
+      158,
+      159
+    ],
+    [
+      160,
+      161
+    ],
+    [
+      162,
+      163
+    ],
+    [
+      164,
+      165
+    ],
+    [
+      166,
+      167
+    ],
+    [
+      168,
+      169
+    ],
+    [
+      170,
+      171
+    ],
+    [
+      172,
+      173
+    ],
+    [
+      174,
+      175
+    ],
+    [
+      176,
+      177
+    ],
+    [
+      178,
+      179
+    ]
+  ],
+  "blocks_range": [
+    4,
+    179
+  ],
+  "rejected": {
+    "0": "initial",
+    "1": "initial",
+    "2": "initial",
+    "182": "incomplete"
+  },
+  "retained_boundary_refs": {
+    "2221": {
+      "FrameTrace": 517665,
+      "FrameTrace-draw": 517666,
+      "FrameTrace-x": 517668
+    },
+    "17999": {
+      "FrameTrace": 2686465,
+      "FrameTrace-draw": 2686466,
+      "FrameTrace-x": 2686468
+    }
+  },
+  "raw_duration_s": 913.338114,
+  "hold_attempt": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 71816,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.2,
+      "started_s": 10.8,
+      "stable_s": 20.8,
+      "stable_frame": 345,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 900.3,
+      "pipeline_cache_off": false
+    }
+  ],
+  "min_armed_gc_hold": 229,
+  "armed_burn": {
+    "bf_burn_cpu_ns": 18298962.102272727,
+    "bf_burn_ns": 17759118.370689657,
+    "bf_burn_probe_ns": 1750204.6986677116,
+    "cpu_gpu_us": 48782.362068965514
+  },
+  "recovery": {
+    "img_new2": 54,
+    "img_new3": 64,
+    "buf_new2": 2,
+    "buf_new3": 4
+  },
+  "zero_checks": {
+    "bf_burn_cpu_bad": true,
+    "bf_igc_bad": true,
+    "bf_igc_critical": true,
+    "bf_igc_evict": true,
+    "bf_mixed": true,
+    "bf_defer_force": true,
+    "bf_trig_fire": true,
+    "bf_trig_wait": true,
+    "bf_trig_fb": true,
+    "bf_dlskip": true,
+    "bf_clr_skip": true,
+    "bf_skip_drop": true,
+    "gm_ops": true
+  },
+  "endpoints": {
+    "B_cpu_ms": 30.049869086206897,
+    "B_wall_ms": 30.596798362068967
+  }
+}

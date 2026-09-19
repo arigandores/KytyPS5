@@ -1,0 +1,33 @@
+{
+  "tag": "eng99a1",
+  "started": "2026-09-19T17:24:22.669133+02:00",
+  "command": [
+    "C:\\Users\\<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-u",
+    "C:\\kyty\\s99\\enter_scene.py",
+    "eng99a1",
+    "--hold",
+    "300",
+    "--attempts",
+    "1",
+    "--no-install",
+    "--gates-file",
+    "C:\\kyty\\s99\\gates_base.txt",
+    "--pred",
+    "C:\\kyty\\s99\\pred\\02_settled_bindings.md",
+    "KYTY_GATE_SCHEDULE=90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=20000|bindfloor=1 drawahead=1 bfmode=2 bfburn=20000",
+    "KYTY_GATE_SCHEDULE_ABBA=1",
+    "KYTY_GPU_CLOCK_PIN=1",
+    "KYTY_BIND_FLOOR_LATCH=1",
+    "KYTY_BIND_FLOOR_CLEAR=0",
+    "KYTY_GPU_MARKERS=0",
+    "KYTY_GPU_CHECKPOINTS=0",
+    "KYTY_BIND_FLOOR_CPU=1"
+  ],
+  "hashes": {
+    "settled99.py": "383e2ff3452557069bc94f7effe8b6401a5c6b2959518b241771adaab9c87bdc",
+    "test_settled99.py": "812b142a9793009b6dd998566b51a64556dcf2980a618f48de913c0eb9a8a93c",
+    "pred/02_settled_bindings.md": "1d1ebf286869ab59944fe135fc5c69d1315d4c61667b6c3dd2ab3ca14839724c",
+    "gates_base.txt": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8"
+  }
+}

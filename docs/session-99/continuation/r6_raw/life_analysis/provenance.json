@@ -1,0 +1,30 @@
+{
+  "log_life99a.txt": {
+    "sha256": "fd5f717d1b9ecdc0ee70b4e4c24a9607f96cfc3fffab895b4c2de8128a7172d5",
+    "failure_markers": []
+  },
+  "stdout_life99a.txt": {
+    "sha256": "b262363f99432c5678e516362d9e8cc7a0af6b18d10ab809da7bbed1bc127274",
+    "failure_markers": []
+  },
+  "meta_hold": [
+    [
+      {
+        "label": "attempt 1",
+        "attempt": 1,
+        "pid": 11028,
+        "level": "underwater_aerial_garden",
+        "guest_args": "-lvl underwater_aerial_garden",
+        "document_s": 9.2,
+        "started_s": 10.8,
+        "stable_s": 17.8,
+        "stable_frame": 293,
+        "outcome": "ok",
+        "detail": null,
+        "hold_exit": null,
+        "hold_s": 300.1,
+        "pipeline_cache_off": false
+      }
+    ]
+  ]
+}

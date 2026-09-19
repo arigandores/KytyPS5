@@ -1,0 +1,5991 @@
+{
+  "canonical_counts": [
+    33,
+    311
+  ],
+  "old_entries_unchanged": true,
+  "small_count": 276,
+  "raw_count": 21,
+  "raw_bytes": 3211660981,
+  "archive_actual_count": 278,
+  "archive_max_file": [
+    337022,
+    "continuation\\plan100_raw\\rows.csv"
+  ],
+  "raw_sha_scope": "All raw paths/sizes checked; no duplicate 3.2GB rehash, freshly hashed by archive task.",
+  "facts_equal": true,
+  "agents_claude_equal": true,
+  "latest_session_numbers": [
+    "99",
+    "98",
+    "97",
+    "96"
+  ],
+  "handoff_final_block_equals_agents": true,
+  "seals": {
+    "01_bindings_only.md": {
+      "bytes": 10848,
+      "sha256": "8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d"
+    },
+    "02_settled_bindings.md": {
+      "bytes": 13461,
+      "sha256": "1d1ebf286869ab59944fe135fc5c69d1315d4c61667b6c3dd2ab3ca14839724c"
+    },
+    "03_image_lifetime_diagnostic.md": {
+      "bytes": 4724,
+      "sha256": "d17745315149f0caad27f4c4764350f3e255fc9949a5b0287d9ea2a5e2c42c90"
+    },
+    "04_gc_audit.md": {
+      "bytes": 7835,
+      "sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b"
+    },
+    "05_observer_separation.md": {
+      "bytes": 8583,
+      "sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0"
+    }
+  },
+  "bf99g": {
+    "schema": "settled99-norec-v1",
+    "tag": "bf99g",
+    "phase": "measurement",
+    "instrument": "a",
+    "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "ADMITTED_SETTLED_MEASUREMENT",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 17800,
+    "duration": "RAW_DURATION: whole=913.338114 claimed=900.300000 s; after_stable=900.505382 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag bf99g   log C:\\kyty\\s99\\log_bf99g.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 182 (blk >= 1), flips 16310, first n 1891, last n 18200\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=900.3 of 900.0\n  R2  edges           PASS 45 falling edges followed by >= 2 flips (need >= 30)\n  R3  latch           FAIL 181 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 182 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 91 vs arm changes 91; bf_edge position {'idx0': 91}\n  R4  dark base       PASS 45 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    FAIL median img_new over 2 flips after a falling edge = 54 (band <= 50)   rising 7, unarmed mid-block reference 14.0, max dt of those 2 flips median 66881 us\n  R6' clean return 3  FAIL median img_new over idx 0..2 after a falling edge = 64 (band <= 50), 45 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 2 (band <= 50)   unarmed flips after the first two: mean 1.626 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 4 (band <= 50), 45 edges\n  D1  displacement (reported) f_fall 0.938  f_rise 0.443  1-lat/dt 0.764  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 92, bf_xover_acb 92, bf_defer 92, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 45 of 45 (acb part > 0: 45); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== bf99g: 8 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "bf99g.json",
+        "log_bf99g.txt",
+        "stdout_bf99g.txt"
+      ],
+      "source_artifact": [
+        "path",
+        "sha256"
+      ],
+      "aa_artifact": [
+        "path",
+        "sha256"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_RAW_CONTIGUITY",
+        "FULL_RAW_ORDER",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "POSITIVE_ENDPOINT",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "frame_gaps",
+        "frames_ordered",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ],
+      "endpoints": [
+        "B_cpu_ms",
+        "B_wall_compatibility_ms",
+        "cpu_query_cost_indicator_ms"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 43,
+        "total": 43,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 6,
+        "total": 6,
+        "failed": {}
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": 0.0009980970537837308,
+      "work_pct": -0.2455356745178272,
+      "draws_u": 5058.672805642634,
+      "draws_a": 5046.251959247649,
+      "C5_ratio": 0.002455356745178272,
+      "area_pairs": 88,
+      "area_matched": 88,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        0.08949014502459551,
+        -0.015159080902149569,
+        0.06786260263635935,
+        0.010214476310510534,
+        -0.012427086985555835,
+        -0.044596912742878025,
+        0.0952524646147479,
+        -0.05011945512458649,
+        0.005274972698732228,
+        -0.0616965044253015,
+        -0.06973371210107215,
+        -0.08259795545300097,
+        0.05207998379888057,
+        0.04069195241391821,
+        0.09743734101292922,
+        -0.017022146868095334,
+        0.05451680214823007,
+        -0.002758396902591276,
+        0.055541591331254025,
+        -0.07045918247380323,
+        0.037818949454382356,
+        -0.022185964007492842,
+        0.07331999965671798,
+        -0.026101131451528037,
+        0.05485671473683951,
+        -0.05295261189575129,
+        -0.01334757013130572,
+        -0.12231239589115539,
+        0.04967075763375739,
+        -0.031316856839203044,
+        0.060423956978339355,
+        -0.0820714679975465,
+        0.028219038490062687,
+        -0.053275875926250826,
+        0.09392789784032907,
+        -0.05458163064231414,
+        0.01092285021893069,
+        -0.009267480338892575,
+        0.01646722171702031,
+        -0.06242273852870017,
+        0.013781734130069445,
+        -0.13281441196781874,
+        -0.027588731232675023,
+        -0.017095256999599684,
+        0.09176793264757954,
+        -0.025833184255052988,
+        0.11661776017382053,
+        -0.04789145770314196,
+        0.020261550035205467,
+        -0.0313662156420591,
+        -0.013163886621658794,
+        -0.017086219822404214,
+        -0.011127957260537169,
+        -0.07487222595805587,
+        0.014008489842698424,
+        0.002530734599925921,
+        0.03900811168553453,
+        -0.044612706068003494,
+        0.04144173039188903,
+        -0.05203706276795117,
+        -0.009504339485832958,
+        -0.08241202519901902,
+        0.020921968122133983,
+        -0.05433112592918565,
+        0.11609489169166487,
+        -0.017612864763216773,
+        -0.048497702459449066,
+        -0.06873980413533154,
+        0.0156783153538953,
+        -0.06361921733746279,
+        0.04483364037932702,
+        -0.01904379132026124,
+        0.0854342809124109,
+        0.02228810149620397,
+        0.045465612289463664,
+        -0.03337832830809795,
+        0.03405251567176748,
+        -0.025032289472026736,
+        0.1134798015502092,
+        0.04210887956925813,
+        0.02343422614634605,
+        -0.031558907263606883,
+        -0.02718275112308932,
+        -0.08534988395774157,
+        0.10416902918153337,
+        0.04013656122181519,
+        0.08004741156828477,
+        -0.00781258486869385
+      ],
+      "dt_a_us": 49968.867946708466,
+      "dt_u_us": 50153.81700626959,
+      "dt_delta_us": 184.9490595611278,
+      "dt_relative": 0.0036876367662706075,
+      "pairs": 88,
+      "rows_per_arm": 2552,
+      "orientations": [
+        44,
+        44
+      ],
+      "edge_histogram": {
+        "idx0": 91,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 18.298962102272725,
+      "armed_wall_burn_mean_ms": 17.759118370689656,
+      "cpu_query_cost_indicator_mean_ms": 1.7502046986677116,
+      "cpu_aggregate_rounding_allowance_ns": 2552000
+    },
+    "reported_image_birth_proxies": {
+      "R6": false,
+      "R6'": false
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ],
+        [
+          48,
+          49
+        ],
+        [
+          50,
+          51
+        ],
+        [
+          52,
+          53
+        ],
+        [
+          54,
+          55
+        ],
+        [
+          56,
+          57
+        ],
+        [
+          58,
+          59
+        ],
+        [
+          60,
+          61
+        ],
+        [
+          62,
+          63
+        ],
+        [
+          64,
+          65
+        ],
+        [
+          66,
+          67
+        ],
+        [
+          68,
+          69
+        ],
+        [
+          70,
+          71
+        ],
+        [
+          72,
+          73
+        ],
+        [
+          74,
+          75
+        ],
+        [
+          76,
+          77
+        ],
+        [
+          78,
+          79
+        ],
+        [
+          80,
+          81
+        ],
+        [
+          82,
+          83
+        ],
+        [
+          84,
+          85
+        ],
+        [
+          86,
+          87
+        ],
+        [
+          88,
+          89
+        ],
+        [
+          90,
+          91
+        ],
+        [
+          92,
+          93
+        ],
+        [
+          94,
+          95
+        ],
+        [
+          96,
+          97
+        ],
+        [
+          98,
+          99
+        ],
+        [
+          100,
+          101
+        ],
+        [
+          102,
+          103
+        ],
+        [
+          104,
+          105
+        ],
+        [
+          106,
+          107
+        ],
+        [
+          108,
+          109
+        ],
+        [
+          110,
+          111
+        ],
+        [
+          112,
+          113
+        ],
+        [
+          114,
+          115
+        ],
+        [
+          116,
+          117
+        ],
+        [
+          118,
+          119
+        ],
+        [
+          120,
+          121
+        ],
+        [
+          122,
+          123
+        ],
+        [
+          124,
+          125
+        ],
+        [
+          126,
+          127
+        ],
+        [
+          128,
+          129
+        ],
+        [
+          130,
+          131
+        ],
+        [
+          132,
+          133
+        ],
+        [
+          134,
+          135
+        ],
+        [
+          136,
+          137
+        ],
+        [
+          138,
+          139
+        ],
+        [
+          140,
+          141
+        ],
+        [
+          142,
+          143
+        ],
+        [
+          144,
+          145
+        ],
+        [
+          146,
+          147
+        ],
+        [
+          148,
+          149
+        ],
+        [
+          150,
+          151
+        ],
+        [
+          152,
+          153
+        ],
+        [
+          154,
+          155
+        ],
+        [
+          156,
+          157
+        ],
+        [
+          158,
+          159
+        ],
+        [
+          160,
+          161
+        ],
+        [
+          162,
+          163
+        ],
+        [
+          164,
+          165
+        ],
+        [
+          166,
+          167
+        ],
+        [
+          168,
+          169
+        ],
+        [
+          170,
+          171
+        ],
+        [
+          172,
+          173
+        ],
+        [
+          174,
+          175
+        ],
+        [
+          176,
+          177
+        ],
+        [
+          178,
+          179
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3,
+        180,
+        181
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "182": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "frame_gaps": [],
+      "frames_ordered": true,
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ],
+        "48": [
+          6181,
+          6209
+        ],
+        "49": [
+          6271,
+          6299
+        ],
+        "50": [
+          6361,
+          6389
+        ],
+        "51": [
+          6451,
+          6479
+        ],
+        "52": [
+          6541,
+          6569
+        ],
+        "53": [
+          6631,
+          6659
+        ],
+        "54": [
+          6721,
+          6749
+        ],
+        "55": [
+          6811,
+          6839
+        ],
+        "56": [
+          6901,
+          6929
+        ],
+        "57": [
+          6991,
+          7019
+        ],
+        "58": [
+          7081,
+          7109
+        ],
+        "59": [
+          7171,
+          7199
+        ],
+        "60": [
+          7261,
+          7289
+        ],
+        "61": [
+          7351,
+          7379
+        ],
+        "62": [
+          7441,
+          7469
+        ],
+        "63": [
+          7531,
+          7559
+        ],
+        "64": [
+          7621,
+          7649
+        ],
+        "65": [
+          7711,
+          7739
+        ],
+        "66": [
+          7801,
+          7829
+        ],
+        "67": [
+          7891,
+          7919
+        ],
+        "68": [
+          7981,
+          8009
+        ],
+        "69": [
+          8071,
+          8099
+        ],
+        "70": [
+          8161,
+          8189
+        ],
+        "71": [
+          8251,
+          8279
+        ],
+        "72": [
+          8341,
+          8369
+        ],
+        "73": [
+          8431,
+          8459
+        ],
+        "74": [
+          8521,
+          8549
+        ],
+        "75": [
+          8611,
+          8639
+        ],
+        "76": [
+          8701,
+          8729
+        ],
+        "77": [
+          8791,
+          8819
+        ],
+        "78": [
+          8881,
+          8909
+        ],
+        "79": [
+          8971,
+          8999
+        ],
+        "80": [
+          9061,
+          9089
+        ],
+        "81": [
+          9151,
+          9179
+        ],
+        "82": [
+          9241,
+          9269
+        ],
+        "83": [
+          9331,
+          9359
+        ],
+        "84": [
+          9421,
+          9449
+        ],
+        "85": [
+          9511,
+          9539
+        ],
+        "86": [
+          9601,
+          9629
+        ],
+        "87": [
+          9691,
+          9719
+        ],
+        "88": [
+          9781,
+          9809
+        ],
+        "89": [
+          9871,
+          9899
+        ],
+        "90": [
+          9961,
+          9989
+        ],
+        "91": [
+          10051,
+          10079
+        ],
+        "92": [
+          10141,
+          10169
+        ],
+        "93": [
+          10231,
+          10259
+        ],
+        "94": [
+          10321,
+          10349
+        ],
+        "95": [
+          10411,
+          10439
+        ],
+        "96": [
+          10501,
+          10529
+        ],
+        "97": [
+          10591,
+          10619
+        ],
+        "98": [
+          10681,
+          10709
+        ],
+        "99": [
+          10771,
+          10799
+        ],
+        "100": [
+          10861,
+          10889
+        ],
+        "101": [
+          10951,
+          10979
+        ],
+        "102": [
+          11041,
+          11069
+        ],
+        "103": [
+          11131,
+          11159
+        ],
+        "104": [
+          11221,
+          11249
+        ],
+        "105": [
+          11311,
+          11339
+        ],
+        "106": [
+          11401,
+          11429
+        ],
+        "107": [
+          11491,
+          11519
+        ],
+        "108": [
+          11581,
+          11609
+        ],
+        "109": [
+          11671,
+          11699
+        ],
+        "110": [
+          11761,
+          11789
+        ],
+        "111": [
+          11851,
+          11879
+        ],
+        "112": [
+          11941,
+          11969
+        ],
+        "113": [
+          12031,
+          12059
+        ],
+        "114": [
+          12121,
+          12149
+        ],
+        "115": [
+          12211,
+          12239
+        ],
+        "116": [
+          12301,
+          12329
+        ],
+        "117": [
+          12391,
+          12419
+        ],
+        "118": [
+          12481,
+          12509
+        ],
+        "119": [
+          12571,
+          12599
+        ],
+        "120": [
+          12661,
+          12689
+        ],
+        "121": [
+          12751,
+          12779
+        ],
+        "122": [
+          12841,
+          12869
+        ],
+        "123": [
+          12931,
+          12959
+        ],
+        "124": [
+          13021,
+          13049
+        ],
+        "125": [
+          13111,
+          13139
+        ],
+        "126": [
+          13201,
+          13229
+        ],
+        "127": [
+          13291,
+          13319
+        ],
+        "128": [
+          13381,
+          13409
+        ],
+        "129": [
+          13471,
+          13499
+        ],
+        "130": [
+          13561,
+          13589
+        ],
+        "131": [
+          13651,
+          13679
+        ],
+        "132": [
+          13741,
+          13769
+        ],
+        "133": [
+          13831,
+          13859
+        ],
+        "134": [
+          13921,
+          13949
+        ],
+        "135": [
+          14011,
+          14039
+        ],
+        "136": [
+          14101,
+          14129
+        ],
+        "137": [
+          14191,
+          14219
+        ],
+        "138": [
+          14281,
+          14309
+        ],
+        "139": [
+          14371,
+          14399
+        ],
+        "140": [
+          14461,
+          14489
+        ],
+        "141": [
+          14551,
+          14579
+        ],
+        "142": [
+          14641,
+          14669
+        ],
+        "143": [
+          14731,
+          14759
+        ],
+        "144": [
+          14821,
+          14849
+        ],
+        "145": [
+          14911,
+          14939
+        ],
+        "146": [
+          15001,
+          15029
+        ],
+        "147": [
+          15091,
+          15119
+        ],
+        "148": [
+          15181,
+          15209
+        ],
+        "149": [
+          15271,
+          15299
+        ],
+        "150": [
+          15361,
+          15389
+        ],
+        "151": [
+          15451,
+          15479
+        ],
+        "152": [
+          15541,
+          15569
+        ],
+        "153": [
+          15631,
+          15659
+        ],
+        "154": [
+          15721,
+          15749
+        ],
+        "155": [
+          15811,
+          15839
+        ],
+        "156": [
+          15901,
+          15929
+        ],
+        "157": [
+          15991,
+          16019
+        ],
+        "158": [
+          16081,
+          16109
+        ],
+        "159": [
+          16171,
+          16199
+        ],
+        "160": [
+          16261,
+          16289
+        ],
+        "161": [
+          16351,
+          16379
+        ],
+        "162": [
+          16441,
+          16469
+        ],
+        "163": [
+          16531,
+          16559
+        ],
+        "164": [
+          16621,
+          16649
+        ],
+        "165": [
+          16711,
+          16739
+        ],
+        "166": [
+          16801,
+          16829
+        ],
+        "167": [
+          16891,
+          16919
+        ],
+        "168": [
+          16981,
+          17009
+        ],
+        "169": [
+          17071,
+          17099
+        ],
+        "170": [
+          17161,
+          17189
+        ],
+        "171": [
+          17251,
+          17279
+        ],
+        "172": [
+          17341,
+          17369
+        ],
+        "173": [
+          17431,
+          17459
+        ],
+        "174": [
+          17521,
+          17549
+        ],
+        "175": [
+          17611,
+          17639
+        ],
+        "176": [
+          17701,
+          17729
+        ],
+        "177": [
+          17791,
+          17819
+        ],
+        "178": [
+          17881,
+          17909
+        ],
+        "179": [
+          17971,
+          17999
+        ]
+      }
+    },
+    "parent_recount": {
+      "tag": "bf99g",
+      "pairs": 88,
+      "rows_per_arm": [
+        2552,
+        2552
+      ],
+      "work_pct": -0.2455356745178272,
+      "area_split_pct": 0.0009980970537837308,
+      "dt_relative": 0.0036876367662706075,
+      "B_cpu_ms": 30.049869086206897
+    }
+  },
+  "bf99h": {
+    "schema": "settled99-norec-v1",
+    "tag": "bf99h",
+    "phase": "measurement",
+    "instrument": "c",
+    "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "ADMITTED_SETTLED_MEASUREMENT",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 10200,
+    "duration": "RAW_DURATION: whole=917.191640 claimed=900.300000 s; after_stable=900.358733 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag bf99h   log C:\\kyty\\s99\\log_bf99h.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=10200', 1: 'bindfloor=1 drawahead=0 bfmode=2 bfburn=10200'}\narmed arm: 1\nblocks 182 (blk >= 1), flips 16356, first n 1891, last n 18246\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=900.3 of 900.0\n  R2  edges           PASS 45 falling edges followed by >= 2 flips (need >= 30)\n  R3  latch           FAIL 181 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 182 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 91 vs arm changes 91; bf_edge position {'idx0': 91}\n  R4  dark base       PASS 45 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 45 (band <= 50)   rising 7, unarmed mid-block reference 14.0, max dt of those 2 flips median 66679 us\n  R6' clean return 3  FAIL median img_new over idx 0..2 after a falling edge = 54 (band <= 50), 45 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1 (band <= 50)   unarmed flips after the first two: mean 1.625 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3 (band <= 50), 45 edges\n  D1  displacement (reported) f_fall 0.893  f_rise 0.470  1-lat/dt 0.702  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 92, bf_xover_acb 92, bf_defer 92, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 45 of 45 (acb part > 0: 45); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== bf99h: 9 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "bf99h.json",
+        "log_bf99h.txt",
+        "stdout_bf99h.txt"
+      ],
+      "source_artifact": [
+        "path",
+        "sha256"
+      ],
+      "aa_artifact": [
+        "path",
+        "sha256"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_RAW_CONTIGUITY",
+        "FULL_RAW_ORDER",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "C4_B_OUT",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "POSITIVE_ENDPOINT",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "frame_gaps",
+        "frames_ordered",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ],
+      "endpoints": [
+        "B_cpu_ms",
+        "B_wall_compatibility_ms",
+        "cpu_query_cost_indicator_ms"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 44,
+        "total": 44,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 6,
+        "total": 6,
+        "failed": {}
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": -0.001447987468206069,
+      "work_pct": 0.10514731520223641,
+      "draws_u": 5034.733542319749,
+      "draws_a": 5040.027429467084,
+      "C5_ratio": 0.0010514731520223641,
+      "area_pairs": 88,
+      "area_matched": 88,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        -0.1716145839108285,
+        -0.13854957509721322,
+        0.05471760325375108,
+        -0.014879545325985344,
+        0.10809772335154122,
+        0.015852926050574645,
+        0.06621801829176377,
+        -0.0005763409906101025,
+        0.022782711913649223,
+        -0.09306766553008883,
+        0.018737675322944014,
+        -0.028850796923285404,
+        0.05166219173000641,
+        0.012720423263612446,
+        0.04425464688273539,
+        -0.015503288604201693,
+        0.01773040083086208,
+        -0.043389920869829623,
+        -0.017438887375686996,
+        -0.005729281662669727,
+        0.08727777165744577,
+        -0.023164837751354916,
+        0.010015135541086018,
+        -0.10853574855295145,
+        0.058567299860712296,
+        -0.02345517874446923,
+        0.016053535199289648,
+        -0.09189525572690371,
+        -0.026618944478817852,
+        -0.08025592426644801,
+        0.03877795236408854,
+        0.00418040684979637,
+        0.04842532767737051,
+        0.032458940198631936,
+        0.05309399599309206,
+        -0.07435740446329886,
+        -0.006131221384131358,
+        0.03606514262262106,
+        0.09501655981585255,
+        0.002351040530523818,
+        0.08866142310954839,
+        -0.04391813756504659,
+        0.029921666499066468,
+        -0.020845172557582003,
+        0.08362932666705625,
+        -0.07656323403286702,
+        0.010146736750371588,
+        -0.017851060517637407,
+        0.0065098333200452885,
+        -0.010832817984229859,
+        0.049400884697181624,
+        -0.007491833925177271,
+        0.05698163091103492,
+        -0.01993564892204258,
+        0.012178019193465062,
+        -0.04000499787096823,
+        -0.03988173020934571,
+        -0.11474182380339926,
+        0.029274498567022356,
+        -0.02382859037982632,
+        0.0778769242245625,
+        -0.04165034074448126,
+        0.06325272296623385,
+        -0.05204811150648636,
+        0.024446748048712053,
+        -0.05328628039631411,
+        -0.02143534521904522,
+        -0.027401762498147075,
+        0.1305037436825751,
+        -0.0381614660623808,
+        -0.03189365659261867,
+        -0.07318904173092555,
+        0.04345428039389532,
+        0.01392913174984578,
+        0.07270974408863928,
+        0.01954256183940295,
+        0.03705852599620307,
+        -0.1408738993997627,
+        -0.011268570577993575,
+        -0.007118402318728734,
+        0.09374610810699568,
+        -0.02548492169801575,
+        0.0488616724438895,
+        -0.03595334980244225,
+        0.0009385213404433657,
+        -0.0975015404196089,
+        0.03699046903311576,
+        0.007333777577134271
+      ],
+      "dt_a_us": 50171.295454545456,
+      "dt_u_us": 49913.056818181816,
+      "dt_delta_us": -258.23863636363967,
+      "dt_relative": 0.0051737692064087555,
+      "pairs": 88,
+      "rows_per_arm": 2552,
+      "orientations": [
+        44,
+        44
+      ],
+      "edge_histogram": {
+        "idx0": 91,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 10.816662789576803,
+      "armed_wall_burn_mean_ms": 10.173132940047022,
+      "cpu_query_cost_indicator_mean_ms": 1.7990926794670845,
+      "cpu_aggregate_rounding_allowance_ns": 2552000
+    },
+    "reported_image_birth_proxies": {
+      "R6": true,
+      "R6'": false
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ],
+        [
+          48,
+          49
+        ],
+        [
+          50,
+          51
+        ],
+        [
+          52,
+          53
+        ],
+        [
+          54,
+          55
+        ],
+        [
+          56,
+          57
+        ],
+        [
+          58,
+          59
+        ],
+        [
+          60,
+          61
+        ],
+        [
+          62,
+          63
+        ],
+        [
+          64,
+          65
+        ],
+        [
+          66,
+          67
+        ],
+        [
+          68,
+          69
+        ],
+        [
+          70,
+          71
+        ],
+        [
+          72,
+          73
+        ],
+        [
+          74,
+          75
+        ],
+        [
+          76,
+          77
+        ],
+        [
+          78,
+          79
+        ],
+        [
+          80,
+          81
+        ],
+        [
+          82,
+          83
+        ],
+        [
+          84,
+          85
+        ],
+        [
+          86,
+          87
+        ],
+        [
+          88,
+          89
+        ],
+        [
+          90,
+          91
+        ],
+        [
+          92,
+          93
+        ],
+        [
+          94,
+          95
+        ],
+        [
+          96,
+          97
+        ],
+        [
+          98,
+          99
+        ],
+        [
+          100,
+          101
+        ],
+        [
+          102,
+          103
+        ],
+        [
+          104,
+          105
+        ],
+        [
+          106,
+          107
+        ],
+        [
+          108,
+          109
+        ],
+        [
+          110,
+          111
+        ],
+        [
+          112,
+          113
+        ],
+        [
+          114,
+          115
+        ],
+        [
+          116,
+          117
+        ],
+        [
+          118,
+          119
+        ],
+        [
+          120,
+          121
+        ],
+        [
+          122,
+          123
+        ],
+        [
+          124,
+          125
+        ],
+        [
+          126,
+          127
+        ],
+        [
+          128,
+          129
+        ],
+        [
+          130,
+          131
+        ],
+        [
+          132,
+          133
+        ],
+        [
+          134,
+          135
+        ],
+        [
+          136,
+          137
+        ],
+        [
+          138,
+          139
+        ],
+        [
+          140,
+          141
+        ],
+        [
+          142,
+          143
+        ],
+        [
+          144,
+          145
+        ],
+        [
+          146,
+          147
+        ],
+        [
+          148,
+          149
+        ],
+        [
+          150,
+          151
+        ],
+        [
+          152,
+          153
+        ],
+        [
+          154,
+          155
+        ],
+        [
+          156,
+          157
+        ],
+        [
+          158,
+          159
+        ],
+        [
+          160,
+          161
+        ],
+        [
+          162,
+          163
+        ],
+        [
+          164,
+          165
+        ],
+        [
+          166,
+          167
+        ],
+        [
+          168,
+          169
+        ],
+        [
+          170,
+          171
+        ],
+        [
+          172,
+          173
+        ],
+        [
+          174,
+          175
+        ],
+        [
+          176,
+          177
+        ],
+        [
+          178,
+          179
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3,
+        180,
+        181
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "182": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "frame_gaps": [],
+      "frames_ordered": true,
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ],
+        "48": [
+          6181,
+          6209
+        ],
+        "49": [
+          6271,
+          6299
+        ],
+        "50": [
+          6361,
+          6389
+        ],
+        "51": [
+          6451,
+          6479
+        ],
+        "52": [
+          6541,
+          6569
+        ],
+        "53": [
+          6631,
+          6659
+        ],
+        "54": [
+          6721,
+          6749
+        ],
+        "55": [
+          6811,
+          6839
+        ],
+        "56": [
+          6901,
+          6929
+        ],
+        "57": [
+          6991,
+          7019
+        ],
+        "58": [
+          7081,
+          7109
+        ],
+        "59": [
+          7171,
+          7199
+        ],
+        "60": [
+          7261,
+          7289
+        ],
+        "61": [
+          7351,
+          7379
+        ],
+        "62": [
+          7441,
+          7469
+        ],
+        "63": [
+          7531,
+          7559
+        ],
+        "64": [
+          7621,
+          7649
+        ],
+        "65": [
+          7711,
+          7739
+        ],
+        "66": [
+          7801,
+          7829
+        ],
+        "67": [
+          7891,
+          7919
+        ],
+        "68": [
+          7981,
+          8009
+        ],
+        "69": [
+          8071,
+          8099
+        ],
+        "70": [
+          8161,
+          8189
+        ],
+        "71": [
+          8251,
+          8279
+        ],
+        "72": [
+          8341,
+          8369
+        ],
+        "73": [
+          8431,
+          8459
+        ],
+        "74": [
+          8521,
+          8549
+        ],
+        "75": [
+          8611,
+          8639
+        ],
+        "76": [
+          8701,
+          8729
+        ],
+        "77": [
+          8791,
+          8819
+        ],
+        "78": [
+          8881,
+          8909
+        ],
+        "79": [
+          8971,
+          8999
+        ],
+        "80": [
+          9061,
+          9089
+        ],
+        "81": [
+          9151,
+          9179
+        ],
+        "82": [
+          9241,
+          9269
+        ],
+        "83": [
+          9331,
+          9359
+        ],
+        "84": [
+          9421,
+          9449
+        ],
+        "85": [
+          9511,
+          9539
+        ],
+        "86": [
+          9601,
+          9629
+        ],
+        "87": [
+          9691,
+          9719
+        ],
+        "88": [
+          9781,
+          9809
+        ],
+        "89": [
+          9871,
+          9899
+        ],
+        "90": [
+          9961,
+          9989
+        ],
+        "91": [
+          10051,
+          10079
+        ],
+        "92": [
+          10141,
+          10169
+        ],
+        "93": [
+          10231,
+          10259
+        ],
+        "94": [
+          10321,
+          10349
+        ],
+        "95": [
+          10411,
+          10439
+        ],
+        "96": [
+          10501,
+          10529
+        ],
+        "97": [
+          10591,
+          10619
+        ],
+        "98": [
+          10681,
+          10709
+        ],
+        "99": [
+          10771,
+          10799
+        ],
+        "100": [
+          10861,
+          10889
+        ],
+        "101": [
+          10951,
+          10979
+        ],
+        "102": [
+          11041,
+          11069
+        ],
+        "103": [
+          11131,
+          11159
+        ],
+        "104": [
+          11221,
+          11249
+        ],
+        "105": [
+          11311,
+          11339
+        ],
+        "106": [
+          11401,
+          11429
+        ],
+        "107": [
+          11491,
+          11519
+        ],
+        "108": [
+          11581,
+          11609
+        ],
+        "109": [
+          11671,
+          11699
+        ],
+        "110": [
+          11761,
+          11789
+        ],
+        "111": [
+          11851,
+          11879
+        ],
+        "112": [
+          11941,
+          11969
+        ],
+        "113": [
+          12031,
+          12059
+        ],
+        "114": [
+          12121,
+          12149
+        ],
+        "115": [
+          12211,
+          12239
+        ],
+        "116": [
+          12301,
+          12329
+        ],
+        "117": [
+          12391,
+          12419
+        ],
+        "118": [
+          12481,
+          12509
+        ],
+        "119": [
+          12571,
+          12599
+        ],
+        "120": [
+          12661,
+          12689
+        ],
+        "121": [
+          12751,
+          12779
+        ],
+        "122": [
+          12841,
+          12869
+        ],
+        "123": [
+          12931,
+          12959
+        ],
+        "124": [
+          13021,
+          13049
+        ],
+        "125": [
+          13111,
+          13139
+        ],
+        "126": [
+          13201,
+          13229
+        ],
+        "127": [
+          13291,
+          13319
+        ],
+        "128": [
+          13381,
+          13409
+        ],
+        "129": [
+          13471,
+          13499
+        ],
+        "130": [
+          13561,
+          13589
+        ],
+        "131": [
+          13651,
+          13679
+        ],
+        "132": [
+          13741,
+          13769
+        ],
+        "133": [
+          13831,
+          13859
+        ],
+        "134": [
+          13921,
+          13949
+        ],
+        "135": [
+          14011,
+          14039
+        ],
+        "136": [
+          14101,
+          14129
+        ],
+        "137": [
+          14191,
+          14219
+        ],
+        "138": [
+          14281,
+          14309
+        ],
+        "139": [
+          14371,
+          14399
+        ],
+        "140": [
+          14461,
+          14489
+        ],
+        "141": [
+          14551,
+          14579
+        ],
+        "142": [
+          14641,
+          14669
+        ],
+        "143": [
+          14731,
+          14759
+        ],
+        "144": [
+          14821,
+          14849
+        ],
+        "145": [
+          14911,
+          14939
+        ],
+        "146": [
+          15001,
+          15029
+        ],
+        "147": [
+          15091,
+          15119
+        ],
+        "148": [
+          15181,
+          15209
+        ],
+        "149": [
+          15271,
+          15299
+        ],
+        "150": [
+          15361,
+          15389
+        ],
+        "151": [
+          15451,
+          15479
+        ],
+        "152": [
+          15541,
+          15569
+        ],
+        "153": [
+          15631,
+          15659
+        ],
+        "154": [
+          15721,
+          15749
+        ],
+        "155": [
+          15811,
+          15839
+        ],
+        "156": [
+          15901,
+          15929
+        ],
+        "157": [
+          15991,
+          16019
+        ],
+        "158": [
+          16081,
+          16109
+        ],
+        "159": [
+          16171,
+          16199
+        ],
+        "160": [
+          16261,
+          16289
+        ],
+        "161": [
+          16351,
+          16379
+        ],
+        "162": [
+          16441,
+          16469
+        ],
+        "163": [
+          16531,
+          16559
+        ],
+        "164": [
+          16621,
+          16649
+        ],
+        "165": [
+          16711,
+          16739
+        ],
+        "166": [
+          16801,
+          16829
+        ],
+        "167": [
+          16891,
+          16919
+        ],
+        "168": [
+          16981,
+          17009
+        ],
+        "169": [
+          17071,
+          17099
+        ],
+        "170": [
+          17161,
+          17189
+        ],
+        "171": [
+          17251,
+          17279
+        ],
+        "172": [
+          17341,
+          17369
+        ],
+        "173": [
+          17431,
+          17459
+        ],
+        "174": [
+          17521,
+          17549
+        ],
+        "175": [
+          17611,
+          17639
+        ],
+        "176": [
+          17701,
+          17729
+        ],
+        "177": [
+          17791,
+          17819
+        ],
+        "178": [
+          17881,
+          17909
+        ],
+        "179": [
+          17971,
+          17999
+        ]
+      }
+    },
+    "parent_recount": {
+      "tag": "bf99h",
+      "pairs": 88,
+      "rows_per_arm": [
+        2552,
+        2552
+      ],
+      "work_pct": 0.10514731520223641,
+      "area_split_pct": -0.001447987468206069,
+      "dt_relative": 0.0051737692064087555,
+      "B_cpu_ms": 37.367904034482756
+    }
+  },
+  "bf99e": {
+    "schema": "settled99-gc-v1",
+    "tag": "bf99e",
+    "phase": "measurement",
+    "instrument": "a",
+    "pred_sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "NOT_MEASUREMENT",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 17800,
+    "duration": "RAW_DURATION: whole=916.375208 claimed=900.300000 s; after_stable=900.775228 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag bf99e   log C:\\kyty\\s99\\log_bf99e.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 180 (blk >= 1), flips 16139, first n 1891, last n 18029\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=900.3 of 900.0\n  R2  edges           PASS 45 falling edges followed by >= 2 flips (need >= 30)\n  R3  latch           FAIL 179 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 180 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 90 vs arm changes 90; bf_edge position {'idx0': 90}\n  R4  dark base       PASS 45 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 23 (band <= 50)   rising 6.5, unarmed mid-block reference 11.0, max dt of those 2 flips median 66626 us\n  R6' clean return 3  PASS median img_new over idx 0..2 after a falling edge = 29 (band <= 50), 45 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1 (band <= 50)   unarmed flips after the first two: mean 1.641 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3 (band <= 50), 45 edges\n  D1  displacement (reported) f_fall 0.907  f_rise 0.451  1-lat/dt 0.762  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 91, bf_xover_acb 91, bf_defer 91, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 45 of 45 (acb part > 0: 45); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== bf99e: 10 of 10 criteria PASS -> REVERSIBLE (for this run) ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "bf99e.json",
+        "log_bf99e.txt",
+        "stdout_bf99e.txt"
+      ],
+      "source_artifact": [
+        "path",
+        "sha256"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "POSITIVE_ENDPOINT",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 41,
+        "total": 41,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 5,
+        "total": 6,
+        "failed": {
+          "WORK": false
+        }
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": 0.003480178262682543,
+      "work_pct": -0.7106393061121041,
+      "draws_u": 5078.87421630094,
+      "draws_a": 5042.781739811912,
+      "C5_ratio": 0.007106393061121041,
+      "area_pairs": 88,
+      "area_matched": 88,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        -0.0032409373986297396,
+        0.010098631341493025,
+        0.0563109614402979,
+        0.008329824633257488,
+        -0.0005176582480559411,
+        -0.049409593001847885,
+        -0.06304991150434258,
+        -0.06312342732529563,
+        0.018897479849200316,
+        0.0372206517814222,
+        0.08700447208347395,
+        0.07437841911475118,
+        -0.001614653929149501,
+        -0.07418578407700771,
+        -0.08133822666416268,
+        -0.04727264359215555,
+        0.03234463112278263,
+        0.04356902400659557,
+        -0.004100231217440964,
+        -0.09181431232077042,
+        -0.030955483227168568,
+        -0.029131018264960673,
+        0.07297975345261776,
+        0.05953390179123108,
+        0.09548693347203319,
+        -0.05859734333719668,
+        -0.03728566104055364,
+        -0.05202073707718524,
+        0.028549388077903082,
+        0.04445209811969608,
+        0.05133080525978606,
+        0.03386317930098581,
+        -0.033337052261506184,
+        -0.0018255212409723498,
+        0.03459109158805429,
+        0.03627097803802215,
+        0.028903282901704408,
+        -0.024660404864607077,
+        -0.02386026429991306,
+        -0.0749040335729867,
+        -0.04651040179001198,
+        -0.07685588243451225,
+        0.015529271072933781,
+        0.03167264295689254,
+        0.0582522869092994,
+        -0.026925932733801172,
+        0.005135482316087625,
+        0.019704522551178272,
+        0.01365861164948079,
+        0.033507609467875454,
+        0.014390932812435864,
+        -0.08619223514432228,
+        0.013428108832513885,
+        -0.011991161150093355,
+        -0.006168860934097076,
+        -0.026455005003211962,
+        -0.01763501110678689,
+        0.026113984495790277,
+        0.043863163084778556,
+        0.0813095679125464,
+        0.0763991818381049,
+        -0.00916530748812372,
+        -0.010709636771366604,
+        -0.06371338909851865,
+        -0.05438528547748733,
+        -0.05753347902450745,
+        -0.0330540561161885,
+        -0.01636899561165972,
+        0.08680227855708544,
+        0.04749968469135446,
+        0.0467628961278832,
+        -0.08128557426665406,
+        -0.00904845657461184,
+        0.03345682277937634,
+        0.009375527380228732,
+        -0.0710614531509779,
+        -0.03206928836200218,
+        -0.0623170768541792,
+        0.0578664642280069,
+        0.05254889390140516,
+        0.09109185131741526,
+        0.005805580368578589,
+        0.052131061339566465,
+        0.013687864475286915,
+        0.03499915851019608,
+        -0.026393979043559668,
+        0.039428445709188686,
+        0.09544230564195733
+      ],
+      "dt_a_us": 50365.13126959248,
+      "dt_u_us": 51027.97021943574,
+      "dt_delta_us": 662.8389498432589,
+      "dt_relative": 0.01298971812895654,
+      "pairs": 88,
+      "rows_per_arm": 2552,
+      "orientations": [
+        44,
+        44
+      ],
+      "edge_histogram": {
+        "idx0": 90,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 18.282346589341692,
+      "armed_wall_burn_mean_ms": 17.748527035658306,
+      "cpu_query_cost_indicator_mean_ms": 1.7514840239028213,
+      "cpu_aggregate_rounding_allowance_ns": 2552000
+    },
+    "reported_image_birth_proxies": {
+      "R6": true,
+      "R6'": true
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ],
+        [
+          48,
+          49
+        ],
+        [
+          50,
+          51
+        ],
+        [
+          52,
+          53
+        ],
+        [
+          54,
+          55
+        ],
+        [
+          56,
+          57
+        ],
+        [
+          58,
+          59
+        ],
+        [
+          60,
+          61
+        ],
+        [
+          62,
+          63
+        ],
+        [
+          64,
+          65
+        ],
+        [
+          66,
+          67
+        ],
+        [
+          68,
+          69
+        ],
+        [
+          70,
+          71
+        ],
+        [
+          72,
+          73
+        ],
+        [
+          74,
+          75
+        ],
+        [
+          76,
+          77
+        ],
+        [
+          78,
+          79
+        ],
+        [
+          80,
+          81
+        ],
+        [
+          82,
+          83
+        ],
+        [
+          84,
+          85
+        ],
+        [
+          86,
+          87
+        ],
+        [
+          88,
+          89
+        ],
+        [
+          90,
+          91
+        ],
+        [
+          92,
+          93
+        ],
+        [
+          94,
+          95
+        ],
+        [
+          96,
+          97
+        ],
+        [
+          98,
+          99
+        ],
+        [
+          100,
+          101
+        ],
+        [
+          102,
+          103
+        ],
+        [
+          104,
+          105
+        ],
+        [
+          106,
+          107
+        ],
+        [
+          108,
+          109
+        ],
+        [
+          110,
+          111
+        ],
+        [
+          112,
+          113
+        ],
+        [
+          114,
+          115
+        ],
+        [
+          116,
+          117
+        ],
+        [
+          118,
+          119
+        ],
+        [
+          120,
+          121
+        ],
+        [
+          122,
+          123
+        ],
+        [
+          124,
+          125
+        ],
+        [
+          126,
+          127
+        ],
+        [
+          128,
+          129
+        ],
+        [
+          130,
+          131
+        ],
+        [
+          132,
+          133
+        ],
+        [
+          134,
+          135
+        ],
+        [
+          136,
+          137
+        ],
+        [
+          138,
+          139
+        ],
+        [
+          140,
+          141
+        ],
+        [
+          142,
+          143
+        ],
+        [
+          144,
+          145
+        ],
+        [
+          146,
+          147
+        ],
+        [
+          148,
+          149
+        ],
+        [
+          150,
+          151
+        ],
+        [
+          152,
+          153
+        ],
+        [
+          154,
+          155
+        ],
+        [
+          156,
+          157
+        ],
+        [
+          158,
+          159
+        ],
+        [
+          160,
+          161
+        ],
+        [
+          162,
+          163
+        ],
+        [
+          164,
+          165
+        ],
+        [
+          166,
+          167
+        ],
+        [
+          168,
+          169
+        ],
+        [
+          170,
+          171
+        ],
+        [
+          172,
+          173
+        ],
+        [
+          174,
+          175
+        ],
+        [
+          176,
+          177
+        ],
+        [
+          178,
+          179
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "180": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ],
+        "48": [
+          6181,
+          6209
+        ],
+        "49": [
+          6271,
+          6299
+        ],
+        "50": [
+          6361,
+          6389
+        ],
+        "51": [
+          6451,
+          6479
+        ],
+        "52": [
+          6541,
+          6569
+        ],
+        "53": [
+          6631,
+          6659
+        ],
+        "54": [
+          6721,
+          6749
+        ],
+        "55": [
+          6811,
+          6839
+        ],
+        "56": [
+          6901,
+          6929
+        ],
+        "57": [
+          6991,
+          7019
+        ],
+        "58": [
+          7081,
+          7109
+        ],
+        "59": [
+          7171,
+          7199
+        ],
+        "60": [
+          7261,
+          7289
+        ],
+        "61": [
+          7351,
+          7379
+        ],
+        "62": [
+          7441,
+          7469
+        ],
+        "63": [
+          7531,
+          7559
+        ],
+        "64": [
+          7621,
+          7649
+        ],
+        "65": [
+          7711,
+          7739
+        ],
+        "66": [
+          7801,
+          7829
+        ],
+        "67": [
+          7891,
+          7919
+        ],
+        "68": [
+          7981,
+          8009
+        ],
+        "69": [
+          8071,
+          8099
+        ],
+        "70": [
+          8161,
+          8189
+        ],
+        "71": [
+          8251,
+          8279
+        ],
+        "72": [
+          8341,
+          8369
+        ],
+        "73": [
+          8431,
+          8459
+        ],
+        "74": [
+          8521,
+          8549
+        ],
+        "75": [
+          8611,
+          8639
+        ],
+        "76": [
+          8701,
+          8729
+        ],
+        "77": [
+          8791,
+          8819
+        ],
+        "78": [
+          8881,
+          8909
+        ],
+        "79": [
+          8971,
+          8999
+        ],
+        "80": [
+          9061,
+          9089
+        ],
+        "81": [
+          9151,
+          9179
+        ],
+        "82": [
+          9241,
+          9269
+        ],
+        "83": [
+          9331,
+          9359
+        ],
+        "84": [
+          9421,
+          9449
+        ],
+        "85": [
+          9511,
+          9539
+        ],
+        "86": [
+          9601,
+          9629
+        ],
+        "87": [
+          9691,
+          9719
+        ],
+        "88": [
+          9781,
+          9809
+        ],
+        "89": [
+          9871,
+          9899
+        ],
+        "90": [
+          9961,
+          9989
+        ],
+        "91": [
+          10051,
+          10079
+        ],
+        "92": [
+          10141,
+          10169
+        ],
+        "93": [
+          10231,
+          10259
+        ],
+        "94": [
+          10321,
+          10349
+        ],
+        "95": [
+          10411,
+          10439
+        ],
+        "96": [
+          10501,
+          10529
+        ],
+        "97": [
+          10591,
+          10619
+        ],
+        "98": [
+          10681,
+          10709
+        ],
+        "99": [
+          10771,
+          10799
+        ],
+        "100": [
+          10861,
+          10889
+        ],
+        "101": [
+          10951,
+          10979
+        ],
+        "102": [
+          11041,
+          11069
+        ],
+        "103": [
+          11131,
+          11159
+        ],
+        "104": [
+          11221,
+          11249
+        ],
+        "105": [
+          11311,
+          11339
+        ],
+        "106": [
+          11401,
+          11429
+        ],
+        "107": [
+          11491,
+          11519
+        ],
+        "108": [
+          11581,
+          11609
+        ],
+        "109": [
+          11671,
+          11699
+        ],
+        "110": [
+          11761,
+          11789
+        ],
+        "111": [
+          11851,
+          11879
+        ],
+        "112": [
+          11941,
+          11969
+        ],
+        "113": [
+          12031,
+          12059
+        ],
+        "114": [
+          12121,
+          12149
+        ],
+        "115": [
+          12211,
+          12239
+        ],
+        "116": [
+          12301,
+          12329
+        ],
+        "117": [
+          12391,
+          12419
+        ],
+        "118": [
+          12481,
+          12509
+        ],
+        "119": [
+          12571,
+          12599
+        ],
+        "120": [
+          12661,
+          12689
+        ],
+        "121": [
+          12751,
+          12779
+        ],
+        "122": [
+          12841,
+          12869
+        ],
+        "123": [
+          12931,
+          12959
+        ],
+        "124": [
+          13021,
+          13049
+        ],
+        "125": [
+          13111,
+          13139
+        ],
+        "126": [
+          13201,
+          13229
+        ],
+        "127": [
+          13291,
+          13319
+        ],
+        "128": [
+          13381,
+          13409
+        ],
+        "129": [
+          13471,
+          13499
+        ],
+        "130": [
+          13561,
+          13589
+        ],
+        "131": [
+          13651,
+          13679
+        ],
+        "132": [
+          13741,
+          13769
+        ],
+        "133": [
+          13831,
+          13859
+        ],
+        "134": [
+          13921,
+          13949
+        ],
+        "135": [
+          14011,
+          14039
+        ],
+        "136": [
+          14101,
+          14129
+        ],
+        "137": [
+          14191,
+          14219
+        ],
+        "138": [
+          14281,
+          14309
+        ],
+        "139": [
+          14371,
+          14399
+        ],
+        "140": [
+          14461,
+          14489
+        ],
+        "141": [
+          14551,
+          14579
+        ],
+        "142": [
+          14641,
+          14669
+        ],
+        "143": [
+          14731,
+          14759
+        ],
+        "144": [
+          14821,
+          14849
+        ],
+        "145": [
+          14911,
+          14939
+        ],
+        "146": [
+          15001,
+          15029
+        ],
+        "147": [
+          15091,
+          15119
+        ],
+        "148": [
+          15181,
+          15209
+        ],
+        "149": [
+          15271,
+          15299
+        ],
+        "150": [
+          15361,
+          15389
+        ],
+        "151": [
+          15451,
+          15479
+        ],
+        "152": [
+          15541,
+          15569
+        ],
+        "153": [
+          15631,
+          15659
+        ],
+        "154": [
+          15721,
+          15749
+        ],
+        "155": [
+          15811,
+          15839
+        ],
+        "156": [
+          15901,
+          15929
+        ],
+        "157": [
+          15991,
+          16019
+        ],
+        "158": [
+          16081,
+          16109
+        ],
+        "159": [
+          16171,
+          16199
+        ],
+        "160": [
+          16261,
+          16289
+        ],
+        "161": [
+          16351,
+          16379
+        ],
+        "162": [
+          16441,
+          16469
+        ],
+        "163": [
+          16531,
+          16559
+        ],
+        "164": [
+          16621,
+          16649
+        ],
+        "165": [
+          16711,
+          16739
+        ],
+        "166": [
+          16801,
+          16829
+        ],
+        "167": [
+          16891,
+          16919
+        ],
+        "168": [
+          16981,
+          17009
+        ],
+        "169": [
+          17071,
+          17099
+        ],
+        "170": [
+          17161,
+          17189
+        ],
+        "171": [
+          17251,
+          17279
+        ],
+        "172": [
+          17341,
+          17369
+        ],
+        "173": [
+          17431,
+          17459
+        ],
+        "174": [
+          17521,
+          17549
+        ],
+        "175": [
+          17611,
+          17639
+        ],
+        "176": [
+          17701,
+          17729
+        ],
+        "177": [
+          17791,
+          17819
+        ],
+        "178": [
+          17881,
+          17909
+        ],
+        "179": [
+          17971,
+          17999
+        ]
+      }
+    }
+  },
+  "eng99a4": {
+    "schema": "settled99-gc-v1",
+    "tag": "eng99a4",
+    "phase": "pilot",
+    "instrument": "a",
+    "pred_sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "ENGINEERING_COMPLETE",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 17800,
+    "duration": "RAW_DURATION: whole=312.679042 claimed=300.100000 s; after_stable=300.096209 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag eng99a4   log C:\\kyty\\s99\\log_eng99a4.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 49 (blk >= 1), flips 4357, first n 1891, last n 6247\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=300.1 of 300.0\n  R2  edges           PASS 12 falling edges followed by >= 2 flips (need >= 8)\n  R3  latch           FAIL 48 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 49 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 25 vs arm changes 25; bf_edge position {'idx0': 25}\n  R4  dark base       PASS 12 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 49.0 (band <= 50)   rising 6.0, unarmed mid-block reference 13.0, max dt of those 2 flips median 71556.0 us\n  R6' clean return 3  FAIL median img_new over idx 0..2 after a falling edge = 60.0 (band <= 50), 12 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 2.0 (band <= 50)   unarmed flips after the first two: mean 1.643 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3.0 (band <= 50), 12 edges\n  D1  displacement (reported) f_fall 0.973  f_rise 0.408  1-lat/dt 0.788  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 26, bf_xover_acb 26, bf_defer 26, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 12 of 12 (acb part > 0: 12); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== eng99a4: 9 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "eng99a4.json",
+        "log_eng99a4.txt",
+        "stdout_eng99a4.txt"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ],
+      "decision": [
+        "action",
+        "fixed_burn"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 40,
+        "total": 40,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 6,
+        "total": 6,
+        "failed": {}
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": -0.015102132731215079,
+      "work_pct": -0.02365018145290554,
+      "draws_u": 5036.843260188088,
+      "draws_a": 5035.652037617555,
+      "C5_ratio": 0.0002365018145290554,
+      "area_pairs": 22,
+      "area_matched": 22,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        -0.10724118752137857,
+        -0.03637963773139852,
+        0.0859425188125984,
+        -0.024080062943176994,
+        0.031262674093035514,
+        -0.11662455634824376,
+        -0.08925720893434574,
+        -0.05854230235646796,
+        -0.005132887456793522,
+        -0.019239861571995753,
+        0.018636948373318418,
+        -0.04783046646139599,
+        0.030216576611996615,
+        0.019796701408525408,
+        0.01098976282782882,
+        -0.004248896920022727,
+        0.026948076904442786,
+        0.021282421359214432,
+        0.047884693808875056,
+        -0.0656268880887434,
+        -0.05848351998833934,
+        -0.011104437215692098
+      ],
+      "dt_a_us": 49629.63009404389,
+      "dt_u_us": 49631.72727272727,
+      "dt_delta_us": 2.0971786833833903,
+      "dt_relative": 4.2254799472509874e-05,
+      "pairs": 22,
+      "rows_per_arm": 638,
+      "orientations": [
+        11,
+        11
+      ],
+      "edge_histogram": {
+        "idx0": 25,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 18.24968319278997,
+      "armed_wall_burn_mean_ms": 17.772310039184955,
+      "cpu_query_cost_indicator_mean_ms": 1.7397646739811912,
+      "cpu_aggregate_rounding_allowance_ns": 638000
+    },
+    "decision": {
+      "action": "LOCK",
+      "fixed_burn": 17800
+    },
+    "reported_image_birth_proxies": {
+      "R6": true,
+      "R6'": false
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3,
+        48
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "49": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ]
+      }
+    }
+  },
+  "eng99c1": {
+    "schema": "settled99-norec-v1",
+    "tag": "eng99c1",
+    "phase": "pilot",
+    "instrument": "c",
+    "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "ENGINEERING_COMPLETE",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 17800,
+    "duration": "RAW_DURATION: whole=314.846528 claimed=300.100000 s; after_stable=300.313565 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag eng99c1   log C:\\kyty\\s99\\log_eng99c1.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=0 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 46 (blk >= 1), flips 4059, first n 1891, last n 5949\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=300.1 of 300.0\n  R2  edges           PASS 11 falling edges followed by >= 2 flips (need >= 8)\n  R3  latch           FAIL 45 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 46 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 23 vs arm changes 23; bf_edge position {'idx0': 23}\n  R4  dark base       PASS 11 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    FAIL median img_new over 2 flips after a falling edge = 65 (band <= 50)   rising 6, unarmed mid-block reference 15.0, max dt of those 2 flips median 66426 us\n  R6' clean return 3  FAIL median img_new over idx 0..2 after a falling edge = 73 (band <= 50), 11 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 2 (band <= 50)   unarmed flips after the first two: mean 1.624 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 4 (band <= 50), 11 edges\n  D1  displacement (reported) f_fall 0.940  f_rise 0.534  1-lat/dt 0.744  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 24, bf_xover_acb 24, bf_defer 24, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 11 of 11 (acb part > 0: 11); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== eng99c1: 8 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "eng99c1.json",
+        "log_eng99c1.txt",
+        "stdout_eng99c1.txt"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_RAW_CONTIGUITY",
+        "FULL_RAW_ORDER",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "C4_B_OUT",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "frame_gaps",
+        "frames_ordered",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ],
+      "decision": [
+        "action",
+        "next_burn",
+        "method"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 43,
+        "total": 43,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 5,
+        "total": 6,
+        "failed": {
+          "C9": false
+        }
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": -0.010062405672373043,
+      "work_pct": 0.4147485503343429,
+      "draws_u": 5028.805172413793,
+      "draws_a": 5049.662068965517,
+      "C5_ratio": 0.004147485503343429,
+      "area_pairs": 20,
+      "area_matched": 20,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        -0.07158580650751256,
+        -0.04386891968864992,
+        0.07020937113393355,
+        -0.1925658246696993,
+        -0.007283630304866229,
+        -0.04225115925796663,
+        0.060748088748030504,
+        -0.08109755698036958,
+        -0.019598521398134228,
+        -0.04633399814438777,
+        0.05230737134549468,
+        0.03399809427337974,
+        0.07929914406599181,
+        0.022810423407682023,
+        0.018616462763931807,
+        -0.015706834491480137,
+        0.007709578796233352,
+        -0.005549975265373153,
+        -0.004000663602099497,
+        -0.039689791037189615
+      ],
+      "dt_a_us": 57473.418965517245,
+      "dt_u_us": 49824.99137931035,
+      "dt_delta_us": -7648.427586206897,
+      "dt_relative": 0.153505848660977,
+      "pairs": 20,
+      "rows_per_arm": 580,
+      "orientations": [
+        10,
+        10
+      ],
+      "edge_histogram": {
+        "idx0": 23,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 18.279090725862066,
+      "armed_wall_burn_mean_ms": 17.785580151724137,
+      "cpu_query_cost_indicator_mean_ms": 1.7338753620689655,
+      "cpu_aggregate_rounding_allowance_ns": 580000
+    },
+    "decision": {
+      "action": "TUNE",
+      "next_burn": 10200,
+      "method": "old burn + round100(dt_U-dt_A)"
+    },
+    "reported_image_birth_proxies": {
+      "R6": false,
+      "R6'": false
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3,
+        44,
+        45
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "46": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "frame_gaps": [],
+      "frames_ordered": true,
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ]
+      }
+    }
+  },
+  "eng99c2": {
+    "schema": "settled99-norec-v1",
+    "tag": "eng99c2",
+    "phase": "pilot",
+    "instrument": "c",
+    "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "ENGINEERING_COMPLETE",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 10200,
+    "duration": "RAW_DURATION: whole=311.796548 claimed=300.100000 s; after_stable=300.530065 [reported only]",
+    "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+    "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag eng99c2   log C:\\kyty\\s99\\log_eng99c2.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=10200', 1: 'bindfloor=1 drawahead=0 bfmode=2 bfburn=10200'}\narmed arm: 1\nblocks 49 (blk >= 1), flips 4335, first n 1891, last n 6225\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=300.1 of 300.0\n  R2  edges           PASS 12 falling edges followed by >= 2 flips (need >= 8)\n  R3  latch           FAIL 48 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 49 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 25 vs arm changes 25; bf_edge position {'idx0': 25}\n  R4  dark base       PASS 12 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 37.5 (band <= 50)   rising 7.0, unarmed mid-block reference 13.0, max dt of those 2 flips median 66646.0 us\n  R6' clean return 3  PASS median img_new over idx 0..2 after a falling edge = 48.5 (band <= 50), 12 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1.0 (band <= 50)   unarmed flips after the first two: mean 1.469 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3.0 (band <= 50), 12 edges\n  D1  displacement (reported) f_fall 0.897  f_rise 0.493  1-lat/dt 0.726  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 26, bf_xover_acb 26, bf_defer 26, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 12 of 12 (acb part > 0: 12); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== eng99c2: 10 of 10 criteria PASS -> REVERSIBLE (for this run) ====\n",
+    "reported_old_area_verdict": "INVALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "eng99c2.json",
+        "log_eng99c2.txt",
+        "stdout_eng99c2.txt"
+      ],
+      "source_artifact": [
+        "path",
+        "sha256"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_RAW_CONTIGUITY",
+        "FULL_RAW_ORDER",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "IGC_HOLD_EACH_ARMED_BLOCK",
+        "COUNTERS",
+        "EDGE",
+        "C1'''",
+        "C2'",
+        "C4_B",
+        "DARK_B",
+        "LIVE_DARK_RATIO",
+        "REAL_CLEARS",
+        "MARKERS_OFF",
+        "C10'''_B",
+        "C4_B_OUT",
+        "CPU_BAD_ZERO",
+        "CPU_NONNEGATIVE",
+        "CPU_BASE_DARK",
+        "CPU_DARK_STRUCTURE",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED",
+        "CPU_ARMED_POSITIVE",
+        "CPU_AGGREGATE",
+        "C2_SETTLED",
+        "C8_CPU",
+        "R1",
+        "R2",
+        "R3'",
+        "R4'",
+        "R5",
+        "R7",
+        "R7'",
+        "R8",
+        "OLD_C3'",
+        "OLD_C6'",
+        "OLD_C7"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations",
+        "edge_histogram",
+        "armed_cpu_burn_mean_ms",
+        "armed_wall_burn_mean_ms",
+        "cpu_query_cost_indicator_mean_ms",
+        "cpu_aggregate_rounding_allowance_ns"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "frame_gaps",
+        "frames_ordered",
+        "row_ranges"
+      ],
+      "reported_image_birth_proxies": [
+        "R6",
+        "R6'"
+      ],
+      "decision": [
+        "action",
+        "fixed_burn"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 43,
+        "total": 43,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 6,
+        "total": 6,
+        "failed": {}
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": -0.003582563600301736,
+      "work_pct": 0.20830616951841296,
+      "draws_u": 5024.855799373041,
+      "draws_a": 5035.322884012539,
+      "C5_ratio": 0.0020830616951841296,
+      "area_pairs": 22,
+      "area_matched": 22,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        0.06110730115085339,
+        -0.08385954865491874,
+        0.015799682559358708,
+        -0.01302099363749143,
+        0.02444081376531404,
+        -0.03724963073153953,
+        0.018871940154885358,
+        -0.029587039873357757,
+        0.062204883701610925,
+        -0.008810702242267876,
+        -0.0009884948197536048,
+        -0.07212667168862152,
+        0.04306306555486028,
+        -0.04033147174699048,
+        0.020307875245140217,
+        -0.08375387614050211,
+        0.04390708465220605,
+        0.018637003816701636,
+        0.0685135839647133,
+        -0.0383085521061588,
+        0.048146102825774584,
+        -0.0889532099985435
+      ],
+      "dt_a_us": 49317.35579937304,
+      "dt_u_us": 49527.65987460815,
+      "dt_delta_us": 210.30407523510803,
+      "dt_relative": 0.004246194465225012,
+      "pairs": 22,
+      "rows_per_arm": 638,
+      "orientations": [
+        11,
+        11
+      ],
+      "edge_histogram": {
+        "idx0": 25,
+        "other": 0
+      },
+      "armed_cpu_burn_mean_ms": 10.811640987460814,
+      "armed_wall_burn_mean_ms": 10.19312268338558,
+      "cpu_query_cost_indicator_mean_ms": 1.7336376630094044,
+      "cpu_aggregate_rounding_allowance_ns": 638000
+    },
+    "decision": {
+      "action": "LOCK",
+      "fixed_burn": 10200
+    },
+    "reported_image_birth_proxies": {
+      "R6": true,
+      "R6'": true
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3,
+        48
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "49": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "frame_gaps": [],
+      "frames_ordered": true,
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ]
+      }
+    }
+  },
+  "aa99plain": {
+    "schema": "settled99-norec-v1",
+    "tag": "aa99plain",
+    "phase": "aa",
+    "instrument": "a",
+    "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+    "status": "AA_PASS",
+    "global_M3": "GAP unchanged; G/R1 unlicensed",
+    "burn": 17800,
+    "duration": "RAW_DURATION: whole=310.194920 claimed=300.100000 s; after_stable=300.095506 [reported only]",
+    "reported_full_reversibility": "A/A never arms the floor; no falling-edge or hazard-proof claim",
+    "reported_old_area_verdict": "VALID",
+    "dict_keys": {
+      "raw_sha256": [
+        "aa99plain.json",
+        "log_aa99plain.txt",
+        "stdout_aa99plain.txt"
+      ],
+      "technical": [
+        "FULL_SCHEMA",
+        "INTERNAL_ROWS_COMPLETE",
+        "FULL_RAW_CONTIGUITY",
+        "FULL_RAW_ORDER",
+        "FULL_ROW_IDENTITY",
+        "IGC_NONNEGATIVE",
+        "IGC_CHECKS_POSITIVE",
+        "BF_IGC_BAD_ZERO",
+        "BF_IGC_CRITICAL_ZERO",
+        "BF_IGC_EVICT_ZERO",
+        "AA_FLOOR_OFF",
+        "AA_OTHER_OBSERVERS_OFF",
+        "COMPLETE_PAIRS",
+        "AB_BA_BALANCED"
+      ],
+      "strict": [
+        "AREA_SPLIT",
+        "AREA_MATCH",
+        "WORK",
+        "C5",
+        "C9",
+        "RETAINED_DATA"
+      ],
+      "metrics": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio",
+        "area_pairs",
+        "area_matched",
+        "area_match_pct",
+        "pair_area_deltas_pct",
+        "dt_a_us",
+        "dt_u_us",
+        "dt_delta_us",
+        "dt_relative",
+        "pairs",
+        "rows_per_arm",
+        "orientations"
+      ],
+      "reported_raw_population": [
+        "valid_data",
+        "area_split_pct",
+        "work_pct",
+        "draws_u",
+        "draws_a",
+        "C5_ratio"
+      ],
+      "gc_audit": [
+        "whole_log_totals",
+        "scope"
+      ],
+      "selection": [
+        "pairs",
+        "excluded_edge_blocks",
+        "rejected_blocks",
+        "internal_incomplete",
+        "frame_gaps",
+        "frames_ordered",
+        "row_ranges"
+      ]
+    },
+    "controls": {
+      "technical": {
+        "pass": 14,
+        "total": 14,
+        "failed": {}
+      },
+      "strict": {
+        "pass": 6,
+        "total": 6,
+        "failed": {}
+      }
+    },
+    "metrics": {
+      "valid_data": true,
+      "area_split_pct": 0.013619145879850691,
+      "work_pct": 0.03482878183302951,
+      "draws_u": 5035.830721003134,
+      "draws_a": 5037.584639498433,
+      "C5_ratio": 0.0003482878183302951,
+      "area_pairs": 22,
+      "area_matched": 22,
+      "area_match_pct": 100.0,
+      "pair_area_deltas_pct": [
+        -0.036343298931351686,
+        -0.1370561465015796,
+        -0.02308013513750984,
+        -0.02249554357320882,
+        0.08562236203419893,
+        -0.047199076862181055,
+        0.029319599207489055,
+        -0.007105905237125842,
+        0.07491186107946302,
+        -0.04709245108559523,
+        0.06845747326083007,
+        0.043997697664655,
+        0.019828522002796056,
+        -0.07873196463403787,
+        0.04223625911325968,
+        -0.031623534825886424,
+        0.07935810192667425,
+        0.026697461657931854,
+        0.1580529832959865,
+        0.014315360563177393,
+        0.08600834290841686,
+        -0.01460781349865714
+      ],
+      "dt_a_us": 49607.916927899685,
+      "dt_u_us": 49659.02978056426,
+      "dt_delta_us": 51.112852664577076,
+      "dt_relative": 0.0010292761032673623,
+      "pairs": 22,
+      "rows_per_arm": 638,
+      "orientations": [
+        11,
+        11
+      ]
+    },
+    "selection": {
+      "pairs": [
+        [
+          4,
+          5
+        ],
+        [
+          6,
+          7
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          10,
+          11
+        ],
+        [
+          12,
+          13
+        ],
+        [
+          14,
+          15
+        ],
+        [
+          16,
+          17
+        ],
+        [
+          18,
+          19
+        ],
+        [
+          20,
+          21
+        ],
+        [
+          22,
+          23
+        ],
+        [
+          24,
+          25
+        ],
+        [
+          26,
+          27
+        ],
+        [
+          28,
+          29
+        ],
+        [
+          30,
+          31
+        ],
+        [
+          32,
+          33
+        ],
+        [
+          34,
+          35
+        ],
+        [
+          36,
+          37
+        ],
+        [
+          38,
+          39
+        ],
+        [
+          40,
+          41
+        ],
+        [
+          42,
+          43
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          46,
+          47
+        ]
+      ],
+      "excluded_edge_blocks": [
+        3
+      ],
+      "rejected_blocks": {
+        "0": "outside first-frame window",
+        "1": "outside first-frame window",
+        "2": "outside first-frame window",
+        "48": "incomplete block"
+      },
+      "internal_incomplete": [],
+      "frame_gaps": [],
+      "frames_ordered": true,
+      "row_ranges": {
+        "4": [
+          2221,
+          2249
+        ],
+        "5": [
+          2311,
+          2339
+        ],
+        "6": [
+          2401,
+          2429
+        ],
+        "7": [
+          2491,
+          2519
+        ],
+        "8": [
+          2581,
+          2609
+        ],
+        "9": [
+          2671,
+          2699
+        ],
+        "10": [
+          2761,
+          2789
+        ],
+        "11": [
+          2851,
+          2879
+        ],
+        "12": [
+          2941,
+          2969
+        ],
+        "13": [
+          3031,
+          3059
+        ],
+        "14": [
+          3121,
+          3149
+        ],
+        "15": [
+          3211,
+          3239
+        ],
+        "16": [
+          3301,
+          3329
+        ],
+        "17": [
+          3391,
+          3419
+        ],
+        "18": [
+          3481,
+          3509
+        ],
+        "19": [
+          3571,
+          3599
+        ],
+        "20": [
+          3661,
+          3689
+        ],
+        "21": [
+          3751,
+          3779
+        ],
+        "22": [
+          3841,
+          3869
+        ],
+        "23": [
+          3931,
+          3959
+        ],
+        "24": [
+          4021,
+          4049
+        ],
+        "25": [
+          4111,
+          4139
+        ],
+        "26": [
+          4201,
+          4229
+        ],
+        "27": [
+          4291,
+          4319
+        ],
+        "28": [
+          4381,
+          4409
+        ],
+        "29": [
+          4471,
+          4499
+        ],
+        "30": [
+          4561,
+          4589
+        ],
+        "31": [
+          4651,
+          4679
+        ],
+        "32": [
+          4741,
+          4769
+        ],
+        "33": [
+          4831,
+          4859
+        ],
+        "34": [
+          4921,
+          4949
+        ],
+        "35": [
+          5011,
+          5039
+        ],
+        "36": [
+          5101,
+          5129
+        ],
+        "37": [
+          5191,
+          5219
+        ],
+        "38": [
+          5281,
+          5309
+        ],
+        "39": [
+          5371,
+          5399
+        ],
+        "40": [
+          5461,
+          5489
+        ],
+        "41": [
+          5551,
+          5579
+        ],
+        "42": [
+          5641,
+          5669
+        ],
+        "43": [
+          5731,
+          5759
+        ],
+        "44": [
+          5821,
+          5849
+        ],
+        "45": [
+          5911,
+          5939
+        ],
+        "46": [
+          6001,
+          6029
+        ],
+        "47": [
+          6091,
+          6119
+        ]
+      }
+    }
+  },
+  "combined": {
+    "status": "DIAGNOSTIC_ONLY",
+    "diagnostic": "HIGH",
+    "B_cpu_ms": [
+      30.049869086206897,
+      37.36790403448275
+    ],
+    "addend_ms": 0,
+    "bindings_only_measurement_complete": true,
+    "global_M3": "GAP unchanged; no G/R1 closure/licence; route order unchanged"
+  },
+  "video": {
+    "video99_full": {
+      "frames": 18037,
+      "events": 185
+    },
+    "video99_base_full": {
+      "frames": 17802,
+      "events": 0
+    }
+  },
+  "cpp_numstat": "13\t0\tsrc/common/frameStats.h\n35\t0\tsrc/graphics/host_gpu/renderer/cache/textureCache.cpp\n39\t0\tsrc/graphics/host_gpu/renderer/pipeline/descriptors.cpp\n3\t0\tsrc/graphics/host_gpu/renderer/pipeline/descriptors.h\n9\t0\tsrc/graphics/presentation/videoOut.cpp\n",
+  "staged": "",
+  "installed": {
+    "bytes": 23743488,
+    "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f"
+  },
+  "encoding_suspect_lines": [
+    [
+      1,
+      "# Session 99 — bindings-only measurement completed; experimental video artifacts isolated"
+    ],
+    [
+      103,
+      "effects. The user independently said \"глитчей не видел при прогоне\". This supports non-reproduction"
+    ]
+  ],
+  "errors": []
+}

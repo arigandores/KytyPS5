@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-09-19T21:55:58.723965+02:00",
+  "checks": [
+    {
+      "path": "C:\\Users\\<user>\\OneDrive\\Desktop\\ps5 em\\kyty_emulator.exe",
+      "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+      "bytes": 23743488,
+      "pass_check": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\gates_base.txt",
+      "sha256": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8",
+      "bytes": 1092,
+      "pass_check": true
+    }
+  ],
+  "emulator_processes": "",
+  "no_changes_made": true
+}

@@ -1,13 +1,17 @@
 # Session 99 — route E, M3 continues: the gap branch (`bfmode=2`)
 
-**EXECUTED AFTER PERMISSION; STOPPED AT cal99a (NOT ADMITTED).**
-The single180.1s calibration failed work comparability (-4.0974%) and falling-edge count
-(17<30). Fresh raw VERIFY confirmed it. No accepted burn or B exists; no later run followed.
-Installed binary: ee9cc8ab..., unchanged seal8b816528.... Do not repeat this sequence.
-Current facts: docs/local-session-99.md. Next PLAN: docs/next-session-100.md.
+**SESSION99 COMPLETED THE BINDINGS-ONLY MEASUREMENT; HIGH DIAGNOSTIC.**
+Admitted bf99g/bf99h give B_a30.049869/B_c37.367904ms on the CPU-burn clock,
+900.3s/45falls/88pairs each; limited HIGH uses addend0. Global M3 remains GAP;
+G/R1 are unlicensed, M4/M5 undone. cal99a and recorded bf99e retain their failures.
+Normal floor0+REC control:17802frames/0 detector events; user saw no glitches.
+Installed34206e3f...,23743488bytes; default-off CPU/GC observers, no speedup proved.
+Current facts: docs/local-session-99.md; immutable rules01–05 and archived evidence
+under docs/session-99. Next PLAN: docs/next-session-100.md. Do not repeat the completed
+calibration/confirmation campaign or execute the original brief below as a fresh plan.
 
 The remainder is the original pre-preparation brief; its old burn/proof/scorer assumptions
-are superseded only as explicitly recorded in the new sealed rule.
+are superseded only as explicitly recorded in the immutable session99 rules01–05.
 
 **Order M3 → M4 → M5 stays** (the user's decision, session 97). Read `C:/kyty/s98/FACTS.md` in full
 first (in git `docs/local-session-98.md`), then `ROADMAP.md` §0.1 (the session-98 addendum) and §2 E

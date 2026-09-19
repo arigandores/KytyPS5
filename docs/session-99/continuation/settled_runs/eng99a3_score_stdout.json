@@ -1,0 +1,449 @@
+{
+  "schema": "settled99-v1",
+  "tag": "eng99a3",
+  "phase": "pilot",
+  "instrument": "a",
+  "pred_sha256": "1d1ebf286869ab59944fe135fc5c69d1315d4c61667b6c3dd2ab3ca14839724c",
+  "binary_sha256": "2a6bb5388d8fdd97a4aab20e1bde2715e3d92ad499c49b7cd2ea094ec0385c87",
+  "status": "NOT_MEASUREMENT",
+  "global_M3": "GAP unchanged; G/R1 unlicensed",
+  "errors": [],
+  "entry_history": [],
+  "burn": 17800,
+  "duration": "RAW_DURATION: whole=310.113144 claimed=300.100000 s; after_stable=300.347185 [reported only]",
+  "raw_sha256": {
+    "eng99a3.json": "ae364188dfcee7cfdb97392adbb3a560a5e57143c481c47aea8c98339e3cc2f4",
+    "log_eng99a3.txt": "061c79520c9fb364ae6d8141001fabfbac6826f05d5f3cd95da052fe5e97c29f",
+    "stdout_eng99a3.txt": "06a0ce9ac09a6d1f1f331bc77fd257d8a8709d6581791345c1554d0863501109"
+  },
+  "source_artifact": {
+    "path": "C:\\kyty\\s99\\settled_runs\\eng99a2_score.json",
+    "sha256": "fe8da5091775d9918123e4f3780cb1183b520919476ecdf66eb63431bd27cc9c"
+  },
+  "technical": {
+    "FULL_SCHEMA": true,
+    "INTERNAL_ROWS_COMPLETE": true,
+    "FULL_ROW_IDENTITY": true,
+    "COUNTERS": true,
+    "EDGE": true,
+    "C1'''": true,
+    "C2'": true,
+    "C4_B": true,
+    "DARK_B": true,
+    "LIVE_DARK_RATIO": true,
+    "REAL_CLEARS": true,
+    "MARKERS_OFF": true,
+    "C10'''_B": true,
+    "CPU_BAD_ZERO": true,
+    "CPU_NONNEGATIVE": true,
+    "CPU_BASE_DARK": true,
+    "CPU_DARK_STRUCTURE": true,
+    "COMPLETE_PAIRS": true,
+    "AB_BA_BALANCED": true,
+    "CPU_ARMED_POSITIVE": true,
+    "CPU_AGGREGATE": true,
+    "C2_SETTLED": true,
+    "C8_CPU": true,
+    "R1": true,
+    "R2": true,
+    "R3'": true,
+    "R4'": true,
+    "R5": true,
+    "R6": true,
+    "R6'": false,
+    "R7": true,
+    "R7'": true,
+    "R8": true,
+    "OLD_C3'": true,
+    "OLD_C6'": true,
+    "OLD_C7": true
+  },
+  "strict": {
+    "AREA_SPLIT": true,
+    "AREA_MATCH": true,
+    "WORK": true,
+    "C5": true,
+    "C9": true,
+    "RETAINED_DATA": true
+  },
+  "missing": [],
+  "metrics": {
+    "valid_data": true,
+    "area_split_pct": -0.007180123119154835,
+    "work_pct": 0.24222758287442137,
+    "draws_u": 5024.550156739812,
+    "draws_a": 5036.721003134796,
+    "C5_ratio": 0.0024222758287442137,
+    "area_pairs": 22,
+    "area_matched": 22,
+    "area_match_pct": 100.0,
+    "pair_area_deltas_pct": [
+      -0.09356617539489909,
+      -0.1385973546977337,
+      0.044825237874790425,
+      -0.05125716431965133,
+      0.08938356888681387,
+      -0.01700101076816951,
+      0.09517716562688072,
+      -0.015353682021235215,
+      0.05599133694291769,
+      -0.10380750073579748,
+      -0.051040373672706085,
+      -0.025487380599920062,
+      0.002432202671953654,
+      0.011647051679153364,
+      0.014487200836588165,
+      -0.07548971769127943,
+      0.04365680136590999,
+      -0.04512878524470798,
+      0.0663016144229811,
+      -0.0032170150747856674,
+      0.043573737871871465,
+      0.0038720547436366104
+    ],
+    "dt_a_us": 49397.55485893417,
+    "dt_u_us": 49294.3934169279,
+    "dt_delta_us": -103.16144200626877,
+    "dt_relative": 0.002092762175481861,
+    "pairs": 22,
+    "rows_per_arm": 638,
+    "orientations": [
+      11,
+      11
+    ],
+    "edge_histogram": {
+      "idx0": 25,
+      "other": 0
+    },
+    "armed_cpu_burn_mean_ms": 18.285399152037616,
+    "armed_wall_burn_mean_ms": 17.775583355799373,
+    "cpu_query_cost_indicator_mean_ms": 1.7593582178683387,
+    "cpu_aggregate_rounding_allowance_ns": 638000
+  },
+  "reported_raw_population": {
+    "valid_data": true,
+    "area_split_pct": -0.01103654769137874,
+    "work_pct": -1.3763337742173976,
+    "draws_u": 5061.112623181605,
+    "draws_a": 4991.454820797577,
+    "C5_ratio": 0.013763337742173976
+  },
+  "selection": {
+    "pairs": [
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        16,
+        17
+      ],
+      [
+        18,
+        19
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        22,
+        23
+      ],
+      [
+        24,
+        25
+      ],
+      [
+        26,
+        27
+      ],
+      [
+        28,
+        29
+      ],
+      [
+        30,
+        31
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        34,
+        35
+      ],
+      [
+        36,
+        37
+      ],
+      [
+        38,
+        39
+      ],
+      [
+        40,
+        41
+      ],
+      [
+        42,
+        43
+      ],
+      [
+        44,
+        45
+      ],
+      [
+        46,
+        47
+      ]
+    ],
+    "excluded_edge_blocks": [
+      3,
+      48
+    ],
+    "rejected_blocks": {
+      "0": "outside first-frame window",
+      "1": "outside first-frame window",
+      "2": "outside first-frame window",
+      "49": "incomplete block"
+    },
+    "internal_incomplete": [],
+    "row_ranges": {
+      "4": [
+        2221,
+        2249
+      ],
+      "5": [
+        2311,
+        2339
+      ],
+      "6": [
+        2401,
+        2429
+      ],
+      "7": [
+        2491,
+        2519
+      ],
+      "8": [
+        2581,
+        2609
+      ],
+      "9": [
+        2671,
+        2699
+      ],
+      "10": [
+        2761,
+        2789
+      ],
+      "11": [
+        2851,
+        2879
+      ],
+      "12": [
+        2941,
+        2969
+      ],
+      "13": [
+        3031,
+        3059
+      ],
+      "14": [
+        3121,
+        3149
+      ],
+      "15": [
+        3211,
+        3239
+      ],
+      "16": [
+        3301,
+        3329
+      ],
+      "17": [
+        3391,
+        3419
+      ],
+      "18": [
+        3481,
+        3509
+      ],
+      "19": [
+        3571,
+        3599
+      ],
+      "20": [
+        3661,
+        3689
+      ],
+      "21": [
+        3751,
+        3779
+      ],
+      "22": [
+        3841,
+        3869
+      ],
+      "23": [
+        3931,
+        3959
+      ],
+      "24": [
+        4021,
+        4049
+      ],
+      "25": [
+        4111,
+        4139
+      ],
+      "26": [
+        4201,
+        4229
+      ],
+      "27": [
+        4291,
+        4319
+      ],
+      "28": [
+        4381,
+        4409
+      ],
+      "29": [
+        4471,
+        4499
+      ],
+      "30": [
+        4561,
+        4589
+      ],
+      "31": [
+        4651,
+        4679
+      ],
+      "32": [
+        4741,
+        4769
+      ],
+      "33": [
+        4831,
+        4859
+      ],
+      "34": [
+        4921,
+        4949
+      ],
+      "35": [
+        5011,
+        5039
+      ],
+      "36": [
+        5101,
+        5129
+      ],
+      "37": [
+        5191,
+        5219
+      ],
+      "38": [
+        5281,
+        5309
+      ],
+      "39": [
+        5371,
+        5399
+      ],
+      "40": [
+        5461,
+        5489
+      ],
+      "41": [
+        5551,
+        5579
+      ],
+      "42": [
+        5641,
+        5669
+      ],
+      "43": [
+        5731,
+        5759
+      ],
+      "44": [
+        5821,
+        5849
+      ],
+      "45": [
+        5911,
+        5939
+      ],
+      "46": [
+        6001,
+        6029
+      ],
+      "47": [
+        6091,
+        6119
+      ]
+    }
+  },
+  "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag eng99a3   log C:\\kyty\\s99\\log_eng99a3.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 49 (blk >= 1), flips 4321, first n 1891, last n 6211\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=300.1 of 300.0\n  R2  edges           PASS 12 falling edges followed by >= 2 flips (need >= 8)\n  R3  latch           FAIL 48 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 49 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 25 vs arm changes 25; bf_edge position {'idx0': 25}\n  R4  dark base       PASS 12 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 41.5 (band <= 50)   rising 7, unarmed mid-block reference 14.0, max dt of those 2 flips median 71940.5 us\n  R6' clean return 3  FAIL median img_new over idx 0..2 after a falling edge = 52.0 (band <= 50), 12 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1.5 (band <= 50)   unarmed flips after the first two: mean 1.634 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 4.0 (band <= 50), 12 edges\n  D1  displacement (reported) f_fall 0.938  f_rise 0.387  1-lat/dt 0.761  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 26, bf_xover_acb 26, bf_defer 26, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 12 of 12 (acb part > 0: 12); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== eng99a3: 9 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====\n",
+  "reported_old_controls": [
+    "bf96|   C1   leak bf_n(unarmed)/armed               0.004667  <= 0.001                       FAIL straddle detail below if non-zero",
+    "bf96|   C2   |bf_n/draws-1| and bf_skip/bf_n        0.006401  <= 0.02 and skip <= 0.02       PASS bf_n 4959.5 vs draws 4991.5 a flip; bf_skip/bf_n = 0.0000",
+    "bf96|   C3   (bf_push+bf_pool)/bf_n                   1.0494  >= 0.98                        PASS every draw that took the floor still bound or pushed a descriptor set   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C3'  |push+pool - (bf_n+bf_disp)|                  8  <= 46 boundaries               PASS push+pool 10310217, bf_n+bf_disp 10310225 over the armed window",
+    "bf96|   C4   bf_reuse/(bf_mat+bf_reuse)                  n/a  >= 0.95                        FAIL bindfloor dark or bf_mat + bf_reuse = 0",
+    "bf96|   C5   |draws(armed)/draws(unarmed)-1|        0.013763  <= 0.02  (NOT 0.005)           PASS LOOSER than guards.py check 4 on purpose: check 4's 0.5 %% is written for arms that do the SAME work, and the floor arm does not, by construction. guards.py check 4 is therefore EXPECTED TO FAIL on this run; that FAIL is anticipated in pred/02 section 6 C5 BEFORE the run and does not by itself replace it. Criterion 3 still governs validity.",
+    "bf96|   C6   bda_scan med ratio (max/min)           1065.000  <= 2.0 (no absolute cut)       FAIL armed med 0.0, unarmed med 1065.0; the record's own change of regime is ~21x   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C6'  unarmed bda_scan thirds max/min           1.001  <= 2.0                         PASS early / mid / late medians 1065.0, 1063.5, 1065.0 (NEW ~50, OLD ~1 060 - label advisory)",
+    "bf96|   C7   pl_* all 0 and be_n = 0                       0  0 non-zero                     PASS pathlap and bdaevery are off in this run",
+    "bf96|   C8   cpu_gpu_us armed < unarmed              +1933.9  < 0 us a flip                  FAIL armed 47900.1 us, unarmed 45966.2 us a flip - a stub that did not make the path cheaper measured nothing   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C8'  net(armed) - burn < net(unarmed)       -15598.9  < 0 us a flip                  PASS armed 47900.1 - spin 1.6 - burn 17577.1 = 30321.4 us; unarmed 45966.2 - spin 45.9 = 45920.3 us",
+    "bf96|          C6 and C8 as sealed in pred/02 FAILED and stay recorded above; repaired under pred/01_floor_reversible.md section 5.1",
+    "  C1'''   leak U\\T*/A\\T* bf_n + structure          0.000000  <= 0.001; R4' structure      PASS U\\T* 0 vs A\\T* 9688096; unarmed leaking rows: 11 allowed at (b,0)/(b,1)+edge, 0 at the last index (allowed, counted), 0 DISALLOWED, 0 blocks over the count",
+    "  C2'     |bf_n/draws-1|, skip, skip_drop on A\\T*       0.003980  <= 0.02; skip, drop <= 0.02  PASS bf_skip/bf_n = 0.0000, bf_skip_drop/bf_n = 0.0000 over 1947 armed rows outside T*",
+    "  C8''    net(A\\T*)-burn < net(U\\T*)                +2172.6  < 0 us a flip                FAIL armed 47931.5 us, unarmed 45758.9 us a flip (rows outside T*)",
+    "  C3'     PASS",
+    "  C4      FAIL",
+    "  C5      PASS",
+    "  C6'     PASS",
+    "  C7      PASS",
+    "  C1      FAIL   [printed only - replaced by its s98 repair]",
+    "  C2      PASS   [printed only - replaced by its s98 repair]",
+    "  C8'     PASS   [printed only - replaced by its s98 repair]",
+    "CONTROLS FAILED / NOT ADMISSIBLE - no number of section 9 may be published  (criterion 3 INVALID; controls failed: C4, C8'')"
+  ],
+  "reported_old_area_controls": [
+    "bf96|   |     [PASS] area split < 1.0 %%          -0.011 %",
+    "bf96|   |     [PASS] pair match >= 90 %%          100.0 % (22/22)",
+    "bf96|   |     [FAIL] work within 0.5 %%           -1.376 %"
+  ],
+  "reported_old_area_verdict": "INVALID",
+  "decision": {
+    "action": "INVESTIGATE",
+    "reason": "technical/survival failure; fix before another run"
+  }
+}

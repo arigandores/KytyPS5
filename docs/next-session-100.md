@@ -1,45 +1,60 @@
-# Session 100 — PLAN after cal99a's sealed STOP
+# Сессия100 — широкий M3 после завершённого плеча «только привязки»
 
-Read ROADMAP.md first, then docs/local-session-99.md (canonical C:/kyty/s99/FACTS.md),
-C:/kyty/s99/pred/01_bindings_only.md and verify_cal99a/VERIFY.md with its raw inputs.
-HANDOFF §3 is frozen history, not the plan. Keep M3 → M4 → M5; no 60 FPS promise.
+Сначала `docs/ROADMAP.md`, затем `docs/local-session-99.md` (источник
+`C:/kyty/s99/FACTS.md`), неизменяемые `pred/01`–`05` и финальные raw-проверки в
+`docs/session-99/continuation`. HANDOFF §3 — замороженная история, не план.
+Бюджет60FPS ≤~3,0мкс/дров, p99≤~2,3; историческая допущенная база6,4мкс/дров,
+31,6мс/кадр,GPU12,8мс. Это не новая база сессии99. 60FPS не обещать.
 
-Budget <=~3.0 us/draw, p99<=~2.3; old admitted reference6.4us/draw,31.6ms/frame,GPU12.8ms.
-Prior full-floor M3 is GAP. Session99 yielded no admitted bindings-only calibration or B.
-Installed ee9cc8ab... (23739904 bytes) was built once in preparation a3558a2; no rebuild
-for its label. Its code/scorers were independently reviewed before the run. Do not redo
-that port or mistake its offline PASS for an admitted game measurement.
+## Что уже завершено и не требует повторной калибровки
 
-## What stopped session99
+Два допущенных независимых подтверждения без записи: bf99g(a)30,049869086мс,
+bf99h(c)37,367904034мс;900,3с/45спадов/88пар каждое. CPU-дожиг вычтен на тех же
+часах, что CPU-эндпойнт; wall-варианты30,596798/37,984520мс не решают вердикт.
+43/43 и44/44 технических,6/6 строгих; работа−0,245536%/+0,105147%. LOCK a17800
+получен в eng99a4, c10200 — после eng99c1 TUNE и eng99c2 LOCK; AA_PASS.
+Фиксированные period90/idx60..88/полные исходные ABBA-квартеты заданы до данных.
+**HIGH DIAGNOSTIC при добавке0: min(B_a,B_c)≥15,5. Глобальный M3=GAP, G/R1
+не закрыты и не лицензированы. M4/M5 ещё не выполнены; порядок M3→M4→M5 прежний.**
 
-Exactly one cal99a, hold180.1s, no crash/hang. Work U5052.851720/A4845.815155 draws/flip
-changed-4.097420%: fails both criterion3 work (0.5%) and C5 (2%). These are the same
-population, not two independent effects. Area split-0.010508%,pairs28/28 passed.
-Only17 completed falling edges (required30),34 clean adoptions at idx0; T*102 whole/87 window.
-dt_U50.501825ms/dt_A42.516671ms are calibration CONTROL inputs, not a new CPU floor.
-No accepted burn artifact exists; do not reuse the rejected formula result as a valid budget.
-STOP held: bf99a/cal99c/bf99c and video were not taken. The old sealed rule stays immutable.
+cal99a остаётся NOT ADMITTED (работа−4,0974%,17<30спадов); bf99e с записью —
+NOT MEASUREMENT (работа−0,710639%). Из них не извлекать B и не спасать их новыми
+окнами/нормировкой. Старые image-birth FAIL остаются видны: прямой аудит GC
+задал новое проверяемое требование для будущих данных, не изменил прошлый результат.
 
-## Before proposing another run
+Установлен34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f,
+23743488Б. CPU/GC-наблюдатели по умолчанию выключены, политика GC не менялась.
+После проверок исправлены только устаревшие комментарии Session100→99; пересборка
+ради комментариев/метки не нужна. Порт, скореры и завершённые калибровки не повторять.
 
-The user leads PLAN → CODE → TEST → VERIFY. Show a synthesized plan before edits.
-If continuing with agents, fan out only genuinely independent read-only questions; fresh
-reviewer gets sealed rules/raw data, not author rationale. One executor alone owns GPU/log,
-build only build_local.cmd. Game runs require the user's authorisation for the new protocol.
+## Решение следующей сессии
 
-1. From existing raw data/code, investigate why draws/flip differ. Distinguish guest work
-   change, presentation/guest-frame accounting and transition/window effects. An invalid
-   whole run cannot be rescued by selecting a favourable subset after seeing the result.
-2. Check whether the calibration design is identifiable: it adjusts dt but requires same
-   work before dt is matched. Establish the dependence rather than assuming it or simply
-   loosening C5/criterion3. Plan a defensible NEW rule before new data, or record that this
-   instrument cannot answer the intended question.
-3. The fixed180s hold did not deliver30 falls at this pace. Design observation length from
-   the required transitions before the next run; extending time alone does not fix work FAIL.
-4. Guards reported one CPU group-11.3%; no specific background cause is established.
-   Do not label base timing a regression or blame another process without evidence.
+1. Сформулировать, что именно недостаёт широкому правилу M3 после ограниченного HIGH.
+   Этот пол сохраняет реальную материализацию/очистки, которые варианты G/R1 вправе
+   переписать. Дорогой сохранённый путь не является нижней границей любой переписи.
+   До нового эксперимента задать явную границу остаточного пессимизма или правило,
+   которое честно оставляет глобальный GAP, если такую границу доказать нельзя.
+2. Разделить цену реальной сохранённой работы и цену наблюдения. CPU-probe около1,7мс
+   на retained-кадр не равен полной цене инструмента и не может молча вычитаться.
+   Cross-counter снимок и две CPU-пробы не атомарны относительно кадра гостя.
+   Нужна проверяемая привязка к кадру/подаче гостя либо граница возможного смещения;
+   GC-call не является новым знаменателем кадра. Не назначать ещё один произвольный
+   settled-интервал по уже увиденным данным и не считать межбинарную разность чистой
+   ценой материализации. Прежняя константа полного пола2,2535 остаётся в его правиле;
+   ограниченный HIGH с добавкой0 не подменяет этот вердикт.
+3. Зафиксировать состояние корректности: в разрушительном bf99e185событий/18037кадров,
+   в обычном floor0+REC vis99base0/17802 за900,3с; фиксированные поздние кадры чисты,
+   пользователь глитчей не видел. Это невоспроизведение без пола, не доказательство
+   точной причины или корректного удаления привязок. Любая производительная замена
+   требует собственных проверок картинки/переходов. Межочередной ACB-разрыв защёлки,
+   BVH-зависон входа и прежние долги ROADMAP не закрыты этим измерением.
+4. Принять широкий вывод M3 только по явно применимому правилу; затем M4 и M5
+   в ранее выбранном пользователем порядке. Не объявлять G/R1 закрытыми только из HIGH.
 
-Do not silently change the M3 constant2.2535, license G/R1 from a floor retaining work they
-may remove, advance M4/M5, repeat cal99a, or edit any sealed pred. A further experiment needs
-a new tag and preregistration. Retain every old FAIL. No source/threshold repair was attempted
-after the failed run. Video/recovery correctness remains an explicit debt.
+Сначала PLAN с измеримым вопросом, затем CODE→TEST→свежий VERIFY, если код/данные
+действительно нужны. Использовать уже имеющееся разрешение пользователя в его области;
+не вводить повторное согласование ради выполненной подготовки. При новом правиле —
+новая пре-регистрация и теги, старые печати неизменны. Один исполнитель владеет GPU/логом,
+во время выдержки нет фоновой сборки/скореров; сборка только build_local.cmd.
+В конце обновить ROADMAP одной правкой, FACTS и контексты, обязательный коммит без push;
+посторонний dirty nlohmann_json не захватывать.

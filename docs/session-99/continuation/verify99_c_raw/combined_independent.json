@@ -1,0 +1,21 @@
+{
+  "status": "DIAGNOSTIC_ONLY",
+  "diagnostic": "HIGH",
+  "B_cpu_ms": [
+    30.049869086206897,
+    37.36790403448276
+  ],
+  "B_wall_compatibility_ms": [
+    30.596798362068967,
+    37.984519672413796
+  ],
+  "addend_ms": 0,
+  "global_M3": "GAP unchanged; G/R1 alive and unlicensed",
+  "source_a": "verify99_confirm_raw/bf99g_independent.json (previous independent raw verification, raw hashes rechecked now)",
+  "source_c": "verify99_c_raw/bf99h_admitted.json (fresh independent raw parser)",
+  "replay_technical_count": 44,
+  "replay_technical_passed": 44,
+  "replay_strict_count": 6,
+  "raw_unchanged": true,
+  "current_frozen_scorer_sha256": "8216acd9797f7b2eeb61f2654a7827daed3f103ac0a07ec3b80a570ae6626399"
+}

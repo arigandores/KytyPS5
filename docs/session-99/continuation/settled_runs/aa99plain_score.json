@@ -1,0 +1,397 @@
+{
+  "schema": "settled99-norec-v1",
+  "tag": "aa99plain",
+  "phase": "aa",
+  "instrument": "a",
+  "pred_sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+  "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+  "status": "AA_PASS",
+  "global_M3": "GAP unchanged; G/R1 unlicensed",
+  "errors": [],
+  "entry_history": [],
+  "burn": 17800,
+  "duration": "RAW_DURATION: whole=310.194920 claimed=300.100000 s; after_stable=300.095506 [reported only]",
+  "raw_sha256": {
+    "aa99plain.json": "e541741a27a39537773cf6700ba1a98d4af4b46397d802d0ed319bcdf59b540f",
+    "log_aa99plain.txt": "40c9f1aa8bf82882a9736eb494967879a0b5709d13cf5e16d023182d2d1eb8a9",
+    "stdout_aa99plain.txt": "07bafe10bf7db1fcd1dcdd6d48e570d32673db0b2563387a9e4f34fa635eae99"
+  },
+  "technical": {
+    "FULL_SCHEMA": true,
+    "INTERNAL_ROWS_COMPLETE": true,
+    "FULL_RAW_CONTIGUITY": true,
+    "FULL_RAW_ORDER": true,
+    "FULL_ROW_IDENTITY": true,
+    "IGC_NONNEGATIVE": true,
+    "IGC_CHECKS_POSITIVE": true,
+    "BF_IGC_BAD_ZERO": true,
+    "BF_IGC_CRITICAL_ZERO": true,
+    "BF_IGC_EVICT_ZERO": true,
+    "AA_FLOOR_OFF": true,
+    "AA_OTHER_OBSERVERS_OFF": true,
+    "COMPLETE_PAIRS": true,
+    "AB_BA_BALANCED": true
+  },
+  "strict": {
+    "AREA_SPLIT": true,
+    "AREA_MATCH": true,
+    "WORK": true,
+    "C5": true,
+    "C9": true,
+    "RETAINED_DATA": true
+  },
+  "missing": [],
+  "metrics": {
+    "valid_data": true,
+    "area_split_pct": 0.013619145879850691,
+    "work_pct": 0.03482878183302951,
+    "draws_u": 5035.830721003134,
+    "draws_a": 5037.584639498433,
+    "C5_ratio": 0.0003482878183302951,
+    "area_pairs": 22,
+    "area_matched": 22,
+    "area_match_pct": 100.0,
+    "pair_area_deltas_pct": [
+      -0.036343298931351686,
+      -0.1370561465015796,
+      -0.02308013513750984,
+      -0.02249554357320882,
+      0.08562236203419893,
+      -0.047199076862181055,
+      0.029319599207489055,
+      -0.007105905237125842,
+      0.07491186107946302,
+      -0.04709245108559523,
+      0.06845747326083007,
+      0.043997697664655,
+      0.019828522002796056,
+      -0.07873196463403787,
+      0.04223625911325968,
+      -0.031623534825886424,
+      0.07935810192667425,
+      0.026697461657931854,
+      0.1580529832959865,
+      0.014315360563177393,
+      0.08600834290841686,
+      -0.01460781349865714
+    ],
+    "dt_a_us": 49607.916927899685,
+    "dt_u_us": 49659.02978056426,
+    "dt_delta_us": 51.112852664577076,
+    "dt_relative": 0.0010292761032673623,
+    "pairs": 22,
+    "rows_per_arm": 638,
+    "orientations": [
+      11,
+      11
+    ]
+  },
+  "reported_raw_population": {
+    "valid_data": true,
+    "area_split_pct": 0.010231975779451119,
+    "work_pct": 0.13545302284847516,
+    "draws_u": 5026.616548463357,
+    "draws_a": 5033.425252525252,
+    "C5_ratio": 0.0013545302284847516
+  },
+  "gc_audit": {
+    "whole_log_totals": {
+      "bf_igc_checks": 49834,
+      "bf_igc_hold": 0,
+      "bf_igc_bad": 0,
+      "bf_igc_critical": 0,
+      "bf_igc_evict": 0
+    },
+    "scope": "baseline clock checks; no armed-hold or falling-edge proof"
+  },
+  "selection": {
+    "pairs": [
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        16,
+        17
+      ],
+      [
+        18,
+        19
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        22,
+        23
+      ],
+      [
+        24,
+        25
+      ],
+      [
+        26,
+        27
+      ],
+      [
+        28,
+        29
+      ],
+      [
+        30,
+        31
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        34,
+        35
+      ],
+      [
+        36,
+        37
+      ],
+      [
+        38,
+        39
+      ],
+      [
+        40,
+        41
+      ],
+      [
+        42,
+        43
+      ],
+      [
+        44,
+        45
+      ],
+      [
+        46,
+        47
+      ]
+    ],
+    "excluded_edge_blocks": [
+      3
+    ],
+    "rejected_blocks": {
+      "0": "outside first-frame window",
+      "1": "outside first-frame window",
+      "2": "outside first-frame window",
+      "48": "incomplete block"
+    },
+    "internal_incomplete": [],
+    "frame_gaps": [],
+    "frames_ordered": true,
+    "row_ranges": {
+      "4": [
+        2221,
+        2249
+      ],
+      "5": [
+        2311,
+        2339
+      ],
+      "6": [
+        2401,
+        2429
+      ],
+      "7": [
+        2491,
+        2519
+      ],
+      "8": [
+        2581,
+        2609
+      ],
+      "9": [
+        2671,
+        2699
+      ],
+      "10": [
+        2761,
+        2789
+      ],
+      "11": [
+        2851,
+        2879
+      ],
+      "12": [
+        2941,
+        2969
+      ],
+      "13": [
+        3031,
+        3059
+      ],
+      "14": [
+        3121,
+        3149
+      ],
+      "15": [
+        3211,
+        3239
+      ],
+      "16": [
+        3301,
+        3329
+      ],
+      "17": [
+        3391,
+        3419
+      ],
+      "18": [
+        3481,
+        3509
+      ],
+      "19": [
+        3571,
+        3599
+      ],
+      "20": [
+        3661,
+        3689
+      ],
+      "21": [
+        3751,
+        3779
+      ],
+      "22": [
+        3841,
+        3869
+      ],
+      "23": [
+        3931,
+        3959
+      ],
+      "24": [
+        4021,
+        4049
+      ],
+      "25": [
+        4111,
+        4139
+      ],
+      "26": [
+        4201,
+        4229
+      ],
+      "27": [
+        4291,
+        4319
+      ],
+      "28": [
+        4381,
+        4409
+      ],
+      "29": [
+        4471,
+        4499
+      ],
+      "30": [
+        4561,
+        4589
+      ],
+      "31": [
+        4651,
+        4679
+      ],
+      "32": [
+        4741,
+        4769
+      ],
+      "33": [
+        4831,
+        4859
+      ],
+      "34": [
+        4921,
+        4949
+      ],
+      "35": [
+        5011,
+        5039
+      ],
+      "36": [
+        5101,
+        5129
+      ],
+      "37": [
+        5191,
+        5219
+      ],
+      "38": [
+        5281,
+        5309
+      ],
+      "39": [
+        5371,
+        5399
+      ],
+      "40": [
+        5461,
+        5489
+      ],
+      "41": [
+        5551,
+        5579
+      ],
+      "42": [
+        5641,
+        5669
+      ],
+      "43": [
+        5731,
+        5759
+      ],
+      "44": [
+        5821,
+        5849
+      ],
+      "45": [
+        5911,
+        5939
+      ],
+      "46": [
+        6001,
+        6029
+      ],
+      "47": [
+        6091,
+        6119
+      ]
+    }
+  },
+  "reported_full_reversibility": "A/A never arms the floor; no falling-edge or hazard-proof claim",
+  "reported_old_controls": [],
+  "reported_old_area_controls": [
+    "    [PASS] area split < 1.0 %%          +0.010 %",
+    "    [PASS] pair match >= 90 %%          100.0 % (22/22)",
+    "    [PASS] work within 0.5 %%           +0.135 %"
+  ],
+  "reported_old_area_verdict": "VALID"
+}

@@ -1,0 +1,122 @@
+{
+  "tag": "bf99h",
+  "errors": [],
+  "fatal": [],
+  "markers": {
+    "BindFloorGcAudit": 16545,
+    "BindFloorCpu": 456411
+  },
+  "raw_sha256": {
+    "log_bf99h.txt": "977dd9943e1c9d3dc03af12508dc145a3593fdd6787931458ab0fe258800e3ca",
+    "stdout_bf99h.txt": "8d335c83e45e5b6515348bec835a9557087237a522e8e2b9244d528c7c3105b7",
+    "bf99h.json": "63e20710597b586654340a348780ee07fc17bf276e0a0742b620c111c0ba0fc8"
+  },
+  "stream_counts": {
+    "FrameTrace": 18245,
+    "FrameTrace-draw": 18245,
+    "FrameTrace-x": 18245
+  },
+  "n_range": [
+    2,
+    18246
+  ],
+  "gate_count": 183,
+  "raw_duration_s": 917.19164,
+  "completed_falls": 45,
+  "edge_sum": 91,
+  "edge_indices": {
+    "0": 91
+  },
+  "excluded_quartets": {
+    "0": [
+      0,
+      1,
+      2
+    ],
+    "180": [
+      182,
+      183
+    ]
+  },
+  "selected_block_range": [
+    4,
+    179
+  ],
+  "selected_boundary_refs": {
+    "2221": {
+      "FrameTrace": 493701,
+      "FrameTrace-draw": 493702,
+      "FrameTrace-x": 493704
+    },
+    "17999": {
+      "FrameTrace": 2608188,
+      "FrameTrace-draw": 2608189,
+      "FrameTrace-x": 2608191
+    }
+  },
+  "row_counts_U_A": [
+    2552,
+    2552
+  ],
+  "draws_U_A": [
+    5034.733542319749,
+    5040.027429467084
+  ],
+  "work_pct": 0.10514731520223641,
+  "area_U_A": [
+    2008.0783504267856,
+    2008.0492737039197
+  ],
+  "area_pct": -0.001447987468206069,
+  "dt_U_A_us": [
+    49913.056818181816,
+    50171.295454545456
+  ],
+  "C9_pct": 0.5173769206408756,
+  "area_pair_match": [
+    88,
+    88
+  ],
+  "strict": {
+    "work": true,
+    "C5": true,
+    "area": true,
+    "pairmatch": true,
+    "C9": true,
+    "pair_count": true,
+    "falls": true
+  },
+  "zero_invariants": {
+    "bf_burn_cpu_bad": true,
+    "bf_igc_bad": true,
+    "bf_igc_critical": true,
+    "bf_igc_evict": true,
+    "bf_mixed": true,
+    "bf_defer_force": true,
+    "bf_trig_fire": true,
+    "bf_trig_wait": true,
+    "bf_trig_fb": true,
+    "bf_dlskip": true,
+    "bf_clr_skip": true,
+    "bf_skip_drop": true,
+    "gm_ops": true
+  },
+  "min_armed_gc_hold": 226,
+  "recovery": {
+    "img_new_2": 45,
+    "img_new_3": 54,
+    "buf_new_2": 1,
+    "buf_new_3": 3
+  },
+  "armed_means": {
+    "cpu_gpu_us": 48912.29231974921,
+    "spin_gpu_us": 0.6018808777429467,
+    "bf_burn_cpu_ns": 10816662.789576802,
+    "bf_burn_ns": 10173132.940047022,
+    "bf_burn_probe_ns": 1799092.6794670846
+  },
+  "endpoints": {
+    "B_cpu_ms": 37.36790403448276,
+    "B_wall_ms": 37.984519672413796
+  }
+}

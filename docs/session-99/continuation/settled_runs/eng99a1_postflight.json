@@ -1,0 +1,5 @@
+{
+  "timestamp": "2026-09-19T17:30:21.204460+02:00",
+  "emulator_processes": "",
+  "gpu": "utilization.gpu [%], memory.used [MiB], power.draw [W]\n1 %, 1690 MiB, 22.91 W"
+}

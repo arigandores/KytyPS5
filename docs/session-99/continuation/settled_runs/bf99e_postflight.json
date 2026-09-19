@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-09-19T19:09:43.782920+02:00",
+  "emulator_processes": "",
+  "gpu": "utilization.gpu [%], memory.used [MiB], power.draw [W]\n1 %, 1690 MiB, 23.03 W",
+  "env_absence_checked": true,
+  "rec_env": "C:\\kyty\\s99\\rec_bf99e.mp4",
+  "rec_files": [
+    {
+      "path": "C:\\kyty\\s99\\rec_bf99e.mp4",
+      "bytes": 247313203
+    },
+    {
+      "path": "C:\\kyty\\s99\\rec_bf99e.mp4.idx",
+      "bytes": 354356
+    }
+  ],
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 74332,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.2,
+      "started_s": 11.3,
+      "stable_s": 23.9,
+      "stable_frame": 396,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 900.3,
+      "pipeline_cache_off": false
+    }
+  ]
+}

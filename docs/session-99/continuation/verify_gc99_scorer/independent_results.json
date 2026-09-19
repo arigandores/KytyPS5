@@ -1,0 +1,207 @@
+{
+  "verdict": "PASS after root runtime-marker fix; original defect retained",
+  "cases": [
+    {
+      "name": "baseline technical/strict",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "bf_igc_bad before selected window, zero births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "bf_igc_critical before selected window, zero births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "bf_igc_evict before selected window, zero births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "missing bf_igc_checks early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "negative bf_igc_checks early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "missing bf_igc_hold early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "negative bf_igc_hold early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "missing bf_igc_bad early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "negative bf_igc_bad early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "missing bf_igc_critical early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "negative bf_igc_critical early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "missing bf_igc_evict early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "negative bf_igc_evict early",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "no checks rejects",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "one retained armed block without hold rejects",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old tag rejected eng99a1",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old tag rejected eng99a2",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old tag rejected eng99a3",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old tag rejected eng99a3_entry1",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old tag rejected eng99a3_entry2",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "fresh reset a",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "fresh reset old-source rejected a",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "fresh reset c",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "fresh reset old-source rejected c",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "high birth technical and strict pass",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "old image proxy FAILs stay visible",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "buffer R7 still deciding",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "high birth mechanics LOCK no admitted result",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "C++ emits no-space marker",
+      "expected_observed": true,
+      "detail": "b'BindFloorGcAudit: mode1\\n'"
+    },
+    {
+      "name": "ORIGINAL DEFECT valid actual marker rejected",
+      "expected_observed": true,
+      "detail": [
+        "log mode/pin evidence missing/wrong"
+      ]
+    },
+    {
+      "name": "FIX actual C++ marker accepted",
+      "expected_observed": true,
+      "detail": []
+    },
+    {
+      "name": "missing_env rejected",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "wrong_env rejected",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "lifetime_env_zero rejected",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "full pipeline rejects bf_igc_bad with zero image births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "full pipeline rejects bf_igc_critical with zero image births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "full pipeline rejects bf_igc_evict with zero image births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "full pipeline rejects buf_new with zero image births",
+      "expected_observed": true,
+      "detail": null
+    },
+    {
+      "name": "R7/R7prime violations remain decisive",
+      "expected_observed": true,
+      "detail": null
+    }
+  ]
+}

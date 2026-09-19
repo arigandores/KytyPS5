@@ -1,0 +1,13 @@
+prereg: 03_image_lifetime_diagnostic.md  4724 bytes  sha256 d17745315149f0ca  mtime 2026-09-19T18:01:59  mtime-ctime +0.001 s
+pre_run: host 320 processes, top by CPU: System 48496s, dwm 29396s, voicemeeter 19170s, PhoneExperienceHost 14233s, svchost 14022s, figma_agent 10823s
+pre_run: GPU 2.0 % busy, 23.4 W, 1690 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
+--- attempt 1: launching
+9.2 s  LevelDocument Loaded: underwater_aerial_garden
+10.8 s  Level has started: underwater_aerial_garden
+17.8 s  scene stable at frame 293 (90 frames with draws >= 3000)
+holding the run for 300 s
+copied C:\kyty\s99\log_life99a.txt
+copied C:\kyty\s99\stdout_life99a.txt
+
+attempt 1  ok               document=9.2 s started=10.8 s stable=17.8 s 
+VERDICT: underwater_aerial_garden in 17.8 s - PASS (acceptance <= 90 s)

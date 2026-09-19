@@ -1,0 +1,50 @@
+{
+  "raw_sha256": "fd5f717d1b9ecdc0ee70b4e4c24a9607f96cfc3fffab895b4c2de8128a7172d5",
+  "events": 64121,
+  "creates": 32652,
+  "frees": 31469,
+  "rows": 6209,
+  "row_img_new": 32593,
+  "row_img_free": 31465,
+  "free_reasons": {
+    "ResolveOverlap": 5348,
+    "RunGarbageCollector": 10581,
+    "DeleteImage": 3,
+    "ResolveDepthOverlap": 15535,
+    "FindImage": 2
+  },
+  "create_classes": {
+    "first_observed_signature": 8287,
+    "undefined_bookkeeping": 5,
+    "prior_free_RunGarbageCollector": 4574,
+    "ambiguous_live_signature": 7751,
+    "prior_free_ResolveDepthOverlap": 11627,
+    "prior_free_ResolveOverlap": 407,
+    "prior_free_DeleteImage": 1
+  },
+  "create_candidate_causes": {
+    "first_observed_signature": 8291,
+    "prior_free_RunGarbageCollector": 4574,
+    "ambiguous_live_signature": 7751,
+    "prior_free_ResolveDepthOverlap": 11627,
+    "prior_free_ResolveOverlap": 407,
+    "prior_free_DeleteImage": 2
+  },
+  "free_phases": {
+    "pregate": 15942,
+    "unarmed": 15446,
+    "armed_boundary": 81
+  },
+  "gc_frees_by_phase": {
+    "pregate": 6679,
+    "unarmed": 3901,
+    "armed_boundary": 1
+  },
+  "negative_live_signatures": 0,
+  "create_boundary_counts": {
+    "before_first_draw": 55,
+    "after_last_draw": 4,
+    "first_row": 2,
+    "last_row": 6210
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "tag": "bf99h",
+  "started": "2026-09-19T21:32:35.388137+02:00",
+  "command": [
+    "C:\\Users\\<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-u",
+    "C:\\kyty\\s99\\enter_scene.py",
+    "bf99h",
+    "--hold",
+    "900",
+    "--attempts",
+    "1",
+    "--no-install",
+    "--gates-file",
+    "C:\\kyty\\s99\\gates_base.txt",
+    "--pred",
+    "C:\\kyty\\s99\\pred\\05_observer_separation.md",
+    "KYTY_GATE_SCHEDULE=90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=10200|bindfloor=1 drawahead=0 bfmode=2 bfburn=10200",
+    "KYTY_GATE_SCHEDULE_ABBA=1",
+    "KYTY_GPU_CLOCK_PIN=1",
+    "KYTY_BIND_FLOOR_LATCH=1",
+    "KYTY_BIND_FLOOR_CLEAR=0",
+    "KYTY_GPU_MARKERS=0",
+    "KYTY_GPU_CHECKPOINTS=0",
+    "KYTY_BIND_FLOOR_CPU=1",
+    "KYTY_BIND_FLOOR_GC_AUDIT=1",
+    "KYTY_SETTLED_SOURCE_TAG=eng99c2",
+    "KYTY_SETTLED_SOURCE_SHA256=f8df75ffde566f43e7120462877fa30a81fe7803b1669ae5e26bf21f4069d6a4",
+    "KYTY_SETTLED_AA_TAG=aa99plain",
+    "KYTY_SETTLED_AA_SHA256=3c8c8ed44a93ad1d9295016e0e5cdc7602f142d6be443ad6863e292b1068a55e"
+  ],
+  "hashes": {
+    "settled99_norec.py": "8216acd9797f7b2eeb61f2654a7827daed3f103ac0a07ec3b80a570ae6626399",
+    "pred/05_observer_separation.md": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "pred/04_gc_audit.md": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b",
+    "gates_base.txt": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8",
+    "settled_runs/eng99c2_score.json": "f8df75ffde566f43e7120462877fa30a81fe7803b1669ae5e26bf21f4069d6a4",
+    "settled_runs/aa99plain_score.json": "3c8c8ed44a93ad1d9295016e0e5cdc7602f142d6be443ad6863e292b1068a55e"
+  },
+  "preflight_conflicting_processes_absent": true
+}

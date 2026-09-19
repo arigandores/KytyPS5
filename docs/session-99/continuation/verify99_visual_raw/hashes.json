@@ -1,0 +1,38 @@
+{
+  "pred/05_observer_separation.md": {
+    "bytes": 8583,
+    "sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0"
+  },
+  "vis99base.json": {
+    "bytes": 11286,
+    "sha256": "e3ed5becc984ddbd1f037f941ce4e32e8493160dada88580e60a966c3e6101f6"
+  },
+  "log_vis99base.txt": {
+    "bytes": 378467581,
+    "sha256": "47df31a301fd19f43503d0de5c2f3b763e3f491873da16ae206073eb1a6adc63"
+  },
+  "rec_vis99base.mp4": {
+    "bytes": 283007722,
+    "sha256": "3de7a25a6ff0634643b46fddd40d69c6bb48abc0c82a4674f52d028261f74911"
+  },
+  "rec_vis99base.mp4.idx": {
+    "bytes": 349456,
+    "sha256": "15671b60ad66c5c0f642d7fe391c60208b4eb18882b9c08628cdfcf36c7041ed"
+  },
+  "bf99e.json": {
+    "bytes": 11399,
+    "sha256": "a0e071a7cfbee09d92af52d7a0b1a9ea060e0c433983830eaf68a370b9e85202"
+  },
+  "rec_bf99e.mp4": {
+    "bytes": 247313203,
+    "sha256": "8023506179868376c820f8d0cebae2b29c22adf5884572b6e50f6e39963fb1c0"
+  },
+  "rec_bf99e.mp4.idx": {
+    "bytes": 354356,
+    "sha256": "1142c2af0f290cedaefed6ddacd423e44e719092eeb881b69b0121a853e97268"
+  },
+  "video99_full/report.json": {
+    "bytes": 91043,
+    "sha256": "b10216fb13ca3e2f56e722af250aacd41c9d58de9e17f746ab3768e61bb52080"
+  }
+}

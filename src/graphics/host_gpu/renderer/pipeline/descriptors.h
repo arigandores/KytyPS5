@@ -191,6 +191,9 @@ BindFloorOp BindFloorLatchDraw(uint64_t vs_addr, uint64_t ps_addr);
 BindFloorOp BindFloorLatchDispatch(uint64_t cs_addr);
 // GC keep-alive: mode 0 = BindFloorLatchOp().armed (unchanged); modes 1/2 a NON-adopting read.
 [[nodiscard]] bool BindFloorGcHold();
+// Session 99 audit only: read current submission's counted sticky armed value, without
+// adopting/reading a live gate. Independent subset of GcHold; base/pending are NOT witnessed.
+[[nodiscard]] bool BindFloorGcAuditSticky();
 // Download-ring skip: mode 0 = live gate || sticky; modes 1/2 = latched op || sticky.
 [[nodiscard]] bool BindFloorDownloadSkip();
 // KYTY_BIND_FLOOR_CLEAR=1 and the current op latched armed with bfmode != 2 (Session 98,

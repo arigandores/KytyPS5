@@ -1,0 +1,1322 @@
+{
+  "schema": "settled99-gc-v1",
+  "tag": "bf99e",
+  "phase": "measurement",
+  "instrument": "a",
+  "pred_sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b",
+  "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+  "status": "NOT_MEASUREMENT",
+  "global_M3": "GAP unchanged; G/R1 unlicensed",
+  "errors": [],
+  "entry_history": [],
+  "burn": 17800,
+  "duration": "RAW_DURATION: whole=916.375208 claimed=900.300000 s; after_stable=900.775228 [reported only]",
+  "raw_sha256": {
+    "bf99e.json": "a0e071a7cfbee09d92af52d7a0b1a9ea060e0c433983830eaf68a370b9e85202",
+    "log_bf99e.txt": "0e5a373cba19f0e38aeea8c7b68a29fa98115987cc166815d7365667c0e254a3",
+    "stdout_bf99e.txt": "2c52c9f997d82260a6751fa74142ecdc03f34923d1e75b7b04e83a79c46ad01f"
+  },
+  "source_artifact": {
+    "path": "C:\\kyty\\s99\\settled_runs\\eng99a4_score.json",
+    "sha256": "9f021e8bcc080f03a3309c851629f01c49b7f54868dd75b2a62b6ee28e175e8e"
+  },
+  "technical": {
+    "FULL_SCHEMA": true,
+    "INTERNAL_ROWS_COMPLETE": true,
+    "FULL_ROW_IDENTITY": true,
+    "IGC_NONNEGATIVE": true,
+    "IGC_CHECKS_POSITIVE": true,
+    "BF_IGC_BAD_ZERO": true,
+    "BF_IGC_CRITICAL_ZERO": true,
+    "BF_IGC_EVICT_ZERO": true,
+    "IGC_HOLD_EACH_ARMED_BLOCK": true,
+    "COUNTERS": true,
+    "EDGE": true,
+    "C1'''": true,
+    "C2'": true,
+    "C4_B": true,
+    "DARK_B": true,
+    "LIVE_DARK_RATIO": true,
+    "REAL_CLEARS": true,
+    "MARKERS_OFF": true,
+    "C10'''_B": true,
+    "CPU_BAD_ZERO": true,
+    "CPU_NONNEGATIVE": true,
+    "CPU_BASE_DARK": true,
+    "CPU_DARK_STRUCTURE": true,
+    "COMPLETE_PAIRS": true,
+    "AB_BA_BALANCED": true,
+    "CPU_ARMED_POSITIVE": true,
+    "CPU_AGGREGATE": true,
+    "C2_SETTLED": true,
+    "C8_CPU": true,
+    "POSITIVE_ENDPOINT": true,
+    "R1": true,
+    "R2": true,
+    "R3'": true,
+    "R4'": true,
+    "R5": true,
+    "R7": true,
+    "R7'": true,
+    "R8": true,
+    "OLD_C3'": true,
+    "OLD_C6'": true,
+    "OLD_C7": true
+  },
+  "strict": {
+    "AREA_SPLIT": true,
+    "AREA_MATCH": true,
+    "WORK": false,
+    "C5": true,
+    "C9": true,
+    "RETAINED_DATA": true
+  },
+  "missing": [],
+  "metrics": {
+    "valid_data": true,
+    "area_split_pct": 0.003480178262682543,
+    "work_pct": -0.7106393061121041,
+    "draws_u": 5078.87421630094,
+    "draws_a": 5042.781739811912,
+    "C5_ratio": 0.007106393061121041,
+    "area_pairs": 88,
+    "area_matched": 88,
+    "area_match_pct": 100.0,
+    "pair_area_deltas_pct": [
+      -0.0032409373986297396,
+      0.010098631341493025,
+      0.0563109614402979,
+      0.008329824633257488,
+      -0.0005176582480559411,
+      -0.049409593001847885,
+      -0.06304991150434258,
+      -0.06312342732529563,
+      0.018897479849200316,
+      0.0372206517814222,
+      0.08700447208347395,
+      0.07437841911475118,
+      -0.001614653929149501,
+      -0.07418578407700771,
+      -0.08133822666416268,
+      -0.04727264359215555,
+      0.03234463112278263,
+      0.04356902400659557,
+      -0.004100231217440964,
+      -0.09181431232077042,
+      -0.030955483227168568,
+      -0.029131018264960673,
+      0.07297975345261776,
+      0.05953390179123108,
+      0.09548693347203319,
+      -0.05859734333719668,
+      -0.03728566104055364,
+      -0.05202073707718524,
+      0.028549388077903082,
+      0.04445209811969608,
+      0.05133080525978606,
+      0.03386317930098581,
+      -0.033337052261506184,
+      -0.0018255212409723498,
+      0.03459109158805429,
+      0.03627097803802215,
+      0.028903282901704408,
+      -0.024660404864607077,
+      -0.02386026429991306,
+      -0.0749040335729867,
+      -0.04651040179001198,
+      -0.07685588243451225,
+      0.015529271072933781,
+      0.03167264295689254,
+      0.0582522869092994,
+      -0.026925932733801172,
+      0.005135482316087625,
+      0.019704522551178272,
+      0.01365861164948079,
+      0.033507609467875454,
+      0.014390932812435864,
+      -0.08619223514432228,
+      0.013428108832513885,
+      -0.011991161150093355,
+      -0.006168860934097076,
+      -0.026455005003211962,
+      -0.01763501110678689,
+      0.026113984495790277,
+      0.043863163084778556,
+      0.0813095679125464,
+      0.0763991818381049,
+      -0.00916530748812372,
+      -0.010709636771366604,
+      -0.06371338909851865,
+      -0.05438528547748733,
+      -0.05753347902450745,
+      -0.0330540561161885,
+      -0.01636899561165972,
+      0.08680227855708544,
+      0.04749968469135446,
+      0.0467628961278832,
+      -0.08128557426665406,
+      -0.00904845657461184,
+      0.03345682277937634,
+      0.009375527380228732,
+      -0.0710614531509779,
+      -0.03206928836200218,
+      -0.0623170768541792,
+      0.0578664642280069,
+      0.05254889390140516,
+      0.09109185131741526,
+      0.005805580368578589,
+      0.052131061339566465,
+      0.013687864475286915,
+      0.03499915851019608,
+      -0.026393979043559668,
+      0.039428445709188686,
+      0.09544230564195733
+    ],
+    "dt_a_us": 50365.13126959248,
+    "dt_u_us": 51027.97021943574,
+    "dt_delta_us": 662.8389498432589,
+    "dt_relative": 0.01298971812895654,
+    "pairs": 88,
+    "rows_per_arm": 2552,
+    "orientations": [
+      44,
+      44
+    ],
+    "edge_histogram": {
+      "idx0": 90,
+      "other": 0
+    },
+    "armed_cpu_burn_mean_ms": 18.282346589341692,
+    "armed_wall_burn_mean_ms": 17.748527035658306,
+    "cpu_query_cost_indicator_mean_ms": 1.7514840239028213,
+    "cpu_aggregate_rounding_allowance_ns": 2552000
+  },
+  "gc_audit": {
+    "whole_log_totals": {
+      "bf_igc_checks": 144514,
+      "bf_igc_hold": 64546,
+      "bf_igc_bad": 0,
+      "bf_igc_critical": 0,
+      "bf_igc_evict": 0
+    },
+    "scope": "direct image-GC clock/hold audit; not all native allocations"
+  },
+  "reported_raw_population": {
+    "valid_data": true,
+    "area_split_pct": 0.002542360622448392,
+    "work_pct": -1.465059574514882,
+    "draws_u": 5083.396504369538,
+    "draws_a": 5008.921717171717,
+    "C5_ratio": 0.01465059574514882
+  },
+  "selection": {
+    "pairs": [
+      [
+        4,
+        5
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        16,
+        17
+      ],
+      [
+        18,
+        19
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        22,
+        23
+      ],
+      [
+        24,
+        25
+      ],
+      [
+        26,
+        27
+      ],
+      [
+        28,
+        29
+      ],
+      [
+        30,
+        31
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        34,
+        35
+      ],
+      [
+        36,
+        37
+      ],
+      [
+        38,
+        39
+      ],
+      [
+        40,
+        41
+      ],
+      [
+        42,
+        43
+      ],
+      [
+        44,
+        45
+      ],
+      [
+        46,
+        47
+      ],
+      [
+        48,
+        49
+      ],
+      [
+        50,
+        51
+      ],
+      [
+        52,
+        53
+      ],
+      [
+        54,
+        55
+      ],
+      [
+        56,
+        57
+      ],
+      [
+        58,
+        59
+      ],
+      [
+        60,
+        61
+      ],
+      [
+        62,
+        63
+      ],
+      [
+        64,
+        65
+      ],
+      [
+        66,
+        67
+      ],
+      [
+        68,
+        69
+      ],
+      [
+        70,
+        71
+      ],
+      [
+        72,
+        73
+      ],
+      [
+        74,
+        75
+      ],
+      [
+        76,
+        77
+      ],
+      [
+        78,
+        79
+      ],
+      [
+        80,
+        81
+      ],
+      [
+        82,
+        83
+      ],
+      [
+        84,
+        85
+      ],
+      [
+        86,
+        87
+      ],
+      [
+        88,
+        89
+      ],
+      [
+        90,
+        91
+      ],
+      [
+        92,
+        93
+      ],
+      [
+        94,
+        95
+      ],
+      [
+        96,
+        97
+      ],
+      [
+        98,
+        99
+      ],
+      [
+        100,
+        101
+      ],
+      [
+        102,
+        103
+      ],
+      [
+        104,
+        105
+      ],
+      [
+        106,
+        107
+      ],
+      [
+        108,
+        109
+      ],
+      [
+        110,
+        111
+      ],
+      [
+        112,
+        113
+      ],
+      [
+        114,
+        115
+      ],
+      [
+        116,
+        117
+      ],
+      [
+        118,
+        119
+      ],
+      [
+        120,
+        121
+      ],
+      [
+        122,
+        123
+      ],
+      [
+        124,
+        125
+      ],
+      [
+        126,
+        127
+      ],
+      [
+        128,
+        129
+      ],
+      [
+        130,
+        131
+      ],
+      [
+        132,
+        133
+      ],
+      [
+        134,
+        135
+      ],
+      [
+        136,
+        137
+      ],
+      [
+        138,
+        139
+      ],
+      [
+        140,
+        141
+      ],
+      [
+        142,
+        143
+      ],
+      [
+        144,
+        145
+      ],
+      [
+        146,
+        147
+      ],
+      [
+        148,
+        149
+      ],
+      [
+        150,
+        151
+      ],
+      [
+        152,
+        153
+      ],
+      [
+        154,
+        155
+      ],
+      [
+        156,
+        157
+      ],
+      [
+        158,
+        159
+      ],
+      [
+        160,
+        161
+      ],
+      [
+        162,
+        163
+      ],
+      [
+        164,
+        165
+      ],
+      [
+        166,
+        167
+      ],
+      [
+        168,
+        169
+      ],
+      [
+        170,
+        171
+      ],
+      [
+        172,
+        173
+      ],
+      [
+        174,
+        175
+      ],
+      [
+        176,
+        177
+      ],
+      [
+        178,
+        179
+      ]
+    ],
+    "excluded_edge_blocks": [
+      3
+    ],
+    "rejected_blocks": {
+      "0": "outside first-frame window",
+      "1": "outside first-frame window",
+      "2": "outside first-frame window",
+      "180": "incomplete block"
+    },
+    "internal_incomplete": [],
+    "row_ranges": {
+      "4": [
+        2221,
+        2249
+      ],
+      "5": [
+        2311,
+        2339
+      ],
+      "6": [
+        2401,
+        2429
+      ],
+      "7": [
+        2491,
+        2519
+      ],
+      "8": [
+        2581,
+        2609
+      ],
+      "9": [
+        2671,
+        2699
+      ],
+      "10": [
+        2761,
+        2789
+      ],
+      "11": [
+        2851,
+        2879
+      ],
+      "12": [
+        2941,
+        2969
+      ],
+      "13": [
+        3031,
+        3059
+      ],
+      "14": [
+        3121,
+        3149
+      ],
+      "15": [
+        3211,
+        3239
+      ],
+      "16": [
+        3301,
+        3329
+      ],
+      "17": [
+        3391,
+        3419
+      ],
+      "18": [
+        3481,
+        3509
+      ],
+      "19": [
+        3571,
+        3599
+      ],
+      "20": [
+        3661,
+        3689
+      ],
+      "21": [
+        3751,
+        3779
+      ],
+      "22": [
+        3841,
+        3869
+      ],
+      "23": [
+        3931,
+        3959
+      ],
+      "24": [
+        4021,
+        4049
+      ],
+      "25": [
+        4111,
+        4139
+      ],
+      "26": [
+        4201,
+        4229
+      ],
+      "27": [
+        4291,
+        4319
+      ],
+      "28": [
+        4381,
+        4409
+      ],
+      "29": [
+        4471,
+        4499
+      ],
+      "30": [
+        4561,
+        4589
+      ],
+      "31": [
+        4651,
+        4679
+      ],
+      "32": [
+        4741,
+        4769
+      ],
+      "33": [
+        4831,
+        4859
+      ],
+      "34": [
+        4921,
+        4949
+      ],
+      "35": [
+        5011,
+        5039
+      ],
+      "36": [
+        5101,
+        5129
+      ],
+      "37": [
+        5191,
+        5219
+      ],
+      "38": [
+        5281,
+        5309
+      ],
+      "39": [
+        5371,
+        5399
+      ],
+      "40": [
+        5461,
+        5489
+      ],
+      "41": [
+        5551,
+        5579
+      ],
+      "42": [
+        5641,
+        5669
+      ],
+      "43": [
+        5731,
+        5759
+      ],
+      "44": [
+        5821,
+        5849
+      ],
+      "45": [
+        5911,
+        5939
+      ],
+      "46": [
+        6001,
+        6029
+      ],
+      "47": [
+        6091,
+        6119
+      ],
+      "48": [
+        6181,
+        6209
+      ],
+      "49": [
+        6271,
+        6299
+      ],
+      "50": [
+        6361,
+        6389
+      ],
+      "51": [
+        6451,
+        6479
+      ],
+      "52": [
+        6541,
+        6569
+      ],
+      "53": [
+        6631,
+        6659
+      ],
+      "54": [
+        6721,
+        6749
+      ],
+      "55": [
+        6811,
+        6839
+      ],
+      "56": [
+        6901,
+        6929
+      ],
+      "57": [
+        6991,
+        7019
+      ],
+      "58": [
+        7081,
+        7109
+      ],
+      "59": [
+        7171,
+        7199
+      ],
+      "60": [
+        7261,
+        7289
+      ],
+      "61": [
+        7351,
+        7379
+      ],
+      "62": [
+        7441,
+        7469
+      ],
+      "63": [
+        7531,
+        7559
+      ],
+      "64": [
+        7621,
+        7649
+      ],
+      "65": [
+        7711,
+        7739
+      ],
+      "66": [
+        7801,
+        7829
+      ],
+      "67": [
+        7891,
+        7919
+      ],
+      "68": [
+        7981,
+        8009
+      ],
+      "69": [
+        8071,
+        8099
+      ],
+      "70": [
+        8161,
+        8189
+      ],
+      "71": [
+        8251,
+        8279
+      ],
+      "72": [
+        8341,
+        8369
+      ],
+      "73": [
+        8431,
+        8459
+      ],
+      "74": [
+        8521,
+        8549
+      ],
+      "75": [
+        8611,
+        8639
+      ],
+      "76": [
+        8701,
+        8729
+      ],
+      "77": [
+        8791,
+        8819
+      ],
+      "78": [
+        8881,
+        8909
+      ],
+      "79": [
+        8971,
+        8999
+      ],
+      "80": [
+        9061,
+        9089
+      ],
+      "81": [
+        9151,
+        9179
+      ],
+      "82": [
+        9241,
+        9269
+      ],
+      "83": [
+        9331,
+        9359
+      ],
+      "84": [
+        9421,
+        9449
+      ],
+      "85": [
+        9511,
+        9539
+      ],
+      "86": [
+        9601,
+        9629
+      ],
+      "87": [
+        9691,
+        9719
+      ],
+      "88": [
+        9781,
+        9809
+      ],
+      "89": [
+        9871,
+        9899
+      ],
+      "90": [
+        9961,
+        9989
+      ],
+      "91": [
+        10051,
+        10079
+      ],
+      "92": [
+        10141,
+        10169
+      ],
+      "93": [
+        10231,
+        10259
+      ],
+      "94": [
+        10321,
+        10349
+      ],
+      "95": [
+        10411,
+        10439
+      ],
+      "96": [
+        10501,
+        10529
+      ],
+      "97": [
+        10591,
+        10619
+      ],
+      "98": [
+        10681,
+        10709
+      ],
+      "99": [
+        10771,
+        10799
+      ],
+      "100": [
+        10861,
+        10889
+      ],
+      "101": [
+        10951,
+        10979
+      ],
+      "102": [
+        11041,
+        11069
+      ],
+      "103": [
+        11131,
+        11159
+      ],
+      "104": [
+        11221,
+        11249
+      ],
+      "105": [
+        11311,
+        11339
+      ],
+      "106": [
+        11401,
+        11429
+      ],
+      "107": [
+        11491,
+        11519
+      ],
+      "108": [
+        11581,
+        11609
+      ],
+      "109": [
+        11671,
+        11699
+      ],
+      "110": [
+        11761,
+        11789
+      ],
+      "111": [
+        11851,
+        11879
+      ],
+      "112": [
+        11941,
+        11969
+      ],
+      "113": [
+        12031,
+        12059
+      ],
+      "114": [
+        12121,
+        12149
+      ],
+      "115": [
+        12211,
+        12239
+      ],
+      "116": [
+        12301,
+        12329
+      ],
+      "117": [
+        12391,
+        12419
+      ],
+      "118": [
+        12481,
+        12509
+      ],
+      "119": [
+        12571,
+        12599
+      ],
+      "120": [
+        12661,
+        12689
+      ],
+      "121": [
+        12751,
+        12779
+      ],
+      "122": [
+        12841,
+        12869
+      ],
+      "123": [
+        12931,
+        12959
+      ],
+      "124": [
+        13021,
+        13049
+      ],
+      "125": [
+        13111,
+        13139
+      ],
+      "126": [
+        13201,
+        13229
+      ],
+      "127": [
+        13291,
+        13319
+      ],
+      "128": [
+        13381,
+        13409
+      ],
+      "129": [
+        13471,
+        13499
+      ],
+      "130": [
+        13561,
+        13589
+      ],
+      "131": [
+        13651,
+        13679
+      ],
+      "132": [
+        13741,
+        13769
+      ],
+      "133": [
+        13831,
+        13859
+      ],
+      "134": [
+        13921,
+        13949
+      ],
+      "135": [
+        14011,
+        14039
+      ],
+      "136": [
+        14101,
+        14129
+      ],
+      "137": [
+        14191,
+        14219
+      ],
+      "138": [
+        14281,
+        14309
+      ],
+      "139": [
+        14371,
+        14399
+      ],
+      "140": [
+        14461,
+        14489
+      ],
+      "141": [
+        14551,
+        14579
+      ],
+      "142": [
+        14641,
+        14669
+      ],
+      "143": [
+        14731,
+        14759
+      ],
+      "144": [
+        14821,
+        14849
+      ],
+      "145": [
+        14911,
+        14939
+      ],
+      "146": [
+        15001,
+        15029
+      ],
+      "147": [
+        15091,
+        15119
+      ],
+      "148": [
+        15181,
+        15209
+      ],
+      "149": [
+        15271,
+        15299
+      ],
+      "150": [
+        15361,
+        15389
+      ],
+      "151": [
+        15451,
+        15479
+      ],
+      "152": [
+        15541,
+        15569
+      ],
+      "153": [
+        15631,
+        15659
+      ],
+      "154": [
+        15721,
+        15749
+      ],
+      "155": [
+        15811,
+        15839
+      ],
+      "156": [
+        15901,
+        15929
+      ],
+      "157": [
+        15991,
+        16019
+      ],
+      "158": [
+        16081,
+        16109
+      ],
+      "159": [
+        16171,
+        16199
+      ],
+      "160": [
+        16261,
+        16289
+      ],
+      "161": [
+        16351,
+        16379
+      ],
+      "162": [
+        16441,
+        16469
+      ],
+      "163": [
+        16531,
+        16559
+      ],
+      "164": [
+        16621,
+        16649
+      ],
+      "165": [
+        16711,
+        16739
+      ],
+      "166": [
+        16801,
+        16829
+      ],
+      "167": [
+        16891,
+        16919
+      ],
+      "168": [
+        16981,
+        17009
+      ],
+      "169": [
+        17071,
+        17099
+      ],
+      "170": [
+        17161,
+        17189
+      ],
+      "171": [
+        17251,
+        17279
+      ],
+      "172": [
+        17341,
+        17369
+      ],
+      "173": [
+        17431,
+        17459
+      ],
+      "174": [
+        17521,
+        17549
+      ],
+      "175": [
+        17611,
+        17639
+      ],
+      "176": [
+        17701,
+        17729
+      ],
+      "177": [
+        17791,
+        17819
+      ],
+      "178": [
+        17881,
+        17909
+      ],
+      "179": [
+        17971,
+        17999
+      ]
+    }
+  },
+  "reported_image_birth_proxies": {
+    "R6": true,
+    "R6'": true
+  },
+  "image_birth_proxy_scope": "original image Insert counts, reported only; not specific GC-loss evidence",
+  "reported_full_reversibility": "==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====\npre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md\n  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3\n  SEALED OK\namendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK\npre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md\n  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af\n  SEALED OK\ntag bf99e   log C:\\kyty\\s99\\log_bf99e.txt\npre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)\n  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\n  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519\narms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=17800', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=17800'}\narmed arm: 1\nblocks 180 (blk >= 1), flips 16139, first n 1891, last n 18029\n\n--- criteria (pred/01_floor_reversible.md section 4) ---\n  R1  survival        PASS hold_exit=None hold_s=900.3 of 900.0\n  R2  edges           PASS 45 falling edges followed by >= 2 flips (need >= 30)\n  R3  latch           FAIL 179 boundaries checked, 0 wrong, 1 stray flips    stray: [(1891, 1)]   [sealed text, printed only - repaired below]\n  R3' latch (frame)   PASS 180 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 90 vs arm changes 90; bf_edge position {'idx0': 90}\n  R4  dark base       PASS 45 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]\n  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters\n  R5  no readback     PASS bf_dlskip total 0 over the whole log\n  R6  clean return    PASS median img_new over 2 flips after a falling edge = 23 (band <= 50)   rising 6.5, unarmed mid-block reference 11.0, max dt of those 2 flips median 66626 us\n  R6' clean return 3  PASS median img_new over idx 0..2 after a falling edge = 29 (band <= 50), 45 edges\n  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1 (band <= 50)   unarmed flips after the first two: mean 1.641 a flip\n  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3 (band <= 50), 45 edges\n  D1  displacement (reported) f_fall 0.907  f_rise 0.451  1-lat/dt 0.762  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)\n  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 91, bf_xover_acb 91, bf_defer 91, bf_clr_skip 0.00 a floored flip\n  R8x xover (reported): falling edges with bf_xover > 0: 45 of 45 (acb part > 0: 45); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0\n  R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)\n\n==== bf99e: 10 of 10 criteria PASS -> REVERSIBLE (for this run) ====\n",
+  "reported_old_controls": [
+    "bf96|   C1   leak bf_n(unarmed)/armed               0.004502  <= 0.001                       FAIL straddle detail below if non-zero",
+    "bf96|   C2   |bf_n/draws-1| and bf_skip/bf_n        0.006597  <= 0.02 and skip <= 0.02       PASS bf_n 4975.9 vs draws 5008.9 a flip; bf_skip/bf_n = 0.0000",
+    "bf96|   C3   (bf_push+bf_pool)/bf_n                   1.0493  >= 0.98                        PASS every draw that took the floor still bound or pushed a descriptor set   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C3'  |push+pool - (bf_n+bf_disp)|                 21  <= 177 boundaries              PASS push+pool 41350370, bf_n+bf_disp 41350391 over the armed window",
+    "bf96|   C4   bf_reuse/(bf_mat+bf_reuse)                  n/a  >= 0.95                        FAIL bindfloor dark or bf_mat + bf_reuse = 0",
+    "bf96|   C5   |draws(armed)/draws(unarmed)-1|        0.014651  <= 0.02  (NOT 0.005)           PASS LOOSER than guards.py check 4 on purpose: check 4's 0.5 %% is written for arms that do the SAME work, and the floor arm does not, by construction. guards.py check 4 is therefore EXPECTED TO FAIL on this run; that FAIL is anticipated in pred/02 section 6 C5 BEFORE the run and does not by itself replace it. Criterion 3 still governs validity.",
+    "bf96|   C6   bda_scan med ratio (max/min)           1065.000  <= 2.0 (no absolute cut)       FAIL armed med 0.0, unarmed med 1065.0; the record's own change of regime is ~21x   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C6'  unarmed bda_scan thirds max/min           1.000  <= 2.0                         PASS early / mid / late medians 1065.0, 1065.0, 1065.0 (NEW ~50, OLD ~1 060 - label advisory)",
+    "bf96|   C7   pl_* all 0 and be_n = 0                       0  0 non-zero                     PASS pathlap and bdaevery are off in this run",
+    "bf96|   C8   cpu_gpu_us armed < unarmed              +2336.4  < 0 us a flip                  FAIL armed 49031.3 us, unarmed 46694.9 us a flip - a stub that did not make the path cheaper measured nothing   [as sealed in pred/02; repaired, not deciding]",
+    "bf96|   C8'  net(armed) - burn < net(unarmed)       -15215.2  < 0 us a flip                  PASS armed 49031.3 - spin 1.9 - burn 17587.1 = 31442.4 us; unarmed 46694.9 - spin 37.3 = 46657.6 us",
+    "bf96|          C6 and C8 as sealed in pred/02 FAILED and stay recorded above; repaired under pred/01_floor_reversible.md section 5.1",
+    "  C1'''   leak U\\T*/A\\T* bf_n + structure          0.000000  <= 0.001; R4' structure      PASS U\\T* 0 vs A\\T* 38864585; unarmed leaking rows: 44 allowed at (b,0)/(b,1)+edge, 0 at the last index (allowed, counted), 0 DISALLOWED, 0 blocks over the count",
+    "  C2'     |bf_n/draws-1|, skip, skip_drop on A\\T*       0.003970  <= 0.02; skip, drop <= 0.02  PASS bf_skip/bf_n = 0.0000, bf_skip_drop/bf_n = 0.0000 over 7788 armed rows outside T*",
+    "  C8''    net(A\\T*)-burn < net(U\\T*)                +2529.1  < 0 us a flip                FAIL armed 49041.3 us, unarmed 46512.1 us a flip (rows outside T*)",
+    "  C3'     PASS",
+    "  C4      FAIL",
+    "  C5      PASS",
+    "  C6'     PASS",
+    "  C7      PASS",
+    "  C1      FAIL   [printed only - replaced by its s98 repair]",
+    "  C2      PASS   [printed only - replaced by its s98 repair]",
+    "  C8'     PASS   [printed only - replaced by its s98 repair]",
+    "CONTROLS FAILED / NOT ADMISSIBLE - no number of section 9 may be published  (criterion 3 INVALID; controls failed: C4, C8'')"
+  ],
+  "reported_old_area_controls": [
+    "bf96|   |     [PASS] area split < 1.0 %%          +0.003 %",
+    "bf96|   |     [PASS] pair match >= 90 %%          100.0 % (88/88)",
+    "bf96|   |     [FAIL] work within 0.5 %%           -1.465 %"
+  ],
+  "reported_old_area_verdict": "INVALID"
+}

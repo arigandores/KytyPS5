@@ -1,0 +1,10 @@
+{
+  "baseline_pilot_LOCK": true,
+  "old_three_area_controls_preserved": true,
+  "old_WORK_FAIL_preserved": true,
+  "old_area_INVALID_preserved": true,
+  "pilot_no_endpoint": true,
+  "untampered_source_roundtrip_pass": true,
+  "original_mutation_now_rejected": true,
+  "relevant_author_tests_pass": true
+}

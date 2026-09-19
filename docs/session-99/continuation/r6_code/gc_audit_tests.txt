@@ -1,0 +1,1 @@
+GC audit truth/sequence tests: 28/28 PASS (including freeze-off, lost-sticky, release-catchup, stale TLS).

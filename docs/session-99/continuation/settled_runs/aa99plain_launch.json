@@ -1,0 +1,35 @@
+{
+  "tag": "aa99plain",
+  "started": "2026-09-19T20:44:55.803254+02:00",
+  "command": [
+    "C:\\Users\\<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "-u",
+    "C:\\kyty\\s99\\enter_scene.py",
+    "aa99plain",
+    "--hold",
+    "300",
+    "--attempts",
+    "1",
+    "--no-install",
+    "--gates-file",
+    "C:\\kyty\\s99\\gates_base.txt",
+    "--pred",
+    "C:\\kyty\\s99\\pred\\05_observer_separation.md",
+    "KYTY_GATE_SCHEDULE=90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=17800|bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+    "KYTY_GATE_SCHEDULE_ABBA=1",
+    "KYTY_GPU_CLOCK_PIN=1",
+    "KYTY_BIND_FLOOR_LATCH=1",
+    "KYTY_BIND_FLOOR_CLEAR=0",
+    "KYTY_GPU_MARKERS=0",
+    "KYTY_GPU_CHECKPOINTS=0",
+    "KYTY_BIND_FLOOR_CPU=1",
+    "KYTY_BIND_FLOOR_GC_AUDIT=1"
+  ],
+  "hashes": {
+    "settled99_norec.py": "8216acd9797f7b2eeb61f2654a7827daed3f103ac0a07ec3b80a570ae6626399",
+    "pred/05_observer_separation.md": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "gates_base.txt": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8",
+    "enter_scene.py": "f4a142b8042ee7a13c59aa5fad4ef72ee80a1b7bf34fe7855a368c27e50ee7fd"
+  },
+  "preflight_emulator_ffmpeg_absent": true
+}

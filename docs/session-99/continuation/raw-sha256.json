@@ -1,0 +1,131 @@
+{
+  "schema": "s99-local-raw-sha256-v1",
+  "artifacts": {
+    "kyty_emulator_before_run99.exe": {
+      "bytes": 23738880,
+      "sha256": "9aa93e73673e8c5377636d698c355febc99d5c3b9064a259011fa16fb1df1dbc",
+      "location": "C:/kyty/s99/kyty_emulator_before_run99.exe",
+      "not_in_git": true
+    },
+    "kyty_emulator_s99.exe": {
+      "bytes": 23739904,
+      "sha256": "ee9cc8ab1f5d25384dedb02a6a6abfca2aa7692585fcaddc74950721afc7a160",
+      "location": "C:/kyty/s99/kyty_emulator_s99.exe",
+      "not_in_git": true
+    },
+    "kyty_emulator_s99_cpu.exe": {
+      "bytes": 23741440,
+      "sha256": "2a6bb5388d8fdd97a4aab20e1bde2715e3d92ad499c49b7cd2ea094ec0385c87",
+      "location": "C:/kyty/s99/kyty_emulator_s99_cpu.exe",
+      "not_in_git": true
+    },
+    "kyty_emulator_s99_gc.exe": {
+      "bytes": 23743488,
+      "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+      "location": "C:/kyty/s99/kyty_emulator_s99_gc.exe",
+      "not_in_git": true
+    },
+    "log_aa99plain.txt": {
+      "bytes": 132539392,
+      "sha256": "40c9f1aa8bf82882a9736eb494967879a0b5709d13cf5e16d023182d2d1eb8a9",
+      "location": "C:/kyty/s99/log_aa99plain.txt",
+      "not_in_git": true
+    },
+    "log_bf99e.txt": {
+      "bytes": 357718510,
+      "sha256": "0e5a373cba19f0e38aeea8c7b68a29fa98115987cc166815d7365667c0e254a3",
+      "location": "C:/kyty/s99/log_bf99e.txt",
+      "not_in_git": true
+    },
+    "log_bf99g.txt": {
+      "bytes": 384826024,
+      "sha256": "a9422bebb226a27771c81efd5c54f37e52312a9ccd28db7dceedada0de4560f8",
+      "location": "C:/kyty/s99/log_bf99g.txt",
+      "not_in_git": true
+    },
+    "log_bf99h.txt": {
+      "bytes": 378939016,
+      "sha256": "977dd9943e1c9d3dc03af12508dc145a3593fdd6787931458ab0fe258800e3ca",
+      "location": "C:/kyty/s99/log_bf99h.txt",
+      "not_in_git": true
+    },
+    "log_eng99a1.txt": {
+      "bytes": 129822577,
+      "sha256": "8754e2ad700a2a584bcceacd8a56caf9580cbe0a402ef4e7669dae569e4ae9aa",
+      "location": "C:/kyty/s99/log_eng99a1.txt",
+      "not_in_git": true
+    },
+    "log_eng99a2.txt": {
+      "bytes": 132630837,
+      "sha256": "ce941e40720dd119c0ca5f9725545fd29439e69a7d45b15a2e5810079a047b73",
+      "location": "C:/kyty/s99/log_eng99a2.txt",
+      "not_in_git": true
+    },
+    "log_eng99a3.txt": {
+      "bytes": 134285113,
+      "sha256": "061c79520c9fb364ae6d8141001fabfbac6826f05d5f3cd95da052fe5e97c29f",
+      "location": "C:/kyty/s99/log_eng99a3.txt",
+      "not_in_git": true
+    },
+    "log_eng99a4.txt": {
+      "bytes": 137242048,
+      "sha256": "5fe17e7c57ce124bc80f1b4043ab361537bc2429b859ff230220ce0e8646c5c5",
+      "location": "C:/kyty/s99/log_eng99a4.txt",
+      "not_in_git": true
+    },
+    "log_eng99c1.txt": {
+      "bytes": 134440495,
+      "sha256": "8f6686f0e78fae836064b6e49132878b7485bd0e7dc7890707882701d1ae581e",
+      "location": "C:/kyty/s99/log_eng99c1.txt",
+      "not_in_git": true
+    },
+    "log_eng99c2.txt": {
+      "bytes": 133252268,
+      "sha256": "6f1c64d8fd96031704f6dcca033a08bb12d64599a4802df18f90dbbbf998f2a5",
+      "location": "C:/kyty/s99/log_eng99c2.txt",
+      "not_in_git": true
+    },
+    "log_life99a.txt": {
+      "bytes": 149431948,
+      "sha256": "fd5f717d1b9ecdc0ee70b4e4c24a9607f96cfc3fffab895b4c2de8128a7172d5",
+      "location": "C:/kyty/s99/log_life99a.txt",
+      "not_in_git": true
+    },
+    "log_vis99base.txt": {
+      "bytes": 378467581,
+      "sha256": "47df31a301fd19f43503d0de5c2f3b763e3f491873da16ae206073eb1a6adc63",
+      "location": "C:/kyty/s99/log_vis99base.txt",
+      "not_in_git": true
+    },
+    "r6_raw/analysis.json": {
+      "bytes": 2076723,
+      "sha256": "8528768ed43386619f0066e990309a211ef6a902d53bf2532d30fd98c19f51fc",
+      "location": "C:/kyty/s99/r6_raw/analysis.json",
+      "not_in_git": true
+    },
+    "rec_bf99e.mp4": {
+      "bytes": 247313203,
+      "sha256": "8023506179868376c820f8d0cebae2b29c22adf5884572b6e50f6e39963fb1c0",
+      "location": "C:/kyty/s99/rec_bf99e.mp4",
+      "not_in_git": true
+    },
+    "rec_bf99e.mp4.idx": {
+      "bytes": 354356,
+      "sha256": "1142c2af0f290cedaefed6ddacd423e44e719092eeb881b69b0121a853e97268",
+      "location": "C:/kyty/s99/rec_bf99e.mp4.idx",
+      "not_in_git": true
+    },
+    "rec_vis99base.mp4": {
+      "bytes": 283007722,
+      "sha256": "3de7a25a6ff0634643b46fddd40d69c6bb48abc0c82a4674f52d028261f74911",
+      "location": "C:/kyty/s99/rec_vis99base.mp4",
+      "not_in_git": true
+    },
+    "rec_vis99base.mp4.idx": {
+      "bytes": 349456,
+      "sha256": "15671b60ad66c5c0f642d7fe391c60208b4eb18882b9c08628cdfcf36c7041ed",
+      "location": "C:/kyty/s99/rec_vis99base.mp4.idx",
+      "not_in_git": true
+    }
+  }
+}

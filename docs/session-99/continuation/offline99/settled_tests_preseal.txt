@@ -1,0 +1,22 @@
+test_entry_suffix_bound_and_real_before_schedule_evidence (__main__.ControlFlowTests.test_entry_suffix_bound_and_real_before_schedule_evidence) ... ok
+test_frozen_source_requires_launch_pin_exact_budget_and_raw_replay (__main__.ControlFlowTests.test_frozen_source_requires_launch_pin_exact_budget_and_raw_replay) ... ok
+test_legacy_mutable_state_is_restored (__main__.ControlFlowTests.test_legacy_mutable_state_is_restored) ... ok
+test_two_instruments_only_diagnostic_no_addends (__main__.ControlFlowTests.test_two_instruments_only_diagnostic_no_addends) ... ok
+test_unsealed_and_mechanics_cannot_admit (__main__.ControlFlowTests.test_unsealed_and_mechanics_cannot_admit) ... ok
+test_updates_signflip_bounds_and_three_pilot_limit (__main__.ControlFlowTests.test_updates_signflip_bounds_and_three_pilot_limit) ... ok
+test_both_protocols_and_delayed_cpu_mode_line (__main__.ProtocolTests.test_both_protocols_and_delayed_cpu_mode_line) ... ok
+test_missing_stream_stdout_failure_and_short_hold (__main__.ProtocolTests.test_missing_stream_stdout_failure_and_short_hold) ... ok
+test_old_period_inconsistent_arms_binary_or_observer_rejected (__main__.ProtocolTests.test_old_period_inconsistent_arms_binary_or_observer_rejected) ... ok
+test_area_is_attachment_weighted_and_pair_tolerance_is_half_percent (__main__.SelectionTests.test_area_is_attachment_weighted_and_pair_tolerance_is_half_percent) ... ok
+test_c_instrument_requires_materialization_without_ahead (__main__.SelectionTests.test_c_instrument_requires_materialization_without_ahead) ... ok
+test_cpu_bad_aggregate_and_darkness (__main__.SelectionTests.test_cpu_bad_aggregate_and_darkness) ... ok
+test_engineering_does_not_publish_B_and_does_not_admit_work_failure (__main__.SelectionTests.test_engineering_does_not_publish_B_and_does_not_admit_work_failure) ... ok
+test_fixed_washout_cpu_vs_wall_and_query_indicator (__main__.SelectionTests.test_fixed_washout_cpu_vs_wall_and_query_indicator) ... ok
+test_internal_missing_row_not_rescued_by_dropping_quartet (__main__.SelectionTests.test_internal_missing_row_not_rescued_by_dropping_quartet) ... ok
+test_missing_early_counter_and_early_live_leak (__main__.SelectionTests.test_missing_early_counter_and_early_live_leak) ... ok
+test_no_pair_reuse_balanced_and_edge_quartet_dropped (__main__.SelectionTests.test_no_pair_reuse_balanced_and_edge_quartet_dropped) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 3.420s
+
+OK

@@ -1609,6 +1609,11 @@ enum class Counter : uint32_t {
 	BindFloorMat,       // bf_mat:     real MaterializeResources calls under the floor
 	BindFloorReuse,     // bf_reuse:   materialisations answered from the last one instead
 	BindFloorBurnNs,    // bf_burn_ns: time the calibrated idle (bfmode=2/3) actually burned
+	// Session 99: optional KYTY_BIND_FLOOR_CPU=1 readout, same clock as cpu_gpu_us.
+	BindFloorBurnCpuNs, // bf_burn_cpu_ns: sum of successful GuestGpu CPU deltas around burn
+	BindFloorBurnCpuN,  // bf_burn_cpu_n: successful strictly positive CPU sample pairs
+	BindFloorBurnCpuBad,// bf_burn_cpu_bad: zero/backwards readings or zero CPU delta
+	BindFloorBurnProbeNs, // bf_burn_probe_ns: wall bounds around both CPU queries, all pairs
 	BindFloorSkips,     // bf_skip:    draws / dispatches the floor did NOT take (reason in
 	                    //             the log for the first 64)
 	// Session 99: successful existing-program resource outcomes, armed bfmode=2 only.
@@ -1631,6 +1636,14 @@ enum class Counter : uint32_t {
 	// the floor suspended (textureCache.cpp RunGarbageCollector), 0 while the floor is off;
 	// bf_edge - changes of the per-op latch (descriptors.cpp BindFloorLatchOp), one per
 	// schedule edge, booked in the flip that first saw the new value.
+	// Session 99: opt-in texture GC mechanism audit, both arms, per GC call.
+	// Hold predicate = normal helper OR current submission's counted sticky armed value;
+	// the latter is only an independent subset, not a proof of base/pending state.
+	BindFloorImgGcChecks,   // bf_igc_checks: observed clock transitions (also below trigger)
+	BindFloorImgGcHold,     // bf_igc_hold: expected paused transitions, excluding critical
+	BindFloorImgGcBad,      // bf_igc_bad: wrong clock delta OR sticky subset missed by helper
+	BindFloorImgGcCritical, // bf_igc_critical: expected hold but critical override permitted
+	BindFloorImgGcEvict,    // bf_igc_evict: GC root evictions under expected hold, critical too
 	BindFloorGcHold,   // bf_gc_hold
 	BindFloorEdges,    // bf_edge
 	// Session 97 (patch C): buffer GC calls whose non-aggressive pass the floor suspended.

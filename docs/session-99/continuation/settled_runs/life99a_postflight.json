@@ -1,0 +1,110 @@
+{
+  "timestamp": "2026-09-19T18:09:11.508372+02:00",
+  "emulator_processes": "",
+  "gpu": "utilization.gpu [%], memory.used [MiB], power.draw [W]\n2 %, 1690 MiB, 23.13 W",
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 11028,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.2,
+      "started_s": 10.8,
+      "stable_s": 17.8,
+      "stable_frame": 293,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 300.1,
+      "pipeline_cache_off": false
+    }
+  ],
+  "prereg": {
+    "path": "C:\\kyty\\s99\\pred\\03_image_lifetime_diagnostic.md",
+    "bytes": 4724,
+    "sha256": "d17745315149f0caad27f4c4764350f3e255fc9949a5b0287d9ea2a5e2c42c90",
+    "mtime": "2026-09-19T18:01:59",
+    "ctime": "2026-09-19T18:01:59",
+    "mtime_ctime_delta_s": 0.001,
+    "read_at": "2026-09-19T18:03:15"
+  },
+  "env": {
+    "VK_SDK_PATH": "C:\\VulkanSDK\\1.4.357.0",
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\s99\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\s99\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl underwater_aerial_garden",
+    "KYTY_GATE_SCHEDULE": "90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=17800|bindfloor=1 drawahead=1 bfmode=2 bfburn=17800",
+    "KYTY_GATE_SCHEDULE_ABBA": "1",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_BIND_FLOOR_LATCH": "1",
+    "KYTY_BIND_FLOOR_CLEAR": "0",
+    "KYTY_GPU_MARKERS": "0",
+    "KYTY_GPU_CHECKPOINTS": "0",
+    "KYTY_BIND_FLOOR_CPU": "1",
+    "KYTY_IMAGE_LIFETIME_TRACE": "1",
+    "KYTY_IMAGE_LIFETIME_MIN_KB": "0",
+    "KYTY_IMAGE_LIFETIME_FROM": "0"
+  },
+  "files": [
+    {
+      "path": "C:\\kyty\\s99\\life99a.json",
+      "bytes": 11306,
+      "sha256": "53bd4144e6d4068c3eae570f51e18f1eba27b391d6cddc5708cc8b845cced3eb",
+      "counts": {
+        "lines": 354
+      },
+      "first_imagelife": null,
+      "ends_newline": false
+    },
+    {
+      "path": "C:\\kyty\\s99\\log_life99a.txt",
+      "bytes": 149431948,
+      "sha256": "fd5f717d1b9ecdc0ee70b4e4c24a9607f96cfc3fffab895b4c2de8128a7172d5",
+      "counts": {
+        "lines": 1062231,
+        "ImageLife": 64121,
+        "FrameTrace:": 6209,
+        "GateArm:": 50
+      },
+      "first_imagelife": "ImageLife: event=create reason=InsertImage line=368 frame=0 guest=0x0000000538bc0000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295",
+      "ends_newline": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\stdout_life99a.txt",
+      "bytes": 15021,
+      "sha256": "b262363f99432c5678e516362d9e8cc7a0af6b18d10ab809da7bbed1bc127274",
+      "counts": {
+        "lines": 176
+      },
+      "first_imagelife": null,
+      "ends_newline": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\cpuclk_life99a.csv",
+      "bytes": 26309,
+      "sha256": "101be62fb98ce62d09da143efbd3365800e3a0c998e406776cec9c615f0f73fc",
+      "counts": {
+        "lines": 163
+      },
+      "first_imagelife": null,
+      "ends_newline": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\gpuclk_life99a.csv",
+      "bytes": 54521,
+      "sha256": "e84a3796e6892aee30e54e04eaa1ac95f73b712fa210176017c60b4c41f92fca",
+      "counts": {
+        "lines": 641
+      },
+      "first_imagelife": null,
+      "ends_newline": true
+    }
+  ],
+  "diagnostic_only": true,
+  "scorer_invoked": false,
+  "cause_classification_performed": false
+}

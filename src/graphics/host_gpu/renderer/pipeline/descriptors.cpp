@@ -994,6 +994,13 @@ BindFloorOp BindFloorLatchDispatch(uint64_t cs_addr) {
 	return BfLatch(true, &key);
 }
 
+bool BindFloorGcAuditSticky() {
+	// Read-only independent subset: a current submission with a counted armed sticky
+	// value must be held by GC. Process runs GC before SliceComplete removes its count.
+	// No CurrentOp read (it can outlive a submission), live gate read, or latch adoption.
+	return t_bf_slice != nullptr && t_bf_slice->sticky_armed_counted;
+}
+
 bool BindFloorGcHold() {
 	switch (BindFloorLatchMode()) {
 		case 1: {
@@ -3292,10 +3299,42 @@ void RenderExecutor::BindFloorBurnSlice() {
 	if (slice > floor.budget_ns - floor.burned_ns) {
 		slice = floor.budget_ns - floor.burned_ns;
 	}
+	// Session 99, measurement only: a parallel CPU readout, NEVER the budget clock.
+	// Initialised once at the first actual burn; modes 0/1 and zero budgets never reach it.
+	static const bool cpu_probe = [] {
+		const char* value = std::getenv("KYTY_BIND_FLOOR_CPU");
+		const bool on = value != nullptr && value[0] == '1' && value[1] == '\0';
+		LOGF("BindFloorCpu: mode %u\n", on ? 1u : 0u);
+		return on;
+	}();
+	uint64_t cpu_begin = 0;
+	uint64_t probe_ns  = 0;
+	if (cpu_probe) {
+		const uint64_t probe_begin = Common::FrameStats::NowNs();
+		cpu_begin = Common::FrameStats::ThreadCpuNs(Common::FrameStats::ThreadRole::Gpu);
+		probe_ns = Common::FrameStats::NowNs() - probe_begin;
+	}
 	const uint64_t begin = Common::FrameStats::NowNs();
 	uint64_t       now   = begin;
 	while (now - begin < slice) {
 		now = Common::FrameStats::NowNs();
+	}
+	if (cpu_probe) {
+		const uint64_t probe_begin = Common::FrameStats::NowNs();
+		const uint64_t cpu_end =
+		    Common::FrameStats::ThreadCpuNs(Common::FrameStats::ThreadRole::Gpu);
+		probe_ns += Common::FrameStats::NowNs() - probe_begin;
+		// Zero samples (including a zero delta) fail visibly. Do not substitute wall time.
+		if (cpu_begin != 0 && cpu_end > cpu_begin) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnCpuNs,
+			                        cpu_end - cpu_begin);
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnCpuN, 1);
+		} else {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnCpuBad, 1);
+		}
+		// Both query costs are bounded, including the tails outside the CPU sample span.
+		// Probe/counter overhead is intentionally not deducted from cpu_gpu_us.
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnProbeNs, probe_ns);
 	}
 	floor.burned_ns += now - begin;
 	Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnNs, now - begin);

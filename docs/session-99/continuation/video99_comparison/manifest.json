@@ -1,0 +1,72 @@
+[
+  {
+    "tag": "bf99e",
+    "image": "bf99e_01.png",
+    "frame": 966,
+    "present": 967,
+    "wall_seconds": 50.032
+  },
+  {
+    "tag": "bf99e",
+    "image": "bf99e_02.png",
+    "frame": 4906,
+    "present": 4907,
+    "wall_seconds": 250.015
+  },
+  {
+    "tag": "bf99e",
+    "image": "bf99e_03.png",
+    "frame": 8868,
+    "present": 8869,
+    "wall_seconds": 449.998
+  },
+  {
+    "tag": "bf99e",
+    "image": "bf99e_04.png",
+    "frame": 16251,
+    "present": 16252,
+    "wall_seconds": 824.998
+  },
+  {
+    "tag": "bf99e",
+    "image": "bf99e_05.png",
+    "frame": 17697,
+    "present": 17698,
+    "wall_seconds": 899.998
+  },
+  {
+    "tag": "vis99base",
+    "image": "vis99base_01.png",
+    "frame": 953,
+    "present": 954,
+    "wall_seconds": 49.981
+  },
+  {
+    "tag": "vis99base",
+    "image": "vis99base_02.png",
+    "frame": 4803,
+    "present": 4804,
+    "wall_seconds": 250.015
+  },
+  {
+    "tag": "vis99base",
+    "image": "vis99base_03.png",
+    "frame": 8701,
+    "present": 8702,
+    "wall_seconds": 449.981
+  },
+  {
+    "tag": "vis99base",
+    "image": "vis99base_04.png",
+    "frame": 15999,
+    "present": 16000,
+    "wall_seconds": 825.014
+  },
+  {
+    "tag": "vis99base",
+    "image": "vis99base_05.png",
+    "frame": 17459,
+    "present": 17460,
+    "wall_seconds": 900.014
+  }
+]

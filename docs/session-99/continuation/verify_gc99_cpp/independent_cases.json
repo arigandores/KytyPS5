@@ -1,0 +1,407 @@
+{
+  "verdict": "PASS",
+  "cases": 38,
+  "scope": "Independent model cases, not compiled C++ execution",
+  "results": [
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 0,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 0,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 29,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 29,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 30,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 30,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 79,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 79,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 80,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 80,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 1
+      }
+    },
+    {
+      "helper": false,
+      "sticky": false,
+      "usage": 100,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": false,
+      "sticky": true,
+      "usage": 100,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 1
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 0,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 0,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 29,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 29,
+      "path": "below_trigger",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 30,
+      "path": "held_return",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 30,
+      "path": "held_return",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 79,
+      "path": "held_return",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 79,
+      "path": "held_return",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 0,
+        "critical": 0
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 80,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 1
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 80,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 1
+      }
+    },
+    {
+      "helper": true,
+      "sticky": false,
+      "usage": 100,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 1
+      }
+    },
+    {
+      "helper": true,
+      "sticky": true,
+      "usage": 100,
+      "path": "collect",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 0,
+        "critical": 1
+      }
+    },
+    {
+      "mutant": "paused_clock_advances",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "base_clock_pauses",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "base_catches_up",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "held_catches_up",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "clock_backwards",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "uint64_wrap",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "critical_clock_frozen",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 1
+      }
+    },
+    {
+      "mutant": "critical_double_tick",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 1
+      }
+    },
+    {
+      "mutant": "lost_sticky_even_with_correct_pause",
+      "result": {
+        "checks": 1,
+        "hold": 1,
+        "bad": 1,
+        "critical": 0
+      }
+    },
+    {
+      "mutant": "lost_sticky_at_critical",
+      "result": {
+        "checks": 1,
+        "hold": 0,
+        "bad": 1,
+        "critical": 1
+      }
+    },
+    {
+      "old_usage": 0,
+      "refreshed_usage": 100,
+      "path": "collect",
+      "delta": 1
+    },
+    {
+      "old_usage": 100,
+      "refreshed_usage": 0,
+      "path": "below_trigger",
+      "delta": 0
+    },
+    {
+      "outside_slice": true,
+      "stale_current_op": false,
+      "sticky": false
+    },
+    {
+      "outside_slice": true,
+      "stale_current_op": true,
+      "sticky": false
+    }
+  ]
+}

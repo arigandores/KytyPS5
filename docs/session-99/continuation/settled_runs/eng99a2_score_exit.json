@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Users\\<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\kyty\\s99\\settled99.py",
+    "eng99a2",
+    "--source-json",
+    "C:\\kyty\\s99\\settled_runs\\eng99a1_score.json",
+    "--out",
+    "C:\\kyty\\s99\\settled_runs\\eng99a2_score.json"
+  ],
+  "rc": 0,
+  "timestamp": "2026-09-19T17:39:25.023397+02:00"
+}

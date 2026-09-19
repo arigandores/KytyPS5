@@ -1,0 +1,18 @@
+{
+  "C:\\kyty\\s99\\pred\\04_gc_audit.md": {
+    "bytes": 7835,
+    "sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b"
+  },
+  "C:\\kyty\\s99\\settled99_gc.py": {
+    "bytes": 32105,
+    "sha256": "be2a9a317fded5ee3ee6b421312d60e3fb6e9cd22c643eb3b7ec89a1258adef6"
+  },
+  "C:\\kyty\\s99\\test_settled99_gc.py": {
+    "bytes": 21946,
+    "sha256": "c1bde31f312f08f116e3ea08f44923c9c5a636118e45d9456eaad6b3ae1d483e"
+  },
+  "C:\\kyty\\s99\\settled99.py": {
+    "bytes": 30465,
+    "sha256": "383e2ff3452557069bc94f7effe8b6401a5c6b2959518b241771adaab9c87bdc"
+  }
+}

@@ -1,0 +1,6068 @@
+{
+  "vis99base": {
+    "idx": {
+      "rows": 17802,
+      "first": [
+        0,
+        1,
+        0.0
+      ],
+      "last": [
+        17801,
+        17802,
+        917.981
+      ],
+      "frame_gaps": [],
+      "present_gaps": [],
+      "time_backwards": 0,
+      "time_equal": 0
+    },
+    "attempt": {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 63948,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.7,
+      "started_s": 11.8,
+      "stable_s": 24.4,
+      "stable_frame": 398,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 900.3,
+      "pipeline_cache_off": false
+    },
+    "idx_stable_frame": [
+      397,
+      398,
+      16.748
+    ],
+    "idx_span_after_stable_s": 901.233,
+    "log_lines": 2673386,
+    "frame_rows": 17793,
+    "frame_first_last": [
+      2,
+      17794
+    ],
+    "frame_gaps": [],
+    "x_rows": 17793,
+    "x_gaps": [],
+    "bindfloor_occurrences": {
+      "0": 178
+    },
+    "bindfloor_positive": [],
+    "floor_counter_rows": {
+      "bf_n": 17793,
+      "bf_disp": 17793,
+      "bf_reuse": 17793,
+      "bf_burn_ns": 17793,
+      "bf_burn_cpu_n": 17793,
+      "bf_skip": 17793,
+      "bf_gc_hold": 17793,
+      "bf_edge": 17793,
+      "bf_bgc_hold": 17793,
+      "bf_clr_skip": 17793
+    },
+    "floor_counter_nonzero": {},
+    "gates": [
+      {
+        "line": 455581,
+        "text": "GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 466905,
+        "text": "GateArm: arm=1 arms=2 block=1 frame=1890 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 478035,
+        "text": "GateArm: arm=1 arms=2 block=2 frame=1980 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 489053,
+        "text": "GateArm: arm=0 arms=2 block=3 frame=2070 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 500750,
+        "text": "GateArm: arm=0 arms=2 block=4 frame=2160 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 511599,
+        "text": "GateArm: arm=1 arms=2 block=5 frame=2250 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 521974,
+        "text": "GateArm: arm=1 arms=2 block=6 frame=2340 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 531340,
+        "text": "GateArm: arm=0 arms=2 block=7 frame=2430 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 540328,
+        "text": "GateArm: arm=0 arms=2 block=8 frame=2520 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 549349,
+        "text": "GateArm: arm=1 arms=2 block=9 frame=2610 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 558346,
+        "text": "GateArm: arm=1 arms=2 block=10 frame=2700 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 567534,
+        "text": "GateArm: arm=0 arms=2 block=11 frame=2790 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 576630,
+        "text": "GateArm: arm=0 arms=2 block=12 frame=2880 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 585803,
+        "text": "GateArm: arm=1 arms=2 block=13 frame=2970 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 594906,
+        "text": "GateArm: arm=1 arms=2 block=14 frame=3060 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 603971,
+        "text": "GateArm: arm=0 arms=2 block=15 frame=3150 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 613066,
+        "text": "GateArm: arm=0 arms=2 block=16 frame=3240 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 623265,
+        "text": "GateArm: arm=1 arms=2 block=17 frame=3330 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 633857,
+        "text": "GateArm: arm=1 arms=2 block=18 frame=3420 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 644501,
+        "text": "GateArm: arm=0 arms=2 block=19 frame=3510 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 655085,
+        "text": "GateArm: arm=0 arms=2 block=20 frame=3600 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 665450,
+        "text": "GateArm: arm=1 arms=2 block=21 frame=3690 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 675830,
+        "text": "GateArm: arm=1 arms=2 block=22 frame=3780 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 686434,
+        "text": "GateArm: arm=0 arms=2 block=23 frame=3870 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 696798,
+        "text": "GateArm: arm=0 arms=2 block=24 frame=3960 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 707146,
+        "text": "GateArm: arm=1 arms=2 block=25 frame=4050 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 717817,
+        "text": "GateArm: arm=1 arms=2 block=26 frame=4140 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 728303,
+        "text": "GateArm: arm=0 arms=2 block=27 frame=4230 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 738480,
+        "text": "GateArm: arm=0 arms=2 block=28 frame=4320 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 748992,
+        "text": "GateArm: arm=1 arms=2 block=29 frame=4410 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 759054,
+        "text": "GateArm: arm=1 arms=2 block=30 frame=4500 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 769457,
+        "text": "GateArm: arm=0 arms=2 block=31 frame=4590 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 779807,
+        "text": "GateArm: arm=0 arms=2 block=32 frame=4680 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 790255,
+        "text": "GateArm: arm=1 arms=2 block=33 frame=4770 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 800659,
+        "text": "GateArm: arm=1 arms=2 block=34 frame=4860 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 811016,
+        "text": "GateArm: arm=0 arms=2 block=35 frame=4950 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 821449,
+        "text": "GateArm: arm=0 arms=2 block=36 frame=5040 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 831910,
+        "text": "GateArm: arm=1 arms=2 block=37 frame=5130 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 842249,
+        "text": "GateArm: arm=1 arms=2 block=38 frame=5220 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 852622,
+        "text": "GateArm: arm=0 arms=2 block=39 frame=5310 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 862974,
+        "text": "GateArm: arm=0 arms=2 block=40 frame=5400 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 873128,
+        "text": "GateArm: arm=1 arms=2 block=41 frame=5490 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 883628,
+        "text": "GateArm: arm=1 arms=2 block=42 frame=5580 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 894196,
+        "text": "GateArm: arm=0 arms=2 block=43 frame=5670 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 904560,
+        "text": "GateArm: arm=0 arms=2 block=44 frame=5760 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 915176,
+        "text": "GateArm: arm=1 arms=2 block=45 frame=5850 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 925742,
+        "text": "GateArm: arm=1 arms=2 block=46 frame=5940 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 936044,
+        "text": "GateArm: arm=0 arms=2 block=47 frame=6030 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 946424,
+        "text": "GateArm: arm=0 arms=2 block=48 frame=6120 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 956861,
+        "text": "GateArm: arm=1 arms=2 block=49 frame=6210 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 967146,
+        "text": "GateArm: arm=1 arms=2 block=50 frame=6300 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 977881,
+        "text": "GateArm: arm=0 arms=2 block=51 frame=6390 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 988430,
+        "text": "GateArm: arm=0 arms=2 block=52 frame=6480 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 998953,
+        "text": "GateArm: arm=1 arms=2 block=53 frame=6570 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1009292,
+        "text": "GateArm: arm=1 arms=2 block=54 frame=6660 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1019499,
+        "text": "GateArm: arm=0 arms=2 block=55 frame=6750 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1029674,
+        "text": "GateArm: arm=0 arms=2 block=56 frame=6840 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1040144,
+        "text": "GateArm: arm=1 arms=2 block=57 frame=6930 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1050568,
+        "text": "GateArm: arm=1 arms=2 block=58 frame=7020 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1060791,
+        "text": "GateArm: arm=0 arms=2 block=59 frame=7110 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1071256,
+        "text": "GateArm: arm=0 arms=2 block=60 frame=7200 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1081514,
+        "text": "GateArm: arm=1 arms=2 block=61 frame=7290 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1092128,
+        "text": "GateArm: arm=1 arms=2 block=62 frame=7380 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1102573,
+        "text": "GateArm: arm=0 arms=2 block=63 frame=7470 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1113134,
+        "text": "GateArm: arm=0 arms=2 block=64 frame=7560 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1123698,
+        "text": "GateArm: arm=1 arms=2 block=65 frame=7650 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1134371,
+        "text": "GateArm: arm=1 arms=2 block=66 frame=7740 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1144603,
+        "text": "GateArm: arm=0 arms=2 block=67 frame=7830 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1155213,
+        "text": "GateArm: arm=0 arms=2 block=68 frame=7920 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1165764,
+        "text": "GateArm: arm=1 arms=2 block=69 frame=8010 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1176156,
+        "text": "GateArm: arm=1 arms=2 block=70 frame=8100 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1186431,
+        "text": "GateArm: arm=0 arms=2 block=71 frame=8190 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1196627,
+        "text": "GateArm: arm=0 arms=2 block=72 frame=8280 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1207023,
+        "text": "GateArm: arm=1 arms=2 block=73 frame=8370 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1217159,
+        "text": "GateArm: arm=1 arms=2 block=74 frame=8460 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1227481,
+        "text": "GateArm: arm=0 arms=2 block=75 frame=8550 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1237967,
+        "text": "GateArm: arm=0 arms=2 block=76 frame=8640 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1248323,
+        "text": "GateArm: arm=1 arms=2 block=77 frame=8730 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1258705,
+        "text": "GateArm: arm=1 arms=2 block=78 frame=8820 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1269205,
+        "text": "GateArm: arm=0 arms=2 block=79 frame=8910 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1279652,
+        "text": "GateArm: arm=0 arms=2 block=80 frame=9000 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1290196,
+        "text": "GateArm: arm=1 arms=2 block=81 frame=9090 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1300421,
+        "text": "GateArm: arm=1 arms=2 block=82 frame=9180 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1310816,
+        "text": "GateArm: arm=0 arms=2 block=83 frame=9270 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1320997,
+        "text": "GateArm: arm=0 arms=2 block=84 frame=9360 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1331142,
+        "text": "GateArm: arm=1 arms=2 block=85 frame=9450 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1341382,
+        "text": "GateArm: arm=1 arms=2 block=86 frame=9540 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1351707,
+        "text": "GateArm: arm=0 arms=2 block=87 frame=9630 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1362163,
+        "text": "GateArm: arm=0 arms=2 block=88 frame=9720 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1372859,
+        "text": "GateArm: arm=1 arms=2 block=89 frame=9810 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1383356,
+        "text": "GateArm: arm=1 arms=2 block=90 frame=9900 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1393867,
+        "text": "GateArm: arm=0 arms=2 block=91 frame=9990 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1404317,
+        "text": "GateArm: arm=0 arms=2 block=92 frame=10080 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1414737,
+        "text": "GateArm: arm=1 arms=2 block=93 frame=10170 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1425291,
+        "text": "GateArm: arm=1 arms=2 block=94 frame=10260 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1435754,
+        "text": "GateArm: arm=0 arms=2 block=95 frame=10350 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1446213,
+        "text": "GateArm: arm=0 arms=2 block=96 frame=10440 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1457064,
+        "text": "GateArm: arm=1 arms=2 block=97 frame=10530 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1467235,
+        "text": "GateArm: arm=1 arms=2 block=98 frame=10620 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1477360,
+        "text": "GateArm: arm=0 arms=2 block=99 frame=10710 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1487837,
+        "text": "GateArm: arm=0 arms=2 block=100 frame=10800 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1498299,
+        "text": "GateArm: arm=1 arms=2 block=101 frame=10890 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1508829,
+        "text": "GateArm: arm=1 arms=2 block=102 frame=10980 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1519280,
+        "text": "GateArm: arm=0 arms=2 block=103 frame=11070 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1529930,
+        "text": "GateArm: arm=0 arms=2 block=104 frame=11160 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1540524,
+        "text": "GateArm: arm=1 arms=2 block=105 frame=11250 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1551168,
+        "text": "GateArm: arm=1 arms=2 block=106 frame=11340 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1561773,
+        "text": "GateArm: arm=0 arms=2 block=107 frame=11430 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1572371,
+        "text": "GateArm: arm=0 arms=2 block=108 frame=11520 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1582859,
+        "text": "GateArm: arm=1 arms=2 block=109 frame=11610 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1593294,
+        "text": "GateArm: arm=1 arms=2 block=110 frame=11700 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1603778,
+        "text": "GateArm: arm=0 arms=2 block=111 frame=11790 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1614217,
+        "text": "GateArm: arm=0 arms=2 block=112 frame=11880 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1624602,
+        "text": "GateArm: arm=1 arms=2 block=113 frame=11970 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1635129,
+        "text": "GateArm: arm=1 arms=2 block=114 frame=12060 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1645561,
+        "text": "GateArm: arm=0 arms=2 block=115 frame=12150 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1656011,
+        "text": "GateArm: arm=0 arms=2 block=116 frame=12240 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1666734,
+        "text": "GateArm: arm=1 arms=2 block=117 frame=12330 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1677091,
+        "text": "GateArm: arm=1 arms=2 block=118 frame=12420 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1687322,
+        "text": "GateArm: arm=0 arms=2 block=119 frame=12510 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1697750,
+        "text": "GateArm: arm=0 arms=2 block=120 frame=12600 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1708464,
+        "text": "GateArm: arm=1 arms=2 block=121 frame=12690 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1718686,
+        "text": "GateArm: arm=1 arms=2 block=122 frame=12780 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1728780,
+        "text": "GateArm: arm=0 arms=2 block=123 frame=12870 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1739312,
+        "text": "GateArm: arm=0 arms=2 block=124 frame=12960 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1749813,
+        "text": "GateArm: arm=1 arms=2 block=125 frame=13050 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1760519,
+        "text": "GateArm: arm=1 arms=2 block=126 frame=13140 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1771117,
+        "text": "GateArm: arm=0 arms=2 block=127 frame=13230 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1781695,
+        "text": "GateArm: arm=0 arms=2 block=128 frame=13320 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1792050,
+        "text": "GateArm: arm=1 arms=2 block=129 frame=13410 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1802541,
+        "text": "GateArm: arm=1 arms=2 block=130 frame=13500 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1812983,
+        "text": "GateArm: arm=0 arms=2 block=131 frame=13590 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1823484,
+        "text": "GateArm: arm=0 arms=2 block=132 frame=13680 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1833892,
+        "text": "GateArm: arm=1 arms=2 block=133 frame=13770 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1844445,
+        "text": "GateArm: arm=1 arms=2 block=134 frame=13860 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1854949,
+        "text": "GateArm: arm=0 arms=2 block=135 frame=13950 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1865425,
+        "text": "GateArm: arm=0 arms=2 block=136 frame=14040 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1875833,
+        "text": "GateArm: arm=1 arms=2 block=137 frame=14130 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1886117,
+        "text": "GateArm: arm=1 arms=2 block=138 frame=14220 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1896261,
+        "text": "GateArm: arm=0 arms=2 block=139 frame=14310 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1906764,
+        "text": "GateArm: arm=0 arms=2 block=140 frame=14400 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1917641,
+        "text": "GateArm: arm=1 arms=2 block=141 frame=14490 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1928188,
+        "text": "GateArm: arm=1 arms=2 block=142 frame=14580 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1938722,
+        "text": "GateArm: arm=0 arms=2 block=143 frame=14670 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1949235,
+        "text": "GateArm: arm=0 arms=2 block=144 frame=14760 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1961806,
+        "text": "GateArm: arm=1 arms=2 block=145 frame=14850 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1983692,
+        "text": "GateArm: arm=1 arms=2 block=146 frame=14940 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2005544,
+        "text": "GateArm: arm=0 arms=2 block=147 frame=15030 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2027460,
+        "text": "GateArm: arm=0 arms=2 block=148 frame=15120 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2049593,
+        "text": "GateArm: arm=1 arms=2 block=149 frame=15210 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2071435,
+        "text": "GateArm: arm=1 arms=2 block=150 frame=15300 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2093094,
+        "text": "GateArm: arm=0 arms=2 block=151 frame=15390 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2115181,
+        "text": "GateArm: arm=0 arms=2 block=152 frame=15480 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2136856,
+        "text": "GateArm: arm=1 arms=2 block=153 frame=15570 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2158482,
+        "text": "GateArm: arm=1 arms=2 block=154 frame=15660 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2179967,
+        "text": "GateArm: arm=0 arms=2 block=155 frame=15750 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2201469,
+        "text": "GateArm: arm=0 arms=2 block=156 frame=15840 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2223030,
+        "text": "GateArm: arm=1 arms=2 block=157 frame=15930 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2244483,
+        "text": "GateArm: arm=1 arms=2 block=158 frame=16020 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2266010,
+        "text": "GateArm: arm=0 arms=2 block=159 frame=16110 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2287896,
+        "text": "GateArm: arm=0 arms=2 block=160 frame=16200 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2309474,
+        "text": "GateArm: arm=1 arms=2 block=161 frame=16290 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2331011,
+        "text": "GateArm: arm=1 arms=2 block=162 frame=16380 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2352896,
+        "text": "GateArm: arm=0 arms=2 block=163 frame=16470 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2375050,
+        "text": "GateArm: arm=0 arms=2 block=164 frame=16560 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2396670,
+        "text": "GateArm: arm=1 arms=2 block=165 frame=16650 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2418346,
+        "text": "GateArm: arm=1 arms=2 block=166 frame=16740 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2440202,
+        "text": "GateArm: arm=0 arms=2 block=167 frame=16830 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2461466,
+        "text": "GateArm: arm=0 arms=2 block=168 frame=16920 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2483236,
+        "text": "GateArm: arm=1 arms=2 block=169 frame=17010 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2505109,
+        "text": "GateArm: arm=1 arms=2 block=170 frame=17100 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2526310,
+        "text": "GateArm: arm=0 arms=2 block=171 frame=17190 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2548381,
+        "text": "GateArm: arm=0 arms=2 block=172 frame=17280 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2570140,
+        "text": "GateArm: arm=1 arms=2 block=173 frame=17370 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2591847,
+        "text": "GateArm: arm=1 arms=2 block=174 frame=17460 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2613563,
+        "text": "GateArm: arm=0 arms=2 block=175 frame=17550 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2635519,
+        "text": "GateArm: arm=0 arms=2 block=176 frame=17640 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2657645,
+        "text": "GateArm: arm=1 arms=2 block=177 frame=17730 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      }
+    ],
+    "markers": [
+      {
+        "line": 4543,
+        "text": "Recording: C:\\kyty\\s99\\rec_vis99base.mp4 960x540 (source 1280x720) first present=1 pipe=ok"
+      },
+      {
+        "line": 2673384,
+        "text": "Window 1 closed"
+      },
+      {
+        "line": 2673385,
+        "text": "Event: quit"
+      }
+    ],
+    "detector": {
+      "frames": 17802,
+      "events_count": 0,
+      "events": []
+    }
+  },
+  "bf99e": {
+    "idx": {
+      "rows": 18037,
+      "first": [
+        0,
+        1,
+        0.0
+      ],
+      "last": [
+        18036,
+        18037,
+        917.681
+      ],
+      "frame_gaps": [],
+      "present_gaps": [],
+      "time_backwards": 0,
+      "time_equal": 0
+    },
+    "attempt": {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 74332,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.2,
+      "started_s": 11.3,
+      "stable_s": 23.9,
+      "stable_frame": 396,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 900.3,
+      "pipeline_cache_off": false
+    },
+    "idx_stable_frame": [
+      395,
+      396,
+      16.399
+    ],
+    "idx_span_after_stable_s": 901.282,
+    "log_lines": 2434008,
+    "frame_rows": 18028,
+    "frame_first_last": [
+      2,
+      18029
+    ],
+    "frame_gaps": [],
+    "x_rows": 18028,
+    "x_gaps": [],
+    "bindfloor_occurrences": {
+      "0": 136,
+      "1": 135
+    },
+    "bindfloor_positive": 135,
+    "floor_counter_rows": {
+      "bf_n": 18028,
+      "bf_disp": 18028,
+      "bf_reuse": 18028,
+      "bf_burn_ns": 18028,
+      "bf_burn_cpu_n": 18028,
+      "bf_skip": 18028,
+      "bf_gc_hold": 18028,
+      "bf_edge": 18028,
+      "bf_bgc_hold": 18028,
+      "bf_clr_skip": 18028
+    },
+    "floor_counter_nonzero": {
+      "bf_n": 8145,
+      "bf_disp": 8145,
+      "bf_burn_ns": 8145,
+      "bf_burn_cpu_n": 8145,
+      "bf_gc_hold": 8145,
+      "bf_edge": 90,
+      "bf_bgc_hold": 8145
+    },
+    "gates": [
+      {
+        "line": 429799,
+        "text": "GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 438714,
+        "text": "GateArm: arm=1 arms=2 block=1 frame=1890 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 447782,
+        "text": "GateArm: arm=1 arms=2 block=2 frame=1980 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 456820,
+        "text": "GateArm: arm=0 arms=2 block=3 frame=2070 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 465955,
+        "text": "GateArm: arm=0 arms=2 block=4 frame=2160 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 474991,
+        "text": "GateArm: arm=1 arms=2 block=5 frame=2250 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 483899,
+        "text": "GateArm: arm=1 arms=2 block=6 frame=2340 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 492997,
+        "text": "GateArm: arm=0 arms=2 block=7 frame=2430 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 502115,
+        "text": "GateArm: arm=0 arms=2 block=8 frame=2520 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 511204,
+        "text": "GateArm: arm=1 arms=2 block=9 frame=2610 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 520160,
+        "text": "GateArm: arm=1 arms=2 block=10 frame=2700 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 529263,
+        "text": "GateArm: arm=0 arms=2 block=11 frame=2790 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 538453,
+        "text": "GateArm: arm=0 arms=2 block=12 frame=2880 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 547548,
+        "text": "GateArm: arm=1 arms=2 block=13 frame=2970 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 556486,
+        "text": "GateArm: arm=1 arms=2 block=14 frame=3060 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 565590,
+        "text": "GateArm: arm=0 arms=2 block=15 frame=3150 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 574722,
+        "text": "GateArm: arm=0 arms=2 block=16 frame=3240 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 583774,
+        "text": "GateArm: arm=1 arms=2 block=17 frame=3330 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 592753,
+        "text": "GateArm: arm=1 arms=2 block=18 frame=3420 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 601882,
+        "text": "GateArm: arm=0 arms=2 block=19 frame=3510 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 611031,
+        "text": "GateArm: arm=0 arms=2 block=20 frame=3600 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 619911,
+        "text": "GateArm: arm=1 arms=2 block=21 frame=3690 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 628856,
+        "text": "GateArm: arm=1 arms=2 block=22 frame=3780 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 638031,
+        "text": "GateArm: arm=0 arms=2 block=23 frame=3870 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 647176,
+        "text": "GateArm: arm=0 arms=2 block=24 frame=3960 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 656253,
+        "text": "GateArm: arm=1 arms=2 block=25 frame=4050 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 665184,
+        "text": "GateArm: arm=1 arms=2 block=26 frame=4140 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 674193,
+        "text": "GateArm: arm=0 arms=2 block=27 frame=4230 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 683371,
+        "text": "GateArm: arm=0 arms=2 block=28 frame=4320 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 692411,
+        "text": "GateArm: arm=1 arms=2 block=29 frame=4410 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 701257,
+        "text": "GateArm: arm=1 arms=2 block=30 frame=4500 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 710362,
+        "text": "GateArm: arm=0 arms=2 block=31 frame=4590 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 719513,
+        "text": "GateArm: arm=0 arms=2 block=32 frame=4680 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 728506,
+        "text": "GateArm: arm=1 arms=2 block=33 frame=4770 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 737381,
+        "text": "GateArm: arm=1 arms=2 block=34 frame=4860 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 746435,
+        "text": "GateArm: arm=0 arms=2 block=35 frame=4950 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 755604,
+        "text": "GateArm: arm=0 arms=2 block=36 frame=5040 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 764671,
+        "text": "GateArm: arm=1 arms=2 block=37 frame=5130 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 773610,
+        "text": "GateArm: arm=1 arms=2 block=38 frame=5220 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 782686,
+        "text": "GateArm: arm=0 arms=2 block=39 frame=5310 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 791786,
+        "text": "GateArm: arm=0 arms=2 block=40 frame=5400 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 800819,
+        "text": "GateArm: arm=1 arms=2 block=41 frame=5490 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 809791,
+        "text": "GateArm: arm=1 arms=2 block=42 frame=5580 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 818884,
+        "text": "GateArm: arm=0 arms=2 block=43 frame=5670 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 828016,
+        "text": "GateArm: arm=0 arms=2 block=44 frame=5760 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 837099,
+        "text": "GateArm: arm=1 arms=2 block=45 frame=5850 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 846037,
+        "text": "GateArm: arm=1 arms=2 block=46 frame=5940 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 855038,
+        "text": "GateArm: arm=0 arms=2 block=47 frame=6030 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 864170,
+        "text": "GateArm: arm=0 arms=2 block=48 frame=6120 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 873246,
+        "text": "GateArm: arm=1 arms=2 block=49 frame=6210 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 882154,
+        "text": "GateArm: arm=1 arms=2 block=50 frame=6300 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 891263,
+        "text": "GateArm: arm=0 arms=2 block=51 frame=6390 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 900448,
+        "text": "GateArm: arm=0 arms=2 block=52 frame=6480 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 909430,
+        "text": "GateArm: arm=1 arms=2 block=53 frame=6570 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 918372,
+        "text": "GateArm: arm=1 arms=2 block=54 frame=6660 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 927549,
+        "text": "GateArm: arm=0 arms=2 block=55 frame=6750 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 936691,
+        "text": "GateArm: arm=0 arms=2 block=56 frame=6840 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 945691,
+        "text": "GateArm: arm=1 arms=2 block=57 frame=6930 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 954617,
+        "text": "GateArm: arm=1 arms=2 block=58 frame=7020 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 963628,
+        "text": "GateArm: arm=0 arms=2 block=59 frame=7110 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 972755,
+        "text": "GateArm: arm=0 arms=2 block=60 frame=7200 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 981759,
+        "text": "GateArm: arm=1 arms=2 block=61 frame=7290 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 990645,
+        "text": "GateArm: arm=1 arms=2 block=62 frame=7380 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 999780,
+        "text": "GateArm: arm=0 arms=2 block=63 frame=7470 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1008934,
+        "text": "GateArm: arm=0 arms=2 block=64 frame=7560 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1017956,
+        "text": "GateArm: arm=1 arms=2 block=65 frame=7650 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1026852,
+        "text": "GateArm: arm=1 arms=2 block=66 frame=7740 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1035990,
+        "text": "GateArm: arm=0 arms=2 block=67 frame=7830 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1045129,
+        "text": "GateArm: arm=0 arms=2 block=68 frame=7920 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1054146,
+        "text": "GateArm: arm=1 arms=2 block=69 frame=8010 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1063106,
+        "text": "GateArm: arm=1 arms=2 block=70 frame=8100 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1072090,
+        "text": "GateArm: arm=0 arms=2 block=71 frame=8190 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1081252,
+        "text": "GateArm: arm=0 arms=2 block=72 frame=8280 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1090242,
+        "text": "GateArm: arm=1 arms=2 block=73 frame=8370 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1099182,
+        "text": "GateArm: arm=1 arms=2 block=74 frame=8460 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1108319,
+        "text": "GateArm: arm=0 arms=2 block=75 frame=8550 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1117459,
+        "text": "GateArm: arm=0 arms=2 block=76 frame=8640 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1126487,
+        "text": "GateArm: arm=1 arms=2 block=77 frame=8730 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1135426,
+        "text": "GateArm: arm=1 arms=2 block=78 frame=8820 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1144543,
+        "text": "GateArm: arm=0 arms=2 block=79 frame=8910 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1153690,
+        "text": "GateArm: arm=0 arms=2 block=80 frame=9000 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1162727,
+        "text": "GateArm: arm=1 arms=2 block=81 frame=9090 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1171669,
+        "text": "GateArm: arm=1 arms=2 block=82 frame=9180 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1180655,
+        "text": "GateArm: arm=0 arms=2 block=83 frame=9270 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1189755,
+        "text": "GateArm: arm=0 arms=2 block=84 frame=9360 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1198763,
+        "text": "GateArm: arm=1 arms=2 block=85 frame=9450 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1207703,
+        "text": "GateArm: arm=1 arms=2 block=86 frame=9540 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1216807,
+        "text": "GateArm: arm=0 arms=2 block=87 frame=9630 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1225997,
+        "text": "GateArm: arm=0 arms=2 block=88 frame=9720 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1235065,
+        "text": "GateArm: arm=1 arms=2 block=89 frame=9810 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1244059,
+        "text": "GateArm: arm=1 arms=2 block=90 frame=9900 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1253154,
+        "text": "GateArm: arm=0 arms=2 block=91 frame=9990 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1262321,
+        "text": "GateArm: arm=0 arms=2 block=92 frame=10080 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1271402,
+        "text": "GateArm: arm=1 arms=2 block=93 frame=10170 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1280320,
+        "text": "GateArm: arm=1 arms=2 block=94 frame=10260 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1289335,
+        "text": "GateArm: arm=0 arms=2 block=95 frame=10350 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1298459,
+        "text": "GateArm: arm=0 arms=2 block=96 frame=10440 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1307425,
+        "text": "GateArm: arm=1 arms=2 block=97 frame=10530 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1316434,
+        "text": "GateArm: arm=1 arms=2 block=98 frame=10620 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1325438,
+        "text": "GateArm: arm=0 arms=2 block=99 frame=10710 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1334627,
+        "text": "GateArm: arm=0 arms=2 block=100 frame=10800 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1343589,
+        "text": "GateArm: arm=1 arms=2 block=101 frame=10890 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1352538,
+        "text": "GateArm: arm=1 arms=2 block=102 frame=10980 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1361604,
+        "text": "GateArm: arm=0 arms=2 block=103 frame=11070 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1370748,
+        "text": "GateArm: arm=0 arms=2 block=104 frame=11160 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1379767,
+        "text": "GateArm: arm=1 arms=2 block=105 frame=11250 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1388702,
+        "text": "GateArm: arm=1 arms=2 block=106 frame=11340 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1397688,
+        "text": "GateArm: arm=0 arms=2 block=107 frame=11430 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1406948,
+        "text": "GateArm: arm=0 arms=2 block=108 frame=11520 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1416056,
+        "text": "GateArm: arm=1 arms=2 block=109 frame=11610 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1425106,
+        "text": "GateArm: arm=1 arms=2 block=110 frame=11700 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1434175,
+        "text": "GateArm: arm=0 arms=2 block=111 frame=11790 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1443348,
+        "text": "GateArm: arm=0 arms=2 block=112 frame=11880 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1452346,
+        "text": "GateArm: arm=1 arms=2 block=113 frame=11970 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1461277,
+        "text": "GateArm: arm=1 arms=2 block=114 frame=12060 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1470344,
+        "text": "GateArm: arm=0 arms=2 block=115 frame=12150 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1479430,
+        "text": "GateArm: arm=0 arms=2 block=116 frame=12240 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1488409,
+        "text": "GateArm: arm=1 arms=2 block=117 frame=12330 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1497329,
+        "text": "GateArm: arm=1 arms=2 block=118 frame=12420 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1506392,
+        "text": "GateArm: arm=0 arms=2 block=119 frame=12510 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1515477,
+        "text": "GateArm: arm=0 arms=2 block=120 frame=12600 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1524467,
+        "text": "GateArm: arm=1 arms=2 block=121 frame=12690 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1533352,
+        "text": "GateArm: arm=1 arms=2 block=122 frame=12780 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1542468,
+        "text": "GateArm: arm=0 arms=2 block=123 frame=12870 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1551613,
+        "text": "GateArm: arm=0 arms=2 block=124 frame=12960 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1560642,
+        "text": "GateArm: arm=1 arms=2 block=125 frame=13050 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1569601,
+        "text": "GateArm: arm=1 arms=2 block=126 frame=13140 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1578653,
+        "text": "GateArm: arm=0 arms=2 block=127 frame=13230 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1587767,
+        "text": "GateArm: arm=0 arms=2 block=128 frame=13320 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1596777,
+        "text": "GateArm: arm=1 arms=2 block=129 frame=13410 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1605745,
+        "text": "GateArm: arm=1 arms=2 block=130 frame=13500 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1614779,
+        "text": "GateArm: arm=0 arms=2 block=131 frame=13590 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1623857,
+        "text": "GateArm: arm=0 arms=2 block=132 frame=13680 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1632933,
+        "text": "GateArm: arm=1 arms=2 block=133 frame=13770 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1641826,
+        "text": "GateArm: arm=1 arms=2 block=134 frame=13860 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1650935,
+        "text": "GateArm: arm=0 arms=2 block=135 frame=13950 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1660040,
+        "text": "GateArm: arm=0 arms=2 block=136 frame=14040 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1669079,
+        "text": "GateArm: arm=1 arms=2 block=137 frame=14130 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1678035,
+        "text": "GateArm: arm=1 arms=2 block=138 frame=14220 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1687083,
+        "text": "GateArm: arm=0 arms=2 block=139 frame=14310 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1696280,
+        "text": "GateArm: arm=0 arms=2 block=140 frame=14400 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1705306,
+        "text": "GateArm: arm=1 arms=2 block=141 frame=14490 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1714217,
+        "text": "GateArm: arm=1 arms=2 block=142 frame=14580 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1723416,
+        "text": "GateArm: arm=0 arms=2 block=143 frame=14670 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1732512,
+        "text": "GateArm: arm=0 arms=2 block=144 frame=14760 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1741607,
+        "text": "GateArm: arm=1 arms=2 block=145 frame=14850 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1750573,
+        "text": "GateArm: arm=1 arms=2 block=146 frame=14940 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1759597,
+        "text": "GateArm: arm=0 arms=2 block=147 frame=15030 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1775045,
+        "text": "GateArm: arm=0 arms=2 block=148 frame=15120 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1795358,
+        "text": "GateArm: arm=1 arms=2 block=149 frame=15210 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1815692,
+        "text": "GateArm: arm=1 arms=2 block=150 frame=15300 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1836195,
+        "text": "GateArm: arm=0 arms=2 block=151 frame=15390 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1856754,
+        "text": "GateArm: arm=0 arms=2 block=152 frame=15480 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1877153,
+        "text": "GateArm: arm=1 arms=2 block=153 frame=15570 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1897284,
+        "text": "GateArm: arm=1 arms=2 block=154 frame=15660 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1917562,
+        "text": "GateArm: arm=0 arms=2 block=155 frame=15750 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1937988,
+        "text": "GateArm: arm=0 arms=2 block=156 frame=15840 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1958369,
+        "text": "GateArm: arm=1 arms=2 block=157 frame=15930 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1978719,
+        "text": "GateArm: arm=1 arms=2 block=158 frame=16020 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 1999274,
+        "text": "GateArm: arm=0 arms=2 block=159 frame=16110 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2019935,
+        "text": "GateArm: arm=0 arms=2 block=160 frame=16200 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2040357,
+        "text": "GateArm: arm=1 arms=2 block=161 frame=16290 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2060646,
+        "text": "GateArm: arm=1 arms=2 block=162 frame=16380 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2081016,
+        "text": "GateArm: arm=0 arms=2 block=163 frame=16470 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2101664,
+        "text": "GateArm: arm=0 arms=2 block=164 frame=16560 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2122160,
+        "text": "GateArm: arm=1 arms=2 block=165 frame=16650 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2142486,
+        "text": "GateArm: arm=1 arms=2 block=166 frame=16740 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2162412,
+        "text": "GateArm: arm=0 arms=2 block=167 frame=16830 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2181915,
+        "text": "GateArm: arm=0 arms=2 block=168 frame=16920 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2202198,
+        "text": "GateArm: arm=1 arms=2 block=169 frame=17010 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2222592,
+        "text": "GateArm: arm=1 arms=2 block=170 frame=17100 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2243120,
+        "text": "GateArm: arm=0 arms=2 block=171 frame=17190 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2263645,
+        "text": "GateArm: arm=0 arms=2 block=172 frame=17280 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2284247,
+        "text": "GateArm: arm=1 arms=2 block=173 frame=17370 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2304616,
+        "text": "GateArm: arm=1 arms=2 block=174 frame=17460 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2325128,
+        "text": "GateArm: arm=0 arms=2 block=175 frame=17550 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2345724,
+        "text": "GateArm: arm=0 arms=2 block=176 frame=17640 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2366218,
+        "text": "GateArm: arm=1 arms=2 block=177 frame=17730 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2386470,
+        "text": "GateArm: arm=1 arms=2 block=178 frame=17820 period=90 abba=1 text=bindfloor=1 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2406905,
+        "text": "GateArm: arm=0 arms=2 block=179 frame=17910 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      },
+      {
+        "line": 2427386,
+        "text": "GateArm: arm=0 arms=2 block=180 frame=18000 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+      }
+    ],
+    "markers": [
+      {
+        "line": 4544,
+        "text": "Recording: C:\\kyty\\s99\\rec_bf99e.mp4 960x540 (source 1280x720) first present=1 pipe=ok"
+      },
+      {
+        "line": 2434006,
+        "text": "Window 1 closed"
+      },
+      {
+        "line": 2434007,
+        "text": "Event: quit"
+      }
+    ],
+    "detector": {
+      "frames": 18037,
+      "events_count": 185,
+      "events": [
+        {
+          "frame": 8879,
+          "present": [
+            8880,
+            450.531
+          ],
+          "diff_prev": 4.281381172839506,
+          "diff_next": 4.281835776748972,
+          "neighbours": 0.007253729423868313,
+          "area": 14777,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1141522,
+            "arm": 1,
+            "blk": 78,
+            "dt_us": 49388
+          },
+          "idx_line": 8880
+        },
+        {
+          "frame": 9599,
+          "present": [
+            9600,
+            486.598
+          ],
+          "diff_prev": 4.071325874485597,
+          "diff_next": 4.0728774434156385,
+          "neighbours": 0.008007330246913583,
+          "area": 13726,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1213776,
+            "arm": 1,
+            "blk": 86,
+            "dt_us": 50636
+          },
+          "idx_line": 9600
+        },
+        {
+          "frame": 10263,
+          "present": [
+            10264,
+            520.198
+          ],
+          "diff_prev": 4.631905864197531,
+          "diff_next": 4.631999742798354,
+          "neighbours": 0.00016846707818930087,
+          "area": 20485,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1280753,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 49916
+          },
+          "idx_line": 10264
+        },
+        {
+          "frame": 10264,
+          "present": [
+            10265,
+            520.248
+          ],
+          "diff_prev": 4.631999742798354,
+          "diff_next": 4.568798868312758,
+          "neighbours": 0.5444367283950617,
+          "area": 20485,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1280843,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 49520
+          },
+          "idx_line": 10265
+        },
+        {
+          "frame": 10265,
+          "present": [
+            10266,
+            520.298
+          ],
+          "diff_prev": 4.568798868312758,
+          "diff_next": 4.5688406635802465,
+          "neighbours": 0.00023341049382716048,
+          "area": 19949,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1280933,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 50826
+          },
+          "idx_line": 10266
+        },
+        {
+          "frame": 10266,
+          "present": [
+            10267,
+            520.348
+          ],
+          "diff_prev": 4.5688406635802465,
+          "diff_next": 4.568132716049383,
+          "neighbours": 0.049361496913580244,
+          "area": 19949,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1281023,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 48548
+          },
+          "idx_line": 10267
+        },
+        {
+          "frame": 10267,
+          "present": [
+            10268,
+            520.398
+          ],
+          "diff_prev": 4.568132716049383,
+          "diff_next": 4.5680992798353905,
+          "neighbours": 0.00013503086419753085,
+          "area": 19947,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1281142,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 51619
+          },
+          "idx_line": 10268
+        },
+        {
+          "frame": 10319,
+          "present": [
+            10320,
+            522.981
+          ],
+          "diff_prev": 5.185988940329219,
+          "diff_next": 5.186749614197531,
+          "neighbours": 0.0009548611111111093,
+          "area": 22640,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1286257,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 47181
+          },
+          "idx_line": 10320
+        },
+        {
+          "frame": 10323,
+          "present": [
+            10324,
+            523.198
+          ],
+          "diff_prev": 4.631905864197531,
+          "diff_next": 4.631999742798354,
+          "neighbours": 0.00016846707818930087,
+          "area": 20485,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1286745,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 48017
+          },
+          "idx_line": 10324
+        },
+        {
+          "frame": 10324,
+          "present": [
+            10325,
+            523.248
+          ],
+          "diff_prev": 4.631999742798354,
+          "diff_next": 4.568798868312758,
+          "neighbours": 0.5444367283950617,
+          "area": 20485,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1286765,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 35567
+          },
+          "idx_line": 10325
+        },
+        {
+          "frame": 10325,
+          "present": [
+            10326,
+            523.298
+          ],
+          "diff_prev": 4.568798868312758,
+          "diff_next": 4.5688406635802465,
+          "neighbours": 0.00023341049382716048,
+          "area": 19949,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1286926,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 64425
+          },
+          "idx_line": 10326
+        },
+        {
+          "frame": 10326,
+          "present": [
+            10327,
+            523.331
+          ],
+          "diff_prev": 4.5688406635802465,
+          "diff_next": 4.568132716049383,
+          "neighbours": 0.049361496913580244,
+          "area": 19949,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1286958,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 35705
+          },
+          "idx_line": 10327
+        },
+        {
+          "frame": 10327,
+          "present": [
+            10328,
+            523.382
+          ],
+          "diff_prev": 4.568132716049383,
+          "diff_next": 4.5680992798353905,
+          "neighbours": 0.00013503086419753085,
+          "area": 19947,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1287079,
+            "arm": 1,
+            "blk": 94,
+            "dt_us": 49230
+          },
+          "idx_line": 10328
+        },
+        {
+          "frame": 11261,
+          "present": [
+            11262,
+            571.148
+          ],
+          "diff_prev": 4.328399562757201,
+          "diff_next": 4.327592592592593,
+          "neighbours": 0.003003472222222223,
+          "area": 25667,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1380832,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48129
+          },
+          "idx_line": 11262
+        },
+        {
+          "frame": 11262,
+          "present": [
+            11263,
+            571.165
+          ],
+          "diff_prev": 4.327592592592593,
+          "diff_next": 4.3329205246913585,
+          "neighbours": 0.09383487654320985,
+          "area": 25667,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1380963,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 52415
+          },
+          "idx_line": 11263
+        },
+        {
+          "frame": 11263,
+          "present": [
+            11264,
+            571.198
+          ],
+          "diff_prev": 4.3329205246913585,
+          "diff_next": 4.333155864197531,
+          "neighbours": 0.002332818930041151,
+          "area": 25558,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381083,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 64644
+          },
+          "idx_line": 11264
+        },
+        {
+          "frame": 11264,
+          "present": [
+            11265,
+            571.231
+          ],
+          "diff_prev": 4.333155864197531,
+          "diff_next": 5.032219650205762,
+          "neighbours": 1.289832818930041,
+          "area": 25558,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381102,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 34578
+          },
+          "idx_line": 11265
+        },
+        {
+          "frame": 11265,
+          "present": [
+            11266,
+            571.281
+          ],
+          "diff_prev": 5.032219650205762,
+          "diff_next": 5.032080761316873,
+          "neighbours": 0.00014274691358024674,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381265,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 65116
+          },
+          "idx_line": 11266
+        },
+        {
+          "frame": 11266,
+          "present": [
+            11267,
+            571.331
+          ],
+          "diff_prev": 5.032080761316873,
+          "diff_next": 4.327478137860082,
+          "neighbours": 1.2936741255144033,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381383,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49844
+          },
+          "idx_line": 11267
+        },
+        {
+          "frame": 11267,
+          "present": [
+            11268,
+            571.381
+          ],
+          "diff_prev": 4.327478137860082,
+          "diff_next": 4.327524434156378,
+          "neighbours": 0.0001234567901234568,
+          "area": 25548,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381475,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50421
+          },
+          "idx_line": 11268
+        },
+        {
+          "frame": 11268,
+          "present": [
+            11269,
+            571.431
+          ],
+          "diff_prev": 4.327524434156378,
+          "diff_next": 5.031880144032923,
+          "neighbours": 1.293533950617284,
+          "area": 25548,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381566,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49557
+          },
+          "idx_line": 11269
+        },
+        {
+          "frame": 11269,
+          "present": [
+            11270,
+            571.481
+          ],
+          "diff_prev": 5.031880144032923,
+          "diff_next": 5.031880144032923,
+          "neighbours": 0.0,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381656,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51000
+          },
+          "idx_line": 11270
+        },
+        {
+          "frame": 11270,
+          "present": [
+            11271,
+            571.531
+          ],
+          "diff_prev": 5.031880144032923,
+          "diff_next": 4.327434413580246,
+          "neighbours": 1.2934439300411522,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381789,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48587
+          },
+          "idx_line": 11271
+        },
+        {
+          "frame": 11271,
+          "present": [
+            11272,
+            571.581
+          ],
+          "diff_prev": 4.327434413580246,
+          "diff_next": 4.327434413580246,
+          "neighbours": 0.0,
+          "area": 25548,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381880,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51128
+          },
+          "idx_line": 11272
+        },
+        {
+          "frame": 11272,
+          "present": [
+            11273,
+            571.631
+          ],
+          "diff_prev": 4.327434413580246,
+          "diff_next": 5.031880144032923,
+          "neighbours": 1.2934439300411522,
+          "area": 25548,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1381971,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49732
+          },
+          "idx_line": 11273
+        },
+        {
+          "frame": 11273,
+          "present": [
+            11274,
+            571.698
+          ],
+          "diff_prev": 5.031880144032923,
+          "diff_next": 5.031880144032923,
+          "neighbours": 0.0,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382072,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50240
+          },
+          "idx_line": 11274
+        },
+        {
+          "frame": 11274,
+          "present": [
+            11275,
+            571.733
+          ],
+          "diff_prev": 5.031880144032923,
+          "diff_next": 5.025023148148148,
+          "neighbours": 0.06726594650205761,
+          "area": 26960,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382178,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50470
+          },
+          "idx_line": 11275
+        },
+        {
+          "frame": 11275,
+          "present": [
+            11276,
+            571.798
+          ],
+          "diff_prev": 5.025023148148148,
+          "diff_next": 5.025023148148148,
+          "neighbours": 0.0,
+          "area": 26855,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382270,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50481
+          },
+          "idx_line": 11276
+        },
+        {
+          "frame": 11276,
+          "present": [
+            11277,
+            571.848
+          ],
+          "diff_prev": 5.025023148148148,
+          "diff_next": 5.055021219135803,
+          "neighbours": 0.22037229938271605,
+          "area": 26855,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382347,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49702
+          },
+          "idx_line": 11277
+        },
+        {
+          "frame": 11277,
+          "present": [
+            11278,
+            571.898
+          ],
+          "diff_prev": 5.055021219135803,
+          "diff_next": 4.958899176954732,
+          "neighbours": 0.11022183641975308,
+          "area": 26893,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382418,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48608
+          },
+          "idx_line": 11278
+        },
+        {
+          "frame": 11281,
+          "present": [
+            11282,
+            572.098
+          ],
+          "diff_prev": 4.406516203703704,
+          "diff_next": 4.406004372427983,
+          "neighbours": 0.0005915637860082287,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382796,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 35172
+          },
+          "idx_line": 11282
+        },
+        {
+          "frame": 11282,
+          "present": [
+            11283,
+            572.148
+          ],
+          "diff_prev": 4.406004372427983,
+          "diff_next": 5.15953125,
+          "neighbours": 1.3915104166666667,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1382983,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 64033
+          },
+          "idx_line": 11283
+        },
+        {
+          "frame": 11283,
+          "present": [
+            11284,
+            572.198
+          ],
+          "diff_prev": 5.15953125,
+          "diff_next": 5.1594380144032925,
+          "neighbours": 0.00011895576131687237,
+          "area": 27580,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383037,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 36431
+          },
+          "idx_line": 11284
+        },
+        {
+          "frame": 11284,
+          "present": [
+            11285,
+            572.248
+          ],
+          "diff_prev": 5.1594380144032925,
+          "diff_next": 5.199014274691358,
+          "neighbours": 0.39119020061728393,
+          "area": 27580,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383128,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48134
+          },
+          "idx_line": 11285
+        },
+        {
+          "frame": 11285,
+          "present": [
+            11286,
+            572.298
+          ],
+          "diff_prev": 5.199014274691358,
+          "diff_next": 5.199088863168724,
+          "neighbours": 0.00047968106995884647,
+          "area": 27667,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383278,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51867
+          },
+          "idx_line": 11286
+        },
+        {
+          "frame": 11286,
+          "present": [
+            11287,
+            572.348
+          ],
+          "diff_prev": 5.199088863168724,
+          "diff_next": 5.199865612139917,
+          "neighbours": 0.0718878600823045,
+          "area": 27669,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383332,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 47562
+          },
+          "idx_line": 11287
+        },
+        {
+          "frame": 11287,
+          "present": [
+            11288,
+            572.398
+          ],
+          "diff_prev": 5.199865612139917,
+          "diff_next": 5.199836676954732,
+          "neighbours": 0.00024627057613168466,
+          "area": 27693,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383466,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 52700
+          },
+          "idx_line": 11288
+        },
+        {
+          "frame": 11288,
+          "present": [
+            11289,
+            572.448
+          ],
+          "diff_prev": 5.199836676954732,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.3959220679012346,
+          "area": 27693,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383577,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49664
+          },
+          "idx_line": 11289
+        },
+        {
+          "frame": 11289,
+          "present": [
+            11290,
+            572.515
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383667,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49203
+          },
+          "idx_line": 11290
+        },
+        {
+          "frame": 11290,
+          "present": [
+            11291,
+            572.565
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 4.402071116255144,
+          "neighbours": 1.3871006944444444,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383747,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49419
+          },
+          "idx_line": 11291
+        },
+        {
+          "frame": 11291,
+          "present": [
+            11292,
+            572.598
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 4.402071116255144,
+          "neighbours": 0.0,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383862,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50856
+          },
+          "idx_line": 11292
+        },
+        {
+          "frame": 11292,
+          "present": [
+            11293,
+            572.664
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 5.161381172839505,
+          "neighbours": 1.3871006944444444,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1383972,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49437
+          },
+          "idx_line": 11293
+        },
+        {
+          "frame": 11293,
+          "present": [
+            11294,
+            572.698
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384021,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48930
+          },
+          "idx_line": 11294
+        },
+        {
+          "frame": 11294,
+          "present": [
+            11295,
+            572.748
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384171,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 53156
+          },
+          "idx_line": 11295
+        },
+        {
+          "frame": 11295,
+          "present": [
+            11296,
+            572.798
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384300,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 62688
+          },
+          "idx_line": 11296
+        },
+        {
+          "frame": 11296,
+          "present": [
+            11297,
+            572.848
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.08063657407407407,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384390,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50560
+          },
+          "idx_line": 11297
+        },
+        {
+          "frame": 11297,
+          "present": [
+            11298,
+            572.898
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384508,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50196
+          },
+          "idx_line": 11298
+        },
+        {
+          "frame": 11298,
+          "present": [
+            11299,
+            572.948
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 4.402071116255144,
+          "neighbours": 1.3871006944444444,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384598,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50123
+          },
+          "idx_line": 11299
+        },
+        {
+          "frame": 11299,
+          "present": [
+            11300,
+            572.998
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 4.402071116255144,
+          "neighbours": 0.0,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384690,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50953
+          },
+          "idx_line": 11300
+        },
+        {
+          "frame": 11300,
+          "present": [
+            11301,
+            573.048
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 5.161381172839505,
+          "neighbours": 1.3871006944444444,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384823,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48417
+          },
+          "idx_line": 11301
+        },
+        {
+          "frame": 11301,
+          "present": [
+            11302,
+            573.098
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1384915,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51508
+          },
+          "idx_line": 11302
+        },
+        {
+          "frame": 11302,
+          "present": [
+            11303,
+            573.148
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385005,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48403
+          },
+          "idx_line": 11303
+        },
+        {
+          "frame": 11303,
+          "present": [
+            11304,
+            573.198
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385124,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51930
+          },
+          "idx_line": 11304
+        },
+        {
+          "frame": 11304,
+          "present": [
+            11305,
+            573.248
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.08063657407407407,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385214,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48025
+          },
+          "idx_line": 11305
+        },
+        {
+          "frame": 11305,
+          "present": [
+            11306,
+            573.314
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385304,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51619
+          },
+          "idx_line": 11306
+        },
+        {
+          "frame": 11306,
+          "present": [
+            11307,
+            573.365
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385437,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49479
+          },
+          "idx_line": 11307
+        },
+        {
+          "frame": 11307,
+          "present": [
+            11308,
+            573.415
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385527,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48875
+          },
+          "idx_line": 11308
+        },
+        {
+          "frame": 11308,
+          "present": [
+            11309,
+            573.465
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 4.406057741769547,
+          "neighbours": 1.3901266718106997,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385617,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51775
+          },
+          "idx_line": 11309
+        },
+        {
+          "frame": 11309,
+          "present": [
+            11310,
+            573.515
+          ],
+          "diff_prev": 4.406057741769547,
+          "diff_next": 4.406057741769547,
+          "neighbours": 0.0,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385708,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48460
+          },
+          "idx_line": 11310
+        },
+        {
+          "frame": 11310,
+          "present": [
+            11311,
+            573.565
+          ],
+          "diff_prev": 4.406057741769547,
+          "diff_next": 4.400965149176954,
+          "neighbours": 0.08920653292181069,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385828,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51331
+          },
+          "idx_line": 11311
+        },
+        {
+          "frame": 11311,
+          "present": [
+            11312,
+            573.615
+          ],
+          "diff_prev": 4.400965149176954,
+          "diff_next": 4.400965149176954,
+          "neighbours": 0.0,
+          "area": 25896,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1385920,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48795
+          },
+          "idx_line": 11312
+        },
+        {
+          "frame": 11312,
+          "present": [
+            11313,
+            573.664
+          ],
+          "diff_prev": 4.400965149176954,
+          "diff_next": 5.161381172839505,
+          "neighbours": 1.3908339763374487,
+          "area": 25896,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386011,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50372
+          },
+          "idx_line": 11313
+        },
+        {
+          "frame": 11313,
+          "present": [
+            11314,
+            573.715
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386103,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50032
+          },
+          "idx_line": 11314
+        },
+        {
+          "frame": 11314,
+          "present": [
+            11315,
+            573.765
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.198180298353909,
+          "neighbours": 0.39269675925925923,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386222,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50081
+          },
+          "idx_line": 11315
+        },
+        {
+          "frame": 11315,
+          "present": [
+            11316,
+            573.814
+          ],
+          "diff_prev": 5.198180298353909,
+          "diff_next": 5.198180298353909,
+          "neighbours": 0.0,
+          "area": 27679,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386314,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51020
+          },
+          "idx_line": 11316
+        },
+        {
+          "frame": 11316,
+          "present": [
+            11317,
+            573.865
+          ],
+          "diff_prev": 5.198180298353909,
+          "diff_next": 5.161527777777777,
+          "neighbours": 0.39284336419753085,
+          "area": 27679,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386404,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48210
+          },
+          "idx_line": 11317
+        },
+        {
+          "frame": 11317,
+          "present": [
+            11318,
+            573.915
+          ],
+          "diff_prev": 5.161527777777777,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.00014660493827160494,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386494,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51864
+          },
+          "idx_line": 11318
+        },
+        {
+          "frame": 11318,
+          "present": [
+            11319,
+            573.964
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386625,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48442
+          },
+          "idx_line": 11319
+        },
+        {
+          "frame": 11319,
+          "present": [
+            11320,
+            574.015
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386717,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50395
+          },
+          "idx_line": 11320
+        },
+        {
+          "frame": 11320,
+          "present": [
+            11321,
+            574.065
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.08063657407407407,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386808,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50164
+          },
+          "idx_line": 11321
+        },
+        {
+          "frame": 11321,
+          "present": [
+            11322,
+            574.115
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1386899,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49590
+          },
+          "idx_line": 11322
+        },
+        {
+          "frame": 11322,
+          "present": [
+            11323,
+            574.165
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 4.402071116255144,
+          "neighbours": 1.3871006944444444,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387017,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50483
+          },
+          "idx_line": 11323
+        },
+        {
+          "frame": 11323,
+          "present": [
+            11324,
+            574.215
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 4.402071116255144,
+          "neighbours": 0.0,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387107,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49843
+          },
+          "idx_line": 11324
+        },
+        {
+          "frame": 11324,
+          "present": [
+            11325,
+            574.265
+          ],
+          "diff_prev": 4.402071116255144,
+          "diff_next": 5.161381172839505,
+          "neighbours": 1.3871006944444444,
+          "area": 25945,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387197,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51180
+          },
+          "idx_line": 11325
+        },
+        {
+          "frame": 11325,
+          "present": [
+            11326,
+            574.315
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387289,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48609
+          },
+          "idx_line": 11326
+        },
+        {
+          "frame": 11326,
+          "present": [
+            11327,
+            574.365
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387422,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49782
+          },
+          "idx_line": 11327
+        },
+        {
+          "frame": 11327,
+          "present": [
+            11328,
+            574.415
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387512,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51234
+          },
+          "idx_line": 11328
+        },
+        {
+          "frame": 11328,
+          "present": [
+            11329,
+            574.465
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.08063657407407407,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387602,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48192
+          },
+          "idx_line": 11329
+        },
+        {
+          "frame": 11329,
+          "present": [
+            11330,
+            574.515
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.161381172839505,
+          "neighbours": 0.0,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387720,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50709
+          },
+          "idx_line": 11330
+        },
+        {
+          "frame": 11330,
+          "present": [
+            11331,
+            574.565
+          ],
+          "diff_prev": 5.161381172839505,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.08063657407407407,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387810,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 50686
+          },
+          "idx_line": 11331
+        },
+        {
+          "frame": 11331,
+          "present": [
+            11332,
+            574.614
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 5.159048353909464,
+          "neighbours": 0.0,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1387900,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 49579
+          },
+          "idx_line": 11332
+        },
+        {
+          "frame": 11332,
+          "present": [
+            11333,
+            574.665
+          ],
+          "diff_prev": 5.159048353909464,
+          "diff_next": 4.406057741769547,
+          "neighbours": 1.3901266718106997,
+          "area": 27571,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388034,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51198
+          },
+          "idx_line": 11333
+        },
+        {
+          "frame": 11333,
+          "present": [
+            11334,
+            574.715
+          ],
+          "diff_prev": 4.406057741769547,
+          "diff_next": 4.406057741769547,
+          "neighbours": 0.0,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388127,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48115
+          },
+          "idx_line": 11334
+        },
+        {
+          "frame": 11334,
+          "present": [
+            11335,
+            574.765
+          ],
+          "diff_prev": 4.406057741769547,
+          "diff_next": 4.400965149176954,
+          "neighbours": 0.08920653292181069,
+          "area": 26126,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388147,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 36848
+          },
+          "idx_line": 11335
+        },
+        {
+          "frame": 11335,
+          "present": [
+            11336,
+            574.815
+          ],
+          "diff_prev": 4.400965149176954,
+          "diff_next": 4.400965149176954,
+          "neighbours": 0.0,
+          "area": 25896,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388307,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 64202
+          },
+          "idx_line": 11336
+        },
+        {
+          "frame": 11336,
+          "present": [
+            11337,
+            574.864
+          ],
+          "diff_prev": 4.400965149176954,
+          "diff_next": 5.167581661522633,
+          "neighbours": 1.396682098765432,
+          "area": 25896,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388429,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 48867
+          },
+          "idx_line": 11337
+        },
+        {
+          "frame": 11337,
+          "present": [
+            11338,
+            574.915
+          ],
+          "diff_prev": 5.167581661522633,
+          "diff_next": 5.1606159979423865,
+          "neighbours": 0.011660879629629637,
+          "area": 27678,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388518,
+            "arm": 1,
+            "blk": 105,
+            "dt_us": 51139
+          },
+          "idx_line": 11338
+        },
+        {
+          "frame": 11341,
+          "present": [
+            11342,
+            575.115
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.0,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1388913,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51285
+          },
+          "idx_line": 11342
+        },
+        {
+          "frame": 11342,
+          "present": [
+            11343,
+            575.165
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.389002057613168,
+          "neighbours": 1.0721707818930042,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389003,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48887
+          },
+          "idx_line": 11343
+        },
+        {
+          "frame": 11343,
+          "present": [
+            11344,
+            575.215
+          ],
+          "diff_prev": 5.389002057613168,
+          "diff_next": 5.389002057613168,
+          "neighbours": 0.0,
+          "area": 28281,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389094,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50115
+          },
+          "idx_line": 11344
+        },
+        {
+          "frame": 11344,
+          "present": [
+            11345,
+            575.25
+          ],
+          "diff_prev": 5.389002057613168,
+          "diff_next": 5.146390174897119,
+          "neighbours": 1.0721707818930042,
+          "area": 28281,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389214,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50177
+          },
+          "idx_line": 11345
+        },
+        {
+          "frame": 11345,
+          "present": [
+            11346,
+            575.315
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.0,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389234,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 32580
+          },
+          "idx_line": 11346
+        },
+        {
+          "frame": 11346,
+          "present": [
+            11347,
+            575.364
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.05935442386831275,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389337,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51597
+          },
+          "idx_line": 11347
+        },
+        {
+          "frame": 11347,
+          "present": [
+            11348,
+            575.415
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.0,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389514,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 64770
+          },
+          "idx_line": 11348
+        },
+        {
+          "frame": 11348,
+          "present": [
+            11349,
+            575.464
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.3836156121399177,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389604,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50842
+          },
+          "idx_line": 11349
+        },
+        {
+          "frame": 11349,
+          "present": [
+            11350,
+            575.515
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389696,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49686
+          },
+          "idx_line": 11350
+        },
+        {
+          "frame": 11350,
+          "present": [
+            11351,
+            575.564
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.06807548868312756,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389735,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 35522
+          },
+          "idx_line": 11351
+        },
+        {
+          "frame": 11351,
+          "present": [
+            11352,
+            575.615
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.0,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389865,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 47656
+          },
+          "idx_line": 11352
+        },
+        {
+          "frame": 11352,
+          "present": [
+            11353,
+            575.664
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.06807548868312756,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1389968,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 52048
+          },
+          "idx_line": 11353
+        },
+        {
+          "frame": 11353,
+          "present": [
+            11354,
+            575.715
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390129,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 63967
+          },
+          "idx_line": 11354
+        },
+        {
+          "frame": 11354,
+          "present": [
+            11355,
+            575.765
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 4.392480709876543,
+          "neighbours": 1.3128285751028805,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390149,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 34868
+          },
+          "idx_line": 11355
+        },
+        {
+          "frame": 11355,
+          "present": [
+            11356,
+            575.798
+          ],
+          "diff_prev": 4.392480709876543,
+          "diff_next": 4.392480709876543,
+          "neighbours": 0.0,
+          "area": 26127,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390269,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50964
+          },
+          "idx_line": 11356
+        },
+        {
+          "frame": 11356,
+          "present": [
+            11357,
+            575.848
+          ],
+          "diff_prev": 4.392480709876543,
+          "diff_next": 5.096977237654321,
+          "neighbours": 1.3128285751028805,
+          "area": 26127,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390405,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 64074
+          },
+          "idx_line": 11357
+        },
+        {
+          "frame": 11357,
+          "present": [
+            11358,
+            575.915
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390492,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 37655
+          },
+          "idx_line": 11358
+        },
+        {
+          "frame": 11358,
+          "present": [
+            11359,
+            575.965
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.3828973765432099,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390587,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 47602
+          },
+          "idx_line": 11359
+        },
+        {
+          "frame": 11359,
+          "present": [
+            11360,
+            576.015
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.0,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390719,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 64911
+          },
+          "idx_line": 11360
+        },
+        {
+          "frame": 11360,
+          "present": [
+            11361,
+            576.048
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.06059992283950617,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390787,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 36545
+          },
+          "idx_line": 11361
+        },
+        {
+          "frame": 11361,
+          "present": [
+            11362,
+            576.098
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.0,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1390931,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 63833
+          },
+          "idx_line": 11362
+        },
+        {
+          "frame": 11362,
+          "present": [
+            11363,
+            576.148
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.096708461934156,
+          "neighbours": 0.3971778549382716,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391021,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50318
+          },
+          "idx_line": 11363
+        },
+        {
+          "frame": 11363,
+          "present": [
+            11364,
+            576.214
+          ],
+          "diff_prev": 5.096708461934156,
+          "diff_next": 5.096708461934156,
+          "neighbours": 0.0,
+          "area": 27486,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391140,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49951
+          },
+          "idx_line": 11364
+        },
+        {
+          "frame": 11364,
+          "present": [
+            11365,
+            576.248
+          ],
+          "diff_prev": 5.096708461934156,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.06487011316872428,
+          "area": 27486,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391231,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50111
+          },
+          "idx_line": 11365
+        },
+        {
+          "frame": 11365,
+          "present": [
+            11366,
+            576.298
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391321,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50967
+          },
+          "idx_line": 11366
+        },
+        {
+          "frame": 11366,
+          "present": [
+            11367,
+            576.364
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.06807548868312756,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391412,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48431
+          },
+          "idx_line": 11367
+        },
+        {
+          "frame": 11367,
+          "present": [
+            11368,
+            576.398
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.0,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391545,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51332
+          },
+          "idx_line": 11368
+        },
+        {
+          "frame": 11368,
+          "present": [
+            11369,
+            576.448
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 4.3948784722222225,
+          "neighbours": 1.313004758230453,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391635,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49654
+          },
+          "idx_line": 11369
+        },
+        {
+          "frame": 11369,
+          "present": [
+            11370,
+            576.515
+          ],
+          "diff_prev": 4.3948784722222225,
+          "diff_next": 4.3948784722222225,
+          "neighbours": 0.0,
+          "area": 26158,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391726,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48986
+          },
+          "idx_line": 11370
+        },
+        {
+          "frame": 11370,
+          "present": [
+            11371,
+            576.548
+          ],
+          "diff_prev": 4.3948784722222225,
+          "diff_next": 4.393006044238683,
+          "neighbours": 0.05056455761316871,
+          "area": 26158,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391817,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51760
+          },
+          "idx_line": 11371
+        },
+        {
+          "frame": 11371,
+          "present": [
+            11372,
+            576.615
+          ],
+          "diff_prev": 4.393006044238683,
+          "diff_next": 4.393006044238683,
+          "neighbours": 0.0,
+          "area": 26157,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1391935,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48896
+          },
+          "idx_line": 11372
+        },
+        {
+          "frame": 11372,
+          "present": [
+            11373,
+            576.665
+          ],
+          "diff_prev": 4.393006044238683,
+          "diff_next": 5.096977237654321,
+          "neighbours": 1.311966306584362,
+          "area": 26157,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392027,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49029
+          },
+          "idx_line": 11373
+        },
+        {
+          "frame": 11373,
+          "present": [
+            11374,
+            576.715
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392047,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 36020
+          },
+          "idx_line": 11374
+        },
+        {
+          "frame": 11374,
+          "present": [
+            11375,
+            576.764
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.3828973765432099,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392252,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 64146
+          },
+          "idx_line": 11375
+        },
+        {
+          "frame": 11375,
+          "present": [
+            11376,
+            576.815
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.0,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392314,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 36589
+          },
+          "idx_line": 11376
+        },
+        {
+          "frame": 11376,
+          "present": [
+            11377,
+            576.865
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.06059992283950617,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392414,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48873
+          },
+          "idx_line": 11377
+        },
+        {
+          "frame": 11377,
+          "present": [
+            11378,
+            576.914
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.0,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392513,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50711
+          },
+          "idx_line": 11378
+        },
+        {
+          "frame": 11378,
+          "present": [
+            11379,
+            576.965
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.05935442386831275,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392624,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49799
+          },
+          "idx_line": 11379
+        },
+        {
+          "frame": 11379,
+          "present": [
+            11380,
+            577.015
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.0,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392730,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49797
+          },
+          "idx_line": 11380
+        },
+        {
+          "frame": 11380,
+          "present": [
+            11381,
+            577.065
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.3836156121399177,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392839,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49569
+          },
+          "idx_line": 11381
+        },
+        {
+          "frame": 11381,
+          "present": [
+            11382,
+            577.114
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1392952,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49876
+          },
+          "idx_line": 11382
+        },
+        {
+          "frame": 11382,
+          "present": [
+            11383,
+            577.164
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.06807548868312756,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393045,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49289
+          },
+          "idx_line": 11383
+        },
+        {
+          "frame": 11383,
+          "present": [
+            11384,
+            577.198
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 5.097557870370371,
+          "neighbours": 0.0,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393152,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49293
+          },
+          "idx_line": 11384
+        },
+        {
+          "frame": 11384,
+          "present": [
+            11385,
+            577.264
+          ],
+          "diff_prev": 5.097557870370371,
+          "diff_next": 4.3948784722222225,
+          "neighbours": 1.313004758230453,
+          "area": 27487,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393256,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51366
+          },
+          "idx_line": 11385
+        },
+        {
+          "frame": 11385,
+          "present": [
+            11386,
+            577.298
+          ],
+          "diff_prev": 4.3948784722222225,
+          "diff_next": 4.3948784722222225,
+          "neighbours": 0.0,
+          "area": 26158,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393346,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49476
+          },
+          "idx_line": 11386
+        },
+        {
+          "frame": 11386,
+          "present": [
+            11387,
+            577.348
+          ],
+          "diff_prev": 4.3948784722222225,
+          "diff_next": 4.393006044238683,
+          "neighbours": 0.05056455761316871,
+          "area": 26158,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393463,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50376
+          },
+          "idx_line": 11387
+        },
+        {
+          "frame": 11387,
+          "present": [
+            11388,
+            577.398
+          ],
+          "diff_prev": 4.393006044238683,
+          "diff_next": 4.393006044238683,
+          "neighbours": 0.0,
+          "area": 26157,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393555,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48790
+          },
+          "idx_line": 11388
+        },
+        {
+          "frame": 11388,
+          "present": [
+            11389,
+            577.448
+          ],
+          "diff_prev": 4.393006044238683,
+          "diff_next": 5.096977237654321,
+          "neighbours": 1.311966306584362,
+          "area": 26157,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393646,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51241
+          },
+          "idx_line": 11389
+        },
+        {
+          "frame": 11389,
+          "present": [
+            11390,
+            577.498
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.096977237654321,
+          "neighbours": 0.0,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393749,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49676
+          },
+          "idx_line": 11390
+        },
+        {
+          "frame": 11390,
+          "present": [
+            11391,
+            577.548
+          ],
+          "diff_prev": 5.096977237654321,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.3828973765432099,
+          "area": 27531,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393857,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49238
+          },
+          "idx_line": 11391
+        },
+        {
+          "frame": 11391,
+          "present": [
+            11392,
+            577.598
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.148913966049382,
+          "neighbours": 0.0,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1393948,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51283
+          },
+          "idx_line": 11392
+        },
+        {
+          "frame": 11392,
+          "present": [
+            11393,
+            577.648
+          ],
+          "diff_prev": 5.148913966049382,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.06059992283950617,
+          "area": 27864,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394040,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49544
+          },
+          "idx_line": 11393
+        },
+        {
+          "frame": 11393,
+          "present": [
+            11394,
+            577.698
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.146390174897119,
+          "neighbours": 0.0,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394143,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50164
+          },
+          "idx_line": 11394
+        },
+        {
+          "frame": 11394,
+          "present": [
+            11395,
+            577.748
+          ],
+          "diff_prev": 5.146390174897119,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.05935442386831275,
+          "area": 27843,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394250,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48982
+          },
+          "idx_line": 11395
+        },
+        {
+          "frame": 11395,
+          "present": [
+            11396,
+            577.798
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.148216306584361,
+          "neighbours": 0.0,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394340,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51207
+          },
+          "idx_line": 11396
+        },
+        {
+          "frame": 11396,
+          "present": [
+            11397,
+            577.848
+          ],
+          "diff_prev": 5.148216306584361,
+          "diff_next": 5.100540766460906,
+          "neighbours": 0.3911953446502057,
+          "area": 27858,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394434,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49431
+          },
+          "idx_line": 11397
+        },
+        {
+          "frame": 11397,
+          "present": [
+            11398,
+            577.898
+          ],
+          "diff_prev": 5.100540766460906,
+          "diff_next": 5.096379886831275,
+          "neighbours": 0.009445087448559675,
+          "area": 27532,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394546,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50297
+          },
+          "idx_line": 11398
+        },
+        {
+          "frame": 11399,
+          "present": [
+            11400,
+            577.998
+          ],
+          "diff_prev": 5.841520704732511,
+          "diff_next": 6.116465406378601,
+          "neighbours": 0.5706571502057612,
+          "area": 29703,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394749,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50428
+          },
+          "idx_line": 11400
+        },
+        {
+          "frame": 11401,
+          "present": [
+            11402,
+            578.098
+          ],
+          "diff_prev": 4.402593878600823,
+          "diff_next": 4.402593878600823,
+          "neighbours": 0.0,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1394962,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49704
+          },
+          "idx_line": 11402
+        },
+        {
+          "frame": 11402,
+          "present": [
+            11403,
+            578.148
+          ],
+          "diff_prev": 4.402593878600823,
+          "diff_next": 5.146250643004115,
+          "neighbours": 1.4045338220164607,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395053,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50189
+          },
+          "idx_line": 11403
+        },
+        {
+          "frame": 11403,
+          "present": [
+            11404,
+            578.198
+          ],
+          "diff_prev": 5.146250643004115,
+          "diff_next": 5.146250643004115,
+          "neighbours": 0.0,
+          "area": 27706,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395144,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49991
+          },
+          "idx_line": 11404
+        },
+        {
+          "frame": 11404,
+          "present": [
+            11405,
+            578.248
+          ],
+          "diff_prev": 5.146250643004115,
+          "diff_next": 5.149565329218107,
+          "neighbours": 0.08406185699588473,
+          "area": 27706,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395254,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49340
+          },
+          "idx_line": 11405
+        },
+        {
+          "frame": 11405,
+          "present": [
+            11406,
+            578.298
+          ],
+          "diff_prev": 5.149565329218107,
+          "diff_next": 5.14930362654321,
+          "neighbours": 0.0020183899176954728,
+          "area": 27732,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395368,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51044
+          },
+          "idx_line": 11406
+        },
+        {
+          "frame": 11406,
+          "present": [
+            11407,
+            578.348
+          ],
+          "diff_prev": 5.14930362654321,
+          "diff_next": 5.389236111111111,
+          "neighbours": 1.0862776491769546,
+          "area": 27734,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395459,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49585
+          },
+          "idx_line": 11407
+        },
+        {
+          "frame": 11407,
+          "present": [
+            11408,
+            578.398
+          ],
+          "diff_prev": 5.389236111111111,
+          "diff_next": 5.389904835390946,
+          "neighbours": 0.0015959362139917688,
+          "area": 28181,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395548,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50693
+          },
+          "idx_line": 11408
+        },
+        {
+          "frame": 11408,
+          "present": [
+            11409,
+            578.448
+          ],
+          "diff_prev": 5.389904835390946,
+          "diff_next": 5.148530092592591,
+          "neighbours": 1.0900591563786008,
+          "area": 28178,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395666,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50012
+          },
+          "idx_line": 11409
+        },
+        {
+          "frame": 11409,
+          "present": [
+            11410,
+            578.498
+          ],
+          "diff_prev": 5.148530092592591,
+          "diff_next": 5.148530092592591,
+          "neighbours": 0.0,
+          "area": 27738,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395740,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50114
+          },
+          "idx_line": 11410
+        },
+        {
+          "frame": 11410,
+          "present": [
+            11411,
+            578.548
+          ],
+          "diff_prev": 5.148530092592591,
+          "diff_next": 5.149173096707818,
+          "neighbours": 0.07718878600823043,
+          "area": 27738,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395830,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49987
+          },
+          "idx_line": 11411
+        },
+        {
+          "frame": 11411,
+          "present": [
+            11412,
+            578.598
+          ],
+          "diff_prev": 5.149173096707818,
+          "diff_next": 5.149173096707818,
+          "neighbours": 0.0,
+          "area": 27751,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1395938,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50334
+          },
+          "idx_line": 11412
+        },
+        {
+          "frame": 11412,
+          "present": [
+            11413,
+            578.648
+          ],
+          "diff_prev": 5.149173096707818,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.385522762345679,
+          "area": 27751,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396035,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50060
+          },
+          "idx_line": 11413
+        },
+        {
+          "frame": 11413,
+          "present": [
+            11414,
+            578.698
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.0,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396131,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50348
+          },
+          "idx_line": 11414
+        },
+        {
+          "frame": 11414,
+          "present": [
+            11415,
+            578.748
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.109080504115226,
+          "neighbours": 0.059710005144032914,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396185,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49197
+          },
+          "idx_line": 11415
+        },
+        {
+          "frame": 11415,
+          "present": [
+            11416,
+            578.798
+          ],
+          "diff_prev": 5.109080504115226,
+          "diff_next": 5.109080504115226,
+          "neighbours": 0.0,
+          "area": 27504,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396373,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 64645
+          },
+          "idx_line": 11416
+        },
+        {
+          "frame": 11416,
+          "present": [
+            11417,
+            578.848
+          ],
+          "diff_prev": 5.109080504115226,
+          "diff_next": 4.403016332304526,
+          "neighbours": 1.3131873713991769,
+          "area": 27504,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396463,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50550
+          },
+          "idx_line": 11417
+        },
+        {
+          "frame": 11417,
+          "present": [
+            11418,
+            578.898
+          ],
+          "diff_prev": 4.403016332304526,
+          "diff_next": 4.403016332304526,
+          "neighbours": 0.0,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396553,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50992
+          },
+          "idx_line": 11418
+        },
+        {
+          "frame": 11418,
+          "present": [
+            11419,
+            578.948
+          ],
+          "diff_prev": 4.403016332304526,
+          "diff_next": 4.400954218106995,
+          "neighbours": 0.06630722736625515,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396671,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49515
+          },
+          "idx_line": 11419
+        },
+        {
+          "frame": 11419,
+          "present": [
+            11420,
+            578.998
+          ],
+          "diff_prev": 4.400954218106995,
+          "diff_next": 4.400954218106995,
+          "neighbours": 0.0,
+          "area": 26170,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396767,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50081
+          },
+          "idx_line": 11420
+        },
+        {
+          "frame": 11420,
+          "present": [
+            11421,
+            579.048
+          ],
+          "diff_prev": 4.400954218106995,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 1.3174813528806584,
+          "area": 26170,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396859,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48814
+          },
+          "idx_line": 11421
+        },
+        {
+          "frame": 11421,
+          "present": [
+            11422,
+            579.098
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.0,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1396952,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50694
+          },
+          "idx_line": 11422
+        },
+        {
+          "frame": 11422,
+          "present": [
+            11423,
+            579.148
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.146784336419752,
+          "neighbours": 0.38454732510288064,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397085,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49942
+          },
+          "idx_line": 11423
+        },
+        {
+          "frame": 11423,
+          "present": [
+            11424,
+            579.198
+          ],
+          "diff_prev": 5.146784336419752,
+          "diff_next": 5.146784336419752,
+          "neighbours": 0.0,
+          "area": 27708,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397175,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50324
+          },
+          "idx_line": 11424
+        },
+        {
+          "frame": 11424,
+          "present": [
+            11425,
+            579.248
+          ],
+          "diff_prev": 5.146784336419752,
+          "diff_next": 5.148530092592591,
+          "neighbours": 0.07937564300411519,
+          "area": 27708,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397268,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49481
+          },
+          "idx_line": 11425
+        },
+        {
+          "frame": 11425,
+          "present": [
+            11426,
+            579.315
+          ],
+          "diff_prev": 5.148530092592591,
+          "diff_next": 5.148530092592591,
+          "neighbours": 0.0,
+          "area": 27738,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397388,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 50555
+          },
+          "idx_line": 11426
+        },
+        {
+          "frame": 11426,
+          "present": [
+            11427,
+            579.365
+          ],
+          "diff_prev": 5.148530092592591,
+          "diff_next": 5.149173096707818,
+          "neighbours": 0.07718878600823043,
+          "area": 27738,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397479,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 49519
+          },
+          "idx_line": 11427
+        },
+        {
+          "frame": 11427,
+          "present": [
+            11428,
+            579.415
+          ],
+          "diff_prev": 5.149173096707818,
+          "diff_next": 5.149173096707818,
+          "neighbours": 0.0,
+          "area": 27751,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397571,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 51143
+          },
+          "idx_line": 11428
+        },
+        {
+          "frame": 11428,
+          "present": [
+            11429,
+            579.465
+          ],
+          "diff_prev": 5.149173096707818,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.385522762345679,
+          "area": 27751,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397661,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 48568
+          },
+          "idx_line": 11429
+        },
+        {
+          "frame": 11429,
+          "present": [
+            11430,
+            579.515
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.0,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397690,
+            "arm": 1,
+            "blk": 106,
+            "dt_us": 35577
+          },
+          "idx_line": 11430
+        },
+        {
+          "frame": 11430,
+          "present": [
+            11431,
+            579.564
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.109080504115226,
+          "neighbours": 0.059710005144032914,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397887,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 64881
+          },
+          "idx_line": 11431
+        },
+        {
+          "frame": 11431,
+          "present": [
+            11432,
+            579.615
+          ],
+          "diff_prev": 5.109080504115226,
+          "diff_next": 5.109080504115226,
+          "neighbours": 0.0,
+          "area": 27504,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1397979,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 66558
+          },
+          "idx_line": 11432
+        },
+        {
+          "frame": 11432,
+          "present": [
+            11433,
+            579.664
+          ],
+          "diff_prev": 5.109080504115226,
+          "diff_next": 4.403016332304526,
+          "neighbours": 1.3131873713991769,
+          "area": 27504,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398097,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 49988
+          },
+          "idx_line": 11433
+        },
+        {
+          "frame": 11433,
+          "present": [
+            11434,
+            579.715
+          ],
+          "diff_prev": 4.403016332304526,
+          "diff_next": 4.403016332304526,
+          "neighbours": 0.0,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398188,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 50119
+          },
+          "idx_line": 11434
+        },
+        {
+          "frame": 11434,
+          "present": [
+            11435,
+            579.764
+          ],
+          "diff_prev": 4.403016332304526,
+          "diff_next": 4.400954218106995,
+          "neighbours": 0.06630722736625515,
+          "area": 26200,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398279,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 50692
+          },
+          "idx_line": 11435
+        },
+        {
+          "frame": 11435,
+          "present": [
+            11436,
+            579.815
+          ],
+          "diff_prev": 4.400954218106995,
+          "diff_next": 4.400954218106995,
+          "neighbours": 0.0,
+          "area": 26170,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398398,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 48883
+          },
+          "idx_line": 11436
+        },
+        {
+          "frame": 11436,
+          "present": [
+            11437,
+            579.864
+          ],
+          "diff_prev": 4.400954218106995,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 1.3174813528806584,
+          "area": 26170,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398500,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 51641
+          },
+          "idx_line": 11437
+        },
+        {
+          "frame": 11437,
+          "present": [
+            11438,
+            579.915
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.1107195216049375,
+          "neighbours": 0.0,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398654,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 49631
+          },
+          "idx_line": 11438
+        },
+        {
+          "frame": 11438,
+          "present": [
+            11439,
+            579.965
+          ],
+          "diff_prev": 5.1107195216049375,
+          "diff_next": 5.146784336419752,
+          "neighbours": 0.38454732510288064,
+          "area": 27500,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398777,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 48303
+          },
+          "idx_line": 11439
+        },
+        {
+          "frame": 11439,
+          "present": [
+            11440,
+            579.998
+          ],
+          "diff_prev": 5.146784336419752,
+          "diff_next": 5.146784336419752,
+          "neighbours": 0.0,
+          "area": 27708,
+          "bbox": [
+            0,
+            0,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1398870,
+            "arm": 0,
+            "blk": 107,
+            "dt_us": 50909
+          },
+          "idx_line": 11440
+        },
+        {
+          "frame": 13966,
+          "present": [
+            13967,
+            707.199
+          ],
+          "diff_prev": 9.273278677983539,
+          "diff_next": 9.480001929012346,
+          "neighbours": 2.761156121399177,
+          "area": 61960,
+          "bbox": [
+            0,
+            3,
+            959,
+            539
+          ],
+          "trace": {
+            "line": 1652726,
+            "arm": 0,
+            "blk": 135,
+            "dt_us": 49574
+          },
+          "idx_line": 13967
+        }
+      ],
+      "event_arm_counts": {
+        "1": 174,
+        "0": 11
+      }
+    }
+  }
+}

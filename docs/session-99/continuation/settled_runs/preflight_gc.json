@@ -1,0 +1,73 @@
+{
+  "timestamp": "2026-09-19T18:39:08.228616+02:00",
+  "status": "READY_AWAITING_COORDINATOR_GO",
+  "game_launched": false,
+  "checks": [
+    {
+      "path": "C:\\kyty\\s99\\pred\\04_gc_audit.md",
+      "bytes": 7835,
+      "sha256": "a93f4b6b1068cb34b06d02301d5c35f09483ef60f546f7669b03e193aeee611b",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\kyty_emulator_s99_gc.exe",
+      "bytes": 23743488,
+      "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\build\\install\\kyty_emulator.exe",
+      "bytes": 23743488,
+      "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\gates_base.txt",
+      "bytes": 1092,
+      "sha256": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\pred\\02_settled_bindings.md",
+      "bytes": 13461,
+      "sha256": "1d1ebf286869ab59944fe135fc5c69d1315d4c61667b6c3dd2ab3ca14839724c",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\settled99_gc.py",
+      "bytes": 32101,
+      "sha256": "6d242596de76023c1dbdcab9a58bfbe5ed690ce340734e972b6115aa60c2f804",
+      "pass": true
+    },
+    {
+      "path": "C:\\kyty\\s99\\test_settled99_gc.py",
+      "bytes": 21948,
+      "sha256": "fcbab5e0fe50c0d8a6f8c6c06ca45a590cd72ff2351e8d8e8836cbbf2065410a",
+      "pass": true
+    }
+  ],
+  "installed_before": {
+    "path": "C:\\Users\\<user>\\OneDrive\\Desktop\\ps5 em\\kyty_emulator.exe",
+    "bytes": 23741440,
+    "sha256": "2a6bb5388d8fdd97a4aab20e1bde2715e3d92ad499c49b7cd2ea094ec0385c87"
+  },
+  "existing_backup": {
+    "path": "C:\\kyty\\s99\\kyty_emulator_s99_cpu.exe",
+    "bytes": 23741440,
+    "sha256": "2a6bb5388d8fdd97a4aab20e1bde2715e3d92ad499c49b7cd2ea094ec0385c87"
+  },
+  "installed_after": {
+    "path": "C:\\Users\\<user>\\OneDrive\\Desktop\\ps5 em\\kyty_emulator.exe",
+    "bytes": 23743488,
+    "sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f"
+  },
+  "processes": [],
+  "gpu": "name, utilization.gpu [%], utilization.memory [%], memory.used [MiB], clocks.current.graphics [MHz], clocks.current.memory [MHz], power.draw [W]\nNVIDIA GeForce RTX 5080 Laptop GPU, 1 %, 1 %, 1690 MiB, 1650 MHz, 14301 MHz, 23.53 W",
+  "tag_collisions": [],
+  "notes": [
+    "No emulator/build/profiler running; desktop applications left intact.",
+    "Existing CPU and old ee9cc8ab backups preserved.",
+    "Fresh scorer VERIFY pending coordinator; no game GO yet.",
+    "Planned reset eng99a4 has no source env/JSON and no ImageLife env keys; TRACE=0 must not be used."
+  ]
+}

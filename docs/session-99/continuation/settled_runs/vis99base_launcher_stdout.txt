@@ -1,0 +1,13 @@
+prereg: 05_observer_separation.md  8583 bytes  sha256 fb376ee63ce8fb19  mtime 2026-09-19T20:22:56  mtime-ctime -0.164 s
+pre_run: host 324 processes, top by CPU: System 49027s, dwm 29866s, voicemeeter 19446s, PhoneExperienceHost 14690s, svchost 14270s, figma_agent 11096s
+pre_run: GPU 2.0 % busy, 23.0 W, 1682 MiB used, SM 1650.0 MHz, 23 process(es) on the GPU
+--- attempt 1: launching
+9.7 s  LevelDocument Loaded: underwater_aerial_garden
+11.8 s  Level has started: underwater_aerial_garden
+24.4 s  scene stable at frame 398 (90 frames with draws >= 3000)
+holding the run for 900 s
+copied C:\kyty\s99\log_vis99base.txt
+copied C:\kyty\s99\stdout_vis99base.txt
+
+attempt 1  ok               document=9.7 s started=11.8 s stable=24.4 s 
+VERDICT: underwater_aerial_garden in 24.4 s - PASS (acceptance <= 90 s)

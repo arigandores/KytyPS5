@@ -1,0 +1,352 @@
+{
+  "tag": "aa99plain",
+  "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+  "started": "2026-09-19T20:50:21",
+  "launched": "2026-09-19T20:44:59",
+  "finished": "2026-09-19T20:50:21",
+  "cmdline": [
+    "C:\\Users\\<user>\\OneDrive\\Desktop\\ps5 em\\kyty_emulator.exe",
+    "--screen-width",
+    "1280",
+    "--screen-height",
+    "720",
+    "--user-name",
+    "Player",
+    "--user-id",
+    "1000",
+    "--present-mode",
+    "Fifo",
+    "--vblank-frequency",
+    "60",
+    "--console-language",
+    "1",
+    "--vulkan-validation",
+    "false",
+    "--shader-validation",
+    "false",
+    "--shader-optimization-type",
+    "Size",
+    "--shader-log-direction",
+    "File",
+    "--shader-log-folder",
+    "_Shaders",
+    "--command-buffer-dump",
+    "false",
+    "--command-buffer-dump-folder",
+    "_Buffers",
+    "--printf-direction",
+    "File",
+    "--printf-output-file",
+    "_kyty.txt",
+    "--spirv-debug-printf",
+    "false",
+    "--game",
+    "C:\\Users\\<user>\\OneDrive\\Desktop\\ps5 em\\games\\PPSA21564-app"
+  ],
+  "env": {
+    "VK_SDK_PATH": "C:\\VulkanSDK\\1.4.357.0",
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\s99\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\s99\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl underwater_aerial_garden",
+    "KYTY_GATE_SCHEDULE": "90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=17800|bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+    "KYTY_GATE_SCHEDULE_ABBA": "1",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_BIND_FLOOR_LATCH": "1",
+    "KYTY_BIND_FLOOR_CLEAR": "0",
+    "KYTY_GPU_MARKERS": "0",
+    "KYTY_GPU_CHECKPOINTS": "0",
+    "KYTY_BIND_FLOOR_CPU": "1",
+    "KYTY_BIND_FLOOR_GC_AUDIT": "1"
+  },
+  "schedule": "90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=17800|bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+  "arms": [
+    "bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+    "bindfloor=0 drawahead=1 bfmode=2 bfburn=17800"
+  ],
+  "phases": [],
+  "notes": "KYTY_GPU_TIME unset: the record thread stays live (PacketsWanted); guest command line: -lvl underwater_aerial_garden; stable = 90 consecutive FrameTrace lines with draws >= 3000; ran the already installed binary (--no-install)",
+  "pre_run": {
+    "gpu_util_median": 1.0,
+    "gpu_power_median": 22.7,
+    "gpu_memory_used_mib": 1686,
+    "gpu_apps": [
+      {
+        "pid": 2844,
+        "name": "C:\\Windows\\System32\\dwm.exe"
+      },
+      {
+        "pid": 16488,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\CrossDeviceResume.exe"
+      },
+      {
+        "pid": 15640,
+        "name": "C:\\Windows\\explorer.exe"
+      },
+      {
+        "pid": 17724,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\SearchHost.exe"
+      },
+      {
+        "pid": 17732,
+        "name": "C:\\Windows\\SystemApps\\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\\StartMenuExperienceHost.exe"
+      },
+      {
+        "pid": 13052,
+        "name": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\152.0.4191.66\\msedgewebview2.exe"
+      },
+      {
+        "pid": 20828,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.YourPhone_1.26071.164.0_x64__8wekyb3d8bbwe\\PhoneExperienceHost.exe"
+      },
+      {
+        "pid": 21116,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.YourPhone_1.26071.164.0_x64__8wekyb3d8bbwe\\YourPhoneAppProxyHost.exe"
+      },
+      {
+        "pid": 26396,
+        "name": "C:\\Windows\\SystemApps\\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\\TextInputHost.exe"
+      },
+      {
+        "pid": 12404,
+        "name": "C:\\Program Files\\Cloudflare\\Cloudflare WARP\\Cloudflare WARP.exe"
+      },
+      {
+        "pid": 23296,
+        "name": "C:\\Program Files\\Razer\\RazerAppEngine\\app-4.0.821\\RazerAppEngine.exe"
+      },
+      {
+        "pid": 28804,
+        "name": "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application\\152.0.4191.66\\msedgewebview2.exe"
+      },
+      {
+        "pid": 30164,
+        "name": "C:\\Program Files\\LGHUB\\system_tray\\lghub_system_tray.exe"
+      },
+      {
+        "pid": 41580,
+        "name": "C:\\Windows\\SystemApps\\ShellExperienceHost_cw5n1h2txyewy\\ShellExperienceHost.exe"
+      },
+      {
+        "pid": 8592,
+        "name": "C:\\Program Files\\WindowsApps\\AdvancedMicroDevicesInc-2.AMDRadeonSoftware_10.25.10201.0_x64__0a9344xs7nr4m\\radeonsoftware\\AMDRSSrcExt.exe"
+      },
+      {
+        "pid": 40184,
+        "name": "C:\\Program Files\\WindowsApps\\unchihugo.FluentFlyout_2.14.0.0_x64__69b7b6qge1ahj\\FluentFlyout\\FluentFlyout.exe"
+      },
+      {
+        "pid": 11424,
+        "name": "C:\\Windows\\explorer.exe"
+      },
+      {
+        "pid": 28560,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.ScreenSketch_11.2605.38.0_x64__8wekyb3d8bbwe\\SnippingTool\\SnippingTool.exe"
+      },
+      {
+        "pid": 75224,
+        "name": "C:\\Program Files\\Common Files\\microsoft shared\\ink\\TabTip.exe"
+      },
+      {
+        "pid": 56060,
+        "name": "C:\\Program Files\\DS4Windows\\DS4Windows.exe"
+      },
+      {
+        "pid": 57588,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_1.24.11911.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+      },
+      {
+        "pid": 37464,
+        "name": "C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_1.24.11911.0_x64__8wekyb3d8bbwe\\WindowsTerminal.exe"
+      },
+      {
+        "pid": 6804,
+        "name": "C:\\Windows\\System32\\ShellHost.exe"
+      }
+    ],
+    "host": {
+      "available": true,
+      "process_count": 324,
+      "top": [
+        {
+          "name": "System",
+          "pid": 4,
+          "cpu_s": 49164.8,
+          "ws_mib": 33.9
+        },
+        {
+          "name": "dwm",
+          "pid": 2844,
+          "cpu_s": 29975.5,
+          "ws_mib": 148.6
+        },
+        {
+          "name": "voicemeeter",
+          "pid": 32632,
+          "cpu_s": 19487.3,
+          "ws_mib": 14.9
+        },
+        {
+          "name": "PhoneExperienceHost",
+          "pid": 20828,
+          "cpu_s": 14757.7,
+          "ws_mib": 480.8
+        },
+        {
+          "name": "svchost",
+          "pid": 10968,
+          "cpu_s": 14307.6,
+          "ws_mib": 40.2
+        },
+        {
+          "name": "figma_agent",
+          "pid": 32716,
+          "cpu_s": 11121.4,
+          "ws_mib": 17.3
+        },
+        {
+          "name": "WmiPrvSE",
+          "pid": 6384,
+          "cpu_s": 10003.1,
+          "ws_mib": 68.6
+        },
+        {
+          "name": "explorer",
+          "pid": 15640,
+          "cpu_s": 9546.4,
+          "ws_mib": 371.4
+        },
+        {
+          "name": "audiodg",
+          "pid": 6264,
+          "cpu_s": 5428.6,
+          "ws_mib": 51.1
+        },
+        {
+          "name": "NVDisplay.Container",
+          "pid": 5020,
+          "cpu_s": 4894.3,
+          "ws_mib": 69.3
+        },
+        {
+          "name": "nvcontainer",
+          "pid": 7268,
+          "cpu_s": 4575.9,
+          "ws_mib": 88.2
+        },
+        {
+          "name": "DS4Windows",
+          "pid": 56060,
+          "cpu_s": 3056.2,
+          "ws_mib": 305.7
+        },
+        {
+          "name": "csrss",
+          "pid": 1936,
+          "cpu_s": 2617.9,
+          "ws_mib": 7.8
+        },
+        {
+          "name": "svchost",
+          "pid": 23244,
+          "cpu_s": 2080.4,
+          "ws_mib": 48.6
+        },
+        {
+          "name": "FluentFlyout",
+          "pid": 40184,
+          "cpu_s": 2012.2,
+          "ws_mib": 583.9
+        },
+        {
+          "name": "CrossDeviceService",
+          "pid": 16952,
+          "cpu_s": 1957.1,
+          "ws_mib": 205.8
+        },
+        {
+          "name": "Cloudflare WARP",
+          "pid": 12404,
+          "cpu_s": 1956.6,
+          "ws_mib": 49.8
+        },
+        {
+          "name": "svchost",
+          "pid": 3052,
+          "cpu_s": 1873.5,
+          "ws_mib": 21.9
+        },
+        {
+          "name": "svchost",
+          "pid": 4776,
+          "cpu_s": 1851.9,
+          "ws_mib": 31.3
+        },
+        {
+          "name": "viiper",
+          "pid": 36428,
+          "cpu_s": 1596.5,
+          "ws_mib": 32.3
+        }
+      ],
+      "top_names": [
+        "audiodg",
+        "cloudflare warp",
+        "crossdeviceservice",
+        "csrss",
+        "ds4windows",
+        "dwm",
+        "explorer",
+        "figma_agent",
+        "fluentflyout",
+        "nvcontainer",
+        "nvdisplay.container",
+        "phoneexperiencehost",
+        "svchost",
+        "system",
+        "viiper",
+        "voicemeeter",
+        "wmiprvse"
+      ],
+      "sampled_at": "2026-09-19T20:44:59"
+    },
+    "sampled_at": "2026-09-19T20:44:59"
+  },
+  "prereg": {
+    "path": "C:\\kyty\\s99\\pred\\05_observer_separation.md",
+    "bytes": 8583,
+    "sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "mtime": "2026-09-19T20:22:56",
+    "ctime": "2026-09-19T20:22:56",
+    "mtime_ctime_delta_s": -0.163535,
+    "read_at": "2026-09-19T20:44:55"
+  },
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 6820,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 8.2,
+      "started_s": 9.8,
+      "stable_s": 16.8,
+      "stable_frame": 300,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 300.1,
+      "pipeline_cache_off": false
+    }
+  ],
+  "gates": "copy=1 srtpages=1 clamp=1 regionepoch=0 srtmemo=0 smemocheck=0 bdastamp=1 backpages=1 srtstat=0 metalock=1 drawahead=1 dause=1 asyncsubmit=1 imgrecycle=1 recordthread=1 trackfree=1 tfcheck=0 protfast=0 swlocal=0 swdefer=1 gdsepoch=0 atomimg=0 dsring=1 recpack=1 syncfree=1 sfcheck=0 protbatch=1 pbcheck=0 texfaulthint=1 daclass=1 daprefetch=1 daclone=0 texlru=1 texfast=1 texfastcheck=0 texmemo2=0 clampvma=1 smpmemo=1 bindspare=0 fslean=0 applyskip=0 recbatch=0 recrelax=0 recpin=1 stkstat=0 drawstat=0 dpslow=0 drawstate=1 snapkeep=1 buflru=1 snapdiff=1 snapswap=1 buffast=0 buffastcheck=0 protbatch2=0 acopyidle=1 dawalk=0 rtfast=1 progmemo=1 progmemocheck=0 armdefer=0 armcheck=0 dawitness=1 dawitptr=1 daqpre=0 cbstat=0 recimg=0 recup=0 shadowinline=0 savepersist=0 occzero=0 amut=0 pxstat=0 mutsite=0 imgskip=0 cleardec=0 daepceil=0 dawitfb=0 imgfuse=1 dawitcp=1 dawitcg=1 dawitcgcheck=0 pfhint=1 dathreads=4 recarena=64 dsbatch=32 dspool=1024 recspin=300 dapin=3 procpin=0 faultkb=64 dawalklead=1 recpubn=0 shadowresolve=0 shadowmask=3 m4baton=0 imgskipkb=4096 dawitloop=0 pfcap=1024",
+  "schedule_period": 90,
+  "schedule_start": 1800,
+  "guest_args": "-lvl underwater_aerial_garden",
+  "hold_s": 300,
+  "cpuclk_requested": true,
+  "gpuclk": "C:\\kyty\\s99\\gpuclk_aa99plain.csv",
+  "cpuclk": "C:\\kyty\\s99\\cpuclk_aa99plain.csv"
+}

@@ -1,0 +1,17 @@
+{
+  "fixed_exact_geometry": true,
+  "whole_internal_block_fails": true,
+  "early_identity_arm": true,
+  "early_identity_blk": true,
+  "early_cpu_dark_fails": true,
+  "early_missing_fails": true,
+  "synthetic_real_pipeline_engineering_lock": true,
+  "source_real_replay_pass": true,
+  "source_changed_selection_rejected": false,
+  "source_changed_selection_errors": [],
+  "changed_source_raw_hash_rejected": true,
+  "cpu_not_wall": true,
+  "negative_round_ties_away": true,
+  "pilot_never_B": true,
+  "combine_keeps_global": true
+}

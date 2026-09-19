@@ -1,0 +1,13 @@
+{
+  "session": 99,
+  "user_instructions": ["закончишь что планировали ? запускай игру сколько нужно", "а в этой сессии не можешь сделать ?"],
+  "scope": "Finish both bindings-only instruments and video in this session; necessary causal fixes and new runs authorised; old failures remain failures.",
+  "preregistration": "pred/02_settled_bindings.md",
+  "pred_sha256": "1d1ebf286869ab59944fe135fc5c69d1315d4c61667b6c3dd2ab3ca14839724c",
+  "binary_sha256": "2a6bb5388d8fdd97a4aab20e1bde2715e3d92ad499c49b7cd2ea094ec0385c87",
+  "scorer_sha256": "383e2ff3452557069bc94f7effe8b6401a5c6b2959518b241771adaab9c87bdc",
+  "code_review": "verify99b_cpp/VERIFY.md",
+  "scorer_review": "verify99b_settled/VERIFY_final.md",
+  "single_gpu_executor": "test99b",
+  "first_run": "eng99a1"
+}

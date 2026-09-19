@@ -1,0 +1,355 @@
+{
+  "tag": "bf99h",
+  "errors": [],
+  "fatal": [],
+  "markers": {
+    "BindFloorGcAudit": 16545,
+    "BindFloorCpu": 456411
+  },
+  "raw_sha256": {
+    "log_bf99h.txt": "977dd9943e1c9d3dc03af12508dc145a3593fdd6787931458ab0fe258800e3ca",
+    "stdout_bf99h.txt": "8d335c83e45e5b6515348bec835a9557087237a522e8e2b9244d528c7c3105b7",
+    "bf99h.json": "63e20710597b586654340a348780ee07fc17bf276e0a0742b620c111c0ba0fc8"
+  },
+  "stream_counts": {
+    "FrameTrace": 18245,
+    "FrameTrace-draw": 18245,
+    "FrameTrace-x": 18245
+  },
+  "n_range": [
+    2,
+    18246
+  ],
+  "gate_count": 183,
+  "raw_duration_s": 917.19164,
+  "completed_falls": 45,
+  "edge_sum": 91,
+  "edge_indices": {
+    "0": 91
+  },
+  "excluded_quartets": {
+    "0": [
+      0,
+      1,
+      2
+    ],
+    "180": [
+      182,
+      183
+    ]
+  },
+  "selected_block_range": [
+    4,
+    179
+  ],
+  "selected_boundary_refs": {
+    "2221": {
+      "FrameTrace": 493701,
+      "FrameTrace-draw": 493702,
+      "FrameTrace-x": 493704
+    },
+    "17999": {
+      "FrameTrace": 2608188,
+      "FrameTrace-draw": 2608189,
+      "FrameTrace-x": 2608191
+    }
+  },
+  "row_counts_U_A": [
+    2552,
+    2552
+  ],
+  "draws_U_A": [
+    5034.733542319749,
+    5040.027429467084
+  ],
+  "work_pct": 0.10514731520223641,
+  "area_U_A": [
+    2008.0783504267856,
+    2008.0492737039197
+  ],
+  "area_pct": -0.001447987468206069,
+  "dt_U_A_us": [
+    49913.056818181816,
+    50171.295454545456
+  ],
+  "C9_pct": 0.5173769206408756,
+  "area_pair_match": [
+    88,
+    88
+  ],
+  "strict": {
+    "work": true,
+    "C5": true,
+    "area": true,
+    "pairmatch": true,
+    "C9": true,
+    "pair_count": true,
+    "falls": true
+  },
+  "zero_invariants": {
+    "bf_burn_cpu_bad": true,
+    "bf_igc_bad": true,
+    "bf_igc_critical": true,
+    "bf_igc_evict": true,
+    "bf_mixed": true,
+    "bf_defer_force": true,
+    "bf_trig_fire": true,
+    "bf_trig_wait": true,
+    "bf_trig_fb": true,
+    "bf_dlskip": true,
+    "bf_clr_skip": true,
+    "bf_skip_drop": true,
+    "gm_ops": true
+  },
+  "min_armed_gc_hold": 226,
+  "recovery": {
+    "img_new_2": 45,
+    "img_new_3": 54,
+    "buf_new_2": 1,
+    "buf_new_3": 3
+  },
+  "armed_means": {
+    "cpu_gpu_us": 48912.29231974921,
+    "spin_gpu_us": 0.6018808777429467,
+    "bf_burn_cpu_ns": 10816662.789576802,
+    "bf_burn_ns": 10173132.940047022,
+    "bf_burn_probe_ns": 1799092.6794670846
+  }
+}
+{
+  "tag": "eng99c1",
+  "errors": [],
+  "fatal": [],
+  "markers": {
+    "BindFloorGcAudit": 16552,
+    "BindFloorCpu": 475566
+  },
+  "raw_sha256": {
+    "log_eng99c1.txt": "8f6686f0e78fae836064b6e49132878b7485bd0e7dc7890707882701d1ae581e",
+    "stdout_eng99c1.txt": "e101d8911e20878fc8dfdcc2355f81d6eda52f7de844d2467cf93710f9b788f0",
+    "eng99c1.json": "21ec801637ce03cf21e98731857b7d2058957a8dec99280d1eaa3addc9a5f114"
+  },
+  "stream_counts": {
+    "FrameTrace": 5948,
+    "FrameTrace-draw": 5948,
+    "FrameTrace-x": 5948
+  },
+  "n_range": [
+    2,
+    5949
+  ],
+  "gate_count": 47,
+  "raw_duration_s": 314.846528,
+  "completed_falls": 11,
+  "edge_sum": 23,
+  "edge_indices": {
+    "0": 23
+  },
+  "excluded_quartets": {
+    "0": [
+      0,
+      1,
+      2
+    ],
+    "44": [
+      46,
+      47
+    ]
+  },
+  "selected_block_range": [
+    4,
+    43
+  ],
+  "selected_boundary_refs": {
+    "2221": {
+      "FrameTrace": 518347,
+      "FrameTrace-draw": 518348,
+      "FrameTrace-x": 518350
+    },
+    "5759": {
+      "FrameTrace": 965068,
+      "FrameTrace-draw": 965069,
+      "FrameTrace-x": 965071
+    }
+  },
+  "row_counts_U_A": [
+    580,
+    580
+  ],
+  "draws_U_A": [
+    5028.805172413793,
+    5049.662068965517
+  ],
+  "work_pct": 0.4147485503343429,
+  "area_U_A": [
+    2007.4849952860175,
+    2007.2829940019797
+  ],
+  "area_pct": -0.010062405672373043,
+  "dt_U_A_us": [
+    49824.99137931035,
+    57473.418965517245
+  ],
+  "C9_pct": 15.3505848660977,
+  "area_pair_match": [
+    20,
+    20
+  ],
+  "strict": {
+    "work": true,
+    "C5": true,
+    "area": true,
+    "pairmatch": true,
+    "C9": false,
+    "pair_count": true,
+    "falls": true
+  },
+  "zero_invariants": {
+    "bf_burn_cpu_bad": true,
+    "bf_igc_bad": true,
+    "bf_igc_critical": true,
+    "bf_igc_evict": true,
+    "bf_mixed": true,
+    "bf_defer_force": true,
+    "bf_trig_fire": true,
+    "bf_trig_wait": true,
+    "bf_trig_fb": true,
+    "bf_dlskip": true,
+    "bf_clr_skip": true,
+    "bf_skip_drop": true,
+    "gm_ops": true
+  },
+  "min_armed_gc_hold": 229,
+  "recovery": {
+    "img_new_2": 65,
+    "img_new_3": 73,
+    "buf_new_2": 2,
+    "buf_new_3": 4
+  },
+  "armed_means": {
+    "cpu_gpu_us": 56085.025862068964,
+    "spin_gpu_us": 1.0482758620689656,
+    "bf_burn_cpu_ns": 18279090.725862067,
+    "bf_burn_ns": 17785580.151724137,
+    "bf_burn_probe_ns": 1733875.3620689656
+  }
+}
+{
+  "tag": "eng99c2",
+  "errors": [],
+  "fatal": [],
+  "markers": {
+    "BindFloorGcAudit": 16542,
+    "BindFloorCpu": 468355
+  },
+  "raw_sha256": {
+    "log_eng99c2.txt": "6f1c64d8fd96031704f6dcca033a08bb12d64599a4802df18f90dbbbf998f2a5",
+    "stdout_eng99c2.txt": "cfdbd3f9012d2bd2896db59f44e1b50e46decf62dc094718883032bf0ab224ad",
+    "eng99c2.json": "eadec1923be8f383edccf566b441f37ef48d95a1c2f2212d3ca29f13a981c945"
+  },
+  "stream_counts": {
+    "FrameTrace": 6224,
+    "FrameTrace-draw": 6224,
+    "FrameTrace-x": 6224
+  },
+  "n_range": [
+    2,
+    6225
+  ],
+  "gate_count": 50,
+  "raw_duration_s": 311.796548,
+  "completed_falls": 12,
+  "edge_sum": 25,
+  "edge_indices": {
+    "0": 25
+  },
+  "excluded_quartets": {
+    "0": [
+      0,
+      1,
+      2
+    ],
+    "48": [
+      49,
+      50,
+      51
+    ]
+  },
+  "selected_block_range": [
+    4,
+    47
+  ],
+  "selected_boundary_refs": {
+    "2221": {
+      "FrameTrace": 504722,
+      "FrameTrace-draw": 504723,
+      "FrameTrace-x": 504725
+    },
+    "6119": {
+      "FrameTrace": 933552,
+      "FrameTrace-draw": 933553,
+      "FrameTrace-x": 933555
+    }
+  },
+  "row_counts_U_A": [
+    638,
+    638
+  ],
+  "draws_U_A": [
+    5024.855799373041,
+    5035.322884012539
+  ],
+  "work_pct": 0.20830616951841296,
+  "area_U_A": [
+    2007.6795398483603,
+    2007.6076134519549
+  ],
+  "area_pct": -0.003582563600301736,
+  "dt_U_A_us": [
+    49527.65987460815,
+    49317.35579937304
+  ],
+  "C9_pct": 0.42461944652250116,
+  "area_pair_match": [
+    22,
+    22
+  ],
+  "strict": {
+    "work": true,
+    "C5": true,
+    "area": true,
+    "pairmatch": true,
+    "C9": true,
+    "pair_count": true,
+    "falls": true
+  },
+  "zero_invariants": {
+    "bf_burn_cpu_bad": true,
+    "bf_igc_bad": true,
+    "bf_igc_critical": true,
+    "bf_igc_evict": true,
+    "bf_mixed": true,
+    "bf_defer_force": true,
+    "bf_trig_fire": true,
+    "bf_trig_wait": true,
+    "bf_trig_fb": true,
+    "bf_dlskip": true,
+    "bf_clr_skip": true,
+    "bf_skip_drop": true,
+    "gm_ops": true
+  },
+  "min_armed_gc_hold": 229,
+  "recovery": {
+    "img_new_2": 37.5,
+    "img_new_3": 48.5,
+    "buf_new_2": 1.0,
+    "buf_new_3": 3.0
+  },
+  "armed_means": {
+    "cpu_gpu_us": 48042.91379310345,
+    "spin_gpu_us": 0.6677115987460815,
+    "bf_burn_cpu_ns": 10811640.987460814,
+    "bf_burn_ns": 10193122.68338558,
+    "bf_burn_probe_ns": 1733637.6630094044
+  }
+}

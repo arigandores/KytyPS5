@@ -1,0 +1,13 @@
+prereg: 04_gc_audit.md  7835 bytes  sha256 a93f4b6b1068cb34  mtime 2026-09-19T18:31:55  mtime-ctime +0.000 s
+pre_run: host 323 processes, top by CPU: System 48694s, dwm 29560s, voicemeeter 19267s, PhoneExperienceHost 14393s, svchost 14111s, figma_agent 10916s
+pre_run: GPU 1.0 % busy, 23.4 W, 1690 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
+--- attempt 1: launching
+9.2 s  LevelDocument Loaded: underwater_aerial_garden
+11.3 s  Level has started: underwater_aerial_garden
+23.9 s  scene stable at frame 396 (90 frames with draws >= 3000)
+holding the run for 900 s
+copied C:\kyty\s99\log_bf99e.txt
+copied C:\kyty\s99\stdout_bf99e.txt
+
+attempt 1  ok               document=9.2 s started=11.3 s stable=23.9 s 
+VERDICT: underwater_aerial_garden in 23.9 s - PASS (acceptance <= 90 s)

@@ -1,0 +1,11 @@
+{
+  "status": "DIAGNOSTIC_ONLY",
+  "diagnostic": "HIGH",
+  "B_cpu_ms": [
+    30.049869086206897,
+    37.36790403448275
+  ],
+  "addend_ms": 0,
+  "bindings_only_measurement_complete": true,
+  "global_M3": "GAP unchanged; no G/R1 closure/licence; route order unchanged"
+}

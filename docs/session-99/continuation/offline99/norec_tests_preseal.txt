@@ -1,0 +1,16 @@
+test_aa_hidden_floor_clock_or_gc_failure_rejected_early (__main__.AAAndCoreTests.test_aa_hidden_floor_clock_or_gc_failure_rejected_early) ... ok
+test_aa_work_and_area_keep_strict_bands (__main__.AAAndCoreTests.test_aa_work_and_area_keep_strict_bands) ... ok
+test_fake_labels_are_baseline_no_b_no_falls (__main__.AAAndCoreTests.test_fake_labels_are_baseline_no_b_no_falls) ... ok
+test_unchanged_measurement_selection_clock_and_gc (__main__.AAAndCoreTests.test_unchanged_measurement_selection_clock_and_gc) ... ok
+test_aa_mechanics_pipeline_never_becomes_measurement (__main__.ProtocolAndPipelineTests.test_aa_mechanics_pipeline_never_becomes_measurement) ... ok
+test_aa_protocol_without_cpu_startup (__main__.ProtocolAndPipelineTests.test_aa_protocol_without_cpu_startup) ... ok
+test_rec_presence_or_runtime_rejected_but_backend_recordthread_allowed (__main__.ProtocolAndPipelineTests.test_rec_presence_or_runtime_rejected_but_backend_recordthread_allowed) ... ok
+test_aa_requires_prelaunch_hash_and_reproducible_selection (__main__.ProvenanceTests.test_aa_requires_prelaunch_hash_and_reproducible_selection) ... ok
+test_exact_carried_source_uses_unchanged_04_replay (__main__.ProvenanceTests.test_exact_carried_source_uses_unchanged_04_replay) ... ok
+test_no_addends_or_global_closure (__main__.ProvenanceTests.test_no_addends_or_global_closure) ... ok
+test_old_recorded_confirmation_and_old_pilot_not_new_identities (__main__.ProvenanceTests.test_old_recorded_confirmation_and_old_pilot_not_new_identities) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 4.742s
+
+OK

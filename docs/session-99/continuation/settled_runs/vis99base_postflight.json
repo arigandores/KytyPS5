@@ -1,0 +1,105 @@
+{
+  "timestamp": "2026-09-19T20:41:17.340430+02:00",
+  "emulator_processes": "",
+  "gpu": "utilization.gpu [%], memory.used [MiB], power.draw [W]\n2 %, 1686 MiB, 23.31 W",
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 63948,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 9.7,
+      "started_s": 11.8,
+      "stable_s": 24.4,
+      "stable_frame": 398,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 900.3,
+      "pipeline_cache_off": false
+    }
+  ],
+  "prereg": {
+    "path": "C:\\kyty\\s99\\pred\\05_observer_separation.md",
+    "bytes": 8583,
+    "sha256": "fb376ee63ce8fb19c7151e37c34ddc340fbecafc6aa648a27a9c160e7bc20af0",
+    "mtime": "2026-09-19T20:22:56",
+    "ctime": "2026-09-19T20:22:56",
+    "mtime_ctime_delta_s": -0.163535,
+    "read_at": "2026-09-19T20:24:51"
+  },
+  "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+  "env": {
+    "VK_SDK_PATH": "C:\\VulkanSDK\\1.4.357.0",
+    "KYTY_FRAME_TRACE": "lite",
+    "KYTY_GPU_HANG_ABORT_S": "8",
+    "KYTY_GATE_FILE": "C:\\kyty\\s99\\gates.req",
+    "KYTY_SAMPLE_GATE": "C:\\kyty\\s99\\sample.req",
+    "KYTY_QUEUE_TRACE": "1",
+    "KYTY_GUEST_ARGS": "-lvl underwater_aerial_garden",
+    "KYTY_REC": "C:\\kyty\\s99\\rec_vis99base.mp4",
+    "KYTY_GATE_SCHEDULE": "90+1800:bindfloor=0 drawahead=1 bfmode=2 bfburn=17800|bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+    "KYTY_GATE_SCHEDULE_ABBA": "1",
+    "KYTY_GPU_CLOCK_PIN": "1",
+    "KYTY_BIND_FLOOR_LATCH": "1",
+    "KYTY_BIND_FLOOR_CLEAR": "0",
+    "KYTY_GPU_MARKERS": "0",
+    "KYTY_GPU_CHECKPOINTS": "0",
+    "KYTY_BIND_FLOOR_CPU": "1",
+    "KYTY_BIND_FLOOR_GC_AUDIT": "1"
+  },
+  "files": [
+    {
+      "path": "C:\\kyty\\s99\\vis99base.json",
+      "bytes": 11286,
+      "sha256": "e3ed5becc984ddbd1f037f941ce4e32e8493160dada88580e60a966c3e6101f6"
+    },
+    {
+      "path": "C:\\kyty\\s99\\log_vis99base.txt",
+      "bytes": 378467581,
+      "sha256": "47df31a301fd19f43503d0de5c2f3b763e3f491873da16ae206073eb1a6adc63"
+    },
+    {
+      "path": "C:\\kyty\\s99\\stdout_vis99base.txt",
+      "bytes": 15022,
+      "sha256": "1427c46ed23d6efa5e4f60147e939d8fb825feba75ff4c1c7930310c7ef1c98f"
+    },
+    {
+      "path": "C:\\kyty\\s99\\rec_vis99base.mp4",
+      "bytes": 283007722,
+      "sha256": "3de7a25a6ff0634643b46fddd40d69c6bb48abc0c82a4674f52d028261f74911"
+    },
+    {
+      "path": "C:\\kyty\\s99\\rec_vis99base.mp4.idx",
+      "bytes": 349456,
+      "sha256": "15671b60ad66c5c0f642d7fe391c60208b4eb18882b9c08628cdfcf36c7041ed"
+    },
+    {
+      "path": "C:\\kyty\\s99\\cpuclk_vis99base.csv",
+      "bytes": 75707,
+      "sha256": "e132a7200bf3bf843c7929267706ad9300c2316c5e1934b3e903ed1fc1e009a9"
+    },
+    {
+      "path": "C:\\kyty\\s99\\gpuclk_vis99base.csv",
+      "bytes": 156266,
+      "sha256": "1251dbec449993f534d553f6dd3b80ebba99a66bfecda7f92abeb4a849b71336"
+    }
+  ],
+  "raw_counts": {
+    "FrameTrace_main": 17793,
+    "GateArm": 178
+  },
+  "first_gate": "GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+  "last_gate": "GateArm: arm=1 arms=2 block=177 frame=17730 period=90 abba=1 text=bindfloor=0 drawahead=1 bfmode=2 bfburn=17800",
+  "main_rows_consecutive": true,
+  "first_main_n": 2,
+  "last_main_n": 17794,
+  "fatal_samples": [],
+  "index_rows": 17802,
+  "index_first": "0 1 0.000",
+  "index_last": "17801 17802 917.981",
+  "index_sequential": true,
+  "scorer_invoked": false,
+  "video_decoded": false
+}

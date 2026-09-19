@@ -3261,7 +3261,33 @@ void TextureCache::RunGarbageCollector() {
 	// than the 16-tick age the moment the gate fell.  With the floor off this is the shipped
 	// order exactly - the tick is taken first.
 	// Session 98: KYTY_BIND_FLOOR_LATCH >= 1 reads without adopting (descriptors.h).
+	// Session 99: observe the existing per-CALL age clock; never adopt a latch or change GC.
+	static const bool gc_audit = [] {
+		const auto* value = std::getenv("KYTY_BIND_FLOOR_GC_AUDIT");
+		const bool on = value != nullptr && value[0] == '1' && value[1] == '\0';
+		LOGF("BindFloorGcAudit: mode%u\n", on ? 1u : 0u);
+		return on;
+	}();
+	const uint64_t audit_tick_before = gc_audit ? m_gc_tick : 0;
 	const bool floor_hold = BindFloorGcHold();
+	// The current submission's counted sticky value is a valid independent SUBSET of hold.
+	// Unlike CurrentOp (stale outside operations), it expires with the submission. It does
+	// NOT independently prove the base/pending parts of BindFloorGcHold.
+	const bool audit_sticky = gc_audit && BindFloorGcAuditSticky();
+	const bool audit_expected_hold = gc_audit && (floor_hold || audit_sticky);
+	const auto audit_clock = [&](bool critical_override) {
+		if (!gc_audit) return;
+		using Counter = Common::FrameStats::Counter;
+		const uint64_t expected_delta = audit_expected_hold && !critical_override ? 0u : 1u;
+		const bool bad = (audit_sticky && !floor_hold) || m_gc_tick < audit_tick_before ||
+		                 m_gc_tick - audit_tick_before != expected_delta;
+		Common::FrameStats::Add(Counter::BindFloorImgGcChecks, 1);
+		Common::FrameStats::Add(Counter::BindFloorImgGcHold,
+		                       audit_expected_hold && !critical_override ? 1u : 0u);
+		Common::FrameStats::Add(Counter::BindFloorImgGcBad, bad ? 1u : 0u);
+		Common::FrameStats::Add(Counter::BindFloorImgGcCritical,
+		                       audit_expected_hold && critical_override ? 1u : 0u);
+	};
 	uint64_t   tick       = floor_hold ? m_gc_tick : m_gc_tick++;
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruTouches, m_lru_touch_calls);
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruRepeats, m_lru_touch_repeats);
@@ -3310,6 +3336,7 @@ void TextureCache::RunGarbageCollector() {
 		m_graphics.LogMemoryBudget();
 	}
 	if (m_total_used_memory < m_trigger_gc_memory) {
+		audit_clock(false);
 		return;
 	}
 	// Session 97, gate "bindfloor" (MEASUREMENT ONLY): the floor removes every texture
@@ -3323,10 +3350,13 @@ void TextureCache::RunGarbageCollector() {
 	if (floor_hold) {
 		if (m_total_used_memory < m_critical_gc_memory) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorGcHold, 1);
+			audit_clock(false);
 			return;
 		}
 		tick = m_gc_tick++;
 	}
+	// Pressure is sampled before collection mutates accounting, not inferred from age delta.
+	audit_clock(m_total_used_memory >= m_critical_gc_memory);
 	const auto collect = [&](bool allow_aggressive) {
 		bool           pressured  = m_total_used_memory >= m_pressure_gc_memory;
 		bool           aggressive = allow_aggressive && m_total_used_memory >= m_critical_gc_memory;
@@ -3398,6 +3428,11 @@ void TextureCache::RunGarbageCollector() {
 					retry_later();
 					continue;
 				}
+			}
+			if (audit_expected_hold) {
+				// Counts GC root victims, including critical collection; recursive stencil
+				// children are not counted twice. Every such cascade has a counted root.
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorImgGcEvict, 1);
 			}
 			FreeImage(id, __func__, __LINE__);
 			if (m_total_used_memory < m_critical_gc_memory && aggressive) {

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "C:\\Users\\<user>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+    "C:\\kyty\\s99\\settled99_norec.py",
+    "--combine",
+    "C:\\kyty\\s99\\settled_runs\\bf99g_score.json",
+    "C:\\kyty\\s99\\settled_runs\\bf99h_score.json",
+    "--out",
+    "C:\\kyty\\s99\\settled_runs\\combined99_score.json"
+  ],
+  "rc": 0,
+  "timestamp": "2026-09-19T21:55:31.311621+02:00",
+  "preflight_hashes": {
+    "settled99_norec.py": "8216acd9797f7b2eeb61f2654a7827daed3f103ac0a07ec3b80a570ae6626399",
+    "settled_runs/bf99g_score.json": "7ff29580ce24cf59f65d571e5f95e68eedaa9755aa59dd1bcfd27c85f0c80a0b",
+    "settled_runs/bf99h_score.json": "043dd97ebe613d279489e58c5f6a5137e8a94eb8f754fb239ed7d93706d2ffac"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema": "s99-precommit-encoding-correction-v1",
+  "reason": "Explicit root-authorised correction: finalizer default cp1250 text decoding corrupted UTF8 in newly archived mutable FACTS/README. Root fixed explicit UTF8, regenerated FACTS/mirror, and restored README historical tail from valid old archive. No sealed evidence changed.",
+  "allowed_source_files": [
+    "FACTS.md",
+    "README.md",
+    "finalize_cont99_facts.py"
+  ],
+  "corrections": {
+    "FACTS.md": {
+      "before": {
+        "bytes": 11932,
+        "sha256": "6207d0791ce1b4400ced7450fa3447fa355bac68f51fa2e673557dc8159956b1"
+      },
+      "after": {
+        "bytes": 11875,
+        "sha256": "c016cd2a3d47edccc44a69bf1b7fc2543f3d47682b7524139aa57076f5f5dd81"
+      }
+    },
+    "README.md": {
+      "before": {
+        "bytes": 4453,
+        "sha256": "808a1e0afe5decb96dd94fa42744aa0236f2a34f9d4340d32098c3e121546eb7"
+      },
+      "after": {
+        "bytes": 5184,
+        "sha256": "9c69dc222979022bc103d0a402d7b44a9819a9c39978a05353a71f5f1a735b73"
+      }
+    },
+    "finalize_cont99_facts.py": {
+      "before": {
+        "bytes": 3860,
+        "sha256": "3630124729cdc2ac11d0fe00a45a69a714106affae36b7052a88e0a94077be67"
+      },
+      "after": {
+        "bytes": 3971,
+        "sha256": "8f25bac2623b266c4a0974297c338e3e16d937b02ed6d6fd54d7ccc3a0cfb588"
+      }
+    }
+  },
+  "small_manifest": {
+    "before": {
+      "bytes": 41551,
+      "sha256": "f52040b0715ddf49184d9037cfb99ebd70e5672f367876f2b9fadde079428321"
+    },
+    "after": {
+      "bytes": 41551,
+      "sha256": "8f455ee71818d0ca124c10075d4e0fd1442e712c993b7c35198fa42de04ee6af"
+    }
+  },
+  "canonical_manifest": {
+    "before": {
+      "bytes": 47651,
+      "sha256": "a45163b0a72e50e7f8669a50e9694cf6ea8800bc91e36390cba9dee63c51b912"
+    },
+    "after": {
+      "bytes": 47651,
+      "sha256": "1da301d981b98e23b050c456bcd140875cb166e0ec38bc9795b359ed0c405abd"
+    }
+  },
+  "post_checks": {
+    "canonical_entries_verified": 311,
+    "unchanged_canonical_members_compared_bytewise": 307,
+    "original33_values_preserved": true,
+    "cal99a_manifest_preserved": true,
+    "raw_seal_review_artifacts_preserved": true
+  },
+  "stage_or_commit": false
+}

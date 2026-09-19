@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-09-19T20:50:58.584819+02:00",
+  "emulator_processes": "",
+  "gpu": "utilization.gpu [%], memory.used [MiB], power.draw [W]\n1 %, 1686 MiB, 22.90 W",
+  "no_rec_env": true,
+  "no_imagelife_env": true,
+  "attempts": [
+    {
+      "label": "attempt 1",
+      "attempt": 1,
+      "pid": 6820,
+      "level": "underwater_aerial_garden",
+      "guest_args": "-lvl underwater_aerial_garden",
+      "document_s": 8.2,
+      "started_s": 9.8,
+      "stable_s": 16.8,
+      "stable_frame": 300,
+      "outcome": "ok",
+      "detail": null,
+      "hold_exit": null,
+      "hold_s": 300.1,
+      "pipeline_cache_off": false
+    }
+  ]
+}

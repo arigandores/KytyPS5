@@ -1,0 +1,22 @@
+# Raw recovery investigation (exploratory, not admission)
+
+Read-only inputs: eng99a1/a2/a3 raw logs and sealed pred/02. Only this directory was written.
+Independent parser joins main/draw/x by n, derives idx from original GateArm.frame, records raw line numbers.
+All 12 completed a3 falling edges are retained. R6=41.5, R6'=52.0 reproduce exactly (REPORT.md:59).
+The threshold and failed verdict remain unchanged. No B value is extracted.
+
+## What is established
+
+1. a3 recovery excess is not explained solely by more draws in presentation rows. First3 fall windows average18024 draws vs15132.6 clean width3; births average54.167 vs20.329. Births/10kdraw=30.053 vs13.434 (REPORT.md:77). Clean same-arm U boundary first3 is13.498, settled U idx60..88 is13.256 (TIMELINE.md:136,138). This is a controlled local descriptive contrast, not randomised causal attribution.
+2. All12 raw window triples and lines are in REPORT.md:64 onward. Maximum total71, minimum45. Local draw-scaled expected births22.19..27.63; all12 corresponding descriptive excesses18.17..46.48, median27.839. These are aggregate statistical excess estimates, not identified excess objects; exact causal object count is unavailable without identity/reason counters.
+3. In a3 the first3 mean img_new54.167, img_rec_hit8.25, img_rec_put19.917, img_free21.25; clean3 means20.329,20.107,20.795,20.905 respectively. The conspicuous distinction is birth/recycle-hit imbalance, not massive immediate frees. During each preceding180-row floor period img_new6..9, and exactly all of these match recycle hits (TIMELINE.md:119 onward). Counter semantics need C++ verification before interpreting new-minus-hit as actual allocations.
+4. The recovery peak is sharply timed: a3 idx1 mean42.583 births and11.917 frees; idx2 births9.667/free9.333. Later idx9 mean35.917 frees; idx10 mean35.083 recycle puts (TIMELINE.md:100,108,109). This delayed retirement pattern is consistent with short-lived recovery allocations. It does not establish whether heap GC, guest request novelty, alias replacement, or recycle eviction caused the earlier births.
+5. a1/a2 already have excesses (local draw-normalized median17.458/18.278), though raw R6' medians39/41 pass. a3 is not a binary new failure mode established by52vs50; it strengthens an existing pattern. Since processes/budgets differ, their differences do not prove burn is causal.
+6. a3 first6falls raw median53.5, last6 median50.5; clean median20 both (REPORT.md:80). No clear process-warmup trend eliminates the issue. Local baseline rate does rise modestly across processes:18.216,18.808,20.329 births/3rows. That is insufficient to explain the larger recovery rise40,42,54.167.
+7. No exact guest-frame work counter was established. fbp_n is explicitly FaultProcN, GC ProcessFaultBuffer calls (src/common/frameStats.h:1503), NOT guest frames. It is0,3,2 on every fall's first3 rows. gclk_sadv is scaled clock advance over sampled reads (header:1323), so368.889vs165.317 births/scaled-second is only a sampled-clock proxy, not independent proof of equal guest work. texlru_n/rep are activity counters, not proved cache occupancy.
+
+## Causal next observation
+
+Keep the old failure and limits. Before another launch, predeclare a new diagnostic tag with identical timing and instrumentation that directly records image creation reason/identity and recycle-pool state at real fall and same-arm U controls. Needed live counters: actual host image allocation vs reuse; pool hit/miss and reason (empty/key mismatch/age or cap eviction); pool count/bytes; image free reason (GC/alias/explicit invalidation); old resource retirement/use age; guest submission or flip ID sufficient to assign the event to the logical guest frame. Aggregate by guest submission and report the old presentation window beside it.
+
+Use the source diagnosis to choose one intervention, e.g. freeze a demonstrably unpaused image recycling clock during the floor if one exists, and predict reduced fresh allocations with unchanged normal live births before collecting data. If no such defect exists, a separately sealed A/A sham-edge diagnostic establishes normal image novelty and GC timing under the same90-row schedule. Neither a wider window nor a threshold52 follows from these results. The current evidence supports investigation of real bounded transient allocation/recycling behavior, not dismissing the failed recovery check as mere row mix.

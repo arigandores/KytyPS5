@@ -140,8 +140,13 @@ on entry in the same way.
 
 Candidates (workflow `wf_724e89d5-00b`, four read-only lenses; ranked, none proven): a game
 shader running away on data a transition frame left inconsistent — the same bug as the entry
-hang, a floor edge being one more trigger (0.55 / 0.35: GPU-built pointer structures such as
-per-pixel OIT lists torn or stale across the floor); floor stores polluting the shared NULL
+hang, a floor edge being one more trigger (0.45–0.55). The loops lens names the only unbounded
+memory-driven loops of the scene: the BVH traversal of four indirect async-compute ray-tracing
+kernels (`0x503d7f066a496c3c`, `0x1f16e50eea0c89e3`, `0xff8ee744ffa4dcdc`, `0xf88d0f630ac5b35d`) —
+exit only on sentinels read from memory, no step cap, the game's invalid-TLAS `S_TRAP` translated as
+a no-op; the state lens adds per-pixel OIT lists (0.35). **The abort path could never name the
+op: `masterSemaphore.cpp:113` calls `ReportGpuCheckpointHistory` (CPU ring), not
+`ReportGpuCheckpoints` (GPU breadcrumb).** Further candidates: floor stores polluting the shared NULL
 buffer the real path reads for degenerate V#s (0.12–0.20) — **patch D removes this one and is
 built, not run**; floor draws rasterising garbage into real targets and history (0.12); buffer-GC
 churn (0.12 before patch C — **patch C removed the churn and the hang stayed**).

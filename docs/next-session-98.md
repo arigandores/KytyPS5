@@ -28,6 +28,31 @@ promise 60 FPS** (~15 %).
   and the nine null images (floor stores polluted the buffer the real path reads for degenerate
   V#s; `Vulkan nullDescriptor:` is logged; counter `bf_ndesc`). It removes ONE candidate.
 
+## 0.1 The prime suspect (read-only finding of `wf_724e89d5-00b`, lens "loops" — not yet proven)
+
+The only unbounded, memory-driven loops in this scene are the BVH traversals of FOUR indirect
+async-compute ray-tracing kernels issued every frame through `AgcAcbDispatchIndirect`:
+**`0x503d7f066a496c3c`, `0x1f16e50eea0c89e3`, `0xff8ee744ffa4dcdc`, `0xf88d0f630ac5b35d`**. The
+leaf loop exits only on a sign-bit sentinel read from memory (variant-V# `S_BUFFER_LOAD` through
+the base address, no bound), the node loop only when every child is `0xFFFFFFFF` and the stack is
+empty (the stack pointer is clamped with `S_MIN_U32 s46,60`, so an overflow never exits), there is
+no step counter, and the game's own invalid-TLAS guard (`S_BITCMP1` bit 18 → `S_TRAP`) is translated
+as a no-op (`Scalar.cpp:229-231`). During 20 floored flips the BVH / instance / light-list
+producers wrote only into the null buffer while the guest kept streaming and reusing memory; a
+stale pointer into still-registered memory reads real bytes that are not a BVH, no fault is
+recorded, and the wave never returns. The historical ENTRY hang: in 8 of 8 logs it came one frame
+after the fault path registered a wild BDA page. **Also a one-line defect: the `GpuHangAbort`
+branch of `masterSemaphore.cpp:113` calls `ReportGpuCheckpointHistory` (the CPU ring), not
+`ReportGpuCheckpoints` (the GPU-written breadcrumb) — that is why no run ever named the op.**
+
+Suggested repair to pre-register (measurement only): a translator knob that caps the iterations of
+every loop in programs containing `BvhIntersectRay` (e.g. 1<<16 steps an invocation), part of the
+shader-translation-cache signature (unlike `KYTY_LOOP_LIMIT`), active in BOTH arms, with a
+host-visible trip counter in `FrameTrace-x` — it turns a process-killing hang into a counted
+picture glitch, which the floor's charter allows. Alternative: skip (not floor) those four
+dispatches while the latch is armed and in the first base flip after a falling edge, and exclude
+that flip from scoring.
+
 ## 1. First, name the op that runs away (no guessing past this point)
 
 The checkpoint breadcrumb of session 97 printed only CPU-recorded EOP writes. Two ways, pick one

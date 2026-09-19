@@ -1,0 +1,313 @@
+{
+  "verdict": "NOT ADMITTED",
+  "protocol_errors": [],
+  "checks": {
+    "COUNTERS": true,
+    "EDGE": true,
+    "C1'''": true,
+    "C2'": true,
+    "C4_B": true,
+    "DARK_B": true,
+    "LIVE_DARK_RATIO": true,
+    "REAL_CLEARS": true,
+    "MARKERS_OFF": true,
+    "C8''_B": true,
+    "C10'''_B": true,
+    "PAIRS": true,
+    "ENDPOINT": true,
+    "inherited C3'": true,
+    "inherited C5": false,
+    "inherited C6'": true,
+    "inherited C7": true,
+    "R1": true,
+    "R2": false,
+    "R3'": true,
+    "R4'": true,
+    "R5": true,
+    "R6": true,
+    "R6'": true,
+    "R7": true,
+    "R7'": true,
+    "R8": true,
+    "criterion3": false
+  },
+  "independent": {
+    "raw_frames": 3812,
+    "first": 2,
+    "last": 3813,
+    "duplicates": [],
+    "window_rows": [
+      843,
+      871
+    ],
+    "retained_rows": [
+      799,
+      828
+    ],
+    "dt_U": 50501.82478097622,
+    "dt_A": 42516.67149758454,
+    "draw_means": [
+      5052.85172004745,
+      4845.8151549942595
+    ],
+    "C5": 0.04097420160416776,
+    "areas": [
+      2007.544777596946,
+      2007.3338190079155
+    ],
+    "area_split_pct": -0.010508288103194818,
+    "work_pct": -4.097420160416776,
+    "area_pairs": 28,
+    "area_matched": 28,
+    "criterion3_independent": false,
+    "matched_pairs": 29,
+    "unpaired_blocks": [
+      9
+    ],
+    "gate_blocks": [
+      0,
+      67
+    ],
+    "edges": 34,
+    "completed_falling": 17,
+    "edge_hist": {
+      "idx0": 34
+    },
+    "edge_bad": [],
+    "stray_edges": [],
+    "Tstar_rows": 102,
+    "live": {
+      "0": {
+        "bf_live_ahead": 0,
+        "bf_live_mat": 0,
+        "bf_live_memo": 0,
+        "bf_mat": 0,
+        "bf_reuse": 0,
+        "bf_n": 0,
+        "bf_burn_ns": 0
+      },
+      "1": {
+        "bf_live_ahead": 6835498,
+        "bf_live_mat": 631308,
+        "bf_live_memo": 0,
+        "bf_mat": 0,
+        "bf_reuse": 0,
+        "bf_n": 3988195,
+        "bf_burn_ns": 9687781571
+      }
+    },
+    "recovery_first2": {
+      "img_new": 12,
+      "buf_new": 2
+    },
+    "duration_s": 189.030605,
+    "post_stable_duration_s": 180.215183,
+    "refs": {
+      "first_window": 468323,
+      "last_frame": 633783,
+      "first_gate": 439504,
+      "first_fall": 448085,
+      "last_fall": 633468
+    },
+    "recovery_first3": {
+      "img_new": 17,
+      "buf_new": 3
+    },
+    "totals_all": {
+      "bf_dlskip": 0,
+      "bf_clr_skip": 0,
+      "bf_skip_drop": 0,
+      "bf_mixed": 0,
+      "bf_defer_force": 0,
+      "bf_trig_fire": 0,
+      "bf_trig_wait": 0,
+      "bf_trig_fb": 0,
+      "bf_xover": 35,
+      "bf_xover_acb": 35,
+      "bf_defer": 35
+    },
+    "C9_reported": 0.15811613378373698,
+    "burn_valid": false,
+    "Tstar_removed_in_window": 87,
+    "pairs_list": [
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        16,
+        17
+      ],
+      [
+        18,
+        19
+      ],
+      [
+        20,
+        21
+      ],
+      [
+        22,
+        23
+      ],
+      [
+        24,
+        25
+      ],
+      [
+        26,
+        27
+      ],
+      [
+        28,
+        29
+      ],
+      [
+        30,
+        31
+      ],
+      [
+        32,
+        33
+      ],
+      [
+        34,
+        35
+      ],
+      [
+        36,
+        37
+      ],
+      [
+        38,
+        39
+      ],
+      [
+        40,
+        41
+      ],
+      [
+        42,
+        43
+      ],
+      [
+        44,
+        45
+      ],
+      [
+        46,
+        47
+      ],
+      [
+        48,
+        49
+      ],
+      [
+        50,
+        51
+      ],
+      [
+        52,
+        53
+      ],
+      [
+        54,
+        55
+      ],
+      [
+        56,
+        57
+      ],
+      [
+        58,
+        59
+      ],
+      [
+        60,
+        61
+      ],
+      [
+        62,
+        63
+      ],
+      [
+        64,
+        65
+      ],
+      [
+        66,
+        67
+      ]
+    ],
+    "edge_block_line_refs": {
+      "1": 442374,
+      "3": 448085,
+      "5": 453968,
+      "7": 459653,
+      "9": 465508,
+      "11": 471176,
+      "13": 477032,
+      "15": 482734,
+      "17": 488585,
+      "19": 494265,
+      "21": 500157,
+      "23": 505836,
+      "25": 511749,
+      "27": 517657,
+      "29": 523598,
+      "31": 529302,
+      "33": 535160,
+      "35": 540873,
+      "37": 546784,
+      "39": 552482,
+      "41": 558397,
+      "43": 564118,
+      "45": 569969,
+      "47": 575677,
+      "49": 581593,
+      "51": 587321,
+      "53": 593210,
+      "55": 598877,
+      "57": 604751,
+      "59": 610448,
+      "61": 616268,
+      "63": 621908,
+      "65": 627777,
+      "67": 633468
+    }
+  },
+  "hashes": {
+    "C:\\kyty\\s99\\log_cal99a.txt": {
+      "bytes": 84293208,
+      "sha256": "21564a0826abb63a6d91a81358b01975cc5137a08e2469b3cd49a2b2ef7eb9c5"
+    },
+    "C:\\kyty\\s99\\stdout_cal99a.txt": {
+      "bytes": 15021,
+      "sha256": "120422e06ac7625382a25186cf5cc294b219862f6dcb8fa06a4749a4f54278f0"
+    },
+    "C:\\kyty\\s99\\cal99a.json": {
+      "bytes": 11148,
+      "sha256": "2ac1d990f923422650045a7338165b05957988defdc4f6a8a07aeeac91396a02"
+    },
+    "C:\\kyty\\s99\\gates_base.txt": {
+      "bytes": 1092,
+      "sha256": "00c116dcad0cdff62f96f5ec4a72faa7e9ed5210e8304380a098a280900594d8"
+    },
+    "C:\\kyty\\s99\\pred\\01_bindings_only.md": {
+      "bytes": 10848,
+      "sha256": "8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d"
+    },
+    "C:\\kyty\\s99\\kyty_emulator_s99.exe": {
+      "bytes": 23739904,
+      "sha256": "ee9cc8ab1f5d25384dedb02a6a6abfca2aa7692585fcaddc74950721afc7a160"
+    }
+  }
+}

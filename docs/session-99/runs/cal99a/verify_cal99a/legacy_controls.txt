@@ -1,0 +1,39 @@
+bf96| --- pred/02 section 6 C6: the BDA regime (regime94.py, run as it is) ---
+bf96|     C6 is a RATIO between the arms and uses no absolute cut. There is NO written
+bf96| --- pred/02 section 8: CRITERION 3 (area_verdict.py, run as it is) ---
+bf96|   |     [PASS] area split < 1.0 %%          -0.011 %
+bf96|   |     [PASS] pair match >= 90 %%          100.0 % (28/28)
+bf96|   |     [FAIL] work within 0.5 %%           -4.097 %
+bf96|   CRITERION 3: INVALID   whole-arm area split -0.011 %
+bf96|      bf96b is admitted under THIS pre-registration with C1-C8 plus C9 and C10.
+bf96| --- pred/02 section 6: controls (a FAIL here voids the whole of section 9) ---
+bf96|   C1   leak bf_n(unarmed)/armed               0.014115  <= 0.001                       FAIL straddle detail below if non-zero
+bf96|       C1 straddle detail (unarmed frames with bf_n > 0: blk, index in block, block length, value):
+bf96|   C2   |bf_n/draws-1| and bf_skip/bf_n        0.012147  <= 0.02 and skip <= 0.02       PASS bf_n 4787.0 vs draws 4845.8 a flip; bf_skip/bf_n = 0.0000
+bf96|   C3   (bf_push+bf_pool)/bf_n                   1.0504  >= 0.98                        PASS every draw that took the floor still bound or pushed a descriptor set   [as sealed in pred/02; repaired, not deciding]
+bf96|   C3'  |push+pool - (bf_n+bf_disp)|                  5  <= 58 boundaries               PASS push+pool 4379782, bf_n+bf_disp 4379787 over the armed window
+bf96|   C4   bf_reuse/(bf_mat+bf_reuse)                  n/a  >= 0.95                        FAIL bindfloor dark or bf_mat + bf_reuse = 0
+bf96|   C5   |draws(armed)/draws(unarmed)-1|        0.040974  <= 0.02  (NOT 0.005)           FAIL LOOSER than guards.py check 4 on purpose: check 4's 0.5 %% is written for arms that do the SAME work, and the floor arm does not, by construction. guards.py check 4 is therefore EXPECTED TO FAIL on this run; that FAIL is anticipated in pred/02 section 6 C5 BEFORE the run and does not by itself replace it. Criterion 3 still governs validity.
+bf96|   C6   bda_scan med ratio (max/min)           1064.000  <= 2.0 (no absolute cut)       FAIL armed med 0.0, unarmed med 1064.0; the record's own change of regime is ~21x   [as sealed in pred/02; repaired, not deciding]
+bf96|   C6'  unarmed bda_scan thirds max/min           1.005  <= 2.0                         PASS early / mid / late medians 1067.0, 1063.0, 1062.0 (NEW ~50, OLD ~1 060 - label advisory)
+bf96|   C7   pl_* all 0 and be_n = 0                       0  0 non-zero                     PASS pathlap and bdaevery are off in this run
+bf96|   C8   cpu_gpu_us armed < unarmed              -4505.2  < 0 us a flip                  PASS armed 41811.4 us, unarmed 46316.6 us a flip - a stub that did not make the path cheaper measured nothing   [as sealed in pred/02; repaired, not deciding]
+bf96|   C8'  net(armed) - burn < net(unarmed)       -16110.9  < 0 us a flip                  PASS armed 41811.4 - spin 4.4 - burn 11629.9 = 30177.1 us; unarmed 46316.6 - spin 28.6 = 46287.9 us
+bf96|   P5   OUTSIDE in arm B, us                    n/a  [3000, 5200]     pt 4050    NOT EVALUABLE  the stub does not touch the PM4 parse [`pathlap` is off in this run - C7 REQUIRES pl_* = 0 - so OUTSIDE is not produced here at all. pred/02 section 9 item 3 anticipates this: "OUTSIDE if pathlap data exists from pl96a". A prediction on a quantity this run does not produce is VOID, not a miss (pred/01 section 9)]
+bf96|   In addition, 3 of 8 controls failed: C1, C4, C5
+bf96|          C6 as sealed in pred/02 FAILED and stay recorded above; repaired under pred/01_floor_reversible.md section 5.1
+  --- deciding controls replacing C1, C2, C8', C9, C10', C10'' (rows outside T*) ---
+  C1'''   leak U\T*/A\T* bf_n + structure          0.000000  <= 0.001; R4' structure      PASS U\T* 0 vs A\T* 3988195; unarmed leaking rows: 15 allowed at (b,0)/(b,1)+edge, 0 at the last index (allowed, counted), 0 DISALLOWED, 0 blocks over the count
+  C2'     |bf_n/draws-1|, skip, skip_drop on A\T*       0.004056  <= 0.02; skip, drop <= 0.02  PASS bf_skip/bf_n = 0.0000, bf_skip_drop/bf_n = 0.0000 over 828 armed rows outside T*
+  C8''    net(A\T*)-burn < net(U\T*)                -4217.3  < 0 us a flip                PASS armed 41686.3 us, unarmed 45903.6 us a flip (rows outside T*)
+  C3'     PASS
+  C4      FAIL
+  C5      FAIL
+  C6'     PASS
+  C7      PASS
+  C1      FAIL   [printed only - replaced by its s98 repair]
+  C2      PASS   [printed only - replaced by its s98 repair]
+  C8'     PASS   [printed only - replaced by its s98 repair]
+  (sealed C1, C2 as printed by bf96.py are its C1/C2 lines above; C3, C6, C8, C10 as sealed are its "[as sealed in pred/02]" lines)
+CONTROLS FAILED / NOT ADMISSIBLE - no number of section 9 may be published  (criterion 3 INVALID; controls failed: C4, C5)
+ADMISSION: NOT ADMITTED (criterion 3 INVALID; controls failed: C4, C5)

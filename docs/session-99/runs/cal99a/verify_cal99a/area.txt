@@ -1,0 +1,21 @@
+log_cal99a.txt -> C:\kyty\s99\verify_cal99a\area_cal99a.csv (3812 flips)
+====================================================================================================
+cal99a   csv=C:\kyty\s99\verify_cal99a\area_cal99a.csv   flips n>=2100: 1714   arms: [0, 1]
+  high-rung share (rt_kpx/rt_att > 2600):   0.0 %   population 0 of 1714 flips
+  whole-arm rt_kpx/rt_att : arm0   2007.5 (843 flips)   arm1   2007.3 (871 flips)
+  WHOLE-ARM AREA SPLIT    :  -0.011 %     [ tool header: +0.00 quotable, +1.74 VOID, +4.30 VOID ]
+  whole-arm cpu/frame     : arm0  46316.6 us   arm1  41811.4 us    -9.727 %
+  whole-arm draws/frame   : arm0   5052.9      arm1   4845.8       -4.097 %
+  complete pairs 28   matched within 0.50 %: 28  (100.0 %)   dropped 0
+    ALL        28 pairs  cpu/draw  -5.731 %  2*SE  0.374 %  t  -30.69
+    MATCHED    28 pairs  cpu/draw  -5.731 %  2*SE  0.374 %  t  -30.69
+    DROPPED     0 pair(s) - NOT MEASURED (population too small to quote)
+  VALIDITY (pre-registered; never substitute one that fails - take another run):
+    [PASS] area split < 1.0 %%          -0.011 %
+    [PASS] pair match >= 90 %%          100.0 % (28/28)
+    [FAIL] work within 0.5 %%           -4.097 %
+  RESULT (reported, NOT part of validity - a valid run may measure nothing):
+    [ SIG  ] MATCHED cpu/draw          -5.731 % +- 0.374 %, t = -30.69 over 28 pairs
+  VERDICT: INVALID - this run may not be quoted. Take another run. Do NOT substitute a criterion.
+====================================================================================================
+1 of 1 tag(s) INVALID

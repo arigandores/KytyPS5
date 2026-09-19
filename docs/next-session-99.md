@@ -1,12 +1,10 @@
 # Session 99 — route E, M3 continues: the gap branch (`bfmode=2`)
 
-**PREPARATION COMPLETED, GAME NOT AUTHORISED YET (session 99 WIP).** Read
-`docs/local-session-99.md` and `C:/kyty/s99/README.md` before the original brief below.
-The port, source instrument, build and offline VERIFY are done; do not repeat them.
-Sealed rule: `C:/kyty/s99/pred/01_bindings_only.md`, SHA256 `8b816528…d9d4b14d`.
-Wait for the user's signal, then one executor follows the new calibration/measurement
-sequence. New binary `ee9cc8ab…` is saved in s99; game-folder exe remains `9aa93e73…`.
-No B endpoints or runtime acceptance exist. M3 remains GAP; M4/M5 do not start.
+**EXECUTED AFTER PERMISSION; STOPPED AT cal99a (NOT ADMITTED).**
+The single180.1s calibration failed work comparability (-4.0974%) and falling-edge count
+(17<30). Fresh raw VERIFY confirmed it. No accepted burn or B exists; no later run followed.
+Installed binary: ee9cc8ab..., unchanged seal8b816528.... Do not repeat this sequence.
+Current facts: docs/local-session-99.md. Next PLAN: docs/next-session-100.md.
 
 The remainder is the original pre-preparation brief; its old burn/proof/scorer assumptions
 are superseded only as explicitly recorded in the new sealed rule.

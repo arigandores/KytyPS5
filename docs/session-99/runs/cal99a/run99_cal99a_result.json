@@ -1,0 +1,104 @@
+{
+  "tag": "cal99a",
+  "status": "NOT_ADMITTED_SEQUENCE_STOPPED",
+  "harness_exit_code": 0,
+  "scorer_exit_code": 1,
+  "process_count": 1,
+  "warmup_process_count": 0,
+  "retries": 0,
+  "emulator_processes_after_run": 0,
+  "binary_sha256": "ee9cc8ab1f5d25384dedb02a6a6abfca2aa7692585fcaddc74950721afc7a160",
+  "stable_s": 15.9,
+  "stable_frame": 278,
+  "hold_actual_s": 180.1,
+  "hold_required_s": 180,
+  "raw_whole_s": 189.030605,
+  "raw_after_stable_s": 180.215183,
+  "admission_failures": [
+    "inherited C5",
+    "AREA",
+    "cal99a R2"
+  ],
+  "C5_draw_difference_absolute": 0.040974,
+  "C5_limit": 0.02,
+  "criterion3_work_difference_percent": -4.097,
+  "criterion3_work_limit_percent": 0.5,
+  "criterion3_area_split_percent": -0.011,
+  "criterion3_matched_pairs": 28,
+  "criterion3_pair_match_percent": 100,
+  "completed_falling_edges": 17,
+  "minimum_falling_edges": 30,
+  "matched_pairs99": 29,
+  "edge_histogram": {
+    "other": 0,
+    "idx0": 34
+  },
+  "T_star_rows": 102,
+  "calibration_dt_U_us": 50501.825,
+  "calibration_dt_A_us": 42516.671,
+  "calibration_delta_us": 7985.153,
+  "calibration_candidate_admitted": false,
+  "candidate_artifact_created": false,
+  "B_endpoint_produced": false,
+  "later_runs_launched": [],
+  "video_recorded": false,
+  "source_lines": {
+    "admission": "run99_cal99a_score.txt:111",
+    "falls": "run99_cal99a_score.txt:65",
+    "survival": "run99_cal99a_score.txt:64",
+    "calibration_means": "run99_cal99a_score.txt:110",
+    "AREA": "run99_cal99a_score.txt:10",
+    "C5": "run99_cal99a_score.txt:20",
+    "pairs": "run99_cal99a_score.txt:109"
+  },
+  "files": [
+    {
+      "name": "cal99a.json",
+      "bytes": 11148
+    },
+    {
+      "name": "cal99a.map",
+      "bytes": 31713192
+    },
+    {
+      "name": "calibration-only-not-measurement_cal99a_legacy.txt",
+      "bytes": 20166
+    },
+    {
+      "name": "cpuclk_cal99a.csv",
+      "bytes": 16481
+    },
+    {
+      "name": "gpuclk_cal99a.csv",
+      "bytes": 33953
+    },
+    {
+      "name": "log_cal99a.txt",
+      "bytes": 84293208
+    },
+    {
+      "name": "run99_cal99a_console.txt",
+      "bytes": 807
+    },
+    {
+      "name": "run99_cal99a_exit.json",
+      "bytes": 76
+    },
+    {
+      "name": "run99_cal99a_postprocess.json",
+      "bytes": 207
+    },
+    {
+      "name": "run99_cal99a_score.json",
+      "bytes": 156
+    },
+    {
+      "name": "run99_cal99a_score.txt",
+      "bytes": 10898
+    },
+    {
+      "name": "stdout_cal99a.txt",
+      "bytes": 15021
+    }
+  ]
+}

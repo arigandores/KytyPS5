@@ -1,0 +1,98 @@
+{
+  "run99_authorization.json": {
+    "bytes": 386,
+    "sha256": "6b0f9dc81a84d27ee5aa29107fb3d8b981ae8cbce1cd561074ae9c6f251521a6"
+  },
+  "cal99a.json": {
+    "bytes": 11148,
+    "sha256": "2ac1d990f923422650045a7338165b05957988defdc4f6a8a07aeeac91396a02"
+  },
+  "stdout_cal99a.txt": {
+    "bytes": 15021,
+    "sha256": "120422e06ac7625382a25186cf5cc294b219862f6dcb8fa06a4749a4f54278f0"
+  },
+  "run99_cal99a_console.txt": {
+    "bytes": 807,
+    "sha256": "5148a6e87067f70097da5da3ace0b003e0d35d012b8ee7fb21b3033e1eaf2065"
+  },
+  "run99_cal99a_exit.json": {
+    "bytes": 76,
+    "sha256": "51021110a5f40a4e3e66b748244b9ee2be909828232a4a8b5ea316263d7a1da2"
+  },
+  "run99_cal99a_postprocess.json": {
+    "bytes": 207,
+    "sha256": "d282223dc6367eb32d350866fb7c0540090944b92e854307f3535fdb02bd22b0"
+  },
+  "run99_cal99a_score.txt": {
+    "bytes": 10898,
+    "sha256": "b77290c8c5d939b7deb198d1e7b17167ae7c4c1f0c6a5bf69730a73c0fb16c83"
+  },
+  "run99_cal99a_score.json": {
+    "bytes": 156,
+    "sha256": "b15cbf3c3b226202eb65665db9c25f66ab77decc01e8bd7f61036b7e042ea432"
+  },
+  "run99_cal99a_result.json": {
+    "bytes": 2597,
+    "sha256": "c2e05a8027285c336755dd7771ff29be5ebdc627c07145c10fba0b720992e0c7"
+  },
+  "run99_cal99a_guards.txt": {
+    "bytes": 10433,
+    "sha256": "11c51404286295993a661fec047bd4c33edcdd44e4d6b9738314c0e3f0d83ac2"
+  },
+  "run99_cal99a_guards.json": {
+    "bytes": 249,
+    "sha256": "81904c71575447467b832ae398daa8a8a234a10b456f8173feec969c79852071"
+  },
+  "cpuclk_cal99a.csv": {
+    "bytes": 16481,
+    "sha256": "4e02b2f5b24c667a0b682131451588dc19f440bee3fa7aaa1d749be5b687ff63"
+  },
+  "gpuclk_cal99a.csv": {
+    "bytes": 33953,
+    "sha256": "35981aab1fdca68c91c2f5df843378f348b084146e9e01738b5d8cbaedc57065"
+  },
+  "recount_cal99a.py": {
+    "bytes": 2483,
+    "sha256": "427f90ead069763d4801bc8f8cf4331c70502f355469043bb438627183d4371f"
+  },
+  "recount_cal99a.json": {
+    "bytes": 758,
+    "sha256": "47a54fe82487f449c8af67bc7c105e81b18a62412d61556586664c3a2e8a1267"
+  },
+  "verify_cal99a/VERIFY.md": {
+    "bytes": 5845,
+    "sha256": "2dcbc876e84c693af78ac4f98c5ade525b91e0857826b05fe1036144f21a96ba"
+  },
+  "verify_cal99a/VERIFY.json": {
+    "bytes": 5870,
+    "sha256": "03e998cb19445c4a982a7fe90ef52b6740dbb4087fc5fbee1a59ddd18680b8f5"
+  },
+  "verify_cal99a/verify.py": {
+    "bytes": 6168,
+    "sha256": "aa0b7d6b96a59cf598f15ee48ac390d4f60ba274a54d222f5419bfaed0666570"
+  },
+  "verify_cal99a/area.txt": {
+    "bytes": 1600,
+    "sha256": "44820efa832e5cee373fb9c2cb3c461076e6221bf4eb4c229051727c82803517"
+  },
+  "verify_cal99a/rv.txt": {
+    "bytes": 3156,
+    "sha256": "e2ce78b0c0b73f0ac162c213535c35f888e4b50746a37057d548cfa6d8e053e6"
+  },
+  "verify_cal99a/legacy_controls.txt": {
+    "bytes": 4895,
+    "sha256": "c5004b64b00960b66ec6cdc29b85a9887d4b9d54db48c61a464c6993e117d43c"
+  },
+  "log_cal99a.txt": {
+    "bytes": 84293208,
+    "sha256": "21564a0826abb63a6d91a81358b01975cc5137a08e2469b3cd49a2b2ef7eb9c5",
+    "location": "C:/kyty/s99/log_cal99a.txt",
+    "not_in_git": true
+  },
+  "cal99a.map": {
+    "bytes": 31713192,
+    "sha256": "594a30c6ffa86d780cbf2ddc2818b402d46153f2e7ceb18221fcbf4d739895c6",
+    "location": "C:/kyty/s99/cal99a.map",
+    "not_in_git": true
+  }
+}

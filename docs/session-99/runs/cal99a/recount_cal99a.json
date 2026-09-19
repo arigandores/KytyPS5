@@ -1,0 +1,28 @@
+{
+  "log_sha256": "21564a0826abb63a6d91a81358b01975cc5137a08e2469b3cd49a2b2ef7eb9c5",
+  "last_frame": 3813,
+  "arms": {
+    "0": {
+      "full_rows": 843,
+      "Tstar_retained": 799,
+      "draws_mean_full": 5052.85172004745,
+      "dt_us_mean_Tstar": 50501.82478097622
+    },
+    "1": {
+      "full_rows": 871,
+      "Tstar_retained": 828,
+      "draws_mean_full": 4845.8151549942595,
+      "dt_us_mean_Tstar": 42516.67149758454
+    }
+  },
+  "draw_change_pct": -4.097420160416776,
+  "C5_limit_pct": 2,
+  "C5_PASS": false,
+  "completed_falling_edges": 17,
+  "R2_required": 30,
+  "R2_PASS": false,
+  "changes": 34,
+  "bf_edge_total": 34,
+  "Tstar_rows_in_window": 87,
+  "scope": "Admission diagnostics only; no B/F, burn candidate or architecture verdict"
+}

@@ -1,0 +1,8 @@
+{
+  "session": 99,
+  "user_message": "можешь запускать",
+  "recorded_utc": "2026-09-19 14:23:42 UTC",
+  "scope": "Sealed cal99a -> bf99a -> cal99c -> bf99c sequence, one executor; stop on failure; video on bf99a.",
+  "prereg_sha256": "8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d",
+  "preparation_commit": "a3558a2352184f8713c2bcf08bdbed88e7a6c384"
+}

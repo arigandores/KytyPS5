@@ -1,3 +1,16 @@
+# Session 99 — STOPPED at cal99a (NOT ADMITTED)
+
+The user authorised execution; exactly one cal99a process survived180.1s but failed
+work-population admission (-4.0974%) and transition count (17<30). No accepted burn exists.
+bf99a/cal99c/bf99c must not follow under this seal. No retries or new game launches are queued.
+Installed binary is now ee9cc8ab...; the old9aa93e73... exe is backed up in this directory.
+
+Current result: FACTS.md and verify_cal99a/VERIFY.md. Next PLAN: docs/next-session-100.md
+in C:/kyty/KytyPS5. The commands below are the ARCHIVED pre-run plan, not instructions
+to restart the stopped sequence or overwrite cal99a. The immutable seal remains unchanged.
+
+## Archived preparation instructions (before the user's launch permission)
+
 # Session 99 — preparation, game launches forbidden pending user's signal
 
 Budget <=3.0 us/draw (p99 <=2.3); reference path 6.4 us/draw, 31.6 ms/frame,

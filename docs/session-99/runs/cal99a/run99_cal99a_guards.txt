@@ -1,0 +1,98 @@
+=== guards.py cal99a (root C:\kyty\s99) ===
+  log     C:/kyty/s99/log_cal99a.txt                                 84.3 MB
+  stdout  C:/kyty/s99/stdout_cal99a.txt                              0.0 MB
+  idx     NOT FOUND                                                  -
+  rec     NOT FOUND                                                  -
+  gpuclk  C:/kyty/s99/gpuclk_cal99a.csv                              0.0 MB
+  meta    C:/kyty/s99/cal99a.json                                    0.0 MB
+  log: 633874 lines, 3812 FrameTrace: frames, arm/blk present
+
+  schedule starts at flip 1800; frames before it belong to no arm and are dropped
+
+[WARN]  0 machine     2 foreign process(es) on the GPU: ds4windows.exe, tabtip.exe
+         idle sampled at 2026-09-19T16:25:02: utilization.gpu 1.0 %, power 23.2 W, memory 1680 MiB, 23 process(es) on the GPU
+         not on the harmless list: ds4windows.exe, tabtip.exe
+         the GPU was idle (1.0 % <= 10.0 %), so this is an open window and not a running load; close it anyway before an acceptance run.
+[PASS]  1 crashes     none of 8 markers in log_cal99a.txt (633874 lines), stdout_cal99a.txt (176 lines)
+[PASS]  2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+         CRITERION 1 IS ONLY AS STRONG AS ITS REACHABLE COUNTERS: 15 of 17 zero counters cannot be non-zero in this run because their verify gate is pinned off. Turn one on in one run per session, or do not quote the fraction.
+         NOTE: no *_VERIFY / *check gate was enabled - the MISMATCH prints could not fire at all; only the always-on counters were checked
+[FAIL]  3 resolution  the render target or the viewport moved during the run; 9 fragment flip(s) skipped
+         fragment flips (check 3b's predicate: rt_att < 25 % of the run median 12350): 9 of 1714 (0.53 %) dropped from the sample below - a flip that caught a fragment of a game frame is not a smaller picture
+         skipped flips: 2193 2433 2553 2657 2876 3086 3393 3465 3756
+         rt_w changed 26 time(s), starting at 3840: 3840 -> 1920 at frame 2194, 1920 -> 3840 at frame 2195, 3840 -> 1920 at frame 2314, 1920 -> 3840 at frame 2315, 3840 -> 1920 at frame 2434, 1920 -> 3840 at frame 2435
+         rt_h changed 26 time(s), starting at 2160: 2160 -> 1080 at frame 2194, 1080 -> 2160 at frame 2195, 2160 -> 1080 at frame 2314, 1080 -> 2160 at frame 2315, 2160 -> 1080 at frame 2434, 1080 -> 2160 at frame 2435
+         vp_w changed 26 time(s), starting at 3840: 3840 -> 2048 at frame 2194, 2048 -> 3840 at frame 2195, 3840 -> 2048 at frame 2314, 2048 -> 3840 at frame 2315, 3840 -> 2048 at frame 2434, 2048 -> 3840 at frame 2435
+         vp_h changed 26 time(s), starting at 2160: 2160 -> 2048 at frame 2194, 2048 -> 2160 at frame 2195, 2160 -> 2048 at frame 2314, 2048 -> 2160 at frame 2315, 2160 -> 2048 at frame 2434, 2048 -> 2160 at frame 2435
+         rt_w differs between the arms: arm0=[3840] arm1=[1920, 2432, 3840]
+         rt_h differs between the arms: arm0=[2160] arm1=[1080, 1368, 2160]
+         vp_w differs between the arms: arm0=[3840] arm1=[1920, 2048, 3840]
+         vp_h differs between the arms: arm0=[2160] arm1=[1080, 2048, 2160]
+[WARN] 3b area        2 advisory pass-area difference(s); the render size itself held
+         1714 frames carry rt_att/rt_kpx/vp_kpx, flips 2100..3813
+         the verdict is taken on the ATTACHMENT-WEIGHTED low mode of rt only; the plain per-frame p5 is printed beside it because it is the statistic that used to carry the verdict and it is the one a fragment flip moves
+         fragment flips (rt_att < 25 % of the run median 12350): 9 of 1714 (0.53 %) - a flip whose boundary cut the frame before its full-size pass, not a smaller picture
+         rt (rt_kpx/rt_att): weighted low mode p5 1994.8 Kpx = ~1906x1072 at 16:9 (per-frame p5 1993.1), median 2008.2, p95 2012.2
+         vp (vp_kpx/draws) [advisory]: weighted low mode p5 2444.9 Kpx (per-frame p5 2317.2), median 2602.1, p95 2858.9
+         rt weighted low mode per arm: arm0 2000.3 arm1 1993.5 -> 0.340 % apart (limit 1.000 %; unweighted it would read 0.282 %)
+         rt draw-weighted mean per arm: arm0 2007.5 arm1 2007.3 -> 0.01 % apart (advisory limit 5.00 %)
+         vp weighted low mode per arm: arm0 2317.2 arm1 2530.2 -> 9.190 % apart (ADVISORY limit 1.000 %; unweighted it would read 21.578 %)
+         vp draw-weighted mean per arm: arm0 2636.1 arm1 2637.7 -> 0.06 % apart (advisory limit 5.00 %)
+         rt over 16 sliding windows of 200 frames: lowest weighted 1992.5 at flip 2200 (-0.12 %, limit -2.00 %), highest 1997.6 (+0.1 %, a window with no light frame in it); unweighted the worst window would read -0.14 %
+         vp over 16 sliding windows of 200 frames: lowest weighted 2369.1 at flip 3200 (-3.10 %, ADVISORY limit -2.00 %), highest 2519.3 (+3.0 %, a window with no light frame in it); unweighted the worst window would read -14.21 %
+         vp (advisory): the low mode of a draw-MIXTURE statistic is 9.190 % apart - read it with check 5, not as a resolution
+         vp (advisory): fell 3.10 % below the run at flip 3200 - a draw-MIXTURE statistic, read it with check 5
+[FAIL]  4 draws       the arms did not draw the same amount of work (4.272 % apart by the sum)
+         arm0: 843 frames, 4259554 draws, 5052.85 draws/frame (+2.092 %); median 5220.0 (-2.229 %, reference only)
+         arm1: 871 frames, 4220705 draws, 4845.82 draws/frame (-2.092 %); median 5458.0 (+2.229 %, reference only)
+         59 schedule blocks, draws/frame spread 4.272 % (limit 0.500 %); the medians are 4.559 % apart and are NOT judged - a slower thread smears draws across the flip boundary and moves the median without moving the sum
+[WARN]  5 heavy       the distribution of draws over the frames moved by 7.37 pp - expected of any change that moves the speed of the GuestGpu thread; the work itself is checked by check 4 (--strict makes this a failure)
+         arm0: 7.83 % of 843 frames have draws >= 6000
+         arm1: 0.46 % of 871 frames have draws >= 6000
+         spread 7.37 percentage points (limit 5.00)
+         the amount of work itself is check 4, and it is judged on sum(draws)/frames; a gap here with check 4 green means the draws only changed flips
+[FAIL]  6 cores       1 of 12 groups of 5 blocks more than 10 % off their arm median - something else used the machine
+         schedule blocks are 30 frames - 5 blocks of the same arm are merged to reach the 150-frame minimum
+         12 groups of 5 blocks, median 4.896 busy cores, min 4.257, max 5.322
+         per-arm median: arm0 4.799 arm1 4.971 (an arm that adds worker threads moves its own median, so each group is judged against its arm)
+         arm0 group 5: 4.257 cores (-11.3 % of its arm), frames 3601..3813
+[PASS]  7 gpuclk      no throttle reason outside mask 0x405 over 366 busy samples
+         gpuclk_cal99a.csv: 398 samples, 366 with utilization >= 50 %
+         SM clock mean 2856 MHz, min 2497, max 2962, sd 145 (5.1 % of mean)
+         memory clock mean 14301 MHz, min 14301
+         power mean 77 W, max 86 W
+         temperature 60..69 C
+         throttle 0x0000000000000400 unknown(0x400)                           366 samples (100.0 %)
+[SKIP]  8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+[SKIP]  9 video       not requested (--video); the one-frame glitch pass takes minutes
+         REMINDER: an acceptance run is not accepted without it - re-run with --video
+[PASS] 10 identity    confirmed binary sha256 and 68 GateArm blocks - every arm text applied where it was meant to
+         binary sha256 ee9cc8ab1f5d2538... matches cal99a.json
+         68 GateArm: blocks, arm0 x34 arm1 x34
+         first block 0 at frame 1800 text "bindfloor=0 drawahead=1 bfmode=2 bfburn=12000"; last block 67 at frame 3810 text "bindfloor=0 drawahead=1 bfmode=2 bfburn=12000"
+         36 Gate: change lines in the log; names owned by the arms: bfburn bfmode bindfloor drawahead
+           Gate: bfmode=2 frame=1800
+           Gate: bfburn=12000 frame=1800
+           Gate: bindfloor=1 frame=1830
+           Gate: bindfloor=0 frame=1890
+           Gate: bindfloor=1 frame=1950
+           Gate: bindfloor=0 frame=2010
+           Gate: bindfloor=1 frame=2070
+           Gate: bindfloor=0 frame=2130
+           ... 28 more
+
+=== cal99a: 4 PASS, 3 FAIL, 3 WARN, 2 SKIP ===
+status check        note
+WARN    0 machine     2 foreign process(es) on the GPU: ds4windows.exe, tabtip.exe
+PASS    1 crashes     none of 8 markers in log_cal99a.txt (633874 lines), stdout_cal99a.txt (176 lines)
+PASS    2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+FAIL    3 resolution  the render target or the viewport moved during the run; 9 fragment flip(s) skipped
+WARN   3b area        2 advisory pass-area difference(s); the render size itself held
+FAIL    4 draws       the arms did not draw the same amount of work (4.272 % apart by the sum)
+WARN    5 heavy       the distribution of draws over the frames moved by 7.37 pp - expected of any change that moves the speed of the GuestGpu thread; the work itself is checked by check 4 (--strict makes this a failure)
+FAIL    6 cores       1 of 12 groups of 5 blocks more than 10 % off their arm median - something else used the machine
+PASS    7 gpuclk      no throttle reason outside mask 0x405 over 366 busy samples
+SKIP    8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+SKIP    9 video       not requested (--video); the one-frame glitch pass takes minutes
+PASS   10 identity    confirmed binary sha256 and 68 GateArm blocks - every arm text applied where it was meant to
+VERDICT: FAIL

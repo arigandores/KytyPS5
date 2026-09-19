@@ -1,0 +1,13 @@
+prereg: 01_bindings_only.md  10848 bytes  sha256 8b816528b78a1730  mtime 2026-09-19T15:09:19  mtime-ctime +0.000 s
+pre_run: host 323 processes, top by CPU: System 48099s, dwm 29109s, voicemeeter 18978s, PhoneExperienceHost 13896s, svchost 13849s, figma_agent 10655s
+pre_run: GPU 1.0 % busy, 23.2 W, 1680 MiB used, SM 1635.0 MHz, 23 process(es) on the GPU
+--- attempt 1: launching
+8.2 s  LevelDocument Loaded: underwater_aerial_garden
+10.4 s  Level has started: underwater_aerial_garden
+15.9 s  scene stable at frame 278 (90 frames with draws >= 3000)
+holding the run for 180 s
+copied C:\kyty\s99\log_cal99a.txt
+copied C:\kyty\s99\stdout_cal99a.txt
+
+attempt 1  ok               document=8.2 s started=10.4 s stable=15.9 s 
+VERDICT: underwater_aerial_garden in 15.9 s - PASS (acceptance <= 90 s)

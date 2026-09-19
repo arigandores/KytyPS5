@@ -1,0 +1,111 @@
+SEAL read=8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d pinned=8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d
+RAW_DURATION: whole=189.030605 claimed=180.100000 s; after_stable=180.215183 [reported only]
+LEGACY full calibration-only artifact: C:\kyty\s99\calibration-only-not-measurement_cal99a_legacy.txt
+LEGACY calibration numeric/branch sections suppressed; controls and area follow
+bf98 REPORTED ONLY| bf96| --- pred/02 section 6 C6: the BDA regime (regime94.py, run as it is) ---
+bf98 REPORTED ONLY| bf96|     C6 is a RATIO between the arms and uses no absolute cut. There is NO written
+bf98 REPORTED ONLY| bf96| --- pred/02 section 8: CRITERION 3 (area_verdict.py, run as it is) ---
+bf98 REPORTED ONLY| bf96|   |     [PASS] area split < 1.0 %%          -0.011 %
+bf98 REPORTED ONLY| bf96|   |     [PASS] pair match >= 90 %%          100.0 % (28/28)
+bf98 REPORTED ONLY| bf96|   |     [FAIL] work within 0.5 %%           -4.097 %
+bf98 REPORTED ONLY| bf96|   CRITERION 3: INVALID   whole-arm area split -0.011 %
+bf98 REPORTED ONLY| bf96|      bf96b is admitted under THIS pre-registration with C1-C8 plus C9 and C10.
+bf98 REPORTED ONLY| bf96| --- pred/02 section 6: controls (a FAIL here voids the whole of section 9) ---
+bf98 REPORTED ONLY| bf96|   C1   leak bf_n(unarmed)/armed               0.014115  <= 0.001                       FAIL straddle detail below if non-zero
+bf98 REPORTED ONLY| bf96|       C1 straddle detail (unarmed frames with bf_n > 0: blk, index in block, block length, value):
+bf98 REPORTED ONLY| bf96|   C2   |bf_n/draws-1| and bf_skip/bf_n        0.012147  <= 0.02 and skip <= 0.02       PASS bf_n 4787.0 vs draws 4845.8 a flip; bf_skip/bf_n = 0.0000
+bf98 REPORTED ONLY| bf96|   C3   (bf_push+bf_pool)/bf_n                   1.0504  >= 0.98                        PASS every draw that took the floor still bound or pushed a descriptor set   [as sealed in pred/02; repaired, not deciding]
+bf98 REPORTED ONLY| bf96|   C3'  |push+pool - (bf_n+bf_disp)|                  5  <= 58 boundaries               PASS push+pool 4379782, bf_n+bf_disp 4379787 over the armed window
+bf98 REPORTED ONLY| bf96|   C4   bf_reuse/(bf_mat+bf_reuse)                  n/a  >= 0.95                        FAIL bindfloor dark or bf_mat + bf_reuse = 0
+bf98 REPORTED ONLY| bf96|   C5   |draws(armed)/draws(unarmed)-1|        0.040974  <= 0.02  (NOT 0.005)           FAIL LOOSER than guards.py check 4 on purpose: check 4's 0.5 %% is written for arms that do the SAME work, and the floor arm does not, by construction. guards.py check 4 is therefore EXPECTED TO FAIL on this run; that FAIL is anticipated in pred/02 section 6 C5 BEFORE the run and does not by itself replace it. Criterion 3 still governs validity.
+bf98 REPORTED ONLY| bf96|   C6   bda_scan med ratio (max/min)           1064.000  <= 2.0 (no absolute cut)       FAIL armed med 0.0, unarmed med 1064.0; the record's own change of regime is ~21x   [as sealed in pred/02; repaired, not deciding]
+bf98 REPORTED ONLY| bf96|   C6'  unarmed bda_scan thirds max/min           1.005  <= 2.0                         PASS early / mid / late medians 1067.0, 1063.0, 1062.0 (NEW ~50, OLD ~1 060 - label advisory)
+bf98 REPORTED ONLY| bf96|   C7   pl_* all 0 and be_n = 0                       0  0 non-zero                     PASS pathlap and bdaevery are off in this run
+bf98 REPORTED ONLY| bf96|   C8   cpu_gpu_us armed < unarmed              -4505.2  < 0 us a flip                  PASS armed 41811.4 us, unarmed 46316.6 us a flip - a stub that did not make the path cheaper measured nothing   [as sealed in pred/02; repaired, not deciding]
+bf98 REPORTED ONLY| bf96|   C8'  net(armed) - burn < net(unarmed)       -16110.9  < 0 us a flip                  PASS armed 41811.4 - spin 4.4 - burn 11629.9 = 30177.1 us; unarmed 46316.6 - spin 28.6 = 46287.9 us
+bf98 REPORTED ONLY| bf96|   P5   OUTSIDE in arm B, us                    n/a  [3000, 5200]     pt 4050    NOT EVALUABLE  the stub does not touch the PM4 parse [`pathlap` is off in this run - C7 REQUIRES pl_* = 0 - so OUTSIDE is not produced here at all. pred/02 section 9 item 3 anticipates this: "OUTSIDE if pathlap data exists from pl96a". A prediction on a quantity this run does not produce is VOID, not a miss (pred/01 section 9)]
+bf98 REPORTED ONLY| bf96|   In addition, 3 of 8 controls failed: C1, C4, C5
+bf98 REPORTED ONLY| bf96|          C6 as sealed in pred/02 FAILED and stay recorded above; repaired under pred/01_floor_reversible.md section 5.1
+bf98 REPORTED ONLY|   --- deciding controls replacing C1, C2, C8', C9, C10', C10'' (rows outside T*) ---
+bf98 REPORTED ONLY|   C1'''   leak U\T*/A\T* bf_n + structure          0.000000  <= 0.001; R4' structure      PASS U\T* 0 vs A\T* 3988195; unarmed leaking rows: 15 allowed at (b,0)/(b,1)+edge, 0 at the last index (allowed, counted), 0 DISALLOWED, 0 blocks over the count
+bf98 REPORTED ONLY|   C2'     |bf_n/draws-1|, skip, skip_drop on A\T*       0.004056  <= 0.02; skip, drop <= 0.02  PASS bf_skip/bf_n = 0.0000, bf_skip_drop/bf_n = 0.0000 over 828 armed rows outside T*
+bf98 REPORTED ONLY|   C8''    net(A\T*)-burn < net(U\T*)                -4217.3  < 0 us a flip                PASS armed 41686.3 us, unarmed 45903.6 us a flip (rows outside T*)
+bf98 REPORTED ONLY|   C3'     PASS
+bf98 REPORTED ONLY|   C4      FAIL
+bf98 REPORTED ONLY|   C5      FAIL
+bf98 REPORTED ONLY|   C6'     PASS
+bf98 REPORTED ONLY|   C7      PASS
+bf98 REPORTED ONLY|   C1      FAIL   [printed only - replaced by its s98 repair]
+bf98 REPORTED ONLY|   C2      PASS   [printed only - replaced by its s98 repair]
+bf98 REPORTED ONLY|   C8'     PASS   [printed only - replaced by its s98 repair]
+bf98 REPORTED ONLY|   (sealed C1, C2 as printed by bf96.py are its C1/C2 lines above; C3, C6, C8, C10 as sealed are its "[as sealed in pred/02]" lines)
+bf98 REPORTED ONLY| CONTROLS FAILED / NOT ADMISSIBLE - no number of section 9 may be published  (criterion 3 INVALID; controls failed: C4, C5)
+bf98 REPORTED ONLY| ADMISSION: NOT ADMITTED (criterion 3 INVALID; controls failed: C4, C5)
+C9 calibration-only: REPORTED, not deciding
+rv98 THIS PROCESS| ==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====
+rv98 THIS PROCESS| pre-registration C:/kyty/s99/prev98/pred/01_hang_trigger.md
+rv98 THIS PROCESS|   sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3
+rv98 THIS PROCESS|   sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3
+rv98 THIS PROCESS|   SEALED OK
+rv98 THIS PROCESS| amendment C:/kyty/s99/prev98/pred/01b_entry_hang.md  SEALED OK
+rv98 THIS PROCESS| pre-registration C:/kyty/s99/prev98/pred/01_floor_reversible.md
+rv98 THIS PROCESS|   sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+rv98 THIS PROCESS|   sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+rv98 THIS PROCESS|   SEALED OK
+rv98 THIS PROCESS| tag cal99a   log C:\kyty\s99\log_cal99a.txt
+rv98 THIS PROCESS| pre-registration C:/kyty/s99/prev98/pred/02_floor_walk.md (R7, bf_bgc_hold)
+rv98 THIS PROCESS|   sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+rv98 THIS PROCESS|   sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+rv98 THIS PROCESS| arms (GateArm text): {0: 'bindfloor=0 drawahead=1 bfmode=2 bfburn=12000', 1: 'bindfloor=1 drawahead=1 bfmode=2 bfburn=12000'}
+rv98 THIS PROCESS| armed arm: 1
+rv98 THIS PROCESS| blocks 67 (blk >= 1), flips 1983, first n 1831, last n 3813
+rv98 THIS PROCESS| 
+rv98 THIS PROCESS| --- criteria (pred/01_floor_reversible.md section 4) ---
+rv98 THIS PROCESS|   R1  survival        PASS hold_exit=None hold_s=180.1 of 180.0
+rv98 THIS PROCESS|   R2  edges           FAIL 17 falling edges followed by >= 2 flips (need >= 30)
+rv98 THIS PROCESS|   R3  latch           FAIL 66 boundaries checked, 0 wrong, 1 stray flips    stray: [(1831, 1)]   [sealed text, printed only - repaired below]
+rv98 THIS PROCESS|   R3' latch (frame)   PASS 67 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 34 vs arm changes 34; bf_edge position {'idx0': 34}
+rv98 THIS PROCESS|   R4  dark base       PASS 17 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]
+rv98 THIS PROCESS|   R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters
+rv98 THIS PROCESS|   R5  no readback     PASS bf_dlskip total 0 over the whole log
+rv98 THIS PROCESS|   R6  clean return    PASS median img_new over 2 flips after a falling edge = 12 (band <= 50)   rising 7.0, unarmed mid-block reference 10.0, max dt of those 2 flips median 66422 us
+rv98 THIS PROCESS|   R6' clean return 3  PASS median img_new over idx 0..2 after a falling edge = 17 (band <= 50), 17 edges
+rv98 THIS PROCESS|   R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 2 (band <= 50)   unarmed flips after the first two: mean 1.503 a flip
+rv98 THIS PROCESS|   R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3 (band <= 50), 17 edges
+rv98 THIS PROCESS|   D1  displacement (reported) f_fall 0.888  f_rise 0.479  1-lat/dt 0.701  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)
+rv98 THIS PROCESS|   R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 35, bf_xover_acb 35, bf_defer 35, bf_clr_skip 0.00 a floored flip
+rv98 THIS PROCESS|   R8x xover (reported): falling edges with bf_xover > 0: 17 of 17 (acb part > 0: 17); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0
+rv98 THIS PROCESS|   R9  hazard          n/a  (the proof criterion of pred/01 section 4; an M3 run is governed by pred/02)
+rv98 THIS PROCESS| 
+rv98 THIS PROCESS| ==== cal99a: 9 of 10 criteria PASS -> NOT SHOWN REVERSIBLE ====
+CONTROL99 COUNTERS PASS
+CONTROL99 EDGE PASS
+CONTROL99 C1''' PASS
+CONTROL99 C2' PASS
+CONTROL99 C4_B PASS
+CONTROL99 DARK_B PASS
+CONTROL99 LIVE_DARK_RATIO PASS
+CONTROL99 REAL_CLEARS PASS
+CONTROL99 MARKERS_OFF PASS
+CONTROL99 C8''_B PASS
+CONTROL99 C10'''_B PASS
+CONTROL99 PAIRS PASS
+CONTROL99 ENDPOINT PASS
+CONTROL99 inherited C3' PASS
+CONTROL99 inherited C5 FAIL
+CONTROL99 inherited C6' PASS
+CONTROL99 inherited C7 PASS
+CONTROL99 AREA FAIL
+CONTROL99 cal99a R1 PASS
+CONTROL99 cal99a R2 FAIL
+CONTROL99 cal99a R3' PASS
+CONTROL99 cal99a R4' PASS
+CONTROL99 cal99a R5 PASS
+CONTROL99 cal99a R6 PASS
+CONTROL99 cal99a R6' PASS
+CONTROL99 cal99a R7 PASS
+CONTROL99 cal99a R7' PASS
+CONTROL99 cal99a R8 PASS
+MATCHED_PAIRS99 29; edge histogram {'idx0': 34, 'other': 0}; T* rows 102
+CALIBRATION dt_U=50501.825 dt_A=42516.671 delta=7985.153 us
+ADMISSION: NOT ADMITTED (inherited C5; AREA; cal99a R2)

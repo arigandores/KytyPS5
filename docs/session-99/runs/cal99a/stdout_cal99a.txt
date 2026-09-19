@@ -1,0 +1,176 @@
+Initialized: Config
+Initialized: Log
+Initialized: Timer
+Initialized: Pthread
+Initialized: Profiler
+Initialized: Network
+Initialized: Memory
+Initialized: FileSystem
+Initialized: SaveData
+Initialized: Controller
+Initialized: Audio
+Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+Vulkan pipeline cache: loaded 59120865 bytes from _PipelineCache\PPSA21564.bin
+ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:2db9065aef8b54a24a7d29b3584df9647f61dd95:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+Initialized: Graphics
+Title ID: PPSA21564
+Vulkan pipeline cache: saved 59120865 bytes to _PipelineCache\PPSA21564.bin (81784 us)
+ShaderPreparation: ready completed=726 total=726 skipped=0
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7ce40 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+Exception: code=0xe06d7363 depth=0 rip=0x00007ff9f0041ada addr=0x00000100bed7e700 tid=63324
+shader 0xc80fe4dc28c8e615: scalar buffer load at pc 0x00000180 uses a variant V#, reading through its base address
+shader 0xcfdceef703c56553: descriptor word at pc 0x000001a8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x92f9dd0d9be5c4f8: descriptor word at pc 0x0000012c comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x6076621c96bb8e51: descriptor word at pc 0x00000084 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x230ae73860c0e217: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x230ae73860c0e217: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x230ae73860c0e217: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x5cd7ada004f6e1f7: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x5cd7ada004f6e1f7: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x5cd7ada004f6e1f7: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xbd3163e5cf418f11: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xbd3163e5cf418f11: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xbd3163e5cf418f11: descriptor word at pc 0x000001b8 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xa62a37f2455315c4: descriptor word at pc 0x000001d0 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xa62a37f2455315c4: descriptor word at pc 0x000001d0 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0xa62a37f2455315c4: descriptor word at pc 0x000001d0 comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x62051a9a5b17f037: descriptor word at pc 0x000002ac comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x0fd674b412730f37: descriptor word at pc 0x0000011c comes from a uniform branch, lowered its phi to a host-evaluated select
+shader 0x99012529f9a27ba3: SRT slot 136 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 137 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 138 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 139 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 148 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 149 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 150 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 151 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 152 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 153 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 154 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 155 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 156 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 157 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 158 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: SRT slot 159 is loop-variant, restored its load
+shader 0x99012529f9a27ba3: scalar buffer load at pc 0x00000ee8 uses a variant V#, reading through its base address
+shader 0x99012529f9a27ba3: scalar buffer load at pc 0x00000f08 uses a variant V#, reading through its base address
+shader 0x99012529f9a27ba3: scalar buffer load at pc 0x00000f90 uses a variant V#, reading through its base address
+shader 0x99012529f9a27ba3: scalar buffer load at pc 0x00000f90 uses a variant V#, reading through its base address
+shader 0x1f3219e5899a66f2: SRT slot 148 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 149 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 150 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 151 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 160 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 161 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 162 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 163 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 164 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 165 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 166 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 168 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 169 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 170 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 171 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: SRT slot 172 is loop-variant, restored its load
+shader 0x1f3219e5899a66f2: scalar buffer load at pc 0x000013fc uses a variant V#, reading through its base address
+shader 0x1f3219e5899a66f2: scalar buffer load at pc 0x0000141c uses a variant V#, reading through its base address
+shader 0x1f3219e5899a66f2: scalar buffer load at pc 0x000014a4 uses a variant V#, reading through its base address
+shader 0x1f3219e5899a66f2: scalar buffer load at pc 0x000014a4 uses a variant V#, reading through its base address
+shader 0x8175abf0855222db: SRT slot 186 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 187 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 188 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 189 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 198 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 199 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 200 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 201 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 202 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 203 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 204 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 206 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 207 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 208 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 209 is loop-variant, restored its load
+shader 0x8175abf0855222db: SRT slot 210 is loop-variant, restored its load
+shader 0x8175abf0855222db: scalar buffer load at pc 0x00001aa0 uses a variant V#, reading through its base address
+shader 0x8175abf0855222db: scalar buffer load at pc 0x00001ac0 uses a variant V#, reading through its base address
+shader 0x8175abf0855222db: scalar buffer load at pc 0x00001b48 uses a variant V#, reading through its base address
+shader 0x8175abf0855222db: scalar buffer load at pc 0x00001b48 uses a variant V#, reading through its base address
+shader 0x3d27502d0a809c72: SRT slot 186 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 187 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 188 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 189 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 198 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 199 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 200 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 201 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 202 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 203 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 204 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 206 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 207 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 208 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 209 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: SRT slot 210 is loop-variant, restored its load
+shader 0x3d27502d0a809c72: scalar buffer load at pc 0x00001e20 uses a variant V#, reading through its base address
+shader 0x3d27502d0a809c72: scalar buffer load at pc 0x00001e40 uses a variant V#, reading through its base address
+shader 0x3d27502d0a809c72: scalar buffer load at pc 0x00001ec8 uses a variant V#, reading through its base address
+shader 0x3d27502d0a809c72: scalar buffer load at pc 0x00001ec8 uses a variant V#, reading through its base address
+shader 0x0af122d5ac62c4c5: SRT slot 272 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 273 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 274 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 275 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 276 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 277 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 278 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 279 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 280 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 281 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 282 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 283 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 284 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 285 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 286 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: SRT slot 287 is loop-variant, restored its load
+shader 0x0af122d5ac62c4c5: scalar buffer load at pc 0x00002c64 uses a variant V#, reading through its base address
+shader 0x0af122d5ac62c4c5: scalar buffer load at pc 0x00002c84 uses a variant V#, reading through its base address
+shader 0x0af122d5ac62c4c5: scalar buffer load at pc 0x00002d0c uses a variant V#, reading through its base address
+shader 0x0af122d5ac62c4c5: scalar buffer load at pc 0x00002d0c uses a variant V#, reading through its base address
+shader 0xa763fb769f3167ec: SRT slot 264 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 265 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 266 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 267 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 268 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 269 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 278 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 279 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 280 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 281 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 282 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 283 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 284 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 285 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 286 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: SRT slot 287 is loop-variant, restored its load
+shader 0xa763fb769f3167ec: scalar buffer load at pc 0x00002bfc uses a variant V#, reading through its base address
+shader 0xa763fb769f3167ec: scalar buffer load at pc 0x00002c1c uses a variant V#, reading through its base address
+shader 0xa763fb769f3167ec: scalar buffer load at pc 0x00002ca4 uses a variant V#, reading through its base address
+shader 0xa763fb769f3167ec: scalar buffer load at pc 0x00002ca4 uses a variant V#, reading through its base address
+version = 13
+Note: game uses occlusion queries; they are answered "everything is visible". Measured in Sky Garden and in the desert: the game does not cull on the answer, so this costs no draws and no frame time. Real queries would be a correctness fix, not a performance one.
+AvPlayer video started playing
+AvPlayer video stopped

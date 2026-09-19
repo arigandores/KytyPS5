@@ -1,0 +1,6 @@
+{
+  "exit_code": 1,
+  "finished": "2026-09-19T16:33:40.7177714+02:00",
+  "command": "python C:/kyty/s99/guards.py cal99a --first-frame 2100",
+  "scope": "Descriptive guards only; calibration NOT ADMITTED remains unchanged; no game or build"
+}

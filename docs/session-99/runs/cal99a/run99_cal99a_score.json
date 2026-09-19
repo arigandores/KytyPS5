@@ -1,0 +1,5 @@
+{
+  "exit_code": 1,
+  "finished": "2026-09-19T16:29:15.8679638+02:00",
+  "command": "python C:/kyty/s99/bf99.py cal99a --instrument a --calibration"
+}

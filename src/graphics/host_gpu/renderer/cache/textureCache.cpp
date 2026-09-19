@@ -2867,7 +2867,11 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 		// guards say.
 		// The EXIT below is kept verbatim for every run without the gate, so a floor-less
 		// binary behaves exactly as before.
-		if (Common::Gates::Enabled(Common::Gates::Gate::BindFloor)) {
+		// Session 97: STICKY once the floor has armed in this process.  An image the floor
+		// could not read back stays GPU-dirty; its retry after the falling edge would reach the
+		// EXIT below and end an ABBA run in its base arm.  A nonzero bf_dlskip voids the run
+		// either way (comment above), so the skip changes no admitted number.
+		if (Common::Gates::Enabled(Common::Gates::Gate::BindFloor) || BindFloorEverArmed()) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkip, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkipKb,
 			                        range.size >> 10u);
@@ -3249,7 +3253,13 @@ void TextureCache::UnmapMemory(uint64_t address, uint64_t size) {
 
 void TextureCache::RunGarbageCollector() {
 	std::scoped_lock lock {m_lock};
-	const uint64_t   tick = m_gc_tick++;
+	// Session 97, gate "bindfloor": the GC runs outside any draw, so it takes the per-op latch
+	// itself (descriptors.h).  While it is armed the LRU CLOCK stops as well as the eviction
+	// (below): with the clock running, every texture the floor does not touch would be older
+	// than the 16-tick age the moment the gate fell.  With the floor off this is the shipped
+	// order exactly - the tick is taken first.
+	const bool floor_hold = BindFloorLatchOp().armed;
+	uint64_t   tick       = floor_hold ? m_gc_tick : m_gc_tick++;
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruTouches, m_lru_touch_calls);
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruRepeats, m_lru_touch_repeats);
 	m_lru_touch_calls   = 0;
@@ -3298,6 +3308,21 @@ void TextureCache::RunGarbageCollector() {
 	}
 	if (m_total_used_memory < m_trigger_gc_memory) {
 		return;
+	}
+	// Session 97, gate "bindfloor" (MEASUREMENT ONLY): the floor removes every texture
+	// resolve and with it every TouchImage, so the age pass below evicted ~1 050 LIVE textures
+	// per 30-flip floor block in bf96b, and the first base flip after the gate fell re-created
+	// them (921 images, 1.4 GB uploaded, 84 ms).  An ABBA arm must hand the base arm back the
+	// cache it found.  While the latch is armed the NON-critical passes are suspended and the
+	// clock does not advance (above); at critical pressure the clock advances and both passes
+	// run exactly as before.  bf_gc_hold counts the suspended calls that would have collected
+	// (usage at or above the trigger) and is 0 whenever the floor is off.
+	if (floor_hold) {
+		if (m_total_used_memory < m_critical_gc_memory) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorGcHold, 1);
+			return;
+		}
+		tick = m_gc_tick++;
 	}
 	const auto collect = [&](bool allow_aggressive) {
 		bool           pressured  = m_total_used_memory >= m_pressure_gc_memory;

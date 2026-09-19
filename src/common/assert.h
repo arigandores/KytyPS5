@@ -41,6 +41,9 @@ int  DbgExitIfHandler(char const* expr, char const* file, int line);
 int  DbgNotImplementedHandler(char const* expr, char const* file, int line);
 void DbgExit(int status);
 #endif
+// Session 97: std::set_terminate is PER THREAD in the UCRT; a long-lived host thread calls
+// this at its entry so an exception escaping it is reported (common/assert.cpp).
+void InstallThreadTerminateReport();
 
 } // namespace Common
 

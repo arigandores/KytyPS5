@@ -657,6 +657,8 @@ void GuestGpu::ThreadRun(void* data) {
 	EXIT_IF(gpu == nullptr);
 	KYTY_PROFILER_THREAD("Thread_Gpu");
 	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Gpu);
+	// Session 97: std::set_terminate is per thread in the UCRT; bf96b died on THIS thread.
+	Common::InstallThreadTerminateReport();
 	g_gpu_thread = true;
 	g_gpu_state  = gpu;
 
@@ -1767,6 +1769,10 @@ void CommandProcessor::PrefetchComputePipelines(const Pm4Execution& execution) {
 	// Knob "dapin": the GuestGpu thread applies it to itself once per submission, whatever the
 	// other gates say.
 	DrawAheadApplyPin(true);
+	// Session 97, gate "bindfloor": this walk reaches ProgramCache::Get outside any draw, so it
+	// takes the per-op latch itself - after a falling edge it must not reuse floor snapshots
+	// (or capture a lookahead materialisation as one) on the last draw's stale decision.
+	BindFloorLatchOp();
 	// The walk also carries the graphics shadow state of docs/parallel-draw-path.md, so it runs
 	// when either the compute prefetch or the draw lookahead asks for it.
 	if ((AsyncComputeMode() != 2 && !Common::Gates::Enabled(Common::Gates::Gate::DrawAhead)) ||

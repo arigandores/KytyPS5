@@ -3116,8 +3116,14 @@ struct PipelineCache::ProgramCache {
 		// and 3 the floor removes BOTH AheadTake (below) and MaterializeResources (further
 		// down).  bfmode=2 is the BINDINGS-ONLY arm and leaves this function alone entirely
 		// (rewrite94/gpu-driven.md:141), so it is excluded here and only here.
-		const bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor) &&
-		                        Common::Gates::Value(Common::Gates::Knob::BindFloorMode) != 2;
+		// Session 97: the op's LATCHED decision (BindFloorLatchOp), not a live read of the gate,
+		// so this and the binding path agree for one draw - EXCEPT a draw the binding path then
+		// screens out (bf_skip: an image class NullTextureDesc cannot express), which binds for
+		// real over this floor snapshot; bf_skip is 0 in this scene and pred/02 C2 bounds it.
+		// The GuestGpu compute prefetch latches itself (graphicsRun.cpp); the guest submit
+		// thread's lookahead never latches and reads armed = false.
+		const auto& floor_op   = BindFloorCurrentOp();
+		const bool  bind_floor = floor_op.armed && floor_op.mode != 2;
 		bool       ahead_hit     = false;
 		// Hoisted out of the if so pg_ahead_n counts the same calls the block runs on; the
 		// operands have no side effects, so the short circuit is unchanged.

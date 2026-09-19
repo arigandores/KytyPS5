@@ -2118,8 +2118,10 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	LogDrawPhase(draw.Name(), "PrepareBindings");
 	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
 	// measurement M3: the CEILING STUB.  THE PICTURE IS ALLOWED TO BREAK (ROADMAP.md:1048).
-	// Read ONCE per draw, HERE, before anything is prepared, so a schedule flip landing inside
-	// a draw cannot arm half of it: the draw takes the floor end to end or none of it.
+	// Session 97: this reads the LATCH taken at the top of DrawIndex / DrawAuto, the same value
+	// ProgramCache::Get read for this draw.  Session 96 read the gate here and claimed that a
+	// flip could not arm half a draw - true only inside this function: CommitBindings read the
+	// gate again, and a falling edge between the two reads killed bf96b.
 	// REMOVED from this function: PrepareBindings (the SRT resolve of every image, buffer and
 	// sampler slot of every stage), PrepareGraphicsBindings (RebindImages, RebindBuffers, the
 	// buffer uploads, PrepareBda, the per-slot synchronisations) and the pixel bindings
@@ -2127,7 +2129,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// and index buffers, the pipeline lookup, CommitBindings' emit half and the whole record /
 	// "recpack" tail.  bf_skip: a stage whose image numeric class NullTextureDesc cannot
 	// express would abort the process, so that draw keeps the real path.
-	bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	bool bind_floor = BindFloorCurrentOp().armed;
 	if (bind_floor) {
 		for (uint32_t i = 0; i < vertex_stages.size() && bind_floor; i++) {
 			bind_floor = BindFloorStageSupported(state.vertex_info[i].stage);
@@ -2947,6 +2949,9 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	// the middle of the critical section still account for their whole hold.
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
+	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
+	BindFloorLatchOp();
 	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
 	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
 	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&
@@ -3111,6 +3116,9 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
+	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
+	BindFloorLatchOp();
 	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
 	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
 	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&

@@ -667,6 +667,42 @@ void BindFloorPrepareStage(const ShaderStageRuntime& runtime, PreparedBindings& 
 	prepared.Reset();
 	prepared.runtime = &runtime;
 	prepared.shader_data.assign(runtime.program->bindings.ShaderDataDwords(), 0u);
+	// Session 97: CommitBindings reads this, not the gate.
+	prepared.floor = true;
+}
+
+namespace {
+// Session 97, gate "bindfloor": the per-op latch (descriptors.h).  Written only by
+// BindFloorLatchOp on the thread that runs the op, read on that same thread; the GuestGpu
+// thread is the only one that runs draws and dispatches, so no other thread ever sees a
+// value it did not latch itself (a thread that never latched reads armed = false).
+thread_local BindFloorOp t_bind_floor_op {};
+std::atomic<bool>        g_bind_floor_ever {false};
+} // namespace
+
+BindFloorOp BindFloorLatchOp() {
+	BindFloorOp op;
+	op.armed = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	op.mode  = Common::Gates::Value(Common::Gates::Knob::BindFloorMode);
+	// bf_edge: the latch changed value - one per schedule edge as the translating thread
+	// saw it.  Counted in the flip of the op that saw the new value, so a falling edge is
+	// booked in the first frame of the base arm; it is the only bf_* the base arm writes.
+	if (op.armed != t_bind_floor_op.armed) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorEdges, 1);
+	}
+	if (op.armed && !g_bind_floor_ever.load(std::memory_order_relaxed)) {
+		g_bind_floor_ever.store(true, std::memory_order_relaxed);
+	}
+	t_bind_floor_op = op;
+	return op;
+}
+
+const BindFloorOp& BindFloorCurrentOp() {
+	return t_bind_floor_op;
+}
+
+bool BindFloorEverArmed() {
+	return g_bind_floor_ever.load(std::memory_order_relaxed);
 }
 
 static void PopulateTextureMipLayout(ImageInfo& info) {
@@ -2786,7 +2822,8 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 // was really burned, never what was asked for.  At any other mode this returns on the first
 // line and costs one relaxed atomic load.
 void RenderExecutor::BindFloorBurnSlice() {
-	if (Common::Gates::Value(Common::Gates::Knob::BindFloorMode) != 3) {
+	// Session 97: the latched mode of this op, like every other floor site.
+	if (BindFloorCurrentOp().mode != 3) {
 		return;
 	}
 	const uint64_t budget_us = Common::Gates::Value(Common::Gates::Knob::BindFloorBurn);
@@ -2851,7 +2888,16 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// out of prepared->runtime->program - which is why `prepared` and `runtime` are still
 	// needed), the dstSet, updateDescriptorSets, bindDescriptorSets, pushDescriptorSetKHR,
 	// the push constants, the gate "recpack" packet and the census hooks.
-	const bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	// Session 97: the branch is the one the stages were PREPARED with (PreparedBindings::floor),
+	// never a second read of the gate.  Session 96 read the gate here again; a falling edge
+	// between that read and ExecutePreparedDraw's own (the calibrated burn sits in between)
+	// sent floor-prepared stages - images / buffers / samplers EMPTY - down the real branch,
+	// and bf96b died silently on it.  A draw whose stages disagree cannot be committed.
+	const bool bind_floor = !prepared_bindings.empty() && prepared_bindings.front() != nullptr &&
+	                        prepared_bindings.front()->floor;
+	for (const auto* floor_stage: prepared_bindings) {
+		EXIT_IF(floor_stage == nullptr || floor_stage->floor != bind_floor);
+	}
 	if (bind_floor) {
 		m_bind_floor.commit++;
 		// The nine null-image slots are rebuilt once a frame instead of being validated per
@@ -3116,6 +3162,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		// synchronisation the floor exists to remove.
 		const uint32_t floor_transit_count =
 		    bind_floor ? 0u : static_cast<uint32_t>(program.info.images.size());
+		// Session 97: the loop below indexes images[] unchecked.  The real path fills it to
+		// exactly program.info.images.size() (RebindImages already EXIT_IFs that), so this
+		// can only fire on a stage this branch should never have seen - loud, not silent.
+		EXIT_IF(descriptors.images.size() < floor_transit_count);
 		for (uint32_t i = 0; i < floor_transit_count; i++) {
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
 			{

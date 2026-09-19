@@ -283,6 +283,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldDispatchNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
+	// Session 97, gate "bindfloor": latch the floor decision for this whole dispatch before
+	// GetComputeProgram reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
+	BindFloorLatchOp();
 	// Session 83, knob "mutwide" bit 2: the dispatch critical section as one interval.  Nothing
 	// in it carries a MutScope today, so all 2 419 us of mh_disp_us sits outside a_mut_us.
 	Common::FrameStats::MutScope wide_disp(
@@ -791,11 +794,12 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	auto& bindings = reuse_bindings ? m_compute_bindings : *local_bindings;
 	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053), route E
 	// measurement M3: the dispatch half of the ceiling stub.  THE PICTURE IS ALLOWED TO BREAK
-	// (ROADMAP.md:1048).  Read ONCE per dispatch, here, before anything is prepared.
+	// (ROADMAP.md:1048).  Session 97: the LATCH taken at the top of DispatchDirect, never the
+	// gate itself (CommitBindings takes its branch from PreparedBindings::floor).
 	// REMOVED: PrepareBindings, FindBuffers, PrepareBda, RebindImages, RebindBuffers.
 	// KEPT: the PM4 parse, the pipeline lookup, CommitBindings' emit half, the shader-write
 	// hazard barrier and the whole "recpack" record tail.
-	bool bind_floor = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+	bool bind_floor = BindFloorCurrentOp().armed;
 	if (bind_floor) {
 		bind_floor = BindFloorStageSupported(input_info.stage);
 		Common::FrameStats::Add(bind_floor ? Common::FrameStats::Counter::BindFloorDispatch

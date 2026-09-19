@@ -1622,6 +1622,12 @@ enum class Counter : uint32_t {
 	// until bfmode=3 / bfburn hold the frame length.  Written only while the gate is on.
 	BindFloorDlSkip,   // bf_dlskip:    readbacks abandoned
 	BindFloorDlSkipKb, // bf_dlskip_kb: their guest ranges, KiB
+	// Session 97, gate "bindfloor": bf_gc_hold - texture GC calls whose non-critical age pass
+	// the floor suspended (textureCache.cpp RunGarbageCollector), 0 while the floor is off;
+	// bf_edge - changes of the per-op latch (descriptors.cpp BindFloorLatchOp), one per
+	// schedule edge, booked in the flip that first saw the new value.
+	BindFloorGcHold,   // bf_gc_hold
+	BindFloorEdges,    // bf_edge
 	Count
 };
 

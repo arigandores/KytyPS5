@@ -107,6 +107,12 @@ struct PreparedBindings {
 	// which already takes the same PreparedBindings. Recomputed for every stage of every draw:
 	// it is not a cache and has no invalidation source.
 	uint32_t                              kind_mask = 0;
+	// Session 97, gate "bindfloor": true when BindFloorPrepareStage filled this stage, false
+	// when PrepareBindings did (Reset clears it).  CommitBindings takes its floor branch from
+	// THIS and never from a second read of the gate: the gate flips on the presentation
+	// thread, and bf96b died on a falling edge that landed between two reads of one draw -
+	// prepared by the floor, committed by the real path over an emptied `images`.
+	bool                                  floor     = false;
 
 	void Reset() {
 		// Capacity belongs to the executor; every descriptor belongs to this draw only.
@@ -125,6 +131,7 @@ struct PreparedBindings {
 		kind_mask = 0;
 		srt_hash  = 0;
 		data_hash = 0;
+		floor     = false;
 	}
 };
 
@@ -145,6 +152,21 @@ NativeDescriptorCount(const ShaderRecompiler::IR::DescriptorBinding& binding);
 // EXIT_IF on that length still holds.  Every other field stays empty on purpose.
 [[nodiscard]] bool BindFloorStageSupported(const ShaderStageRuntime& runtime);
 void BindFloorPrepareStage(const ShaderStageRuntime& runtime, PreparedBindings& prepared);
+
+// Session 97, gate "bindfloor": the floor decision LATCHED once per op.  Gates are applied on
+// the presentation thread (gates.cpp PollSchedule -> ApplyText), so any site that reads the
+// gate itself can disagree with another site of the SAME draw.  BindFloorLatchOp is called
+// once at the top of DrawIndex, DrawAuto and DispatchDirect, before anything reads it;
+// every floor site of that op (ProgramCache::Get, ExecutePreparedDraw, DispatchDirect,
+// BindFloorBurnSlice, the texture GC keep-alive) reads BindFloorCurrentOp on the same thread.
+// BindFloorEverArmed: sticky, true once any op of this process latched the floor.
+struct BindFloorOp {
+	bool     armed = false; // gate "bindfloor" as this op latched it
+	uint32_t mode  = 0;     // knob "bfmode" as this op latched it
+};
+BindFloorOp                      BindFloorLatchOp();
+[[nodiscard]] const BindFloorOp& BindFloorCurrentOp();
+[[nodiscard]] bool               BindFloorEverArmed();
 
 template <typename T>
 [[nodiscard]] T DecodeNativeDescriptor(const ShaderRecompiler::IR::DescriptorValue& value) {

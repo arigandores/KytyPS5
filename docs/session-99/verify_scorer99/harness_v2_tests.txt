@@ -1,0 +1,13 @@
+test_entry_failure_stops (__main__.Stop.test_entry_failure_stops) ... ok
+test_failure_markers_stop (__main__.Stop.test_failure_markers_stop) ... ok
+test_hold_death_stops (__main__.Stop.test_hold_death_stops) ... ok
+test_missing_log_stops (__main__.Stop.test_missing_log_stops) ... ok
+test_missing_stdout_stops (__main__.Stop.test_missing_stdout_stops) ... ok
+test_short_hold_stops (__main__.Stop.test_short_hold_stops) ... ok
+test_stdout_only_failure_markers_stop (__main__.Stop.test_stdout_only_failure_markers_stop) ... ok
+test_success_runs_exactly_two (__main__.Stop.test_success_runs_exactly_two) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.020s
+
+OK

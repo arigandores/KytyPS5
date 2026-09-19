@@ -1,0 +1,54 @@
+PRECONDITIONS PASS: 5 root constructs; 10 sealed texts; 18 live paths; gates 1092 B / 99 names
+LEDGER r1 PASS: arms.py, baseline.py, effect.py
+LEDGER r2 PASS: area_verdict.py
+LEDGER r3 PASS: shift91.py
+LEDGER r4 PASS: bda93.py, s94lib.py, stg92.py
+LEDGER r5 PASS: regime94.py
+LEDGER r6 PASS: bd96.py, bf96.py, bf98.py, check_s96_counters.py, m3_97.py, m3_98.py, pl96.py, rv97.py, rv98.py, trig98.py
+INTEGRITY PASS: every carried file verified; 12 degenerate chains unchanged beyond naive rewrite
+SEALED PASS: 01_floor_reversible.md 15422 B 7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+SEALED PASS: 02_floor_walk.md 12151 B 9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+SEALED PASS: 01_pathlap.md 12987 B 94ea04b05e247f0bc7d13612cd27a0c46ea04907ac3d7aaf032f0df45696b212
+SEALED PASS: 02_bindfloor.md 13039 B e6c56dfcab222adac3e7541db1e2ae179d2c3b49f439dc5a53276d6aa39398c8
+SEALED PASS: 03_bdaevery.md 8584 B ada5682860cfd5ac5b61aefeeab1ea82eec29d4a80227974b84fb7b654c6dd0e
+SEALED PASS: 04_pathlap_identity.md 6618 B 584a13afcf07055086cb8b724695007d919846221bf096bab1407a64eaeb58f5
+SEALED PASS: 05_bdaevery_controls.md 9087 B 352448acaacd9b40fd0f01b77bdcf0b17a2cf708e7a928f3487db82f3d87c624
+SEALED PASS: 01_hang_trigger.md 19391 B aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3
+SEALED PASS: 01b_entry_hang.md 4202 B 3884109387e44f520b63fe5684340fc1828111dda30a7b99bdb9098ac41d49b6
+SEALED PASS: 02_m3_frame.md 11825 B 83144a3dfeff531eccd1da0bef91cdf882e4fcf4d6a70d8545f1ed9a53354389
+ARCHIVE, DO NOT RUN: bf98_v1.py; carried by naive rewrite only
+ARCHIVE, DO NOT RUN: bf98_v2.py; carried by naive rewrite only
+ARCHIVE, DO NOT RUN: design98/rv98_before_N3.py; carried by naive rewrite only
+ARCHIVE, DO NOT RUN: m3_98_v1.py; carried by naive rewrite only
+OLDER PRED, REPORT ONLY: fr95.py PRED = 'C:/kyty/s99/pred/01_framerep.md'
+OLDER PRED, REPORT ONLY: fr95b.py PRED = 'C:/kyty/s99/pred/02_framerep_ring.md'
+OLDER PRED, REPORT ONLY: mc94.py PRED = 'C:/kyty/s99/pred/01_mergecost.md'
+OLDER PRED, REPORT ONLY: bda94.py PRED = 'C:/kyty/s99/pred/02_bdaall.md'
+OLDER PRED, REPORT ONLY: stg92.py PRED = ROOT + '/pred/01_stglap.md'
+OLDER PRED, REPORT ONLY: bda93.py PRED = ROOT + '/pred/01_bdacap.md'
+OLDER PRED, REPORT ONLY: shift91.py PRED = pathlib.Path('C:/kyty/s99/pred/01_shift.md')
+ROOT PASS: bf98a -> C:/kyty/s98
+ROOT PASS: bf98c -> C:/kyty/s98
+ROOT PASS: rv98a -> C:/kyty/s98
+ROOT PASS: rv98a_warmup -> C:/kyty/s98
+ROOT PASS: bf98a_warmup -> C:/kyty/s98
+ROOT PASS: bf98c_warmup -> C:/kyty/s98
+ROOT PASS: trig98a -> C:/kyty/s98
+ROOT PASS: rv97a -> C:/kyty/s97
+ROOT PASS: rv97b -> C:/kyty/s97
+ROOT PASS: bd96b -> C:/kyty/s97
+ROOT PASS: pl96a -> C:/kyty/s96
+ROOT PASS: fr95a -> C:/kyty/s95
+ROOT PASS: mc94a -> C:/kyty/s94
+ROOT PASS: bl93a -> C:/kyty/s93
+ROOT PASS: stg92a -> C:/kyty/s92
+gen_gates.py --check exit=1 (expected out-of-date for deliberately pinned baseline)
+109 gates, 23 knobs, 1462 bytes (gate file limit 3500, schedule arm limit 511)
+
+NOTE: too long for a schedule arm - an arm must list only the names it drives (the arms own those names and the gate file below skips them)
+
+copy=1 srtpages=1 clamp=1 regionepoch=0 srtmemo=0 smemocheck=0 bdastamp=1 backpages=1 srtstat=0 metalock=1 drawahead=1 dause=1 asyncsubmit=1 imgrecycle=1 recordthread=1 trackfree=1 tfcheck=0 protfast=0 swlocal=0 swdefer=1 gdsepoch=0 atomimg=0 dsring=1 recpack=1 syncfree=1 sfcheck=0 protbatch=1 pbcheck=0 texfaulthint=1 daclass=1 daprefetch=1 daclone=0 texlru=1 texfast=1 texfastcheck=0 texmemo2=0 clampvma=1 smpmemo=1 bindspare=0 fslean=0 applyskip=0 recbatch=0 recrelax=0 recpin=1 stkstat=0 drawstat=0 dpslow=0 drawstate=1 snapkeep=1 buflru=1 snapdiff=1 snapswap=1 buffast=0 buffastcheck=0 protbatch2=0 acopyidle=1 dawalk=0 rtfast=1 progmemo=1 progmemocheck=0 armdefer=0 armcheck=0 dawitness=1 dawitptr=1 daqpre=0 cbstat=0 recimg=0 recup=0 shadowinline=0 savepersist=0 occzero=0 amut=0 pxstat=0 mutsite=0 imgskip=0 cleardec=0 daepceil=0 dawitfb=0 imgfuse=1 dawitcp=1 dawitcg=1 dawitcgcheck=0 pfhint=1 bindkey=0 bdabits=0 bdabitscheck=0 bindpack=1 bindpackcheck=0 plkstat=0 slotstat=0 bdalap=0 bindlap=0 bdasplit=0 slotstatcheck=0 bindpack2=0 bindpack2check=0 proglap=0 drawmerge=0 drawmergecheck=0 bindalt=0 takelap=0 bufimpcheck=0 stglap=0 bdacap=0 mergecost=0 bdaall=0 framerep=0 pathlap=0 bindfloor=0 dathreads=4 recarena=64 dsbatch=32 dspool=1024 recspin=300 dapin=3 procpin=0 faultkb=64 dawalklead=1 recpubn=0 shadowresolve=0 shadowmask=3 m4baton=0 imgskipkb=4096 dawitloop=0 pfcap=1024 mutwide=0 bindwit=0 bufimp=0 bdaevery=0 copywake=0 bfmode=1 bfburn=0
+
+gates_base.txt is out of date: rerun without --check
+GATES PASS: check-only, unchanged SHA; no scorer/game/build invoked
+PORT DIAGNOSTIC: clean; carried=1399 ledger=35 skipped=30

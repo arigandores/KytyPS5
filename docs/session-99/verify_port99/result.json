@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    "Whole inherited corpus: 1399 files (406 Python/993 other), 30 skipped; ledger 35 files",
+    "All five root constructs validated from AST; regime includes s99 once in search tuple",
+    "10 sealed byte-exact texts; 18 live PRED constants across 10 files, paths/SHA valid",
+    "Both gates_base: 1092 bytes / 99 unique names / pinned SHA exact",
+    "4 old scorer archives only naive changes; no live Python imports",
+    "15 historical tag fallbacks found their original session roots; no scorer imported/run"
+  ],
+  "issues": []
+}

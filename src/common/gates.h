@@ -507,8 +507,8 @@ enum class Knob : uint32_t {
 	// floor is taken.  1 (and 0) = the full stub; 2 = BINDINGS ONLY, that is AheadTake and
 	// MaterializeResources stay and only the binding half is stubbed (the spare arm for the
 	// fork in the sealed rule, rewrite94/gpu-driven.md:141); 3 = 1 plus the calibrated idle.
-	BindFloorMode,    // KYTY_BIND_FLOOR_MODE,    file name "bfmode" (1 full, 2 bindings, 3 burn)
-	// Session 96, measurement only, read only at bfmode=3: microseconds the translation
+	BindFloorMode,    // KYTY_BIND_FLOOR_MODE,    file name "bfmode" (1 full, 2 bindings + optional burn, 3 full + burn)
+	// Session 96/99, measurement only, read at bfmode=2/3: microseconds the translation
 	// thread busy-waits per frame, spread over that frame's draws and dispatches, so the
 	// floor arm keeps arm A's frame length and the DRS step cannot move between the arms
 	// (ROADMAP.md:1062-1065).  bf_burn_ns reports what was really burned.

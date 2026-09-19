@@ -2248,7 +2248,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// image aliases, before the buffer uploads of RebindBuffers.
 	// Session 96, gate "bindfloor": THIS CALL is the floor's main target - RebindImages,
 	// RebindBuffers, the buffer uploads, PrepareBda and the per-slot synchronisations all live
-	// inside it.  At bfmode=3 the calibrated idle is burned exactly where it stood, on this
+	// inside it.  At bfmode=2/3 the calibrated idle is burned exactly where it stood, on this
 	// thread and inside the render mutex (ROADMAP.md:1062-1065).
 	if (!bind_floor) {
 		PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});

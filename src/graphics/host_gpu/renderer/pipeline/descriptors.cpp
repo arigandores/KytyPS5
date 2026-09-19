@@ -3248,7 +3248,7 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 
 } // namespace
 
-// Session 96, knob "bfburn" at "bfmode"=3 (MEASUREMENT ONLY, ROADMAP.md:1062-1065): the
+// Sessions 96/99, knob "bfburn" at "bfmode"=2 or 3 (MEASUREMENT ONLY): the
 // calibrated idle.  The floor makes the frame SHORTER, and a shorter frame lets DRS raise the
 // resolution, so the two arms would no longer draw the same area and every per-frame number
 // would be comparing two different scenes.  This burns the difference back on the very thread
@@ -3256,11 +3256,11 @@ void NoteSlotStat(ShaderType stage, uint64_t shader,
 // mutex - so the arms keep the same frame length.  The budget is a whole frame's worth of
 // microseconds and is spread over the draws and dispatches by the PREVIOUS frame's
 // population, which is the only count available before the frame ends.  bf_burn_ns is what
-// was really burned, never what was asked for.  At any other mode this returns on the first
-// line and costs one relaxed atomic load.
+// was really burned, never what was asked for.  Modes 0/1 return without burning.
 void RenderExecutor::BindFloorBurnSlice() {
-	// Session 97: the latched mode of this op, like every other floor site.
-	if (BindFloorCurrentOp().mode != 3) {
+	// Read the latched mode once: bindings-only needs its own DRS calibration too.
+	const auto mode = BindFloorCurrentOp().mode;
+	if (mode != 2 && mode != 3) {
 		return;
 	}
 	const uint64_t budget_us = Common::Gates::Value(Common::Gates::Knob::BindFloorBurn);

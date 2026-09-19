@@ -1,0 +1,44 @@
+{
+  "verdict": "PASS",
+  "scope": "Frozen session-99 scorer and harness preparation, not real measurement admission",
+  "game_launched": false,
+  "build_run": false,
+  "blocking_findings_remaining": [],
+  "initial_code_reports_preserved": ["REVIEW.md", "HARNESS_REVIEW.md"],
+  "counts": {
+    "author_scorer_tests_passed": 23,
+    "author_scorer_tests_total": 23,
+    "independent_final_assertions_passed": 20,
+    "independent_final_assertions_total": 20,
+    "author_harness_ast_tests_passed": 8,
+    "author_harness_ast_tests_total": 8,
+    "independent_harness_marker_regressions_fixed": 5,
+    "production_root_refusal_exit_code": 2
+  },
+  "historical_recount": {
+    "F_a_ms": 14.274068801724138,
+    "F_a_pairs": 128,
+    "F_c_ms": 12.825411375615763,
+    "F_c_pairs": 122,
+    "rv98a_falls": 432,
+    "rv98a_warmup_falls": 425,
+    "total_falls": 857
+  },
+  "limitations": [
+    "No game run or build; harness tests execute only actual loop AST with attempt mocked.",
+    "Synthetic component fixtures are not real ADMITTED measurements.",
+    "Whole-log duration >= metadata hold is necessary consistency, not independent proof of an uninterrupted hold; entry time is included and after-stable duration is reported only.",
+    "No new mode2 calibration, endpoint, video or hazard-rate evidence exists; historical 857 edges do not prove new mode2 behavior."
+  ],
+  "sha256": {
+    "bf99.py": "92cb8148415992e23b033af81b5104a1f23d33928a2f66ffb14aa94b2ea958fb",
+    "m3_99.py": "8a80e4cf90e04d56685dc5f3e794bf6354cf9377a61896f4fc3b27c400fe85b3",
+    "test99_scorers.py": "18ae159c0680632e2babcb40abb8c69289416c1a5c290a64541bd7749e285a7c",
+    "accept99.sh": "589128026f3cf99568e09412c929fab295f650fe3877224c120f7b89fa4f8d77",
+    "enter_scene.py": "f4a142b8042ee7a13c59aa5fad4ef72ee80a1b7bf34fe7855a368c27e50ee7fd",
+    "run_safety99.py": "77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638",
+    "test99_harness_stop.py": "ac36b63c7d8c1f66a7a436deb5ea729466da5cbf0eaa963ceb46dac5a9b707b5",
+    "pred/01_bindings_only.md": "8b816528b78a1730c052d7fdbc414d7b00ef3b9c4df25ab2e7016b23d9d4b14d"
+  },
+  "preregistration_bytes": 10848
+}

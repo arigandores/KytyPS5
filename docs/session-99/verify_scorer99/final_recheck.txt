@@ -1,0 +1,21 @@
+positive_a PASS {'errors': [], 'core': {'COUNTERS': True, 'EDGE': True, "C1'''": True, "C2'": True, 'C4_B': True, 'DARK_B': True, 'LIVE_DARK_RATIO': True, 'REAL_CLEARS': True, 'MARKERS_OFF': True, "C8''_B": True, "C9''_B": True, "C10'''_B": True, 'PAIRS': True, 'ENDPOINT': True}, 'kept': {"3'": True, '5': True, "6'": True, '7': True}, 'area': 'VALID', 'rv': {'1': True, '2': True, "3'": True, "4'": True, '5': True, '6': True, "6'": True, '7': True, "7'": True, '8': True}, 'pairs': 165}
+positive_c PASS {'errors': [], 'core': {'COUNTERS': True, 'EDGE': True, "C1'''": True, "C2'": True, 'C4_B': True, 'C4_B_OUT': True, 'DARK_B': True, 'LIVE_DARK_RATIO': True, 'REAL_CLEARS': True, 'MARKERS_OFF': True, "C8''_B": True, "C9''_B": True, "C10'''_B": True, 'PAIRS': True, 'ENDPOINT': True}, 'kept': {"3'": True, '5': True, "6'": True, '7': True}, 'area': 'VALID', 'rv': {'1': True, '2': True, "3'": True, "4'": True, '5': True, '6': True, "6'": True, '7': True, "7'": True, '8': True}, 'pairs': 165}
+missing_early_bf_mixed PASS 
+missing_early_bf_trig_fire PASS 
+missing_early_bf_dlskip PASS 
+missing_early_bf_live_mat PASS 
+missing_early_img_new PASS 
+early_live_leak PASS 
+contradictory_arms PASS 
+stdout_FATAL PASS 
+stdout_Fatal error PASS 
+stdout_Unhandled exception: PASS 
+stdout_GpuMarkerHung PASS 
+stdout_GpuCheckpointHang PASS 
+stdout_GpuWaitSlow PASS 
+short_raw_hold PASS 
+fresh_raw_area PASS INVALID
+calibration_real_replay PASS 
+calibration_stdout_hash PASS 
+calibration_replays_raw_area PASS 
+TOTAL 20 PASS

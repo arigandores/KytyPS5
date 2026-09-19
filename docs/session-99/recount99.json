@@ -1,0 +1,32 @@
+{
+  "a": {
+    "tag": "bf98a",
+    "sha256": "1762d65bd65d5f63b57bc2846cd2cc467b592422f01ee0f9f9132be8ffa8bb3e",
+    "pairs": 128,
+    "armed_blocks": 128,
+    "F_ms": 14.274068801724138
+  },
+  "c": {
+    "tag": "bf98c",
+    "sha256": "32664c5b826fae9486c4ac8957699abe84c4fbc3f4446456315ea1122ceeeec1",
+    "pairs": 122,
+    "armed_blocks": 122,
+    "F_ms": 12.825411375615765
+  },
+  "proof": {
+    "tag": "rv98a",
+    "sha256": "1f7b01f568eea53df88b6ab886ca388e786e1a88c409277299818201fce1d22f",
+    "falling_edges": 432,
+    "completed": 432,
+    "bf_edge_sum": 865
+  },
+  "warmup": {
+    "tag": "rv98a_warmup",
+    "sha256": "73327de0831b6c1c11921c90a05f4f848956028416e6670ed0de2aae76eeb5e2",
+    "falling_edges": 426,
+    "completed": 425,
+    "bf_edge_sum": 851
+  },
+  "global_low": 15.078911375615764,
+  "global_high": 16.527568801724136
+}

@@ -1,0 +1,215 @@
+==== bf98.py (v2) - M3 under the FRAME latch: bf96.py verbatim + the s98 pred/02 repairs ====
+tag              bf98c
+log              C:/kyty/s98/log_bf98c.txt
+LATCH mode=1 clear=1 trim=1
+  trim source    the log says "BindFloorLatch: mode 1"
+pre-registration C:/kyty/s98/pred/02_m3_frame.md
+  sha256 read    83144a3dfeff531eccd1da0bef91cdf882e4fcf4d6a70d8545f1ed9a53354389
+  sha256 sealed  83144a3dfeff531eccd1da0bef91cdf882e4fcf4d6a70d8545f1ed9a53354389
+  SEALED OK
+
+====================================================================================================
+A. bf96.py readout, VERBATIM (exit 1).  Under a trimmed readout every number and verdict
+   in it is PRINTED ONLY: its F_st is untrimmed, its C1/C2/C8'/C9/C10'/C10'' are the
+   sealed forms, and its VERDICT uses the sealed +2.65.  Section B decides.
+====================================================================================================
+bf96| ==== bf96.py - gate `bindfloor` against pred/02_bindfloor.md (THE M3 RULE) ====
+bf96| tag              bf98c
+bf96| log              C:/kyty/s98/log_bf98c.txt
+bf96| pre-registration C:/kyty/s98/prev97/pred/02_bindfloor.md
+bf96|   sha256 read    e6c56dfcab222adac3e7541db1e2ae179d2c3b49f439dc5a53276d6aa39398c8
+bf96|   sha256 sealed  e6c56dfcab222adac3e7541db1e2ae179d2c3b49f439dc5a53276d6aa39398c8
+bf96|   SEALED OK
+bf96|   DRY RUN - the seal check does not stop this run; this is NOT a scoring.
+bf96| repair           C:/kyty/s98/prev97/pred/01_floor_reversible.md
+bf96|   sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+bf96|   sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+bf96|   SEALED OK
+bf96| repair           C:/kyty/s98/prev97/pred/02_floor_walk.md
+bf96|   sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+bf96|   sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+bf96|   SEALED OK
+bf96| units            bf_* are RAW ns / raw counts; cpu_gpu_us, spin_gpu_us, dt_us and
+bf96|                  mh_*_us are us; F_st and VERDICT_INPUT are MILLIseconds (pred/02
+bf96|                  section 2).  Per-arm tables are per flip.
+bf96| the picture      IS ALLOWED TO BREAK (ROADMAP.md:1048).  A broken image is not a
+bf96|                  defect of this run; the video pass is a DEBT this gate incurs.
+bf96| window           n >= 2100, blk >= 1: 7320 flips
+bf96| 
+bf96| --- the arms, read off the TEXT of the GateArm: lines (never off a counter) ---
+bf96|   arm 0  3660 flips  text="bindfloor=0 drawahead=1 bfmode=3 bfburn=18800"
+bf96|   arm 1  3660 flips  text="bindfloor=1 drawahead=0 bfmode=3 bfburn=18800"
+bf96|   ARMED   arm 1  (its GateArm text carries "bindfloor=1")
+bf96|   UNARMED arm 0  (its GateArm text carries "bindfloor=0")
+bf96|   MODE    bfmode=3 -> the full stub + a calibrated idle burn (the section 8 DRS arm)  (the armed arm's text carries "bfmode=3")
+bf96| 
+bf96| --- per arm, per flip (bf_burn_ns divided by 1000; the *_us are already us) ---
+bf96|   arm 0 (3660 flips)
+bf96|     base   draws=5046.4 dispatches=268.0 cpu_gpu_us=31572.6 spin_gpu_us=37.7 gpu_busy_us=12685.6 dt_us=32448.7
+bf96|     bf     bf_n=63.95 bf_disp=1.69 bf_push=33.43 bf_pool=32.22 bf_img=510.75 bf_buf=1044.94 bf_smp=149.68 bf_null_tr=0.00 bf_mat=0.00 bf_reuse=112.83 bf_skip=0.00
+bf96|     bf     bf_burn_ns=232.8 us a flip (raw ns in the log)
+bf96|     mutex  mh_pro_us=0.0 mh_rt_us=0.0 mh_prog_us=0.0 mh_bind_us=0.0 mh_emit_us=0.0 mh_tail_us=0.0 mh_disp_us=0.0 mh_pres_us=0.0 a_hold_us=0.0  mh_n=0.0
+bf96|     quiet  pl_* sum=0.0 over 32 keys ; be_n=0.00
+bf96|   arm 1 (3660 flips)
+bf96|     base   draws=5042.9 dispatches=268.0 cpu_gpu_us=31695.8 spin_gpu_us=5.2 gpu_busy_us=4819.5 dt_us=32427.1
+bf96|     bf     bf_n=4960.74 bf_disp=254.32 bf_push=2600.18 bf_pool=2614.86 bf_img=47412.32 bf_buf=83836.17 bf_smp=10998.43 bf_null_tr=0.00 bf_mat=0.00 bf_reuse=9305.89 bf_skip=0.00
+bf96|     bf     bf_burn_ns=18526.7 us a flip (raw ns in the log)
+bf96|     mutex  mh_pro_us=0.0 mh_rt_us=0.0 mh_prog_us=0.0 mh_bind_us=0.0 mh_emit_us=0.0 mh_tail_us=0.0 mh_disp_us=0.0 mh_pres_us=0.0 a_hold_us=0.0  mh_n=0.0
+bf96|     quiet  pl_* sum=0.0 over 32 keys ; be_n=0.00
+bf96| 
+bf96| !! `mutsite` is NOT armed in this run (mh_n = 0), so every mh_*_us reads a
+bf96|    STRUCTURAL zero.  P2's band is [0, 1 500] and CONTAINS ZERO - scoring it
+bf96|    here would print a vacuous HIT at 0.0, which is exactly the defect session
+bf96|    95 caught.  P2, P3 and P4 are therefore NOT EVALUABLE below.
+bf96| 
+bf96| --- pred/02 section 6 C6: the BDA regime (regime94.py, run as it is) ---
+bf96|   | == bf98c 9418 frames
+bf96|   |   pre-schedule  arm  0  n=1500  bda_scan med   1064  buf_new mean 1.793  pb2_pass med   842  misses mean 19.4
+bf96|   |   early         arm  0  n= 960  bda_scan med   1064  buf_new mean 1.439  pb2_pass med   820  misses mean 20.6
+bf96|   |   early         arm  1  n= 941  bda_scan med      0  buf_new mean 0.056  pb2_pass med     0  misses mean 0.1
+bf96|   |   mid           arm  0  n= 990  bda_scan med   1065  buf_new mean 1.433  pb2_pass med   820  misses mean 21.3
+bf96|   |   mid           arm  1  n=1011  bda_scan med      0  buf_new mean 0.041  pb2_pass med     0  misses mean 0.1
+bf96|   |   late          arm  0  n=1711  bda_scan med   1065  buf_new mean 1.449  pb2_pass med   820  misses mean 21.4
+bf96|   |   late          arm  1  n=1709  bda_scan med      0  buf_new mean 0.032  pb2_pass med     0  misses mean 0.1
+bf96|     arm 0  bda_scan med   1065.0 a frame  (windows 1064, 1065, 1065)   [label: OLD]
+bf96|     arm 1  bda_scan med      0.0 a frame  (windows 0, 0, 0)   [label: NEW]
+bf96|     C6 is a RATIO between the arms and uses no absolute cut. There is NO written
+bf96|     OLD/NEW threshold in the record - only observed values (1060 vs 50 a frame,
+bf96|     FACTS.md:342-343, ~21x). The OLD/NEW label above is MY classification
+bf96|     (>= 400 / <= 200), it is advisory, and it decides nothing.
+bf96| 
+bf96| --- pred/02 section 8: CRITERION 3 (area_verdict.py, run as it is) ---
+bf96|   | ====================================================================================================
+bf96|   | bf98c   csv=C:\kyty\s98\area_bf98c.csv   flips n>=2100: 7320   arms: [0, 1]
+bf96|   |   high-rung share (rt_kpx/rt_att > 2600):   0.0 %   population 0 of 7320 flips
+bf96|   |   whole-arm rt_kpx/rt_att : arm0   2007.6 (3660 flips)   arm1   2007.7 (3660 flips)
+bf96|   |   WHOLE-ARM AREA SPLIT    :  +0.002 %     [ tool header: +0.00 quotable, +1.74 VOID, +4.30 VOID ]
+bf96|   |   whole-arm cpu/frame     : arm0  31572.6 us   arm1  31695.8 us    +0.390 %
+bf96|   |   whole-arm draws/frame   : arm0   5046.4      arm1   5042.9       -0.069 %
+bf96|   |   complete pairs 122   matched within 0.50 %: 122  (100.0 %)   dropped 0
+bf96|   |     ALL       122 pairs  cpu/draw  +0.493 %  2*SE  0.312 %  t   +3.16
+bf96|   |     MATCHED   122 pairs  cpu/draw  +0.493 %  2*SE  0.312 %  t   +3.16
+bf96|   |     DROPPED     0 pair(s) - NOT MEASURED (population too small to quote)
+bf96|   |   VALIDITY (pre-registered; never substitute one that fails - take another run):
+bf96|   |     [PASS] area split < 1.0 %%          +0.002 %
+bf96|   |     [PASS] pair match >= 90 %%          100.0 % (122/122)
+bf96|   |     [PASS] work within 0.5 %%           -0.069 %
+bf96|   |   RESULT (reported, NOT part of validity - a valid run may measure nothing):
+bf96|   |     [ SIG  ] MATCHED cpu/draw          +0.493 % +- 0.312 %, t = +3.16 over 122 pairs
+bf96|   |   VERDICT: VALID - quotable once guards 2/10, the arming counter and the bracketing timer are also checked.
+bf96|   | ====================================================================================================
+bf96|   | 0 of 1 tag(s) INVALID
+bf96|   CRITERION 3: VALID   whole-arm area split +0.002 %
+bf96| 
+bf96| --- pred/02 section 6: controls (a FAIL here voids the whole of section 9) ---
+bf96|   C1   leak bf_n(unarmed)/armed               0.012892  <= 0.001                       FAIL straddle detail below if non-zero
+bf96|       C1 straddle detail (unarmed frames with bf_n > 0: blk, index in block, block length, value):
+bf96|         (11, 0, 30, 4074)
+bf96|         (15, 0, 30, 4672)
+bf96|         (19, 0, 30, 3844)
+bf96|         (23, 0, 30, 4501)
+bf96|         (27, 0, 30, 3182)
+bf96|         (31, 0, 30, 4754)
+bf96|         (35, 0, 30, 3880)
+bf96|         (39, 0, 30, 4668)
+bf96|         (43, 0, 30, 4492)
+bf96|         (47, 0, 30, 4805)
+bf96|         (51, 0, 30, 2857)
+bf96|         (55, 0, 30, 4377)
+bf96|         61 non-zero frames, 0 of them at the LAST frame of their block (straddle), 61 NOT (defect)
+bf96|   C2   |bf_n/draws-1| and bf_skip/bf_n        0.016291  <= 0.02 and skip <= 0.02       PASS bf_n 4960.7 vs draws 5042.9 a flip; bf_skip/bf_n = 0.0000
+bf96|   C3   (bf_push+bf_pool)/bf_n                   1.0513  >= 0.98                        PASS every draw that took the floor still bound or pushed a descriptor set   [as sealed in pred/02; repaired, not deciding]
+bf96|   C3'  |push+pool - (bf_n+bf_disp)|                 44  <= 244 boundaries              PASS push+pool 19087050, bf_n+bf_disp 19087094 over the armed window
+bf96|   C4   bf_reuse/(bf_mat+bf_reuse)               1.0000  >= 0.95                        PASS materialisation ran on a vanishing minority of draws (bf_mat 0.0, bf_reuse 9305.9 a flip)
+bf96|   C5   |draws(armed)/draws(unarmed)-1|        0.000688  <= 0.02  (NOT 0.005)           PASS LOOSER than guards.py check 4 on purpose: check 4's 0.5 %% is written for arms that do the SAME work, and the floor arm does not, by construction. guards.py check 4 is therefore EXPECTED TO FAIL on this run; that FAIL is anticipated in pred/02 section 6 C5 BEFORE the run and does not by itself replace it. Criterion 3 still governs validity.
+bf96|   C6   bda_scan med ratio (max/min)           1065.000  <= 2.0 (no absolute cut)       FAIL armed med 0.0, unarmed med 1065.0; the record's own change of regime is ~21x   [as sealed in pred/02; repaired, not deciding]
+bf96|   C6'  unarmed bda_scan thirds max/min           1.001  <= 2.0                         PASS early / mid / late medians 1064.0, 1065.0, 1065.0 (NEW ~50, OLD ~1 060 - label advisory)
+bf96|   C7   pl_* all 0 and be_n = 0                       0  0 non-zero                     PASS pathlap and bdaevery are off in this run
+bf96|   C8   cpu_gpu_us armed < unarmed               +123.2  < 0 us a flip                  FAIL armed 31695.8 us, unarmed 31572.6 us a flip - a stub that did not make the path cheaper measured nothing   [as sealed in pred/02; repaired, not deciding]
+bf96|   C8'  net(armed) - burn < net(unarmed)       -18371.0  < 0 us a flip                  PASS armed 31695.8 - spin 5.2 - burn 18526.7 = 13163.9 us; unarmed 31572.6 - spin 37.7 = 31534.9 us
+bf96|   C9   |dt(B)-dt(A)|/dt(A)                    0.000665  <= 0.03                        PASS the burn must return the frame to arm A's duration so both arms hold the same DRS step (armed 32427.1 us, unarmed 32448.7 us)
+bf96|   C10  bf_burn_ns > 0 armed, = 0 unarmed    67807754211  > 0 armed AND = 0 unarmed      FAIL armed 18526.7 us, unarmed 232.8 us a flip   [as sealed in pred/02; repaired, not deciding]
+bf96|   C10' burn armed > 0; unarmed boundary only             61  > 0 armed; I1'' structure      PASS 61 unarmed flips carry burn, 0 mid-block, 0 blocks with > 1; their total 852214.9 us over the window
+bf96|   C10'' C10' and unarmed/armed burn            0.012568  C10' and <= 0.001              FAIL unarmed 852214926 ns against armed 67807754211 ns over the window
+bf96| 
+bf96| --- pred/02 section 7: predictions ---
+bf96|   (scored for the record; section 9 is suppressed below - see the banner)
+bf96|   P1   F_st, ms                             13.167  [10, 18]         pt 14.0    HIT            median over 122 matched arm-1 blocks of cpu_net_us/flip
+bf96|   P2   mh_bind_us in arm B, us                 0.0  [0, 1500]        pt 400     NOT EVALUABLE  the phase the stub empties [`mutsite` is NOT in this run's arms, so mh_bind_us reads a STRUCTURAL 0, and a band scored against a structural zero is VOID - not a hit and not a miss (this band STARTS at 0, so scoring it here would print the vacuous HIT of session 95)]
+bf96|   P3   mh_emit_us in arm B, us                 0.0  [4500, 7000]     pt 5700    NOT EVALUABLE  emit is KEPT; only CommitBindings' resolution goes [`mutsite` is NOT in this run's arms, so mh_emit_us reads a STRUCTURAL 0, and a band scored against a structural zero is VOID - not a hit and not a miss]
+bf96|   P4   mh_prog_us in arm B, us                 0.0  [900, 3200]      pt 1800    NOT EVALUABLE  materialisation removed, pg_pre + key/find stay [`mutsite` is NOT in this run's arms, so mh_prog_us reads a STRUCTURAL 0, and a band scored against a structural zero is VOID - not a hit and not a miss]
+bf96|   P5   OUTSIDE in arm B, us                    n/a  [3000, 5200]     pt 4050    NOT EVALUABLE  the stub does not touch the PM4 parse [`pathlap` is off in this run - C7 REQUIRES pl_* = 0 - so OUTSIDE is not produced here at all. pred/02 section 9 item 3 anticipates this: "OUTSIDE if pathlap data exists from pl96a". A prediction on a quantity this run does not produce is VOID, not a miss (pred/01 section 9)]
+bf96|   P6   bf_n / draws                         0.9837  [0.98, 1.02]     pt 1.0     HIT            the predicate should take essentially every draw
+bf96|   P7   gpu_busy_us B lower than A          -7866.1  <= 0             pt B < A   HIT            armed 4819.5 us, unarmed 12685.6 us a flip - null descriptors mean the shaders read a 1x1 image and a 16-byte buffer
+bf96|   P8   bf_mat a flip                          0.00  [1, 400]         pt 60      MISS           one materialisation per program permutation, then reuse
+bf96|   P9   VERDICT_INPUT >= 15.5 => CLOSE         15.817  >= 15.5          pt 16.65   HIT            F_st + 2.65; the band of P1 straddles all three branches of section 3, which is why the gap branch was sealed in advance
+bf96|   P10  DRS trap fires (INVALID)           +0.002 %  |split| > 1.0 %  pt FIRES   MISS           criterion 3 = VALID. The trap did NOT fire; the run survives criterion 3 and F_st stands.
+bf96| 
+bf96| CONTROLS FAILED - no number of section 9 may be published
+bf96|   2 of 11 controls failed: C1, C10''
+bf96|   Section 9 is NOT printed.  A control is repaired under a NEW sealed
+bf96|   pre-registration (pred/02 preamble), never by arguing with this output.
+bf96| 
+bf96| summary: controls 9/11 (repaired set), predictions 4 HIT / 2 MISS / 4 NOT EVALUABLE
+bf96|          C6 and C8 and C10 as sealed in pred/02 FAILED and stay recorded above; repaired under pred/01_floor_reversible.md section 5.1
+bf96|          criterion 3 (area_verdict.py) = VALID
+
+====================================================================================================
+B. the s98 pred/02 repairs on rows outside T* (DECIDING)
+====================================================================================================
+  ARMED arm 1 (its GateArm text carries "bindfloor=1"); UNARMED arm 0 (its GateArm text carries "bindfloor=0")
+  MODE bfmode=3 (the armed arm's text carries "bfmode=3")
+  GateArm blocks 254 (block 0 with arm 0); E (predecessor announced with the other arm): 127; blocks with rows but no GateArm: none
+  window rows 7320; T* rows in the window 366 (narrow T 122)
+  bf_edge position at the 127 arm changes: last-old 0, idx0 127, idx1 0, none 0, several 0; bf_edge rows outside every change window (other) 0
+  (b,0) carries (reported, not deciding): median bf_n/draws at armed idx0 0.314 (other arm share 0.686), at unarmed idx0 0.935; median 1 - lat_us/dt_us 0.689
+
+  --- deciding controls replacing C1, C2, C8', C9, C10', C10'' (rows outside T*) ---
+  C1'''   leak U\T*/A\T* bf_n + structure          0.000000  <= 0.001; R4' structure      PASS U\T* 0 vs A\T* 17453814; unarmed leaking rows: 61 allowed at (b,0)/(b,1)+edge, 0 at the last index (allowed, counted), 0 DISALLOWED, 0 blocks over the count
+  C2'     |bf_n/draws-1|, skip, skip_drop on A\T*       0.003955  <= 0.02; skip, drop <= 0.02  PASS bf_skip/bf_n = 0.0000, bf_skip_drop/bf_n = 0.0000 over 3477 armed rows outside T*
+  C8''    net(A\T*)-burn < net(U\T*)               -18461.7  < 0 us a flip                PASS armed 12867.5 us, unarmed 31329.2 us a flip (rows outside T*)
+  C9''    |dt(A\T*)-dt(U\T*)|/dt(U\T*)             0.003209  <= 0.03                      PASS armed 32346.1 us, unarmed 32242.6 us a flip (rows outside T*)
+  C10'''  burn A>0; U R4' structure; size          0.000000  > 0 A; R4' structure; <= 0.001 PASS armed burn 67807754211 ns; unarmed burn rows: 61 allowed, 0 last-index (counted), 0 DISALLOWED, 0 blocks over the count; U\T* 0 ns vs A\T* 65172062858 ns
+
+  --- bf96.py controls kept in the repaired set (verdicts from section A) ---
+  C3'     PASS
+  C4      PASS
+  C5      PASS
+  C6'     PASS
+  C7      PASS
+  --- printed only: the forms the repairs replace (verdicts from section A) ---
+  C1      FAIL   [printed only - replaced by its s98 repair]
+  C2      PASS   [printed only - replaced by its s98 repair]
+  C8'     PASS   [printed only - replaced by its s98 repair]
+  C9      PASS   [printed only - replaced by its s98 repair]
+  C10'    PASS   [printed only - replaced by its s98 repair]
+  C10''   FAIL   [printed only - replaced by its s98 repair]
+  (sealed C1, C2 as printed by bf96.py are its C1/C2 lines above; C3, C6, C8, C10 as sealed are its "[as sealed in pred/02]" lines)
+
+  --- the floor on rows outside T* ---
+F_st'' = 12.825 ms
+W_armed'' = 723.9 us a flip
+L3_bound = 1.577 ms
+  F_st'' is the median over 122 matched armed blocks of the block mean over rows NOT in T*
+       of (cpu_gpu_us - spin_gpu_us - bf_burn_ns/1000)/flip; pairs dropped for an all-T* block: 0 (both blocks of each left F_st'': 0 blocks with data)
+  F_st (narrow T = {(b,0)}, pred/01 section 4) = 12.817 ms over 122 blocks   [printed only]
+  F_st (untrimmed, bf96 definition) = 13.167 ms   [printed only]   cross-check vs bf96.endpoint_and_floor: EQUAL
+  F_st - F_st'' = +0.342 ms, F_st(T) - F_st'' = -0.008 ms; block means: T* 12.867, T 12.860, untrimmed 13.164 ms
+  E'' (arm1 - arm0 of cpu_gpu - spin) = +281.8 us +- 106.0 (2*SE) t = +5.31   E_net'' (armed - unarmed, - burn) = -18461.8 us +- 98.3 (2*SE) t = -375.80   122 pairs  (T*-trimmed, deciding)
+  E(T) (arm1 - arm0 of cpu_gpu - spin) = +100.1 us +- 104.7 (2*SE) t = +1.91   E_net(T) (armed - unarmed, - burn) = -18630.9 us +- 99.2 (2*SE) t = -375.63   122 pairs  (narrow T [printed only])
+  E (arm1 - arm0 of cpu_gpu - spin) = +155.5 us +- 126.6 (2*SE) t = +2.46   E_net (armed - unarmed, - burn) = -18138.1 us +- 116.6 (2*SE) t = -311.06   122 pairs  (untrimmed [printed only])
+  W'' ARMED   da_walk_us 723.9  da_work_us 0.0  da_q 0.0  da_hit 0.0   (median of matched T*-trimmed block means)
+  W'' unarmed da_walk_us 1893.6  da_work_us 26446.4  da_q 7939.1  da_hit 8599.0   (median of matched T*-trimmed block means)
+  L3 count only: sum_{A\T*} bf_clr_skip = 688268 over 3477 armed rows = 197.95 a flip
+  L3 bound: per-dispatch CPU reference 7.967 us (sealed outside reference, pl96a (C:/kyty/s96/log_pl96a.txt, sha256 5bb18488fa9257d0...), n >= 2100, blk >= 1: sum mh_disp_us / sum mh_disp_n; arm 0 "pathlap=0 mutsite=1" 8238005/1034020 = 7.967 (taken: the larger arm), arm 1 7.955, whole 7.961)
+      |dF_L3| <= 197.95 * 7.967 / 1000 = 1.577 ms
+      !! F_st'' +- L3 = [11.248, 14.402] STRADDLES 13.2465 ms (a branch threshold minus 2.2535)
+      in-run mh_disp_us/mh_disp_n on U\T*: not available (mh_disp_n = 0: `mutsite` off)   [printed only]
+
+VERDICT_INPUT = F_st'' + 1.66 + 0.49 + 0.1035 = 12.825 + 2.2535 = 15.079 ms   (user's constant, s98 pred/01 section 0.1)
+  this run alone lands in: GAP - nothing closes, nothing proceeds (pred/02 section 3)
+  [printed only] sealed form F_st'' + 2.65 = 15.475 ms; untrimmed F_st + 2.2535 = 15.421 ms
+
+summary: repaired set 10/10 controls; criterion 3 VALID; trim T* ON; bf96.py exit 1 (printed only)
+DRY RUN - NOT a scoring
+ADMISSION: ADMITTED

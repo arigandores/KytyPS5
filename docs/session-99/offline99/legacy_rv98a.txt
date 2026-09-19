@@ -1,0 +1,36 @@
+==== rv98.py - is the frame-latched `bindfloor` reversible?  (s98 pred/01 section 4) ====
+pre-registration C:/kyty/s98/pred/01_hang_trigger.md
+  sha256 read    aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3
+  sha256 sealed  aca036c1a094c18176ad5ac04f69f9ed8a926bf81ac1d6f63760f8493c071cd3
+  SEALED OK
+amendment C:/kyty/s98/pred/01b_entry_hang.md  SEALED OK
+pre-registration C:/kyty/s98/prev97/pred/01_floor_reversible.md
+  sha256 read    7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+  sha256 sealed  7df5beb55cd964f58cd79a6b0caa697089cd3b20ea546e80ab2b10644f7d43af
+  SEALED OK
+tag rv98a   log C:/kyty/s98/log_rv98a.txt
+pre-registration C:/kyty/s98/prev97/pred/02_floor_walk.md (R7, bf_bgc_hold)
+  sha256 read    9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+  sha256 sealed  9a88ab87a60789a2702bea4fb55939c6e578f25b4230482537361ee717f85519
+arms (GateArm text): {0: 'bindfloor=0 bfmode=3 bfburn=16400', 1: 'bindfloor=1 bfmode=3 bfburn=16400'}
+armed arm: 1
+blocks 1730 (blk >= 1), flips 17297, first n 1811, last n 19107
+
+--- criteria (pred/01_floor_reversible.md section 4) ---
+  R1  survival        PASS hold_exit=None hold_s=600.2 of 600.0
+  R2  edges           PASS 432 falling edges followed by >= 2 flips (need >= 100)
+  R3  latch           FAIL 1729 boundaries checked, 0 wrong, 1 stray flips    stray: [(1811, 1)]   [sealed text, printed only - repaired below]
+  R3' latch (frame)   PASS 1730 boundaries checked, 0 wrong, 0 stray flips; sum bf_edge 865 vs arm changes 865; bf_edge position {'idx0': 865}
+  R4  dark base       PASS 432 leaking unarmed flips, 0 mid-block, 0 blocks with > 1   [sealed text, printed only - repaired below]
+  R4' dark base (fr)  PASS 0 disallowed leaks, 0 blocks with > 2 leaking flips, 0 last-index leaks (allowed, counted); DARK98 = 17 counters
+  R5  no readback     PASS bf_dlskip total 0 over the whole log
+  R6  clean return    PASS median img_new over 2 flips after a falling edge = 20.0 (band <= 50)   rising 7.0, unarmed mid-block reference 12.0, max dt of those 2 flips median 43248.0 us
+  R6' clean return 3  PASS median img_new over idx 0..2 after a falling edge = 26.0 (band <= 50), 432 edges
+  R7  clean buffers   PASS median buf_new over 2 flips after a falling edge = 1.0 (band <= 50)   unarmed flips after the first two: mean 1.644 a flip
+  R7' clean buffers 3 PASS median buf_new over idx 0..2 after a falling edge = 3.0 (band <= 50), 432 edges
+  D1  displacement (reported) f_fall 0.895  f_rise 0.744  1-lat/dt 0.642  (sealed band: both in [0.3, 0.95], |f_fall - f_rise| <= 0.2, each within 0.2 of 1-lat/dt)
+  R8  frame integrity PASS bf_mixed 0, bf_defer_force 0, bf_trig_* 0   reported: bf_xover 866, bf_xover_acb 866, bf_defer 866, bf_clr_skip 196.08 a floored flip
+  R8x xover (reported): falling edges with bf_xover > 0: 432 of 432 (acb part > 0: 432); R9 speaks for frames untorn ACROSS QUEUES only at the 0 edges with xover = 0
+  R9  hazard          PASS both survive: True, falling edges together 857 (need >= 600)   rv98a_warmup: falling 425, hang-text False, hold_exit None, hold_s 600.2; rv98a: falling 432, hang-text False, hold_exit None, hold_s 600.2
+
+==== rv98a: 11 of 11 criteria PASS -> REVERSIBLE (for this run) ====

@@ -1,0 +1,2 @@
+# Preserve the exact reviewed/sealed artifact bytes, including CRLF where present.
+** -text -whitespace

@@ -1,0 +1,6 @@
+bf98a_warmup claimed 300.1 stable 272 all_s 307.193623 post_stable_s 300.493904 first_last_us 49826 32975 last_n 9551
+bf98a claimed 300.1 stable 276 all_s 307.195137 post_stable_s 300.462357 first_last_us 33631 33668 last_n 9779
+bf98c_warmup claimed 300.1 stable 272 all_s 307.011982 post_stable_s 300.329273 first_last_us 33232 33340 last_n 9443
+bf98c claimed 300.1 stable 280 all_s 306.977613 post_stable_s 300.09419 first_last_us 49536 33516 last_n 9419
+rv98a_warmup claimed 600.2 stable 280 all_s 607.224881 post_stable_s 600.324927 first_last_us 35382 32621 last_n 18830
+rv98a claimed 600.2 stable 282 all_s 607.524698 post_stable_s 600.637644 first_last_us 30016 16626 last_n 19107

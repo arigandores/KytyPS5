@@ -1,5 +1,16 @@
 # Session 99 — route E, M3 continues: the gap branch (`bfmode=2`)
 
+**PREPARATION COMPLETED, GAME NOT AUTHORISED YET (session 99 WIP).** Read
+`docs/local-session-99.md` and `C:/kyty/s99/README.md` before the original brief below.
+The port, source instrument, build and offline VERIFY are done; do not repeat them.
+Sealed rule: `C:/kyty/s99/pred/01_bindings_only.md`, SHA256 `8b816528…d9d4b14d`.
+Wait for the user's signal, then one executor follows the new calibration/measurement
+sequence. New binary `ee9cc8ab…` is saved in s99; game-folder exe remains `9aa93e73…`.
+No B endpoints or runtime acceptance exist. M3 remains GAP; M4/M5 do not start.
+
+The remainder is the original pre-preparation brief; its old burn/proof/scorer assumptions
+are superseded only as explicitly recorded in the new sealed rule.
+
 **Order M3 → M4 → M5 stays** (the user's decision, session 97). Read `C:/kyty/s98/FACTS.md` in full
 first (in git `docs/local-session-98.md`), then `ROADMAP.md` §0.1 (the session-98 addendum) and §2 E
 (M3, the session-98 addendum), `C:/kyty/s98/README.md`, and the sealed `C:/kyty/s98/pred/01_hang_trigger.md`,
@@ -25,8 +36,8 @@ Read what `bfmode=2` does in the code (`descriptors.cpp`, `pipelineCache.cpp:312
 per-slot syncs are floored; `C:/kyty/s95/rewrite94/gpu-driven.md:141` "in between ⇒ split with a B =
 bindings-only run"). Then decide, in a new sealed pre-registration, BEFORE any number:
 
-* what quantity the arm yields (e.g. `F_B''` = the floor with materialisation kept; `F_a − F_B''` =
-  what materialisation costs on this path), with the same T*-trim, controls and burn rules as
+* what quantity the arm yields (e.g. `F_B''` = the floor with materialisation kept; `F_B'' − F_a` =
+  descriptive net returned-work contrast (not a pure materialisation timer)), with the same T*-trim, controls and burn rules as
   `pred/02_m3_frame.md` (the burn is calibrated anew — `bfmode=2` moves the floor's work);
 * **which branch of G/R1 each outcome closes or keeps open** — write it as a table, like session 96's §3;
 * `KYTY_BIND_FLOOR_CLEAR=0` in the `bfmode=2` arm (pred/01 §4: at `bfmode=2` the snapshot is not

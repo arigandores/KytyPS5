@@ -847,7 +847,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	if (bind_floor) {
 		BindFloorPrepareStage(input_info.stage, bindings);
-		// Knob "bfburn" at bfmode=3: burned where the removed work stood.
+		// Knob "bfburn" at bfmode=2/3: burned where the removed work stood.
 		BindFloorBurnSlice();
 	} else {
 		PrepareBindings(input_info.stage, bindings);

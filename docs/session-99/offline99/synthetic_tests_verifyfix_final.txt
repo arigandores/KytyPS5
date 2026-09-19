@@ -1,0 +1,28 @@
+test_exact_b_binding_sources_and_area (__main__.CalibrationFixtures.test_exact_b_binding_sources_and_area) ... ok
+test_stale_csv_cannot_mask_doubled_raw_area (__main__.CalibrationFixtures.test_stale_csv_cannot_mask_doubled_raw_area) ... ok
+test_both_instruments_and_no_closure (__main__.DecisionFixtures.test_both_instruments_and_no_closure) ... ok
+test_cli_mandatory_c_and_unsealed_refusal (__main__.DecisionFixtures.test_cli_mandatory_c_and_unsealed_refusal) ... ok
+test_mechanics_only_never_admits_even_with_valid_mocked_controls (__main__.DecisionFixtures.test_mechanics_only_never_admits_even_with_valid_mocked_controls) ... ok
+test_calibration_rounding (__main__.EndpointFixtures.test_calibration_rounding) ... ok
+test_clear_and_marker_counters (__main__.EndpointFixtures.test_clear_and_marker_counters) ... ok
+test_frozen_reuse_fails_mode2 (__main__.EndpointFixtures.test_frozen_reuse_fails_mode2) ... ok
+test_live_midblock_leak_before_timing_window_is_refused (__main__.EndpointFixtures.test_live_midblock_leak_before_timing_window_is_refused) ... ok
+test_materialization_positive_witness (__main__.EndpointFixtures.test_materialization_positive_witness) ... ok
+test_midblock_or_missing_or_duplicate_edge_refused (__main__.EndpointFixtures.test_midblock_or_missing_or_duplicate_edge_refused) ... ok
+test_missing_integrity_field_before_timing_window_is_refused (__main__.EndpointFixtures.test_missing_integrity_field_before_timing_window_is_refused) ... ok
+test_mode2_burn_and_all_three_edge_positions (__main__.EndpointFixtures.test_mode2_burn_and_all_three_edge_positions) ... ok
+test_one_missing_field_cannot_be_zero (__main__.EndpointFixtures.test_one_missing_field_cannot_be_zero) ... ok
+test_out_requires_real_materialization_not_ahead (__main__.EndpointFixtures.test_out_requires_real_materialization_not_ahead) ... ok
+test_union_darkness_and_leak_ratio (__main__.EndpointFixtures.test_union_darkness_and_leak_ratio) ... ok
+test_contradictory_metadata_arms_and_short_raw_hold (__main__.ProtocolFixtures.test_contradictory_metadata_arms_and_short_raw_hold) ... ok
+test_missing_metadata_and_wrong_actual_protocol (__main__.ProtocolFixtures.test_missing_metadata_and_wrong_actual_protocol) ... ok
+test_no_retry_and_warmup_death (__main__.ProtocolFixtures.test_no_retry_and_warmup_death) ... ok
+test_stdout_only_failure_and_missing_stdout_are_refused (__main__.ProtocolFixtures.test_stdout_only_failure_and_missing_stdout_are_refused) ... ok
+test_valid_both_instruments_and_calibration (__main__.ProtocolFixtures.test_valid_both_instruments_and_calibration) ... ok
+test_wrong_binary_gates_or_seal (__main__.ProtocolFixtures.test_wrong_binary_gates_or_seal) ... ok
+test_wrong_requested_mode_rejected_even_if_actual_matches (__main__.ProtocolFixtures.test_wrong_requested_mode_rejected_even_if_actual_matches) ... ok
+
+----------------------------------------------------------------------
+Ran 23 tests in 3.882s
+
+OK

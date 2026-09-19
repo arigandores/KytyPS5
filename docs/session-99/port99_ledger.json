@@ -1,0 +1,346 @@
+{
+  "source": "C:/kyty/s98",
+  "destination": "C:/kyty/s99",
+  "files": {
+    "area_verdict.py": {
+      "repairs": [
+        "r2"
+      ],
+      "lines": [
+        56
+      ]
+    },
+    "arms.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        29
+      ]
+    },
+    "baseline.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        83
+      ]
+    },
+    "bd96.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        47,
+        50
+      ]
+    },
+    "bda93.py": {
+      "repairs": [
+        "r4"
+      ],
+      "lines": [
+        41
+      ]
+    },
+    "bf96.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        52,
+        57,
+        59
+      ]
+    },
+    "bf98.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        86
+      ]
+    },
+    "check_s96_counters.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        41,
+        43
+      ]
+    },
+    "effect.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        103
+      ]
+    },
+    "m3_97.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        26
+      ]
+    },
+    "m3_98.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        50
+      ]
+    },
+    "pl96.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        50
+      ]
+    },
+    "regime94.py": {
+      "repairs": [
+        "r5"
+      ],
+      "lines": [
+        9
+      ]
+    },
+    "rv97.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        38,
+        45
+      ]
+    },
+    "rv98.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        43,
+        46,
+        49,
+        63
+      ]
+    },
+    "s84_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        30
+      ]
+    },
+    "s85_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        36,
+        39,
+        40
+      ]
+    },
+    "s86_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        15,
+        16,
+        39,
+        42,
+        43
+      ]
+    },
+    "s87_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        15,
+        16,
+        39,
+        42,
+        43
+      ]
+    },
+    "s88_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        21,
+        22,
+        45,
+        48,
+        49
+      ]
+    },
+    "s89_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        21,
+        22,
+        45,
+        49,
+        50
+      ]
+    },
+    "s90_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        21,
+        22,
+        45,
+        49,
+        50
+      ]
+    },
+    "s91_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        19,
+        20,
+        43,
+        44
+      ]
+    },
+    "s92_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        19,
+        20,
+        54,
+        55
+      ]
+    },
+    "s93_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        20,
+        21,
+        63,
+        64
+      ]
+    },
+    "s94_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        20,
+        21,
+        54,
+        55
+      ]
+    },
+    "s94lib.py": {
+      "repairs": [
+        "r4"
+      ],
+      "lines": [
+        21
+      ]
+    },
+    "s95_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        20,
+        21,
+        63,
+        64
+      ]
+    },
+    "s96_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        20,
+        21,
+        87,
+        88
+      ]
+    },
+    "s97_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        29,
+        30,
+        119,
+        120
+      ]
+    },
+    "s98_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        106,
+        107
+      ]
+    },
+    "s99_port.py": {
+      "repairs": [
+        "r1"
+      ],
+      "lines": [
+        107
+      ]
+    },
+    "shift91.py": {
+      "repairs": [
+        "r3"
+      ],
+      "lines": [
+        35
+      ]
+    },
+    "stg92.py": {
+      "repairs": [
+        "r4"
+      ],
+      "lines": [
+        44
+      ]
+    },
+    "trig98.py": {
+      "repairs": [
+        "r6"
+      ],
+      "lines": [
+        41
+      ]
+    }
+  },
+  "carried_count": 1399,
+  "skipped_count": 30,
+  "archive_scorers": [
+    "bf98_v1.py",
+    "bf98_v2.py",
+    "design98/rv98_before_N3.py",
+    "m3_98_v1.py"
+  ]
+}

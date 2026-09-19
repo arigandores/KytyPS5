@@ -3124,6 +3124,8 @@ struct PipelineCache::ProgramCache {
 		// thread's lookahead never latches and reads armed = false.
 		const auto& floor_op   = BindFloorCurrentOp();
 		const bool  bind_floor = floor_op.armed && floor_op.mode != 2;
+		// Session 99: successful live outcomes, only in the bindings-only arm.
+		const bool floor_live = floor_op.armed && floor_op.mode == 2;
 		bool       ahead_hit     = false;
 		// Hoisted out of the if so pg_ahead_n counts the same calls the block runs on; the
 		// operands have no side effects, so the short circuit is unchanged.
@@ -3145,6 +3147,9 @@ struct PipelineCache::ProgramCache {
 				const auto take_begin = timed ? Common::FrameStats::NowNs() : 0;
 				ahead_hit = AheadTake(entry->second, params, read_cache, resources, specialization,
 				                      kept >= 0, take_lap ? take_begin : 0);
+				if (floor_live && ahead_hit) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorLiveAhead, 1);
+				}
 				if (timed) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadTakeNs,
 					                        Common::FrameStats::NowNs() - take_begin);
@@ -3188,6 +3193,9 @@ struct PipelineCache::ProgramCache {
 				pg_mark(Common::FrameStats::Counter::ProgLapMemoNs);
 				if (pg_t != 0) {
 					Common::FrameStats::Add(Common::FrameStats::Counter::ProgLapMemos, 1);
+				}
+				if (floor_live) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorLiveMemo, 1);
 				}
 				return memo_entry->handle;
 			}
@@ -3240,6 +3248,10 @@ struct PipelineCache::ProgramCache {
 			entry = programs.end();
 			resources = {};
 			specialization = {};
+		} else if (floor_live && pg_mat_ran && !floor_reused) {
+			// The failure arm above was not taken: MaterializeResources returned true.
+			// Excludes cold entries, ahead hits, frozen reuse and failed materialisations.
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorLiveMat, 1);
 		}
 		// Session 96, gate "bindfloor": the first materialisation of each program is kept, and
 		// every later draw of it reads the copy above.  Taken BEFORE `resources` is moved into

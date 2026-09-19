@@ -1608,9 +1608,14 @@ enum class Counter : uint32_t {
 	                    //             commit - NOT a per-slot synchronisation)
 	BindFloorMat,       // bf_mat:     real MaterializeResources calls under the floor
 	BindFloorReuse,     // bf_reuse:   materialisations answered from the last one instead
-	BindFloorBurnNs,    // bf_burn_ns: time the calibrated idle (bfmode=3) actually burned
+	BindFloorBurnNs,    // bf_burn_ns: time the calibrated idle (bfmode=2/3) actually burned
 	BindFloorSkips,     // bf_skip:    draws / dispatches the floor did NOT take (reason in
 	                    //             the log for the first 64)
+	// Session 99: successful existing-program resource outcomes, armed bfmode=2 only.
+	// No timers or proglap dependency; cold translations and failed attempts are excluded.
+	BindFloorLiveAhead, // bf_live_ahead: AheadTake supplied a live snapshot
+	BindFloorLiveMat,   // bf_live_mat:   MaterializeResources returned true
+	BindFloorLiveMemo,  // bf_live_memo:  verified SRT memo supplied a live snapshot
 	// Session 96, gate "bindfloor" (MEASUREMENT ONLY, ROADMAP.md:1048-1053): image readbacks
 	// the floor had to abandon because the image's guest range does not fit the 32 MiB
 	// download ring.  Run bf96a died on exactly this (textureCache.cpp, DownloadImageMemory):

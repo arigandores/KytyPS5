@@ -44,6 +44,9 @@ struct GraphicContext {
 	// VK_EXT_robustness2 robustBufferAccess2: out-of-range storage-buffer dwords read as zero,
 	// so the shader emitter drops its own bounds branches (RobustBufferLoads).
 	bool                               robust_buffer_access2_enabled         = false;
+	// VK_EXT_robustness2 nullDescriptor: a VK_NULL_HANDLE buffer / image view in a descriptor
+	// reads as zero and drops stores.  Used by the measurement gate "bindfloor" (session 97).
+	bool                               null_descriptor_enabled               = false;
 	// KYTY_PIPELINE_STATS=1: VK_KHR_pipeline_executable_properties (statistics + SASS dumps).
 	bool                               pipeline_stats_enabled                = false;
 	bool                               sample_rate_shading_enabled           = false;

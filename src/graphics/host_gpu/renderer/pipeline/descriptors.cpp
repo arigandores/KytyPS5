@@ -2913,10 +2913,24 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// The CONSTANT triplet NativeStorageBuffer already returns for a degenerate V# (the
 	// `address == 0 || size == 0` return of this file).  The floor binds it for every buffer
 	// view; taken once a commit, and only while the gate is on.
+	// Session 97 (patch D): with VK_EXT_robustness2 nullDescriptor the floor binds TRUE null
+	// descriptors - reads zero, stores dropped, no memory behind them.  The triplet above was
+	// SHARED with the shipped path's degenerate V#s, and floor stores into it were read back
+	// as garbage by both paths for the rest of the process (rv97a: two GPU execution hangs).
+	const bool floor_null = bind_floor && m_context.GetGraphics().null_descriptor_enabled;
+	if (bind_floor && !floor_null) {
+		static std::atomic<bool> warned {false};
+		if (!warned.exchange(true, std::memory_order_relaxed)) {
+			LOGF("BindFloor: nullDescriptor unavailable - the floor binds the SHARED null buffer"
+			     " and null images, and its stores pollute them\n");
+		}
+	}
 	const vk::DescriptorBufferInfo floor_buffer =
-	    bind_floor ? vk::DescriptorBufferInfo {
-	                     m_context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16}
-	               : vk::DescriptorBufferInfo {};
+	    floor_null ? vk::DescriptorBufferInfo {nullptr, 0, VK_WHOLE_SIZE}
+	    : bind_floor
+	        ? vk::DescriptorBufferInfo {
+	              m_context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16}
+	        : vk::DescriptorBufferInfo {};
 	ShaderRecompiler::IR::PushData push_data;
 	bool                           has_push_data = false;
 	constexpr auto                 GraphicsStages =
@@ -3044,6 +3058,19 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	const auto floor_sources = [&](const ShaderRecompiler::IR::CompiledShaderInfo& program,
 	                               const ShaderRecompiler::IR::DescriptorBinding&  binding) {
 		if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
+		        ShaderRecompiler::IR::ImageResourceClass::None &&
+		    floor_null) {
+			// Session 97 (patch D): a null image view - no image, no transit, no shared state.
+			for ([[maybe_unused]] const auto resource: binding.resources) {
+				m_descriptor_images.emplace_back(nullptr, nullptr, vk::ImageLayout::eGeneral);
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorImages,
+			                        binding.resources.size());
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorNullDescs,
+			                        binding.resources.size());
+			return;
+		}
+		if (ShaderRecompiler::IR::ImageBindingResourceClass(binding.kind) !=
 		    ShaderRecompiler::IR::ImageResourceClass::None) {
 			auto& texture_cache = m_context.GetTextureCache();
 			for (const auto resource: binding.resources) {
@@ -3089,6 +3116,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 				}
 				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBuffers,
 				                        binding.resources.size());
+				if (floor_null) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorNullDescs,
+					                        binding.resources.size());
+				}
 				break;
 			case BindingKind::BdaPagetable:
 			case BindingKind::FaultBuffer: {
@@ -3106,6 +3137,9 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			case BindingKind::Gds:
 				m_descriptor_buffers.push_back(floor_buffer);
 				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBuffers, 1);
+				if (floor_null) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorNullDescs, 1);
+				}
 				break;
 			case BindingKind::Samplers:
 				if (m_bind_floor.sampler == nullptr) {

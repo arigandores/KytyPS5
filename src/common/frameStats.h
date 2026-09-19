@@ -1630,6 +1630,8 @@ enum class Counter : uint32_t {
 	BindFloorEdges,    // bf_edge
 	// Session 97 (patch C): buffer GC calls whose non-aggressive pass the floor suspended.
 	BindFloorBufGcHold, // bf_bgc_hold
+	// Session 97 (patch D): true null descriptors the floor wrote (buffers + images).
+	BindFloorNullDescs, // bf_ndesc
 	Count
 };
 

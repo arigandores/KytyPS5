@@ -671,6 +671,10 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 	}
 	graphics.robust_buffer_access2_enabled =
 	    robustness2_ext_enabled && robustness2.robustBufferAccess2 == VK_TRUE;
+	graphics.null_descriptor_enabled =
+	    robustness2_ext_enabled && robustness2.nullDescriptor == VK_TRUE;
+	LOGF("Vulkan nullDescriptor: %s\n",
+	     graphics.null_descriptor_enabled ? "enabled" : "unavailable");
 	ShaderRecompiler::Spirv::Emitter::SetRobustBufferLoads(graphics.robust_buffer_access2_enabled);
 	LOGF("Vulkan robustBufferAccess2: %s (shader bounds branches %s)\n",
 	     graphics.robust_buffer_access2_enabled ? "enabled" : "unavailable",

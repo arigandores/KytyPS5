@@ -2362,6 +2362,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bf_gc_hold", FS::Counter::BindFloorGcHold, false},
 				    {"bf_edge", FS::Counter::BindFloorEdges, false},
 				    {"bf_bgc_hold", FS::Counter::BindFloorBufGcHold, false},
+				    {"bf_ndesc", FS::Counter::BindFloorNullDescs, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

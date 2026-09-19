@@ -146,7 +146,17 @@ kernels (`0x503d7f066a496c3c`, `0x1f16e50eea0c89e3`, `0xff8ee744ffa4dcdc`, `0xf8
 exit only on sentinels read from memory, no step cap, the game's invalid-TLAS `S_TRAP` translated as
 a no-op; the state lens adds per-pixel OIT lists (0.35). **The abort path could never name the
 op: `masterSemaphore.cpp:113` calls `ReportGpuCheckpointHistory` (CPU ring), not
-`ReportGpuCheckpoints` (GPU breadcrumb).** Further candidates: floor stores polluting the shared NULL
+`ReportGpuCheckpoints` (GPU breadcrumb).**
+**The synthesis found the trigger's marker (post hoc on two hangs, replicated by the third):**
+the direct-write site `+0x80d33b` is the GDS barrier (`MakeGdsDependency` inlined in
+`CommitBindings`, confirmed by disassembling `c6fe36da`). A real GDS barrier ran inside the edge
+flip's own interval — i.e. the per-op latch switched the floor off MID-FRAME, before a GDS pass —
+at **14 of 489 falling edges; all three hangs are among them (3 of 14, ~20 %, against 0 of 475)**;
+`rv97b` replicated it on a different binary (chance ≈ 0.02). Ranked cause now: **a torn GPU frame**
+— floored producers early in the frame, real consumers later — with the runaway shader either the
+ray-tracing traversal or a GDS-append/OIT consumer. Fix proposed: adopt the scheduled value on
+GuestGpu only at the flip EOP (a frame-latched floor) with a `bf_mixed` counter that must read 0,
+keep patch D, do NOT keep written slots real. Further candidates: floor stores polluting the shared NULL
 buffer the real path reads for degenerate V#s (0.12–0.20) — **patch D removes this one and is
 built, not run**; floor draws rasterising garbage into real targets and history (0.12); buffer-GC
 churn (0.12 before patch C — **patch C removed the churn and the hang stayed**).

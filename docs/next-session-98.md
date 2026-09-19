@@ -53,6 +53,23 @@ picture glitch, which the floor's charter allows. Alternative: skip (not floor) 
 dispatches while the latch is armed and in the first base flip after a falling edge, and exclude
 that flip from scoring.
 
+**The trigger's marker (synthesis of `wf_724e89d5-00b`, post hoc on two hangs, replicated by the
+third on another binary, chance ≈ 0.02):** the direct-write site `+0x80d33b` is the GDS barrier
+(`MakeGdsDependency` inlined in `CommitBindings`; confirmed by disassembling `c6fe36da`). A real
+GDS barrier ran inside the edge flip's own interval at **14 of 489 falling edges — all three hangs
+are among them (3/14 ≈ 20 % against 0/475)**. The per-op latch flips the floor MID-FRAME: floored
+producers early in the GPU frame, real consumers after them. **Ranked fix: a frame-latched floor**
+— GuestGpu adopts the scheduled value only when it processes the flip EOP (`sync.cpp` EopFlip /
+EopWriteBackFlip / EopOnlyFlip), `BindFloorLatchOp` and the GC freezes read that value, a new
+counter `bf_mixed` (frames holding both armed and unarmed ops) must read 0 — count it per queue:
+the four ray-tracing kernels arrive through `AgcAcbDispatchIndirect` and the async-compute queues
+may not share the graphics flip boundary (then adopt only when no submission is in flight on any
+queue). Keep patch D. Do NOT keep written slots real (floored producers would write garbage into
+what real consumers walk, and ~490 µs of binding cost would return to the ceiling).
+`GetFrameNum()` is NOT a frame clock (it is `m_done_num`, advanced by `AgcSuspendPoint`).
+A quick trigger test: apply a pending change at the first real GDS-barrier op after `Poll` — the
+hazard should rise to ~20 % an edge.
+
 ## 1. First, name the op that runs away (no guessing past this point)
 
 The checkpoint breadcrumb of session 97 printed only CPU-recorded EOP writes. Two ways, pick one
@@ -61,6 +78,9 @@ and pre-register it:
 * **(a) run** `KYTY_GPU_CHECKPOINTS=1 KYTY_GPU_HANG_ABORT_S=0`, ABBA period 2–4, so the 60 s TDR
   returns `eErrorDeviceLost` and `ReportGpuCheckpoints` names the never-completed op with its
   ps/vs/cs hash. The checkpoint mode hung on ENTRY in `hg97a` — count that, do not hide it.
+  **Each hang then freezes the desktop for ~60 s** (TdrDelay 60). Trust the NV top/bottom-of-pipe
+  markers over the breadcrumb: dispatches are not wrapped in an extra barrier (only draws are,
+  `renderDraw.cpp:1468-1480`).
 * **(b) patch** the `GpuHangAbort` branch (`masterSemaphore.cpp:104-118`) to read and print the
   GPU-written breadcrumbs and the NV checkpoint data before EXIT, and widen the `KYTY_QUEUE_TRACE`
   record so every tick carries the CS/VS/PS hashes recorded into it.

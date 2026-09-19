@@ -1,10 +1,14 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 
 #include "common/gates.h"
+
+#include <mutex>
+#include <unordered_set>
 #include "common/alignment.h"
 #include "common/frameStats.h"
 #include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/renderMemo.h"
 #include "graphics/host_gpu/renderer/shadowResolve.h"
 
@@ -676,25 +680,458 @@ namespace {
 // BindFloorLatchOp on the thread that runs the op, read on that same thread; the GuestGpu
 // thread is the only one that runs draws and dispatches, so no other thread ever sees a
 // value it did not latch itself (a thread that never latched reads armed = false).
+// Session 98 (patch_s98a): KYTY_BIND_FLOOR_LATCH selects how the value is taken (descriptors.h).
 thread_local BindFloorOp t_bind_floor_op {};
 std::atomic<bool>        g_bind_floor_ever {false};
-} // namespace
 
-BindFloorOp BindFloorLatchOp() {
+// Session 98 (patch_s98a, MEASUREMENT ONLY; descriptors.h).  The slice GuestGpu::Process is
+// running, published for its length by ThreadRun (nullptr on every other thread and between
+// submissions: such a latcher reads seq 0, i.e. the base value, and is not accounted).
+thread_local BindFloorSlice* t_bf_slice = nullptr;
+// GPU flip packets processed so far (every mode; the frame clock of modes 1 and 2).
+std::atomic<uint64_t> g_bf_flip_epoch {0};
+
+// Mode 1, the frame latch.  Written only on GuestGpu (flip packets, ThreadRun resolution);
+// relaxed atomics so that an off-thread latcher (m4baton relay, pinned off) reads the same
+// values.  A value packs {armed (bit 32), bfmode (low 32 bits)}.
+constexpr uint64_t    BfArmedBit = uint64_t {1} << 32u;
+std::atomic<bool>     g_bf_base_init {false};
+std::atomic<uint64_t> g_bf_base {0};
+// Session 98 (patch_s98e): incomplete submissions whose sticky value is armed (mode 1 only).
+std::atomic<uint32_t> g_bf_sticky_armed {0};
+std::atomic<bool>     g_bf_pending_valid {false};
+std::atomic<uint64_t> g_bf_pending_sflip {0};
+std::atomic<uint64_t> g_bf_pending_value {0};
+uint32_t              g_bf_pending_flips = 0;     // further flip packets seen while pending
+bool                  g_bf_pending_older = false; // an older submission was in flight at the flip
+
+// Mode 2, the GDS trigger.  The hold is per latching thread, like t_bind_floor_op.
+thread_local bool            t_bf_hold       = false;
+thread_local uint64_t        t_bf_hold_epoch = 0;
+thread_local uint64_t        t_bf_hold_ops   = 0;
+std::mutex                   g_gds_keys_mutex;
+std::unordered_set<uint64_t> g_gds_keys;
+
+struct BfKey {
+	uint64_t key      = 0;
+	bool     dispatch = false;
+	uint64_t a0       = 0; // cs (dispatch) or vs (draw) data_addr
+	uint64_t a1       = 0; // ps data_addr (draw)
+};
+
+uint64_t BfPack(bool armed, uint32_t mode) {
+	return (armed ? BfArmedBit : 0u) | mode;
+}
+
+BindFloorOp BfUnpack(uint64_t value) {
 	BindFloorOp op;
-	op.armed = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
-	op.mode  = Common::Gates::Value(Common::Gates::Knob::BindFloorMode);
-	// bf_edge: the latch changed value - one per schedule edge as the translating thread
-	// saw it.  Counted in the flip of the op that saw the new value, so a falling edge is
-	// booked in the first frame of the base arm; it is the only bf_* the base arm writes.
-	if (op.armed != t_bind_floor_op.armed) {
+	op.armed = (value & BfArmedBit) != 0;
+	op.mode  = static_cast<uint32_t>(value & 0xffffffffu);
+	return op;
+}
+
+uint64_t BfLive() {
+	return BfPack(Common::Gates::Enabled(Common::Gates::Gate::BindFloor),
+	              Common::Gates::Value(Common::Gates::Knob::BindFloorMode));
+}
+
+void BfMarkEver(bool armed) {
+	if (armed && !g_bind_floor_ever.load(std::memory_order_relaxed)) {
+		g_bind_floor_ever.store(true, std::memory_order_relaxed);
+	}
+}
+
+// Mode 1: the base starts as the live value at the first use (a schedule starts unarmed).
+void BfInitBase() {
+	if (g_bf_base_init.load(std::memory_order_acquire)) {
+		return;
+	}
+	const uint64_t live = BfLive();
+	g_bf_base.store(live, std::memory_order_relaxed);
+	BfMarkEver((live & BfArmedBit) != 0);
+	g_bf_base_init.store(true, std::memory_order_release);
+	LOGF("BindFloorLatch: base armed=%d mode=%u\n", (live & BfArmedBit) != 0 ? 1 : 0,
+	     static_cast<uint32_t>(live & 0xffffffffu));
+}
+
+// Mode 1: pending -> base.  bf_edge is booked here, once per adopted change of `armed`.
+void BfAdopt(bool force) {
+	const uint64_t value = g_bf_pending_value.load(std::memory_order_relaxed);
+	const uint64_t old   = g_bf_base.load(std::memory_order_relaxed);
+	g_bf_base.store(value, std::memory_order_relaxed);
+	g_bf_pending_valid.store(false, std::memory_order_release);
+	if (((old ^ value) & BfArmedBit) != 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorEdges, 1);
 	}
-	if (op.armed && !g_bind_floor_ever.load(std::memory_order_relaxed)) {
-		g_bind_floor_ever.store(true, std::memory_order_relaxed);
+	BfMarkEver((value & BfArmedBit) != 0);
+	if (force) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDeferForce, 1);
+	} else if (g_bf_pending_older) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDefer, 1);
+	}
+}
+
+bool BfGdsKnown(uint64_t key) {
+	std::lock_guard<std::mutex> lock(g_gds_keys_mutex);
+	return g_gds_keys.find(key) != g_gds_keys.end();
+}
+
+// The draw key lives in the upper half of the key space (bit 63), a dispatch key is its CS
+// address (< 2^48), so the two can never collide.  0 is "no key".
+uint64_t BfDrawKey(uint64_t vs_addr, uint64_t ps_addr) {
+	uint64_t h = vs_addr * 0x9E3779B97F4A7C15ull;
+	h ^= ps_addr + 0x632BE59BD9B4E019ull + (h << 6u) + (h >> 2u);
+	h ^= h >> 31u;
+	h *= 0xBF58476D1CE4E5B9ull;
+	h ^= h >> 29u;
+	return h | (uint64_t {1} << 63u);
+}
+
+void BfLogTrigger(const char* what, const BfKey* key, uint64_t flips) {
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) >= 256) {
+		return;
+	}
+	const uint64_t seq = t_bf_slice != nullptr ? t_bf_slice->seq : 0;
+	if (key == nullptr) {
+		LOGF("BindFloorTrigger: %s key=0x0 kind=aux held_ops=%" PRIu64 " flips=%" PRIu64
+		     " seq=%" PRIu64 "\n",
+		     what, t_bf_hold_ops, flips, seq);
+	} else if (key->dispatch) {
+		LOGF("BindFloorTrigger: %s key=0x%016" PRIx64 " kind=dispatch cs=0x%016" PRIx64
+		     " held_ops=%" PRIu64 " flips=%" PRIu64 " seq=%" PRIu64 "\n",
+		     what, key->key, key->a0, t_bf_hold_ops, flips, seq);
+	} else {
+		LOGF("BindFloorTrigger: %s key=0x%016" PRIx64 " kind=draw vs=0x%016" PRIx64
+		     " ps=0x%016" PRIx64 " held_ops=%" PRIu64 " flips=%" PRIu64 " seq=%" PRIu64 "\n",
+		     what, key->key, key->a0, key->a1, t_bf_hold_ops, flips, seq);
+	}
+}
+
+// The one latch body.  op_site: a draw or dispatch (bf_mixed accounting, the only sites that may
+// adopt a held falling edge in mode 2).  key: the op's shader key, non-null only in mode 2.
+BindFloorOp BfLatch(bool op_site, const BfKey* key) {
+	BindFloorOp    op;
+	const uint32_t latch_mode = BindFloorLatchMode();
+	if (latch_mode == 1) {
+		// Frame latch: no live read here.  Never adopts.
+		// Session 98 (patch_s98d): STICKY per submission - an op-site latch reuses the value its
+		// submission fixed at its first op-site latch (two values for the flip-bearing DCB: before
+		// and after its flip packet).  Non-op reads (compute prefetch) compute it every time.
+		BfInitBase();
+		auto* const slice      = t_bf_slice;
+		bool*       sticky_set = nullptr;
+		uint64_t*   sticky     = nullptr;
+		if (op_site && slice != nullptr) {
+			sticky_set = slice->after_flip ? &slice->sticky_post_set : &slice->sticky_pre_set;
+			sticky     = slice->after_flip ? &slice->sticky_post : &slice->sticky_pre;
+		}
+		uint64_t value = 0;
+		if (sticky_set != nullptr && *sticky_set) {
+			value = *sticky;
+		} else {
+			value = g_bf_base.load(std::memory_order_relaxed);
+			if (g_bf_pending_valid.load(std::memory_order_acquire)) {
+				const uint64_t s_flip = g_bf_pending_sflip.load(std::memory_order_relaxed);
+				if (slice != nullptr &&
+				    (slice->seq > s_flip || (slice->seq == s_flip && slice->after_flip))) {
+					value = g_bf_pending_value.load(std::memory_order_relaxed);
+				}
+			}
+			if (sticky_set != nullptr) {
+				*sticky     = value;
+				*sticky_set = true;
+				// Session 98 (patch_s98e): an armed sticky value may outlive base/pending (xover,
+				// forced adoption); keep the GC keep-alive on until this submission completes.
+				if ((value & BfArmedBit) != 0 && !slice->sticky_armed_counted) {
+					slice->sticky_armed_counted = true;
+					g_bf_sticky_armed.fetch_add(1, std::memory_order_relaxed);
+				}
+			}
+		}
+		op = BfUnpack(value);
+		BfMarkEver(op.armed);
+	} else if (latch_mode == 2) {
+		const bool     live      = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+		const uint32_t live_mode = Common::Gates::Value(Common::Gates::Knob::BindFloorMode);
+		const auto&    held      = t_bind_floor_op;
+		if (held.armed && !live) {
+			// A falling edge is pending: hold it until a learned GDS consumer (or the fallback).
+			const uint64_t epoch = g_bf_flip_epoch.load(std::memory_order_relaxed);
+			if (!t_bf_hold) {
+				t_bf_hold       = true;
+				t_bf_hold_epoch = epoch;
+				t_bf_hold_ops   = 0;
+			}
+			bool adopt = false;
+			if (op_site) {
+				if (key != nullptr && key->key != 0 && BfGdsKnown(key->key)) {
+					adopt = true;
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorTrigFire, 1);
+					BfLogTrigger("fire", key, epoch - t_bf_hold_epoch);
+				} else if (epoch - t_bf_hold_epoch >= 2) {
+					adopt = true;
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorTrigFb, 1);
+					BfLogTrigger("fallback", key, epoch - t_bf_hold_epoch);
+				}
+			}
+			if (adopt) {
+				op.armed  = false;
+				op.mode   = live_mode;
+				t_bf_hold = false;
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorEdges, 1);
+			} else {
+				op.armed = true;
+				op.mode  = held.mode;
+				if (op_site) {
+					t_bf_hold_ops++;
+					Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorTrigWait, 1);
+				}
+			}
+		} else {
+			// Rising edge or no change: per op, exactly as mode 0.
+			t_bf_hold = false;
+			op.armed  = live;
+			op.mode   = live_mode;
+			if (op.armed != held.armed) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorEdges, 1);
+			}
+			BfMarkEver(op.armed);
+		}
+	} else {
+		// Mode 0: the session-97 per-op latch, verbatim.
+		op.armed = Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+		op.mode  = Common::Gates::Value(Common::Gates::Knob::BindFloorMode);
+		// bf_edge: the latch changed value - one per schedule edge as the translating thread
+		// saw it.  Counted in the flip of the op that saw the new value, so a falling edge is
+		// booked in the first frame of the base arm; it is the only bf_* the base arm writes.
+		if (op.armed != t_bind_floor_op.armed) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorEdges, 1);
+		}
+		if (op.armed && !g_bind_floor_ever.load(std::memory_order_relaxed)) {
+			g_bind_floor_ever.store(true, std::memory_order_relaxed);
+		}
+	}
+	if (key != nullptr) {
+		op.key = key->key;
+	}
+	// bf_mixed: draw/dispatch latches only, split at this submission's flip packet.
+	if (op_site && t_bf_slice != nullptr) {
+		auto&         slice = *t_bf_slice;
+		const uint8_t bit   = op.armed ? 1u : 2u;
+		slice.ops++;
+		if (slice.after_flip) {
+			slice.bits_post |= bit;
+		} else {
+			slice.bits_pre |= bit;
+		}
 	}
 	t_bind_floor_op = op;
 	return op;
+}
+} // namespace
+
+BindFloorOp BindFloorLatchOp() {
+	return BfLatch(false, nullptr);
+}
+
+uint32_t BindFloorLatchMode() {
+	static const uint32_t mode = [] {
+		const char* value = std::getenv("KYTY_BIND_FLOOR_LATCH");
+		uint32_t    m     = 0;
+		if (value != nullptr && value[0] != '\0') {
+			char*               end    = nullptr;
+			const unsigned long parsed = std::strtoul(value, &end, 10);
+			if (end == value || *end != '\0' || parsed > 2) {
+				EXIT("KYTY_BIND_FLOOR_LATCH=%s: expected 0, 1 or 2\n", value);
+			}
+			m = static_cast<uint32_t>(parsed);
+		}
+		LOGF("BindFloorLatch: mode %u\n", m);
+		return m;
+	}();
+	return mode;
+}
+
+uint32_t BindFloorClearMode() {
+	static const uint32_t mode = [] {
+		const char* value = std::getenv("KYTY_BIND_FLOOR_CLEAR");
+		uint32_t    m     = 0;
+		if (value != nullptr && value[0] != '\0') {
+			char*               end    = nullptr;
+			const unsigned long parsed = std::strtoul(value, &end, 10);
+			if (end == value || *end != '\0' || parsed > 1) {
+				EXIT("KYTY_BIND_FLOOR_CLEAR=%s: expected 0 or 1\n", value);
+			}
+			m = static_cast<uint32_t>(parsed);
+		}
+		LOGF("BindFloorClear: mode %u\n", m);
+		return m;
+	}();
+	return mode;
+}
+
+BindFloorOp BindFloorLatchDraw(uint64_t vs_addr, uint64_t ps_addr) {
+	if (BindFloorLatchMode() != 2) {
+		return BfLatch(true, nullptr);
+	}
+	BfKey key;
+	key.key      = BfDrawKey(vs_addr, ps_addr);
+	key.dispatch = false;
+	key.a0       = vs_addr;
+	key.a1       = ps_addr;
+	return BfLatch(true, &key);
+}
+
+BindFloorOp BindFloorLatchDispatch(uint64_t cs_addr) {
+	if (BindFloorLatchMode() != 2) {
+		return BfLatch(true, nullptr);
+	}
+	BfKey key;
+	key.key      = cs_addr;
+	key.dispatch = true;
+	key.a0       = cs_addr;
+	return BfLatch(true, &key);
+}
+
+bool BindFloorGcHold() {
+	switch (BindFloorLatchMode()) {
+		case 1: {
+			// Conservative: the LRU clock stops while either frame could be floored.
+			BfInitBase();
+			if ((g_bf_base.load(std::memory_order_relaxed) & BfArmedBit) != 0) {
+				return true;
+			}
+			// Session 98 (patch_s98e): a submission still running on an armed sticky value.
+			if (g_bf_sticky_armed.load(std::memory_order_relaxed) != 0) {
+				return true;
+			}
+			return g_bf_pending_valid.load(std::memory_order_acquire) &&
+			       (g_bf_pending_value.load(std::memory_order_relaxed) & BfArmedBit) != 0;
+		}
+		case 2:
+			// The held value (a pending falling edge keeps it armed) or the live rising one.
+			return t_bind_floor_op.armed ||
+			       Common::Gates::Enabled(Common::Gates::Gate::BindFloor);
+		default: return BindFloorLatchOp().armed;
+	}
+}
+
+bool BindFloorDownloadSkip() {
+	if (BindFloorLatchMode() == 0) {
+		return Common::Gates::Enabled(Common::Gates::Gate::BindFloor) || BindFloorEverArmed();
+	}
+	return BindFloorCurrentOp().armed || BindFloorEverArmed();
+}
+
+bool BindFloorClearSkip() {
+	// Session 98 (patch_s98d): only where ProgramCache::Get freezes the snapshot
+	// (pipelineCache.cpp: bind_floor = armed && mode != 2).
+	return BindFloorClearMode() == 1 && t_bind_floor_op.armed && t_bind_floor_op.mode != 2;
+}
+
+void BindFloorNoteGdsBarrier() {
+	if (BindFloorLatchMode() != 2) {
+		return;
+	}
+	const uint64_t key = t_bind_floor_op.key;
+	if (key == 0) {
+		return;
+	}
+	bool inserted = false;
+	{
+		std::lock_guard<std::mutex> lock(g_gds_keys_mutex);
+		inserted = g_gds_keys.insert(key).second;
+	}
+	if (inserted) {
+		static std::atomic<uint32_t> logged {0};
+		if (logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+			LOGF("BindFloorTrigger: learn key=0x%016" PRIx64 " seq=%" PRIu64 "\n", key,
+			     t_bf_slice != nullptr ? t_bf_slice->seq : uint64_t {0});
+		}
+	}
+}
+
+void BindFloorSetSlice(BindFloorSlice* slice) {
+	t_bf_slice = slice;
+}
+
+uint64_t BindFloorSliceSeq() {
+	return t_bf_slice != nullptr ? t_bf_slice->seq : 0;
+}
+
+void BindFloorSliceComplete(const BindFloorSlice& slice) {
+	if (slice.sticky_armed_counted) {
+		// Session 98 (patch_s98e): the submission is complete - its armed sticky value is gone.
+		g_bf_sticky_armed.fetch_sub(1, std::memory_order_relaxed);
+	}
+	if (slice.bits_pre != 3 && slice.bits_post != 3) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorMixed, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+		LOGF("BindFloorMixed: seq=%" PRIu64 " queue=%u bits=%u/%u ops=%u\n", slice.seq,
+		     slice.queue, static_cast<uint32_t>(slice.bits_pre),
+		     static_cast<uint32_t>(slice.bits_post), slice.ops);
+	}
+}
+
+uint64_t BindFloorFlipEpoch() {
+	return g_bf_flip_epoch.load(std::memory_order_relaxed);
+}
+
+bool BindFloorNoteFlipPacket(const BindFloorFlipQueues* queues) {
+	bool created = false;
+	if (BindFloorLatchMode() == 1) {
+		// Session 98 (patch_s98d): the frame latch places the frame boundary at the flip-bearing
+		// submission's seq; a flip packet on a thread without a GuestGpu slice (the m4baton
+		// relay, pinned 0) has none, and would silently collapse the boundary.
+		if (t_bf_slice == nullptr) {
+			EXIT("KYTY_BIND_FLOOR_LATCH=1: a GPU flip packet was processed on a thread without a "
+			     "GuestGpu submission slice (the m4baton relay?) - the frame latch cannot place the "
+			     "frame boundary; run with m4baton=0 or KYTY_BIND_FLOOR_LATCH=0\n");
+		}
+		BfInitBase();
+		if (g_bf_pending_valid.load(std::memory_order_relaxed) && ++g_bf_pending_flips >= 2) {
+			BfAdopt(true);
+		}
+		// The ONLY live read of the gate in mode 1.
+		const uint64_t live = BfLive();
+		if (!g_bf_pending_valid.load(std::memory_order_relaxed) &&
+		    live != g_bf_base.load(std::memory_order_relaxed)) {
+			g_bf_pending_value.store(live, std::memory_order_relaxed);
+			g_bf_pending_sflip.store(BindFloorSliceSeq(), std::memory_order_relaxed);
+			g_bf_pending_flips = 0;
+			g_bf_pending_older = queues != nullptr && queues->older_in_flight;
+			g_bf_pending_valid.store(true, std::memory_order_release);
+			created = true;
+			if (queues != nullptr) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorXover, queues->xover);
+				Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorXoverAcb,
+				                        queues->xover_acb);
+			}
+		}
+	}
+	g_bf_flip_epoch.fetch_add(1, std::memory_order_relaxed);
+	// The rest of the flip-bearing DCB belongs to the next frame (every mode: bf_mixed).
+	if (t_bf_slice != nullptr) {
+		t_bf_slice->after_flip = true;
+	}
+	return created;
+}
+
+bool BindFloorPendingValid() {
+	return g_bf_pending_valid.load(std::memory_order_acquire);
+}
+
+void BindFloorResolve(uint64_t min_front_seq) {
+	if (BindFloorLatchMode() != 1 || !g_bf_pending_valid.load(std::memory_order_acquire)) {
+		return;
+	}
+	if (min_front_seq > g_bf_pending_sflip.load(std::memory_order_relaxed)) {
+		BfAdopt(false);
+	}
 }
 
 const BindFloorOp& BindFloorCurrentOp() {
@@ -3173,6 +3610,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			    Common::Gates::Enabled(Common::Gates::Gate::GdsEpoch));
 			if (gds_needed) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::GdsBarriers, 1);
+				// Session 98, KYTY_BIND_FLOOR_LATCH=2: this op is a real GDS consumer; learn its
+				// key (only reachable unfloored - the floor leaves gds.buffer empty).
+				BindFloorNoteGdsBarrier();
+				GpuMarkerNoteGds(); // Session 98 (patch_s98b): the next op carries gds=1
 				Common::DrawStat::Mark(Common::DrawStat::Barrier);
 				Common::DrawStat::Cut(Common::DrawStat::EdgeBarrier);
 				buffer.EndRendering(RenderPassEnd::Gds);

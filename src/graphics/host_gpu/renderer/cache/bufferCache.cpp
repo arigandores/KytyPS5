@@ -1937,7 +1937,8 @@ void BufferCache::RunGarbageCollector() {
 	// edge and died twice of a GPU fault right there.  While the per-op latch is armed the
 	// LRU clock stops and the non-aggressive pass is suspended (bf_bgc_hold); at critical
 	// pressure it runs exactly as before.  With the floor off this is the shipped order.
-	const bool floor_hold = BindFloorLatchOp().armed;
+	// Session 98: KYTY_BIND_FLOOR_LATCH >= 1 reads without adopting (descriptors.h).
+	const bool floor_hold = BindFloorGcHold();
 	auto       tick       = floor_hold ? m_gc_tick : m_gc_tick++;
 	if (m_graphics.CanReportMemoryUsage()) {
 		m_total_used_memory = m_graphics.GetDeviceMemoryUsage();

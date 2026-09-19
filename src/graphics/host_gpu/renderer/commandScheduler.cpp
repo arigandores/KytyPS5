@@ -30,6 +30,7 @@ void ReportVulkanFatal(GraphicContext& graphics, const char* what, vk::Result re
                        uint64_t tick, uint32_t debug_op, uint64_t debug_submit, uint32_t arg0,
                        uint32_t arg1, uint32_t arg2, uint32_t arg3, uint64_t arg4) {
 	ReportGpuCheckpoints(graphics);
+	ReportGpuMarkers("fatal", result == vk::Result::eErrorDeviceLost); // Session 98 (patch_s98b)
 	LOGF("%s failed: %s (%d), tick=%" PRIu64 " debug_op=%u debug_submit=%" PRIu64
 	     " args=%u,%u,%u,%u,0x%016" PRIx64 "\n",
 	     what, vk::to_string(result).c_str(), static_cast<int>(result), tick, debug_op,
@@ -291,6 +292,7 @@ CommandScheduler::CommandScheduler(RenderContext& context, GraphicContext& graph
       m_priority_thread([this](std::stop_token stop) { PriorityOperationsThread(stop); }),
       m_gpu_time(graphics, m_master) {
 	InitTimestamps();
+	GpuMarkersRegisterScheduler(this); // Session 98 (patch_s98b): no-op unless markers/trace=2
 	// KYTY_ASYNC_COPY_GPU_WAIT=0: block the GuestGpu thread in Submit until the async copies
 	// landed (the old behaviour) instead of making the queue wait for them.
 	const char* gpu_wait = std::getenv("KYTY_ASYNC_COPY_GPU_WAIT");
@@ -322,6 +324,7 @@ void CommandScheduler::SignalCopySemaphore(uint64_t completed, void* user) {
 }
 
 CommandScheduler::~CommandScheduler() {
+	GpuMarkersUnregisterScheduler(this); // Session 98 (patch_s98b)
 	if (m_copy_gpu_wait) {
 		Common::RemoveAsyncCopySignal(&CommandScheduler::SignalCopySemaphore, this);
 		Common::WaitAsyncCopies();

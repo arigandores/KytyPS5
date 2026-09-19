@@ -52,6 +52,8 @@ struct GraphicContext {
 	bool                               sample_rate_shading_enabled           = false;
 	bool                               diagnostic_checkpoints_enabled        = false;
 	bool                               gpu_breadcrumbs_enabled               = false;
+	// Session 98 (patch_s98b): KYTY_GPU_MARKERS=1 and VK_AMD_buffer_marker present and loaded.
+	bool                               gpu_markers_enabled                   = false;
 	bool                               attachment_feedback_loop_enabled      = false;
 	bool                               provoking_vertex_last_enabled         = false;
 	// VK_EXT_external_memory_host (KYTY_HOST_IMPORT, default on): guest direct memory imported

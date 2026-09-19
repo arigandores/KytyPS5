@@ -2871,7 +2871,9 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 		// could not read back stays GPU-dirty; its retry after the falling edge would reach the
 		// EXIT below and end an ABBA run in its base arm.  A nonzero bf_dlskip voids the run
 		// either way (comment above), so the skip changes no admitted number.
-		if (Common::Gates::Enabled(Common::Gates::Gate::BindFloor) || BindFloorEverArmed()) {
+		// Session 98: mode 0 reads exactly the above; KYTY_BIND_FLOOR_LATCH >= 1 reads the
+		// latched op instead of the live gate (descriptors.h, BindFloorDownloadSkip).
+		if (BindFloorDownloadSkip()) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkip, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorDlSkipKb,
 			                        range.size >> 10u);
@@ -3258,7 +3260,8 @@ void TextureCache::RunGarbageCollector() {
 	// (below): with the clock running, every texture the floor does not touch would be older
 	// than the 16-tick age the moment the gate fell.  With the floor off this is the shipped
 	// order exactly - the tick is taken first.
-	const bool floor_hold = BindFloorLatchOp().armed;
+	// Session 98: KYTY_BIND_FLOOR_LATCH >= 1 reads without adopting (descriptors.h).
+	const bool floor_hold = BindFloorGcHold();
 	uint64_t   tick       = floor_hold ? m_gc_tick : m_gc_tick++;
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruTouches, m_lru_touch_calls);
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruRepeats, m_lru_touch_repeats);

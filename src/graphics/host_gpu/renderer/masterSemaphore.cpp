@@ -57,7 +57,9 @@ void MasterSemaphore::Refresh() {
 	uint64_t   counter = 0;
 	const auto result  = m_graphics.device.getSemaphoreCounterValue(m_semaphore, &counter);
 	if (result == vk::Result::eErrorDeviceLost) {
-		ReportGpuCheckpoints(m_graphics);
+		ReportGpuBreadcrumb(m_graphics); // Session 98 (patch_s98b): the two halves, and markers
+		ReportNvCheckpoints(m_graphics);
+		ReportGpuMarkers("lost", true);
 	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 
@@ -87,8 +89,10 @@ void MasterSemaphore::Wait(uint64_t tick) {
 	{
 		namespace FS  = Common::FrameStats;
 		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		// Session 98 (patch_s98b): KYTY_GPU_MARKERS makes the wait diagnostic too, so a hang
+		// reaches GpuWaitSlow / GpuHangAbort and the marker readout.
 		const bool diagnostic = m_graphics.diagnostic_checkpoints_enabled || m_graphics.gpu_breadcrumbs_enabled ||
-		                        GpuQueueTraceEnabled();
+		                        GpuQueueTraceEnabled() || m_graphics.gpu_markers_enabled;
 		bool reported = false;
 		uint32_t timeouts = 0;
 		do {
@@ -111,6 +115,11 @@ void MasterSemaphore::Wait(uint64_t tick) {
 				     Common::AsyncCopySignaled(), Common::PendingAsyncCopies());
 				std::printf("GpuHangAbort: requested=%" PRIu64 " known=%" PRIu64 " after=%us\n",
 				            tick, m_gpu_tick.load(std::memory_order_acquire), timeouts * 2u);
+				// Session 98 (patch_s98b): the device is NOT lost here - never the NV half.
+				ReportGpuMarkers("abort", false);
+				if (m_graphics.gpu_breadcrumbs_enabled) {
+					ReportGpuBreadcrumb(m_graphics);
+				}
 				ReportGpuCheckpointHistory();
 				ReportGpuSubmissionHistory();
 				Log::Flush();
@@ -127,6 +136,7 @@ void MasterSemaphore::Wait(uint64_t tick) {
 				     Common::AsyncCopySignaled(), Common::PendingAsyncCopies());
 				std::printf("GpuWaitSlow: role=%u requested=%" PRIu64 "\n",
 				            static_cast<uint32_t>(FS::CurrentRole()), tick);
+				ReportGpuMarkers("slow", false); // Session 98 (patch_s98b)
 				ReportGpuCheckpointHistory();
 				ReportGpuSubmissionHistory();
 				Log::Flush();
@@ -148,8 +158,13 @@ void MasterSemaphore::Wait(uint64_t tick) {
 		     vk::to_string(result).c_str(), static_cast<int>(result), tick);
 		std::printf("vkWaitSemaphores failed: %s (%d), tick=%" PRIu64 "\n",
 		            vk::to_string(result).c_str(), static_cast<int>(result), tick);
-		if (result == vk::Result::eErrorDeviceLost) ReportGpuCheckpoints(m_graphics);
-		else ReportGpuCheckpointHistory();
+		if (result == vk::Result::eErrorDeviceLost) {
+			ReportGpuBreadcrumb(m_graphics); // Session 98 (patch_s98b)
+			ReportNvCheckpoints(m_graphics);
+			ReportGpuMarkers("lost", true);
+		} else {
+			ReportGpuCheckpointHistory();
+		}
 	}
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
 	Refresh();

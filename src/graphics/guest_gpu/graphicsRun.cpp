@@ -14,6 +14,7 @@
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/guest_gpu/pm4.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
 #include "graphics/host_gpu/renderer/sync.h"
@@ -636,6 +637,9 @@ void GuestGpu::Enqueue(Submission submission) {
 	LookaheadSubmission(submission);
 	Common::LockGuard lock(m_queue_mutex);
 	EXIT_IF(!m_accepting);
+	// Session 98 (patch_s98a): the guest submission order over ALL queues.
+	submission.bf.seq   = ++m_bf_seq;
+	submission.bf.queue = submission.queue_id;
 	submission.enqueue_ns = static_cast<uint64_t>(
 	    std::chrono::duration_cast<std::chrono::nanoseconds>(
 	        std::chrono::steady_clock::now().time_since_epoch())
@@ -760,10 +764,20 @@ void GuestGpu::ThreadRun(void* data) {
 		bool complete = false;
 		{
 			Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
+			// Session 98 (patch_s98a): the latch sees this submission's seq, queue and flip state
+			// for the whole slice; a resumed slice keeps its after_flip and bf_mixed bits.
+			BindFloorSetSlice(&submission.bf);
 			complete = gpu->Process(submission);
+			BindFloorSetSlice(nullptr);
+		}
+		if (complete) {
+			BindFloorSliceComplete(submission.bf);
 		}
 
 		Common::LockGuard lock(gpu->m_queue_mutex);
+		if (complete && BindFloorLatchMode() == 1) {
+			gpu->BindFloorDoneLocked(submission.bf);
+		}
 		if (!complete) {
 			submission.blocked = true;
 			gpu->m_queues[submission.queue_id].push_front(std::move(submission));
@@ -774,6 +788,11 @@ void GuestGpu::ThreadRun(void* data) {
 					queue.front().blocked = false;
 				}
 			}
+		}
+		// Session 98, KYTY_BIND_FLOOR_LATCH=1: adopt a pending value once every submission
+		// older than the flip-bearing DCB (and that DCB) has completed.
+		if (BindFloorLatchMode() == 1) {
+			gpu->BindFloorResolveLocked();
 		}
 		gpu->m_processing = false;
 		if (gpu->m_commands.empty() && gpu->m_submission_count == 0) {
@@ -2884,7 +2903,102 @@ void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t req
 	}
 }
 
+// Session 98 (patch_s98a, MEASUREMENT ONLY): the flip packet is the guest frame boundary on
+// GuestGpu.  Mode 1 needs the queue fronts and the completion ring (bf_xover, bf_defer), so it
+// takes m_queue_mutex here - never held by ThreadRun while Process runs.
+void GuestGpu::BindFloorFlipPacket() {
+	if (BindFloorLatchMode() != 1) {
+		BindFloorNoteFlipPacket(nullptr);
+		return;
+	}
+	const uint64_t      s_flip = BindFloorSliceSeq();
+	BindFloorFlipQueues queues;
+	// Session 98 (patch_s98d): every submission with seq > s_flip that already ran an op under the
+	// old value - started queue fronts and completed ones (matched in the completion ring by seq,
+	// not by flip epoch, so one that completed before the PREVIOUS flip packet is counted too).
+	struct Xover {
+		uint64_t seq       = 0;
+		uint32_t queue     = 0;
+		uint32_t ops       = 0;
+		bool     completed = false;
+	};
+	std::array<Xover, 64> xs {};
+	uint32_t              xn   = 0;
+	const auto            note = [&](uint64_t seq, uint32_t queue, uint32_t ops, bool completed) {
+		queues.xover++;
+		queues.xover_acb += queue != 0 ? 1u : 0u;
+		if (xn < xs.size()) {
+			xs[xn++] = Xover {seq, queue, ops, completed};
+		}
+	};
+	{
+		Common::LockGuard lock(m_queue_mutex);
+		for (uint32_t id = 0; id < QueueCount; id++) {
+			if (m_queues[id].empty()) {
+				continue;
+			}
+			// FIFO per queue, and a blocked (started) submission is re-pushed to the front, so
+			// the front is the oldest - and the only one that can have run ops.
+			const auto& front = m_queues[id].front();
+			if (front.bf.seq < s_flip) {
+				queues.older_in_flight = true;
+			} else if (front.started && front.bf.seq > s_flip && front.bf.ops != 0) {
+				note(front.bf.seq, id, front.bf.ops, false);
+			}
+		}
+		// Completed (the ring holds the last 512 completions).
+		for (const auto& done: m_bf_done) {
+			if (done.seq > s_flip && done.ops != 0) {
+				note(done.seq, done.queue, done.ops, true);
+			}
+		}
+	}
+	if (BindFloorNoteFlipPacket(&queues)) {
+		static std::atomic<uint32_t> logged {0};
+		for (uint32_t i = 0; i < xn; i++) {
+			if (logged.fetch_add(1, std::memory_order_relaxed) >= 64) {
+				break;
+			}
+			LOGF("BindFloorXover: s_flip=%" PRIu64 " seq=%" PRIu64 " queue=%u completed=%d ops=%u\n",
+			     s_flip, xs[i].seq, xs[i].queue, xs[i].completed ? 1 : 0, xs[i].ops);
+		}
+	}
+}
+
+void GuestGpu::BindFloorDoneLocked(const BindFloorSlice& slice) {
+	auto& done = m_bf_done[m_bf_done_next++ % m_bf_done.size()];
+	done.seq   = slice.seq;
+	done.epoch = BindFloorFlipEpoch();
+	done.queue = slice.queue;
+	done.ops   = slice.ops;
+}
+
+void GuestGpu::BindFloorResolveLocked() {
+	if (!BindFloorPendingValid()) {
+		return;
+	}
+	uint64_t min_seq = UINT64_MAX;
+	for (const auto& queue: m_queues) {
+		if (!queue.empty()) {
+			min_seq = std::min(min_seq, queue.front().bf.seq);
+		}
+	}
+	BindFloorResolve(min_seq);
+}
+
+// A flip packet on a thread without a GuestGpu (the m4baton relay, pinned off) still opens the
+// pending change in mode 1, without queue information.
+static void BindFloorFlipHook() {
+	if (g_gpu_state != nullptr) {
+		g_gpu_state->BindFloorFlipPacket();
+	} else {
+		BindFloorNoteFlipPacket(nullptr);
+	}
+}
+
 void CommandProcessor::Flip() {
+	BindFloorFlipHook();
+	GpuMarkersFlip(); // Session 98 (patch_s98b): gm_unsup, gm_ok/gm_bad
 	CheckBuffer();
 	m_renderer.DrainDeferredProtection();
 
@@ -2903,6 +3017,8 @@ void CommandProcessor::Flip() {
 }
 
 void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
+	BindFloorFlipHook(); // Session 98
+	GpuMarkersFlip(); // Session 98 (patch_s98b)
 	CheckBuffer();
 	m_renderer.DrainDeferredProtection();
 
@@ -2927,6 +3043,8 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 
 void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action,
                                          void* dst_gpu_addr, uint32_t value) {
+	BindFloorFlipHook(); // Session 98
+	GpuMarkersFlip(); // Session 98 (patch_s98b)
 	CheckBuffer();
 	m_renderer.DrainDeferredProtection();
 
@@ -2955,6 +3073,8 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 }
 
 void CommandProcessor::PrepareCpuFlip(uint64_t request_id) {
+	BindFloorFlipHook(); // Session 98
+	GpuMarkersFlip(); // Session 98 (patch_s98b)
 	CheckBuffer();
 	if (g_current_processor != nullptr) {
 		EXIT("invalid graphics-thread CPU flip preparation\n");

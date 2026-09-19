@@ -177,6 +177,8 @@ enum class RecordCmd : uint16_t {
 	ShaderWriteBarrierLocal,  // aux vk::PipelineStageFlags
 	ShaderWriteHazardBarrier, // aux vk::PipelineStageFlags
 	ShaderAccessBarrier,      // aux vk::PipelineStageFlags
+	// Session 98 (patch_s98b), KYTY_GPU_MARKERS: vkCmdWriteBufferMarkerAMD.
+	BufferMarker,             // aux vk::PipelineStageFlagBits: vk::Buffer, vk::DeviceSize, uint32_t
 };
 struct RecordCmdHeader {
 	uint16_t cmd;
@@ -483,6 +485,15 @@ public:
 	}
 	void shaderAccessBarrier(vk::PipelineStageFlags stages) {
 		(void)Append(RecordCmd::ShaderAccessBarrier, static_cast<uint32_t>(stages), 0);
+	}
+	// Session 98 (patch_s98b), KYTY_GPU_MARKERS: same signature as vk::CommandBuffer's (legal
+	// inside a render pass instance).
+	void writeBufferMarkerAMD(vk::PipelineStageFlagBits stage, vk::Buffer buffer,
+	                          vk::DeviceSize offset, uint32_t marker) {
+		auto* out = Append(RecordCmd::BufferMarker, static_cast<uint32_t>(stage), 20u);
+		std::memcpy(out, &buffer, sizeof(buffer));
+		std::memcpy(out + 8, &offset, sizeof(offset));
+		std::memcpy(out + 16, &marker, sizeof(marker));
 	}
 
 private:

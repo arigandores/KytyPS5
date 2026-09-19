@@ -1632,6 +1632,41 @@ enum class Counter : uint32_t {
 	BindFloorBufGcHold, // bf_bgc_hold
 	// Session 97 (patch D): true null descriptors the floor wrote (buffers + images).
 	BindFloorNullDescs, // bf_ndesc
+	// Session 98 (patch_s98a/b, MEASUREMENT ONLY, raw counts; descriptors.h has the latch).
+	// bf_xover / bf_xover_acb: KYTY_BIND_FLOOR_LATCH=1, submissions of the NEW frame (seq above
+	// the flip-bearing DCB) that had already run ops under the old value when the flip packet
+	// opened a pending change - all queues / the async-compute queues (1..56) only.
+	BindFloorXover,      // bf_xover
+	BindFloorXoverAcb,   // bf_xover_acb
+	// bf_mixed: completed submissions whose draw/dispatch latches saw BOTH armed and unarmed
+	// (the flip-bearing DCB is judged before and after its flip packet separately).  Every mode.
+	BindFloorMixed,      // bf_mixed
+	// bf_defer: frame-latch adoptions that had to wait for an older submission still in flight;
+	// bf_defer_force: pending changes adopted anyway after two further flip packets.
+	BindFloorDefer,      // bf_defer
+	BindFloorDeferForce, // bf_defer_force
+	// KYTY_BIND_FLOOR_LATCH=2: falling edges adopted at a learned GDS consumer / ops held armed
+	// while a falling edge waited for one / falling edges adopted by the two-flip fallback.
+	BindFloorTrigFire,   // bf_trig_fire
+	BindFloorTrigWait,   // bf_trig_wait
+	BindFloorTrigFb,     // bf_trig_fb
+	// KYTY_BIND_FLOOR_CLEAR=1: floored, shortcut-eligible dispatches whose compute clear
+	// shortcuts were skipped (renderCompute.cpp).
+	BindFloorClrSkip,    // bf_clr_skip
+	// KYTY_GPU_MARKERS (patch_s98b): ops marked this flip, positive-control hits / misses, and 1
+	// a flip when markers were requested but the device lacks VK_AMD_buffer_marker.
+	GpuMarkerOps,        // gm_ops
+	GpuMarkerOk,         // gm_ok
+	GpuMarkerBad,        // gm_bad
+	GpuMarkerUnsup,      // gm_unsup
+	// Session 98 (patch_s98c): live-visibility control - marker words of ops in a tick whose
+	// semaphore had NOT signalled when they were read, in patterns the end-of-submission flush
+	// cannot produce (gpuCheckpoints.cpp MarkerLiveControl).
+	GpuMarkerLive,       // gm_live
+	GpuMarkerLiveTop,    // gm_live_top
+	// Session 98 (patch_s98d): KYTY_BIND_FLOOR_CLEAR=1 - an ARMED op the floor cannot express
+	// (bf_skip) dropped instead of running the real PrepareBindings over the frozen snapshot.
+	BindFloorSkipDrop,   // bf_skip_drop
 	Count
 };
 

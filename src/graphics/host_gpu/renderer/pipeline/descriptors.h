@@ -163,10 +163,78 @@ void BindFloorPrepareStage(const ShaderStageRuntime& runtime, PreparedBindings& 
 struct BindFloorOp {
 	bool     armed = false; // gate "bindfloor" as this op latched it
 	uint32_t mode  = 0;     // knob "bfmode" as this op latched it
+	// Session 98: the op's GDS-trigger key (KYTY_BIND_FLOOR_LATCH=2 only, 0 otherwise).
+	uint64_t key = 0;
 };
+// The auxiliary latch (compute prefetch; the GCs in mode 0).  Never counted in bf_mixed.
 BindFloorOp                      BindFloorLatchOp();
 [[nodiscard]] const BindFloorOp& BindFloorCurrentOp();
 [[nodiscard]] bool               BindFloorEverArmed();
+
+// Session 98 (patch_s98a, MEASUREMENT ONLY; C:/kyty/s98/design98/SPEC_patch98.md Part L).  Two
+// environment variables read ONCE per process, identical in both arms of any schedule:
+//   KYTY_BIND_FLOOR_LATCH  0 (default) = the session-97 per-op latch above, unchanged;
+//                          1 = FRAME latch: the live gate is read ONLY at the GPU flip packets
+//                              processed on GuestGpu; a changed value becomes `pending` and is
+//                              taken by every op of a submission enqueued after the flip-bearing
+//                              DCB (and by that DCB's own ops after its flip packet); it becomes
+//                              the `base` once every older submission has completed;
+//                          2 = GDS TRIGGER test: rising edges per op as in mode 0, a FALLING edge
+//                              is held (ops stay floored) until the first draw/dispatch whose
+//                              shader key is a learned real GDS consumer, or two flip packets.
+//   KYTY_BIND_FLOOR_CLEAR  1 = a floored dispatch never takes the compute clear shortcuts.
+[[nodiscard]] uint32_t BindFloorLatchMode();
+[[nodiscard]] uint32_t BindFloorClearMode();
+// The op-site latches (draw / dispatch), counted in bf_mixed.  The shader addresses are hashed
+// into the GDS-trigger key only in mode 2.
+BindFloorOp BindFloorLatchDraw(uint64_t vs_addr, uint64_t ps_addr);
+BindFloorOp BindFloorLatchDispatch(uint64_t cs_addr);
+// GC keep-alive: mode 0 = BindFloorLatchOp().armed (unchanged); modes 1/2 a NON-adopting read.
+[[nodiscard]] bool BindFloorGcHold();
+// Download-ring skip: mode 0 = live gate || sticky; modes 1/2 = latched op || sticky.
+[[nodiscard]] bool BindFloorDownloadSkip();
+// KYTY_BIND_FLOOR_CLEAR=1 and the current op latched armed with bfmode != 2 (Session 98,
+// patch_s98d: bfmode=2 does not freeze the snapshot, its clears are real work).  Also drops an
+// armed op the floor cannot express (bf_skip -> bf_skip_drop).
+[[nodiscard]] bool BindFloorClearSkip();
+// CommitBindings' real GDS-barrier branch: mode 2 learns the current op's key.
+void BindFloorNoteGdsBarrier();
+// Per-submission latch state, owned by GuestGpu's Submission; the slice being processed is
+// published to the latch through a thread-local pointer (BindFloorSetSlice) for the length of
+// GuestGpu::Process.  seq: monotonic over ALL 57 queues, assigned at Enqueue under m_queue_mutex.
+struct BindFloorSlice {
+	uint64_t seq        = 0;
+	uint32_t queue      = 0;     // 0 = graphics DCB, 1..56 = async compute
+	uint32_t ops        = 0;     // op-site latches taken so far
+	bool     after_flip = false; // a flip packet of this submission has been processed
+	uint8_t  bits_pre   = 0;     // bf_mixed accumulators: 1 = armed seen, 2 = unarmed seen,
+	uint8_t  bits_post  = 0;     // before / after this submission's flip packet
+	// Session 98 (patch_s98d), KYTY_BIND_FLOOR_LATCH=1: the value is STICKY per submission - the
+	// first op-site latch before (after) this submission's flip packet fixes it (packed
+	// {armed, bfmode}); every later op-site latch of that part reuses it, resumed slices too.
+	bool     sticky_pre_set  = false;
+	bool     sticky_post_set = false;
+	uint64_t sticky_pre      = 0;
+	uint64_t sticky_post     = 0;
+	// Session 98 (patch_s98e): this submission holds an armed sticky value and is counted in the
+	// global sticky-armed count until it completes (BindFloorSliceComplete) - the GC keep-alive.
+	bool     sticky_armed_counted = false;
+};
+// What GuestGpu knows about its queues at a flip packet (mode 1 only).
+struct BindFloorFlipQueues {
+	bool     older_in_flight = false; // a submission with seq < s_flip is not complete
+	uint32_t xover           = 0;     // seq > s_flip and already ran ops, all queues
+	uint32_t xover_acb       = 0;     // ... of them on queues 1..56
+};
+void                   BindFloorSetSlice(BindFloorSlice* slice);
+[[nodiscard]] uint64_t BindFloorSliceSeq();
+void                   BindFloorSliceComplete(const BindFloorSlice& slice);
+[[nodiscard]] uint64_t BindFloorFlipEpoch();
+// Returns true when this flip packet opened a pending change (mode 1).  Session 98 (patch_s98d):
+// mode 1 EXITs when the packet is processed on a thread without a GuestGpu slice (m4baton relay).
+bool                   BindFloorNoteFlipPacket(const BindFloorFlipQueues* queues);
+[[nodiscard]] bool     BindFloorPendingValid();
+void                   BindFloorResolve(uint64_t min_front_seq);
 
 template <typename T>
 [[nodiscard]] T DecodeNativeDescriptor(const ShaderRecompiler::IR::DescriptorValue& value) {

@@ -22,6 +22,7 @@
 #include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/depthRenderTarget.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/render.h"
@@ -1449,6 +1450,23 @@ static uint64_t DrawShaderHash(const ShaderStageRuntime& stage) {
 	return (stage && stage.program != nullptr) ? stage.program->shader_hash : 0u;
 }
 
+// Session 98 (patch_s98b), KYTY_GPU_MARKERS / KYTY_QUEUE_TRACE=2: the op-ring entry of a draw
+// (gpuCheckpoints.h).  Called only when GpuOpsActive(), right before the draw command(s).
+static GpuMarkerSite BeginDrawMarker(CommandScheduler& scheduler, uint64_t submit_id,
+                                     const DrawCallInfo& draw, const DrawRenderState& state,
+                                     bool indirect, bool mesh, uint32_t mesh_groups) {
+	const auto kind = mesh       ? GpuMarkerKind::Mesh
+	                  : indirect ? (draw.IsIndexed() ? GpuMarkerKind::DrawIndexedIndirect
+	                                                 : GpuMarkerKind::DrawIndirect)
+	                  : draw.IsIndexed() ? GpuMarkerKind::DrawIndexed
+	                                     : GpuMarkerKind::Draw;
+	return GpuMarkerBegin(scheduler, kind, submit_id,
+	                      state.ps_active ? DrawShaderHash(state.ps_input_info.stage) : 0u,
+	                      DrawShaderHash(state.vertex_info[0].stage),
+	                      mesh ? mesh_groups : draw.index_count, draw.instance_count, 0u,
+	                      BindFloorCurrentOp().armed);
+}
+
 // Debug record of a draw: args=phase,index_count,instance_count,first_instance, arg4=PS hash,
 // arg5=VS hash (see GpuCheckpoint output).
 static void SetDrawDebugPhase(CommandBuffer& buffer, uint64_t submit_id, const DrawCallInfo& draw,
@@ -2155,6 +2173,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			}
 		}
 	}
+	// Session 98 (patch_s98d), KYTY_BIND_FLOOR_CLEAR=1 (MEASUREMENT ONLY): an ARMED draw the floor
+	// cannot express (bf_skip) would run the REAL PrepareBindings over the frozen floor snapshot
+	// and write through stale addresses on the GPU: drop it.
+	if (!bind_floor && BindFloorClearSkip()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorSkipDrop, 1);
+		return;
+	}
 	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9): while ReuseBindingsEnabled() is on -
 	// the default - `bindings` binds to m_graphics_bindings and this object is never read, but it
 	// is still array<PreparedBindings,3> with five vectors each: fifteen empty-vector
@@ -2670,6 +2695,14 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (!draw.IsIndexed()) {
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
 		}
+		// Session 98 (patch_s98b): GPU marker TOP (no-op unless KYTY_GPU_MARKERS).
+		GpuMarkerSite gpu_marker;
+		if (GpuOpsActive()) {
+			gpu_marker = BeginDrawMarker(m_context.GetCommandScheduler(), submit_id, draw, state,
+			                             emit_info.indirect_buffer != nullptr, mesh_active,
+			                             mesh_groups);
+		}
+		GpuMarkerTop(tail, gpu_marker);
 		if (mesh_active) {
 			const uint32_t draw_data[] {
 			    draw.index_count,
@@ -2685,6 +2718,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		} else {
 			EmitDrawPrimitives(ucfg, tail, state.vertex_info[0], draw, emit_info);
 		}
+		GpuMarkerBottom(tail, gpu_marker); // Session 98 (patch_s98b)
 		if (!draw.IsIndexed()) {
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x600u);
 		}
@@ -2802,6 +2836,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (!draw.IsIndexed()) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x500u);
 	}
+	// Session 98 (patch_s98b): GPU marker TOP (no-op unless KYTY_GPU_MARKERS).
+	GpuMarkerSite gpu_marker;
+	if (GpuOpsActive()) {
+		gpu_marker = BeginDrawMarker(m_context.GetCommandScheduler(), submit_id, draw, state,
+		                             emit_info.indirect_buffer != nullptr, mesh_active, mesh_groups);
+	}
+	GpuMarkerTop(vk_buffer, gpu_marker);
 	if (mesh_active) {
 		const auto emit_mesh = [&](uint32_t first, uint32_t count, uint32_t instance,
 		                           uint32_t groups, uint32_t instances) {
@@ -2834,6 +2875,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	} else {
 		EmitDrawPrimitives(ucfg, vk_buffer, state.vertex_info[0], draw, emit_info);
 	}
+	GpuMarkerBottom(vk_buffer, gpu_marker); // Session 98 (patch_s98b)
 	if (GpuTimeProfiler::Enabled()) {
 		const auto& vs = state.vertex_info[0].stage;
 		const auto& ps = state.ps_input_info.stage;
@@ -2951,7 +2993,9 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
-	BindFloorLatchOp();
+	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed
+	// only at KYTY_BIND_FLOOR_LATCH=2.
+	BindFloorLatchDraw(sh_ctx.GetVs().es_regs.data_addr, sh_ctx.GetPs().ps_regs.data_addr);
 	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
 	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
 	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&
@@ -3118,7 +3162,9 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
-	BindFloorLatchOp();
+	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed
+	// only at KYTY_BIND_FLOOR_LATCH=2.
+	BindFloorLatchDraw(sh_ctx.GetVs().es_regs.data_addr, sh_ctx.GetPs().ps_regs.data_addr);
 	// Session 94, gate "mergecost": the start of this draw's pre-class interval, right after
 	// the render mutex (the lock wait is outside it, as it is outside every mh_* phase).
 	m_merge_cost.draw_t0 = Common::Gates::Enabled(Common::Gates::Gate::MergeCost) &&

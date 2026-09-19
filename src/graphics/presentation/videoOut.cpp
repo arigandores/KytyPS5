@@ -2363,6 +2363,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bf_edge", FS::Counter::BindFloorEdges, false},
 				    {"bf_bgc_hold", FS::Counter::BindFloorBufGcHold, false},
 				    {"bf_ndesc", FS::Counter::BindFloorNullDescs, false},
+				    {"bf_xover", FS::Counter::BindFloorXover, false},
+				    {"bf_xover_acb", FS::Counter::BindFloorXoverAcb, false},
+				    {"bf_mixed", FS::Counter::BindFloorMixed, false},
+				    {"bf_defer", FS::Counter::BindFloorDefer, false},
+				    {"bf_defer_force", FS::Counter::BindFloorDeferForce, false},
+				    {"bf_trig_fire", FS::Counter::BindFloorTrigFire, false},
+				    {"bf_trig_wait", FS::Counter::BindFloorTrigWait, false},
+				    {"bf_trig_fb", FS::Counter::BindFloorTrigFb, false},
+				    {"bf_clr_skip", FS::Counter::BindFloorClrSkip, false},
+				    {"gm_ops", FS::Counter::GpuMarkerOps, false},
+				    {"gm_ok", FS::Counter::GpuMarkerOk, false},
+				    {"gm_bad", FS::Counter::GpuMarkerBad, false},
+				    {"gm_unsup", FS::Counter::GpuMarkerUnsup, false},
+				    {"gm_live", FS::Counter::GpuMarkerLive, false},
+				    {"gm_live_top", FS::Counter::GpuMarkerLiveTop, false},
+				    {"bf_skip_drop", FS::Counter::BindFloorSkipDrop, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

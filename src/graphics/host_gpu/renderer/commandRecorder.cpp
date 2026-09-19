@@ -904,6 +904,17 @@ void CommandRecorder::ExecuteCommands(const uint8_t* payload) {
 			case RecordCmd::ShaderAccessBarrier:
 				ShaderAccessBarrier(m_buffer, vk::PipelineStageFlags(aux));
 				break;
+			case RecordCmd::BufferMarker: { // Session 98 (patch_s98b)
+				vk::Buffer     marker_buffer;
+				vk::DeviceSize marker_offset = 0;
+				uint32_t       marker_value  = 0;
+				std::memcpy(&marker_buffer, data, sizeof(marker_buffer));
+				std::memcpy(&marker_offset, data + 8, sizeof(marker_offset));
+				std::memcpy(&marker_value, data + 16, sizeof(marker_value));
+				m_buffer.writeBufferMarkerAMD(static_cast<vk::PipelineStageFlagBits>(aux),
+				                              marker_buffer, marker_offset, marker_value);
+				break;
+			}
 			default: EXIT("RecordThread: unknown command %u\n", static_cast<uint32_t>(command.cmd));
 		}
 	}

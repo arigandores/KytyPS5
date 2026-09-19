@@ -17,6 +17,7 @@
 #include "SDL_vulkan.h"
 #include "common/assert.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
@@ -1202,6 +1203,14 @@ void WindowContext::CreateVulkan() {
 				LOGF("Vulkan: diagnostic checkpoints enabled\n");
 			}
 		}
+		// Session 98 (patch_s98b, MEASUREMENT ONLY): KYTY_GPU_MARKERS=1 - VK_AMD_buffer_marker,
+		// enabled only when requested and exposed by the device (confirmed after the dispatcher
+		// loaded vkCmdWriteBufferMarkerAMD, below).
+		if (GpuMarkersRequested() &&
+		    HasExtension(available_extensions, VK_AMD_BUFFER_MARKER_EXTENSION_NAME)) {
+			device_extensions.push_back(VK_AMD_BUFFER_MARKER_EXTENSION_NAME);
+			graphic_ctx.gpu_markers_enabled = true;
+		}
 	}
 
 	graphic_ctx.device = VulkanCreateDevice(graphic_ctx, device_extensions);
@@ -1209,6 +1218,14 @@ void WindowContext::CreateVulkan() {
 		EXIT("Could not create device");
 	}
 	VULKAN_HPP_DEFAULT_DISPATCHER.init(graphic_ctx.device);
+	if (GpuMarkersRequested()) { // Session 98 (patch_s98b)
+		if (VULKAN_HPP_DEFAULT_DISPATCHER.vkCmdWriteBufferMarkerAMD == nullptr) {
+			graphic_ctx.gpu_markers_enabled = false;
+		}
+		GpuMarkersSetEnabled(graphic_ctx.gpu_markers_enabled);
+		LOGF("Vulkan: GPU markers %s\n",
+		     graphic_ctx.gpu_markers_enabled ? "enabled" : "unavailable");
+	}
 	graphic_ctx.device.getQueue(graphic_ctx.queue_family, 0, &graphic_ctx.queue);
 	EXIT_IF(graphic_ctx.queue == nullptr);
 

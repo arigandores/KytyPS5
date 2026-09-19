@@ -16,6 +16,7 @@
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
+#include "graphics/host_gpu/renderer/gpuCheckpoints.h"
 #include "graphics/host_gpu/renderer/image/imageInfo.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
@@ -285,7 +286,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole dispatch before
 	// GetComputeProgram reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
-	BindFloorLatchOp();
+	// Session 98: the dispatch's op-site latch; the CS address is the GDS-trigger key (mode 2).
+	BindFloorLatchDispatch(sh_ctx.GetCs().cs_regs.data_addr);
 	// Session 83, knob "mutwide" bit 2: the dispatch critical section as one interval.  Nothing
 	// in it carries a MutScope today, so all 2 419 us of mh_disp_us sits outside a_mut_us.
 	Common::FrameStats::MutScope wide_disp(
@@ -381,12 +383,33 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		ResetBindings();
 		return;
 	}
-	if (!indirect && TryConsumeComputeMetaClear(input_info, buffer)) {
+	// Session 98, KYTY_BIND_FLOOR_CLEAR=1 (MEASUREMENT ONLY): under the floor `resources` is the
+	// program's FROZEN floor snapshot (pipelineCache.cpp: taken at the first floored
+	// materialisation of the process, floor_valid never reset), so both shortcuts below would do
+	// a REAL ClearMeta / ClearImage / ClearImageFromBuffer / TrackDccFill at a stale address.  A
+	// floored dispatch skips them and takes the floor branch (a null dispatch).  bf_clr_skip
+	// counts the skipped dispatches that are shortcut-eligible by shape (a uniform fill, or a
+	// written buffer in a program without bitwise xor).
+	const bool floor_clear_skip = !indirect && BindFloorClearSkip();
+	if (floor_clear_skip) {
+		const auto& clr_program = *input_info.stage.program;
+		const bool  clr_fill    = input_info.stage.resources.uniform_fill.kind !=
+		                      ShaderRecompiler::IR::UniformFillKind::None;
+		const bool clr_meta =
+		    !clr_program.info.has_bitwise_xor &&
+		    std::any_of(clr_program.info.buffers.begin(), clr_program.info.buffers.end(),
+		                [](const auto& resource) { return resource.written; });
+		if (clr_fill || clr_meta) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorClrSkip, 1);
+		}
+	}
+	if (!indirect && !floor_clear_skip && TryConsumeComputeMetaClear(input_info, buffer)) {
 		ResetBindings();
 		return;
 	}
-	if (!indirect && TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
-	                                             thread_group_z, mode)) {
+	if (!indirect && !floor_clear_skip &&
+	    TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
+	                                thread_group_z, mode)) {
 		ResetBindings();
 		return;
 	}
@@ -814,6 +837,14 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			}
 		}
 	}
+	// Session 98 (patch_s98d), KYTY_BIND_FLOOR_CLEAR=1 (MEASUREMENT ONLY): an ARMED dispatch the
+	// floor cannot express (bf_skip) would run the REAL PrepareBindings / FindBuffers over the
+	// program's FROZEN floor snapshot and write through stale addresses on the GPU: drop it.
+	if (!bind_floor && BindFloorClearSkip()) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorSkipDrop, 1);
+		ResetBindings();
+		return;
+	}
 	if (bind_floor) {
 		BindFloorPrepareStage(input_info.stage, bindings);
 		// Knob "bfburn" at bfmode=3: burned where the removed work stood.
@@ -912,6 +943,16 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		                           ShaderRecompiler::IR::ImageResourceClass::Storage;
 	                }) ||
 	    has_storage_writes;
+	// Session 98 (patch_s98b), KYTY_GPU_MARKERS / KYTY_QUEUE_TRACE=2: the op-ring entry of this
+	// dispatch; the markers bracket the game dispatch only (the sanitizer's ran above).
+	GpuMarkerSite gpu_marker;
+	if (GpuOpsActive()) {
+		gpu_marker = GpuMarkerBegin(
+		    m_context.GetCommandScheduler(),
+		    indirect ? GpuMarkerKind::DispatchIndirect : GpuMarkerKind::Dispatch, submit_id,
+		    program.shader_hash, 0u, thread_group_x, thread_group_y, thread_group_z,
+		    BindFloorCurrentOp().armed);
+	}
 	if (packet_now) {
 		// Gate "recpack": the same calls, in the same order, as one record.
 		RecordCommandWriter tail(*buffer.Recorder());
@@ -920,11 +961,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 			tail.shaderWriteHazardBarrier(vk::PipelineStageFlagBits::eComputeShader);
 		}
 		tail.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
+		GpuMarkerTop(tail, gpu_marker); // Session 98 (patch_s98b)
 		if (indirect) {
 			tail.dispatchIndirect(indirect_vk_buffer, indirect_vk_offset);
 		} else {
 			tail.dispatch(thread_group_x, thread_group_y, thread_group_z);
 		}
+		GpuMarkerBottom(tail, gpu_marker);
 		tail.shaderAccessBarrier(vk::PipelineStageFlagBits::eComputeShader);
 		tail.Commit(true);
 		m_context.GetTextureCache().StampPendingDccFill();
@@ -942,11 +985,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 3);
 	}
 	vk_buffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
+	GpuMarkerTop(vk_buffer, gpu_marker); // Session 98 (patch_s98b)
 	if (indirect) {
 		vk_buffer.dispatchIndirect(indirect_vk_buffer, indirect_vk_offset);
 	} else {
 		vk_buffer.dispatch(thread_group_x, thread_group_y, thread_group_z);
 	}
+	GpuMarkerBottom(vk_buffer, gpu_marker);
 	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
 	                                        indirect ? 1u : 0u);
 	m_context.GetTextureCache().StampPendingDccFill();

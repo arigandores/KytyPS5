@@ -1628,6 +1628,8 @@ enum class Counter : uint32_t {
 	// schedule edge, booked in the flip that first saw the new value.
 	BindFloorGcHold,   // bf_gc_hold
 	BindFloorEdges,    // bf_edge
+	// Session 97 (patch C): buffer GC calls whose non-aggressive pass the floor suspended.
+	BindFloorBufGcHold, // bf_bgc_hold
 	Count
 };
 

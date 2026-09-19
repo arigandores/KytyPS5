@@ -18,6 +18,7 @@
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/cache/textureCache.h"
+#include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -1930,7 +1931,14 @@ bool BufferCache::IsRegionCpuModified(uint64_t vaddr, uint64_t size) {
 }
 
 void BufferCache::RunGarbageCollector() {
-	const auto tick = m_gc_tick++;
+	// Session 97, gate "bindfloor" (MEASUREMENT ONLY): the floor removes RebindBuffers, so no
+	// buffer is touched for a whole floor block and the age pass below deleted LIVE buffers;
+	// run rv97a re-created ~1 056 of them in the first two base flips after every falling
+	// edge and died twice of a GPU fault right there.  While the per-op latch is armed the
+	// LRU clock stops and the non-aggressive pass is suspended (bf_bgc_hold); at critical
+	// pressure it runs exactly as before.  With the floor off this is the shipped order.
+	const bool floor_hold = BindFloorLatchOp().armed;
+	auto       tick       = floor_hold ? m_gc_tick : m_gc_tick++;
 	if (m_graphics.CanReportMemoryUsage()) {
 		m_total_used_memory = m_graphics.GetDeviceMemoryUsage();
 	}
@@ -1939,6 +1947,13 @@ void BufferCache::RunGarbageCollector() {
 	}
 
 	const bool     aggressive = m_total_used_memory >= m_critical_gc_memory;
+	if (floor_hold) {
+		if (!aggressive) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBufGcHold, 1);
+			return;
+		}
+		tick = m_gc_tick++;
+	}
 	const uint64_t age        = std::min<uint64_t>(aggressive ? 80 : 160, tick);
 	const size_t   limit      = aggressive ? 64 : 32;
 

@@ -1,0 +1,22 @@
+{
+  "ADDEND_hi_ms": 2.918040375446948,
+  "ADDEND_lo_ms": 2.9169480870907587,
+  "B_bias_bound_ms": 0.0010922883561893945,
+  "T1_images_ms": 1.6590439262068963,
+  "T34_samplers_plus_shader_data_ms": 0.6649964492400517,
+  "VERDICT_INPUT_hi": [
+    15.743040375446947,
+    17.192040375446947
+  ],
+  "VERDICT_INPUT_lo": [
+    15.741948087090758,
+    17.190948087090757
+  ],
+  "agrees_with_scorer": true,
+  "area_split_pct": 0.005223271993703982,
+  "branch": "CLOSE",
+  "pairs": 90,
+  "rows_per_arm": 2610,
+  "tag": "mov100b_entry1",
+  "work_pct": 0.04124232158542185
+}

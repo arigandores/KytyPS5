@@ -1,0 +1,25 @@
+{
+  "ADDEND_hi_ms": 2.9999960978544062,
+  "ADDEND_lo_ms": 2.563444373716471,
+  "C_instrument_raw_ms": 0.4365517241379348,
+  "T1_images_ms": 1.6641539522605362,
+  "T3_samplers_ms": 0.3370340996168582,
+  "T4_shader_data_ms": 0.4048080459770115,
+  "VERDICT_INPUT_hi": [
+    15.824996097854406,
+    17.273996097854404
+  ],
+  "VERDICT_INPUT_lo": [
+    15.388444373716471,
+    16.83744437371647
+  ],
+  "agrees_with_scorer": true,
+  "area_split_pct": -0.0012877702739610974,
+  "bl_res_n_per_flip": 48013.67432950192,
+  "branch": "GAP",
+  "dt_relative": 0.008474719979898382,
+  "pairs": 90,
+  "rows_per_arm": 2610,
+  "tag": "cen100b",
+  "work_pct": -0.007278456851911308
+}

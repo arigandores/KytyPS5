@@ -1685,6 +1685,26 @@ enum class Counter : uint32_t {
 	// Session 98 (patch_s98d): KYTY_BIND_FLOOR_CLEAR=1 - an ARMED op the floor cannot express
 	// (bf_skip) dropped instead of running the real PrepareBindings over the frozen snapshot.
 	BindFloorSkipDrop,   // bf_skip_drop
+	// Session 100: the compute clear shortcuts ACTUALLY TAKEN, in BOTH arms and behind no
+	// gate - the counter session 98 owed (ROADMAP.md:1406).  bf_clr_skip counts dispatches
+	// that are shortcut-ELIGIBLE BY SHAPE and strictly over-counts; these two count the
+	// consumed ones, so the base arm finally has a real denominator.
+	ClearShortcutMeta,   // clr_taken_meta: TryConsumeComputeMetaClear consumed the dispatch
+	ClearShortcutImage,  // clr_taken_img:  TryConsumeComputeImageClear consumed the dispatch
+	// Session 100, gate "blmove" (MEASUREMENT ONLY, pred/02_moved_mark.md): the moved-mark
+	// census.  Phase 0 closes after the image loop, phase 1 after the shader_data copy;
+	// both pay exactly two timestamps and four Adds a stage, so the mark price cancels in
+	// span1 - span0.  The phase alternates per stage TYPE, and blm_img*/blm_smp* exist so
+	// that the balance of the two phases is a control and not an assumption.
+	// Raw ns and raw counts; at blmove=0 all eight read exactly 0.
+	BindLapMoveSpan0Ns,   // blm_s0_ns
+	BindLapMoveSpan0N,    // blm_s0_n
+	BindLapMoveSpan1Ns,   // blm_s1_ns
+	BindLapMoveSpan1N,    // blm_s1_n
+	BindLapMoveImages0,   // blm_img0
+	BindLapMoveImages1,   // blm_img1
+	BindLapMoveSamplers0, // blm_smp0
+	BindLapMoveSamplers1, // blm_smp1
 	Count
 };
 

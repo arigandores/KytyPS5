@@ -2195,6 +2195,17 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	uint32_t                     bl_wit_n     = 0;
 	uint32_t                     bl_wit_n0    = 0;
 	uint32_t                     bl_wnh_n     = 0;
+	// Session 100, gate "blmove" (MEASUREMENT ONLY): two timestamps a stage in BOTH phases.
+	// The phase alternates per stage TYPE (the `previous_key` idiom above), so each type
+	// contributes equally to the two spans and the difference is not a comparison of unlike
+	// stages.  Opened here, closed once - after the image loop in phase 0, after the
+	// shader_data copy in phase 1.  Nothing between the two close sites is reordered.
+	const bool blm = Common::FrameStats::Enabled() &&
+	                 Common::Gates::Enabled(Common::Gates::Gate::BindLapMove);
+	static thread_local std::array<uint32_t, 16> blm_turn {};
+	const uint32_t blm_phase =
+	    blm ? (blm_turn[static_cast<uint32_t>(program.stage) % blm_turn.size()]++ & 1u) : 0;
+	const uint64_t blm_t0 = blm ? Common::FrameStats::NowNs() : 0;
 	prepared.images.reserve(program.info.images.size());
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		if (bind_wit != 0) {
@@ -2262,6 +2273,15 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		                        program.info.images.size());
 		bl_t = bl_now;
 	}
+	if (blm && blm_phase == 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSpan0Ns,
+		                        Common::FrameStats::NowNs() - blm_t0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSpan0N, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveImages0,
+		                        program.info.images.size());
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSamplers0,
+		                        program.info.samplers.size());
+	}
 	prepared.samplers.reserve(program.info.samplers.size());
 	for (uint32_t i = 0; i < program.info.samplers.size(); i++) {
 		prepared.samplers.push_back(NativeSampler(m_context, program, i, snapshot.samplers[i]));
@@ -2281,6 +2301,16 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	if (bl_t != 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapDataNs,
 		                        Common::FrameStats::NowNs() - bl_t);
+	}
+	if (blm && blm_phase != 0) {
+		// Exactly the same two timestamps and four Adds phase 0 paid, at the later site.
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSpan1Ns,
+		                        Common::FrameStats::NowNs() - blm_t0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSpan1N, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveImages1,
+		                        program.info.images.size());
+		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSamplers1,
+		                        program.info.samplers.size());
 	}
 	// Session 87, gate "bindalt": published here, past the last bindlap mark, so the four Adds
 	// land in the DERIVED remainder of bl_prep_us and contaminate neither bl_res_us (the

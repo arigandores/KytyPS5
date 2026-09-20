@@ -2391,6 +2391,18 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"gm_live", FS::Counter::GpuMarkerLive, false},
 				    {"gm_live_top", FS::Counter::GpuMarkerLiveTop, false},
 				    {"bf_skip_drop", FS::Counter::BindFloorSkipDrop, false},
+				    // Session 100: clear shortcuts actually taken (both arms, no gate).
+				    {"clr_taken_meta", FS::Counter::ClearShortcutMeta, false},
+				    {"clr_taken_img", FS::Counter::ClearShortcutImage, false},
+				    // Session 100, gate "blmove": the moved-mark census.  Raw ns / counts.
+				    {"blm_s0_ns", FS::Counter::BindLapMoveSpan0Ns, false},
+				    {"blm_s0_n", FS::Counter::BindLapMoveSpan0N, false},
+				    {"blm_s1_ns", FS::Counter::BindLapMoveSpan1Ns, false},
+				    {"blm_s1_n", FS::Counter::BindLapMoveSpan1N, false},
+				    {"blm_img0", FS::Counter::BindLapMoveImages0, false},
+				    {"blm_img1", FS::Counter::BindLapMoveImages1, false},
+				    {"blm_smp0", FS::Counter::BindLapMoveSamplers0, false},
+				    {"blm_smp1", FS::Counter::BindLapMoveSamplers1, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

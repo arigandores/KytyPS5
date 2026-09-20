@@ -387,6 +387,14 @@ enum class Gate : uint32_t {
 	// exist.  It binds WRONG data by construction and can NEVER be shipped.
 	// LAST row, matching the LAST enum entry before Gate::Count.
 	BindFloor,          // KYTY_BIND_FLOOR,         file name "bindfloor"
+	// Session 100, MEASUREMENT ONLY (pred/02_moved_mark.md): the moved-mark form of the
+	// session-85 gate "bindlap".  Both phases pay exactly two timestamps and four Adds a
+	// stage; phase 0 closes after the image loop and phase 1 after the shader_data copy,
+	// so the price of the mark CANCELS in span1 - span0 instead of having to be estimated.
+	// It binds nothing, reads no resource and changes no descriptor.  Use it with
+	// "bindlap" OFF: bindlap's own marks sit inside span 1 and outside span 0.
+	// LAST row, matching the LAST enum entry before Gate::Count.
+	BindLapMove,        // KYTY_BIND_LAP_MOVE,      file name "blmove"
 	Count,
 };
 

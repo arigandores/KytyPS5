@@ -1,0 +1,118 @@
+{
+  "M3_branch": "GAP",
+  "binary_sha256": "34206e3fe4fb7c887af2901ce6332d63d0ebd715ef95d3a4ff5547654b58355f",
+  "branch_if_admitted": "GAP",
+  "census": {
+    "ADDEND_hi_ms": 2.9999960978544062,
+    "ADDEND_lo_ms": 2.563444373716471,
+    "C_instrument_ms": 0.4365517241379348,
+    "C_instrument_raw_ms": 0.4365517241379348,
+    "T1_T3_T4_required_ms": 2.081000000000001,
+    "T1_T3_T4_sum_ms": 2.405996097854406,
+    "T1_images_ms": 1.6641539522605362,
+    "T2_writable_ms": 0.4905,
+    "T3_samplers_ms": 0.3370340996168582,
+    "T4_shader_data_ms": 0.4048080459770115,
+    "T5_sync_ms": 0.1035
+  },
+  "errors": [],
+  "failed_controls": [],
+  "gate_blocks": 186,
+  "mechanics_only": false,
+  "metrics": {
+    "C5_ratio": 7.278456851911308e-05,
+    "area_match_pct": 100.0,
+    "area_matched": 90,
+    "area_pairs": 90,
+    "area_split_pct": -0.0012877702739610974,
+    "bl_img_n_per_flip": 48013.67126436782,
+    "bl_prep_n_per_flip": 9149.355938697317,
+    "bl_prep_us_per_flip": 4391.772796934866,
+    "bl_res_n_per_flip": 48013.67432950192,
+    "bl_res_us_per_flip": 3399.7164750957854,
+    "bl_smp_n_per_flip": 11165.232567049808,
+    "cpu_net_armed_us": 46421.51724137931,
+    "cpu_net_base_us": 45984.96551724138,
+    "draws_a": 5053.122222222222,
+    "draws_u": 5053.490038314177,
+    "dt_a_us": 48994.45862068966,
+    "dt_relative": 0.008474719979898382,
+    "dt_u_us": 49413.22183908046,
+    "pairs": 90,
+    "rows_per_arm": 2610,
+    "valid_data": true,
+    "work_pct": -0.007278456851911308
+  },
+  "notes": [],
+  "orientations": [
+    45,
+    45
+  ],
+  "phase": "measurement",
+  "pilot_branch_preview": null,
+  "pred": "C:/kyty/s100/pred/01_addend_census.md",
+  "pred_sha256": "4c90060f91c21052238e0395abe2229e316012849c6bd54623d858edc5cf8c65",
+  "raw_sha256": {
+    "log": "8ab87f589fad5fe9e5a1b2560f8259248538e8654a7a4a5e2c9aa813ee703333",
+    "meta": "39885431ed2e56b43da267d162c1b09911f009c1e146f689b075049f7a57936e",
+    "stdout": "ce15333a05627c468702e191d2912e5f2cfe152260283e08a0a3aa5fa7d3f59a"
+  },
+  "schema_bad": [],
+  "scorer": "cen100.py",
+  "selection": {
+    "blocks": 180,
+    "excluded_edge_blocks": [
+      3,
+      184
+    ],
+    "pairs": 90,
+    "rejected": {
+      "0": "outside first-frame window",
+      "1": "outside first-frame window",
+      "185": "incomplete block",
+      "2": "outside first-frame window"
+    }
+  },
+  "status": "ADMITTED_ADDEND_CENSUS",
+  "streams_missing": [],
+  "strict": {
+    "AREA_MATCH": true,
+    "AREA_SPLIT": true,
+    "C5": true,
+    "C9": true,
+    "RETAINED_DATA": true,
+    "WORK": true
+  },
+  "tag": "cen100b",
+  "technical": {
+    "AB_BA_BALANCED": true,
+    "BINDLAP_ARMED_POSITIVE": true,
+    "BINDLAP_DARK": true,
+    "COMPLETE_PAIRS": true,
+    "CRASHES": true,
+    "DURATION": true,
+    "GATEARM": true,
+    "IDENTITY": true,
+    "MARKERS_OFF": true,
+    "NO_FLOOR": true,
+    "NO_RECORDING": true,
+    "PARTS_LE_WHOLE": true,
+    "PIN_ON": true,
+    "PREREG_PINNED": true,
+    "RAW_CONTIGUITY": true,
+    "RES_N_IDENTITY": true,
+    "RETAINED_ROWS": true,
+    "SCHEMA": true,
+    "STREAMS_COMPLETE": true
+  },
+  "verdict_input": {
+    "hi": {
+      "a": 17.273996097854404,
+      "c": 15.824996097854406
+    },
+    "lo": {
+      "a": 16.83744437371647,
+      "c": 15.388444373716471
+    }
+  }
+}

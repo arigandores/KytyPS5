@@ -1,0 +1,51 @@
+{
+  "binary_sha256": "6f7475b8a6b9636aa31938d97f26c1bd4b7dbfd97213dd01b99b8cd3109268c0",
+  "errors": [
+    "attempt outcome 'GpuHangAbort'",
+    "hold_s None below 895"
+  ],
+  "gate_blocks": 0,
+  "mechanics_only": false,
+  "notes": [],
+  "orientations": [
+    0,
+    0
+  ],
+  "phase": "measurement",
+  "pred": "C:/kyty/s100/pred/02_moved_mark.md",
+  "pred_sha256": "b1930f69f83a77d3bba359d4d18f0653f7fea6a331232dc9edaaf46c2a82e137",
+  "raw_sha256": {
+    "log": "7e5852259baae6ca2b59a5ec02dbb2eb31fb330a432df3779859ce10cc7ddd1b",
+    "meta": "f552c4084de04126c7a926656d3b0eabd18e3efc936d5b444317df0215597ba9",
+    "stdout": "6e292d3e7966ef1c1dc08069b62ce96911de3617ceaad16aaec4822c96c6e391"
+  },
+  "scorer": "mov100.py",
+  "selection": {
+    "blocks": 0,
+    "excluded_edge_blocks": [],
+    "pairs": 0,
+    "rejected": {}
+  },
+  "status": "NOT_MEASUREMENT",
+  "streams_missing": [],
+  "strict": {},
+  "tag": "mov100b",
+  "technical": {
+    "AB_BA_BALANCED": false,
+    "BINDLAP_OFF": true,
+    "COMPLETE_PAIRS": false,
+    "CRASHES": false,
+    "DURATION": false,
+    "GATEARM": false,
+    "IDENTITY": true,
+    "MARKERS_OFF": true,
+    "NO_FLOOR": true,
+    "NO_RECORDING": true,
+    "PIN_ON": true,
+    "PREREG_PINNED": true,
+    "RAW_CONTIGUITY": true,
+    "RETAINED_ROWS": false,
+    "SCHEMA": true,
+    "STREAMS_COMPLETE": true
+  }
+}

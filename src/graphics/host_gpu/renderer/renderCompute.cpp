@@ -404,12 +404,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		}
 	}
 	if (!indirect && !floor_clear_skip && TryConsumeComputeMetaClear(input_info, buffer)) {
+		// Session 100, the L3 debt of session 98 (ROADMAP.md:1406): bf_clr_skip is a shape
+		// census of ELIGIBLE dispatches and over-counts.  This counts the consumed ones, in
+		// BOTH arms and behind no gate, so the base arm has a real denominator at last.
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutMeta, 1);
 		ResetBindings();
 		return;
 	}
 	if (!indirect && !floor_clear_skip &&
 	    TryConsumeComputeImageClear(input_info, buffer, thread_group_x, thread_group_y,
 	                                thread_group_z, mode)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::ClearShortcutImage, 1);
 		ResetBindings();
 		return;
 	}

@@ -1,0 +1,123 @@
+{
+  "M3_branch": "CLOSE",
+  "binary_sha256": "6f7475b8a6b9636aa31938d97f26c1bd4b7dbfd97213dd01b99b8cd3109268c0",
+  "branch_if_admitted": "CLOSE",
+  "census": {
+    "ADDEND_hi_ms": 2.918040375446948,
+    "ADDEND_lo_ms": 2.9169480870907587,
+    "B_bias_bound_ms": 0.0010922883561893945,
+    "B_img_ms": 0.0010406506195801686,
+    "B_smp_ms": 6.648035267097207e-05,
+    "T1_images_ms": 1.6590439262068963,
+    "T2_writable_ms": 0.4905,
+    "T34_samplers_plus_shader_data_ms": 0.6649964492400517,
+    "T5_sync_ms": 0.1035
+  },
+  "errors": [],
+  "failed_controls": [],
+  "gate_blocks": 187,
+  "mechanics_only": false,
+  "metrics": {
+    "C5_ratio": 0.0004124232158542185,
+    "C_blmove_ms_reported_never_subtracted": 0.14094827586207248,
+    "area_match_pct": 100.0,
+    "area_matched": 90,
+    "area_pairs": 90,
+    "area_split_pct": 0.005223271993703982,
+    "armed_blocks": 90,
+    "clr_taken_img_per_flip": 6.998850574712644,
+    "clr_taken_meta_per_flip": 1.999616858237548,
+    "dispatches_per_flip": 268.0193486590038,
+    "draws_a": 5053.06398467433,
+    "draws_u": 5050.9808429118775,
+    "dt_a_us": 48775.13333333333,
+    "dt_relative": 0.0013226543720893072,
+    "dt_u_us": 48839.73141762452,
+    "img0_per_stage": 5.250549401372761,
+    "img1_per_stage": 5.250713833093231,
+    "pairs": 90,
+    "rows_per_arm": 2610,
+    "s0_ns_per_stage": 368.4965967463718,
+    "s1_ns_per_stage": 440.704304320436,
+    "smp0_per_stage": 1.2212775006891938,
+    "smp1_per_stage": 1.2211846965157793,
+    "stages_per_flip": 9107.120689655174,
+    "valid_data": true,
+    "work_pct": 0.04124232158542185
+  },
+  "notes": [],
+  "orientations": [
+    45,
+    45
+  ],
+  "phase": "measurement",
+  "pred": "C:/kyty/s100/pred/02_moved_mark.md",
+  "pred_sha256": "b1930f69f83a77d3bba359d4d18f0653f7fea6a331232dc9edaaf46c2a82e137",
+  "raw_sha256": {
+    "log": "9ed50c5bfc3257f506e99857aed518cf018b321507a73d85b2910b7e8604bb6d",
+    "meta": "76fcf13fb095322d7b1f53cf5cd7c559dd3900bb51a8111d6190c86ac3254a7d",
+    "stdout": "c090bf53bee7ca1a9d4d75ecd00c5182a486a1411adf4122cc9b4a6ca4dded43"
+  },
+  "scorer": "mov100.py",
+  "selection": {
+    "blocks": 180,
+    "excluded_edge_blocks": [
+      3,
+      184,
+      185
+    ],
+    "pairs": 90,
+    "rejected": {
+      "0": "outside first-frame window",
+      "1": "outside first-frame window",
+      "186": "incomplete block",
+      "2": "outside first-frame window"
+    }
+  },
+  "status": "ADMITTED_MOVED_MARK",
+  "streams_missing": [],
+  "strict": {
+    "AREA_MATCH": true,
+    "AREA_SPLIT": true,
+    "C5": true,
+    "C9": true,
+    "RETAINED_DATA": true,
+    "WORK": true
+  },
+  "tag": "mov100b_entry1",
+  "technical": {
+    "AB_BA_BALANCED": true,
+    "BINDLAP_OFF": true,
+    "BLMOVE_ARMED_POSITIVE": true,
+    "BLMOVE_DARK": true,
+    "COMPLETE_PAIRS": true,
+    "CRASHES": true,
+    "DURATION": true,
+    "GATEARM": true,
+    "IDENTITY": true,
+    "IMAGE_BALANCE": true,
+    "MARKERS_OFF": true,
+    "NO_FLOOR": true,
+    "NO_RECORDING": true,
+    "PHASE_BALANCE": true,
+    "PIN_ON": true,
+    "PREREG_PINNED": true,
+    "RAW_CONTIGUITY": true,
+    "RETAINED_ROWS": true,
+    "SAMPLER_BALANCE": true,
+    "SCHEMA": true,
+    "SPAN_ORDER": true,
+    "STREAMS_COMPLETE": true,
+    "T34_POSITIVE": true
+  },
+  "verdict_input": {
+    "hi": {
+      "a": 17.192040375446947,
+      "c": 15.743040375446947
+    },
+    "lo": {
+      "a": 17.190948087090757,
+      "c": 15.741948087090758
+    }
+  }
+}

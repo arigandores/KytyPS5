@@ -268,6 +268,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // single branch of it is taken and the renderer behaves exactly as before.
     // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_BIND_FLOOR", "bindfloor", false},
+    // Session 100, measurement only: the moved-mark census of the sampler loop and the
+    // shader_data copy (pred/02_moved_mark.md).  Read once a stage inside PrepareBindings,
+    // so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_BIND_LAP_MOVE", "blmove", false},
 }};
 
 struct KnobDefinition {

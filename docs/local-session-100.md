@@ -303,3 +303,5 @@ speedup, no 60 FPS.**
   `runs100/manifest100.json`.
 * Git HEAD at the start: `013b81aee6c668f96836abfa2375b435437fe3f9`, branch `merge-upstream`,
   only `3rdparty/nlohmann_json` dirty and deliberately excluded.
+* Session-100 commit: **`8a9de7b913e1598471bd00516822fa28dba55e72`**, branch `merge-upstream`, **no push**; the dirty
+  `3rdparty/nlohmann_json` submodule was deliberately not captured.

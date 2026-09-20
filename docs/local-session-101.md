@@ -316,7 +316,11 @@ entry-hang BVH traversal are discharged. **No frame-rate gain, no speedup, no 60
   `{"KYTY_*","name"}` entries (111 gates + 23 knobs).
 * Every raw log, stdout, `<tag>.json`, launch record, score and recount is hashed in
   `runs101/manifest101.json`; the audit re-hashed ~920 MB of raw material and every file matched.
-* Git HEAD at the start: `e68f1cc`, branch `merge-upstream`, only `3rdparty/nlohmann_json` dirty.
+* Git HEAD at the start: `e68f1cc`, branch `merge-upstream`, only `3rdparty/nlohmann_json` dirty
+  and deliberately excluded. **Session-101 commit: `6705036947c6a8b5ca28cb414463af36fb7ca37d`**
+  (8 files, 736 insertions: the gate, the sixteen counters, the single ROADMAP edit, this report
+  and `docs/next-session-102.md`). **No push.** The two game contexts live outside the repository
+  and are updated byte-identically (173 049 B each), hashed in `runs101/manifest101.json`.
 * Scene `-lvl underwater_aerial_garden` (Sky Garden).
 
 ---

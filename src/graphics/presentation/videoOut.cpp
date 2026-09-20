@@ -2403,6 +2403,24 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"blm_img1", FS::Counter::BindLapMoveImages1, false},
 				    {"blm_smp0", FS::Counter::BindLapMoveSamplers0, false},
 				    {"blm_smp1", FS::Counter::BindLapMoveSamplers1, false},
+				    // Session 101, gate "cbmove": the moved-mark census of CommitBindings.
+				    // Raw ns / counts.
+				    {"cm_s0_ns", FS::Counter::CommitLapMoveStage0Ns, false},
+				    {"cm_s0_n", FS::Counter::CommitLapMoveStage0N, false},
+				    {"cm_s1_ns", FS::Counter::CommitLapMoveStage1Ns, false},
+				    {"cm_s1_n", FS::Counter::CommitLapMoveStage1N, false},
+				    {"cm_i0", FS::Counter::CommitLapMoveImages0, false},
+				    {"cm_i1", FS::Counter::CommitLapMoveImages1, false},
+				    {"cm_b0", FS::Counter::CommitLapMoveBindings0, false},
+				    {"cm_b1", FS::Counter::CommitLapMoveBindings1, false},
+				    {"cm_e0_ns", FS::Counter::CommitLapMoveEmit0Ns, false},
+				    {"cm_e0_n", FS::Counter::CommitLapMoveEmit0N, false},
+				    {"cm_e1_ns", FS::Counter::CommitLapMoveEmit1Ns, false},
+				    {"cm_e1_n", FS::Counter::CommitLapMoveEmit1N, false},
+				    {"cm_w0", FS::Counter::CommitLapMoveWrites0, false},
+				    {"cm_w1", FS::Counter::CommitLapMoveWrites1, false},
+				    {"cm_c0", FS::Counter::CommitLapMoveDesc0, false},
+				    {"cm_c1", FS::Counter::CommitLapMoveDesc1, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

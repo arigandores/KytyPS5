@@ -3494,6 +3494,14 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// no second set of timestamps; it reuses these and writes its own counters.  The
 	// cb_pool_* / cb_push_* Adds stay behind DrawStat::On() so their meaning is unchanged.
 	const bool bind_lap     = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
+	// Session 101, gate "cbmove" (MEASUREMENT ONLY): read ONCE a commit, like every other
+	// gate in this function, so a schedule flip landing inside a commit cannot arm half of
+	// it.  The two turn tables alternate the phase per stage TYPE and per commit SHAPE, so
+	// each kind contributes equally to both spans of its pair.
+	const bool cm           = Common::FrameStats::Enabled() &&
+	                Common::Gates::Enabled(Common::Gates::Gate::CommitLapMove);
+	static thread_local std::array<uint32_t, 16> cm_turn {};
+	static thread_local std::array<uint32_t, 16> cm_eturn {};
 	// Session 94, gate "mergecost": armed per draw at its class point (renderDraw.cpp), never
 	// by a gate read here, so a flip landing inside a draw cannot arm half of it.
 	const bool merge_cost   = m_merge_cost.armed &&
@@ -3667,6 +3675,12 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		auto&       descriptors   = *prepared;
 		const auto  shader_stage  = NativeShaderStage(program.stage);
 		const auto  shader_stages = ShaderPipelineStages(shader_stage);
+		// Session 101, gate "cbmove": one timestamp a stage in BOTH phases, opened here and
+		// closed once - after cb_lap(cb_transit) in phase 0, after cb_lap(cb_write) in
+		// phase 1.  Nothing between the two close sites is reordered.
+		const uint32_t cm_phase =
+		    cm ? (cm_turn[static_cast<uint32_t>(program.stage) % cm_turn.size()]++ & 1u) : 0;
+		const uint64_t cm_t0 = cm ? Common::FrameStats::NowNs() : 0;
 		if (descriptors.gds.buffer != nullptr) {
 			// Gate "gdsepoch": skipping must not call EndRendering(Gds) -- leaving the pass open
 			// is the whole point, and this barrier is the first closer of every OIT draw once the
@@ -3788,6 +3802,15 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			binding.layout = image.backing.state.layout;
 		}
 		cb_lap(cb_transit);
+		if (cm && cm_phase == 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveStage0Ns,
+			                        Common::FrameStats::NowNs() - cm_t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveStage0N, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveImages0,
+			                        program.info.images.size());
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveBindings0,
+			                        program.bindings.descriptors.size());
+		}
 
 		// Session 96, gate "bindfloor": the census walks PreparedBindings, which the floor
 		// leaves empty; the two gates are not combinable and the census stands down.
@@ -3892,6 +3915,32 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			has_push_data = true;
 		}
 		cb_lap(cb_write);
+		if (cm && cm_phase != 0) {
+			// Exactly the same two timestamps and four Adds phase 0 paid, at the later site.
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveStage1Ns,
+			                        Common::FrameStats::NowNs() - cm_t0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveStage1N, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveImages1,
+			                        program.info.images.size());
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveBindings1,
+			                        program.bindings.descriptors.size());
+		}
+	}
+
+	// Session 101, gate "cbmove": the emit pair opens exactly where bl_em_us's region
+	// begins - immediately after the last cb_lap(cb_write) - and phase 0 closes at once,
+	// so its span is the price of the mark pair itself and cm_e1 - cm_e0 is the emit with
+	// that price removed.  The phase alternates per commit SHAPE, so commits of the same
+	// write_count contribute equally to both spans.
+	const uint32_t cm_ephase =
+	    cm ? (cm_eturn[write_count % cm_eturn.size()]++ & 1u) : 0;
+	const uint64_t cm_e0 = cm ? Common::FrameStats::NowNs() : 0;
+	if (cm && cm_ephase == 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit0Ns,
+		                        Common::FrameStats::NowNs() - cm_e0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit0N, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveWrites0, write_count);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveDesc0, descriptor_count);
 	}
 
 	// Session 96, gate "bindfloor": which emit this commit went out through.  bf_push +
@@ -3927,6 +3976,15 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			                  : std::span<const uint32_t> {},
 			    m_descriptor_writes, m_descriptor_buffers, m_descriptor_images);
 		}
+		if (cm && cm_ephase != 0) {
+			// The same two timestamps and four Adds phase 0 paid, at the later site.
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit1Ns,
+			                        Common::FrameStats::NowNs() - cm_e0);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit1N, 1);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveWrites1, write_count);
+			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveDesc1,
+			                        descriptor_count);
+		}
 		cb_finish();
 		if (merge_cost) {
 			MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, true);
@@ -3959,6 +4017,14 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			vk_buffer.bindDescriptorSets(pipeline_bind_point, pipeline.pipeline_layout, 0, 1, &set,
 			                             0, nullptr);
 		}
+	}
+	if (cm && cm_ephase != 0) {
+		// The same two timestamps and four Adds phase 0 paid, at the later site.
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit1Ns,
+		                        Common::FrameStats::NowNs() - cm_e0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveEmit1N, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveWrites1, write_count);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveDesc1, descriptor_count);
 	}
 	cb_finish();
 	if (merge_cost) {

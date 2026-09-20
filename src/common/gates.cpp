@@ -273,6 +273,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // so it CAN be a schedule arm.
     // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_BIND_LAP_MOVE", "blmove", false},
+    // Session 101, measurement only: the moved-mark census of the CommitBindings write
+    // build and emit (pred/01_two_directional.md).  Read once a commit and once a stage
+    // inside CommitBindings, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_COMMIT_LAP_MOVE", "cbmove", false},
 }};
 
 struct KnobDefinition {

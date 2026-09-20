@@ -395,6 +395,16 @@ enum class Gate : uint32_t {
 	// "bindlap" OFF: bindlap's own marks sit inside span 1 and outside span 0.
 	// LAST row, matching the LAST enum entry before Gate::Count.
 	BindLapMove,        // KYTY_BIND_LAP_MOVE,      file name "blmove"
+	// Session 101, MEASUREMENT ONLY (pred/01_two_directional.md): the moved-mark census of
+	// CommitBindings.  Two phases a stage and two a commit, each paying exactly two
+	// timestamps and four Adds at different program points, so the price of the mark
+	// cancels in the difference.  It measures the SUBTRACTIVE half of the corrected M3
+	// rule - the write build and the emit, which the floor keeps and a rewrite deletes.
+	// It binds nothing, reads no resource and changes no descriptor.  Use it with
+	// "bindlap", "drawstat" and "mergecost" OFF: those arm cb_timed, whose own four
+	// timestamps a commit sit inside these spans.
+	// LAST row, matching the LAST enum entry before Gate::Count.
+	CommitLapMove,      // KYTY_COMMIT_LAP_MOVE,    file name "cbmove"
 	Count,
 };
 

@@ -1705,6 +1705,30 @@ enum class Counter : uint32_t {
 	BindLapMoveImages1,   // blm_img1
 	BindLapMoveSamplers0, // blm_smp0
 	BindLapMoveSamplers1, // blm_smp1
+	// Session 101, gate "cbmove" (MEASUREMENT ONLY, pred/01_two_directional.md): the
+	// moved-mark census of CommitBindings.  Stage phase 0 closes after cb_lap(cb_transit)
+	// and phase 1 after cb_lap(cb_write), so cm_s1 - cm_s0 is the write build; commit
+	// phase 0 closes immediately (a null span pricing the mark pair) and phase 1 before
+	// cb_finish(), so cm_e1 - cm_e0 is the emit.  Both phases pay exactly two timestamps
+	// and four Adds, so the mark price cancels in each difference.  The population
+	// counters exist so that the balance of the two phases is a control, not an
+	// assumption.  Raw ns and raw counts; at cbmove=0 all sixteen read exactly 0.
+	CommitLapMoveStage0Ns,   // cm_s0_ns
+	CommitLapMoveStage0N,    // cm_s0_n
+	CommitLapMoveStage1Ns,   // cm_s1_ns
+	CommitLapMoveStage1N,    // cm_s1_n
+	CommitLapMoveImages0,    // cm_i0: program.info.images.size() of the phase-0 stages
+	CommitLapMoveImages1,    // cm_i1
+	CommitLapMoveBindings0,  // cm_b0: program.bindings.descriptors.size(), phase-0 stages
+	CommitLapMoveBindings1,  // cm_b1
+	CommitLapMoveEmit0Ns,    // cm_e0_ns
+	CommitLapMoveEmit0N,     // cm_e0_n
+	CommitLapMoveEmit1Ns,    // cm_e1_ns
+	CommitLapMoveEmit1N,     // cm_e1_n
+	CommitLapMoveWrites0,    // cm_w0: write_count of the phase-0 commits
+	CommitLapMoveWrites1,    // cm_w1
+	CommitLapMoveDesc0,      // cm_c0: descriptor_count of the phase-0 commits
+	CommitLapMoveDesc1,      // cm_c1
 	Count
 };
 

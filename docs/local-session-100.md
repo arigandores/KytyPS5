@@ -283,7 +283,8 @@ speedup, no 60 FPS.**
 * Git HEAD at the start: `013b81aee6c668f96836abfa2375b435437fe3f9`, branch `merge-upstream`, only
   `3rdparty/nlohmann_json` dirty and deliberately excluded.
 * Session-100 commits: **`8a9de7b`** (the work, with the withdrawn CLOSE claim in its message),
-  **`64a0762`** (hash stamp) and the correction commit that carries this rewrite. **No push.**
+  **`64a0762`** (hash stamp) and **`af5572e04681e81ff07883d83ea6029e65212b21`** (this rewrite, the withdrawal and
+  `pred/03`; no source file touched). **No push.**
 
 ---
 

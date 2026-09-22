@@ -317,6 +317,7 @@ or V2's wrong bytes on S1/S8 are understood. That 60 FPS is unreachable — `ROA
   manifest hashing the large local ones (logs, bench JSON, the 6.0 GB capture) in
   `docs/session-102/results/`.
 * Commits: `0d35faa` (ROADMAP pre-record + pred/01), `1fc0e15` (pred/02–04), `7c8ec57` (pred/05),
-  `130744b` (source), `cd403db` (pred/06), `5518878` (pred/07), and the session's final commit.
+  `130744b` (source), `cd403db` (pred/06), `5518878` (pred/07), and the session commit
+  **`710a15101d1ef9f51814f5e3a1b6c145c595bb48`** (pred/08–09, the report, ROADMAP, the plan).
   **No push.** `3rdparty/nlohmann_json` dirty and excluded.
 * Scene `-lvl underwater_aerial_garden`; capture sha256 `92a10b3c…`.

@@ -1,0 +1,105 @@
+1. guards (reported only; a plain run without a schedule)
+=== guards.py ckpt102_entry1 (root C:\kyty\s102) ===
+  log     C:/kyty/s102/log_ckpt102_entry1.txt                        118.2 MB
+  stdout  C:/kyty/s102/stdout_ckpt102_entry1.txt                     0.0 MB
+  idx     NOT FOUND                                                  -
+  rec     NOT FOUND                                                  -
+  gpuclk  C:/kyty/s102/gpuclk_ckpt102_entry1.csv                     0.0 MB
+  meta    C:/kyty/s102/ckpt102_entry1.json                           0.0 MB
+  log: 785820 lines, 5608 FrameTrace: frames, arm/blk present
+
+[WARN]  0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+         idle sampled at 2026-09-22T22:49:09: utilization.gpu 8.0 %, power 30.3 W, memory 1478 MiB, 19 process(es) on the GPU
+         not on the harmless list: docker desktop.exe
+         the GPU was idle (8.0 % <= 10.0 %), so this is an open window and not a running load; close it anyway before an acceptance run.
+[PASS]  1 crashes     none of 8 markers in log_ckpt102_entry1.txt (785820 lines), stdout_ckpt102_entry1.txt (176 lines)
+[PASS]  2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+         CRITERION 1 IS ONLY AS STRONG AS ITS REACHABLE COUNTERS: 15 of 17 zero counters cannot be non-zero in this run because their verify gate is pinned off. Turn one on in one run per session, or do not quote the fraction.
+         NOTE: no *_VERIFY / *check gate was enabled - the MISMATCH prints could not fire at all; only the always-on counters were checked
+[PASS]  3 resolution  constant over 3303 frames; 207 fragment flip(s) skipped
+         fragment flips (check 3b's predicate: rt_att < 25 % of the run median 13166): 207 of 3510 (5.90 %) dropped from the sample below - a flip that caught a fragment of a game frame is not a smaller picture
+         skipped flips: 2108 2116 2118 2126 2141 2148 2154 2160 2169 2176 2184 2191 ...
+         rt_w = 3840 over 3303 frames
+         rt_h = 2160 over 3303 frames
+         vp_w = 3840 over 3303 frames
+         vp_h = 2160 over 3303 frames
+         NOTE: these four are MAXIMA and the maximum is the output target in every run measured so far - they are pinned to 3840x2160 both in the manual session-64 base and in the -lvl entry.  Check 3b is the one that sees the resolution ladder.
+[PASS] 3b area        the render size held: low mode equal in the arms and steady over the run
+         3510 frames carry rt_att/rt_kpx/vp_kpx, flips 2100..5609
+         the verdict is taken on the ATTACHMENT-WEIGHTED low mode of rt only; the plain per-frame p5 is printed beside it because it is the statistic that used to carry the verdict and it is the one a fragment flip moves
+         fragment flips (rt_att < 25 % of the run median 13166): 207 of 3510 (5.90 %) - a flip whose boundary cut the frame before its full-size pass, not a smaller picture
+         rt (rt_kpx/rt_att): weighted low mode p5 2004.4 Kpx = ~1910x1075 at 16:9 (per-frame p5 1947.9), median 2008.4, p95 2011.1
+         vp (vp_kpx/draws) [advisory]: weighted low mode p5 2569.2 Kpx (per-frame p5 2571.3), median 2604.3, p95 3099.8
+         one arm or none - the between-arm half of this check needs a schedule
+         rt over 34 sliding windows of 200 frames: lowest weighted 2002.1 at flip 2300 (-0.12 %, limit -2.00 %), highest 2008.3 (+0.2 %, a window with no light frame in it); unweighted the worst window would read -2.52 %
+         vp over 34 sliding windows of 200 frames: lowest weighted 2530.0 at flip 3800 (-1.52 %, ADVISORY limit -2.00 %), highest 2579.9 (+0.4 %, a window with no light frame in it); unweighted the worst window would read -0.54 %
+[SKIP]  4 draws       no arm/blk fields or no schedule - run with KYTY_GATE_SCHEDULE for an A/B; a gate-file sweep is compared by summary3.py instead
+[SKIP]  5 heavy       no arm/blk fields or no schedule
+[SKIP]  6 cores       no schedule blocks (blk) - advisory windows only, 0 of 12 off by more than 10 %
+         12 window of 300 frames, median 7.655 busy cores, min 7.375, max 8.137
+[PASS]  7 gpuclk      no throttle reason outside mask 0x405 over 1 busy samples
+         gpuclk_ckpt102_entry1.csv: 398 samples, 1 with utilization >= 50 %
+         SM clock mean 2295 MHz, min 2295, max 2295, sd 0 (0.0 % of mean)
+         memory clock mean 14301 MHz, min 14301
+         power mean 50 W, max 50 W
+         temperature 54..54 C
+         throttle 0x0000000000000400 unknown(0x400)                           1 samples (100.0 %)
+[SKIP]  8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+[SKIP]  9 video       not requested (--video); the one-frame glitch pass takes minutes
+         REMINDER: an acceptance run is not accepted without it - re-run with --video
+[PASS] 10 identity    confirmed binary sha256 - every arm text applied where it was meant to
+         binary sha256 346ba4f6448c35cb... matches ckpt102_entry1.json
+         no schedule in this run and no GateArm: line - nothing to cross-check
+         0 Gate: change lines in the log
+
+=== ckpt102_entry1: 6 PASS, 0 FAIL, 1 WARN, 5 SKIP ===
+status check        note
+WARN    0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+PASS    1 crashes     none of 8 markers in log_ckpt102_entry1.txt (785820 lines), stdout_ckpt102_entry1.txt (176 lines)
+PASS    2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+PASS    3 resolution  constant over 3303 frames; 207 fragment flip(s) skipped
+PASS   3b area        the render size held: low mode equal in the arms and steady over the run
+SKIP    4 draws       no arm/blk fields or no schedule - run with KYTY_GATE_SCHEDULE for an A/B; a gate-file sweep is compared by summary3.py instead
+SKIP    5 heavy       no arm/blk fields or no schedule
+SKIP    6 cores       no schedule blocks (blk) - advisory windows only, 0 of 12 off by more than 10 %
+PASS    7 gpuclk      no throttle reason outside mask 0x405 over 1 busy samples
+SKIP    8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+SKIP    9 video       not requested (--video); the one-frame glitch pass takes minutes
+PASS   10 identity    confirmed binary sha256 - every arm text applied where it was meant to
+VERDICT: PASS
+2. endpoint84 (reported only; one arm, no pairs)
+log C:\kyty\s102\log_ckpt102_entry1.txt
+first GateArm frame None; settled window n >= 2100; 3510 frames 2100..5609
+arms [0], frames [3510]
+
+counter             line           arm0           arm1      arm1-arm0
+dt_us               main      33262.000            nan            nan
+draws               main       5196.000            nan            nan
+dispatches          main        268.000            nan            nan
+cpu_gpu_us          main      32368.000            nan            nan
+gpu_busy_us         main      12533.000            nan            nan
+spin_gpu_us         draw          4.000            nan            nan
+da_take_us          draw       2467.000            nan            nan
+rec_n               draw      11254.000            nan            nan
+
+blocks 0, adjacent opposite-arm pairs 0
+not enough paired blocks for the endpoint
+3. the sealed witness scorer (pred/04 2 items 1-6; cm101a printed as the A arm, never deciding)
+ckpt102.py ckpt102_entry1 (root C:\kyty\s102) status=ACCEPTED
+  window n 2100..5599 (stable_frame 268, hold_s 180.1), rows 3500, main-without-draw 0
+  item 1 [PASS] 'GPU checkpoints off (KYTY_GPU_CHECKPOINTS=0)' x1 (need 1), 'mode=' x0, 'diagnostic checkpoints enabled' x0 (need 0 each)
+  item 2 [PASS] 'RecordThread: started' x2 (need >= 1)
+  item 3 [PASS] median rec_n 11254.5 (need >= 9000)
+  item 4 [PASS] median gpu_busy_us 12533.0 (need <= 16000)
+  item 5 [PASS] median dt_us 33262.0 (need <= 40000)
+  item 6 [PASS] GpuHangAbort x0, fatal {}, GpuClockPin modes {'1': 1} (need mode 1 once only)
+  to end of log (reported): {'rows': 3510, 'rec_n': 11254.0, 'gpu_busy_us': 12533.0, 'dt_us': 33262.0}
+  VERDICT: fix ACCEPTED: every line of pred/04 2 holds
+  reference cm101a (never deciding): medians {'rec_n': 0.0, 'gpu_busy_us': 48838.0, 'dt_us': 49978.0}
+    ref item 1 [FAIL] 'GPU checkpoints off (KYTY_GPU_CHECKPOINTS=0)' x0 (need 1), 'mode=' x1, 'diagnostic checkpoints enabled' x1 (need 0 each)
+    ref item 2 [FAIL] 'RecordThread: started' x0 (need >= 1)
+    ref item 3 [FAIL] median rec_n 0.0 (need >= 9000)
+    ref item 4 [FAIL] median gpu_busy_us 48838.0 (need <= 16000)
+    ref item 5 [FAIL] median dt_us 49978.0 (need <= 40000)
+    ref item 6 [PASS] GpuHangAbort x0, fatal {}, GpuClockPin modes {'1': 1} (need mode 1 once only)
+wrote C:/kyty/s102/runs102/ckpt102_entry1_score.json

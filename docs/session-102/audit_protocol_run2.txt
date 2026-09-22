@@ -1,0 +1,68 @@
+**Verdict: NOT REFUTED (lens 4, protocol and order).** Every order and integrity check passes: seals came before runs, no seal was edited, the tools were not changed, and each step ran exactly once. I found four defects and one note. None of them changes CLOSE, and one (D1) comes close to the precedent session 101 used to withdraw a number.
+
+**What I checked and found to hold**
+- **Seal order (git, Europe/Berlin time):**
+  - `0d35faa` 19:49:40 carries the ROADMAP pre-record and pred/01.
+  - `1fc0e15` 22:12:23 carries pred/02; the file mtime is 22:12:14.
+  - `5518878` 23:00:04 carries pred/07.
+  - The capture runs came later. `m5cap102` launched 22:58:55 and crashed. The retry `m5cap102b` launched 23:00:13, and the `.rdc` was written at 23:03:21.
+  - The analysis runs came after that: find 23:05:31, plan 23:08:44, equality 23:08:51–23:11:14, bench 23:11:39–23:27:09, scorer 23:27:24.
+  - Only `rd_m5_bench.py` calls `FetchCounters`, via `m5_rdlib.py:254`. So the first timing of any item came after the equality run, which came after pred/02.
+- **Seals intact:** all 7 sha256 match `SEALS102.txt`. Each seal file has exactly one commit, and its first-commit blob hash equals the one in `SEALS102.txt`. The bench and equality tools logged "seals verified" at start.
+- **Tools unchanged:**
+  - `m5_102.py` has mtime 22:21:41. Its sha `ccb39173…` equals the value recorded at the start of find, equal and bench, and nothing in `C:/kyty/s102` or the repo changed after 23:11:15 except the bench and scorer outputs.
+  - The same holds for `rd_m5_find.py`, `rd_m5_bench.py`, `rd_m5_equal.py`, `m5_rdlib.py` and `m5_plan.py`.
+  - The single scorer run matches the bench's own interim decision (X 1.42006, Y 1.33238, L 1.02079).
+- **Harness and modules:**
+  - `shader_cfg_tests.exe` sha is `cfe15c6c`, built 21:14:47 from `shaderCfgTests.cpp` (mtime 21:14:15). That file equals the committed blob `4da0b2ed`, and no `src` file is newer than the emulator build at 21:07:18.
+  - All 64 `.spv` files (mtime 21:18) match the md5/sha in `recompile.json`, which records exe `cfe15c6c`.
+  - All 42 distinct module md5s in the plan are found in `recompile.json`. The plan's recorded hashes of `recompile.json`, `regs.json`, `layout_check.json` and the find output match the files.
+  - The capture sha is `92a10b3c…` in find, plan and bench, and still is today. It is the only new `.rdc`.
+- **Design and single runs:** R = 20 with the 10-sequence design; the bench log shows the rotations and then their reverses, as pred/02 §4 says. There were two warm-up fetches and no extension. find, plan, equal, bench and the scorer each ran exactly once.
+- **Capture environment:** `m5cap102b.json` matches pred/01 §4 plus the one addition from pred/07.
+  - Present: `KYTY_DMA_LAYOUT=1`, `KYTY_GPU_CLOCK_PIN=1`, `KYTY_RD_TIME=150`, `KYTY_RD_FLIPS=2`, `KYTY_BDA_ALL=1`, `--rd`, hold 240 s, 1 attempt, `--no-install`.
+  - The gates are the 99 entries of `gates_base.txt`, byte for byte.
+  - Absent, as required: `KYTY_GPU_CHECKPOINTS`, `KYTY_GPU_TIME`, `KYTY_REC`.
+  - The other variables are harness defaults set by `enter_scene.py:536-539`.
+  - The gate `bdaall` really was on: `bda_all_n` summed to 18.3M over 3643 lines. The log contains both "DmaLayout: mode 1" and "GpuClockPin: mode 1".
+
+**Defects**
+
+- **D1 — pred/02 changed the operationalisation, but the ROADMAP was not updated before the first number.**
+  - **Evidence:**
+    - `docs/ROADMAP.md:1360-1364` (commit `0d35faa`, unchanged at HEAD) still says V2 is a lower bound, so a CLOSE on it is robust.
+    - pred/02 §3 (`02_m5_addendum.md:42-43`) withdraws exactly that. It also adds the V2s arm, the X/Y/L logic and the weaker "CLOSE with today's BDA machinery" tier, and rewrites V-e and V-f.
+    - pred/01:6 made "recorded in ROADMAP first" part of the protocol. The programme's own precedent (`ROADMAP.md:1324-1325` and `1541-1547`) withdrew session 101's number for skipping that step.
+  - **Effect on the result:** none on the branch.
+    - pred/01's rule alone also gives CLOSE (X CI_lo 0.412, far above 0.06).
+    - Even with pred/01's strict V-e, V2 stays valid. The items that would fail are S1, S4 and S8; their A-arm time is 2797 of 9132 µs, 30.6 %, under the 40 % limit.
+  - **What it changes:** the meaning of the CLOSE. The ROADMAP promises a robust lower-bound CLOSE; what was measured is a CLOSE with today's machinery, which pred/02 says the user may reopen. The report must record pred/02 in the ROADMAP, state the late recording as a defect, and must not cite `ROADMAP.md:1363`.
+  - **Changes the verdict:** no.
+
+- **D2 — pred/07 describes the retry wrongly: the record thread was not off.**
+  - **Evidence** (`log_m5cap102b.txt`):
+    - Line 238 reads "KYTY_RECORD_THREAD=0 at start; recordthread= in the gate file moves it".
+    - Line 17884 reads "Gate: recordthread=1 frame=1". This pin comes from `gates_base.txt`.
+    - Line 17923 reads "record thread on from tick 90", and line 18194 reads "…on from tick 2406" for the second scheduler.
+    - The mechanism is documented in `commandRecorder.cpp:1061-1062`.
+  - So the retry ran the same record-thread setup as the crashed run, except for ticks 1–89. The claim at pred/07:14-19 that the record thread was off before the capture is false. The retry's success is not evidence that `KYTY_RECORD_THREAD=0` avoids the crash; the crash stays undiagnosed.
+  - **Effect on the capture:** none.
+    - Both schedulers went "record thread off" at the capture request (lines 514799 and 514882), before "capture started" at 514883.
+    - They came back on only after "capture finished" at 516189 (lines 516199 and 516209), which agrees with `commandRecorder.cpp:1081`.
+    - pred/01 §4 allows a technical retry without requiring any change, so the retry is still valid.
+  - **Changes the verdict:** no. The report must say this and must not describe the capture as taken without the record thread.
+
+- **D3 (minor) — the "GPU idle" check in pred/01 §5 cannot fail on Windows.**
+  - **Evidence:**
+    - `bench_m5cap102.json.run.json` `pre_compute_apps` lists 18 processes, all with memory "[N/A]"; Windows' driver model never reports this value, so the check passes by default.
+    - During the bench the GPU clock was not locked (SM 1537–2640 MHz), and utilisation had median 20 % and max 100 % (`bench_m5cap102.json.gpuclk.csv`).
+  - **Effect:** negligible against X − 1 = 0.42. The interleaved design balances drift, and A/B = 0.9974.
+  - **Changes the verdict:** no.
+
+- **D4 (negligible) — pred/02:5-6 says no EventGPUDuration of any §2 module had been measured; that is literally false.**
+  - The earlier tool-testing runs on the old session-49 capture fetched every event's duration (13 590 results per fetch; `m5/mechanics/README.md`).
+  - Through the cache link, that capture contains old-translator modules of 7 PS items (`plan_old49_cachelink_v2.json`).
+  - No A, V1, V2 or V2s module of any item was timed there; the test items M1–M3 are different shaders. So no information about X, Y or L leaked.
+  - **Changes the verdict:** no.
+
+**Note (not a defect).** The tools and the scorer are not in git and were never sealed. Their provenance rests on the sha that the run wrapper recorded at each run start, plus mtimes that predate all real runs; both check out.

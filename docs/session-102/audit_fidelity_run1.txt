@@ -1,0 +1,66 @@
+**Verdict: REFUTED.** The load-bearing part that fails is "M5 is decided ⇒ G is closed." The narrower empirical statement stands: today's emitter's BDA path costs X−1 = 0.42 and Y−1 = 0.33 on these items. It stays above +6 % even after removing the PS-specific confounds (see D6). I did not re-check the numbers themselves (X, Y, L, the controls) under this lens.
+
+**D1. CLOSE-machinery does not meet the M5 rule as ROADMAP records it.**
+- **What:** The ROADMAP operationalisation gives one reason why a CLOSE means "G closed": the variant is a LOWER bound. `C:/kyty/KytyPS5/docs/ROADMAP.md:1360-1364` reads «Вариант G — НИЖНЯЯ граница … Поэтому CLOSE (> +6 %) по нему устойчив».
+- **Evidence:**
+  - `pred/02_m5_addendum.md:42-43` withdraws that premise before any timing. `:51` says "Only V1 is a strict lower bound". `:82` declares both tiers "G closed under the rule".
+  - The ROADMAP was never updated. `git log -- docs/ROADMAP.md` ends at 0d35faa (19:49). The addendum commit 1fc0e15 (22:12) touched only `docs/session-102/pred/*`. The working tree is clean.
+  - Nothing in the record shows the user was asked about the tier. This is the same defect class that withdrew session 101's number (ROADMAP.md:389, :1541-1546, «спроси, ЗАПИШИ, потом мерь»).
+- **How much:** Under the recorded premise, the only arm that is a lower bound is V1. It gives L−1 = +2.08 %, CI [1.83, 2.56], entirely below +6 %. So the recorded logic yields "M5 does not close G at its lower bound", not CLOSE.
+- **Changes the verdict:** Yes, for "G closed". "G closed with today's machinery" is a category that exists only in the executor's addendum.
+
+**D2. V2 does more than pred/01 §3 and the addendum describe: every PS variant gains a store to the fault buffer.**
+- **Evidence:**
+  - Each V2 PS module has 1–2 STG, from `EmitBdaFaultFlush`/`RecordBdaFault` (`spirvEmitterMemory.cpp:1784-1791`). The A, V1 and V2s modules of S2, S3, S4, S5, S8, S9 and S10 have 0 STG.
+  - All of these shaders already contain KILL, so the emitter never declares EarlyFragmentTests (`spirvEmitterModule.cpp:814-818`; the SPIR-V shows only the `SignedZeroInfNanPreserve` and `OriginUpperLeft` execution modes).
+- **Consequence (untested):** Under Vulkan rules, a fragment shader with storage writes must behave as if depth/stencil tests run after shading. So V2 PS pipelines plausibly lose early depth testing: occluded fragments get shaded, which is not a load cost.
+  - The pattern fits: S3 and S5 bind the same 6-target set (G-buffer-like) and give V2/A = 2.21 and 1.70. Their V1/A is only 1.09–1.10, and they convert just 67 and 162 dwords with 9 and 51 page lookups.
+  - The addendum lists "the fault-buffer store at exit" only as code, not as this pipeline-level effect. V2s has no store, so Y cannot see it either.
+- **How much:** At most, the PS items carry 1 789 of the 2 503 µs excess of V2 over V2s (71 %). Setting PS V2 to the V2s level gives X′ ≈ 1.16 and Y′ ≈ 1.09 (point estimates from per-item medians).
+- **Changes the verdict:** Not the CLOSE-machinery tier on its own, but it changes what Y is the price of.
+
+**D3. The page-table traffic is larger than disclosed ("a page-table LDG.E.64 per group").**
+- **Evidence:**
+  - Every `get_bda_pointer` call reads two table entries: the page entry and entry 0, the null base (`spirvEmitterMemory.cpp:1830-1842`). It also does a private fault-page load, select and store, and checks the index twice (OpArrayLength plus robustBufferAccess2; SASS: two ISETP per lookup).
+  - In the PS variants the compiler loads entry 0 once or twice (14–15 times in S4/S8). In the CS variants it reloads it every time, because the SPIR-V has no NonWritable or Restrict decoration anywhere and the CS's own stores block reuse. SASS counts of `LDG.E.64 [RZ.U32+URx]` in V2: S7 26, S6 38, S1 123. Example: `S7_…_V2.full.sass` lines 27-28, reloaded at line 77.
+  - Grouping per SPIR-V dword site (lookups/sites): S7 18/32 (10 not grouped with any other dword), S6 42/76 (30 not grouped), S2 35/93, S3 9/67, S4 63/262, S5 51/162, S9 and S10 1/3.
+- **How much:** Unquantified. It is the likely main driver of the CS ratios, where there are no STRONG loads: V2/V2s = 1.26 for S6 and 1.69 for S7.
+
+**D4. The CS excess comes from avoidable machinery plus one intrinsic dependent load, not from STRONG loads.**
+- **Evidence:**
+  - S7: 1 880 vs 1 144 SASS instructions (integer 1 038 vs 515; ISETP 281 vs 113; SEL 191 vs 83). LDG 148 vs 50, of which 62 are 64-bit loads. Registers 41 → 63 (V2s stays at 41), roughly 42 → 32 warps per SM.
+  - S6: 69 → 83 registers with spills (4 STL / 23 LDL). Its 24 KiB of shared memory per 32-thread group probably already limits occupancy, so dependent-load latency and spills dominate.
+- **What is intrinsic:** Only the dependent page lookup (gpu-driven.md §2 and §5) and constants moving into vector registers (which L prices at +2.1 %).
+- **What a G implementation could avoid:** Reloads across stores, the duplicated slow path taken when a group crosses a page (`:732-751`), the fault tracking, the double index check, and the granularity cost (V2s/A = +6.1 %).
+
+**D5. The addendum's cause for the STRONG loads, and its disclosure generally, are not supported by evidence.**
+- **What:** All PSB data loads in PS compile to LDG.E.STRONG.SM (S3 130, S4 480, S5 298). The SPIR-V loads are plain `OpLoad … Aligned 4` with no Volatile or Coherent. No experiment separates the emitter from the driver or from the stage.
+- **A candidate cause that is itself machinery:** The fault store from D2 is the only store in the V2 PS modules.
+- **Registers:** V2 hits the 128-register ceiling in S4, S5 and S8, with spills. S4 V2 has 256 B of local memory and 98 STL / 134 LDL, against 34 / 35 for V2s.
+- **Disclosure:** Neither (i) nor (ii) is quantified anywhere.
+
+**D6. Once the PS confounds are set aside, the CLOSE rests on one item.**
+- **How much:** Without the PS confounds and without S7, Y″ ≈ 1.03, below the threshold. X″ ≈ 1.09, and part of that is the granularity cost the addendum itself calls an artefact (+6.1 %).
+- **Changes the verdict:** It shows how fragile the claim is if the machinery is attributed. It does not flip the tier as the rule is sealed.
+
+**D7. V2 does not always read the same bytes as A; V-e cannot see beyond the last event.**
+- **Evidence (`equal_m5cap102.json`):**
+  - S8: V2 differs by 746 B on a repeatable item, while V2s is bit-identical to A. So the BDA path read different data.
+  - S1: V2 differs by 4.15 MB, and its fault buffer (ResourceId::138) gains a newly set bit at byte 0, which means V2 went through the null page.
+  - For PS items the fault buffer is never compared, and only the last event is checked.
+- **How much:** Unknown. Null-page zero reads at earlier events of included items could change control flow and timing.
+- **Changes the verdict:** No, as far as shown.
+
+**Could G avoid most of X?** Part of it, plausibly: the granularity cost, the slow-path code and its register pressure, the reloads, the fault tracking, and the PS store side effect. No arm prices an "intrinsic-only" variant, though. Pulling the other way:
+- V2 omits SRT pointer chasing, which G needs and which adds more dependent lookups.
+- The small shaders S9 and S10 show no occupancy change, V1 ≈ 1.00 and V2/V2s = 1.08 / 1.13. Real latency cost is likely there too.
+
+So the true price of G is neither shown above nor below 6 %.
+
+**Conclusion.**
+- The label "with today's BDA machinery" is honest as far as it goes.
+- The machinery disclosure is incomplete (D2, D3, D5).
+- "G closed" without that qualifier is not supported.
+- Under the ROADMAP-recorded rule, the only lower-bound arm reads NOT CLOSED.
+
+Scratch script: `C:/Users/<user>/AppData/Local/Temp/claude/C--Users-<user>-OneDrive-Desktop-ps5-em/9077010c-5d2a-4f0b-8edc-d9eb47622f00/scratchpad/audit102/lens3/spvcount.py`

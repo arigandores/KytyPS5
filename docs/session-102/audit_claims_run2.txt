@@ -1,0 +1,76 @@
+**Verdict: NOT REFUTED.** The M5 claim holds as stated. Five of the report's planned consequence sentences need qualifiers or disclosures (below), and none of them changes a verdict.
+
+**What I checked and confirmed**
+- **Numbers:** I recomputed them from the raw per-event durations (`m5/real/bench_m5cap102.json` with `plan_m5cap102.json`; my script is in `scratchpad/audit102/subsets.py`). X = 1.4201, CI of X−1 [0.4121, 0.4242]. Y = 1.3324, CI [0.3247, 0.3356]. L = 1.0208, CI [0.0183, 0.0256]. V2s/A = 1.0608. A/B = 0.9974. S1 and S8 together are 21.87 % of A time. All match exactly.
+- **Robustness:** the CLOSE-machinery tier does not depend on the item set or on the strong PS loads.
+
+| subset | X−1 | Y−1 | L−1 |
+|---|---:|---:|---:|
+| CS only (S6, S7; no LDG.E.STRONG loads) | +55.4 % | +48.0 % | +0.1 % |
+| PS only (six items) | +38.6 % | +29.7 % | — |
+| without S3, S5, S7 (highest V2/A ratios) | +16.1 % [15.6, 16.6] | +13.5 % [12.7, 13.8] | — |
+| the 8 V2-valid items | — | — | +2.8 % [2.4, 3.3] |
+
+  So the price is carried by item (i) of `pred/02` §3 (page-table lookup, fits-in-page branch, per-dword slow path), not item (ii) (the strong loads).
+- **Seal order:** every seal came before the run it governs (sealed → launched):
+  - `pred/01`: 19:49 → capture 22:58.
+  - `pred/02`: 22:12:14 → bench 23:11.
+  - `pred/06`: 22:48:47 → `ckpt102_entry1` launched 22:49:09.
+  - `pred/07`: 23:00:04 → `m5cap102b` launched 23:00:13.
+  - All seven seal hashes match `SEALS102.txt`.
+- **(a) "G closed":** `pred/02` §3 says both tiers are "G closed" under the rule, so the claim is allowed with the qualifier "with today's machinery".
+- **(b):** "P, P+G, F closed in session 95; R1 alive and unlicensed" matches the ROADMAP tables at `ROADMAP.md:1117-1122`.
+
+**Defects**
+
+1. **The consequences are stated as final, but the tier is conditional.**
+   - L = +2.1 % is the only strict lower bound and it does not cross 6 %. Under `pred/02` §3 the user can reopen G on the machinery ground.
+   - M1 closed P only by the letter of its rule. The ROADMAP M1 caveat says the rule's reason ("no free cores") does not hold on a 16-core / 32-thread machine, and that bringing P back is a rule decision.
+   - "No licensed variant left" and "the target becomes …" must say "unless the user reopens G (machinery) or revisits P's rule".
+   - `ROADMAP.md:46` ("not proven that there is nothing to rewrite") must stand. `pred/01` §8 forbids any CLOSE → "60 FPS unreachable" inference.
+   - Effect on verdict: none.
+
+2. **The ROADMAP still carries the withdrawn "lower bound" justification.**
+   - The ROADMAP M5 entry written in `0d35faa`, clause (в), says V2 is a LOWER bound and "CLOSE по нему устойчив".
+   - `pred/02` §3 withdrew that and replaced the single-ratio verdict with the X/Y/L two-tier rule. Nothing after `0d35faa` touched `docs/ROADMAP.md` (commits `1fc0e15`…`5518878` change only pred files and src).
+   - This is the same class of defect as sessions 100 and 101 (not recorded in ROADMAP first), in a mild form: it was sealed before timing, and `pred/01`'s own ratio (1.4201) also returns CLOSE.
+   - The final ROADMAP edit must correct (в) and disclose the change. Effect on verdict: none.
+
+3. **The `pred/07` retry fix did not take effect.**
+   - `log_m5cap102b.txt` shows: "KYTY_RECORD_THREAD=0 at start; recordthread= in the gate file moves it…", then "Gate: recordthread=1 frame=1" and "record thread on from tick 90". `gates_base` pins `recordthread=1` (`m5cap102b.json` gates).
+   - So the retry ran the same configuration that crashed in `m5cap102`. The start-up crash is intermittent under `--rd`, not configuration-bound.
+   - M5 is unaffected: the captured frames were recorded without the record thread ("record thread off from tick 109135" comes before "capture started"), and `pred/01` §4 allows one technical retry regardless.
+   - The report must not say the retry ran with the record thread off.
+
+4. **The checkpoint fix acceptance rests on a clause added after a failure.**
+   - `pred/04` §2 says the fix passes only if every line holds on `ckpt102`, and any failure means not accepted. `ckpt102` failed item 6 (`GpuHangAbort` role=4 at about 13 s).
+   - Acceptance rests on `pred/06`, written after that failure, which moved the witness to `ckpt102_entry1`. It is the programme's standard entry clause (`pred/03` §4), so the move is defensible, but it must be disclosed as post-failure.
+   - The hang is attributed to the historical BVH entry hang by signature only (`KYTY_GPU_MARKERS=0`, so no operation was named).
+   - `ckpt102_entry1` passes 6/6 (rec_n 11254.5, gpu_busy 12533, dt 33262), matching `cm101d`. There was no video pass (guards check 9 SKIP).
+
+5. **Only the checkpoint fix can be claimed for `ROADMAP.md` §6, and only on a weak warrant.**
+   - Its test is one run checked against absolute limits, with `cm101a` as a reference from another session and another binary that never decides. `pred/04` §1 itself calls this an inter-run comparison. `ROADMAP.md` §3 lists inter-run comparisons as "not measurements".
+   - With the variable unset, behaviour is unchanged by construction: no user gains frame rate. `cm101a` 49.98 ms against `ckpt102_entry1` 33.26 ms is not a speedup (`pred/04` §3).
+   - `dabatch` was closed and not shipped. The shipped change to the default walk path (the requests list became `thread_local`) was never compared against the old code: both pilot arms ran the new binary.
+   - `KYTY_DMA_LAYOUT` is measurement-only.
+   - So "§6 satisfied" needs this warrant stated beside it.
+
+6. **The `dabatch` closure is robust, but its estimator has a flaw.**
+   - Using the change in `da_walk_us` instead: b = 127.95 / 946.27 = 0.135 µs per call, so Ŝ ≈ 16.4 µs (upper ≈ 18 µs).
+   - Using the full endpoint: the change in `cpu_net_us` gives Ŝ ≤ about 32 µs, and `endpoint84`'s upper bound of 203.2 µs gives ≤ about 26 µs. All are below 60 µs, so it stays CLOSED.
+   - The flaw: b̂ = 0.0781 µs mixes per-call and per-request cost. The batch-8 arm made 258.7 more requests (R 8666.7 against 8408.0; `da_nohint` +142), which is about 24.6 µs of the 73.9 µs change in `da_queue_us` at roughly 95 ns per request. The 8→64 slope is also extrapolated to 1024.
+   - Q3 is a MISS (change in `da_late` −0.24 per flip, t = −4.34) and must be published as one. It suggests larger batches raise lateness.
+   - `m_mutex` contention was read, not measured (`pred/03` §6).
+
+7. **The "~15 % (8…25 %)" chance is now stale.** It was the estimate for route E as a whole. With P, P+G, F and G closed, only R1 (≤ 3 %, an [I] estimate) is left. The report must say the figure is superseded or re-estimate it. Repeating "~15 %" next to "no licensed variant left" is inconsistent.
+
+8. **Tagging and wording.**
+   - R1's "≤ 3 %" and "does not reach 16.7 ms in principle" are [I] estimates from session 94 (`ROADMAP.md:1103`, `:1111`), and §0.1 says such estimates were wrong by 2–20× six times. They must carry [I] and must not read as closing R1 (`pred/01` §8).
+   - "The honest target becomes max FPS" is inaccurate: `ROADMAP.md:27` has stated that target since session 83.
+
+9. **V2 correctness should be disclosed, not just "excluded".**
+   - V2 is functionally wrong on S1: 4,153,261 bytes differ against an allowance of 28,466 (146×). On S8 it differs by 746 bytes on a repeatable item.
+   - V-e checks only each item's last event (S9 has 983 events, S3 has 600), so V2 timings on earlier events rest on outputs that were never checked. The subset checks above show the verdict does not depend on this.
+   - Presentation: X and Y use 8 items, while L and V2s/A are printed over 10. Over the 8 items, L = 1.0277 and V2s/A = 1.0653.
+
+My only file is the scratch script: `C:/Users/<user>/AppData/Local/Temp/claude/C--Users-<user>-OneDrive-Desktop-ps5-em/9077010c-5d2a-4f0b-8edc-d9eb47622f00/scratchpad/audit102/subsets.py`

@@ -1,0 +1,370 @@
+1. guards (reported only; checks 3b and 6 are not criteria of this rule)
+=== guards.py dab102a (root C:\kyty\s102) ===
+  log     C:/kyty/s102/log_dab102a.txt                               200.4 MB
+  stdout  C:/kyty/s102/stdout_dab102a.txt                            0.0 MB
+  idx     NOT FOUND                                                  -
+  rec     NOT FOUND                                                  -
+  gpuclk  C:/kyty/s102/gpuclk_dab102a.csv                            0.1 MB
+  meta    C:/kyty/s102/dab102a.json                                  0.0 MB
+  log: 1272977 lines, 9721 FrameTrace: frames, arm/blk present
+
+  schedule starts at flip 1800; frames before it belong to no arm and are dropped
+
+[WARN]  0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+         idle sampled at 2026-09-22T22:52:55: utilization.gpu 1.0 %, power 22.0 W, memory 1329 MiB, 18 process(es) on the GPU
+         not on the harmless list: docker desktop.exe
+         the GPU was idle (1.0 % <= 10.0 %), so this is an open window and not a running load; close it anyway before an acceptance run.
+[PASS]  1 crashes     none of 8 markers in log_dab102a.txt (1272977 lines), stdout_dab102a.txt (176 lines)
+[PASS]  2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+         CRITERION 1 IS ONLY AS STRONG AS ITS REACHABLE COUNTERS: 15 of 17 zero counters cannot be non-zero in this run because their verify gate is pinned off. Turn one on in one run per session, or do not quote the fraction.
+         NOTE: no *_VERIFY / *check gate was enabled - the MISMATCH prints could not fire at all; only the always-on counters were checked
+[PASS]  3 resolution  constant over 6890 frames and equal in 2 arms; 733 fragment flip(s) skipped
+         fragment flips (check 3b's predicate: rt_att < 25 % of the run median 13625): 733 of 7623 (9.62 %) dropped from the sample below - a flip that caught a fragment of a game frame is not a smaller picture
+         skipped flips: 2106 2111 2116 2122 2128 2133 2138 2143 2148 2153 2158 2162 ...
+         rt_w = 3840 over 6890 frames
+         rt_h = 2160 over 6890 frames
+         vp_w = 3840 over 6890 frames
+         vp_h = 2160 over 6890 frames
+         NOTE: these four are MAXIMA and the maximum is the output target in every run measured so far - they are pinned to 3840x2160 both in the manual session-64 base and in the -lvl entry.  Check 3b is the one that sees the resolution ladder.
+[PASS] 3b area        the render size held: low mode equal in the arms and steady over the run
+         7623 frames carry rt_att/rt_kpx/vp_kpx, flips 2100..9722
+         the verdict is taken on the ATTACHMENT-WEIGHTED low mode of rt only; the plain per-frame p5 is printed beside it because it is the statistic that used to carry the verdict and it is the one a fragment flip moves
+         fragment flips (rt_att < 25 % of the run median 13625): 733 of 7623 (9.62 %) - a flip whose boundary cut the frame before its full-size pass, not a smaller picture
+         rt (rt_kpx/rt_att): weighted low mode p5 2005.7 Kpx = ~1911x1075 at 16:9 (per-frame p5 1933.1), median 2009.1, p95 2011.6
+         vp (vp_kpx/draws) [advisory]: weighted low mode p5 2560.8 Kpx (per-frame p5 2562.3), median 2592.3, p95 3106.2
+         rt weighted low mode per arm: arm0 2006.0 arm1 2005.5 -> 0.025 % apart (limit 1.000 %; unweighted it would read 0.014 %)
+         rt draw-weighted mean per arm: arm0 2007.7 arm1 2007.5 -> 0.01 % apart (advisory limit 5.00 %)
+         vp weighted low mode per arm: arm0 2560.3 arm1 2561.5 -> 0.048 % apart (ADVISORY limit 1.000 %; unweighted it would read 0.048 %)
+         vp draw-weighted mean per arm: arm0 2625.1 arm1 2623.8 -> 0.05 % apart (advisory limit 5.00 %)
+         rt over 75 sliding windows of 200 frames: lowest weighted 2000.8 at flip 2200 (-0.25 %, limit -2.00 %), highest 2009.6 (+0.2 %, a window with no light frame in it); unweighted the worst window would read -2.05 %
+         vp over 75 sliding windows of 200 frames: lowest weighted 2550.5 at flip 7100 (-0.40 %, ADVISORY limit -2.00 %), highest 2570.6 (+0.4 %, a window with no light frame in it); unweighted the worst window would read -0.31 %
+[PASS]  4 draws       arms drew the same work, 0.087 % apart by the sum
+         arm0: 3843 frames, 19354475 draws, 5036.29 draws/frame (-0.043 %); median 5302.0 (+0.076 %, reference only)
+         arm1: 3780 frames, 19053677 draws, 5040.66 draws/frame (+0.043 %); median 5294.0 (-0.076 %, reference only)
+         86 schedule blocks, draws/frame spread 0.087 % (limit 0.500 %); the medians are 0.151 % apart and are NOT judged - a slower thread smears draws across the flip boundary and moves the median without moving the sum
+[PASS]  5 heavy       heavy-frame share 0.20 pp apart
+         arm0: 0.75 % of 3843 frames have draws >= 6000
+         arm1: 0.56 % of 3780 frames have draws >= 6000
+         spread 0.20 percentage points (limit 5.00)
+[FAIL]  6 cores       3 of 43 groups of 2 blocks more than 10 % off their arm median - something else used the machine
+         schedule blocks are 90 frames - 2 blocks of the same arm are merged to reach the 150-frame minimum
+         43 groups of 2 blocks, median 7.782 busy cores, min 6.219, max 8.985
+         per-arm median: arm0 7.759 arm1 7.853 (an arm that adds worker threads moves its own median, so each group is judged against its arm)
+         arm0 group 7: 8.985 cores (+15.8 % of its arm), frames 4591..4770
+         arm0 group 18: 8.580 cores (+10.6 % of its arm), frames 8551..8730
+         arm0 group 21: 6.219 cores (-19.8 % of its arm), frames 9631..9722
+[PASS]  7 gpuclk      no throttle reason outside mask 0x405 over 5 busy samples
+         gpuclk_dab102a.csv: 632 samples, 5 with utilization >= 50 %
+         SM clock mean 2353 MHz, min 1972, max 2527, sd 195 (8.3 % of mean)
+         memory clock mean 14301 MHz, min 14301
+         power mean 65 W, max 80 W
+         temperature 52..67 C
+         throttle 0x0000000000000400 unknown(0x400)                           5 samples (100.0 %)
+[SKIP]  8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+[SKIP]  9 video       not requested (--video); the one-frame glitch pass takes minutes
+         REMINDER: an acceptance run is not accepted without it - re-run with --video
+[PASS] 10 identity    confirmed binary sha256 and 89 GateArm blocks - every arm text applied where it was meant to
+         binary sha256 346ba4f6448c35cb... matches dab102a.json
+         89 GateArm: blocks, arm0 x45 arm1 x44
+         first block 0 at frame 1800 text "dabatch=64"; last block 88 at frame 9720 text "dabatch=64"
+         44 Gate: change lines in the log; names owned by the arms: dabatch
+           Gate: dabatch=8 frame=1890
+           Gate: dabatch=64 frame=2070
+           Gate: dabatch=8 frame=2250
+           Gate: dabatch=64 frame=2430
+           Gate: dabatch=8 frame=2610
+           Gate: dabatch=64 frame=2790
+           Gate: dabatch=8 frame=2970
+           Gate: dabatch=64 frame=3150
+           ... 36 more
+
+=== dab102a: 8 PASS, 1 FAIL, 1 WARN, 2 SKIP ===
+status check        note
+WARN    0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+PASS    1 crashes     none of 8 markers in log_dab102a.txt (1272977 lines), stdout_dab102a.txt (176 lines)
+PASS    2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
+PASS    3 resolution  constant over 6890 frames and equal in 2 arms; 733 fragment flip(s) skipped
+PASS   3b area        the render size held: low mode equal in the arms and steady over the run
+PASS    4 draws       arms drew the same work, 0.087 % apart by the sum
+PASS    5 heavy       heavy-frame share 0.20 pp apart
+FAIL    6 cores       3 of 43 groups of 2 blocks more than 10 % off their arm median - something else used the machine
+PASS    7 gpuclk      no throttle reason outside mask 0x405 over 5 busy samples
+SKIP    8 presents    rec_<tag>.mp4.idx not found - the recorder was off
+SKIP    9 video       not requested (--video); the one-frame glitch pass takes minutes
+PASS   10 identity    confirmed binary sha256 and 89 GateArm blocks - every arm text applied where it was meant to
+VERDICT: FAIL
+2. area (criterion 3 of session 101)
+log_dab102a.txt -> C:\kyty\s102\area_dab102a.csv (9721 flips)
+====================================================================================================
+dab102a   csv=C:\kyty\s102\area_dab102a.csv   flips n>=2100: 7623   arms: [0, 1]
+  high-rung share (rt_kpx/rt_att > 2600):   0.0 %   population 0 of 7623 flips
+  whole-arm rt_kpx/rt_att : arm0   2007.7 (3843 flips)   arm1   2007.5 (3780 flips)
+  WHOLE-ARM AREA SPLIT    :  -0.008 %     [ tool header: +0.00 quotable, +1.74 VOID, +4.30 VOID ]
+  whole-arm cpu/frame     : arm0  30829.5 us   arm1  30948.3 us    +0.385 %
+  whole-arm draws/frame   : arm0   5036.3      arm1   5040.7       +0.087 %
+  complete pairs 42   matched within 0.50 %: 42  (100.0 %)   dropped 0
+    ALL        42 pairs  cpu/draw  +0.309 %  2*SE  0.270 %  t   +2.28
+    MATCHED    42 pairs  cpu/draw  +0.309 %  2*SE  0.270 %  t   +2.28
+    DROPPED     0 pair(s) - NOT MEASURED (population too small to quote)
+  VALIDITY (pre-registered; never substitute one that fails - take another run):
+    [PASS] area split < 1.0 %%          -0.008 %
+    [PASS] pair match >= 90 %%          100.0 % (42/42)
+    [PASS] work within 0.5 %%           +0.087 %
+  RESULT (reported, NOT part of validity - a valid run may measure nothing):
+    [ null ] MATCHED cpu/draw          +0.309 % +- 0.270 %, t = +2.28 over 42 pairs
+  VERDICT: VALID - quotable once guards 2/10, the arming counter and the bracketing timer are also checked.
+====================================================================================================
+0 of 1 tag(s) INVALID
+3. summary4 --blocks and endpoint84 (reported only)
+=== summary4  tag=dab102a  stat=sum ===
+source   : log C:\kyty\s102\log_dab102a.txt (200 MB) -> C:\kyty\s102\raw\dab102a_frames.tsv
+frames   : 7923 of 9721  n=1800..9722  warmup/block=3  min block=5
+schedule : yes (GateArm lines: 89, gate changes: 44, arm/blk fields: yes, period=90)
+pre-sched: 1798 frames older than the first GateArm (frame=1800) dropped; they carry
+           blk=0/arm=0 and would land inside block 0 of arm0 (on aa67a that alone
+           made arm0 look 6.8 % heavier in draws per frame).
+estimator: block value = RATIO OF SUMS.  cpu/draw = sum(cpu_gpu_us)/sum(draws) over the block,
+           every other metric = sum(metric)/frames; max_us = sum(max(cpu,gpu))/frames.
+           --stat median restores the old summary3 behaviour (kept as the diagnostic
+           column "(med)%" in the paired table).
+WHY      : the scene is two-population (cpu_gpu_us p50 33 ms vs p90 48.5 ms), so a
+           30-frame block MEDIAN hops between the populations: it is 1.4-6.8x noisier
+           than the ratio of sums AND biased (it read the ab67a gate as +11.14 % where
+           the blocking-free whole-arm ratio says +9.01 %).  Primary metric is cpu/draw
+           as a ratio of sums, and it is only honest while the arms do the SAME work -
+           see "work check" below (draws per frame must agree).
+CAVEAT   : gpu_busy_us is booked to the frame that HARVESTS the timestamps, not to the
+           frame that submitted them (commandScheduler.cpp, HarvestTimestamps under
+           m_master.IsFree), so p99 of max_us carries a systematic shift.  It does not
+           invalidate a comparison of the arms against each other.
+           draws are booked to the interval between flips, so a slow arm SPLITS heavy
+           frames in two: the median of draws and the share of draws>=6k move even when
+           the total work is identical.  Judge work by the SUM, never by the median.
+
+no rec_dab102a.mp4.idx - no independent tempo arbiter
+blocks   : 88 used, 1 dropped (fewer than 5 frames after warm-up)
+
+=== per arm (blocks, after warm-up) ===
+arm            frames cpu p50     p90     p99 max p50     p90     p99 dt p50  draws  d>=6k         rt         vp cores    fps
+arm0[44 blk]     3829   32740   33397   34281   32740   33397   34281  33237   5301   0.8%  3840x2160  3840x2160  7.83  31.92
+arm1[44 blk]     3828   32772   33371   34058   32772   33371   34058  33239   5294   0.5%  3840x2160  3840x2160  7.82  31.88
+TOTAL            7657   32756   33385   34144   32756   33385   34144  33238   5297   0.7%  3840x2160  3840x2160  7.83  31.90
+  arm0 text: dabatch=64
+  arm1 text: dabatch=8
+
+=== whole-arm ratio of sums (all frames of the arm, NO blocking, NO median) ===
+  built from 44 complete cycles (0 unpaired block(s) excluded so that the arms carry the same number of blocks)
+arm            frames   draws/fr  cpu/draw  cpu/fr us  gpu/fr us   dt/fr us    fps
+arm0             3829    5036.27    6.1228      30836      12743      31331  31.92
+arm1             3828    5036.04    6.1384      30913      12718      31371  31.88
+vs arm0                  draws% cpu/draw%   cpu/fr%   gpu/fr%    dt/fr%
+arm1 - arm0              -0.005    +0.254    +0.250    -0.199    +0.127
+
+work check: draws per frame arm1 vs arm0 = -0.005 % (must be within 0.5 %)  -> OK
+  (the arms rendered the same work, so cpu/draw is a legitimate comparison)
+
+=== per block (sum) ===
+   blk  arm   first    last frames  cpu/draw      cpu      max       dt   draws  d>=6k
+     0    0    1803    1890     88    6.1202    31154    31154    32004    5090   2.3%
+     1    1    1894    1980     87    6.0963    30323    30323    30843    4974   0.0%
+     2    1    1984    2070     87    6.1276    30291    30291    30648    4943   0.0%
+     3    0    2074    2160     87    6.1481    29899    29899    30266    4863   0.0%
+     4    0    2164    2250     87    6.1444    29740    29740    30070    4840   0.0%
+     5    1    2254    2340     87    6.1922    29767    29767    30106    4807   0.0%
+     6    1    2344    2430     87    6.1611    30068    30068    30460    4880   0.0%
+     7    0    2434    2520     87    6.1398    30224    30224    30844    4923   0.0%
+     8    0    2524    2610     87    6.1839    30635    30635    31414    4954   1.1%
+     9    1    2614    2700     87    6.1477    30825    30825    31228    5014   0.0%
+    10    1    2704    2790     87    6.0975    30530    30530    30842    5007   0.0%
+    11    0    2794    2880     87    6.1392    30516    30516    30850    4971   0.0%
+    12    0    2884    2970     87    6.1276    30433    30433    30845    4967   0.0%
+    13    1    2974    3060     87    6.1525    30621    30621    31035    4977   0.0%
+    14    1    3064    3150     87    6.1203    30370    30370    30848    4962   0.0%
+    15    0    3154    3240     87    6.1780    30653    30653    31426    4962   1.1%
+    16    0    3244    3330     87    6.1027    30403    30403    31040    4982   0.0%
+    17    1    3334    3420     87    6.1384    30461    30461    30843    4962   0.0%
+    18    1    3424    3510     87    6.1651    30444    30444    30842    4938   0.0%
+    19    0    3514    3600     87    6.1218    30457    30457    30843    4975   0.0%
+    20    0    3604    3690     87    6.1276    31009    31009    31413    5061   0.0%
+    21    1    3694    3780     87    6.0580    30903    30903    31221    5101   0.0%
+    22    1    3784    3870     87    6.0956    31803    31803    32373    5217   2.3%
+    23    0    3874    3960     87    6.0846    31799    31799    32565    5226   0.0%
+    24    0    3964    4050     87    6.0510    31370    31370    31804    5184   1.1%
+    25    1    4054    4140     87    6.0703    31489    31489    31996    5187   0.0%
+    26    1    4144    4230     87    6.0723    31612    31612    31995    5206   2.3%
+    27    0    4234    4320     87    6.0723    31857    31857    32187    5246   0.0%
+    28    0    4324    4410     87    6.0442    31452    31452    31802    5204   0.0%
+    29    1    4414    4500     87    6.1010    31574    31574    31997    5175   2.3%
+    30    1    4504    4590     87    6.1520    31819    31819    32569    5172   0.0%
+    31    0    4594    4680     87    6.0708    31089    31089    31600    5121   0.0%
+    32    0    4684    4770     87    6.0605    31172    31172    31609    5144   1.1%
+    33    1    4774    4860     87    6.1280    31536    31536    31989    5146   0.0%
+    34    1    4864    4950     87    6.1198    31126    31126    31611    5086   0.0%
+    35    0    4954    5040     87    6.1343    30834    30834    31227    5026   0.0%
+    36    0    5044    5130     87    6.1056    30675    30675    31034    5024   1.1%
+    37    1    5134    5220     87    6.2508    31372    31372    32172    5019   2.3%
+    38    1    5224    5310     87    6.1709    30917    30917    31423    5010   0.0%
+    39    0    5314    5400     87    6.3390    31596    31596    31983    4984   4.6%
+    40    0    5404    5490     87    6.1166    30247    30247    30660    4945   0.0%
+    41    1    5494    5580     87    6.2028    30390    30390    30839    4899   0.0%
+    42    1    5584    5670     87    6.1469    30424    30424    30844    4950   0.0%
+    43    0    5674    5760     87    6.1030    30440    30440    30849    4988   0.0%
+    44    0    5764    5850     87    6.1499    30714    30714    31230    4994   0.0%
+    45    1    5854    5940     87    6.2135    30987    30987    31605    4987   0.0%
+    46    1    5944    6030     87    6.1460    30511    30511    30852    4964   1.1%
+    47    0    6034    6120     87    6.1107    30445    30445    30839    4982   1.1%
+    48    0    6124    6210     87    6.1149    30177    30177    30840    4935   1.1%
+    49    1    6214    6300     87    6.1682    30789    30789    31224    4992   2.3%
+    50    1    6304    6390     87    6.1753    30816    30816    31222    4990   1.1%
+    51    0    6394    6480     87    6.1058    30225    30225    30653    4950   0.0%
+    52    0    6484    6570     87    6.2198    30835    30835    31615    4957   0.0%
+    53    1    6574    6660     87    6.1840    30534    30534    31035    4938   0.0%
+    54    1    6664    6750     87    6.1320    30316    30316    30651    4944   0.0%
+    55    0    6754    6840     87    6.1274    30438    30438    30844    4968   1.1%
+    56    0    6844    6930     87    6.1578    30927    30927    31414    5022   1.1%
+    57    1    6934    7020     87    6.1113    30984    30984    31417    5070   0.0%
+    58    1    7024    7110     87    6.0871    31156    31156    31610    5118   0.0%
+    59    0    7114    7200     87    6.1113    31960    31960    32560    5230   2.3%
+    60    0    7204    7290     87    6.0936    31746    31746    32379    5210   2.3%
+    61    1    7294    7380     87    6.0853    31636    31636    31992    5199   0.0%
+    62    1    7384    7470     87    6.1132    31912    31912    32379    5220   2.3%
+    63    0    7474    7560     87    6.0578    31603    31603    31989    5217   2.3%
+    64    0    7564    7650     87    6.0555    31571    31571    31994    5214   1.1%
+    65    1    7654    7740     87    6.0922    31777    31777    32195    5216   0.0%
+    66    1    7744    7830     87    6.1225    31489    31489    31997    5143   2.3%
+    67    0    7834    7920     87    6.1438    30967    30967    31803    5040   3.4%
+    68    0    7924    8010     87    6.1145    30506    30506    31031    4989   0.0%
+    69    1    8014    8100     87    6.1172    30842    30842    31233    5042   0.0%
+    70    1    8104    8190     87    6.1162    31047    31047    31414    5076   0.0%
+    71    0    8194    8280     87    6.1731    31225    31225    31608    5058   1.1%
+    72    0    8284    8370     87    6.1116    30798    30798    31221    5039   1.1%
+    73    1    8374    8460     87    6.1136    31219    31219    31608    5107   1.1%
+    74    1    8464    8550     87    6.1755    31587    31587    32374    5115   0.0%
+    75    0    8554    8640     87    6.1307    31549    31549    32181    5146   0.0%
+    76    0    8644    8730     87    6.1239    31268    31268    31798    5106   0.0%
+    77    1    8734    8820     87    6.1377    30862    30862    31215    5028   0.0%
+    78    1    8824    8910     87    6.1555    30492    30492    30839    4954   0.0%
+    79    0    8914    9000     87    6.1286    30483    30483    30848    4974   1.1%
+    80    0    9004    9090     87    6.1263    30465    30465    30849    4973   0.0%
+    81    1    9094    9180     87    6.1733    30654    30654    31221    4966   1.1%
+    82    1    9184    9270     87    6.2165    30962    30962    31810    4981   3.4%
+    83    0    9274    9360     87    6.0894    30211    30211    30653    4961   2.3%
+    84    0    9364    9450     87    6.1292    30425    30425    30842    4964   0.0%
+    85    1    9454    9540     87    6.1636    30463    30463    30850    4942   0.0%
+    86    1    9544    9630     87    6.1452    30478    30478    30842    4960   0.0%
+    87    0    9634    9720     87    6.1367    30598    30598    31033    4986   0.0%
+
+cycles   : 44 (a cycle = one full turn of the schedule), 44 complete
+
+=== paired block differences: arm1 vs arm0 [A/B]  [stat=sum] ===
+  arm0: dabatch=64
+  arm1: dabatch=8
+  metric        pairs    mean%      SE%        t    2*SE%    (med)%  verdict
+  cpu/draw         44   +0.259    0.134    +1.93    0.268     +0.32  noise <- PRIMARY
+  cpu_net_us       44   +0.258    0.177    +1.46    0.353     +0.10  noise
+  cpu_gpu_us       44   +0.258    0.177    +1.46    0.353     +0.10  noise <- per-frame, moves with frame packing
+  max_us           44   +0.258    0.177    +1.46    0.353     +0.10  noise
+  gpu_busy_us      44   -0.196    0.121    -1.62    0.242     -0.29  noise
+  dt_us            44   +0.138    0.225    +0.62    0.449     +0.00  noise
+  SE ratio cpu_gpu_us / cpu/draw = 1.3x (why the verdict is taken from cpu/draw)
+  VERDICT (cpu/draw): +0.259 % +- 0.268 % (2*SE), t=+1.93 -> noise
+  cross-check: whole-arm ratio of sums +0.254 % vs paired +0.259 % (gap +0.005 pp)
+
+  === run length needed (from the SE measured in THIS run) ===
+  N = (SE_of_one_pair / threshold)^2, SE_of_one_pair = SE * sqrt(pairs).
+  The columns give N for SE = threshold; multiply by 4 for 2*SE = threshold.
+  metric        pairs        SE%   SE1pair%     N@0.5%       N@1.0%  frames@0.5%
+  cpu/draw         44      0.134      0.890          4            1          720
+  cpu_net_us       44      0.177      1.172          6            2         1080
+  cpu_gpu_us       44      0.177      1.172          6            2         1080
+  max_us           44      0.177      1.172          6            2         1080
+  gpu_busy_us      44      0.121      0.803          3            1          540
+  dt_us            44      0.225      1.491          9            3         1620
+  (frames@0.5% assumes 2 arms x period 90 and no warm-up loss; this run gave 44 pairs)
+
+NOTE: spin_gpu_us was ABSENT on 22971 of 22971 main FrameTrace lines (present on 0) - under KYTY_FRAME_TRACE=lite it lives on FrameTrace-draw, which this tool does not parse, so cpu_net_us here IS cpu_gpu_us.  Use endpoint84.py for the endpoint.
+written  : C:\kyty\s102\summary4_dab102a.json
+log C:\kyty\s102\log_dab102a.txt
+first GateArm frame 1800; settled window n >= 2100; 7623 frames 2100..9722
+arms [0, 1], frames [3843, 3780]
+
+counter             line           arm0           arm1      arm1-arm0
+dt_us               main      33237.000      33241.500          4.500
+draws               main       5302.000       5294.000         -8.000
+dispatches          main        268.000        268.000          0.000
+cpu_gpu_us          main      32746.000      32780.000         34.000
+gpu_busy_us         main      12849.000      12808.500        -40.500
+spin_gpu_us         draw          5.000          4.000         -1.000
+da_take_us          draw       2486.000       2496.000         10.000
+da_qcall               x        134.000       1080.000        946.000
+da_queue_us         draw        750.000        823.000         73.000
+da_walk_us          draw       1816.000       1945.000        129.000
+da_walks            draw          5.000          5.000          0.000
+da_req                 x       7972.000       8079.000        107.000
+da_nohint           draw        454.000        596.000        142.000
+da_hit              draw       9146.000       9127.000        -19.000
+da_miss             draw         76.000         76.000          0.000
+da_late             draw          0.000          0.000          0.000
+da_busy             draw         20.000         20.000          0.000
+rec_n               draw      11482.000      11457.000        -25.000
+
+blocks 86, adjacent opposite-arm pairs 42
+PRIMARY ENDPOINT cpu_net_us = cpu_gpu_us - spin_gpu_us, paired blocks, MICROSECONDS:
+  E = arm1 - arm0 = +104.2 us  +- 99.0 (2*SE)  t = +2.10 on 42 pairs
+  interval [5.2, 203.2]
+4. the sealed dabatch scorer (pred/03, phase pilot)
+dab102.py dab102a phase=pilot B=8 status=ADMITTED_PILOT
+  seals: pred/03 f828e2578a1e68e2dbf99e976be7ce49f4041e6631d96c4773f0d23642b6135e  pred/05 b889c57a6f8c0f56eaa3ac43f68e9ea168dfef32b4a7122cb0b918fee5e7686d
+  pairs 42 (orientations [21, 21]), blocks 84, excluded edge blocks [3]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BAND_dt_us
+  [PASS] controls  BAND_gpu_busy_us
+  [PASS] controls  BAND_rec_n
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  arm0_dabatch64   dt 31062.0 rec_n 10876.2 gpu_busy 12729.4 draws 5015.0 qcall 134.36 walks 5.00 R 8408.0
+  arm1_dabatch8    dt 31569.1 rec_n 10887.4 gpu_busy 12709.5 draws 5020.7 qcall 1078.79 walks 5.00 R 8666.7
+  work split (pred/05 1, mean of rows 1218/1218): 0.0896 %  (strict < 0.50 %) -> PASS
+    REPORTED, never deciding: block-median 0.1148 %, row-median -0.1886 %
+  arming (pred/05 2): W 5.000  R 8407.98 -> PASS
+    arm0_dabatch64   median da_qcall 134.362 in [98.531, 170.468]: inside
+    arm1_dabatch8    median da_qcall 1078.793 in [788.248, 1319.997]: inside
+    note (pred/03 ratio rule, replaced): Q_B obs 1078.79 pred 1056.00  dev 0.0216
+  area_verdict mirror: split -0.008 %  match 100.0 % (42/42)  work 0.087 %  valid True
+  b_hat 0.0781 us/call  90% CI ['0.0725', '0.0838']
+  Q64 134.36  W 5.00  R 8408.0  Q1024 13.211  S_hat 9.47 us  90% CI ['8.78', '10.15']
+  mechanism: d walk 127.95 us, d queue 73.93 us, ratio 1.731 -> d da_walk_us <= 2 x d da_queue_us
+  d cpu_net_us   mean 113.5246  t 1.39  n 42
+  d da_walk_us   mean 127.9491  t 16.26  n 42
+  d da_late      mean -0.2406  t -4.34  n 42
+  d da_hit       mean 6.7356  t 0.38  n 42
+  d da_miss      mean -0.1149  t -0.30  n 42
+  d da_busy      mean -0.0616  t -0.29  n 42
+  pilot decision if admitted: CLOSED   pilot decision: CLOSED
+  prediction Q1_b_hat_in_0.05_1.5_us      HIT  value 0.0781 band [0.05, 1.5]
+  prediction Q2_closes_after_pilot        HIT  value 10.1472 band [None, 60.0]
+  prediction Q3_d_da_late_within_0.05     MISS value -0.2406 band [-0.05, 0.05]
+  failed: none
+wrote C:/kyty/s102/runs102/dab102a_score.json

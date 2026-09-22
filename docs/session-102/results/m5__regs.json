@@ -1,0 +1,5308 @@
+{
+ "note": "REPORTED numbers, not decisions (pred/01 \u00a76). local_memory_bytes = low dword of pipestat Local Memory Size. full_* = m5_sass_full.py: the whole CS/FS code (all zstd frames, the longest clean prefix of Binary Size; full_instructions excludes the trailing NOP/BRA padding, full_instructions_raw includes it); s16_* = scripts/s16_sass.py (first zstd frame only; its PS window ends at the first unconditional EXIT). full_mem = memory opcodes with their width suffix; const_bank_split: cx[] = indexed constant bank (uniform-buffer descriptor load), c[] = fixed bank.",
+ "rows": [
+  {
+   "module": "S1_56a15431999c5a2d_p0_A",
+   "item": "S1",
+   "stage": "cs",
+   "hash": "56a15431999c5a2d",
+   "cache_id": "7ee8623d978266cd",
+   "perm": 0,
+   "arm": "A",
+   "md5": "85985c7db7af121d74cebb85ce382535",
+   "register_count": 255,
+   "binary_size": 258432,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476800,
+   "local_memory_bytes": 64,
+   "s16_rc": 0,
+   "s16_window": [
+    328,
+    258432
+   ],
+   "s16_instructions": 16152,
+   "s16_ops": {
+    "LDG": 498,
+    "LDC": 1,
+    "LDCU": 80,
+    "ULDC": 0,
+    "LDS": 176,
+    "LD": 0,
+    "STL": 12,
+    "LDL": 12,
+    "ISETP": 1166,
+    "BRA": 333,
+    "TEX": 66,
+    "EXIT": 1
+   },
+   "full_window": [
+    328,
+    258432
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 16137,
+   "full_ops": {
+    "LDG": 498,
+    "LDC": 1,
+    "LDCU": 80,
+    "ULDC": 0,
+    "LDS": 176,
+    "LD": 0,
+    "STL": 12,
+    "LDL": 12,
+    "ISETP": 1166,
+    "BRA": 333,
+    "TEX": 66,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 16152,
+   "full_binary_size": 258432,
+   "full_register_count": 255,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 44,
+     "LDCU.64": 16,
+     "LDCU.HDRUNPACK": 20,
+     "LDG.E": 298,
+     "LDG.E.128": 95,
+     "LDG.E.64": 105,
+     "LDL": 12,
+     "LDS": 176,
+     "STG.E": 1,
+     "STL": 12,
+     "STS": 57,
+     "STS.128": 6,
+     "STS.64": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 64,
+     "LDCU.64": 16,
+     "LDG.128": 95,
+     "LDG.32": 298,
+     "LDG.64": 105,
+     "LDL.32": 12,
+     "LDS.32": 176,
+     "STG.32": 1,
+     "STL.32": 12,
+     "STS.128": 6,
+     "STS.32": 57,
+     "STS.64": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 64,
+     "LDCU.c.64": 16
+    }
+   }
+  },
+  {
+   "module": "S1_56a15431999c5a2d_p0_V1",
+   "item": "S1",
+   "stage": "cs",
+   "hash": "56a15431999c5a2d",
+   "cache_id": "7ee8623d978266cd",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "85985c7db7af121d74cebb85ce382535",
+   "register_count": 255,
+   "binary_size": 258432,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476800,
+   "local_memory_bytes": 64,
+   "s16_rc": 0,
+   "s16_window": [
+    328,
+    258432
+   ],
+   "s16_instructions": 16152,
+   "s16_ops": {
+    "LDG": 498,
+    "LDC": 1,
+    "LDCU": 80,
+    "ULDC": 0,
+    "LDS": 176,
+    "LD": 0,
+    "STL": 12,
+    "LDL": 12,
+    "ISETP": 1166,
+    "BRA": 333,
+    "TEX": 66,
+    "EXIT": 1
+   },
+   "full_window": [
+    328,
+    258432
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 16137,
+   "full_ops": {
+    "LDG": 498,
+    "LDC": 1,
+    "LDCU": 80,
+    "ULDC": 0,
+    "LDS": 176,
+    "LD": 0,
+    "STL": 12,
+    "LDL": 12,
+    "ISETP": 1166,
+    "BRA": 333,
+    "TEX": 66,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 16152,
+   "full_binary_size": 258432,
+   "full_register_count": 255,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 44,
+     "LDCU.64": 16,
+     "LDCU.HDRUNPACK": 20,
+     "LDG.E": 298,
+     "LDG.E.128": 95,
+     "LDG.E.64": 105,
+     "LDL": 12,
+     "LDS": 176,
+     "STG.E": 1,
+     "STL": 12,
+     "STS": 57,
+     "STS.128": 6,
+     "STS.64": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 64,
+     "LDCU.64": 16,
+     "LDG.128": 95,
+     "LDG.32": 298,
+     "LDG.64": 105,
+     "LDL.32": 12,
+     "LDS.32": 176,
+     "STG.32": 1,
+     "STL.32": 12,
+     "STS.128": 6,
+     "STS.32": 57,
+     "STS.64": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 64,
+     "LDCU.c.64": 16
+    }
+   }
+  },
+  {
+   "module": "S1_56a15431999c5a2d_p0_V2",
+   "item": "S1",
+   "stage": "cs",
+   "hash": "56a15431999c5a2d",
+   "cache_id": "7ee8623d978266cd",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "88c1382286ed2ebbb896f3781135f9a2",
+   "register_count": 255,
+   "binary_size": 336128,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476816,
+   "local_memory_bytes": 80,
+   "s16_rc": 0,
+   "s16_window": [
+    328,
+    336128
+   ],
+   "s16_instructions": 21008,
+   "s16_ops": {
+    "LDG": 1097,
+    "LDC": 1,
+    "LDCU": 48,
+    "ULDC": 0,
+    "LDS": 234,
+    "LD": 0,
+    "STL": 28,
+    "LDL": 16,
+    "ISETP": 2171,
+    "BRA": 374,
+    "TEX": 68,
+    "EXIT": 1
+   },
+   "full_window": [
+    328,
+    336128
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 20994,
+   "full_ops": {
+    "LDG": 1097,
+    "LDC": 1,
+    "LDCU": 48,
+    "ULDC": 0,
+    "LDS": 234,
+    "LD": 0,
+    "STL": 28,
+    "LDL": 16,
+    "ISETP": 2171,
+    "BRA": 374,
+    "TEX": 68,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 21008,
+   "full_binary_size": 336128,
+   "full_register_count": 255,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 24,
+     "LDCU.64": 6,
+     "LDCU.HDRUNPACK": 18,
+     "LDG.E": 610,
+     "LDG.E.128": 84,
+     "LDG.E.64": 403,
+     "LDL": 16,
+     "LDS": 234,
+     "STG.E": 1,
+     "STL": 28,
+     "STS": 55,
+     "STS.128": 6,
+     "STS.64": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 42,
+     "LDCU.64": 6,
+     "LDG.128": 84,
+     "LDG.32": 610,
+     "LDG.64": 403,
+     "LDL.32": 16,
+     "LDS.32": 234,
+     "STG.32": 1,
+     "STL.32": 28,
+     "STS.128": 6,
+     "STS.32": 55,
+     "STS.64": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 42,
+     "LDCU.c.64": 6
+    }
+   }
+  },
+  {
+   "module": "S1_56a15431999c5a2d_p0_V2s",
+   "item": "S1",
+   "stage": "cs",
+   "hash": "56a15431999c5a2d",
+   "cache_id": "7ee8623d978266cd",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "0b66bb41c2f63a42543b3d25478eb345",
+   "register_count": 255,
+   "binary_size": 262400,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 0,
+   "s16_window": [
+    328,
+    262400
+   ],
+   "s16_instructions": 16400,
+   "s16_ops": {
+    "LDG": 570,
+    "LDC": 1,
+    "LDCU": 82,
+    "ULDC": 0,
+    "LDS": 152,
+    "LD": 0,
+    "STL": 1,
+    "LDL": 1,
+    "ISETP": 1319,
+    "BRA": 298,
+    "TEX": 68,
+    "EXIT": 1
+   },
+   "full_window": [
+    328,
+    262400
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 16388,
+   "full_ops": {
+    "LDG": 570,
+    "LDC": 1,
+    "LDCU": 82,
+    "ULDC": 0,
+    "LDS": 152,
+    "LD": 0,
+    "STL": 1,
+    "LDL": 1,
+    "ISETP": 1319,
+    "BRA": 298,
+    "TEX": 68,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S1_56a15431999c5a2d_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 16400,
+   "full_binary_size": 262400,
+   "full_register_count": 255,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 46,
+     "LDCU.64": 16,
+     "LDCU.HDRUNPACK": 20,
+     "LDG.E": 383,
+     "LDG.E.128": 84,
+     "LDG.E.64": 103,
+     "LDL": 1,
+     "LDS": 152,
+     "STG.E": 1,
+     "STL": 1,
+     "STS": 68,
+     "STS.128": 6,
+     "STS.64": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 66,
+     "LDCU.64": 16,
+     "LDG.128": 84,
+     "LDG.32": 383,
+     "LDG.64": 103,
+     "LDL.32": 1,
+     "LDS.32": 152,
+     "STG.32": 1,
+     "STL.32": 1,
+     "STS.128": 6,
+     "STS.32": 68,
+     "STS.64": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 66,
+     "LDCU.c.64": 16
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p0_A",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 0,
+   "arm": "A",
+   "md5": "6342112df1fcef92910c66effb6fa253",
+   "register_count": 72,
+   "binary_size": 32256,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    31904
+   ],
+   "s16_instructions": 1994,
+   "s16_ops": {
+    "LDG": 10,
+    "LDC": 12,
+    "LDCU": 78,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 67,
+    "BRA": 48,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    32128
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1996,
+   "full_ops": {
+    "LDG": 10,
+    "LDC": 12,
+    "LDCU": 78,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 67,
+    "BRA": 49,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2008,
+   "full_binary_size": 32256,
+   "full_register_count": 72,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 5,
+     "LDC.64": 7,
+     "LDCU": 47,
+     "LDCU.64": 31,
+     "LDG.E": 7,
+     "LDG.E.128": 3
+    },
+    "widths": {
+     "LDC.32": 5,
+     "LDC.64": 7,
+     "LDCU.32": 47,
+     "LDCU.64": 31,
+     "LDG.128": 3,
+     "LDG.32": 7
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 5,
+     "LDC.cx.64": 7,
+     "LDCU.c.32": 19,
+     "LDCU.c.64": 14,
+     "LDCU.cx.32": 28,
+     "LDCU.cx.64": 17
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p0_V1",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "55578396ab23b0d6400cbb6bfbd589a6",
+   "register_count": 72,
+   "binary_size": 32000,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    31632
+   ],
+   "s16_instructions": 1977,
+   "s16_ops": {
+    "LDG": 50,
+    "LDC": 0,
+    "LDCU": 62,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 122,
+    "BRA": 47,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    31872
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1979,
+   "full_ops": {
+    "LDG": 50,
+    "LDC": 0,
+    "LDCU": 62,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 122,
+    "BRA": 48,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1992,
+   "full_binary_size": 32000,
+   "full_register_count": 72,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 44,
+     "LDCU.64": 18,
+     "LDG.E": 27,
+     "LDG.E.128": 20,
+     "LDG.E.64": 3
+    },
+    "widths": {
+     "LDCU.32": 44,
+     "LDCU.64": 18,
+     "LDG.128": 20,
+     "LDG.32": 27,
+     "LDG.64": 3
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 44,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p0_V2",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "7b7e34c156e50afddee7ad5f994d91ad",
+   "register_count": 101,
+   "binary_size": 55552,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    38992
+   ],
+   "s16_instructions": 2437,
+   "s16_ops": {
+    "LDG": 177,
+    "LDC": 2,
+    "LDCU": 44,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 358,
+    "BRA": 43,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    55424
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3454,
+   "full_ops": {
+    "LDG": 275,
+    "LDC": 3,
+    "LDCU": 76,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 556,
+    "BRA": 63,
+    "TEX": 9,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3464,
+   "full_binary_size": 55552,
+   "full_register_count": 101,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 2,
+     "LDCU": 66,
+     "LDCU.64": 10,
+     "LDG.E": 55,
+     "LDG.E.64": 77,
+     "LDG.E.STRONG.SM": 143,
+     "STG.E": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 2,
+     "LDCU.32": 66,
+     "LDCU.64": 10,
+     "LDG.32": 198,
+     "LDG.64": 77,
+     "STG.32": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 2,
+     "LDCU.c.32": 66,
+     "LDCU.c.64": 10
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p0_V2s",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "369917015bbf0dc68d143e13ddcc465a",
+   "register_count": 64,
+   "binary_size": 40448,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    40112
+   ],
+   "s16_instructions": 2507,
+   "s16_ops": {
+    "LDG": 42,
+    "LDC": 25,
+    "LDCU": 103,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 170,
+    "BRA": 51,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    40320
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 2509,
+   "full_ops": {
+    "LDG": 42,
+    "LDC": 25,
+    "LDCU": 103,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 170,
+    "BRA": 52,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2520,
+   "full_binary_size": 40448,
+   "full_register_count": 64,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 25,
+     "LDCU": 85,
+     "LDCU.64": 18,
+     "LDG.E": 42
+    },
+    "widths": {
+     "LDC.32": 25,
+     "LDCU.32": 85,
+     "LDCU.64": 18,
+     "LDG.32": 42
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 25,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 18,
+     "LDCU.cx.32": 56
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p1_A",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 1,
+   "arm": "A",
+   "md5": "30206d1e804be1b32d7c103884be13e6",
+   "register_count": 70,
+   "binary_size": 32128,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    31712
+   ],
+   "s16_instructions": 1982,
+   "s16_ops": {
+    "LDG": 11,
+    "LDC": 10,
+    "LDCU": 79,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 68,
+    "BRA": 48,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    32000
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1984,
+   "full_ops": {
+    "LDG": 11,
+    "LDC": 10,
+    "LDCU": 79,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 68,
+    "BRA": 49,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2000,
+   "full_binary_size": 32128,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 4,
+     "LDC.64": 6,
+     "LDCU": 48,
+     "LDCU.64": 31,
+     "LDG.E": 7,
+     "LDG.E.128": 4
+    },
+    "widths": {
+     "LDC.32": 4,
+     "LDC.64": 6,
+     "LDCU.32": 48,
+     "LDCU.64": 31,
+     "LDG.128": 4,
+     "LDG.32": 7
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 4,
+     "LDC.cx.64": 6,
+     "LDCU.c.32": 20,
+     "LDCU.c.64": 14,
+     "LDCU.cx.32": 28,
+     "LDCU.cx.64": 17
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p1_V1",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 1,
+   "arm": "V1",
+   "md5": "55578396ab23b0d6400cbb6bfbd589a6",
+   "register_count": 72,
+   "binary_size": 32000,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    31632
+   ],
+   "s16_instructions": 1977,
+   "s16_ops": {
+    "LDG": 50,
+    "LDC": 0,
+    "LDCU": 62,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 122,
+    "BRA": 47,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    31872
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1979,
+   "full_ops": {
+    "LDG": 50,
+    "LDC": 0,
+    "LDCU": 62,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 122,
+    "BRA": 48,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1992,
+   "full_binary_size": 32000,
+   "full_register_count": 72,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 44,
+     "LDCU.64": 18,
+     "LDG.E": 27,
+     "LDG.E.128": 20,
+     "LDG.E.64": 3
+    },
+    "widths": {
+     "LDCU.32": 44,
+     "LDCU.64": 18,
+     "LDG.128": 20,
+     "LDG.32": 27,
+     "LDG.64": 3
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 44,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p1_V2",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 1,
+   "arm": "V2",
+   "md5": "7b7e34c156e50afddee7ad5f994d91ad",
+   "register_count": 101,
+   "binary_size": 55552,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    38992
+   ],
+   "s16_instructions": 2437,
+   "s16_ops": {
+    "LDG": 177,
+    "LDC": 2,
+    "LDCU": 44,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 358,
+    "BRA": 43,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    55424
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3454,
+   "full_ops": {
+    "LDG": 275,
+    "LDC": 3,
+    "LDCU": 76,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 556,
+    "BRA": 63,
+    "TEX": 9,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3464,
+   "full_binary_size": 55552,
+   "full_register_count": 101,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 2,
+     "LDCU": 66,
+     "LDCU.64": 10,
+     "LDG.E": 55,
+     "LDG.E.64": 77,
+     "LDG.E.STRONG.SM": 143,
+     "STG.E": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 2,
+     "LDCU.32": 66,
+     "LDCU.64": 10,
+     "LDG.32": 198,
+     "LDG.64": 77,
+     "STG.32": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 2,
+     "LDCU.c.32": 66,
+     "LDCU.c.64": 10
+    }
+   }
+  },
+  {
+   "module": "S2_746c68bba46b2b49_p1_V2s",
+   "item": "S2",
+   "stage": "ps",
+   "hash": "746c68bba46b2b49",
+   "cache_id": "ba06f0d0d4edd94d",
+   "perm": 1,
+   "arm": "V2s",
+   "md5": "bf96a8008ff89c6c3fc551a13d68b9b0",
+   "register_count": 64,
+   "binary_size": 40448,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    40144
+   ],
+   "s16_instructions": 2509,
+   "s16_ops": {
+    "LDG": 45,
+    "LDC": 22,
+    "LDCU": 103,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 174,
+    "BRA": 51,
+    "TEX": 9,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    40320
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 2511,
+   "full_ops": {
+    "LDG": 45,
+    "LDC": 22,
+    "LDCU": 103,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 174,
+    "BRA": 52,
+    "TEX": 9,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S2_746c68bba46b2b49_p1_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2520,
+   "full_binary_size": 40448,
+   "full_register_count": 64,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 22,
+     "LDCU": 85,
+     "LDCU.64": 18,
+     "LDG.E": 45
+    },
+    "widths": {
+     "LDC.32": 22,
+     "LDCU.32": 85,
+     "LDCU.64": 18,
+     "LDG.32": 45
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 22,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 18,
+     "LDCU.cx.32": 56
+    }
+   }
+  },
+  {
+   "module": "S3_3d705c1b57adec00_p0_A",
+   "item": "S3",
+   "stage": "ps",
+   "hash": "3d705c1b57adec00",
+   "cache_id": "b519b730d6966fd7",
+   "perm": 0,
+   "arm": "A",
+   "md5": "5ff20bf600c76da4c46919475a705391",
+   "register_count": 64,
+   "binary_size": 18560,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    18192
+   ],
+   "s16_instructions": 1137,
+   "s16_ops": {
+    "LDG": 3,
+    "LDC": 1,
+    "LDCU": 55,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 96,
+    "BRA": 6,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    18432
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1137,
+   "full_ops": {
+    "LDG": 3,
+    "LDC": 1,
+    "LDCU": 55,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 96,
+    "BRA": 7,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1152,
+   "full_binary_size": 18560,
+   "full_register_count": 64,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 28,
+     "LDCU.128": 1,
+     "LDCU.64": 26,
+     "LDG.E": 3
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.128": 1,
+     "LDCU.32": 28,
+     "LDCU.64": 26,
+     "LDG.32": 3
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 1,
+     "LDCU.c.128": 1,
+     "LDCU.c.32": 8,
+     "LDCU.c.64": 5,
+     "LDCU.cx.32": 20,
+     "LDCU.cx.64": 21
+    }
+   }
+  },
+  {
+   "module": "S3_3d705c1b57adec00_p0_V1",
+   "item": "S3",
+   "stage": "ps",
+   "hash": "3d705c1b57adec00",
+   "cache_id": "b519b730d6966fd7",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "8f2c45f091570170e294696239710f69",
+   "register_count": 78,
+   "binary_size": 18688,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    18304
+   ],
+   "s16_instructions": 1144,
+   "s16_ops": {
+    "LDG": 27,
+    "LDC": 1,
+    "LDCU": 17,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 120,
+    "BRA": 3,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    18560
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1144,
+   "full_ops": {
+    "LDG": 27,
+    "LDC": 1,
+    "LDCU": 17,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 120,
+    "BRA": 4,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1160,
+   "full_binary_size": 18688,
+   "full_register_count": 78,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 12,
+     "LDCU.128": 1,
+     "LDCU.64": 4,
+     "LDG.E": 8,
+     "LDG.E.128": 18,
+     "LDG.E.64": 1
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.128": 1,
+     "LDCU.32": 12,
+     "LDCU.64": 4,
+     "LDG.128": 18,
+     "LDG.32": 8,
+     "LDG.64": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.128": 1,
+     "LDCU.c.32": 12,
+     "LDCU.c.64": 4
+    }
+   }
+  },
+  {
+   "module": "S3_3d705c1b57adec00_p0_V2",
+   "item": "S3",
+   "stage": "ps",
+   "hash": "3d705c1b57adec00",
+   "cache_id": "b519b730d6966fd7",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "4fe8ea80a05ff176ef6814c09033b713",
+   "register_count": 96,
+   "binary_size": 39040,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    2272
+   ],
+   "s16_instructions": 142,
+   "s16_ops": {
+    "LDG": 14,
+    "LDC": 1,
+    "LDCU": 12,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 23,
+    "BRA": 2,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    38912
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 2420,
+   "full_ops": {
+    "LDG": 216,
+    "LDC": 1,
+    "LDCU": 37,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 372,
+    "BRA": 14,
+    "TEX": 8,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2432,
+   "full_binary_size": 39040,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 29,
+     "LDCU.128": 1,
+     "LDCU.64": 7,
+     "LDG.E": 17,
+     "LDG.E.64": 69,
+     "LDG.E.STRONG.SM": 130,
+     "STG.E": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.128": 1,
+     "LDCU.32": 29,
+     "LDCU.64": 7,
+     "LDG.32": 147,
+     "LDG.64": 69,
+     "STG.32": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.128": 1,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 7
+    }
+   }
+  },
+  {
+   "module": "S3_3d705c1b57adec00_p0_V2s",
+   "item": "S3",
+   "stage": "ps",
+   "hash": "3d705c1b57adec00",
+   "cache_id": "b519b730d6966fd7",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "30fa2a148c2aa3c3274b7602c0660122",
+   "register_count": 70,
+   "binary_size": 23808,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    632,
+    23680
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 1468,
+   "full_ops": {
+    "LDG": 13,
+    "LDC": 23,
+    "LDCU": 59,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 110,
+    "BRA": 6,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S3_3d705c1b57adec00_p0_V2s.full.sass",
+   "full_frame": 7338,
+   "full_instructions_raw": 1480,
+   "full_binary_size": 23808,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 23,
+     "LDCU": 51,
+     "LDCU.128": 1,
+     "LDCU.64": 7,
+     "LDG.E": 13
+    },
+    "widths": {
+     "LDC.32": 23,
+     "LDCU.128": 1,
+     "LDCU.32": 51,
+     "LDCU.64": 7,
+     "LDG.32": 13
+    },
+    "const_bank_split": {
+     "LDC.cx.32": 23,
+     "LDCU.c.128": 1,
+     "LDCU.c.32": 11,
+     "LDCU.c.64": 7,
+     "LDCU.cx.32": 40
+    }
+   }
+  },
+  {
+   "module": "S4_2e2ae33a4d374e8f_p0_A",
+   "item": "S4",
+   "stage": "ps",
+   "hash": "2e2ae33a4d374e8f",
+   "cache_id": "61162655bd1b2fe2",
+   "perm": 0,
+   "arm": "A",
+   "md5": "f6163abf730b68c50f7a60067751a95a",
+   "register_count": 96,
+   "binary_size": 88192,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476816,
+   "local_memory_bytes": 80,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    664,
+    88064
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5495,
+   "full_ops": {
+    "LDG": 23,
+    "LDC": 86,
+    "LDCU": 123,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 32,
+    "LDL": 26,
+    "ISETP": 144,
+    "BRA": 104,
+    "TEX": 47,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_A.full.sass",
+   "full_frame": 7390,
+   "full_instructions_raw": 5504,
+   "full_binary_size": 88192,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 27,
+     "LDC.64": 59,
+     "LDCU": 61,
+     "LDCU.64": 62,
+     "LDG.E": 20,
+     "LDG.E.128": 3,
+     "LDL": 7,
+     "LDL.LU": 19,
+     "STL": 32
+    },
+    "widths": {
+     "LDC.32": 27,
+     "LDC.64": 59,
+     "LDCU.32": 61,
+     "LDCU.64": 62,
+     "LDG.128": 3,
+     "LDG.32": 20,
+     "LDL.32": 26,
+     "STL.32": 32
+    },
+    "const_bank_split": {
+     "LDC.c.32": 3,
+     "LDC.cx.32": 24,
+     "LDC.cx.64": 59,
+     "LDCU.c.32": 31,
+     "LDCU.c.64": 21,
+     "LDCU.cx.32": 30,
+     "LDCU.cx.64": 41
+    }
+   }
+  },
+  {
+   "module": "S4_2e2ae33a4d374e8f_p0_V1",
+   "item": "S4",
+   "stage": "ps",
+   "hash": "2e2ae33a4d374e8f",
+   "cache_id": "61162655bd1b2fe2",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "142a4fb2441a35c63ae7f00f78eb0bdd",
+   "register_count": 96,
+   "binary_size": 92544,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476848,
+   "local_memory_bytes": 112,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    27456
+   ],
+   "s16_instructions": 1716,
+   "s16_ops": {
+    "LDG": 32,
+    "LDC": 1,
+    "LDCU": 37,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 5,
+    "LDL": 2,
+    "ISETP": 116,
+    "BRA": 38,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    664,
+    92416
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5766,
+   "full_ops": {
+    "LDG": 115,
+    "LDC": 6,
+    "LDCU": 98,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 38,
+    "LDL": 35,
+    "ISETP": 259,
+    "BRA": 108,
+    "TEX": 47,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5776,
+   "full_binary_size": 92544,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 3,
+     "LDC.64": 3,
+     "LDCU": 80,
+     "LDCU.64": 18,
+     "LDG.E": 48,
+     "LDG.E.128": 60,
+     "LDG.E.64": 7,
+     "LDL": 13,
+     "LDL.LU": 21,
+     "LDL.LU.128": 1,
+     "STL": 36,
+     "STL.128": 1,
+     "STL.64": 1
+    },
+    "widths": {
+     "LDC.32": 3,
+     "LDC.64": 3,
+     "LDCU.32": 80,
+     "LDCU.64": 18,
+     "LDG.128": 60,
+     "LDG.32": 48,
+     "LDG.64": 7,
+     "LDL.128": 1,
+     "LDL.32": 34,
+     "STL.128": 1,
+     "STL.32": 36,
+     "STL.64": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 3,
+     "LDC.c.64": 3,
+     "LDCU.c.32": 80,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S4_2e2ae33a4d374e8f_p0_V2",
+   "item": "S4",
+   "stage": "ps",
+   "hash": "2e2ae33a4d374e8f",
+   "cache_id": "61162655bd1b2fe2",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "b0fca9eb70d502098e23546613bf0cf6",
+   "register_count": 128,
+   "binary_size": 179200,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476992,
+   "local_memory_bytes": 256,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    48480
+   ],
+   "s16_instructions": 3030,
+   "s16_ops": {
+    "LDG": 177,
+    "LDC": 1,
+    "LDCU": 55,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 30,
+    "LDL": 1,
+    "ISETP": 211,
+    "BRA": 44,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    664,
+    179072
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 11177,
+   "full_ops": {
+    "LDG": 840,
+    "LDC": 9,
+    "LDCU": 174,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 98,
+    "LDL": 134,
+    "ISETP": 1265,
+    "BRA": 152,
+    "TEX": 47,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 11192,
+   "full_binary_size": 179200,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 8,
+     "LDC.64": 1,
+     "LDCU": 163,
+     "LDCU.64": 11,
+     "LDG.E": 102,
+     "LDG.E.64": 258,
+     "LDG.E.STRONG.SM": 480,
+     "LDL": 82,
+     "LDL.LU": 47,
+     "LDL.LU.64": 5,
+     "STG.E": 2,
+     "STL": 93,
+     "STL.64": 5
+    },
+    "widths": {
+     "LDC.32": 8,
+     "LDC.64": 1,
+     "LDCU.32": 163,
+     "LDCU.64": 11,
+     "LDG.32": 582,
+     "LDG.64": 258,
+     "LDL.32": 129,
+     "LDL.64": 5,
+     "STG.32": 2,
+     "STL.32": 93,
+     "STL.64": 5
+    },
+    "const_bank_split": {
+     "LDC.c.32": 8,
+     "LDC.c.64": 1,
+     "LDCU.c.32": 163,
+     "LDCU.c.64": 11
+    }
+   }
+  },
+  {
+   "module": "S4_2e2ae33a4d374e8f_p0_V2s",
+   "item": "S4",
+   "stage": "ps",
+   "hash": "2e2ae33a4d374e8f",
+   "cache_id": "61162655bd1b2fe2",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "d68623cb1aedaf2e638bd38569539ea1",
+   "register_count": 96,
+   "binary_size": 106752,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476832,
+   "local_memory_bytes": 96,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    664,
+    106624
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 6654,
+   "full_ops": {
+    "LDG": 59,
+    "LDC": 247,
+    "LDCU": 70,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 34,
+    "LDL": 35,
+    "ISETP": 516,
+    "BRA": 110,
+    "TEX": 47,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S4_2e2ae33a4d374e8f_p0_V2s.full.sass",
+   "full_frame": 7390,
+   "full_instructions_raw": 6664,
+   "full_binary_size": 106752,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 246,
+     "LDC.64": 1,
+     "LDCU": 44,
+     "LDCU.64": 26,
+     "LDG.E": 59,
+     "LDL": 14,
+     "LDL.LU": 21,
+     "STL": 34
+    },
+    "widths": {
+     "LDC.32": 246,
+     "LDC.64": 1,
+     "LDCU.32": 44,
+     "LDCU.64": 26,
+     "LDG.32": 59,
+     "LDL.32": 35,
+     "STL.32": 34
+    },
+    "const_bank_split": {
+     "LDC.c.32": 3,
+     "LDC.c.64": 1,
+     "LDC.cx.32": 243,
+     "LDCU.c.32": 41,
+     "LDCU.c.64": 26,
+     "LDCU.cx.32": 3
+    }
+   }
+  },
+  {
+   "module": "S5_b96c2898f05637df_p0_A",
+   "item": "S5",
+   "stage": "ps",
+   "hash": "b96c2898f05637df",
+   "cache_id": "acdeeb103a4a3eb9",
+   "perm": 0,
+   "arm": "A",
+   "md5": "fa7ba08278c883c16e0bfce42133df9b",
+   "register_count": 80,
+   "binary_size": 42752,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    42480
+   ],
+   "s16_instructions": 2655,
+   "s16_ops": {
+    "LDG": 18,
+    "LDC": 0,
+    "LDCU": 149,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 130,
+    "BRA": 40,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    42624
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 2655,
+   "full_ops": {
+    "LDG": 18,
+    "LDC": 0,
+    "LDCU": 149,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 130,
+    "BRA": 41,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2664,
+   "full_binary_size": 42752,
+   "full_register_count": 80,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 84,
+     "LDCU.128": 4,
+     "LDCU.64": 61,
+     "LDG.E": 18
+    },
+    "widths": {
+     "LDCU.128": 4,
+     "LDCU.32": 84,
+     "LDCU.64": 61,
+     "LDG.32": 18
+    },
+    "const_bank_split": {
+     "LDCU.c.128": 4,
+     "LDCU.c.32": 18,
+     "LDCU.c.64": 22,
+     "LDCU.cx.32": 66,
+     "LDCU.cx.64": 39
+    }
+   }
+  },
+  {
+   "module": "S5_b96c2898f05637df_p0_V1",
+   "item": "S5",
+   "stage": "ps",
+   "hash": "b96c2898f05637df",
+   "cache_id": "acdeeb103a4a3eb9",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "b6ed8d48174cf190b8460c3e1236c280",
+   "register_count": 86,
+   "binary_size": 44672,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    44336
+   ],
+   "s16_instructions": 2771,
+   "s16_ops": {
+    "LDG": 96,
+    "LDC": 0,
+    "LDCU": 82,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 225,
+    "BRA": 38,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    44544
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 2771,
+   "full_ops": {
+    "LDG": 96,
+    "LDC": 0,
+    "LDCU": 82,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 225,
+    "BRA": 39,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 2784,
+   "full_binary_size": 44672,
+   "full_register_count": 86,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 52,
+     "LDCU.128": 4,
+     "LDCU.64": 26,
+     "LDG.E": 63,
+     "LDG.E.128": 27,
+     "LDG.E.64": 6
+    },
+    "widths": {
+     "LDCU.128": 4,
+     "LDCU.32": 52,
+     "LDCU.64": 26,
+     "LDG.128": 27,
+     "LDG.32": 63,
+     "LDG.64": 6
+    },
+    "const_bank_split": {
+     "LDCU.c.128": 4,
+     "LDCU.c.32": 52,
+     "LDCU.c.64": 26
+    }
+   }
+  },
+  {
+   "module": "S5_b96c2898f05637df_p0_V2",
+   "item": "S5",
+   "stage": "ps",
+   "hash": "b96c2898f05637df",
+   "cache_id": "acdeeb103a4a3eb9",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "69a184d49ba664681d3db9c1562b1161",
+   "register_count": 128,
+   "binary_size": 95616,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    95264
+   ],
+   "s16_instructions": 5954,
+   "s16_ops": {
+    "LDG": 521,
+    "LDC": 8,
+    "LDCU": 129,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 938,
+    "BRA": 81,
+    "TEX": 43,
+    "EXIT": 2
+   },
+   "full_window": [
+    632,
+    95488
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5954,
+   "full_ops": {
+    "LDG": 521,
+    "LDC": 8,
+    "LDCU": 129,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 938,
+    "BRA": 82,
+    "TEX": 43,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5968,
+   "full_binary_size": 95616,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 4,
+     "LDC.64": 4,
+     "LDCU": 106,
+     "LDCU.128": 2,
+     "LDCU.64": 21,
+     "LDG.E": 60,
+     "LDG.E.64": 163,
+     "LDG.E.STRONG.SM": 298,
+     "STG.E": 1
+    },
+    "widths": {
+     "LDC.32": 4,
+     "LDC.64": 4,
+     "LDCU.128": 2,
+     "LDCU.32": 106,
+     "LDCU.64": 21,
+     "LDG.32": 358,
+     "LDG.64": 163,
+     "STG.32": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 4,
+     "LDC.c.64": 4,
+     "LDCU.c.128": 2,
+     "LDCU.c.32": 106,
+     "LDCU.c.64": 21
+    }
+   }
+  },
+  {
+   "module": "S5_b96c2898f05637df_p0_V2s",
+   "item": "S5",
+   "stage": "ps",
+   "hash": "b96c2898f05637df",
+   "cache_id": "acdeeb103a4a3eb9",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "5a19ddf5892338882f70ab2ee1b6e34a",
+   "register_count": 80,
+   "binary_size": 55936,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    55552
+   ],
+   "s16_instructions": 3472,
+   "s16_ops": {
+    "LDG": 54,
+    "LDC": 93,
+    "LDCU": 113,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 1,
+    "LDL": 1,
+    "ISETP": 358,
+    "BRA": 38,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_window": [
+    664,
+    55808
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3472,
+   "full_ops": {
+    "LDG": 54,
+    "LDC": 93,
+    "LDCU": 113,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 1,
+    "LDL": 1,
+    "ISETP": 358,
+    "BRA": 39,
+    "TEX": 43,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S5_b96c2898f05637df_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3488,
+   "full_binary_size": 55936,
+   "full_register_count": 80,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 93,
+     "LDCU": 83,
+     "LDCU.128": 4,
+     "LDCU.64": 26,
+     "LDG.E": 54,
+     "LDL.LU": 1,
+     "STL": 1
+    },
+    "widths": {
+     "LDC.32": 93,
+     "LDCU.128": 4,
+     "LDCU.32": 83,
+     "LDCU.64": 26,
+     "LDG.32": 54,
+     "LDL.32": 1,
+     "STL.32": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.cx.32": 92,
+     "LDCU.c.128": 4,
+     "LDCU.c.32": 31,
+     "LDCU.c.64": 26,
+     "LDCU.cx.32": 52
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p0_A",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 0,
+   "arm": "A",
+   "md5": "75c20bfa1576fd1bfafcde53777a0a43",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p0_V1",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "75c20bfa1576fd1bfafcde53777a0a43",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p0_V2",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "cafa040cc76ad0f9b6ff1c7d8d484d2b",
+   "register_count": 83,
+   "binary_size": 81024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    264,
+    81008
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5047,
+   "full_ops": {
+    "LDG": 272,
+    "LDC": 1,
+    "LDCU": 16,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 4,
+    "LDL": 23,
+    "ISETP": 841,
+    "BRA": 203,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5063,
+   "full_binary_size": 81024,
+   "full_register_count": 83,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 9,
+     "LDCU.64": 7,
+     "LDG.E": 148,
+     "LDG.E.64": 124,
+     "LDL": 23,
+     "LDS": 288,
+     "STG.E": 11,
+     "STL": 4,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 9,
+     "LDCU.64": 7,
+     "LDG.32": 148,
+     "LDG.64": 124,
+     "LDL.32": 23,
+     "LDS.32": 288,
+     "STG.32": 11,
+     "STL.32": 4,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 9,
+     "LDCU.c.64": 7
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p0_V2s",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "f8f8e4e863c3f58a203b747f137bdbfb",
+   "register_count": 69,
+   "binary_size": 56576,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    344,
+    56448
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3516,
+   "full_ops": {
+    "LDG": 77,
+    "LDC": 1,
+    "LDCU": 20,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 481,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3528,
+   "full_binary_size": 56576,
+   "full_register_count": 69,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 12,
+     "LDCU.64": 8,
+     "LDG.E": 77,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 12,
+     "LDCU.64": 8,
+     "LDG.32": 77,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 12,
+     "LDCU.c.64": 8
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p1_A",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 1,
+   "arm": "A",
+   "md5": "75c20bfa1576fd1bfafcde53777a0a43",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p1_V1",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 1,
+   "arm": "V1",
+   "md5": "75c20bfa1576fd1bfafcde53777a0a43",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p1_V2",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 1,
+   "arm": "V2",
+   "md5": "cafa040cc76ad0f9b6ff1c7d8d484d2b",
+   "register_count": 83,
+   "binary_size": 81024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    264,
+    81008
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5047,
+   "full_ops": {
+    "LDG": 272,
+    "LDC": 1,
+    "LDCU": 16,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 4,
+    "LDL": 23,
+    "ISETP": 841,
+    "BRA": 203,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5063,
+   "full_binary_size": 81024,
+   "full_register_count": 83,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 9,
+     "LDCU.64": 7,
+     "LDG.E": 148,
+     "LDG.E.64": 124,
+     "LDL": 23,
+     "LDS": 288,
+     "STG.E": 11,
+     "STL": 4,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 9,
+     "LDCU.64": 7,
+     "LDG.32": 148,
+     "LDG.64": 124,
+     "LDL.32": 23,
+     "LDS.32": 288,
+     "STG.32": 11,
+     "STL.32": 4,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 9,
+     "LDCU.c.64": 7
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_100166fe_p1_V2s",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "100166fe058eb1a3",
+   "perm": 1,
+   "arm": "V2s",
+   "md5": "f8f8e4e863c3f58a203b747f137bdbfb",
+   "register_count": 69,
+   "binary_size": 56576,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    344,
+    56448
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3516,
+   "full_ops": {
+    "LDG": 77,
+    "LDC": 1,
+    "LDCU": 20,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 481,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_100166fe_p1_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3528,
+   "full_binary_size": 56576,
+   "full_register_count": 69,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 12,
+     "LDCU.64": 8,
+     "LDG.E": 77,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 12,
+     "LDCU.64": 8,
+     "LDG.32": 77,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 12,
+     "LDCU.c.64": 8
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p0_A",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 0,
+   "arm": "A",
+   "md5": "ffc2378c2779b6080f46a21b742390e6",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p0_V1",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "ffc2378c2779b6080f46a21b742390e6",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p0_V2",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "ab8a63b4ffa9fae2a49069fc6e9b2c75",
+   "register_count": 83,
+   "binary_size": 81024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    264,
+    81008
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5047,
+   "full_ops": {
+    "LDG": 272,
+    "LDC": 1,
+    "LDCU": 16,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 4,
+    "LDL": 23,
+    "ISETP": 841,
+    "BRA": 203,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5063,
+   "full_binary_size": 81024,
+   "full_register_count": 83,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 9,
+     "LDCU.64": 7,
+     "LDG.E": 148,
+     "LDG.E.64": 124,
+     "LDL": 23,
+     "LDS": 288,
+     "STG.E": 11,
+     "STL": 4,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 9,
+     "LDCU.64": 7,
+     "LDG.32": 148,
+     "LDG.64": 124,
+     "LDL.32": 23,
+     "LDS.32": 288,
+     "STG.32": 11,
+     "STL.32": 4,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 9,
+     "LDCU.c.64": 7
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p0_V2s",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "44b0e098bc338c0ca79fb21ccec3d971",
+   "register_count": 69,
+   "binary_size": 56576,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    344,
+    56448
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3516,
+   "full_ops": {
+    "LDG": 77,
+    "LDC": 1,
+    "LDCU": 20,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 481,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3528,
+   "full_binary_size": 56576,
+   "full_register_count": 69,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 12,
+     "LDCU.64": 8,
+     "LDG.E": 77,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 12,
+     "LDCU.64": 8,
+     "LDG.32": 77,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 12,
+     "LDCU.c.64": 8
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p1_A",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 1,
+   "arm": "A",
+   "md5": "ffc2378c2779b6080f46a21b742390e6",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p1_V1",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 1,
+   "arm": "V1",
+   "md5": "ffc2378c2779b6080f46a21b742390e6",
+   "register_count": 70,
+   "binary_size": 53376,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    360,
+    53232
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3315,
+   "full_ops": {
+    "LDG": 66,
+    "LDC": 1,
+    "LDCU": 10,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 414,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3327,
+   "full_binary_size": 53376,
+   "full_register_count": 70,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 5,
+     "LDCU.64": 5,
+     "LDG.E": 61,
+     "LDG.E.128": 4,
+     "LDG.E.64": 1,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 5,
+     "LDCU.64": 5,
+     "LDG.128": 4,
+     "LDG.32": 61,
+     "LDG.64": 1,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 5,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p1_V2",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 1,
+   "arm": "V2",
+   "md5": "ab8a63b4ffa9fae2a49069fc6e9b2c75",
+   "register_count": 83,
+   "binary_size": 81024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    264,
+    81008
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5047,
+   "full_ops": {
+    "LDG": 272,
+    "LDC": 1,
+    "LDCU": 16,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 4,
+    "LDL": 23,
+    "ISETP": 841,
+    "BRA": 203,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5063,
+   "full_binary_size": 81024,
+   "full_register_count": 83,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 9,
+     "LDCU.64": 7,
+     "LDG.E": 148,
+     "LDG.E.64": 124,
+     "LDL": 23,
+     "LDS": 288,
+     "STG.E": 11,
+     "STL": 4,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 9,
+     "LDCU.64": 7,
+     "LDG.32": 148,
+     "LDG.64": 124,
+     "LDL.32": 23,
+     "LDS.32": 288,
+     "STG.32": 11,
+     "STL.32": 4,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 9,
+     "LDCU.c.64": 7
+    }
+   }
+  },
+  {
+   "module": "S6_173677e49330bd65_a20d0a4b_p1_V2s",
+   "item": "S6",
+   "stage": "cs",
+   "hash": "173677e49330bd65",
+   "cache_id": "a20d0a4b2199d3f7",
+   "perm": 1,
+   "arm": "V2s",
+   "md5": "44b0e098bc338c0ca79fb21ccec3d971",
+   "register_count": 69,
+   "binary_size": 56576,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    344,
+    56448
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 3516,
+   "full_ops": {
+    "LDG": 77,
+    "LDC": 1,
+    "LDCU": 20,
+    "ULDC": 0,
+    "LDS": 288,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 481,
+    "BRA": 173,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S6_173677e49330bd65_a20d0a4b_p1_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 3528,
+   "full_binary_size": 56576,
+   "full_register_count": 69,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 12,
+     "LDCU.64": 8,
+     "LDG.E": 77,
+     "LDS": 288,
+     "STG.E": 10,
+     "STS": 24
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 12,
+     "LDCU.64": 8,
+     "LDG.32": 77,
+     "LDS.32": 288,
+     "STG.32": 10,
+     "STS.32": 24
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 12,
+     "LDCU.c.64": 8
+    }
+   }
+  },
+  {
+   "module": "S7_3276e23cce1be33c_p0_A",
+   "item": "S7",
+   "stage": "cs",
+   "hash": "3276e23cce1be33c",
+   "cache_id": "799ac41f2238c323",
+   "perm": 0,
+   "arm": "A",
+   "md5": "d2b83875f6c63caf93fd958d0a833e9a",
+   "register_count": 41,
+   "binary_size": 15872,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    328,
+    15760
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 976,
+   "full_ops": {
+    "LDG": 34,
+    "LDC": 1,
+    "LDCU": 44,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 71,
+    "BRA": 27,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 985,
+   "full_binary_size": 15872,
+   "full_register_count": 41,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 22,
+     "LDCU.64": 22,
+     "LDG.E": 31,
+     "LDG.E.128": 2,
+     "LDG.E.64": 1,
+     "STG.E": 18
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 22,
+     "LDCU.64": 22,
+     "LDG.128": 2,
+     "LDG.32": 31,
+     "LDG.64": 1,
+     "STG.32": 18
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 22,
+     "LDCU.c.64": 22
+    }
+   }
+  },
+  {
+   "module": "S7_3276e23cce1be33c_p0_V1",
+   "item": "S7",
+   "stage": "cs",
+   "hash": "3276e23cce1be33c",
+   "cache_id": "799ac41f2238c323",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "d2b83875f6c63caf93fd958d0a833e9a",
+   "register_count": 41,
+   "binary_size": 15872,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    328,
+    15760
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 976,
+   "full_ops": {
+    "LDG": 34,
+    "LDC": 1,
+    "LDCU": 44,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 71,
+    "BRA": 27,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 985,
+   "full_binary_size": 15872,
+   "full_register_count": 41,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 22,
+     "LDCU.64": 22,
+     "LDG.E": 31,
+     "LDG.E.128": 2,
+     "LDG.E.64": 1,
+     "STG.E": 18
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 22,
+     "LDCU.64": 22,
+     "LDG.128": 2,
+     "LDG.32": 31,
+     "LDG.64": 1,
+     "STG.32": 18
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 22,
+     "LDCU.c.64": 22
+    }
+   }
+  },
+  {
+   "module": "S7_3276e23cce1be33c_p0_V2",
+   "item": "S7",
+   "stage": "cs",
+   "hash": "3276e23cce1be33c",
+   "cache_id": "799ac41f2238c323",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "b7360dfeda254cf8d096a663e5e1804e",
+   "register_count": 63,
+   "binary_size": 30080,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    216,
+    30080
+   ],
+   "s16_instructions": 1880,
+   "s16_ops": {
+    "LDG": 148,
+    "LDC": 1,
+    "LDCU": 51,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 281,
+    "BRA": 49,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_window": [
+    216,
+    30080
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 1864,
+   "full_ops": {
+    "LDG": 148,
+    "LDC": 1,
+    "LDCU": 51,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 281,
+    "BRA": 49,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1880,
+   "full_binary_size": 30080,
+   "full_register_count": 63,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 26,
+     "LDCU.64": 25,
+     "LDG.E": 86,
+     "LDG.E.64": 62,
+     "STG.E": 19
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 26,
+     "LDCU.64": 25,
+     "LDG.32": 86,
+     "LDG.64": 62,
+     "STG.32": 19
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 26,
+     "LDCU.c.64": 25
+    }
+   }
+  },
+  {
+   "module": "S7_3276e23cce1be33c_p0_V2s",
+   "item": "S7",
+   "stage": "cs",
+   "hash": "3276e23cce1be33c",
+   "cache_id": "799ac41f2238c323",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "a41eee161369d12e4fdda0321a5f1f73",
+   "register_count": 41,
+   "binary_size": 18304,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476752,
+   "local_memory_bytes": 16,
+   "s16_rc": 0,
+   "s16_window": [
+    248,
+    18304
+   ],
+   "s16_instructions": 1144,
+   "s16_ops": {
+    "LDG": 50,
+    "LDC": 1,
+    "LDCU": 53,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 113,
+    "BRA": 27,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_window": [
+    248,
+    18304
+   ],
+   "full_method": "binary-size",
+   "full_instructions": 1132,
+   "full_ops": {
+    "LDG": 50,
+    "LDC": 1,
+    "LDCU": 53,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 113,
+    "BRA": 27,
+    "TEX": 0,
+    "EXIT": 1
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S7_3276e23cce1be33c_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 1144,
+   "full_binary_size": 18304,
+   "full_register_count": 41,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 29,
+     "LDCU.64": 24,
+     "LDG.E": 50,
+     "STG.E": 18
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 29,
+     "LDCU.64": 24,
+     "LDG.32": 50,
+     "STG.32": 18
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 24
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p0_A",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 0,
+   "arm": "A",
+   "md5": "da9e1db290374cbdbb0b971bdc92a364",
+   "register_count": 96,
+   "binary_size": 73088,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476800,
+   "local_memory_bytes": 64,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    29568
+   ],
+   "s16_instructions": 1848,
+   "s16_ops": {
+    "LDG": 10,
+    "LDC": 10,
+    "LDCU": 52,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 5,
+    "LDL": 0,
+    "ISETP": 62,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    664,
+    72960
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4549,
+   "full_ops": {
+    "LDG": 23,
+    "LDC": 83,
+    "LDCU": 112,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 21,
+    "LDL": 24,
+    "ISETP": 142,
+    "BRA": 91,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 4560,
+   "full_binary_size": 73088,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 25,
+     "LDC.64": 58,
+     "LDCU": 57,
+     "LDCU.64": 55,
+     "LDG.E": 20,
+     "LDG.E.128": 3,
+     "LDL": 12,
+     "LDL.LU": 12,
+     "STL": 21
+    },
+    "widths": {
+     "LDC.32": 25,
+     "LDC.64": 58,
+     "LDCU.32": 57,
+     "LDCU.64": 55,
+     "LDG.128": 3,
+     "LDG.32": 20,
+     "LDL.32": 24,
+     "STL.32": 21
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.cx.32": 24,
+     "LDC.cx.64": 58,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 21,
+     "LDCU.cx.32": 28,
+     "LDCU.cx.64": 34
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p0_V1",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "e62ceef525edd470eb9740e9235dceee",
+   "register_count": 96,
+   "binary_size": 77056,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476848,
+   "local_memory_bytes": 112,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    27728
+   ],
+   "s16_instructions": 1733,
+   "s16_ops": {
+    "LDG": 32,
+    "LDC": 0,
+    "LDCU": 38,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 4,
+    "LDL": 0,
+    "ISETP": 114,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    664,
+    76928
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4798,
+   "full_ops": {
+    "LDG": 111,
+    "LDC": 4,
+    "LDCU": 94,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 35,
+    "LDL": 35,
+    "ISETP": 250,
+    "BRA": 95,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 4808,
+   "full_binary_size": 77056,
+   "full_register_count": 96,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 3,
+     "LDCU": 76,
+     "LDCU.64": 18,
+     "LDG.E": 48,
+     "LDG.E.128": 56,
+     "LDG.E.64": 7,
+     "LDL": 17,
+     "LDL.LU": 18,
+     "STL": 34,
+     "STL.64": 1
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 3,
+     "LDCU.32": 76,
+     "LDCU.64": 18,
+     "LDG.128": 56,
+     "LDG.32": 48,
+     "LDG.64": 7,
+     "LDL.32": 35,
+     "STL.32": 34,
+     "STL.64": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 3,
+     "LDCU.c.32": 76,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p0_V2",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "1f14445e072a3bede5f68c8f02c3ece4",
+   "register_count": 128,
+   "binary_size": 159488,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719477008,
+   "local_memory_bytes": 272,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    664,
+    159360
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 9945,
+   "full_ops": {
+    "LDG": 798,
+    "LDC": 7,
+    "LDCU": 160,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 94,
+    "LDL": 121,
+    "ISETP": 1200,
+    "BRA": 138,
+    "TEX": 31,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V2.full.sass",
+   "full_frame": 7396,
+   "full_instructions_raw": 9960,
+   "full_binary_size": 159488,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 6,
+     "LDC.64": 1,
+     "LDCU": 149,
+     "LDCU.64": 11,
+     "LDG.E": 102,
+     "LDG.E.64": 245,
+     "LDG.E.STRONG.SM": 451,
+     "LDL": 72,
+     "LDL.LU": 40,
+     "LDL.LU.64": 9,
+     "STG.E": 2,
+     "STL": 85,
+     "STL.64": 9
+    },
+    "widths": {
+     "LDC.32": 6,
+     "LDC.64": 1,
+     "LDCU.32": 149,
+     "LDCU.64": 11,
+     "LDG.32": 553,
+     "LDG.64": 245,
+     "LDL.32": 112,
+     "LDL.64": 9,
+     "STG.32": 2,
+     "STL.32": 85,
+     "STL.64": 9
+    },
+    "const_bank_split": {
+     "LDC.c.32": 6,
+     "LDC.c.64": 1,
+     "LDCU.c.32": 149,
+     "LDCU.c.64": 11
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p0_V2s",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "9c215542c368064325f8f23d80f030bc",
+   "register_count": 128,
+   "binary_size": 88192,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    32144
+   ],
+   "s16_instructions": 2009,
+   "s16_ops": {
+    "LDG": 28,
+    "LDC": 57,
+    "LDCU": 29,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 204,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    88064
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5495,
+   "full_ops": {
+    "LDG": 59,
+    "LDC": 233,
+    "LDCU": 64,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 507,
+    "BRA": 95,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5504,
+   "full_binary_size": 88192,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 232,
+     "LDC.64": 1,
+     "LDCU": 38,
+     "LDCU.64": 26,
+     "LDG.E": 59
+    },
+    "widths": {
+     "LDC.32": 232,
+     "LDC.64": 1,
+     "LDCU.32": 38,
+     "LDCU.64": 26,
+     "LDG.32": 59
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 1,
+     "LDC.cx.32": 231,
+     "LDCU.c.32": 38,
+     "LDCU.c.64": 26
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p1_A",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 1,
+   "arm": "A",
+   "md5": "4280630fedda6ea2173a61567974bae3",
+   "register_count": 107,
+   "binary_size": 72448,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    29424
+   ],
+   "s16_instructions": 1839,
+   "s16_ops": {
+    "LDG": 10,
+    "LDC": 10,
+    "LDCU": 52,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 62,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    72320
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4505,
+   "full_ops": {
+    "LDG": 23,
+    "LDC": 83,
+    "LDCU": 112,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 142,
+    "BRA": 94,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 4520,
+   "full_binary_size": 72448,
+   "full_register_count": 107,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 25,
+     "LDC.64": 58,
+     "LDCU": 57,
+     "LDCU.64": 55,
+     "LDG.E": 20,
+     "LDG.E.128": 3
+    },
+    "widths": {
+     "LDC.32": 25,
+     "LDC.64": 58,
+     "LDCU.32": 57,
+     "LDCU.64": 55,
+     "LDG.128": 3,
+     "LDG.32": 20
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.cx.32": 24,
+     "LDC.cx.64": 58,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 21,
+     "LDCU.cx.32": 28,
+     "LDCU.cx.64": 34
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p1_V1",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 1,
+   "arm": "V1",
+   "md5": "f7193bba4f36941f34a25db747129e3b",
+   "register_count": 121,
+   "binary_size": 73344,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    632,
+    73216
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4560,
+   "full_ops": {
+    "LDG": 111,
+    "LDC": 4,
+    "LDCU": 94,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 250,
+    "BRA": 96,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V1.full.sass",
+   "full_frame": 7396,
+   "full_instructions_raw": 4576,
+   "full_binary_size": 73344,
+   "full_register_count": 121,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 3,
+     "LDCU": 76,
+     "LDCU.64": 18,
+     "LDG.E": 48,
+     "LDG.E.128": 56,
+     "LDG.E.64": 7
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 3,
+     "LDCU.32": 76,
+     "LDCU.64": 18,
+     "LDG.128": 56,
+     "LDG.32": 48,
+     "LDG.64": 7
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 3,
+     "LDCU.c.32": 76,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p1_V2",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 1,
+   "arm": "V2",
+   "md5": "5fe69004685079a8a50c24c6e012d6ab",
+   "register_count": 128,
+   "binary_size": 159744,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719477008,
+   "local_memory_bytes": 272,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    48176
+   ],
+   "s16_instructions": 3011,
+   "s16_ops": {
+    "LDG": 177,
+    "LDC": 0,
+    "LDCU": 56,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 21,
+    "LDL": 0,
+    "ISETP": 213,
+    "BRA": 44,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    664,
+    159616
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 9960,
+   "full_ops": {
+    "LDG": 798,
+    "LDC": 7,
+    "LDCU": 160,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 94,
+    "LDL": 121,
+    "ISETP": 1200,
+    "BRA": 138,
+    "TEX": 31,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 9976,
+   "full_binary_size": 159744,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 6,
+     "LDC.64": 1,
+     "LDCU": 149,
+     "LDCU.64": 11,
+     "LDG.E": 102,
+     "LDG.E.64": 245,
+     "LDG.E.STRONG.SM": 451,
+     "LDL": 72,
+     "LDL.LU": 40,
+     "LDL.LU.64": 9,
+     "STG.E": 2,
+     "STL": 85,
+     "STL.64": 9
+    },
+    "widths": {
+     "LDC.32": 6,
+     "LDC.64": 1,
+     "LDCU.32": 149,
+     "LDCU.64": 11,
+     "LDG.32": 553,
+     "LDG.64": 245,
+     "LDL.32": 112,
+     "LDL.64": 9,
+     "STG.32": 2,
+     "STL.32": 85,
+     "STL.64": 9
+    },
+    "const_bank_split": {
+     "LDC.c.32": 6,
+     "LDC.c.64": 1,
+     "LDCU.c.32": 149,
+     "LDCU.c.64": 11
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p1_V2s",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 1,
+   "arm": "V2s",
+   "md5": "bb89912a0bc2aca46e35f04c87716cad",
+   "register_count": 125,
+   "binary_size": 89472,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    632,
+    89344
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5573,
+   "full_ops": {
+    "LDG": 59,
+    "LDC": 233,
+    "LDCU": 64,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 507,
+    "BRA": 98,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p1_V2s.full.sass",
+   "full_frame": 7396,
+   "full_instructions_raw": 5584,
+   "full_binary_size": 89472,
+   "full_register_count": 125,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 232,
+     "LDC.64": 1,
+     "LDCU": 38,
+     "LDCU.64": 26,
+     "LDG.E": 59
+    },
+    "widths": {
+     "LDC.32": 232,
+     "LDC.64": 1,
+     "LDCU.32": 38,
+     "LDCU.64": 26,
+     "LDG.32": 59
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 1,
+     "LDC.cx.32": 231,
+     "LDCU.c.32": 38,
+     "LDCU.c.64": 26
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p2_A",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 2,
+   "arm": "A",
+   "md5": "28be296b83a1faba722fd65916996850",
+   "register_count": 107,
+   "binary_size": 71936,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    29040
+   ],
+   "s16_instructions": 1815,
+   "s16_ops": {
+    "LDG": 11,
+    "LDC": 10,
+    "LDCU": 50,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 62,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    71808
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4479,
+   "full_ops": {
+    "LDG": 24,
+    "LDC": 83,
+    "LDCU": 110,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 142,
+    "BRA": 94,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 4488,
+   "full_binary_size": 71936,
+   "full_register_count": 107,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 25,
+     "LDC.64": 58,
+     "LDCU": 56,
+     "LDCU.64": 54,
+     "LDG.E": 20,
+     "LDG.E.128": 4
+    },
+    "widths": {
+     "LDC.32": 25,
+     "LDC.64": 58,
+     "LDCU.32": 56,
+     "LDCU.64": 54,
+     "LDG.128": 4,
+     "LDG.32": 20
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.cx.32": 24,
+     "LDC.cx.64": 58,
+     "LDCU.c.32": 29,
+     "LDCU.c.64": 21,
+     "LDCU.cx.32": 27,
+     "LDCU.cx.64": 33
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p2_V1",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 2,
+   "arm": "V1",
+   "md5": "f7193bba4f36941f34a25db747129e3b",
+   "register_count": 121,
+   "binary_size": 73344,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    632,
+    73216
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 4560,
+   "full_ops": {
+    "LDG": 111,
+    "LDC": 4,
+    "LDCU": 94,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 250,
+    "BRA": 96,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V1.full.sass",
+   "full_frame": 7396,
+   "full_instructions_raw": 4576,
+   "full_binary_size": 73344,
+   "full_register_count": 121,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 3,
+     "LDCU": 76,
+     "LDCU.64": 18,
+     "LDG.E": 48,
+     "LDG.E.128": 56,
+     "LDG.E.64": 7
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 3,
+     "LDCU.32": 76,
+     "LDCU.64": 18,
+     "LDG.128": 56,
+     "LDG.32": 48,
+     "LDG.64": 7
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 3,
+     "LDCU.c.32": 76,
+     "LDCU.c.64": 18
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p2_V2",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 2,
+   "arm": "V2",
+   "md5": "5fe69004685079a8a50c24c6e012d6ab",
+   "register_count": 128,
+   "binary_size": 159744,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719477008,
+   "local_memory_bytes": 272,
+   "s16_rc": 0,
+   "s16_window": [
+    664,
+    48176
+   ],
+   "s16_instructions": 3011,
+   "s16_ops": {
+    "LDG": 177,
+    "LDC": 0,
+    "LDCU": 56,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 21,
+    "LDL": 0,
+    "ISETP": 213,
+    "BRA": 44,
+    "TEX": 8,
+    "EXIT": 2
+   },
+   "full_window": [
+    664,
+    159616
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 9960,
+   "full_ops": {
+    "LDG": 798,
+    "LDC": 7,
+    "LDCU": 160,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 94,
+    "LDL": 121,
+    "ISETP": 1200,
+    "BRA": 138,
+    "TEX": 31,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 9976,
+   "full_binary_size": 159744,
+   "full_register_count": 128,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 6,
+     "LDC.64": 1,
+     "LDCU": 149,
+     "LDCU.64": 11,
+     "LDG.E": 102,
+     "LDG.E.64": 245,
+     "LDG.E.STRONG.SM": 451,
+     "LDL": 72,
+     "LDL.LU": 40,
+     "LDL.LU.64": 9,
+     "STG.E": 2,
+     "STL": 85,
+     "STL.64": 9
+    },
+    "widths": {
+     "LDC.32": 6,
+     "LDC.64": 1,
+     "LDCU.32": 149,
+     "LDCU.64": 11,
+     "LDG.32": 553,
+     "LDG.64": 245,
+     "LDL.32": 112,
+     "LDL.64": 9,
+     "STG.32": 2,
+     "STL.32": 85,
+     "STL.64": 9
+    },
+    "const_bank_split": {
+     "LDC.c.32": 6,
+     "LDC.c.64": 1,
+     "LDCU.c.32": 149,
+     "LDCU.c.64": 11
+    }
+   }
+  },
+  {
+   "module": "S8_7a46be05e11e081b_p2_V2s",
+   "item": "S8",
+   "stage": "ps",
+   "hash": "7a46be05e11e081b",
+   "cache_id": "c61039671745e4f1",
+   "perm": 2,
+   "arm": "V2s",
+   "md5": "3d32ea523b17df331eb34cae9082dea9",
+   "register_count": 125,
+   "binary_size": 89472,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    632,
+    32032
+   ],
+   "s16_instructions": 2002,
+   "s16_ops": {
+    "LDG": 31,
+    "LDC": 54,
+    "LDCU": 29,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 207,
+    "BRA": 37,
+    "TEX": 8,
+    "EXIT": 1
+   },
+   "full_window": [
+    632,
+    89344
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 5568,
+   "full_ops": {
+    "LDG": 62,
+    "LDC": 230,
+    "LDCU": 64,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 510,
+    "BRA": 98,
+    "TEX": 31,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S8_7a46be05e11e081b_p2_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 5584,
+   "full_binary_size": 89472,
+   "full_register_count": 125,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 229,
+     "LDC.64": 1,
+     "LDCU": 38,
+     "LDCU.64": 26,
+     "LDG.E": 62
+    },
+    "widths": {
+     "LDC.32": 229,
+     "LDC.64": 1,
+     "LDCU.32": 38,
+     "LDCU.64": 26,
+     "LDG.32": 62
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 1,
+     "LDC.cx.32": 228,
+     "LDCU.c.32": 38,
+     "LDCU.c.64": 26
+    }
+   }
+  },
+  {
+   "module": "S9_ca11de665702d6d9_p0_A",
+   "item": "S9",
+   "stage": "ps",
+   "hash": "ca11de665702d6d9",
+   "cache_id": "d116e19d911236df",
+   "perm": 0,
+   "arm": "A",
+   "md5": "19b8e94301e03169af0a39c65260ae01",
+   "register_count": 16,
+   "binary_size": 1024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    600,
+    896
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 40,
+   "full_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 5,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 56,
+   "full_binary_size": 1024,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 2,
+     "LDCU.64": 3
+    },
+    "widths": {
+     "LDCU.32": 2,
+     "LDCU.64": 3
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 1,
+     "LDCU.c.64": 2,
+     "LDCU.cx.32": 1,
+     "LDCU.cx.64": 1
+    }
+   }
+  },
+  {
+   "module": "S9_ca11de665702d6d9_p0_V1",
+   "item": "S9",
+   "stage": "ps",
+   "hash": "ca11de665702d6d9",
+   "cache_id": "d116e19d911236df",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "8ba28cdbd1a2f3515233bd41c28a41b7",
+   "register_count": 16,
+   "binary_size": 1024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    600,
+    896
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 42,
+   "full_ops": {
+    "LDG": 1,
+    "LDC": 1,
+    "LDCU": 3,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 2,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 56,
+   "full_binary_size": 1024,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 1,
+     "LDCU.64": 2,
+     "LDG.E.128": 1
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 1,
+     "LDCU.64": 2,
+     "LDG.128": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 1,
+     "LDCU.c.64": 2
+    }
+   }
+  },
+  {
+   "module": "S9_ca11de665702d6d9_p0_V2",
+   "item": "S9",
+   "stage": "ps",
+   "hash": "ca11de665702d6d9",
+   "cache_id": "d116e19d911236df",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "a37ae8d9834de5dc11faec2fa237d281",
+   "register_count": 28,
+   "binary_size": 2560,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    600,
+    1984
+   ],
+   "s16_instructions": 124,
+   "s16_ops": {
+    "LDG": 11,
+    "LDC": 2,
+    "LDCU": 9,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 20,
+    "BRA": 2,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_window": [
+    600,
+    2432
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 139,
+   "full_ops": {
+    "LDG": 12,
+    "LDC": 2,
+    "LDCU": 12,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 23,
+    "BRA": 3,
+    "TEX": 1,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V2.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 152,
+   "full_binary_size": 2560,
+   "full_register_count": 28,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDC.64": 1,
+     "LDCU": 7,
+     "LDCU.64": 5,
+     "LDG.E": 2,
+     "LDG.E.64": 4,
+     "LDG.E.STRONG.SM": 6,
+     "STG.E": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDC.64": 1,
+     "LDCU.32": 7,
+     "LDCU.64": 5,
+     "LDG.32": 8,
+     "LDG.64": 4,
+     "STG.32": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDC.c.64": 1,
+     "LDCU.c.32": 7,
+     "LDCU.c.64": 5
+    }
+   }
+  },
+  {
+   "module": "S9_ca11de665702d6d9_p0_V2s",
+   "item": "S9",
+   "stage": "ps",
+   "hash": "ca11de665702d6d9",
+   "cache_id": "d116e19d911236df",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "5e17feb24e19dd3a08ac48d1bd09d034",
+   "register_count": 16,
+   "binary_size": 1280,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    600,
+    960
+   ],
+   "s16_instructions": 60,
+   "s16_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 8,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 0,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_window": [
+    600,
+    1152
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 60,
+   "full_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 8,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S9_ca11de665702d6d9_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 72,
+   "full_binary_size": 1280,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 6,
+     "LDCU.64": 2
+    },
+    "widths": {
+     "LDCU.32": 6,
+     "LDCU.64": 2
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 3,
+     "LDCU.c.64": 2,
+     "LDCU.cx.32": 3
+    }
+   }
+  },
+  {
+   "module": "S10_c924afb0821b68c8_p0_A",
+   "item": "S10",
+   "stage": "ps",
+   "hash": "c924afb0821b68c8",
+   "cache_id": "05b0d69d55cc2b88",
+   "perm": 0,
+   "arm": "A",
+   "md5": "9545c44cea31f0d5d58ee19e04aa4362",
+   "register_count": 16,
+   "binary_size": 1024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    600,
+    896
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 43,
+   "full_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 5,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_A.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_A.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 56,
+   "full_binary_size": 1024,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 2,
+     "LDCU.64": 3
+    },
+    "widths": {
+     "LDCU.32": 2,
+     "LDCU.64": 3
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 1,
+     "LDCU.c.64": 2,
+     "LDCU.cx.32": 1,
+     "LDCU.cx.64": 1
+    }
+   }
+  },
+  {
+   "module": "S10_c924afb0821b68c8_p0_V1",
+   "item": "S10",
+   "stage": "ps",
+   "hash": "c924afb0821b68c8",
+   "cache_id": "05b0d69d55cc2b88",
+   "perm": 0,
+   "arm": "V1",
+   "md5": "147809970020e6d4d13361fb4f9a7294",
+   "register_count": 16,
+   "binary_size": 1024,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    600,
+    896
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 46,
+   "full_ops": {
+    "LDG": 2,
+    "LDC": 1,
+    "LDCU": 3,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 3,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V1.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V1.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 56,
+   "full_binary_size": 1024,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 1,
+     "LDCU.64": 2,
+     "LDG.E": 1,
+     "LDG.E.64": 1
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 1,
+     "LDCU.64": 2,
+     "LDG.32": 1,
+     "LDG.64": 1
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 1,
+     "LDCU.c.64": 2
+    }
+   }
+  },
+  {
+   "module": "S10_c924afb0821b68c8_p0_V2",
+   "item": "S10",
+   "stage": "ps",
+   "hash": "c924afb0821b68c8",
+   "cache_id": "05b0d69d55cc2b88",
+   "perm": 0,
+   "arm": "V2",
+   "md5": "709acae9653422881f6a2e1867bbd9c2",
+   "register_count": 29,
+   "binary_size": 2560,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 3,
+   "s16_window": [
+    null,
+    null
+   ],
+   "s16_instructions": null,
+   "s16_ops": null,
+   "full_window": [
+    600,
+    2432
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 141,
+   "full_ops": {
+    "LDG": 12,
+    "LDC": 1,
+    "LDCU": 13,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 23,
+    "BRA": 3,
+    "TEX": 1,
+    "EXIT": 4
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V2.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V2.full.sass",
+   "full_frame": 7325,
+   "full_instructions_raw": 152,
+   "full_binary_size": 2560,
+   "full_register_count": 29,
+   "full_mem": {
+    "ops_full": {
+     "LDC": 1,
+     "LDCU": 7,
+     "LDCU.64": 6,
+     "LDG.E": 2,
+     "LDG.E.64": 4,
+     "LDG.E.STRONG.SM": 6,
+     "STG.E": 2
+    },
+    "widths": {
+     "LDC.32": 1,
+     "LDCU.32": 7,
+     "LDCU.64": 6,
+     "LDG.32": 8,
+     "LDG.64": 4,
+     "STG.32": 2
+    },
+    "const_bank_split": {
+     "LDC.c.32": 1,
+     "LDCU.c.32": 7,
+     "LDCU.c.64": 6
+    }
+   }
+  },
+  {
+   "module": "S10_c924afb0821b68c8_p0_V2s",
+   "item": "S10",
+   "stage": "ps",
+   "hash": "c924afb0821b68c8",
+   "cache_id": "05b0d69d55cc2b88",
+   "perm": 0,
+   "arm": "V2s",
+   "md5": "e6dd5831598da0a4694f7579ed59ac35",
+   "register_count": 16,
+   "binary_size": 1280,
+   "stack_size": 0,
+   "local_memory_size_raw": 68719476736,
+   "local_memory_bytes": 0,
+   "s16_rc": 0,
+   "s16_window": [
+    600,
+    960
+   ],
+   "s16_instructions": 60,
+   "s16_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 8,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 0,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_window": [
+    600,
+    1152
+   ],
+   "full_method": "to-first-decode-error",
+   "full_instructions": 60,
+   "full_ops": {
+    "LDG": 0,
+    "LDC": 0,
+    "LDCU": 8,
+    "ULDC": 0,
+    "LDS": 0,
+    "LD": 0,
+    "STL": 0,
+    "LDL": 0,
+    "ISETP": 1,
+    "BRA": 1,
+    "TEX": 1,
+    "EXIT": 2
+   },
+   "full_error": null,
+   "s16_log": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V2s.s16.txt",
+   "full_sass": "C:/kyty/s102/m5/sass/S10_c924afb0821b68c8_p0_V2s.full.sass",
+   "full_frame": 100,
+   "full_instructions_raw": 72,
+   "full_binary_size": 1280,
+   "full_register_count": 16,
+   "full_mem": {
+    "ops_full": {
+     "LDCU": 6,
+     "LDCU.64": 2
+    },
+    "widths": {
+     "LDCU.32": 6,
+     "LDCU.64": 2
+    },
+    "const_bank_split": {
+     "LDCU.c.32": 3,
+     "LDCU.c.64": 2,
+     "LDCU.cx.32": 3
+    }
+   }
+  }
+ ]
+}

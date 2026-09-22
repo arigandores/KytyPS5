@@ -1,0 +1,54 @@
+**Verdict: NOT REFUTED under Lens 1.** My own recount matches every number in the claim, and the verdict holds under an alternative estimator. The defects below are real but none moves the verdict.
+
+**Independent recount.** My script shares no code with `m5_102.py`. It reads the raw `d[]` values from `bench_m5cap102.json` and the item-to-event map from `plan_m5cap102.json` (plan sha e03da100…, which matches the bench).
+
+| Statistic | Items | Point | 90 % CI of −1 | Claim |
+|---|---|---|---|---|
+| X = V2/A | S2–S7, S9, S10 | 1.4201 | [0.4121, 0.4242] | identical |
+| Y = V2/V2s | same | 1.3324 | [0.3262, 0.3356] (seed 12345); [0.3247, 0.3356] (seed 7) | lower bound differs by 0.0015 at one seed, under 0.002 |
+| L = V1/A | all 10 | 1.0208 | [0.0183, 0.0256] | identical |
+| V2s/A | all 10 | 1.0608 | [0.0578, 0.0623] | identical |
+| A/B | all 10 | 0.9974 | [−0.0040/−0.0046, −0.0005] | identical |
+
+- **Per-item ratios:** all 50 values (B/A, V1/A, V2/A, V2s/A, V2/V2s for S1–S10) match the scorer's table to 4 decimals.
+- **Verdict by addendum 02 §3:** CLOSE-machinery.
+- **V-e exclusion:** S1 and S8 carry 0.2187 of A time, under the 40 % limit.
+- **Design:** 20 rounds, 100 fetches. Round r used sequence r mod 10, and my own list of rotations 0..4 of [B,A,V1,V2,V2s] plus their reverses equals the bench's. Positions are in time order and the 2 B warm-ups came before round 0. No violations.
+- **Event mapping:** 3,355 events, no duplicates, no event in two items. Each item's module events equal the RenderDoc listing in `find_m5cap102.json` exactly (14 modules). No other capture module has an item's md5.
+- **Completeness:** every fetch has 3,355 values, `missing` is empty, and `n_results` is 12,533 in every fetch.
+- **Built modules:** the md5 of all 42 bench modules still matches the files on disk, all were validated with the `--uniform-buffer-standard-layout` command, and all 56 replacement checks pass.
+
+**Defects (none changes the verdict):**
+
+1. **GPU Duration is the time until an event finishes after the work before it, not the event's own cost.** Of the per-event readings in the PS items, 30–54 % are exactly 0.0, spread across 530 of S3's 600 events and similar for the other PS items (113,402 zero readings over 100 fetches). The CS items have none. When item draws slow down, they absorb time previously shown on neighbouring events.
+   - Time outside the items drops by 105 µs (V1), 258 µs (V2) and 287 µs (V2s) against A.
+   - Frame-total estimator: X (all 10 items) 1.3805, CI [0.3716, 0.3842], against 1.4073 item-based. Y 1.3256, CI [0.3143, 0.3627], about the same.
+   - L drops to 1.0095 and V2s/A to 1.0280 (CI [−0.004, 0.059]). The published V2s/A 1.0608 and L 1.0208 are therefore about twice the frame cost.
+   - Effect on the decision: none. X and Y still cross 6 % and L still does not, so the tier stays "machinery".
+2. **The replacement itself adds time outside the items.** B's frame total is 272 µs above A's (frame-based B/A about 1.03) while the item sums match. V-d only looks at item sums, so it cannot see this. Not decisive.
+3. **The sealed 5-arm design does not balance carry-over.** Within a round, A never follows V2 or V2s, and V2 always follows V1 or V2s. pred/01's "Williams design, carry-over balanced" reasoning therefore no longer holds after addendum 02 §4. Measured carry-over by predecessor is at most about 1.2 % on arm sums, so it is negligible here.
+4. **GPU clocks were not locked:** SM clock ranged 1,537–2,640 MHz in the 5 s samples. Round 2 is an outlier (S[A] 10,310 against about 9,120; X 1.3148; L 0.9228). The medians absorb it.
+5. **Excluding S1 and S8 is correct.** S1's V2 output differs by 4.05 MB of a 16.6 MB texture and 89 KB of a 4.1 MB texture, which is a real divergence. Keeping both items would give X 1.4073 and Y 1.3256.
+6. **Subset check:** the verdict does not depend on a few items or on the STRONG-load artefact.
+   - CS items only (these have no LDG.E.STRONG): X 1.554, Y 1.480.
+   - Without S3: X 1.309, Y 1.245.
+   - Without S3 and S7: X 1.247, Y 1.188, CI lower bound 0.183.
+
+**Outside Lens 1, noted from the sources:**
+
+7. **ROADMAP was never updated for addendum 02.** Addendum 02 withdrew "V2 is a lower bound" and added the CLOSE-machinery tier. `docs/ROADMAP.md` was last changed in 0d35faa, and lines 1360 and 1363 still say V2 is the lower bound and that a CLOSE on it is therefore robust. This is the same "record in ROADMAP first" defect that the session-101 audit flagged. It affects how the claim stands, not the numbers.
+8. **The sealed retry setting did not take effect.** Addendum 07 says the retry adds `KYTY_RECORD_THREAD=0`, but `C:/kyty/s102/gates.req` token 15, `recordthread=1`, overrode it. `log_m5cap102b.txt` shows "Gate: recordthread=1 frame=1" and "record thread on from tick 90". So the retry ran with the record thread on. The captured frames were unaffected, because the thread is off during capture ("off from tick 109135"). The report must not say the retry ran without the record thread.
+
+Seal hashes and commit order check out:
+- pred/01 is 0d35faa at 19:49 and pred/02 is 1fc0e15 at 22:12.
+- pred/07 is 5518878 at 23:00, before the capture at 23:03 and the bench at 23:11.
+- Recomputed sha256 of 01, 02 and 07 match SEALS102.txt, and the 01 and 02 blobs in git match too.
+
+Scratch scripts are in `C:/Users/<user>/AppData/Local/Temp/claude/C--Users-<user>-OneDrive-Desktop-ps5-em/9077010c-5d2a-4f0b-8edc-d9eb47622f00/scratchpad/audit102/`:
+- `recount.py`
+- `zeros.py`
+- `totals.py`
+- `framebased.py`
+- `carry.py`
+- `mapcheck.py`
+- `subsets.py`

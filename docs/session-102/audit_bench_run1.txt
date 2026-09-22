@@ -1,0 +1,72 @@
+**Verdict: NOT REFUTED (lens 2, instrument).**
+
+The headline numbers reproduce exactly from the raw per-event data in `bench_m5cap102.json`, using the same seed-102 bootstrap and the sets V2 = {S2,S3,S4,S5,S6,S7,S9,S10}, L = all 10:
+- X = 1.4201, CI of X−1 [0.4121, 0.4242]
+- Y = 1.3324, CI of Y−1 [0.3247, 0.3356]
+
+The V-e failing share is (1260.1 + 736.7) / 9132.0 = 0.2187. None of the instrument defects below brings X−1 or Y−1 near +0.06, even at its worst-case bound. What they do show is that 1.42 and 1.33 overstate the pure BDA/LDG load price. X is better read as roughly 1.20 to 1.42.
+
+**Defects**
+
+1. **(e) V2's fault-buffer store probably turns off early depth testing in 6 of the 7 pixel-shader items. This is a fixed-function cost, not a load cost.**
+   - **Evidence:** I disassembled the modules with `spirv-dis` and counted stores; the script is `scratchpad/audit102/lens2_sbstores.py`.
+     - The A and V2s pixel-shader modules have 0 storage-buffer stores. Every V2 pixel-shader module has 1–2, the `fault_buffer` load/OR/store from `EmitBdaFaultFlush` → `RecordBdaFault` (`src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp` ~173-184 and ~1784-1793).
+     - Only S5 declares `EarlyFragmentTests`. S2, S3, S4, S8, S9 and S10 do not, and they contain `OpKill`.
+     - A fragment shader with side effects and no `EarlyFragmentTests` cannot legally have occluded fragments rejected before shading. So V2 likely also shades fragments that the depth pre-pass culls in A and V2s. No arm isolates this, and V2s cannot control for it because it has no store.
+     - A hint in the data: the same S3 shader reads V2/A 3.03 on its VS-664 draws but 1.36 on its VS-378 draws. The data alone cannot prove the mechanism, because S5 (which has `EarlyFragmentTests`) also varies 1.32–1.98 across its draw groups.
+   - **Size:** if all of the V2 excess on the non-`EarlyFragmentTests` pixel items (S2, S3, S4, S9, S10) came from this:
+     - X → 1.197, CI [0.1955, 0.1977]
+     - Y → 1.154, CI [0.1533, 0.1549]
+     - Compute shaders only (S6, S7): X 1.554, Y 1.480.
+   - **Verdict:** unchanged. But the pred/02 §3 machinery item (i) should name "the fault store disables early depth testing". Y is not a clean "BDA+LDG at equal granularity" number.
+
+2. **(d) S1 is excluded from the sums, but its V2 still runs inside the all-at-once V2 arm and writes materially different data.**
+   - **Evidence (`equal_m5cap102.json`, S1 V2):**
+     - tex 5735: 4,052,053 of 16,588,800 bytes differ.
+     - tex 5737: 89,046 bytes differ.
+     - The fault flag in buf 138 is set, so S1 V2 hit a missing page and read zeros.
+   - **Who is downstream:**
+     - S4, which is counted, renders into 5735 after both S1 dispatches (S1 at 31918 and 63664; S4 from 34244 to 67297).
+     - Every frame-2 event of every item comes after S1's frame-1 dispatch.
+     - No tool output lists who samples 5735 or 5737, and V-e only ever checked one item replaced at a time, never the combined arm.
+   - **Sensitivity (`lens2_subsets.py`):**
+     - V2 set without S4: X 1.4296.
+     - Only events before 31918, which S1 cannot have touched: X 1.5385 [0.5346, 0.5465], Y 1.4073.
+   - **Verdict:** unchanged.
+
+3. **Per-event GPU durations are not additive.**
+   - **Evidence:** the time of the untouched (non-item) events falls when the items are replaced (`lens2_nonitem.py`):
+     - V2 vs A: mean −315 µs, t = −3.4.
+     - V2 vs B: mean −451 µs, t = −5.0.
+     - The whole-frame V2−A difference is only 0.914 × the item-sum difference.
+   - **Size:** a whole-frame X (frame difference minus the S1 and S8 item differences, over the V2 set's A time) is 1.387 instead of 1.420, a shift of −0.033. Whole-frame Y is 1.330 instead of 1.332.
+   - **Verdict:** unchanged.
+
+4. **(b) GPU clocks were not locked, and one control is only nominal.**
+   - **Clocks:** the SM clock ranged 1537–2640 MHz across 187 samples (`bench_m5cap102.json.gpuclk.csv`). The 5 s sampling cannot resolve a 0.42 s fetch.
+   - **Idle before each fetch:** the GPU sits idle for a median of 5.4 s before B fetches and 8.2–9.5 s before the replaced arms, so B's warm-up state differs systematically.
+   - **A/B:** A/B = 0.9974 and its CI [−0.0040, −0.0005] excludes zero. It is small but real.
+   - **Outlier:** one transient, the round-2 A fetch, ran +13% (S1 +37%, S3 +27%). The median absorbs it.
+   - **Drift:** X is 1.4148 over rounds 0–9 and 1.4222 over rounds 10–19.
+   - **Other processes:** the "nothing else on the GPU" check proves nothing on this system. Under the Windows WDDM driver model all 18 listed processes report memory as [N/A] (`bench_m5cap102.json.run.json` `pre_compute_apps`).
+   - **Verdict:** unchanged.
+
+5. **(c) The design is position-balanced but not balanced for carry-over.**
+   - Each arm is ever preceded by only 2 of the other 4 arms, and V2 never precedes A. The scorer's own docstring says so.
+   - Measured order effects are at most about 1%:
+     - V2's item sum by position: 12781–12886.
+     - V2s after V2: 9672; V2s after B: 9645.
+     - A after B / after V1 / first in round: 9151 / 9121 / 9117.
+   - **Verdict:** unchanged.
+
+6. **(a) The replacement check runs once, before timing, on only one event per module (`rd_m5_bench.py:203-240`), plus V-e's check at each item's last event.**
+   - Pipelines for other vertex-shader pairings are not checked individually. For example, S5 has 6 draw groups and 2 were checked; S9 has 5 and 2 were checked.
+   - No group looks unreplaced, with one ambiguous case: S2's 70 mesh draws (92% of S2's A time) read about 1.0 in every arm (V1 1.000, V2 0.992, V2s 0.978). Both of S2's checked events are mesh draws, so this is most likely a pixel-shader-insensitive draw, not a failed replacement.
+   - S8's second module (ResourceId::303) gets V1/V2 bytes identical to its first module's. This is legitimate: the permutation difference only affects const-bank loads, which V1 and V2 remove. Its 71 µs behaves oddly (V1/A 0.835, V2s/A 1.511, B/A 1.063).
+   - **Verdict:** unchanged.
+
+7. **Small draws are timed mostly by pipelining.** Per-group ratios such as S5 (VS 797) V2/A 0.269, S10 (VS 666) 0.786, and S3 (VS 659) 0.830 with V1/A 1.507 are not plausible shader effects. Their weight in the sums is small. **Verdict:** unchanged.
+
+8. **(e) No descriptor-binding difference between arms.** `KYTY_DMA_LAYOUT` gives every arm the same layout, so binding cost is identical. V2's `get_bda_pointer` additionally does an unconditional page-table[0] load and an `OpArrayLength` on every lookup (`spirvEmitterMemory.cpp` ~1800-1850). That is machinery, and only partly named in item (i). **Verdict:** unchanged.
+
+My scratch scripts are `scratchpad/audit102/lens2_*.py` and `a1.py`–`a6.py`. Other auditors share that directory, so `a1`–`a6` may have overwritten files of the same name.

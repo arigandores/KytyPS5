@@ -1,0 +1,35 @@
+M5 scorer, sealed to C:/kyty/s102/pred/01_m5_bench.md + C:/kyty/s102/pred/02_m5_addendum.md
+status:  VALID
+verdict: CLOSE-machinery  (intervals over the 20 main rounds)
+branch:  G CLOSED - with today's BDA machinery (X and Y cross, L does not). pred/02 s3: the V2-only BDA machinery a G prototype would first have to replace: (i) a 64-bit base, a page-table LDG.E.64 per group, the fits-in-page branch and its duplicated per-dword slow path, null-page fault tracking and the fault-buffer store at exit; (ii) every V2 data load in a PS item compiles to LDG.E.STRONG.SM (S4 480, S8 451, S2 143) while V2s/A loads are weak LDG/LDC.  Reopening G on that ground is a decision for the user, recorded in ROADMAP.md first.
+X          = median_r S[V2]/S[A] = 1.4201  (-1 = 0.4201), 90% CI of -1 [0.4121, 0.4242], rounds 20, items ['S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S9', 'S10']
+Y          = median_r S[V2]/S[V2s] = 1.3324  (-1 = 0.3324), 90% CI of -1 [0.3247, 0.3356], rounds 20, items ['S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S9', 'S10']
+L          = median_r S[V1]/S[A] = 1.0208  (-1 = 0.0208), 90% CI of -1 [0.0183, 0.0256], rounds 20, items ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']
+V2s_over_A = median_r S[V2s]/S[A] = 1.0608  (-1 = 0.0608), 90% CI of -1 [0.0578, 0.0623], rounds 20, items ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']
+A_over_B   = median_r S[A]/S[B] = 0.9974  (-1 = -0.0026), 90% CI of -1 [-0.0040, -0.0005], rounds 20, items ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']
+controls:
+  V-a  PASS  {"capture_sha256_bench": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d", "capture_sha256_plan": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d", "sha_match": true, "items_with_module": 10, "log_checked": true, "log": "C:/kyty/s102/log_m5cap102b.txt", "log_sha256": "c5de4e9293c2fd11a67e2eb388a5a1f349181b35cec0e6f3f6eefbd019717580", "dma_layout": true, "clock_pin": true}
+  V-b  PASS  {"present": 10, "of": 10, "weight_present": 4508.0, "weight_share": 1.0, "absent": []}
+  V-c  PASS  {"excluded_share": 0.0, "excluded_modules": {"S1": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 0, "S6": 0, "S7": 0, "S8": 0, "S9": 0, "S10": 0}, "cache_link_used": true}
+  V-d  PASS  {"median_A_over_B": 0.9973790705188301, "band": [0.97, 1.03]}
+  V-e  PASS  {"evaluated": true, "rule": "pred/02 s2: three A replays; repeatable => bit-equal to A1; otherwise differing bytes vs A1 <= 2*E", "V1": {"failing": [], "reasons": {}, "failing_share": 0.0, "passing": 10, "within_replay_noise": ["S1", "S4"], "deciding": false, "share_within_40pct": true}, "V2": {"failing": ["S1", "S8"], "reasons": {"S1": "replay-nondeterministic item, 4153261 differing bytes > 2*E = 28466", "S8": "repeatable item, outputs differ from A1 (746 bytes)"}, "failing_share": 0.218660644
+  V-f  PASS  {"command": "spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout <spv>", "modules": 48, "failing": [], "failing_pred01_command_reported": 24}
+  V-g  PASS  {"complete": true, "rounds_main": 20, "rounds_required": 20, "rounds_requested": 20, "build_errors": 0, "missing_values": 0, "design_violations": [], "reasons": []}
+items:  item  weight  present  A-valid  A us(med)   B/A     V1/A    V2/A    V2s/A  V2/V2s  V-e V1/V2/V2s
+        S1    1009.1  True     True        1260.1  1.0004  0.9979  1.4974  1.0370  1.4436  pass (within replay noise) / FAIL / pass (within replay noise)
+        S2     493.0  True     True         919.8  1.0034  0.9935  1.0203  0.9775  1.0516  pass / pass / pass
+        S3     473.2  True     True         849.6  1.0036  1.0942  2.2073  1.1673  1.9457  pass / pass / pass
+        S4     428.9  True     True         800.2  1.0007  1.0483  1.3488  1.1069  1.2221  pass (within replay noise) / pass (within replay noise) / pass (within replay noise)
+        S5     373.9  True     True         877.7  0.9982  1.0965  1.7019  1.1825  1.4396  pass / pass / pass
+        S6     373.5  True     True         699.7  1.0008  1.0046  1.3133  1.0416  1.2605  pass / pass / pass
+        S7     361.4  True     True         719.8  0.9966  0.9973  1.7895  1.0620  1.6859  pass / pass / pass
+        S8     359.1  True     True         736.7  1.0061  1.0003  1.1134  1.0535  1.0509  pass / FAIL / pass
+        S9     349.9  True     True        1685.8  1.0004  0.9990  1.0874  1.0059  1.0812  pass / pass / pass
+        S10    286.0  True     True         582.6  1.0033  1.0067  1.1457  1.0095  1.1341  pass / pass / pass
+predictions (no decision weight):
+  P1 HIT   V1 aggregate Delta (L - 1) in [-0.01, +0.05]  value=0.020786287051114627
+  P2 MISS  V2 aggregate Delta (X - 1, pred/02 s6) in [+0.02, +0.20]  value=0.42006263529588894
+  P3 HIT   V2 raises at least one PS item register count above its A count  value={"raised": [{"item": "S2", "perm": "ba06f0d0d4edd94d:0", "A": 72, "V2": 101}, {"item": "S3", "perm": "b519b730d6966fd7:0", "A": 64, "V2": 96}, {"item": "S4", "perm": "61162655bd1b2fe2:0", "A": 96, "V2
+  P4 HIT   V-e (amended): at least 8 of the present items pass for V2  value=8
+note: V-e: passing WITHIN REPLAY NOISE (never "equal"): V1 S1, S4; V2 S4; V2s S1, S4
+wrote C:/kyty/s102/m5/real/m5_102_result.json

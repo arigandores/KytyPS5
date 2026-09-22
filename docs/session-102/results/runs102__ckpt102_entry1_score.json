@@ -1,0 +1,121 @@
+{
+  "binary_sha256": "346ba4f6448c35cba8677101a1599c6ddd0b907d3ea76015ada692cd3b3dc776",
+  "control": false,
+  "counts": {
+    "diag": 0,
+    "fatal": {},
+    "gatearm": 0,
+    "hang": 0,
+    "mode": 0,
+    "off": 1,
+    "off_any": 1,
+    "pin": {
+      "1": 1
+    },
+    "started": 2
+  },
+  "does_not_show": "that any truthy value still enables checkpoints; that any other converted variable behaves as intended; any speedup (pred/04 3)",
+  "failed_items": [],
+  "identity_installed_exe": true,
+  "inputs_missing": [],
+  "installed_exe_sha256": "346ba4f6448c35cba8677101a1599c6ddd0b907d3ea76015ada692cd3b3dc776",
+  "item_text": {
+    "1": "'GPU checkpoints off (KYTY_GPU_CHECKPOINTS=0)' x1 (need 1), 'mode=' x0, 'diagnostic checkpoints enabled' x0 (need 0 each)",
+    "2": "'RecordThread: started' x2 (need >= 1)",
+    "3": "median rec_n 11254.5 (need >= 9000)",
+    "4": "median gpu_busy_us 12533.0 (need <= 16000)",
+    "5": "median dt_us 33262.0 (need <= 40000)",
+    "6": "GpuHangAbort x0, fatal {}, GpuClockPin modes {'1': 1} (need mode 1 once only)"
+  },
+  "items": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true,
+    "6": true
+  },
+  "mechanics_only": false,
+  "medians": {
+    "dt_us": 33262.0,
+    "gpu_busy_us": 12533.0,
+    "rec_n": 11254.5
+  },
+  "medians_to_end_of_log_reported": {
+    "dt_us": 33262.0,
+    "gpu_busy_us": 12533.0,
+    "rec_n": 11254.0,
+    "rows": 3510
+  },
+  "pred": "C:/kyty/s102/pred/04_checkpoints_fix.md",
+  "pred_bytes": 4221,
+  "pred_sha256": "c131852e4b3a5c979ce93d2c4182849b641bcc53ce1f217373926de369e8fe87",
+  "protocol_errors": [],
+  "raw_sha256": {
+    "log": "00bf455ce07ddf51423926b42de6b44ceb5387798a97358cea7e842023d363bf",
+    "meta": "3586f4cc1f2ab6dee157f2cdf6ca3db3c9d89b9c063e70b83165260e48843b1d",
+    "stdout": "5b5098850712e7e489be3d3ae862c70e4c5e41612a4f830a6948083094bafa30"
+  },
+  "reference": {
+    "counts": {
+      "diag": 1,
+      "fatal": {},
+      "gatearm": 51,
+      "hang": 0,
+      "mode": 1,
+      "off": 0,
+      "off_any": 0,
+      "pin": {
+        "1": 1
+      },
+      "started": 0
+    },
+    "item_text": {
+      "1": "'GPU checkpoints off (KYTY_GPU_CHECKPOINTS=0)' x0 (need 1), 'mode=' x1, 'diagnostic checkpoints enabled' x1 (need 0 each)",
+      "2": "'RecordThread: started' x0 (need >= 1)",
+      "3": "median rec_n 0.0 (need >= 9000)",
+      "4": "median gpu_busy_us 48838.0 (need <= 16000)",
+      "5": "median dt_us 49978.0 (need <= 40000)",
+      "6": "GpuHangAbort x0, fatal {}, GpuClockPin modes {'1': 1} (need mode 1 once only)"
+    },
+    "items": {
+      "1": false,
+      "2": false,
+      "3": false,
+      "4": false,
+      "5": false,
+      "6": true
+    },
+    "medians": {
+      "dt_us": 49978.0,
+      "gpu_busy_us": 48838.0,
+      "rec_n": 0.0
+    },
+    "role": "A arm of pred/04 1, printed for the report, NEVER deciding",
+    "root": "C:\\kyty\\s101",
+    "tag": "cm101a",
+    "window": {
+      "first": 2100,
+      "hold_end": 6307,
+      "how": "stable_frame 322, hold_s 300.1",
+      "last_main_frame": 6310,
+      "main_without_draw": 0,
+      "rows": 4208
+    }
+  },
+  "root": "C:\\kyty\\s102",
+  "schema_bad": [],
+  "schema_bad_n": 0,
+  "scorer": "ckpt102.py",
+  "status": "ACCEPTED",
+  "tag": "ckpt102_entry1",
+  "verdict": "fix ACCEPTED: every line of pred/04 2 holds",
+  "window": {
+    "first": 2100,
+    "hold_end": 5599,
+    "how": "stable_frame 268, hold_s 180.1",
+    "last_main_frame": 5609,
+    "main_without_draw": 0,
+    "rows": 3500
+  }
+}

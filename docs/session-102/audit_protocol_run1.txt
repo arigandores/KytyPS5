@@ -1,0 +1,49 @@
+**Verdict: REFUTED.** The problem is protocol, not arithmetic. Every sealing, ordering and identity check holds, and I reproduced X = 1.4201 and Y = 1.3324 from the raw per-event durations. What fails is the licence for "G is closed". Addendum 02 changed the rule that decides M5 and withdrew the reason the ROADMAP gives for trusting a CLOSE, and neither change was written into ROADMAP first.
+
+**Checks that hold:**
+- **Seals unchanged.** All 7 hashes match `SEALS102.txt`, the committed copies (`git show HEAD`) and the files on disk. The reflog is linear, with no amend or reset.
+- **Order.**
+  - pred/01 and the ROADMAP pre-record were committed together in `0d35faa` at 19:49:40, before the capture (launched 22:58:55, retry 23:00:13).
+  - pred/02 (`1fc0e15`, 22:12:23) came before find (23:05:31), equal (23:08:51) and bench (23:11:38).
+  - Every timing before pred/02 was on the session-49 capture with stand-in shaders (M1/M2/M3 self-replacements). Their event counts (2/2/4) match none of the §2 items.
+  - pred/07 (`5518878`, 23:00:04) came 9 s before the m5cap102b launch.
+- **Tools and modules.**
+  - The tests exe sha is `cfe15c6c…`; it was built at 21:14:47, after `shaderCfgTests.cpp` (21:14:15), and nothing changed later. The switch is at `shaderCfgTests.cpp:13679-13747` and `:14432-14447`.
+  - All 56 plan replacements match: plan md5 = `recompile.json` md5 = file on disk. The `.spv` files date from 21:18:22.
+  - The five arms were built with the right settings. V1 equals A on every compute module. A is byte-identical to the translation cache (identical=1).
+  - The capture sha `92a10b3c…` matches today and matches the plan and bench records.
+- **Capture environment.** It is the pred/01 §4 key set plus `KYTY_RECORD_THREAD=0`, plus the defaults `enter_scene.py` always adds (`KYTY_FRAME_TRACE=lite`, `KYTY_QUEUE_TRACE=1`, `KYTY_GPU_HANG_ABORT_S=8`, the gate and sample files, the guest arguments).
+  - No `KYTY_GPU_CHECKPOINTS`, `KYTY_GPU_TIME` or `KYTY_REC`.
+  - The log shows `DmaLayout: mode 1` and `GpuClockPin: mode 1`.
+  - `bdaall` was really on: `bda_all_n > 0` in 3641 of 3643 `FrameTrace-x` lines, and the gate file does not pin it.
+- **Nothing re-run.** find → plan → equal → bench → scorer ran once each, back to back, with no gaps. No C:/kyty file changed during the hold or the bench except that run's own outputs.
+  - The bench: 20 rounds, no extension, orders exactly as pred/02 §4 (five rotations, then their reverses), 2 warm-up fetches on B, replacement check 56/56 before any timing.
+  - The scorer `m5_102.py` was last modified at 22:21:41. Its sha `ccb39173…` was recorded before find and is unchanged; every other tool sha matches too.
+
+**Defects:**
+
+1. **MAJOR — this is what refutes the claim.** Addendum 02 was never recorded in ROADMAP, and the ROADMAP now contradicts it.
+   - **What.** pred/02 replaced the estimator and the decision rule: new arm V2s, X/Y/L, two CLOSE tiers, R = 20. It was written after the registers and SASS of every module had been read (pred/02:4-5). It withdrew "V2 is a lower bound" (pred/02:42-43, 51).
+   - **Evidence.** `docs/ROADMAP.md` was last changed in `0d35faa`. It has 0 mentions of `02_m5_addendum`, V2s or CLOSE-machinery. ROADMAP.md:1360-1364 still says V2 is the lower bound, so a CLOSE on it is robust. ROADMAP.md:1367-1368 still says pred/01 holds the estimator and acceptance. The brief requires the record first (next-session-102.md:108 and :130-131). The same defect withdrew session 101's number (ROADMAP.md:389-391, :1541-1547).
+   - **How much.** No number moves. The addendum's only strict lower bound is L − 1 = 0.0208, 90% CI [0.0183, 0.0256], which is ≤ 0.06. Under the recorded logic that reads "M5 does not close G at its lower bound". CLOSE comes only from the unrecorded "X and Y" tier. pred/02 §3 itself says that tier includes machinery a G prototype would first replace, and that reopening G on it is the user's decision.
+   - Under pred/01's recorded estimator with its strict V-e (excluding S1, S4, S8), X = 1.4296 and the CI low end is 0.420, so the result is CLOSE. That reading rests on the lower-bound premise the executor withdrew before timing.
+   - **Changes the verdict:** yes for "G is closed" as a ROADMAP-licensed decision; no for the X/Y/L arithmetic.
+
+2. **MINOR — pred/07 misdescribes the retry.** `KYTY_RECORD_THREAD=0` was overridden at frame 1 by `recordthread=1` in `gates_base.txt`, the gate file pred/01 §4 requires.
+   - `log_m5cap102b.txt:238` shows the variable at 0; `:17884` shows the gate turning it on. The record thread started at tick 90 on one scheduler (`:17922-17923`) and tick 2406 on the other (`:18193-18194`), and ran for about 2300 frames.
+   - Both schedulers switched it off only for the captured flips (`:514799`, `:514882`, capture `:514883-516189`) and back on after (`:516199`, `:516209`).
+   - So the "one addition" was in effect only for ticks below 90. That still covers the crash window: the first attempt died before any gate line (`log_m5cap102.txt:194-198`, `:3873`).
+   - pred/07's claim about the captured frames (07:15-19) holds, so the capture content is unaffected. The report should say the retry ran with the record thread on, and that the retry succeeding says nothing about the cause of the crash.
+   - Moves nothing; the verdict is unchanged.
+
+3. **MINOR — the retry goes against the brief.** The brief says any game run gets "no warmup, no retry" (next-session-102.md:81). Only the executor's own seal allowed it (pred/01:143-144). The first attempt failed for a technical reason (exit 321 at start-up, no `.rdc`), so the retry was not chosen on any result. Disclose it; the verdict is unchanged.
+
+4. **MINOR — the bench's GPU-state check cannot pass as written.** pred/01:150-151 asks that no other process holds dedicated GPU memory. Windows reports that memory as [N/A] for all 18 listed processes (`bench_m5cap102.json.run.json`), including three `claude` processes, Docker and Razer. GPU use was 0-1% before the run, and all five arms were interleaved in one process, so the ratios are barely affected. The verdict is unchanged.
+
+5. **INFO — the retry's run record checks only pred/01.** `launch_m5cap102b.txt:1` and the `prereg` field hash-check pred/01, not pred/07. The commit time proves pred/07 came first. No effect.
+
+6. **INFO — "built from the same commit" is loose.** pred/01:133-135 says the tests exe and the emulator come from the same commit. Neither was built from a commit: both came from the uncommitted tree on `0d35faa` (emulator 21:07:18, tests 21:14:47), which was committed later as `130744b` (22:46:39). No emulator source changed after 20:40:52, and the translator hash `2db9065a` is the same. No effect.
+
+**Fix before publishing:** record pred/02 in ROADMAP and correct the lower-bound statement at ROADMAP.md:1360-1364. Then publish X/Y/L and the pred/02 classification, but do not state "G is closed" until the user has decided the machinery-only CLOSE against L = +2.1%, as pred/02 §3 itself asks.
+
+The two check scripts are in `C:/Users/<user>/AppData/Local/Temp/claude/C--Users-<user>-OneDrive-Desktop-ps5-em/9077010c-5d2a-4f0b-8edc-d9eb47622f00/scratchpad/audit102/`: `chk_mods.py` and `recompute.py`.

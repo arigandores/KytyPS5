@@ -1,0 +1,102 @@
+**Verdict: NOT REFUTED** for the M5 claim itself. The CLOSE-machinery branch stands. Several sentences in the report's "consequences" part are over-claimed or wrong and must be fixed before it is published: see D1, D2, D3, D4, D10, D11 and D12.
+
+**What I checked and confirmed:**
+- All 7 seal hashes match `SEALS102.txt` and the copies in git.
+- The commit order is sound: pred/01 at 19:49, pred/02 at 22:12 and addendum 07 at 23:00:04 all come before the capture retry (23:00:09) and the bench (23:11–23:27).
+- My own script (`scratchpad/audit102/recount_l5.py`) reproduces from `bench_m5cap102.json`, 20 rounds: X 1.42006, Y 1.33238, L 1.02079, V2s/A 1.06076, A/B 0.99738. The V2 exclusion share is 0.21866.
+- The result does not depend on any one item. Dropping any single item leaves at least X 1.3086 and Y 1.2454 (the lowest is when S3 is dropped).
+- The compute-shader items have no STRONG loads, and on them alone Y = 1.4795 and X = 1.5537.
+- Under pred/01's original verdict rule (the only one written into ROADMAP), Δ has a 90 % CI of [0.412, 0.424], which is also CLOSE.
+
+**Defects:**
+
+**D1 — ROADMAP was never updated for pred/02's rule changes.**
+- ROADMAP §2 E (commit 0d35faa, `ROADMAP.md:1360`) records clause (в): V2 is a LOWER bound, so a CLOSE is robust.
+- pred/02 §3 withdraws that. It also changes how the verdict is composed: a new NOT-CLOSED path through Y alone, a new CLOSE path through L alone, and two tiers.
+- Commit 1fc0e15 changed only pred files; ROADMAP was last touched in 0d35faa. The brief requires any rule change to go into ROADMAP first (§5) and forbids claiming a changed rule without that (§6).
+- This is the same kind of defect as s100 (г) and s101 (а).
+- Effect on numbers: none. Effect on the verdict: none, since pred/01 alone also gives CLOSE.
+- But the "machinery" tier and its "user decides to reopen" clause exist only in a seal, while ROADMAP still states a premise the session itself withdrew. The report must disclose this, correct (в), and must not say "the rule was unchanged" without adding that pred/02 changed the verdict composition.
+
+**D2 — "route E's rewrite has no licensed variant left" is empty.**
+- No variant was ever licensed (ROADMAP §0.1 and the §2 E tables: "живы и НЕ лицензированы").
+- The honest statement is "no variant is alive except R1". G is closed only at the machinery tier, and pred/02 §3 leaves reopening to the user. P and P+G are closed by the letter of M1, and ROADMAP says the reasoning behind that rule does not follow (`ROADMAP.md:1131`).
+- `ROADMAP.md:46` ("НЕ ДОКАЗАНО … что переписывать нечего") must stay. The brief's line "the rewrite has nothing left" (brief §1) conflicts with R1 being alive.
+- Verdict unchanged; the wording has to change.
+
+**D3 — "the honest target becomes…" is wrong.**
+- That has been the recorded target since session 83 (`ROADMAP.md:27`). It should read "remains".
+- Minor.
+
+**D4 — The chance figure is now stale.**
+- "~15 % (8…25 %)" at `ROADMAP.md:324` and `:1521` included G (5–12 %) and P+G.
+- Repeating 15 % alongside "G closed" contradicts itself. Replacing it with "≤ 3 % via R1" is a statement about 60 FPS drawn from the CLOSE, which pred/01 §8 forbids unless it is clearly labelled as the s94 estimate [I].
+- The report must address this explicitly. Verdict unchanged.
+
+**D5 — The R1 sentence is correct but needs its label.**
+- The ROADMAP tables at `:1111` and `:1122` support it. With M3 closed as a final GAP, R1's only closure path is gone, so "formally alive" is right.
+- "Does not reach 16.7 ms in principle" is an s94 analyst inference (the column header at `:1100` is marked [I]). It must be tagged [I], and nothing from M5 may be applied to R1 (pred/01 §8).
+
+**D6 — "P+G closed" is correct but needs M1's caveat.**
+- It matches `ROADMAP.md:1119` (closed together with P in s95).
+- When the report uses it as a premise for "nothing left", it must carry M1's caveat from `:1131`.
+
+**D7 — Framing of machinery item (i); this strengthens the result, it does not refute it.**
+- pred/02 §3 (i) lists "a page-table LDG.E.64 per group" among the machinery a G prototype would replace. But G as designed routes reads through exactly that page table: `s94/rewrite94/gpu-driven.md` §2–3 ("one extra dependent page-table load per access") and the §5 row "BDA page-table indirection".
+- Item (ii), the STRONG loads, cannot be what carries the verdict: on the compute-shader items, which have no STRONG loads, Y is still 1.48.
+- The report should say the result is closer to "G as designed" than the label suggests.
+
+**D8 — The strict tier did not cross.**
+- L − 1 has a 90 % CI upper bound of 0.0256, well under 0.06. The only strict lower bound of G's price is +2.1 %.
+- The report must say the CLOSE rests entirely on X and Y and is not "CLOSE — strict".
+
+**D9 — V2 gives wrong output on 2 of 10 items, including the largest.**
+- S1 differs by 4 153 261 bytes against a tolerance of 2E = 28 466 (146×). S8 is repeatable and differs by 746 bytes.
+- The cause in the `KYTY_RECOMPILE_BDA=1` rewrite is undiagnosed. For the other 8 items only the LAST event was compared (S3 has 600 events, S9 983, S10 690).
+- "V-e PASS" must not be read as "V2 is correct". The leave-one-out check shows the verdict does not move, but the report must name the failure as unexplained.
+
+**D10 — Addendum 07's premise is false: the retry capture ran with the record thread ON.**
+- `gates_base.txt` and `gates.req` set `recordthread=1`, which overrides `KYTY_RECORD_THREAD=0` at the next command buffer.
+- The log proves it: `log_m5cap102b.txt:237`, `:17921-17922` (started, on from tick 90) and `:18192-18193` (from tick 2406).
+- So the retry was the same configuration as the crashed attempt and succeeded because the race did not recur. The captured frames themselves were recorded directly, because `RecordThreadWanted` refuses the record thread while RenderDoc is capturing (`commandRecorder.cpp`), so the M5 numbers are unaffected.
+- The report must not say the capture ran without the record thread. The assertion at `commandRecorder.cpp:326` on this session's binary stays an undiagnosed debt.
+
+**D11 — The checkpoint-fix acceptance is overstated.**
+- pred/04 §1 says "same environment string", but the reference run cm101a also had `KYTY_GATE_SCHEDULE "90+1800:cbmove=0|cbmove=1"` with ABBA, `KYTY_BIND_FLOOR_LATCH=0` and `KYTY_BIND_FLOOR_CLEAR=0`, a 300 s hold against 180 s, and a different binary (b70d0096 against 346ba4f6).
+- The scorer marks cm101a as "never deciding". Acceptance rests on absolute bands for the new run only (rec_n 11254.5, gpu_busy 12533, dt 33262). That is a categorical inter-run witness, not an ABBA A/B.
+- The retry clause (addendum 06) was adopted after the entry hang was seen: the TDR happened at 22:48:11 and the seal was committed at 22:49:05. It is a technical-failure clause and mirrors the other seals, but it is post-hoc and must be disclosed.
+- "Class fixed" is an over-claim. 15 sites in the translator (12 variables, including `KYTY_BVH_STUB` and `KYTY_SAMPLE_LOD0`, which change rendering) still turn on when the variable is merely present. Of the converted sites, only `KYTY_GPU_CHECKPOINTS` was exercised at runtime.
+- No speedup when the variable is unset. The machine-check guard warned that docker desktop.exe was on the GPU.
+- Acceptance holds on its own terms.
+
+**D12 — ROADMAP §6 ("a source change that passed A/B").**
+- Only the checkpoint fix qualifies, and only as "a real-path change that passed its sealed inter-run categorical witness, 6/6 items", with no change in frame rate at the default.
+- dabatch does NOT qualify: its candidate was CLOSED and not shipped, the default is unchanged, and the new thread_local `requests` vector sits in both arms, so no A/B measured it.
+- `KYTY_DMA_LAYOUT` and `KYTY_RECOMPILE_BDA` are measurement-only.
+
+**D13 — The dabatch closure is robust, but the report has to say more.**
+- Using the whole Δda_walk_us instead of the queue timer: b ≈ 127.95/946.6 ≈ 0.135 µs per call, so Ŝ ≈ 16.4 µs.
+- Even bounding ALL call overhead at batch 64 by the Δcpu_net_us 90 % upper bound (≈ 248 µs over about 946 extra calls, so 0.262 µs × 134.4 calls): ≤ 35 µs. Every basis is below 60 µs.
+- The walk/queue ratio of 1.731 is under the sealed factor of 2, so b̂ is not formally labelled a lower bound. Still, about 42 % of the extra walk time falls outside `da_queue_us`, and this must be stated.
+- Q3 MISS must be published: Δda_late was −0.241 per flip (t −4.34). A bigger batch would likely increase lateness, a cost against shipping that was never measured.
+- "Closed" means the 1024 saving is extrapolated, not measured.
+
+**D14 — The code change came before M5, not after.**
+- The M5 capture used the patched binary 346ba4f6 and ran after ckpt102 and dab102a, against the brief §2 instruction "measure first and patch after".
+- This does not affect the GPU replay ratios, and `KYTY_DMA_LAYOUT` was needed for the capture anyway. It is not load-bearing, but the report must not claim the order was measurement first.
+
+**D15 — M5 was not "without a game run".**
+- The brief §1 and `ROADMAP.md` §0.1 and §5 item 5 describe M5 as a bench with no game run. It took two game launches (m5cap102, which exited with code 321, and m5cap102b).
+- pred/01 §8 forbids claiming otherwise.
+
+**D16 — P2 MISS must be published** beside P1, P3 and P4 (all HIT). X − 1 = 0.420 lies outside the predicted [0.02, 0.20].
+
+Relevant files:
+- `C:/kyty/s102/pred/02_m5_addendum.md`
+- `C:/kyty/KytyPS5/docs/ROADMAP.md` (lines 27, 46, 324, 1100–1131, 1350–1366, 1521)
+- `C:/kyty/s102/log_m5cap102b.txt`
+- `C:/kyty/s102/gates_base.txt`
+- `C:/kyty/s102/runs102/ckpt102_entry1_score.json`
+- `C:/kyty/s101/cm101a.json`
+- `C:/kyty/s102/accept_dab102a.txt`
+- `C:/Users/<user>/AppData/Local/Temp/claude/C--Users-<user>-OneDrive-Desktop-ps5-em/9077010c-5d2a-4f0b-8edc-d9eb47622f00/scratchpad/audit102/recount_l5.py`

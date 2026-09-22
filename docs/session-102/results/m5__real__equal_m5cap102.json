@@ -1,0 +1,3655 @@
+{
+ "tool": "rd_m5_equal",
+ "capture": "C:/Users/<user>/OneDrive/Desktop/ps5 em/_RenderDoc/kyty_1790110985179586_capture.rdc",
+ "plan": "C:/kyty/s102/m5/real/plan_m5cap102.json",
+ "plan_sha256": "e03da10031743fe2c6e5650d79ece4126dea92f551b0fd839f2f0ccc130c3f8a",
+ "pred_sha256": "cf3c353f7aaa4a2a16d7b59a61461cf26bef11ddbfffd59206ae95a8b6b33e0a",
+ "addendum_sha256": "ced6d4103c64b9e5b7c81a3a730cac6d2b04a08486f82cf43642b04a8701f4d3",
+ "seals": {
+  "pred": {
+   "path": "C:/kyty/s102/pred/01_m5_bench.md",
+   "sha256": "cf3c353f7aaa4a2a16d7b59a61461cf26bef11ddbfffd59206ae95a8b6b33e0a",
+   "want": "cf3c353f7aaa4a2a16d7b59a61461cf26bef11ddbfffd59206ae95a8b6b33e0a"
+  },
+  "addendum": {
+   "path": "C:/kyty/s102/pred/02_m5_addendum.md",
+   "sha256": "ced6d4103c64b9e5b7c81a3a730cac6d2b04a08486f82cf43642b04a8701f4d3",
+   "want": "ced6d4103c64b9e5b7c81a3a730cac6d2b04a08486f82cf43642b04a8701f4d3"
+  }
+ },
+ "mechanics": false,
+ "reference": "A",
+ "a_replays": 3,
+ "variants": [
+  "V1",
+  "V2",
+  "V2s"
+ ],
+ "ps_rw": false,
+ "rule": "pred/02 s2: repeatable => bit-equal to A1; else differing bytes vs A1 <= 2*E",
+ "replay_optimisation": "balanced",
+ "started": "2026-09-22T23:08:51",
+ "items": {
+  "S1": {
+   "stage": "cs",
+   "last_event": 63664,
+   "modules": [
+    "ResourceId::349"
+   ],
+   "variants": {
+    "V1": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "buf",
+       "ResourceId::5969",
+       259216,
+       129604
+      ],
+      "offset": 0
+     },
+     "n_diff_bytes": 14504,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 14233,
+      "A1-A3": 13657,
+      "A2-A3": 13111
+     },
+     "E": 14233,
+     "limit": 28466,
+     "repeatable": false,
+     "pass": true,
+     "pass_kind": "within replay noise",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::178",
+        0,
+        536870912
+       ],
+       "deciding": true,
+       "size_ref": 536870912,
+       "size_var": 536870912,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::138",
+        0,
+        8388608
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22390016,
+        1244
+       ],
+       "deciding": true,
+       "size_ref": 1244,
+       "size_var": 1244,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::5969",
+        259216,
+        129604
+       ],
+       "deciding": true,
+       "size_ref": 129604,
+       "size_var": 129604,
+       "equal": false,
+       "first_diff": 0,
+       "n_diff_bytes": 12523,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        43042064,
+        17904
+       ],
+       "deciding": true,
+       "size_ref": 17904,
+       "size_var": 17904,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389712,
+        112
+       ],
+       "deciding": true,
+       "size_ref": 112,
+       "size_var": 112,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::17514",
+        10832,
+        64
+       ],
+       "deciding": true,
+       "size_ref": 64,
+       "size_var": 64,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::6036",
+        10688,
+        96
+       ],
+       "deciding": true,
+       "size_ref": 96,
+       "size_var": 96,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389824,
+        16
+       ],
+       "deciding": true,
+       "size_ref": 16,
+       "size_var": 16,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        42989904,
+        576
+       ],
+       "deciding": true,
+       "size_ref": 576,
+       "size_var": 576,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 6410856,
+       "n_diff_bytes": 1721,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5737",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": false,
+       "first_diff": 1645140,
+       "n_diff_bytes": 260,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "buf",
+       "ResourceId::138",
+       0,
+       8388608
+      ],
+      "offset": 0
+     },
+     "n_diff_bytes": 4153261,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 14233,
+      "A1-A3": 13657,
+      "A2-A3": 13111
+     },
+     "E": 14233,
+     "limit": 28466,
+     "repeatable": false,
+     "pass": false,
+     "pass_kind": null,
+     "same_resource_set": false,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::178",
+        0,
+        536870912
+       ],
+       "deciding": true,
+       "size_ref": 536870912,
+       "size_var": 536870912,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::138",
+        0,
+        8388608
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": false,
+       "first_diff": 0,
+       "n_diff_bytes": 1,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22390016,
+        1244
+       ],
+       "deciding": true,
+       "size_ref": 1244,
+       "size_var": 1244,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::5969",
+        259216,
+        129604
+       ],
+       "deciding": true,
+       "size_ref": 129604,
+       "size_var": 129604,
+       "equal": false,
+       "first_diff": 0,
+       "n_diff_bytes": 12161,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        43042064,
+        17904
+       ],
+       "deciding": true,
+       "size_ref": 17904,
+       "size_var": 17904,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389712,
+        112
+       ],
+       "deciding": true,
+       "size_ref": 112,
+       "size_var": 112,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::17514",
+        10832,
+        64
+       ],
+       "deciding": true,
+       "size_ref": 64,
+       "size_var": 64,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::6036",
+        10688,
+        96
+       ],
+       "deciding": true,
+       "size_ref": 96,
+       "size_var": 96,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389824,
+        16
+       ],
+       "deciding": true,
+       "size_ref": 16,
+       "size_var": 16,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        42989904,
+        576
+       ],
+       "deciding": true,
+       "size_ref": 576,
+       "size_var": 576,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 10290,
+       "n_diff_bytes": 4052053,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5737",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": false,
+       "first_diff": 2598,
+       "n_diff_bytes": 89046,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "buf",
+       "ResourceId::5969",
+       259216,
+       129604
+      ],
+      "offset": 2
+     },
+     "n_diff_bytes": 13570,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 14233,
+      "A1-A3": 13657,
+      "A2-A3": 13111
+     },
+     "E": 14233,
+     "limit": 28466,
+     "repeatable": false,
+     "pass": true,
+     "pass_kind": "within replay noise",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::178",
+        0,
+        536870912
+       ],
+       "deciding": true,
+       "size_ref": 536870912,
+       "size_var": 536870912,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::138",
+        0,
+        8388608
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22390016,
+        1244
+       ],
+       "deciding": true,
+       "size_ref": 1244,
+       "size_var": 1244,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::5969",
+        259216,
+        129604
+       ],
+       "deciding": true,
+       "size_ref": 129604,
+       "size_var": 129604,
+       "equal": false,
+       "first_diff": 2,
+       "n_diff_bytes": 12144,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        43042064,
+        17904
+       ],
+       "deciding": true,
+       "size_ref": 17904,
+       "size_var": 17904,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389712,
+        112
+       ],
+       "deciding": true,
+       "size_ref": 112,
+       "size_var": 112,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::17514",
+        10832,
+        64
+       ],
+       "deciding": true,
+       "size_ref": 64,
+       "size_var": 64,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::6036",
+        10688,
+        96
+       ],
+       "deciding": true,
+       "size_ref": 96,
+       "size_var": 96,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        22389824,
+        16
+       ],
+       "deciding": true,
+       "size_ref": 16,
+       "size_var": 16,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::91421",
+        42989904,
+        576
+       ],
+       "deciding": true,
+       "size_ref": 576,
+       "size_var": 576,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 6410856,
+       "n_diff_bytes": 1219,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5737",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": false,
+       "first_diff": 1645140,
+       "n_diff_bytes": 207,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "85985c7db7af121d74cebb85ce382535",
+     "got": "85985c7db7af121d74cebb85ce382535",
+     "ok": true
+    },
+    "A2": {
+     "expected": "85985c7db7af121d74cebb85ce382535",
+     "got": "85985c7db7af121d74cebb85ce382535",
+     "ok": true
+    },
+    "A3": {
+     "expected": "85985c7db7af121d74cebb85ce382535",
+     "got": "85985c7db7af121d74cebb85ce382535",
+     "ok": true
+    },
+    "V1": {
+     "expected": "85985c7db7af121d74cebb85ce382535",
+     "got": "85985c7db7af121d74cebb85ce382535",
+     "ok": true
+    },
+    "V2": {
+     "expected": "88c1382286ed2ebbb896f3781135f9a2",
+     "got": "88c1382286ed2ebbb896f3781135f9a2",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "0b66bb41c2f63a42543b3d25478eb345",
+     "got": "0b66bb41c2f63a42543b3d25478eb345",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "buf",
+     "ResourceId::178",
+     0,
+     536870912,
+     536870912
+    ],
+    [
+     "buf",
+     "ResourceId::138",
+     0,
+     8388608,
+     8388608
+    ],
+    [
+     "buf",
+     "ResourceId::184",
+     22390016,
+     1244,
+     1244
+    ],
+    [
+     "buf",
+     "ResourceId::5969",
+     259216,
+     129604,
+     129604
+    ],
+    [
+     "buf",
+     "ResourceId::91421",
+     43042064,
+     17904,
+     17904
+    ],
+    [
+     "buf",
+     "ResourceId::184",
+     22389712,
+     112,
+     112
+    ],
+    [
+     "buf",
+     "ResourceId::17514",
+     10832,
+     64,
+     64
+    ],
+    [
+     "buf",
+     "ResourceId::6036",
+     10688,
+     96,
+     96
+    ],
+    [
+     "buf",
+     "ResourceId::184",
+     22389824,
+     16,
+     16
+    ],
+    [
+     "buf",
+     "ResourceId::91421",
+     42989904,
+     576,
+     576
+    ],
+    [
+     "tex",
+     "ResourceId::5735",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::5737",
+     0,
+     0,
+     0,
+     4147200
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 14233,
+    "A1-A3": 13657,
+    "A2-A3": 13111
+   },
+   "reference_pair_diff_by_resource": [
+    {
+     "key": [
+      "buf",
+      "ResourceId::5969",
+      259216,
+      129604
+     ],
+     "deciding": true,
+     "pairs": [
+      12252,
+      12231,
+      12307
+     ]
+    },
+    {
+     "key": [
+      "tex",
+      "ResourceId::5735",
+      0,
+      0,
+      0
+     ],
+     "deciding": true,
+     "pairs": [
+      1721,
+      1219,
+      699
+     ]
+    },
+    {
+     "key": [
+      "tex",
+      "ResourceId::5737",
+      0,
+      0,
+      0
+     ],
+     "deciding": true,
+     "pairs": [
+      260,
+      207,
+      105
+     ]
+    }
+   ],
+   "E": 14233,
+   "repeatable": false,
+   "seconds": 14.8
+  },
+  "S2": {
+   "stage": "ps",
+   "last_event": 67924,
+   "modules": [
+    "ResourceId::286"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "6342112df1fcef92910c66effb6fa253",
+     "got": "6342112df1fcef92910c66effb6fa253",
+     "ok": true
+    },
+    "A2": {
+     "expected": "6342112df1fcef92910c66effb6fa253",
+     "got": "6342112df1fcef92910c66effb6fa253",
+     "ok": true
+    },
+    "A3": {
+     "expected": "6342112df1fcef92910c66effb6fa253",
+     "got": "6342112df1fcef92910c66effb6fa253",
+     "ok": true
+    },
+    "V1": {
+     "expected": "55578396ab23b0d6400cbb6bfbd589a6",
+     "got": "55578396ab23b0d6400cbb6bfbd589a6",
+     "ok": true
+    },
+    "V2": {
+     "expected": "7b7e34c156e50afddee7ad5f994d91ad",
+     "got": "7b7e34c156e50afddee7ad5f994d91ad",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "369917015bbf0dc68d143e13ddcc465a",
+     "got": "369917015bbf0dc68d143e13ddcc465a",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::27557",
+     0,
+     0,
+     0,
+     4147200
+    ],
+    [
+     "tex",
+     "ResourceId::199905",
+     0,
+     0,
+     0,
+     2073600
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 12.1
+  },
+  "S3": {
+   "stage": "ps",
+   "last_event": 53603,
+   "modules": [
+    "ResourceId::660"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "5ff20bf600c76da4c46919475a705391",
+     "got": "5ff20bf600c76da4c46919475a705391",
+     "ok": true
+    },
+    "A2": {
+     "expected": "5ff20bf600c76da4c46919475a705391",
+     "got": "5ff20bf600c76da4c46919475a705391",
+     "ok": true
+    },
+    "A3": {
+     "expected": "5ff20bf600c76da4c46919475a705391",
+     "got": "5ff20bf600c76da4c46919475a705391",
+     "ok": true
+    },
+    "V1": {
+     "expected": "8f2c45f091570170e294696239710f69",
+     "got": "8f2c45f091570170e294696239710f69",
+     "ok": true
+    },
+    "V2": {
+     "expected": "4fe8ea80a05ff176ef6814c09033b713",
+     "got": "4fe8ea80a05ff176ef6814c09033b713",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "30fa2a148c2aa3c3274b7602c0660122",
+     "got": "30fa2a148c2aa3c3274b7602c0660122",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::27424",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::5649",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::27426",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::5733",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::27428",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::27408",
+     0,
+     0,
+     0,
+     16588800
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 7.3
+  },
+  "S4": {
+   "stage": "ps",
+   "last_event": 67297,
+   "modules": [
+    "ResourceId::598"
+   ],
+   "variants": {
+    "V1": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "tex",
+       "ResourceId::5735",
+       0,
+       0,
+       0
+      ],
+      "offset": 6366032
+     },
+     "n_diff_bytes": 613,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 1941,
+      "A1-A3": 1775,
+      "A2-A3": 591
+     },
+     "E": 1941,
+     "limit": 3882,
+     "repeatable": false,
+     "pass": true,
+     "pass_kind": "within replay noise",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 6366032,
+       "n_diff_bytes": 613,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "tex",
+       "ResourceId::5735",
+       0,
+       0,
+       0
+      ],
+      "offset": 1527834
+     },
+     "n_diff_bytes": 250,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 1941,
+      "A1-A3": 1775,
+      "A2-A3": 591
+     },
+     "E": 1941,
+     "limit": 3882,
+     "repeatable": false,
+     "pass": true,
+     "pass_kind": "within replay noise",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 1527834,
+       "n_diff_bytes": 250,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "tex",
+       "ResourceId::5735",
+       0,
+       0,
+       0
+      ],
+      "offset": 6366032
+     },
+     "n_diff_bytes": 613,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 1941,
+      "A1-A3": 1775,
+      "A2-A3": 591
+     },
+     "E": 1941,
+     "limit": 3882,
+     "repeatable": false,
+     "pass": true,
+     "pass_kind": "within replay noise",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::5735",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": false,
+       "first_diff": 6366032,
+       "n_diff_bytes": 613,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "f6163abf730b68c50f7a60067751a95a",
+     "got": "f6163abf730b68c50f7a60067751a95a",
+     "ok": true
+    },
+    "A2": {
+     "expected": "f6163abf730b68c50f7a60067751a95a",
+     "got": "f6163abf730b68c50f7a60067751a95a",
+     "ok": true
+    },
+    "A3": {
+     "expected": "f6163abf730b68c50f7a60067751a95a",
+     "got": "f6163abf730b68c50f7a60067751a95a",
+     "ok": true
+    },
+    "V1": {
+     "expected": "142a4fb2441a35c63ae7f00f78eb0bdd",
+     "got": "142a4fb2441a35c63ae7f00f78eb0bdd",
+     "ok": true
+    },
+    "V2": {
+     "expected": "b0fca9eb70d502098e23546613bf0cf6",
+     "got": "b0fca9eb70d502098e23546613bf0cf6",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "d68623cb1aedaf2e638bd38569539ea1",
+     "got": "d68623cb1aedaf2e638bd38569539ea1",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::5735",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::27408",
+     0,
+     0,
+     0,
+     16588800
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 1941,
+    "A1-A3": 1775,
+    "A2-A3": 591
+   },
+   "reference_pair_diff_by_resource": [
+    {
+     "key": [
+      "tex",
+      "ResourceId::5735",
+      0,
+      0,
+      0
+     ],
+     "deciding": true,
+     "pairs": [
+      1941,
+      1775,
+      591
+     ]
+    }
+   ],
+   "E": 1941,
+   "repeatable": false,
+   "seconds": 9.7
+  },
+  "S5": {
+   "stage": "ps",
+   "last_event": 74342,
+   "modules": [
+    "ResourceId::364"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27424",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5649",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27426",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::5733",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8294400,
+       "size_var": 8294400,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27428",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "fa7ba08278c883c16e0bfce42133df9b",
+     "got": "fa7ba08278c883c16e0bfce42133df9b",
+     "ok": true
+    },
+    "A2": {
+     "expected": "fa7ba08278c883c16e0bfce42133df9b",
+     "got": "fa7ba08278c883c16e0bfce42133df9b",
+     "ok": true
+    },
+    "A3": {
+     "expected": "fa7ba08278c883c16e0bfce42133df9b",
+     "got": "fa7ba08278c883c16e0bfce42133df9b",
+     "ok": true
+    },
+    "V1": {
+     "expected": "b6ed8d48174cf190b8460c3e1236c280",
+     "got": "b6ed8d48174cf190b8460c3e1236c280",
+     "ok": true
+    },
+    "V2": {
+     "expected": "69a184d49ba664681d3db9c1562b1161",
+     "got": "69a184d49ba664681d3db9c1562b1161",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "5a19ddf5892338882f70ab2ee1b6e34a",
+     "got": "5a19ddf5892338882f70ab2ee1b6e34a",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::27424",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::5649",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::27426",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::5733",
+     0,
+     0,
+     0,
+     8294400
+    ],
+    [
+     "tex",
+     "ResourceId::27428",
+     0,
+     0,
+     0,
+     16588800
+    ],
+    [
+     "tex",
+     "ResourceId::27408",
+     0,
+     0,
+     0,
+     16588800
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 8.5
+  },
+  "S6": {
+   "stage": "cs",
+   "last_event": 68778,
+   "modules": [
+    "ResourceId::456",
+    "ResourceId::457",
+    "ResourceId::679",
+    "ResourceId::680"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2835328,
+        352
+       ],
+       "deciding": true,
+       "size_ref": 352,
+       "size_var": 352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::32782",
+        2244720,
+        15216
+       ],
+       "deciding": true,
+       "size_ref": 15216,
+       "size_var": 15216,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10069",
+        16240,
+        7771300
+       ],
+       "deciding": true,
+       "size_ref": 7771300,
+       "size_var": 7771300,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::18125",
+        4194336,
+        4041076
+       ],
+       "deciding": true,
+       "size_ref": 4041076,
+       "size_var": 4041076,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": false,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2835328,
+        352
+       ],
+       "deciding": true,
+       "size_ref": 352,
+       "size_var": 352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::32782",
+        2244720,
+        15216
+       ],
+       "deciding": true,
+       "size_ref": 15216,
+       "size_var": 15216,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10069",
+        16240,
+        7771300
+       ],
+       "deciding": true,
+       "size_ref": 7771300,
+       "size_var": 7771300,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::18125",
+        4194336,
+        4041076
+       ],
+       "deciding": true,
+       "size_ref": 4041076,
+       "size_var": 4041076,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::178",
+        0,
+        536870912
+       ],
+       "deciding": true,
+       "size_ref": 536870912,
+       "size_var": 536870912,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "variant"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::138",
+        0,
+        8388608
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "variant"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2835328,
+        352
+       ],
+       "deciding": true,
+       "size_ref": 352,
+       "size_var": 352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::32782",
+        2244720,
+        15216
+       ],
+       "deciding": true,
+       "size_ref": 15216,
+       "size_var": 15216,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10069",
+        16240,
+        7771300
+       ],
+       "deciding": true,
+       "size_ref": 7771300,
+       "size_var": 7771300,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::18125",
+        4194336,
+        4041076
+       ],
+       "deciding": true,
+       "size_ref": 4041076,
+       "size_var": 4041076,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "A2": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "A3": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "V1": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "V2": {
+     "expected": "ab8a63b4ffa9fae2a49069fc6e9b2c75",
+     "got": "ab8a63b4ffa9fae2a49069fc6e9b2c75",
+     "ok": true
+    },
+    "A1+V2": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "A2+V2": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "A3+V2": {
+     "expected": "ffc2378c2779b6080f46a21b742390e6",
+     "got": "ffc2378c2779b6080f46a21b742390e6",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "44b0e098bc338c0ca79fb21ccec3d971",
+     "got": "44b0e098bc338c0ca79fb21ccec3d971",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "buf",
+     "ResourceId::28227",
+     2835328,
+     352,
+     352
+    ],
+    [
+     "buf",
+     "ResourceId::32782",
+     2244720,
+     15216,
+     15216
+    ],
+    [
+     "buf",
+     "ResourceId::10069",
+     16240,
+     7771300,
+     7771300
+    ],
+    [
+     "buf",
+     "ResourceId::18125",
+     4194336,
+     4041076,
+     4041076
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 29.6
+  },
+  "S7": {
+   "stage": "cs",
+   "last_event": 69542,
+   "modules": [
+    "ResourceId::459"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        24217856,
+        32
+       ],
+       "deciding": true,
+       "size_ref": 32,
+       "size_var": 32,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2820448,
+        48
+       ],
+       "deciding": true,
+       "size_ref": 48,
+       "size_var": 48,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        7472,
+        101352
+       ],
+       "deciding": true,
+       "size_ref": 101352,
+       "size_var": 101352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        108832,
+        391584
+       ],
+       "deciding": true,
+       "size_ref": 391584,
+       "size_var": 391584,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        600096,
+        96768
+       ],
+       "deciding": true,
+       "size_ref": 96768,
+       "size_var": 96768,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        1152,
+        405408
+       ],
+       "deciding": true,
+       "size_ref": 405408,
+       "size_var": 405408,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": false,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        24217856,
+        32
+       ],
+       "deciding": true,
+       "size_ref": 32,
+       "size_var": 32,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2820448,
+        48
+       ],
+       "deciding": true,
+       "size_ref": 48,
+       "size_var": 48,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        7472,
+        101352
+       ],
+       "deciding": true,
+       "size_ref": 101352,
+       "size_var": 101352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        108832,
+        391584
+       ],
+       "deciding": true,
+       "size_ref": 391584,
+       "size_var": 391584,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        600096,
+        96768
+       ],
+       "deciding": true,
+       "size_ref": 96768,
+       "size_var": 96768,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "reference"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        1152,
+        405408
+       ],
+       "deciding": true,
+       "size_ref": 405408,
+       "size_var": 405408,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::178",
+        0,
+        536870912
+       ],
+       "deciding": true,
+       "size_ref": 536870912,
+       "size_var": 536870912,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "variant"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::138",
+        0,
+        8388608
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "variant"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "buf",
+        "ResourceId::184",
+        24217856,
+        32
+       ],
+       "deciding": true,
+       "size_ref": 32,
+       "size_var": 32,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::28227",
+        2820448,
+        48
+       ],
+       "deciding": true,
+       "size_ref": 48,
+       "size_var": 48,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        7472,
+        101352
+       ],
+       "deciding": true,
+       "size_ref": 101352,
+       "size_var": 101352,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10066",
+        108832,
+        391584
+       ],
+       "deciding": true,
+       "size_ref": 391584,
+       "size_var": 391584,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        600096,
+        96768
+       ],
+       "deciding": true,
+       "size_ref": 96768,
+       "size_var": 96768,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "buf",
+        "ResourceId::10063",
+        1152,
+        405408
+       ],
+       "deciding": true,
+       "size_ref": 405408,
+       "size_var": 405408,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "A2": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "A3": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "V1": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "V2": {
+     "expected": "b7360dfeda254cf8d096a663e5e1804e",
+     "got": "b7360dfeda254cf8d096a663e5e1804e",
+     "ok": true
+    },
+    "A1+V2": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "A2+V2": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "A3+V2": {
+     "expected": "d2b83875f6c63caf93fd958d0a833e9a",
+     "got": "d2b83875f6c63caf93fd958d0a833e9a",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "a41eee161369d12e4fdda0321a5f1f73",
+     "got": "a41eee161369d12e4fdda0321a5f1f73",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "buf",
+     "ResourceId::184",
+     24217856,
+     32,
+     32
+    ],
+    [
+     "buf",
+     "ResourceId::28227",
+     2820448,
+     48,
+     48
+    ],
+    [
+     "buf",
+     "ResourceId::10066",
+     7472,
+     101352,
+     101352
+    ],
+    [
+     "buf",
+     "ResourceId::10066",
+     108832,
+     391584,
+     391584
+    ],
+    [
+     "buf",
+     "ResourceId::10063",
+     600096,
+     96768,
+     96768
+    ],
+    [
+     "buf",
+     "ResourceId::10063",
+     1152,
+     405408,
+     405408
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 10.0
+  },
+  "S8": {
+   "stage": "ps",
+   "last_event": 67871,
+   "modules": [
+    "ResourceId::302",
+    "ResourceId::303"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": false,
+     "first_diff": {
+      "key": [
+       "tex",
+       "ResourceId::27557",
+       0,
+       0,
+       0
+      ],
+      "offset": 426080
+     },
+     "n_diff_bytes": 746,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": false,
+     "pass_kind": null,
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": false,
+       "first_diff": 426080,
+       "n_diff_bytes": 746,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27557",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 4147200,
+       "size_var": 4147200,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      },
+      {
+       "key": [
+        "tex",
+        "ResourceId::199905",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 2073600,
+       "size_var": 2073600,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "28be296b83a1faba722fd65916996850",
+     "got": "28be296b83a1faba722fd65916996850",
+     "ok": true
+    },
+    "A2": {
+     "expected": "28be296b83a1faba722fd65916996850",
+     "got": "28be296b83a1faba722fd65916996850",
+     "ok": true
+    },
+    "A3": {
+     "expected": "28be296b83a1faba722fd65916996850",
+     "got": "28be296b83a1faba722fd65916996850",
+     "ok": true
+    },
+    "V1": {
+     "expected": "f7193bba4f36941f34a25db747129e3b",
+     "got": "f7193bba4f36941f34a25db747129e3b",
+     "ok": true
+    },
+    "V2": {
+     "expected": "5fe69004685079a8a50c24c6e012d6ab",
+     "got": "5fe69004685079a8a50c24c6e012d6ab",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "3d32ea523b17df331eb34cae9082dea9",
+     "got": "3d32ea523b17df331eb34cae9082dea9",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::27557",
+     0,
+     0,
+     0,
+     4147200
+    ],
+    [
+     "tex",
+     "ResourceId::199905",
+     0,
+     0,
+     0,
+     2073600
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 18.6
+  },
+  "S9": {
+   "stage": "ps",
+   "last_event": 73121,
+   "modules": [
+    "ResourceId::644"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::27408",
+        0,
+        0,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 16588800,
+       "size_var": 16588800,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "19b8e94301e03169af0a39c65260ae01",
+     "got": "19b8e94301e03169af0a39c65260ae01",
+     "ok": true
+    },
+    "A2": {
+     "expected": "19b8e94301e03169af0a39c65260ae01",
+     "got": "19b8e94301e03169af0a39c65260ae01",
+     "ok": true
+    },
+    "A3": {
+     "expected": "19b8e94301e03169af0a39c65260ae01",
+     "got": "19b8e94301e03169af0a39c65260ae01",
+     "ok": true
+    },
+    "V1": {
+     "expected": "8ba28cdbd1a2f3515233bd41c28a41b7",
+     "got": "8ba28cdbd1a2f3515233bd41c28a41b7",
+     "ok": true
+    },
+    "V2": {
+     "expected": "a37ae8d9834de5dc11faec2fa237d281",
+     "got": "a37ae8d9834de5dc11faec2fa237d281",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "5e17feb24e19dd3a08ac48d1bd09d034",
+     "got": "5e17feb24e19dd3a08ac48d1bd09d034",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::27408",
+     0,
+     0,
+     0,
+     16588800
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 6.2
+  },
+  "S10": {
+   "stage": "ps",
+   "last_event": 63404,
+   "modules": [
+    "ResourceId::386"
+   ],
+   "variants": {
+    "V1": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::17198",
+        0,
+        2,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::17198",
+        0,
+        2,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    },
+    "V2s": {
+     "equal": true,
+     "first_diff": null,
+     "n_diff_bytes": 0,
+     "reference_pair_diff_bytes": {
+      "A1-A2": 0,
+      "A1-A3": 0,
+      "A2-A3": 0
+     },
+     "E": 0,
+     "limit": 0,
+     "repeatable": true,
+     "pass": true,
+     "pass_kind": "bit-equal",
+     "same_resource_set": true,
+     "error": null,
+     "info_rw_equal": null,
+     "resources": [
+      {
+       "key": [
+        "tex",
+        "ResourceId::17198",
+        0,
+        2,
+        0
+       ],
+       "deciding": true,
+       "size_ref": 8388608,
+       "size_var": 8388608,
+       "equal": true,
+       "first_diff": null,
+       "n_diff_bytes": 0,
+       "bound_in": "both"
+      }
+     ]
+    }
+   },
+   "in_effect": {
+    "A1": {
+     "expected": "9545c44cea31f0d5d58ee19e04aa4362",
+     "got": "9545c44cea31f0d5d58ee19e04aa4362",
+     "ok": true
+    },
+    "A2": {
+     "expected": "9545c44cea31f0d5d58ee19e04aa4362",
+     "got": "9545c44cea31f0d5d58ee19e04aa4362",
+     "ok": true
+    },
+    "A3": {
+     "expected": "9545c44cea31f0d5d58ee19e04aa4362",
+     "got": "9545c44cea31f0d5d58ee19e04aa4362",
+     "ok": true
+    },
+    "V1": {
+     "expected": "147809970020e6d4d13361fb4f9a7294",
+     "got": "147809970020e6d4d13361fb4f9a7294",
+     "ok": true
+    },
+    "V2": {
+     "expected": "709acae9653422881f6a2e1867bbd9c2",
+     "got": "709acae9653422881f6a2e1867bbd9c2",
+     "ok": true
+    },
+    "V2s": {
+     "expected": "e6dd5831598da0a4694f7579ed59ac35",
+     "got": "e6dd5831598da0a4694f7579ed59ac35",
+     "ok": true
+    }
+   },
+   "reference_resources": [
+    [
+     "tex",
+     "ResourceId::17198",
+     0,
+     2,
+     0,
+     8388608
+    ]
+   ],
+   "reference_replays": 3,
+   "reference_pair_diff_bytes": {
+    "A1-A2": 0,
+    "A1-A3": 0,
+    "A2-A3": 0
+   },
+   "reference_pair_diff_by_resource": [],
+   "E": 0,
+   "repeatable": true,
+   "seconds": 5.9
+  }
+ },
+ "build_errors": [],
+ "complete": true,
+ "capture_sha256": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d",
+ "finished": "2026-09-22T23:11:14"
+}

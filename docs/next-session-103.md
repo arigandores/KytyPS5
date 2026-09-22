@@ -13,33 +13,20 @@ its lens tally and states that X and Y are over eight items).
 60 FPS.** The ~15 % (8…25 %) estimate included G; if the user closes G, say which estimate replaces it
 and label it [I] — do not derive a 60 FPS statement from M5 (`pred/01` §8).
 
-## 0. The decision that must come first — and be written into ROADMAP before anything acts on it
+## 0. The decision is recorded: G stays alive behind M5′ — and the standing rule that recorded it
+
+**Standing delegation (the user, after session 102):** programme decisions are the executor's, taken
+by the goal and **recorded in `ROADMAP.md` before the first action on them**; an unrecorded decision is
+void; the user is not asked. Read `ROADMAP.md` §0.1 (the delegation and the decision), §6 (the rule).
 
 Session 102 measured M5: today's emitter's BDA path costs **X = +42 %** and **Y = +33 %** at equal load
 granularity on eight of the ten top shaders (S1, S8 fail V-e), and the unavoidable const-bank →
-global-load step **L = +2.1 %** over all ten.
-The audit withdrew "M5 closes G": the tiered rule was not recorded first, and V2 carries unpriced
-machinery (a fault-buffer store in every pixel variant that likely disables early depth testing, doubled
-page-table reads). **The user is asked:**
+global-load step **L = +2.1 %** over all ten. The audit withdrew "M5 closes G". **Recorded decision (b):
+G stays alive and unlicensed behind M5′** — the BDA path as G would build it, priced by one ratio X′
+with threshold +6 % (rule in `ROADMAP.md` §0.1, written before any work on it). **Do not change that rule
+without recording the change in ROADMAP first.**
 
-* **(a) G closed by the user's decision** on one line of the rule — V2 is "read-only V# through BDA",
-  the method the design itself specified, and X crossed the threshold seven times over — knowing that
-  under the operationalisation ROADMAP records only L (+2.1 %) decides and that X includes unpriced
-  machinery. Route E then has no variant alive (unless the user later reopens G or revisits P's rule,
-  which M1 closed only by its letter) except R1 (≤ 3 %, "does not reach 16.7 ms in principle" — the s94 estimate, [I]); the programme's
-  target remains "maximum FPS with unshakeable correctness" (recorded since session 83).
-* **(b) G kept alive behind a named prerequisite:** rebuild the BDA emitter — the full list is the
-  `ROADMAP.md` §7 row "машинерия BDA-эмиттера" (a vector BDA load op, no fault-buffer store in pixel
-  shaders or `EarlyFragmentTests`, one table read per lookup, no reloads of entry 0,
-  `NonWritable`/`Restrict` on read-only pointers, the page-crossing slow path, the `LDG.E.STRONG.SM`
-  cause) — and re-measure as **M5′**. Note: if the emitter change
-  touches only the BDA path the variants use, arm A still reproduces the captured modules and **the
-  session-102 capture can be reused** (check A's md5 against `m5/real/plan_m5cap102.json` first).
-
-**If the answer is not in `ROADMAP.md` when the session starts, ask it first, record it, commit it, and
-only then act.** Three sessions in a row lost their headline number to acting before recording.
-
-## 1. The code the programme owes regardless of (a)/(b): the entry hang
+## 1. One translator change, one cold session: the entry hang, the deferred sites, and the M5′ switch
 
 **`KYTY_BVH_LOOP_CAP`, minimal variant** (FACTS §5; design `C:/kyty/s101/design98/loops.md`): the
 `KYTY_LOOP_LIMIT` machinery bounded for `{380bb9d636390bae}` (the only shader the GPU named in entry
@@ -57,6 +44,17 @@ signature token for any override, optionally a trip counter in the fault-buffer 
   The first run after the build is cold (translation, pipelines.bin) — a declared warm-up, not an entry.
 * **Video pass is owed** (the cap reaches the renderer): `--rec`, `s20_vidglitch.py`, ≥ 3 000 frames.
 * ROADMAP §6: this is a real-path change with its own sealed A/B-equivalent (the series).
+
+**In the same translator change: the M5′ switch** (default off, in the translation-cache signature when
+on; the rule of `ROADMAP.md` §0.1): vector BDA loads when the base alignment class and the immediate
+prove 8/16-byte alignment; **no fault-buffer store in pixel shaders**; one page-table read per lookup
+(the null base as a constant, not a re-read of entry 0); `NonWritable`/`Restrict` on read-only pointers;
+no reloads after stores. Build arm **V2′** with the session-102 harness (`C:/kyty/s102/m5_recompile.py`,
+`m5_sass_full.py`, `M5_RUNBOOK.md`) on the session-102 capture `kyty_1790110985179586` **if arm A still
+reproduces its modules for ≥ 7 items carrying ≥ 60 % of the weight** (V-c; S1 already used BDA in A, so
+expect S1 to drop). Seal the M5′ protocol before any timing (arms B, A, V1, V2′; R = 20; the §0.1
+verdict). **No game run is needed if the capture is reusable.** Watch registers/spills on every item
+(the register trap of `5323c4ef4f785055` applies to any emitter change).
 
 ## 2. The port, first
 
@@ -105,8 +103,7 @@ environment-variable list, and the mandatory commit without push; do not capture
 
 ## 5. Must not be claimed
 
-That M5 closed G or licensed it (unless the user's decision (a) is recorded — and then it is the user's
-decision on a measured number, not a measured closure of G's intrinsic price) · that X is G's intrinsic
+That M5 closed G or licensed it (the recorded decision is (b): G alive behind M5′) · that X is G's intrinsic
 price · that the presence class is fully fixed · that the checkpoint fix is a speedup · that `dabatch`'s
 saving was measured at 1024 (it was extrapolated from the pilot) · that the capture retry ran without the
 record thread · that M5 ran without a game run · **any frame-rate gain, speedup or 60 FPS.**

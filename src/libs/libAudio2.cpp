@@ -1,5 +1,6 @@
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/threads.h"
 #include "kernel/pthread.h"
@@ -507,7 +508,7 @@ int KYTY_SYSV_ABI AudioOut2ContextAdvance(AudioOut2ContextHandle ctx) {
 
 int KYTY_SYSV_ABI AudioOut2ContextPush(AudioOut2ContextHandle ctx, uint32_t blocking) {
 	uint32_t sleep_micros = audioout2_grain_micros(512);
-	static const bool            av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	static const bool            av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 	static std::atomic<uint64_t> av_calls {0};
 	if (av_trace) {
 		const auto n = av_calls.fetch_add(1, std::memory_order_relaxed) + 1;

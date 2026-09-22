@@ -2,6 +2,7 @@
 
 #include "common/alignment.h"
 #include "common/drawStat.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/virtualMemory.h"
@@ -299,7 +300,7 @@ struct PageManager::Impl {
 	}
 
 	void Protect(uint64_t vaddr, uint64_t size, Common::VirtualMemory::Mode mode) noexcept {
-		static const bool trap = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+		static const bool trap = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 		if (trap && mode != Common::VirtualMemory::Mode::ReadWrite &&
 		    Libs::LibKernel::Memory::OverlapsGuestStack(vaddr, size)) {
 			static std::atomic<int> logged {0};

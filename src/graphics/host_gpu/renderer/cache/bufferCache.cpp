@@ -10,6 +10,7 @@
 #include "common/alignment.h"
 #include "common/assert.h"
 #include "common/drawStat.h"
+#include "common/envFlag.h"
 #include "common/gates.h"
 #include "common/frameStats.h"
 #include "common/parallelCopy.h"
@@ -287,7 +288,7 @@ void BufferCache::DownloadBufferMemory(std::span<const DownloadCopy> copies, con
 	                                         Common::FrameStats::Counter::Downloads);
 	// KYTY_FAULT_TRACE=1: every synchronous drain with its reason (a CPU write into GPU-written
 	// memory, the buffer garbage collector, a guest stack release).
-	static const bool drain_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	static const bool drain_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 	const auto        drain_t0    = drain_trace ? std::chrono::steady_clock::now()
 	                                            : std::chrono::steady_clock::time_point {};
 	uint64_t          drain_bytes = 0;
@@ -447,7 +448,7 @@ void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
 		     "addr=0x%016" PRIx64 " size=0x%016" PRIx64 "\n",
 		     vaddr, size);
 	}
-	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 	const auto        t0    = std::chrono::steady_clock::now();
 	auto&             gpu   = m_scheduler.Context().GetGpu();
 	// KYTY_STALE_READ=0: a guest CPU read of GPU-written memory waits for the GPU queue to
@@ -529,7 +530,7 @@ void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) 
 		hot.end   = hot.hits == 0 ? window_end : std::max(hot.end, window_end);
 		hot.hits++;
 		hot.last_hit_frame = m_scheduler.Context().GetGpu().GetFrameNum();
-		static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+		static const bool trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 		const auto        t0    = std::chrono::steady_clock::now();
 		DownloadBufferMemory(copies, is_write ? "cpu-write" : "cpu-read");
 		if (trace) {
@@ -653,7 +654,7 @@ BufferId BufferCache::CreateBuffer(uint64_t vaddr, uint64_t size) {
 		joined++;
 		JoinOverlap(id, old_id, !overlap.has_stream_leap);
 	}
-	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	if (trace && joined_bytes >= (16u << 20)) {
 		LOGF("BufferJoin: new=0x%016" PRIx64 " size=0x%" PRIx64 " joined=%u bytes=%" PRIu64 " leap=%d req=0x%016" PRIx64 "+0x%" PRIx64 "\n",
 		     overlap.begin, overlap.end - overlap.begin, joined, joined_bytes, overlap.has_stream_leap ? 1 : 0, vaddr, size);
@@ -1419,7 +1420,7 @@ bool StreamPrefetchEnabled(); // defined with the stream prefetch below
 // buffer, or a fresh staging copy of guest memory) with the StreamRead clock, to correlate uploads
 // at scene cuts with the file reads that produced the data.
 void BufferCache::TraceImageUpload(uint64_t vaddr, uint64_t size, const char* path) {
-	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool stream_trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	if (!stream_trace || size < (256u << 10)) {
 		return;
 	}
@@ -1665,7 +1666,7 @@ bool BufferCache::WaitPendingHostReads(uint64_t vaddr, uint64_t size) {
 	}
 	Common::FrameStats::Scope wait_scope(Common::FrameStats::Counter::HostReadWaitNs,
 	                                     Common::FrameStats::Counter::HostReadWaits);
-	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 	const auto        t0    = trace ? Common::FrameStats::NowNs() : 0;
 	// Session 91: the Scope above stamps only under TimingsEnabled() - never in lite - so its ns
 	// column reads 0 in every measurement run.  These counters use Enabled() (the LapScope idiom).
@@ -1764,7 +1765,7 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 		     " src_gds=%d" "\n", src_vaddr, dst_vaddr, size, static_cast<int>(src_gds));
 	}
 	// KYTY_STREAM_TRACE=1: log large DMA copies (texture streaming) with a timestamp.
-	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool stream_trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	if (stream_trace && size >= (1u << 20)) {
 		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
 		                    std::chrono::steady_clock::now().time_since_epoch())
@@ -2390,7 +2391,7 @@ void BufferCache::PrefetchStreamedRanges() {
 	}
 	pending.clear();
 
-	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	const auto        t0    = StreamNowNs();
 	uint64_t          bytes = 0;
 	uint32_t          done  = 0;
@@ -2486,7 +2487,7 @@ void BufferCache::DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size) {
 		}
 	}
 	if (ids.empty()) {
-		static const bool trace0 = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+		static const bool trace0 = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 		if (trace0) {
 			std::fprintf(stderr, "GuestStack: no buffers for stack 0x%016llx size=0x%llx" "\n",
 			             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size));
@@ -2523,7 +2524,7 @@ void BufferCache::DeleteBuffersOverlapping(uint64_t vaddr, uint64_t size) {
 		m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
 		DeleteBuffer(id);
 	}
-	static const bool trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	if (trace) {
 		std::fprintf(stderr, "GuestStack: released %zu buffers for stack 0x%016llx size=0x%llx" "\n", ids.size(),
 		             static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size));

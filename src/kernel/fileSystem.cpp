@@ -4,6 +4,7 @@
 #include "common/common.h"
 #include "common/dateTime.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/hash.h"
 #include "common/logging/log.h"
@@ -588,7 +589,7 @@ std::mutex                 g_stream_mutex;
 std::array<StreamSlot, 1024> g_stream_slots;
 std::atomic<uint64_t>      g_stream_seq {0};
 
-const bool g_stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+const bool g_stream_trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 
 uint64_t StreamSampleHash(const void* buf, uint64_t size) {
 	const auto* p = static_cast<const uint8_t*>(buf);
@@ -808,7 +809,7 @@ int64_t KYTY_SYSV_ABI KernelRead(int d, void* buf, size_t nbytes) {
 	}
 
 	LOGF("\tRead %u bytes from: %s\n", bytes_read, Common::PathToString(file->real_name).c_str());
-	static const bool stream_trace = std::getenv("KYTY_STREAM_TRACE") != nullptr;
+	static const bool stream_trace = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 	if (stream_trace && bytes_read >= (1u << 20)) {
 		const auto us = std::chrono::duration_cast<std::chrono::microseconds>(
 		                    std::chrono::steady_clock::now().time_since_epoch())

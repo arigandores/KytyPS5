@@ -4,6 +4,7 @@
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/gates.h"
@@ -69,7 +70,7 @@ void TraceWatchedImage(const char* event, const Image& image, uint64_t address =
 
 void TraceImageLifetime(const char* event, const ImageInfo& info, const char* reason, uint32_t line,
                         uint32_t last_frame = UINT32_MAX) {
-	static const bool trace = std::getenv("KYTY_IMAGE_LIFETIME_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_IMAGE_LIFETIME_TRACE");
 	static const uint64_t min_bytes = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_LIFETIME_MIN_KB");
 		return value == nullptr ? uint64_t {1u << 20u} : std::strtoull(value, nullptr, 10) << 10u;
@@ -319,7 +320,7 @@ const MipDeferConfig& MipDefer() {
 		    .frame_bytes  = env_u64("KYTY_MIP_DEFER_FRAME_MB", 32) << 20u,
 		    .min_bytes    = env_u64("KYTY_MIP_DEFER_MIN_KB", 256) << 10u,
 		    .budget_bytes = env_u64("KYTY_MIP_DEFER_BUDGET_MB", 64) << 20u,
-		    .trace        = std::getenv("KYTY_MIP_DEFER_TRACE") != nullptr,
+		    .trace        = Common::EnvFlagOn("KYTY_MIP_DEFER_TRACE"),
 		};
 	}();
 	return config;
@@ -476,7 +477,7 @@ void TextureCache::FreeImage(ImageId id, const char* reason, uint32_t line) {
 	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	auto& image = m_slot_images[id];
 	TraceImageLifetime("free", image.info, reason, line, image.frame_accessed_last);
-	static const bool state_trace = std::getenv("KYTY_IMAGE_STATE_TRACE") != nullptr;
+	static const bool state_trace = Common::EnvFlagOn("KYTY_IMAGE_STATE_TRACE");
 	if (state_trace && image.info.data.size >= (1u << 20u)) {
 		LOGF("ImageStateFree: frame=%u guest=0x%016" PRIx64 " reason=%s gpu=%d cpu=%d maybe=%d buffer=%d metadata=%u\n",
 		     GpuTimeProfiler::Frame(), image.info.data.address, reason,
@@ -1234,7 +1235,7 @@ void TextureCache::ConfigureImageSourceUnlocked(ImageId id, const ImageDesc& des
 		image.pending_levels = 0;
 		image.pending_bytes = 0;
 	}
-	static const bool trace = std::getenv("KYTY_IMAGE_LIFETIME_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_IMAGE_LIFETIME_TRACE");
 	if (trace) LOGF("ImageSource: frame=%u guest=0x%016" PRIx64 " first=%u bytes=%" PRIu64 " logical=%" PRIu64 "\n",
 	               GpuTimeProfiler::Frame(), image.info.data.address, first, size, image.info.data.size);
 }
@@ -1780,7 +1781,7 @@ void TextureCache::InitializeImage(ImageId id, bool allow_defer) {
 		if (source.buffer == nullptr) {
 			EXIT("TextureCache: failed to obtain image upload source\n");
 		}
-		static const bool upload_trace = std::getenv("KYTY_IMAGE_UPLOAD_TRACE") != nullptr;
+		static const bool upload_trace = Common::EnvFlagOn("KYTY_IMAGE_UPLOAD_TRACE");
 		if (upload_trace) {
 			static const uint32_t first_frame = [] {
 				const auto* value = std::getenv("KYTY_IMAGE_UPLOAD_FROM");
@@ -1945,7 +1946,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		           {vk::ImageAspectFlagBits::eColor, 0, 1, layer, 1}, clear);
 		metadata.clear_mask &= ~(1u << layer);
 		BumpMetaEpoch();
-		static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+		static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
 		if (trace) LOGF("CmaskClear: frame=%u image=0x%016" PRIx64 " meta=0x%016" PRIx64
 		               " layer=%u words=%08x/%08x\n", GpuTimeProfiler::Frame(), image.info.data.address,
 		               desc.info.metadata.range.address, layer, desc.info.metadata.cmask_clear_words[0],
@@ -3125,7 +3126,7 @@ bool TextureCache::PendingDccFillStale(uint64_t address, const MetaDataInfo& met
 		return false;
 	}
 	static std::atomic<uint32_t> stale_count = 0;
-	static const bool dcc_trace_stale = std::getenv("KYTY_DCC_TRACE") != nullptr;
+	static const bool dcc_trace_stale = Common::EnvFlagOn("KYTY_DCC_TRACE");
 	if (dcc_trace_stale || stale_count++ < 32) {
 		LOGF("TextureCache: stale pending DCC fill ignored image=0x%016" PRIx64
 		     " dcc=0x%016" PRIx64 " fill=0x%08x size=0x%" PRIx64 " seq=%" PRIu64 " last=%" PRIu64
@@ -3205,7 +3206,7 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
 	image->info.metadata.range.address = metadata_address;
 	static std::atomic<uint32_t> log_count = 0;
-	static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+	static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
 	if (dcc_trace || log_count++ < 32) {
 		LOGF("TextureCache: adopted pending DCC fill for shader binding image=0x%016" PRIx64
 		     " dcc=0x%016" PRIx64 " fill=0x%08x size=0x%" PRIx64 " clear_mask=0x%08x\n",
@@ -3306,7 +3307,7 @@ void TextureCache::RunGarbageCollector() {
 		const auto* value = std::getenv("KYTY_IMAGE_GC_FRAME_GUARD");
 		return value != nullptr && value[0] == '1';
 	}();
-	static const bool trace = std::getenv("KYTY_IMAGE_GC_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_IMAGE_GC_TRACE");
 	static const uint32_t trace_from = [] {
 		const auto* value = std::getenv("KYTY_IMAGE_GC_TRACE_FROM");
 		return value == nullptr ? 0u : static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
@@ -3314,7 +3315,7 @@ void TextureCache::RunGarbageCollector() {
 	if (m_graphics.CanReportMemoryUsage()) {
 		m_total_used_memory = m_graphics.GetDeviceMemoryUsage();
 	}
-	static const bool memory_trace = std::getenv("KYTY_IMAGE_MEMORY_TRACE") != nullptr;
+	static const bool memory_trace = Common::EnvFlagOn("KYTY_IMAGE_MEMORY_TRACE");
 	static uint32_t last_memory_frame = UINT32_MAX;
 	if (memory_trace && frame % 120u == 0 && frame != last_memory_frame) {
 		last_memory_frame = frame;
@@ -3412,7 +3413,7 @@ void TextureCache::RunGarbageCollector() {
 				// prove that the buffer contains the image's latest GPU writes. Keep
 				// tiled GPU contents until an actual CPU/buffer invalidation supersedes them.
 				if (owner->info.IsTiled() && (preserve_gpu ? owner->SafeToDownload() : safe)) {
-					static const bool state_trace = std::getenv("KYTY_IMAGE_STATE_TRACE") != nullptr;
+					static const bool state_trace = Common::EnvFlagOn("KYTY_IMAGE_STATE_TRACE");
 					if (state_trace && !safe) {
 						LOGF("ImageGcKeepOverlap: frame=%u guest=0x%016" PRIx64 " bytes=%" PRIu64 "\n",
 						     frame, owner->info.data.address, owner->info.data.size);

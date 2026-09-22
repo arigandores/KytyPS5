@@ -7,6 +7,7 @@
 
 #include "common/assert.h"
 #include "common/drawStat.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -317,7 +318,7 @@ void CommandScheduler::SignalCopySemaphore(uint64_t completed, void* user) {
 	info.value        = completed;
 	const auto result = self->m_graphics.device.signalSemaphore(&info);
 	EXIT_NOT_IMPLEMENTED(result != vk::Result::eSuccess);
-	static const bool trace = std::getenv("KYTY_ACOPY_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_ACOPY_TRACE");
 	if (trace) {
 		std::fprintf(stderr, "AcopyTrace: signal %llu\n", static_cast<unsigned long long>(completed));
 	}
@@ -734,7 +735,7 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 		if (m_copy_gpu_wait) {
 			const auto sequence = Common::AsyncCopySequence();
 			const bool complete = Common::RequestAsyncCopySignal(sequence);
-			static const bool present_trace = std::getenv("KYTY_PRESENT_TRACE") != nullptr;
+			static const bool present_trace = Common::EnvFlagOn("KYTY_PRESENT_TRACE");
 			if (present_trace && !complete) {
 				LOGF("PresentTrace: copywait t=%llu scheduler=%p tick=%llu seq=%llu completed=%llu binary=%u\n",
 				     (unsigned long long)FS::NowNs(), (void*)this, (unsigned long long)CurrentTick(),
@@ -745,7 +746,7 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 				submit.AddWait(m_copy_semaphore, sequence, vk::PipelineStageFlagBits::eAllCommands);
 				FS::Add(FS::Counter::AsyncCopyGpuWaits, 1);
 			}
-			static const bool trace = std::getenv("KYTY_ACOPY_TRACE") != nullptr;
+			static const bool trace = Common::EnvFlagOn("KYTY_ACOPY_TRACE");
 			if (trace) {
 				uint64_t   value  = 0;
 				const auto result = m_graphics.device.getSemaphoreCounterValue(m_copy_semaphore, &value);
@@ -768,7 +769,7 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	auto& graphics = m_graphics;
 	EXIT_IF(graphics.queue == nullptr);
 
-	static const bool sync_submit = std::getenv("KYTY_SYNC_SUBMIT") != nullptr;
+	static const bool sync_submit = Common::EnvFlagOn("KYTY_SYNC_SUBMIT");
 	uint64_t          tick        = 0;
 	const bool        async = allow_async && !sync_submit && !submit.present && !caller_semaphores &&
 	                          Common::Gates::Enabled(Common::Gates::Gate::AsyncSubmit);

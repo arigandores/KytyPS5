@@ -2,6 +2,7 @@
 
 #include "common/logging/log.h"
 
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 
 #include <atomic>
@@ -167,7 +168,7 @@ static LONG WINAPI ExceptionFilter(PEXCEPTION_POINTERS exception) noexcept {
 	const auto handler = g_handler.load(std::memory_order_acquire);
 	if (handler != nullptr) {
 		// KYTY_FAULT_TRACE=1: every resolved fault, all threads (host tid, RIP, address, time).
-		static const bool fault_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+		static const bool fault_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 		const auto t0       = (Common::FrameStats::Enabled() || fault_trace) ? Common::FrameStats::NowNs() : 0;
 		const bool resolved = handler(info);
 		if (t0 != 0 && fault_trace && info.type == ExceptionType::AccessViolation) {

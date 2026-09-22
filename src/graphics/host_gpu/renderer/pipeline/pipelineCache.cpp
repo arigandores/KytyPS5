@@ -12,6 +12,7 @@
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -113,8 +114,90 @@ uint64_t HostMicros() {
 }
 
 bool AvTraceEnabled() {
-	static const bool enabled = std::getenv("KYTY_AV_TRACE") != nullptr;
+	static const bool enabled = Common::EnvFlagOn("KYTY_AV_TRACE");
 	return enabled;
+}
+
+// Session 102, KYTY_DMA_LAYOUT=1 - MEASUREMENT ONLY (route E, M5: the RenderDoc stand).  Every
+// translated program the host adopts - ProgramCache: a fresh permutation (Compile), a
+// translation-cache load (LoadFromTranslationCache) and a pipeline precache resolve (Resolve) -
+// gets the two descriptor bindings a uses_dma program has, the BDA page table and the fault
+// buffer (AllocateBindings, BindingLayout.cpp), added to its IN-MEMORY binding layout when it has
+// neither.  Every pipeline layout then carries them at NativeBinding(stage, kind) = 46 / 47 +
+// 51 * group, CommitBindings already writes both kinds generically from program.bindings (the
+// buffer cache owns both buffers from its construction), and a capture taken in this mode can
+// have any PS or CS replaced by a BDA-using SPIR-V variant with a compatible layout.
+// NOT changed: the SPIR-V modules (a layout may carry bindings a module does not use),
+// info.uses_dma (so PrepareBda and the fault processing never see these programs), the
+// translation-cache files (SaveToTranslationCache strips what was added) and the pipelines.bin
+// recipes (a source key and a permutation index, no layout).  NOT for timing: two more
+// descriptors a stage can move a pipeline from push descriptors to the pooled path, because
+// CreateDescriptorLayout compares its descriptor count with maxPushDescriptors per pipeline.
+// Read ONCE per process; on only for the exact value "1", and silent otherwise.
+bool DmaLayoutMode() {
+	static const bool mode = [] {
+		const char* value = std::getenv("KYTY_DMA_LAYOUT");
+		const bool  on    = value != nullptr && std::strcmp(value, "1") == 0;
+		if (on) {
+			LOGF("DmaLayout: mode 1 (page table + fault buffer bound in every stage; MEASUREMENT ONLY)\n");
+		}
+		return on;
+	}();
+	return mode;
+}
+
+// Bits of ProgramCache::Permutation::dma_layout: which binding DmaLayoutInject added.
+constexpr uint8_t DMA_LAYOUT_PAGETABLE = 1u;
+constexpr uint8_t DMA_LAYOUT_FAULT     = 2u;
+
+const char* DmaLayoutStageName(ShaderType stage) {
+	switch (stage) {
+		case ShaderType::Vertex: return "vs";
+		case ShaderType::Mesh: return "ms";
+		case ShaderType::Local: return "ls";
+		case ShaderType::TessellationControl: return "hs";
+		case ShaderType::TessellationEvaluation: return "ds";
+		case ShaderType::Pixel: return "ps";
+		case ShaderType::Compute: return "cs";
+		default: return "unknown";
+	}
+}
+
+// Adds each of the two bindings the program lacks at the position AllocateBindings gives them
+// (after Gds, in front of FlattenedSrt and ShaderData) and returns the DMA_LAYOUT_* bits of what
+// it added.  The translator adds both or neither, so the answer is 0 or both bits.
+uint8_t DmaLayoutInject(ShaderRecompiler::IR::CompiledShaderInfo& program) {
+	using Kind        = ShaderRecompiler::IR::DescriptorBindingKind;
+	auto&   descriptors = program.bindings.descriptors;
+	uint8_t added       = 0;
+	for (const auto kind: {Kind::BdaPagetable, Kind::FaultBuffer}) {
+		if (std::ranges::any_of(descriptors, [kind](const auto& b) { return b.kind == kind; })) {
+			continue;
+		}
+		const auto at = std::ranges::find_if(descriptors, [](const auto& b) {
+			return b.kind == Kind::FlattenedSrt || b.kind == Kind::ShaderData;
+		});
+		descriptors.insert(at, ShaderRecompiler::IR::DescriptorBinding {kind, {}});
+		added |= kind == Kind::BdaPagetable ? DMA_LAYOUT_PAGETABLE : DMA_LAYOUT_FAULT;
+	}
+	if (added != 0) {
+		static std::atomic<uint32_t> logged {0};
+		if (logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+			LOGF("DmaLayout: inject stage=%s hash=%016" PRIx64 "\n", DmaLayoutStageName(program.stage),
+			     program.shader_hash);
+		}
+	}
+	return added;
+}
+
+// The inverse on the copy SaveToTranslationCache writes: exactly the kinds that were added, and a
+// kind occurs at most once in a layout, so the file gets the translator's layout back.
+void DmaLayoutStrip(ShaderRecompiler::IR::CompiledShaderInfo& program, uint8_t added) {
+	using Kind = ShaderRecompiler::IR::DescriptorBindingKind;
+	std::erase_if(program.bindings.descriptors, [added](const auto& b) {
+		return ((added & DMA_LAYOUT_PAGETABLE) != 0 && b.kind == Kind::BdaPagetable) ||
+		       ((added & DMA_LAYOUT_FAULT) != 0 && b.kind == Kind::FaultBuffer);
+	});
 }
 
 vk::PolygonMode ResolvePolygonMode(const HW::ModeControl& mode, bool cull_front, bool cull_back) {
@@ -1700,7 +1783,21 @@ struct PipelineCache::ProgramCache {
 		ShaderRecompiler::IR::CompiledShaderInfo     program;
 		ShaderProgram                                handle;
 		std::vector<uint32_t>                        spirv; // kept for the translation cache file
+		// Session 102, KYTY_DMA_LAYOUT: the DMA_LAYOUT_* bits of the bindings DmaLayoutInject added
+		// to `program` in memory, which SaveToTranslationCache takes out again.  0 when the mode is off.
+		uint8_t                                      dma_layout = 0;
 	};
+
+	// Session 102, KYTY_DMA_LAYOUT (MEASUREMENT ONLY): a permutation enters `permutations` at
+	// exactly three sites - Compile, LoadFromTranslationCache and Resolve - and each calls this on
+	// it right after the push_back, before its handle is indexed or its program is handed out, so
+	// no pipeline layout, descriptor count or write list can ever see the layout without it.  One
+	// predictable branch on a cold path when the mode is off; the draw path is untouched.
+	static void AdoptDmaLayout(Permutation& permutation) {
+		if (DmaLayoutMode()) [[unlikely]] {
+			permutation.dma_layout = DmaLayoutInject(permutation.program);
+		}
+	}
 
 	// Gate "daclass": static variants of programs whose plans are canonically equal
 	// (CanonicalPlanBytes). Never freed: slots and source entries keep pointers to it.
@@ -1870,6 +1967,7 @@ struct PipelineCache::ProgramCache {
 			    .handle         = {.id = ++next_shader_id, .module = module},
 			    .spirv          = std::move(p.spirv),
 			});
+			AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
 		}
 		source.from_cache = true;
 		entry             = programs.try_emplace(key, std::move(source)).first;
@@ -1883,7 +1981,7 @@ struct PipelineCache::ProgramCache {
 	void VerifyTranslationCache(const ProgramKey& key, const ShaderRecompiler::IR::SrtRuntime& runtime,
 	                            const ShaderRecompiler::IR::ResourceSnapshot&       resources,
 	                            const ShaderRecompiler::IR::ResourceSpecialization& specialization) {
-		static const bool verify = std::getenv("KYTY_SHADER_CACHE_VERIFY") != nullptr;
+		static const bool verify = Common::EnvFlagOn("KYTY_SHADER_CACHE_VERIFY");
 		if (!verify || !translation_cache.Enabled()) {
 			return;
 		}
@@ -1921,6 +2019,10 @@ struct PipelineCache::ProgramCache {
 			permutations.push_back({.specialization = p.specialization,
 			                        .program        = p.program,
 			                        .spirv          = p.spirv});
+			// Session 102, KYTY_DMA_LAYOUT: what was added in memory never reaches the file.
+			if (p.dma_layout != 0) [[unlikely]] {
+				DmaLayoutStrip(permutations.back().program, p.dma_layout);
+			}
 		}
 		if (permutations.empty()) {
 			return;
@@ -3035,7 +3137,7 @@ struct PipelineCache::ProgramCache {
 			lookup_key.user_data_count = static_cast<uint32_t>(params.user_data.size());
 			lookup_key.code_size       = static_cast<uint32_t>(params.code.size());
 			BuildStageStaticKey(input_info, lookup_key.static_state);
-			static const bool register_trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;
+			static const bool register_trace = Common::EnvFlagOn("KYTY_SHADER_REGISTER_TRACE");
 			static const bool dump_gcn = [] {
 				const auto* value = std::getenv("KYTY_DUMP_GCN");
 				return value != nullptr && value[0] != '0';
@@ -3416,6 +3518,7 @@ struct PipelineCache::ProgramCache {
 		}
 		entry->second.permutations.push_back(CompilePermutation(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
+		AdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT
 		by_id[entry->second.permutations.back().handle.id] = {
 		    &entry->first, static_cast<uint32_t>(entry->second.permutations.size() - 1)};
 		SaveToTranslationCache(entry->first, entry->second);
@@ -3958,6 +4061,7 @@ struct PipelineCache::ProgramCache {
 				    .handle         = {.id = ++next_shader_id, .module = module},
 				    .spirv          = std::move(p.spirv),
 				});
+				AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
 			}
 			source.from_cache = true;
 			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;
@@ -4486,6 +4590,8 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
 	if (timed) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
 		                        Common::FrameStats::NowNs() - queue_begin);
+		// Session 102, knob "dabatch": one per call, the proof of the batch size in force.
+		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueCalls, 1);
 	}
 }
 
@@ -4664,7 +4770,7 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 	static_params.topology                 = topology;
 	static_params.primitive_restart_enable = primitive_restart_enable;
 	static_params.samples                  = attachment_samples;
-	static const bool alpha_trace = std::getenv("KYTY_ALPHA_TRACE") != nullptr;
+	static const bool alpha_trace = Common::EnvFlagOn("KYTY_ALPHA_TRACE");
 	if (alpha_trace && ps_active && ps_input_info->stage.program &&
 	    (ps_input_info->stage.program->shader_hash == 0x1a4e22aaa15d8ab3ull ||
 	     ps_input_info->stage.program->shader_hash == 0xaef08e7e8c990db9ull)) {
@@ -5271,7 +5377,7 @@ void PipelineCache::TraceShaderRegistration(const Shader& header, const ShaderMa
 			    Config::GetShaderLogDirection() != Config::LogDirection::Silent); }
 		}
 	}
-	static const bool trace = std::getenv("KYTY_SHADER_REGISTER_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_SHADER_REGISTER_TRACE");
 	if (!trace) {
 		return;
 	}

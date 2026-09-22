@@ -5,6 +5,7 @@
 
 #include "common/assert.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/stringUtils.h"
 
 #include <cstdio>
@@ -188,7 +189,7 @@ bool IsSilent() {
 }
 
 bool IsVerbose() {
-	static const bool verbose = std::getenv("KYTY_LOG_VERBOSE") != nullptr;
+	static const bool verbose = Common::EnvFlagOn("KYTY_LOG_VERBOSE");
 	return !IsSilent() && (verbose || Config::GraphicsDebugDumpEnabled());
 }
 

@@ -3,6 +3,7 @@
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -505,7 +506,7 @@ void CommandProcessor::WaitRegMem(uint32_t func, const T* addr, T ref, T mask, u
 	(void)poll;
 	// KYTY_WAIT_TRACE=1: log WAIT_REG_MEM stall/pass transitions of the compute queues
 	// (address, values, queue) and EOP writes into the same region.
-	static const bool trace = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_WAIT_TRACE");
 	const bool        pass  = TestWaitRegMemValue(*addr, ref, mask, func);
 	if (trace && IsAsyncComputeQueue()) {
 		static std::array<const void*, 256> stalled_addrs {};
@@ -700,7 +701,7 @@ void GuestGpu::ThreadRun(void* data) {
 					}
 				}
 				if (selected_queue < 0) {
-					static const bool trace_sched = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+					static const bool trace_sched = Common::EnvFlagOn("KYTY_WAIT_TRACE");
 					static uint64_t   all_blocked = 0;
 					if (trace_sched && (all_blocked++ % 64) == 0) {
 						LOGF("WaitTrace: all queues blocked (%" PRIu64 " times), sleeping up to 100 ms\n",
@@ -898,7 +899,7 @@ bool GuestGpu::Process(Submission& submission) {
 	    Common::FrameStats::Counter::PathProcNs, Common::FrameStats::Counter::PathProcN);
 	const bool first_slice = !submission.started;
 	// KYTY_LAG_TRACE=1: log submissions that waited long between Enqueue and processing.
-	static const bool trace_lag = std::getenv("KYTY_LAG_TRACE") != nullptr;
+	static const bool trace_lag = Common::EnvFlagOn("KYTY_LAG_TRACE");
 	if (trace_lag && first_slice) {
 		const auto now = static_cast<uint64_t>(
 		    std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -1203,6 +1204,12 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
                                   bool prefetch_compute, const HW::Shader* seed = nullptr,
                                   bool draw_ahead = false, uint64_t walk_id = 0,
                                   GraphicsShadow* shadow = nullptr) {
+	// Session 102, knob "dabatch": requests per QueueDrawAhead call, read ONCE per walk (and
+	// only when the walk collects requests), so a schedule flip landing inside a walk cannot
+	// give it two batch sizes.  0 = no flush inside the walk: one call, from the final flush.
+	const uint32_t batch_knob =
+	    draw_ahead ? Common::Gates::Value(Common::Gates::Knob::DrawAheadBatch) : 0u;
+	const size_t   batch      = batch_knob == 0u ? SIZE_MAX : size_t {batch_knob};
 	// Gate "dawalk": `shadow` is the walker's per-queue state, carried across submissions like
 	// `cs`; without it the state of this walk is seeded from the live context.
 	GraphicsShadow  local_gfx;
@@ -1240,7 +1247,14 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 			gfx.pixel.user_data[offset - Pm4::SPI_SHADER_USER_DATA_PS_0] = value;
 		}
 	};
-	std::vector<PipelineCache::DrawAheadRequest> requests;
+	// Session 102: thread-local and cleared here, so every walk still starts from an empty list
+	// exactly as the local did, but a large "dabatch" does not regrow a fresh vector of ~160-byte
+	// requests on every walk.  One per thread (GuestGpu, the "dawalk" walker, the enqueue walk,
+	// which never adds to it); the walk is iterative - nested indirect buffers go on `stack` -
+	// and neither QueueDrawAhead nor PrefetchComputePipeline walks PM4, so it is never
+	// re-entered on one thread while its list is live.
+	thread_local std::vector<PipelineCache::DrawAheadRequest> requests;
+	requests.clear();
 	GraphicsShadow::Stage last_vertex;
 	GraphicsShadow::Stage last_pixel;
 	// Index in `requests` of the last request of each stage (SIZE_MAX once flushed): a draw that
@@ -1400,7 +1414,7 @@ static void WalkComputeDispatches(PipelineCache& cache, HW::ComputeShaderInfo& c
 				if (draw_ahead) {
 					request(gfx.vertex, last_vertex, false);
 					request(gfx.pixel, last_pixel, true);
-					if (requests.size() >= 64u) {
+					if (requests.size() >= batch) {
 						flush();
 					}
 				}
@@ -2008,7 +2022,7 @@ void CommandProcessor::ProcessPm4Range(Pm4Execution& execution, size_t stop_dept
 		}
 
 		// KYTY_PM4_TRACE=1: host time per PM4 opcode (FrameTrace-pm4 line at every flip).
-		static const bool pm4_trace = std::getenv("KYTY_PM4_TRACE") != nullptr;
+		static const bool pm4_trace = Common::EnvFlagOn("KYTY_PM4_TRACE");
 		const auto        pm4_t0    = pm4_trace ? Common::FrameStats::NowNs() : 0;
 		const auto packet_dw =
 		    handler(*this, packet_header & ~1u, packet + 1, remaining_dw, total_dw) + 1;
@@ -2139,7 +2153,7 @@ void CommandProcessor::DrawIndirect(uint32_t data_offset, uint32_t draw_initiato
 	// index buffer is bound whole (INDEX_BUFFER_SIZE indices) and the counts pass through the
 	// sanitizer. KYTY_INDIRECT_DRAW_CPU=1 restores the CPU path (also used for the legacy
 	// primitive types, 8-bit indices and an unknown index buffer size).
-	static const bool force_cpu = std::getenv("KYTY_INDIRECT_DRAW_CPU") != nullptr;
+	static const bool force_cpu = Common::EnvFlagOn("KYTY_INDIRECT_DRAW_CPU");
 	const auto        prim      = m_ucfg.GetPrimType();
 	const bool        legacy    = prim == Prospero::PrimitiveType::kRectListLegacy ||
 	                       prim == Prospero::PrimitiveType::kQuadListLegacy;
@@ -2387,7 +2401,7 @@ void CommandProcessor::DispatchDirect(uint32_t thread_group_x, uint32_t thread_g
 
 		// Debug aid: KYTY_SYNC_DISPATCH=1 submits and drains the queue after every dispatch, so a
 		// device loss is attributed to the dispatch logged last ("SyncDispatch" in the log).
-		static const bool sync_dispatch = std::getenv("KYTY_SYNC_DISPATCH") != nullptr;
+		static const bool sync_dispatch = Common::EnvFlagOn("KYTY_SYNC_DISPATCH");
 		if (sync_dispatch) {
 			BufferFlushAndWait();
 		}
@@ -2513,7 +2527,7 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 		default: EXIT("unknown interrupt_selector\n");
 	}
 
-	static const bool trace_eop = std::getenv("KYTY_WAIT_TRACE") != nullptr;
+	static const bool trace_eop = Common::EnvFlagOn("KYTY_WAIT_TRACE");
 	if (trace_eop) {
 		const auto dst_u = reinterpret_cast<uint64_t>(dst_gpu_addr);
 		if (dst_u >= 0x400200000ull && dst_u < 0x400204000ull) {
@@ -2876,7 +2890,7 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 			const auto         value        = ready_bit | (occlusion_zero ? 0ull : m_synthetic_occlusion_counter);
 			Common::FrameStats::Add(Common::FrameStats::Counter::OcclusionDumps, 1);
 			// KYTY_FAULT_TRACE=1: log the dump destination and the tracker state before the write.
-			static const bool occlusion_trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+			static const bool occlusion_trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 			if (occlusion_trace) {
 				const auto st = LibKernel::Memory::QueryGpuTracking(event_address, 16u * 16u);
 				LOGF("OcclusionDump: addr=0x%016" PRIx64 " value=0x%016" PRIx64

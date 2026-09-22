@@ -4,6 +4,7 @@
 #include "common/gates.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/parallelCopy.h"
@@ -35,7 +36,7 @@
 namespace Libs::Graphics {
 
 static bool PresentTraceEnabled() {
-	static const bool enabled = std::getenv("KYTY_PRESENT_TRACE") != nullptr;
+	static const bool enabled = Common::EnvFlagOn("KYTY_PRESENT_TRACE");
 	return enabled;
 }
 

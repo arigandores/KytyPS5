@@ -4,6 +4,7 @@
 #include "common/common.h"
 #include "common/dateTime.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/hostException.h"
 #include "common/logging/log.h"
 #include "common/singleton.h"
@@ -4064,7 +4065,7 @@ void KernelTimeFreezeEnd() {
 	if (listener != nullptr) {
 		listener(false);
 	}
-	static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 	if (av_trace) {
 		const auto frequency = KernelGetTscFrequencyNative();
 		const auto to_us     = [frequency](uint64_t tsc) {
@@ -4698,7 +4699,7 @@ int KYTY_SYSV_ABI pthread_setspecific(LibKernel::PthreadKey key, void* value) {
 
 void* KYTY_SYSV_ABI pthread_getspecific(LibKernel::PthreadKey key) {
 	// KYTY_RET_TRACE=1: guest call sites of pthread_getspecific (the game polls objects through TLS)
-	static const bool ret_trace = std::getenv("KYTY_RET_TRACE") != nullptr;
+	static const bool ret_trace = Common::EnvFlagOn("KYTY_RET_TRACE");
 	static const bool ret_trace_gated = std::getenv("KYTY_RET_TRACE_AFTER_THREAD") != nullptr;
 	if (ret_trace && Common::Thread::GetThreadIdUnique() == 5 &&
 	    (!ret_trace_gated || LibKernel::g_ret_trace_gate.load(std::memory_order_relaxed))) {

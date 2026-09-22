@@ -360,6 +360,10 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // schedule arms.  LAST rows, matching the LAST enum entries before Knob::Count.
     {"KYTY_BIND_FLOOR_MODE", "bfmode", 1, 3},
     {"KYTY_BIND_FLOOR_BURN", "bfburn", 0, 40000},
+    // Session 102: draw-lookahead requests per QueueDrawAhead call; 64 = today, 0 = one call
+    // per walk.  Read once per walk, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_DRAW_AHEAD_BATCH", "dabatch", 64, 65536},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

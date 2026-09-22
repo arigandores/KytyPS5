@@ -1,6 +1,7 @@
 #include "common/frameStats.h"
 
 #include "common/common.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 
 #include <algorithm>
@@ -157,8 +158,8 @@ double TscCyclesPerNs() {
 } // namespace
 
 bool Enabled() {
-	static const bool enabled = std::getenv("KYTY_FRAME_TRACE") != nullptr ||
-	                            std::getenv("KYTY_AV_TRACE") != nullptr;
+	static const bool enabled = Common::EnvFlagOn("KYTY_FRAME_TRACE") ||
+	                            Common::EnvFlagOn("KYTY_AV_TRACE");
 	return enabled;
 }
 

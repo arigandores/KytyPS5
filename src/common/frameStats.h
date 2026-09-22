@@ -1729,6 +1729,10 @@ enum class Counter : uint32_t {
 	CommitLapMoveWrites1,    // cm_w1
 	CommitLapMoveDesc0,      // cm_c0: descriptor_count of the phase-0 commits
 	CommitLapMoveDesc1,      // cm_c1
+	// Session 102, knob "dabatch": PipelineCache::QueueDrawAhead calls - the batches the walk
+	// flushes (~130 a frame at 64).  Counted whenever FrameStats is on, lite included, under the
+	// same condition as da_queue_us and da_q.  Raw count.
+	DrawAheadQueueCalls,     // da_qcall
 	Count
 };
 

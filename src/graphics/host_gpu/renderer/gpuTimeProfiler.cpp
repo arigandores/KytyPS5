@@ -1,5 +1,6 @@
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
 
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/masterSemaphore.h"
@@ -41,7 +42,7 @@ uint64_t EntryKey(GpuTimeProfiler::Kind kind, uint64_t key, uint64_t key2) {
 } // namespace
 
 bool GpuTimeProfiler::Enabled() {
-	static const bool enabled = std::getenv("KYTY_GPU_TIME") != nullptr;
+	static const bool enabled = Common::EnvFlagOn("KYTY_GPU_TIME");
 	return enabled;
 }
 

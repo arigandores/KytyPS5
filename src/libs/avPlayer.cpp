@@ -1,5 +1,6 @@
 #include "common/common.h"
 #include <cstdlib>
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/magicEnum.h"
 #include "common/stringUtils.h"
@@ -1525,7 +1526,7 @@ private:
 			const char* v = std::getenv("KYTY_VIDEO_TEST");
 			return v != nullptr ? std::atoi(v) : 0;
 		}();
-		static const bool dump_video = std::getenv("KYTY_DUMP_VIDEO") != nullptr;
+		static const bool dump_video = Common::EnvFlagOn("KYTY_DUMP_VIDEO");
 		if (video_test == 1) {
 			for (uint32_t y = 0; y < h; y++) {
 				for (uint32_t x = 0; x < pitch; x++) {

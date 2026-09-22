@@ -13673,6 +13673,534 @@ void TestComputePretranslation() {
 #endif
 }
 
+namespace Libs::Graphics {
+namespace {
+
+// Session 102 (route E, M5; arm V2 of C:/kyty/s102/pred/01_m5_bench.md §3): KYTY_RECOMPILE_BDA=1
+// rewrites the translated IR, before CompileProgram, so that every ReadConstBuffer and every
+// LoadBuffer{U8,U16,U32,U32x2,U32x3,U32x4} of a buffer that is neither written nor atomic, and that
+// is not a formatted/typed load, reads guest memory through the BDA page table at
+// base(V#) + byte offset instead of through its storage/uniform descriptor. Harness only: nothing
+// under src/graphics/shader changes, so the translator hash and the game's caches do not move.
+//  * base = (d0, d1 & 0xffff) of the V# handle at run time (ShaderBufferResource::Base48,
+//    shaderBindings.h), as RewriteVariantScalarBufferLoad (ResourceTracking.cpp) builds it. One
+//    GetAddressResource per (V#, block), so the emitter's grouped scalar BDA path
+//    (LoadScalarBdaGroup) shares one page lookup between the dwords of a group.
+//  * byte offset: the descriptor path's own (EmitReadConstBuffer: sgpr + imm; BufferByteAddress:
+//    index * stride + offset + imm (+ swizzle) + soffset), except that the stride of an indexed
+//    access is the V#'s, read at run time: d1 bits 16..29 (ShaderBufferResource::Stride). Swizzle,
+//    index stride and ADD_TID stay as specialized (ADD_TID loads are kept on descriptors).
+//  * bounds: the dword at byte address A reads 0 unless A + 4 <= size, where size = d2 when the
+//    stride is 0 and stride * d2 (saturated to 2^32 - 1) otherwise: ShaderBufferResource::GetSize(),
+//    the range RenderExecutor::FindBuffers binds and robustBufferAccess2 checks per dword.
+//  * every dword is a LoadAddressU32 of the ScalarAddress kind, which truncates the address to a
+//    dword like the descriptor path's `byte >> 2`; wide loads rebuild the vector with
+//    CompositeConstruct, subword loads shift the byte/half out of the dword as LoadSubwordInBounds.
+//  * d0..d3 stay referenced (ReferenceU32), so user_data_registers and the push-data layout do not
+//    change; the buffer stays in info.buffers (same indices and memory offsets); uses_dma makes
+//    AllocateBindings add exactly BdaPagetable and FaultBuffer.
+// KYTY_RECOMPILE_BDA=2 ("V2s", descriptor_path): the load-granularity control of V2. The same
+// eligibility, the same run-time stride and limit, the same per-dword byte offsets, bounds selects,
+// result assembly and ReferenceU32 keep-alives - but every dword is read through the load's OWN
+// descriptor instead of the page table: ReadConstBuffer(handle, low + imm) with a zero immediate
+// for a constant load (so a const-bank buffer stays a uniform-buffer load and a compute one an
+// SSBO load; the immediate is folded into the offset operand so that no two dwords share an offset
+// value and the emitter's KYTY_VEC_CONST grouping, keyed on (resource, offset value), never merges
+// them back into a uvec2/uvec4), and LoadBufferU32(handle, 0, byte, 0, exec) with the dword's
+// immediate for a vector load (index 0: the byte offset already carries index * run-time stride).
+// No GetAddressResource, no LoadAddressU32, uses_dma untouched: the layout stays exactly A's.
+// Swizzled loads are not implemented in mode 2 (the emitter would swizzle the precomputed byte
+// again); none of the M5 items has one, and meeting one fails the run (rc 2).
+struct BdaRewriteCounts {
+  uint32_t converted_const  = 0;
+  uint32_t converted_buffer = 0;
+  uint32_t kept_written     = 0;
+  uint32_t kept_atomic      = 0;
+  uint32_t kept_formatted   = 0;
+  uint32_t kept_other       = 0;
+  uint32_t planning_only    = 0;
+  uint32_t dead             = 0;
+  uint32_t address_handles  = 0;
+  uint32_t dwords           = 0;
+  uint32_t subword          = 0;
+  uint32_t wide             = 0;
+  uint32_t swizzled         = 0;
+  uint32_t indexed          = 0;
+  uint32_t misaligned_imm   = 0;
+  uint32_t remaining_eligible = 0;
+  uint32_t unsupported_swizzled = 0; // mode 2 only
+  bool     uses_dma_before  = false;
+  bool     uses_dma_after   = false;
+};
+
+BdaRewriteCounts RewriteBuffersToBda(ShaderRecompiler::IR::Program &program,
+                                     const ShaderRecompiler::IR::ResourceSpecialization &specialization,
+                                     bool trace, bool descriptor_path) {
+  namespace IR = ShaderRecompiler::IR;
+  using IR::Value;
+  using IR::ValueOpcode;
+  BdaRewriteCounts counts;
+  counts.uses_dma_before = program.info.uses_dma;
+
+  const auto is_load = [](ValueOpcode opcode) {
+    switch (opcode) {
+    case ValueOpcode::ReadConstBuffer:
+    case ValueOpcode::LoadBufferU8:
+    case ValueOpcode::LoadBufferU16:
+    case ValueOpcode::LoadBufferU32:
+    case ValueOpcode::LoadBufferU32x2:
+    case ValueOpcode::LoadBufferU32x3:
+    case ValueOpcode::LoadBufferU32x4: return true;
+    default: return false;
+    }
+  };
+  // Why a load stays on its descriptor; None = it is converted.
+  enum class Keep { None, Planning, Dead, Other, Atomic, Written, Formatted };
+  const auto classify = [&](const IR::Inst &inst) {
+    const bool is_const = inst.GetOpcode() == ValueOpcode::ReadConstBuffer;
+    const auto flags    = inst.Flags<IR::MemoryFlags>();
+    if (flags.index >= program.memory_info.size()) {
+      return Keep::Other;
+    }
+    const auto &memory = program.memory_info[flags.index];
+    if (memory.planning_only) {
+      return Keep::Planning;
+    }
+    if (!inst.HasUses()) {
+      return Keep::Dead; // Converting it would only keep its V# dwords alive (ReferenceU32).
+    }
+    const auto *handle = inst.NumArgs() != 0 ? inst.Arg(0).Resolve().TryInstruction() : nullptr;
+    if (handle == nullptr || handle->GetOpcode() != ValueOpcode::GetBufferResource ||
+        handle->NumArgs() != 4 || memory.resource >= program.info.buffers.size() ||
+        memory.resource >= specialization.buffers.size() ||
+        memory.kind != (is_const ? IR::ResourceKind::ScalarBuffer : IR::ResourceKind::Buffer)) {
+      return Keep::Other;
+    }
+    const auto &buffer = program.info.buffers[memory.resource];
+    if (buffer.atomic) {
+      return Keep::Atomic;
+    }
+    if (buffer.written) {
+      return Keep::Written;
+    }
+    if (memory.formatted || memory.typed) {
+      return Keep::Formatted;
+    }
+    if (!is_const && ((specialization.buffers[memory.resource].packed_stride >> 20u) & 1u) != 0u) {
+      return Keep::Other; // ADD_TID_ENABLE: the descriptor path adds the lane to the index.
+    }
+    return Keep::None;
+  };
+
+  struct Site {
+    IR::Block          *block = nullptr;
+    IR::Block::iterator where;
+  };
+  std::vector<Site> loads;
+  for (auto *block : program.blocks) {
+    for (auto it = block->begin(); it != block->end(); ++it) {
+      if (is_load(it->GetOpcode())) {
+        loads.push_back({block, it});
+      }
+    }
+  }
+
+  const auto immediate = [](Value value, uint32_t &out) {
+    value = value.Resolve();
+    if (value.IsEmpty() || !value.IsImmediate() || value.GetType() != IR::Type::U32) {
+      return false;
+    }
+    out = value.U32();
+    return true;
+  };
+  const auto is_zero = [&](Value value) {
+    uint32_t constant = 1;
+    return immediate(value, constant) && constant == 0u;
+  };
+
+  // Per-block state: the address handle of each V# (dense resource), the byte addresses already
+  // computed (loads of one V# with the same operands share them and so their page lookup), and
+  // the `low | 3` of each address.
+  struct Handle {
+    uint32_t resource = 0;
+    Value    address;
+    Value    stride;
+    Value    limit;
+  };
+  struct Byte {
+    uint32_t resource = 0;
+    Value    index;
+    Value    offset;
+    Value    soffset;
+    Value    byte;
+  };
+  struct LowOr3 {
+    Value low;
+    Value low_or3;
+  };
+  const IR::Block    *state_block = nullptr;
+  std::vector<Handle> block_handles;
+  std::vector<Byte>   block_bytes;
+  std::vector<LowOr3> block_low_or3;
+  std::unordered_map<const IR::Inst *, Value> replaced;
+  // Mode 2: the per-dword descriptor loads it creates (eligible by construction; the self-check
+  // skips them). Always empty in mode 1.
+  std::unordered_map<const IR::Inst *, bool> descriptor_loads;
+
+  for (const auto &site : loads) {
+    auto      &inst   = *site.where;
+    auto      *block  = site.block;
+    const auto where  = site.where;
+    const auto opcode = inst.GetOpcode();
+    switch (classify(inst)) {
+    case Keep::None: break;
+    case Keep::Planning: counts.planning_only++; continue;
+    case Keep::Dead: counts.dead++; continue;
+    case Keep::Other: counts.kept_other++; continue;
+    case Keep::Atomic: counts.kept_atomic++; continue;
+    case Keep::Written: counts.kept_written++; continue;
+    case Keep::Formatted: counts.kept_formatted++; continue;
+    }
+    if (block != state_block) {
+      state_block = block;
+      block_handles.clear();
+      block_bytes.clear();
+      block_low_or3.clear();
+    }
+    const auto emit = [&](ValueOpcode op, std::initializer_list<Value> args, uint64_t flags = 0) {
+      return Value(&*block->PrependNewInst(where, op, args, flags));
+    };
+    const auto add = [&](Value value, uint32_t constant) {
+      uint32_t base = 0;
+      if (constant == 0u) {
+        return value;
+      }
+      if (immediate(value, base)) {
+        return Value(base + constant);
+      }
+      return emit(ValueOpcode::IAdd32, {value, Value(constant)});
+    };
+    const auto low_or3 = [&](Value low) {
+      uint32_t base = 0;
+      if (immediate(low, base)) {
+        return Value(base | 3u);
+      }
+      for (const auto &entry : block_low_or3) {
+        if (entry.low == low) {
+          return entry.low_or3;
+        }
+      }
+      const auto result = emit(ValueOpcode::BitwiseOr32, {low, Value(3u)});
+      block_low_or3.push_back({low, result});
+      return result;
+    };
+    const auto flags  = inst.Flags<IR::MemoryFlags>();
+    const auto memory = program.memory_info[flags.index];
+    auto      *handle = inst.Arg(0).Resolve().TryInstruction();
+
+    const Handle *values = nullptr;
+    for (const auto &entry : block_handles) {
+      if (entry.resource == memory.resource) {
+        values = &entry;
+      }
+    }
+    if (values == nullptr) {
+      const Value d0   = handle->Arg(0).Resolve();
+      const Value d1   = handle->Arg(1).Resolve();
+      const Value d2   = handle->Arg(2).Resolve();
+      const Value d3   = handle->Arg(3).Resolve();
+      Handle      next;
+      next.resource    = memory.resource;
+      if (!descriptor_path) {
+        const auto high  = emit(ValueOpcode::BitwiseAnd32, {d1, Value(0xffffu)});
+        next.address     = emit(ValueOpcode::GetAddressResource, {d0, high});
+      }
+      for (const auto &dword : {d0, d1, d2, d3}) {
+        emit(ValueOpcode::ReferenceU32, {dword});
+      }
+      next.stride         = emit(ValueOpcode::BitFieldUExtract, {d1, Value(16u), Value(14u)});
+      const auto product  = emit(ValueOpcode::IMul32, {next.stride, d2});
+      const auto overflow = emit(ValueOpcode::INotEqual32,
+                                 {emit(ValueOpcode::UMulHi, {next.stride, d2}), Value(0u)});
+      const auto bytes    = emit(ValueOpcode::SelectU32, {overflow, Value(0xffffffffu), product});
+      const auto raw      = emit(ValueOpcode::IEqual32, {next.stride, Value(0u)});
+      next.limit          = emit(ValueOpcode::SelectU32, {raw, d2, bytes});
+      block_handles.push_back(next);
+      values = &block_handles.back();
+      counts.address_handles++;
+    }
+    const Value address = values->address;
+    const Value stride  = values->stride;
+    const Value limit   = values->limit;
+
+    // One dword through the page table: LoadAddressU32 at base + (low & ~3) + imm, zero outside
+    // [0, limit) and in inactive lanes.
+    const auto load_dword = [&](Value low, Value low3, uint32_t imm, uint32_t component,
+                                uint32_t component_count, Value active) {
+      if (descriptor_path) {
+        // Mode 2: the same dword (byte low + imm, dword-truncated) through the load's descriptor,
+        // the same bounds select as mode 1.
+        auto dword            = memory;
+        dword.data_dwords     = 1u;
+        dword.data_bits       = 32u;
+        dword.data_signed     = false;
+        dword.component_index = component;
+        dword.component_count = component_count;
+        dword.formatted       = false;
+        dword.typed           = false;
+        dword.planning_only   = false;
+        Value loaded;
+        if (opcode == ValueOpcode::ReadConstBuffer) {
+          // EmitReadConstBuffer reads dword (offset + imm) >> 2; the immediate rides in the offset
+          // operand, so each dword has its own offset value (no KYTY_VEC_CONST regrouping).
+          const auto at = add(low, imm);
+          dword.offset  = 0u;
+          const IR::MemoryFlags dword_flags {.index = static_cast<uint32_t>(program.memory_info.size()),
+                                             .pc    = flags.pc};
+          program.memory_info.push_back(dword);
+          uint64_t bits = 0;
+          std::memcpy(&bits, &dword_flags, sizeof(dword_flags));
+          loaded = emit(ValueOpcode::ReadConstBuffer, {Value(handle), at}, bits);
+        } else {
+          // BufferByteAddress: index 0, offset = byte (index * run-time stride + offset + soffset),
+          // soffset 0, immediate = the dword's; ADD_TID and swizzle are excluded before this point.
+          dword.offset = imm;
+          dword.idxen  = false;
+          dword.offen  = true;
+          const IR::MemoryFlags dword_flags {.index = static_cast<uint32_t>(program.memory_info.size()),
+                                             .pc    = flags.pc};
+          program.memory_info.push_back(dword);
+          uint64_t bits = 0;
+          std::memcpy(&bits, &dword_flags, sizeof(dword_flags));
+          loaded = emit(ValueOpcode::LoadBufferU32, {Value(handle), Value(0u), low, Value(0u), active},
+                        bits);
+        }
+        descriptor_loads.emplace(loaded.TryInstruction(), true);
+        const auto in_range = emit(ValueOpcode::ULessThan32, {add(low3, imm), limit});
+        counts.dwords++;
+        return emit(ValueOpcode::SelectU32, {in_range, loaded, Value(0u)});
+      }
+      auto scalar            = memory;
+      scalar.kind            = IR::ResourceKind::ScalarAddress;
+      scalar.resource        = 0;
+      scalar.sampler         = 0;
+      scalar.offset          = imm;
+      scalar.data_dwords     = 1u;
+      scalar.data_bits       = 32u;
+      scalar.data_signed     = false;
+      scalar.component_index = component;
+      scalar.component_count = component_count;
+      scalar.address_is_full = false;
+      scalar.formatted       = false;
+      scalar.typed           = false;
+      scalar.idxen           = false;
+      scalar.offen           = false;
+      scalar.planning_only   = false;
+      const IR::MemoryFlags dword_flags {.index = static_cast<uint32_t>(program.memory_info.size()),
+                                         .pc    = flags.pc};
+      program.memory_info.push_back(scalar);
+      uint64_t bits = 0;
+      std::memcpy(&bits, &dword_flags, sizeof(dword_flags));
+      const auto loaded   = emit(ValueOpcode::LoadAddressU32, {address, low, Value(0u), active}, bits);
+      const auto in_range = emit(ValueOpcode::ULessThan32, {add(low3, imm), limit});
+      counts.dwords++;
+      return emit(ValueOpcode::SelectU32, {in_range, loaded, Value(0u)});
+    };
+
+    Value replacement;
+    if (opcode == ValueOpcode::ReadConstBuffer) {
+      // S_BUFFER_LOAD: dword at (sgpr + imm) >> 2. The ScalarAddress path adds (low & ~3) and
+      // (imm & ~3), which is the same whenever imm is a dword multiple; otherwise fold imm first.
+      Value    low = inst.Arg(1).Resolve();
+      uint32_t imm = memory.offset;
+      if ((imm & 3u) != 0u) {
+        low = add(low, imm);
+        imm = 0u;
+        counts.misaligned_imm++;
+      }
+      replacement = load_dword(low, low_or3(low), imm, memory.component_index,
+                               memory.component_count, Value(true));
+      counts.converted_const++;
+    } else {
+      const auto packed     = specialization.buffers[memory.resource].packed_stride;
+      const bool swizzle    = (packed & 0x3fffu) != 0u && ((packed >> 14u) & 1u) != 0u;
+      const auto index      = inst.Arg(1).Resolve();
+      const auto offset     = inst.Arg(2).Resolve();
+      const auto soffset    = inst.Arg(3).Resolve();
+      const auto active     = inst.Arg(4).Resolve();
+      uint32_t   components = 1u;
+      switch (opcode) {
+      case ValueOpcode::LoadBufferU32x2: components = 2u; break;
+      case ValueOpcode::LoadBufferU32x3: components = 3u; break;
+      case ValueOpcode::LoadBufferU32x4: components = 4u; break;
+      default: break;
+      }
+      const uint32_t           component_count = components == 3u ? 4u : components;
+      std::array<Value, 4>     dwords {};
+      Value                    first_byte;
+      if (!is_zero(index)) {
+        counts.indexed++;
+      }
+      if (!swizzle) {
+        // index * stride + offset + soffset; imm rides in the ScalarAddress immediate when it is a
+        // dword multiple (so equal operands share the page lookup), else it is folded in.
+        Value    byte = offset;
+        uint32_t imm  = memory.offset;
+        if ((imm & 3u) != 0u) {
+          byte = add(byte, imm);
+          imm  = 0u;
+        }
+        bool cached = false;
+        for (const auto &entry : block_bytes) {
+          if (entry.resource == memory.resource && entry.index == index && entry.offset == byte &&
+              entry.soffset == soffset) {
+            byte   = entry.byte;
+            cached = true;
+            break;
+          }
+        }
+        if (!cached) {
+          const Value key_offset = byte;
+          if (!is_zero(index)) {
+            const auto scaled = emit(ValueOpcode::IMul32, {index, stride});
+            byte = is_zero(byte) ? scaled : emit(ValueOpcode::IAdd32, {scaled, byte});
+          }
+          if (!is_zero(soffset)) {
+            byte = is_zero(byte) ? soffset : emit(ValueOpcode::IAdd32, {byte, soffset});
+          }
+          block_bytes.push_back({memory.resource, index, key_offset, soffset, byte});
+        }
+        const auto low3 = low_or3(byte);
+        for (uint32_t component = 0; component < components; component++) {
+          dwords[component] =
+              load_dword(byte, low3, imm + component * 4u, component, component_count, active);
+        }
+        first_byte = add(byte, imm);
+      } else {
+        // BufferByteAddress, swizzled: ((index >> (e + 3)) * stride + (offset & ~3)) * (8 << e) +
+        // ((index & ((8 << e) - 1)) << 2) + (offset & 3) + soffset, per component.
+        counts.swizzled++;
+        if (descriptor_path) {
+          // Mode 2 would pass the precomputed byte to a descriptor load whose emitter swizzles again.
+          counts.unsupported_swizzled++;
+          continue; // left on its descriptor: the self-check below fails the run
+        }
+        const uint32_t stride_enum  = (packed >> 16u) & 3u;
+        const uint32_t index_stride = 8u << stride_enum;
+        const auto index_msb   = emit(ValueOpcode::ShiftRightLogical32, {index, Value(stride_enum + 3u)});
+        const auto index_lsb   = emit(ValueOpcode::BitwiseAnd32, {index, Value(index_stride - 1u)});
+        const auto indexed_msb = emit(ValueOpcode::IMul32, {index_msb, stride});
+        const auto lsb_index   = emit(ValueOpcode::ShiftLeftLogical32, {index_lsb, Value(2u)});
+        for (uint32_t component = 0; component < components; component++) {
+          const auto offset_k   = add(offset, memory.offset + component * 4u);
+          const auto offset_msb = emit(ValueOpcode::BitwiseAnd32, {offset_k, Value(~3u)});
+          const auto offset_lsb = emit(ValueOpcode::BitwiseAnd32, {offset_k, Value(3u)});
+          const auto msb        = emit(ValueOpcode::IMul32,
+                                       {emit(ValueOpcode::IAdd32, {indexed_msb, offset_msb}),
+                                        Value(index_stride)});
+          auto byte = emit(ValueOpcode::IAdd32,
+                           {msb, emit(ValueOpcode::IAdd32, {lsb_index, offset_lsb})});
+          if (!is_zero(soffset)) {
+            byte = emit(ValueOpcode::IAdd32, {byte, soffset});
+          }
+          dwords[component] = load_dword(byte, low_or3(byte), 0u, component, component_count, active);
+          if (component == 0u) {
+            first_byte = byte;
+          }
+        }
+      }
+      switch (opcode) {
+      case ValueOpcode::LoadBufferU32: replacement = dwords[0]; break;
+      case ValueOpcode::LoadBufferU32x2:
+        replacement = emit(ValueOpcode::CompositeConstructU32x2, {dwords[0], dwords[1]});
+        counts.wide++;
+        break;
+      case ValueOpcode::LoadBufferU32x3:
+        replacement =
+            emit(ValueOpcode::CompositeConstructU32x3, {dwords[0], dwords[1], dwords[2]});
+        counts.wide++;
+        break;
+      case ValueOpcode::LoadBufferU32x4:
+        replacement = emit(ValueOpcode::CompositeConstructU32x4,
+                           {dwords[0], dwords[1], dwords[2], dwords[3]});
+        counts.wide++;
+        break;
+      default: {
+        // LoadSubwordInBounds: (dword >> ((byte & 3) * 8)) masked by the U8/U16 conversion.
+        uint32_t   constant = 0;
+        const auto shift =
+            immediate(first_byte, constant)
+                ? Value((constant & 3u) * 8u)
+                : emit(ValueOpcode::ShiftLeftLogical32,
+                       {emit(ValueOpcode::BitwiseAnd32, {first_byte, Value(3u)}), Value(3u)});
+        const auto shifted = emit(ValueOpcode::ShiftRightLogical32, {dwords[0], shift});
+        replacement        = emit(opcode == ValueOpcode::LoadBufferU8 ? ValueOpcode::ConvertU8U32
+                                                                      : ValueOpcode::ConvertU16U32,
+                                  {shifted});
+        counts.subword++;
+        break;
+      }
+      }
+      counts.converted_buffer++;
+    }
+    if (trace) {
+      std::fprintf(stderr,
+                   "bda-rewrite-load: pc=0x%08x op=%s res=%u imm=%u packed_stride=0x%08x "
+                   "component=%u/%u\n",
+                   flags.pc, std::string(IR::ValueOpcodeName(opcode)).c_str(), memory.resource,
+                   memory.offset, specialization.buffers[memory.resource].packed_stride,
+                   memory.component_index, memory.component_count);
+    }
+    inst.ReplaceUsesWith(replacement, true);
+    replaced.emplace(&inst, replacement);
+  }
+
+  // Values held outside the use lists (the emitter reads block_info; the rest is kept coherent).
+  const auto fix = [&](Value &value) {
+    if (const auto *inst = value.TryInstruction(); inst != nullptr) {
+      if (const auto found = replaced.find(inst); found != replaced.end()) {
+        value = found->second;
+      }
+    }
+  };
+  for (auto &info : program.block_info) {
+    fix(info.condition);
+    fix(info.indirect_target);
+  }
+  for (auto &value : program.dynamic_reads) {
+    fix(value);
+  }
+  for (auto &read : program.srt_reads) {
+    fix(read.value);
+  }
+  for (auto &source : program.descriptor_sources) {
+    for (auto &dword : source.dwords) {
+      fix(dword);
+    }
+  }
+  for (auto &value : program.uniform_fill.values) {
+    fix(value);
+  }
+  if (!descriptor_path && counts.converted_const + counts.converted_buffer != 0u) {
+    program.info.uses_dma = true;
+  }
+  counts.uses_dma_after = program.info.uses_dma;
+  // Self-check: no load that the rule converts may remain on a descriptor (mode 2: other than the
+  // per-dword loads it created).
+  for (const auto *block : program.blocks) {
+    for (const auto &inst : *block) {
+      if (is_load(inst.GetOpcode()) && classify(inst) == Keep::None &&
+          !descriptor_loads.contains(&inst)) {
+        counts.remaining_eligible++;
+      }
+    }
+  }
+  return counts;
+}
+
+} // namespace
+} // namespace Libs::Graphics
+
 int main() {
   using namespace Libs::Graphics;
 
@@ -13755,6 +14283,9 @@ int main() {
       size_t i = 0;
       pixel.scratch_size_dwords = s[i++];
       pixel.input_num = s[i++];
+      // Session 102: BuildStageStaticKey (shader.cpp) writes wave_size (SPI_PS_IN_CONTROL.PS_W32_EN)
+      // here; without it every later field was read one slot early (wrong inputs and exports).
+      pixel.wave_size = s[i++];
       pixel.ps_system_input_base = s[i++];
       pixel.vs_export_count = s[i++];
       pixel.custom_interpolation_mask = s[i++];
@@ -13827,6 +14358,9 @@ int main() {
       options.detect_wave_size = true;
     } else if (is_pixel) {
       options.input_info.pixel = &pixel;
+      // Session 102: as PipelineCache does for a pixel shader - the register wave size is the
+      // starting point, the code still decides.
+      options.wave_size = pixel.wave_size;
       options.detect_wave_size = true;
     } else {
       options.input_info.compute = &compute;
@@ -13895,6 +14429,45 @@ int main() {
         }
       }
     }
+    // Session 102: KYTY_RECOMPILE_BDA=1 - arm V2 of the M5 bench (RewriteBuffersToBda above), on
+    // top of the specialization the switches above produced (so KYTY_RECOMPILE_CBANK still acts on
+    // every load it leaves on a descriptor). KYTY_RECOMPILE_BDA_TRACE=1 lists each converted load.
+    // KYTY_RECOMPILE_BDA=2 - arm V2s, the same rewrite through the loads' own descriptors (the
+    // granularity/bounds control of V2); its report lines carry "mode=2".
+    const int bda_mode = [] {
+      const char *value = std::getenv("KYTY_RECOMPILE_BDA");
+      return value == nullptr ? 0 : value[0] == '1' ? 1 : value[0] == '2' ? 2 : 0;
+    }();
+    if (bda_mode != 0) {
+      const bool descriptor_path = bda_mode == 2;
+      const auto bda = RewriteBuffersToBda(translated.program, specialization,
+                                           std::getenv("KYTY_RECOMPILE_BDA_TRACE") != nullptr,
+                                           descriptor_path);
+      if (early_check) {
+        RewriteBuffersToBda(early_check->program, specialization, false, descriptor_path);
+      }
+      const char *mode_tag = descriptor_path ? "mode=2 " : "";
+      std::printf("bda-rewrite: %sconverted_const=%u converted_buffer=%u kept_written=%u kept_atomic=%u "
+                  "kept_formatted=%u kept_other=%u\n",
+                  mode_tag, bda.converted_const, bda.converted_buffer, bda.kept_written,
+                  bda.kept_atomic, bda.kept_formatted, bda.kept_other);
+      std::printf("bda-rewrite-detail: %splanning_only=%u dead=%u address_handles=%u dwords=%u wide=%u "
+                  "subword=%u indexed=%u swizzled=%u misaligned_imm=%u remaining_eligible=%u "
+                  "uses_dma=%u->%u\n",
+                  mode_tag, bda.planning_only, bda.dead, bda.address_handles, bda.dwords, bda.wide,
+                  bda.subword, bda.indexed, bda.swizzled, bda.misaligned_imm, bda.remaining_eligible,
+                  bda.uses_dma_before ? 1u : 0u, bda.uses_dma_after ? 1u : 0u);
+      std::fflush(stdout);
+      if (bda.unsupported_swizzled != 0u) {
+        std::fprintf(stderr, "bda-rewrite: mode 2 does not implement swizzled loads (%u met)\n",
+                     bda.unsupported_swizzled);
+      }
+      if (bda.remaining_eligible != 0u) {
+        std::fprintf(stderr, "bda-rewrite: %u eligible loads remain on descriptors\n",
+                     bda.remaining_eligible);
+        return 2;
+      }
+    }
     auto compiled = ShaderRecompiler::CompileProgram(
         std::move(translated), options, specialization,
         stored.program.bindings.push_data_start_dword);
@@ -13948,6 +14521,11 @@ int main() {
                 compute.threads_num[2], compute.lds_size_dwords, pixel.input_num,
                 entry.permutations.size(), aligns.c_str(), ms(t0, t1), ms(t1, t2), compiled.spirv.size(),
                 stored.spirv.size(), parts[2].c_str());
+    // Session 102: whether this module is byte-identical to the SPIR-V the game stored for the
+    // permutation (the M5 identity control compares the capture's modules with arm A).
+    std::printf("recompile-identity: permutation=%zu words=%zu stored_words=%zu identical=%u\n",
+                permutation, compiled.spirv.size(), stored.spirv.size(),
+                compiled.spirv == stored.spirv ? 1u : 0u);
     return 0;
   }
   if (const char *bench = std::getenv("KYTY_CFG_BENCH"); bench != nullptr) {

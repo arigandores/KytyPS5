@@ -5,6 +5,7 @@
 #include <mutex>
 #include <unordered_set>
 #include "common/alignment.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "graphics/host_gpu/lodStats.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
@@ -1377,7 +1378,7 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	auto& texture_cache = m_context.GetTextureCache();
 	// Debug aid: KYTY_SKIP_TAIL_MIP_STORAGE=1 binds a dummy image for storage views that
 	// address a mip level above the descriptor max_mip, to isolate GPU faults.
-	static const bool skip_tail_mip_storage = std::getenv("KYTY_SKIP_TAIL_MIP_STORAGE") != nullptr;
+	static const bool skip_tail_mip_storage = Common::EnvFlagOn("KYTY_SKIP_TAIL_MIP_STORAGE");
 	const bool tail_mip_storage = storage && !descriptor.IsNull() && !resource.r128 &&
 	                              descriptor.LastLevel() > descriptor.MaxMip();
 	if (descriptor.IsNull() || (skip_tail_mip_storage && tail_mip_storage)) {
@@ -1440,7 +1441,7 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	if (!storage && descriptor.MipStatsCntEn()) {
 		LodStats::Touch(descriptor.MipStatsCntId(), descriptor.BaseLevel());
 	}
-	static const bool lod_trace = std::getenv("KYTY_LOD_STATS_TRACE") != nullptr;
+	static const bool lod_trace = Common::EnvFlagOn("KYTY_LOD_STATS_TRACE");
 	if (lod_trace && !storage) {
 		static std::atomic<uint32_t> traced {0};
 		if (descriptor.Base40() >= 0x1000000000ull && traced.fetch_add(1) < 20000) {
@@ -1912,7 +1913,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	// ClearImage's own condition for rendering through a view instead of a transfer clear.
 	const bool aliased = clear_format != image.backing.format;
 	static std::atomic<uint32_t> log_count = 0;
-	static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+	static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
 	if (dcc_trace || log_count++ < 32) {
 		LOGF("MaterializeDeferredDccClear: image=0x%016" PRIx64 " dcc=0x%016" PRIx64
 		     " code=0x%02x layers=0x%08x format=%u view=%u decoded=%d\n",
@@ -2002,7 +2003,7 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		const auto id = cache.FindDccSurfaceImage(rt.base.addr, rt.dcc_addr.addr);
 		if (!id) {
 			static std::atomic<uint32_t> miss_count = 0;
-			static const bool dcc_trace = std::getenv("KYTY_DCC_TRACE") != nullptr;
+			static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
 			if (dcc_trace || miss_count++ < 32) {
 				LOGF("MaterializeBoundTargetDccClears: no image for slot=%u base=0x%016" PRIx64
 				     " dcc=0x%016" PRIx64 "\n",
@@ -2406,7 +2407,7 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	// its range stale (NativeStorageBuffer -> InvalidateMemoryFromGPU), which is where 95 % of the
 	// ~100 MB of image uploads per frame come from. Same env var as the image trace, so one run
 	// prints both sides; large ranges only, so the four addresses that carry 90 MB stand out.
-	static const bool writer_trace = std::getenv("KYTY_IMAGE_UPLOAD_TRACE") != nullptr;
+	static const bool writer_trace = Common::EnvFlagOn("KYTY_IMAGE_UPLOAD_TRACE");
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 		uint32_t buffer_offset = 0;
 		// Session 93, gate "bdacap": out-parameter, BdaCapClass::None unless the gate is armed.

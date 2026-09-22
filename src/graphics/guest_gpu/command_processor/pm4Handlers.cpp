@@ -1,5 +1,6 @@
 #include "common/assert.h"
 
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -1391,7 +1392,7 @@ KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 		const char* v = std::getenv("KYTY_LOD_STATS");
 		return v == nullptr || std::strcmp(v, "0") != 0;
 	}();
-	static const bool trace = std::getenv("KYTY_LOD_STATS_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_LOD_STATS_TRACE");
 
 	if (dst != nullptr && buffer_size != 0) {
 		memset(dst, 0, buffer_size);

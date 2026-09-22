@@ -1,6 +1,7 @@
 #include "graphics/host_gpu/renderer/pipeline/descriptorHeap.h"
 
 #include "common/assert.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -29,7 +30,7 @@ DescriptorHeap::DescriptorHeap(GraphicContext& graphics, MasterSemaphore& master
 }
 
 DescriptorHeap::~DescriptorHeap() {
-	if (std::getenv("KYTY_DESCRIPTOR_STATS") != nullptr) {
+	if (Common::EnvFlagOn("KYTY_DESCRIPTOR_STATS")) {
 		LOGF("DescriptorHeap: allocation_calls=%llu resets=%llu reused=%llu pools=%zu\n",
 		     static_cast<unsigned long long>(m_statistics.allocation_calls),
 		     static_cast<unsigned long long>(m_statistics.pool_resets),

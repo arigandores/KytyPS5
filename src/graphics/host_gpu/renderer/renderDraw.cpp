@@ -8,6 +8,7 @@
 #include "common/assert.h"
 #include "common/drawStat.h"
 #include "common/common.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -2319,7 +2320,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			     draw.index_count, draw.instance_count, ctx.GetRenderTargetMask(),
 			     ctx.GetColorControl().mode, rt.clear_word0.word0, rt.clear_word1.word1,
 			     rt.cmask.addr, rt.dcc_addr.addr);
-			static const bool dump_watched = std::getenv("KYTY_IMAGE_WATCH_BINDINGS") != nullptr;
+			static const bool dump_watched = Common::EnvFlagOn("KYTY_IMAGE_WATCH_BINDINGS");
 			static uint32_t watched_dumps = 0;
 			if (dump_watched && GpuTimeProfiler::Frame() >= 14000 && watched_dumps++ < 16) {
 				DumpShaderStageBindings(m_context, "WatchVS", state.vertex_info[0].stage);

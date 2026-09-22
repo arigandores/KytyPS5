@@ -21,6 +21,7 @@
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -1183,7 +1184,7 @@ void WindowContext::CreateVulkan() {
 			device_extensions.push_back(VK_EXT_ATTACHMENT_FEEDBACK_LOOP_LAYOUT_EXTENSION_NAME);
 			device_extensions.push_back(VK_EXT_ATTACHMENT_FEEDBACK_LOOP_DYNAMIC_STATE_EXTENSION_NAME);
 		}
-		if (std::getenv("KYTY_PIPELINE_STATS") != nullptr &&
+		if (Common::EnvFlagOn("KYTY_PIPELINE_STATS") &&
 		    HasExtension(available_extensions,
 		                 VK_KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME)) {
 			device_extensions.push_back(VK_KHR_PIPELINE_EXECUTABLE_PROPERTIES_EXTENSION_NAME);
@@ -1192,7 +1193,12 @@ void WindowContext::CreateVulkan() {
 		}
 		// Diagnostic checkpoints attribute a device loss to the draw or dispatch that hung.
 		// Enabled only on request: the markers cost a little per operation.
-		if (const auto* checkpoints = std::getenv("KYTY_GPU_CHECKPOINTS"); checkpoints != nullptr) {
+		// Session 102: the VALUE decides, not the presence: unset/""/0/false/off/no = off, "nv" = NV
+		// only, anything else = breadcrumbs+NV. Session 101 found KYTY_GPU_CHECKPOINTS=0 turning them
+		// ON (and with them refusing the record thread, see RecordThreadWanted). A present but falsy
+		// value logs "GPU checkpoints off": the witness that a run read the switch as off.
+		if (const auto* checkpoints = std::getenv("KYTY_GPU_CHECKPOINTS");
+		    Common::EnvValueOn(checkpoints)) {
 			graphic_ctx.gpu_breadcrumbs_enabled = std::strcmp(checkpoints, "nv") != 0;
 			LOGF("Vulkan: GPU checkpoints mode=%s\n",
 			     graphic_ctx.gpu_breadcrumbs_enabled ? "breadcrumbs+NV" : "NV only");
@@ -1202,6 +1208,8 @@ void WindowContext::CreateVulkan() {
 				graphic_ctx.diagnostic_checkpoints_enabled = true;
 				LOGF("Vulkan: diagnostic checkpoints enabled\n");
 			}
+		} else if (checkpoints != nullptr) {
+			LOGF("Vulkan: GPU checkpoints off (KYTY_GPU_CHECKPOINTS=%s)\n", checkpoints);
 		}
 		// Session 98 (patch_s98b, MEASUREMENT ONLY): KYTY_GPU_MARKERS=1 - VK_AMD_buffer_marker,
 		// enabled only when requested and exposed by the device (confirmed after the dispatcher

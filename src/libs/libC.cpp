@@ -1,6 +1,7 @@
 #include "common/abi.h"
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/singleton.h"
 #include "common/stringUtils.h"
@@ -633,7 +634,7 @@ int KYTY_SYSV_ABI vsnprintf(char* s, size_t n, const char* str, VaList* c) {
 
 	int r = GetGuestVsnprintfFunc()(s, n, str, c);
 	// KYTY_GUEST_FMT_LOG=1: log every formatted string (the game's logger formats through vsnprintf)
-	static const bool fmt_log = std::getenv("KYTY_GUEST_FMT_LOG") != nullptr;
+	static const bool fmt_log = Common::EnvFlagOn("KYTY_GUEST_FMT_LOG");
 	if (fmt_log && s != nullptr && n != 0) {
 		LOGF_COLOR(Log::Color::BrightMagenta, "GuestFmt: [%d] %s%s", Common::Thread::GetThreadIdUnique(), s,
 		           (s[0] != 0 && s[std::strlen(s) - 1] == '\n' ? "" : "\n"));

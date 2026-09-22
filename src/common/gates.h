@@ -531,6 +531,12 @@ enum class Knob : uint32_t {
 	// floor arm keeps arm A's frame length and the DRS step cannot move between the arms
 	// (ROADMAP.md:1062-1065).  bf_burn_ns reports what was really burned.
 	BindFloorBurn,    // KYTY_BIND_FLOOR_BURN,    file name "bfburn" (us a frame, 0 = none)
+	// Session 102: draw-lookahead requests per PipelineCache::QueueDrawAhead call (graphicsRun.cpp,
+	// WalkComputeDispatches).  64 = the constant it replaces, 0 = one call at the end of the walk.
+	// Read ONCE PER WALK, so a schedule flip cannot give one walk two batch sizes and it CAN be a
+	// schedule arm.  Proof it armed: the counter da_qcall (QueueDrawAhead calls).
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	DrawAheadBatch,   // KYTY_DRAW_AHEAD_BATCH,   file name "dabatch" (requests per queue call, 0 = whole walk)
 	Count,
 };
 

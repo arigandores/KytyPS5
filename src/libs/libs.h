@@ -2,6 +2,7 @@
 #define EMULATOR_INCLUDE_EMULATOR_LIBS_LIBS_H_
 
 #include "common/abi.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "common/threads.h"
@@ -50,7 +51,7 @@
 
 // NOLINTNEXTLINE(cppcoreguidelines-macro-usage)
 #define PRINT_NAME()                                                                               \
-	static const bool print_name_forced = std::getenv("KYTY_PRINT_NAMES") != nullptr;             \
+	static const bool print_name_forced = Common::EnvFlagOn("KYTY_PRINT_NAMES");                  \
 	if (PRINT_NAME_ENABLED || print_name_forced || Libs::g_print_name_thread_forced) {            \
 		if (Log::GetDirection() != Log::Direction::Silent) {                                       \
 			const auto print_name_time = Loader::Timer::GetTime().ToString("HH24:MI:SS.FFF");      \

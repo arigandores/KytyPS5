@@ -2,6 +2,7 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/singleton.h"
@@ -2366,7 +2367,7 @@ static std::unordered_map<FiberObject*, uint64_t> g_fiber_owner_thread;
 static std::unordered_map<uint64_t, FiberObject*> g_fiber_current_by_thread;
 
 static bool FiberTraceEnabled() {
-	static const bool enabled = std::getenv("KYTY_FIBER_TRACE") != nullptr;
+	static const bool enabled = Common::EnvFlagOn("KYTY_FIBER_TRACE");
 	return enabled;
 }
 

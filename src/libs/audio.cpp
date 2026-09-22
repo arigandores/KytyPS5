@@ -4,6 +4,7 @@
 #include "common/assert.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/magicEnum.h"
 #include "common/stringUtils.h"
@@ -608,7 +609,7 @@ bool Audio::QueueSdlAudio(PortOut* port, const void* data, bool blocking) {
 		queue_size = static_cast<uint32_t>(port->stretch_out.size() * sizeof(float));
 	}
 
-	static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+	static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 	const auto        av_queued_before = SDL_GetQueuedAudioSize(port->audio_device);
 	const auto        av_t0            = LibKernel::KernelGetProcessTime();
 	if (blocking) {

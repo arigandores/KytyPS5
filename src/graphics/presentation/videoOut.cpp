@@ -6,6 +6,7 @@
 #include "common/gates.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/stringUtils.h"
@@ -1205,7 +1206,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 		cfg.pace_last_base_us = base_us;
 	}
 	{
-		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 		if (av_trace) {
 			const auto host_frequency = Common::Timer::QueryPerformanceFrequency();
 			const auto host_counter   = Common::Timer::QueryPerformanceCounter();
@@ -2421,6 +2422,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cm_w1", FS::Counter::CommitLapMoveWrites1, false},
 				    {"cm_c0", FS::Counter::CommitLapMoveDesc0, false},
 				    {"cm_c1", FS::Counter::CommitLapMoveDesc1, false},
+				    // Session 102, knob "dabatch": QueueDrawAhead calls, its arming proof.  Raw count.
+				    {"da_qcall", FS::Counter::DrawAheadQueueCalls, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

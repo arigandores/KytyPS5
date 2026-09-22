@@ -6,6 +6,7 @@
 #include "common/gates.h"
 #include "common/common.h"
 #include "common/emulatorConfig.h"
+#include "common/envFlag.h"
 #include "common/file.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -97,7 +98,7 @@ bool RenderExecutor::TryConsumeComputeMetaClear(const ShaderComputeInputInfo& in
 				if (cache.ClearMeta(descriptor.Base48())) {
 					if (!all_writes) return true;
 					cleared_metadata = true;
-					static const bool trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+					static const bool trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
 					if (trace) {
 						LOGF("MetaClearTrace: frame=%u shader=0x%016" PRIx64
 						     " addr=0x%016" PRIx64 " size=0x%" PRIx64 " images=%zu buffers=%zu\n",
@@ -217,7 +218,7 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 	                              size)) {
 		return false;
 	}
-	static const bool clear_trace = std::getenv("KYTY_CLEAR_TRACE") != nullptr;
+	static const bool clear_trace = Common::EnvFlagOn("KYTY_CLEAR_TRACE");
 	// Session 71: the trace is printed AFTER the call so it can name the outcome. Without the
 	// outcome the line says which fills exist but not which of them the cache turned into a
 	// clear, and sessions 69/70 left no single log carrying both halves.
@@ -351,7 +352,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	static const std::vector<uint64_t> trace_cs = [] {
 		std::vector<uint64_t> out;
 		const char*           value = std::getenv("KYTY_TRACE_CS");
-		if (value == nullptr) {
+		// Session 102: unset/""/0/false/off/no = off. Before, "0" parsed as the list {0} and "false"
+		// as {0xfa}, and any non-empty list logs every direct dispatch whose raw X is zero.
+		if (!Common::EnvValueOn(value)) {
 			return out;
 		}
 		std::string_view text(value);
@@ -483,7 +486,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	// with the CPU view of its first dwords and the buffer-cache ownership flags; KYTY_SYNC_DISPATCH
 	// logs every dispatch before it is recorded (see CommandProcessor::DispatchDirect).
 	static const char* dump_cs      = std::getenv("KYTY_DUMP_CS");
-	static const bool  sync_dispatch = std::getenv("KYTY_SYNC_DISPATCH") != nullptr;
+	static const bool  sync_dispatch = Common::EnvFlagOn("KYTY_SYNC_DISPATCH");
 	// KYTY_DUMP_ADDR=<hex guest address> additionally dumps every dispatch whose buffer or image
 	// binding covers that address (finds the producers of a buffer).
 	static const uint64_t dump_addr = [] {
@@ -592,7 +595,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		// KYTY_DUMP_CS_REUPLOAD=1: experiment - mark every read-only buffer of the dumped shader as
 		// CPU-modified so that the binding below re-uploads the current guest memory. If a hang
 		// disappears with this, the GPU copy was stale (a CPU write went unnoticed by the tracker).
-		static const bool reupload = std::getenv("KYTY_DUMP_CS_REUPLOAD") != nullptr;
+		static const bool reupload = Common::EnvFlagOn("KYTY_DUMP_CS_REUPLOAD");
 		for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
 			const auto r    = DecodeNativeDescriptor<ShaderBufferResource>(resources.buffers[i]);
 			const auto base = r.Base48();
@@ -649,7 +652,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		// KYTY_DUMP_CS_READBACK=1: download the GPU contents of every GPU-written buffer binding
 		// before the dispatch, summarize it as a linked-list node array ({payload, next} records)
 		// and save the first two snapshots to _dump_<hash>_<binding>.bin for offline analysis.
-		static const bool readback = std::getenv("KYTY_DUMP_CS_READBACK") != nullptr;
+		static const bool readback = Common::EnvFlagOn("KYTY_DUMP_CS_READBACK");
 		if (readback) {
 			static std::atomic<uint32_t> readback_count {0};
 			const auto snapshot = readback_count.fetch_add(1, std::memory_order_relaxed);
@@ -910,7 +913,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		}
 		auto [args_buffer, args_offset] = cache.ObtainBuffer(indirect_args_addr, ArgsSize, false);
 		EXIT_IF(args_buffer == nullptr);
-		static const bool sanitize = std::getenv("KYTY_NO_INDIRECT_SANITIZE") == nullptr;
+		static const bool sanitize = !Common::EnvFlagOn("KYTY_NO_INDIRECT_SANITIZE");
 		if (sanitize) {
 			if (m_indirect_sanitizer == nullptr) {
 				m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(

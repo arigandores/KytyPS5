@@ -2,6 +2,7 @@
 #include "graphics/host_gpu/renderer/shadowResolve.h"
 
 #include "common/assert.h"
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
@@ -140,7 +141,7 @@ bool RenderContext::HandleFault(PageFaultAccess access, uint64_t fault_vaddr) no
 		return false;
 	}
 	// KYTY_FAULT_TRACE=1: log CPU page faults on GPU-tracked memory (address, access).
-	static const bool trace = std::getenv("KYTY_FAULT_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_FAULT_TRACE");
 	if (access == PageFaultAccess::Write) {
 		const auto t0 = trace ? Common::FrameStats::NowNs() : 0;
 		// fw_*: would a wider write-fault window have saved this fault (KYTY_FRAME_TRACE only).

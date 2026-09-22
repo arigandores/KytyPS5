@@ -1,5 +1,7 @@
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
 
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+
 #include <algorithm>
 
 namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
@@ -290,6 +292,12 @@ void DefineDescriptors(EmitterState& state) {
 			}
 			case IR::DescriptorBindingKind::BdaPagetable:
 				state.bda_pagetable_variable = Define(StorageBufferU64Type(state), "bda_pagetable");
+				if (BdaLeanEnabled()) {
+					state.builder.AddAnnotation(spv::OpDecorate, state.bda_pagetable_variable,
+					                            spv::DecorationNonWritable);
+					state.builder.AddAnnotation(spv::OpDecorate, state.bda_pagetable_variable,
+					                            spv::DecorationRestrict);
+				}
 				break;
 			case IR::DescriptorBindingKind::FaultBuffer:
 				state.fault_buffer_variable = Define(StorageBufferType(state), "fault_buffer");

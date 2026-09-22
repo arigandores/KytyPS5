@@ -134,6 +134,7 @@ void BufferCache::ChangeRegister(BufferId id) {
 			// here, at the first registration, because the constructor has no command buffer.
 			m_bda_null_page_ready = true;
 			m_bda_null_page.Fill(0, CACHING_PAGESIZE, 0);
+			m_fault_manager.ClearLoopTripTail();
 			const vk::DeviceAddress null_page_address = m_bda_null_page.BufferDeviceAddress();
 			WriteDataBuffer(m_bda_pagetable_buffer, 0, &null_page_address,
 			                sizeof(null_page_address));

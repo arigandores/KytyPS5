@@ -1,6 +1,7 @@
 #include "graphics/shader/recompiler/frontend/translate/Translator.h"
 #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
 
+#include "common/envFlag.h"
 #include <algorithm>
 #include <array>
 #include <cstdlib>
@@ -710,7 +711,7 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	const bool a16    = (inst.image_sample_flags & Decoder::ImageSampleFlagA16) != 0u;
 
 	// Debug aid: KYTY_BVH_STUB=1 makes every ray miss without touching BVH memory.
-	static const bool stub = std::getenv("KYTY_BVH_STUB") != nullptr;
+	static const bool stub = Common::EnvFlagOn("KYTY_BVH_STUB");
 	if (stub) {
 		const IR::Value miss(0xffffffffu);
 		WriteImageComponents(inst.dst,

@@ -2,6 +2,7 @@
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
 #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
 
+#include "common/envFlag.h"
 #include <cstdlib>
 #include <algorithm>
 #include <bit>
@@ -755,7 +756,7 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
 		}
 		// Debug aid: KYTY_SAMPLE_LOD0=1 emits every pixel-shader sample with an explicit LOD of 0
 		// instead of implicit LOD (isolates derivative/LOD-related host behaviour).
-		static const bool force_lod0 = std::getenv("KYTY_SAMPLE_LOD0") != nullptr;
+		static const bool force_lod0 = Common::EnvFlagOn("KYTY_SAMPLE_LOD0");
 		const bool explicit_lod = HasFlag(mem, Decoder::ImageSampleFlagDerivative) ||
 		                          HasFlag(mem, Decoder::ImageSampleFlagLod) ||
 		                          HasFlag(mem, Decoder::ImageSampleFlagLevelZero) ||

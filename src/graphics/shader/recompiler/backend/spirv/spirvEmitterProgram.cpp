@@ -1,11 +1,14 @@
 #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
 
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+
 #include "common/assert.h"
 #include "common/logging/log.h"
 
 #include <algorithm>
 #include <bit>
 #include <cinttypes>
+#include <cstdio>
 #include <cstdlib>
 #include <functional>
 #include <optional>
@@ -124,10 +127,15 @@ bool IsLoopControlTarget(const IR::Program& program, uint32_t id) {
 	});
 }
 
-void EmitReturn(ValueEmitContext& ctx) {
+void EmitReturnTail(ValueEmitContext& ctx) {
 	EmitKillIfPixelValidMaskInactive(ctx.state);
 	EmitBdaFaultFlush(ctx.state);
 	ctx.state.builder.AddFunction(spv::OpReturn);
+}
+
+void EmitReturn(ValueEmitContext& ctx) {
+	EmitLoopCapNear(ctx.state); // no-op unless KYTY_BVH_LOOP_CAP covers the program
+	EmitReturnTail(ctx);
 }
 
 uint32_t BranchCondition(ValueEmitContext& ctx, const IR::BlockInfo& info) {
@@ -165,13 +173,23 @@ uint32_t LoopGuardLimit() {
 	return limit;
 }
 
-using LoopGuardVariables = std::unordered_map<const IR::Block*, uint32_t>;
+// Loop headers and the counters they spend. KYTY_LOOP_LIMIT: one counter per loop, a bare return
+// on abort (debug aid, unchanged). KYTY_BVH_LOOP_CAP: every header of a capped program spends from
+// ONE budget per invocation, and the abort counts a trip and leaves through the normal return
+// path (fault flush, pixel kill).
+struct LoopGuards {
+	std::unordered_map<const IR::Block*, uint32_t> variables;
+	std::vector<uint32_t>                          declared;
+	uint32_t                                       limit = 0;
+	bool                                           cap   = false;
+};
 
 // Emits the loop header prologue of a guarded loop: counter update, OpLoopMerge and a conditional
 // exit into a returning block. The block's original terminator then follows in a fresh label, so
 // the caller must emit it without a second OpLoopMerge (`guarded`). Returns false when the loop
 // has no usable merge/continue targets and the terminator must be emitted normally.
-bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t variable) {
+bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t variable,
+                   const LoopGuards& guards) {
 	const auto& program = ctx.state.program;
 	const auto& term    = info.terminator;
 	const auto* merge   = TargetBlock(program, term.merge_block);
@@ -187,7 +205,7 @@ bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t va
 	state.builder.AddFunction(spv::OpIAdd, TypeU32(state), next, count, ConstantU32(state, 1));
 	state.builder.AddFunction(spv::OpStore, variable, next);
 	state.builder.AddFunction(spv::OpUGreaterThan, TypeBool(state), over, next,
-	                          ConstantU32(state, LoopGuardLimit()));
+	                          ConstantU32(state, guards.limit));
 	state.builder.AddFunction(spv::OpLoopMerge, ctx.Label(merge), ctx.Label(cont),
 	                          spv::LoopControlMaskNone);
 	// The header branches unconditionally into a nested selection (a conditional branch in the
@@ -200,7 +218,12 @@ bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t va
 	state.builder.AddFunction(spv::OpSelectionMerge, after_label, spv::SelectionControlMaskNone);
 	state.builder.AddFunction(spv::OpBranchConditional, over, abort_label, after_label);
 	EmitLabel(state, abort_label);
-	state.builder.AddFunction(spv::OpReturn);
+	if (guards.cap) {
+		EmitLoopCapTrip(state, next);
+		EmitReturnTail(ctx);
+	} else {
+		state.builder.AddFunction(spv::OpReturn);
+	}
 	EmitLabel(state, after_label);
 	return true;
 }
@@ -455,7 +478,7 @@ void PatchStructuredPhis(ValueEmitContext& ctx, StructuredFunctionState& structu
 	}
 }
 
-void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuardVariables& loop_guards) {
+void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuards& loop_guards) {
 	const auto& program = ctx.state.program;
 	StructuredFunctionState structured;
 	ctx.state.builder.AddFunction(spv::OpBranch, ctx.Label(program.blocks.front()));
@@ -466,8 +489,9 @@ void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuardVariables& loo
 			EmitStructuredInstruction(lane, structured, inst);
 		});
 		bool guarded = false;
-		if (const auto found = loop_guards.find(block); found != loop_guards.end()) {
-			guarded = EmitLoopGuard(ctx, info, found->second);
+		if (const auto found = loop_guards.variables.find(block);
+		    found != loop_guards.variables.end()) {
+			guarded = EmitLoopGuard(ctx, info, found->second, loop_guards);
 		}
 		structured.block_exit_labels.emplace(block, ctx.state.current_label);
 		EmitStructuredTerminator(ctx, block, info, guarded);
@@ -538,6 +562,71 @@ void EmitDispatcherFunction(ValueEmitContext& ctx, const DispatcherFunctionState
 }
 
 } // namespace
+
+namespace {
+
+constexpr uint64_t BvhLoopCapDefaultHash = 0x380bb9d636390baeull;
+constexpr uint32_t BvhLoopCapDefault     = 65536;
+
+struct BvhLoopCapConfig {
+	uint32_t              cap = BvhLoopCapDefault;
+	std::vector<uint64_t> set {BvhLoopCapDefaultHash};
+	std::string           token;
+};
+
+const BvhLoopCapConfig& LoopCapConfig() {
+	static const BvhLoopCapConfig config = [] {
+		BvhLoopCapConfig result;
+		if (const char* value = std::getenv("KYTY_BVH_LOOP_CAP"); value != nullptr) {
+			result.cap = static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
+		}
+		if (const char* value = std::getenv("KYTY_BVH_LOOP_CAP_SET"); value != nullptr) {
+			result.set.clear();
+			const char* cursor = value;
+			while (*cursor != 0 && result.set.size() < LoopTripSlots) {
+				char*      end  = nullptr;
+				const auto hash = std::strtoull(cursor, &end, 16);
+				if (end == cursor) {
+					break;
+				}
+				result.set.push_back(hash);
+				cursor = *end == ',' ? end + 1 : end;
+			}
+		}
+		const bool is_default = result.cap == BvhLoopCapDefault && result.set.size() == 1 &&
+		                        result.set.front() == BvhLoopCapDefaultHash;
+		if (!is_default) {
+			result.token = ":bvhcap" + std::to_string(result.cap);
+			for (const auto hash: result.set) {
+				char text[24];
+				std::snprintf(text, sizeof(text), "-%016llx", static_cast<unsigned long long>(hash));
+				result.token += text;
+			}
+		}
+		return result;
+	}();
+	return config;
+}
+
+} // namespace
+
+uint32_t BvhLoopCap() {
+	return LoopCapConfig().cap;
+}
+
+int BvhLoopCapSlot(uint64_t shader_hash) {
+	const auto& set = LoopCapConfig().set;
+	for (size_t index = 0; index < set.size(); index++) {
+		if (set[index] == shader_hash) {
+			return static_cast<int>(index);
+		}
+	}
+	return -1;
+}
+
+std::string BvhLoopCapSignatureToken() {
+	return LoopCapConfig().token;
+}
 
 uint32_t TypeId(EmitterState& state, IR::Type type) {
 	switch (type) {
@@ -755,16 +844,41 @@ void EmitProgram(EmitterState& state) {
 		const auto label = state.builder.AllocateId();
 		state.labels.emplace(block, label);
 	}
-	LoopGuardVariables loop_guards;
-	if (LoopGuardLimit() != 0 && !state.program.dispatcher_fallback) {
+	LoopGuards loop_guards;
+	const int  cap_slot = BvhLoopCap() != 0 ? BvhLoopCapSlot(program.shader_hash) : -1;
+	if (cap_slot >= 0 && state.program.dispatcher_fallback) {
+		LOGF("BvhLoopCap: shader=0x%016" PRIx64 " UNCAPPED (dispatcher fallback)\n",
+		     program.shader_hash);
+	} else if (cap_slot >= 0) {
+		const auto budget = state.builder.AllocateId();
 		for (size_t index = 0; index < program.blocks.size(); index++) {
 			if (program.block_info[index].terminator.loop_header) {
-				loop_guards.emplace(program.blocks[index], state.builder.AllocateId());
+				loop_guards.variables.emplace(program.blocks[index], budget);
 			}
 		}
-		if (!loop_guards.empty()) {
+		if (!loop_guards.variables.empty()) {
+			loop_guards.declared.push_back(budget);
+			loop_guards.limit              = BvhLoopCap();
+			loop_guards.cap                = true;
+			state.loop_cap_budget_variable = budget;
+			state.loop_cap_limit           = BvhLoopCap();
+			state.loop_cap_slot            = static_cast<uint32_t>(cap_slot);
+			state.builder.AddName(budget, "bvh_loop_budget");
+		}
+		LOGF("BvhLoopCap: shader=0x%016" PRIx64 " loops=%zu cap=%u slot=%d\n", program.shader_hash,
+		     loop_guards.variables.size(), BvhLoopCap(), cap_slot);
+	} else if (LoopGuardLimit() != 0 && !state.program.dispatcher_fallback) {
+		for (size_t index = 0; index < program.blocks.size(); index++) {
+			if (program.block_info[index].terminator.loop_header) {
+				const auto variable = state.builder.AllocateId();
+				loop_guards.variables.emplace(program.blocks[index], variable);
+				loop_guards.declared.push_back(variable);
+			}
+		}
+		loop_guards.limit = LoopGuardLimit();
+		if (!loop_guards.variables.empty()) {
 			LOGF("SPIR-V loop guard: shader=0x%016" PRIx64 " loops=%zu limit=%u\n",
-			     program.shader_hash, loop_guards.size(), LoopGuardLimit());
+			     program.shader_hash, loop_guards.variables.size(), LoopGuardLimit());
 		}
 	}
 	if (state.program.dispatcher_fallback) {
@@ -879,8 +993,7 @@ void EmitProgram(EmitterState& state) {
 			                          lane.scratch_u32_variable, spv::StorageClassFunction);
 		}
 	}
-	for (const auto& [guarded_block, variable]: loop_guards) {
-		(void)guarded_block;
+	for (const auto variable: loop_guards.declared) {
 		state.builder.AddFunction(spv::OpVariable,
 		                          TypePointer(state, spv::StorageClassFunction, TypeU32(state)),
 		                          variable, spv::StorageClassFunction, ConstantU32(state, 0));
@@ -897,6 +1010,16 @@ void EmitProgram(EmitterState& state) {
 	if (state.bda_fault_page_variable != 0) {
 		state.builder.AddFunction(spv::OpStore, state.bda_fault_page_variable,
 		                          ConstantU32(state, 0));
+	}
+	if (state.bda_null_base_variable != 0) {
+		// KYTY_BDA_LEAN: page-table entry 0 (the null page) read once per invocation.
+		const auto entry = state.builder.AllocateId();
+		state.builder.AddFunction(spv::OpAccessChain, TypeStorageBufferU64ElementPointer(state),
+		                          entry, state.bda_pagetable_variable, ConstantU32(state, 0),
+		                          ConstantU32(state, 0));
+		const auto null_base = state.builder.AllocateId();
+		state.builder.AddFunction(spv::OpLoad, TypeScalarU64(state), null_base, entry);
+		state.builder.AddFunction(spv::OpStore, state.bda_null_base_variable, null_base);
 	}
 	EmitMemoryOffsets(state);
 	if (program.blocks.empty()) {

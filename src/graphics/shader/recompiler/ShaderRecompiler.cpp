@@ -2,6 +2,7 @@
 #include "graphics/shader/recompiler/Tessellation.h"
 #include "graphics/shader/recompiler/TranslationBudget.h"
 
+#include "common/envFlag.h"
 #include "common/assert.h"
 #include "common/logging/log.h"
 #include "common/timer.h"
@@ -592,7 +593,7 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
 		if (options.early_dump) {
 			LOGF("%s decoded RDNA2 (early):\n%s", GetDumpLabel(options), decoded_dump.c_str());
 		}
-		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 		if (av_trace) {
 			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
 			LOGF("AvTrace: dump decoded hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",
@@ -736,7 +737,7 @@ CompileResult CompileProgram(TranslateResult translated, const CompileOptions& o
 		if (options.early_dump) {
 			LOGF("%s native IR and bindings (early):\n%s", GetDumpLabel(options), ir_dump.c_str());
 		}
-		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
+		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
 		if (av_trace) {
 			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
 			LOGF("AvTrace: dump ir hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",

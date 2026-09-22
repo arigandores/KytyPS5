@@ -21,6 +21,9 @@ public:
 
 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return &m_fault_buffer; }
 	void                  ProcessFaultBuffer();
+	// KYTY_BVH_LOOP_CAP: zero the counter tail after the fault bitmap (needs a command buffer,
+	// so the buffer cache calls it at its first registration, like the null page).
+	void ClearLoopTripTail();
 
 private:
 	GraphicContext&                            m_graphics;
@@ -29,6 +32,9 @@ private:
 	Buffer                                     m_fault_buffer;
 	Buffer                                     m_download_buffer;
 	std::array<uint64_t, MaxPendingFaults>      m_fault_areas {};
+	Buffer                                     m_trip_download;
+	std::array<uint32_t, 16>                   m_trip_last {};
+	uint32_t                                   m_trip_lines = 0;
 	uint32_t                                   m_current_area = 0;
 	vk::DescriptorSetLayout                    m_fault_process_desc_layout = nullptr;
 	vk::Pipeline                               m_fault_process_pipeline = nullptr;

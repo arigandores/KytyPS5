@@ -9,7 +9,9 @@
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 #include "graphics/host_gpu/renderer/commandScheduler.h"
 #include "graphics/host_gpu/vulkanCommon.h"
+#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
 
+#include <algorithm>
 #include <bit>
 #include <cinttypes>
 #include <cstring>
@@ -22,16 +24,27 @@ namespace {
 constexpr size_t MaxPageFaults    = 1024;
 constexpr size_t PageFaultAreaSize = MaxPageFaults * sizeof(uint64_t);
 
+namespace LoopCap = ShaderRecompiler::Spirv::Emitter;
+
+// KYTY_BVH_LOOP_CAP counters: LoopTripWords u32 right after the bitmap of CACHING_NUMPAGES bits.
+constexpr uint64_t LoopTripOffset = BufferCache::CACHING_NUMPAGES / 8;
+constexpr uint64_t LoopTripBytes  = LoopCap::LoopTripWords * sizeof(uint32_t);
+static_assert(LoopTripOffset == uint64_t {LoopCap::LoopTripWordBase} * sizeof(uint32_t));
+
 } // namespace
 
 FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler,
                            BufferCache& buffer_cache)
     : m_graphics(graphics), m_scheduler(scheduler), m_buffer_cache(buffer_cache),
       m_fault_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 0, AllFlags,
-                     BufferCache::CACHING_NUMPAGES / 8),
+                     LoopTripOffset + LoopTripBytes),
       m_download_buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
-                        MaxPendingFaults * PageFaultAreaSize) {
+                        MaxPendingFaults * PageFaultAreaSize),
+      m_trip_download(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+                      MaxPendingFaults * LoopTripBytes) {
 	SetVulkanObjectNameF(m_graphics.device, m_fault_buffer.Handle(), "Fault Buffer");
+	LOGF("BvhLoopCap: cap=%u token='%s' default_slot0=%d\n", LoopCap::BvhLoopCap(),
+	     LoopCap::BvhLoopCapSignatureToken().c_str(), LoopCap::BvhLoopCapSlot(0x380bb9d636390baeull));
 
 	const vk::DescriptorSetLayoutBinding bindings[] {
 	    {0, vk::DescriptorType::eStorageBuffer, 1, vk::ShaderStageFlagBits::eCompute, nullptr},
@@ -74,6 +87,10 @@ FaultManager::~FaultManager() {
 	m_graphics.device.destroyPipeline(m_fault_process_pipeline, nullptr);
 	m_graphics.device.destroyPipelineLayout(m_fault_process_pipeline_layout, nullptr);
 	m_graphics.device.destroyDescriptorSetLayout(m_fault_process_desc_layout, nullptr);
+}
+
+void FaultManager::ClearLoopTripTail() {
+	m_fault_buffer.Fill(LoopTripOffset, LoopTripBytes, 0);
 }
 
 void FaultManager::ProcessFaultBuffer() {
@@ -130,8 +147,66 @@ void FaultManager::ProcessFaultBuffer() {
 	dependency.pBufferMemoryBarriers = &post_barrier;
 	command.pipelineBarrier2(dependency);
 
+	// KYTY_BVH_LOOP_CAP: copy the counter tail next to the fault list; the counters only grow,
+	// so each readback is diffed against the largest values already seen.
+	const bool trips       = LoopCap::BvhLoopCap() != 0;
+	const auto trip_offset = m_current_area * LoopTripBytes;
+	if (trips) {
+		vk::BufferMemoryBarrier2 tail_barrier {};
+		tail_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eAllCommands;
+		tail_barrier.srcAccessMask = vk::AccessFlagBits2::eShaderWrite;
+		tail_barrier.dstStageMask  = vk::PipelineStageFlagBits2::eCopy;
+		tail_barrier.dstAccessMask = vk::AccessFlagBits2::eTransferRead;
+		tail_barrier.buffer        = m_fault_buffer.Handle();
+		tail_barrier.offset        = LoopTripOffset;
+		tail_barrier.size          = LoopTripBytes;
+		vk::BufferMemoryBarrier2 host_barrier {};
+		host_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eCopy;
+		host_barrier.srcAccessMask = vk::AccessFlagBits2::eTransferWrite;
+		host_barrier.dstStageMask  = vk::PipelineStageFlagBits2::eHost;
+		host_barrier.dstAccessMask = vk::AccessFlagBits2::eHostRead;
+		host_barrier.buffer        = m_trip_download.Handle();
+		host_barrier.offset        = trip_offset;
+		host_barrier.size          = LoopTripBytes;
+		vk::DependencyInfo tail_dependency {};
+		tail_dependency.bufferMemoryBarrierCount = 1;
+		tail_dependency.pBufferMemoryBarriers    = &tail_barrier;
+		command.pipelineBarrier2(tail_dependency);
+		const vk::BufferCopy region {LoopTripOffset, trip_offset, LoopTripBytes};
+		command.copyBuffer(m_fault_buffer.Handle(), m_trip_download.Handle(), 1, &region);
+		tail_dependency.pBufferMemoryBarriers = &host_barrier;
+		command.pipelineBarrier2(tail_dependency);
+	}
+
 	const auto area = m_current_area;
-	m_scheduler.DeferOperation([this, mapped, offset, area] {
+	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {
+		if (trips) {
+			m_trip_download.Invalidate(trip_offset, LoopTripBytes);
+			std::array<uint32_t, LoopCap::LoopTripWords> words {};
+			std::memcpy(words.data(), m_trip_download.Mapped().data() + trip_offset,
+			            LoopTripBytes);
+			const auto grown = [&](uint32_t index) {
+				const uint32_t delta =
+				    words[index] > m_trip_last[index] ? words[index] - m_trip_last[index] : 0;
+				m_trip_last[index] = std::max(m_trip_last[index], words[index]);
+				return delta;
+			};
+			const auto trip_delta = grown(0);
+			const auto near_delta = grown(1);
+			(void)grown(2);
+			for (uint32_t slot = 0; slot < LoopCap::LoopTripSlots; slot++) {
+				(void)grown(8 + slot);
+			}
+			Common::FrameStats::Add(Common::FrameStats::Counter::LoopCapTrips, trip_delta);
+			Common::FrameStats::Add(Common::FrameStats::Counter::LoopCapNear, near_delta);
+			if ((trip_delta != 0 || near_delta != 0) && m_trip_lines < 64) {
+				m_trip_lines++;
+				LOGF("BvhLoopCapTrip: trips=+%u total=%u near=+%u near_total=%u max_spent=%u "
+				     "cap=%u slot0=%u slot1=%u\n",
+				     trip_delta, m_trip_last[0], near_delta, m_trip_last[1], m_trip_last[2],
+				     LoopCap::BvhLoopCap(), m_trip_last[8], m_trip_last[9]);
+			}
+		}
 		m_download_buffer.Invalidate(offset, PageFaultAreaSize);
 		RangeSet    fault_ranges;
 		const auto* faults = std::bit_cast<const uint64_t*>(mapped);

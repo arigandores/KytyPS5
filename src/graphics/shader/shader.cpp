@@ -1,5 +1,6 @@
 #include "graphics/shader/shader.h"
 
+#include "common/envFlag.h"
 #include "kernel/memory.h"
 
 #include "common/assert.h"
@@ -566,7 +567,7 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
 		uint32_t offset      = (attrib[in.semantic] >> 14u) & 0xfffu;
 		uint32_t fetch_index = (attrib[in.semantic] >> 26u) & 0x1u;
 		// Debug aid (KYTY_VTX_TRACE=1): raw attribute table entry and V# of every semantic.
-		static const bool vtx_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
+		static const bool vtx_trace = Common::EnvFlagOn("KYTY_VTX_TRACE");
 		if (vtx_trace && num_input_semantics >= 8) {
 			const auto* vs = &buffer[(attrib[in.semantic] & 0x1fu) * 4];
 			LOGF("VtxTrace: sem[%u]=%u reg=%u size=%u f16=%u custom=%u static_vb=%u static_attr=%u "
@@ -762,7 +763,7 @@ static void ShaderGetStaticInputInfoPS(
 	EXIT_NOT_IMPLEMENTED(ps_info.input_num > std::size(ps_info.interpolator_settings));
 	ps_info.ps_system_input_base = ShaderCalcPsSystemInputBase(sh);
 	ps_info.vs_export_count      = sh.GetExportCount();
-	static const bool ps_inputs_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
+	static const bool ps_inputs_trace = Common::EnvFlagOn("KYTY_VTX_TRACE");
 	if (ps_inputs_trace) {
 		static std::mutex         s_lock2;
 		static std::set<uint64_t> s_seen2;

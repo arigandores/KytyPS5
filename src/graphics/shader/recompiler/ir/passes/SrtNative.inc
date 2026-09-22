@@ -259,7 +259,7 @@ void AuditNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
 	compiled.native_eval(&frame);
 	static std::atomic<uint64_t> checked {0};
 	const auto count = checked.fetch_add(1, std::memory_order_relaxed) + 1;
-	if ((count & 65535u) == 0 && std::getenv("KYTY_SRT_NATIVE_STATS") != nullptr) {
+	if ((count & 65535u) == 0 && Common::EnvFlagOn("KYTY_SRT_NATIVE_STATS")) {
 		std::fprintf(stderr, "SrtNativeAuditProgress: checked=%llu\n", static_cast<unsigned long long>(count));
 	}
 	size_t bad = 0;
@@ -293,7 +293,7 @@ bool EvaluateNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
 		if (compiled.nodes.size() > 8192) return;
 		try {
 			auto code = std::make_shared<NativeSrtCode>(compiled);
-			if (std::getenv("KYTY_SRT_NATIVE_STATS") != nullptr) {
+			if (Common::EnvFlagOn("KYTY_SRT_NATIVE_STATS")) {
 				std::fprintf(stderr, "SrtNative: hash=%016llx nodes=%zu bytes=%zu\n",
 				             static_cast<unsigned long long>(plan.shader_hash),
 				             compiled.nodes.size(), code->getSize());
@@ -306,7 +306,7 @@ bool EvaluateNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
 		}
 	});
 	if (compiled.native_eval == nullptr) return false;
-	static const bool audit = std::getenv("KYTY_SRT_NATIVE_AUDIT") != nullptr;
+	static const bool audit = Common::EnvFlagOn("KYTY_SRT_NATIVE_AUDIT");
 	if (audit) {
 		static const uint64_t every = [] {
 			const auto* value = std::getenv("KYTY_SRT_NATIVE_AUDIT_EVERY");

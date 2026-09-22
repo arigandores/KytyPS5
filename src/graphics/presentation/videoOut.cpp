@@ -2424,6 +2424,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cm_c1", FS::Counter::CommitLapMoveDesc1, false},
 				    // Session 102, knob "dabatch": QueueDrawAhead calls, its arming proof.  Raw count.
 				    {"da_qcall", FS::Counter::DrawAheadQueueCalls, false},
+				    // Session 103, KYTY_BVH_LOOP_CAP: capped BVH invocations that tripped / came
+				    // near the cap (1/16).  Raw counts.
+				    {"bl_trip", FS::Counter::LoopCapTrips, false},
+				    {"bl_near", FS::Counter::LoopCapNear, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

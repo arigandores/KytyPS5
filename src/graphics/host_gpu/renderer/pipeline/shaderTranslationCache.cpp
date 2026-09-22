@@ -7,6 +7,7 @@
 #include "graphics/shader/recompiler/ir/Value.h"
 #include "kytyGitVersion.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <string_view>
@@ -566,6 +567,16 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 		return;
 	}
 	m_directory = std::filesystem::path("_ShaderCache") / title_id;
+	// Session 103: a non-default translator variant (KYTY_BVH_LOOP_CAP override, KYTY_BDA_LEAN)
+	// gets its own signature token AND its own directory - file names do not carry the
+	// signature, so a variant run would otherwise overwrite the default cache and pipelines.bin.
+	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "");
+	if (!variant.empty()) {
+		std::string folder = "variant" + variant;
+		std::replace(folder.begin(), folder.end(), ':', '_');
+		m_directory /= folder;
+	}
 	// Keyed by the translator sources, not the git revision: unrelated commits keep the cache.
 	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +
 	              std::string(translator_hash) +
@@ -575,7 +586,7 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	              (ShaderRecompiler::IR::ConstBankEnabled()
 	                   ? (ShaderRecompiler::IR::ConstBankForStage(ShaderType::Compute) ? ":cbank2" : ":cbank")
 	                   : "") +
-	              "\n";
+	              variant + "\n";
 	m_enabled = true;
 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
 }

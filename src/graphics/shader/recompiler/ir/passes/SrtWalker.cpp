@@ -1,5 +1,6 @@
 #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
 
+#include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
 
@@ -1436,7 +1437,7 @@ public:
 				return false;
 			}
 		}
-		if (std::getenv("KYTY_SRT_PLAN_STATS") != nullptr) {
+		if (Common::EnvFlagOn("KYTY_SRT_PLAN_STATS")) {
 			const auto reads = std::count_if(m_out.nodes.begin(), m_out.nodes.end(), [](const auto& node) {
 				return node.op == CompiledSrt::Op::MemRead || node.op == CompiledSrt::Op::MemReadScalar;
 			});
@@ -2354,7 +2355,7 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
 		const char* value = std::getenv("KYTY_SRT_COMPILED");
 		return value == nullptr || value[0] != '0';
 	}();
-	static const bool verify = std::getenv("KYTY_SRT_VERIFY") != nullptr;
+	static const bool verify = Common::EnvFlagOn("KYTY_SRT_VERIFY");
 	static const uint64_t verify_every = [] {
 		const auto* value = std::getenv("KYTY_SRT_VERIFY_EVERY");
 		return value == nullptr ? uint64_t {1}

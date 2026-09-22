@@ -1,5 +1,6 @@
 #include "graphics/shader/recompiler/frontend/cfg/ShaderCFG.h"
 
+#include "common/envFlag.h"
 #include "common/assert.h"
 
 #include <algorithm>
@@ -1676,7 +1677,7 @@ bool SplitOneSelectionMerge(Graph& graph) {
 					}
 				}
 				if (!local_predecessors.empty()) {
-					if (std::getenv("KYTY_CFG_TRACE") != nullptr) {
+					if (Common::EnvFlagOn("KYTY_CFG_TRACE")) {
 						std::fprintf(stderr,
 						             "CFG: header %u clones terminal epilogue %u (%zu blocks) for "
 						             "predecessors [%s]\n",

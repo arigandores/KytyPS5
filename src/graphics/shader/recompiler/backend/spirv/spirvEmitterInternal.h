@@ -147,6 +147,13 @@ struct EmitterState {
 	uint32_t                                         bda_fault_page_variable = 0;
 	uint32_t                                         fault_buffer_variable   = 0;
 	uint32_t                                         bda_pointer_function    = 0;
+	// KYTY_BVH_LOOP_CAP: the Function u32 every loop header of a capped program spends from
+	// (0 = the program is not capped), the budget and the program's slot in the cap set.
+	uint32_t                                         loop_cap_budget_variable = 0;
+	uint32_t                                         loop_cap_limit           = 0;
+	uint32_t                                         loop_cap_slot            = 0;
+	// KYTY_BDA_LEAN: Private u64 holding page-table entry 0 (the null page), stored at entry.
+	uint32_t                                         bda_null_base_variable   = 0;
 	// Page lookup shared by the dwords of one scalar pointer load (S_LOAD_DWORDXn): the
 	// translator emits one LoadAddressU32 per dword with the same address handle and offset
 	// operand; the first dword resolves the page, the others reuse it within the same block.
@@ -571,6 +578,9 @@ void EmitProgram(EmitterState& state);
 void DefineGetBdaPointer(EmitterState& state);
 bool BdaNullPageEnabled();
 void EmitBdaFaultFlush(EmitterState& state);
+// KYTY_BVH_LOOP_CAP counters in the fault-buffer tail (SpirvEmitter.h, LoopTripWordBase).
+void EmitLoopCapTrip(EmitterState& state, uint32_t budget);
+void EmitLoopCapNear(EmitterState& state);
 
 // These templates accept local lambdas from several emitter translation units.
 template <typename Fn>

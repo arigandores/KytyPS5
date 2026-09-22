@@ -1733,6 +1733,12 @@ enum class Counter : uint32_t {
 	// flushes (~130 a frame at 64).  Counted whenever FrameStats is on, lite included, under the
 	// same condition as da_queue_us and da_q.  Raw count.
 	DrawAheadQueueCalls,     // da_qcall
+	// Session 103, KYTY_BVH_LOOP_CAP: invocations of a capped BVH program that exhausted their
+	// step budget (bl_trip) and that returned normally after spending more than 1/16 of it
+	// (bl_near), read back from the fault-buffer tail by ProcessFaultBuffer. Raw counts; they
+	// land 1-3 flips after the dispatch.
+	LoopCapTrips,            // bl_trip
+	LoopCapNear,             // bl_near
 	Count
 };
 

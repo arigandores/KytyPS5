@@ -1,6 +1,7 @@
 #include "graphics/shader/recompiler/ir/passes/ConstantPropagation.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
+#include "common/envFlag.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
 
 #include <algorithm>
@@ -392,7 +393,7 @@ bool FoldCompareByKnownValues(Inst& inst, KnownValueContext& ctx, bool equal) {
 		return false;
 	}
 	const auto c = rhs.U32();
-	static const bool trace = std::getenv("KYTY_KNOWN_VALUES_TRACE") != nullptr;
+	static const bool trace = Common::EnvFlagOn("KYTY_KNOWN_VALUES_TRACE");
 	if (trace) {
 		std::fprintf(stderr, "KnownValues: %s(x, %u) x=%s set[%zu]={", equal ? "IEqual" : "INotEqual", c,
 		             lhs.TryInstruction() != nullptr ? std::string(ValueOpcodeName(lhs.TryInstruction()->GetOpcode())).c_str() : "?",

@@ -167,7 +167,7 @@ Test-only presence checks in `tests/shaderCfgTests.cpp` are unchanged.
 
 * Commits: `27b492d` (ROADMAP pre-record), `9a49f88` (series seal + scorer), `14db6c7` (source),
   `4ed2219` (M5′ seal), `a3ff539` (series verdict + the keep-ON decision), `9b8212f` (addendum 03),
-  and the session commit (§10). **No push.**
+  and the session commit **`4a87d30`** (report, ROADMAP, plan, audit addenda 04–05). **No push.**
 * Emulator `16ef56b6…` (the build that ran the warm-up, all 67 entries and the video pass); an
   earlier build `6b680ba2…` (before the id-order fix) was never run. Tests exe `e7a15418…` (arms of
   M5′). Translator hash `699c1e4b7db359067b461e029b913c4b6e78dc90` (was `2db9065a`): the translation

@@ -1,0 +1,54 @@
+PASS             want PASS         got PASS         S_A  4 S_B  4 errors [] OK
+PASS_D_edge      want PASS         got PASS         S_A  4 S_B  9 errors [] OK
+FAIL_D           want FAIL         got FAIL         S_A  4 S_B 10 errors [] OK
+FAIL_D_just      want FAIL         got FAIL         S_A  4 S_B  9 errors [] OK
+FAIL_M_first     want FAIL         got FAIL         S_A  4 S_B  5 errors [] OK
+PASS_M_edge      want PASS         got PASS         S_A  4 S_B  4 errors [] OK
+FAIL_M           want FAIL         got FAIL         S_A  4 S_B  4 errors [] OK
+PASS_more_events want PASS         got PASS         S_A 12 S_B 16 errors [] OK
+NO_POWER         want NO_POWER     got NO_POWER     S_A  0 S_B  0 errors [] OK
+NO_POWER_b       want NO_POWER     got NO_POWER     S_A  0 S_B  3 errors [] OK
+SYNC_inflight    want PASS         got PASS         S_A  4 S_B  4 errors [] OK
+SYNC_missing     want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  5 errors ['stl110_2:STALL_SYNC'] OK
+SYNC_extra       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:STALL_SYNC'] OK
+IDENTITY         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['IDENTITY'] OK
+ORDER            want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['ORDER'] OK
+INPUTS           want NOT_ADMITTED got NOT_ADMITTED S_A  3 S_B  4 errors ['stl110_4:INPUTS', 'ORDER'] OK
+BINARY           want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:BINARY'] OK
+PREREG           want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:PREREG'] OK
+ENV_PRECACHE     want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ENV_PRECACHE'] OK
+ENV_PRECACHE_cs  want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ENV_PRECACHE'] OK
+ENV_PIN          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ENV_PIN'] OK
+ENV_SCHED        want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ENV_FORBIDDEN'] OK
+ENV_CKPT         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_4:ENV_FORBIDDEN'] OK
+ENV_REC          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ENV_FORBIDDEN'] OK
+GATES_A          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:GATES_ARM'] OK
+GATES_B          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:GATES_ARM'] OK
+GATES_both       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:GATES_ARM'] OK
+ATT_outcome      want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ATTEMPT'] OK
+ATT_exit         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ATTEMPT'] OK
+ATT_hold         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_4:ATTEMPT'] OK
+ATT_two          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ATTEMPT'] OK
+PIN_none         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:PIN_ONCE'] OK
+PIN_two          want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:PIN_ONCE'] OK
+PRECACHE_on      want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:PRECACHE_OFF'] OK
+MARK_hang        want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:NO_MARKER'] OK
+MARK_error       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:NO_MARKER'] OK
+MARK_skipped     want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:NO_MARKER'] OK
+MARK_slow        want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_4:NO_MARKER'] OK
+ROWS_few         want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ROWS'] OK
+ROWS_field       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ROWS'] OK
+ARM_A_skip       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ARM_A_DARK'] OK
+ARM_A_look       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_4:ARM_A_DARK'] OK
+ARM_B_dark       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ARM_B_ARMED'] OK
+ARM_B_bad        want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:ARM_B_ARMED'] OK
+PIN_mode2        want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:PIN_ONCE'] OK
+MARK_fatal       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:NO_MARKER'] OK
+MARK_stdout      want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_4:NO_MARKER'] OK
+GATES_notail     want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_2:GATES_ARM'] OK
+ATT_hold_edge    want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:ATTEMPT'] OK
+ORDER_dupe       want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['ORDER'] OK
+PRECACHE_first   want NOT_ADMITTED got NOT_ADMITTED S_A  4 S_B  4 errors ['stl110_1:PRECACHE_OFF'] OK
+DRAFT            errors ['DRAFT'] OK
+SEAL             errors ['SEAL'] OK
+ALL OK

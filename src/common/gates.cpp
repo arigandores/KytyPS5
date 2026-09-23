@@ -85,8 +85,9 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_PROTECT_BATCH2", "protbatch2", false},
     // Session 58, Sky Garden hang: liveness of the async-copy timeline semaphore.
     {"KYTY_ASYNC_COPY_IDLE_SIGNAL", "acopyidle", true},
-    // Session 59, M1 producer off the critical thread.
-    {"KYTY_DRAW_AHEAD_WALK", "dawalk", false},
+    // Session 59, M1 producer off the critical thread. Session 104: default 1 (sealed ABBA dwk104:
+    // cpu_net -458.5 us, mean dt_us -265.9 us a flip; video vwk104 clean).
+    {"KYTY_DRAW_AHEAD_WALK", "dawalk", true},
     {"KYTY_RT_FAST", "rtfast", true},
     // Session 60, B3.
     {"KYTY_PROG_MEMO", "progmemo", true},

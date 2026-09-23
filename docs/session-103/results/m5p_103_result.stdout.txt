@@ -1,0 +1,33 @@
+M5' scorer, sealed to C:/kyty/s103/pred/02_m5p_bench.md (+ parents C:/kyty/s103/prev102/pred/01_m5_bench.md, C:/kyty/s103/prev102/pred/02_m5_addendum.md)
+status:  VALID
+verdict: CLOSED  (intervals over the 20 main rounds)
+branch:  G CLOSED (CI_lo(X'-1) > 0.06): the BDA path as design G would build it costs more than +6 % on the top PS/CS items.  Not a statement about CPU, P, F or R1.
+X'   (deciding) = median_r S[V2p]/S[A] = 1.2934  (-1 = 0.2934), 90% CI of -1 [0.2910, 0.2946], rounds 20, items ['S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S9', 'S10']
+L    (reported) = median_r S[V1]/S[A] = 1.0201  (-1 = 0.0201), 90% CI of -1 [0.0182, 0.0230], rounds 20, items ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']
+A/B  (reported) = median_r S[A]/S[B] = 1.0027  (-1 = 0.0027), 90% CI of -1 [0.0006, 0.0045], rounds 20, items ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10']
+controls:
+  V-a  PASS  {"capture_sha256_bench": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d", "capture_sha256_plan": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d", "capture_sha256_sealed": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d", "sha_match": true, "sha_sealed": true, "items_with_module": 10, "log_checked": true, "log": "C:/kyty/s102/log_m5cap102b.txt", "log_sha256": "c5de4e9293c2fd11a67e2eb388a5a1f349181b35cec0e6f3f6eefbd019717580", "dma_layout": t
+  V-b  PASS  {"present": 10, "of": 10, "weight_present": 4508.0, "weight_share": 1.0, "absent": []}
+  V-c  PASS  {"excluded_share": 0.0, "excluded_modules": {"S1": 0, "S2": 0, "S3": 0, "S4": 0, "S5": 0, "S6": 0, "S7": 0, "S8": 0, "S9": 0, "S10": 0}, "cache_link_used": true}
+  V-d  PASS  {"median_A_over_B": 1.0026918897165766, "band": [0.97, 1.03]}
+  V-e  PASS  {"evaluated": true, "rule": "102 pred/02 s2: three A replays; repeatable => bit-equal to A1; otherwise differing bytes vs A1 <= 2*E", "V1": {"failing": [], "reasons": {}, "failing_share": 0.0, "passing": 10, "within_replay_noise": ["S1", "S4"], "deciding": false, "share_within_40pct": true}, "V2p": {"failing": ["S1", "S8"], "reasons": {"S1": "replay-nondeterministic item, 4153398 differing bytes > 2*E = 31026", "S8": "repeatable item, outputs differ from A1 (729 bytes)"}, "failing_share": 0.2210
+  V-f  PASS  {"command": "spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout <spv>", "modules": 36, "failing": [], "failing_pred01_command_reported": 16}
+  V-g  PASS  {"complete": true, "rounds_main": 20, "rounds_required": 20, "rounds_requested": 20, "build_errors": 0, "missing_values": 0, "design_violations": [], "reasons": []}
+items:  item  weight  present  A-valid  A us(med)   B/A     V1/A    V2p/A   V-e V1/V2p
+        S1    1009.1  True     True        1264.9  0.9995  1.0008  1.4987  pass (within replay noise) / FAIL
+        S2     493.0  True     True         898.1  0.9882  0.9912  1.0026  pass / pass
+        S3     473.2  True     True         853.0  1.0001  1.0942  1.2454  pass / pass
+        S4     428.9  True     True         795.5  1.0006  1.0558  1.3472  pass (within replay noise) / pass (within replay noise)
+        S5     373.9  True     True         880.2  1.0037  1.0918  1.5957  pass / pass
+        S6     373.5  True     True         700.7  0.9976  0.9991  1.3046  pass / pass
+        S7     361.4  True     True         724.5  0.9958  0.9974  2.0807  pass / pass
+        S8     359.1  True     True         751.0  1.0085  0.9962  1.0943  pass / FAIL
+        S9     349.9  True     True        1649.4  0.9996  0.9998  1.0255  pass / pass
+        S10    286.0  True     True         604.0  1.0010  1.0053  1.0466  pass / pass
+predictions (no decision weight):
+  P1' MISS  X' - 1 in [0.00, +0.12]  value=0.29344742848883865
+  P2' HIT   at least 8 of the present items pass V-e for V2p  value=8
+  P3' HIT   L - 1 in [0.00, +0.05]  value=0.020147932707234695
+  P4' HIT   X' < X of session 102 (1.4201) on the common items  value={"common_items": ["S2", "S3", "S4", "S5", "S6", "S7", "S9", "S10"], "x102_items": ["S2", "S3", "S4", "S5", "S6", "S7", "S9", "S10"], "xp_common": 1.2934474284888386, "x102_common": 1.4201, "x102_source": "sealed 1.4201 (session 102, the same eight items)", "x102_eight_recomputed": 1.420062635295889}
+note: V-e: passing WITHIN REPLAY NOISE (never "equal"): V1 S1, S4; V2p S4
+wrote C:/kyty/s103/m5p/real/m5p_103_result.json

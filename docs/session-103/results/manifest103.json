@@ -1,0 +1,30 @@
+{
+ "C:/kyty/s103/m5p/real/bench_m5p103.json": {
+  "bytes": 3479120,
+  "sha256": "a5edfd020c67719632ecd3ba0088f47184d00376354bdcd6ee59150166c74e92"
+ },
+ "C:/kyty/s103/m5p/real/equal_m5p103.json": {
+  "bytes": 55398,
+  "sha256": "c7ec15bd73401a8c2d494cd7c70dc562184b4f7713ba8d787259650d8620bcfd"
+ },
+ "C:/kyty/s103/m5p/real/find_m5p103.json": {
+  "bytes": 1570568,
+  "sha256": "74a3de2f5bccf85af2a9f5d86b50ab03cfb9545d21c9fbfe90c3d47685495f1c"
+ },
+ "C:/kyty/s103/m5p/real/plan_m5p103.json": {
+  "bytes": 231746,
+  "sha256": "9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461"
+ },
+ "C:/kyty/s103/m5p/recompile.json": {
+  "bytes": 321724,
+  "sha256": "ac5524dc1eb2ff0fa3da214aa9d0b1846ee98dcc571162ae31138ba83d404a73"
+ },
+ "C:/kyty/s103/rec_vid103.mp4": {
+  "bytes": 59511543,
+  "sha256": "b7d6816c0d3c2caeb7e776a10bcf7a8449880e163f9d35ebe897814fcc303f31"
+ },
+ "C:/kyty/s103/bvh103_result.json": {
+  "bytes": 28891,
+  "sha256": "808c04a020d10ea2c19fb29ab481419e1f0ba7a4be870a4f08042ed06b857afd"
+ }
+}

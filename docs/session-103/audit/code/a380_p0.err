@@ -1,0 +1,20 @@
+shader 0x380bb9d636390bae: SRT slot 10 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 11 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 15 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 16 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 17 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 18 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 21 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 22 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 23 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 24 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 25 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 26 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 27 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 28 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 29 is loop-variant, restored its load
+shader 0x380bb9d636390bae: SRT slot 30 is loop-variant, restored its load
+shader 0x380bb9d636390bae: scalar buffer load at pc 0x00000434 uses a variant V#, reading through its base address
+shader 0x380bb9d636390bae: scalar buffer load at pc 0x00000454 uses a variant V#, reading through its base address
+shader 0x380bb9d636390bae: scalar buffer load at pc 0x000004f8 uses a variant V#, reading through its base address
+shader 0x380bb9d636390bae: scalar buffer load at pc 0x000004f8 uses a variant V#, reading through its base address

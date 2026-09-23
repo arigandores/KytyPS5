@@ -1,0 +1,3244 @@
+{
+ "controls": {
+  "V-a": {
+   "capture_sha256_bench": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d",
+   "capture_sha256_plan": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d",
+   "capture_sha256_sealed": "92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d",
+   "sha_match": true,
+   "sha_sealed": true,
+   "items_with_module": 10,
+   "log_checked": true,
+   "log": "C:/kyty/s102/log_m5cap102b.txt",
+   "log_sha256": "c5de4e9293c2fd11a67e2eb388a5a1f349181b35cec0e6f3f6eefbd019717580",
+   "dma_layout": true,
+   "clock_pin": true,
+   "pass": true
+  },
+  "V-b": {
+   "present": 10,
+   "of": 10,
+   "weight_present": 4508.0,
+   "weight_share": 1.0,
+   "absent": [],
+   "pass": true
+  },
+  "V-c": {
+   "excluded_share": 0.0,
+   "excluded_modules": {
+    "S1": 0,
+    "S2": 0,
+    "S3": 0,
+    "S4": 0,
+    "S5": 0,
+    "S6": 0,
+    "S7": 0,
+    "S8": 0,
+    "S9": 0,
+    "S10": 0
+   },
+   "cache_link_used": true,
+   "pass": true
+  },
+  "V-d": {
+   "median_A_over_B": 1.0026918897165766,
+   "band": [
+    0.97,
+    1.03
+   ],
+   "pass": true
+  },
+  "V-e": {
+   "evaluated": true,
+   "rule": "102 pred/02 s2: three A replays; repeatable => bit-equal to A1; otherwise differing bytes vs A1 <= 2*E",
+   "judged": {
+    "V1": {
+     "S1": {
+      "pass": true,
+      "kind": "within replay noise",
+      "E": 15513,
+      "limit": 31026,
+      "repeatable": false,
+      "reason": null,
+      "n_diff_bytes": 15912
+     },
+     "S2": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S3": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S4": {
+      "pass": true,
+      "kind": "within replay noise",
+      "E": 2920,
+      "limit": 5840,
+      "repeatable": false,
+      "reason": null,
+      "n_diff_bytes": 2947
+     },
+     "S5": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S6": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S7": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S8": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S9": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S10": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     }
+    },
+    "V2p": {
+     "S1": {
+      "pass": false,
+      "kind": null,
+      "E": 15513,
+      "limit": 31026,
+      "repeatable": false,
+      "reason": "replay-nondeterministic item, 4153398 differing bytes > 2*E = 31026",
+      "n_diff_bytes": 4153398
+     },
+     "S2": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S3": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S4": {
+      "pass": true,
+      "kind": "within replay noise",
+      "E": 2920,
+      "limit": 5840,
+      "repeatable": false,
+      "reason": null,
+      "n_diff_bytes": 2285
+     },
+     "S5": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S6": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S7": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S8": {
+      "pass": false,
+      "kind": null,
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": "repeatable item, outputs differ from A1 (729 bytes)",
+      "n_diff_bytes": 729
+     },
+     "S9": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     },
+     "S10": {
+      "pass": true,
+      "kind": "bit-equal",
+      "E": 0,
+      "limit": 0,
+      "repeatable": true,
+      "reason": null,
+      "n_diff_bytes": 0
+     }
+    }
+   },
+   "V1": {
+    "failing": [],
+    "reasons": {},
+    "failing_share": 0.0,
+    "passing": 10,
+    "within_replay_noise": [
+     "S1",
+     "S4"
+    ],
+    "deciding": false,
+    "share_within_40pct": true
+   },
+   "V2p": {
+    "failing": [
+     "S1",
+     "S8"
+    ],
+    "reasons": {
+     "S1": "replay-nondeterministic item, 4153398 differing bytes > 2*E = 31026",
+     "S8": "repeatable item, outputs differ from A1 (729 bytes)"
+    },
+    "failing_share": 0.22101128956434488,
+    "passing": 8,
+    "within_replay_noise": [
+     "S4"
+    ],
+    "deciding": true,
+    "share_within_40pct": true
+   },
+   "pass": true,
+   "nondeterministic_reference": [
+    "S1",
+    "S4"
+   ],
+   "E": {
+    "S1": 15513,
+    "S2": 0,
+    "S3": 0,
+    "S4": 2920,
+    "S5": 0,
+    "S6": 0,
+    "S7": 0,
+    "S8": 0,
+    "S9": 0,
+    "S10": 0
+   }
+  },
+  "V-f": {
+   "command": "spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout <spv>",
+   "modules": 36,
+   "failing": [],
+   "failing_pred01_command_reported": 16,
+   "pass": true
+  },
+  "V-g": {
+   "complete": true,
+   "rounds_main": 20,
+   "rounds_required": 20,
+   "rounds_requested": 20,
+   "build_errors": 0,
+   "missing_values": 0,
+   "design_violations": [],
+   "reasons": [],
+   "pass": true
+  }
+ },
+ "notes": [
+  "V-e: passing WITHIN REPLAY NOISE (never \"equal\"): V1 S1, S4; V2p S4"
+ ],
+ "items": {
+  "S1": {
+   "weight": 1009.1,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 2,
+   "excluded_events": 0
+  },
+  "S2": {
+   "weight": 493.0,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 92,
+   "excluded_events": 0
+  },
+  "S3": {
+   "weight": 473.2,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 600,
+   "excluded_events": 0
+  },
+  "S4": {
+   "weight": 428.9,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 236,
+   "excluded_events": 0
+  },
+  "S5": {
+   "weight": 373.9,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 500,
+   "excluded_events": 0
+  },
+  "S6": {
+   "weight": 373.5,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 4,
+   "excluded_modules": 0,
+   "events": 52,
+   "excluded_events": 0
+  },
+  "S7": {
+   "weight": 361.4,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 76,
+   "excluded_events": 0
+  },
+  "S8": {
+   "weight": 359.1,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 2,
+   "excluded_modules": 0,
+   "events": 124,
+   "excluded_events": 0
+  },
+  "S9": {
+   "weight": 349.9,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 983,
+   "excluded_events": 0
+  },
+  "S10": {
+   "weight": 286.0,
+   "present": true,
+   "included": true,
+   "a_valid": true,
+   "a_invalid_reasons": [],
+   "modules": 1,
+   "excluded_modules": 0,
+   "events": 690,
+   "excluded_events": 0
+  }
+ },
+ "statistics": {
+  "Xp": {
+   "label": "X'",
+   "numerator": "V2p",
+   "denominator": "A",
+   "items": [
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S9",
+    "S10"
+   ],
+   "n_rounds": 20,
+   "deciding": true,
+   "ratios": [
+    1.2165008951238065,
+    1.2940344109668052,
+    1.3225443312709944,
+    1.3035150485219797,
+    1.2851208256568942,
+    1.303667047100059,
+    1.3215006668829523,
+    1.2930571209593795,
+    1.300201695687682,
+    1.294624342717831,
+    1.3216281033914306,
+    1.2917777837638837,
+    1.2945035699851815,
+    1.2534130136867485,
+    1.2875273799114821,
+    1.292437701580208,
+    1.287184664662339,
+    1.2938377360182975,
+    1.2918193957752662,
+    1.2888842097717876
+   ],
+   "point": 1.2934474284888386,
+   "minus1": 0.29344742848883865,
+   "ci": [
+    1.2910132344691945,
+    1.294624342717831
+   ],
+   "ci_minus1": [
+    0.29101323446919447,
+    0.294624342717831
+   ]
+  },
+  "L": {
+   "label": "L",
+   "numerator": "V1",
+   "denominator": "A",
+   "items": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10"
+   ],
+   "n_rounds": 20,
+   "deciding": false,
+   "ratios": [
+    0.9915602212681082,
+    1.0268809861497785,
+    1.027802420132473,
+    1.028844603640799,
+    1.0232991481730558,
+    1.0018385650224215,
+    1.0235069774289551,
+    1.0194423421908285,
+    1.0208535232236406,
+    1.0191252041867933,
+    1.0244030392011887,
+    1.0180745448119233,
+    1.0229655499201493,
+    0.9944591623537128,
+    1.0189370992762021,
+    1.0152944434512228,
+    1.0214276976845784,
+    1.0210866041956181,
+    1.0135809747742026,
+    1.0182188077763463
+   ],
+   "point": 1.0201479327072347,
+   "minus1": 0.020147932707234695,
+   "ci": [
+    1.0182188077763463,
+    1.0229655499201493
+   ],
+   "ci_minus1": [
+    0.018218807776346324,
+    0.02296554992014932
+   ]
+  },
+  "A_over_B": {
+   "label": "A/B",
+   "numerator": "A",
+   "denominator": "B",
+   "items": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10"
+   ],
+   "n_rounds": 20,
+   "deciding": false,
+   "ratios": [
+    1.0462843657651855,
+    0.982923487862975,
+    1.0012533616071113,
+    1.002339666123321,
+    1.0032680427586496,
+    1.0163620618932592,
+    0.9988935303036139,
+    1.0006240577779333,
+    0.9781123677314556,
+    0.9997476782898195,
+    0.9920259862733798,
+    1.003081966982937,
+    0.9994106772651216,
+    1.0268854711881281,
+    1.0045164671659168,
+    1.0011581507491127,
+    1.0063874165080953,
+    1.0030441133098322,
+    1.0078865573401594,
+    1.0052730511183232
+   ],
+   "point": 1.0026918897165766,
+   "minus1": 0.0026918897165766342,
+   "ci": [
+    1.0006240577779333,
+    1.0045164671659168
+   ],
+   "ci_minus1": [
+    0.0006240577779332845,
+    0.004516467165916804
+   ]
+  }
+ },
+ "per_item": {
+  "S1": {
+   "B/A": 0.9995316522846396,
+   "V1/A": 1.0008343314586505,
+   "V2p/A": 1.4986843384503112,
+   "A_us_median": 1264.944,
+   "B_us_median": 1265.408,
+   "V-e": {
+    "V1": "pass (within replay noise)",
+    "V2p": "FAIL"
+   }
+  },
+  "S2": {
+   "B/A": 0.9882234074480677,
+   "V1/A": 0.9911989985233511,
+   "V2p/A": 1.0025554700949146,
+   "A_us_median": 898.0640000000003,
+   "B_us_median": 888.432,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S3": {
+   "B/A": 1.0000931349064315,
+   "V1/A": 1.094154524972248,
+   "V2p/A": 1.245444077662518,
+   "A_us_median": 852.9760000000003,
+   "B_us_median": 854.6720000000012,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S4": {
+   "B/A": 1.0005613114838607,
+   "V1/A": 1.055761526031755,
+   "V2p/A": 1.3471729392052494,
+   "A_us_median": 795.4880000000003,
+   "B_us_median": 795.9040000000002,
+   "V-e": {
+    "V1": "pass (within replay noise)",
+    "V2p": "pass (within replay noise)"
+   }
+  },
+  "S5": {
+   "B/A": 1.003736800796444,
+   "V1/A": 1.0917822290703652,
+   "V2p/A": 1.5956616062890856,
+   "A_us_median": 880.2400000000005,
+   "B_us_median": 882.736000000001,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S6": {
+   "B/A": 0.9976497759179166,
+   "V1/A": 0.9991091194738768,
+   "V2p/A": 1.3046109302680384,
+   "A_us_median": 700.7040000000002,
+   "B_us_median": 700.144,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S7": {
+   "B/A": 0.9957910913329934,
+   "V1/A": 0.99736018931495,
+   "V2p/A": 2.0806582284424935,
+   "A_us_median": 724.528,
+   "B_us_median": 721.4719999999998,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S8": {
+   "B/A": 1.008538222963161,
+   "V1/A": 0.9962100285979869,
+   "V2p/A": 1.0942588853114223,
+   "A_us_median": 750.9760000000001,
+   "B_us_median": 752.6560000000002,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "FAIL"
+   }
+  },
+  "S9": {
+   "B/A": 0.9995852425693902,
+   "V1/A": 0.9997577030982312,
+   "V2p/A": 1.0254518290076784,
+   "A_us_median": 1649.3919999999994,
+   "B_us_median": 1648.8800000000006,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  },
+  "S10": {
+   "B/A": 1.000980720335673,
+   "V1/A": 1.0052716162975939,
+   "V2p/A": 1.046611172561338,
+   "A_us_median": 604.0320000000008,
+   "B_us_median": 603.6640000000012,
+   "V-e": {
+    "V1": "pass",
+    "V2p": "pass"
+   }
+  }
+ },
+ "predictions": {
+  "P1": {
+   "text": "X' - 1 in [0.00, +0.12]",
+   "value": 0.29344742848883865,
+   "hit": false
+  },
+  "P2": {
+   "text": "at least 8 of the present items pass V-e for V2p",
+   "value": 8,
+   "hit": true
+  },
+  "P3": {
+   "text": "L - 1 in [0.00, +0.05]",
+   "value": 0.020147932707234695,
+   "hit": true
+  },
+  "P4": {
+   "text": "X' < X of session 102 (1.4201) on the common items",
+   "value": {
+    "common_items": [
+     "S2",
+     "S3",
+     "S4",
+     "S5",
+     "S6",
+     "S7",
+     "S9",
+     "S10"
+    ],
+    "x102_items": [
+     "S2",
+     "S3",
+     "S4",
+     "S5",
+     "S6",
+     "S7",
+     "S9",
+     "S10"
+    ],
+    "xp_common": 1.2934474284888386,
+    "x102_common": 1.4201,
+    "x102_source": "sealed 1.4201 (session 102, the same eight items)",
+    "x102_eight_recomputed": 1.420062635295889
+   },
+   "hit": true
+  }
+ },
+ "rounds_main": 20,
+ "rounds_extension": 0,
+ "rounds_required": 20,
+ "bootstrap": {
+  "resamples": 20000,
+  "seed": 103,
+  "level": 0.9,
+  "same_indices": [
+   "A_over_B",
+   "L",
+   "Xp"
+  ],
+  "rounds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19
+  ]
+ },
+ "failed_controls": [],
+ "unevaluated_controls": [],
+ "statistical_classification": "CLOSED",
+ "status": "VALID",
+ "verdict": "CLOSED",
+ "decided_at": "intervals over the 20 main rounds",
+ "branch": "G CLOSED (CI_lo(X'-1) > 0.06): the BDA path as design G would build it costs more than +6 % on the top PS/CS items.  Not a statement about CPU, P, F or R1.",
+ "extend": false,
+ "module_stats": {
+  "S1": [
+   {
+    "perm": "7ee8623d978266cd:0",
+    "orig": "ResourceId::349",
+    "A": {
+     "name": "S1_56a15431999c5a2d_p0_A",
+     "bytes": 709596,
+     "sha256": "f17b27f13c0aed195bacb8177b5271ef0e8aa4080a6d307c7e7e8ad572e9948e",
+     "cache_id": "7ee8623d978266cd",
+     "identity": {
+      "permutation": 0,
+      "words": 177399,
+      "stored_words": 177399,
+      "identical": 1
+     },
+     "words": 177399,
+     "buffer_align": "16,16c,16c,16,16c,16,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 255,
+     "local_memory_bytes": 64,
+     "binary_size": 258432,
+     "stack_size": 0,
+     "full_instructions": 16137,
+     "full_ops": {
+      "LDG": 498,
+      "LDC": 1,
+      "LDCU": 80,
+      "ULDC": 0,
+      "LDS": 176,
+      "LD": 0,
+      "STL": 12,
+      "LDL": 12,
+      "ISETP": 1166,
+      "BRA": 333,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "s16_instructions": 16152,
+     "s16_ops": {
+      "LDG": 498,
+      "LDC": 1,
+      "LDCU": 80,
+      "ULDC": 0,
+      "LDS": 176,
+      "LD": 0,
+      "STL": 12,
+      "LDL": 12,
+      "ISETP": 1166,
+      "BRA": 333,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 298,
+      "LDG.E.128": 95,
+      "LDG.E.64": 105
+     }
+    },
+    "V1": {
+     "name": "S1_56a15431999c5a2d_p0_V1",
+     "bytes": 709596,
+     "sha256": "f17b27f13c0aed195bacb8177b5271ef0e8aa4080a6d307c7e7e8ad572e9948e",
+     "cache_id": "7ee8623d978266cd",
+     "identity": {
+      "permutation": 0,
+      "words": 177399,
+      "stored_words": 177399,
+      "identical": 1
+     },
+     "words": 177399,
+     "buffer_align": "16,16,16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 255,
+     "local_memory_bytes": 64,
+     "binary_size": 258432,
+     "stack_size": 0,
+     "full_instructions": 16137,
+     "full_ops": {
+      "LDG": 498,
+      "LDC": 1,
+      "LDCU": 80,
+      "ULDC": 0,
+      "LDS": 176,
+      "LD": 0,
+      "STL": 12,
+      "LDL": 12,
+      "ISETP": 1166,
+      "BRA": 333,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "s16_instructions": 16152,
+     "s16_ops": {
+      "LDG": 498,
+      "LDC": 1,
+      "LDCU": 80,
+      "ULDC": 0,
+      "LDS": 176,
+      "LD": 0,
+      "STL": 12,
+      "LDL": 12,
+      "ISETP": 1166,
+      "BRA": 333,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 298,
+      "LDG.E.128": 95,
+      "LDG.E.64": 105
+     }
+    },
+    "V2p": {
+     "name": "S1_56a15431999c5a2d_p0_V2p",
+     "bytes": 778868,
+     "sha256": "9697df7e52a617fa0cfa1f32cd009869c023e606e595f2f1407983a0141feaa7",
+     "cache_id": "7ee8623d978266cd",
+     "identity": {
+      "permutation": 0,
+      "words": 194717,
+      "stored_words": 177399,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 53,
+      "converted_buffer": 11,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 118,
+      "dead": 0,
+      "address_handles": 25,
+      "dwords": 91,
+      "wide": 9,
+      "subword": 0,
+      "indexed": 9,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 1,
+      "uses_dma_after": 1
+     },
+     "words": 194717,
+     "buffer_align": "16,16c,16c,16,16c,16,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 255,
+     "local_memory_bytes": 80,
+     "binary_size": 328704,
+     "stack_size": 0,
+     "full_instructions": 20535,
+     "full_ops": {
+      "LDG": 979,
+      "LDC": 1,
+      "LDCU": 48,
+      "ULDC": 0,
+      "LDS": 240,
+      "LD": 0,
+      "STL": 17,
+      "LDL": 17,
+      "ISETP": 2003,
+      "BRA": 384,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "s16_instructions": 20544,
+     "s16_ops": {
+      "LDG": 979,
+      "LDC": 1,
+      "LDCU": 48,
+      "ULDC": 0,
+      "LDS": 240,
+      "LD": 0,
+      "STL": 17,
+      "LDL": 17,
+      "ISETP": 2003,
+      "BRA": 384,
+      "TEX": 66,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 201,
+      "LDG.E.128": 84,
+      "LDG.E.128.CONSTANT": 50,
+      "LDG.E.64.CONSTANT": 234,
+      "LDG.E.CONSTANT": 410
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S2": [
+   {
+    "perm": "ba06f0d0d4edd94d:0",
+    "orig": "ResourceId::286",
+    "A": {
+     "name": "S2_746c68bba46b2b49_p0_A",
+     "bytes": 96092,
+     "sha256": "a72bc9868bf6bb75bdb5ed02ab113cd5dc4260f00d11a9cf3bb5f27aa436b20f",
+     "cache_id": "ba06f0d0d4edd94d",
+     "identity": {
+      "permutation": 0,
+      "words": 24023,
+      "stored_words": 24023,
+      "identical": 1
+     },
+     "words": 24023,
+     "buffer_align": "16c,16,16c,16,16c,16,16c,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 72,
+     "local_memory_bytes": 0,
+     "binary_size": 32256,
+     "stack_size": 0,
+     "full_instructions": 1996,
+     "full_ops": {
+      "LDG": 10,
+      "LDC": 12,
+      "LDCU": 78,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 67,
+      "BRA": 49,
+      "TEX": 9,
+      "EXIT": 2
+     },
+     "s16_instructions": 1994,
+     "s16_ops": {
+      "LDG": 10,
+      "LDC": 12,
+      "LDCU": 78,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 67,
+      "BRA": 48,
+      "TEX": 9,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 7,
+      "LDG.E.128": 3
+     }
+    },
+    "V1": {
+     "name": "S2_746c68bba46b2b49_p0_V1",
+     "bytes": 97280,
+     "sha256": "d5121f19510657f86083b20ab933380f2dae5dda1f589bec3bf116392f7e2d33",
+     "cache_id": "ba06f0d0d4edd94d",
+     "identity": {
+      "permutation": 0,
+      "words": 24320,
+      "stored_words": 24023,
+      "identical": 0
+     },
+     "words": 24320,
+     "buffer_align": "16,16,16,16,16,16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 72,
+     "local_memory_bytes": 0,
+     "binary_size": 32000,
+     "stack_size": 0,
+     "full_instructions": 1979,
+     "full_ops": {
+      "LDG": 50,
+      "LDC": 0,
+      "LDCU": 62,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 122,
+      "BRA": 48,
+      "TEX": 9,
+      "EXIT": 2
+     },
+     "s16_instructions": 1977,
+     "s16_ops": {
+      "LDG": 50,
+      "LDC": 0,
+      "LDCU": 62,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 122,
+      "BRA": 47,
+      "TEX": 9,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 27,
+      "LDG.E.128": 20,
+      "LDG.E.64": 3
+     }
+    },
+    "V2p": {
+     "name": "S2_746c68bba46b2b49_p0_V2p",
+     "bytes": 135156,
+     "sha256": "480c6d725d4494f4c228efd70fc00e8c6dec6319863511f6d6278a2df53f5f8e",
+     "cache_id": "ba06f0d0d4edd94d",
+     "identity": {
+      "permutation": 0,
+      "words": 33789,
+      "stored_words": 24023,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 93,
+      "converted_buffer": 0,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 32,
+      "dwords": 93,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 33789,
+     "buffer_align": "16c,16,16c,16,16c,16,16c,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 86,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3313,
+     "full_ops": {
+      "LDG": 256,
+      "LDC": 0,
+      "LDCU": 72,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 475,
+      "BRA": 72,
+      "TEX": 9,
+      "EXIT": 2
+     },
+     "s16_instructions": 3311,
+     "s16_ops": {
+      "LDG": 256,
+      "LDC": 0,
+      "LDCU": 72,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 475,
+      "BRA": 71,
+      "TEX": 9,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 38,
+      "LDG.E.128.CONSTANT": 21,
+      "LDG.E.64.CONSTANT": 79,
+      "LDG.E.CONSTANT": 118
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S3": [
+   {
+    "perm": "b519b730d6966fd7:0",
+    "orig": "ResourceId::660",
+    "A": {
+     "name": "S3_3d705c1b57adec00_p0_A",
+     "bytes": 60816,
+     "sha256": "23d9a415a11990f98731e99480846603ceead05fef5568b22d3710ab81d64a2f",
+     "cache_id": "b519b730d6966fd7",
+     "identity": {
+      "permutation": 0,
+      "words": 15204,
+      "stored_words": 15204,
+      "identical": 1
+     },
+     "words": 15204,
+     "buffer_align": "16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 64,
+     "local_memory_bytes": 0,
+     "binary_size": 18560,
+     "stack_size": 0,
+     "full_instructions": 1137,
+     "full_ops": {
+      "LDG": 3,
+      "LDC": 1,
+      "LDCU": 55,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 96,
+      "BRA": 7,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "s16_instructions": 1137,
+     "s16_ops": {
+      "LDG": 3,
+      "LDC": 1,
+      "LDCU": 55,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 96,
+      "BRA": 6,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "ldg_variants": {
+      "LDG.E": 3
+     }
+    },
+    "V1": {
+     "name": "S3_3d705c1b57adec00_p0_V1",
+     "bytes": 61216,
+     "sha256": "68daa84f95b7e9934d3a4a45bddd274ab2c841a2d98dfa396061d446aad0324d",
+     "cache_id": "b519b730d6966fd7",
+     "identity": {
+      "permutation": 0,
+      "words": 15304,
+      "stored_words": 15204,
+      "identical": 0
+     },
+     "words": 15304,
+     "buffer_align": "16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 78,
+     "local_memory_bytes": 0,
+     "binary_size": 18688,
+     "stack_size": 0,
+     "full_instructions": 1144,
+     "full_ops": {
+      "LDG": 27,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 120,
+      "BRA": 4,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "s16_instructions": 1144,
+     "s16_ops": {
+      "LDG": 27,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 120,
+      "BRA": 3,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "ldg_variants": {
+      "LDG.E": 8,
+      "LDG.E.128": 18,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S3_3d705c1b57adec00_p0_V2p",
+     "bytes": 84172,
+     "sha256": "6751e5b583eb1765a39049f5f651ee4681b044b9e4d888d01e9df123603fb963",
+     "cache_id": "b519b730d6966fd7",
+     "identity": {
+      "permutation": 0,
+      "words": 21043,
+      "stored_words": 15204,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 64,
+      "converted_buffer": 1,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 7,
+      "dwords": 67,
+      "wide": 1,
+      "subword": 0,
+      "indexed": 1,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 21043,
+     "buffer_align": "16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 102,
+     "local_memory_bytes": 0,
+     "binary_size": 38400,
+     "stack_size": 0,
+     "full_instructions": 2377,
+     "full_ops": {
+      "LDG": 230,
+      "LDC": 0,
+      "LDCU": 32,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 361,
+      "BRA": 20,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "s16_instructions": 2377,
+     "s16_ops": {
+      "LDG": 230,
+      "LDC": 0,
+      "LDCU": 32,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 361,
+      "BRA": 19,
+      "TEX": 8,
+      "EXIT": 2
+     },
+     "ldg_variants": {
+      "LDG.E": 14,
+      "LDG.E.128.CONSTANT": 19,
+      "LDG.E.64.CONSTANT": 67,
+      "LDG.E.CONSTANT": 130
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S4": [
+   {
+    "perm": "61162655bd1b2fe2:0",
+    "orig": "ResourceId::598",
+    "A": {
+     "name": "S4_2e2ae33a4d374e8f_p0_A",
+     "bytes": 279292,
+     "sha256": "2ec19fc137c692783c8642ac818899c3633e8fab103aeb5e605f6ac54048882b",
+     "cache_id": "61162655bd1b2fe2",
+     "identity": {
+      "permutation": 0,
+      "words": 69823,
+      "stored_words": 69823,
+      "identical": 1
+     },
+     "words": 69823,
+     "buffer_align": "16c,16c,16,16c,16,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 96,
+     "local_memory_bytes": 80,
+     "binary_size": 88192,
+     "stack_size": 0,
+     "full_instructions": 5495,
+     "full_ops": {
+      "LDG": 23,
+      "LDC": 86,
+      "LDCU": 123,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 32,
+      "LDL": 26,
+      "ISETP": 144,
+      "BRA": 104,
+      "TEX": 47,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 20,
+      "LDG.E.128": 3
+     }
+    },
+    "V1": {
+     "name": "S4_2e2ae33a4d374e8f_p0_V1",
+     "bytes": 282284,
+     "sha256": "2490440b192f1cfee79211e85451741f40bec27081975e40232b00800ed45707",
+     "cache_id": "61162655bd1b2fe2",
+     "identity": {
+      "permutation": 0,
+      "words": 70571,
+      "stored_words": 69823,
+      "identical": 0
+     },
+     "words": 70571,
+     "buffer_align": "16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 96,
+     "local_memory_bytes": 112,
+     "binary_size": 92544,
+     "stack_size": 0,
+     "full_instructions": 5766,
+     "full_ops": {
+      "LDG": 115,
+      "LDC": 6,
+      "LDCU": 98,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 38,
+      "LDL": 35,
+      "ISETP": 259,
+      "BRA": 108,
+      "TEX": 47,
+      "EXIT": 2
+     },
+     "s16_instructions": 1716,
+     "s16_ops": {
+      "LDG": 32,
+      "LDC": 1,
+      "LDCU": 37,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 5,
+      "LDL": 2,
+      "ISETP": 116,
+      "BRA": 38,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 48,
+      "LDG.E.128": 60,
+      "LDG.E.64": 7
+     }
+    },
+    "V2p": {
+     "name": "S4_2e2ae33a4d374e8f_p0_V2p",
+     "bytes": 382972,
+     "sha256": "a5612a5fe3b9eb63c9db6f9a7db8198baf3a657cf849d4bfebcb21d6ccfd61d7",
+     "cache_id": "61162655bd1b2fe2",
+     "identity": {
+      "permutation": 0,
+      "words": 95743,
+      "stored_words": 69823,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 261,
+      "converted_buffer": 1,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 54,
+      "dwords": 262,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 95743,
+     "buffer_align": "16c,16c,16,16c,16,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 128,
+     "local_memory_bytes": 144,
+     "binary_size": 169984,
+     "stack_size": 0,
+     "full_instructions": 10606,
+     "full_ops": {
+      "LDG": 819,
+      "LDC": 9,
+      "LDCU": 135,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 48,
+      "LDL": 49,
+      "ISETP": 827,
+      "BRA": 180,
+      "TEX": 47,
+      "EXIT": 2
+     },
+     "s16_instructions": 2795,
+     "s16_ops": {
+      "LDG": 171,
+      "LDC": 2,
+      "LDCU": 40,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 9,
+      "LDL": 0,
+      "ISETP": 203,
+      "BRA": 52,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 52,
+      "LDG.E.128.CONSTANT": 59,
+      "LDG.E.64.CONSTANT": 253,
+      "LDG.E.CONSTANT": 455
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S5": [
+   {
+    "perm": "acdeeb103a4a3eb9:0",
+    "orig": "ResourceId::364",
+    "A": {
+     "name": "S5_b96c2898f05637df_p0_A",
+     "bytes": 166608,
+     "sha256": "833dd25da5e03c521c484a7edd8e82ad60e72973bb63a7573b16e86dc3430d62",
+     "cache_id": "acdeeb103a4a3eb9",
+     "identity": {
+      "permutation": 0,
+      "words": 41652,
+      "stored_words": 41652,
+      "identical": 1
+     },
+     "words": 41652,
+     "buffer_align": "16c,16,16c,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 80,
+     "local_memory_bytes": 0,
+     "binary_size": 42752,
+     "stack_size": 0,
+     "full_instructions": 2655,
+     "full_ops": {
+      "LDG": 18,
+      "LDC": 0,
+      "LDCU": 149,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 130,
+      "BRA": 41,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "s16_instructions": 2655,
+     "s16_ops": {
+      "LDG": 18,
+      "LDC": 0,
+      "LDCU": 149,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 130,
+      "BRA": 40,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 18
+     }
+    },
+    "V1": {
+     "name": "S5_b96c2898f05637df_p0_V1",
+     "bytes": 169696,
+     "sha256": "b4a6d6c83bc8ad8709838ea14252bb6efc1b4e9f35b9833af382d92a95357fbb",
+     "cache_id": "acdeeb103a4a3eb9",
+     "identity": {
+      "permutation": 0,
+      "words": 42424,
+      "stored_words": 41652,
+      "identical": 0
+     },
+     "words": 42424,
+     "buffer_align": "16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 86,
+     "local_memory_bytes": 0,
+     "binary_size": 44672,
+     "stack_size": 0,
+     "full_instructions": 2771,
+     "full_ops": {
+      "LDG": 96,
+      "LDC": 0,
+      "LDCU": 82,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 225,
+      "BRA": 39,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "s16_instructions": 2771,
+     "s16_ops": {
+      "LDG": 96,
+      "LDC": 0,
+      "LDCU": 82,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 225,
+      "BRA": 38,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 63,
+      "LDG.E.128": 27,
+      "LDG.E.64": 6
+     }
+    },
+    "V2p": {
+     "name": "S5_b96c2898f05637df_p0_V2p",
+     "bytes": 224092,
+     "sha256": "80e876126b6d20482afa1ee94379cee55fd257b966a27b28e181784a2abc13f9",
+     "cache_id": "acdeeb103a4a3eb9",
+     "identity": {
+      "permutation": 0,
+      "words": 56023,
+      "stored_words": 41652,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 144,
+      "converted_buffer": 6,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 41,
+      "dwords": 162,
+      "wide": 6,
+      "subword": 0,
+      "indexed": 6,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 56023,
+     "buffer_align": "16c,16,16c,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 128,
+     "local_memory_bytes": 0,
+     "binary_size": 92416,
+     "stack_size": 0,
+     "full_instructions": 5754,
+     "full_ops": {
+      "LDG": 548,
+      "LDC": 5,
+      "LDCU": 119,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 943,
+      "BRA": 88,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "s16_instructions": 5754,
+     "s16_ops": {
+      "LDG": 548,
+      "LDC": 5,
+      "LDCU": 119,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 943,
+      "BRA": 87,
+      "TEX": 43,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 53,
+      "LDG.E.128.CONSTANT": 33,
+      "LDG.E.64.CONSTANT": 166,
+      "LDG.E.CONSTANT": 296
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S6": [
+   {
+    "perm": "100166fe058eb1a3:0",
+    "orig": "ResourceId::456",
+    "A": {
+     "name": "S6_173677e49330bd65_100166fe_p0_A",
+     "bytes": 169728,
+     "sha256": "6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V1": {
+     "name": "S6_173677e49330bd65_100166fe_p0_V1",
+     "bytes": 169728,
+     "sha256": "6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S6_173677e49330bd65_100166fe_p0_V2p",
+     "bytes": 199420,
+     "sha256": "fdc163919c9b289183b6dfaf47440aa25b1beb85f99e113f24d4c9940d38ea79",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 49855,
+      "stored_words": 42432,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 22,
+      "converted_buffer": 14,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 3,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 20,
+      "dwords": 38,
+      "wide": 1,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 49855,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 85,
+     "local_memory_bytes": 0,
+     "binary_size": 78592,
+     "stack_size": 0,
+     "full_instructions": 4901,
+     "full_ops": {
+      "LDG": 232,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 825,
+      "BRA": 212,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 26,
+      "LDG.E.128.CONSTANT": 12,
+      "LDG.E.64.CONSTANT": 74,
+      "LDG.E.CONSTANT": 120
+     },
+     "layout_ok": true
+    }
+   },
+   {
+    "perm": "100166fe058eb1a3:0",
+    "orig": "ResourceId::457",
+    "A": {
+     "name": "S6_173677e49330bd65_100166fe_p0_A",
+     "bytes": 169728,
+     "sha256": "6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V1": {
+     "name": "S6_173677e49330bd65_100166fe_p0_V1",
+     "bytes": 169728,
+     "sha256": "6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S6_173677e49330bd65_100166fe_p0_V2p",
+     "bytes": 199420,
+     "sha256": "fdc163919c9b289183b6dfaf47440aa25b1beb85f99e113f24d4c9940d38ea79",
+     "cache_id": "100166fe058eb1a3",
+     "identity": {
+      "permutation": 0,
+      "words": 49855,
+      "stored_words": 42432,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 22,
+      "converted_buffer": 14,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 3,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 20,
+      "dwords": 38,
+      "wide": 1,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 49855,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 85,
+     "local_memory_bytes": 0,
+     "binary_size": 78592,
+     "stack_size": 0,
+     "full_instructions": 4901,
+     "full_ops": {
+      "LDG": 232,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 825,
+      "BRA": 212,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 26,
+      "LDG.E.128.CONSTANT": 12,
+      "LDG.E.64.CONSTANT": 74,
+      "LDG.E.CONSTANT": 120
+     },
+     "layout_ok": true
+    }
+   },
+   {
+    "perm": "a20d0a4b2199d3f7:0",
+    "orig": "ResourceId::679",
+    "A": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_A",
+     "bytes": 169728,
+     "sha256": "e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V1": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_V1",
+     "bytes": 169728,
+     "sha256": "e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_V2p",
+     "bytes": 199420,
+     "sha256": "989cb3e51a6eebe91e77ccbdb72779729b1aba348c7b280dc66a26caf0b9e44a",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 49855,
+      "stored_words": 42432,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 22,
+      "converted_buffer": 14,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 3,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 20,
+      "dwords": 38,
+      "wide": 1,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 49855,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 85,
+     "local_memory_bytes": 0,
+     "binary_size": 78592,
+     "stack_size": 0,
+     "full_instructions": 4901,
+     "full_ops": {
+      "LDG": 232,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 825,
+      "BRA": 212,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 26,
+      "LDG.E.128.CONSTANT": 12,
+      "LDG.E.64.CONSTANT": 74,
+      "LDG.E.CONSTANT": 120
+     },
+     "layout_ok": true
+    }
+   },
+   {
+    "perm": "a20d0a4b2199d3f7:0",
+    "orig": "ResourceId::680",
+    "A": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_A",
+     "bytes": 169728,
+     "sha256": "e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V1": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_V1",
+     "bytes": 169728,
+     "sha256": "e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 42432,
+      "stored_words": 42432,
+      "identical": 1
+     },
+     "words": 42432,
+     "buffer_align": "16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 70,
+     "local_memory_bytes": 0,
+     "binary_size": 53376,
+     "stack_size": 0,
+     "full_instructions": 3315,
+     "full_ops": {
+      "LDG": 66,
+      "LDC": 1,
+      "LDCU": 10,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 414,
+      "BRA": 173,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 61,
+      "LDG.E.128": 4,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S6_173677e49330bd65_a20d0a4b_p0_V2p",
+     "bytes": 199420,
+     "sha256": "989cb3e51a6eebe91e77ccbdb72779729b1aba348c7b280dc66a26caf0b9e44a",
+     "cache_id": "a20d0a4b2199d3f7",
+     "identity": {
+      "permutation": 0,
+      "words": 49855,
+      "stored_words": 42432,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 22,
+      "converted_buffer": 14,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 3,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 20,
+      "dwords": 38,
+      "wide": 1,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 49855,
+     "buffer_align": "16c,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 85,
+     "local_memory_bytes": 0,
+     "binary_size": 78592,
+     "stack_size": 0,
+     "full_instructions": 4901,
+     "full_ops": {
+      "LDG": 232,
+      "LDC": 1,
+      "LDCU": 17,
+      "ULDC": 0,
+      "LDS": 288,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 825,
+      "BRA": 212,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 26,
+      "LDG.E.128.CONSTANT": 12,
+      "LDG.E.64.CONSTANT": 74,
+      "LDG.E.CONSTANT": 120
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S7": [
+   {
+    "perm": "799ac41f2238c323:0",
+    "orig": "ResourceId::459",
+    "A": {
+     "name": "S7_3276e23cce1be33c_p0_A",
+     "bytes": 56808,
+     "sha256": "aeed851a3e5eb82223451fcdefc39a1e69138a62b93af508a132eaf71692ab26",
+     "cache_id": "799ac41f2238c323",
+     "identity": {
+      "permutation": 0,
+      "words": 14202,
+      "stored_words": 14202,
+      "identical": 1
+     },
+     "words": 14202,
+     "buffer_align": "16c,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 41,
+     "local_memory_bytes": 0,
+     "binary_size": 15872,
+     "stack_size": 0,
+     "full_instructions": 976,
+     "full_ops": {
+      "LDG": 34,
+      "LDC": 1,
+      "LDCU": 44,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 71,
+      "BRA": 27,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 31,
+      "LDG.E.128": 2,
+      "LDG.E.64": 1
+     }
+    },
+    "V1": {
+     "name": "S7_3276e23cce1be33c_p0_V1",
+     "bytes": 56808,
+     "sha256": "aeed851a3e5eb82223451fcdefc39a1e69138a62b93af508a132eaf71692ab26",
+     "cache_id": "799ac41f2238c323",
+     "identity": {
+      "permutation": 0,
+      "words": 14202,
+      "stored_words": 14202,
+      "identical": 1
+     },
+     "words": 14202,
+     "buffer_align": "16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 41,
+     "local_memory_bytes": 0,
+     "binary_size": 15872,
+     "stack_size": 0,
+     "full_instructions": 976,
+     "full_ops": {
+      "LDG": 34,
+      "LDC": 1,
+      "LDCU": 44,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 71,
+      "BRA": 27,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 31,
+      "LDG.E.128": 2,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S7_3276e23cce1be33c_p0_V2p",
+     "bytes": 71020,
+     "sha256": "10fb0a47d30ae082aed251442f55fc00845a153156888f5d3383b56ef30ccb7f",
+     "cache_id": "799ac41f2238c323",
+     "identity": {
+      "permutation": 0,
+      "words": 17755,
+      "stored_words": 14202,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 10,
+      "converted_buffer": 3,
+      "kept_written": 4,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 9,
+      "dwords": 16,
+      "wide": 2,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 17755,
+     "buffer_align": "16c,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 62,
+     "local_memory_bytes": 16,
+     "binary_size": 28288,
+     "stack_size": 0,
+     "full_instructions": 1752,
+     "full_ops": {
+      "LDG": 123,
+      "LDC": 1,
+      "LDCU": 51,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 261,
+      "BRA": 48,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "s16_instructions": 1768,
+     "s16_ops": {
+      "LDG": 123,
+      "LDC": 1,
+      "LDCU": 51,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 261,
+      "BRA": 48,
+      "TEX": 0,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 36,
+      "LDG.E.128.CONSTANT": 2,
+      "LDG.E.64.CONSTANT": 35,
+      "LDG.E.CONSTANT": 50
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S8": [
+   {
+    "perm": "c61039671745e4f1:1",
+    "orig": "ResourceId::302",
+    "A": {
+     "name": "S8_7a46be05e11e081b_p1_A",
+     "bytes": 234432,
+     "sha256": "75b35cd582c408cab3df18be5ba84847c706c170faf67ff862551c2237c6581a",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 1,
+      "words": 58608,
+      "stored_words": 58608,
+      "identical": 1
+     },
+     "words": 58608,
+     "buffer_align": "16c,16c,16,16c,16,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 107,
+     "local_memory_bytes": 0,
+     "binary_size": 72448,
+     "stack_size": 0,
+     "full_instructions": 4505,
+     "full_ops": {
+      "LDG": 23,
+      "LDC": 83,
+      "LDCU": 112,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 142,
+      "BRA": 94,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": 1839,
+     "s16_ops": {
+      "LDG": 10,
+      "LDC": 10,
+      "LDCU": 52,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 62,
+      "BRA": 37,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 20,
+      "LDG.E.128": 3
+     }
+    },
+    "V1": {
+     "name": "S8_7a46be05e11e081b_p1_V1",
+     "bytes": 237280,
+     "sha256": "c902acae30ba4b86bdb4055a14a8aaa81537662abdb91745fab43df5c4369925",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 1,
+      "words": 59320,
+      "stored_words": 58608,
+      "identical": 0
+     },
+     "words": 59320,
+     "buffer_align": "16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 121,
+     "local_memory_bytes": 0,
+     "binary_size": 73344,
+     "stack_size": 0,
+     "full_instructions": 4560,
+     "full_ops": {
+      "LDG": 111,
+      "LDC": 4,
+      "LDCU": 94,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 250,
+      "BRA": 96,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 48,
+      "LDG.E.128": 56,
+      "LDG.E.64": 7
+     }
+    },
+    "V2p": {
+     "name": "S8_7a46be05e11e081b_p1_V2p",
+     "bytes": 332652,
+     "sha256": "a42c950f96afc1433ca71dd05116f4cedadee98a032e1b7597fc964b313e8a70",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 1,
+      "words": 83163,
+      "stored_words": 58608,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 246,
+      "converted_buffer": 1,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 52,
+      "dwords": 247,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 83163,
+     "buffer_align": "16c,16c,16,16c,16,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 128,
+     "local_memory_bytes": 144,
+     "binary_size": 151808,
+     "stack_size": 0,
+     "full_instructions": 9469,
+     "full_ops": {
+      "LDG": 772,
+      "LDC": 7,
+      "LDCU": 128,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 45,
+      "LDL": 45,
+      "ISETP": 805,
+      "BRA": 165,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": 2802,
+     "s16_ops": {
+      "LDG": 171,
+      "LDC": 1,
+      "LDCU": 41,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 10,
+      "LDL": 0,
+      "ISETP": 201,
+      "BRA": 51,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 52,
+      "LDG.E.128.CONSTANT": 56,
+      "LDG.E.64.CONSTANT": 238,
+      "LDG.E.CONSTANT": 426
+     },
+     "layout_ok": true
+    }
+   },
+   {
+    "perm": "c61039671745e4f1:2",
+    "orig": "ResourceId::303",
+    "A": {
+     "name": "S8_7a46be05e11e081b_p2_A",
+     "bytes": 234468,
+     "sha256": "8579377bf1e79b8020eb0fc987fe31c54ccfd10bc28d31753497fafbae419826",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 2,
+      "words": 58617,
+      "stored_words": 58617,
+      "identical": 1
+     },
+     "words": 58617,
+     "buffer_align": "16c,16c,16,16,16c,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 107,
+     "local_memory_bytes": 0,
+     "binary_size": 71936,
+     "stack_size": 0,
+     "full_instructions": 4479,
+     "full_ops": {
+      "LDG": 24,
+      "LDC": 83,
+      "LDCU": 110,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 142,
+      "BRA": 94,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": 1815,
+     "s16_ops": {
+      "LDG": 11,
+      "LDC": 10,
+      "LDCU": 50,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 62,
+      "BRA": 37,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 20,
+      "LDG.E.128": 4
+     }
+    },
+    "V1": {
+     "name": "S8_7a46be05e11e081b_p2_V1",
+     "bytes": 237280,
+     "sha256": "c902acae30ba4b86bdb4055a14a8aaa81537662abdb91745fab43df5c4369925",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 2,
+      "words": 59320,
+      "stored_words": 58617,
+      "identical": 0
+     },
+     "words": 59320,
+     "buffer_align": "16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 121,
+     "local_memory_bytes": 0,
+     "binary_size": 73344,
+     "stack_size": 0,
+     "full_instructions": 4560,
+     "full_ops": {
+      "LDG": 111,
+      "LDC": 4,
+      "LDCU": 94,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 250,
+      "BRA": 96,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 48,
+      "LDG.E.128": 56,
+      "LDG.E.64": 7
+     }
+    },
+    "V2p": {
+     "name": "S8_7a46be05e11e081b_p2_V2p",
+     "bytes": 332652,
+     "sha256": "a42c950f96afc1433ca71dd05116f4cedadee98a032e1b7597fc964b313e8a70",
+     "cache_id": "c61039671745e4f1",
+     "identity": {
+      "permutation": 2,
+      "words": 83163,
+      "stored_words": 58617,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 246,
+      "converted_buffer": 1,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 52,
+      "dwords": 247,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 83163,
+     "buffer_align": "16c,16c,16,16,16c,16c,16,16c,16,16c,16,16,16,16c,16c,16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 128,
+     "local_memory_bytes": 144,
+     "binary_size": 151808,
+     "stack_size": 0,
+     "full_instructions": 9469,
+     "full_ops": {
+      "LDG": 772,
+      "LDC": 7,
+      "LDCU": 128,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 45,
+      "LDL": 45,
+      "ISETP": 805,
+      "BRA": 165,
+      "TEX": 31,
+      "EXIT": 2
+     },
+     "s16_instructions": 2802,
+     "s16_ops": {
+      "LDG": 171,
+      "LDC": 1,
+      "LDCU": 41,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 10,
+      "LDL": 0,
+      "ISETP": 201,
+      "BRA": 51,
+      "TEX": 8,
+      "EXIT": 1
+     },
+     "ldg_variants": {
+      "LDG.E": 52,
+      "LDG.E.128.CONSTANT": 56,
+      "LDG.E.64.CONSTANT": 238,
+      "LDG.E.CONSTANT": 426
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S9": [
+   {
+    "perm": "d116e19d911236df:0",
+    "orig": "ResourceId::644",
+    "A": {
+     "name": "S9_ca11de665702d6d9_p0_A",
+     "bytes": 5308,
+     "sha256": "c2e805a393c44756537add0abc6fd6df1c444b2f9113ce9957b416357c3e7b53",
+     "cache_id": "d116e19d911236df",
+     "identity": {
+      "permutation": 0,
+      "words": 1327,
+      "stored_words": 1327,
+      "identical": 1
+     },
+     "words": 1327,
+     "buffer_align": "16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 16,
+     "local_memory_bytes": 0,
+     "binary_size": 1024,
+     "stack_size": 0,
+     "full_instructions": 40,
+     "full_ops": {
+      "LDG": 0,
+      "LDC": 0,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 1,
+      "BRA": 1,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {}
+    },
+    "V1": {
+     "name": "S9_ca11de665702d6d9_p0_V1",
+     "bytes": 4740,
+     "sha256": "a7e8e0476c87f2307f8746e39da4fcfe3d088361b8b13779f793beefc14ff4a5",
+     "cache_id": "d116e19d911236df",
+     "identity": {
+      "permutation": 0,
+      "words": 1185,
+      "stored_words": 1327,
+      "identical": 0
+     },
+     "words": 1185,
+     "buffer_align": "16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 16,
+     "local_memory_bytes": 0,
+     "binary_size": 1024,
+     "stack_size": 0,
+     "full_instructions": 42,
+     "full_ops": {
+      "LDG": 1,
+      "LDC": 1,
+      "LDCU": 3,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 2,
+      "BRA": 1,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E.128": 1
+     }
+    },
+    "V2p": {
+     "name": "S9_ca11de665702d6d9_p0_V2p",
+     "bytes": 7164,
+     "sha256": "f6dd86c3cb5ec193c26bccd8c173dea3050bca58308eee7f720d07ef1ad6241a",
+     "cache_id": "d116e19d911236df",
+     "identity": {
+      "permutation": 0,
+      "words": 1791,
+      "stored_words": 1327,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 3,
+      "converted_buffer": 0,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 1,
+      "dwords": 3,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 1791,
+     "buffer_align": "16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 20,
+     "local_memory_bytes": 0,
+     "binary_size": 2048,
+     "stack_size": 0,
+     "full_instructions": 105,
+     "full_ops": {
+      "LDG": 11,
+      "LDC": 2,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 17,
+      "BRA": 3,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": 105,
+     "s16_ops": {
+      "LDG": 11,
+      "LDC": 2,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 17,
+      "BRA": 2,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "ldg_variants": {
+      "LDG.E.128.CONSTANT": 1,
+      "LDG.E.64.CONSTANT": 4,
+      "LDG.E.CONSTANT": 6
+     },
+     "layout_ok": true
+    }
+   }
+  ],
+  "S10": [
+   {
+    "perm": "05b0d69d55cc2b88:0",
+    "orig": "ResourceId::386",
+    "A": {
+     "name": "S10_c924afb0821b68c8_p0_A",
+     "bytes": 5372,
+     "sha256": "8deeb06c06405d2151491c6cd209c20c6906823253862d7a9c6dd9d2707587ff",
+     "cache_id": "05b0d69d55cc2b88",
+     "identity": {
+      "permutation": 0,
+      "words": 1343,
+      "stored_words": 1343,
+      "identical": 1
+     },
+     "words": 1343,
+     "buffer_align": "16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 16,
+     "local_memory_bytes": 0,
+     "binary_size": 1024,
+     "stack_size": 0,
+     "full_instructions": 43,
+     "full_ops": {
+      "LDG": 0,
+      "LDC": 0,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 1,
+      "BRA": 1,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {}
+    },
+    "V1": {
+     "name": "S10_c924afb0821b68c8_p0_V1",
+     "bytes": 4888,
+     "sha256": "ccd109a0ed8c1c4586ad3ff5a54fcb549c0cefbd6c0d8b5028888a7aa7cc74eb",
+     "cache_id": "05b0d69d55cc2b88",
+     "identity": {
+      "permutation": 0,
+      "words": 1222,
+      "stored_words": 1343,
+      "identical": 0
+     },
+     "words": 1222,
+     "buffer_align": "16",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 16,
+     "local_memory_bytes": 0,
+     "binary_size": 1024,
+     "stack_size": 0,
+     "full_instructions": 46,
+     "full_ops": {
+      "LDG": 2,
+      "LDC": 1,
+      "LDCU": 3,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 3,
+      "BRA": 1,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": null,
+     "s16_ops": null,
+     "ldg_variants": {
+      "LDG.E": 1,
+      "LDG.E.64": 1
+     }
+    },
+    "V2p": {
+     "name": "S10_c924afb0821b68c8_p0_V2p",
+     "bytes": 7164,
+     "sha256": "447bc050894a508348915f318f578e9b1db7b3600537a0c86bbced4f10900f8c",
+     "cache_id": "05b0d69d55cc2b88",
+     "identity": {
+      "permutation": 0,
+      "words": 1791,
+      "stored_words": 1343,
+      "identical": 0
+     },
+     "bda_rewrite": {
+      "converted_const": 3,
+      "converted_buffer": 0,
+      "kept_written": 0,
+      "kept_atomic": 0,
+      "kept_formatted": 0,
+      "kept_other": 0
+     },
+     "bda_rewrite_detail": {
+      "planning_only": 0,
+      "dead": 0,
+      "address_handles": 1,
+      "dwords": 3,
+      "wide": 0,
+      "subword": 0,
+      "indexed": 0,
+      "swizzled": 0,
+      "misaligned_imm": 0,
+      "remaining_eligible": 0,
+      "uses_dma_before": 0,
+      "uses_dma_after": 1
+     },
+     "words": 1791,
+     "buffer_align": "16c",
+     "recompile_spirv_val_pass": true,
+     "recompile_rc": 0,
+     "register_count": 20,
+     "local_memory_bytes": 0,
+     "binary_size": 2048,
+     "stack_size": 0,
+     "full_instructions": 106,
+     "full_ops": {
+      "LDG": 11,
+      "LDC": 2,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 17,
+      "BRA": 3,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "s16_instructions": 106,
+     "s16_ops": {
+      "LDG": 11,
+      "LDC": 2,
+      "LDCU": 5,
+      "ULDC": 0,
+      "LDS": 0,
+      "LD": 0,
+      "STL": 0,
+      "LDL": 0,
+      "ISETP": 17,
+      "BRA": 2,
+      "TEX": 1,
+      "EXIT": 2
+     },
+     "ldg_variants": {
+      "LDG.E.128.CONSTANT": 1,
+      "LDG.E.64.CONSTANT": 4,
+      "LDG.E.CONSTANT": 6
+     },
+     "layout_ok": true
+    }
+   }
+  ]
+ },
+ "identity": {
+  "plan_sha256": "9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461",
+  "bench_plan_sha256": "9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461",
+  "equal_plan_sha256": "9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461",
+  "plan_pred_sha256": "4035a9b0cc6ae89a671706a12731b3e0f21f29c2caa90763f61c0fab4b688a67",
+  "plan_parent01_sha256": "cf3c353f7aaa4a2a16d7b59a61461cf26bef11ddbfffd59206ae95a8b6b33e0a",
+  "plan_parent02_sha256": "ced6d4103c64b9e5b7c81a3a730cac6d2b04a08486f82cf43642b04a8701f4d3",
+  "seal_problems": [],
+  "input_problems": [],
+  "files_pass": true,
+  "pass": true
+ },
+ "seals": {
+  "pred": {
+   "path": "C:/kyty/s103/pred/02_m5p_bench.md",
+   "sha256": "4035a9b0cc6ae89a671706a12731b3e0f21f29c2caa90763f61c0fab4b688a67"
+  },
+  "parent01": {
+   "path": "C:/kyty/s103/prev102/pred/01_m5_bench.md",
+   "sha256": "cf3c353f7aaa4a2a16d7b59a61461cf26bef11ddbfffd59206ae95a8b6b33e0a"
+  },
+  "parent02": {
+   "path": "C:/kyty/s103/prev102/pred/02_m5_addendum.md",
+   "sha256": "ced6d4103c64b9e5b7c81a3a730cac6d2b04a08486f82cf43642b04a8701f4d3"
+  }
+ },
+ "inputs": {
+  "plan": "C:/kyty/s103/m5p/real/plan_m5p103.json",
+  "bench": "C:/kyty/s103/m5p/real/bench_m5p103.json",
+  "equal": "C:/kyty/s103/m5p/real/equal_m5p103.json",
+  "capture_log": "C:/kyty/s102/log_m5cap102b.txt",
+  "prev102": {
+   "plan": "C:/kyty/s102/m5/real/plan_m5cap102.json",
+   "plan_sha256": "e03da10031743fe2c6e5650d79ece4126dea92f551b0fd839f2f0ccc130c3f8a",
+   "bench": "C:/kyty/s102/m5/real/bench_m5cap102.json",
+   "bench_sha256": "42c7b8d05c761b9860411fa400c22facfc388e8e73eef7d7afc068c830ce8a7f"
+  }
+ }
+}

@@ -1,0 +1,4 @@
+error: line 146: Structure id 46 decorated as Block for variable in Uniform storage class must follow relaxed uniform buffer layout rules: member 0 contains an array with stride 4 not satisfying alignment to 16
+This is may be allowed if you enable the uniformBufferStandardLayout feature (or use the --uniform-buffer-standard-layout command line flag)
+  %_struct_46 = OpTypeStruct %_arr_uint_uint_16384
+

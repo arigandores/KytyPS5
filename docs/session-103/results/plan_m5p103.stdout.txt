@@ -1,0 +1,23 @@
+plan -> C:/kyty/s103/m5p/real/plan_m5p103.json
+capture C:/Users/<user>/OneDrive/Desktop/ps5 em/_RenderDoc/kyty_1790110985179586_capture.rdc  sha256 92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d
+item stg hash               weight present included  mods  excl x-norc events x-evts   last  arm missing
+S1   cs  56a15431999c5a2d   1009.1    True     True     1     0      0      2      0  63664  
+S2   ps  746c68bba46b2b49    493.0    True     True     1     0      0     92      0  67924  
+S3   ps  3d705c1b57adec00    473.2    True     True     1     0      0    600      0  53603  
+S4   ps  2e2ae33a4d374e8f    428.9    True     True     1     0      0    236      0  67297  
+S5   ps  b96c2898f05637df    373.9    True     True     1     0      0    500      0  74342  
+S6   cs  173677e49330bd65    373.5    True     True     4     0      0     52      0  68778  
+S7   cs  3276e23cce1be33c    361.4    True     True     1     0      0     76      0  69542  
+S8   ps  7a46be05e11e081b    359.1    True     True     2     0      0    124      0  67871  
+S9   ps  ca11de665702d6d9    349.9    True     True     1     0      0    983      0  73121  
+S10  ps  c924afb0821b68c8    286.0    True     True     1     0      0    690      0  63404  
+arm B   0 replacements
+arm A   14 replacements
+arm V1  14 replacements
+arm V2p 14 replacements
+spirv-val, deciding command (102 pred/02 s1, --uniform-buffer-standard-layout): 0 of 36 modules fail
+spirv-val, 102 pred/01 command (reported only): 16 of 36 fail
+note: S6: module ResourceId::456 matches several permutations ['100166fe058eb1a3:0', '100166fe058eb1a3:1']; using 100166fe058eb1a3:0
+note: S6: module ResourceId::457 matches several permutations ['100166fe058eb1a3:0', '100166fe058eb1a3:1']; using 100166fe058eb1a3:0
+note: S6: module ResourceId::679 matches several permutations ['a20d0a4b2199d3f7:0', 'a20d0a4b2199d3f7:1']; using a20d0a4b2199d3f7:0
+note: S6: module ResourceId::680 matches several permutations ['a20d0a4b2199d3f7:0', 'a20d0a4b2199d3f7:1']; using a20d0a4b2199d3f7:0

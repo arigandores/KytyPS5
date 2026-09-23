@@ -1,0 +1,35 @@
+[     0.00] hide_ui: C:\Program Files\shiboken2\libshiboken does not exist
+[     0.00] seals verified: pred 4035a9b0cc6a, parent01 cf3c353f7aaa, parent02 ced6d4103c64
+[    12.88] capture sha256 92a10b3cad28064e8b16d08dad074758be0627b66ac081dc2fd42f036dcf416d (12.9 s)
+[    18.38] capture opened: C:/Users/<user>/OneDrive/Desktop/ps5 em/_RenderDoc/kyty_1790110985179586_capture.rdc replay optimisation: balanced
+[    22.78] S1: last event 63664, 12 output subresources under A; A replay pairs {'A1-A2': 14375, 'A1-A3': 15513, 'A2-A3': 15448} -> replay-nondeterministic, E = 15513
+[    24.18] S1 V1: bit-equal=False, differing bytes vs A1 15912 over 12 subresources; E=15513 -> pass (within replay noise)
+[    28.41] S1 V2p: bit-equal=False, differing bytes vs A1 4153398 over 12 subresources; E=15513 -> FAIL
+[    31.78] S2: last event 67924, 2 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    32.86] S2 V1: bit-equal=True, differing bytes vs A1 0 over 2 subresources; E=0 -> pass (bit-equal)
+[    34.66] S2 V2p: bit-equal=True, differing bytes vs A1 0 over 2 subresources; E=0 -> pass (bit-equal)
+[    37.66] S3: last event 53603, 6 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    38.63] S3 V1: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    39.91] S3 V2p: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    43.16] S4: last event 67297, 2 output subresources under A; A replay pairs {'A1-A2': 578, 'A1-A3': 2920, 'A2-A3': 2906} -> replay-nondeterministic, E = 2920
+[    44.26] S4 V1: bit-equal=False, differing bytes vs A1 2947 over 2 subresources; E=2920 -> pass (within replay noise)
+[    46.40] S4 V2p: bit-equal=False, differing bytes vs A1 2285 over 2 subresources; E=2920 -> pass (within replay noise)
+[    49.60] S5: last event 74342, 6 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    50.65] S5 V1: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    52.50] S5 V2p: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    61.39] S6: last event 68778, 4 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    64.34] S6 V1: bit-equal=True, differing bytes vs A1 0 over 4 subresources; E=0 -> pass (bit-equal)
+[    77.65] S6 V2p: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    80.61] S7: last event 69542, 6 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    81.57] S7 V1: bit-equal=True, differing bytes vs A1 0 over 6 subresources; E=0 -> pass (bit-equal)
+[    86.40] S7 V2p: bit-equal=True, differing bytes vs A1 0 over 8 subresources; E=0 -> pass (bit-equal)
+[    92.06] S8: last event 67871, 2 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[    93.97] S8 V1: bit-equal=True, differing bytes vs A1 0 over 2 subresources; E=0 -> pass (bit-equal)
+[    97.24] S8 V2p: bit-equal=False, differing bytes vs A1 729 over 2 subresources; E=0 -> FAIL
+[   100.36] S9: last event 73121, 1 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[   101.35] S9 V1: bit-equal=True, differing bytes vs A1 0 over 1 subresources; E=0 -> pass (bit-equal)
+[   102.37] S9 V2p: bit-equal=True, differing bytes vs A1 0 over 1 subresources; E=0 -> pass (bit-equal)
+[   105.29] S10: last event 63404, 1 output subresources under A; A replay pairs {'A1-A2': 0, 'A1-A3': 0, 'A2-A3': 0} -> REPEATABLE
+[   106.23] S10 V1: bit-equal=True, differing bytes vs A1 0 over 1 subresources; E=0 -> pass (bit-equal)
+[   107.19] S10 V2p: bit-equal=True, differing bytes vs A1 0 over 1 subresources; E=0 -> pass (bit-equal)
+[   107.36] exit code 0

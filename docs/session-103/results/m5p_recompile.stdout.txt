@@ -1,0 +1,173 @@
+S1_56a15431999c5a2d_p0_A: rc=0 words=177399 md5=85985c7db7af121d74cebb85ce382535 identical_to_stored=1 val=ok 
+S1_56a15431999c5a2d_p0_V1: rc=0 words=177399 md5=85985c7db7af121d74cebb85ce382535 identical_to_stored=1 val=ok 
+S1_56a15431999c5a2d_p0_V2p: rc=0 words=194717 md5=ce10841848efb621f6851d268c06d42a identical_to_stored=0 val=ok {'converted_const': 53, 'converted_buffer': 11, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S2_746c68bba46b2b49_p0_A: rc=0 words=24023 md5=6342112df1fcef92910c66effb6fa253 identical_to_stored=1 val=ok 
+S2_746c68bba46b2b49_p0_V1: rc=0 words=24320 md5=55578396ab23b0d6400cbb6bfbd589a6 identical_to_stored=0 val=ok 
+S2_746c68bba46b2b49_p0_V2p: rc=0 words=33789 md5=68c73c78664116a8fbe2a31468416bac identical_to_stored=0 val=ok {'converted_const': 93, 'converted_buffer': 0, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S2_746c68bba46b2b49_p1_A: rc=0 words=24032 md5=30206d1e804be1b32d7c103884be13e6 identical_to_stored=1 val=ok 
+S2_746c68bba46b2b49_p1_V1: rc=0 words=24320 md5=55578396ab23b0d6400cbb6bfbd589a6 identical_to_stored=0 val=ok 
+S2_746c68bba46b2b49_p1_V2p: rc=0 words=33789 md5=68c73c78664116a8fbe2a31468416bac identical_to_stored=0 val=ok {'converted_const': 93, 'converted_buffer': 0, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S3_3d705c1b57adec00_p0_A: rc=0 words=15204 md5=5ff20bf600c76da4c46919475a705391 identical_to_stored=1 val=ok 
+S3_3d705c1b57adec00_p0_V1: rc=0 words=15304 md5=8f2c45f091570170e294696239710f69 identical_to_stored=0 val=ok 
+S3_3d705c1b57adec00_p0_V2p: rc=0 words=21043 md5=eedb24ea185a60b34003f79a85e26788 identical_to_stored=0 val=ok {'converted_const': 64, 'converted_buffer': 1, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S4_2e2ae33a4d374e8f_p0_A: rc=0 words=69823 md5=f6163abf730b68c50f7a60067751a95a identical_to_stored=1 val=ok 
+S4_2e2ae33a4d374e8f_p0_V1: rc=0 words=70571 md5=142a4fb2441a35c63ae7f00f78eb0bdd identical_to_stored=0 val=ok 
+S4_2e2ae33a4d374e8f_p0_V2p: rc=0 words=95743 md5=ba653eb42dbc059e38fa4ad2966f4e92 identical_to_stored=0 val=ok {'converted_const': 261, 'converted_buffer': 1, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S5_b96c2898f05637df_p0_A: rc=0 words=41652 md5=fa7ba08278c883c16e0bfce42133df9b identical_to_stored=1 val=ok 
+S5_b96c2898f05637df_p0_V1: rc=0 words=42424 md5=b6ed8d48174cf190b8460c3e1236c280 identical_to_stored=0 val=ok 
+S5_b96c2898f05637df_p0_V2p: rc=0 words=56023 md5=35b291a0f27967e45bc98643e8614051 identical_to_stored=0 val=ok {'converted_const': 144, 'converted_buffer': 6, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S6_173677e49330bd65_100166fe_p0_A: rc=0 words=42432 md5=75c20bfa1576fd1bfafcde53777a0a43 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_100166fe_p0_V1: rc=0 words=42432 md5=75c20bfa1576fd1bfafcde53777a0a43 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_100166fe_p0_V2p: rc=0 words=49855 md5=7d2309e140e5ab4b70e10a4658c78b97 identical_to_stored=0 val=ok {'converted_const': 22, 'converted_buffer': 14, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 3, 'kept_other': 0}
+S6_173677e49330bd65_100166fe_p1_A: rc=0 words=42432 md5=75c20bfa1576fd1bfafcde53777a0a43 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_100166fe_p1_V1: rc=0 words=42432 md5=75c20bfa1576fd1bfafcde53777a0a43 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_100166fe_p1_V2p: rc=0 words=49855 md5=7d2309e140e5ab4b70e10a4658c78b97 identical_to_stored=0 val=ok {'converted_const': 22, 'converted_buffer': 14, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 3, 'kept_other': 0}
+S6_173677e49330bd65_a20d0a4b_p0_A: rc=0 words=42432 md5=ffc2378c2779b6080f46a21b742390e6 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_a20d0a4b_p0_V1: rc=0 words=42432 md5=ffc2378c2779b6080f46a21b742390e6 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_a20d0a4b_p0_V2p: rc=0 words=49855 md5=712fd17459e38e4015267dd1907a9418 identical_to_stored=0 val=ok {'converted_const': 22, 'converted_buffer': 14, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 3, 'kept_other': 0}
+S6_173677e49330bd65_a20d0a4b_p1_A: rc=0 words=42432 md5=ffc2378c2779b6080f46a21b742390e6 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_a20d0a4b_p1_V1: rc=0 words=42432 md5=ffc2378c2779b6080f46a21b742390e6 identical_to_stored=1 val=ok 
+S6_173677e49330bd65_a20d0a4b_p1_V2p: rc=0 words=49855 md5=712fd17459e38e4015267dd1907a9418 identical_to_stored=0 val=ok {'converted_const': 22, 'converted_buffer': 14, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 3, 'kept_other': 0}
+S7_3276e23cce1be33c_p0_A: rc=0 words=14202 md5=d2b83875f6c63caf93fd958d0a833e9a identical_to_stored=1 val=ok 
+S7_3276e23cce1be33c_p0_V1: rc=0 words=14202 md5=d2b83875f6c63caf93fd958d0a833e9a identical_to_stored=1 val=ok 
+S7_3276e23cce1be33c_p0_V2p: rc=0 words=17755 md5=3c655ea1da369c9ccaa647701ec7f4b2 identical_to_stored=0 val=ok {'converted_const': 10, 'converted_buffer': 3, 'kept_written': 4, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S8_7a46be05e11e081b_p0_A: rc=0 words=58334 md5=da9e1db290374cbdbb0b971bdc92a364 identical_to_stored=1 val=ok 
+S8_7a46be05e11e081b_p0_V1: rc=0 words=59046 md5=e62ceef525edd470eb9740e9235dceee identical_to_stored=0 val=ok 
+S8_7a46be05e11e081b_p0_V2p: rc=0 words=82889 md5=7ab4d0a02001aa07d5be8b9e84004200 identical_to_stored=0 val=ok {'converted_const': 246, 'converted_buffer': 1, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S8_7a46be05e11e081b_p1_A: rc=0 words=58608 md5=4280630fedda6ea2173a61567974bae3 identical_to_stored=1 val=ok 
+S8_7a46be05e11e081b_p1_V1: rc=0 words=59320 md5=f7193bba4f36941f34a25db747129e3b identical_to_stored=0 val=ok 
+S8_7a46be05e11e081b_p1_V2p: rc=0 words=83163 md5=9a75d540a62bfd7b303419ec4130ff86 identical_to_stored=0 val=ok {'converted_const': 246, 'converted_buffer': 1, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S8_7a46be05e11e081b_p2_A: rc=0 words=58617 md5=28be296b83a1faba722fd65916996850 identical_to_stored=1 val=ok 
+S8_7a46be05e11e081b_p2_V1: rc=0 words=59320 md5=f7193bba4f36941f34a25db747129e3b identical_to_stored=0 val=ok 
+S8_7a46be05e11e081b_p2_V2p: rc=0 words=83163 md5=9a75d540a62bfd7b303419ec4130ff86 identical_to_stored=0 val=ok {'converted_const': 246, 'converted_buffer': 1, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S9_ca11de665702d6d9_p0_A: rc=0 words=1327 md5=19b8e94301e03169af0a39c65260ae01 identical_to_stored=1 val=ok 
+S9_ca11de665702d6d9_p0_V1: rc=0 words=1185 md5=8ba28cdbd1a2f3515233bd41c28a41b7 identical_to_stored=0 val=ok 
+S9_ca11de665702d6d9_p0_V2p: rc=0 words=1791 md5=376744a396886a73eef9594ccfa80ab1 identical_to_stored=0 val=ok {'converted_const': 3, 'converted_buffer': 0, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+S10_c924afb0821b68c8_p0_A: rc=0 words=1343 md5=9545c44cea31f0d5d58ee19e04aa4362 identical_to_stored=1 val=ok 
+S10_c924afb0821b68c8_p0_V1: rc=0 words=1222 md5=147809970020e6d4d13361fb4f9a7294 identical_to_stored=0 val=ok 
+S10_c924afb0821b68c8_p0_V2p: rc=0 words=1791 md5=6275acd95448b06443ca4f33996356b6 identical_to_stored=0 val=ok {'converted_const': 3, 'converted_buffer': 0, 'kept_written': 0, 'kept_atomic': 0, 'kept_formatted': 0, 'kept_other': 0}
+layout S1_56a15431999c5a2d_p0_V2p: added={} removed=[] ok=True
+layout S2_746c68bba46b2b49_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S2_746c68bba46b2b49_p1_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S3_3d705c1b57adec00_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S4_2e2ae33a4d374e8f_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S5_b96c2898f05637df_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S6_173677e49330bd65_100166fe_p0_V2p: added={'46': 'bda_pagetable', '47': 'fault_buffer'} removed=[] ok=True
+layout S6_173677e49330bd65_100166fe_p1_V2p: added={'46': 'bda_pagetable', '47': 'fault_buffer'} removed=[] ok=True
+layout S6_173677e49330bd65_a20d0a4b_p0_V2p: added={'46': 'bda_pagetable', '47': 'fault_buffer'} removed=[] ok=True
+layout S6_173677e49330bd65_a20d0a4b_p1_V2p: added={'46': 'bda_pagetable', '47': 'fault_buffer'} removed=[] ok=True
+layout S7_3276e23cce1be33c_p0_V2p: added={'46': 'bda_pagetable', '47': 'fault_buffer'} removed=[] ok=True
+layout S8_7a46be05e11e081b_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S8_7a46be05e11e081b_p1_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S8_7a46be05e11e081b_p2_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S9_ca11de665702d6d9_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+layout S10_c924afb0821b68c8_p0_V2p: added={'97': 'bda_pagetable', '98': 'fault_buffer'} removed=[] ok=True
+S1_56a15431999c5a2d_p0_A: R=255 bin=258432 lmem=64 sass(full)=16137 STL=12 LDG={'LDG.E': 298, 'LDG.E.128': 95, 'LDG.E.64': 105}
+S1_56a15431999c5a2d_p0_V1: R=255 bin=258432 lmem=64 sass(full)=16137 STL=12 LDG={'LDG.E': 298, 'LDG.E.128': 95, 'LDG.E.64': 105}
+S1_56a15431999c5a2d_p0_V2p: R=255 bin=328704 lmem=80 sass(full)=20535 STL=17 LDG={'LDG.E': 201, 'LDG.E.128': 84, 'LDG.E.128.CONSTANT': 50, 'LDG.E.64.CONSTANT': 234, 'LDG.E.CONSTANT': 410}
+S2_746c68bba46b2b49_p0_A: R=72 bin=32256 lmem=0 sass(full)=1996 STL=0 LDG={'LDG.E': 7, 'LDG.E.128': 3}
+S2_746c68bba46b2b49_p0_V1: R=72 bin=32000 lmem=0 sass(full)=1979 STL=0 LDG={'LDG.E': 27, 'LDG.E.128': 20, 'LDG.E.64': 3}
+S2_746c68bba46b2b49_p0_V2p: R=86 bin=53376 lmem=0 sass(full)=3313 STL=0 LDG={'LDG.E': 38, 'LDG.E.128.CONSTANT': 21, 'LDG.E.64.CONSTANT': 79, 'LDG.E.CONSTANT': 118}
+S2_746c68bba46b2b49_p1_A: R=70 bin=32128 lmem=0 sass(full)=1984 STL=0 LDG={'LDG.E': 7, 'LDG.E.128': 4}
+S2_746c68bba46b2b49_p1_V1: R=72 bin=32000 lmem=0 sass(full)=1979 STL=0 LDG={'LDG.E': 27, 'LDG.E.128': 20, 'LDG.E.64': 3}
+S2_746c68bba46b2b49_p1_V2p: R=86 bin=53376 lmem=0 sass(full)=3313 STL=0 LDG={'LDG.E': 38, 'LDG.E.128.CONSTANT': 21, 'LDG.E.64.CONSTANT': 79, 'LDG.E.CONSTANT': 118}
+S3_3d705c1b57adec00_p0_A: R=64 bin=18560 lmem=0 sass(full)=1137 STL=0 LDG={'LDG.E': 3}
+S3_3d705c1b57adec00_p0_V1: R=78 bin=18688 lmem=0 sass(full)=1144 STL=0 LDG={'LDG.E': 8, 'LDG.E.128': 18, 'LDG.E.64': 1}
+S3_3d705c1b57adec00_p0_V2p: R=102 bin=38400 lmem=0 sass(full)=2377 STL=0 LDG={'LDG.E': 14, 'LDG.E.128.CONSTANT': 19, 'LDG.E.64.CONSTANT': 67, 'LDG.E.CONSTANT': 130}
+S4_2e2ae33a4d374e8f_p0_A: R=96 bin=88192 lmem=80 sass(full)=5495 STL=32 LDG={'LDG.E': 20, 'LDG.E.128': 3}
+S4_2e2ae33a4d374e8f_p0_V1: R=96 bin=92544 lmem=112 sass(full)=5766 STL=38 LDG={'LDG.E': 48, 'LDG.E.128': 60, 'LDG.E.64': 7}
+S4_2e2ae33a4d374e8f_p0_V2p: R=128 bin=169984 lmem=144 sass(full)=10606 STL=48 LDG={'LDG.E': 52, 'LDG.E.128.CONSTANT': 59, 'LDG.E.64.CONSTANT': 253, 'LDG.E.CONSTANT': 455}
+S5_b96c2898f05637df_p0_A: R=80 bin=42752 lmem=0 sass(full)=2655 STL=0 LDG={'LDG.E': 18}
+S5_b96c2898f05637df_p0_V1: R=86 bin=44672 lmem=0 sass(full)=2771 STL=0 LDG={'LDG.E': 63, 'LDG.E.128': 27, 'LDG.E.64': 6}
+S5_b96c2898f05637df_p0_V2p: R=128 bin=92416 lmem=0 sass(full)=5754 STL=0 LDG={'LDG.E': 53, 'LDG.E.128.CONSTANT': 33, 'LDG.E.64.CONSTANT': 166, 'LDG.E.CONSTANT': 296}
+S6_173677e49330bd65_100166fe_p0_A: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_100166fe_p0_V1: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_100166fe_p0_V2p: R=85 bin=78592 lmem=0 sass(full)=4901 STL=0 LDG={'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}
+S6_173677e49330bd65_100166fe_p1_A: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_100166fe_p1_V1: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_100166fe_p1_V2p: R=85 bin=78592 lmem=0 sass(full)=4901 STL=0 LDG={'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}
+S6_173677e49330bd65_a20d0a4b_p0_A: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_a20d0a4b_p0_V1: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_a20d0a4b_p0_V2p: R=85 bin=78592 lmem=0 sass(full)=4901 STL=0 LDG={'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}
+S6_173677e49330bd65_a20d0a4b_p1_A: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_a20d0a4b_p1_V1: R=70 bin=53376 lmem=0 sass(full)=3315 STL=0 LDG={'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+S6_173677e49330bd65_a20d0a4b_p1_V2p: R=85 bin=78592 lmem=0 sass(full)=4901 STL=0 LDG={'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}
+S7_3276e23cce1be33c_p0_A: R=41 bin=15872 lmem=0 sass(full)=976 STL=0 LDG={'LDG.E': 31, 'LDG.E.128': 2, 'LDG.E.64': 1}
+S7_3276e23cce1be33c_p0_V1: R=41 bin=15872 lmem=0 sass(full)=976 STL=0 LDG={'LDG.E': 31, 'LDG.E.128': 2, 'LDG.E.64': 1}
+S7_3276e23cce1be33c_p0_V2p: R=62 bin=28288 lmem=16 sass(full)=1752 STL=0 LDG={'LDG.E': 36, 'LDG.E.128.CONSTANT': 2, 'LDG.E.64.CONSTANT': 35, 'LDG.E.CONSTANT': 50}
+S8_7a46be05e11e081b_p0_A: R=96 bin=73088 lmem=64 sass(full)=4549 STL=21 LDG={'LDG.E': 20, 'LDG.E.128': 3}
+S8_7a46be05e11e081b_p0_V1: R=96 bin=77056 lmem=112 sass(full)=4798 STL=35 LDG={'LDG.E': 48, 'LDG.E.128': 56, 'LDG.E.64': 7}
+S8_7a46be05e11e081b_p0_V2p: R=128 bin=151552 lmem=144 sass(full)=9453 STL=45 LDG={'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}
+S8_7a46be05e11e081b_p1_A: R=107 bin=72448 lmem=0 sass(full)=4505 STL=0 LDG={'LDG.E': 20, 'LDG.E.128': 3}
+S8_7a46be05e11e081b_p1_V1: R=121 bin=73344 lmem=0 sass(full)=4560 STL=0 LDG={'LDG.E': 48, 'LDG.E.128': 56, 'LDG.E.64': 7}
+S8_7a46be05e11e081b_p1_V2p: R=128 bin=151808 lmem=144 sass(full)=9469 STL=45 LDG={'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}
+S8_7a46be05e11e081b_p2_A: R=107 bin=71936 lmem=0 sass(full)=4479 STL=0 LDG={'LDG.E': 20, 'LDG.E.128': 4}
+S8_7a46be05e11e081b_p2_V1: R=121 bin=73344 lmem=0 sass(full)=4560 STL=0 LDG={'LDG.E': 48, 'LDG.E.128': 56, 'LDG.E.64': 7}
+S8_7a46be05e11e081b_p2_V2p: R=128 bin=151808 lmem=144 sass(full)=9469 STL=45 LDG={'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}
+S9_ca11de665702d6d9_p0_A: R=16 bin=1024 lmem=0 sass(full)=40 STL=0 LDG={}
+S9_ca11de665702d6d9_p0_V1: R=16 bin=1024 lmem=0 sass(full)=42 STL=0 LDG={'LDG.E.128': 1}
+S9_ca11de665702d6d9_p0_V2p: R=20 bin=2048 lmem=0 sass(full)=105 STL=0 LDG={'LDG.E.128.CONSTANT': 1, 'LDG.E.64.CONSTANT': 4, 'LDG.E.CONSTANT': 6}
+S10_c924afb0821b68c8_p0_A: R=16 bin=1024 lmem=0 sass(full)=43 STL=0 LDG={}
+S10_c924afb0821b68c8_p0_V1: R=16 bin=1024 lmem=0 sass(full)=46 STL=0 LDG={'LDG.E': 1, 'LDG.E.64': 1}
+S10_c924afb0821b68c8_p0_V2p: R=20 bin=2048 lmem=0 sass(full)=106 STL=0 LDG={'LDG.E.128.CONSTANT': 1, 'LDG.E.64.CONSTANT': 4, 'LDG.E.CONSTANT': 6}
+{
+ "modules": 48,
+ "rc_nonzero": [],
+ "spirv_val_fail": [],
+ "A_not_identical_to_stored": [],
+ "A_identical_to_stored": 16,
+ "A_modules": 16,
+ "dump_bytes_differ": [],
+ "crosscheck_fail": [],
+ "V2p_not_uses_dma": [],
+ "layout_bad": [],
+ "manifest_mismatch": [],
+ "baseline_changed": []
+}
+
+item  perms  A identical  V-f fail (A/V1/V2p)  regs A/V1/V2p [lmem A/V1/V2p]
+S1        1     1 of 1     0/0/0                255/255/255 [64/64/80]
+S2        2     2 of 2     0/0/0                72/72/86 [0/0/0]; 70/72/86 [0/0/0]
+S3        1     1 of 1     0/0/0                64/78/102 [0/0/0]
+S4        1     1 of 1     0/0/0                96/96/128 [80/112/144]
+S5        1     1 of 1     0/0/0                80/86/128 [0/0/0]
+S6        4     4 of 4     0/0/0                70/70/85 [0/0/0]; 70/70/85 [0/0/0]; 70/70/85 [0/0/0]; 70/70/85 [0/0/0]
+S7        1     1 of 1     0/0/0                41/41/62 [0/0/16]
+S8        3     3 of 3     0/0/0                96/96/128 [64/112/144]; 107/121/128 [0/0/144]; 107/121/128 [0/0/144]
+S9        1     1 of 1     0/0/0                16/16/20 [0/0/0]
+S10       1     1 of 1     0/0/0                16/16/20 [0/0/0]
+
+LDG variants per module (full SASS), A vs V2p:
+  S1_56a15431999c5a2d_p0                   A: {'LDG.E': 298, 'LDG.E.128': 95, 'LDG.E.64': 105}
+                                           V2p: {'LDG.E': 201, 'LDG.E.128': 84, 'LDG.E.128.CONSTANT': 50, 'LDG.E.64.CONSTANT': 234, 'LDG.E.CONSTANT': 410}  STL 12 -> 17
+  S2_746c68bba46b2b49_p0                   A: {'LDG.E': 7, 'LDG.E.128': 3}
+                                           V2p: {'LDG.E': 38, 'LDG.E.128.CONSTANT': 21, 'LDG.E.64.CONSTANT': 79, 'LDG.E.CONSTANT': 118}  STL 0 -> 0
+  S2_746c68bba46b2b49_p1                   A: {'LDG.E': 7, 'LDG.E.128': 4}
+                                           V2p: {'LDG.E': 38, 'LDG.E.128.CONSTANT': 21, 'LDG.E.64.CONSTANT': 79, 'LDG.E.CONSTANT': 118}  STL 0 -> 0
+  S3_3d705c1b57adec00_p0                   A: {'LDG.E': 3}
+                                           V2p: {'LDG.E': 14, 'LDG.E.128.CONSTANT': 19, 'LDG.E.64.CONSTANT': 67, 'LDG.E.CONSTANT': 130}  STL 0 -> 0
+  S4_2e2ae33a4d374e8f_p0                   A: {'LDG.E': 20, 'LDG.E.128': 3}
+                                           V2p: {'LDG.E': 52, 'LDG.E.128.CONSTANT': 59, 'LDG.E.64.CONSTANT': 253, 'LDG.E.CONSTANT': 455}  STL 32 -> 48
+  S5_b96c2898f05637df_p0                   A: {'LDG.E': 18}
+                                           V2p: {'LDG.E': 53, 'LDG.E.128.CONSTANT': 33, 'LDG.E.64.CONSTANT': 166, 'LDG.E.CONSTANT': 296}  STL 0 -> 0
+  S6_173677e49330bd65_100166fe_p0          A: {'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+                                           V2p: {'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}  STL 0 -> 0
+  S6_173677e49330bd65_100166fe_p1          A: {'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+                                           V2p: {'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}  STL 0 -> 0
+  S6_173677e49330bd65_a20d0a4b_p0          A: {'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+                                           V2p: {'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}  STL 0 -> 0
+  S6_173677e49330bd65_a20d0a4b_p1          A: {'LDG.E': 61, 'LDG.E.128': 4, 'LDG.E.64': 1}
+                                           V2p: {'LDG.E': 26, 'LDG.E.128.CONSTANT': 12, 'LDG.E.64.CONSTANT': 74, 'LDG.E.CONSTANT': 120}  STL 0 -> 0
+  S7_3276e23cce1be33c_p0                   A: {'LDG.E': 31, 'LDG.E.128': 2, 'LDG.E.64': 1}
+                                           V2p: {'LDG.E': 36, 'LDG.E.128.CONSTANT': 2, 'LDG.E.64.CONSTANT': 35, 'LDG.E.CONSTANT': 50}  STL 0 -> 0
+  S8_7a46be05e11e081b_p0                   A: {'LDG.E': 20, 'LDG.E.128': 3}
+                                           V2p: {'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}  STL 21 -> 45
+  S8_7a46be05e11e081b_p1                   A: {'LDG.E': 20, 'LDG.E.128': 3}
+                                           V2p: {'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}  STL 0 -> 45
+  S8_7a46be05e11e081b_p2                   A: {'LDG.E': 20, 'LDG.E.128': 4}
+                                           V2p: {'LDG.E': 52, 'LDG.E.128.CONSTANT': 56, 'LDG.E.64.CONSTANT': 238, 'LDG.E.CONSTANT': 426}  STL 0 -> 45
+  S9_ca11de665702d6d9_p0                   A: {}
+                                           V2p: {'LDG.E.128.CONSTANT': 1, 'LDG.E.64.CONSTANT': 4, 'LDG.E.CONSTANT': 6}  STL 0 -> 0
+  S10_c924afb0821b68c8_p0                  A: {}
+                                           V2p: {'LDG.E.128.CONSTANT': 1, 'LDG.E.64.CONSTANT': 4, 'LDG.E.CONSTANT': 6}  STL 0 -> 0
+exit 0

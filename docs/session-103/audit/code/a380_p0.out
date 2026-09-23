@@ -1,0 +1,2 @@
+recompile C:/Users/<user>/OneDrive/Desktop/ps5 em/_Shaders/gcn/cs_380bb9d636390bae.bin: cs hash=380bb9d636390bae wave=64 local=128x1x1 lds=0 inputs=0 permutations=3 buffer_align=[16,16c,16c,16c,16c] translate=62.3ms emit=4.5ms spirv=115656 words (cached 114378) -> C:/kyty/s103/audit103/code/a380_p0.spv
+recompile-identity: permutation=0 words=115656 stored_words=114378 identical=0

@@ -1,0 +1,112 @@
+crash              files= 69 lines= 1242  Read # bytes (pos = #) from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app
+crash              files= 69 lines=  828  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/characters/ani
+crash              files= 69 lines=  828  KernelFstat: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/charact
+crash              files= 69 lines=  828  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/characters/an
+crash              files= 69 lines=  690  KernelFstat: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects
+crash              files= 69 lines=  690  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/common/anim/co
+crash              files= 69 lines=  690  KernelFstat: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/common/
+crash              files= 69 lines=  690  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/common/anim/c
+exception          files= 35 lines=  525  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#e# tid=#
+crash              files= 69 lines=  414  Read # bytes (pos = #) from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-ap
+crash              files= 69 lines=  414  Read # bytes (pos = #) from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/
+crash              files= 69 lines=  276  Read # bytes (pos = #) from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-a
+crash              files= 69 lines=  276  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/anim/
+crash              files= 69 lines=  207  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/Next Gen
+crash              files= 69 lines=  207  KernelFstat: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/N
+crash              files= 69 lines=  207  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/Next Ge
+crash              files= 69 lines=  207  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/Astro Bo
+crash              files= 69 lines=  207  KernelFstat: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/A
+crash              files= 69 lines=  207  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/sound/Astro B
+crash              files= 69 lines=  138  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/gfx/he
+crash              files= 69 lines=  138  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/gfx/h
+crash              files= 69 lines=  138  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/anim/h
+crash              files= 69 lines=  138  Read # bytes from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/pre
+crash              files= 69 lines=  138  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/gfx/bi
+crash              files= 69 lines=  138  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/gfx/b
+crash              files= 69 lines=  138  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/anim/b
+exception          files=  5 lines=   75  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ae# tid=#
+crash              files= 69 lines=   69  Vulkan available layer: VK_LAYER_LUNARG_crash_diagnostic, specVersion = #, implVersi
+terminate          files= 69 lines=   69  event_name = ActivityTerminate
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Next Gen/pri_hero_sfx/pri_hero_glide_crash.szd
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Next Gen/pri_hero_sfx/pri_hero_glide_crash_pad.szd
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Astro Bot#/ab#_common/ab#_controller_ship_crash_#.szd
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Next Gen/pri_hero_sfx/pri_hero_transporter_crash.szd
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Astro Bot/SFX/object_sfx/gimmick/mup_obj_cart_crash.szd
+crash              files= 69 lines=   69  path = /app#/data/prein/sound/Astro Bot#/ab#_hero_vo_renewal/ab#_hero_renew_crash_landing_
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/odx/hero_landing_swamp_hub_crashsite.odxb
+crash              files= 69 lines=   69  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/odx/he
+crash              files= 69 lines=   69  Read # bytes from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prei
+crash              files= 69 lines=   69  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/odx/h
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/gfx/hero_landing_swamp_hub_crashsite.jxm
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/anim/hero_landing_swamp_hub_crashsite.skel
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/anim/hero_landing_swamp_hub_crashsite_anim_play.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_disappear.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_disappear_fast.
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_recover.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_recover_fast.an
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_spin_slide.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_stop.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_crash_landing_stop_idle.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_landing_iceberg_crash.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_stop_crash_land.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/common/anim/controller_ship_art_anim_stop_crash_sky.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/hero_scarf_anim_cinematics_hub_crashsite_gyro_defa
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/hero_scarf_anim_cinematics_hub_crashsite_gyro_l.an
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/hero_scarf_anim_cinematics_hub_crashsite_gyro_r.an
+crash              files= 69 lines=   69  KernelStat: /app#/data/prein/effects/gfx/hero_landing_swamp_hub_crashsite.jxm
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/gfx/hero_landing_swamp_hub_crashsite.jpx
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_cinematics_hub_crashsite_gyro_default.a
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_cinematics_hub_crashsite_gyro_l.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_cinematics_hub_crashsite_gyro_r.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_crash_bandicoot_dance.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_glide_crash.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_glide_crash_fall.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_glide_crash_land.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/astro_anim_slingshot_crash_landing.anim
+crash              files= 69 lines=   69  path = /app#/data/prein/characters/anim/wildlife_meerkat_anim_damage_half_ground_crashsite
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/odx/big_hand_big_stone_crash.odxb
+crash              files= 69 lines=   69  Open: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/odx/bi
+crash              files= 69 lines=   69  Read # bytes from: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein
+crash              files= 69 lines=   69  Close: C:/Users/<user>/OneDrive/Desktop/ps# em/games/PPSA#-app/data/prein/effects/odx/b
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/gfx/big_hand_big_stone_crash.jxm
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/anim/big_hand_big_stone_crash.skel
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/anim/big_hand_big_stone_crash_anim_play.anim
+crash              files= 69 lines=   69  KernelStat: /app#/data/prein/effects/gfx/big_hand_big_stone_crash.jxm
+crash              files= 69 lines=   69  path = /app#/data/prein/effects/gfx/big_hand_big_stone_crash.jpx
+exception          files=  4 lines=   60  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#e#e# tid=#
+exception          files=  3 lines=   45  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#d#e# tid=#
+exception          files=  3 lines=   45  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ee# tid=#
+exception          files=  3 lines=   45  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#de# tid=#
+exception          files= 35 lines=   35  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cf# tid=#
+exception          files=  2 lines=   30  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cce# tid=#
+exception          files=  2 lines=   30  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#eae# tid=#
+exception          files=  2 lines=   30  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#be# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ede# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#f#e# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cde# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#dae# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cae# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#fe# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ebe# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#c#e# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#fce# tid=#
+exception          files=  1 lines=   15  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#ffce# tid=#
+exception          files=  5 lines=    5  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#acf# tid=#
+exception          files=  4 lines=    4  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#e#cf# tid=#
+exception          files=  3 lines=    3  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#d#cf# tid=#
+exception          files=  3 lines=    3  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ecf# tid=#
+exception          files=  3 lines=    3  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#dcf# tid=#
+exception          files=  2 lines=    2  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cccf# tid=#
+exception          files=  2 lines=    2  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#eacf# tid=#
+exception          files=  2 lines=    2  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#bcf# tid=#
+assert             files=  1 lines=    1  ASSERT: D:\asobi\#.#\source\engine\app\Module\System\KernelFile.cpp:#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#edcf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#f#cf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cdcf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#dacf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#cacf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#fcf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#ebcf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#c#cf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#b#fccf# tid=#
+exception          files=  1 lines=    1  Exception: code=#xe#d# depth=# rip=#x#ffea#d#ada addr=#x#ffccf# tid=#

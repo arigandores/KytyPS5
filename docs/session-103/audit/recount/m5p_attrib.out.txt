@@ -1,0 +1,8 @@
+A vs A, median over rounds: d_items10 0.0 us, d_items8 0.0 us, d_total_all 0.0 us, d_non_item 0.0 us
+V1 vs A, median over rounds: d_items10 183.8 us, d_items8 199.3 us, d_total_all 226.0 us, d_non_item 19.2 us
+V2p vs A, median over rounds: d_items10 2783.8 us, d_items8 2085.9 us, d_total_all 2822.2 us, d_non_item 63.0 us
+B median total_all_us 32977.8 median n_results 12533.0
+A median total_all_us 32774.8 median n_results 12533.0
+V1 median total_all_us 33017.0 median n_results 12533.0
+V2p median total_all_us 35712.7 median n_results 12533.0
+median_r total_all[V2p]/total_all[A] = 1.0865

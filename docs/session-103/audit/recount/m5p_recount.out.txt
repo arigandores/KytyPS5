@@ -1,0 +1,73 @@
+sha256 bench a5edfd020c67719632ecd3ba0088f47184d00376354bdcd6ee59150166c74e92
+sha256 plan  9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461 bench says 9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461 equal says 9f6dc17b2d35003b06db2629fea1a1fda913f7247860ea4710ebe7ce97238461
+sha256 pred02 4035a9b0cc6ae89a671706a12731b3e0f21f29c2caa90763f61c0fab4b688a67 bench says 4035a9b0cc6ae89a671706a12731b3e0f21f29c2caa90763f61c0fab4b688a67
+sha256 pred03 73a7be0d895979b9d458e44c9251ad48d2be9d94c5f6b03d28d7d290b49bb894
+map S1 modules(mine) ['ResourceId::349'] plan ['ResourceId::349'] events mine 2 plan 2 same True last 63664 plan last 63664
+map S2 modules(mine) ['ResourceId::286'] plan ['ResourceId::286'] events mine 92 plan 92 same True last 67924 plan last 67924
+map S3 modules(mine) ['ResourceId::660'] plan ['ResourceId::660'] events mine 600 plan 600 same True last 53603 plan last 53603
+map S4 modules(mine) ['ResourceId::598'] plan ['ResourceId::598'] events mine 236 plan 236 same True last 67297 plan last 67297
+map S5 modules(mine) ['ResourceId::364'] plan ['ResourceId::364'] events mine 500 plan 500 same True last 74342 plan last 74342
+map S6 modules(mine) ['ResourceId::456', 'ResourceId::457', 'ResourceId::679', 'ResourceId::680'] plan ['ResourceId::456', 'ResourceId::457', 'ResourceId::679', 'ResourceId::680'] events mine 52 plan 52 same True last 68778 plan last 68778
+map S7 modules(mine) ['ResourceId::459'] plan ['ResourceId::459'] events mine 76 plan 76 same True last 69542 plan last 69542
+map S8 modules(mine) ['ResourceId::302', 'ResourceId::303'] plan ['ResourceId::302', 'ResourceId::303'] events mine 124 plan 124 same True last 67871 plan last 67871
+map S9 modules(mine) ['ResourceId::644'] plan ['ResourceId::644'] events mine 983 plan 983 same True last 73121 plan last 73121
+map S10 modules(mine) ['ResourceId::386'] plan ['ResourceId::386'] events mine 690 plan 690 same True last 63404 plan last 63404
+union events 3355 distinct 3355 bench events 3355 same set True plan events same True
+fetches 80 main 80 other phases []
+warmup 2 [('warmup', 'B', -1), ('warmup', 'B', -1)]
+fetches with a missing/invalid value: 0
+zero-duration events per fetch S1 {'B': (0, 0), 'A': (0, 0), 'V1': (0, 0), 'V2p': (0, 0)} of 2
+zero-duration events per fetch S2 {'B': (15, 33), 'A': (13, 30), 'V1': (12, 29), 'V2p': (26, 38)} of 92
+zero-duration events per fetch S3 {'B': (246, 270), 'A': (90, 276), 'V1': (88, 261), 'V2p': (306, 333)} of 600
+zero-duration events per fetch S4 {'B': (34, 94), 'A': (32, 93), 'V1': (31, 91), 'V2p': (83, 95)} of 236
+zero-duration events per fetch S5 {'B': (211, 230), 'A': (196, 235), 'V1': (202, 225), 'V2p': (206, 233)} of 500
+zero-duration events per fetch S6 {'B': (0, 0), 'A': (0, 0), 'V1': (0, 0), 'V2p': (0, 0)} of 52
+zero-duration events per fetch S7 {'B': (0, 0), 'A': (0, 0), 'V1': (0, 0), 'V2p': (0, 0)} of 76
+zero-duration events per fetch S8 {'B': (30, 74), 'A': (29, 74), 'V1': (25, 72), 'V2p': (68, 76)} of 124
+zero-duration events per fetch S9 {'B': (278, 302), 'A': (263, 317), 'V1': (260, 310), 'V2p': (285, 320)} of 983
+zero-duration events per fetch S10 {'B': (228, 259), 'A': (225, 254), 'V1': (225, 270), 'V2p': (226, 268)} of 690
+rounds [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
+design violations [] recorded round_sequences 20
+warm-up before main True global t_start monotone in (round,pos) True
+V-e S1 V1 E 15513 repeatable False ndiff 15912 limit 31026 pass(mine) True pass(file) True in_effect True
+V-e S1 V2p E 15513 repeatable False ndiff 4153398 limit 31026 pass(mine) False pass(file) False in_effect True
+V-e S2 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S2 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S3 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S3 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S4 V1 E 2920 repeatable False ndiff 2947 limit 5840 pass(mine) True pass(file) True in_effect True
+V-e S4 V2p E 2920 repeatable False ndiff 2285 limit 5840 pass(mine) True pass(file) True in_effect True
+V-e S5 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S5 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S6 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S6 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S7 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S7 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S8 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S8 V2p E 0 repeatable True ndiff 729 limit 0 pass(mine) False pass(file) False in_effect True
+V-e S9 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S9 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S10 V1 E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e S10 V2p E 0 repeatable True ndiff 0 limit 0 pass(mine) True pass(file) True in_effect True
+V-e failing (mine): {'V1': [], 'V2p': ['S1', 'S8']}
+items X ['S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S9', 'S10']
+X' point 1.293447  L point 1.020148  A/B point 1.002692
+X series ['1.2165', '1.2940', '1.3225', '1.3035', '1.2851', '1.3037', '1.3215', '1.2931', '1.3002', '1.2946', '1.3216', '1.2918', '1.2945', '1.2534', '1.2875', '1.2924', '1.2872', '1.2938', '1.2918', '1.2889']
+X series min/max 1.2165 1.3225
+X' as ratio of sums over rounds 1.291588
+failing share V2p: median over rounds 0.2206, pooled 0.2203, min 0.2128 max 0.2353
+item S1 A med us 1264.9 B/A 0.9995 V1/A 1.0008 V2p/A 1.4987
+item S2 A med us 898.1 B/A 0.9882 V1/A 0.9912 V2p/A 1.0026
+item S3 A med us 853.0 B/A 1.0001 V1/A 1.0942 V2p/A 1.2454
+item S4 A med us 795.5 B/A 1.0006 V1/A 1.0558 V2p/A 1.3472
+item S5 A med us 880.2 B/A 1.0037 V1/A 1.0918 V2p/A 1.5957
+item S6 A med us 700.7 B/A 0.9976 V1/A 0.9991 V2p/A 1.3046
+item S7 A med us 724.5 B/A 0.9958 V1/A 0.9974 V2p/A 2.0807
+item S8 A med us 751.0 B/A 1.0085 V1/A 0.9962 V2p/A 1.0943
+item S9 A med us 1649.4 B/A 0.9996 V1/A 0.9998 V2p/A 1.0255
+item S10 A med us 604.0 B/A 1.0010 V1/A 1.0053 V2p/A 1.0466
+bootstrap python random.Random(103) X-1 [0.2910, 0.2946] L-1 [0.0182, 0.0230] AB-1 [0.0006, 0.0045]
+bootstrap numpy default_rng(103) X-1 [0.2918, 0.2946] L-1 [0.0182, 0.0230] AB-1 [0.0006, 0.0045]
+bootstrap numpy RandomState(103) X-1 [0.2918, 0.2966] L-1 [0.0182, 0.0230] AB-1 [0.0006, 0.0045]
+bootstrap python random.Random(987654) (seed sensitivity) X-1 [0.2918, 0.2946] L-1 [0.0182, 0.0230] AB-1 [0.0006, 0.0045]
+verdict input: X' point-1 = 0.2934

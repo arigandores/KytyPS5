@@ -1,0 +1,1133 @@
+commit 14db6c7898289d5b39cd6a1a336e7494c16f1d44
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Wed Sep 23 01:43:24 2026 +0200
+
+    Session 103: BVH loop cap (default ON for 380bb9d6), 15 translator env sites read their value, KYTY_BDA_LEAN (M5', default off)
+    
+    KYTY_BVH_LOOP_CAP: one 65536-step budget per invocation for KYTY_BVH_LOOP_CAP_SET
+    (default {380bb9d636390bae}); a trip counts bl_trip in the fault-buffer tail and returns
+    through the normal return path; normal returns past 1/16 of the budget count bl_near.
+    Overrides carry a signature token and their own cache directory.
+    KYTY_BDA_LEAN: measurement-only BDA path (no PS fault store, one table read per lookup,
+    read-only PSB views, uvec4 windows behind a run-time alignment test). Off: byte-identical
+    SPIR-V for every offline-recompilable cached module (106 CS, 173 PS).
+    Built as 16ef56b6 (emulator) from this tree.
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index 5fa2bb7..722c0a1 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1733,6 +1733,12 @@ enum class Counter : uint32_t {
+ 	// flushes (~130 a frame at 64).  Counted whenever FrameStats is on, lite included, under the
+ 	// same condition as da_queue_us and da_q.  Raw count.
+ 	DrawAheadQueueCalls,     // da_qcall
++	// Session 103, KYTY_BVH_LOOP_CAP: invocations of a capped BVH program that exhausted their
++	// step budget (bl_trip) and that returned normally after spending more than 1/16 of it
++	// (bl_near), read back from the fault-buffer tail by ProcessFaultBuffer. Raw counts; they
++	// land 1-3 flips after the dispatch.
++	LoopCapTrips,            // bl_trip
++	LoopCapNear,             // bl_near
+ 	Count
+ };
+ 
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+index 7565636..849d9d2 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+@@ -134,6 +134,7 @@ void BufferCache::ChangeRegister(BufferId id) {
+ 			// here, at the first registration, because the constructor has no command buffer.
+ 			m_bda_null_page_ready = true;
+ 			m_bda_null_page.Fill(0, CACHING_PAGESIZE, 0);
++			m_fault_manager.ClearLoopTripTail();
+ 			const vk::DeviceAddress null_page_address = m_bda_null_page.BufferDeviceAddress();
+ 			WriteDataBuffer(m_bda_pagetable_buffer, 0, &null_page_address,
+ 			                sizeof(null_page_address));
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.cpp b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+index d30caaf..dd119b2 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.cpp
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+@@ -9,7 +9,9 @@
+ #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+ #include "graphics/host_gpu/renderer/commandScheduler.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
++#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+ 
++#include <algorithm>
+ #include <bit>
+ #include <cinttypes>
+ #include <cstring>
+@@ -22,16 +24,27 @@ namespace {
+ constexpr size_t MaxPageFaults    = 1024;
+ constexpr size_t PageFaultAreaSize = MaxPageFaults * sizeof(uint64_t);
+ 
++namespace LoopCap = ShaderRecompiler::Spirv::Emitter;
++
++// KYTY_BVH_LOOP_CAP counters: LoopTripWords u32 right after the bitmap of CACHING_NUMPAGES bits.
++constexpr uint64_t LoopTripOffset = BufferCache::CACHING_NUMPAGES / 8;
++constexpr uint64_t LoopTripBytes  = LoopCap::LoopTripWords * sizeof(uint32_t);
++static_assert(LoopTripOffset == uint64_t {LoopCap::LoopTripWordBase} * sizeof(uint32_t));
++
+ } // namespace
+ 
+ FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler,
+                            BufferCache& buffer_cache)
+     : m_graphics(graphics), m_scheduler(scheduler), m_buffer_cache(buffer_cache),
+       m_fault_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 0, AllFlags,
+-                     BufferCache::CACHING_NUMPAGES / 8),
++                     LoopTripOffset + LoopTripBytes),
+       m_download_buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+-                        MaxPendingFaults * PageFaultAreaSize) {
++                        MaxPendingFaults * PageFaultAreaSize),
++      m_trip_download(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
++                      MaxPendingFaults * LoopTripBytes) {
+ 	SetVulkanObjectNameF(m_graphics.device, m_fault_buffer.Handle(), "Fault Buffer");
++	LOGF("BvhLoopCap: cap=%u token='%s' default_slot0=%d\n", LoopCap::BvhLoopCap(),
++	     LoopCap::BvhLoopCapSignatureToken().c_str(), LoopCap::BvhLoopCapSlot(0x380bb9d636390baeull));
+ 
+ 	const vk::DescriptorSetLayoutBinding bindings[] {
+ 	    {0, vk::DescriptorType::eStorageBuffer, 1, vk::ShaderStageFlagBits::eCompute, nullptr},
+@@ -76,6 +89,10 @@ FaultManager::~FaultManager() {
+ 	m_graphics.device.destroyDescriptorSetLayout(m_fault_process_desc_layout, nullptr);
+ }
+ 
++void FaultManager::ClearLoopTripTail() {
++	m_fault_buffer.Fill(LoopTripOffset, LoopTripBytes, 0);
++}
++
+ void FaultManager::ProcessFaultBuffer() {
+ 	if (const auto wait_tick = m_fault_areas[m_current_area]; wait_tick != 0) {
+ 		Common::FrameStats::SiteScope site_scope("fault-buffer");
+@@ -130,8 +147,66 @@ void FaultManager::ProcessFaultBuffer() {
+ 	dependency.pBufferMemoryBarriers = &post_barrier;
+ 	command.pipelineBarrier2(dependency);
+ 
++	// KYTY_BVH_LOOP_CAP: copy the counter tail next to the fault list; the counters only grow,
++	// so each readback is diffed against the largest values already seen.
++	const bool trips       = LoopCap::BvhLoopCap() != 0;
++	const auto trip_offset = m_current_area * LoopTripBytes;
++	if (trips) {
++		vk::BufferMemoryBarrier2 tail_barrier {};
++		tail_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eAllCommands;
++		tail_barrier.srcAccessMask = vk::AccessFlagBits2::eShaderWrite;
++		tail_barrier.dstStageMask  = vk::PipelineStageFlagBits2::eCopy;
++		tail_barrier.dstAccessMask = vk::AccessFlagBits2::eTransferRead;
++		tail_barrier.buffer        = m_fault_buffer.Handle();
++		tail_barrier.offset        = LoopTripOffset;
++		tail_barrier.size          = LoopTripBytes;
++		vk::BufferMemoryBarrier2 host_barrier {};
++		host_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eCopy;
++		host_barrier.srcAccessMask = vk::AccessFlagBits2::eTransferWrite;
++		host_barrier.dstStageMask  = vk::PipelineStageFlagBits2::eHost;
++		host_barrier.dstAccessMask = vk::AccessFlagBits2::eHostRead;
++		host_barrier.buffer        = m_trip_download.Handle();
++		host_barrier.offset        = trip_offset;
++		host_barrier.size          = LoopTripBytes;
++		vk::DependencyInfo tail_dependency {};
++		tail_dependency.bufferMemoryBarrierCount = 1;
++		tail_dependency.pBufferMemoryBarriers    = &tail_barrier;
++		command.pipelineBarrier2(tail_dependency);
++		const vk::BufferCopy region {LoopTripOffset, trip_offset, LoopTripBytes};
++		command.copyBuffer(m_fault_buffer.Handle(), m_trip_download.Handle(), 1, &region);
++		tail_dependency.pBufferMemoryBarriers = &host_barrier;
++		command.pipelineBarrier2(tail_dependency);
++	}
++
+ 	const auto area = m_current_area;
+-	m_scheduler.DeferOperation([this, mapped, offset, area] {
++	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {
++		if (trips) {
++			m_trip_download.Invalidate(trip_offset, LoopTripBytes);
++			std::array<uint32_t, LoopCap::LoopTripWords> words {};
++			std::memcpy(words.data(), m_trip_download.Mapped().data() + trip_offset,
++			            LoopTripBytes);
++			const auto grown = [&](uint32_t index) {
++				const uint32_t delta =
++				    words[index] > m_trip_last[index] ? words[index] - m_trip_last[index] : 0;
++				m_trip_last[index] = std::max(m_trip_last[index], words[index]);
++				return delta;
++			};
++			const auto trip_delta = grown(0);
++			const auto near_delta = grown(1);
++			(void)grown(2);
++			for (uint32_t slot = 0; slot < LoopCap::LoopTripSlots; slot++) {
++				(void)grown(8 + slot);
++			}
++			Common::FrameStats::Add(Common::FrameStats::Counter::LoopCapTrips, trip_delta);
++			Common::FrameStats::Add(Common::FrameStats::Counter::LoopCapNear, near_delta);
++			if ((trip_delta != 0 || near_delta != 0) && m_trip_lines < 64) {
++				m_trip_lines++;
++				LOGF("BvhLoopCapTrip: trips=+%u total=%u near=+%u near_total=%u max_spent=%u "
++				     "cap=%u slot0=%u slot1=%u\n",
++				     trip_delta, m_trip_last[0], near_delta, m_trip_last[1], m_trip_last[2],
++				     LoopCap::BvhLoopCap(), m_trip_last[8], m_trip_last[9]);
++			}
++		}
+ 		m_download_buffer.Invalidate(offset, PageFaultAreaSize);
+ 		RangeSet    fault_ranges;
+ 		const auto* faults = std::bit_cast<const uint64_t*>(mapped);
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.h b/src/graphics/host_gpu/renderer/cache/faultManager.h
+index 86dde24..4209fac 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.h
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.h
+@@ -21,6 +21,9 @@ public:
+ 
+ 	[[nodiscard]] Buffer* GetFaultBuffer() noexcept { return &m_fault_buffer; }
+ 	void                  ProcessFaultBuffer();
++	// KYTY_BVH_LOOP_CAP: zero the counter tail after the fault bitmap (needs a command buffer,
++	// so the buffer cache calls it at its first registration, like the null page).
++	void ClearLoopTripTail();
+ 
+ private:
+ 	GraphicContext&                            m_graphics;
+@@ -29,6 +32,9 @@ private:
+ 	Buffer                                     m_fault_buffer;
+ 	Buffer                                     m_download_buffer;
+ 	std::array<uint64_t, MaxPendingFaults>      m_fault_areas {};
++	Buffer                                     m_trip_download;
++	std::array<uint32_t, 16>                   m_trip_last {};
++	uint32_t                                   m_trip_lines = 0;
+ 	uint32_t                                   m_current_area = 0;
+ 	vk::DescriptorSetLayout                    m_fault_process_desc_layout = nullptr;
+ 	vk::Pipeline                               m_fault_process_pipeline = nullptr;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index ff17758..231ba82 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -7,6 +7,7 @@
+ #include "graphics/shader/recompiler/ir/Value.h"
+ #include "kytyGitVersion.h"
+ 
++#include <algorithm>
+ #include <cstdlib>
+ #include <cstring>
+ #include <string_view>
+@@ -566,6 +567,16 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 		return;
+ 	}
+ 	m_directory = std::filesystem::path("_ShaderCache") / title_id;
++	// Session 103: a non-default translator variant (KYTY_BVH_LOOP_CAP override, KYTY_BDA_LEAN)
++	// gets its own signature token AND its own directory - file names do not carry the
++	// signature, so a variant run would otherwise overwrite the default cache and pipelines.bin.
++	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
++	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "");
++	if (!variant.empty()) {
++		std::string folder = "variant" + variant;
++		std::replace(folder.begin(), folder.end(), ':', '_');
++		m_directory /= folder;
++	}
+ 	// Keyed by the translator sources, not the git revision: unrelated commits keep the cache.
+ 	m_signature = std::string("KytySC") + std::to_string(FORMAT_VERSION) + ":" +
+ 	              std::string(translator_hash) +
+@@ -575,7 +586,7 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	              (ShaderRecompiler::IR::ConstBankEnabled()
+ 	                   ? (ShaderRecompiler::IR::ConstBankForStage(ShaderType::Compute) ? ":cbank2" : ":cbank")
+ 	                   : "") +
+-	              "\n";
++	              variant + "\n";
+ 	m_enabled = true;
+ 	LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str());
+ }
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index 2839e92..c5a9a12 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2424,6 +2424,10 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    {"cm_c1", FS::Counter::CommitLapMoveDesc1, false},
+ 				    // Session 102, knob "dabatch": QueueDrawAhead calls, its arming proof.  Raw count.
+ 				    {"da_qcall", FS::Counter::DrawAheadQueueCalls, false},
++				    // Session 103, KYTY_BVH_LOOP_CAP: capped BVH invocations that tripped / came
++				    // near the cap (1/16).  Raw counts.
++				    {"bl_trip", FS::Counter::LoopCapTrips, false},
++				    {"bl_near", FS::Counter::LoopCapNear, false},
+ 				};
+ 				std::string text;
+ 				for (const auto& counter: named) {
+diff --git a/src/graphics/shader/recompiler/ShaderRecompiler.cpp b/src/graphics/shader/recompiler/ShaderRecompiler.cpp
+index 838772d..4957a14 100644
+--- a/src/graphics/shader/recompiler/ShaderRecompiler.cpp
++++ b/src/graphics/shader/recompiler/ShaderRecompiler.cpp
+@@ -2,6 +2,7 @@
+ #include "graphics/shader/recompiler/Tessellation.h"
+ #include "graphics/shader/recompiler/TranslationBudget.h"
+ 
++#include "common/envFlag.h"
+ #include "common/assert.h"
+ #include "common/logging/log.h"
+ #include "common/timer.h"
+@@ -592,7 +593,7 @@ TranslateResult TranslateProgram(std::span<const uint32_t> code, const CompileOp
+ 		if (options.early_dump) {
+ 			LOGF("%s decoded RDNA2 (early):\n%s", GetDumpLabel(options), decoded_dump.c_str());
+ 		}
+-		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
++		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+ 		if (av_trace) {
+ 			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
+ 			LOGF("AvTrace: dump decoded hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",
+@@ -736,7 +737,7 @@ CompileResult CompileProgram(TranslateResult translated, const CompileOptions& o
+ 		if (options.early_dump) {
+ 			LOGF("%s native IR and bindings (early):\n%s", GetDumpLabel(options), ir_dump.c_str());
+ 		}
+-		static const bool av_trace = std::getenv("KYTY_AV_TRACE") != nullptr;
++		static const bool av_trace = Common::EnvFlagOn("KYTY_AV_TRACE");
+ 		if (av_trace) {
+ 			const auto frequency = std::max<uint64_t>(Common::Timer::QueryPerformanceFrequency(), 1);
+ 			LOGF("AvTrace: dump ir hash=0x%016" PRIx64 " us=%" PRIu64 " bytes=%" PRIu64 "\n",
+diff --git a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
+index 1de5191..34be317 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
++++ b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
+@@ -5,6 +5,7 @@
+ #include "common/stringUtils.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+ 
++#include <string>
+ #include <vector>
+ 
+ namespace Libs::Graphics::ShaderRecompiler::Spirv {
+@@ -22,6 +23,27 @@ bool RobustBufferLoads();
+ void SetDenormFlushToZero(bool device_can_flush, bool device_can_preserve);
+ bool DenormFlushToZero();         // manual flush dropped
+ bool DenormFlushToZeroDeclared(); // execution mode emitted
++// Session 103, KYTY_BVH_LOOP_CAP: a step budget per invocation for the programs of
++// KYTY_BVH_LOOP_CAP_SET (hex hashes, comma-separated; default the BVH traversal
++// 380bb9d636390bae that hung Sky Garden entries). Every loop-header execution spends one step;
++// an invocation that exhausts the budget counts a trip and returns through the normal return
++// path. Default 65536, 0 = off. Read once per process. The token is empty at the default and
++// otherwise part of the translation cache signature (and of its directory).
++uint32_t    BvhLoopCap();
++int         BvhLoopCapSlot(uint64_t shader_hash); // index in the set, -1 = not capped
++std::string BvhLoopCapSignatureToken();
++// The trip counters live right after the fault bitmap (CACHING_NUMPAGES / 32 words), which the
++// fault-buffer parser never touches: [0] trips, [1] normal returns that spent more than
++// 1/16 of the budget, [2] the largest budget seen by [0]/[1], [8 + slot] trips per set entry.
++inline constexpr uint32_t LoopTripWordBase = 1u << 21;
++inline constexpr uint32_t LoopTripWords    = 16;
++inline constexpr uint32_t LoopTripSlots    = 8;
++// Session 103, KYTY_BDA_LEAN (M5', measurement only, default off): the BDA path as design G would
++// build it - no fault-buffer store in pixel shaders, one page-table read per lookup (the null-page
++// base read once per invocation), read-only PSB views (NonWritable, Restrict when the program
++// writes no memory), and uvec4 loads for the 16-byte windows of a scalar load group behind a
++// run-time alignment test. Needs the null-page mode. Part of the translation cache signature.
++bool BdaLeanEnabled();
+ } // namespace Emitter
+ 
+ std::vector<uint32_t> EmitProgram(const IR::Program& program,
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp
+index a10f0f7..2ea2e8c 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterImage.cpp
+@@ -2,6 +2,7 @@
+ #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
+ #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
+ 
++#include "common/envFlag.h"
+ #include <cstdlib>
+ #include <algorithm>
+ #include <bit>
+@@ -755,7 +756,7 @@ void EmitImage(ValueEmitContext& ctx, const IR::Inst& inst) {
+ 		}
+ 		// Debug aid: KYTY_SAMPLE_LOD0=1 emits every pixel-shader sample with an explicit LOD of 0
+ 		// instead of implicit LOD (isolates derivative/LOD-related host behaviour).
+-		static const bool force_lod0 = std::getenv("KYTY_SAMPLE_LOD0") != nullptr;
++		static const bool force_lod0 = Common::EnvFlagOn("KYTY_SAMPLE_LOD0");
+ 		const bool explicit_lod = HasFlag(mem, Decoder::ImageSampleFlagDerivative) ||
+ 		                          HasFlag(mem, Decoder::ImageSampleFlagLod) ||
+ 		                          HasFlag(mem, Decoder::ImageSampleFlagLevelZero) ||
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h
+index 5349d1d..7062d84 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h
+@@ -147,6 +147,13 @@ struct EmitterState {
+ 	uint32_t                                         bda_fault_page_variable = 0;
+ 	uint32_t                                         fault_buffer_variable   = 0;
+ 	uint32_t                                         bda_pointer_function    = 0;
++	// KYTY_BVH_LOOP_CAP: the Function u32 every loop header of a capped program spends from
++	// (0 = the program is not capped), the budget and the program's slot in the cap set.
++	uint32_t                                         loop_cap_budget_variable = 0;
++	uint32_t                                         loop_cap_limit           = 0;
++	uint32_t                                         loop_cap_slot            = 0;
++	// KYTY_BDA_LEAN: Private u64 holding page-table entry 0 (the null page), stored at entry.
++	uint32_t                                         bda_null_base_variable   = 0;
+ 	// Page lookup shared by the dwords of one scalar pointer load (S_LOAD_DWORDXn): the
+ 	// translator emits one LoadAddressU32 per dword with the same address handle and offset
+ 	// operand; the first dword resolves the page, the others reuse it within the same block.
+@@ -571,6 +578,9 @@ void EmitProgram(EmitterState& state);
+ void DefineGetBdaPointer(EmitterState& state);
+ bool BdaNullPageEnabled();
+ void EmitBdaFaultFlush(EmitterState& state);
++// KYTY_BVH_LOOP_CAP counters in the fault-buffer tail (SpirvEmitter.h, LoopTripWordBase).
++void EmitLoopCapTrip(EmitterState& state, uint32_t budget);
++void EmitLoopCapNear(EmitterState& state);
+ 
+ // These templates accept local lambdas from several emitter translation units.
+ template <typename Fn>
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+index 7fd5ba7..2ea0644 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+@@ -1,6 +1,8 @@
+ #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
+ 
++#include "common/envFlag.h"
+ #include "graphics/host_gpu/renderer/cache/bufferCache.h"
++#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+ 
+ #include <algorithm>
+ #include <array>
+@@ -201,6 +203,49 @@ uint32_t GetBdaPointer(ValueEmitContext& ctx, uint32_t address, uint32_t active
+ 
+ uint32_t LoadBdaAt(ValueEmitContext& ctx, uint32_t pointer);
+ 
++// KYTY_BDA_LEAN: read-only PSB views. The pointee is a Block struct with one member at offset 0,
++// decorated NonWritable, and Restrict when the program writes no buffer or image memory (a PSB
++// read may otherwise alias a store through a descriptor).
++bool BdaLeanRestrict(const EmitterState& state) {
++	const auto& info          = state.program.info;
++	const bool  buffer_writes = std::ranges::any_of(
++        info.buffers, [](const IR::BufferResource& b) { return b.written || b.atomic; });
++	const bool image_writes = std::ranges::any_of(
++	    info.images, [](const IR::ImageResource& i) { return i.written || i.atomic; });
++	return !buffer_writes && !image_writes;
++}
++
++uint32_t LoadBdaReadOnly(ValueEmitContext& ctx, uint32_t address, uint32_t components) {
++	auto&      state  = ctx.state;
++	const auto member = components == 1u ? TypeU32(state) : TypeU32Vector(state, components);
++	const auto view =
++	    BdaLeanRestrict(state)
++	        ? state.builder.DecoratedType(spv::OpTypeStruct,
++	                                      {{spv::OpMemberDecorate, {0, spv::DecorationOffset, 0}},
++	                                       {spv::OpMemberDecorate, {0, spv::DecorationNonWritable}},
++	                                       {spv::OpMemberDecorate, {0, spv::DecorationRestrict}},
++	                                       {spv::OpDecorate, {spv::DecorationBlock}}},
++	                                      member)
++	        : state.builder.DecoratedType(spv::OpTypeStruct,
++	                                      {{spv::OpMemberDecorate, {0, spv::DecorationOffset, 0}},
++	                                       {spv::OpMemberDecorate, {0, spv::DecorationNonWritable}},
++	                                       {spv::OpDecorate, {spv::DecorationBlock}}},
++	                                      member);
++	const auto view_pointer = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpConvertUToPtr,
++	                          TypePointer(state, spv::StorageClassPhysicalStorageBuffer, view),
++	                          view_pointer, address);
++	const auto member_pointer = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpAccessChain,
++	                          TypePointer(state, spv::StorageClassPhysicalStorageBuffer, member),
++	                          member_pointer, view_pointer, ConstantU32(state, 0));
++	const auto value = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpLoad, member, value, member_pointer,
++	                          spv::MemoryAccessAlignedMask,
++	                          static_cast<uint32_t>(sizeof(uint32_t) * components));
++	return value;
++}
++
+ uint32_t LoadBdaDword(ValueEmitContext& ctx, uint32_t address) {
+ 	auto&      state   = ctx.state;
+ 	const auto bda     = GetBdaPointer(ctx, address);
+@@ -224,6 +269,9 @@ uint32_t LoadBdaDword(ValueEmitContext& ctx, uint32_t address) {
+ uint32_t LoadBdaAt(ValueEmitContext& ctx, uint32_t pointer) {
+ 	auto&              state     = ctx.state;
+ 	constexpr uint32_t alignment = sizeof(uint32_t);
++	if (BdaLeanEnabled()) {
++		return LoadBdaReadOnly(ctx, pointer, 1u);
++	}
+ 	if (BdaNullPageEnabled()) {
+ 		const auto typed = state.builder.AllocateId();
+ 		state.builder.AddFunction(OpConvertUToPtr, TypePhysicalU32Pointer(state), typed, pointer);
+@@ -389,7 +437,7 @@ uint32_t KnownOffsetAlignment(IR::Value value, uint32_t depth) {
+ }
+ 
+ bool VectorConstTrace() {
+-	static const bool enabled = std::getenv("KYTY_VEC_CONST_TRACE") != nullptr;
++	static const bool enabled = Common::EnvFlagOn("KYTY_VEC_CONST_TRACE");
+ 	return enabled;
+ }
+ 
+@@ -626,7 +674,7 @@ uint32_t LoadConstBufferVector(ValueEmitContext& ctx, const IR::Inst& inst,
+ // defined eagerly; their own emission is skipped through ctx.grouped_loads. Null-page mode only
+ // (loads are unconditional there). Returns the value of `inst`.
+ bool ScalarGroupTrace() {
+-	static const bool enabled = std::getenv("KYTY_SCALAR_GROUP_TRACE") != nullptr;
++	static const bool enabled = Common::EnvFlagOn("KYTY_SCALAR_GROUP_TRACE");
+ 	return enabled;
+ }
+ 
+@@ -732,12 +780,87 @@ uint32_t LoadScalarBdaGroup(ValueEmitContext& ctx, const IR::Inst& inst, const I
+ 		state.builder.AddFunction(OpBranchConditional, fits, fast_label, slow_label);
+ 		EmitLabel(state, fast_label);
+ 		std::vector<uint32_t> fast_values;
+-		for (const auto& member: members) {
+-			const auto delta = static_cast<uint64_t>(member.offset - imm_min);
+-			const auto ptr   = delta == 0 ? page_ptr
+-			                              : Binary(state, OpIAdd, type, page_ptr,
+-			                                       ConstantDeviceAddress(state, delta));
+-			fast_values.push_back(LoadBdaAt(ctx, ptr));
++		const auto load_dwords = [&]() {
++			std::vector<uint32_t> out;
++			for (const auto& member: members) {
++				const auto delta = static_cast<uint64_t>(member.offset - imm_min);
++				const auto ptr   = delta == 0 ? page_ptr
++				                              : Binary(state, OpIAdd, type, page_ptr,
++				                                       ConstantDeviceAddress(state, delta));
++				out.push_back(LoadBdaAt(ctx, ptr));
++			}
++			return out;
++		};
++		if (!BdaLeanEnabled()) {
++			fast_values = load_dwords();
++		} else {
++			// KYTY_BDA_LEAN: the group origin's 16-byte alignment is only known at run time (a
++			// copied V#'s class describes the host copy, not the guest base), so test it: an
++			// aligned origin loads every 16-byte window with two or more members as one uvec4.
++			// Inside the page (this branch) an aligned 16-byte window never leaves it.
++			std::vector<std::pair<uint64_t, std::vector<size_t>>> windows;
++			for (size_t i = 0; i < members.size(); i++) {
++				const auto window = static_cast<uint64_t>(members[i].offset - imm_min) / 16u;
++				auto       found  = std::ranges::find_if(
++                    windows, [&](const auto& entry) { return entry.first == window; });
++				if (found == windows.end()) {
++					windows.push_back({window, {i}});
++				} else {
++					found->second.push_back(i);
++				}
++			}
++			const bool any_vector = std::ranges::any_of(
++			    windows, [](const auto& entry) { return entry.second.size() >= 2u; });
++			if (!any_vector) {
++				fast_values = load_dwords();
++			} else {
++				const auto aligned = Binary(
++				    state, OpIEqual, TypeBool(state),
++				    Binary(state, OpBitwiseAnd, type, address, ConstantDeviceAddress(state, 15)),
++				    ConstantDeviceAddress(state, 0));
++				const auto vector_label = state.builder.AllocateId();
++				const auto dword_label  = state.builder.AllocateId();
++				const auto join_label   = state.builder.AllocateId();
++				state.builder.AddFunction(OpSelectionMerge, join_label,
++				                          spv::SelectionControlMaskNone);
++				state.builder.AddFunction(OpBranchConditional, aligned, vector_label, dword_label);
++				EmitLabel(state, vector_label);
++				std::vector<uint32_t> vector_values(members.size(), 0u);
++				for (const auto& [window, indices]: windows) {
++					if (indices.size() < 2u) {
++						const auto delta = static_cast<uint64_t>(members[indices[0]].offset - imm_min);
++						const auto ptr   = delta == 0 ? page_ptr
++						                              : Binary(state, OpIAdd, type, page_ptr,
++						                                       ConstantDeviceAddress(state, delta));
++						vector_values[indices[0]] = LoadBdaAt(ctx, ptr);
++						continue;
++					}
++					const auto ptr    = window == 0 ? page_ptr
++					                                : Binary(state, OpIAdd, type, page_ptr,
++					                                         ConstantDeviceAddress(state, window * 16u));
++					const auto vector = LoadBdaReadOnly(ctx, ptr, 4u);
++					for (const auto index: indices) {
++						const auto component =
++						    (static_cast<uint32_t>(members[index].offset - imm_min) % 16u) / 4u;
++						vector_values[index] = state.builder.AllocateId();
++						state.builder.AddFunction(OpCompositeExtract, TypeU32(state),
++						                          vector_values[index], vector, component);
++					}
++				}
++				const auto vector_exit = state.current_label;
++				state.builder.AddFunction(OpBranch, join_label);
++				EmitLabel(state, dword_label);
++				const auto dword_values = load_dwords();
++				const auto dword_exit   = state.current_label;
++				state.builder.AddFunction(OpBranch, join_label);
++				EmitLabel(state, join_label);
++				for (size_t i = 0; i < members.size(); i++) {
++					const auto joined = state.builder.AllocateId();
++					state.builder.AddFunction(OpPhi, TypeU32(state), joined, vector_values[i],
++					                          vector_exit, dword_values[i], dword_exit);
++					fast_values.push_back(joined);
++				}
++			}
+ 		}
+ 		const auto fast_exit = state.current_label;
+ 		state.builder.AddFunction(OpBranch, merge_label);
+@@ -1780,6 +1903,11 @@ bool BdaNullPageEnabled() {
+ 	return enabled;
+ }
+ 
++bool BdaLeanEnabled() {
++	static const bool enabled = Common::EnvFlagOn("KYTY_BDA_LEAN") && BdaNullPageEnabled();
++	return enabled;
++}
++
+ // Null-page mode: at shader return, record the last missing page of this invocation.
+ void EmitBdaFaultFlush(EmitterState& state) {
+ 	if (state.bda_fault_page_variable == 0 || state.fault_buffer_variable == 0) {
+@@ -1791,6 +1919,48 @@ void EmitBdaFaultFlush(EmitterState& state) {
+ 	EmitIfCondition(state, faulted, [&]() { RecordBdaFault(state, page); });
+ }
+ 
++static_assert(LoopTripWordBase == BufferCache::CACHING_NUMPAGES / 32,
++              "the loop-cap counters start right after the fault bitmap");
++
++namespace {
++
++void AtomicTailU32(EmitterState& state, spv::Op op, uint32_t word, uint32_t value) {
++	const auto result = state.builder.AllocateId();
++	state.builder.AddFunction(op, TypeU32(state), result,
++	                          FaultElementPointer(state, ConstantU32(state, word)),
++	                          ConstantU32(state, spv::ScopeDevice),
++	                          ConstantU32(state, spv::MemorySemanticsMaskNone), value);
++}
++
++} // namespace
++
++// KYTY_BVH_LOOP_CAP: this invocation spent its whole step budget and returns now.
++void EmitLoopCapTrip(EmitterState& state, uint32_t budget) {
++	if (state.fault_buffer_variable == 0) {
++		return;
++	}
++	AtomicTailU32(state, spv::OpAtomicIAdd, LoopTripWordBase + 0, ConstantU32(state, 1));
++	AtomicTailU32(state, spv::OpAtomicUMax, LoopTripWordBase + 2, budget);
++	AtomicTailU32(state, spv::OpAtomicIAdd, LoopTripWordBase + 8 + state.loop_cap_slot,
++	              ConstantU32(state, 1));
++}
++
++// KYTY_BVH_LOOP_CAP: at a normal return, count the invocations that spent more than 1/16 of the
++// budget (the margin rule: the largest legitimate walk times 16 must stay within the cap).
++void EmitLoopCapNear(EmitterState& state) {
++	if (state.loop_cap_budget_variable == 0 || state.fault_buffer_variable == 0) {
++		return;
++	}
++	const auto spent = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpLoad, TypeU32(state), spent, state.loop_cap_budget_variable);
++	const auto beyond = Binary(state, spv::OpUGreaterThan, TypeBool(state), spent,
++	                         ConstantU32(state, state.loop_cap_limit >> 4));
++	EmitIfCondition(state, beyond, [&]() {
++		AtomicTailU32(state, spv::OpAtomicIAdd, LoopTripWordBase + 1, ConstantU32(state, 1));
++		AtomicTailU32(state, spv::OpAtomicUMax, LoopTripWordBase + 2, spent);
++	});
++}
++
+ namespace {
+ 
+ // Branchless page lookup: entry 0 of the page table holds the address of a zero-filled
+@@ -1800,9 +1970,19 @@ namespace {
+ void DefineGetBdaPointerNullPage(EmitterState& state) {
+ 	const auto type          = TypeScalarU64(state);
+ 	const auto function_type = state.builder.Type(OpTypeFunction, type, type, TypeBool(state));
+-	state.bda_fault_page_variable = state.builder.DefineGlobalVariable(
+-	    TypePointer(state, StorageClassPrivate, TypeU32(state)), StorageClassPrivate);
+-	state.builder.AddName(state.bda_fault_page_variable, "bda_fault_page");
++	// KYTY_BDA_LEAN: no fault store in pixel shaders (a miss reads the null page silently).
++	const bool lean         = BdaLeanEnabled();
++	const bool track_faults = !lean || state.program.stage != ShaderType::Pixel;
++	if (track_faults) {
++		state.bda_fault_page_variable = state.builder.DefineGlobalVariable(
++		    TypePointer(state, StorageClassPrivate, TypeU32(state)), StorageClassPrivate);
++		state.builder.AddName(state.bda_fault_page_variable, "bda_fault_page");
++	}
++	if (lean) {
++		state.bda_null_base_variable = state.builder.DefineGlobalVariable(
++		    TypePointer(state, StorageClassPrivate, type), StorageClassPrivate);
++		state.builder.AddName(state.bda_null_base_variable, "bda_null_base");
++	}
+ 	state.bda_pointer_function = state.builder.AllocateId();
+ 	const auto address         = state.builder.AllocateId();
+ 	const auto entry_label     = state.builder.AllocateId();
+@@ -1816,11 +1996,17 @@ void DefineGetBdaPointerNullPage(EmitterState& state) {
+ 
+ 	const auto page64 = Binary(state, OpShiftRightLogical, type, address,
+ 	                           ConstantDeviceAddress(state, BufferCache::CACHING_PAGEBITS));
+-	const auto table_length = state.builder.AllocateId();
+-	state.builder.AddFunction(OpArrayLength, TypeU32(state), table_length,
+-	                          state.bda_pagetable_variable, 0);
+-	const auto in_table = Binary(state, OpULessThan, TypeBool(state), page64,
+-	                             Unary(state, OpUConvert, type, table_length));
++	uint32_t in_table = 0;
++	if (lean) {
++		in_table = Binary(state, OpULessThan, TypeBool(state), page64,
++		                  ConstantDeviceAddress(state, BufferCache::CACHING_NUMPAGES));
++	} else {
++		const auto table_length = state.builder.AllocateId();
++		state.builder.AddFunction(OpArrayLength, TypeU32(state), table_length,
++		                          state.bda_pagetable_variable, 0);
++		in_table = Binary(state, OpULessThan, TypeBool(state), page64,
++		                  Unary(state, OpUConvert, type, table_length));
++	}
+ 	const auto page = Select(state, TypeU32(state), in_table,
+ 	                         Unary(state, OpUConvert, TypeU32(state), page64),
+ 	                         ConstantU32(state, 0));
+@@ -1829,24 +2015,33 @@ void DefineGetBdaPointerNullPage(EmitterState& state) {
+ 	                          state.bda_pagetable_variable, ConstantU32(state, 0), page);
+ 	const auto loaded = state.builder.AllocateId();
+ 	state.builder.AddFunction(OpLoad, type, loaded, entry_pointer);
+-	const auto null_pointer = state.builder.AllocateId();
+-	state.builder.AddFunction(OpAccessChain, TypeStorageBufferU64ElementPointer(state), null_pointer,
+-	                          state.bda_pagetable_variable, ConstantU32(state, 0),
+-	                          ConstantU32(state, 0));
+-	const auto null_base = state.builder.AllocateId();
+-	state.builder.AddFunction(OpLoad, type, null_base, null_pointer);
++	uint32_t null_base = 0;
++	if (lean) {
++		null_base = state.builder.AllocateId();
++		state.builder.AddFunction(OpLoad, type, null_base, state.bda_null_base_variable);
++	} else {
++		// Same id order as before the switch existed (byte-identical SPIR-V when it is off).
++		const auto null_pointer = state.builder.AllocateId();
++		state.builder.AddFunction(OpAccessChain, TypeStorageBufferU64ElementPointer(state),
++		                          null_pointer, state.bda_pagetable_variable,
++		                          ConstantU32(state, 0), ConstantU32(state, 0));
++		null_base = state.builder.AllocateId();
++		state.builder.AddFunction(OpLoad, type, null_base, null_pointer);
++	}
+ 	const auto missing = Binary(state, OpLogicalOr, TypeBool(state),
+ 	                            Unary(state, OpLogicalNot, TypeBool(state), in_table),
+ 	                            Binary(state, OpIEqual, TypeBool(state), loaded,
+ 	                                   ConstantDeviceAddress(state, 0)));
+ 	const auto base = Select(state, type, missing, null_base, loaded);
+ 	// Remember an in-table miss (page 0 is the null page itself and never misses).
+-	const auto previous = state.builder.AllocateId();
+-	state.builder.AddFunction(OpLoad, TypeU32(state), previous, state.bda_fault_page_variable);
+-	const auto remembered = Select(state, TypeU32(state),
+-	                               Binary(state, OpLogicalAnd, TypeBool(state), missing, active),
+-	                               page, previous);
+-	state.builder.AddFunction(OpStore, state.bda_fault_page_variable, remembered);
++	if (track_faults) {
++		const auto previous = state.builder.AllocateId();
++		state.builder.AddFunction(OpLoad, TypeU32(state), previous, state.bda_fault_page_variable);
++		const auto remembered = Select(state, TypeU32(state),
++		                               Binary(state, OpLogicalAnd, TypeBool(state), missing, active),
++		                               page, previous);
++		state.builder.AddFunction(OpStore, state.bda_fault_page_variable, remembered);
++	}
+ 	const auto offset = Binary(state, OpBitwiseAnd, type, address,
+ 	                           ConstantDeviceAddress(state, BufferCache::CACHING_PAGESIZE - 1));
+ 	state.builder.AddFunction(OpReturnValue, Binary(state, OpIAdd, type, base, offset));
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp
+index ffb478a..2ac3b73 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterModule.cpp
+@@ -1,5 +1,7 @@
+ #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInternal.h"
+ 
++#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
++
+ #include <algorithm>
+ 
+ namespace Libs::Graphics::ShaderRecompiler::Spirv::Emitter {
+@@ -290,6 +292,12 @@ void DefineDescriptors(EmitterState& state) {
+ 			}
+ 			case IR::DescriptorBindingKind::BdaPagetable:
+ 				state.bda_pagetable_variable = Define(StorageBufferU64Type(state), "bda_pagetable");
++				if (BdaLeanEnabled()) {
++					state.builder.AddAnnotation(spv::OpDecorate, state.bda_pagetable_variable,
++					                            spv::DecorationNonWritable);
++					state.builder.AddAnnotation(spv::OpDecorate, state.bda_pagetable_variable,
++					                            spv::DecorationRestrict);
++				}
+ 				break;
+ 			case IR::DescriptorBindingKind::FaultBuffer:
+ 				state.fault_buffer_variable = Define(StorageBufferType(state), "fault_buffer");
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
+index 359f973..ecda503 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
+@@ -1,11 +1,14 @@
+ #include "graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h"
+ 
++#include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
++
+ #include "common/assert.h"
+ #include "common/logging/log.h"
+ 
+ #include <algorithm>
+ #include <bit>
+ #include <cinttypes>
++#include <cstdio>
+ #include <cstdlib>
+ #include <functional>
+ #include <optional>
+@@ -124,12 +127,17 @@ bool IsLoopControlTarget(const IR::Program& program, uint32_t id) {
+ 	});
+ }
+ 
+-void EmitReturn(ValueEmitContext& ctx) {
++void EmitReturnTail(ValueEmitContext& ctx) {
+ 	EmitKillIfPixelValidMaskInactive(ctx.state);
+ 	EmitBdaFaultFlush(ctx.state);
+ 	ctx.state.builder.AddFunction(spv::OpReturn);
+ }
+ 
++void EmitReturn(ValueEmitContext& ctx) {
++	EmitLoopCapNear(ctx.state); // no-op unless KYTY_BVH_LOOP_CAP covers the program
++	EmitReturnTail(ctx);
++}
++
+ uint32_t BranchCondition(ValueEmitContext& ctx, const IR::BlockInfo& info) {
+ 	// Scalar-instruction conditions already test the full wave's raw register values.
+ 	if (ctx.other_half == nullptr ||
+@@ -165,13 +173,23 @@ uint32_t LoopGuardLimit() {
+ 	return limit;
+ }
+ 
+-using LoopGuardVariables = std::unordered_map<const IR::Block*, uint32_t>;
++// Loop headers and the counters they spend. KYTY_LOOP_LIMIT: one counter per loop, a bare return
++// on abort (debug aid, unchanged). KYTY_BVH_LOOP_CAP: every header of a capped program spends from
++// ONE budget per invocation, and the abort counts a trip and leaves through the normal return
++// path (fault flush, pixel kill).
++struct LoopGuards {
++	std::unordered_map<const IR::Block*, uint32_t> variables;
++	std::vector<uint32_t>                          declared;
++	uint32_t                                       limit = 0;
++	bool                                           cap   = false;
++};
+ 
+ // Emits the loop header prologue of a guarded loop: counter update, OpLoopMerge and a conditional
+ // exit into a returning block. The block's original terminator then follows in a fresh label, so
+ // the caller must emit it without a second OpLoopMerge (`guarded`). Returns false when the loop
+ // has no usable merge/continue targets and the terminator must be emitted normally.
+-bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t variable) {
++bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t variable,
++                   const LoopGuards& guards) {
+ 	const auto& program = ctx.state.program;
+ 	const auto& term    = info.terminator;
+ 	const auto* merge   = TargetBlock(program, term.merge_block);
+@@ -187,7 +205,7 @@ bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t va
+ 	state.builder.AddFunction(spv::OpIAdd, TypeU32(state), next, count, ConstantU32(state, 1));
+ 	state.builder.AddFunction(spv::OpStore, variable, next);
+ 	state.builder.AddFunction(spv::OpUGreaterThan, TypeBool(state), over, next,
+-	                          ConstantU32(state, LoopGuardLimit()));
++	                          ConstantU32(state, guards.limit));
+ 	state.builder.AddFunction(spv::OpLoopMerge, ctx.Label(merge), ctx.Label(cont),
+ 	                          spv::LoopControlMaskNone);
+ 	// The header branches unconditionally into a nested selection (a conditional branch in the
+@@ -200,7 +218,12 @@ bool EmitLoopGuard(ValueEmitContext& ctx, const IR::BlockInfo& info, uint32_t va
+ 	state.builder.AddFunction(spv::OpSelectionMerge, after_label, spv::SelectionControlMaskNone);
+ 	state.builder.AddFunction(spv::OpBranchConditional, over, abort_label, after_label);
+ 	EmitLabel(state, abort_label);
+-	state.builder.AddFunction(spv::OpReturn);
++	if (guards.cap) {
++		EmitLoopCapTrip(state, next);
++		EmitReturnTail(ctx);
++	} else {
++		state.builder.AddFunction(spv::OpReturn);
++	}
+ 	EmitLabel(state, after_label);
+ 	return true;
+ }
+@@ -455,7 +478,7 @@ void PatchStructuredPhis(ValueEmitContext& ctx, StructuredFunctionState& structu
+ 	}
+ }
+ 
+-void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuardVariables& loop_guards) {
++void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuards& loop_guards) {
+ 	const auto& program = ctx.state.program;
+ 	StructuredFunctionState structured;
+ 	ctx.state.builder.AddFunction(spv::OpBranch, ctx.Label(program.blocks.front()));
+@@ -466,8 +489,9 @@ void EmitStructuredFunction(ValueEmitContext& ctx, const LoopGuardVariables& loo
+ 			EmitStructuredInstruction(lane, structured, inst);
+ 		});
+ 		bool guarded = false;
+-		if (const auto found = loop_guards.find(block); found != loop_guards.end()) {
+-			guarded = EmitLoopGuard(ctx, info, found->second);
++		if (const auto found = loop_guards.variables.find(block);
++		    found != loop_guards.variables.end()) {
++			guarded = EmitLoopGuard(ctx, info, found->second, loop_guards);
+ 		}
+ 		structured.block_exit_labels.emplace(block, ctx.state.current_label);
+ 		EmitStructuredTerminator(ctx, block, info, guarded);
+@@ -539,6 +563,71 @@ void EmitDispatcherFunction(ValueEmitContext& ctx, const DispatcherFunctionState
+ 
+ } // namespace
+ 
++namespace {
++
++constexpr uint64_t BvhLoopCapDefaultHash = 0x380bb9d636390baeull;
++constexpr uint32_t BvhLoopCapDefault     = 65536;
++
++struct BvhLoopCapConfig {
++	uint32_t              cap = BvhLoopCapDefault;
++	std::vector<uint64_t> set {BvhLoopCapDefaultHash};
++	std::string           token;
++};
++
++const BvhLoopCapConfig& LoopCapConfig() {
++	static const BvhLoopCapConfig config = [] {
++		BvhLoopCapConfig result;
++		if (const char* value = std::getenv("KYTY_BVH_LOOP_CAP"); value != nullptr) {
++			result.cap = static_cast<uint32_t>(std::strtoul(value, nullptr, 10));
++		}
++		if (const char* value = std::getenv("KYTY_BVH_LOOP_CAP_SET"); value != nullptr) {
++			result.set.clear();
++			const char* cursor = value;
++			while (*cursor != 0 && result.set.size() < LoopTripSlots) {
++				char*      end  = nullptr;
++				const auto hash = std::strtoull(cursor, &end, 16);
++				if (end == cursor) {
++					break;
++				}
++				result.set.push_back(hash);
++				cursor = *end == ',' ? end + 1 : end;
++			}
++		}
++		const bool is_default = result.cap == BvhLoopCapDefault && result.set.size() == 1 &&
++		                        result.set.front() == BvhLoopCapDefaultHash;
++		if (!is_default) {
++			result.token = ":bvhcap" + std::to_string(result.cap);
++			for (const auto hash: result.set) {
++				char text[24];
++				std::snprintf(text, sizeof(text), "-%016llx", static_cast<unsigned long long>(hash));
++				result.token += text;
++			}
++		}
++		return result;
++	}();
++	return config;
++}
++
++} // namespace
++
++uint32_t BvhLoopCap() {
++	return LoopCapConfig().cap;
++}
++
++int BvhLoopCapSlot(uint64_t shader_hash) {
++	const auto& set = LoopCapConfig().set;
++	for (size_t index = 0; index < set.size(); index++) {
++		if (set[index] == shader_hash) {
++			return static_cast<int>(index);
++		}
++	}
++	return -1;
++}
++
++std::string BvhLoopCapSignatureToken() {
++	return LoopCapConfig().token;
++}
++
+ uint32_t TypeId(EmitterState& state, IR::Type type) {
+ 	switch (type) {
+ 		case IR::Type::U1: return TypeBool(state);
+@@ -755,16 +844,41 @@ void EmitProgram(EmitterState& state) {
+ 		const auto label = state.builder.AllocateId();
+ 		state.labels.emplace(block, label);
+ 	}
+-	LoopGuardVariables loop_guards;
+-	if (LoopGuardLimit() != 0 && !state.program.dispatcher_fallback) {
++	LoopGuards loop_guards;
++	const int  cap_slot = BvhLoopCap() != 0 ? BvhLoopCapSlot(program.shader_hash) : -1;
++	if (cap_slot >= 0 && state.program.dispatcher_fallback) {
++		LOGF("BvhLoopCap: shader=0x%016" PRIx64 " UNCAPPED (dispatcher fallback)\n",
++		     program.shader_hash);
++	} else if (cap_slot >= 0) {
++		const auto budget = state.builder.AllocateId();
++		for (size_t index = 0; index < program.blocks.size(); index++) {
++			if (program.block_info[index].terminator.loop_header) {
++				loop_guards.variables.emplace(program.blocks[index], budget);
++			}
++		}
++		if (!loop_guards.variables.empty()) {
++			loop_guards.declared.push_back(budget);
++			loop_guards.limit              = BvhLoopCap();
++			loop_guards.cap                = true;
++			state.loop_cap_budget_variable = budget;
++			state.loop_cap_limit           = BvhLoopCap();
++			state.loop_cap_slot            = static_cast<uint32_t>(cap_slot);
++			state.builder.AddName(budget, "bvh_loop_budget");
++		}
++		LOGF("BvhLoopCap: shader=0x%016" PRIx64 " loops=%zu cap=%u slot=%d\n", program.shader_hash,
++		     loop_guards.variables.size(), BvhLoopCap(), cap_slot);
++	} else if (LoopGuardLimit() != 0 && !state.program.dispatcher_fallback) {
+ 		for (size_t index = 0; index < program.blocks.size(); index++) {
+ 			if (program.block_info[index].terminator.loop_header) {
+-				loop_guards.emplace(program.blocks[index], state.builder.AllocateId());
++				const auto variable = state.builder.AllocateId();
++				loop_guards.variables.emplace(program.blocks[index], variable);
++				loop_guards.declared.push_back(variable);
+ 			}
+ 		}
+-		if (!loop_guards.empty()) {
++		loop_guards.limit = LoopGuardLimit();
++		if (!loop_guards.variables.empty()) {
+ 			LOGF("SPIR-V loop guard: shader=0x%016" PRIx64 " loops=%zu limit=%u\n",
+-			     program.shader_hash, loop_guards.size(), LoopGuardLimit());
++			     program.shader_hash, loop_guards.variables.size(), LoopGuardLimit());
+ 		}
+ 	}
+ 	if (state.program.dispatcher_fallback) {
+@@ -879,8 +993,7 @@ void EmitProgram(EmitterState& state) {
+ 			                          lane.scratch_u32_variable, spv::StorageClassFunction);
+ 		}
+ 	}
+-	for (const auto& [guarded_block, variable]: loop_guards) {
+-		(void)guarded_block;
++	for (const auto variable: loop_guards.declared) {
+ 		state.builder.AddFunction(spv::OpVariable,
+ 		                          TypePointer(state, spv::StorageClassFunction, TypeU32(state)),
+ 		                          variable, spv::StorageClassFunction, ConstantU32(state, 0));
+@@ -898,6 +1011,16 @@ void EmitProgram(EmitterState& state) {
+ 		state.builder.AddFunction(spv::OpStore, state.bda_fault_page_variable,
+ 		                          ConstantU32(state, 0));
+ 	}
++	if (state.bda_null_base_variable != 0) {
++		// KYTY_BDA_LEAN: page-table entry 0 (the null page) read once per invocation.
++		const auto entry = state.builder.AllocateId();
++		state.builder.AddFunction(spv::OpAccessChain, TypeStorageBufferU64ElementPointer(state),
++		                          entry, state.bda_pagetable_variable, ConstantU32(state, 0),
++		                          ConstantU32(state, 0));
++		const auto null_base = state.builder.AllocateId();
++		state.builder.AddFunction(spv::OpLoad, TypeScalarU64(state), null_base, entry);
++		state.builder.AddFunction(spv::OpStore, state.bda_null_base_variable, null_base);
++	}
+ 	EmitMemoryOffsets(state);
+ 	if (program.blocks.empty()) {
+ 		EmitReturn(ctx);
+diff --git a/src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp b/src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp
+index 4ebe67e..ca5c2e8 100644
+--- a/src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp
++++ b/src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp
+@@ -1,5 +1,6 @@
+ #include "graphics/shader/recompiler/frontend/cfg/ShaderCFG.h"
+ 
++#include "common/envFlag.h"
+ #include "common/assert.h"
+ 
+ #include <algorithm>
+@@ -1676,7 +1677,7 @@ bool SplitOneSelectionMerge(Graph& graph) {
+ 					}
+ 				}
+ 				if (!local_predecessors.empty()) {
+-					if (std::getenv("KYTY_CFG_TRACE") != nullptr) {
++					if (Common::EnvFlagOn("KYTY_CFG_TRACE")) {
+ 						std::fprintf(stderr,
+ 						             "CFG: header %u clones terminal epilogue %u (%zu blocks) for "
+ 						             "predecessors [%s]\n",
+diff --git a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+index 257d9c0..f297683 100644
+--- a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
++++ b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+@@ -1,6 +1,7 @@
+ #include "graphics/shader/recompiler/frontend/translate/Translator.h"
+ #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
+ 
++#include "common/envFlag.h"
+ #include <algorithm>
+ #include <array>
+ #include <cstdlib>
+@@ -710,7 +711,7 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 	const bool a16    = (inst.image_sample_flags & Decoder::ImageSampleFlagA16) != 0u;
+ 
+ 	// Debug aid: KYTY_BVH_STUB=1 makes every ray miss without touching BVH memory.
+-	static const bool stub = std::getenv("KYTY_BVH_STUB") != nullptr;
++	static const bool stub = Common::EnvFlagOn("KYTY_BVH_STUB");
+ 	if (stub) {
+ 		const IR::Value miss(0xffffffffu);
+ 		WriteImageComponents(inst.dst,
+diff --git a/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp b/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp
+index 30dd695..a50e751 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.cpp
+@@ -1,6 +1,7 @@
+ #include "graphics/shader/recompiler/ir/passes/ConstantPropagation.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+ 
++#include "common/envFlag.h"
+ #include "graphics/shader/recompiler/ir/ShaderIR.h"
+ 
+ #include <algorithm>
+@@ -392,7 +393,7 @@ bool FoldCompareByKnownValues(Inst& inst, KnownValueContext& ctx, bool equal) {
+ 		return false;
+ 	}
+ 	const auto c = rhs.U32();
+-	static const bool trace = std::getenv("KYTY_KNOWN_VALUES_TRACE") != nullptr;
++	static const bool trace = Common::EnvFlagOn("KYTY_KNOWN_VALUES_TRACE");
+ 	if (trace) {
+ 		std::fprintf(stderr, "KnownValues: %s(x, %u) x=%s set[%zu]={", equal ? "IEqual" : "INotEqual", c,
+ 		             lhs.TryInstruction() != nullptr ? std::string(ValueOpcodeName(lhs.TryInstruction()->GetOpcode())).c_str() : "?",
+diff --git a/src/graphics/shader/recompiler/ir/passes/SrtNative.inc b/src/graphics/shader/recompiler/ir/passes/SrtNative.inc
+index 317f828..6174392 100644
+--- a/src/graphics/shader/recompiler/ir/passes/SrtNative.inc
++++ b/src/graphics/shader/recompiler/ir/passes/SrtNative.inc
+@@ -259,7 +259,7 @@ void AuditNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
+ 	compiled.native_eval(&frame);
+ 	static std::atomic<uint64_t> checked {0};
+ 	const auto count = checked.fetch_add(1, std::memory_order_relaxed) + 1;
+-	if ((count & 65535u) == 0 && std::getenv("KYTY_SRT_NATIVE_STATS") != nullptr) {
++	if ((count & 65535u) == 0 && Common::EnvFlagOn("KYTY_SRT_NATIVE_STATS")) {
+ 		std::fprintf(stderr, "SrtNativeAuditProgress: checked=%llu\n", static_cast<unsigned long long>(count));
+ 	}
+ 	size_t bad = 0;
+@@ -293,7 +293,7 @@ bool EvaluateNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
+ 		if (compiled.nodes.size() > 8192) return;
+ 		try {
+ 			auto code = std::make_shared<NativeSrtCode>(compiled);
+-			if (std::getenv("KYTY_SRT_NATIVE_STATS") != nullptr) {
++			if (Common::EnvFlagOn("KYTY_SRT_NATIVE_STATS")) {
+ 				std::fprintf(stderr, "SrtNative: hash=%016llx nodes=%zu bytes=%zu\n",
+ 				             static_cast<unsigned long long>(plan.shader_hash),
+ 				             compiled.nodes.size(), code->getSize());
+@@ -306,7 +306,7 @@ bool EvaluateNativeSrt(const CompiledSrt& compiled, const ResourcePlan& plan,
+ 		}
+ 	});
+ 	if (compiled.native_eval == nullptr) return false;
+-	static const bool audit = std::getenv("KYTY_SRT_NATIVE_AUDIT") != nullptr;
++	static const bool audit = Common::EnvFlagOn("KYTY_SRT_NATIVE_AUDIT");
+ 	if (audit) {
+ 		static const uint64_t every = [] {
+ 			const auto* value = std::getenv("KYTY_SRT_NATIVE_AUDIT_EVERY");
+diff --git a/src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp b/src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp
+index b6b9916..63e1e98 100644
+--- a/src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/SrtWalker.cpp
+@@ -1,5 +1,6 @@
+ #include "graphics/shader/recompiler/ir/passes/SrtWalker.h"
+ 
++#include "common/envFlag.h"
+ #include "common/frameStats.h"
+ #include "common/gates.h"
+ 
+@@ -1436,7 +1437,7 @@ public:
+ 				return false;
+ 			}
+ 		}
+-		if (std::getenv("KYTY_SRT_PLAN_STATS") != nullptr) {
++		if (Common::EnvFlagOn("KYTY_SRT_PLAN_STATS")) {
+ 			const auto reads = std::count_if(m_out.nodes.begin(), m_out.nodes.end(), [](const auto& node) {
+ 				return node.op == CompiledSrt::Op::MemRead || node.op == CompiledSrt::Op::MemReadScalar;
+ 			});
+@@ -2354,7 +2355,7 @@ bool EvaluateRuntimeSourcesImpl(const ResourcePlan& program, std::span<const uin
+ 		const char* value = std::getenv("KYTY_SRT_COMPILED");
+ 		return value == nullptr || value[0] != '0';
+ 	}();
+-	static const bool verify = std::getenv("KYTY_SRT_VERIFY") != nullptr;
++	static const bool verify = Common::EnvFlagOn("KYTY_SRT_VERIFY");
+ 	static const uint64_t verify_every = [] {
+ 		const auto* value = std::getenv("KYTY_SRT_VERIFY_EVERY");
+ 		return value == nullptr ? uint64_t {1}
+diff --git a/src/graphics/shader/shader.cpp b/src/graphics/shader/shader.cpp
+index 18f11b6..f939560 100644
+--- a/src/graphics/shader/shader.cpp
++++ b/src/graphics/shader/shader.cpp
+@@ -1,5 +1,6 @@
+ #include "graphics/shader/shader.h"
+ 
++#include "common/envFlag.h"
+ #include "kernel/memory.h"
+ 
+ #include "common/assert.h"
+@@ -566,7 +567,7 @@ static void ShaderApplyAttribSemantics(ShaderVertexInputInfo& info,
+ 		uint32_t offset      = (attrib[in.semantic] >> 14u) & 0xfffu;
+ 		uint32_t fetch_index = (attrib[in.semantic] >> 26u) & 0x1u;
+ 		// Debug aid (KYTY_VTX_TRACE=1): raw attribute table entry and V# of every semantic.
+-		static const bool vtx_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
++		static const bool vtx_trace = Common::EnvFlagOn("KYTY_VTX_TRACE");
+ 		if (vtx_trace && num_input_semantics >= 8) {
+ 			const auto* vs = &buffer[(attrib[in.semantic] & 0x1fu) * 4];
+ 			LOGF("VtxTrace: sem[%u]=%u reg=%u size=%u f16=%u custom=%u static_vb=%u static_attr=%u "
+@@ -762,7 +763,7 @@ static void ShaderGetStaticInputInfoPS(
+ 	EXIT_NOT_IMPLEMENTED(ps_info.input_num > std::size(ps_info.interpolator_settings));
+ 	ps_info.ps_system_input_base = ShaderCalcPsSystemInputBase(sh);
+ 	ps_info.vs_export_count      = sh.GetExportCount();
+-	static const bool ps_inputs_trace = std::getenv("KYTY_VTX_TRACE") != nullptr;
++	static const bool ps_inputs_trace = Common::EnvFlagOn("KYTY_VTX_TRACE");
+ 	if (ps_inputs_trace) {
+ 		static std::mutex         s_lock2;
+ 		static std::set<uint64_t> s_seen2;

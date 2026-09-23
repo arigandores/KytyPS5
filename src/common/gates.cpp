@@ -361,9 +361,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // schedule arms.  LAST rows, matching the LAST enum entries before Knob::Count.
     {"KYTY_BIND_FLOOR_MODE", "bfmode", 1, 3},
     {"KYTY_BIND_FLOOR_BURN", "bfburn", 0, 40000},
-    // Session 102: draw-lookahead requests per QueueDrawAhead call; 64 = today, 0 = one call
-    // per walk.  Read once per walk, so it CAN be a schedule arm.
-    {"KYTY_DRAW_AHEAD_BATCH", "dabatch", 64, 65536},
+    // Session 102: draw-lookahead requests per QueueDrawAhead call; 0 = one call per walk.
+    // Read once per walk, so it CAN be a schedule arm.  Session 106: default 8 (was 64) - each
+    // call is one hold of PipelineCache::m_mutex by the dawalk walker, and shorter holds cut the
+    // GuestGpu spin on that lock (pred/02_dabatch.md: d mean dt -169.3 us, 2SE 94.1, video clean).
+    {"KYTY_DRAW_AHEAD_BATCH", "dabatch", 8, 65536},
     // Session 105, route A M3.1: the source of the ownership tick; 0 = today (the render
     // scheduler's CurrentTick()), 1 = CommandBuffer::Tick(), 2 = 1 + checks, 3 = 2 + EXIT.
     // Read at every use, so it CAN be a schedule arm. Session 105: default 1 after the sealed

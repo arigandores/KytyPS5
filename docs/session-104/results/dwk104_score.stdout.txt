@@ -1,0 +1,74 @@
+dwk104.py dwk104 status=ADMITTED seal=5f088c02c55b185e8f591ce403b0363b70c61a53bcd088b13354fec78e1d4a13
+  pairs 92 (orientations [46, 46]), blocks 184, excluded [3, 188, 189]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DARK_ARM0
+  [PASS] arming    WALK_DROPS
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 21330, 'da_wjobs': 21339, 'da_wdrop': 0}  skip/posts-1 -0.0004  drop 0.0000  walks rel 0.0000
+  dt_us        arm0    32162.2   arm1    31617.6
+  cpu_net_us   arm0    31242.8   arm1    30744.3
+  draws        arm0     5031.8   arm1     5021.1
+  gpu_busy_us  arm0    12415.3   arm1    12391.5
+  rec_n        arm0    10907.6   arm1    10879.5
+  da_walk_us   arm0     1895.4   arm1     2125.8
+  da_queue_us  arm0      784.4   arm1      852.6
+  da_take_us   arm0     2452.3   arm1     2855.3
+  da_hit       arm0     8603.0   arm1     8362.5
+  da_miss      arm0       73.9   arm1      291.6
+  da_late      arm0        0.1   arm1        7.9
+  da_wjobs     arm0        0.0   arm1        8.0
+  da_wskip     arm0        0.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0        0.0   arm1    74528.5
+  da_wdepth    arm0        0.0   arm1       17.5
+  d cpu_net_us   mean -458.5  2SE 114.6  t -8.00  n 92
+  d dt_us        mean -265.9  2SE 114.5  t -4.65  n 92
+  d da_take_us   mean 414.7  2SE 14.9  t 55.80  n 92
+  d da_miss      mean 219.1  2SE 7.0  t 62.84  n 92
+  d da_late      mean 8.1  2SE 0.3  t 47.65  n 92
+  d da_hit       mean -231.5  2SE 29.5  t -15.68  n 92
+  d da_stale     mean 0.0  2SE None  t 0.00  n 92
+  d da_walk_us   mean 229.1  2SE 12.9  t 35.51  n 92
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [PASS] ship S1_cpu_net_le_-150
+  [PASS] ship S2_cpu_net_2se_excludes_0
+  [PASS] ship S3_dt_same_sign
+  VERDICT: SHIP_PENDING_VIDEO (S1-S4 met; nothing ships until vwk104 is read)
+  prediction D1  HIT  value 8.000 band [7, 9]  arm-1 da_wskip level in [7, 9] a flip
+  prediction D2  HIT  value -0.000 band [-0.01, 0.01]  arm-1 skip/posts identity within +-1 %
+  prediction D3  HIT  value -458.462 band [-700, 100]  d cpu_net_us in [-700, +100] us
+  prediction D4  HIT  value 414.686 band [0, 800]  d da_take_us in [0, +800] us
+  prediction D5  HIT  value 219.053 band [20, 250]  d da_miss in [+20, +250] a flip
+  prediction D6  HIT  value 8.105 band [0, 12]  d da_late in [0, +12] a flip
+  prediction D7  HIT  value 229.125 band [200, 1000]  d da_walk_us (walker thread in arm 1) in [+200, +1 000] us
+  prediction D8  HIT  value -458.462 band [None, -150.0]  d cpu_net_us <= -150 us (the ship bar is met) - the discriminating prediction, low confidence
+  failed: none
+wrote C:/kyty/s104/runs104/dwk104_score.json

@@ -1,0 +1,16 @@
+dwk104 rows 18926 main 18926 dup 0 gate 191
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'GpuClockPin:': 1}
+sh104 rows 9264 main 9264 dup 0 gate 83
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'GpuClockPin:': 1, 'ShadowResolve: worker': 4}
+mut104b rows 9289 main 9289 dup 0 gate 84
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'GpuClockPin:': 1}
+mut104 rows 9209 main 9209 dup 0 gate 83
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 4, 'RecordThread: started': 2, 'GpuClockPin:': 1, 'AsyncPipelines: skipped draw': 11, 'AsyncPipelines: flip': 1}
+reg104 rows 5999 main 5999 dup 0 gate 0
+markers {'GPU checkpoints': 1, 'ShaderSeed:': 2, 'PipelinePrecache': 4, 'RecordThread: started': 2, 'GpuClockPin:': 1, 'AsyncPipelines: skipped draw': 21, 'AsyncPipelines: flip': 1}
+vwk104 rows 3875 main 3875 dup 0 gate 0
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'Recording:': 1}
+vid104 rows 3907 main 3907 dup 0 gate 0
+markers {'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'Recording:': 1}
+ckpt102 rows 5608 main 5608 dup 0 gate 0
+markers {'GPU checkpoints': 1, 'ShaderSeed:': 1, 'PipelinePrecache': 2, 'RecordThread: started': 2, 'GpuClockPin:': 1}

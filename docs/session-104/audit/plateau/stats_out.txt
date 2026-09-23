@@ -1,0 +1,60 @@
+C:/kyty/s102/log_dab102a.txt
+  mid-third n= 3240 mean= 31434.6 med= 33241.0 vbl%={1: 12.1, 2: 87.2, 3: 0.7, 4: 0.0} busy=0.9851 net=0.9844 cpu/fr=30967 idle/fr=467 spin/fr=22 lat=11058/10887 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5055 gpu=12719
+  whole     n= 9721 mean= 31579.0 med= 33251.0 vbl%={1: 12.8, 2: 85.0, 3: 2.1, 4: 0.0, 5: 0.0} busy=0.9763 net=0.9755 cpu/fr=30832 idle/fr=747 spin/fr=27 lat=11393/10975 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5045 gpu=12587
+  0.00-0.34 n= 3305 mean= 31809.9 med= 33267.0 vbl%={1: 14.3, 2: 80.8, 3: 4.8, 4: 0.1, 5: 0.1} busy=0.9597 net=0.9586 cpu/fr=30529 idle/fr=1281 spin/fr=35 lat=12136/11284 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5021 gpu=12302
+  0.33-0.67 n= 3306 mean= 31432.3 med= 33241.5 vbl%={1: 12.2, 2: 87.1, 3: 0.7, 4: 0.0} busy=0.9850 net=0.9843 cpu/fr=30961 idle/fr=471 spin/fr=22 lat=11056/10867 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5053 gpu=12718
+  0.66-1.00 n= 3306 mean= 31457.6 med= 33243.5 vbl%={1: 12.0, 2: 87.2, 3: 0.8} busy=0.9847 net=0.9840 cpu/fr=30977 idle/fr=481 spin/fr=22 lat=10953/10761 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5055 gpu=12741
+C:/kyty/s102/log_ckpt102_entry1.txt
+  mid-third n= 1869 mean= 31834.5 med= 33241.0 vbl%={1: 9.7, 2: 89.5, 3: 0.7} busy=0.9731 net=0.9723 cpu/fr=30979 idle/fr=856 spin/fr=26 lat=11016/11049 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4958 gpu=12489
+  whole     n= 5608 mean= 33353.6 med= 33328.0 vbl%={1: 9.0, 2: 82.2, 3: 8.8, 4: 0.1, 5: 0.0} busy=0.9602 net=0.9594 cpu/fr=32025 idle/fr=1329 spin/fr=25 lat=11911/11534 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5053 gpu=12215
+  0.00-0.34 n= 1906 mean= 35763.8 med= 33502.5 vbl%={1: 10.1, 2: 65.9, 3: 23.8, 4: 0.2, 5: 0.1} busy=0.9371 net=0.9363 cpu/fr=33514 idle/fr=2250 spin/fr=29 lat=13159/11828 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5089 gpu=11715
+  0.33-0.67 n= 1907 mean= 31864.2 med= 33242.0 vbl%={1: 9.6, 2: 89.6, 3: 0.8} busy=0.9731 net=0.9723 cpu/fr=31006 idle/fr=858 spin/fr=26 lat=11039/11080 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4961 gpu=12487
+  0.66-1.00 n= 1907 mean= 32441.3 med= 33283.0 vbl%={1: 6.8, 2: 91.7, 3: 1.5} busy=0.9736 net=0.9730 cpu/fr=31585 idle/fr=857 spin/fr=21 lat=11485/11634 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5112 gpu=12459
+C:/kyty/s96/log_pl96a.txt
+  mid-third n= 3276 mean= 31145.0 med= 33239.5 vbl%={1: 13.5, 2: 86.1, 3: 0.4} busy=0.9880 net=0.9873 cpu/fr=30772 idle/fr=373 spin/fr=22 lat=10762/10512 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5055 gpu=12695
+  whole     n= 9828 mean= 31243.6 med= 33247.0 vbl%={1: 14.1, 2: 84.4, 3: 1.5, 4: 0.0, 5: 0.0} busy=0.9791 net=0.9784 cpu/fr=30590 idle/fr=653 spin/fr=22 lat=11276/10807 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5040 gpu=12559
+  0.00-0.34 n= 3341 mean= 31462.1 med= 33265.0 vbl%={1: 15.3, 2: 80.9, 3: 3.7, 4: 0.0, 5: 0.1} busy=0.9622 net=0.9614 cpu/fr=30274 idle/fr=1188 spin/fr=25 lat=12224/11374 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5010 gpu=12292
+  0.33-0.67 n= 3341 mean= 31132.9 med= 33237.0 vbl%={1: 13.6, 2: 86.0, 3: 0.4} busy=0.9880 net=0.9873 cpu/fr=30760 idle/fr=373 spin/fr=22 lat=10759/10511 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5053 gpu=12691
+  0.66-1.00 n= 3342 mean= 31108.7 med= 33234.0 vbl%={1: 13.6, 2: 86.2, 3: 0.2} busy=0.9877 net=0.9871 cpu/fr=30727 idle/fr=381 spin/fr=20 lat=10806/10544 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5052 gpu=12696
+C:/kyty/s103/log_vid103.txt
+  mid-third n= 1277 mean= 33033.3 med= 33146.0 vbl%={1: 6.4, 2: 89.4, 3: 4.2, 5: 0.1} busy=0.9715 net=0.9699 cpu/fr=32090 idle/fr=943 spin/fr=52 lat=11790/11703 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5035 gpu=13316
+  whole     n= 3832 mean= 33189.7 med= 33187.5 vbl%={1: 9.6, 2: 82.4, 3: 7.7, 4: 0.1, 5: 0.2} busy=0.9509 net=0.9490 cpu/fr=31559 idle/fr=1631 spin/fr=62 lat=12881/12053 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4998 gpu=12967
+  0.00-0.34 n= 1302 mean= 34281.8 med= 33330.5 vbl%={1: 15.1, 2: 66.1, 3: 18.2, 4: 0.2, 5: 0.4} busy=0.9110 net=0.9086 cpu/fr=31231 idle/fr=3050 spin/fr=81 lat=15511/13920 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4974 gpu=12240
+  0.33-0.67 n= 1303 mean= 33027.5 med= 33148.0 vbl%={1: 6.4, 2: 89.3, 3: 4.1, 5: 0.1} busy=0.9715 net=0.9700 cpu/fr=32086 idle/fr=941 spin/fr=51 lat=11799/11719 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5038 gpu=13320
+  0.66-1.00 n= 1303 mean= 32257.9 med= 33135.0 vbl%={1: 7.1, 2: 92.3, 3: 0.6} busy=0.9734 net=0.9718 cpu/fr=31401 idle/fr=857 spin/fr=52 lat=11278/10937 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4991 gpu=13373
+C:/kyty/s104/log_reg104.txt
+  mid-third n= 2000 mean= 31149.5 med= 33234.0 vbl%={1: 14.2, 2: 85.3, 3: 0.5, 5: 0.1} busy=0.9752 net=0.9750 cpu/fr=30376 idle/fr=774 spin/fr=4 lat=10863/10874 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4969 gpu=12634
+  whole     n= 5999 mean= 31518.6 med= 33253.0 vbl%={1: 14.6, 2: 82.1, 3: 3.3, 4: 0.0, 5: 0.0} busy=0.9521 net=0.9518 cpu/fr=30008 idle/fr=1511 spin/fr=8 lat=12088/11422 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4943 gpu=12193
+  0.00-0.34 n= 2039 mean= 31705.9 med= 33275.0 vbl%={1: 18.5, 2: 73.2, 3: 8.1, 4: 0.1, 5: 0.0} busy=0.9066 net=0.9061 cpu/fr=28746 idle/fr=2960 spin/fr=18 lat=14404/12572 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=4777 gpu=11301
+  0.33-0.67 n= 2040 mean= 31176.1 med= 33235.5 vbl%={1: 14.1, 2: 85.2, 3: 0.6, 5: 0.0} busy=0.9752 net=0.9751 cpu/fr=30403 idle/fr=774 spin/fr=4 lat=10856/10866 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=4974 gpu=12635
+  0.66-1.00 n= 2040 mean= 31698.9 med= 33259.5 vbl%={1: 10.9, 2: 87.9, 3: 1.1} busy=0.9762 net=0.9761 cpu/fr=30945 idle/fr=753 spin/fr=4 lat=10925/10917 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5089 gpu=12667
+C:/kyty/s104/log_dwk104.txt
+  mid-third n= 6309 mean= 31998.8 med= 33265.0 vbl%={1: 9.4, 2: 89.3, 3: 1.3, 5: 0.0} busy=0.9703 net=0.9692 cpu/fr=31047 idle/fr=951 spin/fr=35 lat=10776/10744 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5058 gpu=12412
+  whole     n=18926 mean= 32071.8 med= 33271.0 vbl%={1: 9.9, 2: 87.8, 3: 2.3, 4: 0.0, 5: 0.0} busy=0.9669 net=0.9657 cpu/fr=31011 idle/fr=1061 spin/fr=38 lat=11034/10856 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5051 gpu=12333
+  0.00-0.34 n= 6434 mean= 32224.2 med= 33286.5 vbl%={1: 11.1, 2: 84.6, 3: 4.3, 4: 0.0, 5: 0.0} busy=0.9600 net=0.9586 cpu/fr=30936 idle/fr=1289 spin/fr=46 lat=11501/11100 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5032 gpu=12151
+  0.33-0.67 n= 6435 mean= 31991.3 med= 33265.0 vbl%={1: 9.4, 2: 89.3, 3: 1.3, 5: 0.0} busy=0.9702 net=0.9691 cpu/fr=31038 idle/fr=953 spin/fr=35 lat=10783/10745 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5057 gpu=12413
+  0.66-1.00 n= 6435 mean= 31967.9 med= 33263.0 vbl%={1: 9.3, 2: 89.6, 3: 1.1} busy=0.9708 net=0.9697 cpu/fr=31034 idle/fr=934 spin/fr=34 lat=10800/10733 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5059 gpu=12442
+C:/kyty/s104/log_sh104.txt
+  mid-third n= 3088 mean= 33321.8 med= 33348.0 vbl%={1: 5.3, 2: 89.5, 3: 5.1, 4: 0.0} busy=0.9755 net=0.9734 cpu/fr=32507 idle/fr=815 spin/fr=73 lat=11032/11166 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5061 gpu=12650
+  whole     n= 9264 mean= 33147.5 med= 33346.0 vbl%={1: 7.0, 2: 87.3, 3: 5.6, 4: 0.0, 5: 0.0} busy=0.9674 net=0.9654 cpu/fr=32067 idle/fr=1080 spin/fr=66 lat=11483/11332 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5046 gpu=12498
+  0.00-0.34 n= 3149 mean= 32777.1 med= 33338.0 vbl%={1: 10.9, 2: 81.9, 3: 7.0, 4: 0.1, 5: 0.1} busy=0.9487 net=0.9471 cpu/fr=31097 idle/fr=1681 spin/fr=52 lat=12269/11732 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5012 gpu=12129
+  0.33-0.67 n= 3149 mean= 33311.6 med= 33349.0 vbl%={1: 5.3, 2: 89.5, 3: 5.1, 4: 0.0} busy=0.9754 net=0.9733 cpu/fr=32494 idle/fr=818 spin/fr=73 lat=11035/11171 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5059 gpu=12650
+  0.66-1.00 n= 3150 mean= 33338.1 med= 33355.0 vbl%={1: 4.6, 2: 90.8, 3: 4.6, 4: 0.0} busy=0.9778 net=0.9756 cpu/fr=32598 idle/fr=740 spin/fr=75 lat=11114/11242 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5060 gpu=12726
+C:/kyty/s61/log_sky61d.txt
+  mid-third n=14054 mean= 20142.0 med= 17307.0 vbl%={0: 0.4, 1: 85.9, 2: 6.3, 3: 7.2, 4: 0.1, 5: 0.0} busy=0.4892 net=0.4886 cpu/fr=9853 idle/fr=10289 spin/fr=12 lat=30366/32942 wfd_us/fr=0.2 wfd_n/fr=1.00 draws=1247 gpu=12357
+  whole     n=42162 mean= 25818.4 med= 18190.0 vbl%={0: 0.2, 1: 62.2, 2: 20.5, 3: 16.7, 4: 0.4, 5: 0.0} busy=0.6720 net=0.6711 cpu/fr=17349 idle/fr=8470 spin/fr=23 lat=24605/32710 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=2221 gpu=12206
+  0.00-0.34 n=14335 mean= 16698.4 med= 16682.0 vbl%={0: 0.1, 1: 99.6, 2: 0.2, 3: 0.1} busy=0.2442 net=0.2439 cpu/fr=4077 idle/fr=12621 spin/fr=4 lat=33010/33039 wfd_us/fr=0.2 wfd_n/fr=1.00 draws=377 gpu=9499
+  0.33-0.67 n=14335 mean= 20280.7 med= 17356.0 vbl%={0: 0.4, 1: 85.2, 2: 6.9, 3: 7.3, 4: 0.1, 5: 0.0} busy=0.4947 net=0.4940 cpu/fr=10032 idle/fr=10248 spin/fr=13 lat=30215/32937 wfd_us/fr=0.2 wfd_n/fr=1.00 draws=1273 gpu=12330
+  0.66-1.00 n=14336 mean= 40587.2 med= 39170.5 vbl%={1: 1.0, 2: 55.3, 3: 42.7, 4: 1.1} busy=0.9386 net=0.9373 cpu/fr=38093 idle/fr=2494 spin/fr=52 lat=10468/9556 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=5043 gpu=14804
+C:/kyty/s60/log_sky60.txt
+  mid-third n= 9947 mean= 25298.7 med= 18247.0 vbl%={0: 0.2, 1: 57.3, 2: 33.1, 3: 9.3, 4: 0.1, 5: 0.0} busy=0.7282 net=0.7278 cpu/fr=18423 idle/fr=6875 spin/fr=10 lat=24575/32545 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=2557 gpu=12532
+  whole     n=29841 mean= 25898.8 med= 18599.0 vbl%={0: 0.2, 1: 52.2, 2: 39.7, 3: 7.8, 4: 0.0, 5: 0.0} busy=0.7489 net=0.7485 cpu/fr=19395 idle/fr=6503 spin/fr=9 lat=23688/32136 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=2714 gpu=12517
+  0.00-0.34 n=10145 mean= 16790.5 med= 16701.0 vbl%={0: 0.4, 1: 98.9, 2: 0.4, 3: 0.1, 4: 0.0, 5: 0.1} busy=0.2823 net=0.2820 cpu/fr=4741 idle/fr=12050 spin/fr=5 lat=33147/33042 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=535 gpu=10128
+  0.33-0.67 n=10146 mean= 25326.2 med= 18252.0 vbl%={0: 0.2, 1: 57.2, 2: 33.2, 3: 9.4, 4: 0.1, 5: 0.0} busy=0.7289 net=0.7285 cpu/fr=18459 idle/fr=6867 spin/fr=10 lat=24545/32540 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=2562 gpu=12567
+  0.66-1.00 n=10146 mean= 35622.7 med= 33741.5 vbl%={1: 0.3, 2: 85.6, 3: 14.0, 5: 0.0} busy=0.9836 net=0.9832 cpu/fr=35037 idle/fr=585 spin/fr=12 lat=13339/13468 wfd_us/fr=0.0 wfd_n/fr=1.00 draws=5053 gpu=14904
+C:/kyty/s63/log_sky63a.txt
+  mid-third n=10089 mean= 25401.8 med= 18644.0 vbl%={0: 0.1, 1: 59.4, 2: 28.5, 3: 11.9, 4: 0.1, 5: 0.0} busy=0.6825 net=0.6810 cpu/fr=17336 idle/fr=8065 spin/fr=39 lat=24795/32442 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=2446 gpu=12556
+  whole     n=30268 mean= 26018.7 med= 18946.0 vbl%={0: 0.1, 1: 53.0, 2: 37.7, 3: 9.1, 4: 0.0, 5: 0.0} busy=0.7135 net=0.7117 cpu/fr=18564 idle/fr=7455 spin/fr=46 lat=23599/31936 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=2671 gpu=12739
+  0.00-0.34 n=10291 mean= 16769.9 med= 16628.0 vbl%={0: 0.1, 1: 99.4, 2: 0.4, 3: 0.0, 4: 0.0, 5: 0.0} busy=0.2727 net=0.2724 cpu/fr=4573 idle/fr=12197 spin/fr=5 lat=33130/33039 wfd_us/fr=0.2 wfd_n/fr=1.00 draws=516 gpu=10124
+  0.33-0.67 n=10291 mean= 25440.9 med= 18648.0 vbl%={0: 0.1, 1: 59.2, 2: 28.7, 3: 11.9, 4: 0.1, 5: 0.0} busy=0.6839 net=0.6824 cpu/fr=17400 idle/fr=8041 spin/fr=39 lat=24764/32434 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=2456 gpu=12609
+  0.66-1.00 n=10292 mean= 35907.6 med= 33464.0 vbl%={1: 0.3, 2: 84.1, 3: 15.6, 4: 0.0, 5: 0.0} busy=0.9415 net=0.9388 cpu/fr=33806 idle/fr=2102 spin/fr=95 lat=12877/12602 wfd_us/fr=0.1 wfd_n/fr=1.00 draws=5055 gpu=15596

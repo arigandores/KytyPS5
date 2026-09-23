@@ -1,0 +1,2 @@
+C:/kyty/s104/rec_vwk104.mp4 decoded frames 3886 stderr bytes 0 median d1 0.414 p99 d1 8.859 max d1 61.118 {4.0: (0, []), 6.0: (0, []), 10.0: (0, [])}
+C:/kyty/s104/rec_vid104.mp4 decoded frames 3917 stderr bytes 0 median d1 0.426 p99 d1 8.724 max d1 61.592 {4.0: (0, []), 6.0: (0, []), 10.0: (0, [])}

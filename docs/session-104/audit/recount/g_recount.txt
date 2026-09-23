@@ -1,0 +1,14 @@
+cpu_net 30976.4655 S_lo 12865.3621 S_raw 20615.9483 P_mw 50.7232 2SE 142.3436 T_in 124409.9828 dI 492.6635
+E_rec 1266.8372 E_com 2242.8801 spine 1084.8276 T4 2532.4918 2SE 155.6965 sh_push 556.5345
+CENTRAL S_now 20072.5615 S_ctx 17690.1493 G 5683.1019  -> PROCEEDS
+CEILING S_now^ 19437.5544 S_ctx^ 15927.8370 T4^ 1820.2609 G^ 7628.9515
+G f=0.39 4487.3335
+kill T4 5215.5937
+area arm0 mut 2007.6942 sh 2007.6318 rel -0.0031 %
+xrun instrument price 1096.6897
+G using mut104b arm-0 cpu_net (same run as S) 6450.7847
+arm 0 mw/expect-1 -1.00000 a_hold_n/(mh_n+mh_disp_n)-1 -0.00001 pl_prog_n/mh_n-1 -0.00398 pl_cs_n/disp-1 0.00000 pl_em_n/mh_draws-1 0.00002 pl_pref_n 8.0
+arm 1 mw/expect-1 -0.00266 a_hold_n/(mh_n+mh_disp_n)-1 0.00007 pl_prog_n/mh_n-1 -0.00397 pl_cs_n/disp-1 0.00000 pl_em_n/mh_draws-1 -0.00001 pl_pref_n 8.0
+emit keys ['pl_em_vtx_ns', 'pl_em_rt_ns', 'pl_em_pipe_ns', 'pl_em_com_ns', 'pl_em_rec_ns', 'pl_em_rest_ns']
+arm 0 emit closure (sum ratio) 0.9838
+arm 1 emit closure (sum ratio) 0.9837

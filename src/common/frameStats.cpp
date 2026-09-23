@@ -602,6 +602,17 @@ SiteScope::~SiteScope() {
 	t_site = m_previous;
 }
 
+bool GpuWallOn() {
+	static const bool on = [] {
+		const bool value = Common::EnvFlagOn("KYTY_GPU_WALL");
+		if (value) {
+			LOGF("GpuWall: mode 1" "\n");
+		}
+		return value;
+	}();
+	return on;
+}
+
 uint64_t ThreadCpuNs(ThreadRole role) {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 	const auto handle = g_threads[static_cast<size_t>(role)].load();

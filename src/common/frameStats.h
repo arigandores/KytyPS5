@@ -1749,6 +1749,22 @@ enum class Counter : uint32_t {
 	CtxCheckBad,             // ctx_chk_bad
 	CtxMidSubmit,            // ctx_midsub
 	CtxRecordBlock,          // ctx_rec_block
+	// Session 106, KYTY_GPU_WALL=1 (measurement only, read once per process): the wall of the
+	// GuestGpu thread by region - waiting for work in ThreadRun (gw_idle), all queues blocked
+	// (gw_blk), one GuestGpu::Process call (gw_proc), one queued command (gw_cmd), and inside
+	// Process the R_WAIT_FLIP_DONE wait in FlipQueue::Wait (gw_flip).  Raw ns / counts, live in
+	// KYTY_FRAME_TRACE=lite; all read 0 without the variable.  dt - cpu_net splits into
+	// idle + blk (outside Process) + flip + lock waits + the rest (other waits, preemption).
+	GpuWallIdleNs,           // gw_idle_ns
+	GpuWallIdleN,            // gw_idle_n
+	GpuWallBlockedNs,        // gw_blk_ns
+	GpuWallBlockedN,         // gw_blk_n
+	GpuWallFlipNs,           // gw_flip_ns
+	GpuWallFlipN,            // gw_flip_n
+	GpuWallProcNs,           // gw_proc_ns
+	GpuWallProcN,            // gw_proc_n
+	GpuWallCmdNs,            // gw_cmd_ns
+	GpuWallCmdN,             // gw_cmd_n
 	Count
 };
 
@@ -2124,6 +2140,33 @@ private:
 	Counter   m_ns;
 	uint64_t  m_t0;
 	uint32_t* m_depth = nullptr;
+};
+
+// Session 106, KYTY_GPU_WALL=1 (measurement only): read once per process; logs "GpuWall: mode 1"
+// the first time it is asked and finds the variable on.
+[[nodiscard]] bool GpuWallOn();
+
+// Session 106: the wall of one GuestGpu-thread region (counters GpuWall*), timestamped under
+// Enabled() so it reads in KYTY_FRAME_TRACE=lite.  `on` is the caller's extra condition (the
+// thread role for the flip wait).  Off, it costs the static read in GpuWallOn().
+class WallSpan {
+public:
+	WallSpan(bool on, Counter ns, Counter n): m_ns(ns), m_t0(on && GpuWallOn() && Enabled() ? NowNs() : 0) {
+		if (m_t0 != 0) {
+			Add(n, 1);
+		}
+	}
+	~WallSpan() {
+		if (m_t0 != 0) {
+			Add(m_ns, NowNs() - m_t0);
+		}
+	}
+	WallSpan(const WallSpan&)            = delete;
+	WallSpan& operator=(const WallSpan&) = delete;
+
+private:
+	Counter  m_ns;
+	uint64_t m_t0;
 };
 
 // Session 96, gate "pathlap": HoldLap's shape with its OWN thread-local cursor, so a chain

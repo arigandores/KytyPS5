@@ -680,6 +680,8 @@ void GuestGpu::ThreadRun(void* data) {
 				gpu->m_idle.Signal();
 				{
 					Common::FrameStats::Scope idle_scope(Common::FrameStats::Counter::GpuThreadIdleNs);
+					Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallIdleNs,
+					                                  Common::FrameStats::Counter::GpuWallIdleN);
 					gpu->m_work_available.Wait(&gpu->m_queue_mutex);
 				}
 			}
@@ -712,6 +714,8 @@ void GuestGpu::ThreadRun(void* data) {
 					const auto t0 = std::chrono::steady_clock::now();
 					{
 						Common::FrameStats::Scope blocked_scope(Common::FrameStats::Counter::GpuThreadBlockedNs);
+						Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallBlockedNs,
+						                                  Common::FrameStats::Counter::GpuWallBlockedN);
 						gpu->m_work_available.WaitFor(&gpu->m_queue_mutex, 100);
 					}
 					if (trace_sched) {
@@ -751,6 +755,8 @@ void GuestGpu::ThreadRun(void* data) {
 			EXIT_IF(g_current_processor != nullptr);
 			{
 				Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
+				Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallCmdNs,
+				                                  Common::FrameStats::Counter::GpuWallCmdN);
 				command();
 			}
 
@@ -766,6 +772,8 @@ void GuestGpu::ThreadRun(void* data) {
 		bool complete = false;
 		{
 			Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
+			Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallProcNs,
+			                                  Common::FrameStats::Counter::GpuWallProcN);
 			// Session 98 (patch_s98a): the latch sees this submission's seq, queue and flip state
 			// for the whole slice; a resumed slice keeps its after_flip and bf_mixed bits.
 			BindFloorSetSlice(&submission.bf);

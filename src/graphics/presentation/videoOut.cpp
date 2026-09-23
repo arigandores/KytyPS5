@@ -2433,6 +2433,17 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"ctx_chk_bad", FS::Counter::CtxCheckBad, false},
 				    {"ctx_midsub", FS::Counter::CtxMidSubmit, false},
 				    {"ctx_rec_block", FS::Counter::CtxRecordBlock, false},
+				    // Session 106, KYTY_GPU_WALL=1: the GuestGpu thread's wall by region.  Raw ns/counts.
+				    {"gw_idle_ns", FS::Counter::GpuWallIdleNs, false},
+				    {"gw_idle_n", FS::Counter::GpuWallIdleN, false},
+				    {"gw_blk_ns", FS::Counter::GpuWallBlockedNs, false},
+				    {"gw_blk_n", FS::Counter::GpuWallBlockedN, false},
+				    {"gw_flip_ns", FS::Counter::GpuWallFlipNs, false},
+				    {"gw_flip_n", FS::Counter::GpuWallFlipN, false},
+				    {"gw_proc_ns", FS::Counter::GpuWallProcNs, false},
+				    {"gw_proc_n", FS::Counter::GpuWallProcN, false},
+				    {"gw_cmd_ns", FS::Counter::GpuWallCmdNs, false},
+				    {"gw_cmd_n", FS::Counter::GpuWallCmdN, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -2829,6 +2840,10 @@ void VideoOutDriver::WaitFlipDone(int handle, int index) {
 	EXIT_IF(ctx == nullptr);
 
 	EXIT_NOT_IMPLEMENTED(!IsValidBufferIndex(index));
+	// Session 106, KYTY_GPU_WALL=1: R_WAIT_FLIP_DONE on the GuestGpu thread (gw_flip).
+	Common::FrameStats::WallSpan wall(
+	    Common::FrameStats::CurrentRole() == Common::FrameStats::ThreadRole::Gpu,
+	    Common::FrameStats::Counter::GpuWallFlipNs, Common::FrameStats::Counter::GpuWallFlipN);
 	m_impl->GetFlipQueue().Wait(*ctx, index);
 }
 

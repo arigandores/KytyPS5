@@ -953,6 +953,7 @@ bool CommandRecorder::SpinFor(uint64_t tail) {
 
 void CommandRecorder::Loop() {
 	Common::FrameStats::RegisterCurrentThread(Common::FrameStats::ThreadRole::Record);
+	CtxTick::t_record_thread = true; // session 105, knob "ctxtick" >= 2: ctx_rec_block
 	// m_data and m_mask never change after the constructor: local copies keep this loop off the
 	// line of the fields around them.
 	const auto* const data = m_data.get();

@@ -191,6 +191,7 @@ private:
 } // namespace
 
 void DrainAsyncSubmits() {
+	CtxTick::RecordBlock("drain-async-submits");
 	// Commands that are not written yet are queued work too: the presenter submits on its own
 	// scheduler from a buffer the GuestGpu thread filled, so the record queues go first.
 	DrainRecordQueues();
@@ -420,12 +421,14 @@ void CommandScheduler::Flush(SubmitInfo& submit) {
 }
 
 void CommandScheduler::FlushAndWait() {
+	CtxTick::RecordBlock("flush-and-wait");
 	const auto tick = Submit({}, false);
 	m_master.Wait(tick);
 	BeginNext();
 }
 
 void CommandScheduler::Finish() {
+	CtxTick::RecordBlock("finish");
 	CheckActive();
 	if (!m_command.IsInvalid()) {
 		Submit({}, false);
@@ -436,6 +439,7 @@ void CommandScheduler::Finish() {
 }
 
 void CommandScheduler::Wait(uint64_t tick) {
+	CtxTick::RecordBlock("scheduler-wait");
 	EXIT_IF(tick > CurrentTick());
 	if (tick == CurrentTick()) {
 		CheckActive();
@@ -466,6 +470,31 @@ static const char* DeferredSiteName(const void* site) {
 	}
 	return it->second.c_str();
 }
+
+namespace CtxTick {
+
+// "ctx-mid:<site>": the FrameTrace-submit row of a submit made inside a draw or dispatch. Keyed
+// by the site's address like the site table itself, so each name is built once.
+static const char* MidSiteName(const char* site) {
+	static std::mutex                         mutex;
+	static std::map<const char*, std::string> names;
+	std::lock_guard                           lock(mutex);
+	auto [it, inserted] = names.try_emplace(site);
+	if (inserted) {
+		it->second = std::string("ctx-mid:") + (site != nullptr ? site : "other");
+	}
+	return it->second.c_str();
+}
+
+void RecordBlockSlow(const char* api) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::CtxRecordBlock, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("CtxCheck: RECBLOCK api=%s\n", api);
+	}
+}
+
+} // namespace CtxTick
 
 void CommandScheduler::PopPendingOperations() {
 	PopPendingOperations(true);
@@ -686,6 +715,9 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 	}
 	m_command.m_recorder = wanted;
 	m_command.m_active   = true;
+	// Session 105, route A M3.1: the tick this recording will signal, for both paths below. The
+	// tick moves only through NextTick inside Submit, which also ends the recording.
+	m_command.m_tick = CurrentTick();
 	if (m_command.m_recorder != nullptr) {
 		// CurrentTick() is the tick this buffer will signal: the same value the direct path
 		// stamps the pooled buffer with.
@@ -707,6 +739,13 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 
 uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 	EXIT_IF(m_command.IsInvalid());
+	// Session 105, knob "ctxtick" >= 2: a submit made from inside a draw or dispatch (ctx_midsub).
+	// Its FrameTrace-submit row is renamed "ctx-mid:<site>", so these submits are published per
+	// site while the table still sums to submit_n.
+	const bool ctx_mid = CtxTick::Mode() >= 2 && CtxTick::t_op != nullptr;
+	if (ctx_mid) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::CtxMidSubmit, 1);
+	}
 	Common::DrawStat::Mark(Common::DrawStat::Sync);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeSubmit);
 	EXIT_IF(submit.num_wait_semaphores > SubmitInfo::MaxSemaphores ||
@@ -834,11 +873,13 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 			const auto ns = FS::NowNs() - submit_t0;
 			FS::Add(FS::Counter::SubmitNs, ns);
 			FS::Add(FS::Counter::Submits, 1);
-			FS::AddSite(FS::Table::SubmitSites, FS::CurrentSite(), ns);
+			FS::AddSite(FS::Table::SubmitSites,
+			            ctx_mid ? CtxTick::MidSiteName(FS::CurrentSite()) : FS::CurrentSite(), ns);
 		}
 		m_command.m_active = false;
 		return tick;
 	}
+	CtxTick::RecordBlock("submit-sync");
 	// Synchronous: everything queued before goes first, including commands no record thread has
 	// written yet. After it the handle belongs to this thread again.
 	DrainAsyncSubmits();
@@ -913,7 +954,8 @@ uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
 		const auto ns = FS::NowNs() - submit_t0;
 		FS::Add(FS::Counter::SubmitNs, ns);
 		FS::Add(FS::Counter::Submits, 1);
-		FS::AddSite(FS::Table::SubmitSites, FS::CurrentSite(), ns);
+		FS::AddSite(FS::Table::SubmitSites,
+		            ctx_mid ? CtxTick::MidSiteName(FS::CurrentSite()) : FS::CurrentSite(), ns);
 	}
 
 	m_command.m_buffer = nullptr;

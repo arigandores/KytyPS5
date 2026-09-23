@@ -2428,6 +2428,11 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // near the cap (1/16).  Raw counts.
 				    {"bl_trip", FS::Counter::LoopCapTrips, false},
 				    {"bl_near", FS::Counter::LoopCapNear, false},
+				    // Session 105, knob "ctxtick" >= 2: the route-A M3.1 checks.  Raw counts.
+				    {"ctx_chk_n", FS::Counter::CtxCheckN, false},
+				    {"ctx_chk_bad", FS::Counter::CtxCheckBad, false},
+				    {"ctx_midsub", FS::Counter::CtxMidSubmit, false},
+				    {"ctx_rec_block", FS::Counter::CtxRecordBlock, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

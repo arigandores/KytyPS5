@@ -174,6 +174,7 @@ void GuestGpu::ProcessCommands() {
 }
 
 void GuestGpu::SendCommandSync(Common::UniqueFunction<void>&& command) {
+	CtxTick::RecordBlock("send-command-sync");
 	EXIT_IF(!command);
 	if (IsGpuThread()) {
 		command();

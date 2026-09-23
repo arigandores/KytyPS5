@@ -49,14 +49,13 @@ DescriptorHeap::~DescriptorHeap() {
 	}
 }
 
-vk::DescriptorSet DescriptorHeap::CommitRing(vk::DescriptorSetLayout layout) {
+vk::DescriptorSet DescriptorHeap::CommitRing(vk::DescriptorSetLayout layout, uint64_t tick) {
 	auto* ring = m_ring_last;
 	if (layout != m_ring_last_layout || ring == nullptr) {
 		ring               = &m_rings[layout];
 		m_ring_last_layout = layout;
 		m_ring_last        = ring;
 	}
-	const auto tick = m_master_semaphore.CurrentTick();
 	if (ring->sets.empty() || !m_master_semaphore.IsFree(ring->ticks[ring->hint])) {
 		// The known GPU tick is refreshed by the draw path every 200 us; ask the driver once
 		// before growing, so a ring does not grow only because that value is stale.
@@ -120,12 +119,12 @@ void DescriptorHeap::GrowRing(vk::DescriptorSetLayout layout, Ring& ring) {
 	ring.ticks.insert(ring.ticks.begin() + at, count, uint64_t {0});
 }
 
-vk::DescriptorSet DescriptorHeap::Commit(vk::DescriptorSetLayout layout) {
+vk::DescriptorSet DescriptorHeap::Commit(vk::DescriptorSetLayout layout, uint64_t tick) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(layout == nullptr);
 
 	if (Common::Gates::Enabled(Common::Gates::Gate::DescriptorRing)) {
-		if (const auto set = CommitRing(layout); set != nullptr) {
+		if (const auto set = CommitRing(layout, tick); set != nullptr) {
 			return set;
 		}
 		// The ring of this layout is at its cap and busy: the pooled path below serves this draw.
@@ -150,7 +149,7 @@ vk::DescriptorSet DescriptorHeap::Commit(vk::DescriptorSetLayout layout) {
 			m_current_pool.used = true;
 			return fresh.sets[fresh.cursor++];
 		}
-		m_current_pool.tick = m_master_semaphore.CurrentTick();
+		m_current_pool.tick = tick;
 		m_pending_pools.push_back(std::move(m_current_pool));
 		m_current_pool = {};
 		if (m_master_semaphore.IsFree(m_pending_pools.front().tick)) {

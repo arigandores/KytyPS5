@@ -264,7 +264,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	bool indirect = indirect_args_addr != 0;
 	{
 		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DispatchPopNs);
-		m_context.GetCommandScheduler().PopPendingOperationsLazy();
+		buffer.Scheduler().PopPendingOperationsLazy();
 	}
 	auto& ctx    = buffer.GetRegisters();
 	auto& sh_ctx = buffer.GetShaders();
@@ -285,6 +285,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldDispatchNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
+	// Session 105, knob "ctxtick" >= 2: check the buffer and mark the thread as inside a dispatch.
+	const CtxTick::OpScope ctx_op(m_context, buffer, "dispatch");
 	// Session 97, gate "bindfloor": latch the floor decision for this whole dispatch before
 	// GetComputeProgram reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the dispatch's op-site latch; the CS address is the GDS-trigger key (mode 2).
@@ -917,11 +919,11 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		if (sanitize) {
 			if (m_indirect_sanitizer == nullptr) {
 				m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(
-				    m_context.GetGraphics(), m_context.GetCommandScheduler());
+				    m_context.GetGraphics(), buffer.Scheduler());
 			}
 			std::tie(indirect_vk_buffer, indirect_vk_offset) =
 			    m_indirect_sanitizer->Sanitize(*args_buffer, args_offset);
-			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
+			buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 		} else {
 			indirect_vk_buffer = args_buffer->Handle();
 			indirect_vk_offset = args_offset;
@@ -956,7 +958,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	GpuMarkerSite gpu_marker;
 	if (GpuOpsActive()) {
 		gpu_marker = GpuMarkerBegin(
-		    m_context.GetCommandScheduler(),
+		    buffer.Scheduler(),
 		    indirect ? GpuMarkerKind::DispatchIndirect : GpuMarkerKind::Dispatch, submit_id,
 		    program.shader_hash, 0u, thread_group_x, thread_group_y, thread_group_z,
 		    BindFloorCurrentOp().armed);
@@ -990,7 +992,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		// A host fence used to serialize every dispatch. Preserve its read-before-write ordering
 		// while allowing the queue to execute asynchronously.
 		ShaderWriteHazardBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
-		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 3);
+		buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 3);
 	}
 	vk_buffer.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline.pipeline);
 	GpuMarkerTop(vk_buffer, gpu_marker); // Session 98 (patch_s98b)
@@ -1000,14 +1002,14 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		vk_buffer.dispatch(thread_group_x, thread_group_y, thread_group_z);
 	}
 	GpuMarkerBottom(vk_buffer, gpu_marker);
-	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
-	                                        indirect ? 1u : 0u);
+	buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Dispatch, program.shader_hash,
+	                           indirect ? 1u : 0u);
 	m_context.GetTextureCache().StampPendingDccFill();
 
 	// The removed host fence also ordered read-only dispatches before later writers.
 	buffer.CheckNoPublish(publish_mark);
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
-	m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 2);
+	buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 2);
 	lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
 	ResetBindings();
 }

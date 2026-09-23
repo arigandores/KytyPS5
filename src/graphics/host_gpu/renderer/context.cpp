@@ -3,6 +3,7 @@
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/common.h"
+#include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/threads.h"
 #include "graphics/host_gpu/graphicContext.h"
@@ -87,7 +88,46 @@ static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::SwMigOther) -
 } // namespace
 
 CommandBuffer::CommandBuffer(CommandScheduler& scheduler)
-    : m_context(scheduler.Context()), m_graphics(scheduler.Graphics()) {}
+    : m_context(scheduler.Context()), m_graphics(scheduler.Graphics()), m_scheduler(&scheduler) {}
+
+// Session 105, route A M3.1: the one place the executor still asks the render scheduler for an
+// ownership tick (knob "ctxtick" = 0, the expression DescriptorHeap and MergeCostCensus used).
+uint64_t RenderExecutor::OwnerTick(const CommandBuffer& buffer, const char* site) {
+	const auto mode = CtxTick::Mode();
+	if (mode == 0) {
+		return m_context.GetCommandScheduler().CurrentTick();
+	}
+	if (mode >= 2) {
+		CtxTick::Check(m_context, buffer, site, mode);
+	}
+	return buffer.Tick();
+}
+
+void CtxTick::Check(RenderContext& context, const CommandBuffer& buffer, const char* site,
+                    uint32_t mode) {
+	namespace FS       = Common::FrameStats;
+	auto&      render  = context.GetCommandScheduler();
+	const bool owner   = &buffer.Scheduler() == &render;
+	const bool current = &buffer == &render.Current();
+	const bool active  = !buffer.IsInvalid();
+	const bool tick    = buffer.Tick() == render.CurrentTick();
+	FS::Add(FS::Counter::CtxCheckN, 1);
+	if (owner && current && active && tick) {
+		return;
+	}
+	FS::Add(FS::Counter::CtxCheckBad, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("CtxCheck: MISMATCH site=%s owner=%d current=%d active=%d buffer_tick=%llu "
+		     "render_tick=%llu\n",
+		     site, owner ? 1 : 0, current ? 1 : 0, active ? 1 : 0,
+		     static_cast<unsigned long long>(buffer.Tick()),
+		     static_cast<unsigned long long>(render.CurrentTick()));
+	}
+	if (mode >= 3) {
+		EXIT("CtxCheck: MISMATCH site=%s (ctxtick=3)\n", site);
+	}
+}
 
 bool CommandBuffer::IsInvalid() const {
 	// Not m_buffer: with a record thread the handle belongs to that thread until the queue is

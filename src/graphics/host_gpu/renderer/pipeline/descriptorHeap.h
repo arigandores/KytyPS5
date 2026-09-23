@@ -20,7 +20,10 @@ public:
 	~DescriptorHeap();
 	KYTY_CLASS_NO_COPY(DescriptorHeap);
 
-	[[nodiscard]] vk::DescriptorSet Commit(vk::DescriptorSetLayout layout);
+	// tick: the tick of the command buffer the set is handed out for, which owns it until that
+	// tick completes (session 105, route A M3.1: the caller names it, the heap no longer asks
+	// the semaphore).
+	[[nodiscard]] vk::DescriptorSet Commit(vk::DescriptorSetLayout layout, uint64_t tick);
 	// Gate "dsring": one ring of sets per layout, each set stamped with the tick it was last
 	// handed out for. Commit dispatches here while the gate is on.
 	struct Statistics {
@@ -65,7 +68,7 @@ private:
 		std::vector<uint64_t>          ticks;
 		size_t                         hint = 0;
 	};
-	[[nodiscard]] vk::DescriptorSet CommitRing(vk::DescriptorSetLayout layout);
+	[[nodiscard]] vk::DescriptorSet CommitRing(vk::DescriptorSetLayout layout, uint64_t tick);
 	void                            GrowRing(vk::DescriptorSetLayout layout, Ring& ring);
 
 	GraphicContext&                                     m_graphics;

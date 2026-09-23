@@ -156,7 +156,7 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 					memo_slot->info.memo_version = r.memo_version;
 					Common::DrawStat::Mark(Common::DrawStat::Memo);
 				} else {
-					image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+					image->tick_accessed_last = m_context.AgeTick();
 					cache.TouchImage(*image);
 				}
 				BindRenderTarget(r.image_id);

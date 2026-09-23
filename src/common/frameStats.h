@@ -1739,6 +1739,16 @@ enum class Counter : uint32_t {
 	// land 1-3 flips after the dispatch.
 	LoopCapTrips,            // bl_trip
 	LoopCapNear,             // bl_near
+	// Session 105, route A M3.1, knob "ctxtick" >= 2 (docs/session-105/designA3_stage3.md
+	// section 2 item 5): the command-buffer identity checks made at draw / dispatch entry and at
+	// each ownership site (ctx_chk_n) and those that failed (ctx_chk_bad), the Submit calls made
+	// while the thread was inside a draw or dispatch (ctx_midsub), and the blocking scheduler
+	// APIs entered on a CommandRecorder thread (ctx_rec_block).  Raw counts; all four read
+	// exactly 0 at ctxtick 0 and 1.
+	CtxCheckN,               // ctx_chk_n
+	CtxCheckBad,             // ctx_chk_bad
+	CtxMidSubmit,            // ctx_midsub
+	CtxRecordBlock,          // ctx_rec_block
 	Count
 };
 

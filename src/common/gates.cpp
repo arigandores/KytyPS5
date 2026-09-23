@@ -363,8 +363,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_BIND_FLOOR_BURN", "bfburn", 0, 40000},
     // Session 102: draw-lookahead requests per QueueDrawAhead call; 64 = today, 0 = one call
     // per walk.  Read once per walk, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_DRAW_AHEAD_BATCH", "dabatch", 64, 65536},
+    // Session 105, route A M3.1: the source of the ownership tick; 0 = today (the render
+    // scheduler's CurrentTick()), 1 = CommandBuffer::Tick(), 2 = 1 + checks, 3 = 2 + EXIT.
+    // Read at every use, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_CTX_TICK", "ctxtick", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

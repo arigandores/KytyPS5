@@ -1496,7 +1496,7 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 				g_bind_wit_mark = Common::FrameStats::NowNs();
 			}
 			texture_cache.ConfigureImageSource(memo_slot.image_id, memo_slot.desc);
-			cached->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+			cached->tick_accessed_last = m_context.AgeTick();
 			texture_cache.TouchImage(*cached);
 			if (!cached->info.IsDepth() && descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
 				// The adoption itself only ever turns an image with no metadata into a DCC one;
@@ -1956,7 +1956,7 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 			                                vk::ImageLayout::eTransferDstOptimal, &clear, 1,
 			                                &range);
 		}
-		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 1);
+		buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 1);
 		for (uint32_t consumed = layer; consumed < layer + count; consumed++) {
 			if (!cache.TouchMeta(address, consumed, false)) {
 				EXIT("failed to consume DCC clear state for a shader binding\n");
@@ -3967,7 +3967,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		if (!m_descriptor_writes.empty()) {
 			EXIT_IF(pipeline.descriptor_set_layout == nullptr);
 			if (!pipeline.uses_push_descriptors) {
-				set = m_context.GetDescriptorHeap().Commit(pipeline.descriptor_set_layout);
+				set = m_context.GetDescriptorHeap().Commit(pipeline.descriptor_set_layout,
+				                                           OwnerTick(buffer, "commit-packet"));
 			}
 		}
 		if (has_push_data || !m_descriptor_writes.empty()) {
@@ -3988,7 +3989,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		}
 		cb_finish();
 		if (merge_cost) {
-			MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, true);
+			MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, true,
+			                OwnerTick(buffer, "mergecost"));
 		}
 		return;
 	}
@@ -4007,7 +4009,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			                               static_cast<uint32_t>(m_descriptor_writes.size()),
 			                               m_descriptor_writes.data());
 		} else {
-			const auto set = m_context.GetDescriptorHeap().Commit(pipeline.descriptor_set_layout);
+			const auto set = m_context.GetDescriptorHeap().Commit(pipeline.descriptor_set_layout,
+			                                                      OwnerTick(buffer, "commit"));
 			for (auto& write: m_descriptor_writes) {
 				write.dstSet = set;
 			}
@@ -4029,7 +4032,8 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	}
 	cb_finish();
 	if (merge_cost) {
-		MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, false);
+		MergeCostCensus(pipeline, prepared_bindings, cb_transit, cb_write, cb_emit, false,
+		                OwnerTick(buffer, "mergecost"));
 	}
 }
 
@@ -4046,7 +4050,7 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
                                      std::span<PreparedBindings* const> prepared_bindings,
                                      uint64_t transit_ns, uint64_t write_ns,
-                                     uint64_t emit_ns, bool packet) {
+                                     uint64_t emit_ns, bool packet, uint64_t tick) {
 	namespace FS  = Common::FrameStats;
 	using Counter = FS::Counter;
 	using ShaderRecompiler::IR::DescriptorBindingKind;
@@ -4227,7 +4231,6 @@ void RenderExecutor::MergeCostCensus(const PipelineCache::Pipeline&     pipeline
 	}
 	const uint64_t layout = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(
 	    static_cast<VkPipelineLayout>(pipeline.pipeline_layout)));
-	const uint64_t tick   = m_context.GetCommandScheduler().CurrentTick();
 	const uint64_t pipe   = static_cast<uint64_t>(
 	    reinterpret_cast<uintptr_t>(static_cast<VkPipeline>(pipeline.pipeline)));
 	if (bad) {

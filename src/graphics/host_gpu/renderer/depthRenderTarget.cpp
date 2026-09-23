@@ -320,7 +320,7 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 				memo_slot.info.memo_version = r.memo_version;
 				Common::DrawStat::Mark(Common::DrawStat::Memo);
 			} else {
-				image->tick_accessed_last = m_context.GetCommandScheduler().CurrentTick();
+				image->tick_accessed_last = m_context.AgeTick();
 				cache.TouchImage(*image);
 			}
 			BindRenderTarget(r.image_id);
@@ -456,7 +456,7 @@ bool RenderExecutor::DepthStencilCopy(CommandBuffer& buffer) {
 	auto& destination = cache.GetImage(write_id);
 	EXIT_IF(read_id == write_id || source.backing.format != destination.backing.format);
 
-	auto& scheduler = m_context.GetCommandScheduler();
+	auto& scheduler = buffer.Scheduler();
 	scheduler.EndRendering();
 	const auto command = scheduler.Current().Handle();
 	const ImageSubresourceRange range {read_desc.view_info.base_level, 1,

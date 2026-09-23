@@ -2,6 +2,7 @@
 #define EMULATOR_SRC_GRAPHICS_HOST_GPU_RENDERER_COMMANDSCHEDULER_H_
 
 #include "common/common.h"
+#include "common/gates.h"
 #include "common/uniqueFunction.h"
 #include "graphics/host_gpu/renderer/commandRecorder.h"
 #include "graphics/host_gpu/renderer/gpuTimeProfiler.h"
@@ -167,6 +168,58 @@ private:
 	// Declared last: its destructor stops the record thread before anything it points at dies.
 	std::unique_ptr<CommandRecorder>          m_recorder;
 };
+
+// Session 105, route A M3.1 (docs/session-105/designA3_stage3.md section 2 item 5): the checks of
+// knob "ctxtick" >= 2.  At 0 and 1 every entry point below costs one knob read and nothing else.
+namespace CtxTick {
+
+[[nodiscard]] inline uint32_t Mode() noexcept {
+	return Common::Gates::Value(Common::Gates::Knob::CtxTick);
+}
+// The draw or dispatch this thread is inside (OpScope); Submit counts ctx_midsub while it is set.
+inline thread_local const char* t_op = nullptr;
+// Set for the life of a CommandRecorder thread (CommandRecorder::Loop).
+inline thread_local bool t_record_thread = false;
+
+// ctx_chk_n / ctx_chk_bad: `buffer` must be the open buffer of the render scheduler of
+// `context`, owned by it, with the tick it will signal next.  Logs up to 40 "CtxCheck: MISMATCH
+// site=" lines; mode 3 exits on the first.  Defined in context.cpp.
+void Check(RenderContext& context, const CommandBuffer& buffer, const char* site, uint32_t mode);
+// ctx_rec_block: `api` blocks, and a record thread must never call it (the priority thread's
+// wait is legitimate and is not a record thread).
+void RecordBlockSlow(const char* api);
+inline void RecordBlock(const char* api) {
+	if (Mode() >= 2 && t_record_thread) [[unlikely]] {
+		RecordBlockSlow(api);
+	}
+}
+
+// A draw or dispatch from right after the render mutex to its return: checks the buffer at entry
+// and marks the thread as inside the operation (ctx_midsub).
+class OpScope {
+public:
+	OpScope(RenderContext& context, const CommandBuffer& buffer, const char* op) {
+		if (const auto mode = Mode(); mode >= 2) [[unlikely]] {
+			Check(context, buffer, op, mode);
+			m_previous = t_op;
+			t_op       = op;
+			m_armed    = true;
+		}
+	}
+	~OpScope() {
+		if (m_armed) [[unlikely]] {
+			t_op = m_previous;
+		}
+	}
+	OpScope(const OpScope&)            = delete;
+	OpScope& operator=(const OpScope&) = delete;
+
+private:
+	const char* m_previous = nullptr;
+	bool        m_armed    = false;
+};
+
+} // namespace CtxTick
 
 } // namespace Libs::Graphics
 

@@ -1076,7 +1076,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			buffer.Handle().clearDepthStencilImage(image.backing.image,
 			                                       vk::ImageLayout::eTransferDstOptimal, &clear, 1,
 			                                       &range);
-			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 2);
+			buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 2);
 			depth.depth_load_clear_enable = depth.depth_clear_enable;
 		}
 		image.Transit(layout, access,
@@ -1489,24 +1489,22 @@ static void SetDrawDebugPhase(CommandBuffer& buffer, uint64_t submit_id, const D
 // bracketed: a marker outside the render pass before it and, after it, an all-commands barrier plus
 // a DrawComplete marker. A device loss then leaves the hung draw (with its shader hashes) in the
 // breadcrumb buffer.
-static void RecordDrawStartBreadcrumb(RenderContext& context, CommandBuffer& buffer,
-                                      uint64_t submit_id, const DrawCallInfo& draw,
-                                      const DrawRenderState& state) {
+static void RecordDrawStartBreadcrumb(CommandBuffer& buffer, uint64_t submit_id,
+                                      const DrawCallInfo& draw, const DrawRenderState& state) {
 	if (!buffer.GetGraphics().gpu_breadcrumbs_enabled && !buffer.GetGraphics().diagnostic_checkpoints_enabled) {
 		return;
 	}
-	if (buffer.GetGraphics().gpu_breadcrumbs_enabled) context.GetCommandScheduler().EndRendering();
+	if (buffer.GetGraphics().gpu_breadcrumbs_enabled) buffer.Scheduler().EndRendering();
 	SetDrawDebugPhase(buffer, submit_id, draw, state, 0x800u);
 }
 
-static void RecordDrawCompleteBreadcrumb(RenderContext& context, CommandBuffer& buffer,
-                                         uint64_t submit_id, const DrawCallInfo& draw,
-                                         const DrawRenderState& state) {
+static void RecordDrawCompleteBreadcrumb(CommandBuffer& buffer, uint64_t submit_id,
+                                         const DrawCallInfo& draw, const DrawRenderState& state) {
 	if (!buffer.GetGraphics().gpu_breadcrumbs_enabled && !buffer.GetGraphics().diagnostic_checkpoints_enabled) {
 		return;
 	}
 	if (buffer.GetGraphics().gpu_breadcrumbs_enabled) {
-	context.GetCommandScheduler().EndRendering();
+	buffer.Scheduler().EndRendering();
 	VulkanMemoryBarrier barrier {};
 	barrier.sType         = vk::StructureType::eMemoryBarrier;
 	barrier.srcAccessMask = vk::AccessFlagBits::eMemoryWrite;
@@ -2453,7 +2451,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		EXIT_IF(args_buffer == nullptr);
 		if (m_indirect_sanitizer == nullptr) {
 			m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(
-			    m_context.GetGraphics(), m_context.GetCommandScheduler());
+			    m_context.GetGraphics(), buffer.Scheduler());
 		}
 		constexpr uint32_t MaxInstances = 1u << 20u;
 		const std::array<uint32_t, 5> limits =
@@ -2461,11 +2459,11 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		                                               UINT32_MAX, UINT32_MAX, UINT32_MAX}
 		                     : std::array<uint32_t, 5> {UINT32_MAX, MaxInstances,
 		                                               UINT32_MAX, UINT32_MAX, 0};
-		m_context.GetCommandScheduler().EndRendering(RenderPassEnd::Sanitize);
+		buffer.Scheduler().EndRendering(RenderPassEnd::Sanitize);
 		std::tie(emit_info.indirect_buffer, emit_info.indirect_offset) =
 		    m_indirect_sanitizer->Sanitize(*args_buffer, args_offset, dwords,
 		                                   limits, true);
-		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
+		buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Other, 1);
 	}
 
 	if (draw.IsIndexed()) {
@@ -2699,7 +2697,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		// Session 98 (patch_s98b): GPU marker TOP (no-op unless KYTY_GPU_MARKERS).
 		GpuMarkerSite gpu_marker;
 		if (GpuOpsActive()) {
-			gpu_marker = BeginDrawMarker(m_context.GetCommandScheduler(), submit_id, draw, state,
+			gpu_marker = BeginDrawMarker(buffer.Scheduler(), submit_id, draw, state,
 			                             emit_info.indirect_buffer != nullptr, mesh_active,
 			                             mesh_groups);
 		}
@@ -2786,7 +2784,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// memory.
 	auto       vk_buffer    = buffer.Handle();
 	const auto publish_mark = buffer.PublishMark();
-	RecordDrawStartBreadcrumb(m_context, buffer, submit_id, draw, state);
+	RecordDrawStartBreadcrumb(buffer, submit_id, draw, state);
 	SetDrawDebugPhase(buffer, submit_id, draw, state, draw.IsIndexed() ? 0x100u : 0x200u);
 	if (!mesh_active) {
 		CommitVertexBuffers(vk_buffer, vertex_bindings);
@@ -2824,7 +2822,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (!draw.IsIndexed()) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 	}
-	m_context.GetCommandScheduler().BeginRendering(rendering);
+	buffer.Scheduler().BeginRendering(rendering);
 	DrawStatEmit();
 	buffer.CheckNoPublish(publish_mark);
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {
@@ -2840,7 +2838,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// Session 98 (patch_s98b): GPU marker TOP (no-op unless KYTY_GPU_MARKERS).
 	GpuMarkerSite gpu_marker;
 	if (GpuOpsActive()) {
-		gpu_marker = BeginDrawMarker(m_context.GetCommandScheduler(), submit_id, draw, state,
+		gpu_marker = BeginDrawMarker(buffer.Scheduler(), submit_id, draw, state,
 		                             emit_info.indirect_buffer != nullptr, mesh_active, mesh_groups);
 	}
 	GpuMarkerTop(vk_buffer, gpu_marker);
@@ -2880,7 +2878,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (GpuTimeProfiler::Enabled()) {
 		const auto& vs = state.vertex_info[0].stage;
 		const auto& ps = state.ps_input_info.stage;
-		m_context.GetCommandScheduler().GpuMark(
+		buffer.Scheduler().GpuMark(
 		    GpuTimeProfiler::Kind::Draw, (state.ps_active && ps) ? ps.program->shader_hash : 0u,
 		    vs ? vs.program->shader_hash : 0u);
 	}
@@ -2915,12 +2913,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		    Common::Gates::Enabled(Common::Gates::Gate::ShaderWriteDefer)) {
 			buffer.NotePendingShaderWrite(shader_write_stages);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ShaderWriteBarriersDeferred, 1);
-			m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
+			buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
 			LogDrawPhase(draw.Name(), "DrawComplete");
 			if (!draw.IsIndexed()) {
 				SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
 			}
-			RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
+			RecordDrawCompleteBreadcrumb(buffer, submit_id, draw, state);
 			lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
 			Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 			return;
@@ -2945,17 +2943,17 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 			ShaderWriteBarrierLocal(vk_buffer, shader_write_stages);
 			buffer.NotePendingShaderWrite(shader_write_stages);
 		} else {
-			m_context.GetCommandScheduler().EndRendering(RenderPassEnd::ShaderWrite);
+			buffer.Scheduler().EndRendering(RenderPassEnd::ShaderWrite);
 			buffer.CheckNoPublish(publish_mark);
 			ShaderWriteBarrier(vk_buffer, shader_write_stages);
 		}
-		m_context.GetCommandScheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
+		buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 1);
 	}
 	LogDrawPhase(draw.Name(), "DrawComplete");
 	if (!draw.IsIndexed()) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x700u);
 	}
-	RecordDrawCompleteBreadcrumb(m_context, buffer, submit_id, draw, state);
+	RecordDrawCompleteBreadcrumb(buffer, submit_id, draw, state);
 	lap.Mark(Common::FrameStats::Counter::DrawEmitNs);
 	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 }
@@ -2969,7 +2967,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
 	{
 		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DrawPopNs);
-		m_context.GetCommandScheduler().PopPendingOperationsLazy();
+		buffer.Scheduler().PopPendingOperationsLazy();
 	}
 	auto& ucfg   = buffer.GetUserConfig();
 	auto& sh_ctx = buffer.GetShaders();
@@ -2992,6 +2990,8 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	// the middle of the critical section still account for their whole hold.
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 105, knob "ctxtick" >= 2: check the buffer and mark the thread as inside a draw.
+	const CtxTick::OpScope ctx_op(m_context, buffer, "draw-index");
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed
@@ -3142,7 +3142,7 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
 	{
 		Common::FrameStats::Scope pop_scope(Common::FrameStats::Counter::DrawPopNs);
-		m_context.GetCommandScheduler().PopPendingOperationsLazy();
+		buffer.Scheduler().PopPendingOperationsLazy();
 	}
 	auto& ucfg   = buffer.GetUserConfig();
 	auto& sh_ctx = buffer.GetShaders();
@@ -3161,6 +3161,8 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldTailNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
+	// Session 105, knob "ctxtick" >= 2: see DrawIndex above.
+	const CtxTick::OpScope ctx_op(m_context, buffer, "draw-auto");
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed

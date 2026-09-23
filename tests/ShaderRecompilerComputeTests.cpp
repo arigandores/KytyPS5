@@ -1914,7 +1914,7 @@ public:
       constexpr uint32_t phase_sets = 1100; // also exhaust drivers that overallocate descriptor types
       std::vector<vk::DescriptorSet> issued;
       const auto commit = [&](vk::DescriptorSetLayout requested = nullptr) {
-        const auto set = heap.Commit(requested ? requested : layout);
+        const auto set = heap.Commit(requested ? requested : layout, scheduler.CurrentTick());
         Require("DescriptorHeapLargeSet", "allocation", set != nullptr,
                 "ordinary descriptor heap could not allocate an oversized sampler set");
         Require("DescriptorHeapLargeSet", "in-flight uniqueness",

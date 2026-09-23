@@ -535,8 +535,16 @@ enum class Knob : uint32_t {
 	// WalkComputeDispatches).  64 = the constant it replaces, 0 = one call at the end of the walk.
 	// Read ONCE PER WALK, so a schedule flip cannot give one walk two batch sizes and it CAN be a
 	// schedule arm.  Proof it armed: the counter da_qcall (QueueDrawAhead calls).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	DrawAheadBatch,   // KYTY_DRAW_AHEAD_BATCH,   file name "dabatch" (requests per queue call, 0 = whole walk)
+	// Session 105, route A M3.1 (docs/session-105/designA3_stage3.md section 2): where the
+	// ownership tick of a descriptor set (DescriptorHeap::Commit) and of the mergecost census
+	// comes from.  0 = the render scheduler's CurrentTick(), the old expression; 1 = the tick the
+	// command buffer was begun with (CommandBuffer::Tick); 2 = 1 plus the identity checks
+	// ctx_chk_n / ctx_chk_bad and the counters ctx_midsub / ctx_rec_block; 3 = 2 plus EXIT on a
+	// mismatch.  At N = 1 the two sources are equal by construction, so a flip between two reads
+	// is harmless.  Read at every use.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	CtxTick,          // KYTY_CTX_TICK,           file name "ctxtick" (0 old, 1 buffer, 2 + check, 3 + exit)
 	Count,
 };
 

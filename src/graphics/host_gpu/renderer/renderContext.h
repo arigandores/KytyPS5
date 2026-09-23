@@ -47,6 +47,10 @@ public:
 	BufferCache&        GetBufferCache() { return m_buffer_cache; }
 	TextureCache&       GetTextureCache() { return m_texture_cache; }
 	RenderExecutor&     GetRenderExecutor() { return m_render_executor; }
+	// Session 105, route A M3.1: the clock images age by (tick_accessed_last against
+	// NumFramesBeforeRemoval). One global clock on purpose: it stays the render scheduler's tick
+	// and never becomes a per-context one, whose values another timeline could not compare.
+	[[nodiscard]] uint64_t AgeTick() const noexcept { return m_command_scheduler.CurrentTick(); }
 
 	[[nodiscard]] bool HandleFault(PageFaultAccess access, uint64_t fault_vaddr) noexcept;
 	[[nodiscard]] bool InvalidateMemory(uint64_t vaddr, uint64_t size);

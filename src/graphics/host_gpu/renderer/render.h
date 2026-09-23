@@ -244,6 +244,12 @@ public:
 	[[nodiscard]] HW::Context&      GetRegisters() const noexcept { return *m_registers; }
 	[[nodiscard]] HW::UserConfig&   GetUserConfig() const noexcept { return *m_user_config; }
 	[[nodiscard]] HW::Shader&       GetShaders() const noexcept { return *m_shaders; }
+	// Session 105, route A M3.1: the scheduler that owns this buffer, and the tick this recording
+	// will signal (set by CommandScheduler::BeginCommand, stale once the buffer is submitted).
+	// A submit inside a draw begins a new recording in the same object with a new tick, so read
+	// Tick() at the use and never keep it in a local across a call.
+	[[nodiscard]] CommandScheduler& Scheduler() const noexcept { return *m_scheduler; }
+	[[nodiscard]] uint64_t          Tick() const noexcept { return m_tick; }
 
 private:
 	explicit CommandBuffer(CommandScheduler& scheduler);
@@ -265,6 +271,8 @@ private:
 
 	RenderContext&      m_context;
 	GraphicContext&     m_graphics;
+	CommandScheduler*   m_scheduler = nullptr;
+	uint64_t            m_tick      = 0;
 	// Owned by the record thread while its queue is not empty; the resolving thread may read it
 	// after a drain. Whether a buffer is open is m_active, not this handle.
 	vk::CommandBuffer   m_buffer          = nullptr;
@@ -537,10 +545,16 @@ private:
 	// Knob "bfburn" at bfmode=3 only; a no-op at every other setting.  Called from the draw
 	// and dispatch paths exactly where the removed work stood.
 	void           BindFloorBurnSlice();
+	// tick: the ownership tick of the commit (OwnerTick), taken at the call.
 	void           MergeCostCensus(const PipelineCache::Pipeline&     pipeline,
 	                               std::span<PreparedBindings* const> prepared_bindings,
 	                               uint64_t transit_ns, uint64_t write_ns, uint64_t emit_ns,
-	                               bool packet);
+	                               bool packet, uint64_t tick);
+	// Session 105, route A M3.1, knob "ctxtick": the ownership tick of what this operation hands
+	// out now - the render scheduler's CurrentTick() at 0 (the old expression), buffer.Tick() at
+	// 1..3, after the identity checks at 2..3 (CtxTick::Check, `site` names the caller).
+	// Evaluate it at the use: a submit inside the operation moves the tick.
+	[[nodiscard]] uint64_t OwnerTick(const CommandBuffer& buffer, const char* site);
 	// Hot-path memos (renderMemo.h); created on first use so the header stays light.
 	std::shared_ptr<RenderExecutorMemo>   m_memo;
 	[[nodiscard]] RenderExecutorMemo&     Memo();

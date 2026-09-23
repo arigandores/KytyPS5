@@ -71,6 +71,7 @@ void MasterSemaphore::Refresh() {
 }
 
 void MasterSemaphore::Wait(uint64_t tick) {
+	CtxTick::RecordBlock("master-wait");
 	if (IsFree(tick)) {
 		return;
 	}

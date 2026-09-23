@@ -1,0 +1,11 @@
+  stl110b_1  A rows   4955  new   3 wait   1  lines   4  D_us     1203  M_us     609  cspf_new   74  hit        0  ok
+  stl110b_2  B rows   4960  new   3 wait   1  lines   5  D_us     2222  M_us     963  cspf_new   74  hit  1272860  ok
+  stl110b_3  B rows   4911  new   3 wait   2  lines   7  D_us     4168  M_us    1619  cspf_new   74  hit  1260270  ok
+  stl110b_4  A rows   4908  new   3 wait   1  lines   6  D_us     2413  M_us     960  cspf_new   74  hit        0  ok
+  stl110b_5  A rows   4866  new   2 wait   2  lines   6  D_us    13922  M_us   12293  cspf_new   75  hit        0  ok
+  stl110b_6  B rows   4956  new   3 wait   1  lines   6  D_us     2499  M_us     943  cspf_new   74  hit  1274792  ok
+  stl110b_7  B rows   4976  new   2 wait   1  lines   4  D_us     1989  M_us     930  cspf_new   75  hit  1279278  ok
+  stl110b_8  A rows   4900  new   2 wait   1  lines   4  D_us     2031  M_us     957  cspf_new   75  hit        0  ok
+  S_A 15 S_B 16  N_A 20  D_A 19569 D_B 10878 (bound 44461)  M_A 12293 M_B 1619 (bound 22293)  errors none
+  scorer 83f3236f43ab2581e968d6f0b89b18620dadc817036e9ae339c571841c027cb6
+VERDICT: PASS

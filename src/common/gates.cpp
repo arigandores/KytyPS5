@@ -374,10 +374,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 107: compute-prefetch memo on the walker; 0 = off (today).  Read once per prefetch
     // call, so it CAN be a schedule arm.
     {"KYTY_CS_PREFETCH_MEMO", "cspmemo", 0, 3},
-    // Session 108: compute-prefetch skip per shader family after K "already built"; 0 = off (today).
-    // Read once per prefetch call, so it CAN be a schedule arm.
+    // Session 108: compute-prefetch skip per shader family after K "already built"; 0 = off.
+    // Read once per prefetch call, so it CAN be a schedule arm. Session 108: default 4 after the
+    // sealed ABBA (pred/01_cspfam.md: d mean dt -141.8 us, 2SE 107.0; cs_sync_new 0/0; video clean).
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_CS_PREFETCH_FAMILY", "cspfam", 0, 1024},
+    {"KYTY_CS_PREFETCH_FAMILY", "cspfam", 4, 1024},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

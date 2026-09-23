@@ -2476,6 +2476,16 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cs_sync_wait", FS::Counter::CsSyncWait, false},
 				    // Session 109: knob "cspfam" v2, family-table clears.  Raw count.
 				    {"cspfam_clr", FS::Counter::CspFamClear, false},
+				    // Session 109: knob "cspfree".  Raw counts.
+				    {"cspfree_look", FS::Counter::CspFreeLook, false},
+				    {"cspfree_hit", FS::Counter::CspFreeHit, false},
+				    {"cspfree_src_miss", FS::Counter::CspFreeSrcMiss, false},
+				    {"cspfree_spec_miss", FS::Counter::CspFreeSpecMiss, false},
+				    {"cspfree_mat_fail", FS::Counter::CspFreeMatFail, false},
+				    {"cspfree_clr", FS::Counter::CspFreeClear, false},
+				    {"cspfree_store", FS::Counter::CspFreeStore, false},
+				    {"cspfree_bad", FS::Counter::CspFreeBad, false},
+				    {"cspfree_moved", FS::Counter::CspFreeMoved, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

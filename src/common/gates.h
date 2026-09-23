@@ -558,8 +558,14 @@ enum class Knob : uint32_t {
 	// the count of compute-pipeline creations anywhere (any creation clears every streak).  0 = off; K = the
 	// streak.  A new permutation of a skipped family is then compiled on the dispatch - counted by
 	// cs_sync_new, the guard of every run.  Read once per prefetch call.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	CsPrefetchFamily, // KYTY_CS_PREFETCH_FAMILY, file name "cspfam" (0 off, K = streak before skipping)
+	// Session 109: PipelineCache::PrefetchComputePipeline without the lock when a per-thread memo knows the
+	// (source entry, materialized specialization) - the exact permutation predicate of ProgramCache::Get -
+	// and a pipeline for it; the materialization runs unlocked on a source whose compiled SRT was seen
+	// published under the lock.  0 = off; 1 = skip on a hit; 2 = verify (the locked path still runs; ids
+	// that differ at equal specializations are counted bad).  Read once per prefetch call.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	CsPrefetchFree,   // KYTY_CS_PREFETCH_FREE,   file name "cspfree" (0 off, 1 skip on hit, 2 verify)
 	Count,
 };
 

@@ -1806,6 +1806,19 @@ enum class Counter : uint32_t {
 	// Session 109, knob "cspfam" v2: family-table clears on the prefetching thread (a stamp moved:
 	// programs epoch, shader registrations, a compute-pipeline creation anywhere, or capacity).
 	CspFamClear,             // cspfam_clr
+	// Session 109, knob "cspfree": prefetch calls that built the key (knob != 0), that found the source,
+	// that found the specialization (a skip at knob 1), source unknown, specialization unknown, unlocked
+	// materialization failed, memo cleared (stamp moved or full), entries stored, knob 2 disagreements at
+	// equal specializations (bad) and at different ones (memory moved between the two reads).  Raw counts.
+	CspFreeLook,             // cspfree_look
+	CspFreeHit,              // cspfree_hit
+	CspFreeSrcMiss,          // cspfree_src_miss
+	CspFreeSpecMiss,         // cspfree_spec_miss
+	CspFreeMatFail,          // cspfree_mat_fail
+	CspFreeClear,            // cspfree_clr
+	CspFreeStore,            // cspfree_store
+	CspFreeBad,              // cspfree_bad
+	CspFreeMoved,            // cspfree_moved
 	Count
 };
 

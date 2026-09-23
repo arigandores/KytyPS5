@@ -1,0 +1,89 @@
+gw106.py gw106 status=ADMITTED seal=432e3c5bb0fde029b1bebdb85dade4147f59c2f9ab863934269bf3e02100c8c4
+  pairs 94 (orientations [47, 47]), blocks 188, excluded [3, 192]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    GWALL_ARMED
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    PLKSTAT_ARMED
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DARK_ARM0
+  [PASS] arming    WALK_DROPS
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 21797, 'da_wjobs': 21806, 'da_wdrop': 0}  skip/posts-1 -0.0004  drop 0.0000  walks rel 0.0000
+  dt_us        arm0    31606.1   arm1    31595.1
+  cpu_net_us   arm0    30721.9   arm1    30338.6
+  D_us         arm0      875.4   arm1      935.7
+  gw_idle_us   arm0       20.8   arm1       26.0
+  gw_blk_us    arm0        0.0   arm1        0.0
+  gw_flip_us   arm0        0.4   arm1        0.5
+  lock_wait_us arm0       92.5   arm1      710.5
+  R_us         arm0      762.9   arm1      194.9
+  gw_proc_us   arm0    31537.0   arm1    31385.0
+  gw_cmd_us    arm0        0.0   arm1        0.0
+  uncovered_us arm0        5.1   arm1       32.7
+  gw_flip_n    arm0        1.0   arm1        1.0
+  draws        arm0     5016.8   arm1     5035.1
+  gpu_busy_us  arm0    12900.8   arm1    12754.1
+  rec_n        arm0    10880.7   arm1    10904.9
+  da_walk_us   arm0     1822.8   arm1     2055.6
+  da_queue_us  arm0      787.4   arm1      851.5
+  da_take_us   arm0     2422.4   arm1     2830.3
+  da_hit       arm0     8574.6   arm1     8385.6
+  da_miss      arm0       74.2   arm1      299.1
+  da_late      arm0        0.1   arm1        8.4
+  da_wjobs     arm0        0.0   arm1        8.0
+  da_wskip     arm0        0.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0        0.0   arm1    73373.4
+  da_wdepth    arm0        0.0   arm1       17.5
+  d cpu_net_us   mean -330.6  2SE 95.7  t -6.91  n 94
+  d dt_us        mean -220.9  2SE 96.8  t -4.56  n 94
+  d D_us         mean 109.8  2SE 43.6  t 5.03  n 94
+  d gw_idle_us   mean 11.2  2SE 9.0  t 2.47  n 94
+  d gw_blk_us    mean 0.0  2SE 0.0  t 1.00  n 94
+  d gw_flip_us   mean 0.0  2SE 0.0  t 1.22  n 94
+  d lock_wait_us mean 616.5  2SE 5.9  t 210.31  n 94
+  d R_us         mean -518.0  2SE 44.7  t -23.20  n 94
+  d gw_proc_us   mean -215.9  2SE 103.5  t -4.17  n 94
+  d gw_cmd_us    mean -0.1  2SE 0.1  t -1.08  n 94
+  d uncovered_us mean -16.1  2SE 43.1  t -0.75  n 94
+  d da_take_us   mean 406.9  2SE 13.3  t 61.04  n 94
+  d da_miss      mean 226.0  2SE 6.0  t 74.75  n 94
+  d da_late      mean 8.2  2SE 0.3  t 53.80  n 94
+  d da_walk_us   mean 231.2  2SE 11.7  t 39.55  n 94
+  [PASS] ship R0_D_reproduced
+  R0 D reproduced: True   named (draft too): ['lock_wait_us']
+  VERDICT: NAMED lock_wait_us
+  prediction G1  HIT  value 109.752 band [100, 300]  d D_us in [+100, +300] (D reproduced at dwk104 size)
+  prediction G2  HIT  value 875.397 band [600, 1100]  arm-0 D_us level in [600, 1100]
+  prediction G3  MISS value -517.980 band [54.87582538517975, None]  d R_us >= D/2 (the residual - preemption / other waits - carries it)
+  prediction G4  MISS value 616.537 band [0, 100]  d lock_wait_us in [0, +100]
+  prediction G5  HIT  value 0.025 band [-50, 50]  d gw_flip_us in [-50, +50]
+  prediction G6  HIT  value -220.890 band [-450, -100]  d dt_us in [-450, -100]
+  failed: none
+wrote C:/kyty/s106/runs106/gw106_score.json

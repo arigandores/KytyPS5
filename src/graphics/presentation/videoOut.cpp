@@ -2486,6 +2486,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cspfree_store", FS::Counter::CspFreeStore, false},
 				    {"cspfree_bad", FS::Counter::CspFreeBad, false},
 				    {"cspfree_moved", FS::Counter::CspFreeMoved, false},
+				    // Session 110: stall duration on the dispatch.  Raw us.
+				    {"cs_sync_new_us", FS::Counter::CsSyncNewUs, false},
+				    {"cs_sync_wait_us", FS::Counter::CsSyncWaitUs, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

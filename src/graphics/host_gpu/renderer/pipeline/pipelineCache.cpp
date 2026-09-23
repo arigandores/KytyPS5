@@ -5408,6 +5408,14 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 	EXIT_IF(!compute_program);
 
 	ComputePipelineEntry* pending = nullptr;
+	// Session 110: one line per dispatch-time stall (always on, capped), the duration guard's input.
+	const auto note_stall = [&](const char* kind, uint64_t us) {
+		static std::atomic<uint32_t> stall_lines {0};
+		if (stall_lines.fetch_add(1, std::memory_order_relaxed) < 4096) {
+			LOGF("CsStall: kind=%s us=%" PRIu64 " id=%" PRIu64 " hash=0x%016" PRIx64 "\n", kind, us,
+			     compute_program.id, input_info.stage.program->shader_hash);
+		}
+	};
 	{
 		Common::LockGuard lock(m_mutex);
 
@@ -5421,6 +5429,7 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 		} else {
 			// Session 108: the guard of the "cspfam" knob - a compute pipeline compiled on the dispatch.
 			Common::FrameStats::Add(Common::FrameStats::Counter::CsSyncNew, 1);
+			const auto                       stall_begin = HostMicros();
 			LibKernel::KernelTimeFreezeScope freeze_scope;
 
 			if (graphics_debug_dump_enabled()) {
@@ -5449,6 +5458,9 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 			    m_compute_pipelines.emplace(compute_program.id, std::move(cached));
 			EXIT_IF(!inserted);
 			g_compute_creations.fetch_add(1, std::memory_order_release);
+			const auto stall_us = HostMicros() - stall_begin;
+			Common::FrameStats::Add(Common::FrameStats::Counter::CsSyncNewUs, stall_us);
+			note_stall("new", stall_us);
 			return *place->second;
 		}
 	}
@@ -5458,6 +5470,11 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 	{
 		std::unique_lock<std::mutex> lock(m_job_mutex);
 		m_ready_cv.wait(lock, [pending] { return pending->ready.load(std::memory_order_acquire); });
+	}
+	{
+		const auto stall_us = HostMicros() - wait_begin;
+		Common::FrameStats::Add(Common::FrameStats::Counter::CsSyncWaitUs, stall_us);
+		note_stall("wait", stall_us);
 	}
 	if (AvTraceEnabled()) {
 		LOGF("AvTrace: pipeline cs cs=%" PRIu64 " waited_us=%" PRIu64 " hash=0x%016" PRIx64 "\n",

@@ -1819,6 +1819,10 @@ enum class Counter : uint32_t {
 	CspFreeStore,            // cspfree_store
 	CspFreeBad,              // cspfree_bad
 	CspFreeMoved,            // cspfree_moved
+	// Session 110: wall on the dispatching thread inside GetComputePipeline's synchronous compile (from the
+	// "not found" branch, lock held, to the return) and inside the wait for a pending entry.  Raw us.
+	CsSyncNewUs,             // cs_sync_new_us
+	CsSyncWaitUs,            // cs_sync_wait_us
 	Count
 };
 

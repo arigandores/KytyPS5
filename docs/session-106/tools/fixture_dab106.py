@@ -1,4 +1,4 @@
-"""Session 106: synthetic ABBA fixture for gw106.py - every field the scorer parses, planted effects.
+"""Session 106: synthetic ABBA fixture for dab106.py (derived from fixture_gw106.py; the docstring below is gw106 text) - every field the scorer parses, planted effects.
 Planted (arm 1 - arm 0, us a flip): dt -266, cpu_gpu -462, spin -4 => D +192; idle +20, blk 0, flip 0,
 lock +30 => R +142 (>= D/2 = 96): expected verdict "NAMED R_us" in a non-draft reading, and every
 arming / control check PASS except the seal / protocol ones a fixture cannot carry.

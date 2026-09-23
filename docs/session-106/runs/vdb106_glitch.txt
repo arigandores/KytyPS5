@@ -1,0 +1,2 @@
+C:/kyty/s106/rec_vdb106.mp4: 3989 frames 960x540, index entries 3989
+one-frame glitches: 0

@@ -1,0 +1,2 @@
+C:/kyty/s106/rec_vid106.mp4: 3993 frames 960x540, index entries 3993
+one-frame glitches: 0

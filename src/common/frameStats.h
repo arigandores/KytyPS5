@@ -1795,6 +1795,14 @@ enum class Counter : uint32_t {
 	CspMemoClear,            // cspm_clear: memo cleared (stamp moved or full)
 	CspPrefHave,             // cspf_have: locked prefetches whose program already had a pipeline
 	CspPrefNew,              // cspf_new: ... that queued a new pipeline
+	// Session 108, knob "cspfam": prefetch calls that looked the family up / returned before the lock.
+	CspFamLook,              // cspfam_look
+	CspFamSkip,              // cspfam_skip
+	// Session 108, the guard of every run (no gate): GetComputePipeline found no pipeline and compiled it
+	// synchronously on the dispatch (cs_sync_new), or found one the prefetch queued still compiling and
+	// waited for it (cs_sync_wait).  Raw counts.
+	CsSyncNew,               // cs_sync_new
+	CsSyncWait,              // cs_sync_wait
 	Count
 };
 

@@ -2469,6 +2469,11 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cspm_clear", FS::Counter::CspMemoClear, false},
 				    {"cspf_have", FS::Counter::CspPrefHave, false},
 				    {"cspf_new", FS::Counter::CspPrefNew, false},
+				    // Session 108: knob "cspfam" and the dispatch-time compile guard.  Raw counts.
+				    {"cspfam_look", FS::Counter::CspFamLook, false},
+				    {"cspfam_skip", FS::Counter::CspFamSkip, false},
+				    {"cs_sync_new", FS::Counter::CsSyncNew, false},
+				    {"cs_sync_wait", FS::Counter::CsSyncWait, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

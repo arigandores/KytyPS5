@@ -184,6 +184,29 @@ CsPrefetchMemo& ThreadCsPrefetchMemo() {
 	return memo;
 }
 
+// Session 108, knob "cspfam": per-thread streaks of "the locked prefetch found a built pipeline" per
+// shader family; same stamps and capacity rule as CsPrefetchMemo.
+struct CsPrefetchFamilies {
+	static constexpr size_t Capacity = 4096;
+	std::unordered_map<uint64_t, uint32_t> streak;
+	uint64_t                               epoch = UINT64_MAX;
+	uint64_t                               registrations = UINT64_MAX;
+	std::vector<uint32_t>                  key_words;
+
+	void Restamp(uint64_t now_epoch, uint64_t now_registrations) {
+		if (now_epoch != epoch || now_registrations != registrations || streak.size() >= Capacity) {
+			streak.clear();
+			epoch         = now_epoch;
+			registrations = now_registrations;
+		}
+	}
+};
+
+CsPrefetchFamilies& ThreadCsPrefetchFamilies() {
+	thread_local CsPrefetchFamilies families;
+	return families;
+}
+
 // KYTY_ASYNC_PIPELINES: 0 = compile graphics pipelines synchronously on the GuestGpu thread
 // (freezing the guest clock), 1 = compile them on a worker pool while the draws that need them
 // are skipped (default). A scene cut brings 4-13 new vertex/pixel shaders at once and the
@@ -5082,6 +5105,30 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	}
 	input_info.host_subgroup_size = m_graphics.SupportsComputeWave64() ? 64u : 32u;
 	const auto params             = PrepareProgram(regs, sh, input_info);
+	// Session 108, knob "cspfam": skip the whole prefetch for a family whose last K locked prefetches all
+	// found a built pipeline (stamps unchanged).
+	const auto fam_k   = Common::Gates::Value(Common::Gates::Knob::CsPrefetchFamily);
+	uint64_t   fam_key = 0;
+	if (fam_k != 0) {
+		auto& fam = ThreadCsPrefetchFamilies();
+		fam.Restamp(g_programs_epoch_mirror.load(std::memory_order_acquire), ShaderRegistrations());
+		fam.key_words.clear();
+		BuildStageStaticKey(input_info, fam.key_words);
+		fam_key = XXH3_64bits_withSeed(fam.key_words.data(), fam.key_words.size() * sizeof(uint32_t),
+		                               params.hash ^ params.Base() ^ 0x63737066616d00ULL);
+		Common::FrameStats::Add(Common::FrameStats::Counter::CspFamLook, 1);
+		if (const auto it = fam.streak.find(fam_key); it != fam.streak.end() && it->second >= fam_k) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::CspFamSkip, 1);
+			return;
+		}
+	}
+	const auto fam_note = [&](bool have) {
+		if (fam_k == 0) {
+			return;
+		}
+		auto& streak = ThreadCsPrefetchFamilies().streak[fam_key];
+		streak       = have ? streak + 1 : 0;
+	};
 	// Session 107, knob "cspmemo": look the prefetch up before taking the lock.
 	const auto memo_mode = Common::Gates::Value(Common::Gates::Knob::CsPrefetchMemo);
 	uint64_t   memo_key  = 0;
@@ -5139,9 +5186,11 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	if (m_compute_pipelines.contains(program.id)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::CspPrefHave, 1);
 		memo_store(program.id);
+		fam_note(true);
 		return;
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::CspPrefNew, 1);
+	fam_note(false);
 	if (log) {
 		LOGF("AsyncCompute: prefetch hash=0x%016" PRIx64 " id=%" PRIu64 " queued\n", params.hash, program.id);
 	}
@@ -5201,7 +5250,10 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 				return *iter->second;
 			}
 			pending = iter->second.get(); // queued by the lookahead, still compiling
+			Common::FrameStats::Add(Common::FrameStats::Counter::CsSyncWait, 1);
 		} else {
+			// Session 108: the guard of the "cspfam" knob - a compute pipeline compiled on the dispatch.
+			Common::FrameStats::Add(Common::FrameStats::Counter::CsSyncNew, 1);
 			LibKernel::KernelTimeFreezeScope freeze_scope;
 
 			if (graphics_debug_dump_enabled()) {

@@ -29,8 +29,8 @@ except Exception:
 
 PRODUCTION_ROOT = 'C:/kyty/s108'
 PRED = 'C:/kyty/s108/pred/01_cspfam.md'
-PRED_SHA = None          # filled by the executor when pred/01 is sealed
-PRED_BYTES = None        # filled by the executor when pred/01 is sealed
+PRED_SHA = 'a40cf056d83fd2ed5b31b1c84e1674f0968803ad481d8831213617c623caa945'   # pred/01 sealed
+PRED_BYTES = 6890       # pred/01 sealed
 BINARY_SHA = 'fd1d0bd7f68280e97680bc68dfe56fdf57a134429a49bc9223ece6254b7b1e72'
 EXE = 'C:/Users/<user>/OneDrive/Desktop/ps5 em/kyty_emulator.exe'
 GATES_FILE = 'C:/kyty/s108/gates_base.txt'

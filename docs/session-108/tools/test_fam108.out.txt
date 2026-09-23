@@ -1,26 +1,106 @@
-SHIP       want SHIP cspfam=4                        got SHIP cspfam=4 as the new default (a new buil only=True OK  failed=[]
-PENDING    want SHIP_PENDING_VIDEO                   got SHIP_PENDING_VIDEO (S1-S2 met; nothing ships only=True OK  failed=[]
-S1_only    want KEEP cspfam=0 (ship rule             got KEEP cspfam=0 (ship rule S1-S2 on mean dt no only=True OK  failed=[]
-   S2 case: mean -170.7849529780563 se 144.35093856231546 rules {'S1_dt_le_-100': True, 'S2_dt_2se_excludes_0': False}
-S2_only    want KEEP cspfam=0 (ship rule             got KEEP cspfam=0 (ship rule S1-S2 on mean dt no only=True OK  failed=[]
-V_frames   want KEEP cspfam=0 (video pass failed)    got KEEP cspfam=0 (video pass failed)            only=True OK  failed=[]
-V_glitch   want KEEP cspfam=0 (video pass failed)    got KEEP cspfam=0 (video pass failed)            only=True OK  failed=[]
-V_gate     want KEEP cspfam=0 (video pass failed)    got KEEP cspfam=0 (video pass failed)            only=True OK  failed=[]
-V_pin      want KEEP cspfam=0 (video pass failed)    got KEEP cspfam=0 (video pass failed)            only=True OK  failed=[]
-V_binary   want KEEP cspfam=0 (video pass failed)    got KEEP cspfam=0 (video pass failed)            only=True OK  failed=[]
-FAM_DARK0  want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:ARMING']
-FAM_ARMED1 want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:ARMING']
-SYNC       want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:SYNC_COMPILE']
-PIN_ONCE   want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:PIN_ONCE']
-REC_TWO    want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:RECORD_THREAD_TWO']
-FATAL      want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:NO_FATAL_MARKER']
-BANDS      want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:BANDS']
-WORK       want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:AREA_VERDICT', 'control:WORK_SPLIT']
-AREA       want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT']
-PAIRS      want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:PAIRS', 'integrity:DURATION']
-GATEARM    want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['integrity:GATEARM']
-PREREG     want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['integrity:PREREG_PINNED']
-BINARY     want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['integrity:BINARY_SEALED']
-ENV_EXTRA  want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['protocol']
-ENV_CKPT   want KEEP cspfam=0 (run not admitted)     got KEEP cspfam=0 (run not admitted)             only=True OK  failed=['control:ENV_NO_CHECKPOINTS', 'protocol']
+SHIP                want SHIP cspfam=4                      got SHIP cspfam=4 as the new default (a new  OK  failed=[] 
+PENDING             want SHIP_PENDING_VIDEO                 got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+DRAFT               want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] 
+S1_only             want KEEP cspfam=0 (ship rule           got KEEP cspfam=0 (ship rule S1-S2 on mean d OK  failed=[] rules=['S1_dt_le_-100']
+   S2 case: mean -170.7849529780563 se 144.35093856231546
+S2_only             want KEEP cspfam=0 (ship rule           got KEEP cspfam=0 (ship rule S1-S2 on mean d OK  failed=[] rules=['S2_dt_2se_excludes_0']
+V_frames            want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['frames']
+V_glitch            want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['no_glitch']
+V_gate              want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['cspfam_4_in_gate_text']
+V_gate_dawalk       want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['cspfam_4_in_gate_text']
+V_pin               want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['pinned']
+V_binary            want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['binary']
+V_recorded          want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['recorded']
+V_no_schedule       want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['no_schedule']
+V_no_ckpt           want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['no_checkpoints']
+V_att_outcome       want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_att_exit          want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_att_two           want KEEP cspfam=0 (video pass failed)  got KEEP cspfam=0 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_missing           want SHIP_PENDING_VIDEO                 got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+INPUTS_log          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+INPUTS_meta         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+PREREG              want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:PREREG_PINNED'] 
+BINARY              want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:BINARY_SEALED'] 
+SCHEMA              want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+FIELD_ORIGIN        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:FIELD_ORIGIN'] 
+RAW_CONTIG          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:RAW_CONTIGUITY'] 
+DURATION            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:DURATION'] 
+GATEARM             want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_malformed   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+NO_FLOOR            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+MARKERS_OFF         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:MARKERS_OFF'] 
+NO_RECORDING        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:NO_RECORDING'] 
+STREAMS             want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:STREAMS_COMPLETE'] 
+ROW_ARMS            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:ROW_ARMS'] 
+AB_BA               want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+PIN_ONCE            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:PIN_ONCE'] 
+REC_TWO             want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:RECORD_THREAD_TWO'] 
+CKPT_line           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_off            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_diag           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+HANGABORT           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_GPUHANGABORT'] 
+FATAL               want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so0           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so1           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so2           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so3           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so4           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so5           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so6           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so7           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+ENV_CKPT            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ENV_NO_CHECKPOINTS', 'protocol'] errors=1
+PAIRS               want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:PAIRS'] 
+PAIRS_DUR           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:PAIRS', 'integrity:DURATION'] 
+NO_PAIRS            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED'] 
+BANDS               want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:BANDS'] 
+BANDS_rec1          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:BANDS'] 
+WORK_SPLIT          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:WORK_SPLIT'] 
+AREA_VERDICT        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_V_work         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_VERDICT'] mirror=['work']
+AREA_SELECTED       want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_SELECTED'] 
+WORK                want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_VERDICT', 'control:WORK_SPLIT'] mirror=['work']
+AREA                want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT'] mirror=['match', 'split']
+SYNC                want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:SYNC_COMPILE'] 
+SYNC_edge           want SHIP_PENDING_VIDEO                 got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+FAM_DARK0           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['FAMILY_DARK_ARM0']
+FAM_ARMED1          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['FAMILY_ARMED_ARM1']
+WALK_ARMED0         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM0']
+WALK_IDENT0         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM0']
+WALK_DROPS0         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM0']
+WALK_ARMED1         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM1']
+WALK_IDENT1         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+WALK_DROPS1         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM1']
+WALKS_SAME          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALKS_SAME']
+DARK_mw_n0          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_sh_jobs1       want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+P_env_frame_trace   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_hang_abort_s want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_queue_trace   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_guest_args    want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gate_schedule_abba want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_clock_pin want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_markers   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_sched         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_meta_sched        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_gatefile   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_samplegate want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_schedule   want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=2
+ENV_EXTRA           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_gates_sha         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_gates_text        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_label         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_two           want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_outcome       want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_exit          want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_hold_s        want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+P_meta_hold_s       want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['protocol'] errors=1
+MAIN_OK             want SHIP_PENDING_VIDEO                 got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] rc=0
+BINARY_main         want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:BINARY_SEALED', 'integrity:IDENTITY'] rc=1
+IDENTITY            want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:IDENTITY'] rc=1
+IDENTITY_noexe      want KEEP cspfam=0 (run not admitted)   got KEEP cspfam=0 (run not admitted)         OK  failed=['integrity:IDENTITY'] rc=1
+REFUSE_seal         want SEALED PRE-REGISTRATION CHANGED    got SEALED PRE-REGISTRATION CHANGED: C:\kyty OK  failed=[] rc=2
+REFUSE_root         want production root must be            got production root must be C:/kyty/s108 (us OK  failed=[] rc=2
+REFUSE_tag          want tag 'fam109' is not                got tag 'fam109' is not a pred/01 tag (fam10 OK  failed=[] rc=2
+REFUSE_geom         want --period/--start/--first/--keep ar got --period/--start/--first/--keep are --dr OK  failed=[] rc=2
+103 cases
 ALL OK

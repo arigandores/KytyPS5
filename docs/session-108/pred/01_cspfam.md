@@ -1,10 +1,7 @@
 # Sealed pre-registration 01 — session 108, track 1 candidate: `cspfam=0|4` (skip the walker's steady-state compute prefetch per shader family)
 
-> **DRAFT — NOT SEALED (session 108 paused 2026-09-23).** Editable until sealed; resume steps in
-> `docs/local-session-108.md` §2 (protect the build, the fixture debt, the port, then seal). Delete this note on sealing.
-
 **Immutable once written.** Recorded in `docs/ROADMAP.md` §0.1 (the executor's decision after session 107, item 1 —
-commit `87f1c2b`; "СЕССИЯ 108 — ЗАПИСИ ДО ДЕЙСТВИЙ", items 1–2 — commit `3cc53a2`) before the code and this text.
+commit `87f1c2b`; "СЕССИЯ 108 — ЗАПИСИ ДО ДЕЙСТВИЙ", items 1–2 — commit `3cc53a2`, and item 4 — the resumption after the pause, fixtures by option (a) — committed with this text) before the code and this text.
 
 ## 0. Why
 
@@ -28,7 +25,7 @@ compiling, waited for). Arm 0 `dawalk=1 dawalklead=1 cspfam=0` (today), arm 1 `d
 `plkstat`, no `KYTY_GPU_WALL`: the shipping configuration.
 
 ## 2. Runs, in order, nothing else on the machine (no builds, compiles, scorers, agents; a heartbeat only
-reschedules); one repeat on a fatal marker
+reschedules — `go108.sh` holds `C:/kyty/SEALED_RUN.lock` for the whole chain); one repeat on a fatal marker
 
 1. `fam108`: `python C:/kyty/s108/enter_scene.py fam108 --hold 600 --attempts 1 --gates-file
    C:/kyty/s108/gates_base.txt --pred C:/kyty/s108/pred/01_cspfam.md
@@ -48,14 +45,23 @@ reschedules); one repeat on a fatal marker
 The `dab107` integrity, controls and walk arming, with the batch arming replaced by `FAMILY_DARK_ARM0`
 (Σ`cspfam_look` = 0 over arm-0 kept rows) and `FAMILY_ARMED_ARM1` (arm-1 level of `cspfam_skip` ≥ 1), plus
 **`SYNC_COMPILE`**: over ALL rows from frame 2100, by each row's arm, Σ`cs_sync_new` of arm 1 ≤ that of arm 0 + 2
-(both sums and `cs_sync_wait` are printed). Fixtures (NON-draft, `test_fam108.py`, 24 cases at the pause, all as
-planted): every verdict branch (SHIP, SHIP_PENDING_VIDEO, KEEP by the bar, KEEP by a failed video, KEEP not admitted)
-and, alone, S1, S2, five of the nine video checks, `FAMILY_DARK_ARM0`/`FAMILY_ARMED_ARM1` (as `control:ARMING`),
-`SYNC_COMPILE`, `PIN_ONCE`, `RECORD_THREAD_TWO`, `NO_FATAL_MARKER`, `BANDS`, `GATEARM`, `PREREG_PINNED`,
-`BINARY_SEALED`, the protocol env check; coupled by construction and asserted as exact sets: work split with the
-area verdict, area split with both area controls, pairs with duration, the checkpoint env with the protocol.
-**TO FILL BEFORE SEALING:** the inherited terms not yet covered alone (list in `docs/local-session-108.md` §1 item 5)
-— add their fixtures and update this paragraph, or record a narrowed rule in ROADMAP first.
+(both sums and `cs_sync_wait` are printed).
+Fixtures (NON-draft, `test_fam108.py`, 103 cases, all as planted; each asserts the exact failing set and
+the exact failing ship rules, video checks, arming sub-checks by name and protocol errors): every verdict branch
+(SHIP, SHIP_PENDING_VIDEO, KEEP by the bar, KEEP by a failed video, KEEP not admitted, DRAFT) and the refusals of
+`main()`; alone, S1, S2, all nine video checks (and a missing video file reading ABSENT), every integrity term
+(`PREREG_PINNED`, `BINARY_SEALED`, `SCHEMA`, `FIELD_ORIGIN`, `RAW_CONTIGUITY`, `DURATION`, `GATEARM`, `NO_FLOOR`,
+`MARKERS_OFF`, `NO_RECORDING`, `STREAMS_COMPLETE`, `ROW_ARMS`, `IDENTITY` through `main()`), every control
+(`PIN_ONCE`, `RECORD_THREAD_TWO`, `NO_CHECKPOINT_LINE`, `NO_GPUHANGABORT`, `NO_FATAL_MARKER` for each of its eight
+markers, `PAIRS`, `BANDS`, `WORK_SPLIT`, `AREA_VERDICT`, `AREA_SELECTED`, `SYNC_COMPILE` with its +2 edge), every
+arming sub-check by name under `control:ARMING` (`WALK_ARMED_ARM0/1`, `WALK_IDENTITY_ARM0/1`, `WALK_DROPS_ARM0/1`,
+`WALKS_SAME`, `INSTRUMENTS_DARK`, `FAMILY_DARK_ARM0`, `FAMILY_ARMED_ARM1`) and every protocol error (each sealed
+env value, the schedule in env and meta, each absent variable, an extra variable, the gates sha and text, the
+attempt label, count, outcome, hold exit and hold, the meta hold). Coupled by construction and asserted as exact
+sets: `INPUTS` with the protocol (a missing input is a protocol error), `ENV_NO_CHECKPOINTS` with the protocol (an
+extra `KYTY_*` variable), `AB_BA_BALANCED` with `GATEARM` or `PAIRS` (the pinned ABBA pattern pairs whole
+quartets, one pair of each orientation), `BINARY_SEALED` with `IDENTITY` in `main()`, and the no-pair early
+return (`PAIRS` with `AB_BA_BALANCED`, `BANDS`, `WORK_SPLIT`, both area controls, `ARMING`).
 
 ## 4. Ship rule
 

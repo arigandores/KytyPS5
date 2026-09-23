@@ -1,0 +1,11 @@
+  ent109_1   A rows   4987  sync_new    0  sync_wait    2  S    2  cspf_new   77  skip         0  clr      0  ok
+  ent109_2   B rows   4989  sync_new    9  sync_wait    0  S    9  cspf_new   68  skip   1279262  clr    146  ok
+  ent109_3   B rows   4990  sync_new    7  sync_wait    0  S    7  cspf_new   70  skip   1280664  clr    151  ok
+  ent109_4   A rows   4935  sync_new    0  sync_wait    2  S    2  cspf_new   77  skip         0  clr      0  ok
+  ent109_5   A rows   4943  sync_new    2  sync_wait    2  S    4  cspf_new   75  skip         0  clr      0  ok
+  ent109_6   B rows   4948  sync_new    9  sync_wait    0  S    9  cspf_new   68  skip   1267648  clr    150  ok
+  ent109_7   B rows   5000  sync_new    7  sync_wait    2  S    9  cspf_new   70  skip   1282720  clr    153  ok
+  ent109_8   A rows   4946  sync_new    3  sync_wait    1  S    4  cspf_new   74  skip         0  clr      0  ok
+  S_A 12  S_B 34  slack 2  errors none
+  scorer 96a6fa4e89f4b6ca191c06f70acca772c55960f6a317551587b6190a081d564e
+VERDICT: FAIL

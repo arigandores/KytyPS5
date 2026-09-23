@@ -68,6 +68,122 @@ namespace Libs::Graphics {
 
 namespace {
 
+// Session 107: bumped next to every ProgramCache::programs_epoch++ (an entry inserted into or
+// extracted from `programs`), readable outside PipelineCache::m_mutex - the stamp of the
+// knob "cspmemo" memo.
+std::atomic<uint64_t> g_programs_epoch_mirror {0};
+
+// Session 107, gate "plkstat": GuestGpu's acquisition of PipelineCache::m_mutex at a plkstat
+// site.  Measured only on the GuestGpu thread with the gate armed: a TryLock first; only when it
+// fails, the holder tag, the wall and the thread CPU around the blocking Lock (CPU / wall = the
+// spin share of the CRITICAL_SECTION).  Otherwise exactly Common::LockGuard.
+class PipeLockMeasured {
+public:
+	PipeLockMeasured(Common::Mutex& mutex, bool measure, const std::atomic<uint8_t>& holder)
+	    : m_mutex(mutex) {
+		namespace FS = Common::FrameStats;
+		if (!measure || FS::CurrentRole() != FS::ThreadRole::Gpu) {
+			m_mutex.Lock();
+			return;
+		}
+		if (m_mutex.TryLock()) {
+			return;
+		}
+		const auto tag  = holder.load(std::memory_order_relaxed);
+		const auto t0   = FS::NowNs();
+		const auto cpu0 = FS::ThreadCpuNs(FS::ThreadRole::Gpu);
+		m_mutex.Lock();
+		const auto cpu1 = FS::ThreadCpuNs(FS::ThreadRole::Gpu);
+		const auto wall = FS::NowNs() - t0;
+		FS::Add(FS::Counter::PipeLockContN, 1);
+		FS::Add(FS::Counter::PipeLockContWallNs, wall);
+		FS::Add(FS::Counter::PipeLockContCpuNs, cpu1 > cpu0 && cpu0 != 0 ? cpu1 - cpu0 : 0);
+		static constexpr std::array<FS::Counter, 4> tag_n {
+		    FS::Counter::PipeLockContH0N, FS::Counter::PipeLockContH1N, FS::Counter::PipeLockContH2N,
+		    FS::Counter::PipeLockContH3N};
+		static constexpr std::array<FS::Counter, 4> tag_ns {
+		    FS::Counter::PipeLockContH0Ns, FS::Counter::PipeLockContH1Ns,
+		    FS::Counter::PipeLockContH2Ns, FS::Counter::PipeLockContH3Ns};
+		const auto slot = tag < 4 ? tag : 0u;
+		FS::Add(tag_n[slot], 1);
+		FS::Add(tag_ns[slot], wall);
+	}
+	~PipeLockMeasured() {
+		m_mutex.Unlock();
+	}
+	PipeLockMeasured(const PipeLockMeasured&)            = delete;
+	PipeLockMeasured& operator=(const PipeLockMeasured&) = delete;
+
+private:
+	Common::Mutex& m_mutex;
+};
+
+// Session 107, gate "plkstat": a tagged holder of PipelineCache::m_mutex.  Constructed right
+// after the LockGuard (so destroyed before the unlock): publishes the tag for the whole hold and,
+// when `hold_ns` is given, times the hold itself (not the wait for the lock).
+class PipeLockHolder {
+public:
+	PipeLockHolder(std::atomic<uint8_t>& holder, uint8_t tag,
+	               Common::FrameStats::Counter hold_ns = Common::FrameStats::Counter::Count,
+	               Common::FrameStats::Counter hold_n  = Common::FrameStats::Counter::Count)
+	    : m_holder(holder),
+	      m_on(Common::Gates::Enabled(Common::Gates::Gate::PipeLockStat) &&
+	           Common::FrameStats::Enabled()),
+	      m_hold_ns(hold_ns),
+	      m_hold_n(hold_n) {
+		if (m_on) {
+			m_holder.store(tag, std::memory_order_relaxed);
+			m_t0 = hold_ns != Common::FrameStats::Counter::Count ? Common::FrameStats::NowNs() : 0;
+		}
+	}
+	~PipeLockHolder() {
+		if (m_on) {
+			if (m_t0 != 0) {
+				Common::FrameStats::Add(m_hold_ns, Common::FrameStats::NowNs() - m_t0);
+				Common::FrameStats::Add(m_hold_n, 1);
+			}
+			m_holder.store(0, std::memory_order_relaxed);
+		}
+	}
+	PipeLockHolder(const PipeLockHolder&)            = delete;
+	PipeLockHolder& operator=(const PipeLockHolder&) = delete;
+
+private:
+	std::atomic<uint8_t>&       m_holder;
+	bool                        m_on;
+	Common::FrameStats::Counter m_hold_ns;
+	Common::FrameStats::Counter m_hold_n;
+	uint64_t                    m_t0 = 0;
+};
+
+// Session 107, knob "cspmemo": per-thread memo of compute prefetches whose program already had
+// a pipeline.  Key: the translated code (hash and base), the user SGPRs and the stage's static
+// key; value: the program id.  Stamp: g_programs_epoch_mirror and ShaderRegistrations(); a moved
+// stamp or a full table clears it.  Only ever a hint (see Knob::CsPrefetchMemo).
+struct CsPrefetchMemo {
+	static constexpr size_t Capacity = 4096;
+	std::unordered_map<uint64_t, uint64_t> ids;
+	uint64_t                               epoch = UINT64_MAX;
+	uint64_t                               registrations = UINT64_MAX;
+	std::vector<uint32_t>                  key_words;
+
+	void Restamp(uint64_t now_epoch, uint64_t now_registrations) {
+		if (now_epoch != epoch || now_registrations != registrations || ids.size() >= Capacity) {
+			if (!ids.empty()) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoClear, 1);
+			}
+			ids.clear();
+			epoch         = now_epoch;
+			registrations = now_registrations;
+		}
+	}
+};
+
+CsPrefetchMemo& ThreadCsPrefetchMemo() {
+	thread_local CsPrefetchMemo memo;
+	return memo;
+}
+
 // KYTY_ASYNC_PIPELINES: 0 = compile graphics pipelines synchronously on the GuestGpu thread
 // (freezing the guest clock), 1 = compile them on a worker pool while the draws that need them
 // are skipped (default). A scene cut brings 4-13 new vertex/pixel shaders at once and the
@@ -1972,6 +2088,7 @@ struct PipelineCache::ProgramCache {
 		source.from_cache = true;
 		entry             = programs.try_emplace(key, std::move(source)).first;
 		programs_epoch++;
+		g_programs_epoch_mirror.fetch_add(1, std::memory_order_release);
 		IndexPermutations(entry->first, entry->second);
 		return true;
 	}
@@ -3346,6 +3463,7 @@ struct PipelineCache::ProgramCache {
 			// Not freed: a lookahead worker may still be materializing with its plan.
 			retired_sources.push_back(programs.extract(entry));
 			programs_epoch++;
+			g_programs_epoch_mirror.fetch_add(1, std::memory_order_release);
 			memo_generation++; // the memo holds permutation pointers of the dropped entry
 			entry = programs.end();
 			resources = {};
@@ -3515,6 +3633,7 @@ struct PipelineCache::ProgramCache {
 			}
 			entry = programs.try_emplace(lookup_key, std::move(resource_plan)).first;
 			programs_epoch++;
+			g_programs_epoch_mirror.fetch_add(1, std::memory_order_release);
 		}
 		entry->second.permutations.push_back(CompilePermutation(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
@@ -4066,6 +4185,7 @@ struct PipelineCache::ProgramCache {
 			source.from_cache = true;
 			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;
 			programs_epoch++;
+			g_programs_epoch_mirror.fetch_add(1, std::memory_order_release);
 			IndexPermutations(entry->first, entry->second);
 		}
 		if (index >= entry->second.permutations.size()) {
@@ -4538,7 +4658,7 @@ PipelineCache::GraphicsPrograms PipelineCache::GetGraphicsPrograms(
 	                                  Common::FrameStats::Enabled()
 	                              ? Common::FrameStats::NowNs()
 	                              : 0;
-	Common::LockGuard lock(m_mutex);
+	PipeLockMeasured lock(m_mutex, prog_lock_t0 != 0, m_lock_holder);
 	Common::FrameStats::LockSplit prog_lock_split(
 	    prog_lock_t0, Common::FrameStats::Counter::PipeLockProgWaitNs,
 	    Common::FrameStats::Counter::PipeLockProgHoldNs,
@@ -4586,6 +4706,8 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
 	const bool        timed       = Common::FrameStats::Enabled();
 	const auto        queue_begin = timed ? Common::FrameStats::NowNs() : 0;
 	Common::LockGuard lock(m_mutex);
+	PipeLockHolder    holder(m_lock_holder, 1, Common::FrameStats::Counter::PipeLockWalkQueueHoldNs,
+	                         Common::FrameStats::Counter::PipeLockWalkQueueHoldN);
 	m_program_cache->QueueAhead(requests, walk);
 	if (timed) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
@@ -4607,7 +4729,7 @@ ShaderProgram PipelineCache::GetComputeProgram(const HW::ComputeShaderInfo& regs
 	                                Common::FrameStats::Enabled()
 	                            ? Common::FrameStats::NowNs()
 	                            : 0;
-	Common::LockGuard lock(m_mutex);
+	PipeLockMeasured lock(m_mutex, cs_lock_t0 != 0, m_lock_holder);
 	Common::FrameStats::LockSplit cs_lock_split(
 	    cs_lock_t0, Common::FrameStats::Counter::PipeLockCsWaitNs,
 	    Common::FrameStats::Counter::PipeLockCsHoldNs,
@@ -4652,7 +4774,7 @@ PipelineCache::Pipeline* PipelineCache::GetGraphicsPipeline(
 		                                  Common::FrameStats::Enabled()
 		                              ? Common::FrameStats::NowNs()
 		                              : 0;
-		Common::LockGuard lock(m_mutex);
+		PipeLockMeasured lock(m_mutex, pipe_lock_t0 != 0, m_lock_holder);
 		Common::FrameStats::LockSplit pipe_lock_split(
 		    pipe_lock_t0, Common::FrameStats::Counter::PipeLockPipeWaitNs,
 		    Common::FrameStats::Counter::PipeLockPipeHoldNs,
@@ -4960,9 +5082,52 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	}
 	input_info.host_subgroup_size = m_graphics.SupportsComputeWave64() ? 64u : 32u;
 	const auto params             = PrepareProgram(regs, sh, input_info);
+	// Session 107, knob "cspmemo": look the prefetch up before taking the lock.
+	const auto memo_mode = Common::Gates::Value(Common::Gates::Knob::CsPrefetchMemo);
+	uint64_t   memo_key  = 0;
+	uint64_t   memo_id   = 0;
+	bool       memo_hit  = false;
+	if (memo_mode != 0) {
+		auto& memo = ThreadCsPrefetchMemo();
+		memo.Restamp(g_programs_epoch_mirror.load(std::memory_order_acquire), ShaderRegistrations());
+		memo.key_words.clear();
+		BuildStageStaticKey(input_info, memo.key_words);
+		uint64_t seed = XXH3_64bits_withSeed(memo.key_words.data(), memo.key_words.size() * sizeof(uint32_t),
+		                                     params.hash ^ 0x6373706d656d6fULL);
+		seed          = XXH3_64bits_withSeed(params.user_data.words.data(),
+		                                     size_t {params.user_data.count} * sizeof(uint32_t), seed ^ params.Base());
+		memo_key      = seed;
+		Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoLook, 1);
+		if (const auto it = memo.ids.find(memo_key); it != memo.ids.end()) {
+			memo_hit = true;
+			memo_id  = it->second;
+			Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoWould, 1);
+			if (memo_mode == 2) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoSkip, 1);
+				return;
+			}
+		}
+	}
 	Common::LockGuard lock(m_mutex);
+	PipeLockHolder    holder(m_lock_holder, 2, Common::FrameStats::Counter::PipeLockWalkPrefHoldNs,
+	                         Common::FrameStats::Counter::PipeLockWalkPrefHoldN);
 	uint32_t          push_data_cursor = 0;
 	const auto        program = m_program_cache->Get(params, input_info, push_data_cursor, true);
+	const auto memo_store = [&](uint64_t id) {
+		if (memo_mode == 0) {
+			return;
+		}
+		if (memo_mode == 3 && memo_hit && memo_id != id) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoBad, 1);
+			static std::atomic<uint32_t> bad_log {0};
+			if (bad_log.fetch_add(1, std::memory_order_relaxed) < 40) {
+				LOGF("CspMemoVerify: MISMATCH hash=0x%016" PRIx64 " memo_id=%" PRIu64 " id=%" PRIu64 "\n",
+				     params.hash, memo_id, id);
+			}
+		}
+		ThreadCsPrefetchMemo().ids[memo_key] = id;
+		Common::FrameStats::Add(Common::FrameStats::Counter::CspMemoStore, 1);
+	};
 	static std::atomic<uint32_t> log_count {0};
 	const bool                   log = log_count.fetch_add(1, std::memory_order_relaxed) < 2048;
 	if (!program) {
@@ -4972,8 +5137,11 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 		return;
 	}
 	if (m_compute_pipelines.contains(program.id)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::CspPrefHave, 1);
+		memo_store(program.id);
 		return;
 	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::CspPrefNew, 1);
 	if (log) {
 		LOGF("AsyncCompute: prefetch hash=0x%016" PRIx64 " id=%" PRIu64 " queued\n", params.hash, program.id);
 	}
@@ -4981,6 +5149,7 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	auto  entry  = std::make_unique<ComputePipelineEntry>();
 	auto* target = entry.get();
 	m_compute_pipelines.emplace(program.id, std::move(entry));
+	memo_store(program.id);
 	m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
 	// The job owns a copy of the input info (stage.program points into the program cache, which
 	// lives for the process; the resource snapshot is per dispatch and only copied along).
@@ -4997,6 +5166,7 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 		const auto create_end = HostMicros();
 		{
 			Common::LockGuard lock(m_mutex);
+			PipeLockHolder    holder(m_lock_holder, 3);
 			if (AvTraceEnabled()) {
 				LOGF("AvTrace: pipeline cs cs=%" PRIu64 " us=%" PRIu64 " total=%" PRIu64
 				     " async wait_us=%" PRIu64 " hash=0x%016" PRIx64 "\n",

@@ -543,8 +543,16 @@ enum class Knob : uint32_t {
 	// ctx_chk_n / ctx_chk_bad and the counters ctx_midsub / ctx_rec_block; 3 = 2 plus EXIT on a
 	// mismatch.  At N = 1 the two sources are equal by construction, so a flip between two reads
 	// is harmless.  Read at every use.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	CtxTick,          // KYTY_CTX_TICK,           file name "ctxtick" (0 old, 1 buffer, 2 + check, 3 + exit)
+	// Session 107: the compute-prefetch memo of PipelineCache::PrefetchComputePipeline (the
+	// dawalk walker's second hold of PipelineCache::m_mutex).  0 = off; 1 = SHADOW (the key is
+	// built and looked up, nothing is skipped: cspm_look / cspm_would); 2 = SKIP (a hit returns
+	// before the lock and before ProgramCache::Get); 3 = skip-and-verify (a hit still runs the
+	// locked path and compares the program id: cspm_bad, "CspMemoVerify:").  The memo is only a
+	// hint - the dispatch always runs its own Get / GetComputePipeline - so a stale entry costs a
+	// missed prefetch, never a wrong result.  Read once per prefetch call.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	CsPrefetchMemo,   // KYTY_CS_PREFETCH_MEMO,   file name "cspmemo" (0 off, 1 shadow, 2 skip, 3 skip + verify)
 	Count,
 };
 

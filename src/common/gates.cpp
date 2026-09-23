@@ -370,8 +370,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // scheduler's CurrentTick()), 1 = CommandBuffer::Tick(), 2 = 1 + checks, 3 = 2 + EXIT.
     // Read at every use, so it CAN be a schedule arm. Session 105: default 1 after the sealed
     // acceptance (pred/02_m31.md: checks clean, A/A |d cpu_net| 62.6 us <= 90, video, 10 entries).
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_CTX_TICK", "ctxtick", 1, 3},
+    // Session 107: compute-prefetch memo on the walker; 0 = off (today).  Read once per prefetch
+    // call, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_CS_PREFETCH_MEMO", "cspmemo", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

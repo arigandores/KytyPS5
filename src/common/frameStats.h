@@ -1765,6 +1765,36 @@ enum class Counter : uint32_t {
 	GpuWallProcN,            // gw_proc_n
 	GpuWallCmdNs,            // gw_cmd_ns
 	GpuWallCmdN,             // gw_cmd_n
+	// Session 107, gate "plkstat" (measurement only): GuestGpu's CONTENDED acquisitions of
+	// PipelineCache::m_mutex at its three plkstat sites (a TryLock failed first): the count, the
+	// wall and the thread CPU (ThreadCpuNs(Gpu)) around the blocking Lock - cpu / wall is the spin
+	// share - and the same split by the holder tag read at the failed try (0 untagged, 1 walker
+	// QueueDrawAhead, 2 walker PrefetchComputePipeline, 3 compute-pipeline compile completion).
+	// Plus the walker's own holds, timed after its LockGuard.  Raw ns / counts.
+	PipeLockContN,           // pl_cont_n
+	PipeLockContWallNs,      // pl_cont_wall_ns
+	PipeLockContCpuNs,       // pl_cont_cpu_ns
+	PipeLockContH0N,         // pl_cont_h0_n
+	PipeLockContH0Ns,        // pl_cont_h0_ns
+	PipeLockContH1N,         // pl_cont_h1_n
+	PipeLockContH1Ns,        // pl_cont_h1_ns
+	PipeLockContH2N,         // pl_cont_h2_n
+	PipeLockContH2Ns,        // pl_cont_h2_ns
+	PipeLockContH3N,         // pl_cont_h3_n
+	PipeLockContH3Ns,        // pl_cont_h3_ns
+	PipeLockWalkQueueHoldNs, // pl_wq_hold_ns
+	PipeLockWalkQueueHoldN,  // pl_wq_hold_n
+	PipeLockWalkPrefHoldNs,  // pl_wp_hold_ns
+	PipeLockWalkPrefHoldN,   // pl_wp_hold_n
+	// Session 107, knob "cspmemo": the compute-prefetch memo.  Raw counts.
+	CspMemoLook,             // cspm_look: prefetch calls that built a key (knob != 0)
+	CspMemoWould,            // cspm_would: ... that found it (a skip at knob 2/3)
+	CspMemoSkip,             // cspm_skip: calls returned early (knob 2)
+	CspMemoBad,              // cspm_bad: knob 3 - the locked path disagreed with the memo
+	CspMemoStore,            // cspm_store: entries written
+	CspMemoClear,            // cspm_clear: memo cleared (stamp moved or full)
+	CspPrefHave,             // cspf_have: locked prefetches whose program already had a pipeline
+	CspPrefNew,              // cspf_new: ... that queued a new pipeline
 	Count
 };
 

@@ -313,6 +313,10 @@ private:
 	};
 	std::unordered_map<uint64_t, std::unique_ptr<ComputePipelineEntry>> m_compute_pipelines;
 	Common::Mutex m_mutex;
+	// Session 107, gate "plkstat": who holds m_mutex, written by the tagged holders while they
+	// hold it (1 walker QueueDrawAhead, 2 walker PrefetchComputePipeline, 3 compute-pipeline
+	// compile completion; 0 = untagged), read by GuestGpu when its TryLock fails.
+	std::atomic<uint8_t> m_lock_holder {0};
 	uint64_t      m_driver_cache_saved_us    = 0;
 	uint32_t      m_driver_cache_unsaved     = 0;
 

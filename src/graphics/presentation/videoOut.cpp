@@ -2444,6 +2444,31 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"gw_proc_n", FS::Counter::GpuWallProcN, false},
 				    {"gw_cmd_ns", FS::Counter::GpuWallCmdNs, false},
 				    {"gw_cmd_n", FS::Counter::GpuWallCmdN, false},
+				    // Session 107, gate "plkstat": contended m_mutex acquisitions of GuestGpu and the
+				    // walker's holds; knob "cspmemo": the compute-prefetch memo.  Raw ns / counts.
+				    {"pl_cont_n", FS::Counter::PipeLockContN, false},
+				    {"pl_cont_wall_ns", FS::Counter::PipeLockContWallNs, false},
+				    {"pl_cont_cpu_ns", FS::Counter::PipeLockContCpuNs, false},
+				    {"pl_cont_h0_n", FS::Counter::PipeLockContH0N, false},
+				    {"pl_cont_h0_ns", FS::Counter::PipeLockContH0Ns, false},
+				    {"pl_cont_h1_n", FS::Counter::PipeLockContH1N, false},
+				    {"pl_cont_h1_ns", FS::Counter::PipeLockContH1Ns, false},
+				    {"pl_cont_h2_n", FS::Counter::PipeLockContH2N, false},
+				    {"pl_cont_h2_ns", FS::Counter::PipeLockContH2Ns, false},
+				    {"pl_cont_h3_n", FS::Counter::PipeLockContH3N, false},
+				    {"pl_cont_h3_ns", FS::Counter::PipeLockContH3Ns, false},
+				    {"pl_wq_hold_ns", FS::Counter::PipeLockWalkQueueHoldNs, false},
+				    {"pl_wq_hold_n", FS::Counter::PipeLockWalkQueueHoldN, false},
+				    {"pl_wp_hold_ns", FS::Counter::PipeLockWalkPrefHoldNs, false},
+				    {"pl_wp_hold_n", FS::Counter::PipeLockWalkPrefHoldN, false},
+				    {"cspm_look", FS::Counter::CspMemoLook, false},
+				    {"cspm_would", FS::Counter::CspMemoWould, false},
+				    {"cspm_skip", FS::Counter::CspMemoSkip, false},
+				    {"cspm_bad", FS::Counter::CspMemoBad, false},
+				    {"cspm_store", FS::Counter::CspMemoStore, false},
+				    {"cspm_clear", FS::Counter::CspMemoClear, false},
+				    {"cspf_have", FS::Counter::CspPrefHave, false},
+				    {"cspf_new", FS::Counter::CspPrefNew, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

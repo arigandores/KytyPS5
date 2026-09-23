@@ -1,0 +1,34 @@
+obs107.py obs107 rows=7842 admitted=True verify=FAIL
+  [PASS] admission PIN_ONCE
+  [PASS] admission NO_FATAL
+  [PASS] admission RECORD_THREAD_TWO
+  [PASS] admission PLKSTAT_ARMED
+  [PASS] admission MEMO_ARMED
+  [PASS] admission ROWS
+  [PASS] admission ONE_OK_ATTEMPT
+  [PASS] admission GATE_TEXT
+  spin share 0.7518020313827168  holder shares {'0': 0.01385076754513319, '1': 0.5771996086166483, '2': 0.4089496238382185, '3': 0.0}
+  contended wall 421.7938508033665 us/flip  tag2 172.49243662331037 us/flip  would_rate 0.43799053870329996
+  pl_cont_n        321.0406783983678
+  pl_wq_hold_ns    1021224.0637592451
+  pl_wq_hold_n     1079.642183116552
+  pl_wp_hold_ns    342229.78245345573
+  pl_wp_hold_n     266.0
+  cspm_look        266.0
+  cspm_would       116.50548329507778
+  cspm_bad         0.0002550369803621525
+  cspm_clear       0.03647028819178781
+  cspf_have        266.0
+  cspf_new         0.0
+  pl_prog_wait_us  208.77735271614384
+  pl_pipe_wait_us  226.16296863045142
+  pl_cs_wait_us    116.84378984952818
+  dt_us            31619.85156847743
+  cpu_gpu_us       30618.524866105585
+  prediction O1 HIT  value 0.7518020313827168  spin share >= 0.6
+  prediction O2 HIT  value 0.4089496238382185  holder tag 2 (walker prefetch) share of contended wall >= 0.4
+  prediction O3 MISS value 0.43799053870329996  would_rate >= 0.8
+  prediction O4 HIT  value 321.0406783983678  pl_cont_n per flip in [50, 1000]
+  prediction O5 MISS value 2  cspm_bad sum == 0
+  prediction O6 MISS value 0.0  GO
+  VERDICT: VERIFY FAIL - cspmemo closed (memo disagrees or never hits)

@@ -1803,6 +1803,9 @@ enum class Counter : uint32_t {
 	// waited for it (cs_sync_wait).  Raw counts.
 	CsSyncNew,               // cs_sync_new
 	CsSyncWait,              // cs_sync_wait
+	// Session 109, knob "cspfam" v2: family-table clears on the prefetching thread (a stamp moved:
+	// programs epoch, shader registrations, a compute-pipeline creation anywhere, or capacity).
+	CspFamClear,             // cspfam_clr
 	Count
 };
 

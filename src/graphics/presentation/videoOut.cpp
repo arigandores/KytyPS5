@@ -2474,6 +2474,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"cspfam_skip", FS::Counter::CspFamSkip, false},
 				    {"cs_sync_new", FS::Counter::CsSyncNew, false},
 				    {"cs_sync_wait", FS::Counter::CsSyncWait, false},
+				    // Session 109: knob "cspfam" v2, family-table clears.  Raw count.
+				    {"cspfam_clr", FS::Counter::CspFamClear, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

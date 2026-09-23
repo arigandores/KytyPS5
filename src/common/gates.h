@@ -554,7 +554,8 @@ enum class Knob : uint32_t {
 	CsPrefetchMemo,   // KYTY_CS_PREFETCH_MEMO,   file name "cspmemo" (0 off, 1 shadow, 2 skip, 3 skip + verify)
 	// Session 108: skip PipelineCache::PrefetchComputePipeline per shader FAMILY (code hash and base plus
 	// the stage static key, no user SGPRs) once the family's last K locked prefetches all found a built
-	// pipeline and neither the programs epoch nor the shader registrations moved.  0 = off; K = the
+	// pipeline and neither the programs epoch nor the shader registrations moved.  Session 109 (v2): nor
+	// the count of compute-pipeline creations anywhere (any creation clears every streak).  0 = off; K = the
 	// streak.  A new permutation of a skipped family is then compiled on the dispatch - counted by
 	// cs_sync_new, the guard of every run.  Read once per prefetch call.
 	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.

@@ -73,6 +73,11 @@ namespace {
 // knob "cspmemo" memo.
 std::atomic<uint64_t> g_programs_epoch_mirror {0};
 
+// Session 109, knob "cspfam" v2: bumped wherever m_compute_pipelines gains an entry (the walker's
+// prefetch, GetComputePipeline's synchronous path, the startup precache); a stamp of the family table,
+// so any creation clears every streak and the skip re-arms only after K rounds with no creation.
+std::atomic<uint64_t> g_compute_creations {0};
+
 // Session 107, gate "plkstat": GuestGpu's acquisition of PipelineCache::m_mutex at a plkstat
 // site.  Measured only on the GuestGpu thread with the gate armed: a TryLock first; only when it
 // fails, the holder tag, the wall and the thread CPU around the blocking Lock (CPU / wall = the
@@ -191,14 +196,20 @@ struct CsPrefetchFamilies {
 	std::unordered_map<uint64_t, uint32_t> streak;
 	uint64_t                               epoch = UINT64_MAX;
 	uint64_t                               registrations = UINT64_MAX;
+	uint64_t                               creations = UINT64_MAX; // session 109, v2
 	std::vector<uint32_t>                  key_words;
 
-	void Restamp(uint64_t now_epoch, uint64_t now_registrations) {
-		if (now_epoch != epoch || now_registrations != registrations || streak.size() >= Capacity) {
+	// true when the table was cleared
+	bool Restamp(uint64_t now_epoch, uint64_t now_registrations, uint64_t now_creations) {
+		if (now_epoch != epoch || now_registrations != registrations || now_creations != creations ||
+		    streak.size() >= Capacity) {
 			streak.clear();
 			epoch         = now_epoch;
 			registrations = now_registrations;
+			creations     = now_creations;
+			return true;
 		}
+		return false;
 	}
 };
 
@@ -5111,7 +5122,10 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	uint64_t   fam_key = 0;
 	if (fam_k != 0) {
 		auto& fam = ThreadCsPrefetchFamilies();
-		fam.Restamp(g_programs_epoch_mirror.load(std::memory_order_acquire), ShaderRegistrations());
+		if (fam.Restamp(g_programs_epoch_mirror.load(std::memory_order_acquire), ShaderRegistrations(),
+		                g_compute_creations.load(std::memory_order_acquire))) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::CspFamClear, 1);
+		}
 		fam.key_words.clear();
 		BuildStageStaticKey(input_info, fam.key_words);
 		fam_key = XXH3_64bits_withSeed(fam.key_words.data(), fam.key_words.size() * sizeof(uint32_t),
@@ -5198,6 +5212,7 @@ void PipelineCache::PrefetchComputePipeline(const HW::ComputeShaderInfo& regs,
 	auto  entry  = std::make_unique<ComputePipelineEntry>();
 	auto* target = entry.get();
 	m_compute_pipelines.emplace(program.id, std::move(entry));
+	g_compute_creations.fetch_add(1, std::memory_order_release);
 	memo_store(program.id);
 	m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
 	// The job owns a copy of the input info (stage.program points into the program cache, which
@@ -5281,6 +5296,7 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 			auto [place, inserted] =
 			    m_compute_pipelines.emplace(compute_program.id, std::move(cached));
 			EXIT_IF(!inserted);
+			g_compute_creations.fetch_add(1, std::memory_order_release);
 			return *place->second;
 		}
 	}
@@ -5949,6 +5965,7 @@ void PipelineCache::PrecachePipelines() {
 				auto entry = std::make_unique<ComputePipelineEntry>();
 				target     = entry.get();
 				m_compute_pipelines.emplace(program.id, std::move(entry));
+				g_compute_creations.fetch_add(1, std::memory_order_release);
 				m_pending_pipelines.fetch_add(1, std::memory_order_relaxed);
 			}
 			info->stage = {.program = compiled};

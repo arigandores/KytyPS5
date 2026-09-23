@@ -1,0 +1,84 @@
+frf109.py frm109 status=ADMITTED seal=50fbc61b0915169059258d34d119c72deec58043b47c6276bc7b52dd993bd864
+  pairs 96 (orientations [48, 48]), blocks 192, excluded [3]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  SYNC_COMPILE
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    FREE_ARMED_ARM1
+  [PASS] arming    FREE_DARK_ARM0
+  [PASS] arming    FREE_NO_BAD
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 22236, 'da_wjobs': 22261, 'da_wdrop': 0}  skip/posts-1 -0.0011  drop 0.0000  walks rel 0.0000
+  cspfree arm-0 kept totals {'cspfree_look': 0, 'cspfree_hit': 0}  cspfree_bad over all rows 0
+  dt_us        arm0    31037.7   arm1    31033.6
+  cpu_net_us   arm0    30146.1   arm1    30103.6
+  draws        arm0     5025.2   arm1     5028.5
+  gpu_busy_us  arm0    12530.7   arm1    12570.1
+  rec_n        arm0    10885.1   arm1    10892.8
+  da_walk_us   arm0     2387.4   arm1     2352.6
+  da_queue_us  arm0     1091.6   arm1     1100.3
+  da_take_us   arm0     2798.7   arm1     2805.4
+  da_hit       arm0     8372.5   arm1     8398.1
+  da_miss      arm0      296.7   arm1      296.5
+  da_late      arm0        5.0   arm1        5.5
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    72898.2   arm1    72839.1
+  da_wdepth    arm0       17.5   arm1       17.5
+  cspfree_look arm0        0.0   arm1      266.0
+  cspfree_hit  arm0        0.0   arm1      266.0
+  cspfree_spec_miss arm0        0.0   arm1        0.0
+  cspf_have    arm0      266.0   arm1        0.0
+  cspf_new     arm0        0.0   arm1        0.0
+  d cpu_net_us   mean -54.8  2SE 112.0  t -0.98  n 96
+  d dt_us        mean -154.1  2SE 121.2  t -2.54  n 96
+  d da_take_us   mean 4.5  2SE 16.1  t 0.56  n 96
+  d da_miss      mean 6.5  2SE 9.8  t 1.33  n 96
+  d da_late      mean 0.4  2SE 0.3  t 2.37  n 96
+  d da_hit       mean -6.1  2SE 28.6  t -0.43  n 96
+  d da_stale     mean 0.0  2SE None  t 0.00  n 96
+  d da_walk_us   mean -36.1  2SE 13.4  t -5.41  n 96
+  d gpu_busy_us  mean 70.6  2SE 30.5  t 4.63  n 96
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [PASS] ship S1_dt_le_-100
+  [PASS] ship S2_dt_2se_excludes_0
+  VERDICT: SHIP_PENDING_VIDEO (S1-S2 met; nothing ships until vff109 is read)
+  prediction G1  HIT  value 266.000 band [200, 270]  arm-1 cspfree_hit level in [200, 270] a flip
+  prediction G2  HIT  value 0.000 band [None, 30]  arm-1 cspf_have level <= 30 a flip (most prefetches return before the lock)
+  prediction G3  HIT  value -154.140 band [-300, 0]  d mean dt_us in [-300, 0] us
+  prediction G4  HIT  value -154.140 band [None, -100.0]  d mean dt_us <= -100 us (the ship bar) - the discriminating prediction, medium-low confidence
+  prediction G5  HIT  value 6.549 band [-30, 30]  d da_miss in [-30, +30] a flip
+  prediction G6  HIT  value 70.602 band [-50, 150]  d gpu_busy_us in [-50, +150] us a flip
+  failed: none
+wrote C:/kyty/s109/runs109/frm109_score.json

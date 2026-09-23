@@ -1,0 +1,7 @@
+C:/kyty/s108/log_sf108b.txt lines 2049850 frames 19827 gate 0
+  mark GpuClockPin: 1 [(16432, 'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)')]
+  mark RecordThread: started 2 [(630, 'RecordThread: started recorder=0x100000c6100 arena=65536KiB gpu=0'), (16425, 'RecordThread: started recorder=0x100c4e08280 arena=65536KiB gpu=1')]
+  mark AsyncCompute: 256 [(16422, 'AsyncCompute: lookahead walk packets=193 dispatches=9 us=410'), (16423, 'AsyncCompute: lookahead walk packets=550 dispatches=15 us=2436')]
+  mark PipelinePrecache: 2 [(573, 'PipelinePrecache: 641 recipes -> 520 graphics + 121 compute pipelines queued, 0 skipped, 1127 sources loaded, complete, 197 ms (scratch: 0 pipelines, max 0 dwords/thread)'), (576, 'PipelinePrecache: all pipelines created, 197 ms')]
+  mark Level has started 2 [(186566, 'GuestOut: Level has started:'), (214762, 'GuestOut: Level has started: intro_next')]
+  mark cspfam 19827 [(18159, 'FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=1 rec_spin_us=2275 rec_sleep=6 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=66 prot_spin_gp'), (18446, 'FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=1 rec_spin_us=1893 rec_sleep=5 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu')]

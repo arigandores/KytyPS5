@@ -1,0 +1,8 @@
+C:/kyty/s108/log_vid108.txt lines 699599 frames 3964 gate 0
+  mark GpuClockPin: 1 [(16430, 'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)')]
+  mark RecordThread: started 2 [(630, 'RecordThread: started recorder=0x10000f51580 arena=65536KiB gpu=0'), (16423, 'RecordThread: started recorder=0x100c5030b40 arena=65536KiB gpu=1')]
+  mark Recording: 1 [(632, 'Recording: C:\\kyty\\s108\\rec_vid108.mp4 960x540 (source 1280x720) first present=1 pipe=ok')]
+  mark AsyncCompute: 256 [(16420, 'AsyncCompute: lookahead walk packets=193 dispatches=9 us=574'), (16421, 'AsyncCompute: lookahead walk packets=550 dispatches=15 us=2049')]
+  mark PipelinePrecache: 2 [(573, 'PipelinePrecache: 641 recipes -> 520 graphics + 121 compute pipelines queued, 0 skipped, 1127 sources loaded, complete, 187 ms (scratch: 0 pipelines, max 0 dwords/thread)'), (576, 'PipelinePrecache: all pipelines created, 187 ms')]
+  mark Level has started 2 [(182482, 'GuestOut: Level has started:'), (224175, 'GuestOut: Level has started: underwater_aerial_garden')]
+  mark cspfam 3964 [(18167, 'FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=2 rec_spin_us=2955 rec_sleep=7 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu'), (18403, 'FrameTrace-x: n=3 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=0 rec_pack_cs=0 rec_bind=0 rec_pack_kb=0 rec_direct_busy=0 rec_spin_us=1374 rec_sleep=4 prot_spin_us=0 prot_spin_calls=0 prot_spin_pages=0 prot_spin_gpu')]

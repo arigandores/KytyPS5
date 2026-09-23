@@ -1,0 +1,56 @@
+gate lines 198 pattern ok True texts ['dawalk=1 dawalklead=1 cspfam=0', 'dawalk=1 dawalklead=1 cspfam=4']
+rows whose arm/blk disagree with the frame-range block: 0
+primary window [60:89]: eligible blocks 194 pairs 96 orientations [48, 48] eligible-but-unpaired [3, 196]
+  d dt_us             mean   -141.8  2SE  107.0  t  -2.65  median    -14.9  frac<0 0.583  sd 524.4
+  d cpu_net_us        mean     72.7  2SE   96.7  t   1.50  median     38.5  frac<0 0.448  sd 474.0
+  d dt_minus_cpu_net  mean   -214.5  2SE   40.2  t -10.68  median   -181.0  frac<0 0.865  sd 196.8
+  d da_walk_us        mean   -212.6  2SE   14.8  t -28.68  median   -206.3  frac<0 1.000  sd 72.6
+  d da_miss           mean      2.0  2SE    9.9  t   0.41  median     -0.0  frac<0 0.500  sd 48.3
+  d draws             mean     -3.2  2SE   14.1  t  -0.45  median     -0.6  frac<0 0.510  sd 69.3
+  d gpu_busy_us       mean     87.5  2SE   38.6  t   4.54  median     77.1  frac<0 0.302  sd 188.9
+  d cpu_gpu_us        mean     74.0  2SE   96.7  t   1.53  median     40.8  frac<0 0.448  sd 473.9
+  d spin_gpu_us       mean      1.3  2SE    0.3  t   9.15  median      1.3  frac<0 0.146  sd 1.4
+  dt: sign-flip p 0.00875  bootstrap95 [-246.3, -37.8]  10%-trimmed mean -138.0  wilcoxon p 0.0082 (z -2.64)
+  cpu_net: sign-flip p 0.1356  bootstrap95 [-20.5, 166.6]
+  orientation first-arm=0: n 48 mean 12.0 2SE 136.9
+  orientation first-arm=1: n 48 mean -295.5 2SE 153.4
+  first half: n 48 mean -112.6 2SE 147.2
+  second half: n 48 mean -170.9 2SE 156.5
+  level dt_us        arm0 mean   31221.5 median   31038.6 | arm1 mean   31079.7 median   31031.4
+  level cpu_net_us   arm0 mean   30312.5 median   30262.1 | arm1 mean   30385.2 median   30329.4
+  level cspfam_skip  arm0 mean       0.0 median       0.0 | arm1 mean     266.0 median     266.0
+  level cspfam_look  arm0 mean       0.0 median       0.0 | arm1 mean     266.0 median     266.0
+  level cspf_have    arm0 mean     266.0 median     266.0 | arm1 mean       0.0 median       0.0
+  level da_walk_us   arm0 mean    2381.7 median    2368.8 | arm1 mean    2169.1 median    2160.2
+  level da_miss      arm0 mean     296.5 median     296.1 | arm1 mean     298.5 median     296.7
+  all rows >=2100 sum cs_sync_new  arm0 0 arm1 0
+  all rows >=2100 sum cs_sync_wait arm0 0 arm1 0
+  all rows >=2100 sum cspfam_look  arm0 0 arm1 2309680
+  all rows >=2100 sum cspfam_skip  arm0 0 arm1 2309680
+  all rows >=2100 sum cspf_have    arm0 2338403 arm1 0
+  all rows >=2100 sum cspf_new     arm0 0 arm1 0
+  kept arm-0 cspfam_look total 0
+  vblank histogram (kept rows):
+    arm0 n  2784 mean dt 31221.5 median 33224.5  1vb 369 (13.25%)  2vb 2399 (86.17%)  3vb 16 (0.57%)
+    arm1 n  2784 mean dt 31079.7 median 33228.0  1vb 389 (13.97%)  2vb 2382 (85.56%)  3vb 13 (0.47%)
+    mean vblanks/frame arm0 1.8732 arm1 1.8649 -> delta -0.0083 vb = -137.7 us
+  vblank histogram (all rows >= 2100):
+    arm0 n  8791 mean dt 31241.8 median 33227.0  1vb 1159 (13.18%)  2vb 7581 (86.24%)  3vb 49 (0.56%)  4vb 1 (0.01%)  7vb 1 (0.01%)
+    arm1 n  8683 mean dt 31079.0 median 33235.0  1vb 1209 (13.92%)  2vb 7439 (85.67%)  3vb 35 (0.40%)
+    mean vblanks/frame arm0 1.8745 arm1 1.8648 -> delta -0.0097 vb = -162.3 us
+  mean residual dt - k*16667 (kept): arm0 0.8 arm1 -3.3
+  paired d(#frames of 1 vblanks per 29-frame block): mean 0.208 2SE 0.192 t 2.17
+  paired d(#frames of 2 vblanks per 29-frame block): mean -0.177 2SE 0.242 t -1.46
+  paired d(#frames of 3 vblanks per 29-frame block): mean -0.031 2SE 0.100 t -0.62
+  paired d(#frames of 4 vblanks per 29-frame block): mean 0.000 2SE 0.000 t nan
+  paired d(#frames >= 3 vblanks per block): mean -0.031 2SE 0.100 t -0.62
+  window sensitivity (dt_us):
+    keep [60:89] pairs  96  mean  -141.8  2SE  107.0  t  -2.65  median   -14.9  p_signflip 0.0095
+    keep [ 0:90] pairs  96  mean  -168.4  2SE   73.1  t  -4.61  median  -181.8  p_signflip 0.0000
+    keep [ 0:89] pairs  96  mean  -181.6  2SE   70.7  t  -5.14  median  -184.1  p_signflip 0.0000
+    keep [30:89] pairs  96  mean  -139.9  2SE   77.8  t  -3.60  median  -255.5  p_signflip 0.0004
+    keep [45:90] pairs  96  mean   -90.3  2SE   88.6  t  -2.04  median    -7.0  p_signflip 0.0411
+    keep [60:90] pairs  96  mean  -103.2  2SE  103.6  t  -1.99  median   -11.6  p_signflip 0.0494
+    keep [10:90] pairs  96  mean  -138.6  2SE   73.8  t  -3.76  median    -6.3  p_signflip 0.0002
+    keep [ 0:60] pairs  96  mean  -200.9  2SE   91.0  t  -4.42  median  -263.4  p_signflip 0.0000
+    keep [30:60] pairs  96  mean  -138.1  2SE  129.0  t  -2.14  median   -13.0  p_signflip 0.0329

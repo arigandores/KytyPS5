@@ -1,0 +1,26 @@
+fam108 complete quartets 48
+mean dt by quartet position and within-block segment (us):
+  pos arm  [ 0:10]  [10:30]  [30:60]  [60:89]  [89:90]   [60:89]-[0:90]
+  0   0      31343     31263     31333     31108     31896
+  1   1      31071     31117     31037     31120     32953
+  2   1      30796     31022     31174     31039     31603
+  3   0      31338     31261     31155     31335     30631
+paired delta arm1-arm0 by orientation and segment:
+  AB (pos1-pos0)  [ 0:10] mean   -271.7  2SE   338.9
+  AB (pos1-pos0)  [10:30] mean   -146.4  2SE   175.2
+  AB (pos1-pos0)  [30:60] mean   -295.4  2SE   204.9
+  AB (pos1-pos0)  [60:89] mean     12.0  2SE   136.9
+  AB (pos1-pos0)  [89:90] mean   1057.0  2SE  2006.1
+  AB (pos1-pos0)  [60:89] mean     12.0  2SE   136.9
+  BA (pos2-pos3)  [ 0:10] mean   -541.9  2SE   294.3
+  BA (pos2-pos3)  [10:30] mean   -238.2  2SE   167.3
+  BA (pos2-pos3)  [30:60] mean     19.3  2SE   145.1
+  BA (pos2-pos3)  [60:89] mean   -295.5  2SE   153.4
+  BA (pos2-pos3)  [89:90] mean    972.1  2SE  2317.3
+  BA (pos2-pos3)  [60:89] mean   -295.5  2SE   153.4
+same-arm contrasts, kept window [60:89] (second-of-run minus first-of-run):
+Traceback (most recent call last):
+  File "C:\kyty\s108\audit108\profile108.py", line 50, in <module>
+    for name, (ps, pf) in (('arm0: pos0 - pos3(prev quartet)', None), ('arm1: pos2 - pos1', (2, 1))):
+              ^^^^^^^^
+TypeError: cannot unpack non-iterable NoneType object

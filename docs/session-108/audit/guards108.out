@@ -1,0 +1,113 @@
+== fam108 rows 19572 n 2 .. 19573
+  totals {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 2772513, 'cspf_new': 0, 'cspfam_look': 2357561, 'cspfam_skip': 2357253, 'dispatches': 5168962}
+  rows missing field {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 0, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 0}
+  cs_sync_new  nonzero rows     0 first [] last []
+  cs_sync_wait nonzero rows     0 first [] last []
+  cspf_new     nonzero rows     0 first [] last []
+  cspfam_skip  nonzero rows  8863 first [1891, 1892, 1893, 1894, 1895] last [19571, 19572, 19573]
+  cspfam_look  nonzero rows  8863 first [1891, 1892, 1893, 1894, 1895] last [19571, 19572, 19573]
+  window     dt_ms_mean draws cspf_have cspf_new look skip sync_new sync_wait
+      2- 1001     29.1   3876   189817      0      0      0    0    0
+   1002- 2001     32.9   5520   236579      0  29527  29219    0    0
+   2002- 3001     30.3   4907   143638      0 122362 122362    0    0
+   3002- 4001     30.8   5006   130606      0 135393 135393    0    0
+   4002- 5001     31.7   5192   122360      0 143641 143641    0    0
+   5002- 6001     30.8   4992   130074      0 135925 135925    0    0
+   6002- 7001     30.8   4976   143638      0 122363 122363    0    0
+   7002- 8001     31.7   5164   141246      0 124754 124754    0    0
+   8002- 9001     31.4   5060   122359      0 143640 143640    0    0
+   9002-10001     30.7   4977   122360      0 143641 143641    0    0
+  10002-11001     31.3   5087   140712      0 125288 125288    0    0
+  11002-12001     31.4   5105   143640      0 122360 122360    0    0
+  12002-13001     31.0   5010   130605      0 135394 135394    0    0
+  13002-14001     30.8   5001   122362      0 143638 143638    0    0
+  14002-15001     31.4   5099   130074      0 135927 135927    0    0
+  15002-16001     31.3   5093   143638      0 122362 122362    0    0
+  16002-17001     30.9   4972   141247      0 124752 124752    0    0
+  17002-18001     31.4   5085   122361      0 143639 143639    0    0
+  18002-19001     32.0   5161   122362      0 143638 143638    0    0
+  19002-20001     30.8   4969    92835      0  59317  59317    0    0
+== sf108a rows 19854 n 2 .. 19855
+  totals {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 2068986, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 2095427}
+  rows missing field {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 0, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 0}
+  cs_sync_new  nonzero rows     0 first [] last []
+  cs_sync_wait nonzero rows     0 first [] last []
+  cspf_new     nonzero rows     0 first [] last []
+  cspfam_skip  nonzero rows     0 first [] last []
+  cspfam_look  nonzero rows     0 first [] last []
+  window     dt_ms_mean draws cspf_have cspf_new look skip sync_new sync_wait
+      2- 1001     16.7    182    88806      0      0      0    0    0
+   1002- 2001     16.7    528   131779      0      0      0    0    0
+   2002- 3001     16.7    692   120545      0      0      0    0    0
+   3002- 4001     16.7    946   120576      0      0      0    0    0
+   4002- 5001     16.7    730   127578      0      0      0    0    0
+   5002- 6001     16.7    401   101221      0      0      0    0    0
+   6002- 7001     16.7    497    99345      0      0      0    0    0
+   7002- 8001     16.7    757    99471      0      0      0    0    0
+   8002- 9001     16.7    754    99215      0      0      0    0    0
+   9002-10001     16.7    755    99596      0      0      0    0    0
+  10002-11001     16.7    756    99590      0      0      0    0    0
+  11002-12001     16.7    754    99529      0      0      0    0    0
+  12002-13001     16.7    755    99616      0      0      0    0    0
+  13002-14001     16.7    755    99411      0      0      0    0    0
+  14002-15001     16.7    754    99350      0      0      0    0    0
+  15002-16001     16.7    755    99406      0      0      0    0    0
+  16002-17001     16.7    755    99683      0      0      0    0    0
+  17002-18001     16.7    754    99608      0      0      0    0    0
+  18002-19001     16.7    755    99590      0      0      0    0    0
+  19002-20001     16.7    755    85071      0      0      0    0    0
+== sf108b rows 19827 n 2 .. 19828
+  totals {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 3995, 'cspf_new': 0, 'cspfam_look': 2069331, 'cspfam_skip': 2065336, 'dispatches': 2096124}
+  rows missing field {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 0, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 0}
+  cs_sync_new  nonzero rows     0 first [] last []
+  cs_sync_wait nonzero rows     0 first [] last []
+  cspf_new     nonzero rows     0 first [] last []
+  cspfam_skip  nonzero rows 19823 first [4, 5, 6, 7, 8] last [19826, 19827, 19828]
+  cspfam_look  nonzero rows 19823 first [4, 5, 6, 7, 8] last [19826, 19827, 19828]
+  window     dt_ms_mean draws cspf_have cspf_new look skip sync_new sync_wait
+      2- 1001     16.7    187     3606      0  92760  89154    0    0
+   1002- 2001     16.7    586       51      0 138661 138610    0    0
+   2002- 3001     16.7    670       30      0 114216 114186    0    0
+   3002- 4001     16.7    949       23      0 122113 122090    0    0
+   4002- 5001     16.7    711      280      0 126585 126305    0    0
+   5002- 6001     16.7    392        3      0 100358 100355    0    0
+   6002- 7001     16.7    519        2      0  99399  99397    0    0
+   7002- 8001     16.7    757        0      0  99445  99445    0    0
+   8002- 9001     16.7    754        0      0  99381  99381    0    0
+   9002-10001     16.7    755        0      0  99291  99291    0    0
+  10002-11001     16.7    755        0      0  99563  99563    0    0
+  11002-12001     16.7    754        0      0  99511  99511    0    0
+  12002-13001     16.7    755        0      0  99361  99361    0    0
+  13002-14001     16.7    755        0      0  99438  99438    0    0
+  14002-15001     16.7    755        0      0  99413  99413    0    0
+  15002-16001     16.7    755        0      0  99286  99286    0    0
+  16002-17001     16.7    755        0      0  99282  99282    0    0
+  17002-18001     16.7    754        0      0  99489  99489    0    0
+  18002-19001     16.7    755        0      0  99506  99506    0    0
+  19002-20001     16.7    754        0      0  82273  82273    0    0
+== vid108 rows 3964 n 2 .. 3965
+  totals {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 3130, 'cspf_new': 0, 'cspfam_look': 1010830, 'cspfam_skip': 1007700, 'dispatches': 1018766}
+  rows missing field {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 0, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 0}
+  cs_sync_new  nonzero rows     0 first [] last []
+  cs_sync_wait nonzero rows     0 first [] last []
+  cspf_new     nonzero rows     0 first [] last []
+  cspfam_skip  nonzero rows  3961 first [4, 5, 6, 7, 8] last [3963, 3964, 3965]
+  cspfam_look  nonzero rows  3961 first [4, 5, 6, 7, 8] last [3963, 3964, 3965]
+  window     dt_ms_mean draws cspf_have cspf_new look skip sync_new sync_wait
+      2- 1001     32.6   4781     3130      0 222466 219336    0    0
+   1002- 2001     32.8   5330        0      0 265940 265940    0    0
+   2002- 3001     31.3   4924        0      0 266001 266001    0    0
+   3002- 4001     31.7   5032        0      0 256423 256423    0    0
+== vfm108 rows 3619 n 2 .. 3620
+  totals {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 3112, 'cspf_new': 0, 'cspfam_look': 918821, 'cspfam_skip': 915709, 'dispatches': 926096}
+  rows missing field {'cs_sync_new': 0, 'cs_sync_wait': 0, 'cspf_have': 0, 'cspf_new': 0, 'cspfam_look': 0, 'cspfam_skip': 0, 'dispatches': 0}
+  cs_sync_new  nonzero rows     0 first [] last []
+  cs_sync_wait nonzero rows     0 first [] last []
+  cspf_new     nonzero rows     0 first [] last []
+  cspfam_skip  nonzero rows  3616 first [4, 5, 6, 7, 8] last [3618, 3619, 3620]
+  cspfam_look  nonzero rows  3616 first [4, 5, 6, 7, 8] last [3618, 3619, 3620]
+  window     dt_ms_mean draws cspf_have cspf_new look skip sync_new sync_wait
+      2- 1001     37.2   4779     3112      0 222228 219116    0    0
+   1002- 2001     37.6   5333        0      0 265938 265938    0    0
+   2002- 3001     33.2   4911        0      0 266001 266001    0    0
+   3002- 4001     31.4   4973        0      0 164654 164654    0    0

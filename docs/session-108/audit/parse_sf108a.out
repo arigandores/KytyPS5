@@ -1,0 +1,7 @@
+C:/kyty/s108/log_sf108a.txt lines 2049861 frames 19854 gate 0
+  mark GpuClockPin: 1 [(16429, 'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)')]
+  mark RecordThread: started 2 [(630, 'RecordThread: started recorder=0xfff7b776c0 arena=65536KiB gpu=0'), (16424, 'RecordThread: started recorder=0x100be8af900 arena=65536KiB gpu=1')]
+  mark AsyncCompute: 256 [(16420, 'AsyncCompute: lookahead walk packets=193 dispatches=9 us=528'), (16421, 'AsyncCompute: lookahead walk packets=550 dispatches=15 us=2079')]
+  mark PipelinePrecache: 2 [(573, 'PipelinePrecache: 641 recipes -> 520 graphics + 121 compute pipelines queued, 0 skipped, 1127 sources loaded, complete, 180 ms (scratch: 0 pipelines, max 0 dwords/thread)'), (576, 'PipelinePrecache: all pipelines created, 180 ms')]
+  mark Level has started 2 [(189120, 'GuestOut: Level has started:'), (214580, 'GuestOut: Level has started: intro_next')]
+  mark cspfam 19855 [(17881, 'Gate: cspfam=0 frame=1'), (18164, 'FrameTrace-x: n=2 ds_ring_new=0 ds_ring_grow=0 ds_ring_n=0 rec_pack=1 rec_pack_cs=0 rec_bind=1 rec_pack_kb=1 rec_direct_busy=2 rec_spin_us=2268 rec_sleep=6 prot_spin_us=3 prot_spin_calls=1 prot_spin_pages=66 prot_spin_gp')]

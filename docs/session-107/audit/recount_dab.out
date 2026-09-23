@@ -1,0 +1,26 @@
+rows 18839 18839 18839 GateArm lines 190 Counter({b'RecordThread: started': 2, b'GpuClockPin': 1})
+[b'GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=dawalk=1 dawalklead=1 dabatch=8', b'GateArm: arm=1 arms=2 block=1 frame=1890 period=90 abba=1 text=dawalk=1 dawalklead=1 dabatch=2', b'GateArm: arm=1 arms=2 block=2 frame=1980 period=90 abba=1 text=dawalk=1 dawalklead=1 dabatch=2'] [b'GateArm: arm=0 arms=2 block=188 frame=18720 period=90 abba=1 text=dawalk=1 dawalklead=1 dabatch=8', b'GateArm: arm=1 arms=2 block=189 frame=18810 period=90 abba=1 text=dawalk=1 dawalklead=1 dabatch=2']
+blocks 189 mixed-arm blocks 0
+pairs 92 orient Counter({0: 46, 1: 46})
+d dt_us        mean    281.01 2SE   176.29 t   3.19
+d cpu_net_us   mean    280.36 2SE   163.80 t   3.42
+d cpu_gpu_us   mean    280.19 2SE   163.63 t   3.42
+d da_walk_us   mean    712.45 2SE    20.69 t  68.85
+d da_queue_us  mean    630.31 2SE    12.53 t 100.60
+d da_miss      mean     16.80 2SE    10.72 t   3.14
+d da_late      mean     -3.65 2SE     0.31 t -23.73
+d da_take_us   mean     10.63 2SE    23.98 t   0.89
+d da_qcall     mean   3969.39 2SE    15.96 t 497.48
+d draws        mean      0.37 2SE    12.79 t   0.06
+d gpu_busy_us  mean    -26.25 2SE    30.31 t  -1.73
+d da_hit       mean    -13.00 2SE    27.80 t  -0.94
+d rec_n        mean      0.85 2SE    26.47 t   0.06
+arm means da_qcall        1084.21    5053.59 diff  3969.39 ratio 4.6611
+arm means dt_us          31623.52   31904.53 diff   281.01 ratio 1.0089
+arm means cpu_net_us     30699.73   30980.10 diff   280.36 ratio 1.0091
+arm means da_walk_us      2442.17    3154.61 diff   712.45 ratio 1.2917
+arm means da_queue_us     1133.60    1763.91 diff   630.31 ratio 1.5560
+used blocks 4 187 184
+S1 (<= -100): False S2 (m+2SE<0): False
+arm 0 n 2668 vblank buckets [(1, 323), (2, 2296), (3, 49)] mean 31623.52136431784
+arm 1 n 2668 vblank buckets [(1, 278), (2, 2340), (3, 50)] mean 31904.534107946027

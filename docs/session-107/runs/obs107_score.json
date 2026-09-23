@@ -1,0 +1,132 @@
+{
+ "scorer": "obs107.py",
+ "scorer_sha256": "49015e9e7c2f35c9e23d2286740efe87bbf8c74e41602e3c51e0de983a80d643",
+ "tag": "obs107",
+ "draft": false,
+ "readouts": {
+  "rows": 7842,
+  "spin_share": 0.7518020313827168,
+  "holder_share": {
+   "0": 0.01385076754513319,
+   "1": 0.5771996086166483,
+   "2": 0.4089496238382185,
+   "3": 0.0
+  },
+  "tag2_us": 172.49243662331037,
+  "cont_wall_us": 421.7938508033665,
+  "would_rate": 0.43799053870329996,
+  "means": {
+   "pl_cont_n": 321.0406783983678,
+   "pl_cont_wall_ns": 421793.8508033665,
+   "pl_cont_cpu_ns": 317105.4738587095,
+   "pl_cont_h0_ns": 5842.168579444019,
+   "pl_cont_h1_ns": 243459.24560061208,
+   "pl_cont_h2_ns": 172492.43662331038,
+   "pl_cont_h3_ns": 0.0,
+   "pl_cont_h0_n": 8.525886253506759,
+   "pl_cont_h1_n": 233.08059168579445,
+   "pl_cont_h2_n": 79.43420045906656,
+   "pl_cont_h3_n": 0.0,
+   "pl_wq_hold_ns": 1021224.0637592451,
+   "pl_wq_hold_n": 1079.642183116552,
+   "pl_wp_hold_ns": 342229.78245345573,
+   "pl_wp_hold_n": 266.0,
+   "cspm_look": 266.0,
+   "cspm_would": 116.50548329507778,
+   "cspm_skip": 0.0,
+   "cspm_bad": 0.0002550369803621525,
+   "cspm_store": 266.0,
+   "cspm_clear": 0.03647028819178781,
+   "cspf_have": 266.0,
+   "cspf_new": 0.0,
+   "pl_prog_n": 5014.191787809233,
+   "pl_prog_wait_us": 208.77735271614384,
+   "pl_pipe_wait_us": 226.16296863045142,
+   "pl_cs_wait_us": 116.84378984952818,
+   "dt_us": 31619.85156847743,
+   "cpu_gpu_us": 30618.524866105585
+  }
+ },
+ "admission": {
+  "PIN_ONCE": true,
+  "NO_FATAL": true,
+  "RECORD_THREAD_TWO": true,
+  "PLKSTAT_ARMED": true,
+  "MEMO_ARMED": true,
+  "ROWS": true,
+  "ONE_OK_ATTEMPT": true,
+  "GATE_TEXT": true
+ },
+ "fatal": {},
+ "verify_lines": 2,
+ "verify": "FAIL",
+ "go": false,
+ "admitted": true,
+ "binary_sha256": "dd567a0feb49d8f182345434920649b485b677b69569c5e06d9b9d73b20789a3",
+ "prereg": {
+  "path": "C:\\kyty\\s107\\pred\\01_obs107.md",
+  "bytes": 3138,
+  "sha256": "85a65121dce86e65c442becf2f5859ef4c215f1848ad4439902e616872ac1db6",
+  "mtime": "2026-09-23T08:10:10",
+  "ctime": "2026-09-23T08:10:10",
+  "mtime_ctime_delta_s": 0.001001,
+  "read_at": "2026-09-23T08:10:28"
+ },
+ "verdict": "VERIFY FAIL - cspmemo closed (memo disagrees or never hits)",
+ "predictions": {
+  "O1": {
+   "text": "spin share >= 0.6",
+   "value": 0.7518020313827168,
+   "band": [
+    0.6,
+    null
+   ],
+   "hit": true
+  },
+  "O2": {
+   "text": "holder tag 2 (walker prefetch) share of contended wall >= 0.4",
+   "value": 0.4089496238382185,
+   "band": [
+    0.4,
+    null
+   ],
+   "hit": true
+  },
+  "O3": {
+   "text": "would_rate >= 0.8",
+   "value": 0.43799053870329996,
+   "band": [
+    0.8,
+    null
+   ],
+   "hit": false
+  },
+  "O4": {
+   "text": "pl_cont_n per flip in [50, 1000]",
+   "value": 321.0406783983678,
+   "band": [
+    50,
+    1000
+   ],
+   "hit": true
+  },
+  "O5": {
+   "text": "cspm_bad sum == 0",
+   "value": 2,
+   "band": [
+    0,
+    0
+   ],
+   "hit": false
+  },
+  "O6": {
+   "text": "GO",
+   "value": 0.0,
+   "band": [
+    1.0,
+    1.0
+   ],
+   "hit": false
+  }
+ }
+}

@@ -1,0 +1,11 @@
+arm 0 vblank 1 n 323 mean dt 17033 mean cpu_net 16368 mean busy 0.961 draws 2928
+arm 0 vblank 2 n 2296 mean dt 33299 mean cpu_net 32349 mean busy 0.9715 draws 5319
+arm 0 vblank 3 n 49 mean dt 49278 mean cpu_net 47872 mean busy 0.9715 draws 6674
+arm 1 vblank 1 n 278 mean dt 17077 mean cpu_net 16465 mean busy 0.9643 draws 2891
+arm 1 vblank 2 n 2340 mean dt 33300 mean cpu_net 32348 mean busy 0.9714 draws 5277
+arm 1 vblank 3 n 50 mean dt 49048 mean cpu_net 47648 mean busy 0.9715 draws 6668
+slope cpu_net on dt across frames 0.9792805764005365
+paired d cpu_net within 2-vblank frames (mean, 2SE, t, n): (-2.9, 45.7, -0.13, 92)
+paired d (#1-vblank frames per 29) : (-0.5, 0.2, -4.8, 92)
+paired d (dt - cpu_net) i.e. non-CPU part of the interval: (0.6, 44.4, 0.03, 92)
+overall busy frac 0.9709069560054367

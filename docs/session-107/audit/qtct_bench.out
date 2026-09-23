@@ -1,0 +1,5 @@
+QueryThreadCycleTime per call (python loop) ns 518.6 baseline GetCurrentThreadId 132.0 diff ns 386.6
+cycles per ns over a 200 ms busy loop 2.4909
+busy  2 us: cycle-ns / wall-ns median 1.002  p10 0.963  p90 1.002  zeros 0
+busy  5 us: cycle-ns / wall-ns median 1.002  p10 0.984  p90 1.002  zeros 0
+busy 20 us: cycle-ns / wall-ns median 1.002  p10 0.997  p90 1.002  zeros 0

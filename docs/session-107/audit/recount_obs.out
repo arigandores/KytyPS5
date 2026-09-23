@@ -1,0 +1,35 @@
+main rows 9640 x rows 9640 draw rows 9640 Counter()
+pins 1 recs [b'RecordThread: KYTY_RECORD_THREAD=1 at start; recordthread= in the gate file moves it at the next command buffer\n', b'RecordThread: started recorder=0x100011f89c0 arena=65536KiB gpu=0\n', b'RecordThread: started recorder=0x100c1e91840 arena=65536KiB gpu=1\n'] fatal Counter({b'MISMATCH': 2})
+verify lines 2
+   b'CspMemoVerify: MISMATCH hash=0x632642f4ddc1f3df memo_id=79 id=82\n'
+   b'CspMemoVerify: MISMATCH hash=0x632642f4ddc1f3df memo_id=82 id=79\n'
+window rows 7842 first 1800 last 9641 missing Counter()
+spin share 0.7518020313827168
+holder 0 share 0.01385076754513319 n share 0.026557027900767437
+holder 1 share 0.5771996086166483 n share 0.726015758652781
+holder 2 share 0.4089496238382185 n share 0.2474272134464516
+holder 3 share 0.0 n share 0.0
+sum h_ns / wall 1.0 sum h_n / n 1.0
+tag2_us 172.49243662331037 cont wall us/flip 421.7938508033665 pl_cont_n/flip 321.0406783983678
+mean contended wall per acq us 1.313833041057737 cpu per acq 0.9877423491649391
+would_rate 0.43799053870329996 look/flip 266.0 would/flip 116.50548329507778
+sum cspm_bad 2 cspm_skip 0 store/flip 266.0 clear 286
+cspf_have/flip 266.0 cspf_new 0
+wq hold us/flip 1021.224063759245 n/flip 1079.642183116552 per 0.9458912218595665
+wp hold us/flip 342.22978245345575 n/flip 266.0 per 1.2865781295242698
+pl_prog_wait_us 208.77735271614384
+pl_pipe_wait_us 226.16296863045142
+pl_cs_wait_us 116.84378984952818
+pl_prog_hold_us 4834.238714613619
+pl_pipe_hold_us 655.7388421321092
+pl_cs_hold_us 294.2304259117572
+pl_prog_n 5014.191787809233
+pl_prog_wait_n 0.0
+pl_pipe_wait_n 0.0
+pl_cs_wait_n 0.0
+dt mean 31619.85156847743 cpu_gpu 30618.524866105585
+bad frames [(1944, 1), (2244, 1)]
+['cspf_have', 'cspf_new', 'cspm_bad', 'cspm_clear', 'cspm_look', 'cspm_skip', 'cspm_store', 'cspm_would', 'pl_bar_n', 'pl_bar_ns', 'pl_cmd_n', 'pl_cmd_ns', 'pl_cont_cpu_ns', 'pl_cont_h0_n', 'pl_cont_h0_ns', 'pl_cont_h1_n', 'pl_cont_h1_ns', 'pl_cont_h2_n', 'pl_cont_h2_ns', 'pl_cont_h3_n', 'pl_cont_h3_ns', 'pl_cont_n', 'pl_cont_wall_ns', 'pl_cs_hold_us', 'pl_cs_n', 'pl_cs_wait_us', 'pl_em_com_ns', 'pl_em_n', 'pl_em_pipe_ns', 'pl_em_rec_ns', 'pl_em_rest_ns', 'pl_em_rt_ns', 'pl_em_vtx_ns', 'pl_eop_n', 'pl_eop_ns', 'pl_gc_n', 'pl_gc_ns', 'pl_look_n', 'pl_look_ns', 'pl_pipe_hold_us', 'pl_pipe_n', 'pl_pipe_wait_us', 'pl_pref_n', 'pl_pref_ns', 'pl_proc_n', 'pl_proc_ns', 'pl_prog_hold_us', 'pl_prog_n', 'pl_prog_wait_us', 'pl_sub_n', 'pl_sub_ns', 'pl_wp_hold_n', 'pl_wp_hold_ns', 'pl_wq_hold_n', 'pl_wq_hold_ns']
+bad pre-window []
+1st spin 0.7496633147430684 h1 0.5798393537741402 h2 0.4060229100024062 h0 0.014137736223453623
+2nd spin 0.7539172873866294 h1 0.5745888201233669 h2 0.41184423310910984 h0 0.01356694676752334

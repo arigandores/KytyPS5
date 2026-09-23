@@ -1,0 +1,72 @@
+dwk104.py lead105 status=ADMITTED seal=7dca62cf623edf98782f0642f40432f460ffaa32237193d449c55bc3fd637e27
+  pairs 94 (orientations [47, 47]), blocks 188, excluded [3]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 21794, 'da_wjobs': 21804, 'da_wdrop': 0}  skip/posts-1 -0.0005  drop 0.0000  walks rel 0.0000
+  dt_us        arm0    31608.4   arm1    31605.8
+  cpu_net_us   arm0    30929.9   arm1    30731.3
+  draws        arm0     5027.1   arm1     5036.3
+  gpu_busy_us  arm0    12470.4   arm1    12461.6
+  rec_n        arm0    10900.1   arm1    10908.5
+  da_walk_us   arm0     2222.5   arm1     2187.8
+  da_queue_us  arm0      978.6   arm1      953.2
+  da_take_us   arm0     3155.2   arm1     3234.6
+  da_hit       arm0     8376.5   arm1     8535.6
+  da_miss      arm0      296.3   arm1      155.4
+  da_late      arm0        7.8   arm1        0.0
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    74079.6   arm1    53977.3
+  da_wdepth    arm0       17.6   arm1       16.7
+  d cpu_net_us   mean -79.6  2SE 103.8  t -1.53  n 94
+  d dt_us        mean -61.0  2SE 115.5  t -1.06  n 94
+  d da_take_us   mean 69.4  2SE 15.6  t 8.93  n 94
+  d da_miss      mean -137.8  2SE 6.1  t -44.96  n 94
+  d da_late      mean -7.9  2SE 0.2  t -63.00  n 94
+  d da_hit       mean 142.3  2SE 26.8  t 10.62  n 94
+  d da_stale     mean 0.0  2SE None  t 0.00  n 94
+  d da_walk_us   mean -48.4  2SE 13.2  t -7.31  n 94
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [FAIL] ship S1_dt_le_-100
+  [FAIL] ship S2_dt_2se_excludes_0
+  VERDICT: KEEP dawalklead=1 (ship rule S1-S2 on mean dt not met)
+  prediction L1  HIT  value -7.860 band [-9, -3]  d da_late in [-9, -3] a flip (lead 2 removes most late results)
+  prediction L2  HIT  value -137.808 band [-150, -30]  d da_miss in [-150, -30] a flip
+  prediction L3  MISS value 69.406 band [-400, 0]  d da_take_us in [-400, 0] us
+  prediction L4  HIT  value -61.015 band [-350, 100]  d mean dt_us in [-350, +100] us
+  prediction L5  MISS value -61.015 band [None, -100.0]  d mean dt_us <= -100 us (the ship bar) - the discriminating prediction, low confidence
+  failed: none
+wrote C:/kyty/s105/runs105/lead105_score.json

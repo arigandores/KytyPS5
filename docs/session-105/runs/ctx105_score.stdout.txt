@@ -1,0 +1,67 @@
+dwk104.py abb105 status=INVALID seal=c731a5477daf0a01bae83d04b1b962a2f768f37c9b940f8bb257a3b4b30b9449
+  pairs 146 (orientations [73, 73]), blocks 292, excluded [3, 296, 297, 298]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [FAIL] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  [FAIL] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 33822, 'da_wjobs': 33858, 'da_wdrop': 0}  skip/posts-1 -0.0011  drop 0.0000  walks rel 0.0000
+  dt_us        arm0    31080.6   arm1    31062.6
+  cpu_net_us   arm0    30225.4   arm1    30244.2
+  draws        arm0     5035.7   arm1     5032.3
+  gpu_busy_us  arm0    12425.5   arm1    12449.7
+  rec_n        arm0    10906.7   arm1    10904.9
+  da_walk_us   arm0     2114.1   arm1     2116.2
+  da_queue_us  arm0      846.4   arm1      847.5
+  da_take_us   arm0     2783.5   arm1     2789.2
+  da_hit       arm0     8413.4   arm1     8390.6
+  da_miss      arm0      283.9   arm1      279.9
+  da_late      arm0        7.5   arm1        7.6
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    73744.7   arm1    73467.5
+  da_wdepth    arm0       17.5   arm1       17.5
+  d cpu_net_us   mean -62.6  2SE 91.2  t -1.37  n 146
+  d dt_us        mean -66.3  2SE 97.2  t -1.36  n 146
+  d da_take_us   mean -7.8  2SE 13.9  t -1.13  n 146
+  d da_miss      mean -2.0  2SE 7.6  t -0.53  n 146
+  d da_late      mean -0.1  2SE 0.3  t -0.65  n 146
+  d da_hit       mean -3.3  2SE 23.1  t -0.29  n 146
+  d da_stale     mean 0.0  2SE None  t 0.00  n 146
+  d da_walk_us   mean -10.6  2SE 13.4  t -1.58  n 146
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [PASS] ship P2_abs_cpu_net_point_le_90
+  VERDICT: P2 FAIL (run not admitted)
+  prediction Q3  MISS value 62.625 band [0, 60]  |d cpu_net_us| point <= 60 us
+  failed: ['control:ARMING']
+wrote C:/kyty/s105/runs105/ctx105_score.json

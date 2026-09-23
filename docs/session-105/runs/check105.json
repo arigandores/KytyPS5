@@ -1,0 +1,131 @@
+{
+ "seal_sha256": "c731a5477daf0a01bae83d04b1b962a2f768f37c9b940f8bb257a3b4b30b9449",
+ "P1": {
+  "frames": 9508,
+  "chk_bad": 0,
+  "rec_block": 0,
+  "ctxcheck_lines": [],
+  "median_chk": 8509.0,
+  "median_work": 5627.0,
+  "midsub_mean": 0,
+  "pass": true,
+  "midsub_sites_total": {}
+ },
+ "P3": {
+  "frames": 3925,
+  "glitches": 0,
+  "gate_ctxtick1": true,
+  "binary": "8de4a93bb6c5693871918d0c8d88e1b3ea5b147d0e34c96b5a039a39435af8f0",
+  "pass_": true
+ },
+ "P4": {
+  "entries": [
+   {
+    "tag": "ect105_01",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6014206,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_02",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6056717,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_03",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6105919,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_04",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 5901470,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_05",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6137743,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_06",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6251227,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_07",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 5923549,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_08",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6113046,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_09",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 6234340,
+    "hang_lines": [],
+    "bvh_signature": false
+   },
+   {
+    "tag": "ect105_10",
+    "outcome": "ok",
+    "hold_exit": null,
+    "chk_bad": 0,
+    "chk_n": 5929741,
+    "hang_lines": [],
+    "bvh_signature": false
+   }
+  ],
+  "pass_": true
+ },
+ "screen": {
+  "a": {
+   "mean_dt": 30823.157655381507,
+   "cpu_per_draw": 6.020484546944164,
+   "n": 1979
+  },
+  "b": {
+   "mean_dt": 30804.545638945234,
+   "cpu_per_draw": 6.015291374198526,
+   "n": 1972
+  },
+  "cpu_per_draw_rel": -0.0008625838510414319,
+  "dt_rel": -0.0006038322434178678,
+  "flag": false
+ }
+}

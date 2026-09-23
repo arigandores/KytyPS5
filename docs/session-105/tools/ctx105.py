@@ -57,7 +57,7 @@ EXPECTED_LINE = {
     'bf_clr_skip': 'x', 'bf_skip_drop': 'x', 'gm_ops': 'x',
     'da_wjobs': 'x', 'da_wskip': 'x', 'da_wdrop': 'x', 'da_wlag_us': 'x', 'da_wdepth': 'x',
     'da_qcall': 'x', 'mw_n': 'x', 'a_hold_us': 'x', 'a_mut_us': 'x', 'pl_em_n': 'x',
-    'pl_proc_n': 'x', 'sh_jobs': 'x',
+    'pl_proc_n': 'x', 'sh_jobs': 'x', 'ctx_chk_n': 'x', 'ctx_chk_bad': 'x',
 }
 FIELDS = tuple(EXPECTED_LINE)
 CORE = ('arm', 'blk', 'dt_us', 'draws', 'cpu_gpu_us', 'spin_gpu_us', 'gpu_busy_us',

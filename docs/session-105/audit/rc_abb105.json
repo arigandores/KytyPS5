@@ -1,0 +1,197 @@
+{
+ "tag": "abb105",
+ "main_rows": 28791,
+ "draw_rows": 28791,
+ "x_rows": 28791,
+ "gatearm_lines": 300,
+ "markers": {
+  "RecordThread: started": 2,
+  "GpuClockPin: mode": 1,
+  "PIN:res the pacer speed (KYTY_GPU_CLOCK_PIN)": 1
+ },
+ "contiguous": true,
+ "gate_abba_ok": true,
+ "arm_texts": [
+  "ctxtick=0",
+  "ctxtick=1"
+ ],
+ "arm_mismatch_rows": 0,
+ "pairs": 146,
+ "orient": [
+  73,
+  73
+ ],
+ "delta": {
+  "dt_us": {
+   "mean": -66.27,
+   "2se": 97.2,
+   "t": -1.363,
+   "sd": 587.3,
+   "median": -8.71
+  },
+  "cpu_net": {
+   "mean": -62.62,
+   "2se": 91.23,
+   "t": -1.373,
+   "sd": 551.2,
+   "median": -16.6
+  },
+  "cpu_gpu_us": {
+   "mean": -61.5,
+   "2se": 91.4,
+   "t": -1.346,
+   "sd": 552.2,
+   "median": -11.22
+  },
+  "draws": {
+   "mean": -2.84,
+   "2se": 11.19,
+   "t": -0.507,
+   "sd": 67.6,
+   "median": 0.29
+  },
+  "gpu_busy_us": {
+   "mean": -1.69,
+   "2se": 26.46,
+   "t": -0.128,
+   "sd": 159.8,
+   "median": 3.71
+  },
+  "d_da_late": {
+   "mean": -0.11,
+   "2se": 0.33,
+   "t": -0.647,
+   "sd": 2.0,
+   "median": 0.03
+  },
+  "d_da_miss": {
+   "mean": -2.02,
+   "2se": 7.64,
+   "t": -0.528,
+   "sd": 46.1,
+   "median": -3.17
+  },
+  "d_da_take_us": {
+   "mean": -7.85,
+   "2se": 13.93,
+   "t": -1.127,
+   "sd": 84.1,
+   "median": -11.91
+  },
+  "d_da_hit": {
+   "mean": -3.33,
+   "2se": 23.1,
+   "t": -0.288,
+   "sd": 139.5,
+   "median": -0.79
+  },
+  "d_rec_n": {
+   "mean": -5.78,
+   "2se": 23.0,
+   "t": -0.503,
+   "sd": 139.0,
+   "median": 4.26
+  },
+  "d_spin_gpu_us": {
+   "mean": 1.12,
+   "2se": 1.64,
+   "t": 1.371,
+   "sd": 9.9,
+   "median": 0.64
+  },
+  "d_da_walk_us": {
+   "mean": -10.61,
+   "2se": 13.41,
+   "t": -1.583,
+   "sd": 81.0,
+   "median": -3.14
+  }
+ },
+ "delta_all90rows": {
+  "dt_us": {
+   "mean": 1.02,
+   "2se": 69.83
+  },
+  "cpu_net": {
+   "mean": 8.33,
+   "2se": 66.38
+  }
+ },
+ "work_split_pct": -0.0562,
+ "dark_present": {
+  "mw_n": 28791,
+  "a_hold_us": 28791,
+  "a_mut_us": 28791,
+  "pl_em_n": 28791,
+  "pl_proc_n": 28791,
+  "sh_jobs": 28791,
+  "ctx_chk_n": 28791,
+  "ctx_chk_bad": 28791,
+  "ctx_midsub": 28791,
+  "ctx_rec_block": 28791,
+  "bf_n": 28791,
+  "gm_ops": 28791
+ },
+ "dark_totals_by_arm": {
+  "mw_n": {
+   "0": 0,
+   "1": 0
+  },
+  "a_hold_us": {
+   "0": 0,
+   "1": 0
+  },
+  "a_mut_us": {
+   "0": 0,
+   "1": 0
+  },
+  "pl_em_n": {
+   "0": 0,
+   "1": 0
+  },
+  "pl_proc_n": {
+   "0": 0,
+   "1": 0
+  },
+  "sh_jobs": {
+   "0": 0,
+   "1": 0
+  },
+  "ctx_chk_n": {
+   "0": 0,
+   "1": 0
+  },
+  "ctx_chk_bad": {
+   "0": 0,
+   "1": 0
+  },
+  "ctx_midsub": {
+   "0": 0,
+   "1": 0
+  },
+  "ctx_rec_block": {
+   "0": 0,
+   "1": 0
+  },
+  "bf_n": {
+   "0": 0,
+   "1": 0
+  },
+  "gm_ops": {
+   "0": 0,
+   "1": 0
+  }
+ },
+ "walk_arm0": {
+  "skip": 33886,
+  "jobs": 33876,
+  "drop": 0,
+  "walks_per_flip": 5.001
+ },
+ "walk_arm1": {
+  "skip": 33822,
+  "jobs": 33858,
+  "drop": 0,
+  "walks_per_flip": 4.997
+ }
+}

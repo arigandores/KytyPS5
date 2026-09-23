@@ -1,0 +1,2 @@
+C:/kyty/s105/rec_vct105.mp4: 3925 frames 960x540, index entries 3925
+one-frame glitches: 0

@@ -1,0 +1,282 @@
+{
+ "P1": {
+  "x_lines": 9790,
+  "present": {
+   "ctx_chk_n": 9790,
+   "ctx_chk_bad": 9790,
+   "ctx_midsub": 9790,
+   "ctx_rec_block": 9790
+  },
+  "totals": {
+   "ctx_chk_n": 77687559,
+   "ctx_chk_bad": 0,
+   "ctx_midsub": 0,
+   "ctx_rec_block": 0
+  },
+  "markers": {
+   "RecordThread: started": 2,
+   "GpuClockPin: mode": 1
+  },
+  "ctx_mid_rows": {},
+  "stable_frame": 284,
+  "from_stable": {
+   "flips": 9508,
+   "median_chk": 8509.0,
+   "median_work": 5627.0,
+   "flips_chk_lt_work": 0,
+   "min_ratio": 1.1885,
+   "median_ratio": 1.5113
+  },
+  "from_n1000": {
+   "flips": 8792,
+   "median_chk": 8490.0,
+   "median_work": 5613.0,
+   "flips_chk_lt_work": 0,
+   "min_ratio": 1.1885,
+   "median_ratio": 1.5121
+  },
+  "from_n2100": {
+   "flips": 7692,
+   "median_chk": 8475.0,
+   "median_work": 5601.0,
+   "flips_chk_lt_work": 0,
+   "min_ratio": 1.1885,
+   "median_ratio": 1.5132
+  }
+ },
+ "P4": [
+  {
+   "tag": "ect105_01",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6014206,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 842
+  },
+  {
+   "tag": "ect105_02",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6056717,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 847
+  },
+  {
+   "tag": "ect105_03",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.4
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6105919,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 850
+  },
+  {
+   "tag": "ect105_04",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 5901470,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 826
+  },
+  {
+   "tag": "ect105_05",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6137743,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 851
+  },
+  {
+   "tag": "ect105_06",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.8
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6251227,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 868
+  },
+  {
+   "tag": "ect105_07",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 5923549,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 830
+  },
+  {
+   "tag": "ect105_08",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6113046,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 851
+  },
+  {
+   "tag": "ect105_09",
+   "attempts": [
+    [
+     "ok",
+     null,
+     17.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 6234340,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 864
+  },
+  {
+   "tag": "ect105_10",
+   "attempts": [
+    [
+     "ok",
+     null,
+     14.3
+    ]
+   ],
+   "bin": "8de4a93b",
+   "ctxtick2": true,
+   "chk_n": 5929741,
+   "chk_bad": 0,
+   "midsub": 0,
+   "rec_block": 0,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   },
+   "last_n": 830
+  }
+ ],
+ "screen": {
+  "a": {
+   "rows": 5936,
+   "mid_rows": 1979,
+   "cpu_per_draw": 6.020484546944164,
+   "mean_dt": 30823.157655381507,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   }
+  },
+  "b": {
+   "rows": 5915,
+   "mid_rows": 1972,
+   "cpu_per_draw": 6.015291374198526,
+   "mean_dt": 30804.545638945234,
+   "markers": {
+    "RecordThread: started": 2,
+    "GpuClockPin: mode": 1
+   }
+  },
+  "rel_cpu_per_draw_pct": -0.08625838510414319
+ }
+}

@@ -1,0 +1,181 @@
+{
+ "tag": "lead105",
+ "main_rows": 19102,
+ "draw_rows": 19102,
+ "x_rows": 19102,
+ "gatearm_lines": 193,
+ "markers": {
+  "RecordThread: started": 2,
+  "GpuClockPin: mode": 1,
+  "PIN:res the pacer speed (KYTY_GPU_CLOCK_PIN)": 1
+ },
+ "contiguous": true,
+ "gate_abba_ok": true,
+ "arm_texts": [
+  "dawalk=1 dawalklead=1",
+  "dawalk=1 dawalklead=2"
+ ],
+ "arm_mismatch_rows": 0,
+ "pairs": 94,
+ "orient": [
+  47,
+  47
+ ],
+ "delta": {
+  "dt_us": {
+   "mean": -61.02,
+   "2se": 115.46,
+   "t": -1.057,
+   "sd": 559.7,
+   "median": -4.34
+  },
+  "cpu_net": {
+   "mean": -79.61,
+   "2se": 103.76,
+   "t": -1.535,
+   "sd": 503.0,
+   "median": -53.1
+  },
+  "cpu_gpu_us": {
+   "mean": -82.76,
+   "2se": 104.02,
+   "t": -1.591,
+   "sd": 504.3,
+   "median": -51.1
+  },
+  "draws": {
+   "mean": -2.16,
+   "2se": 13.68,
+   "t": -0.315,
+   "sd": 66.3,
+   "median": -2.91
+  },
+  "gpu_busy_us": {
+   "mean": -27.85,
+   "2se": 34.05,
+   "t": -1.636,
+   "sd": 165.1,
+   "median": -25.38
+  },
+  "d_da_late": {
+   "mean": -7.86,
+   "2se": 0.25,
+   "t": -63.001,
+   "sd": 1.2,
+   "median": -7.81
+  },
+  "d_da_miss": {
+   "mean": -137.81,
+   "2se": 6.13,
+   "t": -44.959,
+   "sd": 29.7,
+   "median": -133.81
+  },
+  "d_da_take_us": {
+   "mean": 69.41,
+   "2se": 15.55,
+   "t": 8.927,
+   "sd": 75.4,
+   "median": 79.14
+  },
+  "d_da_hit": {
+   "mean": 142.31,
+   "2se": 26.81,
+   "t": 10.617,
+   "sd": 130.0,
+   "median": 143.98
+  },
+  "d_rec_n": {
+   "mean": -4.66,
+   "2se": 28.36,
+   "t": -0.328,
+   "sd": 137.5,
+   "median": -4.19
+  },
+  "d_spin_gpu_us": {
+   "mean": -3.15,
+   "2se": 2.11,
+   "t": -2.98,
+   "sd": 10.2,
+   "median": -3.03
+  },
+  "d_da_walk_us": {
+   "mean": -48.41,
+   "2se": 13.25,
+   "t": -7.308,
+   "sd": 64.2,
+   "median": -39.07
+  }
+ },
+ "delta_all90rows": {
+  "dt_us": {
+   "mean": -62.07,
+   "2se": 65.25
+  },
+  "cpu_net": {
+   "mean": -54.98,
+   "2se": 62.36
+  }
+ },
+ "work_split_pct": -0.0427,
+ "dark_present": {
+  "mw_n": 19102,
+  "a_hold_us": 19102,
+  "a_mut_us": 19102,
+  "pl_em_n": 19102,
+  "pl_proc_n": 19102,
+  "sh_jobs": 19102,
+  "bf_n": 19102,
+  "gm_ops": 19102
+ },
+ "dark_totals_by_arm": {
+  "mw_n": {
+   "0": 0,
+   "1": 0
+  },
+  "a_hold_us": {
+   "0": 0,
+   "1": 0
+  },
+  "a_mut_us": {
+   "0": 0,
+   "1": 0
+  },
+  "pl_em_n": {
+   "0": 0,
+   "1": 0
+  },
+  "pl_proc_n": {
+   "0": 0,
+   "1": 0
+  },
+  "sh_jobs": {
+   "0": 0,
+   "1": 0
+  },
+  "ctx_chk_n": {},
+  "ctx_chk_bad": {},
+  "ctx_midsub": {},
+  "ctx_rec_block": {},
+  "bf_n": {
+   "0": 0,
+   "1": 0
+  },
+  "gm_ops": {
+   "0": 0,
+   "1": 0
+  }
+ },
+ "walk_arm0": {
+  "skip": 21825,
+  "jobs": 21815,
+  "drop": 0,
+  "walks_per_flip": 5.002
+ },
+ "walk_arm1": {
+  "skip": 21794,
+  "jobs": 21804,
+  "drop": 0,
+  "walks_per_flip": 4.999
+ }
+}

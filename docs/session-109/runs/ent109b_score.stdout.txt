@@ -1,0 +1,11 @@
+  ent109b_1   A rows   4932  sync_new    2  sync_wait    1  S    3  cspf_new   75  free_look        0  hit        0  ok
+  ent109b_2   B rows   4972  sync_new    0  sync_wait    3  S    3  cspf_new   77  free_look  1280178  hit  1278478  ok
+  ent109b_3   B rows   5039  sync_new    2  sync_wait    3  S    5  cspf_new   75  free_look  1296365  hit  1294645  ok
+  ent109b_4   A rows   4934  sync_new    0  sync_wait    2  S    2  cspf_new   77  free_look        0  hit        0  ok
+  ent109b_5   A rows   4956  sync_new    1  sync_wait    0  S    1  cspf_new   76  free_look        0  hit        0  ok
+  ent109b_6   B rows   5001  sync_new    0  sync_wait    3  S    3  cspf_new   77  free_look  1288275  hit  1286627  ok
+  ent109b_7   B rows   5012  sync_new    3  sync_wait    3  S    6  cspf_new   74  free_look  1291256  hit  1289592  ok
+  ent109b_8   A rows   4955  sync_new    1  sync_wait    0  S    1  cspf_new   76  free_look        0  hit        0  ok
+  S_A 7  S_B 17  slack 2  errors none
+  scorer 98903f77cdec3dda8dab07b1860b97dd21cd7b45dd5f3d0d5e8a5f7b6cc5f3f0
+VERDICT: FAIL

@@ -1,0 +1,17 @@
+  rows 9827  errors none
+  cs_sync_new        total          1  steady(n>=2100)          0
+  cs_sync_wait       total          2  steady(n>=2100)          0
+  cspf_new           total         76  steady(n>=2100)          0
+  cspf_have          total    2571988  steady(n>=2100)    2055914
+  cspfree_look       total    2572064  steady(n>=2100)    2055914
+  cspfree_hit        total    2570381  steady(n>=2100)    2055914
+  cspfree_src_miss   total       1645  steady(n>=2100)          0
+  cspfree_spec_miss  total         38  steady(n>=2100)          0
+  cspfree_mat_fail   total          0  steady(n>=2100)          0
+  cspfree_clr        total        131  steady(n>=2100)          0
+  cspfree_store      total       1683  steady(n>=2100)          0
+  cspfree_bad        total          0  steady(n>=2100)          0
+  cspfree_moved      total          0  steady(n>=2100)          0
+  BAD 0  HIT_RATE 1.0000 (bar 0.90)
+  scorer 44af344b3d9479e70a5e3603356bae861b77ed4d00961301f91adf2b8a367c34
+VERDICT: GO

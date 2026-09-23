@@ -1,0 +1,40 @@
+{
+ "scorer_sha256": "44af344b3d9479e70a5e3603356bae861b77ed4d00961301f91adf2b8a367c34",
+ "pred": "C:/kyty/s109/pred/01b_vfy109.md",
+ "pred_sha256": "f626da410e534afb858e7c95b8a41ee152690870ad572123575dcdc04d133768",
+ "errors": [],
+ "rows": 9827,
+ "total": {
+  "cs_sync_new": 1,
+  "cs_sync_wait": 2,
+  "cspf_new": 76,
+  "cspf_have": 2571988,
+  "cspfree_look": 2572064,
+  "cspfree_hit": 2570381,
+  "cspfree_src_miss": 1645,
+  "cspfree_spec_miss": 38,
+  "cspfree_mat_fail": 0,
+  "cspfree_clr": 131,
+  "cspfree_store": 1683,
+  "cspfree_bad": 0,
+  "cspfree_moved": 0
+ },
+ "steady": {
+  "cs_sync_new": 0,
+  "cs_sync_wait": 0,
+  "cspf_new": 0,
+  "cspf_have": 2055914,
+  "cspfree_look": 2055914,
+  "cspfree_hit": 2055914,
+  "cspfree_src_miss": 0,
+  "cspfree_spec_miss": 0,
+  "cspfree_mat_fail": 0,
+  "cspfree_clr": 0,
+  "cspfree_store": 0,
+  "cspfree_bad": 0,
+  "cspfree_moved": 0
+ },
+ "bad": 0,
+ "hit_rate": 1.0,
+ "verdict": "GO"
+}

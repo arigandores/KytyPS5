@@ -1,0 +1,74 @@
+dab107.py dab107 status=ADMITTED seal=3a0d4043e983cda2f9ae19aff4da1ad7cb15861639fe95bd921c6fb61c1027bb
+  pairs 92 (orientations [46, 46]), blocks 184, excluded [3, 188]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    BATCH_ARMED
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 21355, 'da_wjobs': 21350, 'da_wdrop': 0}  skip/posts-1 0.0002  drop 0.0000  walks rel 0.0000
+  dt_us        arm0    31571.3   arm1    31606.8
+  cpu_net_us   arm0    30402.1   arm1    30691.1
+  draws        arm0     5016.3   arm1     5034.6
+  gpu_busy_us  arm0    12728.9   arm1    12721.9
+  rec_n        arm0    10866.9   arm1    10895.3
+  da_walk_us   arm0     2428.4   arm1     3142.8
+  da_queue_us  arm0     1125.7   arm1     1760.5
+  da_take_us   arm0     2874.4   arm1     2893.5
+  da_hit       arm0     8381.2   arm1     8371.8
+  da_miss      arm0      289.0   arm1      307.2
+  da_late      arm0        5.5   arm1        1.8
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    73654.6   arm1    75284.2
+  da_wdepth    arm0       17.5   arm1       17.4
+  d cpu_net_us   mean 280.4  2SE 163.8  t 3.42  n 92
+  d dt_us        mean 281.0  2SE 176.3  t 3.19  n 92
+  d da_take_us   mean 10.6  2SE 24.0  t 0.89  n 92
+  d da_miss      mean 16.8  2SE 10.7  t 3.14  n 92
+  d da_late      mean -3.7  2SE 0.3  t -23.73  n 92
+  d da_hit       mean -13.0  2SE 27.8  t -0.94  n 92
+  d da_stale     mean 0.0  2SE None  t 0.00  n 92
+  d da_walk_us   mean 712.4  2SE 20.7  t 68.85  n 92
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [FAIL] ship S1_dt_le_-100
+  [FAIL] ship S2_dt_2se_excludes_0
+  VERDICT: KEEP dabatch=8 (ship rule S1-S2 on mean dt not met)
+  prediction B1  MISS value 4.686 band [3.5, 4.5]  arm-1 / arm-0 da_qcall in [3.5, 4.5] (four-fold calls)
+  prediction B2  MISS value 630.308 band [0, 600]  d da_queue_us in [0, +600] us (more calls, shorter holds, on the walker)
+  prediction B3  MISS value 280.365 band [-300, 0]  d cpu_net_us in [-300, 0] us (less spinning on m_mutex)
+  prediction B4  MISS value 281.013 band [-250, 50]  d mean dt_us in [-250, +50] us
+  prediction B5  MISS value 281.013 band [None, -100.0]  d mean dt_us <= -100 us (the ship bar) - the discriminating prediction, LOW confidence
+  prediction B6  HIT  value 16.804 band [-30, 30]  d da_miss in [-30, +30] a flip (the batch does not change what M1 builds)
+  failed: none
+wrote C:/kyty/s107/runs107/dab107_score.json

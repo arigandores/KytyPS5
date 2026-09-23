@@ -1,0 +1,11 @@
+  stl110_1   A rows   5045  new   0 wait   1  lines   2  D_us    13576  M_us   12821  cspf_new   77  hit        0  STALL_SYNC
+  stl110_2   B rows   4885  new   3 wait   1  lines   6  D_us    13757  M_us   12334  cspf_new   74  hit  1254402  STALL_SYNC
+  stl110_3   B rows   4981  new   1 wait   1  lines   3  D_us      687  M_us     467  cspf_new   76  hit  1280837  STALL_SYNC
+  stl110_4   A rows   5007  new   3 wait   1  lines   5  D_us     3319  M_us    1236  cspf_new   74  hit        0  STALL_SYNC
+  stl110_5   A rows   4936  new   0 wait   1  lines   2  D_us    12856  M_us   12384  cspf_new   77  hit        0  STALL_SYNC
+  stl110_6   B rows   4928  new   3 wait   2  lines   6  D_us    14278  M_us   12118  cspf_new   74  hit  1266815  STALL_SYNC
+  stl110_7   B rows   4946  new   3 wait   0  lines   5  D_us    13705  M_us   12318  cspf_new   74  hit  1271765  STALL_SYNC
+  stl110_8   A rows   4944  new   0 wait   1  lines   2  D_us    14650  M_us   14206  cspf_new   77  hit        0  STALL_SYNC
+  S_A 7 S_B 14  N_A 11  D_A 44401 D_B 42427 (bound 75501)  M_A 14206 M_B 12334 (bound 24206)  errors ['stl110_1:STALL_SYNC', 'stl110_2:STALL_SYNC', 'stl110_3:STALL_SYNC', 'stl110_4:STALL_SYNC', 'stl110_5:STALL_SYNC', 'stl110_6:STALL_SYNC', 'stl110_7:STALL_SYNC', 'stl110_8:STALL_SYNC']
+  scorer a04a7abf7ea4e0fb07ea4ddac590e35903defcce8c2ebc372a35c579304870ad
+VERDICT: NOT_ADMITTED

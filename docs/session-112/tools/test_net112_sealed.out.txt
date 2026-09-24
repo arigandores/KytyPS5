@@ -1,0 +1,221 @@
+CONSTANTS                  want CONSTANTS OK                       got CONSTANTS OK                             OK  failed=[] 
+REVERT                     want REVERT to daslot=0 daguard=0 as th got REVERT to daslot=0 daguard=0 as the new  OK  failed=[] 
+   PENDING case: main d mean dt -154.1270454545455 se 3.5740564994880004 | secondary d mean dt -143.51222570532906 se 6.842642697313447
+PENDING                    want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+DRAFT                      want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] 
+S1_S2_positive             want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+   S2_only case: main d mean dt -181.3997727272728 se 143.6282002730578 | secondary d mean dt -170.7849529780563 se 144.35093856231546
+S2_only                    want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   S1_edge case: main d mean dt 0.0 se 0.0 | secondary d mean dt 0.0 se 0.0
+S1_edge                    want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   S1_edge_in case: main d mean dt -0.5 se 0.0 | secondary d mean dt -0.4827586206884007 se 0.0
+S1_edge_in                 want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+   S1_edge_out case: main d mean dt 0.5 se 0.0 | secondary d mean dt 0.4827586206884007 se 0.0
+S1_edge_out                want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+   KEEP_edge case: main d mean dt -350.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+KEEP_edge                  want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+   SEC_edge case: main d mean dt 502.5 se 0.0 | secondary d mean dt -350.0 se 0.0
+SEC_edge                   want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+   EST_rows0_9 case: main d mean dt -150.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+EST_rows0_9                want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+   EST_rows10_59 case: main d mean dt 350.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+EST_rows10_59              want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+   EST_rows10_59_rev case: main d mean dt -250.0 se 0.0 | secondary d mean dt 0.0 se 0.0
+EST_rows10_59_rev          want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+   SE_exact case: main d mean dt -165.76363636363635 se 83.0298115893076 | secondary d mean dt -165.76363636363635 se 83.0298115893076 (sample SE wanted 83.0298115893076, population 82.65154168768336)
+SE_exact                   want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   LEVEL_median case: main d mean dt -150.0 se 37.45444828606715 | secondary d mean dt -150.0 se 37.45444828606715
+   LEVEL case: dt arm0 31000.0 arm1 30850.0, da_q_free arm0 1080.0, da_q_noguard arm1 1080.0, da_queue_us arm1 1080.0
+LEVEL_median               want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+   CPU_NET case: d cpu_net_us mean -200.0 (d cpu_gpu -150, d spin +50)
+CPU_NET_spin               want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+PRED_inside                want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+PRED_edges_lo              want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S2_dt_2se_excludes_0']
+PRED_misses_lo             want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+PRED_edges_hi              want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+PRED_misses_hi             want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+PRED_N4_edge               want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+PRED_N4_out                want KEEP daslot=1 (revert rule S1-S2 o got KEEP daslot=1 (revert rule S1-S2 on mean OK  failed=[] rules=['S1_dt_le_0', 'S2_dt_2se_excludes_0']
+V_frames                   want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['frames']
+V_frames_3000              want REVERT to daslot=0 daguard=0 as th got REVERT to daslot=0 daguard=0 as the new  OK  failed=[] 
+V_frames_2999              want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['frames']
+V_glitch                   want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['no_glitch']
+V_gate                     want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['daguard_0_in_gate_text']
+V_gate_daslot              want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['daguard_0_in_gate_text']
+V_gate_daguard             want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['daguard_0_in_gate_text']
+V_gate_dawalk              want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['daguard_0_in_gate_text']
+V_pin                      want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['pinned']
+V_binary                   want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['binary']
+V_recorded                 want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['recorded']
+V_no_schedule              want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['no_schedule']
+V_no_ckpt                  want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['no_checkpoints']
+V_att_outcome              want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_att_exit                 want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_att_two                  want KEEP daslot=1 (video pass failed)  got KEEP daslot=1 (video pass failed)        OK  failed=[] video=['one_ok_attempt']
+V_missing                  want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+INPUTS_log                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+INPUTS_meta                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+PREREG                     want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:PREREG_PINNED'] 
+BINARY                     want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:BINARY_SEALED'] 
+SCHEMA                     want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_free                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_new_us              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_wait_us             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_guard_busy       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_taking         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_hint_defer       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_hint_torn        want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_slot_bad         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_free           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_chk_ok           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_chk_bad          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_noguard        want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_guard_yield      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:SCHEMA'] 
+FIELD_ORIGIN               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:FIELD_ORIGIN'] 
+FIELD_ORIGIN_us            want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:FIELD_ORIGIN'] 
+FIELD_ORIGIN_slot          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:FIELD_ORIGIN'] 
+RAW_CONTIG                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:RAW_CONTIGUITY'] 
+DURATION                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:DURATION'] 
+GATEARM                    want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_malformed          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_order              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_abba0              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_arms               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_period             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_frame              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_block              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:GATEARM'] 
+GATEARM_none               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+NO_FLOOR_bf_n              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_disp           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_clr_skip       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip_drop      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_FLOOR'] 
+MARKERS_OFF                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:MARKERS_OFF'] 
+NO_RECORDING               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:NO_RECORDING'] 
+STREAMS                    want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:STREAMS_COMPLETE'] 
+ROW_ARMS                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:ROW_ARMS'] 
+AB_BA                      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+AB_BA_abba1                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+PIN_ONCE                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:PIN_ONCE'] 
+PIN_mode2                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:PIN_ONCE'] 
+PIN_none                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:PIN_ONCE'] 
+REC_TWO                    want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:RECORD_THREAD_TWO'] 
+CKPT_line                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_off                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_diag                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_CHECKPOINT_LINE'] 
+HANGABORT                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_GPUHANGABORT'] 
+FATAL                      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so0                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so1                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so2                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so3                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so4                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so5                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so6                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so7                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_log         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_so          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:NO_FATAL_MARKER'] 
+CSSTALL_not_marker         want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+ENV_CKPT                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ENV_NO_CHECKPOINTS', 'protocol'] errors=1
+PAIRS                      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:PAIRS'] 
+PAIRS_DUR                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:PAIRS', 'integrity:DURATION'] 
+NO_PAIRS                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED'] 
+BANDS                      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:BANDS'] 
+BANDS_rec1                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:BANDS'] 
+BANDS_gpu0                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:BANDS'] 
+WORK_SPLIT                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:WORK_SPLIT'] 
+AREA_VERDICT               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_V_work                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_VERDICT'] mirror=['work']
+AREA_SELECTED              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_SELECTED'] 
+WORK                       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_VERDICT', 'control:WORK_SPLIT'] mirror=['work']
+AREA                       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_min_flips             want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+AREA_min_flips_below       want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+SYNC                       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:SYNC_COMPILE'] 
+SYNC_edge                  want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+SYNC_unkept                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:SYNC_COMPILE'] 
+SLOT_ARMED0                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_ARMED_ARM0']
+SLOT_ARMED0_sparse         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_ARMED_ARM0']
+SLOT_ARMED0_lag            want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_ARMED_ARM0']
+SLOT_DARK1                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_DARK_ARM1']
+SLOT_DARK1_one             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_DARK_ARM1']
+SLOT_DARK1_lag             want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+NOGUARD_ARMED1             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['NOGUARD_ARMED_ARM1']
+NOGUARD_ARMED1_sparse      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['NOGUARD_ARMED_ARM1']
+NOGUARD_ARMED1_lag         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['NOGUARD_ARMED_ARM1']
+NOGUARD_DARK0              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['NOGUARD_DARK_ARM0']
+NOGUARD_DARK0_one          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['NOGUARD_DARK_ARM0']
+NOGUARD_DARK0_lag          want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+ARMED_edge                 want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+SLOT_NO_BAD                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_NO_BAD']
+SLOT_NO_BAD_kept           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['SLOT_NO_BAD']
+DEFAULTS_arm0              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_arm0_look         want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_arm1              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_bad               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_bad_kept          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+WALK_ARMED0                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM0']
+WALK_IDENT0                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM0']
+WALK_DROPS0                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM0']
+WALK_ARMED1                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM1']
+WALK_IDENT1                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+WALK_DROPS1                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM1']
+WALKS_SAME                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALKS_SAME']
+WALK_IDENT_edge_in         want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+WALK_IDENT_edge_out        want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+DARK_mw_n                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_hold_us             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_mut_us              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_em_n               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_proc_n             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_sh_jobs               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+P_env_frame_trace          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_hang_abort_s     want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_queue_trace          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_guest_args           want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gate_schedule_abba   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_clock_pin        want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_gpu_markers          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_env_sched                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_meta_sched               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_gatefile          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_samplegate        want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_absent_schedule          want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=2
+ENV_EXTRA                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_gates_sha                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_gates_text               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_label                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_two                  want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_outcome              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_exit                 want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_hold_s               want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_att_hold_edge            want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] 
+P_att_hold_out             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+P_meta_hold_s              want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['protocol'] errors=1
+MAIN_OK                    want REVERT_PENDING_VIDEO (S1-S2 met; n got REVERT_PENDING_VIDEO (S1-S2 met; nothing OK  failed=[] rc=0
+BINARY_main                want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:BINARY_SEALED', 'integrity:IDENTITY'] rc=1
+IDENTITY                   want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:IDENTITY'] rc=1
+IDENTITY_noexe             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:IDENTITY'] rc=1
+REFUSE_seal                want SEALED PRE-REGISTRATION CHANGED    got SEALED PRE-REGISTRATION CHANGED: C:\kyty OK  failed=[] rc=2
+REFUSE_unsealed            want PRED_SHA / PRED_BYTES are not fill got PRED_SHA / PRED_BYTES are not filled: se OK  failed=[] rc=2
+REFUSE_root                want production root must be            got production root must be C:/kyty/s112 (us OK  failed=[] rc=2
+TAG_ok_net112b             want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_net112_entry1       want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_net112b_entry1      want KEEP daslot=1 (run not admitted)   got KEEP daslot=1 (run not admitted)         OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+REFUSE_tag_net113          want tag 'net113' is not a pred/02 tag  got tag 'net113' is not a pred/02 tag (net11 OK  failed=[] rc=2
+REFUSE_tag_net111          want tag 'net111' is not a pred/02 tag  got tag 'net111' is not a pred/02 tag (net11 OK  failed=[] rc=2
+REFUSE_tag_shp111          want tag 'shp111' is not a pred/02 tag  got tag 'shp111' is not a pred/02 tag (net11 OK  failed=[] rc=2
+REFUSE_tag_shp111b         want tag 'shp111b' is not a pred/02 tag got tag 'shp111b' is not a pred/02 tag (net1 OK  failed=[] rc=2
+REFUSE_tag_shp111_entry1   want tag 'shp111_entry1' is not a pred/ got tag 'shp111_entry1' is not a pred/02 tag OK  failed=[] rc=2
+REFUSE_tag_vnet112         want tag 'vnet112' is not a pred/02 tag got tag 'vnet112' is not a pred/02 tag (net1 OK  failed=[] rc=2
+REFUSE_tag_vss111          want tag 'vss111' is not a pred/02 tag  got tag 'vss111' is not a pred/02 tag (net11 OK  failed=[] rc=2
+REFUSE_tag_net112c         want tag 'net112c' is not a pred/02 tag got tag 'net112c' is not a pred/02 tag (net1 OK  failed=[] rc=2
+REFUSE_tag_xnet112         want tag 'xnet112' is not a pred/02 tag got tag 'xnet112' is not a pred/02 tag (net1 OK  failed=[] rc=2
+REFUSE_geom                want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+REFUSE_geom_keep           want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+REFUSE_geom_secondary      want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+DRAFT_secondary            want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] rc=0
+REFUSE_out_exists          want output C:\kyty\s106_stage\net112\f got output C:\kyty\s106_stage\net112\fx_seal OK  failed=[] rc=2
+REFUSE_out_root            want output must live under             got output must live under C:/kyty/s106_stag OK  failed=[] rc=2
+205 cases
+ALL OK

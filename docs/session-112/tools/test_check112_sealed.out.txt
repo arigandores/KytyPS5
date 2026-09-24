@@ -1,0 +1,39 @@
+PASS                 want []                                       got []                                       OK
+PASS_stdout_clean    want []                                       got []                                       OK
+PASS_pre_stable_bad  want []                                       got []                                       OK
+binary               want ['binary']                               got ['binary']                               OK
+installed            want ['installed_now']                        got ['installed_now']                        OK
+pin_env              want ['pinned']                               got ['pinned']                               OK
+pin_none             want ['pinned']                               got ['pinned']                               OK
+pin_two              want ['pinned']                               got ['pinned']                               OK
+pin_mode2            want ['pinned']                               got ['pinned']                               OK
+recorded             want ['recorded']                             got ['recorded']                             OK
+schedule             want ['no_schedule']                          got ['no_schedule']                          OK
+checkpoints          want ['no_checkpoints']                       got ['no_checkpoints']                       OK
+att_two              want ['one_ok_attempt']                       got ['one_ok_attempt']                       OK
+att_extra_failed     want ['one_ok_attempt']                       got ['one_ok_attempt']                       OK
+att_exit             want ['free_default_armed', 'one_ok_attempt', 'rows', 'slot_default_armed'] got ['free_default_armed', 'one_ok_attempt', 'rows', 'slot_default_armed'] OK
+att_outcome          want ['free_default_armed', 'one_ok_attempt', 'rows', 'slot_default_armed'] got ['free_default_armed', 'one_ok_attempt', 'rows', 'slot_default_armed'] OK
+gate_daslot          want ['default_runs']                         got ['default_runs']                         OK
+gate_daguard         want ['default_runs']                         got ['default_runs']                         OK
+gate_cspfree         want ['default_runs']                         got ['default_runs']                         OK
+frames_edge_fail     want ['frames']                               got ['frames']                               OK
+frames_edge_ok       want []                                       got []                                       OK
+frames_missing       want ['frames']                               got ['frames']                               OK
+glitch               want ['no_glitch']                            got ['no_glitch']                            OK
+glitch_missing       want ['no_glitch']                            got ['no_glitch']                            OK
+rows_edge_fail       want ['rows']                                 got ['rows']                                 OK
+rows_edge_ok         want []                                       got []                                       OK
+rows_field           want ['rows']                                 got ['rows']                                 OK
+slot_free            want ['slot_default_armed']                   got ['slot_default_armed']                   OK
+slot_noguard         want ['slot_default_armed']                   got ['slot_default_armed']                   OK
+slot_bad             want ['slot_no_bad']                          got ['slot_no_bad']                          OK
+free_hit             want ['free_default_armed']                   got ['free_default_armed']                   OK
+free_bad             want ['free_default_armed']                   got ['free_default_armed']                   OK
+guard                want ['guard']                                got ['guard']                                OK
+marker_log           want ['no_marker']                            got ['no_marker']                            OK
+marker_fatal         want ['no_marker']                            got ['no_marker']                            OK
+marker_skipped       want ['no_marker']                            got ['no_marker']                            OK
+marker_stdout        want ['no_marker']                            got ['no_marker']                            OK
+CONSTANTS            match OK
+ALL OK

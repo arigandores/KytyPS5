@@ -2509,6 +2509,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
 				    {"bgc_evict", FS::Counter::BufGcEvict, false},
 				    {"bda_nrace", FS::Counter::BdaNarrowRace, false},
+				    {"prio_unsub", FS::Counter::PrioUnsub, false},
+				    {"prio_stall", FS::Counter::PrioStall, false},
+				    {"gw_idle_prio", FS::Counter::GpuIdlePrio, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

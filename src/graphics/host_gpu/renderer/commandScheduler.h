@@ -63,6 +63,9 @@ public:
 	void                      WaitPriorityOperations(uint64_t tick);
 	void                      DeferOperation(Common::UniqueFunction<void>&& operation);
 	void                      DeferPriorityOperation(Common::UniqueFunction<void>&& operation);
+	// Session 113 (ROADMAP item 18): a queued or waited priority operation on the recording (unsubmitted) tick - its tick
+	// and the place that queued it.  Try-lock: false when the operation lock is busy.
+	[[nodiscard]] bool        UnsubmittedPriorityOperation(uint64_t* tick, const void** site);
 	[[nodiscard]] static bool InDeferredOperation() noexcept;
 
 	[[nodiscard]] bool Active() const noexcept { return m_command.m_registers != nullptr; }
@@ -146,6 +149,7 @@ private:
 	std::jthread                 m_priority_thread;
 	bool                         m_priority_active      = false;
 	uint64_t                     m_priority_active_tick = 0;
+	const void*                  m_priority_active_site = nullptr; // Session 113 (item 18)
 	uint64_t                     m_last_tick_refresh_ns = 0;
 	OperationState               m_operation_state      = OperationState::Open;
 	static constexpr uint32_t                 TimestampSlots        = 4096;

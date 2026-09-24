@@ -1859,6 +1859,13 @@ enum class Counter : uint32_t {
 	// the region lock did not - a guest write landed between the two reads (information; knob 1 walks the region on its
 	// next pass).  Raw count.
 	BdaNarrowRace,           // bda_nrace
+	// Session 113 (item 18): the priority-operation stall instrument (raw counts).  prio_unsub: priority waits that
+	// started on the recording (unsubmitted) tick; prio_stall: priority waits longer than 50 ms (PriorityStall: lines);
+	// gw_idle_prio: GuestGpu went idle or slept with every queue blocked while a priority operation sat on the
+	// unsubmitted tick (GpuIdlePrio: lines).
+	PrioUnsub,               // prio_unsub
+	PrioStall,               // prio_stall
+	GpuIdlePrio,             // gw_idle_prio
 	Count
 };
 

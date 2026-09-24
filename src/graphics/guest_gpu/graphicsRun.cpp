@@ -334,6 +334,22 @@ int GuestGpu::GetFrameNum() const {
 	return m_done_num;
 }
 
+// Session 113 (ROADMAP item 18): GuestGpu is about to wait for work (or sleep with every queue blocked) while a priority
+// operation sits on the recording tick - nothing submits that tick until more work arrives.  Instrument only.
+static void NoteIdlePriority(RenderContext& renderer, const char* where) {
+	uint64_t    tick = 0;
+	const void* site = nullptr;
+	if (!renderer.GetCommandScheduler().UnsubmittedPriorityOperation(&tick, &site)) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::GpuIdlePrio, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+		LOGF("GpuIdlePrio: where=%s tick=%llu site=+0x%llx\n", where, static_cast<unsigned long long>(tick),
+		     static_cast<unsigned long long>(Common::FrameStats::ModuleOffset(site)));
+	}
+}
+
 CommandProcessor& GuestGpu::GetProcessor(uint32_t queue_id) {
 	EXIT_IF(queue_id >= QueueCount);
 	if (queue_id == 0) {
@@ -678,6 +694,7 @@ void GuestGpu::ThreadRun(void* data) {
 			while (gpu->m_commands.empty() && gpu->m_submission_count == 0 && !gpu->m_stopping) {
 				gpu->m_processing = false;
 				gpu->m_idle.Signal();
+				NoteIdlePriority(gpu->m_renderer, "idle");
 				{
 					Common::FrameStats::Scope idle_scope(Common::FrameStats::Counter::GpuThreadIdleNs);
 					Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallIdleNs,
@@ -711,6 +728,7 @@ void GuestGpu::ThreadRun(void* data) {
 						     all_blocked);
 					}
 					gpu->m_processing = false;
+					NoteIdlePriority(gpu->m_renderer, "blocked");
 					const auto t0 = std::chrono::steady_clock::now();
 					{
 						Common::FrameStats::Scope blocked_scope(Common::FrameStats::Counter::GpuThreadBlockedNs);

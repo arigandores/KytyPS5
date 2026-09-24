@@ -17,6 +17,8 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
+#include <chrono>
 #include <cstdio>
 #include <optional>
 #include <vector>
@@ -584,7 +586,7 @@ void CommandScheduler::DeferPriorityOperation(Common::UniqueFunction<void>&& ope
 	EXIT_IF(!operation);
 	std::unique_lock lock(m_operation_mutex);
 	if (m_operation_state == OperationState::Open) {
-		m_priority_operations.push({std::move(operation), CurrentTick()});
+		m_priority_operations.push({std::move(operation), CurrentTick(), __builtin_return_address(0)});
 		lock.unlock();
 		m_operation_available.notify_one();
 		return;
@@ -598,6 +600,25 @@ void CommandScheduler::DeferPriorityOperation(Common::UniqueFunction<void>&& ope
 	                           [this] { return m_operation_state == OperationState::Closed; });
 	lock.unlock();
 	operation();
+}
+
+bool CommandScheduler::UnsubmittedPriorityOperation(uint64_t* tick, const void** site) {
+	std::unique_lock lock(m_operation_mutex, std::try_to_lock);
+	if (!lock.owns_lock()) {
+		return false;
+	}
+	const auto current = CurrentTick();
+	if (m_priority_active && m_priority_active_tick >= current) {
+		*tick = m_priority_active_tick;
+		*site = m_priority_active_site;
+		return true;
+	}
+	if (!m_priority_operations.empty() && m_priority_operations.front().tick >= current) {
+		*tick = m_priority_operations.front().tick;
+		*site = m_priority_operations.front().site;
+		return true;
+	}
+	return false;
 }
 
 void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
@@ -615,8 +636,27 @@ void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
 			m_priority_operations.pop();
 			m_priority_active      = true;
 			m_priority_active_tick = operation.tick;
+			m_priority_active_site = operation.site;
 		}
+		// Session 113 (ROADMAP item 18): a wait that starts on the recording tick ends only when somebody submits it.
+		const bool unsubmitted = operation.tick >= CurrentTick();
+		const auto wait_t0     = std::chrono::steady_clock::now();
 		m_master.Wait(operation.tick);
+		const auto wait_us = std::chrono::duration_cast<std::chrono::microseconds>(
+		                         std::chrono::steady_clock::now() - wait_t0)
+		                         .count();
+		if (unsubmitted) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PrioUnsub, 1);
+		}
+		if (wait_us >= 50000) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::PrioStall, 1);
+			static std::atomic<uint32_t> stall_logged {0};
+			if (stall_logged.fetch_add(1, std::memory_order_relaxed) < 64) {
+				LOGF("PriorityStall: tick=%llu unsub=%d us=%lld site=%s\n",
+				     static_cast<unsigned long long>(operation.tick), unsubmitted ? 1 : 0,
+				     static_cast<long long>(wait_us), DeferredSiteName(operation.site));
+			}
+		}
 		if (!stop.stop_requested()) {
 			RunOperation(std::move(operation.callback));
 		}
@@ -624,6 +664,7 @@ void CommandScheduler::PriorityOperationsThread(std::stop_token stop) {
 			std::lock_guard lock(m_operation_mutex);
 			m_priority_active      = false;
 			m_priority_active_tick = 0;
+			m_priority_active_site = nullptr;
 		}
 		m_operation_available.notify_all();
 	}

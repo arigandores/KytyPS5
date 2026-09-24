@@ -1,0 +1,4 @@
+[22:00:28] shn113 start
+[22:10:55] shn113 rc=0 VERDICT: underwater_aerial_garden in 17.3 s - PASS (acceptance <= 90 s)
+[22:11:05] shn113 score VERDICT: KEEP bdanarrow=0 (ship rule S1-S2 on mean dt not met)
+[22:11:05] done

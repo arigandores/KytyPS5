@@ -1,0 +1,112 @@
+shn113.py shn113 status=ADMITTED seal=75f34c692954ab127f78a923831566224cc3b17b7f4c99d2a10a15281356d271
+  pairs 98 (orientations [49, 49]), blocks 196, excluded [200]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  SYNC_COMPILE
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    DEFAULTS_ON
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    NARROW_ARMED_ARM1
+  [PASS] arming    NARROW_DARK_ARM0
+  [PASS] arming    NARROW_SCAN_ARM1
+  [PASS] arming    NO_CHECK
+  [PASS] arming    NO_XTHR
+  [PASS] arming    REGIME_OLD_ARM0
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 62732, 'da_wjobs': 62722, 'da_wdrop': 0}  skip/posts-1 0.0002  drop 0.0000  walks rel 0.0000
+  bdanarrow: bda_scan levels [1438.38125, 49.61875]  bda_nskip arm-0 kept totals {'bda_nskip': 0}  bda_nwould / bda_nmiss / bda_nxthr over all rows 0 / 0 / 0
+  defaults: cspfree_hit levels [266.0, 266.0]  cspfree_bad over all rows 0  da_q_free levels [1076.5187500000002, 1071.81875]  da_slot_bad over all rows 0
+  dt_us        arm0    30623.9   arm1    30621.0
+  cpu_net_us   arm0    29773.9   arm1    29669.4
+  draws        arm0     5018.8   arm1     5012.1
+  gpu_busy_us  arm0    12521.8   arm1    12500.4
+  rec_n        arm0    10872.5   arm1    10853.9
+  da_walk_us   arm0     2431.4   arm1     2424.9
+  da_queue_us  arm0     1212.7   arm1     1212.4
+  da_take_us   arm0     2678.4   arm1     2675.1
+  da_hit       arm0     8353.2   arm1     8345.7
+  da_miss      arm0      289.3   arm1      291.6
+  da_late      arm0       10.6   arm1       10.5
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    71844.3   arm1    71788.7
+  da_wdepth    arm0       17.5   arm1       17.6
+  da_qcall     arm0     1076.5   arm1     1071.8
+  da_q_free    arm0     1076.5   arm1     1071.8
+  da_q_noguard arm0        0.0   arm1        0.0
+  da_guard_busy arm0        0.0   arm1        0.0
+  da_guard_yield arm0        0.0   arm1        0.0
+  da_q_taking  arm0        0.0   arm1        0.0
+  da_hint_defer arm0        1.0   arm1        1.0
+  da_hint_torn arm0        0.0   arm1        0.0
+  cspfree_hit  arm0      266.0   arm1      266.0
+  cspf_have    arm0        0.0   arm1        0.0
+  cspf_new     arm0        0.0   arm1        0.0
+  bda_scan     arm0     1438.4   arm1       49.6
+  bda_nskip    arm0        0.0   arm1        1.4
+  bda_ginv_reg arm0        1.4   arm1        0.0
+  bda_ginv_map arm0        0.0   arm1        0.0
+  bda_rinv     arm0        1.6   arm1        1.6
+  bda_nwould   arm0        0.0   arm1        0.0
+  bda_nmiss    arm0        0.0   arm1        0.0
+  bda_nxthr    arm0        0.0   arm1        0.0
+  bgc_evict    arm0        1.5   arm1        1.5
+  main estimator (decides): rows 10..89 of each block
+  d cpu_net_us   mean -83.9  2SE 60.6  t -2.77  n 98
+  d dt_us        mean -83.2  2SE 68.0  t -2.45  n 98
+  d da_take_us   mean 3.0  2SE 8.8  t 0.69  n 98
+  d da_miss      mean 0.2  2SE 5.7  t 0.08  n 98
+  d da_late      mean 0.0  2SE 0.4  t 0.13  n 98
+  d da_hit       mean 2.2  2SE 17.9  t 0.24  n 98
+  d da_stale     mean 0.0  2SE None  t 0.00  n 98
+  d da_walk_us   mean 1.7  2SE 9.7  t 0.36  n 98
+  d gpu_busy_us  mean 5.9  2SE 23.8  t 0.49  n 98
+  quoted size: d mean dt_us (arm 1 - arm 0) = -83.2 us a flip, 2SE 68.0, n 98 - bdanarrow=1 against bdanarrow=0 of build 1678d3f4, forced OLD (GC trigger -1024 MiB), main estimator
+  secondary estimator (rows 60..88, never deciding): pairs 98, blocks 196, excluded [3, 200]
+  secondary d cpu_net_us   mean -38.4  2SE 107.8  t -0.71  n 98
+  secondary d dt_us        mean -28.6  2SE 119.2  t -0.48  n 98
+  secondary would FAIL S1_dt_le_-100 (not deciding)
+  secondary would FAIL S2_dt_2se_excludes_0 (not deciding)
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [FAIL] ship S1_dt_le_-100
+  [PASS] ship S2_dt_2se_excludes_0
+  VERDICT: KEEP bdanarrow=0 (ship rule S1-S2 on mean dt not met)
+  prediction P1  MISS value 1438.381 band [800, 1400]  arm-0 bda_scan level in [800, 1400] a flip (the OLD regime: every region walked again once a frame)
+  prediction P2  HIT  value 49.619 band [30, 200]  arm-1 bda_scan level in [30, 200] a flip (the narrow stamps: the moved regions only)
+  prediction P3  HIT  value -83.232 band [-1500, 200]  d mean dt_us (arm 1 - arm 0, main estimator, rows 10..89) in [-1500, +200] us
+  prediction P4  MISS value -83.232 band [None, -100]  d mean dt_us (main estimator) <= -100 us (the ship bar) - the discriminating prediction, low confidence
+  prediction P5  HIT  value 5.882 band [-150, 150]  d gpu_busy_us in [-150, +150] a flip
+  prediction P6  HIT  value 1.369 band [0.5, 3]  arm-1 bda_nskip level in [0.5, 3] a flip (the registration invalidations knob 1 skipped)
+  prediction P7  HIT  value 0.236 band [-40, 40]  d da_miss in [-40, +40] a flip
+  failed: none
+wrote C:/kyty/s113/runs113/shn113_score.json

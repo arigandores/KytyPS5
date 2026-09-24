@@ -1,0 +1,10 @@
+  errors none
+  ctl114a errors none rows 6025 window [(2972, 3034886), (2973, 2956), (2974, 44997)] max_dt 3034886 GpuWaitSlow 1 MainThreadWait(frame 3000) max 3001826 us, MainTaskLate max 3001715 us
+  ctl114b errors none rows 5913 window [(2975, 33365), (2976, 33228), (2977, 33176)] max_dt 33365 GpuWaitSlow 0 MainThreadWait(frame 3000) max 0 us, MainTaskLate max 3000429 us
+  check a_froze          PASS
+  check a_waited_main    PASS
+  check b_calm           PASS
+  check b_no_slow        PASS
+  check b_main_slept     PASS
+  scorer d1dfc01adf8d12603f44ab77432c5322eb91552912308df6aff29f1dfb607c2e
+VERDICT: PASS

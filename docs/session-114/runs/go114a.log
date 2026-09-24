@@ -1,0 +1,6 @@
+[01:42:13] ctl114a start (titleasync=0)
+[01:45:40] ctl114a rc=0 VERDICT: underwater_aerial_garden in 17.9 s - PASS (acceptance <= 90 s)
+[01:45:40] ctl114b start (titleasync=1)
+[01:49:05] ctl114b rc=0 VERDICT: underwater_aerial_garden in 15.4 s - PASS (acceptance <= 90 s)
+[01:49:09] ctl114 score VERDICT: PASS
+[01:49:09] done

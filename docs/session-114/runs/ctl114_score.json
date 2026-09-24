@@ -1,0 +1,66 @@
+{
+ "scorer_sha256": "d1dfc01adf8d12603f44ab77432c5322eb91552912308df6aff29f1dfb607c2e",
+ "pred": "C:/kyty/s114/pred/01_ctl114.md",
+ "pred_sha256": "ac16a32a31fc2ea4876ae941b205bcc8179cecb845205d2a5a785a40f7b5d76b",
+ "errors": [],
+ "runs": {
+  "ctl114a": {
+   "tag": "ctl114a",
+   "errors": [],
+   "rows": 6025,
+   "window": [
+    [
+     2972,
+     3034886
+    ],
+    [
+     2973,
+     2956
+    ],
+    [
+     2974,
+     44997
+    ]
+   ],
+   "max_dt": 3034886,
+   "gpuwaitslow": 1,
+   "main_wait_max_us": 3001826,
+   "main_late_max_us": 3001715,
+   "main_wait_lines": 1,
+   "main_late_lines": 2
+  },
+  "ctl114b": {
+   "tag": "ctl114b",
+   "errors": [],
+   "rows": 5913,
+   "window": [
+    [
+     2975,
+     33365
+    ],
+    [
+     2976,
+     33228
+    ],
+    [
+     2977,
+     33176
+    ]
+   ],
+   "max_dt": 33365,
+   "gpuwaitslow": 0,
+   "main_wait_max_us": 0,
+   "main_late_max_us": 3000429,
+   "main_wait_lines": 0,
+   "main_late_lines": 2
+  }
+ },
+ "checks": {
+  "a_froze": true,
+  "a_waited_main": true,
+  "b_calm": true,
+  "b_no_slow": true,
+  "b_main_slept": true
+ },
+ "verdict": "PASS"
+}

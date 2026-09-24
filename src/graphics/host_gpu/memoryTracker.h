@@ -109,6 +109,9 @@ public:
 	// Snapshot without clearing bits or changing protection. Missing regions are CPU-dirty,
 	// just as when a manager is first created. Callers must recheck/upload after releasing locks.
 	void CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size, std::vector<GuestRange>& ranges);
+	// Session 113 (knob "bdanarrow" 2): the same snapshot for a piece of ONE tracking region, plus that region's write
+	// stamp read under the same region lock - the dirty bits and the stamp are one consistent snapshot.
+	RegionStamp CollectCpuModifiedRangesStamped(uint64_t vaddr, uint64_t size, std::vector<GuestRange>& ranges);
 	void               MarkRegionAsCpuModified(uint64_t vaddr, uint64_t size);
 	void               MarkRegionAsGpuModified(uint64_t vaddr, uint64_t size);
 	void               UnmarkRegionAsGpuModified(uint64_t vaddr, uint64_t size);

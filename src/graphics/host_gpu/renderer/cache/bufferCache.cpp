@@ -2885,35 +2885,41 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 			cursor += bytes;
 			continue;
 		}
-		// Session 113, knob "bdanarrow" 2: knob 1 would have skipped this region - its write stamp did not move, no
-		// registration marked it, and it was scanned since the last guest-map invalidation.
-		const bool narrow_would_skip = m_bda_narrow_check && seen.generation != 0 &&
-		                               seen.generation >= m_bda_map_generation && seen.stamp == stamp;
+		// Session 113, knob "bdanarrow" 2: the previous witness of this region, before the walk overwrites it.
+		const auto prev = seen;
 		seen = {stamp, m_bda_stamp_generation};
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
 		const uint64_t bda_scan_t0 =
 		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
-		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
-		if (narrow_would_skip) {
-			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowWould, 1);
-			uint64_t range_address = 0, range_size = 0, buffer_address = 0, buffer_size = 0;
-			if (DirtyRangesTouchBuffers(&range_address, &range_size, &buffer_address, &buffer_size)) {
-				// Session 113 (pre-run audit): the stamp above was read without the region lock and the bits were collected
-				// under it, so a guest write announced in between is seen here - but it moved the stamp, and knob 1 would
-				// walk this region on its next pass. Read the stamp again: unchanged = a real miss of knob 1.
-				if (m_memory_tracker.RegionWriteStamp(index) == stamp) {
-					Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
-					static std::atomic<uint32_t> logged {0};
-					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
-						LOGF("BdaNarrowMiss: region=%llu range=0x%llx+0x%llx buffer=0x%llx+0x%llx\n",
-						     static_cast<unsigned long long>(index), static_cast<unsigned long long>(range_address),
-						     static_cast<unsigned long long>(range_size), static_cast<unsigned long long>(buffer_address),
-						     static_cast<unsigned long long>(buffer_size));
+		if (m_bda_narrow_check) {
+			// Session 113 (item 14): the dirty bits and the region stamp read under the same region lock. Knob 1 would
+			// have skipped this region iff the previous witness was not marked by a registration, is not older than the
+			// last guest-map invalidation, and its stamp equals the LOCKED stamp - no write since the last walk - so a
+			// dirty range of a registered buffer here is a real miss of knob 1.
+			const auto locked = m_memory_tracker.CollectCpuModifiedRangesStamped(cursor, bytes, m_bda_dirty_ranges);
+			if (prev.generation != 0 && prev.generation >= m_bda_map_generation) {
+				if (prev.stamp == locked) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowWould, 1);
+					uint64_t range_address = 0, range_size = 0, buffer_address = 0, buffer_size = 0;
+					if (DirtyRangesTouchBuffers(&range_address, &range_size, &buffer_address, &buffer_size)) {
+						Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
+						static std::atomic<uint32_t> logged {0};
+						if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+							LOGF("BdaNarrowMiss: region=%llu range=0x%llx+0x%llx buffer=0x%llx+0x%llx\n",
+							     static_cast<unsigned long long>(index), static_cast<unsigned long long>(range_address),
+							     static_cast<unsigned long long>(range_size),
+							     static_cast<unsigned long long>(buffer_address),
+							     static_cast<unsigned long long>(buffer_size));
+						}
 					}
-				} else {
+				} else if (prev.stamp == stamp) {
+					// Information only: the unlocked read matched, the locked one did not - a write landed in between;
+					// knob 1 walks this region on its next pass.
 					Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowRace, 1);
 				}
 			}
+		} else {
+			m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
 		}
 		const uint64_t bda_scan_t1 = bda_scan_t0 != 0 ? Common::FrameStats::NowNs() : 0;
 		SynchronizeBuffersOfDirtyRanges();

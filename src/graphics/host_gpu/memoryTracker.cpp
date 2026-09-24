@@ -190,6 +190,34 @@ void MemoryTracker::CollectCpuModifiedRanges(uint64_t vaddr, uint64_t size,
 	}
 }
 
+MemoryTracker::RegionStamp MemoryTracker::CollectCpuModifiedRangesStamped(uint64_t vaddr, uint64_t size,
+                                                                          std::vector<GuestRange>& ranges) {
+	CheckNotInUploadCallback();
+	ValidateRange(vaddr, size);
+	ranges.clear();
+	const auto index = vaddr / TRACKER_REGION_SIZE;
+	EXIT_IF(size == 0 || (vaddr + size - 1) / TRACKER_REGION_SIZE != index);
+	const auto end    = vaddr + size;
+	const auto append = [&](uint64_t address, uint64_t bytes) noexcept {
+		const auto first = std::max(address, vaddr);
+		const auto last  = std::min(address + bytes, end);
+		if (first >= last) return;
+		if (!ranges.empty() && ranges.back().End() == first) {
+			ranges.back().size += last - first;
+		} else {
+			ranges.push_back({first, last - first});
+		}
+	};
+	auto* manager = m_regions[index].load(std::memory_order_acquire);
+	if (manager == nullptr) {
+		append(vaddr, size);
+		return {};
+	}
+	std::scoped_lock lock(manager->lock);
+	manager->ForEachModifiedRange<DirtySource::Cpu, false>(vaddr, size, append);
+	return RegionStamp {manager, manager->Epoch()};
+}
+
 void MemoryTracker::MarkRegionAsCpuModified(uint64_t vaddr, uint64_t size) {
 	CheckNotInUploadCallback();
 	Iterate<true>(vaddr, size, [](RegionManager* manager, uint64_t offset, uint64_t bytes) {

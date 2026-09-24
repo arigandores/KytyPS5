@@ -1855,8 +1855,9 @@ enum class Counter : uint32_t {
 	BdaNarrowMiss,           // bda_nmiss
 	BdaNarrowXthread,        // bda_nxthr
 	BufGcEvict,              // bgc_evict
-	// Session 113 (pre-run audit): knob-2 regions whose dirty ranges overlapped a registered buffer but whose write stamp
-	// moved while the check collected them - a guest write racing the check, not a miss of knob 1.  Raw count.
+	// Session 113 (item 14): knob-2 regions whose unlocked stamp matched the previous witness but whose stamp read under
+	// the region lock did not - a guest write landed between the two reads (information; knob 1 walks the region on its
+	// next pass).  Raw count.
 	BdaNarrowRace,           // bda_nrace
 	Count
 };

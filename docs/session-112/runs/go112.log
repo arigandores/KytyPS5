@@ -1,0 +1,10 @@
+[07:50:11] vdg112 start
+[07:55:39] vdg112 rc=0 VERDICT: underwater_aerial_garden in 18.3 s - PASS (acceptance <= 90 s)
+[07:55:44] vdg112 score VERDICT: GO
+[07:55:44] net112 start
+[08:06:08] net112 rc=0 VERDICT: underwater_aerial_garden in 15.4 s - PASS (acceptance <= 90 s)
+[08:06:18] net112 score VERDICT: KEEP daslot=1 (revert rule S1-S2 on mean dt not met)
+[08:08:42] vid112 rc=0
+[08:08:52] vidglitch one-frame glitches: 0
+[08:08:55] check112 "verdict": "PASS"
+[08:08:55] done

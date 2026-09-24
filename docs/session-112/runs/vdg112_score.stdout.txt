@@ -1,0 +1,23 @@
+  rows 7472  gatearm 64  arm rows [2480, 2560]  errors none
+  da_slot_bad    total            0   level arm0        0.0  arm1        0.0
+  da_chk_ok      total     61535031   level arm0     9235.5  arm1     8908.5
+  da_chk_bad     total            0   level arm0        0.0  arm1        0.0
+  da_q_free      total      4904831   level arm0        0.0  arm1     1074.0
+  da_q_noguard   total      3011966   level arm0     1070.0  arm1        0.0
+  da_guard_busy  total            0   level arm0        0.0  arm1        0.0
+  da_guard_yield total            0   level arm0        0.0  arm1        0.0
+  da_q_taking    total            2   level arm0        0.0  arm1        0.0
+  da_hint_defer  total          283   level arm0        0.0  arm1        0.0
+  da_hint_torn   total            0   level arm0        0.0  arm1        0.0
+  da_qcall       total      7916797   level arm0     1070.0  arm1     1074.0
+  cspfree_hit    total      1910788   level arm0      266.0  arm1      266.0
+  cspfree_bad    total            0   level arm0        0.0  arm1        0.0
+  checks/hits arm0 0.999981  arm1 1.000001
+  mismatch lines {'DaSlotVerify: MISMATCH': 0, 'DrawAheadVerify: MISMATCH': 0}  BAD 0
+  prediction D1 HIT   value 0  BAD == 0
+  prediction D2 HIT   value 1074.0  arm-1 da_q_free level in [800, 1400] a flip
+  prediction D3 HIT   value 1070.0  arm-0 da_q_noguard level in [800, 1400] a flip
+  prediction D4 HIT   value 0  da_guard_yield total <= 100
+  prediction D5 HIT   value 0.9999806607849859  checks/hits >= 0.99 in both arms
+  scorer 8845f970252843197dfe9187ab3b46ca6c5040f285927f647c25098da01ee8bd
+VERDICT: GO

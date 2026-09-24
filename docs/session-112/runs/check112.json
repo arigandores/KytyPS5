@@ -1,0 +1,48 @@
+{
+ "check_sha256": "829cb59f2c60879348885e8d8217bf8edc29ee8c14622c2dbaff819dd8cceb80",
+ "build_sha256": "b47b58a997b441478ab1d278c992949d79795014370d034b747d5fd4e7b9f7f7",
+ "checks": {
+  "binary": true,
+  "installed_now": true,
+  "pinned": true,
+  "recorded": true,
+  "no_schedule": true,
+  "no_checkpoints": true,
+  "one_ok_attempt": true,
+  "default_runs": true,
+  "frames": true,
+  "no_glitch": true,
+  "rows": true,
+  "slot_default_armed": true,
+  "slot_no_bad": true,
+  "free_default_armed": true,
+  "guard": true,
+  "no_marker": true
+ },
+ "frames": 3980,
+ "glitches": 0,
+ "scene_rows": 3695,
+ "totals": {
+  "cspfree_hit": 982085,
+  "cspfree_bad": 0,
+  "cs_sync_new": 0,
+  "cs_sync_wait": 0,
+  "da_q_free": 4149989,
+  "da_q_noguard": 0,
+  "da_slot_bad": 0,
+  "da_guard_yield": 0
+ },
+ "per_row": {
+  "cspfree_hit": 265.78755074424896,
+  "cspfree_bad": 0.0,
+  "cs_sync_new": 0.0,
+  "cs_sync_wait": 0.0,
+  "da_q_free": 1123.136400541272,
+  "da_q_noguard": 0.0,
+  "da_slot_bad": 0.0,
+  "da_guard_yield": 0.0
+ },
+ "markers": [],
+ "stable_frame": 276,
+ "verdict": "PASS"
+}

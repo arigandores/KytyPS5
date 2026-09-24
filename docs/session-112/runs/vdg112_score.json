@@ -1,0 +1,111 @@
+{
+ "scorer_sha256": "8845f970252843197dfe9187ab3b46ca6c5040f285927f647c25098da01ee8bd",
+ "pred": "C:/kyty/s112/pred/01_vdg112.md",
+ "pred_sha256": "e4029a493abc48998b789f06ca44f812ed6e2e32468db53f9bd43ef3471a8e8b",
+ "errors": [],
+ "rows": 7472,
+ "total": {
+  "da_slot_bad": 0,
+  "da_chk_ok": 61535031,
+  "da_chk_bad": 0,
+  "da_q_free": 4904831,
+  "da_q_noguard": 3011966,
+  "da_guard_busy": 0,
+  "da_guard_yield": 0,
+  "da_q_taking": 2,
+  "da_hint_defer": 283,
+  "da_hint_torn": 0,
+  "da_qcall": 7916797,
+  "cspfree_hit": 1910788,
+  "cspfree_bad": 0
+ },
+ "mismatch_lines": {
+  "DaSlotVerify: MISMATCH": 0,
+  "DrawAheadVerify: MISMATCH": 0
+ },
+ "bad": 0,
+ "gatearm_lines": 64,
+ "arm_rows": [
+  2480,
+  2560
+ ],
+ "level": [
+  {
+   "da_slot_bad": 0.0,
+   "da_chk_ok": 9235.5,
+   "da_chk_bad": 0.0,
+   "da_q_free": 0.0,
+   "da_q_noguard": 1070.0,
+   "da_guard_busy": 0.0,
+   "da_guard_yield": 0.0,
+   "da_q_taking": 0.0,
+   "da_hint_defer": 0.0,
+   "da_hint_torn": 0.0,
+   "da_qcall": 1070.0,
+   "cspfree_hit": 266.0,
+   "cspfree_bad": 0.0
+  },
+  {
+   "da_slot_bad": 0.0,
+   "da_chk_ok": 8908.5,
+   "da_chk_bad": 0.0,
+   "da_q_free": 1074.0,
+   "da_q_noguard": 0.0,
+   "da_guard_busy": 0.0,
+   "da_guard_yield": 0.0,
+   "da_q_taking": 0.0,
+   "da_hint_defer": 0.0,
+   "da_hint_torn": 0.0,
+   "da_qcall": 1074.0,
+   "cspfree_hit": 266.0,
+   "cspfree_bad": 0.0
+  }
+ ],
+ "ratio": [
+  0.9999806607849859,
+  1.0000011149730992
+ ],
+ "verdict": "GO",
+ "predictions": [
+  {
+   "name": "D1",
+   "text": "BAD == 0",
+   "value": 0,
+   "low": 0,
+   "high": 0,
+   "hit": true
+  },
+  {
+   "name": "D2",
+   "text": "arm-1 da_q_free level in [800, 1400] a flip",
+   "value": 1074.0,
+   "low": 800,
+   "high": 1400,
+   "hit": true
+  },
+  {
+   "name": "D3",
+   "text": "arm-0 da_q_noguard level in [800, 1400] a flip",
+   "value": 1070.0,
+   "low": 800,
+   "high": 1400,
+   "hit": true
+  },
+  {
+   "name": "D4",
+   "text": "da_guard_yield total <= 100",
+   "value": 0,
+   "low": null,
+   "high": 100,
+   "hit": true
+  },
+  {
+   "name": "D5",
+   "text": "checks/hits >= 0.99 in both arms",
+   "value": 0.9999806607849859,
+   "low": 0.99,
+   "high": null,
+   "hit": true
+  }
+ ]
+}

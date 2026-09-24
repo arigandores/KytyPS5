@@ -4981,6 +4981,7 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
 		m_program_cache->QueueAhead(requests, walk);
 	} else {
 		m_program_cache->QueueAhead(requests, walk);
+		Common::FrameStats::Add(Common::FrameStats::Counter::DaQueueFree, 1);
 	}
 	if (timed) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,

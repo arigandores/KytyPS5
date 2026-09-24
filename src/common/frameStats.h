@@ -1831,6 +1831,9 @@ enum class Counter : uint32_t {
 	DaHintDefer,             // da_hint_defer
 	DaHintTorn,              // da_hint_torn
 	DaSlotBad,               // da_slot_bad
+	// Session 111: QueueDrawAhead calls made without PipelineCache::m_mutex (knob "daslot" != 0) - the arming
+	// proof of the knob's arm 1.  Raw count.
+	DaQueueFree,             // da_q_free
 	Count
 };
 

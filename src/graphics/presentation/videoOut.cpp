@@ -2495,6 +2495,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"da_hint_defer", FS::Counter::DaHintDefer, false},
 				    {"da_hint_torn", FS::Counter::DaHintTorn, false},
 				    {"da_slot_bad", FS::Counter::DaSlotBad, false},
+				    {"da_q_free", FS::Counter::DaQueueFree, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

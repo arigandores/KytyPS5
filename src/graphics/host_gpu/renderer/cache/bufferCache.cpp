@@ -406,8 +406,19 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	const auto threshold = std::min(budget, target_threshold);
 	const auto expected  = std::min(budget - 6 * threshold / 10, budget - GiB);
 	const auto critical  = std::min(budget - 2 * threshold / 10, budget - GiB / 2);
-	m_trigger_gc_memory  = static_cast<uint64_t>(std::max<int64_t>(expected, GiB));
+	// Session 113 (ROADMAP item 17), MEASUREMENT ONLY: KYTY_BUFFER_GC_TRIGGER_SHIFT_MB lowers the buffer-GC trigger by
+	// N MiB (never below 1 GiB) so a run is put in the OLD BDA regime (usage above the trigger, the GC evicting idle
+	// buffers) on purpose; the critical threshold and the texture cache keep today's values.  Read once per process.
+	uint64_t shift_mb = 0;
+	if (const char* shift = std::getenv("KYTY_BUFFER_GC_TRIGGER_SHIFT_MB"); shift != nullptr) {
+		shift_mb = std::strtoull(shift, nullptr, 10);
+	}
+	const auto shifted = expected - static_cast<int64_t>(std::min<uint64_t>(shift_mb, 1ull << 30u)) * (GiB / 1024);
+	m_trigger_gc_memory  = static_cast<uint64_t>(std::max<int64_t>(shifted, GiB));
 	m_critical_gc_memory = static_cast<uint64_t>(std::max<int64_t>(critical, 2 * GiB));
+	LOGF("BufferGc: budget=%llu trigger=%llu critical=%llu shift_mb=%llu\n", static_cast<unsigned long long>(budget),
+	     static_cast<unsigned long long>(m_trigger_gc_memory), static_cast<unsigned long long>(m_critical_gc_memory),
+	     static_cast<unsigned long long>(shift_mb));
 }
 
 BufferCache::~BufferCache() {

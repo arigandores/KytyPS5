@@ -1,0 +1,24 @@
+blocks 194 first (0, 0, 66.968) last (193, 1, 613.053) launched 2026-09-24 04:52:25
+gpu clocks.current.sm [MHz] arm0 n 425 med 2325.0 mean 2324.42 | arm1 n 416 med 2325.0 mean 2321.93
+gpu clocks.current.memory [MHz] arm0 n 425 med 14001.0 mean 14001.00 | arm1 n 416 med 14001.0 mean 14001.00
+gpu utilization.gpu [%] arm0 n 425 med 41.0 mean 40.80 | arm1 n 416 med 41.0 mean 40.76
+gpu power.draw [W] arm0 n 425 med 75.1 mean 74.96 | arm1 n 416 med 75.2 mean 75.06
+gpu temperature.gpu arm0 n 425 med 67.0 mean 66.61 | arm1 n 416 med 67.0 mean 66.70
+gpu clocks_event_reasons.active arm0 {'0x0000000000000400': 425} | arm1 {'0x0000000000000400': 416}
+cpu first t_s 0.000 last 620.099
+cpu perf_all arm0 n 105 med 192.60 mean 192.687 | arm1 n 103 med 192.70 mean 192.731
+cpu perf_ccd0 arm0 n 105 med 184.80 mean 184.916 | arm1 n 103 med 185.00 mean 184.998
+cpu perf_ccd1 arm0 n 105 med 200.40 mean 200.462 | arm1 n 103 med 200.40 mean 200.468
+cpu mhz_ccd0 arm0 n 105 med 4620.00 mean 4622.886 | arm1 n 103 med 4624.00 mean 4624.796
+cpu mhz_ccd1 arm0 n 105 med 5010.00 mean 5011.581 | arm1 n 103 med 5010.00 mean 5011.602
+cpu busy_all arm0 n 105 med 26.70 mean 26.418 | arm1 n 103 med 27.23 mean 27.688
+cpu busy_ccd0 arm0 n 105 med 27.16 mean 26.886 | arm1 n 103 med 27.54 mean 28.037
+cpu busy_ccd1 arm0 n 105 med 26.17 mean 25.951 | arm1 n 103 med 27.01 mean 27.341
+cpu c3_ccd0 arm0 n 105 med 35.80 mean 35.342 | arm1 n 103 med 35.33 mean 34.958
+cpu c3_ccd1 arm0 n 105 med 11.57 mean 11.388 | arm1 n 103 med 11.47 mean 11.291
+cpu dpc_ms_ccd0 arm0 n 105 med 109.38 mean 114.137 | arm1 n 103 med 125.00 mean 121.056
+cpu dpc_ms_ccd1 arm0 n 105 med 0.00 mean 14.285 | arm1 n 103 med 0.00 mean 14.713
+cpu irq_ms_ccd0 arm0 n 105 med 78.12 mean 84.672 | arm1 n 103 med 78.12 mean 91.323
+cpu irq_ms_ccd1 arm0 n 105 med 78.12 mean 79.762 | arm1 n 103 med 78.12 mean 81.765
+cpu q_len 
+cpu proc_cpu_s arm0 n 105 med 15.66 mean 15.336 | arm1 n 103 med 16.00 mean 16.073

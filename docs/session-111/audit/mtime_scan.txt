@@ -1,0 +1,66 @@
+scanned 338719
+go111 04:33:24 C:/kyty/s111/__pycache__/run_safety99.cpython-313.pyc
+go111 04:38:44 C:/kyty/s111/log_obs111.txt
+go111 04:38:44 C:/kyty/s111/stdout_obs111.txt
+go111 04:38:49 C:/kyty/s111/cpuclk_obs111.csv
+go111 04:38:49 C:/kyty/s111/gpuclk_obs111.csv
+go111 04:38:50 C:/kyty/s111/obs111.json
+go111 04:38:50 C:/kyty/s111/obs111.stdout.txt
+go111 04:38:50 C:/kyty/s111/__pycache__/launch_run.cpython-313.pyc
+go111 04:38:55 C:/kyty/s111/runs111/obs111_score.json
+go111 04:38:55 C:/kyty/s111/runs111/obs111_score.stdout.txt
+go111 04:44:14 C:/kyty/s111/log_vds111.txt
+go111 04:44:14 C:/kyty/s111/stdout_vds111.txt
+go111 04:44:19 C:/kyty/s111/cpuclk_vds111.csv
+go111 04:44:19 C:/kyty/s111/gpuclk_vds111.csv
+go111 04:44:19 C:/kyty/s111/vds111.json
+go111 04:44:19 C:/kyty/s111/vds111.stdout.txt
+go111 04:44:25 C:/kyty/s111/go111.log
+go111 04:44:25 C:/kyty/s111/runs111/vds111_score.json
+go111 04:44:25 C:/kyty/s111/runs111/vds111_score.stdout.txt
+go111b 04:52:11 C:/kyty/s111/log_vds111b.txt
+go111b 04:52:11 C:/kyty/s111/stdout_vds111b.txt
+go111b 04:52:15 C:/kyty/s111/cpuclk_vds111b.csv
+go111b 04:52:16 C:/kyty/s111/gpuclk_vds111b.csv
+go111b 04:52:16 C:/kyty/s111/vds111b.json
+go111b 04:52:16 C:/kyty/s111/vds111b.stdout.txt
+go111b 04:52:21 C:/kyty/s111/runs111/vds111b_score.json
+go111b 04:52:21 C:/kyty/s111/runs111/vds111b_score.stdout.txt
+go111b 05:02:40 C:/kyty/s111/log_shp111.txt
+go111b 05:02:40 C:/kyty/s111/stdout_shp111.txt
+go111b 05:02:45 C:/kyty/s111/cpuclk_shp111.csv
+go111b 05:02:45 C:/kyty/s111/gpuclk_shp111.csv
+go111b 05:02:46 C:/kyty/s111/shp111.json
+go111b 05:02:46 C:/kyty/s111/shp111.stdout.txt
+go111b 05:02:55 C:/kyty/s111/runs111/shp111_score.json
+go111b 05:02:55 C:/kyty/s111/runs111/shp111_score.stdout.txt
+go111b 05:05:15 C:/kyty/s111/log_vss111.txt
+go111b 05:05:15 C:/kyty/s111/rec_vss111.mp4
+go111b 05:05:15 C:/kyty/s111/rec_vss111.mp4.idx
+go111b 05:05:15 C:/kyty/s111/stdout_vss111.txt
+go111b 05:05:15 C:/Users/<user>/OneDrive/Desktop/ps5 em/_kyty.prev.txt
+go111b 05:05:19 C:/kyty/s111/cpuclk_vss111.csv
+go111b 05:05:20 C:/kyty/s111/gpuclk_vss111.csv
+go111b 05:05:20 C:/kyty/s111/vss111.json
+go111b 05:05:20 C:/kyty/s111/vss111.stdout.txt
+go111b 05:05:30 C:/kyty/s111/vss111_glitch.txt
+go111b 05:05:40 C:/kyty/s111/go111b.log
+go111b 05:05:40 C:/kyty/s111/runs111/shp111_score_video.json
+go111b 05:05:40 C:/kyty/s111/runs111/shp111_score_video.stdout.txt
+go111v 05:08:04 C:/kyty/s111/gates.req
+go111v 05:08:04 C:/kyty/s111/sample.req
+go111v 05:08:15 C:/Users/<user>/OneDrive/Desktop/ps5 em/_PipelineCache/PPSA21564.bin
+go111v 05:10:23 C:/kyty/s111/log_vid111.txt
+go111v 05:10:23 C:/kyty/s111/rec_vid111.mp4.idx
+go111v 05:10:23 C:/kyty/s111/stdout_vid111.txt
+go111v 05:10:23 C:/Users/<user>/OneDrive/Desktop/ps5 em/_kyty.txt
+go111v 05:10:23 C:/Users/<user>/OneDrive/Desktop/ps5 em/_run_stdout.txt
+go111v 05:10:24 C:/kyty/s111/rec_vid111.mp4
+go111v 05:10:28 C:/kyty/s111/cpuclk_vid111.csv
+go111v 05:10:28 C:/kyty/s111/gpuclk_vid111.csv
+go111v 05:10:28 C:/kyty/s111/vid111.json
+go111v 05:10:28 C:/kyty/s111/vid111.stdout.txt
+go111v 05:10:38 C:/kyty/s111/vid111_glitch.txt
+go111v 05:10:40 C:/kyty/s111/go111v.log
+go111v 05:10:40 C:/kyty/s111/runs111/check111.json
+go111v 05:10:40 C:/kyty/s111/runs111/check111.stdout.txt

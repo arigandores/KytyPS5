@@ -1,0 +1,25 @@
+{
+ "scorer_sha256": "d106af506acf0bb8aafb94111babfacc9445bd5d010d664b0610cd3e82661232",
+ "pred": "C:/kyty/s111/pred/02b_vds111b.md",
+ "pred_sha256": "a404307329c32b3489cd8d9c4950a0823f0e9f3b8dcbcb60a08776f57e541e39",
+ "errors": [],
+ "rows": 7239,
+ "total": {
+  "da_slot_bad": 0,
+  "da_chk_ok": 60770502,
+  "da_chk_bad": 0,
+  "da_q_free": 7820081,
+  "da_guard_busy": 1,
+  "da_q_taking": 2,
+  "da_hint_defer": 278,
+  "da_hint_torn": 0,
+  "cspfree_hit": 1883341,
+  "cspfree_bad": 0
+ },
+ "mismatch_lines": {
+  "DaSlotVerify: MISMATCH": 0,
+  "DrawAheadVerify: MISMATCH": 0
+ },
+ "bad": 0,
+ "verdict": "GO"
+}

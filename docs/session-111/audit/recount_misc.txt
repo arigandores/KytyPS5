@@ -1,0 +1,29 @@
+== vds111 rows with x-line 9858 log markers {'GpuClockPin:': 1}
+   totals {'da_slot_bad': 0, 'da_chk_ok': 0, 'da_chk_bad': 0, 'da_q_free': 10659158, 'da_guard_busy': 2, 'da_q_taking': 2, 'da_hint_defer': 10841, 'da_hint_torn': 0, 'cspfree_hit': 2579536, 'cspfree_bad': 0, 'cs_sync_new': 0, 'cs_sync_wait': 0, 'da_hit': 82674481}
+   per flip {'da_slot_bad': 0.0, 'da_chk_ok': 0.0, 'da_chk_bad': 0.0, 'da_q_free': 1081.27, 'da_guard_busy': 0.0, 'da_q_taking': 0.0, 'da_hint_defer': 1.1, 'da_hint_torn': 0.0, 'cspfree_hit': 261.669, 'cspfree_bad': 0.0, 'cs_sync_new': 0.0, 'cs_sync_wait': 0.0, 'da_hit': 8386.537}
+   stdout markers {}
+   Gate lines ['Gate: daslot=2 frame=1']
+   BAD 0 D1 True D2 True D3 True D4 True D5 True  checks per hit 0.0
+== vds111b rows with x-line 7239 log markers {'GpuClockPin:': 1}
+   totals {'da_slot_bad': 0, 'da_chk_ok': 60770502, 'da_chk_bad': 0, 'da_q_free': 7820081, 'da_guard_busy': 1, 'da_q_taking': 2, 'da_hint_defer': 278, 'da_hint_torn': 0, 'cspfree_hit': 1883341, 'cspfree_bad': 0, 'cs_sync_new': 0, 'cs_sync_wait': 0, 'da_hit': 60770480}
+   per flip {'da_slot_bad': 0.0, 'da_chk_ok': 8394.875, 'da_chk_bad': 0.0, 'da_q_free': 1080.271, 'da_guard_busy': 0.0, 'da_q_taking': 0.0, 'da_hint_defer': 0.038, 'da_hint_torn': 0.0, 'cspfree_hit': 260.166, 'cspfree_bad': 0.0, 'cs_sync_new': 0.0, 'cs_sync_wait': 0.0, 'da_hit': 8394.872}
+   stdout markers {}
+   Gate lines ['Gate: smemocheck=1 frame=1', 'Gate: daslot=2 frame=1']
+   BAD 0 D1 True D2 True D3 True D4 True D5 True  checks per hit 1.0000003620178746
+== obs111 rows 7983 contended wall us/flip 236.11 h1 232.59 h2 0.00 h0 3.52 h3 0.00 acq 239.73 wq hold 965.57 us/flip n 1080.0 -> 0.894 us/call wp hold 0.00 spin share 0.703 tag1 share 0.9851
+   stdout markers {} log {'GpuClockPin:': 1}
+== vid111 json keys ['arms', 'attempts', 'binary_sha256', 'cmdline', 'cpuclk', 'cpuclk_requested', 'env', 'finished', 'gates', 'gpuclk', 'guest_args', 'hold_s', 'launched', 'notes', 'phases', 'pre_run', 'prereg', 'schedule', 'schedule_period', 'schedule_start', 'started', 'tag']
+   attempts [{'label': 'attempt 1', 'attempt': 1, 'pid': 21520, 'level': 'underwater_aerial_garden', 'guest_args': '-lvl underwater_aerial_garden', 'document_s': 9.7, 'started_s': 11.3, 'stable_s': 15.4, 'stable_frame': 280, 'outcome': 'ok', 'detail': None, 'hold_exit': None, 'hold_s': 120.0, 'pipeline_cache_off': False}]
+   env {'KYTY_FRAME_TRACE': 'lite', 'KYTY_GPU_HANG_ABORT_S': '8', 'KYTY_GATE_FILE': 'C:\\kyty\\s111\\gates.req', 'KYTY_SAMPLE_GATE': 'C:\\kyty\\s111\\sample.req', 'KYTY_QUEUE_TRACE': '1', 'KYTY_GUEST_ARGS': '-lvl underwater_aerial_garden', 'KYTY_REC': 'C:\\kyty\\s111\\rec_vid111.mp4', 'KYTY_GPU_CLOCK_PIN': '1', 'KYTY_GPU_MARKERS': '0'}
+   rows n>0: 4001 {'cspfree_hit': (1019081, 254.707), 'cspfree_bad': (0, 0.0), 'da_q_free': (4294121, 1073.262), 'da_slot_bad': (0, 0.0), 'cs_sync_new': (0, 0.0), 'cs_sync_wait': (0, 0.0)}
+   rows n>280: 3722 {'cspfree_hit': (989269, 265.79), 'cspfree_bad': (0, 0.0), 'da_q_free': (4175961, 1121.967), 'da_slot_bad': (0, 0.0), 'cs_sync_new': (0, 0.0), 'cs_sync_wait': (0, 0.0)}
+   rows n>300: 3702 {'cspfree_hit': (983970, 265.794), 'cspfree_bad': (0, 0.0), 'da_q_free': (4150136, 1121.052), 'da_slot_bad': (0, 0.0), 'cs_sync_new': (0, 0.0), 'cs_sync_wait': (0, 0.0)}
+   rows n>2100: 1902 {'cspfree_hit': (505933, 266.001), 'cspfree_bad': (0, 0.0), 'da_q_free': (2026692, 1065.558), 'da_slot_bad': (0, 0.0), 'cs_sync_new': (0, 0.0), 'cs_sync_wait': (0, 0.0)}
+   stdout markers {} log {'GpuClockPin:': 1}
+   gate lines []
+   idx lines 4023
+   glitch report C:/kyty/s111/rec_vid111.mp4: 4023 frames 960x540, index entries 4023
+one-frame glitches: 0
+== vss111 log {'GpuClockPin:': 1, 'BvhLoopCapTrip:': 3} stdout {}
+   glitch report C:/kyty/s111/rec_vss111.mp4: 3944 frames 960x540, index entries 3944
+one-frame glitches: 0

@@ -1,0 +1,39 @@
+== windows on the main pair set (94 pairs; block rows from the full-block selection)
+  rows  0..89  n  94 mean   -228.55 2SE    80.35 t   -5.69 med   -196.08 p 0.0002 boot95 [-306.0, -147.5]
+  rows 10..89  n  94 mean   -230.65 2SE    81.75 t   -5.64 med   -213.12 p 0.0002 boot95 [-310.3, -145.5]
+  rows  0..29  n  94 mean   -193.09 2SE   135.71 t   -2.85 med    -36.87 p 0.0062 boot95 [-321.6, -57.0]
+  rows 30..59  n  94 mean   -217.67 2SE   111.94 t   -3.89 med    -36.73 p 0.0002 boot95 [-323.7, -102.6]
+  rows 60..89  n  94 mean   -274.89 2SE    97.76 t   -5.62 med    -56.50 p 0.0002 boot95 [-368.9, -181.1]
+  rows 60..88  n  94 mean   -231.53 2SE   102.69 t   -4.51 med    -17.16 p 0.0002 boot95 [-332.2, -134.4]
+  rows 10..49  n  94 mean   -233.24 2SE   119.75 t   -3.90 med   -403.36 p 0.0002 boot95 [-346.9, -108.4]
+  rows 50..89  n  94 mean   -228.07 2SE    85.03 t   -5.36 med   -400.98 p 0.0002 boot95 [-309.6, -146.7]
+  rows  0.. 9  n  94 mean   -211.72 2SE   259.21 t   -1.63 med    -31.20 p 0.1095 boot95 [-464.1, 38.5]
+== caps on the main window
+  cap None   d -230.7 2SE 81.8 t -5.64
+  cap 45000  d -224.0 2SE 78.1 t -5.74
+  cap 34500  d -215.5 2SE 77.3 t -5.58
+  cap 25000  d -103.2 2SE 38.8 t -5.32
+== halves/quarters of the run (main window)
+  first half  -261.5 2SE 78.5 t -6.67
+  second half -199.8 2SE 143.9 t -2.78
+  quarter 0  -271.5 2SE 102.8 t -5.28
+  quarter 1  -253.7 2SE 125.3 t -4.05
+  quarter 2  -344.6 2SE 94.8 t -7.27
+  quarter 3  -73.1 2SE 263.2 t -0.56
+== 5%-trimmed mean of pair diffs -252.2 (n 86); median -213.1
+== in-block profile (arm1 - arm0), bins of 10 rows
+   0.. 9  -211.7 2SE 259.2
+  10..19  -265.1 2SE 268.0
+  20..29  -102.4 2SE 233.2
+  30..39  -204.2 2SE 226.6
+  40..49  -361.2 2SE 221.2
+  50..59  -87.6 2SE 212.7
+  60..69  -242.7 2SE 241.1
+  70..79  -138.4 2SE 216.4
+  80..89  -443.6 2SE 219.1
+== vblank classes (main window): n, share1, share2, share3+, mean1, mean2, mean3+, mean
+  arm0 [7520, '0.1133', '0.8791', '0.0076', '17052.3603', '33294.5279', 48984, '31573.2477']
+  arm1 [7520, '0.1262', '0.8670', '0.0068', '17046.8746', '33289.3880', '48470.9804', '31342.5949']
+  implied by share shift at arm-0 class means: -222.0 us; within-class shifts: -8.6 us
+  arm0 long flips by in-window third [20, 21, 16]
+  arm1 long flips by in-window third [16, 21, 14]

@@ -1,0 +1,11 @@
+run      arm  build            da_queue   da_qcall   us/call    da_take     da_hit    us/hit  config
+shp110   0    b3f7a2c9 pre       1090.3     1083.0     1.007     2873.2     8410.4    0.3416  cspfree=0 (600 s ABBA, BDA NEW)
+shp110   1    b3f7a2c9 pre       1103.6     1083.6     1.018     2870.3     8413.4    0.3412  cspfree=1 (600 s ABBA, BDA NEW)
+vid110   0    072861c8 pre       1097.0     1064.2     1.031     2940.2     8276.8    0.3552  defaults, recording, BDA OLD
+obs111   0    072861c8 pre       1114.1     1080.0     1.032     2768.2     8390.0    0.3299  plkstat=1, BDA NEW
+vds111   0    c8235c90 post      1201.1     1080.1     1.112     2776.1     8386.0    0.3310  daslot=2 (smemocheck off by defect), BDA OLD
+vds111b  0    c8235c90 post      1351.8     1077.2     1.255     2767.2     8383.3    0.3301  daslot=2 + smemocheck=1, BDA OLD
+shp111   0    c8235c90 post      1340.1     1083.6     1.237     2867.6     8423.1    0.3404  daslot=0 + guards (600 s ABBA arm 0), BDA OLD
+shp111   1    c8235c90 post      1195.5     1084.0     1.103     2878.6     8415.6    0.3421  daslot=1 (arm 1), BDA OLD
+vss111   0    c8235c90 post      1315.8     1062.2     1.239     3154.5     8254.8    0.3821  daslot=1 gate, recording, BDA OLD
+vid111   0    0c8a13f2 post      1287.1     1065.5     1.208     3070.5     8287.1    0.3705  daslot=1 default, recording, BDA OLD

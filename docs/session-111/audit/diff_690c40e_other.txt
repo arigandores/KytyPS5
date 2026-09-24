@@ -1,0 +1,87 @@
+commit 690c40e146a6fa08cd70f975760e830223310869
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Thu Sep 24 03:07:48 2026 +0200
+
+    Session 111: knob daslot - the M1 queue off PipelineCache::m_mutex (per-slot guards, Taking state, publish-once hints)
+    
+    Per-slot guard byte for key/state transitions (producer: both probes, lower index first; draw: bounded try, busy =
+    miss), AheadTaking while a draw verifies/copies outside the guard, publish-once hints under a seqlock (AheadNote only
+    publishes sources with a compiled SRT, fingerprint and class computed), atomic variants / memo_generation / slot
+    table pointer, ahead_queue_mutex serialising QueueAhead. Knob daslot (0 m_mutex = today, 1 own lock, 2 + key check),
+    counters da_guard_busy, da_q_taking, da_hint_defer, da_hint_torn, da_slot_bad. Default 0. ROADMAP 1f488f7.
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_017SCSPuNeFJhT3cLQjMgMCE
+
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index 418d4fa..cf34a2b 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1823,6 +1823,14 @@ enum class Counter : uint32_t {
+ 	// "not found" branch, lock held, to the return) and inside the wait for a pending entry.  Raw us.
+ 	CsSyncNewUs,             // cs_sync_new_us
+ 	CsSyncWaitUs,            // cs_sync_wait_us
++	// Session 111, knob "daslot": a take gave up on a busy slot guard (a miss), the walker met a slot being taken
++	// (skipped), AheadNote deferred a source whose compiled SRT is not published yet, the walker's hint read raced
++	// a write (treated as no hint), and the knob-2 check of a slot key failed.  Raw counts.
++	DaGuardBusy,             // da_guard_busy
++	DaQueueTaking,           // da_q_taking
++	DaHintDefer,             // da_hint_defer
++	DaHintTorn,              // da_hint_torn
++	DaSlotBad,               // da_slot_bad
+ 	Count
+ };
+ 
+diff --git a/src/common/gates.cpp b/src/common/gates.cpp
+index 3aa6800..005b08c 100644
+--- a/src/common/gates.cpp
++++ b/src/common/gates.cpp
+@@ -383,8 +383,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
+     // Read once per prefetch call, so it CAN be a schedule arm. Session 110: default 1 after the
+     // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: bar met,
+     // video clean); size ~ -200 us a frame at the pin (pooled full-block estimate, audit pred/04).
+-    // LAST row, matching the LAST enum entry before Knob::Count.
+     {"KYTY_CS_PREFETCH_FREE", "cspfree", 1, 2},
++    // Session 111: the M1 queue off PipelineCache::m_mutex (per-slot guards are unconditional); 0 = m_mutex
++    // (today).  Read once per queue call and once per take, so it CAN be a schedule arm.
++    // LAST row, matching the LAST enum entry before Knob::Count.
++    {"KYTY_DRAW_AHEAD_SLOT", "daslot", 0, 2},
+ }};
+ 
+ using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;
+diff --git a/src/common/gates.h b/src/common/gates.h
+index 4b50222..e6a2d2b 100644
+--- a/src/common/gates.h
++++ b/src/common/gates.h
+@@ -564,8 +564,13 @@ enum class Knob : uint32_t {
+ 	// and a pipeline for it; the materialization runs unlocked on a source whose compiled SRT was seen
+ 	// published under the lock.  0 = off; 1 = skip on a hit; 2 = verify (the locked path still runs; ids
+ 	// that differ at equal specializations are counted bad).  Read once per prefetch call.
+-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+ 	CsPrefetchFree,   // KYTY_CS_PREFETCH_FREE,   file name "cspfree" (0 off, 1 skip on hit, 2 verify)
++	// Session 111: which lock PipelineCache::QueueDrawAhead (the M1 queue of the draw walker) takes: 0 = m_mutex
++	// (today), 1 = only the new ahead_queue_mutex (the slots are guarded per slot either way), 2 = 1 plus a check of
++	// the slot key under its guard at every take (da_slot_bad, DaSlotVerify: MISMATCH).  Read once per queue call
++	// and once per take, so it CAN be a schedule arm; the per-slot protocol is unconditional, so a flip is safe.
++	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
++	DrawAheadSlot,    // KYTY_DRAW_AHEAD_SLOT,    file name "daslot" (0 m_mutex, 1 own lock, 2 own lock + verify)
+ 	Count,
+ };
+ 
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index 115b83a..6d323e7 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2489,6 +2489,12 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    // Session 110: stall duration on the dispatch.  Raw us.
+ 				    {"cs_sync_new_us", FS::Counter::CsSyncNewUs, false},
+ 				    {"cs_sync_wait_us", FS::Counter::CsSyncWaitUs, false},
++				    // Session 111: knob "daslot".  Raw counts.
++				    {"da_guard_busy", FS::Counter::DaGuardBusy, false},
++				    {"da_q_taking", FS::Counter::DaQueueTaking, false},
++				    {"da_hint_defer", FS::Counter::DaHintDefer, false},
++				    {"da_hint_torn", FS::Counter::DaHintTorn, false},
++				    {"da_slot_bad", FS::Counter::DaSlotBad, false},
+ 				};
+ 				std::string text;
+ 				for (const auto& counter: named) {

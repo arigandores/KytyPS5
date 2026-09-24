@@ -20,3 +20,7 @@ b73afd64f4e0267da50afd429b050de20c1dadf23d10b1dea6fb637ec042d18a *test_vds111b.p
 31a7ee194c70133e0889d7bed3751988114a1ad760dce4a4f78902cf35a3382a *make_vds111b.py
 5d48ce368d649a4054c207523eb1fadf887cd30dec9dff9212ddf804bfe53195 *go111b.sh
 ad4e72e650889dac2ce39ca47942bcd8796d85b259a740d72096157f155ef7f8 *gates_slot2b.txt
+83358a9c83f43874e6aef4030be2d063f179d9e78618ac826e04c695c856461c *pred/04_audit111.md
+1f740594faaebf6a18373e691e241409ca68790e0b36de0c7d409a16bc9fe2c7 *check111.py (post-run: published after go111v, audit MINOR-3)
+2a0c3aa7898731650d77c38419ef48bfdcdf6dc0e0cd4ae6ec5aa2d6edab1285 *make_check111.py (post-run: published after go111v, audit MINOR-3)
+cd45141879a36d1b1c6119cd6af6529870827c3e50ddc5d68f8e710744f35fa7 *go111v.sh (post-run: published after go111v, audit MINOR-3)

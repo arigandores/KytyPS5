@@ -1,0 +1,133 @@
+commit dc1136b5f56463ee7d686d07dad36ecf37870c0b
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Thu Sep 24 03:08:07 2026 +0200
+
+    Session 111: counter da_q_free (QueueDrawAhead calls without m_mutex) - the arming proof of daslot's arm 1
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_017SCSPuNeFJhT3cLQjMgMCE
+
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index cf34a2b..5bd04ab 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1831,6 +1831,9 @@ enum class Counter : uint32_t {
+ 	DaHintDefer,             // da_hint_defer
+ 	DaHintTorn,              // da_hint_torn
+ 	DaSlotBad,               // da_slot_bad
++	// Session 111: QueueDrawAhead calls made without PipelineCache::m_mutex (knob "daslot" != 0) - the arming
++	// proof of the knob's arm 1.  Raw count.
++	DaQueueFree,             // da_q_free
+ 	Count
+ };
+ 
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index d473b54..9a79d71 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -4981,6 +4981,7 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
+ 		m_program_cache->QueueAhead(requests, walk);
+ 	} else {
+ 		m_program_cache->QueueAhead(requests, walk);
++		Common::FrameStats::Add(Common::FrameStats::Counter::DaQueueFree, 1);
+ 	}
+ 	if (timed) {
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index 6d323e7..d14178d 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2495,6 +2495,7 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    {"da_hint_defer", FS::Counter::DaHintDefer, false},
+ 				    {"da_hint_torn", FS::Counter::DaHintTorn, false},
+ 				    {"da_slot_bad", FS::Counter::DaSlotBad, false},
++				    {"da_q_free", FS::Counter::DaQueueFree, false},
+ 				};
+ 				std::string text;
+ 				for (const auto& counter: named) {
+
+commit 6b340d748e6630424be9d335487ae0ae0f03aef4
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Thu Sep 24 03:09:21 2026 +0200
+
+    Session 111: counters da_chk_ok / da_chk_bad (smemocheck checks of M1 takes) - the arming proof of the daslot verify run
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_017SCSPuNeFJhT3cLQjMgMCE
+
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index 5bd04ab..9d1f0c7 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1834,6 +1834,10 @@ enum class Counter : uint32_t {
+ 	// Session 111: QueueDrawAhead calls made without PipelineCache::m_mutex (knob "daslot" != 0) - the arming
+ 	// proof of the knob's arm 1.  Raw count.
+ 	DaQueueFree,             // da_q_free
++	// Session 111: gate "smemocheck" checks of M1 takes (AheadCheck) that agreed / disagreed - the arming proof
++	// of the check in the daslot verify run.  Raw counts.
++	DaCheckOk,               // da_chk_ok
++	DaCheckBad,              // da_chk_bad
+ 	Count
+ };
+ 
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index 9a79d71..3b74cbc 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -3392,9 +3392,11 @@ struct PipelineCache::ProgramCache {
+ 		const bool same_specialization = ok && fresh_specialization == specialization;
+ 		if (same_snapshot && same_specialization) {
+ 			memo_checks_ok++;
++			Common::FrameStats::Add(Common::FrameStats::Counter::DaCheckOk, 1); // session 111
+ 			return;
+ 		}
+ 		memo_checks_bad++;
++		Common::FrameStats::Add(Common::FrameStats::Counter::DaCheckBad, 1); // session 111
+ 		if (memo_checks_bad <= 40) {
+ 			LOGF("DrawAheadVerify: MISMATCH hash=0x%016" PRIx64 " stage=%u materialized=%d "
+ 			     "snapshot=%d specialization=%d (ok=%" PRIu64 " bad=%" PRIu64 ")\n",
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index d14178d..244afa4 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2496,6 +2496,8 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    {"da_hint_torn", FS::Counter::DaHintTorn, false},
+ 				    {"da_slot_bad", FS::Counter::DaSlotBad, false},
+ 				    {"da_q_free", FS::Counter::DaQueueFree, false},
++				    {"da_chk_ok", FS::Counter::DaCheckOk, false},
++				    {"da_chk_bad", FS::Counter::DaCheckBad, false},
+ 				};
+ 				std::string text;
+ 				for (const auto& counter: named) {
+
+commit 38d8f86032d6c87b8898aad14a754520caca6f3d
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Thu Sep 24 05:06:04 2026 +0200
+
+    Session 111: vds111b GO, shp111 SHIP - knob daslot default 1 (d mean dt -230.7 us on frames 10-89 at the pin, 2SE 81.8; video clean)
+    
+    ROADMAP session 111 item 5 recorded before this default change.
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_017SCSPuNeFJhT3cLQjMgMCE
+
+diff --git a/src/common/gates.cpp b/src/common/gates.cpp
+index 005b08c..bed873b 100644
+--- a/src/common/gates.cpp
++++ b/src/common/gates.cpp
+@@ -384,10 +384,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
+     // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: bar met,
+     // video clean); size ~ -200 us a frame at the pin (pooled full-block estimate, audit pred/04).
+     {"KYTY_CS_PREFETCH_FREE", "cspfree", 1, 2},
+-    // Session 111: the M1 queue off PipelineCache::m_mutex (per-slot guards are unconditional); 0 = m_mutex
+-    // (today).  Read once per queue call and once per take, so it CAN be a schedule arm.
++    // Session 111: the M1 queue off PipelineCache::m_mutex (per-slot guards are unconditional); 0 = m_mutex.
++    // Read once per queue call and once per take, so it CAN be a schedule arm. Session 111: default 1 after
++    // the verify run (pred/02b_vds111b.md: GO, 60.8 M checks, 0 bad) and the sealed ship ABBA
++    // (pred/03_shp111.md: d mean dt -230.7 us on frames 10-89, 2SE 81.8; video clean).
+     // LAST row, matching the LAST enum entry before Knob::Count.
+-    {"KYTY_DRAW_AHEAD_SLOT", "daslot", 0, 2},
++    {"KYTY_DRAW_AHEAD_SLOT", "daslot", 1, 2},
+ }};
+ 
+ using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

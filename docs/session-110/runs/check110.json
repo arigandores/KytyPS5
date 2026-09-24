@@ -1,0 +1,30 @@
+{
+ "check_sha256": "2efd74145602c1274a5946364baa41bbaf15fca84fde15b9acd578fa44ae1071",
+ "build_sha256": "072861c89193c3726232e44e78be4f36172254af826394b56c8bf671ef609c21",
+ "checks": {
+  "binary": true,
+  "installed_now": true,
+  "pinned": true,
+  "recorded": true,
+  "no_schedule": true,
+  "one_ok_attempt": true,
+  "default_runs": true,
+  "frames": true,
+  "no_glitch": true,
+  "default_armed": true,
+  "no_bad": true,
+  "fields_present": true,
+  "no_checkpoints": true,
+  "guard": true,
+  "no_marker": true
+ },
+ "frames": 4004,
+ "glitches": 0,
+ "scene_rows": 3706,
+ "cspfree_hit_per_row": 265.78764166216945,
+ "cs_sync_new": 0,
+ "cs_sync_wait": 0,
+ "markers": [],
+ "stable_frame": 281,
+ "verdict": "PASS"
+}

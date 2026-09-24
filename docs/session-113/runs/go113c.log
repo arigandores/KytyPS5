@@ -1,0 +1,4 @@
+[13:42:32] vbn113c start
+[13:47:56] vbn113c rc=0 VERDICT: underwater_aerial_garden in 14.8 s - PASS (acceptance <= 90 s)
+[13:48:03] vbn113c score VERDICT: INVESTIGATE
+[13:48:03] done

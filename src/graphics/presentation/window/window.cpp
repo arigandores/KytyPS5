@@ -23,6 +23,8 @@
 #include "common/emulatorConfig.h"
 #include "common/envFlag.h"
 #include "common/file.h"
+#include "common/frameStats.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
 #include "common/systemInfo.h"
@@ -41,7 +43,11 @@
 #include "libs/controller.h"
 #include "loader/systemContent.h"
 
+#include <atomic>
+#include <chrono>
 #include <cstdlib>
+#include <thread>
+#include <utility>
 #include <fmt/format.h>
 #include <memory>
 #include <string>
@@ -787,6 +793,18 @@ void WindowContext::RunOnMainThread(std::function<void()> task) {
 	}
 }
 
+void WindowContext::PostToMainThread(std::function<void()> task) {
+	{
+		Common::LockGuard lock(main_task_mutex);
+		main_tasks.push_back(std::move(task));
+		++main_tasks_queued;
+	}
+	// Wake the main loop in case it is blocked in SDL_WaitEvent.
+	SDL_Event event {};
+	event.type = SDL_USEREVENT;
+	SDL_PushEvent(&event);
+}
+
 void WindowContext::DrainMainThreadTasks() {
 	std::vector<std::function<void()>> tasks;
 	{
@@ -1090,7 +1108,61 @@ void WindowContext::UpdateTitle() {
 	    (has_title_id ? ", " : ""), (has_app_ver ? app_ver : ""), (has_app_ver ? " " : ""),
 	    device_name, processor_name, frame_num, current_fps);
 
-	RunOnMainThread([this, text = std::move(text)] { SDL_SetWindowTitle(window, text.c_str()); });
+	// Session 114 (ROADMAP §0.1 "СЕССИЯ 114" item 2): the present thread holds VideoOutConfig::mutex here, so waiting
+	// for the SDL main thread (titleasync 0) stops the flip path while the main thread is busy.  KYTY_MAIN_STALL_TEST=
+	// <frame>:<ms> (measurement only, read once) queues a sleep on the main thread at one frame: the positive control.
+	static const std::pair<uint64_t, uint32_t> stall_test = [] {
+		std::pair<uint64_t, uint32_t> v {0, 0};
+		if (const char* s = std::getenv("KYTY_MAIN_STALL_TEST"); s != nullptr) {
+			char* end = nullptr;
+			v.first   = std::strtoull(s, &end, 10);
+			if (end != nullptr && *end == ':') {
+				v.second = static_cast<uint32_t>(std::strtoul(end + 1, nullptr, 10));
+			}
+			LOGF("MainStallTest: frame=%llu ms=%u\n", static_cast<unsigned long long>(v.first), v.second);
+		}
+		return v;
+	}();
+	if (stall_test.second != 0 && frame_num == stall_test.first) {
+		const auto ms = stall_test.second;
+		LOGF("MainStallTest: queued frame=%llu ms=%u\n", static_cast<unsigned long long>(frame_num), ms);
+		PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });
+	}
+	const bool title_async = Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
+	const auto title_t0    = Common::FrameStats::NowNs();
+	if (title_async) {
+		bool post = false;
+		{
+			Common::LockGuard lock(title_mutex);
+			title_text   = std::move(text);
+			post         = !title_queued;
+			title_queued = true;
+		}
+		if (post) {
+			PostToMainThread([this] {
+				std::string latest;
+				{
+					Common::LockGuard lock(title_mutex);
+					latest       = title_text;
+					title_queued = false;
+				}
+				SDL_SetWindowTitle(window, latest.c_str());
+			});
+		}
+	} else {
+		RunOnMainThread([this, text = std::move(text)] { SDL_SetWindowTitle(window, text.c_str()); });
+	}
+	const auto title_ns = Common::FrameStats::NowNs() - title_t0;
+	Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleNs, title_ns);
+	Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleN, 1);
+	if (title_ns >= 50000000ull) {
+		static std::atomic<uint32_t> wait_logged {0};
+		if (wait_logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+			LOGF("MainThreadWait: us=%llu frame=%llu titleasync=%d\n",
+			     static_cast<unsigned long long>(title_ns / 1000), static_cast<unsigned long long>(frame_num),
+			     title_async ? 1 : 0);
+		}
+	}
 }
 
 } // namespace Libs::Graphics

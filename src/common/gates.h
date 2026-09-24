@@ -581,8 +581,12 @@ enum class Knob : uint32_t {
 	// frame while the buffer GC runs); 1 = a registration marks only its own regions (always done, whatever the knob),
 	// the global generation moves only with the guest map; 2 = 0 plus a check of what 1 would skip (bda_nwould,
 	// bda_nmiss).  Read once per PrepareBda call, so it CAN be a schedule arm; a switch is safe at any moment.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	BdaNarrowStamps,  // KYTY_BDA_NARROW_STAMPS,  file name "bdanarrow" (0 global, 1 per buffer, 2 global + check)
+	// Session 114: WindowContext::UpdateTitle hands the window title to the SDL main thread without waiting (1)
+	// instead of waiting for it while the present thread holds VideoOutConfig::mutex (0, today: a busy main thread
+	// then stops the flip path).  Read on every UpdateTitle call, so it CAN be a schedule arm; safe at any moment.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	TitleAsync,       // KYTY_TITLE_ASYNC,        file name "titleasync" (0 wait for the main thread, 1 post)
 	Count,
 };
 

@@ -1866,6 +1866,13 @@ enum class Counter : uint32_t {
 	PrioUnsub,               // prio_unsub
 	PrioStall,               // prio_stall
 	GpuIdlePrio,             // gw_idle_prio
+	// Session 114 (item 2): pres_title_ns / pres_title_n - the wall of WindowContext::UpdateTitle on the present thread,
+	// including the wait for the SDL main thread at titleasync 0; flip_rsv_wait_ns / flip_rsv_wait_n - blocking waits
+	// for VideoOutConfig::mutex in ReserveFlipRequest after a failed TryLock.  Raw ns / counts.
+	PresTitleNs,             // pres_title_ns
+	PresTitleN,              // pres_title_n
+	FlipReserveWaitNs,       // flip_rsv_wait_ns
+	FlipReserveWaitN,        // flip_rsv_wait_n
 	Count
 };
 

@@ -522,7 +522,17 @@ static int ReserveFlipRequest(VideoOutDriver::Impl& driver, int handle, int inde
 		return VIDEO_OUT_ERROR_INVALID_INDEX;
 	}
 
-	Common::LockGuard lock(video_out->mutex);
+	// Session 114 (ROADMAP item 2): the present thread holds this mutex for a whole present; time a blocking wait.
+	if (!video_out->mutex.TryLock()) {
+		const auto wait_t0 = Common::FrameStats::NowNs();
+		video_out->mutex.Lock();
+		Common::FrameStats::Add(Common::FrameStats::Counter::FlipReserveWaitNs, Common::FrameStats::NowNs() - wait_t0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::FlipReserveWaitN, 1);
+	}
+	struct ReserveUnlock {
+		Common::Mutex& mutex;
+		~ReserveUnlock() { mutex.Unlock(); }
+	} lock {video_out->mutex};
 	if (video_out->closing ||
 	    (!IsSpecialBufferIndex(index) && !video_out->buffers[index].Occupied())) {
 		return VIDEO_OUT_ERROR_INVALID_INDEX;
@@ -2512,6 +2522,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"prio_unsub", FS::Counter::PrioUnsub, false},
 				    {"prio_stall", FS::Counter::PrioStall, false},
 				    {"gw_idle_prio", FS::Counter::GpuIdlePrio, false},
+				    {"pres_title_ns", FS::Counter::PresTitleNs, false},
+				    {"pres_title_n", FS::Counter::PresTitleN, false},
+				    {"flip_rsv_wait_ns", FS::Counter::FlipReserveWaitNs, false},
+				    {"flip_rsv_wait_n", FS::Counter::FlipReserveWaitN, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

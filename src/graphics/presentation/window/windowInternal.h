@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <string>
 #include <vector>
 
 namespace Libs::Graphics {
@@ -50,6 +51,8 @@ struct WindowContext {
 	void Run();
 	// SDL window operations must complete on the main thread.
 	void RunOnMainThread(std::function<void()> task);
+	// Session 114 (knob "titleasync"): queue a task for the main thread and return without waiting for it.
+	void PostToMainThread(std::function<void()> task);
 	void DrainMainThreadTasks();
 
 	GraphicContext                 graphic_ctx;
@@ -67,6 +70,11 @@ struct WindowContext {
 	std::vector<std::function<void()>> main_tasks;            // guarded by main_task_mutex
 	uint64_t                           main_tasks_queued = 0; // guarded by main_task_mutex
 	uint64_t                           main_tasks_run    = 0; // guarded by main_task_mutex
+	// Session 114 (knob "titleasync" 1): the latest title text and whether a title task is queued; the main thread
+	// applies the latest text, so at most one title task waits in main_tasks.  Guarded by title_mutex.
+	Common::Mutex title_mutex;
+	std::string   title_text;
+	bool          title_queued = false;
 };
 
 } // namespace Libs::Graphics

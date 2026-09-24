@@ -1,0 +1,30 @@
+=== LENS concurrency
+ * C1 MAJOR SURVIVES [(False, 'MAJOR'), (False, 'MAJOR')] | titleasync=1 at process start stops the present thread's startup park, so two threads can run Presenter::Present at once
+     loc: src/graphics/presentation/window/window.cpp:1133-1151 (post branch) together with window.cpp:966-971 (WindowPrepareShaders presents on the main thread), videoOut.cpp:259 (the present thread starts at 
+     fix: Serialize Presenter::Present, for example with a present mutex from AcquireNextImage through swapchain.Present and Release. Or have PresentThread skip presenting while ShaderPreparationOverlayActive(), because the main thread owns presenting then. Before shipping titleasync=1, run one entry with KYTY_TITLE_ASYNC=1 set in the environment and with a real preparation phase (prepare-cold or a long precache).
+ * C2 MINOR SURVIVES [(False, 'MINOR'), (False, 'MINOR')] | Every run that boots at titleasync 0 logs a boot-time MainThreadWait line (frame=1), even an entry meant to be titleasync 1
+     loc: src/graphics/presentation/window/window.cpp:1153 and :1158-1164
+     fix: Score only lines with frame equal to the MainStallTest frame and us close to the stall length. Or skip the log and the counter until the main loop has started, for example with a flag set in Run() before the first DrainMainThreadTasks.
+ - INFO C3 | The stall frame counts UpdateTitle calls, not flips, and at titleasync 1 from the environment it runs ahead during boot
+ - INFO C4 | main_tasks_run is counted per batch, so a posted task later in a batch delays earlier RunOnMainThread waiters
+=== LENS default
+ - INFO D1 | MainThreadWait: lines now print in ordinary default runs, and their 32-line budget is shared with the control
+ - INFO D2 | Harness port constants are stale: gates.cpp now has 143 entries, 44 of them absent from gates_base.txt
+ - INFO D3 | flip_rsv_wait_n/_ns also count spin-only contention, not only blocking waits
+ - INFO D4 | KYTY_MAIN_STALL_TEST frame counts non-preparing UpdateTitle calls, not flip_status.count or FrameTrace n
+=== LENS control
+ * F1 MINOR SURVIVES [(False, 'MINOR'), (False, 'MINOR')] | The positive control can only confirm the knob works, not that the vbn113k 3-s blocker was the title wait. Once titleasync=1 ships, no instrument names a different blocker.
+     loc: src/graphics/presentation/window/window.cpp:1126-1130 (sleep injected inside UpdateTitle), :1158-1165 (MainThreadWait); src/graphics/presentation/videoOut.cpp:1148-2578 (cfg->mutex hold, untimed)
+     fix: Keep the claim at the knob level. Add a cheap FlipHold split: time the hold from videoOut.cpp:1148 to :2578 in phases and log lines over 50 ms naming the phase. Record the queue-to-run age of posted main-thread tasks in DrainMainThreadTasks, so a busy main thread stays visible at titleasync=1.
+ * F2 MINOR SURVIVES [(False, 'INFO'), (False, 'INFO')] | titleasync=1 removes only the title wait. Every other blocking call inside the VideoOutConfig::mutex hold stays, so the stall class (GuestGpu stranded in ReserveFlipRequest before the flip flush) is still open.
+     loc: src/graphics/presentation/videoOut.cpp:1148 (lock) .. :2578 (unlock); src/graphics/presentation/window/swapchain.cpp:838-909
+     fix: Record in ROADMAP that titleasync=1 closes only the title path. The analysis's own remaining fixes still apply: (b) do not hold cfg->mutex across m_presenter.Present, Gates::Poll and logging; (c) flush the recording buffer before PrepareVideoOutFlip/PrepareFlip when priority ops are pending (graphicsRun.cpp flip handlers).
+ * F3 MINOR SURVIVES [(False, 'MINOR'), (False, 'MINOR')] | frame= in MainStallTest/MainThreadWait counts presents, not FrameTrace n. The seal has to find the stall row by log order and must admit a run only if the trigger fired.
+     loc: src/graphics/presentation/window/window.cpp:1081,1095,1126-1129; swapchain.cpp:903; videoOut.cpp:858-873 (blank presents before video-out open), :1169-1175 (held flips skip Present)
+     fix: In the seal: take the stall row to be the first 'FrameTrace: n=' line after 'MainStallTest: queued'. The present thread writes both, in order, in the same FlipQueue::Flip. Require the 'MainStallTest: frame=3000 ms=3000' and 'queued' lines in BOTH runs. Use a hold of at least 120 s after stable. Log the knob value once, for example as a 'TitleAsync: mode N' line on the first UpdateTitle.
+ * F4 MINOR SURVIVES [(False, 'INFO'), (False, 'MINOR')] | One injected stall lands in two different FrameTrace rows: pres_title_ns in row n, flip_rsv_wait_ns (and the priority semwait) in row n+1.
+     loc: src/graphics/presentation/window/window.cpp:1155-1157; src/graphics/presentation/videoOut.cpp:526-531, :1247-1251 (snapshot), :2578 (unlock)
+     fix: In the preregistration, score pres_title_ns and dt on the stall row n, and flip_rsv_wait_ns and GpuWaitSlow/semwait on row n+1. Or sum over the pair.
+ - INFO F5 | flip_rsv_wait_* is not a clean present-hold or title indicator. MainThreadWait cannot fire at titleasync=1.
+ - INFO F6 | In the titleasync=0 prediction, GpuWaitSlow is conditional, and M has two hard limits.
+ - INFO F7 | After an injected stall, PresentThread fires a burst of about M/16.7 vblanks with no sleep. This already happens after any stall, but it will appear in the control rows.

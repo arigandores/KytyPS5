@@ -1,0 +1,259 @@
+commit 37e0de19997fcfb1c0383da3174c46ca2df56620
+Author: arigandores <arigandores@users.noreply.github.com>
+Date:   Thu Sep 24 09:05:30 2026 +0200
+
+    Session 113: knob bdanarrow - BDA region stamps invalidated per registered buffer instead of globally (1), or globally with a check of what 1 would skip (2); registrations always mark their own regions
+    
+    ROADMAP session 113 items 1-2 recorded before this code. Counters bda_ginv_reg, bda_ginv_map, bda_rinv, bda_nskip,
+    bda_nwould, bda_nmiss, bda_nxthr, bgc_evict. Build 94362eae.
+    
+    Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>
+    Claude-Session: https://claude.ai/code/session_017SCSPuNeFJhT3cLQjMgMCE
+
+diff --git a/src/common/frameStats.h b/src/common/frameStats.h
+index 37d2da2..67c42b5 100644
+--- a/src/common/frameStats.h
++++ b/src/common/frameStats.h
+@@ -1842,6 +1842,19 @@ enum class Counter : uint32_t {
+ 	// proof of the arm), and walker guard waits (GuardSlot) that spun out and yielded to the OS.  Raw counts.
+ 	DaQueueNoGuard,          // da_q_noguard
+ 	DaGuardYield,            // da_guard_yield
++	// Session 113, knob "bdanarrow": global BDA stamp invalidations by cause (a buffer registration / the guest map),
++	// regions marked stale by a registration, registration moves whose global invalidation knob 1 skipped, and at
++	// knob 2 the regions knob 1 would have skipped and those among them whose dirty ranges overlap a registered buffer
++	// (an upper bound on a missed synchronization - must read 0); registrations marked on a thread other than the one
++	// that scans; buffers the buffer GC evicted.  Raw counts.
++	BdaGlobalInvReg,         // bda_ginv_reg
++	BdaGlobalInvMap,         // bda_ginv_map
++	BdaRegionInv,            // bda_rinv
++	BdaNarrowSkip,           // bda_nskip
++	BdaNarrowWould,          // bda_nwould
++	BdaNarrowMiss,           // bda_nmiss
++	BdaNarrowXthread,        // bda_nxthr
++	BufGcEvict,              // bgc_evict
+ 	Count
+ };
+ 
+diff --git a/src/common/gates.cpp b/src/common/gates.cpp
+index 8300dcf..5a4a44b 100644
+--- a/src/common/gates.cpp
++++ b/src/common/gates.cpp
+@@ -392,8 +392,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
+     {"KYTY_DRAW_AHEAD_SLOT", "daslot", 1, 2},
+     // Session 112: at daslot = 0, 0 = the M1 queue skips the slot guards and reads hints directly (the
+     // session-110 walker hold); 1 = guards always. Read once per queue call, so it CAN be a schedule arm.
+-    // LAST row, matching the LAST enum entry before Knob::Count.
+     {"KYTY_DRAW_AHEAD_GUARD", "daguard", 1, 1},
++    // Session 113: BDA region stamps invalidated per registered buffer (1) instead of globally (0); 2 = 0 + a
++    // check of what 1 would skip. Read once per PrepareBda call, so it CAN be a schedule arm.
++    // LAST row, matching the LAST enum entry before Knob::Count.
++    {"KYTY_BDA_NARROW_STAMPS", "bdanarrow", 0, 2},
+ }};
+ 
+ using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;
+diff --git a/src/common/gates.h b/src/common/gates.h
+index 54d7e02..5d16d8f 100644
+--- a/src/common/gates.h
++++ b/src/common/gates.h
+@@ -575,8 +575,14 @@ enum class Knob : uint32_t {
+ 	// and reads the hints directly (0) - the session-110 walker hold, the arm the session-111 audit asked for; 1 =
+ 	// the guards always (session 111).  No effect at daslot != 0.  Read once per queue call (with daslot), so it
+ 	// CAN be a schedule arm; safe to flip at any moment (every other guard taker is serialised by one of the locks).
+-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+ 	DrawAheadGuard,   // KYTY_DRAW_AHEAD_GUARD,   file name "daguard" (0 no guards at daslot 0, 1 guards)
++	// Session 113: the scope of the BDA region-stamp invalidation in PrepareBda.  0 = a buffer registration moves the
++	// global stamp generation (every tracking region is walked again - the OLD regime's ~1 016 extra region walks a
++	// frame while the buffer GC runs); 1 = a registration marks only its own regions (always done, whatever the knob),
++	// the global generation moves only with the guest map; 2 = 0 plus a check of what 1 would skip (bda_nwould,
++	// bda_nmiss).  Read once per PrepareBda call, so it CAN be a schedule arm; a switch is safe at any moment.
++	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
++	BdaNarrowStamps,  // KYTY_BDA_NARROW_STAMPS,  file name "bdanarrow" (0 global, 1 per buffer, 2 global + check)
+ 	Count,
+ };
+ 
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+index 849d9d2..7c5c051 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.cpp
+@@ -146,6 +146,10 @@ void BufferCache::ChangeRegister(BufferId id) {
+ 		}
+ 		WriteDataBuffer(m_bda_pagetable_buffer, pages.first * sizeof(vk::DeviceAddress),
+ 		                addresses.data(), addresses.size() * sizeof(vk::DeviceAddress));
++		// Session 113, knob "bdanarrow": whatever the knob, the new buffer's own regions are walked again by the next
++		// BDA scan - the only regions a registration can make relevant (a region whose write stamp did not move got
++		// no new dirty page, and the dirty pages an earlier scan left alone belonged to no registered buffer).
++		MarkBdaRegions(buffer.CpuAddress(), buffer.Size());
+ 	} else {
+ 		const auto found = m_buffers.find(buffer.CpuAddress());
+ 		EXIT_IF(found == m_buffers.end() || found->second != id);
+@@ -1985,6 +1989,7 @@ void BufferCache::RunGarbageCollector() {
+ 			dirty_buffers.push_back(id);
+ 		} else {
+ 			m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
++			Common::FrameStats::Add(Common::FrameStats::Counter::BufGcEvict, 1);
+ 			DeleteBuffer(id);
+ 		}
+ 		return ++retire_count == limit;
+@@ -2017,6 +2022,7 @@ void BufferCache::RunGarbageCollector() {
+ 			m_memory_tracker.UnmarkRegionAsGpuModified(buffer.CpuAddress(), buffer.Size());
+ 		}
+ 		m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
++		Common::FrameStats::Add(Common::FrameStats::Counter::BufGcEvict, 1);
+ 		Unregister(id);
+ 		m_slot_buffers.erase(id);
+ 	}
+@@ -2773,6 +2779,38 @@ void BufferCache::SynchronizeBuffersOfDirtyRanges() {
+ 	Common::FrameStats::Add(Common::FrameStats::Counter::PassPasses, 1);
+ }
+ 
++void BufferCache::MarkBdaRegions(uint64_t vaddr, uint64_t size) {
++	if (m_bda_region_stamps.empty() || size == 0) {
++		return; // no region scanned yet: every one is walked by the first scan anyway
++	}
++	if (m_bda_scan_thread != std::thread::id {} && std::this_thread::get_id() != m_bda_scan_thread) {
++		Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowXthread, 1);
++	}
++	const auto first = vaddr / TRACKER_REGION_SIZE;
++	const auto last  = std::min<uint64_t>((vaddr + size - 1) / TRACKER_REGION_SIZE, m_bda_region_stamps.size() - 1);
++	for (auto index = first; index <= last; index++) {
++		m_bda_region_stamps[index].generation = 0; // never the current generation: the next pass walks it
++		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionInv, 1);
++	}
++}
++
++bool BufferCache::DirtyRangesTouchBuffers() {
++	for (const auto& range: m_bda_dirty_ranges) {
++		auto it = m_buffers.upper_bound(range.address);
++		if (it != m_buffers.begin()) {
++			--it;
++		}
++		for (; it != m_buffers.end() && it->first < range.End(); ++it) {
++			const auto& buffer = m_slot_buffers[it->second];
++			if (std::max(buffer.CpuAddress(), range.address) <
++			    std::min(buffer.CpuAddress() + buffer.Size(), range.End())) {
++				return true;
++			}
++		}
++	}
++	return false;
++}
++
+ // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
+ // scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
+ // write racing with the scan is seen by the next preparation instead of being lost.
+@@ -2789,6 +2827,7 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
+ 	if (m_bda_region_stamps.empty()) {
+ 		m_bda_region_stamps.resize(MemoryTracker::RegionCount());
+ 	}
++	m_bda_scan_thread = std::this_thread::get_id();
+ 	// Gate "bdabits" (session 82): consult the write map before the stamp. A clear bit means no
+ 	// announcement since this scan last cleared it, which is exactly the skip condition below, so
+ 	// the two scattered loads of RegionWriteStamp are not paid. The map is a conservative superset
+@@ -2839,11 +2878,21 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
+ 			cursor += bytes;
+ 			continue;
+ 		}
++		// Session 113, knob "bdanarrow" 2: knob 1 would have skipped this region - its write stamp did not move, no
++		// registration marked it, and it was scanned since the last guest-map invalidation.
++		const bool narrow_would_skip = m_bda_narrow_check && seen.generation != 0 &&
++		                               seen.generation >= m_bda_map_generation && seen.stamp == stamp;
+ 		seen = {stamp, m_bda_stamp_generation};
+ 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
+ 		const uint64_t bda_scan_t0 =
+ 		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+ 		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
++		if (narrow_would_skip) {
++			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowWould, 1);
++			if (DirtyRangesTouchBuffers()) {
++				Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
++			}
++		}
+ 		const uint64_t bda_scan_t1 = bda_scan_t0 != 0 ? Common::FrameStats::NowNs() : 0;
+ 		SynchronizeBuffersOfDirtyRanges();
+ 		if (bda_scan_t0 != 0) {
+diff --git a/src/graphics/host_gpu/renderer/cache/bufferCache.h b/src/graphics/host_gpu/renderer/cache/bufferCache.h
+index 276bd5b..b78b232 100644
+--- a/src/graphics/host_gpu/renderer/cache/bufferCache.h
++++ b/src/graphics/host_gpu/renderer/cache/bufferCache.h
+@@ -18,6 +18,7 @@
+ #include <map>
+ #include <mutex>
+ #include <span>
++#include <thread>
+ #include <unordered_map>
+ #include <utility>
+ #include <vector>
+@@ -141,6 +142,10 @@ public:
+ 	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
+ 	// dropped and when the guest map changes, because those make unscanned bytes relevant again.
+ 	void               InvalidateBdaRegionStamps() noexcept { m_bda_stamp_generation++; }
++	// Session 113, knob "bdanarrow": PrepareBda records a guest-map invalidation (the generation after it) - regions
++	// scanned since then are what knob 1 keeps - and whether this pass checks what knob 1 would skip (knob 2).
++	void               NoteBdaMapInvalidation() noexcept { m_bda_map_generation = m_bda_stamp_generation; }
++	void               SetBdaNarrowCheck(bool check) noexcept { m_bda_narrow_check = check; }
+ 	// Gate "bdabits": the generation the write map was last consulted under. While it lags
+ 	// m_bda_stamp_generation the map is bypassed, because a generation bump invalidates stamps
+ 	// without any region having announced a write.
+@@ -283,6 +288,15 @@ private:
+ 	// One entry per tracking region, filled lazily on the first incremental scan.
+ 	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
+ 	uint64_t                                           m_bda_stamp_generation = 1;
++	// Session 113, knob "bdanarrow": see NoteBdaMapInvalidation / MarkBdaRegions; the scanning thread, for the
++	// same-thread check of the marks.
++	uint64_t                                           m_bda_map_generation = 1;
++	bool                                               m_bda_narrow_check   = false;
++	std::thread::id                                    m_bda_scan_thread {};
++	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
++	void MarkBdaRegions(uint64_t vaddr, uint64_t size);
++	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer.
++	bool DirtyRangesTouchBuffers();
+ 	void SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end);
+ 	void SynchronizeBuffersOfDirtyRanges();
+ 	void SynchronizeBuffersOfDirtyRangesBatched(PageManager::PassScope& pass);
+diff --git a/src/graphics/host_gpu/renderer/renderContext.cpp b/src/graphics/host_gpu/renderer/renderContext.cpp
+index 4212018..c0a2387 100644
+--- a/src/graphics/host_gpu/renderer/renderContext.cpp
++++ b/src/graphics/host_gpu/renderer/renderContext.cpp
+@@ -340,8 +340,22 @@ void RenderContext::PrepareBda() {
+ 	// A newly registered buffer may cover pages whose dirty bits an earlier scan left alone, and
+ 	// a changed guest map moves bytes between regions: in both cases the per-region witnesses of
+ 	// the incremental scan no longer say anything about the buffers.
+-	if (registration_epoch != m_bda_registration_epoch || m_mapping_epoch != m_bda_mapping_epoch) {
++	// Session 113, knob "bdanarrow" (read once here): a registration always marks its own regions stale
++	// (BufferCache::MarkBdaRegions), so at 1 only the guest map bumps the global generation; 0 and 2 bump it for a
++	// registration too, and 2 also counts what 1 would have skipped (bda_nwould / bda_nmiss).
++	const auto narrow = Common::Gates::Value(Common::Gates::Knob::BdaNarrowStamps);
++	m_buffer_cache.SetBdaNarrowCheck(narrow == 2);
++	if (m_mapping_epoch != m_bda_mapping_epoch) {
+ 		m_buffer_cache.InvalidateBdaRegionStamps();
++		m_buffer_cache.NoteBdaMapInvalidation();
++		Common::FrameStats::Add(Common::FrameStats::Counter::BdaGlobalInvMap, 1);
++	} else if (registration_epoch != m_bda_registration_epoch) {
++		if (narrow == 1) {
++			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowSkip, 1);
++		} else {
++			m_buffer_cache.InvalidateBdaRegionStamps();
++			Common::FrameStats::Add(Common::FrameStats::Counter::BdaGlobalInvReg, 1);
++		}
+ 	}
+ 	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): FACTS s84 5 read bda_scan_us =
+ 	// 1 875.1 + 16.53 x misses, i.e. ~1.88 ms a frame is paid by whichever call scans FIRST.
+diff --git a/src/graphics/presentation/videoOut.cpp b/src/graphics/presentation/videoOut.cpp
+index a4fc557..957a2cd 100644
+--- a/src/graphics/presentation/videoOut.cpp
++++ b/src/graphics/presentation/videoOut.cpp
+@@ -2500,6 +2500,14 @@ bool FlipQueue::Flip(uint32_t micros) {
+ 				    {"da_chk_bad", FS::Counter::DaCheckBad, false},
+ 				    {"da_q_noguard", FS::Counter::DaQueueNoGuard, false},
+ 				    {"da_guard_yield", FS::Counter::DaGuardYield, false},
++				    {"bda_ginv_reg", FS::Counter::BdaGlobalInvReg, false},
++				    {"bda_ginv_map", FS::Counter::BdaGlobalInvMap, false},
++				    {"bda_rinv", FS::Counter::BdaRegionInv, false},
++				    {"bda_nskip", FS::Counter::BdaNarrowSkip, false},
++				    {"bda_nwould", FS::Counter::BdaNarrowWould, false},
++				    {"bda_nmiss", FS::Counter::BdaNarrowMiss, false},
++				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
++				    {"bgc_evict", FS::Counter::BufGcEvict, false},
+ 				};
+ 				std::string text;
+ 				for (const auto& counter: named) {

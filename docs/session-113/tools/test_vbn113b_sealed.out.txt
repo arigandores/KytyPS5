@@ -1,0 +1,84 @@
+CONSTANTS                  match OK
+GO                         want GO            got GO            bad 0 errors [] OK
+GO_tag_b                   want GO            got GO            bad 0 errors [] OK
+GO_stdout_clean            want GO            got GO            bad 0 errors [] OK
+GO_start_old_excluded      want GO            got GO            bad 0 errors [] OK
+GO_races_only              want GO            got GO            bad 0 errors [] OK
+NO_GO_miss                 want NO_GO         got NO_GO         bad 1 errors [] OK
+NO_GO_miss_and_xthr        want NO_GO         got NO_GO         bad 2 errors [] OK
+INVESTIGATE_xthr           want INVESTIGATE   got INVESTIGATE   bad 1 errors [] OK
+NOT_EVALUABLE_new          want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_edge_ok             want GO            got GO            bad 0 errors [] OK
+REGIME_edge_new            want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_start_only          want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_start_long          want GO            got GO            bad 0 errors [] OK
+TAG                        want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['TAG'] OK
+IDENTITY                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['IDENTITY'] OK
+INPUTS                     want NOT_ADMITTED  got NOT_ADMITTED  bad None errors ['INPUTS'] OK
+BINARY                     want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['BINARY'] OK
+PREREG                     want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PREREG'] OK
+ENV_PIN                    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_PIN'] OK
+ENV_SCHED                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_CKPT                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_REC                    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_PRECACHE               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+GATES_missing              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_mode1                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_twice                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_first                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+ATT_outcome                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_exit                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_fail         want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_ok           want GO            got GO            bad 0 errors [] OK
+ATT_two                    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_extra_failed           want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+PRE_RUN_edge_ok            want GO            got GO            bad 0 errors [] OK
+PRE_RUN_edge_fail          want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PRE_RUN'] OK
+PRE_RUN_missing            want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PRE_RUN'] OK
+PIN_none                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+PIN_two                    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+PIN_mode2                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+MARK_hang                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_slow                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_lost                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_error                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_fatal                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_skipped               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_stdout                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+ROWS_edge_fail             want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ROWS'] OK
+ROWS_edge_ok               want GO            got GO            bad 0 errors [] OK
+ROWS_field                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ROWS'] OK
+STREAMS_gap                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['STREAMS'] OK
+STREAMS_main_extra_ok      want GO            got GO            bad 0 errors [] OK
+STREAMS_main_extra_fail    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['STREAMS'] OK
+ARMED_ginv                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+ARMED_would_zero           want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+ARMED_nskip                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+DEFAULTS_slot              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+DEFAULTS_free              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+DEFAULTS_bad               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+ARMED_would_edges          exact [] under ['ARMED'] OK
+PRED_base                  {'B1': (0, True), 'B2': (1068, True), 'B3': (1, True), 'B4': (1100, True), 'B5': (1, True), 'B6': (0, True)} OK
+PRED_edge_0                B2 want True got True OK
+PRED_edge_1                B2 want False got False OK
+PRED_edge_2                B2 want True got True OK
+PRED_edge_3                B2 want False got False OK
+PRED_edge_4                B4 want True got True OK
+PRED_edge_5                B4 want False got False OK
+PRED_edge_6                B4 want True got True OK
+PRED_edge_7                B4 want False got False OK
+PRED_edge_8                B3 want True got True OK
+PRED_edge_9                B3 want False got False OK
+PRED_edge_10               B3 want False got False OK
+PRED_edge_11               B5 want True got True OK
+PRED_edge_12               B5 want False got False OK
+PRED_edge_13               B5 want False got False OK
+PRED_edge_14               B6 want True got True OK
+PRED_edge_15               B6 want False got False OK
+PRED_edge_16               B1 want False got False OK
+PRED_edge_17               B1 want False got False OK
+PRED_median_scene          B5 value 1 OK
+PRED_median_scene_b3       B3 (1, True) OK
+DRAFT                      errors ['DRAFT'] OK
+SEAL                       errors ['SEAL'] OK
+ALL OK

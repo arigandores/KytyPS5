@@ -16,6 +16,32 @@ of the same order as every shipped gain of the last ten sessions. In session 94 
 in OLD (`a_mut_us`), and `buf_new` was 1.3–2 a frame in OLD against 0.01 in NEW. 60 FPS stays the direction without
 a route with a live estimate.
 
+## RESUME POINT (session 113 paused 2026-09-24 before its first game run)
+
+**Done without the game** (details: `C:/kyty/s113/FACTS.md` = `docs/local-session-113.md`; ROADMAP §0.1 "СЕССИЯ 113"
+items 1–6): port `s113`; the BDA-regime mechanism (a buffer registration invalidated every region stamp; the buffer GC
+runs above a device-memory threshold); the census of 579 archived runs (within a build OLD is not slower: +17 ± 84 µs);
+knob `bdanarrow` (`37e0de1`) and the race-separating check (`6eb7d14`), build **`7d9fa028…`** (pinned copy
+`C:/kyty/s113/kyty_emulator_7d9fa028.exe`, NOT installed; the game folder still runs `b47b58a9…`); an offline adversarial
+audit (31 agents, `C:/kyty/s113/audit113pre/AUDIT113PRE.md`); **seal `pred/01b_vbn113b.md` (`120d0ad9`)** replacing the
+never-run `pred/01`; scorer `vbn113b.py` (83 fixture checks; mutants on the sealed copy → `mut_vbn113b.out.txt`); chain
+`go113b.sh`.
+
+**Next, in this order:**
+1. Check nothing else runs (no agents, no `tail`, GPU idle), then `bash /c/kyty/s113/go113b.sh` (in the background; it
+   holds `C:/kyty/SEALED_RUN.lock`, checks and installs the pinned build, runs `vbn113` 300 s pinned with `bdanarrow=2`,
+   scores it with `vbn113b.py`; on NOT_EVALUABLE (NEW regime) it repeats once as `vbn113b`). No tool calls while it runs.
+2. Read `runs113/vbn113*_score.stdout.txt`; record the verdict in ROADMAP (item 7) before anything else. GO → step 3;
+   NO_GO → mode 1 closed as built (the `BdaNarrowMiss:` lines name the region/buffer), write it up; INVESTIGATE → find the
+   off-thread registrar; NOT_EVALUABLE twice → record and plan anew.
+3. Seal 02 — the ship ABBA `bdanarrow=0|1` (600 s, pinned, main estimator frames 10–89, bar Δ`dt` ≤ −100 µs and
+   2·SE < 0, admitted only in the OLD regime, one repeat on NEW) with scorer `shn113.py` (derived from `net112.py` by
+   `make_shn113.py` in `C:/kyty/s106_stage/`; **it was built for build `94362eae` — re-pin `BINARY_SHA` to `7d9fa028…` and
+   add `bda_nrace` to its schema by an addendum to the generator, re-run its fixtures and mutants**). Prediction P4
+   (Δ ≤ −100 µs) carries LOW confidence (the census). Then the video with a check script whose fixtures use the real
+   report format, committed and hashed before its run.
+4. Audit, FACTS, ROADMAP close, `next-session-114.md`, contexts, HANDOFF, commit (no push).
+
 ## 1. The port, first
 
 `s113_port.py` fresh in `C:/kyty/s112/` (SRC `C:/kyty/s112`, DST `C:/kyty/s113`), modelled on

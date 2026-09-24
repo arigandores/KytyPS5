@@ -3392,9 +3392,11 @@ struct PipelineCache::ProgramCache {
 		const bool same_specialization = ok && fresh_specialization == specialization;
 		if (same_snapshot && same_specialization) {
 			memo_checks_ok++;
+			Common::FrameStats::Add(Common::FrameStats::Counter::DaCheckOk, 1); // session 111
 			return;
 		}
 		memo_checks_bad++;
+		Common::FrameStats::Add(Common::FrameStats::Counter::DaCheckBad, 1); // session 111
 		if (memo_checks_bad <= 40) {
 			LOGF("DrawAheadVerify: MISMATCH hash=0x%016" PRIx64 " stage=%u materialized=%d "
 			     "snapshot=%d specialization=%d (ok=%" PRIu64 " bad=%" PRIu64 ")\n",

@@ -1834,6 +1834,10 @@ enum class Counter : uint32_t {
 	// Session 111: QueueDrawAhead calls made without PipelineCache::m_mutex (knob "daslot" != 0) - the arming
 	// proof of the knob's arm 1.  Raw count.
 	DaQueueFree,             // da_q_free
+	// Session 111: gate "smemocheck" checks of M1 takes (AheadCheck) that agreed / disagreed - the arming proof
+	// of the check in the daslot verify run.  Raw counts.
+	DaCheckOk,               // da_chk_ok
+	DaCheckBad,              // da_chk_bad
 	Count
 };
 

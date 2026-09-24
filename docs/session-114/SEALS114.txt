@@ -1,0 +1,14 @@
+# SEALS114 - session 114 seals and post-seal tallies
+# seal 01 ctl114 (ROADMAP 114 items 2-5, 2026-09-24T23:35) - NOT RUN until the user allows (item 3)
+ac16a32a31fc2ea4876ae941b205bcc8179cecb845205d2a5a785a40f7b5d76b *pred/01_ctl114.md
+d1dfc01adf8d12603f44ab77432c5322eb91552912308df6aff29f1dfb607c2e *ctl114.py
+330ce66d358ec0be7116143d660a012bf42c80fb6aa2c0190ac549a2bb0be2b1 *test_ctl114.py
+241cb1b3a9aa2805808c2557bcb3ad3bbfffa24b54eba24f85f603856faee52e *mut_ctl114.py
+b47a723cb60ce8ad268a53e851065a6c0d973afa2cd564b9b6c745e5e8733ff1 *go114a.sh
+2a5b1d6c51616c02c49d486da5859415a05914397d12f325306e96dddaad33c5 *enter_scene.py
+77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf *gates_base.txt
+ad24d7b2fbf07ac67714673b3b5b16f8f7768cfdbcd0b84ee8c4fa65442fc9ae *gates_title0.txt
+34e12bdc970c63ca00b58b8882936e4beba9e0565d9ec0230317ee988b2e5e73 *gates_title1.txt
+916f64898a5a31c697ad0d823f0795850acc160cf56271b566e8ae330c7c3b2c *kyty_emulator_916f6489.exe
+post-seal (mutlib v2 877eb53a frozen copy, --control --no-memo): 51e66df32282e72ed008534bf98c6540769ef1b170f704689f85d7e124e53d08 *mut_ctl114.out.txt

@@ -2500,6 +2500,14 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"da_chk_bad", FS::Counter::DaCheckBad, false},
 				    {"da_q_noguard", FS::Counter::DaQueueNoGuard, false},
 				    {"da_guard_yield", FS::Counter::DaGuardYield, false},
+				    {"bda_ginv_reg", FS::Counter::BdaGlobalInvReg, false},
+				    {"bda_ginv_map", FS::Counter::BdaGlobalInvMap, false},
+				    {"bda_rinv", FS::Counter::BdaRegionInv, false},
+				    {"bda_nskip", FS::Counter::BdaNarrowSkip, false},
+				    {"bda_nwould", FS::Counter::BdaNarrowWould, false},
+				    {"bda_nmiss", FS::Counter::BdaNarrowMiss, false},
+				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
+				    {"bgc_evict", FS::Counter::BufGcEvict, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

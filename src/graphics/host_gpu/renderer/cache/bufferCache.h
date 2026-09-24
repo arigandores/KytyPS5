@@ -18,6 +18,7 @@
 #include <map>
 #include <mutex>
 #include <span>
+#include <thread>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -141,6 +142,10 @@ public:
 	// Forgets the per-region witnesses of the BDA scan: called when a buffer is registered or
 	// dropped and when the guest map changes, because those make unscanned bytes relevant again.
 	void               InvalidateBdaRegionStamps() noexcept { m_bda_stamp_generation++; }
+	// Session 113, knob "bdanarrow": PrepareBda records a guest-map invalidation (the generation after it) - regions
+	// scanned since then are what knob 1 keeps - and whether this pass checks what knob 1 would skip (knob 2).
+	void               NoteBdaMapInvalidation() noexcept { m_bda_map_generation = m_bda_stamp_generation; }
+	void               SetBdaNarrowCheck(bool check) noexcept { m_bda_narrow_check = check; }
 	// Gate "bdabits": the generation the write map was last consulted under. While it lags
 	// m_bda_stamp_generation the map is bypassed, because a generation bump invalidates stamps
 	// without any region having announced a write.
@@ -283,6 +288,15 @@ private:
 	// One entry per tracking region, filled lazily on the first incremental scan.
 	std::vector<BdaRegionStamp>                        m_bda_region_stamps;
 	uint64_t                                           m_bda_stamp_generation = 1;
+	// Session 113, knob "bdanarrow": see NoteBdaMapInvalidation / MarkBdaRegions; the scanning thread, for the
+	// same-thread check of the marks.
+	uint64_t                                           m_bda_map_generation = 1;
+	bool                                               m_bda_narrow_check   = false;
+	std::thread::id                                    m_bda_scan_thread {};
+	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
+	void MarkBdaRegions(uint64_t vaddr, uint64_t size);
+	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer.
+	bool DirtyRangesTouchBuffers();
 	void SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end);
 	void SynchronizeBuffersOfDirtyRanges();
 	void SynchronizeBuffersOfDirtyRangesBatched(PageManager::PassScope& pass);

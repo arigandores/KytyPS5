@@ -340,8 +340,22 @@ void RenderContext::PrepareBda() {
 	// A newly registered buffer may cover pages whose dirty bits an earlier scan left alone, and
 	// a changed guest map moves bytes between regions: in both cases the per-region witnesses of
 	// the incremental scan no longer say anything about the buffers.
-	if (registration_epoch != m_bda_registration_epoch || m_mapping_epoch != m_bda_mapping_epoch) {
+	// Session 113, knob "bdanarrow" (read once here): a registration always marks its own regions stale
+	// (BufferCache::MarkBdaRegions), so at 1 only the guest map bumps the global generation; 0 and 2 bump it for a
+	// registration too, and 2 also counts what 1 would have skipped (bda_nwould / bda_nmiss).
+	const auto narrow = Common::Gates::Value(Common::Gates::Knob::BdaNarrowStamps);
+	m_buffer_cache.SetBdaNarrowCheck(narrow == 2);
+	if (m_mapping_epoch != m_bda_mapping_epoch) {
 		m_buffer_cache.InvalidateBdaRegionStamps();
+		m_buffer_cache.NoteBdaMapInvalidation();
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaGlobalInvMap, 1);
+	} else if (registration_epoch != m_bda_registration_epoch) {
+		if (narrow == 1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowSkip, 1);
+		} else {
+			m_buffer_cache.InvalidateBdaRegionStamps();
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaGlobalInvReg, 1);
+		}
 	}
 	// Session 85, gate "bdasplit" (MEASUREMENT ONLY): FACTS s84 5 read bda_scan_us =
 	// 1 875.1 + 16.53 x misses, i.e. ~1.88 ms a frame is paid by whichever call scans FIRST.

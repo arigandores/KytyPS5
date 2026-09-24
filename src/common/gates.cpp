@@ -392,8 +392,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_DRAW_AHEAD_SLOT", "daslot", 1, 2},
     // Session 112: at daslot = 0, 0 = the M1 queue skips the slot guards and reads hints directly (the
     // session-110 walker hold); 1 = guards always. Read once per queue call, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_DRAW_AHEAD_GUARD", "daguard", 1, 1},
+    // Session 113: BDA region stamps invalidated per registered buffer (1) instead of globally (0); 2 = 0 + a
+    // check of what 1 would skip. Read once per PrepareBda call, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_BDA_NARROW_STAMPS", "bdanarrow", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

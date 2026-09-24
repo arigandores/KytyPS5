@@ -1842,6 +1842,19 @@ enum class Counter : uint32_t {
 	// proof of the arm), and walker guard waits (GuardSlot) that spun out and yielded to the OS.  Raw counts.
 	DaQueueNoGuard,          // da_q_noguard
 	DaGuardYield,            // da_guard_yield
+	// Session 113, knob "bdanarrow": global BDA stamp invalidations by cause (a buffer registration / the guest map),
+	// regions marked stale by a registration, registration moves whose global invalidation knob 1 skipped, and at
+	// knob 2 the regions knob 1 would have skipped and those among them whose dirty ranges overlap a registered buffer
+	// (an upper bound on a missed synchronization - must read 0); registrations marked on a thread other than the one
+	// that scans; buffers the buffer GC evicted.  Raw counts.
+	BdaGlobalInvReg,         // bda_ginv_reg
+	BdaGlobalInvMap,         // bda_ginv_map
+	BdaRegionInv,            // bda_rinv
+	BdaNarrowSkip,           // bda_nskip
+	BdaNarrowWould,          // bda_nwould
+	BdaNarrowMiss,           // bda_nmiss
+	BdaNarrowXthread,        // bda_nxthr
+	BufGcEvict,              // bgc_evict
 	Count
 };
 

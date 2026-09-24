@@ -575,8 +575,14 @@ enum class Knob : uint32_t {
 	// and reads the hints directly (0) - the session-110 walker hold, the arm the session-111 audit asked for; 1 =
 	// the guards always (session 111).  No effect at daslot != 0.  Read once per queue call (with daslot), so it
 	// CAN be a schedule arm; safe to flip at any moment (every other guard taker is serialised by one of the locks).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	DrawAheadGuard,   // KYTY_DRAW_AHEAD_GUARD,   file name "daguard" (0 no guards at daslot 0, 1 guards)
+	// Session 113: the scope of the BDA region-stamp invalidation in PrepareBda.  0 = a buffer registration moves the
+	// global stamp generation (every tracking region is walked again - the OLD regime's ~1 016 extra region walks a
+	// frame while the buffer GC runs); 1 = a registration marks only its own regions (always done, whatever the knob),
+	// the global generation moves only with the guest map; 2 = 0 plus a check of what 1 would skip (bda_nwould,
+	// bda_nmiss).  Read once per PrepareBda call, so it CAN be a schedule arm; a switch is safe at any moment.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	BdaNarrowStamps,  // KYTY_BDA_NARROW_STAMPS,  file name "bdanarrow" (0 global, 1 per buffer, 2 global + check)
 	Count,
 };
 

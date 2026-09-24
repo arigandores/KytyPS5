@@ -146,6 +146,10 @@ void BufferCache::ChangeRegister(BufferId id) {
 		}
 		WriteDataBuffer(m_bda_pagetable_buffer, pages.first * sizeof(vk::DeviceAddress),
 		                addresses.data(), addresses.size() * sizeof(vk::DeviceAddress));
+		// Session 113, knob "bdanarrow": whatever the knob, the new buffer's own regions are walked again by the next
+		// BDA scan - the only regions a registration can make relevant (a region whose write stamp did not move got
+		// no new dirty page, and the dirty pages an earlier scan left alone belonged to no registered buffer).
+		MarkBdaRegions(buffer.CpuAddress(), buffer.Size());
 	} else {
 		const auto found = m_buffers.find(buffer.CpuAddress());
 		EXIT_IF(found == m_buffers.end() || found->second != id);
@@ -1985,6 +1989,7 @@ void BufferCache::RunGarbageCollector() {
 			dirty_buffers.push_back(id);
 		} else {
 			m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
+			Common::FrameStats::Add(Common::FrameStats::Counter::BufGcEvict, 1);
 			DeleteBuffer(id);
 		}
 		return ++retire_count == limit;
@@ -2017,6 +2022,7 @@ void BufferCache::RunGarbageCollector() {
 			m_memory_tracker.UnmarkRegionAsGpuModified(buffer.CpuAddress(), buffer.Size());
 		}
 		m_memory_tracker.UntrackMemory(buffer.CpuAddress(), buffer.Size());
+		Common::FrameStats::Add(Common::FrameStats::Counter::BufGcEvict, 1);
 		Unregister(id);
 		m_slot_buffers.erase(id);
 	}
@@ -2773,6 +2779,38 @@ void BufferCache::SynchronizeBuffersOfDirtyRanges() {
 	Common::FrameStats::Add(Common::FrameStats::Counter::PassPasses, 1);
 }
 
+void BufferCache::MarkBdaRegions(uint64_t vaddr, uint64_t size) {
+	if (m_bda_region_stamps.empty() || size == 0) {
+		return; // no region scanned yet: every one is walked by the first scan anyway
+	}
+	if (m_bda_scan_thread != std::thread::id {} && std::this_thread::get_id() != m_bda_scan_thread) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowXthread, 1);
+	}
+	const auto first = vaddr / TRACKER_REGION_SIZE;
+	const auto last  = std::min<uint64_t>((vaddr + size - 1) / TRACKER_REGION_SIZE, m_bda_region_stamps.size() - 1);
+	for (auto index = first; index <= last; index++) {
+		m_bda_region_stamps[index].generation = 0; // never the current generation: the next pass walks it
+		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionInv, 1);
+	}
+}
+
+bool BufferCache::DirtyRangesTouchBuffers() {
+	for (const auto& range: m_bda_dirty_ranges) {
+		auto it = m_buffers.upper_bound(range.address);
+		if (it != m_buffers.begin()) {
+			--it;
+		}
+		for (; it != m_buffers.end() && it->first < range.End(); ++it) {
+			const auto& buffer = m_slot_buffers[it->second];
+			if (std::max(buffer.CpuAddress(), range.address) <
+			    std::min(buffer.CpuAddress() + buffer.Size(), range.End())) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 // Incremental variant (gate "bdastamp"): only regions that announced a CPU write since the last
 // scan are locked and walked. The witness is read and stored BEFORE the region is scanned, so a
 // write racing with the scan is seen by the next preparation instead of being lost.
@@ -2789,6 +2827,7 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 	if (m_bda_region_stamps.empty()) {
 		m_bda_region_stamps.resize(MemoryTracker::RegionCount());
 	}
+	m_bda_scan_thread = std::this_thread::get_id();
 	// Gate "bdabits" (session 82): consult the write map before the stamp. A clear bit means no
 	// announcement since this scan last cleared it, which is exactly the skip condition below, so
 	// the two scattered loads of RegionWriteStamp are not paid. The map is a conservative superset
@@ -2839,11 +2878,21 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 			cursor += bytes;
 			continue;
 		}
+		// Session 113, knob "bdanarrow" 2: knob 1 would have skipped this region - its write stamp did not move, no
+		// registration marked it, and it was scanned since the last guest-map invalidation.
+		const bool narrow_would_skip = m_bda_narrow_check && seen.generation != 0 &&
+		                               seen.generation >= m_bda_map_generation && seen.stamp == stamp;
 		seen = {stamp, m_bda_stamp_generation};
 		Common::FrameStats::Add(Common::FrameStats::Counter::BdaRegionsScanned, 1);
 		const uint64_t bda_scan_t0 =
 		    bda_split && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
 		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
+		if (narrow_would_skip) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowWould, 1);
+			if (DirtyRangesTouchBuffers()) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
+			}
+		}
 		const uint64_t bda_scan_t1 = bda_scan_t0 != 0 ? Common::FrameStats::NowNs() : 0;
 		SynchronizeBuffersOfDirtyRanges();
 		if (bda_scan_t0 != 0) {

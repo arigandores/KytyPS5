@@ -1838,6 +1838,10 @@ enum class Counter : uint32_t {
 	// of the check in the daslot verify run.  Raw counts.
 	DaCheckOk,               // da_chk_ok
 	DaCheckBad,              // da_chk_bad
+	// Session 112, knob "daguard": QueueDrawAhead calls at daslot = 0 that skipped the slot guards (the arming
+	// proof of the arm), and walker guard waits (GuardSlot) that spun out and yielded to the OS.  Raw counts.
+	DaQueueNoGuard,          // da_q_noguard
+	DaGuardYield,            // da_guard_yield
 	Count
 };
 

@@ -1961,10 +1961,12 @@ struct PipelineCache::ProgramCache {
 		    : resource_plan(std::move(plan)) {}
 
 		ShaderRecompiler::IR::ResourcePlan resource_plan;
-		// ShaderTranslationCache::PlanFingerprint of the plan (| 1, 0 = not computed yet); only
-		// the holder of PipelineCache::m_mutex computes and reads it.
+		// ShaderTranslationCache::PlanFingerprint of the plan (| 1, 0 = not computed yet); computed only by the
+		// holder of PipelineCache::m_mutex.  Session 111 ("daslot"): the M1 queue reads it WITHOUT m_mutex - safe only
+		// because AheadNote computes it (and plan_class) before the hint that publishes the source, and neither is
+		// ever reset.  A path that lets a source reach the queue before AheadNote would be a data race.
 		mutable uint64_t                   plan_fingerprint = 0;
-		// Canonical class of the plan (ClassOf), same ownership as plan_fingerprint.
+		// Canonical class of the plan (ClassOf), same ownership and publication as plan_fingerprint.
 		mutable const PlanClass* plan_class = nullptr;
 		// deque: draws and asynchronous pipeline jobs keep pointers to a permutation's program
 		// while later permutations of the same source are appended.
@@ -2304,10 +2306,12 @@ struct PipelineCache::ProgramCache {
 
 	// Draw lookahead (gates "drawahead"/"dause", docs/parallel-draw-path.md M1). A slot holds one
 	// materialization task and, once a worker has run it, its result and witness.
-	// Ownership: the key fields are written only by the holder of PipelineCache::m_mutex while no
-	// worker can touch the slot (state Empty, Ready or Failed). A worker claims a Queued slot with a
-	// compare-exchange, writes only the result fields and publishes Ready or Failed; after that it
-	// never touches the slot again, so the holder of m_mutex reads the result without a lock.
+	// Ownership (session 111): the key fields are written only by a producer (QueueAheadSource, serialised by
+	// ahead_queue_mutex) under the slot guard while no worker can touch the slot (state Empty, Ready or Failed).
+	// A worker claims a Queued slot with a compare-exchange, writes only the result fields and publishes Ready or
+	// Failed; after that it never touches the slot again, so the draw (holder of m_mutex) reads the result after
+	// moving the slot to Taking under the guard.  Session 112 (knob "daguard" 0 at daslot 0): the producer then
+	// holds m_mutex too and skips the guards - the draw, the only other guard taker, cannot run.
 	// Session 111 (knob "daslot"): the key, walk, uses, taken, pixel and every state transition of the producer and
 	// of the draw are read and written only under the slot's `guard` (a spin byte), so the M1 queue can run without
 	// PipelineCache::m_mutex. AheadTaking: a draw took a Ready slot under the guard and verifies/copies its result
@@ -2318,13 +2322,13 @@ struct PipelineCache::ProgramCache {
 	struct AheadSlot {
 		std::atomic<uint8_t> state {AheadEmpty};
 		std::atomic<uint8_t> guard {0};
-		// Holder of m_mutex only (workers never read them): a draw took this result (da_unused counts
-		// results that went without), and the stage it was queued for.
+		// Under the slot guard, or by the draw while the slot is Taking (workers never read them): a draw took
+		// this result (da_unused counts results that went without), and the stage it was queued for.
 		uint8_t taken = 0;
 		uint8_t pixel = 0;
 		// Gate "daclass": the canonical class of the key (nullptr = keyed by plan fingerprint alone).
 		const PlanClass* plan_class = nullptr;
-		// key (holder of m_mutex); `source` is one entry with this plan, for the worker
+		// key (producer, under the slot guard); `source` is one entry with this plan, for the worker
 		const SourceEntry*                                 source      = nullptr;
 		uint64_t                                           fingerprint = 0;
 		uint64_t                                           shader_base = 0;
@@ -2393,6 +2397,18 @@ struct PipelineCache::ProgramCache {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DaHintTorn, 1);
 		return false;
 	}
+	// Session 112 ("daguard" 0 at daslot 0): the caller holds PipelineCache::m_mutex, which every hint writer
+	// (AheadNote) holds, so the hint cannot change under it: a plain copy.
+	void ReadHintLocked(size_t index, AheadHintView& view) const {
+		const auto& hint = ahead_hints[index];
+		for (size_t i = 0; i < view.sources.size(); i++) {
+			view.sources[i] = hint.sources[i].load(std::memory_order_relaxed);
+		}
+		view.base       = hint.base.load(std::memory_order_relaxed);
+		view.generation = hint.generation.load(std::memory_order_relaxed);
+		view.count      = hint.count.load(std::memory_order_relaxed);
+		view.stage      = hint.stage.load(std::memory_order_relaxed);
+	}
 	// Slot guards: the draw gives up after a bounded spin (a miss); the producer waits.
 	static bool TryGuardSlot(AheadSlot& slot) {
 		for (int spin = 0; spin < 64; spin++) {
@@ -2404,9 +2420,18 @@ struct PipelineCache::ProgramCache {
 		}
 		return false;
 	}
+	// Session 112: the producer spins, and after 256 spins gives its quantum away (the guard holder - a draw - may
+	// have been preempted inside its few-instruction window); da_guard_yield counts those.
 	static void GuardSlot(AheadSlot& slot) {
+		uint32_t spin = 0;
 		while (slot.guard.load(std::memory_order_relaxed) != 0 || slot.guard.exchange(1, std::memory_order_acquire) != 0) {
-			YieldProcessor();
+			if (++spin < 256) {
+				YieldProcessor();
+			} else {
+				spin = 0;
+				Common::FrameStats::Add(Common::FrameStats::Counter::DaGuardYield, 1);
+				SwitchToThread();
+			}
 		}
 	}
 	static void UnguardSlot(AheadSlot& slot) {
@@ -2483,7 +2508,10 @@ struct PipelineCache::ProgramCache {
 	uint32_t                              ahead_queue_head = 0;     // ahead_mutex, pop position
 	uint32_t                              ahead_queue_tail = 0;     // ahead_mutex, push position
 	bool                                  ahead_stop = false; // ahead_mutex
-	std::vector<std::thread>              ahead_threads;
+	std::vector<std::thread>              ahead_threads; // ahead_queue_mutex (AheadStartThreads) / shutdown
+	// Session 112: ahead_threads.size() for the workers, which read it under ahead_mutex, not under the lock the
+	// vector is resized under (a data race the session-111 audit found, MINOR-9).
+	std::atomic<uint32_t>                 ahead_thread_count {0};
 
 	static size_t AheadHintIndex(ShaderType stage, uint64_t base, uint32_t count) {
 		return static_cast<size_t>((base >> 2u) ^ (base >> 17u) ^ (uint64_t {count} * 0x9e37u) ^
@@ -2608,6 +2636,7 @@ struct PipelineCache::ProgramCache {
 				SetThreadDescription(GetCurrentThread(), L"DrawAhead");
 				AheadWorker(index);
 			});
+			ahead_thread_count.store(static_cast<uint32_t>(ahead_threads.size()), std::memory_order_relaxed);
 		}
 	}
 
@@ -2621,6 +2650,7 @@ struct PipelineCache::ProgramCache {
 			thread.join();
 		}
 		ahead_threads.clear();
+		ahead_thread_count.store(0, std::memory_order_relaxed);
 	}
 
 	struct AheadQueueStats {
@@ -2638,10 +2668,12 @@ struct PipelineCache::ProgramCache {
 		uint64_t unused_pixel = 0;
 	};
 
-	// Holder of m_mutex: queue one request for one source entry, or find it already queued.
+	// Under ahead_queue_mutex: queue one request for one source entry, or find it already queued.  `unguarded`
+	// (session 112, "daguard" 0 at daslot 0): the caller holds PipelineCache::m_mutex too, so no draw can take a
+	// guard and the slot guards are skipped.
 	void QueueAheadSource(const SourceEntry* source, const PlanClass* plan_class,
 						  const PipelineCache::DrawAheadRequest& request,
-	                      AheadQueueStats& stats, std::vector<uint32_t>& batch) {
+	                      AheadQueueStats& stats, std::vector<uint32_t>& batch, bool unguarded) {
 		if (source->resource_plan.srt_compiled == nullptr) {
 			stats.no_plan++;
 			return;
@@ -2652,19 +2684,27 @@ struct PipelineCache::ProgramCache {
 		const auto generation  = memo_generation.load(std::memory_order_relaxed);
 		AheadSlot* victim      = nullptr;
 		uint32_t   victim_rank = UINT32_MAX;
-		// Session 111 ("daslot"): both probe slots guarded for the whole decision, lower index first.
+		// Session 111 ("daslot"): both probe slots guarded for the whole decision, lower index first (session 112:
+		// not when `unguarded`).
 		struct PairGuard {
 			AheadSlot& low;
 			AheadSlot& high;
-			PairGuard(AheadSlot& a, AheadSlot& b): low(&a < &b ? a : b), high(&a < &b ? b : a) {
-				GuardSlot(low);
-				GuardSlot(high);
+			bool       on;
+			PairGuard(AheadSlot& a, AheadSlot& b, bool guard)
+			    : low(&a < &b ? a : b), high(&a < &b ? b : a), on(guard) {
+				if (on) {
+					GuardSlot(low);
+					GuardSlot(high);
+				}
 			}
 			~PairGuard() {
-				UnguardSlot(high);
-				UnguardSlot(low);
+				if (on) {
+					UnguardSlot(high);
+					UnguardSlot(low);
+				}
 			}
-		} pair_guard(ahead_slots[hash & (AheadSlotCount - 1)], ahead_slots[(hash + 1) & (AheadSlotCount - 1)]);
+		} pair_guard(ahead_slots[hash & (AheadSlotCount - 1)], ahead_slots[(hash + 1) & (AheadSlotCount - 1)],
+		             !unguarded);
 		for (size_t probe = 0; probe < 2; probe++) {
 			stats.probes++;
 			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
@@ -2756,7 +2796,8 @@ struct PipelineCache::ProgramCache {
 	}
 
 	// Session 111 ("daslot"): under ahead_queue_mutex (taken here), with or without PipelineCache::m_mutex.
-	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, uint64_t walk) {
+	// Session 112: `unguarded` only when the caller holds m_mutex ("daguard" 0 at daslot 0).
+	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, uint64_t walk, bool unguarded) {
 		namespace FS     = Common::FrameStats;
 		const auto wanted = Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
 		if (wanted == 0) {
@@ -2782,6 +2823,13 @@ struct PipelineCache::ProgramCache {
 		}
 		AheadQueueStats                    stats;
 		thread_local std::vector<uint32_t> batch;
+		auto read_hint = [&](size_t index, AheadHintView& view) {
+			if (unguarded) {
+				ReadHintLocked(index, view);
+				return true;
+			}
+			return ReadHint(index, view);
+		};
 		const bool class_mode = Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass);
 		const bool counting   = FS::Enabled();
 		batch.clear();
@@ -2796,7 +2844,7 @@ struct PipelineCache::ProgramCache {
 			const auto    ahead_stage = ahead.pixel ? ShaderType::Pixel : ShaderType::Vertex;
 			AheadHintView ahead_hint;
 			if (ahead.count > HW::UserSgprInfo::SGPRS_MAX ||
-			    !ReadHint(AheadHintIndex(ahead_stage, ahead.base, ahead.count), ahead_hint) ||
+			    !read_hint(AheadHintIndex(ahead_stage, ahead.base, ahead.count), ahead_hint) ||
 			    ahead_hint.sources[0] == nullptr || ahead_hint.stage != ahead_stage || ahead_hint.base != ahead.base ||
 			    ahead_hint.count != ahead.count || ahead_hint.generation != generation) {
 				return;
@@ -2838,7 +2886,7 @@ struct PipelineCache::ProgramCache {
 			const auto    stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
 			AheadHintView hint;
 			if (request.count > HW::UserSgprInfo::SGPRS_MAX ||
-			    !ReadHint(AheadHintIndex(stage, request.base, request.count), hint) || hint.sources[0] == nullptr ||
+			    !read_hint(AheadHintIndex(stage, request.base, request.count), hint) || hint.sources[0] == nullptr ||
 			    hint.stage != stage || hint.base != request.base || hint.count != request.count ||
 			    hint.generation != generation) {
 				stats.no_hint++;
@@ -2885,7 +2933,7 @@ struct PipelineCache::ProgramCache {
 			stats.fan_canon += class_count;
 			if (class_mode) {
 				for (size_t index = 0; index < class_count; index++) {
-					QueueAheadSource(class_sources[index], classes[index], request, stats, batch);
+					QueueAheadSource(class_sources[index], classes[index], request, stats, batch, unguarded);
 				}
 				continue;
 			}
@@ -2897,7 +2945,7 @@ struct PipelineCache::ProgramCache {
 				if (predicted_key == key && predicted_source != nullptr &&
 				    std::find(hint.sources.begin(), hint.sources.end(), predicted_source) !=
 				        hint.sources.end()) {
-					QueueAheadSource(predicted_source, nullptr, request, stats, batch);
+					QueueAheadSource(predicted_source, nullptr, request, stats, batch, unguarded);
 					stats.predicted++;
 					continue;
 				}
@@ -2915,7 +2963,7 @@ struct PipelineCache::ProgramCache {
 					          Fingerprint(*hint.sources[earlier]) == fingerprint;
 				}
 				if (!shared) {
-					QueueAheadSource(source, nullptr, request, stats, batch);
+					QueueAheadSource(source, nullptr, request, stats, batch, unguarded);
 				}
 			}
 		}
@@ -2992,8 +3040,8 @@ struct PipelineCache::ProgramCache {
 					ahead_queue_head++;
 				}
 				more = ahead_queue_tail != ahead_queue_head;
-				wake_all =
-				    ahead_threads.size() > Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+				wake_all = ahead_thread_count.load(std::memory_order_relaxed) >
+				           Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
 			}
 			if (more) {
 				// The producer wakes one worker per batch: pass the wake on, outside the lock, so
@@ -4973,16 +5021,21 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
 	}
 	const bool        timed       = Common::FrameStats::Enabled();
 	const auto        queue_begin = timed ? Common::FrameStats::NowNs() : 0;
-	// Session 111, knob "daslot": 0 = under m_mutex (today); 1/2 = only ahead_queue_mutex (taken in QueueAhead) -
-	// the slots are guarded one by one and the hints are read as consistent copies, so GuestGpu's draws do not
-	// wait for the walker here.
+	// Session 111, knob "daslot": 0 = under m_mutex; 1/2 = only ahead_queue_mutex (taken in QueueAhead) - the
+	// slots are guarded one by one and the hints are read as consistent copies, so GuestGpu's draws do not wait
+	// for the walker here.  Session 112, knob "daguard": at daslot 0, 0 = no slot guards and direct hint reads
+	// inside the m_mutex hold (the session-110 hold); both knobs are read once here and the decision passed down.
 	if (Common::Gates::Value(Common::Gates::Knob::DrawAheadSlot) == 0) {
+		const bool        unguarded = Common::Gates::Value(Common::Gates::Knob::DrawAheadGuard) == 0;
 		Common::LockGuard lock(m_mutex);
 		PipeLockHolder    holder(m_lock_holder, 1, Common::FrameStats::Counter::PipeLockWalkQueueHoldNs,
 		                         Common::FrameStats::Counter::PipeLockWalkQueueHoldN);
-		m_program_cache->QueueAhead(requests, walk);
+		m_program_cache->QueueAhead(requests, walk, unguarded);
+		if (unguarded) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DaQueueNoGuard, 1);
+		}
 	} else {
-		m_program_cache->QueueAhead(requests, walk);
+		m_program_cache->QueueAhead(requests, walk, false);
 		Common::FrameStats::Add(Common::FrameStats::Counter::DaQueueFree, 1);
 	}
 	if (timed) {

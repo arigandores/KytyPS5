@@ -2498,6 +2498,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"da_q_free", FS::Counter::DaQueueFree, false},
 				    {"da_chk_ok", FS::Counter::DaCheckOk, false},
 				    {"da_chk_bad", FS::Counter::DaCheckBad, false},
+				    {"da_q_noguard", FS::Counter::DaQueueNoGuard, false},
+				    {"da_guard_yield", FS::Counter::DaGuardYield, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

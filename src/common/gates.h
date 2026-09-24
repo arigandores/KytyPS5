@@ -566,11 +566,17 @@ enum class Knob : uint32_t {
 	// that differ at equal specializations are counted bad).  Read once per prefetch call.
 	CsPrefetchFree,   // KYTY_CS_PREFETCH_FREE,   file name "cspfree" (0 off, 1 skip on hit, 2 verify)
 	// Session 111: which lock PipelineCache::QueueDrawAhead (the M1 queue of the draw walker) takes: 0 = m_mutex
-	// (today), 1 = only the new ahead_queue_mutex (the slots are guarded per slot either way), 2 = 1 plus a check of
+	// (the pre-session lock - but with the session-111 slot protocol inside the hold unless daguard = 0, so NOT the
+	// session-110 code), 1 = only the new ahead_queue_mutex (the slots are guarded per slot), 2 = 1 plus a check of
 	// the slot key under its guard at every take (da_slot_bad, DaSlotVerify: MISMATCH).  Read once per queue call
-	// and once per take, so it CAN be a schedule arm; the per-slot protocol is unconditional, so a flip is safe.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	// and once per take, so it CAN be a schedule arm; a flip is safe.
 	DrawAheadSlot,    // KYTY_DRAW_AHEAD_SLOT,    file name "daslot" (0 m_mutex, 1 own lock, 2 own lock + verify)
+	// Session 112: at daslot = 0 the M1 queue, which then holds m_mutex and ahead_queue_mutex, skips the slot guards
+	// and reads the hints directly (0) - the session-110 walker hold, the arm the session-111 audit asked for; 1 =
+	// the guards always (session 111).  No effect at daslot != 0.  Read once per queue call (with daslot), so it
+	// CAN be a schedule arm; safe to flip at any moment (every other guard taker is serialised by one of the locks).
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	DrawAheadGuard,   // KYTY_DRAW_AHEAD_GUARD,   file name "daguard" (0 no guards at daslot 0, 1 guards)
 	Count,
 };
 

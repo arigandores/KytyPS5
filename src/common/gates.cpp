@@ -381,8 +381,8 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_CS_PREFETCH_FAMILY", "cspfam", 0, 1024},
     // Session 109: the compute prefetch without the lock on a (source, specialization) hit; 0 = off.
     // Read once per prefetch call, so it CAN be a schedule arm. Session 110: default 1 after the
-    // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: d mean dt
-    // -418.7 us, 2SE 135.3; video clean).
+    // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: bar met,
+    // video clean); size ~ -200 us a frame at the pin (pooled full-block estimate, audit pred/04).
     // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_CS_PREFETCH_FREE", "cspfree", 1, 2},
 }};

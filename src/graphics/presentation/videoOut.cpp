@@ -1146,6 +1146,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_mutex.Unlock();
 
 	r.cfg->mutex.Lock();
+	// Session 114 (ROADMAP item 4): the hold of VideoOutConfig::mutex by phase - GuestGpu's ReserveFlipRequest waits on it.
+	const uint64_t hold_t0    = Common::FrameStats::NowNs();
+	uint64_t       present_ns = 0;
+	uint64_t       poll_ns    = 0;
 	if (!IsFlipDueLocked(*r.cfg, r.generation)) {
 		r.cfg->mutex.Unlock();
 		Common::LockGuard queue_lock(m_mutex);
@@ -1174,7 +1178,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 		}
 		m_presenter.Discard(*r.frame);
 	} else {
+		const uint64_t present_t0 = Common::FrameStats::NowNs();
 		m_presenter.Present(*r.frame);
+		present_ns = Common::FrameStats::NowNs() - present_t0;
 	}
 	Graphics::RenderDocOnGuestFlip(m_presenter.Renderer());
 
@@ -1187,7 +1193,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 
 	r.cfg->flip_status.count++;
 	Graphics::GpuTimeProfiler::SetFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
+	const uint64_t poll_t0 = Common::FrameStats::NowNs();
 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
+	poll_ns = Common::FrameStats::NowNs() - poll_t0;
 	Common::FrameStats::SetLean(Common::Gates::Enabled(Common::Gates::Gate::FrameStatsLean));
 	r.cfg->flip_status.processTime              = LibKernel::KernelGetProcessTime();
 	r.cfg->flip_status.processTimeCounter       = LibKernel::KernelGetProcessTimeCounter();
@@ -2526,6 +2534,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"pres_title_n", FS::Counter::PresTitleN, false},
 				    {"flip_rsv_wait_ns", FS::Counter::FlipReserveWaitNs, false},
 				    {"flip_rsv_wait_n", FS::Counter::FlipReserveWaitN, false},
+				    {"flip_hold_ns", FS::Counter::FlipHoldNs, false},
+				    {"flip_hold_n", FS::Counter::FlipHoldN, false},
+				    {"mt_age_ns", FS::Counter::MainTaskAgeNs, false},
+				    {"mt_n", FS::Counter::MainTaskN, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -2575,6 +2587,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_done_cond_var.SignalAll();
 	m_submit_slot_cond_var.Signal();
 	m_mutex.Unlock();
+	{
+		const uint64_t hold_ns = Common::FrameStats::NowNs() - hold_t0;
+		Common::FrameStats::Add(Common::FrameStats::Counter::FlipHoldNs, hold_ns);
+		Common::FrameStats::Add(Common::FrameStats::Counter::FlipHoldN, 1);
+		if (hold_ns >= 50000000ull) {
+			static std::atomic<uint32_t> hold_logged {0};
+			if (hold_logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+				const uint64_t named = present_ns + poll_ns;
+				LOGF("FlipHold: us=%llu present_us=%llu poll_us=%llu other_us=%llu flip=%llu\n",
+				     static_cast<unsigned long long>(hold_ns / 1000), static_cast<unsigned long long>(present_ns / 1000),
+				     static_cast<unsigned long long>(poll_ns / 1000),
+				     static_cast<unsigned long long>((hold_ns > named ? hold_ns - named : 0) / 1000),
+				     static_cast<unsigned long long>(r.cfg->flip_status.count));
+			}
+		}
+	}
 	r.cfg->mutex.Unlock();
 
 	Graphics::RenderDocOnGuestFlip(m_presenter.Renderer());

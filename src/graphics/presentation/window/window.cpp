@@ -779,6 +779,7 @@ void WindowContext::RunOnMainThread(std::function<void()> task) {
 	{
 		Common::LockGuard lock(main_task_mutex);
 		main_tasks.push_back(std::move(task));
+		main_task_enqueue_ns.push_back(Common::FrameStats::NowNs());
 		ticket = ++main_tasks_queued;
 	}
 
@@ -797,6 +798,7 @@ void WindowContext::PostToMainThread(std::function<void()> task) {
 	{
 		Common::LockGuard lock(main_task_mutex);
 		main_tasks.push_back(std::move(task));
+		main_task_enqueue_ns.push_back(Common::FrameStats::NowNs());
 		++main_tasks_queued;
 	}
 	// Wake the main loop in case it is blocked in SDL_WaitEvent.
@@ -807,15 +809,29 @@ void WindowContext::PostToMainThread(std::function<void()> task) {
 
 void WindowContext::DrainMainThreadTasks() {
 	std::vector<std::function<void()>> tasks;
+	std::vector<uint64_t>              enqueued;
 	{
 		Common::LockGuard lock(main_task_mutex);
 		tasks.swap(main_tasks);
+		enqueued.swap(main_task_enqueue_ns);
 	}
 	if (tasks.empty()) {
 		return;
 	}
-	for (auto& task: tasks) {
-		task();
+	for (size_t i = 0; i < tasks.size(); i++) {
+		// Session 114 (ROADMAP item 4): the queue-to-run age - a busy main thread stays visible at titleasync 1.
+		if (i < enqueued.size()) {
+			const auto age = Common::FrameStats::NowNs() - enqueued[i];
+			Common::FrameStats::Add(Common::FrameStats::Counter::MainTaskAgeNs, age);
+			Common::FrameStats::Add(Common::FrameStats::Counter::MainTaskN, 1);
+			if (age >= 50000000ull) {
+				static std::atomic<uint32_t> late_logged {0};
+				if (late_logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+					LOGF("MainTaskLate: us=%llu\n", static_cast<unsigned long long>(age / 1000));
+				}
+			}
+		}
+		tasks[i]();
 	}
 	Common::LockGuard lock(main_task_mutex);
 	main_tasks_run += tasks.size();
@@ -829,6 +845,8 @@ void WindowContext::Run() {
 	loop.event     = {};
 	loop.need_exit = false;
 	loop.paused.store(false, std::memory_order_release);
+	// Session 114 (ROADMAP item 4, review C1): from here on UpdateTitle may take the async title path.
+	main_loop_running.store(true, std::memory_order_release);
 
 	while (!loop.need_exit) {
 		DrainMainThreadTasks();
@@ -1128,7 +1146,10 @@ void WindowContext::UpdateTitle() {
 		LOGF("MainStallTest: queued frame=%llu ms=%u\n", static_cast<unsigned long long>(frame_num), ms);
 		PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });
 	}
-	const bool title_async = Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
+	// Session 114 (ROADMAP item 4, review C1): the async path only once the SDL main loop runs - before WindowRun the
+	// waiting path parks the present thread, which keeps it out of Present while WindowPrepareShaders presents.
+	const bool loop_running = main_loop_running.load(std::memory_order_acquire);
+	const bool title_async  = loop_running && Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
 	const auto title_t0    = Common::FrameStats::NowNs();
 	if (title_async) {
 		bool post = false;
@@ -1153,9 +1174,11 @@ void WindowContext::UpdateTitle() {
 		RunOnMainThread([this, text = std::move(text)] { SDL_SetWindowTitle(window, text.c_str()); });
 	}
 	const auto title_ns = Common::FrameStats::NowNs() - title_t0;
-	Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleNs, title_ns);
-	Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleN, 1);
-	if (title_ns >= 50000000ull) {
+	if (loop_running) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleNs, title_ns);
+		Common::FrameStats::Add(Common::FrameStats::Counter::PresTitleN, 1);
+	}
+	if (loop_running && title_ns >= 50000000ull) {
 		static std::atomic<uint32_t> wait_logged {0};
 		if (wait_logged.fetch_add(1, std::memory_order_relaxed) < 32) {
 			LOGF("MainThreadWait: us=%llu frame=%llu titleasync=%d\n",

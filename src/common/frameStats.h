@@ -1873,6 +1873,13 @@ enum class Counter : uint32_t {
 	PresTitleN,              // pres_title_n
 	FlipReserveWaitNs,       // flip_rsv_wait_ns
 	FlipReserveWaitN,        // flip_rsv_wait_n
+	// Session 114 (item 4): flip_hold_ns / flip_hold_n - the hold of VideoOutConfig::mutex in FlipQueue::Flip (lands in
+	// the next FrameTrace row: the snapshot is taken inside the hold); mt_age_ns / mt_n - the queue-to-run age of the
+	// SDL main thread's tasks (RunOnMainThread and PostToMainThread).  Raw ns / counts.
+	FlipHoldNs,              // flip_hold_ns
+	FlipHoldN,               // flip_hold_n
+	MainTaskAgeNs,           // mt_age_ns
+	MainTaskN,               // mt_n
 	Count
 };
 

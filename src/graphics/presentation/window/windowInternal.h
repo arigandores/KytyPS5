@@ -70,6 +70,12 @@ struct WindowContext {
 	std::vector<std::function<void()>> main_tasks;            // guarded by main_task_mutex
 	uint64_t                           main_tasks_queued = 0; // guarded by main_task_mutex
 	uint64_t                           main_tasks_run    = 0; // guarded by main_task_mutex
+	// Session 114 (item 4): the enqueue time of each main-thread task, parallel to main_tasks (guarded by
+	// main_task_mutex); DrainMainThreadTasks reports the queue-to-run age (mt_age_ns, MainTaskLate: lines).
+	std::vector<uint64_t>              main_task_enqueue_ns;
+	// Session 114 (item 4, review C1): set by Run() before its first DrainMainThreadTasks.  Until then UpdateTitle keeps
+	// the waiting path, which parks the present thread while WindowPrepareShaders presents from the main thread.
+	std::atomic<bool>                  main_loop_running {false};
 	// Session 114 (knob "titleasync" 1): the latest title text and whether a title task is queued; the main thread
 	// applies the latest text, so at most one title task waits in main_tasks.  Guarded by title_mutex.
 	Common::Mutex title_mutex;

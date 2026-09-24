@@ -1,0 +1,75 @@
+CONSTANTS                match OK
+GO                       want GO            got GO            bad 0 errors [] OK
+GO_tag_b                 want GO            got GO            bad 0 errors [] OK
+GO_stdout_clean          want GO            got GO            bad 0 errors [] OK
+GO_start_old_excluded    want GO            got GO            bad 0 errors [] OK
+NO_GO_miss               want NO_GO         got NO_GO         bad 1 errors [] OK
+NO_GO_xthr               want NO_GO         got NO_GO         bad 1 errors [] OK
+NOT_EVALUABLE_new        want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_edge_ok           want GO            got GO            bad 0 errors [] OK
+REGIME_edge_new          want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_start_only        want NOT_EVALUABLE got NOT_EVALUABLE bad 0 errors [] OK
+REGIME_start_long        want GO            got GO            bad 0 errors [] OK
+ATT_extra_failed         want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+TAG                      want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['TAG'] OK
+IDENTITY                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['IDENTITY'] OK
+INPUTS                   want NOT_ADMITTED  got NOT_ADMITTED  bad None errors ['INPUTS'] OK
+BINARY                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['BINARY'] OK
+PREREG                   want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PREREG'] OK
+ENV_PIN                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_PIN'] OK
+ENV_SCHED                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_CKPT                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_REC                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_PRECACHE             want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ENV_FORBIDDEN'] OK
+GATES_missing            want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_mode1              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_twice              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+GATES_first              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['GATES'] OK
+ATT_outcome              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_exit                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_fail       want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_ok         want GO            got GO            bad 0 errors [] OK
+ATT_two                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ATTEMPT'] OK
+PIN_none                 want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+PIN_two                  want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+PIN_mode2                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['PIN_ONCE'] OK
+MARK_hang                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_slow                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_lost                want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_error               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_fatal               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_skipped             want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+MARK_stdout              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['NO_MARKER'] OK
+ROWS_edge_fail           want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ROWS'] OK
+ROWS_edge_ok             want GO            got GO            bad 0 errors [] OK
+ROWS_field               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ROWS'] OK
+ARMED_ginv               want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+ARMED_would_edge_fail    want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+ARMED_nskip              want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['ARMED'] OK
+DEFAULTS_slot            want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+DEFAULTS_free            want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+DEFAULTS_bad             want NOT_ADMITTED  got NOT_ADMITTED  bad 0 errors ['DEFAULTS'] OK
+ARMED_would_edges        exact [] under ['ARMED'] OK
+PRED_base                {'B1': (0, True), 'B2': (1068, True), 'B3': (1.0, True), 'B4': (1100.0, True), 'B5': (1.0, True)} OK
+PRED_edge_0              B2 {'scan': 800} want True got True OK
+PRED_edge_1              B2 {'scan': 799} want False got False OK
+PRED_edge_2              B2 {'scan': 1400} want True got True OK
+PRED_edge_3              B2 {'scan': 1401} want False got False OK
+PRED_edge_4              B4 {'would': 800} want True got True OK
+PRED_edge_5              B4 {'would': 799} want False got False OK
+PRED_edge_6              B4 {'would': 1400} want True got True OK
+PRED_edge_7              B4 {'would': 1401} want False got False OK
+PRED_edge_8              B3 {'ginv': 3} want True got True OK
+PRED_edge_9              B3 {'ginv': 4} want False got False OK
+PRED_edge_10             B5 {'evict': 3} want True got True OK
+PRED_edge_11             B5 {'evict': 4} want False got False OK
+PRED_edge_12             B1 {'nmiss': 1} want False got False OK
+PRED_B3_low_2            value 0.5000 want True got True errors [] OK
+PRED_B3_low_3            value 0.3333 want False got False errors [] OK
+PRED_B3_low_45           value 0.4500 want False got False errors [] OK
+PRED_B5_low_2            value 0.5000 want True got True errors [] OK
+PRED_B5_low_3            value 0.3333 want False got False errors [] OK
+PRED_B5_low_45           value 0.4500 want False got False errors [] OK
+DRAFT                    errors ['DRAFT'] OK
+SEAL                     errors ['SEAL'] OK
+ALL OK

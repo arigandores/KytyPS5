@@ -60,9 +60,11 @@ installed build `b47b58a9…` (session 112). 60 FPS is not promised.
    scene rows; B6 Σ`bda_nrace` ≤ 40. Scorer `vbn113b.py` (from `vbn113.py` by `make_vbn113b.py`; 83 fixture checks; 41
    mutants run on the SEALED copy, output `mut_vbn113b.out.txt`). Chain **`go113b.sh`** (refuses a held lock, installs
    the pinned copy after a sha check, verify only). **Not run.**
-9. **Seal 02 (ship ABBA `bdanarrow=0|1`)** not written: scorer `shn113.py` was derived from `net112.py` by
-   `make_shn113.py` (`C:/kyty/s106_stage/`) for build `94362eae` — it must be re-pinned to `7d9fa028` and given the
-   `bda_nrace` field before sealing (RESUME POINT step 3).
+9. **Seal 02 (ship ABBA `bdanarrow=0|1`)** not written: scorer `shn113.py` derived from `net112.py` by `make_shn113.py`
+   (draft copies `C:/kyty/s113/shn113_draft/`): 235 fixture cases ALL OK, **310/310 mutants killed** (that pass took ~3 h —
+   the reason for ROADMAP item 7, the fast mutation harness), draft run on `net112` OK. It is built for `94362eae`
+   without `bda_nrace` — re-pin before sealing; open: the NARROW_ARMED_ARM1 threshold (≥ 1 may refuse an armed run;
+   decide from `vbn113`'s `bda_ginv_reg`) (RESUME POINT step 3).
 
 ## 2. Harness
 

@@ -1,0 +1,112 @@
+shn113.py net112 status=DRAFT seal=None
+  PROTOCOL: env KYTY_GATE_SCHEDULE='90+1800:dawalk=1 dawalklead=1 daslot=1 daguard=1|dawalk=1 dawalklead=1 daslot=0 daguard=0', expected '90+1800:dawalk=1 dawalklead=1 bdanarrow=0|dawalk=1 dawalklead=1 bdanarrow=1'
+  PROTOCOL: meta schedule '90+1800:dawalk=1 dawalklead=1 daslot=1 daguard=1|dawalk=1 dawalklead=1 daslot=0 daguard=0', expected '90+1800:dawalk=1 dawalklead=1 bdanarrow=0|dawalk=1 dawalklead=1 bdanarrow=1'
+  pairs 96 (orientations [48, 48]), blocks 192, excluded []
+  [PASS] integrity AB_BA_BALANCED
+  [FAIL] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [FAIL] integrity GATEARM
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [FAIL] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [FAIL] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [FAIL] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  SYNC_COMPILE
+  [PASS] controls  WORK_SPLIT
+  [FAIL] arming    DEFAULTS_ON
+  [PASS] arming    INSTRUMENTS_DARK
+  [FAIL] arming    NARROW_ARMED_ARM1
+  [FAIL] arming    NARROW_DARK_ARM0
+  [PASS] arming    NARROW_SCAN_ARM1
+  [PASS] arming    NO_CHECK
+  [PASS] arming    NO_XTHR
+  [FAIL] arming    REGIME_OLD_ARM0
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 61416, 'da_wjobs': 61432, 'da_wdrop': 0}  skip/posts-1 -0.0003  drop 0.0000  walks rel 0.0000
+  bdanarrow: bda_scan levels [53.35625, 53.025]  bda_nskip arm-0 kept totals {'bda_nskip': None}  bda_nwould / bda_nmiss / bda_nxthr over all rows 0 / 0 / 0
+  defaults: cspfree_hit levels [266.0, 266.0]  cspfree_bad over all rows 0  da_q_free levels [1072.975, 0.0]  da_slot_bad over all rows 0
+  dt_us        arm0    30829.7   arm1    31042.9
+  cpu_net_us   arm0    29889.0   arm1    30230.0
+  draws        arm0     5009.0   arm1     5014.1
+  gpu_busy_us  arm0    12923.8   arm1    12884.7
+  rec_n        arm0    10844.9   arm1    10860.6
+  da_walk_us   arm0     2449.9   arm1     2498.7
+  da_queue_us  arm0     1225.7   arm1     1278.2
+  da_take_us   arm0     2718.6   arm1     2731.4
+  da_hit       arm0     8330.5   arm1     8342.1
+  da_miss      arm0      296.8   arm1      296.0
+  da_late      arm0       11.2   arm1        5.8
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    72429.5   arm1    72779.6
+  da_wdepth    arm0       17.6   arm1       17.6
+  da_qcall     arm0     1073.0   arm1     1074.6
+  da_q_free    arm0     1073.0   arm1        0.0
+  da_q_noguard arm0        0.0   arm1     1074.6
+  da_guard_busy arm0        0.0   arm1        0.0
+  da_guard_yield arm0        0.0   arm1        0.0
+  da_q_taking  arm0        0.0   arm1        0.0
+  da_hint_defer arm0        1.0   arm1        1.0
+  da_hint_torn arm0        0.0   arm1        0.0
+  cspfree_hit  arm0      266.0   arm1      266.0
+  cspf_have    arm0        0.0   arm1        0.0
+  cspf_new     arm0        0.0   arm1        0.0
+  bda_scan     arm0       53.4   arm1       53.0
+  bda_nskip    arm0       None   arm1       None
+  bda_ginv_reg arm0       None   arm1       None
+  bda_ginv_map arm0       None   arm1       None
+  bda_rinv     arm0       None   arm1       None
+  bda_nwould   arm0       None   arm1       None
+  bda_nmiss    arm0       None   arm1       None
+  bda_nxthr    arm0       None   arm1       None
+  bgc_evict    arm0       None   arm1       None
+  main estimator (decides): rows 10..89 of each block
+  d cpu_net_us   mean 240.7  2SE 56.8  t 8.47  n 96
+  d dt_us        mean 243.1  2SE 62.6  t 7.77  n 96
+  d da_take_us   mean 7.0  2SE 7.7  t 1.82  n 96
+  d da_miss      mean -3.0  2SE 5.3  t -1.13  n 96
+  d da_late      mean -5.3  2SE 0.3  t -36.21  n 96
+  d da_hit       mean 7.1  2SE 16.5  t 0.86  n 96
+  d da_stale     mean 0.0  2SE None  t 0.00  n 96
+  d da_walk_us   mean 49.1  2SE 8.2  t 12.01  n 96
+  d gpu_busy_us  mean -22.5  2SE 22.4  t -2.01  n 96
+  quoted size: d mean dt_us (arm 1 - arm 0) = 243.1 us a flip, 2SE 62.6, n 96 - bdanarrow=1 against bdanarrow=0 of build 94362eae, OLD regime, main estimator
+  secondary estimator (rows 60..88, never deciding): pairs 96, blocks 192, excluded [3]
+  secondary d cpu_net_us   mean 268.8  2SE 102.4  t 5.25  n 96
+  secondary d dt_us        mean 278.3  2SE 111.5  t 4.99  n 96
+  secondary would FAIL S1_dt_le_-100 (not deciding)
+  secondary would FAIL S2_dt_2se_excludes_0 (not deciding)
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [FAIL] ship S1_dt_le_-100
+  [FAIL] ship S2_dt_2se_excludes_0
+  VERDICT: DRAFT (no verdict)
+  prediction P1  MISS value 53.356 band [800, 1400]  arm-0 bda_scan level in [800, 1400] a flip (the OLD regime: every region walked again once a frame)
+  prediction P2  HIT  value 53.025 band [30, 200]  arm-1 bda_scan level in [30, 200] a flip (the narrow stamps: the moved regions only)
+  prediction P3  MISS value 243.097 band [-1500, 200]  d mean dt_us (arm 1 - arm 0, main estimator, rows 10..89) in [-1500, +200] us
+  prediction P4  MISS value 243.097 band [None, -100]  d mean dt_us (main estimator) <= -100 us (the ship bar) - the discriminating prediction, low confidence
+  prediction P5  HIT  value -22.502 band [-150, 150]  d gpu_busy_us in [-150, +150] a flip
+  prediction P6  MISS value None band [0.5, 3]  arm-1 bda_nskip level in [0.5, 3] a flip (the registration invalidations knob 1 skipped)
+  prediction P7  HIT  value -3.015 band [-40, 40]  d da_miss in [-40, +40] a flip
+  failed: ['control:ARMING', 'integrity:BINARY_SEALED', 'integrity:GATEARM', 'integrity:PREREG_PINNED', 'integrity:SCHEMA', 'protocol']

@@ -46,6 +46,14 @@ never-run `pred/01`; scorer `vbn113b.py` (83 fixture checks; mutants on the seal
    add `bda_nrace` to its schema by an addendum to the generator, re-run its fixtures and mutants**). Prediction P4
    (Δ ≤ −100 µs) carries LOW confidence (the census). Then the video with a check script whose fixtures use the real
    report format, committed and hashed before its run.
+   **State of `shn113` at the pause** (draft, not sealed; `C:/kyty/s113/shn113_draft/`, git
+   `docs/session-113/tools/shn113_draft/`; sources in `C:/kyty/s106_stage/`): 235 fixture cases ALL OK, 310/310 mutants
+   killed, draft run on `net112` OK (NEW regime there, REGIME_OLD_ARM0 fails as it should); P3 band [−1500, +200], P4
+   'low confidence'. Built for `94362eae` without `bda_nrace` — re-pin by an addendum to `make_shn113.py`.
+   **Open decision before seal 02 (record it in ROADMAP first):** NARROW_ARMED_ARM1 requires the arm-1 level of
+   `bda_nskip` ≥ 1, but OLD may coalesce to ~1 invalidation a PrepareBda-frame, so the median could sit just below 1
+   and refuse a correctly armed run — read the `bda_ginv_reg` median from `vbn113` (the same count at knob 2) and set
+   the term to `> 0` or `≥ 0.5` if needed (one generator line + one fixture).
 4. Audit, FACTS, ROADMAP close, `next-session-114.md`, contexts, HANDOFF, commit (no push).
 
 ## 1. The port, first

@@ -1,0 +1,3 @@
+written C:/kyty/s106_stage/shn113.py 49694 bytes sha256 026fae4f819b4b38bad19a010bbf5de2a04584395131b663152bfe51fccb8896
+written C:/kyty/s106_stage/test_shn113.py 87722 bytes sha256 0dc13f986771994dafe5f4bc9bb8cfa8a8b83a7241375e204933b4d9a439f52c
+written C:/kyty/s106_stage/mut_shn113.py 40508 bytes sha256 0159901386c1543f9e3aa61dea8925d416514fa7a1e61fdc181672e703a0b837

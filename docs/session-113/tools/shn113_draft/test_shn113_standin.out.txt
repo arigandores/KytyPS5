@@ -1,0 +1,252 @@
+CONSTANTS                  want CONSTANTS OK                       got CONSTANTS OK                             OK  failed=[] 
+SHIP                       want SHIP bdanarrow=1 as the new defaul got SHIP bdanarrow=1 as the new default (a n OK  failed=[] 
+   PENDING case: main d mean dt -154.1270454545455 se 3.5740564994880004 | secondary d mean dt -143.51222570532906 se 6.842642697313447
+PENDING                    want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+DRAFT                      want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] 
+S1_S2_positive             want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0']
+   S2_only case: main d mean dt -181.3997727272728 se 143.6282002730578 | secondary d mean dt -170.7849529780563 se 144.35093856231546
+S2_only                    want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   S1_edge case: main d mean dt -100.0 se 0.0 | secondary d mean dt -100.0 se 0.0
+S1_edge                    want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   S1_edge_in case: main d mean dt -100.5 se 0.0 | secondary d mean dt -100.4827586206884 se 0.0
+S1_edge_in                 want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   S1_only case: main d mean dt -99.5 se 0.0 | secondary d mean dt -99.5172413793116 se 0.0
+S1_only                    want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100']
+   KEEP_edge case: main d mean dt -350.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+KEEP_edge                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   SEC_edge case: main d mean dt 502.5 se 0.0 | secondary d mean dt -350.0 se 0.0
+SEC_edge                   want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0']
+   EST_rows0_9 case: main d mean dt -150.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+EST_rows0_9                want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   EST_rows10_59 case: main d mean dt 350.0 se 0.0 | secondary d mean dt -150.0 se 0.0
+EST_rows10_59              want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0']
+   EST_rows10_59_ship case: main d mean dt -250.0 se 0.0 | secondary d mean dt 0.0 se 0.0
+EST_rows10_59_ship         want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   SE_exact case: main d mean dt -165.76363636363635 se 83.0298115893076 | secondary d mean dt -165.76363636363635 se 83.0298115893076 (sample SE wanted 83.0298115893076, population 82.65154168768336)
+SE_exact                   want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   LEVEL_median case: main d mean dt -150.0 se 37.45444828606715 | secondary d mean dt -150.0 se 37.45444828606715
+   LEVEL case: dt arm0 31000.0 arm1 30850.0, bda_scan arm0 1068.0 arm1 52.0, bda_nskip arm1 1.0
+LEVEL_median               want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   CPU_NET case: d cpu_net_us mean -200.0 (d cpu_gpu -150, d spin +50)
+CPU_NET_spin               want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_inside                want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_edges_lo              want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_misses_lo             want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_edges_hi              want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0']
+PRED_misses_hi             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0'] arming=['NARROW_SCAN_ARM1']
+S2_edge_zero               want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100', 'S2_dt_2se_excludes_0']
+PRED_P4_out                want KEEP bdanarrow=0 (ship rule S1-S2  got KEEP bdanarrow=0 (ship rule S1-S2 on mea OK  failed=[] rules=['S1_dt_le_-100']
+PRED_P6_lo                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_ARMED_ARM1']
+PRED_P6_lo_out             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_ARMED_ARM1']
+V_frames                   want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['frames']
+V_frames_3000              want SHIP bdanarrow=1 as the new defaul got SHIP bdanarrow=1 as the new default (a n OK  failed=[] 
+V_frames_2999              want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['frames']
+V_glitch                   want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['no_glitch']
+V_gate                     want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['bdanarrow_1_in_gate_text']
+V_gate_mode2               want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['bdanarrow_1_in_gate_text']
+V_gate_none                want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['bdanarrow_1_in_gate_text']
+V_gate_dawalk              want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['bdanarrow_1_in_gate_text']
+V_pin                      want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['pinned']
+V_binary                   want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['binary']
+V_recorded                 want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['recorded']
+V_no_schedule              want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['no_schedule']
+V_no_ckpt                  want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['no_checkpoints']
+V_att_outcome              want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['one_ok_attempt']
+V_att_exit                 want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['one_ok_attempt']
+V_att_two                  want KEEP bdanarrow=0 (video pass faile got KEEP bdanarrow=0 (video pass failed)     OK  failed=[] video=['one_ok_attempt']
+V_missing                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+INPUTS_log                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+INPUTS_meta                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+PREREG                     want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:PREREG_PINNED'] 
+BINARY                     want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:BINARY_SEALED'] 
+SCHEMA                     want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_free                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_new_us              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_wait_us             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_guard_busy       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_taking         want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_hint_defer       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_hint_torn        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_slot_bad         want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_free           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_chk_ok           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_chk_bad          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_q_noguard        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_da_guard_yield      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_ginv_reg        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_ginv_map        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_rinv            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_nskip           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_nwould          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_nmiss           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bda_nxthr           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+SCHEMA_bgc_evict           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+FIELD_ORIGIN               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:FIELD_ORIGIN'] 
+FIELD_ORIGIN_us            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:FIELD_ORIGIN'] 
+FIELD_ORIGIN_slot          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:FIELD_ORIGIN'] 
+SCHEMA_bda_scan            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:SCHEMA'] 
+FIELD_ORIGIN_scan          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:FIELD_ORIGIN'] 
+RAW_CONTIG                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:RAW_CONTIGUITY'] 
+DURATION                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:DURATION'] 
+GATEARM                    want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_malformed          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_order              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_abba0              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_arms               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_period             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_frame              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_block              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:GATEARM'] 
+GATEARM_none               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+NO_FLOOR_bf_n              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_disp           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_clr_skip       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip_drop      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_FLOOR'] 
+MARKERS_OFF                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:MARKERS_OFF'] 
+NO_RECORDING               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:NO_RECORDING'] 
+STREAMS                    want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:STREAMS_COMPLETE'] 
+ROW_ARMS                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:ROW_ARMS'] 
+AB_BA                      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+AB_BA_abba1                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+PIN_ONCE                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:PIN_ONCE'] 
+PIN_mode2                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:PIN_ONCE'] 
+PIN_none                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:PIN_ONCE'] 
+REC_TWO                    want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:RECORD_THREAD_TWO'] 
+CKPT_line                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_off                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_diag                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_CHECKPOINT_LINE'] 
+HANGABORT                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_GPUHANGABORT'] 
+FATAL                      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so0                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so1                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so2                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so3                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so4                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so5                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so6                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so7                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_log         want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_so          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:NO_FATAL_MARKER'] 
+CSSTALL_not_marker         want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+ENV_CKPT                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ENV_NO_CHECKPOINTS', 'protocol'] errors=1
+PAIRS                      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:PAIRS'] 
+PAIRS_DUR                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:PAIRS', 'integrity:DURATION'] 
+NO_PAIRS                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED'] 
+BANDS                      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:BANDS'] 
+BANDS_rec1                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:BANDS'] 
+BANDS_gpu0                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:BANDS'] 
+WORK_SPLIT                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:WORK_SPLIT'] 
+AREA_VERDICT               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_V_work                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_VERDICT'] mirror=['work']
+AREA_SELECTED              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_SELECTED'] 
+WORK                       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_VERDICT', 'control:WORK_SPLIT'] mirror=['work']
+AREA                       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_min_flips             want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+AREA_min_flips_below       want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+SYNC                       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:SYNC_COMPILE'] 
+SYNC_edge                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+SYNC_unkept                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:SYNC_COMPILE'] 
+REGIME_OLD0                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['REGIME_OLD_ARM0']
+REGIME_OLD0_edge           want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+REGIME_OLD0_out            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['REGIME_OLD_ARM0']
+REGIME_OLD0_lag            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['REGIME_OLD_ARM0']
+REGIME_OLD0_none           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING', 'integrity:SCHEMA'] arming=['REGIME_OLD_ARM0']
+NARROW_ARMED1              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_ARMED_ARM1']
+NARROW_ARMED1_out          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_ARMED_ARM1']
+NARROW_ARMED1_lag          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_ARMED_ARM1']
+NARROW_DARK0               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_DARK_ARM0']
+NARROW_DARK0_one           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_DARK_ARM0']
+NARROW_DARK0_lag           want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+NARROW_SCAN1               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_SCAN_ARM1']
+NARROW_SCAN1_edge          want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+NARROW_SCAN1_out           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NARROW_SCAN_ARM1']
+NARROW_SCAN1_lag           want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+NARROW_SCAN1_none          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING', 'integrity:SCHEMA'] arming=['NARROW_SCAN_ARM1']
+NO_CHECK_would             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NO_CHECK']
+NO_CHECK_miss              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NO_CHECK']
+NO_CHECK_kept              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NO_CHECK']
+NO_XTHR                    want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NO_XTHR']
+NO_XTHR_kept               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['NO_XTHR']
+ARMED_edge                 want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+DEFAULTS_arm0              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_arm0_look         want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_arm1              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_bad               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_bad_kept          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree0            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree1            want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_hit_out0          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree_out0        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree_lag0        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_hit_out1          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree_out1        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_qfree_lag1        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_slot_bad          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+DEFAULTS_slot_bad_kept     want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['DEFAULTS_ON']
+WALK_ARMED0                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM0']
+WALK_IDENT0                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM0']
+WALK_DROPS0                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM0']
+WALK_ARMED1                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM1']
+WALK_IDENT1                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+WALK_DROPS1                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM1']
+WALKS_SAME                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALKS_SAME']
+WALK_IDENT_edge_in         want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+WALK_IDENT_edge_out        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+DARK_mw_n                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_hold_us             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_mut_us              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_em_n               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_proc_n             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_sh_jobs               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+P_env_frame_trace          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_gpu_hang_abort_s     want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_queue_trace          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_guest_args           want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_gate_schedule_abba   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_gpu_clock_pin        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_gpu_markers          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_env_sched                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_meta_sched               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_absent_gatefile          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_absent_samplegate        want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_absent_schedule          want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=2
+ENV_EXTRA                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_gates_sha                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_gates_text               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_label                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_two                  want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_outcome              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_exit                 want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_hold_s               want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_att_hold_edge            want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+P_att_hold_out             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+P_meta_hold_s              want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['protocol'] errors=1
+MAIN_OK                    want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] rc=0
+BINARY_main                want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:BINARY_SEALED', 'integrity:IDENTITY'] rc=1
+IDENTITY                   want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:IDENTITY'] rc=1
+IDENTITY_noexe             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:IDENTITY'] rc=1
+REFUSE_seal                want SEALED PRE-REGISTRATION CHANGED    got SEALED PRE-REGISTRATION CHANGED: C:\kyty OK  failed=[] rc=2
+REFUSE_unsealed            want PRED_SHA / PRED_BYTES are not fill got PRED_SHA / PRED_BYTES are not filled: se OK  failed=[] rc=2
+REFUSE_root                want production root must be            got production root must be C:/kyty/s113 (us OK  failed=[] rc=2
+TAG_ok_shn113b             want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_shn113_entry1       want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_shn113b_entry1      want KEEP bdanarrow=0 (run not admitted got KEEP bdanarrow=0 (run not admitted)      OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+REFUSE_tag_shn114          want tag 'shn114' is not a pred/02 tag  got tag 'shn114' is not a pred/02 tag (shn11 OK  failed=[] rc=2
+REFUSE_tag_shn112          want tag 'shn112' is not a pred/02 tag  got tag 'shn112' is not a pred/02 tag (shn11 OK  failed=[] rc=2
+REFUSE_tag_net112          want tag 'net112' is not a pred/02 tag  got tag 'net112' is not a pred/02 tag (shn11 OK  failed=[] rc=2
+REFUSE_tag_net112b         want tag 'net112b' is not a pred/02 tag got tag 'net112b' is not a pred/02 tag (shn1 OK  failed=[] rc=2
+REFUSE_tag_net112_entry1   want tag 'net112_entry1' is not a pred/ got tag 'net112_entry1' is not a pred/02 tag OK  failed=[] rc=2
+REFUSE_tag_vsn113          want tag 'vsn113' is not a pred/02 tag  got tag 'vsn113' is not a pred/02 tag (shn11 OK  failed=[] rc=2
+REFUSE_tag_vbn113          want tag 'vbn113' is not a pred/02 tag  got tag 'vbn113' is not a pred/02 tag (shn11 OK  failed=[] rc=2
+REFUSE_tag_vnet112         want tag 'vnet112' is not a pred/02 tag got tag 'vnet112' is not a pred/02 tag (shn1 OK  failed=[] rc=2
+REFUSE_tag_shn113c         want tag 'shn113c' is not a pred/02 tag got tag 'shn113c' is not a pred/02 tag (shn1 OK  failed=[] rc=2
+REFUSE_tag_xshn113         want tag 'xshn113' is not a pred/02 tag got tag 'xshn113' is not a pred/02 tag (shn1 OK  failed=[] rc=2
+REFUSE_geom                want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+REFUSE_geom_keep           want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+REFUSE_geom_secondary      want --period/--start/--first/--keep/-- got --period/--start/--first/--keep/--second OK  failed=[] rc=2
+DRAFT_secondary            want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] rc=0
+REFUSE_out_exists          want output C:\kyty\s106_stage\shn113\f got output C:\kyty\s106_stage\shn113\fx_stan OK  failed=[] rc=2
+REFUSE_out_root            want output must live under             got output must live under C:/kyty/s106_stag OK  failed=[] rc=2
+235 cases
+ALL OK
+rc=0

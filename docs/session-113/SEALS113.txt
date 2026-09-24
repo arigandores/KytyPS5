@@ -48,3 +48,5 @@ d66b379ea0200a426ea8627a0a2d19f4cc921c939ac17c69c4d84e731378fdff *test_vbn113f.p
 3d980eef4fd2fbdff114d835298b01a708675629f9a2423530c34587dec5eed4 *make_vbn113f.py
 d43d55b1f2a71ae3a21e198c22c3cfcf2e14380025f79dc4cd3a14579e603594 *go113f.sh
 1678d3f40ace01cd652d375dbfd8229b58341846b465cc4fd91817634cbe3373 *kyty_emulator_1678d3f4.exe
+post-seal (mutlib v2 877eb53a, --control --no-memo, 54/54): 60af13a3fd915067315bf6fd7da9260155e6ab9c332ec8e6b45d9bd8ad9f4f68 *mut_vbn113f.out.txt
+post-seal (mutlib v2 877eb53a, --control --no-memo, 54/54): ee35fa6d38ab80a5c2f7341042188c363d4e9909c03ac1d896da66c1806f30b8 *mut_vbn113f.stderr.txt

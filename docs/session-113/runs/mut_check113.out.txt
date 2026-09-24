@@ -1,0 +1,48 @@
+mutlib 2  harness C:\kyty\s106_stage\mutlib\mutlib.py sha256 877eb53a9d939293308fd4bcbce2764606f42a9c1f0d6df4282923db529a6108
+scorer  C:\kyty\s113\check113.py sha256 2120ed5aa011ed6c7c06f8077b681e6b5505bece8e40c735d19baf80bc66cefa
+test    C:\kyty\s113\test_check113.py sha256 f8415d987a60f232508b898140883cd95c3bb32ee29a41ed2d45d85a08bba158
+mutants C:\kyty\s113\mut_check113.py sha256 7cccc6fbaa8bbd69936df6daa025bcddb390193a037b8aa254e01bbb3355c033
+mutants: format list, 31 defined (strict: every use of MUTANTS checked; statements evaluated at lines 3-5,9)
+suite: family V; fast on (2 guarded updates of ok); end of suite: the final exit call at line 125
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+workers 28 (spawn, one process per job), work dir C:\kyty\s106_stage\mutlib\work\check113_38452_1790280816
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (1.1 s)
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (1.3 s)
+CONTROL CONTROL_pass_end_of_evaluate  SURVIVED  (1.2 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (1.5 s)
+frames  KILLED by frames_edge_fail  (0.8 s)
+rows  KILLED by rows_edge_fail  (0.9 s)
+pin_count  KILLED by pin_two  (0.2 s)
+pin_mode  KILLED by pin_mode2  (0.3 s)
+pin_env  KILLED by pin_env  (0.2 s)
+rec  KILLED by recorded  (0.3 s)
+sched  KILLED by schedule  (0.3 s)
+ckpt  KILLED by checkpoints  (0.4 s)
+att_len  KILLED by att_extra_failed  (0.4 s)
+def_daslot  KILLED by gate_daslot  (0.5 s)
+def_daguard  KILLED by gate_daguard  (0.5 s)
+def_cspfree  KILLED by gate_cspfree  (0.6 s)
+glitch  KILLED by glitch  (0.9 s)
+missing  KILLED by rows_field  (1.0 s)
+free  KILLED by att_exit  (0.4 s)
+noguard  KILLED by slot_noguard  (1.0 s)
+slot_bad  KILLED by slot_bad  (1.1 s)
+hit  KILLED by att_exit  (0.5 s)
+free_bad  KILLED by free_bad  (1.1 s)
+guard  KILLED by guard  (1.2 s)
+stdout  KILLED by marker_stdout  (1.3 s)
+stable  KILLED by PASS_pre_stable_bad  (0.1 s)
+marker_fatal  KILLED by marker_fatal  (1.2 s)
+installed  KILLED by installed  (0.2 s)
+def_bdanarrow  KILLED by gate_bdanarrow  (0.6 s)
+shift  KILLED by shift  (0.6 s)
+nskip  KILLED by narrow_skip  (0.6 s)
+would  KILLED by narrow_would  (0.7 s)
+gc_count  KILLED (crash: IndexError: list index out of range [check113.py:116])  (0.7 s)
+gc_shift  KILLED by gc_shift  (0.9 s)
+gc_collect  KILLED by PASS  (0.1 s)
+31 mutants: 31 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone
+controls: 3 of 3 survived
+wall 4.7 s, worker time 24.8 s, 28 workers
+ALL KILLED (31 of 31 selected mutants killed; 31 defined in the mutant script)

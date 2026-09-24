@@ -64,3 +64,13 @@ post-seal derived (item 20, 2 draft-only mutants removed): 205005061ea5aab18a7cb
 post-seal (mutlib v2 877eb53a, sealed copy, --control --no-memo, 315/315): 5635d8067eca31a3157cd907da652f5bcd78e221b0c4fa016286c84331e97960 *mut_shn113.out.txt
 post-seal (mutlib v2 877eb53a, sealed copy, --control --no-memo, 315/315): 40173d17d1de426926b5d2fb107fc51bc0bd60ca98f6f6799d6acd1d53661e96 *mut_shn113.stderr.txt
 post-seal (draft shn113b, --only the 2 unfilled-seal mutants, 2/2): 2f484674a6551ceb567b2e6dd4e5f646e3e57ca01bdd183b16aa36a42b44001b *mut_shn113_draft2.out.txt
+# video check (ROADMAP item 21, 2026-09-24T22:13)
+2120ed5aa011ed6c7c06f8077b681e6b5505bece8e40c735d19baf80bc66cefa *check113.py
+f8415d987a60f232508b898140883cd95c3bb32ee29a41ed2d45d85a08bba158 *test_check113.py
+13a99c51c2b5b0b0421355b6d68ab244d7054e4c591c1ce3d8ba803e6bdfd921 *mut_check113.py
+fa7703a04fe45568e0222e4991aefb251710827f293a7fb67fc7923e7532a168 */c/kyty/s106_stage/make_check113.py
+317104e50aa68729f8f0337ad32dfc8f1a3343b54c8d3ff9a0897caecef3e301 *go113h.sh
+# video check mutants re-derived (def_cspfree re-anchored; supersedes the mut_check113/make_check113 lines above, 22:13)
+7cccc6fbaa8bbd69936df6daa025bcddb390193a037b8aa254e01bbb3355c033 *mut_check113.py
+89db22e35b5f21ac589082bad7c856bd3c8e0bd603c96e3ac8a029fa4321ab47 */c/kyty/s106_stage/make_check113.py
+post-seal (mutlib v2, --control --no-memo, 31/31): 2283d795400ce4e474199a475e72f18c0561bf20870049f104ddd9c37812a721 *mut_check113.out.txt

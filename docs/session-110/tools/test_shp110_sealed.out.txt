@@ -1,0 +1,160 @@
+CONSTANTS                  want CONSTANTS OK                       got CONSTANTS DIFFER ['PRED_BYTES', 'PRED_SH FAIL  failed=[]   PROBLEMS message
+SHIP                       want SHIP cspfree=1 as the new default  got SHIP cspfree=1 as the new default (a new OK  failed=[] 
+PENDING                    want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+DRAFT                      want DRAFT (no verdict)                 got DRAFT (no verdict)                       OK  failed=[] 
+S1_only                    want KEEP cspfree=0 (ship rule S1-S2 on got KEEP cspfree=0 (ship rule S1-S2 on mean  OK  failed=[] rules=['S1_dt_le_-100']
+   S2_only case: d mean dt -170.7849529780563 se 144.35093856231546 (sample SE wanted -, population -)
+S2_only                    want KEEP cspfree=0 (ship rule S1-S2 on got KEEP cspfree=0 (ship rule S1-S2 on mean  OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   KEEP_edge case: d mean dt -150.0 se 0.0 (sample SE wanted -, population -)
+KEEP_edge                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   SE_exact case: d mean dt -165.76363636363635 se 83.0298115893076 (sample SE wanted 83.0298115893076, population 82.65154168768336)
+SE_exact                   want KEEP cspfree=0 (ship rule S1-S2 on got KEEP cspfree=0 (ship rule S1-S2 on mean  OK  failed=[] rules=['S2_dt_2se_excludes_0']
+   LEVEL_median case: d mean dt -150.0 se 37.45444828606715 (sample SE wanted -, population -)
+   LEVEL case: dt arm0 31000.0 arm1 30850.0, cspfree_hit arm1 262.0
+LEVEL_median               want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+   CPU_NET case: d cpu_net_us mean -200.0 (d cpu_gpu -150, d spin +50)
+CPU_NET_spin               want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_H6_hit                want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+PRED_misses                want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+V_frames                   want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['frames']
+V_glitch                   want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['no_glitch']
+V_gate                     want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['cspfree_1_in_gate_text']
+V_gate_dawalk              want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['cspfree_1_in_gate_text']
+V_pin                      want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['pinned']
+V_binary                   want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['binary']
+V_recorded                 want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['recorded']
+V_no_schedule              want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['no_schedule']
+V_no_ckpt                  want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['no_checkpoints']
+V_att_outcome              want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['one_ok_attempt']
+V_att_exit                 want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['one_ok_attempt']
+V_att_two                  want KEEP cspfree=0 (video pass failed) got KEEP cspfree=0 (video pass failed)       OK  failed=[] video=['one_ok_attempt']
+V_missing                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+INPUTS_log                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+INPUTS_meta                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:INPUTS', 'protocol'] errors=1
+PREREG                     want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:PREREG_PINNED'] 
+BINARY                     want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:BINARY_SEALED'] 
+SCHEMA                     want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:SCHEMA'] 
+SCHEMA_free                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:SCHEMA'] 
+SCHEMA_new_us              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:SCHEMA'] 
+SCHEMA_wait_us             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:SCHEMA'] 
+FIELD_ORIGIN               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:FIELD_ORIGIN'] 
+FIELD_ORIGIN_us            want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:FIELD_ORIGIN'] 
+RAW_CONTIG                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:RAW_CONTIGUITY'] 
+DURATION                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:DURATION'] 
+GATEARM                    want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_malformed          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_order              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_abba0              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_arms               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_period             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_frame              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_block              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:GATEARM'] 
+GATEARM_none               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+NO_FLOOR_bf_n              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_disp           want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip           want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_clr_skip       want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_FLOOR'] 
+NO_FLOOR_bf_skip_drop      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_FLOOR'] 
+MARKERS_OFF                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:MARKERS_OFF'] 
+NO_RECORDING               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:NO_RECORDING'] 
+STREAMS                    want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:STREAMS_COMPLETE'] 
+ROW_ARMS                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:ROW_ARMS'] 
+AB_BA                      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+AB_BA_abba1                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:AB_BA_BALANCED', 'integrity:GATEARM'] 
+PIN_ONCE                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:PIN_ONCE'] 
+PIN_mode2                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:PIN_ONCE'] 
+PIN_none                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:PIN_ONCE'] 
+REC_TWO                    want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:RECORD_THREAD_TWO'] 
+CKPT_line                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_off                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_CHECKPOINT_LINE'] 
+CKPT_diag                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_CHECKPOINT_LINE'] 
+HANGABORT                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_GPUHANGABORT'] 
+FATAL                      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so0                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so1                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so2                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so3                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so4                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so5                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so6                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_so7                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_log         want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+FATAL_waitslow_so          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:NO_FATAL_MARKER'] 
+CSSTALL_not_marker         want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+ENV_CKPT                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ENV_NO_CHECKPOINTS', 'protocol'] errors=1
+PAIRS                      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:PAIRS'] 
+PAIRS_DUR                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:PAIRS', 'integrity:DURATION'] 
+NO_PAIRS                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT', 'control:ARMING', 'control:BANDS', 'control:PAIRS', 'control:WORK_SPLIT', 'integrity:AB_BA_BALANCED'] 
+BANDS                      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:BANDS'] 
+BANDS_rec1                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:BANDS'] 
+BANDS_gpu0                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:BANDS'] 
+WORK_SPLIT                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:WORK_SPLIT'] 
+AREA_VERDICT               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_VERDICT'] mirror=['match', 'split']
+AREA_V_work                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_VERDICT'] mirror=['work']
+AREA_SELECTED              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_SELECTED'] 
+WORK                       want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_VERDICT', 'control:WORK_SPLIT'] mirror=['work']
+AREA                       want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:AREA_SELECTED', 'control:AREA_VERDICT'] mirror=['match', 'split']
+SYNC                       want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:SYNC_COMPILE'] 
+SYNC_edge                  want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] 
+FREE_DARK0                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['FREE_DARK_ARM0']
+FREE_DARK0_hit             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['FREE_DARK_ARM0']
+FREE_ARMED1                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['FREE_ARMED_ARM1']
+FREE_NO_BAD                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['FREE_NO_BAD']
+FREE_NO_BAD_kept           want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['FREE_NO_BAD']
+WALK_ARMED0                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM0']
+WALK_IDENT0                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM0']
+WALK_DROPS0                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM0']
+WALK_ARMED1                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_ARMED_ARM1']
+WALK_IDENT1                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_IDENTITY_ARM1']
+WALK_DROPS1                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALK_DROPS_ARM1']
+WALKS_SAME                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['WALKS_SAME']
+DARK_mw_n                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_hold_us             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_a_mut_us              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_em_n               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_pl_proc_n             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+DARK_sh_jobs               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['control:ARMING'] arming=['INSTRUMENTS_DARK']
+P_env_frame_trace          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_gpu_hang_abort_s     want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_queue_trace          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_guest_args           want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_gate_schedule_abba   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_gpu_clock_pin        want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_gpu_markers          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_env_sched                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_meta_sched               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_absent_gatefile          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_absent_samplegate        want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_absent_schedule          want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=2
+ENV_EXTRA                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_gates_sha                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_gates_text               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_att_label                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_att_two                  want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_att_outcome              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_att_exit                 want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_att_hold_s               want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+P_meta_hold_s              want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['protocol'] errors=1
+MAIN_OK                    want SHIP_PENDING_VIDEO (S1-S2 met; not got SHIP_PENDING_VIDEO (S1-S2 met; nothing s OK  failed=[] rc=0
+BINARY_main                want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:BINARY_SEALED', 'integrity:IDENTITY'] rc=1
+IDENTITY                   want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:IDENTITY'] rc=1
+IDENTITY_noexe             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:IDENTITY'] rc=1
+REFUSE_seal                want SEALED PRE-REGISTRATION CHANGED    got SEALED PRE-REGISTRATION CHANGED: C:\kyty OK  failed=[] rc=2
+REFUSE_unsealed            want PRED_SHA / PRED_BYTES are not fill got PRED_SHA / PRED_BYTES are not filled: se OK  failed=[] rc=2
+REFUSE_root                want production root must be            got production root must be C:/kyty/s110 (us OK  failed=[] rc=2
+TAG_ok_shp110b             want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_shp110_entry1       want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+TAG_ok_shp110b_entry1      want KEEP cspfree=0 (run not admitted)  got KEEP cspfree=0 (run not admitted)        OK  failed=['integrity:IDENTITY', 'integrity:INPUTS', 'protocol'] errors=2 rc=1
+REFUSE_tag_shp111          want tag 'shp111' is not a pred/03 tag  got tag 'shp111' is not a pred/03 tag (shp11 OK  failed=[] rc=2
+REFUSE_tag_frf109          want tag 'frf109' is not a pred/03 tag  got tag 'frf109' is not a pred/03 tag (shp11 OK  failed=[] rc=2
+REFUSE_tag_frf109b         want tag 'frf109b' is not a pred/03 tag got tag 'frf109b' is not a pred/03 tag (shp1 OK  failed=[] rc=2
+REFUSE_tag_frf109_entry1   want tag 'frf109_entry1' is not a pred/ got tag 'frf109_entry1' is not a pred/03 tag OK  failed=[] rc=2
+REFUSE_tag_fam108          want tag 'fam108' is not a pred/03 tag  got tag 'fam108' is not a pred/03 tag (shp11 OK  failed=[] rc=2
+REFUSE_tag_vsh110          want tag 'vsh110' is not a pred/03 tag  got tag 'vsh110' is not a pred/03 tag (shp11 OK  failed=[] rc=2
+REFUSE_tag_shp110c         want tag 'shp110c' is not a pred/03 tag got tag 'shp110c' is not a pred/03 tag (shp1 OK  failed=[] rc=2
+REFUSE_tag_xshp110         want tag 'xshp110' is not a pred/03 tag got tag 'xshp110' is not a pred/03 tag (shp1 OK  failed=[] rc=2
+REFUSE_geom                want --period/--start/--first/--keep ar got --period/--start/--first/--keep are --dr OK  failed=[] rc=2
+REFUSE_out_exists          want output C:\kyty\s106_stage\fx_shp11 got output C:\kyty\s106_stage\fx_shp110\alre OK  failed=[] rc=2
+REFUSE_out_root            want output must live under             got output must live under C:/kyty/s106_stag OK  failed=[] rc=2
+152 cases
+FIXTURE FAILURES

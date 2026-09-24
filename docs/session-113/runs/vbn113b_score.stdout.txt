@@ -1,0 +1,24 @@
+  tag vbn113b  rows 9952  scan rows 9686  errors none
+  bda_ginv_reg   total          555   per row      0.056
+  bda_ginv_map   total            9   per row      0.001
+  bda_rinv       total         6415   per row      0.645
+  bda_nskip      total            0   per row      0.000
+  bda_nwould     total       554496   per row     55.717
+  bda_nmiss      total            0   per row      0.000
+  bda_nxthr      total            0   per row      0.000
+  bgc_evict      total            5   per row      0.001
+  bda_nrace      total            0   per row      0.000
+  da_q_free      total     10754190   per row   1080.606
+  cspfree_hit    total      2604818   per row    261.738
+  cspfree_bad    total            0   per row      0.000
+  levels (medians over the scene rows) {'bda_scan': 56.0, 'bda_ginv_reg': 0.0, 'bda_nwould': 0.0, 'bgc_evict': 0.0}  regime NEW
+  main rows 9952  pre_run gpu util 0.0
+  BAD 0
+  prediction B1 HIT   value 0  BAD == 0
+  prediction B2 MISS  value 56.0  bda_scan level in [800, 1400] (the run is OLD)
+  prediction B3 MISS  value 0.0  bda_ginv_reg median over the scene rows in [0.5, 3] a frame (global invalidations by registrations)
+  prediction B4 MISS  value 0.0  bda_nwould median over the scene rows in [800, 1400] a frame (what mode 1 would skip)
+  prediction B5 MISS  value 0.0  bgc_evict median over the scene rows in [0.5, 3] a frame (the buffer GC runs)
+  prediction B6 HIT   value 0  sum bda_nrace <= 40 (races the check separated; the audit estimated 0.4-40 in 300 s)
+  scorer 688db5fc2e03900fb4ad993df4dd9e6fdafa0bed23f1bf63642e08cd520560df
+VERDICT: NOT_EVALUABLE

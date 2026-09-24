@@ -1,0 +1,98 @@
+{
+ "scorer_sha256": "688db5fc2e03900fb4ad993df4dd9e6fdafa0bed23f1bf63642e08cd520560df",
+ "pred": "C:/kyty/s113/pred/01b_vbn113b.md",
+ "pred_sha256": "120d0ad9c9cdc088dc24ddac0b4e232bf15e25715727e42415bf0b4cb8ae8d10",
+ "tag": "vbn113",
+ "errors": [],
+ "rows": 10201,
+ "main_rows": 10201,
+ "total": {
+  "bda_ginv_reg": 539,
+  "bda_ginv_map": 14,
+  "bda_rinv": 6496,
+  "bda_nskip": 0,
+  "bda_nwould": 539687,
+  "bda_nmiss": 0,
+  "bda_nxthr": 0,
+  "bgc_evict": 0,
+  "bda_nrace": 0,
+  "da_q_free": 10866378,
+  "cspfree_hit": 2636663,
+  "cspfree_bad": 0
+ },
+ "per_row": {
+  "bda_ginv_reg": 0.052837957063033035,
+  "bda_ginv_map": 0.0013724144691696892,
+  "bda_rinv": 0.6368003136947358,
+  "bda_nskip": 0.0,
+  "bda_nwould": 52.90530340162729,
+  "bda_nmiss": 0.0,
+  "bda_nxthr": 0.0,
+  "bgc_evict": 0.0,
+  "bda_nrace": 0.0,
+  "da_q_free": 1065.2267424762279,
+  "cspfree_hit": 258.47103225174004,
+  "cspfree_bad": 0.0
+ },
+ "bad": 0,
+ "regime_old": false,
+ "level": {
+  "bda_scan": 56,
+  "bda_ginv_reg": 0,
+  "bda_nwould": 0,
+  "bgc_evict": 0
+ },
+ "scan_rows": 9777,
+ "pre_run_gpu_util": 0.0,
+ "verdict": "NOT_EVALUABLE",
+ "predictions": [
+  {
+   "name": "B1",
+   "text": "BAD == 0",
+   "value": 0,
+   "low": 0,
+   "high": 0,
+   "hit": true
+  },
+  {
+   "name": "B2",
+   "text": "bda_scan level in [800, 1400] (the run is OLD)",
+   "value": 56,
+   "low": 800,
+   "high": 1400,
+   "hit": false
+  },
+  {
+   "name": "B3",
+   "text": "bda_ginv_reg median over the scene rows in [0.5, 3] a frame (global invalidations by registrations)",
+   "value": 0,
+   "low": 0.5,
+   "high": 3.0,
+   "hit": false
+  },
+  {
+   "name": "B4",
+   "text": "bda_nwould median over the scene rows in [800, 1400] a frame (what mode 1 would skip)",
+   "value": 0,
+   "low": 800,
+   "high": 1400,
+   "hit": false
+  },
+  {
+   "name": "B5",
+   "text": "bgc_evict median over the scene rows in [0.5, 3] a frame (the buffer GC runs)",
+   "value": 0,
+   "low": 0.5,
+   "high": 3.0,
+   "hit": false
+  },
+  {
+   "name": "B6",
+   "text": "sum bda_nrace <= 40 (races the check separated; the audit estimated 0.4-40 in 300 s)",
+   "value": 0,
+   "low": null,
+   "high": 40,
+   "hit": true
+  }
+ ]
+}

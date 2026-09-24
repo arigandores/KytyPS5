@@ -1,0 +1,16 @@
+mutlib 2  harness C:\kyty\s106_stage\mutlib\mutlib.py sha256 877eb53a9d939293308fd4bcbce2764606f42a9c1f0d6df4282923db529a6108
+scorer  C:\kyty\s106_stage\shn113b\shn113.py sha256 830bcbb8b09e75a6bff0b14840e3b451cda5b0f7f1176e9fe8befcea382a5b24
+test    C:\kyty\s113\test_shn113.py sha256 f7c9ca5378d3eca64f1134b51d12e9e70eccd38725cd34e9df550d37e3329743
+mutants C:\kyty\s113\mut_shn113.py sha256 bc0b66a825d89e59cd1b0e042300260d809d08c7b66c0dfe087551e34349a5ec
+mutants: format calls, 317 defined (strict: every use of M checked; statements evaluated at lines 17-22,31,43-45,47-56,59-73,75-77,80-81,83-90,92,94,96-107,109,111,115,117,119,121-129,131-139,141,144,148-150,152,154-156,159-170,173-179,182,185-188,190-196,199,201-202,205-211,214-217,219,221,225-231,234-240,242,244,247-252,254-256,259-266,268-272,274,277-282,284-285,287-292,294,296-299,302-309,311,313-321,323-325,327,332-336,338-339,341-343,345-348,350-351,353-360,362-366,368-371,373,375-420,424,426,428,430-431,433,435-441,443-444,446,451-453,455,457-458)
+selection: --only, 2 mutants
+suite: family N; fast on (1 guarded updates of ok); end of suite: the final exit call at line 1248
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+workers 2 (spawn, one process per job), work dir C:\kyty\s106_stage\mutlib\work\shn113_13336_1790279694
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (274.1 s)
+CONST_pred_sha_prefilled  KILLED by CONSTANTS  (43.8 s)
+CONST_pred_bytes_prefilled  KILLED by CONSTANTS  (43.6 s)
+2 mutants: 2 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone
+wall 318.5 s, worker time 361.4 s, 2 workers
+ALL KILLED (2 of 2 selected mutants killed; 317 defined in the mutant script)

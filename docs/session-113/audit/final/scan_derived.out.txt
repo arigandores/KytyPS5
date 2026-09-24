@@ -1,0 +1,42 @@
+== vbn113d
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['not differ', 'passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: none
+   mutants: list format, 43 extracted; other tuple lists none; loop iterables ['MUTANTS']; continue at [65]
+   scorer: recursive functions none; memo plan (False, 'read_run is not one top-level def', []); path-leak candidates none
+== vbn113e
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['not differ', 'passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: none
+   mutants: list format, 51 extracted; other tuple lists none; loop iterables ['MUTANTS']; continue at [73]
+   scorer: recursive functions none; memo plan (False, 'read_run is not one top-level def', []); path-leak candidates none
+== vbn113f
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['not differ', 'passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: none
+   mutants: list format, 54 extracted; other tuple lists none; loop iterables ['MUTANTS']; continue at [76]
+   scorer: recursive functions none; memo plan (False, 'read_run is not one top-level def', []); path-leak candidates none
+== shn113 sealed
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: ['sys.argv[2]']
+   mutants: calls format, 315 extracted; other tuple lists none; loop iterables ["('da_guard_busy', 'da_q_taking', 'da_hint_defer', 'da_hint_t", 'M.items()', 'enumerate(names)', 'ex.map(lane, lanes)', 'jobs', 'js', 'names', 'range(WORKERS)', 'res_list', 'txt.splitlines()']; continue at none
+   scorer: recursive functions none; memo plan (True, '', ['log_path', 'stdout_path']); path-leak candidates none
+== shn113 draft
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: ['sys.argv[2]']
+   mutants: calls format, 317 extracted; other tuple lists none; loop iterables ["('da_guard_busy', 'da_q_taking', 'da_hint_defer', 'da_hint_t", 'M.items()', 'enumerate(names)', 'ex.map(lane, lanes)', 'jobs', 'js', 'names', 'range(WORKERS)', 'res_list', 'txt.splitlines()']; continue at none
+   scorer: recursive functions none; memo plan (True, '', ['log_path', 'stdout_path']); path-leak candidates none
+== check113
+   exit expression: 0 if ok else 1 (names ['ok'])
+   ok &= operands: ['not differ', 'passed']
+   ok &= inside a try: none
+   raw sys.stdout.write calls: none; sys.argv[2] uses: none
+   mutants: list format, 31 extracted; other tuple lists none; loop iterables ['MUTANTS']; continue at [46]
+   scorer: recursive functions none; memo plan (False, 'read_run is not one top-level def', []); path-leak candidates none

@@ -1,105 +1,93 @@
-# Session 113 — WIP, PAUSED before its first game run: the BDA regime explained (a buffer registration invalidates every region stamp; the buffer GC runs above a device-memory threshold); within a build OLD is not slower (census); knob `bdanarrow` built, audited offline, verify seal 01b ready
+# Session 113 — the BDA regime explained; knob `bdanarrow` built, verified in a forced OLD regime (0 misses) and KEPT at 0 (−83.2 ± 68.0 µs, below the −100 bar); the fast mutation harness `mutlib` v2; one 3-s stall diagnosed as a wait on an unsubmitted tick; no speed-up shipped
 
-**Single source of truth for session 113 while it is paused.** Mirrored into git as `docs/local-session-113.md`. Harness
-root `C:/kyty/s113`. Everything below is measured (offline, archived logs) or read from code; **no game run happened in
-this session** (the user paused it: "добиваем всё без запуска игры, документируем и останавливаемся").
+**Single source of truth for session 113.** Mirrored into git as `docs/local-session-113.md`. Harness root
+`C:/kyty/s113`. Decisions: `docs/ROADMAP.md` §0.1 "СЕССИЯ 113 — ЗАПИСИ ДО ДЕЙСТВИЙ" items 1–22 (item 9 was retracted by
+item 10; item 22 carries the audit's errata to items 13–21).
 
 **Opening numbers:** Sky Garden, defaults `dawalk=1 dabatch=8 ctxtick=1 dapin=3 cspfam=0 cspfree=1 daslot=1 daguard=1`;
-installed build `b47b58a9…` (session 112). 60 FPS is not promised.
+installed build at the start `b47b58a9…` (session 112). **Closing:** the same defaults plus `bdanarrow=0`; installed
+build **`1678d3f4…`** (video `vid113` PASS). 60 FPS is not promised.
 
 ---
 
-## 1. Result (offline)
+## 1. Result
 
-1. **Port** `C:/kyty/s112/s113_port.py` (`04cfa646…`, 3 591 lines): `PORT DIAGNOSTIC: clean; carried=7591 ledger=87
-   skipped=47`; 70 sealed texts (68 in `prev112/pred`); `gates.cpp` asserted at 141 entries / ABSENT 42 at port time
-   (the `bdanarrow` knob added after the port makes it 142 / 43).
-2. **Mechanism of the BDA regime** (code reading + 190 archived logs, `C:/kyty/s106_stage/bda113/MECHANISM.md`, git
-   `docs/session-113/census/MECHANISM.md`): OLD = one extra full walk of the registered-buffer span per frame (1 068 − 52
-   ≈ 1 016 four-MiB regions). `PrepareBda` (`renderContext.cpp:343-345` before the patch) called
-   `InvalidateBdaRegionStamps()` on any move of the buffer registration epoch — every region's stamp went stale, not just
-   the changed buffer's. In OLD the epoch moves ~1.2 times a frame: the buffer GC (`bufferCache.cpp:1935-1991`) evicts
-   buffers idle for 160 ticks and they are created again (`buf_new` 1.1–2.4 a frame). The GC runs only when device-local
-   usage ≥ a threshold fixed in the constructor (9 295.8 MiB here); NEW runs sit 225–567 MiB below, OLD 133–1 085 above
-   (whole 256-MiB VMA blocks after the level load). Within-run evidence: the `bindfloor` arm that holds the GC reads 0–1.6 %
-   OLD frames against 95–97 %.
-3. **Census of 659 archived logs** (`census113.py`, 151 fixture checks; 579 usable runs of sessions 53–112,
-   `docs/session-113/census/census_summary.md`): OLD 289, NEW 221, 11 switched; desert/intro/title all NEW, Sky Garden
-   288 OLD / 135 NEW. `bda_scan` a flip = base ~50 + k full re-walks of ~1 014 regions (OLD: k = 1 on 59.9 % of flips, 2 on
-   29.3 %; NEW: k = 0 on 96.8 %); a re-walk follows a flip that created a buffer (88 % in NEW), and OLD creates a buffer on
-   84.6 % of flips. The regime settles when the load burst ends, but 8 runs switched later (NEW → OLD near n ≈ 940).
-   **Within a build OLD is not slower:** identical-launch series Δ`dt` (OLD − NEW) **+17 ± 84 µs**; regression on the
-   re-walk share +91 ± 193 µs; median over 28 build+scene groups +2.6 µs. OLD shows less `sync_up_kb` (−368 KiB a flip,
-   27/27 groups), fewer `faults_gpu`, less `prot_gpu_us` — the full re-walk seems to take buffer syncs over from other
-   paths. Session 112's audit indication (+27…+442 µs across builds) did not survive the within-build comparison.
-4. **Code** (`37e0de1`; ROADMAP items 1–2 recorded first, `5a8970c`): knob **`bdanarrow`** (`KYTY_BDA_NARROW_STAMPS`,
-   0..2, default 0, LAST knob row). Unconditionally `ChangeRegister<insert>` marks the stamps of the new buffer's regions
-   stale (`MarkBdaRegions`, generation 0). `PrepareBda` reads the knob once: 0 — a registration still bumps the global
-   generation; **1 — only a guest-map move bumps it**; 2 — 0 plus a check of every region 1 would skip (`bda_nwould`) and
-   of those whose dirty ranges overlap a registered buffer (`bda_nmiss`). Counters `bda_ginv_reg`, `bda_ginv_map`,
-   `bda_rinv`, `bda_nskip`, `bda_nwould`, `bda_nmiss`, `bda_nxthr`, `bgc_evict`. Build
-   **`94362eae5e28fa68c6a9d5ed921510a1fb1caa2868b0aa220099ba333df4da92`** (copy `s113/kyty_emulator_94362eae.exe`; NOT
-   installed — `go113.sh` installs it). The binary carries every new counter name (checked offline).
-5. **Seal 01** `pred/01_vbn113.md` (`e6b7b397…`, `942fd2f`) — **never run; superseded by seal 01b** (item 8).
-6. **Offline adversarial audit before any run** (workflow of 31 agents: four lenses — safety of mode 1, validity of the
-   check, threads, harness — and two skeptics per finding; `C:/kyty/s113/audit113pre/AUDIT113PRE.md`, git
-   `docs/session-113/audit/`): the safety of mode 1 is NOT REFUTED; **MAJOR — races inflate `bda_nmiss`** (the stamp was
-   read without the region lock and the dirty bits collected later under it, so a guest write in between counted as a
-   miss that mode 1 would not suffer; 0.4–40 expected in 300 s ⇒ a NO_GO of seal 01 could not be read). MINOR: an old
-   `bdastamp` hole (a 4-MiB region shared by two mapped ranges is walked only for the lower one — every knob; no such layout
-   found in `vid112`); `armdefer` vs the three-epoch cache (gate off); `bda_nxthr` in BAD (0 by construction); B3–B5 were
-   means not levels; no row-continuity check; the chain installed without a hash check; "nothing else on the machine"
-   unchecked; mutants ran on the draft copy.
-7. **Race-separating check** (`6eb7d14`; ROADMAP item 5 first, `505c589`): after the collect the region stamp is read
-   again — `bda_nmiss` only if unchanged, else **`bda_nrace`**; the first 40 misses logged as `BdaNarrowMiss: region=…
-   range=… buffer=…`. Build **`7d9fa0288099204f16974292a0d474afee80e58df43770612e11b8d5db5d6e5f`** (copy
-   `s113/kyty_emulator_7d9fa028.exe`; not installed).
-8. **Seal 01b** `pred/01b_vbn113b.md` (**`120d0ad9…`**, `b885fd4`), replacing seal 01 before any run: BAD = Σ`bda_nmiss`
-   (races excluded) + Σ`bda_nxthr`; new branch INVESTIGATE (BAD made only of `bda_nxthr`); new admission terms PRE_RUN
-   (launcher's pre-run GPU utilisation ≤ 10) and STREAMS (contiguous flips, x rows = main rows ±1); B3–B5 medians over the
-   scene rows; B6 Σ`bda_nrace` ≤ 40. Scorer `vbn113b.py` (from `vbn113.py` by `make_vbn113b.py`; 83 fixture checks; 41
-   mutants run on the SEALED copy, output `mut_vbn113b.out.txt`). Chain **`go113b.sh`** (refuses a held lock, installs
-   the pinned copy after a sha check, verify only). **Not run.**
-9. **Seal 02 (ship ABBA `bdanarrow=0|1`)** not written: scorer `shn113.py` derived from `net112.py` by `make_shn113.py`
-   (draft copies `C:/kyty/s113/shn113_draft/`): 235 fixture cases ALL OK, **310/310 mutants killed** (that pass took ~3 h —
-   the reason for ROADMAP item 7, the fast mutation harness), draft run on `net112` OK. It is built for `94362eae`
-   without `bda_nrace` — re-pin before sealing; open: the NARROW_ARMED_ARM1 threshold (≥ 1 may refuse an armed run;
-   decide from `vbn113`'s `bda_ginv_reg`) (RESUME POINT step 3).
+1. **The BDA regime** (offline, `C:/kyty/s106_stage/bda113/MECHANISM.md`, census of 579 archived runs): OLD = a full
+   re-walk of all ~1 016 four-MiB regions after each buffer registration, because `PrepareBda` invalidated every region
+   stamp when the registration epoch moved; the buffer GC evicts idle buffers (and they are re-created) only while
+   device-local usage is above a trigger fixed in the constructor (budget − 1 GiB − 0.6·8 GiB = 9 296 MiB here). Which
+   side a run lands on depends on its usage after the level load (hypothesis H2: the number of 256-MiB VMA blocks; H3 —
+   another budget — refuted: the budget was identical in all entries of the day). Today: OLD 1 entry of 7 (`vbn113c`),
+   plus `vid113` (natural OLD at the end of the session).
+2. **Knob `bdanarrow`** (`KYTY_BDA_NARROW_STAMPS`, 0..2, default 0): 0 today; 1 marks stale only the stamps of the
+   registered buffer's regions; 2 = 0 plus the check of what 1 would skip. The check was made exact (`56a4b4f`: the stamp
+   read under the same region lock as the dirty bits).
+3. **Verify (seals 01b–01f).** 01b (`vbn113`, `vbn113b`) and 01d (`vbn113g..j`): NEW regime ⇒ NOT_EVALUABLE; 01c
+   (`vbn113c`, OLD): 13.79 M checks, 0 misses, 3 races ⇒ INVESTIGATE ⇒ the exact check. The GC-trigger measurement env
+   **`KYTY_BUFFER_GC_TRIGGER_SHIFT_MB`** (`967d1aa`, default 0; 1024 = trigger −1 GiB) forces OLD. 01e (`vbn113k`): forced
+   OLD worked, BAD 0 over 13.9 M, **NOT_ADMITTED** by one `GpuWaitSlow`. 01f (`vbn113m`, build `1678d3f4`): **GO** — forced
+   OLD, 11 845 121 would-skip regions, `bda_nmiss` 0, `bda_nxthr` 0, `bda_nrace` 0 (in this one 300-s entry).
+4. **ABBA (seal 02, `shn113`, 600 s, pinned, forced OLD in both arms): KEEP `bdanarrow=0`.** Admitted (98 pairs);
+   **Δ`dt` = −83.2 ± 68.0 µs** (2·SE, t −2.45; main estimator rows 10..89); Δ`cpu_net` −83.9 ± 60.6; Δ`gpu_busy` +5.9 ±
+   23.8. S2 met, S1 (≤ −100) not ⇒ KEEP. The 2·SE band of the saving (15–151 µs) straddles the bar; only the point estimate
+   is below it. Point estimate ≈ 0.27 % of game speed in a forced OLD regime at a pinned clock (band 0.05–0.50 %).
+5. **The 3-s stall (`vbn113k`, frame 9 672, `dt` 3.03 s):** `GpuWaitSlow role=4 requested=329576 known=329575
+   current=329576` — a thread outside the frame-trace roles (by code, the priority-operation thread — an inference by
+   elimination) waited 2.975 s on the recording tick, which was not submitted for ≈ 3 s; the submit history ended at the
+   previous tick, the submit backlog was 0, GPU utilisation 0 % for ~2.5 s. New in form: the 21 earlier `GpuWaitSlow`
+   events (sessions 80–98, 22 files) had `requested < current` and all ended in `GpuHangAbort`; none in sessions 104–112.
+   Instrument `623009f` (no behaviour change): queue site of priority operations, `prio_unsub`, `prio_stall`
+   (`PriorityStall:` lines), `gw_idle_prio` (`GpuIdlePrio:` lines). In `vbn113m` and `vid113`: `prio_stall` 0,
+   `gw_idle_prio` 0, `prio_unsub` ≈ 5.7 a frame. Cause not found (session 114, step 1).
+6. **`mutlib` v2** (`C:/kyty/s106_stage/mutlib/mutlib.py` sha `877eb53a…`): fast mutation harness, accepted on six suites
+   with the old verdicts (net112 277/277 in 21 min with the parse memo, 33 min without; shn113 310/310 in 34 min); fresh
+   review: 2 MAJOR + 6 MINOR holes with no trigger in today's suites ⇒ derived scorers run `--control --no-memo` (item 15);
+   v3 is a debt. Mutants this session: vbn113d 43/43, vbn113e 51/51, vbn113f 54/54, shn113 315/315 (+2/2 draft-only),
+   check113 31/31.
+7. **Video `vid113`** (build `1678d3f4`, defaults, pinned, 120 s): PASS — 3 976 frames, 0 one-frame glitches;
+   `BufferGc … shift_mb=0`, `bda_nskip`/`bda_nwould` 0, `prio_stall` 0.
 
-## 2. Harness
+## 2. Harness (`C:/kyty/s113`)
 
-`C:/kyty/s113`: `vbn113b.py`, `test_vbn113b.py`, `mut_vbn113b.py`, `make_vbn113b.py`, `go113b.sh` (seal 01b), the superseded
-`vbn113.py`/`test_vbn113.py`/`mut_vbn113.py`/`go113.sh` (seal 01), `gates_narrow2.txt` (base + ` bdanarrow=2`),
-`gates_narrow1.txt` (base + ` bdanarrow=1`, for the ABBA's video), `SEALS113.txt`, build copies
-`kyty_emulator_94362eae.exe` (seal 01) and `kyty_emulator_7d9fa028.exe` (seal 01b); `audit113pre/`; census and mechanism scripts in `C:/kyty/s106_stage/bda113/` (git
-`docs/session-113/census/`).
+Seals `pred/01b…02` and `SEALS113.txt`; scorers `vbn113b/c/d/e/f.py`, `shn113.py`, `check113.py` with `test_*`, `mut_*`,
+`make_*` (the generators after item 16 assert whole-line anchors); chains `go113b…h.sh`; build copies
+`kyty_emulator_7d9fa028/5ba0e188/cf22e223/1678d3f4.exe`; `runs113/` (scores); `audit113pre/` (pre-run audit),
+`audit113/` (mid-session audit), `audit113/final/` (session audit: `RECOUNT.md`, `PROTOCOL.md`, `CODE.md`, `CLAIMS.md`);
+`mutlib` in `C:/kyty/s106_stage/mutlib` (archived in git `docs/session-113/mutlib`).
 
 ## 3. Source, builds, provenance
 
-Commits: `d611c20` (session 112 close), `5a8970c` (records 1–3), `37e0de1` (code), `942fd2f` (seal 01 + port), `3931e65`
-(census record 4), `505c589` (record 5 — audit and decisions), `6eb7d14` (race-separating check), `b885fd4` (seal 01b),
-the pause commit. Builds `94362eae…` (`37e0de1`) and `7d9fa028…` (`6eb7d14`); installed exe still `b47b58a9…`. No push.
+Code commits: `37e0de1`, `6eb7d14` (knob `bdanarrow`, check), `56a4b4f` (exact check), `967d1aa` (GC-trigger env),
+`623009f` (stall instrument). Builds: `7d9fa028` (6eb7d14), `5ba0e188` (56a4b4f), `cf22e223` (967d1aa), **`1678d3f4`**
+(623009f, installed). Records and seals: `docs/ROADMAP.md` items 1–22, `docs/session-113/`. No push.
 
 ## 4. Runs
 
-None in this session.
+| tag | seal | what | outcome |
+|---|---|---|---|
+| `vbn113`, `vbn113b` | 01b | verify `bdanarrow=2`, build `7d9fa028` | NOT_EVALUABLE (NEW) |
+| `vbn113c` | 01c | verify, relaunched until OLD | OLD; 13.79 M checks, 0 miss, 3 race ⇒ INVESTIGATE |
+| `vbn113g`–`j` | 01d | exact check, build `5ba0e188` | NOT_EVALUABLE ×4 (NEW); 2.35 M checks, 0/0/0 |
+| `vbn113k` | 01e | forced OLD, build `cf22e223` | NOT_ADMITTED (`GpuWaitSlow`, 3-s stall); BAD 0 over 13.9 M |
+| `vbn113m` | 01f | forced OLD + stall instrument, build `1678d3f4` | **GO**; 11.85 M, 0/0/0 |
+| `shn113` | 02 | ABBA `bdanarrow=0\|1`, 600 s, forced OLD | **KEEP** (−83.2 ± 68.0 µs) |
+| `vid113` | check113 | video of the installed build, defaults | **PASS** (3 976 frames, 0 glitches) |
 
-## 5. RESUME POINT
+## 5. Proved, and not proved
 
-`docs/next-session-113.md`, section "RESUME POINT": run `go113b.sh` (nothing else running), record the verdict in ROADMAP
-(item 7), then — on GO — re-pin `shn113` to `7d9fa028` (+ `bda_nrace`), seal 02, the ABBA, its video; then the session
-audit and close. The heartbeat cron was deleted and the loop stopped at the pause.
+**Proved:** what makes a run OLD (GC above the trigger + global stamp invalidation); that mode 1 skipped no needed
+synchronization in one forced-OLD 300-s entry of this scene (0 misses on 11.8 M); that the extra walk costs 83.2 ± 68.0
+µs a frame at a pinned clock in a forced OLD regime (below the ship bar by the point estimate).
+**Not proved:** that mode 1 is safe elsewhere (its correctness conditions: registrations serialized with the walk; the
+check ran on arm-2 history); the share of the natural OLD regime; the cause of the 3-s stall; anything about 60 FPS.
 
-## 6. Proved, and not proved
+## 6. Audits
 
-**Found (offline).** What makes a run OLD (the buffer GC above a device-memory threshold; each registration invalidating
-every region stamp) and that, within a build, OLD runs are not measurably slower than NEW (+17 ± 84 µs).
-**Not proved.** That knob 1 is safe (to be checked by the sealed verify); that it saves frame time (the census suggests
-little: the extra walk seems to take buffer syncs over from other paths); anything about 60 FPS.
+Pre-run (`audit113pre/AUDIT113PRE.md`, 31 agents): MAJOR (races inflate `bda_nmiss`) fixed by the exact check. Session
+audit (`audit113/final/`): no MAJOR — recount CONFIRMED, protocol HOLDS, code NOT REFUTED, 11 MINOR claim errata recorded
+in ROADMAP item 22.
 
-## 7. Offline audit
+## 7. Next
 
-See §1 item 6; report `C:/kyty/s113/audit113pre/AUDIT113PRE.md` (merged findings S1–S9 with skeptic verdicts, refuted
-items, "checked OK" per lens). Its MAJOR is fixed in code and seal (items 7–8); its MINORs are either fixed in seal 01b
-(PRE_RUN, STREAMS, medians, INVESTIGATE, hash-checked install, mutants on the sealed copy) or recorded as ROADMAP §7 debts
-(the `bdastamp` shared-region hole, the epoch order in `ChangeState`, `armdefer`).
+`docs/next-session-114.md`: (1) the stall — catch the site, then a fix as a knob; (2) `mutlib` v3; (3) the next speed
+track chosen by the rule (candidate: the queue-to-run latency of priority operations).

@@ -1,0 +1,38 @@
+test_vbn113c: cases 63, EDGES 19, named make() 7
+test_vbn113d: cases 63, EDGES 19, named make() 7
+   inline comment holding a fixture: (dict(race=1), 'B1', True),                           # B1 reads BAD, which races never enter (bad_race) (dict(nmiss=1), 'B1', False),
+test_vbn113e: cases 70, EDGES 20, named make() 7
+test_vbn113f: cases 72, EDGES 22, named make() 7
+
+== c -> d
+  cases lost  : ['GO_tag_d', 'GO_tag_e', 'GO_tag_f', 'INVESTIGATE_race']
+  cases added : ['GO_race', 'GO_tag_h', 'GO_tag_i', 'GO_tag_j']
+  cases changed (same name, other text): ['TAG', 'TAG_old']
+  EDGES lost  : ["(dict(nmiss=1), 'B1', False)"]
+  EDGES added : ["(dict(race=1), 'B1', True)"]
+  named lost  : []
+  named added : []
+== d -> e
+  cases lost  : ['GO_tag_h', 'GO_tag_i', 'GO_tag_j']
+  cases added : ['ENV_SHIFT_missing', 'ENV_SHIFT_wrong', 'GC_LINE_missing', 'GC_LINE_prefix', 'GC_LINE_shift0', 'GC_LINE_shift_big', 'GC_LINE_trigger_edge_fail', 'GC_LINE_trigger_edge_ok', 'GC_LINE_two', 'GO_tag_l']
+  cases changed (same name, other text): ['TAG', 'TAG_old']
+  EDGES lost  : []
+  EDGES added : ["(dict(nmiss=1), 'B1', False)"]
+  named lost  : []
+  named added : []
+== e -> f
+  cases lost  : ['GO_tag_l']
+  cases added : ['GO_stall', 'GO_tag_n', 'ROWS_field_prio']
+  cases changed (same name, other text): ['TAG', 'TAG_old']
+  EDGES lost  : []
+  EDGES added : ["(dict(stall=0), 'B7', True)", "(dict(stall=1), 'B7', False)"]
+  named lost  : []
+  named added : []
+== c -> f
+  cases lost  : ['GO_tag_d', 'GO_tag_e', 'GO_tag_f', 'INVESTIGATE_race']
+  cases added : ['ENV_SHIFT_missing', 'ENV_SHIFT_wrong', 'GC_LINE_missing', 'GC_LINE_prefix', 'GC_LINE_shift0', 'GC_LINE_shift_big', 'GC_LINE_trigger_edge_fail', 'GC_LINE_trigger_edge_ok', 'GC_LINE_two', 'GO_race', 'GO_stall', 'GO_tag_n', 'ROWS_field_prio']
+  cases changed (same name, other text): ['TAG', 'TAG_old']
+  EDGES lost  : []
+  EDGES added : ["(dict(race=1), 'B1', True)", "(dict(stall=0), 'B7', True)", "(dict(stall=1), 'B7', False)"]
+  named lost  : []
+  named added : []

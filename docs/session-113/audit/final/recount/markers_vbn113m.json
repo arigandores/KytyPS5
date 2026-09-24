@@ -1,0 +1,22 @@
+{
+ "log_vbn113m.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "BufferGc:": 1,
+   "Gate: ": 1
+  },
+  "first": {
+   "BufferGc:": "BufferGc: budget=14901313536 trigger=8673610957 critical=13183326618 shift_mb=1024",
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "Gate: ": "Gate: bdanarrow=2 frame=1"
+  }
+ },
+ "stdout_vbn113m.txt": {
+  "counts": {},
+  "first": {}
+ },
+ "vbn113m.stdout.txt": {
+  "counts": {},
+  "first": {}
+ }
+}

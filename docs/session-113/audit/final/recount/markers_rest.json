@@ -1,0 +1,74 @@
+{
+ "log_vbn113g.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "Gate: ": 1
+  },
+  "first": {
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "Gate: ": "Gate: bdanarrow=2 frame=1"
+  }
+ },
+ "log_vbn113h.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "Gate: ": 1
+  },
+  "first": {
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "Gate: ": "Gate: bdanarrow=2 frame=1"
+  }
+ },
+ "log_vbn113i.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "Gate: ": 1
+  },
+  "first": {
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "Gate: ": "Gate: bdanarrow=2 frame=1"
+  }
+ },
+ "log_vbn113j.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "Gate: ": 1
+  },
+  "first": {
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "Gate: ": "Gate: bdanarrow=2 frame=1"
+  }
+ },
+ "log_shn113.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "BufferGc:": 1,
+   "GateArm:": 202,
+   "Gate: ": 101
+  },
+  "first": {
+   "BufferGc:": "BufferGc: budget=14901313536 trigger=8673610957 critical=13183326618 shift_mb=1024",
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)",
+   "GateArm:": "GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=dawalk=1 dawalklead=1 bdanarrow=0",
+   "Gate: ": "Gate: bdanarrow=1 frame=1890"
+  }
+ },
+ "stdout_shn113.txt": {
+  "counts": {},
+  "first": {}
+ },
+ "log_vid113.txt": {
+  "counts": {
+   "GpuClockPin:": 1,
+   "BufferGc:": 1
+  },
+  "first": {
+   "BufferGc:": "BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0",
+   "GpuClockPin:": "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)"
+  }
+ },
+ "stdout_vid113.txt": {
+  "counts": {},
+  "first": {}
+ }
+}

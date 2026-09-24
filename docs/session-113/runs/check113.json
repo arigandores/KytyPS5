@@ -1,0 +1,62 @@
+{
+ "check_sha256": "2120ed5aa011ed6c7c06f8077b681e6b5505bece8e40c735d19baf80bc66cefa",
+ "build_sha256": "1678d3f40ace01cd652d375dbfd8229b58341846b465cc4fd91817634cbe3373",
+ "checks": {
+  "binary": true,
+  "installed_now": true,
+  "pinned": true,
+  "recorded": true,
+  "no_schedule": true,
+  "no_checkpoints": true,
+  "one_ok_attempt": true,
+  "default_runs": true,
+  "no_shift": true,
+  "frames": true,
+  "no_glitch": true,
+  "rows": true,
+  "slot_default_armed": true,
+  "slot_no_bad": true,
+  "free_default_armed": true,
+  "guard": true,
+  "no_marker": true,
+  "narrow_default_dark": true,
+  "gc_default": true
+ },
+ "frames": 3976,
+ "glitches": 0,
+ "scene_rows": 3692,
+ "totals": {
+  "cspfree_hit": 981286,
+  "cspfree_bad": 0,
+  "cs_sync_new": 0,
+  "cs_sync_wait": 0,
+  "da_q_free": 4141859,
+  "da_q_noguard": 0,
+  "da_slot_bad": 0,
+  "da_guard_yield": 8,
+  "bda_nskip": 0,
+  "bda_nwould": 0,
+  "prio_stall": 0,
+  "prio_unsub": 22455
+ },
+ "per_row": {
+  "cspfree_hit": 265.78710725893825,
+  "cspfree_bad": 0.0,
+  "cs_sync_new": 0.0,
+  "cs_sync_wait": 0.0,
+  "da_q_free": 1121.846966413868,
+  "da_q_noguard": 0.0,
+  "da_slot_bad": 0.0,
+  "da_guard_yield": 0.0021668472372697724,
+  "bda_nskip": 0.0,
+  "bda_nwould": 0.0,
+  "prio_stall": 0.0,
+  "prio_unsub": 6.082069339111593
+ },
+ "markers": [],
+ "stable_frame": 276,
+ "gc_lines": [
+  "BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0"
+ ],
+ "verdict": "PASS"
+}

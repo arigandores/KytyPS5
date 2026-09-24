@@ -1,0 +1,326 @@
+{
+"C:/kyty/s80/log_nos80a.txt": [],
+"C:/kyty/s80/log_nos80b.txt": [],
+"C:/kyty/s80/log_nos80c.txt": [],
+"C:/kyty/s80/log_nos80d.txt": [],
+"C:/kyty/s80/log_nos80e.txt": [],
+"C:/kyty/s80/log_nos80f.txt": [],
+"C:/kyty/s80/log_smp80a.txt": [],
+"C:/kyty/s80/log_smp80b.txt": [],
+"C:/kyty/s80/log_smp80c.txt": [],
+"C:/kyty/s80/log_smp80c_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=3059 known=3058 current=3151 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2835/2835/2835 acopy_pending=0",
+"requested": 3059,
+"known": 3058,
+"current": 3151
+}
+],
+"C:/kyty/s80/log_smp80d.txt": [],
+"C:/kyty/s80/log_smp80e.txt": [],
+"C:/kyty/s80/log_smp80f.txt": [],
+"C:/kyty/s80/log_smp80f_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=3076 known=3075 current=3167 master=0xff62552a10 submit_backlog=0 record_backlog=0 acopy=2826/2826/2826 acopy_pending=0",
+"requested": 3076,
+"known": 3075,
+"current": 3167
+}
+],
+"C:/kyty/s80/log_vfy80a.txt": [],
+"C:/kyty/s81/log_diag81a_a1.txt": [],
+"C:/kyty/s81/log_diag81c.txt": [],
+"C:/kyty/s81/log_hang81_14.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2920 known=2919 current=3016 master=0xff62622a10 submit_backlog=0 record_backlog=0 acopy=2743/2743/2743 acopy_pending=0",
+"requested": 2920,
+"known": 2919,
+"current": 3016
+}
+],
+"C:/kyty/s81/log_hang81_17.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=3038 known=3037 current=3142 master=0xff625d2a10 submit_backlog=0 record_backlog=0 acopy=2900/2900/2900 acopy_pending=0",
+"requested": 3038,
+"known": 3037,
+"current": 3142
+}
+],
+"C:/kyty/s81/log_nos81a.txt": [],
+"C:/kyty/s81/log_nos81b.txt": [],
+"C:/kyty/s81/log_nos81c.txt": [],
+"C:/kyty/s81/log_nos81d.txt": [],
+"C:/kyty/s81/log_nos81e.txt": [],
+"C:/kyty/s81/log_nos81f.txt": [],
+"C:/kyty/s81/log_nos81g.txt": [],
+"C:/kyty/s81/log_nos81h.txt": [],
+"C:/kyty/s81/log_nos81i.txt": [],
+"C:/kyty/s81/log_nos81j.txt": [],
+"C:/kyty/s81/log_pac81a.txt": [],
+"C:/kyty/s81/log_pac81b.txt": [],
+"C:/kyty/s81/log_smp81a.txt": [],
+"C:/kyty/s81/log_smp81a_a1.txt": [],
+"C:/kyty/s81/log_smp81b.txt": [],
+"C:/kyty/s81/log_smp81c.txt": [],
+"C:/kyty/s81/log_smp81d.txt": [],
+"C:/kyty/s81/log_smp81e.txt": [],
+"C:/kyty/s81/log_smp81f.txt": [],
+"C:/kyty/s81/log_smp81f_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=3002 known=3001 current=3096 master=0xff62662a10 submit_backlog=0 record_backlog=0 acopy=2812/2812/2812 acopy_pending=0",
+"requested": 3002,
+"known": 3001,
+"current": 3096
+}
+],
+"C:/kyty/s81/log_smp81g.txt": [],
+"C:/kyty/s81/log_smp81g_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2992 known=2991 current=3082 master=0xff62592a10 submit_backlog=0 record_backlog=0 acopy=2747/2747/2747 acopy_pending=0",
+"requested": 2992,
+"known": 2991,
+"current": 3082
+}
+],
+"C:/kyty/s81/log_smp81h.txt": [],
+"C:/kyty/s81/log_smp81i.txt": [],
+"C:/kyty/s81/log_smp81j.txt": [],
+"C:/kyty/s81/log_smt81a.txt": [],
+"C:/kyty/s82/log_acc82a.txt": [],
+"C:/kyty/s82/log_bdb82a.txt": [],
+"C:/kyty/s82/log_bdv82a.txt": [],
+"C:/kyty/s82/log_bdv82b.txt": [],
+"C:/kyty/s82/log_bdv82b_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2950 known=2949 current=3041 master=0xff62662a10 submit_backlog=0 record_backlog=0 acopy=2717/2717/2717 acopy_pending=0",
+"requested": 2950,
+"known": 2949,
+"current": 3041
+}
+],
+"C:/kyty/s82/log_bk82a.txt": [],
+"C:/kyty/s82/log_dap82a.txt": [],
+"C:/kyty/s82/log_dap82b.txt": [],
+"C:/kyty/s83/log_bpc83a.txt": [],
+"C:/kyty/s83/log_bpk83a.txt": [],
+"C:/kyty/s83/log_bpk83b.txt": [],
+"C:/kyty/s83/log_bpv83a.txt": [],
+"C:/kyty/s83/log_bpv83a_warmup.txt": [],
+"C:/kyty/s83/log_bpv83b.txt": [],
+"C:/kyty/s83/log_bpv83b_warmup.txt": [],
+"C:/kyty/s83/log_flr83a.txt": [],
+"C:/kyty/s83/log_flr83a_warmup.txt": [],
+"C:/kyty/s83/log_flr83b.txt": [],
+"C:/kyty/s83/log_plk83a.txt": [],
+"C:/kyty/s83/log_plk83a_warmup.txt": [],
+"C:/kyty/s84/log_acc84a.txt": [],
+"C:/kyty/s84/log_bpc84a.txt": [],
+"C:/kyty/s84/log_bpk84a.txt": [],
+"C:/kyty/s84/log_bpv84a.txt": [],
+"C:/kyty/s84/log_bpv84a_warmup.txt": [],
+"C:/kyty/s84/log_slp84a.txt": [],
+"C:/kyty/s84/log_slp84b.txt": [],
+"C:/kyty/s85/log_blp85a.txt": [],
+"C:/kyty/s85/log_bn2d85a.txt": [],
+"C:/kyty/s85/log_dap85a.txt": [],
+"C:/kyty/s85/log_dgt85a.txt": [],
+"C:/kyty/s85/log_rcp85a.txt": [],
+"C:/kyty/s85/log_spv85a.txt": [],
+"C:/kyty/s85/log_spv85a_warmup.txt": [],
+"C:/kyty/s85/log_tfs85a.txt": [],
+"C:/kyty/s85/log_tfs85a_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2808 known=2807 current=2896 master=0xff62652a10 submit_backlog=0 record_backlog=0 acopy=2656/2656/2656 acopy_pending=0",
+"requested": 2808,
+"known": 2807,
+"current": 2896
+}
+],
+"C:/kyty/s86/log_drm86a.txt": [],
+"C:/kyty/s86/log_pgm86a.txt": [],
+"C:/kyty/s86/log_spv86a.txt": [],
+"C:/kyty/s86/log_spv86a_warmup.txt": [],
+"C:/kyty/s86/log_spv86b.txt": [],
+"C:/kyty/s86/log_spv86b_warmup.txt": [],
+"C:/kyty/s87/log_bal87a.txt": [],
+"C:/kyty/s87/log_pgl87a.txt": [],
+"C:/kyty/s87/log_spv87a.txt": [],
+"C:/kyty/s87/log_spv87a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2877 known=2876 current=2967 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=2655/2655/2655 acopy_pending=0",
+"requested": 2877,
+"known": 2876,
+"current": 2967
+}
+],
+"C:/kyty/s88/log_dap88a.txt": [],
+"C:/kyty/s88/log_dwl88a.txt": [],
+"C:/kyty/s88/log_dwl88b.txt": [],
+"C:/kyty/s88/log_dwl88c.txt": [],
+"C:/kyty/s88/log_dwl88c_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2847 known=2846 current=2935 master=0xff62682a10 submit_backlog=0 record_backlog=0 acopy=2639/2639/2639 acopy_pending=0",
+"requested": 2847,
+"known": 2846,
+"current": 2935
+}
+],
+"C:/kyty/s88/log_spv88a.txt": [],
+"C:/kyty/s88/log_spv88a_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2902 known=2901 current=2997 master=0xff62612a10 submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0",
+"requested": 2902,
+"known": 2901,
+"current": 2997
+}
+],
+"C:/kyty/s88/log_spv88a_warmup.txt": [],
+"C:/kyty/s88/log_wit88a.txt": [],
+"C:/kyty/s88/log_wit88a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2861 known=2860 current=2948 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0",
+"requested": 2861,
+"known": 2860,
+"current": 2948
+}
+],
+"C:/kyty/s88/log_wit88b.txt": [],
+"C:/kyty/s88/log_wit88b_warmup.txt": [],
+"C:/kyty/s89/log_tkl89a.txt": [],
+"C:/kyty/s89/log_tkl89a_warmup.txt": [],
+"C:/kyty/s90/log_bim90a.txt": [],
+"C:/kyty/s90/log_bim90a_warmup.txt": [],
+"C:/kyty/s90/log_pgl90a.txt": [],
+"C:/kyty/s90/log_pgl90a_warmup.txt": [],
+"C:/kyty/s91/log_pin91a.txt": [],
+"C:/kyty/s91/log_pin91a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=4884 known=4883 current=4976 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=3408/3408/3408 acopy_pending=0",
+"requested": 4884,
+"known": 4883,
+"current": 4976
+}
+],
+"C:/kyty/s91/log_pin91b.txt": [],
+"C:/kyty/s91/log_pin91b_warmup.txt": [],
+"C:/kyty/s91/log_pin91c.txt": [],
+"C:/kyty/s91/log_pin91c_warmup.txt": [],
+"C:/kyty/s92/log_stg92a.txt": [],
+"C:/kyty/s92/log_stg92a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2984 known=2983 current=3076 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2716/2716/2716 acopy_pending=0",
+"requested": 2984,
+"known": 2983,
+"current": 3076
+}
+],
+"C:/kyty/s92/log_wak92a.txt": [],
+"C:/kyty/s92/log_wak92a_warmup.txt": [],
+"C:/kyty/s93/log_bl93a.txt": [],
+"C:/kyty/s93/log_bl93a_warmup.txt": [],
+"C:/kyty/s94/log_bda94a.txt": [],
+"C:/kyty/s94/log_bda94a_warmup.txt": [],
+"C:/kyty/s94/log_mc94a.txt": [],
+"C:/kyty/s94/log_mc94a_warmup.txt": [],
+"C:/kyty/s95/log_dryfix95.txt": [],
+"C:/kyty/s95/log_fr95a.txt": [],
+"C:/kyty/s95/log_fr95a_warmup.txt": [],
+"C:/kyty/s95/log_fr95b.txt": [],
+"C:/kyty/s95/log_fr95b_warmup.txt": [],
+"C:/kyty/s95/log_m1probe.txt": [],
+"C:/kyty/s96/log_bd96a.txt": [],
+"C:/kyty/s96/log_bd96a_warmup.txt": [],
+"C:/kyty/s96/log_bf96a.txt": [],
+"C:/kyty/s96/log_bf96a_warmup.txt": [],
+"C:/kyty/s96/log_bf96b.txt": [],
+"C:/kyty/s96/log_bf96b_warmup.txt": [],
+"C:/kyty/s96/log_pl96a.txt": [],
+"C:/kyty/s96/log_pl96a_warmup.txt": [],
+"C:/kyty/s97/log_bd96b.txt": [],
+"C:/kyty/s97/log_bd96b_warmup.txt": [],
+"C:/kyty/s97/log_hg97a.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=69075 known=69074 current=69157 master=0xff626c2a10 submit_backlog=0 record_backlog=0 acopy=77230/77230/77230 acopy_pending=0",
+"requested": 69075,
+"known": 69074,
+"current": 69157
+}
+],
+"C:/kyty/s97/log_hg97a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2993 known=2992 current=3089 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=2787/2787/2787 acopy_pending=0",
+"requested": 2993,
+"known": 2992,
+"current": 3089
+}
+],
+"C:/kyty/s97/log_rv97a.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=225116 known=225115 current=225203 master=0xff625e2a10 submit_backlog=0 record_backlog=0 acopy=212557/212557/212557 acopy_pending=0",
+"requested": 225116,
+"known": 225115,
+"current": 225203
+}
+],
+"C:/kyty/s97/log_rv97a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=199898 known=199897 current=199985 master=0xff62682a10 submit_backlog=0 record_backlog=0 acopy=189071/189071/189071 acopy_pending=0",
+"requested": 199898,
+"known": 199897,
+"current": 199985
+}
+],
+"C:/kyty/s97/log_rv97b.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=169115 known=169114 current=169196 master=0xff62602a10 submit_backlog=0 record_backlog=0 acopy=160281/160281/160281 acopy_pending=0",
+"requested": 169115,
+"known": 169114,
+"current": 169196
+}
+],
+"C:/kyty/s97/log_rv97b_warmup.txt": [],
+"C:/kyty/s98/log_bf98a.txt": [],
+"C:/kyty/s98/log_bf98a_warmup.txt": [],
+"C:/kyty/s98/log_bf98c.txt": [],
+"C:/kyty/s98/log_bf98c_warmup.txt": [],
+"C:/kyty/s98/log_rv98a.txt": [],
+"C:/kyty/s98/log_rv98a_warmup.txt": [],
+"C:/kyty/s98/log_smk98a.txt": [],
+"C:/kyty/s98/log_trig98a.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0",
+"requested": 2966,
+"known": 2965,
+"current": 3056
+}
+],
+"C:/kyty/s98/log_trig98a_a1.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0",
+"requested": 2966,
+"known": 2965,
+"current": 3056
+}
+],
+"C:/kyty/s98/log_trig98a_warmup.txt": [
+{
+"line": "GpuWaitSlow: role=4 requested=76733 known=76732 current=76813 master=0xff62652a10 submit_backlog=0 record_backlog=0 acopy=89390/89390/89390 acopy_pending=0",
+"requested": 76733,
+"known": 76732,
+"current": 76813
+}
+],
+"C:/kyty/s99/log_aa99plain.txt": [],
+"C:/kyty/s99/log_bf99e.txt": [],
+"C:/kyty/s99/log_bf99g.txt": [],
+"C:/kyty/s99/log_bf99h.txt": [],
+"C:/kyty/s99/log_cal99a.txt": [],
+"C:/kyty/s99/log_eng99a1.txt": [],
+"C:/kyty/s99/log_eng99a2.txt": [],
+"C:/kyty/s99/log_eng99a3.txt": [],
+"C:/kyty/s99/log_eng99a4.txt": [],
+"C:/kyty/s99/log_eng99c1.txt": [],
+"C:/kyty/s99/log_eng99c2.txt": [],
+"C:/kyty/s99/log_life99a.txt": [],
+"C:/kyty/s99/log_vis99base.txt": []
+}

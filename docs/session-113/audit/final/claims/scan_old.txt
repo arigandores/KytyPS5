@@ -1,0 +1,67 @@
+C:/kyty/s80\log_smp80c_a1.txt 2
+    GpuWaitSlow: role=4 requested=3059 known=3058 current=3151 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2835/2835/2835 acopy_pending=0
+    GpuHangAbort: role=4 requested=3059 known=3058 current=3151 master=0xff62672a10 after=8s submit_backlog=0 record_backlog=0 acopy=2835/2835/2835 acopy_pending=0
+C:/kyty/s80\log_smp80f_a1.txt 2
+    GpuWaitSlow: role=4 requested=3076 known=3075 current=3167 master=0xff62552a10 submit_backlog=0 record_backlog=0 acopy=2826/2826/2826 acopy_pending=0
+    GpuHangAbort: role=4 requested=3076 known=3075 current=3167 master=0xff62552a10 after=8s submit_backlog=0 record_backlog=0 acopy=2826/2826/2826 acopy_pending=0
+C:/kyty/s81\log_hang81_14.txt 2
+    GpuWaitSlow: role=4 requested=2920 known=2919 current=3016 master=0xff62622a10 submit_backlog=0 record_backlog=0 acopy=2743/2743/2743 acopy_pending=0
+    GpuHangAbort: role=4 requested=2920 known=2919 current=3016 master=0xff62622a10 after=8s submit_backlog=0 record_backlog=0 acopy=2743/2743/2743 acopy_pending=0
+C:/kyty/s81\log_hang81_17.txt 2
+    GpuWaitSlow: role=4 requested=3038 known=3037 current=3142 master=0xff625d2a10 submit_backlog=0 record_backlog=0 acopy=2900/2900/2900 acopy_pending=0
+    GpuHangAbort: role=4 requested=3038 known=3037 current=3142 master=0xff625d2a10 after=8s submit_backlog=0 record_backlog=0 acopy=2900/2900/2900 acopy_pending=0
+C:/kyty/s81\log_smp81f_a1.txt 2
+    GpuWaitSlow: role=4 requested=3002 known=3001 current=3096 master=0xff62662a10 submit_backlog=0 record_backlog=0 acopy=2812/2812/2812 acopy_pending=0
+    GpuHangAbort: role=4 requested=3002 known=3001 current=3096 master=0xff62662a10 after=8s submit_backlog=0 record_backlog=0 acopy=2812/2812/2812 acopy_pending=0
+C:/kyty/s81\log_smp81g_a1.txt 2
+    GpuWaitSlow: role=4 requested=2992 known=2991 current=3082 master=0xff62592a10 submit_backlog=0 record_backlog=0 acopy=2747/2747/2747 acopy_pending=0
+    GpuHangAbort: role=4 requested=2992 known=2991 current=3082 master=0xff62592a10 after=8s submit_backlog=0 record_backlog=0 acopy=2747/2747/2747 acopy_pending=0
+C:/kyty/s82\log_bdv82b_a1.txt 2
+    GpuWaitSlow: role=4 requested=2950 known=2949 current=3041 master=0xff62662a10 submit_backlog=0 record_backlog=0 acopy=2717/2717/2717 acopy_pending=0
+    GpuHangAbort: role=4 requested=2950 known=2949 current=3041 master=0xff62662a10 after=8s submit_backlog=0 record_backlog=0 acopy=2717/2717/2717 acopy_pending=0
+C:/kyty/s85\log_tfs85a_a1.txt 2
+    GpuWaitSlow: role=4 requested=2808 known=2807 current=2896 master=0xff62652a10 submit_backlog=0 record_backlog=0 acopy=2656/2656/2656 acopy_pending=0
+    GpuHangAbort: role=4 requested=2808 known=2807 current=2896 master=0xff62652a10 after=8s submit_backlog=0 record_backlog=0 acopy=2656/2656/2656 acopy_pending=0
+C:/kyty/s87\log_spv87a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=2877 known=2876 current=2967 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=2655/2655/2655 acopy_pending=0
+    GpuHangAbort: role=4 requested=2877 known=2876 current=2967 master=0xff62642a10 after=8s submit_backlog=0 record_backlog=0 acopy=2655/2655/2655 acopy_pending=0
+C:/kyty/s88\log_dwl88c_a1.txt 2
+    GpuWaitSlow: role=4 requested=2847 known=2846 current=2935 master=0xff62682a10 submit_backlog=0 record_backlog=0 acopy=2639/2639/2639 acopy_pending=0
+    GpuHangAbort: role=4 requested=2847 known=2846 current=2935 master=0xff62682a10 after=8s submit_backlog=0 record_backlog=0 acopy=2639/2639/2639 acopy_pending=0
+C:/kyty/s88\log_spv88a_a1.txt 2
+    GpuWaitSlow: role=4 requested=2902 known=2901 current=2997 master=0xff62612a10 submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0
+    GpuHangAbort: role=4 requested=2902 known=2901 current=2997 master=0xff62612a10 after=8s submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0
+C:/kyty/s88\log_wit88a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=2861 known=2860 current=2948 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0
+    GpuHangAbort: role=4 requested=2861 known=2860 current=2948 master=0xff62672a10 after=8s submit_backlog=0 record_backlog=0 acopy=2701/2701/2701 acopy_pending=0
+C:/kyty/s91\log_pin91a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=4884 known=4883 current=4976 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=3408/3408/3408 acopy_pending=0
+    GpuHangAbort: role=4 requested=4884 known=4883 current=4976 master=0xff62642a10 after=8s submit_backlog=0 record_backlog=0 acopy=3408/3408/3408 acopy_pending=0
+C:/kyty/s92\log_stg92a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=2984 known=2983 current=3076 master=0xff62672a10 submit_backlog=0 record_backlog=0 acopy=2716/2716/2716 acopy_pending=0
+    GpuHangAbort: role=4 requested=2984 known=2983 current=3076 master=0xff62672a10 after=8s submit_backlog=0 record_backlog=0 acopy=2716/2716/2716 acopy_pending=0
+C:/kyty/s97\log_hg97a.txt 2
+    GpuWaitSlow: role=4 requested=69075 known=69074 current=69157 master=0xff626c2a10 submit_backlog=0 record_backlog=0 acopy=77230/77230/77230 acopy_pending=0
+    GpuHangAbort: role=4 requested=69075 known=69074 current=69157 master=0xff626c2a10 after=8s submit_backlog=0 record_backlog=0 acopy=77230/77230/77230 acopy_pending=0
+C:/kyty/s97\log_hg97a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=2993 known=2992 current=3089 master=0xff62642a10 submit_backlog=0 record_backlog=0 acopy=2787/2787/2787 acopy_pending=0
+    GpuHangAbort: role=4 requested=2993 known=2992 current=3089 master=0xff62642a10 after=8s submit_backlog=0 record_backlog=0 acopy=2787/2787/2787 acopy_pending=0
+C:/kyty/s97\log_rv97a.txt 2
+    GpuWaitSlow: role=4 requested=225116 known=225115 current=225203 master=0xff625e2a10 submit_backlog=0 record_backlog=0 acopy=212557/212557/212557 acopy_pending=0
+    GpuHangAbort: role=4 requested=225116 known=225115 current=225203 master=0xff625e2a10 after=8s submit_backlog=0 record_backlog=0 acopy=212557/212557/212557 acopy_pending=0
+C:/kyty/s97\log_rv97a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=199898 known=199897 current=199985 master=0xff62682a10 submit_backlog=0 record_backlog=0 acopy=189071/189071/189071 acopy_pending=0
+    GpuHangAbort: role=4 requested=199898 known=199897 current=199985 master=0xff62682a10 after=8s submit_backlog=0 record_backlog=0 acopy=189071/189071/189071 acopy_pending=0
+C:/kyty/s97\log_rv97b.txt 2
+    GpuWaitSlow: role=4 requested=169115 known=169114 current=169196 master=0xff62602a10 submit_backlog=0 record_backlog=0 acopy=160281/160281/160281 acopy_pending=0
+    GpuHangAbort: role=4 requested=169115 known=169114 current=169196 master=0xff62602a10 after=8s submit_backlog=0 record_backlog=0 acopy=160281/160281/160281 acopy_pending=0
+C:/kyty/s98\log_trig98a.txt 2
+    GpuWaitSlow: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0
+    GpuHangAbort: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 after=8s submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0
+C:/kyty/s98\log_trig98a_a1.txt 2
+    GpuWaitSlow: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0
+    GpuHangAbort: role=4 requested=2966 known=2965 current=3056 master=0xff626d2a10 after=8s submit_backlog=0 record_backlog=0 acopy=2828/2828/2828 acopy_pending=0
+C:/kyty/s98\log_trig98a_warmup.txt 2
+    GpuWaitSlow: role=4 requested=76733 known=76732 current=76813 master=0xff62652a10 submit_backlog=0 record_backlog=0 acopy=89390/89390/89390 acopy_pending=0
+    GpuHangAbort: role=4 requested=76733 known=76732 current=76813 master=0xff62652a10 after=8s submit_backlog=0 record_backlog=0 acopy=89390/89390/89390 acopy_pending=0
+files 170 hits 44

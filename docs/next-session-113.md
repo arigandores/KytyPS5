@@ -28,6 +28,12 @@ never-run `pred/01`; scorer `vbn113b.py` (83 fixture checks; mutants on the seal
 `go113b.sh`.
 
 **Next, in this order:**
+0. **Fast mutation harness first** (ROADMAP item 7, the user's decision: a 1.5–3 h mutant pass is not acceptable).
+   A shared `mutlib.py`: stop a mutant at its FIRST failing fixture; generate the synthetic fixture logs once and only
+   read them; load each mutant in-process and keep parsed rows in memory; for a derived scorer run all mutants of
+   changed lines and a sample of inherited ones (the full set once, on the sealed copy); make the fixture scale a
+   parameter. Target ≤ 10 min per scorer. Acceptance: identical killed/survived per mutant against the archived runs
+   of `net112` (`mut_net112.out.txt`) and `vbn113b` (`mut_vbn113b.out.txt`). Then use it for `shn113` in step 3.
 1. Check nothing else runs (no agents, no `tail`, GPU idle), then `bash /c/kyty/s113/go113b.sh` (in the background; it
    holds `C:/kyty/SEALED_RUN.lock`, checks and installs the pinned build, runs `vbn113` 300 s pinned with `bdanarrow=2`,
    scores it with `vbn113b.py`; on NOT_EVALUABLE (NEW regime) it repeats once as `vbn113b`). No tool calls while it runs.

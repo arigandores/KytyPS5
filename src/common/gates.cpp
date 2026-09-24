@@ -379,10 +379,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // 4 (pred/01_cspfam.md: d mean dt -141.8 us, 2SE 107.0), then the guard with the compute precache
     // off failed its rule (cs_sync_new 6 vs 3 + 2): rolled back to 0 (ROADMAP 0.1, session 108 item 8).
     {"KYTY_CS_PREFETCH_FAMILY", "cspfam", 0, 1024},
-    // Session 109: the compute prefetch without the lock on a (source, specialization) hit; 0 = off
-    // (today).  Read once per prefetch call, so it CAN be a schedule arm.
+    // Session 109: the compute prefetch without the lock on a (source, specialization) hit; 0 = off.
+    // Read once per prefetch call, so it CAN be a schedule arm. Session 110: default 1 after the
+    // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: d mean dt
+    // -418.7 us, 2SE 135.3; video clean).
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_CS_PREFETCH_FREE", "cspfree", 0, 2},
+    {"KYTY_CS_PREFETCH_FREE", "cspfree", 1, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

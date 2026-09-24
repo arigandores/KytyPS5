@@ -1,0 +1,84 @@
+shp110.py shp110 status=ADMITTED seal=4f02d2848cbcd87202a9dbb525fbef8adf8f315610be21a39e008d67b3a66103
+  pairs 96 (orientations [48, 48]), blocks 192, excluded [3]
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [PASS] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  SYNC_COMPILE
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    FREE_ARMED_ARM1
+  [PASS] arming    FREE_DARK_ARM0
+  [PASS] arming    FREE_NO_BAD
+  [PASS] arming    INSTRUMENTS_DARK
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 22236, 'da_wjobs': 22259, 'da_wdrop': 0}  skip/posts-1 -0.0010  drop 0.0000  walks rel 0.0000
+  cspfree arm-0 kept totals {'cspfree_look': 0, 'cspfree_hit': 0}  cspfree_bad over all rows 0
+  dt_us        arm0    31045.8   arm1    31024.6
+  cpu_net_us   arm0    30341.0   arm1    30130.8
+  draws        arm0     5035.1   arm1     5018.6
+  gpu_busy_us  arm0    12495.6   arm1    12506.2
+  rec_n        arm0    10902.3   arm1    10874.1
+  da_walk_us   arm0     2383.8   arm1     2334.8
+  da_queue_us  arm0     1085.1   arm1     1099.8
+  da_take_us   arm0     2872.6   arm1     2846.7
+  da_hit       arm0     8354.4   arm1     8350.3
+  da_miss      arm0      296.0   arm1      300.4
+  da_late      arm0        5.3   arm1        5.5
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    73280.3   arm1    71985.9
+  da_wdepth    arm0       17.6   arm1       17.5
+  cspfree_look arm0        0.0   arm1      266.0
+  cspfree_hit  arm0        0.0   arm1      266.0
+  cspfree_spec_miss arm0        0.0   arm1        0.0
+  cspf_have    arm0      266.0   arm1        0.0
+  cspf_new     arm0        0.0   arm1        0.0
+  d cpu_net_us   mean -302.1  2SE 134.8  t -4.48  n 96
+  d dt_us        mean -418.7  2SE 135.3  t -6.19  n 96
+  d da_take_us   mean -31.1  2SE 20.5  t -3.04  n 96
+  d da_miss      mean -0.7  2SE 9.6  t -0.15  n 96
+  d da_late      mean 0.1  2SE 0.4  t 0.38  n 96
+  d da_hit       mean -16.1  2SE 28.4  t -1.14  n 96
+  d da_stale     mean 0.0  2SE None  t 0.00  n 96
+  d da_walk_us   mean -55.3  2SE 17.7  t -6.24  n 96
+  d gpu_busy_us  mean 32.2  2SE 32.1  t 2.00  n 96
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [PASS] ship S1_dt_le_-100
+  [PASS] ship S2_dt_2se_excludes_0
+  VERDICT: SHIP_PENDING_VIDEO (S1-S2 met; nothing ships until vsh110 is read)
+  prediction H1  HIT  value 266.000 band [200, 270]  arm-1 cspfree_hit level in [200, 270] a flip
+  prediction H2  HIT  value 0.000 band [None, 30]  arm-1 cspf_have level <= 30 a flip (most prefetches return before the lock)
+  prediction H3  MISS value -418.693 band [-300, 0]  d mean dt_us in [-300, 0] us
+  prediction H4  HIT  value -418.693 band [None, -100.0]  d mean dt_us <= -100 us (the ship bar) - the discriminating prediction, medium confidence
+  prediction H5  HIT  value -0.718 band [-30, 30]  d da_miss in [-30, +30] a flip
+  prediction H6  HIT  value 32.175 band [0, 150]  d gpu_busy_us in [0, +150] us a flip (the mid-pass-upload side effect)
+  failed: none
+wrote C:/kyty/s110/runs110/shp110_score.json

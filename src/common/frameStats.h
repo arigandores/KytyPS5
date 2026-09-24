@@ -1823,6 +1823,14 @@ enum class Counter : uint32_t {
 	// "not found" branch, lock held, to the return) and inside the wait for a pending entry.  Raw us.
 	CsSyncNewUs,             // cs_sync_new_us
 	CsSyncWaitUs,            // cs_sync_wait_us
+	// Session 111, knob "daslot": a take gave up on a busy slot guard (a miss), the walker met a slot being taken
+	// (skipped), AheadNote deferred a source whose compiled SRT is not published yet, the walker's hint read raced
+	// a write (treated as no hint), and the knob-2 check of a slot key failed.  Raw counts.
+	DaGuardBusy,             // da_guard_busy
+	DaQueueTaking,           // da_q_taking
+	DaHintDefer,             // da_hint_defer
+	DaHintTorn,              // da_hint_torn
+	DaSlotBad,               // da_slot_bad
 	Count
 };
 

@@ -2489,6 +2489,12 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    // Session 110: stall duration on the dispatch.  Raw us.
 				    {"cs_sync_new_us", FS::Counter::CsSyncNewUs, false},
 				    {"cs_sync_wait_us", FS::Counter::CsSyncWaitUs, false},
+				    // Session 111: knob "daslot".  Raw counts.
+				    {"da_guard_busy", FS::Counter::DaGuardBusy, false},
+				    {"da_q_taking", FS::Counter::DaQueueTaking, false},
+				    {"da_hint_defer", FS::Counter::DaHintDefer, false},
+				    {"da_hint_torn", FS::Counter::DaHintTorn, false},
+				    {"da_slot_bad", FS::Counter::DaSlotBad, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

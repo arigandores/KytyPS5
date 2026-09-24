@@ -2210,8 +2210,9 @@ struct PipelineCache::ProgramCache {
 	static constexpr size_t MemoSlots = 16384;
 
 	std::vector<MemoEntry> memo = std::vector<MemoEntry>(MemoSlots);
-	// Bumped when a source entry is dropped: the stored permutation pointers belong to one.
-	uint64_t memo_generation = 1;
+	// Bumped when a source entry is dropped: the stored permutation pointers belong to one.  Session 111
+	// ("daslot"): atomic - the M1 queue reads it without PipelineCache::m_mutex.
+	std::atomic<uint64_t> memo_generation {1};
 
 	static uint64_t MemoHash(const SourceEntry* source, uint64_t shader_base,
 	                         std::span<const uint32_t> user_data) {
@@ -2307,10 +2308,16 @@ struct PipelineCache::ProgramCache {
 	// worker can touch the slot (state Empty, Ready or Failed). A worker claims a Queued slot with a
 	// compare-exchange, writes only the result fields and publishes Ready or Failed; after that it
 	// never touches the slot again, so the holder of m_mutex reads the result without a lock.
-	enum AheadState : uint8_t { AheadEmpty, AheadQueued, AheadRunning, AheadReady, AheadFailed };
+	// Session 111 (knob "daslot"): the key, walk, uses, taken, pixel and every state transition of the producer and
+	// of the draw are read and written only under the slot's `guard` (a spin byte), so the M1 queue can run without
+	// PipelineCache::m_mutex. AheadTaking: a draw took a Ready slot under the guard and verifies/copies its result
+	// without it; nobody else touches such a slot until the draw publishes Ready or Empty. Workers still only CAS
+	// Queued -> Running and publish Ready/Failed; they never take the guard.
+	enum AheadState : uint8_t { AheadEmpty, AheadQueued, AheadRunning, AheadReady, AheadFailed, AheadTaking };
 
 	struct AheadSlot {
 		std::atomic<uint8_t> state {AheadEmpty};
+		std::atomic<uint8_t> guard {0};
 		// Holder of m_mutex only (workers never read them): a draw took this result (da_unused counts
 		// results that went without), and the stage it was queued for.
 		uint8_t taken = 0;
@@ -2343,20 +2350,75 @@ struct PipelineCache::ProgramCache {
 	// (vertex fetch, pixel inputs, render target exports) depends on context state the PM4 walk
 	// does not follow, so the walk asks which entry that program resolved to the last time. A wrong
 	// guess costs a task whose result no draw matches.
+	// Session 111 ("daslot"): written only by AheadNote (holder of m_mutex) under a sequence counter, read by the M1
+	// queue without m_mutex as a consistent copy (ReadHint). A source enters a hint only with its compiled SRT
+	// published and its fingerprint and class computed, so the queue never writes to a source entry.
 	struct AheadHint {
-		std::array<const SourceEntry*, 4> sources {}; // static variants seen, replaced in turn
+		std::atomic<uint32_t>                          seq {0};
+		std::array<std::atomic<const SourceEntry*>, 4> sources {}; // static variants seen, replaced in turn
+		std::atomic<uint64_t>                          base {0};
+		std::atomic<uint64_t>                          generation {0};
+		std::atomic<uint32_t>                          count {0};
+		std::atomic<uint32_t>                          next {0}; // variant slot replaced next
+		std::atomic<ShaderType>                        stage {ShaderType::Unknown};
+	};
+	struct AheadHintView {
+		std::array<const SourceEntry*, 4> sources {};
 		uint64_t                          base       = 0;
 		uint64_t                          generation = 0;
 		uint32_t                          count      = 0;
-		uint32_t                          next       = 0; // variant slot replaced next
 		ShaderType                        stage      = ShaderType::Unknown;
 	};
+	// The M1 queue's copy of a hint; false (no hint) when the write in progress did not settle.
+	bool ReadHint(size_t index, AheadHintView& view) const {
+		const auto& hint = ahead_hints[index];
+		for (int attempt = 0; attempt < 4; attempt++) {
+			const auto begin = hint.seq.load(std::memory_order_acquire);
+			if ((begin & 1u) != 0) {
+				YieldProcessor();
+				continue;
+			}
+			for (size_t i = 0; i < view.sources.size(); i++) {
+				view.sources[i] = hint.sources[i].load(std::memory_order_relaxed);
+			}
+			view.base       = hint.base.load(std::memory_order_relaxed);
+			view.generation = hint.generation.load(std::memory_order_relaxed);
+			view.count      = hint.count.load(std::memory_order_relaxed);
+			view.stage      = hint.stage.load(std::memory_order_relaxed);
+			std::atomic_thread_fence(std::memory_order_acquire);
+			if (hint.seq.load(std::memory_order_relaxed) == begin) {
+				return true;
+			}
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::DaHintTorn, 1);
+		return false;
+	}
+	// Slot guards: the draw gives up after a bounded spin (a miss); the producer waits.
+	static bool TryGuardSlot(AheadSlot& slot) {
+		for (int spin = 0; spin < 64; spin++) {
+			if (slot.guard.load(std::memory_order_relaxed) == 0 &&
+			    slot.guard.exchange(1, std::memory_order_acquire) == 0) {
+				return true;
+			}
+			YieldProcessor();
+		}
+		return false;
+	}
+	static void GuardSlot(AheadSlot& slot) {
+		while (slot.guard.load(std::memory_order_relaxed) != 0 || slot.guard.exchange(1, std::memory_order_acquire) != 0) {
+			YieldProcessor();
+		}
+	}
+	static void UnguardSlot(AheadSlot& slot) {
+		slot.guard.store(0, std::memory_order_release);
+	}
 
 	static constexpr size_t AheadSlotCount = 32768;
 	static constexpr size_t AheadHintCount = 16384;
 	static constexpr size_t AheadBatch     = 16;
 
-	std::unique_ptr<AheadSlot[]>          ahead_slots; // allocated by the first queued walk
+	std::unique_ptr<AheadSlot[]>          ahead_slots; // allocated by the first queued walk (ahead_queue_mutex)
+	std::atomic<AheadSlot*>               ahead_slots_ptr {nullptr}; // the same, published for the draw
 	std::array<AheadHint, AheadHintCount> ahead_hints {};
 	uint64_t                              ahead_walk = 0; // latest walk id queued (m_mutex)
 	// Walk id of the graphics submission the GuestGpu thread is processing (that thread stores,
@@ -2366,9 +2428,9 @@ struct PipelineCache::ProgramCache {
 	uint64_t                              ahead_fresh = 0;
 	// The static variant a multi-variant program last ran with for given user data: which source
 	// entry the walk should materialize a request for.
-	struct AheadVariant {
-		uint64_t           key    = 0;
-		const SourceEntry* source = nullptr;
+	struct AheadVariant { // session 111 ("daslot"): atomic, read by the M1 queue without m_mutex
+		std::atomic<uint64_t>           key {0};
+		std::atomic<const SourceEntry*> source {nullptr};
 	};
 	static constexpr size_t                     AheadVariantCount = 16384;
 	std::array<AheadVariant, AheadVariantCount> ahead_variants {};
@@ -2407,6 +2469,9 @@ struct PipelineCache::ProgramCache {
 	}
 	std::mutex                            ahead_mutex;
 	std::condition_variable               ahead_cv;
+	// Session 111 ("daslot"): serialises every QueueAhead call (the walker and GuestGpu's own walks) and the
+	// allocation of the slot table; taken after PipelineCache::m_mutex when that is held too (daslot = 0).
+	std::mutex                            ahead_queue_mutex;
 	// Slot indices waiting for a worker. A fixed ring rather than std::deque: MSVC puts four
 	// uint32_t in one heap block, so a Sky Garden frame's ~19k tasks cost ~4.7k allocations and
 	// as many frees, taken and given back under this very lock - the samples of QueueAhead inside
@@ -2428,32 +2493,64 @@ struct PipelineCache::ProgramCache {
 
 	void AheadNote(ShaderType stage, uint64_t base, std::span<const uint32_t> user_data,
 	               const SourceEntry* source) {
-		const auto count = static_cast<uint32_t>(user_data.size());
-		auto&      hint  = ahead_hints[AheadHintIndex(stage, base, count)];
-		if (hint.sources[1] != nullptr && hint.base == base && hint.count == count &&
+		// Session 111 ("daslot"): publish once - the M1 queue reads hints without m_mutex, so a source enters one
+		// only with its compiled SRT published and its fingerprint and class already computed (the next draw of
+		// the program notes it; the queue would have skipped it as no_plan anyway).
+		if (source->resource_plan.srt_compiled == nullptr) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::DaHintDefer, 1);
+			return;
+		}
+		Fingerprint(*source);
+		ClassOf(*source);
+		const auto count      = static_cast<uint32_t>(user_data.size());
+		const auto generation = memo_generation.load(std::memory_order_relaxed);
+		auto&      hint       = ahead_hints[AheadHintIndex(stage, base, count)];
+		// This thread is the only writer: relaxed reads of its own fields.
+		const auto hint_base  = hint.base.load(std::memory_order_relaxed);
+		const auto hint_count = hint.count.load(std::memory_order_relaxed);
+		const auto hint_stage = hint.stage.load(std::memory_order_relaxed);
+		const auto hint_gen   = hint.generation.load(std::memory_order_relaxed);
+		const auto write      = [&hint](const auto& body) {
+			const auto seq = hint.seq.load(std::memory_order_relaxed);
+			hint.seq.store(seq + 1, std::memory_order_relaxed);
+			std::atomic_thread_fence(std::memory_order_release);
+			body();
+			hint.seq.store(seq + 2, std::memory_order_release);
+		};
+		if (hint.sources[1].load(std::memory_order_relaxed) != nullptr && hint_base == base && hint_count == count &&
 			!Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass) &&
-		    hint.stage == stage && hint.generation == memo_generation) {
-			const auto key = AheadVariantKey(stage, base, UserDataHash(user_data));
-			ahead_variants[key % AheadVariantCount] = {key, source};
+		    hint_stage == stage && hint_gen == generation) {
+			const auto key     = AheadVariantKey(stage, base, UserDataHash(user_data));
+			auto&      variant = ahead_variants[key % AheadVariantCount];
+			variant.source.store(source, std::memory_order_release);
+			variant.key.store(key, std::memory_order_release);
 		}
-		if (hint.base != base || hint.count != count || hint.stage != stage ||
-		    hint.generation != memo_generation) {
-			hint            = {};
-			hint.sources[0] = source;
-			hint.base       = base;
-			hint.generation = memo_generation;
-			hint.count      = count;
-			hint.next       = 1;
-			hint.stage      = stage;
+		if (hint_base != base || hint_count != count || hint_stage != stage || hint_gen != generation) {
+			write([&] {
+				hint.sources[0].store(source, std::memory_order_relaxed);
+				for (size_t i = 1; i < hint.sources.size(); i++) {
+					hint.sources[i].store(nullptr, std::memory_order_relaxed);
+				}
+				hint.base.store(base, std::memory_order_relaxed);
+				hint.generation.store(generation, std::memory_order_relaxed);
+				hint.count.store(count, std::memory_order_relaxed);
+				hint.next.store(1, std::memory_order_relaxed);
+				hint.stage.store(stage, std::memory_order_relaxed);
+			});
 			return;
 		}
-		if (std::find(hint.sources.begin(), hint.sources.end(), source) != hint.sources.end()) {
-			return;
+		for (const auto& held: hint.sources) {
+			if (held.load(std::memory_order_relaxed) == source) {
+				return;
+			}
 		}
 		// Another static variant of the same program.
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadHintFlip, 1);
-		hint.sources[hint.next % hint.sources.size()] = source;
-		hint.next++;
+		const auto next = hint.next.load(std::memory_order_relaxed);
+		write([&] {
+			hint.sources[next % hint.sources.size()].store(source, std::memory_order_relaxed);
+			hint.next.store(next + 1, std::memory_order_relaxed);
+		});
 	}
 
 	// Canonical class of a source entry's plan (gate "daclass", counter da_fan_canon): built once per
@@ -2552,13 +2649,36 @@ struct PipelineCache::ProgramCache {
 		const auto fingerprint = plan_class != nullptr ? plan_class->hash : Fingerprint(*source);
 		const std::span<const uint32_t> user_data(request.user_data.data(), request.count);
 		const auto hash        = AheadHash(fingerprint, request.base, request.user_hash);
+		const auto generation  = memo_generation.load(std::memory_order_relaxed);
 		AheadSlot* victim      = nullptr;
 		uint32_t   victim_rank = UINT32_MAX;
+		// Session 111 ("daslot"): both probe slots guarded for the whole decision, lower index first.
+		struct PairGuard {
+			AheadSlot& low;
+			AheadSlot& high;
+			PairGuard(AheadSlot& a, AheadSlot& b): low(&a < &b ? a : b), high(&a < &b ? b : a) {
+				GuardSlot(low);
+				GuardSlot(high);
+			}
+			~PairGuard() {
+				UnguardSlot(high);
+				UnguardSlot(low);
+			}
+		} pair_guard(ahead_slots[hash & (AheadSlotCount - 1)], ahead_slots[(hash + 1) & (AheadSlotCount - 1)]);
 		for (size_t probe = 0; probe < 2; probe++) {
 			stats.probes++;
 			auto&      slot  = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
 			const auto state = slot.state.load(std::memory_order_acquire);
-			if (state != AheadEmpty && slot.Matches(fingerprint, plan_class, request.base, memo_generation, user_data)) {
+			if (state == AheadTaking) {
+				// A draw is taking this slot's result right now: neither a match to update nor a victim.
+				if (slot.Matches(fingerprint, plan_class, request.base, generation, user_data)) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::DaQueueTaking, 1);
+					stats.busy++;
+					return;
+				}
+				continue;
+			}
+			if (state != AheadEmpty && slot.Matches(fingerprint, plan_class, request.base, generation, user_data)) {
 				if (slot.walk >= ahead_fresh) {
 					// Queued for a submission the GuestGpu thread has not finished (gate "dawalk":
 					// the walker runs ahead, so this may be an earlier submission than `walk`
@@ -2616,7 +2736,7 @@ struct PipelineCache::ProgramCache {
 		victim->source      = source;
 		victim->fingerprint = fingerprint;
 		victim->shader_base = request.base;
-		victim->generation  = memo_generation;
+		victim->generation  = generation;
 		victim->walk        = ahead_walk;
 		victim->uses        = request.uses;
 		victim->count       = request.count;
@@ -2635,13 +2755,15 @@ struct PipelineCache::ProgramCache {
 		batch.push_back(static_cast<uint32_t>(victim - ahead_slots.get()));
 	}
 
-	// Holder of m_mutex.
+	// Session 111 ("daslot"): under ahead_queue_mutex (taken here), with or without PipelineCache::m_mutex.
 	void QueueAhead(std::span<const PipelineCache::DrawAheadRequest> requests, uint64_t walk) {
 		namespace FS     = Common::FrameStats;
 		const auto wanted = Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
 		if (wanted == 0) {
 			return;
 		}
+		std::lock_guard<std::mutex> queue_lock(ahead_queue_mutex);
+		const auto                  generation = memo_generation.load(std::memory_order_relaxed);
 		// The walk ids grow in submission order; a walker that runs ahead (gate "dawalk") may
 		// queue a later walk while an earlier one is still pending, and the slot table protects
 		// every walk from the processing one up.
@@ -2652,6 +2774,7 @@ struct PipelineCache::ProgramCache {
 			// otherwise have to check the pointer on every wake-up.
 			ahead_slots = std::make_unique<AheadSlot[]>(AheadSlotCount);
 			ahead_queue = std::make_unique<uint32_t[]>(AheadQueueSize);
+			ahead_slots_ptr.store(ahead_slots.get(), std::memory_order_release);
 		}
 		AheadStartThreads(wanted);
 		if (FS::Enabled()) {
@@ -2670,11 +2793,12 @@ struct PipelineCache::ProgramCache {
 		    Common::Gates::Enabled(Common::Gates::Gate::DrawAheadQueuePrefetch) && ahead_slots != nullptr;
 		constexpr size_t lookahead = 4;
 		auto prefetch_request = [&](const PipelineCache::DrawAheadRequest& ahead) {
-			const auto  ahead_stage = ahead.pixel ? ShaderType::Pixel : ShaderType::Vertex;
-			const auto& ahead_hint  = ahead_hints[AheadHintIndex(ahead_stage, ahead.base, ahead.count)];
-			if (ahead.count > HW::UserSgprInfo::SGPRS_MAX || ahead_hint.sources[0] == nullptr ||
-			    ahead_hint.stage != ahead_stage || ahead_hint.base != ahead.base ||
-			    ahead_hint.count != ahead.count || ahead_hint.generation != memo_generation) {
+			const auto    ahead_stage = ahead.pixel ? ShaderType::Pixel : ShaderType::Vertex;
+			AheadHintView ahead_hint;
+			if (ahead.count > HW::UserSgprInfo::SGPRS_MAX ||
+			    !ReadHint(AheadHintIndex(ahead_stage, ahead.base, ahead.count), ahead_hint) ||
+			    ahead_hint.sources[0] == nullptr || ahead_hint.stage != ahead_stage || ahead_hint.base != ahead.base ||
+			    ahead_hint.count != ahead.count || ahead_hint.generation != generation) {
 				return;
 			}
 			for (const auto* source: ahead_hint.sources) {
@@ -2711,11 +2835,12 @@ struct PipelineCache::ProgramCache {
 			if (prefetch_slots && request_index + lookahead < requests.size()) {
 				prefetch_request(requests[request_index + lookahead]);
 			}
-			const auto  stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
-			const auto& hint  = ahead_hints[AheadHintIndex(stage, request.base, request.count)];
-			if (request.count > HW::UserSgprInfo::SGPRS_MAX || hint.sources[0] == nullptr ||
+			const auto    stage = request.pixel ? ShaderType::Pixel : ShaderType::Vertex;
+			AheadHintView hint;
+			if (request.count > HW::UserSgprInfo::SGPRS_MAX ||
+			    !ReadHint(AheadHintIndex(stage, request.base, request.count), hint) || hint.sources[0] == nullptr ||
 			    hint.stage != stage || hint.base != request.base || hint.count != request.count ||
-			    hint.generation != memo_generation) {
+			    hint.generation != generation) {
 				stats.no_hint++;
 				continue;
 			}
@@ -2740,7 +2865,8 @@ struct PipelineCache::ProgramCache {
 					print_sources[prints++] = source;
 				}
 				if (class_mode || counting) {
-					const auto* plan_class = ClassOf(*source);
+					// Session 111 ("daslot"): computed by AheadNote before the source was published.
+					const auto* plan_class = source->plan_class;
 					size_t      index      = 0;
 					while (index < class_count && classes[index] != plan_class) {
 						index++;
@@ -2765,11 +2891,13 @@ struct PipelineCache::ProgramCache {
 			}
 			if (hint.sources[1] != nullptr) {
 				const auto  key       = AheadVariantKey(stage, request.base, request.user_hash);
-				const auto& predicted = ahead_variants[key % AheadVariantCount];
-				if (predicted.key == key &&
-				    std::find(hint.sources.begin(), hint.sources.end(), predicted.source) !=
+				const auto& predicted        = ahead_variants[key % AheadVariantCount];
+				const auto  predicted_key    = predicted.key.load(std::memory_order_acquire);
+				const auto* predicted_source = predicted.source.load(std::memory_order_acquire);
+				if (predicted_key == key && predicted_source != nullptr &&
+				    std::find(hint.sources.begin(), hint.sources.end(), predicted_source) !=
 				        hint.sources.end()) {
-					QueueAheadSource(predicted.source, nullptr, request, stats, batch);
+					QueueAheadSource(predicted_source, nullptr, request, stats, batch);
 					stats.predicted++;
 					continue;
 				}
@@ -3004,9 +3132,11 @@ struct PipelineCache::ProgramCache {
 				lap_t = lap_now;
 			}
 		};
-		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || ahead_slots == nullptr) {
+		auto* const slots = ahead_slots_ptr.load(std::memory_order_acquire);
+		if (params.user_data.size() > HW::UserSgprInfo::SGPRS_MAX || slots == nullptr) {
 			return false;
 		}
+		const auto slot_mode = Common::Gates::Value(Common::Gates::Knob::DrawAheadSlot);
 		const PlanClass* plan_class =
 			Common::Gates::Enabled(Common::Gates::Gate::DrawAheadClass) ? ClassOf(source) : nullptr;
 		const auto fingerprint = plan_class != nullptr ? plan_class->hash : Fingerprint(source);
@@ -3026,9 +3156,17 @@ struct PipelineCache::ProgramCache {
 				}
 			}
 		} probe_counter {probes};
+		const auto generation = memo_generation.load(std::memory_order_relaxed);
 		for (size_t probe = 0; probe < 2; probe++) {
-			auto& slot = ahead_slots[(hash + probe) & (AheadSlotCount - 1)];
-			if (!slot.Matches(fingerprint, plan_class, params.Base(), memo_generation, params.user_data)) {
+			auto& slot = slots[(hash + probe) & (AheadSlotCount - 1)];
+			// Session 111 ("daslot"): the key and the state transition under the slot's guard; a busy guard is a
+			// miss rather than a wait.
+			if (!TryGuardSlot(slot)) {
+				FS::Add(FS::Counter::DaGuardBusy, 1);
+				continue;
+			}
+			if (!slot.Matches(fingerprint, plan_class, params.Base(), generation, params.user_data)) {
+				UnguardSlot(slot);
 				continue;
 			}
 			probes     = probe + 1;
@@ -3041,17 +3179,37 @@ struct PipelineCache::ProgramCache {
 					auto expected = static_cast<uint8_t>(AheadQueued);
 					slot.state.compare_exchange_strong(expected, AheadEmpty, std::memory_order_acq_rel);
 				}
+				UnguardSlot(slot);
 				FS::Add(FS::Counter::DrawAheadLate, 1);
 				return false;
 			}
 			if (state == AheadRunning) {
 				slot.uses -= slot.uses != 0 ? 1u : 0u;
+				UnguardSlot(slot);
 				FS::Add(FS::Counter::DrawAheadLate, 1);
 				return false;
 			}
 			if (state != AheadReady) {
+				UnguardSlot(slot);
 				break;
 			}
+			if (slot_mode == 2) {
+				// Knob "daslot" = 2: the key the producer wrote must still describe the source it named.
+				const bool key_ok = slot.source != nullptr &&
+				                    (slot.plan_class != nullptr
+				                         ? ClassOf(*slot.source) == slot.plan_class && slot.plan_class->hash == slot.fingerprint
+				                         : Fingerprint(*slot.source) == slot.fingerprint);
+				if (!key_ok) {
+					FS::Add(FS::Counter::DaSlotBad, 1);
+					static std::atomic<uint32_t> bad_log {0};
+					if (bad_log.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("DaSlotVerify: MISMATCH slot=%" PRIu64 " fingerprint=0x%016" PRIx64 "\n",
+						     static_cast<uint64_t>(&slot - slots), slot.fingerprint);
+					}
+				}
+			}
+			slot.state.store(AheadTaking, std::memory_order_relaxed);
+			UnguardSlot(slot);
 			take_mark(Common::FrameStats::Counter::TakeLapProbeNs);
 			if (lap_t != 0) {
 				FS::Add(FS::Counter::TakeLapReady, 1);
@@ -3169,7 +3327,7 @@ struct PipelineCache::ProgramCache {
 				Common::DrawStat::Mark(Common::DrawStat::M1);
 				// Guest words moved since the worker read them: no later draw can use it either.
 				slot.uses = 0;
-				slot.state.store(AheadEmpty, std::memory_order_release);
+				slot.state.store(AheadEmpty, std::memory_order_release); // publishes the Taking slot
 				return false;
 			}
 			if (FS::Enabled() && !slot.witness.regions.empty()) {
@@ -3182,6 +3340,8 @@ struct PipelineCache::ProgramCache {
 			if (slot.uses > 1) {
 				slot.uses--;
 				CopyAheadResult(slot, resources, specialization, kept, false);
+				slot.taken = 1;
+				slot.state.store(AheadReady, std::memory_order_release); // publishes the Taking slot
 			} else {
 				// The last draw of this walk that asked for it: take the vectors, and retire the
 				// slot, which no longer holds a result.
@@ -3205,12 +3365,12 @@ struct PipelineCache::ProgramCache {
 					std::swap(resources, slot.snapshot);
 					std::swap(specialization, slot.specialization);
 				}
-				slot.uses = 0;
-				slot.state.store(AheadEmpty, std::memory_order_release);
+				slot.uses  = 0;
+				slot.taken = 1;
+				slot.state.store(AheadEmpty, std::memory_order_release); // publishes the Taking slot
 				FS::Add(FS::Counter::DrawAheadMoves, 1);
 			}
 			take_mark(Common::FrameStats::Counter::TakeLapTakeNs);
-			slot.taken = 1;
 			Common::DrawStat::Mark(Common::DrawStat::M1);
 			FS::Add(FS::Counter::DrawAheadHits, 1);
 			return true;
@@ -4811,10 +4971,17 @@ void PipelineCache::QueueDrawAhead(std::span<const DrawAheadRequest> requests, u
 	}
 	const bool        timed       = Common::FrameStats::Enabled();
 	const auto        queue_begin = timed ? Common::FrameStats::NowNs() : 0;
-	Common::LockGuard lock(m_mutex);
-	PipeLockHolder    holder(m_lock_holder, 1, Common::FrameStats::Counter::PipeLockWalkQueueHoldNs,
-	                         Common::FrameStats::Counter::PipeLockWalkQueueHoldN);
-	m_program_cache->QueueAhead(requests, walk);
+	// Session 111, knob "daslot": 0 = under m_mutex (today); 1/2 = only ahead_queue_mutex (taken in QueueAhead) -
+	// the slots are guarded one by one and the hints are read as consistent copies, so GuestGpu's draws do not
+	// wait for the walker here.
+	if (Common::Gates::Value(Common::Gates::Knob::DrawAheadSlot) == 0) {
+		Common::LockGuard lock(m_mutex);
+		PipeLockHolder    holder(m_lock_holder, 1, Common::FrameStats::Counter::PipeLockWalkQueueHoldNs,
+		                         Common::FrameStats::Counter::PipeLockWalkQueueHoldN);
+		m_program_cache->QueueAhead(requests, walk);
+	} else {
+		m_program_cache->QueueAhead(requests, walk);
+	}
 	if (timed) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::DrawAheadQueueNs,
 		                        Common::FrameStats::NowNs() - queue_begin);

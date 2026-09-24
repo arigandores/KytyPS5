@@ -564,8 +564,13 @@ enum class Knob : uint32_t {
 	// and a pipeline for it; the materialization runs unlocked on a source whose compiled SRT was seen
 	// published under the lock.  0 = off; 1 = skip on a hit; 2 = verify (the locked path still runs; ids
 	// that differ at equal specializations are counted bad).  Read once per prefetch call.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	CsPrefetchFree,   // KYTY_CS_PREFETCH_FREE,   file name "cspfree" (0 off, 1 skip on hit, 2 verify)
+	// Session 111: which lock PipelineCache::QueueDrawAhead (the M1 queue of the draw walker) takes: 0 = m_mutex
+	// (today), 1 = only the new ahead_queue_mutex (the slots are guarded per slot either way), 2 = 1 plus a check of
+	// the slot key under its guard at every take (da_slot_bad, DaSlotVerify: MISMATCH).  Read once per queue call
+	// and once per take, so it CAN be a schedule arm; the per-slot protocol is unconditional, so a flip is safe.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	DrawAheadSlot,    // KYTY_DRAW_AHEAD_SLOT,    file name "daslot" (0 m_mutex, 1 own lock, 2 own lock + verify)
 	Count,
 };
 

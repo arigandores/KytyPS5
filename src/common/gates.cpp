@@ -383,8 +383,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Read once per prefetch call, so it CAN be a schedule arm. Session 110: default 1 after the
     // duration guard (pred/02_stl110b.md: PASS) and the sealed ship ABBA (pred/03_shp110.md: bar met,
     // video clean); size ~ -200 us a frame at the pin (pooled full-block estimate, audit pred/04).
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_CS_PREFETCH_FREE", "cspfree", 1, 2},
+    // Session 111: the M1 queue off PipelineCache::m_mutex (per-slot guards are unconditional); 0 = m_mutex
+    // (today).  Read once per queue call and once per take, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_DRAW_AHEAD_SLOT", "daslot", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

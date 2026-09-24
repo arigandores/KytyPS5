@@ -1,0 +1,36 @@
+scanned 347444
+go112 07:50:11 C:/kyty/s112/__pycache__/run_safety99.cpython-313.pyc
+go112 07:55:33 C:/kyty/s112/log_vdg112.txt
+go112 07:55:34 C:/kyty/s112/stdout_vdg112.txt
+go112 07:55:37 C:/kyty/s112/cpuclk_vdg112.csv
+go112 07:55:38 C:/kyty/s112/gpuclk_vdg112.csv
+go112 07:55:39 C:/kyty/s112/vdg112.json
+go112 07:55:39 C:/kyty/s112/vdg112.stdout.txt
+go112 07:55:39 C:/kyty/s112/__pycache__/launch_run.cpython-313.pyc
+go112 07:55:44 C:/kyty/s112/runs112/vdg112_score.json
+go112 07:55:44 C:/kyty/s112/runs112/vdg112_score.stdout.txt
+go112 08:06:03 C:/kyty/s112/log_net112.txt
+go112 08:06:03 C:/kyty/s112/stdout_net112.txt
+go112 08:06:03 C:/Users/<user>/OneDrive/Desktop/ps5 em/_kyty.prev.txt
+go112 08:06:08 C:/kyty/s112/cpuclk_net112.csv
+go112 08:06:08 C:/kyty/s112/gpuclk_net112.csv
+go112 08:06:08 C:/kyty/s112/net112.json
+go112 08:06:08 C:/kyty/s112/net112.stdout.txt
+go112 08:06:18 C:/kyty/s112/gates.req
+go112 08:06:18 C:/kyty/s112/sample.req
+go112 08:06:18 C:/kyty/s112/runs112/net112_score.json
+go112 08:06:18 C:/kyty/s112/runs112/net112_score.stdout.txt
+go112 08:06:29 C:/Users/<user>/OneDrive/Desktop/ps5 em/_PipelineCache/PPSA21564.bin
+go112 08:08:37 C:/kyty/s112/log_vid112.txt
+go112 08:08:37 C:/kyty/s112/rec_vid112.mp4
+go112 08:08:37 C:/kyty/s112/rec_vid112.mp4.idx
+go112 08:08:37 C:/kyty/s112/stdout_vid112.txt
+go112 08:08:37 C:/Users/<user>/OneDrive/Desktop/ps5 em/_kyty.txt
+go112 08:08:37 C:/Users/<user>/OneDrive/Desktop/ps5 em/_run_stdout.txt
+go112 08:08:42 C:/kyty/s112/cpuclk_vid112.csv
+go112 08:08:42 C:/kyty/s112/gpuclk_vid112.csv
+go112 08:08:42 C:/kyty/s112/vid112.json
+go112 08:08:42 C:/kyty/s112/vid112.stdout.txt
+go112 08:08:52 C:/kyty/s112/vid112_glitch.txt
+go112 08:08:54 C:/kyty/s112/runs112/check112.json
+go112 08:08:54 C:/kyty/s112/runs112/check112.stdout.txt

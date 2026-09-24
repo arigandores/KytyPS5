@@ -1,0 +1,41 @@
+== 600 s pinned ABBA arms (Sky Garden)
+  fam108   arm0  s108 cspfam=0                          NEW bda_scan    53.1  dt  31241.8  cpu_net  30328.4  gpu  12596.4  vbl1 0.132  q/call 1.006  n 8791
+  fam108   arm1  s108 cspfam=4                          NEW bda_scan    55.7  dt  31079.0  cpu_net  30380.2  gpu  12710.0  vbl1 0.139  q/call 1.032  n 8683
+  frm109   arm0  s109 cspfree=0                         OLD bda_scan  1243.1  dt  31229.5  cpu_net  30182.6  gpu  12518.8  vbl1 0.131  q/call 1.007  n 8705
+  frm109   arm1  s109 cspfree=1                         OLD bda_scan  1247.8  dt  31067.5  cpu_net  30125.5  gpu  12586.0  vbl1 0.141  q/call 1.019  n 8640
+  shp110   arm0  s110 cspfree=0                         NEW bda_scan    53.5  dt  31202.2  cpu_net  30310.2  gpu  12500.2  vbl1 0.134  q/call 1.007  n 8738
+  shp110   arm1  s110 cspfree=1                         NEW bda_scan    55.1  dt  30979.7  cpu_net  30190.4  gpu  12541.1  vbl1 0.146  q/call 1.018  n 8640
+  shp111   arm0  s111 daslot=0 guards                   OLD bda_scan  1465.6  dt  31554.3  cpu_net  30627.5  gpu  12912.2  vbl1 0.114  q/call 1.237  n 8611
+  shp111   arm1  s111 daslot=1                          OLD bda_scan  1464.1  dt  31335.7  cpu_net  30407.9  gpu  12935.2  vbl1 0.127  q/call 1.103  n 8521
+  net112   arm0  s112 daslot=1                          NEW bda_scan    55.0  dt  30894.3  cpu_net  30029.4  gpu  12915.6  vbl1 0.149  q/call 1.133  n 8790
+  net112   arm1  s112 daslot=0 daguard=0                NEW bda_scan    55.4  dt  31143.5  cpu_net  30277.7  gpu  12893.6  vbl1 0.135  q/call 1.181  n 8640
+   OLD: runs 4  mean dt 31296.7  mean cpu_net 30335.9  mean vbl1 0.128
+   NEW: runs 6  mean dt 31090.1  mean cpu_net 30252.7  mean vbl1 0.139
+   OLD - NEW: dt +206.7  cpu_net +83.2
+== 300 s single-config runs
+  sf108c   all   s108 precache gfx, 300 s               NEW bda_scan    57.8  dt  31114.0  cpu_net  30262.1  gpu  12609.2  vbl1 0.138  q/call 1.022  n 7820
+  sf108d   all   s108 precache gfx cspfam=4, 300 s      NEW bda_scan    59.1  dt  31124.9  cpu_net  30384.2  gpu  12506.7  vbl1 0.138  q/call 1.056  n 7594
+  vfy109   all   s109 cspfree=2 verify, 300 s           OLD bda_scan  1467.7  dt  31014.7  cpu_net  30052.5  gpu  12546.5  vbl1 0.143  q/call 1.019  n 7729
+  vds111   all   s111 daslot=2 (smemocheck unarmed), 300 s OLD bda_scan  1460.2  dt  30916.4  cpu_net  29986.6  gpu  12911.1  vbl1 0.147  q/call 1.112  n 7760
+  obs111   all   s110 build, plkstat, 300 s             NEW bda_scan    57.0  dt  30600.0  cpu_net  29787.3  gpu  12751.1  vbl1 0.166  q/call 1.032  n 7983
+   OLD: runs 2  mean dt 30965.6  mean cpu_net 30019.6  mean vbl1 0.145
+   NEW: runs 3  mean dt 30946.3  mean cpu_net 30144.6  mean vbl1 0.147
+   OLD - NEW: dt +19.3  cpu_net -125.0
+== 120 s recorded videos
+  vid108   all   s108 video                             NEW bda_scan    70.7  dt  31509.2  cpu_net  30693.0  gpu  13254.2  vbl1 0.113  q/call 1.020  n 1866
+  vid108r  all   s108 reverted video                    OLD bda_scan  1227.9  dt  31806.3  cpu_net  30807.5  gpu  13341.8  vbl1 0.099  q/call 1.044  n 1823
+  vsh110   all   s110 video                             NEW bda_scan    63.2  dt  31139.0  cpu_net  30277.8  gpu  13590.4  vbl1 0.134  q/call 1.006  n 1899
+  vid110   all   s110 video                             OLD bda_scan  1460.3  dt  31283.3  cpu_net  30351.0  gpu  13592.9  vbl1 0.128  q/call 1.031  n 1887
+  vid111   all   s111 video                             OLD bda_scan  1477.5  dt  31022.4  cpu_net  30150.7  gpu  13599.5  vbl1 0.140  q/call 1.208  n 1903
+  vss111   all   s111 video                             OLD bda_scan  1464.8  dt  31571.0  cpu_net  30642.1  gpu  13626.3  vbl1 0.109  q/call 1.239  n 1835
+  vid112   all   s112 video                             OLD bda_scan  1241.0  dt  31106.4  cpu_net  30237.6  gpu  13618.8  vbl1 0.135  q/call 1.212  n 1871
+  vfm108   all   s108 video?                            NEW bda_scan    65.9  dt  32335.2  cpu_net  31469.2  gpu  13293.7  vbl1 0.106  q/call 1.102  n 1521
+   OLD: runs 5  mean dt 31357.9  mean cpu_net 30437.8  mean vbl1 0.122
+   NEW: runs 3  mean dt 31661.2  mean cpu_net 30813.3  mean vbl1 0.118
+   OLD - NEW: dt -303.3  cpu_net -375.5
+== matched pairs (same code at the compared setting, different regime)
+  cspfree=0, s109 (OLD) vs s110 (NEW)                        OLD-NEW dt   +27.2  cpu_net  -127.6  gpu   +18.6  vbl1 -0.003
+  cspfree=1, s109 (OLD) vs s110 (NEW)                        OLD-NEW dt   +87.8  cpu_net   -64.9  gpu   +44.9  vbl1 -0.005
+  daslot=1, 0c8a13f2 (OLD) vs b47b58a9 (NEW)                 OLD-NEW dt  +441.5  cpu_net  +378.5  gpu   +19.6  vbl1 -0.023
+  video, s110 cspfree=1 (OLD) vs s110 ship candidate (NEW)   OLD-NEW dt  +144.3  cpu_net   +73.2  gpu    +2.5  vbl1 -0.006
+  video, s108 reverted (OLD) vs cspfam=4 (NEW)               OLD-NEW dt  +297.1  cpu_net  +114.5  gpu   +87.6  vbl1 -0.014

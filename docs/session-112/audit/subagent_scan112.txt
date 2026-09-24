@@ -1,0 +1,17 @@
+agent-a09bcf10a5edcaa87.jsonl Port harness s111 to s112 2026-09-24T05:49:34 2026-09-24T06:11:15 calls 113 IN-WINDOW 0
+agent-a09ce04af059cbe9b.jsonl Design walker lock-hold reductions 2026-09-23T21:12:12 2026-09-23T21:25:27 calls 38 IN-WINDOW 0
+agent-a0e7b6443d3dec5eb.jsonl Write and run s108 harness port 2026-09-23T18:44:43 2026-09-23T18:59:24 calls 44 IN-WINDOW 0
+agent-a2c239287714d3ab1.jsonl Write and run s110 harness port 2026-09-24T00:09:28 2026-09-24T00:30:27 calls 52 IN-WINDOW 0
+agent-a6953a69c40950d6e.jsonl Derive net112 scorer and fixtures 2026-09-24T06:10:32 2026-09-24T07:46:10 calls 60 IN-WINDOW 0
+agent-a82a2069307648bc0.jsonl Adversarial audit session 112 2026-09-24T08:10:25 2026-09-24T08:26:01 calls 76 IN-WINDOW 0
+agent-a9c593a7c731627ab.jsonl Write and run s109 harness port 2026-09-23T20:27:46 2026-09-23T20:46:29 calls 50 IN-WINDOW 0
+agent-aa580a9646f7a8b17.jsonl Adversarial audit of session 109 2026-09-23T23:26:51 2026-09-24T00:07:05 calls 127 IN-WINDOW 0
+agent-aaa5d4cc0f80c56a1.jsonl Write and run s111 harness port 2026-09-24T03:01:21 2026-09-24T03:26:32 calls 82 IN-WINDOW 0
+agent-aad23828fefea2359.jsonl Derive shp111 ship-ABBA scorer 2026-09-24T03:12:53 2026-09-24T04:29:46 calls 52 IN-WINDOW 0
+agent-ac491234da0b953fa.jsonl Derive frf109 scorer and fixtures 2026-09-23T21:29:57 2026-09-23T22:40:13 calls 64 IN-WINDOW 0
+agent-ad354d00f2174cc3c.jsonl Derive obs111 observation scorer 2026-09-24T03:01:49 2026-09-24T03:18:17 calls 40 IN-WINDOW 0
+agent-ad7fe8504dd3978ac.jsonl Adversarial audit of session 110 2026-09-24T02:29:34 2026-09-24T02:59:12 calls 92 IN-WINDOW 0
+agent-ae534cf71ce2147f3.jsonl Adversarial audit of session 108 2026-09-23T19:44:36 2026-09-23T20:06:47 calls 93 IN-WINDOW 0
+agent-ae75b4d2e5537afc2.jsonl Close fam108 fixture debt 2026-09-23T18:45:00 2026-09-23T19:10:20 calls 34 IN-WINDOW 0
+agent-ae85e9a7b440e16d1.jsonl Derive shp110 ship-ABBA scorer 2026-09-24T01:24:41 2026-09-24T02:09:16 calls 42 IN-WINDOW 0
+agent-af4d413d5da7ffc9a.jsonl Adversarial audit session 111 2026-09-24T05:11:47 2026-09-24T05:45:03 calls 141 IN-WINDOW 0

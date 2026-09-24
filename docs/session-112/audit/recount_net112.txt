@@ -1,0 +1,88 @@
+tag net112 rows 19528 gatearm 197
+arm texts {0: [b'dawalk=1 dawalklead=1 daslot=1 daguard=1'], 1: [b'dawalk=1 dawalklead=1 daslot=0 daguard=0']}
+abba/period/arms [(2, 90, 1)]
+first 16 arms [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0] count 197
+byrow False eligible 192 pairs 96 row arm/blk mismatches 0 rejected {0: 'early', 1: 'early', 2: 'early', 3: 'early', 196: 'incomplete'}
+byrow True eligible 192 pairs 96 row arm/blk mismatches 0 rejected {0: 'incomplete', 1: 'early', 2: 'early', 3: 'early', 196: 'incomplete'}
+orientations {(0, 1): 48, (1, 0): 48}
+markers {'GpuClockPin:': 1}
+
+== main estimator rows 10..89: d = arm1 - arm0 (arm1 = daslot0 daguard0), levels median(mean) of block means
+dt_us           d    243.097 2SE   62.591 t    7.77 | arm0 med   30829.706 mean   30893.954 | arm1 med   31042.862 mean   31137.052
+cpu_net_us      d    240.676 2SE   56.807 t    8.47 | arm0 med   29888.981 mean   30031.617 | arm1 med   30229.956 mean   30272.292
+cpu_gpu_us      d    239.233 2SE   56.760 t    8.43 | arm0 med   29915.806 mean   30054.265 | arm1 med   30252.175 mean   30293.498
+spin_gpu_us     d     -1.442 2SE    1.568 t   -1.84 | arm0 med      22.631 mean      22.648 | arm1 med      20.650 mean      21.206
+gpu_busy_us     d    -22.502 2SE   22.426 t   -2.01 | arm0 med   12923.769 mean   12919.495 | arm1 med   12884.675 mean   12896.994
+draws           d     -0.576 2SE    8.153 t   -0.14 | arm0 med    5008.988 mean    5049.207 | arm1 med    5014.112 mean    5048.630
+dispatches      d     -0.003 2SE    0.051 t   -0.11 | arm0 med     268.000 mean     267.989 | arm1 med     268.000 mean     267.986
+rec_n           d     -0.299 2SE   16.569 t   -0.04 | arm0 med   10844.938 mean   10929.218 | arm1 med   10860.556 mean   10928.919
+da_walk_us      d     49.080 2SE    8.174 t   12.01 | arm0 med    2449.931 mean    2453.999 | arm1 med    2498.669 mean    2503.079
+da_queue_us     d     52.720 2SE    3.903 t   27.01 | arm0 med    1225.650 mean    1227.293 | arm1 med    1278.237 mean    1280.013
+da_qcall        d     -0.010 2SE    1.798 t   -0.01 | arm0 med    1072.975 mean    1083.673 | arm1 med    1074.625 mean    1083.663
+q_per_call      d      0.049 2SE    0.003 t   28.06 | arm0 med       1.133 mean       1.133 | arm1 med       1.182 mean       1.181
+da_take_us      d      6.974 2SE    7.677 t    1.82 | arm0 med    2718.550 mean    2744.408 | arm1 med    2731.400 mean    2751.382
+da_hit          d      7.127 2SE   16.495 t    0.86 | arm0 med    8330.550 mean    8407.836 | arm1 med    8342.081 mean    8414.963
+da_miss         d     -3.015 2SE    5.336 t   -1.13 | arm0 med     296.794 mean     297.601 | arm1 med     296.013 mean     294.587
+da_late         d     -5.342 2SE    0.295 t  -36.21 | arm0 med      11.250 mean      11.215 | arm1 med       5.769 mean       5.873
+da_stale        d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+da_busy         d      0.608 2SE    0.529 t    2.30 | arm0 med      64.338 mean      66.702 | arm1 med      64.250 mean      67.311
+da_walks        d     -0.000 2SE    0.003 t   -0.20 | arm0 med       5.000 mean       4.999 | arm1 med       5.000 mean       4.999
+da_q            d     -0.395 2SE   13.876 t   -0.06 | arm0 med    7848.650 mean    7929.977 | arm1 med    7861.519 mean    7929.582
+da_nohint       d      0.387 2SE    1.621 t    0.48 | arm0 med     598.237 mean     599.935 | arm1 med     600.281 mean     600.322
+da_present      d     -0.061 2SE    0.115 t   -1.06 | arm0 med     104.987 mean     105.108 | arm1 med     104.987 mean     105.048
+da_work_us      d     37.845 2SE   74.536 t    1.02 | arm0 med   25364.875 mean   25464.211 | arm1 med   25438.069 mean   25502.056
+bda_scan        d      0.231 2SE    1.888 t    0.24 | arm0 med      53.356 mean      55.217 | arm1 med      53.025 mean      55.448
+bda_n           d      0.190 2SE    1.669 t    0.23 | arm0 med     180.169 mean     181.657 | arm1 med     181.525 mean     181.847
+srt_miss        d     -7.308 2SE   10.397 t   -1.41 | arm0 med    1519.794 mean    1514.450 | arm1 med    1503.131 mean    1507.142
+img_up_kb       d     -7.442 2SE   39.089 t   -0.38 | arm0 med  101138.800 mean  101102.756 | arm1 med  101120.413 mean  101095.313
+kpx_per_att     d      0.272 2SE    0.465 t    1.17 | arm0 med    1999.993 mean    1999.997 | arm1 med    2000.050 mean    2000.268
+vbl1            d     -0.014 2SE    0.004 t   -7.94 | arm0 med       0.150 mean       0.149 | arm1 med       0.138 mean       0.135
+vbl2            d      0.013 2SE    0.004 t    6.51 | arm0 med       0.838 mean       0.848 | arm1 med       0.850 mean       0.861
+vbl3p           d      0.001 2SE    0.002 t    1.12 | arm0 med       0.000 mean       0.003 | arm1 med       0.000 mean       0.004
+long50          d      0.000 2SE    0.001 t    0.38 | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.001
+cpu_main_us     d     14.522 2SE   19.764 t    1.47 | arm0 med    9106.431 mean    9116.837 | arm1 med    9134.862 mean    9131.359
+semwait_us      d    173.974 2SE   49.904 t    6.97 | arm0 med   26842.169 mean   26878.590 | arm1 med   27056.394 mean   27052.564
+lat_us          d    -41.320 2SE  100.458 t   -0.82 | arm0 med   10853.525 mean   10846.881 | arm1 med   10872.900 mean   10805.562
+faults          d      4.361 2SE    2.191 t    3.98 | arm0 med    1257.987 mean    1256.644 | arm1 med    1261.287 mean    1261.005
+fault_us        d    -91.035 2SE  169.934 t   -1.07 | arm0 med   14770.694 mean   14647.232 | arm1 med   14767.319 mean   14556.197
+da_q_free       d  -1083.672 2SE    5.085 t -426.26 | arm0 med    1072.975 mean    1083.672 | arm1 med       0.000 mean       0.000
+da_q_noguard    d   1083.663 2SE    4.947 t  438.08 | arm0 med       0.000 mean       0.000 | arm1 med    1074.625 mean    1083.663
+da_guard_yield  d     -0.001 2SE    0.002 t   -1.30 | arm0 med       0.000 mean       0.001 | arm1 med       0.000 mean       0.000
+da_guard_busy   d     -0.000 2SE    0.000 t   -1.00 | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+da_q_taking     d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+da_hint_defer   d      0.084 2SE    0.165 t    1.02 | arm0 med       1.000 mean       1.042 | arm1 med       1.000 mean       1.126
+da_hint_torn    d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+cspfree_hit     d      0.000 2SE    0.003 t    0.00 | arm0 med     266.000 mean     265.999 | arm1 med     266.000 mean     265.999
+cs_sync_new     d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+cs_sync_wait    d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+da_wjobs        d     -0.000 2SE    0.003 t   -0.20 | arm0 med       8.000 mean       7.999 | arm1 med       8.000 mean       7.999
+da_wlag_us      d    397.155 2SE  185.987 t    4.27 | arm0 med   72429.525 mean   72896.027 | arm1 med   72779.556 mean   73293.182
+da_wdepth       d      0.030 2SE    0.043 t    1.37 | arm0 med      17.569 mean      17.587 | arm1 med      17.637 mean      17.617
+pl_wq_hold_ns   d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+pl_wq_hold_n    d      0.000 2SE    0.000 t     nan | arm0 med       0.000 mean       0.000 | arm1 med       0.000 mean       0.000
+da_unused       d     -2.646 2SE    4.042 t   -1.31 | arm0 med     153.694 mean     155.341 | arm1 med     153.156 mean     152.695
+prot_us         d      8.857 2SE   17.133 t    1.03 | arm0 med    3536.856 mean    3551.165 | arm1 med    3571.412 mean    3560.022
+cpu_record_us   d    294.177 2SE   60.598 t    9.71 | arm0 med   28511.888 mean   28600.437 | arm1 med   28831.306 mean   28894.613
+pmemo_hit       d     -1.250 2SE   14.255 t   -0.18 | arm0 med    6587.562 mean    6678.905 | arm1 med    6607.988 mean    6677.654
+
+full stats dt_us   n  96 mean   243.097 2SE   62.591 t    7.77 med    206.72 p 0.0000 boot95 [181.1, 304.9]
+full stats cpu_net n  96 mean   240.676 2SE   56.807 t    8.47 med    205.69 p 0.0000 boot95 [186.6, 297.3]
+N1 arm1 per call 1.1895 (median ratio), mean-based 1.1812
+N2 arm0 per call 1.1423 (median ratio), mean-based 1.1325
+secondary 60..88 dt_us      n  96 mean   278.344 2SE  111.525 t    4.99 med     31.10 p 0.0000 boot95 [166.0, 390.0] pairs 96
+secondary 60..88 cpu_net_us n  96 mean   268.793 2SE  102.375 t    5.25 med    254.14 p 0.0000 boot95 [168.3, 368.7] pairs 96
+full block 0..89 dt_us      n  96 mean   243.206 2SE   60.377 t    8.06 med    187.93 p 0.0000 boot95 [182.8, 302.6] pairs 96
+full block 0..89 cpu_net_us n  96 mean   240.240 2SE   53.922 t    8.91 med    204.38 p 0.0000 boot95 [186.8, 293.3] pairs 96
+full block 0..89 gpu_busy_us n  96 mean   -23.327 2SE   21.058 t   -2.22 med    -18.29 p 0.0293 boot95 [-43.9, -3.2] pairs 96
+third 1 dt 240.7 2SE 123.5 t 3.90 n 32
+third 2 dt 229.9 2SE 109.6 t 4.20 n 32
+third 3 dt 258.7 2SE 93.3 t 5.54 n 32
+capped dt at 41667 n  96 mean   240.130 2SE   58.739 t    8.18 med    206.84 p 0.0000 boot95 [183.4, 299.5]
+capped dt at 50000 n  96 mean   247.327 2SE   61.853 t    8.00 med    206.72 p 0.0000 boot95 [186.6, 309.0]
+capped dt at 60000 n  96 mean   246.049 2SE   61.974 t    7.94 med    206.72 p 0.0000 boot95 [184.9, 307.6]
+block-median dt d 17.9 2SE 10.6 t 3.38
+arm 0 rows 7680 mean 30894.0 p10 16999 p50 33215 p90 33743 p99 34178 max 82665  >=41667 0.0026  >=50000 0.0004  >=66667 0.0001  <25000 0.1492
+arm 1 rows 7680 mean 31137.1 p10 17111 p50 33235 p90 33734 p99 34205 max 50376  >=41667 0.0035  >=50000 0.0005  >=66667 0.0000  <25000 0.1353
+pair d dt min/max [-416.9250000000029, -412.6875, -212.58749999999782] [839.4375, 842.7749999999978, 1045.1124999999993]
+pairs with d<0 20 of 96
+10% trimmed mean 236.9

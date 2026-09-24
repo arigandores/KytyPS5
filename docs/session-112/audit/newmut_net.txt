@@ -1,0 +1,4 @@
+N_ship_us_half           KILLED  (199 s) ['S1_edge_out']
+N_n1_high_1125           KILLED  (199 s) ['PENDING', 'S1_edge', 'EST_rows10_59', 'LEVEL_median', 'PRED_inside', 'PRED_edges_lo']
+N_n7_high_41             KILLED  (198 s) ['PENDING', 'S1_edge', 'EST_rows10_59', 'LEVEL_median', 'PRED_inside', 'PRED_edges_lo']
+N_sync_slack_3           KILLED  (196 s) ['SYNC', 'SYNC_unkept']

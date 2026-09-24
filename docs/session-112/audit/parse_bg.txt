@@ -1,0 +1,39 @@
+fam108 rows 19572 gatearm 198 gate lines 99
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+sf108a rows 19854 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+sf108b rows 19827 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+sf108c rows 9918 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+sf108d rows 9692 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vfm108 rows 3619 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vid108 rows 3964 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vid108r rows 3921 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+frm109 rows 19443 gatearm 197 gate lines 98
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vfy109 rows 9827 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+shp110 rows 19476 gatearm 197 gate lines 98
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vid110 rows 3985 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vsh110 rows 3997 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+obs111 rows 10081 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+shp111 rows 19230 gatearm 194 gate lines 97
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vds111 rows 9858 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vds111b rows 7239 gatearm 0 gate lines 2
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vid111 rows 4001 gatearm 0 gate lines 0
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+vss111 rows 3933 gatearm 0 gate lines 1
+   GpuClockPin: 1 b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n'
+   BvhLoopCapTrip: 3 b'BvhLoopCapTrip: trips=+20480 total=20480 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=20480 slot1=0\n'

@@ -1,0 +1,29 @@
+rows 7472 gatearm 64 gate lines 67
+markers {'GpuClockPin:': 1}
+arm texts {0: {(2, 90, 1, b'dawalk=1 dawalklead=1 daslot=0 daguard=0')}, 1: {(2, 90, 1, b'dawalk=1 dawalklead=1 daslot=1 daguard=1')}}
+Gate lines sample [b'Gate: smemocheck=1 frame=1', b'Gate: daslot=0 frame=1800', b'Gate: daguard=0 frame=1800', b'Gate: daslot=1 frame=1890', b'Gate: daguard=1 frame=1890', b'Gate: daslot=0 frame=2070']
+smemocheck gate lines [b'Gate: smemocheck=1 frame=1'] 1
+x rows 7472
+  total da_slot_bad    0
+  total da_chk_ok      61535031
+  total da_chk_bad     0
+  total da_q_free      4904831
+  total da_q_noguard   3011966
+  total da_guard_busy  0
+  total da_guard_yield 0
+  total da_q_taking    2
+  total da_hint_defer  283
+  total da_hint_torn   0
+  total da_qcall       7916797
+  total cspfree_hit    1910788
+  total cspfree_bad    0
+  total da_hit         61534991
+x rows missing a field 0
+arm 0 main rows 2480  checks/hits 0.999981  median q_free 0.0  median q_noguard 1069.0  sum q_free 534  sum q_noguard 2585189  med qcall 1069.0  sum yield 0  sum guard_busy 0
+arm 1 main rows 2560  checks/hits 1.000001  median q_free 1074.0  median q_noguard 0.0  sum q_free 2764786  sum q_noguard 0  med qcall 1074.0  sum yield 0  sum guard_busy 0
+transition rows (0..9) 633 bad 0 checks/hits 1.000063
+all rows checks/hits 1.000001
+arm switches 32
+rows with both q_free and q_noguard > 0: 0
+frame range 2 7473
+dt level per arm (main rows) med {0: 47376.0, 1: 47515.5}

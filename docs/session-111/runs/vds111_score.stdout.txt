@@ -1,0 +1,14 @@
+  rows 9858  errors ['GATES', 'ARMED']
+  da_slot_bad    total            0
+  da_chk_ok      total            0
+  da_chk_bad     total            0
+  da_q_free      total     10659158
+  da_guard_busy  total            2
+  da_q_taking    total            2
+  da_hint_defer  total        10841
+  da_hint_torn   total            0
+  cspfree_hit    total      2579536
+  cspfree_bad    total            0
+  mismatch lines {'DaSlotVerify: MISMATCH': 0, 'DrawAheadVerify: MISMATCH': 0}  BAD 0
+  scorer a8718039955cfc6a34665bf1a72afd07fb0f7c13c5f7d1076566e97f204c6b94
+VERDICT: NOT_ADMITTED

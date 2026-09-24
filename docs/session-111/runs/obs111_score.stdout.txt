@@ -1,0 +1,17 @@
+obs111.py obs111 root C:/kyty/s111 rows 7983 (all 10081)
+  errors none
+  contended wall 236.10782099461355 us/flip  tag1 232.5873834398096  tag2 0.0  tags0+3 3.5204375548039586  (residual 0 ns)
+  contended acquisitions 239.72641863960916/flip  by tag {'0': 7.10134034824001, '1': 232.62507829136916, '2': 0.0, '3': 0.0}
+  spin share (lower bound) 0.7032150619768435  tag1 share 0.9850897037634163  tag2 share 0.0
+  walker QueueDrawAhead holds 965.5689130652637 us/flip  1080.0248027057496 calls/flip  0.8940247581780125 us/call
+  walker prefetch holds 0.0 us/flip  0.0 calls/flip
+  cspfree_hit 265.99987473380935  cspfree_look 265.99987473380935  cspf_have 0.0  cspf_new 0.0 per flip  cspfree_bad (all rows) 0
+  prediction P1 HIT  value 0.0  tag-2 contended wall <= 20 us a flip
+  prediction P2 HIT  value 0.9850897037634163  tag-1 share of the contended wall >= 0.85
+  prediction P3 HIT  value 236.10782099461355  total contended wall in [150, 320] us a flip
+  prediction P4 HIT  value 0.0  pl_wp_hold_ns per flip <= 20 us
+  prediction P5 HIT  value 1.0  verdict BUILD_DASLOT
+  gates file C:/kyty/s111/gates_obs111.txt match True (information only)
+  scorer 927b1721763964a49ba66f7f38bf6747af63e74f053177af91aa0c67ddd58a29
+VERDICT: BUILD_DASLOT
+wrote C:\kyty\s111\runs111\obs111_score.json

@@ -1,0 +1,64 @@
+CONSTANTS            match OK
+GO                   want GO           got GO           bad 0 errors [] OK
+GO_no_leak           want GO           got GO           bad 0 errors [] OK
+GO_leak_pos9         want GO           got GO           bad 0 errors [] OK
+GO_stdout_clean      want GO           got GO           bad 0 errors [] OK
+GO_armline_ok        want GO           got GO           bad 0 errors [] OK
+NO_GO_slot           want NO_GO        got NO_GO        bad 1 errors [] OK
+NO_GO_chk            want NO_GO        got NO_GO        bad 1 errors [] OK
+NO_GO_slot_line      want NO_GO        got NO_GO        bad 1 errors [] OK
+NO_GO_chk_line       want NO_GO        got NO_GO        bad 1 errors [] OK
+IDENTITY             want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['IDENTITY'] OK
+INPUTS               want NOT_ADMITTED got NOT_ADMITTED bad None errors ['INPUTS'] OK
+BINARY               want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['BINARY'] OK
+PREREG               want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['PREREG'] OK
+ENV_PIN              want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ENV_PIN'] OK
+ENV_CKPT             want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_REC              want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ENV_FORBIDDEN'] OK
+ENV_PRECACHE         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ENV_FORBIDDEN'] OK
+SCHED_missing        want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['SCHEDULE'] OK
+SCHED_text           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['SCHEDULE'] OK
+SCHED_abba           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['SCHEDULE'] OK
+GATES_check_off      want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATES'] OK
+GATES_appended       want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATES'] OK
+GATES_none           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATES'] OK
+GATES_daslot         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATES'] OK
+GATES_daguard        want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATES'] OK
+ATT_outcome          want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ATTEMPT'] OK
+ATT_exit             want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_fail   want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ATTEMPT'] OK
+ATT_hold_edge_ok     want GO           got GO           bad 0 errors [] OK
+ATT_two              want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ATTEMPT'] OK
+PIN_none             want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['PIN_ONCE'] OK
+PIN_two              want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['PIN_ONCE'] OK
+PIN_mode2            want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['PIN_ONCE'] OK
+MARK_hang            want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+MARK_error           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+MARK_fatal           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+MARK_skipped         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+MARK_slow            want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+MARK_stdout          want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['NO_MARKER'] OK
+ROWS_edge_fail       want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ROWS'] OK
+ROWS_edge_ok         want GO           got GO           bad 0 errors [] OK
+ROWS_field           want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ROWS'] OK
+GATEARM_edge_fail    want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATEARM'] OK
+GATEARM_text         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATEARM'] OK
+GATEARM_abba         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATEARM'] OK
+GATEARM_period       want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATEARM'] OK
+GATEARM_arms         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['GATEARM'] OK
+ARMED_arm0_leak10    want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ARMED_ARM0'] OK
+ARMED_arm1_leak10    want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ARMED_ARM1'] OK
+GO_leak1_pos9        want GO           got GO           bad 0 errors [] OK
+ARMED_arm0_leak89    want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ARMED_ARM0'] OK
+GO_leak_pos90        want GO           got GO           bad 0 errors [] OK
+ARMED_arm0_dark      want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['ARMED_ARM0', 'ARMED_ARM1'] OK
+CHECKED_edge_fail    want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['CHECKED'] OK
+CHECKED_edge_ok      want GO           got GO           bad 0 errors [] OK
+CHECKED_none         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['CHECKED'] OK
+DEFAULTS_free        want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['DEFAULTS'] OK
+DEFAULTS_bad         want NOT_ADMITTED got NOT_ADMITTED bad 0 errors ['DEFAULTS'] OK
+ARM_ROWS_edges       rows [2400, 2400] edge ok GO edge+1 ['ARM_ROWS'] OK
+PRED_values          {'D1': (0, True), 'D2': (1080.0, True), 'D3': (1080.0, True), 'D4': (101, False), 'D5': (0.99, True)} OK
+DRAFT                errors ['DRAFT'] OK
+SEAL                 errors ['SEAL'] OK
+ALL OK

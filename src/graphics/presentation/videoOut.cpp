@@ -2508,6 +2508,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bda_nmiss", FS::Counter::BdaNarrowMiss, false},
 				    {"bda_nxthr", FS::Counter::BdaNarrowXthread, false},
 				    {"bgc_evict", FS::Counter::BufGcEvict, false},
+				    {"bda_nrace", FS::Counter::BdaNarrowRace, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

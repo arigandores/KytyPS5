@@ -2794,7 +2794,8 @@ void BufferCache::MarkBdaRegions(uint64_t vaddr, uint64_t size) {
 	}
 }
 
-bool BufferCache::DirtyRangesTouchBuffers() {
+bool BufferCache::DirtyRangesTouchBuffers(uint64_t* range_address, uint64_t* range_size, uint64_t* buffer_address,
+                                          uint64_t* buffer_size) {
 	for (const auto& range: m_bda_dirty_ranges) {
 		auto it = m_buffers.upper_bound(range.address);
 		if (it != m_buffers.begin()) {
@@ -2804,6 +2805,12 @@ bool BufferCache::DirtyRangesTouchBuffers() {
 			const auto& buffer = m_slot_buffers[it->second];
 			if (std::max(buffer.CpuAddress(), range.address) <
 			    std::min(buffer.CpuAddress() + buffer.Size(), range.End())) {
+				if (range_address != nullptr) {
+					*range_address  = range.address;
+					*range_size     = range.End() - range.address;
+					*buffer_address = buffer.CpuAddress();
+					*buffer_size    = buffer.Size();
+				}
 				return true;
 			}
 		}
@@ -2889,8 +2896,23 @@ void BufferCache::SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_
 		m_memory_tracker.CollectCpuModifiedRanges(cursor, bytes, m_bda_dirty_ranges);
 		if (narrow_would_skip) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowWould, 1);
-			if (DirtyRangesTouchBuffers()) {
-				Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
+			uint64_t range_address = 0, range_size = 0, buffer_address = 0, buffer_size = 0;
+			if (DirtyRangesTouchBuffers(&range_address, &range_size, &buffer_address, &buffer_size)) {
+				// Session 113 (pre-run audit): the stamp above was read without the region lock and the bits were collected
+				// under it, so a guest write announced in between is seen here - but it moved the stamp, and knob 1 would
+				// walk this region on its next pass. Read the stamp again: unchanged = a real miss of knob 1.
+				if (m_memory_tracker.RegionWriteStamp(index) == stamp) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowMiss, 1);
+					static std::atomic<uint32_t> logged {0};
+					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("BdaNarrowMiss: region=%llu range=0x%llx+0x%llx buffer=0x%llx+0x%llx\n",
+						     static_cast<unsigned long long>(index), static_cast<unsigned long long>(range_address),
+						     static_cast<unsigned long long>(range_size), static_cast<unsigned long long>(buffer_address),
+						     static_cast<unsigned long long>(buffer_size));
+					}
+				} else {
+					Common::FrameStats::Add(Common::FrameStats::Counter::BdaNarrowRace, 1);
+				}
 			}
 		}
 		const uint64_t bda_scan_t1 = bda_scan_t0 != 0 ? Common::FrameStats::NowNs() : 0;

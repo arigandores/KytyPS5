@@ -295,8 +295,10 @@ private:
 	std::thread::id                                    m_bda_scan_thread {};
 	// Marks the stamps of the tracking regions of [vaddr, vaddr + size) stale (a buffer was registered there).
 	void MarkBdaRegions(uint64_t vaddr, uint64_t size);
-	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer.
-	bool DirtyRangesTouchBuffers();
+	// Knob 2 of "bdanarrow": whether the dirty ranges just collected overlap any registered buffer (the first overlap
+	// is returned through the optional pointers, for the miss log).
+	bool DirtyRangesTouchBuffers(uint64_t* range_address = nullptr, uint64_t* range_size = nullptr,
+	                             uint64_t* buffer_address = nullptr, uint64_t* buffer_size = nullptr);
 	void SynchronizeBuffersByRegion(uint64_t scan_begin, uint64_t scan_end);
 	void SynchronizeBuffersOfDirtyRanges();
 	void SynchronizeBuffersOfDirtyRangesBatched(PageManager::PassScope& pass);

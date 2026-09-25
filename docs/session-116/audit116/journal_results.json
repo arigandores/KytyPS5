@@ -468,7 +468,7 @@
      "id": "F8",
      "severity": "INFO",
      "title": "Privacy: one system path outside C:/kyty and the game folder; the user's foreign game is named",
-     "evidence": "No e-mail, and no .claude, AppData or Temp paths, in any session-116 committed file. The main session's grep for '.claude|<name>.<surname>' ran at freeze time. WORKFLOW_RESULT.txt paths are all C:/kyty/…. test_obs116.py (committed in docs/session-116/tools) has VK_SDK_PATH fixture values C:\\VulkanSDK\\1.4.357.0 and C:\\VulkanSDK\\Bin: a non-personal SDK path, but outside the allowed set (it also appears in project CLAUDE.md). ACCEPTANCE_V41.md and WORKFLOW_RESULT.txt name the user's game 'game-Y'; session 115's amendment did the same with 'game-X'. The game folder path C:/Users/<user>/OneDrive/Desktop/ps5 em in go116a.sh, obs116.py and test_obs116.py is allowed.",
+     "evidence": "No e-mail, and no .claude, AppData or Temp paths, in any session-116 committed file. The main session's grep for '.claude|<user-id>' ran at freeze time. WORKFLOW_RESULT.txt paths are all C:/kyty/…. test_obs116.py (committed in docs/session-116/tools) has VK_SDK_PATH fixture values C:\\VulkanSDK\\1.4.357.0 and C:\\VulkanSDK\\Bin: a non-personal SDK path, but outside the allowed set (it also appears in project CLAUDE.md). ACCEPTANCE_V41.md and WORKFLOW_RESULT.txt name the user's game 'game-Y'; session 115's amendment did the same with 'game-X'. The game folder path C:/Users/<user>/OneDrive/Desktop/ps5 em in go116a.sh, obs116.py and test_obs116.py is allowed.",
      "fix": "Before any push, replace the game title with 'a foreign process', and optionally use a neutral VK_SDK_PATH value in the fixtures."
     },
     {

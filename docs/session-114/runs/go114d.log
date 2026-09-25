@@ -1,0 +1,8 @@
+[06:13:57] idle check cpu=2 gpu=0
+[06:13:57] vid114 start
+[06:16:21] vid114 rc=0 VERDICT: underwater_aerial_garden in 14.3 s - PASS (acceptance <= 90 s)
+[06:16:30] vidglitch one-frame glitches: 0
+[06:16:30] boot114 start
+[06:16:47] boot114 rc=1 VERDICT: no attempt reached underwater_aerial_garden
+[06:16:50] check114 VERDICT: NOT_ADMITTED
+[06:16:50] done

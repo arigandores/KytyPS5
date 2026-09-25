@@ -7,6 +7,7 @@
 #include "graphics/host_gpu/renderer/renderContext.h"
 
 #include <cstdint>
+#include <memory>
 #include <span>
 #include <vector>
 
@@ -49,6 +50,13 @@ private:
 	// graphics submission) and whether the walker thread already walked it (gate "dawalk").
 	uint64_t                  m_walk_id       = 0;
 	bool                      m_walked_ahead  = false;
+	// Session 117, knob "spine" (measurement only): the mode latched when the submission started (0 off, 1 plan,
+	// 2 plan + verify), the plan this submission owns (the snapshots live in the processor), the next element the real
+	// processor compares, and how many elements the plan saw.
+	uint8_t                   m_spine_mode     = 0;
+	uint64_t                  m_spine_plan     = 0;
+	uint32_t                  m_spine_cursor   = 0;
+	uint32_t                  m_spine_elements = 0;
 };
 
 bool ApplyCsShRegister(HW::CsStageRegisters& cs_regs, uint32_t cmd_offset, uint32_t value);
@@ -166,6 +174,20 @@ public:
 
 private:
 	void ProcessPm4Baton(Pm4Execution& execution, size_t stop_depth, uint32_t length);
+	// Session 117, knob "spine" (route A stage 4, docs/session-117/designA4_spine.md; measurement only): a second
+	// processor, seeded from this one when a submission starts, walks the submission through the real register
+	// handlers; at mode 2 the register state before every draw/dispatch is snapshotted by the plan and compared
+	// member-wise with the real state before the element's handler runs.
+	struct SpineSnap {
+		HW::Context    ctx;
+		HW::UserConfig ucfg;
+		HW::Shader     sh;
+		uint64_t       regs[8] = {};
+	};
+	void SpinePlan(Pm4Execution& execution);
+	void SpineCheck(Pm4Execution& execution, uint32_t opcode);
+	void SpineFinish(Pm4Execution& execution);
+	void SpineRegs(uint64_t* out) const;
 	// KYTY_ASYNC_COMPUTE: walks the submission ahead of execution with a shadow copy of the compute
 	// state and queues the driver compile of every compute pipeline it will need.
 	void PrefetchComputePipelines(const Pm4Execution& execution);
@@ -205,6 +227,12 @@ private:
 	// atomic: the relay runs while GuestGpu is parked.
 	uint64_t  m_range_draws                 = 0;
 	uint32_t  m_baton_turn                  = 0;
+	// Session 117, knob "spine": the shadow processor (created on the first plan; never asked to draw), the snapshots
+	// of the latest mode-2 plan (reused, never shrunk) and that plan's number.
+	std::unique_ptr<CommandProcessor> m_spine;
+	std::vector<SpineSnap>            m_spine_snaps;
+	uint32_t                          m_spine_snap_count = 0;
+	uint64_t                          m_spine_plan_id    = 0;
 };
 
 } // namespace Libs::Graphics

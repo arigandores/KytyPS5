@@ -2539,6 +2539,23 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"mt_age_ns", FS::Counter::MainTaskAgeNs, false},
 				    {"mt_n", FS::Counter::MainTaskN, false},
 				    {"present_overlap", FS::Counter::PresentOverlap, false},
+				    {"spine_n", FS::Counter::SpineN, false},
+				    {"spine_ns", FS::Counter::SpineNs, false},
+				    {"spine_pk", FS::Counter::SpinePackets, false},
+				    {"spine_el", FS::Counter::SpineElements, false},
+				    {"spine_ib", FS::Counter::SpineIb, false},
+				    {"spine_cf_br", FS::Counter::SpineCfBranch, false},
+				    {"spine_cf_cond", FS::Counter::SpineCfCond, false},
+				    {"spine_cf_pred", FS::Counter::SpineCfPred, false},
+				    {"spine_cf_predw", FS::Counter::SpineCfPredWait, false},
+				    {"spine_cf_ind", FS::Counter::SpineCfIndirect, false},
+				    {"spine_abort", FS::Counter::SpineAbort, false},
+				    {"spine_cmp", FS::Counter::SpineCmp, false},
+				    {"spine_bad", FS::Counter::SpineBad, false},
+				    {"spine_misal", FS::Counter::SpineMisalign, false},
+				    {"spine_pad", FS::Counter::SpinePad, false},
+				    {"spine_lost", FS::Counter::SpineLost, false},
+				    {"spine_chk_ns", FS::Counter::SpineCheckNs, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

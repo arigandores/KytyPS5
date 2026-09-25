@@ -9,12 +9,20 @@ namespace Libs::Graphics::HW {
 
 struct ColorBase {
 	uint64_t addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorBase& other) const = default;
 };
 
 struct ColorView {
 	uint32_t base_array_slice_index = 0;
 	uint32_t last_array_slice_index = 0;
 	uint32_t current_mip_level      = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorView& other) const = default;
 };
 
 struct ColorInfo {
@@ -30,18 +38,30 @@ struct ColorInfo {
 	Prospero::ChannelLayout format                         = Prospero::ChannelLayout::kInvalid;
 	Prospero::ChannelType   channel_type                   = Prospero::ChannelType::kUNorm;
 	Prospero::ChannelOrder  channel_order                  = Prospero::ChannelOrder::kStandard;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorInfo& other) const = default;
 };
 
 struct ColorAttrib {
 	bool     force_dest_alpha_to_one = false;
 	uint32_t num_samples             = 0;
 	uint32_t num_fragments           = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorAttrib& other) const = default;
 };
 
 struct ColorAttrib2 {
 	uint32_t height         = 0;
 	uint32_t width          = 0;
 	uint32_t num_mip_levels = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorAttrib2& other) const = default;
 };
 
 struct ColorAttrib3 {
@@ -50,6 +70,10 @@ struct ColorAttrib3 {
 	uint32_t           dimension                    = 0;
 	bool               metadata_pipe_aligned        = false;
 	bool               write_vrs_rate_hint_to_cmask = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorAttrib3& other) const = default;
 };
 
 struct ColorDccControl {
@@ -62,26 +86,50 @@ struct ColorDccControl {
 	bool                 overwrite_combiner_disable     = false;
 	IndependentBlockSize independent_block_size         = IndependentBlockSize::Disabled;
 	bool                 data_write_on_dcc_clear_to_reg = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorDccControl& other) const = default;
 };
 
 struct ColorCmask {
 	uint64_t addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorCmask& other) const = default;
 };
 
 struct ColorFmask {
 	uint64_t addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorFmask& other) const = default;
 };
 
 struct ColorClearWord0 {
 	uint32_t word0 = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorClearWord0& other) const = default;
 };
 
 struct ColorClearWord1 {
 	uint32_t word1 = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorClearWord1& other) const = default;
 };
 
 struct ColorDccAddr {
 	uint64_t addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorDccAddr& other) const = default;
 };
 
 struct RenderTarget {
@@ -97,6 +145,10 @@ struct RenderTarget {
 	ColorClearWord0 clear_word0;
 	ColorClearWord1 clear_word1;
 	ColorDccAddr    dcc_addr;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const RenderTarget& other) const = default;
 };
 
 struct DepthZInfo {
@@ -132,6 +184,10 @@ struct DepthZInfo {
 			default: return false;
 		}
 	}
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthZInfo& other) const = default;
 };
 
 struct DepthStencilInfo {
@@ -160,6 +216,10 @@ struct DepthStencilInfo {
 			default: return false;
 		}
 	}
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthStencilInfo& other) const = default;
 };
 
 struct DepthDepthView {
@@ -168,12 +228,20 @@ struct DepthDepthView {
 	uint8_t  current_mip_level     = 0;
 	bool     depth_write_disable   = false;
 	bool     stencil_write_disable = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthDepthView& other) const = default;
 };
 
 struct DepthDepthSizeXY {
 	uint16_t x_max = 0;
 	uint16_t y_max = 0;
 	bool     valid = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthDepthSizeXY& other) const = default;
 };
 
 struct DepthRenderTarget {
@@ -188,6 +256,10 @@ struct DepthRenderTarget {
 	uint64_t stencil_write_base_addr = 0;
 	uint64_t htile_data_base_addr    = 0;
 	uint8_t  shading_rate_encoding   = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthRenderTarget& other) const = default;
 };
 
 struct RenderControl {
@@ -200,6 +272,10 @@ struct RenderControl {
 	bool    copy_stencil_to_color    = false;
 	bool    copy_centroid            = false;
 	uint8_t copy_sample              = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const RenderControl& other) const = default;
 };
 
 struct DepthRenderOverride {
@@ -207,6 +283,10 @@ struct DepthRenderOverride {
 	bool force_z_dirty       = false;
 	bool force_stencil_valid = false;
 	bool force_stencil_dirty = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthRenderOverride& other) const = default;
 };
 
 struct GdsOaCounter {
@@ -219,6 +299,10 @@ struct GdsOaCounter {
 	[[nodiscard]] uint32_t GetCrawlerId() const { return (address >> 20u) & 0xfu; }
 	[[nodiscard]] bool     IsCounterEnabled() const { return (address & 0x80000000u) != 0; }
 	[[nodiscard]] bool IsAllocationCrawlerDisabled() const { return (address & 0x40000000u) != 0; }
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GdsOaCounter& other) const = default;
 };
 
 struct GdsOaState {
@@ -228,6 +312,10 @@ struct GdsOaState {
 	GdsOaCounter counters[COUNTERS_NUM];
 
 	[[nodiscard]] uint32_t GetIndex() const { return cntl & (COUNTERS_NUM - 1u); }
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GdsOaState& other) const = default;
 };
 
 struct ClipControl {
@@ -245,6 +333,10 @@ struct ClipControl {
 	bool    force_viewport_index_from_vs_enable = false;
 
 	[[nodiscard]] bool IsZClipEnabled() const { return !min_z_clip_disable && !max_z_clip_disable; }
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ClipControl& other) const = default;
 };
 
 struct DepthControl {
@@ -256,6 +348,10 @@ struct DepthControl {
 	bool    backface_enable     = false;
 	uint8_t stencilfunc         = 0;
 	uint8_t stencilfunc_bf      = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthControl& other) const = default;
 };
 
 struct StencilControl {
@@ -265,6 +361,10 @@ struct StencilControl {
 	uint8_t stencil_fail_bf  = 0;
 	uint8_t stencil_zpass_bf = 0;
 	uint8_t stencil_zfail_bf = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const StencilControl& other) const = default;
 };
 
 struct StencilMask {
@@ -276,6 +376,10 @@ struct StencilMask {
 	uint8_t stencil_mask_bf      = 0;
 	uint8_t stencil_writemask_bf = 0;
 	uint8_t stencil_opval_bf     = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const StencilMask& other) const = default;
 };
 
 struct ModeControl {
@@ -290,6 +394,10 @@ struct ModeControl {
 	bool    vtx_window_offset_enable = false;
 	bool    provoking_vtx_last       = false;
 	bool    persp_corr_dis           = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ModeControl& other) const = default;
 };
 
 struct PolyOffset {
@@ -300,6 +408,10 @@ struct PolyOffset {
 	float  front_offset    = 0.0f;
 	float  back_scale      = 0.0f;
 	float  back_offset     = 0.0f;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const PolyOffset& other) const = default;
 };
 
 struct BlendControl {
@@ -311,6 +423,10 @@ struct BlendControl {
 	uint8_t alpha_destblend      = 0;
 	bool    separate_alpha_blend = true;
 	bool    enable               = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const BlendControl& other) const = default;
 };
 
 struct BlendColor {
@@ -318,6 +434,10 @@ struct BlendColor {
 	float green = 0.0f;
 	float blue  = 0.0f;
 	float alpha = 0.0f;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const BlendColor& other) const = default;
 };
 
 struct EqaaControl {
@@ -329,22 +449,38 @@ struct EqaaControl {
 	bool    incoherent_eqaa_reads      = false;
 	bool    interpolate_comp_z         = false;
 	bool    static_anchor_associations = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const EqaaControl& other) const = default;
 };
 
 struct ColorControl {
 	uint8_t mode = 1;
 	uint8_t op   = 0xCC;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ColorControl& other) const = default;
 };
 
 struct ScanModeControl {
 	bool msaa_enable          = false;
 	bool vport_scissor_enable = true;
 	bool line_stipple_enable  = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ScanModeControl& other) const = default;
 };
 
 struct AaSampleControl {
 	uint64_t centroid_priority = 0;
 	uint32_t locations[16]     = {};
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const AaSampleControl& other) const = default;
 };
 
 struct DepthShaderControl {
@@ -357,6 +493,10 @@ struct DepthShaderControl {
 	bool     shader_dual_export_enable   = false;
 	bool     shader_execute_on_noop      = false;
 	bool     alpha_to_mask_disable       = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const DepthShaderControl& other) const = default;
 };
 
 struct AaConfig {
@@ -364,6 +504,10 @@ struct AaConfig {
 	bool    aa_mask_centroid_dtmn = false;
 	uint8_t max_sample_dist       = 0;
 	uint8_t msaa_exposed_samples  = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const AaConfig& other) const = default;
 };
 
 struct Viewport {
@@ -380,6 +524,10 @@ struct Viewport {
 	int   viewport_scissor_right                = 16384;
 	int   viewport_scissor_bottom               = 16384;
 	bool  viewport_scissor_window_offset_enable = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const Viewport& other) const = default;
 };
 
 struct ScreenViewport {
@@ -413,6 +561,10 @@ struct ScreenViewport {
 	int      clip_rect_right[4]                   = {};
 	int      clip_rect_bottom[4]                  = {};
 	bool     clip_rect_window_offset_enable[4]    = {};
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ScreenViewport& other) const = default;
 };
 
 struct HsShaderResource1 {
@@ -426,6 +578,10 @@ struct HsShaderResource1 {
 	bool    threadgroup_configuration = false;
 	uint8_t ls_vgpr_component_count   = 0;
 	bool    fp16_overflow             = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const HsShaderResource1& other) const = default;
 };
 
 struct HsShaderResource2 {
@@ -433,6 +589,10 @@ struct HsShaderResource2 {
 	uint8_t  user_sgpr    = 0;
 	uint16_t lds_size     = 0;
 	uint8_t  shared_vgprs = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const HsShaderResource2& other) const = default;
 };
 
 struct PsShaderResource1 {
@@ -445,6 +605,10 @@ struct PsShaderResource1 {
 	bool    cu_group_disable         = false;
 	bool    require_forward_progress = false;
 	bool    fp16_overflow            = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const PsShaderResource1& other) const = default;
 };
 
 struct PsShaderResource2 {
@@ -454,12 +618,20 @@ struct PsShaderResource2 {
 	uint8_t extra_lds_size         = 0;
 	uint8_t raster_ordered_shading = 0;
 	uint8_t shared_vgprs           = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const PsShaderResource2& other) const = default;
 };
 
 struct PsStageRegisters {
 	uint64_t          data_addr = 0;
 	PsShaderResource1 rsrc1;
 	PsShaderResource2 rsrc2;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const PsStageRegisters& other) const = default;
 };
 
 struct CsStageRegisters {
@@ -487,14 +659,26 @@ struct CsStageRegisters {
 	uint8_t  tidig_comp_cnt            = 0;
 	uint16_t lds_size                  = 0;
 	uint8_t  shared_vgprs              = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const CsStageRegisters& other) const = default;
 };
 
 struct EsStageRegisters {
 	uint64_t data_addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const EsStageRegisters& other) const = default;
 };
 
 struct LsStageRegisters {
 	uint64_t data_addr = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const LsStageRegisters& other) const = default;
 };
 
 struct HsStageRegisters {
@@ -502,6 +686,10 @@ struct HsStageRegisters {
 	uint64_t          user_data_addr = 0;
 	HsShaderResource1 rsrc1;
 	HsShaderResource2 rsrc2;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const HsStageRegisters& other) const = default;
 };
 
 struct GsShaderResource1 {
@@ -516,6 +704,10 @@ struct GsShaderResource1 {
 	bool    threadgroup_configuration = false;
 	uint8_t gs_vgpr_component_count   = 0;
 	bool    fp16_overflow             = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GsShaderResource1& other) const = default;
 };
 
 struct GsShaderResource2 {
@@ -525,6 +717,10 @@ struct GsShaderResource2 {
 	bool    offchip_lds             = false;
 	uint8_t lds_size                = 0;
 	uint8_t shared_vgprs            = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GsShaderResource2& other) const = default;
 };
 
 struct GsStageRegisters {
@@ -532,6 +728,10 @@ struct GsStageRegisters {
 	uint64_t          user_data_addr = 0;
 	GsShaderResource1 rsrc1;
 	GsShaderResource2 rsrc2;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GsStageRegisters& other) const = default;
 };
 
 struct ShaderRegisters {
@@ -582,6 +782,10 @@ struct ShaderRegisters {
 	[[nodiscard]] uint32_t GetGsInstPrimsInSubgrp() const {
 		return (m_vgtGsOnchipCntl >> 22u) & 0x3FFu;
 	}
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ShaderRegisters& other) const = default;
 };
 
 enum class UserSgprType { Unknown, Region, Vsharp };
@@ -592,6 +796,10 @@ struct UserSgprInfo {
 	uint32_t     value[SGPRS_MAX] = {0};
 	UserSgprType type[SGPRS_MAX]  = {};
 	uint32_t     count            = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const UserSgprInfo& other) const = default;
 };
 
 struct VertexShaderInfo {
@@ -601,27 +809,47 @@ struct VertexShaderInfo {
 	GsStageRegisters gs_regs;
 	UserSgprInfo     hs_user_sgpr;
 	UserSgprInfo     gs_user_sgpr;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const VertexShaderInfo& other) const = default;
 };
 
 struct PixelShaderInfo {
 	PsStageRegisters ps_regs;
 	UserSgprInfo     ps_user_sgpr;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const PixelShaderInfo& other) const = default;
 };
 
 struct ComputeShaderInfo {
 	CsStageRegisters cs_regs;
 	UserSgprInfo     cs_user_sgpr;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const ComputeShaderInfo& other) const = default;
 };
 
 struct GeControl {
 	uint16_t primitive_group_size = 0;
 	uint16_t vertex_group_size    = 0;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GeControl& other) const = default;
 };
 
 struct GeUserVgprEn {
 	bool vgpr1 = false;
 	bool vgpr2 = false;
 	bool vgpr3 = false;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const GeUserVgprEn& other) const = default;
 };
 
 class Context {
@@ -937,12 +1165,20 @@ private:
 	EqaaControl m_eqaa_control;
 
 	ShaderRegisters m_sh_regs;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const Context& other) const = default;
 };
 
 struct FsrView {
 	uint32_t control_points[2][4] {};
 	uint32_t alphas[2][2] {};
 	uint32_t window[2] {};
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const FsrView& other) const = default;
 };
 
 class UserConfig {
@@ -993,6 +1229,10 @@ private:
 	GeControl    m_ge_cntl;
 	GeUserVgprEn m_ge_user_vgpr_en;
 	GdsOaState   m_gds_oa;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const UserConfig& other) const = default;
 };
 
 class Shader {
@@ -1065,6 +1305,10 @@ private:
 	VertexShaderInfo  m_vs;
 	PixelShaderInfo   m_ps;
 	ComputeShaderInfo m_cs;
+
+public:
+	// Session 117 (knob "spine"): member-wise, so padding bytes never make two states differ.
+	[[nodiscard]] bool operator==(const Shader& other) const = default;
 };
 
 } // namespace Libs::Graphics::HW

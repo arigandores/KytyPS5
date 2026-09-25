@@ -586,8 +586,14 @@ enum class Knob : uint32_t {
 	// instead of waiting for it while the present thread holds VideoOutConfig::mutex (0, today: a busy main thread
 	// then stops the flip path).  Read on every UpdateTitle call, so it CAN be a schedule arm; safe at any moment.
 	// Default 1 from session 115 (seal chk115); before the SDL main loop the title is always posted (session 115).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	TitleAsync,       // KYTY_TITLE_ASYNC,        file name "titleasync" (0 wait for the main thread, 1 post)
+	// Session 117, MEASUREMENT ONLY (route A stage 4, docs/session-117/designA4_spine.md): the shadow spine.  1 = at
+	// the start of every submission a second CommandProcessor, seeded from the real one, walks the whole submission
+	// through the real register handlers (spine_* counters); 2 = 1 plus a snapshot of the register state before every
+	// draw/dispatch, compared member-wise with the real state when the real processor reaches it (spine_cmp /
+	// spine_bad).  Read once per submission and latched into Pm4Execution, so it CAN be a schedule arm.  Never changes
+	// what executes.  LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	Spine,            // KYTY_SPINE,              file name "spine" (0 off, 1 plan, 2 plan + verify)
 	Count,
 };
 

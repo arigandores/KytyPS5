@@ -1882,6 +1882,32 @@ enum class Counter : uint32_t {
 	MainTaskN,               // mt_n
 	// Session 114 (item 10): a thread entered Presenter::Present while another was inside (must stay 0).  Raw count.
 	PresentOverlap,          // present_overlap
+	// Session 117 (knob "spine", route A stage 4): the shadow spine.  spine_n plans, spine_ns their wall minus the
+	// snapshot time (raw ns), spine_pk packets decoded, spine_el draw/dispatch packets planned, spine_ib indirect buffers
+	// followed, spine_cf_br 14-dword branches and spine_cf_cond COND_EXEC words evaluated at plan time, spine_cf_pred
+	// SET_PREDICATION packets (spine_cf_predw of them with wait_op: the real processor waits for the GPU there, the
+	// spine does not), spine_cf_ind indirect draws/dispatches, spine_abort plans that met a packet they cannot follow;
+	// at spine=2: spine_cmp compares, spine_bad member-wise mismatches (SpineMismatch: lines), spine_pad compares whose
+	// bytes differed only in padding (not a mismatch), spine_misal submissions whose real element count differs from
+	// the plan, spine_lost submissions whose snapshots another plan of the same processor replaced (their remaining
+	// compares are lost - an instrument limit, not a mismatch), spine_chk_ns snapshot and compare time (raw ns).
+	SpineN,                  // spine_n
+	SpineNs,                 // spine_ns
+	SpinePackets,            // spine_pk
+	SpineElements,           // spine_el
+	SpineIb,                 // spine_ib
+	SpineCfBranch,           // spine_cf_br
+	SpineCfCond,             // spine_cf_cond
+	SpineCfPred,             // spine_cf_pred
+	SpineCfPredWait,         // spine_cf_predw
+	SpineCfIndirect,         // spine_cf_ind
+	SpineAbort,              // spine_abort
+	SpineCmp,                // spine_cmp
+	SpineBad,                // spine_bad
+	SpineMisalign,           // spine_misal
+	SpinePad,                // spine_pad
+	SpineLost,               // spine_lost
+	SpineCheckNs,            // spine_chk_ns
 	Count
 };
 

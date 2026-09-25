@@ -400,8 +400,10 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // VideoOutConfig::mutex (0). Read on every UpdateTitle call, so it CAN be a schedule arm. The sealed ABBA
     // pred/02b_ttl114b.md said SHIP (d mean dt -43.5 us, 2SE 73.2); default 1 from session 115 together with the
     // presentation-ring fix, kept only if the sealed boot/video check pred/01_chk115.md reads PASS.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_TITLE_ASYNC", "titleasync", 1, 1},
+    // Session 117, MEASUREMENT ONLY: the shadow spine of route A stage 4 (1 plan, 2 plan + verify). Read once per
+    // submission, so it CAN be a schedule arm. LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_SPINE", "spine", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

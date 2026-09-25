@@ -1443,6 +1443,11 @@ void CommandProcessor::SpinePlan(Pm4Execution& execution) {
 						sp.SpineRegs(snap.regs);
 						snap_ns += FS::NowNs() - ts;
 					}
+					// The one side effect an element has on the register state (ROADMAP 117 item 9): DispatchDirect,
+					// and DispatchIndirect through it, set the compute wave size from the packet's last word.
+					if (opcode == Pm4::IT_DISPATCH_DIRECT || opcode == Pm4::IT_DISPATCH_INDIRECT) {
+						sp.m_sh_ctx.SetCsWaveSize(Pm4::ComputeWaveSize(packet[len - 1u]));
+					}
 				} else if (g_cp_op_func[opcode] == nullptr) {
 					aborted = true;
 				}

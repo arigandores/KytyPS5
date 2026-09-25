@@ -1,0 +1,32 @@
+C:/kyty/s116/log_obs116.txt
+    b'GpuClockPin: mode 1 - the guest GPU cloc'
+   arm 0: n=7200 dt=31143.1 median_dt=33235.0 cpu_gpu=30487.2 bda_scan_median=55.0
+C:/kyty/s114/log_ttl114b.txt
+    b'GpuClockPin: mode 1 - the guest GPU cloc'
+    b'GateArm: arm=0 arms=2 block=0 frame=1800 period=90 abba=1 text=dawalk=1 dawalklead=1 titleasync=0'
+   arm 0: n=7840 dt=31279.6 median_dt=33231.0 cpu_gpu=30430.0 bda_scan_median=51.0
+   arm 1: n=7840 dt=31236.9 median_dt=33231.0 cpu_gpu=30397.5 bda_scan_median=51.0
+C:/kyty/s114/log_ctl114b.txt
+    b'GpuClockPin: mode 1 - the guest GPU cloc'
+   arm 0: n=3600 dt=31166.3 median_dt=33237.0 cpu_gpu=30487.1 bda_scan_median=1066.0
+C:/kyty/s115/log_vid115.txt
+    b'GpuClockPin: mode 1 - the guest GPU cloc'
+   arm 0: n=1840 dt=33800.9 median_dt=33226.5 cpu_gpu=32782.8 bda_scan_median=51.0
+C:/kyty/s114/log_vid114.txt
+    b'GpuClockPin: mode 1 - the guest GPU cloc'
+   arm 0: n=1920 dt=31059.3 median_dt=32946.5 cpu_gpu=30201.0 bda_scan_median=1064.0
+C:/kyty/s116/log_obs116.txt share of kept frames >= 41.7 ms: 0.0046 mean of frames < 41.7 ms: 31061.8
+C:/kyty/s114/log_ttl114b.txt share of kept frames >= 41.7 ms: 0.0151 mean of frames < 41.7 ms: 30979.4
+C:/kyty/s114/log_ctl114b.txt share of kept frames >= 41.7 ms: 0.0117 mean of frames < 41.7 ms: 30951.6
+spn117 arm0 n 3120 <25ms 0.0301 25-41.7 0.9285 >=41.7 0.0413 mean 33525.1
+spn117 arm1 n 3200 <25ms 0.0066 25-41.7 0.8794 >=41.7 0.1141 mean 35124.3
+C:/kyty/s116/log_obs116.txt n 7200 <25ms 0.136 25-41.7 0.8594 >=41.7 0.0046 mean 31143.1
+C:/kyty/s114/log_ttl114b.txt n 15680 <25ms 0.1397 25-41.7 0.8453 >=41.7 0.0151 mean 31258.2
+spn117 arm0 dt_us=33525.1 cpu_gpu_us=32211.9 gpu_busy_us=14385.5 cpu_main_us=9899.7 draws=5042.3 dispatches=268.0 cpu_proc_us=262785.5
+spn117 arm1 dt_us=35124.3 cpu_gpu_us=33711.3 gpu_busy_us=14314.4 cpu_main_us=9999.2 draws=5041.8 dispatches=268.0 cpu_proc_us=266206.1
+C:/kyty/s116/log_obs116.txt dt_us=31143.1 cpu_gpu_us=30487.2 gpu_busy_us=12891.2 cpu_main_us=9009.3 draws=5037.7 dispatches=268.0 cpu_proc_us=240408.0
+C:/kyty/s114/log_ttl114b.txt dt_us=31258.2 cpu_gpu_us=30413.7 gpu_busy_us=12838.3 cpu_main_us=9146.6 draws=5050.1 dispatches=268.0 cpu_proc_us=246915.9
+spn117 arm0 vp_kpx/frame 13230370 rt_kpx/rt_att 2007.6 gclk?  occ_dump 16.00
+spn117 arm1 vp_kpx/frame 13230582 rt_kpx/rt_att 2007.7 gclk?  occ_dump 16.00
+C:/kyty/s116/log_obs116.txt vp_kpx/frame 13224449 rt_kpx/rt_att 2007.9
+C:/kyty/s114/log_ttl114b.txt vp_kpx/frame 13249277 rt_kpx/rt_att 2008.0

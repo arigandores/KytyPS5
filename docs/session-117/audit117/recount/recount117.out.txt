@@ -1,0 +1,102 @@
+main: frames 8983 min 2 max 8984 dups 0 []
+   gaps 0 []
+   order non-monotone steps 0
+draw: frames 8983 min 2 max 8984 dups 0 []
+   gaps 0 []
+   order non-monotone steps 0
+x: frames 8983 min 2 max 8984 dups 0 []
+   gaps 0 []
+   order non-monotone steps 0
+x lines after 1800 missing spine fields: {}
+spine fields non-zero before/at 1800: {}
+main lines n>1800 whose arm=/blk= disagree with (n-1801)//90 and ABBA: 0 []
+arm/blk on frames <= 1800: [((0, 0), 1799)]
+GateArm lines 80 blocks 0 .. 79 consecutive True all ok True
+Gate lines 41 expected change blocks 41 match True ok True
+Spine lines: [(447310, b'Spine: mode=1 snap=4096 ctx=2672 ucfg=148 sh=1208\n')]
+GpuClockPin lines: [(16564, b'GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)\n')]
+markers log [] stdout []
+blocks by (arm, complete_all): {(0, True): 39, (1, True): 40, (0, False): 1}
+incomplete blocks [79] [(8911, 8984)]
+x lines after 1800: 7184
+sums over every x line n>1800: {'spine_n': 57472, 'spine_ns': 5048307921, 'spine_pk': 188188205, 'spine_el': 38145991, 'spine_ib': 0, 'spine_cf_br': 0, 'spine_cf_cond': 0, 'spine_cf_pred': 0, 'spine_cf_predw': 0, 'spine_cf_ind': 100576, 'spine_abort': 0, 'spine_cmp': 19107669, 'spine_bad': 0, 'spine_misal': 0, 'spine_pad': 0, 'spine_lost': 0, 'spine_chk_ns': 3240715060, 'cram_write': 0}
+SpineMismatch lines 0 SpineMisalign lines 0
+arm 0: kept 3120
+   dt_us = 33525.1433
+   cpu_gpu_us = 32211.8821
+   draws = 5042.2949
+   dispatches = 267.9622
+   da_walk_us = 2599.1609
+   da_queue_us = 1357.7660
+   spine_n = 7.9955
+   spine_ns = 607989.5423
+   spine_pk = 26192.0253
+   spine_el = 5309.3744
+   spine_ib = 0.0000
+   spine_cf_br = 0.0000
+   spine_cf_cond = 0.0000
+   spine_cf_pred = 0.0000
+   spine_cf_predw = 0.0000
+   spine_cf_ind = 13.9971
+   spine_abort = 0.0000
+   spine_cmp = 0.0054
+   spine_bad = 0.0000
+   spine_misal = 0.0000
+   spine_pad = 0.0000
+   spine_lost = 0.0000
+   spine_chk_ns = 1.5609
+   cram_write = 0.0000
+   spine_us = 607.9895
+   el_over_ops = 0.9998
+   cmp_over_el = 0.0000
+   pk_per_plan = 3275.8406
+   kept_frames = 3120.0000
+arm 1: kept 3200
+   dt_us = 35124.2753
+   cpu_gpu_us = 33711.2853
+   draws = 5041.7863
+   dispatches = 267.9991
+   da_walk_us = 2665.6912
+   da_queue_us = 1406.4772
+   spine_n = 7.9997
+   spine_ns = 795208.7456
+   spine_pk = 26192.6497
+   spine_el = 5309.2059
+   spine_ib = 0.0000
+   spine_cf_br = 0.0000
+   spine_cf_cond = 0.0000
+   spine_cf_pred = 0.0000
+   spine_cf_predw = 0.0000
+   spine_cf_ind = 14.0000
+   spine_abort = 0.0000
+   spine_cmp = 5309.8006
+   spine_bad = 0.0000
+   spine_misal = 0.0000
+   spine_pad = 0.0000
+   spine_lost = 0.0000
+   spine_chk_ns = 897851.1934
+   cram_write = 0.0000
+   spine_us = 795.2087
+   el_over_ops = 0.9999
+   cmp_over_el = 1.0001
+   pk_per_plan = 3274.2091
+   kept_frames = 3200.0000
+K1 spine_us arm0 kept = 607.990; walker need 3207.150 vs frame without spine 32917.154 (fit True)
+arm1 kept cmp 16991362 el 16989459 ratio 1.000112
+frames >1800 with all three lines: 7184 sums: {'spine_n': 57472, 'spine_ns': 5048307921, 'spine_pk': 188188205, 'spine_el': 38145991, 'spine_ib': 0, 'spine_cf_br': 0, 'spine_cf_cond': 0, 'spine_cf_pred': 0, 'spine_cf_predw': 0, 'spine_cf_ind': 100576, 'spine_abort': 0, 'spine_cmp': 19107669, 'spine_bad': 0, 'spine_misal': 0, 'spine_pad': 0, 'spine_lost': 0, 'spine_chk_ns': 3240715060, 'cram_write': 0}
+arm0 kept spine_us distribution: {'mean': 607.99, 'median': 555.26, 'p10': 507.13, 'p90': 786.84, 'p99': 942.11, 'max': 1155.36, 'min': 366.03, 'sd': 124.98} top1% share 0.0163
+   top frames: [(5827, 1155.4, 11, 6961), (1864, 1095.5, 11, 7091), (2915, 1073.7, 11, 6625), (4020, 1066.5, 11, 7297), (2209, 1047.5, 9, 4773), (7182, 1044.8, 11, 7280), (4972, 1038.4, 8, 5324), (5070, 1037.1, 12, 6812), (2928, 1025.3, 12, 6685), (7878, 1012.5, 8, 5328)]
+arm0 per-block spine_us: min 568.6 max 651.8 median 607.2
+arm0 ns per element median 104.2 p99 179.0
+arm1 spine_us median 753.6 p99 1296.6 chk_us median 852.5 p99 1510.9
+arm0 dt mean 33525.1 median 33346.0 p99 49877.6
+arm1 dt mean 35124.3 median 33415.0 p99 50078.2
+ABBA quads 19: dt(arm1) - dt(arm0) = 1639.0 +- 280.7 (2SE)
+arm0 spine_n per-frame values [(8, 1847), (9, 303), (7, 273), (4, 152), (12, 149), (6, 111)]
+spine_cf_ind per-frame values (both arms kept) [(14, 4667), (11, 828), (17, 825)]
+arm0 kept frames with cmp/chk non-zero: 1 [(8730, 17, 4870)]
+arm1 kept frames with cmp != el: 3191 [(1901, 5359, 5178), (1902, 5380, 5437), (1903, 5369, 5186), (1904, 3969, 5499), (1905, 5292, 5299), (1906, 6745, 5267), (1907, 5347, 5472), (1908, 5295, 5286), (1909, 5297, 5168), (1910, 5316, 5488), (1911, 5292, 5281), (1912, 3634, 4497), (1913, 5331, 5499), (1914, 5517, 5249), (1915, 5087, 5306)]
+arm1 cmp-el by in-block index (non-zero): {0: -14094, 1: -2420, 2: 1321, 3: -2438, 4: 3108, 5: 1911, 6: -5690, 7: 1093, 8: -455, 9: -570, 10: 329, 11: 5296, 12: 406, 13: -1454, 14: -2494, 15: -3639, 16: 401, 17: 854, 18: 2347, 19: 472, 20: -3416, 21: 3267, 22: -635, 23: -4513, 24: 6606, 25: 643, 26: -4142, 27: 913, 28: -1383, 29: 2019, 30: 5889, 31: -4688, 32: 2687, 33: -5287, 34: -558, 35: -1357, 36: 2042, 37: 1574, 38: -2208, 39: 1712, 40: -4852, 41: 1223, 42: 6303, 43: -4874, 44: 1095, 45: 2190, 46: -950, 47: 545, 48: -1016, 49: 2214, 50: -914, 51: -2358, 52: 173, 53: 613, 54: 2933, 55: -3693, 56: -7259, 57: 6301, 58: 3629, 59: 338, 60: -5227, 61: 382, 62: -1029, 63: 4361, 64: -4905, 65: 943, 66: 7478, 67: -3434, 68: -673, 69: -4111, 70: 636, 71: 2679, 72: -4272, 73: -1683, 74: 7384, 75: 217, 76: 2455, 77: -3194, 78: 593, 79: -2648, 80: 2244, 81: 7215, 82: -7677, 83: 332, 84: 548, 85: -2143, 86: 532, 87: 3368, 88: -4390, 89: 2598}
+arm 0 blocks 39 min spine_n/block 636 el/ops range 0.9975-1.0024 cmp/el range 0.0000-0.0000
+arm 1 blocks 40 min spine_n/block 636 el/ops range 0.9971-1.0034 cmp/el range 0.9966-1.0029
+kept frames with spine_n==0: 0 []

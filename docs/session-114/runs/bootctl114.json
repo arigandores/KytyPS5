@@ -1,0 +1,43 @@
+{
+ "check_sha256": "0130e46109f63787c9200ba296eb10cab8d906df980c0b13103102dda23fc9ae",
+ "build_sha256": "8d7ba8f4ae995a3da10670a095670acf0c46450675f7b61137714eb7975956ec",
+ "tags": {
+  "boot114b": {
+   "setup": {
+    "binary": true,
+    "hold_env": true,
+    "pinned": true,
+    "no_schedule": true,
+    "no_checkpoints": true,
+    "knob": true
+   },
+   "setup_ok": true,
+   "holds": 1,
+   "fatal_after_hold": true,
+   "waits": 0,
+   "fatal_lines": [
+    "Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\\kyty\\KytyPS5\\src\\graphics\\host_gpu\\renderer\\commandRecorder.cpp:326"
+   ],
+   "outcome": "SAME_FATAL"
+  },
+  "boot114c": {
+   "setup": {
+    "binary": true,
+    "hold_env": true,
+    "pinned": true,
+    "no_schedule": true,
+    "no_checkpoints": true,
+    "knob": true
+   },
+   "setup_ok": true,
+   "holds": 1,
+   "fatal_after_hold": true,
+   "waits": 0,
+   "fatal_lines": [
+    "Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\\kyty\\KytyPS5\\src\\graphics\\host_gpu\\renderer\\commandRecorder.cpp:326"
+   ],
+   "outcome": "SAME_FATAL"
+  }
+ },
+ "verdict": "KEEP_1"
+}

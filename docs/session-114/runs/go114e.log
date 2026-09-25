@@ -1,0 +1,7 @@
+[06:21:14] idle check cpu=3 gpu=0
+[06:21:14] boot114b start
+[06:21:31] boot114b rc=1 VERDICT: no attempt reached underwater_aerial_garden
+[06:21:31] boot114c start
+[06:21:47] boot114c rc=1 VERDICT: no attempt reached underwater_aerial_garden
+[06:21:48] bootctl114 VERDICT: KEEP_1
+[06:21:48] done

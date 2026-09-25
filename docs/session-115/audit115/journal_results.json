@@ -1,0 +1,620 @@
+[
+ {
+  "type": "result",
+  "key": "v2:979c90adb27a7081f80344cc9255d26358f1923764cb8ede4cc99834a7a1cc5a",
+  "agentId": "abd30cb42e0c70002",
+  "result": {
+   "summary": "I recounted seal 01 chk115 from the raw artifacts with my own parsers (C:/kyty/s115/audit115/recount/: recount_vid.py, recount_f2.py, myglitch.py, scan_boot.py, *.out.txt). check115.py was not imported. Every number the verdict rests on is CONFIRMED and the verdict PASS stands. vid115 has 3894 frames (ffprobe packets, decoded frames and the index agree) and 0 one-frame glitches: my own detector's nearest candidate has a neighbour ratio of 1.025, far above the 0.35 cut. I recomputed the stable frame as 466, which gives 3418 scene rows. UpdateTitle costs 31.297 us per call (row median 24.086), present_overlap is 0, there are no failure markers in the log or stdout, and the bda_scan median is 51. boot115a (10111 ms, 607/0) and boot115c (10115 ms, 606/0) both reach the scene. boot115b prints exactly one 'PrepareMainPresent: mode 1', then the :326 fatal after the PrepareHold line (log lines 4284, 4285, 4291), and has no wait line. All four pre_run gpu_util_median values are 2.0. Every setup condition holds: env, gates text identical to gates_base.txt with no titleasync, the pin, the hold, one attempt each, all binary_sha256 d3a981a2. All 18 seal hashes and the amendment hashes match; archive copies are byte-equal. The installed exe is d3a981a2. The build matches 7c73f26 source: PE link stamp 10:18:42 local, last src mtime 08:23:11, no non-docs diff 7c73f26..HEAD, and the embedded banner reads e68bb6e-dirty. The F2 figures in item 9 are CONFIRMED over n>=300 (3584 rows): median 2.429, p90 4.211, p99 5.761 nearest-rank, max 12.941 ms, flip_rsv_wait_n 0 on every row, no FlipHold lines, mt_age 88.4 us. The findings are all MINOR or INFO. Item 9 calls the n>=300 window 'scene frames', but 166 of its rows are before the stable frame. Its speed-track inputs cannot be reproduced exactly from any stated window, and its per-operation arithmetic comes to 6.2 us, not 6.3. The 'never waited' statement holds only within the scope; there were 3 waits at startup. Item 8 says the control died 'after the hold', but it died about 7.4 s after launch, inside the 10-s hold. A v4 acceptance stage ran on 2 workers throughout the chain and neither item 8 nor item 9 mentions it. Smaller points: the seal text says v2 while v3 was hashed and used; the refused chain installed the build and left it installed; the BDA regime has 8% full rescans; <foreign app> range trivia.",
+   "recounts": [
+    {
+     "item": "vid115 video frames",
+     "stated": "3894",
+     "recounted": "3894 (ffprobe nb_read_packets 3894; own ffmpeg decode 3894 frames, 0 decode errors; .idx 3894 entries; vid115_glitch.txt '3894 frames')",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 one-frame glitches",
+     "stated": "0",
+     "recounted": "0 (own detector, T=4, neighbour ratio<0.35; nearest candidate ratio 1.025 at video frame 1248; 816 frames with both diffs >4 are motion, not one-frame)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 scene rows from the stable frame",
+     "stated": "3418",
+     "recounted": "3418 FrameTrace-x rows n>=466 (stable frame recomputed independently = 466: 90 consecutive FrameTrace rows with draws>=3000; rows n=2..3883, no gaps, no duplicate n, every row carries all 15 fields)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 UpdateTitle wall per call",
+     "stated": "31.3 us",
+     "recounted": "31.297 us (106,973,729 ns / 3418 calls; one call per row)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 UpdateTitle row median",
+     "stated": "24.1 us",
+     "recounted": "24.086 us",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 present_overlap / PresentOverlap lines",
+     "stated": "0",
+     "recounted": "sum 0 over 3418 rows; 0 lines containing 'PresentOverlap'",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 failure markers",
+     "stated": "none",
+     "recounted": "0 in log and stdout (broader list: fatal, --- error ---, terminate, abort(), unhandled, devicelost, gpuhangabort, gpuwaitslow, gpumarkerhung, gpucheckpoint, skipped draw, commandrecorder.cpp, assert); stdout has the usual 16 C++ 0xe06d7363 lines, same as vid114",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 BDA regime (bda_scan median on FrameTrace-draw rows n>=466)",
+     "stated": "NEW, median 51",
+     "recounted": "median 51 (lower=upper=51), mean 134.5; 275/3418 rows >1000 (272 on rows with bda_ginv_reg>0; 286 registrations, bgc_evict 0)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 other checks (pin, GC line, armed knobs, guards)",
+     "stated": "PASS",
+     "recounted": "1 GpuClockPin line, mode 1; 1 BufferGc line ending shift_mb=0; da_q_free 3,838,600, da_q_noguard 0, da_slot_bad 0; cspfree_hit 908,404, cspfree_bad 0; cs_sync_new 0; bda_nskip/nwould 0; title 106,973,729 <= 60,000*3418",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115a wait line",
+     "stated": "startup wait finished in 10111 ms presents_other=607 presents_main=0",
+     "recounted": "exactly one such line (log line 4299); exactly one 'PrepareHold: ms=10000'; 1 GpuClockPin mode 1",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115a scene reached, no fatal",
+     "stated": "reached, no fatal",
+     "recounted": "stable frame recomputed 286 (= json), hold 60 s, hold_exit null; 0 PrepareMainPresent, 0 commandRecorder.cpp:326, 0 PresentOverlap, 0 markers in log and stdout",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115c (KYTY_TITLE_ASYNC=1 in env)",
+     "stated": "10115 ms, 606/0",
+     "recounted": "10115 ms presents_other=606 presents_main=0; env KYTY_TITLE_ASYNC='1'; stable 299; no fatal, main-present or overlap lines, no markers",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115b positive control",
+     "stated": "one 'PrepareMainPresent: mode 1', then commandRecorder.cpp:326 after 'PrepareHold: ms=10000', no wait line",
+     "recounted": "log lines 4284 PrepareHold: ms=10000, 4285 PrepareMainPresent: mode 1, 4291 Error ... commandRecorder.cpp:326; 0 wait lines; 0 GpuClockPin lines (env pin 1); exit code 321; death ~7.4 s after launch, inside the hold",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "pre_run.gpu_util_median, four runs",
+     "stated": "<= 10",
+     "recounted": "2.0 / 2.0 / 2.0 / 2.0",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "setup conditions of pred/01 (env, gates, sha, attempts)",
+     "stated": "as sealed",
+     "recounted": "all four: binary_sha256 d3a981a2, KYTY_GPU_CLOCK_PIN=1, KYTY_GPU_MARKERS=0, no GATE_SCHEDULE / GPU_CHECKPOINTS / GC shift; gates text == gates_base.txt (99 names, no titleasync/daslot/daguard/cspfree/bdanarrow); one attempt each; vid115 has KYTY_REC, hold 120, no PREPARE_HOLD; boots have HOLD_MS=10000; only b has MAIN_PRESENT=1, only c has TITLE_ASYNC=1; prereg sha 9d8c9e49 read at run time",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "verdict",
+     "stated": "PASS",
+     "recounted": "PASS (every check input recomputed independently; runs115/check115.json agrees: 76 checks, 0 failing, admitted)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "installed exe sha",
+     "stated": "d3a981a23fc1c5df651eef2a93ff1f02a8bffd04416adea2fd5cd2218e290f64",
+     "recounted": "same; also pinned copy, build/install and build/kyty_emulator.exe",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "build matches git 7c73f26 source",
+     "stated": "d3a981a2 = 503a8bf + 7c73f26 code",
+     "recounted": "PE TimeDateStamp 08:18:42Z (10:18:42 local); build115a.log mtime 10:18:51 compiles window/systemOverlay/swapchain/gates; last mtime of any non-docs repo file 08:23:11; git diff 7c73f26..HEAD has no non-docs files; banner 'e68bb6e-dirty' (docs-only commit, 10:18:18; dirty = nlohmann_json submodule only)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "seal file hashes (SEALS115, 18 lines + amendment 4)",
+     "stated": "as listed",
+     "recounted": "all match; docs/session-115 copies byte-equal",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "chain gate",
+     "stated": "go115a 14:19-14:26, gate clean, CPU 3 %, GPU 2 %",
+     "recounted": "procload clean twice (1.5/4 amended version); idle check cpu=3 gpu=2 at 14:20:22; done 14:26:37; started after amendment commit b8fa868 (14:19:45)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "F2 flip-mutex hold per flip, median (n>=300)",
+     "stated": "2.43 ms",
+     "recounted": "2.429 ms (3584 rows, flip_hold_n = 1 on every row); 2.438 at n>=466",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "F2 p90 / p99 / max",
+     "stated": "4.21 / 5.76 / 12.94 ms",
+     "recounted": "p90 4.211 (lin) / 4.212 (nearest); p99 5.761 nearest-rank (5.727 lin); max 12.941",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "F2 flip_rsv_wait_n 0 on every row; no FlipHold lines",
+     "stated": "0 on every row, no FlipHold",
+     "recounted": "0 on all 3584 rows n>=300; 0 FlipHold lines; but over the whole log 3 waits at n=2, 8, 11 (2.98, 1.18, 1.29 ms)",
+     "status": "CONFIRMED (within the n>=300 scope)"
+    },
+    {
+     "item": "F2 '3 584 кадра сцены'",
+     "stated": "3584 scene frames",
+     "recounted": "3584 rows n>=300, of which 166 are before the stable frame 466 (77 with draws<3000, min 29); the seal's scene has 3418 rows",
+     "status": "NOT CONFIRMED (the count is right, the 'scene' label is not)"
+    },
+    {
+     "item": "item 9 UpdateTitle / main-task age",
+     "stated": "31 us / 88 us",
+     "recounted": "31.13 us per call; mt_age_ns mean 88.4 us per row (n>=300)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "item 9 cpu_gpu_us at dt",
+     "stated": "34.3 ms at 35.4 ms",
+     "recounted": "33.68 / 35.07 ms (n>=300); 34.18 / 35.25 (n>=466); closest match needs start about n=403 or a draws>=100 filter (34.37 / 35.46)",
+     "status": "NOT CONFIRMED (not reproducible from the stated window; difference <=1.8 %)"
+    },
+    {
+     "item": "item 9 draws + dispatches per frame",
+     "stated": "5266 + 268",
+     "recounted": "5158 + 262.9 (n>=300); 5253 + 267.8 (n>=466)",
+     "status": "NOT CONFIRMED (window unstated)"
+    },
+    {
+     "item": "item 9 CPU per operation",
+     "stated": "about 6.3 us",
+     "recounted": "34.3 / (5266+268) = 6.20 us; 6.19 at n>=466",
+     "status": "NOT CONFIRMED (arithmetic gives 6.2)"
+    },
+    {
+     "item": "item 9 fault_us / faults; GuestGpu faults",
+     "stated": "15.3 ms at 1240; GuestGpu 21 and 0.13 ms",
+     "recounted": "n>=466: 15.30 ms, 1240.9, 21.0, 0.126 ms; n>=300: 14.99 ms, 1213.5, 20.6, 0.123 ms",
+     "status": "CONFIRMED at n>=466 (not at the stated n>=300)"
+    },
+    {
+     "item": "Q1 / Q3",
+     "stated": "Q1 HIT (N 10111/10115, P 607/606, M 0); Q3 MISS (3894 < 3900)",
+     "recounted": "same",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "<foreign app> load during refusal 1 (items 6, 7, amendment)",
+     "stated": "2.4-4.4 (item 6) / 2.4-4.7 (item 7, amend1)",
+     "recounted": "2.418-4.526 CPU s/s over 26 snapshots",
+     "status": "NOT CONFIRMED (trivial: 2.4-4.5)"
+    }
+   ],
+   "findings": [
+    {
+     "id": "R115-1",
+     "severity": "MINOR",
+     "title": "Item 9 labels the n>=300 window '3 584 кадра сцены', but 166 of those rows are before the stable frame",
+     "evidence": "log_vid115.txt: FrameTrace-x rows n>=300 = 3584, but vid115.json stable_frame = 466 (recomputed independently). Rows 300..465 = 166, of which 77 have draws<3000 (min 29), i.e. loading. The seal's own scene (item 8) is 3418 rows, so items 8 and 9 use two different 'scene' definitions for one run. The F2 numbers barely move: n>=466 gives median 2.438, p90 4.226, p99 5.720, max 12.941 ms.",
+     "fix": "In item 9 / FACTS, say '3 584 строки FrameTrace-x с n >= 300 (сцена по печати — 3 418 строк от кадра 466)', or quote the n>=466 values. Future offline measurements should use the stable frame from <tag>.json."
+    },
+    {
+     "id": "R115-2",
+     "severity": "MINOR",
+     "title": "Item 9 speed-track inputs cannot be reproduced from the stated window; the per-operation cost is 6.2 us, not 6.3",
+     "evidence": "Stated: cpu_gpu 34.3 ms, dt 35.4 ms, 5266 draw + 268 dispatch, fault_us 15.3 ms at 1240 faults. At n>=300: 33.68 / 35.07 / 5158 / 262.9 / 14.99 / 1213.5. At n>=466: 34.18 / 35.25 / 5253 / 267.8 / 15.30 / 1240.9. Only start about n=403 or a draws>=100 filter comes close (34.37 / 35.46 / 5268). 34.3 ms / 5534 ops = 6.20 us. No decision rests on these: the CPU-bound reading (cpu_gpu/dt 96-97 %) holds in every window.",
+     "fix": "Recompute item 9's inputs on one declared window, preferably the stable scene (n>=466), and correct '≈ 6,3' to '≈ 6,2 мкс'. Session 116 should take these levels from a fresh measurement anyway (item 9 already says so)."
+    },
+    {
+     "id": "R115-3",
+     "severity": "MINOR",
+     "title": "'GuestGpu ни разу не ждал ReserveFlipRequest' holds only within n>=300; at startup the guest waited 3 times",
+     "evidence": "Over all 3882 FrameTrace-x rows of vid115, flip_rsv_wait_n is nonzero at n=2 (2,980,731 ns), n=8 (1,180,632 ns) and n=11 (1,287,574 ns). The largest flip hold, 13.85 ms, is at n=2 and exceeds the stated max of 12.94. The F2 decision ('no cost in this scene') is unaffected. But these are real observations of the mechanism behind the §7 correctness debt, and they show the counter is live, not always zero.",
+     "fix": "Add to item 9 / the §7 F2 debt: 'в сцене 0; на старте (n = 2, 8, 11) три ожидания 1,2–3,0 мс, удержание до 13,9 мс'."
+    },
+    {
+     "id": "R115-4",
+     "severity": "MINOR",
+     "title": "Item 8 says the control fatal came 'после удержания'; it came at the start of the 10-s hold",
+     "evidence": "boot115b: nvidia-smi sampling starts 14:24:42.481 (launch); the last write of log_boot115b.txt (= _kyty.prev.txt, same sha a856b564) is 14:24:49.836, about 7.4 s later, inside a 10-s hold. The log has no 'ShaderPreparation: progress ... elapsed_ms=0' line, which the fix runs print immediately after PrepareHold (boot115a/c line 4287). So the death came right after the PrepareHold line. The sealed criterion ('a line with FATAL_SITE after the hold line') is met; only the prose is inaccurate. Session 114 audit (в) made the same kind of correction.",
+     "fix": "Reword item 8 / FACTS: '`commandRecorder.cpp:326` сразу после строки `PrepareHold` (в начале удержания, ~7 с после запуска)'."
+    },
+    {
+     "id": "R115-5",
+     "severity": "MINOR",
+     "title": "A mutlib v4 acceptance stage (2 workers) ran through the whole chain; item 7 calls it 'самопроверки' and items 8/9 do not mention it",
+     "evidence": "C:/kyty/s106_stage/mutlib/v4check/out/small_v4.log shows '== ttl114b_subset [14:15:03]' to '== done [14:28:18]': 12 mutant jobs, 2 workers, wall 794.8 s, worker time 1572.4 s. That covers the entire chain (14:19:5x-14:26:37). pre_run snapshots show python pid 45036 at about 1.0 CPU s/s during the chain (cpu_s 296.0 at 14:23:05, 392.6 at 14:24:42, 410.4 at 14:25:00); refused2 at 14:18 saw pids 13140 and 45036. cpuclk.py is missing ('cpuclk not started'), so there is no in-run CPU record. The amended gate (<=1.5 per process, <=4 total) allows this, and the functional verdict is unaffected. But vid115 feeds item 9's timing levels (flip hold, cpu_gpu) and the Q3 frame count (MISS by 6 frames), and both carry this 2-core load plus the recording. Item 3's rule ('never parallel to heavy v4 stages') is arguably kept, since 2 workers is not a heavy stage.",
+     "fix": "Record in item 8/9 and FACTS that the v4 small-set stage ttl114b_subset (2 workers) ran concurrently with go115a. Describe it as acceptance mutant runs, not 'самопроверки'. Take any timing level for session 116 from a run behind the 0.5 gate. Put cpuclk.py in the harness root or drop cpuclk_requested."
+    },
+    {
+     "id": "R115-6",
+     "severity": "MINOR",
+     "title": "Sealed text pred/01 §3 names 'mutlib v2 frozen copy', but the seal hashes and uses v3",
+     "evidence": "pred/01_chk115.md §3: 'mutants mut_check115.py through mutlib v2 frozen copy ...'. SEALS115.txt, in the seal block itself, hashes docs/session-115/mutlib_v3/mutlib.py (5d2f2f90), and the post-seal tally says 'mutlib v3 frozen docs copy 5d2f2f90 ... 104/104'. mut_check115.out.txt header: 'mutlib 3'. Item 4 (v3 as the working tool, with conditions) was recorded before sealing (10:18 vs 10:37), so the harness is right and the sealed prose is stale.",
+     "fix": "Add a note in FACTS/ROADMAP: the 'v2' wording of pred/01 §3 is superseded by item 4, recorded before the seal, and the seal block hashes v3. Future seal templates should name the mutlib version and sha that the SEALS block hashes."
+    },
+    {
+     "id": "R115-7",
+     "severity": "INFO",
+     "title": "Refused chain #2 installed the unverified build and left it installed",
+     "evidence": "The installed kyty_emulator.exe has mtime 14:18:14.92. go115a_refused2.log ends '[14:18:26] a process became busy - not starting'. go115a.sh copies the pinned exe after taking the lock and before the post-lock procload re-check, and its EXIT trap removes only the lock. d3a981a2 therefore stayed installed from 14:18:14 until the successful chain at about 14:19:55, without a PASS (item 2: 'до её PASS сборка не остаётся установленной'). No game ran in between, so there is no consequence.",
+     "fix": "In future chains, run the post-lock load re-check before installing, or restore the previous installed sha on refusal."
+    },
+    {
+     "id": "R115-8",
+     "severity": "INFO",
+     "title": "The binary's embedded banner is e68bb6e-dirty, not 7c73f26",
+     "evidence": "Every log and stdout prints 'Fork build arigandores/KytyPS5 e68bb6e-dirty'. e68bb6e (10:18:18) is a docs-only commit after 7c73f26, and 'dirty' comes from the 3rdparty/nlohmann_json submodule only. PE TimeDateStamp 08:18:42Z = 10:18:42 local. No non-docs file changed in 7c73f26..HEAD, and no repo file outside docs/.git is newer than 08:23:11. The code identity is confirmed.",
+     "fix": "State in FACTS: 'build d3a981a2, banner e68bb6e-dirty = code 7c73f26 (docs-only commits after; dirty = submodule)'."
+    },
+    {
+     "id": "R115-9",
+     "severity": "INFO",
+     "title": "vid115 is NEW by median but has 8 % full BDA rescans",
+     "evidence": "bda_scan over 3418 scene rows: median 51, mean 134.5. 275 rows exceed 1000 (272 on rows with bda_ginv_reg>0; 286 registrations; bgc_evict 0, so this is not the GC-driven OLD mode). They are concentrated early: 300-row window means are 272, 279, 420 for n<1366, then 47-96.",
+     "fix": "When comparing vid115 levels with other NEW runs, report 'NEW (median 51, 8 % full rescans from buffer registrations)'."
+    },
+    {
+     "id": "R115-10",
+     "severity": "INFO",
+     "title": "The <foreign app> load range is misquoted slightly in items 6 and 7",
+     "evidence": "go115a_refused1.log (26 snapshots): 2.418-4.526 CPU s/s. Item 6 says '2,4–4,4'; item 7 and amendment 1 say '2,4–4,7'.",
+     "fix": "Use '2,4–4,5' in FACTS. This has no bearing on any decision."
+    }
+   ]
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:05f61516ad7f73bab401d5a5b7f49c3ddc188e8426a4be3c20216009fb6b8710",
+  "agentId": "a783c07b6e41858b5",
+  "result": {
+   "summary": "Code-review lens, commits 503a8bf (presentation-ring fix) and 7c73f26 (titleasync default 1). No BLOCKER or MAJOR. At defaults the only callers of Presenter::Present and of PrepareBlankFrame without a producer are in the VideoOut present thread: videoOut.cpp:831, 843, 853-854, 871-872 and FlipQueue::Flip :1182, which only PresentThread calls. The only other call site is window.cpp:1007-1009, which runs only when KYTY_PREPARE_MAIN_PRESENT=1. Two related paths were checked and do not record into present_scheduler: the GuestGpu thread's PrepareFrame and PrepareBlankFrame(&buffer), which record into the GuestGpu buffer, and the screenshot/RenderDoc hooks, which run inside Present or Flip. So the present ring has one producer, and C1 (two threads in Present) is impossible by construction, as ROADMAP 115 items 1 and 8 claim (CONFIRMED). That rests on reading the code: nothing enforces it at run time.\n\nThe main thread no longer touches ImGui state during preparation. SetShaderPreparationOverlay only stores atomics, and ProcessEvent in the preparation loop only changes main-thread-only g_input_* globals. The ImGui context and Vulkan backend are now built and used by the present thread alone, which is an improvement over the old two-thread use.\n\nEnd of preparation while the present thread is inside Present is harmless. The flag is read once at entry; PrepareFrame falls through to the IME path and draws nothing; at most one present is counted after the snapshot is taken.\n\nTitles posted before the main loop are bounded at one queued task. title_queued stays true until the first DrainMainThreadTasks in Run, and each log shows exactly one startup MainTaskLate line.\n\nWith KYTY_PREPARE_HOLD_MS unset, a long cold preparation still shows the overlay. m_precache_active is set before the precache thread starts. The present path takes only the render mutex, queue_mutex and the frame pool. The precache thread takes only PipelineCache::m_mutex. So nothing links the two, but a real cold preparation was not run (the claim is already scoped to warm preparation with a 10 s hold).\n\nAt the default path, SDL_QUIT during preparation leads to quick_exit(0) with the present thread still running, the same situation as the normal exit.\n\nBuild provenance checks out. The installed exe, the pinned copy and the build output all have sha256 d3a981a23fc1c5df. The build label is e68bb6e-dirty. The binary's knob table reads titleasync fallback 1 limit 1, daslot 1, daguard 1, cspfree 1, bdanarrow 0.\n\nRemaining issues:\n- Stale comments that now state the opposite of the code (MINOR).\n- No run-time enforcement of the one-thread claim (MINOR).\n- On macOS, surface recreation during preparation stalls the overlay, because WindowPrepareShaders never drains main-thread tasks (MINOR).\n- Several INFO notes: a torn overlay frame is possible at the end of preparation; the present thread is no longer parked before Run, which shifts KYTY_KEYS @present numbering and KYTY_REC indices by about 10 frames; item 9 draws its numbers from two different row windows.\n\nScratch scripts: C:/kyty/s115/audit115/code/scan_logs.py and C:/kyty/s115/audit115/code/recount_x.py.",
+   "recounts": [
+    {
+     "item": "boot115a wait line (ROADMAP 115 item 8)",
+     "stated": "startup wait finished in 10111 ms presents_other=607 presents_main=0",
+     "recounted": "log_boot115a.txt line 4299: 10111 ms, presents_other=607, presents_main=0; exactly 1 PrepareHold: ms=10000 (line 4284); 0 PrepareMainPresent, 0 commandRecorder.cpp:326, 0 PresentOverlap; 607/10.111 s = 60.0 presents/s",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115c wait line",
+     "stated": "10 115 ms, 606 / 0",
+     "recounted": "log_boot115c.txt line 4299: 10115 ms presents_other=606 presents_main=0; no :326, no PresentOverlap",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115b positive control",
+     "stated": "PrepareMainPresent: mode 1, then commandRecorder.cpp:326 after the hold, no wait line",
+     "recounted": "log_boot115b.txt: PrepareHold line 4284, PrepareMainPresent: mode 1 line 4285, --- Fatal Error --- line 4290, :326 (m_producer != self) line 4291 (last line), no 'startup wait finished'; the ring owner was claimed at line 632 (only RecordThread line), before preparation",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 frames / glitches",
+     "stated": "3 894 frames, 0 glitches",
+     "recounted": "vid115_glitch.txt: 3894 frames 960x540, one-frame glitches: 0; idx 3894 entries",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 scene rows and UpdateTitle wall",
+     "stated": "3 418 scene rows, 31.3 us per call (median 24.1)",
+     "recounted": "FrameTrace-x rows with n >= stable_frame 466: 3418; sum pres_title_ns / sum pres_title_n = 31,297.2 ns; median per-row 24,086 ns",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "present_overlap at defaults",
+     "stated": "0",
+     "recounted": "sum present_overlap = 0 over all FrameTrace-x rows of vid115 (3882), boot115a (1928), boot115c (1939); no 'PresentOverlap:' line in any of the four logs",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 BDA regime",
+     "stated": "NEW, bda_scan median 51",
+     "recounted": "median bda_scan over 3418 FrameTrace-draw scene rows = 51",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "C1 closed by construction (item 8)",
+     "stated": "the main thread does not present; C1 closed by construction",
+     "recounted": "Present call sites: videoOut.cpp:831, 843, 854, 872 (PresentThread) and :1182 (FlipQueue::Flip, called only from PresentThread :840); window.cpp:1009 only under KYTY_PREPARE_MAIN_PRESENT=1. present_scheduler.BeginCommand only at swapchain.cpp:816 (PrepareBlankFrame, producer==nullptr) and :900 (Present). GuestGpu's PrepareFrame/PrepareBlankFrame(&buffer) record into the GuestGpu buffer. No other thread records into the present ring at defaults",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "titleasync default 1 in the shipped build (7c73f26)",
+     "stated": "titleasync default 1 in build d3a981a2",
+     "recounted": "KNOB_DEFINITIONS row parsed from the installed exe (sha256 d3a981a23fc1c5df, same as pinned copy and build output): KYTY_TITLE_ASYNC fallback=1 limit=1; binary contains 'PrepareMainPresent: mode 1' and 'presents_other='; label e68bb6e-dirty",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 9 flip-mutex hold and main-task age",
+     "stated": "3 584 scene rows; hold median 2.43 ms, p90 4.21, p99 5.76, max 12.94; flip_rsv_wait_n 0; no FlipHold lines; title 31 us; main-task age 88 us",
+     "recounted": "window n >= 300 (3584 rows): median 2.429, p90 4.212, p99 5.761, max 12.941 ms; flip_rsv_wait_n sum 0; 0 FlipHold lines; title 31.1 us/call; mt age 88.4 us/task",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 9 CPU-side inputs",
+     "stated": "cpu_gpu_us 34.3 ms, dt 35.4 ms, 5 266 draws + 268 dispatch, fault_us 15.3 ms, 1 240 faults",
+     "recounted": "on n >= 466 (3418 rows): cpu_gpu 34.18 ms, dt 35.25 ms, draws 5253.0, dispatches 267.8, fault_us 15.30 ms, faults 1240.9; on n >= 300 (the 3584 rows the item names): 33.68 / 35.07 / 5158 / 262.9 / 14.99 / 1213.5",
+     "status": "NOT CONFIRMED (fault_us, faults, dispatch match the n>=466 window; cpu_gpu, dt, draws off by 0.3-0.4% in every window tried; the item names 3 584 rows but these values come from about 3 418)"
+    }
+   ],
+   "findings": [
+    {
+     "id": "CR115-1",
+     "severity": "MINOR",
+     "title": "Comments left from session 114 now say the opposite of the new pre-loop behaviour",
+     "evidence": "src/graphics/presentation/window/windowInternal.h:76-78 still says that until Run() 'UpdateTitle keeps the waiting path, which parks the present thread while WindowPrepareShaders presents from the main thread'. After 503a8bf the pre-loop path always posts (window.cpp:1179 `title_async = !loop_running || ...`) and the main thread does not present. window.cpp:848 says 'from here on UpdateTitle may take the async title path', but now the knob decides from that point on. window.cpp:968-969 says KYTY_PREPARE_HOLD_MS 'keeps presenting the preparation screen from the main thread ... the stress for the startup park', but the hold now keeps the overlay active for the present thread and the park no longer exists. swapchain.cpp:843-845 explains the PresentOverlap zone by 'the startup park itself happens inside UpdateTitle'. gates.cpp titleasync row says 'Read on every UpdateTitle call', but it is now read only after the loop starts. None of these files or lines was touched by the patch (patch_s115a.py edits only the UpdateTitle comment block).",
+     "fix": "Update the five comments to the session-115 model: before Run, UpdateTitle always posts; the main thread only pumps SDL events; the hold keeps the overlay active for the VideoOut thread; there is no startup park; the knob is read only once main_loop_running is set. Do it in the next code commit so later audits do not reason from the old model."
+    },
+    {
+     "id": "CR115-2",
+     "severity": "MINOR",
+     "title": "'C1 closed by construction' is proven only by reading the code; no run-time check guards it",
+     "evidence": "The claim (ROADMAP 115 items 1 and 8) is correct today: the only non-PresentThread caller of Present/PrepareBlankFrame(nullptr) is window.cpp:1007-1009, behind KYTY_PREPARE_MAIN_PRESENT. The guards behind it are weak. The PresentOverlap detector (swapchain.cpp:846-867) only counts and logs up to 8 lines. The ring-owner EXIT (commandRecorder.cpp:326) fires only when RecordThreadWanted is true for the present scheduler; it is false with KYTY_GPU_CHECKPOINTS or GPU-time runs, as noted in session 101. In that mode a future second caller, or the positive control itself, would race in Present/ImGui/FramePool without any fatal signal. The permanent ROADMAP wording ('C1 закрыт по построению') does not say that it relies on this inspection.",
+     "fix": "Record in ROADMAP that the guarantee is by inspection of these call sites. Optionally make it enforced: remember the VideoOut PresentThread id at start, and in Presenter::Present and PrepareBlankFrame(producer==nullptr) EXIT on any other thread unless KYTY_PREPARE_MAIN_PRESENT=1. The positive control would then fail the same way whether or not the record thread is on."
+    },
+    {
+     "id": "CR115-3",
+     "severity": "MINOR",
+     "title": "macOS: surface recreation during preparation now blocks the present thread until WindowRun, freezing the overlay",
+     "evidence": "swapchain.cpp:569-576: on __APPLE__, Swapchain::Recreate(surface_lost) calls m_window.RunOnMainThread(RecreateSurface). Before 503a8bf the main thread presented during preparation, so this ran inline (IsMainThread, window.cpp:773). Now only the present thread presents, and WindowPrepareShaders (window.cpp:988-1018) never calls DrainMainThreadTasks. A surface loss during preparation therefore parks the present thread in RunOnMainThread until Run() drains, and the preparation screen freezes for the rest of the preparation. It is not a deadlock: Run drains first. Windows is unaffected (RecreateSurface is called directly).",
+     "fix": "Call g_window->DrainMainThreadTasks() in the WindowPrepareShaders loop, next to SDL_PollEvent. The only pre-loop tasks are the coalesced title and surface recreation, both safe on the main thread. This also applies the startup title early."
+    },
+    {
+     "id": "CR115-4",
+     "severity": "INFO",
+     "title": "Possible one-frame torn preparation overlay at the end of preparation",
+     "evidence": "systemOverlay.cpp:479-483: SetShaderPreparationOverlay(false) uses the defaults completed=0, total=0. It stores total=0 (relaxed) before active=false. The present thread's PrepareFrame (:975, :994) can read active==true and then total==0, and draw 'Reading saved shaders...' instead of the full progress bar for the final frame. During updates, completed and total can also tear, which min() clamps. The window is a few instructions wide, so this is cosmetic.",
+     "fix": "When deactivating, store g_shader_preparation=false first (or keep the last counters). Alternatively, pack completed and total into one 64-bit atomic."
+    },
+    {
+     "id": "CR115-5",
+     "severity": "INFO",
+     "title": "Present thread no longer parked before Run: extra startup presents shift KYTY_KEYS @present and KYTY_REC numbering; startup MainTaskLate line persists",
+     "evidence": "rec_vid114.mp4.idx: 1 present, then a 0.232 s gap (the park), matching MainTaskLate us=229700. rec_vid115.mp4.idx: 11 presents in 0.150 s at about 60 Hz before the first gap (1.038 s at frame 11). Each non-preparing Present calls InputScript::Poll (m_presents++), records a KYTY_REC frame and calls UpdateTitle. So @<present> numbers and the KYTY_MAIN_STALL_TEST frame count now include about 10 extra startup presents compared with 114 builds, more with a long LoadElf. The pre-loop title task still ages until Run: MainTaskLate: us=471907 (vid115), 10341415 (boot115a), 10268377 (boot115c), which uses 1 of the 32 log lines and would satisfy a scorer that takes the maximum over MainTaskLate lines (the ctl114 b_main_slept pattern, audit 114 note (и)). FrameTrace mt_age_ns is not polluted (first rows 28-94 us).",
+     "fix": "Note in HANDOFF/CLAUDE.md that @present counts shifted with 503a8bf. In future scorers, pick the stall row by log order after 'MainStallTest: queued', not by the maximum. Optionally skip the age accounting for tasks queued before main_loop_running is set."
+    },
+    {
+     "id": "CR115-6",
+     "severity": "INFO",
+     "title": "Only a warm preparation with a 10 s hold was tested; by code nothing ties the present path to a real cold preparation",
+     "evidence": "boot115a/c progress lines read 682/682 at elapsed_ms=0, so preparation was finished and only the hold kept the overlay up. For a real cold preparation, pipelineCache.cpp:6144 sets m_precache_active before the thread starts, so the loop does not exit early. The precache thread takes only PipelineCache::m_mutex (no GetMutex()/queue_mutex in pipelineCache.cpp). The present path takes the render mutex, queue_mutex and the frame pool. FinishPreparation (about 96 ms WriteDriverCache in boot115a) now runs while the overlay is still presented by the VideoOut thread, which is better than before. The 114 review C1 fix had asked for a prepare-cold entry; ROADMAP item 8 already limits the claim to 'тёплая подготовка с удержанием 10 с'.",
+     "fix": "No code change. Optionally add one KYTY_CACHE_MODE=prepare-cold boot to a later functional seal to cover the real preparation."
+    },
+    {
+     "id": "CR115-7",
+     "severity": "INFO",
+     "title": "SDL_QUIT/CLOSE during preparation: quick_exit runs while the present thread keeps presenting",
+     "evidence": "window.cpp:993-998 returns false, then emulator.cpp:187-188 calls std::quick_exit(0). at_quick_exit runs Subsystems::EmergencyShutdownActive (Log::Shutdown, FileSystem, Controller, SaveData). Graphics has no emergency hook, so the VideoOut present thread may still be inside vkQueuePresentKHR or LOGF while the log shuts down. Before 503a8bf the present thread was often parked at this point; now it presents at 60 Hz. This is the same class as the normal WindowRun exit path, so it is not a regression of the ring fix.",
+     "fix": "Optional: before quick_exit, request the VideoOut jthread stop, or make LOGF after Log::Shutdown a no-op."
+    },
+    {
+     "id": "CR115-8",
+     "severity": "INFO",
+     "title": "ROADMAP item 9 mixes two row windows",
+     "evidence": "The item names 3 584 scene rows. The flip-hold numbers (2.43/4.21/5.76/12.94 ms) and the main-task age of 88 us reproduce exactly on n >= 300 (3584 rows). fault_us 15.3 ms, 1 240 faults and 268 dispatches reproduce on the sealed scene window n >= 466 (3418 rows: 15.30 ms, 1240.9, 267.8). cpu_gpu_us 34.3 / dt 35.4 / 5 266 draws match no window tried: 34.18 / 35.25 / 5253 on n >= 466, 33.68 / 35.07 / 5158 on n >= 300. They are inputs for a later speed track, not a decision.",
+     "fix": "In FACTS/ROADMAP, state the window for each number in item 9, or recompute all of them on one window (the sealed n >= stable_frame 466 is the natural choice)."
+    }
+   ]
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:7fa4efc0027e936626e94ac590759d45edd0194e79581b40e01743cf6975695a",
+  "agentId": "af0929240f08e79a4",
+  "result": {
+   "summary": "Protocol lens, session 115, read-only. I found one MAJOR, four MINOR and three INFO findings. The seal-01 verdict PASS and its consequence stand: build d3a981a2 stays installed and titleasync=1 is shipped. None of the findings can flip that verdict, because every seal check is one-sided and has at least a 2x margin.\n\nWhat holds:\n- **Decisions before actions.** Items 1-9 were each committed before the first action on them. Item 1 went in at 08:21:45 and the code at 08:21:54. Item 3 was recorded 31 s after the user's message. Item 4 (10:18:18) preceded the build (10:18:23-10:18:51). Item 5 (10:34:34) preceded its amendments (10:35:19). The seal was committed at 10:37:21 and the post-seal mutants started at 10:37:26. Item 7 was committed at 14:19:06, amendment 1 was hashed at 14:19:44 and committed at 14:19:45, and the chain launched at 14:19:48.\n- **Amendment 1.** It was made before any outcome of the seal existed. Neither refusal log has a run \"start\" line, and no emulator artefact exists between 10:17 and 14:20:20. The change cannot bias the verdict toward PASS: added load can only lower frames and presents or raise UpdateTitle time.\n- **Seal hashes.** All 16 original entries and 4 amendment entries in SEALS115 match the files now. The superseded go115a.sh, go115r.sh and procload.py hashes match git c5cb874.\n- **Archive.** All 31 archive files are byte-equal to their originals.\n- **Sealed mutants.** They ran with the frozen v3 docs copy (5d2f2f90), memo off, --work-dir C:/kyty/s115/work: 104/104 killed, controls 3/3, 0 own-filter skips.\n- **Consequence executed.** The installed exe is d3a981a2; check115 has not changed since the seal; Q3 MISS is reported honestly.\n- **Heavy v4 stages.** The heavy runs in the heavy logs and in accept4/accept4t all ran outside the chain window (14:19:48-14:26:37).\n- **Adoption decision.** \"Full runs only, --changed-from barred, --no-memo for sealed runs\" is supported by the review. The review found existing suites safe with full runs. MAJOR-1 is the reason to bar --changed-from. MINOR-3 is the reason to keep --no-memo.\n- **Privacy.** No e-mail addresses and no paths outside C:/kyty or the game folder in docs/session-115 or the ROADMAP.\n\nWhat does not hold:\n- **(MAJOR)** A 2-worker mutation run of the real ttl114b suite and the v4 builder agent were live through the whole sealed chain. Amendment 1 is what let the chain start beside them; items 7-9 mis-describe or omit this.\n- **(MINOR)** The v4 acceptance was trimmed and resumed at 14:59:58 but only recorded at 16:26:22.\n- **(MINOR)** Item 10 does not name the build or memo mode behind its speed numbers.\n- **(MINOR)** Seal §3 says \"mutlib v2\" while its own hashes and tally are v3.\n- **(MINOR)** The \"verbatim\" user quotes in item 3 are truncated.\n\nScratch scripts are in C:/kyty/s115/audit115/protocol/ (privacy_scan.py, recount.py).",
+   "recounts": [
+    {
+     "item": "Seal 01 hashes in SEALS115 vs current files (16 entries + 4 amendment-1 entries)",
+     "stated": "match",
+     "recounted": "all 20 sha256 match; the superseded go115a.sh 51230ba2, go115r.sh b671bee4 and procload.py 784411f9 match git c5cb874",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Archive docs/session-115 copies vs originals",
+     "stated": "copies",
+     "recounted": "31/31 byte-identical (SEALS, pred x2, runs x7, tools x19, mutlib_v3/mutlib.py, ACCEPTANCE_V3; v4 mutlib/README/ACCEPTANCE equal to s106_stage)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Post-seal mutants of sealed check115",
+     "stated": "104/104, controls 3/3, v3 frozen copy 5d2f2f90, --no-memo, work dir s115/work",
+     "recounted": "header 'mutlib 3 harness ...docs\\session-115\\mutlib_v3\\mutlib.py 5d2f2f90', 'memo off', work dir C:\\kyty\\s115\\work\\check115_7400_1790325446 (=10:37:26, after seal commit 10:37:21), 104 killed, controls 3 of 3, 0 'skipped by the mutant script' lines",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "go115a window / gate (item 8)",
+     "stated": "14:19-14:26, CPU 3 %, GPU 2 %",
+     "recounted": "launched 14:19:48 (transcript), idle check 14:20:22 cpu=3 gpu=2, done 14:26:37",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115a wait line",
+     "stated": "10111 ms, presents_other=607, presents_main=0",
+     "recounted": "log line 4299: 'startup wait finished in 10111 ms presents_other=607 presents_main=0'; one PrepareHold (4284); 0 :326, 0 PrepareMainPresent, 0 fatal markers",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115c wait line",
+     "stated": "10115 ms, 606 / 0",
+     "recounted": "'startup wait finished in 10115 ms presents_other=606 presents_main=0'; env KYTY_TITLE_ASYNC=1; no :326",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "boot115b control",
+     "stated": "PrepareMainPresent: mode 1, then :326 after hold, no wait line",
+     "recounted": "PrepareHold line 4284, 'PrepareMainPresent: mode 1' line 4285, '--- Fatal Error ---' 4290, commandRecorder.cpp:326 line 4291; no wait line; no GpuClockPin line",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 frames / glitches / Q3",
+     "stated": "3 894 frames, 0 glitches, Q3 MISS (<3 900)",
+     "recounted": "idx 3894 entries; vid115_glitch.txt '3894 frames ... one-frame glitches: 0'",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "vid115 BDA regime",
+     "stated": "NEW, bda_scan median 51",
+     "recounted": "median over all 3 882 FrameTrace-draw rows = 50 (the scorer's scene-row population was not recomputed); NEW regime",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Admission gpu_util_median <= 10 (all four)",
+     "stated": "<= 10",
+     "recounted": "2.0 for vid115, boot115a, boot115b, boot115c",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Refusal 1 foreign load (item 6)",
+     "stated": "<foreign app> 2,4-4,4 CPU s/s for 30 min",
+     "recounted": "26 samples 2.418-4.526 over ~31 min",
+     "status": "NOT CONFIRMED (upper bound 4.5, not 4.4; trivial)"
+    },
+    {
+     "item": "Refusal 1 foreign load (item 7 / amend1)",
+     "stated": "<foreign app> 2.4-4.7",
+     "recounted": "max in the refused window is 4.526; 4.686 was seen by the executor at 11:39, after the refusal",
+     "status": "NOT CONFIRMED for the window (trivial)"
+    },
+    {
+     "item": "Refusal 2 offenders (item 7)",
+     "stated": "two python processes ~1.0 CPU s/s, light v4 self-checks",
+     "recounted": "0.972-0.999 each: they were the 2 workers of the mutlib v4 run ttl114b_subset (small_v4.log 14:15:03-14:28:18, 2 workers, 1 572 worker-s, 4.1 GB fixture store), not light checks",
+     "status": "NUMBER CONFIRMED; CHARACTERISATION NOT CONFIRMED"
+    },
+    {
+     "item": "Item 3 user quotes 'verbatim'",
+     "stated": "three quoted fragments",
+     "recounted": "all are exact substrings, but they are truncated: 'как ты говорил', 'СТОП,' and '- вопрос только хули так долго' are omitted",
+     "status": "PARTIALLY CONFIRMED"
+    },
+    {
+     "item": "Item 4 v3 acceptance duration",
+     "stated": "3 h 54 min",
+     "recounted": "agent span 06:23:31-10:17:39 local",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 10 net112 under v4",
+     "stated": "277/277, 844 s",
+     "recounted": "843.8 s at 15:19-15:33 on b666df35, memo on, cold",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 10 ttl114b full",
+     "stated": "345/345 in 20,3 min (under 'sha v4 b666df35')",
+     "recounted": "1 220 s run is b1_6118aef5/full_warm (sha 6118aef5), memo on, warm; there is no full run on b666df35",
+     "status": "NUMBER CONFIRMED; BUILD ATTRIBUTION NOT CONFIRMED"
+    },
+    {
+     "item": "Item 10 selection runs",
+     "stated": "79/79 in 7,6 / 10,2 min",
+     "recounted": "459 s / 614 s on b666df35",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 10 PyPy",
+     "stated": "1 016 vs 844 s",
+     "recounted": "1 015.6 vs 843.8 s",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 10 v2/v3 net112 comparators",
+     "stated": "1 268-2 017 s",
+     "recounted": "v2 1 267.7 s (24.09 17:48); v3 1 526.3 / 1 298.0 s with memo and 2 016.7 s --no-memo (25.09 07:16-09:11): cross-time, mixed modes",
+     "status": "CONFIRMED (not side by side)"
+    },
+    {
+     "item": "Decision-before-action order, items 1-9",
+     "stated": "each recorded before its action",
+     "recounted": "items 1-9 all precede their actions (times as in the summary); the patch_s115a draft (07:50, dry run) preceded item 1 but was not applied until after it",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Decision-before-action for the v4 acceptance trim (item 10)",
+     "stated": "'приёмка урезана мной ... записано до решения'",
+     "recounted": "trim acted on at 14:59:19 (TaskStop) and 14:59:58-59 (task edit and resume); recorded 16:26:22",
+     "status": "NOT CONFIRMED"
+    },
+    {
+     "item": "Privacy of committed session-115 files",
+     "stated": "-",
+     "recounted": "0 e-mail addresses; 0 paths outside C:/kyty or the game folder (37 files incl. ROADMAP)",
+     "status": "CONFIRMED"
+    }
+   ],
+   "findings": [
+    {
+     "id": "P1",
+     "severity": "MAJOR",
+     "title": "A mutlib mutation run and the v4 builder agent were live through the whole sealed chain go115a; amendment 1 was the enabler; items 7-9 mis-describe or omit it",
+     "evidence": "**The job.** C:/kyty/s106_stage/mutlib/v4check/out/small_v4.log has '== ttl114b_subset [14:15:03]' ... 'wall 794.8 s, worker time 1572.4 s, 2 workers' ... '== done [14:28:18]'.\n- Report work dir ttl114b_39992_1790338504 = started 14:15:04. BASELINE took 181.2 s, then 12 jobs ran on 2 workers until about 14:28:15.\n- The fixture store holds 193 files, 4 122.9 MB.\n\n**The chain.** go115a launched at 14:19:48 (executor transcript). vid115 started 14:20:22; the boot runs ran 14:23-14:26:32; the chain ended 14:26:37. So the job covered every run of the seal.\n\n**The processes item 7 names.** The PIDs change every sample (12940/36096, then 13140/45036), consistent with a fresh process per mutlib job; their timing matches this job's 2 workers.\n\n**The agent.** Builder agent aa0c9be95b9dad5c3 was alive 10:20:51-14:51:46. It launched small_v4.sh at 14:10:24 and was polling it from 14:20:38 to 14:28:20.\n\n**Rules broken:**\n- ROADMAP 114 item 6: 'нет наших тяжёлых процессов (mutlib, агенты, сборки) ... Ни одного нашего тяжёлого прогона (mutlib, воркфлоу) параллельно ... с запечатанной цепочкой'.\n- CLAUDE.md state: 'во время запечатанного прогона — ни агентов, ни сборок, ни мутантов'.\n- small_v4.sh's own header: 'allowed without the heavy gate, but never during a sealed run'. Its lock check runs only at the start of a step, so this step outlived the lock.\n\n**Mis-description and omission.**\n- Item 7 calls these processes 'лёгкие самопроверки моего же воркфлоу v4 (им разрешено работать всегда)'. The builder prompt allowed at any time only 'small single-process checks (py_compile, static checks, tiny synthetic triples with --workers 2)'.\n- Under the sealed 0.5 CPU s/s gate, the chain would have waited until about 14:28. Amendment 1 (≤ 1.5 per process, ≤ 4 total) is what let it start beside the job.\n- Item 8 ('шлюз поправки 1 чист') and item 9 do not mention the overlap.\n\n**Impact.**\n- The PASS verdict is unaffected. The checks are one-sided (frames 3 894 ≥ 3 000; presents 607/606 ≥ 300; UpdateTitle 31.3 ≤ 60 µs), and extra load can only push toward FAIL.\n- Q3 MISS (3 894 < 3 900) was taken under this load.\n- Item 9's levels were taken under this load: cpu_gpu_us 34.3 ms, about 6.3 µs per operation, flip mutex 2.43 ms per flip. Item 9 names them as the input for session 116's speed-track choice, on a GuestGpu thread it calls CPU-bound, with two busy Python workers beside it.\n- Precedent: the session-103 audit rated scorers running during a sealed run as MAJOR.",
+     "fix": "1. Add a ROADMAP 115 correction (item 11) that states the overlap: the ttl114b_subset mutlib run (2 workers, 14:15-14:28) and the live builder agent. Record that item 7's 'allowed always' was wrong.\n2. Tag Q3 and the item-9 levels as 'measured with a concurrent 2-worker mutlib run'. Do not use them for the session-116 track choice without a clean re-measure.\n3. go115*.sh: refuse while any process whose CommandLine contains 'mutlib.py' exists (Get-CimInstance Win32_Process), independent of CPU rate.\n4. mutlib and small_v4-type scripts: poll C:/kyty/SEALED_RUN.lock during a run and abort or pause when it appears.\n5. Write a precise definition of a 'light' job into ROADMAP (never a mutlib run on a real suite)."
+    },
+    {
+     "id": "P2",
+     "severity": "MINOR",
+     "title": "The v4 acceptance trim was acted on at 14:59 but recorded only at 16:26, after the outcome and the review; an orphaned chain survived the TaskStop",
+     "evidence": "**Timeline (executor transcript, local time):**\n- 14:59:19: TaskStop of the v4 workflow.\n- 14:59:58: the acceptance task was edited to 'TASK (TRIMMED acceptance of v4, by the executor's decision: the user waits ...) ... no new v3 side-by-side runs'.\n- 14:59:59: the workflow was resumed.\n- The acceptance finished at 15:55 and the review at 16:25.\n- ROADMAP item 10 (6e046e5) was committed at 16:26:22.\n\n**What was dropped.**\n- Item 6 (11:08) had recorded 'время v3/v4 сравнивается бок о бок в один момент'; the trimmed task dropped it.\n- The original accept task (agent a8081865) required '--control, --no-memo' verdict equality, including a full sealed-ttl114b run and side-by-side speed. The trimmed task kept only net112 with the memo on and took the builder's older-build full ttl114b run as done.\n- Item 10's wording 'приёмка урезана мной ... записано до решения' refers to the adoption decision; it obscures that the trim itself was unrecorded when acted on.\n\n**Orphaned chain.** accept4/chain4.sh (started 14:55:54 by the killed first accept agent) kept running until 15:17:34. Its PyPy and v4nm results were adopted.\n\n**Why MINOR.**\n- The trimmed scope still matches item 3's recorded fast acceptance: net112, small suites, review cases, timing.\n- The only edits between 6118aef5 and b666df35 (12:08-12:09Z) touched the memo path (NaN backstop, memo for mutated closures). The dropped memo-off and final-build checks are therefore unlikely to flip the adoption.",
+     "fix": "1. Record the trim as a post-hoc correction in ROADMAP, including the user's 14:35 message that preceded it.\n2. Before the first sealed use of v4, run one full `--control --no-memo` pass under v4 on net112 or ttl114b. This closes the evidence gap for the adopted sealed mode and gives its real timing.\n3. After a TaskStop of a workflow, kill its background chains or record that they continue."
+    },
+    {
+     "id": "P3",
+     "severity": "MINOR",
+     "title": "Item 10 states v4 speed figures without their build or memo mode; the adopted sealed mode (--no-memo) has no large-suite timing",
+     "evidence": "**The build.** Item 10 says 'sha v4 b666df35 ... ttl114b полный 345/345 за 20,3 мин против ~70' and 'ABBA-печать ≈ 20 мин вместо ~70 (×3,5)'. The 345/345, 1 220 s run is v4check/out/heavy/b1_6118aef5/full_warm: header sha 6118aef5a28eaf5e, memo on, warm. ACCEPTANCE_V4.md and WORKFLOW_RESULT.txt disclose the earlier build; item 10 does not.\n\n**The mode.**\n- Item 10 makes --no-memo mandatory for sealed runs.\n- On v3, net112 with --no-memo took 2 016.7 s against 1 298-1 526 s with the memo (+32 to 55 %).\n- No v4 --no-memo timing exists on any large suite; only check112, vbn113f and check115 (4-45 s).\n- So the '≈ 20 min per ABBA seal' figure is unmeasured for the adopted mode and likely optimistic.\n\n**The comparison.** '844 с против 1 268–2 017 с у v2/v3' compares a cold memo-on v4 run (15:19) with a v2 run (24.09 17:48) and v3 runs (25.09 07:16-09:11) of mixed memo modes. These are cross-time runs, not the side-by-side comparison item 6 promised.\n\n**Early exit.** '98–99 %' is ttl114b's figure; net112's median is 78 %.",
+     "fix": "Amend item 10:\n- Name the build (6118aef5) and memo mode of the ttl114b full run.\n- Mark the v2/v3 comparators as cross-time and mixed-mode.\n- Replace the 20-min ABBA estimate with 'unmeasured under --no-memo' until the P2 run is done."
+    },
+    {
+     "id": "P4",
+     "severity": "MINOR",
+     "title": "Seal 01 §3 names 'mutlib v2 frozen copy', but its own hash list and the post-seal tally are v3",
+     "evidence": "- pred/01_chk115.md §3: 'mutants `mut_check115.py` through mutlib v2 frozen copy `--control --no-memo --work-dir C:/kyty/s115/work`'.\n- SEALS115.txt hashes /c/kyty/KytyPS5/docs/session-115/mutlib_v3/mutlib.py (5d2f2f90). Its post-seal line reads 'mutlib v3 frozen docs copy 5d2f2f90'.\n- mut_check115.out.txt header: 'mutlib 3 harness C:\\kyty\\KytyPS5\\docs\\session-115\\mutlib_v3\\mutlib.py'.\n- Item 4 (10:18:18) chose v3 for check115 before the seal (10:37:21). The executed procedure therefore follows a recorded decision, but the immutable seal text contradicts its own hash list.\n- No verdict impact: 104/104 killed, controls 3/3, memo off, 0 own-filter skips; v3 was accepted 1 225/1 225 equal to v2.",
+     "fix": "1. Add a FACTS / audit correction: §3's 'v2' is superseded by item 4 (recorded before the seal).\n2. In future seal texts, name the mutation harness by sha rather than by version."
+    },
+    {
+     "id": "P5",
+     "severity": "MINOR",
+     "title": "Item 3's 'дословно' quotes are truncated, and related user messages are not recorded",
+     "evidence": "**07:16:20Z (09:16 local).** The user wrote '... я изначально говорил что я ебал ждать каждую сессию по 3-6 часов, и новые версии mutlib должны были ускориться x6 как ты говорил'. The ROADMAP drops 'как ты говорил' (the ×6 was the executor's own promise) and the preceding 'блядь, а нахуя мы тогда вообще v2 и v3 делали'.\n\n**07:18:08Z.** The user wrote 'СТОП, ПРОГО УЖЕ ИДЕТ 2 с хуем часа, дай ему закончить. Почему v3 ошибочный - он же дыры закрывает - вопрос только хули так долго'. The ROADMAP drops 'СТОП,' and '- вопрос только хули так долго'.\n\n**07:20:33Z.** «делай все 5 пунктов после приемки» is exact, and it was recorded promptly (7fab116 at 07:21:04Z).\n\n**Not recorded:**\n- 07:14:39Z: 'кстати а че опять приемка 3ч идёт ? мы же фиксили mutlib ?'\n- 07:19:09Z: the question about porting mutlib to Rust.\n- 12:35:14Z: 'а че там mutlib-v4 - 4 часа идет уже ?'. This message preceded the 14:59 trim, which was justified by 'the user waits'.",
+     "fix": "1. Replace the fragments in item 3 with the full message texts.\n2. Quote the 12:35Z message in the correction that records the acceptance trim (P2)."
+    },
+    {
+     "id": "P6",
+     "severity": "INFO",
+     "title": "Amendment 1 was made before any outcome and cannot bias toward PASS; refusal 2 had already installed the build, and the chain start is unlogged",
+     "evidence": "**Order.** Item 7 was committed at 14:19:06; the scripts were amended at 14:19:21; amend1 and SEALS were written at 14:19:44 and committed at 14:19:45 (b8fa868); the chain launched at 14:19:48. This order is correct.\n\n**No outcome existed.**\n- go115a_refused1.log and go115a_refused2.log contain no 'start' line.\n- Every run artefact (json, log, csv, mp4) is timestamped 14:22:45 or later.\n- There is no emulator artefact under C:/kyty between 10:17 and 14:20:20.\n\n**Cannot bias toward PASS.** Every check is a one-sided threshold. More load can only lower frames and presents or raise UpdateTitle time. N ≥ 10 000 holds by construction of the 10-s hold.\n\n**Build installed on refusal 2.** go115a.sh installs the pinned build before its post-lock procload re-check. Refusal 2 therefore took the lock and copied d3a981a2 into the game folder at 14:18:14 before refusing at 14:18:26. No game ran, but item 7 / amend1 do not mention it.\n\n**Start not logged.** The chain logs no timestamped start line; the first timestamp is the idle check. The start time had to be recovered from the transcript.",
+     "fix": "1. In future chains, log a timestamped 'chain start' line (and the lock content) before the first procload.\n2. Install the build only after the post-lock re-check passes."
+    },
+    {
+     "id": "P7",
+     "severity": "INFO",
+     "title": "<foreign app> load ranges quoted in items 6 and 7 differ from the refusal log",
+     "evidence": "- go115a_refused1.log has 26 samples of 2.418-4.526 CPU s/s.\n- Item 6 says '2,4–4,4'; item 7 and amend1 say '2,4–4,7'.\n- 4.686 was seen by the executor at 11:39 local, after the 11:08 refusal.\n- The conclusion does not change: <foreign app> stays above 1.5 CPU s/s and is blocked under both gates.",
+     "fix": "Cite 2.4-4.5 for the refused window, and state separately where the later 4.7 reading came from."
+    },
+    {
+     "id": "P8",
+     "severity": "INFO",
+     "title": "The archive omits some sealed inputs; the v3 README original was overwritten",
+     "evidence": "- SEALS115 hashes enter_scene.py (1579fc3e), run_safety99.py and gates_base.txt. They are present and hash-correct in C:/kyty/s115 but are not copied into docs/session-115/tools.\n- The pre-amendment go115a.sh, go115r.sh and procload.py exist only in git history (c5cb874), which is acceptable.\n- docs/session-115/mutlib_v3/README.md can only be checked against its commit e68bb6e (unchanged since). The original C:/kyty/s106_stage/mutlib/README.md was overwritten by the v4 README.",
+     "fix": "Copy enter_scene.py, run_safety99.py and gates_base.txt into docs/session-115/tools at session close, so every sealed input except the exe is archived."
+    }
+   ]
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:a5b1fd04074abdd7ea5fb0cc4099b28b9b3cba89a223009d727e29dfa2417ecb",
+  "agentId": "accdda2690f8106f3",
+  "result": {
+   "refuted": false,
+   "severity_if_real": "MAJOR",
+   "reasoning": "I checked every part of the evidence myself and could not refute it. The factual core holds.\n\n**The job (CONFIRMED)**\n- small_v4.log shows '== ttl114b_subset [14:15:03]' through '== done [14:28:18]'.\n- ttl114b_subset_w2.report.txt: work dir ttl114b_39992_1790338504. Epoch 1790338504 is 12:15:04 UTC, i.e. 14:15:04 local.\n- BASELINE 181.2 s and BASELINE#2 181.8 s ran in parallel. Store: 193 files, 4 122.9 MB. Wall 794.8 s, worker time 1 572.4 s, 2 workers.\n- The 12 jobs sum to 1 209.3 worker-seconds, packed into the roughly 609 s after the baselines (14:18:06 to 14:28:15). So both workers were busy almost continuously through the chain.\n- This is a mutlib run on a real sealed suite: s114 ttl114b.py, 9 mutants plus 3 controls.\n\n**The chain (CONFIRMED)**\n- Main transcript: go115a relaunched at 12:19:48.375Z (14:19:48 local).\n- go115a.log: vid115 started 14:20:22; boot115c ended 14:26:32; done 14:26:37.\n\n**The builder agent (CONFIRMED)**\n- agent-aa0c9be95b9dad5c3 meta: 10:20:51; last write 14:51:46.\n- It ran 'bash small_v4.sh' at 12:10:24Z and polled the log from 12:20:38Z to 12:28:20Z.\n- It was the only workflow agent alive during the chain.\n\n**Amendment 1 was the enabler (CONFIRMED)**\n- go115a_refused2.log: the 14:18:26 refusal was caused only by python 12940/36096 (the parallel baselines), then 13140/45036, each at about 1.0 CPU s/s.\n- Between 14:18:33 and 14:19:02 the executor went straight from reading that log to writing the item-7 patch. It never checked the processes' command lines.\n- Amendment 1 (14:19) names them 'two light self-check processes' and raises the gate to 1.5 per process / 4 total. The relaunch then passed with the same workers still running.\n\n**Rules (wording CONFIRMED)**\n- ROADMAP 114 item 6 lists mutlib and agents as heavy processes and forbids any of them in parallel with a sealed chain.\n- CLAUDE.md says 'ни агентов, ни сборок, ни мутантов'.\n- small_v4.sh's header says 'never during a sealed run'. mutlib.py:5559 refuses 'no parallel CPU work' too, but only at startup, as does small_v4.sh's step().\n- Item 7's 'им разрешено работать всегда' is false against the builder prompt. That prompt allows at any time only py_compile, static checks and tiny synthetic triples with --workers 2.\n\n**Nuances that weaken the finding**\n1. The builder did not break its own prompt. Its heavy gate covers only 'more than 2 workers on a real suite', so a 2-worker real-suite run fell into a gap: neither gated nor in the allowed-any-time list. The root cause is that gap plus the executor's unchecked label.\n2. Session 115 item 4 explicitly lets the v4 workflow's agents stay alive during sealed chains, with only heavy commands gated. So 'agent alive' alone is not a breach; the concurrent mutant run is.\n3. Item 7 was recorded before the run, so the letter of 'decision before action' was kept. The decision rested on a false premise.\n4. Minor: 'PIDs change every sample' is overstated. The first pair persisted across two samples; they were the two baselines.\n\n**Impact on the seal verdict**\n- The PASS is robust. The checks are one-sided (frames 3 894 ≥ 3 000; presents 607/606 ≥ 300).\n- The boot115b control reproduced commandRecorder.cpp:326 under the same load, so the load did not mask the race.\n- Item 9's F2 decision (zero waits) is one-sided in the safe direction.\n- So no BLOCKER.\n\n**My additional evidence that the load plausibly contaminated the levels**\n- Scratch scripts are in C:/kyty/s115/audit115/p1_skeptic/ (cmp.py, cmp2.py, clk.py). Numbers are for FrameTrace n ≥ 400.\n- vid115 against the same-scene videos:\n\n| | vid114 (BDA OLD) | vtt114b | vid115 (BDA NEW) |\n|---|---|---|---|\n| dt mean | 32.1 ms | 33.0 ms | 35.4 ms |\n| cpu_gpu_us mean | 31.2 ms | 32.1 ms | 34.3 ms |\n| dt p90 | 35.5 ms | 36.3 ms | 48.2 ms |\n| frames > 40 ms | 3.0 % | 6.1 % | 15.1 % |\n| video frames | 4 010 | — | 3 894 |\n\n- vid115 was the worse run even though OLD is the slower regime and vid114 ran in OLD. GPU SM clocks were equal or higher (medians 2 332 / 2 325 / 2 377 MHz).\n- After the main loop starts, the build change is inert: the ring fix only acts before the main loop, and titleasync=1 was also on in vid114.\n- CPU-time per operation: vid115 6.20 µs (ROADMAP says ≈ 6.3), against 5.69 µs in vid114.\n- So Q3's MISS and item 9's 'input for the next speed track' (34.3 ms, ≈ 6.3 µs/op) sit about 10 % above comparable runs, in the direction the load pushes. Item 9 records them with no caveat about the load. The track choice itself is deferred to a fresh phase breakdown in session 116, which limits the damage.\n\n**Severity**\nMAJOR. A standing rule was broken (ROADMAP 114.6, CLAUDE.md; precedent: the session-103 audit rated scorers during a sealed run as MAJOR). The enabling decision (amendment 1 / item 7) was based on an unchecked, false description; described correctly, the obvious choice was to wait about 10 minutes. Items 8 and 9 omit the overlap, and item 9 passes on levels that are measurably off.\n\n**Fix (the finding's fix, plus these)**\n- The ROADMAP correction item should also cite the vid115 vs vid114 comparison above.\n- Close the builder-prompt gap: any mutlib run on a real suite, whatever the worker count, counts as heavy.\n- mutlib and small_v4.sh should poll SEALED_RUN.lock between jobs and pause, not only check it at start.\n- go115*.sh should refuse while any process's CommandLine contains mutlib.py."
+  }
+ }
+]

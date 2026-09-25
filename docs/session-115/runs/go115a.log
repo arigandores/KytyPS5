@@ -1,0 +1,14 @@
+procload: clean (no process above 1.50 CPU s/s, total cap 4.0)
+procload: clean (no process above 1.50 CPU s/s, total cap 4.0)
+[14:20:22] idle check cpu=3 gpu=2
+[14:20:22] vid115 start
+[14:22:51] vid115 rc=0 VERDICT: underwater_aerial_garden in 18.9 s - PASS (acceptance <= 90 s)
+[14:23:01] vidglitch one-frame glitches: 0
+[14:23:01] boot115a start
+[14:24:38] boot115a rc=0 VERDICT: underwater_aerial_garden in 27.4 s - PASS (acceptance <= 90 s)
+[14:24:38] boot115b start
+[14:24:56] boot115b rc=1 VERDICT: no attempt reached underwater_aerial_garden
+[14:24:56] boot115c start
+[14:26:32] boot115c rc=0 VERDICT: underwater_aerial_garden in 25.9 s - PASS (acceptance <= 90 s)
+[14:26:37] check115 VERDICT: PASS
+[14:26:37] done

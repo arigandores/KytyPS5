@@ -1,0 +1,2 @@
+C:/kyty/s115/rec_vid115.mp4: 3894 frames 960x540, index entries 3894
+one-frame glitches: 0

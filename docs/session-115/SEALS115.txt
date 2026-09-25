@@ -15,3 +15,8 @@ d3a981a23fc1c5df651eef2a93ff1f02a8bffd04416adea2fd5cd2218e290f64 *kyty_emulator_
 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c */c/kyty/scripts/s51_vidglitch.py
 5d2f2f90a28e9f405158d2771898f54850692279c3056f4acf0b6aac3b97537d */c/kyty/KytyPS5/docs/session-115/mutlib_v3/mutlib.py
 post-seal (mutlib v3 frozen docs copy 5d2f2f90, sealed check115, --control --no-memo --work-dir C:/kyty/s115/work, 104/104, controls 3/3, 0 own-filter skips): 1fb10e40baa2509ec95ac4a2742b08331baffaa43eaff61e078c6c6fa58d9477 *mut_check115.out.txt
+# amendment 1 of seal 01 (ROADMAP 115 item 7; 2026-09-25T14:19) - supersedes the go115a.sh/go115r.sh/procload.py lines above
+3389c53ba31715718efea72bd5e583e861faf36fd4945250dfc9c58e6decba2b *pred/01_chk115_amend1.md
+b020386e4292fdf7b3cf7abeaa6c38701bcac34ac219698ac7ea1b944ddbb182 *go115a.sh
+2ba7040477b1748bd0844130a9af9e768ecd59bc9d2407bd3e0e27820ea34c2b *go115r.sh
+f1df7128ab0821bee18cd5ab7f02df76666ed44b8633f2f85bd541943da1ec06 *procload.py

@@ -12,7 +12,7 @@ PRED=C:/kyty/s115/pred/01_chk115.md
 cd /c/kyty/s115
 log() { echo "[$(date +%H:%M:%S)] $*" >> $L; }
 if [ -e $LOCK ]; then log "lock held: $(cat $LOCK) - not starting"; exit 1; fi
-python C:/kyty/s115/procload.py --wait-s 1800 >> $L 2>&1 || { log "a process stays busy - not starting"; exit 1; }
+python C:/kyty/s115/procload.py --wait-s 1800 --max-rate 1.5 --max-total 4 >> $L 2>&1 || { log "a process stays busy - not starting"; exit 1; }
 if [ -e $LOCK ]; then log "lock held: $(cat $LOCK) - not starting"; exit 1; fi
 echo "go115a.sh pid $$ started $(date +%Y-%m-%dT%H:%M:%S)" > $LOCK
 trap 'rm -f $LOCK' EXIT
@@ -24,7 +24,7 @@ if [ "$SHA" != "$EXPECT" ]; then
 fi
 SHA=$(sha256sum "$GAME" | cut -c1-64)
 [ "$SHA" = "$EXPECT" ] || { log "installed sha $SHA != $EXPECT - stop"; exit 1; }
-python C:/kyty/s115/procload.py --wait-s 0 >> $L 2>&1 || { log "a process became busy - not starting"; exit 1; }
+python C:/kyty/s115/procload.py --wait-s 0 --max-rate 1.5 --max-total 4 >> $L 2>&1 || { log "a process became busy - not starting"; exit 1; }
 CPU=$(powershell -NoProfile -Command "\$a=@(); 1..3 | % { \$a += (Get-CimInstance Win32_Processor | Measure-Object -Property LoadPercentage -Average).Average; Start-Sleep -Seconds 2 }; [int](\$a | Measure-Object -Average).Average" | tr -d '\r')
 GPU=$(nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader,nounits | head -1 | tr -d ' \r')
 log "idle check cpu=$CPU gpu=$GPU"

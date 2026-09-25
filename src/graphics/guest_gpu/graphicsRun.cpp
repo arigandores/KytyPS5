@@ -1314,7 +1314,8 @@ void CommandProcessor::SpinePlan(Pm4Execution& execution) {
 				break;
 			case Pm4::IT_NOP: {
 				const auto r = KYTY_PM4_R(cmd);
-				if (r == Pm4::R_CONTEXT_STATE) {
+				if (r == Pm4::R_CONTEXT_STATE || r == Pm4::R_DISPATCH_RESET) {
+					// Context push/pop/clear, and the full processor reset (ROADMAP 117 item 10).
 					advance = g_cp_op_func[opcode](sp, cmd, body, remaining, total) + 1u;
 				} else if (r == Pm4::R_ZERO && (body[0] & 0xffff0000u) == 0x68750000u) {
 					// CpOpMarker: only the two user-data markers are register state; the flips it also carries

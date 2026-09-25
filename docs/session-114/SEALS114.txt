@@ -42,3 +42,5 @@ f8a22554cdae6ce3c37bbf67031bf107fef1b11065a5ff021abf12ea0b2b543b *go114c.sh
 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
 916f64898a5a31c697ad0d823f0795850acc160cf56271b566e8ae330c7c3b2c *kyty_emulator_916f6489.exe
 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c */c/kyty/scripts/s51_vidglitch.py
+post-seal (mutlib v2 frozen copy, sealed ttl114b, mut_ttl114b_sealed.py, --control --no-memo): 3dcd19994d660222a1cb636dda6189272efa63c90611b30267c39c89777db02f *mut_ttl114b.out.txt
+post-seal (mutlib v2 frozen copy, sealed ttl114b, mut_ttl114b_sealed.py, --control --no-memo): 0d16ab9fbdb5a55ea7060abe3ddacb9f61712e3717af657d4be4c913d7cd7806 *mut_ttl114b.stderr.txt

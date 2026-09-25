@@ -4,7 +4,7 @@
   "key": "v2:979c90adb27a7081f80344cc9255d26358f1923764cb8ede4cc99834a7a1cc5a",
   "agentId": "abd30cb42e0c70002",
   "result": {
-   "summary": "I recounted seal 01 chk115 from the raw artifacts with my own parsers (C:/kyty/s115/audit115/recount/: recount_vid.py, recount_f2.py, myglitch.py, scan_boot.py, *.out.txt). check115.py was not imported. Every number the verdict rests on is CONFIRMED and the verdict PASS stands. vid115 has 3894 frames (ffprobe packets, decoded frames and the index agree) and 0 one-frame glitches: my own detector's nearest candidate has a neighbour ratio of 1.025, far above the 0.35 cut. I recomputed the stable frame as 466, which gives 3418 scene rows. UpdateTitle costs 31.297 us per call (row median 24.086), present_overlap is 0, there are no failure markers in the log or stdout, and the bda_scan median is 51. boot115a (10111 ms, 607/0) and boot115c (10115 ms, 606/0) both reach the scene. boot115b prints exactly one 'PrepareMainPresent: mode 1', then the :326 fatal after the PrepareHold line (log lines 4284, 4285, 4291), and has no wait line. All four pre_run gpu_util_median values are 2.0. Every setup condition holds: env, gates text identical to gates_base.txt with no titleasync, the pin, the hold, one attempt each, all binary_sha256 d3a981a2. All 18 seal hashes and the amendment hashes match; archive copies are byte-equal. The installed exe is d3a981a2. The build matches 7c73f26 source: PE link stamp 10:18:42 local, last src mtime 08:23:11, no non-docs diff 7c73f26..HEAD, and the embedded banner reads e68bb6e-dirty. The F2 figures in item 9 are CONFIRMED over n>=300 (3584 rows): median 2.429, p90 4.211, p99 5.761 nearest-rank, max 12.941 ms, flip_rsv_wait_n 0 on every row, no FlipHold lines, mt_age 88.4 us. The findings are all MINOR or INFO. Item 9 calls the n>=300 window 'scene frames', but 166 of its rows are before the stable frame. Its speed-track inputs cannot be reproduced exactly from any stated window, and its per-operation arithmetic comes to 6.2 us, not 6.3. The 'never waited' statement holds only within the scope; there were 3 waits at startup. Item 8 says the control died 'after the hold', but it died about 7.4 s after launch, inside the 10-s hold. A v4 acceptance stage ran on 2 workers throughout the chain and neither item 8 nor item 9 mentions it. Smaller points: the seal text says v2 while v3 was hashed and used; the refused chain installed the build and left it installed; the BDA regime has 8% full rescans; <foreign app> range trivia.",
+   "summary": "I recounted seal 01 chk115 from the raw artifacts with my own parsers (C:/kyty/s115/audit115/recount/: recount_vid.py, recount_f2.py, myglitch.py, scan_boot.py, *.out.txt). check115.py was not imported. Every number the verdict rests on is CONFIRMED and the verdict PASS stands. vid115 has 3894 frames (ffprobe packets, decoded frames and the index agree) and 0 one-frame glitches: my own detector's nearest candidate has a neighbour ratio of 1.025, far above the 0.35 cut. I recomputed the stable frame as 466, which gives 3418 scene rows. UpdateTitle costs 31.297 us per call (row median 24.086), present_overlap is 0, there are no failure markers in the log or stdout, and the bda_scan median is 51. boot115a (10111 ms, 607/0) and boot115c (10115 ms, 606/0) both reach the scene. boot115b prints exactly one 'PrepareMainPresent: mode 1', then the :326 fatal after the PrepareHold line (log lines 4284, 4285, 4291), and has no wait line. All four pre_run gpu_util_median values are 2.0. Every setup condition holds: env, gates text identical to gates_base.txt with no titleasync, the pin, the hold, one attempt each, all binary_sha256 d3a981a2. All 18 seal hashes and the amendment hashes match; archive copies are byte-equal. The installed exe is d3a981a2. The build matches 7c73f26 source: PE link stamp 10:18:42 local, last src mtime 08:23:11, no non-docs diff 7c73f26..HEAD, and the embedded banner reads e68bb6e-dirty. The F2 figures in item 9 are CONFIRMED over n>=300 (3584 rows): median 2.429, p90 4.211, p99 5.761 nearest-rank, max 12.941 ms, flip_rsv_wait_n 0 on every row, no FlipHold lines, mt_age 88.4 us. The findings are all MINOR or INFO. Item 9 calls the n>=300 window 'scene frames', but 166 of its rows are before the stable frame. Its speed-track inputs cannot be reproduced exactly from any stated window, and its per-operation arithmetic comes to 6.2 us, not 6.3. The 'never waited' statement holds only within the scope; there were 3 waits at startup. Item 8 says the control died 'after the hold', but it died about 7.4 s after launch, inside the 10-s hold. A v4 acceptance stage ran on 2 workers throughout the chain and neither item 8 nor item 9 mentions it. Smaller points: the seal text says v2 while v3 was hashed and used; the refused chain installed the build and left it installed; the BDA regime has 8% full rescans; game-X range trivia.",
    "recounts": [
     {
      "item": "vid115 video frames",
@@ -187,7 +187,7 @@
      "status": "CONFIRMED"
     },
     {
-     "item": "<foreign app> load during refusal 1 (items 6, 7, amendment)",
+     "item": "game-X load during refusal 1 (items 6, 7, amendment)",
      "stated": "2.4-4.4 (item 6) / 2.4-4.7 (item 7, amend1)",
      "recounted": "2.418-4.526 CPU s/s over 26 snapshots",
      "status": "NOT CONFIRMED (trivial: 2.4-4.5)"
@@ -260,7 +260,7 @@
     {
      "id": "R115-10",
      "severity": "INFO",
-     "title": "The <foreign app> load range is misquoted slightly in items 6 and 7",
+     "title": "The game-X load range is misquoted slightly in items 6 and 7",
      "evidence": "go115a_refused1.log (26 snapshots): 2.418-4.526 CPU s/s. Item 6 says '2,4–4,4'; item 7 and amendment 1 say '2,4–4,7'.",
      "fix": "Use '2,4–4,5' in FACTS. This has no bearing on any decision."
     }
@@ -470,13 +470,13 @@
     },
     {
      "item": "Refusal 1 foreign load (item 6)",
-     "stated": "<foreign app> 2,4-4,4 CPU s/s for 30 min",
+     "stated": "game-X 2,4-4,4 CPU s/s for 30 min",
      "recounted": "26 samples 2.418-4.526 over ~31 min",
      "status": "NOT CONFIRMED (upper bound 4.5, not 4.4; trivial)"
     },
     {
      "item": "Refusal 1 foreign load (item 7 / amend1)",
-     "stated": "<foreign app> 2.4-4.7",
+     "stated": "game-X 2.4-4.7",
      "recounted": "max in the refused window is 4.526; 4.686 was seen by the executor at 11:39, after the refusal",
      "status": "NOT CONFIRMED for the window (trivial)"
     },
@@ -593,8 +593,8 @@
     {
      "id": "P7",
      "severity": "INFO",
-     "title": "<foreign app> load ranges quoted in items 6 and 7 differ from the refusal log",
-     "evidence": "- go115a_refused1.log has 26 samples of 2.418-4.526 CPU s/s.\n- Item 6 says '2,4–4,4'; item 7 and amend1 say '2,4–4,7'.\n- 4.686 was seen by the executor at 11:39 local, after the 11:08 refusal.\n- The conclusion does not change: <foreign app> stays above 1.5 CPU s/s and is blocked under both gates.",
+     "title": "game-X load ranges quoted in items 6 and 7 differ from the refusal log",
+     "evidence": "- go115a_refused1.log has 26 samples of 2.418-4.526 CPU s/s.\n- Item 6 says '2,4–4,4'; item 7 and amend1 say '2,4–4,7'.\n- 4.686 was seen by the executor at 11:39 local, after the 11:08 refusal.\n- The conclusion does not change: game-X stays above 1.5 CPU s/s and is blocked under both gates.",
      "fix": "Cite 2.4-4.5 for the refused window, and state separately where the later 4.7 reading came from."
     },
     {

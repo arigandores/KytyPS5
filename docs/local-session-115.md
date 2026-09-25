@@ -46,7 +46,7 @@ frozen v4 `docs/session-115/mutlib_v4/` (b666df35). No push.
 
 | tag | seal | what | outcome |
 |---|---|---|---|
-| `go115a` ×2 | 01 | refused before any run (foreign `<foreign app>` 30 min; then a mutlib run of mine) | no run |
+| `go115a` ×2 | 01 | refused before any run (foreign `game-X` 30 min; then a mutlib run of mine) | no run |
 | `vid115` | 01 | video, build `d3a981a2`, defaults | PASS (3 894 frames, 0 glitches, NEW) |
 | `boot115a`, `boot115c` | 01 | `KYTY_PREPARE_HOLD_MS=10000`, knob default / 1 | PASS (10.1 s hold, 607 / 606 presents, 0 main) |
 | `boot115b` | 01 | + `KYTY_PREPARE_MAIN_PRESENT=1` (control) | fatal `:326` as expected |

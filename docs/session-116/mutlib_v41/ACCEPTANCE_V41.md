@@ -9,7 +9,7 @@ memo cache `cache/`. No project scorer, suite or mutant script was edited.
 
 **Gate.** Both heavy runs went through `accept41/gate41.py`. It requires `C:/kyty/s116/V41_GO` to be present, no
 `C:/kyty/SEALED_RUN.lock`, and no other `mutlib.py` process. The runs went one at a time. A `mutlib_v4` run on obs116
-(not mine) finished before my first run. During both heavy runs a game (Hollow Knight Silksong) was using
+(not mine) finished before my first run. During both heavy runs a game (game-Y) was using
 0.9–2.7 CPU s/s out of 32 logical CPUs, which gate41 recorded in `accept41/out/heavy41.log`. The timings below
 include that load.
 

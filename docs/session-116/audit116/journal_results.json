@@ -1,0 +1,494 @@
+[
+ {
+  "type": "result",
+  "key": "v2:6ebab23a7de3eea50d78ef9bc8958e9298d1fbf0913fe872abca176db7961343",
+  "agentId": "a0202c5dbadd56fcc",
+  "result": {
+   "summary": "Lens: independent recount of obs116. I wrote my own binary-mode parser (C:/kyty/s116/audit116/recount/recount.py, plus pmemo.py, checks2.py, blocks.py, buckets.py; outputs in recount_out.json and recount_run1.txt). It does not import obs116.py. Every number stated in ROADMAP 116 item 6 recounts to within rounding.\n\n**Stable frame and scene rows.** The stable frame is 432 by enter_scene's rule: 90 consecutive FrameTrace lines with draws >= 3000, counted after both level markers. Frames 343-432 all have >= 3000 draws, and frame 342 had 229. The markers fall at frames 149 and 320, so the result is the same with or without the marker gating. The scene rows are n = 432..9929, 9 498 rows with no gap, no missing line and no repeated line.\n\n**Admission conditions.** All 23 hold on my own evaluation:\n- identities: hold identity 0 (tolerance 16), emit identity -7 (tolerance 256), proc_n 0;\n- proc_wall 0.99998 and hold_cover 0.99667;\n- the pre-registration sha matches the json, SEALS116 and the file on disk;\n- GATES_SHA 678fed09 is matched by the json gates, gates.req and gates_obs116.txt;\n- exactly two Gate: lines, both at frame=1; exactly one `GpuWall: mode 1` line; exactly one GpuClockPin line, mode 1;\n- no check115 marker in the log or stdout;\n- the installed exe and the sealed copy are d3a981a2;\n- env is exact and VK_SDK_PATH is the only VK_ variable;\n- idle: pre_run GPU 6.0 % (the limit is 10).\n\n**Where the audit fails.** One claim is contradicted by both the code and the run's own counters: the parenthesis in the T1 track choice, \"потолок ≈ pmemo_miss × цена промаха (оценка сверху — большая часть 6,7 мс)\". pmemo_hit and pmemo_miss count draw stages (VS, plus PS when active), not draws; they sit on the FrameTrace-x lines.\n- **What a miss costs.** A miss adds only PrepareProgram, the MemoRecord step, BuildStageStaticKey and programs.find.\n- **What a hit still pays.** The memo check (433 µs), PipelineCache::m_mutex and all of ProgramCache::Get. That includes AheadTake: da_take_us is 3 002 µs a frame here, 44.7 % of mh_prog.\n- **Measured premium.** The per-row regressions give a miss premium over a hit of 0.20-0.29 µs, so all 2 206 misses cost about 0.45-0.65 ms a frame, below the plan's own 1 ms bar. Session 86's price gives about 0.23 ms.\n\n**Other findings.** One MINOR latent gap-blindness in the scorer's rows check, not triggered by this run. INFO items: the first 1 000 scene rows are a transient; the per-row emit skew is wider than pl96a's; a derived VS/PS split of the misses; minor wording and sampler differences.",
+   "recounts": [
+    {
+     "item": "stable frame (enter_scene rule: 90 consecutive FrameTrace lines with draws >= 3000 after both markers)",
+     "stated": "432",
+     "recounted": "432 (run of frames 343..432; frame 342 had 229 draws, 341 had 465; LevelDocument marker at frame 149, Level has started at frame 320; the same result without marker gating)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "scene rows from the stable frame",
+     "stated": "9 498 rows from frame 432",
+     "recounted": "9 498 (n = 432..9929, contiguous; 0 missing, 0 repeated; every used field present once per line)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "duration",
+     "stated": "300.6 s",
+     "recounted": "300.612606 s (sum of dt_us)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "BDA regime (median bda_scan, FrameTrace-draw)",
+     "stated": "NEW, median 56",
+     "recounted": "median 56, mean 82.0; 269 rows >= 600, 214 of them in the first 1 000 scene rows",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "dt_us mean / game speed",
+     "stated": "31 650 us / 52.7 %",
+     "recounted": "31 650.1 us / 16 667 / 31 650.1 = 52.66 %",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "cpu_gpu_us mean",
+     "stated": "30 994",
+     "recounted": "30 993.5",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "gw_idle",
+     "stated": "28 us",
+     "recounted": "27.6 us (raw ns / 1000)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "hold = sum of mh_* phases",
+     "stated": "28 592 us = 92.3 %",
+     "recounted": "28 592.1 us = 92.25 % of cpu_gpu_us (a_hold_us is 28 687.5)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "mh_bind_us",
+     "stated": "10 662 (34.4 %; 2.09 us a draw)",
+     "recounted": "10 662.1 (34.40 %; 2.087 us per mh_draw)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "mh_emit_us",
+     "stated": "7 477 (24.1 %; 1.46 us)",
+     "recounted": "7 477.0 (24.12 %; 1.463 us per mh_draw)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "pl_em_* (raw ns / 1000): com, rt, vtx, rec, pipe",
+     "stated": "2 275, 1 600, 1 403, 1 280, 762",
+     "recounted": "2 274.9, 1 599.9, 1 403.0, 1 279.6, 762.1 (rest 46.5; emit_split 7 366.0)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "mh_prog_us",
+     "stated": "6 711 (21.7 %; 1.31 us)",
+     "recounted": "6 711.4 (21.65 %; 1.314 us per mh_draw)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "mh_disp_us",
+     "stated": "2 342 (7.6 %; 8.7 us a dispatch)",
+     "recounted": "2 342.2 (7.56 %; 8.742 us per mh_disp_n)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "mh_rt / mh_pro / mh_tail",
+     "stated": "798 / 338 / 263",
+     "recounted": "797.6 / 338.4 / 263.4",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "outside = pl_proc - a_hold_us - a_wait_us",
+     "stated": "(the formula of item 2; score 2 754.2)",
+     "recounted": "2 754.2 us (pl_proc 31 612.0, a_hold 28 687.5, a_wait 170.3)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "named outside spans (of them pl_cmd)",
+     "stated": "700 (pl_cmd 564)",
+     "recounted": "699.7 (pl_cmd 564.3; pl_pref 1.1, eop 39.3, bar 11.3, sub 51.8, gc 32.1)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "residue = outside - named",
+     "stated": "2 055 (6.6 %)",
+     "recounted": "2 054.5 (6.63 %); residue_s96 2 350.2",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "draws / dispatches a frame",
+     "stated": "5 129 / 268",
+     "recounted": "5 129.14 / 267.92",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "cost per operation",
+     "stated": "5.74 us",
+     "recounted": "5.7427 us as a ratio of sums (5.714 as the mean of per-row ratios)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "consistency ratios hold/a_hold, emit_split/mh_emit, pl_proc/gw_proc",
+     "stated": "0.997, 0.985, 1.000",
+     "recounted": "0.99667, 0.98515, 0.99998",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "pmemo_hit / pmemo_miss a frame (FrameTrace-x)",
+     "stated": "6 812 / 2 206 (24.5 % of 9 018 accesses)",
+     "recounted": "6 812.3 / 2 206.0 (sum 20 952 588 = 2 206 x 9 498); 24.46 % of 9 018.3; hit = eq_vs + eq_ps exactly (64 703 305); these are draw STAGES, 1.765 per mh_draw",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "pmemo_chk_us",
+     "stated": "433",
+     "recounted": "433.3 (ProgMemoCheckNs, printed as us)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: id_hold_n |a_hold_n - mh_n - mh_disp_n| <= 16",
+     "stated": "ok",
+     "recounted": "0 (per-row -3..+3)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: id_emit_n |pl_em_n - mh_draws| <= 256",
+     "stated": "ok (score -7)",
+     "recounted": "-7 (per-row -48..+50, sd 7.21; cumulative -16..+39)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: proc_n / proc_wall / hold_cover",
+     "stated": "ok",
+     "recounted": "0 (per-row -2..+2) / 0.99998 <= 1.01 / 0.99667 in [0.98, 1.02]",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: armed totals",
+     "stated": "ok",
+     "recounted": "mh_draws 48 525 990, mh_disp_n 2 544 681, pl_proc_n 120 414, pl_em_n 48 525 983, gw_proc_n 120 414 (all > 0)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: pin, wall, gate lines, markers",
+     "stated": "ok",
+     "recounted": "1 line 'GpuClockPin: mode 1' (log line 16265); 1 line 'GpuWall: mode 1' (line 608); exactly 'Gate: mutsite=1 frame=1' and 'Gate: pathlap=1 frame=1' (lines 17805-17806, before 432); 0 check115 markers in the log and stdout (the list is identical to check115.py:78-80)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "admission: binary, installed, prereg sha, gates, env, VK, hold, attempts, idle",
+     "stated": "ok",
+     "recounted": "json and installed exe and sealed copy d3a981a2...; prereg a1ad2697... equals json, SEALS116 and the file now; normalised gates sha 678fed09... (json = gates.req = gates_obs116.txt; only mutsite 0->1 and pathlap=1 appended vs base); KYTY_* env exactly the 9 expected keys (enter_scene strips inherited KYTY_*); VK_SDK_PATH only; hold_s 300 (attempt 300.1, hold_exit null); 1 attempt ok; pre_run gpu_util_median 6.0 <= 10",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "23 admission checks",
+     "stated": "all 23",
+     "recounted": "23/23 hold",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "idle before the chain",
+     "stated": "CPU 4 %, GPU 1 %",
+     "recounted": "go116a.log: idle check cpu=4 gpu=1 (the admission 'idle' uses pre_run 6.0 %)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "T1 ceiling: 'pmemo_miss x miss cost (upper estimate - most of 6.7 ms)'",
+     "stated": "most of mh_prog 6.7 ms",
+     "recounted": "Regression of mh_prog on stages + misses gives a miss premium of 0.287 +- 0.026 us (R2 0.950). With da_take_us added it gives 0.203 +- 0.014 us (R2 0.986). So all 2 206 misses cost 0.45-0.65 ms, 7-10 % of mh_prog. Session 86's progmemo A/B price (-699 us for about 75 % hits) gives about 0.23 ms. Even the most generous attribution (mh_prog minus da_take minus the memo check) is 3 276 us = 49 %",
+     "status": "NOT CONFIRMED"
+    }
+   ],
+   "findings": [
+    {
+     "id": "F1",
+     "severity": "MAJOR",
+     "title": "The T1 ceiling \"most of 6.7 ms\" is contradicted by the code and by this run's own counters",
+     "evidence": "ROADMAP 116 item 6 picks T1 with the ceiling \"потолок ≈ pmemo_miss × цена промаха (оценка сверху — большая часть 6,7 мс)\".\n\n**What the counters count.** pmemo_hit and pmemo_miss are counted per draw STAGE, not per draw (pipelineCache.cpp:4868-4872: +1 for VS, +1 for PS only when pixel_active). They add up to 9 018 a frame, 1.765 per mh_draw. They are printed on the FrameTrace-x lines (videoOut.cpp:1785-1792).\n\n**What a miss executes, per stage:**\n- PrepareProgram (shader.cpp:969 VS: ShaderGetMappedData, GetShaderParams, ShaderGetStaticVertexInputInfo; shader.cpp:1101 PS: ShaderGetStaticInputInfoPS);\n- MemoRecordVertex/Pixel (pipelineCache.cpp:4223-4250; for VS, RecordVertexTables re-reads the attribute and V# tables and validates every resource);\n- under m_mutex, BuildStageStaticKey plus programs.find (pipelineCache.cpp:3494-3511). Session 86 priced this at 73.79 ns against 14.53 ns on a hit.\n\n**What a hit still pays:**\n- the witness check (pmemo_chk_us 433 us);\n- PipelineCache::m_mutex;\n- the rest of ProgramCache::Get: AheadNote/AheadTake (pipelineCache.cpp:3589-3614), MaterializeResources on an ahead miss, and the permutation lookup. In this run da_take_us alone is 3 002 us a frame = 44.7 % of mh_prog, and it is paid on hits and misses alike.\n\n**Per-row regressions on the 9 498 rows:**\n- mh_prog = -713 + 0.753 x stages + 0.287 x misses (R2 0.950);\n- with da_take_us as a regressor, the miss premium is 0.203 +- 0.014 us (R2 0.986).\n\nSo all 2 206 misses cost about 0.45-0.65 ms, 7-10 % of mh_prog. Bucketing the rows by draws gives the same order.\n\n**Session 86's A/B.** It priced the whole progmemo gate at -699 +- 86 us for about 75 % hits (ROADMAP §2 D2). That is about 0.10 us per converted stage, so about 0.23 ms for the 2 206 misses.\n\nThe most generous attribution — all of mh_prog except AheadTake and the memo check — is 3 276 us = 49 %, still not \"most\". The ROADMAP's own earlier records say the same: session 83 noted that the lock and ProgramCache::Get run on every draw regardless of the memo, and session 87 found AheadTake at 63 % of Get.",
+     "fix": "Before session 117 acts on item 6, record a corrected upper bound for T1 in ROADMAP: about 0.45-0.65 ms a frame (this run's regression premium, collinear, VIF about 6) or about 0.23 ms (session 86's price). Record the prediction that the census falls under its own >= 1 ms bar. Then either re-rank the tracks with that bound — the candidates are T2 mh_bind, or AheadTake (da_take_us 3.0 ms, 45 % of mh_prog, paid on every stage) — or keep the T1 census as a cheap check with this predicted outcome written down before it runs."
+    },
+    {
+     "id": "F2",
+     "severity": "MINOR",
+     "title": "The obs116.py rows check is blind to frames missing from all three streams",
+     "evidence": "obs116.py:386-388 builds `ns` only from the n values it actually saw (n >= stable) and sets `missing = len(ns) - len(good)`. A frame whose FrameTrace, FrameTrace-draw and FrameTrace-x lines are all absent is never in `ns`, so it is neither counted as missing nor refused. It would only drop silently out of every sum.\n\nThis run is not affected: my recount finds n = 432..9929 contiguous (9 498 of 9 498).",
+     "fix": "In the next derived scorer, also require set(range(stable, max(ns) + 1)) <= ns, or report the gap count. Add one fixture with a wholly missing middle frame, expected NOT_ADMITTED."
+    },
+    {
+     "id": "F3",
+     "severity": "INFO",
+     "title": "The first 1 000 scene rows are a transient that raises the pre-registered means",
+     "evidence": "Block means by 1 000 rows, first block against the rest:\n- dt_us 35 349 vs 31 215 (rows from 1000 on);\n- cpu_gpu_us 34 614 vs 30 568;\n- mh_prog 7 558 vs 6 612;\n- draws 5 842 vs 5 045;\n- mean bda_scan 276 vs 59. 214 of the first 1 000 rows have bda_scan >= 600 (OLD-sized scans); the NEW label still holds by median (56).\n\nDropping the first 1 000 rows would move the dt mean by -435 us. The report follows the sealed rule (all rows from the stable frame), so this is not a defect.",
+     "fix": "When these levels are compared with another run, say the T1 census, use the same window rule from the stable frame, or print a steady-state mean beside it (for example, rows 1000+)."
+    },
+    {
+     "id": "F4",
+     "severity": "INFO",
+     "title": "Per-row emit skew is wider than the pl96a range used to size the tolerance, but the cumulative drift stays small",
+     "evidence": "pl_em_n - mh_draws per row: sd 7.21, range -48..+50 (pl96a: sd 6.55, range +-33, window sum up to 60). The split is <0 in 44.5 % of rows, =0 in 9.2 %, >0 in 46.3 %. The cumulative sum runs -16..+39 and ends at -7, far inside the tolerance of 256. The hold identity stays within -3..+3 per row and sums to 0.",
+     "fix": "None needed. If the tolerance is ever tightened, re-derive it from this build's log rather than from pl96a."
+    },
+    {
+     "id": "F5",
+     "severity": "INFO",
+     "title": "The misses are mostly vertex-stage misses (derived) — the T1 census should record which witness field differs",
+     "evidence": "pmemo_hit = pmemo_eq_vs + pmemo_eq_ps exactly (pmemo_stale = 0). If each mh_draw makes one VS lookup (5 109.1), then PS lookups are 3 909.2. That gives about 1 831 VS misses (35.8 % of VS lookups) against about 375 PS misses (9.6 %).\n\nThe VS witness (pipelineCache.cpp:4122-4152) includes the attribute and V# table pointer SGPRs (table_regs) and the full ShaderRegisters. Per-object table pointers would make those misses non-repeating, so a multi-entry memo would not recover them.",
+     "fix": "Have the session 117 census record reuse distance per stage and name the first differing witness field. Treat the VS/PS split above as an estimate until the census measures it."
+    },
+    {
+     "id": "F6",
+     "severity": "INFO",
+     "title": "Item 6 quotes phase shares without their denominator or caveat (b)",
+     "evidence": "Item 6 writes \"92,3 %\", \"34,4 %\", \"24,1 %\", \"21,7 %\" and \"6,6 %\" without saying they are wall intervals over cpu_gpu_us (CPU cycle time). Pre-registration §7 forbids presenting a phase share as a CPU share. offcpu is only 656.6 us (2.1 %), so the numbers barely move.",
+     "fix": "Add \"доли — стена фаз к `cpu_gpu_us` (оговорка (b))\" to item 6."
+    },
+    {
+     "id": "F7",
+     "severity": "INFO",
+     "title": "Minor provenance notes: stable frame source, idle samplers, startup C++ exceptions",
+     "evidence": "- obs116.py takes the stable frame from the json instead of recomputing it; my recount from the log gives the same 432.\n- The ROADMAP's \"GPU 1 %\" comes from go116a.log's idle check, while the admission check 'idle' used pre_run gpu_util_median 6.0 %; both pass.\n- stdout_obs116.txt has 16 lines 'Exception: code=0xe06d7363' (MSVC C++ exceptions, tid 38476) at startup. They are not in the check115 marker list and the run continued normally.",
+     "fix": "None required. Optionally print the recomputed stable frame and both idle samples in future score reports."
+    }
+   ]
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:731595e8a4131df04a72c52575fc893529284ffd821f916700699c9c120a84dc",
+  "agentId": "af893c44bf680ae77",
+  "result": {
+   "refuted": false,
+   "severity_if_real": "MAJOR. It sets the direction of session 117: T1 was picked over T2 and AheadTake on a ceiling that the code and this run's counters rule out. The damage is limited by item 6's own bar: the multi-entry memo is built only if the census shows at least 1 ms a frame. No shipped result is affected, only the track ranking and session 117's first step. Downgrading it to MINOR would also be defensible for that reason.",
+   "reasoning": "I could not refute F1. I rechecked the code and recounted every number from C:/kyty/s116/log_obs116.txt myself (binary read, rows with n >= 432 that have all three FrameTrace lines). Scratch files are in C:/kyty/s116/audit116/skeptic_f1/ (rec.py, arr.npy, pc.cpp).\n\n**Recounted numbers: all CONFIRMED**\n- 9 498 rows.\n- pmemo_hit 6 812.31 and pmemo_miss 2 206.00 a frame; 9 018.3 lookups; 1.7652 per mh_draw; miss share 24.46 %.\n- pmemo_chk_us 433.29.\n- da_take_us 3 002.48 a frame, which is 44.74 % of mh_prog (6 711.42).\n- Model 1: mh_prog = -712.7 + 0.7530 x stages + 0.2872 (+-0.026) x misses, R2 0.9498.\n- Model 2, adding da_take: miss premium 0.2030 +- 0.0138, R2 0.9859.\n- Collinearity between stages and misses: correlation 0.9145, VIF 6.11.\n- The most generous attribution, mh_prog minus da_take minus chk, is 3 275.7 us = 48.8 %.\n- Session 86's price: 699 / (0.75 x 9 122.7) = 0.102 us per converted stage, times 2 206 = 0.225 ms.\n- Session 86 text also CONFIRMED: K_miss 73.79 ns, K_hit 14.53 ns, and -699.0 +- 86.3 us for progmemo=1.\n- Session 83 wrote that the lock and ProgramCache::Get run on every draw regardless of the memo. CONFIRMED.\n\n**Code: CONFIRMED**\n- Source is unchanged since 7c73f26: `git diff 7c73f26 HEAD -- src` is empty.\n- pipelineCache.cpp:4868-4872 counts per stage (VS +1, PS +1 only when pixel_active). videoOut.cpp:1785-1792 prints the counters.\n- A memo hit skips only PrepareProgram (shader.cpp:969 and :1102; the finding says 1101), MemoRecord (4222-4250), and BuildStageStaticKey plus programs.find (3489-3511).\n- AheadNote/AheadTake (3589-3614) and MaterializeResources are gated on `entry != end` and the stage, not on key_hit, so hits pay them too.\n- The pipeline memo at 5283-5288 does not depend on a stage hit, so a miss adds nothing outside mh_prog.\n\n**Why \"most of 6.7 ms\" cannot hold**\nMost of 6.7 ms spread over 2 206 misses means at least 1.52 us a miss. The whole of mh_prog averages 0.744 us a lookup. Even charging misses with everything hits do not provably pay gives 3.28 ms, which is 48.8 %, still below half.\n\nSession 86's own split is tighter still. Everything before the lock (pg_pre, 1 541 us) plus key and find (pg_key, 255 us) came to about 30 % of mh_prog.\n\nWithin-bucket checks agree:\n- Slopes of mh_prog on misses inside stage buckets are noisy and small; their weighted mean is 0.08 us.\n- Draw buckets likewise stay mostly well under 1.5 us a miss (-0.70 to 0.41), except one noisy 121-row bucket at 2.0.\n\n**Minor imprecisions in F1 (none change the conclusion)**\n- PS PrepareProgram is at shader.cpp:1102, not 1101.\n- Session 87's 63.1 % is AheadTake's share of the Get block without key and find. pg_ahead / pg_get is 59.5 %.\n\n**Caveat on F1's prediction**\nThe ceiling correction is solid; the prediction that the census falls under 1 ms is less certain. The mis-specified model with mh_draws instead of stages gives 0.69 us a miss, 1.53 ms if every miss were caught. That model is wrong for per-stage counters, and even 1.53 ms is not \"most of 6.7 ms\". The fix should record the bound as roughly 0.2-0.65 ms, with at most about 2 ms from session 86's pre-lock plus key split."
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:5eacdfc0ec63ded1d1983007ebc6eca3d5cfe7c081c763765090a932bc3d021e",
+  "agentId": "af0d1ba33fefd64dd",
+  "result": {
+   "summary": "Protocol audit of session 116. Verdict: the protocol HOLDS for sealed chain obs116, with one MAJOR on item 5's record.\n\nOrdering is confirmed for every item. Each ROADMAP item 1-6 was committed before the action it governs. Times are from git, file mtimes and the main transcript, which is in UTC+2.\n- Item 1 (16:50:55): V41_GO created 16:51:01, workflow launched 16:51:25, harness ported 16:51:35.\n- Item 2 (17:22:12): pre-seal check agent launched 17:22:28.\n- Item 3 (17:35:24): amendment instruction sent 17:35:37.\n- Item 4 (17:55:56): instruction to drop id_emit_med sent 17:56:01, edits 17:56:20-17:57:13.\n- Seal 0e1013c (18:00:43), then post-seal mutants 18:00:51-18:01:46, then e3041bd (18:01:57), then go116a (19:08:10).\n- Item 5 (19:07:53): V41_GO removed by the same command, after the commit; go116a started 19:08:10.\n- Item 6 (19:15:20): after the chain ended at 19:14:19.\n\nSeal integrity: all 12 seal hashes plus the post-seal tally match the files now. The archive copies in docs/session-116 are byte-identical to the harness copies.\n\nNo heavy job overlapped the chain (19:08:10-19:14:19):\n- The last write under C:/kyty/s106_stage/mutlib was at 19:06:24.99. The v4.1 workflow's last agent finished at 19:07:18. The stray s114 directory was deleted at 19:05:51.\n- Nothing under C:/kyty outside the chain's own files changed during the window, and the main session was idle.\n- The unrelated Claude session last wrote its transcript at 18:51:24. The foreign game is absent from the 19:08:50 process and GPU-app lists.\n- procload ran strict (0.50 CPU s/s, no total cap) and came back clean twice, plus once more at 19:07:57. Idle check: CPU 4 %, GPU 1 %.\n\nItem 6's track choice (T1) is consistent with the scorer's rule that the report carries no speed verdict. It is a plan: a census with no behaviour change, a bar of 1 ms or more, then a knob defaulting to 0 with ABBA. It makes no speed claim. Caveats are in finding F5.\n\nItem 5 is supported by WORKFLOW_RESULT.txt and ACCEPTANCE_V41.md on sha, selection, equality and review verdicts. The decision to stop mutlib speed work is recorded.\n- Its premise \"ABBA seal ≈ 20 min\" is not measured for the only permitted mode (full run with --no-memo). ACCEPTANCE_V41 says so itself. The 20.3 min figure is a memo-on, warm run on the earlier build 6118aef5.\n- Item 1 (г) required a full --no-memo timing. It was dropped from the workflow script without a record.\n\nPrivacy: no e-mail and no .claude or AppData paths in committed session-116 files; WORKFLOW_RESULT.txt is clean. Minor notes are in findings F8 and F9.\n\nScratch scripts are in C:/kyty/s116/audit116/protocol/.",
+   "recounts": [
+    {
+     "item": "Item 1 committed before its actions",
+     "stated": "9687fd2 16:50:55, recorded before action",
+     "recounted": "V41_GO touch 16:51:01, Workflow wf launch 16:51:25, harness port files 16:51:35 (all after commit)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 2 committed before the pre-seal check",
+     "stated": "710e12c 17:22:12, before sealing",
+     "recounted": "check agent launched 17:22:28; check_obs116/roadmap116.txt 17:23:01",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 3 committed before amendments",
+     "stated": "296d92c 17:35:24, 'записано до правок'",
+     "recounted": "check result 17:34:42; SendMessage to author 17:35:37; go116a.sh rewritten 17:43:49",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 4 committed before removing id_emit_med",
+     "stated": "d8308f1 17:55:56, 'записано до правки'",
+     "recounted": "SendMessage 17:56:01; obs116.py edit 17:56:20, final mtimes 17:56:27-17:57:13",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Amendments of items 3-4 implemented before sealing",
+     "stated": "tolerances 16 / 256, no id_emit_med, cross-checks, prereg sha, noclobber, old/ move, VK_* only VK_SDK_PATH",
+     "recounted": "sealed obs116.py: ID_HOLD_TOL=16, ID_EMIT_TOL=256, PROC_N_TOL=16, VK_ALLOWED=('VK_SDK_PATH',), no id_emit_med; go116a.sh has noclobber + old/ move; last edit 17:57:13 < seal 18:00:43",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Seal 0e1013c and post-seal mutants e3041bd before go116a",
+     "stated": "seal 18:00:43, mutants 18:01:57, chain 19:08:10",
+     "recounted": "mutlib work dir stamp 1790352051 = 18:00:51 (after seal commit); out.txt 18:01:46; go116a requested 19:08:10",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Seal hashes vs files now (SEALS116.txt)",
+     "stated": "12 sealed files + post-seal tally c6d0d74d",
+     "recounted": "all 13 sha256 recomputed equal; archive copies byte-identical",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Post-seal mutants",
+     "stated": "145/145, controls 3/3, mutlib v4 b666df35, --control --no-memo --workers 2, 55 s",
+     "recounted": "out.txt header shows the v4 sha and the sealed hashes; 145 killed, 0 survived; controls 3 of 3; wall 55.1 s; replay OFF",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5 committed before V41_GO removal and go116a",
+     "stated": "ceec841 19:07:53; 'V41_GO снимается; дальше go116a'",
+     "recounted": "one command: commit, then rm -f V41_GO (17:07:52Z); go116a 19:08:10; V41_GO absent now",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "No heavy job overlapped the sealed chain 19:08:10-19:14:19",
+     "stated": "workflow finished before; nothing else on the machine",
+     "recounted": "last s106_stage/mutlib write 19:06:24.99; review agent done 19:07:18; accept41 last 18:38:49; no other C:/kyty writes in the window; main session idle; other Claude session last wrote 18:51:24; no game-Y in the 19:08:50 lists",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "procload strict in the chain",
+     "stated": "timing-seal defaults 0.5 CPU s/s, no total cap",
+     "recounted": "go116a.log: 'procload: clean (no process above 0.50 CPU s/s, total cap None)' twice, plus one extra run at 19:07:57",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Idle before the run",
+     "stated": "CPU 4 %, GPU 1 %",
+     "recounted": "go116a.log idle check cpu=4 gpu=1; obs116.json pre_run gpu_util_median 6.0 (≤ 10)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Admission and scene",
+     "stated": "ADMITTED, all 23 checks; 9 498 rows from frame 432; 300.6 s; BDA NEW median 56",
+     "recounted": "score.json: 23 True; scene_rows 9498, stable_frame 432, span 300.612606 s, missing 0, dup 0; bda median 56",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 6 levels vs sealed report",
+     "stated": "dt 31 650; cpu_gpu 30 994; hold 28 592 = 92.3 %; bind 10 662/34.4 %/2.09; emit 7 477/24.1 %/1.46; prog 6 711/21.7 %/1.31; disp 2 342/7.6 %/8.7; named 700 (cmd 564); residue 2 055/6.6 %; 5.74 µs/op; 0.997/0.985/1.000; speed 52.7 %",
+     "recounted": "obs116.score.txt gives exactly these values after rounding; 16667/31650.1 = 52.66 %",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 6 program-memo counters (outside the sealed report)",
+     "stated": "pmemo_hit 6 812, pmemo_miss 2 206 (24.5 % of 9 018), pmemo_chk_us 433",
+     "recounted": "raw log FrameTrace-x, 9 498 rows from n=432: 6812.3 / 2206.0 / 0.2446 of 9018.3 / 433.3",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 2 draft state",
+     "stated": "test_obs116.py 193 lines, mutants 113/113 on the draft",
+     "recounted": "draft agent's report at 17:21:48 local (193 fixture lines, 113/113)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5: v4.1 sha and frozen copy",
+     "stated": "db82ef4b…, frozen in docs/session-116/mutlib_v41",
+     "recounted": "sha256 of both the stage file and the frozen copy is db82ef4bcf05…",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5: ttl114b selection",
+     "stated": "185 of 345 (12 + 133 + 40), 185/185 equal to the full report",
+     "recounted": "accept41/out/heavy41.log: 12 + 133 + 0 + 0 + 40 = 185; PASS 185 equal; controls 3/3",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5: selected --no-memo time",
+     "stated": "1 081 s = 18.0 min",
+     "recounted": "h1_nomemo elapsed 1081.2 s; foreign game game-Y at 2.55 CPU s/s at gate time (not stated in item 5)",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5: memo timings",
+     "stated": "15.2 min cold, 10.5 min hot",
+     "recounted": "910.7 s (builder; WORKFLOW_RESULT calls its cache 'warm') and 632.4 s",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Item 5: 'полный v4 — 20,3 мин' used as the ABBA seal cost (≈ 20 min)",
+     "stated": "ABBA seal ≈ 20 min in the permitted mode (full, --no-memo)",
+     "recounted": "ACCEPTANCE_V4: 1 220 s full run was warm memo on build 6118aef5; ACCEPTANCE_V41: full --no-memo 'not measured'",
+     "status": "NOT CONFIRMED"
+    },
+    {
+     "item": "Item 1 (г): --no-memo timing on ttl114b, full and selected",
+     "stated": "to be measured by the v4.1 workflow",
+     "recounted": "workflow script (d) became 'keep every v4 guarantee'; acceptance timed the selected run only; the full --no-memo run was never made",
+     "status": "NOT CONFIRMED"
+    },
+    {
+     "item": "Item 5: review probes",
+     "stated": "MAJOR-1 twocmp plus 6 more probes give a false ALL KILLED",
+     "recounted": "review6 table: 7 probes give ALL KILLED with --sample 0 while full and oldstyle report survivors",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Decision to stop mutlib speed work recorded",
+     "stated": "item 5: 'Ускорение mutlib на этом останавливается'",
+     "recounted": "present in ROADMAP line 2060-2061, committed 19:07:53 before any further action",
+     "status": "CONFIRMED"
+    },
+    {
+     "item": "Privacy of committed session-116 files",
+     "stated": "no e-mail, no paths outside C:/kyty and the game folder",
+     "recounted": "no e-mail and no .claude/AppData paths; WORKFLOW_RESULT.txt paths all C:/kyty; test_obs116.py has C:\\VulkanSDK\\1.4.357.0 and C:\\VulkanSDK\\Bin",
+     "status": "NOT CONFIRMED"
+    }
+   ],
+   "findings": [
+    {
+     "id": "F1",
+     "severity": "MAJOR",
+     "title": "Item 5's premise 'ABBA seal ≈ 20 min' is unmeasured for the only permitted mode; item 1 (г) full --no-memo timing silently dropped",
+     "evidence": "ROADMAP 2003 (item 1 (г)): 'замер --no-memo на ttl114b полный и выборочный'. The v4.1 workflow script (transcript 16:51:25) turned (d) into 'keep every v4 guarantee'. Acceptance timed only the selected run (18.0 min, --no-memo). ACCEPTANCE_V41.md line 93-94 says a full --no-memo run of all 345 mutants was 'not measured; the full v4 run with the memo took 20.3 min'. ACCEPTANCE_V4 line 118 shows that 1 220 s was warm memo on the earlier build 6118aef5. Item 5 (ROADMAP 2058-2061) nevertheless adopts 'full runs, --control --no-memo' and states 'ABBA-печать ≈ 20 мин (было ~70) — практический уровень' as the reason to stop speed work. The v4.1 full mode was exercised only on small suites (check112 24, check115 104), not on an ABBA-size suite. Precedent: v3 net112 --no-memo took 33.6 min against 21.1 min with the memo (ACCEPTANCE_V4 line 119).",
+     "fix": "Add a ROADMAP correction item: the full --no-memo cost of an ABBA-size seal under v4.1 is not measured, and 20.3 min is memo-on warm on 6118aef5. Before the next ABBA seal, time one full ttl114b (or net112) run with v4.1 --control --no-memo on a clean machine and quote that number. Record that item 1 (г) 'полный' was not executed."
+    },
+    {
+     "id": "F2",
+     "severity": "MINOR",
+     "title": "ROADMAP never records seal 01 obs116 or its post-seal mutant tally, though the pre-registration makes that a sealing condition",
+     "evidence": "pred/01_obs116.md §header: 'It becomes immutable when it is hashed in SEALS116.txt … after the mutants ran … and after ROADMAP records the seal'. The ROADMAP diff 76851b4..HEAD has no mention of 0e1013c, e3041bd, a1ad2697 or 145/145; item 5 only says 'дальше — запечатанный go116a'. Session 115 did record it (item 6: 'Печать 01 запечатана (c5cb874), мутанты 104/104 (3cb0786)'). Git history does fix the seal before the run (18:00:43 < 19:08:10), so tamper evidence is intact.",
+     "fix": "Add a line to item 6 or a new item: seal 01 = 0e1013c (pred sha a1ad2697…, scorer 9f3683c0…, build d3a981a2…), post-seal mutants e3041bd 145/145, controls 3/3, mutlib v4 b666df35."
+    },
+    {
+     "id": "F3",
+     "severity": "MINOR",
+     "title": "Item 5 omits residual risks of the adopted full-run mode and the review agent's write outside its sandbox",
+     "evidence": "WORKFLOW_RESULT review MINOR-5: hand-copying a file mode (os.chmod(dst, os.stat(src)[0])) bypasses the copy2 refusal. A replay artefact is then confirmed as a crash kill, giving 'ALL KILLED' with exit 0 while oldstyle says SURVIVED. Replay is on in full runs too (heavy41.log 'REPLAY ON'), so this affects the mode item 5 keeps. Item 5 lists only MAJOR-1 and MINOR-1/2. Also recorded in WORKFLOW_RESULT but not in ROADMAP: the reviewer ran the legacy harness of C:/kyty/s114/mut_ttl114b_sealed.py via runpy (about 2.5 min, one core) and wrote 456 files under C:/kyty/s114/ttl114b_draft/ttl114b/ (created 19:02:57), then deleted them (directory mtime 19:05:51). Verified now: SEALS114.txt is 66/66 equal and no other s114 file changed after 16:50. The breach ended before the chain.",
+     "fix": "Record both in ROADMAP. For sealed full runs either pass --no-replay or implement the MINOR-5 fix (confirm an out-of-scorer crash with replay and memo off, UNRESOLVED otherwise). Add a note that workflow agents must not import mutant scripts without a __main__ guard."
+    },
+    {
+     "id": "F4",
+     "severity": "MINOR",
+     "title": "Item 5 cites mutlib timings taken under foreign load without the caveat",
+     "evidence": "accept41/out/heavy41.log: at h1_nomemo the gate saw 'game-Y(53004) 2.55' CPU s/s (CPU total 3.02); at h2_memo 2.70 (total 3.18); ACCEPTANCE_V41 says 'The timings below include that load'. The builder's 910.7-s (15.2 min) run (about 17:41:46-17:56:57) overlapped the obs116 author's single-process draft mutant loop (17:48:46 to about 17:55). The builder calls that run 'warm cache', while item 5 says 'холодный'. Item 5 quotes 18.0 / 15.2 / 10.5 min with no caveat. The next-session rule is 'never two heavy jobs at once'; the overlap was not heavy by the gate's own definition.",
+     "fix": "Append to item 5: 'timings with a foreign game at 0.9-2.7 CPU s/s (h1/h2) and a concurrent single-process job (builder run); the 15.2 min is a first memo run with fixture entries cold'."
+    },
+    {
+     "id": "F5",
+     "severity": "MINOR",
+     "title": "Item 6's track choice leans on unsealed numbers and an unnamed rule, and shows phase shares without the wall-over-CPU caveat",
+     "evidence": "The pmemo_* figures (6 812 / 2 206 / 9 018 / 433 µs) are not in obs116's sealed report. They come from an ad hoc scan the main session ran at 19:14:51, one minute before item 6 was written. My recount of the raw log confirms them. Pred §1 and item 1 say the track is chosen 'by the rule of ROADMAP §2/§5', but §2/§5 contain no operational track-selection rule. T1 (21.7 %) was picked over the larger T2 (34.4 %) by judgment. Pred §7 forbids claiming a phase share is a CPU share; item 6 prints '28 592 мкс = 92,3 %', '34,4 %' etc. right after cpu_gpu without saying the shares are wall time over CPU time. Otherwise item 6 is consistent with the 'no speed verdict' rule: it is a plan (census without behaviour change, bar ≥ 1 ms, knob default 0 + ABBA) and claims no speed effect.",
+     "fix": "In next-session-117 (before the census): mark the pmemo figures as read outside seal 01 (recounted: CONFIRMED), state the shares as wall/CPU, and write the explicit T1-over-T2 criterion (ceiling per phase, what M1/M2 already closed) as the rule step (3) applied."
+    },
+    {
+     "id": "F6",
+     "severity": "INFO",
+     "title": "Sealed documents still label themselves DRAFT / NOT SEALED; the chain logs only 7 of the 11 sealed file hashes",
+     "evidence": "pred/01_obs116.md: '**DRAFT — NOT SEALED …** … Nothing below has run'. obs116.py docstring: 'DRAFT, NOT SEALED'. test_obs116.py and mut_obs116.py: 'DRAFT, not sealed'. go116a.sh header: 'DRAFT seal'. Session 115 retitled its pred as 'Sealed pre-registration … Immutable once written'. go116a.log 'files:' covers obs116/test/mut/gates_obs116/enter_scene/procload/pred only; go116a.sh, gates_base.txt and run_safety99.py (imported at 19:08:46) are not checked at run time. All of them match SEALS116 now.",
+     "fix": "Before hashing a seal, replace the DRAFT banners with the sealed banner. In future chains, check the whole SEALS file (sha256sum -c) before the run."
+    },
+    {
+     "id": "F7",
+     "severity": "INFO",
+     "title": "No in-run foreign-load monitoring; the absence of overlap rests on pre-run checks and circumstantial evidence",
+     "evidence": "go116a.sh checks load only before the lock and after it (procload twice, CPU/GPU idle). Nothing samples per-process CPU during the 300-s hold. The user's /loop note (18:02) warned that an unrelated Claude Code session may spawn python processes, and a foreign game ran until at least 18:37:48. The evidence found is consistent with a clean window: the other session's transcript last write was 18:51:24; no game-Y in the pre_run top/GPU lists at 19:08:50; no file writes outside the chain; main session idle.",
+     "fix": "Have enter_scene.py or the chain take a second procload-style snapshot at hold end and record the top per-process CPU rates in <tag>.json; refuse or flag if any foreign process exceeds 0.5 CPU s/s over the hold."
+    },
+    {
+     "id": "F8",
+     "severity": "INFO",
+     "title": "Privacy: one system path outside C:/kyty and the game folder; the user's foreign game is named",
+     "evidence": "No e-mail, and no .claude, AppData or Temp paths, in any session-116 committed file. The main session's grep for '.claude|<name>.<surname>' ran at freeze time. WORKFLOW_RESULT.txt paths are all C:/kyty/…. test_obs116.py (committed in docs/session-116/tools) has VK_SDK_PATH fixture values C:\\VulkanSDK\\1.4.357.0 and C:\\VulkanSDK\\Bin: a non-personal SDK path, but outside the allowed set (it also appears in project CLAUDE.md). ACCEPTANCE_V41.md and WORKFLOW_RESULT.txt name the user's game 'game-Y'; session 115's amendment did the same with 'game-X'. The game folder path C:/Users/<user>/OneDrive/Desktop/ps5 em in go116a.sh, obs116.py and test_obs116.py is allowed.",
+     "fix": "Before any push, replace the game title with 'a foreign process', and optionally use a neutral VK_SDK_PATH value in the fixtures."
+    },
+    {
+     "id": "F9",
+     "severity": "INFO",
+     "title": "Frozen v4.1 copy lacks README.md, unlike the v3 and v4 frozen copies",
+     "evidence": "git ls-files docs/session-115/mutlib_v4 includes README.md (and mutlib_v3/README.md); docs/session-116/mutlib_v41 has only mutlib.py, ACCEPTANCE_V41.md and WORKFLOW_RESULT.txt. The v4.1 README section (the rule, how suites are compared, the limits) is only in C:/kyty/s106_stage/mutlib/README.md (17:57:58).",
+     "fix": "Freeze C:/kyty/s106_stage/mutlib/README.md into docs/session-116/mutlib_v41/ at session close, with its sha in the commit message."
+    }
+   ]
+  }
+ },
+ {
+  "type": "result",
+  "key": "v2:d4a01d6dc0551de565ae495e67ccee2bb492565b7f0d2c8ec9e0b4862b12c154",
+  "agentId": "afd61312e98f76307",
+  "result": {
+   "refuted": false,
+   "severity_if_real": "MAJOR",
+   "reasoning": "I could not refute the finding. I checked every claim against the files, and the finding if anything understates the problem.\n\n1. Item 1 (г) required both timings. ROADMAP.md lines 2001-2002 say \"(г) замер `--no-memo` на `ttl114b` полный и выборочный\". The finding cites line 2003, which is only the next line; that slip is harmless. `next-session-116.md:29` also says \"(d) timings with --no-memo on ttl114b (full and selected)\". CONFIRMED.\n\n2. The workflow dropped the full timing. `audit116/protocol/workflow_v41_script.js` shows the build's (d) became \"keep every v4 guarantee\". Its acceptance asks for only two ttl114b runs: item 1 is the selected run with `--no-memo`, and item 2 is the same run with the memo on. There is no full `--no-memo` run. The workflow started at 14:51:25Z, which is 16:51:25 local time. No ROADMAP item records this change, although item 1 of the session-115 rules requires \"каждое изменение запущенного воркфлоу — сначала в ROADMAP\". CONFIRMED.\n\n3. No full `--no-memo` ttl114b run exists anywhere.\n   - `accept41/out/heavy/` has only `h1_nomemo`, `h2_memo` and a dry run, all of the 185 selected mutants.\n   - `v41check/out/heavy/` has only `ttl114b_sel`.\n   - The only full ttl114b run is `v4check/out/heavy/b1_6118aef5/full_warm`. Its header shows mutlib sha 6118aef5 and the memo on (read_run memo, dep hash 02ba6baa…). Wall 1 220.1 s, worker time 30 258 s.\n   - `ACCEPTANCE_V41.md` lines 93-94 say \"(not measured; the full v4 run with the memo took 20.3 min)\".\n   - `ACCEPTANCE_V4.md` lines 37 and 118 say \"1 220 s (20.3 min, build 6118aef5, warm)\".\n   \n   CONFIRMED.\n\n4. Item 5 rests on the unmeasured number.\n   - ROADMAP lines 2053 and 2058-2061 allow only full runs with `--control --no-memo` and say memo caches stay off on sealed copies.\n   - The same item states \"ABBA-печать ≈ 20 мин (было ~70) — практический уровень\" and stops speed work on that basis.\n   - Line 2053 puts \"полный v4 — 20,3 мин\" next to the `--no-memo` number, so a memo-on warm figure reads as if it were the permitted mode.\n   - Commit ceec841 repeats \"~20 min per ABBA seal\".\n   \n   CONFIRMED.\n\n5. My own estimate says the real cost is about twice 20 min.\n   - I matched job times for the 185 mutants that appear in both reports: `h1_nomemo` (v4.1, `--no-memo`) against `full_warm` (v4, memo on).\n   - `--no-memo` jobs take 2.49× as long in total (median ratio per mutant 2.70). The baselines agree: 685 s against 298 s.\n   - I scaled the other 160 mutants from `full_warm` by the same factor. That gives about 71 300 s of mutant time. Adding baselines and controls (3 224 s) gives about 74 500 s of worker time. Over 28 workers that is at least about 2 660 s, roughly 44 min of wall.\n   - Correcting for the ×1.14 hot-memo difference between the two runs (a game was loading the machine during the v4.1 runs) still leaves about 39 min.\n   \n   So a ttl114b-size seal in the permitted mode probably takes about 40-45 min, not about 20. Stopping speed work at \"practical level\" rests on a number that is wrong by roughly half.\n\n6. Precedent and suite sizes.\n   - The v3 net112 `--no-memo` run took 2 016.7 s (33.6 min); `ACCEPTANCE_V4.md` line 119. CONFIRMED.\n   - The finding's \"21.1 min with the memo\" is actually v2's warm run. v3 with the memo took 1 298-1 526 s (21.6-25.4 min). This is a minor misattribution and does not change the point.\n   - v4.1 full runs were exercised only on check112 (24 rows) and check115 (104 rows); `ACCEPTANCE_V41.md` item 4. The obs116 mutants were run with frozen v4, not v4.1. CONFIRMED.\n\nThe fix stands as proposed. Add a ROADMAP correction saying three things:\n- The ≈20 min figure is v4 with the memo on, warm, on build 6118aef5, and does not apply to the permitted mode.\n- The full `--no-memo` cost under v4.1 is not measured; this estimate is about 40-45 min.\n- Item 1 (г) \"полный\" was not carried out.\n\nBefore the next ABBA seal, time one full ttl114b (or net112) run under v4.1 with `--control --no-memo` on an idle machine, then revisit the decision to stop speed work. MAJOR fits: this is not a measurement-correctness defect, but a pre-registered step was silently dropped and a program decision rests on the wrong mode's number."
+  }
+ }
+]

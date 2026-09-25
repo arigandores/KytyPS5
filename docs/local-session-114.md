@@ -92,6 +92,6 @@ independent check.
 ## 6. Next
 
 `docs/next-session-115.md`: (1) the presentation record ring ownership (preferred: no main-thread present in
-`WindowPrepareShaders`), a new boot seal with controls before the fix (`KYTY_RECORD_THREAD=0` PASS path, defaults ⇒
-`:326`), then re-ship `titleasync=1` with a video; (2) `mutlib` v3 (item 16); (3) review F2 debts; (4) the next speed
-track by the rule.
+`WindowPrepareShaders`), a new boot seal with controls, then re-ship `titleasync=1` with a video; (2) `mutlib` v3 —
+its acceptance had not finished at the close (item 16), the verdict moves to session 115; (3) review F2 debts; (4) the
+next speed track by the rule.

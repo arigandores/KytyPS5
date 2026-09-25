@@ -1,0 +1,6 @@
+procload: busy [('Telegram', 23572, 0.576)]
+procload: busy [('python', 12940, 0.982), ('python', 36096, 0.972)]
+procload: busy [('python', 12940, 0.998), ('python', 36096, 0.998)]
+procload: clean (no process above 0.50 CPU s/s)
+procload: busy [('python', 13140, 0.999), ('python', 45036, 0.985)]
+[14:18:26] a process became busy - not starting

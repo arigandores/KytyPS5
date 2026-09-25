@@ -1,0 +1,24 @@
+spn117 tag spn117  scorer ab5d5996846faf06  build 3cde1af8ed1af960
+  binary           ok
+  installed_now    ok
+  pinned           ok
+  env_exact        ok
+  env_vk           ok
+  hold             ok
+  one_ok_attempt   ok
+  prereg           ok
+  prereg_sha       ok
+  gates_exact      ok
+  gate_lines       ok
+  arms             ok
+  spine_logged     ok
+  no_marker        ok
+  blocks           ok
+  armed            ok
+  el_ops           ok
+  idle             ok
+K5 PASS: every x line after 1800: spine_bad=0, spine_misal=0, cram_write=0, SpineMismatch/Misalign lines 0; complete frames (7184): spine_bad=0, spine_misal=0, spine_pad=0, spine_lost=0, spine_abort=0, spine_cmp=19107669, spine_el=38145991, spine_n=57472, cram_write=0; cmp_ratio (arm 1 kept) 1.0001 (bar 90 %)
+K1 PASS: spine 608.0 us a frame (arm 0 kept; bar 1200); walker need 3207.2 us vs the frame without the spine 32917.2 us (dt 33525.1) -> walker_fit True
+  arm 0 (spine=1): 3120 kept frames in 39 blocks; dt_us=33525.14, cpu_gpu_us=32211.88, draws=5042.29, dispatches=267.96, da_walk_us=2599.16, spine_n=8.00, spine_ns=607989.54, spine_pk=26192.03, spine_el=5309.37, spine_ib=0.00, spine_cf_br=0.00, spine_cf_cond=0.00, spine_cf_pred=0.00, spine_cf_predw=0.00, spine_cf_ind=14.00, spine_abort=0.00, spine_cmp=0.01, spine_bad=0.00, spine_misal=0.00, spine_pad=0.00, spine_lost=0.00, spine_chk_ns=1.56, cram_write=0.00, spine_us=607.99, spine_chk_us=0.00, el_over_ops=1.00, pk_per_plan=3275.84
+  arm 1 (spine=2): 3200 kept frames in 40 blocks; dt_us=35124.28, cpu_gpu_us=33711.29, draws=5041.79, dispatches=268.00, da_walk_us=2665.69, spine_n=8.00, spine_ns=795208.75, spine_pk=26192.65, spine_el=5309.21, spine_ib=0.00, spine_cf_br=0.00, spine_cf_cond=0.00, spine_cf_pred=0.00, spine_cf_predw=0.00, spine_cf_ind=14.00, spine_abort=0.00, spine_cmp=5309.80, spine_bad=0.00, spine_misal=0.00, spine_pad=0.00, spine_lost=0.00, spine_chk_ns=897851.19, cram_write=0.00, spine_us=795.21, spine_chk_us=897.85, el_over_ops=1.00, pk_per_plan=3274.21
+VERDICT: ADMITTED  CONSEQUENCE: PART2

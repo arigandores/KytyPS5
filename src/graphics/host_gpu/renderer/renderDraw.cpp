@@ -1118,13 +1118,15 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	EXIT_IF(state.width == 0 || state.height == 0 || state.num_layers == 0 ||
 	        state.width == std::numeric_limits<uint32_t>::max() ||
 	        state.height == std::numeric_limits<uint32_t>::max());
-	// Gate "slicecen" (session 118): the targets this draw writes.
+	// Gate "slicecen" (session 118): the targets this draw uses; the depth/stencil target is a write only when the draw
+	// writes it (item 4).
 	if (Common::Gates::Enabled(Common::Gates::Gate::SliceCensus)) {
 		for (uint32_t i = 0; i < color_count; i++) {
-			SliceCensus::Image(colors[i].image_id.index, true);
+			SliceCensus::Image(SliceCensus::ImageKey(colors[i].image_id.index, colors[i].image_id.generation), true);
 		}
 		if (depth.image_id) {
-			SliceCensus::Image(depth.image_id.index, true);
+			SliceCensus::Image(SliceCensus::ImageKey(depth.image_id.index, depth.image_id.generation),
+			                   static_cast<bool>(depth.AttachmentWriteAspects()));
 		}
 	}
 	return state;

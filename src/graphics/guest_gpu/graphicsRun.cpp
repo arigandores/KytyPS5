@@ -1544,7 +1544,7 @@ void PassBegin() {
 	s.starts.push_back(s.el - 1);
 }
 
-void Image(uint32_t image_index, bool write) {
+void Image(uint32_t image_key, bool write) {
 	if (!Armed()) {
 		return;
 	}
@@ -1552,7 +1552,7 @@ void Image(uint32_t image_index, bool write) {
 	if (s.el == 0) {
 		return;
 	}
-	s.images.push_back((uint64_t {s.el - 1} << 33u) | (uint64_t {image_index} << 1u) | (write ? 1u : 0u));
+	s.images.push_back((uint64_t {s.el - 1} << 33u) | (uint64_t {image_key} << 1u) | (write ? 1u : 0u));
 }
 
 } // namespace SliceCensus

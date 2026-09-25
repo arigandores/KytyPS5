@@ -14,7 +14,12 @@ namespace Libs::Graphics::SliceCensus {
 
 void Element(int frame);
 void PassBegin();
-void Image(uint32_t image_index, bool write);
+// image_key: the slot index mixed with its generation (ImageKey), so a slot reused within a frame is two images.
+void Image(uint32_t image_key, bool write);
+
+[[nodiscard]] inline uint32_t ImageKey(uint32_t index, uint32_t generation) {
+	return index ^ (generation * 0x9e3779b1u);
+}
 
 } // namespace Libs::Graphics::SliceCensus
 

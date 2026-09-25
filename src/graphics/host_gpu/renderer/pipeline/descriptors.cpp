@@ -2519,10 +2519,14 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			          program.info.images[i].atomic);
 		}
 	}
-	// Gate "slicecen" (session 118): every image this stage touches, written when bound as storage.
+	// Gate "slicecen" (session 118): every image this stage touches, written when bound as storage; a null descriptor
+	// binds the shared null image, which is no dependency (item 4).
 	if (Common::Gates::Enabled(Common::Gates::Gate::SliceCensus)) {
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
-			SliceCensus::Image(images[i].image_id.index,
+			if (DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]).IsNull()) {
+				continue;
+			}
+			SliceCensus::Image(SliceCensus::ImageKey(images[i].image_id.index, images[i].image_id.generation),
 			                   images[i].desc.type == TextureCache::BindingType::Storage);
 		}
 	}

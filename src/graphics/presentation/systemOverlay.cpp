@@ -31,8 +31,11 @@ namespace Libs::Graphics {
 namespace {
 
 std::atomic<bool> g_shader_preparation {false};
-uint32_t g_shader_completed = 0;
-uint32_t g_shader_total = 0;
+// Session 115 (audit C-10): written by the main thread, read by the present thread that renders the overlay.
+std::atomic<uint32_t> g_shader_completed {0};
+std::atomic<uint32_t> g_shader_total {0};
+std::atomic<uint64_t> g_prep_presents_main {0};
+std::atomic<uint64_t> g_prep_presents_other {0};
 
 namespace CoreIme   = Libs::Ime;
 namespace DialogIme = Libs::Dialog::ImeDialog;
@@ -474,9 +477,18 @@ SystemOverlayVisualState GetSystemOverlayVisualState() noexcept {
 }
 
 void SetShaderPreparationOverlay(bool active, uint32_t completed, uint32_t total) {
-	g_shader_completed = completed;
-	g_shader_total = total;
+	g_shader_completed.store(completed, std::memory_order_relaxed);
+	g_shader_total.store(total, std::memory_order_relaxed);
 	g_shader_preparation.store(active);
+}
+
+void NoteShaderPreparationPresent(bool main_thread) noexcept {
+	(main_thread ? g_prep_presents_main : g_prep_presents_other).fetch_add(1, std::memory_order_relaxed);
+}
+
+void ShaderPreparationPresents(uint64_t& main_thread, uint64_t& other) noexcept {
+	main_thread = g_prep_presents_main.load(std::memory_order_relaxed);
+	other       = g_prep_presents_other.load(std::memory_order_relaxed);
 }
 
 bool ShaderPreparationOverlayActive() noexcept {
@@ -979,11 +991,13 @@ struct SystemOverlay::Impl {
 			    ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings);
 			ImGui::TextUnformatted("Preparing shaders");
 			ImGui::TextWrapped("Preparing this game for smoother playback. The game will start automatically.");
-			if (g_shader_total != 0) {
-				const auto completed = std::min(g_shader_completed, g_shader_total);
+			const uint32_t shader_total = g_shader_total.load(std::memory_order_relaxed);
+			if (shader_total != 0) {
+				const auto completed = std::min(g_shader_completed.load(std::memory_order_relaxed), shader_total);
 				char label[64];
-				snprintf(label, sizeof(label), "%u / %u", completed, g_shader_total);
-				ImGui::ProgressBar(static_cast<float>(completed) / g_shader_total, {-1, 26.0f * scale}, label);
+				snprintf(label, sizeof(label), "%u / %u", completed, shader_total);
+				ImGui::ProgressBar(static_cast<float>(completed) / static_cast<float>(shader_total), {-1, 26.0f * scale},
+				                   label);
 			} else {
 				ImGui::TextDisabled("Reading saved shaders...");
 			}

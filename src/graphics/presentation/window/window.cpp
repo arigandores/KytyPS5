@@ -974,6 +974,16 @@ bool WindowPrepareShaders() {
 	if (hold_ms != 0) {
 		LOGF("PrepareHold: ms=%llu\n", static_cast<unsigned long long>(hold_ms));
 	}
+	// Session 115 (ROADMAP item 1): the VideoOut present thread presents the preparation overlay (the overlay makes
+	// NeedsSystemOverlayRefresh true), so the presentation record ring keeps one producer.  KYTY_PREPARE_MAIN_PRESENT=1
+	// (MEASUREMENT ONLY, read once) restores the old main-thread present - the positive control of the ring owner check.
+	static const bool main_present = [] {
+		const char* value = std::getenv("KYTY_PREPARE_MAIN_PRESENT");
+		return value != nullptr && value[0] == '1' && value[1] == '\0';
+	}();
+	if (main_present) {
+		LOGF("PrepareMainPresent: mode 1\n");
+	}
 	uint64_t last_log = 0;
 	while (true) {
 		const auto status = cache.GetPreparationStatus();
@@ -993,9 +1003,11 @@ bool WindowPrepareShaders() {
 			}
 		}
 		SetShaderPreparationOverlay(true, status.completed, status.total);
-		auto& frame = g_window->presenter->PrepareBlankFrame(
-		    g_window->graphic_ctx.screen_width, g_window->graphic_ctx.screen_height, true);
-		g_window->presenter->Present(frame);
+		if (main_present) {
+			auto& frame = g_window->presenter->PrepareBlankFrame(
+			    g_window->graphic_ctx.screen_width, g_window->graphic_ctx.screen_height, true);
+			g_window->presenter->Present(frame);
+		}
 		const auto now = SDL_GetTicks64();
 		if (last_log == 0 || now - last_log >= 1000) {
 			LOGF("ShaderPreparation: progress %u/%u skipped=%u elapsed_ms=%" PRIu64 "\n",
@@ -1007,7 +1019,12 @@ bool WindowPrepareShaders() {
 	// This joins the producer, not just the currently queued jobs (the queue can temporarily empty).
 	cache.FinishPreparation();
 	SetShaderPreparationOverlay(false);
-	LOGF("ShaderPreparation: startup wait finished in %" PRIu64 " ms\n", SDL_GetTicks64() - started);
+	uint64_t presents_main  = 0;
+	uint64_t presents_other = 0;
+	ShaderPreparationPresents(presents_main, presents_other);
+	LOGF("ShaderPreparation: startup wait finished in %" PRIu64 " ms presents_other=%" PRIu64 " presents_main=%" PRIu64
+	     "\n",
+	     SDL_GetTicks64() - started, presents_other, presents_main);
 	return true;
 }
 
@@ -1155,10 +1172,11 @@ void WindowContext::UpdateTitle() {
 		LOGF("MainStallTest: queued frame=%llu ms=%u\n", static_cast<unsigned long long>(frame_num), ms);
 		PostToMainThread([ms] { std::this_thread::sleep_for(std::chrono::milliseconds(ms)); });
 	}
-	// Session 114 (ROADMAP item 4, review C1): the async path only once the SDL main loop runs - before WindowRun the
-	// waiting path parks the present thread, which keeps it out of Present while WindowPrepareShaders presents.
+	// Session 115 (ROADMAP item 1): before the SDL main loop runs the title is always posted - the main thread no longer
+	// presents during WindowPrepareShaders, so nothing needs the present thread parked, and a parked present thread
+	// could not present the preparation overlay.  Once the loop runs, the knob decides (session 114).
 	const bool loop_running = main_loop_running.load(std::memory_order_acquire);
-	const bool title_async  = loop_running && Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
+	const bool title_async  = !loop_running || Common::Gates::Value(Common::Gates::Knob::TitleAsync) != 0;
 	const auto title_t0    = Common::FrameStats::NowNs();
 	if (title_async) {
 		bool post = false;

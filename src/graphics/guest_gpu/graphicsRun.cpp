@@ -948,6 +948,7 @@ bool GuestGpu::Process(Submission& submission) {
 
 	if (first_slice && submission.reset_processor) {
 		cp.Reset();
+		cp.SpineNoteReset(); // knob "spine", term C (session 118 item 3): the carried shadow sees the same reset
 	}
 
 	// Session 96, knob "bdaevery"=1: the synchronisation term at SUBMISSION granularity
@@ -1555,6 +1556,14 @@ void Image(uint32_t image_index, bool write) {
 }
 
 } // namespace SliceCensus
+
+// Term C (ROADMAP 118 item 3): a submission-level reset (GuestGpu::Process, `reset_processor`) is known from the
+// submission's metadata, so a spine that carries state would apply it too.
+void CommandProcessor::SpineNoteReset() {
+	if (m_spine != nullptr) {
+		m_spine->Reset();
+	}
+}
 
 // The processor's own draw registers. m_num_instances is left out on purpose: indirect draws rewrite it from
 // GPU-written arguments, which the spine cannot read ahead.

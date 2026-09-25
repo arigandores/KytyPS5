@@ -188,6 +188,12 @@ private:
 	void SpineCheck(Pm4Execution& execution, uint32_t opcode);
 	void SpineFinish(Pm4Execution& execution);
 	void SpineRegs(uint64_t* out) const;
+
+public:
+	// Session 118, term C: a submission-level reset applied to the shadow processor too.
+	void SpineNoteReset();
+
+private:
 	// KYTY_ASYNC_COMPUTE: walks the submission ahead of execution with a shadow copy of the compute
 	// state and queues the driver compile of every compute pipeline it will need.
 	void PrefetchComputePipelines(const Pm4Execution& execution);

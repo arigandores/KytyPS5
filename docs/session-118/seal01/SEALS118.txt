@@ -1,0 +1,15 @@
+# SEALS118 - session 118 seals and post-seal tallies
+# seal 01 spk118 (ROADMAP 118 items 1-4; 2026-09-25T23:04; build 321175ab, git 7bc87cd)
+fe65225a7220a59ef8c97a57d322578ea024a607cd8a6fbe2083d6fe37443a1a *pred/01_spk118.md
+6fa60aad002e01cfd5e41afd41cf408f9a6c5b929a42ceae464407dfa4cf6dc9 *spk118.py
+e6b39edbeac22a865d8b14a8b0fda4e4b7447df92455ee80930ffe0e0fc38ff9 *test_spk118.py
+5aa75c0f4bf576f8ef12a01c978d0f9889f7c715d0f71f74179009cef95c1d3b *mut_spk118.py
+5258407cad55a7a9f016c7e481155deb485824d3dd124a498fb0aaa19a100ece *go118a.sh
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf *gates_base.txt
+d9e7a777404f1aa98eb8e221d2d9b1af0e393b292d91997fade08fae685ce5c0 *procload.py
+4c6036ae1b346d30614d8ef1f374cc808df3d6b088822ead3890c44a278df38f *enter_scene.py
+e383aed377af4aec4cc1b716f71d3af7ec9002188abb59a4ab60bc794bdc5180 *launch_run.py
+77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
+321175ab43ebba1664b03d307cb09e61782505a4f9628196c2f089414babcf76 *kyty_emulator_321175ab.exe
+db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde */c/kyty/KytyPS5/docs/session-116/mutlib_v41/mutlib.py
+post-seal (mutlib v4.1 frozen docs/session-116/mutlib_v41 db82ef4b, sealed spk118 01, --control --no-memo, 28 workers, 125/125, controls 3/3, wall 44.0 s): 6df4798e82a2adb298960a666efeb179904f0cafe78c5f9d3eaa9ea20cc20d85 *mut_spk118.out.txt

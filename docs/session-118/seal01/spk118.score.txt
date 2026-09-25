@@ -1,0 +1,29 @@
+spk118 tag spk118  scorer 6fa60aad002e01cf  build 321175ab43ebba16
+  binary           ok
+  installed_now    ok
+  pinned           ok
+  env_exact        ok
+  env_vk           ok
+  hold             ok
+  one_ok_attempt   ok
+  prereg           ok
+  prereg_sha       ok
+  gates_exact      ok
+  gate_lines       ok
+  arms             ok
+  spine_logged     ok
+  no_marker        ok
+  blocks           ok
+  armed            ok
+  el_ops           ok
+  idle             ok
+K5 PASS  C PASS  safe True: raw spine_bad=0, spine_misal=0, cram_write=0, carry_bad=0, mismatch/misalign lines 0, carry lines 0; plans 25904, with a predecessor 25904
+  carry_skip 0.0 % of plans (report only)
+K3 median largest-run share 0.1622 over 3239 frames -> W_MAX 8
+K4 W=2 PASS: dep median 47 p90 48 permille (bar 300) over 3229 frames; any median 259; fmax median 555
+  W=2 above the bar 0.0 % of 3229 frames; block medians 0:47 3:48 4:47 7:47 8:47 11:46 12:46 15:48 16:48 19:47 20:48 23:31 24:31 27:32 28:32 31:47 32:48 35:47 36:48 39:47 40:48 43:48 44:48 47:48 48:48 51:47 52:48 55:48 56:47 59:32 60:32 63:32 64:32 67:47 68:48 71:47 72:47 75:48 76:47 79:47 80:47 (report only)
+K4 W=4 FAIL: dep median 325 p90 325 permille (bar 300) over 3008 frames; any median 742; fmax median 300
+  W=4 above the bar 75.1 % of 3008 frames; block medians 0:325 3:325 4:325 7:325 8:325 11:325 12:325 15:325 16:325 19:325 20:325 23:90 24:90 27:90 28:90 31:325 32:325 35:325 36:325 39:325 40:325 43:325 44:325 47:325 48:325 51:325 52:325 55:325 56:325 59:90 60:90 63:90 64:90 67:325 68:325 71:325 72:325 75:325 76:325 79:325 80:325 (report only)
+  arm 0: 3239 kept frames in 41 blocks; dt_us=35974.9, cpu_gpu_us=35466.5, draws=5040.9, dispatches=267.9, bda_scan=69.6, da_take_us=3003.8, spine_n=8.0, spine_ns=958833.7, spine_el=5308.9, spine_abort=0.0, spine_cmp=5308.8, spine_bad=0.0, spine_misal=0.0, spine_unc=0.0, carry_cmp=8.0, carry_bad=0.0, carry_skip=0.0, cram_write=0.0, sc_frames=1.0, sc_el=5310.5, sc_runs=192.1, k3_max=851.7, k4_w2_n=1.0, k4_w2_any=258.3, k4_w2_dep=43.9, k4_w2_fmax=554.4, k4_w4_n=1.0, k4_w4_any=741.7, k4_w4_dep=269.3, k4_w4_fmax=297.2, k4_nocut=0.0, sc_ns=2433870.7, da_t_n=0.0, da_t_key_us=0.0, da_t_prb_us=0.0, da_t_pfa_us=0.0, da_t_pfb_us=0.0, da_t_ver_us=0.0, da_t_cpy_us=0.0, bl_stage_n=0.0, bl_prep_us=0.0, bl_img_us=0.0, bl_buf_us=0.0, bl_res_us=0.0, bl_smp_us=0.0, bl_sd_us=0.0, bl_tr_us=0.0, bl_wr_us=0.0, bl_em_us=0.0, mh_pro_us=0.0, mh_rt_us=0.0, mh_prog_us=0.0, mh_bind_us=0.0, mh_emit_us=0.0, mh_tail_us=0.0, mh_disp_us=0.0, mh_draws=0.0, pl_em_vtx_ns=0.0, pl_em_rt_ns=0.0, pl_em_pipe_ns=0.0, pl_em_com_ns=0.0, pl_em_rec_ns=0.0, pl_em_rest_ns=0.0, pl_em_n=0.0
+  arm 1: 3160 kept frames in 40 blocks; dt_us=32007.9, cpu_gpu_us=31289.4, draws=5043.2, dispatches=268.0, bda_scan=57.6, da_take_us=3039.1, spine_n=0.0, spine_ns=0.0, spine_el=0.0, spine_abort=0.0, spine_cmp=0.0, spine_bad=0.0, spine_misal=0.0, spine_unc=0.0, carry_cmp=0.0, carry_bad=0.0, carry_skip=0.0, cram_write=0.0, sc_frames=0.0, sc_el=0.0, sc_runs=0.0, k3_max=0.0, k4_w2_n=0.0, k4_w2_any=0.0, k4_w2_dep=0.0, k4_w2_fmax=0.0, k4_w4_n=0.0, k4_w4_any=0.0, k4_w4_dep=0.0, k4_w4_fmax=0.0, k4_nocut=0.0, sc_ns=0.0, da_t_n=8705.6, da_t_key_us=125.4, da_t_prb_us=197.9, da_t_pfa_us=653.4, da_t_pfb_us=301.7, da_t_ver_us=1211.2, da_t_cpy_us=462.0, bl_stage_n=9129.4, bl_prep_us=4235.0, bl_img_us=1094.7, bl_buf_us=3868.1, bl_res_us=3213.4, bl_smp_us=364.6, bl_sd_us=400.8, bl_tr_us=966.5, bl_wr_us=659.0, bl_em_us=479.7, mh_pro_us=347.5, mh_rt_us=811.6, mh_prog_us=6661.8, mh_bind_us=10968.5, mh_emit_us=7425.9, mh_tail_us=231.2, mh_disp_us=2359.3, mh_draws=5023.2, pl_em_vtx_ns=1363346.4, pl_em_rt_ns=1565446.0, pl_em_pipe_ns=745124.9, pl_em_com_ns=2375641.4, pl_em_rec_ns=1225642.3, pl_em_rest_ns=45252.0, pl_em_n=5023.2
+VERDICT: ADMITTED  CONSEQUENCE: W2_CEILING

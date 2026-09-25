@@ -44,3 +44,15 @@ f8a22554cdae6ce3c37bbf67031bf107fef1b11065a5ff021abf12ea0b2b543b *go114c.sh
 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c */c/kyty/scripts/s51_vidglitch.py
 post-seal (mutlib v2 frozen copy, sealed ttl114b, mut_ttl114b_sealed.py, --control --no-memo): 3dcd19994d660222a1cb636dda6189272efa63c90611b30267c39c89777db02f *mut_ttl114b.out.txt
 post-seal (mutlib v2 frozen copy, sealed ttl114b, mut_ttl114b_sealed.py, --control --no-memo): 0d16ab9fbdb5a55ea7060abe3ddacb9f61712e3717af657d4be4c913d7cd7806 *mut_ttl114b.stderr.txt
+# seal 03 vid114+boot114 (ROADMAP 114 items 9-12, 2026-09-25T06:12)
+a0de2b483c527f8c6e6684ff533bd4a973887ef9eff1d7bc97b4ef2eae844bd0 *pred/03_vid114.md
+4c3d1875f8e5ca53acd84879aca11f0185306aada2195be5bc943ed8441832e4 *check114.py
+f45103d99e163f910714b5a68355143d4621db7df1b962f9036902a0838e2b5b *test_check114.py
+3ec96c3a89f9d5cafa809b2f9511cd54bc46c6944c639233c5131c62a538cf4b *mut_check114.py
+719fff1d8360068cf101a43c8161a7cb10a5d6a3d93f02c9f2d95e5d7f6e83c0 *make_check114.py
+5d1c5ff47f1b4246adc94aa8cc749d78cb4373e9c02b5cc970cd828e66b938ef *go114d.sh
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf *gates_base.txt
+2a5b1d6c51616c02c49d486da5859415a05914397d12f325306e96dddaad33c5 *enter_scene.py
+77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
+8d7ba8f4ae995a3da10670a095670acf0c46450675f7b61137714eb7975956ec *kyty_emulator_8d7ba8f4.exe
+6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c */c/kyty/scripts/s51_vidglitch.py

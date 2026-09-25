@@ -1,0 +1,827 @@
+{
+ "scorer_sha256": "9f3683c0bc356f62ebeacd9c4efbb59f64463789ea1b13d921030a089c964177",
+ "build_sha256": "d3a981a23fc1c5df651eef2a93ff1f02a8bffd04416adea2fd5cd2218e290f64",
+ "tag": "obs116",
+ "checks": {
+  "binary": true,
+  "installed_now": true,
+  "pinned": true,
+  "env_exact": true,
+  "env_vk": true,
+  "hold": true,
+  "one_ok_attempt": true,
+  "prereg": true,
+  "prereg_sha": true,
+  "gates_exact": true,
+  "gate_mutsite": true,
+  "gate_pathlap": true,
+  "gate_lines": true,
+  "wall_logged": true,
+  "no_marker": true,
+  "rows": true,
+  "armed": true,
+  "id_hold_n": true,
+  "id_emit_n": true,
+  "proc_n": true,
+  "proc_wall": true,
+  "hold_cover": true,
+  "idle": true
+ },
+ "stable_frame": 432,
+ "scene_rows": 9498,
+ "missing_rows": 0,
+ "dup_rows": 0,
+ "markers": [],
+ "pins": [
+  1
+ ],
+ "gate_lines": [
+  "Gate: mutsite=1 frame=1",
+  "Gate: pathlap=1 frame=1"
+ ],
+ "walls": [
+  "GpuWall: mode 1"
+ ],
+ "vk_env": [
+  "VK_SDK_PATH"
+ ],
+ "totals": {
+  "mh_n": 48716598,
+  "mh_draws": 48525990,
+  "mh_disp_n": 2544681,
+  "a_hold_n": 51261279,
+  "mh_pres_n": 18996,
+  "pl_proc_n": 120414,
+  "pl_pref_n": 76454,
+  "pl_eop_n": 3505773,
+  "pl_bar_n": 10675478,
+  "pl_sub_n": 5128494,
+  "pl_gc_n": 76454,
+  "pl_cmd_n": 250819755,
+  "pl_look_n": 76455,
+  "pl_em_n": 48525983,
+  "gw_idle_n": 9497,
+  "gw_blk_n": 7,
+  "gw_flip_n": 9498,
+  "gw_proc_n": 120414,
+  "gw_cmd_n": 145,
+  "flip_rsv_wait_n": 0
+ },
+ "raw_totals": {
+  "pl_proc_ns": 300251046648,
+  "gw_proc_ns": 300257036663,
+  "a_hold_us": 272473945,
+  "mh_pro_us": 3214115,
+  "mh_rt_us": 7575414,
+  "mh_prog_us": 63745035,
+  "mh_bind_us": 101268675,
+  "mh_emit_us": 71016457,
+  "mh_tail_us": 2501352,
+  "mh_disp_us": 22246651
+ },
+ "prereg_sha256": "a1ad2697248e8bf0c46a4ebce7bb63fe5b789089d6219816fc4bab3e91497d87",
+ "pred_sha256_now": "a1ad2697248e8bf0c46a4ebce7bb63fe5b789089d6219816fc4bab3e91497d87",
+ "report": {
+  "n_rows": 9498,
+  "stable_frame": 432,
+  "span_s": 300.612606,
+  "fields": {
+   "dt_us": {
+    "unit": "us",
+    "mean": 31650.095388502843,
+    "sum": 300612606.0,
+    "median": 33259.0,
+    "share_cpu": 1.0211838769002026,
+    "per_op": 5.864320415215491
+   },
+   "cpu_gpu_us": {
+    "unit": "us",
+    "mean": 30993.532217308908,
+    "sum": 294376569.0,
+    "median": 32653.0,
+    "share_cpu": 1.0,
+    "per_op": 5.742668434030313
+   },
+   "gpu_busy_us": {
+    "unit": "us",
+    "mean": 12931.311223415456,
+    "sum": 122821594.0,
+    "median": 12998.5,
+    "share_cpu": 0.4172261210096514,
+    "per_op": 2.3959912749750365
+   },
+   "mh_pro_us": {
+    "unit": "us",
+    "mean": 338.39913666034954,
+    "sum": 3214115.0,
+    "median": 352.0,
+    "share_cpu": 0.010918379173038055,
+    "per_op": 0.06270063142777962,
+    "per_unit": 0.06623491864874885,
+    "unit_pop": "mh_draws"
+   },
+   "mh_rt_us": {
+    "unit": "us",
+    "mean": 797.5799115603285,
+    "sum": 7575414.0,
+    "median": 837.0,
+    "share_cpu": 0.025733753286593948,
+    "per_op": 0.14778041268804687,
+    "per_unit": 0.15611044720571388,
+    "unit_pop": "mh_draws"
+   },
+   "mh_prog_us": {
+    "unit": "us",
+    "mean": 6711.416614024005,
+    "sum": 63745035.0,
+    "median": 7078.0,
+    "share_cpu": 0.21654248915442723,
+    "per_op": 1.2435317170934805,
+    "per_unit": 1.3136266771682557,
+    "unit_pop": "mh_draws"
+   },
+   "mh_bind_us": {
+    "unit": "us",
+    "mean": 10662.105180037903,
+    "sum": 101268675.0,
+    "median": 11316.0,
+    "share_cpu": 0.34401065052157737,
+    "per_op": 1.975539103720496,
+    "per_unit": 2.0868955996570087,
+    "unit_pop": "mh_draws"
+   },
+   "mh_emit_us": {
+    "unit": "us",
+    "mean": 7476.990629606233,
+    "sum": 71016457.0,
+    "median": 7861.0,
+    "share_cpu": 0.2412435787306156,
+    "per_op": 1.3853818844888128,
+    "per_unit": 1.4634726050926523,
+    "unit_pop": "mh_draws"
+   },
+   "mh_tail_us": {
+    "unit": "us",
+    "mean": 263.35565382185723,
+    "sum": 2501352.0,
+    "median": 220.0,
+    "share_cpu": 0.008497116494349793,
+    "per_op": 0.04879612267238087,
+    "per_unit": 0.05134496460528709,
+    "unit_pop": "mh_n"
+   },
+   "mh_disp_us": {
+    "unit": "us",
+    "mean": 2342.2458412297324,
+    "sum": 22246651.0,
+    "median": 2249.0,
+    "share_cpu": 0.07557208467906289,
+    "per_op": 0.4339854251803203,
+    "per_unit": 8.742412506714986,
+    "unit_pop": "mh_disp_n"
+   },
+   "hold": {
+    "unit": "us",
+    "mean": 28592.092966940407,
+    "sum": 271567699.0,
+    "median": 30111.0,
+    "share_cpu": 0.9225180520396649,
+    "per_op": 5.297715297271317
+   },
+   "a_hold_us": {
+    "unit": "us",
+    "mean": 28687.507369972627,
+    "sum": 272473945.0,
+    "median": 30211.0,
+    "share_cpu": 0.9255965783064752,
+    "per_op": 5.315394252887062,
+    "per_unit": 5.315394978732388,
+    "unit_pop": "a_hold_n"
+   },
+   "a_wait_us": {
+    "unit": "us",
+    "mean": 170.2723731311855,
+    "sum": 1617247.0,
+    "median": 156.0,
+    "share_cpu": 0.005493803414768381,
+    "per_op": 0.031549091452758325,
+    "per_unit": 0.03154909576095438,
+    "unit_pop": "a_hold_n"
+   },
+   "mh_pres_us": {
+    "unit": "us",
+    "mean": 125.42135186355021,
+    "sum": 1191252.0,
+    "median": 113.0,
+    "share_cpu": 0.0040466943549437185,
+    "per_op": 0.02323882393430395,
+    "per_unit": 62.71067593177511,
+    "unit_pop": "mh_pres_n"
+   },
+   "mh_pres_wait_us": {
+    "unit": "us",
+    "mean": 68.65476942514213,
+    "sum": 652083.0,
+    "median": 32.0,
+    "share_cpu": 0.0022151321425313577,
+    "per_op": 0.012720769432120763,
+    "per_unit": 34.32738471257107,
+    "unit_pop": "mh_pres_n"
+   },
+   "pl_em_vtx": {
+    "unit": "us",
+    "mean": 1402.9681096020215,
+    "sum": 13325391.105,
+    "median": null,
+    "share_cpu": 0.04526648010834042,
+    "per_op": 0.2599503864378276,
+    "per_unit": 0.27460321834181084,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_em_rt": {
+    "unit": "us",
+    "mean": 1599.9478777637398,
+    "sum": 15196304.943,
+    "median": null,
+    "share_cpu": 0.051621992180362695,
+    "per_op": 0.2964479849959285,
+    "per_unit": 0.31315810630770735,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_em_pipe": {
+    "unit": "us",
+    "mean": 762.1243940829648,
+    "sum": 7238657.495,
+    "median": null,
+    "share_cpu": 0.02458978824160424,
+    "per_op": 0.14121100073455045,
+    "per_unit": 0.14917075445952327,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_em_com": {
+    "unit": "us",
+    "mean": 2274.8527284691513,
+    "sum": 21606551.215,
+    "median": null,
+    "share_cpu": 0.07339765963166722,
+    "per_op": 0.4214984230984763,
+    "per_unit": 0.4452573627411113,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_em_rec": {
+    "unit": "us",
+    "mean": 1279.5821066540323,
+    "sum": 12153470.849,
+    "median": null,
+    "share_cpu": 0.0412854558713197,
+    "per_op": 0.2370886842167791,
+    "per_unit": 0.2504528522173368,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_em_rest": {
+    "unit": "us",
+    "mean": 46.50768698673405,
+    "sum": 441730.011,
+    "median": null,
+    "share_cpu": 0.0015005610415956712,
+    "per_op": 0.008617224526907108,
+    "per_unit": 0.009102958532545337,
+    "unit_pop": "pl_em_n"
+   },
+   "emit_split": {
+    "unit": "us",
+    "mean": 7365.982903558644,
+    "sum": 69962105.618,
+    "median": null,
+    "share_cpu": 0.23766193707488995,
+    "per_op": 1.364813704010469,
+    "per_unit": 1.441745252600035,
+    "unit_pop": "pl_em_n"
+   },
+   "pl_proc": {
+    "unit": "us",
+    "mean": 31612.028495262162,
+    "sum": 300251046.648,
+    "median": null,
+    "share_cpu": 1.0199556563484506,
+    "per_op": 5.857267151822918,
+    "per_unit": 2493.489516567841,
+    "unit_pop": "pl_proc_n"
+   },
+   "pl_pref": {
+    "unit": "us",
+    "mean": 1.0671044430406402,
+    "sum": 10135.358,
+    "median": null,
+    "share_cpu": 3.4429907361275076e-05,
+    "per_op": 0.00019771954219018227,
+    "per_unit": 0.13256805399325083,
+    "unit_pop": "pl_pref_n"
+   },
+   "pl_eop": {
+    "unit": "us",
+    "mean": 39.2535058959781,
+    "sum": 372829.799,
+    "median": null,
+    "share_cpu": 0.0012665063672238125,
+    "per_op": 0.007273126136554592,
+    "per_unit": 0.10634738729518425,
+    "unit_pop": "pl_eop_n"
+   },
+   "pl_bar": {
+    "unit": "us",
+    "mean": 11.260680880185301,
+    "sum": 106953.947,
+    "median": null,
+    "share_cpu": 0.0003633235734872635,
+    "per_op": 0.002086446816804401,
+    "per_unit": 0.010018656494819249,
+    "unit_pop": "pl_bar_n"
+   },
+   "pl_sub": {
+    "unit": "us",
+    "mean": 51.7679156664561,
+    "sum": 491691.663,
+    "median": null,
+    "share_cpu": 0.0016702812478258079,
+    "per_op": 0.009591871397842028,
+    "per_unit": 0.09587447367589784,
+    "unit_pop": "pl_sub_n"
+   },
+   "pl_gc": {
+    "unit": "us",
+    "mean": 32.09423352284692,
+    "sum": 304831.03,
+    "median": null,
+    "share_cpu": 0.0010355139032821598,
+    "per_op": 0.0059466130053779775,
+    "per_unit": 3.987116828419704,
+    "unit_pop": "pl_gc_n"
+   },
+   "pl_cmd": {
+    "unit": "us",
+    "mean": 564.2560324278795,
+    "sum": 5359303.796,
+    "median": null,
+    "share_cpu": 0.01820560588162844,
+    "per_op": 0.10454875821882424,
+    "per_unit": 0.02136715186568937,
+    "unit_pop": "pl_cmd_n"
+   },
+   "named": {
+    "unit": "us",
+    "mean": 699.6994728363867,
+    "sum": 6645745.593,
+    "median": null,
+    "share_cpu": 0.02257566088080876,
+    "per_op": 0.12964453511759344
+   },
+   "outside": {
+    "unit": "us",
+    "mean": 2754.248752158349,
+    "sum": 26159854.648,
+    "median": null,
+    "share_cpu": 0.08886527462720716,
+    "per_op": 0.5103238074830975
+   },
+   "residue": {
+    "unit": "us",
+    "mean": 2054.5492793219623,
+    "sum": 19514109.055,
+    "median": null,
+    "share_cpu": 0.06628961374639841,
+    "per_op": 0.38067927236550403
+   },
+   "residue_noflip": {
+    "unit": "us",
+    "mean": 2054.0873029058753,
+    "sum": 19509721.203,
+    "median": null,
+    "share_cpu": 0.06627470817149174,
+    "per_op": 0.38059367459099647
+   },
+   "residue_s96": {
+    "unit": "us",
+    "mean": 2350.2430043166983,
+    "sum": 22322608.055,
+    "median": null,
+    "share_cpu": 0.07583011151611051,
+    "per_op": 0.4354671877525663
+   },
+   "attributed": {
+    "unit": "us",
+    "mean": 29462.064812907982,
+    "sum": 279830691.593,
+    "median": null,
+    "share_cpu": 0.950587516335242,
+    "per_op": 5.458908923841669
+   },
+   "remainder": {
+    "unit": "us",
+    "mean": 1531.4674044009264,
+    "sum": 14545877.407,
+    "median": null,
+    "share_cpu": 0.04941248366475798,
+    "per_op": 0.2837595101886441
+   },
+   "pl_look": {
+    "unit": "us",
+    "mean": 11.227570751737208,
+    "sum": 106639.467,
+    "median": null,
+    "share_cpu": 0.00036225528194127433,
+    "per_op": 0.0020803119726649074,
+    "per_unit": 1.394800431626447,
+    "unit_pop": "pl_look_n"
+   },
+   "gw_idle": {
+    "unit": "us",
+    "mean": 27.61505316908823,
+    "sum": 262287.775,
+    "median": null,
+    "share_cpu": 0.00089099406209874,
+    "per_op": 0.005116683475322879,
+    "per_unit": 27.61796093503212,
+    "unit_pop": "gw_idle_n"
+   },
+   "gw_blk": {
+    "unit": "us",
+    "mean": 0.21403642872183617,
+    "sum": 2032.9180000000001,
+    "median": null,
+    "share_cpu": 6.905841748566613e-06,
+    "per_op": 3.965795941990219e-05,
+    "per_unit": 290.41685714285717,
+    "unit_pop": "gw_blk_n"
+   },
+   "gw_proc": {
+    "unit": "us",
+    "mean": 31612.659155927562,
+    "sum": 300257036.663,
+    "median": null,
+    "share_cpu": 1.019976004486281,
+    "per_op": 5.857384004431727,
+    "per_unit": 2493.5392617386683,
+    "unit_pop": "gw_proc_n"
+   },
+   "gw_cmd": {
+    "unit": "us",
+    "mean": 0.11518593388081702,
+    "sum": 1094.036,
+    "median": null,
+    "share_cpu": 3.716450679877311e-06,
+    "per_op": 2.1342344005961927e-05,
+    "per_unit": 7.545075862068966,
+    "unit_pop": "gw_cmd_n"
+   },
+   "gw_flip": {
+    "unit": "us",
+    "mean": 0.4619764160875974,
+    "sum": 4387.852,
+    "median": null,
+    "share_cpu": 1.4905574906676761e-05,
+    "per_op": 8.559777450764696e-05,
+    "per_unit": 0.4619764160875974,
+    "unit_pop": "gw_flip_n"
+   },
+   "thread_unwalled": {
+    "unit": "us",
+    "mean": 9.49195704358811,
+    "sum": 90154.60799999988,
+    "median": null,
+    "share_cpu": 0.000306256059394455,
+    "per_op": 0.0017587270050150492
+   },
+   "offcpu": {
+    "unit": "us",
+    "mean": 656.5631711939355,
+    "sum": 6236037.0,
+    "median": 451.0,
+    "share_cpu": 0.02118387690020261,
+    "per_op": 0.12165198118517745
+   },
+   "offcpu_unexplained": {
+    "unit": "us",
+    "mean": 628.2721051800379,
+    "sum": 5967328.455,
+    "median": null,
+    "share_cpu": 0.020271071421448628,
+    "per_op": 0.11641004197592703
+   },
+   "flip_rsv_wait": {
+    "unit": "us",
+    "mean": 0.0,
+    "sum": 0.0,
+    "median": null,
+    "share_cpu": 0.0,
+    "per_op": 0.0,
+    "per_unit": null,
+    "unit_pop": "flip_rsv_wait_n"
+   },
+   "semwait_gpu_us": {
+    "unit": "us",
+    "mean": 0.1702463676563487,
+    "sum": 1617.0,
+    "median": null,
+    "share_cpu": 5.492964353423115e-06,
+    "per_op": 3.154427300165665e-05
+   },
+   "prio_us": {
+    "unit": "us",
+    "mean": 0.0,
+    "sum": 0.0,
+    "median": null,
+    "share_cpu": 0.0,
+    "per_op": 0.0,
+    "per_unit": 0.0,
+    "unit_pop": "prios"
+   },
+   "draws": {
+    "unit": "count",
+    "mean": 5129.143503895557,
+    "sum": 48716605.0,
+    "median": 5352.0
+   },
+   "dispatches": {
+    "unit": "count",
+    "mean": 267.9175615919141,
+    "sum": 2544681.0,
+    "median": 268.0
+   },
+   "ops": {
+    "unit": "count",
+    "mean": 5397.061065487471,
+    "sum": 51261286.0,
+    "median": 5624.0
+   },
+   "cpu_per_op": {
+    "unit": "us/op",
+    "mean": 5.714420298899165,
+    "sum": 54275.563998944264,
+    "median": 5.752533030381699,
+    "sum_ratio": 5.742668434030313
+   },
+   "bda_scan": {
+    "unit": "count",
+    "mean": 81.99115603284902,
+    "sum": 778752.0,
+    "median": 56.0
+   },
+   "prios": {
+    "unit": "count",
+    "mean": 19.37239418825016,
+    "sum": 183999.0,
+    "median": 19.0
+   },
+   "mh_n": {
+    "unit": "count",
+    "mean": 5129.142766898294,
+    "sum": 48716598.0,
+    "median": 5349.0
+   },
+   "mh_draws": {
+    "unit": "count",
+    "mean": 5109.074542008844,
+    "sum": 48525990.0,
+    "median": 5329.0
+   },
+   "mh_disp_n": {
+    "unit": "count",
+    "mean": 267.9175615919141,
+    "sum": 2544681.0,
+    "median": 268.0
+   },
+   "a_hold_n": {
+    "unit": "count",
+    "mean": 5397.060328490208,
+    "sum": 51261279.0,
+    "median": 5623.0
+   },
+   "mh_pres_n": {
+    "unit": "count",
+    "mean": 2.0,
+    "sum": 18996.0,
+    "median": 2.0
+   },
+   "pl_proc_n": {
+    "unit": "count",
+    "mean": 12.677826910928616,
+    "sum": 120414.0,
+    "median": 13.0
+   },
+   "pl_pref_n": {
+    "unit": "count",
+    "mean": 8.049484101916192,
+    "sum": 76454.0,
+    "median": 8.0
+   },
+   "pl_eop_n": {
+    "unit": "count",
+    "mean": 369.10644346178145,
+    "sum": 3505773.0,
+    "median": 369.0
+   },
+   "pl_bar_n": {
+    "unit": "count",
+    "mean": 1123.971151821436,
+    "sum": 10675478.0,
+    "median": 1123.0
+   },
+   "pl_sub_n": {
+    "unit": "count",
+    "mean": 539.9551484523057,
+    "sum": 5128494.0,
+    "median": 540.0
+   },
+   "pl_gc_n": {
+    "unit": "count",
+    "mean": 8.049484101916192,
+    "sum": 76454.0,
+    "median": 8.0
+   },
+   "pl_cmd_n": {
+    "unit": "count",
+    "mean": 26407.63897662666,
+    "sum": 250819755.0,
+    "median": 27441.0
+   },
+   "pl_look_n": {
+    "unit": "count",
+    "mean": 8.049589387239418,
+    "sum": 76455.0,
+    "median": 8.0
+   },
+   "pl_em_n": {
+    "unit": "count",
+    "mean": 5109.0738050115815,
+    "sum": 48525983.0,
+    "median": 5328.0
+   },
+   "gw_idle_n": {
+    "unit": "count",
+    "mean": 0.999894714676774,
+    "sum": 9497.0,
+    "median": 1.0
+   },
+   "gw_blk_n": {
+    "unit": "count",
+    "mean": 0.0007369972625815961,
+    "sum": 7.0,
+    "median": 0.0
+   },
+   "gw_flip_n": {
+    "unit": "count",
+    "mean": 1.0,
+    "sum": 9498.0,
+    "median": 1.0
+   },
+   "gw_proc_n": {
+    "unit": "count",
+    "mean": 12.677826910928616,
+    "sum": 120414.0,
+    "median": 13.0
+   },
+   "gw_cmd_n": {
+    "unit": "count",
+    "mean": 0.015266371867761634,
+    "sum": 145.0,
+    "median": 0.0
+   },
+   "flip_rsv_wait_n": {
+    "unit": "count",
+    "mean": 0.0,
+    "sum": 0.0,
+    "median": 0.0
+   }
+  },
+  "consistency": {
+   "hold_over_a_hold": 0.996674008591904,
+   "emit_split_over_mh_emit": 0.9851534218047515,
+   "pl_proc_over_gw_proc": 0.9999800503759494,
+   "mh_n_over_draws": 0.9999998563118263,
+   "mh_disp_n_over_dispatches": 1.0,
+   "a_hold_n_minus_mh": 0.0,
+   "pl_em_n_minus_mh_draws": -7.0,
+   "pl_proc_n_minus_gw_proc_n": 0.0
+  },
+  "bda": {
+   "median": 56.0,
+   "label": "NEW"
+  },
+  "predictions": {
+   "dt_us": {
+    "lo": 29000,
+    "hi": 40000,
+    "mean": 31650.095388502843,
+    "in_range": true
+   },
+   "cpu_gpu_us": {
+    "lo": 28000,
+    "hi": 38000,
+    "mean": 30993.532217308908,
+    "in_range": true
+   },
+   "draws": {
+    "lo": 4500,
+    "hi": 6000,
+    "mean": 5129.143503895557,
+    "in_range": true
+   },
+   "dispatches": {
+    "lo": 240,
+    "hi": 300,
+    "mean": 267.9175615919141,
+    "in_range": true
+   },
+   "cpu_per_op": {
+    "lo": 5.0,
+    "hi": 7.5,
+    "mean": 5.714420298899165,
+    "in_range": true
+   },
+   "a_hold_us": {
+    "lo": 22000,
+    "hi": 34000,
+    "mean": 28687.507369972627,
+    "in_range": true
+   },
+   "mh_bind_us": {
+    "lo": 6000,
+    "hi": 14000,
+    "mean": 10662.105180037903,
+    "in_range": true
+   },
+   "mh_emit_us": {
+    "lo": 5000,
+    "hi": 10000,
+    "mean": 7476.990629606233,
+    "in_range": true
+   },
+   "mh_prog_us": {
+    "lo": 2500,
+    "hi": 7500,
+    "mean": 6711.416614024005,
+    "in_range": true
+   },
+   "mh_disp_us": {
+    "lo": 1200,
+    "hi": 4000,
+    "mean": 2342.2458412297324,
+    "in_range": true
+   },
+   "mh_rt_us": {
+    "lo": 400,
+    "hi": 2000,
+    "mean": 797.5799115603285,
+    "in_range": true
+   },
+   "emit_split": {
+    "lo": 5000,
+    "hi": 10000,
+    "mean": 7365.982903558644,
+    "in_range": true
+   },
+   "pl_pref": {
+    "lo": 0,
+    "hi": 400,
+    "mean": 1.0671044430406402,
+    "in_range": true
+   },
+   "named": {
+    "lo": 300,
+    "hi": 3000,
+    "mean": 699.6994728363867,
+    "in_range": true
+   },
+   "residue": {
+    "lo": 0,
+    "hi": 4000,
+    "mean": 2054.5492793219623,
+    "in_range": true
+   },
+   "remainder": {
+    "lo": -2000,
+    "hi": 4000,
+    "mean": 1531.4674044009264,
+    "in_range": true
+   },
+   "offcpu": {
+    "lo": 0,
+    "hi": 4000,
+    "mean": 656.5631711939355,
+    "in_range": true
+   }
+  },
+  "caveats": [
+   "(a) instruments on: mutsite ~0.10 ms a frame (session 69, +0.312 % +- 0.294 % cpu/draw), pathlap +362.9 +- 80.8 us a flip on top of mutsite=1 (session 96, pl96a), KYTY_GPU_WALL not priced (a few timestamps a submission) - levels are instrumented levels and compare with no uninstrumented run",
+   "(b) every phase is a WALL interval (rdtsc) of the GuestGpu thread; cpu_gpu_us is its CPU cycle time - shares of cpu_gpu_us are wall over CPU, and remainder / residue are signed",
+   "(c) mh_pres_us and mh_pres_wait_us are BOTH threads (PrepareFrame/PrepareBlankFrame at the flip packet on GuestGpu, inside residue; Present on the present thread) - not separable by these counters; pl_look runs on the guest submit thread and is in no sum",
+   "(d) the named outside spans are taken as disjoint from each other and from the render-mutex holds (session 96 design; PathSpan refuses to arm inside a hold, the reverse is not checked here)",
+   "(e) one entry, one launch state (BDA regime reported); no A/B, nothing here is a speed effect",
+   "(f) PathSpan, WallSpan and PathLap marks (every pl_*, gw_*) and the waits flip_rsv_wait, semwait_gpu_us, prio_us add their whole interval to the flip in which they END - a Process slice can last ~58 ms (pl96a) - so a flip can carry a neighbour's span; for these keys and every key built from them (emit_split, named, outside, residue*, attributed, remainder, thread_unwalled, offcpu_unexplained) only means and run sums are reported, no per-row medians",
+   "(g) per_unit of mh_pro/mh_rt/mh_prog/mh_bind/mh_emit divides by mh_draws, which excludes the ~20 draws a frame that return early (session 71) although their holds up to the return sit in those phases - a slight overstatement per draw; mh_tail is divided by mh_n",
+   "(h) prio_us is timed by a Scope (commandScheduler.cpp:682) and reads 0 in a lite run (its count prios is live); semwait_gpu_us (masterSemaphore.cpp:92/152) and flip_rsv_wait (videoOut.cpp:526-530) are live"
+  ]
+ },
+ "verdict": "ADMITTED"
+}

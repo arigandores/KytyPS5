@@ -1,0 +1,112 @@
+obs116 tag obs116  scorer 9f3683c0bc356f62  build d3a981a23fc1c5df
+  binary           ok
+  installed_now    ok
+  pinned           ok
+  env_exact        ok
+  env_vk           ok
+  hold             ok
+  one_ok_attempt   ok
+  prereg           ok
+  prereg_sha       ok
+  gates_exact      ok
+  gate_mutsite     ok
+  gate_pathlap     ok
+  gate_lines       ok
+  wall_logged      ok
+  no_marker        ok
+  rows             ok
+  armed            ok
+  id_hold_n        ok
+  id_emit_n        ok
+  proc_n           ok
+  proc_wall        ok
+  hold_cover       ok
+  idle             ok
+REPORT (report only, no verdict on speed): 9498 scene rows from frame 432, 300.6 s, BDA NEW (median bda_scan 56); median "-" on a span key: not reported, caveat (f)
+  key                        mean     median          sum     %cpu     us/op    us/unit  unit
+  dt_us                   31650.1    33259.0    300612606   102.12     5.864          -  
+  cpu_gpu_us              30993.5    32653.0    294376569   100.00     5.743          -  
+  gpu_busy_us             12931.3    12998.5    122821594    41.72     2.396          -  
+  mh_pro_us                 338.4      352.0      3214115     1.09     0.063      0.066  mh_draws
+  mh_rt_us                  797.6      837.0      7575414     2.57     0.148      0.156  mh_draws
+  mh_prog_us               6711.4     7078.0     63745035    21.65     1.244      1.314  mh_draws
+  mh_bind_us              10662.1    11316.0    101268675    34.40     1.976      2.087  mh_draws
+  mh_emit_us               7477.0     7861.0     71016457    24.12     1.385      1.463  mh_draws
+  mh_tail_us                263.4      220.0      2501352     0.85     0.049      0.051  mh_n
+  mh_disp_us               2342.2     2249.0     22246651     7.56     0.434      8.742  mh_disp_n
+  hold                    28592.1    30111.0    271567699    92.25     5.298          -  
+  a_hold_us               28687.5    30211.0    272473945    92.56     5.315      5.315  a_hold_n
+  a_wait_us                 170.3      156.0      1617247     0.55     0.032      0.032  a_hold_n
+  mh_pres_us                125.4      113.0      1191252     0.40     0.023     62.711  mh_pres_n
+  mh_pres_wait_us            68.7       32.0       652083     0.22     0.013     34.327  mh_pres_n
+  pl_em_vtx                1403.0          -     13325391     4.53     0.260      0.275  pl_em_n
+  pl_em_rt                 1599.9          -     15196305     5.16     0.296      0.313  pl_em_n
+  pl_em_pipe                762.1          -      7238657     2.46     0.141      0.149  pl_em_n
+  pl_em_com                2274.9          -     21606551     7.34     0.421      0.445  pl_em_n
+  pl_em_rec                1279.6          -     12153471     4.13     0.237      0.250  pl_em_n
+  pl_em_rest                 46.5          -       441730     0.15     0.009      0.009  pl_em_n
+  emit_split               7366.0          -     69962106    23.77     1.365      1.442  pl_em_n
+  pl_proc                 31612.0          -    300251047   102.00     5.857   2493.490  pl_proc_n
+  pl_pref                     1.1          -        10135     0.00     0.000      0.133  pl_pref_n
+  pl_eop                     39.3          -       372830     0.13     0.007      0.106  pl_eop_n
+  pl_bar                     11.3          -       106954     0.04     0.002      0.010  pl_bar_n
+  pl_sub                     51.8          -       491692     0.17     0.010      0.096  pl_sub_n
+  pl_gc                      32.1          -       304831     0.10     0.006      3.987  pl_gc_n
+  pl_cmd                    564.3          -      5359304     1.82     0.105      0.021  pl_cmd_n
+  named                     699.7          -      6645746     2.26     0.130          -  
+  outside                  2754.2          -     26159855     8.89     0.510          -  
+  residue                  2054.5          -     19514109     6.63     0.381          -  
+  residue_noflip           2054.1          -     19509721     6.63     0.381          -  
+  residue_s96              2350.2          -     22322608     7.58     0.435          -  
+  attributed              29462.1          -    279830692    95.06     5.459          -  
+  remainder                1531.5          -     14545877     4.94     0.284          -  
+  pl_look                    11.2          -       106639     0.04     0.002      1.395  pl_look_n
+  gw_idle                    27.6          -       262288     0.09     0.005     27.618  gw_idle_n
+  gw_blk                      0.2          -         2033     0.00     0.000    290.417  gw_blk_n
+  gw_proc                 31612.7          -    300257037   102.00     5.857   2493.539  gw_proc_n
+  gw_cmd                      0.1          -         1094     0.00     0.000      7.545  gw_cmd_n
+  gw_flip                     0.5          -         4388     0.00     0.000      0.462  gw_flip_n
+  thread_unwalled             9.5          -        90155     0.03     0.002          -  
+  offcpu                    656.6      451.0      6236037     2.12     0.122          -  
+  offcpu_unexplained        628.3          -      5967328     2.03     0.116          -  
+  flip_rsv_wait               0.0          -            0     0.00     0.000          -  flip_rsv_wait_n
+  semwait_gpu_us              0.2          -         1617     0.00     0.000          -  
+  prio_us                     0.0          -            0     0.00     0.000      0.000  prios
+  draws                  5129.144   5352.000     48716605  (count)
+  dispatches              267.918    268.000      2544681  (count)
+  ops                    5397.061   5624.000     51261286  (count)
+  cpu_per_op                5.714      5.753        54276  (us/op)
+  bda_scan                 81.991     56.000       778752  (count)
+  prios                    19.372     19.000       183999  (count)
+  mh_n                   5129.143   5349.000     48716598  (count)
+  mh_draws               5109.075   5329.000     48525990  (count)
+  mh_disp_n               267.918    268.000      2544681  (count)
+  a_hold_n               5397.060   5623.000     51261279  (count)
+  mh_pres_n                 2.000      2.000        18996  (count)
+  pl_proc_n                12.678     13.000       120414  (count)
+  pl_pref_n                 8.049      8.000        76454  (count)
+  pl_eop_n                369.106    369.000      3505773  (count)
+  pl_bar_n               1123.971   1123.000     10675478  (count)
+  pl_sub_n                539.955    540.000      5128494  (count)
+  pl_gc_n                   8.049      8.000        76454  (count)
+  pl_cmd_n              26407.639  27441.000    250819755  (count)
+  pl_look_n                 8.050      8.000        76455  (count)
+  pl_em_n                5109.074   5328.000     48525983  (count)
+  gw_idle_n                 1.000      1.000         9497  (count)
+  gw_blk_n                  0.001      0.000            7  (count)
+  gw_flip_n                 1.000      1.000         9498  (count)
+  gw_proc_n                12.678     13.000       120414  (count)
+  gw_cmd_n                  0.015      0.000          145  (count)
+  flip_rsv_wait_n           0.000      0.000            0  (count)
+  cpu_per_op as a ratio of sums: 5.7427 us
+  consistency: hold_over_a_hold=0.9967, emit_split_over_mh_emit=0.9852, pl_proc_over_gw_proc=1.0000, mh_n_over_draws=1.0000, mh_disp_n_over_dispatches=1.0000, a_hold_n_minus_mh=0.0000, pl_em_n_minus_mh_draws=-7.0000, pl_proc_n_minus_gw_proc_n=0.0000
+  ranges (report only): dt_us 31650.1 [29000, 40000] in, cpu_gpu_us 30993.5 [28000, 38000] in, draws 5129.1 [4500, 6000] in, dispatches 267.9 [240, 300] in, cpu_per_op 5.7 [5.0, 7.5] in, a_hold_us 28687.5 [22000, 34000] in, mh_bind_us 10662.1 [6000, 14000] in, mh_emit_us 7477.0 [5000, 10000] in, mh_prog_us 6711.4 [2500, 7500] in, mh_disp_us 2342.2 [1200, 4000] in, mh_rt_us 797.6 [400, 2000] in, emit_split 7366.0 [5000, 10000] in, pl_pref 1.1 [0, 400] in, named 699.7 [300, 3000] in, residue 2054.5 [0, 4000] in, remainder 1531.5 [-2000, 4000] in, offcpu 656.6 [0, 4000] in
+  caveat (a) instruments on: mutsite ~0.10 ms a frame (session 69, +0.312 % +- 0.294 % cpu/draw), pathlap +362.9 +- 80.8 us a flip on top of mutsite=1 (session 96, pl96a), KYTY_GPU_WALL not priced (a few timestamps a submission) - levels are instrumented levels and compare with no uninstrumented run
+  caveat (b) every phase is a WALL interval (rdtsc) of the GuestGpu thread; cpu_gpu_us is its CPU cycle time - shares of cpu_gpu_us are wall over CPU, and remainder / residue are signed
+  caveat (c) mh_pres_us and mh_pres_wait_us are BOTH threads (PrepareFrame/PrepareBlankFrame at the flip packet on GuestGpu, inside residue; Present on the present thread) - not separable by these counters; pl_look runs on the guest submit thread and is in no sum
+  caveat (d) the named outside spans are taken as disjoint from each other and from the render-mutex holds (session 96 design; PathSpan refuses to arm inside a hold, the reverse is not checked here)
+  caveat (e) one entry, one launch state (BDA regime reported); no A/B, nothing here is a speed effect
+  caveat (f) PathSpan, WallSpan and PathLap marks (every pl_*, gw_*) and the waits flip_rsv_wait, semwait_gpu_us, prio_us add their whole interval to the flip in which they END - a Process slice can last ~58 ms (pl96a) - so a flip can carry a neighbour's span; for these keys and every key built from them (emit_split, named, outside, residue*, attributed, remainder, thread_unwalled, offcpu_unexplained) only means and run sums are reported, no per-row medians
+  caveat (g) per_unit of mh_pro/mh_rt/mh_prog/mh_bind/mh_emit divides by mh_draws, which excludes the ~20 draws a frame that return early (session 71) although their holds up to the return sit in those phases - a slight overstatement per draw; mh_tail is divided by mh_n
+  caveat (h) prio_us is timed by a Scope (commandScheduler.cpp:682) and reads 0 in a lite run (its count prios is live); semwait_gpu_us (masterSemaphore.cpp:92/152) and flip_rsv_wait (videoOut.cpp:526-530) are live
+VERDICT: ADMITTED

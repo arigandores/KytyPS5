@@ -1908,6 +1908,38 @@ enum class Counter : uint32_t {
 	SpinePad,                // spine_pad
 	SpineLost,               // spine_lost
 	SpineCheckNs,            // spine_chk_ns
+	// Session 118 (knob "spine"): spine_unc plans stopped as UNCERTAIN (a word read early sat on a GPU-dirty page);
+	// carry_cmp / carry_bad / carry_skip - the state the previous complete plan of the processor left, compared with
+	// the real state at the next plan (SpineCarry: lines) / plans without a complete predecessor.  Raw counts.
+	SpineUncertain,          // spine_unc
+	CarryCmp,                // carry_cmp
+	CarryBad,                // carry_bad
+	CarrySkip,               // carry_skip
+	// Session 118 (gate "slicecen"): frames finished, their elements, element runs between host render-pass starts,
+	// the sum over frames of each frame's largest run, the run histogram (<32 <128 <512 <1024 >=1024), K4 per frame
+	// (the max over adjacent segment pairs of |A&B| / min and of the write-crossing share, and the largest segment's
+	// share, all in permille, at W = 2 and W = 4, with the frames that could be cut), frames too short in pass starts to
+	// cut, image records and the census's own time (raw ns).
+	ScFrames,                // sc_frames
+	ScElements,              // sc_el
+	ScRuns,                  // sc_runs
+	K3MaxRun,                // k3_max
+	K3Hist0,                 // k3_h0
+	K3Hist1,                 // k3_h1
+	K3Hist2,                 // k3_h2
+	K3Hist3,                 // k3_h3
+	K3Hist4,                 // k3_h4
+	K4W2N,                   // k4_w2_n
+	K4W2Any,                 // k4_w2_any
+	K4W2Dep,                 // k4_w2_dep
+	K4W2Fmax,                // k4_w2_fmax
+	K4W4N,                   // k4_w4_n
+	K4W4Any,                 // k4_w4_any
+	K4W4Dep,                 // k4_w4_dep
+	K4W4Fmax,                // k4_w4_fmax
+	K4NoCut,                 // k4_nocut
+	ScImages,                // sc_img
+	ScNs,                    // sc_ns
 	Count
 };
 

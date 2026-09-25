@@ -25,6 +25,7 @@
 #include "graphics/guest_gpu/gpu_format.h"
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/guest_gpu/hardwareContext.h"
+#include "graphics/guest_gpu/sliceCensus.h"
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/hostMemory.h"
@@ -2516,6 +2517,13 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			BindImage(images[i].image_id,
 			          images[i].desc.type == TextureCache::BindingType::Storage,
 			          program.info.images[i].atomic);
+		}
+	}
+	// Gate "slicecen" (session 118): every image this stage touches, written when bound as storage.
+	if (Common::Gates::Enabled(Common::Gates::Gate::SliceCensus)) {
+		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+			SliceCensus::Image(images[i].image_id.index,
+			                   images[i].desc.type == TextureCache::BindingType::Storage);
 		}
 	}
 	// Gate "texfast": a sampled binding resolved from a memo slot takes the view recorded in that

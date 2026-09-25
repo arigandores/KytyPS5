@@ -403,8 +403,14 @@ enum class Gate : uint32_t {
 	// It binds nothing, reads no resource and changes no descriptor.  Use it with
 	// "bindlap", "drawstat" and "mergecost" OFF: those arm cb_timed, whose own four
 	// timestamps a commit sit inside these spans.
-	// LAST row, matching the LAST enum entry before Gate::Count.
 	CommitLapMove,      // KYTY_COMMIT_LAP_MOVE,    file name "cbmove"
+	// Session 118, MEASUREMENT ONLY (route A stage 4 part 2, docs/session-118/designA4_part2.md): the slice census.
+	// Elements, host render-pass starts and the images every element touches are recorded on the GuestGpu thread; at
+	// each frame change K3 (element runs between pass starts) and K4 (image overlap of adjacent segments at W = 2 and 4)
+	// land in FrameTrace-x.  Read at every element / pass start / image, so it CAN be a schedule arm (a frame is only
+	// finished if the gate stayed on from its first element).  Changes nothing that executes.
+	// LAST row, matching the LAST enum entry before Gate::Count.
+	SliceCensus,        // KYTY_SLICE_CENSUS,       file name "slicecen"
 	Count,
 };
 
@@ -591,8 +597,13 @@ enum class Knob : uint32_t {
 	// the start of every submission a second CommandProcessor, seeded from the real one, walks the whole submission
 	// through the real register handlers (spine_* counters); 2 = 1 plus a snapshot of the register state before every
 	// draw/dispatch, compared member-wise with the real state when the real processor reaches it (spine_cmp /
-	// spine_bad).  Read once per submission and latched into Pm4Execution, so it CAN be a schedule arm.  Never changes
-	// what executes.  LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	// spine_bad).  Read once per submission and latched into Pm4Execution, so it CAN be a schedule arm.  Session 118:
+	// every plan first compares the state the previous complete plan of the processor left with the real state (the
+	// carry, carry_*); words read early are read only from GPU-clean pages (else the plan stops as UNCERTAIN) and the
+	// structural EXIT conditions of the register handlers are checked first (the plan stops as ABORTED).  It does not
+	// change what executes, except through a value-level EXIT inside a register handler that the real processor would
+	// reach a moment later on the same packet (ROADMAP 117 item 15).  LAST row, matching the LAST entry of
+	// KNOB_DEFINITIONS.
 	Spine,            // KYTY_SPINE,              file name "spine" (0 off, 1 plan, 2 plan + verify)
 	Count,
 };

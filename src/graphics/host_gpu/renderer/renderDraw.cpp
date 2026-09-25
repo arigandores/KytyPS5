@@ -17,6 +17,7 @@
 #include "graphics/guest_gpu/gpu_defs.h"
 #include "graphics/guest_gpu/graphicsRun.h"
 #include "graphics/guest_gpu/hardwareContext.h"
+#include "graphics/guest_gpu/sliceCensus.h"
 #include "graphics/guest_gpu/tile.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/colorRenderTarget.h"
@@ -1117,6 +1118,15 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	EXIT_IF(state.width == 0 || state.height == 0 || state.num_layers == 0 ||
 	        state.width == std::numeric_limits<uint32_t>::max() ||
 	        state.height == std::numeric_limits<uint32_t>::max());
+	// Gate "slicecen" (session 118): the targets this draw writes.
+	if (Common::Gates::Enabled(Common::Gates::Gate::SliceCensus)) {
+		for (uint32_t i = 0; i < color_count; i++) {
+			SliceCensus::Image(colors[i].image_id.index, true);
+		}
+		if (depth.image_id) {
+			SliceCensus::Image(depth.image_id.index, true);
+		}
+	}
 	return state;
 }
 

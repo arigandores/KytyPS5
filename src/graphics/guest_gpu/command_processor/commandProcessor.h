@@ -233,6 +233,9 @@ private:
 	std::vector<SpineSnap>            m_spine_snaps;
 	uint32_t                          m_spine_snap_count = 0;
 	uint64_t                          m_spine_plan_id    = 0;
+	// Session 118, term C: the shadow state is the end state of a plan that ran to completion (not aborted, not
+	// uncertain), so the next plan can compare it with the real state before seeding.
+	bool                              m_spine_carry_valid = false;
 };
 
 } // namespace Libs::Graphics

@@ -277,8 +277,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     // Session 101, measurement only: the moved-mark census of the CommitBindings write
     // build and emit (pred/01_two_directional.md).  Read once a commit and once a stage
     // inside CommitBindings, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_COMMIT_LAP_MOVE", "cbmove", false},
+    // Session 118, measurement only: the slice census of route A stage 4 part 2 (K3 pass runs, K4 image overlap of
+    // adjacent segments). Read at every element, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_SLICE_CENSUS", "slicecen", false},
 }};
 
 struct KnobDefinition {
@@ -402,7 +405,9 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // presentation-ring fix, kept only if the sealed boot/video check pred/01_chk115.md reads PASS.
     {"KYTY_TITLE_ASYNC", "titleasync", 1, 1},
     // Session 117, MEASUREMENT ONLY: the shadow spine of route A stage 4 (1 plan, 2 plan + verify). Read once per
-    // submission, so it CAN be a schedule arm. LAST row, matching the LAST enum entry before Knob::Count.
+    // submission, so it CAN be a schedule arm. Session 118: the plan also checks the carry (term C) and is safe (it
+    // stops as UNCERTAIN / ABORTED instead of reading a GPU-dirty word or reaching a structural EXIT).
+    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_SPINE", "spine", 0, 2},
 }};
 

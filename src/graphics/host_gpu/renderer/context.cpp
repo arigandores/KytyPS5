@@ -2,6 +2,7 @@
 #include "common/drawStat.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
+#include "graphics/guest_gpu/sliceCensus.h"
 #include "common/common.h"
 #include "common/logging/log.h"
 #include "common/profiler.h"
@@ -329,6 +330,7 @@ void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) co
 	EXIT_IF(packet && m_recorder == nullptr);
 	EndRenderingImpl(RenderPassEnd::State, packet);
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
+	SliceCensus::PassBegin(); // gate "slicecen" (session 118): GuestGpu thread only, nothing when off
 	// Session 71, gate G-area: the census of this pass. Enabled(), NOT TimingsEnabled(): a
 	// measurement run is KYTY_FRAME_TRACE=lite, where g_timings is false and every counter is
 	// live. Placed after the early return at the top of the function, so it counts exactly the

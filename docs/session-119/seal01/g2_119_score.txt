@@ -1,0 +1,141 @@
+g2_119.py status=ADMITTED seal=e22c96a75b6e4c96ef186732da31542221647df7f58fa2e9d744921636197e58
+  run mut119 (mut) status=ADMITTED
+    pairs 40 (orientations [20, 20]), blocks 80, excluded [3, 84]
+    [PASS] integrity AB_BA_BALANCED
+    [PASS] integrity BINARY_SEALED
+    [PASS] integrity DURATION
+    [PASS] integrity FIELD_ORIGIN
+    [PASS] integrity GATEARM
+    [PASS] integrity IDENTITY
+    [PASS] integrity MARKERS_OFF
+    [PASS] integrity NO_FLOOR
+    [PASS] integrity NO_RECORDING
+    [PASS] integrity PREREG_PINNED
+    [PASS] integrity RAW_CONTIGUITY
+    [PASS] integrity ROW_ARMS
+    [PASS] integrity SCHEMA
+    [PASS] integrity STREAMS_COMPLETE
+    [PASS] controls  AREA_SELECTED
+    [PASS] controls  AREA_VERDICT
+    [PASS] controls  ARMING
+    [PASS] controls  BANDS
+    [PASS] controls  ENV_NO_CHECKPOINTS
+    [PASS] controls  NO_CHECKPOINT_LINE
+    [PASS] controls  NO_FATAL_MARKER
+    [PASS] controls  NO_GPUHANGABORT
+    [PASS] controls  PAIRS
+    [PASS] controls  PIN_ONCE
+    [PASS] controls  RECORD_THREAD_TWO
+    [PASS] controls  WORK_SPLIT
+    [PASS] arming    AMUT_ARMED
+    [PASS] arming    MUTSITE_HOLD_IDENTITY
+    [PASS] arming    MW_DARK_ARM0
+    [PASS] arming    MW_IDENTITY_ARM1
+    [PASS] arming    OTHER_INSTRUMENTS_DARK
+    [PASS] arming    PATHLAP_ARMED
+    [PASS] arming    PLKSTAT_IDENTITIES
+    dt_us            arm0    32195.0   arm1    32728.4
+    cpu_net_us       arm0    31457.9   arm1    31610.1
+    draws            arm0     5012.8   arm1     5061.8
+    gpu_busy_us      arm0    12956.6   arm1    12922.1
+    rec_n            arm0    10858.8   arm1    10962.6
+    a_mut_us         arm0    13193.2   arm1    21642.3
+    a_hold_us        arm0    29193.6   arm1    29632.2
+    mw_n             arm0        0.0   arm1    10542.9
+    mw_expect        arm0    10484.9   arm1    10571.0
+    mh_prog_us       arm0     6492.9   arm1     6600.9
+    mh_emit_us       arm0     7655.0   arm1     7680.9
+    pl_prog_hold_us  arm0     4674.6   arm1     4701.7
+    pl_em_rec_us     arm0     1244.3   arm1     1246.0
+    pl_em_com_us     arm0     2298.1   arm1     2299.9
+    spine_us         arm0     1268.2   arm1     1299.5
+    da_take_us       arm0     2745.4   arm1     2775.5
+    sh_jobs          arm0        0.0   arm1        0.0
+    sh_us            arm0        0.0   arm1        0.0
+    sh_push_us       arm0        0.0   arm1        0.0
+    d cpu_net_us   mean 61.8  2SE 155.6  t 0.79  n 40
+    d dt_us        mean 71.6  2SE 164.1  t 0.87  n 40
+    d draws        mean 3.4  2SE 19.0  t 0.36  n 40
+    work 0.0678 %  area mirror valid True  selected split -0.005 % match 100.0 %
+    failed: none
+  run sh119 (sh) status=ADMITTED
+    pairs 40 (orientations [20, 20]), blocks 80, excluded [3, 84, 85]
+    [PASS] integrity AB_BA_BALANCED
+    [PASS] integrity BINARY_SEALED
+    [PASS] integrity DURATION
+    [PASS] integrity FIELD_ORIGIN
+    [PASS] integrity GATEARM
+    [PASS] integrity IDENTITY
+    [PASS] integrity MARKERS_OFF
+    [PASS] integrity NO_FLOOR
+    [PASS] integrity NO_RECORDING
+    [PASS] integrity PREREG_PINNED
+    [PASS] integrity RAW_CONTIGUITY
+    [PASS] integrity ROW_ARMS
+    [PASS] integrity SCHEMA
+    [PASS] integrity STREAMS_COMPLETE
+    [PASS] controls  AREA_SELECTED
+    [PASS] controls  AREA_VERDICT
+    [PASS] controls  ARMING
+    [PASS] controls  BANDS
+    [PASS] controls  ENV_NO_CHECKPOINTS
+    [PASS] controls  NO_CHECKPOINT_LINE
+    [PASS] controls  NO_FATAL_MARKER
+    [PASS] controls  NO_GPUHANGABORT
+    [PASS] controls  PAIRS
+    [PASS] controls  PIN_ONCE
+    [PASS] controls  RECORD_THREAD_TWO
+    [PASS] controls  WORK_SPLIT
+    [PASS] arming    INSTRUMENTS_DARK
+    [PASS] arming    SH_DARK_ARM0
+    [PASS] arming    SH_JOBS_PER_DRAW
+    [PASS] arming    SH_NO_DROP
+    [PASS] arming    SH_ONE_WORKER
+    dt_us            arm0    31047.3   arm1    32767.1
+    cpu_net_us       arm0    30252.5   arm1    31858.9
+    draws            arm0     5013.0   arm1     5017.3
+    gpu_busy_us      arm0    12923.0   arm1    12925.3
+    rec_n            arm0    10860.4   arm1    10870.8
+    a_mut_us         arm0        0.0   arm1        0.0
+    a_hold_us        arm0        0.0   arm1        0.0
+    mw_n             arm0        0.0   arm1        0.0
+    mw_expect        arm0      179.0   arm1      181.7
+    mh_prog_us       arm0        0.0   arm1        0.0
+    mh_emit_us       arm0        0.0   arm1        0.0
+    pl_prog_hold_us  arm0        0.0   arm1        0.0
+    pl_em_rec_us     arm0        0.0   arm1        0.0
+    pl_em_com_us     arm0        0.0   arm1        0.0
+    spine_us         arm0     1266.8   arm1     1286.4
+    da_take_us       arm0     2791.7   arm1     2790.1
+    sh_jobs          arm0        0.0   arm1     4997.6
+    sh_us            arm0        0.0   arm1     3547.9
+    sh_push_us       arm0        0.0   arm1      533.8
+    d cpu_net_us   mean 1645.4  2SE 157.4  t 20.91  n 40
+    d dt_us        mean 1767.0  2SE 177.1  t 19.95  n 40
+    d draws        mean 6.7  2SE 19.9  t 0.67  n 40
+    work 0.1325 %  area mirror valid True  selected split -0.004 % match 100.0 %
+    failed: none
+  G TERMS (us): cpu_net 30252.5 | S_lo 13193.2 S_raw 21642.3 P_mw 61.8 (2SE 155.6) T_in 124956 dI 494.8
+    E_rec 1246.0 E_com 2299.9 W_E(s101) 1115.6 | spine 1268.2 (mut arm0 proxy 1268.2, sh arm0 proxy 1266.8, pref-based -1227.0 - meaningless at dawalk=1)
+    T2 1645.4 (2SE 157.4) sh_push 533.8 | T2 on dt 1767.0 (2SE 177.1)
+  CENTRAL: S_now 21085.7 E_move 2361.5 S_ctx 18724.2 T2 1645.4  ->  G2 2216.5  (f=0.564: 2112.8; wall: 2094.9; pref spine, meaningless at dawalk=1: 4711.8)
+  CEILING: S_now 20435.3 E_move 3545.9 S_ctx 16889.4 T2 954.2  ->  G2^ 3724.2  (f=0.564: 3604.0)
+  T2 that would bring the CENTRAL G2 to the bar: 861.9 us; H/M 0.712; area xrun 0.002 %
+  RULE (central G2 < 3000 => A CLOSED): if admitted A_CLOSED_FOR_MAX_FPS ; VERDICT A_CLOSED_FOR_MAX_FPS 
+  prediction A1    HIT  value 0.000 band [0, 0]  mw_n arm 0 level exactly 0
+  prediction A10a  HIT  value 1645.391 band [700, 2600]  T2 (shadowresolve=1) in [+700, +2 600] us
+  prediction A10b  HIT  value 533.810 band [250, 700]  sh_push_us (arm 1) in [250, 700] us
+  prediction A10c  HIT  value 3547.931 band [2500, 6500]  sh_us (arm 1) in [2 500, 6 500] us
+  prediction A11a  HIT  value 2216.540 band [1000, 4500]  G2 central in [1 000, 4 500] us
+  prediction A11b  HIT  value 2216.540 band [None, 2999.999999999]  G2 central < 3 000 us (A closes) - the discriminating prediction
+  prediction A12   HIT  value 1205.362 band [500, 2500]  cross-run instrument price cpu_net(mut arm0) - cpu_net(sh arm0) in [+500, +2 500]
+  prediction A2    HIT  value -0.003 band [-0.02, 0.02]  mw_n arm 1 / (2 mh_n + mh_disp_n + bda_n) - 1 within +-2 %
+  prediction A3    HIT  value 13193.190 band [11000, 15000]  S_lo (arm-0 a_mut_us) in [11 000, 15 000] us
+  prediction A4    MISS value 21642.345 band [17500, 21500]  S_raw (arm-1 a_mut_us) in [17 500, 21 500] us
+  prediction A5    HIT  value 61.797 band [0, 400]  P_mw in [0, +400] us
+  prediction A6    HIT  value 0.712 band [0.6, None]  H/M = pl_prog_hold_us / mh_prog_us >= 0.60
+  prediction A7a   HIT  value 1245.955 band [1000, 1500]  pl_em_rec in [1 000, 1 500] us
+  prediction A7b   HIT  value 2299.900 band [1800, 2700]  pl_em_com in [1 800, 2 700] us
+  prediction A8    HIT  value 1268.172 band [959, 1500]  spine = max(mut119 arm-0 proxy, 959) in [959, 1 500] us
+  prediction A9    HIT  value 30252.517 band [29000, 32000]  cpu_net (sh119 arm 0) in [29 000, 32 000] us
+wrote C:/kyty/s119/runs119/g2_119_score.json

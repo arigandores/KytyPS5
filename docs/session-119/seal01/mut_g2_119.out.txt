@@ -1,0 +1,60 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s119\g2_119.py sha256 2f089ef594b159b32d49422834a452c98b47e3515204408d8b2946e270602e40
+test    C:\kyty\s119\test_g2_119.py sha256 7666f91ffaf6bf108b55ca6019068c263334ac15f23d789cbd164c4ca4b3475d
+mutants C:\kyty\s119\mut_g2_119.py sha256 afa01a07143d60e6caaa35c45cbe64b02a7bb14733bae77d4a7d6ca75494fc3d
+mutants: format list, 40 defined (strict: every use of MUTANTS checked; statements evaluated at lines 5-7,11)
+harness part: 1 text substitution(s) at line(s) [86], each drawing (old, new) from one element of MUTANTS
+suite: family V; fast OFF (line 612 binds ok (ok); 0 initialisations `ok = True`; no `ok &= ...` update; the suite does not end with sys.exit(<depends on ok>); other exits at lines [616]); end of suite: the final exit call at line 616
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['run_one', 'run_pair', 'write_run'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 28 (spawn, one process per job), work dir C:\kyty\s119\work_seal\g2_119_41188_1790375190
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.00 s in the baseline (0 of 59 calls validated; not validated: 59 x it changed a suite global it can reach)
+BASELINE  SURVIVED  (39.0 s)
+BASELINE#2  SURVIVED  (38.9 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (68.3 s)
+CONTROL CONTROL_pass_end_of_evaluate  SURVIVED  (69.0 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (67.9 s)
+f_050  KILLED by exit 1  (68.8 s)
+f_030  KILLED by exit 1  (68.7 s)
+f_sens  KILLED by exit 1  (68.9 s)
+spine_direct  KILLED by exit 1  (69.6 s)
+bar  KILLED by exit 1  (68.5 s)
+c_ts  KILLED by exit 1  (69.0 s)
+w_e  KILLED by exit 1  (68.9 s)
+area_xrun_hi  KILLED by exit 1  (68.0 s)
+area_xrun_lo  KILLED by exit 1  (69.5 s)
+min_pairs  KILLED by exit 1  (68.9 s)
+binary  KILLED by exit 1  (69.0 s)
+gates_sha  KILLED by exit 1  (69.0 s)
+sh_arm1  KILLED by exit 1  (69.8 s)
+tag_mut  KILLED by exit 1  (69.1 s)
+spine_min  KILLED by exit 1  (69.5 s)
+spine_sh  KILLED by exit 1  (68.6 s)
+spine_proxy_only  KILLED by exit 1  (70.1 s)
+one_worker_len  KILLED by exit 1  (69.3 s)
+one_worker_any  KILLED by exit 1  (69.7 s)
+mut_dark_wjobs  KILLED by exit 1  (69.4 s)
+mut_dark_none  KILLED by exit 1  (69.5 s)
+sh_dark_wjobs  KILLED by exit 1  (68.5 s)
+sh_dark_hold  KILLED by exit 1  (69.0 s)
+g_tax_sign  KILLED by exit 1  (69.5 s)
+g_spine_drop  KILLED by exit 1  (70.0 s)
+cpu_net_mut  KILLED by exit 1  (55.5 s)
+tax_on_dt  KILLED by exit 1  (54.8 s)
+s_now_no_di  KILLED by exit 1  (55.8 s)
+e_move_no_we  KILLED by exit 1  (54.7 s)
+kill_f  KILLED by exit 1  (54.3 s)
+rule_le  KILLED by exit 1  (53.0 s)
+rule_ceiling  KILLED by exit 1  (53.3 s)
+area_gate  KILLED by exit 1  (54.6 s)
+verdict_admit  KILLED by exit 1  (50.9 s)
+sh_dark_mw  KILLED by exit 1  (55.1 s)
+sh_dark_amut  KILLED by exit 1  (54.3 s)
+worker_set  KILLED by exit 1  (56.6 s)
+area_abs  KILLED by exit 1  (56.6 s)
+a11b_ge  KILLED by exit 1  (51.7 s)
+tag_sh  KILLED by exit 1  (57.0 s)
+40 mutants: 40 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+wall 168.0 s, worker time 2830.1 s, 28 workers
+ALL KILLED (40 of 40 selected mutants killed; 40 defined in the mutant script)

@@ -1,0 +1,96 @@
+PRED_SHA / PRED_BYTES are not filled: seal C:\kyty\s119\fx_g2_119\seal_01.md and put its sha256 and size into g2_119.py (only --draft runs without a seal): refusing to score
+output C:\kyty\s119\fx_g2_119\exists.json exists: never overwritten
+--period/--start/--first/--keep are --draft only
+tag 'mut104' is not a pred/01_g2_119 mut tag
+tag 'sh104' is not a pred/01_g2_119 sh tag
+reference mut119 ADMITTED                                                ok 
+reference sh119 ADMITTED                                                 ok 
+reference pairs 32                                                       ok 
+G2 central equals the independent recount                                ok 
+G2 ceiling equals the independent recount                                ok 
+cpu_net / S_raw / P / T2 / spine recounted                               ok 
+reference spine is the mut proxy (1 300 > 959)                           ok 
+kill T2 equals the recount                                               ok 
+ceiling >= central (every term A-favourable)                             ok 
+reference verdict follows the recount                                    ok 
+predictions scored                                                       ok 
+f and bar reported                                                       ok 
+proxy 700 -> spine 959                                                   ok 
+proxy 700: G2 equals the recount                                         ok 
+the sh run walk does not enter the spine                                 ok 
+bar 3000.000 -> A_PROCEEDS_BY_STAGES                                     ok 
+bar 2999.999 -> A_CLOSED_FOR_MAX_FPS                                     ok 
+the ceiling decides nothing                                              ok 
+large T2 closes A (central G2 < 3000)                                    ok 
+no tax: A proceeds, G2 equals the recount                                ok 
+cross-run area 4 % -> NOT_EVALUABLE                                      ok 
+cross-run area 2 % -> evaluable                                          ok 
+cross-run area 3.1 % -> NOT_EVALUABLE                                    ok 
+cross-run area 2.9 % -> evaluable                                        ok 
+cross-run area -3.1 % -> NOT_EVALUABLE                                   ok 
+cross-run area -2.9 % -> evaluable                                       ok 
+A11b is the one-sided G2 < 3000 prediction                               ok 
+G2 at f = 0.564 recounted                                                ok 
+30 pairs -> ADMITTED                                                     ok 
+28 pairs -> PAIRS                                                        ok 
+draft status DRAFT and no verdict                                        ok 
+mw_n leak in arm-0 kept rows -> MW_DARK_ARM0                             ok 
+mw_n leak OUTSIDE kept rows is ignored                                   ok 
+mw_n 5 % below identity -> MW_IDENTITY_ARM1                              ok 
+pl_em_n 10 % short -> PATHLAP_ARMED                                      ok 
+pl_pref_n 0 -> PATHLAP_ARMED                                             ok 
+emit chain 0.887 -> PATHLAP_ARMED                                        ok 
+pl_prog_n 10 % short -> PLKSTAT_IDENTITIES                               ok 
+a_hold_n off identity -> MUTSITE_HOLD_IDENTITY                           ok 
+amut dark in arm 0 -> AMUT_ARMED                                         ok 
+shadow jobs in the mut run -> OTHER_INSTRUMENTS_DARK                     ok 
+the production walker (da_wjobs 8) does not fail the mut darkness        ok 
+two shadow workers -> SH_ONE_WORKER                                      ok 
+no shadow worker line -> SH_ONE_WORKER                                   ok 
+worker 1 only -> SH_ONE_WORKER                                           ok 
+sh_jobs 0.8 a draw -> SH_JOBS_PER_DRAW                                   ok 
+5 % dropped jobs -> SH_NO_DROP                                           ok 
+an instrument live in the sh run -> INSTRUMENTS_DARK                     ok 
+sh_jobs leak in arm-0 kept rows -> SH_DARK_ARM0                          ok 
+mw_n live in the sh run -> INSTRUMENTS_DARK                              ok 
+a_mut_us live in the sh run -> INSTRUMENTS_DARK                          ok 
+worker 0 twice -> SH_ONE_WORKER                                          ok 
+the production walker (da_wjobs 8) does not fail the sh darkness         ok 
+wrong arm text -> GATEARM                                                ok 
+sh arm text shadowresolve=4 -> GATEARM                                   ok 
+KYTY_REC in env -> protocol                                              ok 
+KYTY_GPU_CHECKPOINTS=0 -> ENV_NO_CHECKPOINTS and NO_CHECKPOINT_LINE      ok 
+fatal marker in stdout -> NO_FATAL_MARKER                                ok 
+skipped draw -> NO_FATAL_MARKER                                          ok 
+GpuHangAbort -> NO_GPUHANGABORT                                          ok 
+two pin lines -> PIN_ONCE                                                ok 
+one record thread -> RECORD_THREAD_TWO                                   ok 
+field missing on one x line -> SCHEMA                                    ok 
+field on the wrong line -> FIELD_ORIGIN                                  ok 
+arm 1 does 1 % more draws -> WORK_SPLIT                                  ok 
+arm 1 renders 2 % more area -> AREA_*                                    ok 
+dt 45 ms -> BANDS                                                        ok 
+rec_n 8 000 -> BANDS                                                     ok 
+10 pairs -> PAIRS                                                        ok 
+a frame missing -> RAW_CONTIGUITY                                        ok 
+game ended inside the hold -> protocol                                   ok 
+prereg hash mismatch -> PREREG_PINNED                                    ok 
+other binary -> BINARY_SEALED                                            ok 
+the session-104 binary -> BINARY_SEALED                                  ok 
+other schedule -> protocol                                               ok 
+the session-104 sh schedule (4 readers) -> protocol                      ok 
+unsealed: production scoring refused (exit 2)                            ok 
+unsealed check_seal raises                                               ok 
+changed seal raises                                                      ok 
+--out never overwrites (exit 2)                                          ok 
+geometry outside --draft refused                                         ok 
+the session-104 tag is refused (exit 2)                                  ok 
+the session-104 sh tag is refused (exit 2)                               ok 
+the session-104 tag is refused (exit 2)                                  ok 
+dab102a: 42 pairs, d cpu_net == dab102.py (113.52463054187207, sd 529.8987787583336) ok 
+dab102a: levels equal dab102.py arm medians (cpu_net 30668.086, dt 31062.034) ok 
+dab102a: the sh arming FAILS (negative control: no shadow workers)       ok 
+obs116 (installed binary d3a981a2): every field printed, on its expected line ok 
+obs116: no checkpoint line, two record threads, one pin line             ok 
+89 fixtures, 0 failed
+ALL OK

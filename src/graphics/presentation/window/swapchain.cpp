@@ -840,10 +840,12 @@ RenderContext& Presenter::Renderer() const noexcept {
 
 void Presenter::Present(Frame& frame, bool reuse) {
 	KYTY_PROFILER_FUNCTION();
-	// Session 114 (ROADMAP item 10): the PresentOverlap detector - presenting is single-threaded by design (the
-	// startup park, review C1); a second thread entering while another is inside is counted and logged.
+	// Session 114 (ROADMAP items 10, 11): the PresentOverlap detector - the swapchain work is single-threaded by design
+	// (the startup park, review C1); a second thread entering while another is inside is counted and logged.  The zone
+	// ends before UpdateTitle (Leave), because the startup park itself happens inside UpdateTitle.
 	static std::atomic<int> present_inside {0};
 	struct PresentInside {
+		bool inside = true;
 		PresentInside() {
 			if (present_inside.fetch_add(1, std::memory_order_acq_rel) != 0) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::PresentOverlap, 1);
@@ -854,7 +856,13 @@ void Presenter::Present(Frame& frame, bool reuse) {
 				}
 			}
 		}
-		~PresentInside() { present_inside.fetch_sub(1, std::memory_order_acq_rel); }
+		void Leave() {
+			if (inside) {
+				inside = false;
+				present_inside.fetch_sub(1, std::memory_order_acq_rel);
+			}
+		}
+		~PresentInside() { Leave(); }
 		KYTY_CLASS_NO_COPY(PresentInside);
 	} present_inside_guard;
 	m_impl->frames.ValidateForPresent(&frame, reuse);
@@ -920,6 +928,7 @@ void Presenter::Present(Frame& frame, bool reuse) {
 
 		m_impl->presented_overlay_revision.store(overlay_visual.revision,
 		                                         std::memory_order_release);
+		present_inside_guard.Leave();
 		if (!preparing) m_impl->window.UpdateTitle();
 		m_impl->frames.Release(&frame, true);
 		return;

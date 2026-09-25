@@ -1,0 +1,2 @@
+C:/kyty/s114/rec_vtt114b.mp4: 3921 frames 960x540, index entries 3921
+one-frame glitches: 0

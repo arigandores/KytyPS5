@@ -1,0 +1,8 @@
+[05:18:50] ttl114b start
+[05:29:18] ttl114b rc=0 VERDICT: underwater_aerial_garden in 17.9 s - PASS (acceptance <= 90 s)
+[05:29:29] ttl114b score VERDICT: SHIP_PENDING_VIDEO (titleasync=1: S1-S2 met; nothing ships until vtt114 is read)
+[05:29:29] vtt114b start
+[05:31:55] vtt114b rc=0
+[05:32:05] vidglitch one-frame glitches: 0
+[05:32:15] ttl114b video score VERDICT: SHIP titleasync=1 as the new default (a new build: its video pass is owed; ctl114 must read PASS)
+[05:32:15] done

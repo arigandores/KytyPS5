@@ -56,3 +56,5 @@ f45103d99e163f910714b5a68355143d4621db7df1b962f9036902a0838e2b5b *test_check114.
 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
 8d7ba8f4ae995a3da10670a095670acf0c46450675f7b61137714eb7975956ec *kyty_emulator_8d7ba8f4.exe
 6afe4e3335da68f28792ada0c6c4f05f741f037f78a00bf83fb1de409ee46c1c */c/kyty/scripts/s51_vidglitch.py
+post-seal (mutlib v2 frozen copy, sealed check114, --control --no-memo, 93/93, controls 3/3): 2be5e6eedf9efc873d52caf548f89515959a9fd95b92f3b6c16de2345fd6e93e *mut_check114.out.txt
+post-seal (mutlib v2 frozen copy, sealed check114, --control --no-memo): 6649ace972b0c449c38ed0176ee81d19303e5094ff3f5c3ae714cea98fccf63d *mut_check114.stderr.txt

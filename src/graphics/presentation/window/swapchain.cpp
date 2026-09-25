@@ -22,7 +22,10 @@
 #include "graphics/presentation/window/windowInternal.h"
 
 #include <algorithm>
+#include <atomic>
 #include <deque>
+#include <functional>
+#include <thread>
 #include <limits>
 #include <memory>
 #include <vector>
@@ -837,6 +840,23 @@ RenderContext& Presenter::Renderer() const noexcept {
 
 void Presenter::Present(Frame& frame, bool reuse) {
 	KYTY_PROFILER_FUNCTION();
+	// Session 114 (ROADMAP item 10): the PresentOverlap detector - presenting is single-threaded by design (the
+	// startup park, review C1); a second thread entering while another is inside is counted and logged.
+	static std::atomic<int> present_inside {0};
+	struct PresentInside {
+		PresentInside() {
+			if (present_inside.fetch_add(1, std::memory_order_acq_rel) != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::PresentOverlap, 1);
+				static std::atomic<uint32_t> overlap_logged {0};
+				if (overlap_logged.fetch_add(1, std::memory_order_relaxed) < 8) {
+					LOGF("PresentOverlap: thread=%llu\n", static_cast<unsigned long long>(
+					                                           std::hash<std::thread::id> {}(std::this_thread::get_id())));
+				}
+			}
+		}
+		~PresentInside() { present_inside.fetch_sub(1, std::memory_order_acq_rel); }
+		KYTY_CLASS_NO_COPY(PresentInside);
+	} present_inside_guard;
 	m_impl->frames.ValidateForPresent(&frame, reuse);
 
 	const auto overlay_visual = GetSystemOverlayVisualState();

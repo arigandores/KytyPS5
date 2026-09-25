@@ -585,6 +585,7 @@ enum class Knob : uint32_t {
 	// Session 114: WindowContext::UpdateTitle hands the window title to the SDL main thread without waiting (1)
 	// instead of waiting for it while the present thread holds VideoOutConfig::mutex (0, today: a busy main thread
 	// then stops the flip path).  Read on every UpdateTitle call, so it CAN be a schedule arm; safe at any moment.
+	// Default 1 since session 114 (seal 02b SHIP); the async path starts only once the SDL main loop runs.
 	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	TitleAsync,       // KYTY_TITLE_ASYNC,        file name "titleasync" (0 wait for the main thread, 1 post)
 	Count,

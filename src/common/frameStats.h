@@ -1880,6 +1880,8 @@ enum class Counter : uint32_t {
 	FlipHoldN,               // flip_hold_n
 	MainTaskAgeNs,           // mt_age_ns
 	MainTaskN,               // mt_n
+	// Session 114 (item 10): a thread entered Presenter::Present while another was inside (must stay 0).  Raw count.
+	PresentOverlap,          // present_overlap
 	Count
 };
 

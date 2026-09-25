@@ -2538,6 +2538,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"flip_hold_n", FS::Counter::FlipHoldN, false},
 				    {"mt_age_ns", FS::Counter::MainTaskAgeNs, false},
 				    {"mt_n", FS::Counter::MainTaskN, false},
+				    {"present_overlap", FS::Counter::PresentOverlap, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

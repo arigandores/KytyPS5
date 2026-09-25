@@ -965,10 +965,19 @@ bool WindowPrepareShaders() {
 	}
 	auto& cache = g_window->render_context->GetPipelineCache();
 	const auto started = SDL_GetTicks64();
+	// Session 114 (ROADMAP item 10, MEASUREMENT ONLY): KYTY_PREPARE_HOLD_MS keeps presenting the preparation screen from
+	// the main thread for at least N ms after the wait started - the stress for the startup park (review C1).
+	static const uint64_t hold_ms = [] {
+		const char* value = std::getenv("KYTY_PREPARE_HOLD_MS");
+		return value != nullptr ? static_cast<uint64_t>(std::strtoull(value, nullptr, 10)) : uint64_t {0};
+	}();
+	if (hold_ms != 0) {
+		LOGF("PrepareHold: ms=%llu\n", static_cast<unsigned long long>(hold_ms));
+	}
 	uint64_t last_log = 0;
 	while (true) {
 		const auto status = cache.GetPreparationStatus();
-		if (!status.active) break;
+		if (!status.active && SDL_GetTicks64() - started >= hold_ms) break;
 		while (SDL_PollEvent(&g_window->loop.event)) {
 			// Keep window/controller lifecycle events, but don't forward game button presses.
 			if (g_window->loop.event.type == SDL_QUIT ||

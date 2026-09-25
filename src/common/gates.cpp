@@ -397,9 +397,10 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // check of what 1 would skip. Read once per PrepareBda call, so it CAN be a schedule arm.
     {"KYTY_BDA_NARROW_STAMPS", "bdanarrow", 0, 2},
     // Session 114: UpdateTitle posts the title to the SDL main thread without waiting (1) instead of waiting under
-    // VideoOutConfig::mutex (0). Read on every UpdateTitle call, so it CAN be a schedule arm.
+    // VideoOutConfig::mutex (0). Read on every UpdateTitle call, so it CAN be a schedule arm. Default 1 since the
+    // sealed ABBA pred/02b_ttl114b.md (SHIP: d mean dt -43.5 us, 2SE 73.2; control pred/01_ctl114.md PASS; video clean).
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_TITLE_ASYNC", "titleasync", 0, 1},
+    {"KYTY_TITLE_ASYNC", "titleasync", 1, 1},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

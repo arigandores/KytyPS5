@@ -69,3 +69,4 @@ ad24d7b2fbf07ac67714673b3b5b16f8f7768cfdbcd0b84ee8c4fa65442fc9ae *gates_title0.t
 2a5b1d6c51616c02c49d486da5859415a05914397d12f325306e96dddaad33c5 *enter_scene.py
 77e685e5543d90a0b9cc8c8e48827a42e4bf5263260af53da3a63b4d06529638 *run_safety99.py
 8d7ba8f4ae995a3da10670a095670acf0c46450675f7b61137714eb7975956ec *kyty_emulator_8d7ba8f4.exe
+post-seal (mutlib v2 frozen copy, sealed bootctl114, --control --no-memo, 25/25, controls 3/3): 031d7d07335d08d745290e0e66671774353e4967dead753080f3c99088414dc6 *mut_bootctl114.out.txt

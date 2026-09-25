@@ -1,0 +1,42 @@
+mutlib 2  harness C:\kyty\KytyPS5\docs\session-113\mutlib\v2\mutlib.py sha256 877eb53a9d939293308fd4bcbce2764606f42a9c1f0d6df4282923db529a6108
+scorer  C:\kyty\s114\bootctl114.py sha256 0130e46109f63787c9200ba296eb10cab8d906df980c0b13103102dda23fc9ae
+test    C:\kyty\s114\test_bootctl114.py sha256 5397b31910d686601cd8e9218dee24d91c08cde84d63064eb57df75d4f1442f3
+mutants C:\kyty\s114\mut_bootctl114.py sha256 ad18dda4de1002f70fc3afdc10ce36590eeca839e03ab143941b3d4c0636be45
+mutants: format list, 25 defined (strict: every use of MUTANTS checked; statements evaluated at lines 3-5,9)
+suite: family V; fast on (2 guarded updates of ok); end of suite: the final exit call at line 94
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+workers 28 (spawn, one process per job), work dir C:\kyty\KytyPS5\docs\session-113\mutlib\v2\work\bootctl114_43080_1790310053
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (0.1 s)
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (0.1 s)
+CONTROL CONTROL_pass_end_of_evaluate  SURVIVED  (0.1 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (0.1 s)
+binary  KILLED by b_binary  (0.0 s)
+hold_env  KILLED by b_hold_env  (0.0 s)
+hold_env_any  KILLED by b_hold_env_5000  (0.0 s)
+pinned  KILLED by b_pin  (0.0 s)
+sched  KILLED by b_schedule  (0.0 s)
+ckpt  KILLED by b_checkpoints  (0.0 s)
+knob  KILLED by b_env_knob  (0.0 s)
+knob_c_env  KILLED by c_env_knob_missing  (0.0 s)
+knob_c_gate  KILLED by c_gate_knob_missing  (0.0 s)
+knob_c_gate_sp  KILLED by c_gate_knob_01  (0.0 s)
+knob_b_env  KILLED by b_env_knob  (0.0 s)
+knob_b_gate  KILLED by b_gate_knob  (0.0 s)
+knob_branch  KILLED by KEEP  (0.0 s)
+holds_one  KILLED by b_two_holds  (0.0 s)
+holds_any  KILLED by b_two_holds  (0.0 s)
+after_hold  KILLED by b_fatal_before_hold  (0.0 s)
+fatal_flag  KILLED by b_no_fatal_no_wait  (0.0 s)
+waits  KILLED by b_fatal_and_wait  (0.0 s)
+hold_line  KILLED by b_hold_5000_line  (0.0 s)
+fatal_site  KILLED by CONSTANTS  (0.1 s)
+fatal_prefix  KILLED by KEEP  (0.0 s)
+setup_all  KILLED by b_binary  (0.0 s)
+setup_any  KILLED by b_binary  (0.0 s)
+same_any  KILLED by b_no_fatal  (0.0 s)
+tags  KILLED by c_binary  (0.0 s)
+25 mutants: 25 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone
+controls: 3 of 3 survived
+wall 2.2 s, worker time 0.9 s, 28 workers
+ALL KILLED (25 of 25 selected mutants killed; 25 defined in the mutant script)

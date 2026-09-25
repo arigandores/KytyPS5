@@ -344,5 +344,5 @@ fails = [r for r in RESULTS if not r[1]]
 for name, ok, why in RESULTS:
     print('%-28s %s %s' % (name, 'ok' if ok else 'FAIL', '; '.join(why)))
 print('%d fixtures, %d failed' % (len(RESULTS), len(fails)))
-print('ok' if not fails else 'FIXTURE FAILURES')
+print('ALL OK' if not fails else 'FIXTURE FAILURES')
 sys.exit(0 if not fails else 1)

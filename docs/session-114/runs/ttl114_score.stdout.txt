@@ -1,0 +1,110 @@
+ttl114.py ttl114 status=INVALID seal=02b11e8704e714296ebd6456fc84fe01c0603c18e83d65365f29667a4529286e
+  pairs 96 (orientations [48, 48]), blocks 192, excluded []
+  [PASS] integrity AB_BA_BALANCED
+  [PASS] integrity BINARY_SEALED
+  [PASS] integrity DURATION
+  [PASS] integrity FIELD_ORIGIN
+  [PASS] integrity GATEARM
+  [PASS] integrity IDENTITY
+  [PASS] integrity MARKERS_OFF
+  [PASS] integrity NO_FLOOR
+  [PASS] integrity NO_RECORDING
+  [PASS] integrity PREREG_PINNED
+  [PASS] integrity RAW_CONTIGUITY
+  [PASS] integrity ROW_ARMS
+  [PASS] integrity SCHEMA
+  [PASS] integrity STREAMS_COMPLETE
+  [PASS] controls  AREA_SELECTED
+  [PASS] controls  AREA_VERDICT
+  [FAIL] controls  ARMING
+  [PASS] controls  BANDS
+  [PASS] controls  ENV_NO_CHECKPOINTS
+  [PASS] controls  NO_CHECKPOINT_LINE
+  [PASS] controls  NO_FATAL_MARKER
+  [PASS] controls  NO_GPUHANGABORT
+  [PASS] controls  PAIRS
+  [PASS] controls  PIN_ONCE
+  [PASS] controls  RECORD_THREAD_TWO
+  [PASS] controls  SYNC_COMPILE
+  [PASS] controls  WORK_SPLIT
+  [PASS] arming    DEFAULTS_ON
+  [PASS] arming    INSTRUMENTS_DARK
+  [FAIL] arming    TITLE_ARMED
+  [PASS] arming    TITLE_COUNTED
+  [PASS] arming    WALKS_SAME
+  [PASS] arming    WALK_ARMED_ARM0
+  [PASS] arming    WALK_ARMED_ARM1
+  [PASS] arming    WALK_DROPS_ARM0
+  [PASS] arming    WALK_DROPS_ARM1
+  [PASS] arming    WALK_IDENTITY_ARM0
+  [PASS] arming    WALK_IDENTITY_ARM1
+  arm-1 kept totals {'da_wskip': 61448, 'da_wjobs': 61443, 'da_wdrop': 0}  skip/posts-1 0.0001  drop 0.0000  walks rel 0.0000
+  titleasync: pres_title_n levels [1.0, 1.0]  per-call wall [168467.85, 21420.9625] ns (arm-1 cap 20000 ns)
+  defaults: cspfree_hit levels [266.0, 266.0]  cspfree_bad over all rows 0  da_q_free levels [1078.28125, 1071.8125]  da_slot_bad over all rows 0
+  dt_us        arm0    31242.0   arm1    31051.7
+  cpu_net_us   arm0    30362.7   arm1    30296.5
+  draws        arm0     5034.0   arm1     5014.8
+  gpu_busy_us  arm0    12791.1   arm1    12767.3
+  rec_n        arm0    10899.5   arm1    10857.7
+  da_walk_us   arm0     2525.9   arm1     2529.4
+  da_queue_us  arm0     1252.2   arm1     1254.7
+  da_take_us   arm0     2824.5   arm1     2821.1
+  da_hit       arm0     8374.2   arm1     8346.1
+  da_miss      arm0      289.1   arm1      291.1
+  da_late      arm0       13.3   arm1       13.4
+  da_wjobs     arm0        8.0   arm1        8.0
+  da_wskip     arm0        8.0   arm1        8.0
+  da_wdrop     arm0        0.0   arm1        0.0
+  da_wlag_us   arm0    73240.1   arm1    73343.5
+  da_wdepth    arm0       17.9   arm1       17.9
+  da_qcall     arm0     1078.3   arm1     1071.8
+  da_q_free    arm0     1078.3   arm1     1071.8
+  da_q_noguard arm0        0.0   arm1        0.0
+  da_guard_busy arm0        0.0   arm1        0.0
+  da_guard_yield arm0        0.0   arm1        0.0
+  da_q_taking  arm0        0.0   arm1        0.0
+  da_hint_defer arm0        1.0   arm1        1.0
+  da_hint_torn arm0        0.0   arm1        0.0
+  cspfree_hit  arm0      266.0   arm1      266.0
+  cspf_have    arm0        0.0   arm1        0.0
+  cspf_new     arm0        0.0   arm1        0.0
+  pres_title_ns arm0   168467.9   arm1    21421.0
+  pres_title_n arm0        1.0   arm1        1.0
+  flip_rsv_wait_ns arm0        0.0   arm1        0.0
+  flip_rsv_wait_n arm0        0.0   arm1        0.0
+  flip_hold_ns arm0  1543301.4   arm1  1372414.8
+  flip_hold_n  arm0        1.0   arm1        1.0
+  mt_age_ns    arm0    62297.2   arm1    62773.1
+  mt_n         arm0        1.0   arm1        1.0
+  bda_scan     arm0       50.3   arm1       50.2
+  bgc_evict    arm0        0.0   arm1        0.0
+  main estimator (decides): rows 10..89 of each block
+  d cpu_net_us   mean -49.0  2SE 70.2  t -1.40  n 96
+  d dt_us        mean -51.6  2SE 75.4  t -1.37  n 96
+  d da_take_us   mean -4.8  2SE 9.6  t -0.99  n 96
+  d da_miss      mean 1.9  2SE 5.4  t 0.70  n 96
+  d da_late      mean 0.2  2SE 0.5  t 0.65  n 96
+  d da_hit       mean -10.5  2SE 18.2  t -1.15  n 96
+  d da_stale     mean 0.0  2SE None  t 0.00  n 96
+  d da_walk_us   mean 6.4  2SE 11.4  t 1.11  n 96
+  d gpu_busy_us  mean -10.2  2SE 22.6  t -0.90  n 96
+  d flip_rsv_wait_ns mean 0.0  2SE None  t 0.00  n 96
+  quoted size: d mean dt_us (arm 1 - arm 0) = -51.6 us a flip, 2SE 75.4, n 96 - titleasync=1 against titleasync=0 of build 916f6489, main estimator
+  secondary estimator (rows 60..88, never deciding): pairs 96, blocks 192, excluded [3]
+  secondary d cpu_net_us   mean -16.5  2SE 120.5  t -0.27  n 96
+  secondary d dt_us        mean -5.6  2SE 127.0  t -0.09  n 96
+  secondary would PASS S1_dt_le_+50 (not deciding)
+  secondary would PASS S2_dt_2se_le_+200 (not deciding)
+  video: ABSENT {'reason': 'no --video-meta / --video-report given'}
+  [PASS] ship S1_dt_le_+50
+  [PASS] ship S2_dt_2se_le_+200
+  VERDICT: KEEP titleasync=0 (run not admitted)
+  prediction P1  HIT  value 168.468 band [20, 5000]  arm-0 per-call wall of UpdateTitle, level(pres_title_ns) / level(pres_title_n) / 1000, in [20, 5000] us a call (titleasync=0 waits for the SDL main thread)
+  prediction P2  MISS value 21.421 band [None, 20]  arm-1 per-call wall of UpdateTitle <= 20 us a call (titleasync=1 posts without waiting)
+  prediction P3  HIT  value -51.640 band [-500, 100]  d mean dt_us (arm 1 - arm 0, main estimator, rows 10..89) in [-500, +100] us
+  prediction P4  HIT  value -51.640 band [None, 0]  d mean dt_us (main estimator) <= 0 us (titleasync=1 not slower at all)
+  prediction P5  HIT  value -10.184 band [-150, 150]  d gpu_busy_us in [-150, +150] a flip
+  prediction P6  HIT  value 0.000 band [None, 0]  d flip_rsv_wait_ns (arm 1 - arm 0, main estimator) <= 0 raw ns a flip (the per-row counter: the blocking wait of GuestGpu for VideoOutConfig::mutex in ReserveFlipRequest after a failed TryLock)
+  prediction P7  HIT  value 1.872 band [-40, 40]  d da_miss in [-40, +40] a flip
+  failed: ['control:ARMING']
+wrote C:/kyty/s114/runs114/ttl114_score.json

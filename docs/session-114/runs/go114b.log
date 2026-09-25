@@ -1,0 +1,4 @@
+[03:03:34] ttl114 start
+[03:14:02] ttl114 rc=0 VERDICT: underwater_aerial_garden in 18.4 s - PASS (acceptance <= 90 s)
+[03:14:12] ttl114 score VERDICT: KEEP titleasync=0 (run not admitted)
+[03:14:12] done

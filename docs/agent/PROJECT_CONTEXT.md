@@ -1452,6 +1452,12 @@ cd /c/kyty/build && KYTY_TESTS_CONTINUE=1 KYTY_TESTS_VERBOSE=1 ./shader_cfg_test
   настоящим монитором (`executionPolicy.monitor`, `monitorNextCheckAt` в ответе PATCH). Страховка — рутина **«Сторож
   цикла KytyPS5»** (лид, `*/20 * * * *`, `chain_check.py HPP-3 --repair`: вставшее звено → `todo` + комментарий, это
   будит исполнителя); инвариант I12. Правило — `ROADMAP.md` п. 21.
+- **Ловушка платформы 6 (2026-09-27): PATH в Bash агентов ломает лаунчер GitHub на Windows** (склеивает PATH
+  двоеточием через `BASH_ENV`; `bash: command not found`). Локальная правка сервера («HPP-13 hotfix»,
+  `execution-target.js`, рядом `.bak-hpp13`) грузится только перезапуском сервера Paperclip — перезапуск обрывает раны
+  агентов, поэтому только без `SEALED_RUN.lock` и эмулятора; **обновление пакета `paperclipai` правку сотрёт**. Обход:
+  PowerShell или `export PATH=/usr/bin:/mingw64/bin:$PATH` в начале команды Bash. С цепочки с. 123 приёмка шагов —
+  стадия `executionPolicy` с лидом, сторож — штатный watchdog `HPP-3` (разбор `HPP-19`, `ROADMAP.md` п. 23).
 - **Агенты не просят у пользователя апрувов (2026-09-26, `ROADMAP.md` п. 16).** Обращения
   `request_confirmation` / `ask_user_questions` / `suggest_tasks` в этой программе не создаются: решения
   принимает лид, специалист пишет вопрос в отчёт шага. Исключение — блокер физического ресурса

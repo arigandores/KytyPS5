@@ -1424,6 +1424,10 @@ cd /c/kyty/build && KYTY_TESTS_CONTINUE=1 KYTY_TESTS_VERBOSE=1 ./shader_cfg_test
 - Перед изменением файла читать его. Инструмент Edit переписывает файлы с CRLF, а репозиторий в LF: перед коммитом
   `cd C:\kyty\KytyPS5 && python C:\kyty\normalize_eol.py`, затем `git diff --stat` должен показывать только реальные правки.
   Коммиты с trailer'ами Co-Authored-By/Claude-Session; push в `fork` только по отдельному запросу. Частичный стейджинг: `C:\kyty\stage_hunks.py`.
+- **Ловушка окружения агентов (2026-09-26): `GIT_AUTHOR_NAME`/`GIT_AUTHOR_EMAIL`/`GIT_COMMITTER_*` заданы ПУСТЫМИ**, а
+  `GIT_CONFIG_GLOBAL=/dev/null` — `git commit` падает с `fatal: empty ident name (for <>) not allowed`, и `-c user.name=…`
+  НЕ помогает (окружение старше конфига). Перед коммитом в сессии агента выставить все четыре переменные
+  (`arigandores` / `<e-mail>`) в том же вызове шелла.
 - Не трогать `kyty_emulator.exe.orig-74a78f3`. Не удалять `_kyty.prev.txt` до анализа.
 - GPU ноутбука троттлит после часа непрерывных прогонов (fps 53 → 38), гонки загрузки воспроизводятся по-разному —
   выводы о «стабильно/нестабильно» делать по сериям из ≥5 прогонов (`load_test.sh`).

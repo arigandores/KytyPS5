@@ -419,8 +419,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_R2_CENSUS", "r2cen", 0, 2},
     // Session 121: the 8-way texture memo (1), with VERIFY (2, MEASUREMENT ONLY) and a positive control (3). Read once
     // per ResolveTextureWith call, so it CAN be a schedule arm (a change 0 <-> nonzero invalidates the memo).
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_TEX_MEMO8", "texmemo8", 0, 3},
+    // Session 122, MEASUREMENT ONLY: the per-thread calibrated CPU burn, code * 100 000 + dose_us (codes 1..8, dose
+    // 1..20 000, else rejected). Read once per thread and site per flip, so it CAN be a schedule arm. A value above
+    // the limit clamps to 899 999 (code 8, dose 99 999), which is rejected.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_BURN", "burn", 0, 899999},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

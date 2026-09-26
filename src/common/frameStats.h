@@ -2175,6 +2175,39 @@ enum class Counter : uint32_t {
 	Tm8Probe0Ns,             // tm8_pb0_ns
 	Tm8ProbeNs,              // tm8_pb_ns
 	Tm8ProbeN,               // tm8_pb_n
+	// Session 122, knob "burn" (MEASUREMENT ONLY): raw ns / counts, see BurnSite below.
+	BurnGNs,                 // burn_g_ns
+	BurnGN,                  // burn_g_n
+	BurnGCpuNs,              // burn_g_cpu_ns
+	BurnGCpuW,               // burn_g_cpu_w
+	BurnGSeen,               // burn_g_seen
+	BurnRNs,                 // burn_r_ns
+	BurnRN,                  // burn_r_n
+	BurnRQ,                  // burn_r_q
+	BurnRCpuNs,              // burn_r_cpu_ns
+	BurnRCpuW,               // burn_r_cpu_w
+	BurnRSeen,               // burn_r_seen
+	BurnMNs,                 // burn_m_ns
+	BurnMN,                  // burn_m_n
+	BurnMQ,                  // burn_m_q
+	BurnMCpuNs,              // burn_m_cpu_ns
+	BurnMCpuW,               // burn_m_cpu_w
+	BurnMSeen,               // burn_m_seen
+	BurnM0Seen,              // burn_m0_seen
+	BurnTNs,                 // burn_t_ns
+	BurnTN,                  // burn_t_n
+	BurnTCpuNs,              // burn_t_cpu_ns
+	BurnTCpuW,               // burn_t_cpu_w
+	BurnTSeen,               // burn_t_seen
+	BurnSSeen,               // burn_s_seen
+	BurnSMain,               // burn_s_main
+	BurnPNs,                 // burn_p_ns
+	BurnPN,                  // burn_p_n
+	BurnPCpuNs,              // burn_p_cpu_ns
+	BurnPCpuW,               // burn_p_cpu_w
+	BurnPSeen,               // burn_p_seen
+	BurnLate,                // burn_late
+	BurnCpuBad,              // burn_cpu_bad
 	Count
 };
 
@@ -2653,6 +2686,95 @@ public:
 private:
 	uint64_t m_t;
 };
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 122, knob "burn" (MEASUREMENT ONLY; C:/kyty/s122/design/design122.md, burn.md, burn_review.md RC1-RC13): a
+// calibrated per-thread CPU burn.  Value = thread code * 100 000 + dose in us (dose 1..20 000, else the value is rejected
+// and logged).  Codes: 1 GuestGpu once per frame before Process (ThreadRun, outside every lock); 2 the GuestGpu recorder,
+// spread over the frame's records; 3 all M1 workers, spread over the frame's jobs (dose / dathreads each); 4 the main
+// guest thread once per frame at the return of a blocking KernelWaitEqueue; 5 the recorder once per frame (control); 6 M1
+// worker 0 once per frame at the top of its loop (control); 7 the first graphics GuestGpu::Submit after the key changed,
+// before m_submission_mutex, on any guest thread (RC1); 8 a detached placebo thread pinned like M1 (RC9).
+// The frame key is the flip counter, stored by the present thread right after Gates::Poll (release), so a thread that
+// loads a new key (acquire) also sees the knob value Poll published for that flip.  Each site of each thread reads the
+// knob once per new key.  At burn = 0: per hook call one acquire load and one thread-local compare (a spread site one
+// more thread-local load; the Submit hook of code 7 a relaxed load of the shared submit key instead of the
+// thread-local one); per new key per site one cold call (a seen counter, one relaxed knob load; the Submit hook one CAS
+// on the shared key, one or two seen counters and a thread-role check); per flip one release store; nothing spins,
+// logs or starts a thread.
+enum class BurnSite : uint32_t { Gpu, Record, M1Job, M1Top, Main, Count };
+
+namespace Detail {
+// RC13: each on a private cache line - alignas on the type pads it to 64 bytes, so no other global can be packed into
+// the rest of the line.  Written once per flip / once per frame, read by every hook.
+struct alignas(64) BurnLine {
+	std::atomic<uint32_t> v {0};
+};
+static_assert(sizeof(BurnLine) == 64);
+inline constinit BurnLine g_burn_frame {};      // .v: the flip counter
+inline constinit BurnLine g_burn_submit_key {}; // .v: code 7, the key the first Submit took
+inline constinit thread_local std::array<uint32_t, static_cast<size_t>(BurnSite::Count)> t_burn_key {};
+inline constinit thread_local bool     t_burn_spread = false; // this thread's frame is an armed spread frame
+inline constinit thread_local uint32_t t_burn_calls  = 0;     // spread-site calls of this armed frame
+inline constinit thread_local uint64_t t_burn_left   = 0;     // spread budget left this frame, TSC cycles
+} // namespace Detail
+
+// The spin: registers only, no lock, no memory.  rdtsc is a side-effecting builtin (the same one __rdtsc expands to),
+// so neither the loop nor the call can be folded away; noinline keeps one body for every caller and for the offline
+// unit test (C:/kyty/s122/unit).  Returns the TSC cycles elapsed since `start`; overshoot is one pause plus one rdtsc.
+#if defined(__clang__) || defined(__GNUC__)
+[[gnu::noinline]] inline uint64_t BurnSpinUntil(uint64_t start, uint64_t cycles) noexcept {
+	uint64_t t = __builtin_ia32_rdtsc();
+	while (t - start < cycles) {
+		__builtin_ia32_pause();
+		t = __builtin_ia32_rdtsc();
+	}
+	return t - start;
+}
+#endif
+
+// Cold paths (frameStats.cpp).
+void BurnNewFrame(BurnSite site, uint32_t key, void (*pin)(bool));
+void BurnSpreadStep();
+void BurnSubmitFrame(uint32_t key);
+
+// The present thread, once per flip, right after Gates::Poll.
+inline void BurnPublishFrame(uint32_t key) {
+	Detail::g_burn_frame.v.store(key, std::memory_order_release);
+}
+
+// Block sites (codes 1, 4, 6; the GuestGpu site also starts the placebo of code 8 with `pin`).
+inline void BurnHook(BurnSite site, void (*pin)(bool) = nullptr) {
+	const auto key = Detail::g_burn_frame.v.load(std::memory_order_acquire);
+	if (key != Detail::t_burn_key[static_cast<size_t>(site)]) [[unlikely]] {
+		BurnNewFrame(site, key, pin);
+	}
+}
+
+// Spread sites (codes 2 / 5 on the recorder, 3 on the M1 workers).  The call count of an armed frame (for the next
+// frame's quantum) is kept inline, so calls after the budget ran out cost one thread-local increment.
+inline void BurnSpreadHook(BurnSite site) {
+	const auto key = Detail::g_burn_frame.v.load(std::memory_order_acquire);
+	if (key != Detail::t_burn_key[static_cast<size_t>(site)]) [[unlikely]] {
+		BurnNewFrame(site, key, nullptr);
+		return;
+	}
+	if (Detail::t_burn_spread) [[unlikely]] {
+		Detail::t_burn_calls++;
+		if (Detail::t_burn_left != 0) {
+			BurnSpreadStep();
+		}
+	}
+}
+
+// Code 7 (RC1): the entry of GuestGpu::Submit, before m_submission_mutex.  The first graphics Submit after the key
+// changed takes the frame (any guest thread).
+inline void BurnSubmitHook() {
+	const auto key = Detail::g_burn_frame.v.load(std::memory_order_acquire);
+	if (key != Detail::g_burn_submit_key.v.load(std::memory_order_relaxed)) [[unlikely]] {
+		BurnSubmitFrame(key);
+	}
+}
 
 } // namespace Common::FrameStats
 

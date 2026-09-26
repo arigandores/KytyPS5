@@ -639,8 +639,17 @@ enum class Knob : uint32_t {
 	// nothing in the memo is corrupted).  Read once per ResolveTextureWith call, so it CAN be a schedule arm: a change
 	// between 0 and nonzero invalidates the whole memo.  Off under texmemo2 (tm8_x2 counts); forces r1cen / r2cen off
 	// (tm8_cenoff counts).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	TexMemo8,         // KYTY_TEX_MEMO8,          file name "texmemo8" (0 direct, 1 8-way, 2 verify, 3 verify + control)
+	// Session 122, MEASUREMENT ONLY (C:/kyty/s122/design/design122.md; burn.md with RC1-RC13 of burn_review.md): the
+	// per-thread calibrated CPU burn.  Value = thread code * 100 000 + dose in us (dose 1..20 000; anything else is
+	// rejected and logged): 1 GuestGpu once per frame before Process (outside every lock), 2 the GuestGpu recorder
+	// spread over the frame's records, 3 all M1 workers spread over the frame's jobs, 4 the main guest thread once per
+	// frame at the return of a blocking KernelWaitEqueue, 5 the recorder once per frame (control), 6 M1 worker 0 once
+	// per frame (control), 7 the first graphics GuestGpu::Submit of the frame before m_submission_mutex (any thread),
+	// 8 a placebo thread.  Read once per thread and site per flip (the frame key is published after Poll), so it CAN
+	// be a schedule arm.  At 0 nothing spins, logs or starts a thread.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	Burn,             // KYTY_BURN,               file name "burn" (MEASUREMENT ONLY: code * 100000 + dose_us; 0 off)
 	Count,
 };
 

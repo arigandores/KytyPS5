@@ -1196,6 +1196,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 	const uint64_t poll_t0 = Common::FrameStats::NowNs();
 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
 	poll_ns = Common::FrameStats::NowNs() - poll_t0;
+	// Session 122, knob "burn": the frame key, after Poll (a thread that loads it also sees the knob Poll published).
+	Common::FrameStats::BurnPublishFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
 	Common::FrameStats::SetLean(Common::Gates::Enabled(Common::Gates::Gate::FrameStatsLean));
 	r.cfg->flip_status.processTime              = LibKernel::KernelGetProcessTime();
 	r.cfg->flip_status.processTimeCounter       = LibKernel::KernelGetProcessTimeCounter();
@@ -2772,6 +2774,38 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"tm8_pb0_ns", FS::Counter::Tm8Probe0Ns, false},
 				    {"tm8_pb_ns", FS::Counter::Tm8ProbeNs, false},
 				    {"tm8_pb_n", FS::Counter::Tm8ProbeN, false},
+				    {"burn_g_ns", FS::Counter::BurnGNs, false},
+				    {"burn_g_n", FS::Counter::BurnGN, false},
+				    {"burn_g_cpu_ns", FS::Counter::BurnGCpuNs, false},
+				    {"burn_g_cpu_w", FS::Counter::BurnGCpuW, false},
+				    {"burn_g_seen", FS::Counter::BurnGSeen, false},
+				    {"burn_r_ns", FS::Counter::BurnRNs, false},
+				    {"burn_r_n", FS::Counter::BurnRN, false},
+				    {"burn_r_q", FS::Counter::BurnRQ, false},
+				    {"burn_r_cpu_ns", FS::Counter::BurnRCpuNs, false},
+				    {"burn_r_cpu_w", FS::Counter::BurnRCpuW, false},
+				    {"burn_r_seen", FS::Counter::BurnRSeen, false},
+				    {"burn_m_ns", FS::Counter::BurnMNs, false},
+				    {"burn_m_n", FS::Counter::BurnMN, false},
+				    {"burn_m_q", FS::Counter::BurnMQ, false},
+				    {"burn_m_cpu_ns", FS::Counter::BurnMCpuNs, false},
+				    {"burn_m_cpu_w", FS::Counter::BurnMCpuW, false},
+				    {"burn_m_seen", FS::Counter::BurnMSeen, false},
+				    {"burn_m0_seen", FS::Counter::BurnM0Seen, false},
+				    {"burn_t_ns", FS::Counter::BurnTNs, false},
+				    {"burn_t_n", FS::Counter::BurnTN, false},
+				    {"burn_t_cpu_ns", FS::Counter::BurnTCpuNs, false},
+				    {"burn_t_cpu_w", FS::Counter::BurnTCpuW, false},
+				    {"burn_t_seen", FS::Counter::BurnTSeen, false},
+				    {"burn_s_seen", FS::Counter::BurnSSeen, false},
+				    {"burn_s_main", FS::Counter::BurnSMain, false},
+				    {"burn_p_ns", FS::Counter::BurnPNs, false},
+				    {"burn_p_n", FS::Counter::BurnPN, false},
+				    {"burn_p_cpu_ns", FS::Counter::BurnPCpuNs, false},
+				    {"burn_p_cpu_w", FS::Counter::BurnPCpuW, false},
+				    {"burn_p_seen", FS::Counter::BurnPSeen, false},
+				    {"burn_late", FS::Counter::BurnLate, false},
+				    {"burn_cpu_bad", FS::Counter::BurnCpuBad, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

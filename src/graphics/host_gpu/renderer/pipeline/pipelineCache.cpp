@@ -3022,6 +3022,10 @@ struct PipelineCache::ProgramCache {
 	void AheadWorker(uint32_t index) {
 		std::array<uint32_t, AheadBatch> taken {};
 		for (;;) {
+			if (index == 0) {
+				// Session 122, knob "burn" code 6: worker 0 once per frame, before ahead_mutex.
+				Common::FrameStats::BurnHook(Common::FrameStats::BurnSite::M1Top);
+			}
 			size_t count    = 0;
 			bool   more     = false;
 			bool   wake_all = false;
@@ -3055,6 +3059,9 @@ struct PipelineCache::ProgramCache {
 				}
 			}
 			for (size_t i = 0; i < count; i++) {
+				// Session 122, knob "burn" code 3: spread over the jobs, outside ahead_mutex; the slot is still
+				// AheadQueued, so the burn delays the job like slower M1 work.
+				Common::FrameStats::BurnSpreadHook(Common::FrameStats::BurnSite::M1Job);
 				AheadRun(ahead_slots[taken[i]]);
 			}
 		}

@@ -1028,6 +1028,8 @@ void CommandRecorder::Loop() {
 					FS::Add(FS::Counter::RecordCrossCcd, 1);
 				}
 			}
+			// Session 122, knob "burn" codes 2 (spread over the records) and 5 (once per frame): no lock held here.
+			FS::BurnSpreadHook(FS::BurnSite::Record);
 		}
 		{
 			namespace FS  = Common::FrameStats;

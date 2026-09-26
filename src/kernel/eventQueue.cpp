@@ -2,6 +2,7 @@
 
 #include "common/assert.h"
 #include "common/common.h"
+#include "common/frameStats.h"
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "common/threads.h"
@@ -437,6 +438,11 @@ int KYTY_SYSV_ABI KernelWaitEqueue(KernelEqueue eq, KernelEvent* ev, int num, in
 	     *out, static_cast<uint64_t>(ev[0].ident), ev[0].filter, ev[0].flags, ev[0].fflags,
 	     static_cast<uint64_t>(ev[0].data), reinterpret_cast<uint64_t>(ev[0].udata));
 
+	// Session 122, knob "burn" code 4: the main guest thread, once per frame, after a BLOCKING wait returned events
+	// (only the owner pin is held - a reference, not a lock).
+	if (timo == nullptr || *timo != 0) {
+		Common::FrameStats::BurnHook(Common::FrameStats::BurnSite::Main);
+	}
 	return OK;
 }
 

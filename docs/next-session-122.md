@@ -45,3 +45,16 @@ applications are not named in committed text.
 
 60 FPS; any census number as a speed-up; that R2 or `spcen` A could pay (parked, census numbers do not reopen them);
 that `texmemo8` pays anywhere (closed at < 0.16 ms on Sky Garden); a speed number beside another heavy job.
+
+## Возобновление (сессия 122 приостановлена пользователем, ROADMAP s122 п. 5)
+
+Сделано: п. 1 (порядок), п. 2 (проект `burn`, сцены, правило чтения; ступенька вблэнка; план с. 123 — пропуск кадров),
+п. 3–4 (код и ревью; п. 3 — абзац агента, принят явно). Код `burn` закоммичен как WIP: собран, НЕ установлен, НЕ
+проверен дымом. Установлена `d3a981a2`. Продолжить с шага 2 плана:
+1. сборка из WIP-коммита (`build_local.cmd` из `C:/kyty`), копия `C:/kyty/s122/kyty_emulator_<sha8>.exe`,
+   заполнить `__BUILD_SHA__`/`__BUILD_SHA8__` в `C:/kyty/s122/go122a.sh`;
+2. дым прожига на Sky Garden (6 плеч: `burn=0|102000|402000|802000|202000|302000`, по очереди) — вооружение, покрытие,
+   проверка `cpu/wall` (блоки ≈ 1,0, размазанные ≈ 1,33), шум плацебо при выходе;
+3. дымы входа новых уровней (`go122a.sh eatl122|eght122|ednn122|edes122`, запасные `emgg122|ehub122|ehov122|eice122`);
+4. скорер `map122.py` + фикстуры + мутанты (`mutlib` v4.1 полностью), проверка до печати, печать `pred/01_map122.md`;
+5. запечатанные ABBA по сценам (`sky122`, `skym122`, `skyp122`, затем уровни), аудит, закрытие.

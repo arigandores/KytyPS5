@@ -194,6 +194,8 @@ void GuestGpu::Submit(std::span<const uint32_t> draw_commands,
 	if (draw_commands.empty()) {
 		return;
 	}
+	// Session 122, knob "burn" code 7 (RC1): before m_submission_mutex, so the burn holds no lock.
+	Common::FrameStats::BurnSubmitHook();
 	GpuMutexLock lock(m_submission_mutex);
 	Submission   submission;
 	submission.type              = SubmissionType::Graphics;
@@ -788,6 +790,9 @@ void GuestGpu::ThreadRun(void* data) {
 		}
 
 		EXIT_IF(!has_submission);
+		// Session 122, knob "burn" code 1: once per frame, before Process, outside m_queue_mutex and the render mutex;
+		// code 8 starts the placebo thread here, pinned like M1.
+		Common::FrameStats::BurnHook(Common::FrameStats::BurnSite::Gpu, &DrawAheadApplyPin);
 		bool complete = false;
 		{
 			Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);

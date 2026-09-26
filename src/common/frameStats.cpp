@@ -2,6 +2,7 @@
 
 #include "common/common.h"
 #include "common/envFlag.h"
+#include "common/gates.h"
 #include "common/logging/log.h"
 
 #include <algorithm>
@@ -648,5 +649,373 @@ uint64_t ProcessCpuNs() {
 	return 0;
 #endif
 }
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 122, knob "burn" (MEASUREMENT ONLY): the cold paths of the hooks in frameStats.h.  They run once per frame and
+// site on each hooked thread (a seen counter, one knob read) and, only while armed, the spin and its bookkeeping.  The
+// counted time (burn_*_ns) is the wall of the armed path: from right after the decode (and the one-off self-test and arm
+// log) to right before the counter Adds, so a spread step's per-call overhead is inside the dose; a block converts TSC ->
+// ns once, a spread step converts per step and carries the sub-ns remainder to the next step (t_burn_frac), so the
+// frame's spread total is not truncated per step.  RC3: the thread CPU (QueryThreadCycleTime on this thread) is read
+// around every block spin and around one spread step in 64, and published beside the wall of the same spins
+// (burn_*_cpu_ns / burn_*_cpu_w): the admission check
+// "cpu >= 0.9 * wall" verifies the burn itself, not the frame.  A spread sample's CPU interval holds most of the two
+// QueryThreadCycleTime calls and its wall does not (unit test: cpu/wall 1.32-1.37 at a ~227 ns step, no preemption),
+// so the spread ratio is read against that baseline, not 1.0 (ROADMAP s. 122 item 3 (e)); blocks read 1.000.
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+namespace {
+
+struct BurnCounters {
+	Counter ns;     // wall of the armed path
+	Counter n;      // burnt (block) or armed (spread) frames
+	Counter q;      // spread spin calls; Counter::Count = a block-only group
+	Counter cpu_ns; // thread CPU across the sampled spins
+	Counter cpu_w;  // wall of the same sampled spins
+};
+constexpr BurnCounters kBurnGpu {Counter::BurnGNs, Counter::BurnGN, Counter::Count, Counter::BurnGCpuNs,
+                                 Counter::BurnGCpuW};
+constexpr BurnCounters kBurnRecord {Counter::BurnRNs, Counter::BurnRN, Counter::BurnRQ, Counter::BurnRCpuNs,
+                                    Counter::BurnRCpuW};
+constexpr BurnCounters kBurnM1 {Counter::BurnMNs, Counter::BurnMN, Counter::BurnMQ, Counter::BurnMCpuNs,
+                                Counter::BurnMCpuW};
+constexpr BurnCounters kBurnMain {Counter::BurnTNs, Counter::BurnTN, Counter::Count, Counter::BurnTCpuNs,
+                                  Counter::BurnTCpuW};
+constexpr BurnCounters kBurnPlacebo {Counter::BurnPNs, Counter::BurnPN, Counter::Count, Counter::BurnPCpuNs,
+                                     Counter::BurnPCpuW};
+
+constexpr uint32_t BurnCodeBase    = 100000;
+constexpr uint32_t BurnMaxDoseUs   = 20000;
+constexpr uint64_t BurnLateSlackNs = 50000;
+
+std::array<std::atomic<uint32_t>, 9> g_burn_last_armed {}; // per code: the last armed value that was logged
+std::atomic<uint32_t>                g_burn_log_arm {0};
+std::atomic<uint32_t>                g_burn_log_reject {0};
+std::atomic<uint32_t>                g_burn_log_late {0};
+std::atomic<bool>                    g_burn_notsc {false};
+std::atomic<bool>                    g_burn_selftest {false};
+std::atomic<bool>                    g_burn_placebo {false};
+
+thread_local uint64_t            t_burn_q          = 0;       // spread quantum, TSC cycles
+thread_local uint32_t            t_burn_prev_calls = 0;       // calls of this thread's previous ARMED spread frame
+thread_local uint32_t            t_burn_sample     = 0;       // spread steps, for the 1-in-64 CPU sample
+thread_local const BurnCounters* t_burn_ctr        = nullptr; // counters of the armed spread frame
+thread_local uint64_t            t_burn_carry      = 0;       // previous step's bookkeeping tail, TSC cycles
+thread_local uint64_t            t_burn_gap        = 0;       // per-step rdtsc gap, TSC cycles (BurnRdtscGap)
+thread_local double              t_burn_frac       = 0.0;     // sub-ns remainder of the spread conversions, cycles
+
+// The mean cost of a back-to-back rdtsc pair (4 096 pairs; a pair over 1 000 cycles is an interrupt and dropped),
+// measured once per process: the sliver between a spread step's last timestamp and the next step's first that
+// neither counts (the unit test measured it at ~7 ns a step, 2.8 % of a 2 000 us spread dose).
+uint64_t BurnRdtscGap() {
+	static const uint64_t gap = [] {
+		uint64_t sum = 0;
+		uint64_t n   = 0;
+		for (int i = 0; i < 4096; i++) {
+			const uint64_t a = __rdtsc();
+			const uint64_t b = __rdtsc();
+			if (b - a < 1000) {
+				sum += b - a;
+				n++;
+			}
+		}
+		return n != 0 ? (sum + n / 2) / n : 0;
+	}();
+	return gap;
+}
+
+uint64_t BurnNs(uint64_t cycles, double cycles_per_ns) {
+	return static_cast<uint64_t>(static_cast<double>(cycles) / cycles_per_ns);
+}
+
+bool BurnThreadCycles(uint64_t* cycles) {
+	ULONG64 c = 0;
+	if (QueryThreadCycleTime(GetCurrentThread(), &c) == 0) {
+		return false;
+	}
+	*cycles = c;
+	return true;
+}
+
+// The one knob read of a new frame.  False: off, rejected (logged, <= 8 lines) or no calibrated TSC (logged once).
+bool BurnDecode(uint32_t* code, uint32_t* dose_us, double* cycles_per_ns) {
+	const auto value = Common::Gates::Value(Common::Gates::Knob::Burn);
+	if (value == 0) {
+		return false;
+	}
+	*code    = value / BurnCodeBase;
+	*dose_us = value % BurnCodeBase;
+	if (*code < 1 || *code > 8 || *dose_us == 0 || *dose_us > BurnMaxDoseUs) {
+		if (g_burn_log_reject.fetch_add(1, std::memory_order_relaxed) < 8) {
+			LOGF("Burn: value=%u rejected\n", value);
+		}
+		return false;
+	}
+	*cycles_per_ns = TscCyclesPerNs();
+	if (!(*cycles_per_ns > 0.0)) {
+		if (!g_burn_notsc.exchange(true, std::memory_order_relaxed)) {
+			LOGF("Burn: no calibrated TSC, disabled\n");
+		}
+		return false;
+	}
+	return true;
+}
+
+// Once per process, on the first arming of any code (RC13: on that thread at block position 0 of the first armed block,
+// outside the estimator window 10-88): 1 000 us of the same spin, timed by NowNs and by QPC.
+void BurnSelfTest(double cycles_per_ns) {
+	if (g_burn_selftest.exchange(true, std::memory_order_relaxed)) {
+		return;
+	}
+	const auto frequency = QpcFrequency();
+	const auto q0        = Qpc();
+	const auto n0        = NowNs();
+	const auto cycles    = BurnSpinUntil(__rdtsc(), static_cast<uint64_t>(1000000.0 * cycles_per_ns));
+	const auto n1        = NowNs();
+	const auto q1        = Qpc();
+	const double qpc_us  = frequency != 0 ? static_cast<double>(q1 - q0) * 1e6 / static_cast<double>(frequency) : 0.0;
+	LOGF("Burn: selftest target_us=1000 tsc_us=%.1f qpc_us=%.1f spin_us=%.1f cycles_per_ns=%.6f rdtsc_gap_ns=%.1f\n",
+	     static_cast<double>(n1 - n0) / 1000.0, qpc_us, static_cast<double>(cycles) / cycles_per_ns / 1000.0,
+	     cycles_per_ns, static_cast<double>(BurnRdtscGap()) / cycles_per_ns);
+}
+
+// On each change of the armed value per code (the first arming of a code, or a new dose); <= 32 lines.
+void BurnLogArm(uint32_t code, uint32_t dose_us, const char* thread, uint64_t q_ns) {
+	const uint32_t value = code * BurnCodeBase + dose_us;
+	if (g_burn_last_armed[code].exchange(value, std::memory_order_relaxed) == value) {
+		return;
+	}
+	if (g_burn_log_arm.fetch_add(1, std::memory_order_relaxed) < 32) {
+		LOGF("Burn: arm code=%u thread=%s dose_us=%u q_ns=%llu\n", code, thread, dose_us,
+		     static_cast<unsigned long long>(q_ns));
+	}
+}
+
+// One block of `dose_us` on this thread, CPU read around it (RC3; burn_*_cpu_w = the wall between the readings).
+void BurnBlock(uint32_t code, uint32_t dose_us, double cycles_per_ns, const BurnCounters& c, const char* thread) {
+	BurnSelfTest(cycles_per_ns);
+	BurnLogArm(code, dose_us, thread, 0);
+	const uint64_t dose_ns = static_cast<uint64_t>(dose_us) * 1000u;
+	const uint64_t target  = static_cast<uint64_t>(static_cast<double>(dose_ns) * cycles_per_ns);
+	const uint64_t t_in    = __rdtsc();
+	uint64_t       c0      = 0;
+	uint64_t       c1      = 0;
+	const bool     ok0     = BurnThreadCycles(&c0);
+	const uint64_t s0      = __rdtsc();
+	(void)BurnSpinUntil(t_in, target);
+	const uint64_t s1    = __rdtsc();
+	const bool     ok1   = BurnThreadCycles(&c1);
+	const uint64_t t_out = __rdtsc();
+	const uint64_t ns    = BurnNs(t_out - t_in, cycles_per_ns);
+	Add(c.ns, ns);
+	Add(c.n, 1);
+	if (ok0 && ok1 && c1 > c0) {
+		Add(c.cpu_ns, BurnNs(c1 - c0, cycles_per_ns));
+		Add(c.cpu_w, BurnNs(s1 - s0, cycles_per_ns)); // the wall between the two readings
+	} else {
+		Add(Counter::BurnCpuBad, 1);
+	}
+	if (ns > dose_ns + BurnLateSlackNs) {
+		Add(Counter::BurnLate, 1);
+		if (g_burn_log_late.fetch_add(1, std::memory_order_relaxed) < 64) {
+			LOGF("BurnLate: code=%u us=%.1f target_us=%u\n", code, static_cast<double>(ns) / 1000.0, dose_us);
+		}
+	}
+}
+
+// Arms a spread frame on this thread: budget B = dose / divisor, quantum q = 1.25 * B / (calls of the previous armed
+// frame), 250 ns in the first armed frame; the dose is front-loaded into the first ~80 % of the frame and never
+// exceeds B (leftover budget is discarded at the next key).  The arming call is the frame's first step.
+void BurnArmSpread(uint32_t code, uint32_t dose_us, uint32_t divisor, double cycles_per_ns, const BurnCounters& c,
+                   const char* thread) {
+	BurnSelfTest(cycles_per_ns);
+	const uint64_t budget =
+	    static_cast<uint64_t>(static_cast<double>(dose_us) * 1000.0 * cycles_per_ns / static_cast<double>(divisor));
+	uint64_t q = t_burn_prev_calls == 0
+	                 ? static_cast<uint64_t>(250.0 * cycles_per_ns)
+	                 : static_cast<uint64_t>(1.25 * static_cast<double>(budget) / static_cast<double>(t_burn_prev_calls));
+	q = std::max<uint64_t>(q, 1);
+	BurnLogArm(code, dose_us, thread, BurnNs(q, cycles_per_ns));
+	t_burn_q             = q;
+	t_burn_ctr           = &c;
+	t_burn_carry         = 0;
+	t_burn_frac          = 0.0;
+	t_burn_gap           = BurnRdtscGap();
+	Detail::t_burn_left  = budget;
+	Detail::t_burn_calls = 1;
+	Detail::t_burn_spread = true;
+	Add(c.n, 1);
+	if (budget != 0) {
+		BurnSpreadStep();
+	}
+}
+
+void BurnPlaceboLoop(void (*pin)(bool)) {
+	uint32_t last = Detail::g_burn_frame.v.load(std::memory_order_acquire);
+	for (;;) {
+		Sleep(1);
+		const uint32_t key = Detail::g_burn_frame.v.load(std::memory_order_acquire);
+		if (key == last) {
+			continue;
+		}
+		last = key;
+		Add(Counter::BurnPSeen, 1);
+		uint32_t code          = 0;
+		uint32_t dose_us       = 0;
+		double   cycles_per_ns = 0.0;
+		if (!BurnDecode(&code, &dose_us, &cycles_per_ns) || code != 8) {
+			continue;
+		}
+		if (pin != nullptr) {
+			pin(false); // knob "dapin", as an M1 worker applies it (RC9)
+		}
+		BurnBlock(code, dose_us, cycles_per_ns, kBurnPlacebo, "Placebo");
+	}
+}
+
+// RC9: detached (a joinable std::thread destroyed at exit would call std::terminate), started once.
+void BurnStartPlacebo(void (*pin)(bool)) {
+	if (g_burn_placebo.exchange(true, std::memory_order_relaxed)) {
+		return;
+	}
+	std::thread(BurnPlaceboLoop, pin).detach();
+	LOGF("Burn: placebo thread started\n");
+}
+
+} // namespace
+
+// The counted wall of a step runs from its entry to the end of its spin, plus the bookkeeping tail of the previous
+// step (t_burn_carry) and the rdtsc gap between steps (t_burn_gap), so the per-call overhead is inside the dose (the
+// unit test measured ~8 ns a step outside it before the carry, ~7 ns after it); the tail of a frame's last step is
+// lost.  t_burn_gap is a per-process ESTIMATE (the mean back-to-back rdtsc pair, ~7 ns), not a measured wall (ROADMAP
+// s. 122 item 3 (d)).  The TSC -> ns conversion carries the sub-ns remainder to the next step (t_burn_frac); truncating
+// every step lost ~0.5 ns a step, ~0.2 % of a 2 000 us spread dose.
+void BurnSpreadStep() {
+	const uint64_t t_in          = __rdtsc();
+	const double   cycles_per_ns = TscCyclesPerNs();
+	const auto&    c             = *t_burn_ctr;
+	const uint64_t chunk         = std::min(t_burn_q, Detail::t_burn_left);
+	const bool     sample        = (t_burn_sample++ & 63u) == 0;
+	uint64_t       c0            = 0;
+	uint64_t       c1            = 0;
+	const bool     ok0           = sample && BurnThreadCycles(&c0);
+	const uint64_t s0            = sample ? __rdtsc() : t_in;
+	(void)BurnSpinUntil(s0, chunk);
+	const uint64_t s1      = sample ? __rdtsc() : 0;
+	const bool     ok1     = sample && BurnThreadCycles(&c1);
+	const uint64_t t_mid   = __rdtsc();
+	const uint64_t elapsed = t_mid - t_in + t_burn_carry + t_burn_gap;
+	Detail::t_burn_left    = elapsed >= Detail::t_burn_left ? 0 : Detail::t_burn_left - elapsed;
+	const double   counted = static_cast<double>(elapsed) + t_burn_frac;
+	const uint64_t ns      = static_cast<uint64_t>(counted / cycles_per_ns);
+	t_burn_frac            = counted - static_cast<double>(ns) * cycles_per_ns;
+	Add(c.ns, ns);
+	Add(c.q, 1);
+	if (sample) {
+		if (ok0 && ok1 && c1 > c0) {
+			Add(c.cpu_ns, BurnNs(c1 - c0, cycles_per_ns));
+			Add(c.cpu_w, BurnNs(s1 - s0, cycles_per_ns)); // the wall between the two readings
+		} else {
+			Add(Counter::BurnCpuBad, 1);
+		}
+	}
+	t_burn_carry = __rdtsc() - t_mid;
+}
+
+void BurnNewFrame(BurnSite site, uint32_t key, void (*pin)(bool)) {
+	Detail::t_burn_key[static_cast<size_t>(site)] = key;
+	if (site == BurnSite::Record || site == BurnSite::M1Job) {
+		if (Detail::t_burn_spread) {
+			t_burn_prev_calls = Detail::t_burn_calls;
+		}
+		Detail::t_burn_spread = false;
+		Detail::t_burn_left   = 0;
+		Detail::t_burn_calls  = 0;
+	}
+	switch (site) {
+		case BurnSite::Gpu: Add(Counter::BurnGSeen, 1); break;
+		case BurnSite::Record: Add(Counter::BurnRSeen, 1); break;
+		case BurnSite::M1Job: Add(Counter::BurnMSeen, 1); break;
+		case BurnSite::M1Top: Add(Counter::BurnM0Seen, 1); break;
+		case BurnSite::Main:
+			if (CurrentRole() != ThreadRole::Main) {
+				return;
+			}
+			Add(Counter::BurnTSeen, 1);
+			break;
+		default: return;
+	}
+	uint32_t code          = 0;
+	uint32_t dose_us       = 0;
+	double   cycles_per_ns = 0.0;
+	if (!BurnDecode(&code, &dose_us, &cycles_per_ns)) {
+		return;
+	}
+	switch (site) {
+		case BurnSite::Gpu:
+			if (code == 1) {
+				BurnBlock(code, dose_us, cycles_per_ns, kBurnGpu, "GuestGpu");
+			} else if (code == 8) {
+				BurnStartPlacebo(pin);
+			}
+			break;
+		case BurnSite::Record:
+			if (code == 5) {
+				BurnBlock(code, dose_us, cycles_per_ns, kBurnRecord, "Record");
+			} else if (code == 2) {
+				BurnArmSpread(code, dose_us, 1, cycles_per_ns, kBurnRecord, "Record");
+			}
+			break;
+		case BurnSite::M1Job:
+			if (code == 3) {
+				const auto threads = Common::Gates::Value(Common::Gates::Knob::DrawAheadThreads);
+				BurnArmSpread(code, dose_us, std::max<uint32_t>(threads, 1), cycles_per_ns, kBurnM1, "M1");
+			}
+			break;
+		case BurnSite::M1Top:
+			if (code == 6) {
+				BurnBlock(code, dose_us, cycles_per_ns, kBurnM1, "M1worker0");
+			}
+			break;
+		case BurnSite::Main:
+			if (code == 4) {
+				BurnBlock(code, dose_us, cycles_per_ns, kBurnMain, "Main");
+			}
+			break;
+		default: break;
+	}
+}
+
+void BurnSubmitFrame(uint32_t key) {
+	uint32_t taken = Detail::g_burn_submit_key.v.load(std::memory_order_relaxed);
+	do {
+		// A submitter that loaded an older key must not move the frame back.
+		if (static_cast<int32_t>(key - taken) <= 0) {
+			return;
+		}
+	} while (!Detail::g_burn_submit_key.v.compare_exchange_weak(taken, key, std::memory_order_relaxed));
+	Add(Counter::BurnSSeen, 1);
+	if (CurrentRole() == ThreadRole::Main) {
+		Add(Counter::BurnSMain, 1);
+	}
+	uint32_t code          = 0;
+	uint32_t dose_us       = 0;
+	double   cycles_per_ns = 0.0;
+	if (!BurnDecode(&code, &dose_us, &cycles_per_ns) || code != 7) {
+		return;
+	}
+	BurnBlock(code, dose_us, cycles_per_ns, kBurnMain, "Submit");
+}
+#else
+void BurnSpreadStep() {
+	Detail::t_burn_left = 0;
+}
+void BurnNewFrame(BurnSite site, uint32_t key, void (*pin)(bool)) {
+	(void)pin;
+	Detail::t_burn_key[static_cast<size_t>(site)] = key;
+}
+void BurnSubmitFrame(uint32_t key) {
+	Detail::g_burn_submit_key.v.store(key, std::memory_order_relaxed);
+}
+#endif
 
 } // namespace Common::FrameStats

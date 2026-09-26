@@ -1,0 +1,19 @@
+# Session 121 seal 01 (vfy121) - sha256 of every sealed file; written by seal121_01.py
+
+f681d4db7d55f522f74b943df49a4a5ef3d2f79eb53a1e321606e1f57e2466ea  pred/01_vfy121.md
+ce1462bba27d425d6ee036f28a7a51280863107886e833e5cf5eb4477665ad61  design/design121.md
+43359b1457ad7d1ff990c7406f0e6bec64588229b0604d68ad9084ee96a482f8  vfy121.py
+61edc64b2dc9c7449a0d4d6c1c85646b0bb0a5a39a981ee3194993322bd01222  test_vfy121.py
+48557f6747ce21155133d1b42ff2435735ffdd61033f436f65503048e9359d2b  mut_vfy121.py
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf  gates_base.txt
+b12a9716f9a97d2e5d7e094d1bfceeca199826efeaf030a190db561efab96510  go121a.sh
+30b4d915579f4fb65a9f6d36215ffb1fbd79ec4b14137b33f5334990e22c32d4  enter_scene.py
+d9e7a777404f1aa98eb8e221d2d9b1af0e393b292d91997fade08fae685ce5c0  procload.py
+0bd21ec24e546fbbb9b923c148fb76b57f45389ac166a71bad7410a3add738c7  kyty_emulator_0bd21ec2.exe
+c5743505cca1f626d3090ef4b4475dce6dcd7787a6971ff9da690e48a0397064  chk_vfy121.py
+
+mutlib v4.1 (docs/session-116/mutlib_v41/mutlib.py db82ef4b) FULL run on the sealed copy: see below
+
+
+vfy121: mutlib 4.1 FULL --control --no-memo on the sealed copy: 297 mutants, 297 killed (19 by a suite crash), 0 survived; controls 3 of 3 survived; report mut_vfy121.sealed.txt
+fixtures on the sealed copy: test_vfy121.py --real 444 fixtures ALL OK

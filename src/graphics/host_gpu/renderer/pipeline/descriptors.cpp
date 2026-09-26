@@ -1893,6 +1893,210 @@ static void R1Miss(R1::Census* c, const Common::SlotVector<Image>& images, uint6
 	}
 }
 
+// Session 121, knob "texmemo8" (C:/kyty/s121/design/design121.md = texmemo8.md with RC1-RC8 of texmemo8_review.md and
+// the adopted recommendations): the texture memo as 512 sets x 8 ways of the SAME 4 096 entries (the pure set/way logic
+// is renderMemo8.h).  Read ONCE per ResolveTextureWith call.  1: the 8-way memo (the shipping candidate; rare-path
+// counters only).  2: VERIFY, MEASUREMENT ONLY, never a timed arm - every gained hit (the direct shadow does not hold
+// the key with its id) and a 1/64 xorshift sample of the other hits run the full resolution too and are compared
+// (store, id, R1DescDigest); RebindImages checks that every eligible binding's entry is PLACED under the current
+// layout; the probe is timed on the 1/64 sample.  3: 2 + a positive control (1/1024 of the gained hits are compared
+// against a corrupted COPY of the slot id, 1/1024 of the placement checks against a wrong set; nothing in the memo
+// changes).  Off under texmemo2 (texmemo2 wins).  Only GuestGpu resolves textures: no lock, no atomic.
+namespace Tm8 {
+using Ctr                     = Common::FrameStats::Counter;
+constexpr uint32_t Ways       = RenderExecutorMemo::TextureWays8;
+constexpr uint32_t DirectMask = RenderExecutorMemo::TextureSlots - 1;
+struct Probe {
+	uint32_t index = 0;     // set * 8 + way: the hit way, else the victim way
+	bool     found = false; // the full key proof passed on a non-empty way
+};
+// THE REAL HIT'S KEY TEST on every tag-matching way (valid, resource_key, 32-byte T#) - never the tag alone.
+// Forced inline (review): the timed arm (1) must pay the probe as inline code, as the census priced it, not a call.
+static inline __attribute__((always_inline)) Probe Find(const RenderExecutorMemo& m, uint64_t h, uint64_t rk,
+                                                        const uint32_t* dwords) {
+	const uint32_t set = TexMemo8SetOf(h);
+	const auto&    s   = m.texture_sets8[set];
+	for (uint32_t mask = TexMemo8TagMask(s, TexMemo8Tag(h)); mask != 0; mask &= mask - 1u) {
+		const uint32_t w = static_cast<uint32_t>(std::countr_zero(mask));
+		const auto&    e = m.textures[set * Ways + w];
+		if (e.valid && e.resource_key == rk && std::memcmp(e.dwords.data(), dwords, sizeof(e.dwords)) == 0) {
+			return {set * Ways + w, true};
+		}
+		Common::FrameStats::Add(Ctr::Tm8Alias, 1); // a 32-bit tag alias: the exact proof failed (expected ~0)
+	}
+	return {set * Ways + TexMemo8Victim(s), false};
+}
+// texmemo8 >= 2, the 1/64 sample: the probe price against a null stamp pair (the timed probe IS this lookup's probe).
+static Probe FindTimed(const RenderExecutorMemo& m, uint64_t h, uint64_t rk, const uint32_t* dwords) {
+	namespace FS      = Common::FrameStats;
+	const uint64_t a0 = FS::NowNs();
+	const uint64_t a1 = FS::NowNs();
+	const uint64_t b0 = FS::NowNs();
+	const Probe    p  = Find(m, h, rk, dwords);
+	const uint64_t b1 = FS::NowNs();
+	FS::Add(Ctr::Tm8Probe0Ns, a1 - a0);
+	FS::Add(Ctr::Tm8ProbeNs, b1 - b0);
+	FS::Add(Ctr::Tm8ProbeN, 1);
+	return p;
+}
+// texmemo8 >= 2 (RC3): xorshift32 in the memo, as R1Next - not periodic, so the samplers cannot alias with the fixed
+// per-stage slot order.  Its own state (not t_r1_rng): the two instruments stay uncoupled.
+static uint32_t Next(RenderExecutorMemo& m) {
+	auto x = m.texture8_sample;
+	x ^= x << 13u;
+	x ^= x >> 17u;
+	x ^= x << 5u;
+	return m.texture8_sample = x;
+}
+// Forced inline (review): called from the hit LRU and the store of the timed arm; the wrap is TexMemo8RenormCold.
+static inline __attribute__((always_inline)) uint32_t Tick(RenderExecutorMemo& m) {
+	bool           renormed = false;
+	const uint32_t stamp    = TexMemo8Tick(m.texture8_clock, m.texture_sets8.data(), m.texture_sets8.size(), renormed);
+	if (renormed) [[unlikely]] {
+		Common::FrameStats::Add(Ctr::Tm8Renorm, 1);
+	}
+	return stamp;
+}
+// A layout change (direct <-> 8-way): every entry invalid, every version moved, every recorded view dropped, every way
+// empty.  A binding resolved under the other layout (memo_index, memo_version) can never pass texfast eligibility or the
+// shadowresolve query again, because both require slot.version == binding.memo_version.
+static void Invalidate(RenderExecutorMemo& m) {
+	for (auto& t: m.textures) {
+		t.valid = false;
+		t.version++;
+		t.fast_view = nullptr;
+	}
+	m.texture_sets8.fill(RenderExecutorMemo::TextureSet8 {});
+	m.texture8_clock = 0;
+	Common::FrameStats::Add(Ctr::Tm8Inval, 1);
+}
+// The first call that sees another effective value.  0 <-> nonzero changes the layout: full invalidation.  Entering
+// 2/3: the direct shadow starts EMPTY (it models a direct memo that restarted at this edge; if the 8-way is already
+// full - 1 -> 2 - every hit counts as gained until the shadow fills: more verification, never less).
+static void Switch(RenderExecutorMemo& m, uint32_t mode) {
+	if ((m.texture_mode == 0) != (mode == 0)) {
+		Invalidate(m);
+	}
+	if (mode >= 2) {
+		m.texture8_direct.assign(RenderExecutorMemo::TextureSlots, {});
+	} else if (!m.texture8_direct.empty()) {
+		m.texture8_direct.clear();
+		m.texture8_direct.shrink_to_fit();
+	}
+	m.texture_mode = mode;
+	Common::FrameStats::Add(Ctr::Tm8Mode, 1);
+}
+// The direct shadow (texmemo8 >= 2): does the direct memo's slot memo_hash % 4096 hold K (and, when given, with id)?
+static bool DirectHolds(const RenderExecutorMemo& m, uint64_t h, uint64_t rk, const uint32_t* dwords,
+                        const ImageId* id) {
+	const auto& d = m.texture8_direct[h & DirectMask];
+	return d.valid && d.resource_key == rk && std::memcmp(d.dwords.data(), dwords, sizeof(d.dwords)) == 0 &&
+	       (id == nullptr || d.image_id == *id);
+}
+static void DirectDrop(RenderExecutorMemo& m, uint64_t h, uint64_t rk, const uint32_t* dwords) {
+	if (DirectHolds(m, h, rk, dwords, nullptr)) {
+		m.texture8_direct[h & DirectMask].valid = false;
+	}
+}
+// The shadow after a store (or a verified hit) of (K, id).  RC5: in the loss case the shadow holds K with ANOTHER id -
+// the direct memo may then have hit with that id - so K is DROPPED (later hits of K count as gained and are verified)
+// and booked as tm8_ddiff (information: the shadow does not know whether that id was still live).  Else exact.
+static void DirectStore(RenderExecutorMemo& m, uint64_t h, uint64_t rk, const uint32_t* dwords, ImageId id) {
+	auto& d = m.texture8_direct[h & DirectMask];
+	if (DirectHolds(m, h, rk, dwords, nullptr) && !(d.image_id == id)) {
+		Common::FrameStats::Add(Ctr::Tm8DirectDiff, 1);
+		d.valid = false;
+		return;
+	}
+	d.resource_key = rk;
+	std::memcpy(d.dwords.data(), dwords, sizeof(d.dwords));
+	d.image_id = id;
+	d.valid    = true;
+}
+// THE VERIFY CHECK (the census's bad check, r1.md section 7, on the real table): the hit claims (slot id, slot desc);
+// the fresh full resolution computed (id, desc, store) at the same moment.  The claim holds only if store and the id
+// (index AND generation) and the full desc digest agree.  RC2: the REAL verdict first; `inject` (texmemo8 = 3) then
+// checks that a corrupted COPY of the slot id would be rejected - it never changes the memo and never hides a real
+// mismatch.  Returns false only on a real mismatch.  NOTE (review): the in-game control is tautological by
+// construction - once real_ok holds, id == slot.image_id, so `id != claim` is always true and InjectMissed is
+// unreachable: tm8_inject_miss = 0 proves nothing, tm8_inject > 0 proves only that this counter/log path runs and
+// that ImageId == compares the generation.  The evidence that tm8_bad / tm8_vctl_bad CAN fire is the offline unit
+// test (TexMemo8Judge driven directly, C:/kyty/s121/unit), not this control.
+static bool Agree(bool gained, bool inject, const RenderExecutorMemo::Texture& slot, uint32_t index, ImageId id,
+                  const TextureCache::ImageDesc& desc, bool store) {
+	namespace FS = Common::FrameStats;
+	FS::Add(gained ? Ctr::Tm8Check : Ctr::Tm8CtlCheck, 1);
+	const auto a       = R1DescDigest(slot.desc);
+	const auto b       = R1DescDigest(desc);
+	const bool real_ok = store && id == slot.image_id && a.all == b.all;
+	ImageId    claim   = slot.image_id; // the positive control's COPY: never written back
+	claim.generation ^= 0x80000000u;
+	switch (TexMemo8Judge(real_ok, inject, id != claim)) {
+		case TexMemo8Verdict::Agree: return true;
+		case TexMemo8Verdict::Injected: {
+			FS::Add(Ctr::Tm8Inject, 1);
+			static std::atomic<uint32_t> logged_inject {0};
+			if (logged_inject.fetch_add(1, std::memory_order_relaxed) < 4) {
+				LOGF("Tm8VerifyInjected: set=%u way=%u slot_id=%u/%u claim_id=%u/%u fresh_id=%u/%u rejected=1\n",
+				     index / Ways, index % Ways, slot.image_id.index, slot.image_id.generation, claim.index,
+				     claim.generation, id.index, id.generation);
+			}
+			return true;
+		}
+		case TexMemo8Verdict::InjectMissed: FS::Add(Ctr::Tm8InjectMiss, 1); return true;
+		case TexMemo8Verdict::Mismatch: break;
+	}
+	FS::Add(gained ? Ctr::Tm8Bad : Ctr::Tm8CtlBad, 1);
+	static std::atomic<uint32_t> logged {0};
+	if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+		const uint32_t diff = a.groups ^ b.groups;
+		LOGF("Tm8VerifyMismatch: kind=%s inject=%d set=%u way=%u store=%d id_same=%d slot_id=%u/%u fresh_id=%u/%u"
+		     " desc_same=%d info_differs=%d view_differs=%d source_differs=%d addr=0x%010" PRIx64 "\n",
+		     gained ? "gain" : "ctl", inject ? 1 : 0, index / Ways, index % Ways, store ? 1 : 0,
+		     id == slot.image_id ? 1 : 0, slot.image_id.index, slot.image_id.generation, id.index, id.generation,
+		     a.all == b.all ? 1 : 0, (diff & 0x3ffu) != 0 ? 1 : 0, ((diff >> 10u) & 0x3ffu) != 0 ? 1 : 0,
+		     ((diff >> 20u) & 0x3ffu) != 0 ? 1 : 0, desc.info.data.address);
+	}
+	return false;
+}
+// texmemo8 >= 2, RebindImages (RC4): an ELIGIBLE binding's entry must hold a key that BELONGS at that index under the
+// CURRENT layout and, 8-way, on a non-empty way with the key's tag - i.e. no entry laid out by the other layout, and no
+// evicted-and-refilled way, is ever eligible.  One XXH3 of 32 bytes per check.  The real check runs on every eligible
+// binding; `inject` (texmemo8 = 3, 1/1024) ADDITIONALLY checks the same key against a wrong set, which must be rejected.
+// NOTE (review): tautological like Agree's control - when the real placement holds, (index ^ 8) / 8 != SetOf(h) by
+// construction, so tm8_rbinject_miss is a structural 0; the evidence that tm8_rbbad CAN fire is the unit test
+// (TexMemo8Placed driven directly).
+static void CheckRebind(const RenderExecutorMemo& m, const TextureBinding& binding, bool inject) {
+	namespace FS         = Common::FrameStats;
+	const auto&    slot  = m.textures[binding.memo_index];
+	const uint64_t h     = MemoHashBytes(slot.dwords.data(), sizeof(slot.dwords), slot.resource_key);
+	const uint32_t index = binding.memo_index;
+	FS::Add(Ctr::Tm8RbCheck, 1);
+	if (!TexMemo8Placed(m.texture_mode, h, index, m.texture_sets8[index / Ways])) {
+		FS::Add(Ctr::Tm8RbBad, 1);
+		static std::atomic<uint32_t> logged {0};
+		if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+			LOGF("Tm8RebindMismatch: mode=%u index=%u version=%u hash=0x%016" PRIx64 " slot_id=%u/%u binding_id=%u/%u"
+			     " addr=0x%010" PRIx64 "\n",
+			     m.texture_mode, index, binding.memo_version, h, slot.image_id.index, slot.image_id.generation,
+			     binding.image_id.index, binding.image_id.generation, binding.desc.info.data.address);
+		}
+	}
+	if (inject) [[unlikely]] {
+		const uint32_t wrong = index ^ Ways; // the neighbouring set, same way
+		if (TexMemo8Placed(m.texture_mode, h, wrong, m.texture_sets8[wrong / Ways])) {
+			FS::Add(Ctr::Tm8RbInjectMiss, 1); // must read 0: the placement check cannot reject
+		} else {
+			FS::Add(Ctr::Tm8RbInject, 1);
+			static std::atomic<uint32_t> logged_inject {0};
+			if (logged_inject.fetch_add(1, std::memory_order_relaxed) < 4) {
+				LOGF("Tm8RebindInjected: mode=%u index=%u wrong=%u rejected=1\n", m.texture_mode, index, wrong);
+			}
+		}
+	}
+}
+} // namespace Tm8
+
 // Session 57, B2a: every result goes out through `emit`; the three returns hand it the same
 // fields MakeTextureBinding / the brace initializer did (image_view null, layout undefined, no
 // mip views, memo index UINT32_MAX / version 0 unless given).
@@ -1991,9 +2195,25 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	// overlap view could be superseded by a later exact image).
 	auto&          memo         = Memo();
 	const bool     memo2        = Common::Gates::Enabled(Common::Gates::Gate::TexMemo2);
+	// Session 121, knob "texmemo8" (C:/kyty/s121/design/design121.md): read ONCE per call - a knob read twice in one
+	// operation can tear (session 97).  texmemo2 wins (both write the textures entries through their own index); asking
+	// for both is counted (tm8_x2 must read 0).  The memo remembers the value it is laid out for; the first call that
+	// sees another one switches it (a change 0 <-> nonzero invalidates every entry).
+	const uint32_t tm8          = memo2 ? 0u : Common::Gates::Value(Common::Gates::Knob::TexMemo8);
+	if (memo2 && Common::Gates::Value(Common::Gates::Knob::TexMemo8) != 0) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Tm8WithMemo2, 1);
+	}
+	if (memo.texture_mode != tm8) [[unlikely]] {
+		Tm8::Switch(memo, tm8);
+	}
 	// Session 120, knob "r1cen" (MEASUREMENT ONLY, C:/kyty/s120/design/r1.md): read ONCE per call - a knob read twice
 	// in one operation can tear (session 97).  The census models the direct table only: off under texmemo2.
-	const uint32_t r1_level     = memo2 ? 0u : Common::Gates::Value(Common::Gates::Knob::R1Census);
+	// Session 121: and off under texmemo8 (its real-index bookkeeping, R1Hit's h & 4095, is the direct layout).
+	const uint32_t r1_req       = memo2 ? 0u : Common::Gates::Value(Common::Gates::Knob::R1Census);
+	const uint32_t r1_level     = tm8 != 0 ? 0u : r1_req;
+	if (tm8 != 0 && r1_req != 0) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Tm8CensusOff, 1);
+	}
 	const uint64_t resource_key =
 	    memo2 ? MemoResourceKey(memo, resource)
 	          : MemoHashBytes(&resource,
@@ -2001,18 +2221,207 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	                              reinterpret_cast<const uint8_t*>(&resource));
 	const uint64_t memo_hash =
 	    MemoHashBytes(descriptor.fields, sizeof(descriptor.fields), resource_key);
+	// Session 121, knob "texmemo8": the set probe.  At >= 2 one xorshift32 draw a lookup (RC3: not periodic, so no
+	// slot-position aliasing): bits 0-5 pick the 1/64 control / probe-timer sample, bits 6-15 the 1/1024 positive
+	// control at 3.  At 1 no per-lookup instrument (the timed arm, design section 6).
+	uint32_t tm8_rnd = 0;
+	if (tm8 >= 2) [[unlikely]] {
+		tm8_rnd = Tm8::Next(memo);
+	}
+	const bool tm8_smp   = tm8 >= 2 && (tm8_rnd & 63u) == 0;
+	Tm8::Probe tm8_probe {};
+	if (tm8 != 0) {
+		tm8_probe = tm8_smp ? Tm8::FindTimed(memo, memo_hash, resource_key, descriptor.fields)
+		                    : Tm8::Find(memo, memo_hash, resource_key, descriptor.fields);
+	}
 	const uint32_t memo_index =
-	    memo2 ? MemoTextureWay(memo, memo_hash)
-	          : static_cast<uint32_t>(memo_hash % RenderExecutorMemo::TextureSlots);
+	    memo2      ? MemoTextureWay(memo, memo_hash)
+	    : tm8 != 0 ? tm8_probe.index
+	               : static_cast<uint32_t>(memo_hash % RenderExecutorMemo::TextureSlots);
 	auto& memo_slot = memo.textures[memo_index];
 	const bool memo_key_match =
-	    memo_slot.valid && memo_slot.resource_key == resource_key &&
-	    std::memcmp(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields)) == 0;
+	    tm8 != 0 ? tm8_probe.found // the probe ran the same three-term test on this entry
+	             : memo_slot.valid && memo_slot.resource_key == resource_key &&
+	                   std::memcmp(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields)) == 0;
 	if (!memo_key_match) {
 		Common::FrameStats::Add(memo_slot.valid ? Common::FrameStats::Counter::TexMemoCollide
 		                                        : Common::FrameStats::Counter::TexMemoEmpty,
 		                        1);
+		if (tm8 >= 2) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Miss, 1);
+			if (Tm8::DirectHolds(memo, memo_hash, resource_key, descriptor.fields, nullptr)) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::Tm8DirectLose, 1); // a loss (census ~66.6/frame)
+			}
+		}
 	}
+	if (tm8 >= 2) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Look, 1);
+	}
+	// Session 121, knob "texmemo8" (RC7): the full resolution, formerly inline below the hit path - the same statements in
+	// the same order (only indented, and `TextureCache::ImageDesc desc {};` became the parameter `desc`, which every
+	// caller value-initialises), as a lambda so that texmemo8 >= 2 can run it on a hit.  Force-inlined, so the miss path
+	// keeps its code shape; a texmemo8 ABBA compares against texmemo8 = 0 of the SAME build (ROADMAP s121 item 2).
+	const auto resolve_full = [&](TextureCache::ImageDesc& desc, bool& store) __attribute__((always_inline)) -> ImageId {
+		const auto address      = descriptor.Base40();
+		const auto width        = static_cast<uint32_t>(descriptor.Width5()) + 1u;
+		const auto height       = static_cast<uint32_t>(descriptor.Height5()) + 1u;
+		const auto base_level   = descriptor.BaseLevel();
+		const auto last_level   = descriptor.LastLevel();
+		const auto type         = TextureType(descriptor);
+		const bool multisampled = IsMultisampledTexture(type);
+		auto max_mip = resource.r128 ? last_level : descriptor.MaxMip();
+		// Storage views address their mip level from the surface layout and ignore max_mip, and
+		// games do bind a stale max_mip together with a higher base/last level when they write the
+		// tail of a mip chain (ASTRO BOT downsampling a 480x270 buffer). Extend the level count.
+		if (storage && !multisampled && last_level > max_mip) {
+			max_mip = last_level;
+		}
+		const auto levels = multisampled ? 1u : static_cast<uint32_t>(max_mip) + 1u;
+		const bool dynamic_storage =
+		    storage && resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage;
+		const auto view_last_level =
+		    !multisampled && !dynamic_storage ? std::min(last_level, max_mip) : last_level;
+		const auto tile       = descriptor.TileMode();
+		const bool depth_tile = tile == Prospero::TileMode::kDepth;
+		const bool msaa_tile  = depth_tile || tile == Prospero::TileMode::kRenderTarget;
+		const bool msaa_array = type == Prospero::ImageType::kColor2DMsaaArray;
+		if ((!multisampled && (base_level > view_last_level || view_last_level >= levels)) ||
+		    (multisampled &&
+		     (base_level != 0 || last_level == 0 || last_level > 3 || max_mip != last_level ||
+		      !msaa_tile || (descriptor.MsaaDepth() && !depth_tile) ||
+		      (!msaa_array && (descriptor.Depth() != 0 || descriptor.BaseArray5() != 0))))) {
+			EXIT("unsupported texture mip view: base=%u last=%u levels=%u max=%u type=%u tile=%u "
+			     "class=%u numeric=%u dimension=%u mip_mode=%u read=%d written=%d "
+			     "dwords=%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x\n",
+			     base_level, last_level, levels, descriptor.MaxMip(),
+			     static_cast<uint32_t>(descriptor.Type()), static_cast<uint32_t>(tile),
+			     static_cast<uint32_t>(resource.resource_class),
+			     static_cast<uint32_t>(resource.numeric_class),
+			     static_cast<uint32_t>(resource.dimension), static_cast<uint32_t>(resource.mip_mode),
+			     resource.read, resource.written, descriptor.fields[0], descriptor.fields[1],
+			     descriptor.fields[2], descriptor.fields[3], descriptor.fields[4], descriptor.fields[5],
+			     descriptor.fields[6], descriptor.fields[7]);
+		}
+		const auto samples = multisampled ? 1u << last_level : 1u;
+		const auto view_levels =
+		    multisampled ? 1u : static_cast<uint32_t>(view_last_level - base_level) + 1u;
+		const auto depth          = static_cast<uint32_t>(descriptor.Depth()) + 1u;
+		const auto format         = descriptor.Format();
+		const auto surface_format = TextureGetSurfaceFormatInfo(format);
+		const bool shader_conversion =
+		    surface_format.conversion_format != Prospero::BufferFormat::kInvalid;
+		const bool sampled_numeric_class =
+		    storage || resource.numeric_class == Prospero::SampledTextureNumericClass(format);
+		if (!storage && resource.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled &&
+		    !sampled_numeric_class) {
+			EXIT("sampled image numeric class mismatch: numeric=%u format=%u addr=0x%016" PRIx64 "\n",
+			     static_cast<uint32_t>(resource.numeric_class), static_cast<uint32_t>(format), address);
+		}
+
+		const bool    volume       = type == Prospero::ImageType::kColor3D;
+		const bool    layered      = type == Prospero::ImageType::kColor1DArray ||
+		                             type == Prospero::ImageType::kColor2DArray ||
+		                             type == Prospero::ImageType::kColor2DMsaaArray;
+		const auto    image_layers = layered ? depth : 1u;
+		uint32_t      pitch        = 0;
+		TileSizeAlign size {};
+		if (multisampled) {
+			const auto bytes = Prospero::NumBytesPerElement(format);
+			pitch            = depth_tile ? TileGetDepthPitch(width, bytes, last_level)
+			                              : TileGetRenderTargetPitch(width, bytes, last_level);
+			if (pitch == 0 || !TileGetRenderTargetSize(width, height, pitch, bytes, size, last_level) ||
+			    size.size > UINT32_MAX / image_layers) {
+				EXIT("unsupported multisample texture layout\n");
+			}
+			size.size *= image_layers;
+		} else {
+			pitch = TileGetTexturePitch(format, width, tile);
+			TileGetTextureTotalSize(format, width, height, volume ? depth : image_layers, levels, tile,
+			                        volume, size);
+		}
+		EXIT_NOT_IMPLEMENTED(size.size == 0 || size.align == 0 ||
+		                     (address & (static_cast<uint64_t>(size.align) - 1u)) != 0);
+		if (storage) {
+			ValidateStorageTexture(resource, descriptor, size.size);
+		}
+
+		auto pixel_format = surface_format.vk_format;
+		if (resource.depth_compare) {
+			if (const auto* depth_format = FindGuestDepthFormatPolicy(format)) {
+				pixel_format = depth_format->depth_attachment_format;
+			}
+		}
+		const auto storage_view_format = storage && format == Prospero::BufferFormat::k32SInt
+		                                     ? vk::Format::eR32Uint
+		                                     : SrgbStorageViewFormat(pixel_format);
+		const auto view_format         = storage && storage_view_format != vk::Format::eUndefined
+		                                     ? storage_view_format
+		                                     : pixel_format;
+		const auto block_bytes         = Prospero::BlockCompressedBytesPerBlock(format);
+		desc.info.data         = {address, size.size};
+		desc.info.pixel_format = pixel_format;
+		desc.info.guest_format = format;
+		desc.info.type         = TextureBaseType(type);
+		desc.info.extent       = {width, height, volume ? depth : 1u};
+		desc.info.resources    = {levels, image_layers};
+		desc.info.pitch        = pitch;
+		desc.info.bytes_per_block =
+		    block_bytes != 0 ? block_bytes : Prospero::NumBytesPerElement(format);
+		desc.info.samples   = samples;
+		desc.info.tile_mode = tile;
+		if (!resource.r128 && descriptor.MetaCompress() && tile != Prospero::TileMode::kDepth &&
+		    !desc.info.IsDepth()) {
+			TileSizeAlign metadata_size {};
+			(void)TileGetDccSize(width, height, volume ? depth : image_layers,
+			                     desc.info.bytes_per_block, levels, tile, metadata_size,
+			                     std::countr_zero(samples));
+			desc.info.metadata.kind          = ImageMetadataKind::Dcc;
+			desc.info.metadata.range         = {descriptor.MetaAddr() << 8u, metadata_size.size};
+			desc.info.metadata.dcc_alpha_msb = descriptor.DccAlphaPos();
+		}
+		if (samples > 1) {
+			desc.info.mip_layout[0] = {0, size.size, pitch, height};
+		} else {
+			PopulateTextureMipLayout(desc.info);
+		}
+		desc.view_info = TextureViewInfo(resource, descriptor, view_format, surface_format, storage,
+		                                 view_levels, desc.info.resources.layers,
+		                                 m_context.GetGraphics().image_view_min_lod_enabled);
+		desc.type = storage ? TextureCache::BindingType::Storage : TextureCache::BindingType::Texture;
+
+		auto       id                  = texture_cache.FindImage(desc, shader_conversion);
+		auto*      image               = &texture_cache.GetImage(id);
+		const bool stencil_association = static_cast<bool>(image->depth_id);
+		if (stencil_association) {
+			id    = image->depth_id;
+			image = &texture_cache.GetImage(id);
+		} else if (image->info.IsDepth()) {
+			if (storage) {
+				EXIT("depth target cannot be bound as a storage image\n");
+			}
+			ValidateSampledDepthBinding(resource, descriptor, *image, pixel_format, size.size);
+		} else {
+			if (storage) {
+				ValidateStorageColorView(image->info.pixel_format, view_format,
+				                         descriptor.DstSelXYZW());
+			} else {
+				(void)SelectSampledColorView(image->info.pixel_format, pixel_format,
+				                             descriptor.DstSelXYZW());
+			}
+			// ASTRO BOT fast-clears a half-resolution RGBA16F surface through a DCC metadata fill
+			// and, in frames with nothing to composite, samples it straight away without ever
+			// binding it as a colour target. The fill stays PendingDcc (only FindRenderTarget
+			// registers DCC), the host image keeps stale memory instead of the (0,0,0,1) clear and
+			// the composite pass overwrites the whole scene with it (black cutscene frames).
+			// Adopt the pending fill here so CommitBindings materializes the clear.
+			if (descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
+				(void)texture_cache.AdoptPendingDccForTexture(id, descriptor.MetaAddr() << 8u);
+			}
+		}
+		store = !stencil_association && image->info.data == desc.info.data &&
+		        image->info.extent == desc.info.extent;
+		return id;
+	};
 	// Session 120, knob "r1cen": nothing above the stamp r1_t0 is timed.  Every key miss is timed; a hit on a 1/8
 	// random sample, never on a slot "bindwit" marks inside this call (its NowNs would sit inside the interval).  At
 	// level 2 the self sample (1/64) opens before R1Arm (RC9) and closes before t0, then again after t1.
@@ -2035,6 +2444,77 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		if (cached != nullptr && cached->registered && !cached->binding.needs_rebind &&
 		    !cached->depth_id && cached->info.data == memo_slot.desc.info.data &&
 		    cached->info.extent == memo_slot.desc.info.extent) {
+			// Session 121, knob "texmemo8" >= 2 (VERIFY, never a timed arm): a GAINED hit (the direct shadow does not
+			// hold this key with this id) and a 1/64 control sample of the other hits run the full resolution NOW -
+			// liveness has just been read at lookup time, as the census's pre mode - and are compared.  A disagreement
+			// returns and memoizes the FRESH answer (rendering stays correct) and counts tm8_bad / tm8_vctl_bad.
+			if (tm8 >= 2) [[unlikely]] {
+				const bool gained =
+				    !Tm8::DirectHolds(memo, memo_hash, resource_key, descriptor.fields, &memo_slot.image_id);
+				Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Hit, 1);
+				if (gained) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Gain, 1);
+				}
+				if (gained || tm8_smp) {
+					const bool inject = tm8 == 3 && gained && ((tm8_rnd >> 6u) & 1023u) == 0;
+					// Recommendation 1 (DCC insurance): the fresh resolution adopts pending DCC unconditionally, the hit
+					// tail below skips it when `settled`.  Where the hit tail would skip it, the adoption must change
+					// nothing (tm8_dcc_chg must read 0) - else the verify arm would mask a hit-tail adoption gap.  NOTE
+					// (review): a VACUOUS zero, not evidence - when dcc_skip holds (kind Dcc at this address)
+					// AdoptPendingDccForTexture returns at textureCache.cpp:3185-3186 without touching the image.
+					const auto dcc_addr = descriptor.MetaAddr() << 8u;
+					const bool dcc_skip = !cached->info.IsDepth() && descriptor.MetaCompress() &&
+					                      descriptor.MetaAddr() != 0 &&
+					                      Common::Gates::Enabled(Common::Gates::Gate::MetaLock) &&
+					                      cached->info.metadata.kind == ImageMetadataKind::Dcc &&
+					                      cached->info.metadata.range.address == dcc_addr;
+					const auto dcc_kind  = cached->info.metadata.kind;
+					const auto dcc_range = cached->info.metadata.range;
+					TextureCache::ImageDesc v_desc {};
+					bool                    v_store = false;
+					const ImageId           v_id    = resolve_full(v_desc, v_store); // FindImage: side effects
+					bool agree = Tm8::Agree(gained, inject, memo_slot, memo_index, v_id, v_desc, v_store);
+					if (agree) {
+						// RC6: FindImage may ERASE images (FreeImage: textureCache.cpp:2079 when the resources grew, and
+						// inside ResolveOverlap :1017), and SlotVector::erase resets the optional - so `cached` is re-read
+						// (the deque itself never moves an element) and its liveness re-tested; a failure is handled as
+						// a disagreement and counted tm8_relive (must read 0).
+						cached = texture_cache.m_slot_images.try_get(memo_slot.image_id);
+						if (cached == nullptr || !cached->registered || cached->binding.needs_rebind ||
+						    cached->depth_id) {
+							Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Relive, 1);
+							agree = false;
+						} else if (dcc_skip && (cached->info.metadata.kind != dcc_kind ||
+						                        cached->info.metadata.range.address != dcc_range.address ||
+						                        cached->info.metadata.range.size != dcc_range.size)) {
+							Common::FrameStats::Add(Common::FrameStats::Counter::Tm8DccChange, 1);
+						}
+					}
+					if (!agree) {
+						if (v_store) { // a refill of THIS way (same key) with the fresh answer
+							memo_slot.image_id = v_id;
+							memo_slot.desc     = v_desc;
+							memo_slot.valid    = true;
+							memo_slot.version++;
+							memo_slot.fast_view = nullptr;
+							memo.texture_sets8[memo_index / Tm8::Ways].use[memo_index % Tm8::Ways] = Tm8::Tick(memo);
+							Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Fill, 1);
+							Tm8::DirectStore(memo, memo_hash, resource_key, descriptor.fields, v_id);
+						} else { // unmemoizable: the way is emptied
+							memo_slot.valid = false;
+							memo_slot.version++;
+							memo_slot.fast_view = nullptr;
+							memo.texture_sets8[memo_index / Tm8::Ways].use[memo_index % Tm8::Ways] = 0;
+							Tm8::DirectDrop(memo, memo_hash, resource_key, descriptor.fields);
+						}
+						Common::DrawStat::Mark(Common::DrawStat::Memo);
+						return emit(v_id, v_desc, v_store ? memo_index : UINT32_MAX, v_store ? memo_slot.version : 0u);
+					}
+				}
+				if (gained) {
+					Tm8::DirectStore(memo, memo_hash, resource_key, descriptor.fields, memo_slot.image_id);
+				}
+			}
 			// Session 88, knob "bindwit": THE MEMO-HIT DECISION IS COMPLETE HERE.  Everything
 			// above is the proof that the earlier resolution of this descriptor is still valid -
 			// DecodeNativeDescriptor, the resource key, the hash over the eight T# dwords, the
@@ -2067,6 +2547,13 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 			Common::FrameStats::Add(Common::FrameStats::Counter::BindTexMemoHits, 1);
 			if (memo2) {
 				memo.texture_ways[memo_index].use = ++memo.texture_clock;
+			} else if (tm8 != 0) {
+				// Session 121, knob "texmemo8": the way becomes the most recent of its set.  A stamp equal to the clock is
+				// the latest one given, so the way already is: no write (the LRU order is the same).
+				auto& tm8_use = memo.texture_sets8[memo_index / Tm8::Ways].use[memo_index % Tm8::Ways];
+				if (tm8_use != memo.texture8_clock) {
+					tm8_use = Tm8::Tick(memo);
+				}
 			}
 			// Session 88, knob "bindwit" = 1: the END of the memo-hit tail.  It is taken HERE, in
 			// the same function and with the same independent work still ahead of it, rather than
@@ -2089,167 +2576,24 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		memo_slot.valid = false;
 		memo_slot.version++;
 		memo_slot.fast_view = nullptr;
-	}
-
-	const auto address      = descriptor.Base40();
-	const auto width        = static_cast<uint32_t>(descriptor.Width5()) + 1u;
-	const auto height       = static_cast<uint32_t>(descriptor.Height5()) + 1u;
-	const auto base_level   = descriptor.BaseLevel();
-	const auto last_level   = descriptor.LastLevel();
-	const auto type         = TextureType(descriptor);
-	const bool multisampled = IsMultisampledTexture(type);
-	auto max_mip = resource.r128 ? last_level : descriptor.MaxMip();
-	// Storage views address their mip level from the surface layout and ignore max_mip, and
-	// games do bind a stale max_mip together with a higher base/last level when they write the
-	// tail of a mip chain (ASTRO BOT downsampling a 480x270 buffer). Extend the level count.
-	if (storage && !multisampled && last_level > max_mip) {
-		max_mip = last_level;
-	}
-	const auto levels = multisampled ? 1u : static_cast<uint32_t>(max_mip) + 1u;
-	const bool dynamic_storage =
-	    storage && resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage;
-	const auto view_last_level =
-	    !multisampled && !dynamic_storage ? std::min(last_level, max_mip) : last_level;
-	const auto tile       = descriptor.TileMode();
-	const bool depth_tile = tile == Prospero::TileMode::kDepth;
-	const bool msaa_tile  = depth_tile || tile == Prospero::TileMode::kRenderTarget;
-	const bool msaa_array = type == Prospero::ImageType::kColor2DMsaaArray;
-	if ((!multisampled && (base_level > view_last_level || view_last_level >= levels)) ||
-	    (multisampled &&
-	     (base_level != 0 || last_level == 0 || last_level > 3 || max_mip != last_level ||
-	      !msaa_tile || (descriptor.MsaaDepth() && !depth_tile) ||
-	      (!msaa_array && (descriptor.Depth() != 0 || descriptor.BaseArray5() != 0))))) {
-		EXIT("unsupported texture mip view: base=%u last=%u levels=%u max=%u type=%u tile=%u "
-		     "class=%u numeric=%u dimension=%u mip_mode=%u read=%d written=%d "
-		     "dwords=%08x,%08x,%08x,%08x,%08x,%08x,%08x,%08x\n",
-		     base_level, last_level, levels, descriptor.MaxMip(),
-		     static_cast<uint32_t>(descriptor.Type()), static_cast<uint32_t>(tile),
-		     static_cast<uint32_t>(resource.resource_class),
-		     static_cast<uint32_t>(resource.numeric_class),
-		     static_cast<uint32_t>(resource.dimension), static_cast<uint32_t>(resource.mip_mode),
-		     resource.read, resource.written, descriptor.fields[0], descriptor.fields[1],
-		     descriptor.fields[2], descriptor.fields[3], descriptor.fields[4], descriptor.fields[5],
-		     descriptor.fields[6], descriptor.fields[7]);
-	}
-	const auto samples = multisampled ? 1u << last_level : 1u;
-	const auto view_levels =
-	    multisampled ? 1u : static_cast<uint32_t>(view_last_level - base_level) + 1u;
-	const auto depth          = static_cast<uint32_t>(descriptor.Depth()) + 1u;
-	const auto format         = descriptor.Format();
-	const auto surface_format = TextureGetSurfaceFormatInfo(format);
-	const bool shader_conversion =
-	    surface_format.conversion_format != Prospero::BufferFormat::kInvalid;
-	const bool sampled_numeric_class =
-	    storage || resource.numeric_class == Prospero::SampledTextureNumericClass(format);
-	if (!storage && resource.resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled &&
-	    !sampled_numeric_class) {
-		EXIT("sampled image numeric class mismatch: numeric=%u format=%u addr=0x%016" PRIx64 "\n",
-		     static_cast<uint32_t>(resource.numeric_class), static_cast<uint32_t>(format), address);
-	}
-
-	const bool    volume       = type == Prospero::ImageType::kColor3D;
-	const bool    layered      = type == Prospero::ImageType::kColor1DArray ||
-	                             type == Prospero::ImageType::kColor2DArray ||
-	                             type == Prospero::ImageType::kColor2DMsaaArray;
-	const auto    image_layers = layered ? depth : 1u;
-	uint32_t      pitch        = 0;
-	TileSizeAlign size {};
-	if (multisampled) {
-		const auto bytes = Prospero::NumBytesPerElement(format);
-		pitch            = depth_tile ? TileGetDepthPitch(width, bytes, last_level)
-		                              : TileGetRenderTargetPitch(width, bytes, last_level);
-		if (pitch == 0 || !TileGetRenderTargetSize(width, height, pitch, bytes, size, last_level) ||
-		    size.size > UINT32_MAX / image_layers) {
-			EXIT("unsupported multisample texture layout\n");
-		}
-		size.size *= image_layers;
-	} else {
-		pitch = TileGetTexturePitch(format, width, tile);
-		TileGetTextureTotalSize(format, width, height, volume ? depth : image_layers, levels, tile,
-		                        volume, size);
-	}
-	EXIT_NOT_IMPLEMENTED(size.size == 0 || size.align == 0 ||
-	                     (address & (static_cast<uint64_t>(size.align) - 1u)) != 0);
-	if (storage) {
-		ValidateStorageTexture(resource, descriptor, size.size);
-	}
-
-	auto pixel_format = surface_format.vk_format;
-	if (resource.depth_compare) {
-		if (const auto* depth_format = FindGuestDepthFormatPolicy(format)) {
-			pixel_format = depth_format->depth_attachment_format;
+		if (tm8 != 0) {
+			// Session 121, knob "texmemo8": the way is empty again (use == 0 <=> invalid).  memo_index still names it, so
+			// a store below refills THIS way - what the direct memo does with its slot.
+			memo.texture_sets8[memo_index / Tm8::Ways].use[memo_index % Tm8::Ways] = 0;
+			if (tm8 >= 2) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Stale, 1);
+				Tm8::DirectDrop(memo, memo_hash, resource_key, descriptor.fields);
+			}
 		}
 	}
-	const auto storage_view_format = storage && format == Prospero::BufferFormat::k32SInt
-	                                     ? vk::Format::eR32Uint
-	                                     : SrgbStorageViewFormat(pixel_format);
-	const auto view_format         = storage && storage_view_format != vk::Format::eUndefined
-	                                     ? storage_view_format
-	                                     : pixel_format;
-	const auto block_bytes         = Prospero::BlockCompressedBytesPerBlock(format);
+
 	TextureCache::ImageDesc desc {};
-	desc.info.data         = {address, size.size};
-	desc.info.pixel_format = pixel_format;
-	desc.info.guest_format = format;
-	desc.info.type         = TextureBaseType(type);
-	desc.info.extent       = {width, height, volume ? depth : 1u};
-	desc.info.resources    = {levels, image_layers};
-	desc.info.pitch        = pitch;
-	desc.info.bytes_per_block =
-	    block_bytes != 0 ? block_bytes : Prospero::NumBytesPerElement(format);
-	desc.info.samples   = samples;
-	desc.info.tile_mode = tile;
-	if (!resource.r128 && descriptor.MetaCompress() && tile != Prospero::TileMode::kDepth &&
-	    !desc.info.IsDepth()) {
-		TileSizeAlign metadata_size {};
-		(void)TileGetDccSize(width, height, volume ? depth : image_layers,
-		                     desc.info.bytes_per_block, levels, tile, metadata_size,
-		                     std::countr_zero(samples));
-		desc.info.metadata.kind          = ImageMetadataKind::Dcc;
-		desc.info.metadata.range         = {descriptor.MetaAddr() << 8u, metadata_size.size};
-		desc.info.metadata.dcc_alpha_msb = descriptor.DccAlphaPos();
-	}
-	if (samples > 1) {
-		desc.info.mip_layout[0] = {0, size.size, pitch, height};
-	} else {
-		PopulateTextureMipLayout(desc.info);
-	}
-	desc.view_info = TextureViewInfo(resource, descriptor, view_format, surface_format, storage,
-	                                 view_levels, desc.info.resources.layers,
-	                                 m_context.GetGraphics().image_view_min_lod_enabled);
-	desc.type = storage ? TextureCache::BindingType::Storage : TextureCache::BindingType::Texture;
-
-	auto       id                  = texture_cache.FindImage(desc, shader_conversion);
-	auto*      image               = &texture_cache.GetImage(id);
-	const bool stencil_association = static_cast<bool>(image->depth_id);
-	if (stencil_association) {
-		id    = image->depth_id;
-		image = &texture_cache.GetImage(id);
-	} else if (image->info.IsDepth()) {
-		if (storage) {
-			EXIT("depth target cannot be bound as a storage image\n");
-		}
-		ValidateSampledDepthBinding(resource, descriptor, *image, pixel_format, size.size);
-	} else {
-		if (storage) {
-			ValidateStorageColorView(image->info.pixel_format, view_format,
-			                         descriptor.DstSelXYZW());
-		} else {
-			(void)SelectSampledColorView(image->info.pixel_format, pixel_format,
-			                             descriptor.DstSelXYZW());
-		}
-		// ASTRO BOT fast-clears a half-resolution RGBA16F surface through a DCC metadata fill
-		// and, in frames with nothing to composite, samples it straight away without ever
-		// binding it as a colour target. The fill stays PendingDcc (only FindRenderTarget
-		// registers DCC), the host image keeps stale memory instead of the (0,0,0,1) clear and
-		// the composite pass overwrites the whole scene with it (black cutscene frames).
-		// Adopt the pending fill here so CommitBindings materializes the clear.
-		if (descriptor.MetaCompress() && descriptor.MetaAddr() != 0) {
-			(void)texture_cache.AdoptPendingDccForTexture(id, descriptor.MetaAddr() << 8u);
-		}
-	}
-	const bool store = !stencil_association && image->info.data == desc.info.data &&
-	                   image->info.extent == desc.info.extent;
+	bool                    store = false;
+	const ImageId           id    = resolve_full(desc, store);
+	// Session 121, knob "texmemo8": a key miss whose victim way holds another key is an EVICTION; the store below moves
+	// the way's version and drops its view like any store.  Read before the store overwrites them.
+	const bool tm8_evict = tm8 != 0 && !memo_key_match && memo_slot.valid;
+	const bool tm8_view  = tm8_evict && memo_slot.fast_view != nullptr;
 	if (store) {
 		std::memcpy(memo_slot.dwords.data(), descriptor.fields, sizeof(descriptor.fields));
 		Common::DrawStat::Mark(Common::DrawStat::Memo);
@@ -2261,7 +2605,25 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		memo_slot.fast_view = nullptr;
 		if (memo2) {
 			memo.texture_ways[memo_index] = {memo_hash, ++memo.texture_clock};
+		} else if (tm8 != 0) {
+			auto& tm8_set                   = memo.texture_sets8[memo_index / Tm8::Ways];
+			tm8_set.tag[memo_index % Tm8::Ways] = TexMemo8Tag(memo_hash);
+			tm8_set.use[memo_index % Tm8::Ways] = Tm8::Tick(memo);
+			Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Fill, 1);
+			if (tm8_evict) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::Tm8Evict, 1);
+			}
+			if (tm8_view) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::Tm8EvictView, 1);
+			}
+			if (tm8 >= 2) {
+				Tm8::DirectStore(memo, memo_hash, resource_key, descriptor.fields, id);
+			}
 		}
+	} else if (tm8 >= 2) {
+		// No store: the direct memo would keep its slot, which holds K only in the loss case (and then only while K is
+		// live).  Dropping K errs toward MORE gained hits (more verification), never fewer.
+		Tm8::DirectDrop(memo, memo_hash, resource_key, descriptor.fields);
 	}
 	if (r1_on) [[unlikely]] {
 		const uint64_t r1_ns = r1_t0 != 0 ? Common::FrameStats::NowNs() - r1_t0 : 0; // t1 FIRST
@@ -3159,7 +3521,17 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	bool     r2_smp   = false;
 	uint64_t r2_meta0 = 0;
 	if (r2 != 0) [[unlikely]] {
-		if (!Common::FrameStats::Enabled() || Common::Gates::Enabled(Common::Gates::Gate::TexMemo2)) {
+		// Session 121: and off under texmemo8 - the knob asked for now, or the layout the memo is in (R2's replay indexes
+		// h % 4096 and its bad_key reads an 8-way refill as a direct-slot defect).  A request is counted (tm8_cenoff) -
+		// also when the knob is already 0 but the memo is still 8-way (before the first resolve after a flip), so
+		// tm8_cenoff reads 0 only in runs where r2cen is 0 everywhere.  Only the state at stage start is seen: a knob flip
+		// inside the stage is missed, so r1cen / r2cen != 0 must never be scheduled together with a texmemo8 flip.
+		const bool r2_tm8 = Common::Gates::Value(Common::Gates::Knob::TexMemo8) != 0 ||
+		                    (m_memo != nullptr && m_memo->texture_mode != 0);
+		if (r2_tm8) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::Tm8CensusOff, 1);
+		}
+		if (!Common::FrameStats::Enabled() || Common::Gates::Enabled(Common::Gates::Gate::TexMemo2) || r2_tm8) {
 			r2 = 0;
 		} else {
 			auto& r2_cache = m_context.GetTextureCache();
@@ -3573,13 +3945,18 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	                        !Config::GraphicsDebugDumpEnabled();
 	const bool fast_check = fast && Common::Gates::Enabled(Common::Gates::Gate::TexFastCheck);
 	auto*      memo       = fast ? &Memo() : nullptr;
+	// Session 121, knob "texmemo8" >= 2 (VERIFY, RC4): every ELIGIBLE binding's entry is checked to be PLACED under the
+	// layout the memo is in (Tm8::CheckRebind).  The mode latched in the memo by ResolveTextureWith (after the repair
+	// loop above): no knob load on this path.
+	const bool tm8_check  = memo != nullptr && memo->texture_mode >= 2;
 	uint64_t   fast_ok = 0, fast_no = 0, fast_no_stamp = 0, fast_no_state = 0, fast_record = 0;
 	// Session 120, knob "r1cen" (r1.md 2.3, RC4, RC10): read ONCE per call.  The re-record branch of every eligible
 	// binding whose memo slot holds no view is timed, and a 1/16 sample of the fast branch (never under texfastcheck,
 	// whose FindTexture would sit in the interval); the first re-record after a would-hit fill of table T is booked
 	// to T (r1_T_rb / r1_T_rbns) and its mark consumed.  Off under texmemo2, as in ResolveTextureWith.
 	uint32_t r1_level = fast ? Common::Gates::Value(Common::Gates::Knob::R1Census) : 0u;
-	if (r1_level != 0 && Common::Gates::Enabled(Common::Gates::Gate::TexMemo2)) {
+	// Session 121: and off under texmemo8 (memo is non-null whenever r1_level != 0: it is read only when fast).
+	if (r1_level != 0 && (Common::Gates::Enabled(Common::Gates::Gate::TexMemo2) || memo->texture_mode != 0)) {
 		r1_level = 0;
 	}
 	const bool  r1_time = r1_level != 0 && Common::FrameStats::Enabled();
@@ -3603,6 +3980,9 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			                      binding.desc.info.metadata.kind != ImageMetadataKind::Dcc &&
 			                      image.registered && !image.depth_id &&
 			                      !image.binding.needs_rebind;
+			if (tm8_check && eligible) [[unlikely]] {
+				Tm8::CheckRebind(*memo, binding, memo->texture_mode == 3 && (Tm8::Next(*memo) & 1023u) == 0);
+			}
 			const bool     r1_null = r1_time && eligible && slot->fast_view == nullptr; // the re-record branch
 			const bool     r1_fs   = r1_time && !fast_check && !r1_null && eligible && (R1Next() & 15u) == 0;
 			const uint64_t r1_t0   = r1_null || r1_fs ? Common::FrameStats::NowNs() : 0;

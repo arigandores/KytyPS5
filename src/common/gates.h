@@ -628,8 +628,19 @@ enum class Knob : uint32_t {
 	// stages BEFORE the loop, the witness a real reuse pays (r2_wr_* / r2_wo_*) against a null stamp pair (r2_nul_*);
 	// 2 = 1 plus a read-only replay of the removable resolve work on the sampled clean stages (r2_rm_*).  Read once
 	// per PrepareBindings call, so it CAN be a schedule arm.  Off under texmemo2.  Changes nothing that executes.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	R2Census,         // KYTY_R2_CENSUS,          file name "r2cen" (0 off, 1 census, 2 census + replay)
+	// Session 121 (C:/kyty/s121/design/design121.md; texmemo8.md with RC1-RC8 of texmemo8_review.md): the texture memo
+	// of ResolveTextureWith as 512 sets x 8 ways of the SAME 4 096 entries (entry = set * 8 + way; set = the low 9 bits
+	// of the memo hash; a 32-bit tag and an LRU stamp per way in one 64-byte line per set; the hit keeps its full
+	// proof).  0 = today's direct memo (default), 1 = 8-way, 2 = 8-way + VERIFY (MEASUREMENT ONLY, never timed: every
+	// gained hit and a 1/64 xorshift sample of the others against a fresh full resolution, a placement check of every
+	// eligible texfast binding in RebindImages, a sampled probe timer; tm8_bad / tm8_vctl_bad / tm8_relive / tm8_rbbad
+	// must read 0), 3 = 2 + a positive control (tm8_inject / tm8_rbinject > 0, tm8_inject_miss / tm8_rbinject_miss = 0;
+	// nothing in the memo is corrupted).  Read once per ResolveTextureWith call, so it CAN be a schedule arm: a change
+	// between 0 and nonzero invalidates the whole memo.  Off under texmemo2 (tm8_x2 counts); forces r1cen / r2cen off
+	// (tm8_cenoff counts).
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	TexMemo8,         // KYTY_TEX_MEMO8,          file name "texmemo8" (0 direct, 1 8-way, 2 verify, 3 verify + control)
 	Count,
 };
 

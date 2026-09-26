@@ -416,8 +416,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_R1_CENSUS", "r1cen", 0, 2},
     // Session 120, MEASUREMENT ONLY: R2, the stage image-block repeat census (1) plus a sampled read-only replay of the
     // removable resolve work (2). Read once per PrepareBindings call, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_R2_CENSUS", "r2cen", 0, 2},
+    // Session 121: the 8-way texture memo (1), with VERIFY (2, MEASUREMENT ONLY) and a positive control (3). Read once
+    // per ResolveTextureWith call, so it CAN be a schedule arm (a change 0 <-> nonzero invalidates the memo).
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_TEX_MEMO8", "texmemo8", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

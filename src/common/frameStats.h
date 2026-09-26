@@ -2136,6 +2136,45 @@ enum class Counter : uint32_t {
 	SpTrMissShape,           // sp_tr_x_shape
 	SpTrMissSerial,          // sp_tr_x_ser
 	SpTrMissFlags,           // sp_tr_x_flags
+	// Session 121 (knob "texmemo8", C:/kyty/s121/design/design121.md, texmemo8.md + texmemo8_review.md RC1-RC8): raw
+	// counts / raw ns, all adjacent.  tm8_fill .. tm8_cenoff: any mode, rare paths only (the timed arm texmemo8 = 1
+	// carries no per-lookup counter).  tm8_look .. tm8_pb_n: texmemo8 >= 2 only (VERIFY, never timed).  Must read 0:
+	// tm8_x2, tm8_cenoff, tm8_bad, tm8_vctl_bad, tm8_relive, tm8_inject_miss, tm8_dcc_chg, tm8_rbbad, tm8_rbinject_miss;
+	// tm8_inject / tm8_rbinject > 0 only at texmemo8 = 3.  NEAR identities (adjacent): look = hit + miss + stale,
+	// vchk = gain.  Review notes: tm8_cenoff reads 0 only where r2cen is 0 everywhere; tm8_inject_miss,
+	// tm8_rbinject_miss and tm8_dcc_chg are STRUCTURAL zeros (the controls are tautological, the DCC skip vacuous) -
+	// that tm8_bad / tm8_rbbad can fire is shown by the offline unit test, not by these counters.
+	Tm8Fill,                 // tm8_fill
+	Tm8Evict,                // tm8_evict
+	Tm8EvictView,            // tm8_evict_view
+	Tm8Alias,                // tm8_alias
+	Tm8Inval,                // tm8_inval
+	Tm8Mode,                 // tm8_mode
+	Tm8Renorm,               // tm8_renorm
+	Tm8WithMemo2,            // tm8_x2
+	Tm8CensusOff,            // tm8_cenoff
+	Tm8Look,                 // tm8_look
+	Tm8Hit,                  // tm8_hit
+	Tm8Miss,                 // tm8_miss
+	Tm8Stale,                // tm8_stale
+	Tm8Gain,                 // tm8_gain
+	Tm8Check,                // tm8_vchk
+	Tm8Bad,                  // tm8_bad
+	Tm8CtlCheck,             // tm8_vctl
+	Tm8CtlBad,               // tm8_vctl_bad
+	Tm8Relive,               // tm8_relive
+	Tm8Inject,               // tm8_inject
+	Tm8InjectMiss,           // tm8_inject_miss
+	Tm8DirectLose,           // tm8_dlose
+	Tm8DirectDiff,           // tm8_ddiff
+	Tm8DccChange,            // tm8_dcc_chg
+	Tm8RbCheck,              // tm8_rbchk
+	Tm8RbBad,                // tm8_rbbad
+	Tm8RbInject,             // tm8_rbinject
+	Tm8RbInjectMiss,         // tm8_rbinject_miss
+	Tm8Probe0Ns,             // tm8_pb0_ns
+	Tm8ProbeNs,              // tm8_pb_ns
+	Tm8ProbeN,               // tm8_pb_n
 	Count
 };
 

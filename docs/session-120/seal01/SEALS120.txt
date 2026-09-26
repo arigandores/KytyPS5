@@ -1,0 +1,24 @@
+# Session 120 seal 01 (cen120) - sha256 of every sealed file; written by seal120.py
+
+d20cd3de41cb8e58634e7ac024c76338a51b4bfa33a6415b3cbabd148ab73849  pred/01_cen120.md
+e56b7fe0657915cea61bde4e851ff3409c5c9d1074c060f2f140e544f2d8754b  design/design120.md
+70362d41ae1a1062acfee9fc0fa720e59ae3858edd597f03b0a9ce91acd50322  rpk120.py
+55e3b6ae6c8b09e44ac9bf92306795065dc8ec5fed851c1e78915839c3296d36  test_rpk120.py
+b9240e71a01cb07cf2c1d16b5330b5e0f2d616d784e6240d20b2e72f413f0c1e  mut_rpk120.py
+815083e6edbdfaef4c1adb877516edb5d3780a285edc0356ff23c3cf4b053aa8  spc120.py
+d4ee970dea93951af605ede1a71b268ab14205e97e7a4bd902e914d8ad6e02a2  test_spc120.py
+9cc163c446734c178277a47a510dff3dd527bf760add00170bfc4f9e479779ab  mut_spc120.py
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf  gates_base.txt
+afbb71abaa2eca0a8b56f6319a2cf82a3f87b2c044082dcdb6a0031340ca70cb  go120a.sh
+36cb148f882e0333b1c2bd59af87343e5e4931d8bf72a01e51e09382223db2cf  enter_scene.py
+d9e7a777404f1aa98eb8e221d2d9b1af0e393b292d91997fade08fae685ce5c0  procload.py
+15cdbfc6e2c9d19a9aa803beaa1dff670d3403b54b74b56f4911c456de4ca661  kyty_emulator_15cdbfc6.exe
+de6d3b7111223ed2d8706e65fa7d6332af7c7dc09d8d2e8ba62cd053c3a29893  smoke120.py
+
+mutlib v4.1 (docs/session-116/mutlib_v41/mutlib.py db82ef4b) FULL runs on the sealed copies: see below
+
+
+spc120: mutlib 4.1 FULL --control --no-memo on the sealed copies: 281 mutants, 281 killed (5 by a suite crash), 0 survived; controls 3 of 3 survived; report mut_spc120.sealed.txt
+rpk120: mutlib 4.1 FULL --control --no-memo on the sealed copies: 489 mutants, 489 killed (20 by a suite crash), 0 survived; controls 3 of 3 survived; report mut_rpk120.sealed.txt (one exact equivalent, sum_open_pkg_ignored, removed before the seal with its reason in mut_rpk120.py)
+fixtures on the sealed copies: test_rpk120.py --real 408 fixtures ALL OK; test_spc120.py --real 322 fixtures ALL OK
+note: enter_scene.py EMU now derives the emulator folder from the home directory (same path, same behaviour; no user name in a git file); its sha above is after that edit, made after seal120.py and before the run

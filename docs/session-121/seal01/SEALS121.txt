@@ -17,3 +17,19 @@ mutlib v4.1 (docs/session-116/mutlib_v41/mutlib.py db82ef4b) FULL run on the sea
 
 vfy121: mutlib 4.1 FULL --control --no-memo on the sealed copy: 297 mutants, 297 killed (19 by a suite crash), 0 survived; controls 3 of 3 survived; report mut_vfy121.sealed.txt
 fixtures on the sealed copy: test_vfy121.py --real 444 fixtures ALL OK
+
+# Session 121 seal 02 (shp121) - sha256 of every sealed file; written by seal121_02.py
+
+3b951163346efa7e1fd6196fe36cb4013f16f4f18628dc86ce32bee116e4fbdc  pred/02_shp121.md
+46f8cadc2674f1692bc52a56e41179e62d5089dad5bee92209398722b19dcc0b  shp121.py
+ae5a63deb5806668447a410e103de7e1e5d8a376ee665d65b9a6d3316d2fc602  test_shp121.py
+d7e6620c92eae8e9f1228469d8a3caf48d73fb56f5b90f216c2559d9c6789562  mut_shp121.py
+c5743505cca1f626d3090ef4b4475dce6dcd7787a6971ff9da690e48a0397064  chk_vfy121.py
+b12a9716f9a97d2e5d7e094d1bfceeca199826efeaf030a190db561efab96510  go121a.sh
+bcc00a8247c128abee022f2eda3e7ae3fd8299434b1c0d8cd0760a93f1987db5  runs121/vfy121.score.json
+43359b1457ad7d1ff990c7406f0e6bec64588229b0604d68ad9084ee96a482f8  vfy121.py
+
+shp121: first FULL mutlib on the sealed copy: 342/344 (vfy_unsealed_ok, cli_rc survived: branches left without a
+killing fixture by the filled constants); suite repaired by three direct fixtures (ROADMAP s121 item 7), the
+scorer and pred unchanged; second FULL run: 344 mutants, 344 killed, 0 survived; controls 3 of 3 survived;
+report mut_shp121.sealed.txt; test_shp121.py (306 fixtures) ALL OK; test_shp121.py sha above is the repaired one.

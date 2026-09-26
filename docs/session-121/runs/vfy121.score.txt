@@ -1,0 +1,71 @@
+vfy121 tag vfy121  scorer 43359b1457ad7d1f  build 0bd21ec24e546fbb
+  admission binary           ok
+  admission installed_now    ok
+  admission pinned           ok
+  admission env_exact        ok
+  admission env_vk           ok
+  admission hold             ok
+  admission one_ok_attempt   ok
+  admission prereg           ok
+  admission gates_exact      ok
+  admission base_names       ok
+  admission arm_asserts      ok
+  admission gate_lines       ok
+  admission arms             ok
+  admission modes            ok
+  admission no_marker        ok
+  admission no_skip_window   ok
+  admission streams          ok
+  admission fields_all_rows  ok
+  admission idle             ok
+  admission video            ok
+  hard      hard_zero        ok
+  hard      struct_zero      ok
+  hard      no_mismatch      ok
+  hard      verify_marker    ok
+  hard      no_glitch        ok
+  evidence  config_zero      ok
+  evidence  control_alive    ok
+  evidence  control_leak     ok
+  evidence  verify_alive     ok
+  evidence  dark_01          ok
+  evidence  m1_fill          ok
+  evidence  m0_fill          ok
+  evidence  armed_hits       ok
+  evidence  armed_keys       ok
+  evidence  identities       ok
+  evidence  ratios           ok
+  blocks 65 complete 64; per mode (complete, with estimator rows) m0=16 m1=16 m2=16 m3=16; last main n 7594
+  correctness (all 7593 -x rows, 0 lacking a field): tm8_bad=0, tm8_vctl_bad=0, tm8_relive=0, tm8_rbbad=0, texfast_bad=0, tm8_inject_miss=0, tm8_rbinject_miss=0, tm8_dcc_chg=0, tm8_x2=0, tm8_cenoff=0
+  lines: verify_mismatch=0, rebind_mismatch=0, texfast_mismatch=0, verify_injected=4, rebind_injected=4
+  markers: 0 in mode-2/3 blocks, 0 elsewhere; skipped draws 0 (0 in a window)
+  video C:/kyty/s121/rec_vfy121.mp4: exists True, report C:/kyty/s121/vfy121_glitch.txt, frames 7604, index entries 7604, presents (last main n) 7594, tol 151.9, one-frame glitches 0
+  mode 2 (arm 0, texmemo8=2 texfastcheck=1): blocks 16, estimator frames 1241; means a frame: dt_us 34471.4 cpu_gpu_us 33572.2 draws 5078.3 tex_hits 46753.9 b_texn 48393.2 key_miss 196.9 (collide 189.9 empty 7.0) stale 15.1 bda_scan 64.3 (NEW)
+    texfast ok 45029.3 no 3255.4 rec 190.2 bad 0.000
+    fill 200.05 evict 184.81 evict_view 171.86 alias 0.00 inval 0.00 mode 0.00 renorm 0.00 x2 0.00 cenoff 0.00 look 46967.06 hit 46755.00 miss 196.92 stale 15.13 gain 1254.07 vchk 1254.07 bad 0.00 vctl 711.85 vctl_bad 0.00 relive 0.00 inject 0.00 inject_miss 0.00 dlose 59.15 ddiff 0.51 dcc_chg 0.00 rbchk 45220.79 rbbad 0.00 rbinject 0.00 rbinject_miss 0.00 pb0_ns 6238.58 pb_ns 7117.97 pb_n 735.04
+    probe 1.20 ns a sampled lookup, 56.2 us a frame
+  mode 1 (arm 1, texmemo8=1 texfastcheck=1): blocks 16, estimator frames 1208; means a frame: dt_us 33677.0 cpu_gpu_us 32865.5 draws 5140.3 tex_hits 47731.2 b_texn 49396.3 key_miss 201.0 (collide 194.1 empty 6.9) stale 15.1 bda_scan 57.7 (NEW)
+    texfast ok 45985.1 no 3300.6 rec 194.2 bad 0.000
+    fill 204.11 evict 189.02 evict_view 175.84 alias 0.00 inval 0.00 mode 0.00 renorm 0.00 x2 0.00 cenoff 0.00 look 0.00 hit 0.00 miss 0.00 stale 0.00 gain 0.00 vchk 0.00 bad 0.00 vctl 0.00 vctl_bad 0.00 relive 0.00 inject 0.00 inject_miss 0.00 dlose 0.00 ddiff 0.00 dcc_chg 0.00 rbchk 0.00 rbbad 0.00 rbinject 0.00 rbinject_miss 0.00 pb0_ns 0.00 pb_ns 0.00 pb_n 0.00
+    probe - ns a sampled lookup, - us a frame
+  mode 0 (arm 2, texmemo8=0 texfastcheck=1): blocks 16, estimator frames 1217; means a frame: dt_us 33621.6 cpu_gpu_us 32807.4 draws 5131.2 tex_hits 46343.0 b_texn 49221.1 key_miss 1419.4 (collide 1410.9 empty 8.6) stale 10.0 bda_scan 59.4 (NEW)
+    texfast ok 44627.4 no 4483.9 rec 1302.0 bad 0.000
+    fill 0.00 evict 0.00 evict_view 0.00 alias 0.00 inval 0.00 mode 0.00 renorm 0.00 x2 0.00 cenoff 0.00 look 0.00 hit 0.00 miss 0.00 stale 0.00 gain 0.00 vchk 0.00 bad 0.00 vctl 0.00 vctl_bad 0.00 relive 0.00 inject 0.00 inject_miss 0.00 dlose 0.00 ddiff 0.00 dcc_chg 0.00 rbchk 0.00 rbbad 0.00 rbinject 0.00 rbinject_miss 0.00 pb0_ns 0.00 pb_ns 0.00 pb_n 0.00
+    probe - ns a sampled lookup, - us a frame
+  mode 3 (arm 3, texmemo8=3 texfastcheck=1): blocks 16, estimator frames 1239; means a frame: dt_us 34450.2 cpu_gpu_us 33600.5 draws 5076.4 tex_hits 46756.3 b_texn 48395.8 key_miss 199.5 (collide 189.2 empty 10.3) stale 15.1 bda_scan 57.4 (NEW)
+    texfast ok 45030.7 no 3256.5 rec 192.7 bad 0.000
+    fill 202.56 evict 184.20 evict_view 171.23 alias 0.00 inval 0.00 mode 0.00 renorm 0.00 x2 0.00 cenoff 0.00 look 46972.24 hit 46757.69 miss 199.47 stale 15.09 gain 1251.57 vchk 1251.57 bad 0.00 vctl 709.61 vctl_bad 0.00 relive 0.00 inject 1.23 inject_miss 0.00 dlose 58.82 ddiff 0.50 dcc_chg 0.00 rbchk 45224.58 rbbad 0.00 rbinject 44.03 rbinject_miss 0.00 pb0_ns 6349.88 pb_ns 7229.36 pb_n 732.46
+    probe 1.20 ns a sampled lookup, 56.4 us a frame
+  arming mode 1 - mode 0: tex_hits 1388.2 (>= +300.0), key misses -1218.4 (<= -300.0; both thresholds fixed in the scorer before the run); ceiling = mode-0 key misses 1419.4 a frame (reported)
+  verify gained hits in [600, 2000] a frame (reported, not gated): mode 2 True, mode 3 True
+  identity 19 (reported, not gated): 0 < rbchk <= texfast_ok + texfast_no on 32 of 32 mode-2/3 block windows
+  identity look=hit+miss+stale: max |residual| 8 over 32 mode-2/3 block windows
+  identity vchk=gain: max |residual| 1 over 32 mode-2/3 block windows
+  identity tex_hits=hit-bad-vctl_bad-relive: max |residual| 610 over 32 mode-2/3 block windows
+  identity miss=collide+empty: max |residual| 7 over 32 mode-2/3 block windows
+  identity fill<=collide+empty+stale+bad+vctl_bad+relive: max |residual| 954 over 32 mode-2/3 block windows
+  ratio vctl/(hit-gain): min 0.01544 max 0.01574 (band [0.01250, 0.02000])
+  ratio pb_n/look: min 0.01546 max 0.01575 (band [0.01250, 0.02000])
+  NOTE (ROADMAP s121 item 3): tm8_inject / tm8_rbinject > 0 prove only that the counter and the log path fire (the control is tautological); the evidence that tm8_bad / tm8_rbbad can fire is the offline unit test (374 of 200 000 direct-layout entries look placed).  tm8_inject_miss, tm8_rbinject_miss, tm8_dcc_chg are zeros by construction, never evidence.  Mode 2/3 state diverges from mode 1 (FindImage before the hit tail): the evidence for mode 1 itself is its blocks under texfastcheck=1 with texfast_bad = 0 and the zero-leak checks.
+VERDICT: PASS
+CONSEQUENCE: PASS - печать 01 пройдена: 0 расхождений проверки, положительный контроль режима 3 жив, вооружение режима 1 против режима 0, видео без одно-кадровых глитчей (ROADMAP s121 item 4); seal 02 (shp121) may run.

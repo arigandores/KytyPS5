@@ -1,0 +1,19 @@
+# Seal 01 of session 122 (map122) - git mirror of C:/kyty/s122
+
+sha256 of the sealed ORIGINAL on disk; `scrubbed` = the git copy has the user name replaced by `<user>` and therefore a different sha.
+
+3430b26fb77ae7284e23ec7351860b9d4f6b37f7085627de5b39028260d00677  pred/01_map122.md
+ce35585a1ed852c60d00a2774b531602a6223b2ccab24c50a23ea720b6647805  map122.py
+49aa53a5e3be0be13a7e89dc7cfe8cce69cc9f0672373890bce396ccfc94f353  test_map122.py
+849a430382a708014be3137f270684fa56cc011bb93e52c545a3a432af126c4b  mut_map122.py
+d0bff5f6346f5534c83ac33f34dd98c7dfab60daf84cb51b051c5200a45f35dc  SEALS122.txt
+6ee3e22895e7ed35d99c567e89f0d994335a476e20d3b631c91abf3c0399dae5  checks/map122_checks.json
+2ae1b9c187f7c12d9cad6750ea6f63ba4cb0ee06140eddc4b37def9beb93f91f  mut_map122.sealed.txt  (scrubbed)
+3dd1fa22e28f0dc8ba557fe4ff1296abb9c3f45947b43e6ceecbb0938da56acd  mk_checks122.py
+744fa7d70ca025abc2fa1410d6dc84b9fbc51cf7dc5c6f99f5855f6ddb8cbb1b  chk_map122.py
+c4b2b2135fb9b9bbbd41ef8b1f2c97d040ceab8de12fc14cc369707f9011a72a  go122a.sh
+8404ff8c309a2cf723c44262c543343fe55a5a3b2e1c21c264831b8cac935a1c  hostdev122.py
+e1d88729d1fdac1ed7346c78d0206579beb65f1ee4167cdde4814f1efb6ac120  test_hostdev122.py
+451dbe0edd10b03ecb49e9a98580c737fb2fe0acc70dbfe90a912ed8e2ef30d9  patches/patch_map122_headroom.py
+21c3f7d01bb7b5e049d32b7ef22a4f49265fbe01f8e9ed89fed831cf299a934f  patches/patch_map122_skym_out.py
+b207fe2337c180ff3c73fccf5c4748d5054b8473740016bf03a02d917571ad34  patches/seal122_01.py

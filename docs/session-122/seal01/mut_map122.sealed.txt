@@ -1,0 +1,315 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s122\map122.py sha256 ce35585a1ed852c60d00a2774b531602a6223b2ccab24c50a23ea720b6647805
+test    C:\kyty\s122\test_map122.py sha256 49aa53a5e3be0be13a7e89dc7cfe8cce69cc9f0672373890bce396ccfc94f353
+mutants C:\kyty\s122\mut_map122.py sha256 849a430382a708014be3137f270684fa56cc011bb93e52c545a3a432af126c4b
+mutants: format list, 294 defined (strict: every use of MUTANTS checked; statements evaluated at lines 32-34,38)
+harness part: 1 text substitution(s) at line(s) [547], each drawing (old, new) from one element of MUTANTS
+suite: family V; fast OFF (line 881: ok = res['verdict'] == 'NOT_ADMITTED' and ...; 0 initialisations `ok = True`; no `ok &= ...` update; the suite does not end with sys.exit(<depends on ok>); other exits at lines [894]); end of suite: the final exit call at line 894
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['make', 'run', 'slope_case'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 28 (spawn, one process per job), work dir C:\kyty\s122\mutwork\map122_23312_1790460400
+fixtures: replay OFF - a baseline wrote outside its job directory ([["subprocess.Popen (None, 'C:\\\\Users\\\\<user>\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe C:\\\\kyty\\\\s122\\..."], ["subprocess.Popen (None, 'C:\\\\Users\\\\<user>\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe C:\\\\kyty\\\\s122\\..."]]); the baseline runs again, alone
+workers: FORCED TO 1 - the baseline started processes whose writes cannot be audited: ["subprocess.Popen (None, 'C:\\\\Users\\\\<user>\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python313\\\\python.exe C:\\\\kyty\\\\s122\\...", "_winapi.CreateProcess (None, '\\x02')"]
+BASELINE  SURVIVED  (5.3 s)
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (5.3 s)
+CONTROL CONTROL_pass_end_of_evaluate  SURVIVED  (5.3 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (5.4 s)
+hold_s  KILLED by exit 1  (5.2 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+period  KILLED by exit 1  (5.0 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+start  KILLED by exit 1  (5.1 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+keep_lo9  KILLED by exit 1  (5.3 s)
+keep_lo11  KILLED by exit 1  (5.5 s)
+keep_hi90  KILLED by exit 1  (5.6 s)
+keep_hi88  KILLED by exit 1  (5.5 s)
+keep_0_89  KILLED by exit 1  (5.5 s)
+keep_60_88  KILLED by exit 1  (5.2 s)
+draws_min_299  KILLED by exit 1  (5.3 s)
+draws_min_4700  KILLED by exit 1  (5.1 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+abba_abab  KILLED by exit 1  (5.0 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+arms_swapped  KILLED by exit 1  (5.7 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+min_pairs_23  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+min_pairs_25  KILLED by exit 1  (5.3 s)
+idle_9  KILLED by exit 1  (5.5 s)
+idle_11  KILLED by exit 1  (5.5 s)
+dose_us_1000  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+dose_us_2001  KILLED by exit 1  (5.2 s)
+dose_tol_04  KILLED by exit 1  (5.5 s)
+dose_tol_06  KILLED by exit 1  (5.5 s)
+dose_tol_off  KILLED by exit 1  (5.3 s)
+s_crit_lo_04  KILLED by exit 1  (5.2 s)
+s_crit_lo_06  KILLED by exit 1  (5.4 s)
+s_reach_09  KILLED by exit 1  (5.3 s)
+s_reach_11  KILLED by exit 1  (5.5 s)  [note: printed '\u041d' (U+041D), which cp1250 cannot encode - the old harness would have crashed here]
+s_flat_02  KILLED by exit 1  (5.6 s)
+s_flat_04  KILLED by exit 1  (5.3 s)
+s_super_09  KILLED by exit 1  (5.5 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+s_super_11  KILLED by exit 1  (5.5 s)
+gpu_bound_089  KILLED by exit 1  (5.6 s)
+gpu_bound_091  KILLED by exit 1  (5.2 s)
+pinch_079  KILLED by exit 1  (5.5 s)
+pinch_081  KILLED by exit 1  (5.4 s)
+vblank_us  KILLED by exit 1  (5.5 s)
+game_frame_us  KILLED by exit 1  (5.4 s)
+ns_per_us_1  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+ns_per_us_1e6  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+bda_new_54  KILLED by exit 1  (5.5 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+bda_new_1200  KILLED by exit 1  (5.6 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+bda_old_440  KILLED by exit 1  (5.4 s)
+bda_old_1200  KILLED by exit 1  (5.5 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+cpu_wall_block  KILLED by exit 1  (5.4 s)
+cpu_wall_spread  KILLED by exit 1  (5.2 s)
+build_sha  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+gates_sha  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+plan_sky_value  KILLED by exit 1  (5.4 s)
+plan_sky_level  KILLED by exit 1  (5.3 s)
+plan_skyp_value  KILLED by exit 1  (5.6 s)
+plan_skym_back  KILLED by exit 1  (5.2 s)
+plan_atl_level  KILLED by exit 1  (5.3 s)
+plan_ght_level  KILLED by exit 1  (5.4 s)
+plan_dnn_level  KILLED by exit 1  (5.4 s)
+plan_des_level  KILLED by exit 1  (5.4 s)
+plan_mgg_level  KILLED by exit 1  (5.6 s)
+plan_hub_level  KILLED by exit 1  (5.5 s)
+plan_hov_level  KILLED by exit 1  (5.5 s)
+plan_ice_level  KILLED by exit 1  (5.6 s)
+plan_dose  KILLED by exit 1  (5.3 s)
+group_code1_prefix  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+group_code1_thread  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+group_code2_kind  KILLED by exit 1  (5.4 s)
+group_code3_prefix  KILLED by exit 1  (5.5 s)
+group_code7_thread  KILLED by exit 1  (5.5 s)
+group_code8_prefix  KILLED by exit 1  (5.5 s)
+group_code9_added  KILLED by exit 1  (5.5 s)
+cover_empty  KILLED by exit 1  (5.5 s)
+cover_wrong  KILLED by exit 1  (5.5 s)
+role_empty  KILLED by exit 1  (5.5 s)
+prefixes_short  KILLED (crash: KeyError: 'burn_p_ns' [map122.py:566])  (0.4 s)
+main_fields_no_submits  KILLED (crash: KeyError: 'submits' [map122.py:699])  (0.0 s)
+main_fields_no_blk  KILLED (crash: KeyError: 'blk' [map122.py:491])  (0.0 s)
+x_fields_no_spin  KILLED (crash: KeyError: 'rec_spin_us' [map122.py:697])  (0.0 s)
+burn_keys_no_cpu_bad  KILLED (crash: KeyError: 'burn_cpu_bad' [map122.py:793])  (0.0 s)
+base_absent_no_burn  KILLED by exit 1  (5.6 s)
+base_absent_no_texmemo2  KILLED by exit 1  (5.5 s)
+markers_no_error  KILLED by exit 1  (5.5 s)
+markers_no_hang  KILLED by exit 1  (5.4 s)
+skipped_draw_text  KILLED by exit 1  (5.5 s)
+vk_allowed  KILLED by exit 1  (5.6 s)
+rx_burn_arm_thread  KILLED by exit 1  (5.4 s)
+rx_selftest  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+rx_reject  KILLED by exit 1  (5.4 s)
+rx_notsc  KILLED by exit 1  (5.5 s)
+rx_late  KILLED by exit 1  (5.5 s)
+rx_pin  KILLED (crash: IndexError: no such group [map122.py:422])  (0.0 s)
+base_tag_always  KILLED by exit 1  (5.5 s)
+code_dose_split  KILLED (crash: TypeError: 'NoneType' object is not subscriptable [test_map122.py:224])  (0.0 s)  [rerun in a fresh process to confirm; first run: KILLED (crash: TypeError: 'NoneType' object is not subscriptable [test_map122.py:224])]
+arm_texts_a  KILLED by exit 1  (4.9 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+schedule_order  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_trace  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_hang  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_gate_file  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_sample  KILLED by exit 1  (5.6 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_queue  KILLED by exit 1  (5.2 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_guest_args  KILLED by exit 1  (5.4 s)
+env_no_abba  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_pin_2  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_markers_2  KILLED by exit 1  (5.6 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+env_allows_rec  KILLED by exit 1  (5.6 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+idle_lt  KILLED by exit 1  (5.6 s)
+idle_any  KILLED by exit 1  (5.2 s)
+two_se_three  KILLED by exit 1  (5.5 s)
+two_se_one  KILLED by exit 1  (5.2 s)
+two_se_no_sqrt  KILLED by exit 1  (5.4 s)
+mean_sum  KILLED by exit 1  (5.5 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+median_first  KILLED by exit 1  (5.4 s)
+median_last  KILLED by exit 1  (5.5 s)
+regime_new_ge  KILLED by exit 1  (5.4 s)
+regime_old_gt  KILLED by exit 1  (5.4 s)
+first_values_last  KILLED by exit 1  (5.5 s)
+arm_asserts_no_gate_loop  KILLED by exit 1  (5.4 s)
+arm_asserts_no_text_loop  KILLED by exit 1  (5.4 s)
+arm_asserts_one_arm  KILLED (crash: KeyError: 1 [map122.py:342])  (5.3 s)
+arms_no_arms2  KILLED by exit 1  (5.5 s)
+arms_no_abba  KILLED by exit 1  (5.4 s)
+arms_no_text  KILLED by exit 1  (5.8 s)
+arms_no_frame  KILLED by exit 1  (6.3 s)
+arms_no_order  KILLED by exit 1  (5.4 s)
+arms_no_consecutive  KILLED by exit 1  (5.5 s)
+gate_lines_any_name  KILLED (crash: KeyError: 'fslean' [map122.py:382])  (2.6 s)
+gate_lines_any_frame  KILLED by exit 1  (5.4 s)
+gate_lines_any_value  KILLED by exit 1  (5.7 s)
+parse_x_only_once  KILLED by exit 1  (5.5 s)
+parse_partial_row_ok  KILLED (crash: KeyError: 'rec_spin_us' [map122.py:697])  (2.9 s)
+parse_no_stdout  KILLED by exit 1  (5.4 s)
+parse_skip_frame  KILLED by exit 1  (5.4 s)
+select_whole_block  KILLED by exit 1  (5.6 s)
+select_no_labels  KILLED by exit 1  (5.2 s)
+select_no_blk_label  KILLED by exit 1  (5.4 s)
+select_pairs_overlap  KILLED (crash: IndexError: list index out of range [map122.py:626])  (0.0 s)
+select_pairs_no_est  KILLED (crash: TypeError: unsupported operand type(s) for -: 'NoneType' and 'float' [map122.py:629])  (5.4 s)
+select_ignores_drop  KILLED by exit 1  (5.7 s)
+streams_no_exempt  KILLED by exit 1  (5.4 s)
+streams_no_dups  KILLED by exit 1  (5.5 s)
+first_pop_no_keep  KILLED by exit 1  (5.2 s)
+first_pop_any_block  KILLED by exit 1  (6.7 s)
+skip_unknown_not_fatal  KILLED by exit 1  (5.6 s)
+skip_gt  KILLED by exit 1  (5.5 s)
+skip_none_fatal  KILLED by exit 1  (5.4 s)
+check_skip_all  KILLED by exit 1  (5.5 s)
+check_skip_off  KILLED by exit 1  (5.3 s)
+skipped_before_min  KILLED by exit 1  (5.5 s)
+rep_skip_line_max  KILLED by exit 1  (5.4 s)
+outlier_us_499999  KILLED by exit 1  (5.3 s)
+outlier_us_500001  KILLED by exit 1  (5.3 s)
+max_outlier_1  KILLED by exit 1  (5.3 s)
+max_outlier_3  KILLED by exit 1  (5.3 s)
+outlier_gt  KILLED by exit 1  (8.9 s)
+outlier_no_block_check  KILLED by exit 1  (5.4 s)
+dropped_pairs_self  KILLED by exit 1  (5.4 s)
+dropped_pairs_next  KILLED by exit 1  (5.4 s)
+outlier_check_lt  KILLED by exit 1  (5.3 s)
+outlier_check_off  KILLED by exit 1  (5.5 s)
+dts_complete_rows_only  KILLED by exit 1  (5.4 s)
+dts_last_duplicate  KILLED by exit 1  (5.1 s)
+res_outlier_pair  KILLED by exit 1  (5.3 s)
+rep_outlier_line  KILLED by exit 1  (5.4 s)
+rep_outlier_pair_args  KILLED by exit 1  (5.3 s)
+host_ok_add_invalid  KILLED by exit 1  (5.5 s)
+host_ok_no_stall  KILLED by exit 1  (5.4 s)
+hostdev_sha  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+hostdev_py  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+host_missing_ok  KILLED by exit 1  (5.6 s)
+host_tag_unchecked  KILLED by exit 1  (5.6 s)
+host_window_unchecked  KILLED by exit 1  (5.4 s)
+host_verdicts_any  KILLED by exit 1  (5.3 s)
+host_not_evaluable_ok  KILLED by exit 1  (5.5 s)
+host_check_off  KILLED by exit 1  (5.5 s)
+host_tool_off  KILLED by exit 1  (5.2 s)
+host_tool_arg_ignored  KILLED by exit 1  (5.3 s)
+rep_host_line  KILLED by exit 1  (5.4 s)
+hr_dt_24999  KILLED by exit 1  (5.2 s)
+hr_dt_25001  KILLED by exit 1  (5.3 s)
+hr_share_094  KILLED by exit 1  (5.1 s)
+hr_share_096  KILLED by exit 1  (5.4 s)
+hr_lt_le  KILLED by exit 1  (5.2 s)
+hr_ge_gt  KILLED by exit 1  (5.3 s)
+hr_empty_speed  KILLED by exit 1  (5.2 s)
+hr_empty_headroom  KILLED by exit 1  (5.3 s)
+hr_frames_off  KILLED by exit 1  (5.3 s)
+hr_arm_b  KILLED by exit 1  (5.3 s)
+hr_both_arms  KILLED by exit 1  (5.2 s)
+hr_all_blocks  KILLED by exit 1  (5.2 s)
+reading_always_speed  KILLED by exit 1  (5.6 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+reading_by_name  KILLED by exit 1  (5.2 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+rep_reading_line  KILLED by exit 1  (5.2 s)
+rep_speed_on_ne  KILLED by exit 1  (5.4 s)
+rep_speed_on_headroom  KILLED by exit 1  (5.4 s)
+rep_headroom_note_off  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+rep_bda_old_note_off  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+rep_verdict_bda_b  KILLED by exit 1  (5.4 s)
+adj_ratio_inverted  KILLED by exit 1  (5.5 s)
+adj_no_ratio  KILLED by exit 1  (5.9 s)
+adj_sign  KILLED by exit 1  (5.5 s)
+adj_zone_raw  KILLED by exit 1  (5.4 s)
+adj_differs_off  KILLED by exit 1  (5.4 s)
+adj_decides_verdict  KILLED by exit 1  (5.5 s)
+adj_draws_delta  KILLED by exit 1  (5.4 s)
+rep_adj_differs_text  KILLED by exit 1  (5.3 s)
+coverage_no_role  KILLED by exit 1  (5.3 s)
+coverage_ge0  KILLED by exit 1  (5.4 s)
+coverage_role_ge0  KILLED by exit 1  (5.5 s)
+coverage_check_off  KILLED by exit 1  (5.4 s)
+armed_no_other_groups  KILLED by exit 1  (5.6 s)
+armed_no_a_arm  KILLED by exit 1  (5.3 s)
+armed_zero_ok  KILLED by exit 1  (5.5 s)
+armed_no_b_blocks_ok  KILLED by exit 1  (5.4 s)
+arm_lines_empty_ok  KILLED by exit 1  (5.4 s)
+arm_lines_any  KILLED by exit 1  (5.4 s)
+arm_lines_no_dose  KILLED by exit 1  (5.4 s)
+arm_lines_no_thread  KILLED by exit 1  (5.5 s)
+measure_per_frame_ns  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+measure_per_unit_frames  KILLED by exit 1  (5.3 s)
+measure_cpu_wall_inverted  KILLED by exit 1  (5.4 s)
+measure_a_arm  KILLED by exit 1  (5.3 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+coverage_no_cover_map  KILLED by exit 1  (5.4 s)
+coverage_a_arm  KILLED by exit 1  (5.4 s)
+dose_check_abs  KILLED by exit 1  (5.5 s)
+burn_ok_no_reject  KILLED by exit 1  (5.4 s)
+burn_ok_no_notsc  KILLED by exit 1  (5.4 s)
+burn_ok_no_selftest  KILLED by exit 1  (5.6 s)
+burn_ok_cpu_bad_le  KILLED by exit 1  (5.6 s)
+pred_draft_refuses  KILLED by exit 1  (5.5 s)
+pred_no_bytes  KILLED by exit 1  (5.4 s)
+pred_no_meta_sha  KILLED by exit 1  (5.4 s)
+pred_path_slashes  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+adm_skips_dose  KILLED by exit 1  (5.4 s)
+adm_skips_streams  KILLED by exit 1  (5.5 s)
+check_binary  KILLED by exit 1  (5.3 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+check_installed  KILLED by exit 1  (5.4 s)
+check_pin_count  KILLED by exit 1  (5.5 s)
+check_pin_mode  KILLED by exit 1  (5.4 s)
+check_env_schedule_field  KILLED by exit 1  (5.2 s)
+check_env_exact_subset  KILLED by exit 1  (5.5 s)
+check_hold  KILLED by exit 1  (5.6 s)
+check_attempts_one  KILLED by exit 1  (5.4 s)
+check_attempts_hold_exit  KILLED by exit 1  (5.2 s)
+check_gates_text  KILLED by exit 1  (5.6 s)
+check_gates_sha  KILLED by exit 1  (5.4 s)
+check_marker  KILLED by exit 1  (5.4 s)
+check_plan_sealed_value_only  KILLED (crash: KeyError: 'burn_None_ns' [map122.py:566])  (0.6 s)
+ne_pairs_le  KILLED by exit 1  (5.5 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+ne_pairs_draft  KILLED by exit 1  (5.4 s)
+ne_no_two_se  KILLED by exit 1  (5.4 s)
+ne_regime_same_only  KILLED by exit 1  (5.5 s)
+ne_regime_dropped  KILLED by exit 1  (5.3 s)
+verdict_ne_ignored  KILLED by exit 1  (5.4 s)  [note: printed '\u043a' (U+043A), which cp1250 cannot encode - the old harness would have crashed here]
+verdict_repeat_swapped  KILLED by exit 1  (5.5 s)
+zone_super_first  KILLED by exit 1  (5.5 s)
+zone_super_ge  KILLED by exit 1  (5.4 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+zone_crit_ge  KILLED by exit 1  (5.5 s)
+zone_crit_no_reach  KILLED by exit 1  (5.4 s)
+zone_crit_reach_gt  KILLED by exit 1  (5.4 s)  [note: printed '\u041d' (U+041D), which cp1250 cannot encode - the old harness would have crashed here]
+zone_flat_le  KILLED by exit 1  (5.4 s)
+zone_flat_lo  KILLED by exit 1  (5.5 s)
+zone_no_none  KILLED by exit 1  (5.5 s)
+estimate_sign  KILLED by exit 1  (5.5 s)  [note: printed '\u043d' (U+043D), which cp1250 cannot encode - the old harness would have crashed here]
+estimate_window_rows  KILLED by exit 1  (5.4 s)
+estimate_pooled_means  KILLED by exit 1  (5.5 s)
+slope_uses_two_se  KILLED by exit 1  (5.6 s)  [note: printed '\u043d' (U+043D), which cp1250 cannot encode - the old harness would have crashed here]
+slope_no_div  KILLED by exit 1  (5.4 s)  [note: printed '\u0441' (U+0441), which cp1250 cannot encode - the old harness would have crashed here]
+slope_lo_plus  KILLED by exit 1  (5.3 s)
+slope_hi_minus  KILLED by exit 1  (5.5 s)
+scene_window_rows  KILLED by exit 1  (5.5 s)
+scene_gpu_code8  KILLED by exit 1  (5.3 s)
+scene_gpu_any_code  KILLED by exit 1  (6.1 s)
+scene_gpu_no_verdict  KILLED by exit 1  (5.3 s)
+scene_gpu_gt  KILLED by exit 1  (5.2 s)
+scene_pinch_gt  KILLED by exit 1  (5.4 s)
+vblank_trunc  KILLED by exit 1  (5.6 s)
+vblank_no_floor  KILLED by exit 1  (5.4 s)
+vblank_top_first  KILLED by exit 1  (5.2 s)
+rep_delta_se  KILLED by exit 1  (5.6 s)
+rep_delta_swap  KILLED by exit 1  (5.2 s)
+rep_slope_zones  KILLED by exit 1  (5.5 s)
+rep_dose_line  KILLED by exit 1  (5.3 s)
+rep_dose_args  KILLED by exit 1  (5.2 s)
+rep_coverage_role  KILLED by exit 1  (5.2 s)
+rep_pinched_text  KILLED (crash: TypeError: not all arguments converted during string formatting [map122.py:923])  (0.0 s)
+rep_gpu_bound_na  KILLED by exit 1  (5.3 s)
+rep_bda_regimes  KILLED by exit 1  (5.4 s)
+rep_not_admitted  KILLED by exit 1  (5.4 s)
+rep_draft  KILLED by exit 1  (5.7 s)
+rep_ne_line  KILLED by exit 1  (5.4 s)
+rep_admission  KILLED by exit 1  (5.3 s)
+rep_verdict_line  KILLED by exit 1  (5.5 s)
+rep_consequence  KILLED by exit 1  (5.4 s)  [note: printed '\u041d' (U+041D), which cp1250 cannot encode - the old harness would have crashed here]
+rep_scene_line  KILLED by exit 1  (5.4 s)
+rep_blocks_line  KILLED by exit 1  (5.4 s)
+plan_check_unknown_ok  KILLED by exit 1  (5.4 s)
+plan_check_unsealed_ok  KILLED by exit 1  (5.4 s)
+plan_check_value_only  KILLED by exit 1  (5.4 s)
+plan_check_main_plan  KILLED by exit 1  (5.5 s)
+294 mutants: 294 killed (14 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 1 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+NOTE: 50 mutant(s) printed text the old harness console (cp1250) cannot encode, where the old harness would have crashed (killed); noted, not emulated: ['hold_s', 'period', 'start', 'draws_min_4700', 'abba_abab', 'arms_swapped', 'min_pairs_23', 'dose_us_1000', 's_reach_11', 's_super_09']
+wall 1605.6 s, worker time 1561.1 s, 1 workers
+ALL KILLED (294 of 294 selected mutants killed; 294 defined in the mutant script)

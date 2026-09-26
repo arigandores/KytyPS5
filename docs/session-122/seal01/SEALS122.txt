@@ -1,0 +1,27 @@
+# Session 122 seal 01 (map122) - sha256 of every sealed file; written by patches/seal122_01.py
+
+3430b26fb77ae7284e23ec7351860b9d4f6b37f7085627de5b39028260d00677  pred/01_map122.md
+3ff337acc80a0915ae56cfa606e7984acbe1a2ef5ccab5168b7af92d44fbd191  design/design122.md
+b4b308ff37ddc8ff32742300fbb0b7c613112b933fbc47d11f344fa0be5eb1de  design/burn.md
+9ea661c51ed812629bf26d2ce2c8ffcd6c24bbb574e4d168a26e0f09eafc9760  map122_format_contract.md
+ce35585a1ed852c60d00a2774b531602a6223b2ccab24c50a23ea720b6647805  map122.py
+49aa53a5e3be0be13a7e89dc7cfe8cce69cc9f0672373890bce396ccfc94f353  test_map122.py
+849a430382a708014be3137f270684fa56cc011bb93e52c545a3a432af126c4b  mut_map122.py
+303a784911cf0ffed238f581e47f98876a0a5164a72a24ca32a17fc67820cbbf  gates_base.txt
+c4b2b2135fb9b9bbbd41ef8b1f2c97d040ceab8de12fc14cc369707f9011a72a  go122a.sh
+bc5764bf9b07a37ce031e0cfbf1f3bc9a3256bfcd76ff35a2d0ba2c8276cce28  enter_scene.py
+d9e7a777404f1aa98eb8e221d2d9b1af0e393b292d91997fade08fae685ce5c0  procload.py
+8404ff8c309a2cf723c44262c543343fe55a5a3b2e1c21c264831b8cac935a1c  hostdev122.py
+e1d88729d1fdac1ed7346c78d0206579beb65f1ee4167cdde4814f1efb6ac120  test_hostdev122.py
+744fa7d70ca025abc2fa1410d6dc84b9fbc51cf7dc5c6f99f5855f6ddb8cbb1b  chk_map122.py
+3dd1fa22e28f0dc8ba557fe4ff1296abb9c3f45947b43e6ceecbb0938da56acd  mk_checks122.py
+6ee3e22895e7ed35d99c567e89f0d994335a476e20d3b631c91abf3c0399dae5  checks/map122_checks.json
+2ae1b9c187f7c12d9cad6750ea6f63ba4cb0ee06140eddc4b37def9beb93f91f  mut_map122.sealed.txt
+2baf8742676255fefd37c72f727e6c27c024be9b67d3afa987bed7fe334af86b  kyty_emulator_2baf8742.exe
+db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde  C:/kyty/KytyPS5/docs/session-116/mutlib_v41/mutlib.py
+
+map122: mutlib 4.1 FULL --control --no-memo --work-dir C:/kyty/s122/mutwork --cache-dir C:/kyty/s122/mutcache (no --changed-from) on the sealed copy: 294 mutants, 294 killed (14 by a suite crash), 0 survived, 0 unresolved; controls 3 of 3 survived; report mut_map122.sealed.txt, log mut_run_sealed.log
+fixtures on the sealed copy: test_map122.py 194 fixtures ALL OK (196 with --real: log_bsky122.txt, C:/kyty/s121/log_shp121.txt)
+decided before the seal by the UNSEALED smoke csky122 (ROADMAP s122 item 13 (a)/(b)): code 7 armed, burn_s_main = 0 in every block => the skym122 arm left the map; codes 5 and 6 armed cleanly
+item 18 (c) in the scorer: HEADROOM by the base-arm window share of dt_us < 25 000 >= 0.95 (no base arm => NOT_EVALUABLE)
+sealed tags: sky122, skyp122, des122, atl122, ght122, dnn122 (+ mgg122 hub122 hov122 ice122), each with <tag>r

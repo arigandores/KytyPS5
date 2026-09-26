@@ -1424,6 +1424,12 @@ cd /c/kyty/build && KYTY_TESTS_CONTINUE=1 KYTY_TESTS_VERBOSE=1 ./shader_cfg_test
 - Перед изменением файла читать его. Инструмент Edit переписывает файлы с CRLF, а репозиторий в LF: перед коммитом
   `cd C:\kyty\KytyPS5 && python C:\kyty\normalize_eol.py`, затем `git diff --stat` должен показывать только реальные правки.
   Коммиты с trailer'ами Co-Authored-By/Claude-Session; push в `fork` только по отдельному запросу. Частичный стейджинг: `C:\kyty\stage_hunks.py`.
+- **Ловушка API задач (2026-09-26): поле блокеров называется по-разному на запись и на чтение.** Писать блокер —
+  `blockedByIssueIds` (POST/PATCH задачи; снятие — `removeBlockedByIssueIds`), читать — **`blockedBy`** в ответе
+  `GET /api/issues/<id>` (объект или список; сводка — `blockerAttention.blockingTreeLive`). Запрос
+  `blockedByIssueIds` у прочитанной задачи возвращает пустоту ВСЕГДА, и по нему живая цепочка шагов выглядит
+  мёртвой. Сторож непрерывности — `ps5 em/docs/chain_check.py` (шесть инвариантов, `--selftest`); правило и
+  константы — `ROADMAP.md` «СЕССИЯ 122» п. 9–10.
 - **Ловушка окружения агентов (2026-09-26): `GIT_AUTHOR_NAME`/`GIT_AUTHOR_EMAIL`/`GIT_COMMITTER_*` заданы ПУСТЫМИ**, а
   `GIT_CONFIG_GLOBAL=/dev/null` — `git commit` падает с `fatal: empty ident name (for <>) not allowed`, и `-c user.name=…`
   НЕ помогает (окружение старше конфига). Перед коммитом в сессии агента выставить все четыре переменные

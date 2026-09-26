@@ -1,0 +1,41 @@
+shp121 tag shp121  scorer 46f8cadc2674f169  build 0bd21ec24e546fbb
+  binary               ok
+  installed_now        ok
+  pinned               ok
+  env_exact            ok
+  env_vk               ok
+  hold                 ok
+  one_ok_attempt       ok
+  prereg               ok
+  prereg_sha           ok
+  gates_exact          ok
+  arm_asserts          ok
+  gate_lines           ok
+  arms                 ok
+  no_marker            ok
+  no_skip_window       ok
+  streams              ok
+  pairs                ok
+  idle                 ok
+  armed_fill           ok
+  m_zero               ok
+  no_switch_in_window  ok
+  verify_leak          ok
+  x2_cenoff            ok
+  blocks 89 complete 88 pairs 44; estimator frames P 3182 M 3203; window frames P 3476 M 3476
+Delta dt_us (P - M) 1.3 +- 154.3 us (2SE, 44 pairs), upper 155.6; P 32604.7 M 32603.4 us
+prediction -350.0 us (range -500.0 .. -250.0) [I]
+game speed (16 667 / mean dt_us) P 0.5112 M 0.5112: change -0.00 pp (-0.00 %)
+Delta cpu_gpu_us (P - M) -4.2 +- 139.1 us; P 31923.0 M 31927.2 us (report)
+arming a frame: tex_hits P - M 1434.4 (need >= +300 and <= the M key misses 1661.6; census +1190), key misses P - M -1387.9 (need <= -300; census -1190); P tex_hits 46171.0 M 44736.6, P key misses 273.7 M 1661.6
+report P - M a frame: texmemo_stale 3.8, texfast_ok 1375.0, texfast_no -1324.5, texfast_rec -1192.2, b_texn 50.6
+P window a frame: tm8_fill 275.5, tm8_evict 258.9, tm8_evict_view 238.2, tm8_alias 0.0, tm8_renorm 0.0
+correctness (all rows): tm8_bad=0, tm8_vctl_bad=0, tm8_relive=0, tm8_rbbad=0; lines tm8_mismatch=0, tm8_injected=0
+verify leak (all rows): tm8_look=0, tm8_hit=0, tm8_miss=0, tm8_stale=0, tm8_gain=0, tm8_vchk=0, tm8_vctl=0, tm8_inject=0, tm8_inject_miss=0, tm8_dlose=0, tm8_ddiff=0, tm8_dcc_chg=0, tm8_rbchk=0, tm8_rbinject=0, tm8_rbinject_miss=0, tm8_pb0_ns=0, tm8_pb_ns=0, tm8_pb_n=0, tm8_x2=0, tm8_cenoff=0
+probe timer (all rows): pb 0.000 us, pb0 0.000 us, n 0, t_pb - ns
+bda_scan P 1246.8 (OLD) M 1243.3 (OLD)
+vfy vfy121: PASS (PASS)
+not evaluable: -
+ADMISSION: ADMITTED
+VERDICT: NO_SHIP Delta=1.3 2se=154.3 upper=155.6
+CONSEQUENCE: NO_SHIP - "иначе трек закрыт своим измеренным числом" (ROADMAP s121 item 1): the R1 track closes with its measured Delta +- 2SE (Sky Garden, this build, pinned, against texmemo8=0 of the same build).

@@ -379,7 +379,7 @@ BDA и read-only depth прошли с synchronization validation. Больша�
   **Проверка картинки — только видео (`KYTY_REC`), не скриншоты.**
 - `INDEX.md` — этот файл.
 
-## Папка эмулятора `C:\Users\<user>\OneDrive\Desktop\ps5 em`
+## Папка эмулятора `C:\kyty\KytyPS5\ps5 em`
 - `_RenderDoc\kyty_1789030426233095_capture.rdc` — **целевой F1 пользователя, падающий корабль, 32-я сессия**.
   SkyApply EID 6703/14226, VS `d4bac36b6b1f31c5`, PS `db42662a2582dacb`, sky-LUT 864×486 (tex 24094).
   Бинарь захвата содержит только фикс маски стадий; VS ещё с нулевыми позициями. Стенд `s32\rd_apply.py`

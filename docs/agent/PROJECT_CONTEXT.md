@@ -1428,8 +1428,14 @@ cd /c/kyty/build && KYTY_TESTS_CONTINUE=1 KYTY_TESTS_VERBOSE=1 ./shader_cfg_test
   `blockedByIssueIds` (POST/PATCH задачи; снятие — `removeBlockedByIssueIds`), читать — **`blockedBy`** в ответе
   `GET /api/issues/<id>` (объект или список; сводка — `blockerAttention.blockingTreeLive`). Запрос
   `blockedByIssueIds` у прочитанной задачи возвращает пустоту ВСЕГДА, и по нему живая цепочка шагов выглядит
-  мёртвой. Сторож непрерывности — `ps5 em/docs/chain_check.py` (шесть инвариантов, `--selftest`); правило и
-  константы — `ROADMAP.md` «СЕССИЯ 122» п. 9–10.
+  мёртвой. Сторож непрерывности — `ps5 em/docs/chain_check.py` (семь инвариантов, `--selftest`); правило и
+  константы — `ROADMAP.md` «СЕССИЯ 122» п. 9–11.
+- **Ловушка API задач 2 (2026-09-26): живая цепочка ДОЧЕРНИХ задач не является путём продолжения РОДИТЕЛЯ.**
+  Задача цикла, оставленная `in_progress` без собственного блокера, не имеет чем проснуться
+  (`blockerAttention.blockingTreeLive = false`), и платформа требует диспозицию у пользователя — даже когда все шаги
+  стоят на формальных блокерах и `chain_check.py` печатает `ALL OK`. Пока цепочка сессии открыта, задача цикла стоит
+  **`blocked` с блокером на терминальном звене** (последний шаг, принадлежащий лиду): сводка переходит в
+  `state=covered`, `blockingTreeLive=true`, родитель просыпается сам. Инвариант I7; правило — `ROADMAP.md` п. 11.
 - **Ловушка окружения агентов (2026-09-26): `GIT_AUTHOR_NAME`/`GIT_AUTHOR_EMAIL`/`GIT_COMMITTER_*` заданы ПУСТЫМИ**, а
   `GIT_CONFIG_GLOBAL=/dev/null` — `git commit` падает с `fatal: empty ident name (for <>) not allowed`, и `-c user.name=…`
   НЕ помогает (окружение старше конфига). Перед коммитом в сессии агента выставить все четыре переменные

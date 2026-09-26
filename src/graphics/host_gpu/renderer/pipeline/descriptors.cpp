@@ -1361,6 +1361,538 @@ static bool TextureSourceSettled(const Image& image, const TextureCache::ImageDe
 static thread_local uint32_t g_bind_wit_arm  = 0;
 static thread_local uint64_t g_bind_wit_mark = 0;
 
+// Session 120, knob "r1cen" (MEASUREMENT ONLY, C:/kyty/s120/design/r1.md with the required changes RC1-RC11 of
+// r1_review.md and the recommendations adopted in design120.md section 2).  1: the real memo's key-miss path and a 1/8
+// random sample of its hit path are timed (branch -> emit), RebindImages times its texfast re-record branch and a 1/16
+// sample of its fast branch.  2: plus a TAG-ONLY SHADOW of three other memo shapes - 4-way and 8-way LRU of the same
+// 4 096 entries, direct 16 384 - and of the real shape itself (w1, the null control: its would-hits, losses and
+// re-records are 0 by construction, so a nonzero r1_w1_* is a census defect), that sees every lookup of the real memo,
+// decides "would have hit" with the real hit's own proof (64-bit resource key, 32-byte T#, five-field liveness) and
+// checks that claim against what the real miss path computes (r1_*_bad).  It reads images through
+// SlotVector::try_get only; it never writes the memo, the texture cache or an image, takes no lock, and nothing it
+// computes feeds a decision.
+namespace R1 {
+constexpr uint32_t W4Sets   = 1024;  // x 4 ways = 4 096 entries
+constexpr uint32_t W8Sets   = 512;   // x 8 ways = 4 096 entries
+constexpr uint32_t D16Slots = 16384; // direct
+constexpr uint32_t W1Sets   = 4096;  // x 1 way: the real memo's own shape (RC7 null control)
+static_assert(RenderExecutorMemo::TextureSlots == W1Sets);
+// The table order of candidates, fill marks and counter arrays.
+constexpr uint32_t W4 = 0, W8 = 1, D16 = 2, W1 = 3, Tables = 4;
+// One cache line; read only on a real key miss or written on a fill, never on a real hit (except 1/64 sampled d16).
+struct alignas(64) Proof {
+	uint64_t                resource_key = 0; // the real memo's resource_key (hash of the ImageResource prefix)
+	std::array<uint32_t, 8> dwords {};        // the full T#
+	ImageId                 image_id;         // {index, generation} the fill resolved to
+	uint64_t                desc_digest = 0;  // R1DescDigest(desc).all of the desc the fill resolved to
+	uint32_t                gen         = 0;  // d16 only: census generation of the fill (other gen = empty)
+	uint32_t                groups      = 0;  // R1DescDigest(desc).groups: which desc group differs, for the log only
+};
+static_assert(sizeof(Proof) == 64);
+// Tag = high 32 bits of memo_hash; the set index uses the low bits.  use == 0 means an empty way.
+template <uint32_t N>
+struct alignas(N * 8) Set {
+	std::array<uint32_t, N> tag {};
+	std::array<uint32_t, N> use {};
+};
+struct Cand { // this lookup's exact-proof candidate in one table
+	bool         found  = false;
+	bool         live   = false;
+	uint32_t     slot   = 0; // index into the table's Proof array
+	uint32_t     groups = 0;
+	ImageId      id;
+	uint64_t     digest = 0;
+	GuestRange   data {};    // the candidate image's info.data / info.extent as the liveness test saw them
+	vk::Extent3D extent {};
+};
+struct Census {
+	const RenderExecutorMemo* memo  = nullptr;
+	uint32_t                  gen   = 0;
+	uint32_t                  block = 0;
+	uint32_t                  clock = 0;
+	int                       frame = 0;
+	bool                      post  = false; // this key miss evaluates liveness AFTER the real miss path (5.3, RC5)
+	bool                      self  = false; // this lookup's own census work is timed (1/64)
+	bool after_miss     = false; // RC6: the previous armed lookup was a key miss the real path stored
+	bool hit_after_miss = false; // RC6: this lookup follows one (read and cleared on every armed lookup)
+	uint64_t self_ns    = 0;     // the self sample's time before t0
+	ImageId  real_before;        // the real slot's image id before a stale lookup invalidated it
+	std::array<Cand, Tables>              cand {};
+	std::array<uint64_t, W1Sets / 64>     observed {}; // real slot content filled while watched
+	std::array<uint8_t, W1Sets>           mark {};     // bit T: the slot's last fill was a would-hit in T
+	std::vector<Set<4>> w4  = std::vector<Set<4>>(W4Sets);
+	std::vector<Proof>  w4p = std::vector<Proof>(W4Sets * 4);
+	std::vector<Set<8>> w8  = std::vector<Set<8>>(W8Sets);
+	std::vector<Proof>  w8p = std::vector<Proof>(W8Sets * 8);
+	std::vector<Proof>  d16 = std::vector<Proof>(D16Slots);
+	std::vector<Set<1>> w1  = std::vector<Set<1>>(W1Sets);
+	std::vector<Proof>  w1p = std::vector<Proof>(W1Sets);
+};
+using Ctr = Common::FrameStats::Counter;
+constexpr std::array<const char*, Tables> kName {"w4", "w8", "d16", "w1"};
+constexpr std::array<Ctr, Tables> kPreN {Ctr::R1W4Pre, Ctr::R1W8Pre, Ctr::R1D16Pre, Ctr::R1W1Pre};
+constexpr std::array<Ctr, Tables> kPreNs {Ctr::R1W4PreNs, Ctr::R1W8PreNs, Ctr::R1D16PreNs, Ctr::R1W1PreNs};
+constexpr std::array<Ctr, Tables> kPostN {Ctr::R1W4Post, Ctr::R1W8Post, Ctr::R1D16Post, Ctr::R1W1Post};
+constexpr std::array<Ctr, Tables> kPostNs {Ctr::R1W4PostNs, Ctr::R1W8PostNs, Ctr::R1D16PostNs, Ctr::R1W1PostNs};
+constexpr std::array<Ctr, Tables> kBad {Ctr::R1W4Bad, Ctr::R1W8Bad, Ctr::R1D16Bad, Ctr::R1W1Bad};
+constexpr std::array<Ctr, Tables> kRb {Ctr::R1W4Rb, Ctr::R1W8Rb, Ctr::R1D16Rb, Ctr::R1W1Rb};
+constexpr std::array<Ctr, Tables> kRbNs {Ctr::R1W4RbNs, Ctr::R1W8RbNs, Ctr::R1D16RbNs, Ctr::R1W1RbNs};
+} // namespace R1
+// Allocated on the first armed lookup of the owner thread (about 1.9 MB), never at r1cen 0, never freed (GuestGpu
+// lives as long as the process).  A constinit pointer: no TLS guard on the hot path.
+static constinit thread_local R1::Census* t_r1     = nullptr;
+static constinit thread_local uint32_t    t_r1_rng = 0x2545F491u;
+// design120.md section 2: the owner thread's &t_r1.  GuestGpu is the only thread that resolves textures; any other
+// thread reaching the census counts r1_xthr and gets none (r1_xthr > 0 => NOT_EVALUABLE).
+static std::atomic<const void*> g_r1_owner {nullptr};
+static uint32_t R1Next() { // xorshift32: the hit, fast-branch, mode and self samples (not periodic: no slot aliasing)
+	auto x = t_r1_rng;
+	x ^= x << 13u;
+	x ^= x >> 17u;
+	x ^= x << 5u;
+	return t_r1_rng = x;
+}
+static uint32_t R1Tag(uint64_t h) {
+	return static_cast<uint32_t>(h >> 32u);
+}
+static bool R1Same(const R1::Proof& p, uint64_t rk, const uint32_t* dwords) { // THE REAL HIT'S KEY TEST
+	return p.resource_key == rk && std::memcmp(p.dwords.data(), dwords, sizeof(p.dwords)) == 0;
+}
+struct R1Digest {
+	uint64_t all    = 0;
+	uint32_t groups = 0; // 10-bit fingerprints of the info / view / source groups
+};
+// Every field of ImageDesc a consumer reads, packed member-wise into words (never memcmp/hash of the struct:
+// ImageDesc has padding - see the bindpackcheck comment in ResolveTextureWith), then XXH3 per group: info (ImageInfo,
+// mip_layout up to levels), view (ImageViewInfo + binding type), source (the BC source trim).
+static R1Digest R1DescDigest(const TextureCache::ImageDesc& d) {
+	std::array<uint64_t, 64> a; // info: 16 words + 3 a level (<= 16 levels)
+	std::array<uint64_t, 7>  b; // view
+	std::array<uint64_t, 2>  s; // source
+	size_t      n = 0;
+	const auto& i = d.info;
+	const auto& v = d.view_info;
+	a[n++]        = i.data.address;
+	a[n++]        = i.data.size;
+	a[n++]        = i.stencil.address;
+	a[n++]        = i.stencil.size;
+	a[n++]        = i.metadata.range.address;
+	a[n++]        = i.metadata.range.size;
+	a[n++]        = uint64_t {static_cast<uint8_t>(i.metadata.kind)} |
+	         uint64_t {static_cast<uint8_t>(i.metadata.compression)} << 8u |
+	         uint64_t {i.metadata.stencil_compressed} << 16u | uint64_t {i.metadata.dcc_clear_register_valid} << 17u |
+	         uint64_t {i.metadata.dcc_alpha_msb} << 18u;
+	a[n++] = i.metadata.control | uint64_t {i.metadata.dcc_clear_word} << 32u;
+	a[n++] = i.metadata.cmask_clear_words[0] | uint64_t {i.metadata.cmask_clear_words[1]} << 32u;
+	a[n++] = i.htile_clear_mask | uint64_t {static_cast<uint32_t>(i.pixel_format)} << 32u;
+	a[n++] = static_cast<uint32_t>(i.guest_format) | uint64_t {static_cast<uint32_t>(i.type)} << 32u;
+	a[n++] = i.extent.width | uint64_t {i.extent.height} << 32u;
+	a[n++] = i.extent.depth | uint64_t {i.resources.levels} << 32u;
+	a[n++] = i.resources.layers | uint64_t {i.pitch} << 32u;
+	a[n++] = i.bytes_per_block | uint64_t {i.samples} << 32u;
+	a[n++] = static_cast<uint32_t>(i.tile_mode) | uint64_t {i.bgra16} << 32u;
+	for (uint32_t l = 0; l < std::min<uint32_t>(i.resources.levels, 16u); l++) {
+		a[n++] = i.mip_layout[l].offset;
+		a[n++] = i.mip_layout[l].size;
+		a[n++] = i.mip_layout[l].pitch | uint64_t {i.mip_layout[l].height} << 32u;
+	}
+	b[0] = static_cast<uint32_t>(v.format) | uint64_t {static_cast<uint32_t>(v.type)} << 32u;
+	b[1] = static_cast<uint32_t>(static_cast<VkImageAspectFlags>(v.aspect)) | uint64_t {v.base_level} << 32u;
+	b[2] = v.level_count | uint64_t {v.base_layer} << 32u;
+	b[3] = v.layer_count | uint64_t {v.min_lod} << 32u;
+	b[4] = static_cast<uint32_t>(v.mapping.r) | uint64_t {static_cast<uint32_t>(v.mapping.g)} << 32u;
+	b[5] = static_cast<uint32_t>(v.mapping.b) | uint64_t {static_cast<uint32_t>(v.mapping.a)} << 32u;
+	b[6] = static_cast<uint32_t>(static_cast<VkImageUsageFlags>(v.usage)) |
+	       uint64_t {static_cast<uint32_t>(d.type)} << 32u;
+	s[0]              = d.source_first_level;
+	s[1]              = d.source_size;
+	const uint64_t hi = XXH3_64bits(a.data(), n * sizeof(uint64_t));
+	const uint64_t hv = XXH3_64bits(b.data(), sizeof(b));
+	const uint64_t hs = XXH3_64bits(s.data(), sizeof(s));
+	return {hi ^ std::rotl(hv, 21) ^ std::rotl(hs, 42),
+	        static_cast<uint32_t>(hi & 0x3ffu) | static_cast<uint32_t>(hv & 0x3ffu) << 10u |
+	            static_cast<uint32_t>(hs & 0x3ffu) << 20u};
+}
+// THE REAL HIT'S LIVENESS TEST, minus the data/extent comparison, which needs the desc: R1Miss finishes it.
+static void R1Live(R1::Cand& k, const Common::SlotVector<Image>& images) {
+	const Image* img = images.try_get(k.id);
+	k.live           = img != nullptr && img->registered && !img->binding.needs_rebind && !img->depth_id;
+	if (img != nullptr) {
+		k.data   = img->info.data;
+		k.extent = img->info.extent;
+	}
+}
+template <uint32_t N>
+static int R1FindTag(const R1::Set<N>& s, uint32_t tag) { // real hits: tag only (5.1)
+	for (uint32_t w = 0; w < N; w++) {
+		if (s.use[w] != 0 && s.tag[w] == tag) {
+			return static_cast<int>(w);
+		}
+	}
+	return -1;
+}
+template <uint32_t N>
+static int R1FindExact(const R1::Set<N>& s, const R1::Proof* p, uint32_t tag, uint64_t rk,
+                       const uint32_t* dwords) { // key misses and stale lookups: the full proof
+	for (uint32_t w = 0; w < N; w++) {
+		if (s.use[w] == 0 || s.tag[w] != tag) {
+			continue;
+		}
+		if (R1Same(p[w], rk, dwords)) {
+			return static_cast<int>(w);
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1TagAlias, 1);
+	}
+	return -1;
+}
+template <uint32_t N>
+static uint32_t R1Victim(const R1::Set<N>& s) { // an empty way, else the least recently used
+	uint32_t best = 0;
+	for (uint32_t w = 0; w < N; w++) {
+		if (s.use[w] == 0) {
+			return w;
+		}
+		if (s.use[w] < s.use[best]) {
+			best = w;
+		}
+	}
+	return best;
+}
+static void R1Put(R1::Proof& p, uint64_t rk, const uint32_t* dwords, ImageId id, const R1Digest& dg, uint32_t gen) {
+	p.resource_key = rk;
+	std::memcpy(p.dwords.data(), dwords, sizeof(p.dwords));
+	p.image_id    = id;
+	p.desc_digest = dg.all;
+	p.gen         = gen;
+	p.groups      = dg.groups;
+}
+template <uint32_t N>
+static void R1FillSet(R1::Census& c, R1::Set<N>& s, R1::Proof* p, bool found, uint32_t way, uint32_t tag,
+                      uint64_t rk, const uint32_t* dwords, ImageId id, const R1Digest& dg) {
+	const uint32_t w = found ? way : R1Victim(s);
+	s.tag[w]         = tag;
+	s.use[w]         = ++c.clock;
+	R1Put(p[w], rk, dwords, id, dg, 0);
+}
+// Writes key K into table t (at its own way if present, else at the victim) - what a table of that shape does after
+// its own miss; `found`/`slot` from the lookup's candidate.  Drop = the same table's reaction to "no store".
+static void R1Fill(R1::Census& c, uint32_t t, uint64_t h, bool found, uint32_t slot, uint64_t rk,
+                   const uint32_t* dwords, ImageId id, const R1Digest& dg) {
+	const uint32_t tag = R1Tag(h);
+	if (t == R1::W4) {
+		const auto s = static_cast<uint32_t>(h & (R1::W4Sets - 1));
+		R1FillSet(c, c.w4[s], &c.w4p[s * 4], found, found ? slot - s * 4 : 0, tag, rk, dwords, id, dg);
+	} else if (t == R1::W8) {
+		const auto s = static_cast<uint32_t>(h & (R1::W8Sets - 1));
+		R1FillSet(c, c.w8[s], &c.w8p[s * 8], found, found ? slot - s * 8 : 0, tag, rk, dwords, id, dg);
+	} else if (t == R1::D16) {
+		R1Put(c.d16[h & (R1::D16Slots - 1)], rk, dwords, id, dg, c.gen);
+	} else {
+		const auto s = static_cast<uint32_t>(h & (R1::W1Sets - 1));
+		R1FillSet(c, c.w1[s], &c.w1p[s], found, 0, tag, rk, dwords, id, dg);
+	}
+}
+static void R1Drop(R1::Census& c, uint32_t t, uint32_t slot) {
+	if (t == R1::W4) {
+		c.w4[slot / 4].use[slot % 4] = 0;
+	} else if (t == R1::W8) {
+		c.w8[slot / 8].use[slot % 8] = 0;
+	} else if (t == R1::D16) {
+		c.d16[slot].gen = 0;
+	} else {
+		c.w1[slot].use[0] = 0;
+	}
+}
+static void R1ResetCensus(R1::Census& c, const RenderExecutorMemo& memo, uint32_t block, int frame) {
+	std::fill(c.w4.begin(), c.w4.end(), R1::Set<4> {});
+	std::fill(c.w8.begin(), c.w8.end(), R1::Set<8> {});
+	std::fill(c.w1.begin(), c.w1.end(), R1::Set<1> {});
+	c.gen        = c.gen + 1u == 0u ? 1u : c.gen + 1u; // d16 entries of older generations read as empty
+	c.observed   = {};
+	c.mark       = {};
+	c.clock      = 0;
+	c.after_miss = false;
+	c.memo       = &memo;
+	c.block      = block;
+	c.frame      = frame;
+	Common::FrameStats::Add(Common::FrameStats::Counter::R1Reset, 1);
+}
+// Reset whenever the census may have missed traffic: a new schedule block (the ABBA arm changed, or will), a frame it
+// did not see (the knob was off for a whole frame), a different memo.  g_block is written before the arm's gates are
+// applied (gates.cpp PollSchedule), so an M->P switch always shows a new block to the first armed lookup.
+static R1::Census* R1Arm(const RenderExecutorMemo& memo, int frame) {
+	const void* const me    = &t_r1;
+	const void*       owner = g_r1_owner.load(std::memory_order_relaxed);
+	if (owner != me &&
+	    (owner != nullptr || !g_r1_owner.compare_exchange_strong(owner, me, std::memory_order_relaxed))) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1CrossThread, 1);
+		return nullptr;
+	}
+	const uint32_t block = Common::Gates::Detail::g_block.load(std::memory_order_relaxed);
+	if (t_r1 == nullptr) {
+		t_r1 = new R1::Census();
+		R1ResetCensus(*t_r1, memo, block, frame);
+	}
+	auto& c = *t_r1;
+	if (c.memo != &memo || c.block != block || frame > c.frame + 1 || frame < c.frame) {
+		R1ResetCensus(c, memo, block, frame);
+	}
+	c.frame = frame;
+	return &c;
+}
+static void R1Found(R1::Cand& k, uint32_t slot, const R1::Proof& p) {
+	k.found  = true;
+	k.slot   = slot;
+	k.id     = p.image_id;
+	k.digest = p.desc_digest;
+	k.groups = p.groups;
+}
+// Finds K in every table with the FULL proof (candidates only; liveness is R1Live's).
+static void R1Lookup(R1::Census& c, uint64_t h, uint64_t rk, const uint32_t* dwords) {
+	c.cand             = {};
+	const uint32_t tag = R1Tag(h);
+	const auto     s4  = static_cast<uint32_t>(h & (R1::W4Sets - 1));
+	if (const int w = R1FindExact(c.w4[s4], &c.w4p[s4 * 4], tag, rk, dwords); w >= 0) {
+		R1Found(c.cand[R1::W4], s4 * 4 + static_cast<uint32_t>(w), c.w4p[s4 * 4 + static_cast<uint32_t>(w)]);
+	}
+	const auto s8 = static_cast<uint32_t>(h & (R1::W8Sets - 1));
+	if (const int w = R1FindExact(c.w8[s8], &c.w8p[s8 * 8], tag, rk, dwords); w >= 0) {
+		R1Found(c.cand[R1::W8], s8 * 8 + static_cast<uint32_t>(w), c.w8p[s8 * 8 + static_cast<uint32_t>(w)]);
+	}
+	const auto d = static_cast<uint32_t>(h & (R1::D16Slots - 1));
+	if (c.d16[d].gen == c.gen && R1Same(c.d16[d], rk, dwords)) {
+		R1Found(c.cand[R1::D16], d, c.d16[d]);
+	}
+	const auto s1 = static_cast<uint32_t>(h & (R1::W1Sets - 1));
+	if (const int w = R1FindExact(c.w1[s1], &c.w1p[s1], tag, rk, dwords); w >= 0) {
+		R1Found(c.cand[R1::W1], s1, c.w1p[s1]);
+	}
+}
+// Key miss, before t0.  Draw the mode; in pre mode find K in each table with the FULL proof and take the liveness
+// snapshot NOW, at lookup time, as a table of that shape would (the real miss path may change image state).  In post
+// mode nothing: the lookup and the liveness run after t1 (RC5), which is the same answer because no census table moves
+// between the two calls.
+static void R1Begin(R1::Census& c, const Common::SlotVector<Image>& images, uint64_t rk, uint64_t h,
+                    const uint32_t* dwords) {
+	c.post = (R1Next() & 1u) != 0; // 50/50, per key miss (5.3)
+	if (c.post) {
+		return;
+	}
+	R1Lookup(c, h, rk, dwords);
+	for (auto& k: c.cand) {
+		if (k.found) {
+			R1Live(k, images);
+		}
+	}
+}
+// Every armed lookup at level 2, before t0 (RC9: the self bracket opens in the caller before this call and covers
+// R1Arm).  A key-match lookup does no census work here beyond the flags (design120.md section 2).
+static R1::Census* R1Enter(const RenderExecutorMemo& memo, int frame, const Common::SlotVector<Image>& images,
+                           uint64_t rk, uint64_t h, bool key_match, ImageId real_id, const uint32_t* dwords,
+                           bool self, uint64_t s0) {
+	auto* c = R1Arm(memo, frame);
+	if (c == nullptr) {
+		return nullptr;
+	}
+	c->self           = self;
+	c->real_before    = real_id;
+	c->hit_after_miss = c->after_miss;
+	c->after_miss     = false;
+	if (!key_match) {
+		R1Begin(*c, images, rk, h, dwords);
+	}
+	if (self) {
+		c->self_ns = Common::FrameStats::NowNs() - s0;
+	}
+	return c;
+}
+// After t1 on the hit path.  c == nullptr at r1cen 1 (timers only) or on a thread other than the owner.
+static void R1Hit(R1::Census* c, uint64_t ns, const RenderExecutorMemo::Texture& slot, uint64_t h) {
+	namespace FS = Common::FrameStats;
+	FS::Add(FS::Counter::R1HitN, 1);
+	if (ns != 0) {
+		FS::Add(FS::Counter::R1HitNs, ns);
+		FS::Add(FS::Counter::R1HitTimed, 1);
+	}
+	if (c == nullptr) {
+		return;
+	}
+	const uint64_t s0 = c->self ? FS::NowNs() : 0;
+	if (c->hit_after_miss) { // RC6: the first-order after-effect of the miss path on the next lookup
+		FS::Add(FS::Counter::R1AfterMissN, 1);
+		if (ns != 0) {
+			FS::Add(FS::Counter::R1HitAfterMissNs, ns);
+			FS::Add(FS::Counter::R1HitAfterMissTimed, 1);
+		}
+	}
+	const uint32_t tag   = R1Tag(h);
+	const auto     index = static_cast<uint32_t>(h & (R1::W1Sets - 1)); // the real memo index (r1cen is off under
+	                                                                    // texmemo2)
+	const bool watched = ((c->observed[index >> 6u] >> (index & 63u)) & 1u) != 0;
+	auto&      s4      = c->w4[h & (R1::W4Sets - 1)];
+	auto&      s8      = c->w8[h & (R1::W8Sets - 1)];
+	auto&      s1      = c->w1[index];
+	int        x4      = -1;
+	int        x8      = -1;
+	if (c->self) {
+		// RC2: the tag probe an N-way table pays on every lookup, timed on the self sample against a null stamp pair.
+		// The timed probes ARE this lookup's probes (the same call on the same set).
+		const uint64_t a0 = FS::NowNs();
+		const uint64_t a1 = FS::NowNs();
+		const uint64_t b0 = FS::NowNs();
+		x4                = R1FindTag(s4, tag);
+		const uint64_t b1 = FS::NowNs();
+		const uint64_t d0 = FS::NowNs();
+		x8                = R1FindTag(s8, tag);
+		const uint64_t d1 = FS::NowNs();
+		FS::Add(FS::Counter::R1Probe0Ns, a1 - a0);
+		FS::Add(FS::Counter::R1W4ProbeNs, b1 - b0);
+		FS::Add(FS::Counter::R1W8ProbeNs, d1 - d0);
+		FS::Add(FS::Counter::R1ProbeN, 1);
+	} else {
+		x4 = R1FindTag(s4, tag);
+		x8 = R1FindTag(s8, tag);
+	}
+	const int                     x1 = R1FindTag(s1, tag);
+	std::array<bool, R1::Tables> fill {};
+	if (x4 >= 0) {
+		s4.use[static_cast<uint32_t>(x4)] = ++c->clock;
+	} else {
+		fill[R1::W4] = true; // the 4-way table lost a hit (on a watched slot)
+		if (watched) {
+			FS::Add(FS::Counter::R1W4Lose, 1);
+		}
+	}
+	if (x8 >= 0) {
+		s8.use[static_cast<uint32_t>(x8)] = ++c->clock;
+	} else {
+		fill[R1::W8] = true;
+		if (watched) {
+			FS::Add(FS::Counter::R1W8Lose, 1);
+		}
+	}
+	if (x1 >= 0) {
+		s1.use[static_cast<uint32_t>(x1)] = ++c->clock;
+	} else {
+		fill[R1::W1] = true; // RC7: the real shape never loses its own hit
+		if (watched) {
+			FS::Add(FS::Counter::R1W1Lose, 1);
+		}
+	}
+	if (!watched) { // the real slot was filled before the census watched it
+		fill[R1::D16] = true;
+		FS::Add(FS::Counter::R1Cold, 1);
+		c->observed[index >> 6u] |= uint64_t {1} << (index & 63u);
+	} else if ((R1Next() & 63u) == 0) { // d16 inclusion (5.2): a watched real hit MUST hit d16
+		const auto& p = c->d16[h & (R1::D16Slots - 1)];
+		if (!(p.gen == c->gen && R1Same(p, slot.resource_key, slot.dwords.data()) && p.image_id == slot.image_id)) {
+			FS::Add(FS::Counter::R1Incl, 1);
+			fill[R1::D16] = true;
+		}
+	}
+	if (fill[R1::W4] || fill[R1::W8] || fill[R1::D16] || fill[R1::W1]) {
+		// A table of that shape refills after its own miss; the answer it would store is the real memo's (r1_*_bad
+		// tests that equivalence on the miss side).
+		const auto dg = R1DescDigest(slot.desc);
+		for (uint32_t t = 0; t < R1::Tables; t++) {
+			if (fill[t]) {
+				R1Fill(*c, t, h, false, 0, slot.resource_key, slot.dwords.data(), slot.image_id, dg);
+			}
+		}
+	}
+	if (c->self) {
+		FS::Add(FS::Counter::R1SelfHitNs, c->self_ns + FS::NowNs() - s0);
+		FS::Add(FS::Counter::R1SelfHitN, 1);
+	}
+}
+// After t1 on the miss path (key miss, or stale when `stale`).
+static void R1Miss(R1::Census* c, const Common::SlotVector<Image>& images, uint64_t ns, bool stale, ImageId id,
+                   const TextureCache::ImageDesc& desc, bool store, uint32_t index, uint64_t rk, uint64_t h,
+                   const uint32_t* dwords) {
+	namespace FS = Common::FrameStats;
+	if (stale) {
+		FS::Add(FS::Counter::R1StaleN, 1);
+	} else {
+		FS::Add(FS::Counter::R1MissN, 1);
+		FS::Add(FS::Counter::R1MissNs, ns);
+		if (!store) { // information: no table shape can catch these (design120.md section 2)
+			FS::Add(FS::Counter::R1NoStoreN, 1);
+			FS::Add(FS::Counter::R1NoStoreNs, ns);
+		}
+	}
+	if (c == nullptr) {
+		return;
+	}
+	const uint64_t s0 = c->self ? FS::NowNs() : 0;
+	if (stale) {
+		// K is in the real table with a dead image; wherever a shadow holds K it holds the same id (5.2), so no table
+		// of any shape would hit.  Locate K now (proof only) to mirror the drop/refill and check the invariant.
+		R1Lookup(*c, h, rk, dwords);
+		for (const auto& k: c->cand) {
+			if (k.found && k.id != c->real_before) {
+				FS::Add(FS::Counter::R1Incl, 1);
+			}
+		}
+	} else if (c->post) {
+		FS::Add(FS::Counter::R1MissPost, 1);
+		FS::Add(FS::Counter::R1MissPostNs, ns);
+		R1Lookup(*c, h, rk, dwords); // RC5: post mode, the whole lookup after t1
+		for (auto& k: c->cand) {
+			if (k.found) {
+				R1Live(k, images);
+			}
+		}
+	}
+	const auto dg   = R1DescDigest(desc);
+	uint8_t    mark = 0;
+	for (uint32_t t = 0; t < R1::Tables && !stale; t++) {
+		const auto& k = c->cand[t];
+		if (!k.found) {
+			continue;
+		}
+		// THE REAL HIT'S LIVENESS TEST COMPLETED: data/extent against the desc - a pure function of the key (5.1).
+		const bool would = k.live && k.data == desc.info.data && k.extent == desc.info.extent;
+		if (!would) {
+			FS::Add(FS::Counter::R1ShadowStale, 1);
+			continue;
+		}
+		mark |= static_cast<uint8_t>(1u << t);
+		FS::Add(c->post ? R1::kPostN[t] : R1::kPreN[t], 1);   // r1_T_p / r1_T_q
+		FS::Add(c->post ? R1::kPostNs[t] : R1::kPreNs[t], ns); // r1_T_pns / r1_T_qns
+		if (!store || k.id != id || k.digest != dg.all) {       // THE BAD CHECK (r1.md section 7)
+			FS::Add(R1::kBad[t], 1);
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+				const uint32_t diff = k.groups ^ dg.groups;
+				LOGF("R1CenMismatch: table=%s post=%d store=%d id_same=%d cand_id=%u/%u real_id=%u/%u desc_same=%d"
+				     " info_differs=%d view_differs=%d source_differs=%d addr=0x%010" PRIx64 "\n",
+				     R1::kName[t], c->post ? 1 : 0, store ? 1 : 0, k.id == id ? 1 : 0, k.id.index, k.id.generation,
+				     id.index, id.generation, k.digest == dg.all ? 1 : 0, (diff & 0x3ffu) != 0 ? 1 : 0,
+				     ((diff >> 10u) & 0x3ffu) != 0 ? 1 : 0, ((diff >> 20u) & 0x3ffu) != 0 ? 1 : 0,
+				     desc.info.data.address);
+			}
+		}
+	}
+	// Mirror what a table of each shape does now: store -> K holds (id, digest); no store -> K is dropped.
+	for (uint32_t t = 0; t < R1::Tables; t++) {
+		const auto& k = c->cand[t];
+		if (store) {
+			R1Fill(*c, t, h, k.found, k.slot, rk, dwords, id, dg);
+		} else if (k.found) {
+			R1Drop(*c, t, k.slot);
+		}
+	}
+	if (store) {
+		c->observed[index >> 6u] |= uint64_t {1} << (index & 63u);
+		c->mark[index] = mark;
+	}
+	c->after_miss = !stale && store; // RC6
+	if (c->self) {
+		FS::Add(stale ? FS::Counter::R1SelfStaleNs : FS::Counter::R1SelfMissNs, c->self_ns + FS::NowNs() - s0);
+		FS::Add(stale ? FS::Counter::R1SelfStaleN : FS::Counter::R1SelfMissN, 1);
+	}
+}
+
 // Session 57, B2a: every result goes out through `emit`; the three returns hand it the same
 // fields MakeTextureBinding / the brace initializer did (image_view null, layout undefined, no
 // mip views, memo index UINT32_MAX / version 0 unless given).
@@ -1459,6 +1991,9 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	// overlap view could be superseded by a later exact image).
 	auto&          memo         = Memo();
 	const bool     memo2        = Common::Gates::Enabled(Common::Gates::Gate::TexMemo2);
+	// Session 120, knob "r1cen" (MEASUREMENT ONLY, C:/kyty/s120/design/r1.md): read ONCE per call - a knob read twice
+	// in one operation can tear (session 97).  The census models the direct table only: off under texmemo2.
+	const uint32_t r1_level     = memo2 ? 0u : Common::Gates::Value(Common::Gates::Knob::R1Census);
 	const uint64_t resource_key =
 	    memo2 ? MemoResourceKey(memo, resource)
 	          : MemoHashBytes(&resource,
@@ -1477,6 +2012,23 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		Common::FrameStats::Add(memo_slot.valid ? Common::FrameStats::Counter::TexMemoCollide
 		                                        : Common::FrameStats::Counter::TexMemoEmpty,
 		                        1);
+	}
+	// Session 120, knob "r1cen": nothing above the stamp r1_t0 is timed.  Every key miss is timed; a hit on a 1/8
+	// random sample, never on a slot "bindwit" marks inside this call (its NowNs would sit inside the interval).  At
+	// level 2 the self sample (1/64) opens before R1Arm (RC9) and closes before t0, then again after t1.
+	const bool  r1_on = r1_level != 0 && Common::FrameStats::Enabled();
+	R1::Census* r1_c  = nullptr;
+	uint64_t    r1_t0 = 0;
+	if (r1_on) [[unlikely]] {
+		if (r1_level >= 2) {
+			const bool     r1_self = (R1Next() & 63u) == 0;
+			const uint64_t r1_s0   = r1_self ? Common::FrameStats::NowNs() : 0;
+			r1_c = R1Enter(memo, m_context.GetGpu().GetFrameNum(), texture_cache.m_slot_images, resource_key,
+			               memo_hash, memo_key_match, memo_slot.image_id, descriptor.fields, r1_self, r1_s0);
+		}
+		if (!memo_key_match || (g_bind_wit_arm == 0 && (R1Next() & 7u) == 0)) {
+			r1_t0 = Common::FrameStats::NowNs();
+		}
 	}
 	if (memo_key_match) {
 		auto* cached = texture_cache.m_slot_images.try_get(memo_slot.image_id);
@@ -1524,6 +2076,10 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 			// interval therefore excludes emit, which an amortisation would still have to do.
 			if (g_bind_wit_arm == 1) {
 				g_bind_wit_mark = Common::FrameStats::NowNs();
+			}
+			if (r1_on) [[unlikely]] {
+				const uint64_t r1_ns = r1_t0 != 0 ? Common::FrameStats::NowNs() - r1_t0 : 0; // t1 FIRST
+				R1Hit(r1_c, r1_ns, memo_slot, memo_hash);
 			}
 			return emit(memo_slot.image_id, memo_slot.desc, memo_index,
 			                          memo_slot.version);
@@ -1707,6 +2263,11 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 			memo.texture_ways[memo_index] = {memo_hash, ++memo.texture_clock};
 		}
 	}
+	if (r1_on) [[unlikely]] {
+		const uint64_t r1_ns = r1_t0 != 0 ? Common::FrameStats::NowNs() - r1_t0 : 0; // t1 FIRST
+		R1Miss(r1_c, texture_cache.m_slot_images, r1_ns, memo_key_match /* = stale here */, id, desc, store,
+		       memo_index, resource_key, memo_hash, descriptor.fields);
+	}
 	return emit(id, desc, store ? memo_index : UINT32_MAX,
 	                          store ? memo_slot.version : 0u);
 }
@@ -1865,6 +2426,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	}
 	if (mask == 0) {
 		return;
+	}
+	if (t_sp_dcc_armed) {
+		t_sp_dcc_pending = true; // session 120, gate "spcen": an armed stage's loop met a pending DCC mask
 	}
 	// Encode the clear in the format its consumer views the surface through (ea092a9) -- the
 	// same rule TextureCache::PrepareDccClear applies to the metadata state it owns. The
@@ -2124,6 +2688,436 @@ uint64_t BindingInputKey(const ShaderRecompiler::IR::CompiledShaderInfo& program
 	return h == 0 ? 1 : h;
 }
 
+// Session 120, knob "r2cen" (MEASUREMENT ONLY, C:/kyty/s120/design/r2.md with the required changes C1-C10 of
+// r2_review.md and design120.md section 3).  One entry per shader stage TYPE (the bindkey idiom above): what the
+// previous ARMED PrepareBindings call of that type resolved.  Read and written by nothing but R2PreLoop / R2Census.
+// It reads images through SlotVector::try_get only, never TextureCache::GetImage (it touches the LRU), takes no lock
+// and never writes an Image, the memo, LodStats or m_bound_images.
+constexpr uint32_t R2StageKeys = 16;
+constexpr uint32_t R2MaxImages = 64;
+
+// Every field of TextureCache::ImageDesc a reuse hands on (C5: the WHOLE desc), stored field-wise - ImageDesc has
+// padding, so never memcmp.  mips[] holds only the first min(resources.levels, 16) levels.
+struct R2DescKey {
+	GuestRange                   data;
+	vk::Extent3D                 extent {};
+	GuestRange                   stencil;
+	ImageMetadataInfo            metadata;
+	ImageSubresources            resources;
+	uint32_t                     htile_clear_mask = 0;
+	vk::Format                   pixel_format     = vk::Format::eUndefined;
+	Prospero::BufferFormat       guest_format     = Prospero::BufferFormat::kInvalid;
+	Prospero::ImageType          image_type       = Prospero::ImageType::kColor2D;
+	Prospero::TileMode           tile_mode        = Prospero::TileMode::kLinear;
+	uint32_t                     pitch            = 0;
+	uint32_t                     bytes_per_block  = 0;
+	uint32_t                     samples          = 0;
+	bool                         bgra16           = false;
+	TextureCache::BindingType    type             = TextureCache::BindingType::Texture;
+	uint32_t                     source_first_level = 0;
+	uint64_t                     source_size        = 0;
+	ImageViewInfo                view {};
+	std::array<ImageMipInfo, 16> mips {};
+};
+
+void R2KeyStore(R2DescKey& k, const TextureCache::ImageDesc& d) {
+	const auto& i        = d.info;
+	k.data               = i.data;
+	k.extent             = i.extent;
+	k.stencil            = i.stencil;
+	k.metadata           = i.metadata;
+	k.resources          = i.resources;
+	k.htile_clear_mask   = i.htile_clear_mask;
+	k.pixel_format       = i.pixel_format;
+	k.guest_format       = i.guest_format;
+	k.image_type         = i.type;
+	k.tile_mode          = i.tile_mode;
+	k.pitch              = i.pitch;
+	k.bytes_per_block    = i.bytes_per_block;
+	k.samples            = i.samples;
+	k.bgra16             = i.bgra16;
+	k.type               = d.type;
+	k.source_first_level = d.source_first_level;
+	k.source_size        = d.source_size;
+	k.view               = d.view_info;
+	const uint32_t levels = std::min<uint32_t>(i.resources.levels, 16u);
+	for (uint32_t l = 0; l < levels; l++) {
+		k.mips[l] = i.mip_layout[l];
+	}
+}
+
+// Bit mask of the differing field groups (0 = equal): 1 data, 2 extent/resources, 4 formats/type/tile, 8 metadata
+// kind/address, 16 view, 32 binding type/source, 128 everything else (stencil, htile mask, pitch, bytes per block,
+// samples, bgra16, the rest of the metadata, mip_layout).  The caller ORs 64 (image id) and 256 (memo index/version).
+uint32_t R2DescDiff(const TextureCache::ImageDesc& d, const R2DescKey& k) {
+	const auto& i  = d.info;
+	const auto& m  = i.metadata;
+	const auto& km = k.metadata;
+	uint32_t    f  = 0;
+	f |= i.data != k.data ? 1u : 0u;
+	f |= (i.extent != k.extent || i.resources != k.resources) ? 2u : 0u;
+	f |= (i.pixel_format != k.pixel_format || i.guest_format != k.guest_format || i.type != k.image_type ||
+	      i.tile_mode != k.tile_mode)
+	         ? 4u
+	         : 0u;
+	f |= (m.kind != km.kind || m.range.address != km.range.address) ? 8u : 0u;
+	f |= !(d.view_info == k.view) ? 16u : 0u;
+	f |= (d.type != k.type || d.source_first_level != k.source_first_level || d.source_size != k.source_size) ? 32u
+	                                                                                                          : 0u;
+	bool rest = i.stencil != k.stencil || i.htile_clear_mask != k.htile_clear_mask || i.pitch != k.pitch ||
+	            i.bytes_per_block != k.bytes_per_block || i.samples != k.samples || i.bgra16 != k.bgra16 ||
+	            m.range.size != km.range.size || m.control != km.control || m.dcc_clear_word != km.dcc_clear_word ||
+	            m.cmask_clear_words != km.cmask_clear_words || m.compression != km.compression ||
+	            m.stencil_compressed != km.stencil_compressed ||
+	            m.dcc_clear_register_valid != km.dcc_clear_register_valid || m.dcc_alpha_msb != km.dcc_alpha_msb;
+	const uint32_t levels = std::min(std::min(i.resources.levels, k.resources.levels), 16u);
+	for (uint32_t l = 0; l < levels && !rest; l++) {
+		rest = !(i.mip_layout[l] == k.mips[l]);
+	}
+	f |= rest ? 128u : 0u;
+	return f;
+}
+
+// Per-slot metadata of an entry: the result the previous call emitted.  The hot fields of the R test come first.
+struct R2Meta {
+	ImageId   id;
+	uint32_t  memo_index   = UINT32_MAX;
+	uint32_t  memo_version = 0;
+	bool      null         = false; // the T# was null (the bindpack null-memo path)
+	R2DescKey key;
+};
+
+struct R2Entry {
+	const void* program     = nullptr;
+	uint64_t    shader_hash = 0;
+	uint32_t    count       = 0;
+	bool        valid       = false;
+	uint64_t    age_tick    = 0; // AgeTick() at the end of the entry's call
+	uint64_t    meta_end    = 0; // TextureCache::MetaEpoch() at the end of the entry's call
+	// design120.md section 3: the T# words contiguous, apart from the per-slot metadata, as a real R2 would keep them.
+	std::array<ShaderRecompiler::IR::DescriptorValue, R2MaxImages> words {};
+	std::array<R2Meta, R2MaxImages>                                meta {};
+};
+
+struct R2Table {
+	std::array<R2Entry, R2StageKeys> entries {};
+	uint32_t                    rng        = 0x9e3779b9u; // xorshift32: the 1/8 sample must not alias VS/PS order
+	uint32_t                    last_frame = 0;           // GpuTimeProfiler::Frame() of the last armed call
+	uint64_t                    sink       = 0;           // keeps the witness's and the replay's results alive
+	std::vector<TextureBinding> scratch;                   // r2cen=2 replay target, reserved once
+};
+
+// Allocated by the first ARMED call of the thread (about 0.7 MB), never at r2cen=0, never freed.  A constinit pointer:
+// no TLS guard on the path.  GuestGpu thread, under the render mutex.
+constinit thread_local R2Table* t_r2 = nullptr;
+// One line budget per log tag.
+std::atomic<uint32_t> g_r2_log_bad {0};
+std::atomic<uint32_t> g_r2_log_key {0};
+std::atomic<uint32_t> g_r2_log_div {0};
+
+void R2Log(std::atomic<uint32_t>& budget, uint32_t limit, const char* tag,
+           const ShaderRecompiler::IR::CompiledShaderInfo& program, uint32_t slot, uint32_t n, const R2Meta& s,
+           const TextureBinding& b, uint32_t fields) {
+	if (budget.fetch_add(1, std::memory_order_relaxed) >= limit) {
+		return;
+	}
+	LOGF("%s: stage=%u slot=%u n=%u shader=0x%016" PRIx64 " null=%u prev_id=%u/%u id=%u/%u idx=%u/%u ver=%u/%u"
+	     " fields=0x%03x addr=0x%010" PRIx64 "\n",
+	     tag, static_cast<uint32_t>(program.stage), slot, n, program.shader_hash, s.null ? 1u : 0u, s.id.index,
+	     s.id.generation, b.image_id.index, b.image_id.generation, s.memo_index, b.memo_index, s.memo_version,
+	     b.memo_version, fields, b.desc.info.data.address);
+}
+
+R2Table& R2Arm(uint32_t frame) {
+	if (t_r2 == nullptr) {
+		t_r2 = new R2Table {};
+		t_r2->scratch.reserve(R2MaxImages);
+	}
+	auto& t = *t_r2;
+	if (frame - t.last_frame > 1u) { // first armed call after an unarmed stretch: no stale previous
+		for (auto& entry: t.entries) {
+			entry.valid = false;
+		}
+	}
+	t.last_frame = frame;
+	return t;
+}
+
+// R, the reuse predicate of one slot whose T# equals the stored one - THE MEMO HIT'S OWN CONDITION: the memo slot the
+// stored element came from is still valid, holds the same image and has not moved since (version), and the image
+// passes the memo-hit liveness test (descriptors.cpp, ResolveTextureWith).  A null T#: the bindpack null-memo hit test
+// (the null image still allocated).  `live`: the image alone passes liveness.
+bool R2Reproduced(const R2Meta& s, const Common::SlotVector<Image>& images, const RenderExecutorMemo* memo,
+                  bool& live) {
+	const Image* prev = images.try_get(s.id);
+	if (s.null) {
+		live = prev != nullptr;
+		return live;
+	}
+	live = prev != nullptr && prev->registered && !prev->binding.needs_rebind && !prev->depth_id &&
+	       prev->info.data == s.key.data && prev->info.extent == s.key.extent;
+	if (!live || memo == nullptr || s.memo_index >= RenderExecutorMemo::TextureSlots) {
+		return false;
+	}
+	const auto& ms = memo->textures[s.memo_index];
+	return ms.version == s.memo_version && ms.valid && ms.image_id == s.id;
+}
+
+// C3: the 1/8 sample, drawn BEFORE bl_res opens.  On a sampled stage with images: a null stamp pair, then the witness
+// a real R2 pays before its loop - W1 (program), W2 (every T#, early exit) and, on a repeating stage, R of every slot
+// - timed [z1, w1] and booked by repeating / other.  Returns whether the stage is sampled.
+bool R2PreLoop(R2Table& t, const ShaderRecompiler::IR::CompiledShaderInfo& program,
+               const ShaderRecompiler::IR::ResourceSnapshot& snapshot, const Common::SlotVector<Image>& images,
+               const RenderExecutorMemo* memo) {
+	namespace FS = Common::FrameStats;
+	using C      = FS::Counter;
+	t.rng ^= t.rng << 13u;
+	t.rng ^= t.rng >> 17u;
+	t.rng ^= t.rng << 5u;
+	const auto n = static_cast<uint32_t>(program.info.images.size());
+	if ((t.rng & 7u) != 0u || n == 0u || n > R2MaxImages) {
+		return false;
+	}
+	const auto&    e  = t.entries[static_cast<uint32_t>(program.stage) % R2StageKeys];
+	const uint64_t z0 = FS::NowNs();
+	const uint64_t z1 = FS::NowNs();
+	bool rep = e.valid && e.program == &program && e.shader_hash == program.shader_hash && e.count == n;
+	for (uint32_t i = 0; rep && i < n; i++) {
+		rep = snapshot.images[i] == e.words[i];
+	}
+	uint32_t reproduced = 0;
+	if (rep) {
+		for (uint32_t i = 0; i < n; i++) {
+			bool live = false;
+			reproduced += R2Reproduced(e.meta[i], images, memo, live) ? 1u : 0u;
+		}
+	}
+	const uint64_t w1 = FS::NowNs();
+	t.sink += reproduced + (rep ? 1u : 0u);
+	FS::Add(C::R2NullNs, z1 - z0);
+	FS::Add(C::R2Nulls, 1);
+	FS::Add(rep ? C::R2WitRepNs : C::R2WitOthNs, w1 - z1);
+	FS::Add(rep ? C::R2WitReps : C::R2WitOths, 1);
+	return true;
+}
+
+// After the loop, past every bindlap / blmove / bindalt / bindwit mark.  Reads this call's fresh result
+// (prepared.images: untouched until RebindImages), the snapshot, the memo and the images.  R is evaluated from the
+// memo and the images after the loop: exact for clean stages (only memo hits ran), conservative for mixed ones.
+void R2Census(R2Table& t, bool sampled, uint32_t mode, const ShaderRecompiler::IR::CompiledShaderInfo& program,
+              const ShaderRecompiler::IR::ResourceSnapshot& snapshot, const PreparedBindings& prepared,
+              const Common::SlotVector<Image>& images, const RenderExecutorMemo* memo, uint64_t meta0,
+              uint64_t meta_now, uint64_t age_tick, uint64_t res_ns) {
+	namespace FS = Common::FrameStats;
+	using C      = FS::Counter;
+	auto&      e = t.entries[static_cast<uint32_t>(program.stage) % R2StageKeys];
+	const auto n = static_cast<uint32_t>(program.info.images.size());
+	FS::Add(C::R2Stages, 1);
+	if (n == 0u || n > R2MaxImages || prepared.images.size() != n) {
+		FS::Add(n == 0u ? C::R2NoImage : (n > R2MaxImages ? C::R2Big : C::R2Odd), 1);
+		FS::Add(C::R2OtherNs, res_ns);
+		FS::Add(C::R2OtherSlots, n);
+		if (sampled) {
+			FS::Add(C::R2SampledOtherNs, res_ns);
+			FS::Add(C::R2SampledOtherSlots, n);
+		}
+		e.valid = false;
+		return;
+	}
+	const bool same_pr =
+	    e.valid && e.program == &program && e.shader_hash == program.shader_hash && e.count == n;
+	bool rep = same_pr;
+	for (uint32_t i = 0; rep && i < n; i++) {
+		rep = snapshot.images[i] == e.words[i];
+	}
+	// C9: per-slot bits, NO value initialiser ({} would memset): written for every equal-T# slot, read only on clean
+	// stages, where every slot has an equal T#.  Bit 0 null, bit 1 MipStatsCntEn, bit 2 MetaCompress.
+	std::array<uint8_t, R2MaxImages>  flags;
+	std::array<uint64_t, R2MaxImages> meta_addr;
+	uint32_t sv_n = 0, r_n = 0, r_null = 0, bad = 0, bad_key = 0, div = 0;
+	if (same_pr) {
+		for (uint32_t i = 0; i < n; i++) {
+			if (!(snapshot.images[i] == e.words[i])) {
+				continue;
+			}
+			const auto& b = prepared.images[i];
+			const auto& s = e.meta[i];
+			sv_n++;
+			const auto d = DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]);
+			flags[i]     = static_cast<uint8_t>((d.IsNull() ? 1u : 0u) | (d.MipStatsCntEn() ? 2u : 0u) |
+                                            (d.MetaCompress() ? 4u : 0u));
+			meta_addr[i] = d.MetaAddr();
+			// C5 (iii): equal T#, same program, the fresh resolve on the same memo slot one version later: every
+			// legitimate path moves it by 0 (hit) or >= 2 (stale / eviction + store); +1 means the resolve found the
+			// unchanged slot not matching its own key.
+			if (s.memo_index < RenderExecutorMemo::TextureSlots && b.memo_index == s.memo_index &&
+			    b.memo_version == s.memo_version + 1u) {
+				bad_key++;
+				R2Log(g_r2_log_key, 40, "R2MismatchKey", program, i, n, s, b, 0);
+			}
+			bool       live = false;
+			const bool r    = R2Reproduced(s, images, memo, live);
+			if (!r && !live) {
+				continue; // a real R2 would fall back to the full resolve for this slot
+			}
+			uint32_t dm = (b.image_id != s.id ? 64u : 0u) | R2DescDiff(b.desc, s.key);
+			if (r) {
+				dm |= (b.memo_index != s.memo_index || b.memo_version != s.memo_version) ? 256u : 0u;
+				r_n++;
+				r_null += s.null ? 1u : 0u;
+				if (dm != 0) {
+					bad++;
+					R2Log(g_r2_log_bad, 40, "R2Mismatch", program, i, n, s, b, dm);
+				}
+			} else if (dm != 0) {
+				div++; // information: reuse PAST the memo's version would have diverged from the full path
+				R2Log(g_r2_log_div, 20, "R2Diverge", program, i, n, s, b, dm);
+			}
+		}
+		FS::Add(C::R2SameProgram, 1);
+		FS::Add(C::R2SlotSame, sv_n);
+		FS::Add(C::R2SlotHit, r_n);
+	}
+	if (bad != 0) {
+		FS::Add(C::R2Bad, bad);
+	}
+	if (bad_key != 0) {
+		FS::Add(C::R2BadKey, bad_key);
+	}
+	if (div != 0) {
+		FS::Add(C::R2Diverge, div);
+	}
+
+	const bool clean = rep && r_n == n;
+	if (clean) {
+		FS::Add(C::R2Repeat, 1);
+		FS::Add(C::R2Clean, 1);
+		FS::Add(C::R2CleanNs, res_ns);
+		FS::Add(C::R2CleanSlots, n - r_null);
+		FS::Add(C::R2CleanNull, r_null);
+		if (sampled) {
+			FS::Add(C::R2SampledCleanNs, res_ns);
+			FS::Add(C::R2SampledCleanSlots, n - r_null);
+			FS::Add(C::R2SampledCleanNull, r_null);
+		}
+		// The drivers of the KEPT side effects, on the images the fresh loop bound (information).
+		const bool metalock = Common::Gates::Enabled(Common::Gates::Gate::MetaLock);
+		uint32_t   lod = 0, dcc = 0, bc = 0;
+		for (uint32_t i = 0; i < n; i++) {
+			if ((flags[i] & 1u) != 0) {
+				continue;
+			}
+			if (!program.info.images[i].written && (flags[i] & 2u) != 0) {
+				lod++;
+			}
+			const Image* img = images.try_get(prepared.images[i].image_id);
+			if (img == nullptr) {
+				continue;
+			}
+			if (!img->info.IsDepth() && (flags[i] & 4u) != 0 && meta_addr[i] != 0) {
+				const auto meta    = meta_addr[i] << 8u;
+				const bool settled = metalock && img->info.metadata.kind == ImageMetadataKind::Dcc &&
+				                     img->info.metadata.range.address == meta;
+				dcc += settled ? 0u : 1u;
+			}
+			if (img->info.IsBlock() &&
+			    !(img->source_first_level == 0 && prepared.images[i].desc.source_first_level == 0)) {
+				bc++;
+			}
+		}
+		FS::Add(C::R2CleanLod, lod);
+		FS::Add(C::R2CleanDcc, dcc);
+		FS::Add(C::R2CleanBc, bc);
+		if (age_tick == e.age_tick) {
+			FS::Add(C::R2CleanTick, 1);
+		}
+		if (meta0 == e.meta_end && meta_now == meta0) {
+			FS::Add(C::R2CleanMeta, 1); // information, not a witness (r2_review.md section 7)
+		}
+		// r2cen = 2: the removable work of these slots replayed READ-ONLY into the census's scratch - decode, both
+		// MemoHashBytes, the index, the memo line and its 32-byte memcmp, and the emit (a TextureBinding built from
+		// the memo slot's desc).  Warm: a PROXY (information and sanity), sign of its error unknown.
+		if (mode == 2 && sampled && memo != nullptr) {
+			t.scratch.clear();
+			uint64_t       sink = 0;
+			const uint64_t p0   = FS::NowNs();
+			for (uint32_t i = 0; i < n; i++) {
+				const auto& res = program.info.images[i];
+				const auto  d   = DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]);
+				if (d.IsNull()) {
+					const auto& ns = memo->null_textures[NullTextureKey(
+					    res, res.written ? TextureCache::BindingType::Storage : TextureCache::BindingType::Texture)];
+					sink += ns.valid ? 1u : 0u;
+					t.scratch.emplace_back(ns.image_id, ns.desc, UINT32_MAX, 0u);
+					continue;
+				}
+				const uint64_t rk  = MemoHashBytes(&res, reinterpret_cast<const uint8_t*>(&res.indirect_resources) -
+				                                             reinterpret_cast<const uint8_t*>(&res));
+				const uint64_t h   = MemoHashBytes(d.fields, sizeof(d.fields), rk);
+				const auto     idx = static_cast<uint32_t>(h % RenderExecutorMemo::TextureSlots);
+				const auto&    ms  = memo->textures[idx];
+				sink += (ms.valid && ms.resource_key == rk &&
+				         std::memcmp(ms.dwords.data(), d.fields, sizeof(d.fields)) == 0)
+				            ? 1u
+				            : 0u;
+				t.scratch.emplace_back(ms.image_id, ms.desc, idx, ms.version);
+			}
+			const uint64_t p1 = FS::NowNs();
+			t.sink += sink;
+			FS::Add(C::R2ReplayNs, p1 - p0);
+			FS::Add(C::R2ReplaySlots, n);
+			FS::Add(C::R2Replays, 1);
+		}
+	} else if (rep) {
+		FS::Add(C::R2Repeat, 1);
+		FS::Add(C::R2Mixed, 1);
+		FS::Add(C::R2MixedNs, res_ns);
+		FS::Add(C::R2MixedSlots, n);
+		FS::Add(C::R2MixedEqual, r_n);
+		if (sampled) {
+			FS::Add(C::R2SampledMixedNs, res_ns);
+			FS::Add(C::R2SampledMixedSlots, n);
+		}
+	} else {
+		FS::Add(C::R2OtherNs, res_ns);
+		FS::Add(C::R2OtherSlots, n);
+		if (sampled) {
+			FS::Add(C::R2SampledOtherNs, res_ns);
+			FS::Add(C::R2SampledOtherSlots, n);
+		}
+	}
+
+	// This call becomes the next call's "previous".  The T#-word copy is what a real R2 pays on a non-repeating stage
+	// (timed on the sample, into contiguous words).
+	if (!rep) {
+		const uint64_t s0 = sampled ? FS::NowNs() : 0;
+		e.program         = &program;
+		e.shader_hash     = program.shader_hash;
+		e.count           = n;
+		for (uint32_t i = 0; i < n; i++) {
+			e.words[i] = snapshot.images[i];
+		}
+		if (sampled) {
+			FS::Add(C::R2StoreNs, FS::NowNs() - s0);
+			FS::Add(C::R2Stores, 1);
+		}
+	}
+	if (!(clean && bad == 0)) { // a clean stage without a mismatch already holds exactly this result
+		for (uint32_t i = 0; i < n; i++) {
+			auto&       s  = e.meta[i];
+			const auto& b  = prepared.images[i];
+			s.id           = b.image_id;
+			s.memo_index   = b.memo_index;
+			s.memo_version = b.memo_version;
+			s.null         = DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]).IsNull();
+			R2KeyStore(s.key, b.desc);
+		}
+	}
+	e.valid    = true;
+	e.age_tick = age_tick;
+	e.meta_end = meta_now;
+}
+
 } // namespace
 
 void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, PreparedBindings& prepared) {
@@ -2156,10 +3150,31 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 		                                         : Common::FrameStats::Counter::BindKeyMiss,
 		                        1);
 	}
+	// Session 120, knob "r2cen" (MEASUREMENT ONLY, C:/kyty/s120/design/r2.md): read ONCE per call (a second read can
+	// tear - gates flip on the presentation thread).  At 0 this is one relaxed load and nothing else below runs.  When
+	// armed: the table, the 1/8 sample and, on a sampled stage, the pre-loop witness (C3) - all BEFORE bl_res opens.
+	// Off under texmemo2 (the memo index is then a way index).
+	uint32_t r2       = Common::Gates::Value(Common::Gates::Knob::R2Census);
+	R2Table* r2_table = nullptr;
+	bool     r2_smp   = false;
+	uint64_t r2_meta0 = 0;
+	if (r2 != 0) [[unlikely]] {
+		if (!Common::FrameStats::Enabled() || Common::Gates::Enabled(Common::Gates::Gate::TexMemo2)) {
+			r2 = 0;
+		} else {
+			auto& r2_cache = m_context.GetTextureCache();
+			r2_meta0       = r2_cache.MetaEpoch(); // BEFORE the loop: its DCC adoption may move it
+			r2_table       = &R2Arm(GpuTimeProfiler::Frame());
+			r2_smp = R2PreLoop(*r2_table, program, snapshot, r2_cache.m_slot_images, m_memo.get());
+		}
+	}
 	// Session 86, D3: the rolling mark chain.  `bind_lap` is the gate value already read
 	// above; the Enabled() half deliberately matches LapScope, so the split cannot record
 	// into counters the frame will not print.
 	uint64_t bl_t = bind_lap && Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
+	// Session 120, knob "r2cen": R2 splits bl_res's own span - bindlap's two stamps when bindlap is armed (NO extra
+	// timestamp), its own two stamps at the same two places when it is not.
+	const uint64_t r2_t0 = r2 != 0 && bl_t == 0 ? Common::FrameStats::NowNs() : 0;
 	// Session 87, gate "bindalt" (MEASUREMENT ONLY): ONE timestamp a slot, taken after the
 	// resolve on half the stages and after the bind on the other half, so that an interval which
 	// opens after a bind and closes after a resolve is exactly one ResolveTextureWith.  The
@@ -2268,12 +3283,16 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	// The repair loop of RebindImages calls the same template through ResolveTexture; it must
 	// not mark, so the arming ends with the loop.
 	g_bind_wit_arm = 0;
+	uint64_t r2_res_ns = 0;
 	if (bl_t != 0) {
 		const auto bl_now = Common::FrameStats::NowNs();
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapResolveNs, bl_now - bl_t);
+		r2_res_ns = bl_now - bl_t; // session 120, knob "r2cen": the same interval - counter selection only
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapResolves,
 		                        program.info.images.size());
 		bl_t = bl_now;
+	} else if (r2_t0 != 0) {
+		r2_res_ns = Common::FrameStats::NowNs() - r2_t0; // bindlap off: r2cen's own end stamp, same place
 	}
 	if (blm && blm_phase == 0) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapMoveSpan0Ns,
@@ -2345,6 +3364,13 @@ void RenderExecutor::PrepareBindings(const ShaderStageRuntime& runtime, Prepared
 	}
 	if (has_gds) {
 		prepared.gds.buffer = m_context.GetBufferCache().GetGdsBuffer()->Handle();
+	}
+	// Session 120, knob "r2cen": LAST, past every bindlap / blmove / bindalt / bindwit mark, so its cost lands only in
+	// the derived remainder of bl_prep_us (and in mh_bind) and in no named span.
+	if (r2 != 0) [[unlikely]] {
+		auto& r2_cache = m_context.GetTextureCache();
+		R2Census(*r2_table, r2_smp, r2, program, snapshot, prepared, r2_cache.m_slot_images, m_memo.get(), r2_meta0,
+		         r2_cache.MetaEpoch(), m_context.AgeTick(), r2_res_ns);
 	}
 }
 
@@ -2548,6 +3574,19 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	const bool fast_check = fast && Common::Gates::Enabled(Common::Gates::Gate::TexFastCheck);
 	auto*      memo       = fast ? &Memo() : nullptr;
 	uint64_t   fast_ok = 0, fast_no = 0, fast_no_stamp = 0, fast_no_state = 0, fast_record = 0;
+	// Session 120, knob "r1cen" (r1.md 2.3, RC4, RC10): read ONCE per call.  The re-record branch of every eligible
+	// binding whose memo slot holds no view is timed, and a 1/16 sample of the fast branch (never under texfastcheck,
+	// whose FindTexture would sit in the interval); the first re-record after a would-hit fill of table T is booked
+	// to T (r1_T_rb / r1_T_rbns) and its mark consumed.  Off under texmemo2, as in ResolveTextureWith.
+	uint32_t r1_level = fast ? Common::Gates::Value(Common::Gates::Knob::R1Census) : 0u;
+	if (r1_level != 0 && Common::Gates::Enabled(Common::Gates::Gate::TexMemo2)) {
+		r1_level = 0;
+	}
+	const bool  r1_time = r1_level != 0 && Common::FrameStats::Enabled();
+	R1::Census* r1_c    = r1_time && r1_level >= 2 && t_r1 != nullptr && t_r1->memo == memo ? t_r1 : nullptr;
+	uint64_t    r1_rb_ns = 0, r1_rb_n = 0, r1_rbf_ns = 0, r1_rbf_n = 0;
+	std::array<uint64_t, R1::Tables> r1_rbm {};
+	std::array<uint64_t, R1::Tables> r1_rbmns {};
 	for (uint32_t i = 0; i < program.info.images.size(); i++) {
 		auto& binding = images[i];
 		binding.mip_views.clear();
@@ -2564,6 +3603,9 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			                      binding.desc.info.metadata.kind != ImageMetadataKind::Dcc &&
 			                      image.registered && !image.depth_id &&
 			                      !image.binding.needs_rebind;
+			const bool     r1_null = r1_time && eligible && slot->fast_view == nullptr; // the re-record branch
+			const bool     r1_fs   = r1_time && !fast_check && !r1_null && eligible && (R1Next() & 15u) == 0;
+			const uint64_t r1_t0   = r1_null || r1_fs ? Common::FrameStats::NowNs() : 0;
 			vk::ImageView view = nullptr;
 			if (eligible && slot->fast_view != nullptr) {
 				if (image.bind_stamp.load(std::memory_order_acquire) != slot->fast_stamp) {
@@ -2619,6 +3661,26 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 				}
 			}
 			image.usage.texture = true;
+			if (r1_t0 != 0) [[unlikely]] {
+				const uint64_t r1_dt = Common::FrameStats::NowNs() - r1_t0;
+				if (r1_null) {
+					r1_rb_ns += r1_dt;
+					r1_rb_n++;
+					if (r1_c != nullptr) { // at most ONE re-record per would-hit fill: consume it
+						auto& m = r1_c->mark[binding.memo_index];
+						for (uint32_t t = 0; t < R1::Tables; t++) {
+							if (((m >> t) & 1u) != 0) {
+								r1_rbm[t]++;
+								r1_rbmns[t] += r1_dt;
+							}
+						}
+						m = 0;
+					}
+				} else if (view != nullptr) { // the sampled binding really took the fast path
+					r1_rbf_ns += r1_dt;
+					r1_rbf_n++;
+				}
+			}
 			continue;
 		}
 		if (resource.mip_mode == ShaderRecompiler::IR::ImageMipMode::DynamicStorage) {
@@ -2650,6 +3712,18 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNoStamp, fast_no_stamp);
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNoState, fast_no_state);
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastRecord, fast_record);
+	}
+	if (r1_time) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1RbNs, r1_rb_ns);
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1RbN, r1_rb_n);
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1RbfNs, r1_rbf_ns);
+		Common::FrameStats::Add(Common::FrameStats::Counter::R1RbfN, r1_rbf_n);
+		if (r1_c != nullptr) {
+			for (uint32_t t = 0; t < R1::Tables; t++) {
+				Common::FrameStats::Add(R1::kRb[t], r1_rbm[t]);
+				Common::FrameStats::Add(R1::kRbNs[t], r1_rbmns[t]);
+			}
+		}
 	}
 }
 
@@ -3383,6 +4457,205 @@ void RenderExecutor::BindFloorBurnSlice() {
 	Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBurnNs, now - begin);
 }
 
+// Session 120, gate "spcen" (MEASUREMENT ONLY, C:/kyty/s120/design/spcen.md s.3.9, spcen_review.md RC1-RC3,
+// design120.md section 4): B, the per-stage memo census of the transit loop below.  No census path calls GetImage /
+// TouchImage (RC2): every image is read through m_slot_images.try_get, so TexLruTouches / TexLruRepeats are equal in
+// P and M per draw.
+namespace {
+// Every per-image input of the transit decision and of MaterializeDeferredDccClear's early return.
+[[nodiscard]] uint16_t SpTrFlags(const Image& img) noexcept {
+	return static_cast<uint16_t>(
+	    (img.info.data.Empty() ? 0x001u : 0u) | (img.binding.is_target ? 0x002u : 0u) |
+	    (img.binding.force_general ? 0x004u : 0u) | (img.binding.shader_write ? 0x008u : 0u) |
+	    (img.binding.shader_write_plain ? 0x010u : 0u) | (img.info.IsDepth() ? 0x020u : 0u) |
+	    (img.registered ? 0x040u : 0u) | (img.depth_id ? 0x080u : 0u) |
+	    (img.backing.image == nullptr ? 0x100u : 0u));
+}
+// F8: the view of a sampled depth target is part of the slot identity (the EXIT sanity check reads it).
+[[nodiscard]] vk::ImageView SpTrView(const Image& img, const TextureBinding& b) noexcept {
+	return img.binding.is_target && img.info.IsDepth() ? b.image_view : vk::ImageView {};
+}
+// spcen.md s.4.2: the B reasons, first failing wins, in counter order (SpTrMissBig ... SpTrMissFlags).
+enum SpTrWhy : uint32_t {
+	kSpTrNone = 0,
+	kSpTrBig,
+	kSpTrMemo,
+	kSpTrMeta,
+	kSpTrShape,
+	kSpTrSerial,
+	kSpTrFlags,
+};
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::SpTrMissFlags) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::SpTrMissBig) ==
+              kSpTrFlags - kSpTrBig);
+} // namespace
+
+SpTrStage RenderExecutor::SpTrCheck(uint32_t k, const PreparedBindings& d, uint32_t n, const CommandBuffer& buffer) {
+	namespace FS = Common::FrameStats;
+	auto&     cache = m_context.GetTextureCache();
+	SpTrStage st {};
+	st.serial0 = ImageStateSerial();
+	st.meta0   = cache.MetaEpoch();
+	st.open0   = buffer.IsRendering();
+	st.atomimg = Common::Gates::Enabled(Common::Gates::Gate::AtomicImageBarrier); // GetBarriers reads it per call
+	uint32_t why = kSpTrNone;
+	if (n > kSpTrSlots || k >= m_sp->tr.size()) {
+		why = kSpTrBig;
+	} else {
+		const auto& memo = m_sp->tr[k];
+		if (!memo.valid || memo.atomimg != st.atomimg) {
+			why = kSpTrMemo;
+		} else if (st.meta0 != memo.meta_end) {
+			why = kSpTrMeta;
+		} else if (n != memo.n) {
+			why = kSpTrShape;
+		} else {
+			for (uint32_t i = 0; i < n; i++) {
+				const auto& b = d.images[i];
+				const auto& s = memo.s[i];
+				const auto& v = b.desc.view_info;
+				if (b.image_id != s.id || v.base_level != s.base_level || v.level_count != s.level_count ||
+				    v.base_layer != s.base_layer || v.layer_count != s.layer_count ||
+				    (b.desc.type == TextureCache::BindingType::Storage ? 1u : 0u) != s.storage) {
+					why = kSpTrShape;
+					break;
+				}
+				const auto* img = cache.m_slot_images.try_get(b.image_id); // RC2: never GetImage
+				if (img == nullptr || img->backing.state_serial != s.state_serial) {
+					why = kSpTrSerial;
+					break;
+				}
+				if (SpTrFlags(*img) != s.flags || img->info.metadata.kind != s.meta_kind ||
+				    img->info.metadata.range.address != s.meta_addr || SpTrView(*img, b) != s.view ||
+				    img->binding.attachment_layout != s.att_layout ||
+				    img->binding.attachment_access != s.att_access) {
+					why = kSpTrFlags;
+					break;
+				}
+			}
+		}
+		st.would_g = why == kSpTrNone && st.serial0 == memo.serial_end;
+	}
+	st.would = why == kSpTrNone;
+	FS::Add(FS::Counter::SpTrStages, 1);
+	FS::Add(FS::Counter::SpTrSlots, n);
+	if (st.would) {
+		FS::Add(FS::Counter::SpTrWould, 1);
+		FS::Add(FS::Counter::SpTrWouldSlots, n);
+		if (st.would_g) {
+			FS::Add(FS::Counter::SpTrWouldGlobal, 1);
+		}
+	} else {
+		FS::Add(static_cast<FS::Counter>(static_cast<uint32_t>(FS::Counter::SpTrMissBig) + why - kSpTrBig), 1);
+	}
+	t_sp_dcc_pending = false;
+	t_sp_dcc_armed   = true;
+	return st;
+}
+
+void RenderExecutor::SpTrPost(uint32_t k, const PreparedBindings& d, uint32_t n, const SpTrStage& st,
+                              uint64_t loop_ns, const CommandBuffer& buffer) {
+	namespace FS = Common::FrameStats;
+	auto& cache = m_context.GetTextureCache();
+	t_sp_dcc_armed = false;
+	const bool     dcc     = t_sp_dcc_pending;
+	const uint64_t serial1 = ImageStateSerial();
+	const uint64_t meta1   = cache.MetaEpoch();
+	const bool     open1   = buffer.IsRendering();
+	const bool     indexed = n <= kSpTrSlots && k < m_sp->tr.size();
+	FS::Add(FS::Counter::SpTrLoopNs, loop_ns);
+	if (dcc) {
+		FS::Add(FS::Counter::SpTrDcc, 1);
+	}
+	uint32_t bad = 0;
+	if (st.would && indexed) {
+		const auto& memo = m_sp->tr[k];
+		FS::Add(FS::Counter::BindLapTrHitNs, loop_ns);
+		if (st.would_g) {
+			FS::Add(FS::Counter::BindLapTrHitGNs, loop_ns);
+		}
+		uint32_t slot = UINT32_MAX;
+		if (serial1 != st.serial0) {
+			bad |= 0x01; // S: a barrier / state write in the loop
+		}
+		if (dcc) {
+			bad |= 0x02; // D: a DCC clear was pending
+		}
+		if (st.open0 && !open1) {
+			bad |= 0x08; // P: the loop closed the pass
+		}
+		for (uint32_t i = 0; i < n; i++) {
+			if (d.images[i].layout != memo.s[i].result) {
+				bad |= 0x04; // L: binding.layout
+				slot = i;
+				break;
+			}
+		}
+		if (meta1 != st.meta0) {
+			bad |= 0x10; // M: the loop moved MetaEpoch (no cross-thread writer, RC1)
+		}
+		if (bad != 0) {
+			FS::Add(FS::Counter::SpTrBad, 1);
+			if (m_sp->tr_logged++ < 40) {
+				LOGF("SpTrMismatch: frame=%d stage=%u n=%u why=0x%02x slot=%u serial=%" PRIu64 "->%" PRIu64
+				     " meta=%" PRIu64 "->%" PRIu64 "\n",
+				     m_context.GetGpu().GetFrameNum(), k, n, bad, slot, st.serial0, serial1, st.meta0, meta1);
+			}
+		}
+		const auto r0 = FS::NowNs(); // dry replay: the per-slot binding.layout store
+		for (uint32_t i = 0; i < n; i++) {
+			m_sp->sink.tr_layout[i] = static_cast<uint32_t>(memo.s[i].result);
+		}
+		FS::Add(FS::Counter::SpTrRepNs, FS::NowNs() - r0);
+	}
+	// Record - strict: the loop changed no state record, met no pending DCC mask (timed: sp_tr_rec_ns, RC5).
+	const auto rec0 = FS::NowNs();
+	if (indexed) {
+		auto& memo         = m_sp->tr[k];
+		const bool rec_ok  = bad == 0 && serial1 == st.serial0 && meta1 == st.meta0 && !dcc;
+		if (!rec_ok) {
+			memo.valid = false;
+		} else {
+			bool ok = true;
+			if (!st.would) {
+				memo.n       = n;
+				memo.atomimg = st.atomimg;
+				for (uint32_t i = 0; i < n && ok; i++) {
+					const auto& b   = d.images[i];
+					const auto& v   = b.desc.view_info;
+					const auto* img = cache.m_slot_images.try_get(b.image_id); // RC2: never GetImage
+					if (img == nullptr) {
+						ok = false;
+						break;
+					}
+					auto& s        = memo.s[i];
+					s.id           = b.image_id;
+					s.base_level   = v.base_level;
+					s.level_count  = v.level_count;
+					s.base_layer   = v.base_layer;
+					s.layer_count  = v.layer_count;
+					s.storage      = b.desc.type == TextureCache::BindingType::Storage ? 1u : 0u;
+					s.flags        = SpTrFlags(*img);
+					s.meta_kind    = img->info.metadata.kind;
+					s.meta_addr    = img->info.metadata.range.address;
+					s.view         = SpTrView(*img, b);
+					s.att_layout   = img->binding.attachment_layout;
+					s.result       = b.layout;
+					s.att_access   = img->binding.attachment_access;
+					s.state_serial = img->backing.state_serial;
+				}
+				memo.valid = ok;
+				if (ok) {
+					FS::Add(FS::Counter::SpTrRecords, 1);
+				}
+			}
+			memo.serial_end = serial1;
+			memo.meta_end   = meta1;
+		}
+	}
+	FS::Add(FS::Counter::SpTrRecNs, FS::NowNs() - rec0);
+}
+
 void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
                                     vk::PipelineBindPoint              pipeline_bind_point,
                                     const PipelineCache::Pipeline&     pipeline,
@@ -3519,7 +4792,12 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 	// by a gate read here, so a flip landing inside a draw cannot arm half of it.
 	const bool merge_cost   = m_merge_cost.armed &&
 	                        pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
-	const bool cb_timed     = (Common::DrawStat::On() || bind_lap || merge_cost) &&
+	// Session 120, gate "spcen" (MEASUREMENT ONLY): the DRAW's latch (renderDraw.cpp SpDrawScope), never a second
+	// gate read.  Graphics commits of armed draws only; the floor has nothing to transit.  It arms cb_timed so the
+	// transit loop is timed (bl_tr_hit_ns); the census check and post are cut out of bl_tr by re-basing cb_t.
+	const bool sp_tr        = m_sp != nullptr && m_sp->armed && !bind_floor &&
+	                   pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
+	const bool cb_timed     = (Common::DrawStat::On() || bind_lap || merge_cost || sp_tr) &&
 	                      pipeline_bind_point == vk::PipelineBindPoint::eGraphics;
 	const bool cb_pool      = !pipeline.uses_push_descriptors;
 	uint64_t   cb_t         = cb_timed ? FS::NowNs() : 0;
@@ -3683,7 +4961,9 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			case BindingKind::Count: EXIT("invalid descriptor binding kind");
 		}
 	};
+	uint32_t sp_next_stage = 0; // session 120, gate "spcen": the stage position k of the B memo
 	for (auto* prepared: prepared_bindings) {
+		const uint32_t sp_k       = sp_tr ? sp_next_stage++ : 0u;
 		const auto& program       = *prepared->runtime->program;
 		auto&       descriptors   = *prepared;
 		const auto  shader_stage  = NativeShaderStage(program.stage);
@@ -3737,6 +5017,19 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 		// exactly program.info.images.size() (RebindImages already EXIT_IFs that), so this
 		// can only fire on a stage this branch should never have seen - loud, not silent.
 		EXIT_IF(descriptors.images.size() < floor_transit_count);
+		// Session 120, gate "spcen" (MEASUREMENT ONLY): the B check, reads only.  The prologue / GDS block stay in
+		// bl_tr exactly as before (laps are additive); the check itself is not transit time.
+		SpTrStage sp_st {};
+		if (sp_tr) {
+			cb_lap(cb_transit);
+			sp_st          = SpTrCheck(sp_k, descriptors, floor_transit_count, buffer);
+			const auto now = FS::NowNs();
+			FS::Add(FS::Counter::SpTrChkNs, now - cb_t);
+			if (sp_st.would) {
+				FS::Add(FS::Counter::SpTrChkHitNs, now - cb_t);
+			}
+			cb_t = now;
+		}
 		for (uint32_t i = 0; i < floor_transit_count; i++) {
 			auto& image   = m_context.GetTextureCache().GetImage(descriptors.images[i].image_id);
 			{
@@ -3814,7 +5107,15 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			}
 			binding.layout = image.backing.state.layout;
 		}
+		const uint64_t sp_tr_before = cb_transit;
 		cb_lap(cb_transit);
+		if (sp_tr) {
+			// Session 120, gate "spcen": the B bad check, dry replay and record; the post is not write-list time.
+			SpTrPost(sp_k, descriptors, floor_transit_count, sp_st, cb_transit - sp_tr_before, buffer);
+			const auto now = FS::NowNs();
+			FS::Add(FS::Counter::SpTrPostNs, now - cb_t);
+			cb_t = now;
+		}
 		if (cm && cm_phase == 0) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::CommitLapMoveStage0Ns,
 			                        Common::FrameStats::NowNs() - cm_t0);

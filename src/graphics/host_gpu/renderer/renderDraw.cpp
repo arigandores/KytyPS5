@@ -833,6 +833,16 @@ vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& imag
 		FS::Add(FS::Counter::RtFastStale, 1);
 	}
 	const auto stamp = image.bind_stamp.load(std::memory_order_acquire);
+	// Session 120, gate "spcen" (MEASUREMENT ONLY, RC1): an armed draw took the slow path; a bind_stamp that moved
+	// since the census check (which saw stamp == fast.stamp) is a cross-thread race, decided HERE, before the Find
+	// below can move the stamp itself.  Only the FIRST slow entry of the draw decides: a Find of an earlier target can
+	// bump an aliasing later target's stamp, which is not a race (code review, lead's adoption).
+	if (t_sp_rt_armed) {
+		if (!t_sp_rt_slow) {
+			t_sp_rt_stamp_race = stamp != fast.stamp;
+		}
+		t_sp_rt_slow = true;
+	}
 	const auto view  = depth_target ? cache.FindDepthTarget(id, desc) : cache.FindRenderTarget(id, desc);
 	fast.valid       = false;
 	FS::Add(FS::Counter::RtFastNo, 1);
@@ -867,6 +877,375 @@ vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& imag
 	return view;
 }
 
+// Session 120, gate "spcen" (MEASUREMENT ONLY, C:/kyty/s120/design/spcen.md s.3.7, spcen_review.md RC1-RC6,
+// design120.md section 4): the draw's latch.  Namespace scope, not anonymous: it is the friend render.h names.  Armed:
+// the census state is allocated at the first armed draw (never at gate 0).  Unarmed with a census state left by an
+// earlier armed block (F7): every memo is invalidated, so no memo survives a draw the census did not see.
+class SpDrawScope {
+public:
+	SpDrawScope(RenderExecutor& ex, bool on): m_ex(ex), m_on(on) {
+		if (!on) {
+			if (ex.m_sp != nullptr) {
+				auto& sp      = *ex.m_sp;
+				sp.rt.valid   = false;
+				sp.rt.pending = false;
+				for (auto& tr: sp.tr) {
+					tr.valid = false;
+				}
+			}
+			return;
+		}
+		if (ex.m_sp == nullptr) {
+			ex.m_sp = std::make_unique<SpCensusState>();
+			LOGF("SpCensus: mode 1 rt_targets=%u tr_slots=%u\n", RENDER_COLOR_ATTACHMENTS_MAX + 1u, kSpTrSlots);
+		}
+		ex.m_sp->armed = true;
+	}
+	~SpDrawScope() {
+		if (m_on) {
+			auto& sp      = *m_ex.m_sp;
+			sp.armed      = false;
+			sp.would_rt   = false;
+			sp.would_rt_g = false;
+			t_sp_rt_armed  = false;
+			t_sp_dcc_armed = false;
+		}
+	}
+	SpDrawScope(const SpDrawScope&)            = delete;
+	SpDrawScope& operator=(const SpDrawScope&) = delete;
+	[[nodiscard]] bool Armed() const noexcept { return m_on; }
+
+private:
+	RenderExecutor& m_ex;
+	bool            m_on;
+};
+
+bool RenderExecutor::SpRtConfigOk(const TextureCache& cache) {
+	return Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) && !graphics_debug_dump_enabled() &&
+	       !cache.m_readback_linear_images && !Common::Gates::Enabled(Common::Gates::Gate::SliceCensus);
+}
+
+bool RenderExecutor::SpStencilKept(const TextureCache& cache, const RenderDepthInfo& depth,
+                                   const TargetViewFast& fast, ImageId id) {
+	if (!depth.desc.info.HasStencil()) {
+		return true;
+	}
+	const auto* record = cache.m_slot_images.try_get(fast.stencil_record);
+	return record != nullptr && record->depth_id == id &&
+	       record->info.data.address == depth.desc.info.stencil.address;
+}
+
+namespace {
+// spcen.md s.4.1: the A reasons, first failing wins, in counter order (SpRtMissMemo ... SpRtMissPass).
+enum SpRtWhy : uint32_t {
+	kSpRtNone = 0,
+	kSpRtMemo,
+	kSpRtCfg,
+	kSpRtDepthClear,
+	kSpRtMeta,
+	kSpRtIds,
+	kSpRtLive,
+	kSpRtSerial,
+	kSpRtBound,
+	kSpRtDepthSampled,
+	kSpRtPass,
+};
+static_assert(static_cast<uint32_t>(Common::FrameStats::Counter::SpRtMissPass) -
+                  static_cast<uint32_t>(Common::FrameStats::Counter::SpRtMissMemo) ==
+              kSpRtPass - kSpRtMemo);
+} // namespace
+
+// Reads only (every image through try_get).  Evaluates whether the memo recorded by the previous armed draw of the
+// open pass would return this draw's RenderState with no side effect but the replayable stores.
+void RenderExecutor::SpRtCheck(CommandBuffer& buffer, const RenderColorInfo* colors, uint32_t color_count,
+                               const RenderDepthInfo& depth) {
+	namespace FS = Common::FrameStats;
+	auto& sp    = *m_sp;
+	auto& m     = sp.rt;
+	auto& cache = m_context.GetTextureCache();
+	if (m.pending) { // the recorder never reached BeginRendering
+		m.pending = false;
+		m.valid   = false;
+	}
+	sp.serial0  = ImageStateSerial();
+	sp.meta0    = cache.MetaEpoch();
+	sp.open0    = buffer.IsRendering();
+	sp.draw_bad = 0;
+	sp.raced    = false;
+	const bool     has_depth = static_cast<bool>(depth.image_id);
+	const uint32_t n         = color_count + (has_depth ? 1u : 0u);
+	uint32_t       why       = kSpRtNone;
+	if (!m.valid) {
+		why = kSpRtMemo;
+	} else if (!SpRtConfigOk(cache)) {
+		why = kSpRtCfg;
+	} else if (has_depth && depth.depth_clear_enable) {
+		why = kSpRtDepthClear;
+	} else if (sp.meta0 != m.meta_end) {
+		why = kSpRtMeta;
+	} else if (color_count != m.color_count || has_depth != m.has_depth || n > m.t.size()) {
+		why = kSpRtIds;
+	} else {
+		for (uint32_t i = 0; i < n && why == kSpRtNone; i++) {
+			const bool     d    = i == color_count;
+			const auto&    t    = m.t[i];
+			const ImageId  id   = d ? depth.image_id : colors[i].image_id;
+			const uint32_t slot = d ? UINT32_MAX : colors[i].target_slot;
+			const uint32_t ms   = d ? depth.memo_slot : colors[i].memo_slot;
+			const uint32_t mv   = d ? depth.memo_version : colors[i].memo_version;
+			if (id != t.id || slot != t.slot || ms == UINT32_MAX || ms != t.memo_slot || mv != t.memo_version ||
+			    (!d && slot >= RENDER_COLOR_ATTACHMENTS_MAX)) {
+				why = kSpRtIds;
+				break;
+			}
+			Image*      img   = cache.m_slot_images.try_get(id); // RC2: never GetImage / []
+			const auto& fast  = d ? m_depth_view_fast : m_color_view_fast[slot];
+			const auto& desc  = d ? depth.desc : colors[i].desc;
+			const auto  stamp = img != nullptr ? img->bind_stamp.load(std::memory_order_acquire) : 0u;
+			// AcquireTargetView's whole fast predicate (renderDraw.cpp AcquireTargetView) restated against the live
+			// record and the memo (F7: meta_epoch, source_*, view_info, metadata, depth htile mask included).
+			if (img == nullptr || !img->registered || img->depth_id || img->binding.needs_rebind ||
+			    img->pending_levels != 0 || img->backing.image != t.backing || stamp != t.stamp ||
+			    img->source_size != t.source_size || img->source_first_level != t.source_first_level ||
+			    !fast.valid || fast.image_id != id || fast.backing != t.backing || fast.view != t.view ||
+			    fast.stamp != t.stamp || fast.meta_epoch != sp.meta0 || fast.source_size != img->source_size ||
+			    fast.source_first_level != img->source_first_level || !(fast.view_info == desc.view_info) ||
+			    !SameTargetMetadata(fast.metadata, desc.info.metadata) ||
+			    (d && (fast.htile_clear_mask != img->info.htile_clear_mask ||
+			           img->info.htile_clear_mask != t.htile_mask || !SpStencilKept(cache, depth, fast, id)))) {
+				why = kSpRtLive;
+				break;
+			}
+			if (img->backing.state_serial != t.state_serial) {
+				why = kSpRtSerial;
+				break;
+			}
+			if (!d && img->binding.is_bound != t.is_bound) {
+				why = kSpRtBound;
+				break;
+			}
+			sp.img[i] = img;
+		}
+		if (why == kSpRtNone && has_depth && sp.img[color_count]->binding.is_bound) {
+			why = kSpRtDepthSampled;
+		}
+		if (why == kSpRtNone && !(sp.open0 && CommandBuffer::PassBeginSerial() == m.pass_serial)) {
+			why = kSpRtPass;
+		}
+	}
+	sp.would_rt   = why == kSpRtNone;
+	sp.would_rt_g = sp.would_rt && sp.serial0 == m.serial_end; // the s119 global witness, nested
+	FS::Add(FS::Counter::SpRtDraws, 1);
+	if (!FS::PathLap::Running()) {
+		FS::Add(FS::Counter::SpRtUntimed, 1);
+	}
+	if (sp.would_rt) {
+		FS::Add(FS::Counter::SpRtWould, 1);
+		FS::Add(FS::Counter::SpRtTargets, n);
+		if (sp.would_rt_g) {
+			FS::Add(FS::Counter::SpRtWouldGlobal, 1);
+		}
+	} else {
+		FS::Add(static_cast<FS::Counter>(static_cast<uint32_t>(FS::Counter::SpRtMissMemo) + why - kSpRtMemo), 1);
+	}
+	t_sp_rt_slow       = false;
+	t_sp_rt_refind     = false;
+	t_sp_rt_stamp_race = false;
+	t_sp_rt_armed      = true;
+}
+
+// After the full AcquireRenderTargets: the bad check (spcen.md s.5.1 + RC1 bit M), the timed dry replay (s.5.3) and
+// the strict record (timed: sp_rt_rec_ns, RC5).  Targets are re-looked up with try_get (F8: the slow path can free).
+void RenderExecutor::SpRtPost(CommandBuffer& buffer, const RenderColorInfo* colors, uint32_t color_count,
+                              const RenderDepthInfo& depth, const RenderState& rendering) {
+	namespace FS = Common::FrameStats;
+	auto& sp    = *m_sp;
+	auto& m     = sp.rt;
+	auto& cache = m_context.GetTextureCache();
+	t_sp_rt_armed = false;
+	const uint64_t serial1   = ImageStateSerial();
+	const uint64_t meta1     = cache.MetaEpoch();
+	const bool     open1     = buffer.IsRendering();
+	const bool     fallback  = t_sp_rt_slow || t_sp_rt_refind;
+	const bool     raced     = t_sp_rt_stamp_race; // RC1: decided at the slow-path entry, never re-read after
+	const bool     has_depth = static_cast<bool>(depth.image_id);
+	const uint32_t n_all     = color_count + (has_depth ? 1u : 0u);
+	const uint32_t n         = std::min<uint32_t>(n_all, static_cast<uint32_t>(sp.img.size()));
+	sp.raced                 = raced;
+	for (uint32_t i = 0; i < n; i++) {
+		sp.img[i] = cache.m_slot_images.try_get(i == color_count ? depth.image_id : colors[i].image_id);
+	}
+	if (sp.would_rt) {
+		uint32_t bad = 0;
+		if (!(rendering == m.state)) {
+			bad |= 0x01; // R: the RenderState it returned
+		}
+		if (serial1 != sp.serial0) {
+			bad |= 0x02; // S: an image state written / a barrier
+		}
+		if (fallback) {
+			bad |= 0x04; // F: FindRenderTarget / FindDepthTarget / the dead re-find
+		}
+		for (uint32_t i = 0; i < n; i++) {
+			const ImageId id  = i == color_count ? depth.image_id : colors[i].image_id;
+			const Image*  img = sp.img[i];
+			if (id != m.t[i].id || img == nullptr) {
+				bad |= 0x08; // I: target identity after the call (or the image is gone)
+				continue;
+			}
+			if (img->binding.attachment_layout != m.t[i].att_layout ||
+			    img->binding.attachment_access != m.t[i].att_access) {
+				bad |= 0x10; // X: the side stores a hit replays
+			}
+		}
+		if (has_depth && depth.depth_load_clear_enable) {
+			bad |= 0x10;
+		}
+		if (g_pass_extents.max_width != m.extents.max_width || g_pass_extents.max_height != m.extents.max_height ||
+		    g_pass_extents.true_kpx != m.extents.true_kpx) {
+			bad |= 0x10;
+		}
+		if (sp.open0 && !open1) {
+			bad |= 0x20; // P: the call closed the open pass
+		}
+		if (meta1 != sp.meta0) {
+			bad |= 0x80; // M: the call moved MetaEpoch (no cross-thread writer, RC1)
+		}
+		if (bad != 0) {
+			sp.draw_bad = bad;
+			if (raced) {
+				FS::Add(FS::Counter::SpRtRace, 1);
+			} else {
+				FS::Add(FS::Counter::SpRtBad, 1);
+				if (sp.rt_logged++ < 40) {
+					LOGF("SpRtMismatch: frame=%d why=0x%02x colors=%u depth=%u serial=%" PRIu64 "->%" PRIu64
+					     " meta=%" PRIu64 "->%" PRIu64 " fallback=%u\n",
+					     m_context.GetGpu().GetFrameNum(), bad, color_count, has_depth ? 1u : 0u, sp.serial0,
+					     serial1, sp.meta0, meta1, fallback ? 1u : 0u);
+				}
+			}
+		}
+		// Dry replay: the loads and stores a real hit must still make (spcen.md s.5.3), into sp.sink, timed.
+		const auto r0      = FS::NowNs();
+		sp.sink.state      = m.state;
+		sp.sink.extents    = m.extents;
+		if (has_depth) {
+			sp.sink.depth_load_clear = false; // F8: the depth_load_clear_enable output a hit still stores
+		}
+		for (uint32_t i = 0; i < n; i++) {
+			const auto& t     = m.t[i];
+			sp.sink.layout[i] = static_cast<uint32_t>(t.att_layout);
+			sp.sink.access[i] = static_cast<uint64_t>(static_cast<VkAccessFlags2>(t.att_access));
+			sp.sink.gpu_mod += (sp.img[i] != nullptr && sp.img[i]->IsGpuModified()) ? 1u : 0u; // MarkGpuModified
+			sp.sink.usage |= 1u << i;                                                        // usage.*_target
+			if (i < color_count) {
+				FS::Add(FS::Counter::SpRtRepAtt, 1);     // = RtAttachments
+				FS::Add(FS::Counter::SpRtRepKpx, t.kpx); // = RtPixelsK
+				sp.sink.w = std::max(sp.sink.w, t.w);    // = the two NoteMax
+				sp.sink.h = std::max(sp.sink.h, t.h);
+			}
+		}
+		FS::Add(FS::Counter::SpRtRepNs, FS::NowNs() - r0);
+	}
+	// Record - strict: the call changed nothing and took no fallback (s119: "only if it emitted no barrier").
+	const auto rec0   = FS::NowNs();
+	bool       rec_ok = sp.draw_bad == 0 && !raced && n == n_all && SpRtConfigOk(cache) && serial1 == sp.serial0 &&
+	              meta1 == sp.meta0 && !fallback &&
+	              !(has_depth && (depth.depth_clear_enable || depth.depth_load_clear_enable));
+	for (uint32_t i = 0; i < n && rec_ok; i++) {
+		rec_ok = sp.img[i] != nullptr &&
+		         (i == color_count ? depth.memo_slot : colors[i].memo_slot) != UINT32_MAX &&
+		         (i == color_count || colors[i].target_slot < RENDER_COLOR_ATTACHMENTS_MAX);
+	}
+	if (rec_ok && has_depth && sp.img[color_count]->binding.is_bound) {
+		rec_ok = false; // a sampled depth target is never a hit (spcen.md s.4.1 row 9)
+	}
+	m.valid   = false;
+	m.pending = false;
+	if (rec_ok) {
+		if (!sp.would_rt) {
+			// Full record from THIS draw (a clean would-hit keeps the content: it is equal by s.5.1).
+			m.color_count = color_count;
+			m.has_depth   = has_depth;
+			m.state       = rendering;
+			m.extents     = g_pass_extents;
+			for (uint32_t i = 0; i < n; i++) {
+				const bool   d   = i == color_count;
+				const Image& img = *sp.img[i];
+				auto&        t   = m.t[i];
+				t.id             = d ? depth.image_id : colors[i].image_id;
+				t.slot           = d ? UINT32_MAX : colors[i].target_slot;
+				t.memo_slot      = d ? depth.memo_slot : colors[i].memo_slot;
+				t.memo_version   = d ? depth.memo_version : colors[i].memo_version;
+				t.backing        = img.backing.image;
+				t.view           = d ? rendering.depth_stencil_attachment.image_view
+				                     : rendering.color_attachments[colors[i].target_slot].image_view;
+				t.stamp              = img.bind_stamp.load(std::memory_order_acquire);
+				t.source_first_level = img.source_first_level;
+				t.source_size        = img.source_size;
+				t.state_serial       = img.backing.state_serial;
+				t.htile_mask         = d ? img.info.htile_clear_mask : 0u;
+				t.is_bound           = img.binding.is_bound;
+				t.att_layout         = img.binding.attachment_layout;
+				t.att_access         = img.binding.attachment_access;
+				if (d) {
+					t.w   = 0;
+					t.h   = 0;
+					t.kpx = 0;
+				} else {
+					const auto extent = colors[i].Extent();
+					t.w               = extent.width;
+					t.h               = extent.height;
+					t.kpx             = static_cast<uint64_t>(extent.width) * extent.height / 1024U;
+				}
+			}
+		}
+		m.serial_end = serial1;
+		m.meta_end   = meta1;
+		m.pending    = true; // valid only once BeginRendering pins the pass (SpRtAfterBegin)
+	}
+	FS::Add(FS::Counter::SpRtRecNs, FS::NowNs() - rec0);
+}
+
+// Around BeginRendering (both paths): P2 (an open pass equal to the memo cannot restart) and the pin of the pending
+// memo to the pass this draw renders in.  F8: on P2 the pending memo is invalidated, and P2 is bad only when the pass
+// that restarted is the memo's own pinned pass; any other restart of a would-hit is the sp_rt_rst diagnostic.
+void RenderExecutor::SpRtAfterBegin(bool open_before, uint64_t pass_before) {
+	namespace FS = Common::FrameStats;
+	auto&          sp         = *m_sp;
+	auto&          m          = sp.rt;
+	const uint64_t pass_after = CommandBuffer::PassBeginSerial();
+	bool           p2         = false;
+	if (sp.would_rt && pass_after != pass_before) {
+		FS::Add(FS::Counter::SpRtRestart, 1);
+		if (open_before && pass_before == m.pass_serial && sp.draw_bad == 0) {
+			p2          = true;
+			sp.draw_bad = 0x40;
+			if (sp.raced) {
+				FS::Add(FS::Counter::SpRtRace, 1);
+			} else {
+				FS::Add(FS::Counter::SpRtBad, 1);
+				if (sp.rt_logged++ < 40) {
+					LOGF("SpRtMismatch: frame=%d why=0x%02x pass=%" PRIu64 "->%" PRIu64 " memo_pass=%" PRIu64 "\n",
+					     m_context.GetGpu().GetFrameNum(), 0x40u, pass_before, pass_after, m.pass_serial);
+				}
+			}
+		}
+	}
+	if (m.pending) {
+		const auto r0 = FS::NowNs();
+		m.pending     = false;
+		if (p2) {
+			m.valid = false;
+		} else {
+			m.pass_serial = pass_after;
+			m.valid       = true;
+			FS::Add(FS::Counter::SpRtRecords, 1);
+		}
+		FS::Add(FS::Counter::SpRtRecNs, FS::NowNs() - r0);
+	}
+}
+
 RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderColorInfo* colors,
                                                  uint32_t color_count, RenderDepthInfo& depth,
                                                  const std::optional<PreparedBindings>& pixel) {
@@ -892,6 +1271,9 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		const auto old_image = cache.m_slot_images.try_get(target.image_id);
 		if (old_image == nullptr || (!old_image->registered && !old_image->info.data.Empty()) ||
 		    old_image->binding.needs_rebind) {
+			if (t_sp_rt_armed) {
+				t_sp_rt_refind = true; // session 120, gate "spcen": never a memo from this draw
+			}
 			if (old_image != nullptr) {
 				old_image->binding = {};
 			}
@@ -2437,6 +2819,19 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
 	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmVtxNs);
 	DrawStatTail();
+	// Session 120, gate "spcen" (MEASUREMENT ONLY, spcen.md s.3.7, design120.md section 4): latch the gate ONCE for
+	// this draw - CommitBindings and the BeginRendering sites read the latch, never the gate (the s97 lesson) - and
+	// evaluate WITHOUT ACTING whether a same-pass render-target memo could skip the AcquireRenderTargets below.  Gate
+	// first: FrameStats::Enabled() is out of line and must not run at gate 0.
+	SpDrawScope sp_scope(*this, !bind_floor &&
+	                                Common::Gates::Enabled(Common::Gates::Gate::SamePassCensus) &&
+	                                Common::FrameStats::Enabled());
+	if (sp_scope.Armed()) {
+		SpRtCheck(buffer, state.color_info, state.color_count, state.depth_info);
+		Common::FrameStats::PathLap::MarkSplit(Common::FrameStats::Counter::PathEmSpChkNs,
+		                                       Common::FrameStats::Counter::SpRtChkHitNs, m_sp->would_rt,
+		                                       Common::FrameStats::Counter::SpRtChkHitNs, false);
+	}
 	// Session 96, gate "bindfloor": AcquireRenderTargets walks bindings.pixel->images to decide
 	// the depth feedback loop, and on the floor that vector is EMPTY while image.views is not,
 	// so the floor passes no pixel bindings at all (the std::nullopt default).  The ONLY thing
@@ -2449,7 +2844,17 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	               : AcquireRenderTargets(buffer, state.color_info, state.color_count,
 	                                      state.depth_info, bindings.pixel);
 	lap.Mark(Common::FrameStats::Counter::DrawAcquireRtNs);
-	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRtNs);
+	if (sp_scope.Armed()) {
+		// Session 120, gate "spcen": the same pl_em_rt span, also charged to the would-hit subsets; then the bad check,
+		// the dry replay and the record in their own span.
+		Common::FrameStats::PathLap::MarkSplit(Common::FrameStats::Counter::PathEmRtNs,
+		                                       Common::FrameStats::Counter::PathEmRtHitNs, m_sp->would_rt,
+		                                       Common::FrameStats::Counter::PathEmRtHitGNs, m_sp->would_rt_g);
+		SpRtPost(buffer, state.color_info, state.color_count, state.depth_info, rendering);
+		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmSpPostNs);
+	} else {
+		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRtNs); // gate 0: as before
+	}
 	DrawEmitInfo emit_info = emit;
 	if (emit_info.indirect_args_addr != 0 && !mesh_active) {
 		// The arguments were produced by the GPU (culling); reading them on the CPU would drain the
@@ -2672,7 +3077,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (!draw.IsIndexed()) {
 			SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 		}
+		// Session 120, gate "spcen": P2 and the pin of the pending memo (SpRtAfterBegin).
+		const bool     sp_open = sp_scope.Armed() && buffer.IsRendering();
+		const uint64_t sp_pass = sp_scope.Armed() ? CommandBuffer::PassBeginSerial() : 0;
 		buffer.BeginRenderingPacket(rendering);
+		if (sp_scope.Armed()) {
+			SpRtAfterBegin(sp_open, sp_pass);
+		}
 		DrawStatEmit();
 		RecordCommandWriter tail(*buffer.Recorder());
 		buffer.NoteHandleUse();
@@ -2834,7 +3245,13 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (!draw.IsIndexed()) {
 		SetDrawDebugPhase(buffer, submit_id, draw, state, 0x400u);
 	}
+	// Session 120, gate "spcen": P2 and the pin of the pending memo (SpRtAfterBegin).
+	const bool     sp_open = sp_scope.Armed() && buffer.IsRendering();
+	const uint64_t sp_pass = sp_scope.Armed() ? CommandBuffer::PassBeginSerial() : 0;
 	buffer.Scheduler().BeginRendering(rendering);
+	if (sp_scope.Armed()) {
+		SpRtAfterBegin(sp_open, sp_pass);
+	}
 	DrawStatEmit();
 	buffer.CheckNoPublish(publish_mark);
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {

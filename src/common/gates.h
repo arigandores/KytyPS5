@@ -409,8 +409,16 @@ enum class Gate : uint32_t {
 	// each frame change K3 (element runs between pass starts) and K4 (image overlap of adjacent segments at W = 2 and 4)
 	// land in FrameTrace-x.  Read at every element / pass start / image, so it CAN be a schedule arm (a frame is only
 	// finished if the gate stayed on from its first element).  Changes nothing that executes.
-	// LAST row, matching the LAST enum entry before Gate::Count.
 	SliceCensus,        // KYTY_SLICE_CENSUS,       file name "slicecen"
+	// Session 120, MEASUREMENT ONLY (C:/kyty/s120/design/spcen.md, spcen_review.md RC1-RC6, design120.md section 4):
+	// the same-pass render-target memo census.  Per draw it evaluates, WITHOUT acting, whether a memo could skip
+	// AcquireRenderTargets inside the open pass (A) and the transit loop of CommitBindings per stage (B); the full
+	// work runs beside every would-hit and sp_rt_bad / sp_tr_bad count any difference (both MUST read 0).  Read ONCE
+	// a draw and latched (CommitBindings and the BeginRendering sites read the latch), so it CAN be a schedule arm.
+	// Changes nothing that executes.  The rt times need "pathlap" in the same arm (else sp_rt_nt), the transit times
+	// "bindlap" for bl_tr_us; use with "cbmove" OFF (its stage spans would contain the census check).
+	// LAST row, matching the LAST enum entry before Gate::Count.
+	SamePassCensus,     // KYTY_SAME_PASS_CENSUS,   file name "spcen"
 	Count,
 };
 
@@ -602,9 +610,26 @@ enum class Knob : uint32_t {
 	// carry, carry_*); words read early are read only from GPU-clean pages (else the plan stops as UNCERTAIN) and the
 	// structural EXIT conditions of the register handlers are checked first (the plan stops as ABORTED).  It does not
 	// change what executes, except through a value-level EXIT inside a register handler that the real processor would
-	// reach a moment later on the same packet (ROADMAP 117 item 15).  LAST row, matching the LAST entry of
-	// KNOB_DEFINITIONS.
+	// reach a moment later on the same packet (ROADMAP 117 item 15).
 	Spine,            // KYTY_SPINE,              file name "spine" (0 off, 1 plan, 2 plan + verify)
+	// Session 120, MEASUREMENT ONLY (C:/kyty/s120/design/r1.md, r1_review.md, design120.md section 2): the R1
+	// texture-memo census.  1 = the real memo's key-miss path and a 1/8 sample of its hit path timed (r1_hit_* /
+	// r1_miss_*), RebindImages' texfast re-record branch and a 1/16 sample of its fast branch timed (r1_rb*); 2 = 1
+	// plus a tag-only shadow of a 4-way / 8-way memo of 4 096 entries, a direct memo of 16 384 and a 1-way null
+	// control of the real shape (r1_w4* / r1_w8* / r1_d16* / r1_w1*, r1_*_bad, r1_incl, r1_xthr).  Read once per
+	// ResolveTextureWith call and once per RebindImages call, so it CAN be a schedule arm (the shadow resets at every
+	// schedule block and after a frame it did not see).  Off under texmemo2.  Changes nothing that executes.
+	R1Census,         // KYTY_R1_CENSUS,          file name "r1cen" (0 off, 1 timers, 2 timers + shadow)
+	// Session 120, MEASUREMENT ONLY (C:/kyty/s120/design/r2.md, r2_review.md C1-C10, design120.md section 3): R2, the
+	// stage image-block repeat census.  1 = per PrepareBindings call (one shader stage), whether the stage's image
+	// block repeats the previous call of the same stage TYPE with the same program and T# words, whether each slot
+	// would be reproduced by a reuse (memo slot version unchanged, memo-hit liveness), bl_res's span booked by class,
+	// the fresh result compared with the previous one (r2_bad, r2_bad_key must read 0) and, on a 1/8 sample of the
+	// stages BEFORE the loop, the witness a real reuse pays (r2_wr_* / r2_wo_*) against a null stamp pair (r2_nul_*);
+	// 2 = 1 plus a read-only replay of the removable resolve work on the sampled clean stages (r2_rm_*).  Read once
+	// per PrepareBindings call, so it CAN be a schedule arm.  Off under texmemo2.  Changes nothing that executes.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	R2Census,         // KYTY_R2_CENSUS,          file name "r2cen" (0 off, 1 census, 2 census + replay)
 	Count,
 };
 

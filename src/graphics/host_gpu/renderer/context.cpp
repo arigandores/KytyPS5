@@ -329,6 +329,7 @@ void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) co
 	        state.num_color_attachments > RENDER_COLOR_ATTACHMENTS_MAX);
 	EXIT_IF(packet && m_recorder == nullptr);
 	EndRenderingImpl(RenderPassEnd::State, packet);
+	s_pass_begin_serial.fetch_add(1, std::memory_order_relaxed); // session 120, gate "spcen" (always, measurement only)
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 	SliceCensus::PassBegin(); // gate "slicecen" (session 118): GuestGpu thread only, nothing when off
 	// Session 71, gate G-area: the census of this pass. Enabled(), NOT TimingsEnabled(): a

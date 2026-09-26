@@ -133,9 +133,12 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 	const bool has_subresource_states = !subresource_states.empty();
 
 	Barriers barriers;
+	// Session 120, gate "spcen" (ALWAYS, measurement only): the representation of the state record changed.
+	bool     representation_moved = false;
 	if (partial || has_subresource_states) {
 		if (!has_subresource_states) {
 			subresource_states.resize(info.resources.levels * info.resources.layers, state);
+			representation_moved = true;
 		}
 
 		const uint32_t base_level  = partial ? range->base_level : 0;
@@ -189,6 +192,7 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 
 		if (!partial) {
 			subresource_states.clear();
+			representation_moved = true;
 		}
 	} else {
 		constexpr auto write_access   = vk::AccessFlagBits2::eTransferWrite |
@@ -223,7 +227,20 @@ Image::Barriers Image::GetBarriers(vk::ImageLayout                      destinat
 		barriers.push_back(barrier);
 	}
 
-	state = {destination_stage, destination_access, destination_layout, atomic_write};
+	// Session 120, gate "spcen" (ALWAYS, measurement only - spcen.md s.1.1, s.3.2): the per-backing and global image
+	// state serials move whenever a state record is written with a different value: a barrier, a resize / clear of
+	// subresource_states, or (W5) a whole `state` value change without either.  Read only by the census.
+	const VulkanImageState next {destination_stage, destination_access, destination_layout, atomic_write};
+	const bool value_moved = state.pl_stage != next.pl_stage || state.access_mask != next.access_mask ||
+	                         state.layout != next.layout || state.atomic_write != next.atomic_write;
+	if (!barriers.empty() || representation_moved || value_moved) {
+		backing.NoteStateChange();
+		Common::FrameStats::Add(Common::FrameStats::Counter::ImageStateSerialBumps, 1);
+		if (barriers.empty() && !representation_moved) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImageStateSerialValue, 1); // W5 alone
+		}
+	}
+	state = next;
 	return barriers;
 }
 

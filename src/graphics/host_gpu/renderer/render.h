@@ -133,6 +133,11 @@ public:
 	void SetDebugInfo(uint32_t op, uint64_t submit_id, uint32_t arg0 = 0, uint32_t arg1 = 0,
 	                  uint32_t arg2 = 0, uint32_t arg3 = 0, uint64_t arg4 = 0, uint64_t arg5 = 0);
 	[[nodiscard]] bool IsRendering() const noexcept { return m_rendering; }
+	// Session 120, gate "spcen" (MEASUREMENT ONLY, spcen.md s.3.3): moves at every REAL pass begin
+	// (BeginRenderingImpl past its early return) of any command buffer.  Always counted; read only by the census.
+	[[nodiscard]] static uint64_t PassBeginSerial() noexcept {
+		return s_pass_begin_serial.load(std::memory_order_relaxed);
+	}
 	void BeginRendering(const RenderState& state) const;
 	// why: charged when a pass is actually open (FrameTrace-rp).
 	void EndRendering(RenderPassEnd why = RenderPassEnd::Other) const;
@@ -304,9 +309,96 @@ private:
 	HW::Context*        m_registers   = nullptr;
 	HW::UserConfig*     m_user_config = nullptr;
 	HW::Shader*         m_shaders     = nullptr;
+	// Session 120, gate "spcen": see PassBeginSerial().
+	static inline std::atomic<uint64_t> s_pass_begin_serial {0};
 
 	friend class CommandScheduler;
 };
+
+// Session 120, gate "spcen" (MEASUREMENT ONLY, C:/kyty/s120/design/spcen.md s.3.4, spcen_review.md, design120.md
+// section 4).  Touched on the GuestGpu thread under the render mutex only (the draw path); nothing outside the census
+// reads any of this.  The flags are written only while a draw is armed and tested only on rare paths.
+inline constinit thread_local bool t_sp_rt_armed       = false; // AcquireRenderTargets of an armed draw is running
+inline constinit thread_local bool t_sp_rt_slow        = false; // ... it took AcquireTargetView's slow path
+inline constinit thread_local bool t_sp_rt_stamp_race  = false; // ... entered it with a bind_stamp moved (RC1)
+inline constinit thread_local bool t_sp_rt_refind      = false; // ... it took its dead-image re-find
+inline constinit thread_local bool t_sp_dcc_armed      = false; // an armed stage's transit loop is running
+inline constinit thread_local bool t_sp_dcc_pending    = false; // ... it met a non-zero DCC clear mask
+struct SpRtTarget {
+	ImageId          id;
+	uint32_t         slot         = 0;          // target_slot, UINT32_MAX = depth
+	uint32_t         memo_slot    = UINT32_MAX;
+	uint32_t         memo_version = 0;
+	vk::Image        backing      = nullptr;
+	vk::ImageView    view         = nullptr;    // the view the recording Acquire returned (== the rtfast record's)
+	uint32_t         stamp        = 0;          // bind_stamp after the recording Acquire
+	uint32_t         source_first_level = 0;
+	uint64_t         source_size  = 0;
+	uint64_t         state_serial = 0;          // backing.state_serial after the recording Acquire
+	uint32_t         htile_mask   = 0;          // depth only
+	bool             is_bound     = false;      // binding.is_bound seen by the recording Acquire
+	vk::ImageLayout  att_layout   = vk::ImageLayout::eUndefined; // binding.attachment_layout it stored
+	vk::AccessFlags2 att_access;                                 // binding.attachment_access it stored
+	uint32_t         w = 0, h = 0;                               // colour Extent(), for the counter replay
+	uint64_t         kpx = 0;
+};
+struct SpRtMemo {
+	bool     pending     = false; // recorded by the post, not yet pinned to its pass at BeginRendering
+	bool     valid       = false;
+	bool     has_depth   = false;
+	uint32_t color_count = 0;
+	std::array<SpRtTarget, RENDER_COLOR_ATTACHMENTS_MAX + 1> t {}; // colours in order, depth last
+	uint64_t          serial_end = 0, meta_end = 0, pass_serial = 0;
+	RenderState       state;
+	PassExtentWitness extents;
+};
+struct SpTrSlot {
+	ImageId           id;
+	uint32_t          base_level = 0, level_count = 0, base_layer = 0, layer_count = 0;
+	uint8_t           storage    = 0;
+	uint16_t          flags      = 0;                    // SpTrFlags (descriptors.cpp)
+	ImageMetadataKind meta_kind  = ImageMetadataKind::None;
+	uint64_t          meta_addr  = 0;                    // info.metadata.range.address
+	vk::ImageView     view       = nullptr;              // is_target && IsDepth() slots only (the EXIT sanity check)
+	vk::ImageLayout   att_layout = vk::ImageLayout::eUndefined;
+	vk::ImageLayout   result     = vk::ImageLayout::eUndefined; // TextureBinding::layout the loop produced
+	vk::AccessFlags2  att_access;
+	uint64_t          state_serial = 0;
+};
+inline constexpr uint32_t kSpTrSlots = 32;
+struct SpTrMemo {
+	bool     valid   = false;
+	bool     atomimg = false;
+	uint32_t n       = 0;
+	uint64_t serial_end = 0, meta_end = 0;
+	std::array<SpTrSlot, kSpTrSlots> s {};
+};
+struct SpTrStage {
+	bool     would   = false;
+	bool     would_g = false;
+	bool     atomimg = false;
+	bool     open0   = false;
+	uint64_t serial0 = 0, meta0 = 0;
+};
+struct SpCensusState {
+	bool     armed = false, would_rt = false, would_rt_g = false, open0 = false, raced = false;
+	uint32_t draw_bad = 0, rt_logged = 0, tr_logged = 0;
+	uint64_t serial0 = 0, meta0 = 0;
+	std::array<Image*, RENDER_COLOR_ATTACHMENTS_MAX + 1> img {}; // check: the targets; post: re-looked up (F8)
+	SpRtMemo                rt;
+	std::array<SpTrMemo, 4> tr {}; // 4 = max stages of a draw (3 vertex + pixel)
+	// The dry replay's stores (spcen.md s.5.3): same number of loads and stores as a real hit, into this sink.
+	struct Sink {
+		RenderState                          state;
+		PassExtentWitness                    extents;
+		std::array<uint32_t, RENDER_COLOR_ATTACHMENTS_MAX + 1> layout {};
+		std::array<uint64_t, RENDER_COLOR_ATTACHMENTS_MAX + 1> access {};
+		uint32_t                             usage = 0, gpu_mod = 0, w = 0, h = 0;
+		bool                                 depth_load_clear = false; // depth.depth_load_clear_enable = false
+		std::array<uint32_t, kSpTrSlots>     tr_layout {};
+	} sink;
+};
+
 
 class RenderExecutor {
 public:
@@ -584,6 +676,27 @@ private:
 	                                              const TextureCache::ImageDesc& desc,
 	                                              TargetViewFast& fast, bool depth_target,
 	                                              uint32_t guest_clear_regs = 0);
+
+	// Session 120, gate "spcen" (MEASUREMENT ONLY, spcen.md, design120.md section 4): allocated at the first armed
+	// draw (never at gate 0); latched per draw by SpDrawScope (renderDraw.cpp).  A: SpRtCheck before, SpRtPost after
+	// AcquireRenderTargets, SpRtAfterBegin after BeginRendering; B: SpTrCheck / SpTrPost around the transit loop of
+	// CommitBindings.  Every image read goes through m_slot_images.try_get (never GetImage / TouchImage / []).
+	std::unique_ptr<SpCensusState> m_sp;
+	void      SpRtCheck(CommandBuffer& buffer, const RenderColorInfo* colors, uint32_t color_count,
+	                    const RenderDepthInfo& depth);
+	void      SpRtPost(CommandBuffer& buffer, const RenderColorInfo* colors, uint32_t color_count,
+	                   const RenderDepthInfo& depth, const RenderState& rendering);
+	void      SpRtAfterBegin(bool open_before, uint64_t pass_before);
+	SpTrStage SpTrCheck(uint32_t k, const PreparedBindings& d, uint32_t n, const CommandBuffer& buffer);
+	void      SpTrPost(uint32_t k, const PreparedBindings& d, uint32_t n, const SpTrStage& st, uint64_t loop_ns,
+	                   const CommandBuffer& buffer);
+	// rtfast on, no debug dump, no linear readback, slicecen off: the configuration in which AcquireTargetView can take
+	// its fast path and AcquireRenderTargets has no census side effect.
+	[[nodiscard]] static bool SpRtConfigOk(const TextureCache& cache);
+	// The stencil_kept lambda of AcquireTargetView on the recorded fast.stencil_record; reads only.
+	[[nodiscard]] static bool SpStencilKept(const TextureCache& cache, const RenderDepthInfo& depth,
+	                                        const TargetViewFast& fast, ImageId id);
+	friend class SpDrawScope;
 
 	friend class CommandProcessor;
 	friend struct RenderExecutorTestAccess;

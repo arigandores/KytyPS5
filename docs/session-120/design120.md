@@ -91,6 +91,34 @@ N   = N_A + N_B                                                             (poi
 Δ_A = max(0, pl_em_rt_ns(M) − pl_em_rt_ns(P));   Δ_B = max(0, 1000·(bl_tr_us(M) − bl_tr_us(P)))
 N⁺  = N + Δ_A·pl_em_rt_hit_ns/pl_em_rt_ns + Δ_B·bl_tr_hit_ns/sp_tr_loop_ns (upper)
 ```
+**Timer-read add-back (review of the spcen code, BLOCKING; recorded before the scorer is sealed; this block REPLACES
+the `N⁺` line above).** Every census span pays one `NowNs` read latency z that a real memo never pays, so N counts
+the census's own reads as memo cost. Per frame (P arm) the subtracted spans carry: `pl_em_spchk_ns` one per armed
+draw (the extra `PathLap` mark after the check, `renderDraw.cpp` S9 `MarkSplit(PathEmSpChkNs, …)`), `sp_rt_rec_ns`
+one pair per armed draw (`SpRtPost` `rec0`) plus one per pin (`SpRtAfterBegin`, counted by `sp_rt_rec`),
+`sp_rt_rep_ns` one per would-hit; `sp_tr_chk_ns` one per stage (the pre-check `cb_lap(cb_transit)` to the check-end
+`NowNs`), `sp_tr_rec_ns` one per stage (`SpTrPost` `rec0`), `sp_tr_rep_ns` one per would-hit. The gross terms
+`pl_em_rt_hit_ns` and `bl_tr_hit_ns` carry one per would-hit, which cancels the replay's. Net bias of N:
+−z·(2·`sp_rt_n` + `sp_rt_rec` + 2·`sp_tr_n`), ≈ 0.15–0.3 ms a frame. The pre-check lap also adds one read per armed
+stage to `bl_tr_us(P)`, pulling Δ_B toward 0. So:
+```
+z̄    = Σ r2_nul_ns / Σ r2_nul_n       (P arm, window frames: r2cen=2 in P, R2PreLoop's two back-to-back NowNs on
+                                        the GuestGpu thread; Σ r2_nul_n = 0 or z̄ ≤ 0 ⇒ NOT_EVALUABLE)
+Z    = z̄·(2·sp_rt_n + sp_rt_rec + 2·sp_tr_n)                                (P; the census's own reads)
+Δ_B′ = max(0, 1000·(bl_tr_us(M) − bl_tr_us(P)) + z̄·sp_tr_n(P))
+N⁺   = N + Z + Δ_A·pl_em_rt_hit_ns/pl_em_rt_ns + Δ_B′·bl_tr_hit_ns/sp_tr_loop_ns           (upper; CLOSED uses it)
+```
+N stays the lean-low point (OPEN uses N, never the add-back). The scorer reports z̄, Z and Δ_B′ next to N and N⁺, and
+the suite carries a mutant that drops Z (and one that uses Δ_B for Δ_B′): a fixture whose N + Δ-terms < 500 but N⁺ ≥
+500 must not give CLOSED. The code alternative (an spcen-owned null pair `sp_nul_ns`/`sp_nul_n`) is NOT taken: r2cen
+is armed in both arms (§3) and `r2_nul` already is an in-run pair on the same thread, so the build does not change.
+**Row skew (review, BLOCKING):** `FrameTrace-x` reads every counter separately (`FS::Read`, one registry sum per
+counter in print order) while GuestGpu keeps adding, so one draw's or stage's Adds can split across adjacent lines.
+spcen's partitions and nestings (`spcen.md` §11 fixtures 4, 5) are tested on WINDOW sums (frames 10–88 of each
+block): counts within ±2 per block window (±1 per window edge), ns nestings within the subset counter's own values
+on the two edge lines of that window (a straddling event's span is at most the line it lands in); a ±1 skew between
+adjacent lines that cancels over the window is ADMITTED, a persistent off-by-one (e.g. the reason index shifted)
+FAILs. Never exact per frame.
 Correctness over ALL P rows: Σ(`sp_rt_bad` + `sp_tr_bad`) > 0 or any `SpRtMismatch:`/`SpTrMismatch:` ⇒ FAIL;
 `sp_rt_race` > 10⁻⁴·`sp_rt_would` ⇒ NOT_EVALUABLE; M-arm zeros required on window frames only (RC6).
 

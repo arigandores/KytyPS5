@@ -1940,6 +1940,202 @@ enum class Counter : uint32_t {
 	K4NoCut,                 // k4_nocut
 	ScImages,                // sc_img
 	ScNs,                    // sc_ns
+	// Session 120 (knob "r1cen", C:/kyty/s120/design/r1.md + r1_review.md RC1-RC11 + design120.md section 2): the R1
+	// texture-memo census, MEASUREMENT ONLY.  Level >= 1: real memo hits / key misses / stale misses seen, the hit path
+	// on a 1/8 random sample and every key miss timed (branch -> before emit), key misses the real path did not memoize
+	// (nost), the RebindImages texfast re-record branch (rb) and a 1/16 sample of its fast branch (rbf).  Level 2: a
+	// tag-only shadow of a 4-way (w4) and an 8-way (w8) LRU memo of 4 096 entries, a direct memo of 16 384 (d16) and a
+	// 1-way null control of the real shape (w1) - key misses in post mode (mp), would-hits in the pre half (q) and the
+	// post half (p) with their real miss time, losses, bad answers, the first re-record after a would-hit fill (rb) and
+	// its time (rbns), the N-way tag probe timed on the self sample (pb) against a null stamp pair (pb0), hits right
+	// after a stored key miss (am, timed: ham), shadow candidates that failed liveness (sstale), compulsory fills
+	// (cold), resets, 32-bit tag aliases, desyncs (incl), lookups on a thread other than the owner (xthr) and the
+	// census's own time on a 1/64 sample split by hit / key miss / stale (self_*).  Raw ns / raw counts.
+	// r1_*_bad, r1_incl, r1_xthr and every r1_w1_* must read 0.
+	R1HitN,                  // r1_hn
+	R1MissN,                 // r1_mn
+	R1StaleN,                // r1_sn
+	R1HitNs,                 // r1_hit_ns
+	R1HitTimed,              // r1_hit_t
+	R1MissNs,                // r1_miss_ns
+	R1NoStoreN,              // r1_nost
+	R1NoStoreNs,             // r1_nost_ns
+	R1RbNs,                  // r1_rb_ns
+	R1RbN,                   // r1_rb_n
+	R1RbfNs,                 // r1_rbf_ns
+	R1RbfN,                  // r1_rbf_n
+	R1MissPost,              // r1_mp
+	R1MissPostNs,            // r1_mp_ns
+	R1W4Pre,                 // r1_w4_q
+	R1W4PreNs,               // r1_w4_qns
+	R1W4Post,                // r1_w4_p
+	R1W4PostNs,              // r1_w4_pns
+	R1W4Lose,                // r1_w4_lose
+	R1W4Bad,                 // r1_w4_bad
+	R1W4Rb,                  // r1_w4_rb
+	R1W4RbNs,                // r1_w4_rbns
+	R1W4ProbeNs,             // r1_w4_pb_ns
+	R1W8Pre,                 // r1_w8_q
+	R1W8PreNs,               // r1_w8_qns
+	R1W8Post,                // r1_w8_p
+	R1W8PostNs,              // r1_w8_pns
+	R1W8Lose,                // r1_w8_lose
+	R1W8Bad,                 // r1_w8_bad
+	R1W8Rb,                  // r1_w8_rb
+	R1W8RbNs,                // r1_w8_rbns
+	R1W8ProbeNs,             // r1_w8_pb_ns
+	R1D16Pre,                // r1_d16_q
+	R1D16PreNs,              // r1_d16_qns
+	R1D16Post,               // r1_d16_p
+	R1D16PostNs,             // r1_d16_pns
+	R1D16Bad,                // r1_d16_bad
+	R1D16Rb,                 // r1_d16_rb
+	R1D16RbNs,               // r1_d16_rbns
+	R1W1Pre,                 // r1_w1_q
+	R1W1PreNs,               // r1_w1_qns
+	R1W1Post,                // r1_w1_p
+	R1W1PostNs,              // r1_w1_pns
+	R1W1Lose,                // r1_w1_lose
+	R1W1Bad,                 // r1_w1_bad
+	R1W1Rb,                  // r1_w1_rb
+	R1W1RbNs,                // r1_w1_rbns
+	R1Probe0Ns,              // r1_pb0_ns
+	R1ProbeN,                // r1_pb_n
+	R1AfterMissN,            // r1_am_n
+	R1HitAfterMissNs,        // r1_ham_ns
+	R1HitAfterMissTimed,     // r1_ham_t
+	R1ShadowStale,           // r1_sstale
+	R1Cold,                  // r1_cold
+	R1Reset,                 // r1_reset
+	R1TagAlias,              // r1_tagx
+	R1Incl,                  // r1_incl
+	R1CrossThread,           // r1_xthr
+	R1SelfHitNs,             // r1_self_h_ns
+	R1SelfHitN,              // r1_self_h_n
+	R1SelfMissNs,            // r1_self_m_ns
+	R1SelfMissN,             // r1_self_m_n
+	R1SelfStaleNs,           // r1_self_s_ns
+	R1SelfStaleN,            // r1_self_s_n
+	// Session 120 (knob "r2cen", C:/kyty/s120/design/r2.md + r2_review.md C1-C10 + design120.md section 3): R2, the
+	// stage image-block repeat census, MEASUREMENT ONLY.  One PrepareBindings call = one stage; "previous" = the
+	// previous armed call of the same stage TYPE.  stg all armed calls; noimg / big (> 64 slots) / odd (images.size()
+	// != n, unreachable) not classified; prog same program; rep = prog and every T# equal; cl (every slot R) / mx;
+	// R = memo slot valid, same image, version unchanged since the previous call, memo-hit liveness (null T#: the
+	// null image still allocated).  cl_ns / mx_ns / ot_ns = bl_res's span by class, *_sl / cl_nul slots by class;
+	// s_* the same over the 1/8 SAMPLED stages only (the witness ran before their loop: T* uses the unsampled ones);
+	// sl_eq / sl_hit per slot over prog stages; cl_lod / cl_dcc / cl_bc clean slots paying the kept LodStats / DCC
+	// lock / ConfigureImageSource work, cl_tick / cl_meta clean stages with an unchanged AgeTick / MetaEpoch
+	// (information); bad = R slots whose fresh id / desc / memo index+version differ, bad_key = an equal-T# slot whose
+	// memo slot moved by exactly +1 (both MUST read 0), div = not-R slots still live but different (information);
+	// nul_* a null stamp pair, wr_* / wo_* the pre-loop witness on repeating / other sampled stages, st_* the T#
+	// store of non-repeating sampled stages, rm_* the r2cen=2 replay (ns, slots, stages).  Raw ns / raw counts.
+	R2Stages,                // r2_stg
+	R2NoImage,               // r2_noimg
+	R2Big,                   // r2_big
+	R2Odd,                   // r2_odd
+	R2SameProgram,           // r2_prog
+	R2Repeat,                // r2_rep
+	R2Clean,                 // r2_cl
+	R2Mixed,                 // r2_mx
+	R2CleanNs,               // r2_cl_ns
+	R2MixedNs,               // r2_mx_ns
+	R2OtherNs,               // r2_ot_ns
+	R2CleanSlots,            // r2_cl_sl
+	R2CleanNull,             // r2_cl_nul
+	R2MixedSlots,            // r2_mx_sl
+	R2MixedEqual,            // r2_mx_eq
+	R2OtherSlots,            // r2_ot_sl
+	R2SampledCleanNs,        // r2_s_cl_ns
+	R2SampledCleanSlots,     // r2_s_cl_sl
+	R2SampledCleanNull,      // r2_s_cl_nul
+	R2SampledMixedNs,        // r2_s_mx_ns
+	R2SampledMixedSlots,     // r2_s_mx_sl
+	R2SampledOtherNs,        // r2_s_ot_ns
+	R2SampledOtherSlots,     // r2_s_ot_sl
+	R2SlotSame,              // r2_sl_eq
+	R2SlotHit,               // r2_sl_hit
+	R2CleanLod,              // r2_cl_lod
+	R2CleanDcc,              // r2_cl_dcc
+	R2CleanBc,               // r2_cl_bc
+	R2CleanTick,             // r2_cl_tick
+	R2CleanMeta,             // r2_cl_meta
+	R2Bad,                   // r2_bad
+	R2BadKey,                // r2_bad_key
+	R2Diverge,               // r2_div
+	R2NullNs,                // r2_nul_ns
+	R2Nulls,                 // r2_nul_n
+	R2WitRepNs,              // r2_wr_ns
+	R2WitReps,               // r2_wr_n
+	R2WitOthNs,              // r2_wo_ns
+	R2WitOths,               // r2_wo_n
+	R2StoreNs,               // r2_st_ns
+	R2Stores,                // r2_st_n
+	R2ReplayNs,              // r2_rm_ns
+	R2ReplaySlots,           // r2_rm_sl
+	R2Replays,               // r2_rm_n
+	// Session 120 (gate "spcen", C:/kyty/s120/design/spcen.md + spcen_review.md RC1-RC6 + design120.md section 4): the
+	// same-pass render-target memo census, MEASUREMENT ONLY.  sp_ser_n / sp_ser_val: the image-state serial moves
+	// (ALWAYS counted, both arms; val = a W5 value change alone).  A (rt, per armed draw): would-hits of a memo of
+	// AcquireRenderTargets inside the open pass (per-image witness; wg = also under the global serial), their targets,
+	// the check (pl_em_spchk_ns, chkh on would-hits), AcquireRenderTargets on would-hits (pl_em_rt_hit(g)_ns, subsets
+	// of pl_em_rt_ns), the post (pl_em_sppost_ns) with its dry replay (rep_*) and record (rec, rec_ns incl. the pin at
+	// BeginRendering), bad (MUST read 0), race (the fast path failed on a bind_stamp moved by another thread before the
+	// slow-path Find), rst (a would-hit's BeginRendering began a new pass), nt (armed without pathlap), first failing
+	// reason x_* (10, contiguous).  B (tr, per armed graphics stage): the transit loop (sp_tr_loop_ns, bl_tr_hit(g)_ns
+	// on would-hits), check / post / replay / record times, bad (MUST read 0), dcc (a pending DCC mask met), first
+	// failing reason x_* (6, contiguous).  Raw ns / raw counts.
+	ImageStateSerialBumps,   // sp_ser_n
+	ImageStateSerialValue,   // sp_ser_val
+	SpRtDraws,               // sp_rt_n
+	SpRtWould,               // sp_rt_would
+	SpRtWouldGlobal,         // sp_rt_wg
+	SpRtTargets,             // sp_rt_tgt
+	PathEmSpChkNs,           // pl_em_spchk_ns
+	SpRtChkHitNs,            // sp_rt_chkh_ns
+	PathEmRtHitNs,           // pl_em_rt_hit_ns
+	PathEmRtHitGNs,          // pl_em_rt_hitg_ns
+	PathEmSpPostNs,          // pl_em_sppost_ns
+	SpRtRepNs,               // sp_rt_rep_ns
+	SpRtRepAtt,              // sp_rt_rep_att
+	SpRtRepKpx,              // sp_rt_rep_kpx
+	SpRtRecords,             // sp_rt_rec
+	SpRtRecNs,               // sp_rt_rec_ns
+	SpRtBad,                 // sp_rt_bad
+	SpRtRace,                // sp_rt_race
+	SpRtRestart,             // sp_rt_rst
+	SpRtUntimed,             // sp_rt_nt
+	SpRtMissMemo,            // sp_rt_x_memo
+	SpRtMissCfg,             // sp_rt_x_cfg
+	SpRtMissDepthClear,      // sp_rt_x_dclr
+	SpRtMissMeta,            // sp_rt_x_meta
+	SpRtMissIds,             // sp_rt_x_ids
+	SpRtMissLive,            // sp_rt_x_live
+	SpRtMissSerial,          // sp_rt_x_ser
+	SpRtMissBound,           // sp_rt_x_bound
+	SpRtMissDepthSampled,    // sp_rt_x_dsmp
+	SpRtMissPass,            // sp_rt_x_pass
+	SpTrStages,              // sp_tr_n
+	SpTrSlots,               // sp_tr_slots
+	SpTrWould,               // sp_tr_would
+	SpTrWouldGlobal,         // sp_tr_wg
+	SpTrWouldSlots,          // sp_tr_wslots
+	SpTrLoopNs,              // sp_tr_loop_ns
+	BindLapTrHitNs,          // bl_tr_hit_ns
+	BindLapTrHitGNs,         // bl_tr_hitg_ns
+	SpTrChkNs,               // sp_tr_chk_ns
+	SpTrChkHitNs,            // sp_tr_chkh_ns
+	SpTrPostNs,              // sp_tr_post_ns
+	SpTrRepNs,               // sp_tr_rep_ns
+	SpTrRecords,             // sp_tr_rec
+	SpTrRecNs,               // sp_tr_rec_ns
+	SpTrBad,                 // sp_tr_bad
+	SpTrDcc,                 // sp_tr_dcc
+	SpTrMissBig,             // sp_tr_x_big
+	SpTrMissMemo,            // sp_tr_x_memo
+	SpTrMissMeta,            // sp_tr_x_meta
+	SpTrMissShape,           // sp_tr_x_shape
+	SpTrMissSerial,          // sp_tr_x_ser
+	SpTrMissFlags,           // sp_tr_x_flags
 	Count
 };
 
@@ -2377,6 +2573,24 @@ public:
 			Add(counter, 1);
 		}
 	}
+	// Session 120, gate "spcen" (MEASUREMENT ONLY): Mark(total) that also charges the SAME interval to up to two
+	// nested would-hit subsets, so `total` keeps its meaning in both arms of a schedule.
+	static void MarkSplit(Counter total, Counter hit, bool in_hit, Counter hit_g, bool in_hit_g) {
+		if (Detail::t_path_t0 != 0) {
+			const auto now   = NowNs();
+			const auto spent = now - Detail::t_path_t0;
+			Add(total, spent);
+			if (in_hit) {
+				Add(hit, spent);
+			}
+			if (in_hit_g) {
+				Add(hit_g, spent);
+			}
+			Detail::t_path_t0 = now;
+		}
+	}
+	// Session 120, gate "spcen": whether a chain is running on this thread (pathlap armed for this draw).
+	[[nodiscard]] static bool Running() noexcept { return Detail::t_path_t0 != 0; }
 	PathLap(const PathLap&)            = delete;
 	PathLap& operator=(const PathLap&) = delete;
 

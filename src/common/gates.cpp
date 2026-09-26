@@ -280,8 +280,11 @@ constexpr std::array<Definition, static_cast<size_t>(Gate::Count)> DEFINITIONS {
     {"KYTY_COMMIT_LAP_MOVE", "cbmove", false},
     // Session 118, measurement only: the slice census of route A stage 4 part 2 (K3 pass runs, K4 image overlap of
     // adjacent segments). Read at every element, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Gate::Count.
     {"KYTY_SLICE_CENSUS", "slicecen", false},
+    // Session 120, measurement only: the same-pass render-target memo census (spcen.md, design120.md section 4).
+    // Read once a draw and latched, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Gate::Count.
+    {"KYTY_SAME_PASS_CENSUS", "spcen", false},
 }};
 
 struct KnobDefinition {
@@ -407,8 +410,14 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 117, MEASUREMENT ONLY: the shadow spine of route A stage 4 (1 plan, 2 plan + verify). Read once per
     // submission, so it CAN be a schedule arm. Session 118: the plan also checks the carry (term C) and is safe (it
     // stops as UNCERTAIN / ABORTED instead of reading a GPU-dirty word or reaching a structural EXIT).
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_SPINE", "spine", 0, 2},
+    // Session 120, MEASUREMENT ONLY: the R1 texture-memo census (1 timers, 2 timers + shadow). Read once per resolve /
+    // RebindImages call, so it CAN be a schedule arm.
+    {"KYTY_R1_CENSUS", "r1cen", 0, 2},
+    // Session 120, MEASUREMENT ONLY: R2, the stage image-block repeat census (1) plus a sampled read-only replay of the
+    // removable resolve work (2). Read once per PrepareBindings call, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_R2_CENSUS", "r2cen", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

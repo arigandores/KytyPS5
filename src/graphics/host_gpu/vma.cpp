@@ -398,6 +398,9 @@ bool GraphicContext::CreateImage(const vk::ImageCreateInfo& image_info, VulkanIm
 			// and discards the old content, as for a new image.
 			image.state      = {.layout = vk::ImageLayout::eUndefined};
 			image.subresource_states.clear();
+			// Session 120, gate "spcen" (ALWAYS, measurement only): the backing starts over.
+			image.NoteStateChange();
+			Common::FrameStats::Add(Common::FrameStats::Counter::ImageStateSerialBumps, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ImgRecycleHits, 1);
 			return true;
 		}
@@ -449,6 +452,9 @@ bool GraphicContext::CreateImage(const vk::ImageCreateInfo& image_info, VulkanIm
 	image.flags      = image_info.flags;
 	image.state      = {.layout = image_info.initialLayout};
 	image.subresource_states.clear();
+	// Session 120, gate "spcen" (ALWAYS, measurement only): the backing starts over.
+	image.NoteStateChange();
+	Common::FrameStats::Add(Common::FrameStats::Counter::ImageStateSerialBumps, 1);
 
 	return true;
 }

@@ -987,13 +987,20 @@ the suite ending with `ALL OK`, LF line endings.
    `sp_ser_val ≤ sp_ser_n`.
 3. **Draw identity.** P: `sp_rt_n = pl_em_n` per frame within the row skew (no return between `renderDraw.cpp:2308`
    and the check; `bindfloor=0`); exact on window sums ± rows×2.
-4. **Reason partition.** `sp_rt_n = sp_rt_would + Σ10 sp_rt_x_*`; `sp_tr_n = sp_tr_would + Σ6 sp_tr_x_*` (exact per
-   frame — same draw, same thread; fixture with a one-off skew must FAIL).
+4. **Reason partition.** `sp_rt_n = sp_rt_would + Σ10 sp_rt_x_*`; `sp_tr_n = sp_tr_would + Σ6 sp_tr_x_*`, tested on
+   WINDOW sums (frames 10–88 of each block) within ±2 per block window (±1 per window edge), never exact per frame:
+   `FrameTrace-x` reads each counter separately (`FS::Read`, print order) while GuestGpu keeps adding, so a draw's or
+   stage's `SpRtDraws`/`SpTrStages` Add and its reason Add can land on adjacent lines (review of the code, BLOCKING;
+   design120.md §4 "Row skew"). A fixture with a +1/−1 skew between two adjacent lines that cancels over the window
+   is ADMITTED; a persistent +1 on every line (the mutant "reason index shifted" or an extra Add) must FAIL.
 5. **Nesting.** `sp_rt_wg ≤ sp_rt_would`, `pl_em_rt_hitg_ns ≤ pl_em_rt_hit_ns ≤ pl_em_rt_ns`,
    `sp_rt_chkh_ns ≤ pl_em_spchk_ns`, `sp_rt_rep_ns ≤ pl_em_sppost_ns`, `sp_tr_wg ≤ sp_tr_would`,
    `bl_tr_hitg_ns ≤ bl_tr_hit_ns ≤ sp_tr_loop_ns ≤ 1000·bl_tr_us + rounding` (**`bl_tr_us` is µs, every new field is
    ns** — a unit fixture), `sp_tr_chkh_ns ≤ sp_tr_chk_ns`, `sp_tr_rep_ns ≤ sp_tr_post_ns`,
-   `sp_tr_wslots ≤ sp_tr_slots`.
+   `sp_tr_wslots ≤ sp_tr_slots`. All on WINDOW sums as fixture 4 (the same row skew applies to every pair here,
+   e.g. `sp_rt_wg`/`sp_rt_would`, `bl_tr_hit_ns`/`sp_tr_loop_ns`, `sp_tr_wslots`/`sp_tr_slots`): counts within ±2 per
+   block window; ns within the subset counter's values on the window's two edge lines. A fixture with a one-line
+   skew that cancels over the window is ADMITTED; a fixture where the subset exceeds the superset on every line FAILs.
 6. **Target bounds.** `sp_rt_tgt ≤ rt_fast_ok + rt_fast_no`; `sp_rt_rep_att ≤ rt_att`; `sp_rt_rep_kpx ≤ rt_kpx`;
    `sp_rt_rep_att ≤ sp_rt_tgt`.
 7. **Emit chain.** P: `pl_em_vtx + pl_em_spchk + pl_em_rt + pl_em_sppost + pl_em_pipe + pl_em_com + pl_em_rec +
@@ -1022,6 +1029,8 @@ the suite ending with `ALL OK`, LF line endings.
 Mutants the suite must kill (for `mutlib` v4.1 full runs): gross instead of net; check subtracted on hits only;
 `bl_tr_us` treated as ns; per-draw divisor; bad ignored; mismatch lines ignored; race counted as bad or ignored;
 arm by counter > 0; window 0–99; the two new chain parts dropped from the identity; N^g used for the verdict;
+the timer-read add-back Z dropped from N⁺ (design120.md §4); Δ_B used where Δ_B′ is due; partitions/nestings tested
+exact per frame (killed by the cancelling-skew fixtures of 4 and 5, which must stay ADMITTED);
 `sp_rt_nt` ignored; reason partition off by one reason; `>` for `≥` at 1 000 µs.
 
 ---

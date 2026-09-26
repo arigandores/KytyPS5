@@ -6,6 +6,7 @@
 #include "common/threads.h"
 #include "graphics/host_gpu/vulkanCommon.h" // IWYU pragma: export
 
+#include <atomic>
 #include <functional>
 #include <map>
 #include <mutex>
@@ -162,6 +163,15 @@ struct VulkanImageState {
 	bool                    atomic_write = false;
 };
 
+// Session 120, gate "spcen" (MEASUREMENT ONLY, ALWAYS counted - C:/kyty/s120/design/spcen.md s.1, s.3.1): the image
+// layout/access state machine moved.  Global serial and per-backing serial (VulkanImage::state_serial); both move
+// together, in Image::GetBarriers when it changes a state record (a barrier, a value change of `state`, a resize or
+// clear of `subresource_states`) and in GraphicContext::CreateImage.  Write-only on every path but the census.
+inline std::atomic<uint64_t> g_image_state_serial {0};
+[[nodiscard]] inline uint64_t ImageStateSerial() noexcept {
+	return g_image_state_serial.load(std::memory_order_relaxed);
+}
+
 struct VulkanImage {
 	VulkanImage() = default;
 	KYTY_CLASS_NO_COPY(VulkanImage);
@@ -177,7 +187,14 @@ struct VulkanImage {
 	vk::Image                     image       = nullptr;
 	VulkanImageState              state;
 	std::vector<VulkanImageState> subresource_states;
+	// Session 120, gate "spcen": see g_image_state_serial.  Grows VulkanImage 104 -> 112 B (both arms).
+	uint64_t                      state_serial = 0;
 	VmaAllocation                allocation = nullptr;
+
+	void NoteStateChange() noexcept {
+		state_serial++; // written where `state` itself is written (under the render mutex)
+		g_image_state_serial.fetch_add(1, std::memory_order_relaxed);
+	}
 };
 
 

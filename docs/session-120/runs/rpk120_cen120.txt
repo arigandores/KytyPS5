@@ -1,0 +1,39 @@
+rpk120 tag cen120  scorer 70362d41ae1a1062  build 15cdbfc6e2c9d19a
+  binary          ok
+  installed_now   ok
+  pinned          ok
+  env_exact       ok
+  env_vk          ok
+  hold            ok
+  one_ok_attempt  ok
+  prereg          ok
+  prereg_sha      ok
+  gates_exact     ok
+  gate_lines      ok
+  arms            ok
+  no_marker       ok
+  no_skip_window  ok
+  streams         ok
+  pairs           ok
+  idle            ok
+  blocks 78 complete 77 pairs 38 (R1 38, reset blocks []); estimator frames P 3001 M 2970
+R1 t_hit 19.20 t_miss 539.31 t_fast 9.83 t_ham 48.79 ns; lookups 46399.5 a frame; no-store key misses 12.0 a frame at 389.9 ns
+R1 w4  W 1056.0 t_T 501.8 ns | A 509.6 L 57.5 R 81.2 E 23.8 P 16.4 -> C 540.7 us (without E 516.9) | warming 33.5 ns
+R1 w8  W 1258.7 t_T 516.6 ns | A 626.1 L 33.1 R 81.1 E 28.4 P 43.7 -> C 658.8 us (without E 630.4) | warming 31.6 ns
+R1 d16 W 1021.9 t_T 525.7 ns | A 517.6 L 0.0 R 81.0 E 23.0 P 0.0 -> C 621.7 us (without E 598.6) | warming 38.7 ns
+R2 (M) S 31296.2 Z 886.4 L 447.7 | z 8.94 w_rep 50.49 w_oth 14.90 st 19.69 ns | T* 1376.4 W 199.1 ST 13.1 us | p_c 42.8 ns
+R2 C_up 1067.6 C_pt 435.2 C_lo -36.8 us | C_rp 268.6 C_ext 450.1 us (information) | K_rp 26.6 ns | first touch 4.03 ns
+R2 information: C_up at B=8.49 955.3 us, C_pt traced 511.4 us, DCC-lock share of clean slots 0.0000, replay proxy kept
+correctness (all rows): r1_w4_bad=0, r1_w8_bad=0, r1_d16_bad=0, r1_incl=0, r1_xthr=0, r1_w1_q=0, r1_w1_qns=0, r1_w1_p=0, r1_w1_pns=0, r1_w1_lose=0, r1_w1_bad=0, r1_w1_rb=0, r1_w1_rbns=0, r2_bad=0, r2_bad_key=0, r1_reset=56; lines r1_mismatch=0, r2_mismatch=0, r2_diverge=0
+not evaluable R1 -; R2 -
+price P-M dt_us 2765.9 +- 137.7 (pairs); P 36952.8 M 34184.8 (report only)
+price P-M cpu_gpu_us 2681.9 +- 132.7 (pairs); P 35636.0 M 32952.4 (report only)
+bda_scan P 58.4 (NEW) M 58.5 (NEW)
+VERDICT: ADMITTED
+MEMBER R1: OPEN point=658.8 upper=658.8 2se=9.1
+MEMBER R2: NOT_OPENED point=435.2 upper=1067.6 2se=12.7
+PACKAGE R: OPEN point=1093.9 upper=1726.4 2se=15.0
+CONSEQUENCE: R1 OPEN - "точечный чистый потолок ≥ 500 мкс на кадр (пакет R: C_R1 + C_R2,pt) — открывается трек несущего члена, отгрузка — только по п. 2(в)"; "«Попало бы» — потолок, а не ускорение" (ROADMAP s120 item 4): a speed track opens for the carrying member(s); the prototype has its own verify gate and ships only by item 2(в) (sealed ABBA gain with the 2SE interval below 0, verify 0 mismatches, video without glitches). Table w8.
+CONSEQUENCE: R2 NOT_OPENED - "граница, записывается; допустим только повтор, решается при закрытии" (ROADMAP s120 item 4).
+CONSEQUENCE: R OPEN - "точечный чистый потолок ≥ 500 мкс на кадр (пакет R: C_R1 + C_R2,pt) — открывается трек несущего члена, отгрузка — только по п. 2(в)"; "«Попало бы» — потолок, а не ускорение" (ROADMAP s120 item 4): a speed track opens for the carrying member(s); the prototype has its own verify gate and ships only by item 2(в) (sealed ABBA gain with the 2SE interval below 0, verify 0 mismatches, video without glitches). Open members: R1.
+CONSEQUENCE: OPEN - "точечный чистый потолок ≥ 500 мкс на кадр (пакет R: C_R1 + C_R2,pt) — открывается трек несущего члена, отгрузка — только по п. 2(в)"; "«Попало бы» — потолок, а не ускорение" (ROADMAP s120 item 4): a speed track opens for the carrying member(s); the prototype has its own verify gate and ships only by item 2(в) (sealed ABBA gain with the 2SE interval below 0, verify 0 mismatches, video without glitches). Open: R1.

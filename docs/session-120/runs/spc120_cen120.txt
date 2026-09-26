@@ -1,0 +1,38 @@
+spc120 tag cen120  scorer 815083e6edbdfaef  build 15cdbfc6e2c9d19a
+  admission binary             ok
+  admission installed_now      ok
+  admission pinned             ok
+  admission env_exact          ok
+  admission env_vk             ok
+  admission hold               ok
+  admission one_ok_attempt     ok
+  admission prereg             ok
+  admission gates_exact        ok
+  admission gates_base         ok
+  admission base_names         ok
+  admission gate_lines         ok
+  admission arms               ok
+  admission sp_logged          ok
+  admission no_marker          ok
+  admission no_skip_window     ok
+  admission streams_complete   ok
+  admission pairs              ok
+  admission idle               ok
+  common: ok
+  a_controls: ok
+  b_controls: ok
+  frames P 3001 M 2970, pairs 38, blocks 78; zbar 8.72 ns
+  A: G_A 1001.2  N_A 340.2  Z_A 128.1  D_A 297012.9 ns (unclamped)  r_A 0.7363  T_A 218.7  N_A+ 686.9  G_A+ 1219.9  N_A^g 339.7 G_A^g 1000.7
+  B: G_B 403.6  N_B -8.1  Z_B 154.9  D_B -9081.6 ns  D_B' 68359.9 ns (unclamped)  r_B 0.4554  T_B 31.1  N_B+ 177.9  G_B+ 434.7  N_B^g -8.9 G_B^g 401.5
+  SP: N 332.1  Z 283.0  N+ 864.9 (us a frame)
+  arm P: frames 3001 dt_us 36952.8 cpu_gpu_us 35636.0 draws 5043.1 bda_scan 58.4 (NEW)
+  arm M: frames 2970 dt_us 34184.8 cpu_gpu_us 32952.4 draws 5072.3 bda_scan 58.5 (NEW)
+  price P-M (report only): dt_us 2768.0 2se 137.7  cpu_gpu_us 2683.7 2se 132.7
+  correctness (all rows): sp_rt_bad=0, sp_tr_bad=0, sp_rt_race=0, sp_rt_would=15430054, sp_rt_nt=0; SpRtMismatch lines 0, SpTrMismatch lines 0; sp_rt_nt over P rows 0
+VERDICT: ADMITTED
+MEMBER A: NOT_OPENED point=340.2 upper=686.9 2se=7.3
+MEMBER B: CLOSED point=-8.1 upper=177.9 2se=3.9
+PACKAGE SP: NOT_OPENED point=332.1 upper=864.9 2se=10.6
+CONSEQUENCE: NOT_OPENED - "граница, записывается; допустим только повтор, решается при закрытии" (ROADMAP s120 item 4)
+CONSEQUENCE A: NOT_OPENED - "граница, записывается; допустим только повтор, решается при закрытии" (ROADMAP s120 item 4)
+CONSEQUENCE B: CLOSED - "путь записывается исчерпанным на Sky Garden по правилу 0,5 мс" (ROADMAP s120 item 4)

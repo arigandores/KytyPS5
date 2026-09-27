@@ -384,7 +384,7 @@ Sky Garden; одна попытка; постоянный гейт-файл `gat
 Установлена по-прежнему **`b185f002…`** (пин шага 8); возврат к `d3a981a2` — решение закрытия (лид). Другие сцены не
 мерились.
 
-## Step 9 — audit (HPP-64; author: Session Auditor; not yet accepted by the lead)
+## Step 9 — audit (HPP-64; author: Session Auditor; accepted by the lead — HPP-64 review, ROADMAP «СЕССИЯ 122» item 55)
 
 `C:/kyty/s124/audit124/AUDIT124.md` (git `docs/session-124/audit/`). Игру аудитор не запускал; замка во время аудита не было.
 * **Пересчёт CONFIRMED** своим парсером (`recount124.py`, общего кода с `cen124.py`/`smk124.py`/`ref124.py`/`skc123.py` нет):
@@ -401,3 +401,43 @@ Sky Garden; одна попытка; постоянный гейт-файл `gat
   ран лида кончился в 17:31:15Z.
 * **НЕ доказано:** выигрыш/ускорение/прогноз; удержание флипа (U_p⁺ 790,7 > 500 — не закрыто); A3 (E), A4, A5; отсутствие
   лишних рёбер (RC6); независимая часть P2 лишь 0,24 %; режим NEW; другие сцены; картинка.
+
+## Close (step 10, HPP-65, Roadmap Lead, 2026-09-27)
+
+*Author: the lead.* Decisions: `docs/ROADMAP.md` "СЕССИЯ 122" item 55 (written and committed `9118011a` before any action
+on it).
+
+* **Audit accepted** (recount CONFIRMED by an independent parser to the last printed digit, 1 MAJOR / 2 MINOR, the sealed
+  verdict does not change).
+* **Verdict (seal, not rewritten):** `cen124` (Sky Garden, `skipceil=3`, build `b185f002`, BDA OLD in 73/73 blocks):
+  `f_x^{L+}` = `f_t^L(3τ⁺)` 0.01086 (count share 0.00386), τ⁺ 18.716 ns, M⁺ = 32 609.2 · 0.5; **U = 177.1 µs < 500 —
+  FRAME_SKIP_CLOSED_BY_CENSUS**: skipping the TRANSLATION of draws is closed for versions deciding by operations and whole
+  binding windows, under the design's write visibility (§3.3) and assumptions A3 (E [I]) and A4. U is never a gain or a
+  forecast. Not proven: audit §4 items 1–12.
+* **MAJOR-1 (item 55 (б)):** the program window is positions 10–88; ABBAs alternating held frames use the item 28 (б)
+  exception 10..87. The multiplier was taken on 10..87 — the population of the `sky123` verdict; the error is in the text of
+  items 50 (в)/54, which called it "10–88". On 10..88 U = 177.01 vs 177.05 µs. From now on the seal names the estimator and
+  multiplier windows explicitly with the item number, and every windowed scorer has an edge fixture.
+* **MINOR-1/2 accepted (item 55 (в)):** item 54 (а) stands; max τ̂ of the mode-3 calibration = 460.49 ns (46 % of the
+  < 1 000 guard; 92 → 205 → 460 across runs) is printed beside the guard in any future mode-3 census.
+* **Flip hold is not measured and is closed by contract (item 55 (г)):** a new clause of the shippable-version contract — a
+  frame-skip version does not ship if the rate of SHOWN frames drops by more than 10 % against the same run without skipping.
+  With the upper side U_p⁺ ≤ 1 061 µs/row (`sky123` arm 0) and dt₀ = 32 757.6 µs, the clause allows q ≤ 0.103, i.e. at most
+  ≈ 109 µs removable (≤ 480 µs even if U_p⁺ were understated 4×) — below 500. **The frame-skip track is closed entirely on
+  the reference** (translation by census, hold by contract); the knob `skipceil` stays in the code with default 0. The
+  flip-pace knob (item 2) is route V, closed in session 104.
+* **Lever of session 125 (item 55 (д)): the A-walker debt, first step of its kill test.** The session-120 reopening condition
+  holds (no measured GuestGpu candidate ≥ 0.5 ms remains). Quantity LB_acc — a LOWER bound, µs per reference frame, of what
+  GuestGpu pays to ACCEPT a spine plan computed on the walker thread; built from an offline floor microbenchmark on this
+  machine and the operation counts / state volume of the sealed `g2_119` population (session 119, BDA NEW), every term with a
+  proven lower direction. Reading: LB_acc ≥ 484.7 µs → A-walker CLOSED (route A closed for max FPS in every known variant);
+  < 484.7 → kill condition 2 (writing second-context tax ≤ 1 645 µs) is measured next; direction not proven → NOT_RESOLVED.
+  Honest estimate before the measurement: ≈ 97 ns/op [I] × ≈ 5 300 ops/frame ≈ 515 µs — the expected outcome is a close.
+  No emulator code and no game run in session 125.
+* **Installed build restored to `d3a981a2…`** (item 55 (е)); `b185f002…` stays pinned at
+  `C:/kyty/s124/kyty_emulator_b185f002.exe`.
+* **Chain of session 125 (item 55 (ж)):** 0 harness `C:/kyty/s125` → 1 design LB_acc → 2 adversarial review → 3 bench,
+  scorer, fixtures, seal `pred/01`, one full `mutlib` → 4 sealed bench run → 5 audit → 6 close; brief
+  `docs/next-session-125.md`; `HPP-3` blocked on step 6.
+* **Debts (§7):** the census assumptions (A3/A4/A5, RC6, P2 independent part, NEW, other scenes) reopen only with the
+  frame-skip track; the max τ̂ row. 60 FPS is not promised.

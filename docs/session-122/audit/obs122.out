@@ -1,0 +1,54 @@
+sky122 (code 1, 42 pairs)
+   d dt            +1804.7 +-   129.3
+   d cpu_gpu       +1826.8 +-   127.5
+   d dt-cpu_gpu      -22.0 +-    55.1
+   d cpu_main         -7.1 +-    40.1
+   d semwait        +817.7 +-   133.6
+   d rec_spin        +21.0 +-   116.0
+   d draws            -3.5 +-    13.1
+   B-window rows: 3318, burn 0: 0, burn >= 1.5 doses: 0
+skyp122r (code 8, 42 pairs)
+   d dt              -22.9 +-   188.3
+   d cpu_gpu         -12.6 +-   183.2
+   d dt-cpu_gpu      -10.3 +-    30.9
+   d cpu_main        -10.6 +-    77.2
+   d semwait         -24.3 +-   154.2
+   d rec_spin        -13.3 +-   146.4
+   d draws            -3.0 +-    14.5
+   B-window rows: 3318, burn 0: 0, burn >= 1.5 doses: 0
+des122 (code 1, 98 pairs)
+   d dt               -3.3 +-    14.5
+   d cpu_gpu       +1980.2 +-    67.4
+   d dt-cpu_gpu    -1983.5 +-    68.7
+   d cpu_main        +91.2 +-    23.4
+   d semwait        +206.9 +-   183.2
+   d rec_spin       +225.1 +-    58.3
+   d draws            +9.5 +-    12.2
+   B-window rows: 7720, burn 0: 0, burn >= 1.5 doses: 2
+atl122 (code 1, 91 pairs)
+   d dt               +1.6 +-    12.5
+   d cpu_gpu       +1901.1 +-    79.3
+   d dt-cpu_gpu    -1899.5 +-    77.8
+   d cpu_main         +5.2 +-    12.8
+   d semwait        -211.9 +-   106.3
+   d rec_spin       +180.8 +-    63.8
+   d draws            -8.7 +-    17.4
+   B-window rows: 7189, burn 0: 0, burn >= 1.5 doses: 0
+ght122 (code 1, 57 pairs)
+   d dt            +1878.2 +-    77.8
+   d cpu_gpu       +1919.5 +-    71.3
+   d dt-cpu_gpu      -41.3 +-    30.8
+   d cpu_main        +26.4 +-    27.9
+   d semwait        +886.4 +-    68.8
+   d rec_spin        +91.5 +-    66.3
+   d draws            +0.7 +-     5.5
+   B-window rows: 4503, burn 0: 0, burn >= 1.5 doses: 0
+dnn122 (code 1, 90 pairs)
+   d dt             +454.0 +-    70.3
+   d cpu_gpu       +1745.0 +-    93.4
+   d dt-cpu_gpu    -1291.0 +-    94.8
+   d cpu_main        -99.7 +-    35.6
+   d semwait        -283.8 +-    83.6
+   d rec_spin        -10.3 +-    79.8
+   d draws           -30.7 +-    10.8
+   B-window rows: 7110, burn 0: 1, burn >= 1.5 doses: 0

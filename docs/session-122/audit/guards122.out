@@ -1,0 +1,6 @@
+sky122    code 1 | 4 n/frame 1.000 ns/frame 2000.5 -> ok | 6 seen A 0.985 B 0.981 -> ok | 7 late 5 / 3780 armed rows (0.13 %) -> ok | 8 rt_kpx/rt_att A 2007.5 B 2007.4 rel -0.0000 -> ok
+skyp122r  code 8 | 4 n/frame 1.000 ns/frame 2000.9 -> ok | 6 seen A 0.899 B 0.916 -> FAIL | 7 late 8 / 3780 armed rows (0.21 %) -> ok | 8 rt_kpx/rt_att A 2007.6 B 2007.4 rel -0.0001 -> ok
+des122    code 1 | 4 n/frame 1.000 ns/frame 2000.9 -> ok | 6 seen A 1.000 B 0.999 -> ok | 7 late 48 / 8820 armed rows (0.54 %) -> ok | 8 rt_kpx/rt_att A 7946.0 B 7941.7 rel -0.0005 -> ok
+atl122    code 1 | 4 n/frame 1.000 ns/frame 2001.3 -> ok | 6 seen A 0.997 B 0.977 -> ok | 7 late 46 / 8190 armed rows (0.56 %) -> ok | 8 rt_kpx/rt_att A 4840.7 B 4829.7 rel -0.0023 -> ok
+ght122    code 1 | 4 n/frame 1.000 ns/frame 2000.5 -> ok | 6 seen A 0.965 B 0.962 -> ok | 7 late 1 / 5220 armed rows (0.02 %) -> ok | 8 rt_kpx/rt_att A 1944.7 B 1944.7 rel +0.0000 -> ok
+dnn122    code 1 | 4 n/frame 1.000 ns/frame 2000.4 -> ok | 6 seen A 0.995 B 0.951 -> ok | 7 late 8 / 8100 armed rows (0.10 %) -> ok | 8 rt_kpx/rt_att A 2656.3 B 2718.2 rel +0.0233 -> FAIL/NA

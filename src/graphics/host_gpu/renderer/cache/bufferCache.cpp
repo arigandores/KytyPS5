@@ -2673,6 +2673,7 @@ void BufferCache::PrefetchHotReadbacks() {
 				SkcCensus::G3PrefSeed(begin, end - begin); // Session 124: a seed of policy Lp only (s.3.6.2)
 			}
 		}
+		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 48(b), M2 (N1)
 		for (const auto& piece: pieces) {
 			const auto source_begin = piece.address & ~uint64_t {3};
 			const auto envelope     = piece.size + (piece.address - source_begin);

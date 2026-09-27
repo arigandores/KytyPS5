@@ -1391,6 +1391,7 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 	if (Common::SkipCeil::t_w3) [[unlikely]] {
 		SkcCensus::Upload(m_buffer_cache, image, first_level, level_count);
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 48(b), M2 (N1)
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
 	const bool  partial = first_level != 0 || level_count < info.resources.levels;
@@ -1881,6 +1882,10 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
 	}
+	// Session 124 (ROADMAP s122 item 48(a), R1): an image already linked to this address also links anew when the
+	// entry leaves PendingDcc - the pending fill never closed it (G3MetaFill returns before CloseCandidates).
+	const bool skc3_pend = Common::SkipCeil::t_mode == 3 && !inserted &&
+	                       metadata.type == MetaDataInfo::Type::PendingDcc;
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
@@ -1904,7 +1909,7 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 	}
 	// Session 124 (item 47(v)): a late link to a surface with a pending clear - the remembered cleaner closes the image,
 	// before the materialization below.
-	if (skc3_link && metadata.clear_mask != 0) [[unlikely]] {
+	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
 	if (metadata.clear_mask == 0 || image.info.resources.levels != 1 ||
@@ -1973,6 +1978,9 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
 	}
+	// Session 124 (ROADMAP s122 item 48(a), R1): as in PrepareDccClear - leaving PendingDcc is a link too.
+	const bool skc3_pend = Common::SkipCeil::t_mode == 3 && !inserted &&
+	                       metadata.type == MetaDataInfo::Type::PendingDcc;
 	if (!inserted && metadata.type == MetaDataInfo::Type::PendingDcc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
@@ -1987,7 +1995,7 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
 	}
 	// Session 124 (item 47(v)): a late link to a surface with a pending clear - before the materialization below.
-	if (skc3_link && metadata.clear_mask != 0) [[unlikely]] {
+	if ((skc3_link || skc3_pend) && metadata.clear_mask != 0) [[unlikely]] {
 		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||

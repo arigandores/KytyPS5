@@ -654,8 +654,15 @@ enum class Knob : uint32_t {
 	// arm.  1 = on every second GuestGpu frame the host translation of draws is skipped (everything the guest can observe
 	// executes), the frame's flip is held and the non-critical GC passes are suspended; 2 = the correctness census, nothing
 	// skipped.  Refused (skc_refuse) while m4baton or burn is nonzero.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	SkipCeil,         // KYTY_SKIP_CEILING, file name "skipceil" (MEASUREMENT ONLY: 0 off, 1 skip draw translation every 2nd GuestGpu frame, 2 census, 3 closure census)
+	// Session 126, MEASUREMENT ONLY (docs/session-126/design126.md rev 2, ROADMAP s122 items 63, 64, 67): the K3 census,
+	// the upper bound R_K3+ of the target resolution and capture time a skip over unwritten CB/DB registers could remove.
+	// Read on every draw at the entry of DrawIndex / DrawAuto and latched for that draw, so it CAN be a schedule arm.
+	// 1 = census by register-group write generations (reads no resolution input, [RC2]); 2 = 1 + the split of pl_em_rt
+	// (smoke only); 3 = 1 + the value witnesses V_D / V_key (smoke only).  Refused (Rk3Census: refused) while spcen,
+	// slicecen, bindfloor, m4baton, skipceil or spine is on and without pathlap.  Emulation is unchanged at every value.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	Rk3Cen,           // KYTY_RK3_CENSUS,  file name "rk3cen" (MEASUREMENT ONLY: 0 off, 1 census, 2 census + pl_em_rt split, 3 census + value witnesses)
 	Count,
 };
 

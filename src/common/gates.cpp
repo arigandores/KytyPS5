@@ -427,8 +427,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 123, MEASUREMENT ONLY: the frame-skip ceiling (1) and its correctness census (2). Latched once per GuestGpu
     // frame at the flip packet, so it CAN be a schedule arm.  Session 124: 2 is the census with the mode-1 marked set
     // (mode 2'), 3 the closure census (docs/session-124/design124.md rev 2).
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_SKIP_CEILING", "skipceil", 0, 3},
+    // Session 126, MEASUREMENT ONLY: the K3 census (1), + the pl_em_rt split (2), + the value witnesses (3)
+    // (docs/session-126/design126.md rev 2). Read on every draw at its entry and latched, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_RK3_CENSUS", "rk3cen", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

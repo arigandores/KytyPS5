@@ -120,13 +120,12 @@ void RenderExecutor::ResolveRenderColorTarget(CommandBuffer& buffer, RenderColor
 	// Memo keyed by the slot's raw register block (+ mask, slice offset, slot, flags). A hit
 	// replays the resolved description and only re-validates the image id, like RebindImages.
 	RenderExecutorMemo::ColorTarget* memo_slot = nullptr;
-	std::array<uint8_t, sizeof(HW::RenderTarget)> memo_regs {};
-	uint64_t                                     memo_extra = 0;
+	ColorTargetMemoRegs memo_regs {};
+	uint64_t            memo_extra = 0;
 	if (!graphics_debug_dump_enabled()) {
-		std::memcpy(memo_regs.data(), &rt, sizeof(rt));
-		memo_extra = static_cast<uint64_t>(mask) | (static_cast<uint64_t>(render_target_slice_offset) << 8u) |
-		             (static_cast<uint64_t>(rt_slot) << 40u) | (ignore_target_mask ? 1ull << 48u : 0u) |
-		             (exact_format ? 1ull << 49u : 0u);
+		// Session 126 ([RC5]): the key the census witness V_key builds with the same two functions.
+		BuildColorTargetMemoRegs(rt, memo_regs);
+		memo_extra = ColorTargetMemoExtra(mask, render_target_slice_offset, rt_slot, ignore_target_mask, exact_format);
 		auto& memo = Memo();
 		const auto memo_index = static_cast<uint32_t>(
 		    MemoHashBytes(memo_regs.data(), memo_regs.size(), memo_extra) % RenderExecutorMemo::ColorSlots);

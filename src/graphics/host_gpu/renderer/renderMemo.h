@@ -55,6 +55,35 @@ struct DepthTargetMemoKey {
 	uint32_t              stencil_clear = 0;
 };
 
+// Session 126, knob "rk3cen" = 3 ([RC5], design126.md rev 2 s.4.3): the memo keys resolution builds, as ONE code for
+// ResolveRenderColorTarget / ResolveRenderDepthTarget and the census witness V_key.  The depth key is not inlined, so
+// its padding bytes come out of one compiled body at both call sites.
+using ColorTargetMemoRegs  = std::array<uint8_t, sizeof(HW::RenderTarget)>;
+using DepthTargetMemoBytes = std::array<uint8_t, sizeof(DepthTargetMemoKey)>;
+inline void BuildColorTargetMemoRegs(const HW::RenderTarget& rt, ColorTargetMemoRegs& regs) noexcept {
+	std::memcpy(regs.data(), &rt, sizeof(rt));
+}
+inline uint64_t ColorTargetMemoExtra(uint32_t mask, uint32_t render_target_slice_offset, uint32_t rt_slot,
+                                     bool ignore_target_mask, bool exact_format) noexcept {
+	return static_cast<uint64_t>(mask) | (static_cast<uint64_t>(render_target_slice_offset) << 8u) |
+	       (static_cast<uint64_t>(rt_slot) << 40u) | (ignore_target_mask ? 1ull << 48u : 0u) |
+	       (exact_format ? 1ull << 49u : 0u);
+}
+[[gnu::noinline]] inline void BuildDepthTargetMemoKey(const HW::Context& hw, DepthTargetMemoBytes& memo_key) noexcept {
+	DepthTargetMemoKey memo_key_value {};
+	std::memset(&memo_key_value, 0, sizeof(memo_key_value));
+	memo_key_value.z             = hw.GetDepthRenderTarget();
+	memo_key_value.rc            = hw.GetRenderControl();
+	memo_key_value.dc            = hw.GetDepthControl();
+	memo_key_value.sc            = hw.GetStencilControl();
+	memo_key_value.sm            = hw.GetStencilMask();
+	memo_key_value.depth_clear   = hw.GetDepthClearValue();
+	memo_key_value.bounds_min    = hw.GetDepthBoundsMin();
+	memo_key_value.bounds_max    = hw.GetDepthBoundsMax();
+	memo_key_value.stencil_clear = hw.GetStencilClearValue();
+	std::memcpy(memo_key.data(), &memo_key_value, sizeof(memo_key_value));
+}
+
 // Hot-path memos of the GuestGpu thread. ASTRO BOT binds ~3200 textures and resolves ~530 colour
 // targets per frame from a few hundred distinct register/descriptor values; the full resolution
 // (tile layouts, validation, texture-cache lookups) costs 0.3-1 us each. Entries are validated

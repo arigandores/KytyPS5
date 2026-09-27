@@ -3,6 +3,7 @@
 
 #include "common/abi.h"
 #include "common/common.h"
+#include "common/rk3Census.h"
 #include "graphics/guest_gpu/gpu_defs.h"
 
 namespace Libs::Graphics::HW {
@@ -859,37 +860,59 @@ public:
 
 	KYTY_CLASS_DEFAULT_COPY(Context);
 
-	void Reset() { *this = Context(); }
+	// Session 126, knob "rk3cen" (C2): the hooks below move the census generations, which live outside this object.
+	void Reset() {
+		*this = Context();
+		::Common::Rk3::NoteObject(this);
+	}
 
-	void SetColorBase(uint32_t slot, const ColorBase& base) { m_render_targets[slot].base = base; }
-	void SetColorView(uint32_t slot, const ColorView& view) { m_render_targets[slot].view = view; }
-	void SetColorInfo(uint32_t slot, const ColorInfo& info) { m_render_targets[slot].info = info; }
+	void SetColorBase(uint32_t slot, const ColorBase& base) {
+		m_render_targets[slot].base = base;
+		::Common::Rk3::NoteSlot(this, slot);
+	}
+	void SetColorView(uint32_t slot, const ColorView& view) {
+		m_render_targets[slot].view = view;
+		::Common::Rk3::NoteSlot(this, slot);
+	}
+	void SetColorInfo(uint32_t slot, const ColorInfo& info) {
+		m_render_targets[slot].info = info;
+		::Common::Rk3::NoteSlot(this, slot);
+	}
 	void SetColorAttrib(uint32_t slot, const ColorAttrib& attrib) {
 		m_render_targets[slot].attrib = attrib;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorAttrib2(uint32_t slot, const ColorAttrib2& attrib2) {
 		m_render_targets[slot].attrib2 = attrib2;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorAttrib3(uint32_t slot, const ColorAttrib3& attrib3) {
 		m_render_targets[slot].attrib3 = attrib3;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorDccControl(uint32_t slot, const ColorDccControl& dcc) {
 		m_render_targets[slot].dcc = dcc;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorCmask(uint32_t slot, const ColorCmask& cmask) {
 		m_render_targets[slot].cmask = cmask;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorFmask(uint32_t slot, const ColorFmask& fmask) {
 		m_render_targets[slot].fmask = fmask;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorClearWord0(uint32_t slot, const ColorClearWord0& clear_word0) {
 		m_render_targets[slot].clear_word0 = clear_word0;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorClearWord1(uint32_t slot, const ColorClearWord1& clear_word1) {
 		m_render_targets[slot].clear_word1 = clear_word1;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	void SetColorDccAddr(uint32_t slot, const ColorDccAddr& dcc_addr) {
 		m_render_targets[slot].dcc_addr = dcc_addr;
+		::Common::Rk3::NoteSlot(this, slot);
 	}
 	[[nodiscard]] const RenderTarget& GetRenderTarget(uint32_t slot) const {
 		return m_render_targets[slot];
@@ -902,38 +925,65 @@ public:
 		return m_blend_control[slot];
 	}
 
-	void                   SetRenderTargetMask(uint32_t mask) { m_render_target_mask = mask; }
+	void                   SetRenderTargetMask(uint32_t mask) {
+		m_render_target_mask = mask;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupMask);
+	}
 	[[nodiscard]] uint32_t GetRenderTargetMask() const { return m_render_target_mask; }
 
 	void                   SetShaderStages(uint32_t flags) { m_shader_stages = flags; }
 	[[nodiscard]] uint32_t GetShaderStages() const { return m_shader_stages; }
 
-	void SetDepthRenderTarget(const DepthRenderTarget& target) { m_depth_render_target = target; }
+	void SetDepthRenderTarget(const DepthRenderTarget& target) {
+		m_depth_render_target = target;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const DepthRenderTarget& GetDepthRenderTarget() const {
 		return m_depth_render_target;
 	}
-	void SetDepthZInfo(const DepthZInfo& info) { m_depth_render_target.z_info = info; }
+	void SetDepthZInfo(const DepthZInfo& info) {
+		m_depth_render_target.z_info = info;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const DepthZInfo& GetDepthZInfo() const { return m_depth_render_target.z_info; }
 	void                            SetDepthStencilInfo(const DepthStencilInfo& info) {
 		m_depth_render_target.stencil_info = info;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDact);
 	}
 	[[nodiscard]] const DepthStencilInfo& GetDepthStencilInfo() const {
 		return m_depth_render_target.stencil_info;
 	}
-	void SetDepthZReadBase(uint64_t addr) { m_depth_render_target.z_read_base_addr = addr; }
+	void SetDepthZReadBase(uint64_t addr) {
+		m_depth_render_target.z_read_base_addr = addr;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	void SetDepthStencilReadBase(uint64_t addr) {
 		m_depth_render_target.stencil_read_base_addr = addr;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
 	}
-	void SetDepthZWriteBase(uint64_t addr) { m_depth_render_target.z_write_base_addr = addr; }
+	void SetDepthZWriteBase(uint64_t addr) {
+		m_depth_render_target.z_write_base_addr = addr;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	void SetDepthStencilWriteBase(uint64_t addr) {
 		m_depth_render_target.stencil_write_base_addr = addr;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
 	}
-	void SetDepthHTileDataBase(uint64_t addr) { m_depth_render_target.htile_data_base_addr = addr; }
-	void SetDepthDepthView(const DepthDepthView& view) { m_depth_render_target.depth_view = view; }
+	void SetDepthHTileDataBase(uint64_t addr) {
+		m_depth_render_target.htile_data_base_addr = addr;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
+	void SetDepthDepthView(const DepthDepthView& view) {
+		m_depth_render_target.depth_view = view;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const DepthDepthView& GetDepthDepthView() const {
 		return m_depth_render_target.depth_view;
 	}
-	void SetDepthDepthSizeXY(const DepthDepthSizeXY& size) { m_depth_render_target.size = size; }
+	void SetDepthDepthSizeXY(const DepthDepthSizeXY& size) {
+		m_depth_render_target.size = size;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const DepthDepthSizeXY& GetDepthDepthSizeXY() const {
 		return m_depth_render_target.size;
 	}
@@ -1044,7 +1094,10 @@ public:
 	[[nodiscard]] const ClipControl& GetClipControl() const { return m_clip_control; }
 	void SetClipControl(const ClipControl& control) { m_clip_control = control; }
 	[[nodiscard]] const RenderControl& GetRenderControl() const { return m_render_control; }
-	void SetRenderControl(const RenderControl& control) { m_render_control = control; }
+	void SetRenderControl(const RenderControl& control) {
+		m_render_control = control;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDact);
+	}
 	[[nodiscard]] const DepthRenderOverride& GetDepthRenderOverride() const {
 		return m_depth_render_override;
 	}
@@ -1052,7 +1105,10 @@ public:
 		m_depth_render_override = control;
 	}
 	[[nodiscard]] const DepthControl& GetDepthControl() const { return m_depth_control; }
-	void SetDepthControl(const DepthControl& control) { m_depth_control = control; }
+	void SetDepthControl(const DepthControl& control) {
+		m_depth_control = control;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDact);
+	}
 	[[nodiscard]] const ModeControl& GetModeControl() const { return m_mode_control; }
 	void SetModeControl(const ModeControl& control) { m_mode_control = control; }
 	[[nodiscard]] const PolyOffset& GetPolyOffset() const { return m_poly_offset; }
@@ -1060,9 +1116,15 @@ public:
 	[[nodiscard]] const EqaaControl& GetEqaaControl() const { return m_eqaa_control; }
 	void SetEqaaControl(const EqaaControl& control) { m_eqaa_control = control; }
 	[[nodiscard]] const StencilControl& GetStencilControl() const { return m_stencil_control; }
-	void SetStencilControl(const StencilControl& control) { m_stencil_control = control; }
+	void SetStencilControl(const StencilControl& control) {
+		m_stencil_control = control;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const StencilMask& GetStencilMask() const { return m_stencil_mask; }
-	void SetStencilMask(const StencilMask& mask) { m_stencil_mask = mask; }
+	void SetStencilMask(const StencilMask& mask) {
+		m_stencil_mask = mask;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] const ColorControl& GetColorControl() const { return m_color_control; }
 	void SetColorControl(const ColorControl& control) { m_color_control = control; }
 	[[nodiscard]] const ScanModeControl& GetScanModeControl() const { return m_scan_mode_control; }
@@ -1075,13 +1137,19 @@ public:
 	void                          SetAaConfig(const AaConfig& config) { m_aa_config = config; }
 
 	[[nodiscard]] float GetDepthClearValue() const { return m_depth_clear_value; }
-	void                SetDepthClearValue(float clear_value) { m_depth_clear_value = clear_value; }
+	void                SetDepthClearValue(float clear_value) {
+		m_depth_clear_value = clear_value;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 	[[nodiscard]] float GetDepthBoundsMin() const { return m_depth_bounds_min; }
 	[[nodiscard]] float GetDepthBoundsMax() const { return m_depth_bounds_max; }
 	void                SetDepthBoundsMin(float value) { m_depth_bounds_min = value; }
 	void                SetDepthBoundsMax(float value) { m_depth_bounds_max = value; }
 	[[nodiscard]] uint8_t GetStencilClearValue() const { return m_stencil_clear_value; }
-	void SetStencilClearValue(uint8_t clear_value) { m_stencil_clear_value = clear_value; }
+	void SetStencilClearValue(uint8_t clear_value) {
+		m_stencil_clear_value = clear_value;
+		::Common::Rk3::NoteWrite(this, ::Common::Rk3::GroupDepth);
+	}
 
 	[[nodiscard]] float    GetLineWidth() const { return m_line_width; }
 	void                   SetLineWidth(float width) { m_line_width = width; }

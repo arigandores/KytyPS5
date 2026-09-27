@@ -4,6 +4,7 @@
 
 #include "common/frameStats.h"
 #include "common/gates.h"
+#include "common/rk3Census.h"
 
 #include "common/assert.h"
 #include "common/drawStat.h"
@@ -29,6 +30,7 @@
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
+#include "graphics/host_gpu/renderer/renderMemo.h"
 #include "graphics/host_gpu/vulkanCommon.h"
 #include "graphics/shader/recompiler/BufferFormat.h"
 #include "graphics/shader/recompiler/ir/ShaderIR.h"
@@ -792,6 +794,494 @@ static bool SameTargetMetadata(const ImageMetadataInfo& a, const ImageMetadataIn
 	       a.dcc_alpha_msb == b.dcc_alpha_msb;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 126, knob "rk3cen" (KYTY_RK3_CENSUS, MEASUREMENT ONLY; docs/session-126/design126.md rev 2 with ROADMAP s122
+// items 63, 64, 67): the K3 census.  Everything below runs on the GuestGpu thread only (the latch arms nowhere else) and
+// touches only its own thread-local state, its counters and one gauge: no image, no cache, no lock, no allocation on the
+// hot path (the table is allocated once, at the first armed draw).
+//   C1/C2 the HW::Context hooks move per-context generations of the register groups (Rk3HookWrite / Rk3HookObject);
+//   C3    Rk3Latch at the entry of DrawIndex / DrawAuto latches the knob for the draw (Common::Rk3::t_rk3);
+//   C4    Rk3ResBegin / Rk3ResEnd time PrepareDrawRenderState; a span not consumed by C6 goes to rk3_res_x_ns;
+//   C5    PathLap::MarkSpent(PathEmRtNs) - the pl_em_rt mark, returning what it charged;
+//   C6    Rk3Post classifies the draw from the capture's OUTPUTS (colors[0..color_count), depth) and the generations -
+//         value 1 reads no input of the resolution ([RC2]); value 3 adds the value witnesses V_D / V_key ([RC5]).
+// ---------------------------------------------------------------------------------------------------------------------
+namespace {
+
+namespace Rk3 = Common::Rk3;
+
+struct Rk3Target {
+	ImageId       id;
+	uint32_t      slot = 0;
+	ImageViewInfo view {};
+};
+
+// Value 3 only: the D_census fields of each group (V_D), compared member-wise per group (operator==, the float clear
+// value by its bits), so padding bytes never make two states differ.
+struct Rk3Vd {
+	std::array<HW::RenderTarget, 8> rt {};
+	uint32_t                        mask = 0;
+	HW::DepthControl                dc {};
+	HW::RenderControl               rc {};
+	HW::DepthStencilInfo            si {};
+	HW::DepthRenderTarget           z {};
+	HW::StencilControl              sc {};
+	HW::StencilMask                 sm {};
+	uint32_t                        dclear = 0;
+	uint32_t                        sclear = 0;
+};
+
+// Value 3 only: V_key, the memo keys resolution builds for the targets A compares, in capture order, behind a header
+// {color_count, has_depth} - length and order are part of the comparison ([RC5]).
+static_assert(RENDER_COLOR_ATTACHMENTS_MAX == 8, "one G_slot group per colour slot");
+inline constexpr size_t Rk3ColorKeyBytes = sizeof(ColorTargetMemoRegs) + sizeof(uint64_t);
+inline constexpr size_t Rk3KeyMax        = 8 + RENDER_COLOR_ATTACHMENTS_MAX * Rk3ColorKeyBytes + sizeof(DepthTargetMemoBytes);
+
+struct Rk3Entry {
+	const void*                               ctx = nullptr;
+	std::array<uint64_t, Rk3::GroupCount>     gen {};     // live generations, moved by the hooks
+	bool                                      valid = false; // a record of the previous draw exists
+	std::array<uint64_t, Rk3::GroupCount>     rec_gen {}; // generations when the record was written
+	uint32_t                                  color_count = 0;
+	uint32_t                                  slot_mask   = 0; // target_slot of colors[0..color_count)
+	bool                                      has_depth   = false;
+	std::array<Rk3Target, RENDER_COLOR_ATTACHMENTS_MAX> colors {};
+	Rk3Target                                 depth {};
+	bool                                      v_valid = false; // value 3: vd / key below belong to the record
+	Rk3Vd                                     vd {};
+	uint32_t                                  key_len = 0;
+	std::array<uint8_t, Rk3KeyMax>            key {};
+};
+
+struct Rk3Table {
+	std::array<Rk3Entry, 8> e {};
+	uint32_t                used     = 0;
+	const void*             prev_ctx = nullptr; // context of the previous armed draw (rk3_xctx)
+};
+
+constinit thread_local Rk3Table* t_rk3_table  = nullptr;
+constinit thread_local bool      t_rk3_pend   = false; // a C4 span not yet consumed by C6
+constinit thread_local uint64_t  t_rk3_res_ns = 0;     // ... its length
+constinit thread_local int32_t   t_rk3_c4_idx = -1;    // the entry C4 saw (-1: none)
+constinit thread_local std::array<uint64_t, Rk3::GroupCount> t_rk3_c4_gen {}; // its generations at C4 (rk3_acqw)
+constinit thread_local uint32_t  t_rk3_slice  = 0;     // value 3: the draw's render_target_slice_offset
+constinit thread_local bool      t_rk3_slow   = false; // a target of this draw took AcquireTargetView's slow path
+constinit thread_local uint32_t  t_rk3_logged = 0;     // bits 1..3: mode line printed; 8..: refusal printed
+
+Rk3Entry* Rk3Find(Rk3Table& t, const void* ctx) {
+	for (uint32_t i = 0; i < t.used; i++) {
+		if (t.e[i].ctx == ctx) {
+			return &t.e[i];
+		}
+	}
+	return nullptr;
+}
+
+Rk3Entry* Rk3FindOrAdd(Rk3Table& t, const void* ctx) {
+	if (auto* e = Rk3Find(t, ctx); e != nullptr) {
+		return e;
+	}
+	if (t.used == t.e.size()) {
+		return nullptr;
+	}
+	auto& e   = t.e[t.used++];
+	e.ctx     = ctx;
+	e.gen     = {};
+	e.valid   = false;
+	e.v_valid = false;
+	return &e;
+}
+
+// C1: counted on every armed hook; the generation moves only for a context of the table (a context that never drew has
+// no record, so its first armed draw is R0 whatever was written before).
+void Rk3HookWrite(const void* ctx, uint32_t group) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::Rk3WrSet, 1);
+	auto* t = t_rk3_table;
+	if (t == nullptr || group >= Rk3::GroupCount) {
+		return;
+	}
+	if (auto* e = Rk3Find(*t, ctx); e != nullptr) {
+		e->gen[group]++;
+	}
+}
+
+// C2
+void Rk3HookObject(const void* ctx) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::Rk3WrObj, 1);
+	auto* t = t_rk3_table;
+	if (t == nullptr) {
+		return;
+	}
+	if (auto* e = Rk3Find(*t, ctx); e != nullptr) {
+		for (auto& g: e->gen) {
+			g++;
+		}
+	}
+}
+
+// A C4 span no C6 consumed goes to T13x whole ([RC3]).
+void Rk3FlushPending() {
+	if (t_rk3_pend) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Rk3ResXNs, t_rk3_res_ns);
+		Common::FrameStats::Add(Common::FrameStats::Counter::Rk3ResXN, 1);
+	}
+	t_rk3_pend   = false;
+	t_rk3_res_ns = 0;
+}
+
+void Rk3Refuse(uint32_t bit, const char* reason) {
+	if ((t_rk3_logged & (1u << bit)) == 0) {
+		t_rk3_logged |= 1u << bit;
+		LOGF("Rk3Census: refused reason=%s\n", reason);
+	}
+}
+
+// C3, cold: the knob is nonzero or the previous draw was armed.
+[[gnu::noinline]] void Rk3LatchSlow(uint32_t value) {
+	namespace G = Common::Gates;
+	uint32_t armed = 0;
+	if (value != 0) {
+		if (!Common::SkipCeil::t_gpu) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::Rk3Xthr, 1);
+			Rk3Refuse(8, "thread");
+		} else if (!Common::FrameStats::Enabled()) {
+			Rk3Refuse(9, "frametrace");
+		} else if (!G::Enabled(G::Gate::PathLap)) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::Rk3Nt, 1);
+			Rk3Refuse(10, "pathlap");
+		} else if (G::Enabled(G::Gate::SamePassCensus)) {
+			Rk3Refuse(11, "spcen");
+		} else if (G::Enabled(G::Gate::SliceCensus)) {
+			Rk3Refuse(12, "slicecen");
+		} else if (G::Enabled(G::Gate::BindFloor)) {
+			Rk3Refuse(13, "bindfloor");
+		} else if (G::Value(G::Knob::M4Baton) != 0) {
+			Rk3Refuse(14, "m4baton");
+		} else if (G::Value(G::Knob::SkipCeil) != 0) {
+			Rk3Refuse(15, "skipceil");
+		} else if (G::Value(G::Knob::Spine) != 0) {
+			Rk3Refuse(16, "spine"); // [RC9]
+		} else {
+			armed = value;
+		}
+	}
+	if (armed == 0) {
+		// Leaving the armed state (or refused): the records go, the pending C4 goes to rk3_res_x_ns (s.4.1).
+		if (Rk3::t_rk3 != 0) {
+			Rk3FlushPending();
+			if (t_rk3_table != nullptr) {
+				t_rk3_table->used     = 0;
+				t_rk3_table->prev_ctx = nullptr;
+			}
+			t_rk3_c4_idx = -1;
+		}
+		Rk3::t_rk3 = 0;
+		return;
+	}
+	if (t_rk3_table == nullptr) {
+		t_rk3_table = new Rk3Table();
+	}
+	if ((t_rk3_logged & (1u << armed)) == 0) {
+		t_rk3_logged |= 1u << armed;
+		LOGF("Rk3Census: mode %u ctx_slots=%u groups=%u d_setters=%u\n", armed,
+		     static_cast<uint32_t>(t_rk3_table->e.size()), Rk3::GroupCount, Rk3::DSetters);
+	}
+	Rk3::t_rk3 = armed; // a change between 1, 2 and 3 keeps the records (one classification)
+	t_rk3_slow = false;
+}
+
+// C3: one relaxed knob load and one thread-local test while the knob is 0.
+inline void Rk3Latch() {
+	const auto value = Common::Gates::Value(Common::Gates::Knob::Rk3Cen);
+	if (value != 0 || Rk3::t_rk3 != 0) [[unlikely]] {
+		Rk3LatchSlow(value);
+	}
+}
+
+[[gnu::noinline]] uint64_t Rk3ResBeginSlow(const void* ctx, uint32_t slice) {
+	Rk3FlushPending();
+	Common::FrameStats::Add(Common::FrameStats::Counter::Rk3C4N, 1);
+	auto* e = Rk3FindOrAdd(*t_rk3_table, ctx);
+	if (e != nullptr) {
+		t_rk3_c4_idx = static_cast<int32_t>(e - t_rk3_table->e.data());
+		t_rk3_c4_gen = e->gen;
+	} else {
+		t_rk3_c4_idx = -1;
+	}
+	if (Rk3::t_rk3 == 3) {
+		t_rk3_slice = slice;
+	}
+	t_rk3_slow = false;
+	return Common::FrameStats::NowNs();
+}
+
+// C4: 0 while the draw is not armed.
+inline uint64_t Rk3ResBegin(const void* ctx, uint32_t slice) {
+	if (Rk3::t_rk3 == 0) [[likely]] {
+		return 0;
+	}
+	return Rk3ResBeginSlow(ctx, slice);
+}
+
+inline void Rk3ResEnd(uint64_t t0) {
+	if (t0 != 0) [[unlikely]] {
+		t_rk3_res_ns = Common::FrameStats::NowNs() - t0;
+		t_rk3_pend   = true;
+	}
+}
+
+// Value 2 only (s.4.4): the split of pl_em_rt inside AcquireRenderTargets; the timers inflate the span, so smoke only.
+inline uint64_t Rk3SpBegin() {
+	return Rk3::t_rk3 == 2 ? Common::FrameStats::NowNs() : 0;
+}
+
+inline void Rk3SpEnd(uint64_t t0, Common::FrameStats::Counter counter) {
+	if (t0 != 0) [[unlikely]] {
+		Common::FrameStats::Add(counter, Common::FrameStats::NowNs() - t0);
+	}
+}
+
+// Value 3 only: V_D and V_key of the context as the resolution of this draw read it (nothing parses PM4 between).
+void Rk3BuildVd(const HW::Context& hw, Rk3Vd& vd) {
+	for (uint32_t s = 0; s < RENDER_COLOR_ATTACHMENTS_MAX; s++) {
+		vd.rt[s] = hw.GetRenderTarget(s);
+	}
+	vd.mask   = hw.GetRenderTargetMask();
+	vd.dc     = hw.GetDepthControl();
+	vd.rc     = hw.GetRenderControl();
+	vd.si     = hw.GetDepthStencilInfo();
+	vd.z      = hw.GetDepthRenderTarget();
+	vd.sc     = hw.GetStencilControl();
+	vd.sm     = hw.GetStencilMask();
+	vd.dclear = std::bit_cast<uint32_t>(hw.GetDepthClearValue());
+	vd.sclear = hw.GetStencilClearValue();
+}
+
+uint32_t Rk3BuildKey(const HW::Context& hw, const RenderColorInfo* colors, uint32_t color_count,
+                     const RenderDepthInfo& depth, std::array<uint8_t, Rk3KeyMax>& out) {
+	const uint32_t header[2] = {color_count, depth.image_id ? 1u : 0u};
+	std::memcpy(out.data(), header, sizeof(header));
+	uint32_t len = sizeof(header);
+	for (uint32_t i = 0; i < color_count; i++) {
+		const auto          slot = colors[i].target_slot;
+		ColorTargetMemoRegs regs {};
+		BuildColorTargetMemoRegs(hw.GetRenderTarget(slot), regs);
+		const auto extra =
+		    ColorTargetMemoExtra(render_target_mask_slot(hw.GetRenderTargetMask(), slot), t_rk3_slice, slot, false, false);
+		std::memcpy(out.data() + len, regs.data(), regs.size());
+		len += static_cast<uint32_t>(regs.size());
+		std::memcpy(out.data() + len, &extra, sizeof(extra));
+		len += static_cast<uint32_t>(sizeof(extra));
+	}
+	if (depth.image_id) {
+		DepthTargetMemoBytes key {};
+		BuildDepthTargetMemoKey(hw, key);
+		std::memcpy(out.data() + len, key.data(), key.size());
+		len += static_cast<uint32_t>(key.size());
+	}
+	return len;
+}
+
+// Bit g of the result: group g's V_D fields differ between the two snapshots.
+uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
+	uint32_t diff = 0;
+	if (a.mask != b.mask) {
+		diff |= 1u << Rk3::GroupMask;
+	}
+	for (uint32_t s = 0; s < RENDER_COLOR_ATTACHMENTS_MAX; s++) {
+		if (!(a.rt[s] == b.rt[s])) {
+			diff |= 1u << (Rk3::GroupSlot0 + s);
+		}
+	}
+	if (!(a.dc == b.dc) || !(a.rc == b.rc) || !(a.si == b.si)) {
+		diff |= 1u << Rk3::GroupDact;
+	}
+	auto z = a.z; // G_depth holds the depth target without DB_STENCIL_INFO (a G_dact register)
+	z.stencil_info = b.z.stencil_info;
+	if (!(z == b.z) || !(a.sc == b.sc) || !(a.sm == b.sm) || a.dclear != b.dclear || a.sclear != b.sclear) {
+		diff |= 1u << Rk3::GroupDepth;
+	}
+	return diff;
+}
+
+// Value 3 only ([RC2], [RC5], item 64(v), (e)): the value witnesses of this draw against the record of the same context,
+// then this draw's V_D / V_key into the record.  Returns V (V_key equal to the record's).
+[[gnu::noinline]] bool Rk3Witness(const HW::Context& hw, const RenderColorInfo* colors, uint32_t color_count,
+                                  const RenderDepthInfo& depth, Rk3Entry* e, uint32_t changed) {
+	Rk3Vd                          vd {};
+	std::array<uint8_t, Rk3KeyMax> key {};
+	Rk3BuildVd(hw, vd);
+	const uint32_t key_len = Rk3BuildKey(hw, colors, color_count, depth, key);
+	bool           v       = false;
+	if (e != nullptr && e->valid && e->v_valid) {
+		v = e->key_len == key_len && std::memcmp(e->key.data(), key.data(), key_len) == 0;
+		// WMISS: a group whose generation did not move while its fields did - a write path the hooks missed.
+		const uint32_t still = ~changed & ((1u << Rk3::GroupCount) - 1u);
+		if ((Rk3VdDiff(vd, e->vd) & still) != 0) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::Rk3Wmiss, 1);
+		}
+	}
+	if (e != nullptr) {
+		e->vd      = vd;
+		e->key_len = key_len;
+		std::memcpy(e->key.data(), key.data(), key_len);
+		e->v_valid = true;
+	}
+	return v;
+}
+
+// C6, cold (design s.4.3).  `ran`: the pathlap chain ran through C5, so `rt_ns` is this draw's pl_em_rt span.
+[[gnu::noinline]] void Rk3Post(const HW::Context& hw, const RenderColorInfo* colors, uint32_t color_count,
+                               const RenderDepthInfo& depth, bool ran, uint64_t rt_ns) {
+	namespace FS = Common::FrameStats;
+	using C      = FS::Counter;
+	const uint64_t res_ns  = t_rk3_res_ns;
+	const bool     had_c4  = t_rk3_pend;
+	const bool     slow    = t_rk3_slow;
+	const int32_t  c4_idx  = t_rk3_c4_idx;
+	t_rk3_res_ns = 0; // [RC3]: consumed here
+	t_rk3_pend   = false;
+	t_rk3_slow   = false;
+	t_rk3_c4_idx = -1;
+	if (!ran) {
+		FS::Add(C::Rk3Nt, 1);
+		if (had_c4) { // not classified: its resolution counts whole, as a draw that did not reach C6
+			FS::Add(C::Rk3ResXNs, res_ns);
+			FS::Add(C::Rk3ResXN, 1);
+		}
+		return;
+	}
+	FS::NoteMax(FS::Gauge::Rk3C5Max, rt_ns > UINT32_MAX ? UINT32_MAX : static_cast<uint32_t>(rt_ns));
+	FS::Add(C::Rk3N, 1);
+	FS::Add(C::Rk3RtNs, rt_ns);
+	FS::Add(C::Rk3ResNs, res_ns);
+	const bool has_depth = static_cast<bool>(depth.image_id);
+	const bool dclr      = has_depth && depth.depth_clear_enable;
+	if (dclr) {
+		FS::Add(C::Rk3Dclr, 1);
+	}
+	if (slow) {
+		FS::Add(C::Rk3Slow, 1);
+	}
+	auto&       t   = *t_rk3_table;
+	const void* ctx = &hw;
+	if (t.prev_ctx != nullptr && t.prev_ctx != ctx) {
+		FS::Add(C::Rk3Xctx, 1);
+	}
+	t.prev_ctx = ctx;
+	auto* e    = Rk3Find(t, ctx); // C4 of this draw added it, unless the table was full
+	if (e != nullptr && c4_idx == static_cast<int32_t>(e - t.e.data()) && e->gen != t_rk3_c4_gen) {
+		FS::Add(C::Rk3Acqw, 1);
+	}
+	uint32_t slot_mask = 0;
+	for (uint32_t i = 0; i < color_count; i++) {
+		slot_mask |= 1u << colors[i].target_slot;
+	}
+	enum class Cls { R0, XW, WI, XID };
+	Cls      cls     = Cls::R0;
+	bool     xw_irr  = false;
+	uint32_t changed = 0;
+	if (e == nullptr) {
+		FS::Add(C::Rk3Ovf, 1);
+	} else if (e->valid) {
+		// Rel(d) ([RC1]): G_mask, G_dact always; G_slot[n] for a slot that gave a target now or in the record; G_depth
+		// when a depth target exists now or in the record.
+		uint32_t rel = (1u << Rk3::GroupMask) | (1u << Rk3::GroupDact) | ((slot_mask | e->slot_mask) << Rk3::GroupSlot0);
+		if (has_depth || e->has_depth) {
+			rel |= 1u << Rk3::GroupDepth;
+		}
+		for (uint32_t g = 0; g < Rk3::GroupCount; g++) {
+			if (e->gen[g] != e->rec_gen[g]) {
+				changed |= 1u << g;
+			}
+		}
+		if ((changed & rel) != 0) {
+			cls = Cls::XW;
+		} else {
+			xw_irr  = changed != 0;
+			// E1 (s.3.4): the target identity after the capture equals the record.
+			bool e1 = e->color_count == color_count && e->has_depth == has_depth;
+			for (uint32_t i = 0; e1 && i < color_count; i++) {
+				e1 = colors[i].image_id == e->colors[i].id && colors[i].target_slot == e->colors[i].slot &&
+				     colors[i].desc.view_info == e->colors[i].view;
+			}
+			if (e1 && has_depth) {
+				e1 = depth.image_id == e->depth.id && depth.desc.view_info == e->depth.view;
+			}
+			cls = e1 ? Cls::WI : Cls::XID;
+		}
+	}
+	const bool in_r0 = cls == Cls::R0;
+	const bool in_w  = cls == Cls::WI || cls == Cls::XID;
+	const bool in_r  = in_r0 || cls == Cls::WI;
+	const bool in_r1 = in_r0 || (cls == Cls::WI && !xw_irr);
+	if (in_r0) {
+		FS::Add(C::Rk3Rec0, 1);
+		FS::Add(C::Rk3RtRec0Ns, rt_ns);
+	}
+	if (cls == Cls::XW) {
+		FS::Add(C::Rk3Xw, 1);
+	}
+	if (in_w) {
+		FS::Add(C::Rk3W, 1);
+		if (xw_irr) {
+			FS::Add(C::Rk3XwIrr, 1);
+		}
+		FS::Add(cls == Cls::WI ? C::Rk3Wi : C::Rk3Xid, 1);
+	}
+	if (in_r0 || in_w) {
+		FS::Add(C::Rk3RtWNs, rt_ns);
+	}
+	if (in_r) {
+		FS::Add(C::Rk3RtRNs, rt_ns);
+		FS::Add(C::Rk3ResRNs, res_ns);
+		if (dclr) {
+			FS::Add(C::Rk3RDclr, 1);
+		}
+		if (slow) {
+			FS::Add(C::Rk3RSlow, 1);
+		}
+	}
+	if (in_r1) {
+		FS::Add(C::Rk3RtR1Ns, rt_ns);
+		FS::Add(C::Rk3ResR1Ns, res_ns);
+	}
+	if (Rk3::t_rk3 == 2) {
+		FS::Add(C::Rk3SpN, 1);
+	}
+	// Value 3 only: the value witnesses (the record's V_D / V_key are written there).
+	if (Rk3::t_rk3 == 3) {
+		const bool v = Rk3Witness(hw, colors, color_count, depth, e, changed);
+		if (v) {
+			FS::Add(C::Rk3V, 1);
+			if (cls == Cls::XW) {
+				FS::Add(C::Rk3Vw, 1);
+			}
+		}
+		if (in_r0 || v) {
+			FS::Add(C::Rk3RtVNs, rt_ns);
+			FS::Add(C::Rk3ResVNs, res_ns);
+		}
+	}
+	// The record of this draw.
+	if (e != nullptr) {
+		e->valid       = true;
+		e->rec_gen     = e->gen;
+		e->color_count = color_count;
+		e->slot_mask   = slot_mask;
+		e->has_depth   = has_depth;
+		for (uint32_t i = 0; i < color_count; i++) {
+			e->colors[i] = {colors[i].image_id, colors[i].target_slot, colors[i].desc.view_info};
+		}
+		e->depth = has_depth ? Rk3Target {depth.image_id, 0, depth.desc.view_info} : Rk3Target {};
+		if (Rk3::t_rk3 != 3) {
+			e->v_valid = false; // value 3 wrote V_D / V_key above; any other value leaves no witness record
+		}
+	}
+}
+
+} // namespace
+
 vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
                                                 const TextureCache::ImageDesc& desc,
                                                 TargetViewFast& fast, bool depth_target,
@@ -844,6 +1334,9 @@ vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& imag
 			t_sp_rt_stamp_race = stamp != fast.stamp;
 		}
 		t_sp_rt_slow = true;
+	}
+	if (Common::Rk3::t_rk3 != 0) [[unlikely]] {
+		t_rk3_slow = true; // Session 126, knob "rk3cen" (rk3_slow): a target of this draw took the slow path
 	}
 	const auto view  = depth_target ? cache.FindDepthTarget(id, desc) : cache.FindRenderTarget(id, desc);
 	fast.valid       = false;
@@ -1304,9 +1797,11 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		    (rt_regs.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
 		    (rt_regs.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
 		    (rt_regs.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u);
+		const auto rk3_sp_view = Rk3SpBegin(); // Session 126, knob "rk3cen" = 2 (rk3_sp_view_ns)
 		const auto image_view = AcquireTargetView(cache, image, target.image_id, target.desc,
 		                                          m_color_view_fast[target.target_slot], false,
 		                                          guest_clear_regs);
+		Rk3SpEnd(rk3_sp_view, Common::FrameStats::Counter::Rk3SpViewNs);
 		SetVulkanObjectNameF(m_context.GetGraphics().device, image.backing.image,
 		                     "Kyty.MRT{}.Image[guest=0x{:016x} size=0x{:x} format={}]",
 		                     target.target_slot, image.info.data.address, image.info.data.size,
@@ -1329,10 +1824,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		image.binding.attachment_layout = layout;
 		image.binding.attachment_access =
 		    vk::AccessFlagBits2::eColorAttachmentRead | vk::AccessFlagBits2::eColorAttachmentWrite;
+		const auto rk3_sp_tr = Rk3SpBegin(); // Session 126, knob "rk3cen" = 2 (rk3_sp_tr_ns)
 		image.Transit(layout, image.binding.attachment_access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
 		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
+		Rk3SpEnd(rk3_sp_tr, Common::FrameStats::Counter::Rk3SpTrNs);
 		const auto extent       = target.Extent();
 		// Session 67 watchdog: the frame's largest colour target. Taken here, inside the loop over
 		// the attachments a draw actually binds, because `state` ends up clamped by the smallest of
@@ -1370,8 +1867,11 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		const uint32_t guest_clear_regs =
 		    (depth.depth_clear_enable ? TextureCache::kRegDepthClear : 0u) |
 		    (depth.stencil_clear_enable ? TextureCache::kRegStencilClear : 0u);
+		const auto  rk3_sp_view = Rk3SpBegin(); // Session 126, knob "rk3cen" = 2 (rk3_sp_view_ns)
 		const auto  image_view  = AcquireTargetView(cache, depth_image, depth.image_id, depth.desc,
 		                                            m_depth_view_fast, true, guest_clear_regs);
+		Rk3SpEnd(rk3_sp_view, Common::FrameStats::Counter::Rk3SpViewNs);
+		const auto  rk3_sp_dm   = Rk3SpBegin(); // Session 126, knob "rk3cen" = 2 (rk3_sp_dm_ns, to the feedback search)
 		const auto& metadata   = depth.desc.info.metadata;
 		if (metadata.kind == ImageMetadataKind::Htile && depth.depth_clear_enable &&
 		    !cache.ClearMeta(metadata.range.address)) {
@@ -1419,6 +1919,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			           ImageRangeOverlaps(sampled.base_layer, sampled.layer_count,
 			                              target.base_layer, target.layer_count);
 		    });
+		Rk3SpEnd(rk3_sp_dm, Common::FrameStats::Counter::Rk3SpDmNs);
 		if (feedback && !m_context.GetGraphics().attachment_feedback_loop_enabled) {
 			EXIT("depth attachment feedback loop is not supported by the host\n");
 		}
@@ -1466,10 +1967,12 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 			buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Clear, 2);
 			depth.depth_load_clear_enable = depth.depth_clear_enable;
 		}
+		const auto rk3_sp_tr = Rk3SpBegin(); // Session 126, knob "rk3cen" = 2 (rk3_sp_tr_ns)
 		image.Transit(layout, access,
 		              ImageSubresourceRange {view.base_level, view.level_count, view.base_layer,
 		                                     view.layer_count},
 		              vk::CommandBuffer {}, RenderPassEnd::TargetTransit);
+		Rk3SpEnd(rk3_sp_tr, Common::FrameStats::Counter::Rk3SpTrNs);
 		state.width               = std::min(state.width, depth.desc.info.extent.width);
 		state.height              = std::min(state.height, depth.desc.info.extent.height);
 		state.num_layers          = std::min(state.num_layers, view.layer_count);
@@ -2926,7 +3429,15 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		SpRtPost(buffer, state.color_info, state.color_count, state.depth_info, rendering);
 		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmSpPostNs);
 	} else {
-		Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRtNs); // gate 0: as before
+		// Session 126, knob "rk3cen" (MEASUREMENT ONLY, design126.md rev 2 s.4.2): C5 is the same mark, returning what it
+		// charged; the census post C6 follows it directly - no emulation code between them (ROADMAP s122 item 67(b)) - and
+		// charges its own span to pl_em_rk3_ns.
+		const bool rk3_ran   = Common::Rk3::t_rk3 != 0 && Common::FrameStats::PathLap::Running();
+		const auto rk3_spent = Common::FrameStats::PathLap::MarkSpent(Common::FrameStats::Counter::PathEmRtNs); // gate 0: as before
+		if (Common::Rk3::t_rk3 != 0) [[unlikely]] {
+			Rk3Post(buffer.GetRegisters(), state.color_info, state.color_count, state.depth_info, rk3_ran, rk3_spent);
+			Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRk3Ns);
+		}
 	}
 	DrawEmitInfo emit_info = emit;
 	if (emit_info.indirect_args_addr != 0 && !mesh_active) {
@@ -3478,6 +3989,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
                                const DrawIndexArgs& args) {
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
+	Rk3Latch(); // Session 126, knob "rk3cen" (C3): latched for this draw, before any return
 	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
 	if (Common::SkipCeil::t_skip) [[unlikely]] {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
@@ -3652,7 +4164,11 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 		Common::FrameStats::MutScope wide_rt(
 		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 1u) != 0,
 		    Common::FrameStats::Counter::MutWideScopes);
-		if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
+		// Session 126, knob "rk3cen" (C4): the span of the target resolution of an armed draw.
+		const auto rk3_c4    = Rk3ResBegin(&buffer.GetRegisters(), args.render_target_slice_offset);
+		const bool prepared  = PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state);
+		Rk3ResEnd(rk3_c4);
+		if (!prepared) {
 			ResetBindings();
 			return;
 		}
@@ -3691,6 +4207,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const DrawAutoArgs& args) {
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
+	Rk3Latch(); // Session 126, knob "rk3cen" (C3): latched for this draw, before any return
 	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
 	if (Common::SkipCeil::t_skip) [[unlikely]] {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
@@ -3822,7 +4339,11 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 		Common::FrameStats::MutScope wide_rt(
 		    (Common::Gates::Value(Common::Gates::Knob::MutWide) & 1u) != 0,
 		    Common::FrameStats::Counter::MutWideScopes);
-		if (!PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)) {
+		// Session 126, knob "rk3cen" (C4): the span of the target resolution of an armed draw.
+		const auto rk3_c4    = Rk3ResBegin(&buffer.GetRegisters(), args.render_target_slice_offset);
+		const bool prepared  = PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state);
+		Rk3ResEnd(rk3_c4);
+		if (!prepared) {
 			ResetBindings();
 			return;
 		}
@@ -3919,3 +4440,11 @@ bool RenderExecutor::ResolveColorTargets(CommandBuffer& buffer, uint32_t render_
 }
 
 } // namespace Libs::Graphics
+
+// Session 126, knob "rk3cen" (C1, C2): the cold halves of the HW::Context hooks (common/rk3Census.h).
+void Common::Rk3::NoteWriteCold(const void* ctx, uint32_t group) noexcept {
+	Libs::Graphics::Rk3HookWrite(ctx, group);
+}
+void Common::Rk3::NoteObjectCold(const void* ctx) noexcept {
+	Libs::Graphics::Rk3HookObject(ctx);
+}

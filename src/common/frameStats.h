@@ -2396,6 +2396,47 @@ enum class Counter : uint32_t {
 	// ROADMAP s122 item 50(a) (step 5v): the in-context probe of the pause residual, flushed at the finalization.
 	Skc3TinNs,               // skc3_tin_ns: sum of (O2 - O1) - (t1 - t0) over the probes
 	Skc3TinN,                // skc3_tin_n: probes
+	// Session 126, knob "rk3cen" (MEASUREMENT ONLY, docs/session-126/design126.md rev 2 s.4.5, ROADMAP s122 items 63, 64,
+	// 67): the K3 census, raw counts / ns (micros = false).  Values 1-3 unless named; every one reads 0 at rk3cen = 0.
+	Rk3N,                    // rk3_n: armed draws that reached the post (C6)
+	Rk3Rec0,                 // rk3_rec0: class R0 (no record / new context / table overflow)
+	Rk3Xw,                   // rk3_xw: class XW (a relevant group moved, [RC1])
+	Rk3W,                    // rk3_w: class W
+	Rk3Wi,                   // rk3_wi: W with E1 kept
+	Rk3Xid,                  // rk3_xid: W with E1 broken
+	Rk3XwIrr,                // rk3_xw_irr: W with an irrelevant group moved (XW by the rev 1 rule; reference)
+	Rk3Xctx,                 // rk3_xctx: context differs from the previous armed draw's
+	Rk3Dclr,                 // rk3_dclr: draws with a depth target and depth_clear_enable (output field)
+	Rk3RDclr,                // rk3_r_dclr: ... of them in S_R
+	Rk3Slow,                 // rk3_slow: draws where a target took the slow path of AcquireTargetView
+	Rk3RSlow,                // rk3_r_slow: ... of them in S_R
+	Rk3WrSet,                // rk3_wr_set: D_census writes through a setter
+	Rk3WrObj,                // rk3_wr_obj: writes of the whole object (Reset, R_CONTEXT_STATE Pop)
+	Rk3Ovf,                  // rk3_ovf: context table overflow (the draw is R0)
+	Rk3C4N,                  // rk3_c4_n: armed target resolutions (C4)
+	Rk3RtNs,                 // rk3_rt_ns: C5 span over every rk3_n draw
+	Rk3RtRNs,                // rk3_rt_r_ns: C5 over S_R = R0 u WI (T0 of the reading number)
+	Rk3RtWNs,                // rk3_rt_w_ns: C5 over R0 u W
+	Rk3RtRec0Ns,             // rk3_rt_rec0_ns: C5 over R0
+	Rk3RtR1Ns,               // rk3_rt_r1_ns: C5 over R0 u (WI \ XW_irr) (rev 1 rule; reference)
+	Rk3ResNs,                // rk3_res_ns: C4 span over every rk3_n draw
+	Rk3ResRNs,               // rk3_res_r_ns: C4 over S_R (T13 of the reading number)
+	Rk3ResR1Ns,              // rk3_res_r1_ns: C4 over R0 u (WI \ XW_irr) (reference)
+	Rk3ResXNs,               // rk3_res_x_ns: C4 of armed draws that did not reach C6 (T13x, [RC3])
+	Rk3ResXN,                // rk3_res_x_n: ... their number
+	PathEmRk3Ns,             // pl_em_rk3_ns: the post's own span in the pathlap emit chain
+	Rk3SpViewNs,             // rk3_sp_view_ns: value 2 only - AcquireTargetView calls of the capture
+	Rk3SpTrNs,               // rk3_sp_tr_ns: value 2 only - image.Transit of the attachments
+	Rk3SpDmNs,               // rk3_sp_dm_ns: value 2 only - HTILE clear state and the depth feedback search
+	Rk3SpN,                  // rk3_sp_n: value 2 only - draws
+	Rk3V,                    // rk3_v: value 3 only - V_key equal to the record
+	Rk3Vw,                   // rk3_vw: value 3 only - V and XW
+	Rk3Wmiss,                // rk3_wmiss: value 3 only - a still generation whose V_D fields differ
+	Rk3RtVNs,                // rk3_rt_v_ns: value 3 only - C5 over R0 u V
+	Rk3ResVNs,               // rk3_res_v_ns: value 3 only - C4 over R0 u V
+	Rk3Nt,                   // rk3_nt: must be 0 - an armed draw with no pathlap chain
+	Rk3Xthr,                 // rk3_xthr: must be 0 - a draw off the GuestGpu thread with the knob on
+	Rk3Acqw,                 // rk3_acqw: must be 0 - a generation moved between C4 and C6
 	Count
 };
 
@@ -2407,6 +2448,8 @@ enum class Gauge : uint32_t {
 	RtHeight, // ... its height (rt_h)
 	VpWidth,  // widest guest viewport of this frame, |xscale| * 2 (vp_w)
 	VpHeight, // ... |yscale| * 2 (vp_h)
+	// Session 126, knob "rk3cen" ([RC4]): the largest C5 span of one armed draw this frame, ns (rk3_c5_max_ns).
+	Rk3C5Max,
 	Count
 };
 
@@ -2825,6 +2868,17 @@ public:
 			Add(counter, now - Detail::t_path_t0);
 			Detail::t_path_t0 = now;
 		}
+	}
+	// Session 126, knob "rk3cen" (C5): Mark(counter) that returns what it charged (0 when no chain is running).
+	static uint64_t MarkSpent(Counter counter) {
+		if (Detail::t_path_t0 != 0) {
+			const auto now   = NowNs();
+			const auto spent = now - Detail::t_path_t0;
+			Add(counter, spent);
+			Detail::t_path_t0 = now;
+			return spent;
+		}
+		return 0;
 	}
 	// Population counter, added only while the chain is running, so the population and the
 	// phases always come from the same set of draws.

@@ -391,6 +391,7 @@ void CommandProcessor::ApplyContextStateOperation(ContextStateOperation operatio
 		case ContextStateOperation::Pop:
 			EXIT_IF(!m_context_state_pushed);
 			m_ctx                  = m_saved_ctx;
+			::Common::Rk3::NoteObject(&m_ctx); // Session 126, knob "rk3cen" (C2): the whole object was written
 			m_saved_ctx            = {};
 			m_context_state_pushed = false;
 			break;

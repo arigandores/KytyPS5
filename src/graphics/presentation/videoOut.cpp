@@ -1318,7 +1318,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " gpu_n=%llu cpu_main_us=%llu cpu_gpu_us=%llu cpu_present_us=%llu"
 			     " cpu_proc_us=%llu faults_gpu=%llu fault_gpu_us=%llu semwait_gpu_us=%llu"
 			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu"
-			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u" "\n",
+			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u rk3_c5_max_ns=%u" "\n",
 			     r.cfg->flip_status.count,
 			     static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),
 			     static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),
@@ -1338,7 +1338,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     // already moved the schedule on, so the reported arm is the previous one.
 			     Common::Gates::ReportedArm(), Common::Gates::ReportedBlock(),
 			     FS::TakeMax(FS::Gauge::RtWidth), FS::TakeMax(FS::Gauge::RtHeight),
-			     FS::TakeMax(FS::Gauge::VpWidth), FS::TakeMax(FS::Gauge::VpHeight));
+			     FS::TakeMax(FS::Gauge::VpWidth), FS::TakeMax(FS::Gauge::VpHeight),
+			     FS::TakeMax(FS::Gauge::Rk3C5Max)); // Session 126, knob "rk3cen" ([RC4])
 			LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"
 			     " d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
 			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
@@ -3020,6 +3021,46 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"skc3_cal_n", FS::Counter::Skc3CalN, false},
 				    {"skc3_tin_ns", FS::Counter::Skc3TinNs, false},
 				    {"skc3_tin_n", FS::Counter::Skc3TinN, false},
+				    // Session 126, knob "rk3cen" (design126.md rev 2 s.4.5): 39 counters, raw.
+				    {"rk3_n", FS::Counter::Rk3N, false},
+				    {"rk3_rec0", FS::Counter::Rk3Rec0, false},
+				    {"rk3_xw", FS::Counter::Rk3Xw, false},
+				    {"rk3_w", FS::Counter::Rk3W, false},
+				    {"rk3_wi", FS::Counter::Rk3Wi, false},
+				    {"rk3_xid", FS::Counter::Rk3Xid, false},
+				    {"rk3_xw_irr", FS::Counter::Rk3XwIrr, false},
+				    {"rk3_xctx", FS::Counter::Rk3Xctx, false},
+				    {"rk3_dclr", FS::Counter::Rk3Dclr, false},
+				    {"rk3_r_dclr", FS::Counter::Rk3RDclr, false},
+				    {"rk3_slow", FS::Counter::Rk3Slow, false},
+				    {"rk3_r_slow", FS::Counter::Rk3RSlow, false},
+				    {"rk3_wr_set", FS::Counter::Rk3WrSet, false},
+				    {"rk3_wr_obj", FS::Counter::Rk3WrObj, false},
+				    {"rk3_ovf", FS::Counter::Rk3Ovf, false},
+				    {"rk3_c4_n", FS::Counter::Rk3C4N, false},
+				    {"rk3_rt_ns", FS::Counter::Rk3RtNs, false},
+				    {"rk3_rt_r_ns", FS::Counter::Rk3RtRNs, false},
+				    {"rk3_rt_w_ns", FS::Counter::Rk3RtWNs, false},
+				    {"rk3_rt_rec0_ns", FS::Counter::Rk3RtRec0Ns, false},
+				    {"rk3_rt_r1_ns", FS::Counter::Rk3RtR1Ns, false},
+				    {"rk3_res_ns", FS::Counter::Rk3ResNs, false},
+				    {"rk3_res_r_ns", FS::Counter::Rk3ResRNs, false},
+				    {"rk3_res_r1_ns", FS::Counter::Rk3ResR1Ns, false},
+				    {"rk3_res_x_ns", FS::Counter::Rk3ResXNs, false},
+				    {"rk3_res_x_n", FS::Counter::Rk3ResXN, false},
+				    {"pl_em_rk3_ns", FS::Counter::PathEmRk3Ns, false},
+				    {"rk3_sp_view_ns", FS::Counter::Rk3SpViewNs, false},
+				    {"rk3_sp_tr_ns", FS::Counter::Rk3SpTrNs, false},
+				    {"rk3_sp_dm_ns", FS::Counter::Rk3SpDmNs, false},
+				    {"rk3_sp_n", FS::Counter::Rk3SpN, false},
+				    {"rk3_v", FS::Counter::Rk3V, false},
+				    {"rk3_vw", FS::Counter::Rk3Vw, false},
+				    {"rk3_wmiss", FS::Counter::Rk3Wmiss, false},
+				    {"rk3_rt_v_ns", FS::Counter::Rk3RtVNs, false},
+				    {"rk3_res_v_ns", FS::Counter::Rk3ResVNs, false},
+				    {"rk3_nt", FS::Counter::Rk3Nt, false},
+				    {"rk3_xthr", FS::Counter::Rk3Xthr, false},
+				    {"rk3_acqw", FS::Counter::Rk3Acqw, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

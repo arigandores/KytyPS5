@@ -280,19 +280,9 @@ void RenderExecutor::ResolveRenderDepthTarget(CommandBuffer& buffer, RenderDepth
 	    has_stencil && (dc.stencil_enable || rc.stencil_clear_enable || rc.copy_stencil_to_color);
 	// Memo keyed by every register this function reads. A hit replays the resolved state and
 	// only re-validates the image id (see RebindImages); early returns are cached as "no depth".
-	DepthTargetMemoKey memo_key_value {};
-	std::memset(&memo_key_value, 0, sizeof(memo_key_value));
-	memo_key_value.z             = z;
-	memo_key_value.rc            = rc;
-	memo_key_value.dc            = dc;
-	memo_key_value.sc            = sc;
-	memo_key_value.sm            = sm;
-	memo_key_value.depth_clear   = hw.GetDepthClearValue();
-	memo_key_value.bounds_min    = hw.GetDepthBoundsMin();
-	memo_key_value.bounds_max    = hw.GetDepthBoundsMax();
-	memo_key_value.stencil_clear = hw.GetStencilClearValue();
-	std::array<uint8_t, sizeof(DepthTargetMemoKey)> memo_key {};
-	std::memcpy(memo_key.data(), &memo_key_value, sizeof(memo_key_value));
+	// Session 126 ([RC5]): the key the census witness V_key builds with the same function.
+	DepthTargetMemoBytes memo_key {};
+	BuildDepthTargetMemoKey(hw, memo_key);
 	const auto memo_index = static_cast<uint32_t>(MemoHashBytes(memo_key.data(), memo_key.size()) %
 	                                              RenderExecutorMemo::DepthSlots);
 	auto& memo_slot = Memo().depths[memo_index];

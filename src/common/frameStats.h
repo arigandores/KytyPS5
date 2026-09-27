@@ -2297,11 +2297,15 @@ enum class Counter : uint32_t {
 	SkcDmaAll,               // skc_dma_all
 	// ROADMAP s122 item 35(a) (B1, class K16 - texture LOD statistics) and 35(zh) (N5).
 	SkcLodN,                 // skc_lod_n: IT_GET_LOD_STATS packets executed while the knob is latched 1 or 2
-	SkcLodSub,               // skc_lod_sub: ... of a skipped mode-1 frame (the report gets the substitution)
-	SkcLodFill,              // skc_lod_fill: banks whose written word the substitution changed
 	SkcLodD,                 // skc_lod_d: LodStats::Touch calls from operations of kind D (mode 2)
 	SkcLodAll,               // skc_lod_all: LodStats::Touch calls from every census operation (mode 2)
 	SkcEraseCmd,             // skc_erase_cmd: SkcEraseCpu commands queued to GuestGpu (mode 2)
+	// ROADMAP s122 item 36(b) (class K16 - the skip parity anchored to the game's LOD poll phase), modes 1 / 2.
+	SkcLodSmp0,              // skc_lod_smp0: IT_GET_LOD_STATS reports with a sampled bank in frames without skip
+	SkcLodSmp1,              // skc_lod_smp1: ... in skipped (mode 1) / marked skippable (mode 2) frames
+	SkcLodPmiss,             // skc_lod_pmiss: mode-1 frames with a predicted poll ((frame - A) & 15 == 0) and no Touch
+	SkcLodPbad,              // skc_lod_pbad: mode 1 / 2 frames with a Touch whose offset from A is not a multiple of 16
+	SkcLodNoanc,             // skc_lod_noanc: mode 1 / 2 frames made skippable without an anchor (old t_gframe parity)
 	Count
 };
 
@@ -2889,14 +2893,32 @@ inline constinit thread_local uint8_t  t_kind   = 0;     // census: the kind of 
 inline constinit thread_local bool     t_acq    = false; // census: target-acquisition guard (W3 stamp suppressed)
 inline constinit thread_local bool     t_carry  = false; // census: an image-to-image copy carried its source label
 inline constinit thread_local uint32_t t_pass   = 0;     // census: host passes (BeginRenderingImpl)
-// ROADMAP s122 item 35(a): the snapshot S of the LOD statistics was taken in the current mode-1 stretch (a report of a
-// frame without skip); dropped at every edge of the latched mode.
-inline constinit thread_local bool     t_lod_snap = false;
+// ROADMAP s122 item 36(a) (class K16): the skip parity follows the game's LOD poll phase.  The anchor A is t_gframe of
+// the GuestGpu frame whose operation made the last LodStats::Touch - at ANY value of the knob, never dropped at an edge.
+inline constinit thread_local uint32_t t_lod_anchor = 0;     // A
+inline constinit thread_local bool     t_lod_has    = false; // A exists
+inline constinit thread_local uint32_t t_lod_a0     = 0;     // A at the start of the current frame (pmiss / pbad)
+inline constinit thread_local bool     t_lod_has0   = false; // ... it existed then
 // A W3-class site has work to do: on GuestGpu the census is latched (mode 2); on any other thread always true, so the
 // out-of-line call can count skc_w_xthr (one test per MarkGpuModified at any value, s.9).
 inline constinit thread_local bool     t_w3     = true;
 // The latched mode as seen from the other threads (skc_w_xthr); the GuestGpu thread publishes it at the latch.
 inline constinit std::atomic<uint32_t> g_mode {0};
+// ROADMAP s122 item 36(a), decision of implementation 29: a Touch off the GuestGpu thread (the m4baton relay, which runs
+// a range of the GuestGpu frame while GuestGpu is parked) anchors to g_gframe, the frame the GuestGpu thread published;
+// GuestGpu takes it at its next flip boundary.  g_lod_anchor_x: 0 = none, else bit 32 | frame.
+inline constinit std::atomic<uint32_t> g_gframe {0};
+inline constinit std::atomic<uint64_t> g_lod_anchor_x {0};
+
+// LodStats::Touch (descriptors.cpp): the anchor A of the skip parity, at any value of the knob (item 36(a), (d)).
+inline void NoteLodTouch() noexcept {
+	if (t_gpu) [[likely]] {
+		t_lod_anchor = t_gframe;
+		t_lod_has    = true;
+	} else {
+		g_lod_anchor_x.store((uint64_t {1} << 32u) | g_gframe.load(std::memory_order_relaxed), std::memory_order_relaxed);
+	}
+}
 
 // The GC hold of a skipped frame (mode 1, s.1.6).
 inline bool GcHold() noexcept {

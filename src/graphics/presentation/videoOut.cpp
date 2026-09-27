@@ -2926,11 +2926,14 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"skc_ia_t", FS::Counter::SkcIaT, false},
 				    {"skc_dma_all", FS::Counter::SkcDmaAll, false},
 				    {"skc_lod_n", FS::Counter::SkcLodN, false},
-				    {"skc_lod_sub", FS::Counter::SkcLodSub, false},
-				    {"skc_lod_fill", FS::Counter::SkcLodFill, false},
 				    {"skc_lod_d", FS::Counter::SkcLodD, false},
 				    {"skc_lod_all", FS::Counter::SkcLodAll, false},
 				    {"skc_erase_cmd", FS::Counter::SkcEraseCmd, false},
+				    {"skc_lod_smp0", FS::Counter::SkcLodSmp0, false},
+				    {"skc_lod_smp1", FS::Counter::SkcLodSmp1, false},
+				    {"skc_lod_pmiss", FS::Counter::SkcLodPmiss, false},
+				    {"skc_lod_pbad", FS::Counter::SkcLodPbad, false},
+				    {"skc_lod_noanc", FS::Counter::SkcLodNoanc, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

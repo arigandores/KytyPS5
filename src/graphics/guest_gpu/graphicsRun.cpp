@@ -3815,7 +3815,8 @@ void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t req
 // Session 123, knob "skipceil" (MEASUREMENT ONLY, docs/session-123/design123.md s.1.3, ROADMAP s122 item 28(a)): the
 // boundary of the GuestGpu frame, on every flip entry right after MarkFlipIfIncomplete (a CPU flip: after PrepareFlip).
 // Marks the flip of a skipped frame, counts the frame and latches the knob for the NEXT frame - read exactly once,
-// the value Poll published.  Every second frame (odd t_gframe) is skipped (1) / marked skippable (2).
+// the value Poll published.  Every second frame is skipped (1) / marked skippable (2): the frames at an odd offset from
+// the LOD poll anchor (ROADMAP s122 item 36(a)), without an anchor the odd t_gframe.
 void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) {
 	namespace SC = Common::SkipCeil;
 	namespace FS = Common::FrameStats;
@@ -3823,7 +3824,31 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 		const bool found = m_renderer.GetVideoOut().MarkFlipSkipCeil(request_id);
 		FS::Add(found ? FS::Counter::SkcMark : FS::Counter::SkcMarkMiss, 1);
 	}
+	// ROADMAP s122 item 36(a)-(b), class K16: the ending frame against the LOD poll anchor at its start, at any value.
+	if (SC::t_gpu && SC::g_lod_anchor_x.load(std::memory_order_relaxed) != 0) [[unlikely]] {
+		const uint64_t x  = SC::g_lod_anchor_x.exchange(0, std::memory_order_relaxed);
+		const auto     xf = static_cast<uint32_t>(x);
+		if (x != 0 && (!SC::t_lod_has || static_cast<int32_t>(xf - SC::t_lod_anchor) >= 0)) {
+			SC::t_lod_anchor = xf;
+			SC::t_lod_has    = true;
+		}
+	}
+	if (SC::t_mode != 0 && SC::t_lod_has0) {
+		const bool     touched = SC::t_lod_has && SC::t_lod_anchor == SC::t_gframe;
+		const uint32_t off     = SC::t_gframe - SC::t_lod_a0;
+		if (touched && (off & 15u) != 0) {
+			FS::Add(FS::Counter::SkcLodPbad, 1);
+		}
+		if (SC::t_mode == 1 && !touched && (off & 15u) == 0) {
+			FS::Add(FS::Counter::SkcLodPmiss, 1);
+		}
+	}
+	SC::t_lod_a0   = SC::t_lod_anchor;
+	SC::t_lod_has0 = SC::t_lod_has;
 	SC::t_gframe++;
+	if (SC::t_gpu) {
+		SC::g_gframe.store(SC::t_gframe, std::memory_order_relaxed);
+	}
 	uint32_t mode = Common::Gates::Value(Common::Gates::Knob::SkipCeil);
 	if (mode != 0) {
 		// R9: never with the m4baton relay (draws off GuestGpu) or the burn (another measurement).
@@ -3841,13 +3866,21 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 	}
 	if (mode != SC::t_mode) {
 		FS::Add(FS::Counter::SkcEdge, 1);
-		SC::t_lod_snap = false; // ROADMAP s122 item 35(a): the LOD snapshot S belongs to one stretch of the latched mode
 		if (mode == 2) {
 			SC::t_epoch = SC::t_gframe; // a new census epoch: older labels read empty, the buffer map is cleared
 		}
 	}
 	SC::t_mode = mode;
-	SC::t_skip = mode != 0 && (SC::t_gframe & 1u) != 0;
+	// ROADMAP s122 item 36(a): a poll frame (an even offset from the anchor A) is never skipped, so the IT_GET_LOD_STATS
+	// reports of the two arms are equal byte for byte; without an anchor the old parity of t_gframe (skc_lod_noanc).
+	if (mode != 0 && SC::t_lod_has) {
+		SC::t_skip = ((SC::t_gframe - SC::t_lod_anchor) & 1u) != 0;
+	} else {
+		SC::t_skip = mode != 0 && (SC::t_gframe & 1u) != 0;
+		if (SC::t_skip) {
+			FS::Add(FS::Counter::SkcLodNoanc, 1);
+		}
+	}
 	SC::t_w3   = !SC::t_gpu || mode == 2;
 	SC::g_mode.store(mode, std::memory_order_relaxed);
 	FS::Add(FS::Counter::SkcGf, 1);

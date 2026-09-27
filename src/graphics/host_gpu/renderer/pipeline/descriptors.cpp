@@ -2182,6 +2182,8 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	// Texture LOD statistics: count the binding for the T# counter bank (IT_GET_LOD_STATS reports it).
 	if (!storage && descriptor.MipStatsCntEn()) {
 		LodStats::Touch(descriptor.MipStatsCntId(), descriptor.BaseLevel());
+		// Session 123, knob "skipceil" (ROADMAP s122 item 36(a)): the anchor of the skip parity, at any value of the knob.
+		Common::SkipCeil::NoteLodTouch();
 		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 35(a)): the Touch calls of D operations - the work the
 		// ceiling does not pay and the correct version must do (skc_lod_d), of all census operations (skc_lod_all).
 		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {

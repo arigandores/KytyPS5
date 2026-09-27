@@ -1376,52 +1376,13 @@ KYTY_CP_OP_PARSER(CpOpDispatchIndirect) {
 	return 2;
 }
 
-// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY; ROADMAP s122 item 35(a), B1, class K16 - texture LOD statistics):
-// the draws of a skipped frame never reach LodStats::Touch, so its report would show the banks only they sample as
-// unsampled.  A report of a frame WITHOUT skip keeps its bank words as the snapshot S (taken before the reset); a report
-// of a skipped frame writes, per bank, the union of its word and S: count = max, min_mip = min, a bank empty in both
-// stays NO_SAMPLES.  An approximation of the observed value, not its execution.  GuestGpu thread only (the latch).
-static thread_local std::array<uint64_t, LodStats::BANK_COUNT> t_skc_lod_snap {};
-
-static void SkcLodReport(uint64_t* words) {
-	namespace SC = Common::SkipCeil;
-	namespace FS = Common::FrameStats;
-	if (!SC::t_skip) {
-		std::memcpy(t_skc_lod_snap.data(), words, sizeof(t_skc_lod_snap));
-		SC::t_lod_snap = true;
-		return;
-	}
-	FS::Add(FS::Counter::SkcLodSub, 1);
-	if (!SC::t_lod_snap) {
-		return;
-	}
-	uint64_t fill = 0;
-	for (uint32_t i = 0; i < LodStats::BANK_COUNT; i++) {
-		const uint64_t cur       = words[i];
-		const uint64_t snap      = t_skc_lod_snap[i];
-		const uint32_t cur_count = static_cast<uint32_t>(cur & 0xFFFFFFu);
-		const uint32_t s_count   = static_cast<uint32_t>(snap & 0xFFFFFFu);
-		if (s_count == 0) {
-			continue; // S did not sample the bank: the current word stands
-		}
-		const uint32_t cur_mip = cur_count != 0 ? static_cast<uint32_t>((cur >> 56u) & 0xFu) : LodStats::NO_SAMPLES;
-		const uint32_t s_mip   = static_cast<uint32_t>((snap >> 56u) & 0xFu);
-		const uint64_t word    = static_cast<uint64_t>(std::max(cur_count, s_count)) |
-		                         (static_cast<uint64_t>(std::min(cur_mip, s_mip)) << 56u);
-		if (word != cur) {
-			words[i] = word;
-			fill++;
-		}
-	}
-	FS::Add(FS::Counter::SkcLodFill, fill);
-}
-
 KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0038e00);
 
-	// Session 123, knob "skipceil" (ROADMAP s122 item 35(a)): one thread-local test at 0; the report changes only in mode 1.
+	// Session 123, knob "skipceil" (ROADMAP s122 items 35(a), 36): one thread-local test at 0; the report never changes -
+	// the poll frames are never skipped (item 36(a)), so the reports of the two arms are equal byte for byte.
 	const uint32_t skc_mode = Common::SkipCeil::t_mode;
 	if (skc_mode != 0) [[unlikely]] {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcLodN, 1);
@@ -1461,8 +1422,11 @@ KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 					words[i] = static_cast<uint64_t>(LodStats::NO_SAMPLES) << 56u;
 				}
 			}
-			if (skc_mode == 1) [[unlikely]] {
-				SkcLodReport(words); // before the reset below: S is the banks this report read
+			if (skc_mode != 0 && sampled != 0) [[unlikely]] {
+				// ROADMAP s122 item 36(b): a sampled report in a frame without skip / a skipped (marked skippable) frame.
+				Common::FrameStats::Add(Common::SkipCeil::t_skip ? Common::FrameStats::Counter::SkcLodSmp1
+				                                                  : Common::FrameStats::Counter::SkcLodSmp0,
+				                       1);
 			}
 			if (trace) {
 				LOGF("LodStats: report dst=0x%016" PRIx64 " size=%u sampled_banks=%u reset=%d\n",

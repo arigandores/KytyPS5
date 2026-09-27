@@ -867,6 +867,7 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 		SkcCensus::G3Copy(SkcCensus::LazyP3a, destination, source, UINT32_MAX, 0); // Session 124 ([RC1])
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	{
 		// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
 		const SkcCensus::CarryScope skc_carry(destination, source);
@@ -894,6 +895,7 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 		SkcCensus::G3Copy(SkcCensus::LazyP3b, destination, source, mip, layer); // Session 124 ([RC1])
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
 	const SkcCensus::CarryScope skc_carry(destination, source);
 	if (source.IsGpuModified()) {
@@ -998,6 +1000,7 @@ ImageId TextureCache::ResolveDepthOverlap(const ImageInfo& requested, BindingTyp
 		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 			SkcCensus::G3Copy(SkcCensus::LazyP3c, replacement, cached, UINT32_MAX, 0);
 		}
+		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 		// Session 123, knob "skipceil" = 2 (census, [P3]): the replacement takes the D / T label of the cached image.
 		const SkcCensus::CarryScope skc_carry(replacement, cached);
 		CommitGpuWrite(replacement);
@@ -1865,6 +1868,11 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 		return;
 	}
 	auto& image            = m_slot_images[id];
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(v)): the image links to this surface now.
+	const bool skc3_link   = Common::SkipCeil::t_mode == 3 &&
+	                       (image.info.metadata.kind != desc.info.metadata.kind ||
+	                        image.info.metadata.range.address != desc.info.metadata.range.address);
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	image.info.metadata    = desc.info.metadata;
 	auto [entry, inserted] = m_surface_metas.try_emplace(
 	    desc.info.metadata.range.address, MetaDataInfo {.type = MetaDataInfo::Type::Dcc});
@@ -1893,6 +1901,11 @@ void TextureCache::PrepareDccClear(ImageId id, const ImageDesc& desc) {
 			     static_cast<uint32_t>(metadata.type));
 		}
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::Dcc};
+	}
+	// Session 124 (item 47(v)): a late link to a surface with a pending clear - the remembered cleaner closes the image,
+	// before the materialization below.
+	if (skc3_link && metadata.clear_mask != 0) [[unlikely]] {
+		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
 	if (metadata.clear_mask == 0 || image.info.resources.levels != 1 ||
 	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) {
@@ -1947,6 +1960,11 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 	    desc.type != BindingType::RenderTarget || desc.info.samples != 1 ||
 	    desc.info.resources.levels != 1 || desc.info.IsVolume()) return;
 	auto& image = m_slot_images[id];
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(v)): the image links to this surface now.
+	const bool skc3_link = Common::SkipCeil::t_mode == 3 &&
+	                       (image.info.metadata.kind != desc.info.metadata.kind ||
+	                        image.info.metadata.range.address != desc.info.metadata.range.address);
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	image.info.metadata = desc.info.metadata;
 	auto [entry, inserted] = m_surface_metas.try_emplace(
 	    desc.info.metadata.range.address, MetaDataInfo {.type = MetaDataInfo::Type::CMask});
@@ -1967,6 +1985,10 @@ void TextureCache::PrepareCmaskClear(ImageId id, const ImageDesc& desc) {
 		Common::DrawStat::Mark(Common::DrawStat::Meta);
 		BumpMetaEpoch();
 		metadata = MetaDataInfo {.type = MetaDataInfo::Type::CMask};
+	}
+	// Session 124 (item 47(v)): a late link to a surface with a pending clear - before the materialization below.
+	if (skc3_link && metadata.clear_mask != 0) [[unlikely]] {
+		SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata.clear_mask, false);
 	}
 	if (metadata.fill_value != 0 || metadata.clear_mask == 0 ||
 	    desc.info.metadata.range.size == 0 || metadata.fill_size < desc.info.metadata.range.size) return;
@@ -2259,7 +2281,12 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	}
 	auto view_info = desc.view_info;
 	if (!image.info.data.Empty()) {
-		PrepareDccClear(id, desc);
+		{
+			// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b), N12): the materialization of a
+			// deferred clear while a binding resolves is no write event (an Lt write of the trigger).
+			const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
+			PrepareDccClear(id, desc);
+		}
 		{
 			// Session 71, candidate C3 (counters only): a storage binding writes the image too, but
 			// with scattered texels, so "the pass overwrites it anyway" is far weaker there than
@@ -2371,8 +2398,13 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
 			FS::Add(FS::Counter::C3ColorPopKb, c3_note_kb);
 		}
 	}
-	PrepareDccClear(id, desc);
-	PrepareCmaskClear(id, desc);
+	{
+		// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialization of a deferred
+		// clear at a target acquisition or a fast-clear eliminate is no write event (an Lt write of the trigger).
+		const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
+		PrepareDccClear(id, desc);
+		PrepareCmaskClear(id, desc);
+	}
 	// Those two calls are the ONLY thing between the observation and the upload decision, so an
 	// image that left the population here left it because a recognised guest clear cancelled its
 	// upload - unless the clear performed the upload itself, which the thread-local counter
@@ -2418,11 +2450,18 @@ vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc,
 		RefreshImage(id);
 	}
 	if (desc.info.HasMetadata()) {
+		// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(v)): a new link of the image to this
+		// surface, or a seeded clear state (insertion / type change: no clear event).
+		const bool skc3_link = Common::SkipCeil::t_mode == 3 &&
+		                       (image.info.metadata.kind != desc.info.metadata.kind ||
+		                        image.info.metadata.range.address != desc.info.metadata.range.address);
+		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 		image.info.metadata = desc.info.metadata;
 		auto [metadata, inserted] =
 		    m_surface_metas.try_emplace(desc.info.metadata.range.address,
 		                                MetaDataInfo {.type       = MetaDataInfo::Type::HTile,
 		                                              .clear_mask = image.info.htile_clear_mask});
+		bool skc3_seed = inserted;
 		if (inserted) {
 			BumpMetaEpoch();
 		}
@@ -2432,6 +2471,10 @@ vk::ImageView TextureCache::FindDepthTarget(ImageId id, const ImageDesc& desc,
 			metadata->second = {.type       = MetaDataInfo::Type::HTile,
 			                    .clear_mask = image.info.htile_clear_mask};
 			BumpMetaEpoch();
+			skc3_seed = true;
+		}
+		if (Common::SkipCeil::t_mode == 3 && (skc3_link || skc3_seed) && metadata->second.clear_mask != 0) [[unlikely]] {
+			SkcCensus::G3MetaLate(image, desc.info.metadata.range.address, metadata->second.clear_mask, skc3_seed);
 		}
 	}
 	CommitGpuWrite(image);
@@ -2587,6 +2630,14 @@ bool TextureCache::ClearImageFromBuffer(CommandBuffer& command, uint64_t address
 	return true;
 }
 
+// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(e)): the subresources ClearImage writes; the
+// slices of a volume are no keys (its layers are).
+static SkcCensus::Sub Skc3ClearSub(const Image& image, const vk::ImageSubresourceRange& range) noexcept {
+	const bool volume = image.info.IsVolume();
+	return {range.baseMipLevel, range.levelCount, volume ? 0u : range.baseArrayLayer,
+	        volume ? UINT32_MAX : range.layerCount, 0u, SkcCensus::AspBits(range.aspectMask)};
+}
+
 void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format format,
                               const vk::ImageSubresourceRange& range, const vk::ClearValue& clear) {
 	auto& image = m_slot_images[id];
@@ -2655,6 +2706,7 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format for
 		                            rendering.renderArea.extent.height / 1024U *
 		                            rendering.layerCount);
 		command.Handle().endRendering();
+		const SkcCensus::SubScope skc3_sub(Skc3ClearSub(image, range)); // Session 124 (item 47(e))
 		CommitGpuWrite(image);
 		return;
 	}
@@ -2673,6 +2725,7 @@ void TextureCache::ClearImage(CommandBuffer& command, ImageId id, vk::Format for
 		                                        vk::ImageLayout::eTransferDstOptimal,
 		                                        &clear.depthStencil, 1, &native_range);
 	}
+	const SkcCensus::SubScope skc3_sub(Skc3ClearSub(image, range)); // Session 124 (item 47(e))
 	CommitGpuWrite(image);
 }
 
@@ -2860,6 +2913,13 @@ bool BufferCache::SynchronizeBufferFromImage(Buffer& buffer, uint64_t vaddr, uin
 			}
 		}
 	}
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(g)): the copy writes guest range
+	// [address, +copy_size) of the buffer from the image - a write with no writer ("up"), before the graph read of the
+	// operation (a texel binding reads it from G3ReadBufferLate, after ObtainBuffer).
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3SyncImg(image.info.data.address, copy_size);
+	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	m_texture_cache.DownloadImage(image, buffer, buf_offset, copy_size, std::move(transfer));
 	return true;
 }
@@ -2880,6 +2940,7 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 			SkcCensus::G3Download(image); // Session 124: a write of guest memory with no writer (s.3.3.2)
 		}
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	const auto range    = image.info.data;
 	auto&      download = m_buffer_cache.GetUtilityBuffer(MemoryUsage::Download);
 	auto [mapped, offset] =
@@ -3099,6 +3160,7 @@ bool TextureCache::ClearMeta(uint64_t address) {
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 		SkcCensus::G3MetaClear(*this, address);
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	BumpMetaEpoch();
 	return true;
 }
@@ -3136,6 +3198,7 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 			SkcCensus::G3MetaFill(*this, address, found->second.clear_mask,
 			                      found->second.type == MetaDataInfo::Type::PendingDcc);
 		}
+		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 		found->second.fill_value = fill_value;
 		found->second.fill_size  = size;
 		if (found->second.type == MetaDataInfo::Type::PendingDcc) {
@@ -3263,6 +3326,8 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	// with the cleaner remembered at the fill.
 	if (Common::SkipCeil::t_mode == 3 && found->second.clear_mask != 0) [[unlikely]] {
 		SkcCensus::G3MetaAdopt(*image, metadata_address);
+	} else if (found->second.clear_mask != 0) {
+		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 	}
 	static std::atomic<uint32_t> log_count = 0;
 	static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
@@ -3809,7 +3874,7 @@ struct State {
 	uint32_t                              epoch = 1;
 	std::vector<std::pair<uint64_t, uint64_t>> wr_cur;  // node writes of buffers with ep == epoch (Ld)
 	std::vector<std::pair<uint64_t, uint64_t>> wr_next; // ... with ep == epoch + 1 (the running uses_dma operation)
-	std::unordered_map<uint64_t, uint32_t> pend_dcc;    // PendingDcc metadata address -> its cleaner [RC2]
+	std::unordered_map<uint64_t, uint32_t> clr;         // metadata address -> its cleaner, every type [RC2], item 47(v)
 	uint32_t                              uid    = 0;
 	uint64_t                              finals = 0;
 	bool                                  logged = false;
@@ -3830,6 +3895,9 @@ thread_local bool     t_dwin  = false;
 thread_local uint64_t t_dw_t0 = 0;
 thread_local uint64_t t_dw_p  = 0;
 thread_local uint64_t t_dw_n  = 0;
+// ROADMAP s122 item 47(e): the subresources of the innermost SkcCensus::SubScope.
+thread_local bool           t_sub_on = false;
+thread_local SkcCensus::Sub t_sub {};
 
 std::mutex                                            g_pend_mutex;
 std::vector<std::tuple<uint64_t, uint64_t, uint64_t>> g_pend; // id, begin, end
@@ -4139,6 +4207,24 @@ IR View(Image& image, const ImageViewInfo& view) {
 	asp |= static_cast<bool>(view.aspect & vk::ImageAspectFlagBits::eDepth) ? 2u : 0u;
 	asp |= static_cast<bool>(view.aspect & vk::ImageAspectFlagBits::eStencil) ? 4u : 0u;
 	return Clamp(image, view.base_level, view.level_count, view.base_layer, view.layer_count, asp);
+}
+
+// The keys of `sub` (item 47(e)): one range, or one per layer of lmask.
+IR SubIR(Image& image, const SkcCensus::Sub& sub) {
+	return Clamp(image, sub.bl, sub.lc, sub.by, sub.yc, sub.asp);
+}
+
+template <typename F>
+void ForSub(Image& image, const SkcCensus::Sub& sub, F&& fn) {
+	if (sub.lmask == 0) {
+		fn(SubIR(image, sub));
+		return;
+	}
+	for (uint32_t layer = 0; layer < 32; layer++) {
+		if (((sub.lmask >> layer) & 1u) != 0) {
+			fn(Clamp(image, sub.bl, sub.lc, layer, 1, sub.asp));
+		}
+	}
 }
 
 uint64_t Count(const IR& r) noexcept {
@@ -4658,9 +4744,8 @@ void Chain(uint32_t writer, uint64_t reader_hash, uint32_t stage) {
 	c.second = writer;
 }
 
-void ReadWhole(Image& image) {
-	const IR r = Whole(image);
-	Rd       rd;
+void ReadRange(Image& image, const IR& r) {
+	Rd rd;
 	if (!OpReader(rd)) {
 		return;
 	}
@@ -4679,6 +4764,22 @@ void Upload(Image& image, uint32_t first_level, uint32_t level_count) {
 }
 
 void StampW3(Image& image) {
+	if (t_lazy == SkcCensus::LazyMat) {
+		// ROADMAP s122 items 44(b), 47(b): a materialization of a deferred clear, on every path (a target acquisition
+		// included), is no write event; under Lt a write of the trigger (none outside operations) - of the materialized
+		// subresources when the site knows them.
+		LazyLog(SkcCensus::LazyMat);
+		Wr wr;
+		wr.lt_only = true;
+		wr.lt      = t_skc_op.node;
+		wr.via     = ViaW3;
+		if (t_sub_on) {
+			ForSub(image, t_sub, [&wr](const IR& r) { WriteImg(wr, r); });
+		} else {
+			WriteImg(wr, Whole(image));
+		}
+		return;
+	}
 	if (Common::SkipCeil::t_acq) {
 		return; // a target acquisition is no certain write: W1 covers it (as in session 123)
 	}
@@ -4687,18 +4788,25 @@ void StampW3(Image& image) {
 		case SkcCensus::LazyP3a:
 		case SkcCensus::LazyP3b:
 		case SkcCensus::LazyP3c: return; // the explicit event of the scope is the write
-		case SkcCensus::LazyMat: {
-			// ROADMAP s122 item 44(b): no write event; under Lt a write of the trigger (none outside operations).
-			LazyLog(SkcCensus::LazyMat);
-			Wr wr;
-			wr.lt_only = true;
-			wr.lt      = t_skc_op.node;
-			wr.via     = ViaW3;
-			WriteImg(wr, Whole(image));
+		case SkcCensus::LazyW3r:
+			if (t_sub_on) {
+				ForSub(image, t_sub, [](const IR& r) { LazyWrite(SkcCensus::LazyW3r, r, nullptr, 0, 0); });
+			} else {
+				LazyWrite(SkcCensus::LazyW3r, Whole(image), nullptr, 0, 0);
+			}
 			return;
-		}
-		case SkcCensus::LazyW3r: LazyWrite(SkcCensus::LazyW3r, Whole(image), nullptr, 0, 0); return;
 		default: break;
+	}
+	if (!t_sub_on) {
+		// ROADMAP s122 item 47(e): a W3 without a known subresource closes the keys of its image without a writer ("up":
+		// a writer on keys it did not write would be "down").
+		FS::Add(Counter::Skc3W3Nw, 1);
+		Wr wr;
+		wr.via     = ViaW3;
+		wr.why     = WhyW3;
+		wr.certain = true;
+		WriteImg(wr, Whole(image));
+		return;
 	}
 	const uint32_t w = t_skc_op.node;
 	Wr             wr;
@@ -4707,7 +4815,7 @@ void StampW3(Image& image) {
 	wr.via     = ViaW3;
 	wr.why     = WhyW3;
 	wr.certain = true;
-	WriteImg(wr, Whole(image));
+	ForSub(image, t_sub, [&wr](const IR& r) { WriteImg(wr, r); });
 	CountWrite(w);
 }
 
@@ -4754,6 +4862,23 @@ void CloseCandidates(Each&& each, uint64_t address, uint32_t mask) {
 	if (hit) {
 		FS::Add(Counter::Skc3Mclr, 1);
 	}
+}
+
+// ROADMAP s122 item 47(v): an image linked to a metadata surface whose clear mask is nonzero after the clear event - the
+// cleaner remembered at the address closes it; a cleaner of a finalized frame or an unmarked frame, none remembered, or a
+// seeded clear state (HTILE at its insertion, no clear event) close it without a writer ("up").
+bool LateLink(Image& image, uint64_t address, uint32_t mask, bool seeded) {
+	auto&    s = S();
+	uint32_t w = 0;
+	if (seeded) {
+		s.clr.erase(address);
+	} else if (const auto it = s.clr.find(address); it != s.clr.end()) {
+		w = FrameOf(it->second) != nullptr ? it->second : 0;
+	}
+	FS::Add(w != 0 ? Counter::Skc3ClLate : Counter::Skc3ClLateNw, 1);
+	bool hit = false;
+	CloseImage(image, mask, w, hit);
+	return hit;
 }
 
 // ---- finalization ---------------------------------------------------------------------------------------------------------
@@ -4945,6 +5070,7 @@ void Reset() {
 	s.gds.clear();
 	s.wr_cur.clear();
 	s.wr_next.clear();
+	s.clr.clear(); // N11: the cleaners of finalized frames are "none" either way
 }
 
 } // namespace G3
@@ -4959,6 +5085,19 @@ uint8_t SkcCensus::LazyEnter(uint8_t site) noexcept {
 
 void SkcCensus::LazyLeave(uint8_t prev) noexcept {
 	G3::t_lazy = prev;
+}
+
+bool SkcCensus::SubEnter(const Sub& sub, Sub& prev) noexcept {
+	const bool on = G3::t_sub_on;
+	prev          = G3::t_sub;
+	G3::t_sub     = sub;
+	G3::t_sub_on  = true;
+	return on;
+}
+
+void SkcCensus::SubLeave(bool prev_on, const Sub& prev) noexcept {
+	G3::t_sub    = prev;
+	G3::t_sub_on = prev_on;
 }
 
 void SkcCensus::GcDone(uint64_t t0, uint64_t p0, uint64_t n0) noexcept {
@@ -5251,6 +5390,10 @@ void SkcCensus::G3CpuSeed(uint64_t vaddr, uint64_t size) {
 	page.buffer = true;
 	if (!G3::PendHit(pbeg, pend)) {
 		G3::ReadMap(page, s.buf, pbeg, pend - pbeg);
+	} else if (!G3::PendHit(vaddr, end)) {
+		// ROADMAP s122 item 47(d): the page meets a pending erase and the window does not - Lw is seeded by the window
+		// itself (Lw contains L); when the window meets it too, both are skipped.
+		G3::ReadMap(page, s.buf, vaddr, size);
 	}
 }
 
@@ -5339,6 +5482,7 @@ void SkcCensus::G3MetaClear(TextureCache& cache, uint64_t address) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
 		return;
 	}
+	G3::S().clr[address] = t_skc_op.node; // item 47(v): remembered for a late link of the surface
 	G3::CloseCandidates(
 	    [&cache](auto&& fn) { cache.m_slot_images.ForEach([&fn](Common::SlotId /*id*/, Image& image) { fn(image); }); },
 	    address, UINT32_MAX);
@@ -5350,13 +5494,14 @@ void SkcCensus::G3MetaFill(TextureCache& cache, uint64_t address, uint32_t clear
 		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
 		return;
 	}
+	// ROADMAP s122 items 44(v), 47(v): the cleaner is remembered for a late link of the surface (the adoption of a
+	// PendingDcc fill among them); a fill that is no clear forgets it.
+	if (clear_mask != 0) {
+		G3::S().clr[address] = t_skc_op.node;
+	} else {
+		G3::S().clr.erase(address);
+	}
 	if (pending) {
-		// ROADMAP s122 item 44(v): the owner is not known yet - the cleaner is remembered for the adoption.
-		if (clear_mask != 0) {
-			G3::S().pend_dcc[address] = t_skc_op.node;
-		} else {
-			G3::S().pend_dcc.erase(address);
-		}
 		return;
 	}
 	if (clear_mask != 0) {
@@ -5374,18 +5519,70 @@ void SkcCensus::G3MetaAdopt(Image& image, uint64_t address) {
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3MclrN, 1);
 	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3MclrPend, 1);
-	auto&    s = G3::S();
-	uint32_t w = 0;
-	if (const auto it = s.pend_dcc.find(address); it != s.pend_dcc.end()) {
-		// A cleaner of a finalized frame is "none" (s.3.3.4).
-		w = G3::FrameOf(it->second) != nullptr ? it->second : 0;
-		s.pend_dcc.erase(it);
-	}
-	bool hit = false;
-	G3::CloseImage(image, UINT32_MAX, w, hit);
-	if (hit) {
+	// A cleaner of a finalized frame is "none" (s.3.3.4); the entry stays for other late links (item 47(v)).
+	if (G3::LateLink(image, address, UINT32_MAX, false)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Mclr, 1);
 	}
+}
+
+void SkcCensus::G3MetaLate(Image& image, uint64_t address, uint32_t mask, bool seeded) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (!Common::SkipCeil::t_gpu) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
+		return;
+	}
+	(void)G3::LateLink(image, address, mask, seeded);
+}
+
+void SkcCensus::G3SyncImg(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SyncImg, 1);
+	G3::Wr wr;
+	wr.why     = G3::WhyDl;
+	wr.certain = true;
+	wr.ep      = G3::S().epoch;
+	G3::WriteBuf(wr, G3::S().buf, vaddr, size, true);
+}
+
+void SkcCensus::G3ReadBufferLate(uint64_t vaddr, uint64_t size, bool written) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return; // ROADMAP s122 item 35(g), N2: as ReadBuffer
+	}
+	G3::OpReadBuffer(vaddr, size, written);
+}
+
+void SkcCensus::G3ApplyAttach() {
+	const Common::SkipCeil::Skc3Pause pause;
+	G3::ApplyWrites(t_skc_op); // the W1 writes; W2 went at ApplyW2 (none on the bindfloor path)
+}
+
+void SkcCensus::G3ReadSub(TextureCache& cache, ImageId id, const Sub& sub) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return;
+	}
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image != nullptr) {
+		G3::ReadRange(*image, G3::SubIR(*image, sub));
+	}
+}
+
+void SkcCensus::G3MatDepth(TextureCache& cache, ImageId id, const ImageViewInfo& view) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return;
+	}
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr) {
+		return;
+	}
+	G3::LazyLog(SkcCensus::LazyMat);
+	G3::Wr wr;
+	wr.lt_only = true;
+	wr.lt      = t_skc_op.node;
+	wr.via     = G3::ViaW3;
+	G3::WriteImg(wr, G3::Clamp(*image, view.base_level, view.level_count, view.base_layer, view.layer_count, 2));
 }
 
 void SkcStampW3(Image& image) noexcept {
@@ -5550,12 +5747,13 @@ void SkcCensus::ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_
 	}
 }
 
-void SkcCensus::ReadDepthCopySource(TextureCache& cache, ImageId id) {
+void SkcCensus::ReadDepthCopySource(TextureCache& cache, ImageId id, const Sub& sub) {
 	const Skc::Skc3Pause skc3_pause;
 	auto* image = cache.m_slot_images.try_get(id);
-	// Session 124, knob "skipceil" = 3: the whole source is read by the copy (an operation K).
+	// Session 124, knob "skipceil" = 3: the copied subresources of the source are read by the copy (an operation K;
+	// ROADMAP s122 item 47(e)).
 	if (image != nullptr && Skc::t_mode == 3) {
-		G3::ReadWhole(*image);
+		G3::ReadRange(*image, G3::SubIR(*image, sub));
 	}
 	if (image == nullptr || !SkcLiveDT(*image)) {
 		return;
@@ -5600,12 +5798,12 @@ void SkcCensus::Attachment(TextureCache& cache, ImageId id, bool writes) {
 	}
 }
 
-void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written) {
+void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written, bool g3_late) {
 	const Skc::Skc3Pause skc3_pause;
 	if (t_skc_op.serial == 0) {
 		return; // ROADMAP s122 item 35(g), N2
 	}
-	if (Skc::t_mode == 3) {
+	if (Skc::t_mode == 3 && !g3_late) {
 		G3::OpReadBuffer(vaddr, size, written); // Session 124: an edge / a "next" seed, and a pending W2 write
 	}
 	if (written) {

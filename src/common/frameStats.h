@@ -2357,11 +2357,15 @@ enum class Counter : uint32_t {
 	Skc3DmaCut,              // skc3_dma_cut
 	Skc3LazyN,               // skc3_lazy_n
 	Skc3LazyIn,              // skc3_lazy_in
+	Skc3W3Nw,                // skc3_w3_nw: W3 without a known subresource - the keys close without a writer (item 47(e))
 	Skc3MclrN,               // skc3_mclr_n
 	Skc3Mclr,                // skc3_mclr
 	Skc3MclrPend,            // skc3_mclr_pend
+	Skc3ClLate,              // skc3_cl_late: late surface links closed with the remembered cleaner (item 47(v))
+	Skc3ClLateNw,            // skc3_cl_late_nw: ... closed without a writer (finalized, unknown or seeded cleaner)
 	Skc3CpwN,                // skc3_cpw_n
 	Skc3CpwHit,              // skc3_cpw_hit
+	Skc3SyncImg,             // skc3_sync_img: SynchronizeBufferFromImage copies - a write with no writer (item 47(g))
 	Skc3MGds,                // skc3_m_gds
 	Skc3W2d,                 // skc3_w2d
 	Skc3PcN,                 // skc3_pc_n
@@ -3036,6 +3040,14 @@ inline void NoteOffThreadStamp() noexcept {
 				FrameStats::Add(FrameStats::Counter::Skc3Xthr, 1);
 			}
 		}
+	}
+}
+
+// Session 124 (ROADMAP s122 item 47(z), N1): a hook of the closure census (mode 3) reached off the GuestGpu thread while
+// mode 3 is latched - skc3_xthr (must read 0) instead of a silent loss.  One thread-local test on GuestGpu.
+inline void NoteOffThread3() noexcept {
+	if (!t_gpu && g_mode.load(std::memory_order_relaxed) == 3) [[unlikely]] {
+		FrameStats::Add(FrameStats::Counter::Skc3Xthr, 1);
 	}
 }
 

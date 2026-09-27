@@ -332,8 +332,24 @@ const char* TextureCacheLastClearOutcome();
 
 // Session 123, knob "skipceil" = 2: the correctness census (MEASUREMENT ONLY; docs/session-123/design123.md s.3 with
 // ROADMAP s122 items 28-33).  GuestGpu thread only (no lock).  Every entry point is called only while the census is
-// latched (Common::SkipCeil::t_mode == 2) - the call sites test that first - except the scopes, which test it inline.
+// latched (Common::SkipCeil::t_mode >= 2) - the call sites test that first - except the scopes, which test it inline.
 struct SkcCensus {
+	// Session 124, knob "skipceil" = 3 (ROADMAP s122 item 47(e)): subresources a site knows - aspects 1 colour, 2 depth,
+	// 4 stencil; lmask != 0: the layers of the mask (by / yc unused).  A W3 stamped outside every SubScope closes the keys
+	// of its image without a writer (skc3_w3_nw).
+	struct Sub {
+		uint32_t bl    = 0;
+		uint32_t lc    = 0;
+		uint32_t by    = 0;
+		uint32_t yc    = 0;
+		uint32_t lmask = 0;
+		uint8_t  asp   = 0;
+	};
+	static uint8_t AspBits(vk::ImageAspectFlags aspects) noexcept {
+		return static_cast<uint8_t>(((aspects & vk::ImageAspectFlagBits::eColor) ? 1u : 0u) |
+		                            ((aspects & vk::ImageAspectFlagBits::eDepth) ? 2u : 0u) |
+		                            ((aspects & vk::ImageAspectFlagBits::eStencil) ? 4u : 0u));
+	}
 	// One census operation (s.3.1): an R / K draw from the renderer entry (D from the skip site on), a CS dispatch.  Drops
 	// the W2 stamps it never applied and books skc_x1_draw / _cs / _pass and skc_wpasses at the end.  Does not nest.
 	class OpScope {
@@ -388,13 +404,16 @@ struct SkcCensus {
 	// RebindImages: every non-null image binding is a read; a storage binding also queues a W2 stamp.  stage: 0 vs,
 	// 1 ps, 2 cs.
 	static void ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_t shader_hash, uint32_t stage);
-	// DepthStencilCopy: the source read, before the W3 stamp of the destination ([N3]).
-	static void ReadDepthCopySource(TextureCache& cache, ImageId id);
+	// DepthStencilCopy: the source read, before the W3 stamp of the destination ([N3]).  Session 124 (mode 3, ROADMAP
+	// s122 item 47(e)): the graph reads the copied subresources `sub` only.
+	static void ReadDepthCopySource(TextureCache& cache, ImageId id, const Sub& sub);
 	// The tail of AcquireRenderTargets: the attachment read (skc_x1_att), then the W1 stamp when the draw writes it.
 	static void Attachment(TextureCache& cache, ImageId id, bool writes);
 	// NativeStorageBuffer after the null return (ROADMAP s122 item 33(a)): every slot is a read; a written slot also
 	// queues a W2 stamp.
-	static void ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written);
+	// Session 124 (mode 3, ROADMAP s122 item 47(g)): g3_late - the graph read comes later, from G3ReadBufferLate after
+	// ObtainBuffer (a texel binding: SynchronizeBufferFromImage writes the range first).
+	static void ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written, bool g3_late = false);
 	// The indirect arguments an executed operation reads on the GPU path ([N2]).
 	static void ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t size);
 	// An executed operation with uses_dma at the PrepareBda sites ([RC11], [N8]).
@@ -423,7 +442,7 @@ struct SkcCensus {
 		LazyP3a    = 2, // CopyImage
 		LazyP3b    = 3, // CopyImageMip
 		LazyP3c    = 4, // ResolveDepthOverlap (MS depth reinterpretation)
-		LazyMat    = 5, // MaterializeDeferredDccClear
+		LazyMat    = 5, // the materialization of a deferred clear, on every path (ROADMAP s122 item 47(b))
 		LazyW3r    = 6, // a sampled binding resolving
 	};
 	// W3 stamps inside the scope are the lazy write of its site (upload and P3 record their write explicitly and swallow
@@ -446,6 +465,27 @@ struct SkcCensus {
 	private:
 		bool    m_armed = false;
 		uint8_t m_prev  = LazyNone;
+	};
+	// The subresources the W3 stamps inside the scope write (ROADMAP s122 item 47(e)); scopes nest, the innermost wins.
+	class SubScope {
+	public:
+		explicit SubScope(const Sub& sub) noexcept {
+			if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+				m_armed   = true;
+				m_prev_on = SubEnter(sub, m_prev);
+			}
+		}
+		~SubScope() {
+			if (m_armed) [[unlikely]] {
+				SubLeave(m_prev_on, m_prev);
+			}
+		}
+		KYTY_CLASS_NO_COPY(SubScope);
+
+	private:
+		bool m_armed   = false;
+		bool m_prev_on = false;
+		Sub  m_prev {};
 	};
 	// RenderContext::RunGarbageCollector of a marked frame (s.5.4): its wall minus the pauses inside.
 	class GcSpan {
@@ -503,6 +543,8 @@ struct SkcCensus {
 	static void    LazyLeave(uint8_t prev) noexcept;
 	static void    GcDone(uint64_t t0, uint64_t p0, uint64_t n0) noexcept;
 	static void    ProcDone(uint32_t frame, uint64_t t0, uint64_t p0, uint64_t n0) noexcept;
+	static bool    SubEnter(const Sub& sub, Sub& prev) noexcept;
+	static void    SubLeave(bool prev_on, const Sub& prev) noexcept;
 	// SkipCeilFlipBoundary: the end of a mode-3 frame (poll bit, finalization, calibration), then the latch.
 	static void G3FrameEnd();
 	static void G3Latch(bool edge);
@@ -542,6 +584,20 @@ struct SkcCensus {
 	static void G3MetaClear(TextureCache& cache, uint64_t address);
 	static void G3MetaFill(TextureCache& cache, uint64_t address, uint32_t clear_mask, bool pending);
 	static void G3MetaAdopt(Image& image, uint64_t address);
+	// ROADMAP s122 item 47(v): an image linked to a metadata surface with a nonzero clear mask after the clear event
+	// (PrepareDccClear, PrepareCmaskClear, FindDepthTarget); seeded - a clear state with no clear event (HTILE seed).
+	static void G3MetaLate(Image& image, uint64_t address, uint32_t mask, bool seeded);
+	// ROADMAP s122 item 47(g): SynchronizeBufferFromImage writes guest range [vaddr, +size) with no writer.
+	static void G3SyncImg(uint64_t vaddr, uint64_t size);
+	// ROADMAP s122 item 47(g): the graph read of a texel buffer binding, after its ObtainBuffer (see ReadBuffer).
+	static void G3ReadBufferLate(uint64_t vaddr, uint64_t size, bool written);
+	// ROADMAP s122 item 47(a): the W1 writes AcquireRenderTargets queued, after every image read of the draw.
+	static void G3ApplyAttach();
+	// ROADMAP s122 item 47(e), N4: a read of the subresources `sub` of an image by the running operation.
+	static void G3ReadSub(TextureCache& cache, ImageId id, const Sub& sub);
+	// ROADMAP s122 item 47(b): the HTILE clear materialized at a target acquisition (load-op or explicit clear) - no
+	// write event, an Lt write of the trigger on the depth of the view.
+	static void G3MatDepth(TextureCache& cache, ImageId id, const ImageViewInfo& view);
 };
 
 } // namespace Libs::Graphics

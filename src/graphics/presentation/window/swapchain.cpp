@@ -777,6 +777,7 @@ Presenter::Frame& Presenter::PrepareFrame(CommandBuffer& buffer, const ImageInfo
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 		SkcCensus::G3Flip(image);
 	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 
 	auto frame_format = info.pixel_format;
 	switch (frame_format) {

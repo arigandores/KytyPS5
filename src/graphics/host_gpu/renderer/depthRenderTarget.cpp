@@ -453,10 +453,18 @@ bool RenderExecutor::DepthStencilCopy(CommandBuffer& buffer) {
 	cache.UpdateImage(write_id);
 	// Session 123, knob "skipceil" = 2 (census, [N3]): the source read, after UpdateImage(read_id) (which can replace its
 	// content from guest memory, [N5]) and before the W3 stamp of the destination, so an operation K turns T first.
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(e)): the copy reads and writes one level,
+	// the layers of the view and the copied aspects (the regions below).
+	const SkcCensus::Sub skc3_sub {read_desc.view_info.base_level, 1, read_desc.view_info.base_layer,
+	                               read_desc.view_info.layer_count, 0,
+	                               static_cast<uint8_t>((depth_copy ? 2u : 0u) | (stencil_copy ? 4u : 0u))};
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
-		SkcCensus::ReadDepthCopySource(cache, read_id);
+		SkcCensus::ReadDepthCopySource(cache, read_id, skc3_sub);
 	}
-	cache.MarkGpuWritten(write_id);
+	{
+		const SkcCensus::SubScope skc3_w3(skc3_sub);
+		cache.MarkGpuWritten(write_id);
+	}
 	auto& source      = cache.GetImage(read_id);
 	auto& destination = cache.GetImage(write_id);
 	EXIT_IF(read_id == write_id || source.backing.format != destination.backing.format);

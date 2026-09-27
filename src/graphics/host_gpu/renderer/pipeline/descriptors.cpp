@@ -215,7 +215,8 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY): the buffer read site of EVERY slot, ahead of the
 	// direct-copy branch (ROADMAP s122 item 33(a)); a written slot is a read too ([P1]) and queues its W2 stamp.
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
-		SkcCensus::ReadBuffer(context.GetBufferCache(), address, size, resource.written);
+		// Session 124 (mode 3, ROADMAP s122 item 47(g)): a texel binding's graph read waits for ObtainBuffer below.
+		SkcCensus::ReadBuffer(context.GetBufferCache(), address, size, resource.written, resource.formatted);
 	}
 	const auto& graphics   = context.GetGraphics();
 	const bool  const_bank = ShaderRecompiler::IR::PackedStrideConstBank(resource.packed_stride);
@@ -282,6 +283,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	// The last argument (gate "buffast"): this binding asks for the same range every draw.
 	auto [buffer, offset] = context.GetBufferCache().ObtainBuffer(address, size, resource.written,
 	                                                              resource.formatted, id, true);
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(g)): the graph read of a texel binding,
+	// after SynchronizeBufferFromImage (inside ObtainBuffer) wrote the range.
+	if (resource.formatted && Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3ReadBufferLate(address, size, resource.written);
+	}
 	const auto aligned_offset = Common::AlignDown(offset, alignment);
 	const auto adjustment     = offset - aligned_offset;
 	const auto max_range      = graphics.GetPhysicalDeviceProperties().limits.maxStorageBufferRange;
@@ -2909,6 +2915,8 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 		}
 		layer += count - 1;
 	}
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): the materialized layers (every level).
+	const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {0, UINT32_MAX, 0, 0, mask, 1});
 	cache.MarkGpuWritten(id);
 }
 
@@ -2932,6 +2940,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				// FindRenderTarget, which rt_fast_no never sees. Hand it the same registers the
 				// branch above already tested, so c3_ct covers it and c3_ct + c3_dt - rt_fast_no
 				// measures how often this path runs.
+				// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(b)): this acquisition only
+				// materializes the deferred clear - no write event, an Lt write of the trigger.
+				const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
 				(void)cache.FindRenderTarget(
 				    color.image_id, color.desc,
 				    (rt.info.cmask_fast_clear_enable ? TextureCache::kRegColorFastClear : 0u) |

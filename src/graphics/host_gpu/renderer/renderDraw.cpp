@@ -1355,6 +1355,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		attachment.image_view   = image_view;
 		attachment.image_layout = layout;
 	}
+	bool skc3_depth_mat = false; // Session 124 (item 47(b)): the HTILE clear this acquisition materializes
 	if (depth.image_id) {
 		const auto owner = cache.m_slot_images.try_get(depth.image_id);
 		if (owner == nullptr || !owner->registered || owner->binding.needs_rebind) {
@@ -1380,6 +1381,7 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		    metadata.kind == ImageMetadataKind::Htile &&
 		    cache.IsMetaCleared(metadata.range.address, depth.desc.view_info.base_layer);
 		depth.depth_load_clear_enable = depth.depth_clear_enable || meta_clear;
+		skc3_depth_mat                = meta_clear;
 		if (meta_clear &&
 		    !cache.TouchMeta(metadata.range.address, depth.desc.view_info.base_layer, false)) {
 			EXIT("failed to consume HTile clear state\n");
@@ -1552,6 +1554,10 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 				const auto skc3_w     = static_cast<uint8_t>((skc3_wa & vk::ImageAspectFlagBits::eDepth ? 2u : 0u) |
 				                                             (skc3_wa & vk::ImageAspectFlagBits::eStencil ? 4u : 0u));
 				const auto skc3_r     = static_cast<uint8_t>((skc3_rd ? 2u : 0u) | (depth.stencil_test_enable ? 4u : 0u));
+				if (skc3_depth_mat) {
+					// ROADMAP s122 item 47(b): the materialized HTILE clear precedes the tests - an Lt write of this draw.
+					SkcCensus::G3MatDepth(cache, depth.image_id, depth.desc.view_info);
+				}
 				SkcCensus::G3Attachment(cache, depth.image_id, depth.desc.view_info, skc3_w, skc3_r);
 			}
 			SkcCensus::Attachment(cache, depth.image_id, static_cast<bool>(depth.AttachmentWriteAspects()));
@@ -2905,6 +2911,11 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	                                      state.depth_info)
 	               : AcquireRenderTargets(buffer, state.color_info, state.color_count,
 	                                      state.depth_info, bindings.pixel);
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(a)): the W1 writes AcquireRenderTargets queued
+	// go to the graph now, after every image read of this draw - on both paths, bindfloor included.
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3ApplyAttach();
+	}
 	lap.Mark(Common::FrameStats::Counter::DrawAcquireRtNs);
 	if (sp_scope.Armed()) {
 		// Session 120, gate "spcen": the same pl_em_rt span, also charged to the would-hit subsets; then the bad check,
@@ -3891,7 +3902,15 @@ bool RenderExecutor::ResolveColorTargets(CommandBuffer& buffer, uint32_t render_
 	}
 
 	auto& cache = m_context.GetTextureCache();
-	cache.MarkGpuWritten(dst.image_id);
+	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(e), N4): the resolve reads one level and
+	// layer of the MSAA source and writes one level and layer of the destination.
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3ReadSub(cache, src.image_id, SkcCensus::Sub {src.guest_mip_level, 1, src.guest_array_layer, 1, 0, 1});
+	}
+	{
+		const SkcCensus::SubScope skc3_sub(SkcCensus::Sub {dst.guest_mip_level, 1, dst.guest_array_layer, 1, 0, 1});
+		cache.MarkGpuWritten(dst.image_id);
+	}
 	auto& source      = cache.GetImage(src.image_id);
 	auto& destination = cache.GetImage(dst.image_id);
 	destination.Resolve(source, {src.guest_mip_level, 1, src.guest_array_layer, 1},

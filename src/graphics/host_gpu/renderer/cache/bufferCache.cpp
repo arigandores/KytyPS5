@@ -1754,9 +1754,14 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	// Session 124, knob "skipceil" = 3 (closure census, s.3.2, ROADMAP s122 item 42(e) [RC11]): a DMA is an operation M
 	// unless an operation is open (then part of it); its destination - memory or GDS - is a certain write (M).
 	const SkcCensus::OpScope skc3_m(m_texture_cache, Common::SkipCeil::KindM, false, true);
-	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
-		SkcCensus::G3DmaWrite(vaddr, size, is_gds);
-	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
+	// ROADMAP s122 item 47(z), N3: the write of M goes to the graph AFTER the fill, so the write faults of its CPU path
+	// (SkcEraseCpu) do not erase the writer M.
+	const auto skc3_write = [vaddr, size, is_gds] {
+		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+			SkcCensus::G3DmaWrite(vaddr, size, is_gds);
+		}
+	};
 	if (is_gds) {
 		if (vaddr > m_gds_buffer.Size() || size > m_gds_buffer.Size() - vaddr) {
 			EXIT("BufferCache: GDS fill range is out of bounds\n");
@@ -1765,6 +1770,7 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 		// Buffer::Fill brackets the transfer itself; the epoch makes the next GDS consumer pay
 		// its barrier even when the lazy gate is on.
 		m_gds_host_epoch++;
+		skc3_write();
 		return;
 	}
 	if (vaddr == 0) {
@@ -1778,12 +1784,14 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 		// Access the guest mapping so write faults invalidate cached buffers and images.
 		auto* destination = reinterpret_cast<uint32_t*>(vaddr);
 		std::fill(destination, destination + size / sizeof(uint32_t), value);
+		skc3_write();
 		return;
 	}
 
 	m_texture_cache.InvalidateMemoryFromGPU(vaddr, size);
 	auto [dst, dst_offset] = ObtainBuffer(vaddr, size, true, true);
 	dst->Fill(dst_offset, size, value);
+	skc3_write();
 }
 
 void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t size, bool dst_gds,
@@ -1821,9 +1829,14 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 	// Session 124, knob "skipceil" = 3 (closure census, s.3.2, s.3.4 [RC11]): an operation M unless one is open; its
 	// source (memory or GDS) is read, its destination written.
 	const SkcCensus::OpScope skc3_m(m_texture_cache, Common::SkipCeil::KindM, false, true);
-	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
-		SkcCensus::G3DmaCopy(dst_vaddr, src_vaddr, size, dst_gds, src_gds);
-	}
+	Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
+	// ROADMAP s122 item 47(z), N3: the node M reads and writes in the graph AFTER the copy - the write faults of the CPU
+	// path do not erase the writer M, and a source range SynchronizeBufferFromImage wrote is read closed (item 47(g)).
+	const auto skc3_copy = [dst_vaddr, src_vaddr, size, dst_gds, src_gds] {
+		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+			SkcCensus::G3DmaCopy(dst_vaddr, src_vaddr, size, dst_gds, src_gds);
+		}
+	};
 	// Session 123, knob "skipceil" = 2 (census, s.3.1-3.2): the DMA source is a read (skc_r_m), the destination a
 	// certain write that erases the labels (M).
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
@@ -1838,6 +1851,7 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 	    !IsRegionGpuModified(src_vaddr, size) && !m_texture_cache.FindImageFromRange(src_vaddr, size)) {
 		std::memcpy(reinterpret_cast<void*>(dst_vaddr), reinterpret_cast<const void*>(src_vaddr),
 		            size);
+		skc3_copy();
 		return;
 	}
 
@@ -1855,6 +1869,7 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 	if (dst_gds) {
 		m_gds_host_epoch++;
 	}
+	skc3_copy();
 }
 
 bool BufferCache::IsRegionRegistered(uint64_t vaddr, uint64_t size) {

@@ -131,6 +131,8 @@ public:
 	void SkcCpWrite(uint64_t addr, uint64_t size) {
 		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
 			SkcCpWriteSlow(addr, size);
+		} else {
+			Common::SkipCeil::NoteOffThread3(); // Session 124, ROADMAP s122 item 47(z), N1
 		}
 	}
 	void SkcCpWriteSlow(uint64_t addr, uint64_t size);

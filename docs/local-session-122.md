@@ -393,3 +393,35 @@ Document `C:/kyty/s122/audit122/AUDIT122.md` (git `docs/session-122/audit/`), ow
 * **Debts** (to be parked at the close): code 4; code 7 off the main thread; codes 2/3/5/6 unsealed; NEW placebo;
   saving-side linearity; GuestGpu idle/spin under `KYTY_GPU_WALL=1`; the staircase correction; one idle criterion and the
   watchdog vs item 6; the missing `csky122` video; double/zero dose per flip on HEADROOM scenes.
+
+## Close (step 6, HPP-9, Roadmap Lead, 2026-09-27)
+
+*Author: the lead.* Decisions: `docs/ROADMAP.md` "СЕССИЯ 122" item 25 (written and committed `3d167e0` before any
+action on it).
+
+* **Audit accepted** (recount CONFIRMED, 3 MAJOR / 5 MINOR, no sealed verdict changes).
+* **Map verdict (as item 24, not rewritten):** reference Sky Garden (NEW) GuestGpu slope 0.902 ± 0.065 NOT_RESOLVED;
+  `ght122` (OLD, judges only itself) 0.939 ± 0.039 NOT_RESOLVED; `des122`/`atl122` HEADROOM (2 ms absorbed fully);
+  `dnn122` HEADROOM (≈ ¾ absorbed); placebo `skyp122r` (OLD) NOT_CRITICAL. Map COMPLETE by scene, PARTIAL by thread
+  (code 1 and the placebo). Game speed in the base-arm windows (pinned): reference 0.527, `ght122` 0.683, HEADROOM scenes
+  0.9994–0.9998; no scene GPU-bound.
+* **Staircase correction (MAJOR-2), item 25 (б):** "a saving below the distance to the next vblank step does not move
+  `dt`" is refuted by `sky122`; frames are quantized, the mean is not; the invisibility of small past wins is the noise
+  limit (2SE ≈ 130–190 µs at ~42 pairs).
+* **Lever of session 123, item 25 (в)–(д):** the CEILING of frame skipping, measurement only — a knob (default 0) that
+  skips host translation of draws on every second flip while everything the guest can observe still executes, the
+  skipped flip shows the previous frame; picture may degrade, hang/death = FAIL; plus a correctness census (guest CPU reads
+  of pages written by skipped draws; images written in frame N and read in N+1). Reading: Δ mean `dt` on the reference,
+  ABBA, window 10–88; Δ + 2SE < 500 µs closes frame skipping; Δ − 2SE ≥ 500 µs opens a design of the correct version in
+  session 124 (sized by the census, not by Δ); otherwise NOT_RESOLVED. Δ is a ceiling, never a gain. `KYTY_GPU_WALL=1` in
+  both arms of the sealed run (the "why s < 1" debt; `gw_flip_ns` is the flip-pacing census).
+* **Rules added (item 25 (е)–(ж)):** the seal is checked against the accepted design's guard list (MAJOR-3); while
+  `SEALED_RUN.lock` exists no run — lead, routine ticks, watchdog tasks included — edits, commits or starts processes
+  (MAJOR-1, MINOR-1); the chain uses the scorer's idle criterion (MINOR-2).
+* **Installed build restored to `d3a981a2…`** (item 25 (з)); `2baf8742…` (knob `burn`, default 0) stays pinned at
+  `C:/kyty/s122/kyty_emulator_2baf8742.exe`.
+* **Chain of session 123** on the platform's own mechanisms (item 23): specialist steps with an `executionPolicy` review
+  stage by the lead, no acceptance-link tasks, root `HPP-3` blocked on the terminal link, issue watchdog on `HPP-3`;
+  `chain_check.py` reduced to a lint (item 25 (и)).
+* **Debts parked in §7:** code 4 site dead; code 7 off the main-thread role; codes 2/3/5/6 not in the sealed map; NEW
+  placebo; saving-side linearity (RC6); double/zero dose per flip on HEADROOM scenes. 60 FPS is not promised.

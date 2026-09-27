@@ -1,0 +1,114 @@
+{
+ "log": "C:/kyty/s126/log_k3c126.txt",
+ "gatearm_lines": 87,
+ "bad_gatearm": 0,
+ "arm_blk_mismatch_rows": 0,
+ "dups": {
+  "main": 0,
+  "draw": 0,
+  "x": 0
+ },
+ "counts": {
+  "mode1": 1,
+  "mode_other": 0,
+  "refused": 0,
+  "skipped": 0,
+  "death": 0
+ },
+ "full_blocks": 86,
+ "full_B": 43,
+ "full_C": 43,
+ "incomplete": [
+  86
+ ],
+ "regimes": {
+  "NEW": 86,
+  "OLD": 0,
+  "MID": 0
+ },
+ "bda_block_mean_range": [
+  46.44303797468354,
+  101.89873417721519
+ ],
+ "R": {
+  "NEW": {
+   "R": 2096.906024401608,
+   "mean_rows": 2076.757753311746,
+   "se": 10.074135544931202,
+   "median_block_means": 2063.0186329113926,
+   "blocks": 43,
+   "rows": 3397,
+   "block_mean_min": 1952.0738481012659,
+   "block_mean_max": 2208.4536582278483
+  }
+ },
+ "R_K3_plus": 2096.906024401608,
+ "verdict": "K3_NOT_CLOSED",
+ "C_rows_us": {
+  "rk3_rt_ns": 1655.887337945246,
+  "rk3_rt_r_ns": 1357.5028996173094,
+  "rk3_res_ns": 836.7191233441272,
+  "rk3_res_r_ns": 716.6016870768325,
+  "rk3_res_x_ns": 2.653166617603768,
+  "pl_em_rt_ns": 1655.8945908154253,
+  "pl_em_rk3_ns": 284.4171003826906
+ },
+ "C_rows_n": {
+  "rk3_n": 5025.7321165734475,
+  "rk3_w": 4754.298498675302,
+  "rk3_xw": 271.4333235207536,
+  "rk3_rec0": 0.0,
+  "rk3_xid": 0.0,
+  "rk3_xctx": 0.0,
+  "rk3_ovf": 0.0
+ },
+ "T0_alone": 1370.1950500322655,
+ "guard_nonzero_rows": {
+  "rk3_nt": 0,
+  "rk3_xthr": 0,
+  "rk3_acqw": 0
+ },
+ "zero_B_bad_rows": 0,
+ "T_fail_blocks": [],
+ "T_max_abs": {
+  "T1": 1,
+  "T4a": 11782,
+  "T4b": 26,
+  "T5": 2
+ },
+ "chain_share_min_max": [
+  0.9853560261677052,
+  0.9864088521081956
+ ],
+ "base_dt_us": 32067.203120400354,
+ "base_blocks": 43,
+ "base_regimes": {
+  "NEW": 43,
+  "OLD": 0,
+  "MID": 0
+ },
+ "game_speed_base": 0.5197522196563775,
+ "cost_C_minus_B": {
+  "dt_us": [
+   926.6284957315281,
+   154.9511794241261,
+   43
+  ],
+  "cpu_gpu_us": [
+   924.6134824845452,
+   142.55450285305153,
+   43
+  ],
+  "draws": [
+   5.5319399470120745,
+   13.69581926014308,
+   43
+  ],
+  "gpu_busy_us": [
+   -2.204886664704074,
+   32.38727466580783,
+   43
+  ]
+ },
+ "log_sha256": "815c47193737632e6cb4a4cf49be182a0401f86c5b5a823f6201b23bdd086135"
+}

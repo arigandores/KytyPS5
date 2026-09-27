@@ -877,8 +877,13 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	// Session 96, gate "bindfloor": PrepareBda is one of the three things the floor
 	// removes from a dispatch.
-	if (program.info.uses_dma && !bind_floor && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (program.info.uses_dma && !bind_floor && Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::NoteDma(m_context.GetBufferCache()); // Session 123 (census, [RC11] / [N8])
+	}
+	// Session 124, knob "skipceil" = 3 (closure census, s.3.3.3): the dispatch shifts the uses_dma epoch at its end - by
+	// the program's info.uses_dma, the floor or not.
+	if (program.info.uses_dma && Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3Dma();
 	}
 	if ((program.info.uses_dma || bda_all) && !bind_floor) {
 		m_context.PrepareBda();
@@ -921,7 +926,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		auto [args_buffer, args_offset] = cache.ObtainBuffer(indirect_args_addr, ArgsSize, false);
 		EXIT_IF(args_buffer == nullptr);
 		// Session 123, knob "skipceil" = 2 (census, [N2]): the arguments are this dispatch's last read.
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcCensus::ReadIndirectArgs(cache, indirect_args_addr, ArgsSize);
 		}
 		static const bool sanitize = !Common::EnvFlagOn("KYTY_NO_INDIRECT_SANITIZE");
@@ -949,7 +954,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 
 	// Session 123, knob "skipceil" = 2 (census, [N1], item 31(b)): after the last read (the indirect arguments), before
 	// CommitBindings - the dispatch's W2 stamps, its kind (CS / T) decided by all its reads.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
 	}
 	PreparedBindings* descriptor_stage = &bindings;

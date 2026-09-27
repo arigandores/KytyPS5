@@ -1516,14 +1516,44 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; s.3.1 W1, s.3.3): every attachment is read first
 	// (skc_x1_att), then stamped when the draw writes it - colour by the effective write mask of the pipeline
 	// (ApplyMask, = colorWriteMask), depth / stencil by AttachmentWriteAspects (the convention of session 118).
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
-		const auto rt_mask = buffer.GetRegisters().GetRenderTargetMask();
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
+		const auto& skc_regs = buffer.GetRegisters();
+		const auto  rt_mask  = skc_regs.GetRenderTargetMask();
+		// Session 124, knob "skipceil" = 3 (closure census, s.3.4): a colour attachment is read when blending is on and
+		// the blend equation uses the destination - a destination factor other than ZERO, a source factor naming the
+		// destination (DST_ALPHA .. SRC_ALPHA_SATURATE) or MIN / MAX; the host never enables a logic op.
+		const auto skc3_blend_reads = [&skc_regs](uint32_t slot) {
+			const auto& bc       = skc_regs.GetBlendControl(slot);
+			const auto  dst_src  = [](uint8_t factor) { return factor >= 0x06u && factor <= 0x0au; };
+			const auto  min_max  = [](uint8_t fcn) { return fcn == 0x02u || fcn == 0x03u; };
+			if (!bc.enable || skc_regs.GetRenderTarget(slot).info.blend_bypass) {
+				return false;
+			}
+			const bool color = bc.color_destblend != 0 || dst_src(bc.color_srcblend) || min_max(bc.color_comb_fcn);
+			const bool alpha = bc.separate_alpha_blend &&
+			                   (bc.alpha_destblend != 0 || dst_src(bc.alpha_srcblend) || min_max(bc.alpha_comb_fcn));
+			return color || alpha;
+		};
 		for (uint32_t i = 0; i < color_count; i++) {
-			SkcCensus::Attachment(
-			    cache, colors[i].image_id,
-			    colors[i].export_mapping.ApplyMask(render_target_mask_slot(rt_mask, colors[i].target_slot)) != 0);
+			const bool skc_writes =
+			    colors[i].export_mapping.ApplyMask(render_target_mask_slot(rt_mask, colors[i].target_slot)) != 0;
+			if (Common::SkipCeil::t_mode == 3) {
+				SkcCensus::G3Attachment(cache, colors[i].image_id, colors[i].desc.view_info, skc_writes ? 1u : 0u,
+				                        skc3_blend_reads(colors[i].target_slot) ? 1u : 0u);
+			}
+			SkcCensus::Attachment(cache, colors[i].image_id, skc_writes);
 		}
 		if (depth.image_id) {
+			if (Common::SkipCeil::t_mode == 3) {
+				// Depth is read by a test that is on and not ALWAYS, or by the depth-bounds test; stencil by its test.
+				const auto skc3_wa    = depth.AttachmentWriteAspects();
+				const bool skc3_rd    = (depth.depth_test_enable && depth.depth_compare_op != vk::CompareOp::eAlways) ||
+				                        depth.depth_bounds_test_enable;
+				const auto skc3_w     = static_cast<uint8_t>((skc3_wa & vk::ImageAspectFlagBits::eDepth ? 2u : 0u) |
+				                                             (skc3_wa & vk::ImageAspectFlagBits::eStencil ? 4u : 0u));
+				const auto skc3_r     = static_cast<uint8_t>((skc3_rd ? 2u : 0u) | (depth.stencil_test_enable ? 4u : 0u));
+				SkcCensus::G3Attachment(cache, depth.image_id, depth.desc.view_info, skc3_w, skc3_r);
+			}
 			SkcCensus::Attachment(cache, depth.image_id, static_cast<bool>(depth.AttachmentWriteAspects()));
 		}
 	}
@@ -1806,7 +1836,7 @@ static PreparedVertexBuffers AcquireVertexBuffers(CommandBuffer&               b
 		range.binding      = cache.ObtainBuffer(range.base_address, size, false);
 		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 34(v) by the rule of item 33(a)): the acquired merged
 		// vertex range is a buffer read of this draw, ahead of its deferred W2 stamps.
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcCensus::ReadBuffer(cache, range.base_address, size, false);
 		}
 		SetVulkanObjectNameF(
@@ -2121,7 +2151,7 @@ static PreparedIndexBuffer PrepareIndexBuffer(CommandBuffer&               buffe
 		    buffer.GetContext().GetBufferCache().ObtainBuffer(source.address, source.size, false);
 		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 34(v) by the rule of item 33(a)): the index buffer in
 		// guest memory is a buffer read of this draw, ahead of its deferred W2 stamps (host_data above is no buffer read).
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcCensus::ReadBuffer(buffer.GetContext().GetBufferCache(), source.address, source.size, false);
 		}
 		prepared.buffer = buffer_ptr->Handle();
@@ -2845,7 +2875,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// Session 123, knob "skipceil" = 2 (census, [N1], ROADMAP s122 item 34(v)): the binding, vertex and index reads of this
 	// draw are done - its W2 stamps now (moved here from the tail of PrepareGraphicsBindings; the bindfloor path never ran
 	// PrepareGraphicsBindings, so it queued none and applies none, as before).
-	if (!bind_floor && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (!bind_floor && Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
@@ -2899,7 +2929,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		    emit_info.indirect_args_addr, uint64_t {dwords} * sizeof(uint32_t), false);
 		EXIT_IF(args_buffer == nullptr);
 		// Session 123, knob "skipceil" = 2 (census, [N2]): the arguments are a read of this draw.
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcCensus::ReadIndirectArgs(m_context.GetBufferCache(), emit_info.indirect_args_addr,
 			                            uint64_t {dwords} * sizeof(uint32_t));
 		}
@@ -3526,10 +3556,16 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	}
 
 	if (!DrawHasValidVertexShader(sh_ctx)) {
+		if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
+			SkcCensus::G3Empty(); // Session 124 ([RC13]): a D draw without work
+		}
 		return;
 	}
 
 	if (ShouldSkipGeShader(buffer, m_context.GetGpu().GetFrameNum())) {
+		if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
+			SkcCensus::G3Empty(); // Session 124 ([RC13])
+		}
 		return;
 	}
 
@@ -3729,10 +3765,16 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	}
 
 	if (!DrawHasValidVertexShader(sh_ctx)) {
+		if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
+			SkcCensus::G3Empty(); // Session 124 ([RC13]): a D draw without work
+		}
 		return;
 	}
 
 	if (ShouldSkipGeShader(buffer, m_context.GetGpu().GetFrameNum())) {
+		if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
+			SkcCensus::G3Empty(); // Session 124 ([RC13])
+		}
 		return;
 	}
 

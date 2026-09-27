@@ -121,11 +121,19 @@ public:
 	// Session 123, knob "skipceil" = 2 (census, s.3.2 [RC4]): a CP read of guest memory checked against the D / T map;
 	// site 0 wrm, 1 cond, 2 pred, 3 icnt, 4 iarg, 5 dind.  One thread-local test at any other value.
 	void SkcCpRead(uint32_t site, uint64_t addr, uint64_t size) {
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcCpReadSlow(site, addr, size);
 		}
 	}
 	void SkcCpReadSlow(uint32_t site, uint64_t addr, uint64_t size);
+	// Session 124, knob "skipceil" = 3 (closure census, design124.md s.3.3.2 [RC3]): a CP write of guest memory closes its
+	// range under every policy (no writer).  One thread-local test at any other value.
+	void SkcCpWrite(uint64_t addr, uint64_t size) {
+		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+			SkcCpWriteSlow(addr, size);
+		}
+	}
+	void SkcCpWriteSlow(uint64_t addr, uint64_t size);
 	void SynchronizeGpu();
 	void EmitGlobalBarrier();
 	void TriggerEopEventAtEndOfPipe(uint32_t interrupt_context_id);

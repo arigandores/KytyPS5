@@ -244,6 +244,9 @@ public:
 	// passes (skc_x1_wd / skc_x1_wp count each writer once per frame N + 1).  Cleared with the writer statistics.
 	std::vector<uint32_t> skc_wops;
 	std::vector<uint32_t> skc_wpasses;
+	// Session 124, knob "skipceil" = 3 (closure census): the image part of the key of the graph (design124.md s.3.3.1),
+	// assigned on first use by the GuestGpu thread; 0 = none.
+	uint32_t              skc3_uid = 0;
 
 private:
 	friend struct ImageTestAccess;

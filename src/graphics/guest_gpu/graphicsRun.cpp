@@ -497,6 +497,7 @@ void CommandProcessor::WriteConstRam(uint32_t offset, const uint32_t* src, uint3
 }
 
 void CommandProcessor::DumpConstRam(uint32_t* dst, uint32_t offset, uint32_t dw_num) {
+	SkcCpWrite(reinterpret_cast<uint64_t>(dst), uint64_t {dw_num} * 4); // Session 124 (closure census, [RC3])
 	memcpy(dst, m_const_ram + offset / 4, static_cast<size_t>(dw_num) * 4);
 }
 
@@ -576,6 +577,8 @@ void CommandProcessor::WriteData(uint32_t* dst, const uint32_t* src, uint32_t dw
 		return;
 	}
 
+	// Session 124, knob "skipceil" = 3 (closure census, [RC3]): the written range.
+	SkcCpWrite(reinterpret_cast<uint64_t>(dst), write_one_address ? uint64_t {4} : uint64_t {dw_num} * 4);
 	if (write_one_address) {
 		for (uint32_t i = 0; i < dw_num; i++) {
 			dst[0] = src[i];
@@ -592,6 +595,7 @@ void CommandProcessor::WriteReferenceClock(uint64_t dst_address, uint32_t num_by
 		     num_bytes);
 	}
 	const auto value = Sync::ReadReferenceClock();
+	SkcCpWrite(dst_address, num_bytes); // Session 124 (closure census, [RC3])
 	std::memcpy(reinterpret_cast<void*>(dst_address), &value, num_bytes);
 	LOGF("\t copy_data reference clock: dst=0x%016" PRIx64 " value=0x%016" PRIx64 " size=%u\n",
 	     dst_address, value, num_bytes);
@@ -802,6 +806,9 @@ void GuestGpu::ThreadRun(void* data) {
 			Common::FrameStats::Scope process_scope(Common::FrameStats::Counter::GpuThreadProcessNs);
 			Common::FrameStats::WallSpan wall(true, Common::FrameStats::Counter::GpuWallProcNs,
 			                                  Common::FrameStats::Counter::GpuWallProcN);
+			// Session 124, knob "skipceil" = 3 (design124.md s.5.6 [RC12]): the same span for a marked frame, minus the
+			// pauses of the census code - armed exactly when the WallSpan above is (KYTY_GPU_WALL=1).
+			const SkcCensus::ProcSpan skc3_proc;
 			// Session 98 (patch_s98a): the latch sees this submission's seq, queue and flip state
 			// for the whole slice; a resumed slice keeps its after_flip and bf_mixed bits.
 			BindFloorSetSlice(&submission.bf);
@@ -3429,6 +3436,7 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 	auto write32 = [&](bool with_writeback) {
 		auto* dst  = static_cast<uint32_t*>(dst_gpu_addr);
 		auto  data = static_cast<uint32_t>(value);
+		SkcCpWrite(reinterpret_cast<uint64_t>(dst), sizeof(data)); // Session 124 (closure census, [RC3])
 		std::memcpy(dst, &data, sizeof(data));
 
 		if (with_interrupt) {
@@ -3459,6 +3467,12 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 						                        1);
 					}
 					SynchronizeGpu();
+					// Session 124, knob "skipceil" = 3 (closure census, s.3.5 class gds, [RC3]): the GDS range this
+					// RELEASE_MEM reads is a seed; the guest range it writes is a CP write.
+					if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+						SkcCensus::G3GdsSeed(uint64_t {value & 0xffffu} * 4, uint64_t {value >> 16u} * 4);
+					}
+					SkcCpWrite(reinterpret_cast<uint64_t>(dst), uint64_t {value >> 16u} * 4);
 					Sync::ReadGds(*m_renderer.GetBufferCache().GetGdsBuffer(), dst, value & 0xffffu,
 					              value >> 16u);
 					Sync::WriteAtEndOfPipeGds32(m_submit_id, CurrentBuffer(), dst, value & 0xffffu,
@@ -3485,6 +3499,7 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 			} else {
 				auto write64 = [&](bool with_writeback) {
 					auto* dst = static_cast<uint64_t*>(dst_gpu_addr);
+					SkcCpWrite(reinterpret_cast<uint64_t>(dst), sizeof(value)); // Session 124 (closure census, [RC3])
 					std::memcpy(dst, &value, sizeof(value));
 
 					if (with_interrupt) {
@@ -3575,6 +3590,7 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 			if constexpr (sizeof(T) == sizeof(uint64_t)) {
 				const auto clock = Sync::ReadReferenceClock();
 				auto*      dst   = static_cast<uint64_t*>(dst_gpu_addr);
+				SkcCpWrite(reinterpret_cast<uint64_t>(dst), sizeof(clock)); // Session 124 (closure census, [RC3])
 				std::memcpy(dst, &clock, sizeof(clock));
 				switch (cache_action) {
 					case 0x00:
@@ -3793,6 +3809,7 @@ void CommandProcessor::TriggerEvent(uint32_t event_type, uint32_t event_index,
 				     event_address, value, st.gpu_range ? 1 : 0, st.cpu_dirty ? 1 : 0,
 				     st.gpu_dirty ? 1 : 0);
 			}
+			SkcCpWrite(event_address, 16u * 16u); // Session 124 (closure census, [RC3]): the 16 interleaved DB pairs
 			for (uint32_t db = 0; db < 16u; db++) {
 				results[db * 2u] = value;
 			}
@@ -3845,6 +3862,13 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 	}
 	SC::t_lod_a0   = SC::t_lod_anchor;
 	SC::t_lod_has0 = SC::t_lod_has;
+	// Session 124, knob "skipceil" = 3 (design124.md s.2.2, s.3.8 [RC5(2)], s.5.3): the end of the ending frame, BEFORE
+	// the latch of the next one - a marked frame's record takes the poll bit, an unmarked frame finalizes every open
+	// marked frame, the pauses are calibrated.  The Touch flag is reset at every boundary.
+	if (SC::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3FrameEnd();
+	}
+	SC::t_lod_ftouch = false;
 	SC::t_gframe++;
 	if (SC::t_gpu) {
 		SC::g_gframe.store(SC::t_gframe, std::memory_order_relaxed);
@@ -3862,12 +3886,15 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 			}
 			mode = 0;
 		}
-		mode = std::min<uint32_t>(mode, 2);
+		mode = std::min<uint32_t>(mode, 3);
 	}
+	const uint32_t old_mode = SC::t_mode;
 	if (mode != SC::t_mode) {
 		FS::Add(FS::Counter::SkcEdge, 1);
-		if (mode == 2) {
-			SC::t_epoch = SC::t_gframe; // a new census epoch: older labels read empty, the buffer map is cleared
+		if (mode >= 2) {
+			// A new census epoch (entering 2 or 3, and 2 <-> 3, design124.md s.1.2): older labels read empty, the buffer
+			// map is cleared.
+			SC::t_epoch = SC::t_gframe;
 		}
 	}
 	SC::t_mode = mode;
@@ -3881,7 +3908,7 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 			FS::Add(FS::Counter::SkcLodNoanc, 1);
 		}
 	}
-	SC::t_w3   = !SC::t_gpu || mode == 2;
+	SC::t_w3   = !SC::t_gpu || mode >= 2;
 	SC::g_mode.store(mode, std::memory_order_relaxed);
 	FS::Add(FS::Counter::SkcGf, 1);
 	if (mode != 0) {
@@ -3893,17 +3920,26 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 	if (mode == 1 && SC::t_skip) {
 		FS::Add(FS::Counter::SkcSkipF, 1);
 	}
-	if (mode == 2) {
+	if (mode >= 2) {
 		FS::Add(FS::Counter::SkcCF, 1);
 		if (SC::t_skip) {
 			FS::Add(FS::Counter::SkcCDf, 1);
 		}
 		SkcCensus::FrameDump(m_renderer.GetBufferCache());
 	}
+	// Session 124, knob "skipceil" = 3: an edge into or out of 3 resets the graph (s.1.2); a marked frame of mode 3 opens
+	// its record.
+	if (old_mode == 3 || mode == 3) [[unlikely]] {
+		SkcCensus::G3Latch(old_mode != mode);
+	}
 }
 
 void CommandProcessor::SkcCpReadSlow(uint32_t site, uint64_t addr, uint64_t size) {
 	m_renderer.GetBufferCache().SkcCpRead(site, addr, size);
+}
+
+void CommandProcessor::SkcCpWriteSlow(uint64_t addr, uint64_t size) {
+	SkcCensus::G3CpWrite(addr, size);
 }
 
 // Session 98 (patch_s98a, MEASUREMENT ONLY): the flip packet is the guest frame boundary on
@@ -4033,6 +4069,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 		     reinterpret_cast<uint64_t>(dst_gpu_addr), value);
 	}
 
+	SkcCpWrite(reinterpret_cast<uint64_t>(dst_gpu_addr), sizeof(value)); // Session 124 (closure census, [RC3])
 	std::memcpy(dst_gpu_addr, &value, sizeof(value));
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
@@ -4065,6 +4102,7 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 	if (eop_event_type != 0x00000004 || cache_action != 0x00000038) {
 		EXIT("unknown event type\n");
 	}
+	SkcCpWrite(reinterpret_cast<uint64_t>(dst_gpu_addr), sizeof(value)); // Session 124 (closure census, [RC3])
 	std::memcpy(dst_gpu_addr, &value, sizeof(value));
 	auto& command = CurrentBuffer();
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,

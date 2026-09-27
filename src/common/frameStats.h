@@ -2306,6 +2306,87 @@ enum class Counter : uint32_t {
 	SkcLodPmiss,             // skc_lod_pmiss: mode-1 frames with a predicted poll ((frame - A) & 15 == 0) and no Touch
 	SkcLodPbad,              // skc_lod_pbad: mode 1 / 2 frames with a Touch whose offset from A is not a multiple of 16
 	SkcLodNoanc,             // skc_lod_noanc: mode 1 / 2 frames made skippable without an anchor (old t_gframe parity)
+	// Session 124, knob "skipceil" (MEASUREMENT ONLY, docs/session-124/design124.md rev 2 s.8 with ROADMAP s122 items 43-44):
+	// raw counts, _ns ns.  s.8.1, modes 2 and 3.
+	SkcLodDkeep,             // skc_lod_dkeep: Touch calls of D operations of a marked frame that did not move the anchor
+	// s.8.2, mode 3 (the closure graph).
+	Skc3F,                   // skc3_f
+	Skc3Open2,               // skc3_open2
+	Skc3Pollf,               // skc3_pollf
+	Skc3D,                   // skc3_d
+	Skc3DEmpty,              // skc3_d_empty
+	Skc3Nodes,               // skc3_nodes
+	Skc3Wr,                  // skc3_wr
+	Skc3Ed,                  // skc3_ed
+	Skc3NeedL,               // skc3_need_l
+	Skc3FreeL,               // skc3_free_l
+	Skc3FreeLEmpty,          // skc3_free_l_empty
+	Skc3NeedB,               // skc3_need_b
+	Skc3FreeB,               // skc3_free_b
+	Skc3NeedLp,              // skc3_need_lp
+	Skc3NeedLd,              // skc3_need_ld
+	Skc3NeedLu,              // skc3_need_lu
+	Skc3NeedLw,              // skc3_need_lw
+	Skc3NeedLt,              // skc3_need_lt
+	Skc3ClCpu,               // skc3_cl_cpu
+	Skc3ClCp,                // skc3_cl_cp
+	Skc3ClGds,               // skc3_cl_gds
+	Skc3ClPoll,              // skc3_cl_poll
+	Skc3ClNext,              // skc3_cl_next
+	Skc3ClFlip,              // skc3_cl_flip
+	Skc3ViaW1,               // skc3_via_w1
+	Skc3ViaW2,               // skc3_via_w2
+	Skc3ViaW3,               // skc3_via_w3
+	Skc3ViaM,                // skc3_via_m
+	Skc3Nocause,             // skc3_nocause
+	Skc3Lnb,                 // skc3_lnb
+	Skc3Lsup,                // skc3_lsup
+	Skc3SCpu,                // skc3_s_cpu
+	Skc3SCp,                 // skc3_s_cp
+	Skc3SGds,                // skc3_s_gds
+	Skc3SNext,               // skc3_s_next
+	Skc3SFlip,               // skc3_s_flip
+	Skc3SFlipx,              // skc3_s_flipx
+	Skc3SPref,               // skc3_s_pref
+	Skc3SPend,               // skc3_s_pend
+	Skc3SXmm,                // skc3_s_xmm
+	Skc3SubDrop,             // skc3_sub_drop
+	Skc3AttUnk,              // skc3_att_unk
+	Skc3GdsUnk,              // skc3_gds_unk
+	Skc3DmaEp,               // skc3_dma_ep
+	Skc3DmaCut,              // skc3_dma_cut
+	Skc3LazyN,               // skc3_lazy_n
+	Skc3LazyIn,              // skc3_lazy_in
+	Skc3MclrN,               // skc3_mclr_n
+	Skc3Mclr,                // skc3_mclr
+	Skc3MclrPend,            // skc3_mclr_pend
+	Skc3CpwN,                // skc3_cpw_n
+	Skc3CpwHit,              // skc3_cpw_hit
+	Skc3MGds,                // skc3_m_gds
+	Skc3W2d,                 // skc3_w2d
+	Skc3PcN,                 // skc3_pc_n
+	Skc3PcBad,               // skc3_pc_bad
+	Skc3X1cN,                // skc3_x1c_n
+	Skc3X1cSub,              // skc3_x1c_sub
+	Skc3X1cClr,              // skc3_x1c_clr
+	Skc3X1cBad,              // skc3_x1c_bad
+	Skc3Xthr,                // skc3_xthr
+	Skc3Bad,                 // skc3_bad
+	Skc3Orphan,              // skc3_orphan
+	// s.8.3, mode 3 (time).
+	Skc3WdNs,                // skc3_wd_ns
+	Skc3PdN,                 // skc3_pd_n
+	Skc3WfreeLNs,            // skc3_wfree_l_ns
+	Skc3PfreeLN,             // skc3_pfree_l_n
+	Skc3WfreeBNs,            // skc3_wfree_b_ns
+	Skc3PfreeBN,             // skc3_pfree_b_n
+	Skc3GcNs,                // skc3_gc_ns
+	Skc3GcPn,                // skc3_gc_pn
+	Skc3GcN,                 // skc3_gc_n
+	Skc3FrNs,                // skc3_fr_ns
+	Skc3FrPn,                // skc3_fr_pn
+	Skc3CalNs,               // skc3_cal_ns
+	Skc3CalN,                // skc3_cal_n
 	Count
 };
 
@@ -2885,7 +2966,7 @@ namespace Common::SkipCeil {
 enum Kind : uint8_t { KindNone = 0, KindD = 1, KindT = 2, KindK = 3, KindR = 4, KindCS = 5, KindM = 6 };
 
 inline constinit thread_local bool     t_gpu    = false; // the GuestGpu thread (GuestGpu::ThreadRun; not the m4baton relay)
-inline constinit thread_local uint32_t t_mode   = 0;     // the mode latched for this GuestGpu frame (0..2)
+inline constinit thread_local uint32_t t_mode   = 0;     // the mode latched for this GuestGpu frame (0..3)
 inline constinit thread_local bool     t_skip   = false; // this frame skips (mode 1) / is marked skippable (mode 2)
 inline constinit thread_local uint32_t t_gframe = 0;     // GuestGpu frames (flip packets)
 inline constinit thread_local uint32_t t_epoch  = 0;     // t_gframe of the first frame of the current census epoch
@@ -2909,10 +2990,28 @@ inline constinit std::atomic<uint32_t> g_mode {0};
 // GuestGpu takes it at its next flip boundary.  g_lod_anchor_x: 0 = none, else bit 32 | frame.
 inline constinit std::atomic<uint32_t> g_gframe {0};
 inline constinit std::atomic<uint64_t> g_lod_anchor_x {0};
+// Session 124 (design124.md s.2.2 [RC5(2)]): a Touch of ANY operation in this GuestGpu frame (modes 2 and 3).  Copied
+// into the record of the ending marked frame and reset at every flip boundary, before the latch of the next frame.
+inline constinit thread_local bool     t_lod_ftouch = false;
+// Session 124, knob "skipceil" = 3 (design124.md s.5.2): the pauses of the census code.  Only the outermost level reads
+// the clock; t_p_ns / t_p_n are running totals the timed windows (D, GC, Process) snapshot at their ends.
+inline constinit thread_local uint32_t t_p_depth = 0;
+inline constinit thread_local uint64_t t_p_t0    = 0;
+inline constinit thread_local uint64_t t_p_ns    = 0;
+inline constinit thread_local uint64_t t_p_n     = 0;
 
 // LodStats::Touch (descriptors.cpp): the anchor A of the skip parity, at any value of the knob (item 36(a), (d)).
+// Session 124 (design124.md s.2.2, mode 2'): in modes 2 and 3 a Touch of a D operation of a marked frame does not move
+// the anchor (skc_lod_dkeep) - in mode 1 that draw never reaches Touch, so the marked set is the set of mode 1.
 inline void NoteLodTouch() noexcept {
 	if (t_gpu) [[likely]] {
+		if (t_mode >= 2) [[unlikely]] {
+			t_lod_ftouch = true;
+			if (t_skip && t_kind == KindD) {
+				FrameStats::Add(FrameStats::Counter::SkcLodDkeep, 1);
+				return;
+			}
+		}
 		t_lod_anchor = t_gframe;
 		t_lod_has    = true;
 	} else {
@@ -2925,16 +3024,22 @@ inline bool GcHold() noexcept {
 	return t_mode == 1 && t_skip;
 }
 
-// A census stamp off the GuestGpu thread while the census is latched: skc_w_xthr, must read 0.
+// A census stamp off the GuestGpu thread while the census is latched: skc_w_xthr, must read 0 (mode 3: skc3_xthr too).
 inline void NoteOffThreadStamp() noexcept {
-	if (!t_gpu && g_mode.load(std::memory_order_relaxed) == 2) {
-		FrameStats::Add(FrameStats::Counter::SkcWXthr, 1);
+	if (!t_gpu) {
+		const uint32_t mode = g_mode.load(std::memory_order_relaxed);
+		if (mode >= 2) {
+			FrameStats::Add(FrameStats::Counter::SkcWXthr, 1);
+			if (mode == 3) {
+				FrameStats::Add(FrameStats::Counter::Skc3Xthr, 1);
+			}
+		}
 	}
 }
 
 // A host pass began (BeginRenderingImpl, the pass of session 118): skc_c_dp when a D draw opened it.
 inline void PassBegin() noexcept {
-	if (t_mode == 2) [[unlikely]] {
+	if (t_mode >= 2) [[unlikely]] {
 		t_pass++;
 		if (t_kind == KindD) {
 			FrameStats::Add(FrameStats::Counter::SkcCDp, 1);
@@ -2945,7 +3050,7 @@ inline void PassBegin() noexcept {
 // The target-acquisition guard of W3 (s.3.1): armed only while the census is latched.
 class AcqGuard {
 public:
-	AcqGuard() noexcept: m_armed(t_mode == 2 && !t_acq) {
+	AcqGuard() noexcept: m_armed(t_mode >= 2 && !t_acq) {
 		if (m_armed) [[unlikely]] {
 			t_acq = true;
 		}
@@ -2960,6 +3065,33 @@ public:
 
 private:
 	bool m_armed;
+};
+
+// Session 124, knob "skipceil" = 3 (design124.md s.5.2): RAII pause around every entry point of the census code; only
+// the outermost level reads the clock.  One thread-local test at any other value.
+class Skc3Pause {
+public:
+	Skc3Pause() noexcept {
+		if (t_mode == 3) [[unlikely]] {
+			m_on = true;
+			if (t_p_depth++ == 0) {
+				t_p_t0 = FrameStats::NowNs();
+			}
+		}
+	}
+	~Skc3Pause() {
+		if (m_on) [[unlikely]] {
+			if (--t_p_depth == 0) {
+				t_p_ns += FrameStats::NowNs() - t_p_t0;
+				t_p_n++;
+			}
+		}
+	}
+	Skc3Pause(const Skc3Pause&)            = delete;
+	Skc3Pause& operator=(const Skc3Pause&) = delete;
+
+private:
+	bool m_on = false;
 };
 
 } // namespace Common::SkipCeil

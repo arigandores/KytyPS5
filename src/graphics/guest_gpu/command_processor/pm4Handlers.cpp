@@ -1402,6 +1402,7 @@ KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 	static const bool trace = Common::EnvFlagOn("KYTY_LOD_STATS_TRACE");
 
 	if (dst != nullptr && buffer_size != 0) {
+		cp.SkcCpWrite(reinterpret_cast<uint64_t>(dst), buffer_size); // Session 124 (closure census, [RC3]): LOD report
 		memset(dst, 0, buffer_size);
 		if (buffer_size >= sizeof(uint32_t)) {
 			auto* label = static_cast<uint32_t*>(dst);

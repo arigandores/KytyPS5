@@ -214,7 +214,7 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	}
 	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY): the buffer read site of EVERY slot, ahead of the
 	// direct-copy branch (ROADMAP s122 item 33(a)); a written slot is a read too ([P1]) and queues its W2 stamp.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::ReadBuffer(context.GetBufferCache(), address, size, resource.written);
 	}
 	const auto& graphics   = context.GetGraphics();
@@ -2186,7 +2186,7 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 		Common::SkipCeil::NoteLodTouch();
 		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 35(a)): the Touch calls of D operations - the work the
 		// ceiling does not pay and the correct version must do (skc_lod_d), of all census operations (skc_lod_all).
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			Common::FrameStats::Add(Common::FrameStats::Counter::SkcLodAll, 1);
 			if (Common::SkipCeil::t_kind == Common::SkipCeil::KindD) {
 				Common::FrameStats::Add(Common::FrameStats::Counter::SkcLodD, 1);
@@ -2782,6 +2782,9 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 
 void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId id, Image& image) {
 	auto& cache = m_context.GetTextureCache();
+	// Session 124, knob "skipceil" = 3 (closure census, [RC1], [RC2], ROADMAP s122 item 44(b)): not a write event - the
+	// writer stays the logical clear; under the reference policy Lt it is a write of the trigger operation.
+	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyMat);
 	if (image.info.data.Empty() || image.info.IsDepth() || image.backing.image == nullptr ||
 	    image.depth_id || !image.registered ||
 	    image.info.metadata.kind != ImageMetadataKind::Dcc) {
@@ -3926,7 +3929,14 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 			if (old_image != nullptr) {
 				old_image->binding = {};
 			}
-			images[i] = ResolveTexture(program.info.images[i], snapshot.images[i]);
+			{
+				// Session 124, knob "skipceil" = 3 (closure census, [RC1]): a W3 while a sampled binding resolves is a
+				// lazy write (site w3r).
+				const SkcCensus::LazyScope skc3_lazy(
+				    SkcCensus::LazyW3r,
+				    program.info.images[i].resource_class == ShaderRecompiler::IR::ImageResourceClass::Sampled);
+				images[i] = ResolveTexture(program.info.images[i], snapshot.images[i]);
+			}
 			BindImage(images[i].image_id,
 			          images[i].desc.type == TextureCache::BindingType::Storage,
 			          program.info.images[i].atomic);
@@ -3983,6 +3993,10 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 		auto& binding = images[i];
 		binding.mip_views.clear();
 		const auto& resource = program.info.images[i];
+		// Session 124, knob "skipceil" = 3 (closure census, [RC1]): a W3 while a sampled binding resolves is a lazy write.
+		const SkcCensus::LazyScope skc3_lazy(
+		    SkcCensus::LazyW3r, binding.desc.type != TextureCache::BindingType::Storage &&
+		                            resource.mip_mode != ShaderRecompiler::IR::ImageMipMode::DynamicStorage);
 		if (fast && resource.mip_mode != ShaderRecompiler::IR::ImageMipMode::DynamicStorage &&
 		    binding.desc.type != TextureCache::BindingType::Storage) {
 			auto&      image    = texture_cache.m_slot_images[binding.image_id];
@@ -4105,14 +4119,25 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 	// is a read (a storage binding also a possible write, W2, queued until the operation's last read).  After the loop
 	// above, so a binding FindTexture just refreshed from guest memory reads the label UploadImage left ([N5]); a null
 	// descriptor binds the shared null image, which is no dependency (as in slicecen).
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		const uint32_t skc_stage = program.stage == ShaderType::Pixel ? 1u : program.stage == ShaderType::Compute ? 2u : 0u;
 		for (uint32_t i = 0; i < program.info.images.size(); i++) {
 			if (DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]).IsNull()) {
 				continue;
 			}
-			SkcCensus::ReadImage(texture_cache, images[i].image_id,
-			                     images[i].desc.type == TextureCache::BindingType::Storage, program.shader_hash, skc_stage);
+			const bool skc_storage = images[i].desc.type == TextureCache::BindingType::Storage;
+			// Session 124, knob "skipceil" = 3 (closure census, s.3.4): the view read, BEFORE the census of session 123
+			// (P2 needs its skc_seen of the frame); a storage binding binds one level unless the mips are dynamic.
+			if (Common::SkipCeil::t_mode == 3) {
+				auto skc3_view = images[i].desc.view_info;
+				if (skc_storage &&
+				    program.info.images[i].mip_mode != ShaderRecompiler::IR::ImageMipMode::DynamicStorage) {
+					skc3_view.level_count = 1;
+				}
+				SkcCensus::G3ReadView(texture_cache, images[i].image_id, skc3_view, skc_storage, program.shader_hash,
+				                      skc_stage);
+			}
+			SkcCensus::ReadImage(texture_cache, images[i].image_id, skc_storage, program.shader_hash, skc_stage);
 		}
 	}
 	if (fast && Common::FrameStats::Enabled()) {
@@ -4144,7 +4169,7 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		uses_dma |= stage->runtime->program->info.uses_dma;
 	}
 	// Session 123, knob "skipceil" = 2 (census): the draw's PS hash for skc_whash of its D stamps (SkcX1Reader selfw).
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		for (auto* stage: stages) {
 			if (stage->runtime->program->stage == ShaderType::Pixel) {
 				SkcCensus::SetDrawPs(stage->runtime->program->shader_hash);
@@ -4174,8 +4199,11 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		                                : Common::FrameStats::Counter::BdaAllNoCandidate,
 		                        1);
 	}
-	if (uses_dma && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (uses_dma && Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::NoteDma(m_context.GetBufferCache()); // Session 123 (census, [RC11] / [N8])
+		if (Common::SkipCeil::t_mode == 3) {
+			SkcCensus::G3Dma(); // Session 124: the draw shifts the uses_dma epoch at its end (s.3.3.3)
+		}
 	}
 	if (uses_dma || bda_all) {
 		m_context.PrepareBda();
@@ -5427,8 +5455,12 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			// This stage is itself a GDS producer for whoever comes next.
 			gds_cache.NoteGdsShaderAccess();
 			// Session 123, knob "skipceil" = 2 (census, class K3): a GDS access of a draw of a skippable frame.
-			if (Common::SkipCeil::t_mode == 2 && Common::SkipCeil::t_kind == Common::SkipCeil::KindD) [[unlikely]] {
+			if (Common::SkipCeil::t_mode >= 2 && Common::SkipCeil::t_kind == Common::SkipCeil::KindD) [[unlikely]] {
 				Common::FrameStats::Add(Common::FrameStats::Counter::SkcCGdsd, 1);
+			}
+			// Session 124, knob "skipceil" = 3 (closure census, s.3.4): a GDS binding without offset and size.
+			if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+				SkcCensus::G3GdsAccess(gds_cache.GetGdsBuffer()->Size());
 			}
 		}
 

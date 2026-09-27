@@ -338,8 +338,9 @@ struct SkcCensus {
 	// the W2 stamps it never applied and books skc_x1_draw / _cs / _pass and skc_wpasses at the end.  Does not nest.
 	class OpScope {
 	public:
-		OpScope(TextureCache& cache, uint8_t kind, bool draw) noexcept {
-			if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		// Session 124: census3 = armed only by the closure census (the DMA operation M, design124.md s.3.2).
+		OpScope(TextureCache& cache, uint8_t kind, bool draw, bool census3 = false) noexcept {
+			if (Common::SkipCeil::t_mode >= (census3 ? 3u : 2u)) [[unlikely]] {
 				m_armed = SkcCensus::OpBegin(kind, draw);
 				m_cache = &cache;
 				m_draw  = draw;
@@ -401,13 +402,146 @@ struct SkcCensus {
 	// After the operation's last read ([N1]): the queued W2 stamps.
 	static void ApplyW2(TextureCache& cache, BufferCache& buffers);
 	// UploadImage: the label follows the guest memory the image receives ([N5]).  Any thread (skc_w_xthr off GuestGpu).
-	static void Upload(BufferCache& buffers, Image& image);
+	// Session 124 (mode 3): levels [first_level, first_level + level_count) are a lazy write of site "upload" [RC1].
+	static void Upload(BufferCache& buffers, Image& image, uint32_t first_level, uint32_t level_count);
 	// DownloadImageMemory: an image with a D / T label goes to guest memory (skc_r_i_*).
 	static void DownloadRead(const Image& image);
 	// The flip boundary of a census frame: SkcX1Reader / SkcCpuRead / SkcCpRead lines every 600 census frames.
 	static void FrameDump(BufferCache& buffers);
 	// MarkGpuModified.
 	static void StampW3(Image& image) noexcept;
+
+	// -----------------------------------------------------------------------------------------------------------------
+	// Session 124, knob "skipceil" = 3: the closure census (MEASUREMENT ONLY; docs/session-124/design124.md rev 2 with
+	// ROADMAP s122 items 43-44).  GuestGpu thread only (G3PendAdd: any thread); every entry point is called only while
+	// t_mode == 3 - the call sites or the scopes test it first.
+	// The sites of lazy writes [RC1] (line Skc3Lazy): upload, the three image-to-image copies P3, the materialization of a
+	// deferred clear (an Lt-only write, not a write event), and any other W3 while a sampled binding resolves (w3r).
+	enum LazySite : uint8_t {
+		LazyNone   = 0,
+		LazyUpload = 1,
+		LazyP3a    = 2, // CopyImage
+		LazyP3b    = 3, // CopyImageMip
+		LazyP3c    = 4, // ResolveDepthOverlap (MS depth reinterpretation)
+		LazyMat    = 5, // MaterializeDeferredDccClear
+		LazyW3r    = 6, // a sampled binding resolving
+	};
+	// W3 stamps inside the scope are the lazy write of its site (upload and P3 record their write explicitly and swallow
+	// the stamps); scopes nest, the innermost wins.
+	class LazyScope {
+	public:
+		explicit LazyScope(uint8_t site, bool on = true) noexcept {
+			if (on && Common::SkipCeil::t_mode == 3) [[unlikely]] {
+				m_armed = true;
+				m_prev  = LazyEnter(site);
+			}
+		}
+		~LazyScope() {
+			if (m_armed) [[unlikely]] {
+				LazyLeave(m_prev);
+			}
+		}
+		KYTY_CLASS_NO_COPY(LazyScope);
+
+	private:
+		bool    m_armed = false;
+		uint8_t m_prev  = LazyNone;
+	};
+	// RenderContext::RunGarbageCollector of a marked frame (s.5.4): its wall minus the pauses inside.
+	class GcSpan {
+	public:
+		GcSpan() noexcept {
+			if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
+				m_on = true;
+				m_p  = Common::SkipCeil::t_p_ns;
+				m_n  = Common::SkipCeil::t_p_n;
+				m_t0 = Common::FrameStats::NowNs();
+			}
+		}
+		~GcSpan() {
+			if (m_on) [[unlikely]] {
+				GcDone(m_t0, m_p, m_n);
+			}
+		}
+		KYTY_CLASS_NO_COPY(GcSpan);
+
+	private:
+		bool     m_on = false;
+		uint64_t m_t0 = 0;
+		uint64_t m_p  = 0;
+		uint64_t m_n  = 0;
+	};
+	// GuestGpu::Process of a marked frame (s.5.6, skc3_fr_*): armed exactly when the WallSpan gw_proc is
+	// (KYTY_GPU_WALL=1); booked to the frame open at its start.
+	class ProcSpan {
+	public:
+		ProcSpan() noexcept {
+			if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip && Common::FrameStats::GpuWallOn() &&
+			    Common::FrameStats::Enabled()) [[unlikely]] {
+				m_on    = true;
+				m_frame = Common::SkipCeil::t_gframe;
+				m_p     = Common::SkipCeil::t_p_ns;
+				m_n     = Common::SkipCeil::t_p_n;
+				m_t0    = Common::FrameStats::NowNs();
+			}
+		}
+		~ProcSpan() {
+			if (m_on) [[unlikely]] {
+				ProcDone(m_frame, m_t0, m_p, m_n);
+			}
+		}
+		KYTY_CLASS_NO_COPY(ProcSpan);
+
+	private:
+		bool     m_on    = false;
+		uint32_t m_frame = 0;
+		uint64_t m_t0    = 0;
+		uint64_t m_p     = 0;
+		uint64_t m_n     = 0;
+	};
+	static uint8_t LazyEnter(uint8_t site) noexcept;
+	static void    LazyLeave(uint8_t prev) noexcept;
+	static void    GcDone(uint64_t t0, uint64_t p0, uint64_t n0) noexcept;
+	static void    ProcDone(uint32_t frame, uint64_t t0, uint64_t p0, uint64_t n0) noexcept;
+	// SkipCeilFlipBoundary: the end of a mode-3 frame (poll bit, finalization, calibration), then the latch.
+	static void G3FrameEnd();
+	static void G3Latch(bool edge);
+	// RebindImages: the read of a binding's view (storage: also a pending W2 write of it).
+	static void G3ReadView(TextureCache& cache, ImageId id, const ImageViewInfo& view, bool storage, uint64_t shader_hash,
+	                       uint32_t stage);
+	// AcquireRenderTargets: an attachment read by the pipeline state (aspects 1 colour, 2 depth, 4 stencil), then its
+	// pending W1 write.
+	static void G3Attachment(TextureCache& cache, ImageId id, const ImageViewInfo& view, uint8_t write_aspects,
+	                         uint8_t read_aspects);
+	// A D draw returned after its skip site without work (flag empty, [RC13]).
+	static void G3Empty() noexcept;
+	// A stage of the running operation has info.uses_dma (the epoch, s.3.3.3 with ROADMAP s122 item 44(d)).
+	static void G3Dma() noexcept;
+	// A GDS binding of a draw / dispatch: no offset and size (skc3_gds_unk), a possible write of the whole GDS.
+	static void G3GdsAccess(uint64_t gds_size);
+	// DMA (M): FillBuffer / CopyBuffer.
+	static void G3DmaWrite(uint64_t vaddr, uint64_t size, bool gds);
+	static void G3DmaCopy(uint64_t dst, uint64_t src, uint64_t size, bool dst_gds, bool src_gds);
+	// Writes with no writer: CP [RC3], CPU of the guest, an image download to guest memory.
+	static void G3CpWrite(uint64_t vaddr, uint64_t size);
+	static void G3CpuWrite(uint64_t vaddr, uint64_t size);
+	static void G3Download(const Image& image);
+	// The pending CPU erase list (s.3.5): added by a guest thread, removed by the erase command on GuestGpu.
+	[[nodiscard]] static uint64_t G3PendAdd(uint64_t vaddr, uint64_t size);
+	static void                   G3PendDone(uint64_t id);
+	// Seeds (s.3.5).
+	static void G3CpuSeed(uint64_t vaddr, uint64_t size);
+	static void G3CpSeed(uint64_t vaddr, uint64_t size);
+	static void G3GdsSeed(uint64_t offset, uint64_t size);
+	static void G3PrefSeed(uint64_t vaddr, uint64_t size);
+	static void G3Flip(Image& image);
+	// P3 copies: mip = UINT32_MAX - the whole source to the whole destination; else source level 0 to level `mip`
+	// from layer `layer` on (CopyImageMip).
+	static void G3Copy(uint8_t site, Image& destination, Image& source, uint32_t mip, uint32_t layer);
+	// Logical clears [RC2] (under TextureCache::m_lock).
+	static void G3MetaClear(TextureCache& cache, uint64_t address);
+	static void G3MetaFill(TextureCache& cache, uint64_t address, uint32_t clear_mask, bool pending);
+	static void G3MetaAdopt(Image& image, uint64_t address);
 };
 
 } // namespace Libs::Graphics

@@ -31,9 +31,13 @@
 #include <cstring>
 #include <string>
 #include <limits>
+#include <map>
+#include <memory>
 #include <mutex>
+#include <set>
 #include <span>
 #include <tuple>
+#include <unordered_map>
 #include <unordered_set>
 #include <vulkan/vulkan_format_traits.hpp>
 
@@ -830,6 +834,8 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	RefreshCopySource(source_id);
+	// Session 124, knob "skipceil" = 3 (closure census, [RC1]): the copy is a lazy write of site p3a, recorded below.
+	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyP3a);
 	auto& destination = m_slot_images[destination_id];
 	auto& source      = m_slot_images[source_id];
 	TrackImage(destination_id);
@@ -858,6 +864,9 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 		auto& copy_buffer = m_buffer_cache.GetUtilityBuffer(MemoryUsage::DeviceLocal);
 		destination.CopyImageWithBuffer(source, copy_buffer);
 	}
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3Copy(SkcCensus::LazyP3a, destination, source, UINT32_MAX, 0); // Session 124 ([RC1])
+	}
 	{
 		// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
 		const SkcCensus::CarryScope skc_carry(destination, source);
@@ -873,6 +882,8 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 	Common::DrawStat::Mark(Common::DrawStat::ImgNew);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
 	RefreshCopySource(source_id);
+	// Session 124, knob "skipceil" = 3 (closure census, [RC1]): the copy is a lazy write of site p3b, recorded below.
+	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyP3b);
 	auto& destination = m_slot_images[destination_id];
 	auto& source      = m_slot_images[source_id];
 	TrackImage(destination_id);
@@ -880,6 +891,9 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 		EXIT("TextureCache: invalid mip-copy ownership or sample count\n");
 	}
 	destination.CopyMip(source, mip, layer);
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3Copy(SkcCensus::LazyP3b, destination, source, mip, layer); // Session 124 ([RC1])
+	}
 	// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
 	const SkcCensus::CarryScope skc_carry(destination, source);
 	if (source.IsGpuModified()) {
@@ -978,7 +992,12 @@ ImageId TextureCache::ResolveDepthOverlap(const ImageInfo& requested, BindingTyp
 			EXIT("TextureCache: multisample depth conversion source is not native-current\n");
 		}
 		PrepareImageCopy(replacement_id);
+		// Session 124, knob "skipceil" = 3 (closure census, [RC1]): the reinterpretation is a lazy write of site p3c.
+		const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyP3c);
 		m_blit_helper.ReinterpretColorAsMsDepth(cached, replacement);
+		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+			SkcCensus::G3Copy(SkcCensus::LazyP3c, replacement, cached, UINT32_MAX, 0);
+		}
 		// Session 123, knob "skipceil" = 2 (census, [P3]): the replacement takes the D / T label of the cached image.
 		const SkcCensus::CarryScope skc_carry(replacement, cached);
 		CommitGpuWrite(replacement);
@@ -1362,9 +1381,12 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 	                                       Common::FrameStats::Counter::ImgUploads);
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
+	// Session 124, knob "skipceil" = 3 (closure census, [RC1]): the upload is a lazy write of site "upload"; the stamps
+	// of the rest of this call are part of it.
+	const SkcCensus::LazyScope skc3_lazy(SkcCensus::LazyUpload);
 	// Session 123, knob "skipceil" = 2 (census, [N5]): the image receives guest memory - its label follows that memory.
 	if (Common::SkipCeil::t_w3) [[unlikely]] {
-		SkcCensus::Upload(m_buffer_cache, image);
+		SkcCensus::Upload(m_buffer_cache, image, first_level, level_count);
 	}
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
@@ -2852,8 +2874,11 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 		return false;
 	}
 	// Session 123, knob "skipceil" = 2 (census, s.3.2): the content of a D / T image goes to guest memory.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::DownloadRead(image);
+		if (Common::SkipCeil::t_mode == 3) {
+			SkcCensus::G3Download(image); // Session 124: a write of guest memory with no writer (s.3.3.2)
+		}
 	}
 	const auto range    = image.info.data;
 	auto&      download = m_buffer_cache.GetUtilityBuffer(MemoryUsage::Download);
@@ -3070,6 +3095,10 @@ bool TextureCache::ClearMeta(uint64_t address) {
 	}
 	Common::DrawStat::Mark(Common::DrawStat::Meta);
 	found->second.clear_mask = UINT32_MAX;
+	// Session 124, knob "skipceil" = 3 (closure census, [RC2]): a logical clear - a certain write of every candidate.
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3MetaClear(*this, address);
+	}
 	BumpMetaEpoch();
 	return true;
 }
@@ -3102,6 +3131,11 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 	    found->second.type == MetaDataInfo::Type::Dcc || found->second.type == MetaDataInfo::Type::CMask) {
 		found->second.clear_mask = found->second.type == MetaDataInfo::Type::CMask
 		    ? (fill_value == 0 ? UINT32_MAX : 0u) : dcc_clear_mask;
+		// Session 124, knob "skipceil" = 3 (closure census, [RC2]): a logical clear (PendingDcc: until the adoption).
+		if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+			SkcCensus::G3MetaFill(*this, address, found->second.clear_mask,
+			                      found->second.type == MetaDataInfo::Type::PendingDcc);
+		}
 		found->second.fill_value = fill_value;
 		found->second.fill_size  = size;
 		if (found->second.type == MetaDataInfo::Type::PendingDcc) {
@@ -3225,6 +3259,11 @@ bool TextureCache::AdoptPendingDccForTexture(ImageId id, uint64_t metadata_addre
 	found->second.type                 = MetaDataInfo::Type::Dcc;
 	image->info.metadata.kind          = ImageMetadataKind::Dcc;
 	image->info.metadata.range.address = metadata_address;
+	// Session 124, knob "skipceil" = 3 (closure census, [RC2], ROADMAP s122 item 44(v)): the PendingDcc clear applies now,
+	// with the cleaner remembered at the fill.
+	if (Common::SkipCeil::t_mode == 3 && found->second.clear_mask != 0) [[unlikely]] {
+		SkcCensus::G3MetaAdopt(*image, metadata_address);
+	}
 	static std::atomic<uint32_t> log_count = 0;
 	static const bool dcc_trace = Common::EnvFlagOn("KYTY_DCC_TRACE");
 	if (dcc_trace || log_count++ < 32) {
@@ -3509,6 +3548,21 @@ struct SkcW2 {
 	uint64_t size  = 0;
 };
 
+// Session 124, knob "skipceil" = 3: a pending node write of the operation (W1 attachments, W2 storage images and written
+// buffer slots), applied with the W2 stamps after the operation's last read.
+struct Skc3W {
+	bool     image = false;
+	uint32_t uid   = 0;
+	uint32_t bl    = 0;
+	uint32_t lc    = 0;
+	uint32_t by    = 0;
+	uint32_t yc    = 0;
+	uint8_t  asp   = 0;
+	uint8_t  via   = 0;
+	uint64_t addr  = 0;
+	uint64_t size  = 0;
+};
+
 // The census operation running now (one at a time; OpScope does not nest).
 struct SkcOp {
 	uint32_t             serial   = 0;
@@ -3522,6 +3576,10 @@ struct SkcOp {
 	bool                 ia_t     = false;
 	std::vector<SkcW2>   w2;
 	std::vector<ImageId> d_stamped; // D stamps with a known image id (W1, W2): skc_wpass at the end of the operation
+	// Session 124, knob "skipceil" = 3.
+	uint32_t             node = 0;     // the graph node of this operation in a marked frame, 0 = none
+	bool                 dma  = false; // a stage has info.uses_dma (the epoch, s.3.3.3)
+	std::vector<Skc3W>   g3w;          // pending node writes
 };
 thread_local SkcOp    t_skc_op;
 thread_local uint32_t t_skc_serial  = 0;
@@ -3624,6 +3682,1683 @@ void SkcX1Image(Image& image) {
 
 } // namespace
 
+// =====================================================================================================================
+// Session 124, knob "skipceil" = 3: the closure census (MEASUREMENT ONLY; docs/session-124/design124.md rev 2 with
+// ROADMAP s122 items 43 and 44).  Every marked GuestGpu frame N owns a graph: its nodes are the operations of N (D, K,
+// CS, M) and the transfer nodes T of its lazy writes [RC1]; an edge is a read by a node of N of a key a node of N wrote;
+// a seed is an observable read (cpu, cp, gds, next, flip; poll at the finalization).  The need of a node is a 7-bit mask
+// over the policies L, b, Lp, Ld, Lt, Lu, Lw (s.3.6); it propagates at the seed, depth-first by mask.  All open marked
+// frames are finalized together at the end of the first unmarked frame after them (s.3.8): after it no key has a writer
+// of an open frame, and every key map is cleared.  GuestGpu thread only, except the pending CPU erase list (its mutex).
+
+namespace {
+
+namespace G3 {
+
+namespace FS = Common::FrameStats;
+using Counter = FS::Counter;
+
+constexpr uint8_t PL   = 1;  // L: the last writer lw, global over the open marked frames [RC5(1)]
+constexpr uint8_t PB   = 2;  // b: the writers since the last certain overwrite, per open frame
+constexpr uint8_t PLP  = 4;  // Lp: L plus the prefetch windows
+constexpr uint8_t PLD  = 8;  // Ld: L plus the uses_dma operations of unmarked frames
+constexpr uint8_t PLT  = 16; // Lt: lazy writes and materializations attributed to the trigger [RC1]
+constexpr uint8_t PLU  = 32; // Lu: L without the uses_dma epoch cut [RC4]
+constexpr uint8_t PLW  = 64; // Lw: the cpu seed window is the 4 KiB page [RC14]
+constexpr uint8_t PALL = 127;
+// The policies that follow lw under the epoch cut (Lu follows lw without it, Lt follows ltw, b the lists).
+constexpr uint8_t PLFAM = PL | PLP | PLD | PLW;
+// skc3_lsup: need_L implies all four (s.3.6.2).
+constexpr uint8_t PSUP = PLP | PLD | PLU | PLW;
+
+enum Via : uint8_t { ViaNone = 0, ViaW1 = 1, ViaW2 = 2, ViaW3 = 3, ViaM = 4 };
+enum Why : uint8_t { WhyNone = 0, WhyW1, WhyW2, WhyW3, WhyLazy, WhyClear, WhyCp, WhyCpu, WhyDl, WhyM };
+enum Cause : uint8_t { CNone = 0, CCpu, CCp, CGds, CPoll, CNext, CFlip, CAux };
+
+constexpr uint32_t MaxViewKeys = 256;         // s.3.3.1
+constexpr uint32_t CalK        = 256;         // s.5.3
+constexpr uint64_t PageBytes   = 4096;        // policy Lw [RC14]
+constexpr uint8_t  KindX       = 7;           // the transfer node T [RC1]; Common::SkipCeil::Kind ends at KindM = 6
+constexpr uint32_t ListBit     = 0x80000000u; // edge key: a b-list, not a node
+constexpr uint32_t ChainLines  = 8;           // s.8.4: self-writer chains per process, and the most frequent pairs
+constexpr uint64_t PairsAt     = 300;         // the finalization that prints the most frequent reader-writer pairs
+
+struct Edge {
+	uint32_t w    = 0; // the writer node serial, or a b-list index of the reader's frame (list)
+	uint32_t len  = 0; // b-list: the prefix length at the read
+	uint8_t  mask = 0;
+	uint8_t  via  = 0; // the class of the writer's write of the key read (s.8 skc3_via_*)
+	bool     list = false;
+};
+
+struct Node {
+	uint8_t               kind  = 0; // Common::SkipCeil::Kind or KindX; 0 = a placeholder (skc3_bad)
+	bool                  timed = false;
+	bool                  empty = false;
+	bool                  w2    = false;
+	uint8_t               need  = 0;
+	uint8_t               cause = 0; // the seed class of the first L mark
+	uint8_t               via   = 0; // the write class of the first L mark
+	uint64_t              w_ns  = 0;
+	uint64_t              p_n   = 0;
+	uint64_t              ps    = 0;
+	std::vector<Edge>     in;
+	std::vector<uint64_t> wkeys; // image keys a D node wrote (P2)
+};
+
+// A b-list: the writers of one key in one open frame since its last certain overwrite, in write order.  An edge holds a
+// prefix; `marked` is the prefix already marked with b, so every writer is marked once.
+struct BList {
+	std::vector<uint32_t> w;
+	uint32_t              marked = 0;
+};
+
+struct Frame {
+	uint32_t                               frame = 0;
+	uint32_t                               base  = 0;
+	bool                                   poll  = false;
+	std::vector<Node>                      nodes;
+	std::vector<BList>                     lists;
+	std::unordered_map<uint64_t, uint32_t> emap; // (reader, writer or list) -> index in reader.in
+	uint64_t                               wr    = 0;
+	uint64_t                               gc_ns = 0;
+	uint64_t                               gc_pn = 0;
+	uint64_t                               gc_n  = 0;
+	uint64_t                               fr_ns = 0;
+	uint64_t                               fr_pn = 0;
+	std::vector<uint32_t>                  p1;
+	std::vector<uint32_t>                  p2;
+	std::map<std::tuple<uint64_t, uint64_t, uint32_t>, std::pair<uint64_t, uint32_t>> chains;
+};
+
+struct BRef {
+	uint32_t frame = 0;
+	uint32_t list  = 0;
+};
+
+struct KState {
+	uint32_t          lw      = 0;
+	uint32_t          ltw     = 0;
+	uint32_t          ep      = 0;
+	uint8_t           lw_via  = 0;
+	uint8_t           ltw_via = 0;
+	uint8_t           why     = 0;
+	std::vector<BRef> bl;
+};
+
+struct Seg {
+	uint64_t end = 0;
+	KState   st;
+};
+
+struct Item {
+	uint32_t id   = 0;
+	uint32_t len  = 0;
+	uint8_t  bits = 0;
+	uint8_t  via  = 0;
+	bool     list = false;
+	Frame*   f    = nullptr;
+};
+
+struct State {
+	std::vector<std::unique_ptr<Frame>>   open;
+	Frame*                                cur = nullptr; // the record of the running marked frame
+	std::unordered_map<uint64_t, KState>  img;
+	std::map<uint64_t, Seg>               buf;
+	std::map<uint64_t, Seg>               gds;
+	uint32_t                              epoch = 1;
+	std::vector<std::pair<uint64_t, uint64_t>> wr_cur;  // node writes of buffers with ep == epoch (Ld)
+	std::vector<std::pair<uint64_t, uint64_t>> wr_next; // ... with ep == epoch + 1 (the running uses_dma operation)
+	std::unordered_map<uint64_t, uint32_t> pend_dcc;    // PendingDcc metadata address -> its cleaner [RC2]
+	uint32_t                              uid    = 0;
+	uint64_t                              finals = 0;
+	bool                                  logged = false;
+	std::map<std::tuple<uint64_t, uint64_t, uint32_t>, std::pair<uint64_t, uint8_t>> pairs;
+	std::set<std::tuple<uint64_t, uint64_t, uint32_t>>                                self_seen;
+	uint32_t                              self_lines = 0;
+	std::array<uint64_t, 8>               lazy_n {};
+	std::vector<Item>                     stack;
+};
+
+State& S() {
+	static State s;
+	return s;
+}
+
+thread_local uint8_t  t_lazy  = 0; // SkcCensus::LazySite of the innermost lazy scope
+thread_local bool     t_dwin  = false;
+thread_local uint64_t t_dw_t0 = 0;
+thread_local uint64_t t_dw_p  = 0;
+thread_local uint64_t t_dw_n  = 0;
+
+std::mutex                                            g_pend_mutex;
+std::vector<std::tuple<uint64_t, uint64_t, uint64_t>> g_pend; // id, begin, end
+std::atomic<uint32_t>                                 g_pend_n {0};
+uint64_t                                              g_pend_id = 0;
+
+uint64_t End(uint64_t a, uint64_t s) noexcept {
+	return s > UINT64_MAX - a ? UINT64_MAX : a + s;
+}
+
+void Bad() {
+	FS::Add(Counter::Skc3Bad, 1);
+}
+
+bool PendHit(uint64_t b, uint64_t e) {
+	if (g_pend_n.load(std::memory_order_acquire) == 0) {
+		return false;
+	}
+	std::scoped_lock lock {g_pend_mutex};
+	for (const auto& [id, pb, pe]: g_pend) {
+		if (pb < e && b < pe) {
+			return true;
+		}
+	}
+	return false;
+}
+
+Frame* FrameOf(uint32_t s) {
+	if (s == 0) {
+		return nullptr;
+	}
+	for (auto& f: S().open) {
+		if (s >= f->base && s - f->base < f->nodes.size()) {
+			return f.get();
+		}
+	}
+	return nullptr;
+}
+
+Frame* FrameNo(uint32_t frame) {
+	for (auto& f: S().open) {
+		if (f->frame == frame) {
+			return f.get();
+		}
+	}
+	return nullptr;
+}
+
+Node* NodeOf(uint32_t s) {
+	Frame* f = FrameOf(s);
+	return f != nullptr ? &f->nodes[s - f->base] : nullptr;
+}
+
+uint32_t NextSerial() {
+	uint32_t s = ++t_skc_serial;
+	if (s == 0) {
+		s = ++t_skc_serial;
+	}
+	return s;
+}
+
+// A node of the running marked frame; the serials of one frame are contiguous (every serial the frame allocates is a
+// node), so the node is nodes[serial - base].
+uint32_t NewNode(uint32_t serial, uint8_t kind) {
+	Frame* f = S().cur;
+	if (f == nullptr || serial == 0) {
+		return 0;
+	}
+	if (f->nodes.empty()) {
+		f->base = serial;
+	}
+	if (serial < f->base || serial - f->base < f->nodes.size()) {
+		Bad();
+		return 0;
+	}
+	while (serial - f->base > f->nodes.size()) {
+		f->nodes.emplace_back();
+		Bad();
+	}
+	f->nodes.emplace_back();
+	f->nodes.back().kind = kind;
+	return serial;
+}
+
+// The depth-first mark of the items on S().stack; a node continues while an item adds bits to it (s.3.6.2).
+void Run(uint8_t cause) {
+	auto& st = S().stack;
+	while (!st.empty()) {
+		const Item it = st.back();
+		st.pop_back();
+		if (it.list) {
+			if (it.f == nullptr || it.id >= it.f->lists.size() || it.len > it.f->lists[it.id].w.size()) {
+				Bad(); // a b-list edge off its frame or a prefix longer than its list
+				continue;
+			}
+			auto& l = it.f->lists[it.id];
+			for (uint32_t i = l.marked; i < it.len; i++) {
+				st.push_back({l.w[i], 0, PB, ViaNone, false, nullptr});
+			}
+			l.marked = std::max(l.marked, it.len);
+			continue;
+		}
+		Frame* f = FrameOf(it.id);
+		if (f == nullptr) {
+			Bad(); // an edge or a key on a released node
+			continue;
+		}
+		Node&      nd = f->nodes[it.id - f->base];
+		const auto nb = static_cast<uint8_t>(it.bits & ~nd.need);
+		if (nb == 0) {
+			continue;
+		}
+		if ((nb & PL) != 0) {
+			nd.cause = cause;
+			nd.via   = it.via;
+		}
+		nd.need = static_cast<uint8_t>(nd.need | nb);
+		for (const auto& e: nd.in) {
+			const auto eb = static_cast<uint8_t>(nb & e.mask);
+			if (eb != 0) {
+				st.push_back({e.w, e.len, eb, e.via, e.list, f});
+			}
+		}
+	}
+}
+
+void Mark(uint32_t id, uint32_t len, uint8_t bits, uint8_t via, bool list, Frame* f, uint8_t cause) {
+	auto& st = S().stack;
+	st.clear();
+	st.push_back({id, len, bits, via, list, f});
+	Run(cause);
+}
+
+// An edge of reader r (a node of the running frame); a reader that is already needed passes its bits on at once.
+void AddEdge(uint32_t r, uint32_t w, uint8_t mask, uint8_t via, bool list, uint32_t len) {
+	if (mask == 0 || (!list && r == w)) {
+		return;
+	}
+	Frame* f = FrameOf(r);
+	if (f == nullptr) {
+		Bad();
+		return;
+	}
+	Node&          rn        = f->nodes[r - f->base];
+	const uint64_t key       = (uint64_t {r} << 32u) | (list ? (w | ListBit) : w);
+	const auto [it, inserted] = f->emap.try_emplace(key, static_cast<uint32_t>(rn.in.size()));
+	if (inserted) {
+		rn.in.push_back({w, len, mask, via, list});
+	} else {
+		auto& e = rn.in[it->second];
+		if ((mask & PL) != 0 && (e.mask & PL) == 0) {
+			e.via = via;
+		}
+		e.mask = static_cast<uint8_t>(e.mask | mask);
+		e.len  = std::max(e.len, len);
+	}
+	const auto pass = static_cast<uint8_t>(rn.need & mask);
+	if (pass != 0) {
+		Mark(w, len, pass, via, list, f, rn.cause);
+	}
+}
+
+// One read: an edge of `node` (and the Lt edge of the trigger, node2) or a seed of class `cause`.
+struct Rd {
+	bool     seed   = false;
+	uint32_t node   = 0;
+	uint8_t  mask   = PALL;
+	uint32_t node2  = 0;
+	uint8_t  mask2  = 0;
+	uint8_t  cause  = CNone;
+	bool     buffer = false; // a buffer key: the uses_dma epoch cuts it [RC4]
+	bool     p1     = false; // P1: a read by an executed operation of an unmarked frame
+	bool     found  = false; // a writer of an open frame under L (epoch equal)
+	bool     xmm    = false; // a writer of another marked frame (edge mode): no edge
+	uint32_t cut    = 0;     // L writers cut by the epoch
+	uint32_t lwr    = 0;     // the L writer found
+};
+
+void Give(Rd& rd, Frame* f, uint32_t w, uint8_t m, uint8_t via, bool list, uint32_t len) {
+	if (rd.seed) {
+		const auto bits = static_cast<uint8_t>(m & rd.mask);
+		if (bits != 0) {
+			Mark(w, len, bits, via, list, f, rd.cause);
+		}
+		return;
+	}
+	AddEdge(rd.node, w, static_cast<uint8_t>(m & rd.mask), via, list, len);
+	if (rd.node2 != 0) {
+		AddEdge(rd.node2, w, static_cast<uint8_t>(m & rd.mask2), via, list, len);
+	}
+}
+
+void ReadKey(Rd& rd, const KState& k) {
+	auto&      s     = S();
+	const bool ep_ok = !rd.buffer || k.ep == s.epoch;
+	if (k.lw != 0) {
+		Frame* f = FrameOf(k.lw);
+		if (f == nullptr) {
+			Bad(); // lw on a node of a finalized frame
+		} else if (!rd.seed && f != s.cur) {
+			rd.xmm = true;
+		} else {
+			if (ep_ok) {
+				rd.found = true;
+				rd.lwr   = k.lw;
+			} else {
+				rd.cut++;
+			}
+			Give(rd, f, k.lw, static_cast<uint8_t>(PLU | (ep_ok ? PLFAM : 0)), k.lw_via, false, 0);
+			if (rd.p1 && ep_ok && (rd.mask & PL) != 0 && f->nodes[k.lw - f->base].kind == Common::SkipCeil::KindD) {
+				FS::Add(Counter::Skc3PcN, 1);
+				f->p1.push_back(k.lw);
+			}
+		}
+	}
+	if (!ep_ok) {
+		return; // Lt and b are cut as well; only Lu ignores the epoch
+	}
+	if (k.ltw != 0) {
+		Frame* f = FrameOf(k.ltw);
+		if (f == nullptr) {
+			Bad();
+		} else if (!rd.seed && f != s.cur) {
+			rd.xmm = true;
+		} else {
+			Give(rd, f, k.ltw, PLT, k.ltw_via, false, 0);
+		}
+	}
+	for (const auto& b: k.bl) {
+		Frame* f = FrameNo(b.frame);
+		if (f == nullptr || b.list >= f->lists.size()) {
+			Bad(); // a list of a finalized frame
+			continue;
+		}
+		if (!rd.seed && f != s.cur) {
+			rd.xmm = true;
+			continue;
+		}
+		Give(rd, f, b.list, PB, ViaNone, true, static_cast<uint32_t>(f->lists[b.list].w.size()));
+	}
+}
+
+// The counters of one read under L.
+void Finish(const Rd& rd) {
+	if (rd.xmm) {
+		FS::Add(Counter::Skc3SXmm, 1);
+	}
+	if (rd.cut != 0 && (rd.mask & PL) != 0) {
+		FS::Add(Counter::Skc3DmaCut, rd.cut);
+	}
+}
+
+// ---- image keys: (uid, mip, layer, aspect) -------------------------------------------------------------------------
+
+struct IR {
+	uint32_t uid = 0;
+	uint32_t bl  = 0;
+	uint32_t lc  = 0;
+	uint32_t by  = 0;
+	uint32_t yc  = 0;
+	uint8_t  asp = 0; // 1 colour, 2 depth, 4 stencil
+};
+
+uint8_t ImageAspects(const Image& image) noexcept {
+	if (!image.info.IsDepth()) {
+		return 1;
+	}
+	return static_cast<uint8_t>(2u | (image.info.HasStencil() ? 4u : 0u));
+}
+
+uint32_t Uid(Image& image) {
+	if (image.skc3_uid == 0) {
+		image.skc3_uid = ++S().uid;
+		if (image.skc3_uid == 0) {
+			image.skc3_uid = ++S().uid;
+		}
+	}
+	return image.skc3_uid;
+}
+
+IR Clamp(Image& image, uint32_t bl, uint32_t lc, uint32_t by, uint32_t yc, uint8_t asp) {
+	const uint32_t levels = std::max(image.info.resources.levels, 1u);
+	const uint32_t layers = std::max(image.info.resources.layers, 1u);
+	IR             r;
+	r.uid = Uid(image);
+	if (bl >= levels || by >= layers) {
+		return r; // no keys
+	}
+	r.bl  = bl;
+	r.lc  = std::min(lc, levels - bl);
+	r.by  = by;
+	r.yc  = std::min(yc, layers - by);
+	r.asp = static_cast<uint8_t>(asp & ImageAspects(image));
+	if (r.asp == 0) {
+		r.asp = ImageAspects(image); // a view whose aspect the image has not (a depth image viewed as colour)
+	}
+	return r;
+}
+
+IR Whole(Image& image) {
+	return Clamp(image, 0, UINT32_MAX, 0, UINT32_MAX, ImageAspects(image));
+}
+
+IR View(Image& image, const ImageViewInfo& view) {
+	uint8_t asp = 0;
+	asp |= static_cast<bool>(view.aspect & vk::ImageAspectFlagBits::eColor) ? 1u : 0u;
+	asp |= static_cast<bool>(view.aspect & vk::ImageAspectFlagBits::eDepth) ? 2u : 0u;
+	asp |= static_cast<bool>(view.aspect & vk::ImageAspectFlagBits::eStencil) ? 4u : 0u;
+	return Clamp(image, view.base_level, view.level_count, view.base_layer, view.layer_count, asp);
+}
+
+uint64_t Count(const IR& r) noexcept {
+	return uint64_t {r.lc} * r.yc * static_cast<uint64_t>(std::popcount(r.asp));
+}
+
+uint64_t Key(uint32_t uid, uint32_t mip, uint32_t layer, uint32_t aspect) noexcept {
+	return (uint64_t {uid} << 32u) | (uint64_t {mip & 0xfffu} << 20u) | (uint64_t {layer & 0x3ffffu} << 2u) | aspect;
+}
+
+template <typename F>
+void ForKeys(const IR& r, F&& fn) {
+	for (uint32_t a = 0; a < 3; a++) {
+		if (((r.asp >> a) & 1u) == 0) {
+			continue;
+		}
+		for (uint32_t mip = r.bl; mip < r.bl + r.lc; mip++) {
+			for (uint32_t layer = r.by; layer < r.by + r.yc; layer++) {
+				fn(Key(r.uid, mip, layer, a));
+			}
+		}
+	}
+}
+
+void ReadImg(Rd& rd, const IR& r) {
+	const uint64_t n = Count(r);
+	if (n == 0) {
+		return;
+	}
+	if (n > MaxViewKeys) {
+		FS::Add(Counter::Skc3SubDrop, 1);
+		return;
+	}
+	auto& img = S().img;
+	if (img.empty()) {
+		return;
+	}
+	ForKeys(r, [&](uint64_t key) {
+		const auto it = img.find(key);
+		if (it != img.end()) {
+			ReadKey(rd, it->second);
+		}
+	});
+}
+
+// ---- interval keys: buffers (guest addresses) and GDS (offsets) ---------------------------------------------------------
+
+void ReadMap(Rd& rd, std::map<uint64_t, Seg>& m, uint64_t addr, uint64_t size) {
+	if (size == 0 || m.empty()) {
+		return;
+	}
+	const uint64_t end = End(addr, size);
+	auto           it  = m.upper_bound(addr);
+	if (it != m.begin()) {
+		const auto prev = std::prev(it);
+		if (prev->second.end > addr) {
+			it = prev;
+		}
+	}
+	for (; it != m.end() && it->first < end; ++it) {
+		ReadKey(rd, it->second.st);
+	}
+}
+
+// Cuts the segment that straddles `at`; the tail gets copies of the b-lists, so an append to one half never reaches the
+// other.
+void Split(std::map<uint64_t, Seg>& m, uint64_t at) {
+	auto it = m.upper_bound(at);
+	if (it == m.begin()) {
+		return;
+	}
+	const auto prev = std::prev(it);
+	if (prev->first >= at || prev->second.end <= at) {
+		return;
+	}
+	Seg tail {prev->second.end, prev->second.st};
+	for (auto& b: tail.st.bl) {
+		Frame* f = FrameNo(b.frame);
+		if (f == nullptr || b.list >= f->lists.size()) {
+			Bad();
+			continue;
+		}
+		BList copy = f->lists[b.list];
+		f->lists.push_back(std::move(copy));
+		b.list = static_cast<uint32_t>(f->lists.size() - 1);
+	}
+	prev->second.end = at;
+	m.emplace_hint(it, at, std::move(tail));
+}
+
+template <typename F>
+void WriteMap(std::map<uint64_t, Seg>& m, uint64_t addr, uint64_t size, bool create, F&& fn) {
+	if (size == 0 || (!create && m.empty())) {
+		return;
+	}
+	const uint64_t end = End(addr, size);
+	Split(m, addr);
+	Split(m, end);
+	uint64_t pos = addr;
+	auto     it  = m.lower_bound(addr);
+	while (pos < end) {
+		if (it != m.end() && it->first == pos) {
+			fn(it->second.st);
+			pos = it->second.end;
+			++it;
+			continue;
+		}
+		const uint64_t gap = it != m.end() && it->first < end ? it->first : end;
+		if (create) {
+			const auto added = m.emplace_hint(it, pos, Seg {gap, {}});
+			fn(added->second.st);
+		}
+		pos = gap;
+	}
+}
+
+// ---- writes -----------------------------------------------------------------------------------------------------------
+
+struct Wr {
+	uint32_t w       = 0; // the writer node (0: none - closes the key under L)
+	uint32_t lt      = 0; // the writer under Lt (the trigger of a lazy write; otherwise w)
+	uint8_t  via     = ViaNone;
+	uint8_t  why     = WhyNone;
+	bool     certain = false; // a certain full overwrite (b)
+	bool     lt_only = false; // the materialization of a deferred clear: a write of policy Lt only
+	uint32_t ep      = 0;
+	bool     hit     = false; // out: a writer of an open frame was replaced under L
+};
+
+void AppendB(KState& k, uint32_t w) {
+	Frame* f = FrameOf(w);
+	if (f == nullptr) {
+		Bad();
+		return;
+	}
+	for (const auto& b: k.bl) {
+		if (b.frame == f->frame) {
+			if (b.list >= f->lists.size()) {
+				Bad();
+				return;
+			}
+			auto& l = f->lists[b.list].w;
+			if (l.empty() || l.back() != w) {
+				l.push_back(w);
+			}
+			return;
+		}
+	}
+	f->lists.emplace_back();
+	f->lists.back().w.push_back(w);
+	k.bl.push_back({f->frame, static_cast<uint32_t>(f->lists.size() - 1)});
+}
+
+void WriteKey(Wr& wr, KState& k) {
+	if (k.lw != 0 && FrameOf(k.lw) != nullptr) {
+		wr.hit = true;
+	}
+	if (wr.lt_only) {
+		k.ltw     = wr.lt;
+		k.ltw_via = wr.via;
+		return;
+	}
+	k.lw      = wr.w;
+	k.lw_via  = wr.via;
+	k.ltw     = wr.lt;
+	k.ltw_via = wr.via;
+	k.why     = wr.why;
+	k.ep      = wr.ep;
+	if (wr.certain) {
+		k.bl.clear(); // the lists of ALL open frames [RC5(1)]
+	}
+	if (wr.w != 0) {
+		AppendB(k, wr.w);
+	}
+}
+
+void WriteImg(Wr& wr, const IR& r) {
+	if (Count(r) == 0) {
+		return;
+	}
+	auto&      img    = S().img;
+	const bool create = wr.lt_only ? wr.lt != 0 : wr.w != 0;
+	Node*      nd     = !wr.lt_only && wr.w != 0 ? NodeOf(wr.w) : nullptr;
+	if (nd != nullptr && nd->kind != Common::SkipCeil::KindD) {
+		nd = nullptr;
+	}
+	ForKeys(r, [&](uint64_t key) {
+		if (create) {
+			WriteKey(wr, img[key]);
+			if (nd != nullptr) {
+				nd->wkeys.push_back(key);
+			}
+		} else if (!img.empty()) {
+			const auto it = img.find(key);
+			if (it != img.end()) {
+				WriteKey(wr, it->second);
+			}
+		}
+	});
+}
+
+void WriteBuf(Wr& wr, std::map<uint64_t, Seg>& m, uint64_t addr, uint64_t size, bool buffer) {
+	auto&      s      = S();
+	const bool create = wr.w != 0;
+	WriteMap(m, addr, size, create, [&](KState& k) { WriteKey(wr, k); });
+	if (create && buffer) {
+		(wr.ep == s.epoch ? s.wr_cur : s.wr_next).emplace_back(addr, size);
+	}
+}
+
+// The epoch a write of the running operation carries: after its shift for an operation with uses_dma (ROADMAP s122
+// item 44(d)), the current one otherwise.
+uint32_t EpOf() noexcept {
+	return S().epoch + (t_skc_op.serial != 0 && t_skc_op.dma ? 1u : 0u);
+}
+
+void CountWrite(uint32_t w) {
+	if (Frame* f = FrameOf(w); f != nullptr) {
+		f->wr++;
+	}
+}
+
+// ---- readers ----------------------------------------------------------------------------------------------------------
+
+// A read of the running operation: an edge of its node in a marked frame; a "next" seed in an unmarked frame while a
+// marked frame is open (s.3.5); nothing outside operations.
+bool OpReader(Rd& rd) {
+	if (t_skc_op.serial == 0) {
+		return false;
+	}
+	if (t_skc_op.node != 0) {
+		rd.node = t_skc_op.node;
+		return true;
+	}
+	auto& s = S();
+	if (s.cur != nullptr || s.open.empty()) {
+		return false;
+	}
+	rd.seed  = true;
+	rd.cause = CNext;
+	rd.p1    = true;
+	return true;
+}
+
+void CountNext(const Rd& rd) {
+	if (rd.seed && rd.found && rd.cause == CNext) {
+		FS::Add(Counter::Skc3SNext, 1);
+	}
+}
+
+void ReadBufRange(Rd& rd, uint64_t addr, uint64_t size) {
+	rd.buffer = true;
+	if (size == 0) {
+		return;
+	}
+	if (PendHit(addr, End(addr, size))) {
+		FS::Add(Counter::Skc3SPend, 1);
+		return;
+	}
+	ReadMap(rd, S().buf, addr, size);
+	Finish(rd);
+}
+
+const char* LazyName(uint8_t site) {
+	switch (site) {
+		case SkcCensus::LazyUpload: return "upload";
+		case SkcCensus::LazyP3a: return "p3a";
+		case SkcCensus::LazyP3b: return "p3b";
+		case SkcCensus::LazyP3c: return "p3c";
+		case SkcCensus::LazyMat: return "mat";
+		case SkcCensus::LazyW3r: return "w3r";
+		default: return "none";
+	}
+}
+
+void LazyLog(uint8_t site) {
+	auto& s = S();
+	if (site >= s.lazy_n.size()) {
+		return;
+	}
+	if (s.lazy_n[site]++ == 0) {
+		LOGF("Skc3Lazy: site=%s n=%" PRIu64 "\n", LazyName(site), s.lazy_n[site]);
+	}
+}
+
+// A lazy write [RC1]: in a marked frame a new transfer node T is the writer (under Lt the trigger operation, or T
+// outside operations) and T reads the source (under Lt the trigger does); in an unmarked frame the keys close and the
+// source read is a "next" seed while a marked frame is open.
+void LazyWrite(uint8_t site, const IR& dst, const IR* src_img, uint64_t src_addr, uint64_t src_size) {
+	LazyLog(site);
+	auto&          s    = S();
+	const uint32_t trig = t_skc_op.node;
+	uint32_t       t    = 0;
+	if (s.cur != nullptr) {
+		t = NewNode(NextSerial(), KindX);
+		if (t != 0) {
+			FS::Add(Counter::Skc3LazyN, 1);
+			if (trig != 0) {
+				FS::Add(Counter::Skc3LazyIn, 1);
+			}
+		}
+	}
+	Rd   base;
+	bool reads = false;
+	if (t != 0) {
+		base.node = t;
+		reads     = true;
+		if (trig != 0) {
+			base.mask  = static_cast<uint8_t>(PALL & ~PLT);
+			base.node2 = trig;
+			base.mask2 = PLT;
+		}
+	} else if (s.cur == nullptr && !s.open.empty()) {
+		base.seed  = true;
+		base.cause = CNext;
+		reads      = true;
+	}
+	if (reads && src_img != nullptr) {
+		Rd rd = base;
+		ReadImg(rd, *src_img);
+		Finish(rd);
+		CountNext(rd);
+	}
+	if (reads && src_size != 0) {
+		Rd rd = base;
+		ReadBufRange(rd, src_addr, src_size);
+		CountNext(rd);
+	}
+	Wr wr;
+	wr.w       = t;
+	wr.lt      = trig != 0 ? trig : t;
+	wr.via     = ViaW3;
+	wr.why     = WhyLazy;
+	wr.certain = true;
+	WriteImg(wr, dst);
+	CountWrite(t);
+}
+
+// ---- entry points used by the census of session 123 ---------------------------------------------------------------------
+
+void WindowBegin() {
+	Node* nd = NodeOf(t_skc_op.node);
+	if (nd == nullptr) {
+		return;
+	}
+	nd->kind = Common::SkipCeil::KindD;
+	t_dwin   = true;
+	t_dw_p   = Common::SkipCeil::t_p_ns;
+	t_dw_n   = Common::SkipCeil::t_p_n;
+	t_dw_t0  = FS::NowNs();
+}
+
+void OpEnd(SkcOp& op) {
+	if (t_dwin) {
+		const uint64_t t = FS::NowNs();
+		t_dwin           = false;
+		if (Node* nd = NodeOf(op.node); nd != nullptr) {
+			const uint64_t w = t - t_dw_t0;
+			const uint64_t p = Common::SkipCeil::t_p_ns - t_dw_p;
+			nd->w_ns         = w > p ? w - p : 0;
+			nd->p_n          = Common::SkipCeil::t_p_n - t_dw_n;
+			nd->timed        = true;
+		}
+	}
+	const Common::SkipCeil::Skc3Pause pause;
+	if (Node* nd = NodeOf(op.node); nd != nullptr) {
+		nd->ps = op.ps_hash;
+	}
+	if (op.dma) {
+		auto& s = S();
+		// Ld: an operation of an unmarked frame with uses_dma seeds every buffer range with a writer of an open frame and
+		// the current epoch - before its own shift.
+		if (s.cur == nullptr && !s.open.empty()) {
+			for (const auto& [addr, size]: s.wr_cur) {
+				Rd rd;
+				rd.seed   = true;
+				rd.mask   = PLD;
+				rd.cause  = CAux;
+				rd.buffer = true;
+				ReadMap(rd, s.buf, addr, size);
+			}
+		}
+		s.epoch++;
+		FS::Add(Counter::Skc3DmaEp, 1);
+		s.wr_cur.swap(s.wr_next);
+		s.wr_next.clear();
+	}
+	op.node = 0;
+	op.dma  = false;
+	op.g3w.clear();
+}
+
+void ApplyWrites(SkcOp& op) {
+	const uint32_t w = op.node;
+	for (const auto& e: op.g3w) {
+		Wr wr;
+		wr.w   = w;
+		wr.lt  = w;
+		wr.via = e.via;
+		wr.why = e.via == ViaW1 ? WhyW1 : WhyW2;
+		wr.ep  = EpOf();
+		if (e.image) {
+			WriteImg(wr, IR {e.uid, e.bl, e.lc, e.by, e.yc, e.asp});
+		} else {
+			WriteBuf(wr, S().buf, e.addr, e.size, true);
+		}
+		CountWrite(w);
+		if (e.via == ViaW2) {
+			if (Node* nd = NodeOf(w); nd != nullptr) {
+				nd->w2 = true;
+			}
+		}
+	}
+	op.g3w.clear();
+}
+
+void OpReadBuffer(uint64_t vaddr, uint64_t size, bool written) {
+	Rd rd;
+	if (OpReader(rd)) {
+		ReadBufRange(rd, vaddr, size);
+		CountNext(rd);
+	}
+	if (written) {
+		Skc3W e;
+		e.via  = ViaW2;
+		e.addr = vaddr;
+		e.size = size;
+		t_skc_op.g3w.push_back(e);
+	}
+}
+
+// P2 (s.10, ROADMAP s122 item 44(e)): an image that gives skc_x1_img to a read of an executed operation of the next,
+// unmarked frame - each of its D writers is checked (the census of session 123 does not model logical clears and T).
+void P2(Image& image, const IR& r) {
+	namespace Skc = Common::SkipCeil;
+	if (image.skc_wkind != Skc::KindD || image.skc_wframe < Skc::t_epoch || Skc::t_gframe - image.skc_wframe != 1 ||
+	    image.skc_seen == Skc::t_gframe) {
+		return;
+	}
+	std::vector<uint64_t> keys;
+	ForKeys(r, [&](uint64_t key) { keys.push_back(key); });
+	std::sort(keys.begin(), keys.end());
+	auto& img = S().img;
+	for (const uint32_t serial: image.skc_wops) {
+		FS::Add(Counter::Skc3X1cN, 1);
+		Frame* f = FrameOf(serial);
+		if (f == nullptr) {
+			Bad();
+			continue;
+		}
+		const Node& nd    = f->nodes[serial - f->base];
+		bool        inter = false;
+		bool        clr   = true;
+		for (const uint64_t key: nd.wkeys) {
+			if (!std::binary_search(keys.begin(), keys.end(), key)) {
+				continue;
+			}
+			inter         = true;
+			const auto it = img.find(key);
+			if (it == img.end() || (it->second.why != WhyClear && it->second.why != WhyLazy)) {
+				clr = false;
+			}
+		}
+		if (!inter) {
+			FS::Add(Counter::Skc3X1cSub, 1);
+		} else if (clr) {
+			FS::Add(Counter::Skc3X1cClr, 1);
+		} else {
+			f->p2.push_back(serial); // must have need_b at the finalization
+		}
+	}
+}
+
+void Chain(uint32_t writer, uint64_t reader_hash, uint32_t stage) {
+	if (writer == 0 || reader_hash == 0) {
+		return;
+	}
+	Frame* f = FrameOf(writer);
+	if (f == nullptr) {
+		return;
+	}
+	const Node& nd = f->nodes[writer - f->base];
+	if (nd.kind != Common::SkipCeil::KindD) {
+		return;
+	}
+	auto& c = f->chains[{reader_hash, nd.ps, stage}];
+	c.first++;
+	c.second = writer;
+}
+
+void ReadWhole(Image& image) {
+	const IR r = Whole(image);
+	Rd       rd;
+	if (!OpReader(rd)) {
+		return;
+	}
+	if (rd.seed && Count(r) <= MaxViewKeys) {
+		P2(image, r);
+	}
+	ReadImg(rd, r);
+	Finish(rd);
+	CountNext(rd);
+}
+
+void Upload(Image& image, uint32_t first_level, uint32_t level_count) {
+	const auto range = image.SourceRange();
+	const IR   dst   = Clamp(image, first_level, level_count, 0, UINT32_MAX, ImageAspects(image));
+	LazyWrite(SkcCensus::LazyUpload, dst, nullptr, range.address, range.size);
+}
+
+void StampW3(Image& image) {
+	if (Common::SkipCeil::t_acq) {
+		return; // a target acquisition is no certain write: W1 covers it (as in session 123)
+	}
+	switch (t_lazy) {
+		case SkcCensus::LazyUpload:
+		case SkcCensus::LazyP3a:
+		case SkcCensus::LazyP3b:
+		case SkcCensus::LazyP3c: return; // the explicit event of the scope is the write
+		case SkcCensus::LazyMat: {
+			// ROADMAP s122 item 44(b): no write event; under Lt a write of the trigger (none outside operations).
+			LazyLog(SkcCensus::LazyMat);
+			Wr wr;
+			wr.lt_only = true;
+			wr.lt      = t_skc_op.node;
+			wr.via     = ViaW3;
+			WriteImg(wr, Whole(image));
+			return;
+		}
+		case SkcCensus::LazyW3r: LazyWrite(SkcCensus::LazyW3r, Whole(image), nullptr, 0, 0); return;
+		default: break;
+	}
+	const uint32_t w = t_skc_op.node;
+	Wr             wr;
+	wr.w       = w;
+	wr.lt      = w;
+	wr.via     = ViaW3;
+	wr.why     = WhyW3;
+	wr.certain = true;
+	WriteImg(wr, Whole(image));
+	CountWrite(w);
+}
+
+// ---- logical clears [RC2] ---------------------------------------------------------------------------------------------
+
+void CloseImage(Image& image, uint32_t mask, uint32_t w, bool& hit) {
+	Wr wr;
+	wr.w       = w;
+	wr.lt      = w;
+	wr.via     = ViaW3;
+	wr.why     = WhyClear;
+	wr.certain = true;
+	const IR r = Whole(image);
+	if (mask == UINT32_MAX) {
+		WriteImg(wr, r);
+	} else {
+		for (uint32_t layer = 0; layer < std::min(r.yc, 32u); layer++) {
+			if (((mask >> layer) & 1u) != 0) {
+				IR one = r;
+				one.by = layer;
+				one.yc = 1;
+				WriteImg(wr, one);
+			}
+		}
+	}
+	hit = hit || wr.hit;
+	CountWrite(w);
+}
+
+// `each` visits every image of the cache (SkcCensus, a friend of TextureCache, supplies it).
+template <typename Each>
+void CloseCandidates(Each&& each, uint64_t address, uint32_t mask) {
+	FS::Add(Counter::Skc3MclrN, 1);
+	if (address == 0) {
+		return;
+	}
+	const uint32_t w   = t_skc_op.node;
+	bool           hit = false;
+	each([&](Image& image) {
+		if (image.registered && image.info.metadata.range.address == address) {
+			CloseImage(image, mask, w, hit);
+		}
+	});
+	if (hit) {
+		FS::Add(Counter::Skc3Mclr, 1);
+	}
+}
+
+// ---- finalization ---------------------------------------------------------------------------------------------------------
+
+const char* StageName(uint32_t stage) {
+	return stage == 1 ? "ps" : stage == 2 ? "cs" : "vs";
+}
+
+void Chains(Frame& f) {
+	auto& s = S();
+	for (const auto& [key, v]: f.chains) {
+		const uint32_t serial = v.second;
+		if (serial < f.base || serial - f.base >= f.nodes.size()) {
+			continue;
+		}
+		const Node&   nd   = f.nodes[serial - f.base];
+		const auto    need = static_cast<uint8_t>(((nd.need & PL) != 0 ? 1u : 0u) | ((nd.need & PB) != 0 ? 2u : 0u));
+		auto&         p    = s.pairs[key];
+		p.first += v.first;
+		p.second = need;
+		const auto& [reader, writer, stage] = key;
+		if (reader == writer && s.self_lines < ChainLines && s.self_seen.insert(key).second) {
+			s.self_lines++;
+			LOGF("Skc3Chain: reader=0x%016" PRIx64 " stage=%s writer_ps=0x%016" PRIx64 " need_l=%u need_b=%u k=1\n",
+			     reader, StageName(stage), writer, need & 1u, (need >> 1u) & 1u);
+		}
+	}
+	if (s.finals == PairsAt && !s.pairs.empty()) {
+		std::vector<std::pair<std::tuple<uint64_t, uint64_t, uint32_t>, std::pair<uint64_t, uint8_t>>> rows(
+		    s.pairs.begin(), s.pairs.end());
+		std::sort(rows.begin(), rows.end(), [](const auto& a, const auto& b) { return a.second.first > b.second.first; });
+		for (size_t i = 0; i < rows.size() && i < ChainLines; i++) {
+			const auto& [reader, writer, stage] = rows[i].first;
+			const auto need                     = rows[i].second.second;
+			LOGF("Skc3Chain: reader=0x%016" PRIx64 " stage=%s writer_ps=0x%016" PRIx64 " need_l=%u need_b=%u k=1 n=%" PRIu64
+			     "\n",
+			     reader, StageName(stage), writer, need & 1u, (need >> 1u) & 1u, rows[i].second.first);
+		}
+	}
+}
+
+void Finalize(Frame& f) {
+	auto& s = S();
+	s.finals++;
+	FS::Add(Counter::Skc3F, 1);
+	if (f.poll) {
+		FS::Add(Counter::Skc3Pollf, 1);
+	}
+	const auto node_at = [&f](uint32_t serial) -> const Node* {
+		return serial >= f.base && serial - f.base < f.nodes.size() ? &f.nodes[serial - f.base] : nullptr;
+	};
+	// P1 and P2 check the propagation, so they come before the poll marks.
+	uint64_t pc_bad  = 0;
+	uint64_t x1c_bad = 0;
+	for (const uint32_t w: f.p1) {
+		const Node* nd = node_at(w);
+		pc_bad += nd == nullptr || (nd->need & PL) == 0 ? 1u : 0u;
+	}
+	for (const uint32_t w: f.p2) {
+		const Node* nd = node_at(w);
+		x1c_bad += nd == nullptr || (nd->need & PB) == 0 ? 1u : 0u;
+	}
+	Chains(f);
+	uint64_t nodes = 0, ed = 0, d = 0, d_empty = 0, need_l = 0, free_l = 0, free_l_empty = 0, need_b = 0, free_b = 0;
+	uint64_t lp = 0, ld = 0, lu = 0, lw = 0, lt = 0, nocause = 0, lnb = 0, lsup = 0, w2d = 0, orphan = 0, bad = 0;
+	uint64_t wd = 0, pd = 0, wfl = 0, pfl = 0, wfb = 0, pfb = 0;
+	std::array<uint64_t, 8> cl {};
+	std::array<uint64_t, 5> via {};
+	for (auto& nd: f.nodes) {
+		if (nd.kind == 0) {
+			continue;
+		}
+		nodes++;
+		ed += nd.in.size();
+		if (nd.kind == Common::SkipCeil::KindD) {
+			// The poll rule (s.3.5, contract of ROADMAP s122 item 40(v)(5)): every D of a poll frame, every policy.
+			if (f.poll) {
+				if ((nd.need & PL) == 0) {
+					nd.cause = CPoll;
+					nd.via   = ViaNone;
+				}
+				nd.need = PALL;
+			}
+			d++;
+			d_empty += nd.empty ? 1u : 0u;
+			w2d += nd.w2 ? 1u : 0u;
+			if (!nd.timed) {
+				orphan++;
+			} else {
+				wd += nd.w_ns;
+				pd += nd.p_n;
+			}
+			if ((nd.need & PL) != 0) {
+				need_l++;
+				if (nd.cause >= CCpu && nd.cause <= CFlip) {
+					cl[nd.cause]++;
+					if (nd.cause != CPoll) {
+						if (nd.via >= ViaW1 && nd.via <= ViaM) {
+							via[nd.via]++;
+						} else {
+							bad++;
+						}
+					}
+				} else {
+					nocause++;
+				}
+			} else {
+				free_l++;
+				free_l_empty += nd.empty ? 1u : 0u;
+				if (nd.timed) {
+					wfl += nd.w_ns;
+					pfl += nd.p_n;
+				}
+			}
+			if ((nd.need & PB) != 0) {
+				need_b++;
+			} else {
+				free_b++;
+				if (nd.timed) {
+					wfb += nd.w_ns;
+					pfb += nd.p_n;
+				}
+			}
+			lp += (nd.need & PLP) != 0 ? 1u : 0u;
+			ld += (nd.need & PLD) != 0 ? 1u : 0u;
+			lu += (nd.need & PLU) != 0 ? 1u : 0u;
+			lw += (nd.need & PLW) != 0 ? 1u : 0u;
+			lt += (nd.need & PLT) != 0 ? 1u : 0u;
+		}
+		if ((nd.need & PL) != 0 && (nd.need & PB) == 0) {
+			lnb++;
+		}
+		if ((nd.need & PL) != 0 && (nd.need & PSUP) != PSUP) {
+			lsup++;
+		}
+	}
+	FS::Add(Counter::Skc3D, d);
+	FS::Add(Counter::Skc3DEmpty, d_empty);
+	FS::Add(Counter::Skc3Nodes, nodes);
+	FS::Add(Counter::Skc3Wr, f.wr);
+	FS::Add(Counter::Skc3Ed, ed);
+	FS::Add(Counter::Skc3NeedL, need_l);
+	FS::Add(Counter::Skc3FreeL, free_l);
+	FS::Add(Counter::Skc3FreeLEmpty, free_l_empty);
+	FS::Add(Counter::Skc3NeedB, need_b);
+	FS::Add(Counter::Skc3FreeB, free_b);
+	FS::Add(Counter::Skc3NeedLp, lp);
+	FS::Add(Counter::Skc3NeedLd, ld);
+	FS::Add(Counter::Skc3NeedLu, lu);
+	FS::Add(Counter::Skc3NeedLw, lw);
+	FS::Add(Counter::Skc3NeedLt, lt);
+	FS::Add(Counter::Skc3ClCpu, cl[CCpu]);
+	FS::Add(Counter::Skc3ClCp, cl[CCp]);
+	FS::Add(Counter::Skc3ClGds, cl[CGds]);
+	FS::Add(Counter::Skc3ClPoll, cl[CPoll]);
+	FS::Add(Counter::Skc3ClNext, cl[CNext]);
+	FS::Add(Counter::Skc3ClFlip, cl[CFlip]);
+	FS::Add(Counter::Skc3ViaW1, via[ViaW1]);
+	FS::Add(Counter::Skc3ViaW2, via[ViaW2]);
+	FS::Add(Counter::Skc3ViaW3, via[ViaW3]);
+	FS::Add(Counter::Skc3ViaM, via[ViaM]);
+	FS::Add(Counter::Skc3Nocause, nocause);
+	FS::Add(Counter::Skc3Lnb, lnb);
+	FS::Add(Counter::Skc3Lsup, lsup);
+	FS::Add(Counter::Skc3W2d, w2d);
+	FS::Add(Counter::Skc3PcBad, pc_bad);
+	FS::Add(Counter::Skc3X1cBad, x1c_bad);
+	FS::Add(Counter::Skc3Orphan, orphan);
+	FS::Add(Counter::Skc3Bad, bad);
+	FS::Add(Counter::Skc3WdNs, wd);
+	FS::Add(Counter::Skc3PdN, pd);
+	FS::Add(Counter::Skc3WfreeLNs, wfl);
+	FS::Add(Counter::Skc3PfreeLN, pfl);
+	FS::Add(Counter::Skc3WfreeBNs, wfb);
+	FS::Add(Counter::Skc3PfreeBN, pfb);
+	FS::Add(Counter::Skc3GcNs, f.gc_ns);
+	FS::Add(Counter::Skc3GcPn, f.gc_pn);
+	FS::Add(Counter::Skc3GcN, f.gc_n);
+	FS::Add(Counter::Skc3FrNs, f.fr_ns);
+	FS::Add(Counter::Skc3FrPn, f.fr_pn);
+}
+
+void Reset() {
+	auto& s = S();
+	s.open.clear();
+	s.cur = nullptr;
+	s.img.clear();
+	s.buf.clear();
+	s.gds.clear();
+	s.wr_cur.clear();
+	s.wr_next.clear();
+}
+
+} // namespace G3
+
+} // namespace
+
+uint8_t SkcCensus::LazyEnter(uint8_t site) noexcept {
+	const uint8_t prev = G3::t_lazy;
+	G3::t_lazy         = site;
+	return prev;
+}
+
+void SkcCensus::LazyLeave(uint8_t prev) noexcept {
+	G3::t_lazy = prev;
+}
+
+void SkcCensus::GcDone(uint64_t t0, uint64_t p0, uint64_t n0) noexcept {
+	G3::Frame* f = G3::S().cur;
+	if (f == nullptr) {
+		return;
+	}
+	const uint64_t w = Common::FrameStats::NowNs() - t0;
+	const uint64_t p = Common::SkipCeil::t_p_ns - p0;
+	f->gc_ns += w > p ? w - p : 0;
+	f->gc_pn += Common::SkipCeil::t_p_n - n0;
+	f->gc_n++;
+}
+
+void SkcCensus::ProcDone(uint32_t frame, uint64_t t0, uint64_t p0, uint64_t n0) noexcept {
+	G3::Frame* f = G3::FrameNo(frame);
+	if (f == nullptr) {
+		return;
+	}
+	const uint64_t w = Common::FrameStats::NowNs() - t0;
+	const uint64_t p = Common::SkipCeil::t_p_ns - p0;
+	f->fr_ns += w > p ? w - p : 0;
+	f->fr_pn += Common::SkipCeil::t_p_n - n0;
+}
+
+void SkcCensus::G3FrameEnd() {
+	namespace FS = Common::FrameStats;
+	auto& s = G3::S();
+	// s.5.3: K empty pauses between two clock reads, outside every window.
+	const uint64_t c0 = FS::NowNs();
+	for (uint32_t i = 0; i < G3::CalK; i++) {
+		const Common::SkipCeil::Skc3Pause pause;
+	}
+	const uint64_t c1 = FS::NowNs();
+	FS::Add(FS::Counter::Skc3CalNs, c1 - c0);
+	FS::Add(FS::Counter::Skc3CalN, G3::CalK);
+	if (Common::SkipCeil::t_skip) {
+		// [RC5(2)]: the poll bit of this marked frame goes to its record, read only there at the finalization.
+		if (s.cur != nullptr) {
+			s.cur->poll = Common::SkipCeil::t_lod_ftouch;
+		}
+		s.cur = nullptr;
+		return;
+	}
+	s.cur = nullptr;
+	if (s.open.empty()) {
+		return;
+	}
+	const Common::SkipCeil::Skc3Pause pause;
+	if (s.open.size() >= 2) {
+		FS::Add(FS::Counter::Skc3Open2, 1);
+	}
+	for (auto& f: s.open) {
+		G3::Finalize(*f);
+	}
+	G3::Reset(); // no key has a writer of an open frame any more
+}
+
+void SkcCensus::G3Latch(bool edge) {
+	auto& s = G3::S();
+	if (edge) {
+		G3::Reset(); // an edge into or out of 3 drops the graph uncounted (s.1.2)
+	}
+	if (Common::SkipCeil::t_mode != 3) {
+		return;
+	}
+	if (!s.logged) {
+		s.logged = true;
+		LOGF("Skc3Mode: closure policies=L,b,Lp,Ld,Lu,Lw,Lt pause_k=%u\n", G3::CalK);
+	}
+	if (Common::SkipCeil::t_skip) {
+		s.open.push_back(std::make_unique<G3::Frame>());
+		s.cur        = s.open.back().get();
+		s.cur->frame = Common::SkipCeil::t_gframe;
+	}
+}
+
+void SkcCensus::G3ReadView(TextureCache& cache, ImageId id, const ImageViewInfo& view, bool storage, uint64_t shader_hash,
+                           uint32_t stage) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return;
+	}
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr) {
+		return;
+	}
+	const G3::IR r = G3::View(*image, view);
+	G3::Rd       rd;
+	if (G3::OpReader(rd)) {
+		if (rd.seed && G3::Count(r) <= G3::MaxViewKeys) {
+			G3::P2(*image, r);
+		}
+		G3::ReadImg(rd, r);
+		G3::Finish(rd);
+		G3::CountNext(rd);
+		if (rd.seed && rd.found) {
+			G3::Chain(rd.lwr, shader_hash, stage);
+		}
+	}
+	if (storage) {
+		Skc3W e;
+		e.image = true;
+		e.uid   = r.uid;
+		e.bl    = r.bl;
+		e.lc    = r.lc;
+		e.by    = r.by;
+		e.yc    = r.yc;
+		e.asp   = r.asp;
+		e.via   = G3::ViaW2;
+		t_skc_op.g3w.push_back(e);
+	}
+}
+
+void SkcCensus::G3Attachment(TextureCache& cache, ImageId id, const ImageViewInfo& view, uint8_t write_aspects,
+                             uint8_t read_aspects) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return;
+	}
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr) {
+		return;
+	}
+	// An attachment covers every aspect of its format; the pipeline state chooses which are read and written.
+	const G3::IR r = G3::Clamp(*image, view.base_level, view.level_count, view.base_layer, view.layer_count,
+	                           G3::ImageAspects(*image));
+	if (const auto asp = static_cast<uint8_t>(r.asp & read_aspects); asp != 0) {
+		G3::IR rr = r;
+		rr.asp    = asp;
+		G3::Rd rd;
+		if (G3::OpReader(rd)) {
+			G3::ReadImg(rd, rr);
+			G3::Finish(rd);
+			G3::CountNext(rd);
+		}
+	}
+	if (const auto asp = static_cast<uint8_t>(r.asp & write_aspects); asp != 0) {
+		Skc3W e;
+		e.image = true;
+		e.uid   = r.uid;
+		e.bl    = r.bl;
+		e.lc    = r.lc;
+		e.by    = r.by;
+		e.yc    = r.yc;
+		e.asp   = asp;
+		e.via   = G3::ViaW1;
+		t_skc_op.g3w.push_back(e);
+	}
+}
+
+void SkcCensus::G3Empty() noexcept {
+	if (G3::Node* nd = G3::NodeOf(t_skc_op.node); nd != nullptr) {
+		nd->empty = true;
+	}
+}
+
+void SkcCensus::G3Dma() noexcept {
+	if (t_skc_op.serial != 0) {
+		t_skc_op.dma = true;
+	}
+}
+
+void SkcCensus::G3GdsAccess(uint64_t gds_size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (t_skc_op.serial == 0) {
+		return;
+	}
+	// The read has no offset and size: no edge (s.3.3.1).  The binding is writable, so the operation may write any of
+	// GDS - a W2 of the whole of it (a version of the class of s.3.1 must assume so).
+	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3GdsUnk, 1);
+	const uint32_t w = t_skc_op.node;
+	G3::Wr         wr;
+	wr.w   = w;
+	wr.lt  = w;
+	wr.via = G3::ViaW2;
+	wr.why = G3::WhyW2;
+	G3::WriteBuf(wr, G3::S().gds, 0, gds_size, false);
+	G3::CountWrite(w);
+	if (G3::Node* nd = G3::NodeOf(w); nd != nullptr) {
+		nd->w2 = true;
+	}
+}
+
+void SkcCensus::G3DmaWrite(uint64_t vaddr, uint64_t size, bool gds) {
+	const Common::SkipCeil::Skc3Pause pause;
+	const uint32_t                    w = t_skc_op.node;
+	G3::Wr                            wr;
+	wr.w       = w;
+	wr.lt      = w;
+	wr.via     = G3::ViaM;
+	wr.why     = G3::WhyM;
+	wr.certain = true;
+	wr.ep      = G3::EpOf();
+	G3::WriteBuf(wr, gds ? G3::S().gds : G3::S().buf, vaddr, size, !gds);
+	G3::CountWrite(w);
+}
+
+void SkcCensus::G3DmaCopy(uint64_t dst, uint64_t src, uint64_t size, bool dst_gds, bool src_gds) {
+	const Common::SkipCeil::Skc3Pause pause;
+	G3::Rd                            rd;
+	if (G3::OpReader(rd)) {
+		if (src_gds) {
+			// [RC11]: in N an edge of the node M on the writers of the GDS range; in an unmarked frame a "next" seed.
+			G3::ReadMap(rd, G3::S().gds, src, size);
+			G3::Finish(rd);
+			if (!rd.seed) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::Skc3MGds, 1);
+			}
+		} else {
+			G3::ReadBufRange(rd, src, size);
+		}
+		G3::CountNext(rd);
+	}
+	G3DmaWrite(dst, size, dst_gds);
+}
+
+void SkcCensus::G3CpWrite(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3CpwN, 1);
+	G3::Wr wr;
+	wr.why     = G3::WhyCp;
+	wr.certain = true;
+	wr.ep      = G3::S().epoch;
+	G3::WriteBuf(wr, G3::S().buf, vaddr, size, true);
+	if (wr.hit) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3CpwHit, 1);
+	}
+}
+
+void SkcCensus::G3CpuWrite(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	G3::Wr                            wr;
+	wr.why     = G3::WhyCpu;
+	wr.certain = true;
+	wr.ep      = G3::S().epoch;
+	G3::WriteBuf(wr, G3::S().buf, vaddr, size, true);
+}
+
+void SkcCensus::G3Download(const Image& image) {
+	const Common::SkipCeil::Skc3Pause pause;
+	G3::Wr                            wr;
+	wr.why     = G3::WhyDl;
+	wr.certain = true;
+	wr.ep      = G3::S().epoch;
+	G3::WriteBuf(wr, G3::S().buf, image.info.data.address, image.info.data.size, true);
+}
+
+uint64_t SkcCensus::G3PendAdd(uint64_t vaddr, uint64_t size) {
+	std::scoped_lock lock {G3::g_pend_mutex};
+	const uint64_t   id = ++G3::g_pend_id;
+	G3::g_pend.emplace_back(id, vaddr, G3::End(vaddr, size));
+	G3::g_pend_n.fetch_add(1, std::memory_order_release);
+	return id;
+}
+
+void SkcCensus::G3PendDone(uint64_t id) {
+	std::scoped_lock lock {G3::g_pend_mutex};
+	for (auto it = G3::g_pend.begin(); it != G3::g_pend.end(); ++it) {
+		if (std::get<0>(*it) == id) {
+			G3::g_pend.erase(it);
+			G3::g_pend_n.fetch_sub(1, std::memory_order_release);
+			return;
+		}
+	}
+}
+
+void SkcCensus::G3CpuSeed(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	auto&                             s = G3::S();
+	if (s.open.empty() || size == 0) {
+		return;
+	}
+	// The window of the fault itself [RC14] under every policy but Lw, and its 4 KiB pages under Lw.
+	G3::Rd rd;
+	rd.seed  = true;
+	rd.cause = G3::CCpu;
+	rd.mask  = static_cast<uint8_t>(G3::PALL & ~G3::PLW);
+	G3::ReadBufRange(rd, vaddr, size);
+	if (rd.found) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SCpu, 1);
+	}
+	const uint64_t end   = G3::End(vaddr, size);
+	const uint64_t pbeg  = vaddr & ~(G3::PageBytes - 1);
+	const uint64_t pend  = end > UINT64_MAX - (G3::PageBytes - 1) ? UINT64_MAX : (end + G3::PageBytes - 1) & ~(G3::PageBytes - 1);
+	G3::Rd         page;
+	page.seed   = true;
+	page.cause  = G3::CCpu;
+	page.mask   = G3::PLW;
+	page.buffer = true;
+	if (!G3::PendHit(pbeg, pend)) {
+		G3::ReadMap(page, s.buf, pbeg, pend - pbeg);
+	}
+}
+
+void SkcCensus::G3CpSeed(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (G3::S().open.empty()) {
+		return;
+	}
+	G3::Rd rd;
+	rd.seed  = true;
+	rd.cause = G3::CCp;
+	G3::ReadBufRange(rd, vaddr, size);
+	if (rd.found) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SCp, 1);
+	}
+}
+
+void SkcCensus::G3GdsSeed(uint64_t offset, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (G3::S().open.empty()) {
+		return;
+	}
+	G3::Rd rd;
+	rd.seed  = true;
+	rd.cause = G3::CGds;
+	G3::ReadMap(rd, G3::S().gds, offset, size);
+	G3::Finish(rd);
+	if (rd.found) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SGds, 1);
+	}
+}
+
+void SkcCensus::G3PrefSeed(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (G3::S().open.empty()) {
+		return;
+	}
+	G3::Rd rd;
+	rd.seed  = true;
+	rd.cause = G3::CAux;
+	rd.mask  = G3::PLP;
+	G3::ReadBufRange(rd, vaddr, size);
+	if (rd.found) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SPref, 1);
+	}
+}
+
+void SkcCensus::G3Flip(Image& image) {
+	const Common::SkipCeil::Skc3Pause pause;
+	auto&                             s = G3::S();
+	if (s.cur != nullptr) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SFlipx, 1); // the correct version holds this flip
+		return;
+	}
+	if (s.open.empty()) {
+		return;
+	}
+	G3::Rd rd;
+	rd.seed  = true;
+	rd.cause = G3::CFlip;
+	G3::ReadImg(rd, G3::Whole(image));
+	G3::Finish(rd);
+	if (rd.found) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3SFlip, 1);
+	}
+}
+
+void SkcCensus::G3Copy(uint8_t site, Image& destination, Image& source, uint32_t mip, uint32_t layer) {
+	const Common::SkipCeil::Skc3Pause pause;
+	G3::IR                            dst;
+	G3::IR                            src;
+	if (mip == UINT32_MAX) {
+		dst = G3::Whole(destination);
+		src = G3::Whole(source);
+	} else {
+		// Image::CopyMip: source level 0, all its layers, to level `mip` from layer `layer` on.
+		dst = G3::Clamp(destination, mip, 1, layer, UINT32_MAX, G3::ImageAspects(destination));
+		src = G3::Clamp(source, 0, 1, 0, UINT32_MAX, G3::ImageAspects(source));
+	}
+	G3::LazyWrite(site, dst, &src, 0, 0);
+}
+
+void SkcCensus::G3MetaClear(TextureCache& cache, uint64_t address) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (!Common::SkipCeil::t_gpu) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
+		return;
+	}
+	G3::CloseCandidates(
+	    [&cache](auto&& fn) { cache.m_slot_images.ForEach([&fn](Common::SlotId /*id*/, Image& image) { fn(image); }); },
+	    address, UINT32_MAX);
+}
+
+void SkcCensus::G3MetaFill(TextureCache& cache, uint64_t address, uint32_t clear_mask, bool pending) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (!Common::SkipCeil::t_gpu) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
+		return;
+	}
+	if (pending) {
+		// ROADMAP s122 item 44(v): the owner is not known yet - the cleaner is remembered for the adoption.
+		if (clear_mask != 0) {
+			G3::S().pend_dcc[address] = t_skc_op.node;
+		} else {
+			G3::S().pend_dcc.erase(address);
+		}
+		return;
+	}
+	if (clear_mask != 0) {
+		G3::CloseCandidates(
+		    [&cache](auto&& fn) { cache.m_slot_images.ForEach([&fn](Common::SlotId /*id*/, Image& image) { fn(image); }); },
+		    address, clear_mask);
+	}
+}
+
+void SkcCensus::G3MetaAdopt(Image& image, uint64_t address) {
+	const Common::SkipCeil::Skc3Pause pause;
+	if (!Common::SkipCeil::t_gpu) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Xthr, 1);
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3MclrN, 1);
+	Common::FrameStats::Add(Common::FrameStats::Counter::Skc3MclrPend, 1);
+	auto&    s = G3::S();
+	uint32_t w = 0;
+	if (const auto it = s.pend_dcc.find(address); it != s.pend_dcc.end()) {
+		// A cleaner of a finalized frame is "none" (s.3.3.4).
+		w = G3::FrameOf(it->second) != nullptr ? it->second : 0;
+		s.pend_dcc.erase(it);
+	}
+	bool hit = false;
+	G3::CloseImage(image, UINT32_MAX, w, hit);
+	if (hit) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::Skc3Mclr, 1);
+	}
+}
+
 void SkcStampW3(Image& image) noexcept {
 	SkcCensus::StampW3(image);
 }
@@ -3633,7 +5368,14 @@ void SkcCensus::StampW3(Image& image) noexcept {
 		Skc::NoteOffThreadStamp();
 		return;
 	}
-	if (Skc::t_mode != 2 || Skc::t_acq || Skc::t_carry) {
+	if (Skc::t_mode < 2) {
+		return;
+	}
+	const Skc::Skc3Pause skc3_pause;
+	if (Skc::t_mode == 3) {
+		G3::StampW3(image); // Session 124 (closure census): W3, a lazy write or an Lt-only write
+	}
+	if (Skc::t_acq || Skc::t_carry) {
 		return;
 	}
 	SkcStampImage(image, Skc::t_kind, nullptr);
@@ -3659,11 +5401,23 @@ bool SkcCensus::OpBegin(uint8_t kind, bool draw) noexcept {
 	op.ia_t     = false;
 	op.w2.clear();
 	op.d_stamped.clear();
+	// Session 124, knob "skipceil" = 3: the operation of a marked frame is a node of its graph (s.3.2).
+	op.node = 0;
+	op.dma  = false;
+	op.g3w.clear();
+	if (Skc::t_mode == 3 && Skc::t_skip) {
+		op.node = G3::NewNode(op.serial, kind);
+	}
 	return true;
 }
 
 void SkcCensus::OpEnd(TextureCache& cache, bool draw) noexcept {
 	auto& op = t_skc_op;
+	// Session 124, knob "skipceil" = 3: the D window ends here, first (s.5.1); then the node's tail and the epoch.
+	if (Skc::t_mode == 3) [[unlikely]] {
+		G3::OpEnd(op);
+	}
+	const Skc::Skc3Pause skc3_pause;
 	if (op.x1) {
 		if (draw) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Draw, 1);
@@ -3693,11 +5447,12 @@ void SkcCensus::OpEnd(TextureCache& cache, bool draw) noexcept {
 }
 
 bool SkcCensus::Carry(Image& destination, const Image& source) noexcept {
+	const Skc::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	if (!Skc::t_gpu) {
 		Skc::NoteOffThreadStamp();
 		return false;
 	}
-	if (Skc::t_mode != 2 || !SkcLiveDT(source)) {
+	if (Skc::t_mode < 2 || !SkcLiveDT(source)) {
 		return false;
 	}
 	SkcClearWriters(destination);
@@ -3715,13 +5470,19 @@ void SkcCensus::SkipSiteD() noexcept {
 		Skc::t_kind = Skc::KindD;
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::SkcCDd, 1);
+	// Session 124, knob "skipceil" = 3: the node turns D and its window opens - the LAST statement (s.5.1).
+	if (Skc::t_mode == 3) {
+		G3::WindowBegin();
+	}
 }
 
 void SkcCensus::SetDrawPs(uint64_t ps_hash) noexcept {
+	const Skc::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	t_skc_op.ps_hash = ps_hash;
 }
 
 void SkcCensus::ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_t shader_hash, uint32_t stage) {
+	const Skc::Skc3Pause skc3_pause;
 	if (t_skc_op.serial == 0) {
 		return; // ROADMAP s122 item 35(g), N2: outside every census operation - no read, no W2, no kind from t_skc_op
 	}
@@ -3761,7 +5522,12 @@ void SkcCensus::ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_
 }
 
 void SkcCensus::ReadDepthCopySource(TextureCache& cache, ImageId id) {
+	const Skc::Skc3Pause skc3_pause;
 	auto* image = cache.m_slot_images.try_get(id);
+	// Session 124, knob "skipceil" = 3: the whole source is read by the copy (an operation K).
+	if (image != nullptr && Skc::t_mode == 3) {
+		G3::ReadWhole(*image);
+	}
 	if (image == nullptr || !SkcLiveDT(*image)) {
 		return;
 	}
@@ -3790,6 +5556,7 @@ void SkcCensus::ReadDepthCopySource(TextureCache& cache, ImageId id) {
 }
 
 void SkcCensus::Attachment(TextureCache& cache, ImageId id, bool writes) {
+	const Skc::Skc3Pause skc3_pause;
 	auto* image = cache.m_slot_images.try_get(id);
 	if (image == nullptr) {
 		return;
@@ -3805,8 +5572,12 @@ void SkcCensus::Attachment(TextureCache& cache, ImageId id, bool writes) {
 }
 
 void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written) {
+	const Skc::Skc3Pause skc3_pause;
 	if (t_skc_op.serial == 0) {
 		return; // ROADMAP s122 item 35(g), N2
+	}
+	if (Skc::t_mode == 3) {
+		G3::OpReadBuffer(vaddr, size, written); // Session 124: an edge / a "next" seed, and a pending W2 write
 	}
 	if (written) {
 		t_skc_op.w2.push_back({false, {}, vaddr, size});
@@ -3837,8 +5608,12 @@ void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, 
 }
 
 void SkcCensus::ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t size) {
+	const Skc::Skc3Pause skc3_pause;
 	if (t_skc_op.serial == 0) {
 		return; // ROADMAP s122 item 35(g), N2
+	}
+	if (Skc::t_mode == 3) {
+		G3::OpReadBuffer(vaddr, size, false); // Session 124: the arguments are a read of every operation
 	}
 	if (!SkcExecuted(Skc::t_kind)) {
 		return;
@@ -3859,6 +5634,7 @@ void SkcCensus::ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t 
 }
 
 void SkcCensus::NoteDma(BufferCache& buffers) {
+	const Skc::Skc3Pause skc3_pause;
 	if (!SkcExecuted(Skc::t_kind)) {
 		return;
 	}
@@ -3872,7 +5648,11 @@ void SkcCensus::NoteDma(BufferCache& buffers) {
 }
 
 void SkcCensus::ApplyW2(TextureCache& cache, BufferCache& buffers) {
+	const Skc::Skc3Pause skc3_pause;
 	auto&        op   = t_skc_op;
+	if (Skc::t_mode == 3) {
+		G3::ApplyWrites(op); // Session 124: the operation's pending W1 / W2 node writes, after its last read
+	}
 	const uint8_t kind = Skc::t_kind;
 	const bool    keep = SkcKeeps(kind);
 	op.bound           = true;
@@ -3909,13 +5689,17 @@ void SkcCensus::ApplyW2(TextureCache& cache, BufferCache& buffers) {
 	op.w2.clear();
 }
 
-void SkcCensus::Upload(BufferCache& buffers, Image& image) {
+void SkcCensus::Upload(BufferCache& buffers, Image& image, uint32_t first_level, uint32_t level_count) {
 	if (!Skc::t_gpu) {
 		Skc::NoteOffThreadStamp();
 		return;
 	}
-	if (Skc::t_mode != 2) {
+	if (Skc::t_mode < 2) {
 		return;
+	}
+	const Skc::Skc3Pause skc3_pause;
+	if (Skc::t_mode == 3) {
+		G3::Upload(image, first_level, level_count); // Session 124: a lazy write of site "upload" [RC1]
 	}
 	// [N5]: the content comes from guest memory.  From a range the map holds as D / T it carries the latest such
 	// segment's kind and frame (a carry, not a stamp); otherwise the label is erased.
@@ -3933,6 +5717,7 @@ void SkcCensus::Upload(BufferCache& buffers, Image& image) {
 }
 
 void SkcCensus::DownloadRead(const Image& image) {
+	const Skc::Skc3Pause skc3_pause;
 	if (!SkcLiveDT(image)) {
 		return;
 	}

@@ -772,6 +772,11 @@ Presenter::Frame& Presenter::PrepareFrame(CommandBuffer& buffer, const ImageInfo
 	if (image.backing.format == vk::Format::eUndefined) {
 		EXIT("unsupported presentation source, image=%p\n", static_cast<const void*>(&image));
 	}
+	// Session 124, knob "skipceil" = 3 (closure census, s.3.5): the copy of the flip buffer - a seed "flip" of an
+	// unmarked frame; of a marked frame it is excluded (skc3_s_flipx: the correct version holds that flip).
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3Flip(image);
+	}
 
 	auto frame_format = info.pixel_format;
 	switch (frame_format) {

@@ -655,7 +655,7 @@ enum class Knob : uint32_t {
 	// executes), the frame's flip is held and the non-critical GC passes are suspended; 2 = the correctness census, nothing
 	// skipped.  Refused (skc_refuse) while m4baton or burn is nonzero.
 	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
-	SkipCeil,         // KYTY_SKIP_CEILING, file name "skipceil" (MEASUREMENT ONLY: 0 off, 1 skip draw translation every 2nd GuestGpu frame, 2 census)
+	SkipCeil,         // KYTY_SKIP_CEILING, file name "skipceil" (MEASUREMENT ONLY: 0 off, 1 skip draw translation every 2nd GuestGpu frame, 2 census, 3 closure census)
 	Count,
 };
 

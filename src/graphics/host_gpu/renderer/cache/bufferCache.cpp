@@ -521,8 +521,11 @@ void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
 
 void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) {
 	// Session 123, knob "skipceil" = 2 (census, s.3.2): a read fault on GuestGpu itself (skc_r_c, for reference).
-	if (!is_write && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (!is_write && Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcNoteRead(0, vaddr, size);
+		if (Common::SkipCeil::t_mode == 3) {
+			SkcCensus::G3CpuSeed(vaddr, size); // Session 124: seed cpu-g, the window of the fault (s.3.5)
+		}
 	}
 	if (is_write && !IsRegionRegistered(vaddr, size)) {
 		return;
@@ -1748,6 +1751,12 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	if ((vaddr & 3u) != 0 || size == 0 || (size & 3u) != 0 || size > UINT64_MAX - vaddr) {
 		EXIT("BufferCache: fill range must be dword aligned\n");
 	}
+	// Session 124, knob "skipceil" = 3 (closure census, s.3.2, ROADMAP s122 item 42(e) [RC11]): a DMA is an operation M
+	// unless an operation is open (then part of it); its destination - memory or GDS - is a certain write (M).
+	const SkcCensus::OpScope skc3_m(m_texture_cache, Common::SkipCeil::KindM, false, true);
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3DmaWrite(vaddr, size, is_gds);
+	}
 	if (is_gds) {
 		if (vaddr > m_gds_buffer.Size() || size > m_gds_buffer.Size() - vaddr) {
 			EXIT("BufferCache: GDS fill range is out of bounds\n");
@@ -1761,7 +1770,7 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	if (vaddr == 0) {
 		EXIT("BufferCache: invalid fill memory address\n");
 	}
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcEraseRange(vaddr, size); // Session 123 (census): a DMA fill is a certain write (M)
 	}
 	(void)m_texture_cache.ClearMeta(vaddr);
@@ -1809,9 +1818,15 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 		     " size=0x%016" PRIx64 " src_gds=%d dst_gds=%d\n",
 		     src_vaddr, dst_vaddr, size, static_cast<int>(src_gds), static_cast<int>(dst_gds));
 	}
+	// Session 124, knob "skipceil" = 3 (closure census, s.3.2, s.3.4 [RC11]): an operation M unless one is open; its
+	// source (memory or GDS) is read, its destination written.
+	const SkcCensus::OpScope skc3_m(m_texture_cache, Common::SkipCeil::KindM, false, true);
+	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
+		SkcCensus::G3DmaCopy(dst_vaddr, src_vaddr, size, dst_gds, src_gds);
+	}
 	// Session 123, knob "skipceil" = 2 (census, s.3.1-3.2): the DMA source is a read (skc_r_m), the destination a
 	// certain write that erases the labels (M).
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		if (src_memory) {
 			SkcNoteRead(3, src_vaddr, size);
 		}
@@ -2093,8 +2108,11 @@ BufferCache::AsyncReadback BufferCache::BeginAsyncReadback(uint64_t vaddr, uint6
 	const auto window_end = std::min(std::max(window_begin + WindowSize, vaddr + size), buffer_end);
 
 	// Session 123, knob "skipceil" = 2 (census, s.3.2): a guest read at KYTY_STALE_READ=0 (skc_r_g), by its window.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcNoteRead(1, window_begin, window_end - window_begin);
+		if (Common::SkipCeil::t_mode == 3) {
+			SkcCensus::G3CpuSeed(vaddr, size); // Session 124: seed cpu, the window of the fault itself [RC14]
+		}
 	}
 	uint64_t packed = 0;
 	m_memory_tracker.ForEachDownloadRange<false>(
@@ -2184,8 +2202,11 @@ void BufferCache::ServeStaleRead(uint64_t vaddr, uint64_t size) {
 	const auto window_end = std::min(std::max(window_begin + WindowSize, vaddr + size), buffer_end);
 
 	// Session 123, knob "skipceil" = 2 (census, s.3.2): the guest read this command serves (skc_r_g), by its window.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcNoteRead(1, window_begin, window_end - window_begin);
+		if (Common::SkipCeil::t_mode == 3) {
+			SkcCensus::G3CpuSeed(vaddr, size); // Session 124: seed cpu, the window of the fault itself [RC14]
+		}
 	}
 	std::vector<ReadbackPiece> pieces;
 	uint64_t                   packed = 0;
@@ -2631,8 +2652,11 @@ void BufferCache::PrefetchHotReadbacks() {
 			continue;
 		}
 		// Session 123, knob "skipceil" = 2 (census, s.3.2): a prefetched window is a guest read without a fault (skc_r_p).
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcNoteRead(2, begin, end - begin);
+			if (Common::SkipCeil::t_mode == 3) {
+				SkcCensus::G3PrefSeed(begin, end - begin); // Session 124: a seed of policy Lp only (s.3.6.2)
+			}
 		}
 		for (const auto& piece: pieces) {
 			const auto source_begin = piece.address & ~uint64_t {3};
@@ -3117,6 +3141,7 @@ void BufferCache::SkcCut(uint64_t begin, uint64_t end) {
 }
 
 BufferCache::SkcQuery BufferCache::SkcQueryRange(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	SkcQuery q;
 	SkcSync();
 	if (size == 0 || m_skc_map.empty()) {
@@ -3151,6 +3176,7 @@ BufferCache::SkcQuery BufferCache::SkcQueryRange(uint64_t vaddr, uint64_t size) 
 }
 
 void BufferCache::SkcStampRange(uint64_t vaddr, uint64_t size, uint8_t kind) {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	SkcSync();
 	if (size == 0) {
 		return;
@@ -3164,6 +3190,7 @@ void BufferCache::SkcStampRange(uint64_t vaddr, uint64_t size, uint8_t kind) {
 }
 
 void BufferCache::SkcEraseRange(uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	SkcSync();
 	if (size == 0 || m_skc_map.empty()) {
 		return;
@@ -3173,29 +3200,44 @@ void BufferCache::SkcEraseRange(uint64_t vaddr, uint64_t size) {
 
 void BufferCache::SkcEraseCpu(uint64_t vaddr, uint64_t size) {
 	if (Common::SkipCeil::t_gpu) {
-		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 			SkcEraseRange(vaddr, size);
+			if (Common::SkipCeil::t_mode == 3) {
+				SkcCensus::G3CpuWrite(vaddr, size); // Session 124: a write with no writer (s.3.3.2)
+			}
 		}
 		return;
 	}
-	if (Common::SkipCeil::g_mode.load(std::memory_order_relaxed) != 2) [[likely]] {
+	const uint32_t g_mode = Common::SkipCeil::g_mode.load(std::memory_order_relaxed);
+	if (g_mode < 2) [[likely]] {
 		return;
 	}
 	Common::FrameStats::Add(Common::FrameStats::Counter::SkcEraseCmd, 1); // ROADMAP s122 item 35(zh), N5
-	m_scheduler.Context().GetGpu().SendCommand([this, vaddr, size] {
-		if (Common::SkipCeil::t_mode == 2) {
+	// Session 124, knob "skipceil" = 3 (s.3.5): until the command runs on GuestGpu the window is a pending erase - seeds
+	// and edges that meet it are dropped (skc3_s_pend).
+	const uint64_t pend = g_mode == 3 ? SkcCensus::G3PendAdd(vaddr, size) : 0;
+	m_scheduler.Context().GetGpu().SendCommand([this, vaddr, size, pend] {
+		if (pend != 0) {
+			SkcCensus::G3PendDone(pend);
+		}
+		if (Common::SkipCeil::t_mode >= 2) {
 			SkcEraseRange(vaddr, size);
+			if (Common::SkipCeil::t_mode == 3) {
+				SkcCensus::G3CpuWrite(vaddr, size);
+			}
 		}
 	});
 }
 
 bool BufferCache::SkcDLive(uint32_t k) {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	SkcSync();
 	const auto it = m_skc_dlive.find(Common::SkipCeil::t_gframe - k);
 	return it != m_skc_dlive.end() && it->second != 0;
 }
 
 void BufferCache::SkcNoteRead(uint32_t cls, uint64_t vaddr, uint64_t size) {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	namespace FS = Common::FrameStats;
 	const auto q = SkcQueryRange(vaddr, size);
 	switch (cls) {
@@ -3236,6 +3278,10 @@ void BufferCache::SkcCpRead(uint32_t site, uint64_t vaddr, uint64_t size) {
 	                                     FS::Counter::SkcRcIcntD, FS::Counter::SkcRcIargD, FS::Counter::SkcRcDindD};
 	static constexpr FS::Counter kt[] = {FS::Counter::SkcRcWrmT,  FS::Counter::SkcRcCondT, FS::Counter::SkcRcPredT,
 	                                     FS::Counter::SkcRcIcntT, FS::Counter::SkcRcIargT, FS::Counter::SkcRcDindT};
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
+	if (Common::SkipCeil::t_mode == 3) {
+		SkcCensus::G3CpSeed(vaddr, size); // Session 124: seed cp (s.3.5)
+	}
 	if (site >= 6) {
 		return;
 	}
@@ -3252,6 +3298,7 @@ void BufferCache::SkcCpRead(uint32_t site, uint64_t vaddr, uint64_t size) {
 }
 
 void BufferCache::SkcDump() {
+	const Common::SkipCeil::Skc3Pause skc3_pause; // Session 124 (s.5.2)
 	const auto sorted = [](const auto& table) {
 		std::vector<std::pair<std::tuple<uint32_t, uint64_t, uint32_t>, SkcWindow>> rows(table.begin(), table.end());
 		std::sort(rows.begin(), rows.end(), [](const auto& a, const auto& b) { return a.second.n > b.second.n; });

@@ -425,9 +425,10 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // the limit clamps to 899 999 (code 8, dose 99 999), which is rejected.
     {"KYTY_BURN", "burn", 0, 899999},
     // Session 123, MEASUREMENT ONLY: the frame-skip ceiling (1) and its correctness census (2). Latched once per GuestGpu
-    // frame at the flip packet, so it CAN be a schedule arm.
+    // frame at the flip packet, so it CAN be a schedule arm.  Session 124: 2 is the census with the mode-1 marked set
+    // (mode 2'), 3 the closure census (docs/session-124/design124.md rev 2).
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_SKIP_CEILING", "skipceil", 0, 2},
+    {"KYTY_SKIP_CEILING", "skipceil", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

@@ -393,6 +393,8 @@ void RenderContext::PrepareBda() {
 }
 
 void RenderContext::RunGarbageCollector() {
+	// Session 124, knob "skipceil" = 3 (closure census, s.5.4): the GC of a marked frame counts as removable, whole.
+	const SkcCensus::GcSpan skc3_gc;
 	if (m_fault_process_pending) {
 		m_fault_process_pending = false;
 		// Session 94: every PrepareBda call arms this pass (an EndRendering, a dispatch over

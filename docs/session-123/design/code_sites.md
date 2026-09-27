@@ -59,6 +59,9 @@
   **[П]** (`m_gpu_modified_ranges.Add`, `GpuDirtyGen::Bump`, `NoteGpuWrite`); её зовёт `NativeStorageBuffer`
   (`pipeline/descriptors.cpp:278`) из `PrepareBindings` для draw (`renderDraw.cpp:2604/2624`) и dispatch
   (`renderCompute.cpp:863`) — вид операции известен только вызывающему. DMA: `FillBuffer`/`CopyBuffer` (dst).
+  **[Н1] Поправка (шаг 2г):** `NativeStorageBuffer` зовёт не `PrepareBindings`, а `RebindBuffers` (`descriptors.cpp:3774`,
+  вызов `:3833`): у dispatch — `renderCompute.cpp:888`, у draw — `descriptors.cpp:4185` внутри `PrepareGraphicsBindings`
+  (вызов `renderDraw.cpp:2647`); см. §8.
 * **Образы.** `Image::MarkGpuModified()` (`renderer/image/image.h:149-159`) **[П]** — семь сайтов: `renderDraw.cpp:824`,
   `cache/textureCache.cpp:861`, `:879`, `:2221`, `:2283`, `:2370`, `:2427` **[П]**. У образов наблюдатели ТОЛЬКО на
   запись: чтение гостем памяти цели рендера НИКОГДА не даёт отказа; содержимое образа попадает в память гостя только через
@@ -106,14 +109,30 @@
 | `BindFloorGcHold` | `pipeline/descriptors.cpp:1006` | объединяется со `skc_hold` через ИЛИ |
 | захват цели, быстрый путь | `renderDraw.cpp:795` `AcquireTargetView`; `MarkGpuModified` без проверки записи `:824`; медленный путь `:846` → `FindRenderTarget`/`FindDepthTarget` | охрана захвата `t_skc_acq` на всё тело |
 | `MarkGpuModified`/`CommitGpuWrite`, захват | `textureCache.cpp:2221`, `:2261` (`FindTexture` storage), `:2283`, `:2352` (`FindRenderTarget`), `:2370`, `:2399` (`FindDepthTarget`) | НЕ несомненная запись |
-| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3742`) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified` |
+| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3741` — **[Н9]** было `:3742`) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified` |
 | `FindRenderTarget` из `MaterializeBoundTargetDccClears` | `pipeline/descriptors.cpp:2917` | вне `AcquireTargetView`; операция K |
 | маска записи цвета | `renderDraw.cpp:533` `render_target_mask_slot(ctx.GetRenderTargetMask(), colors[i].target_slot)` | W1 |
 | хвост `AcquireRenderTargets` (перепись `slicecen`) | `renderDraw.cpp:1503-1512`; `AttachmentWriteAspects` `depthRenderTarget.cpp:488` | W1 и чтение вложений |
-| MSAA-резолв | `ResolveColorTargets` `renderDraw.cpp:3716`; `MarkGpuWritten(dst)` `:3742` | штампуется W3 |
+| MSAA-резолв | `ResolveColorTargets` `renderDraw.cpp:3716`; `MarkGpuWritten(dst)` `:3741` (**[Н9]** было `:3742`) | штампуется W3 |
 | чтения CP | WAIT_REG_MEM `graphicsRun.cpp:530`; COND_EXEC `command_processor/pm4Handlers.cpp:1510`, ветвление `compare_addr` `:~1526-1544`; предикация `graphicsRun.cpp:2970`; `count_addr` `:3138`; аргументы `:3063`, `:3085`, `:3156`, `:3177`; `DispatchIndirect` `:3329`; RELEASE_MEM GDS `:3440-3448` | `skc_rc_*`, `skc_r_gds` |
 | `PrepareBda` с `uses_dma` | draw `pipeline/descriptors.cpp:~4112-4142`; dispatch `renderCompute.cpp:~869-879` | `skc_x1_dma`, `skc_x0_dma` |
-| удержание / показ | `presentation/videoOut.cpp:1173-1187` (`Discard` `:1182`, `present_ns` `:1184-1186`); `count++` `:1194`; `Poll` `:1197`; снимок счётчиков строки `FrameTrace` `:1260`, печать `:1279` | `skc_held`, `skc_held_inc`, `skc_pres_*` в строке того же флипа |
+| удержание / показ | `presentation/videoOut.cpp:1173-1187` (`Discard` `:1179`, `present_ns` `:1181-1183` — **[Н9]** было `:1182`, `:1184-1186`; `Present` `:1182`); `count++` `:1194`; `Poll` `:1197`; снимок счётчиков строки `FrameTrace` `:1260`, печать `:1279` | `skc_held`, `skc_held_inc`, `skc_pres_*` в строке того же флипа |
 | `FlipHold:` | `videoOut.cpp:2859-2870` — `present_us` только в строке при удержании ≥ 50 мс | отсюда `skc_pres_ns` (В-н1) |
 | `m_skipped_draws` | `renderDraw.cpp:2911` (`fetch_add`) | рядом `skc_ap_skip` |
-| интервал флипа | `VideoOutSetFlipRate` `videoOut.cpp:2939-2956` (`\trate = <n>` под `PRINT_NAME`); `flip_rate = 0` при открытии `:711`; `IsFlipDueLocked` `:491-498` | В-н2 |
+| интервал флипа | `VideoOutSetFlipRate` `videoOut.cpp:2939-2956` (`\trate = <n>` под `PRINT_NAME`); `flip_rate = 0` при открытии `:711`; `IsFlipDueLocked` `:491-498` | В-н2. **[Н9]** Неверно «под `PRINT_NAME`»: `LOGF("\trate = %d\n")` на `:2942` безусловен, блок `if` макроса кончается до неё (`libs/libs.h:53-61`) |
+
+## 8. Сайты редакции 3 (шаг 2г, `HPP-40`; сверено чтением на HEAD `32d035e`, дерево `src` = `41effbd`) **[П]**
+
+| что | где | примечание |
+|---|---|---|
+| привязки dispatch, порядок | `renderCompute.cpp`: `PrepareBindings` `:863` → `FindBuffers` `:864` → `PrepareBda` `:877-879` → `RebindImages` `:883` → `RebindBuffers` `:888` → блок `if (indirect)` `:903-939` (`ObtainBuffer` аргументов `:916`) → `CommitBindings` `:944` | **[Н1]** сайты чтения `:883`/`:888`; **[Н2]** `:916`; точка отложенных штампов W2 — после блока `if (indirect)`, до `:944` |
+| привязки draw, порядок | `PrepareGraphicsBindings` `descriptors.cpp:4110-4186` (вызов `renderDraw.cpp:2647`): `FindBuffers` → `PrepareBda` `:4141` → `RebindImages` `:4144` → re-find целей → `RebindBuffers` `:4185`; затем `AcquireRenderTargets` (`renderDraw.cpp:2842-2845`), аргументы косвенного draw `:2859-2867` | **[Н1]** штампы W2 draw — после `:4185`; **[Н2]** `renderDraw.cpp:2866-2867` |
+| буферный слот | `RebindBuffers` `descriptors.cpp:3774` → `NativeStorageBuffer` `:3833` (определение `:152`) → `ObtainBuffer(…, resource.written, …)` `:278` | **[Н1]** чтение — слот без `written` |
+| CPU-путь аргументов `DispatchIndirect` | `graphicsRun.cpp:3328-3329` (только режим размеров потоков), комментарий `:3322-3325` | **[Н2]** `skc_rc_dind_*` — не основной путь |
+| `DepthStencilCopy` | `depthRenderTarget.cpp`: `FindImage(read_desc)` `:448` → `FindImage(write_desc)` `:450` → `UpdateImage(read_id)` `:452` → `UpdateImage(write_id)` `:453` → `MarkGpuWritten(write_id)` `:454` → `copyImage` `:482` | **[Н3]** сайт чтения — между `:453` и `:454` |
+| сток содержимого памяти гостя в образ | `TextureCache::UploadImage` `textureCache.cpp:1349`; вызовы: `:1600` (`CompletePendingUpload` `:1587`), `:1808` (`InitializeImage` `:1679` ← `RefreshImage` `:1957`, ветка `if (cpu_dirty)` `:1979-1980`) | **[Н5]** стирание/перенос метки образа |
+| обработчик отказа образов | `InvalidateCpuAliases` `textureCache.cpp:2980` — поток гостя под `m_lock` (комментарий `descriptors.cpp:3933-3935`) | **[Н5]** меток не трогает |
+| `CommitGpuWrite` | `textureCache.cpp:2418`: `CompletePendingUpload` `:2422` → … → `MarkGpuModified` `:2427` | загрузка завершается ДО штампа |
+| эффективная маска цвета | `pipelineCache.cpp:5170-5171` `static_params.color_mask[slot] = colors[i].export_mapping.ApplyMask(render_target_mask_slot(…))` → `colorWriteMask` `shaders.cpp:501-503`; `ApplyMask` `guest_gpu/gpu_defs.h:122`; поле `export_mapping` `colorRenderTarget.h:21` | **[Н6]** W1 |
+| `MarkGpuModified` | `image/image.h:149`; `if (!m_gpu_modified)` `:150` | **[Н6]** штамп до `:150` |
+| `Discard` / `Present` | `videoOut.cpp:1179` / `:1182`; `present_ns` `:1181-1183` | **[Н9]** |

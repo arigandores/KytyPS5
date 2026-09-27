@@ -948,7 +948,6 @@ void Rk3Refuse(uint32_t bit, const char* reason) {
 			Rk3Refuse(9, "frametrace");
 		} else if (!G::Enabled(G::Gate::PathLap)) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::Rk3Nt, 1);
-			Rk3Refuse(10, "pathlap");
 		} else if (G::Enabled(G::Gate::SamePassCensus)) {
 			Rk3Refuse(11, "spcen");
 		} else if (G::Enabled(G::Gate::SliceCensus)) {

@@ -2393,6 +2393,9 @@ enum class Counter : uint32_t {
 	Skc3FrPn,                // skc3_fr_pn
 	Skc3CalNs,               // skc3_cal_ns
 	Skc3CalN,                // skc3_cal_n
+	// ROADMAP s122 item 50(a) (step 5v): the in-context probe of the pause residual, flushed at the finalization.
+	Skc3TinNs,               // skc3_tin_ns: sum of (O2 - O1) - (t1 - t0) over the probes
+	Skc3TinN,                // skc3_tin_n: probes
 	Count
 };
 
@@ -3005,6 +3008,18 @@ inline constinit thread_local uint32_t t_p_depth = 0;
 inline constinit thread_local uint64_t t_p_t0    = 0;
 inline constinit thread_local uint64_t t_p_ns    = 0;
 inline constinit thread_local uint64_t t_p_n     = 0;
+// ROADMAP s122 item 50(a) (step 5v): the in-context probe of the pause residual.  t_p_win - the timed windows open now
+// (PWinD: G3::WindowBegin .. G3::OpEnd; PWinGc: SkcCensus::GcSpan); t_p_cnt - outermost pauses left inside a window;
+// t_p_probe - the next outermost pause opened inside a window is a probe (set by the exit of every ProbeEvery-th);
+// t_tin_ns / t_tin_n - the probe totals, flushed to skc3_tin_ns / skc3_tin_n at the finalization (G3FrameEnd).
+inline constexpr uint32_t                PWinD      = 1;
+inline constexpr uint32_t                PWinGc     = 2;
+inline constexpr uint32_t                ProbeEvery = 61;
+inline constinit thread_local uint32_t t_p_win   = 0;
+inline constinit thread_local uint32_t t_p_cnt   = 0;
+inline constinit thread_local bool     t_p_probe = false;
+inline constinit thread_local uint64_t t_tin_ns  = 0;
+inline constinit thread_local uint64_t t_tin_n   = 0;
 
 // LodStats::Touch (descriptors.cpp): the anchor A of the skip parity, at any value of the knob (item 36(a), (d)).
 // Session 124 (design124.md s.2.2, mode 2'): in modes 2 and 3 a Touch of a D operation of a marked frame does not move
@@ -3083,11 +3098,20 @@ private:
 
 // Session 124, knob "skipceil" = 3 (design124.md s.5.2): RAII pause around every entry point of the census code; only
 // the outermost level reads the clock.  One thread-local test at any other value.
+// ROADMAP s122 item 50(a) (step 5v): every ProbeEvery-th outermost pause opened inside a window D / GC is a probe - O1
+// before the depth moves, O2 after all the regular bookkeeping of the exit; its whole O2 - O1 goes to t_p_ns and
+// (O2 - O1) - (t1 - t0) to t_tin_ns.  Not covered by O1..O2: the tests of t_mode and of the probe flag / window.
 class Skc3Pause {
 public:
 	Skc3Pause() noexcept {
 		if (t_mode == 3) [[unlikely]] {
+			uint64_t o1 = 0;
+			if (t_p_probe && t_p_win != 0) [[unlikely]] {
+				o1        = FrameStats::NowNs(); // O1
+				t_p_probe = false;
+			}
 			m_on = true;
+			m_o1 = o1;
 			if (t_p_depth++ == 0) {
 				t_p_t0 = FrameStats::NowNs();
 			}
@@ -3096,8 +3120,20 @@ public:
 	~Skc3Pause() {
 		if (m_on) [[unlikely]] {
 			if (--t_p_depth == 0) {
-				t_p_ns += FrameStats::NowNs() - t_p_t0;
+				const uint64_t d = FrameStats::NowNs() - t_p_t0; // t1 - t0
+				t_p_ns += d;
 				t_p_n++;
+				if (t_p_win != 0 && ++t_p_cnt == ProbeEvery) {
+					t_p_cnt   = 0;
+					t_p_probe = true;
+				}
+				if (m_o1 != 0) [[unlikely]] {
+					const uint64_t o = FrameStats::NowNs() - m_o1; // O2 - O1
+					const uint64_t r = o > d ? o - d : 0;
+					t_p_ns += r;
+					t_tin_ns += r;
+					t_tin_n++;
+				}
 			}
 		}
 	}
@@ -3105,7 +3141,8 @@ public:
 	Skc3Pause& operator=(const Skc3Pause&) = delete;
 
 private:
-	bool m_on = false;
+	bool     m_on = false;
+	uint64_t m_o1; // NOLINT(cppcoreguidelines-pro-type-member-init): read only when m_on, written with it
 };
 
 } // namespace Common::SkipCeil

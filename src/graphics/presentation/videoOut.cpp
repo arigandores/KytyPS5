@@ -3018,6 +3018,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"skc3_fr_pn", FS::Counter::Skc3FrPn, false},
 				    {"skc3_cal_ns", FS::Counter::Skc3CalNs, false},
 				    {"skc3_cal_n", FS::Counter::Skc3CalN, false},
+				    {"skc3_tin_ns", FS::Counter::Skc3TinNs, false},
+				    {"skc3_tin_n", FS::Counter::Skc3TinN, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

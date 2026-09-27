@@ -4580,6 +4580,7 @@ void WindowBegin() {
 	}
 	nd->kind = Common::SkipCeil::KindD;
 	t_dwin   = true;
+	Common::SkipCeil::t_p_win |= Common::SkipCeil::PWinD; // item 50(a): the probe window
 	t_dw_p   = Common::SkipCeil::t_p_ns;
 	t_dw_n   = Common::SkipCeil::t_p_n;
 	t_dw_t0  = FS::NowNs();
@@ -4589,6 +4590,7 @@ void OpEnd(SkcOp& op) {
 	if (t_dwin) {
 		const uint64_t t = FS::NowNs();
 		t_dwin           = false;
+		Common::SkipCeil::t_p_win &= ~Common::SkipCeil::PWinD; // item 50(a)
 		if (Node* nd = NodeOf(op.node); nd != nullptr) {
 			const uint64_t w = t - t_dw_t0;
 			const uint64_t p = Common::SkipCeil::t_p_ns - t_dw_p;
@@ -5161,6 +5163,11 @@ void SkcCensus::G3FrameEnd() {
 	for (auto& f: s.open) {
 		G3::Finalize(*f);
 	}
+	// ROADMAP s122 item 50(a): the probes live only in the windows of marked frames - booked with their finalization.
+	FS::Add(FS::Counter::Skc3TinNs, Common::SkipCeil::t_tin_ns);
+	FS::Add(FS::Counter::Skc3TinN, Common::SkipCeil::t_tin_n);
+	Common::SkipCeil::t_tin_ns = 0;
+	Common::SkipCeil::t_tin_n  = 0;
 	G3::Reset(); // no key has a writer of an open frame any more
 }
 
@@ -5168,6 +5175,8 @@ void SkcCensus::G3Latch(bool edge) {
 	auto& s = G3::S();
 	if (edge) {
 		G3::Reset(); // an edge into or out of 3 drops the graph uncounted (s.1.2)
+		Common::SkipCeil::t_tin_ns = 0; // item 50(a): ... and the probes of its marked frames
+		Common::SkipCeil::t_tin_n  = 0;
 	}
 	if (Common::SkipCeil::t_mode != 3) {
 		return;

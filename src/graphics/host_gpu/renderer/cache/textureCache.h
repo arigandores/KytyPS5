@@ -492,7 +492,9 @@ struct SkcCensus {
 	public:
 		GcSpan() noexcept {
 			if (Common::SkipCeil::t_mode == 3 && Common::SkipCeil::t_skip) [[unlikely]] {
-				m_on = true;
+				m_on  = true;
+				m_win = Common::SkipCeil::t_p_win & Common::SkipCeil::PWinGc; // item 50(a): the probe window
+				Common::SkipCeil::t_p_win |= Common::SkipCeil::PWinGc;
 				m_p  = Common::SkipCeil::t_p_ns;
 				m_n  = Common::SkipCeil::t_p_n;
 				m_t0 = Common::FrameStats::NowNs();
@@ -501,15 +503,17 @@ struct SkcCensus {
 		~GcSpan() {
 			if (m_on) [[unlikely]] {
 				GcDone(m_t0, m_p, m_n);
+				Common::SkipCeil::t_p_win = (Common::SkipCeil::t_p_win & ~Common::SkipCeil::PWinGc) | m_win;
 			}
 		}
 		KYTY_CLASS_NO_COPY(GcSpan);
 
 	private:
-		bool     m_on = false;
-		uint64_t m_t0 = 0;
-		uint64_t m_p  = 0;
-		uint64_t m_n  = 0;
+		bool     m_on  = false;
+		uint32_t m_win = 0;
+		uint64_t m_t0  = 0;
+		uint64_t m_p   = 0;
+		uint64_t m_n   = 0;
 	};
 	// GuestGpu::Process of a marked frame (s.5.6, skc3_fr_*): armed exactly when the WallSpan gw_proc is
 	// (KYTY_GPU_WALL=1); booked to the frame open at its start.

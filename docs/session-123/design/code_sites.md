@@ -109,7 +109,7 @@
 | `BindFloorGcHold` | `pipeline/descriptors.cpp:1006` | объединяется со `skc_hold` через ИЛИ |
 | захват цели, быстрый путь | `renderDraw.cpp:795` `AcquireTargetView`; `MarkGpuModified` без проверки записи `:824`; медленный путь `:846` → `FindRenderTarget`/`FindDepthTarget` | охрана захвата `t_skc_acq` на всё тело |
 | `MarkGpuModified`/`CommitGpuWrite`, захват | `textureCache.cpp:2221`, `:2261` (`FindTexture` storage), `:2283`, `:2352` (`FindRenderTarget`), `:2370`, `:2399` (`FindDepthTarget`) | НЕ несомненная запись |
-| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3742` — **[Н9-п31]** правка Н9 на `:3741` отменена, п. 31(а)) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified` |
+| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3742` — **[Н9-п31]** правка Н9 на `:3741` отменена, п. 31(а)) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified`; **[П3]** у `:861`, `:879`, `:975` — перенос вида источника (§9 ниже) |
 | `FindRenderTarget` из `MaterializeBoundTargetDccClears` | `pipeline/descriptors.cpp:2917` | вне `AcquireTargetView`; операция K |
 | маска записи цвета | `renderDraw.cpp:533` `render_target_mask_slot(ctx.GetRenderTargetMask(), colors[i].target_slot)` | W1 |
 | хвост `AcquireRenderTargets` (перепись `slicecen`) | `renderDraw.cpp:1503-1512`; `AttachmentWriteAspects` `depthRenderTarget.cpp:488` | W1 и чтение вложений |
@@ -127,7 +127,7 @@
 |---|---|---|
 | привязки dispatch, порядок | `renderCompute.cpp`: `PrepareBindings` `:863` → `FindBuffers` `:864` → `PrepareBda` `:877-879` → `RebindImages` `:883` → `RebindBuffers` `:888` → блок `if (indirect)` `:903-939` (`ObtainBuffer` аргументов `:916`) → `CommitBindings` `:944` | **[Н1]** сайты чтения `:883`/`:888`; **[Н2]** `:916`; точка отложенных штампов W2 — после блока `if (indirect)`, до `:944` |
 | привязки draw, порядок | `PrepareGraphicsBindings` `descriptors.cpp:4110-4186` (вызов `renderDraw.cpp:2647`): `FindBuffers` → `PrepareBda` `:4141` → `RebindImages` `:4144` → re-find целей → `RebindBuffers` `:4185`; затем `AcquireRenderTargets` (`renderDraw.cpp:2842-2845`), аргументы косвенного draw `:2859-2867` | **[Н1]** штампы W2 draw — после `:4185`; **[Н2]** `renderDraw.cpp:2866-2867` |
-| буферный слот | `RebindBuffers` `descriptors.cpp:3774` → `NativeStorageBuffer` `:3833` (определение `:152`) → `ObtainBuffer(…, resource.written, …)` `:278` | **[Н1]** чтение — слот без `written` |
+| буферный слот | `RebindBuffers` `descriptors.cpp:3774` → `NativeStorageBuffer` `:3833` (определение `:152`) → `ObtainBuffer(…, resource.written, …)` `:278` | **[Н1]** чтение — слот без `written`; **[П1]** и записываемый слот тоже (п. 32(а), §9 ниже) |
 | CPU-путь аргументов `DispatchIndirect` | `graphicsRun.cpp:3328-3329` (только режим размеров потоков), комментарий `:3322-3325` | **[Н2]** `skc_rc_dind_*` — не основной путь |
 | `DepthStencilCopy` | `depthRenderTarget.cpp`: `FindImage(read_desc)` `:448` → `FindImage(write_desc)` `:450` → `UpdateImage(read_id)` `:452` → `UpdateImage(write_id)` `:453` → `MarkGpuWritten(write_id)` `:454` → `copyImage` `:482` | **[Н3]** сайт чтения — между `:453` и `:454` |
 | сток содержимого памяти гостя в образ | `TextureCache::UploadImage` `textureCache.cpp:1349`; вызовы: `:1600` (`CompletePendingUpload` `:1587`), `:1808` (`InitializeImage` `:1679` ← `RefreshImage` `:1957`, ветка `if (cpu_dirty)` `:1979-1980`) | **[Н5]** стирание/перенос метки образа |
@@ -136,3 +136,15 @@
 | эффективная маска цвета | `pipelineCache.cpp:5170-5171` `static_params.color_mask[slot] = colors[i].export_mapping.ApplyMask(render_target_mask_slot(…))` → `colorWriteMask` `shaders.cpp:501-503`; `ApplyMask` `guest_gpu/gpu_defs.h:122`; поле `export_mapping` `colorRenderTarget.h:21` | **[Н6]** W1 |
 | `MarkGpuModified` | `image/image.h:149`; `if (!m_gpu_modified)` `:150` | **[Н6]** штамп до `:150` |
 | `Discard` / `Present` | `videoOut.cpp:1179` / `:1182`; `present_ns` `:1181-1183` | **[Н9]** |
+
+## 9. Сайты редакции 4 (шаг 2е, `HPP-43`; сверено чтением на HEAD `ccb7eea`, дерево `src` = `41effbd`) **[П]**
+
+| что | где | примечание |
+|---|---|---|
+| буферный слот, чтение RW | `NativeStorageBuffer` `pipeline/descriptors.cpp:152` (параметр `resource`, `:153`) → `ObtainBuffer(address, size, resource.written, …)` `:278-279` | **[П1]** записываемый слот — чтение на `:278`, до отложенного штампа W2 |
+| прямая копия read-only слота | `NativeStorageBuffer` `descriptors.cpp:241-275`: условие `direct_copy && !resource.written && …` `:241-243`, `!IsRegionGpuModifiedFromGpu && !HasGpuDirtyBytes` `:245`, возврат `:274` — до `:278` | **[П1, В-п1]** чтение не видно сайту `:278`; GPU-грязь снимают `ApplyReadbackPieces` `cache/bufferCache.cpp:2120-2131` и `FinishAsyncReadback` `:2241-2253` |
+| эффективная маска | `ColorComponentMapping::ApplyMask` `guest_gpu/gpu_defs.h:122-127` — перестановка компонентов по отображению, экспорт PS не учитывается | **[П2]** |
+| `CopyImage` | `cache/textureCache.cpp:828-864`: `RefreshCopySource(source_id)` `:831`, `source` `:833`, ветка `IsBufferModified` `:839-844` (копии нет, возврат), копия `:851-859`, `if (source.IsGpuModified()) destination.MarkGpuModified()` `:860-862` | **[П3]** перенос вида источника на месте `:860-862` |
+| `CopyImageMip` | `textureCache.cpp:866-881`: `RefreshCopySource` `:870`, `source` `:872`, `CopyMip` `:877`, штамп `:878-880` | **[П3]** |
+| `ResolveDepthOverlap` | `textureCache.cpp:883-983`: `cached` `:886`; `CopyImage(replacement_id, cached_id)` `:962`; `RefreshCopySource(cached_id)` `:969` → `ReinterpretColorAsMsDepth` `:974` → `CommitGpuWrite(replacement)` `:975`; `FreeImage(cached_id)` `:981` | **[П3]** |
+| вызовы копий | `FindImage` `:2029` → `ResolveOverlap` `:2065` (определение `:985`) → `ResolveDepthOverlap` `:1001`, `ExpandImage` `:1005`…`:1063` (определение `:1078-1098`: `InitializeImage` `:1087`, `CopyImageMip` `:1091`, `CopyImage` `:1094`), `CopyImageMip(merged_id, …)` `:1067` | **[П3]** перенос не подавляется охраной захвата |

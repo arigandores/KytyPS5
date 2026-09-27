@@ -34,3 +34,34 @@
 268,0; `da_wjobs` = 8 в строке `FrameTrace-x` № 3000.
 
 Машина: `AMD Ryzen 9 9955HX3D`, 16 ядер / 32 логических CPU (`Win32_Processor`), два CCD.
+
+## Редакция 2 (`HPP-79`, шаг 2а п. 57(з); HEAD репозитория `b6bf8c41`)
+
+Ни игра, ни бенч не запускались; ниже — чтение кода и существующих файлов.
+
+| файл | sha256 | что взято |
+|---|---|---|
+| `src/graphics/guest_gpu/graphicsRun.cpp` | `e3f945196bb972d041ce8996fc6739d9b9a647bdccc410e5b9e5f1061910fe1a` (не менялся с ред. 1) | `GuestGpu::Enqueue` :661–676 (`enqueue_ns` :669, `LookaheadSubmission` :663), `Process` :940–958 (`first_slice`, `KYTY_LAG_TRACE`), срезы :1143–1175, обходчик :2330–2420 (удержание `dawalklead` :2382–2395, `da_wlag_us` :2408, `da_wdepth` :2409), `DrawAheadWalkerPost` :2438–2466 (`enqueue_ns` :2458), `LookaheadSubmission` :2649–2661 |
+| `src/graphics/presentation/videoOut.cpp` | `5a389d7ed18a7fcf2c909dc9a759d14223a9cdc16ec7e6daec90ed22fa9a6763` | `FlipQueue::Reserve` :888–915 (`reserve_host_ns` :900), `lat_us` :1311–1313, `VideoOutSubmitFlip` :3385, `SubmitFlipFromGpu` :3401, `WaitFlipDone` :3439 |
+| `src/graphics/host_gpu/renderer/sync.cpp` | `1d4539d1032e10870d1d43a542eb265943276f787a615dddca086f122269a166` | `PrepareVideoOutFlip` :228–234 — флип пакетом DCB резервируется потоком GuestGpu (источник `GpuEop`) |
+| `src/libs/agc.cpp` | `0b1474d766bf347425ad31521285f06ff6f3ef57ef588f8eec06cbe7d7411cec` | `AgcDcbWaitUntilSafeForRendering` :2167, `AgcDriverSubmitAcb` :4337 — `LOGF` без метки времени |
+| `src/common/frameStats.h` | `5a783b8fb699626465214acef39b2bfbcc6350570e6e24d2da3ee333ccd47a4f` | `DrawAheadWalk*` :523–527, `GpuWallIdleNs` :1758 |
+| `C:/kyty/s119/runs119/g2_119_score.json` | `85f3364359b31fb24b5868ed5ab1b884b552482a3d38c286e461a28c4374b8ae` | запечатанная печать `g2_119`: `terms.cpu_net` 30 252,517, `central.S_ctx` 18 724,194, `central.G` 2 216,540, `terms.spine` 1 268,172, `central.T4` 1 645,391, `F` 0,555 |
+| `C:/kyty/s119/log_sh119.txt`, `log_mut119.txt` | как выше | ряды §3.4/§3.7 |
+| `docs/session-125/design/rows125.py` | `f890142dcf6e48330e4e75a3250f7775f66c56796a3a5352aa31dd6dd5bfceaf` | пересчёт рядов §3.4/§3.7: плечо 0, окно idx 10..88 (п. 55(б)), исключённые блоки как `g2_119`; номер блока — поле `blk` основной строки `FrameTrace` (черновая арифметика [I], ничего не решает) |
+
+Ряды (`rows125.py`, 3 239 строк × 41 блок в каждом прогоне):
+
+| поле | `sh119` | `mut119` |
+|---|---:|---:|
+| `cpu_gpu_us / dt_us` среднее / медиана | 0,950 / 1,0 | 0,953 / 1,0 |
+| `dt_us − cpu_net` среднее, мкс | 1 261 | 1 209 |
+| `lat_us` среднее, мкс | 11 271 | 11 592 |
+| `da_wjobs` / `da_wdrop` / `da_wskip` на кадр | 7,94 / 0,04 / 7,97 | 7,94 / 0,04 / 7,97 |
+| `da_wlag_us` / `da_wjobs`, мкс | 9 061 | 9 326 |
+| `da_wdepth` / `da_wjobs` | 2,23 | 2,23 |
+| `slc_total` среднее | 12,58 | 12,57 |
+| `bda_scan` среднее | 56,9 | 55,8 |
+| `gw_idle_ns` | 0 | 0 |
+
+`gw_idle` 28 мкс/кадр — `obs116` (`ROADMAP.md` «СЕССИЯ 116» п. 6, режим NEW), иной прогон: только ряд §3.7, в печать не идёт.

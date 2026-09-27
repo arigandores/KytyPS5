@@ -109,11 +109,11 @@
 | `BindFloorGcHold` | `pipeline/descriptors.cpp:1006` | объединяется со `skc_hold` через ИЛИ |
 | захват цели, быстрый путь | `renderDraw.cpp:795` `AcquireTargetView`; `MarkGpuModified` без проверки записи `:824`; медленный путь `:846` → `FindRenderTarget`/`FindDepthTarget` | охрана захвата `t_skc_acq` на всё тело |
 | `MarkGpuModified`/`CommitGpuWrite`, захват | `textureCache.cpp:2221`, `:2261` (`FindTexture` storage), `:2283`, `:2352` (`FindRenderTarget`), `:2370`, `:2399` (`FindDepthTarget`) | НЕ несомненная запись |
-| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3741` — **[Н9]** было `:3742`) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified` |
+| то же, несомненная запись | `:861` `CopyImage`, `:879` `CopyImageMip`, `:975` `ResolveDepthOverlap`, `:2620`, `:2638` `ClearImage`, `:2415` `MarkGpuWritten` (← `depthRenderTarget.cpp:454`, `descriptors.cpp:2894`, `renderDraw.cpp:3742` — **[Н9-п31]** правка Н9 на `:3741` отменена, п. 31(а)) | `CommitGpuWrite` `:2418-2428` → `MarkGpuModified` |
 | `FindRenderTarget` из `MaterializeBoundTargetDccClears` | `pipeline/descriptors.cpp:2917` | вне `AcquireTargetView`; операция K |
 | маска записи цвета | `renderDraw.cpp:533` `render_target_mask_slot(ctx.GetRenderTargetMask(), colors[i].target_slot)` | W1 |
 | хвост `AcquireRenderTargets` (перепись `slicecen`) | `renderDraw.cpp:1503-1512`; `AttachmentWriteAspects` `depthRenderTarget.cpp:488` | W1 и чтение вложений |
-| MSAA-резолв | `ResolveColorTargets` `renderDraw.cpp:3716`; `MarkGpuWritten(dst)` `:3741` (**[Н9]** было `:3742`) | штампуется W3 |
+| MSAA-резолв | `ResolveColorTargets` `renderDraw.cpp:3716`; `MarkGpuWritten(dst)` `:3742` (**[Н9-п31]** правка Н9 на `:3741` отменена, п. 31(а)) | штампуется W3 |
 | чтения CP | WAIT_REG_MEM `graphicsRun.cpp:530`; COND_EXEC `command_processor/pm4Handlers.cpp:1510`, ветвление `compare_addr` `:~1526-1544`; предикация `graphicsRun.cpp:2970`; `count_addr` `:3138`; аргументы `:3063`, `:3085`, `:3156`, `:3177`; `DispatchIndirect` `:3329`; RELEASE_MEM GDS `:3440-3448` | `skc_rc_*`, `skc_r_gds` |
 | `PrepareBda` с `uses_dma` | draw `pipeline/descriptors.cpp:~4112-4142`; dispatch `renderCompute.cpp:~869-879` | `skc_x1_dma`, `skc_x0_dma` |
 | удержание / показ | `presentation/videoOut.cpp:1173-1187` (`Discard` `:1179`, `present_ns` `:1181-1183` — **[Н9]** было `:1182`, `:1184-1186`; `Present` `:1182`); `count++` `:1194`; `Poll` `:1197`; снимок счётчиков строки `FrameTrace` `:1260`, печать `:1279` | `skc_held`, `skc_held_inc`, `skc_pres_*` в строке того же флипа |

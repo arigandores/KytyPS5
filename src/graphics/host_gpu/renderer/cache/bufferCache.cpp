@@ -3181,6 +3181,7 @@ void BufferCache::SkcEraseCpu(uint64_t vaddr, uint64_t size) {
 	if (Common::SkipCeil::g_mode.load(std::memory_order_relaxed) != 2) [[likely]] {
 		return;
 	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SkcEraseCmd, 1); // ROADMAP s122 item 35(zh), N5
 	m_scheduler.Context().GetGpu().SendCommand([this, vaddr, size] {
 		if (Common::SkipCeil::t_mode == 2) {
 			SkcEraseRange(vaddr, size);

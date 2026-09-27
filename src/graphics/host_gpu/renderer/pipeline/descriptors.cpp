@@ -2182,6 +2182,14 @@ decltype(auto) RenderExecutor::ResolveTextureWith(const ShaderRecompiler::IR::Im
 	// Texture LOD statistics: count the binding for the T# counter bank (IT_GET_LOD_STATS reports it).
 	if (!storage && descriptor.MipStatsCntEn()) {
 		LodStats::Touch(descriptor.MipStatsCntId(), descriptor.BaseLevel());
+		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 35(a)): the Touch calls of D operations - the work the
+		// ceiling does not pay and the correct version must do (skc_lod_d), of all census operations (skc_lod_all).
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcLodAll, 1);
+			if (Common::SkipCeil::t_kind == Common::SkipCeil::KindD) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcLodD, 1);
+			}
+		}
 	}
 	static const bool lod_trace = Common::EnvFlagOn("KYTY_LOD_STATS_TRACE");
 	if (lod_trace && !storage) {
@@ -4214,10 +4222,8 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 	for (auto* stage: stages) {
 		RebindBuffers(*stage);
 	}
-	// Session 123, knob "skipceil" = 2 (census, [N1]): the draw's last binding read is done - its W2 stamps now.
-	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
-		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
-	}
+	// Session 123, knob "skipceil" = 2 (census, [N1]): the draw's W2 stamps are applied by ExecutePreparedDraw after the
+	// vertex / index buffer reads (ROADMAP s122 item 34(v)), the draw's last reads before its stamps.
 }
 
 void RenderExecutor::ShadowQueue(std::span<PreparedBindings* const> stages) {

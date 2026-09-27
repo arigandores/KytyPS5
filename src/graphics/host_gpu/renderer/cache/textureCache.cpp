@@ -34,6 +34,7 @@
 #include <mutex>
 #include <span>
 #include <tuple>
+#include <unordered_set>
 #include <vulkan/vulkan_format_traits.hpp>
 
 namespace Libs::Graphics {
@@ -3526,6 +3527,10 @@ thread_local SkcOp    t_skc_op;
 thread_local uint32_t t_skc_serial  = 0;
 thread_local uint32_t t_skc_x1_pass = UINT32_MAX;
 thread_local uint32_t t_skc_frames  = 0;
+// ROADMAP s122 item 35(b): the writers of frame N already counted by skc_x1_wd / skc_x1_wp in frame N + 1.
+thread_local uint32_t                     t_skc_x1_frame = UINT32_MAX;
+thread_local std::unordered_set<uint32_t> t_skc_x1_ops;
+thread_local std::unordered_set<uint32_t> t_skc_x1_passes;
 
 struct SkcReader {
 	uint32_t stage = 0;
@@ -3554,8 +3559,8 @@ bool SkcKeeps(uint8_t kind) noexcept {
 }
 
 void SkcClearWriters(Image& image) noexcept {
-	image.skc_wdraws  = 0;
-	image.skc_wpass   = 0;
+	image.skc_wops.clear();
+	image.skc_wpasses.clear();
 	image.skc_wpassid = UINT32_MAX;
 	image.skc_wop     = 0;
 	image.skc_whash   = 0;
@@ -3570,10 +3575,9 @@ void SkcStampImage(Image& image, uint8_t kind, const ImageId* id) {
 			SkcClearWriters(image);
 		}
 		if (image.skc_wop != t_skc_op.serial) {
+			// Operations do not nest, so a serial never comes back once another one stamped: the list stays distinct.
 			image.skc_wop = t_skc_op.serial;
-			if (image.skc_wdraws != UINT16_MAX) {
-				image.skc_wdraws++;
-			}
+			image.skc_wops.push_back(t_skc_op.serial);
 		}
 		image.skc_whash = t_skc_op.ps_hash;
 		if (id != nullptr) {
@@ -3599,8 +3603,22 @@ void SkcX1Image(Image& image) {
 	if (image.skc_seen != Skc::t_gframe) {
 		image.skc_seen = Skc::t_gframe;
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Img, 1);
-		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wd, image.skc_wdraws);
-		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wp, image.skc_wpass);
+		// ROADMAP s122 item 35(b): distinct writers of frame N, each once in this frame N + 1 (not writer x image pairs).
+		if (t_skc_x1_frame != Skc::t_gframe) {
+			t_skc_x1_frame = Skc::t_gframe;
+			t_skc_x1_ops.clear();
+			t_skc_x1_passes.clear();
+		}
+		uint64_t wd = 0;
+		uint64_t wp = 0;
+		for (const auto serial: image.skc_wops) {
+			wd += t_skc_x1_ops.insert(serial).second ? 1u : 0u;
+		}
+		for (const auto pass: image.skc_wpasses) {
+			wp += t_skc_x1_passes.insert(pass).second ? 1u : 0u;
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wd, wd);
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wp, wp);
 	}
 }
 
@@ -3657,17 +3675,16 @@ void SkcCensus::OpEnd(TextureCache& cache, bool draw) noexcept {
 			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Cs, 1);
 		}
 	}
-	// skc_wpass: the host pass of this D draw, once per image and pass (the pass begins after the W1 / W2 stamps).
+	// skc_wpasses: the host pass of this D draw, once per image and pass (the pass begins after the W1 / W2 stamps).
 	for (const auto& id: op.d_stamped) {
 		auto* image = cache.m_slot_images.try_get(id);
 		if (image == nullptr || image->skc_wkind != Skc::KindD || image->skc_wframe != Skc::t_gframe ||
 		    image->skc_wop != op.serial || image->skc_wpassid == Skc::t_pass) {
 			continue;
 		}
+		// Passes only grow (t_pass), so a pass once left never comes back: the list stays distinct.
 		image->skc_wpassid = Skc::t_pass;
-		if (image->skc_wpass != UINT16_MAX) {
-			image->skc_wpass++;
-		}
+		image->skc_wpasses.push_back(Skc::t_pass);
 	}
 	op.w2.clear();
 	op.d_stamped.clear();
@@ -3705,6 +3722,9 @@ void SkcCensus::SetDrawPs(uint64_t ps_hash) noexcept {
 }
 
 void SkcCensus::ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_t shader_hash, uint32_t stage) {
+	if (t_skc_op.serial == 0) {
+		return; // ROADMAP s122 item 35(g), N2: outside every census operation - no read, no W2, no kind from t_skc_op
+	}
 	auto* image = cache.m_slot_images.try_get(id);
 	if (image == nullptr) {
 		return;
@@ -3785,6 +3805,9 @@ void SkcCensus::Attachment(TextureCache& cache, ImageId id, bool writes) {
 }
 
 void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written) {
+	if (t_skc_op.serial == 0) {
+		return; // ROADMAP s122 item 35(g), N2
+	}
 	if (written) {
 		t_skc_op.w2.push_back({false, {}, vaddr, size});
 	}
@@ -3814,6 +3837,9 @@ void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, 
 }
 
 void SkcCensus::ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t size) {
+	if (t_skc_op.serial == 0) {
+		return; // ROADMAP s122 item 35(g), N2
+	}
 	if (!SkcExecuted(Skc::t_kind)) {
 		return;
 	}

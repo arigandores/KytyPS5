@@ -335,7 +335,7 @@ const char* TextureCacheLastClearOutcome();
 // latched (Common::SkipCeil::t_mode == 2) - the call sites test that first - except the scopes, which test it inline.
 struct SkcCensus {
 	// One census operation (s.3.1): an R / K draw from the renderer entry (D from the skip site on), a CS dispatch.  Drops
-	// the W2 stamps it never applied and books skc_x1_draw / _cs / _pass and skc_wpass at the end.  Does not nest.
+	// the W2 stamps it never applied and books skc_x1_draw / _cs / _pass and skc_wpasses at the end.  Does not nest.
 	class OpScope {
 	public:
 		OpScope(TextureCache& cache, uint8_t kind, bool draw) noexcept {

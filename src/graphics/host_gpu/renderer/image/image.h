@@ -237,11 +237,13 @@ public:
 	uint64_t         skc_whash          = 0;          // PS hash of the last D writer (SkcX1Reader selfw)
 	uint32_t         skc_wframe         = 0;          // GuestGpu frame of the label
 	uint32_t         skc_seen           = 0;          // frame of the last skc_x1_img count
-	uint32_t         skc_wop            = 0;          // census operation of the last D stamp (skc_wdraws counts a draw once)
-	uint32_t         skc_wpassid        = UINT32_MAX; // host pass of the last skc_wpass count
-	uint16_t         skc_wdraws         = 0;          // D draws that wrote the image in skc_wframe
-	uint16_t         skc_wpass          = 0;          // ... their host passes
+	uint32_t         skc_wop            = 0;          // census operation of the last D stamp (skc_wops lists a draw once)
+	uint32_t         skc_wpassid        = UINT32_MAX; // host pass last listed in skc_wpasses
 	uint8_t          skc_wkind          = 0;          // Common::SkipCeil::Kind
+	// ROADMAP s122 item 35(b): the DISTINCT writers of skc_wframe - serials of the D census operations and their host
+	// passes (skc_x1_wd / skc_x1_wp count each writer once per frame N + 1).  Cleared with the writer statistics.
+	std::vector<uint32_t> skc_wops;
+	std::vector<uint32_t> skc_wpasses;
 
 private:
 	friend struct ImageTestAccess;

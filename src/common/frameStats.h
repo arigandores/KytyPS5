@@ -2295,6 +2295,13 @@ enum class Counter : uint32_t {
 	SkcIaD,                  // skc_ia_d
 	SkcIaT,                  // skc_ia_t
 	SkcDmaAll,               // skc_dma_all
+	// ROADMAP s122 item 35(a) (B1, class K16 - texture LOD statistics) and 35(zh) (N5).
+	SkcLodN,                 // skc_lod_n: IT_GET_LOD_STATS packets executed while the knob is latched 1 or 2
+	SkcLodSub,               // skc_lod_sub: ... of a skipped mode-1 frame (the report gets the substitution)
+	SkcLodFill,              // skc_lod_fill: banks whose written word the substitution changed
+	SkcLodD,                 // skc_lod_d: LodStats::Touch calls from operations of kind D (mode 2)
+	SkcLodAll,               // skc_lod_all: LodStats::Touch calls from every census operation (mode 2)
+	SkcEraseCmd,             // skc_erase_cmd: SkcEraseCpu commands queued to GuestGpu (mode 2)
 	Count
 };
 
@@ -2882,6 +2889,9 @@ inline constinit thread_local uint8_t  t_kind   = 0;     // census: the kind of 
 inline constinit thread_local bool     t_acq    = false; // census: target-acquisition guard (W3 stamp suppressed)
 inline constinit thread_local bool     t_carry  = false; // census: an image-to-image copy carried its source label
 inline constinit thread_local uint32_t t_pass   = 0;     // census: host passes (BeginRenderingImpl)
+// ROADMAP s122 item 35(a): the snapshot S of the LOD statistics was taken in the current mode-1 stretch (a report of a
+// frame without skip); dropped at every edge of the latched mode.
+inline constinit thread_local bool     t_lod_snap = false;
 // A W3-class site has work to do: on GuestGpu the census is latched (mode 2); on any other thread always true, so the
 // out-of-line call can count skc_w_xthr (one test per MarkGpuModified at any value, s.9).
 inline constinit thread_local bool     t_w3     = true;

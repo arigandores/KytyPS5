@@ -3841,6 +3841,7 @@ void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) 
 	}
 	if (mode != SC::t_mode) {
 		FS::Add(FS::Counter::SkcEdge, 1);
+		SC::t_lod_snap = false; // ROADMAP s122 item 35(a): the LOD snapshot S belongs to one stretch of the latched mode
 		if (mode == 2) {
 			SC::t_epoch = SC::t_gframe; // a new census epoch: older labels read empty, the buffer map is cleared
 		}

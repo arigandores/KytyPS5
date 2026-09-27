@@ -1804,6 +1804,11 @@ static PreparedVertexBuffers AcquireVertexBuffers(CommandBuffer&               b
 		    Libs::LibKernel::Memory::ClampRangeSize(range.base_address, range.RequestedSize());
 		range.acquired_end = range.base_address + size;
 		range.binding      = cache.ObtainBuffer(range.base_address, size, false);
+		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 34(v) by the rule of item 33(a)): the acquired merged
+		// vertex range is a buffer read of this draw, ahead of its deferred W2 stamps.
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcCensus::ReadBuffer(cache, range.base_address, size, false);
+		}
 		SetVulkanObjectNameF(
 		    buffer.GetContext().GetGraphics().device, range.binding.first->Handle(),
 		    "Kyty.VertexBufferRange[guest=0x{:016x} size=0x{:x}]", range.base_address, size);
@@ -2114,6 +2119,11 @@ static PreparedIndexBuffer PrepareIndexBuffer(CommandBuffer&               buffe
 	} else {
 		auto [buffer_ptr, offset] =
 		    buffer.GetContext().GetBufferCache().ObtainBuffer(source.address, source.size, false);
+		// Session 123, knob "skipceil" = 2 (census, ROADMAP s122 item 34(v) by the rule of item 33(a)): the index buffer in
+		// guest memory is a buffer read of this draw, ahead of its deferred W2 stamps (host_data above is no buffer read).
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcCensus::ReadBuffer(buffer.GetContext().GetBufferCache(), source.address, source.size, false);
+		}
 		prepared.buffer = buffer_ptr->Handle();
 		prepared.offset = offset;
 		SetVulkanObjectNameF(buffer.GetContext().GetGraphics().device, prepared.buffer,
@@ -2831,6 +2841,12 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		LogDrawPhase(draw.Name(), "PrepareVertexBuffers");
 		vertex_bindings = AcquireVertexBuffers(buffer, state.vertex_info[0]);
 		index_binding   = PrepareIndexBuffer(buffer, index_source);
+	}
+	// Session 123, knob "skipceil" = 2 (census, [N1], ROADMAP s122 item 34(v)): the binding, vertex and index reads of this
+	// draw are done - its W2 stamps now (moved here from the tail of PrepareGraphicsBindings; the bindfloor path never ran
+	// PrepareGraphicsBindings, so it queued none and applies none, as before).
+	if (!bind_floor && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
 	}
 	lap.Mark(Common::FrameStats::Counter::DrawVertexNs);
 	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmVtxNs);

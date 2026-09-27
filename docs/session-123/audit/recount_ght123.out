@@ -1,0 +1,35 @@
+file ../log_ght123.txt
+rows main/draw/x 14584 14584 14584 dups [0, 0, 0]
+GateArm lines 143 texts ['skipceil=0', 'skipceil=1']
+blocks 143 complete 142
+complete pairs 71 dropped 0 population 71
+DELTA est(0)-est(1) = 8076.7 +- 77.0 us (2SE), pairs 71
+  est A 24749.4  est B 16672.7
+  Delta-2SE 7999.7  Delta+2SE 8153.7
+  reading: CEILING_MEASURED
+  simple arm-1 mean Delta 8076.7 +- 77.0
+  classes held/other min 39/39 max 39/39
+  sensitivity window 10..88 simple: 8088.0 +- 77.8 (71 pairs)
+  bootstrap 95% [8006.0, 8155.8]
+  median pair d 7914.2, min 7677.7, max 9403.3
+d cpu_gpu_us (1-0) -10396.2 +- 63.5
+d draws (1-0) 25.5 +- 6.9
+d gw_proc_ns/1000 (1-0) -8488.8 +- 169.4
+d gw_flip_ns/1000 (1-0) 2240.7 +- 153.4
+d gw_idle_ns/1000 (1-0) 408.1 +- 113.7
+draw-adjusted Delta 8247.4 +- 89.0
+bda_scan arm0 blocks min 1021.5 max 1224.3 mean 1128.8 | arm1 mean 951.2
+G8 ratio0 1944.473689 ratio1 1951.436538 ratio-1 0.00358
+sum skc_bad 0
+sum skc_xthr 0
+sum skc_refuse 0
+sum skc_mark_miss 0
+sum after GateArm skc_lod_pmiss 0
+sum after GateArm skc_lod_noanc 0
+sum after GateArm skc_lod_pbad 782
+sum mark 3215 held 3215 skipf 3216
+arm-0 windows sum held+skipf+sd 0
+T5 held fraction min 0.500 max 0.500, max adjacent held 0
+largest dt_us after 1800 (99389, 13022)
+holes in main n after 1800 [] 0
+last main n 14585

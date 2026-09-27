@@ -1,0 +1,23 @@
+oldest 2026-09-27T01:21:08.747Z newest 2026-09-27T04:44:52.867Z
+2026-09-27T04:29:18.875Z user local-bo issue.monitor_triggered bb1cddd7 run None
+2026-09-27T04:29:19.143Z agent Harness environment.lease_acquired ba3be7a3 run 0b8dc4b2
+2026-09-27T04:36:40.394Z agent Harness issue.comment_added bb1cddd7 run 0b8dc4b2
+2026-09-27T04:40:06.802Z system routine- routine.run_triggered 59872d73 run None
+2026-09-27T04:40:07.150Z agent Lead environment.lease_acquired e8cbd5b0 run f942e011
+2026-09-27T04:40:24.872Z agent Lead issue.updated 1f6de452 run f942e011
+2026-09-27T04:40:24.891Z agent Lead issue.comment_added 1f6de452 run f942e011
+2026-09-27T04:40:29.783Z agent Lead environment.lease_released e8cbd5b0 run f942e011
+2026-09-27T04:44:07.948Z agent Harness environment.lease_released ba3be7a3 run 0b8dc4b2
+2026-09-27T04:44:07.958Z agent Harness issue.updated bb1cddd7 run 0b8dc4b2
+2026-09-27T04:44:07.991Z agent Harness issue.comment_added bb1cddd7 run 0b8dc4b2
+2026-09-27T04:44:08.032Z system system issue.task_watchdog_triggered 17474ca0 run 0b8dc4b2
+2026-09-27T04:44:08.322Z agent Lead environment.lease_acquired 9dcc23e8 run a9c347fb
+2026-09-27T04:44:08.342Z agent Lead environment.lease_acquired 64550da6 run 62373e17
+2026-09-27T04:44:34.796Z agent Lead issue.updated d5bafd74 run 62373e17
+2026-09-27T04:44:34.816Z agent Lead issue.comment_added d5bafd74 run 62373e17
+2026-09-27T04:44:34.823Z system system issue.task_watchdog_fingerprint_reviewed 17474ca0 run 62373e17
+2026-09-27T04:44:40.824Z agent Lead environment.lease_released 64550da6 run 62373e17
+2026-09-27T04:44:44.414Z agent Lead issue.updated bb1cddd7 run a9c347fb
+2026-09-27T04:44:44.431Z agent Lead issue.comment_added bb1cddd7 run a9c347fb
+2026-09-27T04:44:44.494Z system issue_up issue.blockers_resolved_wake_emitted 290a8041 run a9c347fb
+2026-09-27T04:44:44.645Z agent Auditor environment.lease_acquired 71c30bac run 9bb260a8

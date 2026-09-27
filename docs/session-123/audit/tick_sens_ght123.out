@@ -1,0 +1,4 @@
+reconstructed last frame 14585 at +300.5 s after stable (hold_s 300.1)
+margin  0 s: pairs hit by tick [24, 25, 26, 27, 28, 29, 30] -> Delta 8051.7 +- 69.8 us (64 pairs)
+margin  5 s: pairs hit by tick [22, 23, 24, 25, 26, 27, 28, 29, 30, 31] -> Delta 8061.8 +- 72.0 us (61 pairs)
+margin 15 s: pairs hit by tick [20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] -> Delta 8053.0 +- 72.3 us (56 pairs)

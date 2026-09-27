@@ -1,0 +1,35 @@
+file ../log_sky123.txt
+rows main/draw/x 11023 11023 11023 dups [0, 0, 0]
+GateArm lines 103 texts ['skipceil=0', 'skipceil=1']
+blocks 103 complete 102
+complete pairs 51 dropped 0 population 51
+DELTA est(0)-est(1) = 11384.3 +- 132.7 us (2SE), pairs 51
+  est A 32471.2  est B 21086.9
+  Delta-2SE 11251.6  Delta+2SE 11517.0
+  reading: CEILING_MEASURED
+  simple arm-1 mean Delta 11384.3 +- 132.7
+  classes held/other min 39/39 max 39/39
+  sensitivity window 10..88 simple: 11364.4 +- 134.5 (51 pairs)
+  bootstrap 95% [11254.7, 11512.9]
+  median pair d 11342.2, min 10278.6, max 12586.8
+d cpu_gpu_us (1-0) -13195.2 +- 129.0
+d draws (1-0) -2.3 +- 12.2
+d gw_proc_ns/1000 (1-0) -13640.8 +- 133.3
+d gw_flip_ns/1000 (1-0) 16.7 +- 3.4
+d gw_idle_ns/1000 (1-0) 2150.5 +- 26.0
+draw-adjusted Delta 11369.7 +- 113.6
+bda_scan arm0 blocks min 1356.6 max 1577.9 mean 1489.8 | arm1 mean 1073.0
+G8 ratio0 2007.979222 ratio1 2009.422147 ratio-1 0.00072
+sum skc_bad 0
+sum skc_xthr 0
+sum skc_refuse 0
+sum skc_mark_miss 0
+sum after GateArm skc_lod_pmiss 0
+sum after GateArm skc_lod_noanc 0
+sum after GateArm skc_lod_pbad 566
+sum mark 2317 held 2316 skipf 2317
+arm-0 windows sum held+skipf+sd 0
+T5 held fraction min 0.500 max 0.500, max adjacent held 0
+largest dt_us after 1800 (64586, 6142)
+holes in main n after 1800 [] 0
+last main n 11024

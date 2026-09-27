@@ -1,4 +1,4 @@
-<!-- Mirror of C:/kyty/s123/FACTS.md (source of truth), personal identifiers and foreign application names removed by audit123/mirror_facts123.py. -->
+<!-- Mirror of C:/kyty/s123/FACTS.md (source of truth), personal identifiers and foreign application names removed at the close (HPP-33). -->
 # Session 123 — FACTS (source of truth; git mirror `docs/local-session-123.md` at the close)
 
 Brief: `C:/kyty/KytyPS5/docs/next-session-123.md`; decisions: `ROADMAP.md` §0.1 "СЕССИЯ 122" item 25 and "СЕССИЯ 123".
@@ -242,3 +242,30 @@ sha256 (первые 16): `smk123.py` c2883726…, `smk_d1s123.txt` b2106a8a…,
 * **НЕ доказано:** выигрыш; потолок в режиме NEW (опора шла в OLD); у `ght123` est B 16 672,7 ≈ вблэнк — Δ усечён, «60 кадров/с»
   не частота игры; критичность GuestGpu (Δdt/Δcpu_gpu 0,863 / 0,777 — наблюдение); картинка (видео нет); K16 (`img_up_kb` на
   переведённый кадр ×2,18); цена ручки при 0 против `d3a981a2`.
+
+## Close (step 10, HPP-33, Roadmap Lead, 2026-09-27)
+
+*Author: the lead.* Decisions: `docs/ROADMAP.md` "СЕССИЯ 122" item 40 (written and committed `aa3e176` before any action
+on it).
+
+* **Audit accepted** (recount CONFIRMED by an independent parser, 1 MAJOR / 6 MINOR, no sealed verdict changes).
+* **Verdict (seal, not rewritten):** `sky123` (Sky Garden, BDA OLD, 51 pairs) Δ`dt_us` 11 384.3 ± 132.7 µs; `ght123`
+  (OLD, 71 pairs) 8 076.7 ± 77.0 — both CEILING_MEASURED (item 25 (г)(ii)). A ceiling of the crude knob, never a gain or a
+  forecast. Not proven: the NEW-regime ceiling; `ght123` est B ≈ one vblank (Δ truncated, not the game's frame rate);
+  GuestGpu criticality; the picture; K16 in arm 1 is an approximation; the knob's cost at 0 against `d3a981a2`.
+* **Lever of session 124 (item 40 (б)–(в)): a CLOSURE census, not a prototype.** Mode 2 marking fix (item 38 (д)) and a
+  new mode 3: for every marked frame, the set of its draws/dispatches whose output reaches something observable (guest
+  CPU/CP reads, GDS, LOD reports — the whole poll series, reads in the next unmarked frame before overwrite); output
+  `f_free` (draws outside the closure) with a proven direction. Reading: U = 11 517 µs × `f_free`⁺; U < 500 µs closes
+  frame skipping by census; U ≥ 500 µs → a prototype of the correct version with a verify mode and a sealed ABBA in 125;
+  direction not proven upper → NOT_RESOLVED. Count share vs time share must be resolved by the design. U is never quoted
+  as a gain. One sealed census run on the reference, BDA regime quoted with every number.
+* **Installed build restored to `d3a981a2…`** (item 40 (г)); `e4bb66ca…` (knob `skipceil`, default 0) stays pinned at
+  `C:/kyty/s123/kyty_emulator_e4bb66ca.exe`.
+* **MAJOR-1 closed (item 40 (д)):** the routine "Сторож цикла KytyPS5" is PAUSED (the `HPP-3` watchdog had fired and was
+  verified); I12, `--repair` and their fixtures are removed from `chain_check.py` (`--selftest` 24 fixtures `ALL OK`).
+* **Harness constants from MINOR-1..6 (item 40 (е)):** BDA bands NEW ≤ 300 / OLD ≥ 600 `bda_scan` per frame (arm 0 block
+  mean); a DRS base for a scene outside the design is a ROADMAP line before the seal; full `mutlib` only as the scoring run;
+  `procload` wait ≤ 540 s per call; GPU load during the hold as a row; scorer `--out` archived.
+* **Debts parked in §7:** NEW-regime ceiling; mode-2 marking and the closure; K16 in the contract; `skipceil=0` cost vs
+  `d3a981a2`; `img_up_kb` per translated frame ×2.18; GPU load during sealed runs. 60 FPS is not promised.

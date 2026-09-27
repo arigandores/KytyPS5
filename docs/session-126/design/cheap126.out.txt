@@ -1,0 +1,24 @@
+spc120/cen120 sha256 23aca0abe368692f build 15cdbfc6 regime NEW frames 3001
+  sp_rt_n               5023.1 draws/frame
+  sp_rt_would           4397.4 (87.5 %)
+  sp_rt_x_memo           381.5
+  sp_rt_x_cfg              0.0
+  sp_rt_x_dclr             0.0
+  sp_rt_x_meta             6.0
+  sp_rt_x_ids            185.0
+  sp_rt_x_live             0.0
+  sp_rt_x_ser              0.0
+  sp_rt_x_bound            0.0
+  sp_rt_x_dsmp             0.0
+  sp_rt_x_pass            53.2
+  pl_em_rt   (all)      1359.7 us/frame  (271 ns/draw)
+  pl_em_rt_hit (S_A)    1001.2 us/frame  (228 ns/draw)
+  miss remainder         358.5 us/frame  (573 ns/draw)
+  rt_fast_ok / draw       3.46   rt_fast_no/frame 63.0
+  G_A 1001.2  N_A 340.2  N_A_up 686.9 (sealed members)
+obs116 score sha256 8c6144e3cfbd0f77
+  pl_em_rt   {"unit": "us", "mean": 1599.9478777637398, "sum": 15196304.943, "median": null, "share_cpu": 0.051621992180362695, "per_op": 0.2964479849959285, "per_unit": 0.3
+  pl_em_n    48525983
+  mh_rt_us   7575414
+  draws      {"unit": "count", "mean": 5129.143503895557, "sum": 48716605.0, "median": 5352.0}
+ALL OK

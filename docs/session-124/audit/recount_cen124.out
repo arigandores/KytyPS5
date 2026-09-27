@@ -1,0 +1,24 @@
+attempts 1 outcome ok stable_frame 280 hold_s 300
+rows main/draw/x 6910 6910 6910 dups [0, 0, 0] last main n 6911
+window frames 290..6910: 6621 frames, 6621 complete
+blocks of 90: 73, tail 51
+G7 bda_scan window mean 1469.3; blocks min 1199.4 max 2108.9; bands ['OLD']
+sum skc3_f 3310 (>= 1600: True); sum skc3_d 17038197; c_df/c_f 0.4999
+tau_ctx 18.6123 ns, blocks with probe 73, SE 0.0518, tau+ 18.7158, 3tau+ 56.1475; block range 17.923..19.807
+G10: rows with finalization 3310, without cal 0, without tin 0, max tau^ 460.49 ns, sum tin_n 11873612
+L: f_n 0.00386 f_t(0) 0.00644 f_t(tau+) 0.00741 f_t(3tau+) 0.01086; den(ms) 93309.395 / 79753.693 / 52642.289; f_x+ 0.01086; den=0 at tau 128.83 ns
+b: f_n 0.00255 f_t(0) 0.00460 f_t(tau+) 0.00534 f_t(3tau+) 0.00798; den(ms) 93309.395 / 79753.693 / 52642.289; f_x+ 0.00798; den=0 at tau 128.83 ns
+sky123: pairs 51, arm-0 blocks 51, W0 32421.348873, SE 93.926586, W0+ 32609.202045; G8 base 99915708761/49759334 = 2007.979222
+G8 rt_kpx/rt_att 2008.535 vs base 2007.979222: 0.00028
+READING: q+ 0.5000, M+ 16304.6 us, U = 177.06 us -> CLOSED
+rows: U_b 130.17; U by the letter 11517 x f_x^L+ 125.07
+SENS: f_x needed for U=500: 0.03067 (x2.82 of f_x^L+); tau where f_t^L reaches it: 104.22 ns (= 5.57 x tau+, = 5.60 x tau_ctx)
+SENS: U with W0 (no 2SE) 176.04; U with q = c_df/c_f 177.03; U_b/U_L 0.735
+SENS first half: f_n^L 0.00401 f_t^L(3tau+) 0.01104 tau_ctx 18.427
+SENS second half: f_n^L 0.00371 f_t^L(3tau+) 0.01067 tau_ctx 18.804
+SENS per-block f_t^L(3tau+): mean 0.01081 sd 0.00174 min 0.00804 max 0.01600; 2SE 0.00041
+T1 log 0 window 0; alternation 0/6620; I7prime rows 828 bad 0; skc_on-window 0
+G5 nonzero: none (all 21 zero)
+P1 pc_n 16550 pc_bad 0; P2 x1c_n 5427401 independent 13240 (0.0024); P4 s_next 227615 cl_poll 21966 pollf 828 dkeep 1316994
+G2 largest dt_us from F0 (67324, 3918); gclk_pin window 1980977; skipped-draw lines 0
+mean dt_us (not a speed) 45329.9

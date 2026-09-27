@@ -1,0 +1,36 @@
+lock window (chain go124a.sh cen124): 19:33:08 .. 19:39:24 local = 2026-09-27T17:33:08Z .. 17:39:24Z
+activity log: 500 events, oldest 2026-09-27T13:12:33.984Z newest 2026-09-27T17:41:33.535Z; events 17:25Z..17:45Z:
+2026-09-27T17:29:21.214Z Harness issue.updated e852207c run 969f7c83
+2026-09-27T17:29:21.246Z Harness issue.comment_added e852207c run 969f7c83
+2026-09-27T17:29:34.275Z Harness environment.lease_released 58bc5b32 run 969f7c83
+2026-09-27T17:29:34.469Z Roadmap environment.lease_acquired a76e0421 run 124aa07f
+2026-09-27T17:29:37.287Z Roadmap tool_gateway.discovery e852207c run 124aa07f
+2026-09-27T17:29:37.301Z Roadmap tool_gateway.discovery e852207c run 124aa07f
+2026-09-27T17:29:37.418Z Roadmap tool_gateway.discovery e852207c run 124aa07f
+2026-09-27T17:31:06.414Z Roadmap issue.updated e852207c run 124aa07f
+2026-09-27T17:31:06.433Z Roadmap issue.comment_added e852207c run 124aa07f
+2026-09-27T17:31:06.523Z system issue.blockers_resolved_wake_emitted 8c8be0e0 run 124aa07f
+2026-09-27T17:31:06.717Z Harness environment.lease_acquired e3f63355 run fc78945a
+2026-09-27T17:31:08.913Z Harness tool_gateway.discovery 8c8be0e0 run fc78945a
+2026-09-27T17:31:08.918Z Harness tool_gateway.discovery 8c8be0e0 run fc78945a
+2026-09-27T17:31:09.071Z Harness tool_gateway.discovery 8c8be0e0 run fc78945a
+2026-09-27T17:31:13.776Z user issue.read_marked 8c8be0e0 run 
+2026-09-27T17:31:15.046Z Roadmap environment.lease_released a76e0421 run 124aa07f
+2026-09-27T17:40:40.533Z Harness issue.updated 8c8be0e0 run fc78945a
+2026-09-27T17:40:40.565Z Harness issue.comment_added 8c8be0e0 run fc78945a
+2026-09-27T17:40:49.323Z Harness environment.lease_released e3f63355 run fc78945a
+2026-09-27T17:40:49.542Z Roadmap environment.lease_acquired ce2f0003 run e246e299
+2026-09-27T17:40:51.881Z Roadmap tool_gateway.discovery 8c8be0e0 run e246e299
+2026-09-27T17:40:51.886Z Roadmap tool_gateway.discovery 8c8be0e0 run e246e299
+2026-09-27T17:40:51.976Z Roadmap tool_gateway.discovery 8c8be0e0 run e246e299
+2026-09-27T17:41:23.503Z Roadmap issue.updated 8c8be0e0 run e246e299
+2026-09-27T17:41:23.519Z Roadmap issue.comment_added 8c8be0e0 run e246e299
+2026-09-27T17:41:23.586Z system issue.blockers_resolved_wake_emitted 886a8100 run e246e299
+2026-09-27T17:41:23.798Z Session environment.lease_acquired 8556e83e run e8c7e446
+2026-09-27T17:41:25.497Z Session tool_gateway.discovery 886a8100 run e8c7e446
+2026-09-27T17:41:25.500Z Session tool_gateway.discovery 886a8100 run e8c7e446
+2026-09-27T17:41:25.653Z Session tool_gateway.discovery 886a8100 run e8c7e446
+2026-09-27T17:41:33.535Z Roadmap environment.lease_released ce2f0003 run e246e299
+heartbeat runs overlapping 17:33:00Z..17:39:30Z (of the last 100 runs, oldest start 2026-09-27T02:09:08.525Z):
+2026-09-27T17:31:06.511Z 2026-09-27T17:40:49.203Z Harness fc78945a automation succeeded
+verdict: no event inside the window; the only live run is the Harness Engineer run fc78945a that started the chain

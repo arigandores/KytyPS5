@@ -1,0 +1,140 @@
+sh119  C:/kyty/s119/log_sh119.txt  sha fe8b0e2373a9f6daa1dc072b46212309d8a74558a97affdeb639f9ef11b8f0ba  OK
+  GateArm blocks 87, complete 86, row-arm/blk mismatches 0, window len 79
+  G blocks arm0: 40 (4..83)
+  [G g2-rule, window 10..88] rows 3160  n 2171..9359
+    dt_us          31211.706
+    cpu_net        30294.595
+    dt-cpu_net       917.111
+    busy_mean          0.971
+    busy_med           0.973
+    lat_us         10742.444
+    wjobs              8.000
+    wdrop              0.000
+    wskip              7.996
+    lag/job         9212.866
+    depth/job          2.223
+    slc_total         12.597
+    bda_scan          57.279
+    gw_idle_ns         0.000
+  X blocks arm0: 41 [0, 4, 7, 8]
+  [X GateArm blocks, rows125 exclusions] rows 3239  n 1811..9359
+    dt_us          31217.017
+    cpu_net        30296.731
+    dt-cpu_net       920.286
+    busy_mean          0.971
+    busy_med           0.973
+    lat_us         10740.082
+    wjobs              8.000
+    wdrop              0.000
+    wskip              7.996
+    lag/job         9215.970
+    depth/job          2.224
+    slc_total         12.597
+    bda_scan          57.738
+    gw_idle_ns         0.000
+  [R rows125 reproduction (blk grouping)] rows 3239  n 12..9359
+    dt_us          30856.921
+    cpu_net        29595.439
+    dt-cpu_net      1261.482
+    busy_mean          0.950
+    busy_med           0.972
+    lat_us         11271.003
+    wjobs              7.942
+    wdrop              0.036
+    wskip              7.974
+    lag/job         9060.841
+    depth/job          2.226
+    slc_total         12.580
+    bda_scan          56.942
+    gw_idle_ns         0.000
+  R block-0 rows: 79, n 12..90, mean dt_us 16665.5
+  cram_write sum over all rows: 0
+mut119  C:/kyty/s119/log_mut119.txt  sha 2b0adcb807055d736e89338aced5f39b4bd682c50d98e142799c847622eec8c8  OK
+  GateArm blocks 86, complete 85, row-arm/blk mismatches 0, window len 79
+  G blocks arm0: 40 (4..83)
+  [G g2-rule, window 10..88] rows 3160  n 2171..9359
+    dt_us          32357.438
+    cpu_net        31495.180
+    dt-cpu_net       862.259
+    busy_mean          0.974
+    busy_med           0.975
+    lat_us         11056.593
+    wjobs              8.000
+    wdrop              0.000
+    wskip              7.998
+    lag/job         9481.431
+    depth/job          2.222
+    slc_total         12.589
+    bda_scan          56.135
+    gw_idle_ns         0.000
+  X blocks arm0: 41 [0, 4, 7, 8]
+  [X GateArm blocks, rows125 exclusions] rows 3239  n 1811..9359
+    dt_us          32360.451
+    cpu_net        31495.922
+    dt-cpu_net       864.529
+    busy_mean          0.974
+    busy_med           0.975
+    lat_us         11023.981
+    wjobs              8.000
+    wdrop              0.000
+    wskip              7.998
+    lag/job         9484.395
+    depth/job          2.221
+    slc_total         12.592
+    bda_scan          56.561
+    gw_idle_ns         0.000
+  [R rows125 reproduction (blk grouping)] rows 3239  n 12..9359
+    dt_us          31974.808
+    cpu_net        30765.700
+    dt-cpu_net      1209.108
+    busy_mean          0.953
+    busy_med           0.975
+    lat_us         11591.971
+    wjobs              7.941
+    wdrop              0.035
+    wskip              7.974
+    lag/job         9326.430
+    depth/job          2.225
+    slc_total         12.571
+    bda_scan          55.826
+    gw_idle_ns         0.000
+  R block-0 rows: 79, n 12..90, mean dt_us 16669.6
+  cram_write sum over all rows: 0
+sweep: 36 logs
+  C:/kyty\s116\log_obs116.txt                 204896135 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s117\log_spn117.txt                 195966184 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s118\log_smoke118b.txt              130547079 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s118\log_smoke118c.txt              130071755 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s118\log_spk118.txt                 209913488 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s119\log_mut119.txt                 203467994 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s119\log_sh119.txt                  211079139 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s119\log_smk119m.txt                126076053 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s119\log_smk119s.txt                130420496 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s120\log_cen120.txt                 216129043 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s120\log_smk120.txt                 136291807 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s121\log_shp121.txt                 233719526 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s121\log_vfy121.txt                 180902661 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_atl122.txt                 417766108 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_bsky122.txt                151528799 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_csky122.txt                154957208 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_des122.txt                 445543087 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_dnn122.txt                 410612526 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_eatl122.txt                195643178 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_edes122.txt                174125215 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_ednn122.txt                178401635 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_eght122.txt                131864828 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_ght122.txt                 284490110 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_sky122.txt                 235083441 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_skyp122.txt                235592354 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s122\log_skyp122r.txt               232540288 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s123\log_d1s123.txt                 276985401 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s123\log_d2s123.txt                 108314403 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s123\log_d4s123.txt                 173420234 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s123\log_ght123.txt                 353503797 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s123\log_sky123.txt                 282889945 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s124\log_cen124.txt                 208017107 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s124\log_s1s124.txt                 108492568 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s124\log_s2s124.txt                 126003224 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s124\log_s4s124.txt                 180307286 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+  C:/kyty\s124\log_s6s124.txt                 128556287 B  LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0
+sweep total: LagTrace:=0 AvTrace: flip=0 GpuSubmitOps:=0 SampleTrace:=0

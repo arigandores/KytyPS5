@@ -1,0 +1,9 @@
+sh119 window 60..88 blocks 40 rows 1160 cpu_net mean 30266.357
+sh119 window 10..88 blocks 40 rows 3160 cpu_net mean 30294.595
+mut119 window 60..88 blocks 40 rows 1160 cpu_net mean 31528.280
+mut119 window 10..88 blocks 40 rows 3160 cpu_net mean 31495.180
+-- median of block means (the g2_119 level statistic)
+sh119 window 60..88 median of 40 block means 30252.517
+sh119 window 10..88 median of 40 block means 30188.209
+mut119 window 60..88 median of 40 block means 31457.879
+mut119 window 10..88 median of 40 block means 31346.310

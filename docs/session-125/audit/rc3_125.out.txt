@@ -1,0 +1,4 @@
+sh119  G corrected  rows 3160 cpu_net min 14310 med 32290 mean 30295 max 49002 | artefact a=0.5 8.5 a=0.555 20.7 | share cpu_net > 43275: 0.47 %
+sh119  R rows125    rows 3239 cpu_net min 820 med 32266 mean 29595 max 49002 | artefact a=0.5 8.3 a=0.555 20.2 | share cpu_net > 43275: 0.46 %
+mut119 G corrected  rows 3160 cpu_net min 14321 med 32419 mean 31495 max 49349 | artefact a=0.5 25.2 a=0.555 60.4 | share cpu_net > 43275: 1.36 %
+mut119 R rows125    rows 3239 cpu_net min 928 med 32398 mean 30766 max 49349 | artefact a=0.5 24.6 a=0.555 58.9 | share cpu_net > 43275: 1.33 %

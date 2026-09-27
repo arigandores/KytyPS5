@@ -4570,8 +4570,10 @@ void OpReadBuffer(uint64_t vaddr, uint64_t size, bool written) {
 	}
 }
 
-// P2 (s.10, ROADMAP s122 item 44(e)): an image that gives skc_x1_img to a read of an executed operation of the next,
-// unmarked frame - each of its D writers is checked (the census of session 123 does not model logical clears and T).
+// P2 (s.10, ROADMAP s122 items 44(e), 45(a)): an image that gives skc_x1_img to a read of an executed operation of the
+// next, unmarked frame - each of its D writers is checked by the keys it wrote that the read covers: a key whose `why`
+// is a logical clear or T is excluded (1); a key whose last writer lw is another D node D' of an open marked frame
+// requires need_b of D' (2); any other key requires need_b of D (3).  A node is required at most once per writer.
 void P2(Image& image, const IR& r) {
 	namespace Skc = Common::SkipCeil;
 	if (image.skc_wkind != Skc::KindD || image.skc_wframe < Skc::t_epoch || Skc::t_gframe - image.skc_wframe != 1 ||
@@ -4589,25 +4591,52 @@ void P2(Image& image, const IR& r) {
 			Bad();
 			continue;
 		}
-		const Node& nd    = f->nodes[serial - f->base];
-		bool        inter = false;
-		bool        clr   = true;
+		const Node&           nd    = f->nodes[serial - f->base];
+		bool                  inter = false;
+		bool                  self  = false; // a key by (3)
+		std::vector<uint32_t> ovr;           // the distinct D' of the keys by (2)
 		for (const uint64_t key: nd.wkeys) {
 			if (!std::binary_search(keys.begin(), keys.end(), key)) {
 				continue;
 			}
 			inter         = true;
 			const auto it = img.find(key);
-			if (it == img.end() || (it->second.why != WhyClear && it->second.why != WhyLazy)) {
-				clr = false;
+			if (it == img.end()) {
+				self = true;
+				continue;
 			}
+			const KState& k = it->second;
+			if (k.why == WhyClear || k.why == WhyLazy) {
+				continue;
+			}
+			if (k.lw != 0 && k.lw != serial) {
+				const Node* o = NodeOf(k.lw);
+				if (o != nullptr && o->kind == Common::SkipCeil::KindD) {
+					if (std::find(ovr.begin(), ovr.end(), k.lw) == ovr.end()) {
+						ovr.push_back(k.lw);
+					}
+					continue;
+				}
+			}
+			self = true;
 		}
 		if (!inter) {
 			FS::Add(Counter::Skc3X1cSub, 1);
-		} else if (clr) {
+			continue;
+		}
+		if (!self && ovr.empty()) {
 			FS::Add(Counter::Skc3X1cClr, 1);
+			continue;
+		}
+		if (!self) {
+			FS::Add(Counter::Skc3X1cOvr, 1);
 		} else {
 			f->p2.push_back(serial); // must have need_b at the finalization
+			FS::Add(Counter::Skc3X1cChk, 1);
+		}
+		for (const uint32_t o: ovr) {
+			FrameOf(o)->p2.push_back(o); // D' is open: NodeOf found it
+			FS::Add(Counter::Skc3X1cChk, 1);
 		}
 	}
 }

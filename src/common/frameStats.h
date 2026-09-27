@@ -2370,6 +2370,8 @@ enum class Counter : uint32_t {
 	Skc3X1cSub,              // skc3_x1c_sub
 	Skc3X1cClr,              // skc3_x1c_clr
 	Skc3X1cBad,              // skc3_x1c_bad
+	Skc3X1cOvr,              // skc3_x1c_ovr
+	Skc3X1cChk,              // skc3_x1c_chk
 	Skc3Xthr,                // skc3_xthr
 	Skc3Bad,                 // skc3_bad
 	Skc3Orphan,              // skc3_orphan

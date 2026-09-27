@@ -2996,6 +2996,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"skc3_x1c_sub", FS::Counter::Skc3X1cSub, false},
 				    {"skc3_x1c_clr", FS::Counter::Skc3X1cClr, false},
 				    {"skc3_x1c_bad", FS::Counter::Skc3X1cBad, false},
+				    {"skc3_x1c_ovr", FS::Counter::Skc3X1cOvr, false},
+				    {"skc3_x1c_chk", FS::Counter::Skc3X1cChk, false},
 				    {"skc3_xthr", FS::Counter::Skc3Xthr, false},
 				    {"skc3_bad", FS::Counter::Skc3Bad, false},
 				    {"skc3_orphan", FS::Counter::Skc3Orphan, false},

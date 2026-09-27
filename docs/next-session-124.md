@@ -64,6 +64,8 @@ paused, item 40 (д)).
    specifically: can `f_free`⁺ be understated (missed edges: BDA reads, DMA, CP reads of GPU-written memory, deferred
    clears, image→image copies, GC evictions, cross-frame compute)? The lead accepts the design and the RCs by a ROADMAP
    line BEFORE the code step starts.
+2a. **Probe Designer — design rev 2** (added by ROADMAP item 43 (о)): `design124.md` rev 2 applying RC1–RC14 as
+   decided in item 43 (а)–(н); the lead accepts rev 2 by a ROADMAP item before step 3 starts.
 3. **Emu Engineer — code and build:** mode 2 fix and mode 3 as accepted; `check_gate_order.py` clean; test-failure delta
    0; build from a commit, pinned copy `C:/kyty/s124/kyty_emulator_<sha8>.exe`, `EXPECT`/`PINNED` in `go124a.sh`.
 4. **Red Team — code review** of the commit (BLOCKING / non-blocking; unrecorded implementation decisions are BLOCKING —

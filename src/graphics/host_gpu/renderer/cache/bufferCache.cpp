@@ -442,6 +442,7 @@ void BufferCache::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	m_memory_tracker.InvalidateRegion(
 		vaddr, size, [this, vaddr, size] { ReadMemory(vaddr, size, true); },
 		Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+	SkcEraseCpu(vaddr, size); // Session 123, knob "skipceil" = 2 (census): a CPU write erases the D / T / K labels
 }
 
 void BufferCache::InvalidateWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
@@ -451,6 +452,7 @@ void BufferCache::InvalidateWriteFault(uint64_t fault_vaddr, uint64_t window_beg
 		fault_vaddr, window_begin, window_size,
 		[this, fault_vaddr] { ReadMemory(fault_vaddr, 1, true); },
 		Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch));
+	SkcEraseCpu(window_begin, window_size); // Session 123, knob "skipceil" = 2 (census): the window the fault opened
 }
 
 uint64_t BufferCache::WriteFaultArmedPages(uint64_t fault_vaddr, uint64_t window_begin,
@@ -518,6 +520,10 @@ void BufferCache::ReadMemory(uint64_t vaddr, uint64_t size, bool is_write) {
 }
 
 void BufferCache::ReadMemoryOnGpu(uint64_t vaddr, uint64_t size, bool is_write) {
+	// Session 123, knob "skipceil" = 2 (census, s.3.2): a read fault on GuestGpu itself (skc_r_c, for reference).
+	if (!is_write && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcNoteRead(0, vaddr, size);
+	}
 	if (is_write && !IsRegionRegistered(vaddr, size)) {
 		return;
 	}
@@ -1755,6 +1761,9 @@ void BufferCache::FillBuffer(uint64_t vaddr, uint64_t size, uint32_t value, bool
 	if (vaddr == 0) {
 		EXIT("BufferCache: invalid fill memory address\n");
 	}
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcEraseRange(vaddr, size); // Session 123 (census): a DMA fill is a certain write (M)
+	}
 	(void)m_texture_cache.ClearMeta(vaddr);
 	if (!IsRegionGpuModified(vaddr, size)) {
 		// Access the guest mapping so write faults invalidate cached buffers and images.
@@ -1799,6 +1808,16 @@ void BufferCache::CopyBuffer(uint64_t dst_vaddr, uint64_t src_vaddr, uint64_t si
 		EXIT("BufferCache: invalid copy range, src=0x%016" PRIx64 " dst=0x%016" PRIx64
 		     " size=0x%016" PRIx64 " src_gds=%d dst_gds=%d\n",
 		     src_vaddr, dst_vaddr, size, static_cast<int>(src_gds), static_cast<int>(dst_gds));
+	}
+	// Session 123, knob "skipceil" = 2 (census, s.3.1-3.2): the DMA source is a read (skc_r_m), the destination a
+	// certain write that erases the labels (M).
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		if (src_memory) {
+			SkcNoteRead(3, src_vaddr, size);
+		}
+		if (dst_memory) {
+			SkcEraseRange(dst_vaddr, size);
+		}
 	}
 	if (src_memory && dst_memory && !IsRegionGpuModified(dst_vaddr, size) &&
 	    !IsRegionGpuModified(src_vaddr, size) && !m_texture_cache.FindImageFromRange(src_vaddr, size)) {
@@ -1956,7 +1975,9 @@ void BufferCache::RunGarbageCollector() {
 	// pressure it runs exactly as before.  With the floor off this is the shipped order.
 	// Session 98: KYTY_BIND_FLOOR_LATCH >= 1 reads without adopting (descriptors.h).
 	const bool floor_hold = BindFloorGcHold();
-	auto       tick       = floor_hold ? m_gc_tick : m_gc_tick++;
+	// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY, design123.md s.1.6): a skipped frame holds the GC the same way.
+	const bool skc_hold   = Common::SkipCeil::GcHold();
+	auto       tick       = floor_hold || skc_hold ? m_gc_tick : m_gc_tick++;
 	if (m_graphics.CanReportMemoryUsage()) {
 		m_total_used_memory = m_graphics.GetDeviceMemoryUsage();
 	}
@@ -1965,9 +1986,14 @@ void BufferCache::RunGarbageCollector() {
 	}
 
 	const bool     aggressive = m_total_used_memory >= m_critical_gc_memory;
-	if (floor_hold) {
+	if (aggressive) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcBgcCrit, 1); // Session 123, S_live
+	}
+	if (floor_hold || skc_hold) {
 		if (!aggressive) {
-			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorBufGcHold, 1);
+			Common::FrameStats::Add(floor_hold ? Common::FrameStats::Counter::BindFloorBufGcHold
+			                                   : Common::FrameStats::Counter::SkcBgcHold,
+			                        1);
 			return;
 		}
 		tick = m_gc_tick++;
@@ -2066,6 +2092,10 @@ BufferCache::AsyncReadback BufferCache::BeginAsyncReadback(uint64_t vaddr, uint6
 	const auto         window_begin = std::max(vaddr & ~(WindowSize - 1), buffer_begin);
 	const auto window_end = std::min(std::max(window_begin + WindowSize, vaddr + size), buffer_end);
 
+	// Session 123, knob "skipceil" = 2 (census, s.3.2): a guest read at KYTY_STALE_READ=0 (skc_r_g), by its window.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcNoteRead(1, window_begin, window_end - window_begin);
+	}
 	uint64_t packed = 0;
 	m_memory_tracker.ForEachDownloadRange<false>(
 	    window_begin, window_end - window_begin, [&](uint64_t address, uint64_t bytes) noexcept {
@@ -2153,6 +2183,10 @@ void BufferCache::ServeStaleRead(uint64_t vaddr, uint64_t size) {
 	const auto         window_begin = std::max(vaddr & ~(WindowSize - 1), buffer_begin);
 	const auto window_end = std::min(std::max(window_begin + WindowSize, vaddr + size), buffer_end);
 
+	// Session 123, knob "skipceil" = 2 (census, s.3.2): the guest read this command serves (skc_r_g), by its window.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcNoteRead(1, window_begin, window_end - window_begin);
+	}
 	std::vector<ReadbackPiece> pieces;
 	uint64_t                   packed = 0;
 	m_memory_tracker.ForEachDownloadRange<false>(
@@ -2596,6 +2630,10 @@ void BufferCache::PrefetchHotReadbacks() {
 		if (mapped == nullptr) {
 			continue;
 		}
+		// Session 123, knob "skipceil" = 2 (census, s.3.2): a prefetched window is a guest read without a fault (skc_r_p).
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcNoteRead(2, begin, end - begin);
+		}
 		for (const auto& piece: pieces) {
 			const auto source_begin = piece.address & ~uint64_t {3};
 			const auto envelope     = piece.size + (piece.address - source_begin);
@@ -3021,6 +3059,222 @@ void BufferCache::SynchronizeBuffersInRange(uint64_t vaddr, uint64_t size) {
 			(void)SynchronizeBuffer(buffer, start, finish - start, false, false);
 		}
 	}
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 123, knob "skipceil" = 2: the last-writer map of the census (MEASUREMENT ONLY; design123.md s.3.1).  GuestGpu
+// thread only, except SkcEraseCpu, which queues its erase there.
+
+void BufferCache::SkcSync() {
+	if (m_skc_epoch != Common::SkipCeil::t_epoch) {
+		m_skc_map.clear();
+		m_skc_dlive.clear();
+		m_skc_epoch = Common::SkipCeil::t_epoch;
+	}
+}
+
+void BufferCache::SkcDLiveMove(uint32_t frame, bool add) {
+	if (add) {
+		m_skc_dlive[frame]++;
+		return;
+	}
+	auto it = m_skc_dlive.find(frame);
+	if (it != m_skc_dlive.end() && --it->second == 0) {
+		m_skc_dlive.erase(it);
+	}
+}
+
+// Removes [begin, end) from the map; the segments it cuts keep their outside parts.
+void BufferCache::SkcCut(uint64_t begin, uint64_t end) {
+	auto it = m_skc_map.lower_bound(begin);
+	if (it != m_skc_map.begin()) {
+		auto prev = std::prev(it);
+		if (prev->second.end > begin) {
+			const SkcSegment whole = prev->second;
+			prev->second.end       = begin;
+			if (whole.end > end) {
+				m_skc_map.emplace_hint(it, end, SkcSegment {whole.end, whole.frame, whole.kind});
+				if (whole.kind == Common::SkipCeil::KindD) {
+					SkcDLiveMove(whole.frame, true);
+				}
+				return;
+			}
+		}
+	}
+	while (it != m_skc_map.end() && it->first < end) {
+		if (it->second.end > end) {
+			const SkcSegment rest = it->second;
+			it                    = m_skc_map.erase(it);
+			m_skc_map.emplace_hint(it, end, rest);
+			return;
+		}
+		if (it->second.kind == Common::SkipCeil::KindD) {
+			SkcDLiveMove(it->second.frame, false);
+		}
+		it = m_skc_map.erase(it);
+	}
+}
+
+BufferCache::SkcQuery BufferCache::SkcQueryRange(uint64_t vaddr, uint64_t size) {
+	SkcQuery q;
+	SkcSync();
+	if (size == 0 || m_skc_map.empty()) {
+		return q;
+	}
+	const uint64_t end = size > UINT64_MAX - vaddr ? UINT64_MAX : vaddr + size;
+	auto           it  = m_skc_map.upper_bound(vaddr);
+	if (it != m_skc_map.begin()) {
+		auto prev = std::prev(it);
+		if (prev->second.end > vaddr) {
+			it = prev;
+		}
+	}
+	for (; it != m_skc_map.end() && it->first < end; ++it) {
+		const auto& s = it->second;
+		if (s.kind == Common::SkipCeil::KindD) {
+			q.d          = true;
+			const auto k = Common::SkipCeil::t_gframe - s.frame;
+			(k == 0 ? q.d_k0 : k == 1 ? q.d_k1 : q.d_k2) = true;
+			q.d_bytes += std::min(s.end, end) - std::max(it->first, vaddr);
+		} else if (s.kind == Common::SkipCeil::KindT) {
+			q.t = true;
+		} else {
+			continue;
+		}
+		if (q.last_kind == 0 || s.frame >= q.last_frame) {
+			q.last_kind  = s.kind;
+			q.last_frame = s.frame;
+		}
+	}
+	return q;
+}
+
+void BufferCache::SkcStampRange(uint64_t vaddr, uint64_t size, uint8_t kind) {
+	SkcSync();
+	if (size == 0) {
+		return;
+	}
+	const uint64_t end = size > UINT64_MAX - vaddr ? UINT64_MAX : vaddr + size;
+	SkcCut(vaddr, end);
+	m_skc_map.emplace(vaddr, SkcSegment {end, Common::SkipCeil::t_gframe, kind});
+	if (kind == Common::SkipCeil::KindD) {
+		SkcDLiveMove(Common::SkipCeil::t_gframe, true);
+	}
+}
+
+void BufferCache::SkcEraseRange(uint64_t vaddr, uint64_t size) {
+	SkcSync();
+	if (size == 0 || m_skc_map.empty()) {
+		return;
+	}
+	SkcCut(vaddr, size > UINT64_MAX - vaddr ? UINT64_MAX : vaddr + size);
+}
+
+void BufferCache::SkcEraseCpu(uint64_t vaddr, uint64_t size) {
+	if (Common::SkipCeil::t_gpu) {
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcEraseRange(vaddr, size);
+		}
+		return;
+	}
+	if (Common::SkipCeil::g_mode.load(std::memory_order_relaxed) != 2) [[likely]] {
+		return;
+	}
+	m_scheduler.Context().GetGpu().SendCommand([this, vaddr, size] {
+		if (Common::SkipCeil::t_mode == 2) {
+			SkcEraseRange(vaddr, size);
+		}
+	});
+}
+
+bool BufferCache::SkcDLive(uint32_t k) {
+	SkcSync();
+	const auto it = m_skc_dlive.find(Common::SkipCeil::t_gframe - k);
+	return it != m_skc_dlive.end() && it->second != 0;
+}
+
+void BufferCache::SkcNoteRead(uint32_t cls, uint64_t vaddr, uint64_t size) {
+	namespace FS = Common::FrameStats;
+	const auto q = SkcQueryRange(vaddr, size);
+	switch (cls) {
+		case 0:
+			FS::Add(FS::Counter::SkcRC, 1);
+			FS::Add(FS::Counter::SkcRCD, q.d ? 1u : 0u);
+			FS::Add(FS::Counter::SkcRCT, q.t ? 1u : 0u);
+			return;
+		case 1:
+			FS::Add(FS::Counter::SkcRG, 1);
+			FS::Add(FS::Counter::SkcRGD, q.d ? 1u : 0u);
+			FS::Add(FS::Counter::SkcRGT, q.t ? 1u : 0u);
+			FS::Add(FS::Counter::SkcRGDKb, (q.d_bytes + 1023u) / 1024u);
+			break;
+		case 2:
+			FS::Add(FS::Counter::SkcRP, 1);
+			FS::Add(FS::Counter::SkcRPD, q.d ? 1u : 0u);
+			FS::Add(FS::Counter::SkcRPT, q.t ? 1u : 0u);
+			break;
+		default:
+			FS::Add(FS::Counter::SkcRMD, q.d ? 1u : 0u);
+			FS::Add(FS::Counter::SkcRMT, q.t ? 1u : 0u);
+			return;
+	}
+	// SkcCpuRead lines: the windows of skc_r_g_* / skc_r_p_* that met D / T.
+	for (uint32_t kind = 0; kind < 2; kind++) {
+		if (kind == 0 ? q.d : q.t) {
+			auto& w = m_skc_cpu_reads[{cls, vaddr, kind}];
+			w.kb    = (size + 1023u) / 1024u;
+			w.n++;
+		}
+	}
+}
+
+void BufferCache::SkcCpRead(uint32_t site, uint64_t vaddr, uint64_t size) {
+	namespace FS = Common::FrameStats;
+	static constexpr FS::Counter kd[] = {FS::Counter::SkcRcWrmD,  FS::Counter::SkcRcCondD, FS::Counter::SkcRcPredD,
+	                                     FS::Counter::SkcRcIcntD, FS::Counter::SkcRcIargD, FS::Counter::SkcRcDindD};
+	static constexpr FS::Counter kt[] = {FS::Counter::SkcRcWrmT,  FS::Counter::SkcRcCondT, FS::Counter::SkcRcPredT,
+	                                     FS::Counter::SkcRcIcntT, FS::Counter::SkcRcIargT, FS::Counter::SkcRcDindT};
+	if (site >= 6) {
+		return;
+	}
+	FS::Add(FS::Counter::SkcRcAll, 1);
+	const auto q = SkcQueryRange(vaddr, size);
+	if (q.d) {
+		FS::Add(kd[site], 1);
+		m_skc_cp_reads[{site, vaddr, 0u}].n++;
+	}
+	if (q.t) {
+		FS::Add(kt[site], 1);
+		m_skc_cp_reads[{site, vaddr, 1u}].n++;
+	}
+}
+
+void BufferCache::SkcDump() {
+	const auto sorted = [](const auto& table) {
+		std::vector<std::pair<std::tuple<uint32_t, uint64_t, uint32_t>, SkcWindow>> rows(table.begin(), table.end());
+		std::sort(rows.begin(), rows.end(), [](const auto& a, const auto& b) { return a.second.n > b.second.n; });
+		return rows;
+	};
+	for (const auto& [key, w]: sorted(m_skc_cpu_reads)) {
+		if (m_skc_cpu_lines >= 8) {
+			break;
+		}
+		m_skc_cpu_lines++;
+		LOGF("SkcCpuRead: addr=0x%016" PRIx64 " kb=%" PRIu64 " kind=%c n=%" PRIu64 "\n", std::get<1>(key), w.kb,
+		     std::get<2>(key) == 0 ? 'd' : 't', w.n);
+	}
+	static constexpr const char* sites[] = {"wrm", "cond", "pred", "icnt", "iarg", "dind"};
+	for (const auto& [key, w]: sorted(m_skc_cp_reads)) {
+		if (m_skc_cp_lines >= 8) {
+			break;
+		}
+		m_skc_cp_lines++;
+		LOGF("SkcCpRead: site=%s addr=0x%016" PRIx64 " kind=%c n=%" PRIu64 "\n", sites[std::get<0>(key) % 6u],
+		     std::get<1>(key), std::get<2>(key) == 0 ? 'd' : 't', w.n);
+	}
+	m_skc_cpu_reads.clear();
+	m_skc_cp_reads.clear();
 }
 
 } // namespace Libs::Graphics

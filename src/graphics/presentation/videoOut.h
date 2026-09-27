@@ -41,6 +41,8 @@ public:
 	// The frame of this GPU flip request is incomplete (draws skipped while their pipelines
 	// compile): with KYTY_ASYNC_HOLD_FRAME the flip completes without presenting it.
 	void MarkFlipIncomplete(uint64_t request_id);
+	// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY): hold the flip of a skipped frame; false if not found.
+	[[nodiscard]] bool MarkFlipSkipCeil(uint64_t request_id);
 	void WaitFlipDone(int handle, int index);
 
 	[[nodiscard]] Impl& State() noexcept;

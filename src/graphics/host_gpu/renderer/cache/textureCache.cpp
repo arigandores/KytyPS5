@@ -857,8 +857,12 @@ void TextureCache::CopyImage(ImageId destination_id, ImageId source_id) {
 		auto& copy_buffer = m_buffer_cache.GetUtilityBuffer(MemoryUsage::DeviceLocal);
 		destination.CopyImageWithBuffer(source, copy_buffer);
 	}
-	if (source.IsGpuModified()) {
-		destination.MarkGpuModified();
+	{
+		// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
+		const SkcCensus::CarryScope skc_carry(destination, source);
+		if (source.IsGpuModified()) {
+			destination.MarkGpuModified();
+		}
 	}
 	destination.ClearBufferModified();
 }
@@ -875,6 +879,8 @@ void TextureCache::CopyImageMip(ImageId destination_id, ImageId source_id, uint3
 		EXIT("TextureCache: invalid mip-copy ownership or sample count\n");
 	}
 	destination.CopyMip(source, mip, layer);
+	// Session 123, knob "skipceil" = 2 (census, [P3]): the destination takes the source's D / T label.
+	const SkcCensus::CarryScope skc_carry(destination, source);
 	if (source.IsGpuModified()) {
 		destination.MarkGpuModified();
 	}
@@ -972,6 +978,8 @@ ImageId TextureCache::ResolveDepthOverlap(const ImageInfo& requested, BindingTyp
 		}
 		PrepareImageCopy(replacement_id);
 		m_blit_helper.ReinterpretColorAsMsDepth(cached, replacement);
+		// Session 123, knob "skipceil" = 2 (census, [P3]): the replacement takes the D / T label of the cached image.
+		const SkcCensus::CarryScope skc_carry(replacement, cached);
 		CommitGpuWrite(replacement);
 	} else {
 		LOGF_COLOR(Log::Color::BrightYellow,
@@ -1353,6 +1361,10 @@ uint64_t TextureCache::UploadImage(Image& image, vk::Buffer source, uint64_t sou
 	                                       Common::FrameStats::Counter::ImgUploads);
 	Common::DrawStat::Mark(Common::DrawStat::ImgUp);
 	Common::DrawStat::Cut(Common::DrawStat::EdgeUpload);
+	// Session 123, knob "skipceil" = 2 (census, [N5]): the image receives guest memory - its label follows that memory.
+	if (Common::SkipCeil::t_w3) [[unlikely]] {
+		SkcCensus::Upload(m_buffer_cache, image);
+	}
 	const auto& info    = image.info;
 	const auto  binding = UploadBinding(image);
 	const bool  partial = first_level != 0 || level_count < info.resources.levels;
@@ -2218,6 +2230,8 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 	}
 	if (desc.type == BindingType::Storage) {
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
+		// Session 123, knob "skipceil" = 2 (census, W3 (b)): the storage write is counted by W2, not stamped here.
+		const Common::SkipCeil::AcqGuard skc_acq;
 		image.MarkGpuModified();
 	}
 	auto view_info = desc.view_info;
@@ -2258,6 +2272,7 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 		case BindingType::Texture: break;
 		case BindingType::Storage:
 			if (!image.info.data.Empty()) {
+				const Common::SkipCeil::AcqGuard skc_acq; // Session 123 (census, W3 (b)): W2 counts this write
 				CommitGpuWrite(image);
 			}
 			TrackImageDownload(id, image);
@@ -2835,6 +2850,10 @@ bool TextureCache::DownloadImageMemory(ImageId id) {
 	if (!transfer.valid || !SafeToDownload(image)) {
 		return false;
 	}
+	// Session 123, knob "skipceil" = 2 (census, s.3.2): the content of a D / T image goes to guest memory.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::DownloadRead(image);
+	}
 	const auto range    = image.info.data;
 	auto&      download = m_buffer_cache.GetUtilityBuffer(MemoryUsage::Download);
 	auto [mapped, offset] =
@@ -3271,6 +3290,9 @@ void TextureCache::RunGarbageCollector() {
 	}();
 	const uint64_t audit_tick_before = gc_audit ? m_gc_tick : 0;
 	const bool floor_hold = BindFloorGcHold();
+	// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY, design123.md s.1.6): a skipped frame holds the GC the same way
+	// (the clock stops, the non-critical passes are suspended); at critical pressure both run as before.
+	const bool skc_hold   = Common::SkipCeil::GcHold();
 	// The current submission's counted sticky value is a valid independent SUBSET of hold.
 	// Unlike CurrentOp (stale outside operations), it expires with the submission. It does
 	// NOT independently prove the base/pending parts of BindFloorGcHold.
@@ -3289,7 +3311,7 @@ void TextureCache::RunGarbageCollector() {
 		Common::FrameStats::Add(Counter::BindFloorImgGcCritical,
 		                       audit_expected_hold && critical_override ? 1u : 0u);
 	};
-	uint64_t   tick       = floor_hold ? m_gc_tick : m_gc_tick++;
+	uint64_t   tick       = floor_hold || skc_hold ? m_gc_tick : m_gc_tick++;
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruTouches, m_lru_touch_calls);
 	Common::FrameStats::Add(Common::FrameStats::Counter::TexLruRepeats, m_lru_touch_repeats);
 	m_lru_touch_calls   = 0;
@@ -3340,6 +3362,10 @@ void TextureCache::RunGarbageCollector() {
 		audit_clock(false);
 		return;
 	}
+	// Session 123, S_live (any value of skipceil): the calls with the aggressive pass allowed.
+	if (m_total_used_memory >= m_critical_gc_memory) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcGcCrit, 1);
+	}
 	// Session 97, gate "bindfloor" (MEASUREMENT ONLY): the floor removes every texture
 	// resolve and with it every TouchImage, so the age pass below evicted ~1 050 LIVE textures
 	// per 30-flip floor block in bf96b, and the first base flip after the gate fell re-created
@@ -3348,9 +3374,12 @@ void TextureCache::RunGarbageCollector() {
 	// clock does not advance (above); at critical pressure the clock advances and both passes
 	// run exactly as before.  bf_gc_hold counts the suspended calls that would have collected
 	// (usage at or above the trigger) and is 0 whenever the floor is off.
-	if (floor_hold) {
+	if (floor_hold || skc_hold) {
 		if (m_total_used_memory < m_critical_gc_memory) {
-			Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorGcHold, 1);
+			// skc_gc_hold only when the hold came from skipceil alone (design123.md s.1.6).
+			Common::FrameStats::Add(floor_hold ? Common::FrameStats::Counter::BindFloorGcHold
+			                                   : Common::FrameStats::Counter::SkcGcHold,
+			                        1);
 			audit_clock(false);
 			return;
 		}
@@ -3461,6 +3490,446 @@ void TextureCache::ProcessDownloadImages() {
 		}
 	}
 	m_download_images.clear();
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 123, knob "skipceil" = 2: the correctness census (MEASUREMENT ONLY; docs/session-123/design123.md s.3 with
+// ROADMAP s122 items 28-33).  Everything below runs on the GuestGpu thread: the image labels and the buffer map have
+// no lock.  A label is "live" when its frame is not older than the census epoch.
+
+namespace {
+
+namespace Skc = Common::SkipCeil;
+
+struct SkcW2 {
+	bool     image = false;
+	ImageId  id {};
+	uint64_t vaddr = 0;
+	uint64_t size  = 0;
+};
+
+// The census operation running now (one at a time; OpScope does not nest).
+struct SkcOp {
+	uint32_t             serial   = 0;
+	uint64_t             ps_hash  = 0;
+	bool                 dispatch = false;
+	bool                 bound    = false; // a draw that reached its W2 point (bindings done): skc_x1_pass
+	bool                 x1       = false; // an skc_x1_rd read
+	bool                 x0_cs    = false;
+	bool                 x0_keep  = false;
+	bool                 ia_d     = false;
+	bool                 ia_t     = false;
+	std::vector<SkcW2>   w2;
+	std::vector<ImageId> d_stamped; // D stamps with a known image id (W1, W2): skc_wpass at the end of the operation
+};
+thread_local SkcOp    t_skc_op;
+thread_local uint32_t t_skc_serial  = 0;
+thread_local uint32_t t_skc_x1_pass = UINT32_MAX;
+thread_local uint32_t t_skc_frames  = 0;
+
+struct SkcReader {
+	uint32_t stage = 0;
+	uint64_t n     = 0;
+	bool     selfw = false;
+};
+thread_local std::unordered_map<uint64_t, SkcReader> t_skc_readers;
+
+bool SkcLive(const Image& image) noexcept {
+	return image.skc_wkind != 0 && image.skc_wframe >= Skc::t_epoch;
+}
+
+bool SkcLiveDT(const Image& image) noexcept {
+	return SkcLive(image) && (image.skc_wkind == Skc::KindD || image.skc_wkind == Skc::KindT);
+}
+
+// Executed operations (s.3.3): a dispatch of any frame (CS, T), a draw of a translated frame (R), an operation K.
+bool SkcExecuted(uint8_t kind) noexcept {
+	return kind == Skc::KindR || kind == Skc::KindK || kind == Skc::KindCS || kind == Skc::KindT;
+}
+
+// The kinds a stamp keeps (s.3.1): the writes of undone work.  Any other kind is an executed write and replaces the
+// label (W1 / W3); W2 of such an operation leaves a D / T label in place (skc_w_maybe).
+bool SkcKeeps(uint8_t kind) noexcept {
+	return kind == Skc::KindD || kind == Skc::KindT || kind == Skc::KindK;
+}
+
+void SkcClearWriters(Image& image) noexcept {
+	image.skc_wdraws  = 0;
+	image.skc_wpass   = 0;
+	image.skc_wpassid = UINT32_MAX;
+	image.skc_wop     = 0;
+	image.skc_whash   = 0;
+}
+
+// A stamp of this frame.  D keeps the writer statistics of the frame's D draws (each draw once); every other kind
+// replaces the label.  Kind 0 (a write outside every census operation) erases it.
+void SkcStampImage(Image& image, uint8_t kind, const ImageId* id) {
+	const uint32_t now = Skc::t_gframe;
+	if (kind == Skc::KindD) {
+		if (image.skc_wkind != Skc::KindD || image.skc_wframe != now) {
+			SkcClearWriters(image);
+		}
+		if (image.skc_wop != t_skc_op.serial) {
+			image.skc_wop = t_skc_op.serial;
+			if (image.skc_wdraws != UINT16_MAX) {
+				image.skc_wdraws++;
+			}
+		}
+		image.skc_whash = t_skc_op.ps_hash;
+		if (id != nullptr) {
+			t_skc_op.d_stamped.push_back(*id);
+		}
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcWDi, 1);
+	} else {
+		SkcClearWriters(image);
+		if (kind == Skc::KindT) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcWT, 1);
+		} else if (kind == Skc::KindK) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcWK, 1);
+		}
+	}
+	image.skc_wkind  = kind;
+	image.skc_wframe = now;
+}
+
+// k = 1: a read of an executed operation of frame N + 1 of an image written by D in frame N.
+void SkcX1Image(Image& image) {
+	Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Rd, 1);
+	t_skc_op.x1 = true;
+	if (image.skc_seen != Skc::t_gframe) {
+		image.skc_seen = Skc::t_gframe;
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Img, 1);
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wd, image.skc_wdraws);
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Wp, image.skc_wpass);
+	}
+}
+
+} // namespace
+
+void SkcStampW3(Image& image) noexcept {
+	SkcCensus::StampW3(image);
+}
+
+void SkcCensus::StampW3(Image& image) noexcept {
+	if (!Skc::t_gpu) {
+		Skc::NoteOffThreadStamp();
+		return;
+	}
+	if (Skc::t_mode != 2 || Skc::t_acq || Skc::t_carry) {
+		return;
+	}
+	SkcStampImage(image, Skc::t_kind, nullptr);
+}
+
+bool SkcCensus::OpBegin(uint8_t kind, bool draw) noexcept {
+	if (Skc::t_kind != 0) {
+		return false;
+	}
+	Skc::t_kind = kind;
+	auto& op    = t_skc_op;
+	op.serial   = ++t_skc_serial;
+	if (op.serial == 0) {
+		op.serial = ++t_skc_serial;
+	}
+	op.ps_hash  = 0;
+	op.dispatch = !draw;
+	op.bound    = false;
+	op.x1       = false;
+	op.x0_cs    = false;
+	op.x0_keep  = false;
+	op.ia_d     = false;
+	op.ia_t     = false;
+	op.w2.clear();
+	op.d_stamped.clear();
+	return true;
+}
+
+void SkcCensus::OpEnd(TextureCache& cache, bool draw) noexcept {
+	auto& op = t_skc_op;
+	if (op.x1) {
+		if (draw) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Draw, 1);
+			if (op.bound && Skc::t_pass != t_skc_x1_pass) {
+				t_skc_x1_pass = Skc::t_pass;
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Pass, 1);
+			}
+		} else {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Cs, 1);
+		}
+	}
+	// skc_wpass: the host pass of this D draw, once per image and pass (the pass begins after the W1 / W2 stamps).
+	for (const auto& id: op.d_stamped) {
+		auto* image = cache.m_slot_images.try_get(id);
+		if (image == nullptr || image->skc_wkind != Skc::KindD || image->skc_wframe != Skc::t_gframe ||
+		    image->skc_wop != op.serial || image->skc_wpassid == Skc::t_pass) {
+			continue;
+		}
+		image->skc_wpassid = Skc::t_pass;
+		if (image->skc_wpass != UINT16_MAX) {
+			image->skc_wpass++;
+		}
+	}
+	op.w2.clear();
+	op.d_stamped.clear();
+	op.serial  = 0;
+	Skc::t_kind = 0;
+}
+
+bool SkcCensus::Carry(Image& destination, const Image& source) noexcept {
+	if (!Skc::t_gpu) {
+		Skc::NoteOffThreadStamp();
+		return false;
+	}
+	if (Skc::t_mode != 2 || !SkcLiveDT(source)) {
+		return false;
+	}
+	SkcClearWriters(destination);
+	destination.skc_wkind  = source.skc_wkind;
+	destination.skc_wframe = source.skc_wframe;
+	if (Skc::t_carry) {
+		return false;
+	}
+	Skc::t_carry = true;
+	return true;
+}
+
+void SkcCensus::SkipSiteD() noexcept {
+	if (Skc::t_kind == Skc::KindK) {
+		Skc::t_kind = Skc::KindD;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SkcCDd, 1);
+}
+
+void SkcCensus::SetDrawPs(uint64_t ps_hash) noexcept {
+	t_skc_op.ps_hash = ps_hash;
+}
+
+void SkcCensus::ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_t shader_hash, uint32_t stage) {
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr) {
+		return;
+	}
+	if (storage) {
+		t_skc_op.w2.push_back({true, id, 0, 0});
+	}
+	if (!SkcLiveDT(*image)) {
+		return;
+	}
+	const uint8_t  op   = Skc::t_kind;
+	const bool     exec = SkcExecuted(op);
+	const uint32_t k    = Skc::t_gframe - image->skc_wframe;
+	if (t_skc_op.dispatch) {
+		Skc::t_kind = Skc::KindT; // a dispatch that read D or T writes T (s.3.3)
+	}
+	if (image->skc_wkind == Skc::KindD) {
+		if (t_skc_op.dispatch && k == 0 && Skc::t_skip && !t_skc_op.x0_cs) {
+			t_skc_op.x0_cs = true;
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX0Cs, 1);
+		}
+		if (exec && k == 1) {
+			SkcX1Image(*image);
+			auto& reader = t_skc_readers[shader_hash];
+			reader.stage = stage;
+			reader.n++;
+			reader.selfw = reader.selfw || (shader_hash != 0 && shader_hash == image->skc_whash);
+		} else if (exec && k >= 2) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX2Rd, 1);
+		}
+	} else if (exec) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcXtRd, 1);
+	}
+}
+
+void SkcCensus::ReadDepthCopySource(TextureCache& cache, ImageId id) {
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr || !SkcLiveDT(*image)) {
+		return;
+	}
+	const uint8_t  op = Skc::t_kind;
+	const uint32_t k  = Skc::t_gframe - image->skc_wframe;
+	if (op == Skc::KindK) {
+		// The copy's output derives from undone draws: T, decided before the W3 stamp of the destination (item 29(c)).
+		Skc::t_kind = Skc::KindT;
+		if (k == 0 && !t_skc_op.x0_keep) {
+			t_skc_op.x0_keep = true;
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX0Keep, 1);
+		}
+	}
+	if (!SkcExecuted(op)) {
+		return;
+	}
+	if (image->skc_wkind == Skc::KindD) {
+		if (k == 1) {
+			SkcX1Image(*image);
+		} else if (k >= 2) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX2Rd, 1);
+		}
+	} else {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcXtRd, 1);
+	}
+}
+
+void SkcCensus::Attachment(TextureCache& cache, ImageId id, bool writes) {
+	auto* image = cache.m_slot_images.try_get(id);
+	if (image == nullptr) {
+		return;
+	}
+	const uint8_t kind = Skc::t_kind;
+	if (kind == Skc::KindR && SkcLive(*image) && image->skc_wkind == Skc::KindD &&
+	    Skc::t_gframe - image->skc_wframe == 1) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Att, 1);
+	}
+	if (writes && (kind == Skc::KindD || kind == Skc::KindR)) {
+		SkcStampImage(*image, kind, &id);
+	}
+}
+
+void SkcCensus::ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written) {
+	if (written) {
+		t_skc_op.w2.push_back({false, {}, vaddr, size});
+	}
+	const auto q = buffers.SkcQueryRange(vaddr, size);
+	if (!q.d && !q.t) {
+		return;
+	}
+	const bool exec = SkcExecuted(Skc::t_kind);
+	if (t_skc_op.dispatch) {
+		Skc::t_kind = Skc::KindT;
+	}
+	if (t_skc_op.dispatch && q.d_k0 && Skc::t_skip && !t_skc_op.x0_cs) {
+		t_skc_op.x0_cs = true;
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX0Cs, 1);
+	}
+	if (exec) {
+		if (q.d_k1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Buf, 1);
+		}
+		if (q.d_k2) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcX2Rd, 1);
+		}
+		if (q.t) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcXtRd, 1);
+		}
+	}
+}
+
+void SkcCensus::ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t size) {
+	if (!SkcExecuted(Skc::t_kind)) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SkcIa, 1);
+	const auto q = buffers.SkcQueryRange(vaddr, size);
+	if (q.d && !t_skc_op.ia_d) {
+		t_skc_op.ia_d = true;
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcIaD, 1);
+	}
+	if (q.t && !t_skc_op.ia_t) {
+		t_skc_op.ia_t = true;
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcIaT, 1);
+	}
+	if (t_skc_op.dispatch && (q.d || q.t)) {
+		Skc::t_kind = Skc::KindT;
+	}
+}
+
+void SkcCensus::NoteDma(BufferCache& buffers) {
+	if (!SkcExecuted(Skc::t_kind)) {
+		return;
+	}
+	Common::FrameStats::Add(Common::FrameStats::Counter::SkcDmaAll, 1);
+	if (buffers.SkcDLive(1)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX1Dma, 1);
+	}
+	if (t_skc_op.dispatch && Skc::t_skip && buffers.SkcDLive(0)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcX0Dma, 1);
+	}
+}
+
+void SkcCensus::ApplyW2(TextureCache& cache, BufferCache& buffers) {
+	auto&        op   = t_skc_op;
+	const uint8_t kind = Skc::t_kind;
+	const bool    keep = SkcKeeps(kind);
+	op.bound           = true;
+	for (const auto& entry: op.w2) {
+		if (entry.image) {
+			auto* image = cache.m_slot_images.try_get(entry.id);
+			if (image == nullptr) {
+				continue;
+			}
+			if (keep) {
+				SkcStampImage(*image, kind, &entry.id);
+			} else if (SkcLiveDT(*image)) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWMaybe, 1);
+			}
+			continue;
+		}
+		if (keep) {
+			buffers.SkcStampRange(entry.vaddr, entry.size, kind);
+			if (kind == Skc::KindD) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWDb, 1);
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWDbKb, (entry.size + 1023u) / 1024u);
+			} else if (kind == Skc::KindT) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWT, 1);
+			} else {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWK, 1);
+			}
+		} else {
+			const auto q = buffers.SkcQueryRange(entry.vaddr, entry.size);
+			if (q.d || q.t) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcWMaybe, 1);
+			}
+		}
+	}
+	op.w2.clear();
+}
+
+void SkcCensus::Upload(BufferCache& buffers, Image& image) {
+	if (!Skc::t_gpu) {
+		Skc::NoteOffThreadStamp();
+		return;
+	}
+	if (Skc::t_mode != 2) {
+		return;
+	}
+	// [N5]: the content comes from guest memory.  From a range the map holds as D / T it carries the latest such
+	// segment's kind and frame (a carry, not a stamp); otherwise the label is erased.
+	const auto range = image.SourceRange();
+	SkcClearWriters(image);
+	image.skc_wkind = 0;
+	if (range.size == 0) {
+		return;
+	}
+	const auto q = buffers.SkcQueryRange(range.address, range.size);
+	if (q.last_kind != 0) {
+		image.skc_wkind  = q.last_kind;
+		image.skc_wframe = q.last_frame;
+	}
+}
+
+void SkcCensus::DownloadRead(const Image& image) {
+	if (!SkcLiveDT(image)) {
+		return;
+	}
+	Common::FrameStats::Add(image.skc_wkind == Skc::KindD ? Common::FrameStats::Counter::SkcRID
+	                                                       : Common::FrameStats::Counter::SkcRIT,
+	                        1);
+}
+
+void SkcCensus::FrameDump(BufferCache& buffers) {
+	if (++t_skc_frames < 600) {
+		return;
+	}
+	t_skc_frames = 0;
+	std::vector<std::pair<uint64_t, SkcReader>> rows(t_skc_readers.begin(), t_skc_readers.end());
+	std::sort(rows.begin(), rows.end(), [](const auto& a, const auto& b) { return a.second.n > b.second.n; });
+	static constexpr const char* stages[] = {"vs", "ps", "cs"};
+	for (size_t i = 0; i < rows.size() && i < 20; i++) {
+		const auto& [hash, row] = rows[i];
+		LOGF("SkcX1Reader: stage=%s hash=0x%016" PRIx64 " n=%" PRIu64 " selfw=%u\n", stages[row.stage < 3 ? row.stage : 0],
+		     hash, row.n, row.selfw ? 1u : 0u);
+	}
+	t_skc_readers.clear();
+	buffers.SkcDump();
 }
 
 } // namespace Libs::Graphics

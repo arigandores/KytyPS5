@@ -527,6 +527,7 @@ void CommandProcessor::WaitRegMem(uint32_t func, const T* addr, T ref, T mask, u
 	// KYTY_WAIT_TRACE=1: log WAIT_REG_MEM stall/pass transitions of the compute queues
 	// (address, values, queue) and EOP writes into the same region.
 	static const bool trace = Common::EnvFlagOn("KYTY_WAIT_TRACE");
+	SkcCpRead(0, reinterpret_cast<uint64_t>(addr), sizeof(T)); // Session 123, knob "skipceil" = 2 (census)
 	const bool        pass  = TestWaitRegMemValue(*addr, ref, mask, func);
 	if (trace && IsAsyncComputeQueue()) {
 		static std::array<const void*, 256> stalled_addrs {};
@@ -686,6 +687,9 @@ void GuestGpu::ThreadRun(void* data) {
 	Common::InstallThreadTerminateReport();
 	g_gpu_thread = true;
 	g_gpu_state  = gpu;
+	// Session 123, knob "skipceil": this is the thread that latches and tests it (the m4baton relay is not).
+	Common::SkipCeil::t_gpu = true;
+	Common::SkipCeil::t_w3  = false;
 
 	for (;;) {
 		Submission                   submission;
@@ -2967,6 +2971,7 @@ void CommandProcessor::SetPredication(uint32_t condition, uint32_t op, uint32_t 
 		case 0x03: {
 			EXIT_NOT_IMPLEMENTED(address == nullptr);
 
+			SkcCpRead(2, reinterpret_cast<uint64_t>(address), sizeof(uint64_t)); // Session 123 (census): predication
 			auto value = *reinterpret_cast<const volatile uint64_t*>(address);
 
 			switch (condition) {
@@ -3060,6 +3065,7 @@ void CommandProcessor::DrawIndirect(uint32_t data_offset, uint32_t draw_initiato
 
 	if (!indexed) {
 		DrawIndirectArgs args {};
+		SkcCpRead(4, reinterpret_cast<uint64_t>(args_addr), sizeof(args)); // Session 123 (census)
 		std::memcpy(&args, args_addr, sizeof(args));
 		if (args.instance_count != 1u || args.start_vertex_location != 0u ||
 		    args.start_instance_location != 0u) {
@@ -3082,6 +3088,7 @@ void CommandProcessor::DrawIndirect(uint32_t data_offset, uint32_t draw_initiato
 	}
 
 	DrawIndexedIndirectArgs args {};
+	SkcCpRead(4, reinterpret_cast<uint64_t>(args_addr), sizeof(args)); // Session 123 (census)
 	std::memcpy(&args, args_addr, sizeof(args));
 	if (args.base_vertex_location != 0u || args.start_instance_location != 0u) {
 		static std::atomic<uint32_t> log_count {0};
@@ -3135,6 +3142,7 @@ void CommandProcessor::DrawIndirectMulti(uint32_t data_offset, uint32_t max_coun
 
 	uint32_t draw_count = max_count_or_count;
 	if (count_addr != nullptr) {
+		SkcCpRead(3, reinterpret_cast<uint64_t>(count_addr), sizeof(uint32_t)); // Session 123 (census)
 		draw_count = *count_addr;
 		if (draw_count > max_count_or_count) {
 			draw_count = max_count_or_count;
@@ -3153,6 +3161,7 @@ void CommandProcessor::DrawIndirectMulti(uint32_t data_offset, uint32_t max_coun
 		                       static_cast<uint64_t>(i) * stride_in_bytes;
 
 		if (!indexed) {
+			SkcCpRead(4, args_addr, sizeof(DrawIndirectArgs)); // Session 123 (census)
 			auto* args = reinterpret_cast<const DrawIndirectArgs*>(args_addr);
 			if (args->instance_count != 1u || args->start_vertex_location != 0u ||
 			    args->start_instance_location != 0u) {
@@ -3174,6 +3183,7 @@ void CommandProcessor::DrawIndirectMulti(uint32_t data_offset, uint32_t max_coun
 			continue;
 		}
 
+		SkcCpRead(4, args_addr, sizeof(DrawIndexedIndirectArgs)); // Session 123 (census)
 		auto* args = reinterpret_cast<const DrawIndexedIndirectArgs*>(args_addr);
 		if (args->base_vertex_location != 0u || args->start_instance_location != 0u) {
 			static std::atomic<uint32_t> log_count {0};
@@ -3326,6 +3336,7 @@ void CommandProcessor::DispatchIndirect(uint32_t data_offset, uint32_t mode) {
 	constexpr uint32_t   DispatchInitiatorUseThreadDimensions = 1u << 5u;
 	DispatchIndirectArgs args {};
 	if ((mode & DispatchInitiatorUseThreadDimensions) != 0) {
+		SkcCpRead(5, args_addr, sizeof(args)); // Session 123 (census): the CPU path of DispatchIndirect
 		std::memcpy(&args, reinterpret_cast<const void*>(args_addr), sizeof(args));
 	}
 	DispatchDirect(args.thread_group_x, args.thread_group_y, args.thread_group_z, mode, args_addr);
@@ -3441,6 +3452,12 @@ void CommandProcessor::WriteAtEndOfPipe(uint32_t cache_policy, uint32_t event_wr
 			if constexpr (sizeof(T) == sizeof(uint32_t)) {
 				if (eop_event_type == 0x2f && cache_action == 0x00 && event_index == 0x06) {
 					auto* dst = static_cast<uint32_t*>(dst_gpu_addr);
+					// Session 123, knob "skipceil" (class K3): RELEASE_MEM from GDS in a skipped (1) / skippable (2) frame.
+					if (Common::SkipCeil::t_skip) [[unlikely]] {
+						Common::FrameStats::Add(Common::SkipCeil::t_mode == 1 ? Common::FrameStats::Counter::SkcGds
+						                                                       : Common::FrameStats::Counter::SkcRGds,
+						                        1);
+					}
 					SynchronizeGpu();
 					Sync::ReadGds(*m_renderer.GetBufferCache().GetGdsBuffer(), dst, value & 0xffffu,
 					              value >> 16u);
@@ -3795,6 +3812,66 @@ void CommandProcessor::MarkFlipIfIncomplete(CommandBuffer& command, uint64_t req
 	}
 }
 
+// Session 123, knob "skipceil" (MEASUREMENT ONLY, docs/session-123/design123.md s.1.3, ROADMAP s122 item 28(a)): the
+// boundary of the GuestGpu frame, on every flip entry right after MarkFlipIfIncomplete (a CPU flip: after PrepareFlip).
+// Marks the flip of a skipped frame, counts the frame and latches the knob for the NEXT frame - read exactly once,
+// the value Poll published.  Every second frame (odd t_gframe) is skipped (1) / marked skippable (2).
+void CommandProcessor::SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip) {
+	namespace SC = Common::SkipCeil;
+	namespace FS = Common::FrameStats;
+	if (SC::t_mode == 1 && SC::t_skip) {
+		const bool found = m_renderer.GetVideoOut().MarkFlipSkipCeil(request_id);
+		FS::Add(found ? FS::Counter::SkcMark : FS::Counter::SkcMarkMiss, 1);
+	}
+	SC::t_gframe++;
+	uint32_t mode = Common::Gates::Value(Common::Gates::Knob::SkipCeil);
+	if (mode != 0) {
+		// R9: never with the m4baton relay (draws off GuestGpu) or the burn (another measurement).
+		const auto baton = Common::Gates::Value(Common::Gates::Knob::M4Baton);
+		const auto burn  = Common::Gates::Value(Common::Gates::Knob::Burn);
+		if (baton != 0 || burn != 0) {
+			FS::Add(FS::Counter::SkcRefuse, 1);
+			static std::atomic<uint32_t> logged {0};
+			if (logged.fetch_add(1, std::memory_order_relaxed) < 8) {
+				LOGF("SkipCeil: refused value=%u m4baton=%u burn=%u gframe=%u\n", mode, baton, burn, SC::t_gframe);
+			}
+			mode = 0;
+		}
+		mode = std::min<uint32_t>(mode, 2);
+	}
+	if (mode != SC::t_mode) {
+		FS::Add(FS::Counter::SkcEdge, 1);
+		if (mode == 2) {
+			SC::t_epoch = SC::t_gframe; // a new census epoch: older labels read empty, the buffer map is cleared
+		}
+	}
+	SC::t_mode = mode;
+	SC::t_skip = mode != 0 && (SC::t_gframe & 1u) != 0;
+	SC::t_w3   = !SC::t_gpu || mode == 2;
+	SC::g_mode.store(mode, std::memory_order_relaxed);
+	FS::Add(FS::Counter::SkcGf, 1);
+	if (mode != 0) {
+		FS::Add(FS::Counter::SkcOn, 1);
+		if (cpu_flip) {
+			FS::Add(FS::Counter::SkcCpuFlip, 1);
+		}
+	}
+	if (mode == 1 && SC::t_skip) {
+		FS::Add(FS::Counter::SkcSkipF, 1);
+	}
+	if (mode == 2) {
+		FS::Add(FS::Counter::SkcCF, 1);
+		if (SC::t_skip) {
+			FS::Add(FS::Counter::SkcCDf, 1);
+		}
+		SkcCensus::FrameDump(m_renderer.GetBufferCache());
+	}
+}
+
+void CommandProcessor::SkcCpReadSlow(uint32_t site, uint64_t addr, uint64_t size) {
+	m_renderer.GetBufferCache().SkcCpRead(site, addr, size);
+}
+
 // Session 98 (patch_s98a, MEASUREMENT ONLY): the flip packet is the guest frame boundary on
 // GuestGpu.  Mode 1 needs the queue fronts and the completion ring (bf_xover, bf_defer), so it
 // takes m_queue_mutex here - never held by ThreadRun while Process runs.
@@ -3902,6 +3979,7 @@ void CommandProcessor::Flip() {
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
 	MarkFlipIfIncomplete(command, request);
+	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeOnlyFlip(m_submit_id, command, m_flip.handle, m_flip.index,
 	                               m_flip.flip_mode, m_flip.flip_arg, request);
 	Common::FrameStats::SiteScope site_scope("flip");
@@ -3926,6 +4004,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
 	MarkFlipIfIncomplete(command, request);
+	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeWithFlip32(m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr),
 	                                 value, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                 m_flip.flip_arg, request);
@@ -3957,6 +4036,7 @@ void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache
 	auto request = Sync::PrepareVideoOutFlip(command, m_flip.handle, m_flip.index, m_flip.flip_mode,
 	                                         m_flip.flip_arg);
 	MarkFlipIfIncomplete(command, request);
+	SkipCeilFlipBoundary(request, false); // Session 123, knob "skipceil"
 	Sync::WriteAtEndOfPipeWithInterruptWriteBackFlip32(
 	    m_submit_id, command, static_cast<uint32_t*>(dst_gpu_addr), value, m_flip.handle,
 	    m_flip.index, m_flip.flip_mode, m_flip.flip_arg, request, m_interrupt_event_id);
@@ -3978,6 +4058,7 @@ void CommandProcessor::PrepareCpuFlip(uint64_t request_id) {
 	ProcessorScope processor_scope(*this);
 
 	m_renderer.GetVideoOut().PrepareFlip(request_id, CurrentBuffer());
+	SkipCeilFlipBoundary(request_id, true); // Session 123, knob "skipceil": after PrepareFlip, before CompleteFlip
 	Common::FrameStats::SiteScope site_scope("cpu-flip");
 	GetScheduler().Flush();
 	m_renderer.GetVideoOut().CompleteFlip(request_id);

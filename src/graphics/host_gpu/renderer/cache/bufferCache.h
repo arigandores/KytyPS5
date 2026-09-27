@@ -19,6 +19,7 @@
 #include <mutex>
 #include <span>
 #include <thread>
+#include <tuple>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -178,8 +179,59 @@ public:
 		uint64_t                   seq         = 0;
 	};
 
+	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; design123.md s.3.1, ROADMAP s122 item 28(d)): ONE map
+	// of guest ranges -> {end, kind, frame} written by census operations of kind D, T or K; non-overlapping segments,
+	// cut on every write.  GuestGpu thread only (no lock); cleared when a new census epoch begins.
+	struct SkcQuery {
+		bool     d          = false; // a D segment intersects (any age)
+		bool     t          = false; // a T segment intersects
+		bool     d_k0       = false; // ... D written in this frame (k = 0)
+		bool     d_k1       = false; // ... D written in the previous frame (k = 1)
+		bool     d_k2       = false; // ... D written two or more frames ago (k >= 2)
+		uint64_t d_bytes    = 0;     // bytes of the window under D
+		uint8_t  last_kind  = 0;     // the latest intersecting D / T segment: kind and frame
+		uint32_t last_frame = 0;
+	};
+	[[nodiscard]] SkcQuery SkcQueryRange(uint64_t vaddr, uint64_t size);
+	// A D / T / K write of this frame (W2 of a D / T / K operation).
+	void SkcStampRange(uint64_t vaddr, uint64_t size, uint8_t kind);
+	// A certain write that is not undone work (M: DMA / FillBuffer / CopyBuffer destination), on GuestGpu.
+	void SkcEraseRange(uint64_t vaddr, uint64_t size);
+	// A CPU invalidation, any thread: erases the window by a command on GuestGpu ([RC16]: late by one operation).
+	void SkcEraseCpu(uint64_t vaddr, uint64_t size);
+	// A D segment written k frames ago is live ([N8]).
+	[[nodiscard]] bool SkcDLive(uint32_t k);
+	// Reads that need the undone work (s.3.2): 0 skc_r_c (a CP fault on GuestGpu), 1 skc_r_g (a guest read served),
+	// 2 skc_r_p (a prefetch window), 3 skc_r_m (a DMA source).
+	void SkcNoteRead(uint32_t cls, uint64_t vaddr, uint64_t size);
+	// A CP read (s.3.2 [RC4]): site 0 wrm, 1 cond, 2 pred, 3 icnt, 4 iarg, 5 dind.
+	void SkcCpRead(uint32_t site, uint64_t vaddr, uint64_t size);
+	// SkcCpuRead / SkcCpRead lines (at most 8 of each per process), from SkcCensus::FrameDump.
+	void SkcDump();
+
 private:
 	friend struct BufferCacheTestAccess;
+
+	// Session 123, knob "skipceil" = 2 (census): the map above.
+	struct SkcSegment {
+		uint64_t end   = 0;
+		uint32_t frame = 0;
+		uint8_t  kind  = 0;
+	};
+	struct SkcWindow {
+		uint64_t kb = 0;
+		uint64_t n  = 0;
+	};
+	void                                                          SkcSync();
+	void                                                          SkcCut(uint64_t begin, uint64_t end);
+	void                                                          SkcDLiveMove(uint32_t frame, bool add);
+	std::map<uint64_t, SkcSegment>                                m_skc_map;
+	std::unordered_map<uint32_t, uint32_t>                        m_skc_dlive; // frame -> live D segments
+	uint32_t                                                      m_skc_epoch = UINT32_MAX;
+	std::map<std::tuple<uint32_t, uint64_t, uint32_t>, SkcWindow> m_skc_cpu_reads; // (class, window, d0/t1)
+	std::map<std::tuple<uint32_t, uint64_t, uint32_t>, SkcWindow> m_skc_cp_reads;  // (site, address, d0/t1)
+	uint32_t                                                      m_skc_cpu_lines = 0;
+	uint32_t                                                      m_skc_cp_lines  = 0;
 
 	bool IsBufferInvalid(BufferId id) const {
 		const auto* buffer = m_slot_buffers.try_get(id);

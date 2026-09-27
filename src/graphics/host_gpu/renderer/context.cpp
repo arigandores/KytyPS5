@@ -332,6 +332,7 @@ void CommandBuffer::BeginRenderingImpl(const RenderState& state, bool packet) co
 	s_pass_begin_serial.fetch_add(1, std::memory_order_relaxed); // session 120, gate "spcen" (always, measurement only)
 	Common::FrameStats::Add(Common::FrameStats::Counter::RenderPassBegins, 1);
 	SliceCensus::PassBegin(); // gate "slicecen" (session 118): GuestGpu thread only, nothing when off
+	Common::SkipCeil::PassBegin(); // Session 123, knob "skipceil" = 2 (census): t_skc_pass, skc_c_dp
 	// Session 71, gate G-area: the census of this pass. Enabled(), NOT TimingsEnabled(): a
 	// measurement run is KYTY_FRAME_TRACE=lite, where g_timings is false and every counter is
 	// live. Placed after the early return at the top of the function, so it counts exactly the

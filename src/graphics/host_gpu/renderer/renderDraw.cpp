@@ -797,6 +797,8 @@ vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& imag
                                                 TargetViewFast& fast, bool depth_target,
                                                 uint32_t guest_clear_regs) {
 	namespace FS      = Common::FrameStats;
+	// Session 123, knob "skipceil" = 2 (census, W3 (a)): an acquisition is not a certain write - W1 stamps the attachment.
+	const Common::SkipCeil::AcqGuard skc_acq;
 	// The linear-readback configuration enrols the image under the lock on every acquisition.
 	const bool gate   = Common::Gates::Enabled(Common::Gates::Gate::RenderTargetFast) &&
 	                  !graphics_debug_dump_enabled() && !cache.m_readback_linear_images;
@@ -1509,6 +1511,20 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		if (depth.image_id) {
 			SliceCensus::Image(SliceCensus::ImageKey(depth.image_id.index, depth.image_id.generation),
 			                   static_cast<bool>(depth.AttachmentWriteAspects()));
+		}
+	}
+	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; s.3.1 W1, s.3.3): every attachment is read first
+	// (skc_x1_att), then stamped when the draw writes it - colour by the effective write mask of the pipeline
+	// (ApplyMask, = colorWriteMask), depth / stencil by AttachmentWriteAspects (the convention of session 118).
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		const auto rt_mask = buffer.GetRegisters().GetRenderTargetMask();
+		for (uint32_t i = 0; i < color_count; i++) {
+			SkcCensus::Attachment(
+			    cache, colors[i].image_id,
+			    colors[i].export_mapping.ApplyMask(render_target_mask_slot(rt_mask, colors[i].target_slot)) != 0);
+		}
+		if (depth.image_id) {
+			SkcCensus::Attachment(cache, depth.image_id, static_cast<bool>(depth.AttachmentWriteAspects()));
 		}
 	}
 	return state;
@@ -2866,6 +2882,11 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		auto [args_buffer, args_offset] = m_context.GetBufferCache().ObtainBuffer(
 		    emit_info.indirect_args_addr, uint64_t {dwords} * sizeof(uint32_t), false);
 		EXIT_IF(args_buffer == nullptr);
+		// Session 123, knob "skipceil" = 2 (census, [N2]): the arguments are a read of this draw.
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcCensus::ReadIndirectArgs(m_context.GetBufferCache(), emit_info.indirect_args_addr,
+			                            uint64_t {dwords} * sizeof(uint32_t));
+		}
 		if (m_indirect_sanitizer == nullptr) {
 			m_indirect_sanitizer = std::make_unique<IndirectArgsSanitizer>(
 			    m_context.GetGraphics(), buffer.Scheduler());
@@ -2909,6 +2930,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		static std::atomic<uint32_t> skipped {0};
 		const auto                   n = skipped.fetch_add(1, std::memory_order_relaxed);
 		m_skipped_draws.fetch_add(1, std::memory_order_relaxed);
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcApSkip, 1); // Session 123, S_live ([RC15/M2])
 		if (n < 200000u) {
 			const auto& vs = state.vertex_info[0].stage;
 			const auto& ps = state.ps_input_info.stage;
@@ -3387,10 +3409,22 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRecNs);
 }
 
+// Session 123, knob "skipceil" (MEASUREMENT ONLY): a draw reached the skip site off the GuestGpu thread while the
+// knob is on (skc_xthr, must read 0; the only known path, the m4baton relay, is refused at the latch).
+static void SkipCeilOffThreadDraw() {
+	if (Common::Gates::Value(Common::Gates::Knob::SkipCeil) != 0) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcXthr, 1);
+	}
+}
+
 void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
                                const DrawIndexArgs& args) {
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
+	if (Common::SkipCeil::t_skip) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
+	}
 
 	EXIT_IF(buffer.IsInvalid());
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
@@ -3421,6 +3455,10 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	// Session 105, knob "ctxtick" >= 2: check the buffer and mark the thread as inside a draw.
 	const CtxTick::OpScope ctx_op(m_context, buffer, "draw-index");
+	// Session 123, knob "skipceil" = 2 (census, s.3.1): the draw is one census operation - K up to the skip site of a
+	// skippable frame (D from there on), R in a translated frame.
+	const SkcCensus::OpScope skc_op(m_context.GetTextureCache(),
+	                                Common::SkipCeil::t_skip ? Common::SkipCeil::KindK : Common::SkipCeil::KindR, true);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed
@@ -3434,17 +3472,41 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	                           : 0;
 	DrawStatBegin();
 	if (args.index_count == 0 || args.instance_count == 0) {
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcZeroD, 1); // Session 123
+		}
 		return;
 	}
 
+	// Session 123, knob "skipceil": the guest's metadata operation and depth copy in the draw wrapper execute in every
+	// frame (operations K, class K14; skc_keepd).
 	if (ConsumeMetadataColorOperation(buffer)) {
 		MaterializeBoundTargetDccClears(buffer);
 		ResetBindings();
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcKeepD, 1);
+		}
 		return;
 	}
 	if (DepthStencilCopy(buffer)) {
 		ResetBindings();
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcKeepD, 1);
+		}
 		return;
+	}
+
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): the skip site - below it everything is the
+	// host translation of the draw.  Mode 1 returns here (no binding exists yet, nothing to reset; m_skipped_draws is not
+	// touched); mode 2 translates it as a D operation of the census.
+	if (Common::SkipCeil::t_skip) [[unlikely]] {
+		if (Common::SkipCeil::t_mode == 1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcSkipD, 1);
+			return;
+		}
+		SkcCensus::SkipSiteD();
+	} else if (!Common::SkipCeil::t_gpu) [[unlikely]] {
+		SkipCeilOffThreadDraw();
 	}
 
 	if (!DrawHasValidVertexShader(sh_ctx)) {
@@ -3566,6 +3628,10 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const DrawAutoArgs& args) {
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
+	if (Common::SkipCeil::t_skip) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
+	}
 
 	EXIT_IF(buffer.IsInvalid());
 	EXIT_IF(args.offset_source == DrawOffsetSource::DrawState && args.first_instance != 0);
@@ -3592,6 +3658,10 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldEntries);
 	// Session 105, knob "ctxtick" >= 2: see DrawIndex above.
 	const CtxTick::OpScope ctx_op(m_context, buffer, "draw-auto");
+	// Session 123, knob "skipceil" = 2 (census, s.3.1): the draw is one census operation - K up to the skip site of a
+	// skippable frame (D from there on), R in a translated frame.
+	const SkcCensus::OpScope skc_op(m_context.GetTextureCache(),
+	                                Common::SkipCeil::t_skip ? Common::SkipCeil::KindK : Common::SkipCeil::KindR, true);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole draw before
 	// RefreshShaders reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the draw's op-site latch; the two addresses are the GDS-trigger key, hashed
@@ -3605,17 +3675,41 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	                           : 0;
 	DrawStatBegin();
 	if (args.vertex_count == 0 || args.instance_count == 0) {
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcZeroD, 1); // Session 123
+		}
 		return;
 	}
 
+	// Session 123, knob "skipceil": the guest's metadata operation and depth copy in the draw wrapper execute in every
+	// frame (operations K, class K14; skc_keepd).
 	if (ConsumeMetadataColorOperation(buffer)) {
 		MaterializeBoundTargetDccClears(buffer);
 		ResetBindings();
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcKeepD, 1);
+		}
 		return;
 	}
 	if (DepthStencilCopy(buffer)) {
 		ResetBindings();
+		if (Common::SkipCeil::t_skip) [[unlikely]] {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcKeepD, 1);
+		}
 		return;
+	}
+
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): the skip site - below it everything is the
+	// host translation of the draw.  Mode 1 returns here (no binding exists yet, nothing to reset; m_skipped_draws is not
+	// touched); mode 2 translates it as a D operation of the census.
+	if (Common::SkipCeil::t_skip) [[unlikely]] {
+		if (Common::SkipCeil::t_mode == 1) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcSkipD, 1);
+			return;
+		}
+		SkcCensus::SkipSiteD();
+	} else if (!Common::SkipCeil::t_gpu) [[unlikely]] {
+		SkipCeilOffThreadDraw();
 	}
 
 	if (!DrawHasValidVertexShader(sh_ctx)) {

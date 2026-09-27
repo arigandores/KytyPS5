@@ -322,12 +322,93 @@ private:
 	friend struct TextureCacheTestAccess;
 	friend class BufferCache;
 	friend class RenderExecutor;
+	friend struct SkcCensus;
 };
 
 // Session 72, measurement only (KYTY_CLEAR_TRACE): the outcome the last ClearImageFromBuffer on
 // this thread took - "ok", "none", "ambig", "decode" or "invalid". Written at every exit of that
 // function, read only by the BufferFillTrace print. Never changes a decision.
 const char* TextureCacheLastClearOutcome();
+
+// Session 123, knob "skipceil" = 2: the correctness census (MEASUREMENT ONLY; docs/session-123/design123.md s.3 with
+// ROADMAP s122 items 28-33).  GuestGpu thread only (no lock).  Every entry point is called only while the census is
+// latched (Common::SkipCeil::t_mode == 2) - the call sites test that first - except the scopes, which test it inline.
+struct SkcCensus {
+	// One census operation (s.3.1): an R / K draw from the renderer entry (D from the skip site on), a CS dispatch.  Drops
+	// the W2 stamps it never applied and books skc_x1_draw / _cs / _pass and skc_wpass at the end.  Does not nest.
+	class OpScope {
+	public:
+		OpScope(TextureCache& cache, uint8_t kind, bool draw) noexcept {
+			if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+				m_armed = SkcCensus::OpBegin(kind, draw);
+				m_cache = &cache;
+				m_draw  = draw;
+			}
+		}
+		~OpScope() {
+			if (m_armed) [[unlikely]] {
+				SkcCensus::OpEnd(*m_cache, m_draw);
+			}
+		}
+		KYTY_CLASS_NO_COPY(OpScope);
+
+	private:
+		TextureCache* m_cache = nullptr;
+		bool          m_armed = false;
+		bool          m_draw  = false;
+	};
+	// [P3] An image-to-image copy whose source carries D / T hands its label to the destination (a carry, not a stamp:
+	// no stamp counter moves); the W3 stamp of the destination is suppressed while the scope lives.
+	class CarryScope {
+	public:
+		CarryScope(Image& destination, const Image& source) noexcept {
+			if (Common::SkipCeil::t_w3) [[unlikely]] {
+				m_armed = SkcCensus::Carry(destination, source);
+			}
+		}
+		~CarryScope() {
+			if (m_armed) [[unlikely]] {
+				Common::SkipCeil::t_carry = false;
+			}
+		}
+		KYTY_CLASS_NO_COPY(CarryScope);
+
+	private:
+		bool m_armed = false;
+	};
+
+	[[nodiscard]] static bool OpBegin(uint8_t kind, bool draw) noexcept;
+	static void                OpEnd(TextureCache& cache, bool draw) noexcept;
+	[[nodiscard]] static bool Carry(Image& destination, const Image& source) noexcept;
+	// The skip site of a draw of a skippable frame: K -> D, skc_c_dd.
+	static void SkipSiteD() noexcept;
+	// The PS of the running draw: skc_whash of its D stamps.
+	static void SetDrawPs(uint64_t ps_hash) noexcept;
+	// RebindImages: every non-null image binding is a read; a storage binding also queues a W2 stamp.  stage: 0 vs,
+	// 1 ps, 2 cs.
+	static void ReadImage(TextureCache& cache, ImageId id, bool storage, uint64_t shader_hash, uint32_t stage);
+	// DepthStencilCopy: the source read, before the W3 stamp of the destination ([N3]).
+	static void ReadDepthCopySource(TextureCache& cache, ImageId id);
+	// The tail of AcquireRenderTargets: the attachment read (skc_x1_att), then the W1 stamp when the draw writes it.
+	static void Attachment(TextureCache& cache, ImageId id, bool writes);
+	// NativeStorageBuffer after the null return (ROADMAP s122 item 33(a)): every slot is a read; a written slot also
+	// queues a W2 stamp.
+	static void ReadBuffer(BufferCache& buffers, uint64_t vaddr, uint64_t size, bool written);
+	// The indirect arguments an executed operation reads on the GPU path ([N2]).
+	static void ReadIndirectArgs(BufferCache& buffers, uint64_t vaddr, uint64_t size);
+	// An executed operation with uses_dma at the PrepareBda sites ([RC11], [N8]).
+	static void NoteDma(BufferCache& buffers);
+	// After the operation's last read ([N1]): the queued W2 stamps.
+	static void ApplyW2(TextureCache& cache, BufferCache& buffers);
+	// UploadImage: the label follows the guest memory the image receives ([N5]).  Any thread (skc_w_xthr off GuestGpu).
+	static void Upload(BufferCache& buffers, Image& image);
+	// DownloadImageMemory: an image with a D / T label goes to guest memory (skc_r_i_*).
+	static void DownloadRead(const Image& image);
+	// The flip boundary of a census frame: SkcX1Reader / SkcCpuRead / SkcCpRead lines every 600 census frames.
+	static void FrameDump(BufferCache& buffers);
+	// MarkGpuModified.
+	static void StampW3(Image& image) noexcept;
+};
 
 } // namespace Libs::Graphics
 

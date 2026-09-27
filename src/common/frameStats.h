@@ -2208,6 +2208,93 @@ enum class Counter : uint32_t {
 	BurnPSeen,               // burn_p_seen
 	BurnLate,                // burn_late
 	BurnCpuBad,              // burn_cpu_bad
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, docs/session-123/design123.md s.4): raw counts, _kb KiB, _ns ns.
+	// s.4.1 S_live - counted at any value of the knob, in both arms.
+	SkcGf,                   // skc_gf
+	SkcHeldInc,              // skc_held_inc
+	SkcApSkip,               // skc_ap_skip
+	SkcPresNs,               // skc_pres_ns
+	SkcPresN,                // skc_pres_n
+	SkcGcCrit,               // skc_gc_crit
+	SkcBgcCrit,              // skc_bgc_crit
+	// s.4.2 the ceiling (knob != 0).
+	SkcOn,                   // skc_on
+	SkcEdge,                 // skc_edge
+	SkcRefuse,               // skc_refuse
+	SkcSkipF,                // skc_skipf
+	SkcSd,                   // skc_sd
+	SkcSkipD,                // skc_skipd
+	SkcKeepD,                // skc_keepd
+	SkcZeroD,                // skc_zerod
+	SkcMark,                 // skc_mark
+	SkcMarkMiss,             // skc_mark_miss
+	SkcHeld,                 // skc_held
+	SkcBad,                  // skc_bad
+	SkcXthr,                 // skc_xthr
+	SkcCpuFlip,              // skc_cpuflip
+	SkcGds,                  // skc_gds
+	SkcGcHold,               // skc_gc_hold
+	SkcBgcHold,              // skc_bgc_hold
+	// s.4.3 the census (knob = 2).
+	SkcCF,                   // skc_c_f
+	SkcCDf,                  // skc_c_df
+	SkcCDd,                  // skc_c_dd
+	SkcCDp,                  // skc_c_dp
+	SkcWDb,                  // skc_w_db
+	SkcWDbKb,                // skc_w_db_kb
+	SkcWDi,                  // skc_w_di
+	SkcWT,                   // skc_w_t
+	SkcWK,                   // skc_w_k
+	SkcWMaybe,               // skc_w_maybe
+	SkcWXthr,                // skc_w_xthr
+	SkcRG,                   // skc_r_g
+	SkcRGD,                  // skc_r_g_d
+	SkcRGT,                  // skc_r_g_t
+	SkcRGDKb,                // skc_r_g_d_kb
+	SkcRC,                   // skc_r_c
+	SkcRCD,                  // skc_r_c_d
+	SkcRCT,                  // skc_r_c_t
+	SkcRcAll,                // skc_rc_all
+	SkcRcWrmD,               // skc_rc_wrm_d
+	SkcRcWrmT,               // skc_rc_wrm_t
+	SkcRcCondD,              // skc_rc_cond_d
+	SkcRcCondT,              // skc_rc_cond_t
+	SkcRcPredD,              // skc_rc_pred_d
+	SkcRcPredT,              // skc_rc_pred_t
+	SkcRcIcntD,              // skc_rc_icnt_d
+	SkcRcIcntT,              // skc_rc_icnt_t
+	SkcRcIargD,              // skc_rc_iarg_d
+	SkcRcIargT,              // skc_rc_iarg_t
+	SkcRcDindD,              // skc_rc_dind_d
+	SkcRcDindT,              // skc_rc_dind_t
+	SkcRP,                   // skc_r_p
+	SkcRPD,                  // skc_r_p_d
+	SkcRPT,                  // skc_r_p_t
+	SkcRMD,                  // skc_r_m_d
+	SkcRMT,                  // skc_r_m_t
+	SkcRID,                  // skc_r_i_d
+	SkcRIT,                  // skc_r_i_t
+	SkcCGdsd,                // skc_c_gdsd
+	SkcRGds,                 // skc_r_gds
+	SkcX0Cs,                 // skc_x0_cs
+	SkcX0Keep,               // skc_x0_keep
+	SkcX0Dma,                // skc_x0_dma
+	SkcX1Rd,                 // skc_x1_rd
+	SkcX1Draw,               // skc_x1_draw
+	SkcX1Cs,                 // skc_x1_cs
+	SkcX1Pass,               // skc_x1_pass
+	SkcX1Img,                // skc_x1_img
+	SkcX1Wd,                 // skc_x1_wd
+	SkcX1Wp,                 // skc_x1_wp
+	SkcX1Buf,                // skc_x1_buf
+	SkcX1Dma,                // skc_x1_dma
+	SkcX1Att,                // skc_x1_att
+	SkcX2Rd,                 // skc_x2_rd
+	SkcXtRd,                 // skc_xt_rd
+	SkcIa,                   // skc_ia
+	SkcIaD,                  // skc_ia_d
+	SkcIaT,                  // skc_ia_t
+	SkcDmaAll,               // skc_dma_all
 	Count
 };
 
@@ -2777,5 +2864,72 @@ inline void BurnSubmitHook() {
 }
 
 } // namespace Common::FrameStats
+
+// Session 123, knob "skipceil" (MEASUREMENT ONLY, docs/session-123/design123.md): the latch of the GuestGpu frame.
+// Written only by the GuestGpu thread at its flip packets (CommandProcessor::SkipCeilFlipBoundary); every site that
+// tests it runs on that thread, so there is no lock and no atomic.  At skipceil = 0 a site costs one thread-local test.
+namespace Common::SkipCeil {
+
+// Census operation kinds and image / range labels (s.3.1); 0 = no label, no census operation.
+enum Kind : uint8_t { KindNone = 0, KindD = 1, KindT = 2, KindK = 3, KindR = 4, KindCS = 5, KindM = 6 };
+
+inline constinit thread_local bool     t_gpu    = false; // the GuestGpu thread (GuestGpu::ThreadRun; not the m4baton relay)
+inline constinit thread_local uint32_t t_mode   = 0;     // the mode latched for this GuestGpu frame (0..2)
+inline constinit thread_local bool     t_skip   = false; // this frame skips (mode 1) / is marked skippable (mode 2)
+inline constinit thread_local uint32_t t_gframe = 0;     // GuestGpu frames (flip packets)
+inline constinit thread_local uint32_t t_epoch  = 0;     // t_gframe of the first frame of the current census epoch
+inline constinit thread_local uint8_t  t_kind   = 0;     // census: the kind of the operation running now
+inline constinit thread_local bool     t_acq    = false; // census: target-acquisition guard (W3 stamp suppressed)
+inline constinit thread_local bool     t_carry  = false; // census: an image-to-image copy carried its source label
+inline constinit thread_local uint32_t t_pass   = 0;     // census: host passes (BeginRenderingImpl)
+// A W3-class site has work to do: on GuestGpu the census is latched (mode 2); on any other thread always true, so the
+// out-of-line call can count skc_w_xthr (one test per MarkGpuModified at any value, s.9).
+inline constinit thread_local bool     t_w3     = true;
+// The latched mode as seen from the other threads (skc_w_xthr); the GuestGpu thread publishes it at the latch.
+inline constinit std::atomic<uint32_t> g_mode {0};
+
+// The GC hold of a skipped frame (mode 1, s.1.6).
+inline bool GcHold() noexcept {
+	return t_mode == 1 && t_skip;
+}
+
+// A census stamp off the GuestGpu thread while the census is latched: skc_w_xthr, must read 0.
+inline void NoteOffThreadStamp() noexcept {
+	if (!t_gpu && g_mode.load(std::memory_order_relaxed) == 2) {
+		FrameStats::Add(FrameStats::Counter::SkcWXthr, 1);
+	}
+}
+
+// A host pass began (BeginRenderingImpl, the pass of session 118): skc_c_dp when a D draw opened it.
+inline void PassBegin() noexcept {
+	if (t_mode == 2) [[unlikely]] {
+		t_pass++;
+		if (t_kind == KindD) {
+			FrameStats::Add(FrameStats::Counter::SkcCDp, 1);
+		}
+	}
+}
+
+// The target-acquisition guard of W3 (s.3.1): armed only while the census is latched.
+class AcqGuard {
+public:
+	AcqGuard() noexcept: m_armed(t_mode == 2 && !t_acq) {
+		if (m_armed) [[unlikely]] {
+			t_acq = true;
+		}
+	}
+	~AcqGuard() {
+		if (m_armed) [[unlikely]] {
+			t_acq = false;
+		}
+	}
+	AcqGuard(const AcqGuard&)            = delete;
+	AcqGuard& operator=(const AcqGuard&) = delete;
+
+private:
+	bool m_armed;
+};
+
+} // namespace Common::SkipCeil
 
 #endif // KYTY_COMMON_FRAMESTATS_H_

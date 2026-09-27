@@ -423,8 +423,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 122, MEASUREMENT ONLY: the per-thread calibrated CPU burn, code * 100 000 + dose_us (codes 1..8, dose
     // 1..20 000, else rejected). Read once per thread and site per flip, so it CAN be a schedule arm. A value above
     // the limit clamps to 899 999 (code 8, dose 99 999), which is rejected.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_BURN", "burn", 0, 899999},
+    // Session 123, MEASUREMENT ONLY: the frame-skip ceiling (1) and its correctness census (2). Latched once per GuestGpu
+    // frame at the flip packet, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_SKIP_CEILING", "skipceil", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

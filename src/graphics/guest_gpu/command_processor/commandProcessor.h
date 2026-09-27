@@ -2,6 +2,7 @@
 #define GRAPHICS_GUEST_GPU_COMMAND_PROCESSOR_COMMAND_PROCESSOR_H
 
 #include "common/assert.h"
+#include "common/frameStats.h"
 #include "graphics/guest_gpu/hardwareContext.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -115,6 +116,16 @@ public:
 	void FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action, void* dst_gpu_addr,
 	                       uint32_t value);
 	void PrepareCpuFlip(uint64_t request_id);
+	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.3): the GuestGpu frame boundary of every flip entry.
+	void SkipCeilFlipBoundary(uint64_t request_id, bool cpu_flip);
+	// Session 123, knob "skipceil" = 2 (census, s.3.2 [RC4]): a CP read of guest memory checked against the D / T map;
+	// site 0 wrm, 1 cond, 2 pred, 3 icnt, 4 iarg, 5 dind.  One thread-local test at any other value.
+	void SkcCpRead(uint32_t site, uint64_t addr, uint64_t size) {
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcCpReadSlow(site, addr, size);
+		}
+	}
+	void SkcCpReadSlow(uint32_t site, uint64_t addr, uint64_t size);
 	void SynchronizeGpu();
 	void EmitGlobalBarrier();
 	void TriggerEopEventAtEndOfPipe(uint32_t interrupt_context_id);

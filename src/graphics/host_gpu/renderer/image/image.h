@@ -23,6 +23,10 @@ namespace Libs::Graphics {
 class Buffer;
 class CommandScheduler;
 struct ImageTestAccess;
+class Image;
+
+// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY): the W3 stamp of MarkGpuModified (textureCache.cpp).
+void SkcStampW3(Image& image) noexcept;
 
 using ImageId = Common::SlotId;
 
@@ -147,6 +151,11 @@ public:
 	// monotonic GPU-dirty generation, and counting it here means no call site can be missed.
 	// The branch is predicted not-taken on a line the store already dirties.
 	void MarkGpuModified() noexcept {
+		// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; design123.md s.3.1 W3 [N6]): the stamp is the FIRST
+		// statement, before the transition test, so every write is stamped and not only the first.  One thread-local test.
+		if (Common::SkipCeil::t_w3) [[unlikely]] {
+			SkcStampW3(*this);
+		}
 		if (!m_gpu_modified) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenImage, 1);
 			m_gpu_modified = true;
@@ -223,6 +232,16 @@ public:
 	// Set by the texture cache when the image is destroyed only after the GPU finished with it:
 	// its Vulkan image may then be recycled (gate "imgrecycle").
 	bool             recycle_backing    = false;
+	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; design123.md s.3.1): the last writer of this image.
+	// GuestGpu thread only.  A label whose frame precedes the census epoch (Common::SkipCeil::t_epoch) is empty.
+	uint64_t         skc_whash          = 0;          // PS hash of the last D writer (SkcX1Reader selfw)
+	uint32_t         skc_wframe         = 0;          // GuestGpu frame of the label
+	uint32_t         skc_seen           = 0;          // frame of the last skc_x1_img count
+	uint32_t         skc_wop            = 0;          // census operation of the last D stamp (skc_wdraws counts a draw once)
+	uint32_t         skc_wpassid        = UINT32_MAX; // host pass of the last skc_wpass count
+	uint16_t         skc_wdraws         = 0;          // D draws that wrote the image in skc_wframe
+	uint16_t         skc_wpass          = 0;          // ... their host passes
+	uint8_t          skc_wkind          = 0;          // Common::SkipCeil::Kind
 
 private:
 	friend struct ImageTestAccess;

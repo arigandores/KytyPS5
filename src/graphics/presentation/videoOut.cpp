@@ -213,6 +213,7 @@ public:
 	void Complete(uint64_t request_id);
 	void WaitForSubmitSlot();
 	void MarkIncomplete(uint64_t request_id);
+	[[nodiscard]] bool MarkSkipCeil(uint64_t request_id);
 	bool Flip(uint32_t micros);
 	void GetFlipStatus(VideoOutConfig& cfg, VideoOutFlipStatus& out);
 	void Wait(VideoOutConfig& cfg, int index);
@@ -232,6 +233,7 @@ private:
 		RequestState                state;
 		Graphics::Presenter::Frame* frame;
 		bool                        incomplete = false;
+		bool                        skip_ceil  = false; // Session 123, knob "skipceil" = 1: held whatever KYTY_ASYNC_HOLD_FRAME
 	};
 
 	Graphics::Presenter& m_presenter;
@@ -1099,6 +1101,19 @@ void FlipQueue::MarkIncomplete(uint64_t request_id) {
 	}
 }
 
+// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY, design123.md s.1.5 [RC14/M1]): false when the request was not
+// found (already cancelled or gone) - skc_mark_miss.
+bool FlipQueue::MarkSkipCeil(uint64_t request_id) {
+	Common::LockGuard lock(m_mutex);
+	for (auto& request: m_requests) {
+		if (request.id == request_id) {
+			request.skip_ceil = true;
+			return true;
+		}
+	}
+	return false;
+}
+
 void FlipQueue::WaitForSubmitSlot() {
 	Common::LockGuard lock(m_mutex);
 	while (m_requests.size() + m_cpu_requests.size() >= VIDEO_OUT_FLIP_QUEUE_CAPACITY) {
@@ -1170,17 +1185,37 @@ bool FlipQueue::Flip(uint32_t micros) {
 		const char* value = std::getenv("KYTY_ASYNC_HOLD_FRAME");
 		return value == nullptr || value[0] != '0';
 	}();
-	if (r.incomplete && hold_incomplete) {
-		// Keep the previously presented image on screen instead of a frame with missing draws.
-		static std::atomic<uint32_t> held {0};
-		if (held.fetch_add(1, std::memory_order_relaxed) < 64) {
-			LOGF("AsyncPipelines: flip %" PRIu64 " held (incomplete frame)\n", r.id);
+	// Session 123, knob "skipceil" = 1 (MEASUREMENT ONLY, design123.md s.1.5): the flip of a skipped frame is held
+	// whatever KYTY_ASYNC_HOLD_FRAME says.  skc_held / skc_held_inc / skc_pres_* are added HERE, on the present thread,
+	// before the FrameTrace snapshot of this same Flip call (below), so they land on the line of this flip.
+	if ((r.incomplete && hold_incomplete) || r.skip_ceil) {
+		if (r.skip_ceil) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcHeld, 1);
+			static std::atomic<uint32_t> skc_logged {0};
+			if (skc_logged.fetch_add(1, std::memory_order_relaxed) < 8) {
+				LOGF("SkipCeil: flip %" PRIu64 " held\n", r.id);
+			}
+		} else {
+			// Keep the previously presented image on screen instead of a frame with missing draws.
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcHeldInc, 1);
+			static std::atomic<uint32_t> held {0};
+			if (held.fetch_add(1, std::memory_order_relaxed) < 64) {
+				LOGF("AsyncPipelines: flip %" PRIu64 " held (incomplete frame)\n", r.id);
+			}
+		}
+		if (!r.skip_ceil && !r.incomplete) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // held without a reason
 		}
 		m_presenter.Discard(*r.frame);
 	} else {
+		if (r.skip_ceil) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // a skipceil request presented
+		}
 		const uint64_t present_t0 = Common::FrameStats::NowNs();
 		m_presenter.Present(*r.frame);
 		present_ns = Common::FrameStats::NowNs() - present_t0;
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresNs, present_ns); // Session 123, S_live ([RC12/O12])
+		Common::FrameStats::Add(Common::FrameStats::Counter::SkcPresN, 1);
 	}
 	Graphics::RenderDocOnGuestFlip(m_presenter.Renderer());
 
@@ -2806,6 +2841,90 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"burn_p_seen", FS::Counter::BurnPSeen, false},
 				    {"burn_late", FS::Counter::BurnLate, false},
 				    {"burn_cpu_bad", FS::Counter::BurnCpuBad, false},
+				    // Session 123, knob "skipceil" (design123.md s.4): 7 S_live + 17 ceiling + 59 census, raw.
+				    {"skc_gf", FS::Counter::SkcGf, false},
+				    {"skc_held_inc", FS::Counter::SkcHeldInc, false},
+				    {"skc_ap_skip", FS::Counter::SkcApSkip, false},
+				    {"skc_pres_ns", FS::Counter::SkcPresNs, false},
+				    {"skc_pres_n", FS::Counter::SkcPresN, false},
+				    {"skc_gc_crit", FS::Counter::SkcGcCrit, false},
+				    {"skc_bgc_crit", FS::Counter::SkcBgcCrit, false},
+				    {"skc_on", FS::Counter::SkcOn, false},
+				    {"skc_edge", FS::Counter::SkcEdge, false},
+				    {"skc_refuse", FS::Counter::SkcRefuse, false},
+				    {"skc_skipf", FS::Counter::SkcSkipF, false},
+				    {"skc_sd", FS::Counter::SkcSd, false},
+				    {"skc_skipd", FS::Counter::SkcSkipD, false},
+				    {"skc_keepd", FS::Counter::SkcKeepD, false},
+				    {"skc_zerod", FS::Counter::SkcZeroD, false},
+				    {"skc_mark", FS::Counter::SkcMark, false},
+				    {"skc_mark_miss", FS::Counter::SkcMarkMiss, false},
+				    {"skc_held", FS::Counter::SkcHeld, false},
+				    {"skc_bad", FS::Counter::SkcBad, false},
+				    {"skc_xthr", FS::Counter::SkcXthr, false},
+				    {"skc_cpuflip", FS::Counter::SkcCpuFlip, false},
+				    {"skc_gds", FS::Counter::SkcGds, false},
+				    {"skc_gc_hold", FS::Counter::SkcGcHold, false},
+				    {"skc_bgc_hold", FS::Counter::SkcBgcHold, false},
+				    {"skc_c_f", FS::Counter::SkcCF, false},
+				    {"skc_c_df", FS::Counter::SkcCDf, false},
+				    {"skc_c_dd", FS::Counter::SkcCDd, false},
+				    {"skc_c_dp", FS::Counter::SkcCDp, false},
+				    {"skc_w_db", FS::Counter::SkcWDb, false},
+				    {"skc_w_db_kb", FS::Counter::SkcWDbKb, false},
+				    {"skc_w_di", FS::Counter::SkcWDi, false},
+				    {"skc_w_t", FS::Counter::SkcWT, false},
+				    {"skc_w_k", FS::Counter::SkcWK, false},
+				    {"skc_w_maybe", FS::Counter::SkcWMaybe, false},
+				    {"skc_w_xthr", FS::Counter::SkcWXthr, false},
+				    {"skc_r_g", FS::Counter::SkcRG, false},
+				    {"skc_r_g_d", FS::Counter::SkcRGD, false},
+				    {"skc_r_g_t", FS::Counter::SkcRGT, false},
+				    {"skc_r_g_d_kb", FS::Counter::SkcRGDKb, false},
+				    {"skc_r_c", FS::Counter::SkcRC, false},
+				    {"skc_r_c_d", FS::Counter::SkcRCD, false},
+				    {"skc_r_c_t", FS::Counter::SkcRCT, false},
+				    {"skc_rc_all", FS::Counter::SkcRcAll, false},
+				    {"skc_rc_wrm_d", FS::Counter::SkcRcWrmD, false},
+				    {"skc_rc_wrm_t", FS::Counter::SkcRcWrmT, false},
+				    {"skc_rc_cond_d", FS::Counter::SkcRcCondD, false},
+				    {"skc_rc_cond_t", FS::Counter::SkcRcCondT, false},
+				    {"skc_rc_pred_d", FS::Counter::SkcRcPredD, false},
+				    {"skc_rc_pred_t", FS::Counter::SkcRcPredT, false},
+				    {"skc_rc_icnt_d", FS::Counter::SkcRcIcntD, false},
+				    {"skc_rc_icnt_t", FS::Counter::SkcRcIcntT, false},
+				    {"skc_rc_iarg_d", FS::Counter::SkcRcIargD, false},
+				    {"skc_rc_iarg_t", FS::Counter::SkcRcIargT, false},
+				    {"skc_rc_dind_d", FS::Counter::SkcRcDindD, false},
+				    {"skc_rc_dind_t", FS::Counter::SkcRcDindT, false},
+				    {"skc_r_p", FS::Counter::SkcRP, false},
+				    {"skc_r_p_d", FS::Counter::SkcRPD, false},
+				    {"skc_r_p_t", FS::Counter::SkcRPT, false},
+				    {"skc_r_m_d", FS::Counter::SkcRMD, false},
+				    {"skc_r_m_t", FS::Counter::SkcRMT, false},
+				    {"skc_r_i_d", FS::Counter::SkcRID, false},
+				    {"skc_r_i_t", FS::Counter::SkcRIT, false},
+				    {"skc_c_gdsd", FS::Counter::SkcCGdsd, false},
+				    {"skc_r_gds", FS::Counter::SkcRGds, false},
+				    {"skc_x0_cs", FS::Counter::SkcX0Cs, false},
+				    {"skc_x0_keep", FS::Counter::SkcX0Keep, false},
+				    {"skc_x0_dma", FS::Counter::SkcX0Dma, false},
+				    {"skc_x1_rd", FS::Counter::SkcX1Rd, false},
+				    {"skc_x1_draw", FS::Counter::SkcX1Draw, false},
+				    {"skc_x1_cs", FS::Counter::SkcX1Cs, false},
+				    {"skc_x1_pass", FS::Counter::SkcX1Pass, false},
+				    {"skc_x1_img", FS::Counter::SkcX1Img, false},
+				    {"skc_x1_wd", FS::Counter::SkcX1Wd, false},
+				    {"skc_x1_wp", FS::Counter::SkcX1Wp, false},
+				    {"skc_x1_buf", FS::Counter::SkcX1Buf, false},
+				    {"skc_x1_dma", FS::Counter::SkcX1Dma, false},
+				    {"skc_x1_att", FS::Counter::SkcX1Att, false},
+				    {"skc_x2_rd", FS::Counter::SkcX2Rd, false},
+				    {"skc_xt_rd", FS::Counter::SkcXtRd, false},
+				    {"skc_ia", FS::Counter::SkcIa, false},
+				    {"skc_ia_d", FS::Counter::SkcIaD, false},
+				    {"skc_ia_t", FS::Counter::SkcIaT, false},
+				    {"skc_dma_all", FS::Counter::SkcDmaAll, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -2952,6 +3071,11 @@ KYTY_SYSV_ABI int VideoOutSetFlipRate(int handle, int rate) {
 
 	Common::LockGuard lock(ctx->mutex);
 	ctx->flip_rate = rate;
+	// Session 123 (ROADMAP s122 item 29(b)): the flip interval of the game, unconditionally, at most 16 lines.
+	static std::atomic<uint32_t> rate_logged {0};
+	if (rate_logged.fetch_add(1, std::memory_order_relaxed) < 16) {
+		LOGF("VideoOutFlipRate: rate=%d\n", rate);
+	}
 
 	return OK;
 }
@@ -3211,6 +3335,10 @@ void VideoOutDriver::WaitForSubmitSlot() {
 
 void VideoOutDriver::MarkFlipIncomplete(uint64_t request_id) {
 	m_impl->GetFlipQueue().MarkIncomplete(request_id);
+}
+
+bool VideoOutDriver::MarkFlipSkipCeil(uint64_t request_id) {
+	return m_impl->GetFlipQueue().MarkSkipCeil(request_id);
 }
 
 void VideoOutDriver::WaitFlipDone(int handle, int index) {

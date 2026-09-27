@@ -451,6 +451,11 @@ bool RenderExecutor::DepthStencilCopy(CommandBuffer& buffer) {
 	BindRenderTarget(write_id);
 	cache.UpdateImage(read_id);
 	cache.UpdateImage(write_id);
+	// Session 123, knob "skipceil" = 2 (census, [N3]): the source read, after UpdateImage(read_id) (which can replace its
+	// content from guest memory, [N5]) and before the W3 stamp of the destination, so an operation K turns T first.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::ReadDepthCopySource(cache, read_id);
+	}
 	cache.MarkGpuWritten(write_id);
 	auto& source      = cache.GetImage(read_id);
 	auto& destination = cache.GetImage(write_id);

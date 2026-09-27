@@ -212,6 +212,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		cap_note(BdaCapClass::Null, 0);
 		return {context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16};
 	}
+	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY): the buffer read site of EVERY slot, ahead of the
+	// direct-copy branch (ROADMAP s122 item 33(a)); a written slot is a read too ([P1]) and queues its W2 stamp.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::ReadBuffer(context.GetBufferCache(), address, size, resource.written);
+	}
 	const auto& graphics   = context.GetGraphics();
 	const bool  const_bank = ShaderRecompiler::IR::PackedStrideConstBank(resource.packed_stride);
 	// Session 93, gate "bdacap": the class of every return BELOW the null one.  First match
@@ -4086,6 +4091,20 @@ void RenderExecutor::RebindImages(PreparedBindings& prepared) {
 		image.usage.storage |= storage;
 		image.usage.texture |= !storage;
 	}
+	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY; design123.md s.3.3 [N1]): every image this stage binds
+	// is a read (a storage binding also a possible write, W2, queued until the operation's last read).  After the loop
+	// above, so a binding FindTexture just refreshed from guest memory reads the label UploadImage left ([N5]); a null
+	// descriptor binds the shared null image, which is no dependency (as in slicecen).
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		const uint32_t skc_stage = program.stage == ShaderType::Pixel ? 1u : program.stage == ShaderType::Compute ? 2u : 0u;
+		for (uint32_t i = 0; i < program.info.images.size(); i++) {
+			if (DecodeNativeDescriptor<ShaderTextureResource>(snapshot.images[i]).IsNull()) {
+				continue;
+			}
+			SkcCensus::ReadImage(texture_cache, images[i].image_id,
+			                     images[i].desc.type == TextureCache::BindingType::Storage, program.shader_hash, skc_stage);
+		}
+	}
 	if (fast && Common::FrameStats::Enabled()) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastOk, fast_ok);
 		Common::FrameStats::Add(Common::FrameStats::Counter::TexFastNo, fast_no);
@@ -4114,6 +4133,14 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		FindBuffers(*stage);
 		uses_dma |= stage->runtime->program->info.uses_dma;
 	}
+	// Session 123, knob "skipceil" = 2 (census): the draw's PS hash for skc_whash of its D stamps (SkcX1Reader selfw).
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		for (auto* stage: stages) {
+			if (stage->runtime->program->stage == ShaderType::Pixel) {
+				SkcCensus::SetDrawPs(stage->runtime->program->shader_hash);
+			}
+		}
+	}
 	// Session 93, gate "bdacap" (MEASUREMENT ONLY): draws where at least one stage already
 	// sets info.uses_dma, i.e. where PrepareBda runs anyway and a slot converted to a device
 	// address would cost no new binding.  Gate FIRST and read once per draw; at bdacap = 0
@@ -4136,6 +4163,9 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		Common::FrameStats::Add(bda_all ? Common::FrameStats::Counter::BdaAllCalls
 		                                : Common::FrameStats::Counter::BdaAllNoCandidate,
 		                        1);
+	}
+	if (uses_dma && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::NoteDma(m_context.GetBufferCache()); // Session 123 (census, [RC11] / [N8])
 	}
 	if (uses_dma || bda_all) {
 		m_context.PrepareBda();
@@ -4183,6 +4213,10 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 	// after image identities are final; attachment layout transitions follow buffer alias copies.
 	for (auto* stage: stages) {
 		RebindBuffers(*stage);
+	}
+	// Session 123, knob "skipceil" = 2 (census, [N1]): the draw's last binding read is done - its W2 stamps now.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
 	}
 }
 
@@ -5384,6 +5418,10 @@ void RenderExecutor::CommitBindings(CommandBuffer&                     buffer,
 			}
 			// This stage is itself a GDS producer for whoever comes next.
 			gds_cache.NoteGdsShaderAccess();
+			// Session 123, knob "skipceil" = 2 (census, class K3): a GDS access of a draw of a skippable frame.
+			if (Common::SkipCeil::t_mode == 2 && Common::SkipCeil::t_kind == Common::SkipCeil::KindD) [[unlikely]] {
+				Common::FrameStats::Add(Common::FrameStats::Counter::SkcCGdsd, 1);
+			}
 		}
 
 		// Session 96, gate "bindfloor": on the floor there is nothing here to transit -

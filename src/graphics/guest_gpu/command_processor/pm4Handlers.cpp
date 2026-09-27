@@ -1507,6 +1507,7 @@ KYTY_CP_OP_PARSER(CpOpCondExec) {
 	EXIT_NOT_IMPLEMENTED(addr == 0);
 	EXIT_NOT_IMPLEMENTED(payload_dw + exec_count >= dw);
 
+	cp.SkcCpRead(1, addr, sizeof(uint32_t)); // Session 123, knob "skipceil" = 2 (census): COND_EXEC
 	if (*reinterpret_cast<const volatile uint32_t*>(addr) == 0) {
 		return payload_dw + exec_count;
 	}
@@ -1541,6 +1542,7 @@ KYTY_CP_OP_PARSER(CpOpBranch) {
 	EXIT_NOT_IMPLEMENTED(function > 6);
 	EXIT_NOT_IMPLEMENTED(then_buffer == nullptr || then_num_dw == 0);
 
+	cp.SkcCpRead(1, reinterpret_cast<uint64_t>(compare_addr), sizeof(uint64_t)); // Session 123 (census): branch
 	const bool take_then = TestWaitRegMemValue(*compare_addr, reference, mask, function);
 	LOGF("\t branch: take=%u then=0x%016" PRIx64 "/%" PRIu32 " else=0x%016" PRIx64 "/%" PRIu32 "\n",
 	     take_then ? 1u : 0u, reinterpret_cast<uint64_t>(then_buffer), then_num_dw,

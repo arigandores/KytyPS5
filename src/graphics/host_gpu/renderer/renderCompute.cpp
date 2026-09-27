@@ -287,6 +287,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
 	// Session 105, knob "ctxtick" >= 2: check the buffer and mark the thread as inside a dispatch.
 	const CtxTick::OpScope ctx_op(m_context, buffer, "dispatch");
+	// Session 123, knob "skipceil" = 2 (census, s.3.1): the dispatch is one census operation, CS (T once it reads D / T).
+	const SkcCensus::OpScope skc_op(m_context.GetTextureCache(), Common::SkipCeil::KindCS, false);
 	// Session 97, gate "bindfloor": latch the floor decision for this whole dispatch before
 	// GetComputeProgram reaches ProgramCache::Get (descriptors.h, BindFloorLatchOp).
 	// Session 98: the dispatch's op-site latch; the CS address is the GDS-trigger key (mode 2).
@@ -875,6 +877,9 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	// Session 96, gate "bindfloor": PrepareBda is one of the three things the floor
 	// removes from a dispatch.
+	if (program.info.uses_dma && !bind_floor && Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::NoteDma(m_context.GetBufferCache()); // Session 123 (census, [RC11] / [N8])
+	}
 	if ((program.info.uses_dma || bda_all) && !bind_floor) {
 		m_context.PrepareBda();
 	}
@@ -915,6 +920,10 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		}
 		auto [args_buffer, args_offset] = cache.ObtainBuffer(indirect_args_addr, ArgsSize, false);
 		EXIT_IF(args_buffer == nullptr);
+		// Session 123, knob "skipceil" = 2 (census, [N2]): the arguments are this dispatch's last read.
+		if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+			SkcCensus::ReadIndirectArgs(cache, indirect_args_addr, ArgsSize);
+		}
 		static const bool sanitize = !Common::EnvFlagOn("KYTY_NO_INDIRECT_SANITIZE");
 		if (sanitize) {
 			if (m_indirect_sanitizer == nullptr) {
@@ -938,6 +947,11 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		}
 	}
 
+	// Session 123, knob "skipceil" = 2 (census, [N1], item 31(b)): after the last read (the indirect arguments), before
+	// CommitBindings - the dispatch's W2 stamps, its kind (CS / T) decided by all its reads.
+	if (Common::SkipCeil::t_mode == 2) [[unlikely]] {
+		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
+	}
 	PreparedBindings* descriptor_stage = &bindings;
 	// The sanitizer may have submitted the buffer and begun one without a record thread.
 	const bool packet_now = packet && buffer.Recorder() != nullptr;

@@ -648,8 +648,14 @@ enum class Knob : uint32_t {
 	// per frame (control), 7 the first graphics GuestGpu::Submit of the frame before m_submission_mutex (any thread),
 	// 8 a placebo thread.  Read once per thread and site per flip (the frame key is published after Poll), so it CAN
 	// be a schedule arm.  At 0 nothing spins, logs or starts a thread.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	Burn,             // KYTY_BURN,               file name "burn" (MEASUREMENT ONLY: code * 100000 + dose_us; 0 off)
+	// Session 123, MEASUREMENT ONLY (docs/session-123/design123.md revision 4, ROADMAP s122 items 28-33): the frame-skip
+	// ceiling.  Latched once per GuestGpu frame at the flip packet (the value Poll published), so it CAN be a schedule
+	// arm.  1 = on every second GuestGpu frame the host translation of draws is skipped (everything the guest can observe
+	// executes), the frame's flip is held and the non-critical GC passes are suspended; 2 = the correctness census, nothing
+	// skipped.  Refused (skc_refuse) while m4baton or burn is nonzero.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	SkipCeil,         // KYTY_SKIP_CEILING, file name "skipceil" (MEASUREMENT ONLY: 0 off, 1 skip draw translation every 2nd GuestGpu frame, 2 census)
 	Count,
 };
 

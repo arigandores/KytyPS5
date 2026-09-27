@@ -1,4 +1,4 @@
-# Сайты режимов 2′ и 3 ручки `skipceil` (проект `design124.md`, редакция 1)
+# Сайты режимов 2′ и 3 ручки `skipceil` (проект `design124.md`, редакции 1–2; §9 — rev 2)
 
 Автор — Probe Designer (`HPP-56`). Строки — на дереве `src` коммита `bb45007` (HEAD `61b35b6`), сверены чтением. Поток:
 G — GuestGpu (`SkipCeil::t_gpu`), H — поток гостя. «С. 123» — сайт уже существует (переписи с. 123), режим 3 его
@@ -85,3 +85,22 @@ G — GuestGpu (`SkipCeil::t_gpu`), H — поток гостя. «С. 123» —
 
 Хвост таблиц: `SkcLodNoanc` `common/frameStats.h:2308`; имя `skc_lod_noanc` `presentation/videoOut.cpp:2936`. Новые — после
 них, в порядке §8 проекта.
+
+## 9. Дополнения редакции 2 (`HPP-66`, решения лида п. 43; строки сверены чтением на `bb45007`)
+
+| RC | что | файл:строка | поток | режим 3 |
+|---|---|---|---|---|
+| RC5(2) | бит poll | `NoteLodTouch` `common/frameStats.h:2914-2921` → флаг `t_lod_ftouch`; копия в запись кадра — `SkipCeilFlipBoundary` `graphicsRun.cpp:3820-3903` до защёлки | G | §2.2, §3.8 |
+| RC1 | ленивая запись: загрузка образа | `SkcCensus::Upload` `textureCache.cpp:1367` (тело `:3912-3933`) | G | `Skc3LazyScope` → узел T |
+| RC1 | ленивая запись: копии П3 | `textureCache.cpp:863`, `:884`, `:983` (`CarryScope`, `t_carry` глушит W3 `:3636`) | G | то же |
+| RC1/RC2 | материализация отложенной очистки | `RenderExecutor::MaterializeDeferredDccClear` `descriptors.cpp:2779`/`:2783`; вызовы `:5466` (`CommitBindings`), `:2956` (`MaterializeBoundTargetDccClears`) | G | не событие записи (§3.3.2) |
+| RC1 | прочие W3 при разрешении привязки сэмплируемого образа | перечень исполнителя (шаг 3) | G | `Skc3LazyScope` |
+| RC2 | `ClearMeta` | `textureCache.cpp:3062-3075` (`clear_mask = UINT32_MAX` `:3072`); вызовы `bufferCache.cpp:1767` (`FillBuffer`), `renderCompute.cpp:98` (`TryConsumeComputeMetaClear` `:67-118`, вызов `:413`), `renderDraw.cpp:1376` (очистка HTILE глубины в `AcquireRenderTargets`) | G | событие логической очистки, кандидаты по адресу метаданных |
+| RC2 | `TrackDccFill` | `textureCache.cpp:3077-…` (`clear_mask` `:3103`); вызов `renderCompute.cpp:240` | G | событие при ненулевой маске; `PendingDcc` — отложено |
+| RC2 | усыновление `PendingDcc` | `AdoptPendingDccForTexture` `textureCache.cpp:3198`; вызовы `:3192`, `descriptors.cpp:2433`, `:2559` | G | применение отложенного закрытия |
+| RC2 | `TouchMeta` | `textureCache.cpp:3239` (вызовы только с `is_clear = false`: `descriptors.cpp:2903`, `renderDraw.cpp:1384`) | G | не событие |
+| RC3 | записи CP в память гостя — **стартовый перечень, неполный** | `graphicsRun.cpp:584` (`WriteData`), `:500` (выгрузка const RAM), `:588-598` (`WriteReferenceClock`), `:3429-3432` (`write32`), `:3462` (`Sync::ReadGds` → память), `:3486-3488` (`write64`), `:3578` (часы EOP), `:3780-3790` (дамп окклюзии), `:4036`, `:4068` (метки флипа); `command_processor/pm4Handlers.cpp:1411-1430` (отчёт LOD) | G | закрытие отрезка, `lclosed`; полный перечень — отчёт шага 3 |
+| RC4 | сдвиг эпохи `uses_dma` | `SkcCensus::OpEnd` `textureCache.cpp:3665` (после штампов W2 операции); поле `ShaderInfo::uses_dma` только читается | G | §3.3.3 |
+| RC11 | `CopyBuffer` с `src_gds` | `bufferCache.cpp:1780` (проверки `:1801-1810`, ветка GDS `:1840`); заливка GDS `m_gds_buffer.Fill` в `FillBuffer` (`:1738-1760`) | G | ребро узла M / посев next; dst GDS — запись M |
+| RC13 | пустые D | `renderDraw.cpp:3528-3530` (`DrawHasValidVertexShader`), `:3532-3534` (`ShouldSkipGeShader`); аналог в `DrawAuto` | G | флаг `empty` узла |
+| RC14 | окно отказа | `renderContext.cpp:139` (`fault_size = 1`) | G | Lw — страница 4 КиБ |

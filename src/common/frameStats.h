@@ -2473,6 +2473,41 @@ enum class Counter : uint32_t {
 	RtsWrObj,                // rts_wr_obj: values 2/3 - hook calls, whole-object writes
 	RtsLost,                 // rts_lost: values 2/3 - records taken at the latch and never given back
 	RtsEarly,                // rts_early: values 2/3 - draws that reached place A and not the post
+	// Session 128, knob "protceil" (docs/session-128/design128.md rev 1 s.7.1, ROADMAP s122 items 88, 89): raw ns /
+	// counts / pages. prot_gpu_* split prot_gpu / prot_gpu_us by mode at every value (T1, T2); pc_* see PageManager.
+	ProtGpuRoNs,             // prot_gpu_ro_ns: GuestGpu host protection changes to read-only (not the worker), ns
+	ProtGpuRoN,              // prot_gpu_ro_n: their number
+	ProtGpuRoPages,          // prot_gpu_ro_pages: their pages
+	ProtGpuNaNs,             // prot_gpu_na_ns: the same to no-access, ns
+	ProtGpuNaN,              // prot_gpu_na_n: their number
+	ProtGpuRwNs,             // prot_gpu_rw_ns: the same to read-write (every other mode), ns
+	ProtGpuRwN,              // prot_gpu_rw_n: their number
+	PcOp0,                   // pc_op0: synchronizations latched 0 (a refused latch of 1 included)
+	PcOp1,                   // pc_op1: synchronizations latched 1
+	PcRefuse,                // pc_refuse: latches of 1 refused (armdefer, protbatch2); must be 0
+	PcOffThr,                // pc_offthr: synchronizations off the GuestGpu thread with the knob at 1 (row)
+	PcEligNs,                // pc_elig_ns: armings made at a latch of 0 that a latch of 1 would skip, ns
+	PcEligN,                 // pc_elig_n: their number
+	PcEligPages,             // pc_elig_pages: their pages
+	PcEligScopeN,            // pc_elig_scope_n: of pc_elig_n, applied by the flush of the BatchScope
+	PcEligRngN,              // pc_elig_rng_n: of pc_elig_n, applied by a range flush (the rest: synchronous runs)
+	PcSkipN,                 // pc_skip_n: armings skipped at a latch of 1
+	PcSkipPages,             // pc_skip_pages: their pages
+	PcSkipScopeN,            // pc_skip_scope_n: of pc_skip_n, by the flush of the BatchScope
+	PcSkipRngN,              // pc_skip_rng_n: of pc_skip_n, by a range flush (the rest: synchronous runs)
+	PcUSet,                  // pc_u_set: U bits 0 -> 1
+	PcUClr,                  // pc_u_clr: U bits 1 -> 0 by an application outside the re-arm pass (any thread)
+	PcULive,                 // pc_u_live: live U bits (+set -clr -rearm); printed as the running total, not per frame
+	PcRearmN,                // pc_rearm_n: re-arm passes (item 89(v)(1))
+	PcRearmRuns,             // pc_rearm_runs: runs declared written plus runs protected by the fallback
+	PcRearmPages,            // pc_rearm_pages: every U bit the pass cleared (= decl + pend + odd)
+	PcRearmNs,               // pc_rearm_ns: wall of the passes, ns
+	PcRearmDecl,             // pc_rearm_decl: U bits cleared by the declaration or protected by the fallback
+	PcRearmPend,             // pc_rearm_pend: U bits of pending pages (their application writes Perms())
+	PcRearmOdd,              // pc_rearm_odd: U bits of pages not read-only on the tracker; must be 0 (P')
+	PcVfyU,                  // pc_vfy_u: pbcheck: a U page writable on the host
+	PcVfyUNa,                // pc_vfy_u_na: pbcheck: a U page not readable on the host; must be 0
+	PcVfyURo,                // pc_vfy_u_ro: pbcheck: a U page read-only on the host (row)
 	Count
 };
 

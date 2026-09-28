@@ -155,6 +155,34 @@ public:
 		inline static thread_local uint32_t t_depth = 0;
 	};
 
+	// Session 128, knob "protceil" (MEASUREMENT ONLY, never shipped; docs/session-128/design128.md rev 1 s.4-5 with
+	// ROADMAP s122 items 88, 89). The latch of one buffer synchronization: constructed around the whole ForEachUploadRange
+	// of BufferCache::SynchronizeBuffer, `engage` = on the GuestGpu thread. It reads the knob ONCE (a nested scope
+	// inherits the outer latch); at 1, unless refused (armdefer; protbatch2 with protbatch), no host protection change to
+	// read-only that arms a write watcher is made on this thread until it closes - the synchronous run of
+	// UpdateRegionWatchers and the runs its flushes apply - and their pages are marked unarmed (U, per region, under
+	// `apply`). The tracker changes exactly as at 0. Invariant (P'): the host is never stricter than the tracker and
+	// differs only by the write bit of a U page. Off the GuestGpu thread nothing is latched (pc_offthr at 1).
+	class CeilScope final {
+	public:
+		explicit CeilScope(bool engage) noexcept;
+		~CeilScope();
+		KYTY_CLASS_NO_COPY(CeilScope);
+
+	private:
+		bool    m_engaged  = false;
+		uint8_t m_previous = 0;
+	};
+	// Knob "protceil": some page is unarmed. GuestGpu thread only (only its latches of 1 mark pages).
+	[[nodiscard]] bool HasUnarmed() const noexcept;
+	// Knob "protceil" (item 89(v)(1)): the re-arm pass after the arm edge 1 -> 0, GuestGpu thread, no lock held. Each run
+	// of unarmed pages the tracker keeps read-only (U, not pending, Perms() == Read) is handed to `declare` - the
+	// guest-write declaration, which re-uploads and re-arms them the ordinary way; what it leaves read-only on the
+	// tracker is protected read-only here (the fallback). A pending U page loses the mark (its application writes
+	// Perms()); a U page not read-only on the tracker is pc_rearm_odd (impossible by P').
+	using DeclareFunc = void (*)(void* context, uint64_t vaddr, uint64_t size);
+	void CeilRearm(void* context, DeclareFunc declare);
+
 private:
 	std::unique_ptr<Impl> m_impl;
 };

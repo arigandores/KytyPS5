@@ -832,6 +832,10 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	if (!is_written && SyncFreeSkip(vaddr, size)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
 	} else {
+		// Session 128, knob "protceil" (MEASUREMENT ONLY; design128.md rev 1 s.4.1, ROADMAP s122 item 89(z)): the latch
+		// of this synchronization - the whole ForEachUploadRange, the copy and the written upload's GPU mark included (the
+		// pbcheck below makes no protection change). Only the GuestGpu thread latches; elsewhere the path of 0.
+		const PageManager::CeilScope prot_ceil(GuestGpu::IsGpuThread());
 		provisional = m_memory_tracker.ForEachUploadRange(
 			vaddr, size, is_written,
 			[&](uint64_t address, uint64_t bytes) noexcept {

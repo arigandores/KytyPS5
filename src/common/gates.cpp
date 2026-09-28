@@ -433,8 +433,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_RK3_CENSUS", "rk3cen", 0, 3},
     // Session 127, PROTOTYPE: the K3 skip (1), its self-check (2), the self-check with the register source ignored (3)
     // (docs/session-127/design127.md rev 2). Read once per draw at its entry and latched, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_RT_SKIP", "rtskip", 1, 3},
+    // Session 128, MEASUREMENT ONLY: skip the read-only arming of a buffer synchronization on GuestGpu (1)
+    // (docs/session-128/design128.md rev 1, ROADMAP s122 items 88, 89). Latched once per synchronization, so it CAN
+    // be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_PROT_CEILING", "protceil", 0, 1},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

@@ -799,6 +799,10 @@ void GuestGpu::ThreadRun(void* data) {
 		}
 
 		EXIT_IF(!has_submission);
+		// Session 128, knob "protceil" (ROADMAP s122 item 89(v)(1)): the re-arm pass after the arm edge 1 -> 0 runs here -
+		// on the GuestGpu thread before the submission, outside m_queue_mutex and the render mutex, outside any upload
+		// callback, with no region or cache lock held. One empty-list test while no page is unarmed (every run at 0).
+		gpu->m_renderer.ProtCeilRearm();
 		// Session 122, knob "burn" code 1: once per frame, before Process, outside m_queue_mutex and the render mutex;
 		// code 8 starts the placebo thread here, pinned like M1.
 		Common::FrameStats::BurnHook(Common::FrameStats::BurnSite::Gpu, &DrawAheadApplyPin);

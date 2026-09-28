@@ -5,6 +5,7 @@
 #include "common/envFlag.h"
 #include "common/frameStats.h"
 #include "common/gates.h"
+#include "common/logging/log.h"
 #include "common/virtualMemory.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 #include "kernel/memory.h"
@@ -154,6 +155,18 @@ void ValidateRange(uint64_t vaddr, uint64_t size) {
 } // namespace
 
 struct PageManager::Impl {
+	// Session 128, knob "protceil": whether a host protection change arms a write watcher, and from where - ONE predicate
+	// (ROADMAP s122 item 89(z)): the synchronous run of UpdateRegionWatchers<true, false> to read-only (Sync), or a run
+	// to read-only a flush applies (Scope - the flush of a BatchScope, Range - any other; a deferred read-only change is
+	// always a write-watcher edge: read-watcher changes never defer). It decides the skip at a latch of 1 and pc_elig_*
+	// at a latch of 0.
+	enum class Arm : uint8_t { No, Sync, Scope, Range };
+	// The latch of the thread's innermost CeilScope (t_ceil_state).
+	static constexpr uint8_t CeilOutside = 0; // no CeilScope open
+	static constexpr uint8_t CeilZero    = 1; // latched 0: the previous path, pc_elig_* counted
+	static constexpr uint8_t CeilSkip    = 2; // latched 1: armings skipped
+	static constexpr uint8_t CeilRefused = 3; // latched 1 and refused: the path of 0, nothing counted as eligible
+
 	struct PageState {
 		uint8_t write_watchers  : 7 = 0;
 		uint8_t access_watchers : 1 = 0;
@@ -242,7 +255,17 @@ struct PageManager::Impl {
 		// released (ApplyPending, FlushRegion). `apply` is exclusive, so this one run is every
 		// application in flight on the region. Read without any lock by FlushBlocker.
 		std::atomic<uint64_t>                   applying_run {0};
+		// Session 128, knob "protceil" (design128.md s.5.1; ROADMAP s122 item 89(k): after applying_run, at the end, so
+		// no field above moves). U: a page whose read-only arming was skipped - the host may still let the guest write
+		// it. Read and written only under `apply` (a skip, an application, the re-arm pass, Verify). `has_unarmed`: some
+		// bit was set since the last re-arm pass (it stays set while applications clear the bits); `unarmed_listed`: the
+		// region is in Impl::unarmed_regions.
+		std::array<uint64_t, REGION_PAGES / 64> unarmed {};
+		bool                                    has_unarmed    = false;
+		bool                                    unarmed_listed = false;
 	};
+	// Item 89(k): 1176 bytes before session 128 (applying_run ends at 1176), 1312 with the three fields above.
+	static_assert(sizeof(Region) == 1312);
 
 	Impl() {
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
@@ -299,7 +322,7 @@ struct PageManager::Impl {
 		return ptr;
 	}
 
-	void Protect(uint64_t vaddr, uint64_t size, Common::VirtualMemory::Mode mode) noexcept {
+	void Protect(uint64_t vaddr, uint64_t size, Common::VirtualMemory::Mode mode, Arm arm = Arm::No) noexcept {
 		static const bool trap = Common::EnvFlagOn("KYTY_STREAM_TRACE");
 		if (trap && mode != Common::VirtualMemory::Mode::ReadWrite &&
 		    Libs::LibKernel::Memory::OverlapsGuestStack(vaddr, size)) {
@@ -371,6 +394,33 @@ struct PageManager::Impl {
 					FS::Add(FS::Counter::ProtectGpuNs, ns);
 					FS::Add(FS::Counter::ProtectGpuCalls, 1);
 					FS::Add(FS::Counter::ProtectGpuPages, pages);
+					// Session 128, knob "protceil" (s.7.1): the same calls by mode (T1, T2), and the armings a latch of 1
+					// would have skipped (pc_elig_*, item 89(z): the predicate of the skip, passed down as `arm`).
+					switch (mode) {
+						case Common::VirtualMemory::Mode::Read:
+							FS::Add(FS::Counter::ProtGpuRoNs, ns);
+							FS::Add(FS::Counter::ProtGpuRoN, 1);
+							FS::Add(FS::Counter::ProtGpuRoPages, pages);
+							break;
+						case Common::VirtualMemory::Mode::NoAccess:
+							FS::Add(FS::Counter::ProtGpuNaNs, ns);
+							FS::Add(FS::Counter::ProtGpuNaN, 1);
+							break;
+						default:
+							FS::Add(FS::Counter::ProtGpuRwNs, ns);
+							FS::Add(FS::Counter::ProtGpuRwN, 1);
+							break;
+					}
+					if (arm != Arm::No && t_ceil_state == CeilZero) {
+						FS::Add(FS::Counter::PcEligNs, ns);
+						FS::Add(FS::Counter::PcEligN, 1);
+						FS::Add(FS::Counter::PcEligPages, pages);
+						if (arm == Arm::Scope) {
+							FS::Add(FS::Counter::PcEligScopeN, 1);
+						} else if (arm == Arm::Range) {
+							FS::Add(FS::Counter::PcEligRngN, 1);
+						}
+					}
 				}
 				if (t_protect_masked) {
 					FS::Add(FS::Counter::ProtectMaskedNs, ns);
@@ -396,9 +446,18 @@ struct PageManager::Impl {
 	}
 
 	// Protects a run of pages under the region lock and marks their host state as current.
+	// Session 128, knob "protceil": `arming` - the run arms a write watcher (Arm::Sync, item 89(z)); at a latch of 1 its
+	// host call is skipped and its pages are marked unarmed, everything else is done as at 0.
 	void ProtectRun(Region& region, uint64_t base_addr, size_t first, size_t count,
-	                Common::VirtualMemory::Mode perms) {
-		Protect(base_addr + first * PAGE_SIZE, count * PAGE_SIZE, perms);
+	                Common::VirtualMemory::Mode perms, bool arming) {
+		if (arming && t_ceil_state == CeilSkip) [[unlikely]] {
+			SkipRun(region, base_addr, first, count, Arm::Sync);
+		} else {
+			Protect(base_addr + first * PAGE_SIZE, count * PAGE_SIZE, perms, arming ? Arm::Sync : Arm::No);
+			if (region.has_unarmed) {
+				ClearUnarmed(region, first, count);
+			}
+		}
 		if (region.has_pending) {
 			SetPendingRange(region, first, count, false);
 		}
@@ -449,7 +508,8 @@ struct PageManager::Impl {
 				} else {
 					protected_any = true;
 					ProtectRun(region, base_addr, static_cast<size_t>(range_begin),
-					           static_cast<size_t>(range_bytes / PAGE_SIZE), perms);
+					           static_cast<size_t>(range_bytes / PAGE_SIZE), perms,
+					           track && !is_read && perms == Common::VirtualMemory::Mode::Read);
 				}
 				range_bytes           = 0;
 				potential_range_bytes = 0;
@@ -526,6 +586,164 @@ struct PageManager::Impl {
 			UpdateRegionWatchers<track, is_read, false>(*region, region_base, first, last, nullptr,
 			                                            defer);
 			chunk_begin = chunk_end;
+		}
+	}
+
+	// --- knob "protceil" (session 128) ------------------------------------------------------------
+
+	// The mask of `count` bits from bit `bit` of a word (count 1..64, bit + count <= 64).
+	static uint64_t BitRun(size_t bit, size_t count) noexcept {
+		return (count == 64 ? ~uint64_t {0} : (uint64_t {1} << count) - 1u) << bit;
+	}
+
+	// A skipped arming (latch 1, GuestGpu thread, `apply` held): U on the run, the region listed for the re-arm pass.
+	void SkipRun(Region& region, uint64_t base_addr, size_t first, size_t count, Arm arm) {
+		namespace FS = Common::FrameStats;
+		uint64_t set = 0;
+		for (size_t page = first; page < first + count;) {
+			const auto bit  = page % 64;
+			const auto n    = std::min<size_t>(64 - bit, first + count - page);
+			auto&      word = region.unarmed[page / 64];
+			const auto mask = BitRun(bit, n);
+			set += static_cast<uint64_t>(std::popcount(mask & ~word));
+			word |= mask;
+			page += n;
+		}
+		region.has_unarmed = true;
+		if (!region.unarmed_listed) {
+			region.unarmed_listed = true;
+			unarmed_regions.emplace_back(&region, base_addr);
+		}
+		FS::Add(FS::Counter::PcSkipN, 1);
+		FS::Add(FS::Counter::PcSkipPages, count);
+		if (arm == Arm::Scope) {
+			FS::Add(FS::Counter::PcSkipScopeN, 1);
+		} else if (arm == Arm::Range) {
+			FS::Add(FS::Counter::PcSkipRngN, 1);
+		}
+		FS::Add(FS::Counter::PcUSet, set);
+		FS::Add(FS::Counter::PcULive, set);
+	}
+
+	// An application of [first, first + count) completed (any thread, `apply` held): its pages carry Perms() on the host
+	// again, so their U bits go - pc_u_clr, or pc_rearm_pages and pc_rearm_decl inside the re-arm pass of this thread.
+	// Every U bit 1 -> 0 is counted exactly once (item 89(zh)).
+	static void ClearUnarmed(Region& region, size_t first, size_t count) {
+		namespace FS     = Common::FrameStats;
+		uint64_t cleared = 0;
+		for (size_t page = first; page < first + count;) {
+			const auto bit  = page % 64;
+			const auto n    = std::min<size_t>(64 - bit, first + count - page);
+			auto&      word = region.unarmed[page / 64];
+			const auto mask = BitRun(bit, n);
+			cleared += static_cast<uint64_t>(std::popcount(mask & word));
+			word &= ~mask;
+			page += n;
+		}
+		if (cleared == 0) {
+			return;
+		}
+		if (t_ceil_rearm) {
+			FS::Add(FS::Counter::PcRearmPages, cleared);
+			FS::Add(FS::Counter::PcRearmDecl, cleared);
+		} else {
+			FS::Add(FS::Counter::PcUClr, cleared);
+		}
+		FS::Add(FS::Counter::PcULive, uint64_t {0} - cleared);
+	}
+
+	// The re-arm pass (PageManager::CeilRearm), GuestGpu thread, no lock held on entry.
+	void CeilRearm(void* context, PageManager::DeclareFunc declare) {
+		if (unarmed_regions.empty()) {
+			return;
+		}
+		namespace FS  = Common::FrameStats;
+		const auto t0 = FS::Enabled() ? FS::NowNs() : 0;
+		struct Run {
+			uint64_t vaddr;
+			uint64_t size;
+		};
+		uint64_t pend      = 0;
+		uint64_t odd       = 0;
+		uint64_t decl      = 0;
+		uint64_t run_count = 0;
+		// Under `apply` and `lock` of one region: the U bit of a pending page goes (its application writes Perms()), the
+		// U bit of a page not read-only on the tracker goes as pc_rearm_odd; every other U page joins a run of `out`
+		// (runs never cross a region) and keeps its bit when `keep`.
+		const auto sweep = [&](Region& region, uint64_t base_addr, bool keep, std::vector<Run>& out) {
+			for (size_t word = 0; word < region.unarmed.size(); word++) {
+				auto bits = region.unarmed[word];
+				while (bits != 0) {
+					const auto bit  = static_cast<size_t>(std::countr_zero(bits));
+					const auto mask = uint64_t {1} << bit;
+					bits &= bits - 1u;
+					const auto page = word * 64 + bit;
+					if (region.has_pending && IsPending(region, page)) {
+						region.unarmed[word] &= ~mask;
+						pend++;
+						continue;
+					}
+					if (region.pages[page].Perms() != Common::VirtualMemory::Mode::Read) {
+						region.unarmed[word] &= ~mask;
+						odd++;
+						continue;
+					}
+					if (!keep) {
+						region.unarmed[word] &= ~mask;
+					}
+					const auto vaddr = base_addr + page * PAGE_SIZE;
+					if (!out.empty() && out.back().vaddr + out.back().size == vaddr && vaddr % REGION_SIZE != 0) {
+						out.back().size += PAGE_SIZE;
+					} else {
+						out.push_back({vaddr, PAGE_SIZE});
+					}
+				}
+			}
+		};
+		// 1. The runs to declare, their bits kept: until an application covers a page, P' needs its mark.
+		std::vector<Run> runs;
+		for (const auto& [region, base_addr]: unarmed_regions) {
+			ApplyGuard apply(region->apply, true);
+			SpinGuard  lock(region->lock);
+			sweep(*region, base_addr, true, runs);
+		}
+		// 2. The declaration, with no lock held (item 89(v)(1)): the standard guest-write notification of both caches
+		//    flushes GPU data first, marks the pages CPU-dirty and drops the watchers; the next synchronization at 0
+		//    uploads and arms them. An application it makes on this thread clears U as pc_rearm_decl.
+		t_ceil_rearm = true;
+		for (const auto& run: runs) {
+			declare(context, run.vaddr, run.size);
+		}
+		t_ceil_rearm = false;
+		run_count += runs.size();
+		// 3. The fallback: what the declaration left read-only on the tracker (another watcher, an unmapped range) is
+		//    protected read-only in the same apply hold that read it (Region::apply, P); every U bit goes.
+		std::vector<Run> rest;
+		for (const auto& [region, base_addr]: unarmed_regions) {
+			ApplyGuard apply(region->apply, true);
+			rest.clear();
+			{
+				SpinGuard lock(region->lock);
+				sweep(*region, base_addr, false, rest);
+				region->has_unarmed    = false;
+				region->unarmed_listed = false;
+			}
+			for (const auto& run: rest) {
+				Protect(run.vaddr, run.size, Common::VirtualMemory::Mode::Read);
+				decl += run.size / PAGE_SIZE;
+			}
+			run_count += rest.size();
+		}
+		unarmed_regions.clear();
+		FS::Add(FS::Counter::PcRearmN, 1);
+		FS::Add(FS::Counter::PcRearmRuns, run_count);
+		FS::Add(FS::Counter::PcRearmPages, pend + odd + decl);
+		FS::Add(FS::Counter::PcRearmDecl, decl);
+		FS::Add(FS::Counter::PcRearmPend, pend);
+		FS::Add(FS::Counter::PcRearmOdd, odd);
+		FS::Add(FS::Counter::PcULive, uint64_t {0} - (pend + odd + decl));
+		if (t0 != 0) {
+			FS::Add(FS::Counter::PcRearmNs, FS::NowNs() - t0);
 		}
 	}
 
@@ -727,6 +945,9 @@ struct PageManager::Impl {
 				}
 			}
 			Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms);
+			if (region.has_unarmed) {
+				ClearUnarmed(region, run_first, run_pages); // knob "protceil": U goes with the application
+			}
 			region.applying_run.store(0, std::memory_order_release); // before `apply` is released
 		}
 	}
@@ -784,7 +1005,20 @@ struct PageManager::Impl {
 					break;
 				}
 			}
-			Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms);
+			// Session 128, knob "protceil": a run to read-only is an arming (item 89(z)); at a latch of 1 it is skipped and
+			// its pages marked unarmed - its pending bits are gone and it is withdrawn as after a host call.
+			const auto arm = perms != Common::VirtualMemory::Mode::Read ? Arm::No
+							 : site == FS::Counter::ApplyWaitScopeNs    ? Arm::Scope
+																		 : Arm::Range;
+			if (arm != Arm::No && t_ceil_state == CeilSkip) [[unlikely]] {
+				SkipRun(region, base_addr, run_first, run_pages, arm);
+				region.applying_run.store(0, std::memory_order_release); // before `apply` is released
+				continue;
+			}
+			Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms, arm);
+			if (region.has_unarmed) {
+				ClearUnarmed(region, run_first, run_pages);
+			}
 			region.applying_run.store(0, std::memory_order_release); // before `apply` is released
 			runs++;
 			pages += run_pages;
@@ -845,12 +1079,14 @@ struct PageManager::Impl {
 			const auto page_index = static_cast<size_t>((page % REGION_SIZE) / PAGE_SIZE);
 			ApplyGuard apply(region->apply, true);
 			auto       expected = Common::VirtualMemory::Mode::ReadWrite;
+			bool       unarmed  = false; // knob "protceil"
 			{
 				SpinGuard lock(region->lock);
 				if (region->has_pending && IsPending(*region, page_index)) {
 					continue;
 				}
 				expected = region->pages[page_index].Perms();
+				unarmed  = region->has_unarmed && ((region->unarmed[page_index / 64] >> (page_index % 64)) & 1u) != 0;
 			}
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 			MEMORY_BASIC_INFORMATION info {};
@@ -864,6 +1100,25 @@ struct PageManager::Impl {
 								  protect == PAGE_EXECUTE_WRITECOPY;
 			const bool readable = writable || protect == PAGE_READONLY || protect == PAGE_EXECUTE_READ;
 			Common::FrameStats::Add(Common::FrameStats::Counter::BatchChecks, 1);
+			if (unarmed) [[unlikely]] {
+				// Session 128, knob "protceil" (s.5.4, item 89(d)): a U page is writable or read-only on the host (P');
+				// pb_bad and pb_bad_rw keep their meaning for the pages without U.
+				if (writable) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::PcVfyU, 1);
+				} else if (readable) {
+					Common::FrameStats::Add(Common::FrameStats::Counter::PcVfyURo, 1);
+				} else {
+					Common::FrameStats::Add(Common::FrameStats::Counter::PcVfyUNa, 1);
+					static std::atomic<uint32_t> logged_u {0};
+					if (logged_u.fetch_add(1, std::memory_order_relaxed) < 32) {
+						std::fprintf(stderr, "PbCheck: MISMATCH addr=0x%016llx expected=%u protect=0x%x unarmed=1\n",
+									 static_cast<unsigned long long>(page), static_cast<unsigned>(expected),
+									 static_cast<unsigned>(protect));
+						std::fflush(stderr);
+					}
+				}
+				continue;
+			}
 			bool lost_write = false;
 			bool other      = false;
 			switch (expected) {
@@ -970,6 +1225,13 @@ struct PageManager::Impl {
 	static thread_local PageManager::BatchScope* t_batch;
 	// The open PassScope of this thread (gate "protbatch2"), innermost first.
 	static thread_local PageManager::PassScope* t_pass;
+	// Session 128, knob "protceil": the latch of this thread's innermost CeilScope (Ceil*), and whether the thread is
+	// inside the re-arm pass (its applications clear U as pc_rearm_decl; a CeilScope opened in it latches 0).
+	static thread_local uint8_t t_ceil_state;
+	static thread_local bool    t_ceil_rearm;
+	// The regions holding U bits with their base, in the order they got the first; written and read only on the
+	// GuestGpu thread (SkipRun under a latch of 1, CeilRearm).
+	std::vector<std::pair<Region*, uint64_t>> unarmed_regions;
 
 	std::unique_ptr<std::atomic<Region*>[]> regions;
 	std::vector<std::unique_ptr<Region>>    region_storage;
@@ -989,6 +1251,8 @@ thread_local bool PageManager::Impl::t_protect_worker = false;
 thread_local bool PageManager::Impl::t_protect_masked = false;
 thread_local PageManager::BatchScope* PageManager::Impl::t_batch = nullptr;
 thread_local PageManager::PassScope*  PageManager::Impl::t_pass  = nullptr;
+thread_local uint8_t                  PageManager::Impl::t_ceil_state = PageManager::Impl::CeilOutside;
+thread_local bool                     PageManager::Impl::t_ceil_rearm = false;
 
 static_assert(std::atomic<void*>::is_always_lock_free);
 
@@ -1212,6 +1476,66 @@ void PageManager::PassScope::NoteProtect(uint64_t vaddr, uint64_t size, uint32_t
 	m_last_base = base;
 	m_last_end  = vaddr + size;
 	m_last_mode = mode;
+}
+
+PageManager::CeilScope::CeilScope(bool engage) noexcept {
+	namespace FS = Common::FrameStats;
+	namespace G  = Common::Gates;
+	if (!engage) {
+		if (FS::Enabled() && G::Value(G::Knob::ProtCeiling) == 1) {
+			FS::Add(FS::Counter::PcOffThr, 1);
+		}
+		return;
+	}
+	m_engaged  = true;
+	m_previous = Impl::t_ceil_state;
+	if (m_previous != Impl::CeilOutside) {
+		return; // nested: the latch of the outer synchronization
+	}
+	// The only read of the knob for this synchronization; the refusals are read only at 1 (s.4.3).
+	const auto value = Impl::t_ceil_rearm ? 0u : G::Value(G::Knob::ProtCeiling);
+	auto       state = Impl::CeilZero;
+	if (value == 1) {
+		static std::atomic<uint32_t> logged {0};
+		const char*                  reason = nullptr;
+		uint32_t                     bit    = 0;
+		if (G::Enabled(G::Gate::ArmDefer)) {
+			reason = "armdefer";
+			bit    = 1;
+		} else if (G::Enabled(G::Gate::ProtectBatchPass) && G::Enabled(G::Gate::ProtectBatch)) {
+			reason = "protbatch2";
+			bit    = 2;
+		}
+		if (reason != nullptr) {
+			state = Impl::CeilRefused;
+			FS::Add(FS::Counter::PcRefuse, 1);
+		} else {
+			state = Impl::CeilSkip;
+		}
+		if ((logged.fetch_or(1u << bit, std::memory_order_relaxed) & (1u << bit)) == 0) {
+			if (reason != nullptr) {
+				LOGF("ProtCeil: refused reason=%s\n", reason);
+			} else {
+				LOGF("ProtCeil: mode 1\n");
+			}
+		}
+	}
+	FS::Add(state == Impl::CeilSkip ? FS::Counter::PcOp1 : FS::Counter::PcOp0, 1);
+	Impl::t_ceil_state = state;
+}
+
+PageManager::CeilScope::~CeilScope() {
+	if (m_engaged) {
+		Impl::t_ceil_state = m_previous;
+	}
+}
+
+bool PageManager::HasUnarmed() const noexcept {
+	return !m_impl->unarmed_regions.empty();
+}
+
+void PageManager::CeilRearm(void* context, DeclareFunc declare) {
+	m_impl->CeilRearm(context, declare);
 }
 
 void PageManager::FlushProtection(uint64_t vaddr, uint64_t size) {

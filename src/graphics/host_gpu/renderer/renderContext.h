@@ -66,6 +66,11 @@ public:
 	// Applies every deferred host page protection (TextureCache image tracking); called before
 	// the guest can observe GPU completion of a frame (flip).
 	void               DrainDeferredProtection() { m_page_manager.DrainDeferredProtection(); }
+	// Session 128, knob "protceil" (ROADMAP s122 item 89(v)(1)): GuestGpu thread, between submissions. While the knob reads
+	// 0 and pages are unarmed, declares them written (InvalidateMemory - the guest-write notification of both caches,
+	// the same function Memory::InvalidateMemory reaches) and protects read-only what the declaration left read-only on
+	// the tracker (PageManager::CeilRearm).
+	void               ProtCeilRearm();
 
 	void AddInterruptEq(LibKernel::EventQueue::KernelEqueue eq, int event_id);
 	void DeleteInterruptEq(LibKernel::EventQueue::KernelEqueue eq, int event_id);

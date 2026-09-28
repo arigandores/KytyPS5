@@ -219,6 +219,15 @@ bool RenderContext::InvalidateMemory(uint64_t vaddr, uint64_t size) {
 	return true;
 }
 
+void RenderContext::ProtCeilRearm() {
+	if (!m_page_manager.HasUnarmed() || Common::Gates::Value(Common::Gates::Knob::ProtCeiling) != 0) {
+		return;
+	}
+	m_page_manager.CeilRearm(this, [](void* context, uint64_t vaddr, uint64_t size) {
+		(void)static_cast<RenderContext*>(context)->InvalidateMemory(vaddr, size);
+	});
+}
+
 void RenderContext::NoteStreamedRead(uint64_t vaddr, uint64_t size) {
 	if (!IsMapped(vaddr, size)) {
 		return;

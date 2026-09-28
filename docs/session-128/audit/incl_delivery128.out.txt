@@ -1,0 +1,3 @@
+arm-2 window rows incl. incomplete block: 3344 blocks with rows: 43 dose_ns 4393062927 elig_ns 4360242414 delivery 1.00753
+last main n 9486 last GateArm frame 9450 block 85 arm 1
+max dt_us after 1800: (50726, 7295)

@@ -1,0 +1,8 @@
+shp128 FrameTrace-x rows 4014 sums {'rts_n': 19210396, 'rts_skip': 16989163, 'rts_refuse': 0, 'rts_xthr': 0, 'rts_acqw': 0} share 0.8844
+RtSkip mode lines ['RtSkip: mode 1 ctx_slots=8 gro'] refused 0 skipped draw 0 death markers 0
+json keys ['arms', 'attempts', 'binary_sha256', 'cmdline', 'cpuclk', 'cpuclk_requested', 'env', 'finished', 'ft_tail', 'ft_tail_span_s', 'ft_total', 'ft_window_s', 'gates', 'gpuclk', 'guest_args', 'hold_gpu', 'hold_s', 'launched', 'notes', 'phases', 'pre_run', 'prereg', 'schedule', 'schedule_period', 'schedule_start', 'started', 'tag']
+binary_sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+gates_file None
+hold_s 120
+attempts [{'outcome': 'ok', 'hold_s': 120.0, 'hold_exit': None}]
+gates_base127 has rtskip: False

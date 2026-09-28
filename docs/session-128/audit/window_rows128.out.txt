@@ -1,0 +1,3 @@
+window 10..87: pairs 42  D 1006.0 +- 139.0  adj 1019.7 +- 120.8  lower 867.0 upper 1145.1  K14_OPEN  base 31698.7
+window 60..88: pairs 42  D 1144.9 +- 234.1  adj 1133.5 +- 184.8  lower 910.8 upper 1379.0  K14_OPEN  base 31546.0
+window 0..89: pairs 42  D 1031.3 +- 128.5  adj 1027.6 +- 106.5  lower 902.8 upper 1159.8  K14_OPEN  base 31679.2

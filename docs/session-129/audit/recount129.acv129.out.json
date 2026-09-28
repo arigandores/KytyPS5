@@ -1,0 +1,68 @@
+{
+ "tag": "acv129",
+ "dup": {
+  "main": 0,
+  "draw": 0,
+  "x": 0
+ },
+ "gatearm_lines": 0,
+ "lines": {
+  "armcopy_mode": 1,
+  "armcopy_refused": 0,
+  "protceil": 0,
+  "rtskip": 1,
+  "rtskip_refused": 0,
+  "skipped_draw": 0,
+  "death": 0,
+  "gpuwaitslow": 0,
+  "bvhtrip": 0,
+  "clockpin": 1,
+  "verify_mismatch": 0,
+  "verify_left": 0,
+  "verify_content": 0,
+  "verify_other": 0
+ },
+ "armcopy_mode_lines": [
+  "ArmCopy: mode 1"
+ ],
+ "protceil_lines": [],
+ "rtskip_lines": [
+  "RtSkip: mode 1 ctx_slots=8 groups=11 rec"
+ ],
+ "whole_log": {
+  "ac_n": 269708,
+  "ac_chk": 0,
+  "ac_bad": 0,
+  "ac_gchk": 0,
+  "ac_gbad": 0,
+  "ac_jleft": 0,
+  "ac_jremark": 0,
+  "ac_gjleft": 0,
+  "ac_orphan": 0,
+  "ac_cmp_pages": 0,
+  "ac_cdiff": 0,
+  "ac_cbad": 0,
+  "ac_refuse": 0,
+  "ac_offthr": 0,
+  "ac_moved_n": 353133,
+  "ac_kept_n": 159503,
+  "pb_stuck": 0,
+  "pb_inflight_bad": 0,
+  "pc_u_set": 0,
+  "pc_skip_n": 0,
+  "pc_refuse": 0,
+  "pc_dose_n": 0
+ },
+ "x_rows": 3904,
+ "main_rows": 3904,
+ "max_dt_after_1800": 51487,
+ "left": [],
+ "left_pages_by_branch": {
+  "job": 0,
+  "gpu": 0
+ },
+ "left_perms": [],
+ "mismatch_branches": {},
+ "selfcheck": "NOT_RESOLVED",
+ "cbad_per_page": null
+}

@@ -1318,7 +1318,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " gpu_n=%llu cpu_main_us=%llu cpu_gpu_us=%llu cpu_present_us=%llu"
 			     " cpu_proc_us=%llu faults_gpu=%llu fault_gpu_us=%llu semwait_gpu_us=%llu"
 			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu"
-			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u rk3_c5_max_ns=%u" "\n",
+			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u rk3_c5_max_ns=%u rts_chain_max=%u" "\n",
 			     r.cfg->flip_status.count,
 			     static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),
 			     static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),
@@ -1339,7 +1339,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     Common::Gates::ReportedArm(), Common::Gates::ReportedBlock(),
 			     FS::TakeMax(FS::Gauge::RtWidth), FS::TakeMax(FS::Gauge::RtHeight),
 			     FS::TakeMax(FS::Gauge::VpWidth), FS::TakeMax(FS::Gauge::VpHeight),
-			     FS::TakeMax(FS::Gauge::Rk3C5Max)); // Session 126, knob "rk3cen" ([RC4])
+			     FS::TakeMax(FS::Gauge::Rk3C5Max),     // Session 126, knob "rk3cen" ([RC4])
+			     FS::TakeMax(FS::Gauge::RtsChainMax)); // Session 127, knob "rtskip" ([RC1])
 			LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"
 			     " d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
 			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
@@ -3061,6 +3062,40 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"rk3_nt", FS::Counter::Rk3Nt, false},
 				    {"rk3_xthr", FS::Counter::Rk3Xthr, false},
 				    {"rk3_acqw", FS::Counter::Rk3Acqw, false},
+				    // Session 127, knob "rtskip" (design127.md rev 2 s.7.1): raw counts.
+				    {"rts_n", FS::Counter::RtsN, false},
+				    {"rts_skip", FS::Counter::RtsSkip, false},
+				    {"rts_xa_rec", FS::Counter::RtsXaRec, false},
+				    {"rts_xa_cfg", FS::Counter::RtsXaCfg, false},
+				    {"rts_xa_reg", FS::Counter::RtsXaReg, false},
+				    {"rts_xa_arg", FS::Counter::RtsXaArg, false},
+				    {"rts_xa_unh", FS::Counter::RtsXaUnh, false},
+				    {"rts_xa_memo", FS::Counter::RtsXaMemo, false},
+				    {"rts_xa_img", FS::Counter::RtsXaImg, false},
+				    {"rts_xb_ids", FS::Counter::RtsXbIds, false},
+				    {"rts_xb_live", FS::Counter::RtsXbLive, false},
+				    {"rts_xb_meta", FS::Counter::RtsXbMeta, false},
+				    {"rts_xb_ser", FS::Counter::RtsXbSer, false},
+				    {"rts_xb_bound", FS::Counter::RtsXbBound, false},
+				    {"rts_xb_pass", FS::Counter::RtsXbPass, false},
+				    {"rts_rec_x", FS::Counter::RtsRecX, false},
+				    {"rts_ovf", FS::Counter::RtsOvf, false},
+				    {"rts_refuse", FS::Counter::RtsRefuse, false},
+				    {"rts_xthr", FS::Counter::RtsXthr, false},
+				    {"rts_acqw", FS::Counter::RtsAcqw, false},
+				    {"rts_pa", FS::Counter::RtsPa, false},
+				    {"rts_pb", FS::Counter::RtsPb, false},
+				    {"rts_chk", FS::Counter::RtsChk, false},
+				    {"rts_chk_b", FS::Counter::RtsChkB, false},
+				    {"rts_chain2", FS::Counter::RtsChain2, false},
+				    {"rts_bad", FS::Counter::RtsBad, false},
+				    {"rts_bad_noreg", FS::Counter::RtsBadNoreg, false},
+				    {"rts_race", FS::Counter::RtsRace, false},
+				    {"rts_rec", FS::Counter::RtsRec, false},
+				    {"rts_wr", FS::Counter::RtsWr, false},
+				    {"rts_wr_obj", FS::Counter::RtsWrObj, false},
+				    {"rts_lost", FS::Counter::RtsLost, false},
+				    {"rts_early", FS::Counter::RtsEarly, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

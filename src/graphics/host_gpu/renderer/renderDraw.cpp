@@ -975,6 +975,7 @@ void Rk3Refuse(uint32_t bit, const char* reason) {
 			t_rk3_c4_idx = -1;
 		}
 		Rk3::t_rk3 = 0;
+		Rk3::t_hooks &= ~Rk3::HookRk3; // Session 127 (item 77(e)): the hook mask follows t_rk3
 		return;
 	}
 	if (t_rk3_table == nullptr) {
@@ -986,6 +987,7 @@ void Rk3Refuse(uint32_t bit, const char* reason) {
 		     static_cast<uint32_t>(t_rk3_table->e.size()), Rk3::GroupCount, Rk3::DSetters);
 	}
 	Rk3::t_rk3 = armed; // a change between 1, 2 and 3 keeps the records (one classification)
+	Rk3::t_hooks |= Rk3::HookRk3; // Session 127 (item 77(e)): the hook mask follows t_rk3
 	t_rk3_slow = false;
 }
 
@@ -1281,6 +1283,311 @@ uint32_t Rk3VdDiff(const Rk3Vd& a, const Rk3Vd& b) {
 
 } // namespace
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Session 127, knob "rtskip" (KYTY_RT_SKIP, 0..3, default 0; docs/session-127/design127.md rev 2 with ROADMAP s122 items
+// 76(z), 77, 78, 79): the K3 prototype.  A draw of context C takes the outputs of its target resolution (place A,
+// PrepareDrawRenderState) and capture (place B, AcquireRenderTargets) from the RECORD of C - the outputs of the last full
+// draw on C - while no relevant register group was written since (s.2.1) and no non-register source moved (s.2.2).
+//   0 the previous path; 1 skip; 2 self-check: the full path always runs, the record lives exactly as at 1 ([RC1]) and
+//   every step is compared with it (s.5); 3 = 2 with the register source ignored by PA (positive control, s.6).
+// The latch arms only on the GuestGpu thread; everything below touches thread-local state, its counters and one gauge.
+// The latch, places A and B and the post are RenderExecutor members (RtsLatchSlow, RtsPlaceA, RtsPlaceB, RtsPost) because
+// the replay calls TextureCache::TouchImage and reads m_slot_images, which only RenderExecutor may.
+// ---------------------------------------------------------------------------------------------------------------------
+namespace {
+
+using RtsGen = std::array<uint64_t, Rk3::GroupCount>;
+
+// Self-check bits (s.5.2).  0x001 O, 0x002 K, 0x004 T, 0x008 F and 0x400 U are decided at place A, before the capture.
+inline constexpr uint32_t kRtsBitsA = 0x001u | 0x002u | 0x004u | 0x008u | 0x400u;
+
+// One target of the record (colours in resolution order, depth last), as the recorded capture left it.
+struct RtsTarget {
+	ImageId          id;
+	uint32_t         slot               = 0;       // target_slot, UINT32_MAX = depth
+	vk::Image        backing            = nullptr;
+	vk::ImageView    view               = nullptr; // the view the recorded capture returned (= the rtfast record's)
+	uint32_t         stamp              = 0;       // bind_stamp after the recorded capture
+	uint32_t         source_first_level = 0;
+	uint64_t         source_size        = 0;
+	uint64_t         state_serial       = 0;       // backing.state_serial after the recorded capture (N3)
+	uint32_t         htile_mask         = 0;       // depth only
+	bool             is_bound           = false;
+	vk::ImageLayout  att_layout         = vk::ImageLayout::eUndefined;
+	vk::AccessFlags2 att_access;
+	uint32_t         w = 0, h = 0;                 // colour Extent(), for the counter replay
+	uint64_t         kpx = 0;
+};
+
+// One visit of the resolution loop: the colour slot, the color_info index it wrote, the memo slot it went through
+// (UINT32_MAX: the inactive-slot path, colorRenderTarget.cpp:113-118) and whether it gave a target.
+struct RtsVisit {
+	uint32_t slot         = 0;
+	uint32_t idx          = 0;
+	uint32_t memo_slot    = UINT32_MAX;
+	uint32_t memo_version = 0;
+	bool     image        = false;
+};
+
+// The record of a context (s.4.4).  `pre` is the resolution output before the capture; the strict record demands the
+// output after the capture equal to it in every field of bits 0x001 and 0x400 ([RC9], item 79(b)) - that is, in every
+// field - so the one copy is also `post`.
+struct RtsRecord {
+	RtsGen                                                    gen {};       // generations the recorded resolution read
+	uint32_t                                                  rel   = 0;    // Rel_skip of `mask` (s.2.1)
+	uint32_t                                                  slice = 0;    // render_target_slice_offset (N7)
+	uint32_t                                                  mask  = 0;    // CB_TARGET_MASK
+	uint32_t                                                  bmin = 0, bmax = 0; // depth bounds, bits (N9)
+	uint32_t                                                  n_idx = 0;    // color_info[0 .. n_idx) the resolution wrote
+	uint32_t                                                  color_count = 0;
+	std::array<RenderColorInfo, RENDER_COLOR_ATTACHMENTS_MAX> pre {};
+	RenderDepthInfo                                           pre_depth;
+	uint32_t                                                  nv = 0;
+	std::array<RtsVisit, RENDER_COLOR_ATTACHMENTS_MAX>        v {};
+	uint32_t                                                  dmemo_slot = UINT32_MAX, dmemo_version = 0;
+	uint32_t                                                  nt = 0;       // targets: color_count + (depth ? 1 : 0)
+	std::array<RtsTarget, RENDER_COLOR_ATTACHMENTS_MAX + 1>   t {};
+	RenderState                                               state;
+	PassExtentWitness                                         extents;
+	uint64_t                                                  meta        = 0; // MetaEpoch() after the recorded capture
+	uint64_t                                                  pass_serial = 0; // PassBeginSerial() of its pinned pass
+	uint32_t                                                  age         = 0; // posts in a row that only re-pinned ([RC1])
+	bool                                                      pinned      = false;
+};
+
+struct RtsEntry {
+	const void* ctx     = nullptr;
+	RtsGen      gen {};          // live generations, moved by the hooks
+	bool        has_rec = false; // the record exists and no draw in flight has taken it (N12)
+	RtsRecord   rec;
+};
+
+// What a full resolution of this draw leaves (I1, I2) and what place A read of the registers.
+struct RtsDraft {
+	uint32_t                                                  nv = 0;
+	std::array<RtsVisit, RENDER_COLOR_ATTACHMENTS_MAX>        v {};
+	uint32_t                                                  dmemo_slot = UINT32_MAX, dmemo_version = 0;
+	uint32_t                                                  n_idx = 0;
+	uint32_t                                                  color_count = 0;
+	std::array<RenderColorInfo, RENDER_COLOR_ATTACHMENTS_MAX> pre {};
+	RenderDepthInfo                                           pre_depth;
+	uint32_t                                                  slice = 0, mask = 0, bmin = 0, bmax = 0;
+	size_t                                                    bound0 = 0; // m_bound_images.size() before the resolution
+};
+
+struct RtsTable {
+	std::array<RtsEntry, 8> e {};
+	uint32_t                used = 0;
+	RtsDraft                draft;
+};
+
+constinit thread_local uint32_t    t_rts          = 0;       // the value latched for the draw in flight (0 = off)
+constinit thread_local RtsTable*   t_rts_table    = nullptr; // allocated at the first armed draw
+constinit thread_local RtsEntry*   t_rts_entry    = nullptr; // the entry of this draw's context (nullptr: table full)
+constinit thread_local RtsRecord*  t_rts_take     = nullptr; // the record taken at the latch, given back by the post
+constinit thread_local bool        t_rts_live     = false;   // latched armed, the post not reached yet
+constinit thread_local bool        t_rts_at_a     = false;   // ... place A reached
+constinit thread_local bool        t_rts_pa       = false;   // PA held
+constinit thread_local bool        t_rts_a        = false;   // value 1: place A was skipped
+constinit thread_local bool        t_rts_pb       = false;   // PA and PB held
+constinit thread_local bool        t_rts_b        = false;   // place B ran through RtsPlaceB
+constinit thread_local bool        t_rts_reg      = false;   // a Rel_skip group moved since the record ([RC2], reg=)
+constinit thread_local bool        t_rts_pin      = false;   // the post left a record for AfterBegin to pin
+constinit thread_local bool        t_rts_slow     = false;   // I3: a target took AcquireTargetView's slow path
+constinit thread_local bool        t_rts_race     = false;   // ... and entered it with a bind_stamp moved since PB
+constinit thread_local bool        t_rts_refind   = false;   // I4: the capture's dead-image re-find ran
+constinit thread_local uint32_t    t_rts_bits     = 0;       // values 2/3: the bits place A found
+constinit thread_local uint64_t    t_rts_meta0    = 0;       // MetaEpoch() before / after the full capture
+constinit thread_local uint64_t    t_rts_meta1    = 0;
+constinit thread_local uint64_t    t_rts_ser0     = 0;       // ImageStateSerial() before / after the full capture
+constinit thread_local uint64_t    t_rts_ser1     = 0;
+constinit thread_local bool        t_rts_open0    = false;   // IsRendering() before / after the full capture
+constinit thread_local bool        t_rts_open1    = false;
+constinit thread_local RtsGen      t_rts_gen_a {};           // the entry's generations at place A (rts_acqw)
+constinit thread_local const void* t_rts_last_ctx = nullptr; // item 79(v)(1): context of the last armed draw at A
+constinit thread_local uint32_t    t_rts_logged   = 0;       // bits 1..15: refusal printed; 17..19: mode line printed
+constinit thread_local uint32_t    t_rts_lines    = 0;       // RtSkipVerify lines printed (at most 40)
+
+RtsEntry* RtsFindOrAdd(RtsTable& t, const void* ctx) {
+	for (uint32_t i = 0; i < t.used; i++) {
+		if (t.e[i].ctx == ctx) {
+			return &t.e[i];
+		}
+	}
+	if (t.used == t.e.size()) {
+		return nullptr;
+	}
+	auto& e   = t.e[t.used++];
+	e.ctx     = ctx;
+	e.gen     = {};
+	e.has_rec = false;
+	return &e;
+}
+
+// The hooks (item 77(e)): the generation of a context of the table moves; counted only at 2/3 ([RC3]).
+void RtsHookWrite(const void* ctx, uint32_t group) {
+	if (t_rts >= 2) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::RtsWr, 1);
+	}
+	auto* t = t_rts_table;
+	if (t == nullptr || group >= Rk3::GroupCount) {
+		return;
+	}
+	for (uint32_t i = 0; i < t->used; i++) {
+		if (t->e[i].ctx == ctx) {
+			t->e[i].gen[group]++;
+			return;
+		}
+	}
+}
+
+void RtsHookObject(const void* ctx) {
+	if (t_rts >= 2) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::RtsWrObj, 1);
+	}
+	auto* t = t_rts_table;
+	if (t == nullptr) {
+		return;
+	}
+	for (uint32_t i = 0; i < t->used; i++) {
+		if (t->e[i].ctx == ctx) {
+			for (auto& g: t->e[i].gen) {
+				g++;
+			}
+			return;
+		}
+	}
+}
+
+// Rel_skip(C) (s.2.1): G_mask, G_dact, G_depth, G_slot[0] always, G_slot[n] for a slot the mask lets the loop visit.
+uint32_t RtsRelSkip(uint32_t mask) {
+	uint32_t rel = (1u << Rk3::GroupMask) | (1u << Rk3::GroupDact) | (1u << Rk3::GroupDepth) | (1u << Rk3::GroupSlot0);
+	for (uint32_t n = 1; n < RENDER_COLOR_ATTACHMENTS_MAX; n++) {
+		if (render_target_mask_slot(mask, n) != 0) {
+			rel |= 1u << (Rk3::GroupSlot0 + n);
+		}
+	}
+	return rel;
+}
+
+bool RtsMoved(const RtsGen& now, const RtsGen& rec, uint32_t rel) {
+	for (uint32_t g = 0; g < Rk3::GroupCount; g++) {
+		if ((rel & (1u << g)) != 0 && now[g] != rec[g]) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// Member-wise, never memcmp of an aggregate (padding, the s83 lesson).
+bool RtsSameMeta(const ImageMetadataInfo& a, const ImageMetadataInfo& b) {
+	return a.range == b.range && a.kind == b.kind && a.control == b.control && a.dcc_clear_word == b.dcc_clear_word &&
+	       a.cmask_clear_words == b.cmask_clear_words && a.compression == b.compression &&
+	       a.stencil_compressed == b.stencil_compressed && a.dcc_clear_register_valid == b.dcc_clear_register_valid &&
+	       a.dcc_alpha_msb == b.dcc_alpha_msb;
+}
+
+bool RtsSameDesc(const TextureCache::ImageDesc& a, const TextureCache::ImageDesc& b) {
+	const auto& x = a.info;
+	const auto& y = b.info;
+	return x.data == y.data && x.stencil == y.stencil && RtsSameMeta(x.metadata, y.metadata) &&
+	       x.htile_clear_mask == y.htile_clear_mask && x.pixel_format == y.pixel_format &&
+	       x.guest_format == y.guest_format && x.type == y.type && x.extent == y.extent && x.resources == y.resources &&
+	       x.pitch == y.pitch && x.bytes_per_block == y.bytes_per_block && x.samples == y.samples &&
+	       x.tile_mode == y.tile_mode && x.bgra16 == y.bgra16 && x.mip_layout == y.mip_layout &&
+	       a.view_info == b.view_info && a.type == b.type && a.source_first_level == b.source_first_level &&
+	       a.source_size == b.source_size;
+}
+
+// Bits 0x001 (the outputs render reads, [RC2]) and 0x400 (the memo bookkeeping) of one colour entry.
+uint32_t RtsDiffColor(const RenderColorInfo& a, const RenderColorInfo& b) {
+	uint32_t bits = 0;
+	if (a.image_id != b.image_id || a.target_slot != b.target_slot || a.guest_mip_level != b.guest_mip_level ||
+	    a.guest_array_layer != b.guest_array_layer || a.export_mapping.packed != b.export_mapping.packed ||
+	    !RtsSameDesc(a.desc, b.desc)) {
+		bits |= 0x001u;
+	}
+	if (a.memo_slot != b.memo_slot || a.memo_version != b.memo_version) {
+		bits |= 0x400u;
+	}
+	return bits;
+}
+
+// The same for the depth entry; floats by their bits.
+uint32_t RtsDiffDepth(const RenderDepthInfo& a, const RenderDepthInfo& b) {
+	const auto fb   = [](float v) { return std::bit_cast<uint32_t>(v); };
+	uint32_t   bits = 0;
+	if (!RtsSameDesc(a.desc, b.desc) || a.depth_clear_enable != b.depth_clear_enable ||
+	    a.depth_load_clear_enable != b.depth_load_clear_enable || fb(a.depth_clear_value) != fb(b.depth_clear_value) ||
+	    a.depth_test_enable != b.depth_test_enable || a.depth_write_enable != b.depth_write_enable ||
+	    a.depth_compare_op != b.depth_compare_op || a.depth_bounds_test_enable != b.depth_bounds_test_enable ||
+	    fb(a.depth_min_bounds) != fb(b.depth_min_bounds) || fb(a.depth_max_bounds) != fb(b.depth_max_bounds) ||
+	    a.stencil_clear_enable != b.stencil_clear_enable || a.stencil_clear_value != b.stencil_clear_value ||
+	    a.stencil_test_enable != b.stencil_test_enable || a.stencil_front != b.stencil_front ||
+	    a.stencil_back != b.stencil_back || a.image_id != b.image_id) {
+		bits |= 0x001u;
+	}
+	if (a.memo_slot != b.memo_slot || a.memo_version != b.memo_version) {
+		bits |= 0x400u;
+	}
+	return bits;
+}
+
+// I1 (s.8.2): one colour visit of the full resolution.  Thread-local only.
+void RtsDraftColor(uint32_t slot, uint32_t idx, const RenderColorInfo& r) noexcept {
+	auto& d = t_rts_table->draft;
+	if (d.nv < d.v.size()) {
+		d.v[d.nv++] = RtsVisit {slot, idx, r.memo_slot, r.memo_version, static_cast<bool>(r.image_id)};
+	}
+}
+
+// I2: the depth resolution (always through its memo, depthRenderTarget.cpp:284-361).
+void RtsDraftDepth(const RenderDepthInfo& r) noexcept {
+	auto& d         = t_rts_table->draft;
+	d.dmemo_slot    = r.memo_slot;
+	d.dmemo_version = r.memo_version;
+}
+
+// I3: a target took AcquireTargetView's slow path; the FIRST slow entry of the draw decides whether it entered with a
+// bind_stamp moved since the fast record - a cross-thread race (s.5.2), exactly as t_sp_rt_stamp_race.
+void RtsNoteSlow(bool stamp_moved) noexcept {
+	if (!t_rts_slow) {
+		t_rts_race = stamp_moved;
+	}
+	t_rts_slow = true;
+}
+
+// Values 2/3: one draw's self-check result (s.5.2).  A race suppresses only the capture bits.
+void RtsReport(uint32_t bits, int frame, uint32_t age, uint32_t colors, bool depth) {
+	namespace FS = Common::FrameStats;
+	if (t_rts_race && (bits & kRtsBitsA) == 0) {
+		FS::Add(FS::Counter::RtsRace, 1);
+		return;
+	}
+	FS::Add(FS::Counter::RtsBad, 1);
+	if (!t_rts_reg) {
+		FS::Add(FS::Counter::RtsBadNoreg, 1);
+	}
+	if (t_rts_lines < 40) {
+		t_rts_lines++;
+		LOGF("RtSkipVerify: MISMATCH frame=%d bits=0x%03x reg=%u chain=%u colors=%u depth=%u pa=1 pb=%u mode=%u\n", frame,
+		     bits, t_rts_reg ? 1u : 0u, age, colors, depth ? 1u : 0u, t_rts_pb ? 1u : 0u, t_rts);
+	}
+}
+
+// The pin (s.4.3): after BeginRendering the record the post left is pinned to the pass this draw renders in.
+void RtsAfterBegin() {
+	if (t_rts_pin) {
+		t_rts_pin = false;
+		if (t_rts_entry != nullptr && t_rts_entry->has_rec) {
+			t_rts_entry->rec.pass_serial = CommandBuffer::PassBeginSerial();
+			t_rts_entry->rec.pinned      = true;
+		}
+	}
+}
+
+} // namespace
+
 vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& image, ImageId id,
                                                 const TextureCache::ImageDesc& desc,
                                                 TargetViewFast& fast, bool depth_target,
@@ -1336,6 +1643,9 @@ vk::ImageView RenderExecutor::AcquireTargetView(TextureCache& cache, Image& imag
 	}
 	if (Common::Rk3::t_rk3 != 0) [[unlikely]] {
 		t_rk3_slow = true; // Session 126, knob "rk3cen" (rk3_slow): a target of this draw took the slow path
+	}
+	if (t_rts) [[unlikely]] {
+		RtsNoteSlow(stamp != fast.stamp); // Session 127, knob "rtskip" (I3): the slow path and its bind_stamp race
 	}
 	const auto view  = depth_target ? cache.FindDepthTarget(id, desc) : cache.FindRenderTarget(id, desc);
 	fast.valid       = false;
@@ -1767,6 +2077,9 @@ RenderState RenderExecutor::AcquireRenderTargets(CommandBuffer& buffer, RenderCo
 		    old_image->binding.needs_rebind) {
 			if (t_sp_rt_armed) {
 				t_sp_rt_refind = true; // session 120, gate "spcen": never a memo from this draw
+			}
+			if (t_rts) [[unlikely]] {
+				t_rts_refind = true; // Session 127, knob "rtskip" (I4): never a record from this draw
 			}
 			if (old_image != nullptr) {
 				old_image->binding = {};
@@ -2574,6 +2887,9 @@ bool RenderExecutor::PrepareDrawRenderState(CommandBuffer& buffer, const DrawCal
 		                  ctx.GetRenderTarget(slot).base.addr != 0)) {
 			ResolveRenderColorTarget(buffer, state.color_info[state.color_count],
 			                         render_target_slice_offset, slot);
+			if (t_rts) [[unlikely]] {
+				RtsDraftColor(slot, state.color_count, state.color_info[state.color_count]); // Session 127 (I1)
+			}
 			if (state.color_info[state.color_count].image_id) {
 				state.color_count++;
 			}
@@ -2583,6 +2899,9 @@ bool RenderExecutor::PrepareDrawRenderState(CommandBuffer& buffer, const DrawCal
 		LogDrawPhase(draw.Name(), "ResolveRenderDepthTarget");
 	}
 	ResolveRenderDepthTarget(buffer, state.depth_info);
+	if (t_rts) [[unlikely]] {
+		RtsDraftDepth(state.depth_info); // Session 127, knob "rtskip" (I2)
+	}
 
 	state.ps_active       = DrawHasActivePixelShader(buffer);
 	if (state.color_count == 0 && !state.depth_info.image_id && !state.ps_active) {
@@ -2984,6 +3303,619 @@ bool NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 }
 
 } // namespace
+
+// Session 127, knob "rtskip": the latch, cold half (s.4.1).  Runs while the knob is nonzero or the previous draw was armed.
+// Settles the previous armed draw that never reached its post (N12, [RC7]), decides the value (refusals s.4.2), and on an
+// armed draw takes the record of its context: the post gives it back, any return before the post leaves the context
+// without a record.
+[[gnu::noinline]] void RenderExecutor::RtsLatchSlow(CommandBuffer& buffer, uint32_t value) {
+	namespace FS = Common::FrameStats;
+	namespace G  = Common::Gates;
+	using C      = FS::Counter;
+	if (t_rts_live && t_rts >= 2) {
+		if (t_rts_take != nullptr) {
+			FS::Add(C::RtsLost, 1);
+		}
+		if (t_rts_at_a) {
+			FS::Add(C::RtsEarly, 1);
+		}
+	}
+	t_rts_live   = false;
+	t_rts_at_a   = false;
+	t_rts_pa     = false;
+	t_rts_a      = false;
+	t_rts_pb     = false;
+	t_rts_b      = false;
+	t_rts_reg    = false;
+	t_rts_pin    = false;
+	t_rts_slow   = false;
+	t_rts_race   = false;
+	t_rts_refind = false;
+	t_rts_bits   = 0;
+	t_rts_take   = nullptr;
+	t_rts_entry  = nullptr;
+	uint32_t armed = 0;
+	if (value != 0) {
+		const char* reason = nullptr;
+		uint32_t    bit    = 0;
+		if (!Common::SkipCeil::t_gpu) {
+			FS::Add(C::RtsXthr, 1);
+		} else if (G::Value(G::Knob::Rk3Cen) != 0) {
+			reason = "rk3cen";
+			bit    = 1;
+		} else if (G::Value(G::Knob::Spine) != 0) {
+			reason = "spine";
+			bit    = 2;
+		} else if (G::Enabled(G::Gate::SamePassCensus)) {
+			reason = "spcen";
+			bit    = 3;
+		} else if (G::Enabled(G::Gate::SliceCensus)) {
+			reason = "slicecen";
+			bit    = 4;
+		} else if (G::Value(G::Knob::SkipCeil) != 0) {
+			reason = "skipceil";
+			bit    = 5;
+		} else if (G::Enabled(G::Gate::BindFloor)) {
+			reason = "bindfloor";
+			bit    = 6;
+		} else if (G::Value(G::Knob::M4Baton) != 0) {
+			reason = "m4baton";
+			bit    = 7;
+		} else if (!G::Enabled(G::Gate::RenderTargetFast)) {
+			reason = "rtfast";
+			bit    = 8;
+		} else if (graphics_debug_dump_enabled()) {
+			reason = "graphics_debug_dump";
+			bit    = 9;
+		} else if (!FastRenderMemoEnabled()) {
+			reason = "render_memo_fast";
+			bit    = 10;
+		} else if (m_context.GetTextureCache().m_readback_linear_images) {
+			reason = "readback_linear_images";
+			bit    = 11;
+		} else {
+			armed = value;
+		}
+		if (reason != nullptr) {
+			FS::Add(C::RtsRefuse, 1);
+			if ((t_rts_logged & (1u << bit)) == 0) {
+				t_rts_logged |= 1u << bit;
+				LOGF("RtSkip: refused reason=%s\n", reason);
+			}
+		}
+	}
+	if (armed == 0) {
+		// Leaving the armed state (or refused): the records go (s.4.1).
+		if (t_rts != 0 && t_rts_table != nullptr) {
+			t_rts_table->used = 0;
+		}
+		t_rts_last_ctx = nullptr;
+		t_rts          = 0;
+		Common::Rk3::t_hooks &= ~Common::Rk3::HookRts;
+		return;
+	}
+	if (t_rts_table == nullptr) {
+		t_rts_table = new RtsTable();
+	}
+	if ((t_rts_logged & (1u << (16u + armed))) == 0) {
+		t_rts_logged |= 1u << (16u + armed);
+		LOGF("RtSkip: mode %u ctx_slots=%u groups=%u rec_bytes=%u\n", armed,
+		     static_cast<uint32_t>(t_rts_table->e.size()), Rk3::GroupCount, static_cast<uint32_t>(sizeof(RtsRecord)));
+	}
+	t_rts = armed; // a change between 1, 2 and 3 keeps the records
+	Common::Rk3::t_hooks |= Common::Rk3::HookRts;
+	if (!buffer.IsInvalid()) {
+		t_rts_entry = RtsFindOrAdd(*t_rts_table, &buffer.GetRegisters());
+		if (t_rts_entry != nullptr && t_rts_entry->has_rec) {
+			t_rts_take           = &t_rts_entry->rec; // N12: taken until the post of this draw
+			t_rts_entry->has_rec = false;
+		}
+	}
+	t_rts_live = true;
+}
+
+// Session 127, knob "rtskip": place A (s.4.3), instead of PrepareDrawRenderState.  PA is evaluated by reading only
+// (try_get, no Touch, no store); at 1 and PA the resolution is replaced by the record's outputs and the stores of its memo
+// hits; otherwise the full resolution runs with its draft (I1, I2), and at 2/3 and PA it is compared with the record.
+bool RenderExecutor::RtsPlaceA(CommandBuffer& buffer, const DrawCallInfo& draw, uint32_t render_target_slice_offset,
+                               DrawRenderState& state) {
+	namespace FS = Common::FrameStats;
+	namespace G  = Common::Gates;
+	using C      = FS::Counter;
+	auto&       cache = m_context.GetTextureCache();
+	const auto& ctx   = buffer.GetRegisters();
+	const void* ctx_p = &ctx;
+	FS::Add(C::RtsN, 1);
+	// Item 79(v)(1): the thread's draw state holds what the last armed draw that reached A left there; only a draw of the
+	// same context may take the record over it.  Written here, before any return: its resolution writes the state already.
+	const bool same_ctx = t_rts_last_ctx == ctx_p;
+	t_rts_last_ctx      = ctx_p;
+	t_rts_at_a          = true;
+	if (t_rts_entry != nullptr) {
+		t_rts_gen_a = t_rts_entry->gen;
+	}
+	const RtsRecord* rec = t_rts_take;
+	t_rts_reg            = rec != nullptr && RtsMoved(t_rts_entry->gen, rec->gen, rec->rel);
+	auto&      memo      = Memo();
+	const auto memo_same = [&memo](const RtsRecord& r) {
+		for (uint32_t i = 0; i < r.nv; i++) {
+			const auto& v = r.v[i];
+			if (v.memo_slot != UINT32_MAX &&
+			    !(memo.colors[v.memo_slot].valid && memo.colors[v.memo_slot].version == v.memo_version)) {
+				return false;
+			}
+		}
+		return r.dmemo_slot != UINT32_MAX && memo.depths[r.dmemo_slot].valid &&
+		       memo.depths[r.dmemo_slot].version == r.dmemo_version;
+	};
+	// The resolution's own re-validation of a memo hit (colorRenderTarget.cpp:143-144, depthRenderTarget.cpp:298-299).
+	const auto live = [&cache](ImageId id) {
+		const auto* image = cache.m_slot_images.try_get(id);
+		return image != nullptr && !(!image->registered && !image->info.data.Empty()) && !image->binding.needs_rebind;
+	};
+	// PA: the first failing item is the reason; value 3 does not apply item 3 ([RC2]: reg is computed anyway).
+	C why = C::Count;
+	if (rec == nullptr || !rec->pinned || !same_ctx) {
+		why = C::RtsXaRec;
+	} else if (!(G::Enabled(G::Gate::RenderTargetFast) && !graphics_debug_dump_enabled() &&
+	             !cache.m_readback_linear_images && FastRenderMemoEnabled())) {
+		why = C::RtsXaCfg;
+	} else if (t_rts != 3 && t_rts_reg) {
+		why = C::RtsXaReg;
+	} else if (render_target_slice_offset != rec->slice) {
+		why = C::RtsXaArg;
+	} else if (ctx.GetColorControl().mode == 3 || std::bit_cast<uint32_t>(ctx.GetDepthBoundsMin()) != rec->bmin ||
+	           std::bit_cast<uint32_t>(ctx.GetDepthBoundsMax()) != rec->bmax) {
+		why = C::RtsXaUnh;
+	} else if (!memo_same(*rec)) {
+		why = C::RtsXaMemo;
+	} else {
+		for (uint32_t i = 0; i < rec->color_count && why == C::Count; i++) {
+			if (!live(rec->pre[i].image_id)) {
+				why = C::RtsXaImg;
+			}
+		}
+		if (why == C::Count && rec->pre_depth.image_id && !live(rec->pre_depth.image_id)) {
+			why = C::RtsXaImg;
+		}
+	}
+	t_rts_pa = why == C::Count;
+	if (!t_rts_pa) {
+		FS::Add(why, 1);
+	}
+	if (t_rts == 1 && t_rts_pa) {
+		// The skip (s.3.2): the record's outputs, then the stores of the resolution's memo hits in its order - the LRU
+		// touch and BindRenderTarget of every colour target by slot, then of the depth target.
+		for (uint32_t i = 0; i < rec->n_idx; i++) {
+			state.color_info[i] = rec->pre[i];
+		}
+		state.color_count = rec->color_count;
+		state.depth_info  = rec->pre_depth;
+		const auto replay = [&](ImageId id) {
+			auto* image               = cache.m_slot_images.try_get(id);
+			image->tick_accessed_last = m_context.AgeTick();
+			cache.TouchImage(*image);
+			BindRenderTarget(id);
+		};
+		for (uint32_t i = 0; i < rec->color_count; i++) {
+			replay(rec->pre[i].image_id);
+		}
+		if (rec->pre_depth.image_id) {
+			replay(rec->pre_depth.image_id);
+		}
+		state.ps_active = DrawHasActivePixelShader(buffer);
+		if (state.color_count == 0 && !state.depth_info.image_id && !state.ps_active) {
+			LogFramebufferSkip(draw.Name(), state.color_info[0], state.depth_info, buffer, draw.index_count, 0);
+			return false;
+		}
+		t_rts_a = true;
+		return true;
+	}
+	// The full resolution with its draft.
+	auto& d         = t_rts_table->draft;
+	d.nv            = 0;
+	d.dmemo_slot    = UINT32_MAX;
+	d.dmemo_version = 0;
+	d.bound0        = m_bound_images.size();
+	const bool prepared = PrepareDrawRenderState(buffer, draw, render_target_slice_offset, state);
+	// [RC9]: "fresh before the capture" is sampled here, right after the resolution, before RefreshShaders.
+	uint32_t n_idx = 0;
+	for (uint32_t i = 0; i < d.nv; i++) {
+		n_idx = std::max(n_idx, d.v[i].idx + 1u);
+	}
+	d.n_idx = n_idx;
+	if (prepared && !t_rts_pa) {
+		// The record a full update would take (s.4.4): the resolution half.
+		for (uint32_t i = 0; i < n_idx; i++) {
+			d.pre[i] = state.color_info[i];
+		}
+		d.color_count = state.color_count;
+		d.pre_depth   = state.depth_info;
+		d.slice       = render_target_slice_offset;
+		d.mask        = ctx.GetRenderTargetMask();
+		d.bmin        = std::bit_cast<uint32_t>(ctx.GetDepthBoundsMin());
+		d.bmax        = std::bit_cast<uint32_t>(ctx.GetDepthBoundsMax());
+	}
+	if (t_rts >= 2 && t_rts_pa) {
+		// The resolution half of the self-check (s.5.1 step 2, s.5.2).
+		FS::Add(C::RtsPa, 1);
+		FS::Add(C::RtsChk, 1);
+		if (rec->age >= 1) {
+			FS::Add(C::RtsChain2, 1);
+		}
+		FS::NoteMax(FS::Gauge::RtsChainMax, rec->age);
+		uint32_t   bits   = 0;
+		// F: the record returns false exactly for "no target and no active pixel stage" (the framebuffer skip).
+		const bool expect = !(rec->color_count == 0 && !rec->pre_depth.image_id && !DrawHasActivePixelShader(buffer));
+		if (prepared != expect) {
+			bits |= 0x008u;
+		}
+		// O, U: the outputs before the capture against the record's.
+		if (n_idx != rec->n_idx || state.color_count != rec->color_count) {
+			bits |= 0x001u;
+		}
+		for (uint32_t i = 0; i < std::min(n_idx, rec->n_idx); i++) {
+			bits |= RtsDiffColor(state.color_info[i], rec->pre[i]);
+		}
+		bits |= RtsDiffDepth(state.depth_info, rec->pre_depth);
+		// K: no visited memo slot of the record was stored into or re-found by this resolution.
+		if (!memo_same(*rec)) {
+			bits |= 0x002u;
+		}
+		// T: the tail of m_bound_images this resolution added is the record's targets in resolution order.
+		const uint32_t expect_n = rec->color_count + (rec->pre_depth.image_id ? 1u : 0u);
+		if (m_bound_images.size() != d.bound0 + expect_n) {
+			bits |= 0x004u;
+		} else {
+			for (uint32_t i = 0; i < expect_n; i++) {
+				const ImageId id = i < rec->color_count ? rec->pre[i].image_id : rec->pre_depth.image_id;
+				if (m_bound_images[d.bound0 + i] != id) {
+					bits |= 0x004u;
+				}
+			}
+		}
+		t_rts_bits = bits;
+		if (!prepared && bits != 0) {
+			// The draw ends here (no post): its report is made now.
+			RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, state.color_count,
+			          static_cast<bool>(state.depth_info.image_id));
+		}
+	}
+	return prepared;
+}
+
+// Session 127, knob "rtskip": place B (s.4.3), instead of AcquireRenderTargets.  PB is evaluated by reading only after PA;
+// at 1 and PB the capture is replaced by the record's RenderState and the stores it makes on unchanged images; otherwise
+// the full capture runs between the snapshots the strict record (s.4.4) and the self-check (s.5.2) read.
+RenderState RenderExecutor::RtsPlaceB(CommandBuffer& buffer, DrawRenderState& state,
+                                      const std::optional<PreparedBindings>& pixel) {
+	namespace FS = Common::FrameStats;
+	namespace G  = Common::Gates;
+	using C      = FS::Counter;
+	auto&            cache = m_context.GetTextureCache();
+	const RtsRecord* rec   = t_rts_take;
+	t_rts_b                = true;
+	const uint32_t cc      = state.color_count;
+	const bool     hd      = static_cast<bool>(state.depth_info.image_id);
+	std::array<Image*, RENDER_COLOR_ATTACHMENTS_MAX + 1> img {};
+	const auto pb = [&]() -> C {
+		// 1 (N1): the targets after the bindings are the record's (the bindings may re-find an alias target).
+		if (cc != rec->color_count || hd != static_cast<bool>(rec->pre_depth.image_id)) {
+			return C::RtsXbIds;
+		}
+		for (uint32_t i = 0; i < cc; i++) {
+			const auto& c = state.color_info[i];
+			const auto& p = rec->pre[i];
+			if (c.image_id != p.image_id || c.target_slot != p.target_slot || !(c.desc.view_info == p.desc.view_info)) {
+				return C::RtsXbIds;
+			}
+		}
+		if (hd && (state.depth_info.image_id != rec->pre_depth.image_id ||
+		           !(state.depth_info.desc.view_info == rec->pre_depth.desc.view_info))) {
+			return C::RtsXbIds;
+		}
+		// 2 (N1, N2, [RC6]): the gate of the fast path, the same expression (AcquireTargetView), then its whole predicate
+		// restated against the record and the live fast records (kSpRtLive of spcen), the re-find condition included.
+		const bool gate = G::Enabled(G::Gate::RenderTargetFast) && !graphics_debug_dump_enabled() &&
+		                  !cache.m_readback_linear_images;
+		if (!gate) {
+			return C::RtsXbLive;
+		}
+		for (uint32_t i = 0; i < rec->nt; i++) {
+			const bool    d     = i == cc;
+			const auto&   t     = rec->t[i];
+			const ImageId id    = d ? state.depth_info.image_id : state.color_info[i].image_id;
+			Image*        image = cache.m_slot_images.try_get(id);
+			const auto&   fast  = d ? m_depth_view_fast : m_color_view_fast[t.slot];
+			const auto&   desc  = d ? state.depth_info.desc : state.color_info[i].desc;
+			const auto    stamp = image != nullptr ? image->bind_stamp.load(std::memory_order_acquire) : 0u;
+			if (image == nullptr || !image->registered || image->depth_id || image->binding.needs_rebind ||
+			    image->pending_levels != 0 || image->backing.image != t.backing || stamp != t.stamp ||
+			    image->source_size != t.source_size || image->source_first_level != t.source_first_level ||
+			    !fast.valid || fast.image_id != id || fast.backing != t.backing || fast.view != t.view ||
+			    fast.stamp != t.stamp || fast.meta_epoch != rec->meta || fast.source_size != image->source_size ||
+			    fast.source_first_level != image->source_first_level || !(fast.view_info == desc.view_info) ||
+			    !SameTargetMetadata(fast.metadata, desc.info.metadata) ||
+			    (d && (fast.htile_clear_mask != image->info.htile_clear_mask ||
+			           image->info.htile_clear_mask != t.htile_mask ||
+			           !SpStencilKept(cache, state.depth_info, fast, id)))) {
+				return C::RtsXbLive;
+			}
+			img[i] = image;
+		}
+		// 3 (N2, N4): the metadata epoch the record's fast records were taken at.
+		if (cache.MetaEpoch() != rec->meta) {
+			return C::RtsXbMeta;
+		}
+		// 4 (N3, [RC4]): no state record of a target was written since the record.
+		for (uint32_t i = 0; i < rec->nt; i++) {
+			if (img[i]->backing.state_serial != rec->t[i].state_serial) {
+				return C::RtsXbSer;
+			}
+		}
+		// 5 (N3, N5, [RC5]): sampled by this draw as the record's colour targets were; the depth target not sampled and
+		// not an image without data (then !is_bound means no feedback loop).
+		for (uint32_t i = 0; i < cc; i++) {
+			if (img[i]->binding.is_bound != rec->t[i].is_bound) {
+				return C::RtsXbBound;
+			}
+		}
+		if (hd && (img[cc]->binding.is_bound || img[cc]->info.data.Empty())) {
+			return C::RtsXbBound;
+		}
+		// 6 (N10, N11 - a narrowing of the set, [RC4]): inside the pass the record is pinned to.
+		if (!buffer.IsRendering() || CommandBuffer::PassBeginSerial() != rec->pass_serial) {
+			return C::RtsXbPass;
+		}
+		return C::Count;
+	};
+	bool pb_ok = false;
+	if (t_rts_pa) {
+		const C why = pb();
+		pb_ok       = why == C::Count;
+		if (!pb_ok) {
+			FS::Add(why, 1);
+		}
+	}
+	if (t_rts == 1 && pb_ok) {
+		// The skip (s.3.2): the stores the fast path and the capture make on unchanged images, in the capture's order.
+		t_rts_pb = true;
+		FS::Add(C::RtsSkip, 1);
+		for (uint32_t i = 0; i < rec->nt; i++) {
+			const bool  d     = i == cc;
+			const auto& t     = rec->t[i];
+			auto&       image = *img[i];
+			image.MarkGpuModified();
+			if (d) {
+				image.usage.depth_target = true;
+			} else {
+				image.usage.render_target = true;
+			}
+			image.binding.attachment_layout = t.att_layout;
+			image.binding.attachment_access = t.att_access;
+			if (!d) {
+				FS::NoteMax(FS::Gauge::RtWidth, t.w);
+				FS::NoteMax(FS::Gauge::RtHeight, t.h);
+				FS::Add(C::RtAttachments, 1);
+				FS::Add(C::RtPixelsK, t.kpx);
+			}
+		}
+		if (hd) {
+			state.depth_info.depth_load_clear_enable = false;
+		}
+		g_pass_extents = rec->extents;
+		return rec->state;
+	}
+	if (t_rts >= 2 && pb_ok) {
+		t_rts_pb = true;
+		FS::Add(C::RtsPb, 1);
+		FS::Add(C::RtsChkB, 1);
+	}
+	// The full capture between the snapshots.
+	t_rts_slow   = false;
+	t_rts_race   = false;
+	t_rts_refind = false;
+	t_rts_meta0  = cache.MetaEpoch();
+	t_rts_ser0   = ImageStateSerial();
+	t_rts_open0  = buffer.IsRendering();
+	auto rendering = AcquireRenderTargets(buffer, state.color_info, state.color_count, state.depth_info, pixel);
+	t_rts_meta1    = cache.MetaEpoch();
+	t_rts_ser1     = ImageStateSerial();
+	t_rts_open1    = buffer.IsRendering();
+	return rendering;
+}
+
+// Session 127, knob "rtskip": the post (s.4.3), right after place B.  The guard rts_acqw; at 2/3 the capture half of the
+// self-check and the report; then the record by the rule of s.5.1, the same at 1, 2 and 3: PA and PB - re-pinned only;
+// PA and not PB - its capture half from this draw; not PA - a full update from this draw; both by the strict rule.
+void RenderExecutor::RtsPost(CommandBuffer& buffer, DrawRenderState& state, const RenderState& rendering) {
+	namespace FS = Common::FrameStats;
+	using C      = FS::Counter;
+	(void)buffer;
+	if (!t_rts_b) {
+		return; // place B did not run through RtsPlaceB: the record stays taken (as any return before the post)
+	}
+	auto&          cache = m_context.GetTextureCache();
+	RtsEntry*      e     = t_rts_entry;
+	RtsRecord*     rec   = t_rts_take;
+	const uint32_t cc    = state.color_count;
+	const bool     hd    = static_cast<bool>(state.depth_info.image_id);
+	t_rts_live           = false;
+	t_rts_take           = nullptr;
+	if (e != nullptr && e->gen != t_rts_gen_a) {
+		FS::Add(C::RtsAcqw, 1); // N13: a register group written inside the draw
+	}
+	if (t_rts >= 2 && t_rts_pa) {
+		uint32_t bits = t_rts_bits;
+		if (t_rts_pb) {
+			if (!(rendering == rec->state)) {
+				bits |= 0x010u; // R
+			}
+			for (uint32_t i = 0; i < rec->nt; i++) {
+				const ImageId id    = i == cc ? state.depth_info.image_id : state.color_info[i].image_id;
+				const Image*  image = cache.m_slot_images.try_get(id);
+				if (image == nullptr || image->binding.attachment_layout != rec->t[i].att_layout ||
+				    image->binding.attachment_access != rec->t[i].att_access) {
+					bits |= 0x020u; // X
+				}
+			}
+			if (hd && state.depth_info.depth_load_clear_enable) {
+				bits |= 0x020u;
+			}
+			if (g_pass_extents.max_width != rec->extents.max_width ||
+			    g_pass_extents.max_height != rec->extents.max_height ||
+			    g_pass_extents.true_kpx != rec->extents.true_kpx) {
+				bits |= 0x020u;
+			}
+			if (t_rts_ser1 != t_rts_ser0) {
+				bits |= 0x040u; // S
+			}
+			if (t_rts_open0 && !t_rts_open1) {
+				bits |= 0x080u; // P
+			}
+			if (t_rts_meta1 != t_rts_meta0) {
+				bits |= 0x100u; // M
+			}
+			if (t_rts_slow || t_rts_refind) {
+				bits |= 0x200u; // L
+			}
+		}
+		if (bits != 0) {
+			RtsReport(bits, m_context.GetGpu().GetFrameNum(), rec->age, cc, hd);
+		}
+	}
+	if (e == nullptr) {
+		FS::Add(C::RtsOvf, 1); // the table is full: no record for this context
+		return;
+	}
+	if (t_rts_pb) {
+		// PA and PB (the skip at 1): the record is not refreshed, only re-pinned at BeginRendering ([RC1]).
+		rec->age++;
+		e->has_rec = true;
+		t_rts_pin  = true;
+		return;
+	}
+	// The strict record (s.4.4, items 79(b), 79(v)(2)).
+	const bool             full      = !t_rts_pa;
+	const RtsDraft&        d         = t_rts_table->draft;
+	const RenderColorInfo* pre       = full ? d.pre.data() : rec->pre.data();
+	const RenderDepthInfo& pre_depth = full ? d.pre_depth : rec->pre_depth;
+	const uint32_t         pre_cc    = full ? d.color_count : rec->color_count;
+	const uint32_t         nv        = full ? d.nv : rec->nv;
+	const RtsVisit*        v         = full ? d.v.data() : rec->v.data();
+	const uint32_t         dms       = full ? d.dmemo_slot : rec->dmemo_slot;
+	const uint32_t         dmv       = full ? d.dmemo_version : rec->dmemo_version;
+	std::array<Image*, RENDER_COLOR_ATTACHMENTS_MAX + 1> img {};
+	bool ok = !t_rts_slow && !t_rts_refind && t_rts_meta1 == t_rts_meta0 && cc == pre_cc &&
+	          hd == static_cast<bool>(pre_depth.image_id);
+	if (ok && hd) {
+		ok = !state.depth_info.depth_clear_enable && !state.depth_info.depth_load_clear_enable;
+	}
+	// pre == post in every field of bits 0x001 and 0x400 ([RC9], item 79(b)).
+	for (uint32_t i = 0; i < cc && ok; i++) {
+		ok = RtsDiffColor(state.color_info[i], pre[i]) == 0;
+	}
+	if (ok) {
+		ok = RtsDiffDepth(state.depth_info, pre_depth) == 0;
+	}
+	for (uint32_t i = 0; i < cc + (hd ? 1u : 0u) && ok; i++) {
+		const bool dd = i == cc;
+		img[i]        = cache.m_slot_images.try_get(dd ? state.depth_info.image_id : state.color_info[i].image_id);
+		ok            = img[i] != nullptr &&
+		     (dd ? state.depth_info.memo_slot : state.color_info[i].memo_slot) != UINT32_MAX &&
+		     (dd || state.color_info[i].target_slot < RENDER_COLOR_ATTACHMENTS_MAX);
+	}
+	if (ok && hd) {
+		ok = !img[cc]->binding.is_bound && !img[cc]->info.data.Empty(); // N5, [RC5]
+	}
+	// Every visited colour slot went through its memo or the inactive-slot path; item 79(v)(2): pre equals the content of
+	// the memo slot of the LAST visit that wrote each index (an earlier visit's output at that index is overwritten).
+	auto& memo = Memo();
+	for (uint32_t i = 0; i < nv && ok; i++) {
+		if (v[i].memo_slot == UINT32_MAX) {
+			ok = !v[i].image;
+			continue;
+		}
+		const auto& m = memo.colors[v[i].memo_slot];
+		ok            = m.valid && m.version == v[i].memo_version;
+		bool last     = true;
+		for (uint32_t j = i + 1; j < nv; j++) {
+			if (v[j].idx == v[i].idx) {
+				last = false;
+			}
+		}
+		if (ok && last) {
+			ok = RtsDiffColor(pre[v[i].idx], m.info) == 0;
+		}
+	}
+	if (ok) {
+		ok = dms != UINT32_MAX && memo.depths[dms].valid && memo.depths[dms].version == dmv &&
+		     RtsDiffDepth(pre_depth, memo.depths[dms].info) == 0;
+	}
+	if (!ok) {
+		FS::Add(C::RtsRecX, 1); // the context stays without a record
+		return;
+	}
+	auto& r = e->rec;
+	if (full) {
+		r.gen         = t_rts_gen_a;
+		r.slice       = d.slice;
+		r.mask        = d.mask;
+		r.rel         = RtsRelSkip(d.mask);
+		r.bmin        = d.bmin;
+		r.bmax        = d.bmax;
+		r.n_idx       = d.n_idx;
+		r.color_count = d.color_count;
+		for (uint32_t i = 0; i < d.n_idx; i++) {
+			r.pre[i] = d.pre[i];
+		}
+		r.pre_depth     = d.pre_depth;
+		r.nv            = d.nv;
+		r.v             = d.v;
+		r.dmemo_slot    = d.dmemo_slot;
+		r.dmemo_version = d.dmemo_version;
+	}
+	// The capture half (a full update, or PA and not PB).
+	r.nt = cc + (hd ? 1u : 0u);
+	for (uint32_t i = 0; i < r.nt; i++) {
+		const bool   dd    = i == cc;
+		const Image& image = *img[i];
+		auto&        t     = r.t[i];
+		t.id                 = dd ? state.depth_info.image_id : state.color_info[i].image_id;
+		t.slot               = dd ? UINT32_MAX : state.color_info[i].target_slot;
+		t.backing            = image.backing.image;
+		t.view               = dd ? rendering.depth_stencil_attachment.image_view
+		                          : rendering.color_attachments[state.color_info[i].target_slot].image_view;
+		t.stamp              = image.bind_stamp.load(std::memory_order_acquire);
+		t.source_first_level = image.source_first_level;
+		t.source_size        = image.source_size;
+		t.state_serial       = image.backing.state_serial;
+		t.htile_mask         = dd ? image.info.htile_clear_mask : 0u;
+		t.is_bound           = image.binding.is_bound;
+		t.att_layout         = image.binding.attachment_layout;
+		t.att_access         = image.binding.attachment_access;
+		if (dd) {
+			t.w   = 0;
+			t.h   = 0;
+			t.kpx = 0;
+		} else {
+			const auto extent = state.color_info[i].Extent();
+			t.w               = extent.width;
+			t.h               = extent.height;
+			t.kpx             = static_cast<uint64_t>(extent.width) * extent.height / 1024U;
+		}
+	}
+	r.state    = rendering;
+	r.extents  = g_pass_extents;
+	r.meta     = t_rts_meta1;
+	r.age      = 0;
+	r.pinned   = false; // valid for PA only once BeginRendering pins it
+	e->has_rec = true;
+	t_rts_pin  = true;
+	if (t_rts >= 2) {
+		FS::Add(C::RtsRec, 1);
+	}
+}
 
 void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buffer,
                                          const DrawCallInfo& draw, DrawRenderState& state,
@@ -3408,11 +4340,14 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// this changes is that decision; the targets themselves are acquired identically, which is
 	// what "keep the render-target capture" means.  Two calls, not a ternary on the optional:
 	// a ternary would copy the whole PreparedBindings in the non-floor arm.
+	// Session 127, knob "rtskip" (place B): at 0, on the floor and under an armed spcen - the previous calls.
 	const auto rendering =
-	    bind_floor ? AcquireRenderTargets(buffer, state.color_info, state.color_count,
-	                                      state.depth_info)
-	               : AcquireRenderTargets(buffer, state.color_info, state.color_count,
-	                                      state.depth_info, bindings.pixel);
+	    t_rts != 0 && !bind_floor && !sp_scope.Armed()
+	        ? RtsPlaceB(buffer, state, bindings.pixel)
+	    : bind_floor ? AcquireRenderTargets(buffer, state.color_info, state.color_count,
+	                                        state.depth_info)
+	                 : AcquireRenderTargets(buffer, state.color_info, state.color_count,
+	                                        state.depth_info, bindings.pixel);
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(a)): the W1 writes AcquireRenderTargets queued
 	// go to the graph now, after every image read of this draw - on both paths, bindfloor included.
 	if (Common::SkipCeil::t_mode == 3) [[unlikely]] {
@@ -3436,6 +4371,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (Common::Rk3::t_rk3 != 0) [[unlikely]] {
 			Rk3Post(buffer.GetRegisters(), state.color_info, state.color_count, state.depth_info, rk3_ran, rk3_spent);
 			Common::FrameStats::PathLap::Mark(Common::FrameStats::Counter::PathEmRk3Ns);
+		}
+		if (t_rts != 0) [[unlikely]] {
+			RtsPost(buffer, state, rendering); // Session 127, knob "rtskip": the record; the self-check at 2/3
 		}
 	}
 	DrawEmitInfo emit_info = emit;
@@ -3673,6 +4611,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (sp_scope.Armed()) {
 			SpRtAfterBegin(sp_open, sp_pass);
 		}
+		if (t_rts != 0) [[unlikely]] {
+			RtsAfterBegin(); // Session 127, knob "rtskip": pin the record to the pass this draw renders in
+		}
 		DrawStatEmit();
 		RecordCommandWriter tail(*buffer.Recorder());
 		buffer.NoteHandleUse();
@@ -3841,6 +4782,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	if (sp_scope.Armed()) {
 		SpRtAfterBegin(sp_open, sp_pass);
 	}
+	if (t_rts != 0) [[unlikely]] {
+		RtsAfterBegin(); // Session 127, knob "rtskip": pin the record to the pass this draw renders in
+	}
 	DrawStatEmit();
 	buffer.CheckNoPublish(publish_mark);
 	if (buffer.GraphicsStateChanged(GraphicsStateSlot::Pipeline, pipeline.pipeline)) {
@@ -3989,6 +4933,12 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
 	Rk3Latch(); // Session 126, knob "rk3cen" (C3): latched for this draw, before any return
+	// Session 127, knob "rtskip" (s.4.1): latched ONCE for this draw, before any return - one knob load and one thread-local
+	// test while the knob is 0 and the previous draw was not armed.
+	if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+	    [[unlikely]] {
+		RtsLatchSlow(buffer, rts_value);
+	}
 	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
 	if (Common::SkipCeil::t_skip) [[unlikely]] {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
@@ -4165,7 +5115,9 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 		    Common::FrameStats::Counter::MutWideScopes);
 		// Session 126, knob "rk3cen" (C4): the span of the target resolution of an armed draw.
 		const auto rk3_c4    = Rk3ResBegin(&buffer.GetRegisters(), args.render_target_slice_offset);
-		const bool prepared  = PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state);
+		// Session 127, knob "rtskip" (place A): at 0 the previous call.
+		const bool prepared  = t_rts == 0 ? PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)
+		                                  : RtsPlaceA(buffer, draw, args.render_target_slice_offset, state);
 		Rk3ResEnd(rk3_c4);
 		if (!prepared) {
 			ResetBindings();
@@ -4207,6 +5159,12 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	KYTY_PROFILER_FUNCTION();
 	RenderDocNoteGpuWork();
 	Rk3Latch(); // Session 126, knob "rk3cen" (C3): latched for this draw, before any return
+	// Session 127, knob "rtskip" (s.4.1): latched ONCE for this draw, before any return - one knob load and one thread-local
+	// test while the knob is 0 and the previous draw was not armed.
+	if (const auto rts_value = Common::Gates::Value(Common::Gates::Knob::RtSkip); rts_value != 0 || t_rts != 0)
+	    [[unlikely]] {
+		RtsLatchSlow(buffer, rts_value);
+	}
 	// Session 123, knob "skipceil" (MEASUREMENT ONLY, design123.md s.1.4): a draw of a skippable frame, before any return.
 	if (Common::SkipCeil::t_skip) [[unlikely]] {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SkcSd, 1);
@@ -4340,7 +5298,9 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 		    Common::FrameStats::Counter::MutWideScopes);
 		// Session 126, knob "rk3cen" (C4): the span of the target resolution of an armed draw.
 		const auto rk3_c4    = Rk3ResBegin(&buffer.GetRegisters(), args.render_target_slice_offset);
-		const bool prepared  = PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state);
+		// Session 127, knob "rtskip" (place A): at 0 the previous call.
+		const bool prepared  = t_rts == 0 ? PrepareDrawRenderState(buffer, draw, args.render_target_slice_offset, state)
+		                                  : RtsPlaceA(buffer, draw, args.render_target_slice_offset, state);
 		Rk3ResEnd(rk3_c4);
 		if (!prepared) {
 			ResetBindings();
@@ -4441,9 +5401,20 @@ bool RenderExecutor::ResolveColorTargets(CommandBuffer& buffer, uint32_t render_
 } // namespace Libs::Graphics
 
 // Session 126, knob "rk3cen" (C1, C2): the cold halves of the HW::Context hooks (common/rk3Census.h).
+// Session 127 (item 77(e)): one mask, a table per armed bit; rk3_wr_* / rts_wr* count only under their own bit.
 void Common::Rk3::NoteWriteCold(const void* ctx, uint32_t group) noexcept {
-	Libs::Graphics::Rk3HookWrite(ctx, group);
+	if ((t_hooks & HookRk3) != 0) {
+		Libs::Graphics::Rk3HookWrite(ctx, group);
+	}
+	if ((t_hooks & HookRts) != 0) {
+		Libs::Graphics::RtsHookWrite(ctx, group);
+	}
 }
 void Common::Rk3::NoteObjectCold(const void* ctx) noexcept {
-	Libs::Graphics::Rk3HookObject(ctx);
+	if ((t_hooks & HookRk3) != 0) {
+		Libs::Graphics::Rk3HookObject(ctx);
+	}
+	if ((t_hooks & HookRts) != 0) {
+		Libs::Graphics::RtsHookObject(ctx);
+	}
 }

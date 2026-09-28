@@ -2437,6 +2437,42 @@ enum class Counter : uint32_t {
 	Rk3Nt,                   // rk3_nt: must be 0 - an armed draw with no pathlap chain
 	Rk3Xthr,                 // rk3_xthr: must be 0 - a draw off the GuestGpu thread with the knob on
 	Rk3Acqw,                 // rk3_acqw: must be 0 - a generation moved between C4 and C6
+	// Session 127, knob "rtskip" (docs/session-127/design127.md rev 2 s.7.1, ROADMAP s122 items 78(g), 79): raw counts.
+	// Counted at 1..3: rts_n, rts_xa_*, rts_xb_*, rts_rec_x, rts_ovf; at 1 only: rts_skip; at 2..3 only: rts_pa .. rts_early
+	// below; rts_refuse at a nonzero knob; rts_xthr / rts_acqw on a violation only (must be 0).
+	RtsN,                    // rts_n: armed draws that reached place A
+	RtsSkip,                 // rts_skip: value 1 - resolution AND capture skipped ("skipped", item 77(v))
+	RtsXaRec,                // rts_xa_rec: PA item 1 - no pinned record of the context, or another context at A last
+	RtsXaCfg,                // rts_xa_cfg: PA item 2 - configuration (rtfast, debug dump, linear readback, fast memo)
+	RtsXaReg,                // rts_xa_reg: PA item 3 - a Rel_skip register group was written (0 at value 3)
+	RtsXaArg,                // rts_xa_arg: PA item 4 - render_target_slice_offset differs
+	RtsXaUnh,                // rts_xa_unh: PA item 5 - CB_COLOR_CONTROL resolve mode or the depth bounds (no hook)
+	RtsXaMemo,               // rts_xa_memo: PA item 6 - a visited memo slot was stored into / invalidated
+	RtsXaImg,                // rts_xa_img: PA item 7 - a target image is gone, unregistered or to be rebound
+	RtsXbIds,                // rts_xb_ids: PB item 1 - the targets after the bindings differ from the record
+	RtsXbLive,               // rts_xb_live: PB item 2 - the rtfast gate or the fast predicate against the record
+	RtsXbMeta,               // rts_xb_meta: PB item 3 - TextureCache::MetaEpoch() moved
+	RtsXbSer,                // rts_xb_ser: PB item 4 - a target's backing.state_serial moved
+	RtsXbBound,              // rts_xb_bound: PB item 5 - is_bound differs / the depth target sampled or without data
+	RtsXbPass,               // rts_xb_pass: PB item 6 - not inside the pass the record is pinned to
+	RtsRecX,                 // rts_rec_x: the post took no record by the strict rule
+	RtsOvf,                  // rts_ovf: the context table is full (the draw has no record)
+	RtsRefuse,               // rts_refuse: draws with the knob nonzero and a refusal (RtSkip: refused)
+	RtsXthr,                 // rts_xthr: must be 0 - the knob nonzero on a draw off the GuestGpu thread
+	RtsAcqw,                 // rts_acqw: must be 0 - a generation of the context moved between place A and the post
+	RtsPa,                   // rts_pa: values 2/3 - PA held
+	RtsPb,                   // rts_pb: values 2/3 - PA and PB held
+	RtsChk,                  // rts_chk: values 2/3 - resolution self-checks (= rts_pa)
+	RtsChkB,                 // rts_chk_b: values 2/3 - capture self-checks (= rts_pb)
+	RtsChain2,               // rts_chain2: values 2/3 - self-checks against a record older than the previous draw
+	RtsBad,                  // rts_bad: values 2/3 - mismatches (must be 0 at 2; > 0 at 3)
+	RtsBadNoreg,             // rts_bad_noreg: values 2/3 - mismatches with reg=0 (must be 0 at 2 and 3)
+	RtsRace,                 // rts_race: values 2/3 - bind_stamp races (must be 0 on the self-check runs)
+	RtsRec,                  // rts_rec: values 2/3 - records taken (full update or the capture half)
+	RtsWr,                   // rts_wr: values 2/3 - hook calls, setters
+	RtsWrObj,                // rts_wr_obj: values 2/3 - hook calls, whole-object writes
+	RtsLost,                 // rts_lost: values 2/3 - records taken at the latch and never given back
+	RtsEarly,                // rts_early: values 2/3 - draws that reached place A and not the post
 	Count
 };
 
@@ -2450,6 +2486,8 @@ enum class Gauge : uint32_t {
 	VpHeight, // ... |yscale| * 2 (vp_h)
 	// Session 126, knob "rk3cen" ([RC4]): the largest C5 span of one armed draw this frame, ns (rk3_c5_max_ns).
 	Rk3C5Max,
+	// Session 127, knob "rtskip" = 2/3 ([RC1]): the largest record age a self-check of this frame met (rts_chain_max).
+	RtsChainMax,
 	Count
 };
 

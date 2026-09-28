@@ -430,8 +430,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_SKIP_CEILING", "skipceil", 0, 3},
     // Session 126, MEASUREMENT ONLY: the K3 census (1), + the pl_em_rt split (2), + the value witnesses (3)
     // (docs/session-126/design126.md rev 2). Read on every draw at its entry and latched, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_RK3_CENSUS", "rk3cen", 0, 3},
+    // Session 127, PROTOTYPE: the K3 skip (1), its self-check (2), the self-check with the register source ignored (3)
+    // (docs/session-127/design127.md rev 2). Read once per draw at its entry and latched, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_RT_SKIP", "rtskip", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

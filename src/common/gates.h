@@ -661,8 +661,16 @@ enum class Knob : uint32_t {
 	// 1 = census by register-group write generations (reads no resolution input, [RC2]); 2 = 1 + the split of pl_em_rt
 	// (smoke only); 3 = 1 + the value witnesses V_D / V_key (smoke only).  Refused (Rk3Census: refused) while spcen,
 	// slicecen, bindfloor, m4baton, skipceil or spine is on and without pathlap.  Emulation is unchanged at every value.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	Rk3Cen,           // KYTY_RK3_CENSUS,  file name "rk3cen" (MEASUREMENT ONLY: 0 off, 1 census, 2 census + pl_em_rt split, 3 census + value witnesses)
+	// Session 127, PROTOTYPE (docs/session-127/design127.md rev 2, ROADMAP s122 items 76(z), 77, 78, 79): the K3 skip of the
+	// target resolution and capture of a draw whose context wrote no relevant CB/DB register group and moved no non-register
+	// source since the record of its last full draw.  Read ONCE per draw at the entry of DrawIndex / DrawAuto and latched for
+	// that draw, so it CAN be a schedule arm.  0 = the previous path; 1 = skip; 2 = self-check (the full path always, the
+	// record lived as at 1 and compared, RtSkipVerify); 3 = 2 with the register source ignored (positive control).  Refused
+	// (RtSkip: refused) while rk3cen, spine, spcen, slicecen, skipceil, bindfloor or m4baton is on, rtfast off, the debug
+	// dump, KYTY_RENDER_MEMO_FAST=0 or the linear readback configuration.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check, 3 self-check + positive control)
 	Count,
 };
 

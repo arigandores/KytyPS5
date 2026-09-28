@@ -696,6 +696,15 @@ private:
 	// The stencil_kept lambda of AcquireTargetView on the recorded fast.stencil_record; reads only.
 	[[nodiscard]] static bool SpStencilKept(const TextureCache& cache, const RenderDepthInfo& depth,
 	                                        const TargetViewFast& fast, ImageId id);
+	// Session 127, knob "rtskip" (docs/session-127/design127.md rev 2; state thread-local in renderDraw.cpp): the latch's
+	// cold half, place A (instead of PrepareDrawRenderState), place B (instead of AcquireRenderTargets) and the post.
+	// Members because the skip replays TextureCache::TouchImage and reads m_slot_images (RenderExecutor is the friend).
+	void                      RtsLatchSlow(CommandBuffer& buffer, uint32_t value);
+	[[nodiscard]] bool        RtsPlaceA(CommandBuffer& buffer, const DrawCallInfo& draw,
+	                                    uint32_t render_target_slice_offset, DrawRenderState& state);
+	[[nodiscard]] RenderState RtsPlaceB(CommandBuffer& buffer, DrawRenderState& state,
+	                                    const std::optional<PreparedBindings>& pixel);
+	void                      RtsPost(CommandBuffer& buffer, DrawRenderState& state, const RenderState& rendering);
 	friend class SpDrawScope;
 
 	friend class CommandProcessor;

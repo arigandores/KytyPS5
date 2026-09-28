@@ -22,24 +22,31 @@ inline constexpr uint32_t DSetters   = 29; // hooked setters: 12 colour + 1 mask
 // GuestGpu thread, so on every other thread it stays 0 and a hook there does nothing.
 inline constinit thread_local uint32_t t_rk3 = 0;
 
+// Session 127 (ROADMAP s122 item 77(e), docs/session-127/design127.md rev 2 s.4.5): ONE thread-local mask arms the hooks -
+// bit HookRk3 while rk3cen is latched (t_rk3 != 0), bit HookRts while rtskip is latched (renderDraw.cpp); the cold half
+// hands the write to the table of each armed bit.  The hot check stays one thread-local load; both bits 0 = no write.
+inline constexpr uint32_t HookRk3 = 1u;
+inline constexpr uint32_t HookRts = 2u;
+inline constinit thread_local uint32_t t_hooks = 0;
+
 void NoteWriteCold(const void* ctx, uint32_t group) noexcept; // renderDraw.cpp
 void NoteObjectCold(const void* ctx) noexcept;                 // renderDraw.cpp
 
 // C1: a setter of group `group` wrote the context `ctx`.
 inline void NoteWrite(const void* ctx, uint32_t group) noexcept {
-	if (t_rk3 != 0) [[unlikely]] {
+	if (t_hooks != 0) [[unlikely]] {
 		NoteWriteCold(ctx, group);
 	}
 }
 // C1: a CB_COLORn_* setter of slot `slot` (group G_slot[slot]).
 inline void NoteSlot(const void* ctx, uint32_t slot) noexcept {
-	if (t_rk3 != 0) [[unlikely]] {
+	if (t_hooks != 0) [[unlikely]] {
 		NoteWriteCold(ctx, GroupSlot0 + slot);
 	}
 }
 // C2: the whole object was written (Reset, R_CONTEXT_STATE Pop): every group moves.
 inline void NoteObject(const void* ctx) noexcept {
-	if (t_rk3 != 0) [[unlikely]] {
+	if (t_hooks != 0) [[unlikely]] {
 		NoteObjectCold(ctx);
 	}
 }

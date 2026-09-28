@@ -40,6 +40,25 @@ void                   AddAsyncCopySignal(void (*signal)(uint64_t completed, voi
 void                   RemoveAsyncCopySignal(void (*signal)(uint64_t completed, void* user), void* user);
 [[nodiscard]] bool     RequestAsyncCopySignal(uint64_t sequence);
 
+// Session 129, knob "armcopy" (docs/session-129/design129.md rev 2 s.3 C4): a pooled copy whose chunks arm their own
+// guest range before they copy it. `arm` runs on the thread that takes the chunk, before the copy, and returns true when it
+// copied the chunk itself (value 3 copies under the apply hold); `check` (may be null) runs after the copy at values 2 and
+// 3, with no lock held. The hook must outlive every chunk queued with it.
+struct ArmedCopyHook {
+	bool (*arm)(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst, const uint8_t* src) = nullptr;
+	void* arm_context = nullptr;
+	void (*check)(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+	              const uint8_t* src) = nullptr;
+	void* check_context = nullptr;
+};
+// AsyncMemcpy whose chunks carry {hook, guest vaddr of the chunk, mode} (ac_jobs, ac_chunks). Where AsyncMemcpy would not
+// queue (pool off, KYTY_ASYNC_COPY=0, a size below ASYNC_COPY_MIN_BYTES - the knob refuses the first two) the order of a
+// chunk runs on the caller: arm, copy, check.
+void AsyncMemcpyArmed(void* dst, const void* src, size_t size, const ArmedCopyHook* hook, uint64_t vaddr, uint32_t mode);
+// Knob "armcopy" refusals: the pool has threads (not KYTY_PARALLEL_COPY=0); copies are asynchronous (not KYTY_ASYNC_COPY=0).
+[[nodiscard]] bool CopyPoolEnabled();
+[[nodiscard]] bool AsyncCopyOn();
+
 constexpr size_t PARALLEL_COPY_MIN_BYTES = 4u << 20u;
 constexpr size_t ASYNC_COPY_MIN_BYTES    = 64u << 10u;
 

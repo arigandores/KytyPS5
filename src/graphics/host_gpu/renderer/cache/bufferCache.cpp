@@ -251,6 +251,62 @@ bool BufferCache::CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t 
 	return false;
 }
 
+// Session 129, knob "armcopy" (design129.md rev 2 s.2.2, C3): CopyGuestToStaging of an operation latched 1..4 - the same
+// decision "pool or inline". A pooled copy goes to the pool as an armed job (each chunk arms its range, then copies; at 4
+// it only runs the detector). At 1..3 GuestGpu arms an inline copy's range right before it reads it, and every copy is
+// noted for the rest of the windows and the GuestGpu-branch detector (ArmCopyFinish). The image caller never gets here.
+bool BufferCache::CopyGuestToStagingArmed(uint8_t* staging, uint64_t vaddr, uint64_t size, uint32_t mode) {
+	auto&       pages   = m_memory_tracker.Pages();
+	const void* backing = nullptr;
+	if (size >= Common::ASYNC_COPY_MIN_BYTES && Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+		pages.ArmCopyNoteCopy(vaddr, size, true);
+		Common::AsyncMemcpyArmed(staging, backing, static_cast<size_t>(size), &m_arm_copy_hook, vaddr, mode);
+		return true;
+	}
+	pages.ArmCopyNoteCopy(vaddr, size, false);
+	pages.ArmCopyFlush(vaddr, size, PageManager::ArmCopyReason::Inline);
+	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
+	    !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
+		std::memcpy(staging, reinterpret_cast<const void*>(vaddr), static_cast<size_t>(size));
+	}
+	return false;
+}
+
+// Session 129, knob "armcopy" 2/3 (s.7.3; a ROW, not a guard - ROADMAP s122 item 98(v)): after the copy of a chunk, on the
+// thread that copied it, with no lock held. Each guest-page piece of the staging is compared with the backing; a piece
+// that differs and whose page reads CPU-clean (lock-free, no RegionManager::lock - s.4) is ac_cbad.
+void BufferCache::ArmCopyContent(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+                                 const uint8_t* src) {
+	namespace FS = Common::FrameStats;
+	auto*    self  = static_cast<BufferCache*>(context);
+	uint64_t count = 0;
+	uint64_t diff  = 0;
+	uint64_t bad   = 0;
+	for (uint64_t offset = 0; offset < size;) {
+		const auto page  = (vaddr + offset) & ~(TRACKER_PAGE_SIZE - 1);
+		const auto bytes = std::min<uint64_t>(page + TRACKER_PAGE_SIZE - (vaddr + offset), size - offset);
+		count++;
+		if (std::memcmp(dst + offset, src + offset, static_cast<size_t>(bytes)) != 0) {
+			diff++;
+			// The dirty bit is set before the page becomes writable (ChangeState<Cpu, true>); a write seen in the backing
+			// was made after that, and x86 keeps the order of the two reads.
+			std::atomic_thread_fence(std::memory_order_acquire);
+			if (!self->m_memory_tracker.IsCpuDirtyRelaxed(page, TRACKER_PAGE_SIZE)) {
+				bad++;
+				static std::atomic<uint32_t> logged {0};
+				if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+					LOGF("ArmCopyVerify: CONTENT addr=0x%016llx mode=%u\n", static_cast<unsigned long long>(page),
+					     static_cast<unsigned>(mode));
+				}
+			}
+		}
+		offset += bytes;
+	}
+	FS::Add(FS::Counter::AcCmpPages, count);
+	FS::Add(FS::Counter::AcCdiff, diff);
+	FS::Add(FS::Counter::AcCbad, bad);
+}
+
 // Session 91: the upload memcpy split, counted at the caller from CopyGuestToStaging's own
 // decision.  "pooled" means handed to AsyncMemcpy, which queues it unless KYTY_PARALLEL_COPY=0
 // or KYTY_ASYNC_COPY=0 turns the pool off.
@@ -387,6 +443,7 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	std::memset(m_gds_buffer.Mapped().data(), 0, static_cast<size_t>(m_gds_buffer.Size()));
 	m_gds_buffer.Flush(0, m_gds_buffer.Size());
 	m_gds_host_epoch++;
+	m_arm_copy_hook = {&PageManager::ArmCopyChunk, &m_memory_tracker.Pages(), &BufferCache::ArmCopyContent, this};
 	SetVulkanObjectNameF(m_graphics.device, m_bda_pagetable_buffer.Handle(),
 	                     "BDA Page Table Buffer");
 	// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never mapped)
@@ -836,6 +893,9 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 		// of this synchronization - the whole ForEachUploadRange, the copy and the written upload's GPU mark included (the
 		// pbcheck below makes no protection change). Only the GuestGpu thread latches; elsewhere the path of 0.
 		const PageManager::CeilScope prot_ceil(GuestGpu::IsGpuThread());
+		// Session 129, knob "armcopy" (PROTOTYPE; design129.md rev 2 s.8.1, C1): the latch of this synchronization, inside
+		// the protceil latch around the same ForEachUploadRange. Only the GuestGpu thread latches; elsewhere the path of 0.
+		const PageManager::ArmCopyScope arm_copy(GuestGpu::IsGpuThread(), is_written);
 		provisional = m_memory_tracker.ForEachUploadRange(
 			vaddr, size, is_written,
 			[&](uint64_t address, uint64_t bytes) noexcept {
@@ -1094,6 +1154,8 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 	}
 	t_import_upload.clear();
 
+	// Session 129, knob "armcopy": the mode of the operation (0 outside one and at 0 - the previous path).
+	const auto arm_copy = PageManager::ArmCopyOpMode();
 	auto [mapped, base_offset] = m_staging_buffer.Map(total_size, 4);
 	if (mapped != nullptr) {
 		// Session 92, gate "stglap": read ONCE, outside the loop and outside every timer.
@@ -1106,7 +1168,9 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 		for (auto& copy: copies) {
 			const auto     address = buffer.CpuAddress() + copy.dstOffset;
 			const uint64_t c0 = Common::FrameStats::Enabled() ? Common::FrameStats::NowNs() : 0;
-			const bool     pooled  = CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size);
+			const bool     pooled  = arm_copy == 0
+			                             ? CopyGuestToStaging(mapped + copy.srcOffset, address, copy.size)
+			                             : CopyGuestToStagingArmed(mapped + copy.srcOffset, address, copy.size, arm_copy);
 			NoteStagingCopy(pooled, copy.size, c0 != 0 ? Common::FrameStats::NowNs() - c0 : 0);
 			any_pooled = any_pooled || pooled;
 			copy.srcOffset += base_offset;
@@ -1121,6 +1185,16 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 		return m_staging_buffer.Handle();
 	}
 
+	if (arm_copy >= 1 && arm_copy <= 3) {
+		// Knob "armcopy" 1..3 (s.2.2): the guest view is read below, so GuestGpu arms every window and every copy first.
+		auto& pages = m_memory_tracker.Pages();
+		pages.ArmCopyFlushWindows();
+		for (const auto& copy: copies) {
+			const auto address = buffer.CpuAddress() + copy.dstOffset;
+			pages.ArmCopyNoteCopy(address, copy.size, false);
+			pages.ArmCopyFlush(address, copy.size, PageManager::ArmCopyReason::Tmp);
+		}
+	}
 	auto temporary = std::make_unique<Buffer>(m_graphics, m_scheduler, MemoryUsage::Upload, 0,
 	                                         vk::BufferUsageFlagBits::eTransferSrc, total_size);
 	for (const auto& copy: copies) {

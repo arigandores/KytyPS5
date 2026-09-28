@@ -67,6 +67,9 @@ public:
 		KYTY_CLASS_NO_COPY(BatchScope);
 
 		void Flush() noexcept;
+		// Knob "armcopy" 1..3 (design129.md rev 2 s.2.2, C2): the windows go to the operation running on this thread
+		// unapplied (each pooled chunk arms its range, GuestGpu the rest in ArmCopyFinish); the scope applies nothing.
+		void Handover() noexcept;
 
 	private:
 		friend struct PageManager::Impl;
@@ -184,6 +187,43 @@ public:
 	// Perms()); a U page not read-only on the tracker is pc_rearm_odd (impossible by P').
 	using DeclareFunc = void (*)(void* context, uint64_t vaddr, uint64_t size);
 	void CeilRearm(void* context, DeclareFunc declare);
+
+	// Session 129, knob "armcopy" (PROTOTYPE; docs/session-129/design129.md rev 2 with ROADMAP s122 items 97(e), 98, 99,
+	// 101). The latch of one buffer synchronization, next to CeilScope around the whole ForEachUploadRange of
+	// BufferCache::SynchronizeBuffer, `engage` = on the GuestGpu thread. It reads the knob ONCE (a nested scope inherits the
+	// outer latch) and at a value >= 1 checks the refusals (s.8.2). A written synchronization at >= 1 takes the path of 0
+	// (its armings are ac_kept_wr_* at 1..3). Off the GuestGpu thread nothing is latched (ac_offthr).
+	class ArmCopyScope final {
+	public:
+		ArmCopyScope(bool engage, bool is_written) noexcept;
+		~ArmCopyScope();
+		KYTY_CLASS_NO_COPY(ArmCopyScope);
+
+	private:
+		bool    m_engaged        = false;
+		uint8_t m_previous_state = 0;
+		uint8_t m_previous_mode  = 0;
+	};
+	// Why GuestGpu still arms at a latch of 1..3 (ac_kept_{inl,gap,tmp}_*); every other arming there is "full".
+	enum class ArmCopyReason : uint8_t { Full, Inline, Gap, Tmp };
+	// ForEachUploadRange of a read-only synchronization outside a pass and outside armdefer: the mode of this operation,
+	// 0 = the previous path, else the latch 1..4. A nonzero answer is followed by ArmCopyFinish on the same thread.
+	[[nodiscard]] uint32_t ArmCopyBegin() noexcept;
+	// The mode of the operation running on this thread (UploadCopies), 0 outside one.
+	[[nodiscard]] static uint32_t ArmCopyOpMode() noexcept;
+	// UploadCopies at 1..3: a copy of the operation, pooled (its chunks arm it) or not (GuestGpu arms it before reading).
+	void ArmCopyNoteCopy(uint64_t vaddr, uint64_t size, bool pooled);
+	// UploadCopies at 1..3: GuestGpu arms [vaddr, vaddr + size) before it reads the guest bytes (an inline copy, the
+	// temporary buffer); at 3 in the order take -> check -> apply (s.7.5).
+	void ArmCopyFlush(uint64_t vaddr, uint64_t size, ArmCopyReason reason);
+	// UploadCopies at 1..3, temporary buffer: GuestGpu arms every handed-over window before it reads the guest view.
+	void ArmCopyFlushWindows();
+	// Right after upload_func (s.2.2, RC7): at 1..3 the rest of the windows (ac_kept_gap_*), ac_orphan and at 2/3 the
+	// GuestGpu-branch detector (s.7.5); ends the operation at every mode.
+	void ArmCopyFinish();
+	// The arm hook of a pool chunk (Common::ArmedCopyHook::arm, context = this PageManager), any thread (s.7.4).
+	static bool ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
+	                         const uint8_t* src);
 
 private:
 	std::unique_ptr<Impl> m_impl;

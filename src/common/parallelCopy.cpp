@@ -85,7 +85,8 @@ public:
 	// Both callers of AsyncMemcpy arrive here - the buffer uploads of
 	// BufferCache::UploadCopies and the image "staging:no-owner" path - and the counters
 	// below do NOT separate them.
-	void Enqueue(uint8_t* dst, const uint8_t* src, size_t size) {
+	void Enqueue(uint8_t* dst, const uint8_t* src, size_t size, const ArmedCopyHook* hook = nullptr, uint64_t vaddr = 0,
+	             uint32_t mode = 0) {
 		const bool     lap   = Gates::Enabled(Gates::Gate::StageLap) && FrameStats::Enabled();
 		const uint64_t depth = lap ? static_cast<uint64_t>(Pending()) : 0;
 		const uint64_t t0    = lap ? FrameStats::NowNs() : 0;
@@ -95,7 +96,7 @@ public:
 			for (size_t i = 0; i < chunks; i++) {
 				const auto offset = i * CHUNK_BYTES;
 				m_jobs.push_back({dst + offset, src + offset, std::min(CHUNK_BYTES, size - offset),
-				                  m_sequence++});
+				                  m_sequence++, hook, hook != nullptr ? vaddr + offset : 0, mode});
 			}
 			m_pending.fetch_add(chunks, std::memory_order_acq_rel);
 		}
@@ -205,6 +206,10 @@ private:
 		const uint8_t* src;
 		size_t         size;
 		uint64_t       sequence;
+		// Session 129, knob "armcopy": the arm fields, null / 0 at 0 (C4).
+		const ArmedCopyHook* hook  = nullptr;
+		uint64_t             vaddr = 0; // guest address of this chunk
+		uint32_t             mode  = 0; // the latch of the synchronization, 1..4
 	};
 
 	CopyPool() {
@@ -343,7 +348,15 @@ private:
 				job = m_jobs.front();
 				m_jobs.pop_front();
 			}
-			std::memcpy(job.dst, job.src, job.size);
+			// Session 129, knob "armcopy" (C4): a chunk with a hook arms its guest range first - at 3 it copies inside that
+			// hold itself - and at 2/3 compares after the copy. At 0 no job carries a hook: the memcpy it always was.
+			if (job.hook == nullptr ||
+			    !job.hook->arm(job.hook->arm_context, job.vaddr, job.size, job.mode, job.dst, job.src)) {
+				std::memcpy(job.dst, job.src, job.size);
+			}
+			if (job.hook != nullptr && job.hook->check != nullptr && (job.mode == 2 || job.mode == 3)) {
+				job.hook->check(job.hook->check_context, job.vaddr, job.size, job.mode, job.dst, job.src);
+			}
 			Complete(job.sequence);
 			if (m_pending.fetch_sub(1, std::memory_order_acq_rel) == 1) {
 				if (Gates::Enabled(Gates::Gate::AsyncCopyIdleSignal)) {
@@ -486,6 +499,32 @@ void AsyncMemcpy(void* dst, const void* src, size_t size) {
 	}
 	CopyPool::Instance().Enqueue(static_cast<uint8_t*>(dst), static_cast<const uint8_t*>(src),
 	                             size);
+}
+
+void AsyncMemcpyArmed(void* dst, const void* src, size_t size, const ArmedCopyHook* hook, uint64_t vaddr, uint32_t mode) {
+	auto*       d = static_cast<uint8_t*>(dst);
+	const auto* s = static_cast<const uint8_t*>(src);
+	if (size < ASYNC_COPY_MIN_BYTES || !CopyPool::Instance().Enabled() || !AsyncCopyEnabled()) {
+		// Not queued: the order of one chunk, on the caller.
+		if (!hook->arm(hook->arm_context, vaddr, size, mode, d, s)) {
+			std::memcpy(d, s, size);
+		}
+		if (hook->check != nullptr && (mode == 2 || mode == 3)) {
+			hook->check(hook->check_context, vaddr, size, mode, d, s);
+		}
+		return;
+	}
+	FrameStats::Add(FrameStats::Counter::AcJobs, 1);
+	FrameStats::Add(FrameStats::Counter::AcChunks, (size + CHUNK_BYTES - 1) / CHUNK_BYTES);
+	CopyPool::Instance().Enqueue(d, s, size, hook, vaddr, mode);
+}
+
+bool CopyPoolEnabled() {
+	return CopyPool::Instance().Enabled();
+}
+
+bool AsyncCopyOn() {
+	return AsyncCopyEnabled();
 }
 
 void WaitAsyncCopies() {

@@ -6,6 +6,7 @@
 #include "common/frameStats.h"
 #include "common/gates.h"
 #include "common/logging/log.h"
+#include "common/parallelCopy.h"
 #include "common/virtualMemory.h"
 #include "graphics/host_gpu/regionDefinitions.h"
 #include "kernel/memory.h"
@@ -159,8 +160,17 @@ struct PageManager::Impl {
 	// (ROADMAP s122 item 89(z)): the synchronous run of UpdateRegionWatchers<true, false> to read-only (Sync), or a run
 	// to read-only a flush applies (Scope - the flush of a BatchScope, Range - any other; a deferred read-only change is
 	// always a write-watcher edge: read-watcher changes never defer). It decides the skip at a latch of 1 and pc_elig_*
-	// at a latch of 0.
-	enum class Arm : uint8_t { No, Sync, Scope, Range };
+	// at a latch of 0. Session 129, knob "armcopy": Job - every host call of a pool chunk (ArmCopyChunk, design129.md rev 2
+	// s.3 C5); never in pc_elig_*, moved off GuestGpu (ac_moved_*) or kept as help on it (ac_kept_help_*).
+	enum class Arm : uint8_t { No, Sync, Scope, Range, Job };
+	// The latch of the thread's innermost ArmCopyScope (t_ac_state; the value 1..4 in t_ac_mode).
+	static constexpr uint8_t AcOutside     = 0; // no ArmCopyScope open
+	static constexpr uint8_t AcZero        = 1; // latched 0: the previous path (ac_op0)
+	static constexpr uint8_t AcRefused     = 2; // latched >= 1 and refused: the path of 0
+	static constexpr uint8_t AcWrittenNull = 3; // a written synchronization latched 4: the path of 0, nothing kept
+	static constexpr uint8_t AcNull        = 4; // latched 4, read-only: the path of 0, its chunks run the detector
+	static constexpr uint8_t AcWritten     = 5; // a written synchronization latched 1..3: the path of 0, ac_kept_wr_*
+	static constexpr uint8_t AcMove        = 6; // latched 1..3, read-only: the move
 	// The latch of the thread's innermost CeilScope (t_ceil_state).
 	static constexpr uint8_t CeilOutside = 0; // no CeilScope open
 	static constexpr uint8_t CeilZero    = 1; // latched 0: the previous path, pc_elig_* counted
@@ -412,7 +422,7 @@ struct PageManager::Impl {
 							FS::Add(FS::Counter::ProtGpuRwN, 1);
 							break;
 					}
-					if (arm != Arm::No && (t_ceil_state == CeilZero || t_ceil_state == CeilDose)) {
+					if (arm != Arm::No && arm != Arm::Job && (t_ceil_state == CeilZero || t_ceil_state == CeilDose)) {
 						FS::Add(FS::Counter::PcEligNs, ns);
 						FS::Add(FS::Counter::PcEligN, 1);
 						FS::Add(FS::Counter::PcEligPages, pages);
@@ -434,6 +444,34 @@ struct PageManager::Impl {
 							FS::Add(FS::Counter::PcDoseN, 1);
 							FS::Add(FS::Counter::PcDoseNs, d1 - d0);
 						}
+					}
+				}
+				// Session 129, knob "armcopy" (design129.md rev 2 s.9.1, C6): a chunk's call is moved off GuestGpu and help on
+				// it; a GuestGpu arming inside a latch of 1..3 is kept, by its reason. At 0 and 4 no Arm::Job is passed and the
+				// latch is neither AcWritten nor AcMove, so nothing here is counted.
+				if (arm == Arm::Job) {
+					if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
+						AcAddKept(ns, FS::Counter::AcKeptHelpN, FS::Counter::AcKeptHelpNs);
+					} else {
+						FS::Add(FS::Counter::AcMovedN, 1);
+						FS::Add(FS::Counter::AcMovedNs, ns);
+						FS::Add(FS::Counter::AcMovedPages, pages);
+					}
+				} else if (arm != Arm::No && (t_ac_state == AcWritten || t_ac_state == AcMove) &&
+				           FS::CurrentRole() == FS::ThreadRole::Gpu) {
+					const auto reason = t_ac_state == AcWritten ? AcReasonWr : static_cast<uint8_t>(t_ac_reason);
+					switch (reason) {
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::Inline):
+							AcAddKept(ns, FS::Counter::AcKeptInlN, FS::Counter::AcKeptInlNs);
+							break;
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::Gap):
+							AcAddKept(ns, FS::Counter::AcKeptGapN, FS::Counter::AcKeptGapNs);
+							break;
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::Tmp):
+							AcAddKept(ns, FS::Counter::AcKeptTmpN, FS::Counter::AcKeptTmpNs);
+							break;
+						case AcReasonWr: AcAddKept(ns, FS::Counter::AcKeptWrN, FS::Counter::AcKeptWrNs); break;
+						default: AcAddKept(ns, FS::Counter::AcKeptFullN, FS::Counter::AcKeptFullNs); break;
 					}
 				}
 				if (t_protect_masked) {
@@ -1064,6 +1102,559 @@ struct PageManager::Impl {
 		}
 	}
 
+	// --- knob "armcopy" (session 129, docs/session-129/design129.md rev 2) ---------------------------------------------
+
+	static constexpr uint8_t AcReasonWr = 0xff; // the reason of a written synchronization (not an ArmCopyReason)
+
+	static void AcAddKept(uint64_t ns, Common::FrameStats::Counter n, Common::FrameStats::Counter n_ns) {
+		namespace FS = Common::FrameStats;
+		FS::Add(FS::Counter::AcKeptN, 1);
+		FS::Add(FS::Counter::AcKeptNs, ns);
+		FS::Add(n, 1);
+		FS::Add(n_ns, ns);
+	}
+
+	// The pages of one region as bits.
+	using PageBits = std::array<uint64_t, REGION_PAGES / 64>;
+
+	static void BitsSet(PageBits& bits, size_t first, size_t last) noexcept {
+		for (size_t page = first; page < last;) {
+			const auto bit = page % 64;
+			const auto n   = std::min<size_t>(64 - bit, last - page);
+			bits[page / 64] |= BitRun(bit, n);
+			page += n;
+		}
+	}
+
+	[[nodiscard]] static bool BitsTest(const PageBits& bits, size_t page) noexcept {
+		return ((bits[page / 64] >> (page % 64)) & 1u) != 0;
+	}
+
+	[[nodiscard]] static uint64_t BitsCount(const PageBits& bits) noexcept {
+		uint64_t count = 0;
+		for (const auto word: bits) {
+			count += static_cast<uint64_t>(std::popcount(word));
+		}
+		return count;
+	}
+
+	// func(first, last) for every run of set bits, ascending.
+	template <typename Func>
+	static void BitsRuns(const PageBits& bits, Func&& func) {
+		size_t page = 0;
+		while (page < REGION_PAGES) {
+			const auto word = bits[page / 64] >> (page % 64);
+			if (word == 0) {
+				page = (page / 64 + 1) * 64;
+				continue;
+			}
+			page += static_cast<size_t>(std::countr_zero(word));
+			size_t end = page + 1;
+			while (end < REGION_PAGES && BitsTest(bits, end)) {
+				end++;
+			}
+			func(page, end);
+			page = end;
+		}
+	}
+
+	// The operation of this thread between ArmCopyBegin and ArmCopyFinish (GuestGpu thread only).
+	struct AcWindow {
+		Region*  region;
+		uint64_t base;
+		uint32_t first;
+		uint32_t last;
+	};
+	struct AcCopy {
+		uint64_t vaddr;
+		uint64_t size;
+		bool     pooled;
+	};
+	struct AcArea {
+		Region*  region;
+		uint64_t base;
+		PageBits win;    // handed-over windows
+		PageBits pooled; // pages of pooled copies (their chunks arm them)
+		PageBits own;    // pages of inline / temporary copies (GuestGpu armed them before reading)
+	};
+	struct AcOp {
+		uint32_t                                                 mode         = 0;
+		uint32_t                                                 window_count = 0;
+		std::array<AcWindow, PageManager::BatchScope::Capacity> windows {};
+		bool                                                     windows_flushed = false;
+		std::vector<AcCopy>                                      copies;
+		std::vector<AcArea>                                      areas;
+	};
+
+	// What the detector saw under `lock`: pend_now and Perms() of each page it looked at.
+	struct AcSnap {
+		PageBits                            pend {};
+		std::array<uint8_t, REGION_PAGES> perms {};
+	};
+
+	class AcReasonScope final {
+	public:
+		explicit AcReasonScope(PageManager::ArmCopyReason reason) noexcept: m_previous(t_ac_reason) {
+			t_ac_reason = reason;
+		}
+		~AcReasonScope() { t_ac_reason = m_previous; }
+		KYTY_CLASS_NO_COPY(AcReasonScope);
+
+	private:
+		PageManager::ArmCopyReason m_previous;
+	};
+
+	// The refusal of a latch of `value` >= 1 (s.8.2), nullptr if none; `bit` names it for the one-time log line.
+	static const char* AcRefusal(uint32_t value, uint32_t* bit) {
+		namespace G  = Common::Gates;
+		namespace FS = Common::FrameStats;
+		if (G::Value(G::Knob::ProtCeiling) != 0) {
+			*bit = 8;
+			return "protceil";
+		}
+		if (G::Enabled(G::Gate::ArmDefer)) {
+			*bit = 9;
+			return "armdefer";
+		}
+		if (G::Enabled(G::Gate::ProtectBatchPass) && G::Enabled(G::Gate::ProtectBatch)) {
+			*bit = 10;
+			return "protbatch2";
+		}
+		if (!G::Enabled(G::Gate::ProtectBatch)) {
+			*bit = 11;
+			return "protbatch0";
+		}
+		if (!Common::AsyncCopyOn()) {
+			*bit = 12;
+			return "asynccopy";
+		}
+		if (!Common::CopyPoolEnabled()) {
+			*bit = 13;
+			return "nopool";
+		}
+		if (!DeferEnabled()) {
+			*bit = 14;
+			return "asyncprotect";
+		}
+		if (G::Value(G::Knob::BufImport) != 0) {
+			*bit = 15;
+			return "bufimp";
+		}
+		if (value >= 2 && !FS::Enabled()) {
+			*bit = 16;
+			return "notrace";
+		}
+		return nullptr;
+	}
+
+	// The state-only detector (s.7.1), under the `apply` hold of `region` the caller holds - no application of the region
+	// is in flight and the host of its pages is frozen. For the pages of `mask`: under `lock` the snapshot watched /
+	// pend_now / Perms(); then, `lock` released, VirtualQuery once per homogeneous host run of the pages watched and not
+	// pending. bad = watched && !pend_now && host writable; chk = watched && !pend_now. The caller's bookkeeping (what it
+	// took, what it applied) is not an input.
+	void AcDetect(Region& region, uint64_t base_addr, const PageBits& mask, bool job, uint32_t mode, AcSnap& snap,
+	              uint64_t* chk, uint64_t* bad) {
+		PageBits candidates {};
+		{
+			SpinGuard lock(region.lock);
+			for (size_t word = 0; word < mask.size(); word++) {
+				auto bits = mask[word];
+				while (bits != 0) {
+					const auto bit  = static_cast<size_t>(std::countr_zero(bits));
+					const auto flag = uint64_t {1} << bit;
+					bits &= bits - 1u;
+					const auto  page  = word * 64 + bit;
+					const auto& state = region.pages[page];
+					snap.perms[page]  = static_cast<uint8_t>(state.Perms());
+					if (IsPending(region, page)) {
+						snap.pend[word] |= flag;
+					} else if (state.write_watchers != 0 || state.access_watchers != 0) {
+						candidates[word] |= flag;
+					}
+				}
+			}
+		}
+		*chk += BitsCount(candidates);
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+		uint64_t host_end = 0; // one past the last byte the previous answer covered
+		bool     host_w   = false;
+		uint32_t protect  = 0;
+		BitsRuns(candidates, [&](size_t first, size_t last) {
+			for (size_t page = first; page < last; page++) {
+				const auto vaddr = base_addr + page * PAGE_SIZE;
+				if (vaddr >= host_end) {
+					MEMORY_BASIC_INFORMATION info {};
+					if (VirtualQuery(reinterpret_cast<LPCVOID>(vaddr), &info, sizeof(info)) == 0) {
+						host_w   = false;
+						protect  = 0;
+						host_end = vaddr + PAGE_SIZE;
+					} else {
+						protect  = static_cast<uint32_t>(info.Protect & 0xffu);
+						host_w   = info.State == MEM_COMMIT &&
+						         (protect == PAGE_READWRITE || protect == PAGE_WRITECOPY ||
+						          protect == PAGE_EXECUTE_READWRITE || protect == PAGE_EXECUTE_WRITECOPY);
+						// The answer holds from BaseAddress (the page of vaddr) for RegionSize bytes.
+						host_end = reinterpret_cast<uint64_t>(info.BaseAddress) + info.RegionSize;
+					}
+				}
+				if (host_w) {
+					(*bad)++;
+					static std::atomic<uint32_t> logged {0};
+					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("ArmCopyVerify: MISMATCH br=%s addr=0x%016llx perms=%u pend=0 host=0x%x mode=%u\n",
+						     job ? "job" : "gpu", static_cast<unsigned long long>(vaddr),
+						     static_cast<unsigned>(snap.perms[page]), static_cast<unsigned>(protect),
+						     static_cast<unsigned>(mode));
+					}
+				}
+			}
+		});
+#else
+		(void)base_addr;
+		(void)job;
+		(void)mode;
+		(void)bad;
+#endif
+	}
+
+	// ArmCopyVerify: LEFT - one line per run of `left` with the same Perms() in the snapshot and, for a chunk, the same
+	// membership in the pages it took (rm=; `taken` null on the GuestGpu branch: rm=-) (ROADMAP s122 item 101(b)).
+	static void AcLogLeft(const PageBits& left, const AcSnap& snap, const PageBits* taken, uint64_t base_addr, bool job,
+	                      uint32_t mode) {
+		static std::atomic<uint32_t> logged {0};
+		BitsRuns(left, [&](size_t first, size_t last) {
+			for (size_t page = first; page < last;) {
+				const auto perms = snap.perms[page];
+				const bool rm    = taken != nullptr && BitsTest(*taken, page);
+				size_t     end   = page + 1;
+				while (end < last && snap.perms[end] == perms && (taken != nullptr && BitsTest(*taken, end)) == rm) {
+					end++;
+				}
+				if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
+					LOGF("ArmCopyVerify: LEFT br=%s addr=0x%016llx pages=%u perms=%u rm=%s mode=%u\n", job ? "job" : "gpu",
+					     static_cast<unsigned long long>(base_addr + page * PAGE_SIZE), static_cast<unsigned>(end - page),
+					     static_cast<unsigned>(perms), taken == nullptr ? "-" : (rm ? "1" : "0"),
+					     static_cast<unsigned>(mode));
+				}
+				page = end;
+			}
+		});
+	}
+
+	// Under `apply` (the caller holds it): the host call of a run TakePendingRun took, then the withdrawal - the body of
+	// FlushRegion. A chunk passes Arm::Job for every call (s.3 C5); a GuestGpu flush passes Arm::Range for a run to
+	// read-only, as FlushRegion does.
+	void AcApplyTaken(Region& region, uint64_t base_addr, size_t run_first, size_t run_pages,
+	                  Common::VirtualMemory::Mode perms, Arm arm_read) {
+		const auto arm = arm_read == Arm::Job                           ? Arm::Job
+		                 : perms == Common::VirtualMemory::Mode::Read ? arm_read
+		                                                              : Arm::No;
+		Protect(base_addr + run_first * PAGE_SIZE, run_pages * PAGE_SIZE, perms, arm);
+		if (region.has_unarmed) {
+			ClearUnarmed(region, run_first, run_pages);
+		}
+		region.applying_run.store(0, std::memory_order_release); // before `apply` is released
+	}
+
+	// Under `apply`: every pending run of [first, last) applied (the loop of FlushRegion); the pages taken go to `taken`
+	// (may be null), the runs not to Read to `other` (may be null). Returns the runs applied.
+	uint32_t AcApplyRuns(Region& region, uint64_t base_addr, size_t first, size_t last, Arm arm_read, PageBits* taken,
+	                     uint64_t* other) {
+		const auto call_pages = WorkerCallPages();
+		uint32_t   runs       = 0;
+		for (;;) {
+			size_t                      run_first = 0;
+			size_t                      run_pages = 0;
+			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
+			{
+				SpinGuard lock(region.lock);
+				if (!TakePendingRun(region, first, last, call_pages, false, &run_first, &run_pages, &perms)) {
+					break;
+				}
+			}
+			if (taken != nullptr) {
+				BitsSet(*taken, run_first, run_first + run_pages);
+			}
+			AcApplyTaken(region, base_addr, run_first, run_pages, perms, arm_read);
+			if (other != nullptr && perms != Common::VirtualMemory::Mode::Read) {
+				(*other)++;
+			}
+			runs++;
+		}
+		return runs;
+	}
+
+	// A pool chunk (s.7.4), any thread: per region of [vaddr, vaddr + size) one `apply` hold. 1 - every pending run of its
+	// pages applied; 2 - the same, then the detector and the debt (ac_jleft, ac_jremark); 3 - the first run taken, the
+	// detector, the copy of the chunk's bytes of this region, the run applied, the rest applied; 4 - the detector only.
+	// Returns true when it copied the chunk (3).
+	bool AcChunk(uint64_t vaddr, uint64_t size, uint32_t mode, uint8_t* dst, const uint8_t* src) {
+		namespace FS = Common::FrameStats;
+		if (size == 0 || !GuestRange {vaddr, size}.Valid() || mode < 1 || mode > 4) {
+			return false; // nothing to arm: the caller copies
+		}
+		const auto begin = Common::AlignDown(vaddr, PAGE_SIZE);
+		const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
+		uint32_t   runs  = 0;
+		uint64_t   other = 0;
+		for (auto chunk_begin = begin; chunk_begin < end;) {
+			const auto chunk_end   = std::min(end, Common::AlignUp(chunk_begin + 1, REGION_SIZE));
+			const auto region_base = Common::AlignDown(chunk_begin, REGION_SIZE);
+			const auto first       = static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE);
+			const auto last        = static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE);
+			// The bytes of the chunk inside this region (value 3 copies them in this region's hold).
+			const auto byte_begin = std::max(vaddr, chunk_begin);
+			const auto byte_end   = std::min(vaddr + size, chunk_end);
+			auto*      region     = FindRegion(chunk_begin);
+			if (region == nullptr) {
+				// Never watched: nothing pending, nothing watched.
+				if (mode == 3) {
+					std::memcpy(dst + (byte_begin - vaddr), src + (byte_begin - vaddr),
+					            static_cast<size_t>(byte_end - byte_begin));
+				}
+				chunk_begin = chunk_end;
+				continue;
+			}
+			ApplyGuard apply(region->apply, true, FS::Counter::AcJobWaitNs);
+			if (mode == 1) {
+				runs += AcApplyRuns(*region, region_base, first, last, Arm::Job, nullptr, &other);
+				chunk_begin = chunk_end;
+				continue;
+			}
+			PageBits window {};
+			BitsSet(window, first, last);
+			PageBits j {}; // J: the pages pending at the start of the hold
+			{
+				SpinGuard lock(region->lock);
+				for (size_t page = first; page < last; page++) {
+					if (IsPending(*region, page)) {
+						j[page / 64] |= uint64_t {1} << (page % 64);
+					}
+				}
+			}
+			PageBits                    taken {};
+			size_t                      run_first = 0;
+			size_t                      run_pages = 0;
+			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
+			bool                        took      = false;
+			if (mode == 2) {
+				runs += AcApplyRuns(*region, region_base, first, last, Arm::Job, &taken, &other);
+			} else if (mode == 3) {
+				// Taken by the mechanism's own function: bits cleared, applying_run published, no host call yet.
+				SpinGuard lock(region->lock);
+				took = TakePendingRun(*region, first, last, WorkerCallPages(), false, &run_first, &run_pages, &perms);
+				if (took) {
+					BitsSet(taken, run_first, run_first + run_pages);
+				}
+			}
+			const auto t0  = FS::Enabled() ? FS::NowNs() : 0;
+			AcSnap     snap {};
+			uint64_t   chk = 0;
+			uint64_t   bad = 0;
+			AcDetect(*region, region_base, window, true, mode, snap, &chk, &bad);
+			if (t0 != 0) {
+				FS::Add(FS::Counter::AcChkNs, FS::NowNs() - t0);
+			}
+			FS::Add(FS::Counter::AcChk, chk);
+			FS::Add(FS::Counter::AcBad, bad);
+			PageBits left {};
+			PageBits remark {};
+			for (size_t word = 0; word < left.size(); word++) {
+				left[word]   = (mode == 4 ? window[word] : j[word]) & snap.pend[word];
+				remark[word] = left[word] & taken[word];
+			}
+			const auto jleft = BitsCount(left);
+			FS::Add(FS::Counter::AcJleft, jleft);
+			FS::Add(FS::Counter::AcJremark, BitsCount(remark));
+			if (mode == 2 && jleft != 0) {
+				AcLogLeft(left, snap, &taken, region_base, true, mode);
+			}
+			if (mode == 3) {
+				std::memcpy(dst + (byte_begin - vaddr), src + (byte_begin - vaddr),
+				            static_cast<size_t>(byte_end - byte_begin));
+				if (took) {
+					AcApplyTaken(*region, region_base, run_first, run_pages, perms, Arm::Job);
+					if (perms != Common::VirtualMemory::Mode::Read) {
+						other++;
+					}
+					runs++;
+				}
+				runs += AcApplyRuns(*region, region_base, first, last, Arm::Job, &taken, &other);
+			}
+			chunk_begin = chunk_end;
+		}
+		if (other != 0) {
+			FS::Add(FS::Counter::AcJobOtherN, other);
+		}
+		if (runs == 0 && mode != 4) {
+			FS::Add(FS::Counter::AcJobNowork, 1);
+		}
+		return mode == 3;
+	}
+
+	// Value 3 (s.7.5, ROADMAP s122 item 101(g)): a GuestGpu flush of [first, last) of one region in the order take -> check
+	// -> apply - one hold: the first pending run taken, the detector over the flush range, its host call, the rest as
+	// FlushRegion applies it.
+	void AcFlushChecked(Region& region, uint64_t base_addr, size_t first, size_t last) {
+		namespace FS = Common::FrameStats;
+		ApplyGuard                  apply(region.apply, true, FS::Counter::ApplyWaitRangeNs);
+		size_t                      run_first = 0;
+		size_t                      run_pages = 0;
+		Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
+		bool                        took      = false;
+		{
+			SpinGuard lock(region.lock);
+			took = TakePendingRun(region, first, last, WorkerCallPages(), false, &run_first, &run_pages, &perms);
+		}
+		PageBits range {};
+		BitsSet(range, first, last);
+		const auto t0  = FS::Enabled() ? FS::NowNs() : 0;
+		AcSnap     snap {};
+		uint64_t   chk = 0;
+		uint64_t   bad = 0;
+		AcDetect(region, base_addr, range, false, 3, snap, &chk, &bad);
+		if (t0 != 0) {
+			FS::Add(FS::Counter::AcGchkNs, FS::NowNs() - t0);
+		}
+		FS::Add(FS::Counter::AcGchk, chk);
+		FS::Add(FS::Counter::AcGbad, bad);
+		if (took) {
+			AcApplyTaken(region, base_addr, run_first, run_pages, perms, Arm::Range);
+		}
+		AcApplyRuns(region, base_addr, first, last, Arm::Range, nullptr, nullptr);
+	}
+
+	// A GuestGpu flush of a byte range at 1..3: FlushRange (the range flush of 0), or at 3 take -> check -> apply.
+	void AcFlushRange(uint64_t vaddr, uint64_t size, bool checked) {
+		if (!checked) {
+			FlushRange(vaddr, size);
+			return;
+		}
+		ValidateRange(vaddr, size);
+		const auto begin = Common::AlignDown(vaddr, PAGE_SIZE);
+		const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
+		for (auto chunk_begin = begin; chunk_begin < end;) {
+			const auto chunk_end   = std::min(end, Common::AlignUp(chunk_begin + 1, REGION_SIZE));
+			const auto region_base = Common::AlignDown(chunk_begin, REGION_SIZE);
+			if (auto* region = FindRegion(chunk_begin); region != nullptr) {
+				AcFlushChecked(*region, region_base, static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE),
+				               static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE));
+			}
+			chunk_begin = chunk_end;
+		}
+	}
+
+	// The GuestGpu flush of one window slice [first, last) at 1..3 (the rest of the windows, the temporary buffer).
+	void AcFlushWindow(Region& region, uint64_t base_addr, size_t first, size_t last, uint32_t mode) {
+		if (mode == 3) {
+			AcFlushChecked(region, base_addr, first, last);
+		} else {
+			FlushRegion(region, base_addr, first, last, Common::FrameStats::Counter::ApplyWaitRangeNs);
+		}
+	}
+
+	AcArea& AcAreaOf(AcOp& op, Region* region, uint64_t base_addr) {
+		for (auto& area: op.areas) {
+			if (area.region == region) {
+				return area;
+			}
+		}
+		op.areas.push_back({region, base_addr, {}, {}, {}});
+		return op.areas.back();
+	}
+
+	// ArmCopyFinish: right after upload_func, GuestGpu thread, no lock held (read-only: every RegionManager::lock was
+	// released before upload_func). Never waits for the pool or the GPU.
+	void AcFinish() {
+		namespace FS = Common::FrameStats;
+		auto&      op   = t_ac_op;
+		const auto mode = op.mode;
+		if (mode >= 1 && mode <= 3) {
+			op.areas.clear();
+			for (uint32_t index = 0; index < op.window_count; index++) {
+				const auto& window = op.windows[index];
+				BitsSet(AcAreaOf(op, window.region, window.base).win, window.first, window.last);
+			}
+			for (const auto& copy: op.copies) {
+				if (!GuestRange {copy.vaddr, copy.size}.Valid()) {
+					continue;
+				}
+				const auto begin = Common::AlignDown(copy.vaddr, PAGE_SIZE);
+				const auto end   = Common::AlignUp(copy.vaddr + copy.size, PAGE_SIZE);
+				for (auto chunk_begin = begin; chunk_begin < end;) {
+					const auto chunk_end   = std::min(end, Common::AlignUp(chunk_begin + 1, REGION_SIZE));
+					const auto region_base = Common::AlignDown(chunk_begin, REGION_SIZE);
+					if (auto* region = FindRegion(chunk_begin); region != nullptr) {
+						auto& area = AcAreaOf(op, region, region_base);
+						BitsSet(copy.pooled ? area.pooled : area.own,
+						        static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE),
+						        static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE));
+					}
+					chunk_begin = chunk_end;
+				}
+			}
+			// 1. The rest of the windows (s.2.2, RC7): window pages outside every copy - the pooled ones are armed by their
+			//    chunks, the inline ones were armed before their copy.
+			if (!op.windows_flushed) {
+				AcReasonScope reason(PageManager::ArmCopyReason::Gap);
+				for (auto& area: op.areas) {
+					PageBits gap {};
+					for (size_t word = 0; word < gap.size(); word++) {
+						gap[word] = area.win[word] & ~area.pooled[word] & ~area.own[word];
+					}
+					BitsRuns(gap, [&](size_t first, size_t last) { AcFlushWindow(*area.region, area.base, first, last, mode); });
+				}
+			}
+			// 2. ac_orphan (RC7, B12): windows handed over with no copy - applied by step 1 all the same.
+			if (op.copies.empty()) {
+				bool any = false;
+				for (uint32_t index = 0; index < op.window_count; index++) {
+					any = any || op.windows[index].first < op.windows[index].last;
+				}
+				if (any) {
+					FS::Add(FS::Counter::AcOrphan, 1);
+				}
+			}
+			// 3. At 2/3 the GuestGpu-branch detector (s.7.5): the last action of the operation, per region of G, in its
+			//    own apply hold. G = windows | every copy; G_own = (windows - pooled) | own copies.
+			if (mode >= 2) {
+				for (auto& area: op.areas) {
+					PageBits g {};
+					PageBits g_own {};
+					for (size_t word = 0; word < g.size(); word++) {
+						g[word]     = area.win[word] | area.pooled[word] | area.own[word];
+						g_own[word] = (area.win[word] & ~area.pooled[word]) | area.own[word];
+					}
+					ApplyGuard apply(area.region->apply, true, FS::Counter::ApplyWaitRangeNs);
+					const auto t0  = FS::Enabled() ? FS::NowNs() : 0;
+					AcSnap     snap {};
+					uint64_t   chk = 0;
+					uint64_t   bad = 0;
+					AcDetect(*area.region, area.base, g, false, mode, snap, &chk, &bad);
+					if (t0 != 0) {
+						FS::Add(FS::Counter::AcGchkNs, FS::NowNs() - t0);
+					}
+					FS::Add(FS::Counter::AcGchk, chk);
+					FS::Add(FS::Counter::AcGbad, bad);
+					PageBits left {};
+					for (size_t word = 0; word < left.size(); word++) {
+						left[word] = g_own[word] & snap.pend[word];
+					}
+					const auto gjleft = BitsCount(left);
+					FS::Add(FS::Counter::AcGjleft, gjleft);
+					if (mode == 2 && gjleft != 0) {
+						AcLogLeft(left, snap, nullptr, area.base, false, mode);
+					}
+				}
+			}
+		}
+		op.mode            = 0;
+		op.window_count    = 0;
+		op.windows_flushed = false;
+		op.copies.clear();
+		op.areas.clear();
+	}
+
 	// Gate "pbcheck". Holds the apply lock (no application in flight) and skips pending pages,
 	// whose host protection may lag by design; any other difference breaks Region::apply (P).
 	// Pages that were never watched keep the protection of their mapping: an expected ReadWrite
@@ -1243,6 +1834,12 @@ struct PageManager::Impl {
 	// inside the re-arm pass (its applications clear U as pc_rearm_decl; a CeilScope opened in it latches 0).
 	static thread_local uint8_t t_ceil_state;
 	static thread_local bool    t_ceil_rearm;
+	// Session 129, knob "armcopy": the latch of this thread's innermost ArmCopyScope (Ac*) and its value, the reason of the
+	// GuestGpu flush in progress (ac_kept_*), and the operation between ArmCopyBegin and ArmCopyFinish.
+	static thread_local uint8_t                    t_ac_state;
+	static thread_local uint8_t                    t_ac_mode;
+	static thread_local PageManager::ArmCopyReason t_ac_reason;
+	static thread_local AcOp                       t_ac_op;
 	// The regions holding U bits with their base, in the order they got the first; written and read only on the
 	// GuestGpu thread (SkipRun under a latch of 1, CeilRearm).
 	std::vector<std::pair<Region*, uint64_t>> unarmed_regions;
@@ -1267,6 +1864,10 @@ thread_local PageManager::BatchScope* PageManager::Impl::t_batch = nullptr;
 thread_local PageManager::PassScope*  PageManager::Impl::t_pass  = nullptr;
 thread_local uint8_t                  PageManager::Impl::t_ceil_state = PageManager::Impl::CeilOutside;
 thread_local bool                     PageManager::Impl::t_ceil_rearm = false;
+thread_local uint8_t                    PageManager::Impl::t_ac_state  = PageManager::Impl::AcOutside;
+thread_local uint8_t                    PageManager::Impl::t_ac_mode   = 0;
+thread_local PageManager::ArmCopyReason PageManager::Impl::t_ac_reason = PageManager::ArmCopyReason::Full;
+thread_local PageManager::Impl::AcOp    PageManager::Impl::t_ac_op {};
 
 static_assert(std::atomic<void*>::is_always_lock_free);
 
@@ -1395,6 +1996,18 @@ void PageManager::BatchScope::Flush() noexcept {
 			Common::FrameStats::Add(Common::FrameStats::Counter::BatchMerged, 1);
 		}
 	}
+}
+
+void PageManager::BatchScope::Handover() noexcept {
+	auto& op = Impl::t_ac_op;
+	for (uint32_t index = 0; index < m_count; index++) {
+		const auto& slot = m_slots[index];
+		if (slot.first >= slot.last || op.window_count == Capacity) {
+			continue; // the scope deferred nothing into this region (a window count above Capacity cannot happen)
+		}
+		op.windows[op.window_count++] = {static_cast<Impl::Region*>(slot.region), slot.base, slot.first, slot.last};
+	}
+	m_count = 0;
 }
 
 PageManager::PassScope::PassScope(PageManager& manager, bool owns_flush) noexcept
@@ -1561,6 +2174,114 @@ PageManager::CeilScope::~CeilScope() {
 	if (m_engaged) {
 		Impl::t_ceil_state = m_previous;
 	}
+}
+
+PageManager::ArmCopyScope::ArmCopyScope(bool engage, bool is_written) noexcept {
+	namespace FS = Common::FrameStats;
+	namespace G  = Common::Gates;
+	if (!engage) {
+		if (FS::Enabled() && G::Value(G::Knob::ArmInCopy) != 0) {
+			FS::Add(FS::Counter::AcOffThr, 1);
+		}
+		return;
+	}
+	m_engaged        = true;
+	m_previous_state = Impl::t_ac_state;
+	m_previous_mode  = Impl::t_ac_mode;
+	if (m_previous_state != Impl::AcOutside) {
+		return; // nested: the latch of the outer synchronization
+	}
+	// The only read of the knob for this synchronization; the refusals are read only at >= 1 (s.8.2).
+	const auto value = std::min<uint32_t>(G::Value(G::Knob::ArmInCopy), 4);
+	auto       state = Impl::AcZero;
+	if (value == 0) {
+		FS::Add(FS::Counter::AcOp0, 1);
+	} else {
+		static std::atomic<uint32_t> logged {0};
+		uint32_t                     bit    = value;
+		const char*                  reason = Impl::AcRefusal(value, &bit);
+		if (reason != nullptr) {
+			state = Impl::AcRefused;
+			FS::Add(FS::Counter::AcRefuse, 1);
+		} else if (is_written) {
+			state = value == 4 ? Impl::AcWrittenNull : Impl::AcWritten;
+		} else {
+			state = value == 4 ? Impl::AcNull : Impl::AcMove;
+			FS::Add(FS::Counter::AcN, 1);
+		}
+		if ((logged.fetch_or(1u << bit, std::memory_order_relaxed) & (1u << bit)) == 0) {
+			if (reason != nullptr) {
+				LOGF("ArmCopy: refused reason=%s\n", reason);
+			} else {
+				LOGF("ArmCopy: mode %u\n", static_cast<unsigned>(value));
+			}
+		}
+	}
+	Impl::t_ac_state = state;
+	Impl::t_ac_mode  = static_cast<uint8_t>(value);
+}
+
+PageManager::ArmCopyScope::~ArmCopyScope() {
+	if (m_engaged) {
+		Impl::t_ac_state = m_previous_state;
+		Impl::t_ac_mode  = m_previous_mode;
+	}
+}
+
+uint32_t PageManager::ArmCopyBegin() noexcept {
+	const auto state = Impl::t_ac_state;
+	if (state != Impl::AcMove && state != Impl::AcNull) {
+		return 0;
+	}
+	auto& op           = Impl::t_ac_op;
+	op.mode            = Impl::t_ac_mode;
+	op.window_count    = 0;
+	op.windows_flushed = false;
+	op.copies.clear();
+	return op.mode;
+}
+
+uint32_t PageManager::ArmCopyOpMode() noexcept {
+	return Impl::t_ac_op.mode;
+}
+
+void PageManager::ArmCopyNoteCopy(uint64_t vaddr, uint64_t size, bool pooled) {
+	auto& op = Impl::t_ac_op;
+	if (op.mode >= 1 && op.mode <= 3) {
+		op.copies.push_back({vaddr, size, pooled});
+	}
+}
+
+void PageManager::ArmCopyFlush(uint64_t vaddr, uint64_t size, ArmCopyReason reason) {
+	const auto mode = Impl::t_ac_op.mode;
+	if (mode < 1 || mode > 3) {
+		return;
+	}
+	Impl::AcReasonScope scope(reason);
+	m_impl->AcFlushRange(vaddr, size, mode == 3);
+}
+
+void PageManager::ArmCopyFlushWindows() {
+	auto&      op   = Impl::t_ac_op;
+	const auto mode = op.mode;
+	if (mode < 1 || mode > 3) {
+		return;
+	}
+	Impl::AcReasonScope scope(ArmCopyReason::Tmp);
+	for (uint32_t index = 0; index < op.window_count; index++) {
+		const auto& window = op.windows[index];
+		m_impl->AcFlushWindow(*window.region, window.base, window.first, window.last, mode);
+	}
+	op.windows_flushed = true;
+}
+
+void PageManager::ArmCopyFinish() {
+	m_impl->AcFinish();
+}
+
+bool PageManager::ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
+                               const uint8_t* src) {
+	return static_cast<PageManager*>(context)->m_impl->AcChunk(vaddr, size, mode, dst, src);
 }
 
 bool PageManager::HasUnarmed() const noexcept {

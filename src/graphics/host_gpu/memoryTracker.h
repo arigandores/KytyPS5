@@ -98,6 +98,17 @@ public:
 	// CPU-dirty, read without the region locks. GuestGpu thread only (BufferCache::SyncFreeSkip
 	// checks it and documents why a stale answer is safe).
 	[[nodiscard]] bool IsRegionCpuCleanFast(uint64_t vaddr, uint64_t size);
+	// Session 129, knob "armcopy" (design129.md rev 2 s.7.3, the content row): some page of [vaddr, vaddr + size) reads
+	// CPU-dirty, without any lock (a missing region reads dirty). Any thread; a diagnostic answer only.
+	[[nodiscard]] bool IsCpuDirtyRelaxed(uint64_t vaddr, uint64_t size) {
+		const auto index = vaddr / TRACKER_REGION_SIZE;
+		if (index >= REGION_COUNT) {
+			return true;
+		}
+		auto* manager = m_regions[index].load(std::memory_order_acquire);
+		return manager == nullptr ||
+		       manager->IsModifiedRelaxed<DirtySource::Cpu>(vaddr % TRACKER_REGION_SIZE, size);
+	}
 	// The page manager behind this tracker. The buffer cache opens the batch and the pass scope of
 	// one dirty-range pass on it (gates "protbatch" / "protbatch2"); nothing else reaches past this.
 	[[nodiscard]] PageManager& Pages() noexcept { return m_page_manager; }
@@ -305,6 +316,10 @@ public:
 		bool provisional = false;
 		Iterate<true>(vaddr, size, [](RegionManager*, uint64_t, uint64_t) {});
 		const auto* previous_upload_owner = std::exchange(s_upload_owner, this);
+		// Session 129, knob "armcopy" (design129.md rev 2 s.2.2, C2): the mode of this read-only synchronization, 0 = the
+		// previous path. At 1..3 the scope's windows are handed over instead of flushed and nothing is applied here: each
+		// pooled chunk arms its own range, GuestGpu the rest right after upload_func (ArmCopyFinish). At 4 the path of 0.
+		const uint32_t arm_copy = !is_written && !pass_batch && !arm_defer ? m_page_manager.ArmCopyBegin() : 0;
 		{
 			// batch_protect (gate "protbatch", read-only uploads only): the write watchers armed
 			// by clearing the CPU-dirty bits are applied after every region lock is released and
@@ -330,7 +345,9 @@ public:
 					manager->lock.unlock();
 				}
 			});
-			if (!pass_batch) {
+			if (!pass_batch && arm_copy >= 1 && arm_copy <= 3) {
+				batch.Handover(); // knob "armcopy": no flush and no range pass on GuestGpu here
+			} else if (!pass_batch) {
 				batch.Flush();
 				if (!is_written && !arm_defer) {
 					// Whatever the scope held, and whether or not the gate is on: a page of this
@@ -351,6 +368,11 @@ public:
 			}
 		}
 		upload_func();
+		if (arm_copy != 0) {
+			// Knob "armcopy" (RC7): the rest of the windows on any exit of upload_func, then at 2/3 the GuestGpu-branch
+			// detector; ends the operation.
+			m_page_manager.ArmCopyFinish();
+		}
 		if (is_written) {
 			Iterate<false>(vaddr, size,
 			               [](RegionManager* manager, uint64_t offset, uint64_t bytes) {

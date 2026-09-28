@@ -681,8 +681,18 @@ enum class Knob : uint32_t {
 	// would skip (the pc_elig_* predicate) the thread spins once more for the duration of that call, by the clock of
 	// its ns (pc_dose_n, pc_dose_ns). No U, no re-arm. Refused (ProtCeil: refused reason=noclock) without that clock
 	// (neither KYTY_FRAME_TRACE nor KYTY_AV_TRACE).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	ProtCeiling,      // KYTY_PROT_CEILING, file name "protceil" (MEASUREMENT ONLY: 0 off, 1 skip the read-only arming of a synchronization, 2 dose it)
+	// Session 129, PROTOTYPE (docs/session-129/design129.md rev 2, ROADMAP s122 items 97(e), 98, 99, 101): the read-only
+	// arming of a buffer synchronization moved into the copy-pool job - each 1 MiB chunk of a pooled copy applies the
+	// deferred protection of its own guest range under `apply`, then copies. Read ONCE per synchronization on the GuestGpu
+	// thread (PageManager::ArmCopyScope around the whole ForEachUploadRange of BufferCache::SynchronizeBuffer) and latched
+	// for it; every job of it carries the value, so it CAN be a schedule arm. 0 = the previous path; 1 = the move; 2 = 1 +
+	// the self-check (state-only detector in the chunk and on GuestGpu, content row); 3 = the positive control of both
+	// branches (take -> detect -> copy -> protect; guest writes in that window are lost), smoke only; 4 = the path of 0 plus
+	// the detector in the chunk (null control), smoke only. Refused (ArmCopy: refused) with protceil, armdefer, protbatch2,
+	// protbatch 0, KYTY_ASYNC_COPY=0, KYTY_PARALLEL_COPY=0, KYTY_ASYNC_PROTECT=0, bufimp, and 2/3/4 without KYTY_FRAME_TRACE.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	ArmInCopy,        // KYTY_ARM_IN_COPY, file name "armcopy" (0 off, 1 arm in the copy job, 2 self-check, 3 control, 4 null control)
 	Count,
 };
 

@@ -5,6 +5,7 @@
 #include "common/alignment.h"
 #include "common/common.h"
 #include "common/lruCache.h"
+#include "common/parallelCopy.h"
 #include "common/slotVector.h"
 #include "graphics/host_gpu/memoryTracker.h"
 #include "graphics/host_gpu/rangeSet.h"
@@ -286,6 +287,11 @@ private:
 	// Returns true when the region was handed to Common::AsyncMemcpy (session 91: the callers
 	// count the two branches where the decision is taken).
 	bool CopyGuestToStaging(uint8_t* staging, uint64_t vaddr, uint64_t size);
+	// Session 129, knob "armcopy": CopyGuestToStaging of an operation latched 1..4 (design129.md rev 2 s.2.2, C3).
+	bool CopyGuestToStagingArmed(uint8_t* staging, uint64_t vaddr, uint64_t size, uint32_t mode);
+	// Session 129, knob "armcopy" 2/3: the content row after a chunk copy (Common::ArmedCopyHook::check, s.7.3).
+	static void ArmCopyContent(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+	                           const uint8_t* src);
 	// Knob "bufimp" (route D1): resolve every copy region of one upload into the
 	// VK_EXT_external_memory_host alias of the guest backing store, so that the GPU can
 	// read the guest pages instead of a staging copy of them.  Fills the thread-local
@@ -373,6 +379,8 @@ private:
 	RangeSet                                          m_gpu_modified_ranges;
 	MemoryTracker                                     m_memory_tracker;
 	StreamBuffer                                      m_staging_buffer;
+	// Session 129, knob "armcopy": the hook of the armed pool copies (PageManager::ArmCopyChunk, ArmCopyContent).
+	Common::ArmedCopyHook                             m_arm_copy_hook {};
 	StreamBuffer                                      m_stream_buffer;
 	// Gate "cbstat": shadows of the stream-ring constant copies, keyed by (address, size).
 	struct StreamCopyShadow {

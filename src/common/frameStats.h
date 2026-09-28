@@ -2511,6 +2511,48 @@ enum class Counter : uint32_t {
 	// Value 2 of "protceil" (ROADMAP s122 item 93(g)(1)): the dose after each call counted in pc_elig_* at a latch of 2.
 	PcDoseN,                 // pc_dose_n: doses (one per eligible GuestGpu host call at a latch of 2)
 	PcDoseNs,                // pc_dose_ns: ns actually spun by the doses (not in prot_gpu_*_ns / pc_elig_ns)
+	// Session 129, knob "armcopy" (docs/session-129/design129.md rev 2 s.9.1, ROADMAP s122 items 97(e)(1), 99, 101): raw
+	// counts / ns / pages. "Moved" = a chunk's host call (Arm::Job) off the GuestGpu thread; "kept" = a GuestGpu arming inside
+	// a latch of 1..3, or a chunk GuestGpu ran while it helped the pool.
+	AcOp0,                   // ac_op0: GuestGpu synchronizations latched 0
+	AcN,                     // ac_n: latched 1..4 without a refusal, read-only
+	AcRefuse,                // ac_refuse: latches >= 1 refused (ArmCopy: refused); a guard
+	AcOffThr,                // ac_offthr: SynchronizeBuffer off the GuestGpu thread with the knob nonzero (row)
+	AcJobs,                  // ac_jobs: pooled copies queued with the arm fields (1..4)
+	AcChunks,                // ac_chunks: their chunks
+	AcMovedN,                // ac_moved_n: Protect with Arm::Job on a thread other than GuestGpu
+	AcMovedNs,               // ac_moved_ns: their ns
+	AcMovedPages,            // ac_moved_pages: their pages
+	AcKeptN,                 // ac_kept_n: GuestGpu armings at a latch of 1..3 (Sync/Scope/Range) plus Arm::Job on GuestGpu
+	AcKeptNs,                // ac_kept_ns: their ns
+	AcKeptInlN,              // ac_kept_inl_n: of ac_kept_n, the range of an inline copy
+	AcKeptInlNs,             // ac_kept_inl_ns
+	AcKeptGapN,              // ac_kept_gap_n: of ac_kept_n, the rest of the windows after upload_func
+	AcKeptGapNs,             // ac_kept_gap_ns
+	AcKeptFullN,             // ac_kept_full_n: of ac_kept_n, every other (the synchronous runs of step 1)
+	AcKeptFullNs,            // ac_kept_full_ns
+	AcKeptTmpN,              // ac_kept_tmp_n: of ac_kept_n, the windows and copies of a temporary-buffer upload
+	AcKeptTmpNs,             // ac_kept_tmp_ns
+	AcKeptWrN,               // ac_kept_wr_n: of ac_kept_n, a written synchronization at a latch of 1..3
+	AcKeptWrNs,              // ac_kept_wr_ns
+	AcKeptHelpN,             // ac_kept_help_n: of ac_kept_n, Arm::Job on GuestGpu (it ran a chunk in WaitAll)
+	AcKeptHelpNs,            // ac_kept_help_ns
+	AcJobOtherN,             // ac_job_other_n: chunk applications with a mode other than Read (row)
+	AcJobNowork,             // ac_job_nowork: chunks (1..3) whose arming found nothing pending (row)
+	AcJobWaitNs,             // ac_job_wait_ns: the apply-lock wait of the chunks (in pb_wait_us, not in pb_wait_range_us)
+	AcChk,                   // ac_chk: chunk detector (2/3/4), pages watched and not pending
+	AcBad,                   // ac_bad: of them, writable on the host
+	AcChkNs,                 // ac_chk_ns: ns of the chunk detector
+	AcJleft,                 // ac_jleft: chunk debt, pages pending at the start of the hold still pending (2/3); at 4 pending pages
+	AcJremark,               // ac_jremark: of ac_jleft, pages the chunk itself took and found pending again
+	AcGchk,                  // ac_gchk: GuestGpu-branch detector (2/3), pages watched and not pending
+	AcGbad,                  // ac_gbad: of them, writable on the host
+	AcGchkNs,                // ac_gchk_ns: ns of the GuestGpu-branch detector
+	AcGjleft,                // ac_gjleft: GuestGpu debt, pages GuestGpu had to apply still pending (2/3)
+	AcOrphan,                // ac_orphan: operations 1..3 whose handed-over windows were not empty with no copy (row)
+	AcCmpPages,              // ac_cmp_pages: content row (2/3), page pieces compared after the chunk copy
+	AcCdiff,                 // ac_cdiff: of them, staging differs from the backing
+	AcCbad,                  // ac_cbad: of them, the page reads CPU-clean
 	Count
 };
 

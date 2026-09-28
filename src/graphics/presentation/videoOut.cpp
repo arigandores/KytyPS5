@@ -3129,6 +3129,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"pc_vfy_u", FS::Counter::PcVfyU, false},
 				    {"pc_vfy_u_na", FS::Counter::PcVfyUNa, false},
 				    {"pc_vfy_u_ro", FS::Counter::PcVfyURo, false},
+				    // Value 2 of "protceil" (ROADMAP s122 item 93(g)(1)).
+				    {"pc_dose_n", FS::Counter::PcDoseN, false},
+				    {"pc_dose_ns", FS::Counter::PcDoseNs, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

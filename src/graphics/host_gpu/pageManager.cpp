@@ -165,7 +165,8 @@ struct PageManager::Impl {
 	static constexpr uint8_t CeilOutside = 0; // no CeilScope open
 	static constexpr uint8_t CeilZero    = 1; // latched 0: the previous path, pc_elig_* counted
 	static constexpr uint8_t CeilSkip    = 2; // latched 1: armings skipped
-	static constexpr uint8_t CeilRefused = 3; // latched 1 and refused: the path of 0, nothing counted as eligible
+	static constexpr uint8_t CeilRefused = 3; // latched 1 or 2 and refused: the path of 0, nothing counted as eligible
+	static constexpr uint8_t CeilDose    = 4; // latched 2: the path of 0, pc_elig_* counted, each eligible call dosed
 
 	struct PageState {
 		uint8_t write_watchers  : 7 = 0;
@@ -411,7 +412,7 @@ struct PageManager::Impl {
 							FS::Add(FS::Counter::ProtGpuRwN, 1);
 							break;
 					}
-					if (arm != Arm::No && t_ceil_state == CeilZero) {
+					if (arm != Arm::No && (t_ceil_state == CeilZero || t_ceil_state == CeilDose)) {
 						FS::Add(FS::Counter::PcEligNs, ns);
 						FS::Add(FS::Counter::PcEligN, 1);
 						FS::Add(FS::Counter::PcEligPages, pages);
@@ -419,6 +420,19 @@ struct PageManager::Impl {
 							FS::Add(FS::Counter::PcEligScopeN, 1);
 						} else if (arm == Arm::Range) {
 							FS::Add(FS::Counter::PcEligRngN, 1);
+						}
+						if (t_ceil_state == CeilDose) [[unlikely]] {
+							// Value 2 (ROADMAP s122 item 93(g)(1)): the call is made; the thread spins once more for its
+							// duration by the same clock, still under the locks the call was made under (the counters
+							// above hold the call alone).
+							const auto d0 = FS::NowNs();
+							auto       d1 = d0;
+							while (d1 - d0 < ns) {
+								YieldProcessor();
+								d1 = FS::NowNs();
+							}
+							FS::Add(FS::Counter::PcDoseN, 1);
+							FS::Add(FS::Counter::PcDoseNs, d1 - d0);
 						}
 					}
 				}
@@ -1482,7 +1496,7 @@ PageManager::CeilScope::CeilScope(bool engage) noexcept {
 	namespace FS = Common::FrameStats;
 	namespace G  = Common::Gates;
 	if (!engage) {
-		if (FS::Enabled() && G::Value(G::Knob::ProtCeiling) == 1) {
+		if (FS::Enabled() && G::Value(G::Knob::ProtCeiling) != 0) {
 			FS::Add(FS::Counter::PcOffThr, 1);
 		}
 		return;
@@ -1517,6 +1531,25 @@ PageManager::CeilScope::CeilScope(bool engage) noexcept {
 				LOGF("ProtCeil: refused reason=%s\n", reason);
 			} else {
 				LOGF("ProtCeil: mode 1\n");
+			}
+		}
+	} else if (value == 2) {
+		// Value 2, the dose (ROADMAP s122 item 93(g)(1)): the path of 0, and each eligible GuestGpu call spins once more
+		// for its duration by the clock of Protect - which runs only under Enabled(); without it the value is refused.
+		static std::atomic<uint32_t> logged {0};
+		const bool                   clock = FS::Enabled();
+		const uint32_t               bit   = clock ? 1u : 2u;
+		if (clock) {
+			state = Impl::CeilDose;
+		} else {
+			state = Impl::CeilRefused;
+			FS::Add(FS::Counter::PcRefuse, 1);
+		}
+		if ((logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0) {
+			if (clock) {
+				LOGF("ProtCeil: mode 2\n");
+			} else {
+				LOGF("ProtCeil: refused reason=noclock\n");
 			}
 		}
 	}

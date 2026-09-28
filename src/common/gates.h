@@ -677,8 +677,12 @@ enum class Knob : uint32_t {
 	// runs its scope and range flushes apply); the tracker changes as at 0 and the pages are marked unarmed (U). The first
 	// GuestGpu submission at 0 after 1 declares the unarmed pages written (RenderContext::ProtCeilRearm, item 89(v)(1)).
 	// Refused (ProtCeil: refused) while armdefer is on or protbatch2 with protbatch. Guest writes into U pages are lost.
+	// 2 = the dose (ROADMAP s122 item 93(g)(1)): every call is made as at 0; after each GuestGpu host call a latch of 1
+	// would skip (the pc_elig_* predicate) the thread spins once more for the duration of that call, by the clock of
+	// its ns (pc_dose_n, pc_dose_ns). No U, no re-arm. Refused (ProtCeil: refused reason=noclock) without that clock
+	// (neither KYTY_FRAME_TRACE nor KYTY_AV_TRACE).
 	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
-	ProtCeiling,      // KYTY_PROT_CEILING, file name "protceil" (MEASUREMENT ONLY: 0 off, 1 skip the read-only arming of a synchronization)
+	ProtCeiling,      // KYTY_PROT_CEILING, file name "protceil" (MEASUREMENT ONLY: 0 off, 1 skip the read-only arming of a synchronization, 2 dose it)
 	Count,
 };
 

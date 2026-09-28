@@ -162,7 +162,9 @@ public:
 	// read-only that arms a write watcher is made on this thread until it closes - the synchronous run of
 	// UpdateRegionWatchers and the runs its flushes apply - and their pages are marked unarmed (U, per region, under
 	// `apply`). The tracker changes exactly as at 0. Invariant (P'): the host is never stricter than the tracker and
-	// differs only by the write bit of a U page. Off the GuestGpu thread nothing is latched (pc_offthr at 1).
+	// differs only by the write bit of a U page. Off the GuestGpu thread nothing is latched (pc_offthr at 1 or 2).
+	// At 2 (the dose, ROADMAP s122 item 93(g)(1)) every call is made as at 0 and each one a latch of 1 would skip is
+	// followed by a spin of its own duration; refused without the FrameStats clock.
 	class CeilScope final {
 	public:
 		explicit CeilScope(bool engage) noexcept;

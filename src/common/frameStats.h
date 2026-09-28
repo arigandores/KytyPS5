@@ -2484,8 +2484,8 @@ enum class Counter : uint32_t {
 	ProtGpuRwN,              // prot_gpu_rw_n: their number
 	PcOp0,                   // pc_op0: synchronizations latched 0 (a refused latch of 1 included)
 	PcOp1,                   // pc_op1: synchronizations latched 1
-	PcRefuse,                // pc_refuse: latches of 1 refused (armdefer, protbatch2); must be 0
-	PcOffThr,                // pc_offthr: synchronizations off the GuestGpu thread with the knob at 1 (row)
+	PcRefuse,                // pc_refuse: latches of 1 refused (armdefer, protbatch2) and of 2 (no clock); must be 0
+	PcOffThr,                // pc_offthr: synchronizations off the GuestGpu thread with the knob at 1 or 2 (row)
 	PcEligNs,                // pc_elig_ns: armings made at a latch of 0 that a latch of 1 would skip, ns
 	PcEligN,                 // pc_elig_n: their number
 	PcEligPages,             // pc_elig_pages: their pages
@@ -2508,6 +2508,9 @@ enum class Counter : uint32_t {
 	PcVfyU,                  // pc_vfy_u: pbcheck: a U page writable on the host
 	PcVfyUNa,                // pc_vfy_u_na: pbcheck: a U page not readable on the host; must be 0
 	PcVfyURo,                // pc_vfy_u_ro: pbcheck: a U page read-only on the host (row)
+	// Value 2 of "protceil" (ROADMAP s122 item 93(g)(1)): the dose after each call counted in pc_elig_* at a latch of 2.
+	PcDoseN,                 // pc_dose_n: doses (one per eligible GuestGpu host call at a latch of 2)
+	PcDoseNs,                // pc_dose_ns: ns actually spun by the doses (not in prot_gpu_*_ns / pc_elig_ns)
 	Count
 };
 

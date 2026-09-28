@@ -723,3 +723,63 @@ BDA и read-only depth прошли с synchronization validation. Больша�
 - Код: `renderDraw.cpp`, `pipelineCache.cpp`, `SrtWalker.cpp`, `ResourceMaterialization.cpp`.
 - Проверки: `--sparse-mrt-only`, ResourceMaterialization; журналы `s43/test_*`.
 <!-- SESSION43_INDEX_END -->
+
+## Ключевые места в коде (C:\kyty\KytyPS5\src\graphics)
+
+*Перенесено из `CLAUDE.md` дословно 2026-09-28 (`HPP-157`, `ROADMAP.md` «СЕССИЯ 122» п. 113).*
+
+- `shader/recompiler/frontend/translate/Translate.cpp` — `ReadMaskWord`/`ReadMaskWords64`, пролог PS (`HelperInvocation` →
+  начальный EXEC), `BallotMask` («маска на лейн»: 1/0), `AddBranchCondition` (EXECZ/VCCZ → `IR::WaveAny`), предикатированные
+  записи VGPR `Select(exec, new, old)` (~строка 310).
+- `shader/recompiler/ir/passes/ConstantPropagation.cpp` — свёртки, в т.ч. `WqmMask(IEqual(HelperInvocation,0)) → true`;
+  `ir/passes/SharedMemoryBarrier.cpp` — барьеры LDS для wave64 на 32-лейновых подгруппах (логирует причину пропуска).
+- `shader/recompiler/frontend/translate/Integer.cpp`, `Scalar.cpp`, `Control.cpp` (S_WQM), `Memory.cpp`
+  (`IMAGE_BVH_INTERSECT_RAY`, DS_APPEND, атомики); `frontend/cfg/ShaderCFG.cpp` — структуризатор.
+- `shader/recompiler/backend/spirv/spirvEmitterFlow.cpp` — Ballot, `WaveAny` (OR двух подгрупп через 2 dword'а LDS +
+  барьеры), Barrier, WQM; `spirvEmitterMemoryHelpers.cpp` — `LdsDwordCount` (+2 для WaveAny), `EnsureLdsStorage`;
+  `spirvEmitterProgram.cpp` — synthetic merge, loop guard; `spirvEmitterImage.cpp` — depth compare, image atomics.
+- `shader/recompiler/ir/passes/ResourceTracking.cpp`, `SrtWalker.cpp`, `ResourceMaterialization.cpp` — SRT/дескрипторы.
+- `host_gpu/renderer/renderCompute.cpp` — dispatch, санитайзер, `KYTY_DUMP_*`, `KYTY_SKIP_CS`, `KYTY_TRACE_CS`, пропуск
+  dispatch'ей с нулём групп; `renderDraw.cpp` — `DumpDraw`, HTILE meta clear → `vkCmdClearDepthStencilImage` всего буфера.
+- `host_gpu/renderer/pipeline/descriptors.cpp` — привязки образов/буферов, `MaterializeDeferredDccClear` (отложенная
+  DCC-очистка → `vkCmdClearColorImage` перед привязкой в шейдер); `colorRenderTarget.cpp` — `DecodeFixedDccClear`.
+- `shader/shader.cpp` — `ShaderGetStaticInputInfoPS` (`SPI_PS_INPUT_ENA` → пары I/J `ps_barycentric_vgpr`, число
+  экспортов VS), `ShaderApplyAttribSemantics` (таблица атрибутов); `shaderPixelParameter.cpp` — смещения
+  `SPI_PS_INPUT_CNTL` (маска 0x1f, бит 0x400 = flat); `recompiler/backend/spirv/spirvEmitterModule.cpp`
+  `AllocateInputVariables` (алиасы PS-входов с одним OFFSET), `spirvEmitterFlow.cpp` `EmitAttribute`/`DEFAULT_VAL`.
+- `host_gpu/renderer/cache/bufferCache.cpp` — буферный кэш (memory tracker, BDA, readback `DownloadBufferMemory` =
+  drain GPU, `CopyBuffer` = dmaData; одиннадцатая сессия: `BeginAsyncReadback/FinishAsyncReadback` — гостевой
+  поток ждёт сам, `PrefetchHotReadbacks` — упреждающие копии регионов, которые CPU опрашивает, `NoteGpuWrite` —
+  порядковые номера GPU-записей по 64 КБ);
+- `common/frameStats.h/.cpp` — счётчики `KYTY_FRAME_TRACE` (`Scope`, `Lap`, `SiteScope`, таблицы сайтов; `NowNs` на
+  rdtsc; семплирующий профайлер `StartSampler`/`SamplerThread`, `ModuleOffset`); `host_gpu/renderer/renderMemo.h` —
+  мемо `ResolveTexture` и RT/depth (`RenderExecutorMemo`, `MemoHashBytes`), используется в `descriptors.cpp`,
+  `colorRenderTarget.cpp`, `depthRenderTarget.cpp`; `host_gpu/vma.cpp` — `VulkanDeferredDestroy` (фоновый поток
+  уничтожения), `guest_gpu/graphicsRun.cpp` `EmitGlobalBarrier` (пропуск по умолчанию, `KYTY_EOP_BARRIER`),
+  `commandScheduler.cpp` `PopPendingOperationsLazy`, `DeferredSiteName`;
+  `shader/recompiler/ir/passes/SrtWalker.cpp` — `SrtCompiler`/`EvaluateCompiled` (линейный вычислитель SRT,
+  кэш в `ResourcePlan::srt_compiled`), интерпретатор `Evaluator` — эталон и запасной путь;
+  `guest_gpu/graphicsRun.cpp` `BufferFlushLazy` (коалесценция submit'ов), `DrawIndirect` (GPU-side);
+  `host_gpu/renderer/indirectArgsSanitizer.cpp` + `shaders/dispatch_indirect_sanitize.comp` (до 5 dword,
+  режимы zero/clamp); `shader/shader.cpp` `ShaderComputeHash`/`ShaderMakeHostCopy` (хэш и копии AGC-метаданных
+  при регистрации в `libs/agc.cpp`); `cache/textureCache.cpp` — `UploadImage`/`RefreshImage`/`InvalidateCpuAliases`
+  (образы узнают о записях CPU только через page fault); `host_gpu/memoryTracker.h` — CPU/GPU-грязные страницы.
+- `guest_gpu/graphicsRun.cpp` — GuestGpu: очереди submission'ов (`ThreadRun`, round-robin по границам submission,
+  сон 100 мс при всех заблокированных), `Process`, `WaitRegMem` (`KYTY_WAIT_TRACE`), EOP-записи (метка пишется при разборе
+  PM4, прерывание — после завершения GPU), `KYTY_RD_*`, `KYTY_PEEK_ADDR`, `KYTY_LAG_TRACE`.
+- `host_gpu/renderer/commandScheduler.cpp` — submit, приоритетные операции (прерывания) по timeline-семафору.
+- `kernel/fileSystem.cpp` — `KernelRead`/`KernelPread` (InvalidateMemory до и после чтения, `KYTY_STREAM_TRACE`,
+  `ReadDelay` — эмуляция латентности накопителя); `kernel/eventQueue.cpp` — `sceKernelWaitEqueue` (`timo=0` = опрос,
+  «timedout» при опросе — норма); `kernel/pthread.cpp` — `RunThread` (имена потоков, `KYTY_PRINT_NAMES_THREADS`);
+  `libs/libKernel.cpp` — sceFiber (`FiberRun/Switch/ReturnToThread`, состояние IDLE/RUNNING, `KYTY_FIBER_TRACE`);
+  `libs/libSaveData.cpp` (SaveDataMemory2 синхронный), `libs/libAmpr.cpp` (Ampr выполняется синхронно).
+- `src/libs/avPlayer.cpp` — AvPlayer (ffmpeg → NV12, `KYTY_VIDEO_TEST`, `KYTY_DUMP_VIDEO`); `presentation/renderDoc.cpp` —
+  захват (`KYTY_RD_FLIPS`); `presentation/videoOut.cpp`, `presentation/window/swapchain.cpp` — видеовыход и blit.
+- Шейдеры ASTRO BOT (хэши): видео-PS `0xe197e307a5f2cb39` / VS `0xa356f0ca70df2e47`; композит в видеовыход
+  `0x2c3545445213721e`; bloom-композит CS `0x48bc4ef05ebce9d4`; TAA/апскейл PS `0x4dcbd39a14bd2e70`; DOF: CoC-тайлы
+  `0xa4d6d1f9adcdc5c4`, дилатация `0x03d8402a8c5446ce`, мипы `0x78c7b512c501c9cd`, размытие `0xd97f248195e22298`,
+  композит `0xa70e2320dbfc587d`; clear-шейдер `0xa572ee17a880e71c`; экспозиция 1x1 `0x1933f2c0d893ec50`;
+  froxel-туман: освещение CS `0x9bc1c45f56b06af1`, temporal `0xa45af05c008ab79d`, интегрирование `0x0192b89f529d8bcb`,
+  fullscreen-apply PS (RenderDoc id 945); LUT солнечной освещённости 32x32 пишет CS `0xd11abf58ec5572fe` (wave64, LDS);
+  прочие wave64-LDS CS: `0x6216dac0cc17c2d4`, `0xe9f49434bf837e1d`, `0xda5664fd6d68b1b3`, `0x657ad04626bf9d55`,
+  `0x900aba8df9448d3d`, `0xb57099b84b0b69e3`.

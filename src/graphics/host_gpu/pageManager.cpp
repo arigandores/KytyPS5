@@ -450,12 +450,22 @@ struct PageManager::Impl {
 				// it; a GuestGpu arming inside a latch of 1..3 is kept, by its reason. At 0 and 4 no Arm::Job is passed and the
 				// latch is neither AcWritten nor AcMove, so nothing here is counted.
 				if (arm == Arm::Job) {
+					// Session 130, knob "acinline" (I7): an inline-class chunk's call is also ai_help_* / ai_moved_*.
 					if (FS::CurrentRole() == FS::ThreadRole::Gpu) {
 						AcAddKept(ns, FS::Counter::AcKeptHelpN, FS::Counter::AcKeptHelpNs);
+						if (t_ai_chunk) {
+							FS::Add(FS::Counter::AiHelpN, 1);
+							FS::Add(FS::Counter::AiHelpNs, ns);
+						}
 					} else {
 						FS::Add(FS::Counter::AcMovedN, 1);
 						FS::Add(FS::Counter::AcMovedNs, ns);
 						FS::Add(FS::Counter::AcMovedPages, pages);
+						if (t_ai_chunk) {
+							FS::Add(FS::Counter::AiMovedN, 1);
+							FS::Add(FS::Counter::AiMovedNs, ns);
+							FS::Add(FS::Counter::AiMovedPages, pages);
+						}
 					}
 				} else if (arm != Arm::No && (t_ac_state == AcWritten || t_ac_state == AcMove) &&
 				           FS::CurrentRole() == FS::ThreadRole::Gpu) {
@@ -463,6 +473,22 @@ struct PageManager::Impl {
 					switch (reason) {
 						case static_cast<uint8_t>(PageManager::ArmCopyReason::Inline):
 							AcAddKept(ns, FS::Counter::AcKeptInlN, FS::Counter::AcKeptInlNs);
+							break;
+						// Session 130, knob "acinline" (I7, I7'): an inline copy of an operation with
+						// acinline=1 left on GuestGpu - the same ac_kept_inl_* as Inline, and its ai_* row
+						// by reason.
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::InlNowin):
+							AcAddKept(ns, FS::Counter::AcKeptInlN, FS::Counter::AcKeptInlNs);
+							AiAddKept(ns, FS::Counter::AiKeptNowinN, FS::Counter::AiKeptNowinNs);
+							break;
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::InlNomap):
+							AcAddKept(ns, FS::Counter::AcKeptInlN, FS::Counter::AcKeptInlNs);
+							AiAddKept(ns, FS::Counter::AiKeptNomapN, FS::Counter::AiKeptNomapNs);
+							break;
+						case static_cast<uint8_t>(PageManager::ArmCopyReason::InlBig):
+							AcAddKept(ns, FS::Counter::AcKeptInlN, FS::Counter::AcKeptInlNs);
+							FS::Add(FS::Counter::AiKeptBigN, 1);
+							FS::Add(FS::Counter::AiKeptBigNs, ns);
 							break;
 						case static_cast<uint8_t>(PageManager::ArmCopyReason::Gap):
 							AcAddKept(ns, FS::Counter::AcKeptGapN, FS::Counter::AcKeptGapNs);
@@ -1106,6 +1132,15 @@ struct PageManager::Impl {
 
 	static constexpr uint8_t AcReasonWr = 0xff; // the reason of a written synchronization (not an ArmCopyReason)
 
+	// Session 130, knob "acinline": ai_kept_* and one of its reason rows.
+	static void AiAddKept(uint64_t ns, Common::FrameStats::Counter n, Common::FrameStats::Counter n_ns) {
+		namespace FS = Common::FrameStats;
+		FS::Add(FS::Counter::AiKeptN, 1);
+		FS::Add(FS::Counter::AiKeptNs, ns);
+		FS::Add(n, 1);
+		FS::Add(n_ns, ns);
+	}
+
 	static void AcAddKept(uint64_t ns, Common::FrameStats::Counter n, Common::FrameStats::Counter n_ns) {
 		namespace FS = Common::FrameStats;
 		FS::Add(FS::Counter::AcKeptN, 1);
@@ -1184,6 +1219,10 @@ struct PageManager::Impl {
 		bool                                                     windows_flushed = false;
 		std::vector<AcCopy>                                      copies;
 		std::vector<AcArea>                                      areas;
+		// Session 130, knob "acinline" (I1'', I2', I3', I11): the flag of this operation (written with every mode, cleared by
+		// AcFinish) and the inline copies put in the batch and not yet enqueued.
+		bool                                                     ai_inline  = false;
+		uint32_t                                                 ai_pending = 0;
 	};
 
 	// What the detector saw under `lock`: pend_now and Perms() of each page it looked at.
@@ -1477,7 +1516,8 @@ struct PageManager::Impl {
 				chunk_begin = chunk_end;
 				continue;
 			}
-			ApplyGuard apply(region->apply, true, FS::Counter::AcJobWaitNs);
+			ApplyGuard apply(region->apply, true, FS::Counter::AcJobWaitNs,
+			                 t_ai_chunk ? FS::Counter::AiJobWaitNs : FS::Counter::Count);
 			if (mode == 1) {
 				runs += AcApplyRuns(*region, region_base, first, last, Arm::Job, nullptr, &other);
 				chunk_begin = chunk_end;
@@ -1521,6 +1561,10 @@ struct PageManager::Impl {
 			}
 			FS::Add(FS::Counter::AcChk, chk);
 			FS::Add(FS::Counter::AcBad, bad);
+			if (t_ai_chunk) {
+				FS::Add(FS::Counter::AiChk, chk);
+				FS::Add(FS::Counter::AiBad, bad);
+			}
 			PageBits left {};
 			PageBits remark {};
 			PageBits stuck {}; // taken, pending in the snapshot, never cleared by the take
@@ -1543,6 +1587,10 @@ struct PageManager::Impl {
 				}
 			});
 			FS::Add(FS::Counter::AcJstale, jstale);
+			if (t_ai_chunk) {
+				FS::Add(FS::Counter::AiJleft, jleft);
+				FS::Add(FS::Counter::AiJstale, jstale);
+			}
 			if (mode == 2 && jleft != 0) {
 				AcLogLeft(left, snap, &taken, &stale, region_base, true, mode);
 			}
@@ -1565,6 +1613,9 @@ struct PageManager::Impl {
 		}
 		if (runs == 0 && mode != 4) {
 			FS::Add(FS::Counter::AcJobNowork, 1);
+			if (t_ai_chunk) {
+				FS::Add(FS::Counter::AiNowork, 1);
+			}
 		}
 		return mode == 3;
 	}
@@ -1647,6 +1698,11 @@ struct PageManager::Impl {
 		namespace FS = Common::FrameStats;
 		auto&      op   = t_ac_op;
 		const auto mode = op.mode;
+		// Session 130, knob "acinline" (I11, RC2): a batched copy never enqueued is already in `pooled` and would drop out of
+		// the rest of the windows and of G_own - stop loudly, never clear.
+		if (op.ai_pending != 0) {
+			Fatal("acinline: inline batch not enqueued at ArmCopyFinish (pending=%u)", static_cast<unsigned>(op.ai_pending));
+		}
 		if (mode >= 1 && mode <= 3) {
 			op.areas.clear();
 			for (uint32_t index = 0; index < op.window_count; index++) {
@@ -1726,11 +1782,18 @@ struct PageManager::Impl {
 				}
 			}
 		}
+		// Session 130, knob "acinline" (I11, RC1): the GuestGpu wall of the operation, latch to here, in both values.
+		if (mode >= 1 && mode <= 3 && t_ai_op_t0 != 0) {
+			FS::Add(FS::Counter::AiOpNs, FS::NowNs() - t_ai_op_t0);
+			FS::Add(FS::Counter::AiOpN, 1);
+			t_ai_op_t0 = 0;
+		}
 		op.mode            = 0;
 		op.window_count    = 0;
 		op.windows_flushed = false;
 		op.copies.clear();
 		op.areas.clear();
+		op.ai_inline = false;
 	}
 
 	// Gate "pbcheck". Holds the apply lock (no application in flight) and skips pending pages,
@@ -1918,6 +1981,11 @@ struct PageManager::Impl {
 	static thread_local uint8_t                    t_ac_mode;
 	static thread_local PageManager::ArmCopyReason t_ac_reason;
 	static thread_local AcOp                       t_ac_op;
+	// Session 130, knob "acinline": the flag latched by this thread's outer ArmCopyScope (0/1), the start of the wall of its
+	// operation (ai_op_ns, 0 = not measuring), and whether this thread runs an inline-class chunk right now (I6).
+	static thread_local uint8_t  t_ai_state;
+	static thread_local uint64_t t_ai_op_t0;
+	static thread_local bool     t_ai_chunk;
 	// The regions holding U bits with their base, in the order they got the first; written and read only on the
 	// GuestGpu thread (SkipRun under a latch of 1, CeilRearm).
 	std::vector<std::pair<Region*, uint64_t>> unarmed_regions;
@@ -1946,6 +2014,9 @@ thread_local uint8_t                    PageManager::Impl::t_ac_state  = PageMan
 thread_local uint8_t                    PageManager::Impl::t_ac_mode   = 0;
 thread_local PageManager::ArmCopyReason PageManager::Impl::t_ac_reason = PageManager::ArmCopyReason::Full;
 thread_local PageManager::Impl::AcOp    PageManager::Impl::t_ac_op {};
+thread_local uint8_t                    PageManager::Impl::t_ai_state = 0;
+thread_local uint64_t                   PageManager::Impl::t_ai_op_t0 = 0;
+thread_local bool                       PageManager::Impl::t_ai_chunk = false;
 
 static_assert(std::atomic<void*>::is_always_lock_free);
 
@@ -2266,8 +2337,9 @@ PageManager::ArmCopyScope::ArmCopyScope(bool engage, bool is_written) noexcept {
 	m_engaged        = true;
 	m_previous_state = Impl::t_ac_state;
 	m_previous_mode  = Impl::t_ac_mode;
+	m_previous_ai    = Impl::t_ai_state;
 	if (m_previous_state != Impl::AcOutside) {
-		return; // nested: the latch of the outer synchronization
+		return; // nested: the latch of the outer synchronization (acinline is neither read nor touched - I1')
 	}
 	// The only read of the knob for this synchronization; the refusals are read only at >= 1 (s.8.2).
 	const auto value = std::min<uint32_t>(G::Value(G::Knob::ArmInCopy), 4);
@@ -2295,14 +2367,36 @@ PageManager::ArmCopyScope::ArmCopyScope(bool engage, bool is_written) noexcept {
 			}
 		}
 	}
+	// Session 130, knob "acinline" (I1, I1'): read once, only when armcopy was read >= 1 (at 0 never - item 107(g)).
+	if (value != 0) {
+		const auto inl = std::min<uint32_t>(G::Value(G::Knob::ArmInline), 1);
+		if (state == Impl::AcMove) {
+			if (inl == 1) {
+				Impl::t_ai_state = 1;
+				FS::Add(FS::Counter::AiN, 1);
+				static std::atomic<bool> logged_ai {false};
+				if (!logged_ai.exchange(true, std::memory_order_relaxed)) {
+					LOGF("ArmInline: mode 1\n");
+				}
+			}
+			// The wall of the operation (ai_op_ns, RC1), in both values: from here to the end of AcFinish.
+			Impl::t_ai_op_t0 = FS::Enabled() ? FS::NowNs() : 0;
+		} else if (inl == 1) {
+			FS::Add(FS::Counter::AiIdle, 1); // armcopy 4, a refusal or a written synchronization
+		}
+	}
 	Impl::t_ac_state = state;
 	Impl::t_ac_mode  = static_cast<uint8_t>(value);
 }
 
 PageManager::ArmCopyScope::~ArmCopyScope() {
 	if (m_engaged) {
+		if (m_previous_state == Impl::AcOutside) {
+			Impl::t_ai_op_t0 = 0; // an operation that never reached AcFinish is not counted (I1')
+		}
 		Impl::t_ac_state = m_previous_state;
 		Impl::t_ac_mode  = m_previous_mode;
+		Impl::t_ai_state = m_previous_ai;
 	}
 }
 
@@ -2322,6 +2416,9 @@ uint32_t PageManager::ArmCopyBegin() noexcept {
 	op.window_count    = 0;
 	op.windows_flushed = false;
 	op.copies.clear();
+	// Session 130, knob "acinline" (I1'', RC8): written with every mode (0 at 4), cleared by AcFinish.
+	op.ai_inline  = state == Impl::AcMove && Impl::t_ai_state == 1;
+	op.ai_pending = 0;
 	return op.mode;
 }
 
@@ -2366,6 +2463,56 @@ void PageManager::ArmCopyFinish() {
 bool PageManager::ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
                                const uint8_t* src) {
 	return static_cast<PageManager*>(context)->m_impl->AcChunk(vaddr, size, mode, dst, src);
+}
+
+bool PageManager::ArmCopyInlineOn() noexcept {
+	return Impl::t_ac_op.ai_inline;
+}
+
+bool PageManager::ArmCopyInlineWindow(uint64_t vaddr, uint64_t size) noexcept {
+	const auto& op  = Impl::t_ac_op;
+	const auto  end = vaddr + size;
+	for (uint32_t index = 0; index < op.window_count; index++) {
+		const auto& window = op.windows[index];
+		const auto  first  = window.base + static_cast<uint64_t>(window.first) * PAGE_SIZE;
+		const auto  last   = window.base + static_cast<uint64_t>(window.last) * PAGE_SIZE;
+		if (vaddr < last && first < end) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void PageManager::ArmCopyInlineNote(uint64_t vaddr, uint64_t size) noexcept {
+	namespace FS = Common::FrameStats;
+	Impl::t_ac_op.ai_pending++;
+	FS::Add(FS::Counter::AiJobs, 1);
+	FS::Add(FS::Counter::AiB, size);
+	const auto pages = (Common::AlignUp(vaddr + size, PAGE_SIZE) - Common::AlignDown(vaddr, PAGE_SIZE)) / PAGE_SIZE;
+	FS::Add(FS::Counter::AiPages, pages);
+}
+
+void PageManager::ArmCopyInlineEntry(size_t items) noexcept {
+	if (items != 0 || Impl::t_ac_op.ai_pending != 0) {
+		Fatal("acinline: inline batch not empty on entry (items=%zu pending=%u)", items,
+		      static_cast<unsigned>(Impl::t_ac_op.ai_pending));
+	}
+}
+
+void PageManager::ArmCopyInlineEnqueued(size_t n) noexcept {
+	auto& op = Impl::t_ac_op;
+	if (n != op.ai_pending) {
+		Fatal("acinline: inline batch size mismatch (n=%zu pending=%u)", n, static_cast<unsigned>(op.ai_pending));
+	}
+	op.ai_pending = 0;
+}
+
+bool PageManager::ArmCopyChunkInline(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
+                                     const uint8_t* src) {
+	Impl::t_ai_chunk = true;
+	const bool copied = static_cast<PageManager*>(context)->m_impl->AcChunk(vaddr, size, mode, dst, src);
+	Impl::t_ai_chunk = false;
+	return copied;
 }
 
 bool PageManager::HasUnarmed() const noexcept {

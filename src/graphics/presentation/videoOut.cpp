@@ -1318,7 +1318,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     " gpu_n=%llu cpu_main_us=%llu cpu_gpu_us=%llu cpu_present_us=%llu"
 			     " cpu_proc_us=%llu faults_gpu=%llu fault_gpu_us=%llu semwait_gpu_us=%llu"
 			     " prios=%llu prio_us=%llu dmas=%llu dma_us=%llu"
-			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u rk3_c5_max_ns=%u rts_chain_max=%u" "\n",
+			     " arm=%u blk=%u rt_w=%u rt_h=%u vp_w=%u vp_h=%u rk3_c5_max_ns=%u rts_chain_max=%u ai_enq_nmax=%u" "\n",
 			     r.cfg->flip_status.count,
 			     static_cast<unsigned long long>((cur.host_ns - prev.host_ns) / 1000u),
 			     static_cast<unsigned long long>(lat_us), dus(FS::Counter::GpuThreadProcessNs),
@@ -1340,7 +1340,8 @@ bool FlipQueue::Flip(uint32_t micros) {
 			     FS::TakeMax(FS::Gauge::RtWidth), FS::TakeMax(FS::Gauge::RtHeight),
 			     FS::TakeMax(FS::Gauge::VpWidth), FS::TakeMax(FS::Gauge::VpHeight),
 			     FS::TakeMax(FS::Gauge::Rk3C5Max),     // Session 126, knob "rk3cen" ([RC4])
-			     FS::TakeMax(FS::Gauge::RtsChainMax)); // Session 127, knob "rtskip" ([RC1])
+			     FS::TakeMax(FS::Gauge::RtsChainMax), // Session 127, knob "rtskip" ([RC1])
+			     FS::TakeMax(FS::Gauge::AiEnqNmax));  // Session 130, knob "acinline" (RC2)
 			LOGF("FrameTrace-draw: n=%" PRIu64 " logs=%llu log_us=%llu log_gpu_us=%llu d_pop=%llu"
 			     " d_check=%llu d_rt=%llu d_prog=%llu d_bind=%llu d_vb=%llu d_acq=%llu d_pipe=%llu"
 			     " d_commit=%llu d_emit=%llu c_pop=%llu c_prog=%llu c_pipe=%llu c_bind=%llu"
@@ -3173,6 +3174,41 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"ac_cdiff", FS::Counter::AcCdiff, false},
 				    {"ac_cbad", FS::Counter::AcCbad, false},
 				    {"ac_jstale", FS::Counter::AcJstale, false},
+				    // Session 130, knob "acinline" (design130.md rev 2 s.9.1): raw counts / ns / bytes / pages.
+				    {"ai_n", FS::Counter::AiN, false},
+				    {"ai_idle", FS::Counter::AiIdle, false},
+				    {"ai_cand", FS::Counter::AiCand, false},
+				    {"ai_enq_items", FS::Counter::AiEnqItems, false},
+				    {"ai_jobs", FS::Counter::AiJobs, false},
+				    {"ai_op_ns", FS::Counter::AiOpNs, false},
+				    {"ai_op_n", FS::Counter::AiOpN, false},
+				    {"ai_kept_big_n", FS::Counter::AiKeptBigN, false},
+				    {"ai_kept_big_ns", FS::Counter::AiKeptBigNs, false},
+				    {"ai_copy_nowin", FS::Counter::AiCopyNowin, false},
+				    {"ai_copy_nomap", FS::Counter::AiCopyNomap, false},
+				    {"ai_b", FS::Counter::AiB, false},
+				    {"ai_pages", FS::Counter::AiPages, false},
+				    {"ai_enq", FS::Counter::AiEnq, false},
+				    {"ai_enq_ns", FS::Counter::AiEnqNs, false},
+				    {"ai_moved_n", FS::Counter::AiMovedN, false},
+				    {"ai_moved_ns", FS::Counter::AiMovedNs, false},
+				    {"ai_moved_pages", FS::Counter::AiMovedPages, false},
+				    {"ai_help_n", FS::Counter::AiHelpN, false},
+				    {"ai_help_ns", FS::Counter::AiHelpNs, false},
+				    {"ai_kept_n", FS::Counter::AiKeptN, false},
+				    {"ai_kept_ns", FS::Counter::AiKeptNs, false},
+				    {"ai_kept_nowin_n", FS::Counter::AiKeptNowinN, false},
+				    {"ai_kept_nowin_ns", FS::Counter::AiKeptNowinNs, false},
+				    {"ai_kept_nomap_n", FS::Counter::AiKeptNomapN, false},
+				    {"ai_kept_nomap_ns", FS::Counter::AiKeptNomapNs, false},
+				    {"ai_nowork", FS::Counter::AiNowork, false},
+				    {"ai_job_wait_ns", FS::Counter::AiJobWaitNs, false},
+				    {"ai_chk", FS::Counter::AiChk, false},
+				    {"ai_bad", FS::Counter::AiBad, false},
+				    {"ai_jleft", FS::Counter::AiJleft, false},
+				    {"ai_jstale", FS::Counter::AiJstale, false},
+				    {"ai_cmp_pages", FS::Counter::AiCmpPages, false},
+				    {"ai_cbad", FS::Counter::AiCbad, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

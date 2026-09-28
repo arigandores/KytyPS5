@@ -2556,6 +2556,42 @@ enum class Counter : uint32_t {
 	// Session 130 (ROADMAP s122 item 105(b)(3)): chunk pages (2/3) the chunk took (rm=1), pending in the snapshot, whose
 	// bit still read set in the hold of the take (no fresh mark), with Perms() not ReadWrite - a strict guard at 2
 	AcJstale,                // ac_jstale
+	// Session 130, knob "acinline" (docs/session-130/design130.md rev 2 s.9.1, ROADMAP s122 items 105(zh)(1), 109, 110): raw
+	// counts / ns / bytes / pages; the "inline class" = the chunks queued by AsyncMemcpyArmedBatch (the inline hook).
+	AiN,                     // ai_n: operations latched armcopy 1..3 (read-only, no refusal) with acinline=1
+	AiIdle,                  // ai_idle: acinline=1 read and doing nothing (armcopy 4, a refusal, a written synchronization)
+	AiCand,                  // ai_cand: inline copies (< 64 KiB) of the operations of ai_n
+	AiEnqItems,              // ai_enq_items: sum of n of AsyncMemcpyArmedBatch (MUST stay right before ai_jobs: read order)
+	AiJobs,                  // ai_jobs: of ai_cand, put in the batch (one copy = one chunk), counted at the decision
+	AiOpNs,                  // ai_op_ns: GuestGpu wall of an operation latched armcopy 1..3 (both values), latch to AcFinish end
+	AiOpN,                   // ai_op_n: those operations
+	AiKeptBigN,              // ai_kept_big_n: GuestGpu armings of an inline copy >= 64 KiB not in one mapping (InlBig)
+	AiKeptBigNs,             // ai_kept_big_ns
+	AiCopyNowin,             // ai_copy_nowin: of ai_cand, left on GuestGpu: meets no handed-over window
+	AiCopyNomap,             // ai_copy_nomap: of ai_cand, left on GuestGpu: not in one backing mapping
+	AiB,                     // ai_b: bytes of the batched copies
+	AiPages,                 // ai_pages: tracker pages of the batched copies (edges aligned as AcChunk)
+	AiEnq,                   // ai_enq: calls of AsyncMemcpyArmedBatch
+	AiEnqNs,                 // ai_enq_ns: their GuestGpu wall, entry to return
+	AiMovedN,                // ai_moved_n: Protect with Arm::Job in an inline-class chunk off GuestGpu (of ac_moved_n)
+	AiMovedNs,               // ai_moved_ns
+	AiMovedPages,            // ai_moved_pages
+	AiHelpN,                 // ai_help_n: the same on GuestGpu (help in WaitAll; of ac_kept_help_n)
+	AiHelpNs,                // ai_help_ns
+	AiKeptN,                 // ai_kept_n: GuestGpu armings of an inline copy of an ai_n operation (InlNowin/InlNomap)
+	AiKeptNs,                // ai_kept_ns
+	AiKeptNowinN,            // ai_kept_nowin_n
+	AiKeptNowinNs,           // ai_kept_nowin_ns
+	AiKeptNomapN,            // ai_kept_nomap_n
+	AiKeptNomapNs,           // ai_kept_nomap_ns
+	AiNowork,                // ai_nowork: inline-class chunks whose arming found nothing pending (of ac_job_nowork)
+	AiJobWaitNs,             // ai_job_wait_ns: the apply-lock wait of inline-class chunks (of ac_job_wait_ns)
+	AiChk,                   // ai_chk: detector of inline-class chunks (2/3; of ac_chk)
+	AiBad,                   // ai_bad: of them, writable on the host (of ac_bad)
+	AiJleft,                 // ai_jleft: of ac_jleft, inline-class chunks
+	AiJstale,                // ai_jstale: of ac_jstale, inline-class chunks
+	AiCmpPages,              // ai_cmp_pages: of ac_cmp_pages, inline-class chunks
+	AiCbad,                  // ai_cbad: of ac_cbad, inline-class chunks
 	Count
 };
 
@@ -2571,6 +2607,8 @@ enum class Gauge : uint32_t {
 	Rk3C5Max,
 	// Session 127, knob "rtskip" = 2/3 ([RC1]): the largest record age a self-check of this frame met (rts_chain_max).
 	RtsChainMax,
+	// Session 130, knob "acinline" (design130.md rev 2 s.9.1, RC2): the largest n of one AsyncMemcpyArmedBatch (ai_enq_nmax).
+	AiEnqNmax,
 	Count
 };
 

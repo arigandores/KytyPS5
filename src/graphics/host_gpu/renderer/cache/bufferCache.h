@@ -292,6 +292,12 @@ private:
 	// Session 129, knob "armcopy" 2/3: the content row after a chunk copy (Common::ArmedCopyHook::check, s.7.3).
 	static void ArmCopyContent(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
 	                           const uint8_t* src);
+	// Session 130, knob "acinline" (I6, I9): the check hook of an inline-class chunk - ArmCopyContent plus ai_cmp_pages /
+	// ai_cbad.
+	static void ArmCopyContentInline(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+	                                 const uint8_t* src);
+	static void ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+	                               const uint8_t* src, bool inline_class);
 	// Knob "bufimp" (route D1): resolve every copy region of one upload into the
 	// VK_EXT_external_memory_host alias of the guest backing store, so that the GPU can
 	// read the guest pages instead of a staging copy of them.  Fills the thread-local
@@ -381,6 +387,9 @@ private:
 	StreamBuffer                                      m_staging_buffer;
 	// Session 129, knob "armcopy": the hook of the armed pool copies (PageManager::ArmCopyChunk, ArmCopyContent).
 	Common::ArmedCopyHook                             m_arm_copy_hook {};
+	// Session 130, knob "acinline": the hook of the inline-class chunks (PageManager::ArmCopyChunkInline,
+	// ArmCopyContentInline) - the class travels with the job as its hook.
+	Common::ArmedCopyHook                             m_arm_copy_hook_inline {};
 	StreamBuffer                                      m_stream_buffer;
 	// Gate "cbstat": shadows of the stream-ring constant copies, keyed by (address, size).
 	struct StreamCopyShadow {

@@ -203,9 +203,14 @@ public:
 		bool    m_engaged        = false;
 		uint8_t m_previous_state = 0;
 		uint8_t m_previous_mode  = 0;
+		// Session 130, knob "acinline": the outer latch's acinline flag to restore (a nested scope leaves it untouched).
+		uint8_t m_previous_ai = 0;
 	};
-	// Why GuestGpu still arms at a latch of 1..3 (ac_kept_{inl,gap,tmp}_*); every other arming there is "full".
-	enum class ArmCopyReason : uint8_t { Full, Inline, Gap, Tmp };
+	// Why GuestGpu still arms at a latch of 1..3 (ac_kept_{inl,gap,tmp}_*); every other arming there is "full". Session 130,
+	// knob "acinline" (design130.md rev 2 s.4 I2', I10): the inline copy of an operation with acinline=1 left on GuestGpu -
+	// meets no window (InlNowin), not one backing mapping (InlNomap), or >= 64 KiB not in one mapping (InlBig); each is
+	// also ac_kept_inl_* (the same class as Inline).
+	enum class ArmCopyReason : uint8_t { Full, Inline, Gap, Tmp, InlNowin, InlNomap, InlBig };
 	// ForEachUploadRange of a read-only synchronization outside a pass and outside armdefer: the mode of this operation,
 	// 0 = the previous path, else the latch 1..4. A nonzero answer is followed by ArmCopyFinish on the same thread.
 	[[nodiscard]] uint32_t ArmCopyBegin() noexcept;
@@ -224,6 +229,21 @@ public:
 	// The arm hook of a pool chunk (Common::ArmedCopyHook::arm, context = this PageManager), any thread (s.7.4).
 	static bool ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
 	                         const uint8_t* src);
+	// Session 130, knob "acinline" (PROTOTYPE; docs/session-130/design130.md rev 2 with ROADMAP s122 items 105(zh)(1), 107,
+	// 109, 110), GuestGpu thread, TLS of the operation only - no lock.
+	// The operation running on this thread latched armcopy 1..3 with acinline=1 (I1'').
+	[[nodiscard]] static bool ArmCopyInlineOn() noexcept;
+	// [vaddr, vaddr + size) meets a window the operation was handed over (I4) - a superset of "carries its arming".
+	[[nodiscard]] static bool ArmCopyInlineWindow(uint64_t vaddr, uint64_t size) noexcept;
+	// UploadCopies put the inline copy [vaddr, vaddr + size) in the batch (I2'): ai_jobs, ai_b, ai_pages, pending + 1.
+	static void ArmCopyInlineNote(uint64_t vaddr, uint64_t size) noexcept;
+	// The entry of UploadCopies (I3'): a batch of `items` or a pending count left over is a fatal stop, never a clear.
+	static void ArmCopyInlineEntry(size_t items) noexcept;
+	// After AsyncMemcpyArmedBatch of n items (I3'): n must equal the pending count, which it clears; else a fatal stop.
+	static void ArmCopyInlineEnqueued(size_t n) noexcept;
+	// The arm hook of an inline-class chunk (I6): ArmCopyChunk with the class flag of this thread set for its duration.
+	static bool ArmCopyChunkInline(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
+	                               const uint8_t* src);
 
 private:
 	std::unique_ptr<Impl> m_impl;

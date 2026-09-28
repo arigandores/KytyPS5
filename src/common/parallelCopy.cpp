@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <deque>
@@ -149,6 +150,21 @@ public:
 			FrameStats::Add(FrameStats::Counter::StagingQueueDepth, depth);
 			FrameStats::Add(FrameStats::Counter::StagingChunks, chunks);
 		}
+	}
+
+	// Session 130, knob "acinline" (I5'): n one-chunk jobs in ONE hold of m_mutex - each push_back with its m_sequence++,
+	// and m_pending += n, exactly as Enqueue (a submit reading PendingAsyncCopies() or AsyncCopySequence() between two
+	// pushes would otherwise skip its wait for staging not written yet) - then one notify_one: any woken worker drains
+	// the whole FIFO in Work(), so one wake cannot lose work (the argument of Enqueue's comment).
+	void EnqueueBatch(const ArmedCopyItem* items, size_t n, const ArmedCopyHook* hook, uint32_t mode) {
+		{
+			std::lock_guard lock(m_mutex);
+			for (size_t i = 0; i < n; i++) {
+				m_jobs.push_back({items[i].dst, items[i].src, items[i].size, m_sequence++, hook, items[i].vaddr, mode});
+			}
+			m_pending.fetch_add(n, std::memory_order_acq_rel);
+		}
+		m_wake.notify_one();
 	}
 
 	void WaitAll() {
@@ -518,6 +534,47 @@ void AsyncMemcpyArmed(void* dst, const void* src, size_t size, const ArmedCopyHo
 	FrameStats::Add(FrameStats::Counter::AcJobs, 1);
 	FrameStats::Add(FrameStats::Counter::AcChunks, (size + CHUNK_BYTES - 1) / CHUNK_BYTES);
 	CopyPool::Instance().Enqueue(d, s, size, hook, vaddr, mode);
+}
+
+void AsyncMemcpyArmedBatch(const ArmedCopyItem* items, size_t n, const ArmedCopyHook* hook, uint32_t mode) {
+	namespace FS = FrameStats;
+	if (n == 0) {
+		return;
+	}
+	for (size_t i = 0; i < n; i++) {
+		if (items[i].size >= CHUNK_BYTES) {
+			std::fprintf(stderr, "CopyPool fatal: acinline: batch item of 0x%zx bytes is not one chunk\n", items[i].size);
+			std::fflush(stderr);
+			std::_Exit(322);
+		}
+	}
+	auto&          pool   = CopyPool::Instance();
+	const bool     queued = pool.Enabled() && AsyncCopyEnabled();
+	const uint64_t t0     = FS::Enabled() ? FS::NowNs() : 0;
+	if (queued) {
+		pool.EnqueueBatch(items, n, hook, mode);
+	} else {
+		for (size_t i = 0; i < n; i++) {
+			// Not queued: the order of one chunk, on the caller (as AsyncMemcpyArmed).
+			const auto& item = items[i];
+			if (!hook->arm(hook->arm_context, item.vaddr, item.size, mode, item.dst, item.src)) {
+				std::memcpy(item.dst, item.src, item.size);
+			}
+			if (hook->check != nullptr && mode >= 2 && mode <= 4) {
+				hook->check(hook->check_context, item.vaddr, item.size, mode, item.dst, item.src);
+			}
+		}
+	}
+	if (t0 != 0) {
+		FS::Add(FS::Counter::AiEnqNs, FS::NowNs() - t0);
+	}
+	FS::Add(FS::Counter::AiEnq, 1);
+	FS::Add(FS::Counter::AiEnqItems, n);
+	FS::NoteMax(FS::Gauge::AiEnqNmax, static_cast<uint32_t>(std::min<size_t>(n, UINT32_MAX)));
+	if (queued) {
+		FS::Add(FS::Counter::AcJobs, n);
+		FS::Add(FS::Counter::AcChunks, n);
+	}
 }
 
 bool CopyPoolEnabled() {

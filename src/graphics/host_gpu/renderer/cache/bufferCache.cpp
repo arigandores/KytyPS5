@@ -43,6 +43,11 @@ constexpr uint64_t GdsBufferSize = 64 * 1024;
 // Gate "stkstat": SynchronizeBuffersInRange (the BDA scan of PrepareBda) runs on this thread.
 constinit thread_local bool t_sticky_bda_scan = false;
 
+// Session 130, knob "acinline" (design130.md rev 2 s.4 I2', I3'): the inline copies of the operation running on this
+// thread put in the pool batch by CopyGuestToStagingArmed; cleared only by the enqueue at the end of the copy loop of
+// UploadCopies (a batch left over at the entry of UploadCopies is a fatal stop).
+thread_local std::vector<Common::ArmedCopyItem> t_ai_batch;
+
 bool BufferUploadEpochEnabled() {
 	static const bool enabled = [] {
 		const auto* value = std::getenv("KYTY_BUFFER_UPLOAD_EPOCH");
@@ -263,8 +268,31 @@ bool BufferCache::CopyGuestToStagingArmed(uint8_t* staging, uint64_t vaddr, uint
 		Common::AsyncMemcpyArmed(staging, backing, static_cast<size_t>(size), &m_arm_copy_hook, vaddr, mode);
 		return true;
 	}
+	// Session 130, knob "acinline" (I2, I2'): in an operation latched with acinline=1 an inline copy that meets a handed-over
+	// window and lies in one backing mapping goes to the batch (pooled - its chunk arms it); the others stay here, each
+	// with its reason.
+	auto reason = PageManager::ArmCopyReason::Inline;
+	if (PageManager::ArmCopyInlineOn()) {
+		if (size < Common::ASYNC_COPY_MIN_BYTES) {
+			Common::FrameStats::Add(Common::FrameStats::Counter::AiCand, 1);
+			if (!PageManager::ArmCopyInlineWindow(vaddr, size)) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::AiCopyNowin, 1);
+				reason = PageManager::ArmCopyReason::InlNowin;
+			} else if (!Libs::LibKernel::Memory::TryGetBackingPointer(vaddr, size, &backing)) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::AiCopyNomap, 1);
+				reason = PageManager::ArmCopyReason::InlNomap;
+			} else {
+				t_ai_batch.push_back({staging, static_cast<const uint8_t*>(backing), static_cast<size_t>(size), vaddr});
+				pages.ArmCopyNoteCopy(vaddr, size, true);
+				PageManager::ArmCopyInlineNote(vaddr, size);
+				return true;
+			}
+		} else {
+			reason = PageManager::ArmCopyReason::InlBig;
+		}
+	}
 	pages.ArmCopyNoteCopy(vaddr, size, false);
-	pages.ArmCopyFlush(vaddr, size, PageManager::ArmCopyReason::Inline);
+	pages.ArmCopyFlush(vaddr, size, reason);
 	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, staging, size) &&
 	    !Libs::LibKernel::Memory::TryReadPrtBacking(vaddr, staging, size)) {
 		std::memcpy(staging, reinterpret_cast<const void*>(vaddr), static_cast<size_t>(size));
@@ -278,6 +306,17 @@ bool BufferCache::CopyGuestToStagingArmed(uint8_t* staging, uint64_t vaddr, uint
 // that differs and whose page reads CPU-clean (lock-free, no RegionManager::lock - s.4) is ac_cbad.
 void BufferCache::ArmCopyContent(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
                                  const uint8_t* src) {
+	ArmCopyContentImpl(context, vaddr, size, mode, dst, src, false);
+}
+
+// Session 130, knob "acinline" (I6, I9): the same check for an inline-class chunk, also counted in ai_cmp_pages / ai_cbad.
+void BufferCache::ArmCopyContentInline(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+                                       const uint8_t* src) {
+	ArmCopyContentImpl(context, vaddr, size, mode, dst, src, true);
+}
+
+void BufferCache::ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
+                                     const uint8_t* src, bool inline_class) {
 	namespace FS = Common::FrameStats;
 	auto*    self  = static_cast<BufferCache*>(context);
 	uint64_t count = 0;
@@ -306,6 +345,10 @@ void BufferCache::ArmCopyContent(void* context, uint64_t vaddr, size_t size, uin
 	FS::Add(FS::Counter::AcCmpPages, count);
 	FS::Add(FS::Counter::AcCdiff, diff);
 	FS::Add(FS::Counter::AcCbad, bad);
+	if (inline_class) {
+		FS::Add(FS::Counter::AiCmpPages, count);
+		FS::Add(FS::Counter::AiCbad, bad);
+	}
 }
 
 // Session 91: the upload memcpy split, counted at the caller from CopyGuestToStaging's own
@@ -445,6 +488,8 @@ BufferCache::BufferCache(GraphicContext& graphics, CommandScheduler& scheduler,
 	m_gds_buffer.Flush(0, m_gds_buffer.Size());
 	m_gds_host_epoch++;
 	m_arm_copy_hook = {&PageManager::ArmCopyChunk, &m_memory_tracker.Pages(), &BufferCache::ArmCopyContent, this};
+	m_arm_copy_hook_inline = {&PageManager::ArmCopyChunkInline, &m_memory_tracker.Pages(),
+	                          &BufferCache::ArmCopyContentInline, this};
 	SetVulkanObjectNameF(m_graphics.device, m_bda_pagetable_buffer.Handle(),
 	                     "BDA Page Table Buffer");
 	// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never mapped)
@@ -1127,6 +1172,8 @@ bool BufferCache::TryImportUploadCopies(Buffer& buffer,
 
 vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
                                      uint64_t total_size) {
+	// Session 130, knob "acinline" (I3', RC2): the batch of this thread must be empty here - a fatal stop, never a clear.
+	PageManager::ArmCopyInlineEntry(t_ai_batch.size());
 	if (copies.empty()) {
 		return nullptr;
 	}
@@ -1175,6 +1222,13 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 			NoteStagingCopy(pooled, copy.size, c0 != 0 ? Common::FrameStats::NowNs() - c0 : 0);
 			any_pooled = any_pooled || pooled;
 			copy.srcOffset += base_offset;
+		}
+		// Session 130, knob "acinline" (I3', I5'): the batched inline copies in ONE enqueue - outside every c0 timer, before
+		// WaitAsyncCopies of a non-coherent staging and before Commit (the staging they fill is flushed after them).
+		if (!t_ai_batch.empty()) {
+			Common::AsyncMemcpyArmedBatch(t_ai_batch.data(), t_ai_batch.size(), &m_arm_copy_hook_inline, arm_copy);
+			PageManager::ArmCopyInlineEnqueued(t_ai_batch.size());
+			t_ai_batch.clear();
 		}
 		if (lap && any_pooled) {
 			Common::FrameStats::Add(Common::FrameStats::Counter::StagingUploadCalls, 1);

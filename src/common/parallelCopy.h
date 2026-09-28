@@ -55,6 +55,18 @@ struct ArmedCopyHook {
 // queue (pool off, KYTY_ASYNC_COPY=0, a size below ASYNC_COPY_MIN_BYTES - the knob refuses the first two) the order of a
 // chunk runs on the caller: arm, copy, check.
 void AsyncMemcpyArmed(void* dst, const void* src, size_t size, const ArmedCopyHook* hook, uint64_t vaddr, uint32_t mode);
+// Session 130, knob "acinline" (docs/session-130/design130.md rev 2 s.8.3, I5'): n armed copies, each ONE chunk (size <
+// 1 MiB, else a fatal stop; no ASYNC_COPY_MIN_BYTES threshold - that is its point), queued in ONE hold of the pool queue
+// (every push_back with its m_sequence++ and m_pending += n together, as Enqueue) with ONE notify_one after it. ai_enq,
+// ai_enq_items, ai_enq_ns, gauge ai_enq_nmax; ac_jobs and ac_chunks += n when queued. Pool off or KYTY_ASYNC_COPY=0
+// (unreachable: armcopy refuses both): the order of each chunk runs on the caller, as AsyncMemcpyArmed.
+struct ArmedCopyItem {
+	uint8_t*       dst   = nullptr;
+	const uint8_t* src   = nullptr;
+	size_t         size  = 0;
+	uint64_t       vaddr = 0; // guest address of the copy
+};
+void AsyncMemcpyArmedBatch(const ArmedCopyItem* items, size_t n, const ArmedCopyHook* hook, uint32_t mode);
 // Knob "armcopy" refusals: the pool has threads (not KYTY_PARALLEL_COPY=0); copies are asynchronous (not KYTY_ASYNC_COPY=0).
 [[nodiscard]] bool CopyPoolEnabled();
 [[nodiscard]] bool AsyncCopyOn();

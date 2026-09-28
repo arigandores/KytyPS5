@@ -442,8 +442,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // (1), + self-check (2), positive control (3), null control of the detector (4) (docs/session-129/design129.md rev 2).
     // Latched once per synchronization, so it CAN be a schedule arm. Session 130: NOT shipped (ARMCOPY_HOLD, ROADMAP s122
     // item 116(b)-(c)), default back to 0 = the previous path.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_ARM_IN_COPY", "armcopy", 0, 4},
+    // Session 130, PROTOTYPE: the read-only arming of the inline copies (< 64 KiB) of a buffer synchronization moved into
+    // the copy-pool job as well (1), at armcopy 1..3 only (docs/session-130/design130.md rev 2). Read only when armcopy
+    // was read >= 1 and latched with it, once per synchronization, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_ARM_INLINE", "acinline", 0, 1},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

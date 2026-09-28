@@ -692,8 +692,18 @@ enum class Knob : uint32_t {
 	// branches (take -> detect -> copy -> protect; guest writes in that window are lost), smoke only; 4 = the path of 0 plus
 	// the detector in the chunk (null control), smoke only. Refused (ArmCopy: refused) with protceil, armdefer, protbatch2,
 	// protbatch 0, KYTY_ASYNC_COPY=0, KYTY_PARALLEL_COPY=0, KYTY_ASYNC_PROTECT=0, bufimp, and 2/3/4 without KYTY_FRAME_TRACE.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	ArmInCopy,        // KYTY_ARM_IN_COPY, file name "armcopy" (0 off, 1 arm in the copy job, 2 self-check, 3 control, 4 null control)
+	// Session 130, PROTOTYPE (docs/session-130/design130.md rev 2, ROADMAP s122 items 105(zh)(1), 107, 109, 110): the
+	// read-only arming of the INLINE copies (< ASYNC_COPY_MIN_BYTES) of a buffer synchronization moved into the copy-pool
+	// job too. Read ONCE per synchronization in PageManager::ArmCopyScope, only after "armcopy" was read >= 1 (at armcopy=0
+	// it is never read - the rollback path stays the path of session 129 / step 0a), and latched with it. 0 = the path of
+	// the armcopy build (inline copies armed and copied on GuestGpu); 1 = in an operation latched armcopy 1..3, each inline
+	// copy whose range meets a handed-over window of the operation and lies in one backing mapping goes to the pool as its
+	// own chunk (arm then copy under `apply`, the same AcChunk and detector), all of them in ONE enqueue at the end of the
+	// copy loop of UploadCopies. At armcopy 4, a refusal or a written synchronization it does nothing (ai_idle). No own
+	// refusals; 1 needs no KYTY_FRAME_TRACE. Latched per synchronization, so it CAN be a schedule arm.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	ArmInline,        // KYTY_ARM_INLINE, file name "acinline" (0 off, 1 inline copies with deferred arming to the pool at armcopy 1..3)
 	Count,
 };
 

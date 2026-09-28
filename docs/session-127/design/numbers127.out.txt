@@ -1,0 +1,27 @@
+k3c126: C:/kyty/s126/log_k3c126.txt sha256 815c4719
+cen120: C:/kyty/s120/log_cen120.txt sha256 d9a621c7
+k3c126 armed rows 3933
+  rk3_n                  4992.8 /row
+  rk3_rec0                  0.0 /row
+  rk3_xw                  269.5 /row
+  rk3_w                  4723.4 /row
+  rk3_wi                 4723.4 /row
+  rk3_xid                   0.0 /row
+  rk3_xctx                  0.0 /row
+  rk3_slow                 38.8 /row
+  rk3_wr_set             6566.6 /row
+  rk3_wr_obj               52.7 /row
+  rk3_dclr                  0.0 /row
+  rk3_rt_ns           1644830.5 /row
+  rk3_res_ns           830589.3 /row
+  rk3_rt_r_ns         1348120.7 /row
+  rk3_res_r_ns         711246.7 /row
+  rt ns/draw 329.4  res ns/draw 166.4
+  w/n 0.9460  xw/n 0.0540  wr_obj/row 52.7
+cen120 armed rows 3529
+  sp_rt_n                4994.6 /row  (sum 17625867)
+  sp_rt_would            4372.4 /row  (sum 15430054)
+  sp_rt_bad                 0.0 /row  (sum 0)
+  sp_rt_race                0.0 /row  (sum 0)
+  sp_rt_rst                 1.0 /row  (sum 3510)
+  would/draws 0.8754

@@ -3172,6 +3172,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"ac_cmp_pages", FS::Counter::AcCmpPages, false},
 				    {"ac_cdiff", FS::Counter::AcCdiff, false},
 				    {"ac_cbad", FS::Counter::AcCbad, false},
+				    {"ac_jstale", FS::Counter::AcJstale, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

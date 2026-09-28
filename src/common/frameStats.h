@@ -2550,9 +2550,12 @@ enum class Counter : uint32_t {
 	AcGchkNs,                // ac_gchk_ns: ns of the GuestGpu-branch detector
 	AcGjleft,                // ac_gjleft: GuestGpu debt, pages GuestGpu had to apply still pending (2/3)
 	AcOrphan,                // ac_orphan: operations 1..3 whose handed-over windows were not empty with no copy (row)
-	AcCmpPages,              // ac_cmp_pages: content row (2/3), page pieces compared after the chunk copy
+	AcCmpPages,              // ac_cmp_pages: content row (2/3/4), page pieces compared after the chunk copy
 	AcCdiff,                 // ac_cdiff: of them, staging differs from the backing
 	AcCbad,                  // ac_cbad: of them, the page reads CPU-clean
+	// Session 130 (ROADMAP s122 item 105(b)(3)): chunk pages (2/3) the chunk took (rm=1), pending in the snapshot, whose
+	// bit still read set in the hold of the take (no fresh mark), with Perms() not ReadWrite - a strict guard at 2
+	AcJstale,                // ac_jstale
 	Count
 };
 

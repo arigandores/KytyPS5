@@ -272,7 +272,8 @@ bool BufferCache::CopyGuestToStagingArmed(uint8_t* staging, uint64_t vaddr, uint
 	return false;
 }
 
-// Session 129, knob "armcopy" 2/3 (s.7.3; a ROW, not a guard - ROADMAP s122 item 98(v)): after the copy of a chunk, on the
+// Session 129, knob "armcopy" 2/3 - and 4 since session 130, the same function on the arming of 0 (ROADMAP s122 item
+// 105(b)(2)) - (s.7.3; a ROW, not a guard - ROADMAP s122 item 98(v)): after the copy of a chunk, on the
 // thread that copied it, with no lock held. Each guest-page piece of the staging is compared with the backing; a piece
 // that differs and whose page reads CPU-clean (lock-free, no RegionManager::lock - s.4) is ac_cbad.
 void BufferCache::ArmCopyContent(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,

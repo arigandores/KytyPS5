@@ -1208,7 +1208,10 @@ struct PageManager::Impl {
 	static const char* AcRefusal(uint32_t value, uint32_t* bit) {
 		namespace G  = Common::Gates;
 		namespace FS = Common::FrameStats;
-		if (G::Value(G::Knob::ProtCeiling) != 0) {
+		// F2 (codereview129, ROADMAP s122 item 103(b)): the latch of this synchronization's CeilScope (opened right before
+		// ArmCopyScope, same engage), not a second read of the knob - an arm switching protceil between the two latches
+		// cannot mix a skip or a dose with the move inside one operation.
+		if (t_ceil_state != CeilOutside && t_ceil_state != CeilZero) {
 			*bit = 8;
 			return "protceil";
 		}
@@ -1317,28 +1320,76 @@ struct PageManager::Impl {
 #endif
 	}
 
-	// ArmCopyVerify: LEFT - one line per run of `left` with the same Perms() in the snapshot and, for a chunk, the same
-	// membership in the pages it took (rm=; `taken` null on the GuestGpu branch: rm=-) (ROADMAP s122 item 101(b)).
-	static void AcLogLeft(const PageBits& left, const AcSnap& snap, const PageBits* taken, uint64_t base_addr, bool job,
-	                      uint32_t mode) {
+	// The host protection of one page for a LEFT line (host=): the low byte of Protect from VirtualQuery, 0 when the query
+	// fails, the page is not committed, or off Windows. Called under the caller's `apply` hold (the host is frozen).
+	static uint32_t AcHostProtect(uint64_t vaddr) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+		MEMORY_BASIC_INFORMATION info {};
+		if (VirtualQuery(reinterpret_cast<LPCVOID>(vaddr), &info, sizeof(info)) == 0 || info.State != MEM_COMMIT) {
+			return 0;
+		}
+		return static_cast<uint32_t>(info.Protect & 0xffu);
+#else
+		(void)vaddr;
+		return 0;
+#endif
+	}
+
+	// ArmCopyVerify: LEFT - one line per run of `left` with the same Perms() in the snapshot, the same host protection
+	// (host=) and, for a chunk, the same membership in the pages it took (rm=; `taken` null on the GuestGpu branch: rm=-)
+	// and the same freshness of the mark (remark=1: a page the chunk took whose pending bit read clear in the hold of that
+	// take - pending again only by a mark made after the take; remark=0: not taken, or taken with its bit still set - `stale`;
+	// remark=- on the GuestGpu branch) (ROADMAP s122 items 101(b), 105(b)(3)). At most 40 lines per process.
+	static void AcLogLeft(const PageBits& left, const AcSnap& snap, const PageBits* taken, const PageBits* stale,
+	                      uint64_t base_addr, bool job, uint32_t mode) {
 		static std::atomic<uint32_t> logged {0};
+		if (logged.load(std::memory_order_relaxed) >= 40) {
+			return;
+		}
+		const auto key = [&](size_t page) {
+			const bool rm     = taken != nullptr && BitsTest(*taken, page);
+			const bool remark = rm && stale != nullptr && !BitsTest(*stale, page);
+			return (rm ? 1u : 0u) | (remark ? 2u : 0u);
+		};
 		BitsRuns(left, [&](size_t first, size_t last) {
 			for (size_t page = first; page < last;) {
+				if (logged.load(std::memory_order_relaxed) >= 40) {
+					return;
+				}
 				const auto perms = snap.perms[page];
-				const bool rm    = taken != nullptr && BitsTest(*taken, page);
+				const auto k     = key(page);
+				const auto host  = AcHostProtect(base_addr + page * PAGE_SIZE);
 				size_t     end   = page + 1;
-				while (end < last && snap.perms[end] == perms && (taken != nullptr && BitsTest(*taken, end)) == rm) {
+				while (end < last && snap.perms[end] == perms && key(end) == k &&
+				       AcHostProtect(base_addr + end * PAGE_SIZE) == host) {
 					end++;
 				}
 				if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
-					LOGF("ArmCopyVerify: LEFT br=%s addr=0x%016llx pages=%u perms=%u rm=%s mode=%u\n", job ? "job" : "gpu",
-					     static_cast<unsigned long long>(base_addr + page * PAGE_SIZE), static_cast<unsigned>(end - page),
-					     static_cast<unsigned>(perms), taken == nullptr ? "-" : (rm ? "1" : "0"),
+					LOGF("ArmCopyVerify: LEFT br=%s addr=0x%016llx pages=%u perms=%u rm=%s remark=%s host=0x%x mode=%u\n",
+					     job ? "job" : "gpu", static_cast<unsigned long long>(base_addr + page * PAGE_SIZE),
+					     static_cast<unsigned>(end - page), static_cast<unsigned>(perms),
+					     taken == nullptr ? "-" : ((k & 1u) != 0 ? "1" : "0"),
+					     taken == nullptr ? "-" : ((k & 2u) != 0 ? "1" : "0"), static_cast<unsigned>(host),
 					     static_cast<unsigned>(mode));
 				}
 				page = end;
 			}
 		});
+	}
+
+	// Session 130, ac_jstale (ROADMAP s122 item 105(b)(3)): under `lock`, IN THE HOLD of the TakePendingRun that took the
+	// run [run_first, run_first + run_pages) - the pages of the run whose pending bit still reads set go to `stale`. Every
+	// writer of a pending bit holds `lock` (SetPendingRange: UpdateRegionWatchers, ProtectRun, TakePendingRun), so a page
+	// whose bit reads clear here and set in a later snapshot was marked again after the take (a fresh mark), and a page
+	// whose bit still reads set here was never cleared by the take - an arming the chunk took and cannot apply. The stamp
+	// is the chunk's own local bits: only chunks latched at 2/3 call this; the marking code and the paths of 0 and 1 are
+	// untouched.
+	static void AcStampTake(const Region& region, size_t run_first, size_t run_pages, PageBits& stale) noexcept {
+		for (size_t page = run_first; page < run_first + run_pages && page < REGION_PAGES; page++) {
+			if (IsPending(region, page)) {
+				stale[page / 64] |= uint64_t {1} << (page % 64);
+			}
+		}
 	}
 
 	// Under `apply` (the caller holds it): the host call of a run TakePendingRun took, then the withdrawal - the body of
@@ -1357,9 +1408,11 @@ struct PageManager::Impl {
 	}
 
 	// Under `apply`: every pending run of [first, last) applied (the loop of FlushRegion); the pages taken go to `taken`
-	// (may be null), the runs not to Read to `other` (may be null). Returns the runs applied.
+	// (may be null), the runs not to Read to `other` (may be null). Returns the runs applied. `stamp` (a chunk at 2 only):
+	// each take is read back in its own `lock` hold into `stale` (AcStampTake); the instantiation of 1 is the code of s.129.
+	template <bool stamp = false>
 	uint32_t AcApplyRuns(Region& region, uint64_t base_addr, size_t first, size_t last, Arm arm_read, PageBits* taken,
-	                     uint64_t* other) {
+	                     uint64_t* other, PageBits* stale = nullptr) {
 		const auto call_pages = WorkerCallPages();
 		uint32_t   runs       = 0;
 		for (;;) {
@@ -1370,6 +1423,9 @@ struct PageManager::Impl {
 				SpinGuard lock(region.lock);
 				if (!TakePendingRun(region, first, last, call_pages, false, &run_first, &run_pages, &perms)) {
 					break;
+				}
+				if constexpr (stamp) {
+					AcStampTake(region, run_first, run_pages, *stale);
 				}
 			}
 			if (taken != nullptr) {
@@ -1390,9 +1446,15 @@ struct PageManager::Impl {
 	// Returns true when it copied the chunk (3).
 	bool AcChunk(uint64_t vaddr, uint64_t size, uint32_t mode, uint8_t* dst, const uint8_t* src) {
 		namespace FS = Common::FrameStats;
-		if (size == 0 || !GuestRange {vaddr, size}.Valid() || mode < 1 || mode > 4) {
+		// F4 (codereview129, ROADMAP s122 item 103(b)): a masked UpdateRegionWatchers of this thread (GuestGpu helping the
+		// pool) does not leak into the protect_masked_* rows of the chunk's calls - as FlushRegion.
+		t_protect_masked = false;
+		if (size == 0 || mode < 1 || mode > 4) {
 			return false; // nothing to arm: the caller copies
 		}
+		// F3 (codereview129, ROADMAP s122 item 103(b)): a range the tracker never hands out fails loudly, as FlushRange ->
+		// ValidateRange does at 0, instead of being copied without its arming.
+		ValidateRange(vaddr, size);
 		const auto begin = Common::AlignDown(vaddr, PAGE_SIZE);
 		const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
 		uint32_t   runs  = 0;
@@ -1433,18 +1495,20 @@ struct PageManager::Impl {
 				}
 			}
 			PageBits                    taken {};
+			PageBits                    stale {}; // pages of `taken` whose bit still read set in the hold of the take
 			size_t                      run_first = 0;
 			size_t                      run_pages = 0;
 			Common::VirtualMemory::Mode perms     = Common::VirtualMemory::Mode::ReadWrite;
 			bool                        took      = false;
 			if (mode == 2) {
-				runs += AcApplyRuns(*region, region_base, first, last, Arm::Job, &taken, &other);
+				runs += AcApplyRuns<true>(*region, region_base, first, last, Arm::Job, &taken, &other, &stale);
 			} else if (mode == 3) {
 				// Taken by the mechanism's own function: bits cleared, applying_run published, no host call yet.
 				SpinGuard lock(region->lock);
 				took = TakePendingRun(*region, first, last, WorkerCallPages(), false, &run_first, &run_pages, &perms);
 				if (took) {
 					BitsSet(taken, run_first, run_first + run_pages);
+					AcStampTake(*region, run_first, run_pages, stale);
 				}
 			}
 			const auto t0  = FS::Enabled() ? FS::NowNs() : 0;
@@ -1459,15 +1523,28 @@ struct PageManager::Impl {
 			FS::Add(FS::Counter::AcBad, bad);
 			PageBits left {};
 			PageBits remark {};
+			PageBits stuck {}; // taken, pending in the snapshot, never cleared by the take
 			for (size_t word = 0; word < left.size(); word++) {
 				left[word]   = (mode == 4 ? window[word] : j[word]) & snap.pend[word];
 				remark[word] = left[word] & taken[word];
+				stuck[word]  = remark[word] & stale[word];
 			}
 			const auto jleft = BitsCount(left);
 			FS::Add(FS::Counter::AcJleft, jleft);
 			FS::Add(FS::Counter::AcJremark, BitsCount(remark));
+			// ac_jstale (ROADMAP s122 item 105(b)(3)): of them, the pages without a fresh mark whose Perms() in the snapshot
+			// is not ReadWrite - an arming the chunk took, left pending and did not apply. A strict guard at 2.
+			uint64_t jstale = 0;
+			BitsRuns(stuck, [&](size_t stuck_first, size_t stuck_last) {
+				for (size_t page = stuck_first; page < stuck_last; page++) {
+					if (snap.perms[page] != static_cast<uint8_t>(Common::VirtualMemory::Mode::ReadWrite)) {
+						jstale++;
+					}
+				}
+			});
+			FS::Add(FS::Counter::AcJstale, jstale);
 			if (mode == 2 && jleft != 0) {
-				AcLogLeft(left, snap, &taken, region_base, true, mode);
+				AcLogLeft(left, snap, &taken, &stale, region_base, true, mode);
 			}
 			if (mode == 3) {
 				std::memcpy(dst + (byte_begin - vaddr), src + (byte_begin - vaddr),
@@ -1497,6 +1574,7 @@ struct PageManager::Impl {
 	// FlushRegion applies it.
 	void AcFlushChecked(Region& region, uint64_t base_addr, size_t first, size_t last) {
 		namespace FS = Common::FrameStats;
+		t_protect_masked = false; // F4 (codereview129, ROADMAP s122 item 103(b)), as FlushRegion
 		ApplyGuard                  apply(region.apply, true, FS::Counter::ApplyWaitRangeNs);
 		size_t                      run_first = 0;
 		size_t                      run_pages = 0;
@@ -1643,7 +1721,7 @@ struct PageManager::Impl {
 					const auto gjleft = BitsCount(left);
 					FS::Add(FS::Counter::AcGjleft, gjleft);
 					if (mode == 2 && gjleft != 0) {
-						AcLogLeft(left, snap, nullptr, area.base, false, mode);
+						AcLogLeft(left, snap, nullptr, nullptr, area.base, false, mode);
 					}
 				}
 			}
@@ -2229,6 +2307,12 @@ PageManager::ArmCopyScope::~ArmCopyScope() {
 }
 
 uint32_t PageManager::ArmCopyBegin() noexcept {
+	if (Impl::t_ac_op.mode != 0) {
+		// F1 (codereview129, ROADMAP s122 item 103(b)): an operation is already open on this thread (a ForEachUploadRange of
+		// another tracker inside upload_func). Overwriting it would drop the outer windows and turn the outer inline
+		// armings off - a lost guest write; stop loudly instead.
+		Fatal("armcopy: an operation is already open on this thread (mode=%u)", static_cast<unsigned>(Impl::t_ac_op.mode));
+	}
 	const auto state = Impl::t_ac_state;
 	if (state != Impl::AcMove && state != Impl::AcNull) {
 		return 0;

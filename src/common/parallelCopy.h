@@ -42,8 +42,8 @@ void                   RemoveAsyncCopySignal(void (*signal)(uint64_t completed, 
 
 // Session 129, knob "armcopy" (docs/session-129/design129.md rev 2 s.3 C4): a pooled copy whose chunks arm their own
 // guest range before they copy it. `arm` runs on the thread that takes the chunk, before the copy, and returns true when it
-// copied the chunk itself (value 3 copies under the apply hold); `check` (may be null) runs after the copy at values 2 and
-// 3, with no lock held. The hook must outlive every chunk queued with it.
+// copied the chunk itself (value 3 copies under the apply hold); `check` (may be null) runs after the copy at values 2, 3
+// and 4 (4 since session 130), with no lock held. The hook must outlive every chunk queued with it.
 struct ArmedCopyHook {
 	bool (*arm)(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst, const uint8_t* src) = nullptr;
 	void* arm_context = nullptr;

@@ -349,12 +349,13 @@ private:
 				m_jobs.pop_front();
 			}
 			// Session 129, knob "armcopy" (C4): a chunk with a hook arms its guest range first - at 3 it copies inside that
-			// hold itself - and at 2/3 compares after the copy. At 0 no job carries a hook: the memcpy it always was.
+			// hold itself - and at 2/3/4 compares after the copy (4 since session 130, ROADMAP s122 item 105(b)(2): the same
+			// check as at 2 on the arming of 0). At 0 no job carries a hook: the memcpy it always was.
 			if (job.hook == nullptr ||
 			    !job.hook->arm(job.hook->arm_context, job.vaddr, job.size, job.mode, job.dst, job.src)) {
 				std::memcpy(job.dst, job.src, job.size);
 			}
-			if (job.hook != nullptr && job.hook->check != nullptr && (job.mode == 2 || job.mode == 3)) {
+			if (job.hook != nullptr && job.hook->check != nullptr && job.mode >= 2 && job.mode <= 4) {
 				job.hook->check(job.hook->check_context, job.vaddr, job.size, job.mode, job.dst, job.src);
 			}
 			Complete(job.sequence);
@@ -509,7 +510,7 @@ void AsyncMemcpyArmed(void* dst, const void* src, size_t size, const ArmedCopyHo
 		if (!hook->arm(hook->arm_context, vaddr, size, mode, d, s)) {
 			std::memcpy(d, s, size);
 		}
-		if (hook->check != nullptr && (mode == 2 || mode == 3)) {
+		if (hook->check != nullptr && mode >= 2 && mode <= 4) {
 			hook->check(hook->check_context, vaddr, size, mode, d, s);
 		}
 		return;

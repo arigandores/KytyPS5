@@ -438,11 +438,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // (docs/session-128/design128.md rev 1, ROADMAP s122 items 88, 89); make every such arming and spin its duration
     // once more (2, the dose, ROADMAP s122 item 93(g)(1)). Latched once per synchronization, so it CAN be a schedule arm.
     {"KYTY_PROT_CEILING", "protceil", 0, 2},
-    // Session 129, PROTOTYPE: the read-only arming of a buffer synchronization done by the copy-pool job, arm then copy
+    // Session 129: the read-only arming of a buffer synchronization done by the copy-pool job, arm then copy
     // (1), + self-check (2), positive control (3), null control of the detector (4) (docs/session-129/design129.md rev 2).
-    // Latched once per synchronization, so it CAN be a schedule arm.
+    // Latched once per synchronization, so it CAN be a schedule arm. Session 130: SHIPPED, default 1 (ROADMAP s122 item
+    // 105(b); KYTY_ARM_IN_COPY=0 is the previous path).
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_ARM_IN_COPY", "armcopy", 0, 4},
+    {"KYTY_ARM_IN_COPY", "armcopy", 1, 4},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

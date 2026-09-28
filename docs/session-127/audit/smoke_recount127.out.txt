@@ -1,0 +1,3 @@
+s1s127 rows 6356 rts_bad_rows 0 {'rts_chk': 10282367, 'rts_bad': 0, 'rts_bad_noreg': 0} MISMATCH lines 0
+s2s127 rows 10894 rts_bad_rows 0 {'rts_chk': 2707287, 'rts_bad': 0, 'rts_bad_noreg': 0} MISMATCH lines 0
+s3s127 rows 4772 rts_bad_rows 1447 {'rts_chk': 6731360, 'rts_bad': 1121276, 'rts_bad_noreg': 0} MISMATCH lines 40

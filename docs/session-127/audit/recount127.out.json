@@ -1,0 +1,224 @@
+{
+ "k3p127": {
+  "tag": "k3p127",
+  "window": [
+   10,
+   88
+  ],
+  "dup_n": 0,
+  "gatearm_lines": 85,
+  "lines": {
+   "rtskip_mode": 1,
+   "rtskip_refused": 0,
+   "verify": 0,
+   "skipped_draw": 0,
+   "death": 0,
+   "gpuwaitslow": 0,
+   "gate": 42
+  },
+  "rtskip_mode": [
+   "RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192"
+  ],
+  "gatearm_bad": [],
+  "blocks": 85,
+  "complete": 84,
+  "incomplete": [
+   84
+  ],
+  "block_modes": {
+   "NEW": 84,
+   "OLD": 0,
+   "BETWEEN": 0
+  },
+  "bda_range": [
+   46.74683544303797,
+   102.44303797468355
+  ],
+  "beta": 6.682142536461323,
+  "pairs_total": 42,
+  "pairs_outside_mode": 0,
+  "modes": {
+   "NEW": {
+    "pairs": 42,
+    "d": -386.3878842676313,
+    "d_2se": 118.86966472106177,
+    "d_adj": -402.9784479250658,
+    "d_adj_2se": 133.9985786270699,
+    "ddraws": 2.482820976491829,
+    "ddraws_2se": 13.391649986975912,
+    "dcpu": -363.2293550331523,
+    "dcpu_2se": 115.25222914877457,
+    "dgpu": -34.14767932489442,
+    "dgpu_2se": 87.92347911456255,
+    "median_d": -419.39873417721174,
+    "upper": -267.5182195465695,
+    "lower": -536.9770265521356,
+    "slowdown": false,
+    "verdict": "RTSKIP_GAIN"
+   },
+   "OLD": {
+    "pairs": 0,
+    "verdict": "EMPTY"
+   }
+  },
+  "drs": {
+   "m0": 2007.7425201483402,
+   "m1": 2007.690547018296,
+   "rt_att0_rows": {
+    "0": 0,
+    "1": 0
+   },
+   "mixed": false
+  },
+  "rts_fields": [
+   "rts_acqw",
+   "rts_bad",
+   "rts_bad_noreg",
+   "rts_chain2",
+   "rts_chk",
+   "rts_chk_b",
+   "rts_early",
+   "rts_lost",
+   "rts_n",
+   "rts_ovf",
+   "rts_pa",
+   "rts_pb",
+   "rts_race",
+   "rts_rec",
+   "rts_rec_x",
+   "rts_refuse",
+   "rts_skip",
+   "rts_wr",
+   "rts_wr_obj",
+   "rts_xa_arg",
+   "rts_xa_cfg",
+   "rts_xa_img",
+   "rts_xa_memo",
+   "rts_xa_rec",
+   "rts_xa_reg",
+   "rts_xa_unh",
+   "rts_xb_bound",
+   "rts_xb_ids",
+   "rts_xb_live",
+   "rts_xb_meta",
+   "rts_xb_pass",
+   "rts_xb_ser",
+   "rts_xthr"
+  ],
+  "census": {
+   "zero_ctrl_bad_rows": 0,
+   "t3_bad_rows": 0,
+   "t2_bad": 0,
+   "t4_bad": 0,
+   "t5_bad": 0,
+   "pos_ctrl_bad_blocks": 0,
+   "guard_rows_all": 0,
+   "arm1_window": {
+    "rts_n": 16727643,
+    "rts_skip": 14710273,
+    "rts_xa_reg": 732972,
+    "rts_lost": 0,
+    "rts_early": 0,
+    "draws": 16754258
+   },
+   "arm1_skip_frac": 0.8793990283030311
+  },
+  "T": "RTSKIP_GAIN",
+  "base": {
+   "ALL": {
+    "rows": 3318,
+    "mean_dt_us": 33095.59403254973,
+    "speed_pct": 50.36017780375206
+   },
+   "NEW": {
+    "rows": 3318,
+    "mean_dt_us": 33095.59403254973,
+    "speed_pct": 50.36017780375206
+   },
+   "arm1_mean_dt_us": 32709.206148282097
+  },
+  "skipped_draw_window": 0
+ },
+ "k3k127": {
+  "tag": "k3k127",
+  "gatearm_lines": 0,
+  "dup_n": 0,
+  "first_row": 2,
+  "rows": 8862,
+  "rts_bad_rows": 0,
+  "sums": {
+   "rts_n": 44642788,
+   "rts_skip": 0,
+   "rts_chk": 39814684,
+   "rts_chk_b": 39362713,
+   "rts_chain2": 38110685,
+   "rts_bad": 0,
+   "rts_bad_noreg": 0,
+   "rts_race": 0,
+   "rts_xthr": 0,
+   "rts_acqw": 0,
+   "rts_refuse": 0
+  },
+  "chain_frac": 0.9572017449642448,
+  "rows_all_bad_total": 0,
+  "lines": {
+   "rtskip_mode": 1,
+   "rtskip_refused": 0,
+   "verify": 0,
+   "skipped_draw": 0,
+   "death": 0,
+   "gpuwaitslow": 0,
+   "gate": 1
+  },
+  "rtskip_mode": [
+   "RtSkip: mode 2 ctx_slots=8 groups=11 rec_bytes=7192"
+  ],
+  "gate_lines": [
+   "Gate: rtskip=2 frame=1"
+  ]
+ },
+ "k3v127": {
+  "tag": "k3v127",
+  "gatearm_lines": 0,
+  "rows": 3752,
+  "rts_n": 18772981,
+  "rts_skip": 16593582,
+  "rts_bad": 0,
+  "rts_chk": 0,
+  "lines": {
+   "rtskip_mode": 1,
+   "rtskip_refused": 0,
+   "verify": 0,
+   "skipped_draw": 0,
+   "death": 0,
+   "gpuwaitslow": 0,
+   "gate": 1
+  },
+  "rtskip_mode": [
+   "RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192"
+  ],
+  "gate_lines": [
+   "Gate: rtskip=1 frame=1"
+  ]
+ },
+ "k3w127": {
+  "tag": "k3w127",
+  "gatearm_lines": 0,
+  "rows": 3702,
+  "rts_n": 0,
+  "rts_skip": 0,
+  "rts_bad": 0,
+  "rts_chk": 0,
+  "lines": {
+   "rtskip_mode": 0,
+   "rtskip_refused": 0,
+   "verify": 0,
+   "skipped_draw": 0,
+   "death": 0,
+   "gpuwaitslow": 0,
+   "gate": 0
+  },
+  "rtskip_mode": [],
+  "gate_lines": []
+ }
+}

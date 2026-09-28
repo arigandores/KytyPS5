@@ -1,0 +1,6 @@
+== 10..87
+84 {'NEW': 84, 'OLD': 0, 'BETWEEN': 0} d -387.1 +- 121.0 adj -401.0 +- 132.9 beta 6.6819 T RTSKIP_GAIN base 33088.6
+== 60..88
+84 {'NEW': 84, 'OLD': 0, 'BETWEEN': 0} d -354.6 +- 145.1 adj -362.1 +- 157.7 beta 6.6680 T RTSKIP_GAIN base 33056.0
+== 0..89
+84 {'NEW': 84, 'OLD': 0, 'BETWEEN': 0} d -361.9 +- 112.0 adj -382.0 +- 117.3 beta 6.6995 T RTSKIP_GAIN base 33072.7

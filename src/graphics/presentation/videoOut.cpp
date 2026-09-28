@@ -3096,6 +3096,39 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"rts_wr_obj", FS::Counter::RtsWrObj, false},
 				    {"rts_lost", FS::Counter::RtsLost, false},
 				    {"rts_early", FS::Counter::RtsEarly, false},
+				    // Session 128, knob "protceil" (design128.md s.7.1, ROADMAP s122 item 89(zh)); pc_u_live after the loop.
+				    {"prot_gpu_ro_ns", FS::Counter::ProtGpuRoNs, false},
+				    {"prot_gpu_ro_n", FS::Counter::ProtGpuRoN, false},
+				    {"prot_gpu_ro_pages", FS::Counter::ProtGpuRoPages, false},
+				    {"prot_gpu_na_ns", FS::Counter::ProtGpuNaNs, false},
+				    {"prot_gpu_na_n", FS::Counter::ProtGpuNaN, false},
+				    {"prot_gpu_rw_ns", FS::Counter::ProtGpuRwNs, false},
+				    {"prot_gpu_rw_n", FS::Counter::ProtGpuRwN, false},
+				    {"pc_op0", FS::Counter::PcOp0, false},
+				    {"pc_op1", FS::Counter::PcOp1, false},
+				    {"pc_refuse", FS::Counter::PcRefuse, false},
+				    {"pc_offthr", FS::Counter::PcOffThr, false},
+				    {"pc_elig_ns", FS::Counter::PcEligNs, false},
+				    {"pc_elig_n", FS::Counter::PcEligN, false},
+				    {"pc_elig_pages", FS::Counter::PcEligPages, false},
+				    {"pc_elig_scope_n", FS::Counter::PcEligScopeN, false},
+				    {"pc_elig_rng_n", FS::Counter::PcEligRngN, false},
+				    {"pc_skip_n", FS::Counter::PcSkipN, false},
+				    {"pc_skip_pages", FS::Counter::PcSkipPages, false},
+				    {"pc_skip_scope_n", FS::Counter::PcSkipScopeN, false},
+				    {"pc_skip_rng_n", FS::Counter::PcSkipRngN, false},
+				    {"pc_u_set", FS::Counter::PcUSet, false},
+				    {"pc_u_clr", FS::Counter::PcUClr, false},
+				    {"pc_rearm_n", FS::Counter::PcRearmN, false},
+				    {"pc_rearm_runs", FS::Counter::PcRearmRuns, false},
+				    {"pc_rearm_pages", FS::Counter::PcRearmPages, false},
+				    {"pc_rearm_ns", FS::Counter::PcRearmNs, false},
+				    {"pc_rearm_decl", FS::Counter::PcRearmDecl, false},
+				    {"pc_rearm_pend", FS::Counter::PcRearmPend, false},
+				    {"pc_rearm_odd", FS::Counter::PcRearmOdd, false},
+				    {"pc_vfy_u", FS::Counter::PcVfyU, false},
+				    {"pc_vfy_u_na", FS::Counter::PcVfyUNa, false},
+				    {"pc_vfy_u_ro", FS::Counter::PcVfyURo, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -3104,6 +3137,9 @@ bool FlipQueue::Flip(uint32_t micros) {
 					text += '=';
 					text += std::to_string(counter.micros ? dus(counter.counter) : d(counter.counter));
 				}
+				// Session 128, knob "protceil" (item 89(zh)): the live U bits at the end of the line, a running total.
+				text += " pc_u_live=";
+				text += std::to_string(static_cast<unsigned long long>(cur.c[static_cast<size_t>(FS::Counter::PcULive)]));
 				LOGF("FrameTrace-x: n=%" PRIu64 "%s" "\n", r.cfg->flip_status.count, text.c_str());
 			}
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {

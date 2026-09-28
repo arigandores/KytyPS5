@@ -434,7 +434,7 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 127, PROTOTYPE: the K3 skip (1), its self-check (2), the self-check with the register source ignored (3)
     // (docs/session-127/design127.md rev 2). Read once per draw at its entry and latched, so it CAN be a schedule arm.
     // LAST row, matching the LAST enum entry before Knob::Count.
-    {"KYTY_RT_SKIP", "rtskip", 0, 3},
+    {"KYTY_RT_SKIP", "rtskip", 1, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

@@ -670,7 +670,7 @@ enum class Knob : uint32_t {
 	// (RtSkip: refused) while rk3cen, spine, spcen, slicecen, skipceil, bindfloor or m4baton is on, rtfast off, the debug
 	// dump, KYTY_RENDER_MEMO_FAST=0 or the linear readback configuration.
 	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
-	RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check, 3 self-check + positive control)
+	RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check, 3 self-check + positive control; default 1 since session 128)
 	Count,
 };
 

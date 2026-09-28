@@ -1388,7 +1388,6 @@ constinit thread_local RtsRecord*  t_rts_take     = nullptr; // the record taken
 constinit thread_local bool        t_rts_live     = false;   // latched armed, the post not reached yet
 constinit thread_local bool        t_rts_at_a     = false;   // ... place A reached
 constinit thread_local bool        t_rts_pa       = false;   // PA held
-constinit thread_local bool        t_rts_a        = false;   // value 1: place A was skipped
 constinit thread_local bool        t_rts_pb       = false;   // PA and PB held
 constinit thread_local bool        t_rts_b        = false;   // place B ran through RtsPlaceB
 constinit thread_local bool        t_rts_reg      = false;   // a Rel_skip group moved since the record ([RC2], reg=)
@@ -3323,7 +3322,6 @@ bool NoteDrawMerge(uint64_t pipeline, std::span<PreparedBindings* const> stages,
 	t_rts_live   = false;
 	t_rts_at_a   = false;
 	t_rts_pa     = false;
-	t_rts_a      = false;
 	t_rts_pb     = false;
 	t_rts_b      = false;
 	t_rts_reg    = false;
@@ -3508,7 +3506,6 @@ bool RenderExecutor::RtsPlaceA(CommandBuffer& buffer, const DrawCallInfo& draw, 
 			LogFramebufferSkip(draw.Name(), state.color_info[0], state.depth_info, buffer, draw.index_count, 0);
 			return false;
 		}
-		t_rts_a = true;
 		return true;
 	}
 	// The full resolution with its draft.

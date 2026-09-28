@@ -1,0 +1,8 @@
+k3c126: C:/kyty/s126/log_k3c126.txt sha256 815c4719
+arm C (rk3_n>0): rows 3933  rt_att=0 rows 0
+  rt_kpx/rt_att mean of rows 2005.08  min 1799.19  max 2016.92
+  per row: rt_att 12498.1  rt_hits 17494.3  rt_fast_ok 17380.1
+  per draw (rk3_n 4992.8/row): rt_att 2.503  rt_hits 3.504  rt_fast_ok 3.481
+arm B (rk3_n=0): rows 3849  rt_att=0 rows 0
+  rt_kpx/rt_att mean of rows 2002.94  min 1798.34  max 2017.13
+  per row: rt_att 12504.8  rt_hits 17500.9  rt_fast_ok 17386.7

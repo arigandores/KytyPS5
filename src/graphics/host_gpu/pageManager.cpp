@@ -221,7 +221,9 @@ thread_local int32_t t_lw_flight = -1;
 // A candidate of the chunk this thread checks (lw131.md s.2.1, s.2.4, s.5 with item 127(a), (g), (e)): the event page, the
 // moments of THE hold S_k of its batch, then the words the poll read last and its state.
 enum : uint8_t { LwKindH = 1, LwKindC3, LwKindCr, LwKindCd };
-enum : uint8_t { LwStWaitDelta = 1, LwStWaitMark, LwStP8, LwStP8s, LwStNc, LwStMk, LwStOpen };
+// LwStUnk (item 130(b)(1)): the window of this candidate is not resolvable by the words - a word overwritten or a delta
+// never written.
+enum : uint8_t { LwStWaitDelta = 1, LwStWaitMark, LwStP8, LwStP8s, LwStNc, LwStMk, LwStOpen, LwStUnk };
 struct LwCand {
 	uint64_t page    = 0;
 	uint64_t take    = 0; // g_take of the chunk
@@ -463,13 +465,17 @@ void LwRead(LwCand& c) noexcept {
 // The class of a candidate from the words read last, or what it still waits for (lw131.md s.2.4 with item 127(a)). A read
 // showing no (a) is final: a clear inside (g_take, g_h) wrote its word before its c1 < g_h, so any read after g_h sees that
 // word or a later clear's. Only a clear with c0 in the window and delta 255 waits for its delta; only (a) without a mark
-// taken after c1 waits for the mark.
+// taken after c1 waits for the mark. A later clear over the word (c0 >= g_h; or, with (a), a clear after c1 of O3 in the
+// read that would give LwStMk) is LwStUnk, not a class (item 130(b)(2), (4)).
 [[nodiscard]] uint8_t LwDecide(LwCand& c) noexcept {
 	if (!c.a) {
 		const auto code = LwCode(c.clr);
 		const auto c0   = LwGen(c.clr);
-		if (code == 0 || c0 <= c.take || c0 >= c.h) {
-			return LwStNc; // no clear in the window (an earlier one, or a later one over it - conservatively)
+		if (code == 0 || c0 <= c.take) {
+			return LwStNc; // no clear in the window (an earlier one)
+		}
+		if (c0 >= c.h) {
+			return LwStUnk; // a later clear over the word (item 130(b)(2))
 		}
 		if (c.kind == LwKindCr && LwOp(c.clr) != c.pin) {
 			return LwStNc; // CR: the operation pinned by the snapshot S_k
@@ -492,7 +498,7 @@ void LwRead(LwCand& c) noexcept {
 		return LwStWaitMark;
 	}
 	if (LwOp(c.pend) != c.o3 || LwGen(c.pend) < c.k) {
-		return LwStMk;
+		return LwGen(c.clr) > c.c1 ? LwStUnk : LwStMk; // item 130(b)(4)
 	}
 	return LwKindOf(c.pend) != 0 ? LwStP8s : LwStP8;
 }
@@ -3311,7 +3317,7 @@ void PageManager::ArmCopyLossResolve(ArmCopyClassCounts* counts) {
 	}
 	if (waiting != 0) {
 		// The poll (lw131.md s.5.2 with items 126(a), 127(e)): no lock held; each candidate until rel_ns of its own hold +
-		// T_poll. At the deadline a wait for the delta is no (a) (lw_xnc), a wait for the mark is lw_open.
+		// T_poll. At the deadline a wait for the delta is LwStUnk (lw_xnc, item 130(b)(3)), a wait for the mark is lw_open.
 		const auto t0 = FS::NowNs();
 		FS::Add(FS::Counter::LwPollN, 1);
 		while (waiting != 0) {
@@ -3328,7 +3334,7 @@ void PageManager::ArmCopyLossResolve(ArmCopyClassCounts* counts) {
 					continue;
 				}
 				if (now == 0 || now >= c.rel_ns + LW_T_POLL_NS) {
-					c.state = c.state == LwStWaitDelta ? LwStNc : LwStOpen;
+					c.state = c.state == LwStWaitDelta ? LwStUnk : LwStOpen;
 				} else {
 					LwRead(c);
 					c.state = LwDecide(c);
@@ -3353,8 +3359,8 @@ void PageManager::ArmCopyLossResolve(ArmCopyClassCounts* counts) {
 				} else {
 					out.lw_x++;
 					out.lw_open += c.state == LwStOpen ? 1 : 0;
-					out.lw_xnc += c.state == LwStNc ? 1 : 0;
-					out.lw_xmk += c.state == LwStMk ? 1 : 0;
+					out.lw_xnc += c.state == LwStNc || (c.state == LwStUnk && !c.a) ? 1 : 0; // item 130(b)(5)
+					out.lw_xmk += c.state == LwStMk || (c.state == LwStUnk && c.a) ? 1 : 0;
 				}
 				break;
 			case LwKindC3: (p8 ? out.lw_c3p : out.lw_c3x)++; break;
@@ -3382,7 +3388,7 @@ void PageManager::ArmCopyLossResolve(ArmCopyClassCounts* counts) {
 			std::snprintf(dt, sizeof(dt), "%lld", static_cast<long long>(c.clr_ns - c.k_ns));
 		}
 		if (c.kind == LwKindH) {
-			static constexpr const char* reasons[] = {"-", "-", "-", "p8", "p8s", "nc", "mk", "open"};
+			static constexpr const char* reasons[] = {"-", "-", "-", "p8", "p8s", "nc", "mk", "open", "unk"};
 			LOGF("ArmCopyLoss: page=0x%016llx mode=%u cls=%s clr_op=%s pend_op=%s dt_ns=%s xr=%s perms=%u\n",
 			     static_cast<unsigned long long>(c.page), static_cast<unsigned>(c.mode), p8 ? "P8" : "X", clr_op, pend_op,
 			     dt, reasons[c.state], static_cast<unsigned>(c.perms));

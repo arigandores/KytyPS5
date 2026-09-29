@@ -1,4 +1,4 @@
-procload: busy [('Telegram', 23572, 0.576)]
+procload: busy [('<foreign app>', 23572, 0.576)]
 procload: busy [('python', 12940, 0.982), ('python', 36096, 0.972)]
 procload: busy [('python', 12940, 0.998), ('python', 36096, 0.998)]
 procload: clean (no process above 0.50 CPU s/s)

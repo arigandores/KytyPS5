@@ -38,7 +38,7 @@
 
 3. **MINOR — the retry goes against the brief.** The brief says any game run gets "no warmup, no retry" (next-session-102.md:81). Only the executor's own seal allowed it (pred/01:143-144). The first attempt failed for a technical reason (exit 321 at start-up, no `.rdc`), so the retry was not chosen on any result. Disclose it; the verdict is unchanged.
 
-4. **MINOR — the bench's GPU-state check cannot pass as written.** pred/01:150-151 asks that no other process holds dedicated GPU memory. Windows reports that memory as [N/A] for all 18 listed processes (`bench_m5cap102.json.run.json`), including three `claude` processes, Docker and Razer. GPU use was 0-1% before the run, and all five arms were interleaved in one process, so the ratios are barely affected. The verdict is unchanged.
+4. **MINOR — the bench's GPU-state check cannot pass as written.** pred/01:150-151 asks that no other process holds dedicated GPU memory. Windows reports that memory as [N/A] for all 18 listed processes (`bench_m5cap102.json.run.json`), including three `claude` processes and two foreign applications. GPU use was 0-1% before the run, and all five arms were interleaved in one process, so the ratios are barely affected. The verdict is unchanged.
 
 5. **INFO — the retry's run record checks only pred/01.** `launch_m5cap102b.txt:1` and the `prereg` field hash-check pred/01, not pred/07. The commit time proves pred/07 came first. No effect.
 

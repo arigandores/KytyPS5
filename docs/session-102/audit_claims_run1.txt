@@ -66,7 +66,7 @@
 - The scorer marks cm101a as "never deciding". Acceptance rests on absolute bands for the new run only (rec_n 11254.5, gpu_busy 12533, dt 33262). That is a categorical inter-run witness, not an ABBA A/B.
 - The retry clause (addendum 06) was adopted after the entry hang was seen: the TDR happened at 22:48:11 and the seal was committed at 22:49:05. It is a technical-failure clause and mirrors the other seals, but it is post-hoc and must be disclosed.
 - "Class fixed" is an over-claim. 15 sites in the translator (12 variables, including `KYTY_BVH_STUB` and `KYTY_SAMPLE_LOD0`, which change rendering) still turn on when the variable is merely present. Of the converted sites, only `KYTY_GPU_CHECKPOINTS` was exercised at runtime.
-- No speedup when the variable is unset. The machine-check guard warned that docker desktop.exe was on the GPU.
+- No speedup when the variable is unset. The machine-check guard warned that a foreign application was on the GPU.
 - Acceptance holds on its own terms.
 
 **D12 — ROADMAP §6 ("a source change that passed A/B").**

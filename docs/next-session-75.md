@@ -104,7 +104,7 @@ so it works at `m4baton=0` and costs nothing. `C:/kyty/s74/patch_m4_range_fixed.
 * **Do not bind anything in `ShaderReadCache`'s constructor that only GuestGpu uses** — the four M1
   workers construct one too.
 * **Do not write a self-check without a line cap.**
-* **Do not quote session 74's stand.** `aa74a` was contaminated (Slack restarted itself:
+* **Do not quote session 74's stand.** `aa74a` was contaminated (a foreign application restarted itself:
   +0.334 % bias, t = +2.57, check 6 FAIL). Both decisions came from the measuring run's own 2·SE.
 
 **Carried, all in force:**

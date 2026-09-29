@@ -112,11 +112,11 @@
       },
       {
         "pid": 12404,
-        "name": "C:\\Program Files\\<foreign app>\\<foreign app>\\<foreign app>.exe"
+        "name": "C:\\Program Files\\чужое приложение\\чужое приложение\\чужое приложение.exe"
       },
       {
         "pid": 23296,
-        "name": "C:\\Program Files\\<foreign app>\\<foreign app>\\app-4.0.821\\<foreign app>.exe"
+        "name": "C:\\Program Files\\чужое приложение\\чужое приложение\\app-4.0.821\\чужое приложение.exe"
       },
       {
         "pid": 28804,
@@ -124,7 +124,7 @@
       },
       {
         "pid": 30164,
-        "name": "C:\\Program Files\\<foreign app>\\system_tray\\<foreign app>.exe"
+        "name": "C:\\Program Files\\чужое приложение\\system_tray\\чужое приложение.exe"
       },
       {
         "pid": 41580,
@@ -136,7 +136,7 @@
       },
       {
         "pid": 40184,
-        "name": "C:\\Program Files\\WindowsApps\\<foreign app>.<foreign app>_2.14.0.0_x64__69b7b6qge1ahj\\<foreign app>\\<foreign app>.exe"
+        "name": "C:\\Program Files\\WindowsApps\\чужое приложение\\чужое приложение\\чужое приложение.exe"
       },
       {
         "pid": 11424,
@@ -152,7 +152,7 @@
       },
       {
         "pid": 56060,
-        "name": "C:\\Program Files\\<foreign app>\\<foreign app>.exe"
+        "name": "C:\\Program Files\\чужое приложение\\чужое приложение.exe"
       },
       {
         "pid": 57588,
@@ -238,7 +238,7 @@
           "ws_mib": 87.9
         },
         {
-          "name": "<foreign app>",
+          "name": "чужое приложение",
           "pid": 56060,
           "cpu_s": 3037.0,
           "ws_mib": 305.8
@@ -256,7 +256,7 @@
           "ws_mib": 48.6
         },
         {
-          "name": "<foreign app>",
+          "name": "чужое приложение",
           "pid": 40184,
           "cpu_s": 2005.0,
           "ws_mib": 582.8
@@ -268,7 +268,7 @@
           "ws_mib": 214.1
         },
         {
-          "name": "<foreign app>",
+          "name": "чужое приложение",
           "pid": 12404,
           "cpu_s": 1949.8,
           "ws_mib": 49.8
@@ -286,7 +286,7 @@
           "ws_mib": 31.7
         },
         {
-          "name": "<foreign app>",
+          "name": "чужое приложение",
           "pid": 36428,
           "cpu_s": 1596.5,
           "ws_mib": 32.6
@@ -294,20 +294,20 @@
       ],
       "top_names": [
         "audiodg",
-        "<foreign app>",
+        "чужое приложение",
         "crossdeviceservice",
         "csrss",
-        "<foreign app>",
+        "чужое приложение",
         "dwm",
         "explorer",
         "чужое приложение",
-        "<foreign app>",
+        "чужое приложение",
         "nvcontainer",
         "nvdisplay.container",
         "phoneexperiencehost",
         "svchost",
         "system",
-        "<foreign app>",
+        "чужое приложение",
         "чужое приложение",
         "wmiprvse"
       ],

@@ -189,7 +189,7 @@ def sample_machine():
     """The idle of the machine, sampled BEFORE anything of ours touches the GPU.
 
     Session 67 measured all twelve of its runs while someone else's game was running
-    (divinum.exe: 23 % of the GPU and 67 W with our emulator not even started; without it the
+    (a foreign application: 23 % of the GPU and 67 W with our emulator not even started; without it the
     machine idles at 3 % and 30 W).  gpu_busy_us is the distance between the top-of-pipe and the
     bottom-of-pipe timestamp of our OWN command buffers, so every microsecond another client
     preempts us is counted as ours: the clean control run lvl67e came out 19.68 % below lvl67b on

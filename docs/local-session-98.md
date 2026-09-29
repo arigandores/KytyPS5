@@ -159,7 +159,7 @@ black-material frame as in `rv97a`. The video pass of the new instrument is take
 low 15.078, high 16.527 ⇒ GAP**; sealed 2.65: 15.475 / 16.924 ⇒ GAP. Both runs' `F_st'' ± L3`
 straddle 13.2465 ms, which by `pred/02` §4 also takes the gap branch (the script prints the straddle
 as "reported, not deciding" — a wording difference from the sealed text with the same outcome).
-Guards: check 6 FAIL on both (2/52 and 1/48 groups; no background work of mine ran; `ds4windows.exe`
+Guards: check 6 FAIL on both (2/52 and 1/48 groups; no background work of mine ran; a foreign application
 and `tabtip.exe` were on the GPU) — not a criterion.
 
 Predictions of `pred/02` §6: Q1 HIT, Q2 HIT, Q3 HIT (14.274 in [12.5, 16.0]), Q4 HIT (1.449 in

@@ -93,7 +93,7 @@ flips excluded; the attachment-weighted between-arm area comparison above still 
 Fail4: work spread4.272% using the reverse ratio (same population as -4.097% in C5).
 Fail6: one of12 CPU groups was -11.3% from its arm median,4.257 versus4.799 cores. It does
 not identify a foreign process as the cause. GPU clock guard passed, temperatures60..69C;
-no throttle reason outside the guard's allowed mask. ds4windows.exe/tabtip.exe were listed
+no throttle reason outside the guard's allowed mask. a foreign application/tabtip.exe were listed
 on the GPU while pre-run utilization was1%; they were not killed and causality is unknown.
 
 Video was not requested on calibration. Guards8/9 skipped; the required bf99a video was

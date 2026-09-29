@@ -175,7 +175,7 @@ PASS**, medians over
 frames 2100–5599: `rec_n` 11 254.5, `gpu_busy_us` 12 533, `dt_us` 33 262. The reference `cm101a` read by
 the same scorer: 0 / 48 838 / 49 978 (items 1–5 FAIL). **This is a categorical inter-run witness, not an
 ABBA A/B:** `cm101a` also carried a `cbmove` schedule, the floor-latch variables, a 300 s hold and binary
-`b70d0096…`. Guards 6 PASS, 0 FAIL, 1 WARN (Docker Desktop on the GPU).
+`b70d0096…`. Guards 6 PASS, 0 FAIL, 1 WARN (a foreign application on the GPU).
 
 ## 4. Candidate 3 — knob `dabatch` (sealed `pred/03` + `pred/05`)
 
@@ -190,7 +190,7 @@ session 101's work definition and ceil-proof arming bounds.
 
 **Pilot `dab102a`** (300 s, `dabatch=64|8`, ABBA, pin): **ADMITTED, 42 pairs, every sealed control
 PASS**; work +0.090 %, area split −0.008 % (42/42 matched). Guards (reported, never criteria): 8 PASS,
-1 FAIL (check 6 cores: 3 of 43 groups more than 10 % off their arm median), 1 WARN (Docker Desktop on
+1 FAIL (check 6 cores: 3 of 43 groups more than 10 % off their arm median), 1 WARN (a foreign application on
 the GPU), 2 SKIP. `da_qcall` 134.4 → 1 078.8 a flip; Δ`da_queue_us` +73.9, Δ`da_walk_us` +128.0
 (t 16.3); **b̂ = 0.078 µs a call; predicted Ŝ(1024) = 9.5 µs** ⇒ **CLOSED, no decision run.** Every
 basis stays below 60: from Δ`da_walk_us`, b ≈ 0.135 µs and Ŝ ≈ 16.4 µs (upper ≈ 18); bounding all call

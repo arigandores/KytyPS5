@@ -46,7 +46,7 @@ predicted the post-patch miss count at **1 402.9** — which the shipped gate th
 | `m4r74b` | `m4baton=128` | 180 s | 15.9 s | 2.0 % / 29.1 W | `86e9f125` | 0 errors, `bat_drop` 0 |
 | `probe74a` | the clean-page probe | 300 s | 15.3 s | 2.0 % / 28.1 W | `8d5c6485` | 0 errors |
 | `cgv74a` | `dawitcg=1 dawitcgcheck=1` | 180 s | 14.8 s | 2.0 % / 28.3 W | `01315ff6` | **0 MISMATCH**, `da_cl_bad` 0 |
-| `aa74a` | idle A/A | 300 s | 14.9 s | 3.0 % / 29.8 W | `01315ff6` | FAIL check 6 — Slack, §6.1 |
+| `aa74a` | idle A/A | 300 s | 14.9 s | 3.0 % / 29.8 W | `01315ff6` | FAIL check 6 — foreign app, §6.1 |
 | `cg74a` | ABBA `dawitcg=0\|1` | 300 s | 16.3 s | 2.0 % / 28.7 W | `01315ff6` | FAIL check 6 — host noise, §6.2 |
 | **`cg74b`** | **ABBA `dawitcg=0\|1`, the decision** | 300 s | 16.3 s | 2.0 % / 27.8 W | `01315ff6` | **10 PASS, 0 FAIL, 0 WARN** |
 | `acc74a` | acceptance, video | 300 s | 15.4 s | 3.0 % / 28.1 W | `63af1620` | **8 PASS, 0 FAIL, 1 WARN**, 0 glitches |
@@ -337,7 +337,7 @@ cross-run GPU comparison.
 ### 6.1 `aa74a` — the stand is contaminated and is not quoted
 
 `+0.334 % ± 0.260 %` on `cpu/draw`, t = +2.57, honest resolution 0.593 %. Check 0 WARN names
-`slack.exe`, which restarted itself during the run, and check 6 FAILs on 9 of 49 core groups.
+a foreign application, which restarted itself during the run, and check 6 FAILs on 9 of 49 core groups.
 **The stand of this session is therefore not usable as a threshold**; both decisions were taken from
 the measuring run's own 2·SE (0.151 % and 0.162 %), which is the session-73 rule for GPU applied to
 CPU as well. The bias runs **against** arm1, which is where the gate is on, so it understates the

@@ -9,9 +9,9 @@
 
   schedule starts at flip 1800; frames before it belong to no arm and are dropped
 
-[WARN]  0 machine     2 foreign process(es) on the GPU: ds4windows.exe, tabtip.exe
+[WARN]  0 machine     2 foreign process(es) on the GPU: <foreign app>.exe, tabtip.exe
          idle sampled at 2026-09-19T16:25:02: utilization.gpu 1.0 %, power 23.2 W, memory 1680 MiB, 23 process(es) on the GPU
-         not on the harmless list: ds4windows.exe, tabtip.exe
+         not on the harmless list: <foreign app>.exe, tabtip.exe
          the GPU was idle (1.0 % <= 10.0 %), so this is an open window and not a running load; close it anyway before an acceptance run.
 [PASS]  1 crashes     none of 8 markers in log_cal99a.txt (633874 lines), stdout_cal99a.txt (176 lines)
 [PASS]  2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
@@ -83,7 +83,7 @@
 
 === cal99a: 4 PASS, 3 FAIL, 3 WARN, 2 SKIP ===
 status check        note
-WARN    0 machine     2 foreign process(es) on the GPU: ds4windows.exe, tabtip.exe
+WARN    0 machine     2 foreign process(es) on the GPU: <foreign app>.exe, tabtip.exe
 PASS    1 crashes     none of 8 markers in log_cal99a.txt (633874 lines), stdout_cal99a.txt (176 lines)
 PASS    2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
 FAIL    3 resolution  the render target or the viewport moved during the run; 9 fragment flip(s) skipped

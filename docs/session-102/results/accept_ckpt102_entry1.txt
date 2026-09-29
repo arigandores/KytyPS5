@@ -8,9 +8,9 @@
   meta    C:/kyty/s102/ckpt102_entry1.json                           0.0 MB
   log: 785820 lines, 5608 FrameTrace: frames, arm/blk present
 
-[WARN]  0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+[WARN]  0 machine     1 foreign process(es) on the GPU: <foreign app>.exe
          idle sampled at 2026-09-22T22:49:09: utilization.gpu 8.0 %, power 30.3 W, memory 1478 MiB, 19 process(es) on the GPU
-         not on the harmless list: docker desktop.exe
+         not on the harmless list: <foreign app>.exe
          the GPU was idle (8.0 % <= 10.0 %), so this is an open window and not a running load; close it anyway before an acceptance run.
 [PASS]  1 crashes     none of 8 markers in log_ckpt102_entry1.txt (785820 lines), stdout_ckpt102_entry1.txt (176 lines)
 [PASS]  2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
@@ -54,7 +54,7 @@
 
 === ckpt102_entry1: 6 PASS, 0 FAIL, 1 WARN, 5 SKIP ===
 status check        note
-WARN    0 machine     1 foreign process(es) on the GPU: docker desktop.exe
+WARN    0 machine     1 foreign process(es) on the GPU: <foreign app>.exe
 PASS    1 crashes     none of 8 markers in log_ckpt102_entry1.txt (785820 lines), stdout_ckpt102_entry1.txt (176 lines)
 PASS    2 selfchecks  0 mismatch lines; 2/17 counters REACHABLE and zero (pb_stuck pb_inflight_bad); 15/17 UNREACHABLE - gate off (pb_bad<-pbcheck pb_bad_rw<-pbcheck arm_bad<-armcheck sf_bad<-sfcheck bfast_bad<-buffastcheck tf_bad<-tfcheck texfast_bad<-texfastcheck da_cl_bad<-dawitcgcheck pmemo_bad<-progmemocheck bp_bad<-bindpackcheck bda_bit_bad<-bdabitscheck sl_bad<-slotstatcheck bp2_bad<-bindpack2check dm_bad<-drawmergecheck bi_bad<-bufimpcheck)
 PASS    3 resolution  constant over 3303 frames; 207 fragment flip(s) skipped

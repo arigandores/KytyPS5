@@ -1,0 +1,36 @@
+== s10s130 rows 2863 pre 1798 TORN 0 ai!=0 0
+  identities {'I1': 0, 'I2': 0, 'I3': 0, 'I8': 0, 'I4row': 0, 'I4blk': 0, '_nblocks': 32}
+  armcopy=2 all rows=1423 cmp=7665307 cbad=4168 M=1323 H=9 host=28 host_d=19 Mown=28 Mfor=1295 M4p=1323 nosnap=0 bad=0 left=0 stale=0 jstale=0
+  armcopy=2 win rows=1247 cmp=6712925 cbad=3815 M=1185 H=9 host=26 host_d=17 Mown=26 Mfor=1159 M4p=1185 nosnap=0 bad=0 left=0 stale=0 jstale=0
+  armcopy=4 all rows=1440 cmp=8124746 cbad=1095 M=316 H=0 host=40 host_d=40 Mown=284 Mfor=32 M4p=72 nosnap=0 bad=0 left=244 stale=0 jstale=0
+  armcopy=4 win rows=1264 cmp=7127021 cbad=996 M=300 H=0 host=37 host_d=37 Mown=272 Mfor=28 M4p=65 nosnap=0 bad=0 left=235 stale=0 jstale=0
+  verdict_all CBAD_LOSS(H4=0<H2)
+  verdict_win CBAD_LOSS(H4=0<H2)
+  guards2_all 0
+  guards2_win 0
+  H_content_per_mode {'2': 9}
+  H_content_moved_across_arm 0
+  H_rows [(2516, 7, 'armcopy=2', 85, 9)]
+  H_content [(7, 'armcopy=2', '2', '0x000000050ce82000'), (7, 'armcopy=2', '2', '0x000000050ce83000'), (7, 'armcopy=2', '2', '0x000000050ce84000'), (7, 'armcopy=2', '2', '0x000000050ce85000'), (7, 'armcopy=2', '2', '0x000000050ce86000'), (7, 'armcopy=2', '2', '0x000000050ce87000'), (7, 'armcopy=2', '2', '0x000000050ce88000'), (7, 'armcopy=2', '2', '0x000000050ce89000'), (7, 'armcopy=2', '2', '0x000000050ce8a000')]
+  content {'2M': 49, '2E': 40, '4E': 40, '4M': 40}
+== s11s130 rows 9032 pre 1798 TORN 0 ai!=0 0
+  identities {'I1': 0, 'I2': 0, 'I3': 0, 'I8': 0, 'I4row': 0, 'I4blk': 0, '_nblocks': 101}
+  armcopy=2 all rows=4532 cmp=3004718 cbad=3349 M=622 H=0 host=509 host_d=509 Mown=509 Mfor=113 M4p=622 nosnap=0 bad=0 left=0 stale=0 jstale=0
+  armcopy=2 win rows=3971 cmp=2633224 cbad=2975 M=547 H=0 host=438 host_d=438 Mown=438 Mfor=109 M4p=547 nosnap=0 bad=0 left=0 stale=0 jstale=0
+  armcopy=4 all rows=4500 cmp=3100293 cbad=3098 M=505 H=0 host=489 host_d=489 Mown=500 Mfor=5 M4p=494 nosnap=0 bad=0 left=11 stale=0 jstale=0
+  armcopy=4 win rows=3950 cmp=2739838 cbad=2718 M=429 H=0 host=418 host_d=418 Mown=429 Mfor=0 M4p=418 nosnap=0 bad=0 left=11 stale=0 jstale=0
+  verdict_all pass
+  verdict_win pass
+  guards2_all 0
+  guards2_win 0
+  H_content_per_mode {}
+  H_content_moved_across_arm 0
+  H_rows []
+  H_content []
+  content {'2E': 40, '4E': 40, '2M': 40, '4M': 40}
+== s12s130 rows 0 pre 4236 TORN 0 ai!=0 0
+  identities {'I1': 0, 'I2': 0, 'I3': 0, 'I8': 0, 'I4row': 0, 'I4blk': 0, '_nblocks': 0}
+  H_rows []
+  H_content []
+  content {'3M': 40, '3E': 40}
+DONE

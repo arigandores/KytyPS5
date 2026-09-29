@@ -1,0 +1,25 @@
+== s1s130 rows 4765 missing_keys_rows 0 marks {'ErrorDeviceLost': 0, 'GpuHangAbort:': 0, 'GpuWaitSlow:': 0, '--- Fatal Error ---': 0, 'ArmCopy: refused': 0} stdout_marks 0
+  ArmCopy lines {'ArmCopy: mode 1': 1, 'ArmCopy: mode 2': 1, 'ArmCopy: mode 4': 1} ArmCopyVerify 44 jstale!=0 rows 0
+  sums {'ac_cbad': 6223, 'ac_cmp_pages': 16078632, 'ac_bad': 0, 'ac_gbad': 0, 'ac_jleft': 2192, 'ac_jremark': 32, 'ac_jstale': 0, 'ac_chk': 15958354, 'ac_gchk': 708522, 'ac_refuse': 0, 'ac_moved_n': 301312, 'ac_gjleft': 8}
+  all rows 1526/1440  2: 4756/8113311=0.05862%  4: 1467/7965321=0.01842%  ratio 3.183
+  win rows 1264/1264  2: 3940/6729250=0.05855%  4: 1334/6990972=0.01908%  ratio 3.068
+  pairs k=16 mean=+0.03960% 2SE=0.01404% over1.5=13
+== s2s130 rows 10849 missing_keys_rows 0 marks {'ErrorDeviceLost': 0, 'GpuHangAbort:': 0, 'GpuWaitSlow:': 0, '--- Fatal Error ---': 0, 'ArmCopy: refused': 0} stdout_marks 0
+  ArmCopy lines {'ArmCopy: mode 1': 1, 'ArmCopy: mode 2': 1, 'ArmCopy: mode 4': 1} ArmCopyVerify 42 jstale!=0 rows 0
+  sums {'ac_cbad': 6629, 'ac_cmp_pages': 6120856, 'ac_bad': 0, 'ac_gbad': 0, 'ac_jleft': 264, 'ac_jremark': 32, 'ac_jstale': 0, 'ac_chk': 6111632, 'ac_gchk': 787386, 'ac_refuse': 0, 'ac_moved_n': 95975, 'ac_gjleft': 0}
+  all rows 4550/4500  2: 3257/3037270=0.10723%  4: 3372/3083586=0.10935%  ratio 0.981
+  win rows 3950/3950  2: 2844/2635194=0.10792%  4: 2997/2725293=0.10997%  ratio 0.981
+  pairs k=50 mean=-0.00132% 2SE=0.02529% over1.5=10
+== s3s130 rows 10791 missing_keys_rows 0 marks {'ErrorDeviceLost': 0, 'GpuHangAbort:': 0, 'GpuWaitSlow:': 0, '--- Fatal Error ---': 0, 'ArmCopy: refused': 0} stdout_marks 0
+  ArmCopy lines {'ArmCopy: mode 1': 1, 'ArmCopy: mode 2': 1} ArmCopyVerify 62 jstale!=0 rows 0
+  sums {'ac_cbad': 6723, 'ac_cmp_pages': 6739658, 'ac_bad': 0, 'ac_gbad': 0, 'ac_jleft': 60, 'ac_jremark': 60, 'ac_jstale': 0, 'ac_chk': 6737670, 'ac_gchk': 1974129, 'ac_refuse': 0, 'ac_moved_n': 177216, 'ac_gjleft': 143}
+== ack130 rows 8461 missing_keys_rows 0 marks {'ErrorDeviceLost': 0, 'GpuHangAbort:': 0, 'GpuWaitSlow:': 0, '--- Fatal Error ---': 0, 'ArmCopy: refused': 0} stdout_marks 0
+  ArmCopy lines {'ArmCopy: mode 1': 1, 'ArmCopy: mode 2': 1} ArmCopyVerify 56 jstale!=0 rows 0
+  sums {'ac_cbad': 30856, 'ac_cmp_pages': 44085210, 'ac_bad': 0, 'ac_gbad': 0, 'ac_jleft': 64, 'ac_jremark': 64, 'ac_jstale': 0, 'ac_chk': 43870418, 'ac_gchk': 3914588, 'ac_refuse': 0, 'ac_moved_n': 815767, 'ac_gjleft': 60}
+== shp130 rows 3911 missing_keys_rows 0 marks {'ErrorDeviceLost': 0, 'GpuHangAbort:': 0, 'GpuWaitSlow:': 0, '--- Fatal Error ---': 0, 'ArmCopy: refused': 0} stdout_marks 0
+  ArmCopy lines {'ArmCopy: mode 1': 1} ArmCopyVerify 0 jstale!=0 rows 0
+  sums {'ac_cbad': 0, 'ac_cmp_pages': 0, 'ac_bad': 0, 'ac_gbad': 0, 'ac_jleft': 0, 'ac_jremark': 0, 'ac_jstale': 0, 'ac_chk': 0, 'ac_gchk': 0, 'ac_refuse': 0, 'ac_moved_n': 362368, 'ac_gjleft': 0}
+C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+C:/kyty/s128/kyty_emulator_9235a7ac.exe 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+C:/kyty/s130/kyty_emulator_3f4af2c3.exe 3f4af2c3e5666539a02758272fca4895580d34f994e6c62e022392afcf60721d
+C:/kyty/s130/kyty_emulator_0d23f161.exe 0d23f161006b6b99de848355900b603021377e17cd2610c7a59bd1d80615aa61

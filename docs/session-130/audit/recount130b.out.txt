@@ -1,0 +1,21 @@
+s10s130 blocks 32 complete 31 incomplete [31] maxp {31: 71}
+  all           armcopy=2 rows=1422 cmp=7665703 cbad=4171 M=1327 H=9 host_d=19 share=0.05441%
+  all           armcopy=4 rows=1440 cmp=8124350 cbad=1092 M=312 H=0 host_d=40 share=0.01344%
+  all_complete  armcopy=2 rows=1350 cmp=7273804 cbad=4032 M=1274 H=9 host_d=19 share=0.05543%
+  all_complete  armcopy=4 rows=1440 cmp=8124350 cbad=1092 M=312 H=0 host_d=40 share=0.01344%
+  win           armcopy=2 rows=1247 cmp=6712925 cbad=3815 M=1185 H=9 host_d=17 share=0.05683%
+  win           armcopy=4 rows=1264 cmp=7127021 cbad=996 M=300 H=0 host_d=37 share=0.01397%
+  win_complete  armcopy=2 rows=1185 cmp=6375511 cbad=3678 M=1134 H=9 host_d=17 share=0.05769%
+  win_complete  armcopy=4 rows=1264 cmp=7127021 cbad=996 M=300 H=0 host_d=37 share=0.01397%
+  pairs(win,complete) k=15 mean=+0.00014% 2SE=0.00029%
+s11s130 blocks 101 complete 100 incomplete [100] maxp {100: 30}
+  all           armcopy=2 rows=4531 cmp=3004510 cbad=3355 M=627 H=0 host_d=509 share=0.11167%
+  all           armcopy=4 rows=4500 cmp=3100501 cbad=3092 M=500 H=0 host_d=489 share=0.09973%
+  all_complete  armcopy=2 rows=4500 cmp=2986530 cbad=3325 M=627 H=0 host_d=509 share=0.11133%
+  all_complete  armcopy=4 rows=4500 cmp=3100501 cbad=3092 M=500 H=0 host_d=489 share=0.09973%
+  win           armcopy=2 rows=3971 cmp=2633224 cbad=2975 M=547 H=0 host_d=438 share=0.11298%
+  win           armcopy=4 rows=3950 cmp=2739838 cbad=2718 M=429 H=0 host_d=418 share=0.09920%
+  win_complete  armcopy=2 rows=3950 cmp=2621088 cbad=2955 M=547 H=0 host_d=438 share=0.11274%
+  win_complete  armcopy=4 rows=3950 cmp=2739838 cbad=2718 M=429 H=0 host_d=418 share=0.09920%
+  pairs(win,complete) k=50 mean=+0.00000% 2SE=0.00000%
+s12s130 rows 4236 cbad 10472 cbad_m 6038 cbm_bad 1137 cbm_left 4064 nosnap 0 cmp 21783923 I1-3 bad rows 0 jstale 0

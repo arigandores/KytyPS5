@@ -923,6 +923,7 @@ static uint64_t FindGuestFreeRange(uint64_t search_addr, uint64_t size, uint64_t
 }
 
 bool TryWriteBacking(uint64_t vaddr, const void* data, uint64_t size) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Emu); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	return g_guest_address_space != nullptr &&
 	       g_guest_address_space->TryWriteBacking(vaddr, data, size);
 }

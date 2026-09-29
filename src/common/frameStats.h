@@ -2665,6 +2665,56 @@ enum class Counter : uint32_t {
 	DcPhTailNs,              // dc_ph_tail_ns: ResetBindings and the destructors of the locals (the full path)
 	DcPhEarlyNs,             // dc_ph_early_ns: the last mark -> the end, dispatches that left early
 	DcProtNs,                // dc_prot_ns: of prot_gpu_ro_ns, inside the segment (own shard, item 125(v))
+	// Session 133, knob "rbcen" (docs/session-133/design133.md rev 2 s.6 with ROADMAP s122 items 141(v), 142(b), 143):
+	// raw ns / counts, all past LogNs (gate "fslean" drops them). rb_b2_rst_* keep the order of RbCen::Cause.
+	RbRefuse,                // rb_refuse: refusals of a latch of a value >= 1 (notrace, mutsite); a no-op without the trace
+	RbHeadNs,                // rb_head_ns: the draw chain: the mh_prog mark -> M1 (s.3.1)
+	RbStageNs,               // rb_stage_ns: M1 -> M2 outside the PrepareBindings calls
+	RbFindNs,                // rb_find_ns: M2 -> M3: the entry of PrepareGraphicsBindings and FindBuffers
+	RbFindN,                 // rb_find_n: draws whose chain reached M3 (B10: = mh_draws)
+	RbBdaNs,                 // rb_bda_ns: M3 -> M4: the gate checks and PrepareBda of the draw
+	RbBdaN,                  // rb_bda_n: PrepareBda calls of the draw path
+	RbBdaScanN,              // rb_bda_scan_n: of them, the ones that did not hit the epoch cache (no bda_hit)
+	RbRtNs,                  // rb_rt_ns: M5 -> M6: the re-find of the render targets
+	RbTailNs,                // rb_tail_ns: M7 -> the mh_bind mark
+	RbXprepNs,               // rb_xprep_ns: the dispatch pair around PrepareBindings (B1)
+	RbXimgNs,                // rb_ximg_ns: the dispatch pair around RebindImages (B1)
+	RbXbufNs,                // rb_xbuf_ns: the dispatch pair around RebindBuffers (B1)
+	RbStreamNs,              // rb_stream_ns: selected iterations of class Stream: the sum of the sample (x8 - n*c by the parser)
+	RbStreamN,               // rb_stream_n: iterations of class Stream, every one
+	RbCbankNs,               // rb_cbank_ns: selected iterations of class Cbank
+	RbCbankN,                // rb_cbank_n: iterations of class Cbank, every one (item 142(b) B3)
+	RbEpochNs,               // rb_epoch_ns: selected iterations of class Epoch
+	RbEpochN,                // rb_epoch_n: iterations of class Epoch, every one
+	RbSlowNs,                // rb_slow_ns: selected iterations of class Slow
+	RbSlowN,                 // rb_slow_n: iterations of class Slow, every one
+	RbSampN,                 // rb_samp_n: selected iterations
+	RbCalNs,                 // rb_cal_ns: the empty calibration pair on every 64th selected iteration (B3)
+	RbCalN,                  // rb_cal_n: calibration pairs
+	RbBproNs,                // rb_bpro_ns: the prologue of RebindBuffers up to its slot loop (B4)
+	RbNuploadNs,             // rb_nupload_ns: the tail of RebindBuffers after its slot loop (the NativeUpload calls)
+	RbSyncUpNs,              // rb_sync_up_ns: SynchronizeBuffer upload lambda -> RecordBufferCopies inside a latched slot
+	RbSyncWaitNs,            // rb_sync_wait_ns: own-shard delta of pb_wait_gpu + sem_wait_gpu across the slot loop
+	RbClsBad,                // rb_cls_bad: a latched iteration without a class, or a third note (B7: must be 0)
+	RbB2N,                   // rb_b2_n: B2 probes (notes that reached the census; item 142(b) B6)
+	RbB2Would,               // rb_b2_would: probes that would repeat a copy of the same interval
+	RbB2Kb,                  // rb_b2_kb: bytes of those repeats (printed / 1000 like ob_stream_kb, B8)
+	RbB2Chk,                 // rb_b2_chk: repeats compared against a live 1/16 shadow
+	RbB2Diff,                // rb_b2_diff: of them, the ones whose guest bytes differ
+	RbB2Xchk,                // rb_b2_xchk: the positive control: key repeats across a reset compared against a live shadow (B5)
+	RbB2Xdiff,               // rb_b2_xdiff: of them, the ones whose guest bytes differ
+	RbB2Evict,               // rb_b2_evict: insertions that evicted a live entry of another key (B6)
+	RbB2Shovf,               // rb_b2_shovf: compares skipped because the shadow ring overwrote the shadow (B6)
+	RbB2RstSub,              // rb_b2_rst_sub: interval resets: the start of a submission slice (s.5.2)
+	RbB2RstHost,             // rb_b2_rst_host: resets: a host submit
+	RbB2RstWait,             // rb_b2_rst_wait: resets: WAIT_REG_MEM, WAIT_ON_CE/DE, INCREMENT_CE/DE, REWIND, PFP_SYNC_ME, WAIT_FLIP_DONE
+	RbB2RstRel,              // rb_b2_rst_rel: resets: EVENT_WRITE*, RELEASE_MEM, ACQUIRE_MEM
+	RbB2RstWr,               // rb_b2_rst_wr: resets: WRITE_DATA, COPY_DATA, DMA_DATA, DUMP_CONST_RAM, GET_LOD_STATS, the flips
+	RbB2RstCond,             // rb_b2_rst_cond: resets: SET_PREDICATION, COND_EXEC, the conditional INDIRECT_BUFFER, DISPATCH_RESET
+	RbB2RstEmu,              // rb_b2_rst_emu: resets: an emulator write of the guest backing, a change of a guest mapping (RC4)
+	RbB2RstGpuw,             // rb_b2_rst_gpuw: resets: a registered GPU write of a buffer (NoteGpuWrite)
+	RbB2RstImgw,             // rb_b2_rst_imgw: resets: an image clean -> GPU-dirty (by the rule, not by the code; item 143(a))
+	RbB2RstRing,             // rb_b2_rst_ring: resets: a wrap of the stream ring
 	Count
 };
 
@@ -3445,5 +3495,321 @@ private:
 };
 
 } // namespace Common::SkipCeil
+
+// Session 133, knob "rbcen" (MEASUREMENT ONLY; docs/session-133/design133.md rev 2 with ROADMAP s122 items 141(v), 142(b),
+// 143): 1 splits the unsplit rest of mh_bind by a chain of marks and the phases of RebindBuffers by a 1/8 sample of its slot
+// iterations; 2 adds the census of the B2 repeat of the ring copies - a table of (vaddr, size, alignment) by interval
+// generation, never an action. Every site reads t_rb, latched once per draw (right before the mh_prog_us mark) and once per
+// dispatch (before its bindings); the reset hooks read g_rb_b2_live alone, written only by a latch on a change of value.
+namespace Common::RbCen {
+
+// The reasons of an interval reset, in the order of the counters rb_b2_rst_* (s.5.2).
+enum class Cause : uint32_t { Sub, Host, Wait, Rel, Wr, Cond, Emu, Gpuw, Imgw, Ring };
+
+// The class of one latched slot iteration of RebindBuffers: the last write before the iteration ends (s.3.3).
+enum class Cls : uint8_t { None, Null, Cbank, Stream, Epoch, Slow, Fast };
+
+// One B2 copy of the outer call of a latched slot (s.5.1); gen0 was read before the copy read the guest bytes (RC1).
+struct Note {
+	uint64_t vaddr;
+	uint64_t size;
+	uint64_t gen0;
+	uint64_t align;
+};
+
+// One entry of the B2 table (s.5.1), 32 bytes: gen is the gen0 of the copy that inserted it (RC1); shadow is 0 or 1 + the
+// position of the copy of its bytes in the shadow ring.
+struct Entry {
+	uint64_t vaddr;
+	uint32_t size;
+	uint16_t align;
+	uint16_t unused;
+	uint64_t gen;
+	uint64_t shadow;
+};
+static_assert(sizeof(Entry) == 32);
+
+inline constexpr uint32_t TableBits   = 16;
+inline constexpr uint64_t ShadowBytes = uint64_t {32} << 20u;
+inline constexpr uint64_t CheckBytes  = uint64_t {64} << 10u;
+
+struct Tls {
+	uint32_t mode;      // the latched value; 0 = the path of 0
+	bool     b2;        // mode 2 with the census memory in place (RC8)
+	bool     next;      // the sampling decision of the next slot iteration
+	bool     chain;     // the draw chain of this draw is running
+	bool     chk_tried; // this thread tried to allocate its comparison buffer
+	uint8_t  slot;      // 0 outside a latched slot iteration, 1 inside, 2 inside its outer ObtainBuffer
+	Cls      cls;
+	uint32_t notes;
+	Note     note[2];
+	uint64_t k;   // slot iterations: the Weyl sequence of the 1/8 sample
+	uint64_t sel; // selected iterations: the calibration pair on every 64th
+	uint64_t ins; // B2 insertions: the Weyl sequence of the 1/16 shadow
+	uint64_t cur; // the draw chain (s.3.1): the open mark and the booked segments
+	uint64_t head;
+	uint64_t stage;
+	uint64_t find;
+	uint64_t bda;
+	uint64_t rt;
+	uint64_t find_n;
+	uint64_t bda_n;
+	uint64_t bda_scan_n;
+	uint8_t* chk; // this thread's comparison buffer; set only when the table and the shadow ring are in place
+};
+inline constinit thread_local Tls t_rb {};
+
+inline constinit std::atomic<uint64_t> g_rb_gen {0};
+inline constinit std::atomic<bool>     g_rb_b2_live {false};
+// Written once by the first latch of a value >= 1 (RC8), before any Tls::chk; read only by a latch that set Tls::b2.
+inline constinit Entry*   g_rb_table  = nullptr;
+inline constinit uint8_t* g_rb_shadow = nullptr;
+
+// Deterministic 1 / 2^(64 - shift) selection by a counter: a Weyl sequence, equidistributed and not periodic.
+inline bool Weyl(uint64_t k, uint32_t shift) {
+	return ((k * 0x9E3779B97F4A7C15ull) >> shift) == 0;
+}
+
+// The slow half of the latch at a value >= 1: the refusals, the allocation of RC8 and the lines. Returns the mode.
+uint32_t LatchSlow(uint32_t value, bool mut_site);
+
+// RC2, RC3: written only by a latch and only on a change of value; turning the census on moves the generation first, so
+// the entries of an earlier block of value 2 are dead from the first copy of this one.
+inline void SetLive(bool live) {
+	if (g_rb_b2_live.load(std::memory_order_relaxed) != live) {
+		if (live) {
+			g_rb_gen.fetch_add(1, std::memory_order_release);
+		}
+		g_rb_b2_live.store(live, std::memory_order_release);
+	}
+}
+
+// The latch (s.2.2): `value` is Gates::Value(Knob::RebindCensus), read by the caller once per operation. At 0: one store
+// of the mode and of two flags, one relaxed load of g_rb_b2_live.
+inline void Latch(uint32_t value, bool mut_site) {
+	auto&          rb   = t_rb;
+	const uint32_t mode = value == 0 ? 0u : LatchSlow(value, mut_site);
+	rb.mode             = mode;
+	rb.b2               = mode == 2 && rb.chk != nullptr;
+	rb.chain            = false;
+	if (mode != 0) {
+		rb.head       = 0;
+		rb.stage      = 0;
+		rb.find       = 0;
+		rb.bda        = 0;
+		rb.rt         = 0;
+		rb.find_n     = 0;
+		rb.bda_n      = 0;
+		rb.bda_scan_n = 0;
+	}
+	SetLive(rb.b2);
+}
+
+// RC2: the dispatch unlatch clears this thread's state only; g_rb_b2_live is left to the next latch.
+inline void Unlatch() {
+	t_rb.mode = 0;
+	t_rb.b2   = false;
+	t_rb.slot = 0;
+}
+
+// The reset hook (s.5.2): one relaxed load while the B2 census is off. No lock (an atomic and this thread's shard).
+inline void Reset(Cause cause) {
+	if (g_rb_b2_live.load(std::memory_order_relaxed)) [[unlikely]] {
+		g_rb_gen.fetch_add(1, std::memory_order_release);
+		FrameStats::Add(static_cast<FrameStats::Counter>(static_cast<uint32_t>(FrameStats::Counter::RbB2RstSub) +
+		                                                 static_cast<uint32_t>(cause)),
+		                1);
+	}
+}
+
+// M1 (s.3.1): opens the draw chain on the borrowed start of mh_bind - the mh_prog_us mark's own stamp, the cursor of the
+// gate "mutsite" (0 without it: then nothing is booked).
+inline void ChainOpen() {
+	auto&          rb = t_rb;
+	const uint64_t t0 = FrameStats::Detail::t_hold_t0;
+	if (rb.mode != 0 && t0 != 0) {
+		const uint64_t now = FrameStats::NowNs();
+		rb.head            = now - t0;
+		rb.cur             = now;
+		rb.chain           = true;
+	}
+}
+
+// A mark between two booked segments: [cur, now) to `segment`, then the next segment opens.
+inline void ChainMark(uint64_t Tls::*segment) {
+	auto& rb = t_rb;
+	if (rb.chain) {
+		const uint64_t now = FrameStats::NowNs();
+		rb.*segment += now - rb.cur;
+		rb.cur = now;
+	}
+}
+
+// M3: the mark closing `find`, then the draw's count (B10).
+inline void ChainFind() {
+	auto& rb = t_rb;
+	if (rb.chain) {
+		const uint64_t now = FrameStats::NowNs();
+		rb.find += now - rb.cur;
+		rb.cur = now;
+		rb.find_n++;
+	}
+}
+
+// A mark after a bracketed interval (a PrepareBindings call, the RebindImages / RebindBuffers loop): the next segment
+// opens, the interval is not booked (bl_prep / bl_img / bl_buf carry it).
+inline void ChainSkip() {
+	auto& rb = t_rb;
+	if (rb.chain) {
+		rb.cur = FrameStats::NowNs();
+	}
+}
+
+// F: right after the mh_bind_us mark, which wrote its stamp into t_hold_t0 - the borrowed end T8; outside mh_bind.
+inline void ChainFlush() {
+	namespace FS = FrameStats;
+	auto& rb     = t_rb;
+	if (rb.chain) {
+		rb.chain        = false;
+		const uint64_t end = FS::Detail::t_hold_t0;
+		FS::Add(FS::Counter::RbHeadNs, rb.head);
+		FS::Add(FS::Counter::RbStageNs, rb.stage);
+		FS::Add(FS::Counter::RbFindNs, rb.find);
+		FS::Add(FS::Counter::RbBdaNs, rb.bda);
+		FS::Add(FS::Counter::RbRtNs, rb.rt);
+		FS::Add(FS::Counter::RbTailNs, end > rb.cur ? end - rb.cur : 0);
+		FS::Add(FS::Counter::RbFindN, rb.find_n);
+		FS::Add(FS::Counter::RbBdaN, rb.bda_n);
+		FS::Add(FS::Counter::RbBdaScanN, rb.bda_scan_n);
+	}
+}
+
+// The dispatch pairs (s.3.2, B1): around PrepareBindings, RebindImages and RebindBuffers of a latched dispatch.
+inline uint64_t XBegin() {
+	return t_rb.mode != 0 ? FrameStats::NowNs() : 0;
+}
+inline void XEnd(FrameStats::Counter counter, uint64_t t0) {
+	if (t0 != 0) {
+		FrameStats::Add(counter, FrameStats::NowNs() - t0);
+	}
+}
+
+// S0 (s.3.3): the first statement of a latched slot iteration; its start when the iteration is selected, else 0.
+inline uint64_t SlotBegin(bool selected) {
+	auto&          rb = t_rb;
+	const uint64_t t0 = selected ? FrameStats::NowNs() : 0;
+	rb.slot           = 1;
+	rb.cls            = Cls::None;
+	rb.notes          = 0;
+	return t0;
+}
+
+// S1 (s.3.3): the class count and the decision of the next iteration INSIDE the pair of a selected iteration (every
+// iteration pays them), then its time, its sample count and, on every 64th, the calibration pair. Null and Fast book no
+// time (the rest of R2). Returns the decision of the next iteration.
+inline bool SlotEnd(bool selected, uint64_t t0) {
+	namespace FS = FrameStats;
+	auto& rb     = t_rb;
+	rb.slot      = 0;
+	FS::Counter n  = FS::Counter::Count;
+	FS::Counter ns = FS::Counter::Count;
+	switch (rb.cls) {
+		case Cls::Stream:
+			n  = FS::Counter::RbStreamN;
+			ns = FS::Counter::RbStreamNs;
+			break;
+		case Cls::Cbank:
+			n  = FS::Counter::RbCbankN;
+			ns = FS::Counter::RbCbankNs;
+			break;
+		case Cls::Epoch:
+			n  = FS::Counter::RbEpochN;
+			ns = FS::Counter::RbEpochNs;
+			break;
+		case Cls::Slow:
+			n  = FS::Counter::RbSlowN;
+			ns = FS::Counter::RbSlowNs;
+			break;
+		case Cls::Null:
+		case Cls::Fast: break;
+		case Cls::None: n = FS::Counter::RbClsBad; break;
+	}
+	if (n != FS::Counter::Count) {
+		FS::Add(n, 1);
+	}
+	const bool next = Weyl(++rb.k, 61);
+	rb.next         = next;
+	if (selected) {
+		const uint64_t t1 = FS::NowNs();
+		if (ns != FS::Counter::Count) {
+			FS::Add(ns, t1 - t0);
+		}
+		FS::Add(FS::Counter::RbSampN, 1);
+		if ((++rb.sel & 63u) == 0) {
+			const uint64_t u0 = FS::NowNs();
+			const uint64_t u1 = FS::NowNs();
+			FS::Add(FS::Counter::RbCalNs, u1 - u0);
+			FS::Add(FS::Counter::RbCalN, 1);
+		}
+	}
+	return next;
+}
+
+// A class written by NativeStorageBuffer (Null, Cbank) inside a latched slot iteration.
+inline void SetCls(Cls cls) {
+	if (t_rb.slot != 0) {
+		t_rb.cls = cls;
+	}
+}
+
+// Whether a copy made now is an outer B2 copy of a live census (s.5.1): the slot iteration itself, not a nested call.
+inline bool B2Here() {
+	return t_rb.slot == 1 && t_rb.b2;
+}
+
+// gen0 (RC1): read (acquire) right before the copy reads the guest bytes.
+inline uint64_t Gen0() {
+	return g_rb_gen.load(std::memory_order_acquire);
+}
+
+// A note of an outer B2 copy; at most two per iteration, a third is a defect of the census (rb_cls_bad, B7).
+inline void NoteCopy(uint64_t vaddr, uint64_t size, uint64_t align, uint64_t gen0) {
+	auto& rb = t_rb;
+	if (rb.notes >= 2) {
+		FrameStats::Add(FrameStats::Counter::RbClsBad, 1);
+		return;
+	}
+	rb.note[rb.notes++] = {vaddr, size, gen0, align};
+}
+
+// BufferCache::ObtainBuffer (s.3.3, RC9(a)): the outer call of a latched slot writes the class on its return and makes
+// the B2 note of its stream copy; a nested call (none exists in this tree - a guard for future paths) sees slot 2 and
+// stays silent.
+class ObtainScope {
+public:
+	ObtainScope() noexcept: m_outer(t_rb.slot == 1) {
+		if (m_outer) [[unlikely]] {
+			t_rb.slot = 2;
+		}
+	}
+	~ObtainScope() {
+		if (m_outer) [[unlikely]] {
+			t_rb.slot = 1;
+		}
+	}
+	void Class(Cls cls) const noexcept {
+		if (m_outer) [[unlikely]] {
+			t_rb.cls = cls;
+		}
+	}
+	[[nodiscard]] bool B2() const noexcept { return m_outer && t_rb.b2; }
+	ObtainScope(const ObtainScope&)            = delete;
+	ObtainScope& operator=(const ObtainScope&) = delete;
+
+private:
+	bool m_outer;
+};
+
+} // namespace Common::RbCen
 
 #endif // KYTY_COMMON_FRAMESTATS_H_

@@ -210,6 +210,7 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	const auto& [address, size, id] = source;
 	if (address == 0 || size == 0) {
 		cap_note(BdaCapClass::Null, 0);
+		Common::RbCen::SetCls(Common::RbCen::Cls::Null); // Session 133, knob "rbcen" (s.3.3)
 		return {context.GetBufferCache().GetBuffer(NULL_BUFFER_ID).Handle(), 0, 16};
 	}
 	// Session 123, knob "skipceil" = 2 (census, MEASUREMENT ONLY): the buffer read site of EVERY slot, ahead of the
@@ -257,6 +258,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				EXIT("const-bank copy exceeds maxUniformBufferRange\n");
 			}
 			auto& stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+			// Session 133, knob "rbcen" = 2 (s.5.1, RC1): gen0 of this B2 copy, before its read of the guest bytes.
+			const bool     rb_note = Common::RbCen::B2Here();
+			const uint64_t rb_gen0 = rb_note ? Common::RbCen::Gen0() : 0;
 			const auto copy_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
@@ -277,6 +281,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			}
 			// Session 93, gate "bdacap": ring return 1 of 3 - the direct const-bank copy.
 			cap_note(cap_class(true), size);
+			// Session 133, knob "rbcen" (s.3.3, s.5.1): class Cbank and the note of this B2 copy.
+			Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+			if (rb_note) {
+				Common::RbCen::NoteCopy(address, size, alignment, rb_gen0);
+			}
 			return {stream.Handle(), stream_offset, size};
 		}
 	}
@@ -304,6 +313,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			auto&      stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
 			const bool gpu = cache.IsRegionGpuModifiedFromGpu(address, size) ||
 			                 cache.HasGpuDirtyBytes(address, size);
+			// Session 133, knob "rbcen" = 2 (s.5.1, RC1): gen0 of this B2 copy (a CPU copy only), before its read.
+			const bool     rb_note = !gpu && Common::RbCen::B2Here();
+			const uint64_t rb_gen0 = rb_note ? Common::RbCen::Gen0() : 0;
 			const auto copy_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
@@ -337,6 +349,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			buffer_offset = 0;
 			// Session 93, gate "bdacap": ring return 2 of 3 - the aligned const-bank copy.
 			cap_note(cap_class(true), size);
+			// Session 133, knob "rbcen" (s.3.3, s.5.1): class Cbank (CPU and GPU), the note of a CPU copy.
+			Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+			if (rb_note) {
+				Common::RbCen::NoteCopy(address, size, alignment, rb_gen0);
+			}
 			return {stream.Handle(), stream_offset, size};
 		}
 		// The shader was specialized on the V# base alignment (uvec2/uvec4 constant loads).
@@ -3800,6 +3817,82 @@ void RenderExecutor::FindBuffers(PreparedBindings& prepared) {
 	}
 }
 
+// Session 133, knob "rbcen" = 2 (MEASUREMENT ONLY; design133.md rev 2 s.5.1, s.5.4, s.5.5): the probe of the B2 table for
+// each note of the slot iteration that just ended, on the thread that runs the command processor (the only one that
+// latches value 2 with a note). A repeat is a same-key entry whose gen (the gen0 of the copy that inserted it, RC1) equals
+// gen1 read now, after this copy: no reset over [read of A; read of B]. The shadow and the "now" bytes are read from the
+// guest through TryReadBacking - the function the copies use; the ring slot is never read. Nothing here is read by the path.
+namespace {
+
+uint64_t g_rb_shadow_pos = 0; // the monotonic write position of the shadow ring (serialized like the table)
+
+void RbCompare(const Common::RbCen::Entry& entry, const Common::RbCen::Note& note, Common::FrameStats::Counter chk,
+               Common::FrameStats::Counter diff) {
+	namespace FS = Common::FrameStats;
+	namespace RB = Common::RbCen;
+	if (entry.shadow == 0) {
+		return;
+	}
+	const uint64_t pos = entry.shadow - 1;
+	if (g_rb_shadow_pos - pos > RB::ShadowBytes) {
+		FS::Add(FS::Counter::RbB2Shovf, 1);
+		return;
+	}
+	auto* now = RB::t_rb.chk;
+	if (!Libs::LibKernel::Memory::TryReadBacking(note.vaddr, now, note.size)) {
+		return; // skipped, not an error (s.5.1)
+	}
+	FS::Add(chk, 1);
+	if (std::memcmp(now, RB::g_rb_shadow + pos % RB::ShadowBytes, note.size) != 0) {
+		FS::Add(diff, 1);
+	}
+}
+
+void RbCensus() {
+	namespace FS = Common::FrameStats;
+	namespace RB = Common::RbCen;
+	auto&          rb    = RB::t_rb;
+	const uint32_t notes = rb.notes;
+	rb.notes             = 0;
+	for (uint32_t j = 0; j < notes; j++) {
+		const auto& note = rb.note[j];
+		FS::Add(FS::Counter::RbB2N, 1);
+		const uint64_t gen1  = RB::g_rb_gen.load(std::memory_order_acquire);
+		const uint64_t mixed = (note.vaddr ^ (note.size << 40u) ^ (note.align << 58u)) * 0x9E3779B97F4A7C15ull;
+		auto&          entry = RB::g_rb_table[mixed >> (64u - RB::TableBits)];
+		const bool     same  = entry.vaddr == note.vaddr && entry.size == note.size && entry.align == note.align;
+		if (same && entry.gen == gen1) {
+			// A repeat: the entry keeps the FIRST copy of the interval, the one the mechanism would hand out.
+			FS::Add(FS::Counter::RbB2Would, 1);
+			FS::Add(FS::Counter::RbB2Kb, note.size);
+			RbCompare(entry, note, FS::Counter::RbB2Chk, FS::Counter::RbB2Diff);
+			continue;
+		}
+		if (same) {
+			RbCompare(entry, note, FS::Counter::RbB2Xchk, FS::Counter::RbB2Xdiff); // the positive control (B5)
+		} else if (entry.vaddr != 0 && entry.gen == gen1) {
+			FS::Add(FS::Counter::RbB2Evict, 1); // a live entry of another key (B6)
+		}
+		entry.vaddr  = note.vaddr;
+		entry.size   = static_cast<uint32_t>(note.size);
+		entry.align  = static_cast<uint16_t>(note.align);
+		entry.gen    = note.gen0;
+		entry.shadow = 0;
+		if (note.size <= RB::CheckBytes && RB::Weyl(++rb.ins, 60)) {
+			uint64_t pos = g_rb_shadow_pos;
+			if (pos % RB::ShadowBytes + note.size > RB::ShadowBytes) {
+				pos += RB::ShadowBytes - pos % RB::ShadowBytes; // contiguous: start the next lap
+			}
+			if (Libs::LibKernel::Memory::TryReadBacking(note.vaddr, RB::g_rb_shadow + pos % RB::ShadowBytes, note.size)) {
+				entry.shadow    = pos + 1;
+				g_rb_shadow_pos = pos + note.size;
+			}
+		}
+	}
+}
+
+} // namespace
+
 void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	KYTY_PROFILER_FUNCTION();
 	EXIT_IF(prepared.runtime == nullptr || !*prepared.runtime);
@@ -3811,6 +3904,10 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	const bool                   bind_lap = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
 	Common::FrameStats::LapScope bind_lap_scope(bind_lap,
 	                                            Common::FrameStats::Counter::BindLapBufferNs);
+	// Session 133, knob "rbcen" (design133.md rev 2 s.3.3-3.4): the prologue pair opens here (B4); a latched operation
+	// only (the draw and dispatch latches), at 0 one thread-local test.
+	const bool     rb_on     = Common::RbCen::t_rb.mode != 0;
+	const uint64_t rb_pro_t0 = rb_on ? Common::FrameStats::NowNs() : 0;
 	if (bind_lap) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindLapBuffers,
 		                        program.info.buffers.size());
@@ -3836,7 +3933,17 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	// ~100 MB of image uploads per frame come from. Same env var as the image trace, so one run
 	// prints both sides; large ranges only, so the four addresses that carry 90 MB stand out.
 	static const bool writer_trace = Common::EnvFlagOn("KYTY_IMAGE_UPLOAD_TRACE");
+	// Knob "rbcen": the own-shard waits before the slot loop, the decision of the first iteration, then the prologue closes.
+	uint64_t rb_wait0 = 0;
+	bool     rb_sel   = false;
+	if (rb_on) {
+		rb_wait0 = Common::FrameStats::ReadOwn(Common::FrameStats::Counter::ApplyWaitGpuNs) +
+		           Common::FrameStats::ReadOwn(Common::FrameStats::Counter::SemWaitGpuNs);
+		rb_sel = Common::RbCen::t_rb.next;
+		Common::FrameStats::Add(Common::FrameStats::Counter::RbBproNs, Common::FrameStats::NowNs() - rb_pro_t0);
+	}
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+		const uint64_t rb_t0 = rb_on ? Common::RbCen::SlotBegin(rb_sel) : 0; // S0 (knob "rbcen", s.3.3)
 		uint32_t buffer_offset = 0;
 		// Session 93, gate "bdacap": out-parameter, BdaCapClass::None unless the gate is armed.
 		uint8_t  buffer_class  = static_cast<uint8_t>(BdaCapClass::None);
@@ -3864,7 +3971,18 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		                                               buffer_offset, direct_copy, buffer_class));
 		prepared.buffer_class.push_back(buffer_class);
 		pack_memory_offset(i, buffer_offset);
+		if (rb_on) {
+			rb_sel = Common::RbCen::SlotEnd(rb_sel, rb_t0); // S1
+			if (Common::RbCen::t_rb.notes != 0) {
+				RbCensus(); // value 2, outside the pair
+			}
+		}
 	}
+	// Knob "rbcen": the tail pair opens here; the own-shard waits after the slot loop.
+	const uint64_t rb_up_t0 = rb_on ? Common::FrameStats::NowNs() : 0;
+	const uint64_t rb_wait1 = rb_on ? Common::FrameStats::ReadOwn(Common::FrameStats::Counter::ApplyWaitGpuNs) +
+	                                     Common::FrameStats::ReadOwn(Common::FrameStats::Counter::SemWaitGpuNs)
+	                               : 0;
 	Common::FrameStats::Scope upload_scope(Common::FrameStats::Counter::BindBufUploadNs);
 	const bool kinds_known = (prepared.kind_mask & KIND_COMPUTED) != 0;
 	const bool has_srt =
@@ -3910,6 +4028,10 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	}
 	if (fr_pay) {
 		m_frame_rep.pre_ns += Common::FrameStats::NowNs() - fr_t0;
+	}
+	if (rb_on) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::RbNuploadNs, Common::FrameStats::NowNs() - rb_up_t0);
+		Common::FrameStats::Add(Common::FrameStats::Counter::RbSyncWaitNs, rb_wait1 - rb_wait0);
 	}
 }
 
@@ -4179,6 +4301,7 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		FindBuffers(*stage);
 		uses_dma |= stage->runtime->program->info.uses_dma;
 	}
+	Common::RbCen::ChainFind(); // M3 (knob "rbcen", s.3.1)
 	// Session 123, knob "skipceil" = 2 (census): the draw's PS hash for skc_whash of its D stamps (SkcX1Reader selfw).
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		for (auto* stage: stages) {
@@ -4217,11 +4340,22 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 		}
 	}
 	if (uses_dma || bda_all) {
+		// Knob "rbcen" (s.3.4): a scan is a call that added no bda_hit (read on this thread's own shard).
+		const bool     rb_chain = Common::RbCen::t_rb.chain;
+		const uint64_t rb_hits  = rb_chain ? Common::FrameStats::ReadOwn(Common::FrameStats::Counter::BdaPrepareHits) : 0;
 		m_context.PrepareBda();
+		if (rb_chain) {
+			Common::RbCen::t_rb.bda_n++;
+			if (Common::FrameStats::ReadOwn(Common::FrameStats::Counter::BdaPrepareHits) == rb_hits) {
+				Common::RbCen::t_rb.bda_scan_n++;
+			}
+		}
 	}
+	Common::RbCen::ChainMark(&Common::RbCen::Tls::bda); // M4
 	for (auto* stage: stages) {
 		RebindImages(*stage);
 	}
+	Common::RbCen::ChainSkip(); // M5
 	auto& cache = m_context.GetTextureCache();
 	for (auto& target: colors) {
 		EXIT_IF(!target.image_id);
@@ -4258,11 +4392,13 @@ void RenderExecutor::PrepareGraphicsBindings(std::span<PreparedBindings* const> 
 			BindRenderTarget(target.image_id);
 		}
 	}
+	Common::RbCen::ChainMark(&Common::RbCen::Tls::rt); // M6 (knob "rbcen")
 	// Discovery can read back PS5 metadata and submit the scheduler. Reserve draw buffers only
 	// after image identities are final; attachment layout transitions follow buffer alias copies.
 	for (auto* stage: stages) {
 		RebindBuffers(*stage);
 	}
+	Common::RbCen::ChainSkip(); // M7
 	// Session 123, knob "skipceil" = 2 (census, [N1]): the draw's W2 stamps are applied by ExecutePreparedDraw after the
 	// vertex / index buffer reads (ROADMAP s122 item 34(v)), the draw's last reads before its stamps.
 }

@@ -997,12 +997,17 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		ResetBindings();
 		return;
 	}
+	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2, s.3.2, B1): the latch of this dispatch, for
+	// its pairs and the slots of its RebindBuffers; cleared after them (RC2: this thread only).
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
 	if (bind_floor) {
 		BindFloorPrepareStage(input_info.stage, bindings);
 		// Knob "bfburn" at bfmode=2/3: burned where the removed work stood.
 		BindFloorBurnSlice();
 	} else {
+		const uint64_t rb_x0 = Common::RbCen::XBegin();
 		PrepareBindings(input_info.stage, bindings);
+		Common::RbCen::XEnd(Common::FrameStats::Counter::RbXprepNs, rb_x0);
 		FindBuffers(bindings);
 	}
 	dc_lap.Mark(Common::FrameStats::Counter::DcPhPrepNs);
@@ -1033,14 +1038,19 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	dc_lap.Mark(Common::FrameStats::Counter::DcPhBdaNs);
 	// Session 96, gate "bindfloor": removed by the floor.
 	if (!bind_floor) {
+		const uint64_t rb_x0 = Common::RbCen::XBegin();
 		RebindImages(bindings);
+		Common::RbCen::XEnd(Common::FrameStats::Counter::RbXimgNs, rb_x0);
 	}
 	dc_lap.Mark(Common::FrameStats::Counter::DcPhImgNs);
 	// Upstream dd408ff: the buffer reservations follow the image rebinds, so an alias
 	// discovered while resolving the images cannot be uploaded from a stale identity.
 	if (!bind_floor) {
+		const uint64_t rb_x0 = Common::RbCen::XBegin();
 		RebindBuffers(bindings);
+		Common::RbCen::XEnd(Common::FrameStats::Counter::RbXbufNs, rb_x0);
 	}
+	Common::RbCen::Unlatch(); // knob "rbcen", RC2
 	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
 	dc_lap.Mark(Common::FrameStats::Counter::DcPhBufNs);
 

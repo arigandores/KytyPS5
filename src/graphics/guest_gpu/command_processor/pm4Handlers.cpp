@@ -1316,6 +1316,7 @@ KYTY_HW_UC_PARSER(HwUcSetGdsOaRegisters) {
 }
 
 KYTY_CP_OP_PARSER(CpOpAcquireMem) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Rel); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0055800 && cmd_id != 0xc0061050);
@@ -1377,6 +1378,7 @@ KYTY_CP_OP_PARSER(CpOpDispatchIndirect) {
 }
 
 KYTY_CP_OP_PARSER(CpOpGetLodStats) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0038e00);
@@ -1443,6 +1445,7 @@ KYTY_CP_OP_PARSER(CpOpGetLodStats) {
 }
 
 KYTY_CP_OP_PARSER(CpOpDispatchReset) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Cond); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0001024);
@@ -1453,6 +1456,7 @@ KYTY_CP_OP_PARSER(CpOpDispatchReset) {
 }
 
 KYTY_CP_OP_PARSER(CpOpPfpSyncMe) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0004200);
@@ -1461,6 +1465,7 @@ KYTY_CP_OP_PARSER(CpOpPfpSyncMe) {
 }
 
 KYTY_CP_OP_PARSER(CpOpRewind) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0005900);
@@ -1472,6 +1477,7 @@ KYTY_CP_OP_PARSER(CpOpRewind) {
 }
 
 KYTY_CP_OP_PARSER(CpOpSetPredication) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Cond); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(((cmd_id >> 8u) & 0xffu) != Pm4::IT_SET_PREDICATION);
@@ -1504,6 +1510,7 @@ KYTY_CP_OP_PARSER(CpOpSetPredication) {
 }
 
 KYTY_CP_OP_PARSER(CpOpCondExec) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Cond); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(((cmd_id >> 8u) & 0xffu) != Pm4::IT_COND_EXEC);
@@ -1530,6 +1537,7 @@ KYTY_CP_OP_PARSER(CpOpCondExec) {
 }
 
 KYTY_CP_OP_PARSER(CpOpBranch) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Cond); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(((cmd_id >> 8u) & 0xffu) != Pm4::IT_INDIRECT_BUFFER);
@@ -1603,6 +1611,7 @@ static uint8_t CopyDataSrcToDma(uint32_t src) {
 }
 
 KYTY_CP_OP_PARSER(CpOpCopyData) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != KYTY_PM4(6, Pm4::IT_COPY_DATA, 0u));
@@ -1643,6 +1652,7 @@ KYTY_CP_OP_PARSER(CpOpCopyData) {
 }
 
 KYTY_CP_OP_PARSER(CpOpDmaData) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != KYTY_PM4(7, Pm4::IT_DMA_DATA, 0u));
@@ -1811,6 +1821,7 @@ KYTY_CP_OP_PARSER(CpOpContextState) {
 }
 
 KYTY_CP_OP_PARSER(CpOpDumpConstRam) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0038300);
@@ -1829,6 +1840,7 @@ KYTY_CP_OP_PARSER(CpOpDumpConstRam) {
 }
 
 KYTY_CP_OP_PARSER(CpOpEventWrite) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Rel); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(((cmd_id >> 8u) & 0xffu) != Pm4::IT_EVENT_WRITE);
@@ -1849,6 +1861,7 @@ KYTY_CP_OP_PARSER(CpOpEventWrite) {
 }
 
 KYTY_CP_OP_PARSER(CpOpEventWriteEop) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Rel); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0044700);
@@ -1871,6 +1884,7 @@ KYTY_CP_OP_PARSER(CpOpEventWriteEop) {
 }
 
 KYTY_CP_OP_PARSER(CpOpEventWriteEos) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Rel); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0034802);
@@ -1911,6 +1925,7 @@ KYTY_CP_OP_PARSER(CpOpFlip) {
 }
 
 KYTY_CP_OP_PARSER(CpOpIncrementCeCounter) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0008400);
@@ -1922,6 +1937,7 @@ KYTY_CP_OP_PARSER(CpOpIncrementCeCounter) {
 }
 
 KYTY_CP_OP_PARSER(CpOpIncrementDeCounter) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0008500);
@@ -2311,6 +2327,7 @@ KYTY_CP_OP_PARSER(CpOpPushMarker) {
 }
 
 KYTY_CP_OP_PARSER(CpOpReleaseMem) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Rel); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0061060);
@@ -2584,6 +2601,7 @@ KYTY_CP_OP_PARSER(CpOpSetUconfigReg) {
 }
 
 KYTY_CP_OP_PARSER(CpOpWaitFlipDone) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xc0051018);
@@ -2620,6 +2638,7 @@ static uint32_t CpOpWaitRegMemWaitOp(uint32_t control) {
 
 template <typename T>
 static uint32_t CpOpWaitRegMemSized(CommandProcessor& cp, uint32_t cmd_id, const uint32_t* buffer) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	static_assert(sizeof(T) == sizeof(uint32_t) || sizeof(T) == sizeof(uint64_t));
 
 	constexpr auto value_dw = static_cast<uint32_t>(sizeof(T) / sizeof(uint32_t));
@@ -2659,6 +2678,7 @@ KYTY_CP_OP_PARSER(CpOpWaitRegMem64) {
 }
 
 KYTY_CP_OP_PARSER(CpOpWaitOnCeCounter) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0008600);
@@ -2670,6 +2690,7 @@ KYTY_CP_OP_PARSER(CpOpWaitOnCeCounter) {
 }
 
 KYTY_CP_OP_PARSER(CpOpWaitOnDeCounterDiff) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wait); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	EXIT_NOT_IMPLEMENTED(cmd_id != 0xC0008800);
@@ -2695,6 +2716,7 @@ KYTY_CP_OP_PARSER(CpOpWriteConstRam) {
 }
 
 KYTY_CP_OP_PARSER(CpOpWriteData) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	KYTY_PROFILER_FUNCTION();
 
 	auto op = (cmd_id >> 8u) & 0xffu;

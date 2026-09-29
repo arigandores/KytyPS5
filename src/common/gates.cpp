@@ -454,8 +454,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 131, track K16, MEASUREMENT ONLY: after the segment mh_disp_us of each dispatch, a spin of its length under
     // the render mutex (1) (docs/session-131/dd131.md rev 1, ROADMAP s122 items 123(z), 124, 125). Read once per dispatch,
     // so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_DISP_CEILING", "dispceil", 0, 1},
+    // Session 133, MEASUREMENT ONLY: the census of mh_bind and RebindBuffers (1), + the census of the B2 repeat of the
+    // ring copies (2) (docs/session-133/design133.md rev 2, ROADMAP s122 items 141(v), 142(b), 143). Latched once per
+    // draw and once per dispatch, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_REBIND_CENSUS", "rbcen", 0, 2},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

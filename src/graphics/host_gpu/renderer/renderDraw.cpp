@@ -4066,6 +4066,8 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		Common::FrameStats::Add(Common::FrameStats::Counter::BindFloorSkipDrop, 1);
 		return;
 	}
+	// Session 133, knob "rbcen" (design133.md rev 2 s.3.1): M1 - the draw chain opens on the borrowed start of mh_bind.
+	Common::RbCen::ChainOpen();
 	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9): while ReuseBindingsEnabled() is on -
 	// the default - `bindings` binds to m_graphics_bindings and this object is never read, but it
 	// is still array<PreparedBindings,3> with five vectors each: fifteen empty-vector
@@ -4094,7 +4096,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (bind_floor) {
 			BindFloorPrepareStage(state.vertex_info[i].stage, bindings.vertex[i]);
 		} else {
+			Common::RbCen::ChainMark(&Common::RbCen::Tls::stage); // Pa (knob "rbcen")
 			PrepareBindings(state.vertex_info[i].stage, bindings.vertex[i]);
+			Common::RbCen::ChainSkip(); // Pb
 		}
 		descriptor_stages[stage_count++] = &bindings.vertex[i];
 	}
@@ -4114,7 +4118,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 		if (bind_floor) {
 			BindFloorPrepareStage(state.ps_input_info.stage, *bindings.pixel);
 		} else {
+			Common::RbCen::ChainMark(&Common::RbCen::Tls::stage); // Pa (knob "rbcen")
 			PrepareBindings(state.ps_input_info.stage, *bindings.pixel);
+			Common::RbCen::ChainSkip(); // Pb
 		}
 		descriptor_stages[stage_count++] = &*bindings.pixel;
 	} else {
@@ -4136,6 +4142,7 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// RebindBuffers, the buffer uploads, PrepareBda and the per-slot synchronisations all live
 	// inside it.  At bfmode=2/3 the calibrated idle is burned exactly where it stood, on this
 	// thread and inside the render mutex (ROADMAP.md:1062-1065).
+	Common::RbCen::ChainMark(&Common::RbCen::Tls::stage); // M2 (knob "rbcen", s.3.1)
 	if (!bind_floor) {
 		PrepareGraphicsBindings(stages, std::span {state.color_info, state.color_count});
 	} else {
@@ -4169,6 +4176,9 @@ void RenderExecutor::ExecutePreparedDraw(uint64_t submit_id, CommandBuffer& buff
 	// Session 69, gate "mutsite": everything above this line, back to the mh_prog_us mark, is the
 	// bindings half of the draw (descriptors, texture cache, buffer cache, sampler cache, uploads).
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldBindingsNs);
+	// Session 133, knob "rbcen" (design133.md rev 2 s.3.1): F - the chain closes on the stamp of the mark above (T8) and
+	// is booked here, outside mh_bind.
+	Common::RbCen::ChainFlush();
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDraws);
 	// The rest of this function is mh_emit_us, closed by a destructor because the function has
 	// three exits and the default one (gate "recpack", line ~2220) is in the middle of it.
@@ -5131,6 +5141,9 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 		    Common::FrameStats::Counter::MutWideScopes);
 		RefreshShaders(buffer, draw, state);
 	}
+	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
+	// that opens mh_bind - its price lands in mh_prog_us.
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	LogDrawStateIfNeeded(buffer, draw, state, args.index_type_and_size,
@@ -5320,6 +5333,9 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 		}
 		RefreshShaders(buffer, draw, state);
 	}
+	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
+	// that opens mh_bind - its price lands in mh_prog_us.
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	const bool rect_list = ucfg.GetPrimType() == Prospero::PrimitiveType::kRectList;

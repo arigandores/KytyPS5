@@ -989,6 +989,7 @@ bool GuestGpu::Process(Submission& submission) {
 		submission.command_execution.SetDrawAheadWalk(submission.walk_id, submission.walked_ahead);
 	}
 
+	Common::RbCen::Reset(Common::RbCen::Cause::Sub); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	cp.BufferInit();
 	bool complete = true;
 
@@ -4041,6 +4042,7 @@ static void BindFloorFlipHook() {
 }
 
 void CommandProcessor::Flip() {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	BindFloorFlipHook();
 	GpuMarkersFlip(); // Session 98 (patch_s98b): gm_unsup, gm_ok/gm_bad
 	CheckBuffer();
@@ -4062,6 +4064,7 @@ void CommandProcessor::Flip() {
 }
 
 void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	BindFloorFlipHook(); // Session 98
 	GpuMarkersFlip(); // Session 98 (patch_s98b)
 	CheckBuffer();
@@ -4090,6 +4093,7 @@ void CommandProcessor::Flip(void* dst_gpu_addr, uint32_t value) {
 
 void CommandProcessor::FlipWithInterrupt(uint32_t eop_event_type, uint32_t cache_action,
                                          void* dst_gpu_addr, uint32_t value) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Wr); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	BindFloorFlipHook(); // Session 98
 	GpuMarkersFlip(); // Session 98 (patch_s98b)
 	CheckBuffer();

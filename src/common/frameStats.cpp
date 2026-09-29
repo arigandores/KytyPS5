@@ -18,6 +18,7 @@
 #include <cstring>
 #include <chrono>
 #include <fstream>
+#include <new>
 
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
 #include <intrin.h>
@@ -1115,3 +1116,84 @@ void AcHistLog(uint64_t flip) {
 }
 
 } // namespace Common::FrameStats
+
+// Session 133, knob "rbcen" (MEASUREMENT ONLY; docs/session-133/design133.md rev 2 s.2.1-2.3, RC8).
+namespace Common::RbCen {
+
+namespace {
+
+std::mutex       g_alloc_mutex;
+std::atomic<int> g_alloc_state {0}; // 0 not tried, 1 in place, 2 failed
+
+// RC8: the table, the shadow ring and this thread's comparison buffer, at the first latch of any value >= 1 (so both arms
+// of rbcen=1|2 run on memory already allocated), each touched whole (zeroed) so no first touch of a page lands in a
+// later frame. Returns whether all three are in place for this thread.
+bool Allocate() {
+	auto state = g_alloc_state.load(std::memory_order_acquire);
+	if (state == 0) [[unlikely]] {
+		std::lock_guard lock(g_alloc_mutex);
+		state = g_alloc_state.load(std::memory_order_relaxed);
+		if (state == 0) {
+			auto* table  = new (std::nothrow) Entry[size_t {1} << TableBits];
+			auto* shadow = new (std::nothrow) uint8_t[ShadowBytes];
+			if (table != nullptr && shadow != nullptr) {
+				std::memset(static_cast<void*>(table), 0, sizeof(Entry) << TableBits);
+				std::memset(shadow, 0, ShadowBytes);
+				g_rb_table  = table;
+				g_rb_shadow = shadow;
+				state       = 1;
+			} else {
+				delete[] table;
+				delete[] shadow;
+				state = 2;
+			}
+			g_alloc_state.store(state, std::memory_order_release);
+		}
+	}
+	auto& rb = t_rb;
+	if (state == 1 && !rb.chk_tried) [[unlikely]] {
+		rb.chk_tried = true;
+		rb.chk       = new (std::nothrow) uint8_t[CheckBytes];
+		if (rb.chk != nullptr) {
+			std::memset(rb.chk, 0, CheckBytes);
+		}
+	}
+	return state == 1 && rb.chk != nullptr;
+}
+
+// One line per state, once per process: 1 notrace, 2 mutsite, 4 b2alloc, 8 mode 1, 16 mode 2.
+bool FirstTime(uint32_t bit) {
+	static std::atomic<uint32_t> logged {0};
+	return (logged.load(std::memory_order_relaxed) & bit) == 0 &&
+	       (logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0;
+}
+
+} // namespace
+
+uint32_t LatchSlow(uint32_t value, bool mut_site) {
+	const char* reason = nullptr;
+	uint32_t    bit    = 0;
+	if (!FrameStats::Enabled()) {
+		reason = "notrace"; // rb_refuse is a no-op then (B13): only the line is observable
+		bit    = 1u;
+	} else if (!mut_site) {
+		reason = "mutsite"; // no mh_bind chain to borrow (B11)
+		bit    = 2u;
+	}
+	if (reason != nullptr) {
+		FrameStats::Add(FrameStats::Counter::RbRefuse, 1);
+		if (FirstTime(bit)) {
+			LOGF("RbCen: refused reason=%s\n", reason);
+		}
+		return 0;
+	}
+	if (!Allocate() && FirstTime(4u)) {
+		LOGF("RbCen: refused reason=b2alloc\n"); // seen in both arms: the first latch of any value >= 1 (RC8)
+	}
+	if (FirstTime(value == 1 ? 8u : 16u)) {
+		LOGF("RbCen: mode %u\n", value);
+	}
+	return value;
+}
+
+} // namespace Common::RbCen

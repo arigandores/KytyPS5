@@ -164,6 +164,8 @@ public:
 			// AFTER the store, never before: a generation published while the image still reads
 			// clean would let a reader stamp a stale CLEAN verdict with the new generation.
 			GpuDirtyGen::Bump();
+			// Session 133, knob "rbcen" = 2 (s.5.2, item 143(a)): a reset by the rule, not by the code.
+			Common::RbCen::Reset(Common::RbCen::Cause::Imgw);
 		}
 	}
 	void ClearGpuModified() noexcept {

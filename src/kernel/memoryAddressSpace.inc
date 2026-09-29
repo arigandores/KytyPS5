@@ -162,6 +162,12 @@ public:
 	// backing pointer from TryGetBackingPointer can compare this value instead of validating the
 	// page again; an unchanged epoch means no mapping was added, split or removed meanwhile.
 	[[nodiscard]] uint64_t MapEpoch() const { return m_map_epoch.load(std::memory_order_acquire); }
+	// Session 133, knob "rbcen" = 2 (MEASUREMENT ONLY; design133.md rev 2 s.5.2, RC4): every change of what backs a guest
+	// address resets the B2 interval - the hook first, then the same bump as before; every caller holds m_mutex.
+	void BumpMapEpoch() {
+		Common::RbCen::Reset(Common::RbCen::Cause::Emu);
+		m_map_epoch.fetch_add(1, std::memory_order_release);
+	}
 
 	bool ZeroRange(uint64_t backing_offset, uint64_t size) {
 		if (!IsAvailable() || !RangeOk(backing_offset, size)) {
@@ -318,7 +324,7 @@ public:
 		{
 			std::lock_guard lock(m_mutex);
 			EXIT_IF(!m_maps.emplace(vaddr, MapEntry {vaddr, size, backing_offset, mode}).second);
-			m_map_epoch.fetch_add(1, std::memory_order_release);
+			BumpMapEpoch();
 		}
 		SetFailure(failure_reason, FailureReason::None);
 		return true;
@@ -330,7 +336,7 @@ public:
 		{
 			std::lock_guard lock(m_mutex);
 			EXIT_IF(!m_maps.emplace(vaddr, MapEntry {vaddr, size, backing_offset, mode}).second);
-			m_map_epoch.fetch_add(1, std::memory_order_release);
+			BumpMapEpoch();
 		}
 		SetFailure(failure_reason, FailureReason::None);
 		return true;
@@ -424,7 +430,7 @@ public:
 #endif
 				}
 			}
-			m_map_epoch.fetch_add(1, std::memory_order_release);
+			BumpMapEpoch();
 		}
 
 		if (old.size == 0) {
@@ -444,7 +450,7 @@ public:
 			if (!unmapped) {
 				std::lock_guard lock(m_mutex);
 				m_maps.emplace(old.vaddr, old);
-				m_map_epoch.fetch_add(1, std::memory_order_release);
+				BumpMapEpoch();
 				return false;
 			}
 			if (placeholder_preserved != nullptr) {
@@ -493,7 +499,7 @@ public:
 		}
 		std::lock_guard lock(m_mutex);
 		m_maps.emplace(old.vaddr, old);
-		m_map_epoch.fetch_add(1, std::memory_order_release);
+		BumpMapEpoch();
 		return false;
 #else
 		// Replace only the requested range so concurrent accesses and GPU watch
@@ -513,7 +519,7 @@ public:
 			               MapEntry {right_addr, right_size,
 			                         old.backing_offset + right_addr - old.vaddr, old.mode});
 		}
-		m_map_epoch.fetch_add(1, std::memory_order_release);
+		BumpMapEpoch();
 
 		if (placeholder_preserved != nullptr) {
 			*placeholder_preserved = true;

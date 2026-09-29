@@ -779,6 +779,7 @@ CommandBuffer& CommandScheduler::BeginCommand() {
 }
 
 uint64_t CommandScheduler::Submit(SubmitInfo submit, bool allow_async) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Host); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	EXIT_IF(m_command.IsInvalid());
 	// Session 105, knob "ctxtick" >= 2: a submit made from inside a draw or dispatch (ctx_midsub).
 	// Its FrameTrace-submit row is renamed "ctx-mid:<site>", so these submits are published per

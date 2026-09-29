@@ -991,6 +991,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	uint64_t                    total_size = 0;
 	vk::Buffer                  source;
 	bool                        provisional = false; // gate "armdefer": pages left dirty to settle
+	uint64_t                    rb_up_t0    = 0;     // knob "rbcen": the open rb_sync_up pair (s.3.4)
 	if (!is_written && SyncFreeSkip(vaddr, size)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
 	} else {
@@ -1007,7 +1008,13 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 				copies.emplace_back(total_size, buffer.Offset(address), bytes);
 				total_size += bytes;
 			},
-			[&]() noexcept { source = UploadCopies(buffer, copies, total_size); },
+			[&]() noexcept {
+				// Session 133, knob "rbcen" (s.3.4): rb_sync_up opens here, inside a latched slot of this thread only.
+				if (Common::RbCen::t_rb.slot != 0) [[unlikely]] {
+					rb_up_t0 = Common::FrameStats::NowNs();
+				}
+				source = UploadCopies(buffer, copies, total_size);
+			},
 			Common::Gates::Enabled(Common::Gates::Gate::ProtectBatch),
 			sticky_stat ? &upload_stat : nullptr);
 		if (source && Common::Gates::Enabled(Common::Gates::Gate::ProtectBatchVerify)) {
@@ -1018,6 +1025,9 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncNoop, 1);
 	}
 	RecordBufferCopies(buffer, source, copies, total_size);
+	if (rb_up_t0 != 0) [[unlikely]] {
+		Common::FrameStats::Add(Common::FrameStats::Counter::RbSyncUpNs, Common::FrameStats::NowNs() - rb_up_t0);
+	}
 	// Keep the epoch from before synchronization, so concurrent writes force another upload.
 	// This is only the requested interval: a different part of the same buffer may remain dirty.
 	// A provisional upload (gate "armdefer") records no current epoch: its pages are still dirty
@@ -1327,6 +1337,9 @@ vk::Buffer BufferCache::UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> c
 std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t size,
                                                        bool is_written, bool is_texel_buffer,
                                                        BufferId id, bool memoizable) {
+	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.3.3, RC9(a)): the outer call of a latched slot
+	// writes its class on each return and notes its stream copy; outside a latched slot one thread-local test.
+	const Common::RbCen::ObtainScope rb_obtain;
 	Common::FrameStats::Scope obtain_scope(Common::FrameStats::Counter::ObtainBufNs);
 	// Session 68, gate "amut": the LRU touch, SynchronizeBuffer, the stream-ring copies and the
 	// buffer creation all live below this line.
@@ -1394,6 +1407,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 					}
 					Common::FrameStats::Add(Common::FrameStats::Counter::BufFastOk, 1);
 					if (!Common::Gates::Enabled(Common::Gates::Gate::BufFastCheck)) {
+						rb_obtain.Class(Common::RbCen::Cls::Fast);
 						return {remembered, remembered->Offset(vaddr)};
 					}
 					// Gate "buffastcheck": beside every hit, the work the gate replaced. A write
@@ -1421,6 +1435,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 						}
 						*fast_slot = {};
 					}
+					rb_obtain.Class(Common::RbCen::Cls::Fast);
 					return {&full, full.Offset(vaddr)};
 				}
 			}
@@ -1498,6 +1513,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 			(void)SynchronizeBuffer(*buffer, vaddr, size, false, is_texel_buffer);
 		}
 		remember(id);
+		rb_obtain.Class(Common::RbCen::Cls::Epoch);
 		return {buffer, buffer->Offset(vaddr)};
 	}
 
@@ -1511,6 +1527,9 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	                       m_memory_tracker.IsRegionCpuModified(vaddr, size)))) {
 		const auto alignment = std::max<uint64_t>(
 		    m_graphics.physical_device_properties.limits.minUniformBufferOffsetAlignment, 1);
+		// Knob "rbcen" = 2 (s.5.1, RC1): gen0 of this B2 copy, before the Map and the read of the guest bytes.
+		const bool     rb_note   = rb_obtain.B2();
+		const uint64_t rb_gen0   = rb_note ? Common::RbCen::Gen0() : 0;
 		const auto stream_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);
 		if (mapped != nullptr && Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size)) {
@@ -1529,6 +1548,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 				// range is CPU-dirty anyway (that is why this path was taken).
 				Common::FrameStats::Add(Common::FrameStats::Counter::BufFastSkip, 1);
 				*fast_slot = {};
+			}
+			rb_obtain.Class(Common::RbCen::Cls::Stream);
+			if (rb_note) {
+				Common::RbCen::NoteCopy(vaddr, size, alignment, rb_gen0);
 			}
 			return {&m_stream_buffer, offset};
 		}
@@ -1557,6 +1580,7 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		NoteGpuWrite(vaddr, size);
 	}
 	remember(id);
+	rb_obtain.Class(Common::RbCen::Cls::Slow);
 	return {&resolved, resolved.Offset(vaddr)};
 }
 
@@ -2531,6 +2555,7 @@ bool BufferCache::FinishAsyncReadback(const AsyncReadback& job) {
 // KYTY_READBACK_PREFETCH=0 disables the prefetch.
 
 void BufferCache::NoteGpuWrite(uint64_t vaddr, uint64_t size) {
+	Common::RbCen::Reset(Common::RbCen::Cause::Gpuw); // Session 133, knob "rbcen" = 2 (s.5.2)
 	const auto seq = ++m_gpu_write_seq;
 	if (size > (16u << 20)) {
 		m_large_write_seq = seq;

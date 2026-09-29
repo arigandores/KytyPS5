@@ -299,6 +299,10 @@ std::pair<uint8_t*, uint64_t> StreamBuffer::Map(uint64_t size, uint64_t alignmen
 		m_invalidation_mark    = invalidation_mark;
 		m_current_watch_cursor = 0;
 		std::swap(m_previous_watches, m_current_watches);
+		// Session 133, knob "rbcen" = 2 (s.5.2): a wrap of the stream ring resets the B2 interval.
+		if (Usage() == MemoryUsage::Stream) {
+			Common::RbCen::Reset(Common::RbCen::Cause::Ring);
+		}
 		m_generation++;
 	}
 	m_wait_cursor = wait_cursor;

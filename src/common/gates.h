@@ -718,8 +718,15 @@ enum class Knob : uint32_t {
 	// same length by the same clock, still holding the render mutex (dc_dose_n, dc_dose_ns, dc_tgt_ns). Refused
 	// (DispCeil: refused, dc_refuse) without KYTY_FRAME_TRACE and without the gate "mutsite" (no segment then); off the
 	// GuestGpu thread nothing is dosed (dc_offthr). The census of the phases of the segment (dc_ph_*) lives with "mutsite".
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	DispCeiling,      // KYTY_DISP_CEILING, file name "dispceil" (MEASUREMENT ONLY: 0 off, 1 dose the dispatch segment)
+	// Session 133, MEASUREMENT ONLY (docs/session-133/design133.md rev 2 with ROADMAP s122 items 141(v), 142(b), 143): the
+	// census of mh_bind and RebindBuffers. Latched ONCE per draw (right before the mh_prog_us mark) and ONCE per dispatch
+	// (before its bindings), so it CAN be a schedule arm. 1 = the chain of marks over mh_bind, the dispatch pairs, the 1/8
+	// sample of the slot iterations of RebindBuffers with their classes and the calibration pair (rb_*); 2 = 1 + the census
+	// of the B2 repeat of the ring copies (rb_b2_*), never an action. Refused (RbCen: refused, rb_refuse) without
+	// KYTY_FRAME_TRACE and without the gate "mutsite"; the B2 memory is allocated at the first latch of any value >= 1.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	RebindCensus,     // KYTY_REBIND_CENSUS, file name "rbcen" (MEASUREMENT ONLY: 0 off, 1 split, 2 split + B2 census)
 	Count,
 };
 

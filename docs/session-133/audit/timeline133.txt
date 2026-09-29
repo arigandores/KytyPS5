@@ -1,0 +1,24 @@
+s133 timeline (HPP-199 audit). All times UTC (date -u; git / ls / go133a.log are local = UTC+2, converted here).
+Sources: ROADMAP.md items 141-149 (decision time written in the item), git log of C:/kyty/KytyPS5, issue API (api/issue_*.json,
+api/com_*.json, fetched 2026-09-29 ~22:37 UTC), C:/kyty/s133/FACTS.md.
+
+item  decision  commit                  first action by it
+141   13:55     45f6b929 13:55:41       steps 0 and 1 start 13:57:44 (HPP-191/192 started 13:57:33)
+142   14:29     53962a54 14:30:15       step 2 14:31 (HPP-193 started 14:31:08); step 5a 14:34:22
+143   14:50     edbf922a 14:51:06       link 2a HPP-201 created 14:51:30; rev 2 17:01:56; step 5b 17:03:18
+144   17:31     962186ce 17:32:17       HPP-195 started 17:32:33 (FACTS Step 4 says 17:16 - MINOR-1)
+145   17:43     8a4e5862 17:44:17       step 5v 17:44
+146   18:05     318e7c52 18:06:13       step 5g 18:07 (HPP-196 restarted 18:06:37)
+147   18:24     b6d25030 18:25:29       step 6 18:26 (HPP-197 started 18:25:57)
+148   19:34     2f62ae27 19:34:48       step 7 19:35, procload 19:36:18
+149   22:31     76333e33 22:31:08       audit 22:31:33 (HPP-199 started 22:31:25)
+
+work commits: 4ddc0d9c 14:25:30 (design rev 1), 8a203505 14:48:13 (review), e9cc8e42 17:10:24 (design rev 2),
+0f539e02 17:27:26 (code), 73e6458c 17:42:15 (code review). No commit in either tree 19:34:48 < t < 22:31:08.
+
+idle windows:
+14:51-17:03  OAuth session expired: platform comments "terminal access failure" - HPP-201 x3 (14:51:56, 14:52:42, 14:53:39),
+             HPP-193, 194, 195 (14:51:59), 196, 197 x1; lead re-issued at 17:03:05. 2 h 12 min.
+19:54-22:19  bc133 not run: procload rc 1 twice (19:36:18-19:45:21, 19:45:36-19:54:36), user comment "machine freed" 22:19:59. 2 h 25 min.
+
+bc133 run: procload clean 22:20:24-22:20:37; chain 22:20:40-22:27:10; attempt marker 22:21:35; hold 300 s; 9235a7ac restored.

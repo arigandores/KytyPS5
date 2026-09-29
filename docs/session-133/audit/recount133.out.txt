@@ -1,0 +1,56 @@
+{"log_sha256": "62be26e6adb4027b3f97b18499c68cff61c5465ea936afe03babc8ec3dececa3", "gatearm_lines": 84, "blocks_complete": 83, "incomplete_blocks": [83], "complete_by_arm": {"0": 41, "1": 42}, "gatearm_sequence_ok": true, "dups": {"FrameTrace": 0, "FrameTrace-draw": 0, "FrameTrace-x": 0}, "rbcen_lines": ["RbCen: mode 1", "RbCen: mode 2"], "sum_rb_refuse_all": 0, "sum_rb_cls_bad_all": 0}
+arm1 mh_bind         12223.067  se   38.772
+arm1 bl_prep          4535.228  se   13.058
+arm1 bl_img           1076.488  se    3.014
+arm1 bl_buf           4527.320  se   17.622
+arm1 unsplit          2084.031  se   17.966
+arm1 rb_head           153.551  se    1.074
+arm1 rb_stage          166.512  se    0.651
+arm1 rb_find           570.033  se    2.445
+arm1 rb_bda           1368.868  se    7.944
+arm1 rb_rt              50.363  se    0.200
+arm1 rb_tail            54.564  se    0.245
+arm1 rb_xprep          190.346  se    0.753
+arm1 rb_ximg           105.592  se    0.560
+arm1 rb_xbuf           562.192  se   10.951
+arm1 lvl_stream        583.942  se    3.967
+arm1 lvl_cbank         549.105  se    2.525
+arm1 lvl_epoch         193.278  se    0.962
+arm1 lvl_slow         2248.891  se   19.276
+arm1 rb_nupload        255.184  se    0.976
+arm1 rb_bpro            94.708  se    0.372
+arm1 rb_sync_up        300.691  se   10.323
+arm1 rb_sync_wait        0.000  se    0.000
+arm1 L                1133.047  se    5.982
+arm1 L_raw8           1343.260  se    6.689
+arm1 R1                578.270  se    2.881
+arm1 R1_text          -279.859  se   11.440
+arm1 R2                602.212  se   13.842
+arm1 c_ns               11.919  se    0.034
+arm1 dt_us           33370.253  se   98.158
+arm1 cpu_gpu_us      32686.424  se   91.404
+arm1 gpu_busy_us     13186.276  se   20.436
+arm1 n_stream         9775.452  se   59.624
+arm1 n_cbank          7864.529  se   33.418
+arm1 n_epoch          4982.018  se   23.308
+arm1 n_slow          23971.962  se  123.003
+arm1 bl_buf_n        47726.560  se  212.259
+arm1 samp8           47727.042  se  212.280
+arm1 draws            5046.974  se   16.341
+arm1 bda_scan           57.225  se    2.144
+arm2 mh_bind         12542.965  se   44.740
+arm2 bl_buf           4880.725  se   20.992
+arm2 L                1164.537  se    6.398
+arm2 R2                889.408  se   18.849
+arm2 dt_us           33730.651  se  110.526
+arm2 bda_scan           58.494  se    1.796
+R1 % mh_bind 4.731 ok=True; R2 % bl_buf 13.302 within5=False; row identity {'rows': 3239, 'R1_mean': 578.2695548008645, 'R2_mean': 602.2116996508811, 'R1_rows_over5pct': 465, 'R2_rows_over5pct': 3018}
+arm1 B2 nonzero fields in window rows: 0
+arm2 sums: {'rb_b2_n': 58206418, 'rb_b2_would': 37635129, 'rb_b2_kb': 10725108, 'rb_b2_chk': 2341357, 'rb_b2_diff': 0, 'rb_b2_xchk': 698439, 'rb_b2_xdiff': 19225, 'rb_b2_evict': 21086, 'rb_b2_shovf': 0, 'rb_b2_rst_sub': 41665, 'rb_b2_rst_host': 120011, 'rb_b2_rst_wait': 897704, 'rb_b2_rst_rel': 6416185, 'rb_b2_rst_wr': 680163, 'rb_b2_rst_cond': 9945, 'rb_b2_rst_emu': 61363, 'rb_b2_rst_gpuw': 3458288, 'rb_b2_rst_imgw': 53208, 'rb_b2_rst_ring': 1217, 'rb_stream_n': 32166652, 'cb_copy': 26039571, 'cb_copy_gpu': 0, 'rb_cbank_n': 26039750, 'rows': 3318}
+arm2 shares: {'would_n': 0.6465803994329286, 'diff_chk': 0.0, 'xdiff_xchk': 0.02752566795382274, 'evict_ins': 0.0010250208433705832, 'imgw_all': 0.004532294514984945, 'imgw_trim': 0.0049546434277923206, 'denom_text': 58206223, 'would_over_text_denom': 0.6465825655789417, 'diff_upper95': 1.281308232789788e-06, 'would_n_blocks': (0.6463176275531681, 0.001273310732901366), 'would_n_min_block': 0.6265905563486953}
+reading: {'L': 1133.0474168388953, 'R2': 602.2116996508812, 'lo': 1133.0474168388953, 'hi': 1735.2591164897765, 'member1': 'MET', 'control': 'ALIVE', 'member2': 'MET', 'member3': 'MET', 'outcome': 'B2_PASSES'}
+delta pairs 41 {'dt_us': (370.07131830811954, 181.21275510003449), 'mh_bind': (326.4356282803334, 71.07027464296895), 'bl_buf': (354.5998765050941, 31.385283216466256)}
+bda modes {'0': {'NEW': 41, 'OLD': 0}, '1': {'NEW': 42, 'OLD': 0}}
+arm 1 K1 {'sum': 267, 'max_cum': 343, 'bound': 1628.2442, 'rows_off': 3076} K2 1.009144870819365e-05 lite timers 0 gclk_pin 968187
+arm 2 K1 {'sum': 18, 'max_cum': 146, 'bound': 1667.6611, 'rows_off': 3151} K2 2.08449794128035e-06 lite timers 0 gclk_pin 991898
+arm1 parts >= 400: {'bl_prep': 4535.228156838531, 'bl_img': 1076.4878048780488, 'bl_buf': 4527.320160543378, 'unsplit': 2084.031182463723, 'rb_find': 570.0326502006792, 'rb_bda': 1368.8675384377893, 'lvl_stream': 583.9422516117934, 'lvl_cbank': 549.1051652271019, 'lvl_slow': 2248.8907916289536}

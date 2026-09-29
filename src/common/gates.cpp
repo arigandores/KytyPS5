@@ -440,8 +440,8 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     {"KYTY_PROT_CEILING", "protceil", 0, 2},
     // Session 129: the read-only arming of a buffer synchronization done by the copy-pool job, arm then copy
     // (1), + self-check (2), positive control (3), null control of the detector (4) (docs/session-129/design129.md rev 2).
-    // Latched once per synchronization, so it CAN be a schedule arm. Session 130: NOT shipped (ARMCOPY_HOLD, ROADMAP s122
-    // item 116(b)-(c)), default back to 0 = the previous path.
+    // Latched once per synchronization, so it CAN be a schedule arm. Session 130: NOT shipped (ARMCOPY_INCORRECT, ROADMAP
+    // s122 items 122-123; held at item 116(b)-(c)), default back to 0 = the previous path.
     {"KYTY_ARM_IN_COPY", "armcopy", 0, 4},
     // Session 130, PROTOTYPE: the read-only arming of the inline copies (< 64 KiB) of a buffer synchronization moved into
     // the copy-pool job as well (1), at armcopy 1..3 only (docs/session-130/design130.md rev 2). Read only when armcopy

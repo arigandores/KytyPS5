@@ -683,7 +683,8 @@ enum class Knob : uint32_t {
 	// (neither KYTY_FRAME_TRACE nor KYTY_AV_TRACE).
 	ProtCeiling,      // KYTY_PROT_CEILING, file name "protceil" (MEASUREMENT ONLY: 0 off, 1 skip the read-only arming of a synchronization, 2 dose it)
 	// Session 129 (docs/session-129/design129.md rev 2, ROADMAP s122 items 97(e), 98, 99, 101), NOT shipped in session 130
-	// (ARMCOPY_HOLD, item 116(b)-(c); default 0 = the previous path; 1 needs no KYTY_FRAME_TRACE): the read-only
+	// (ARMCOPY_INCORRECT, items 122-123 - held at 116(b)-(c); default 0 = the previous path; 1 needs no
+	// KYTY_FRAME_TRACE): the read-only
 	// arming of a buffer synchronization moved into the copy-pool job - each 1 MiB chunk of a pooled copy applies the
 	// deferred protection of its own guest range under `apply`, then copies. Read ONCE per synchronization on the GuestGpu
 	// thread (PageManager::ArmCopyScope around the whole ForEachUploadRange of BufferCache::SynchronizeBuffer) and latched

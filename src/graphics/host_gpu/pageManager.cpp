@@ -22,6 +22,7 @@
 #include <deque>
 #include <memory>
 #include <mutex>
+#include <new>
 #include <thread>
 #include <vector>
 
@@ -150,6 +151,362 @@ private:
 void ValidateRange(uint64_t vaddr, uint64_t size) {
 	if (!GuestRange {vaddr, size}.Valid()) {
 		Fatal("invalid range vaddr=0x%016" PRIx64 ", size=0x%016" PRIx64, vaddr, size);
+	}
+}
+
+// Session 131, knob "lwin" (track L, DIAGNOSTIC; docs/session-131/lw131.md rev 1 with ROADMAP s122 items 123(zh), 126, 127):
+// the page stamps of the classifier of the H events of armcopy (why=host dk=0). One generation G: every stamp and every
+// moment of a chunk takes it by a seq_cst fetch_add, so the order of two takes is the order of the holds they sit in. Per
+// page, in a block of its 4 MiB region allocated outside every lock (LwEnsureBlock): the clear word c0 << 30 | delta << 22
+// | mode code << 20 | op (delta = c1 - c0, 255 = not known yet) and its clock, written by the operation that cleared the
+// CPU-dirty bit, under RegionManager::lock; the mark word m << 30 | kind << 29 | mode code << 20 | op (kind 0 pending, 1
+// sync) and its clock, written under region.lock right after the mark. Mode code: armcopy 2 -> 1, 3 -> 2, 4 -> 3; 0 = no
+// stamp. The words keep 34 bits of a generation; from G >= 2^34 on nothing is stamped or classified (kind=gen, 127(l)).
+constexpr uint64_t LW_GEN_LIMIT    = uint64_t {1} << 34u;
+constexpr uint64_t LW_DELTA_NONE   = 255;
+constexpr uint64_t LW_T_POLL_NS    = 3'000'000; // T_poll (item 126(a), (g))
+constexpr uint64_t LW_SPIN_NS      = 1'000'000; // D_spin, lwin=2 (item 126(g))
+constexpr uint64_t LW_SPIN_X_NS    = 6'000'000; // D_spin_x = 2 T_poll, lwin=3 (item 126(v), (g))
+constexpr size_t   LW_FLIGHT_SLOTS = 64;        // chunks in flight (item 126(g))
+constexpr size_t   LW_OPEN_SLOTS   = 64;        // open events (item 126(g))
+constexpr size_t   LW_CAND_MAX     = 257;       // candidates of one chunk, 1 MiB / 4 KiB + 1 (item 126(g))
+constexpr uint32_t LW_LOSS_LINES   = 256;       // ArmCopyLoss: per process (item 126(g))
+constexpr uint32_t LW_LATE_LINES   = 64;        // ArmCopyLossLate: per process
+constexpr uint32_t LW_CTL_LINES    = 64;        // ArmCopyLossCtl: per kind per process
+constexpr size_t   LW_LATE_BUFFER  = 16;        // late lines one pass keeps until its locks are released (item 127(zh))
+constexpr size_t   LW_BLOCKS       = TRACKER_ADDRESS_SIZE / TRACKER_REGION_SIZE;
+
+struct LwPage {
+	std::atomic<uint64_t> clr {0};
+	std::atomic<uint64_t> clr_ns {0};
+	std::atomic<uint64_t> pend {0};
+	std::atomic<uint64_t> pend_ns {0};
+};
+static_assert(sizeof(LwPage) == 32);
+struct LwBlock {
+	std::array<LwPage, TRACKER_REGION_PAGES> pages {};
+};
+// Published with release, read with acquire; an empty pointer reads "no stamp" (item 127(l)(2)). Never freed.
+std::atomic<LwBlock*> g_lw_blocks[LW_BLOCKS];
+std::atomic<uint64_t> g_lw_gen {1};
+std::atomic<uint32_t> g_lw_op {1};
+// The latest latch of lwin of any operation (ArmCopyScope): the chunks and their checks read it (lw131.md s.9).
+std::atomic<uint32_t> g_lw {0};
+// Chunks in flight at lwin >= 2 (the spin of the P8 / X control meets them): first page << 32 | pages, 0 = free.
+std::atomic<uint64_t> g_lw_flight[LW_FLIGHT_SLOTS];
+std::atomic<uint32_t> g_lw_flight_n {0};
+// Open events (lw_open) waiting for a late mark of their O3 (lw_late): page | 2 when published, 1 while written, 0 free.
+struct LwOpenSlot {
+	std::atomic<uint64_t> page {0};
+	std::atomic<uint64_t> info {0}; // op | chunk mode << 20
+	std::atomic<uint64_t> k_ns {0};
+};
+LwOpenSlot            g_lw_open[LW_OPEN_SLOTS];
+std::atomic<uint32_t> g_lw_open_n {0};
+// Overflow kinds seen and logged: one LossWin: overflow line per kind per process (item 127(z)), written only where no lock
+// is held.
+enum : uint32_t { LwOvfInflight, LwOvfOpen, LwOvfCand, LwOvfBlock, LwOvfGen, LwOvfKinds };
+std::atomic<uint32_t> g_lw_ovf_seen {0};
+std::atomic<uint32_t> g_lw_ovf_logged {0};
+
+// The lwin of this thread's ArmCopyScope latch (read by ForEachUploadRange at armcopy 2..4 only), and the operation of the
+// GuestGpu thread between LwOpBegin and LwAfterPass: its number (20 bits), mode code (0 = no operation) and lwin.
+thread_local uint32_t t_ac_lw   = 0;
+thread_local uint32_t t_lw_op   = 0;
+thread_local uint32_t t_lw_code = 0;
+thread_local uint32_t t_lw_val  = 0;
+// The in-flight slot of the chunk this thread copies (lwin >= 2), -1 = none.
+thread_local int32_t t_lw_flight = -1;
+
+// A candidate of the chunk this thread checks (lw131.md s.2.1, s.2.4, s.5 with item 127(a), (g), (e)): the event page, the
+// moments of THE hold S_k of its batch, then the words the poll read last and its state.
+enum : uint8_t { LwKindH = 1, LwKindC3, LwKindCr, LwKindCd };
+enum : uint8_t { LwStWaitDelta = 1, LwStWaitMark, LwStP8, LwStP8s, LwStNc, LwStMk, LwStOpen };
+struct LwCand {
+	uint64_t page    = 0;
+	uint64_t take    = 0; // g_take of the chunk
+	uint64_t h       = 0; // g_h, g_k, g_rel, rel_ns and the clock of g_k of this candidate's hold S_k (item 127(g))
+	uint64_t k       = 0;
+	uint64_t rel     = 0;
+	uint64_t rel_ns  = 0;
+	uint64_t k_ns    = 0;
+	uint64_t clr     = 0; // the words and clocks of the latest read
+	uint64_t pend    = 0;
+	uint64_t clr_ns  = 0;
+	uint64_t pend_ns = 0;
+	uint64_t c1      = 0; // (a) known: c0 + delta of the clear of O3
+	uint32_t pin     = 0; // CR: the operation of the clear word of the snapshot S_k
+	uint32_t o3      = 0; // (a) known: the operation of that clear
+	uint32_t mode    = 0; // the chunk's mode
+	uint8_t  kind    = 0;
+	uint8_t  perms   = 0; // Perms() in S_k
+	uint8_t  state   = 0;
+	bool     a       = false;
+};
+struct LwCandList {
+	size_t                          n = 0;
+	std::array<LwCand, LW_CAND_MAX> c {};
+};
+thread_local LwCandList* t_lw_cands = nullptr;
+struct LwLate {
+	uint64_t page = 0;
+	int64_t  dt   = 0;
+	uint32_t mode = 0;
+	uint32_t op   = 0;
+};
+struct LwLateBuffer {
+	uint32_t                           n = 0;
+	std::array<LwLate, LW_LATE_BUFFER> e {};
+};
+thread_local LwLateBuffer t_lw_late {};
+
+[[nodiscard]] constexpr uint64_t LwModeCode(uint32_t mode) noexcept {
+	return mode == 2 ? 1 : mode == 3 ? 2 : mode == 4 ? 3 : 0;
+}
+[[nodiscard]] constexpr uint64_t LwGen(uint64_t word) noexcept {
+	return word >> 30u;
+}
+[[nodiscard]] constexpr uint64_t LwDelta(uint64_t word) noexcept {
+	return (word >> 22u) & 0xffu;
+}
+[[nodiscard]] constexpr uint32_t LwKindOf(uint64_t word) noexcept {
+	return static_cast<uint32_t>((word >> 29u) & 1u);
+}
+[[nodiscard]] constexpr uint64_t LwCode(uint64_t word) noexcept {
+	return (word >> 20u) & 3u;
+}
+[[nodiscard]] constexpr uint32_t LwOp(uint64_t word) noexcept {
+	return static_cast<uint32_t>(word & 0xfffffu);
+}
+
+[[nodiscard]] uint64_t LwTake() noexcept {
+	return g_lw_gen.fetch_add(1, std::memory_order_seq_cst);
+}
+
+// Any thread, any lock: the counter and the kind; the line waits for LwOverflowLog.
+void LwOverflowNote(uint32_t kind) noexcept {
+	Common::FrameStats::Add(Common::FrameStats::Counter::LwOvf, 1);
+	g_lw_ovf_seen.fetch_or(1u << kind, std::memory_order_relaxed);
+}
+
+// No lock held.
+void LwOverflowLog() {
+	static constexpr const char* names[LwOvfKinds] = {"inflight", "open", "cand", "block", "gen"};
+	const auto seen = g_lw_ovf_seen.load(std::memory_order_relaxed);
+	if ((seen & ~g_lw_ovf_logged.load(std::memory_order_relaxed)) == 0) {
+		return;
+	}
+	for (uint32_t kind = 0; kind < LwOvfKinds; kind++) {
+		const auto bit = 1u << kind;
+		if ((seen & bit) != 0 && (g_lw_ovf_logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0) {
+			LOGF("LossWin: overflow kind=%s\n", names[kind]);
+		}
+	}
+}
+
+[[nodiscard]] LwBlock* LwBlockOf(uint64_t vaddr) noexcept {
+	const auto index = vaddr / TRACKER_REGION_SIZE;
+	return index < LW_BLOCKS ? g_lw_blocks[index].load(std::memory_order_acquire) : nullptr;
+}
+
+void LwFlightLeave() noexcept {
+	if (t_lw_flight >= 0) {
+		g_lw_flight[t_lw_flight].store(0, std::memory_order_release);
+		g_lw_flight_n.fetch_sub(1, std::memory_order_relaxed);
+		t_lw_flight = -1;
+	}
+}
+
+// The chunk [vaddr, vaddr + size) of this thread is in flight (lwin >= 2, L9 with item 127(v)).
+void LwFlightEnter(uint64_t vaddr, uint64_t size) noexcept {
+	LwFlightLeave(); // a chunk of this thread whose check never ran
+	const auto first = vaddr / TRACKER_PAGE_SIZE;
+	const auto pages = (vaddr + size + TRACKER_PAGE_SIZE - 1) / TRACKER_PAGE_SIZE - first;
+	const auto value = first << 32u | (pages & 0xffffffffu);
+	for (size_t slot = 0; slot < LW_FLIGHT_SLOTS; slot++) {
+		uint64_t expected = 0;
+		if (g_lw_flight[slot].compare_exchange_strong(expected, value, std::memory_order_acq_rel)) {
+			g_lw_flight_n.fetch_add(1, std::memory_order_relaxed);
+			t_lw_flight = static_cast<int32_t>(slot);
+			return;
+		}
+	}
+	LwOverflowNote(LwOvfInflight);
+}
+
+// Some chunk in flight meets the pages [first, last) (global page numbers).
+[[nodiscard]] bool LwFlightMeets(uint64_t first, uint64_t last) noexcept {
+	for (size_t slot = 0; slot < LW_FLIGHT_SLOTS; slot++) {
+		const auto value = g_lw_flight[slot].load(std::memory_order_relaxed);
+		if (value != 0) {
+			const auto begin = value >> 32u;
+			const auto end   = begin + (value & 0xffffffffu);
+			if (begin < last && first < end) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+// Under region.lock of the run (UpdateRegionWatchers<.., lw = true>, L8): the open events of the operation `op` on the
+// pages [lo, hi) got their mark late - lw_late and the local buffer only, no line (item 127(zh)).
+void LwLateScan(uint64_t lo, uint64_t hi, uint32_t op, uint64_t mark_ns) noexcept {
+	for (auto& slot: g_lw_open) {
+		auto value = slot.page.load(std::memory_order_acquire);
+		if ((value & 2u) == 0) {
+			continue;
+		}
+		const auto page = value & ~uint64_t {3};
+		if (page < lo || page >= hi) {
+			continue;
+		}
+		const auto info = slot.info.load(std::memory_order_relaxed);
+		const auto k_ns = slot.k_ns.load(std::memory_order_relaxed);
+		if (LwOp(info) != op || !slot.page.compare_exchange_strong(value, 0, std::memory_order_acq_rel)) {
+			continue;
+		}
+		g_lw_open_n.fetch_sub(1, std::memory_order_relaxed);
+		Common::FrameStats::Add(Common::FrameStats::Counter::LwLate, 1);
+		auto& buffer = t_lw_late;
+		if (buffer.n < LW_LATE_BUFFER) {
+			buffer.e[buffer.n++] = {page, static_cast<int64_t>(mark_ns - k_ns), static_cast<uint32_t>((info >> 20u) & 7u), op};
+		}
+	}
+}
+
+// Under region.lock (L8, item 126(b)): the mark words of a run just marked pending (kind 0) or armed synchronously (kind
+// 1) by the operation of this thread, then the late check of the open events. Atomics, the clock and the scan only.
+void LwStampMark(uint64_t base_addr, size_t first, size_t count, uint32_t kind) noexcept {
+	namespace FS = Common::FrameStats;
+	if (t_lw_code == 0 || count == 0) {
+		return;
+	}
+	auto* block = LwBlockOf(base_addr);
+	if (block == nullptr) {
+		return; // no block (lw_ovf at LwEnsureBlock): no stamp
+	}
+	const auto m = LwTake();
+	if (m >= LW_GEN_LIMIT) {
+		LwOverflowNote(LwOvfGen);
+		return;
+	}
+	const auto     ns   = FS::NowNs();
+	const uint64_t word = m << 30u | uint64_t {kind} << 29u | uint64_t {t_lw_code} << 20u | t_lw_op;
+	for (size_t page = first; page < first + count && page < TRACKER_REGION_PAGES; page++) {
+		auto& stamp = block->pages[page];
+		stamp.pend_ns.store(ns, std::memory_order_relaxed);
+		stamp.pend.store(word, std::memory_order_release); // item 127(a)
+	}
+	FS::Add(kind == 0 ? FS::Counter::LwMarkPages : FS::Counter::LwSyncPages, count);
+	if (g_lw_open_n.load(std::memory_order_relaxed) != 0) {
+		LwLateScan(base_addr + first * TRACKER_PAGE_SIZE, base_addr + (first + count) * TRACKER_PAGE_SIZE, t_lw_op, ns);
+	}
+}
+
+// No lock held: the ArmCopyLossLate lines the marks of this thread found.
+void LwLateFlush() {
+	auto& buffer = t_lw_late;
+	static std::atomic<uint32_t> logged {0};
+	for (uint32_t index = 0; index < buffer.n; index++) {
+		const auto& late = buffer.e[index];
+		if (logged.load(std::memory_order_relaxed) < LW_LATE_LINES &&
+		    logged.fetch_add(1, std::memory_order_relaxed) < LW_LATE_LINES) {
+			LOGF("ArmCopyLossLate: page=0x%016llx mode=%u clr_op=%u pend_op=%u dt_ns=%lld\n",
+			     static_cast<unsigned long long>(late.page), static_cast<unsigned>(late.mode), static_cast<unsigned>(late.op),
+			     static_cast<unsigned>(late.op), static_cast<long long>(late.dt));
+		}
+	}
+	buffer.n = 0;
+}
+
+// An lw_open event waits for a late mark of its O3 (row lw_late, lw131.md s.5.3). False when the table is full.
+[[nodiscard]] bool LwOpenInsert(uint64_t page, uint32_t op, uint32_t mode, uint64_t k_ns) noexcept {
+	for (auto& slot: g_lw_open) {
+		uint64_t expected = 0;
+		if (slot.page.compare_exchange_strong(expected, 1, std::memory_order_acquire)) {
+			slot.info.store(uint64_t {op} | uint64_t {mode} << 20u, std::memory_order_relaxed);
+			slot.k_ns.store(k_ns, std::memory_order_relaxed);
+			slot.page.store(page | 2u, std::memory_order_release);
+			g_lw_open_n.fetch_add(1, std::memory_order_relaxed);
+			return true;
+		}
+	}
+	return false;
+}
+
+// CR (lw131.md s.2.1, s.6.2): the words of the snapshot S_k hold a clear inside (g_take, g_h) and, of the same operation, a
+// mark taken before g_k.
+[[nodiscard]] constexpr bool LwCrSnapshot(uint64_t clr, uint64_t pend, uint64_t take, uint64_t h, uint64_t k) noexcept {
+	if (LwCode(clr) == 0 || LwCode(pend) == 0 || LwOp(pend) != LwOp(clr)) {
+		return false;
+	}
+	const auto c0    = LwGen(clr);
+	const auto delta = LwDelta(clr);
+	return c0 > take && c0 < h && delta != LW_DELTA_NONE && c0 + delta < h && LwGen(pend) < k;
+}
+
+// One read of the words of a candidate (after g_rel of its hold).
+void LwRead(LwCand& c) noexcept {
+	auto* block = LwBlockOf(c.page);
+	if (block == nullptr) {
+		c.clr = c.pend = c.clr_ns = c.pend_ns = 0;
+		return;
+	}
+	const auto& stamp = block->pages[(c.page % TRACKER_REGION_SIZE) / TRACKER_PAGE_SIZE];
+	c.pend    = stamp.pend.load(std::memory_order_acquire);
+	c.pend_ns = stamp.pend_ns.load(std::memory_order_relaxed);
+	c.clr     = stamp.clr.load(std::memory_order_relaxed);
+	c.clr_ns  = stamp.clr_ns.load(std::memory_order_relaxed);
+}
+
+// The class of a candidate from the words read last, or what it still waits for (lw131.md s.2.4 with item 127(a)). A read
+// showing no (a) is final: a clear inside (g_take, g_h) wrote its word before its c1 < g_h, so any read after g_h sees that
+// word or a later clear's. Only a clear with c0 in the window and delta 255 waits for its delta; only (a) without a mark
+// taken after c1 waits for the mark.
+[[nodiscard]] uint8_t LwDecide(LwCand& c) noexcept {
+	if (!c.a) {
+		const auto code = LwCode(c.clr);
+		const auto c0   = LwGen(c.clr);
+		if (code == 0 || c0 <= c.take || c0 >= c.h) {
+			return LwStNc; // no clear in the window (an earlier one, or a later one over it - conservatively)
+		}
+		if (c.kind == LwKindCr && LwOp(c.clr) != c.pin) {
+			return LwStNc; // CR: the operation pinned by the snapshot S_k
+		}
+		if (c.kind != LwKindC3 && code != 1 && code != 3) {
+			return LwStNc; // (g): O3 latched 2 or 4 (C3 without it, s.2.1)
+		}
+		const auto delta = LwDelta(c.clr);
+		if (delta == LW_DELTA_NONE) {
+			return LwStWaitDelta;
+		}
+		if (c0 + delta >= c.h) {
+			return LwStNc;
+		}
+		c.a  = true;
+		c.o3 = LwOp(c.clr);
+		c.c1 = c0 + delta;
+	}
+	if (LwCode(c.pend) == 0 || LwGen(c.pend) <= c.c1) {
+		return LwStWaitMark;
+	}
+	if (LwOp(c.pend) != c.o3 || LwGen(c.pend) < c.k) {
+		return LwStMk;
+	}
+	return LwKindOf(c.pend) != 0 ? LwStP8s : LwStP8;
+}
+
+// A candidate the list could not hold is X (kind=cand).
+void LwCountX(uint8_t kind, Libs::Graphics::PageManager::ArmCopyClassCounts& out) noexcept {
+	switch (kind) {
+		case LwKindH:
+			out.lw_x++;
+			out.lw_xnc++;
+			break;
+		case LwKindC3: out.lw_c3x++; break;
+		case LwKindCr: out.lw_crx++; break;
+		default: out.lw_cdx++; break;
 	}
 }
 
@@ -545,7 +902,10 @@ struct PageManager::Impl {
 	// worker (only for adding write watchers; see PageManager::UpdatePageWatchersDeferred).
 	// Gate "protbatch": inside an enabled BatchScope of this manager a write-watcher change
 	// also only marks its runs pending, and the scope applies them (FlushRegion).
-	template <bool track, bool is_read, bool masked>
+	// Session 131, knob "lwin" (L8): `lw` - the pass of an operation with lwin >= 1; each run it marks pending or arms
+	// synchronously gets its mark stamps in the same hold of `lock` (LwStampMark). The instantiations of false are the text
+	// of session 130.
+	template <bool track, bool is_read, bool masked, bool lw = false>
 	void UpdateRegionWatchers(Region& region, uint64_t base_addr, size_t first, size_t last,
 	                          const RegionBits* mask = nullptr, bool defer = false) {
 		bool      enqueue = false;
@@ -575,6 +935,9 @@ struct PageManager::Impl {
 					const auto run_first = static_cast<size_t>(range_begin);
 					const auto run_pages = static_cast<size_t>(range_bytes / PAGE_SIZE);
 					SetPendingRange(region, run_first, run_pages, true);
+					if constexpr (lw) {
+						LwStampMark(base_addr, run_first, run_pages, 0);
+					}
 					region.has_pending = true;
 					if (batch) {
 						ExtendSlot(*slot, run_first, run_first + run_pages);
@@ -588,6 +951,12 @@ struct PageManager::Impl {
 					ProtectRun(region, base_addr, static_cast<size_t>(range_begin),
 					           static_cast<size_t>(range_bytes / PAGE_SIZE), perms,
 					           track && !is_read && perms == Common::VirtualMemory::Mode::Read);
+					if constexpr (lw) {
+						if (track && !is_read && perms == Common::VirtualMemory::Mode::Read) {
+							LwStampMark(base_addr, static_cast<size_t>(range_begin),
+							            static_cast<size_t>(range_bytes / PAGE_SIZE), 1); // sync (item 126(b))
+						}
+					}
 				}
 				range_bytes           = 0;
 				potential_range_bytes = 0;
@@ -647,7 +1016,7 @@ struct PageManager::Impl {
 		}
 	}
 
-	template <bool track, bool is_read>
+	template <bool track, bool is_read, bool lw = false>
 	void UpdatePageWatchers(uint64_t vaddr, uint64_t size, bool defer = false) {
 		ValidateRange(vaddr, size);
 		const auto begin = Common::AlignDown(vaddr, PAGE_SIZE);
@@ -661,7 +1030,7 @@ struct PageManager::Impl {
 			}
 			const auto first = static_cast<size_t>((chunk_begin - region_base) / PAGE_SIZE);
 			const auto last  = static_cast<size_t>((chunk_end - region_base) / PAGE_SIZE);
-			UpdateRegionWatchers<track, is_read, false>(*region, region_base, first, last, nullptr,
+			UpdateRegionWatchers<track, is_read, false, lw>(*region, region_base, first, last, nullptr,
 			                                            defer);
 			chunk_begin = chunk_end;
 		}
@@ -1251,6 +1620,9 @@ struct PageManager::Impl {
 		PageBits st {};
 		PageBits pa {};
 		PageBits ba {};
+		// Session 131, knob "lwin" (L9): the latch of lwin the chunk read (0 = no classifier) and g_take.
+		uint32_t lw      = 0;
+		uint64_t lw_take = 0;
 	};
 
 	class AcReasonScope final {
@@ -1578,6 +1950,19 @@ struct PageManager::Impl {
 					AcStampTake(*region, run_first, run_pages, stale);
 				}
 			}
+			// Session 131, knob "lwin" (lw131.md rev 1 L9 with item 127(v)): in the first region of the chunk, right after the
+			// takes and under this `apply` hold - at lwin >= 2 the chunk is in flight (the control spins meet it), then g_take.
+			uint32_t lw      = 0;
+			uint64_t lw_take = 0;
+			if (!cls_stored) {
+				lw = g_lw.load(std::memory_order_relaxed);
+				if (lw != 0) {
+					if (lw >= 2) {
+						LwFlightEnter(vaddr, size);
+					}
+					lw_take = LwTake();
+				}
+			}
 			const auto t0  = FS::Enabled() ? FS::NowNs() : 0;
 			AcSnap     snap {};
 			uint64_t   chk = 0;
@@ -1635,6 +2020,8 @@ struct PageManager::Impl {
 					cls.pa[word] = window[word] & snap.pend[word];
 				}
 				cls.ba      = bad_bits;
+				cls.lw      = lw;
+				cls.lw_take = lw_take;
 				cls.valid   = true;
 			} else {
 				t_ac_cls.multi = true;
@@ -1701,6 +2088,7 @@ struct PageManager::Impl {
 		constexpr uint8_t f_dk     = 8u;
 		constexpr uint8_t f_ro     = 16u;
 		constexpr uint8_t f_na     = 32u;
+		constexpr uint8_t f_dkb    = 64u; // dk before alone (session 131, knob "lwin": CD)
 		std::array<uint16_t, batch> index {};
 		std::array<uint8_t, batch>  why {};
 		std::array<uint8_t, batch>  flags {};
@@ -1730,9 +2118,22 @@ struct PageManager::Impl {
 				why[i] = BitsTest(cls.st, page) ? 3 : 4;
 			}
 		}
+		// Session 131, knob "lwin" (lw131.md rev 1 L10 with item 127(g), (e)): the moments of this hold S_k - g_h before its
+		// `apply`, the words of each page and g_k (with its clock) last in its `lock`, g_rel and its clock right after `apply`.
+		const bool                   lw_on     = cls.lw != 0;
+		uint64_t                     lw_h      = 0;
+		uint64_t                     lw_k      = 0;
+		uint64_t                     lw_k_ns   = 0;
+		uint64_t                     lw_rel    = 0;
+		uint64_t                     lw_rel_ns = 0;
+		std::array<uint64_t, batch> lw_clr {};
+		std::array<uint64_t, batch> lw_pend {};
 		uint64_t queries = 0;
 		if (any_sk) {
-			auto&      region = *cls.region;
+			auto& region = *cls.region;
+			if (lw_on) {
+				lw_h = LwTake();
+			}
 			ApplyGuard apply(region.apply, true, FS::Counter::AcClsWaitNs);
 			{
 				SpinGuard lock(region.lock);
@@ -1745,8 +2146,19 @@ struct PageManager::Impl {
 					}
 					perms[i] = static_cast<uint8_t>(region.pages[index[i]].Perms());
 					if (dirty(dirty_context, events[i])) { // dk before (item 119(b))
-						flags[i] |= f_dk;
+						flags[i] |= f_dk | f_dkb;
 					}
+					if (lw_on) {
+						if (const auto* block = LwBlockOf(events[i]); block != nullptr) {
+							const auto& stamp = block->pages[(events[i] % TRACKER_REGION_SIZE) / TRACKER_PAGE_SIZE];
+							lw_pend[i]        = stamp.pend.load(std::memory_order_acquire);
+							lw_clr[i]         = stamp.clr.load(std::memory_order_relaxed);
+						}
+					}
+				}
+				if (lw_on) {
+					lw_k    = LwTake(); // g_k: last in this hold of `lock`
+					lw_k_ns = FS::NowNs();
 				}
 			}
 #if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
@@ -1782,6 +2194,10 @@ struct PageManager::Impl {
 				}
 			}
 		}
+		if (any_sk && lw_on) {
+			lw_rel    = LwTake(); // g_rel: right after the release of `apply` (the end of the block above)
+			lw_rel_ns = FS::NowNs();
+		}
 		// CONTENT limits: 40 per (mode 2/3/4, class M/E) per process (item 117(e)); the events why=host dk=0 (H) under their
 		// own 40 per chunk mode, not spending the (mode, class) limit (item 119(c)).
 		static std::array<std::atomic<uint32_t>, 6> logged {};
@@ -1816,6 +2232,44 @@ struct PageManager::Impl {
 			} else {
 				out.e++;
 			}
+			// Session 131, knob "lwin" (lw131.md rev 1 s.2.1, L10 with items 126, 127(g)): H (R8, dk = 0), CD (R8, dk before
+			// = 1), C3 (R2/R3 of a chunk of 3) and CR (R7 whose snapshot S_k holds the mark of the operation that cleared the
+			// bit in the window) go to the list of this chunk with the moments of THIS hold; ArmCopyLossResolve decides them.
+			if (lw_on && (f & f_sk) != 0) {
+				uint8_t kind = 0;
+				if (why[i] == 7) {
+					kind = (f & f_dkb) != 0 ? LwKindCd : !dk ? LwKindH : 0;
+				} else if (mode == 3 && (why[i] == 1 || why[i] == 2)) {
+					kind = LwKindC3;
+				} else if (why[i] == 6 && LwCrSnapshot(lw_clr[i], lw_pend[i], cls.lw_take, lw_h, lw_k)) {
+					kind = LwKindCr;
+				}
+				if (kind != 0) {
+					auto*& list = t_lw_cands;
+					if (list == nullptr) {
+						list = new (std::nothrow) LwCandList();
+					}
+					if (list == nullptr || list->n >= LW_CAND_MAX) {
+						LwOverflowNote(LwOvfCand);
+						LwCountX(kind, out);
+					} else {
+						auto& c  = list->c[list->n++];
+						c        = LwCand {};
+						c.page   = events[i];
+						c.take   = cls.lw_take;
+						c.h      = lw_h;
+						c.k      = lw_k;
+						c.rel    = lw_rel;
+						c.rel_ns = lw_rel_ns;
+						c.k_ns   = lw_k_ns;
+						c.pin    = LwOp(lw_clr[i]);
+						c.mode   = mode;
+						c.kind   = kind;
+						c.perms  = perms[i];
+						out.lw_n++;
+					}
+				}
+			}
 			FS::AcHistNote(events[i], mode, m);
 			if (mode < 2 || mode > 4) {
 				continue;
@@ -1846,6 +2300,9 @@ struct PageManager::Impl {
 		}
 		if (t0 != 0) {
 			FS::Add(FS::Counter::AcClsNs, FS::NowNs() - t0);
+		}
+		if (lw_on) {
+			LwOverflowLog();
 		}
 	}
 
@@ -2617,6 +3074,20 @@ PageManager::ArmCopyScope::ArmCopyScope(bool engage, bool is_written) noexcept {
 			FS::Add(FS::Counter::AiIdle, 1); // armcopy 4, a refusal or a written synchronization
 		}
 	}
+	// Session 131, knob "lwin" (lw131.md rev 1 L2 with ROADMAP s122 items 126(v), 127(v)): read once, only when armcopy was
+	// read 2..4 and latched read-only (AcMove / AcNull) - never at 0/1, a refusal or a written synchronization. The latch of
+	// this operation (t_ac_lw) and of the process (g_lw, read by the chunks and their checks).
+	if (value >= 2 && (state == Impl::AcMove || state == Impl::AcNull)) {
+		const auto lw = std::min<uint32_t>(G::Value(G::Knob::LossWin), 3);
+		t_ac_lw       = lw;
+		g_lw.store(lw, std::memory_order_relaxed);
+		if (lw != 0) {
+			static std::atomic<bool> logged_lw {false};
+			if (!logged_lw.exchange(true, std::memory_order_relaxed)) {
+				LOGF("LossWin: mode %u\n", static_cast<unsigned>(lw));
+			}
+		}
+	}
 	Impl::t_ac_state = state;
 	Impl::t_ac_mode  = static_cast<uint8_t>(value);
 }
@@ -2703,7 +3174,227 @@ void PageManager::ArmCopyClassify(uint64_t vaddr, uint64_t size, uint32_t mode, 
 }
 
 void PageManager::ArmCopyClassDone() noexcept {
-	Impl::t_ac_cls.valid = false;
+	auto& cls = Impl::t_ac_cls;
+	cls.valid = false;
+	// Session 131, knob "lwin" (L15): the chunk is no longer in flight; candidates left unresolved are dropped.
+	if (cls.lw != 0) {
+		if (cls.lw >= 2) {
+			LwFlightLeave();
+		}
+		if (t_lw_cands != nullptr) {
+			t_lw_cands->n = 0;
+		}
+		cls.lw = 0;
+	}
+}
+
+uint32_t PageManager::ArmCopyLossWin() noexcept {
+	return t_ac_lw;
+}
+
+void PageManager::LwOpBegin(uint32_t arm_copy, uint32_t lw) noexcept {
+	t_lw_op   = g_lw_op.fetch_add(1, std::memory_order_relaxed) & 0xfffffu;
+	t_lw_code = static_cast<uint32_t>(LwModeCode(arm_copy));
+	t_lw_val  = lw;
+}
+
+void PageManager::LwEnsureBlock(uint64_t region_base) noexcept {
+	const auto index = region_base / TRACKER_REGION_SIZE;
+	if (index >= LW_BLOCKS || g_lw_blocks[index].load(std::memory_order_acquire) != nullptr) {
+		return;
+	}
+	auto* block = new (std::nothrow) LwBlock();
+	if (block == nullptr) {
+		LwOverflowNote(LwOvfBlock);
+		LwOverflowLog();
+		return;
+	}
+	LwBlock* expected = nullptr;
+	if (!g_lw_blocks[index].compare_exchange_strong(expected, block, std::memory_order_acq_rel)) {
+		delete block;
+	}
+}
+
+uint64_t PageManager::LwClearBegin() noexcept {
+	if (t_lw_code == 0) {
+		return 0;
+	}
+	const auto c0 = LwTake();
+	if (c0 >= LW_GEN_LIMIT) {
+		LwOverflowNote(LwOvfGen);
+		return 0;
+	}
+	return c0;
+}
+
+void PageManager::LwClearEnd(uint64_t region_base, const RegionBits& mask, uint64_t c0) noexcept {
+	namespace FS = Common::FrameStats;
+	auto* block = LwBlockOf(region_base);
+	if (c0 == 0 || block == nullptr) {
+		return;
+	}
+	// Item 127(a): the clear words (delta 255 - c1 not known yet) BEFORE c1, so a hold S_k whose g_h follows c1 sees them.
+	const uint64_t tag = uint64_t {t_lw_code} << 20u | t_lw_op;
+	const uint64_t w0  = c0 << 30u | LW_DELTA_NONE << 22u | tag;
+	uint64_t       pages = 0;
+	for (const auto [first, last]: mask) {
+		for (size_t page = first; page < last; page++) {
+			block->pages[page].clr.store(w0, std::memory_order_relaxed);
+		}
+		pages += last - first;
+	}
+	const auto c1     = LwTake();
+	const auto clr_ns = FS::NowNs();
+	const auto delta  = std::min<uint64_t>(c1 - c0, LW_DELTA_NONE);
+	const auto w1     = c0 << 30u | delta << 22u | tag;
+	for (const auto [first, last]: mask) {
+		for (size_t page = first; page < last; page++) {
+			auto& stamp = block->pages[page];
+			stamp.clr_ns.store(clr_ns, std::memory_order_relaxed);
+			stamp.clr.store(w1, std::memory_order_relaxed);
+		}
+	}
+	FS::Add(FS::Counter::LwStampN, 1);
+	FS::Add(FS::Counter::LwStampPages, pages);
+	// The P8 / X control (lw131.md s.6.1 with items 126(v), 127(v)): at lwin 2 / 3 a pass whose cleared pages meet a chunk
+	// in flight spins 1 / 6 ms here - after the bits and the words, before the marks - holding RegionManager::lock only.
+	if (t_lw_val >= 2 && g_lw_flight_n.load(std::memory_order_relaxed) != 0) {
+		const auto base_page = region_base / TRACKER_PAGE_SIZE;
+		if (LwFlightMeets(base_page + mask.FirstRange().first, base_page + mask.LastRange().second)) {
+			const auto length = t_lw_val == 2 ? LW_SPIN_NS : LW_SPIN_X_NS;
+			const auto s0     = FS::NowNs();
+			auto       s1     = s0;
+			while (s0 != 0 && s1 - s0 < length) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+				YieldProcessor();
+#else
+				std::this_thread::yield();
+#endif
+				s1 = FS::NowNs();
+			}
+			FS::Add(FS::Counter::LwSpinN, 1);
+			FS::Add(FS::Counter::LwSpinNs, s1 - s0);
+		}
+	}
+}
+
+void PageManager::LwAfterPass() noexcept {
+	t_lw_code = 0;
+	t_lw_val  = 0;
+	LwLateFlush();
+	LwOverflowLog();
+}
+
+void PageManager::ArmCopyLossResolve(ArmCopyClassCounts* counts) {
+	namespace FS = Common::FrameStats;
+	auto& out  = *counts;
+	auto* list = t_lw_cands;
+	out.lw_n   = 0;
+	if (list == nullptr || list->n == 0) {
+		LwOverflowLog();
+		return;
+	}
+	const auto n       = list->n;
+	size_t     waiting = 0;
+	const auto waits   = [](uint8_t state) { return state == LwStWaitDelta || state == LwStWaitMark; };
+	std::atomic_thread_fence(std::memory_order_acquire);
+	for (size_t i = 0; i < n; i++) {
+		auto& c = list->c[i];
+		if (c.rel >= LW_GEN_LIMIT) {
+			LwOverflowNote(LwOvfGen); // item 127(l)(1): loudly, never a wrapped comparison
+			c.state = LwStNc;
+			continue;
+		}
+		LwRead(c);
+		c.state = LwDecide(c);
+		waiting += waits(c.state) ? 1 : 0;
+	}
+	if (waiting != 0) {
+		// The poll (lw131.md s.5.2 with items 126(a), 127(e)): no lock held; each candidate until rel_ns of its own hold +
+		// T_poll. At the deadline a wait for the delta is no (a) (lw_xnc), a wait for the mark is lw_open.
+		const auto t0 = FS::NowNs();
+		FS::Add(FS::Counter::LwPollN, 1);
+		while (waiting != 0) {
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+			YieldProcessor();
+#else
+			std::this_thread::yield();
+#endif
+			std::atomic_thread_fence(std::memory_order_acquire);
+			const auto now = FS::NowNs();
+			for (size_t i = 0; i < n; i++) {
+				auto& c = list->c[i];
+				if (!waits(c.state)) {
+					continue;
+				}
+				if (now == 0 || now >= c.rel_ns + LW_T_POLL_NS) {
+					c.state = c.state == LwStWaitDelta ? LwStNc : LwStOpen;
+				} else {
+					LwRead(c);
+					c.state = LwDecide(c);
+				}
+				waiting -= waits(c.state) ? 0 : 1;
+			}
+		}
+		if (t0 != 0) {
+			FS::Add(FS::Counter::LwPollNs, FS::NowNs() - t0);
+		}
+	}
+	static std::atomic<uint32_t>                logged {0};
+	static std::array<std::atomic<uint32_t>, 3> logged_ctl {};
+	for (size_t i = 0; i < n; i++) {
+		auto&      c  = list->c[i];
+		const bool p8 = c.state == LwStP8 || c.state == LwStP8s;
+		switch (c.kind) {
+			case LwKindH:
+				if (p8) {
+					out.lw_p8++;
+					out.lw_p8sync += c.state == LwStP8s ? 1 : 0;
+				} else {
+					out.lw_x++;
+					out.lw_open += c.state == LwStOpen ? 1 : 0;
+					out.lw_xnc += c.state == LwStNc ? 1 : 0;
+					out.lw_xmk += c.state == LwStMk ? 1 : 0;
+				}
+				break;
+			case LwKindC3: (p8 ? out.lw_c3p : out.lw_c3x)++; break;
+			case LwKindCr: (p8 ? out.lw_crp : out.lw_crx)++; break;
+			default: (p8 ? out.lw_cdp : out.lw_cdx)++; break;
+		}
+		if (c.kind == LwKindH && c.state == LwStOpen && !LwOpenInsert(c.page, c.o3, c.mode, c.k_ns)) {
+			LwOverflowNote(LwOvfOpen);
+		}
+		auto& slot = c.kind == LwKindH ? logged : logged_ctl[c.kind - LwKindC3];
+		const auto limit = c.kind == LwKindH ? LW_LOSS_LINES : LW_CTL_LINES;
+		if (slot.load(std::memory_order_relaxed) >= limit || slot.fetch_add(1, std::memory_order_relaxed) >= limit) {
+			continue;
+		}
+		char clr_op[16]  = "-";
+		char pend_op[16] = "-";
+		char dt[32]      = "-";
+		if (LwCode(c.clr) != 0) {
+			std::snprintf(clr_op, sizeof(clr_op), "%u", static_cast<unsigned>(LwOp(c.clr)));
+		}
+		if (LwCode(c.pend) != 0) {
+			std::snprintf(pend_op, sizeof(pend_op), "%u", static_cast<unsigned>(LwOp(c.pend)));
+			std::snprintf(dt, sizeof(dt), "%lld", static_cast<long long>(c.pend_ns - c.k_ns));
+		} else if (LwCode(c.clr) != 0) {
+			std::snprintf(dt, sizeof(dt), "%lld", static_cast<long long>(c.clr_ns - c.k_ns));
+		}
+		if (c.kind == LwKindH) {
+			static constexpr const char* reasons[] = {"-", "-", "-", "p8", "p8s", "nc", "mk", "open"};
+			LOGF("ArmCopyLoss: page=0x%016llx mode=%u cls=%s clr_op=%s pend_op=%s dt_ns=%s xr=%s perms=%u\n",
+			     static_cast<unsigned long long>(c.page), static_cast<unsigned>(c.mode), p8 ? "P8" : "X", clr_op, pend_op,
+			     dt, reasons[c.state], static_cast<unsigned>(c.perms));
+		} else {
+			static constexpr const char* kinds[] = {"-", "-", "c3", "cr", "cd"};
+			LOGF("ArmCopyLossCtl: page=0x%016llx mode=%u kind=%s cls=%s clr_op=%s pend_op=%s dt_ns=%s\n",
+			     static_cast<unsigned long long>(c.page), static_cast<unsigned>(c.mode), kinds[c.kind], p8 ? "P8" : "X",
+			     clr_op, pend_op, dt);
+		}
+	}
+	list->n = 0;
+	LwOverflowLog();
 }
 
 bool PageManager::ArmCopyInlineOn() noexcept {
@@ -2772,7 +3463,7 @@ void PageManager::VerifyProtection(uint64_t vaddr, uint64_t size) {
 	m_impl->Verify(vaddr, size);
 }
 
-template <bool track, bool is_read>
+template <bool track, bool is_read, bool lw>
 void PageManager::UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& mask) {
 	Common::DrawStat::Mark(Common::DrawStat::Prot);
 	if (base_addr % REGION_SIZE != 0 || base_addr >= ADDRESS_SIZE ||
@@ -2788,8 +3479,8 @@ void PageManager::UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& ma
 	const auto first = start_range.first;
 	const auto last  = end_range.second;
 	if (start_range.second == end_range.second) {
-		m_impl->UpdatePageWatchers<track, is_read>(base_addr + first * PAGE_SIZE,
-		                                           (last - first) * PAGE_SIZE);
+		m_impl->UpdatePageWatchers<track, is_read, lw>(base_addr + first * PAGE_SIZE,
+		                                               (last - first) * PAGE_SIZE);
 		return;
 	}
 
@@ -2797,12 +3488,14 @@ void PageManager::UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& ma
 	if (region == nullptr) {
 		Fatal("untracking unknown region 0x%016" PRIx64, base_addr);
 	}
-	m_impl->UpdateRegionWatchers<track, is_read, true>(*region, base_addr, first, last, &mask);
+	m_impl->UpdateRegionWatchers<track, is_read, true, lw>(*region, base_addr, first, last, &mask);
 }
 
 template void PageManager::UpdatePageWatchersForRegion<true, true>(uint64_t, RegionBits&);
 template void PageManager::UpdatePageWatchersForRegion<true, false>(uint64_t, RegionBits&);
 template void PageManager::UpdatePageWatchersForRegion<false, true>(uint64_t, RegionBits&);
 template void PageManager::UpdatePageWatchersForRegion<false, false>(uint64_t, RegionBits&);
+// Session 131, knob "lwin": the pass of an operation with lwin >= 1 (L7).
+template void PageManager::UpdatePageWatchersForRegion<true, false, true>(uint64_t, RegionBits&);
 
 } // namespace Libs::Graphics

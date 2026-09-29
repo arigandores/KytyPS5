@@ -1298,13 +1298,17 @@ bool FlipQueue::Flip(uint32_t micros) {
 		// as one consistent snapshot, in the reverse of the writer's order with an acquire fence after each read - only when
 		// a value of the group or of ac_cls_* read by the loop above moved (none moves at 0/1: no new read there). Accepted
 		// when m + e = cbad, sum(ac_cbm_*) = m and sum(ac_cbe_*) = e (ac_cbm_host_d is not a term); after 1000 attempts the
-		// last read is taken and an ArmCopyClass: TORN line written.
+		// last read is taken and an ArmCopyClass: TORN line written. Session 131, knob "lwin" (lw131.md rev 1 s.7.3 with
+		// ROADMAP s122 item 127(b)): the lw_* group right after ac_cbad_e and BEFORE the reasons (the writer adds it after them),
+		// so a class read brings its reason and a torn attempt fails the same sums; the acceptance is unchanged.
 		{
 			using C = FS::Counter;
-			static constexpr std::array<C, 17> group {C::AcCbad,     C::AcCbadM,     C::AcCbadE,    C::AcCbmNosnap, C::AcCbmBad,
-			                                          C::AcCbmLeft,  C::AcCbmStale,  C::AcCbmRemark, C::AcCbmNew,  C::AcCbmPend,
-			                                          C::AcCbmHostD, C::AcCbmHost,   C::AcCbeRo,    C::AcCbeNa,    C::AcCbeOth,
-			                                          C::AcCdiff,    C::AcCmpPages};
+			static constexpr std::array<C, 29> group {C::AcCbad,      C::AcCbadM,     C::AcCbadE,   C::LwCdp,       C::LwCdx,
+			                                          C::LwCrp,       C::LwCrx,       C::LwC3p,     C::LwC3x,       C::LwP8,
+			                                          C::LwX,         C::LwXmk,       C::LwP8sync,  C::LwXnc,       C::LwOpen,
+			                                          C::AcCbmNosnap, C::AcCbmBad,    C::AcCbmLeft, C::AcCbmStale,  C::AcCbmRemark,
+			                                          C::AcCbmNew,    C::AcCbmPend,   C::AcCbmHostD, C::AcCbmHost,  C::AcCbeRo,
+			                                          C::AcCbeNa,     C::AcCbeOth,    C::AcCdiff,   C::AcCmpPages};
 			static constexpr std::array<C, 4>  cls_rows {C::AcClsN, C::AcClsNs, C::AcClsWaitNs, C::AcClsVq};
 			bool moved = false;
 			for (const auto counter: group) {
@@ -1314,16 +1318,27 @@ bool FlipQueue::Flip(uint32_t micros) {
 				moved = moved || cur.c[static_cast<size_t>(counter)] != prev.c[static_cast<size_t>(counter)];
 			}
 			if (moved) {
-				std::array<uint64_t, 17> v {};
-				bool                     consistent = false;
+				std::array<uint64_t, group.size()> v {};
+				bool                               consistent = false;
+				// The terms by name (the lw_* group moved every index of session 130).
+				const auto at = [&](C counter) {
+					for (size_t k = 0; k < group.size(); k++) {
+						if (group[k] == counter) {
+							return v[k];
+						}
+					}
+					return uint64_t {0};
+				};
 				for (uint32_t attempt = 0; attempt < 1000 && !consistent; attempt++) {
 					for (size_t k = 0; k < group.size(); k++) {
 						v[k] = FS::Read(group[k]);
 						std::atomic_thread_fence(std::memory_order_acquire);
 					}
-					const auto cbm = v[3] + v[4] + v[5] + v[6] + v[7] + v[8] + v[9] + v[11];
-					const auto cbe = v[12] + v[13] + v[14];
-					consistent     = v[1] + v[2] == v[0] && cbm == v[1] && cbe == v[2];
+					const auto cbm = at(C::AcCbmNosnap) + at(C::AcCbmBad) + at(C::AcCbmLeft) + at(C::AcCbmStale) +
+					                 at(C::AcCbmRemark) + at(C::AcCbmNew) + at(C::AcCbmPend) + at(C::AcCbmHost);
+					const auto cbe = at(C::AcCbeRo) + at(C::AcCbeNa) + at(C::AcCbeOth);
+					consistent     = at(C::AcCbadM) + at(C::AcCbadE) == at(C::AcCbad) && cbm == at(C::AcCbadM) &&
+					             cbe == at(C::AcCbadE);
 				}
 				for (size_t k = 0; k < group.size(); k++) {
 					cur.c[static_cast<size_t>(group[k])] = v[k];
@@ -3272,6 +3287,29 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"ac_cls_wait_ns", FS::Counter::AcClsWaitNs, false},
 				    {"ac_cls_vq", FS::Counter::AcClsVq, false},
 				    {"ac_cbm_host_d", FS::Counter::AcCbmHostD, false},
+				    // Session 131, knob "lwin" (lw131.md rev 1 s.7.1 with ROADMAP s122 item 126(b), (g)): raw pages / counts / ns.
+				    {"lw_p8", FS::Counter::LwP8, false},
+				    {"lw_x", FS::Counter::LwX, false},
+				    {"lw_open", FS::Counter::LwOpen, false},
+				    {"lw_xnc", FS::Counter::LwXnc, false},
+				    {"lw_p8sync", FS::Counter::LwP8sync, false},
+				    {"lw_xmk", FS::Counter::LwXmk, false},
+				    {"lw_c3x", FS::Counter::LwC3x, false},
+				    {"lw_c3p", FS::Counter::LwC3p, false},
+				    {"lw_crx", FS::Counter::LwCrx, false},
+				    {"lw_crp", FS::Counter::LwCrp, false},
+				    {"lw_cdx", FS::Counter::LwCdx, false},
+				    {"lw_cdp", FS::Counter::LwCdp, false},
+				    {"lw_late", FS::Counter::LwLate, false},
+				    {"lw_poll_n", FS::Counter::LwPollN, false},
+				    {"lw_poll_ns", FS::Counter::LwPollNs, false},
+				    {"lw_stamp_n", FS::Counter::LwStampN, false},
+				    {"lw_stamp_pages", FS::Counter::LwStampPages, false},
+				    {"lw_mark_pages", FS::Counter::LwMarkPages, false},
+				    {"lw_sync_pages", FS::Counter::LwSyncPages, false},
+				    {"lw_spin_n", FS::Counter::LwSpinN, false},
+				    {"lw_spin_ns", FS::Counter::LwSpinNs, false},
+				    {"lw_ovf", FS::Counter::LwOvf, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

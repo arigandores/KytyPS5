@@ -26,7 +26,9 @@ public:
 
 	template <bool track>
 	void UpdatePageWatchers(uint64_t vaddr, uint64_t size);
-	template <bool track, bool is_read = false>
+	// Session 131, knob "lwin": `lw` - the pass of an operation latched armcopy 2..4 with lwin >= 1 (RegionManager::
+	// UpdateProtection); only that instantiation writes the mark stamps (lw131.md rev 1 L6-L8).
+	template <bool track, bool is_read = false, bool lw = false>
 	void UpdatePageWatchersForRegion(uint64_t base_addr, RegionBits& mask);
 
 	// Adds write watchers like UpdatePageWatchers<true>, but the host protection change
@@ -247,6 +249,22 @@ public:
 		uint64_t ro     = 0;
 		uint64_t na     = 0;
 		uint64_t oth    = 0;
+		// Session 131, knob "lwin" (docs/session-131/lw131.md rev 1 s.7.1 with ROADMAP s122 items 126(b), 127): the classes
+		// of the H events and of the controls of one check (ArmCopyLossResolve), added in the order of I0; lw_n - the
+		// candidates of the check waiting for ArmCopyLossResolve (0 after it).
+		uint64_t lw_n      = 0;
+		uint64_t lw_p8     = 0;
+		uint64_t lw_x      = 0;
+		uint64_t lw_open   = 0;
+		uint64_t lw_xnc    = 0;
+		uint64_t lw_p8sync = 0;
+		uint64_t lw_xmk    = 0;
+		uint64_t lw_c3x    = 0;
+		uint64_t lw_c3p    = 0;
+		uint64_t lw_crx    = 0;
+		uint64_t lw_crp    = 0;
+		uint64_t lw_cdx    = 0;
+		uint64_t lw_cdp    = 0;
 	};
 	// The CPU-dirty read of one tracker page (the buffer cache's lock-free IsCpuDirtyRelaxed), for dk in the hold S_k.
 	using ArmCopyDirtyFunc = bool (*)(void* context, uint64_t page);
@@ -258,6 +276,25 @@ public:
 	                     ArmCopyDirtyFunc dirty, void* dirty_context, ArmCopyClassCounts* counts);
 	// The last action of the chunk's check: its snapshot S_a is no longer valid on this thread.
 	static void ArmCopyClassDone() noexcept;
+	// Session 131, knob "lwin" (DIAGNOSTIC; docs/session-131/lw131.md rev 1 with ROADMAP s122 items 123(zh), 126, 127).
+	// The lwin latched by this thread's ArmCopyScope - read by ForEachUploadRange only at armcopy 2..4 (L3).
+	[[nodiscard]] static uint32_t ArmCopyLossWin() noexcept;
+	// GuestGpu, the start of an operation with lwin >= 1: its number (20 bits), mode and lwin in TLS for its stamps.
+	static void LwOpBegin(uint32_t arm_copy, uint32_t lw) noexcept;
+	// GuestGpu, no lock held: the stamp block of the tracking region at `region_base` (allocated once, never freed).
+	static void LwEnsureBlock(uint64_t region_base) noexcept;
+	// Under RegionManager::lock, before the CPU-dirty bits of a nonempty mask are cleared: c0 (0 = no stamps).
+	[[nodiscard]] static uint64_t LwClearBegin() noexcept;
+	// Under the same lock, right after the bits were cleared and before UpdateProtection (item 127(a)): the clear words of
+	// the mask with delta 255, c1, the words with the delta, and at lwin 2/3 the spin of the P8 / X control.
+	static void LwClearEnd(uint64_t region_base, const RegionBits& mask, uint64_t c0) noexcept;
+	// GuestGpu, after the region pass of the operation, every tracker lock released: ends its stamps and writes the
+	// ArmCopyLossLate lines its marks found (item 127(zh)) and the LossWin: overflow lines.
+	static void LwAfterPass() noexcept;
+	// The thread that checked a chunk, no lock held, after its last ArmCopyClassify and before its I0 group: the poll of the
+	// candidates (<= T_poll after the release of each one's hold S_k), their classes into `counts`, the ArmCopyLoss /
+	// ArmCopyLossCtl lines.
+	void ArmCopyLossResolve(ArmCopyClassCounts* counts);
 	// Session 130, knob "acinline" (PROTOTYPE; docs/session-130/design130.md rev 2 with ROADMAP s122 items 105(zh)(1), 107,
 	// 109, 110), GuestGpu thread, TLS of the operation only - no lock.
 	// The operation running on this thread latched armcopy 1..3 with acinline=1 (I1'').

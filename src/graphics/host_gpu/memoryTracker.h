@@ -320,6 +320,16 @@ public:
 		// previous path. At 1..3 the scope's windows are handed over instead of flushed and nothing is applied here: each
 		// pooled chunk arms its own range, GuestGpu the rest right after upload_func (ArmCopyFinish). At 4 the path of 0.
 		const uint32_t arm_copy = !is_written && !pass_batch && !arm_defer ? m_page_manager.ArmCopyBegin() : 0;
+		// Session 131, knob "lwin" (docs/session-131/lw131.md rev 1 L3): read only at armcopy 2..4 (at 0/1 a compare of the
+		// local above and nothing else). At >= 1: the number of this operation, and the stamp blocks of its regions allocated
+		// here, before any tracker lock.
+		const uint32_t lw = arm_copy >= 2 ? PageManager::ArmCopyLossWin() : 0;
+		if (lw != 0) {
+			PageManager::LwOpBegin(arm_copy, lw);
+			Iterate<false>(vaddr, size, [](RegionManager* manager, uint64_t, uint64_t) {
+				PageManager::LwEnsureBlock(manager->GetCpuAddr());
+			});
+		}
 		{
 			// batch_protect (gate "protbatch", read-only uploads only): the write watchers armed
 			// by clearing the CPU-dirty bits are applied after every region lock is released and
@@ -337,6 +347,10 @@ public:
 					                                           arm_verify, range_func)) {
 						provisional = true;
 					}
+				} else if (lw != 0) {
+					// Knob "lwin" (L4): the stamped instantiation.
+					manager->ForEachModifiedRange<DirtySource::Cpu, true, true>(
+					    manager->GetCpuAddr() + offset, bytes, range_func);
 				} else {
 					manager->ForEachModifiedRange<DirtySource::Cpu, true>(
 					    manager->GetCpuAddr() + offset, bytes, range_func);
@@ -366,6 +380,11 @@ public:
 					Common::FrameStats::Add(Common::FrameStats::Counter::ArmFlushSkips, 1);
 				}
 			}
+		}
+		if (lw != 0) {
+			// Knob "lwin" (item 127(zh)): every tracker lock of the pass is released - the stamps of this operation end, and the
+			// ArmCopyLossLate lines its marks found are written here.
+			PageManager::LwAfterPass();
 		}
 		upload_func();
 		if (arm_copy != 0) {

@@ -2613,6 +2613,31 @@ enum class Counter : uint32_t {
 	AcClsWaitNs,             // ac_cls_wait_ns: the apply wait of S_k (also in ApplyWaitNs)
 	AcClsVq,                 // ac_cls_vq: VirtualQuery calls of S_k
 	AcCbmHostD,              // ac_cbm_host_d: of ac_cbm_host, CPU-dirty in S_k (H = ac_cbm_host - ac_cbm_host_d)
+	// Session 131, knob "lwin" (docs/session-131/lw131.md rev 1 s.7.1 with ROADMAP s122 items 126(b), (g), 127): raw pages /
+	// counts / ns, live at armcopy 2/3/4 with lwin >= 1 only. lw_p8 .. lw_cdp are published with the I0 group of a check
+	// (lw_p8 + lw_x = ac_cbm_host - ac_cbm_host_d on every line).
+	LwP8,                    // lw_p8: H events of class P8 - (a), (b), (v), (g) of the design s.2.4
+	LwX,                     // lw_x: H events of class X - everything else
+	LwOpen,                  // lw_open: of lw_x, (a) and no mark of O3 by T_poll
+	LwXnc,                   // lw_xnc: of lw_x, no (a) or no (g)
+	LwP8sync,                // lw_p8sync: of lw_p8, O3 armed the page synchronously after S_k (item 126(b))
+	LwXmk,                   // lw_xmk: of lw_x, (a) and the mark of O3 before g_k, or a mark of another operation
+	LwC3x,                   // lw_c3x: control C3 (R2/R3 of a chunk of armcopy 3), the predicate false
+	LwC3p,                   // lw_c3p: control C3, the predicate true (row)
+	LwCrx,                   // lw_crx: control CR (R7, the mark of the clearing operation already in S_k), predicate false
+	LwCrp,                   // lw_crp: control CR, the predicate true - a guard, must be 0
+	LwCdx,                   // lw_cdx: control CD (R8 with dk before = 1), the predicate false
+	LwCdp,                   // lw_cdp: control CD, the predicate true - a guard, must be 0
+	LwLate,                  // lw_late: lw_open events whose O3 mark came after T_poll (row)
+	LwPollN,                 // lw_poll_n: checks whose resolve waited
+	LwPollNs,                // lw_poll_ns: wall of those waits
+	LwStampN,                // lw_stamp_n: stamped clear passes of a tracking region
+	LwStampPages,            // lw_stamp_pages: pages given a clear stamp
+	LwMarkPages,             // lw_mark_pages: pages given a mark stamp of kind pending
+	LwSyncPages,             // lw_sync_pages: pages given a mark stamp of kind sync
+	LwSpinN,                 // lw_spin_n: spins of the P8 / X control (lwin 2 / 3)
+	LwSpinNs,                // lw_spin_ns: wall of those spins
+	LwOvf,                   // lw_ovf: overflows - in flight, open, candidates, block, generation (LossWin: overflow)
 	Count
 };
 

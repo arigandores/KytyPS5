@@ -703,8 +703,16 @@ enum class Knob : uint32_t {
 	// own chunk (arm then copy under `apply`, the same AcChunk and detector), all of them in ONE enqueue at the end of the
 	// copy loop of UploadCopies. At armcopy 4, a refusal or a written synchronization it does nothing (ai_idle). No own
 	// refusals; 1 needs no KYTY_FRAME_TRACE. Latched per synchronization, so it CAN be a schedule arm.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	ArmInline,        // KYTY_ARM_INLINE, file name "acinline" (0 off, 1 inline copies with deferred arming to the pool at armcopy 1..3)
+	// Session 131, track L, DIAGNOSTIC (docs/session-131/lw131.md rev 1 with ROADMAP s122 items 123(zh), 126, 127): the
+	// classifier of the H events of "armcopy" (why=host dk=0) by page stamps - lw_p8 the proven rest of the P8 race, lw_x
+	// everything else, conservatively. Read ONCE per synchronization in PageManager::ArmCopyScope, only when "armcopy" was
+	// read 2..4 and latched read-only (never at 0/1, a refusal or a written synchronization). 0 = no stamps; 1 = stamps and
+	// the classifier; 2 = 1 + the P8 control (a 1 ms spin between the clear of the CPU-dirty bits and the arming, on a pass
+	// meeting a chunk in flight); 3 = 1 + the X control (the same spin, 6 ms). The chunks and their checks take the value
+	// of the latest latch, so it is NOT a schedule arm. No own refusals ("armcopy" 2..4 already needs KYTY_FRAME_TRACE).
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	LossWin,          // KYTY_ARM_LOSS_WIN, file name "lwin" (0 off, 1 classifier of H events, 2 + P8 control, 3 + X control)
 	Count,
 };
 

@@ -270,8 +270,14 @@ public:
 		return {m_cpu_addr + first * TRACKER_PAGE_SIZE, (last - first) * TRACKER_PAGE_SIZE};
 	}
 
-	template <DirtySource source, bool clear, typename Func>
+	// Session 131, knob "lwin" (docs/session-131/lw131.md rev 1 L5 with ROADMAP s122 items 126(v), 127(a), (v)): `lw` - the
+	// read-only synchronization of an operation latched armcopy 2..4 with lwin >= 1 (MemoryTracker::ForEachUploadRange).
+	// Only in that instantiation, for a nonempty mask: c0 before the bits are cleared, then the clear words, c1, the delta
+	// and at lwin 2/3 the control spin (PageManager::LwClearEnd), all before UpdateProtection marks the pages, under this
+	// region's lock. The instantiations of false are the text of session 130.
+	template <DirtySource source, bool clear, bool lw = false, typename Func>
 	void ForEachModifiedRange(uint64_t vaddr, uint64_t size, Func&& func) {
+		static_assert(!lw || (source == DirtySource::Cpu && clear));
 		const auto [start, end] = GetPageRange(vaddr, size);
 		auto&      bits         = GetBits<source>();
 		RegionBits mask(bits, start, end);
@@ -279,9 +285,17 @@ public:
 			if constexpr (source == DirtySource::Cpu) {
 				SettleArmedSync(start, end);
 			}
-			bits.UnsetRange(start, end);
+			if constexpr (lw) {
+				const uint64_t c0 = mask.None() ? 0 : PageManager::LwClearBegin();
+				bits.UnsetRange(start, end);
+				if (c0 != 0) {
+					PageManager::LwClearEnd(m_cpu_addr, mask, c0);
+				}
+			} else {
+				bits.UnsetRange(start, end);
+			}
 			if constexpr (source == DirtySource::Cpu) {
-				UpdateProtection<true, false>();
+				UpdateProtection<true, false, lw>();
 			} else {
 				m_stale.UnsetRange(start, end);
 				UpdateProtection<false, true>();
@@ -512,7 +526,8 @@ private:
 	// `defer` (gate "armdefer", write side only): the watchers are added to the page state now
 	// and their host protection is applied by the worker. A page in m_armed is read-only although
 	// CPU-dirty (ForEachUploadRangeArmDeferred).
-	template <bool track, bool is_read>
+	// Session 131, knob "lwin" (L6): `lw` goes to the page manager, which stamps the marks of that instantiation only.
+	template <bool track, bool is_read, bool lw = false>
 	void UpdateProtection(bool defer = false) {
 		const auto protection = is_read ? (~m_gpu_dirty | m_stale) : (m_cpu_dirty & ~m_armed);
 		auto&      previous   = is_read ? m_readable : m_writable;
@@ -532,7 +547,7 @@ private:
 				return;
 			}
 		}
-		m_page_manager.UpdatePageWatchersForRegion<track, is_read>(m_cpu_addr, mask);
+		m_page_manager.UpdatePageWatchersForRegion<track, is_read, lw>(m_cpu_addr, mask);
 	}
 
 	template <DirtySource source>

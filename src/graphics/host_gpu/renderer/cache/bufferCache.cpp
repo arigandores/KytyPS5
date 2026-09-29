@@ -355,6 +355,11 @@ void BufferCache::ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size,
 	if (batched != 0) {
 		pages.ArmCopyClassify(vaddr, size, mode, batch, batched, dirty, self, &cls);
 	}
+	if (cls.lw_n != 0) {
+		// Session 131, knob "lwin" (docs/session-131/lw131.md rev 1 L12, s.5): the candidates of this chunk decided before
+		// its group is published, so lw_p8 + lw_x = H holds on every FrameTrace-x line; no lock held.
+		pages.ArmCopyLossResolve(&cls);
+	}
 	// The order of I0 (cbad130.md rev 2 s.6.1, 6.1'): each group is added before the next, a release fence between groups,
 	// so that at any moment sum(ac_cbm_*) >= ac_cbad_m, sum(ac_cbe_*) >= ac_cbad_e, m + e >= ac_cbad and
 	// ac_cbm_host_d <= ac_cbm_host - the flip reads the group in the reverse order.
@@ -372,6 +377,23 @@ void BufferCache::ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size,
 		FS::Add(FS::Counter::AcCbmHost, cls.host);
 		std::atomic_thread_fence(std::memory_order_release);
 		FS::Add(FS::Counter::AcCbmHostD, cls.host_d);
+		// Session 131, knob "lwin" (lw131.md rev 1 s.7.3 with ROADMAP s122 item 127(b)): the classes after the reasons, the
+		// subsets before their sums; the flip reads them right after ac_cbad_e, before the reasons.
+		std::atomic_thread_fence(std::memory_order_release);
+		FS::Add(FS::Counter::LwOpen, cls.lw_open);
+		FS::Add(FS::Counter::LwXnc, cls.lw_xnc);
+		FS::Add(FS::Counter::LwP8sync, cls.lw_p8sync);
+		FS::Add(FS::Counter::LwXmk, cls.lw_xmk);
+		std::atomic_thread_fence(std::memory_order_release);
+		FS::Add(FS::Counter::LwX, cls.lw_x);
+		FS::Add(FS::Counter::LwP8, cls.lw_p8);
+		FS::Add(FS::Counter::LwC3x, cls.lw_c3x);
+		FS::Add(FS::Counter::LwC3p, cls.lw_c3p);
+		FS::Add(FS::Counter::LwCrx, cls.lw_crx);
+		FS::Add(FS::Counter::LwCrp, cls.lw_crp);
+		FS::Add(FS::Counter::LwCdx, cls.lw_cdx);
+		FS::Add(FS::Counter::LwCdp, cls.lw_cdp);
+		std::atomic_thread_fence(std::memory_order_release);
 		FS::Add(FS::Counter::AcCbeRo, cls.ro);
 		FS::Add(FS::Counter::AcCbeNa, cls.na);
 		FS::Add(FS::Counter::AcCbeOth, cls.oth);

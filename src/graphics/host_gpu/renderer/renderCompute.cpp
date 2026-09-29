@@ -49,7 +49,12 @@
 #include <optional>
 #include <span>
 #include <unordered_map>
+#include <thread>
 #include <vector>
+
+#if defined(_M_X64) || defined(__x86_64__)
+#include <immintrin.h>
+#endif
 
 namespace Libs::Graphics {
 static bool FillSourcesDisjoint(std::span<const ShaderRecompiler::IR::DescriptorValue> sources,
@@ -255,6 +260,126 @@ bool RenderExecutor::TryConsumeComputeImageClear(const ShaderComputeInputInfo& i
 	return true;
 }
 
+namespace {
+
+// Session 131, knob "dispceil" (MEASUREMENT ONLY; docs/session-131/dd131.md rev 1 s.3.3 with ROADMAP s122 items 123(z)(1),
+// 124(v), 125(e)), called only at a value of 1: the trace, mutsite, the thread, in this order. A line once per state.
+bool DispCeilLatch(bool mut_site) {
+	namespace FS = Common::FrameStats;
+	static std::atomic<uint32_t> logged {0};
+	const char*                  reason = nullptr;
+	uint32_t                     bit    = 1u;
+	if (!FS::Enabled()) {
+		reason = "notrace"; // dc_refuse is a no-op then (item 94(v))
+		bit    = 2u;
+	} else if (!mut_site) {
+		reason = "mutsite"; // no segment mh_disp_us to dose (item 124(v))
+		bit    = 4u;
+	} else if (FS::CurrentRole() != FS::ThreadRole::Gpu) {
+		FS::Add(FS::Counter::DcOffthr, 1);
+		return false;
+	}
+	if (reason != nullptr) {
+		FS::Add(FS::Counter::DcRefuse, 1);
+	}
+	if ((logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0) {
+		if (reason != nullptr) {
+			LOGF("DispCeil: refused reason=%s\n", reason);
+		} else {
+			LOGF("DispCeil: mode 1\n");
+		}
+	}
+	return reason == nullptr;
+}
+
+// The dose (dd131.md rev 1 s.3.4, the form of protceil=2): declared between MutexMark and HoldLap, so it is destroyed after
+// ~HoldLap charged mh_disp_us and before the render mutex is released, on every exit; spins for the length of the segment by
+// the same clock. Unarmed - a branch on a member, nothing else.
+class DispCeilDose final {
+public:
+	explicit DispCeilDose(bool armed) noexcept: m_armed(armed), m_t0(armed ? Common::FrameStats::NowNs() : 0) {}
+	~DispCeilDose() {
+		if (!m_armed) {
+			return;
+		}
+		namespace FS  = Common::FrameStats;
+		const auto t1  = FS::NowNs();
+		const auto tgt = t1 - m_t0;
+		const auto d0  = FS::NowNs();
+		auto       d1  = d0;
+		while (d1 - d0 < tgt) {
+#if defined(_M_X64) || defined(__x86_64__)
+			_mm_pause();
+#else
+			std::this_thread::yield();
+#endif
+			d1 = FS::NowNs();
+		}
+		FS::Add(FS::Counter::DcDoseN, 1);
+		FS::Add(FS::Counter::DcDoseNs, d1 - d0);
+		FS::Add(FS::Counter::DcTgtNs, tgt);
+	}
+	DispCeilDose(const DispCeilDose&)            = delete;
+	DispCeilDose& operator=(const DispCeilDose&) = delete;
+
+private:
+	bool     m_armed;
+	uint64_t m_t0;
+};
+
+// The census of the segment (dd131.md rev 1 s.5.2 with ROADMAP s122 items 124(z), 125(v), (e)): its own chain on the stack
+// (not HoldLap, not PathLap), armed by the condition of hold_lap (mutsite && the trace, the caller short-circuits it), 13
+// phases of raw ns. Off - branches on a member only, no TLS and no global read. dc_prot_* - the difference of this thread's
+// own shard of prot_gpu_ro_* over the chain.
+class DispLap final {
+public:
+	explicit DispLap(bool on) noexcept {
+		if (on) {
+			namespace FS = Common::FrameStats;
+			m_prot_ns    = FS::ReadOwn(FS::Counter::ProtGpuRoNs);
+			m_prot_n     = FS::ReadOwn(FS::Counter::ProtGpuRoN);
+			FS::Add(FS::Counter::DcN, 1);
+			m_t = FS::NowNs();
+		}
+	}
+	~DispLap() {
+		if (m_t == 0) {
+			return;
+		}
+		namespace FS = Common::FrameStats;
+		FS::Add(m_rest, FS::NowNs() - m_t);
+		if (m_rest == FS::Counter::DcPhEarlyNs) {
+			FS::Add(FS::Counter::DcEarlyN, 1);
+		}
+		FS::Add(FS::Counter::DcProtNs, FS::ReadOwn(FS::Counter::ProtGpuRoNs) - m_prot_ns);
+		FS::Add(FS::Counter::DcProtN, FS::ReadOwn(FS::Counter::ProtGpuRoN) - m_prot_n);
+	}
+	void Mark(Common::FrameStats::Counter counter) noexcept {
+		if (m_t != 0) {
+			const auto now = Common::FrameStats::NowNs();
+			Common::FrameStats::Add(counter, now - m_t);
+			m_t = now;
+		}
+	}
+	void Count(Common::FrameStats::Counter counter) noexcept {
+		if (m_t != 0) {
+			Common::FrameStats::Add(counter, 1);
+		}
+	}
+	// The dispatch was recorded: what is left is the tail of the full path, not an early exit.
+	void Recorded() noexcept { m_rest = Common::FrameStats::Counter::DcPhTailNs; }
+	DispLap(const DispLap&)            = delete;
+	DispLap& operator=(const DispLap&) = delete;
+
+private:
+	uint64_t                    m_t       = 0;
+	uint64_t                    m_prot_ns = 0;
+	uint64_t                    m_prot_n  = 0;
+	Common::FrameStats::Counter m_rest    = Common::FrameStats::Counter::DcPhEarlyNs;
+};
+
+} // namespace
+
 void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
                                     uint32_t thread_group_x, uint32_t thread_group_y,
                                     uint32_t thread_group_z, uint32_t mode,
@@ -277,14 +402,25 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	// Session 69, gate "mutsite": the whole 614-line critical section is one bucket - a dispatch
 	// has no phase structure in common with a draw, and there are only ~315 of them per frame.
 	const bool mut_site = Common::Gates::Enabled(Common::Gates::Gate::MutexSites);
+	// Session 131, knob "dispceil" (MEASUREMENT ONLY; dd131.md rev 1 s.3.2-3.3 with ROADMAP s122 items 124(v), 125(e)): read
+	// ONCE per dispatch, before the render mutex; the value first - at 0 nothing else is called or read.
+	const uint32_t dc_value   = Common::Gates::Value(Common::Gates::Knob::DispCeiling);
+	bool           dose_armed = false;
+	if (dc_value == 1) [[unlikely]] {
+		dose_armed = DispCeilLatch(mut_site);
+	}
 	const auto lock_t0  = (Common::Gates::Enabled(Common::Gates::Gate::MutateTime) || mut_site) &&
 	                             Common::FrameStats::Enabled()
 	                         ? Common::FrameStats::NowNs()
 	                         : 0;
 	Common::LockGuard            lock(m_context.GetMutex());
 	Common::FrameStats::MutexMark lock_mark(lock_t0);
+	// Knob "dispceil": destroyed after hold_lap (the segment is charged) and before lock_mark and the mutex (s.3.4).
+	DispCeilDose                dc_dose(dose_armed);
 	Common::FrameStats::HoldLap hold_lap(mut_site, Common::FrameStats::Counter::HoldDispatchNs);
 	Common::FrameStats::HoldLap::Count(Common::FrameStats::Counter::HoldDispatches);
+	// Knob "dispceil", the census (s.5.2): inside the segment, destroyed before hold_lap and after every later local.
+	DispLap dc_lap(mut_site && Common::FrameStats::Enabled());
 	// Session 105, knob "ctxtick" >= 2: check the buffer and mark the thread as inside a dispatch.
 	const CtxTick::OpScope ctx_op(m_context, buffer, "dispatch");
 	// Session 123, knob "skipceil" = 2 (census, s.3.1): the dispatch is one census operation, CS (T once it reads D / T).
@@ -334,10 +470,12 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	ShaderComputeInputInfo input_info {};
 	const bool use_thread_dimensions = (mode & DISPATCH_INITIATOR_USE_THREAD_DIMENSIONS) != 0;
 	input_info.dispatch_thread_dimensions = use_thread_dimensions;
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhProNs);
 	Common::FrameStats::Lap lap;
 	const auto compute_program =
 	    m_context.GetPipelineCache().GetComputeProgram(cs_regs, sh_regs, input_info);
 	lap.Mark(Common::FrameStats::Counter::DispatchProgramNs);
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhProgNs);
 	if (use_thread_dimensions) {
 		input_info.dispatch_threads_num[0]    = thread_group_x;
 		input_info.dispatch_threads_num[1]    = thread_group_y;
@@ -806,6 +944,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		return;
 	}
 
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhPreNs);
 	// Gate "recpack", decided once for the whole dispatch (see ExecutePreparedDraw).
 	const bool packet = buffer.PacketsWanted();
 	if (packet) {
@@ -816,6 +955,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	auto& pipeline =
 	    m_context.GetPipelineCache().GetComputePipeline(input_info, compute_program);
 	lap.Mark(Common::FrameStats::Counter::DispatchPipelineNs);
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhPipeNs);
 	// Session 83, gate "bindpack" (PLAN_82_bind.md item 9), the dispatch's copy of the same.
 	const bool reuse_bindings = ReuseBindingsEnabled();
 	std::optional<PreparedBindings> local_bindings;
@@ -865,6 +1005,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		PrepareBindings(input_info.stage, bindings);
 		FindBuffers(bindings);
 	}
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhPrepNs);
 	// Session 94, gate "bdaall" (MEASUREMENT ONLY, pred/02_bdaall.md): the dispatch half of
 	// the census in PrepareGraphicsBindings.
 	bool bda_all = false;
@@ -886,18 +1027,22 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		SkcCensus::G3Dma();
 	}
 	if ((program.info.uses_dma || bda_all) && !bind_floor) {
+		dc_lap.Count(Common::FrameStats::Counter::DcBdaN);
 		m_context.PrepareBda();
 	}
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhBdaNs);
 	// Session 96, gate "bindfloor": removed by the floor.
 	if (!bind_floor) {
 		RebindImages(bindings);
 	}
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhImgNs);
 	// Upstream dd408ff: the buffer reservations follow the image rebinds, so an alias
 	// discovered while resolving the images cannot be uploaded from a stale identity.
 	if (!bind_floor) {
 		RebindBuffers(bindings);
 	}
 	lap.Mark(Common::FrameStats::Counter::DispatchBindingsNs);
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhBufNs);
 
 	// No handle here: the sanitizer below may submit this buffer while it waits for a ring slot, so
 	// every write takes its own handle after the points that can do that.
@@ -911,6 +1056,7 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	vk::Buffer indirect_vk_buffer;
 	uint64_t   indirect_vk_offset = 0;
 	if (indirect) {
+		dc_lap.Count(Common::FrameStats::Counter::DcIndN);
 		constexpr uint64_t ArgsSize = 3u * sizeof(uint32_t);
 		auto&              cache    = m_context.GetBufferCache();
 		static std::atomic<uint32_t> indirect_log_count {0};
@@ -957,12 +1103,14 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	if (Common::SkipCeil::t_mode >= 2) [[unlikely]] {
 		SkcCensus::ApplyW2(m_context.GetTextureCache(), m_context.GetBufferCache());
 	}
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhIndNs);
 	PreparedBindings* descriptor_stage = &bindings;
 	// The sanitizer may have submitted the buffer and begun one without a record thread.
 	const bool packet_now = packet && buffer.Recorder() != nullptr;
 	CommitBindings(buffer, vk::PipelineBindPoint::eCompute, pipeline,
 	               std::span {&descriptor_stage, 1u}, packet_now);
 	lap.Mark(Common::FrameStats::Counter::DispatchCommitNs);
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhComNs);
 	bool has_storage_writes = HasShaderBufferWrites(input_info.stage);
 	has_storage_writes =
 	    std::any_of(program.info.images.begin(), program.info.images.end(),
@@ -1001,6 +1149,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 		tail.Commit(true);
 		m_context.GetTextureCache().StampPendingDccFill();
 		lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
+		dc_lap.Mark(Common::FrameStats::Counter::DcPhEmitNs);
+		dc_lap.Recorded();
 		ResetBindings();
 		return;
 	}
@@ -1030,6 +1180,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	ShaderAccessBarrier(vk_buffer, vk::PipelineStageFlagBits::eComputeShader);
 	buffer.Scheduler().GpuMark(GpuTimeProfiler::Kind::Barrier, 2);
 	lap.Mark(Common::FrameStats::Counter::DispatchEmitNs);
+	dc_lap.Mark(Common::FrameStats::Counter::DcPhEmitNs);
+	dc_lap.Recorded();
 	ResetBindings();
 }
 bool DebugDumpFrame(uint32_t frame) {

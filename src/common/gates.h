@@ -711,8 +711,15 @@ enum class Knob : uint32_t {
 	// the classifier; 2 = 1 + the P8 control (a 1 ms spin between the clear of the CPU-dirty bits and the arming, on a pass
 	// meeting a chunk in flight); 3 = 1 + the X control (the same spin, 6 ms). The chunks and their checks take the value
 	// of the latest latch, so it is NOT a schedule arm. No own refusals ("armcopy" 2..4 already needs KYTY_FRAME_TRACE).
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	LossWin,          // KYTY_ARM_LOSS_WIN, file name "lwin" (0 off, 1 classifier of H events, 2 + P8 control, 3 + X control)
+	// Session 131, track K16, MEASUREMENT ONLY (docs/session-131/dd131.md rev 1 with ROADMAP s122 items 123(z), 124, 125):
+	// the dose of the dispatch path. Read ONCE per RenderExecutor::DispatchDirect before the render mutex, so it CAN be a
+	// schedule arm. 1 = after the segment mh_disp_us of each dispatch (charged by ~HoldLap) the GuestGpu thread spins for the
+	// same length by the same clock, still holding the render mutex (dc_dose_n, dc_dose_ns, dc_tgt_ns). Refused
+	// (DispCeil: refused, dc_refuse) without KYTY_FRAME_TRACE and without the gate "mutsite" (no segment then); off the
+	// GuestGpu thread nothing is dosed (dc_offthr). The census of the phases of the segment (dc_ph_*) lives with "mutsite".
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	DispCeiling,      // KYTY_DISP_CEILING, file name "dispceil" (MEASUREMENT ONLY: 0 off, 1 dose the dispatch segment)
 	Count,
 };
 

@@ -2638,6 +2638,33 @@ enum class Counter : uint32_t {
 	LwSpinN,                 // lw_spin_n: spins of the P8 / X control (lwin 2 / 3)
 	LwSpinNs,                // lw_spin_ns: wall of those spins
 	LwOvf,                   // lw_ovf: overflows - in flight, open, candidates, block, generation (LossWin: overflow)
+	// Session 131, knob "dispceil" (docs/session-131/dd131.md rev 1 s.7 with ROADMAP s122 items 124(g), 125(b), (v)): raw
+	// ns / counts. dc_n, dc_dose_n and dc_offthr stand next to each other (item 125(b): the flip reads one counter at a
+	// time). The census (dc_n .. dc_prot_ns but the dose rows) lives at mutsite=1 with the trace, in both arms.
+	DcN,                     // dc_n: dispatches of the census (the population of mh_disp_n)
+	DcDoseN,                 // dc_dose_n: doses (dispceil=1), one per dispatch
+	DcOffthr,                // dc_offthr: dispceil=1 latched off the GuestGpu thread (no dose)
+	DcDoseNs,                // dc_dose_ns: ns actually spun by the doses
+	DcTgtNs,                 // dc_tgt_ns: ns the doses aimed at (the segment by the clock of the dose, item 124(g))
+	DcRefuse,                // dc_refuse: dispceil=1 refused (notrace - a no-op without the trace; mutsite, item 124(v))
+	DcEarlyN,                // dc_early_n: dispatches that left by an early return
+	DcBdaN,                  // dc_bda_n: dispatches that called PrepareBda
+	DcIndN,                  // dc_ind_n: indirect dispatches
+	DcProtN,                 // dc_prot_n: of prot_gpu_ro_n, the calls inside the segment (own shard, item 125(v))
+	DcPhProNs,               // dc_ph_pro_ns: the start of the chain -> GetComputeProgram
+	DcPhProgNs,              // dc_ph_prog_ns: GetComputeProgram (holds pl_cs_wait + pl_cs_hold)
+	DcPhPreNs,               // dc_ph_pre_ns: traces, KYTY_SKIP_CS, clears, logs, sizes
+	DcPhPipeNs,              // dc_ph_pipe_ns: EndRendering[Packet] + GetComputePipeline
+	DcPhPrepNs,              // dc_ph_prep_ns: PreparedBindings, bindfloor, PrepareBindings + FindBuffers
+	DcPhBdaNs,               // dc_ph_bda_ns: bdaall, the census of skipceil, PrepareBda
+	DcPhImgNs,               // dc_ph_img_ns: RebindImages
+	DcPhBufNs,               // dc_ph_buf_ns: RebindBuffers
+	DcPhIndNs,               // dc_ph_ind_ns: the indirect arguments, the sanitizer, ApplyW2
+	DcPhComNs,               // dc_ph_com_ns: CommitBindings
+	DcPhEmitNs,              // dc_ph_emit_ns: barriers, bindPipeline, dispatch[Indirect], markers, StampPendingDccFill
+	DcPhTailNs,              // dc_ph_tail_ns: ResetBindings and the destructors of the locals (the full path)
+	DcPhEarlyNs,             // dc_ph_early_ns: the last mark -> the end, dispatches that left early
+	DcProtNs,                // dc_prot_ns: of prot_gpu_ro_ns, inside the segment (own shard, item 125(v))
 	Count
 };
 
@@ -2761,6 +2788,14 @@ inline void Add(Counter counter, uint64_t value) {
 	}
 	auto& slot = shard->counters[index];
 	slot.store(slot.load(std::memory_order_relaxed) + value, std::memory_order_relaxed);
+}
+
+// Session 131, knob "dispceil" (docs/session-131/dd131.md rev 1 s.5.2 with ROADMAP s122 items 124(d), 125(v)): this thread's
+// own shard of `counter` - 0 before the thread's first Add. Only the thread writes its shard, so the difference of two
+// reads on it is exact. Nothing is attached or allocated.
+inline uint64_t ReadOwn(Counter counter) {
+	const auto* shard = Detail::t_shard;
+	return shard == nullptr ? 0 : shard->counters[static_cast<size_t>(counter)].load(std::memory_order_relaxed);
 }
 
 // Raises a gauge to `value` if the frame has not seen a larger one. One relaxed load per call and

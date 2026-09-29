@@ -450,8 +450,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 131, track L, DIAGNOSTIC: the classifier of the H events of armcopy by page stamps (1), + the P8 control
     // spin of 1 ms (2), + the X control spin of 6 ms (3) (docs/session-131/lw131.md rev 1, ROADMAP s122 items 123(zh),
     // 126, 127). Read only when armcopy was read 2..4; not a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_ARM_LOSS_WIN", "lwin", 0, 3},
+    // Session 131, track K16, MEASUREMENT ONLY: after the segment mh_disp_us of each dispatch, a spin of its length under
+    // the render mutex (1) (docs/session-131/dd131.md rev 1, ROADMAP s122 items 123(z), 124, 125). Read once per dispatch,
+    // so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_DISP_CEILING", "dispceil", 0, 1},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

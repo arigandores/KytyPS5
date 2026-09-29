@@ -646,7 +646,7 @@ BDA и read-only depth прошли с synchronization validation. Больша�
   `renderdoccmd.exe`. Интерпретатор отлаживает compute-шейдеры Kyty, но не PS (барицентрики).
 - GPU: NVIDIA GeForce RTX 5080 Laptop (subgroup 32, wave64 эмулируется двумя подгруппами + LDS-барьеры),
   CPU Ryzen 9 9955HX3D. Монитор 2560x1600 при масштабе 150%.
-- gh CLI, аккаунты `arigandores` (активный, владелец форка) и `<account>`.
+- gh CLI, аккаунты `arigandores` (активный, владелец форка) и второй аккаунт (имя не указывается).
 
 ## GitHub
 - Форк: https://github.com/arigandores/KytyPS5, ветка `bvh-intersect-ray`.

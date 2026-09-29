@@ -1,0 +1,6 @@
+lw1s131 rows 8958 rows bad 2 sum deficit 1037 all multiples of 16 False blocks bad 0 of 80 first [(2939, 1024), (4649, 13)]
+lw2s131 rows 19865 rows bad 42 sum deficit 1824 all multiples of 16 True blocks bad 10 of 201 first [(2351, 192), (3887, 160), (5888, 16)]
+lw3s131 rows 4419 rows bad 37 sum deficit 2806 all multiples of 16 False blocks bad None first [(42, 16), (44, 16), (47, 15)]
+lw4s131 rows 4227 rows bad 7 sum deficit 405 all multiples of 16 False blocks bad None first [(23, 32), (24, 31), (28, 32)]
+lw5s131 rows 8296 rows bad 16 sum deficit 860 all multiples of 16 False blocks bad None first [(24, 15), (25, 31), (26, 31)]
+lw6s131 rows 3203 rows bad 150 sum deficit 8161 all multiples of 16 False blocks bad None first [(23, 15), (24, 15), (25, 15)]

@@ -1,0 +1,64 @@
+{
+ "outcome": "NOT_RESOLVED",
+ "reasons": [
+  "sum H = 0 at armcopy=2 in lw1/lw2/lw5 - nothing to classify"
+ ],
+ "alive": true,
+ "identities_ok": true,
+ "controls": {
+  "lw3_p8": true,
+  "lw4_c3x": true,
+  "lw6_open": true,
+  "CR": true,
+  "CD": true
+ },
+ "guards": {
+  "g118_at2": [
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "crp_cdp": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ],
+  "torn": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "guards_ok": true,
+ "dead": [],
+ "ovf_void": [],
+ "X2": {
+  "lw1s131": 0,
+  "lw2s131": 0,
+  "lw5s131": 0
+ },
+ "X2n": {
+  "lw1s131": 0,
+  "lw2s131": 0,
+  "lw5s131": 0
+ },
+ "B2": {
+  "lw1s131": 0,
+  "lw2s131": 0,
+  "lw5s131": 0
+ },
+ "H2": {
+  "lw1s131": 0,
+  "lw2s131": 0,
+  "lw5s131": 0
+ },
+ "P8_at2": 0
+}

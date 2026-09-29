@@ -1,0 +1,5 @@
+window rows 3318 dose us/frame 2391.002750150693
+all rows of arm-1 blocks 3780 dose us/frame 2391.8363367724864
+window mh_disp_us/frame arm1 2363.913803496082
+window dc_tgt_ns/frame n/a
+paired arm-1 blocks 41 rows 3239 dose us/frame 2387.6672361840074 slope 0.8337922606293193

@@ -1,0 +1,73 @@
+{
+ "tag": "lw6s131",
+ "gates_json": "copy=1 srtpages=1 clamp=1 regionepoch=0 srtmemo=0 smemocheck=0 bdastamp=1 backpages=1 srtstat=0 metalock=1 drawahead=1 dause=1 asyncsubmit=1 imgrecycle=1 recordthread=1 trackfree=1 tfcheck=0 protfast=0 swlocal=0 swdefer=1 gdsepoch=0 atomimg=0 dsring=1 recpack=1 syncfree=1 sfcheck=0 protbatch=1 pbcheck=0 texfaulthint=1 daclass=1 daprefetch=1 daclone=0 texlru=1 texfast=1 texfastcheck=0 texmemo2=0 clampvma=1 smpmemo=1 bindspare=0 fslean=0 applyskip=0 recbatch=0 recrelax=0 recpin=1 stkstat=0 drawstat=0 dpslow=0 drawstate=1 snapkeep=1 buflru=1 snapdiff=1 snapswap=1 buffast=0 buffastcheck=0 protbatch2=0 acopyidle=1 dawalk=1 rtfast=1 progmemo=1 progmemocheck=0 armdefer=0 armcheck=0 dawitness=1 dawitptr=1 daqpre=0 cbstat=0 recimg=0 recup=0 shadowinline=0 savepersist=0 occzero=0 amut=0 pxstat=0 mutsite=0 imgskip=0 cleardec=0 daepceil=0 dawitfb=0 imgfuse=1 dawitcp=1 dawitcg=1 dawitcgcheck=0 pfhint=1 dathreads=4 recarena=64 dsbatch=32 dspool=1024 recspin=300 dapin=3 procpin=0 faultkb=64 dawalklead=1 recpubn=0 shadowresolve=0 shadowmask=3 m4baton=0 imgskipkb=4096 dawitloop=0 pfcap=1024 rtskip=1 protceil=0 armcopy=2 acinline=0 lwin=3 dispceil=0",
+ "arms_json": [],
+ "hold_s": 150,
+ "x_rows": 3203,
+ "rows_missing_keys": 0,
+ "missing_keys": [],
+ "gatearm_lines": 0,
+ "loss_lines": 256,
+ "lossctl_lines": 64,
+ "late_lines": 64,
+ "lwmode": [
+  "LossWin: mode 3"
+ ],
+ "ovf": [
+  "LossWin: overflow kind=open"
+ ],
+ "torn": 0,
+ "death": [],
+ "quit_line": 585602,
+ "other": {
+  "ArmCopy: mode": 1
+ },
+ "armcopy_mode_lines": [
+  "ArmCopy: mode 2"
+ ],
+ "identity_broken_rows": {},
+ "log_sums": {
+  "lw_p8": 5025,
+  "lw_x": 47948,
+  "lw_open": 46651,
+  "lw_xnc": 1297,
+  "lw_xmk": 0,
+  "lw_p8sync": 0,
+  "lw_crx": 74,
+  "lw_crp": 0,
+  "lw_cdx": 0,
+  "lw_cdp": 0,
+  "lw_c3x": 0,
+  "lw_c3p": 0,
+  "lw_late": 46501,
+  "lw_ovf": 150,
+  "lw_stamp_pages": 16715802,
+  "lw_mark_pages": 16573837,
+  "lw_sync_pages": 35030,
+  "lw_spin_n": 6867,
+  "lw_spin_ns": 41203229481,
+  "ac_cbm_host": 52973,
+  "ac_cbm_host_d": 0,
+  "ac_cbm_pend": 74,
+  "ac_cbm_nosnap": 0,
+  "ac_cbm_bad": 0,
+  "ac_cbm_left": 0,
+  "ac_cbm_stale": 0,
+  "ac_cmp_pages": 16107730,
+  "ac_cbad": 53868
+ },
+ "log_H": 52973,
+ "log_guards118": 0,
+ "loss_by_mode_cls_xr": {
+  "2|X|open": 249,
+  "2|P8|p8": 5,
+  "2|X|nc": 2
+ },
+ "X2": 251,
+ "X2u": 0,
+ "X2n": 251,
+ "IL6_late_le_open": true,
+ "IL6_lines_eq_min256H": true,
+ "IL7_log": true,
+ "bda_mean_after_1800": 1466.8048433048434
+}

@@ -102,7 +102,7 @@ Remaining, in order:
 1. **the CPU sampler** (§3.1);
 2. **host background state** — now recorded in `pre_run['host']` on every run, **never yet varied
    deliberately**. One foreign application (чужое приложение) was resident in all three low-effect session-77 runs and absent from all
-   three high-effect ones; <foreign app> ×2 and <foreign app> were unique to `pfh76c`. Two runs, one dirty host
+   three high-effect ones; two other foreign applications (чужое приложение; one of them ×2) were unique to `pfh76c`. Two runs, one dirty host
    and one clean, pre-registered on process *identity* not count;
 3. **host-heap layout.** The state is re-rolled on every process start and changes the price of
    memory-bound work by 36 % while changing the amount by 0.3 %. Every log already prints one

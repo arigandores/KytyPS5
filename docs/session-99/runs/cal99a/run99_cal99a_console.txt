@@ -1,5 +1,5 @@
 prereg: 01_bindings_only.md  10848 bytes  sha256 8b816528b78a1730  mtime 2026-09-19T15:09:19  mtime-ctime +0.000 s
-pre_run: host 323 processes, top by CPU: System 48099s, dwm 29109s, voicemeeter 18978s, PhoneExperienceHost 13896s, svchost 13849s, figma_agent 10655s
+pre_run: host 323 processes, top by CPU: System 48099s, dwm 29109s, чужое приложение 18978s, PhoneExperienceHost 13896s, svchost 13849s, чужое приложение 10655s
 pre_run: GPU 1.0 % busy, 23.2 W, 1680 MiB used, SM 1635.0 MHz, 23 process(es) on the GPU
 --- attempt 1: launching
 8.2 s  LevelDocument Loaded: underwater_aerial_garden

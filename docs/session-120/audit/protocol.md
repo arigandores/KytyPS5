@@ -124,8 +124,8 @@ exhausted"). So the 10:20 amendment clarified it; it did not create it.
   - No subagent file of that project changed on 2026-09-26, and it made no model turns during the run.
   - Its CPU use in the window is unknown. `procload` saw nothing above 0.5 CPU s/s at the start.
 - **Machine-wide CPU load during the run.** The guards run only at the start. `cen120.json` has `cpuclk_requested:
-  true` but `cpuclk: null`: no CPU clock or load trace was captured. Other processes (voicemeeter is the top CPU
-  consumer at the start, plus Edge, Razer, LG HUB and others) and any user activity are unobservable in the window.
+  true` but `cpuclk: null`: no CPU clock or load trace was captured. Other processes (чужое приложение is the top CPU
+  consumer at the start, plus Edge, <foreign app>, <foreign app> and others) and any user activity are unobservable in the window.
 - **Thermal state after the 25-minute, 28-worker mutlib run.** The run started 62 s after it with no cool-down (INFO-1).
   The ABBA pairs cancel slow drift for the P−M quantities; the absolute `dt_us` values carry it.
 

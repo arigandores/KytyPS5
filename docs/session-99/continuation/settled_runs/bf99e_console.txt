@@ -1,5 +1,5 @@
 prereg: 04_gc_audit.md  7835 bytes  sha256 a93f4b6b1068cb34  mtime 2026-09-19T18:31:55  mtime-ctime +0.000 s
-pre_run: host 323 processes, top by CPU: System 48694s, dwm 29560s, voicemeeter 19267s, PhoneExperienceHost 14393s, svchost 14111s, figma_agent 10916s
+pre_run: host 323 processes, top by CPU: System 48694s, dwm 29560s, чужое приложение 19267s, PhoneExperienceHost 14393s, svchost 14111s, чужое приложение 10916s
 pre_run: GPU 1.0 % busy, 23.4 W, 1690 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
 --- attempt 1: launching
 9.2 s  LevelDocument Loaded: underwater_aerial_garden

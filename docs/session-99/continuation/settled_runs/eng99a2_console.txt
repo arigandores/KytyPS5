@@ -1,5 +1,5 @@
 prereg: 02_settled_bindings.md  13461 bytes  sha256 1d1ebf286869ab59  mtime 2026-09-19T17:14:49  mtime-ctime +0.000 s
-pre_run: host 322 processes, top by CPU: System 48361s, dwm 29292s, voicemeeter 19110s, PhoneExperienceHost 14133s, svchost 13968s, figma_agent 10770s
+pre_run: host 322 processes, top by CPU: System 48361s, dwm 29292s, чужое приложение 19110s, PhoneExperienceHost 14133s, svchost 13968s, чужое приложение 10770s
 pre_run: GPU 1.0 % busy, 22.9 W, 1690 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
 --- attempt 1: launching
 9.2 s  LevelDocument Loaded: underwater_aerial_garden

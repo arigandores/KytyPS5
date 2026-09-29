@@ -1,5 +1,5 @@
 prereg: 03_image_lifetime_diagnostic.md  4724 bytes  sha256 d17745315149f0ca  mtime 2026-09-19T18:01:59  mtime-ctime +0.001 s
-pre_run: host 320 processes, top by CPU: System 48496s, dwm 29396s, voicemeeter 19170s, PhoneExperienceHost 14233s, svchost 14022s, figma_agent 10823s
+pre_run: host 320 processes, top by CPU: System 48496s, dwm 29396s, чужое приложение 19170s, PhoneExperienceHost 14233s, svchost 14022s, чужое приложение 10823s
 pre_run: GPU 2.0 % busy, 23.4 W, 1690 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
 --- attempt 1: launching
 9.2 s  LevelDocument Loaded: underwater_aerial_garden

@@ -1,5 +1,5 @@
 prereg: 05_observer_separation.md  8583 bytes  sha256 fb376ee63ce8fb19  mtime 2026-09-19T20:22:56  mtime-ctime -0.164 s
-pre_run: host 323 processes, top by CPU: System 49359s, dwm 30122s, voicemeeter 19548s, PhoneExperienceHost 14859s, svchost 14364s, figma_agent 11166s
+pre_run: host 323 processes, top by CPU: System 49359s, dwm 30122s, чужое приложение 19548s, PhoneExperienceHost 14859s, svchost 14364s, чужое приложение 11166s
 pre_run: GPU 1.0 % busy, 22.6 W, 1680 MiB used, SM 1642.0 MHz, 23 process(es) on the GPU
 --- attempt 1: launching
 9.7 s  LevelDocument Loaded: underwater_aerial_garden

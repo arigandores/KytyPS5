@@ -229,6 +229,35 @@ public:
 	// The arm hook of a pool chunk (Common::ArmedCopyHook::arm, context = this PageManager), any thread (s.7.4).
 	static bool ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
 	                         const uint8_t* src);
+	// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.4 C4/C5, ROADMAP s122 items 116(d), 117-119):
+	// the classification of the content events of the chunk this thread just checked (2/3/4 only - never called at 0/1).
+	// The class counts of one check, summed over its batches; the caller adds them in the order of I0 (s.6.1, 6.1').
+	struct ArmCopyClassCounts {
+		uint64_t m      = 0; // ac_cbad_m
+		uint64_t e      = 0; // ac_cbad_e
+		uint64_t nosnap = 0; // R1
+		uint64_t bad    = 0; // R2
+		uint64_t left   = 0; // R3
+		uint64_t stale  = 0; // R4
+		uint64_t remark = 0; // R5
+		uint64_t fresh  = 0; // R6 "new"
+		uint64_t pend   = 0; // R7
+		uint64_t host   = 0; // R8
+		uint64_t host_d = 0; // of R8, CPU-dirty in the hold S_k (ac_cbm_host_d)
+		uint64_t ro     = 0;
+		uint64_t na     = 0;
+		uint64_t oth    = 0;
+	};
+	// The CPU-dirty read of one tracker page (the buffer cache's lock-free IsCpuDirtyRelaxed), for dk in the hold S_k.
+	using ArmCopyDirtyFunc = bool (*)(void* context, uint64_t page);
+	// The largest batch of event pages one classification takes (one `apply` hold S_k).
+	static constexpr size_t ArmCopyClassBatch = 64;
+	// A batch of n <= ArmCopyClassBatch event pages (tracker-page addresses) of the chunk {vaddr, size, mode}; any thread,
+	// no lock held. Adds ac_cls_*, writes the CONTENT lines and the address histogram, adds the class counts to `counts`.
+	void ArmCopyClassify(uint64_t vaddr, uint64_t size, uint32_t mode, const uint64_t* pages, size_t n,
+	                     ArmCopyDirtyFunc dirty, void* dirty_context, ArmCopyClassCounts* counts);
+	// The last action of the chunk's check: its snapshot S_a is no longer valid on this thread.
+	static void ArmCopyClassDone() noexcept;
 	// Session 130, knob "acinline" (PROTOTYPE; docs/session-130/design130.md rev 2 with ROADMAP s122 items 105(zh)(1), 107,
 	// 109, 110), GuestGpu thread, TLS of the operation only - no lock.
 	// The operation running on this thread latched armcopy 1..3 with acinline=1 (I1'').

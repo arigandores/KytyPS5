@@ -1231,6 +1231,28 @@ struct PageManager::Impl {
 		std::array<uint8_t, REGION_PAGES> perms {};
 	};
 
+	// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.2.3, s.4 C2/C3): the snapshot S_a of the chunk
+	// this thread copies, from its AcChunk (2/3/4) to the end of its check - key {vaddr, size, mode}, the first region of the
+	// chunk and the chunk's window in it, J (pending at the start of the hold), T (taken), St (taken with the bit still set in
+	// the hold of the take), Pa (pending in the detector's snapshot, window only), Ba (bad in it). `multi`: the chunk met a
+	// second region (its pages have no snapshot - R1 nosnap).
+	struct AcCls {
+		bool     valid  = false;
+		bool     multi  = false;
+		uint32_t mode   = 0;
+		uint64_t vaddr  = 0;
+		uint64_t size   = 0;
+		Region*  region = nullptr;
+		uint64_t base   = 0;
+		size_t   first  = 0;
+		size_t   last   = 0;
+		PageBits j {};
+		PageBits t {};
+		PageBits st {};
+		PageBits pa {};
+		PageBits ba {};
+	};
+
 	class AcReasonScope final {
 	public:
 		explicit AcReasonScope(PageManager::ArmCopyReason reason) noexcept: m_previous(t_ac_reason) {
@@ -1295,7 +1317,7 @@ struct PageManager::Impl {
 	// pending. bad = watched && !pend_now && host writable; chk = watched && !pend_now. The caller's bookkeeping (what it
 	// took, what it applied) is not an input.
 	void AcDetect(Region& region, uint64_t base_addr, const PageBits& mask, bool job, uint32_t mode, AcSnap& snap,
-	              uint64_t* chk, uint64_t* bad) {
+	              uint64_t* chk, uint64_t* bad, PageBits* bad_bits = nullptr) {
 		PageBits candidates {};
 		{
 			SpinGuard lock(region.lock);
@@ -1341,6 +1363,9 @@ struct PageManager::Impl {
 				}
 				if (host_w) {
 					(*bad)++;
+					if (bad_bits != nullptr) { // ac_cbad attribution (cbad130.md rev 2 s.4 C1): Ba of the snapshot S_a
+						BitsSet(*bad_bits, page, page + 1);
+					}
 					static std::atomic<uint32_t> logged {0};
 					if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
 						LOGF("ArmCopyVerify: MISMATCH br=%s addr=0x%016llx perms=%u pend=0 host=0x%x mode=%u\n",
@@ -1356,6 +1381,7 @@ struct PageManager::Impl {
 		(void)job;
 		(void)mode;
 		(void)bad;
+		(void)bad_bits;
 #endif
 	}
 
@@ -1498,6 +1524,7 @@ struct PageManager::Impl {
 		const auto end   = Common::AlignUp(vaddr + size, PAGE_SIZE);
 		uint32_t   runs  = 0;
 		uint64_t   other = 0;
+		bool       cls_stored = false; // ac_cbad attribution: the snapshot S_a of the first region is stored
 		for (auto chunk_begin = begin; chunk_begin < end;) {
 			const auto chunk_end   = std::min(end, Common::AlignUp(chunk_begin + 1, REGION_SIZE));
 			const auto region_base = Common::AlignDown(chunk_begin, REGION_SIZE);
@@ -1555,7 +1582,8 @@ struct PageManager::Impl {
 			AcSnap     snap {};
 			uint64_t   chk = 0;
 			uint64_t   bad = 0;
-			AcDetect(*region, region_base, window, true, mode, snap, &chk, &bad);
+			PageBits   bad_bits {}; // ac_cbad attribution: Ba of the snapshot S_a
+			AcDetect(*region, region_base, window, true, mode, snap, &chk, &bad, &bad_bits);
 			if (t0 != 0) {
 				FS::Add(FS::Counter::AcChkNs, FS::NowNs() - t0);
 			}
@@ -1587,6 +1615,30 @@ struct PageManager::Impl {
 				}
 			});
 			FS::Add(FS::Counter::AcJstale, jstale);
+			// Session 130, ac_cbad attribution (cbad130.md rev 2 s.4 C2(c)): the snapshot S_a of this chunk for its check - the
+			// first region of the chunk only; a second one marks `multi` and its pages classify as R1. The check clears it.
+			if (!cls_stored) {
+				cls_stored  = true;
+				auto& cls   = t_ac_cls;
+				cls.multi   = false;
+				cls.mode    = mode;
+				cls.vaddr   = vaddr;
+				cls.size    = size;
+				cls.region  = region;
+				cls.base    = region_base;
+				cls.first   = first;
+				cls.last    = last;
+				cls.j       = j;
+				cls.t       = taken;
+				cls.st      = stale;
+				for (size_t word = 0; word < cls.pa.size(); word++) {
+					cls.pa[word] = window[word] & snap.pend[word];
+				}
+				cls.ba      = bad_bits;
+				cls.valid   = true;
+			} else {
+				t_ac_cls.multi = true;
+			}
 			if (t_ai_chunk) {
 				FS::Add(FS::Counter::AiJleft, jleft);
 				FS::Add(FS::Counter::AiJstale, jstale);
@@ -1618,6 +1670,183 @@ struct PageManager::Impl {
 			}
 		}
 		return mode == 3;
+	}
+
+	// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.4 C4, s.4.1, s.4.2; ROADMAP s122 items 116(d),
+	// 117(e), 118(b)-(g), 119(b)-(c)): a batch of the event pages of one chunk (n <= 64), on the thread that checked it, no
+	// lock held on entry. R1 - no snapshot S_a of this chunk for the page; R2..R6 - the bits of S_a. Then one `apply` hold of
+	// the chunk's region (S_k): under `lock` Pk, Perms() and the first CPU-dirty read (dk before); `lock` released,
+	// VirtualQuery once per page (prot_k, Wk); an acquire fence and the second CPU-dirty read (dk after); dk = before || after
+	// (item 119(b)); `apply` released. Pages without R1..R6: R7 Pk, R8 !Pk && Wk (host_d when dk), else E by prot_k. Adds
+	// only ac_cls_*, the CONTENT lines and the histogram; the class counts go to `out`, the caller adds them in the order of I0.
+	void AcClassify(uint64_t vaddr, uint64_t size, uint32_t mode, const uint64_t* events, size_t n,
+	                PageManager::ArmCopyDirtyFunc dirty, void* dirty_context, PageManager::ArmCopyClassCounts& out) {
+		namespace FS = Common::FrameStats;
+		constexpr size_t batch = PageManager::ArmCopyClassBatch;
+		static_assert(REGION_PAGES <= 65536);
+		if (n == 0) {
+			return;
+		}
+		n                  = std::min(n, batch);
+		const auto  t0     = FS::Enabled() ? FS::NowNs() : 0;
+		const auto& cls    = t_ac_cls;
+		const bool snap_ok = cls.valid && cls.region != nullptr && cls.vaddr == vaddr && cls.size == size && cls.mode == mode;
+		// why: 0 nosnap, 1 bad, 2 left, 3 stale, 4 remark, 5 new, 6 pend, 7 host (class M); 8 ro, 9 na, 10 oth (class E).
+		static constexpr const char* why_names[] = {"nosnap", "bad",  "left", "stale", "remark", "new",
+		                                            "pend",   "host", "ro",   "na",    "oth"};
+		constexpr uint8_t why_sk   = 0xffu; // decided by the snapshot S_k
+		constexpr uint8_t f_sk     = 1u;    // the page has S_a (and gets S_k)
+		constexpr uint8_t f_pk     = 2u;
+		constexpr uint8_t f_wk     = 4u;
+		constexpr uint8_t f_dk     = 8u;
+		constexpr uint8_t f_ro     = 16u;
+		constexpr uint8_t f_na     = 32u;
+		std::array<uint16_t, batch> index {};
+		std::array<uint8_t, batch>  why {};
+		std::array<uint8_t, batch>  flags {};
+		std::array<uint8_t, batch>  perms {};
+		std::array<uint8_t, batch>  prot {};
+		bool                        any_sk = false;
+		for (size_t i = 0; i < n; i++) {
+			if (!snap_ok || FindRegion(events[i]) != cls.region) {
+				continue; // R1
+			}
+			const auto page = static_cast<size_t>((events[i] - cls.base) / PAGE_SIZE);
+			if (page < cls.first || page >= cls.last) {
+				continue; // R1
+			}
+			index[i] = static_cast<uint16_t>(page);
+			flags[i] = f_sk;
+			any_sk   = true;
+			if (BitsTest(cls.ba, page)) {
+				why[i] = 1;
+			} else if (!BitsTest(cls.pa, page)) {
+				why[i] = why_sk;
+			} else if (!BitsTest(cls.j, page)) {
+				why[i] = 5;
+			} else if (!BitsTest(cls.t, page)) {
+				why[i] = 2;
+			} else {
+				why[i] = BitsTest(cls.st, page) ? 3 : 4;
+			}
+		}
+		uint64_t queries = 0;
+		if (any_sk) {
+			auto&      region = *cls.region;
+			ApplyGuard apply(region.apply, true, FS::Counter::AcClsWaitNs);
+			{
+				SpinGuard lock(region.lock);
+				for (size_t i = 0; i < n; i++) {
+					if ((flags[i] & f_sk) == 0) {
+						continue;
+					}
+					if (IsPending(region, index[i])) {
+						flags[i] |= f_pk;
+					}
+					perms[i] = static_cast<uint8_t>(region.pages[index[i]].Perms());
+					if (dirty(dirty_context, events[i])) { // dk before (item 119(b))
+						flags[i] |= f_dk;
+					}
+				}
+			}
+#if KYTY_PLATFORM == KYTY_PLATFORM_WINDOWS
+			for (size_t i = 0; i < n; i++) {
+				if ((flags[i] & f_sk) == 0) {
+					continue;
+				}
+				queries++;
+				MEMORY_BASIC_INFORMATION info {};
+				if (VirtualQuery(reinterpret_cast<LPCVOID>(events[i]), &info, sizeof(info)) == 0) {
+					continue; // oth
+				}
+				const auto protect = static_cast<uint32_t>(info.Protect & 0xffu);
+				prot[i]            = static_cast<uint8_t>(protect);
+				if (info.State != MEM_COMMIT) {
+					continue; // oth
+				}
+				if (protect == PAGE_READWRITE || protect == PAGE_WRITECOPY || protect == PAGE_EXECUTE_READWRITE ||
+				    protect == PAGE_EXECUTE_WRITECOPY) {
+					flags[i] |= f_wk;
+				} else if (protect == PAGE_READONLY || protect == PAGE_EXECUTE_READ) {
+					flags[i] |= f_ro;
+				} else if (protect == PAGE_NOACCESS) {
+					flags[i] |= f_na;
+				}
+			}
+#endif
+			// dk after VirtualQuery, in the same hold (item 118(c)); the fence as before the event's own read.
+			std::atomic_thread_fence(std::memory_order_acquire);
+			for (size_t i = 0; i < n; i++) {
+				if ((flags[i] & f_sk) != 0 && dirty(dirty_context, events[i])) { // dk after
+					flags[i] |= f_dk;
+				}
+			}
+		}
+		// CONTENT limits: 40 per (mode 2/3/4, class M/E) per process (item 117(e)); the events why=host dk=0 (H) under their
+		// own 40 per chunk mode, not spending the (mode, class) limit (item 119(c)).
+		static std::array<std::atomic<uint32_t>, 6> logged {};
+		static std::array<std::atomic<uint32_t>, 3> logged_h {};
+		for (size_t i = 0; i < n; i++) {
+			const auto f = flags[i];
+			if (why[i] == why_sk) {
+				why[i] = (f & f_pk) != 0 ? 6 : (f & f_wk) != 0 ? 7 : (f & f_ro) != 0 ? 8 : (f & f_na) != 0 ? 9 : 10;
+			}
+			const bool m  = why[i] <= 7;
+			const bool dk = (f & f_dk) != 0;
+			switch (why[i]) {
+				case 0: out.nosnap++; break;
+				case 1: out.bad++; break;
+				case 2: out.left++; break;
+				case 3: out.stale++; break;
+				case 4: out.remark++; break;
+				case 5: out.fresh++; break;
+				case 6: out.pend++; break;
+				case 7:
+					out.host++;
+					if (dk) {
+						out.host_d++;
+					}
+					break;
+				case 8: out.ro++; break;
+				case 9: out.na++; break;
+				default: out.oth++; break;
+			}
+			if (m) {
+				out.m++;
+			} else {
+				out.e++;
+			}
+			FS::AcHistNote(events[i], mode, m);
+			if (mode < 2 || mode > 4) {
+				continue;
+			}
+			const bool h    = why[i] == 7 && !dk;
+			auto&      slot = h ? logged_h[mode - 2] : logged[(mode - 2) * 2 + (m ? 0 : 1)];
+			if (slot.load(std::memory_order_relaxed) >= 40 || slot.fetch_add(1, std::memory_order_relaxed) >= 40) {
+				continue;
+			}
+			if ((f & f_sk) == 0) {
+				LOGF("ArmCopyVerify: CONTENT addr=0x%016llx mode=%u class=M why=nosnap j=- tk=- st=- pa=- ba=- pk=- perms=- "
+				     "host=- dk=-\n",
+				     static_cast<unsigned long long>(events[i]), static_cast<unsigned>(mode));
+			} else {
+				const auto page = static_cast<size_t>(index[i]);
+				LOGF("ArmCopyVerify: CONTENT addr=0x%016llx mode=%u class=%s why=%s j=%u tk=%u st=%u pa=%u ba=%u pk=%u "
+				     "perms=%u host=0x%x dk=%u\n",
+				     static_cast<unsigned long long>(events[i]), static_cast<unsigned>(mode), m ? "M" : "E",
+				     why_names[why[i]], BitsTest(cls.j, page) ? 1u : 0u, BitsTest(cls.t, page) ? 1u : 0u,
+				     BitsTest(cls.st, page) ? 1u : 0u, BitsTest(cls.pa, page) ? 1u : 0u, BitsTest(cls.ba, page) ? 1u : 0u,
+				     (f & f_pk) != 0 ? 1u : 0u, static_cast<unsigned>(perms[i]), static_cast<unsigned>(prot[i]),
+				     dk ? 1u : 0u);
+			}
+		}
+		if (any_sk) {
+			FS::Add(FS::Counter::AcClsN, 1);
+			FS::Add(FS::Counter::AcClsVq, queries);
+		}
+		if (t0 != 0) {
+			FS::Add(FS::Counter::AcClsNs, FS::NowNs() - t0);
+		}
 	}
 
 	// Value 3 (s.7.5, ROADMAP s122 item 101(g)): a GuestGpu flush of [first, last) of one region in the order take -> check
@@ -1981,6 +2210,8 @@ struct PageManager::Impl {
 	static thread_local uint8_t                    t_ac_mode;
 	static thread_local PageManager::ArmCopyReason t_ac_reason;
 	static thread_local AcOp                       t_ac_op;
+	// Session 130, ac_cbad attribution (cbad130.md rev 2 s.4 C3): the snapshot S_a of the chunk this thread copies.
+	static thread_local AcCls                      t_ac_cls;
 	// Session 130, knob "acinline": the flag latched by this thread's outer ArmCopyScope (0/1), the start of the wall of its
 	// operation (ai_op_ns, 0 = not measuring), and whether this thread runs an inline-class chunk right now (I6).
 	static thread_local uint8_t  t_ai_state;
@@ -2014,6 +2245,7 @@ thread_local uint8_t                    PageManager::Impl::t_ac_state  = PageMan
 thread_local uint8_t                    PageManager::Impl::t_ac_mode   = 0;
 thread_local PageManager::ArmCopyReason PageManager::Impl::t_ac_reason = PageManager::ArmCopyReason::Full;
 thread_local PageManager::Impl::AcOp    PageManager::Impl::t_ac_op {};
+thread_local PageManager::Impl::AcCls   PageManager::Impl::t_ac_cls {};
 thread_local uint8_t                    PageManager::Impl::t_ai_state = 0;
 thread_local uint64_t                   PageManager::Impl::t_ai_op_t0 = 0;
 thread_local bool                       PageManager::Impl::t_ai_chunk = false;
@@ -2463,6 +2695,15 @@ void PageManager::ArmCopyFinish() {
 bool PageManager::ArmCopyChunk(void* context, uint64_t vaddr, size_t size, uint32_t mode, uint8_t* dst,
                                const uint8_t* src) {
 	return static_cast<PageManager*>(context)->m_impl->AcChunk(vaddr, size, mode, dst, src);
+}
+
+void PageManager::ArmCopyClassify(uint64_t vaddr, uint64_t size, uint32_t mode, const uint64_t* pages, size_t n,
+                                  ArmCopyDirtyFunc dirty, void* dirty_context, ArmCopyClassCounts* counts) {
+	m_impl->AcClassify(vaddr, size, mode, pages, n, dirty, dirty_context, *counts);
+}
+
+void PageManager::ArmCopyClassDone() noexcept {
+	Impl::t_ac_cls.valid = false;
 }
 
 bool PageManager::ArmCopyInlineOn() noexcept {

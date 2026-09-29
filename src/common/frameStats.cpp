@@ -1018,4 +1018,100 @@ void BurnSubmitFrame(uint32_t key) {
 }
 #endif
 
+// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.5.4, C7; ROADMAP s122 item 117(e)): page -> events
+// by chunk mode (2/3/4) and class (M/E); open addressing over 8192 cells, at most 64 probes, the key set by
+// compare_exchange from 0; a note that finds no cell counts in ovf. Running totals from the start of the process.
+namespace {
+
+struct AcHistCell {
+	std::atomic<uint64_t> page {0};
+	std::atomic<uint32_t> n[3][2] {};
+};
+
+constexpr size_t AC_HIST_CELLS  = 8192;
+constexpr size_t AC_HIST_PROBES = 64;
+constexpr size_t AC_HIST_TOP    = 64;
+
+std::array<AcHistCell, AC_HIST_CELLS> g_ac_hist {};
+std::atomic<uint64_t>                 g_ac_hist_ovf {0};
+
+} // namespace
+
+void AcHistNote(uint64_t page, uint32_t mode, bool m) {
+	if (mode < 2 || mode > 4) {
+		return;
+	}
+	if (page != 0) {
+		const auto hash = static_cast<size_t>(((page >> 12u) * 0x9E3779B97F4A7C15ull) >> 51u); // 13 bits
+		for (size_t probe = 0; probe < AC_HIST_PROBES; probe++) {
+			auto& cell = g_ac_hist[(hash + probe) & (AC_HIST_CELLS - 1)];
+			auto  key  = cell.page.load(std::memory_order_acquire);
+			if (key == 0) {
+				uint64_t expected = 0;
+				key = cell.page.compare_exchange_strong(expected, page, std::memory_order_acq_rel) ? page : expected;
+			}
+			if (key == page) {
+				cell.n[mode - 2][m ? 0 : 1].fetch_add(1, std::memory_order_relaxed);
+				return;
+			}
+		}
+	}
+	g_ac_hist_ovf.fetch_add(1, std::memory_order_relaxed);
+}
+
+void AcHistLog(uint64_t flip) {
+	struct Row {
+		uint64_t page;
+		uint32_t n[3][2];
+	};
+	std::vector<Row> rows;
+	uint64_t         total[3][2] {};
+	for (const auto& cell: g_ac_hist) {
+		const auto page = cell.page.load(std::memory_order_acquire);
+		if (page == 0) {
+			continue;
+		}
+		Row row {page, {}};
+		for (size_t r = 0; r < 3; r++) {
+			for (size_t c = 0; c < 2; c++) {
+				row.n[r][c] = cell.n[r][c].load(std::memory_order_relaxed);
+				total[r][c] += row.n[r][c];
+			}
+		}
+		rows.push_back(row);
+	}
+	LOGF("ArmCopyHist: n=%llu pages=%llu ovf=%llu m2=%llu e2=%llu m3=%llu e3=%llu m4=%llu e4=%llu\n",
+	     static_cast<unsigned long long>(flip), static_cast<unsigned long long>(rows.size()),
+	     static_cast<unsigned long long>(g_ac_hist_ovf.load(std::memory_order_relaxed)),
+	     static_cast<unsigned long long>(total[0][0]), static_cast<unsigned long long>(total[0][1]),
+	     static_cast<unsigned long long>(total[1][0]), static_cast<unsigned long long>(total[1][1]),
+	     static_cast<unsigned long long>(total[2][0]), static_cast<unsigned long long>(total[2][1]));
+	for (const uint32_t mode: {2u, 4u, 3u}) {
+		const auto r = static_cast<size_t>(mode - 2);
+		if (total[r][0] + total[r][1] == 0) {
+			continue;
+		}
+		std::vector<const Row*> by;
+		for (const auto& row: rows) {
+			if (row.n[r][0] + row.n[r][1] != 0) {
+				by.push_back(&row);
+			}
+		}
+		const auto top = std::min(by.size(), AC_HIST_TOP);
+		std::partial_sort(by.begin(), by.begin() + static_cast<std::ptrdiff_t>(top), by.end(),
+		                  [r](const Row* a, const Row* b) {
+			                  const auto na = static_cast<uint64_t>(a->n[r][0]) + a->n[r][1];
+			                  const auto nb = static_cast<uint64_t>(b->n[r][0]) + b->n[r][1];
+			                  return na != nb ? na > nb : a->page < b->page;
+		                  });
+		for (size_t i = 0; i < top; i++) {
+			const auto& row = *by[i];
+			LOGF("ArmCopyHist: n=%llu by=%u rank=%u addr=0x%016llx m2=%u e2=%u m3=%u e3=%u m4=%u e4=%u\n",
+			     static_cast<unsigned long long>(flip), mode, static_cast<unsigned>(i + 1),
+			     static_cast<unsigned long long>(row.page), row.n[0][0], row.n[0][1], row.n[1][0], row.n[1][1],
+			     row.n[2][0], row.n[2][1]);
+		}
+	}
+}
+
 } // namespace Common::FrameStats

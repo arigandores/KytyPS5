@@ -318,10 +318,20 @@ void BufferCache::ArmCopyContentInline(void* context, uint64_t vaddr, size_t siz
 void BufferCache::ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size, uint32_t mode, const uint8_t* dst,
                                      const uint8_t* src, bool inline_class) {
 	namespace FS = Common::FrameStats;
-	auto*    self  = static_cast<BufferCache*>(context);
-	uint64_t count = 0;
-	uint64_t diff  = 0;
-	uint64_t bad   = 0;
+	auto* self = static_cast<BufferCache*>(context);
+	// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.4 C5, s.4.2): every event page goes to a batch
+	// of <= 64 classified by the page manager (one `apply` hold S_k per batch); the CPU-dirty read of that hold is the same
+	// lock-free call as the event's own.
+	constexpr PageManager::ArmCopyDirtyFunc dirty = [](void* dirty_context, uint64_t page) {
+		return static_cast<BufferCache*>(dirty_context)->m_memory_tracker.IsCpuDirtyRelaxed(page, TRACKER_PAGE_SIZE);
+	};
+	auto&                           pages = self->m_memory_tracker.Pages();
+	PageManager::ArmCopyClassCounts cls {};
+	uint64_t                        batch[PageManager::ArmCopyClassBatch] {};
+	size_t                          batched = 0;
+	uint64_t                        count   = 0;
+	uint64_t                        diff    = 0;
+	uint64_t                        bad     = 0;
 	for (uint64_t offset = 0; offset < size;) {
 		const auto page  = (vaddr + offset) & ~(TRACKER_PAGE_SIZE - 1);
 		const auto bytes = std::min<uint64_t>(page + TRACKER_PAGE_SIZE - (vaddr + offset), size - offset);
@@ -333,22 +343,49 @@ void BufferCache::ArmCopyContentImpl(void* context, uint64_t vaddr, size_t size,
 			std::atomic_thread_fence(std::memory_order_acquire);
 			if (!self->m_memory_tracker.IsCpuDirtyRelaxed(page, TRACKER_PAGE_SIZE)) {
 				bad++;
-				static std::atomic<uint32_t> logged {0};
-				if (logged.fetch_add(1, std::memory_order_relaxed) < 40) {
-					LOGF("ArmCopyVerify: CONTENT addr=0x%016llx mode=%u\n", static_cast<unsigned long long>(page),
-					     static_cast<unsigned>(mode));
+				batch[batched++] = page;
+				if (batched == PageManager::ArmCopyClassBatch) {
+					pages.ArmCopyClassify(vaddr, size, mode, batch, batched, dirty, self, &cls);
+					batched = 0;
 				}
 			}
 		}
 		offset += bytes;
 	}
+	if (batched != 0) {
+		pages.ArmCopyClassify(vaddr, size, mode, batch, batched, dirty, self, &cls);
+	}
+	// The order of I0 (cbad130.md rev 2 s.6.1, 6.1'): each group is added before the next, a release fence between groups,
+	// so that at any moment sum(ac_cbm_*) >= ac_cbad_m, sum(ac_cbe_*) >= ac_cbad_e, m + e >= ac_cbad and
+	// ac_cbm_host_d <= ac_cbm_host - the flip reads the group in the reverse order.
 	FS::Add(FS::Counter::AcCmpPages, count);
 	FS::Add(FS::Counter::AcCdiff, diff);
+	if (bad != 0) {
+		std::atomic_thread_fence(std::memory_order_release);
+		FS::Add(FS::Counter::AcCbmNosnap, cls.nosnap);
+		FS::Add(FS::Counter::AcCbmBad, cls.bad);
+		FS::Add(FS::Counter::AcCbmLeft, cls.left);
+		FS::Add(FS::Counter::AcCbmStale, cls.stale);
+		FS::Add(FS::Counter::AcCbmRemark, cls.remark);
+		FS::Add(FS::Counter::AcCbmNew, cls.fresh);
+		FS::Add(FS::Counter::AcCbmPend, cls.pend);
+		FS::Add(FS::Counter::AcCbmHost, cls.host);
+		std::atomic_thread_fence(std::memory_order_release);
+		FS::Add(FS::Counter::AcCbmHostD, cls.host_d);
+		FS::Add(FS::Counter::AcCbeRo, cls.ro);
+		FS::Add(FS::Counter::AcCbeNa, cls.na);
+		FS::Add(FS::Counter::AcCbeOth, cls.oth);
+		std::atomic_thread_fence(std::memory_order_release);
+		FS::Add(FS::Counter::AcCbadM, cls.m);
+		FS::Add(FS::Counter::AcCbadE, cls.e);
+		std::atomic_thread_fence(std::memory_order_release);
+	}
 	FS::Add(FS::Counter::AcCbad, bad);
 	if (inline_class) {
 		FS::Add(FS::Counter::AiCmpPages, count);
 		FS::Add(FS::Counter::AiCbad, bad);
 	}
+	PageManager::ArmCopyClassDone(); // the snapshot S_a lives from AcChunk of this chunk to here (s.4 C5(d))
 }
 
 // Session 91: the upload memcpy split, counted at the caller from CopyGuestToStaging's own

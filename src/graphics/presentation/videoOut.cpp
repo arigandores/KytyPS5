@@ -1294,6 +1294,50 @@ bool FlipQueue::Flip(uint32_t micros) {
 		for (size_t i = 0; i < cur.c.size(); i++) {
 			cur.c[i] = FS::Read(static_cast<FS::Counter>(i));
 		}
+		// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.6.1, 6.1'; I0): the content group read again
+		// as one consistent snapshot, in the reverse of the writer's order with an acquire fence after each read - only when
+		// a value of the group or of ac_cls_* read by the loop above moved (none moves at 0/1: no new read there). Accepted
+		// when m + e = cbad, sum(ac_cbm_*) = m and sum(ac_cbe_*) = e (ac_cbm_host_d is not a term); after 1000 attempts the
+		// last read is taken and an ArmCopyClass: TORN line written.
+		{
+			using C = FS::Counter;
+			static constexpr std::array<C, 17> group {C::AcCbad,     C::AcCbadM,     C::AcCbadE,    C::AcCbmNosnap, C::AcCbmBad,
+			                                          C::AcCbmLeft,  C::AcCbmStale,  C::AcCbmRemark, C::AcCbmNew,  C::AcCbmPend,
+			                                          C::AcCbmHostD, C::AcCbmHost,   C::AcCbeRo,    C::AcCbeNa,    C::AcCbeOth,
+			                                          C::AcCdiff,    C::AcCmpPages};
+			static constexpr std::array<C, 4>  cls_rows {C::AcClsN, C::AcClsNs, C::AcClsWaitNs, C::AcClsVq};
+			bool moved = false;
+			for (const auto counter: group) {
+				moved = moved || cur.c[static_cast<size_t>(counter)] != prev.c[static_cast<size_t>(counter)];
+			}
+			for (const auto counter: cls_rows) {
+				moved = moved || cur.c[static_cast<size_t>(counter)] != prev.c[static_cast<size_t>(counter)];
+			}
+			if (moved) {
+				std::array<uint64_t, 17> v {};
+				bool                     consistent = false;
+				for (uint32_t attempt = 0; attempt < 1000 && !consistent; attempt++) {
+					for (size_t k = 0; k < group.size(); k++) {
+						v[k] = FS::Read(group[k]);
+						std::atomic_thread_fence(std::memory_order_acquire);
+					}
+					const auto cbm = v[3] + v[4] + v[5] + v[6] + v[7] + v[8] + v[9] + v[11];
+					const auto cbe = v[12] + v[13] + v[14];
+					consistent     = v[1] + v[2] == v[0] && cbm == v[1] && cbe == v[2];
+				}
+				for (size_t k = 0; k < group.size(); k++) {
+					cur.c[static_cast<size_t>(group[k])] = v[k];
+				}
+				if (!consistent) {
+					static std::atomic<uint32_t> torn {0};
+					if (torn.fetch_add(1, std::memory_order_relaxed) < 40) {
+						LOGF("ArmCopyClass: TORN n=%" PRIu64 " c=%llu m=%llu e=%llu\n", r.cfg->flip_status.count,
+						     static_cast<unsigned long long>(v[0]), static_cast<unsigned long long>(v[1]),
+						     static_cast<unsigned long long>(v[2]));
+					}
+				}
+			}
+		}
 		for (size_t i = 0; i < cur.cpu.size(); i++) {
 			cur.cpu[i] = FS::ThreadCpuNs(static_cast<FS::ThreadRole>(i));
 		}
@@ -3209,6 +3253,25 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"ai_jstale", FS::Counter::AiJstale, false},
 				    {"ai_cmp_pages", FS::Counter::AiCmpPages, false},
 				    {"ai_cbad", FS::Counter::AiCbad, false},
+				    // Session 130, ac_cbad attribution (cbad130.md rev 2 s.5.1): raw, live at 2/3/4 only.
+				    {"ac_cbad_m", FS::Counter::AcCbadM, false},
+				    {"ac_cbad_e", FS::Counter::AcCbadE, false},
+				    {"ac_cbm_nosnap", FS::Counter::AcCbmNosnap, false},
+				    {"ac_cbm_bad", FS::Counter::AcCbmBad, false},
+				    {"ac_cbm_left", FS::Counter::AcCbmLeft, false},
+				    {"ac_cbm_stale", FS::Counter::AcCbmStale, false},
+				    {"ac_cbm_remark", FS::Counter::AcCbmRemark, false},
+				    {"ac_cbm_new", FS::Counter::AcCbmNew, false},
+				    {"ac_cbm_pend", FS::Counter::AcCbmPend, false},
+				    {"ac_cbm_host", FS::Counter::AcCbmHost, false},
+				    {"ac_cbe_ro", FS::Counter::AcCbeRo, false},
+				    {"ac_cbe_na", FS::Counter::AcCbeNa, false},
+				    {"ac_cbe_oth", FS::Counter::AcCbeOth, false},
+				    {"ac_cls_n", FS::Counter::AcClsN, false},
+				    {"ac_cls_ns", FS::Counter::AcClsNs, false},
+				    {"ac_cls_wait_ns", FS::Counter::AcClsWaitNs, false},
+				    {"ac_cls_vq", FS::Counter::AcClsVq, false},
+				    {"ac_cbm_host_d", FS::Counter::AcCbmHostD, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {
@@ -3221,6 +3284,11 @@ bool FlipQueue::Flip(uint32_t micros) {
 				text += " pc_u_live=";
 				text += std::to_string(static_cast<unsigned long long>(cur.c[static_cast<size_t>(FS::Counter::PcULive)]));
 				LOGF("FrameTrace-x: n=%" PRIu64 "%s" "\n", r.cfg->flip_status.count, text.c_str());
+				// Session 130, ac_cbad attribution (cbad130.md rev 2 s.5.4, C9): the address histogram every 300 flips while the
+				// running ac_cbad (read above - no new read) is not 0.
+				if (cur.c[static_cast<size_t>(FS::Counter::AcCbad)] != 0 && r.cfg->flip_status.count % 300 == 0) {
+					FS::AcHistLog(r.cfg->flip_status.count);
+				}
 			}
 			for (uint32_t table = 0; table < static_cast<uint32_t>(FS::Table::Count); table++) {
 				static std::array<std::array<FS::SiteRow, 160>, static_cast<size_t>(FS::Table::Count)>

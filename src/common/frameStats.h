@@ -2592,6 +2592,27 @@ enum class Counter : uint32_t {
 	AiJstale,                // ai_jstale: of ac_jstale, inline-class chunks
 	AiCmpPages,              // ai_cmp_pages: of ac_cmp_pages, inline-class chunks
 	AiCbad,                  // ai_cbad: of ac_cbad, inline-class chunks
+	// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.5.1, ROADMAP s122 items 116(d), 117(e), 118(g)):
+	// raw pages / counts / ns, live at 2/3/4 only (0 at 0/1). Class M = R1..R8, E = the rest; the flip reads the group
+	// ac_cbad .. ac_cmp_pages as one consistent snapshot (I0).
+	AcCbadM,                 // ac_cbad_m: events of class M
+	AcCbadE,                 // ac_cbad_e: events of class E
+	AcCbmNosnap,             // ac_cbm_nosnap: M by R1 - no snapshot S_a of the chunk for the page
+	AcCbmBad,                // ac_cbm_bad: M by R2 - bad in S_a
+	AcCbmLeft,               // ac_cbm_left: M by R3 - J, pending in S_a, not taken
+	AcCbmStale,              // ac_cbm_stale: M by R4 - taken with the bit still set in the hold of the take
+	AcCbmRemark,             // ac_cbm_remark: M by R5 - taken and marked again before S_a
+	AcCbmNew,                // ac_cbm_new: M by R6 - not in J, pending in S_a
+	AcCbmPend,               // ac_cbm_pend: M by R7 - pending in S_k
+	AcCbmHost,               // ac_cbm_host: M by R8 - not pending in S_k, the host of the guest view writable
+	AcCbeRo,                 // ac_cbe_ro: E, host read-only in S_k
+	AcCbeNa,                 // ac_cbe_na: E, host no-access in S_k
+	AcCbeOth,                // ac_cbe_oth: E, the rest (not committed, the query failed)
+	AcClsN,                  // ac_cls_n: holds S_k (batches)
+	AcClsNs,                 // ac_cls_ns: wall of the classification, the wait included
+	AcClsWaitNs,             // ac_cls_wait_ns: the apply wait of S_k (also in ApplyWaitNs)
+	AcClsVq,                 // ac_cls_vq: VirtualQuery calls of S_k
+	AcCbmHostD,              // ac_cbm_host_d: of ac_cbm_host, CPU-dirty in S_k (H = ac_cbm_host - ac_cbm_host_d)
 	Count
 };
 
@@ -2650,6 +2671,11 @@ enum class ThreadRole : uint32_t { Main, Gpu, Present, Record, Count };
 void                      StartSampler(ThreadRole role);
 // Frame boundary for the per-frame sampler dumps (KYTY_SAMPLE_FRAME_MS): called from the flip.
 void                      NoteFrame(uint64_t frame);
+// Session 130, ac_cbad attribution (docs/session-130/cbad130.md rev 2 s.5.4): one content event on `page` by the chunk's
+// mode (2/3/4) and class (M when `m`) in the address histogram; lock-free, any thread.
+void                      AcHistNote(uint64_t page, uint32_t mode, bool m);
+// The histogram's ArmCopyHist: lines (totals, then up to 64 pages per mode by descending count); on the flip.
+void                      AcHistLog(uint64_t flip);
 
 [[nodiscard]] bool Enabled();
 

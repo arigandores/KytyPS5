@@ -1,0 +1,2 @@
+# recount132.py read_log/blocks_of with NEED += cpu_record_us, rec_spin_us, rec_pack, rec_pack_cs, rec_direct; dd131 arm 0 (dispceil=0), window 10-88 item 55(b)
+rows 3239: cpu_record_us 30039.3, rec_spin_us 26898.5 (89.5 %), rec_pack 5009.1, rec_pack_cs 247.0, rec_direct 795.2

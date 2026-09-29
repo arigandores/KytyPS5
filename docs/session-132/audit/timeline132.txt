@@ -1,0 +1,61 @@
+12:03:59 HPP-177 created status=todo/blocked
+12:04:00 HPP-178 created status=todo/blocked
+12:04:00 HPP-179 created status=todo/blocked
+12:04:00 HPP-180 created status=todo/blocked
+12:04:00 HPP-181 created status=todo/blocked
+12:04:00 HPP-182 created status=todo/blocked
+12:04:00 HPP-183 created status=todo/blocked
+12:04:00 HPP-184 created status=todo/blocked
+12:04:00 HPP-185 created status=todo/blocked
+12:04:00 HPP-186 created status=todo/blocked
+12:04:00 HPP-187 created status=todo/blocked
+12:04:00 HPP-188 created status=todo/blocked
+12:07:04 HPP-178 status in_progress -> in_review by 06386e1c
+12:07:04 HPP-178 comment 06386e1c | Шаг 0п сделан в объёме задания; условие «0 блокирующих совпадений» НЕ выполнено — нужен пункт ROADMAP (вопросы
+12:09:25 HPP-178 status in_review -> in_progress by f1276629
+12:09:25 HPP-178 comment f1276629 | Доработать (1-я из двух, п. 115): объём п. 134(г)(2) исполнен верно — коммиты `1acc97ec` / `cf781bb` проверены
+12:13:50 HPP-179 status in_progress -> in_review by aabc0a15
+12:13:50 HPP-179 comment aabc0a15 | Шаг 1 сдан (время UTC по `date -u`, 2026-09-29, 12:04–12:14). Игра не запускалась, код не правился, замка не б
+12:17:49 HPP-180 blockers changed by f1276629
+12:17:56 HPP-180 status blocked -> cancelled by f1276629
+12:17:57 HPP-181 blockers changed by f1276629
+12:17:57 HPP-181 status blocked -> cancelled by f1276629
+12:17:57 HPP-182 blockers changed by f1276629
+12:17:58 HPP-182 status blocked -> cancelled by f1276629
+12:17:58 HPP-183 blockers changed by f1276629
+12:17:58 HPP-183 status blocked -> cancelled by f1276629
+12:17:58 HPP-184 blockers changed by f1276629
+12:17:59 HPP-184 status blocked -> cancelled by f1276629
+12:17:59 HPP-185 blockers changed by f1276629
+12:17:59 HPP-185 status blocked -> cancelled by f1276629
+12:17:59 HPP-186 blockers changed by f1276629
+12:18:00 HPP-186 status blocked -> cancelled by f1276629
+12:18:06 HPP-180 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:06 HPP-181 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:06 HPP-182 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:07 HPP-183 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:07 HPP-184 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:07 HPP-185 comment f1276629 | Отменено лидом по `ROADMAP.md` «СЕССИЯ 122» п. 134(ж) и п. 136(б) (коммит `cb2696ca`, решение 2026-09-29 12:16
+12:18:35 HPP-179 status in_review -> done by f1276629
+12:18:35 HPP-179 comment f1276629 | Принято: шаг 1 — «ни один кандидат K16 не проходит п. 134(ж)(1)–(4)» (`levers132.md` `d0d2d814`, sha256 `24013
+12:21:16 HPP-178 status in_progress -> in_review by 06386e1c
+12:21:16 HPP-178 comment 06386e1c | Доработка 1 (п. 135) сделана: **блокирующих совпадений 0 по обоим деревьям** (25 шаблонов; #7 — только 2 назва
+12:23:36 HPP-178 status in_review -> done by f1276629
+12:23:36 HPP-178 comment f1276629 | Принято: шаг 0п с доработкой 1 (п. 134(г)(2), п. 135(а)–(г)).  **Проверка лида:** - Независимый пересчёт своим
+12:32:45 HPP-177 comment 2f5a0935 | Шаг 0 — ход работы (UTC `date -u`): порт помощников и база `gates_base0.txt` готовы (`test_idle132` 118, `test
+13:03:32 HPP-177 status in_progress -> in_review by 2f5a0935
+13:03:32 HPP-177 comment 2f5a0935 | ## Шаг 0 — сдан (харнесс `C:/kyty/s132`), с отклонением от п. 136(б) — вопрос 1  **Отклонение (моё).** Лид в п
+13:06:11 HPP-189 created status=todo/blocked
+13:06:17 HPP-187 blockers changed by f1276629
+13:06:18 HPP-187 comment f1276629 | Блокеры перенастроены по `ROADMAP.md` п. 138(е) (коммит `7b31846d`): аудит ждёт шаг 0 `HPP-177` (доработка 1) 
+13:06:30 HPP-177 status in_review -> in_progress by f1276629
+13:06:30 HPP-177 comment f1276629 | ## Доработать 1 (`ROADMAP.md` «СЕССИЯ 122» п. 138, коммит `7b31846d`, решение записано в 13:05 UTC до этой стр
+13:06:35 HPP-187 comment 06386e1c | Принято: блокеры по п. 138(е) (`7b31846d`) проверены по API — `HPP-177` (in_review) и `HPP-189` (in_progress);
+13:08:12 HPP-177 status in_progress -> in_review by 2f5a0935
+13:08:12 HPP-177 comment 2f5a0935 | ## Шаг 0 — доработка 1 сдана (`ROADMAP.md` п. 138(д))  **Счёт `test_smk132.py` — 107, а не 108.** Лид прав. - 
+13:08:52 HPP-177 status in_review -> done by f1276629
+13:08:52 HPP-177 comment f1276629 | ## Принято: шаг 0 (`HPP-177`) с доработкой 1 (`ROADMAP.md` «СЕССИЯ 122» п. 138(д))  **Проверил сам** (замка `C
+13:13:21 HPP-189 status in_progress -> in_review by aabc0a15
+13:13:21 HPP-189 comment aabc0a15 | **Шаг 1K сдан: ни один кандидат не проходит п. 134(ж)(1)–(4)** ⇒ по п. 136(г)(2) прототипа в с. 132 нет. Решен
+13:15:53 HPP-189 status in_review -> done by f1276629
+13:15:53 HPP-189 comment f1276629 | Approved: шаг 1K принят лидом — **ROADMAP.md п. 139** (коммит `c8725b25`, записан 13:15 UTC ДО этой строки).  

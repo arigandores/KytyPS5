@@ -1,0 +1,13 @@
+logs s115-137 with a started level 135 non-val 124 with FrameTrace 135
+  per session [(115, 3), (116, 1), (117, 5), (118, 5), (119, 4), (120, 2), (121, 2), (122, 13), (123, 5), (124, 5), (126, 8), (127, 10), (128, 5), (129, 13), (130, 8), (131, 8), (133, 4), (134, 7), (135, 4), (136, 12), (137, 11)]
+lw6s131 outside B2 window 31 range 179 3176 max (179, 376140)
+s1s128 b'vkQueueSubmit failed: ErrorDeviceLost (-4), tick=1955 debug_op=0 debug_submit=0 args=0,0,0,0,0x0000000000000000\n'
+s1s128 b'--- Fatal Error ---\n'
+s2s128 b'vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=4561\n'
+s2s128 b'--- Fatal Error ---\n'
+dds131 b'--- Fatal Error ---\n'
+census s113 SG 0 []
+logs s113 SG 11 ['shn113', 'vbn113', 'vbn113b', 'vbn113c', 'vbn113g', 'vbn113h', 'vbn113i', 'vbn113j', 'vbn113k', 'vbn113m', 'vid113']
+overlap []
+census s103-113 SG 151
+lw6s131 first n 177 hold>=100ms outside B2 25 range 983 3176 max (1598, 139228)

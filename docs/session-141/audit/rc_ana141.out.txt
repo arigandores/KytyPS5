@@ -1,0 +1,95 @@
+== census 1c3859325ec0f021 rows 579
+census levels: {'underwater_aerial_garden': 468, 'ps_logo': 105, 'title_controller_ship': 105, 'intro_next': 104, 'worldmap': 29, 'penguin_atlantis': None, 'transition_next': None}
+census other level names: []
+census scene=transition_next: 7 [['54', 'play1'], ['57', 'head1'], ['57', 'sky2_crash'], ['58', 'sky58a'], ['58', 'sky58b'], ['61', 'sky61a_crash'], ['61', 'sky61b']]
+census fatal kinds: {'FATAL': 6, 'ERROR': 4, 'HANG': 27} total 37
+census intro_next s59-113 [runs, --- Error ---]: [46, 1]
+census SG s76-102 entries 225 hang req<6000 20 ['fsl76a_a1', 'curve77a_a1', 'smp80c_a1', 'smp80f_a1', 'hang81_14', 'hang81_17', 'smp81f_a1', 'smp81g_a1', 'bdv82b_a1', 'tfs85a_a1', 'spv87a_warmup', 'dwl88c_a1', 'spv88a_a1', 'wit88a_warmup', 'pin91a_warmup', 'stg92a_warmup', 'hg97a_warmup', 'trig98a', 'mov100b', 'ckpt102']
+census SG s103-113 entries 151 hang req<6000 0
+census all GpuHangAbort rows 27
+   hang 58 sky58b 382790 transition_next
+   hang 61 sky61b 372572 transition_next
+   hang 76 fsl76a_a1 2968 underwater_aerial_garden
+   hang 77 curve77a_a1 3196 underwater_aerial_garden
+   hang 80 smp80c_a1 3059 underwater_aerial_garden
+   hang 80 smp80f_a1 3076 underwater_aerial_garden
+   hang 81 hang81_14 2920 underwater_aerial_garden
+   hang 81 hang81_17 3038 underwater_aerial_garden
+   hang 81 smp81f_a1 3002 underwater_aerial_garden
+   hang 81 smp81g_a1 2992 underwater_aerial_garden
+   hang 82 bdv82b_a1 2950 underwater_aerial_garden
+   hang 85 tfs85a_a1 2808 underwater_aerial_garden
+   hang 87 spv87a_warmup 2877 underwater_aerial_garden
+   hang 88 dwl88c_a1 2847 underwater_aerial_garden
+   hang 88 spv88a_a1 2902 underwater_aerial_garden
+   hang 88 wit88a_warmup 2861 underwater_aerial_garden
+   hang 91 pin91a_warmup 4884 underwater_aerial_garden
+   hang 92 stg92a_warmup 2984 underwater_aerial_garden
+   hang 97 hg97a 69075 underwater_aerial_garden
+   hang 97 hg97a_warmup 2993 underwater_aerial_garden
+   hang 97 rv97a 225116 underwater_aerial_garden
+   hang 97 rv97a_warmup 199898 underwater_aerial_garden
+   hang 97 rv97b 169115 underwater_aerial_garden
+   hang 98 trig98a 2966 underwater_aerial_garden
+   hang 98 trig98a_warmup 76733 underwater_aerial_garden
+   hang 100 mov100b 2976 underwater_aerial_garden
+   hang 102 ckpt102 5219 underwater_aerial_garden
+   fatal 54 play1 --- Fatal Error --- transition_next
+   fatal 55 v3 --- Error --- intro_next
+   fatal 57 head1 --- Fatal Error --- transition_next
+   fatal 57 sky2_crash --- Fatal Error --- transition_next
+   fatal 58 sky58a --- Fatal Error --- transition_next
+   fatal 59 sig1 --- Error --- intro_next
+   fatal 61 sky61a_crash --- Fatal Error --- transition_next
+   fatal 68 bat68smoke_a2 --- Fatal Error --- underwater_aerial_garden
+   fatal 96 bf96a --- Error --- underwater_aerial_garden
+   fatal 96 bf96a_warmup --- Error --- underwater_aerial_garden
+== logs: files 155 (unique by sha)
+logs per started level: {'underwater_aerial_garden': 133, 'penguin_atlantis': 2, 'intro_next': 12, 'rotating_level_day_and_night': 2, 'time_stopper_ghost_world': 3}
+logs with any started level: 152
+== 12 named logs: first scene frame (draws>=100 after GuestOut target), window-600 max, max excluding the first frame itself
+  eatl122  56dde051 s122 penguin_atlantis first n 189 draws 894 first_dt 20976 | win max (191, 1391088) | win max excl first (191, 1391088) | win>=1s [(191, 1391088)] | hold>=1s [] | hold max 117868 | last n 7460 | AP 1320 lines 14 frames | MTL>=1s []
+  atl122   f6925868 s122 penguin_atlantis first n 149 draws 3150 first_dt 20500 | win max (151, 95006) | win max excl first (151, 95006) | win>=1s [] | hold>=1s [] | hold max 50042 | last n 18248 | AP 0 lines 0 frames | MTL>=1s []
+  eght122  11e2aca3 s122 time_stopper_ghost_world first n 253 draws 3765 first_dt 856069 | win max (253, 856069) | win max excl first (389, 263946) | win>=1s [] | hold>=1s [] | hold max 50525 | last n 4889 | AP 762 lines 69 frames | MTL>=1s []
+  ght122   51a7f9ea s122 time_stopper_ghost_world first n 239 draws 140 first_dt 25074 | win max (241, 129961) | win max excl first (241, 129961) | win>=1s [] | hold>=1s [] | hold max 65910 | last n 12214 | AP 0 lines 0 frames | MTL>=1s []
+  ght123   06d155f0 s123 time_stopper_ghost_world first n 224 draws 5403 first_dt 164302 | win max (224, 164302) | win max excl first (270, 66389) | win>=1s [] | hold>=1s [] | hold max 99389 | last n 14585 | AP 0 lines 0 frames | MTL>=1s []
+  ednn122  c6f0674e s122 rotating_level_day_and_night first n 219 draws 3139 first_dt 499355 | win max (219, 499355) | win max excl first (242, 67381) | win>=1s [] | hold>=1s [] | hold max 118647 | last n 7412 | AP 185 lines 11 frames | MTL>=1s []
+  dnn122   d11e3959 s122 rotating_level_day_and_night first n 222 draws 120 first_dt 17460 | win max (224, 119744) | win max excl first (224, 119744) | win>=1s [] | hold>=1s [] | hold max 65854 | last n 18110 | AP 0 lines 0 frames | MTL>=1s []
+  edes122  42830f04 s122 intro_next first n 232 draws 176 first_dt 19934 | win max (486, 19993) | win max excl first (486, 19993) | win>=1s [] | hold>=1s [(4945, 23796476)] | hold max 23796476 | last n 7250 | AP 0 lines 0 frames | MTL>=1s [23812688]
+  des122   b78016f2 s122 intro_next first n 201 draws 177 first_dt 16728 | win max (538, 17730) | win max excl first (538, 17730) | win>=1s [] | hold>=1s [] | hold max 67092 | last n 19493 | AP 0 lines 0 frames | MTL>=1s []
+  s6s136   40fdf4cf s136 underwater_aerial_garden first n 313 draws 123 first_dt 20769 | win max (315, 464175) | win max excl first (315, 464175) | win>=1s [] | hold>=1s [] | hold max 180910 | last n 1491 | AP 0 lines 0 frames | MTL>=1s []
+  s6s137   dced812b s137 underwater_aerial_garden first n 184 draws 129 first_dt 21858 | win max (186, 400262) | win max excl first (186, 400262) | win>=1s [] | hold>=1s [] | hold max 178161 | last n 1368 | AP 0 lines 0 frames | MTL>=1s []
+  kp137h   ff3840d9 s137 underwater_aerial_garden first n 182 draws 465 first_dt 18188 | win max (184, 181808) | win max excl first (184, 181808) | win>=1s [] | hold>=1s [] | hold max 51008 | last n 8664 | AP 0 lines 0 frames | MTL>=1s []
+  vbn113k 6a54e332 s113 frames>=1s [(9672, 3032310)]
+  ctl114a aa4bb358 s114 frames>=1s [(2972, 3034886)]
+== B2 (n 945-960, dt>=100ms): base logs 121 with form 6 [('ack129', 129, [(954, 183252)]), ('ack130', 130, [(954, 194034)]), ('s12s130', 130, [(951, 194568)]), ('lw4s131', 131, [(950, 189871)]), ('lw5s131', 131, [(949, 188648)]), ('lw6s131', 131, [(954, 197021)])]
+   base per session [(113, 11), (114, 6), (115, 3), (116, 1), (117, 5), (118, 5), (119, 4), (120, 2), (121, 2), (122, 5), (123, 4), (124, 4), (126, 8), (127, 6), (128, 4), (129, 8), (130, 5), (131, 7), (133, 3), (134, 5), (135, 3), (136, 10), (137, 10)]
+   of them in n 951-954: 4
+== hold frames >=100 ms after entry window (non-validation), with last-5 exclusion flag
+  s113 vbn113k    6a54e332 underwater_aerial_garden n=1 max=(9672, 3032310) last=9770 excl5=0 [(9672, 3032310)]
+  s114 ctl114a    aa4bb358 underwater_aerial_garden n=1 max=(2972, 3034886) last=6026 excl5=0 [(2972, 3034886)]
+  s122 eatl122    56dde051 penguin_atlantis n=1 max=(7458, 117868) last=7460 excl5=1 [(7458, 117868)]
+  s122 edes122    42830f04 intro_next n=1 max=(4945, 23796476) last=7250 excl5=0 [(4945, 23796476)]
+  s122 ednn122    c6f0674e rotating_level_day_and_night n=1 max=(1826, 118647) last=7412 excl5=0 [(1826, 118647)]
+  s126 adm126n    c128fac6 underwater_aerial_garden n=1 max=(1013, 101737) last=5526 excl5=0 [(1013, 101737)]
+  s129 ack129     c2bb6ff3 underwater_aerial_garden n=1 max=(954, 183252) last=8616 excl5=0 [(954, 183252)]
+  s130 ack130     2075039d underwater_aerial_garden n=1 max=(954, 194034) last=8462 excl5=0 [(954, 194034)]
+  s130 s12s130    ceaf5abd underwater_aerial_garden n=1 max=(951, 194568) last=4237 excl5=0 [(951, 194568)]
+  s130 s3s130     1388348f intro_next n=1 max=(2980, 100276) last=10793 excl5=0 [(2980, 100276)]
+  s131 lw3s131    2c1c17a6 underwater_aerial_garden n=1 max=(1060, 155753) last=4420 excl5=0 [(1060, 155753)]
+  s131 lw4s131    30383de7 underwater_aerial_garden n=1 max=(950, 189871) last=4228 excl5=0 [(950, 189871)]
+  s131 lw5s131    e8b34e91 underwater_aerial_garden n=1 max=(949, 188648) last=8297 excl5=0 [(949, 188648)]
+  s131 lw6s131    81a20cb2 underwater_aerial_garden n=26 max=(954, 197021) last=3204 excl5=0 [(954, 197021), (983, 103754), (1069, 106292), (1072, 106929)]
+  s135 rs135      81a7f407 underwater_aerial_garden n=1 max=(7445, 235598) last=8720 excl5=0 [(7445, 235598)]
+  entries per level {'underwater_aerial_garden': 122, 'penguin_atlantis': 2, 'intro_next': 12, 'rotating_level_day_and_night': 2, 'time_stopper_ghost_world': 3} with hold>=100ms (excl last 5) {'underwater_aerial_garden': 11, 'intro_next': 2, 'rotating_level_day_and_night': 1}
+== B3a: entries s115-137 non-validation 124 with hold dt>=1s [('edes122', [(4945, 23796476)])]
+   (all incl. validation) 135
+   entries s113: 11 ['shn113', 'vbn113', 'vbn113b', 'vbn113c', 'vbn113g', 'vbn113h', 'vbn113i', 'vbn113j', 'vbn113k', 'vbn113m', 'vid113']
+== B1b: SG logs s113-137 133 with BvhLoopCapTrip [('s2s126', 126, '0fe987b3'), ('smoke118b', 118, '98042033'), ('spk118', 118, '512e5a78'), ('vbn113', 113, '8618a71b'), ('vtt114b', 114, '3431f587')]
+   SG logs s113-126 61 s127-137 72
+   SG logs with GpuHangAbort []
+== opcode profiles: [('{"SOP1 0x0c": 1, "SOP1 0x21": 96, "VOPC 0xe3": 4}', 151), ('{}', 3), ('{"SOP1 0x21": 20}', 1)]
+== death markers: [('s1s128', 128, 1, 0, 0, 1), ('s2s128', 128, 1, 0, 0, 1), ('dds131', 131, 1, 0, 0, 0)]
+   [Vulkan][E] logs: []
+== PriorityStall>50ms: entries s113-137 152 non-val 141 with >50ms [('ack129', 154844), ('ack130', 153928), ('adm126n', 56459), ('ctl114a', 2975859), ('eatl122', 107575), ('ednn122', 234115), ('eght122', 314838), ('k3p127', 52611), ('lw2s131', 102267), ('lw3s131', 121005), ('lw4s131', 167988), ('lw5s131', 153550), ('lw6s131', 153448), ('rs135', 200365), ('s11s130', 118745), ('s12s130', 157220), ('s1s128', 4677544), ('s2s126', 263151), ('s2s130', 111434), ('s3s129', 77151), ('s3s130', 110210), ('smk119m', 50588), ('smoke118b', 285090), ('spk118', 285090), ('vtt114b', 293313)] validation with 11 of 11
+== dups {'258d5137': ['C:/kyty/s114/log_vid114.txt', 'C:/kyty/s115/check_draft/real_vid/log_vid115.txt'], '98042033': ['C:/kyty/s118/log_smoke118b.txt', 'C:/kyty/s118/check_parse/log_spk118.txt'], 'b9988b60': ['C:/kyty/s128/log_s2s128.txt', 'C:/kyty/s128/log_s2s128_a1.txt']}

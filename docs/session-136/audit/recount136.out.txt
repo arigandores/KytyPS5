@@ -1,0 +1,101 @@
+recount136.py sha256 4197da2638a001c407c2f67f7d88311cf730105ee3c5d809dde11c3e40939113
+== kp136 log sha256 46f613b2403e2b22fecc0c6af66a9165d3f8cb303eb849e4449cb3eb988dc0f9 lines 1200070 dups {'m': 0, 'd': 0, 'x': 0}
+  GateArm 76 complete 75 arms {'0': 37, '1': 38} order_ok True incomplete [75] modes {'0': {'NEW': 37, 'OLD': 0, 'MID': 0}, '1': {'NEW': 38, 'OLD': 0, 'MID': 0}} pairs_outside []
+  window 10..88 (p.55(b)); beta 8.2724 us/draw (sxx 1233288038); base arm0 window rows 35677.9 us (2923 rows); DRS m0 2007.87 m1 2007.85 mixed False
+  guards: IF1 nonzero 0; arm1 blocks with sum bln_hit 0: 0, sum bln_skip 0: 0; rts rows 0; gclk [873690, 897565]
+  package arm1 windows: {'hit': 32085432, 'n': 51925132, 'share': 0.6179171966284073, 'skip': 69675172, 'iters': 139780573, 'skip_per_it': 0.49846105581495936, 'skip_a': 14944778, 'skip_b': 54730398, 'miss_gen': 10787185}
+  mode NEW pairs 37 reading NOT_RESOLVED kill-row KILLED
+    d_dt                -68.369 +-  254.822 (2SE, pairs 37)
+    d_draws               3.840 +-   16.059 (2SE, pairs 37)
+    d_adj              -100.132 +-  224.405 (2SE, pairs 37)
+    red_bl_buf          199.312 +-   39.498 (2SE, pairs 37)
+    d_bl_buf_us        -199.312 +-   39.498 (2SE, pairs 37)
+    d_mh_bind_us       -195.908 +-  100.226 (2SE, pairs 37)
+    d_cpu_gpu_us        -51.315 +-  244.995 (2SE, pairs 37)
+    d_gpu_busy_us       -54.698 +-   45.017 (2SE, pairs 37)
+    d_raw_net          -343.731 +-   51.003 (2SE, pairs 37)
+    d_raw_stream       -271.815 +-   10.707 (2SE, pairs 37)
+    d_raw_cbank          30.073 +-    8.325 (2SE, pairs 37)
+    d_raw_epoch          16.759 +-    3.336 (2SE, pairs 37)
+    d_raw_slow         -118.749 +-   46.664 (2SE, pairs 37)
+    d_pf_rb_epoch_n      36.585 +-   55.499 (2SE, pairs 37)
+    d_pf_rb_slow_n      141.762 +-  150.475 (2SE, pairs 37)
+    d_c                  -1.276 +-    0.176 (2SE, pairs 37)
+    d_net_c            -285.084 +-   48.908 (2SE, pairs 37)
+    d_it_epoch            2.906 +-    0.588 (2SE, pairs 37)
+    d_it_slow            -5.629 +-    1.970 (2SE, pairs 37)
+    max(D+2SE) 186.5  min(D-2SE) -324.5  arm0 dt blocks 35677.9 arm1 35599.6 arm0 bl_buf 4967.3
+  mode OLD pairs 0 reading DEBT kill-row None
+  sums: bln_n=59170570 bln_hit=36568013 bln_miss_new=10052222 bln_miss_gen=12280803 bln_miss_evict=269532 bln_miss_kind=0 bln_chk=0 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=79401052 bln_skip_a=17033651 bln_skip_b=62367401 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=292744 bln_rst_cpuw=4281880 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=82224126 rb_cbank_n=67328535 rb_slow_n=206298534 bda_mean=118.7 bda_rows_new=8168 bda_rows=8554 rows=8554 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 7 last 0 over_rows 0 first None IF5c max 36568013 last -36568013 over_rows 6665 first [1891, -12026]
+  death markers guard 0 (log 0, stdout 0); quit line 1200070; counts {}; heads ['BindLean: mode 1']; BindLeanVerify {}
+== s1s136 log sha256 df207b45ef36befb30c9f9519f1dff39247964111d9d27c03169d9aeada250d4 lines 785469 dups {'m': 0, 'd': 0, 'x': 0}
+  GateArm 48 complete 47 arms {'0': 23, '1': 24} order_ok True incomplete [47] modes {'0': {'NEW': 23, 'OLD': 0, 'MID': 0}, '1': {'NEW': 24, 'OLD': 0, 'MID': 0}} pairs_outside []
+  window 10..88 (p.55(b)); beta 8.0257 us/draw (sxx 763953922); base arm0 window rows 35030.6 us (1817 rows); DRS m0 2007.68 m1 2007.93 mixed False
+  guards: IF1 nonzero 0; arm1 blocks with sum bln_hit 0: 0, sum bln_skip 0: 0; rts rows 0; gclk [543341, 566978]
+  package arm1 windows: {'hit': 19968752, 'n': 32463565, 'share': 0.6151127271450316, 'skip': 43980418, 'iters': 87945629, 'skip_per_it': 0.5000864568266378, 'skip_a': 9401914, 'skip_b': 34578492, 'miss_gen': 6791042}
+  mode NEW pairs 23 reading NOT_RESOLVED kill-row NOT_KILLED
+    d_dt               -214.714 +-  468.747 (2SE, pairs 23)
+    d_draws              -0.515 +-   19.740 (2SE, pairs 23)
+    d_adj              -210.580 +-  452.913 (2SE, pairs 23)
+    red_bl_buf          212.574 +-   69.383 (2SE, pairs 23)
+    d_bl_buf_us        -212.574 +-   69.383 (2SE, pairs 23)
+    d_mh_bind_us       -270.881 +-  171.689 (2SE, pairs 23)
+    d_cpu_gpu_us       -218.343 +-  412.027 (2SE, pairs 23)
+    d_gpu_busy_us       -66.394 +-   40.822 (2SE, pairs 23)
+    d_raw_net          -367.246 +-   79.463 (2SE, pairs 23)
+    d_raw_stream       -262.638 +-   12.259 (2SE, pairs 23)
+    d_raw_cbank          21.081 +-   13.150 (2SE, pairs 23)
+    d_raw_epoch          11.585 +-    6.399 (2SE, pairs 23)
+    d_raw_slow         -137.274 +-   67.656 (2SE, pairs 23)
+    d_pf_rb_epoch_n      -5.816 +-   72.499 (2SE, pairs 23)
+    d_pf_rb_slow_n      -35.981 +-  240.202 (2SE, pairs 23)
+    d_c                  -1.313 +-    0.136 (2SE, pairs 23)
+    d_net_c            -306.314 +-   78.284 (2SE, pairs 23)
+    d_it_epoch            2.368 +-    1.005 (2SE, pairs 23)
+    d_it_slow            -5.490 +-    2.632 (2SE, pairs 23)
+    max(D+2SE) 254.0  min(D-2SE) -683.5  arm0 dt blocks 35030.6 arm1 34762.7 arm0 bl_buf 4914.1
+  mode OLD pairs 0 reading DEBT kill-row None
+  sums: bln_n=36886893 bln_hit=22680387 bln_miss_new=6331999 bln_miss_gen=7711247 bln_miss_evict=163260 bln_miss_kind=0 bln_chk=0 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=50133943 bln_skip_a=10709226 bln_skip_b=39424717 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=186217 bln_rst_cpuw=2728665 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=56069981 rb_cbank_n=46437039 rb_slow_n=142906190 bda_mean=144.3 bda_rows_new=5718 bda_rows=6096 rows=6096 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 6 last 0 over_rows 0 first None IF5c max 22680387 last -22680387 over_rows 4207 first [1891, -10163]
+  death markers guard 0 (log 0, stdout 0); quit line 785469; counts {}; heads ['BindLean: mode 1']; BindLeanVerify {}
+== s2s136 log sha256 3090d22c13ecec2f101bf1c912009599f4da93ce06aed317625fcd091b17335d lines 634754 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=74375636 bln_hit=46749915 bln_miss_new=12274885 bln_miss_gen=14994042 bln_miss_evict=356778 bln_miss_kind=16 bln_chk=46749915 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=170348781 bln_pbad=0 bln_skip=99028132 bln_skip_a=20959570 bln_skip_b=78068562 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=378715 bln_rst_cpuw=5172118 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=40733255 rb_cbank_n=33642521 rb_slow_n=103269956 bda_mean=177.6 bda_rows_new=4053 bda_rows=4420 rows=4420 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 8 last 0 over_rows 0 first None IF5c max 7 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 634754; counts {}; heads ['BindLean: mode 2']; BindLeanVerify {}
+== s3s136 log sha256 2ed70addf5f785b5a45f8e6cd83f267e91e7c927e53767f26b03340f34760e78 lines 1196726 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=16014851 bln_hit=10593836 bln_miss_new=3208733 bln_miss_gen=2186018 bln_miss_evict=26259 bln_miss_kind=5 bln_chk=10593836 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=41442528 bln_pbad=0 bln_skip=25398592 bln_skip_a=5478274 bln_skip_b=19920318 bln_sbad=0 bln_srace=3 bln_sctl=0 bln_refuse=0 bln_rst_cpu=431693 bln_rst_cpuw=1349601 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=9051453 rb_cbank_n=6966259 rb_slow_n=26105147 bda_mean=48.8 bda_rows_new=10638 bda_rows=10909 rows=10909 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 0 last 0 over_rows 0 first None IF5b max 0 last 0 over_rows 0 first None IF5c max 0 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 1196726; counts {}; heads ['BindLean: mode 2']; BindLeanVerify {'SYNC part=b moved=1': 3}
+== s4s136 log sha256 1edc6a4d34eb45a0c8296a163436a799850536dfbe8bda3a7439c5a3a68e06d3 lines 641961 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=80448786 bln_hit=67479329 bln_miss_new=11336761 bln_miss_gen=113159 bln_miss_evict=1519513 bln_miss_kind=24 bln_chk=67479329 bln_bad=0 bln_path=4177482 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=100422828 bln_skip_a=21272319 bln_skip_b=79150509 bln_sbad=342 bln_srace=2 bln_sctl=342 bln_refuse=0 bln_rst_cpu=0 bln_rst_cpuw=0 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=42030243 rb_cbank_n=34241210 rb_slow_n=104745148 bda_mean=182.2 bda_rows_new=4118 bda_rows=4499 rows=4499 row_hit_off=1
+  IF5 running sums K=32 (p.162(a)): IF5a max 5 last 0 over_rows 0 first None IF5b max 7 last 0 over_rows 0 first None IF5c max 8 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 641961; counts {}; heads ['BindLean: mode 3']; BindLeanVerify {'PATH path=slow': 17, 'PATH path=epoch': 23}
+== s4bs136 log sha256 635f911d92b1bbdaf2460f2f9ec25c5b63cee5fe3c37a0846f1c3d1ade91a2e1 lines 634636 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=80009978 bln_hit=67246243 bln_miss_new=11154040 bln_miss_gen=113052 bln_miss_evict=1496614 bln_miss_kind=29 bln_chk=67246243 bln_bad=0 bln_path=4225153 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=98407354 bln_skip_a=21077162 bln_skip_b=77330192 bln_sbad=336 bln_srace=0 bln_sctl=336 bln_refuse=0 bln_rst_cpu=0 bln_rst_cpuw=0 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=42060761 rb_cbank_n=33724200 rb_slow_n=102663859 bda_mean=177.0 bda_rows_new=4066 bda_rows=4444 rows=4444 row_hit_off=1
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 7 last 0 over_rows 0 first None IF5c max 7 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 634636; counts {}; heads ['BindLean: mode 3']; BindLeanVerify {'PATH path=slow': 25, 'PATH path=epoch': 15}
+== s4cs136 log sha256 efc69ed15f347e7be8c63ea28ef6ff0de12eac4dcb00e16b0d790828d8f6d65c lines 766681 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=85550307 bln_hit=72741379 bln_miss_new=4096 bln_miss_gen=0 bln_miss_evict=12804804 bln_miss_kind=28 bln_chk=72741380 bln_bad=3930078 bln_path=9168511 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=99908136 bln_skip_a=21365380 bln_skip_b=78542756 bln_sbad=338 bln_srace=3 bln_sctl=338 bln_refuse=0 bln_rst_cpu=0 bln_rst_cpuw=0 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=42247366 rb_cbank_n=34134583 rb_slow_n=104198036 bda_mean=187.6 bda_rows_new=3962 bda_rows=4343 rows=4343 row_hit_off=1049
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 73 last 0 over_rows 1 first [806, -73] IF5c max 7 last 1 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 766681; counts {}; heads ['BindLean: mode 3']; BindLeanVerify {'PATH path=epoch': 18, 'PATH path=slow': 7, 'MISMATCH why=bytes': 15}
+== s5s136 log sha256 460dcd7414c3a1a99e3a5af1460bc771388044bf2ee7f2f2a6f87afc38383d26 lines 629127 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=73137210 bln_hit=45828897 bln_miss_new=12231015 bln_miss_gen=14716345 bln_miss_evict=360938 bln_miss_kind=15 bln_chk=45828897 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=169668698 bln_pbad=0 bln_skip=99466074 bln_skip_a=20935947 bln_skip_b=78530127 bln_sbad=0 bln_srace=2 bln_sctl=0 bln_refuse=0 bln_rst_cpu=322294 bln_rst_cpuw=5097573 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=39642128 rb_cbank_n=33495233 rb_slow_n=103690638 bda_mean=1442.8 bda_rows_new=400 bda_rows=4368 rows=4368 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 7 last 0 over_rows 0 first None IF5c max 6 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 629127; counts {}; heads ['BindLean: mode 2']; BindLeanVerify {'SYNC part=b moved=1': 2}
+== s6s136 log sha256 40fdf4cf22baef0ed7007dc2ad90cdf1823fa4dda08c68a2988b286027673345 lines 1286049 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=24525867 bln_hit=16524588 bln_miss_new=3615629 bln_miss_gen=4172737 bln_miss_evict=212899 bln_miss_kind=14 bln_chk=0 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=30840118 bln_skip_a=6298600 bln_skip_b=24541518 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=120285 bln_rst_cpuw=1469399 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=13817459 rb_cbank_n=10708541 rb_slow_n=32082644 bda_mean=409.9 bda_rows_new=1145 bda_rows=1490 rows=1490 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 6 last 0 over_rows 0 first None IF5c max 16524588 last -16524588 over_rows 1179 first [313, -376]
+  death markers guard 0 (log 0, stdout 0); quit line 1286049; counts {}; heads ['BindLean: mode 1']; BindLeanVerify {}
+== kk136 log sha256 ecdced47e1968aaeb7fadebee36fd3b62b41eaeab14194f734c803691b28e93e lines 1144554 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=143888119 bln_hit=89668829 bln_miss_new=24201292 bln_miss_gen=29334267 bln_miss_evict=683710 bln_miss_kind=21 bln_chk=89668831 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=332486334 bln_pbad=0 bln_skip=194330703 bln_skip_a=41183184 bln_skip_b=153147520 bln_sbad=0 bln_srace=4 bln_sctl=0 bln_refuse=0 bln_rst_cpu=717471 bln_rst_cpuw=10239394 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=78251951 rb_cbank_n=65636308 rb_slow_n=202727917 bda_mean=121.5 bda_rows_new=7948 bda_rows=8342 rows=8342 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 5 last 0 over_rows 0 first None IF5b max 8 last -1 over_rows 0 first None IF5c max 61 last 2 over_rows 1 first [7401, 61]
+  death markers guard 0 (log 0, stdout 0); quit line 1144548; counts {}; heads ['BindLean: mode 2']; BindLeanVerify {'SYNC part=b moved=1': 4}
+== kv136 log sha256 d4f8a10a5e6c215252372a28827332bd4b20ff50a0bc72ce025b26b0a21af85a lines 636889 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=61941786 bln_hit=39178504 bln_miss_new=10030679 bln_miss_gen=12442535 bln_miss_evict=290041 bln_miss_kind=27 bln_chk=0 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=80244551 bln_skip_a=17155233 bln_skip_b=63089318 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=324499 bln_rst_cpuw=4192233 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=34374761 rb_cbank_n=27567150 rb_slow_n=83706827 bda_mean=208.2 bda_rows_new=3184 bda_rows=3538 rows=3538 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 4 last 0 over_rows 0 first None IF5b max 8 last 0 over_rows 0 first None IF5c max 39178504 last -39178504 over_rows 3350 first [190, -419]
+  death markers guard 0 (log 0, stdout 0); quit line 636889; counts {}; heads ['BindLean: mode 1']; BindLeanVerify {}
+== kw136 log sha256 ca3166722011a344d7e0001c506f8952dc2aa275930481d3a5142c2a55af9dcb lines 632476 dups {'m': 0, 'd': 0, 'x': 0}
+  sums: bln_n=0 bln_hit=0 bln_miss_new=0 bln_miss_gen=0 bln_miss_evict=0 bln_miss_kind=0 bln_chk=0 bln_bad=0 bln_path=0 bln_nomap=0 bln_pchk=0 bln_pbad=0 bln_skip=0 bln_skip_a=0 bln_skip_b=0 bln_sbad=0 bln_srace=0 bln_sctl=0 bln_refuse=0 bln_rst_cpu=0 bln_rst_cpuw=0 bln_srace_a=0 rb_cls_bad=0 rb_refuse=0 rb_stream_n=34458986 rb_cbank_n=27587562 rb_slow_n=83884438 bda_mean=215.0 bda_rows_new=3176 bda_rows=3540 rows=3540 row_hit_off=0
+  IF5 running sums K=32 (p.162(a)): IF5a max 0 last 0 over_rows 0 first None IF5b max 0 last 0 over_rows 0 first None IF5c max 0 last 0 over_rows 0 first None
+  death markers guard 0 (log 0, stdout 0); quit line 632475; counts {}; heads None; BindLeanVerify {}

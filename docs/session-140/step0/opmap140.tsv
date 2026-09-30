@@ -1,0 +1,66 @@
+# opmap140.tsv - session 140 step 0 (Probe Designer): PM4 site name -> class / group, by the code at HEAD main 855c5183 (src identical to a2849aec, the source of build 05431dad: git diff --stat a2849aec HEAD -- src is empty).
+# Site names are those of Pm4OpName (graphicsRun.cpp:2784-2800): "op%02x" (lowercase hex) for every opcode except IT_NOP, "nop%02x" = R field & 63 for IT_NOP; plus 3 non-opcode names of the same table (graphicsRun.cpp:1033, :1041; bufferCache.cpp:3052).
+# class: OUT = no render-mutex acquisition on any path of the handler at the arm-0 knob string;
+#        MIX_MM = reaches a MutexMark interval (a_hold_us/a_wait_us): RenderExecutor::DrawIndex renderDraw.cpp:4938 (lock :4975, MutexMark :4976), RenderExecutor::DrawAuto renderDraw.cpp:5170 (lock :5204, MutexMark :5205), RenderExecutor::DispatchDirect renderCompute.cpp:383 (lock :416, MutexMark :417);
+#        MIX_PF = takes the render mutex WITHOUT MutexMark (not in a_hold_us; in mh_pres_us): Presenter::PrepareFrame swapchain.cpp:748 (lock :759) / PrepareBlankFrame :794 (lock :806) via Sync::PrepareVideoOutFlip sync.cpp:228 -> VideoOutDriver::SubmitFlipFromGpu videoOut.cpp:3840 -> FlipQueue::Prepare videoOut.cpp:964 (:1039/:1042);
+#        NEST = runs nested PM4 (ProcessIndirectBuffer graphicsRun.cpp:2767) inside its own site; NONOP = not an opcode site.
+# The only other render-mutex acquisitions in src (GetMutex): graphicsRun.cpp:935 (BdaEveryHook, knob bdaevery != 0 only), graphicsRun.cpp:3691 (EmitGlobalBarrier, only with KYTY_EOP_BARRIER=1; returns before the lock at :3686-3688 otherwise), renderDoc.cpp:226 (--rd only), swapchain.cpp:896 (Present, present thread).
+# E = 1: calibration-eligible (handler body O(1) by the map: compares, at most one relaxed-load hook RbCen::Reset frameStats.h:3780 and at most one call to a one-line setter; no loop, no RMW atomic, no log, no memory read of the guest).
+# named_inside: PathSpan regions (pathlap) that can run inside the site.  wait: the handler can leave the CPU or suspend (see note).
+name	opcode(pm4.h)	reg(pm4Dispatch.cpp)	handler(pm4Handlers.cpp)	class	group	E	mutex_path	named_inside	wait	note
+op11	IT_SET_BASE 0x11 (:23)	:177	CpOpSetBase :1983	OUT	STATE	1	-	-	-	setter SetDrawIndirectArgsBaseAddress/SetDispatchIndirectArgsBaseAddress graphicsRun.cpp:2958/:2962
+op12	IT_CLEAR_STATE 0x12 (:24)	:178	CpOpClearState :1799	OUT	STATE	0	-	-	-	ApplyContextStateOperation graphicsRun.cpp:383 (m_ctx.Reset, whole context)
+op13	IT_INDEX_BUFFER_SIZE 0x13 (:25)	:180	CpOpIndexBufferSize :1961	OUT	STATE	1	-	-	-	setter graphicsRun.cpp:2954
+op15	IT_DISPATCH_DIRECT 0x15 (:26)	:181	CpOpDispatchDirect :1326	MIX_MM	DISPMM	0	CommandProcessor::DispatchDirect graphicsRun.cpp:3251 -> :3302 -> renderCompute.cpp:383/:416/:417	-	-	one hold per packet
+op16	IT_DISPATCH_INDIRECT 0x16 (:27)	:182	CpOpDispatchIndirect :1342	MIX_MM	DISPMM	0	-> CommandProcessor::DispatchDirect :3251 (via :1366 or DispatchIndirect graphicsRun.cpp:3338/:3359)	-	guest read (memcpy args) only in thread-dimension mode :1363/:3355	one hold per packet
+op20	IT_SET_PREDICATION 0x20 (:28)	:195	CpOpSetPredication :1479	OUT	SYNC	0	-	-	BufferFlushAndWait graphicsRun.cpp:2979 when wait_op != 0 (GPU drain)
+op22	IT_COND_EXEC 0x22 (:29)	:194	CpOpCondExec :1512	OUT	SYNC	0	-	-	guest read :1532 (may fault)
+op24	IT_DRAW_INDIRECT 0x24 (:30)	:183	CpOpDrawIndirect :1728	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndirect graphicsRun.cpp:3043 -> DrawIndexAuto :3362/:3371 -> renderDraw.cpp:5170	-	CPU path guest read :3086 (may fault)	one hold per packet
+op25	IT_DRAW_INDEX_INDIRECT 0x25 (:31)	:184	CpOpDrawIndirect :1728	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndirect :3043 -> DrawIndex :3011/:3025 -> renderDraw.cpp:4938	-	CPU path guest read :3109 (may fault)	one hold per packet
+op26	IT_INDEX_BASE 0x26 (:32)	:179	CpOpIndexBase :1971	OUT	STATE	1	-	-	-	setter graphicsRun.cpp:2950
+op27	IT_DRAW_INDEX_2 0x27 (:33)	:187	CpOpDrawIndex :1687	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndex graphicsRun.cpp:3011 -> :3025 -> renderDraw.cpp:4938/:4975/:4976	-	-	one hold per packet
+op2a	IT_INDEX_TYPE 0x2A (:35)	:191	CpOpIndexType :1951	OUT	STATE	1	-	-	-	setter graphicsRun.cpp:2946
+op2c	IT_DRAW_INDIRECT_MULTI 0x2C (:36)	:185	CpOpDrawIndirectMulti :1742	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndirectMulti graphicsRun.cpp:3153 -> DrawIndexAuto :3195 (loop)	-	guest reads :3163, :3182 (may fault)	0..draw_count holds per packet
+op2d	IT_DRAW_INDEX_AUTO 0x2D (:37)	:193	CpOpDrawIndexAuto :1784	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndexAuto graphicsRun.cpp:3362 -> :3371 -> renderDraw.cpp:5170/:5204/:5205	-	-	one hold per packet
+op2f	IT_NUM_INSTANCES 0x2F (:38)	:192	CpOpNumInstances :2291	OUT	STATE	1	-	-	-	setter graphicsRun.cpp:2967
+op35	IT_DRAW_INDEX_OFFSET_2 0x35 (:40)	:188	CpOpDrawIndexOffset :1766	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndexOffset graphicsRun.cpp:3028 -> DrawIndex :3040 -> renderDraw.cpp:4938	-	-	one hold per packet
+op37	IT_WRITE_DATA 0x37 (:41)	:196	CpOpWriteData :2718	OUT	MEM	0	-	-	-	CommandProcessor::WriteData graphicsRun.cpp:564 (guest write)
+op38	IT_DRAW_INDEX_INDIRECT_MULTI 0x38 (:43)	:186	CpOpDrawIndirectMulti :1742	MIX_MM	DRAWMM	0	CommandProcessor::DrawIndirectMulti :3153 -> DrawIndex :3242 (loop)	-	guest reads :3163, :3204 (may fault)	0..draw_count holds per packet
+op3a	IT_DISPATCH_DRAW_PREAMBLE 0x3A (:44)	:189	CpOpDrawIndex :1687	MIX_MM	DRAWMM	0	as op27 (cmd_id 0xc0073a00, :1692-1707)	-	-	one hold per packet
+op3c	IT_WAIT_REG_MEM 0x3C (:45)	:197	CpOpWaitRegMem32 :2668	OUT	SYNC	0	-	-	guest read graphicsRun.cpp:533 (may fault); not passed -> SuspendPm4 :555, the packet re-executes later (n counts executions)
+op3f	IT_INDIRECT_BUFFER 0x3F (:46)	:198	CpOpIndirectBuffer :2006	NEST	NEST	0	nested ProcessPm4 via ProcessIndirectBuffer (:2046; CpOpBranch :1539 -> :1574/:1577)	nested pl_cmd	nested	its site CONTAINS the nested packets' sites (double count); prior: 0 'indirect buffer:' and 0 'branch:' lines in kp137a..h
+op40	IT_COPY_DATA 0x40 (:47)	:199	CpOpCopyData :1613	OUT	MEM	0	-	-	-	DmaData graphicsRun.cpp:605 or WriteReferenceClock :592 (LOGF every call :601)
+op42	IT_PFP_SYNC_ME 0x42 (:49)	:190	CpOpPfpSyncMe :1458	OUT	STATE	1	-	-	-	RbCen::Reset + compare only
+op46	IT_EVENT_WRITE 0x46 (:51)	:200	CpOpEventWrite :1842	OUT	EOP	0	-	pl_bar (TriggerEvent graphicsRun.cpp:3731 -> EmitGlobalBarrier :3746/:3754/:3764)	-	occlusion dump :3810-3817
+op47	IT_EVENT_WRITE_EOP 0x47 (:52)	:201	CpOpEventWriteEop :1863	OUT	EOP	0	-	-	-	WriteAtEndOfPipe64 graphicsRun.cpp:3656 -> :3383
+op48	IT_EVENT_WRITE_EOS 0x48 (:53)	:202	CpOpEventWriteEos :1886	OUT	EOP	0	-	-	-	WriteAtEndOfPipe32 graphicsRun.cpp:3645 -> :3383
+op50	IT_DMA_DATA 0x50 (:55)	:203	CpOpDmaData :1654	OUT	MEM	0	-	-	-	DmaData graphicsRun.cpp:605 (buffer cache FillBuffer/CopyBuffer, no render mutex)
+op58	IT_ACQUIRE_MEM 0x58 (:56)	:204	CpOpAcquireMem :1318	OUT	STATE	1	-	-	-	RbCen::Reset + compare only
+op59	IT_REWIND 0x59 (:57)	:205	CpOpRewind :1467	OUT	SYNC	0	-	-	WaitForRewind graphicsRun.cpp:477 -> SuspendPm4
+op63	IT_SET_SH_REG_INDIRECT 0x63 (:58)	:211	CpOpIndirectShRegs :2113	OUT	REG	0	-	-	-	loop of register handlers g_hw_sh_indirect_func
+op64	IT_SET_UCONFIG_REG_INDIRECT 0x64 (:59)	:212	CpOpIndirectUcRegs :2176	OUT	REG	0	-	-	-	loop g_hw_uc_indirect_func
+op69	IT_SET_CONTEXT_REG 0x69 (:61)	:206	CpOpSetContextReg :2462	OUT	REG	0	-	-	-	g_hw_ctx_func / g_hw_ctx_indirect_func per value
+op76	IT_SET_SH_REG 0x76 (:62)	:207	CpOpSetShaderReg :2508	OUT	REG	0	-	-	-	g_hw_sh_func / g_hw_sh_indirect_func per value
+op79	IT_SET_UCONFIG_REG 0x79 (:64)	:208	CpOpSetUconfigReg :2545	OUT	REG	0	-	-	-	g_hw_uc_func / g_hw_uc_indirect_func per value
+op7a	IT_SET_UCONFIG_REG_INDEX 0x7A (:65)	:209	CpOpSetUconfigReg :2545	OUT	REG	0	-	-	-	as op79
+op81	IT_WRITE_CONST_RAM 0x81 (:66)	:213	CpOpWriteConstRam :2703	OUT	MEM	0	-	-	-	memcpy into m_const_ram graphicsRun.cpp:491
+op83	IT_DUMP_CONST_RAM 0x83 (:67)	:214	CpOpDumpConstRam :1823	OUT	MEM	0	-	-	-	memcpy to the guest graphicsRun.cpp:500
+op84	IT_INCREMENT_CE_COUNTER 0x84 (:68)	:215	CpOpIncrementCeCounter :1927	OUT	STATE	1	-	-	-	counter increment graphicsRun.cpp:487
+op85	IT_INCREMENT_DE_COUNTER 0x85 (:69)	:216	CpOpIncrementDeCounter :1939	OUT	STATE	1	-	-	-	counter increment graphicsRun.cpp:483
+op86	IT_WAIT_ON_CE_COUNTER 0x86 (:70)	:217	CpOpWaitOnCeCounter :2680	OUT	SYNC	0	-	-	WaitCe graphicsRun.cpp:464 -> SuspendPm4
+op88	IT_WAIT_ON_DE_COUNTER_DIFF 0x88 (:71)	:218	CpOpWaitOnDeCounterDiff :2692	OUT	SYNC	0	-	-	WaitDeDiff graphicsRun.cpp:470 -> SuspendPm4
+op8e	IT_GET_LOD_STATS 0x8E (:73)	:219	CpOpGetLodStats :1380	OUT	MEM	0	-	-	-	memset/record into the guest :1406-1442
+op93	IT_WAIT_REG_MEM_64 0x93 (:74)	:220	CpOpWaitRegMem64 :2674	OUT	SYNC	0	-	-	as op3c
+op9f	IT_SET_CONTEXT_REG_INDIRECT 0x9F (:75)	:210	CpOpIndirectCxRegs :2051	OUT	REG	0	-	-	-	loop g_hw_ctx_indirect_func
+nop00	IT_NOP R_ZERO 0x00 (:79)	:176	CpOpNop :2268 (plain: return :2277; marker: CpOpMarker :2230)	MIX_PF	FLIP	0	marker ids 0x777/0x778/0x781 -> CommandProcessor::Flip graphicsRun.cpp:4048/:4070/:4098 -> PrepareVideoOutFlip -> PrepareFrame (as nop17)	-	as nop17 on a flip marker	plain NOP and markers 0x0/0x4/0xd share the name; not separable
+nop06	IT_NOP R_WAIT_FLIP_DONE 0x06 (:81)	:229	CpOpWaitFlipDone :2603	OUT	WAITFLIP	0	-	pl_sub (BufferFlush graphicsRun.cpp:3376)	VideoOutDriver::WaitFlipDone videoOut.cpp:3878 (waits for the display: pacing)
+nop09	IT_NOP R_DISPATCH_RESET 0x09 (:82)	:228	CpOpDispatchReset :1447	OUT	STATE	0	-	-	-	CommandProcessor::Reset graphicsRun.cpp:368 (memset m_const_ram)
+nop0b	IT_NOP R_PUSH_MARKER 0x0B (:83)	:230	CpOpPushMarker :2314	OUT	STATE	0	-	-	-	atomic fetch_add; LOGF on the first 128
+nop0c	IT_NOP R_POP_MARKER 0x0C (:84)	:231	CpOpPopMarker :2301	OUT	STATE	0	-	-	-	atomic fetch_add; LOGF on the first 64
+nop14	IT_NOP R_ACQUIRE_MEM 0x14 (:85)	:232	CpOpAcquireMem :1318	OUT	STATE	1	-	-	-	as op58
+nop17	IT_NOP R_FLIP 0x17 (:87)	:233	CpOpFlip :1910	MIX_PF	FLIP	0	CommandProcessor::Flip graphicsRun.cpp:4048 -> Sync::PrepareVideoOutFlip :4060 (sync.cpp:228) -> SubmitFlipFromGpu videoOut.cpp:3840 -> FlipQueue::Prepare :3849/:964 -> Presenter::PrepareFrame :1042 (swapchain.cpp:748, lock :759)	-	WaitForSubmitSlot sync.cpp:244 when the flip queue is full; GetScheduler().Flush graphicsRun.cpp:4067	the under-mutex part is in mh_pres_us (with the present thread's Present), not in a_hold_us
+nop18	IT_NOP R_RELEASE_MEM 0x18 (:88)	:234	CpOpReleaseMem :2329	OUT	EOP	0	-	pl_eop (TriggerEopEventAtEndOfPipe graphicsRun.cpp:3722 via :2366), pl_bar (EmitGlobalBarrier :2379/:2389/:2398), pl_sub (BufferFlushLazy :2373/:2414/:2434)	-
+nop1a	IT_NOP R_CONTEXT_STATE 0x1A (:90)	:235	CpOpContextState :1810	OUT	STATE	0	-	-	-	ApplyContextStateOperation graphicsRun.cpp:383 (context copy)
+gc	-	-	graphicsRun.cpp:1033 (RunGarbageCollector, graphics slice end, under Enabled())	NONOP	-	0	-	subset of pl_gc (:1026-1029)	-	outside the PM4 loop; not an opcode site
+prefetch	-	-	graphicsRun.cpp:1041 (PrefetchHotReadbacks, graphics slice end, under Enabled())	NONOP	-	0	-	-	-	outside the PM4 loop; inside the residual (RC2 s139)
+stream-prefetch	-	-	bufferCache.cpp:3052 (PrefetchStreamedRanges)	NONOP	-	0	-	-	-	outside the PM4 loop; inside the residual

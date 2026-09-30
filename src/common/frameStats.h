@@ -2731,6 +2731,7 @@ enum class Counter : uint32_t {
 	B2rRstCpu,               // b2r_rst_cpu: generation moves by a clear of a nonempty CPU-dirty mask (B6; calls, not pages)
 	B2rRstCpuw,              // b2r_rst_cpuw: generation moves by an announced CPU write, ChangeState<Cpu, true> (RC1)
 	B2rWrapcur,              // b2r_wrapcur: the stream ring waited for the tick it records, at b2reuse >= 1 (RC4)
+	B2rNomap,                // b2r_nomap: 2/3: hits whose ring Map returned nullptr and whose path of 0 ended Slow (item 158(b))
 	Count
 };
 
@@ -3885,6 +3886,7 @@ struct Tls {
 	bool                ring;    // 2/3, a hit: the path of 0 ended with a CPU copy into the ring
 	bool                checked; // 2/3, a hit: its bytes were decided
 	bool                gpu;     // 2/3, a hit: the path of 0 took the GPU copy of the aligned const-bank branch
+	bool                nomap;   // 2/3: the outer ObtainBuffer after probe P found the ring busy (Map == nullptr; item 158(b))
 	FrameStats::Counter miss;    // the counter of a pending insertion
 	uint64_t            vaddr;
 	uint64_t            size;
@@ -3915,6 +3917,8 @@ inline bool FirstLine(uint32_t bit) {
 }
 // B2ReuseVerify: lines of the process (at most 40).
 inline constinit std::atomic<uint32_t> g_lines {0};
+// B2ReuseVerify: NOMAP lines of the process (at most 8, outside the 40 above; ROADMAP s122 item 158(b)(2)).
+inline constinit std::atomic<uint32_t> g_lines_nomap {0};
 
 // The value of the current interval; one relaxed load.
 inline uint32_t Mode() {

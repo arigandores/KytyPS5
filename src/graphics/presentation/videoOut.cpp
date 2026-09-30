@@ -3401,6 +3401,7 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"b2r_rst_cpu", FS::Counter::B2rRstCpu, false},
 				    {"b2r_rst_cpuw", FS::Counter::B2rRstCpuw, false},
 				    {"b2r_wrapcur", FS::Counter::B2rWrapcur, false},
+				    {"b2r_nomap", FS::Counter::B2rNomap, false}, // ROADMAP s122 item 158(b)(3), CR1
 				};
 				std::string text;
 				for (const auto& counter: named) {

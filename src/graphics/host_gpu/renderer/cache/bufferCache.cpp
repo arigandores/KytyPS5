@@ -1558,6 +1558,12 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 			}
 			return {&m_stream_buffer, offset};
 		}
+		// Knob "b2reuse" = 2/3 (ROADMAP s122 item 158(b)(1), CR1): the ring was busy (Map with allow_wait=false), and the
+		// call that read the flag of probe P goes to the slow path; End() counts b2r_nomap for it instead of b2r_path.
+		// arm_p is never set at 0 and 1.
+		if (mapped == nullptr && Common::B2Reuse::t_b2r.arm_p) [[unlikely]] {
+			Common::B2Reuse::t_b2r.nomap = true;
+		}
 	}
 
 	Common::DrawStat::Mark(Common::DrawStat::BufSlow);

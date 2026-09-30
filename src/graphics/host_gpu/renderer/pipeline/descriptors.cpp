@@ -257,30 +257,45 @@ bool ReadRing(Kind kind, uint64_t vaddr, uint8_t* dst, uint64_t size) {
 }
 
 void End() {
-	namespace FS    = FrameStats;
-	auto&      t    = t_b2r;
-	const Pend pend = t.pend;
-	t.pend          = Pend::None;
-	t.arm_p         = false;
+	namespace FS     = FrameStats;
+	auto&      t     = t_b2r;
+	const Pend pend  = t.pend;
+	const bool nomap = t.nomap;
+	t.pend           = Pend::None;
+	t.arm_p          = false;
+	t.nomap          = false;
 	if (pend != Pend::Hit || t.mode < 2 || t.ring) {
 		return;
 	}
 	// The path of 0 after the hit ended without a CPU copy into the ring (s.6.3; at 3 a row, RC2).
-	FS::Add(FS::Counter::B2rPath, 1);
 	const char* path = "nocopy";
+	bool        slow = false;
 	if (t.gpu) {
 		path = "gpu";
 	} else if (RbCen::t_rb.cls == RbCen::Cls::Epoch) {
 		path = "epoch";
 	} else if (RbCen::t_rb.cls == RbCen::Cls::Slow) {
 		path = "slow";
+		slow = true;
 	} else if (RbCen::t_rb.cls == RbCen::Cls::Fast) {
 		path = "fast";
 	}
-	if (g_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
-		LOGF("B2ReuseVerify: PATH kind=%s vaddr=0x%016llx size=0x%llx path=%s draw=%s gen_moved=%d\n", KindName(t.kind),
-			 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path,
-			 t.entry->op == t.op ? "same" : "x", GenMoved(t) ? 1 : 0);
+	if (nomap && slow) {
+		// ROADMAP s122 item 158(b)(2), CR1: the ring was busy for the outer ObtainBuffer and the path of 0 went Slow -
+		// b2r_nomap instead of b2r_path, its own lines (at most 8, outside the 40); the byte check below is unchanged.
+		FS::Add(FS::Counter::B2rNomap, 1);
+		if (g_lines_nomap.fetch_add(1, std::memory_order_relaxed) < 8) {
+			LOGF("B2ReuseVerify: NOMAP kind=%s vaddr=0x%016llx size=0x%llx path=%s draw=%s gen_moved=%d\n", KindName(t.kind),
+				 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path,
+				 t.entry->op == t.op ? "same" : "x", GenMoved(t) ? 1 : 0);
+		}
+	} else {
+		FS::Add(FS::Counter::B2rPath, 1);
+		if (g_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
+			LOGF("B2ReuseVerify: PATH kind=%s vaddr=0x%016llx size=0x%llx path=%s draw=%s gen_moved=%d\n", KindName(t.kind),
+				 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path,
+				 t.entry->op == t.op ? "same" : "x", GenMoved(t) ? 1 : 0);
+		}
 	}
 	if (t.mode == 2 && !t.checked) {
 		// 2: a separate read of the guest bytes against the shadow; an unreadable one counts as a mismatch.

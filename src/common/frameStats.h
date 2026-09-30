@@ -3790,10 +3790,10 @@ inline void Reset(Cause cause) {
 	if (b2r == 1u || b2r == 2u) [[unlikely]] {
 		g_rb_gen.fetch_add(1, std::memory_order_release);
 	}
-	// Session 136, knob "bindlean" (design136.md rev 1 s.7, item 176(e)(1)): at 1/2 every cause moves the generation, at 3
-	// only the reset "sub" (the positive control of the B2 part), independent of rbcen and without a counter of its cause.
+	// Session 136, knob "bindlean" (design136.md rev 1 s.7; item 186(c) replaces item 176(e)(1)): at 1/2 every cause moves
+	// the generation, independent of rbcen and without a counter of its cause; at 3 none (the positive control has no reset).
 	const uintptr_t bln = g_bln_state.load(std::memory_order_relaxed) & 3u;
-	if (bln == 1u || bln == 2u || (bln == 3u && cause == Cause::Sub)) [[unlikely]] {
+	if (bln == 1u || bln == 2u) [[unlikely]] {
 		g_rb_gen.fetch_add(1, std::memory_order_release);
 	}
 }

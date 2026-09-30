@@ -1,0 +1,33 @@
+rt1_probe sha256 d852bc2baec0d0f48ebf7821987cbaa8aa0cd8ae3f345aee080141d77590fb0e; smk137 sha256 22d6710337075d5fce30349c28db1b7f1ac1d565189d2cc75920b3ee96fd351b
+s1s136 IF5a: full rows 6096, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s1s136 IF5b: full rows 6096, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s2s136 IF5a: full rows 4420, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s2s136 IF5b: full rows 4420, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s2s136 IF5c: full rows 4420, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 29, spread 29
+s3s136 IF5a: full rows 10909, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s3s136 IF5b: full rows 10909, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s3s136 IF5c: full rows 10909, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4s136 IF5a: full rows 4499, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4s136 IF5b: full rows 4499, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4s136 IF5c: full rows 4499, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 29, spread 29
+s4bs136 IF5a: full rows 4444, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4bs136 IF5b: full rows 4444, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4bs136 IF5c: full rows 4444, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 29, spread 29
+s4cs136 IF5a: full rows 4343, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s4cs136 IF5b: full rows 4343, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: [(806, -73), (807, 73)]; smallest failing E - step 33, spread 33
+s4cs136 IF5c: full rows 4343, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 28, spread 28
+s5s136 IF5a: full rows 4368, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s5s136 IF5b: full rows 4368, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s5s136 IF5c: full rows 4368, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 29, spread 29
+s6s136 IF5a: full rows 1490, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+s6s136 IF5b: full rows 1490, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kp136 IF5a: full rows 8554, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kp136 IF5b: full rows 8554, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kk136 IF5a: full rows 8342, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kk136 IF5b: full rows 8342, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kk136 IF5c: full rows 8342, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: [(7401, 61), (7402, -61)]; smallest failing E - step 29, spread 29
+kv136 IF5a: full rows 3538, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kv136 IF5b: full rows 3538, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kw136 IF5a: full rows 3540, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+kw136 IF5b: full rows 3540, non-full rows 0 (with d != 0: 0, sum d 0); rows |d| > 32: none; smallest failing E - step 33, spread 33
+ALL DONE

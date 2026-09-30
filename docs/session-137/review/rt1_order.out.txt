@@ -1,0 +1,4 @@
+rt1_order sha256 79f103d92300b2554d14ffb0ad3020fa0c73bcee75a4c55ab190951507bc0866
+kp136: blocks 76, pairs 37 (order (0,1) 19, (1,0) 18); simple Delta dt_us -68.4 +- 254.8 (2SE); by order (0,1) -123.5 +- 332.8, (1,0) -10.2 +- 396.6; order-balanced -66.8 +- 258.9; first pair (block 0, order (0, 1)) -873.0; arm-0 block means: first 39049.2, last 35657.9, OLS slope -4.40 us/block over 37 blocks
+s1s136: blocks 48, pairs 23 (order (0,1) 12, (1,0) 11); simple Delta dt_us -214.7 +- 468.7 (2SE); by order (0,1) -19.2 +- 653.4, (1,0) -428.0 +- 680.8; order-balanced -223.6 +- 471.8; first pair (block 0, order (0, 1)) -630.0; arm-0 block means: first 34815.2, last 33335.6, OLS slope 25.48 us/block over 23 blocks
+ALL DONE

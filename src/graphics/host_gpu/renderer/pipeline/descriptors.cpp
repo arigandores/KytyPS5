@@ -557,8 +557,9 @@ void End() {
 				 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path, GenMoved(t) ? 1 : 0);
 		}
 	}
-	if (t.mode == 2 && !t.checked) {
-		// 2: a separate read of the guest bytes against the shadow; an unreadable one counts as a mismatch.
+	if (t.mode >= 2 && !t.checked) {
+		// 2: a separate read of the guest bytes against the shadow; an unreadable one counts as a mismatch. Session 136 step 5a
+		// (ROADMAP s122 item 183(c)): the same read at 3, the positive control of the byte check of a hit without a ring copy.
 		if (!Libs::LibKernel::Memory::TryReadBacking(t.vaddr, g_bln_chk, t.size)) {
 			t.checked = true;
 			Count(FS::Counter::BlnBad);

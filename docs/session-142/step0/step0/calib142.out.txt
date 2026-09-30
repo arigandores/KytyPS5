@@ -1,0 +1,6 @@
+CALIB eatl122 C:/kyty/s122/log_eatl122.txt sha 56dde051b738c5ee level penguin_atlantis first (189, 20976, 894) K2 [(191, 'entry')] K3w [192, 197] K3h [7458] -> PASS
+CALIB edes122 C:/kyty/s122/log_edes122.txt sha 42830f0409886155 level intro_next first (232, 19934, 176) K2 [(4945, 'hold')] K3w none K3h none -> PASS
+CALIB atl122 C:/kyty/s122/log_atl122.txt sha f69258688ed449be level penguin_atlantis first (149, 20500, 3150) K2 none K3w none K3h none -> PASS
+CALIB ednn122 C:/kyty/s122/log_ednn122.txt sha c6f0674ee0e5f8c3 level rotating_level_day_and_night first (219, 499355, 3139) K2 none K3w none K3h [1826] -> PASS
+CALIB eght122 C:/kyty/s122/log_eght122.txt sha 11e2aca340f303c4 level time_stopper_ghost_world first (253, 856069, 3765) K2 none K3w [389, 816] K3h none -> PASS
+CALIB 5 of 5

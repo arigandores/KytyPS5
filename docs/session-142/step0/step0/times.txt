@@ -1,0 +1,26 @@
+2026-09-30T20:38:26Z start step0 HPP-277 (wake issue_blockers_resolved)
+2026-09-30T20:46:08Z ported procload.py run_safety99.py launch_run.py idle142.py from s140
+2026-09-30T20:52:10Z tool check sheet142.py + s51_vidglitch.py on s122 rec_eatl122.mp4 (step0/toolcheck/)
+2026-09-30T21:05:03Z mutlib full (counted) start: forecast 6.4 s x 159 / 8 x 1.3 = 166 s; scorer sha 66322f32cbb4a5d5e935bc44576bd933dbf885886bed7d5a001172b45b886c56 suite sha 3753b284edf9d45b40a01f9ae55296c3d96ea00b8f3e3b8ef78ce81a6a126c63 mutants sha b24c79fb66952c814df2063e9fa60c47570499766cb81fe152067d6048cf7264
+2026-09-30T21:07:01Z mutlib full (counted) end: rc 1 wall 118 s; mut_sc142.txt sha256 7ee9ebbe4a5960a8abe6386b8a7983e432ad52f42bd3c9c4894b2c913f7ed68a
+2026-09-30T21:08:08Z add-only fixtures x1-x3 for the 3 survivors; step0/addonly142.out.txt sha256 d1f89f7e4f419035cda42ff1932826cd3b886ffff68ff3d6ee204748896561d1: ADDONLY: PASS (added 23 lines before line 603 of the old suite)
+2026-09-30T21:08:10Z mutlib --only sealed_vid,sk_w_ok,su_b5a start (survivors of the counted run; forecast 3 x 6.5 s + controls ~ 30 s)
+2026-09-30T21:08:35Z mutlib --only end: rc 0 wall 26 s; mut_sc142.add.txt sha256 067589ec24a92824b472581624b9edac67362015a6eb1879fb6c3ed671a37140
+2026-09-30T21:09:00Z calibration sc142.py --calib: CALIB 5 of 5; step0/calib142.out.txt sha256 461a080c0a62ff7b59c56e9d08e2918b73bb3248ddd4010bb13f45a24218ae9c
+2026-09-30T21:09:08Z test_sc142.py rc 0: 132 PASS, ALL OK; step0/test_sc142.out.txt sha256 2d08b670526b8c89f431ff554bd58b04fb140845773c77fced07edbfae8e2023
+2026-09-30T21:09:13Z test_go142a.py rc 0: checks: 23 ALL OK ; step0/test_go142a.out.txt sha256 c5ba8f1ee61125b9344eae482828994785ea562e21e0ad851c02468bec09b008
+2026-09-30T21:11:25Z seal written: seal written C:/kyty/s142/pred/01_sc142.md sha256 03ea32947790190696b14ab4d452f7316436278edd92a31dfd43b17237082492 bytes 20282 at 2026-09-30 21:11:25 UTC
+2026-09-30T21:11:26Z sc142.py --check-seal: SEAL: PASS; step0/checkseal142.out.txt sha256 97c7e0e02ab9f6680a29b0dbb5d376c742436f5efcc7e7001745adbdd3dde169
+2026-09-30T21:11:26Z DRY go142a.sh v142 w142 c142_01 c142_10 (real script, real seal): step0/dry142.out.txt sha256 34b03b606d79a558066d03a921ecd433415e7782d9adc4ff4cb88d626146153a
+2026-09-30T21:12:11Z noticed later: file sc142.py last written 2026-09-30T20:57:21Z (source: mtime) sha256 66322f32cbb4a5d5e935bc44576bd933dbf885886bed7d5a001172b45b886c56
+2026-09-30T21:12:12Z noticed later: file test_sc142.py last written 2026-09-30T21:07:42Z (source: mtime) sha256 6620af0d6798f87c74006bbca0fe83df78a5a2a20e83afd6b586240b33592390
+2026-09-30T21:12:12Z noticed later: file mut_sc142.py last written 2026-09-30T21:03:14Z (source: mtime) sha256 b24c79fb66952c814df2063e9fa60c47570499766cb81fe152067d6048cf7264
+2026-09-30T21:12:12Z noticed later: file go142a.sh last written 2026-09-30T20:51:30Z (source: mtime) sha256 5bab53b49a266cab0edd742f9589ff7cc7668efba63cb00f038c84f2be855b5e
+2026-09-30T21:12:12Z noticed later: file test_go142a.py last written 2026-09-30T20:59:34Z (source: mtime) sha256 6fefe9af83e276717e8f1e05d961489f74d8bd38c36ab8579e254bb6607617ed
+2026-09-30T21:12:12Z noticed later: file sheet142.py last written 2026-09-30T20:51:17Z (source: mtime) sha256 c1bf9e2903c7db7a30cde63b3fa346e6ea2064bbdf8ad6929e85030fa147471d
+2026-09-30T21:12:13Z noticed later: file enter_scene.py last written 2026-09-30T20:46:23Z (source: mtime) sha256 ab2194bef5aaa9b294f01379b1153dea255d47482474cff010c8a573d4b15d63
+2026-09-30T21:12:14Z noticed later: file gates_default.txt last written 2026-09-30T20:51:30Z (source: mtime) sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+2026-09-30T21:12:15Z noticed later: file step0/pred_template.md last written 2026-09-30T21:10:33Z (source: mtime) sha256 0a71504e925b323caddbb8e6c08a6d0d0671024174c1920857387c818c0b4058
+2026-09-30T21:12:15Z noticed later: file step0/mkseal142.py last written 2026-09-30T21:11:06Z (source: mtime) sha256 937df830a25795298ea127a49cba7427a7c992fcc09b85e75194d54ed11274ad
+2026-09-30T21:12:16Z noticed later: file step0/addonly142.py last written 2026-09-30T21:08:02Z (source: mtime) sha256 81ae95ecead9d5581c043f6bb9b0f5435496eca0d60789492eb11fbfe089defa
+2026-09-30T21:14:09Z copies to C:/kyty/KytyPS5/docs/session-142/step0 and privacy scan: copies 30, private hits in the copies 0; tree expressions with hits 0 of 25; step0/togit142.out.txt sha256 e54a721df18bcaec9417446f9ab5ce32d8787e282ccc66e75a242018d7844331

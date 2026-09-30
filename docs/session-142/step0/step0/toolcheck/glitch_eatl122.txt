@@ -1,0 +1,2 @@
+C:/kyty/s122/rec_eatl122.mp4: 7461 frames 960x540, index entries 7461
+one-frame glitches: 0

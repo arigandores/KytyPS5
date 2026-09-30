@@ -1642,8 +1642,9 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 }
 
 // Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.5.1-5.2): PRE, before S0 of a latched slot iteration,
-// outside every pair. The eligibility and the probe of "buffast" (:1376-1401 above) on the census table; the only write
-// of a slot here is the touch tick of a would-hit (RC2). Reads only atomics and fields of the GuestGpu thread.
+// outside every pair. The eligibility and the probe of "buffast" (:1376-1401 above) on the census table; PRE writes no
+// slot (CF1, ROADMAP p.171(a)): the touch tick of a would-hit is written by POST, step 4, and only when ocls != None.
+// Reads only atomics and fields of the GuestGpu thread.
 void BufferCache::RsPre(uint64_t vaddr, uint64_t size, bool is_written, bool is_texel_buffer) {
 	auto& rs = Common::RbSlow::t_rs;
 	if (!g_rs_touched.load(std::memory_order_relaxed)) [[unlikely]] {
@@ -1673,9 +1674,8 @@ void BufferCache::RsPre(uint64_t vaddr, uint64_t size, bool is_written, bool is_
 	}
 	rs.rem_id = RsPackId(slot.id);
 	if (slot.region_epoch == pre) {
-		rs.would        = true;
-		rs.touch_skip   = slot.touch_tick == m_gc_tick; // a hit of this tick would not call TouchBuffer (:1404)
-		slot.touch_tick = m_gc_tick;
+		rs.would      = true;
+		rs.touch_skip = slot.touch_tick == m_gc_tick; // a hit of this tick would not call TouchBuffer (:1404)
 	} else {
 		rs.xchk = true; // RC3: the population of the positive control, pre != 0 and region_epoch != pre
 	}
@@ -1727,8 +1727,11 @@ void BufferCache::RsPost(uint64_t vaddr, uint64_t size, BufferId src_id) {
 		if (rs.would && ocls == Cls::Stream) {
 			FS::Add(FS::Counter::RsBfStrm, 1);
 		}
-		// Step 4 (RC2): a would-hit leaves its slot as it is; otherwise the rules of the Stream clear and of remember.
-		if (!rs.would) {
+		// Step 4 (RC2, CF1 of ROADMAP p.171(a)): a would-hit changes only the touch tick of its slot, here, where the real
+		// "buffast" touches it (inside ObtainBuffer, :1434-1437); otherwise the rules of the Stream clear and of remember.
+		if (rs.would) {
+			g_rs_table[rs.slot].touch_tick = m_gc_tick;
+		} else {
 			auto& slot = g_rs_table[rs.slot];
 			if (ocls != Cls::Stream && rs.pre != 0 && e_post == rs.pre) {
 				slot = {vaddr,     size,       rs.pre,

@@ -1167,3 +1167,5 @@ L плеча 0 1 091,7; **сетевой ряд Δ(L + `rb_epoch` + `rb_slow`) +
 Тексты поправок — §6 `AUDIT134.md`.
 
 60 FPS не обещается; ни одно число переписи (снижение L, сетевой ряд) — не выигрыш и не скорость.
+
+**Коммиты и приватность (UTC, `date -u`):** ps5-em `b712928` (03:08:40; `CLAUDE.md` = `AGENTS.md` побайтно, `HANDOFF.md`); KytyPS5 `a0fcbda7` (03:08:52; `docs/session-134/audit/` 13 файлов, `docs/local-session-134.md`, `docs/agent/`); проверка приватности новых HEAD `git grep -P -a` по 25 шаблонам списка вне git — 03:09:02, блокирующих 0 (`audit134/privacy134_post.out.txt`). Push не делался.

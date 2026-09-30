@@ -1,0 +1,16 @@
+2026-09-30T21:18:25Z начало чтения входа: KytyPS5 f8db4d5b (ROADMAP п. 223), f612eb63 (step0), HPP-277 комментарий приёмки 21:17:59Z
+2026-09-30T21:22:08Z rt142_ft.py -> rt142_ft.out.txt sha256 bfa5ebbbafe5c4de
+2026-09-30T21:22:46Z rt142_quit.py -> rt142_quit.out.txt sha256 d643cd193ac390aa
+2026-09-30T21:23:44Z rt142_full.py -> rt142_full.out.txt sha256 6b6ffac1dbfcbf3e
+2026-09-30T21:24:07Z sc142.py --check-seal -> rt_checkseal.out.txt sha256 97c7e0e02ab9f668
+2026-09-30T21:24:11Z sc142.py --calib -> rt_calib.out.txt sha256 461a080c0a62ff7b
+2026-09-30T21:24:18Z test_sc142.py -> rt_test_sc142.out.txt sha256 2d08b670526b8c89
+2026-09-30T21:24:23Z test_go142a.py -> rt_test_go142a.out.txt sha256 c5ba8f1ee61125b9
+2026-09-30T21:26:11Z rt142_starts.py -> rt142_starts.out.txt sha256 8140a9c18c75816f
+2026-09-30T21:27:04Z rt142_vk.py -> rt142_vk.out.txt sha256 d2edd1f3bded05b7
+2026-09-30T21:27:48Z rt142_dl.py -> rt142_dl.out.txt sha256 7a2001598948a5ae
+2026-09-30T21:30:43Z refs142_rt.py -> refs142_rt.out.txt sha256 4516da37b9d4e926
+2026-09-30T21:31:02Z sha256 of s122 vidglitch_{eatl,edes,ednn,eght,csky}122.txt read (RC3 evidence)
+2026-09-30T21:35:03Z review142.md written: C:/kyty/KytyPS5/docs/session-142/review142.md sha256 aa0b47e41fd2f351
+2026-09-30T21:35:59Z FACTS.md Step 1 appended: FACTS appended: sha256 a0788855c3f92ba183cc35fbd16063ade3c4e85c4601bbd03aa7f77c7520a79c
+2026-09-30T21:36:04Z copies to docs/session-142/step1 + privacy scan: togit142_rt.out.txt sha256 592df177104b7b2c

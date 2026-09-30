@@ -1,0 +1,6 @@
+C:/kyty/s122/log_eatl122.txt 2 [('', 13272129), ('penguin_atlantis', 14156970)]
+C:/kyty/s122/log_edes122.txt 2 [('', 15355505), ('intro_next', 17083043)]
+C:/kyty/s122/log_atl122.txt 2 [('', 12536179), ('penguin_atlantis', 13497151)]
+C:/kyty/s122/log_ednn122.txt 2 [('', 14583831), ('rotating_level_day_and_night', 17467277)]
+C:/kyty/s122/log_eght122.txt 2 [('', 16094136), ('time_stopper_ghost_world', 18673319)]
+C:/kyty/s137/log_s6s137.txt 2 [('', 15052715), ('underwater_aerial_garden', 18048701)]

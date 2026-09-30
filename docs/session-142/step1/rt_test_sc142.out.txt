@@ -1,0 +1,135 @@
+suite test_sc142.py sha256 6620af0d6798f87c74006bbca0fe83df78a5a2a20e83afd6b586240b33592390 target sc142.py sha256 66322f32cbb4a5d5e935bc44576bd933dbf885886bed7d5a001172b45b886c56
+PASS d1 the first scene frame is the first row after the entry line with draws >= 100 (99 skipped, row before the entry out)
+PASS d2 the first frame dt 2 s is neither K2 nor K3; the 1.5 s loading row before it is not K2
+PASS d3 window = 599 rows after the first frame, hold = the rest
+PASS d1b with the entry line before n 2 the first scene frame is n 2 (draws 3000)
+PASS d4 frame 599 after the first frame -> K3 window; frame 600 -> K3 hold
+PASS d5 dt 1 000 000 -> K2 (entry and hold located); 999 999 -> K3 not K2
+PASS d6 dt 100 000 -> K3; 99 999 -> nothing
+PASS d6b a K2 frame (dt 1 000 000) is not also a K3 frame
+PASS d6c K2 at frame 599 after the first frame is "entry", at frame 600 "hold"
+PASS d7 only another level whose name contains the target (and the empty start) -> not entered
+PASS d8 the first entry line of the level is used
+PASS d9 no row with draws >= 100 -> no first frame; the sum after the entry line counts rows after it only
+PASS d10 n gaps are counted
+PASS d11 letter: rows after Event: quit and the last row count (K2 30, 31); variant vx: neither
+PASS d12 variant vx drops the last row of the log (a K3 there), the letter keeps it
+PASS s1 rows across chunk boundaries of 37 bytes (64 rows) and the sha of the file
+PASS s2 skipped draw lines 3, frames 2
+PASS s3 the stubbed function name is read from the next line
+PASS s4 the last line without a newline is read (GpuHangAbort)
+PASS s5 --- Fatal Error --- is not also --- Error ---
+PASS s6 [Vulkan][E] 1, [Vulkan][W] not counted; BvhLoopCapTrip 1
+PASS s7 a FrameTrace row without draws= is never the first scene frame; the first Event: quit is the exit line
+PASS e1 a census entry: admitted, entered, HOLDS_120
+PASS e2 opcode profile 96/1/4 (case of the hex folded) -> equal
+PASS e3 PriorityStall: us 50000 is not > 50 ms, 50001 is
+PASS e4 per-entry rows: 3 skipped draw lines, 1 stub, 1 BvhLoopCapTrip, 1 [Vulkan][E] (census: not a gate)
+PASS e5 opcode difference: SOP1 0x21 96 (90+6+1 = 97, +1; after entry 7), a new VOP2 0x3b +1
+PASS e5b opcode difference: SOP1 0x21 95 (-1), VOPC 0xe3 absent (-4), SOP1 0x0c equal
+PASS o1 sum dt after the entry line = 120 000 000 -> HOLDS_120
+PASS o1b one us less -> NOT_EVALUABLE
+PASS o2 death marker Unhandled exception: in the log -> K1
+PASS o3 death marker Unhandled exception: in the emulator stdout -> K1
+PASS o2 death marker --- Fatal Error --- in the log -> K1
+PASS o3 death marker --- Fatal Error --- in the emulator stdout -> K1
+PASS o2 death marker --- Error --- in the log -> K1
+PASS o3 death marker --- Error --- in the emulator stdout -> K1
+PASS o2 death marker GpuHangAbort: reques in the log -> K2
+PASS o3 death marker GpuHangAbort: reques in the emulator stdout -> K2
+PASS o2 death marker [Vulkan] ErrorDevice in the log -> K2
+PASS o3 death marker [Vulkan] ErrorDevice in the emulator stdout -> K2
+PASS o4 hold_exit set -> K1
+PASS o5 the ENDED line of enter_scene -> K1
+PASS o6 an attempt that exited before stable -> K1
+PASS o7 ft_tail 0 at the end of the hold -> K2 (tail stall)
+PASS o7b ft_tail None -> no tail stall; timeout of enter_scene is not a marker
+PASS o7c ft_tail 0 without a hold (hold_s None) -> no tail stall
+PASS o7d ft_tail None with a hold -> no tail stall
+PASS o8 a frame dt 1 s after the first scene frame -> K2
+PASS o9 no entry line -> NOT_ENTERED, key = the first marker
+PASS o9b no entry line, no marker -> key attempt:timeout
+PASS o10 a marker after Event: quit: letter K1, variant vx HOLDS_120, flagged at exit
+PASS o11 entered without a scene frame -> NOT_EVALUABLE
+PASS o12 a made run without its log -> NOT_ENTERED
+PASS a1 good jsons of V, W and a census tag are admitted
+PASS a2 refused: two attempts
+PASS a2 refused: a warmup
+PASS a2 refused: another build
+PASS a2 refused: another level
+PASS a2 refused: a non-empty gate file
+PASS a2 refused: no clock pin
+PASS a2 refused: markers 1
+PASS a2 refused: checkpoints
+PASS a2 refused: a schedule
+PASS a2 refused: ABBA
+PASS a2 refused: no video in the census
+PASS a2 refused: a video of another tag
+PASS a2 refused: a video in W
+PASS a2 refused: validation in V
+PASS a2 refused: no validation in W
+PASS a2 refused: no VK_LAYER_PATH in W
+PASS a2 refused: another seal sha
+PASS a2 refused: another seal path
+PASS a2 refused: no prereg
+PASS a2 refused: a pipeline-cache retry
+PASS a3 the last --vulkan-validation value counts (false then true = W)
+PASS a4 a seal sha None refuses
+PASS a4b a seal sha None and a prereg without sha refuses
+PASS k1 every condition true (sum after the first frame = 300 000 000, 3 100 frames, first frame 2 s out) + sheet viewed -> YES
+PASS k1b the sheet row unfilled -> PENDING_SHEET
+PASS k1c the sheet row not-viewed -> NO
+PASS k1d W with [Vulkan][W] only and slow frames (dt rule not applied to W) is fine
+PASS k2 V missing -> NO, the V row fails
+PASS k2b W missing -> NO, the W row fails
+PASS k3 V not admitted (another build)
+PASS k4 V not entered -> NO, the entry row fails
+PASS k5 V a death marker in the emulator stdout
+PASS k6 V hold_exit
+PASS k7 V a frame dt 1 s after the first scene frame
+PASS k7b V first frame dt 5 s is out of the rule
+PASS k8 V tail stall
+PASS k9 V sum after the first frame 299 999 999
+PASS k10 V 3 000 frames after the first frame pass the frame row, 2 999 fail it
+PASS k11 V one glitch
+PASS k11b V glitch file missing
+PASS k11c V glitch file without the glitch line -> the glitch row fails
+PASS k12 W one [Vulkan][E] line
+PASS k12b W one [Vulkan][E] line in the emulator stdout -> the row fails
+PASS k13 W stopped early by the validation (hold_exit, hold_s 42): hold row and marker row fail
+PASS k13b W hold_s 299.9 -> the hold row fails
+PASS k13c W hold_s 300.0 -> passes
+PASS k13d W timeout of the entry -> the hold row fails
+PASS k13e W ENDED line -> death and hold rows fail
+PASS k14 W without its log -> NO: not entered and the [Vulkan][E] row fails (no count without a log)
+PASS k15 W death marker
+PASS t1 three in a row not entered with one marker -> stop
+PASS t2 two -> no stop
+PASS t3 three with different markers -> no stop
+PASS t4 broken by an entered level -> no stop
+PASS t5 a different marker then three alike -> stop on the last three
+PASS t6 main --stop-check: before c142_04 three timeouts -> rc 5; before c142_03 two -> rc 0; unknown tag -> rc 2
+PASS e6 the seal check passes on every sha line (scorer included)
+PASS e7 a changed sealed file fails the seal check
+PASS e8 a sealed name without its line fails
+PASS e9 a scorer whose sha is not the seal line fails
+PASS e10 a missing seal file fails
+PASS e11 main --check-seal on a good seal -> rc 0, SEAL: PASS
+PASS e12 main --check-seal on a broken seal -> rc 1, SEAL: FAIL
+PASS c1 calibration logic 5 of 5 on synthetic forms (K2 191 entry, K2 4945 hold, none, K3 hold 1826, K3 window 389)
+PASS c2 a K3 in the atl122 form -> 4 of 5
+PASS c3 eatl122 form with K2 on the hold -> fails
+PASS c4 each calibration form fails on its near miss (eatl K2 191 on the hold; edes K2 4945 in the window; atl K3 on the hold; ednn K3 in the window; eght K3 at 390 not 389)
+PASS m1 main --tag: the score json carries the outcome K2; rc 1 without the seal (prereg), not admitted rc 1, NO_RUN rc 1, unknown tag rc 2, no mode rc 2
+PASS m2 an admitted census tag -> rc 0; the K3 of its window is printed with "no warm base"
+PASS m3 summary: SCENE_OK PENDING_SHEET without the sheet row, YES with it
+PASS m4 summary: FORM B5a 1/10 (c142_01), FORM B5 2/10 (c142_01 K2 in the window, c142_02; c142_04 of another build is not admitted and not counted), census made 4, admitted 3
+PASS m5 summary: the tags not made are printed
+PASS m6 every printed line is ASCII (strict cp1250 and ascii)
+PASS m7 the constants: 10 census levels in the order of item 221 (g)(1); V, W first
+PASS m8 the build is 9235a7ac and the seal path is s142
+PASS x1 the seal must name the harness, the scorer, the fixtures, the mutants, enter_scene.py and s51_vidglitch.py (item 221 (g)(4))
+PASS x2 W with an attempt outcome other than ok -> the hold row fails even with hold_s 310
+PASS x3 forms: B5a 2/10 (K2 in the window c142_01, K2 on the hold c142_06), B5 2/10 (c142_01, K3 in the window c142_02)
+checks: 132
+ALL OK

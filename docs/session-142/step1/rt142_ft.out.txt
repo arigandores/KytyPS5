@@ -1,0 +1,7 @@
+attempts with a hold: 111
+('ft_tail 0', 'hold_exit') 1
+('ft_tail None', 'no hold_exit') 17
+('ft_tail>0', 'no hold_exit') 93
+ft_tail == 0 or <= 10 rows:
+  C:/kyty\s128\s1s128.json ok 65.3 0 321 1893 -lvl underwater_aerial_garden
+ft_tail without hold_exit: n 93 min 40 p1 40 median 145

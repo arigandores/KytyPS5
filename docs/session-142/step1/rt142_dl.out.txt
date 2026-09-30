@@ -1,0 +1,14 @@
+s1s128 log sha c9427f9427dc3795 level underwater_aerial_garden attempt attempt 1 ok hold_s 65.3 hold_exit 321 ft_tail 0
+   log crash --- Fatal Error --- @67220621 --- Fatal Error ---
+   stdout crash --- Fatal Error --- @15235 --- Fatal Error ---
+   log hang ErrorDeviceLost @67220450 vkQueueSubmit failed: ErrorDeviceLost (-4), tick=1955 debug_op=0 debug_submit=0 args=0,0,0
+   stdout hang ErrorDeviceLost @15061 vkQueueSubmit failed: ErrorDeviceLost (-4), tick=1955 debug_op=0 debug_submit=0 args=0,0,0
+   first (181, 18136, 451) K2 []
+   sc142 outcome (letter, vx, key): ('K1', 'K1', None)
+s2s128 log sha b9988b60c4fdcc1e level underwater_aerial_garden attempt attempt 1 ErrorDeviceLost hold_s None hold_exit None ft_tail None
+   log crash --- Fatal Error --- @21410352 --- Fatal Error ---
+   stdout crash --- Fatal Error --- @2670 --- Fatal Error ---
+   log hang ErrorDeviceLost @21410236 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=4561
+   stdout hang ErrorDeviceLost @2551 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=4561
+   first (316, 17533, 480) K2 []
+   sc142 outcome (letter, vx, key): ('K1', 'K1', None)

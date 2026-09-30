@@ -1,0 +1,26 @@
+suite test_go142a.py sha256 6fefe9af83e276717e8f1e05d961489f74d8bd38c36ab8579e254bb6607617ed target go142a.sh sha256 5bab53b49a266cab0edd742f9589ff7cc7668efba63cb00f038c84f2be855b5e
+PASS g1 an unknown tag -> rc 2 usage
+PASS g2 the stop file -> rc 4 before DRY
+PASS g3 a held lock -> rc 4 before DRY
+PASS g4 PLWAIT not a number -> rc 2; PLWAIT 541 -> rc 2
+PASS g5 one attempt: the marker or <tag>.json -> rc 1
+PASS g6 order: w142 before v142 -> rc 1; after the v142 marker -> DRY rc 0; c142_01 before w142 -> rc 1, after w142.json -> rc 0; c142_03 before c142_02 -> rc 1
+PASS g7 the seal call line: no seal, another PLWAIT, two lines, a trailing blank -> rc 1; PLWAIT=0 as sealed -> DRY rc 0
+PASS g8 DRY rc 0 for every tag once its previous call is made
+PASS g9 every plan: one attempt, clock pin, markers 0, the empty gate file, the seal, no checkpoints/schedule
+PASS g10 v142: Sky Garden, video, hold 330, stable-draws 300, timeout 480, no validation
+PASS g11 w142: Sky Garden, validation true with the layer path and the duplicate limit, hold 310, no video
+PASS g12 every census tag: its level of item 221 (g)(1), video, hold 120, stable-draws 100, no validation
+PASS g13 SEQ of the chain = sc142.SEQ
+PASS g14 the chain tag -> level map = sc142.level_of for the ten census tags; V and W -> Sky Garden
+PASS g15 constants: the installed build 9235a7ac and its pinned copy, the empty-file sha, s51_vidglitch.py of scripts
+PASS g16 holds: V 330 >= 300, W 310 >= 300, census 120 >= 120
+PASS g17 the stop file and the lock are checked before any process
+PASS g18 the stop file is checked again right before the lock is taken
+PASS g19 the stop rule: a census call refuses rc 5 on sc142.py --stop-check rc 5, before the lock
+PASS g20 the lock log lines are UTC; every event line of step2/times.txt is written with date -u
+PASS g21 the seal check runs before the lock
+PASS g22 the script is ASCII and LF only
+PASS g23 the word of the mutation harness is not a command of the chain (only its guard pattern)
+checks: 23
+ALL OK

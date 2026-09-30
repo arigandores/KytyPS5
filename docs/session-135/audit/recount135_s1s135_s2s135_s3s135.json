@@ -1,0 +1,547 @@
+{
+ "s1s135": {
+  "log_sha256": "e4cba0646e48755ac45b91369c1e5c64c197e6d2dee389e2cd9887043f5aa07b",
+  "lines": 764403,
+  "dups": {
+   "m": 0,
+   "d": 0,
+   "x": 0
+  },
+  "heads": {
+   "GpuClockPin: mode": [
+    "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)"
+   ],
+   "RtSkip: mode": [
+    "RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192"
+   ],
+   "RbCen: mode": [
+    "RbCen: mode 1"
+   ],
+   "RbSlow: mode": [
+    "RbSlow: mode 1"
+   ]
+  },
+  "cnt": {
+   "GpuWaitSlow:": 0,
+   "BvhLoopCapTrip:": 0,
+   "B2ReuseVerify:": 0,
+   "RbSlowVerify:": 0,
+   "AsyncPipelines: skipped draw": 0,
+   "[Vulkan][E]": 0,
+   "[Vulkan][W]": 0,
+   "RbCen: refused": 0,
+   "RbSlow: refused": 0,
+   "B2Reuse: refused": 0,
+   "RtSkip: refused": 0
+  },
+  "gatearm": 0,
+  "vk_w_classes": [],
+  "gates_m4": [],
+  "death": {
+   "log": [],
+   "stdout": [],
+   "quit_line": 764403
+  },
+  "smoke": {
+   "x_lines": 4461,
+   "xskip": 0,
+   "sums": {
+    "rs_find_ns": 119755511,
+    "rs_find_n": 309,
+    "rs_touch_ns": 117449545,
+    "rs_sync_ns": 636574327,
+    "rs_wr_ns": 211821383,
+    "rs_wr_n": 4419150,
+    "rs_rem_ns": 110136766,
+    "rs_sync_n": 30947,
+    "rs_sync_noop_n": 107009210,
+    "rs_sync_kb": 2537294,
+    "rs_ro_n": 102621007,
+    "rs_bf_n": 102379746,
+    "rs_bf_would": 47027007,
+    "rs_bf_diff": 0,
+    "rs_bfw_ns": 383837609,
+    "rs_refuse": 0,
+    "rs_head_ns": 423341724,
+    "rs_tail_ns": 198990086,
+    "rs_cen_ns": 754343573,
+    "rs_bf_xchk": 8369,
+    "rs_bf_xdiff": 3943,
+    "rs_bf_strm": 15,
+    "rs_disc_n": 9,
+    "rs_bfw_k": 29307879,
+    "rs_bf_race": 2,
+    "rb_slow_n": 107040153,
+    "rb_slow_ns": 1818069232,
+    "rb_cal_n": 414125,
+    "rb_cls_bad": 0,
+    "rb_refuse": 0
+   },
+   "form": {
+    "I0": {
+     "ok": true,
+     "extreme": -33443,
+     "last": -110,
+     "K": 100000000
+    },
+    "I1": {
+     "ok": true,
+     "extreme": 19,
+     "last": 4,
+     "K": 64
+    },
+    "I2": {
+     "ok": true,
+     "extreme": 19,
+     "last": 4,
+     "K": 64
+    },
+    "I0D": {
+     "ok": true,
+     "last": -110,
+     "bound": 909034.616,
+     "raw": 1818069232
+    },
+    "N1": {
+     "ok": true,
+     "min": 0,
+     "last": 241261,
+     "K": 64
+    },
+    "N2a": {
+     "ok": true,
+     "min": 0,
+     "last": 55352739,
+     "K": 64
+    },
+    "N2b": {
+     "ok": true,
+     "min": 0,
+     "last": 47027007,
+     "K": 64
+    },
+    "N2c": {
+     "ok": true,
+     "min": 0,
+     "last": 47027005,
+     "K": 64
+    },
+    "N3": {
+     "ok": true,
+     "min": 0,
+     "last": 107039844,
+     "K": 64
+    },
+    "N5": {
+     "ok": true,
+     "min": 0,
+     "last": 811899923,
+     "K": 100000000
+    },
+    "N6": {
+     "ok": true,
+     "min": 0,
+     "last": 55344370,
+     "K": 64
+    },
+    "N7": {
+     "ok": true,
+     "min": 0,
+     "last": 4426,
+     "K": 64
+    },
+    "rb_cls_bad": 0,
+    "rs_refuse": 0,
+    "PLACE": true,
+    "LIVE": true,
+    "lines": 4461,
+    "sum_rb_slow_n": 107040153
+   },
+   "lv": {
+    "rows": 4185,
+    "c": 13.579035164138913,
+    "bda_scan": 122.6905615292712,
+    "R1": 597.4812649940255,
+    "R2": 1383.829990721048,
+    "R2p": 144.25794650322769,
+    "R3": -0.00021027479112945002,
+    "R3L": 482.97254943770713,
+    "U3": -26.414725030992138,
+    "U3raw": 719.0426762246117,
+    "lv_slow7": 1010.0776797822735,
+    "mh_bind_us": 13852.14743130227,
+    "bl_buf_us": 5952.198327359618,
+    "it_head": 18.047894038752695,
+    "it_find": -4.625511462307513,
+    "it_touch": -4.806239098421463,
+    "it_sync": 33.61448721070188,
+    "it_wr": 2.240300109497767,
+    "it_rem": -5.345443463211563,
+    "it_tail": 1.2649419085056617
+   },
+   "pct": {
+    "R1": 4.313275381720761,
+    "R2": 23.24905714851931,
+    "R2p": 2.4236078599756636,
+    "R3": -2.0817685148213118e-05,
+    "R3L": 47.815386787065115
+   }
+  }
+ },
+ "s2s135": {
+  "log_sha256": "2da53687ba5732a8b6912022014d6cbef1206a163304af08e7e449256f26921a",
+  "lines": 703036,
+  "dups": {
+   "m": 0,
+   "d": 0,
+   "x": 0
+  },
+  "heads": {
+   "GpuClockPin: mode": [
+    "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)"
+   ],
+   "RtSkip: mode": [
+    "RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192"
+   ]
+  },
+  "cnt": {
+   "GpuWaitSlow:": 0,
+   "BvhLoopCapTrip:": 0,
+   "B2ReuseVerify:": 0,
+   "RbSlowVerify:": 0,
+   "AsyncPipelines: skipped draw": 0,
+   "[Vulkan][E]": 0,
+   "[Vulkan][W]": 0,
+   "RbCen: refused": 0,
+   "RbSlow: refused": 1,
+   "B2Reuse: refused": 0,
+   "RtSkip: refused": 0
+  },
+  "gatearm": 0,
+  "vk_w_classes": [],
+  "gates_m4": [],
+  "death": {
+   "log": [],
+   "stdout": [],
+   "quit_line": 703034
+  },
+  "smoke": {
+   "x_lines": 4539,
+   "xskip": 0,
+   "sums": {
+    "rs_find_ns": 0,
+    "rs_find_n": 0,
+    "rs_touch_ns": 0,
+    "rs_sync_ns": 0,
+    "rs_wr_ns": 0,
+    "rs_wr_n": 0,
+    "rs_rem_ns": 0,
+    "rs_sync_n": 0,
+    "rs_sync_noop_n": 0,
+    "rs_sync_kb": 0,
+    "rs_ro_n": 0,
+    "rs_bf_n": 0,
+    "rs_bf_would": 0,
+    "rs_bf_diff": 0,
+    "rs_bfw_ns": 0,
+    "rs_refuse": 23890384,
+    "rs_head_ns": 0,
+    "rs_tail_ns": 0,
+    "rs_cen_ns": 0,
+    "rs_bf_xchk": 0,
+    "rs_bf_xdiff": 0,
+    "rs_bf_strm": 0,
+    "rs_disc_n": 0,
+    "rs_bfw_k": 0,
+    "rs_bf_race": 0,
+    "rb_slow_n": 0,
+    "rb_slow_ns": 0,
+    "rb_cal_n": 0,
+    "rb_cls_bad": 0,
+    "rb_refuse": 0
+   },
+   "form": {
+    "I0": {
+     "ok": true,
+     "extreme": 0,
+     "last": 0,
+     "K": 100000000
+    },
+    "I1": {
+     "ok": true,
+     "extreme": 0,
+     "last": 0,
+     "K": 64
+    },
+    "I2": {
+     "ok": true,
+     "extreme": 0,
+     "last": 0,
+     "K": 64
+    },
+    "I0D": {
+     "ok": false,
+     "last": 0,
+     "bound": 0.0,
+     "raw": 0
+    },
+    "N1": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N2a": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N2b": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N2c": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N3": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N5": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 100000000
+    },
+    "N6": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "N7": {
+     "ok": true,
+     "min": 0,
+     "last": 0,
+     "K": 64
+    },
+    "rb_cls_bad": 0,
+    "rs_refuse": 23890384,
+    "PLACE": false,
+    "LIVE": false,
+    "lines": 4539,
+    "sum_rb_slow_n": 0
+   }
+  }
+ },
+ "s3s135": {
+  "log_sha256": "76afae74bdc747b1aeec964b7e4464c4dbed40584aa5d2358a8bda3a5c53e49e",
+  "lines": 1336007,
+  "dups": {
+   "m": 0,
+   "d": 0,
+   "x": 0
+  },
+  "heads": {
+   "GpuClockPin: mode": [
+    "GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)"
+   ],
+   "RtSkip: mode": [
+    "RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192"
+   ],
+   "RbCen: mode": [
+    "RbCen: mode 1"
+   ],
+   "RbSlow: mode": [
+    "RbSlow: mode 1"
+   ]
+  },
+  "cnt": {
+   "GpuWaitSlow:": 0,
+   "BvhLoopCapTrip:": 0,
+   "B2ReuseVerify:": 0,
+   "RbSlowVerify:": 0,
+   "AsyncPipelines: skipped draw": 0,
+   "[Vulkan][E]": 0,
+   "[Vulkan][W]": 455671,
+   "RbCen: refused": 0,
+   "RbSlow: refused": 0,
+   "B2Reuse: refused": 0,
+   "RtSkip: refused": 0
+  },
+  "gatearm": 0,
+  "vk_w_classes": [
+   [
+    "class#0 sha256:e785e01bfb2b",
+    1
+   ],
+   [
+    "class#1 sha256:c310a5cb204d",
+    322440
+   ],
+   [
+    "class#2 sha256:bbf2ae1e2339",
+    133230
+   ]
+  ],
+  "gates_m4": [],
+  "death": {
+   "log": [],
+   "stdout": [],
+   "quit_line": 1336007
+  },
+  "smoke": {
+   "x_lines": 1395,
+   "xskip": 0,
+   "sums": {
+    "rs_find_ns": 36392163,
+    "rs_find_n": 328,
+    "rs_touch_ns": 36660796,
+    "rs_sync_ns": 882535900,
+    "rs_wr_ns": 68324875,
+    "rs_wr_n": 1276080,
+    "rs_rem_ns": 33988885,
+    "rs_sync_n": 6912,
+    "rs_sync_noop_n": 33220752,
+    "rs_sync_kb": 698212,
+    "rs_ro_n": 31951584,
+    "rs_bf_n": 31892179,
+    "rs_bf_would": 13972927,
+    "rs_bf_diff": 0,
+    "rs_bfw_ns": 112381661,
+    "rs_refuse": 0,
+    "rs_head_ns": 130456345,
+    "rs_tail_ns": 61761126,
+    "rs_cen_ns": 232610395,
+    "rs_bf_xchk": 3472,
+    "rs_bf_xdiff": 744,
+    "rs_bf_strm": 3,
+    "rs_disc_n": 15,
+    "rs_bfw_k": 8731547,
+    "rs_bf_race": 0,
+    "rb_slow_n": 33227664,
+    "rb_slow_ns": 1250120090,
+    "rb_cal_n": 130154,
+    "rb_cls_bad": 0,
+    "rb_refuse": 0
+   },
+   "form": {
+    "I0": {
+     "ok": true,
+     "extreme": -831,
+     "last": 0,
+     "K": 100000000
+    },
+    "I1": {
+     "ok": true,
+     "extreme": 33,
+     "last": 0,
+     "K": 64
+    },
+    "I2": {
+     "ok": true,
+     "extreme": 33,
+     "last": 0,
+     "K": 64
+    },
+    "I0D": {
+     "ok": true,
+     "last": 0,
+     "bound": 625060.045,
+     "raw": 1250120090
+    },
+    "N1": {
+     "ok": true,
+     "min": 0,
+     "last": 59405,
+     "K": 64
+    },
+    "N2a": {
+     "ok": true,
+     "min": 0,
+     "last": 17919252,
+     "K": 64
+    },
+    "N2b": {
+     "ok": true,
+     "min": 0,
+     "last": 13972927,
+     "K": 64
+    },
+    "N2c": {
+     "ok": true,
+     "min": 0,
+     "last": 13972927,
+     "K": 64
+    },
+    "N3": {
+     "ok": true,
+     "min": 0,
+     "last": 33227336,
+     "K": 64
+    },
+    "N5": {
+     "ok": true,
+     "min": 0,
+     "last": 945520958,
+     "K": 100000000
+    },
+    "N6": {
+     "ok": true,
+     "min": 0,
+     "last": 17915780,
+     "K": 64
+    },
+    "N7": {
+     "ok": true,
+     "min": 0,
+     "last": 2728,
+     "K": 64
+    },
+    "rb_cls_bad": 0,
+    "rs_refuse": 0,
+    "PLACE": true,
+    "LIVE": true,
+    "lines": 1395,
+    "sum_rb_slow_n": 33227664
+   },
+   "lv": {
+    "rows": 1119,
+    "c": 12.288333151384352,
+    "bda_scan": 1617.5710455764074,
+    "R1": 666.6811322609464,
+    "R2": 1298.166867298872,
+    "R2p": -54.47991836094275,
+    "R3": -9.094947017729282e-13,
+    "R3L": 590.751107347565,
+    "U3": 33.67197485719481,
+    "U3raw": 744.1630598748883,
+    "lv_slow7": 5889.585043723627,
+    "mh_bind_us": 32104.71760500447,
+    "bl_buf_us": 10917.714030384272,
+    "it_head": 19.069890856055135,
+    "it_find": -3.5392335777510904,
+    "it_touch": -3.487252312946327,
+    "it_sync": 200.83093541730733,
+    "it_wr": 4.074266941922995,
+    "it_rem": -4.107303039829914,
+    "it_tail": 2.533103015762075
+   },
+   "pct": {
+    "R1": 2.076583075619467,
+    "R2": 11.890464099774377,
+    "R2p": -0.4990048118985693,
+    "R3": -1.544242412701303e-14,
+    "R3L": 10.030436829791816
+   }
+  }
+ }
+}

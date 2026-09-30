@@ -1,0 +1,9 @@
+checks: 13
+FAILED
+window 9 88 exit 1
+checks: 13
+FAILED
+window 10 89 exit 1
+checks: 13
+FAILED
+window 11 88 exit 1

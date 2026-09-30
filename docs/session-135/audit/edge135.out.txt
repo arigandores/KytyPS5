@@ -1,0 +1,7 @@
+pairs 38
+all pairs: (d)(3) NOT_RESOLVED  d_sync_n -0.0650 2SE 0.0628  parts>0 5  raw parts>0 0
+leave-one-pair-out outcomes over 38 subsets: {'NOT_RESOLVED': 31, 'SURCHARGE': 7}
+frame 7445 in pair 62 arm 1 dt_us 235598
+d dt_us all +186.9 +- 174.1
+d dt_us without the pair of frame 7445 +152.2 +- 164.0
+(d)(3) without that pair [I]: NOT_RESOLVED d_sync_n -0.0671 2SE 0.0644 parts>0 5 raw parts>0 0

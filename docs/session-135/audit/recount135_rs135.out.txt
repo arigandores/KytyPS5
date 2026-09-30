@@ -1,0 +1,105 @@
+log sha 81a7f407040a00fa6511b9f107a50fdba9fa89b2a3cab8c9426eb82af95fbe73 lines 1226506 dups {'m': 0, 'd': 0, 'x': 0} GateArm 77
+heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192'], 'RbCen: mode': ['RbCen: mode 1'], 'RbSlow: mode': ['RbSlow: mode 1'], 'B2Reuse: mode': ['B2Reuse: mode 1']}
+cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'RbSlowVerify:': 0, 'AsyncPipelines: skipped draw': 0, '[Vulkan][E]': 0, '[Vulkan][W]': 0, 'RbCen: refused': 0, 'RbSlow: refused': 0, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+m4 gate lines []
+death {"log": [], "stdout": [], "quit_line": 1226506}
+x lines 8719 xskip 0
+ form I0 {'ok': True, 'extreme': -15088, 'last': -100, 'K': 100000000}
+ form I0D {'ok': True, 'last': -100, 'bound': 1863371.702, 'raw': 3726743404}
+ form I1 {'ok': True, 'extreme': 42, 'last': 2, 'K': 64}
+ form I2 {'ok': True, 'extreme': 42, 'last': 3, 'K': 64}
+ form N1 {'ok': True, 'min': 0, 'last': 484976, 'K': 64}
+ form N2a {'ok': True, 'min': 0, 'last': 108069560, 'K': 64}
+ form N2b {'ok': True, 'min': 0, 'last': 94753179, 'K': 64}
+ form N2c {'ok': True, 'min': 0, 'last': 94753176, 'K': 64}
+ form N3 {'ok': True, 'min': 0, 'last': 212085359, 'K': 64}
+ form N5 {'ok': True, 'min': 0, 'last': 1610584401, 'K': 100000000}
+ form N6 {'ok': True, 'min': 0, 'last': 108053917, 'K': 64}
+ form N7 {'ok': True, 'min': 0, 'last': 7371, 'K': 64}
+ cls_bad 0 rs_refuse 0 PLACE True LIVE True sum rb_slow_n 212085682
+ABBA gatearm 77 complete 76 {'0': 38, '1': 38} seq_ok True incomplete [76] modes {'0': {'NEW': 38, 'OLD': 0, 'MID': 0}, '1': {'NEW': 38, 'OLD': 0, 'MID': 0}}
+MODE NEW pairs 38 blocks 38 38 
+ c arm0 14.245 SE 0.404 n 38 | c arm1 10.459 SE 0.148 n 38
+  part head  lv 429.372 SE 10.163 n 38 | it 17.655 SE 0.399 n 38
+  part find  lv -127.384 SE 9.768 n 38 | it -5.248 SE 0.410 n 38
+  part touch lv -129.250 SE 9.431 n 38 | it -5.324 SE 0.396 n 38
+  part sync  lv 831.876 SE 16.337 n 38 | it 34.237 SE 0.666 n 38
+  part wr    lv 52.813 SE 10.077 n 38 | it 2.178 SE 0.423 n 38
+  part rem   lv -142.586 SE 9.452 n 38 | it -5.873 SE 0.397 n 38
+  part tail  lv 21.992 SE 9.895 n 38 | it 0.902 SE 0.414 n 38
+  lv_slow7   936.838 SE 70.898 n 38
+  it_slow7   38.528 SE 2.948 n 38
+  lv_slow1   3013.428 SE 22.689 n 38
+  L          980.317 SE 10.210 n 38
+  lv_epoch   164.251 SE 2.352 n 38
+  R1         573.280 SE 2.856 n 38
+  R2         1296.048 SE 27.852 n 38
+  R2p        97.867 SE 30.571 n 38
+  R3         0.003 SE 0.003 n 38
+  R3L        451.365 SE 19.750 n 38
+  U3         -53.543 SE 20.980 n 38
+  U3raw      721.677 SE 5.137 n 38
+  mh_bind_us 13500.512 SE 55.487 n 38
+  bl_buf_us  5801.591 SE 31.287 n 38
+  lv_cen     1198.181 SE 8.672 n 38
+  dt_us      34943.735 SE 135.943 n 38
+  pf_rs_sync_n       6.62
+  pf_rs_sync_noop_n  24300.99
+  pf_rs_sync_kb      589.11
+  pf_rb_slow_n       24307.60
+  pf_rs_bf_n         23224.72
+  pf_rs_bf_would     10924.29
+  pf_rs_wr_n         1025.75
+  pf_rs_bfw_k        6808.91
+  pf_rs_ro_n         23281.85
+  pf_rs_find_n       0.00
+ pct {'R1': (573.28, 13500.51, 4.246), 'R2': (1296.05, 5801.59, 22.34), 'R2p': (97.87, 5801.59, 1.687), 'R3': (0.0, 936.84, 0.0), 'R3L': (451.36, 936.84, 48.18)}
+ m3 -5.481655617482616 c_e 8.763034566328486 U3e 245.04996478657472
+ shares diff [0, 32794715, 0.0] risk [13, 32794728, 3.9640517829573093e-07] race [0, 32794715, 0.0] would [32794715, 69720622, 0.47037324193694086]
+ xchk 4907 xdiff 3060 proven True d2 B3_PARKED q_timer True
+ pairs_cal 38
+  D L                   -192.2184 +-  20.8312 n 38
+  D lv_epoch             +68.5815 +-   5.8932 n 38
+  D lv_slow7            +827.7787 +- 157.7221 n 38
+  D it_slow7             +33.6626 +-   6.5095 n 38
+  D pf_rb_slow_n        +146.4364 +- 166.7685 n 38
+  D lv_sync              +62.4429 +-  40.4530 n 38
+  D pf_rs_sync_n          -0.0650 +-   0.0628 n 38
+  D pf_rs_sync_noop_n   +146.4877 +- 166.7620 n 38
+  D pf_rs_sync_kb         -3.6179 +-   5.1675 n 38
+  D lv_head             +236.9193 +-  22.0365 n 38
+  D lv_find              +90.2582 +-  20.7622 n 38
+  D lv_touch             +91.1179 +-  20.5888 n 38
+  D lv_wr                +94.2121 +-  22.8519 n 38
+  D lv_rem               +93.1195 +-  20.2039 n 38
+  D lv_tail             +159.7092 +-  21.7617 n 38
+  D it_head               +9.5929 +-   0.8950 n 38
+  D it_find               +3.7264 +-   0.8659 n 38
+  D it_touch              +3.7637 +-   0.8584 n 38
+  D it_sync               +2.3564 +-   1.6427 n 38
+  D it_wr                 +3.8451 +-   0.9486 n 38
+  D it_rem                +3.8481 +-   0.8432 n 38
+  D it_tail               +6.5301 +-   0.8987 n 38
+  D itraw_head            +5.8068 +-   0.3172 n 38
+  D itraw_find            -0.0598 +-   0.1091 n 38
+  D itraw_touch           -0.0225 +-   0.0774 n 38
+  D itraw_sync            -1.4297 +-   1.2179 n 38
+  D itraw_wr              +0.0589 +-   0.2474 n 38
+  D itraw_rem             +0.0619 +-   0.0851 n 38
+  D itraw_tail            +2.7439 +-   0.1431 n 38
+  D bl_buf_us            -41.1875 +-  35.1013 n 38
+  D mh_bind_us           -40.7099 +-  64.3551 n 38
+  D dt_us               +186.9354 +- 174.0665 n 38
+  D draws                 +1.8488 +-  14.2355 n 38
+  D c                     -3.7862 +-   0.8602 n 38
+  D it_minus_dc_head     +13.3791 +-   1.7267 n 38
+  D it_minus_dc_find      +7.5126 +-   1.7227 n 38
+  D it_minus_dc_touch     +7.5498 +-   1.7168 n 38
+  D it_minus_dc_sync      +6.1426 +-   2.3223 n 38
+  D it_minus_dc_wr        +7.6313 +-   1.7940 n 38
+  D it_minus_dc_rem       +7.6342 +-   1.7013 n 38
+  D it_minus_dc_tail     +10.3163 +-   1.7535 n 38
+ d3 B2M_NOT_RESOLVED parts pos ['find', 'touch', 'sync', 'wr', 'rem']
+ base dt arm0 rows 34943.735176548966 rows 3002 speed % 47.69667557229361
+ guards: arm0 b2r nonzero 0 arm1 blocks hit0 0 dead blocks 0 rts rows 0 gclk [897750, 897533]
+MODE OLD pairs 0 blocks 0 0 DEBT

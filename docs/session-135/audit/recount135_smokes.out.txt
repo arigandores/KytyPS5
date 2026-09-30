@@ -1,0 +1,73 @@
+######## s1s135 sha e4cba0646e48755ac45b91369c1e5c64c197e6d2dee389e2cd9887043f5aa07b lines 764403 dups {'m': 0, 'd': 0, 'x': 0} GateArm 0
+ heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192'], 'RbCen: mode': ['RbCen: mode 1'], 'RbSlow: mode': ['RbSlow: mode 1']}
+ cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'RbSlowVerify:': 0, 'AsyncPipelines: skipped draw': 0, '[Vulkan][E]': 0, '[Vulkan][W]': 0, 'RbCen: refused': 0, 'RbSlow: refused': 0, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+ m4 []
+ death {"log": [], "stdout": [], "quit_line": 764403}
+ x lines 4461 xskip 0
+ sums {'rs_find_ns': 119755511, 'rs_find_n': 309, 'rs_touch_ns': 117449545, 'rs_sync_ns': 636574327, 'rs_wr_ns': 211821383, 'rs_wr_n': 4419150, 'rs_rem_ns': 110136766, 'rs_sync_n': 30947, 'rs_sync_noop_n': 107009210, 'rs_sync_kb': 2537294, 'rs_ro_n': 102621007, 'rs_bf_n': 102379746, 'rs_bf_would': 47027007, 'rs_bf_diff': 0, 'rs_bfw_ns': 383837609, 'rs_refuse': 0, 'rs_head_ns': 423341724, 'rs_tail_ns': 198990086, 'rs_cen_ns': 754343573, 'rs_bf_xchk': 8369, 'rs_bf_xdiff': 3943, 'rs_bf_strm': 15, 'rs_disc_n': 9, 'rs_bfw_k': 29307879, 'rs_bf_race': 2, 'rb_slow_n': 107040153, 'rb_slow_ns': 1818069232, 'rb_cal_n': 414125, 'rb_cls_bad': 0, 'rb_refuse': 0}
+ rs_* nonzero (excl refuse): 23 ['rs_find_ns', 'rs_find_n', 'rs_touch_ns', 'rs_sync_ns', 'rs_wr_ns', 'rs_wr_n', 'rs_rem_ns', 'rs_sync_n', 'rs_sync_noop_n', 'rs_sync_kb', 'rs_ro_n', 'rs_bf_n', 'rs_bf_would', 'rs_bfw_ns', 'rs_head_ns', 'rs_tail_ns', 'rs_cen_ns', 'rs_bf_xchk', 'rs_bf_xdiff', 'rs_bf_strm', 'rs_disc_n', 'rs_bfw_k', 'rs_bf_race']
+  form I0 {'ok': True, 'extreme': -33443, 'last': -110, 'K': 100000000}
+  form I0D {'ok': True, 'last': -110, 'bound': 909034.616, 'raw': 1818069232}
+  form I1 {'ok': True, 'extreme': 19, 'last': 4, 'K': 64}
+  form I2 {'ok': True, 'extreme': 19, 'last': 4, 'K': 64}
+  form N1 {'ok': True, 'min': 0, 'last': 241261, 'K': 64}
+  form N2a {'ok': True, 'min': 0, 'last': 55352739, 'K': 64}
+  form N2b {'ok': True, 'min': 0, 'last': 47027007, 'K': 64}
+  form N2c {'ok': True, 'min': 0, 'last': 47027005, 'K': 64}
+  form N3 {'ok': True, 'min': 0, 'last': 107039844, 'K': 64}
+  form N5 {'ok': True, 'min': 0, 'last': 811899923, 'K': 100000000}
+  form N6 {'ok': True, 'min': 0, 'last': 55344370, 'K': 64}
+  form N7 {'ok': True, 'min': 0, 'last': 4426, 'K': 64}
+  PLACE True LIVE True
+ lv {'rows': 4185, 'c': 13.579, 'bda_scan': 122.691, 'R1': 597.481, 'R2': 1383.83, 'R2p': 144.258, 'R3': -0.0, 'R3L': 482.973, 'U3': -26.415, 'U3raw': 719.043, 'lv_slow7': 1010.078, 'mh_bind_us': 13852.147, 'bl_buf_us': 5952.198, 'it_head': 18.048, 'it_find': -4.626, 'it_touch': -4.806, 'it_sync': 33.614, 'it_wr': 2.24, 'it_rem': -5.345, 'it_tail': 1.265}
+ pct {'R1': 4.31, 'R2': 23.25, 'R2p': 2.42, 'R3': -0.0, 'R3L': 47.82}
+ vk W classes 0
+######## s2s135 sha 2da53687ba5732a8b6912022014d6cbef1206a163304af08e7e449256f26921a lines 703036 dups {'m': 0, 'd': 0, 'x': 0} GateArm 0
+ heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192']}
+ cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'RbSlowVerify:': 0, 'AsyncPipelines: skipped draw': 0, '[Vulkan][E]': 0, '[Vulkan][W]': 0, 'RbCen: refused': 0, 'RbSlow: refused': 1, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+ m4 []
+ death {"log": [], "stdout": [], "quit_line": 703034}
+ x lines 4539 xskip 0
+ sums {'rs_find_ns': 0, 'rs_find_n': 0, 'rs_touch_ns': 0, 'rs_sync_ns': 0, 'rs_wr_ns': 0, 'rs_wr_n': 0, 'rs_rem_ns': 0, 'rs_sync_n': 0, 'rs_sync_noop_n': 0, 'rs_sync_kb': 0, 'rs_ro_n': 0, 'rs_bf_n': 0, 'rs_bf_would': 0, 'rs_bf_diff': 0, 'rs_bfw_ns': 0, 'rs_refuse': 23890384, 'rs_head_ns': 0, 'rs_tail_ns': 0, 'rs_cen_ns': 0, 'rs_bf_xchk': 0, 'rs_bf_xdiff': 0, 'rs_bf_strm': 0, 'rs_disc_n': 0, 'rs_bfw_k': 0, 'rs_bf_race': 0, 'rb_slow_n': 0, 'rb_slow_ns': 0, 'rb_cal_n': 0, 'rb_cls_bad': 0, 'rb_refuse': 0}
+ rs_* nonzero (excl refuse): 0 []
+  form I0 {'ok': True, 'extreme': 0, 'last': 0, 'K': 100000000}
+  form I0D {'ok': False, 'last': 0, 'bound': 0.0, 'raw': 0}
+  form I1 {'ok': True, 'extreme': 0, 'last': 0, 'K': 64}
+  form I2 {'ok': True, 'extreme': 0, 'last': 0, 'K': 64}
+  form N1 {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N2a {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N2b {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N2c {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N3 {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N5 {'ok': True, 'min': 0, 'last': 0, 'K': 100000000}
+  form N6 {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  form N7 {'ok': True, 'min': 0, 'last': 0, 'K': 64}
+  PLACE False LIVE False
+ vk W classes 0
+######## s3s135 sha 76afae74bdc747b1aeec964b7e4464c4dbed40584aa5d2358a8bda3a5c53e49e lines 1336007 dups {'m': 0, 'd': 0, 'x': 0} GateArm 0
+ heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOCK_PIN)'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192'], 'RbCen: mode': ['RbCen: mode 1'], 'RbSlow: mode': ['RbSlow: mode 1']}
+ cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'RbSlowVerify:': 0, 'AsyncPipelines: skipped draw': 0, '[Vulkan][E]': 0, '[Vulkan][W]': 455671, 'RbCen: refused': 0, 'RbSlow: refused': 0, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+ m4 []
+ death {"log": [], "stdout": [], "quit_line": 1336007}
+ x lines 1395 xskip 0
+ sums {'rs_find_ns': 36392163, 'rs_find_n': 328, 'rs_touch_ns': 36660796, 'rs_sync_ns': 882535900, 'rs_wr_ns': 68324875, 'rs_wr_n': 1276080, 'rs_rem_ns': 33988885, 'rs_sync_n': 6912, 'rs_sync_noop_n': 33220752, 'rs_sync_kb': 698212, 'rs_ro_n': 31951584, 'rs_bf_n': 31892179, 'rs_bf_would': 13972927, 'rs_bf_diff': 0, 'rs_bfw_ns': 112381661, 'rs_refuse': 0, 'rs_head_ns': 130456345, 'rs_tail_ns': 61761126, 'rs_cen_ns': 232610395, 'rs_bf_xchk': 3472, 'rs_bf_xdiff': 744, 'rs_bf_strm': 3, 'rs_disc_n': 15, 'rs_bfw_k': 8731547, 'rs_bf_race': 0, 'rb_slow_n': 33227664, 'rb_slow_ns': 1250120090, 'rb_cal_n': 130154, 'rb_cls_bad': 0, 'rb_refuse': 0}
+ rs_* nonzero (excl refuse): 22 ['rs_find_ns', 'rs_find_n', 'rs_touch_ns', 'rs_sync_ns', 'rs_wr_ns', 'rs_wr_n', 'rs_rem_ns', 'rs_sync_n', 'rs_sync_noop_n', 'rs_sync_kb', 'rs_ro_n', 'rs_bf_n', 'rs_bf_would', 'rs_bfw_ns', 'rs_head_ns', 'rs_tail_ns', 'rs_cen_ns', 'rs_bf_xchk', 'rs_bf_xdiff', 'rs_bf_strm', 'rs_disc_n', 'rs_bfw_k']
+  form I0 {'ok': True, 'extreme': -831, 'last': 0, 'K': 100000000}
+  form I0D {'ok': True, 'last': 0, 'bound': 625060.045, 'raw': 1250120090}
+  form I1 {'ok': True, 'extreme': 33, 'last': 0, 'K': 64}
+  form I2 {'ok': True, 'extreme': 33, 'last': 0, 'K': 64}
+  form N1 {'ok': True, 'min': 0, 'last': 59405, 'K': 64}
+  form N2a {'ok': True, 'min': 0, 'last': 17919252, 'K': 64}
+  form N2b {'ok': True, 'min': 0, 'last': 13972927, 'K': 64}
+  form N2c {'ok': True, 'min': 0, 'last': 13972927, 'K': 64}
+  form N3 {'ok': True, 'min': 0, 'last': 33227336, 'K': 64}
+  form N5 {'ok': True, 'min': 0, 'last': 945520958, 'K': 100000000}
+  form N6 {'ok': True, 'min': 0, 'last': 17915780, 'K': 64}
+  form N7 {'ok': True, 'min': 0, 'last': 2728, 'K': 64}
+  PLACE True LIVE True
+ lv {'rows': 1119, 'c': 12.288, 'bda_scan': 1617.571, 'R1': 666.681, 'R2': 1298.167, 'R2p': -54.48, 'R3': -0.0, 'R3L': 590.751, 'U3': 33.672, 'U3raw': 744.163, 'lv_slow7': 5889.585, 'mh_bind_us': 32104.718, 'bl_buf_us': 10917.714, 'it_head': 19.07, 'it_find': -3.539, 'it_touch': -3.487, 'it_sync': 200.831, 'it_wr': 4.074, 'it_rem': -4.107, 'it_tail': 2.533}
+ pct {'R1': 2.08, 'R2': 11.89, 'R2p': -0.5, 'R3': -0.0, 'R3L': 10.03}
+ vk W classes 3
+    1 [Vulkan][W] class (text omitted: may name a foreign application)
+    322440 [Vulkan][W] class (text omitted: may name a foreign application)
+    133230 [Vulkan][W] class (text omitted: may name a foreign application)

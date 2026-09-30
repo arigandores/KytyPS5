@@ -1,0 +1,71 @@
+script recount134.py sha256 b0473c0b4ad43cb5f5def28d7e503185e5afcaad890b6ac47995b63772253fb0; date -u 03:03:43
+== kp134 sha a8de853e8ae2431a lines 1239146 GateArm 80 full rows 8964
+== s1s134 sha 1b5b9f4675438e4d lines 873436 GateArm 48 full rows 6070
+
+######## kp134 a8de853e8ae2431a70814509270a0bf35e1695b366fa2f529341c17bff590046
+heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOC'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192'], 'RbCen: mode': ['RbCen: mode 1'], 'B2Reuse: mode': ['B2Reuse: mode 1']}
+cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'AsyncPipelines: skipped draw': 0, 'BufferGc:': 1, '[Vulkan][E]': 0, '[Vulkan][W]': 0, 'RbCen: refused': 0, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+dups {'m': 0, 'd': 0, 'x': 0}
+death {"log_markers": [], "stdout_markers": [], "quit_line": 1239146}
+smoke rows 8964 bad rows 0 path rows 0 nomap rows 0
+sums {'b2r_n': 62028255, 'b2r_hit': 38302704, 'b2r_chk': 0, 'b2r_bad': 0, 'b2r_path': 0, 'b2r_hit_draw': 359602, 'b2r_hit_x': 37943102, 'b2r_miss_new': 10567283, 'b2r_miss_gen': 12885554, 'b2r_miss_evict': 272714, 'b2r_miss_kind': 0, 'b2r_refuse': 0, 'b2r_rst_cpu': 305539, 'b2r_rst_cpuw': 4494896, 'b2r_wrapcur': 0, 'b2r_nomap': 0, 'rb_b2_n': 0, 'rb_b2_would': 0, 'rb_b2_kb': 0, 'rb_b2_chk': 0, 'rb_b2_diff': 0, 'rb_b2_xchk': 0, 'rb_b2_xdiff': 0, 'rb_b2_evict': 0, 'rb_b2_shovf': 0, 'rb_b2_rst_sub': 0, 'rb_b2_rst_host': 0, 'rb_b2_rst_wait': 0, 'rb_b2_rst_rel': 0, 'rb_b2_rst_wr': 0, 'rb_b2_rst_cond': 0, 'rb_b2_rst_emu': 0, 'rb_b2_rst_gpuw': 0, 'rb_b2_rst_imgw': 0, 'rb_b2_rst_ring': 0, 'rb_cls_bad': 0, 'rb_refuse': 0}
+IF5 E1 {'max_abs': 5, 'last': 0, 'rows_nz': 735} E2 {'max_abs': 7, 'last': 0, 'rows_nz': 951} A3 {'max_abs': 38302704, 'last': -38302704, 'rows_nz': 3619} IF6 v1 0 IF6 v23 0
+hit share 0.6175 bda all 117.4 after300 85.8
+bufgc ['BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0']
+vk W classes 0 verify sample []
+ABBA blocks 80 complete 79 39 40 seq_ok True incomplete [79] beta 7.5459
+ mode NEW pairs 39 verdict NOT_RESOLVED
+   d_dt          +135.50 +-   272.73
+   d_dt_adj      +108.92 +-   219.33
+   d_draws         +3.52 +-    16.40
+   L_red         +243.26 +-    14.50 (SE 7.25, n 39)
+   d_E           +267.32 +-    46.96 (SE 23.48, n 39)
+   d_LE           +24.06 +-    53.28 (SE 26.64, n 39)
+   d_cpu_gpu     +163.22 +-   257.21 (SE 128.60, n 39)
+   d_gpu_busy     -45.40 +-    33.04 (SE 16.52, n 39)
+   d_mh_bind       -2.82 +-   103.66 (SE 51.83, n 39)
+   d_bl_buf       -11.77 +-    36.15 (SE 18.07, n 39)
+   L_arm0 1091.73 max(D+2SE) 408.2327219274558 min(D-2SE) -137.22655509850358
+   D/Lred 0.557
+ DRS {'m0': 2007.826067672941, 'm1': 2007.7313548158702, 'rows_att0': (0, 0), 'mixed': False}
+ base arm0 dt 34074.82 speed 48.91 %, arm1 dt 34272.89
+ arm0 window rows 3081 arm0 b2r nonzero fields 0 arm1 blocks hit0 0
+ arm1 sums {'b2r_n': 54481083, 'b2r_hit': 33639233, 'b2r_chk': 0, 'b2r_bad': 0, 'b2r_path': 0, 'b2r_hit_draw': 315721, 'b2r_hit_x': 33323517, 'b2r_miss_new': 9277324, 'b2r_miss_gen': 11326659, 'b2r_miss_evict': 237859, 'b2r_miss_kind': 0, 'b2r_refuse': 0, 'b2r_rst_cpu': 268287, 'b2r_rst_cpuw': 3946159, 'b2r_wrapcur': 0, 'b2r_nomap': 0}
+ arm1 hit share 0.6174479497773566 B1 0.011412566542797304
+ arm1 IF5 {'max_abs': 8, 'last': 8, 'rows_nz': 634} {'max_abs': 10, 'last': -5, 'rows_nz': 830} IF6 0 IF6 noslack 0
+ rts guard rows 0 gclk (921049, 944919) levels {'0': {'dt_us': 34074.82343395002, 'draws': 5041.645569620253, 'ob_stream': 13906.322622525153, 'pb_wait_gpu_us': 158.38526452450503, 'bda_scan': 58.28172671210646, 'L': 1091.7306625018953, 'E': 2389.5886463469046}, '1': {'dt_us': 34272.88924050632, 'draws': 5043.070569620253, 'ob_stream': 7452.854430379746, 'pb_wait_gpu_us': 151.2598101265823, 'bda_scan': 56.551265822784806, 'L': 850.5370976241554, 'E': 2661.0965051025005}}
+ block modes {'arm0': {'NEW': 39}, 'arm1': {'NEW': 40}}
+
+######## s1s134 1b5b9f4675438e4dfa661dfdcb14a8e77ec40286336c8d72094e4560c7f1b7da
+heads {'GpuClockPin: mode': ['GpuClockPin: mode 1 - the guest GPU clock ignores the pacer speed (KYTY_GPU_CLOC'], 'RtSkip: mode': ['RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192'], 'RbCen: mode': ['RbCen: mode 1'], 'B2Reuse: mode': ['B2Reuse: mode 1']}
+cnt {'GpuWaitSlow:': 0, 'BvhLoopCapTrip:': 0, 'B2ReuseVerify:': 0, 'AsyncPipelines: skipped draw': 0, 'BufferGc:': 1, '[Vulkan][E]': 0, '[Vulkan][W]': 0, 'RbCen: refused': 0, 'B2Reuse: refused': 0, 'RtSkip: refused': 0}
+dups {'m': 0, 'd': 0, 'x': 0}
+death {"log_markers": [], "stdout_markers": [], "quit_line": 873436}
+smoke rows 6070 bad rows 0 path rows 0 nomap rows 0
+sums {'b2r_n': 37432452, 'b2r_hit': 23133676, 'b2r_chk': 0, 'b2r_bad': 0, 'b2r_path': 0, 'b2r_hit_draw': 224993, 'b2r_hit_x': 22908683, 'b2r_miss_new': 6326809, 'b2r_miss_gen': 7810386, 'b2r_miss_evict': 161581, 'b2r_miss_kind': 0, 'b2r_refuse': 0, 'b2r_rst_cpu': 186511, 'b2r_rst_cpuw': 2706311, 'b2r_wrapcur': 0, 'b2r_nomap': 0, 'rb_b2_n': 0, 'rb_b2_would': 0, 'rb_b2_kb': 0, 'rb_b2_chk': 0, 'rb_b2_diff': 0, 'rb_b2_xchk': 0, 'rb_b2_xdiff': 0, 'rb_b2_evict': 0, 'rb_b2_shovf': 0, 'rb_b2_rst_sub': 0, 'rb_b2_rst_host': 0, 'rb_b2_rst_wait': 0, 'rb_b2_rst_rel': 0, 'rb_b2_rst_wr': 0, 'rb_b2_rst_cond': 0, 'rb_b2_rst_emu': 0, 'rb_b2_rst_gpuw': 0, 'rb_b2_rst_imgw': 0, 'rb_b2_rst_ring': 0, 'rb_cls_bad': 0, 'rb_refuse': 0}
+IF5 E1 {'max_abs': 5, 'last': 0, 'rows_nz': 408} E2 {'max_abs': 7, 'last': 0, 'rows_nz': 551} A3 {'max_abs': 23133676, 'last': -23133676, 'rows_nz': 2172} IF6 v1 0 IF6 v23 0
+hit share 0.6180 bda all 147.7 after300 103.7
+bufgc ['BufferGc: budget=14901313536 trigger=9747352781 critical=13183326618 shift_mb=0']
+vk W classes 0 verify sample []
+ABBA blocks 48 complete 47 23 24 seq_ok True incomplete [47] beta 7.2793
+ mode NEW pairs 23 verdict NOT_RESOLVED
+   d_dt          +103.71 +-   235.26
+   d_dt_adj       +47.71 +-   185.70
+   d_draws         +7.69 +-    19.16
+   L_red         +268.37 +-    18.28 (SE 9.14, n 23)
+   d_E           +229.37 +-    63.51 (SE 31.75, n 23)
+   d_LE           -39.00 +-    68.53 (SE 34.26, n 23)
+   d_cpu_gpu      +89.85 +-   202.46 (SE 101.23, n 23)
+   d_gpu_busy     -34.12 +-    53.69 (SE 26.85, n 23)
+   d_mh_bind      -42.47 +-    82.47 (SE 41.23, n 23)
+   d_bl_buf       -37.39 +-    41.60 (SE 20.80, n 23)
+   L_arm0 1088.80 max(D+2SE) 338.9683613289434 min(D-2SE) -137.98817798230763
+   D/Lred 0.386
+ DRS {'m0': 2007.6076562527876, 'm1': 2007.4110018909198, 'rows_att0': (0, 0), 'mixed': False}
+ base arm0 dt 33810.09 speed 49.30 %, arm1 dt 33898.36
+ arm0 window rows 1817 arm0 b2r nonzero fields 0 arm1 blocks hit0 0
+ arm1 sums {'b2r_n': 32866072, 'b2r_hit': 20311679, 'b2r_chk': 0, 'b2r_bad': 0, 'b2r_path': 0, 'b2r_hit_draw': 197522, 'b2r_hit_x': 20114159, 'b2r_miss_new': 5547969, 'b2r_miss_gen': 6865204, 'b2r_miss_evict': 141216, 'b2r_miss_kind': 0, 'b2r_refuse': 0, 'b2r_rst_cpu': 163910, 'b2r_rst_cpuw': 2373831, 'b2r_wrapcur': 0, 'b2r_nomap': 0}
+ arm1 hit share 0.6180135855602094 B1 0.011248333551450874
+ arm1 IF5 {'max_abs': 8, 'last': 4, 'rows_nz': 338} {'max_abs': 9, 'last': -2, 'rows_nz': 470} IF6 0 IF6 noslack 0
+ rts guard rows 0 gclk (543079, 566852) levels {'0': {'dt_us': 33810.08750687947, 'draws': 5021.766648321409, 'ob_stream': 14156.71216290589, 'pb_wait_gpu_us': 161.98348926802421, 'bda_scan': 57.46395156851953, 'L': 1088.7989272272898, 'E': 2305.161347830738}, '1': {'dt_us': 33898.36023206751, 'draws': 5026.715189873418, 'ob_stream': 7560.430907172996, 'pb_wait_gpu_us': 152.27531645569618, 'bda_scan': 61.73101265822785, 'L': 820.4590103102954, 'E': 2539.383847744734}}
+ block modes {'arm0': {'NEW': 23}, 'arm1': {'NEW': 24}}

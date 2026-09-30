@@ -1,0 +1,13 @@
+suite test_recount134.py sha256 6b48b6324bfc26083649b586ee4789fd808ea3efe4c11742995ede4210e1173b target recount134.py sha256 b0473c0b4ad43cb5f5def28d7e503185e5afcaad890b6ac47995b63772253fb0
+PASS e1 complete 24
+PASS e1 pairs 12
+PASS e1 delta exactly +100 (p 9 and 89 outside)
+PASS e2 delta = 2*7900/79 = 200 (p 10, 88 inside)
+PASS e3 block 5 incomplete
+PASS e4 9 pairs DEBT
+PASS e5 L_arm0 7.9, reduction 0
+PASS e6 bda 600 -> OLD
+PASS e6 bda 301 -> MID
+PASS e7 runsum
+10 checks
+ALL OK

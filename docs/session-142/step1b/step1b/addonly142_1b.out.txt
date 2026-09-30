@@ -1,0 +1,3 @@
+old C:/kyty/s142/step1b/v1/test_sc142.py b1452fcf881fe5c27e7ad73504e801e9320c4984cb94b99d9593461d61ba742c lines 977
+new C:/kyty/s142/test_sc142.py facafac7d8762f1dee69f6bab7e800d501e6f354a07fa8741a6ea046acccbc6e lines 999
+ADDONLY: PASS (added 22 lines before line 973 of the old suite)

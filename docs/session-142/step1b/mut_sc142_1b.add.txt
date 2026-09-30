@@ -1,0 +1,25 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s142\sc142.py sha256 1ce612cdd036e2382ce5c5aae6bd25836062830dc0952da8512a9f2a74bb38c3
+test    C:\kyty\s142\test_sc142.py sha256 facafac7d8762f1dee69f6bab7e800d501e6f354a07fa8741a6ea046acccbc6e
+mutants C:\kyty\s142\mut_sc142.py sha256 5ed00046dfd00dea619edd35761a5d31869fb7c362f790b990eb8ecc60d8552c
+mutants: format list, 245 defined (strict: every use of MUTANTS checked; statements evaluated at lines 22)
+selection: --only, 3 mutants
+suite: family V; fast on (190 guarded updates of ok); end of suite: the final exit call at line 998
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'mkrun', 'pair', 's6', 's7', 's8', 's9', 'sheet_case'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 6 (spawn, one process per job), work dir C:\kyty\s142\mutwork1b\sc142_60272_1790805821
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.03 s in the baseline (20 of 156 calls validated; not validated: 56 x it returns a dict (only immutable values are replayed); 35 x a scorer function (entry_of); 23 x a scorer function (level_of))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (21.8 s)
+BASELINE#2  SURVIVED  (22.0 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (32.9 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (31.2 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (33.1 s)
+half  KILLED by test line 986  (31.4 s)
+sk_v_att_ok  KILLED by test line 988  (32.7 s)
+ma_nojs  KILLED by test line 993  (31.3 s)
+3 mutants: 3 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 3 kill(s) ended at their first failing case; they skipped a median 0 % / mean 0 % of the suite's 217 checks, about 0.1 s of the baseline's suite time per job (0 s in all)
+wall 56.6 s, worker time 236.4 s, 6 workers
+ALL KILLED (3 of 3 selected mutants killed; 245 defined in the mutant script)

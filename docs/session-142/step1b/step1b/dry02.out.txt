@@ -1,0 +1,12 @@
+bash.exe: warning: could not find /tmp, please create!
+DRY v142: level underwater_aerial_garden; stop file?; lock?; PLWAIT=540; procload --wait-s 540; sc142.py --check-seal; stop-check (census); cpu < 15; idle142; procload --wait-s 0; stop file?; shader cache count; lock (runs142/lock.log UTC); install /c/kyty/s128/kyty_emulator_9235a7ac.exe (9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7); enter_scene.py v142 --level underwater_aerial_garden --attempts 1 --stable-draws 300 --timeout 480 --no-install --require-idle --gates-file C:/kyty/s142/gates_default.txt --pred C:/kyty/s142/pred/02_sc142.md --rec  --hold 330  KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0; log sha; glitch+sheet --rec; sc142.py --tag v142; restore /c/kyty/s128/kyty_emulator_9235a7ac.exe
+ rc 0
+bash.exe: warning: could not find /tmp, please create!
+previous call not made
+ rc 1
+bash.exe: warning: could not find /tmp, please create!
+previous call not made
+ rc 1
+bash.exe: warning: could not find /tmp, please create!
+previous call not made
+ rc 1

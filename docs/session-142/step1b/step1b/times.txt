@@ -1,0 +1,15 @@
+2026-09-30T21:40:39Z start HPP-282 step1b; input commits KytyPS5 6a50c978 (p.224), 8320bc1f (review142)
+2026-09-30T21:45:06Z step0 copies saved to step1b/v0 (sc142.py 66322f32, go142a.sh 5bab53b4 before the 1b edits)
+2026-09-30T21:55:44Z forecast counted full run: suite 13.6 s x 248 jobs / 8 workers x 1.3 = 548 s (<= 900 s); inputs sc142.py 1ce612cdd036e238 test_sc142.py b1452fcf881fe5c2 mut_sc142.py 5ed00046dfd00dea
+2026-09-30T21:55:44Z counted full mutant run start (245 mutants, --control --no-memo --workers 8, work/cache mutwork1b/mutcache1b)
+2026-09-30T21:57:40Z pred/01_sc142.md marked replaced by 02 (p.224); original copy step1b/v0/01_sc142.md sha256 03ea32947790190696b14ab4d452f7316436278edd92a31dfd43b17237082492; marked sha256 e8f10c913244f871e542cf44f0410b961b3fe98144c0dcdb23ecc1764461a075
+2026-09-30T22:02:40Z counted full mutant run end rc 1 mut_sc142_1b.txt sha256 52705812bc91c997dc001720e9c83ec930ebe9ac9981190e70ffee663ba869d4 mut_run1b.log sha256 0fb4e2fa3a83f7769a56e0e45f18f88c7158c44a2decccb43651c9b7b487278b
+2026-09-30T22:03:40Z add-on run start --only half,sk_v_att_ok,ma_nojs on the add-only suite facafac7d8762f1d
+2026-09-30T22:04:38Z add-on run end rc 0 mut_sc142_1b.add.txt sha256 6704f2573aa51b1a96e6fdca6b2d3405d4892a0f85a2703261674166fad9318c mut_run1b.add.log sha256 3fa8b1f6e65ef31a18c7122e4f9663d66c0532b2b9fc4db313ad20da0659117a
+2026-09-30T22:05:04Z test_sc142.py rc 0 step1b/test_sc142.out.txt sha256 3a1f19bbacaa865bec3fd5ee715d6a2fdd12aa2b1157022411951c9a142157d8
+2026-09-30T22:05:07Z test_go142a.py rc 0 step1b/test_go142a.out.txt sha256 8a2b4b88625cba684c8c24edf1285e335dd49d6081a5b518b12814add55041c3
+2026-09-30T22:05:13Z sc142.py --calib rc 0 step1b/calib142_1b.out.txt sha256 461a080c0a62ff7b59c56e9d08e2918b73bb3248ddd4010bb13f45a24218ae9c
+2026-09-30T22:05:15Z sc142.py --check1b rc 0 step1b/check1b.out.txt sha256 1bb561a15a383151f4cdbb75cdf90b3c3164513e659536aa96834c1a7df8e9c3
+2026-09-30T22:05:40Z seal pred/02_sc142.md written rc 0 sha256 a42bce68d4c8376712b76eae76e6ce01563f54b5d6e83ff80617694fe54501e9
+2026-09-30T22:05:40Z sc142.py --check-seal rc 0 step1b/checkseal02.out.txt sha256 8395a74840ba27920bd7a001b5adac53a89d7b17247c3e7cca416037e035aa23
+2026-09-30T22:06:30Z FACTS.md section Step 1b appended sha256 ae3c55ac5242cbd6a9c7f9e8d31ca91f09579d3c31d450bfbaa9777ae9f57d97

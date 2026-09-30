@@ -562,8 +562,10 @@ void End() {
 		// (ROADMAP s122 item 183(c)): the same read at 3, the positive control of the byte check of a hit without a ring copy.
 		if (!Libs::LibKernel::Memory::TryReadBacking(t.vaddr, g_bln_chk, t.size)) {
 			t.checked = true;
-			Count(FS::Counter::BlnBad);
-			Mismatch(t, "read", nullptr, nullptr);
+			if (t.mode == 2) {
+				Count(FS::Counter::BlnBad);
+			}
+			Mismatch(t, "read", nullptr, nullptr); // step 5a' (item 185(b)): at 3 a line, not bln_bad (as ReadRing at 3)
 		} else {
 			Compare(t, g_bln_chk);
 		}

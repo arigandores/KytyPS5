@@ -738,8 +738,14 @@ enum class Knob : uint32_t {
 	// rbcen, the per-iteration counts of its synchronization and the census of the "buffast" hits without an action
 	// (rs_*). Read ONCE per operation together with rbcen (the same latch), so it CAN be a schedule arm. Requires the
 	// latched rbcen=1; otherwise refused (RbSlow: refused reason=rbcen, rs_refuse) and taken as 0.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	RebindSlowCensus, // KYTY_REBIND_SLOW_CENSUS, file name "rbslow" (MEASUREMENT ONLY: 0 off, 1 census)
+	// Session 136, PROTOTYPE (docs/session-136/design136.md rev 1 with ROADMAP s122 items 176(d), (e)(1), 178, 179): the
+	// package B2' + sync-carry - the light miss of the B2 probe (no thread-local write and no End on a miss) and the snapshot
+	// of ObtainBuffer with the bit "CPU-clean" of its combined query carried into SynchronizeBuffer (1), the self-check (2),
+	// the positive control (3). Latched only at the start of a submission slice, so it CAN be a schedule arm. Refused
+	// (BindLean: refused, bln_refuse) with rbcen=2, with b2reuse != 0 and at 2/3 without KYTY_FRAME_TRACE.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	BindLean,         // KYTY_BIND_LEAN, file name "bindlean" (PROTOTYPE: 0 off, 1 lean B2 + sync carry, 2 self-check, 3 control)
 	Count,
 };
 

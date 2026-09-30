@@ -313,6 +313,264 @@ void End() {
 
 } // namespace Common::B2Reuse
 
+// Session 136, knob "bindlean" (PROTOTYPE; docs/session-136/design136.md rev 1 s.5.1 with ROADMAP s122 items 178(g) V4,
+// 179(b) RC1): values 2/3 of the B2 part - a copy of Common::B2Reuse above with its names replaced (the table g_bln_*, the
+// thread-local t_bln, the counters Bln* through the accumulator, the lines BindLeanVerify), without b2r_hit_draw/x and with
+// one table 2^12 for 2 and 3; plus the comparison of every evaluated full probe with LeanProbe at 2 (bln_pchk, bln_pbad) and
+// the insertion through LeanInsert of value 1 under the guard of Insert (RC1). Common::B2Reuse is unchanged.
+namespace Common::BindLean {
+
+namespace {
+
+const char* KindName(Kind kind) {
+	switch (kind) {
+		case Kind::P: return "P";
+		case Kind::D: return "D";
+		case Kind::A: return "A";
+		default: break;
+	}
+	return "-";
+}
+
+bool GenMoved(const Tls& t) {
+	return RbCen::g_rb_gen.load(std::memory_order_acquire) != t.gen;
+}
+
+const uint8_t* ShadowOf(const Tls& t) {
+	return g_bln_shadow + (t.cold->shadow_pos1 - 1) % ShadowBytes;
+}
+
+// BindLeanVerify: MISMATCH (s.5.3); `now` and `shadow` are compared to name the first differing byte.
+void Mismatch(const Tls& t, const char* why, const uint8_t* now, const uint8_t* shadow) {
+	if (g_bln_lines.fetch_add(1, std::memory_order_relaxed) >= 40) {
+		return;
+	}
+	uint64_t first = 0;
+	if (now != nullptr && shadow != nullptr) {
+		while (first < t.size && now[first] == shadow[first]) {
+			first++;
+		}
+	}
+	LOGF("BindLeanVerify: MISMATCH kind=%s vaddr=0x%016llx size=0x%llx gen_moved=%d why=%s first=0x%llx\n", KindName(t.kind),
+		 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), GenMoved(t) ? 1 : 0, why,
+		 static_cast<unsigned long long>(first));
+}
+
+// The bytes of a hit against the shadow of its first copy, exactly `size` bytes.
+void Compare(Tls& t, const uint8_t* now) {
+	t.checked             = true;
+	const uint8_t* shadow = ShadowOf(t);
+	if (std::memcmp(now, shadow, t.size) != 0) {
+		Count(FrameStats::Counter::BlnBad);
+		Mismatch(t, "bytes", now, shadow);
+	}
+}
+
+// 2 (item 176(e)(1)): the decision of the light probe of value 1 on the same table and generation against `full`, the
+// decision of the full probe that evaluated the entry.
+void ProbeCheck(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align, uint64_t gen, bool full) {
+	bool       probed = false;
+	const bool lean   = LeanProbe(kind, vaddr, size, align, gen, probed) != nullptr;
+	Count(FrameStats::Counter::BlnPchk);
+	if (lean != full) {
+		Count(FrameStats::Counter::BlnPbad);
+		LeanDefect(kind, vaddr, size, "probe", full, lean);
+	}
+}
+
+} // namespace
+
+void LeanDefect(Kind kind, uint64_t vaddr, uint64_t size, const char* where, bool full, bool lean) {
+	if (g_bln_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("BindLeanVerify: PROBE kind=%s vaddr=0x%016llx size=0x%llx full=%d lean=%d where=%s\n", KindName(kind),
+			 static_cast<unsigned long long>(vaddr), static_cast<unsigned long long>(size), full ? 1 : 0, lean ? 1 : 0, where);
+	}
+}
+
+const Entry* Probe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align) {
+	namespace FS          = FrameStats;
+	auto&           t     = t_bln;
+	const uintptr_t state = RbCen::g_bln_state.load(std::memory_order_relaxed);
+	const auto      mode  = static_cast<uint32_t>(state & 3u);
+	if (mode == 0 || size > CheckBytes || align > 0xFFFFu) {
+		return nullptr;
+	}
+	if ((state & ~uintptr_t {3}) != reinterpret_cast<uintptr_t>(&t)) {
+		RefuseCall(16u, "thread"); // not the thread of LatchSub - the path of 0 for this probe
+		return nullptr;
+	}
+	if (RbCen::t_rb.b2) {
+		RefuseCall(1u, "rbcen2"); // the census latched by this operation in the middle of the interval
+		return nullptr;
+	}
+	if (t.pend == Pend::Hit) {
+		return nullptr; // 2/3: the hit of this call stands; the later points of its path of 0 only compare
+	}
+	const uint64_t gen   = RbCen::g_rb_gen.load(std::memory_order_acquire);
+	const size_t   index = Index(vaddr, size, align);
+	Entry&         e     = g_bln_hot[index];
+	t.mode               = mode;
+	t.nomap              = false; // a new probe drops the flag of an earlier one
+	t.kind               = kind;
+	t.vaddr              = vaddr;
+	t.size               = size;
+	t.align              = align;
+	t.gen                = gen;
+	t.pos1               = 0;
+	t.entry              = &e;
+	t.cold               = mode >= 2 ? &g_bln_cold[index] : nullptr;
+	const bool same      = e.kind != Kind::None && e.vaddr == vaddr && e.size == size && e.align == align;
+	const bool live      = e.kind != Kind::None && e.gen == gen;
+	FS::Counter miss     = FS::Counter::BlnMissNew;
+	if (same && live && e.kind == kind) {
+		const bool stale = t.cold != nullptr &&
+						   (t.cold->shadow_pos1 == 0 || g_bln_shadow_pos - (t.cold->shadow_pos1 - 1) > ShadowBytes);
+		if (!stale || mode == 2) {
+			if (mode == 2) {
+				ProbeCheck(kind, vaddr, size, align, gen, true);
+			}
+			Count(FS::Counter::BlnN);
+			Count(FS::Counter::BlnHit);
+			if (mode == 1) {
+				t.pend = Pend::None;
+				return &e; // not reached: value 1 probes with LeanProbe
+			}
+			t.pend    = Pend::Hit;
+			t.ring    = false;
+			t.gpu     = false;
+			t.checked = false;
+			Count(FS::Counter::BlnChk);
+			if (stale) {
+				t.checked = true; // 2: an overwritten shadow is counted as a mismatch
+				Count(FS::Counter::BlnBad);
+				Mismatch(t, "shovf", nullptr, nullptr);
+			}
+			return nullptr;
+		}
+		miss = FS::Counter::BlnMissEvict; // B5: a stale shadow at 3 is not a hit
+	} else if (same && !live) {
+		miss = FS::Counter::BlnMissGen;
+	} else if (same) {
+		miss = FS::Counter::BlnMissKind;
+	} else if (live) {
+		miss = FS::Counter::BlnMissEvict;
+	}
+	if (mode == 2) {
+		ProbeCheck(kind, vaddr, size, align, gen, false);
+	}
+	t.pend = Pend::Miss;
+	t.miss = miss;
+	return nullptr;
+}
+
+void Insert(Kind kind, uint64_t offset) {
+	auto& t = t_bln;
+	if (t.pend != Pend::Miss || t.kind != kind) {
+		return;
+	}
+	t.pend  = Pend::None;
+	t.nomap = false; // End() is not called once pend is None
+	if (offset > UINT32_MAX || (t.mode >= 2 && t.pos1 == 0)) {
+		return; // no answer to remember (a copy at 2/3 always leaves its shadow)
+	}
+	// RC1 (item 179(b)(3)): the insertion of value 1 under the guard above, then the cold entry of its shadow.
+	if (LeanInsert(kind, t.vaddr, t.size, t.align, t.gen, offset, t.mode) && t.cold != nullptr) {
+		*t.cold = {t.pos1, (t.pos1 - 1) / ShadowBytes};
+	}
+}
+
+bool ReadRing(Kind kind, uint64_t vaddr, uint8_t* dst, uint64_t size) {
+	auto& t = t_bln;
+	if (kind == Kind::P) {
+		t.arm_p = false; // the outer call only
+	}
+	if (t.mode < 2 || t.pend == Pend::None || (t.pend == Pend::Miss && t.kind != kind) || vaddr != t.vaddr ||
+		size != t.size) {
+		return Libs::LibKernel::Memory::TryReadBacking(vaddr, dst, size);
+	}
+	if (t.pend == Pend::Miss) {
+		// The shadow first, then the ring slot from it: the shadow is the bytes of the first copy by construction.
+		uint64_t pos = g_bln_shadow_pos;
+		if (pos % ShadowBytes + size > ShadowBytes) {
+			pos += ShadowBytes - pos % ShadowBytes; // contiguous: start the next lap
+		}
+		uint8_t* shadow = g_bln_shadow + pos % ShadowBytes;
+		if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, shadow, size)) {
+			return false;
+		}
+		std::memcpy(dst, shadow, size);
+		g_bln_shadow_pos = pos + size;
+		t.pos1           = pos + 1;
+		return true;
+	}
+	// A hit: the fresh copy through the compare buffer, then its bytes against the shadow of the first copy.
+	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, g_bln_chk, size)) {
+		if (t.mode == 3) {
+			Mismatch(t, "read", nullptr, nullptr); // at 3 an unreadable copy is a line, not bln_bad
+		}
+		return false;
+	}
+	std::memcpy(dst, g_bln_chk, size);
+	t.ring = true;
+	if (!t.checked) {
+		Compare(t, g_bln_chk);
+	}
+	return true;
+}
+
+void End() {
+	namespace FS     = FrameStats;
+	auto&      t     = t_bln;
+	const Pend pend  = t.pend;
+	const bool nomap = t.nomap;
+	t.pend           = Pend::None;
+	t.arm_p          = false;
+	t.nomap          = false;
+	if (pend != Pend::Hit || t.mode < 2 || t.ring) {
+		return;
+	}
+	// The path of 0 after the hit ended without a CPU copy into the ring.
+	const char* path = "nocopy";
+	bool        slow = false;
+	if (t.gpu) {
+		path = "gpu";
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Epoch) {
+		path = "epoch";
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Slow) {
+		path = "slow";
+		slow = true;
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Fast) {
+		path = "fast";
+	}
+	if (nomap && slow) {
+		// Item 178(g) V2 (item 158(b) of b2reuse): the ring was busy for the outer ObtainBuffer and the path of 0 went Slow -
+		// bln_nomap instead of bln_path, its own lines (at most 8, outside the 40); the byte check below is unchanged.
+		Count(FS::Counter::BlnNomap);
+		if (g_bln_lines_nomap.fetch_add(1, std::memory_order_relaxed) < 8) {
+			LOGF("BindLeanVerify: NOMAP kind=%s vaddr=0x%016llx size=0x%llx path=%s gen_moved=%d\n", KindName(t.kind),
+				 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path, GenMoved(t) ? 1 : 0);
+		}
+	} else {
+		Count(FS::Counter::BlnPath);
+		if (g_bln_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
+			LOGF("BindLeanVerify: PATH kind=%s vaddr=0x%016llx size=0x%llx path=%s gen_moved=%d\n", KindName(t.kind),
+				 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path, GenMoved(t) ? 1 : 0);
+		}
+	}
+	if (t.mode == 2 && !t.checked) {
+		// 2: a separate read of the guest bytes against the shadow; an unreadable one counts as a mismatch.
+		if (!Libs::LibKernel::Memory::TryReadBacking(t.vaddr, g_bln_chk, t.size)) {
+			t.checked = true;
+			Count(FS::Counter::BlnBad);
+			Mismatch(t, "read", nullptr, nullptr);
+		} else {
+			Compare(t, g_bln_chk);
+		}
+	}
+}
+
+} // namespace Common::BindLean
+
 namespace Libs::Graphics {
 
 namespace {
@@ -410,6 +668,10 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	// thread-local test).
 	const uint32_t                   b2r_mode = Common::B2Reuse::Mode();
 	const Common::B2Reuse::CallScope b2r_call;
+	// Session 136, knob "bindlean" (PROTOTYPE; design136.md rev 1 s.3.2 with ROADMAP s122 item 179(b) RC1): the value, read
+	// once per call; the pending full probe of 2/3 ends on every return (at 0 and 1 one thread-local test).
+	const uint32_t                    bln_mode = Common::BindLean::CallMode();
+	const Common::BindLean::CallScope bln_call;
 	// Session 93, gate "bdacap" (MEASUREMENT ONLY, pred/01_bdacap.md).  The gate is the
 	// FIRST operand of the &&, is read ONCE per call, and is read BEFORE cap_t0, so the
 	// read lies OUTSIDE the interval it arms: at bdacap = 0 not one NowNs() and not one Add
@@ -518,6 +780,26 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 				return {cache.GetUtilityBuffer(MemoryUsage::Stream).Handle(), hit->off, size};
 			}
 		}
+		// Session 136, knob "bindlean" (s.3.2, RC1): probe D after the one of b2reuse, before the three queries. At 1 the light
+		// probe - its generation read here, before any read of the guest bytes (s.3.3); `bln_probed_d` is raised only by an
+		// evaluated miss and alone allows the insertion of this point. At 2/3 the full probe of the self-check.
+		uint64_t bln_gen_d    = 0;
+		bool     bln_probed_d = false;
+		if (bln_mode == 1) [[unlikely]] {
+			bln_gen_d = Common::RbCen::g_rb_gen.load(std::memory_order_acquire);
+			if (const auto* hit = Common::BindLean::LeanProbe(Common::BindLean::Kind::D, address, size, alignment, bln_gen_d,
+															  bln_probed_d)) {
+				if (const_bank && size > graphics.GetPhysicalDeviceProperties().limits.maxUniformBufferRange) {
+					EXIT("const-bank copy exceeds maxUniformBufferRange\n");
+				}
+				cap_note(cap_class(true), size);
+				Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+				Common::BindLean::NoteHit();
+				return {cache.GetUtilityBuffer(MemoryUsage::Stream).Handle(), hit->off, size};
+			}
+		} else if (bln_mode >= 2) [[unlikely]] {
+			(void)Common::BindLean::Probe(Common::BindLean::Kind::D, address, size, alignment);
+		}
 		if (!cache.IsRegionGpuModifiedFromGpu(address, size) && !cache.HasGpuDirtyBytes(address, size) &&
 		    cache.TouchReadOnlyBuffer(id, address, size)) {
 			// This read-only binding needs an aligned copy anyway. Prepare that final
@@ -534,8 +816,10 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
 			// Knob "b2reuse" = 2/3 (s.6.2): the read of this copy through ReadRing.
-			if (!(b2r_mode >= 2 ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::D, address, data, size)
-			                    : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
+			// Knob "bindlean" = 2/3 (design136.md rev 1 s.5.1): likewise through its ReadRing.
+			if (!(b2r_mode >= 2   ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::D, address, data, size)
+				  : bln_mode >= 2 ? Common::BindLean::ReadRing(Common::BindLean::Kind::D, address, data, size)
+								  : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
 				EXIT("storage buffer slot %u: direct const-bank source is unreadable\n", slot);
 			}
 			stream.Commit();
@@ -560,6 +844,15 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			if (b2r_mode != 0) [[unlikely]] {
 				Common::B2Reuse::Insert(Common::B2Reuse::Kind::D, stream_offset); // knob "b2reuse" (s.3.1): a miss of D
 			}
+			// Knob "bindlean" (s.3.2, RC1): at 1 only after the evaluated miss of probe D of this call; at 2/3 Insert.
+			if (bln_mode == 1) [[unlikely]] {
+				if (bln_probed_d) {
+					(void)Common::BindLean::LeanInsert(Common::BindLean::Kind::D, address, size, alignment, bln_gen_d,
+													   stream_offset, 1);
+				}
+			} else if (bln_mode >= 2) [[unlikely]] {
+				Common::BindLean::Insert(Common::BindLean::Kind::D, stream_offset);
+			}
 			return {stream.Handle(), stream_offset, size};
 		}
 	}
@@ -576,10 +869,31 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		// 2/3: the ring copy of the outer ObtainBuffer below reads through ReadRing while a probe of this call is pending.
 		Common::B2Reuse::t_b2r.arm_p = b2r_mode >= 2 && Common::B2Reuse::t_b2r.pend != Common::B2Reuse::Pend::None;
 	}
+	// Session 136, knob "bindlean" (s.3.2, RC1): probe P beside the one of b2reuse - the same guard (a read-only non-texel slot
+	// the ring can take) at the same alignment; at 1 the light probe, at 2/3 the full one with its ReadRing armed.
+	const Common::BindLean::Entry* bln_hit_p    = nullptr;
+	uint64_t                       bln_gen_p    = 0;
+	uint64_t                       bln_align_p  = 0;
+	bool                           bln_probed_p = false;
+	if (bln_mode != 0) [[unlikely]] {
+		if (!resource.written && !resource.formatted && size <= BufferCache::CACHING_PAGESIZE) {
+			bln_align_p =
+				std::max<uint64_t>(graphics.GetPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment, 1);
+			if (bln_mode == 1) {
+				bln_gen_p = Common::RbCen::g_rb_gen.load(std::memory_order_acquire);
+				bln_hit_p = Common::BindLean::LeanProbe(Common::BindLean::Kind::P, address, size, bln_align_p, bln_gen_p,
+														bln_probed_p);
+			} else {
+				(void)Common::BindLean::Probe(Common::BindLean::Kind::P, address, size, bln_align_p);
+			}
+		}
+		Common::BindLean::t_bln.arm_p = bln_mode >= 2 && Common::BindLean::t_bln.pend != Common::BindLean::Pend::None;
+	}
+	const Common::B2Reuse::Entry* reuse_hit = b2r_hit != nullptr ? b2r_hit : bln_hit_p; // knob "bindlean" (s.3.2)
 	// The last argument (gate "buffast"): this binding asks for the same range every draw.
 	auto [buffer, offset] =
-		b2r_hit != nullptr
-			? std::pair<Buffer*, uint64_t> {&context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream), b2r_hit->off}
+			reuse_hit != nullptr
+				? std::pair<Buffer*, uint64_t> {&context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream), reuse_hit->off}
 			: context.GetBufferCache().ObtainBuffer(address, size, resource.written, resource.formatted, id, true);
 	if (b2r_mode != 0) [[unlikely]] {
 		Common::B2Reuse::t_b2r.arm_p = false;
@@ -588,6 +902,24 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 		} else if (buffer == &context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream)) {
 			// The only ring return of ObtainBuffer is its stream copy (s.3.2): a miss of P inserts it.
 			Common::B2Reuse::Insert(Common::B2Reuse::Kind::P, offset);
+		}
+	}
+	// Session 136, knob "bindlean" (s.3.2, RC1): the class of a hit of P; the insertion only after the ring copy of THIS call
+	// (the only ring return of ObtainBuffer) and, at 1, only after the evaluated miss of probe P of this call.
+	if (bln_mode != 0) [[unlikely]] {
+		Common::BindLean::t_bln.arm_p = false;
+		if (bln_hit_p != nullptr) {
+			Common::RbCen::SetCls(Common::RbCen::Cls::Stream);
+			Common::BindLean::NoteHit();
+		} else if (buffer == &context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream)) {
+			if (bln_mode == 1) {
+				if (bln_probed_p) {
+					(void)Common::BindLean::LeanInsert(Common::BindLean::Kind::P, address, size, bln_align_p, bln_gen_p,
+													   offset, 1);
+				}
+			} else {
+				Common::BindLean::Insert(Common::BindLean::Kind::P, offset);
+			}
 		}
 	}
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(g)): the graph read of a texel binding,
@@ -619,10 +951,32 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 					return {stream.Handle(), hit->off, size};
 				}
 			}
+			// Session 136, knob "bindlean" (s.3.2, RC1): probe A beside the one of b2reuse, the same guard (a read-only
+			// non-texel slot); at 1 the light probe (a hit: no query, no Map, no read, no Commit), at 2/3 the full one.
+			uint64_t bln_gen_a    = 0;
+			bool     bln_probed_a = false;
+			if (bln_mode != 0 && !resource.written && !resource.formatted) [[unlikely]] {
+				if (bln_mode == 1) {
+					bln_gen_a = Common::RbCen::g_rb_gen.load(std::memory_order_acquire);
+					if (const auto* hit = Common::BindLean::LeanProbe(Common::BindLean::Kind::A, address, size, alignment,
+																	  bln_gen_a, bln_probed_a)) {
+						buffer_offset = 0;
+						cap_note(cap_class(true), size);
+						Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+						Common::BindLean::NoteHit();
+						return {stream.Handle(), hit->off, size};
+					}
+				} else {
+					(void)Common::BindLean::Probe(Common::BindLean::Kind::A, address, size, alignment);
+				}
+			}
 			const bool gpu = cache.IsRegionGpuModifiedFromGpu(address, size) ||
 			                 cache.HasGpuDirtyBytes(address, size);
 			if (gpu && b2r_mode >= 2) [[unlikely]] {
 				Common::B2Reuse::t_b2r.gpu = true; // knob "b2reuse": the PATH line of a hit (s.6.3)
+			}
+			if (gpu && bln_mode >= 2) [[unlikely]] {
+				Common::BindLean::t_bln.gpu = true; // knob "bindlean": the PATH line of a hit (s.5.1)
 			}
 			// Session 133, knob "rbcen" = 2 (s.5.1, RC1): gen0 of this B2 copy (a CPU copy only), before its read.
 			const bool     rb_note = !gpu && Common::RbCen::B2Here();
@@ -632,8 +986,10 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			EXIT_IF(data == nullptr);
 			if (!gpu) {
 				// Knob "b2reuse" = 2/3 (s.6.2): the read of this copy through ReadRing.
-				if (!(b2r_mode >= 2 ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::A, address, data, size)
-				                    : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
+				// Knob "bindlean" = 2/3 (design136.md rev 1 s.5.1): likewise through its ReadRing.
+				if (!(b2r_mode >= 2   ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::A, address, data, size)
+					  : bln_mode >= 2 ? Common::BindLean::ReadRing(Common::BindLean::Kind::A, address, data, size)
+									  : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
 					EXIT("storage buffer slot %u: const-bank copy source 0x%016llx+0x%llx is unreadable\n",
 					     slot, static_cast<unsigned long long>(address), static_cast<unsigned long long>(size));
 				}
@@ -669,6 +1025,17 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			}
 			if (b2r_mode != 0 && !gpu) [[unlikely]] {
 				Common::B2Reuse::Insert(Common::B2Reuse::Kind::A, stream_offset); // knob "b2reuse" (s.3.3): a CPU copy only
+			}
+			// Knob "bindlean" (s.3.2, RC1): a CPU copy only; at 1 only after the evaluated miss of probe A of this call.
+			if (bln_mode != 0 && !gpu) [[unlikely]] {
+				if (bln_mode == 1) {
+					if (bln_probed_a) {
+						(void)Common::BindLean::LeanInsert(Common::BindLean::Kind::A, address, size, alignment, bln_gen_a,
+														   stream_offset, 1);
+					}
+				} else {
+					Common::BindLean::Insert(Common::BindLean::Kind::A, stream_offset);
+				}
 			}
 			return {stream.Handle(), stream_offset, size};
 		}
@@ -4220,6 +4587,9 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 	const bool                   bind_lap = Common::Gates::Enabled(Common::Gates::Gate::BindLap);
 	Common::FrameStats::LapScope bind_lap_scope(bind_lap,
 	                                            Common::FrameStats::Counter::BindLapBufferNs);
+	// Session 136, knob "bindlean" (item 178(g) V3, 179(v) RC2): the accumulator of the bln_* events of this call, declared
+	// AFTER bind_lap_scope - destroyed before it, so its flush lies inside bl_buf_us in both arms (at 0 one test).
+	const Common::BindLean::AccScope bln_acc;
 	// Session 133, knob "rbcen" (design133.md rev 2 s.3.3-3.4): the prologue pair opens here (B4); a latched operation
 	// only (the draw and dispatch latches), at 0 one thread-local test.
 	const bool     rb_on     = Common::RbCen::t_rb.mode != 0;

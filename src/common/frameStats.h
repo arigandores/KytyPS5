@@ -2759,6 +2759,30 @@ enum class Counter : uint32_t {
 	RsDiscN,                 // rs_disc_n: selected marked iterations whose class was rewritten away from Slow (B9)
 	RsBfwK,                  // rs_bfw_k: lap segments booked into rs_bfw_ns (item 167(b)(1))
 	RsBfRace,                // rs_bf_race: would-hits that uploaded with a moved witness (item 168(b), RC4)
+	// Session 136, knob "bindlean" (PROTOTYPE; docs/session-136/design136.md rev 1 s.9.1 with ROADMAP s122 items 176(e)(1),
+	// 178(b), (g)): pieces, not ns; the events inside RebindBuffers go through the accumulator of item 178(g) V3.
+	BlnN,                    // bln_n: a hit or an insertion of B2' (D/P/A)
+	BlnHit,                  // bln_hit: a hit (at 1 the offset handed out; at 2/3 the decision of the full probe)
+	BlnMissNew,              // bln_miss_new: an insertion over an empty cell or a dead other key
+	BlnMissGen,              // bln_miss_gen: an insertion over the same key of a dead generation
+	BlnMissEvict,            // bln_miss_evict: an insertion over another live key (at 3 also a stale shadow, B5)
+	BlnMissKind,             // bln_miss_kind: an insertion over the same live key of another kind
+	BlnChk,                  // bln_chk: 2/3, a byte check of a hit
+	BlnBad,                  // bln_bad: 2/3, a byte mismatch, an unreadable copy at 2, an overwritten shadow
+	BlnPath,                 // bln_path: 2/3, the path of 0 after a hit was not a CPU copy into the ring (nomap excluded)
+	BlnNomap,                // bln_nomap: 2/3, a hit whose outer ObtainBuffer found the ring busy and went Slow (158(b))
+	BlnPchk,                 // bln_pchk: 2, an evaluated full probe compared with the light probe
+	BlnPbad,                 // bln_pbad: the light and the full probe disagree; a live same key and kind at an insertion
+	BlnSkip,                 // bln_skip: a SynchronizeBuffer with a carry (at 2/3: that would have skipped)
+	BlnSkipA,                // bln_skip_a: of them, (a) only
+	BlnSkipB,                // bln_skip_b: of them, (a) + (b) (the bit "CPU-clean" replaces the read of SyncFreeSkip)
+	BlnSbad,                 // bln_sbad: 2/3, a divergence with the range witness unmoved (s.5.2, item 179(g) RC3)
+	BlnSrace,                // bln_srace: 2/3, a divergence of part (b) with the range witness moved (the window)
+	BlnSctl,                 // bln_sctl: 3, a substituted false bit "CPU-clean" (1/64 of the dirty reads)
+	BlnRefuse,               // bln_refuse: a refused slice or call (s.2.3); a no-op without the trace
+	BlnRstCpu,               // bln_rst_cpu: generation moves by a clear of a CPU-dirty mask at bindlean 1/2, b2reuse 0
+	BlnRstCpuw,              // bln_rst_cpuw: generation moves by an announced CPU write at bindlean 1/2, b2reuse 0
+	BlnSraceA,               // bln_srace_a: 2/3, a divergence of part (a) with the witness moved (item 178(b); a row)
 	Count
 };
 
@@ -3694,6 +3718,10 @@ inline constinit std::atomic<bool>     g_rb_b2_live {false};
 // the low two bits, the address of the latching thread's Common::B2Reuse::t_b2r above them; 0 at value 0. Written only by
 // Common::B2Reuse::LatchSub; the generation above is shared with it (the census refuses it, rbcen2).
 inline constinit std::atomic<uintptr_t> g_b2r_state {0};
+// Session 136, knob "bindlean" (design136.md rev 1 s.2.2): the value latched at the start of a submission slice in the low two
+// bits, the address of the latching thread's Common::BindLean::t_bln above them; 0 at value 0. Written only by
+// Common::BindLean::LatchSub; the generation above is shared with b2reuse and rbcen=2 (both refuse bindlean).
+inline constinit std::atomic<uintptr_t> g_bln_state {0};
 // Written once by the first latch of a value >= 1 (RC8), before any Tls::chk; read only by a latch that set Tls::b2.
 inline constinit Entry*   g_rb_table  = nullptr;
 inline constinit uint8_t* g_rb_shadow = nullptr;
@@ -3760,6 +3788,12 @@ inline void Reset(Cause cause) {
 	// generation, independent of rbcen and without a counter of its cause; at 3 none (the positive control has no reset).
 	const uintptr_t b2r = g_b2r_state.load(std::memory_order_relaxed) & 3u;
 	if (b2r == 1u || b2r == 2u) [[unlikely]] {
+		g_rb_gen.fetch_add(1, std::memory_order_release);
+	}
+	// Session 136, knob "bindlean" (design136.md rev 1 s.7, item 176(e)(1)): at 1/2 every cause moves the generation, at 3
+	// only the reset "sub" (the positive control of the B2 part), independent of rbcen and without a counter of its cause.
+	const uintptr_t bln = g_bln_state.load(std::memory_order_relaxed) & 3u;
+	if (bln == 1u || bln == 2u || (bln == 3u && cause == Cause::Sub)) [[unlikely]] {
 		g_rb_gen.fetch_add(1, std::memory_order_release);
 	}
 }
@@ -4079,10 +4113,18 @@ inline void OpBegin() {
 // relaxed load, at 3 nothing (B5). Any thread (an atomic and this thread's shard).
 inline bool ResetsLive() {
 	const uint32_t mode = Mode();
-	return mode == 1u || mode == 2u;
+	// Session 136, knob "bindlean" (design136.md rev 1 s.7): the same hooks live at bindlean 1/2 (at 3 none).
+	const auto bln = static_cast<uint32_t>(RbCen::g_bln_state.load(std::memory_order_relaxed) & 3u);
+	return mode == 1u || mode == 2u || bln == 1u || bln == 2u;
 }
 inline void ResetCpu(FrameStats::Counter witness) {
 	RbCen::g_rb_gen.fetch_add(1, std::memory_order_release);
+	// Session 136 (s.7): the witness of b2reuse while it is on, otherwise the one of bindlean - every b2r_* stays 0 at
+	// b2reuse=0.
+	if (Mode() == 0) {
+		witness = witness == FrameStats::Counter::B2rRstCpuw ? FrameStats::Counter::BlnRstCpuw
+															  : FrameStats::Counter::BlnRstCpu;
+	}
 	FrameStats::Add(witness, 1);
 }
 
@@ -4112,4 +4154,211 @@ public:
 
 } // namespace Common::B2Reuse
 
+// Session 136, knob "bindlean" (PROTOTYPE; docs/session-136/design136.md rev 1 with ROADMAP s122 items 176(d), (e)(1),
+// 178(b)-(g), 179(b)-(e)): the package B2' + sync-carry. At 1 the probes D/P/A of NativeStorageBuffer are inline (LeanProbe:
+// no thread-local write on a miss, no pend, no End); an insertion only after an evaluated miss of the same point in the same
+// call (RC1) recomputes the index from the key and writes the generation that probe read before any read of the guest
+// bytes (s.3.3). The carry of the snapshot and of the bit "CPU-clean" is BufferCache's (SyncCarry). 2 is the self-check, 3
+// the positive control (s.5); the table is read and written only by the latching thread (LatchSub).
+namespace Common::BindLean {
+
+using B2Reuse::Cold;
+using B2Reuse::Entry;
+using B2Reuse::Kind;
+using B2Reuse::Pend;
+using B2Reuse::Tls;
+
+inline constexpr uint32_t TableBits   = 12; // values 1, 2 and 3 (item 176(e)(1): 2^12 x 32 B as b2reuse; s.3.5)
+inline constexpr uint64_t ShadowBytes = B2Reuse::ShadowBytes;
+inline constexpr uint64_t CheckBytes  = B2Reuse::CheckBytes;
+
+// 2/3: the pending full probe of the NativeStorageBuffer call; never written at 0 and 1 (s.3.1, s.6).
+inline constinit thread_local Tls t_bln {};
+
+// s.3.5: the hot table at the first value >= 1; the cold table, the shadow ring and the compare buffer at the first 2 or 3
+// - each touched whole (zeroed) by LatchSub. Read and written only by the latching thread.
+inline constinit Entry*   g_bln_hot        = nullptr;
+inline constinit Cold*    g_bln_cold       = nullptr;
+inline constinit uint8_t* g_bln_shadow     = nullptr;
+inline constinit uint8_t* g_bln_chk        = nullptr;
+inline constinit uint64_t g_bln_shadow_pos = 0; // the monotonic write position of the shadow ring
+
+// One line per state, once per process: 1 rbcen2, 2 b2reuse, 4 notrace, 8 alloc, 16 thread, 32/64/128 mode 1/2/3.
+inline constinit std::atomic<uint32_t> g_bln_logged {0};
+inline bool FirstLine(uint32_t bit) {
+	return (g_bln_logged.load(std::memory_order_relaxed) & bit) == 0 &&
+		   (g_bln_logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0;
+}
+// BindLeanVerify: MISMATCH|PATH|PROBE|SYNC lines of the process (at most 40); NOMAP lines (at most 8, item 178(g) V2).
+inline constinit std::atomic<uint32_t> g_bln_lines {0};
+inline constinit std::atomic<uint32_t> g_bln_lines_nomap {0};
+
+// Item 178(g) V3 with 179(v) RC2: this thread's bln_* events of one RebindBuffers call, added to the frame by one flush of the
+// nonzero fields when its AccScope (declared after bind_lap_scope) ends; an event with no open scope is added at once.
+inline constexpr uint32_t CounterFirst = static_cast<uint32_t>(FrameStats::Counter::BlnN);
+inline constexpr uint32_t CounterCount = static_cast<uint32_t>(FrameStats::Counter::BlnSraceA) + 1u - CounterFirst;
+struct Acc {
+	uint32_t depth;
+	bool     dirty;
+	uint32_t v[CounterCount];
+};
+inline constinit thread_local Acc t_bln_acc {};
+
+inline void Count(FrameStats::Counter counter) {
+	auto& a = t_bln_acc;
+	if (a.depth != 0) {
+		a.v[static_cast<uint32_t>(counter) - CounterFirst]++;
+		a.dirty = true;
+	} else {
+		FrameStats::Add(counter, 1);
+	}
+}
+
+// The flush of the accumulator (frameStats.cpp): every nonzero field into its counter, then zero.
+void Flush();
+
+// RebindBuffers: one per call, after bind_lap_scope (RC2) - at 0 one increment, one decrement and one test.
+class AccScope {
+public:
+	AccScope() noexcept { ++t_bln_acc.depth; }
+	~AccScope() {
+		auto& a = t_bln_acc;
+		if (--a.depth == 0 && a.dirty) [[unlikely]] {
+			Flush();
+		}
+	}
+	AccScope(const AccScope&)            = delete;
+	AccScope& operator=(const AccScope&) = delete;
+};
+
+// The value of the current interval; one relaxed load.
+inline uint32_t Mode() {
+	return static_cast<uint32_t>(RbCen::g_bln_state.load(std::memory_order_relaxed) & 3u);
+}
+
+// The latch (s.2.2): right after the one of b2reuse, before the reset "sub" (graphicsRun.cpp). Reads the knob, refuses
+// (rbcen2, b2reuse, notrace, alloc), allocates (s.3.5), moves the generation on a new value or a new latching thread.
+void LatchSub();
+// A refused call (s.2.3, item 178(g) V1): bln_refuse and its line once per reason.
+void RefuseCall(uint32_t bit, const char* reason);
+
+// The value of a NativeStorageBuffer call (s.2.2), read once at its start: 0 unless this is the latching thread and the
+// census rbcen=2 is not latched by this operation (otherwise the refusal of the call, s.2.3).
+inline uint32_t CallMode() {
+	const uintptr_t state = RbCen::g_bln_state.load(std::memory_order_relaxed);
+	if (state == 0) {
+		return 0;
+	}
+	if ((state & ~uintptr_t {3}) != reinterpret_cast<uintptr_t>(&t_bln)) {
+		RefuseCall(16u, "thread");
+		return 0;
+	}
+	if (RbCen::t_rb.b2) {
+		RefuseCall(1u, "rbcen2");
+		return 0;
+	}
+	return static_cast<uint32_t>(state & 3u);
+}
+// The same predicate for the ObtainBuffer of that call (memoizable, read-only), without a second refusal count: its inputs
+// change only on this thread outside NativeStorageBuffer, so both reads of one call agree.
+inline uint32_t CallModeQuiet() {
+	const uintptr_t state = RbCen::g_bln_state.load(std::memory_order_relaxed);
+	if (state == 0 || (state & ~uintptr_t {3}) != reinterpret_cast<uintptr_t>(&t_bln) || RbCen::t_rb.b2) {
+		return 0;
+	}
+	return static_cast<uint32_t>(state & 3u);
+}
+
+// Common::B2Reuse's Mix (descriptors.cpp), the same text.
+inline uint64_t Mix(uint64_t vaddr, uint64_t size, uint64_t align) {
+	return (vaddr ^ (size << 40u) ^ (align << 58u)) * 0x9E3779B97F4A7C15ull;
+}
+inline size_t Index(uint64_t vaddr, uint64_t size, uint64_t align) {
+	return static_cast<size_t>(Mix(vaddr, size, align) >> (64u - TableBits));
+}
+
+// The light probe of value 1 (s.3.1): the index, one load of the 32-byte entry, the key and the generation compared; no
+// thread-local write. `probed` is raised only by an evaluated miss (RC1, item 179(b)(1)); the size and alignment guard of
+// B2Reuse::Probe leaves it down.
+inline const Entry* LeanProbe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align, uint64_t gen, bool& probed) {
+	if (size > CheckBytes || align > 0xFFFFu) {
+		return nullptr;
+	}
+	const Entry& e = g_bln_hot[Index(vaddr, size, align)];
+	if (e.kind == kind && e.vaddr == vaddr && e.size == size && e.align == align && e.gen == gen) {
+		return &e;
+	}
+	probed = true;
+	return nullptr;
+}
+
+// A hit handed out at 1 (s.3.2).
+inline void NoteHit() {
+	Count(FrameStats::Counter::BlnN);
+	Count(FrameStats::Counter::BlnHit);
+}
+
+// BindLeanVerify: PROBE (descriptors.cpp): the light and the full probe disagree (where=probe), or a live entry of the same
+// key and kind at an insertion after a miss (where=insert).
+void LeanDefect(Kind kind, uint64_t vaddr, uint64_t size, const char* where, bool full, bool lean);
+
+// The insertion (s.3.1): the index RECOMPUTED from the key; the old entry classified against (key, kind, gen) into
+// bln_miss_*; `gen` is the generation the evaluated probe of this point read (RC1). Returns whether the entry was written.
+inline bool LeanInsert(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align, uint64_t gen, uint64_t offset, uint32_t mode) {
+	namespace FS = FrameStats;
+	if (offset > uint64_t {0xFFFFFFFFu} || size > CheckBytes || align > 0xFFFFu) {
+		return false;
+	}
+	Entry&      e    = g_bln_hot[Index(vaddr, size, align)];
+	const bool  same = e.kind != Kind::None && e.vaddr == vaddr && e.size == size && e.align == align;
+	const bool  live = e.kind != Kind::None && e.gen == gen;
+	FS::Counter miss = FS::Counter::BlnMissNew;
+	if (same && live && e.kind == kind) {
+		// After a miss of this call the same live key of the same kind is impossible at 1 and 2 (a defect of the probe or
+		// of the insertion: bln_pbad, a PROBE line); at 3 it is the stale shadow of the full probe (B5), a miss_evict there.
+		miss = FS::Counter::BlnMissEvict;
+		if (mode != 3) {
+			Count(FS::Counter::BlnPbad);
+			LeanDefect(kind, vaddr, size, "insert", false, true);
+		}
+	} else if (same && !live) {
+		miss = FS::Counter::BlnMissGen;
+	} else if (same) {
+		miss = FS::Counter::BlnMissKind;
+	} else if (live) {
+		miss = FS::Counter::BlnMissEvict;
+	}
+	Count(FS::Counter::BlnN);
+	Count(miss);
+	e = {vaddr, static_cast<uint32_t>(size), static_cast<uint16_t>(align), kind, 0, gen, static_cast<uint32_t>(offset), 0};
+	return true;
+}
+
+// 2/3 (s.5.1, item 178(g) V4): the copies of B2Reuse::Probe, Insert, ReadRing and End on this knob's table and thread-local
+// state (descriptors.cpp). Probe never hands out a hit at 2/3; Insert goes through LeanInsert under the guard of Insert (RC1).
+const Entry* Probe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align);
+void         Insert(Kind kind, uint64_t offset);
+bool         ReadRing(Kind kind, uint64_t vaddr, uint8_t* dst, uint64_t size);
+void         End();
+
+// 2/3 (s.5.2, s.5.3): one BindLeanVerify: SYNC line (frameStats.cpp), within the 40 of the process.
+void SyncLine(const char* part, bool moved, bool moved_g, bool locked, bool ctl, uint64_t vaddr, uint64_t size);
+
+// On every return of NativeStorageBuffer: one thread-local test while nothing is pending (at 0 and 1 always).
+class CallScope {
+public:
+	CallScope() noexcept = default;
+	~CallScope() {
+		if (t_bln.pend != Pend::None) [[unlikely]] {
+			End();
+		}
+	}
+	CallScope(const CallScope&)            = delete;
+	CallScope& operator=(const CallScope&) = delete;
+};
+
+// The Weyl counter of the control 3 of the sync part (s.5.2): 1/64 of the carried calls with a dirty read of SyncFreeSkip.
+inline constinit thread_local uint64_t t_bln_k = 0;
+
+} // namespace Common::BindLean
 #endif // KYTY_COMMON_FRAMESTATS_H_

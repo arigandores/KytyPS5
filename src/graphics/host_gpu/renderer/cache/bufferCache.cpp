@@ -877,6 +877,56 @@ std::pair<uint64_t, uint8_t> BufferCache::UploadEpoch(uint64_t vaddr, uint64_t s
 	return {m_memory_tracker.CpuWriteEpoch(), 0};
 }
 
+namespace {
+
+// Session 136, knob "bindlean" (design136.md rev 1 s.4.2, s.5.2 with ROADMAP s122 item 178(b)): bln_skip and its part on every
+// SynchronizeBuffer with a carry - at 1 the calls that skip, at 2/3 the calls that would (the same population): (b) when the
+// bit is set and SyncFreeSkip would make its read (its gate and its thread), otherwise (a) only.
+void BindLeanSkip(const SyncCarry& carry) {
+	namespace FS = Common::FrameStats;
+	const bool b = carry.clean && Common::Gates::Enabled(Common::Gates::Gate::SyncFree) && GuestGpu::IsGpuThread();
+	Common::BindLean::Count(FS::Counter::BlnSkip);
+	Common::BindLean::Count(b ? FS::Counter::BlnSkipB : FS::Counter::BlnSkipA);
+}
+
+} // namespace
+
+// Session 136, knob "bindlean" 2/3 (s.5.2 (a)): the path of 0 answered "current" where the carry answers "not current" - a
+// divergence in the safe direction (s.4.1). moved: the range witness of RC3 (item 179(g)) or the kind of the epoch changed
+// since S -> bln_srace_a (item 178(b), a row), otherwise bln_sbad; moved_g (the global epoch) is printed beside.
+void BufferCache::BindLeanVerifyA(uint64_t vaddr, uint64_t size, const SyncCarry& carry, uint8_t kind) {
+	namespace FS       = Common::FrameStats;
+	const bool moved   = m_memory_tracker.RangeWriteEpoch(vaddr, size) != carry.rwe || kind != carry.kind;
+	const bool moved_g = m_memory_tracker.CpuWriteEpoch() != carry.gwe;
+	Common::BindLean::Count(moved ? FS::Counter::BlnSraceA : FS::Counter::BlnSbad);
+	Common::BindLean::SyncLine("a", moved, moved_g, false, false, vaddr, size);
+}
+
+// Session 136, knob "bindlean" 2/3 (s.5.2 (b)): `clean` is the read R2 of SyncFreeSkip. A set bit - or, at 3, a false bit
+// substituted on 1/64 of the dirty reads (bln_sctl) - against a dirty R2 is a divergence, classified after the lock of the
+// dirty region serialized its announcers (IsRegionCpuModified takes the locks up to the first dirty region; that lock is
+// enough, RC3(v)): the range witness moved since S -> bln_srace (the window :1555 -> :896), otherwise bln_sbad. The decision
+// stays the one of the path of 0.
+void BufferCache::BindLeanVerifyB(uint64_t vaddr, uint64_t size, const SyncCarry& carry, bool clean) {
+	namespace FS = Common::FrameStats;
+	if (clean) {
+		return;
+	}
+	bool ctl = false;
+	if (!carry.clean) {
+		if (carry.mode != 3 || !Common::RbCen::Weyl(++Common::BindLean::t_bln_k, 58)) {
+			return;
+		}
+		ctl = true;
+		Common::BindLean::Count(FS::Counter::BlnSctl);
+	}
+	const bool locked  = m_memory_tracker.IsRegionCpuModified(vaddr, size);
+	const bool moved   = m_memory_tracker.RangeWriteEpoch(vaddr, size) != carry.rwe;
+	const bool moved_g = m_memory_tracker.CpuWriteEpoch() != carry.gwe;
+	Common::BindLean::Count(moved ? FS::Counter::BlnSrace : FS::Counter::BlnSbad);
+	Common::BindLean::SyncLine("b", moved, moved_g, locked, ctl, vaddr, size);
+}
+
 // Gate "syncfree". A read-only synchronization of a range whose tracking regions all exist and
 // hold no CPU-dirty page does nothing under the region locks: the mask of ForEachModifiedRange is
 // empty, clearing it changes no bit, and UpdateProtection finds m_writable == m_cpu_dirty (every
@@ -891,9 +941,23 @@ std::pair<uint64_t, uint8_t> BufferCache::UploadEpoch(uint64_t vaddr, uint64_t s
 //   epoch: the next HasCurrentUpload check fails and the next synchronization finds the bits
 //   under the lock. The write itself resumes only after its announcement, i.e. after this read.
 // Only the GuestGpu thread may skip.
-bool BufferCache::SyncFreeSkip(uint64_t vaddr, uint64_t size) {
-	if (!Common::Gates::Enabled(Common::Gates::Gate::SyncFree) || !GuestGpu::IsGpuThread() ||
-		!m_memory_tracker.IsRegionCpuCleanFast(vaddr, size)) {
+bool BufferCache::SyncFreeSkip(uint64_t vaddr, uint64_t size, const SyncCarry* carry) {
+	if (!Common::Gates::Enabled(Common::Gates::Gate::SyncFree) || !GuestGpu::IsGpuThread()) {
+		return false;
+	}
+	// Session 136, knob "bindlean" (design136.md rev 1 s.4.2, s.5.2 with ROADMAP s122 item 179(d) RC4): only after the two
+	// checks above. At 1 the bit "CPU-clean" of the combined query of ObtainBuffer (R1) replaces the read R2 below - Claim B:
+	// R1 comes after the snapshot S this synchronization stores; at 2/3 R2 is read and compared with the bit.
+	bool clean = false;
+	if (carry != nullptr && carry->mode == 1 && carry->clean) [[unlikely]] {
+		clean = true;
+	} else {
+		clean = m_memory_tracker.IsRegionCpuCleanFast(vaddr, size);
+		if (carry != nullptr && carry->mode >= 2) [[unlikely]] {
+			BindLeanVerifyB(vaddr, size, *carry, clean);
+		}
+	}
+	if (!clean) {
 		return false;
 	}
 	if (Common::Gates::Enabled(Common::Gates::Gate::SyncFreeVerify) &&
@@ -972,7 +1036,7 @@ void BufferCache::NoteWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
 }
 
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
-                                    bool is_texel_buffer) {
+									bool is_texel_buffer, const SyncCarry* carry) {
 	// Session 135, knob "rbslow" (design135.md rev 2 s.3.4): the handshake - only the outer call of a latched slow
 	// iteration finds in_sync set; it clears it at once, so a nested call sees false.
 	auto&      rs_tls  = Common::RbSlow::t_rs;
@@ -1004,9 +1068,20 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 			                        m_memory_tracker.StickyCandidatePages(vaddr, size, upload_stat.frame, false));
 		}
 	}
-	const auto [cpu_epoch, epoch_kind] = UploadEpoch(vaddr, size);
-	if (BufferUploadEpochEnabled() && !is_written &&
-	    buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
+	// Session 136, knob "bindlean" = 1 (design136.md rev 1 s.4.1 with ROADMAP s122 item 179(d) RC4): the snapshot S of
+	// ObtainBuffer and its "HasCurrentUpload is false" (proven from find = false) replace the repeat below; at 0 and at 2/3
+	// the path of 0, whose answer 2/3 compare (s.5.2).
+	const bool bln_lean = carry != nullptr && carry->mode == 1;
+	if (carry != nullptr) [[unlikely]] {
+		BindLeanSkip(*carry);
+	}
+	const auto [cpu_epoch, epoch_kind] =
+		bln_lean ? std::pair<uint64_t, uint8_t> {carry->epoch, carry->kind} : UploadEpoch(vaddr, size);
+	if (!bln_lean && BufferUploadEpochEnabled() && !is_written &&
+		buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
+		if (carry != nullptr) [[unlikely]] {
+			BindLeanVerifyA(vaddr, size, *carry, epoch_kind); // 2/3: a divergence of part (a)
+		}
 		Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochHits, 1);
 		if (rs_mine) [[unlikely]] {
 			rs_tls.sync = 1; // knob "rbslow": no upload
@@ -1018,7 +1093,7 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	vk::Buffer                  source;
 	bool                        provisional = false; // gate "armdefer": pages left dirty to settle
 	uint64_t                    rb_up_t0    = 0;     // knob "rbcen": the open rb_sync_up pair (s.3.4)
-	if (!is_written && SyncFreeSkip(vaddr, size)) {
+	if (!is_written && SyncFreeSkip(vaddr, size, carry)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncFreeSkips, 1);
 	} else {
 		// Session 128, knob "protceil" (MEASUREMENT ONLY; design128.md rev 1 s.4.1, ROADMAP s122 item 89(z)): the latch
@@ -1062,8 +1137,10 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	// This is only the requested interval: a different part of the same buffer may remain dirty.
 	// A provisional upload (gate "armdefer") records no current epoch: its pages are still dirty
 	// and the next synchronization has to find them.
-	buffer.upload_epoch = provisional ? 0 : cpu_epoch;
-	buffer.upload_epoch_kind = epoch_kind;
+	// Session 136, knob "bindlean" = 1 (s.4.1, item 179(d) RC4): the stored snapshot is S of ObtainBuffer; a provisional
+	// upload keeps its 0 (gate "armdefer").
+	buffer.upload_epoch = provisional ? 0 : (carry != nullptr && carry->mode == 1 ? carry->epoch : cpu_epoch);
+	buffer.upload_epoch_kind = carry != nullptr && carry->mode == 1 ? carry->kind : epoch_kind;
 	buffer.upload_begin = vaddr;
 	buffer.upload_end = vaddr + size;
 	if (is_texel_buffer && !is_written) {
@@ -1500,6 +1577,12 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	}
 	auto* buffer = m_slot_buffers.try_get(id);
 	const auto [current_epoch, current_kind] = UploadEpoch(vaddr, size);
+	// Session 136, knob "bindlean" (design136.md rev 1 s.2.2, s.4.1 with ROADMAP s122 item 179(g) RC3): the value of this call
+	// (a read-only memoizable request - NativeStorageBuffer only) and, at 2/3, the range and the global write witnesses right
+	// after the snapshot S above, before the combined query R1.
+	const uint32_t bln     = memoizable && !is_written ? Common::BindLean::CallModeQuiet() : 0u;
+	const uint64_t bln_rwe = bln >= 2 ? m_memory_tracker.RangeWriteEpoch(vaddr, size) : 0;
+	const uint64_t bln_gwe = bln >= 2 ? m_memory_tracker.CpuWriteEpoch() : 0;
 	if (BufferUploadEpochEnabled() && !is_written && buffer != nullptr && !buffer->is_deleted &&
 	    buffer->IsInBounds(vaddr, size) &&
 	    buffer->HasCurrentUpload(current_epoch, current_kind, vaddr, size)) {
@@ -1551,8 +1634,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		const auto* value = std::getenv("KYTY_BUFFER_COMBINED_QUERY");
 		return value == nullptr || value[0] != '0';
 	}();
+	bool bln_scanned = false; // knob "bindlean" (s.4.2): the fast scan of the combined query below completed
 	if (!is_written && size <= CACHING_PAGESIZE &&
-	    (combined_query ? IsRegionCpuModifiedAndGpuCleanFromGpu(vaddr, size)
+		(combined_query ? (bln != 0 ? IsRegionCpuModifiedAndGpuCleanFromGpu(vaddr, size, &bln_scanned)
+									: IsRegionCpuModifiedAndGpuCleanFromGpu(vaddr, size))
 	                    : (!IsRegionGpuModifiedFromGpu(vaddr, size) &&
 	                       m_memory_tracker.IsRegionCpuModified(vaddr, size)))) {
 		const auto alignment = std::max<uint64_t>(
@@ -1563,9 +1648,12 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		const auto stream_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);
 		// Session 134, knob "b2reuse" = 2/3 (design134.md rev 1 s.6.2): the outer call after probe P reads through ReadRing.
+		// Session 136, knob "bindlean" = 2/3 (design136.md rev 1 s.5.1): likewise after its probe P.
 		if (mapped != nullptr && (Common::B2Reuse::t_b2r.arm_p
-		                              ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::P, vaddr, mapped, size)
-		                              : Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size))) {
+									  ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::P, vaddr, mapped, size)
+								  : Common::BindLean::t_bln.arm_p
+									  ? Common::BindLean::ReadRing(Common::BindLean::Kind::P, vaddr, mapped, size)
+									  : Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size))) {
 			m_stream_buffer.Commit();
 			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamCopies, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamBytes, size);
@@ -1594,14 +1682,24 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		if (mapped == nullptr && Common::B2Reuse::t_b2r.arm_p) [[unlikely]] {
 			Common::B2Reuse::t_b2r.nomap = true;
 		}
+		// Knob "bindlean" = 2/3 (item 178(g) V2): the same for its probe P.
+		if (mapped == nullptr && Common::BindLean::t_bln.arm_p) [[unlikely]] {
+			Common::BindLean::t_bln.nomap = true;
+		}
+		bln_scanned = false; // knob "bindlean" (s.4.2): the query answered true - no bit "CPU-clean"
 	}
+	// Knob "bindlean" (s.4.1-4.3): the bit (b) - a completed fast scan of the combined query with a false answer - and the
+	// carry of this call, handed to SynchronizeBuffer below only at find = false and !is_written.
+	bool            bln_find = false;
+	const SyncCarry bln_carry {current_epoch, bln_rwe, bln_gwe, current_kind, bln_scanned, static_cast<uint8_t>(bln)};
 
 	Common::DrawStat::Mark(Common::DrawStat::BufSlow);
 	// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.3.1): the marks a0..a5 of a selected iteration,
 	// one statement between neighbouring parts; the answer of the slow path into Common::RbSlow::t_rs.
 	rb_obtain.Mark<0>();
 	if (IsBufferInvalid(id) || !m_slot_buffers[id].IsInBounds(vaddr, size)) {
-		id = FindBuffer(vaddr, size);
+		id       = FindBuffer(vaddr, size);
+		bln_find = true; // knob "bindlean" (s.4.1): no carry
 		if (rb_obtain.Rs()) [[unlikely]] {
 			Common::RbSlow::t_rs.find = true;
 		}
@@ -1617,7 +1715,8 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	if (rb_obtain.Rs()) [[unlikely]] {
 		Common::RbSlow::t_rs.in_sync = true; // the handshake; the next statement enters SynchronizeBuffer
 	}
-	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer);
+	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer,
+							bln != 0 && !is_written && !bln_find ? &bln_carry : nullptr);
 	rb_obtain.Mark<3>();
 	if (is_written) {
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
@@ -2363,6 +2462,27 @@ bool BufferCache::IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t
 		const bool locked = m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size);
 		if (locked != fast &&
 		    m_memory_tracker.IsRegionCpuModifiedAndGpuCleanFast(vaddr, size) != locked) {
+			ReportTrackFreeMismatch("combined", vaddr, size, fast, locked);
+		}
+	}
+	return fast;
+}
+
+// Session 136, knob "bindlean" (design136.md rev 1 s.4.2): the query above with the same counters; `*scanned` - its fast
+// branch completed the scan (MemoryTracker::IsRegionCpuModifiedAndGpuCleanFastScan); the locked branch leaves it false.
+bool BufferCache::IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size, bool* scanned) {
+	*scanned = false;
+	if (!GuestGpu::IsGpuThread() ||
+		!Common::Gates::Enabled(Common::Gates::Gate::TrackLockFree)) {
+		Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeLocked, 1);
+		return m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size);
+	}
+	const bool fast = m_memory_tracker.IsRegionCpuModifiedAndGpuCleanFastScan(vaddr, size, scanned);
+	Common::FrameStats::Add(Common::FrameStats::Counter::TrackFreeHits, 1);
+	if (Common::Gates::Enabled(Common::Gates::Gate::TrackLockFreeVerify)) {
+		const bool locked = m_memory_tracker.IsRegionCpuModifiedAndGpuClean(vaddr, size);
+		if (locked != fast &&
+			m_memory_tracker.IsRegionCpuModifiedAndGpuCleanFast(vaddr, size) != locked) {
 			ReportTrackFreeMismatch("combined", vaddr, size, fast, locked);
 		}
 	}

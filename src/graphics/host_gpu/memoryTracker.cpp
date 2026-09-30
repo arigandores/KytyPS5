@@ -140,6 +140,38 @@ bool MemoryTracker::IsRegionCpuModifiedAndGpuCleanFast(uint64_t vaddr, uint64_t 
 	return cpu_dirty || untracked;
 }
 
+// Session 136, knob "bindlean" (design136.md rev 1 s.4.2): the text of IsRegionCpuModifiedAndGpuCleanFast above; `*scanned`
+// is set only right before the return after the loop - every region passed, no early return on GPU-dirty bytes - so a false
+// answer with it set is exactly the predicate of IsRegionCpuCleanFast below at this moment (every manager published, no
+// CPU-dirty bit read in the range).
+bool MemoryTracker::IsRegionCpuModifiedAndGpuCleanFastScan(uint64_t vaddr, uint64_t size, bool* scanned) {
+	*scanned = false;
+	CheckNotInUploadCallback();
+	ValidateRange(vaddr, size);
+	bool     cpu_dirty = false;
+	bool     untracked = false;
+	uint64_t remaining = size;
+	uint64_t index     = vaddr / TRACKER_REGION_SIZE;
+	uint64_t offset    = vaddr % TRACKER_REGION_SIZE;
+	while (remaining != 0) {
+		const auto bytes   = std::min(TRACKER_REGION_SIZE - offset, remaining);
+		auto*      manager = m_regions[index].load(std::memory_order_acquire);
+		if (manager == nullptr) {
+			untracked = true;
+		} else {
+			if (manager->IsModifiedRelaxed<DirtySource::Gpu>(offset, bytes)) {
+				return false;
+			}
+			cpu_dirty |= manager->IsModifiedRelaxed<DirtySource::Cpu>(offset, bytes);
+		}
+		remaining -= bytes;
+		offset = 0;
+		index++;
+	}
+	*scanned = true;
+	return cpu_dirty || untracked;
+}
+
 bool MemoryTracker::IsRegionCpuCleanFast(uint64_t vaddr, uint64_t size) {
 	CheckNotInUploadCallback();
 	ValidateRange(vaddr, size);

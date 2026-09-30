@@ -34,6 +34,20 @@ class TextureCache;
 using BufferId = Common::SlotId;
 inline constexpr BufferId NULL_BUFFER_ID {0};
 
+// Session 136, knob "bindlean" (design136.md rev 1 s.4.3 with ROADMAP s122 items 179(d), (g)): what ObtainBuffer hands to the
+// SynchronizeBuffer of its slow path at find = false and !is_written - an object on its stack, passed by pointer and never
+// stored. epoch/kind: the snapshot S of ObtainBuffer (UploadEpoch before the combined query); clean: the bit "CPU-clean" (a
+// completed fast scan of the combined query with a false answer); rwe/gwe (2/3 only): the range and the global write
+// witnesses read right after S (RC3); mode: the value of the call.
+struct SyncCarry {
+	uint64_t epoch;
+	uint64_t rwe;
+	uint64_t gwe;
+	uint8_t  kind;
+	bool     clean;
+	uint8_t  mode;
+};
+
 class BufferCache {
 public:
 	static constexpr uint32_t CACHING_PAGEBITS  = 14;
@@ -140,6 +154,8 @@ public:
 	// Callers outside the GuestGpu thread must keep using the plain forms above.
 	[[nodiscard]] bool IsRegionGpuModifiedFromGpu(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size);
+	// Session 136, knob "bindlean" (s.4.2): the same query; `*scanned` - its fast branch completed the scan.
+	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFromGpu(uint64_t vaddr, uint64_t size, bool* scanned);
 	// Session 62, item 3 ceiling (gate "cbstat", GuestGpu thread only): `data` was just copied
 	// from guest range [vaddr, vaddr + size) into the stream ring at `ring_offset`; compare it
 	// with the shadow of the previous copy of the same range (cb_same / cb_diff / cb_new and the
@@ -273,10 +289,14 @@ private:
 	void ChangeRegister(BufferId id);
 	void DeleteBuffer(BufferId id);
 	[[nodiscard]] std::pair<uint64_t, uint8_t> UploadEpoch(uint64_t vaddr, uint64_t size);
+	// Session 136, knob "bindlean": `carry` - only from the slow path of ObtainBuffer (s.4.3); every other caller nullptr.
 	[[nodiscard]] bool SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size,
-	                                     bool is_written, bool is_texel_buffer);
+										 bool is_written, bool is_texel_buffer, const SyncCarry* carry = nullptr);
 	// Gate "syncfree": true when a read-only synchronization may skip the region locks.
-	[[nodiscard]] bool SyncFreeSkip(uint64_t vaddr, uint64_t size);
+	[[nodiscard]] bool SyncFreeSkip(uint64_t vaddr, uint64_t size, const SyncCarry* carry = nullptr);
+	// Session 136, knob "bindlean" 2/3 (s.5.2): the comparisons of part (a) and part (b) of a carried call.
+	void BindLeanVerifyA(uint64_t vaddr, uint64_t size, const SyncCarry& carry, uint8_t kind);
+	void BindLeanVerifyB(uint64_t vaddr, uint64_t size, const SyncCarry& carry, bool clean);
 	[[nodiscard]] vk::Buffer UploadCopies(Buffer& buffer, std::span<vk::BufferCopy> copies,
 	                                      uint64_t total_size);
 	// Records the staging -> buffer copies of one synchronization (no-op without a source).

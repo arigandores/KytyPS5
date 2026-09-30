@@ -1320,3 +1320,129 @@ void LatchSub() {
 }
 
 } // namespace Common::B2Reuse
+
+// Session 136, knob "bindlean" (PROTOTYPE; docs/session-136/design136.md rev 1 s.2.2-2.3, s.3.5 with ROADMAP s122 items
+// 176(e)(1), 178(g) V1, V3).
+namespace Common::BindLean {
+
+namespace {
+
+std::mutex            g_alloc_mutex;
+bool                  g_alloc_failed = false;
+std::atomic<uint32_t> g_alloc_have {0}; // bit 1: the hot table (a value >= 1); bit 2: the memory of 2/3
+
+template <typename T>
+T* Zeroed(size_t n) {
+	auto* p = new (std::nothrow) T[n];
+	if (p != nullptr) {
+		std::memset(static_cast<void*>(p), 0, sizeof(T) * n);
+	}
+	return p;
+}
+
+uint32_t Need(uint32_t value) {
+	return value >= 2 ? 3u : 1u;
+}
+
+// s.3.5: at 1 the hot table; at 2/3 + the cold table, the shadow ring and the compare buffer. A failure is final: the value
+// is 0 to the end of the process (item 178(g) V1).
+bool Allocate(uint32_t value) {
+	std::lock_guard lock(g_alloc_mutex);
+	if (g_alloc_failed) {
+		return false;
+	}
+	bool ok = true;
+	if (ok && g_bln_hot == nullptr) {
+		ok = (g_bln_hot = Zeroed<Entry>(size_t {1} << TableBits)) != nullptr;
+	}
+	if (ok && value >= 2 && g_bln_cold == nullptr) {
+		ok = (g_bln_cold = Zeroed<Cold>(size_t {1} << TableBits)) != nullptr;
+	}
+	if (ok && value >= 2 && g_bln_shadow == nullptr) {
+		ok = (g_bln_shadow = Zeroed<uint8_t>(ShadowBytes)) != nullptr;
+	}
+	if (ok && value >= 2 && g_bln_chk == nullptr) {
+		ok = (g_bln_chk = Zeroed<uint8_t>(CheckBytes)) != nullptr;
+	}
+	if (ok) {
+		g_alloc_have.fetch_or(Need(value), std::memory_order_release);
+	} else {
+		g_alloc_failed = true;
+	}
+	return ok;
+}
+
+} // namespace
+
+void RefuseCall(uint32_t bit, const char* reason) {
+	Count(FrameStats::Counter::BlnRefuse);
+	if (FirstLine(bit)) {
+		LOGF("BindLean: refused reason=%s\n", reason);
+	}
+}
+
+void Flush() {
+	auto& a = t_bln_acc;
+	for (uint32_t i = 0; i < CounterCount; i++) {
+		if (a.v[i] != 0) {
+			FrameStats::Add(static_cast<FrameStats::Counter>(CounterFirst + i), a.v[i]);
+			a.v[i] = 0;
+		}
+	}
+	a.dirty = false;
+}
+
+void SyncLine(const char* part, bool moved, bool moved_g, bool locked, bool ctl, uint64_t vaddr, uint64_t size) {
+	if (g_bln_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("BindLeanVerify: SYNC part=%s moved=%d moved_g=%d locked=%d ctl=%d vaddr=0x%016llx size=0x%llx\n", part,
+			 moved ? 1 : 0, moved_g ? 1 : 0, locked ? 1 : 0, ctl ? 1 : 0, static_cast<unsigned long long>(vaddr),
+			 static_cast<unsigned long long>(size));
+	}
+}
+
+void LatchSub() {
+	namespace FS        = FrameStats;
+	uint32_t        value = Gates::Value(Gates::Knob::BindLean);
+	const uintptr_t old   = RbCen::g_bln_state.load(std::memory_order_relaxed);
+	if (value == 0 && old == 0) {
+		return;
+	}
+	if (value != 0) {
+		const char* reason = nullptr;
+		uint32_t    bit    = 0;
+		if (Gates::Value(Gates::Knob::RebindCensus) == 2) {
+			reason = "rbcen2"; // item 176(e)(1): the census owns the generation
+			bit    = 1u;
+		} else if (Gates::Value(Gates::Knob::B2Reuse) != 0) {
+			reason = "b2reuse"; // item 176(e)(1): b2reuse of this build keeps the interval; it works as before
+			bit    = 2u;
+		} else if (value >= 2 && !FS::Enabled()) {
+			reason = "notrace"; // item 178(g) V1: the self-check and the control are not observable without the trace
+			bit    = 4u;
+		} else if ((g_alloc_have.load(std::memory_order_acquire) & Need(value)) != Need(value) && !Allocate(value)) {
+			reason = "alloc";
+			bit    = 8u;
+		}
+		if (reason != nullptr) {
+			FS::Add(FS::Counter::BlnRefuse, 1);
+			if (FirstLine(bit)) {
+				LOGF("BindLean: refused reason=%s\n", reason);
+			}
+			value = 0;
+		}
+	}
+	const uintptr_t now = value == 0 ? 0 : (reinterpret_cast<uintptr_t>(&t_bln) | value);
+	if (now != old) {
+		if (value != 0) {
+			// A new value or a new latching thread: the entries of any earlier period are dead from the first probe of this
+			// one (s.2.2; at 3 the reset "sub" moves it as well, s.7).
+			RbCen::g_rb_gen.fetch_add(1, std::memory_order_release);
+			if (FirstLine(16u << value)) {
+				LOGF("BindLean: mode %u\n", value);
+			}
+		}
+		RbCen::g_bln_state.store(now, std::memory_order_release);
+	}
+}
+
+} // namespace Common::BindLean

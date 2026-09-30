@@ -466,8 +466,11 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 135, MEASUREMENT ONLY: the census of the class slow of RebindBuffers and of the "buffast" hits without an
     // action (docs/session-135/design135.md rev 2, ROADMAP s122 items 166(b), 167(v), 168, 169). Requires rbcen=1; read
     // once per operation with rbcen, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_REBIND_SLOW_CENSUS", "rbslow", 0, 1},
+    // Session 136, PROTOTYPE: the package B2' + sync-carry (docs/session-136/design136.md rev 1, ROADMAP s122 items 176(e)(1),
+    // 178, 179). Latched only at the start of a submission slice, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_BIND_LEAN", "bindlean", 0, 3},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

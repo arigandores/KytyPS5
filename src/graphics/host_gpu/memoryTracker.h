@@ -94,6 +94,9 @@ public:
 	// targets that have no GuestGpu), BufferCache does.
 	[[nodiscard]] bool IsRegionGpuModifiedFast(uint64_t vaddr, uint64_t size);
 	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFast(uint64_t vaddr, uint64_t size);
+	// Session 136, knob "bindlean" (design136.md rev 1 s.4.2): the same query; `*scanned` is set only when the loop passed
+	// every region with no early return on GPU-dirty bytes - its false answer is then IsRegionCpuCleanFast at that moment.
+	[[nodiscard]] bool IsRegionCpuModifiedAndGpuCleanFastScan(uint64_t vaddr, uint64_t size, bool* scanned);
 	// Gate "syncfree": every tracking region of the range exists and none of its pages is
 	// CPU-dirty, read without the region locks. GuestGpu thread only (BufferCache::SyncFreeSkip
 	// checks it and documents why a stale answer is safe).

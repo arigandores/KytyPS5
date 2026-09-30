@@ -1,0 +1,20 @@
+d700ee60:docs/ROADMAP.md:11746 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11810 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11842 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11849 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11862 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11899 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11955 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11965 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:11991 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:12002 anchor OK; control +1 NOT OK
+d700ee60:docs/ROADMAP.md:12003 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:34 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:35 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:123 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:143 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:182 anchor OK; control +1 NOT OK
+f1c3339:docs/agent-team.md:239 anchor OK; control +1 NOT OK
+f1c3339:CLAUDE.md:248 anchor OK; control +1 NOT OK
+f1c3339:docs/platform-traps.md:32 anchor OK; control +1 NOT OK
+refs 19, ALL OK

@@ -1,0 +1,58 @@
+{
+ "label": "c142_04",
+ "level": "mini_giants_garden",
+ "log": "C:/kyty/s142/log_c142_04.txt",
+ "log_sha256": "bd5f547706caad1df9470af8265711dbc86e1bdde7f19dfdb1f9a2b30a0f6133",
+ "rows_all": 7555,
+ "torn": 0,
+ "entry_line": 213071,
+ "scene_changes": [],
+ "marks_log": [],
+ "n_marks_log": 0,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 37,
+ "skipped_frames": 12,
+ "skipped_ids": 12,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 122481592,
+ "first_scene": {
+  "n": 260,
+  "dt_us": 469352,
+  "draws": 3933,
+  "ts": "00:00:12.623"
+ },
+ "win_len": 599,
+ "hold_len": 6697,
+ "frames_after_first": 7296,
+ "sum_dt_after_first_us": 121815486,
+ "median_dt": 16677.0,
+ "max_dt": 33664,
+ "K2": [],
+ "K3_win": [],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:22.795"
+}

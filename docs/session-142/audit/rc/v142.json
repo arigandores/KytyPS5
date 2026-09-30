@@ -1,0 +1,64 @@
+{
+ "label": "v142",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/s142/log_v142.txt",
+ "log_sha256": "565707122e53bb50c8bd1ff73cfa956388a9e86ba18a2f64ba4a49ecb3b46aad",
+ "rows_all": 10555,
+ "torn": 0,
+ "entry_line": 228907,
+ "scene_changes": [],
+ "marks_log": [],
+ "n_marks_log": 0,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 0,
+ "skipped_frames": 0,
+ "skipped_ids": 0,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 334613590,
+ "first_scene": {
+  "n": 380,
+  "dt_us": 15370,
+  "draws": 249,
+  "ts": "00:00:16.782"
+ },
+ "win_len": 599,
+ "hold_len": 9577,
+ "frames_after_first": 10176,
+ "sum_dt_after_first_us": 334146694,
+ "median_dt": 33080.0,
+ "max_dt": 180521,
+ "K2": [],
+ "K3_win": [
+  [
+   382,
+   180521,
+   "00:00:16.979"
+  ]
+ ],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:38.696"
+}

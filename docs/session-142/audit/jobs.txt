@@ -1,0 +1,12 @@
+rc/v142.json v142 underwater_aerial_garden C:/kyty/s142/log_v142.txt C:/kyty/s142/stdout_v142.txt C:/kyty/s142/v142.stdout.txt
+rc/w142.json w142 underwater_aerial_garden C:/kyty/s142/log_w142.txt C:/kyty/s142/stdout_w142.txt C:/kyty/s142/w142.stdout.txt
+rc/c142_01.json c142_01 bumper_enemy_snowy_canyon C:/kyty/s142/log_c142_01.txt C:/kyty/s142/stdout_c142_01.txt C:/kyty/s142/c142_01.stdout.txt
+rc/c142_02.json c142_02 big_hand_pirate_island C:/kyty/s142/log_c142_02.txt C:/kyty/s142/stdout_c142_02.txt C:/kyty/s142/c142_02.stdout.txt
+rc/c142_03.json c142_03 timestop_casino C:/kyty/s142/log_c142_03.txt C:/kyty/s142/stdout_c142_03.txt C:/kyty/s142/c142_03.stdout.txt
+rc/c142_04.json c142_04 mini_giants_garden C:/kyty/s142/log_c142_04.txt C:/kyty/s142/stdout_c142_04.txt C:/kyty/s142/c142_04.stdout.txt
+rc/c142_05.json c142_05 ice_iceberg C:/kyty/s142/log_c142_05.txt C:/kyty/s142/stdout_c142_05.txt C:/kyty/s142/c142_05.stdout.txt
+rc/c142_06.json c142_06 sponge_dirty_bath C:/kyty/s142/log_c142_06.txt C:/kyty/s142/stdout_c142_06.txt C:/kyty/s142/c142_06.stdout.txt
+rc/c142_07.json c142_07 hoover_beach C:/kyty/s142/log_c142_07.txt C:/kyty/s142/stdout_c142_07.txt C:/kyty/s142/c142_07.stdout.txt
+rc/c142_08.json c142_08 volcano_mountain C:/kyty/s142/log_c142_08.txt C:/kyty/s142/stdout_c142_08.txt C:/kyty/s142/c142_08.stdout.txt
+rc/c142_09.json c142_09 voxel_world C:/kyty/s142/log_c142_09.txt C:/kyty/s142/stdout_c142_09.txt C:/kyty/s142/c142_09.stdout.txt
+rc/c142_10.json c142_10 enemy_gorilla C:/kyty/s142/log_c142_10.txt C:/kyty/s142/stdout_c142_10.txt C:/kyty/s142/c142_10.stdout.txt

@@ -1,0 +1,94 @@
+{
+ "label": "c142_09",
+ "level": "voxel_world",
+ "log": "C:/kyty/s142/log_c142_09.txt",
+ "log_sha256": "eadf72b5b79ac09679ac8ae028ba2d391a77ccb829c16bfae30681405d5f9d17",
+ "rows_all": 7604,
+ "torn": 0,
+ "entry_line": 175316,
+ "scene_changes": [],
+ "marks_log": [],
+ "n_marks_log": 0,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 90,
+ "skipped_frames": 4,
+ "skipped_ids": 5,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 6,
+ "emu_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 125945751,
+ "first_scene": {
+  "n": 178,
+  "dt_us": 28782,
+  "draws": 178,
+  "ts": "00:00:11.402"
+ },
+ "win_len": 599,
+ "hold_len": 6828,
+ "frames_after_first": 7427,
+ "sum_dt_after_first_us": 125751647,
+ "median_dt": 16660,
+ "max_dt": 316631,
+ "K2": [],
+ "K3_win": [
+  [
+   180,
+   113999,
+   "00:00:11.626"
+  ],
+  [
+   182,
+   316631,
+   "00:00:11.713"
+  ],
+  [
+   183,
+   283174,
+   "00:00:11.978"
+  ],
+  [
+   184,
+   266420,
+   "00:00:12.264"
+  ],
+  [
+   185,
+   285526,
+   "00:00:12.527"
+  ],
+  [
+   186,
+   298651,
+   "00:00:12.812"
+  ],
+  [
+   187,
+   283939,
+   "00:00:13.370"
+  ]
+ ],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:23.378"
+}

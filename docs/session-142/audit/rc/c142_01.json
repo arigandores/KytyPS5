@@ -1,0 +1,69 @@
+{
+ "label": "c142_01",
+ "level": "bumper_enemy_snowy_canyon",
+ "log": "C:/kyty/s142/log_c142_01.txt",
+ "log_sha256": "66b4ff7e0e50a8a445a3820b27976eef93b32bf81afc72e8efeef571057ec738",
+ "rows_all": 5252,
+ "torn": 0,
+ "entry_line": 186342,
+ "scene_changes": [],
+ "marks_log": [],
+ "n_marks_log": 0,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 225,
+ "skipped_frames": 4,
+ "skipped_ids": 3,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 124647297,
+ "first_scene": {
+  "n": 203,
+  "dt_us": 785741,
+  "draws": 10745,
+  "ts": "00:00:11.984"
+ },
+ "win_len": 599,
+ "hold_len": 4451,
+ "frames_after_first": 5050,
+ "sum_dt_after_first_us": 123549444,
+ "median_dt": 18716.5,
+ "max_dt": 816566,
+ "K2": [],
+ "K3_win": [
+  [
+   204,
+   816566,
+   "00:00:12.794"
+  ],
+  [
+   206,
+   101796,
+   "00:00:13.001"
+  ]
+ ],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:26.666"
+}

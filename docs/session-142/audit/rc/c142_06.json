@@ -1,0 +1,69 @@
+{
+ "label": "c142_06",
+ "level": "sponge_dirty_bath",
+ "log": "C:/kyty/s142/log_c142_06.txt",
+ "log_sha256": "a511e5d4af7a0f0a7f462b097c9a5f48ba58cff1b96194e176f76e404c71034b",
+ "rows_all": 4386,
+ "torn": 0,
+ "entry_line": 245716,
+ "scene_changes": [],
+ "marks_log": [],
+ "n_marks_log": 0,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 56,
+ "skipped_frames": 6,
+ "skipped_ids": 6,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 123962798,
+ "first_scene": {
+  "n": 261,
+  "dt_us": 18198,
+  "draws": 1446,
+  "ts": "00:00:12.118"
+ },
+ "win_len": 599,
+ "hold_len": 3527,
+ "frames_after_first": 4126,
+ "sum_dt_after_first_us": 123763561,
+ "median_dt": 32373.5,
+ "max_dt": 465210,
+ "K2": [],
+ "K3_win": [
+  [
+   262,
+   465210,
+   "00:00:12.574"
+  ],
+  [
+   455,
+   149912,
+   "00:00:18.730"
+  ]
+ ],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:31.488"
+}

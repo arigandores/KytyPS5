@@ -1,0 +1,16 @@
+2026-09-30T23:28:56Z start step3 audit HPP-280 (wake issue_blockers_resolved, HPP-279 done)
+2026-09-30T23:31:16Z aud142.py start on 12 logs (4 parallel), sha256 aud142.py 4fd2e3255f9e62f4391860cb4782f373cc38e0b81d8f747a9dd146875329e0da
+2026-09-30T23:31:17Z aud142.py end on 12 logs rc/run12.out.txt sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+2026-09-30T23:31:26Z aud142.py start on 12 logs via drive.py (4 parallel), sha256 aud142.py 4fd2e3255f9e62f4391860cb4782f373cc38e0b81d8f747a9dd146875329e0da drive.py 92ecab1471485091c63014bb68294d1518d597cdb4a5055e73e6b6a88484f11b
+2026-09-30T23:31:39Z aud142.py end on 12 logs rc=0 rc/run12.out.txt sha256 b6b127c84214b65124abf537465a4e3e54d368a742b9f92354b4238a861c1fd8
+2026-09-30T23:32:05Z cmp142.py rc/cmp142.out.txt sha256 36783cd71d8eecff8f6579b6d8e49c12e7ba7d491ea25a86a20521b5cb82f401
+2026-09-30T23:32:37Z aud142.py rev2 (frame= ids) start, sha256 aud142.py bcb8930cd43267c91b454d934a6f8c548b1d9ab89b0aed3689250293d3bb5a74 cmp142.py dacf8c0539703cf33cb8947d8d3d521908409549fcd1d07646599442976dcf91
+2026-09-30T23:32:52Z aud142.py rev2 end rc/run12.out.txt sha256 34fc7998a7ec263b9c4a4f9eb600c2a169e75c602029a6d02732274fa80e1380; cmp142 rc/cmp142.out.txt sha256 a0333e4ca3ab51a804f823b6675fd69be3bf8aba5fa2bc92c9bc801d6e81be0f
+2026-09-30T23:33:11Z ffprobe packet counts + sha sheet/rec v142 -> rc/video142.out.txt sha256 5cc3c7c8d6accd571c4101e96f3395432b2018f1022550175d90efd88d98a661
+2026-09-30T23:33:28Z aud142.py on s1s128 s2s128 s6s137 -> rc/run3.out.txt sha256 cc99e33fcefca2c4beba695a14a18841c29cd61e52eacca1382a51296477adbd
+2026-09-30T23:33:38Z sc142.py --check1b -> rc/check1b.aud.txt sha256 1bb561a15a383151f4cdbb75cdf90b3c3164513e659536aa96834c1a7df8e9c3; --check-seal -> rc/checkseal.aud.txt sha256 8395a74840ba27920bd7a001b5adac53a89d7b17247c3e7cca416037e035aa23
+2026-09-30T23:36:03Z priv142.py (commits e16edb5c..HEAD, ca71923..HEAD, both trees) -> rc/priv142.out.txt sha256 99854318a397b0df13851d76b73e60f81843f3976813dc91fa6cbff060ce09fb
+2026-09-30T23:38:25Z refs142_aud.py -> rc/refs142_aud.out.txt sha256 2212ee9f0862bb8c4a15a65ffaaca44c118a9f29a0d5ac9adb8885e8135e83c0
+2026-09-30T23:41:51Z audit files copied to docs/session-142/audit; priv142.py on them -> rc/priv142_files.out.txt sha256 58b2093397fd5be4b23f6b7fa17c957f2815b13e6379944ce61bf48b15328beb (FILE hits: 1 non-zero)
+2026-09-30T23:42:09Z AUDIT142.md: third-party app name replaced (pattern 9); priv142.py on audit files -> rc/priv142_files.out.txt sha256 2261b95ff0beeff021086a87ad76e55964fe4e13e9f17587cc992f917f5a474a nonzero 0
+2026-09-30T23:42:33Z FACTS.md Step 3 appended sha256 c7fd9bb9c674d41a0fda909cc2dc6aafeda3547d32dc7bcb214c7a027ec23230; AUDIT142.md sha256 ac0757676bf9c4ce545943573eb5352ce8d2e8397c1b6e42522ff377b8ba19cf

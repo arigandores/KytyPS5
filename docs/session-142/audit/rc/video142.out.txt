@@ -1,0 +1,14 @@
+v142 packets=10567 rows_all=10555 glitchfile: one-frame glitches: 0
+c142_01 packets=5261 rows_all=5252 glitchfile: one-frame glitches: 0
+c142_02 packets=3810 rows_all=3798 glitchfile: one-frame glitches: 0
+c142_03 packets=7100 rows_all=7155 glitchfile: one-frame glitches: 0
+c142_04 packets=7553 rows_all=7555 glitchfile: one-frame glitches: 0
+c142_05 packets=7266 rows_all=7301 glitchfile: one-frame glitches: 0
+c142_06 packets=4391 rows_all=4386 glitchfile: one-frame glitches: 0
+c142_07 packets=7475 rows_all=7475 glitchfile: one-frame glitches: 0
+c142_08 packets=7444 rows_all=7460 glitchfile: one-frame glitches: 0
+c142_09 packets=7616 rows_all=7604 glitchfile: one-frame glitches: 0
+c142_10 packets=6634 rows_all=6608 glitchfile: one-frame glitches: 0
+f2ff6ba630c3c9f68a72b5afff5a4bd54a9448c562cc9e8a7328c06897a1424f *sheet_v142.png
+7ffe353d42160bc40380c53cee4b09f71195055292f0af360b9cf03d5f81fb5f *rec_v142.mp4
+f25c255462493a2f2a3aaba2c51eb337e3b5e2932ee0bb2d5f6e57a3edd287fe *glitch_v142.txt

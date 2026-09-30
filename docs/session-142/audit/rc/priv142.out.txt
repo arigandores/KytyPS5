@@ -1,0 +1,64 @@
+patterns 25
+COMMIT KytyPS5 a23ee6fd added-lines+message hits 0
+COMMIT KytyPS5 d700ee60 added-lines+message hits 0
+COMMIT KytyPS5 07c34a02 added-lines+message hits 0
+COMMIT KytyPS5 9e4e4dfa added-lines+message hits 0
+COMMIT KytyPS5 6a50c978 added-lines+message hits 0
+COMMIT KytyPS5 8320bc1f added-lines+message hits 0
+COMMIT KytyPS5 f8db4d5b added-lines+message hits 0
+COMMIT KytyPS5 f612eb63 added-lines+message hits 0
+COMMIT KytyPS5 4fcff08f added-lines+message hits 0
+COMMIT KytyPS5 2c65eb41 added-lines+message hits 0
+COMMIT KytyPS5 4633907a added-lines+message hits 0
+COMMIT KytyPS5 ba15ee6a added-lines+message hits 0
+COMMIT ps5em f1c33396 added-lines+message hits 0
+TREE KytyPS5 pattern#1 files 0 
+TREE KytyPS5 pattern#2 files 0 
+TREE KytyPS5 pattern#3 files 0 
+TREE KytyPS5 pattern#4 files 0 
+TREE KytyPS5 pattern#5 files 0 
+TREE KytyPS5 pattern#6 files 0 
+TREE KytyPS5 pattern#7 files 2 [('docs/session-112/audit/transcript_calls112.txt', '1'), ('src/libs/guestPrintf.cpp', '1')]
+TREE KytyPS5 pattern#8 files 0 
+TREE KytyPS5 pattern#9 files 19 [('docs/session-109/audit/protocol_checks.py', '1'), ('docs/session-117/audit117/protocol/all117.diff', '1'), ('docs/session-117/runs/go117a.log', '1'), ('docs/session-121/audit/protocol.md', '1'), ('docs/session-99/continuation/aa99plain.json', '2'), ('docs/session-99/continuation/bf99e.json', '2'), ('docs/session-99/continuation/bf99g.json', '2'), ('docs/session-99/continuation/bf99h.json', '2'), ('docs/session-99/continuation/eng99a1.json', '2'), ('docs/session-99/continuation/eng99a2.json', '2'), ('docs/session-99/continuation/eng99a3.json', '2'), ('docs/session-99/continuation/eng99a4.json', '2'), ('docs/session-99/continuation/eng99c1.json', '2'), ('docs/session-99/continuation/eng99c2.json', '2'), ('docs/session-99/continuation/life99a.json', '2'), ('docs/session-99/continuation/settled_runs/preflight.json', '1'), ('docs/session-99/continuation/settled_runs/preflight.txt', '1'), ('docs/session-99/continuation/vis99base.json', '2'), ('docs/session-99/runs/cal99a/cal99a.json', '2')]
+TREE KytyPS5 pattern#10 files 0 
+TREE KytyPS5 pattern#11 files 0 
+TREE KytyPS5 pattern#12 files 0 
+TREE KytyPS5 pattern#13 files 0 
+TREE KytyPS5 pattern#14 files 0 
+TREE KytyPS5 pattern#15 files 0 
+TREE KytyPS5 pattern#16 files 0 
+TREE KytyPS5 pattern#17 files 0 
+TREE KytyPS5 pattern#18 files 0 
+TREE KytyPS5 pattern#19 files 0 
+TREE KytyPS5 pattern#20 files 0 
+TREE KytyPS5 pattern#21 files 0 
+TREE KytyPS5 pattern#22 files 0 
+TREE KytyPS5 pattern#23 files 0 
+TREE KytyPS5 pattern#24 files 0 
+TREE KytyPS5 pattern#25 files 0 
+TREE ps5em pattern#1 files 0 
+TREE ps5em pattern#2 files 0 
+TREE ps5em pattern#3 files 0 
+TREE ps5em pattern#4 files 0 
+TREE ps5em pattern#5 files 0 
+TREE ps5em pattern#6 files 0 
+TREE ps5em pattern#7 files 0 
+TREE ps5em pattern#8 files 0 
+TREE ps5em pattern#9 files 0 
+TREE ps5em pattern#10 files 0 
+TREE ps5em pattern#11 files 0 
+TREE ps5em pattern#12 files 0 
+TREE ps5em pattern#13 files 0 
+TREE ps5em pattern#14 files 0 
+TREE ps5em pattern#15 files 0 
+TREE ps5em pattern#16 files 0 
+TREE ps5em pattern#17 files 0 
+TREE ps5em pattern#18 files 0 
+TREE ps5em pattern#19 files 0 
+TREE ps5em pattern#20 files 0 
+TREE ps5em pattern#21 files 0 
+TREE ps5em pattern#22 files 0 
+TREE ps5em pattern#23 files 0 
+TREE ps5em pattern#24 files 0 
+TREE ps5em pattern#25 files 0 

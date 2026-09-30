@@ -1,0 +1,3 @@
+rc/s1s128.json s1s128 underwater_aerial_garden C:/kyty/s128/log_s1s128.txt C:/kyty/s128/stdout_s1s128.txt C:/kyty/s128/s1s128.stdout.txt
+rc/s2s128.json s2s128 underwater_aerial_garden C:/kyty/s128/log_s2s128.txt C:/kyty/s128/stdout_s2s128.txt C:/kyty/s128/s2s128.stdout.txt
+rc/s6s137.json s6s137 underwater_aerial_garden C:/kyty/s137/log_s6s137.txt C:/kyty/s137/stdout_s6s137.txt C:/kyty/s137/s6s137.stdout.txt

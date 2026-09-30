@@ -1,0 +1,85 @@
+{
+ "label": "s2s128",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/s128/log_s2s128.txt",
+ "log_sha256": "b9988b60c4fdcc1eee50fd6c779a65fad5acf0f3f98aa6da8bbf5711a3a15608",
+ "rows_all": 316,
+ "torn": 0,
+ "entry_line": 226529,
+ "scene_changes": [],
+ "marks_log": [
+  [
+   239627,
+   "ErrorDeviceLost"
+  ],
+  [
+   239630,
+   "--- Fatal Error ---"
+  ]
+ ],
+ "n_marks_log": 2,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 0,
+ "skipped_frames": 0,
+ "skipped_ids": 0,
+ "opc": 20,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [
+   [
+    38,
+    "ErrorDeviceLost"
+   ],
+   [
+    41,
+    "--- Fatal Error ---"
+   ]
+  ],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [
+   [
+    10,
+    "ErrorDeviceLost"
+   ],
+   [
+    17,
+    "ErrorDeviceLost"
+   ]
+  ],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "sum_dt_after_entry_us": 335086,
+ "first_scene": {
+  "n": 316,
+  "dt_us": 17533,
+  "draws": 480,
+  "ts": "00:00:14.721"
+ },
+ "win_len": 1,
+ "hold_len": 0,
+ "frames_after_first": 1,
+ "sum_dt_after_first_us": 17518,
+ "median_dt": 17518,
+ "max_dt": 17518,
+ "K2": [],
+ "K3_win": [],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:14.727"
+}

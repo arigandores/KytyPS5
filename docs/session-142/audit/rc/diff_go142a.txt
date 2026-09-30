@@ -1,0 +1,49 @@
+--- go142a_step0.sh	2026-10-01 01:39:21.198365200 +0200
++++ ../../go142a.sh	2026-09-30 23:48:10.693919300 +0200
+@@ -28,6 +28,10 @@
+ #     line into step2/times.txt by this script at the moment of the event (general rule 23).
+ #   After the run (inside the lock): the log sha256 line, s51_vidglitch.py 4 6 and sheet142.py for a video tag, the scorer
+ #     sc142.py --tag <tag> into score_<tag>.txt; the EXIT trap copies the pinned 9235a7ac back and removes the lock.
++#   Link 1b (HPP-282, item 224 (a)(10)): the seal is pred/02_sc142.md (01 replaced); the count of files of the shared
++#     translation cache _ShaderCache/PPSA21564 goes into step2/times.txt before the lock and after the run (the caches
++#     are shared and warm from earlier runs, V and W included - the census is the first entry of each level, not a
++#     cold cache).
+ # Every run: KYTY_GPU_CLOCK_PIN=1, KYTY_GPU_MARKERS=0, --pred of the seal; KYTY_GPU_CHECKPOINTS never passed.
+ # EXIT CODES: 0 run done (read score_<tag>.txt);  1 hard refusal or failed run;  2 usage / not configured;  4 BUSY (lock,
+ #   stop file, guards, idle) - no run;  5 the stop rule of item 221 (g)(4) - no run, question to the lead.
+@@ -44,7 +48,8 @@
+ VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
+ VKLAYER="C:/VulkanSDK/1.4.357.0/Bin"
+ VKDUP="1000000"
+-PRED="pred/01_sc142.md"
++PRED="pred/02_sc142.md"
++CACHE="/c/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564"
+ SC="sc142.py"
+ VHOLD="330"
+ WHOLD="310"
+@@ -139,7 +144,7 @@
+   echo "PLWAIT differs from the seal"; exit 1
+ fi
+ if [ "${DRY:-0}" = "1" ]; then
+-  echo "DRY $T: level $LEVEL; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; $SC --check-seal; stop-check (census); cpu < 15; idle142; procload --wait-s 0; stop file?; lock (runs142/lock.log UTC); install $BUILD_PINNED ($BUILD_EXPECT); enter_scene.py $T --level $LEVEL --attempts 1 $SD --no-install --require-idle --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED $REC $EMUX --hold $HOLD $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0; log sha; glitch+sheet ${REC:-none}; $SC --tag $T; restore $BUILD_PINNED"
++  echo "DRY $T: level $LEVEL; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; $SC --check-seal; stop-check (census); cpu < 15; idle142; procload --wait-s 0; stop file?; shader cache count; lock (runs142/lock.log UTC); install $BUILD_PINNED ($BUILD_EXPECT); enter_scene.py $T --level $LEVEL --attempts 1 $SD --no-install --require-idle --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED $REC $EMUX --hold $HOLD $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0; log sha; glitch+sheet ${REC:-none}; $SC --tag $T; restore $BUILD_PINNED"
+   exit 0
+ fi
+ sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
+@@ -196,6 +201,8 @@
+ guards 0 || busy "procload / name guard not clean before the lock"
+ if [ -e $STOPF ]; then busy "stop file $STOPF appeared before the lock"; fi
+ mkdir -p $OUT step2
++cachen() { local n=0 f; for f in "$CACHE"/*; do [ -e "$f" ] && n=$((n+1)); done; echo $n; }
++echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) go142a $T shader cache files before the lock $(cachen) ($CACHE)" >> $TIMES
+ set -o noclobber
+ if ! { echo "go142a.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S)" > $LOCK; } 2>/dev/null; then
+   set +o noclobber
+@@ -245,6 +252,7 @@
+   --pred $ROOT/$PRED $REC $EMUX --hold $HOLD $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $T.stdout.txt 2>&1
+ RC=$?
+ echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) go142a $T enter_scene end rc $RC log_$T.txt sha256 $(sha log_$T.txt)" >> $TIMES
++echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) go142a $T shader cache files after the run $(cachen) ($CACHE)" >> $TIMES
+ log "$T rc=$RC $(tail -1 $T.stdout.txt)"
+ if [ "$RC" = "3" ] && [ ! -e "$T.json" ]; then
+   if [ -f "$T.refused.json" ]; then

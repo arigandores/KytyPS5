@@ -1,0 +1,82 @@
+{
+ "label": "s1s128",
+ "level": "underwater_aerial_garden",
+ "log": "C:/kyty/s128/log_s1s128.txt",
+ "log_sha256": "c9427f9427dc3795673ccf12169afd41ea052b9074a8a9b381d113e0525e098b",
+ "rows_all": 1893,
+ "torn": 0,
+ "entry_line": 223801,
+ "scene_changes": [],
+ "marks_log": [
+  [
+   450437,
+   "ErrorDeviceLost"
+  ],
+  [
+   450440,
+   "--- Fatal Error ---"
+  ]
+ ],
+ "n_marks_log": 2,
+ "vk_log": {
+  "E": 0,
+  "any": 0,
+  "nolayer": 0,
+  "valfeat": 0
+ },
+ "skipped_lines": 0,
+ "skipped_frames": 0,
+ "skipped_ids": 0,
+ "opc": 101,
+ "stub": 0,
+ "bvh": 0,
+ "emu_stdout": {
+  "marks": [
+   [
+    177,
+    "ErrorDeviceLost"
+   ],
+   [
+    180,
+    "--- Fatal Error ---"
+   ]
+  ],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 0
+ },
+ "es_stdout": {
+  "marks": [],
+  "vkE": 0,
+  "vkany": 0,
+  "nolayer": 0,
+  "valfeat": 0,
+  "ended": 1
+ },
+ "sum_dt_after_entry_us": 61399245,
+ "first_scene": {
+  "n": 181,
+  "dt_us": 18136,
+  "draws": 451,
+  "ts": "00:00:11.471"
+ },
+ "win_len": 599,
+ "hold_len": 1114,
+ "frames_after_first": 1713,
+ "sum_dt_after_first_us": 61280799,
+ "median_dt": 33430,
+ "max_dt": 182902,
+ "K2": [],
+ "K3_win": [
+  [
+   183,
+   182902,
+   "00:00:11.666"
+  ]
+ ],
+ "K3_hold": [],
+ "n_gaps": 0,
+ "win_last_ts": "00:00:33.665"
+}

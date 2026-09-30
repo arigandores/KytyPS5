@@ -168,6 +168,8 @@ before the measured region, since a sealed schedule starts at frame 1800. That m
 so `pred/01_map122.md` must either bound the marker check to the measured window or demand a warm pipeline cache;
 otherwise every level fails on entry noise. The decision is the lead's, BEFORE the seal.
 
+**Correction (s141 close, `ROADMAP.md` "СЕССИЯ 122" items 217 (а), 221 (з)(2)):** not 20 lines at one frame — 1 320 / 762 / 185 `AsyncPipelines: skipped draw` lines on 14 / 69 / 11 frames (`eatl122` / `eght122` / `ednn122`) [c] (`docs/session-141/inventory141.md` row B5).
+
 **`edes122` (`intro_next`) ran on the fifth attempt, at 21:28:50, and PASSED** (`intro_next` in 32.5 s, acceptance ≤ 90 s; its row and numbers are the last paragraph of this section). It is not a defect of the level: the `procload` gate (0.50 CPU s/s per
 process) had refused four attempts in a row because the user's game (its process, 0.68–0.77 CPU s/s) and browser
 (its process, 0.51–0.66) keep the machine busy. The gate is NOT weakened — `retry_edes.sh` only repeats the full

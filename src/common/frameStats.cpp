@@ -1198,6 +1198,30 @@ uint32_t LatchSlow(uint32_t value, bool mut_site) {
 
 } // namespace Common::RbCen
 
+// Session 135, knob "rbslow" (MEASUREMENT ONLY; docs/session-135/design135.md rev 2 s.2.3): the refusal of a mode other
+// than 1 (rs_refuse on every refused operation), each line once per process.
+namespace Common::RbSlow {
+
+bool LatchSlow(uint32_t mode) {
+	static std::atomic<uint32_t> logged {0};
+	const uint32_t               bit   = mode == 1 ? 1u : 2u;
+	const bool                   first = (logged.load(std::memory_order_relaxed) & bit) == 0 &&
+	                                     (logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0;
+	if (mode != 1) {
+		FrameStats::Add(FrameStats::Counter::RsRefuse, 1); // a no-op without the trace: only the line is observable
+		if (first) {
+			LOGF("RbSlow: refused reason=rbcen\n");
+		}
+		return false;
+	}
+	if (first) {
+		LOGF("RbSlow: mode 1\n");
+	}
+	return true;
+}
+
+} // namespace Common::RbSlow
+
 // Session 134, knob "b2reuse" (PROTOTYPE; docs/session-134/design134.md rev 1 s.2.2-2.3, s.4.3 with ROADMAP s122 items
 // 153(v) B4, B5, 154(b) RC8).
 namespace Common::B2Reuse {

@@ -2732,6 +2732,33 @@ enum class Counter : uint32_t {
 	B2rRstCpuw,              // b2r_rst_cpuw: generation moves by an announced CPU write, ChangeState<Cpu, true> (RC1)
 	B2rWrapcur,              // b2r_wrapcur: the stream ring waited for the tick it records, at b2reuse >= 1 (RC4)
 	B2rNomap,                // b2r_nomap: 2/3: hits whose ring Map returned nullptr and whose path of 0 ended Slow (item 158(b))
+	// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.15 item 4 with ROADMAP s122 items 166(b), 167(v),
+	// 168(b)). Raw ns and raw counts; the parts are booked on the selected Slow iterations of the rbcen 1/8 sample (s.3.3).
+	RsFindNs,                // rs_find_ns: a0 -> a1, IsBufferInvalid / IsInBounds / FindBuffer
+	RsFindN,                 // rs_find_n: every Slow iteration that called FindBuffer
+	RsTouchNs,               // rs_touch_ns: a1 -> a2, the slot lookup and TouchBuffer
+	RsSyncNs,                // rs_sync_ns: a2 -> a3, the whole SynchronizeBuffer
+	RsWrNs,                  // rs_wr_ns: a3 -> a4, the written block (one test when read-only)
+	RsWrN,                   // rs_wr_n: every written Slow iteration
+	RsRemNs,                 // rs_rem_ns: a4 -> a5, remember
+	RsSyncN,                 // rs_sync_n: every Slow iteration whose SynchronizeBuffer uploaded (copies not empty)
+	RsSyncNoopN,             // rs_sync_noop_n: every Slow iteration without an upload
+	RsSyncKb,                // rs_sync_kb: bytes of those uploads (printed / 1000 like rb_b2_kb)
+	RsRoN,                   // rs_ro_n: every read-only Slow iteration
+	RsBfN,                   // rs_bf_n: census probes: an eligible call that reached ObtainBuffer, iteration Slow
+	RsBfWould,               // rs_bf_would: of them, "buffast" would have hit
+	RsBfDiff,                // rs_bf_diff: of them, RsDiff (another buffer, or an upload with an unmoved witness)
+	RsBfwNs,                 // rs_bfw_ns: the parts such a hit would skip, selected iterations, races excluded (RC4)
+	RsRefuse,                // rs_refuse: operations whose rbslow was refused (rbcen != 1); a no-op without the trace
+	RsHeadNs,                // rs_head_ns: S0 -> a0 (item 167(v) B1)
+	RsTailNs,                // rs_tail_ns: a5 -> S1 (item 167(v) B1)
+	RsCenNs,                 // rs_cen_ns: the two census pairs of a selected iteration (PRE; RsSlotEnd + POST) (B3)
+	RsBfXchk,                // rs_bf_xchk: the positive control: the key matched but region_epoch != pre (B4, RC3)
+	RsBfXdiff,               // rs_bf_xdiff: of them, RsDiff - the same predicate as rs_bf_diff (RC3)
+	RsBfStrm,                // rs_bf_strm: "buffast" would have hit on a call that left ObtainBuffer by Stream (B5, RC2)
+	RsDiscN,                 // rs_disc_n: selected marked iterations whose class was rewritten away from Slow (B9)
+	RsBfwK,                  // rs_bfw_k: lap segments booked into rs_bfw_ns (item 167(b)(1))
+	RsBfRace,                // rs_bf_race: would-hits that uploaded with a moved witness (item 168(b), RC4)
 	Count
 };
 
@@ -3556,6 +3583,7 @@ struct Tls {
 	bool     next;      // the sampling decision of the next slot iteration
 	bool     chain;     // the draw chain of this draw is running
 	bool     chk_tried; // this thread tried to allocate its comparison buffer
+	bool     rs;        // session 135, knob "rbslow": 1 latched with mode 1 (s.2.2); written only by Latch and Unlatch
 	uint8_t  slot;      // 0 outside a latched slot iteration, 1 inside, 2 inside its outer ObtainBuffer
 	Cls      cls;
 	uint32_t notes;
@@ -3575,6 +3603,90 @@ struct Tls {
 	uint8_t* chk; // this thread's comparison buffer; set only when the table and the shadow ring are in place
 };
 inline constinit thread_local Tls t_rb {};
+
+} // namespace Common::RbCen
+
+// Session 135, knob "rbslow" (MEASUREMENT ONLY; docs/session-135/design135.md rev 2 with ROADMAP s122 items 166(b), 167(v),
+// 168, 169): the state of ONE latched slot iteration of RebindBuffers (s.3.4). PRE (BufferCache::RsPre, before S0) writes
+// the census of the probe, the outer ObtainBuffer the marks and the answer of its slow path, the outer SynchronizeBuffer
+// the handshake, SlotEnd books after t1 (RsSlotEnd), and POST (BufferCache::RsPost, after SlotEnd) books the census and
+// clears EVERY field. Nothing here is read by the path.
+namespace Common::RbSlow {
+
+struct Tls {
+	uint64_t   a[6];       // the marks a0..a5 of a selected iteration (s.3.1)
+	uint64_t   kb;         // the bytes of the upload of the outer SynchronizeBuffer (sync == 2)
+	uint64_t   res_id;     // the id the slow path resolved, packed (index | generation << 32)
+	uint64_t   rem_id;     // the id of the census slot whose key matched in PRE, packed
+	uint64_t   pre;        // RangeWriteEpoch read by PRE
+	uint64_t   bfw;        // the parts a hit would skip, raw ns (RsSlotEnd, s.3.3)
+	uint64_t   cen_t;      // the open second rs_cen pair (0 = none)
+	uint32_t   slot;       // the index of the census slot of PRE
+	uint32_t   bfw_k;      // the lap segments in bfw
+	uint8_t    sync;       // 0 no handshake, 1 no upload, 2 an upload (the outer SynchronizeBuffer)
+	RbCen::Cls ocls;       // the class the outer ObtainBuffer returned with (None = not reached)
+	bool       have;       // a5 was stamped
+	bool       find;       // FindBuffer was called
+	bool       in_sync;    // the handshake: set right before the outer SynchronizeBuffer, cleared by its entry
+	bool       ro;         // the slow path was read-only
+	bool       elig;       // PRE: the call is eligible for "buffast"
+	bool       would;      // PRE: "buffast" would hit
+	bool       xchk;       // PRE: the key matched in everything but region_epoch != pre (the positive control)
+	bool       touch_skip; // PRE: a hit would skip TouchBuffer (the first hit of a GC tick does not)
+	bool       bfw_set;    // RsSlotEnd booked bfw on a selected Slow iteration (RC7); cleared by POST
+};
+// RC7: constinit, no guard of a TLS initialization on every SynchronizeBuffer of any thread.
+inline constinit thread_local Tls t_rs {};
+
+// The slow half of the latch at a value >= 1 (s.2.3): the refusal at a mode other than 1, the lines. Returns the flag.
+bool LatchSlow(uint32_t mode);
+
+// The comparison of the census (s.5.4, RC3): ONE predicate for rs_bf_diff and rs_bf_xdiff - another buffer, or an upload
+// of the full path while the witness did not move (the form of "buffastcheck").
+inline bool RsDiff(uint64_t res_id, uint64_t rem_id, uint8_t sync, uint64_t e_post, uint64_t pre) {
+	return res_id != rem_id || (sync == 2 && e_post == pre);
+}
+
+// RsSlotEnd (s.3.3): the tail of SlotEnd after t1 and the calibration, outside every pair; t_rb.cls is the class of this
+// iteration. Nothing is cleared here: POST needs sync, res_id, bfw, bfw_k, bfw_set and cen_t.
+inline void RsSlotEnd(bool selected, uint64_t t0, uint64_t t1) {
+	namespace FS = FrameStats;
+	auto& rs     = t_rs;
+	if (selected) {
+		rs.cen_t = FS::NowNs(); // B3: the second rs_cen pair opens
+	}
+	if (RbCen::t_rb.cls == RbCen::Cls::Slow) {
+		FS::Add(rs.ro ? FS::Counter::RsRoN : FS::Counter::RsWrN, 1);
+		if (rs.find) {
+			FS::Add(FS::Counter::RsFindN, 1);
+		}
+		if (rs.sync == 2) {
+			FS::Add(FS::Counter::RsSyncN, 1);
+			FS::Add(FS::Counter::RsSyncKb, rs.kb);
+		} else {
+			FS::Add(FS::Counter::RsSyncNoopN, 1);
+		}
+		if (selected && rs.have) {
+			FS::Add(FS::Counter::RsHeadNs, rs.a[0] - t0);
+			FS::Add(FS::Counter::RsFindNs, rs.a[1] - rs.a[0]);
+			FS::Add(FS::Counter::RsTouchNs, rs.a[2] - rs.a[1]);
+			FS::Add(FS::Counter::RsSyncNs, rs.a[3] - rs.a[2]);
+			FS::Add(FS::Counter::RsWrNs, rs.a[4] - rs.a[3]);
+			FS::Add(FS::Counter::RsRemNs, rs.a[5] - rs.a[4]);
+			FS::Add(FS::Counter::RsTailNs, t1 - rs.a[5]);
+			rs.bfw = (rs.a[1] - rs.a[0]) + (rs.touch_skip ? rs.a[2] - rs.a[1] : 0) + (rs.a[3] - rs.a[2]) +
+			         (rs.a[4] - rs.a[3]) + (rs.a[5] - rs.a[4]);
+			rs.bfw_k   = rs.touch_skip ? 5u : 4u;
+			rs.bfw_set = true; // RC7: the only place that sets it
+		}
+	} else if (selected && rs.have) {
+		FS::Add(FS::Counter::RsDiscN, 1); // B9: the class was rewritten (Cbank, a hit of A)
+	}
+}
+
+} // namespace Common::RbSlow
+
+namespace Common::RbCen {
 
 inline constinit std::atomic<uint64_t> g_rb_gen {0};
 inline constinit std::atomic<bool>     g_rb_b2_live {false};
@@ -3606,13 +3718,15 @@ inline void SetLive(bool live) {
 }
 
 // The latch (s.2.2): `value` is Gates::Value(Knob::RebindCensus), read by the caller once per operation. At 0: one store
-// of the mode and of two flags, one relaxed load of g_rb_b2_live.
-inline void Latch(uint32_t value, bool mut_site) {
+// of the mode and of two flags, one relaxed load of g_rb_b2_live. Session 135: `slow_value` is Gates::Value(Knob::
+// RebindSlowCensus), read by the caller once per operation with `value` (design135.md rev 2 s.2.2); at 0 one store.
+inline void Latch(uint32_t value, bool mut_site, uint32_t slow_value) {
 	auto&          rb   = t_rb;
 	const uint32_t mode = value == 0 ? 0u : LatchSlow(value, mut_site);
 	rb.mode             = mode;
 	rb.b2               = mode == 2 && rb.chk != nullptr;
 	rb.chain            = false;
+	rb.rs               = slow_value != 0 && RbSlow::LatchSlow(mode);
 	if (mode != 0) {
 		rb.head       = 0;
 		rb.stage      = 0;
@@ -3631,6 +3745,7 @@ inline void Unlatch() {
 	t_rb.mode = 0;
 	t_rb.b2   = false;
 	t_rb.slot = 0;
+	t_rb.rs   = false; // knob "rbslow" (s.3.4)
 }
 
 // The reset hook (s.5.2): one relaxed load while the B2 census is off. No lock (an atomic and this thread's shard).
@@ -3766,8 +3881,9 @@ inline bool SlotEnd(bool selected, uint64_t t0) {
 	}
 	const bool next = Weyl(++rb.k, 61);
 	rb.next         = next;
+	uint64_t t1     = 0;
 	if (selected) {
-		const uint64_t t1 = FS::NowNs();
+		t1 = FS::NowNs();
 		if (ns != FS::Counter::Count) {
 			FS::Add(ns, t1 - t0);
 		}
@@ -3778,6 +3894,10 @@ inline bool SlotEnd(bool selected, uint64_t t0) {
 			FS::Add(FS::Counter::RbCalNs, u1 - u0);
 			FS::Add(FS::Counter::RbCalN, 1);
 		}
+	}
+	// Session 135, knob "rbslow" (design135.md rev 2 s.3.3): after t1 and the calibration, outside the pair.
+	if (rb.rs) [[unlikely]] {
+		RbSlow::RsSlotEnd(selected, t0, t1);
 	}
 	return next;
 }
@@ -3817,6 +3937,8 @@ public:
 	ObtainScope() noexcept: m_outer(t_rb.slot == 1) {
 		if (m_outer) [[unlikely]] {
 			t_rb.slot = 2;
+			m_rs      = t_rb.rs;             // knob "rbslow" (s.3.1): the census of this outer call
+			m_rsel    = m_rs && t_rb.next; // s.3.2: t_rb.next is the decision of THIS iteration here
 		}
 	}
 	~ObtainScope() {
@@ -3827,14 +3949,31 @@ public:
 	void Class(Cls cls) const noexcept {
 		if (m_outer) [[unlikely]] {
 			t_rb.cls = cls;
+			if (m_rs) {
+				RbSlow::t_rs.ocls = cls; // knob "rbslow" (s.3.4): the class of the exit, for POST
+			}
 		}
 	}
 	[[nodiscard]] bool B2() const noexcept { return m_outer && t_rb.b2; }
+	// Knob "rbslow" (s.3.1): the census of this outer call is on (m_outer and t_rb.rs).
+	[[nodiscard]] bool Rs() const noexcept { return m_rs; }
+	// Knob "rbslow" (s.3.1): the mark aK of a selected iteration; a5 also records that the marks are complete.
+	template <uint32_t K>
+	void Mark() const noexcept {
+		if (m_rsel) [[unlikely]] {
+			RbSlow::t_rs.a[K] = FrameStats::NowNs();
+			if constexpr (K == 5) {
+				RbSlow::t_rs.have = true;
+			}
+		}
+	}
 	ObtainScope(const ObtainScope&)            = delete;
 	ObtainScope& operator=(const ObtainScope&) = delete;
 
 private:
 	bool m_outer;
+	bool m_rs   = false;
+	bool m_rsel = false;
 };
 
 } // namespace Common::RbCen

@@ -462,8 +462,12 @@ constexpr std::array<KnobDefinition, static_cast<size_t>(Knob::Count)> KNOB_DEFI
     // Session 134, PROTOTYPE: B2 - the offset of the first ring copy of a key inside an interval with no reset (1), the
     // self-check (2), the positive control without resets (3) (docs/session-134/design134.md rev 1, ROADMAP s122 items
     // 151(d), 153(v), 154(b)). Latched only at the start of a submission slice, so it CAN be a schedule arm.
-    // LAST row, matching the LAST enum entry before Knob::Count.
     {"KYTY_B2_REUSE", "b2reuse", 0, 3},
+    // Session 135, MEASUREMENT ONLY: the census of the class slow of RebindBuffers and of the "buffast" hits without an
+    // action (docs/session-135/design135.md rev 2, ROADMAP s122 items 166(b), 167(v), 168, 169). Requires rbcen=1; read
+    // once per operation with rbcen, so it CAN be a schedule arm.
+    // LAST row, matching the LAST enum entry before Knob::Count.
+    {"KYTY_REBIND_SLOW_CENSUS", "rbslow", 0, 1},
 }};
 
 using KnobState = std::array<std::atomic<uint32_t>, static_cast<size_t>(Knob::Count)>;

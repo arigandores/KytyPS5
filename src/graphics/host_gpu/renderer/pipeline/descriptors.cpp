@@ -4258,7 +4258,19 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		rb_sel = Common::RbCen::t_rb.next;
 		Common::FrameStats::Add(Common::FrameStats::Counter::RbBproNs, Common::FrameStats::NowNs() - rb_pro_t0);
 	}
+	// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.5.2): t_rb.rs implies t_rb.mode == 1.
+	const bool rs_on = rb_on && Common::RbCen::t_rb.rs;
 	for (uint32_t i = 0; i < program.info.buffers.size(); i++) {
+		// Knob "rbslow": PRE before S0, outside every pair; the first rs_cen pair around it on a selected iteration (B3).
+		if (rs_on) [[unlikely]] {
+			const auto&    rs_src = prepared.buffer_sources[i];
+			const uint64_t rs_c0  = rb_sel ? Common::FrameStats::NowNs() : 0;
+			m_context.GetBufferCache().RsPre(rs_src.address, rs_src.size, program.info.buffers[i].written,
+			                                 program.info.buffers[i].formatted);
+			if (rs_c0 != 0) {
+				Common::FrameStats::Add(Common::FrameStats::Counter::RsCenNs, Common::FrameStats::NowNs() - rs_c0);
+			}
+		}
 		const uint64_t rb_t0 = rb_on ? Common::RbCen::SlotBegin(rb_sel) : 0; // S0 (knob "rbcen", s.3.3)
 		uint32_t buffer_offset = 0;
 		// Session 93, gate "bdacap": out-parameter, BdaCapClass::None unless the gate is armed.
@@ -4289,6 +4301,11 @@ void RenderExecutor::RebindBuffers(PreparedBindings& prepared) {
 		pack_memory_offset(i, buffer_offset);
 		if (rb_on) {
 			rb_sel = Common::RbCen::SlotEnd(rb_sel, rb_t0); // S1
+			if (rs_on) [[unlikely]] {
+				// Knob "rbslow": POST after SlotEnd, outside every pair, on EVERY iteration (it clears t_rs).
+				const auto& rs_src = prepared.buffer_sources[i];
+				m_context.GetBufferCache().RsPost(rs_src.address, rs_src.size, rs_src.id);
+			}
 			if (Common::RbCen::t_rb.notes != 0) {
 				RbCensus(); // value 2, outside the pair
 			}

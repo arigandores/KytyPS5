@@ -85,6 +85,11 @@ public:
 	                                                        bool     is_texel_buffer = false,
 	                                                        BufferId id              = {},
 	                                                        bool     memoizable      = false);
+	// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.5.2): the census of the "buffast" hits without an
+	// action on its own table - PRE before S0 of a latched slot iteration of RebindBuffers, POST after its SlotEnd (on
+	// EVERY such iteration: it clears Common::RbSlow::t_rs). Neither changes a value, a decision or a side effect of a path.
+	void RsPre(uint64_t vaddr, uint64_t size, bool is_written, bool is_texel_buffer);
+	void RsPost(uint64_t vaddr, uint64_t size, BufferId src_id);
 	[[nodiscard]] StreamBuffer&                GetUtilityBuffer(MemoryUsage usage) noexcept {
 		switch (usage) {
 			case MemoryUsage::Upload: return m_staging_buffer;

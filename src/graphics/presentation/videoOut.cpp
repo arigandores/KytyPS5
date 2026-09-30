@@ -3402,6 +3402,32 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"b2r_rst_cpuw", FS::Counter::B2rRstCpuw, false},
 				    {"b2r_wrapcur", FS::Counter::B2rWrapcur, false},
 				    {"b2r_nomap", FS::Counter::B2rNomap, false}, // ROADMAP s122 item 158(b)(3), CR1
+				    // Session 135, knob "rbslow" (design135.md rev 2 s.15 item 4, ROADMAP s122 items 166(b), 167(v), 168(b)).
+				    {"rs_find_ns", FS::Counter::RsFindNs, false},
+				    {"rs_find_n", FS::Counter::RsFindN, false},
+				    {"rs_touch_ns", FS::Counter::RsTouchNs, false},
+				    {"rs_sync_ns", FS::Counter::RsSyncNs, false},
+				    {"rs_wr_ns", FS::Counter::RsWrNs, false},
+				    {"rs_wr_n", FS::Counter::RsWrN, false},
+				    {"rs_rem_ns", FS::Counter::RsRemNs, false},
+				    {"rs_sync_n", FS::Counter::RsSyncN, false},
+				    {"rs_sync_noop_n", FS::Counter::RsSyncNoopN, false},
+				    {"rs_sync_kb", FS::Counter::RsSyncKb, true},
+				    {"rs_ro_n", FS::Counter::RsRoN, false},
+				    {"rs_bf_n", FS::Counter::RsBfN, false},
+				    {"rs_bf_would", FS::Counter::RsBfWould, false},
+				    {"rs_bf_diff", FS::Counter::RsBfDiff, false},
+				    {"rs_bfw_ns", FS::Counter::RsBfwNs, false},
+				    {"rs_refuse", FS::Counter::RsRefuse, false},
+				    {"rs_head_ns", FS::Counter::RsHeadNs, false},
+				    {"rs_tail_ns", FS::Counter::RsTailNs, false},
+				    {"rs_cen_ns", FS::Counter::RsCenNs, false},
+				    {"rs_bf_xchk", FS::Counter::RsBfXchk, false},
+				    {"rs_bf_xdiff", FS::Counter::RsBfXdiff, false},
+				    {"rs_bf_strm", FS::Counter::RsBfStrm, false},
+				    {"rs_disc_n", FS::Counter::RsDiscN, false},
+				    {"rs_bfw_k", FS::Counter::RsBfwK, false},
+				    {"rs_bf_race", FS::Counter::RsBfRace, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

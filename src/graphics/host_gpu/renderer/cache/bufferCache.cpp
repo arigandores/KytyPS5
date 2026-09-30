@@ -77,6 +77,22 @@ size_t BufFastIndex(uint64_t vaddr, uint64_t size) noexcept {
 	return static_cast<size_t>(mixed >> 32u) & (BufFastSlots - 1);
 }
 
+// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.2.1, s.5): the census table - the slots and the index
+// of "buffast", its own storage. Read and written only by RsPre / RsPost, on the thread where IsGpuThread() holds; the
+// same answers as the thread_local table of "buffast" only at m4baton=0 (checked by the harness, ROADMAP s122 item
+// 168(v)). Touched whole by the first RsPre (the first latched operation).
+BufFastSlot       g_rs_table[BufFastSlots];
+std::atomic<bool> g_rs_touched {false};
+
+// A BufferId as one comparable word (both fields, as SlotId::operator<=>).
+uint64_t RsPackId(BufferId id) noexcept {
+	return (static_cast<uint64_t>(id.generation) << 32u) | id.index;
+}
+
+BufferId RsUnpackId(uint64_t packed) noexcept {
+	return BufferId {static_cast<uint32_t>(packed), static_cast<uint32_t>(packed >> 32u)};
+}
+
 } // namespace
 
 void BufferCache::WriteDataBuffer(Buffer& buffer, uint64_t address, const void* source,
@@ -957,6 +973,13 @@ void BufferCache::NoteWriteFault(uint64_t fault_vaddr, uint64_t window_begin,
 
 bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t size, bool is_written,
                                     bool is_texel_buffer) {
+	// Session 135, knob "rbslow" (design135.md rev 2 s.3.4): the handshake - only the outer call of a latched slow
+	// iteration finds in_sync set; it clears it at once, so a nested call sees false.
+	auto&      rs_tls  = Common::RbSlow::t_rs;
+	const bool rs_mine = rs_tls.in_sync;
+	if (rs_mine) [[unlikely]] {
+		rs_tls.in_sync = false;
+	}
 	Common::FrameStats::Scope sync_scope(Common::FrameStats::Counter::BindBufSyncNs);
 	// Session 68, gate "amut": clears dirty bits, re-protects pages and records the copies. Usually
 	// nested inside ObtainBuffer, where the outer scope already covers it.
@@ -985,6 +1008,9 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	if (BufferUploadEpochEnabled() && !is_written &&
 	    buffer.HasCurrentUpload(cpu_epoch, epoch_kind, vaddr, size)) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::BufEpochHits, 1);
+		if (rs_mine) [[unlikely]] {
+			rs_tls.sync = 1; // knob "rbslow": no upload
+		}
 		return is_texel_buffer ? SynchronizeBufferFromImage(buffer, vaddr, size) : false;
 	}
 	std::vector<vk::BufferCopy> copies;
@@ -1023,6 +1049,10 @@ bool BufferCache::SynchronizeBuffer(Buffer& buffer, uint64_t vaddr, uint64_t siz
 	}
 	if (!is_written && copies.empty()) {
 		Common::FrameStats::Add(Common::FrameStats::Counter::SyncNoop, 1);
+	}
+	if (rs_mine) [[unlikely]] {
+		rs_tls.sync = copies.empty() ? 1 : 2; // knob "rbslow": an upload iff there are copies
+		rs_tls.kb   = total_size;
 	}
 	RecordBufferCopies(buffer, source, copies, total_size);
 	if (rb_up_t0 != 0) [[unlikely]] {
@@ -1567,12 +1597,28 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 	}
 
 	Common::DrawStat::Mark(Common::DrawStat::BufSlow);
+	// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.3.1): the marks a0..a5 of a selected iteration,
+	// one statement between neighbouring parts; the answer of the slow path into Common::RbSlow::t_rs.
+	rb_obtain.Mark<0>();
 	if (IsBufferInvalid(id) || !m_slot_buffers[id].IsInBounds(vaddr, size)) {
 		id = FindBuffer(vaddr, size);
+		if (rb_obtain.Rs()) [[unlikely]] {
+			Common::RbSlow::t_rs.find = true;
+		}
 	}
+	rb_obtain.Mark<1>();
 	auto& resolved = m_slot_buffers[id];
+	if (rb_obtain.Rs()) [[unlikely]] {
+		Common::RbSlow::t_rs.res_id = RsPackId(id);
+		Common::RbSlow::t_rs.ro     = !is_written;
+	}
 	TouchBuffer(resolved);
+	rb_obtain.Mark<2>();
+	if (rb_obtain.Rs()) [[unlikely]] {
+		Common::RbSlow::t_rs.in_sync = true; // the handshake; the next statement enters SynchronizeBuffer
+	}
 	(void)SynchronizeBuffer(resolved, vaddr, size, is_written, is_texel_buffer);
+	rb_obtain.Mark<3>();
 	if (is_written) {
 		Common::DrawStat::Mark(Common::DrawStat::GpuWrite);
 		// Session 74, W8: Add now reports whether the covered set actually GREW, which is the only
@@ -1588,9 +1634,116 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		Common::FrameStats::Add(Common::FrameStats::Counter::GpuDirtyGenBufferAll, 1);
 		NoteGpuWrite(vaddr, size);
 	}
+	rb_obtain.Mark<4>();
 	remember(id);
+	rb_obtain.Mark<5>();
 	rb_obtain.Class(Common::RbCen::Cls::Slow);
 	return {&resolved, resolved.Offset(vaddr)};
+}
+
+// Session 135, knob "rbslow" (MEASUREMENT ONLY; design135.md rev 2 s.5.1-5.2): PRE, before S0 of a latched slot iteration,
+// outside every pair. The eligibility and the probe of "buffast" (:1376-1401 above) on the census table; the only write
+// of a slot here is the touch tick of a would-hit (RC2). Reads only atomics and fields of the GuestGpu thread.
+void BufferCache::RsPre(uint64_t vaddr, uint64_t size, bool is_written, bool is_texel_buffer) {
+	auto& rs = Common::RbSlow::t_rs;
+	if (!g_rs_touched.load(std::memory_order_relaxed)) [[unlikely]] {
+		for (auto& slot: g_rs_table) {
+			slot = {};
+		}
+		g_rs_touched.store(true, std::memory_order_relaxed);
+	}
+	// memoizable: the only caller is RebindBuffers, before NativeStorageBuffer (the only memoizable ObtainBuffer).
+	if (is_written || is_texel_buffer || vaddr == 0 || size == 0 || !GuestGpu::IsGpuThread() ||
+	    !GuestRange {vaddr, size}.Valid()) {
+		return;
+	}
+	rs.elig            = true;
+	const uint64_t pre = m_memory_tracker.RangeWriteEpoch(vaddr, size); // the witness, before the answer (:1387)
+	const size_t   idx = BufFastIndex(vaddr, size);
+	rs.pre             = pre;
+	rs.slot            = static_cast<uint32_t>(idx);
+	auto& slot         = g_rs_table[idx];
+	if (slot.instance != m_instance || slot.vaddr != vaddr || slot.size != size ||
+	    slot.registration != m_registration_epoch || pre == 0) {
+		return;
+	}
+	const auto* remembered = m_slot_buffers.try_get(slot.id);
+	if (remembered == nullptr || remembered->is_deleted) {
+		return;
+	}
+	rs.rem_id = RsPackId(slot.id);
+	if (slot.region_epoch == pre) {
+		rs.would        = true;
+		rs.touch_skip   = slot.touch_tick == m_gc_tick; // a hit of this tick would not call TouchBuffer (:1404)
+		slot.touch_tick = m_gc_tick;
+	} else {
+		rs.xchk = true; // RC3: the population of the positive control, pre != 0 and region_epoch != pre
+	}
+}
+
+// Session 135, knob "rbslow" (design135.md rev 2 s.5.2): POST, after SlotEnd of the same iteration, outside every pair,
+// on EVERY latched iteration. Steps 0-5 without a return before step 5; step 5 clears every field of t_rs. The class of
+// the iteration is t_rb.cls (SlotEnd does not clear it). An exit Fast (the real "buffast" answered) is left like None.
+void BufferCache::RsPost(uint64_t vaddr, uint64_t size, BufferId src_id) {
+	namespace FS = Common::FrameStats;
+	using Cls    = Common::RbCen::Cls;
+	auto&     rs   = Common::RbSlow::t_rs;
+	const Cls ocls = rs.ocls;
+	if (rs.elig && (ocls == Cls::Epoch || ocls == Cls::Slow || ocls == Cls::Stream)) {
+		// Step 0: ONE read, before any write of the slot, never from the slot (RC3).
+		const uint64_t e_post = m_memory_tracker.RangeWriteEpoch(vaddr, size);
+		// Step 2 (RC5): only on an iteration of class Slow.
+		if (Common::RbCen::t_rb.cls == Cls::Slow) {
+			FS::Add(FS::Counter::RsBfN, 1);
+			if (rs.would) {
+				FS::Add(FS::Counter::RsBfWould, 1);
+				if (Common::RbSlow::RsDiff(rs.res_id, rs.rem_id, rs.sync, e_post, rs.pre)) {
+					FS::Add(FS::Counter::RsBfDiff, 1);
+					static std::atomic<uint32_t> logged {0};
+					if (logged.fetch_add(1, std::memory_order_relaxed) < 32) {
+						LOGF("RbSlowVerify: MISMATCH addr=0x%016" PRIx64 " size=0x%" PRIx64 " memo=%" PRIu32 " full=%" PRIu32
+						     " up=%d\n",
+						     vaddr, size, static_cast<uint32_t>(rs.rem_id), static_cast<uint32_t>(rs.res_id),
+						     rs.sync == 2 ? 1 : 0);
+					}
+				}
+				const bool race = rs.sync == 2 && e_post != rs.pre; // RC4: a CPU write between PRE and the upload
+				if (race) {
+					FS::Add(FS::Counter::RsBfRace, 1);
+				}
+				if (rs.bfw_set && !race) {
+					FS::Add(FS::Counter::RsBfwNs, rs.bfw);
+					FS::Add(FS::Counter::RsBfwK, rs.bfw_k);
+				}
+			}
+			if (rs.xchk) {
+				FS::Add(FS::Counter::RsBfXchk, 1);
+				if (Common::RbSlow::RsDiff(rs.res_id, rs.rem_id, rs.sync, e_post, rs.pre)) {
+					FS::Add(FS::Counter::RsBfXdiff, 1);
+				}
+			}
+		}
+		// Step 3 (B5, RC2): by the class of the exit of ObtainBuffer, whatever the iteration became after it.
+		if (rs.would && ocls == Cls::Stream) {
+			FS::Add(FS::Counter::RsBfStrm, 1);
+		}
+		// Step 4 (RC2): a would-hit leaves its slot as it is; otherwise the rules of the Stream clear and of remember.
+		if (!rs.would) {
+			auto& slot = g_rs_table[rs.slot];
+			if (ocls != Cls::Stream && rs.pre != 0 && e_post == rs.pre) {
+				slot = {vaddr,     size,       rs.pre,
+				        m_registration_epoch, m_gc_tick, m_instance,
+				        ocls == Cls::Epoch ? src_id : RsUnpackId(rs.res_id)};
+			} else {
+				slot = {};
+			}
+		}
+	}
+	// Step 5: the end of the second rs_cen pair (B3), then EVERY field of the iteration is cleared (RC7).
+	if (rs.cen_t != 0) {
+		FS::Add(FS::Counter::RsCenNs, FS::NowNs() - rs.cen_t);
+	}
+	rs = {};
 }
 
 BufferCache::ShadowBufferAnswer BufferCache::ShadowProbe(uint64_t vaddr, uint64_t size,

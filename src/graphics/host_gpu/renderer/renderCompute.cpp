@@ -999,7 +999,8 @@ void RenderExecutor::DispatchDirect(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2, s.3.2, B1): the latch of this dispatch, for
 	// its pairs and the slots of its RebindBuffers; cleared after them (RC2: this thread only).
-	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site,
+	                     Common::Gates::Value(Common::Gates::Knob::RebindSlowCensus)); // session 135, knob "rbslow"
 	Common::B2Reuse::OpBegin(); // Session 134, knob "b2reuse" (s.2.2): the operation of b2r_hit_draw
 	if (bind_floor) {
 		BindFloorPrepareStage(input_info.stage, bindings);

@@ -732,8 +732,14 @@ enum class Knob : uint32_t {
 	// interval is never split between values and it CAN be a schedule arm. 1 = the mechanism; 2 = the self-check (copy
 	// always, the fresh copy bound, the bytes and the path of EVERY hit compared: b2r_bad, b2r_path); 3 = the positive
 	// control (2 without any reset). Refused (B2Reuse: refused, b2r_refuse) with rbcen=2 and at 2/3 without KYTY_FRAME_TRACE.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	B2Reuse,          // KYTY_B2_REUSE, file name "b2reuse" (PROTOTYPE: 0 off, 1 reuse, 2 self-check, 3 positive control)
+	// Session 135, MEASUREMENT ONLY (docs/session-135/design135.md rev 2 with ROADMAP s122 items 166(b), 167(v), 168, 169):
+	// the census of the class slow of RebindBuffers - seven lap parts of a selected slow iteration on the 1/8 sample of
+	// rbcen, the per-iteration counts of its synchronization and the census of the "buffast" hits without an action
+	// (rs_*). Read ONCE per operation together with rbcen (the same latch), so it CAN be a schedule arm. Requires the
+	// latched rbcen=1; otherwise refused (RbSlow: refused reason=rbcen, rs_refuse) and taken as 0.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	RebindSlowCensus, // KYTY_REBIND_SLOW_CENSUS, file name "rbslow" (MEASUREMENT ONLY: 0 off, 1 census)
 	Count,
 };
 

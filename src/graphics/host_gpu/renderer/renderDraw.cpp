@@ -5143,7 +5143,8 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	}
 	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
 	// that opens mh_bind - its price lands in mh_prog_us.
-	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site,
+	                     Common::Gates::Value(Common::Gates::Knob::RebindSlowCensus)); // session 135, knob "rbslow"
 	Common::B2Reuse::OpBegin(); // Session 134, knob "b2reuse" (s.2.2): the operation of b2r_hit_draw
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
@@ -5336,7 +5337,8 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	}
 	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
 	// that opens mh_bind - its price lands in mh_prog_us.
-	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
+	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site,
+	                     Common::Gates::Value(Common::Gates::Knob::RebindSlowCensus)); // session 135, knob "rbslow"
 	Common::B2Reuse::OpBegin(); // Session 134, knob "b2reuse" (s.2.2): the operation of b2r_hit_draw
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 

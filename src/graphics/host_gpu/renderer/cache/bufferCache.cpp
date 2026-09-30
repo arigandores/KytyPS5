@@ -1532,7 +1532,10 @@ std::pair<Buffer*, uint64_t> BufferCache::ObtainBuffer(uint64_t vaddr, uint64_t 
 		const uint64_t rb_gen0   = rb_note ? Common::RbCen::Gen0() : 0;
 		const auto stream_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 		auto [mapped, offset] = m_stream_buffer.Map(size, alignment, false);
-		if (mapped != nullptr && Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size)) {
+		// Session 134, knob "b2reuse" = 2/3 (design134.md rev 1 s.6.2): the outer call after probe P reads through ReadRing.
+		if (mapped != nullptr && (Common::B2Reuse::t_b2r.arm_p
+		                              ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::P, vaddr, mapped, size)
+		                              : Libs::LibKernel::Memory::TryReadBacking(vaddr, mapped, size))) {
 			m_stream_buffer.Commit();
 			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamCopies, 1);
 			Common::FrameStats::Add(Common::FrameStats::Counter::ObtainStreamBytes, size);

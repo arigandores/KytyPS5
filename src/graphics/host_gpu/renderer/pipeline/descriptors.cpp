@@ -62,6 +62,240 @@
 #undef max
 #endif
 
+// Session 134, knob "b2reuse" (PROTOTYPE; docs/session-134/design134.md rev 1 s.4.4, s.6 with ROADMAP s122 items 153(v)
+// B5, 154(b) RC2, RC3, RC6(b)): the probe, the insertion, the read of a ring copy at 2/3 and the end of a call. Only the
+// thread that latched the value touches the table, the shadow ring and the compare buffer.
+namespace Common::B2Reuse {
+
+namespace {
+
+uint64_t Mix(uint64_t vaddr, uint64_t size, uint64_t align) {
+	return (vaddr ^ (size << 40u) ^ (align << 58u)) * 0x9E3779B97F4A7C15ull;
+}
+
+const char* KindName(Kind kind) {
+	switch (kind) {
+		case Kind::P: return "P";
+		case Kind::D: return "D";
+		case Kind::A: return "A";
+		default: break;
+	}
+	return "-";
+}
+
+void Refuse(uint32_t bit, const char* reason) {
+	FrameStats::Add(FrameStats::Counter::B2rRefuse, 1);
+	if (FirstLine(bit)) {
+		LOGF("B2Reuse: refused reason=%s\n", reason);
+	}
+}
+
+bool GenMoved(const Tls& t) {
+	return RbCen::g_rb_gen.load(std::memory_order_acquire) != t.gen;
+}
+
+const uint8_t* ShadowOf(const Tls& t) {
+	return g_shadow + (t.cold->shadow_pos1 - 1) % ShadowBytes;
+}
+
+// B2ReuseVerify: MISMATCH (s.6.4); `now` and `shadow` are compared to name the first differing byte.
+void Mismatch(const Tls& t, const char* why, const uint8_t* now, const uint8_t* shadow) {
+	if (g_lines.fetch_add(1, std::memory_order_relaxed) >= 40) {
+		return;
+	}
+	uint64_t first = 0;
+	if (now != nullptr && shadow != nullptr) {
+		while (first < t.size && now[first] == shadow[first]) {
+			first++;
+		}
+	}
+	LOGF("B2ReuseVerify: MISMATCH kind=%s vaddr=0x%016llx size=0x%llx draw=%s gen_moved=%d why=%s first=0x%llx\n",
+		 KindName(t.kind), static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size),
+		 t.entry->op == t.op ? "same" : "x", GenMoved(t) ? 1 : 0, why, static_cast<unsigned long long>(first));
+}
+
+// The bytes of a hit against the shadow of its first copy, exactly `size` bytes (RC3).
+void Compare(Tls& t, const uint8_t* now) {
+	t.checked            = true;
+	const uint8_t* shadow = ShadowOf(t);
+	if (std::memcmp(now, shadow, t.size) != 0) {
+		FrameStats::Add(FrameStats::Counter::B2rBad, 1);
+		Mismatch(t, "bytes", now, shadow);
+	}
+}
+
+} // namespace
+
+const Entry* Probe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align) {
+	namespace FS          = FrameStats;
+	auto&           t     = t_b2r;
+	const uintptr_t state = RbCen::g_b2r_state.load(std::memory_order_relaxed);
+	const auto      mode  = static_cast<uint32_t>(state & 3u);
+	if (mode == 0 || size > CheckBytes || align > 0xFFFFu) {
+		return nullptr;
+	}
+	if ((state & ~uintptr_t {3}) != reinterpret_cast<uintptr_t>(&t)) {
+		Refuse(8u, "thread"); // B4: not the thread of LatchSub - the path of 0 for this probe
+		return nullptr;
+	}
+	if (RbCen::t_rb.b2) {
+		Refuse(1u, "rbcen2"); // the census latched by this operation in the middle of the interval
+		return nullptr;
+	}
+	if (t.pend == Pend::Hit) {
+		return nullptr; // 2/3: the hit of this call stands; the later points of its path of 0 only compare
+	}
+	const uint64_t gen   = RbCen::g_rb_gen.load(std::memory_order_acquire);
+	const uint32_t bits  = mode == 3 ? TableBits3 : TableBits;
+	const auto     index = static_cast<size_t>(Mix(vaddr, size, align) >> (64u - bits));
+	Entry&         e     = (mode == 3 ? g_hot3 : g_hot)[index];
+	t.mode               = mode;
+	t.kind               = kind;
+	t.vaddr              = vaddr;
+	t.size               = size;
+	t.align              = align;
+	t.gen                = gen;
+	t.pos1               = 0;
+	t.entry              = &e;
+	t.cold               = mode >= 2 ? &(mode == 3 ? g_cold3 : g_cold)[index] : nullptr;
+	const bool same      = e.kind != Kind::None && e.vaddr == vaddr && e.size == size && e.align == align;
+	const bool live      = e.kind != Kind::None && e.gen == gen;
+	FS::Counter miss     = FS::Counter::B2rMissNew;
+	if (same && live && e.kind == kind) {
+		const bool stale = t.cold != nullptr &&
+						   (t.cold->shadow_pos1 == 0 || g_shadow_pos - (t.cold->shadow_pos1 - 1) > ShadowBytes);
+		if (!stale || mode == 2) {
+			FS::Add(FS::Counter::B2rN, 1);
+			FS::Add(FS::Counter::B2rHit, 1);
+			FS::Add(e.op == t.op ? FS::Counter::B2rHitDraw : FS::Counter::B2rHitX, 1);
+			if (mode == 1) {
+				t.pend = Pend::None;
+				return &e; // the mechanism: the first copy of the interval, the entry is not updated
+			}
+			t.pend    = Pend::Hit;
+			t.ring    = false;
+			t.gpu     = false;
+			t.checked = false;
+			FS::Add(FS::Counter::B2rChk, 1);
+			if (stale) {
+				t.checked = true; // 2: an overwritten shadow is counted as a mismatch (s.6.3)
+				FS::Add(FS::Counter::B2rBad, 1);
+				Mismatch(t, "shovf", nullptr, nullptr);
+			}
+			return nullptr;
+		}
+		miss = FS::Counter::B2rMissEvict; // B5: a stale shadow at 3 is not a hit
+	} else if (same && !live) {
+		miss = FS::Counter::B2rMissGen;
+	} else if (same) {
+		miss = FS::Counter::B2rMissKind;
+	} else if (live) {
+		miss = FS::Counter::B2rMissEvict;
+	}
+	t.pend = Pend::Miss;
+	t.miss = miss;
+	return nullptr;
+}
+
+void Insert(Kind kind, uint64_t offset) {
+	namespace FS = FrameStats;
+	auto& t      = t_b2r;
+	if (t.pend != Pend::Miss || t.kind != kind) {
+		return;
+	}
+	t.pend = Pend::None;
+	if (offset > UINT32_MAX || (t.mode >= 2 && t.pos1 == 0)) {
+		return; // no answer to remember (a copy at 2/3 always leaves its shadow)
+	}
+	FS::Add(FS::Counter::B2rN, 1);
+	FS::Add(t.miss, 1);
+	*t.entry = {t.vaddr, static_cast<uint32_t>(t.size), static_cast<uint16_t>(t.align), kind, 0, t.gen,
+				static_cast<uint32_t>(offset), t.op};
+	if (t.cold != nullptr) {
+		*t.cold = {t.pos1, (t.pos1 - 1) / ShadowBytes};
+	}
+}
+
+bool ReadRing(Kind kind, uint64_t vaddr, uint8_t* dst, uint64_t size) {
+	auto& t = t_b2r;
+	if (kind == Kind::P) {
+		t.arm_p = false; // the outer call only
+	}
+	if (t.mode < 2 || t.pend == Pend::None || (t.pend == Pend::Miss && t.kind != kind) || vaddr != t.vaddr ||
+		size != t.size) {
+		return Libs::LibKernel::Memory::TryReadBacking(vaddr, dst, size);
+	}
+	if (t.pend == Pend::Miss) {
+		// The shadow first, then the ring slot from it: the shadow is the bytes of the first copy by construction (s.6.2).
+		uint64_t pos = g_shadow_pos;
+		if (pos % ShadowBytes + size > ShadowBytes) {
+			pos += ShadowBytes - pos % ShadowBytes; // contiguous: start the next lap
+		}
+		uint8_t* shadow = g_shadow + pos % ShadowBytes;
+		if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, shadow, size)) {
+			return false;
+		}
+		std::memcpy(dst, shadow, size);
+		g_shadow_pos = pos + size;
+		t.pos1       = pos + 1;
+		return true;
+	}
+	// A hit: the fresh copy through the compare buffer, then its bytes against the shadow of the first copy - the answer of
+	// the path of 0 against the answer of the mechanism, with no race window (s.6.2).
+	if (!Libs::LibKernel::Memory::TryReadBacking(vaddr, g_chk, size)) {
+		if (t.mode == 3) {
+			Mismatch(t, "read", nullptr, nullptr); // B5: at 3 an unreadable copy is a line, not b2r_bad
+		}
+		return false;
+	}
+	std::memcpy(dst, g_chk, size);
+	t.ring = true;
+	if (!t.checked) {
+		Compare(t, g_chk);
+	}
+	return true;
+}
+
+void End() {
+	namespace FS    = FrameStats;
+	auto&      t    = t_b2r;
+	const Pend pend = t.pend;
+	t.pend          = Pend::None;
+	t.arm_p         = false;
+	if (pend != Pend::Hit || t.mode < 2 || t.ring) {
+		return;
+	}
+	// The path of 0 after the hit ended without a CPU copy into the ring (s.6.3; at 3 a row, RC2).
+	FS::Add(FS::Counter::B2rPath, 1);
+	const char* path = "nocopy";
+	if (t.gpu) {
+		path = "gpu";
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Epoch) {
+		path = "epoch";
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Slow) {
+		path = "slow";
+	} else if (RbCen::t_rb.cls == RbCen::Cls::Fast) {
+		path = "fast";
+	}
+	if (g_lines.fetch_add(1, std::memory_order_relaxed) < 40) {
+		LOGF("B2ReuseVerify: PATH kind=%s vaddr=0x%016llx size=0x%llx path=%s draw=%s gen_moved=%d\n", KindName(t.kind),
+			 static_cast<unsigned long long>(t.vaddr), static_cast<unsigned long long>(t.size), path,
+			 t.entry->op == t.op ? "same" : "x", GenMoved(t) ? 1 : 0);
+	}
+	if (t.mode == 2 && !t.checked) {
+		// 2: a separate read of the guest bytes against the shadow; an unreadable one counts as a mismatch.
+		if (!Libs::LibKernel::Memory::TryReadBacking(t.vaddr, g_chk, t.size)) {
+			t.checked = true;
+			FS::Add(FS::Counter::B2rBad, 1);
+			Mismatch(t, "read", nullptr, nullptr);
+		} else {
+			Compare(t, g_chk);
+		}
+	}
+}
+
+} // namespace Common::B2Reuse
+
 namespace Libs::Graphics {
 
 namespace {
@@ -154,6 +388,11 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
                     uint32_t slot, uint32_t& buffer_offset, bool direct_copy,
                     uint8_t& buffer_class) {
 	Common::FrameStats::Scope binding_scope(Common::FrameStats::Counter::BindBuffersNs);
+	// Session 134, knob "b2reuse" (PROTOTYPE; design134.md rev 1 s.3, s.6.3): the value, read once per call and tested at
+	// the probe points, the copy sites and the insertions; the pending probe of this call ends on every return (at 0 one
+	// thread-local test).
+	const uint32_t                   b2r_mode = Common::B2Reuse::Mode();
+	const Common::B2Reuse::CallScope b2r_call;
 	// Session 93, gate "bdacap" (MEASUREMENT ONLY, pred/01_bdacap.md).  The gate is the
 	// FIRST operand of the &&, is read ONCE per call, and is read BEFORE cap_t0, so the
 	// read lies OUTSIDE the interval it arms: at bdacap = 0 not one NowNs() and not one Add
@@ -249,6 +488,19 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 	    ShaderRecompiler::IR::PackedStrideAlignedCopy(resource.packed_stride) &&
 	    address % ShaderRecompiler::IR::PackedStrideBaseAlignment(resource.packed_stride) != 0) {
 		auto& cache = context.GetBufferCache();
+		// Session 134, knob "b2reuse" (s.3.1; RC5 (a) of ROADMAP s122 item 154(b)): probe D before the three queries. A hit
+		// at 1 is the offset of the first copy of the interval - no query (TouchReadOnlyBuffer included), no Map, no read,
+		// no Commit; the class Cbank is written as on the copy (s.7).
+		if (b2r_mode != 0) [[unlikely]] {
+			if (const auto* hit = Common::B2Reuse::Probe(Common::B2Reuse::Kind::D, address, size, alignment)) {
+				if (const_bank && size > graphics.GetPhysicalDeviceProperties().limits.maxUniformBufferRange) {
+					EXIT("const-bank copy exceeds maxUniformBufferRange\n");
+				}
+				cap_note(cap_class(true), size);
+				Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+				return {cache.GetUtilityBuffer(MemoryUsage::Stream).Handle(), hit->off, size};
+			}
+		}
 		if (!cache.IsRegionGpuModifiedFromGpu(address, size) && !cache.HasGpuDirtyBytes(address, size) &&
 		    cache.TouchReadOnlyBuffer(id, address, size)) {
 			// This read-only binding needs an aligned copy anyway. Prepare that final
@@ -264,7 +516,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			const auto copy_t0 = Common::FrameStats::TimingsEnabled() ? Common::FrameStats::NowNs() : 0;
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
-			if (!Libs::LibKernel::Memory::TryReadBacking(address, data, size)) {
+			// Knob "b2reuse" = 2/3 (s.6.2): the read of this copy through ReadRing.
+			if (!(b2r_mode >= 2 ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::D, address, data, size)
+			                    : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
 				EXIT("storage buffer slot %u: direct const-bank source is unreadable\n", slot);
 			}
 			stream.Commit();
@@ -286,12 +540,39 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			if (rb_note) {
 				Common::RbCen::NoteCopy(address, size, alignment, rb_gen0);
 			}
+			if (b2r_mode != 0) [[unlikely]] {
+				Common::B2Reuse::Insert(Common::B2Reuse::Kind::D, stream_offset); // knob "b2reuse" (s.3.1): a miss of D
+			}
 			return {stream.Handle(), stream_offset, size};
 		}
 	}
+	// Session 134, knob "b2reuse" (s.3.2): probe P before ObtainBuffer - a read-only non-texel slot the stream ring can
+	// take (ObtainBuffer: !is_written and size <= CACHING_PAGESIZE), at the alignment of its Map. A hit at 1 replaces the
+	// whole ObtainBuffer with the ring and the offset of the first copy; the class Stream is written here (s.7).
+	const Common::B2Reuse::Entry* b2r_hit = nullptr;
+	if (b2r_mode != 0) [[unlikely]] {
+		if (!resource.written && !resource.formatted && size <= BufferCache::CACHING_PAGESIZE) {
+			b2r_hit = Common::B2Reuse::Probe(
+				Common::B2Reuse::Kind::P, address, size,
+				std::max<uint64_t>(graphics.GetPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment, 1));
+		}
+		// 2/3: the ring copy of the outer ObtainBuffer below reads through ReadRing while a probe of this call is pending.
+		Common::B2Reuse::t_b2r.arm_p = b2r_mode >= 2 && Common::B2Reuse::t_b2r.pend != Common::B2Reuse::Pend::None;
+	}
 	// The last argument (gate "buffast"): this binding asks for the same range every draw.
-	auto [buffer, offset] = context.GetBufferCache().ObtainBuffer(address, size, resource.written,
-	                                                              resource.formatted, id, true);
+	auto [buffer, offset] =
+		b2r_hit != nullptr
+			? std::pair<Buffer*, uint64_t> {&context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream), b2r_hit->off}
+			: context.GetBufferCache().ObtainBuffer(address, size, resource.written, resource.formatted, id, true);
+	if (b2r_mode != 0) [[unlikely]] {
+		Common::B2Reuse::t_b2r.arm_p = false;
+		if (b2r_hit != nullptr) {
+			Common::RbCen::SetCls(Common::RbCen::Cls::Stream);
+		} else if (buffer == &context.GetBufferCache().GetUtilityBuffer(MemoryUsage::Stream)) {
+			// The only ring return of ObtainBuffer is its stream copy (s.3.2): a miss of P inserts it.
+			Common::B2Reuse::Insert(Common::B2Reuse::Kind::P, offset);
+		}
+	}
 	// Session 124, knob "skipceil" = 3 (closure census, ROADMAP s122 item 47(g)): the graph read of a texel binding,
 	// after SynchronizeBufferFromImage (inside ObtainBuffer) wrote the range.
 	if (resource.formatted && Common::SkipCeil::t_mode == 3) [[unlikely]] {
@@ -311,8 +592,21 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			// are copied from guest memory; a range the GPU wrote is copied on the GPU.
 			auto&      cache  = context.GetBufferCache();
 			auto&      stream = cache.GetUtilityBuffer(MemoryUsage::Stream);
+			// Session 134, knob "b2reuse" (s.3.3, RC7): probe A before the gpu query, for a read-only non-texel slot only; a
+			// hit at 1 is the offset of the first copy - no query, no Map, no read, no Commit.
+			if (b2r_mode != 0 && !resource.written && !resource.formatted) [[unlikely]] {
+				if (const auto* hit = Common::B2Reuse::Probe(Common::B2Reuse::Kind::A, address, size, alignment)) {
+					buffer_offset = 0;
+					cap_note(cap_class(true), size);
+					Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
+					return {stream.Handle(), hit->off, size};
+				}
+			}
 			const bool gpu = cache.IsRegionGpuModifiedFromGpu(address, size) ||
 			                 cache.HasGpuDirtyBytes(address, size);
+			if (gpu && b2r_mode >= 2) [[unlikely]] {
+				Common::B2Reuse::t_b2r.gpu = true; // knob "b2reuse": the PATH line of a hit (s.6.3)
+			}
 			// Session 133, knob "rbcen" = 2 (s.5.1, RC1): gen0 of this B2 copy (a CPU copy only), before its read.
 			const bool     rb_note = !gpu && Common::RbCen::B2Here();
 			const uint64_t rb_gen0 = rb_note ? Common::RbCen::Gen0() : 0;
@@ -320,7 +614,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			auto [data, stream_offset] = stream.Map(size, alignment);
 			EXIT_IF(data == nullptr);
 			if (!gpu) {
-				if (!Libs::LibKernel::Memory::TryReadBacking(address, data, size)) {
+				// Knob "b2reuse" = 2/3 (s.6.2): the read of this copy through ReadRing.
+				if (!(b2r_mode >= 2 ? Common::B2Reuse::ReadRing(Common::B2Reuse::Kind::A, address, data, size)
+				                    : Libs::LibKernel::Memory::TryReadBacking(address, data, size))) {
 					EXIT("storage buffer slot %u: const-bank copy source 0x%016llx+0x%llx is unreadable\n",
 					     slot, static_cast<unsigned long long>(address), static_cast<unsigned long long>(size));
 				}
@@ -353,6 +649,9 @@ NativeStorageBuffer(RenderContext& context, const PreparedBindings::BufferSource
 			Common::RbCen::SetCls(Common::RbCen::Cls::Cbank);
 			if (rb_note) {
 				Common::RbCen::NoteCopy(address, size, alignment, rb_gen0);
+			}
+			if (b2r_mode != 0 && !gpu) [[unlikely]] {
+				Common::B2Reuse::Insert(Common::B2Reuse::Kind::A, stream_offset); // knob "b2reuse" (s.3.3): a CPU copy only
 			}
 			return {stream.Handle(), stream_offset, size};
 		}

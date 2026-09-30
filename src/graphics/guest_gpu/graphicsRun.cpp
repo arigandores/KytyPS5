@@ -989,6 +989,8 @@ bool GuestGpu::Process(Submission& submission) {
 		submission.command_execution.SetDrawAheadWalk(submission.walk_id, submission.walked_ahead);
 	}
 
+	// Session 134, knob "b2reuse" (design134.md rev 1 s.2.2): the value of the interval this reset opens.
+	Common::B2Reuse::LatchSub();
 	Common::RbCen::Reset(Common::RbCen::Cause::Sub); // Session 133, knob "rbcen" = 2 (design133.md rev 2 s.5.2)
 	cp.BufferInit();
 	bool complete = true;

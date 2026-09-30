@@ -175,6 +175,11 @@ public:
 				for (const auto [first, last]: armed) {
 					m_cpu_dirty.UnsetRange(first, last);
 				}
+				// Session 134, knob "b2reuse" (C3; ROADMAP s122 items 153(v) B6, 154(b) RC6(a)): the CPU-dirty bits of the
+				// armed pages (a nonempty mask) were cleared - the interval ends at 1/2.
+				if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
+					Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpu);
+				}
 			}
 			if (m_cpu_dirty.AnyInRange(start, end)) {
 				EXIT("GPU dirty state conflicts with CPU dirty state\n");
@@ -194,9 +199,17 @@ public:
 				bits.SetRange(start, end);
 			}
 		} else {
-			bits.UnsetRange(start, end);
 			if constexpr (source == DirtySource::Cpu) {
+				// Session 134, knob "b2reuse" (C4; RC6(v)): not instantiated in this tree (the harness checks it); a clear of
+				// a nonempty CPU-dirty mask ends the interval at 1/2 like C1-C3.
+				const bool b2r_clear = Common::B2Reuse::ResetsLive() && bits.AnyInRange(start, end);
+				bits.UnsetRange(start, end);
+				if (b2r_clear) [[unlikely]] {
+					Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpu);
+				}
 				SettleArmedSync(start, end);
+			} else {
+				bits.UnsetRange(start, end);
 			}
 		}
 		if constexpr (source == DirtySource::Cpu && enable) {
@@ -208,6 +221,11 @@ public:
 			// lock before it reads dirty bits, so the order does not matter to it.
 			m_cpu_epoch.fetch_add(1, std::memory_order_release);
 			m_epoch.fetch_add(1, std::memory_order_release);
+			// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC1): an announced CPU write ends the interval at 1/2 -
+			// after the epochs, before UpdateProtection lets the guest write; any thread, under this region's lock.
+			if (Common::B2Reuse::ResetsLive()) [[unlikely]] {
+				Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpuw);
+			}
 			// Gate "bdabits": the map mirrors this epoch, so it is set here and never later.
 			BdaNoteRegionWrite(m_cpu_addr / TRACKER_REGION_SIZE);
 		}
@@ -291,8 +309,19 @@ public:
 				if (c0 != 0) {
 					PageManager::LwClearEnd(m_cpu_addr, mask, c0);
 				}
+				// Session 134, knob "b2reuse" (C1, the lw branch; ROADMAP s122 items 153(v) B6, 154(b) RC6(a)): a nonempty
+				// mask of CPU-dirty bits was cleared - the interval ends at 1/2, before UpdateProtection and the copy.
+				if (Common::B2Reuse::ResetsLive() && !mask.None()) [[unlikely]] {
+					Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpu);
+				}
 			} else {
 				bits.UnsetRange(start, end);
+				if constexpr (source == DirtySource::Cpu) {
+					// Session 134, knob "b2reuse" (C1; B6, RC6(a)): as in the lw branch.
+					if (Common::B2Reuse::ResetsLive() && !mask.None()) [[unlikely]] {
+						Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpu);
+					}
+				}
 			}
 			if constexpr (source == DirtySource::Cpu) {
 				UpdateProtection<true, false, lw>();
@@ -361,6 +390,11 @@ public:
 			m_cpu_dirty.UnsetRange(first, last);
 			m_armed.UnsetRange(first, last);
 			settled_pages += last - first;
+		}
+		// Session 134, knob "b2reuse" (C2; ROADMAP s122 items 153(v) B6, 154(b) RC6(a)): once, after the settled pages lost
+		// their CPU-dirty bits (the request pages keep theirs) - the interval ends at 1/2.
+		if (settled_pages != 0 && Common::B2Reuse::ResetsLive()) [[unlikely]] {
+			Common::B2Reuse::ResetCpu(Common::FrameStats::Counter::B2rRstCpu);
 		}
 		for (const auto [first, last]: armed_before) {
 			armed_pages += last - first;

@@ -2715,6 +2715,22 @@ enum class Counter : uint32_t {
 	RbB2RstGpuw,             // rb_b2_rst_gpuw: resets: a registered GPU write of a buffer (NoteGpuWrite)
 	RbB2RstImgw,             // rb_b2_rst_imgw: resets: an image clean -> GPU-dirty (by the rule, not by the code; item 143(a))
 	RbB2RstRing,             // rb_b2_rst_ring: resets: a wrap of the stream ring
+	// Session 134, knob "b2reuse" (PROTOTYPE; design134.md rev 1 s.8.1 with ROADMAP s122 items 151(d)(1), 153(v), 154(b)).
+	B2rN,                    // b2r_n: hits and insertions (a probe that made a CPU ring copy of its kind or hit)
+	B2rHit,                  // b2r_hit: hits - same key, same generation
+	B2rChk,                  // b2r_chk: 2/3: hits checked (every hit, once)
+	B2rBad,                  // b2r_bad: 2/3: byte mismatches (at 2 also an unreadable check and an overwritten shadow)
+	B2rPath,                 // b2r_path: 2/3: hits whose path of 0 did not end with a CPU copy into the ring
+	B2rHitDraw,              // b2r_hit_draw: hits inserted by the same draw / dispatch
+	B2rHitX,                 // b2r_hit_x: hits inserted by another operation
+	B2rMissNew,              // b2r_miss_new: insertions into an empty cell or over a dead entry of another key
+	B2rMissGen,              // b2r_miss_gen: insertions over the same (vaddr, size, alignment) of an older generation
+	B2rMissEvict,            // b2r_miss_evict: insertions over a live entry of another key (at 3 also a stale shadow, B5)
+	B2rMissKind,             // b2r_miss_kind: insertions over the same (vaddr, size, alignment), live, another kind
+	B2rRefuse,               // b2r_refuse: refusals (rbcen2, notrace, alloc, thread); a no-op without the trace
+	B2rRstCpu,               // b2r_rst_cpu: generation moves by a clear of a nonempty CPU-dirty mask (B6; calls, not pages)
+	B2rRstCpuw,              // b2r_rst_cpuw: generation moves by an announced CPU write, ChangeState<Cpu, true> (RC1)
+	B2rWrapcur,              // b2r_wrapcur: the stream ring waited for the tick it records, at b2reuse >= 1 (RC4)
 	Count
 };
 
@@ -3561,6 +3577,10 @@ inline constinit thread_local Tls t_rb {};
 
 inline constinit std::atomic<uint64_t> g_rb_gen {0};
 inline constinit std::atomic<bool>     g_rb_b2_live {false};
+// Session 134, knob "b2reuse" (design134.md rev 1 s.2.2, s.5.2): the value latched at the start of a submission slice in
+// the low two bits, the address of the latching thread's Common::B2Reuse::t_b2r above them; 0 at value 0. Written only by
+// Common::B2Reuse::LatchSub; the generation above is shared with it (the census refuses it, rbcen2).
+inline constinit std::atomic<uintptr_t> g_b2r_state {0};
 // Written once by the first latch of a value >= 1 (RC8), before any Tls::chk; read only by a latch that set Tls::b2.
 inline constinit Entry*   g_rb_table  = nullptr;
 inline constinit uint8_t* g_rb_shadow = nullptr;
@@ -3619,6 +3639,12 @@ inline void Reset(Cause cause) {
 		FrameStats::Add(static_cast<FrameStats::Counter>(static_cast<uint32_t>(FrameStats::Counter::RbB2RstSub) +
 		                                                 static_cast<uint32_t>(cause)),
 		                1);
+	}
+	// Session 134, knob "b2reuse" (s.5.2 with ROADMAP s122 items 151(g)(3), 153(v) B3, B5): at 1/2 every cause moves the
+	// generation, independent of rbcen and without a counter of its cause; at 3 none (the positive control has no reset).
+	const uintptr_t b2r = g_b2r_state.load(std::memory_order_relaxed) & 3u;
+	if (b2r == 1u || b2r == 2u) [[unlikely]] {
+		g_rb_gen.fetch_add(1, std::memory_order_release);
 	}
 }
 
@@ -3811,5 +3837,136 @@ private:
 };
 
 } // namespace Common::RbCen
+
+// Session 134, knob "b2reuse" (PROTOTYPE; docs/session-134/design134.md rev 1 with ROADMAP s122 items 151(d), 153(v) B1-B7,
+// 154(b) RC1-RC8): at 1 a read-only copy into the stream ring whose key (vaddr, size, alignment, kind) repeats inside an
+// interval with no reset hands out the offset of the FIRST copy (s.3); 2 copies always, binds the fresh copy and compares
+// the bytes and the path of every hit (s.6); 3 is 2 without any reset (B5). The interval is RbCen::g_rb_gen; the table is
+// read and written only by the thread that latched the value (LatchSub, the start of a submission slice).
+namespace Common::B2Reuse {
+
+// P the stream copy of ObtainBuffer, D the direct const-bank copy, A the aligned const-bank copy (s.3.1-3.3).
+enum class Kind : uint8_t { None, P, D, A };
+
+// One hot entry, 32 bytes (s.4.1).
+struct Entry {
+	uint64_t vaddr;
+	uint32_t size;
+	uint16_t align;
+	Kind     kind;
+	uint8_t  unused;
+	uint64_t gen; // the generation read by the probe of the inserting call, before its copy read the guest bytes (s.5.1)
+	uint32_t off; // the ring offset of the first copy
+	uint32_t op;  // the operation of the insertion (b2r_hit_draw)
+};
+static_assert(sizeof(Entry) == 32);
+
+// One cold entry at 2/3, 16 bytes (s.4.1): 1 + the monotonic position of the shadow of the first copy, and its lap.
+struct Cold {
+	uint64_t shadow_pos1;
+	uint64_t shadow_lap;
+};
+static_assert(sizeof(Cold) == 16);
+
+inline constexpr uint32_t TableBits   = 12; // values 1 and 2 (B1)
+inline constexpr uint32_t TableBits3  = 16; // value 3 (B5)
+inline constexpr uint64_t ShadowBytes = uint64_t {32} << 20u;
+inline constexpr uint64_t CheckBytes  = uint64_t {64} << 10u; // the largest probed size: the compare buffer, a shadow
+
+enum class Pend : uint8_t { None, Miss, Hit };
+
+// This thread's operation and the pending probe of the NativeStorageBuffer call it runs (ended by CallScope).
+struct Tls {
+	uint32_t            op;      // the operation number (OpBegin)
+	uint32_t            mode;    // the value of the pending probe
+	Pend                pend;
+	Kind                kind;    // the kind of the pending probe
+	bool                arm_p;   // 2/3: the outer ObtainBuffer reads its ring copy through ReadRing
+	bool                ring;    // 2/3, a hit: the path of 0 ended with a CPU copy into the ring
+	bool                checked; // 2/3, a hit: its bytes were decided
+	bool                gpu;     // 2/3, a hit: the path of 0 took the GPU copy of the aligned const-bank branch
+	FrameStats::Counter miss;    // the counter of a pending insertion
+	uint64_t            vaddr;
+	uint64_t            size;
+	uint64_t            align;
+	uint64_t            gen;
+	uint64_t            pos1;    // 2/3, a miss: 1 + the shadow position of the copy just made (0: none)
+	Entry*              entry;
+	Cold*               cold;
+};
+inline constinit thread_local Tls t_b2r {};
+
+// RC8: the hot table 2^12 at the first 1 or 2; its cold table, the shadow ring and the compare buffer at the first 2; the
+// tables 2^16 with the shadow ring and the compare buffer at the first 3 - each touched whole (zeroed) by LatchSub. Read
+// and written only by the latching thread.
+inline constinit Entry*   g_hot        = nullptr;
+inline constinit Cold*    g_cold       = nullptr;
+inline constinit Entry*   g_hot3       = nullptr;
+inline constinit Cold*    g_cold3      = nullptr;
+inline constinit uint8_t* g_shadow     = nullptr;
+inline constinit uint8_t* g_chk        = nullptr;
+inline constinit uint64_t g_shadow_pos = 0; // the monotonic write position of the shadow ring
+
+// One line per state, once per process: 1 rbcen2, 2 notrace, 4 alloc, 8 thread, 16/32/64 mode 1/2/3.
+inline constinit std::atomic<uint32_t> g_logged {0};
+inline bool FirstLine(uint32_t bit) {
+	return (g_logged.load(std::memory_order_relaxed) & bit) == 0 &&
+		   (g_logged.fetch_or(bit, std::memory_order_relaxed) & bit) == 0;
+}
+// B2ReuseVerify: lines of the process (at most 40).
+inline constinit std::atomic<uint32_t> g_lines {0};
+
+// The value of the current interval; one relaxed load.
+inline uint32_t Mode() {
+	return static_cast<uint32_t>(RbCen::g_b2r_state.load(std::memory_order_relaxed) & 3u);
+}
+
+// The latch (s.2.2): right before the reset "sub" at the start of a submission slice (graphicsRun.cpp). Reads the knob,
+// refuses (rbcen2, notrace, alloc), allocates (RC8), moves the generation on a new value or a new latching thread.
+void LatchSub();
+
+// Beside the rbcen latch of every draw and dispatch: the operation of b2r_hit_draw.
+inline void OpBegin() {
+	if (Mode() != 0) [[unlikely]] {
+		++t_b2r.op;
+	}
+}
+
+// B6 (a clear of a CPU-dirty bit, RC6) and RC1 (an announced CPU write): the generation moves at 1/2 only - at 0 one
+// relaxed load, at 3 nothing (B5). Any thread (an atomic and this thread's shard).
+inline bool ResetsLive() {
+	const uint32_t mode = Mode();
+	return mode == 1u || mode == 2u;
+}
+inline void ResetCpu(FrameStats::Counter witness) {
+	RbCen::g_rb_gen.fetch_add(1, std::memory_order_release);
+	FrameStats::Add(witness, 1);
+}
+
+// The probe of a point (s.4.4). At 1 a hit returns its entry (the caller answers with its offset); otherwise nullptr and
+// the probe stays pending for the copy sites of this call. Defined in descriptors.cpp.
+const Entry* Probe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align);
+// After a CPU copy of `kind` into the ring at `offset`: the insertion of a pending miss of that kind.
+void Insert(Kind kind, uint64_t offset);
+// 2/3: the read of a CPU copy into the ring (s.6.2, RC3): a miss reads into the shadow ring and copies from there, a hit
+// into the compare buffer and compares it with the shadow of the first copy; otherwise TryReadBacking.
+bool ReadRing(Kind kind, uint64_t vaddr, uint8_t* dst, uint64_t size);
+// The end of the call (s.6.3): the path of a hit at 2/3, then the pending probe is cleared.
+void End();
+
+// On every return of NativeStorageBuffer: one thread-local test while nothing is pending.
+class CallScope {
+public:
+	CallScope() noexcept = default;
+	~CallScope() {
+		if (t_b2r.pend != Pend::None) [[unlikely]] {
+			End();
+		}
+	}
+	CallScope(const CallScope&)            = delete;
+	CallScope& operator=(const CallScope&) = delete;
+};
+
+} // namespace Common::B2Reuse
 
 #endif // KYTY_COMMON_FRAMESTATS_H_

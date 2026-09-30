@@ -357,6 +357,12 @@ bool StreamBuffer::WaitPendingOperations(const std::vector<Watch>& watches,
 		}
 		{
 			Common::FrameStats::SiteScope site_scope("stream-wrap");
+			// Session 134, knob "b2reuse" (ROADMAP s122 item 154(b) RC4): the witness b2r_wrapcur - the stream ring waits for
+			// the tick it is recording (Scheduler().Wait then submits it in the middle of an operation), at b2reuse >= 1.
+			if (Usage() == MemoryUsage::Stream && Common::B2Reuse::Mode() != 0 &&
+				watch.tick == Scheduler().CurrentTick()) [[unlikely]] {
+				Common::FrameStats::Add(Common::FrameStats::Counter::B2rWrapcur, 1);
+			}
 			Scheduler().Wait(watch.tick);
 		}
 		if (Usage() == MemoryUsage::Download) {

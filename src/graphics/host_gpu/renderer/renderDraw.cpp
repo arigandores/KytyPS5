@@ -5144,6 +5144,7 @@ void RenderExecutor::DrawIndex(uint64_t submit_id, CommandBuffer& buffer,
 	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
 	// that opens mh_bind - its price lands in mh_prog_us.
 	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
+	Common::B2Reuse::OpBegin(); // Session 134, knob "b2reuse" (s.2.2): the operation of b2r_hit_draw
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	LogDrawStateIfNeeded(buffer, draw, state, args.index_type_and_size,
@@ -5336,6 +5337,7 @@ void RenderExecutor::DrawAuto(uint64_t submit_id, CommandBuffer& buffer, const D
 	// Session 133, knob "rbcen" (MEASUREMENT ONLY; design133.md rev 2 s.2.2): the latch of this draw, before the mark
 	// that opens mh_bind - its price lands in mh_prog_us.
 	Common::RbCen::Latch(Common::Gates::Value(Common::Gates::Knob::RebindCensus), mut_site);
+	Common::B2Reuse::OpBegin(); // Session 134, knob "b2reuse" (s.2.2): the operation of b2r_hit_draw
 	Common::FrameStats::HoldLap::Mark(Common::FrameStats::Counter::HoldProgramsNs);
 
 	const bool rect_list = ucfg.GetPrimType() == Prospero::PrimitiveType::kRectList;

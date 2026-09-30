@@ -1197,3 +1197,102 @@ uint32_t LatchSlow(uint32_t value, bool mut_site) {
 }
 
 } // namespace Common::RbCen
+
+// Session 134, knob "b2reuse" (PROTOTYPE; docs/session-134/design134.md rev 1 s.2.2-2.3, s.4.3 with ROADMAP s122 items
+// 153(v) B4, B5, 154(b) RC8).
+namespace Common::B2Reuse {
+
+namespace {
+
+std::mutex            g_alloc_mutex;
+bool                  g_alloc_failed = false;
+std::atomic<uint32_t> g_alloc_have {0}; // bit v: the memory of value v is in place
+
+template <typename T>
+T* Zeroed(size_t n) {
+	auto* p = new (std::nothrow) T[n];
+	if (p != nullptr) {
+		std::memset(static_cast<void*>(p), 0, sizeof(T) * n);
+	}
+	return p;
+}
+
+// RC8: at 1 the hot table only; at 2 + its cold table, the shadow ring and the compare buffer; at 3 the tables 2^16 + the
+// shadow ring and the compare buffer. A failure is final: the value is 0 to the end of the process (B4).
+bool Allocate(uint32_t value) {
+	std::lock_guard lock(g_alloc_mutex);
+	if (g_alloc_failed) {
+		return false;
+	}
+	bool ok = true;
+	if (ok && value <= 2 && g_hot == nullptr) {
+		ok = (g_hot = Zeroed<Entry>(size_t {1} << TableBits)) != nullptr;
+	}
+	if (ok && value == 2 && g_cold == nullptr) {
+		ok = (g_cold = Zeroed<Cold>(size_t {1} << TableBits)) != nullptr;
+	}
+	if (ok && value == 3 && g_hot3 == nullptr) {
+		ok = (g_hot3 = Zeroed<Entry>(size_t {1} << TableBits3)) != nullptr;
+	}
+	if (ok && value == 3 && g_cold3 == nullptr) {
+		ok = (g_cold3 = Zeroed<Cold>(size_t {1} << TableBits3)) != nullptr;
+	}
+	if (ok && value >= 2 && g_shadow == nullptr) {
+		ok = (g_shadow = Zeroed<uint8_t>(ShadowBytes)) != nullptr;
+	}
+	if (ok && value >= 2 && g_chk == nullptr) {
+		ok = (g_chk = Zeroed<uint8_t>(CheckBytes)) != nullptr;
+	}
+	if (ok) {
+		g_alloc_have.fetch_or(1u << value, std::memory_order_release);
+	} else {
+		g_alloc_failed = true;
+	}
+	return ok;
+}
+
+} // namespace
+
+void LatchSub() {
+	namespace FS    = FrameStats;
+	uint32_t  value = Gates::Value(Gates::Knob::B2Reuse);
+	const uintptr_t old = RbCen::g_b2r_state.load(std::memory_order_relaxed);
+	if (value == 0 && old == 0) {
+		return;
+	}
+	if (value != 0) {
+		const char* reason = nullptr;
+		uint32_t    bit    = 0;
+		if (Gates::Value(Gates::Knob::RebindCensus) == 2) {
+			reason = "rbcen2"; // ROADMAP s122 item 151(g)(3): the census owns the generation and the table memory idiom
+			bit    = 1u;
+		} else if (value >= 2 && !FS::Enabled()) {
+			reason = "notrace"; // B4: the self-check and the control are not observable without the trace
+			bit    = 2u;
+		} else if ((g_alloc_have.load(std::memory_order_acquire) & (1u << value)) == 0 && !Allocate(value)) {
+			reason = "alloc";
+			bit    = 4u;
+		}
+		if (reason != nullptr) {
+			FS::Add(FS::Counter::B2rRefuse, 1);
+			if (FirstLine(bit)) {
+				LOGF("B2Reuse: refused reason=%s\n", reason);
+			}
+			value = 0;
+		}
+	}
+	const uintptr_t now = value == 0 ? 0 : (reinterpret_cast<uintptr_t>(&t_b2r) | value);
+	if (now != old) {
+		if (value != 0) {
+			// A new value or a new latching thread: the entries of any earlier period are dead from the first probe of this
+			// one (s.2.2; at 3 the only move of the generation, B5).
+			RbCen::g_rb_gen.fetch_add(1, std::memory_order_release);
+			if (FirstLine(8u << value)) {
+				LOGF("B2Reuse: mode %u\n", value);
+			}
+		}
+		RbCen::g_b2r_state.store(now, std::memory_order_release);
+	}
+}
+
+} // namespace Common::B2Reuse

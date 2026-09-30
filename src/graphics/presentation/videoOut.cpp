@@ -3385,6 +3385,22 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"rb_b2_rst_gpuw", FS::Counter::RbB2RstGpuw, false},
 				    {"rb_b2_rst_imgw", FS::Counter::RbB2RstImgw, false},
 				    {"rb_b2_rst_ring", FS::Counter::RbB2RstRing, false},
+				    // Session 134, knob "b2reuse" (design134.md rev 1 s.8.1, ROADMAP s122 items 151(d)(1), 153(v), 154(b)).
+				    {"b2r_n", FS::Counter::B2rN, false},
+				    {"b2r_hit", FS::Counter::B2rHit, false},
+				    {"b2r_chk", FS::Counter::B2rChk, false},
+				    {"b2r_bad", FS::Counter::B2rBad, false},
+				    {"b2r_path", FS::Counter::B2rPath, false},
+				    {"b2r_hit_draw", FS::Counter::B2rHitDraw, false},
+				    {"b2r_hit_x", FS::Counter::B2rHitX, false},
+				    {"b2r_miss_new", FS::Counter::B2rMissNew, false},
+				    {"b2r_miss_gen", FS::Counter::B2rMissGen, false},
+				    {"b2r_miss_evict", FS::Counter::B2rMissEvict, false},
+				    {"b2r_miss_kind", FS::Counter::B2rMissKind, false},
+				    {"b2r_refuse", FS::Counter::B2rRefuse, false},
+				    {"b2r_rst_cpu", FS::Counter::B2rRstCpu, false},
+				    {"b2r_rst_cpuw", FS::Counter::B2rRstCpuw, false},
+				    {"b2r_wrapcur", FS::Counter::B2rWrapcur, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

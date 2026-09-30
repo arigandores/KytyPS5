@@ -725,8 +725,15 @@ enum class Knob : uint32_t {
 	// sample of the slot iterations of RebindBuffers with their classes and the calibration pair (rb_*); 2 = 1 + the census
 	// of the B2 repeat of the ring copies (rb_b2_*), never an action. Refused (RbCen: refused, rb_refuse) without
 	// KYTY_FRAME_TRACE and without the gate "mutsite"; the B2 memory is allocated at the first latch of any value >= 1.
-	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
 	RebindCensus,     // KYTY_REBIND_CENSUS, file name "rbcen" (MEASUREMENT ONLY: 0 off, 1 split, 2 split + B2 census)
+	// Session 134, PROTOTYPE (docs/session-134/design134.md rev 1 with ROADMAP s122 items 151(d), 153(v), 154(b)): B2 - a
+	// read-only copy into the stream ring whose key (vaddr, size, alignment, kind) repeats inside an interval with no reset
+	// hands out the offset of the FIRST copy. Latched ONLY at the start of a submission slice (the reset "sub"), so an
+	// interval is never split between values and it CAN be a schedule arm. 1 = the mechanism; 2 = the self-check (copy
+	// always, the fresh copy bound, the bytes and the path of EVERY hit compared: b2r_bad, b2r_path); 3 = the positive
+	// control (2 without any reset). Refused (B2Reuse: refused, b2r_refuse) with rbcen=2 and at 2/3 without KYTY_FRAME_TRACE.
+	// LAST row, matching the LAST entry of KNOB_DEFINITIONS.
+	B2Reuse,          // KYTY_B2_REUSE, file name "b2reuse" (PROTOTYPE: 0 off, 1 reuse, 2 self-check, 3 positive control)
 	Count,
 };
 

@@ -150,6 +150,7 @@ const Entry* Probe(Kind kind, uint64_t vaddr, uint64_t size, uint64_t align) {
 	const auto     index = static_cast<size_t>(Mix(vaddr, size, align) >> (64u - bits));
 	Entry&         e     = (mode == 3 ? g_hot3 : g_hot)[index];
 	t.mode               = mode;
+	t.nomap              = false; // CR5b-1 (ROADMAP s122 item 160(a)(1)): a new probe drops the flag of an earlier one
 	t.kind               = kind;
 	t.vaddr              = vaddr;
 	t.size               = size;
@@ -203,7 +204,8 @@ void Insert(Kind kind, uint64_t offset) {
 	if (t.pend != Pend::Miss || t.kind != kind) {
 		return;
 	}
-	t.pend = Pend::None;
+	t.pend  = Pend::None;
+	t.nomap = false; // CR5b-1 (ROADMAP s122 item 160(a)(2)): End() is not called once pend is None
 	if (offset > UINT32_MAX || (t.mode >= 2 && t.pos1 == 0)) {
 		return; // no answer to remember (a copy at 2/3 always leaves its shadow)
 	}

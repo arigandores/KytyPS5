@@ -1,0 +1,8 @@
+KILLED   W_LO, W_HI = 10, 88 -> W_LO, W_HI = 9, 88
+KILLED   W_LO, W_HI = 10, 88 -> W_LO, W_HI = 10, 89
+KILLED   K_RUN = 32 -> K_RUN = 31
+KILLED   len(tn) > 3 -> len(tn) > 4
+KILLED   abs(ss[-1]) > K_RUN)) -> abs(ss[-1]) > K_RUN + 1))
+KILLED   '(0,1)' if byb[k]['arm'] == 0 else '(1,0)' -> '(0,1)'
+KILLED   for i in range(L - 1) if ov[i] and ov[i + 1] -> for i in range(L - 1) if ov[i] and ov[i + 1] and False
+mutants 7 killed 7 survived 0

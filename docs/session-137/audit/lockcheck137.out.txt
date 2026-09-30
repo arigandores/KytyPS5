@@ -1,0 +1,15 @@
+C:\kyty\s137\audit137\lockcheck137.py:46: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  t = dt.datetime.utcfromtimestamp(os.path.getmtime(p))
+lock intervals (UTC, from go137a.log "installed before" .. "restored"):
+  s4cs137  12:51:16 .. 12:54:20 (184 s)
+  kk137    12:55:10 .. 13:00:39 (329 s)
+  s6s137   13:01:30 .. 13:04:40 (190 s)
+  kp137a   13:43:25 .. 13:49:13 (348 s)
+  kp137b   13:50:35 .. 13:56:19 (344 s)
+  kp137c   13:57:33 .. 14:03:19 (346 s)
+  kp137d   14:04:34 .. 14:10:18 (344 s)
+  kp137e   14:12:47 .. 14:18:29 (342 s)
+  kp137f   14:20:58 .. 14:26:44 (346 s)
+  kp137g   14:28:00 .. 14:33:45 (345 s)
+  kp137h   14:35:02 .. 14:40:47 (345 s)
+files / commits inside a lock interval (not the chain's own files of that tag): 0

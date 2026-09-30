@@ -1,0 +1,6 @@
+beta 7.7545
+pair 1 (k = 2, order (1,0)) by call: kp137a 838.5, kp137b 848.6, kp137c 852.4, kp137d 804.4, kp137e 629.8, kp137f -843.5, kp137g -625.6, kp137h -625.9; mean simple 234.8 +- 550.8 (8) adjusted -428.3 +- 506.8 (8)
+without pairs 0 and 1: simple -83.6 +- 75.8 (293) adjusted -99.8 +- 74.8 (293)
+first half of every call: simple -120.7 +- 108.5 (149) adjusted -165.8 +- 107.7 (149)
+second half of every call: simple -30.4 +- 104.3 (152) adjusted -52.3 +- 101.5 (152)
+first - second half adjusted -113.5 +- 148.0 (2SE)

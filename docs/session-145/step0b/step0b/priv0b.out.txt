@@ -1,0 +1,5 @@
+FACTS.md: 1 replaced, sha256 8faf56dc84baefa5 -> 5021b81a5601ba45
+step0/seal_template.md: 2 replaced, sha256 01de20b62478c39a -> e6c15bb45fee810b
+pred/01_sc145.md: 2 replaced, sha256 f766e5e9b62df3cc -> 759e33812ea8bde7
+step0/f6scan145.out.txt: 42 replaced, sha256 d0a317118e8c97f4 -> fe44b3ed90af0e57
+local FACTS.md: 1 replaced, sha256 7a36666100685956 -> 29573ab5065b9cc8

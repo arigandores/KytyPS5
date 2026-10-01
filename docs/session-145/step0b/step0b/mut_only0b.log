@@ -1,0 +1,29 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s145\sc145.py sha256 dd93bb1ec601d158c4f4d92eff7b1ab78572f2f712205ab7d130bc62aa113180
+test    C:\kyty\s145\test_sc145.py sha256 066f61e10588f84c13fe2108d3b568da134027606286825fc5e3af9edb93ab97
+mutants C:\kyty\s145\mut_sc145.py sha256 4d8668633e682bcc65716285e1b01df0158a0123fb2ee5e2e94bb49d1fd3c0fc
+mutants: format list, 631 defined (strict: every use of MUTANTS checked; statements evaluated at lines 74)
+selection: --only, 1 mutants
+suite: family V; fast on (418 guarded updates of ok); end of suite: the final exit call at line 2954
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'manifest', 'mk143', 'mk144', 'mk145', 'mkrun', 'pair', 'pair143', 's6', 's7', 's8', 's9', 'sheet_case', 'wstop', 'x144root', 'xroot'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 4 (spawn, one process per job), work dir C:\kyty\s145\mutwork_0b\sc145_65544_1790867625
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.07 s in the baseline (50 of 445 calls validated; not validated: 239 x a scorer function (level_of); 67 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+BASELINE passed in 47.9 s (memo off); mutant timeout 144 s; workers 4
+[1/4] e_pred  KILLED by test line 2342  (8.3 s)
+[2/4] CONTROL CONTROL_module_pass_at_end  SURVIVED  (15.9 s)
+[3/4] CONTROL CONTROL_comment_after_docstring  SURVIVED  (16.2 s)
+[4/4] CONTROL CONTROL_pass_end_of_main  SURVIVED  (16.7 s)
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.07 s in the baseline (50 of 445 calls validated; not validated: 239 x a scorer function (level_of); 67 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (47.9 s)
+BASELINE#2  SURVIVED  (47.6 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (16.2 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (16.7 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (15.9 s)
+e_pred  KILLED by test line 2342  (8.3 s)
+1 mutants: 1 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 1 kill(s) ended at their first failing case; they skipped a median 12 % / mean 12 % of the suite's 460 checks, about 13.6 s of the baseline's suite time per job (14 s in all)
+wall 67.7 s, worker time 152.6 s, 4 workers
+ALL KILLED (1 of 1 selected mutants killed; 631 defined in the mutant script)

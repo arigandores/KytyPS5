@@ -1,57 +1,57 @@
 f6scan145 over 42 files of C:/kyty/s144
 FILE C:/kyty/s144\log_w144_00.txt sha256 2698b03decde184af1dba2904e4caf96d6c171e6b1ebae42f1ef5da9a13d9ca6 bytes 390979784
   [Vulkan] by severity [('W', 936280)]; F6 text lines 936279 (VkRenderingInfo form 936279); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_00.txt sha256 04776b010168919be8f23de6aeea507af6009217b378feceb3357128356e6037 bytes 37303
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_01.txt sha256 280636d7ae05f94047878a5b821a58956b3df6f09292ffa13c95f1f03f2147df bytes 398011245
   [Vulkan] by severity [('W', 951148)]; F6 text lines 951147 (VkRenderingInfo form 951147); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_01.txt sha256 9721d78cf35a03a680efe7a2f9070b44660463feca8a807644d62a27ceaa73ee bytes 36800
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_02.txt sha256 3f83a47e48af1c5f769fcc3a365d0d4357e524d6471d86c83f4c1157ec59a4e3 bytes 439143901
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_02.txt sha256 e168ef2bb45b7339e9d22e670de97c1785a0c95925fb325eba1f4e98c3d8902a bytes 37065
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_03.txt sha256 a146ae165f424fd6d4a9be93ecd6d44f463502146cc2b39054aad31e96177e64 bytes 257777962
   [Vulkan] by severity [('W', 496684)]; F6 text lines 496683 (VkRenderingInfo form 496683); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_03.txt sha256 f78376be64fed0ba31d5d57f957deb2af4518310e0779c53cb2e0795617a289e bytes 133054
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_04.txt sha256 b0b1c20fe446a54370d1d4765ad5afa363fadfa986203e4d5d8b90954cb10ebb bytes 346120934
   [Vulkan] by severity [('W', 668730)]; F6 text lines 668729 (VkRenderingInfo form 668729); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_04.txt sha256 bdfaedd0d29db1ca0ab4b50df731c7479ee4f28a6b13b56a5aac679208af1472 bytes 37154
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_05.txt sha256 202033f4e7e013d5200e18060aa7f9b34a6bb5a696263cac6aaa2afd69281a44 bytes 441241749
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 4)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] (imageView is VK_NULL_HANDLE) and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_05.txt sha256 8a4a364f2a0ddd5c372c5252f0e11f9650676527cf8ac1deaf16360fc5ab1bf9 bytes 36889
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_06.txt sha256 80dcc8947e6d5f2bd69d8559000adea048b350ab86cc9112301da6fe193b831e bytes 453376944
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 1)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 2, "out_mrt_2"] but there is no VkRenderingInfo::pColorAttachments[2] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_06.txt sha256 ca9d5e64ca0f3184604d0e8809dbe889880e959bc1edfe5118acbcbc16be2578 bytes 36782
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_07.txt sha256 1fe11b676a5bc99ff82dccd5de6cddcee7a3454e603a7666724c043df95acf6a bytes 450099377
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 4)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawMeshTasksEXT(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_07.txt sha256 a3f51183a5326f399d4406da48a0fd1d45cfdff9e03ae92b0cfabc0b25e509de bytes 37068
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_08.txt sha256 6c567d954a8f9ed060a6f5e00b275cd693764fd18f3a55e0a0567e6906543fbd bytes 431810129
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 1)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_08.txt sha256 c1487503278e8e1ad8047b110c17dcea980672d26f3d19b4a71ccc38d8d13583 bytes 37155
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_09.txt sha256 08c3a71f11ab48fae635f2d6ca8cdf63a5bad878bb72bbc2bcc3bc022451c8c4 bytes 288183319
   [Vulkan] by severity [('E', 1), ('W', 722001)]; F6 text lines 722000 (VkRenderingInfo form 722000); limit lines 0; other [Vulkan][ lines 2; window [('minimized', 1)]; Recovering Vulkan swapchain 1
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
   OTHER      1 E vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = N, height = N) is invalid.
 FILE C:/kyty/s144\stdout_w144_09.txt sha256 582734268e5c3d58dbe2de5131f8ea3fcc541ebb59e919419718b0fe642571f1 bytes 37664
   [Vulkan] by severity [('E', 1)]; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
@@ -59,66 +59,67 @@ FILE C:/kyty/s144\stdout_w144_09.txt sha256 582734268e5c3d58dbe2de5131f8ea3fcc54
 FILE C:/kyty/s144\log_w144_10.txt sha256 a15ff15222355e58d3f5f5e495058ffc95533cb9274340c62a5b8211200b78cb bytes 456066254
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawMeshTasksEXT(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_10.txt sha256 ba3be82600260fc7ad08c35ffdc1220f8cb240a3811e91b388afe129a0efb72a bytes 36977
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_11.txt sha256 a6cb2c3bcbf3b5f8aecbf9acd4224cb5f7f6b59a4f7c76187e320afec12c1823 bytes 435447974
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawMeshTasksEXT(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_11.txt sha256 a5aecc13375ad112c65e72650d23b21abfabf38979933608c4446f70762a29cf bytes 36797
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_12.txt sha256 c4cc4451bd5397f4c5d5f0b733faaa34a2a95960b07b5b875c03c894d4b7d1d9 bytes 415077235
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 1)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawMeshTasksEXT(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_12.txt sha256 219c47c1ec56bac5ba15a3e61a5f067febf5eb1a07b7ccc685f74cafbcca720e bytes 37157
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_13.txt sha256 b1831b72047e49aa14aa31e8e322fb2c59b4b80c57b8bca7aa079f6ba0fca80f bytes 475466222
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window [('lost keyboard focus', 1)]; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_13.txt sha256 92ed77a71a2082b1c9d7b0f4236c27cb9c7152e530fd16e2859fdae918712b12 bytes 133320
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_14.txt sha256 02f2c2629a9b1239b4ab6a1f21a2df037167bcaecfe799d304d9e90e03ea7b44 bytes 490211276
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] (imageView is VK_NULL_HANDLE) and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_14.txt sha256 6d21d8b75f5e97768366cb6af16474b21b17543dc0051636878a8f5cdeb88a5e bytes 37050
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_15.txt sha256 dc4a51be7beea7b63c2c5197d60d972409097c75e140c58c6f555080fc66d24b bytes 414471331
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_15.txt sha256 43d41683db8dea9eb0a48e2094def43ee4b996ae1599c153f8803f6c961bfa0a bytes 36886
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_16.txt sha256 8c3b987f9765109eecd3777db5a63c9cffb8926a756d09970dc1bf56d1f5a8c6 bytes 521864681
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] (imageView is VK_NULL_HANDLE) and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_16.txt sha256 7c179f5e56af82ce9f0ce2db483ed1444546e6bacad761e182b6d0cfd184df8b bytes 36709
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_17.txt sha256 5951e5ca2c670dc9cb7488bd572745654a846ce32d346d6cd92a309422391063 bytes 492384566
   [Vulkan] by severity [('W', 1000001)]; F6 text lines 999999 (VkRenderingInfo form 999999); limit lines 1; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   LIMIT [W] next line: vkCmdDrawMeshTasksEXT(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, "out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_17.txt sha256 5e3cd382f8cab09e7b2508b61137a419cb251181148e5e6ab10f75021ff2e1ab bytes 36709
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_18.txt sha256 1d75b73e455e9a65fa9ae5a7122849fb0c1faad98f484769077a96fcf8ab9ec0 bytes 383246210
   [Vulkan] by severity [('W', 402918)]; F6 text lines 402917 (VkRenderingInfo form 402917); limit lines 0; other [Vulkan][ lines 1; window [('lost keyboard focus', 1)]; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_18.txt sha256 1ce7e040b679d761fdea27cd45f98623b646008aec9f951e02a6366ee81d521c bytes 36797
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_19.txt sha256 5266a235bc813af78e71716b8badc1efa39dec9cb2e15a1ecc892390f927508b bytes 253209569
   [Vulkan] by severity [('W', 383433)]; F6 text lines 383432 (VkRenderingInfo form 383432); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
 FILE C:/kyty/s144\stdout_w144_19.txt sha256 bfd330c6b31a2f2dab8b0fc73caefc547d3c6b82823038b093bd85f191e39808 bytes 36887
   [Vulkan] by severity []; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 0; window none; Recovering Vulkan swapchain 0
 FILE C:/kyty/s144\log_w144_20.txt sha256 516d801a05776cf0dc6a7bf130969079bdb74237486d61542b62c1bf84de5ead bytes 22149107
   [Vulkan] by severity [('E', 1), ('W', 1)]; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 2; window none; Recovering Vulkan swapchain 0
-  OTHER      1 W Removing layer VK_LAYER_<app>_HOOK (C:\ProgramData\<app>\<app>N.json) because it is a dupli
+  OTHER      1 W Removing layer <app> (<app>) because it is a dupli
   OTHER      1 E vkCreateGraphicsPipelines(): pCreateInfos[N].pColorBlendState->pAttachments[N].srcColorBlendFactor (VK_BLEND_F
 FILE C:/kyty/s144\stdout_w144_20.txt sha256 0602b722d1362315e952373e257d43a003861731fa5d68e006ba46e141646848 bytes 3303
   [Vulkan] by severity [('E', 1)]; F6 text lines 0 (VkRenderingInfo form 0); limit lines 0; other [Vulkan][ lines 1; window none; Recovering Vulkan swapchain 0
   OTHER      1 E vkCreateGraphicsPipelines(): pCreateInfos[N].pColorBlendState->pAttachments[N].srcColorBlendFactor (VK_BLEND_F
 SUMMARY logs 21; logs with a limit line 13; limit lines followed by the F6 VkRenderingInfo text 13, by another text 0; logs with other [Vulkan][ lines >= 1: 21 of 21
+git copy: the name of a third-party layer replaced by <app> (42 places; ROADMAP s122 item 288 (b)); local original C:/kyty/s145/step0/f6scan145.out.txt sha256 d0a317118e8c97f4b92ec0da855400d2d93b4840adc5221b7d4c28f66b0eae00

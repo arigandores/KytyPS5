@@ -61,7 +61,7 @@ entry)`); пара `rocket_hourglass` — V `v144_09` из `C:/kyty/s144` (це�
 **0.5 Идентификатор фильтра** [c]: `step0/f6scan145.out.txt` (`d0a317118e8c97f4b92ec0da855400d2d93b4840adc5221b7d4c28f66b0eae00`) — строка лимита
 слоя в **13 из 21** W с. 144 (`w144_02, 05, 06, 07, 08, 10…17`; контрольный `w144_00` — 0), по одной, и за каждой — текст Ф6 «… there is no
 VkRenderingInfo::pColorAttachments[N] and this write is unused.»; прочих строк `[Vulkan][` в W — одна строка загрузчика
-`[Vulkan][W][1]: Removing layer VK_LAYER_<app>_HOOK …` (тип 1) и `[Vulkan][E]` в `w144_09`, `w144_20`. Лог печатает текст сообщения, не имя
+`[Vulkan][W][1]: Removing layer <app> …` (тип 1) и `[Vulkan][E]` в `w144_09`, `w144_20`. Лог печатает текст сообщения, не имя
 (`4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:933`); имя — из бинаря слоя: `step0/vuid145.out.txt`
 (`89b6bdf5b173a426f3f880aa0e27ccad4163caa52b34c4c357445b1c5275813a`): за форматом VkRenderingInfo-формы Ф6 в `.rdata`
 `VkLayer_khronos_validation.dll` (`9725ce7a…`) — строка **`Undefined-Value-ShaderOutputNotConsumed-DynamicRendering`** [I по соседству

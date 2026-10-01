@@ -38,7 +38,7 @@ C:/kyty/s145/pred/01_sc145.md`; стоп-файл `C:/kyty/s145/STOP` до вс�
 21 логу W с. 144 строка лимита слоя «this will be the last time reporting it» есть в **13 W** (`w144_02, 05, 06, 07, 08, 10…17`; в
 контрольном `w144_00` — 0), каждый раз ровно одна, и **за каждой из 13 — текст Ф6** «… it writes to [Output variable, Location N,
 "out_mrt_N"] but there is no VkRenderingInfo::pColorAttachments[N] and this write is unused.» (936 279…999 999 таких строк на W);
-других строк `[Vulkan][` в W — по одной загрузчика `[Vulkan][W][1]: Removing layer VK_LAYER_<app>_HOOK …` и по одной `[Vulkan][E]`
+других строк `[Vulkan][` в W — по одной загрузчика `[Vulkan][W][1]: Removing layer <app> …` и по одной `[Vulkan][E]`
 в `w144_09` (swapchain 0×0) и `w144_20` (Б35). Лог эмулятора печатает только текст сообщения (`[Vulkan][<sev>][<type>]: <pMessage>`,
 `4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:933`), не имя идентификатора; имя прочитано из бинаря слоя, который
 грузят W: `step0/vuid145.out.txt` (`{VUID}`) — в `.rdata` `VkLayer_khronos_validation.dll` (sha256 `9725ce7a…`) за форматом
@@ -134,7 +134,7 @@ W ≠ 0 — пометка `LAYER TRUNCATED (the outcome stands by the letter)`,
 3. **Строка `window event:` и строка `W filter:` — строки допуска** (форма W п. 273(к)(2) проверяется так же, как форма п. 254(е) в
    с. 144); «Вариант исполнителя» — без них исход W с фильтром другого идентификатора читался бы как исход уровня.
 4. **Член `[Vulkan][` активности слоя после фильтра.** Третий член строки «validation active» (≥ 1 строки `[Vulkan][`) в W с фильтром
-   держится на строке загрузчика `[Vulkan][W][1]: Removing layer VK_LAYER_<app>_HOOK …` (тип 1, не сообщение слоя проверки) — по логам
+   держится на строке загрузчика `[Vulkan][W][1]: Removing layer <app> …` (тип 1, не сообщение слоя проверки) — по логам
    с. 144 других строк `[Vulkan][`, кроме Ф6, в чистых W нет [c, `f6scan145.out.txt`]; два других члена (0 `no validation layer:`, ≥ 1
    `VK_EXT_validation_features`) не меняются. Положительного контроля активности слоя в конце удержания в форме W нет (кандидат п. 272(в)
    — решение закрытия). Печатается член исполнителя: строки `[Vulkan][` типа проверки (бит 2). Вопрос: достаточно ли этого для серии.

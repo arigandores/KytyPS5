@@ -57,6 +57,10 @@ struct GraphicContext {
 	bool                               gpu_markers_enabled                   = false;
 	bool                               attachment_feedback_loop_enabled      = false;
 	bool                               provoking_vertex_last_enabled         = false;
+	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): dualSrcBlend enabled on the device (KYTY_FIX_DUALSRC=1 and
+	// supported) and its limit; CreatePipelineInternal builds the Location 0 Index 1 variant of the pixel module.
+	bool                               dual_src_blend_enabled                = false;
+	uint32_t                           max_fragment_dual_src_attachments     = 0;
 	// VK_EXT_external_memory_host (KYTY_HOST_IMPORT, default on): guest direct memory imported
 	// as Vulkan buffers, so texture uploads read guest memory over PCIe without a host copy.
 	bool                               external_memory_host_enabled          = false;

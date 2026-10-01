@@ -6,6 +6,7 @@
 #include "graphics/guest_gpu/gpu_defs.h"
 #include "graphics/host_gpu/graphicContext.h"
 #include "graphics/host_gpu/renderer/debug.h"
+#include "graphics/host_gpu/renderer/pipeline/dualSrcBlend.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
 #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
@@ -22,7 +23,9 @@
 #include <cinttypes>
 #include <cstdio>
 #include <limits>
+#include <mutex>
 #include <string>
+#include <unordered_set>
 #include <vector>
 #include <span>
 #include <vector>
@@ -312,6 +315,50 @@ static void CreateDescriptorLayout(GraphicContext& graphics, PipelineCache::Pipe
 	            &create, nullptr, &pipeline.descriptor_set_layout) != vk::Result::eSuccess);
 }
 
+// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the blend factors that read the second source.
+static bool IsSecondSourceFactor(vk::BlendFactor factor) {
+	return factor == vk::BlendFactor::eSrc1Color || factor == vk::BlendFactor::eOneMinusSrc1Color ||
+	       factor == vk::BlendFactor::eSrc1Alpha || factor == vk::BlendFactor::eOneMinusSrc1Alpha;
+}
+
+// One "patched" and one "skip" line per PS hash for the whole run (pipelines are created on the draw,
+// worker and precache threads).
+static bool DualSourceFirstLine(uint64_t ps_hash, bool patched) {
+	static std::mutex                   mutex;
+	static std::unordered_set<uint64_t> seen[2];
+	std::lock_guard                     lock(mutex);
+	return seen[patched ? 1 : 0].insert(ps_hash).second;
+}
+
+// KYTY_FIX_DUALSRC=1 and a blended attachment with a SRC1 factor: the fragment module of this pipeline only,
+// with the output at Location 1 rewritten to Location 0 Index 1 (DualSrcBlend::RewriteLocation1ToIndex1).
+// nullptr: the pipeline keeps the translated module (skip line with the reason). The caller destroys the
+// returned module after vkCreateGraphicsPipelines. Not salted by KYTY_PIPELINE_SALT.
+static vk::ShaderModule CreateDualSourceVariant(GraphicContext& graphics, const ShaderProgram& pixel_program,
+                                                uint64_t ps_hash, uint32_t color_count) {
+	std::vector<uint32_t> words;
+	const char*           reason = nullptr;
+	if (color_count > graphics.max_fragment_dual_src_attachments) {
+		reason = "attachments";
+	} else if (pixel_program.spirv == nullptr || pixel_program.spirv->empty()) {
+		reason = "no_spirv";
+	} else if (const auto outcome = DualSrcBlend::RewriteLocation1ToIndex1(*pixel_program.spirv, words);
+	           outcome != DualSrcBlend::Outcome::Patched) {
+		reason = DualSrcBlend::OutcomeName(outcome);
+	}
+	if (reason != nullptr) {
+		if (DualSourceFirstLine(ps_hash, false)) {
+			LOGF("DualSrcBlend: skip ps=%016" PRIx64 " reason=%s\n", ps_hash, reason);
+		}
+		return nullptr;
+	}
+	const auto module = CompileSPV(words, graphics.device);
+	if (DualSourceFirstLine(ps_hash, true)) {
+		LOGF("DualSrcBlend: patched ps=%016" PRIx64 "\n", ps_hash);
+	}
+	return module;
+}
+
 // NOLINTNEXTLINE(readability-function-cognitive-complexity)
 void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
                             const PipelineRenderingState&          rendering,
@@ -375,6 +422,7 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
 		                                       .module = tess_eval_shader_module,
 		                                       .pName  = "main"};
 	}
+	const uint32_t ps_stage_index = shader_stage_count; // F4a2: the fragment stage, when ps_active
 	if (ps_active) {
 		shader_stages[shader_stage_count++] = {.stage  = vk::ShaderStageFlagBits::eFragment,
 		                                       .module = pixel_program.module,
@@ -517,6 +565,28 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
 		color_blend_attachment[i].alphaBlendOp =
 		    (static_params.separate_alpha_blend[i] ? GetBlendOp(static_params.alpha_comb_fcn[i])
 		                                           : color_blend_attachment[i].colorBlendOp);
+	}
+
+	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the game path and precache both create here.
+	vk::ShaderModule dual_src_module = nullptr;
+	if (graphics.dual_src_blend_enabled && ps_active) {
+		bool second_source = false;
+		for (uint32_t i = 0; i < rendering.color_count; i++) {
+			const auto& a = color_blend_attachment[i];
+			second_source |= a.blendEnable == VK_TRUE &&
+			                 (IsSecondSourceFactor(a.srcColorBlendFactor) ||
+			                  IsSecondSourceFactor(a.dstColorBlendFactor) ||
+			                  IsSecondSourceFactor(a.srcAlphaBlendFactor) ||
+			                  IsSecondSourceFactor(a.dstAlphaBlendFactor));
+		}
+		if (second_source) {
+			dual_src_module = CreateDualSourceVariant(graphics, pixel_program,
+			                                          ps_input_info->stage.program->shader_hash,
+			                                          rendering.color_count);
+			if (dual_src_module != nullptr) {
+				shader_stages[ps_stage_index].module = dual_src_module;
+			}
+		}
 	}
 
 	vk::Bool32 color_write_enable[RENDER_COLOR_ATTACHMENTS_MAX] = {};
@@ -678,6 +748,9 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
 	}
 	if (tess_eval_shader_module != nullptr) {
 		graphics.device.destroyShaderModule(tess_eval_shader_module, nullptr);
+	}
+	if (dual_src_module != nullptr) {
+		graphics.device.destroyShaderModule(dual_src_module, nullptr);
 	}
 }
 

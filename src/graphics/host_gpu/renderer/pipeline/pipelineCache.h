@@ -108,6 +108,9 @@ struct PipelineVertexInputState {
 struct ShaderProgram {
 	uint64_t         id     = 0;
 	vk::ShaderModule module = nullptr;
+	// Track F, F4a2 (HPP-346): the SPIR-V the module was created from (Permutation::spirv; empty when the
+	// translation cache is off), read only by CreatePipelineInternal under KYTY_FIX_DUALSRC=1.
+	const std::vector<uint32_t>* spirv = nullptr;
 
 	explicit operator bool() const { return id != 0 && module != nullptr; }
 };

@@ -668,6 +668,9 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 		}
 		LOGF("DualSrcBlend: supported=%d enabled=%d\n", dual_src_supported ? 1 : 0,
 		     dual_src_enabled ? 1 : 0);
+		// F4a2 (HPP-346, p.262(b)): read by CreatePipelineInternal for the Location 0 Index 1 variant.
+		graphics.dual_src_blend_enabled            = dual_src_enabled;
+		graphics.max_fragment_dual_src_attachments = properties2.properties.limits.maxFragmentDualSrcAttachments;
 	}
 
 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};

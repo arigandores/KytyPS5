@@ -2022,6 +2022,15 @@ struct PipelineCache::ProgramCache {
 		}
 	}
 
+	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the handle points at the permutation's own SPIR-V, set
+	// at the same three sites as AdoptDmaLayout, right after the push_back and before the handle is indexed or
+	// handed out. The element never moves: deque::push_back does not relocate elements, and moving the
+	// SourceEntry (try_emplace of a local source) moves the deque, which keeps pointers to its elements
+	// (LWG 2321); retired sources are never freed. `spirv` is not written again after this point.
+	static void AdoptSpirvView(Permutation& permutation) {
+		permutation.handle.spirv = &permutation.spirv;
+	}
+
 	// Gate "daclass": static variants of programs whose plans are canonically equal
 	// (CanonicalPlanBytes). Never freed: slots and source entries keep pointers to it.
 	struct PlanClass {
@@ -2193,6 +2202,7 @@ struct PipelineCache::ProgramCache {
 			    .spirv          = std::move(p.spirv),
 			});
 			AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+			AdoptSpirvView(source.permutations.back()); // track F, F4a2
 		}
 		source.from_cache = true;
 		entry             = programs.try_emplace(key, std::move(source)).first;
@@ -3962,6 +3972,7 @@ struct PipelineCache::ProgramCache {
 		entry->second.permutations.push_back(CompilePermutation(
 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
 		AdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+		AdoptSpirvView(entry->second.permutations.back()); // track F, F4a2
 		by_id[entry->second.permutations.back().handle.id] = {
 		    &entry->first, static_cast<uint32_t>(entry->second.permutations.size() - 1)};
 		SaveToTranslationCache(entry->first, entry->second);
@@ -4577,6 +4588,7 @@ struct PipelineCache::ProgramCache {
 				    .spirv          = std::move(p.spirv),
 				});
 				AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+				AdoptSpirvView(source.permutations.back()); // track F, F4a2
 			}
 			source.from_cache = true;
 			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;

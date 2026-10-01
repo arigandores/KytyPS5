@@ -1,0 +1,133 @@
+commit 01ca15d151851af0f048ab0eaea0e90cae112f88
+Author: Emu Engineer <noreply@anthropic.com>
+Date:   Thu Oct 1 16:21:40 2026 +0200
+
+    track F link F5a2 (HPP-366): RC1 and RC2 of F5b by ROADMAP p.280(v),(g)
+    
+    RC1 (only under KYTY_FIX_MINIMIZE=1; =0 keeps the old path): Presenter::Present
+    records the frame into the screenshot/video ring at most once per call and
+    finishes it exactly once if recorded - on success, or right after a failed
+    present (the submit was made, the slot gets its tick); the zero-extent drop and
+    "retry exhausted" exits leave no ring slot pending without a tick.
+    
+    RC2: the KYTY_TEST_MINIMIZE stand arms only on a level entry line
+    "Level has started: <level>" with a non-blank character after the prefix
+    before the end of the line (TestMinimizeIsLevelEntry, header-only
+    testMinimizeLine.h); the earlier line with an empty name does not arm.
+    
+    Gate order clean; shader_cfg_tests 127/1 (B11) at =0 and =1, logs equal to F5a
+    up to elapsed_ms; RC2 predicate test 17/17; ring model test (f5a2 56/56, f5a
+    reproduces the F5b RC1 reorder). No game run; WIP until F5b2/F5c.
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+diff --git a/src/graphics/presentation/window/swapchain.cpp b/src/graphics/presentation/window/swapchain.cpp
+index 8ca24a6a..8547b4da 100644
+--- a/src/graphics/presentation/window/swapchain.cpp
++++ b/src/graphics/presentation/window/swapchain.cpp
+@@ -944,6 +944,13 @@ void Presenter::Present(Frame& frame, bool reuse) {
+ 	const bool preparing = ShaderPreparationOverlayActive();
+ 	const bool screenshot = !preparing && m_impl->screenshot.Poll();
+ 	if (!preparing) m_impl->input_script.Poll();
++	// F5a2 (ROADMAP s122 item 280(g), RC1 of F5b; KYTY_FIX_MINIMIZE=1 only): one call records the frame into the
++	// screenshot/video ring at most once and finishes it exactly once if recorded - on success, or right after a failed
++	// present (its submit was made, the slot gets that tick), so the zero-extent drop and "retry exhausted" exits leave
++	// no ring slot pending without a tick.  0 - the old path: Record on every attempt, Finish on success only.
++	const bool fix_minimize = FixMinimizeEnabled();
++	bool       recorded     = false;
++	bool       finished     = false;
+ 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
+ 		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+ 			if (!m_impl->TryEndZeroExtent()) {
+@@ -979,8 +986,9 @@ void Presenter::Present(Frame& frame, bool reuse) {
+ 			auto&             command          = m_impl->present_scheduler.BeginCommand();
+ 			const bool        draw_system_overlay =
+ 			    overlay_visual.active && swapchain.PrepareSystemOverlay();
+-			if (screenshot) {
++			if (screenshot && !(fix_minimize && recorded)) {
+ 				m_impl->screenshot.Record(command, frame.image);
++				recorded = true;
+ 			}
+ 			swapchain.RecordPresentCommands(command, frame.image, draw_system_overlay);
+ 			frame.present_tick = swapchain.Submit(m_impl->present_scheduler);
+@@ -998,10 +1006,14 @@ void Presenter::Present(Frame& frame, bool reuse) {
+ 			     (unsigned long long)((end-submitted)/1000), pending);
+ 		}
+ 		if (status != Swapchain::Status::Success) {
++			if (fix_minimize && recorded && !finished) { // F5a2 RC1: the recorded slot gets this submit's tick
++				m_impl->screenshot.Finish(frame.present_tick);
++				finished = true;
++			}
+ 			m_impl->RecoverSwapchain(status);
+ 			continue;
+ 		}
+-		if (screenshot) {
++		if (screenshot && !(fix_minimize && finished)) {
+ 			m_impl->screenshot.Finish(frame.present_tick);
+ 		}
+ 
+diff --git a/src/graphics/presentation/window/testMinimizeLine.h b/src/graphics/presentation/window/testMinimizeLine.h
+new file mode 100644
+index 00000000..f68cfc18
+--- /dev/null
++++ b/src/graphics/presentation/window/testMinimizeLine.h
+@@ -0,0 +1,27 @@
++#ifndef EMULATOR_SRC_GRAPHICS_PRESENTATION_WINDOW_TESTMINIMIZELINE_H_
++#define EMULATOR_SRC_GRAPHICS_PRESENTATION_WINDOW_TESTMINIMIZELINE_H_
++
++#include <string_view>
++
++namespace Libs::Graphics {
++
++// Track F, F5a2 (ROADMAP s122 item 280(v), RC2 of F5b): true when the guest text holds the level entry line
++// "Level has started: <level>" - after the prefix, before the end of that line ('\n' or the end of the text), there is
++// a non-blank character.  The game first writes the line with an empty name; that line is not the entry line (item
++// 221(v)).  Header-only so that a test can build it without the window code.
++inline bool TestMinimizeIsLevelEntry(std::string_view text) {
++	constexpr std::string_view prefix = "Level has started: ";
++	for (auto pos = text.find(prefix); pos != std::string_view::npos; pos = text.find(prefix, pos + 1)) {
++		for (auto i = pos + prefix.size(); i < text.size() && text[i] != '\n'; i++) {
++			const char c = text[i];
++			if (c != ' ' && c != '\t' && c != '\r' && c != '\v' && c != '\f') {
++				return true;
++			}
++		}
++	}
++	return false;
++}
++
++} // namespace Libs::Graphics
++
++#endif // EMULATOR_SRC_GRAPHICS_PRESENTATION_WINDOW_TESTMINIMIZELINE_H_
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index f757835f..47f017e3 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -38,6 +38,7 @@
+ #include "graphics/presentation/presenter.h"
+ #include "graphics/presentation/systemOverlay.h"
+ #include "graphics/presentation/window/hostInput.h"
++#include "graphics/presentation/window/testMinimizeLine.h"
+ #include "graphics/presentation/window/windowInternal.h"
+ #include "kytyGitVersion.h"
+ #include "libs/controller.h"
+@@ -1037,7 +1038,9 @@ void WindowShutdown() {
+ }
+ 
+ // Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
+-// game's first "Level has started:" line the emulator minimizes its own window (SDL_MinimizeWindow on the main thread)
++// game's first level entry line "Level has started: <level>" with a non-blank level name (F5a2, item 280(v): the
++// earlier line with an empty name does not arm; TestMinimizeIsLevelEntry) the emulator minimizes its own window
++// (SDL_MinimizeWindow on the main thread)
+ // and restores it <dur> seconds later (SDL_RestoreWindow); lines "TestMinimize: minimize" / "TestMinimize: restore".
+ // Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
+ // sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
+@@ -1067,7 +1070,7 @@ void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
+ 	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
+ 		return;
+ 	}
+-	if (std::string_view(text, size).find("Level has started: ") == std::string_view::npos ||
++	if (!TestMinimizeIsLevelEntry(std::string_view(text, size)) ||
+ 	    armed.exchange(true, std::memory_order_acq_rel)) {
+ 		return;
+ 	}

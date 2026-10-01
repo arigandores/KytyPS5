@@ -1,0 +1,3 @@
+6599 {'no marker': 6599, 'marker within header+256': 0}
+unique payloads by binary type {} total 0
+snap0 cache sources 1181 unique hashes 506

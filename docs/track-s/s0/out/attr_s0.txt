@@ -1,0 +1,325 @@
+== T1. skipped-draw rows, held flips, frames >= 100 ms (after the first scene frame)
+tag first_n first_dt first_held | win: skiprows held k3 k2 dtmax | hold: skiprows held k3 k2 dtmax | post: skip_draws skip_lines pairs held_lines | score_skip_frames | load(before+first): skiprows held
+v142 380 15370 0 | 0 0 1 0 180521 | 0 0 0 0 69048 | 0 0 0 0 | 0 | 0 0
+w142 187 11187 0 | 0 0 594 0 400429 | 0 0 1846 0 201722 | 0 0 0 0 | 0 | 0 0
+c142_01 203 785741 1 | 2 2 2 0 816566 | 0 0 0 0 50020 | 28 28 14 2 | 3 | 2 1
+c142_02 328 15232 0 | 11 10 14 0 300409 | 4 3 2 0 151746 | 41 41 17 13 | 13 | 0 0
+c142_03 263 13967 0 | 24 24 3 0 432339 | 44 44 1 0 115028 | 2203 2203 16 64 | 68 | 0 0
+c142_04 260 469352 1 | 11 11 0 0 33664 | 0 0 0 0 31838 | 11 11 2 11 | 12 | 1 1
+c142_05 231 10015 0 | 45 45 3 0 448789 | 4 4 1 0 131181 | 239 239 28 49 | 49 | 1 0
+c142_06 261 18198 0 | 6 6 2 0 465210 | 0 0 0 0 52825 | 56 56 18 6 | 6 | 0 0
+c142_07 229 19767 0 | 10 10 0 0 81631 | 0 0 0 0 50311 | 19 19 3 10 | 10 | 0 0
+c142_08 201 328992 1 | 24 29 0 0 52909 | 0 0 0 0 36209 | 56 56 1 29 | 30 | 2 1
+c142_09 178 28782 0 | 3 5 7 0 316631 | 0 0 0 0 41895 | 87 87 2 5 | 5 | 1 0
+c142_10 223 17209 0 | 5 6 1 0 217657 | 0 0 0 0 39678 | 77 77 6 6 | 6 | 0 0
+census sums: skip rows (counter) 193 (window 141 / hold 52), held flips 199 (window 148 / hold 51), k3 window 32, k3 hold 4, sc142 skip frames (frame=) 202, pairs 107
+
+== T2. held runs (visible gap = sum dt of the held rows + dt of the next presented row)
+tag runs gap_max_ms gap>=100ms gap>=1s gap_sum_ms | top runs n0-n1 flips gap_ms part pairs pending_max
+v142 0 0.0 0 0 0.0 | 
+w142 0 0.0 0 0 0.0 | 
+c142_01 1 1018.3 1 1 1018.3 | 204-205 2 1018.3 window 14 4
+c142_02 6 266.3 6 0 1044.7 | 472-477 6 266.3 window 4 4; 330-330 1 217.0 window 4 2; 480-481 2 198.8 window 1 2; 530-530 1 125.5 window 3 3
+c142_03 6 1535.8 4 1 2546.9 | 843-904 62 1535.8 window 10 29; 784-784 1 486.9 window 3 9; 265-265 1 214.1 window 2 2; 1042-1042 1 134.4 hold 1 1
+c142_04 2 235.8 1 0 302.9 | 261-268 8 235.8 window 1 1; 506-508 3 67.1 window 1 1
+c142_05 5 1802.7 3 1 2150.1 | 232-275 44 1802.7 window 24 21; 1002-1002 1 150.0 hold 1 1; 1008-1009 2 101.4 hold 2 2; 1296-1296 1 65.5 hold 1 1
+c142_06 2 771.4 1 0 853.0 | 262-266 5 771.4 window 17 25; 292-292 1 81.6 window 2 2
+c142_07 1 298.7 1 0 298.7 | 398-407 10 298.7 window 2 1
+c142_08 1 655.4 1 0 655.4 | 202-230 29 655.4 window 1 1
+c142_09 1 1282.3 1 1 1282.3 | 180-184 5 1282.3 window 2 2
+c142_10 1 355.0 1 0 355.0 | 225-230 6 355.0 window 6 3
+census sums: runs 26, gap >= 100 ms 20 (levels 10/10), gap >= 1 s 4 (levels 4/10)
+
+== T3. form ban: rows with skipped draws that were not held (next_held = held flag of the next two rows); held rows without skip; skc_bad
+v142 skip_not_held 0 [] | held_without_skip 0 [] | skc_bad 0
+w142 skip_not_held 0 [] | held_without_skip 0 [] | skc_bad 0
+c142_01 skip_not_held 0 [] | held_without_skip 0 [] | skc_bad 0
+c142_02 skip_not_held 4 [(329, 1, [1, 0]), (471, 1, [1, 1]), (529, 1, [1, 0]), (1302, 4, [1, 1])] | held_without_skip 2 [472, 481] | skc_bad 0
+c142_03 skip_not_held 1 [(2625, 1, [0, 1])] | held_without_skip 1 [898] | skc_bad 0
+c142_04 skip_not_held 1 [(504, 1, [0, 1])] | held_without_skip 1 [508] | skc_bad 0
+c142_05 skip_not_held 1 [(368, 1, [1, 0])] | held_without_skip 1 [369] | skc_bad 0
+c142_06 skip_not_held 0 [] | held_without_skip 0 [] | skc_bad 0
+c142_07 skip_not_held 1 [(396, 4, [0, 1])] | held_without_skip 1 [401] | skc_bad 0
+c142_08 skip_not_held 0 [] | held_without_skip 5 [202, 217, 221, 225, 229] | skc_bad 0
+c142_09 skip_not_held 1 [(179, 4, [1, 1])] | held_without_skip 3 [181, 183, 184] | skc_bad 0
+c142_10 skip_not_held 1 [(224, 1, [1, 1])] | held_without_skip 2 [226, 230] | skc_bad 0
+
+== T4. every frame >= 100 ms after the first scene frame
+tag n dt part cls skip held pairs run_first draws cpu_gpu cpu_main semwait img_up_kb img_imp_kb img_new buf_new opens cs_ready cs_src_miss prio late saved line
+v142 382 180521 window NONE 0 0 0 0 6662 169301 17499 129286 1333754 743924 986 1571 41 0 44 [] [] [] 236004
+c142_01 204 816566 window PIPE 22 1 10 1 14627 110405 6926 739403 329973 168136 25 383 344 23 62 [686428] [] [] 363469
+c142_01 206 101796 window NEAR 0 0 0 0 4493 89605 7500 69865 1027701 1325312 374 171 50 0 38 [] [] [] 380442
+c142_02 330 165677 window PIPE 6 1 4 1 2534 74476 11238 110010 782956 543604 174 727 96 0 69 [64156] [] [1201] 267075
+c142_02 332 299442 window NEAR 0 0 0 0 4134 26865 18571 295295 496053 180416 29 96 133 0 2 [283539] [] [] 269168
+c142_02 333 299580 window NONE 0 0 0 0 2066 11591 9416 295487 32192 0 2 50 159 0 0 [284444] [] [] 270377
+c142_02 334 284617 window NONE 0 0 0 0 743 6296 6927 568027 28608 0 1 11 162 0 0 [282785] [] [] 271604
+c142_02 335 300409 window NONE 0 0 0 0 3590 18422 9368 578192 32192 0 2 27 220 0 0 [286003] [] [] 273244
+c142_02 336 298800 window NONE 0 0 0 0 2254 19063 7628 295713 168576 190464 48 43 32 0 1 [285677] [] [] 273564
+c142_02 337 299220 window NONE 0 0 0 0 2185 13313 8612 305838 34688 2112 5 10 32 0 2 [285620] [] [] 273882
+c142_02 474 100019 window PIPE 3 1 3 0 2984 89502 8722 63491 163329 135424 76 44 11 0 28 [] [] [] 323927
+c142_02 482 135990 window NEAR 0 0 0 0 5118 121600 7182 18802 25792 768 15 102 1 0 0 [] [] [] 348859
+c142_02 488 148505 window NONE 0 0 0 0 5814 130219 8577 27572 51200 3840 64 80 115 0 69 [] [] [] 389171
+c142_02 496 116380 window NONE 0 0 0 0 11941 103589 9181 31861 107520 115968 43 30 60 0 0 [] [] [] 428970
+c142_02 529 111102 window PIPE 1 0 1 0 12126 97955 9501 28905 13824 0 5 45 0 0 0 [] [] [] 461759
+c142_02 661 218174 window NONE 0 0 0 0 10437 213980 9593 191727 21376 7552 11 4 0 0 0 [79825, 85542] [] [] 483584
+c142_02 795 165920 window NONE 0 0 0 0 11941 139884 8981 36163 13824 0 5 4 0 42 0 [] [] [] 497191
+c142_02 1358 149651 hold NONE 0 0 0 0 9512 118994 10650 133618 15232 1408 5 2 9 0 0 [95090] [] [] 557383
+c142_02 2557 151746 hold NONE 0 0 0 0 5294 126770 7694 146072 24192 6208 18 11 0 0 0 [106539] [] [1411] 725366
+c142_03 265 130020 window PIPE 17 1 2 1 1714 119023 4957 152605 454520 436148 128 201 22 4 53 [65901] [] [1417] 262553
+c142_03 784 432339 window PIPE 19 1 3 1 4041 409322 8644 80324 137648 137648 118 210 0 0 59 [] [] [] 349499
+c142_03 843 164501 window PIPE 68 1 9 1 2951 156276 9893 156291 2688 0 7 4 0 0 4 [104272] [] [] 399618
+c142_03 1042 115028 hold PIPE 1 1 1 1 2460 19784 9255 15283 64 0 4 0 0 0 0 [] [] [] 423866
+c142_05 232 448789 window PIPE 83 1 23 1 5425 409153 7619 262113 964409 690100 838 816 247 0 76 [130635] [] [] 287605
+c142_05 240 133372 window PIPE 1 1 1 0 5210 119729 7318 32126 112896 52928 11 42 58 23 0 [] [] [] 331180
+c142_05 526 143602 window NONE 0 0 0 0 1304 143372 6536 14006 13824 0 3 0 0 0 0 [] [] [] 373184
+c142_05 1002 131181 hold PIPE 1 1 1 1 2133 22261 6651 131415 22144 18176 13 4 0 0 32 [113160] [] [] 423092
+c142_06 262 465210 window PIPE 50 1 17 1 10956 411388 13336 116546 1221010 728692 1177 1163 241 23 83 [] [] [] 315708
+c142_06 455 149912 window NONE 0 0 0 0 7467 134915 8047 28075 74640 1680 6 5 0 0 0 [] [] [] 369564
+c142_09 180 113999 window PIPE 31 1 2 1 2154 97188 6701 101593 695104 431660 270 685 0 0 62 [] [] [] 206324
+c142_09 182 316631 window PIPE 52 1 2 0 3864 50788 11986 308933 982329 595904 186 370 0 0 0 [266184] [] [] 206637
+c142_09 183 283174 window PIPE 0 1 0 0 1341 14420 7431 286560 181376 88384 2 100 0 0 0 [268979] [] [] 206728
+c142_09 184 266420 window PIPE 0 1 0 0 1353 14362 7406 268308 181376 88896 2 55 0 0 0 [260947] [] [] 206818
+c142_09 185 285526 window NEAR 0 0 0 0 1346 12957 7104 285384 181376 88832 2 57 0 0 0 [268614] [] [] 206908
+c142_09 186 298651 window NEAR 0 0 0 0 1342 13608 6811 295959 181120 88704 2 60 0 23 0 [270313] [] [] 207271
+c142_09 187 283939 window NONE 0 0 0 0 1036 11313 8405 561022 139691 129344 12 13 0 0 3 [269833] [] [] 207363
+c142_10 225 217657 window PIPE 60 1 6 1 4695 177229 6886 255272 920719 566260 645 807 100 0 56 [175624] [] [1834] 224047
+census, frames >= 100 ms by part and class: [(('hold', 'NONE'), [2, 301397]), (('hold', 'PIPE'), [2, 246209]), (('window', 'NEAR'), [5, 1121405]), (('window', 'NONE'), [12, 2709058]), (('window', 'PIPE'), [15, 4165476])]
+w142 (validation run): 2440 frames >= 100 ms, classes ['NONE'] - not classified (validation)
+
+== T5. span of a skipped VS/PS pair (first..last row that logged it): presented time, rows
+v142 pairs 0 span_us None | top []
+w142 pairs 0 span_us None | top []
+c142_01 pairs 14 span_us {'max': 816566, 'med': 816566, 'min': 99987, 'p95': 816566} | top [('06c0b6a2f0f5743e/b96c2898f05637df', 1, 816566), ('1b18cd50ab8b4bf8/8ddc98682cf03c05', 1, 816566), ('2335532b8e5ee2bd/4d72ec7fd676ae4a', 1, 816566)]
+c142_02 pairs 17 span_us {'max': 215155, 'med': 111102, 'min': 16802, 'p95': 215155} | top [('960ad032acbd9134/43cdacd2807376b8', 5, 215155), ('cf1834bb2d5ac83d/0eceb5a172ebb12f', 4, 183674), ('cf1834bb2d5ac83d/845e6beb25c48d83', 3, 166619)]
+c142_03 pairs 16 span_us {'max': 9296476, 'med': 533073, 'min': 28750, 'p95': 9296476} | top [('721a401d22a5d82e/55dcd484fab4c947', 520, 9296476), ('58f24a53c168f6c5/1974d0d59ab6429f', 99, 2748512), ('a4d9ec11b9e813f3/04a29e34109469cb', 65, 1998976)]
+c142_04 pairs 2 span_us {'max': 216592, 'med': 216592, 'min': 65896, 'p95': 216592} | top [('e234ee6bc9c2fb00/058a3a2099b8ad01', 8, 216592), ('57a2d29431f1e0f5/d88770f91d5d003e', 4, 65896)]
+c142_05 pairs 28 span_us {'max': 12099097, 'med': 448789, 'min': 47943, 'p95': 1781815} | top [('581f85caa12e6165/2190adcc312b2e6e', 635, 12099097), ('2b3be82b8235ac05/92b1436c8042e396', 44, 1781815), ('09d3d79d1f2e8d48/fc4314dad69463cc', 8, 748558)]
+c142_06 pairs 18 span_us {'max': 1732325, 'med': 465210, 'min': 47225, 'p95': 1732325} | top [('00b124d0084bf058/13db9f7200632c02', 31, 1732325), ('10d4b54e3d41e16a/b18eadd1c0fab3b8', 5, 731470), ('3fec74f94fe74bc8/d4947c8a62b867e9', 1, 465210)]
+c142_07 pairs 3 span_us {'max': 150394, 'med': 148274, 'min': 34793, 'p95': 150394} | top [('cf1834bb2d5ac83d/48ca1776a2fac11c', 5, 150394), ('9107c4295ae71f59/4d72ec7fd676ae4a', 7, 148274), ('a2fa0872af3e5e9d/0fcbcadd13799ddd', 1, 34793)]
+c142_08 pairs 1 span_us {'max': 616737, 'med': 616737, 'min': 616737, 'p95': 616737} | top [('7d308cde1e9f2e5a/949f191df69f7a18', 28, 616737)]
+c142_09 pairs 2 span_us {'max': 536779, 'med': 536779, 'min': 447176, 'p95': 536779} | top [('3c5da5de59699c9c/81f1012ab6319187', 4, 536779), ('ea53112114a61307/dfbe0413c444964c', 3, 447176)]
+c142_10 pairs 6 span_us {'max': 317479, 'med': 217657, 'min': 217657, 'p95': 317479} | top [('64e405fef41f7856/4b2ba1eaa4e42e47', 5, 317479), ('0c292c39e185e28d/f17fb16c34614344', 2, 248978), ('2aacf97ccc25e636/de77cfe4df77658e', 1, 217657)]
+census: pairs 107, span us min 16802 p25 150394 med 448789 p75 598241 p95 1732325 max 12099097; <= 20 ms: 1; >= 100 ms: 86; >= 1 s: 8
+
+== T6. mechanisms (header lines; line number in the log)
+-- v142 (C:/kyty/s142/log_v142.txt) sha256 565707122e53bb50c8bd1ff73cfa956388a9e86ba18a2f64ba4a49ecb3b46aad
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 88734760 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   585 PipelinePrecache: 1013 recipes -> 849 graphics + 123 compute pipelines queued, 41 skipped, 1819 sources loaded, complete, 676 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   588 PipelinePrecache: all pipelines created, 676 ms
+   4297 Vulkan pipeline cache: saved 88734760 bytes to _PipelineCache\PPSA21564.bin (80044 us)
+   4298 ShaderPreparation: ready completed=1013 total=1013 skipped=41
+   4299 ShaderPreparation: startup wait finished in 85 ms presents_other=0 presents_main=0
+   4882 --- Execute: Main
+   1192238 Event: quit
+   recipes saved (row n, count): []
+   CsPretranslate: ready 442 (sum us 11030324) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 364 skipped 116; before entry: ready 78 skipped 21
+   totals: lines 1192238 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 123 (after first 0) AsyncCompute 256 held lines 0 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- w142 (C:/kyty/s142/log_w142.txt) sha256 7f42a2d3e1a151a2afeac6e75da6fa2085808b9c747aed65145aff7483a29924
+   81 Shader translation cache: _ShaderCache\PPSA21564
+   82 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   83 Vulkan pipeline cache: loaded 88734760 bytes from _PipelineCache\PPSA21564.bin
+   84 AsyncPipelines: mode=1 workers=4
+   85 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   593 PipelinePrecache: 1013 recipes -> 849 graphics + 123 compute pipelines queued, 41 skipped, 1819 sources loaded, complete, 3388 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   597 PipelinePrecache: all pipelines created, 3392 ms
+   4300 Vulkan pipeline cache: saved 88734760 bytes to _PipelineCache\PPSA21564.bin (84715 us)
+   4301 ShaderPreparation: ready completed=1013 total=1013 skipped=41
+   4302 ShaderPreparation: startup wait finished in 90 ms presents_other=0 presents_main=0
+   4882 --- Execute: Main
+   2389025 Event: quit
+   recipes saved (row n, count): []
+   CsPretranslate: ready 442 (sum us 9740922) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 387 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 2389043 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 123 (after first 0) AsyncCompute 256 held lines 0 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_01 (C:/kyty/s142/log_c142_01.txt) sha256 66b4ff7e0e50a8a445a3820b27976eef93b32bf81afc72e8efeef571057ec738
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 88734760 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   585 PipelinePrecache: 1013 recipes -> 849 graphics + 123 compute pipelines queued, 41 skipped, 1819 sources loaded, complete, 345 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   588 PipelinePrecache: all pipelines created, 345 ms
+   4297 Vulkan pipeline cache: saved 88734760 bytes to _PipelineCache\PPSA21564.bin (75800 us)
+   4298 ShaderPreparation: ready completed=1013 total=1013 skipped=41
+   4299 ShaderPreparation: startup wait finished in 78 ms presents_other=0 presents_main=0
+   4879 --- Execute: Main
+   979789 Event: quit
+   979791 Vulkan pipeline cache: saved 90186782 bytes to _PipelineCache\PPSA21564.bin (79668 us)
+   recipes saved (row n, count): [[202, 1015], [None, 1200]]
+   CsPretranslate: ready 439 (sum us 11089320) skipped 137 enqueue_skipped 0 hit 0 miss 3 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 384 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 979791 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 126 (after first 2) AsyncCompute 259 held lines 3 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_02 (C:/kyty/s142/log_c142_02.txt) sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 90186782 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   598 PipelinePrecache: 1200 recipes -> 1033 graphics + 126 compute pipelines queued, 41 skipped, 2190 sources loaded, complete, 381 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   601 PipelinePrecache: all pipelines created, 381 ms
+   4310 Vulkan pipeline cache: saved 90186782 bytes to _PipelineCache\PPSA21564.bin (74362 us)
+   4311 ShaderPreparation: ready completed=1200 total=1200 skipped=41
+   4312 ShaderPreparation: startup wait finished in 77 ms presents_other=0 presents_main=0
+   4893 --- Execute: Main
+   496947 Vulkan pipeline cache: saved 90591072 bytes to _PipelineCache\PPSA21564.bin (93261 us)
+   557303 Vulkan pipeline cache: saved 90629860 bytes to _PipelineCache\PPSA21564.bin (92638 us)
+   724494 Vulkan pipeline cache: saved 90629860 bytes to _PipelineCache\PPSA21564.bin (86465 us)
+   887495 Event: quit
+   887497 Vulkan pipeline cache: saved 90629860 bytes to _PipelineCache\PPSA21564.bin (80789 us)
+   recipes saved (row n, count): [[330, 1201], [1189, 1393], [2557, 1411], [None, 1416]]
+   CsPretranslate: ready 437 (sum us 10631643) skipped 137 enqueue_skipped 0 hit 0 miss 3 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 359 skipped 116; before entry: ready 78 skipped 21
+   totals: lines 887497 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 129 (after first 3) AsyncCompute 259 held lines 13 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_03 (C:/kyty/s142/log_c142_03.txt) sha256 9aaa83b0c73e66b13c8d40d6433bce23ded53aaa579e3dd1be00d539892ed3cb
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 90629860 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   611 PipelinePrecache: 1416 recipes -> 1246 graphics + 129 compute pipelines queued, 41 skipped, 2619 sources loaded, complete, 412 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   614 PipelinePrecache: all pipelines created, 412 ms
+   4323 Vulkan pipeline cache: saved 90629860 bytes to _PipelineCache\PPSA21564.bin (77980 us)
+   4324 ShaderPreparation: ready completed=1416 total=1416 skipped=41
+   4325 ShaderPreparation: startup wait finished in 80 ms presents_other=0 presents_main=0
+   4905 --- Execute: Main
+   423789 Vulkan pipeline cache: saved 92136273 bytes to _PipelineCache\PPSA21564.bin (87008 us)
+   565427 Vulkan pipeline cache: saved 92136273 bytes to _PipelineCache\PPSA21564.bin (80536 us)
+   952600 Event: quit
+   952602 Vulkan pipeline cache: saved 92136273 bytes to _PipelineCache\PPSA21564.bin (92621 us)
+   recipes saved (row n, count): [[265, 1417], [2626, 1558], [None, 1563]]
+   CsPretranslate: ready 437 (sum us 11731834) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 376 skipped 124; before entry: ready 55 skipped 12
+   totals: lines 952602 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 129 (after first 0) AsyncCompute 256 held lines 64 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_04 (C:/kyty/s142/log_c142_04.txt) sha256 bd5f547706caad1df9470af8265711dbc86e1bdde7f19dfdb1f9a2b30a0f6133
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 92136273 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   615 PipelinePrecache: 1563 recipes -> 1393 graphics + 129 compute pipelines queued, 41 skipped, 2912 sources loaded, complete, 474 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   618 PipelinePrecache: all pipelines created, 474 ms
+   4327 Vulkan pipeline cache: saved 92136273 bytes to _PipelineCache\PPSA21564.bin (71973 us)
+   4328 ShaderPreparation: ready completed=1563 total=1563 skipped=41
+   4329 ShaderPreparation: startup wait finished in 74 ms presents_other=0 presents_main=0
+   4911 --- Execute: Main
+   883857 Event: quit
+   883868 Vulkan pipeline cache: saved 92372771 bytes to _PipelineCache\PPSA21564.bin (79227 us)
+   recipes saved (row n, count): [[259, 1565], [None, 1604]]
+   CsPretranslate: ready 436 (sum us 12366829) skipped 137 enqueue_skipped 0 hit 0 miss 8 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 358 skipped 116; before entry: ready 55 skipped 12
+   totals: lines 883868 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 137 (after first 0) AsyncCompute 264 held lines 12 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_05 (C:/kyty/s142/log_c142_05.txt) sha256 9ea02549b36c01009255f63b420cafee8ad7c6e0018caffac2d9590282d94969
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 92372771 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   647 PipelinePrecache: 1604 recipes -> 1426 graphics + 137 compute pipelines queued, 41 skipped, 2986 sources loaded, complete, 488 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   650 PipelinePrecache: all pipelines created, 488 ms
+   4359 Vulkan pipeline cache: saved 92372771 bytes to _PipelineCache\PPSA21564.bin (87852 us)
+   4360 ShaderPreparation: ready completed=1604 total=1604 skipped=41
+   4361 ShaderPreparation: startup wait finished in 92 ms presents_other=0 presents_main=0
+   4941 --- Execute: Main
+   423006 Vulkan pipeline cache: saved 92984474 bytes to _PipelineCache\PPSA21564.bin (92793 us)
+   1030145 Event: quit
+   1030146 Vulkan pipeline cache: saved 93008722 bytes to _PipelineCache\PPSA21564.bin (82729 us)
+   recipes saved (row n, count): [[230, 1605], [1296, 1701]]
+   CsPretranslate: ready 436 (sum us 11504829) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 381 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 1030146 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 137 (after first 0) AsyncCompute 256 held lines 49 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_06 (C:/kyty/s142/log_c142_06.txt) sha256 a511e5d4af7a0f0a7f462b097c9a5f48ba58cff1b96194e176f76e404c71034b
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 93008722 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   647 PipelinePrecache: 1701 recipes -> 1523 graphics + 137 compute pipelines queued, 41 skipped, 3179 sources loaded, complete, 491 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   650 PipelinePrecache: all pipelines created, 491 ms
+   4359 Vulkan pipeline cache: saved 93008722 bytes to _PipelineCache\PPSA21564.bin (75811 us)
+   4360 ShaderPreparation: ready completed=1701 total=1701 skipped=41
+   4361 ShaderPreparation: startup wait finished in 79 ms presents_other=0 presents_main=0
+   4942 --- Execute: Main
+   710989 Event: quit
+   710991 Vulkan pipeline cache: saved 93360825 bytes to _PipelineCache\PPSA21564.bin (83941 us)
+   recipes saved (row n, count): [[259, 1704], [None, 1793]]
+   CsPretranslate: ready 433 (sum us 10639212) skipped 137 enqueue_skipped 0 hit 0 miss 3 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 378 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 710991 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 140 (after first 0) AsyncCompute 259 held lines 6 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_07 (C:/kyty/s142/log_c142_07.txt) sha256 5e1bd731e2e5d34530821d73677a6522a60f2759e43a5544453665ec6b0928ea
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 93360825 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   661 PipelinePrecache: 1793 recipes -> 1612 graphics + 140 compute pipelines queued, 41 skipped, 3359 sources loaded, complete, 528 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   664 PipelinePrecache: all pipelines created, 529 ms
+   4373 Vulkan pipeline cache: saved 93360825 bytes to _PipelineCache\PPSA21564.bin (87691 us)
+   4374 ShaderPreparation: ready completed=1793 total=1793 skipped=41
+   4375 ShaderPreparation: startup wait finished in 90 ms presents_other=0 presents_main=0
+   4956 --- Execute: Main
+   892194 Event: quit
+   892197 Vulkan pipeline cache: saved 93477912 bytes to _PipelineCache\PPSA21564.bin (82835 us)
+   recipes saved (row n, count): [[227, 1794], [None, 1807]]
+   CsPretranslate: ready 432 (sum us 12474734) skipped 137 enqueue_skipped 0 hit 0 miss 1 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 377 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 892197 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 141 (after first 0) AsyncCompute 257 held lines 10 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_08 (C:/kyty/s142/log_c142_08.txt) sha256 358be0e0d44d729e5e4c8a87d7bcbf4eab67dc54986f3928c661368a7ca13135
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 93477912 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   665 PipelinePrecache: 1807 recipes -> 1625 graphics + 141 compute pipelines queued, 41 skipped, 3386 sources loaded, complete, 535 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   668 PipelinePrecache: all pipelines created, 535 ms
+   4377 Vulkan pipeline cache: saved 93477912 bytes to _PipelineCache\PPSA21564.bin (70191 us)
+   4378 ShaderPreparation: ready completed=1807 total=1807 skipped=41
+   4379 ShaderPreparation: startup wait finished in 73 ms presents_other=0 presents_main=0
+   4959 --- Execute: Main
+   1053545 Event: quit
+   1053547 Vulkan pipeline cache: saved 93973356 bytes to _PipelineCache\PPSA21564.bin (81029 us)
+   recipes saved (row n, count): [[200, 1808], [None, 1825]]
+   CsPretranslate: ready 432 (sum us 12117756) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 377 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 1053547 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 141 (after first 0) AsyncCompute 256 held lines 30 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_09 (C:/kyty/s142/log_c142_09.txt) sha256 eadf72b5b79ac09679ac8ae028ba2d391a77ccb829c16bfae30681405d5f9d17
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 93973356 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   665 PipelinePrecache: 1825 recipes -> 1643 graphics + 141 compute pipelines queued, 41 skipped, 3422 sources loaded, complete, 537 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   668 PipelinePrecache: all pipelines created, 537 ms
+   4377 Vulkan pipeline cache: saved 93973356 bytes to _PipelineCache\PPSA21564.bin (74391 us)
+   4378 ShaderPreparation: ready completed=1825 total=1825 skipped=41
+   4379 ShaderPreparation: startup wait finished in 77 ms presents_other=0 presents_main=0
+   4960 --- Execute: Main
+   832118 Event: quit
+   832182 Vulkan pipeline cache: saved 94249535 bytes to _PipelineCache\PPSA21564.bin (95600 us)
+   recipes saved (row n, count): [[179, 1826], [None, 1831]]
+   CsPretranslate: ready 432 (sum us 12261849) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 377 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 832182 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 141 (after first 0) AsyncCompute 256 held lines 5 (cap 64) torn FrameTrace 0 x_missing(post) 0
+-- c142_10 (C:/kyty/s142/log_c142_10.txt) sha256 d78e0342fa2186f45fe7b470c15965e0278c4fae3fd4d365318b48ddd4519e70
+   77 Shader translation cache: _ShaderCache\PPSA21564
+   78 Vulkan pipeline cache: loading _PipelineCache\PPSA21564.bin
+   79 Vulkan pipeline cache: loaded 94249535 bytes from _PipelineCache\PPSA21564.bin
+   80 AsyncPipelines: mode=1 workers=4
+   81 ShaderSeed: compatibility=KytySeed1:PPSA21564:01.007.000:KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank::10288:376:216:44:516:125:000010de:00002c59
+   665 PipelinePrecache: 1831 recipes -> 1649 graphics + 141 compute pipelines queued, 41 skipped, 3434 sources loaded, complete, 557 ms (scratch: 0 pipelines, max 0 dwords/thread)
+   668 PipelinePrecache: all pipelines created, 557 ms
+   4377 Vulkan pipeline cache: saved 94249535 bytes to _PipelineCache\PPSA21564.bin (138213 us)
+   4378 ShaderPreparation: ready completed=1831 total=1831 skipped=41
+   4379 ShaderPreparation: startup wait finished in 146 ms presents_other=0 presents_main=0
+   4959 --- Execute: Main
+   769240 Event: quit
+   769242 Vulkan pipeline cache: saved 94435637 bytes to _PipelineCache\PPSA21564.bin (98951 us)
+   recipes saved (row n, count): [[225, 1834], [None, 1842]]
+   CsPretranslate: ready 432 (sum us 11868914) skipped 137 enqueue_skipped 0 hit 0 miss 0 summary 0 reasons [('SOP1 0x0c', 1), ('SOP1 0x21', 96), ('VOPC 0xe3', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics/shader/recompiler/TranslationBudget.h:21 speculative t', 4), ('reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 s', 32)]
+   CsPretranslate after the first scene frame: ready 377 skipped 125; before entry: ready 55 skipped 12
+   totals: lines 769242 AvTrace 0 ShaderRegister 0 ShaderFirstUse 0 PipelineTrace-CS-begin 141 (after first 0) AsyncCompute 256 held lines 6 (cap 64) torn FrameTrace 0 x_missing(post) 0
+ALL OK

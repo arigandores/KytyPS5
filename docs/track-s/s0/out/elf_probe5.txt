@@ -1,0 +1,6 @@
+{'n out of range': 4576, 'with binary info': 4}
+signatures {b'<bin>': 4}
+unique nonzero hashes in ELF payloads 4 by info.type {0: 2, 4: 1, 15: 1}
+snap0 cache: unique hashes 506 {'cs': 122, 'ps': 230, 'vs': 154}
+snap0 cache hashes found among ELF payload hashes: 0 of 506 {'cs': '0/122', 'ps': '0/230', 'vs': '0/154'}
+info.length bytes min/med/max 132353 8130682 12516867

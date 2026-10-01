@@ -1,0 +1,22 @@
+vulkaninfo extract (S0, HPP-294): line number of C:/kyty/s288/s0/vulkaninfo.out.txt, text
+53 VK_EXT_shader_object : extension revision 1
+420 apiVersion        = 1.4.351 (4211039)
+421 driverVersion     = 616.56.0.0 (2584608768)
+422 vendorID          = 0x10de
+423 deviceID          = 0x2c59
+424 deviceType        = PHYSICAL_DEVICE_TYPE_DISCRETE_GPU
+425 deviceName        = NVIDIA GeForce RTX 5080 Laptop GPU
+806 graphicsPipelineLibraryFastLinking                        = true
+807 graphicsPipelineLibraryIndependentInterpolationDecoration = true
+1050 driverID                                             = DRIVER_ID_NVIDIA_PROPRIETARY
+1051 driverName                                           = NVIDIA
+1052 driverInfo                                           = 616.56
+1303 VK_EXT_graphics_pipeline_library              : extension revision 1
+1327 VK_EXT_pipeline_creation_cache_control        : extension revision 3
+1352 VK_EXT_shader_module_identifier               : extension revision 1
+1353 VK_EXT_shader_object                          : extension revision 1
+1430 VK_KHR_pipeline_library                       : extension revision 1
+2075 graphicsPipelineLibrary = true
+2319 shaderModuleIdentifier = true
+2323 shaderObject = true
+2477 pipelineCreationCacheControl                       = true

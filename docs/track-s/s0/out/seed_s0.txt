@@ -1,0 +1,4 @@
+seed compatibility.txt == log line 81 of log_c142_01.txt: True
+seed shaders 512
+seed pipelines.bin magic b'KytyPR1\n' signature+layout KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank:10288:376:216:44:516:125 recipes 638 bytes 6149106 sha256 b5f88e59717a18dee3d1567dd9d3fafb10db430a3bb174a2e7134f5bfafe6533
+snap0 pipelines.bin magic b'KytyPR1\n' signature+layout KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank:10288:376:216:44:516:125 recipes 1842 bytes 19810316 sha256 b462896a50e0735cc9502bf80af12e27246a23217f9fc3b71381bc3bbaa77e24

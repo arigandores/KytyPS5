@@ -1,0 +1,14 @@
+tag first_n | window: U skip_or_held k3k2 both | all rows: sum skc_ap_skip, skip lines, sum skc_held_inc, held lines (cap 64) | identities
+v142 380 | 1 0 1 0 | 0 0 0 0 | skip OK held OK
+w142 187 | 594 0 594 0 | 0 0 0 0 | skip OK held OK
+c142_01 203 | 3 2 2 1 | 225 225 3 3 | skip OK held OK
+c142_02 328 | 24 13 14 3 | 41 41 13 13 | skip OK held OK
+c142_03 263 | 24 24 3 3 | 2203 2203 68 64 | skip OK held OK
+c142_04 260 | 12 12 0 0 | 37 37 12 12 | skip OK held OK
+c142_05 231 | 47 46 3 2 | 240 240 49 49 | skip OK held OK
+c142_06 261 | 7 6 2 1 | 56 56 6 6 | skip OK held OK
+c142_07 229 | 11 11 0 0 | 19 19 10 10 | skip OK held OK
+c142_08 201 | 29 29 0 0 | 140 140 30 30 | skip OK held OK
+c142_09 178 | 9 6 7 4 | 90 90 5 5 | skip OK held OK
+c142_10 223 | 7 7 1 1 | 77 77 6 6 | skip OK held OK
+ALL OK

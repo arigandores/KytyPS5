@@ -1,0 +1,5 @@
+candidates 6599
+result {'payload located': 97, 'OrbShdr near end': 0, 'no payload located': 6502}
+field offset hits (relative pointer at header+N whose target holds s_endpgm, dword aligned) {8: 97, 40: 90, 48: 76, 56: 20}
+located by binary type {0: 18, 1: 56, 2: 23}
+unique payloads (type, sha256) 97 by type {0: 18, 1: 56, 2: 23}

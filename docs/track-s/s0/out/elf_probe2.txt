@@ -1,0 +1,2 @@
+6599 {'code ptr 0': 6599}
+OrbShdr occurrences in the whole ELF: 0

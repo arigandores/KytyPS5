@@ -1,0 +1,177 @@
+# FSc (HPP-370): writes pred/01_fs.md - the seal of the FSc series (ROADMAP p.282(g)(3), p.281(v)-(g), p.286(v) N1, p.258(d)).
+# The text of p.282(g)(3) (from the line "(3) **FSc (Harness Engineer)**" to the line before "(4) **FSd"), of p.281(v)-(g) (from
+# "(v) **Otgruzka" to the line before "(d) **Reestr**") and of p.286(v) (from "(v) **N1" to the line before "(g) **Pravilo 24")
+# is copied verbatim from git (KytyPS5 COMMIT:docs/ROADMAP.md); every sealed file gets one 'seal: <sha256> <name>' line.
+# UTF-8, LF.   usage: python mk_seal_fs.py <UTC when> <COMMIT>
+import hashlib
+import os
+import subprocess
+import sys
+
+HERE = 'C:/kyty/f287/fsc'
+sys.path.insert(0, HERE)
+import fs_read as R  # noqa: E402
+
+GIT = 'C:/Program Files/Git/cmd/git.exe'
+when, COMMIT = sys.argv[1], sys.argv[2]
+road = subprocess.run([GIT, '-C', 'C:/kyty/KytyPS5', 'show', '%s:docs/ROADMAP.md' % COMMIT], capture_output=True,
+                      check=True).stdout.decode('utf-8').split('\n')
+
+
+def block(item, start, stop, ctl):
+    i0 = next(i for i, l in enumerate(road) if l.startswith('%d. **' % item))
+    a = next(i for i in range(i0, len(road)) if road[i].lstrip().startswith(start))
+    b = next(i for i in range(a + 1, len(road)) if road[i].lstrip().startswith(stop))
+    assert ctl in road[a + 1], (item, road[a + 1][:60])
+    return a, b
+
+
+g0, g1 = block(282, '(3) **FSc (Harness Engineer)**', '(4) **FSd (лид)**', 'трансляции (корень и каталоги вариантов)')
+v0, v1 = block(281, '(в) **Отгрузка умолчания `KYTY_FIX_DUALSRC=1`', '(д) **Реестр**', 'Основания: [c] A/B видео по уровню')
+n0, n1 = block(286, '(в) **N1 — в печать FSc**', '(г) **Правило 24:**', 'идёт. Блокер FSb у FSc снят этой приёмкой')
+
+
+def sha(p):
+    return hashlib.sha256(open(p, 'rb').read()).hexdigest()
+
+
+def path(n):
+    return n if n.startswith('C:/') else os.path.join(HERE, n)
+
+
+L = []
+A = L.append
+A('# Печать 01 звена FSc трека F — регрессия бинаря отгрузки трека F (`pred/01_fs.md`)')
+A('')
+A('Звено FSc (`HPP-370`, Harness Engineer). Записана %s (UTC по `date -u`) ДО первого прогона серии FSc. Основание — `ROADMAP.md`' % when)
+A('«СЕССИЯ 122» **п. 282(г)(3)** (`%s:docs/ROADMAP.md:%d`, якорь «(3) **FSc (Harness Engineer)**», контроль +1 — %d «трансляции (корень и' % (COMMIT, g0 + 1, g0 + 2))
+A('каталоги вариантов)»), **п. 281(в)–(г)** (`%s:docs/ROADMAP.md:%d`, якорь «(в) **Отгрузка умолчания `KYTY_FIX_DUALSRC=1`», контроль +1 — %d' % (COMMIT, v0 + 1, v0 + 2))
+A('«Основания: [c] A/B видео по уровню») и **п. 286(в) N1** (`%s:docs/ROADMAP.md:%d`, якорь «(в) **N1 — в печать FSc**», контроль +1 — %d' % (COMMIT, n0 + 1, n0 + 2))
+A('«идёт. Блокер FSb у FSc снят этой приёмкой»); п. 258(д) (член исполнителя), п. 221(в) (первый кадр сцены), п. 224 (активность валидации),')
+A('п. 273(з) (событие окна), п. 273(к)(2) (фильтр Ф6), п. 279(в) (ожидание `idle142`, один повтор отказа BUSY), п. 277(б)(2) (каталоги вариантов).')
+A('Пункты после выдачи звена, прочитанные перед печатью: п. 287 (F6b — очередь внутри F: «F5c и FSc раньше»), п. 288 (шаг 0 с. 145 — кэши драйвера')
+A('серии сессии: строка данных; приватность коммитов), п. 289 (P14) — объём FSc не меняют. Без мутантов (задание звена: скорер — фикстуры на каждый член);')
+A('без отзыва — печать называет константы пунктов дословно. После печати `fs_read.py`, `go_fs.sh`, `win_fs.py` и наборы не меняются; изменение — новая печать.')
+A('')
+A('## 1. Пункт 282(г)(3) — дословно (`%s:docs/ROADMAP.md:%d`–%d)' % (COMMIT, g0 + 1, g1))
+A('')
+A('```text')
+L.extend(road[g0:g1])
+A('```')
+A('')
+A('## 2. Пункт 281(в)–(г) — дословно (`%s:docs/ROADMAP.md:%d`–%d)' % (COMMIT, v0 + 1, v1))
+A('')
+A('```text')
+L.extend(road[v0:v1])
+A('```')
+A('')
+A('## 3. Пункт 286(в) (N1) — дословно (`%s:docs/ROADMAP.md:%d`–%d)' % (COMMIT, n0 + 1, n1))
+A('')
+A('```text')
+L.extend(road[n0:n1])
+A('```')
+A('')
+A('## 4. Что прогоняется (п. 282(г)(3), п. 286(в) N1)')
+A('')
+A('Одна серия под одним замком `C:/kyty/SEALED_RUN.lock`, по одной попытке на тег; провал — данные, повтора нет (повтор — только строкой лида).')
+A('Бинарь — только копия `C:/kyty/f287/bin/kyty_emulator_dac02fb9.exe` (sha256 `%s`); сверка sha256 копии и установленного файла перед' % R.BIN_SHA)
+A('каждым тегом; сборка FSb `2fc78597` в прогоны не идёт; пересборки нет. Установленная `9235a7ac` возвращается в ловушке выхода с проверкой sha.')
+A('Умолчания: ни одна `KYTY_FIX_*` не передаётся (у бинаря отгрузки умолчание 1 — `KYTY_FIX_B26`, `KYTY_FIX_B1B`, `KYTY_FIX_DUALSRC`, п. 286(а)(2)), кроме')
+A('`fs_d` — `KYTY_FIX_B1B=0`. `KYTY_PIPELINE_PRECACHE` не передаётся нигде (precache по умолчанию, п. 281(г)).')
+A('')
+A('| тег | пункт | уровень (`-lvl`) | форма | стена удержания (от «stable») | видео | буква |')
+A('|---|---|---|---|---|---|---|')
+A('| `fs_a` | (г)(3)(а) контрольный W | `underwater_aerial_garden` | W | 310 с | нет | строка `DualSrcBlend: supported=1 enabled=1` до первой `GuestOut`; вход; Σ`dt` ≥ 300 с; 0 `[Vulkan][E]`; валидация активна (п. 224); 0 строк лимита слоя |')
+A('| `fs_b` | (г)(3)(б) | `underwater_aerial_garden` | V | 330 с | да | Σ`dt` ≥ 300 с; ≥ 3 000 кадров; 0 глитчей; 0 маркеров смерти; 0 кадров ≥ 1 с; 0 `BvhLoopCapTrip:`; лист-пара «`v142` / FSc»; среднее `dt` — число |')
+A('| `fs_v` | (г)(3)(в) | `mini_giants_garden` | W | 310 с | нет | форма (а); Σ`dt` ≥ 310 с; 0 `[Vulkan][E]`; ≥ 1 строка `DualSrcBlend: patched ps=5514e10f1a60df83` |')
+A('| `fs_g` | (г)(3)(г) | `mini_giants_garden` | V | 330 с | да | стена ≥ 330 с; ≥ 3 000 кадров; 0 глитчей; 0 маркеров; лист против `f4c_g` |')
+A('| `fs_d` | (г)(3)(д) информация | `underwater_aerial_garden` | V, `KYTY_FIX_B1B=0` | 330 с | нет | Σ`dt` ≥ 300 с; среднее `dt` — число; вердикта не задаёт |')
+A('')
+A('W: `--vulkan-validation true`, `VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin`, `VK_LAYER_DUPLICATE_MESSAGE_LIMIT=%s`,' % R.VKDUP)
+A('`VK_LAYER_MESSAGE_ID_FILTER=%s` (как `sc145`, п. 273(к)(2)); `--stable-draws 300 --timeout 600`. V: `--stable-draws 300 --timeout 480`.' % R.VKFILTER)
+A('Каждый прогон — `KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0`, `KYTY_GPU_CHECKPOINTS` не передаётся. Перед каждым тегом — ожидание простоя `idle142` до 300 с')
+A('шагом 15 с и один повтор отказа BUSY `enter_scene` до старта эмулятора (п. 279(в)); отказ до старта эмулятора — не попытка. Перед каждым тегом файл')
+A('рецептов каталога варианта тега (`variant_fixb26_fixb1b/pipelines.bin`, у `fs_d` — `variant_fixb26/pipelines.bin`) разбирается `recipes143.py`, если есть —')
+A('строка `times.txt`, информация (п. 281(г): «файл рецептов наполняется заново»).')
+A('')
+A('**Кэши (п. 228(в), п. 277(б)(2), п. 282(г)(3)).** Внутри замка до установки: список содержимого `_ShaderCache/PPSA21564` (корень, файл рецептов корня')
+A('`pipelines.bin`, все каталоги вариантов со своими `pipelines.bin`) и **список каталогов вариантов** с его sha — строки `times.txt`; копия в `cache_snap/`;')
+A('после серии каталог прогона переносится в `cache_run/<UTC>/`, копия возвращается, список содержимого и список каталогов обязаны совпасть с исходными')
+A('(каталог, которого до серии не было, после серии отсутствует); `GLCache` — манифест до/после, копия и возврат (`GLRESTORE=1`); `_PipelineCache` — список,')
+A('копия и возврат (член исполнителя И10). Несовпадение — стоп-файл `C:/kyty/f287/STOP`, комментарий в `HPP-370`.')
+A('')
+A('**Окно замка (`win_fs.py`, строка `times.txt` с ответом API):** `HPP-369` (FSb) — `done` без прогона; `HPP-357` (F5c — первым внутри F при одновременном')
+A('ожидании), `HPP-352` (шаг прогонов с. 145), `HPP-364` (P17) — не `todo`/`in_progress` и без прогона; иначе — BUSY, замок не берётся.')
+A('')
+A('**Остановка серии** (стоп-проверка `fs_read.py --stop-check` после каждого тега и rc `enter_scene`): нет чтения; `NOT ADMITTED`; `INVALID`; `WINDOW EVENT`;')
+A('`fs_a` не `PASS`; маркер смерти без строки `[Vulkan][E]`; rc `enter_scene` ≠ 0 (кроме остановки валидацией — данные) — следующие теги не идут, вопрос лиду.')
+A('Провал члена (б)–(г), `NOT EVALUABLE` (б)–(д) — данные, серия идёт.')
+A('')
+A('## 5. Правило чтения (`fs_read.py`)')
+A('')
+A('Чтение s142 не копируется: `C:/kyty/s142/sc142.py` импортируется после сверки sha256 `%s` (`scan`, `derive`, `markers`, `validation`,' % R.SC142_SHA)
+A('`read_glitch`, `last_value`; первый кадр сцены — первая строка `FrameTrace` с `draws` ≥ 100 после строки входа, п. 221(в); Σ`dt` — сумма `dt_us` показанных')
+A('кадров после первого кадра сцены до смены сцены).')
+A('')
+A('1. **Допуск** (каждый тег): одна попытка; `-lvl <уровень>`; sha256 бинаря = `dac02fb9…` (п. 286(в) N1); `KYTY_FIX_B26`, `KYTY_FIX_B1B`, `KYTY_FIX_DUALSRC`,')
+A('   `KYTY_FIX_MINIMIZE` не заданы (у `fs_d` — `KYTY_FIX_B1B` ровно `0`); не заданы %s;' % ', '.join('`%s`' % k for k in R.OTHER_ABSENT))
+A('   `KYTY_GPU_CLOCK_PIN=1`; видео — у `fs_b`, `fs_g` (`rec_<тег>.mp4`), у прочих нет; `--vulkan-validation` — `true` у W, `false` у прочих; у W — фильтр Ф6 и лимит')
+A('   повторов ровно как выше и валидация активна по трём признакам п. 224 (0 строк `no validation layer:`, ≥ 1 `VK_EXT_validation_features`, ≥ 1 `[Vulkan][`);')
+A('   у V фильтра нет. Провал — `NOT ADMITTED`.')
+A('2. **Контроль ручки** (И11): каждая строка `Shader translation cache:` кончается каталогом `variant_fixb26_fixb1b` (умолчания) или `variant_fixb26` (`fs_d`),')
+A('   строк ≥ 1; иначе — `INVALID` (помеха прогона, повтор строкой лида).')
+A('3. **Событие окна** (п. 273(з)): строка `Window <id> minimized` или `Recovering Vulkan swapchain` (лог и stdout) — `WINDOW EVENT`, помеха прогона, не исход;')
+A('   прочие строки окна печатаются числом.')
+A('4. **Буква п. 282(г)(3)** по тегу — таблица §4. Положительный контроль W — строка `DualSrcBlend: supported=1 enabled=1`, стоящая раньше первой строки')
+A('   лога, содержащей `GuestOut` (п. 281(г): нет — тег `FAIL`). Маркеры смерти — `sc142.markers` (лог, затем stdout: `Unhandled exception:`, `--- Fatal Error ---`,')
+A('   `--- Error ---`, `GpuHangAbort:`, `ErrorDeviceLost`); кадр ≥ 1 с — строка `FrameTrace` с `dt_us` ≥ 1 000 000 после первого кадра сцены; видео —')
+A('   `s51_vidglitch.py 4 6` (кадров, глитчей); листы-пары `sheetpair_f3d.py` — сверху 24 кадра эталона (`C:/kyty/s142/rec_v142.mp4` у `fs_b`,')
+A('   `C:/kyty/f287/f4c/rec_f4c_g.mp4` у `fs_g`), снизу 24 кадра FSc по тем же номерам кадров `k · step`, `step = min(кадров) // 24`; у `fs_g` ещё лист `sheet142.py`')
+A('   всего видео FSc. Листы смотрит лид (FSd).')
+A('')
+A('**Вердикт тега:** `NOT ADMITTED` → `INVALID` → `WINDOW EVENT` → `FAIL` (провален член буквы) → `NOT EVALUABLE` (не вошёл / нет первого кадра сцены;')
+A('удержание меньше названного: Σ`dt` < 300 с у `fs_a`, `fs_b`, `fs_d`, < 310 с у `fs_v`; стена < 330 с у `fs_g`) → `PASS` (`fs_d` — `INFO`).')
+A('')
+A('**Вердикт серии** (`fs_read.py --summary`): `FAIL`, если хоть один из `fs_a`, `fs_b`, `fs_v`, `fs_g` — `FAIL`; иначе `NOT EVALUABLE`, если хоть один из них не `PASS`')
+A('(нет чтения, `NOT ADMITTED`, `INVALID`, `WINDOW EVENT`, `NOT EVALUABLE`); иначе `PASS`. `fs_d` — строка информации (Σ`dt`, среднее `dt`), вердикта не задаёт.')
+A('Строки (B) — кандидат `SCENE_OK` `mini_giants_garden` и строка установки — решает лид (FSd), не скорер.')
+A('')
+A('**Члены исполнителя [I] (п. 258(д): вердикта записи не задают; провал — вопрос лиду):**')
+A('')
+A('- И1. «(в) … ≥ 310 с» читается как Σ`dt` после первого кадра сцены ≥ 310 с (как F4c `f4c_v`, п. 262(е)); рядом печатается прочтение Σ`dt` ≥ 300 с (форма (а));')
+A('  стена `fs_v` — 310 с, как у (а).')
+A('- И2. «(г) … ≥ 330 с стены» — `hold_s` попытки в `fs_g.json` (стена от «stable»); Σ`dt` печатается рядом, член Σ`dt` ≥ 330 с — [I].')
+A('- И3. «Форма (а)» у (в) включает положительный контроль `DualSrcBlend: supported=1 enabled=1` до первой `GuestOut`, активность валидации и 0 строк лимита слоя.')
+A('- И4. Строка `DualSrcBlend: patched ps=5514e10f1a60df83` у (в) засчитывается в любом месте лога (пункт место не называет); числа до/после первой `GuestOut` печатаются.')
+A('- И5. «Остановка (а) — стоп серии» читается как любой исход контрольного W, кроме `PASS` (п. 254(и)); NOT EVALUABLE (б)–(д) серию не останавливает.')
+A('- И6. Стоп серии на маркере смерти без `[Vulkan][E]` и на rc `enter_scene` ≠ 0 (правило первого воспроизведения); остановка валидацией у (в) — данные.')
+A('- И7. «Те же номера кадров» листов-пар — те же номера кадров видео (как F3d В2), не время от первого кадра сцены.')
+A('- И8. Строка `BvhLoopCapTrip:` у (а), (в), (г) — член [I] (переоткрытие Б1б по п. 282(д) — вопрос лиду); у (б) — буква. Кадры ≥ 1 с у (а), (в), (г), (д) и маркеры смерти у W — [I].')
+A('- И9. Смена сцены и выход игры внутри удержания (`hold_exit`) — [I]; Σ`dt` считается до смены сцены.')
+A('- И10. `_PipelineCache` (блоб драйвера) копируется и возвращается, как кэш трансляции (п. 288(в) с. 145: кэши драйвера — строка данных серии сессии; F3d его не возвращал).')
+A('- И11. Контроль ручки по строке `Shader translation cache:` (как F3d, п. 277(б)(1)).')
+A('- И12. Стена `fs_d` — 330 с (как V `fs_b`); исход — `INFO` или `NOT EVALUABLE`.')
+A('- И13. Ровно одна строка `DualSrcBlend: supported=` в логе W — [I] (буква: строка до первой `GuestOut`).')
+A('')
+A('## 6. Строка вызова (п. 105(в))')
+A('')
+A('go_fs call: PLWAIT=540 bash C:/kyty/f287/fsc/go_fs.sh series')
+A('')
+A('Вызов — обёрткой `next_fs.sh` (отсоединённая серия + ожидание переднего плана `wait_fs.sh` < 600 с на вызов), как F3d/F4c. Отказ BUSY до замка (rc 4,')
+A('попытки нет) — файл вывода переименовывается в `go_series.busy<N>.out.txt` строкой `times.txt`, вызов повторяется дословно.')
+A('')
+A('## 7. Наборы (последний вывод)')
+A('')
+for t, o in (('test_fs_read.py', 'test_fs_read.out.txt'), ('test_go_fs.py', 'test_go_fs.out.txt')):
+    lines = open(path(o), encoding='ascii').read().split('\n')
+    A('- `%s` → `%s` sha256 `%s`: первая строка `%s`; итог `%s` / `%s`' % (t, o, sha(path(o)), lines[0], lines[-3], lines[-2]))
+A('')
+A('## 8. Печать файлов')
+A('')
+for n in R.SEALED:
+    A('seal: %s %s' % (sha(path(n)), n))
+A('')
+out = os.path.join(HERE, 'pred', '01_fs.md')
+open(out, 'wb').write(('\n'.join(L)).encode('utf-8'))
+print('written %s sha256 %s lines %d (p.282(g)(3) %d-%d, p.281(v)-(g) %d-%d, p.286(v) %d-%d at %s)' % (
+    out, sha(out), len(L), g0 + 1, g1, v0 + 1, v1, n0 + 1, n1, COMMIT))

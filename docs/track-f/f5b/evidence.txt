@@ -1,0 +1,50 @@
+F5b (HPP-356, Red Team) - outputs of own checks, 2026-10-01 (UTC)
+
+[1] binary C:/kyty/f287/bin/kyty_emulator_abce7916.exe
+sha256 abce7916ebd03b317829d98d9d4f13bc8be81305a6d405a92c5ceff185f66c21 24272896
+1 699c1e4b7db359067b461e029b913c4b6e78dc90
+1 KYTY_FIX_MINIMIZE
+1 FixMinimize: on
+1 SwapchainZeroExtent: begin
+1 SwapchainZeroExtent: end frames_dropped=
+1 KYTY_TEST_MINIMIZE
+1 TestMinimize: minimize
+1 TestMinimize: restore
+1 TestMinimize: armed
+1 TestMinimize: config
+1 Level has started:
+0 KYTY_FIX_B1B
+0 KYTY_FIX_B26
+0 KYTY_FIX_DUALSRC
+0 KYTY_S_PCW
+1 KYTY_RT_SKIP
+1 retry exhausted
+
+[2] provenance
+worktree C:/kyty/f287/f5a/wt HEAD bf8f90e47ceec11597d6392751d76beb383866cb, parent 4fc501f4
+git patch-id --stable: d2811535 -> b6608c04f48dfc575a3c55d9949617dd44cb5275 ; bf8f90e4 -> b6608c04f48dfc575a3c55d9949617dd44cb5275
+git status --porcelain: 27 files M (src/graphics/guest_gpu/gpu_defs.h, gpu_format.h, 25 under src/graphics/shader/**)
+git diff --stat: 27 files changed, 1815 insertions(+), 1815 deletions(-) ; git diff --ignore-cr-at-eol --stat: empty ; core.autocrlf false
+
+[3] shader_cfg_tests logs of F5a (C:/kyty/f287/f5a/)
+cfg_tests_min0.txt    7296 sha256 5a60758a  normalized(elapsed_ms) 5330f920  tests 127
+cfg_tests_min1.txt    7296 sha256 5a60758a  normalized 5330f920  tests 127
+cfg_tests_wt_min0.txt 7296 sha256 a074f1b3  normalized 5330f920  tests 127
+cfg_tests_wt_min1.txt 7296 sha256 5a60758a  normalized 5330f920  tests 127
+wt min0 vs min1: one differing line "ASTRO BOT PS 5457 structurize: ok=1 blocks=160 elapsed_ms=19" vs "=18"
+
+[4] C:/kyty/s144/log_w144_09.txt after the first "minimized" (filtered lines, in order)
+Window 1 minimized
+vkQueuePresentKHR returned vk::Result::eErrorOutOfDateKHR
+Recovering Vulkan swapchain
+[Vulkan][E][2]: vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = 0, height = 0) is invalid.
+(... VUID-VkSwapchainCreateInfoKHR-imageExtent-01689)
+
+[5] "Level has started:" lines
+C:/kyty/s144/log_w144_00.txt 2: 'GuestOut: Level has started: ' ; 'GuestOut: Level has started: underwater_aerial_garden'
+  between them: FrameTrace 333, sum dt_us 0.650206 s
+C:/kyty/s144/log_v144_09.txt 2: 'GuestOut: Level has started: ' ; 'GuestOut: Level has started: rocket_hourglass'
+  between them: FrameTrace 306, sum dt_us 0.566794 s ; nearest timestamps 00:00:12.709 -> 00:00:13.275
+
+[6] API (lead rule p.277(g)), 2026-10-01 ~13:16Z: HPP-337 in_progress, HPP-342 in_progress, HPP-357 blocked, HPP-315 blocked,
+HPP-318 blocked, HPP-364 blocked, HPP-350 in_progress (s145 step 0, no lock), HPP-351..354 blocked -> GPU tests not run.

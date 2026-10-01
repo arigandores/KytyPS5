@@ -1,0 +1,35 @@
+f5c_a sha256 e0b28937efb15021fa33593d827200f6840097ae181dae7361df6bc0b6235f6d
+  E 0
+  E_after_restore 0
+  W2_after_restore 0
+  death 0
+  fixon 1
+  ft_after_restore 18351
+  last Vulkan pipeline cache: saved 105688889 bytes to _PipelineCache\PPSA21564.bin (95261 us)
+  limit 0
+  lines 595545
+  minimize 319741
+  rec 1
+  restore 332076
+  zero_begin 1
+  zero_end 1
+  stdout sha256 6fe54ed6fd89d92abbb11e558a08ddbba3f4e76457ae7384346c1df28d948fb3
+  stdout death 0 Recovering 0
+f5c_g sha256 736b1b763783ac924a853a1bc01d6a3beee09e3f697159c308e706e4eb3335d7
+  E 0
+  E_after_restore 0
+  W2_after_restore 0
+  death 0
+  fixon 0
+  ft_after_restore 69309
+  last Event: quit
+  limit 0
+  lines 1279131
+  minimize 431413
+  rec 2
+  restore 462677
+  zero_begin 0
+  zero_end 0
+  stdout sha256 c9403bb3f44e09f07035deb7fc52fb26b4a3a2bb6d36c8589290804236cda505
+  stdout death 0 Recovering 0
+F5D CHK DONE

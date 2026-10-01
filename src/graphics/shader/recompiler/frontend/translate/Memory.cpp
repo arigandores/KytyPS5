@@ -830,8 +830,9 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	}
 
 	// --- BVH descriptor (T#, 128-bit):
-	//   dword0        = base_address[31:0]
-	//   dword1[15:0]  = base_address[47:32]
+	//   dword0        = base_address[31:0]   (KYTY_FIX_B1B=1: base_address[39:0] is the BVH
+	//   dword1[7:0]   = base_address[39:32]   address >> 8, PAL sq_bvh_rsrc_t, 40 bits)
+	//   (KYTY_FIX_B1B=0, before the fix: dword0 | dword1[15:0] << 32 as a byte address)
 	//   dword1[22:21] = box sort heuristic (0 closest, 1 largest, 2 midpoint, 3 disabled)
 	//   dword1[30:23] = box grow value (ulps)
 	//   dword1[31]    = box sort enable
@@ -869,7 +870,13 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 		node_addr = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
 		                            {ir.ConstructU64(node_off, node_hi), U32C(3u)}));
 	} else {
-		const IR::U64 base64 = ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu)));
+		// Track F, F3b: the base is the 40-bit field base_address in 256-byte units (<< 8);
+		// KYTY_FIX_B1B=0 keeps the pre-fix byte address.
+		const IR::U64 base64 =
+		    Decoder::FixB1BEnabled()
+		        ? IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
+		                          {ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffu))), U32C(8u)}))
+		        : ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu)));
 		const IR::U64 off64  = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
 		                                       {ir.ConstructU64(node_off, U32C(0u)), U32C(3u)}));
 		node_addr            = IR::U64(ir.Emit(IR::ValueOpcode::IAdd64, {base64, off64}));

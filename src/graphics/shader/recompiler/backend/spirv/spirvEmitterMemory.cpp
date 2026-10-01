@@ -3,6 +3,7 @@
 #include "common/envFlag.h"
 #include "graphics/host_gpu/renderer/cache/bufferCache.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+#include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
 
 #include <algorithm>
 #include <array>
@@ -2213,7 +2214,15 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
 		node_addr = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, node_hi),
 		                   ConstantDeviceAddress(state, 3));
 	} else {
-		const auto base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu)));
+		// Track F, F3b (ROADMAP p.259(e)(3)): base_address is a 40-bit field in 256-byte units
+		// (dword0, dword1[7:0]) -> << 8; KYTY_FIX_B1B=0 keeps the pre-fix byte address (same ids).
+		uint32_t base = 0;
+		if (Decoder::FixB1BEnabled()) {
+			const auto field = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffu)));
+			base             = Binary(state, OpShiftLeftLogical, addrt, field, ConstantDeviceAddress(state, 8));
+		} else {
+			base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu)));
+		}
 		const auto off  = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, U(0)),
 		                         ConstantDeviceAddress(state, 3));
 		node_addr       = Binary(state, OpIAdd, addrt, base, off);

@@ -749,6 +749,13 @@ void SetUnsupported(Instruction& inst, Family family, uint32_t opcode_id, const 
 // translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
 bool   FixB26Enabled();
 Opcode GateFixB26(Opcode opcode);
+// Track F, F3b (HPP-340, ROADMAP p.259(e)(3)): KYTY_FIX_B1B, default ON (unset or empty = on; 0, false,
+// off, no = off, as Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY takes the BVH descriptor base as
+// the 40-bit field base_address (dword0, dword1[7:0]) in 256-byte units, i.e. field << 8 (PAL
+// sq_bvh_rsrc_t; the game builds it with S_BFE_U64 X, 0x00280008). Off: the address is computed
+// exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
+// the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+bool   FixB1BEnabled();
 std::string OperandToString(const Operand& operand);
 const char* ImageDimensionToString(ImageDimension dimension);
 std::string InstructionToString(const Instruction& inst);

@@ -341,6 +341,14 @@ Opcode GateFixB26(Opcode opcode) {
 	return opcode;
 }
 
+bool FixB1BEnabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_B1B");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
+	return enabled;
+}
+
 Family GetInstructionFamily(uint32_t word) {
 	if ((word & 0x80000000u) == 0u) {
 		switch ((word >> 25u) & 0x3fu) {

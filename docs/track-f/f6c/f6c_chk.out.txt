@@ -1,0 +1,105 @@
+ok   control: sceKernelGetProcessTimeCounter = fgxnMeTNUtY
+commit 5f67f829d714b9f75204c74e0cc3692a08256550 parent 378a869d97d5a921d7b4f3c31123bcab9b61c647
+ok   LIB_FUNC in the library: 22 (22)
+ok   outside the KYTY_FIX_B9A block: 6 (6)
+ok   inside the KYTY_FIX_B9A block: 16 (16)
+ok   distinct NIDs 22
+ok   F6a table 1 rows: 22 (22)
+
+| GOT | NID | name | hash(name) | LIB_FUNC | F6a |
+|---|---|---|---|---|---|
+| 1233 | `XKCN4gpeYsM` | `sceAudioPropagationSystemUnregisterMaterial` | `XKCN4gpeYsM` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSystemUnregisterMaterial) = XKCN4gpeYsM
+ok   LIB_FUNC XKCN4gpeYsM -> sceAudioPropagationSystemUnregisterMaterial
+ok   block of sceAudioPropagationSystemUnregisterMaterial matches F6a "не разрешён"
+| 1234 | `VlBT16890mA` | `sceAudioPropagationSystemSetRays` | `VlBT16890mA` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSystemSetRays) = VlBT16890mA
+ok   LIB_FUNC VlBT16890mA -> sceAudioPropagationSystemSetRays
+ok   block of sceAudioPropagationSystemSetRays matches F6a "не разрешён"
+| 1235 | `ZQXE-xS6MTE` | `sceAudioPropagationPortalDestroy` | `ZQXE-xS6MTE` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationPortalDestroy) = ZQXE-xS6MTE
+ok   LIB_FUNC ZQXE-xS6MTE -> sceAudioPropagationPortalDestroy
+ok   block of sceAudioPropagationPortalDestroy matches F6a "не разрешён"
+| 1236 | `kIdb+iQUzCs` | `sceAudioPropagationSystemSetAttributes` | `kIdb+iQUzCs` | old | HLE |
+ok   hash(sceAudioPropagationSystemSetAttributes) = kIdb+iQUzCs
+ok   LIB_FUNC kIdb+iQUzCs -> sceAudioPropagationSystemSetAttributes
+ok   block of sceAudioPropagationSystemSetAttributes matches F6a "HLE"
+| 1237 | `5vzOS2pHMFc` | `sceAudioPropagationSourceSetAudioPaths` | `5vzOS2pHMFc` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceSetAudioPaths) = 5vzOS2pHMFc
+ok   LIB_FUNC 5vzOS2pHMFc -> sceAudioPropagationSourceSetAudioPaths
+ok   block of sceAudioPropagationSourceSetAudioPaths matches F6a "не разрешён"
+| 1238 | `aNEqtSHdUSo` | `sceAudioPropagationSystemCreate` | `aNEqtSHdUSo` | old | HLE |
+ok   hash(sceAudioPropagationSystemCreate) = aNEqtSHdUSo
+ok   LIB_FUNC aNEqtSHdUSo -> sceAudioPropagationSystemCreate
+ok   block of sceAudioPropagationSystemCreate matches F6a "HLE"
+| 1239 | `CPLV6G-eXmk` | `sceAudioPropagationSystemRegisterMaterial` | `CPLV6G-eXmk` | old | HLE |
+ok   hash(sceAudioPropagationSystemRegisterMaterial) = CPLV6G-eXmk
+ok   LIB_FUNC CPLV6G-eXmk -> sceAudioPropagationSystemRegisterMaterial
+ok   block of sceAudioPropagationSystemRegisterMaterial matches F6a "HLE"
+| 1240 | `WXMhENV2NcA` | `sceAudioPropagationPortalSetAttributes` | `WXMhENV2NcA` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationPortalSetAttributes) = WXMhENV2NcA
+ok   LIB_FUNC WXMhENV2NcA -> sceAudioPropagationPortalSetAttributes
+ok   block of sceAudioPropagationPortalSetAttributes matches F6a "не разрешён"
+| 1241 | `b-dYXrjSNZU` | `sceAudioPropagationPortalCreate` | `b-dYXrjSNZU` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationPortalCreate) = b-dYXrjSNZU
+ok   LIB_FUNC b-dYXrjSNZU -> sceAudioPropagationPortalCreate
+ok   block of sceAudioPropagationPortalCreate matches F6a "не разрешён"
+| 1242 | `S0JwP2AFTTE` | `sceAudioPropagationRoomDestroy` | `S0JwP2AFTTE` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationRoomDestroy) = S0JwP2AFTTE
+ok   LIB_FUNC S0JwP2AFTTE -> sceAudioPropagationRoomDestroy
+ok   block of sceAudioPropagationRoomDestroy matches F6a "не разрешён"
+| 1243 | `x5VPqg5iyAk` | `sceAudioPropagationSystemDestroy` | `x5VPqg5iyAk` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSystemDestroy) = x5VPqg5iyAk
+ok   LIB_FUNC x5VPqg5iyAk -> sceAudioPropagationSystemDestroy
+ok   block of sceAudioPropagationSystemDestroy matches F6a "не разрешён"
+| 1244 | `d84otraxt2s` | `sceAudioPropagationSourceCreate` | `d84otraxt2s` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceCreate) = d84otraxt2s
+ok   LIB_FUNC d84otraxt2s -> sceAudioPropagationSourceCreate
+ok   block of sceAudioPropagationSourceCreate matches F6a "не разрешён"
+| 1245 | `-wsUTr31yeg` | `sceAudioPropagationSourceSetAttributes` | `-wsUTr31yeg` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceSetAttributes) = -wsUTr31yeg
+ok   LIB_FUNC -wsUTr31yeg -> sceAudioPropagationSourceSetAttributes
+ok   block of sceAudioPropagationSourceSetAttributes matches F6a "не разрешён"
+| 1246 | `aKJZx7wCma8` | `sceAudioPropagationSourceGetRays` | `aKJZx7wCma8` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceGetRays) = aKJZx7wCma8
+ok   LIB_FUNC aKJZx7wCma8 -> sceAudioPropagationSourceGetRays
+ok   block of sceAudioPropagationSourceGetRays matches F6a "не разрешён"
+| 1247 | `7xyAxrusLko` | `sceAudioPropagationSystemQueryMemory` | `7xyAxrusLko` | old | HLE |
+ok   hash(sceAudioPropagationSystemQueryMemory) = 7xyAxrusLko
+ok   LIB_FUNC 7xyAxrusLko -> sceAudioPropagationSystemQueryMemory
+ok   block of sceAudioPropagationSystemQueryMemory matches F6a "HLE"
+| 1248 | `G+QLTfyLMYk` | `sceAudioPropagationSourceGetAudioPathCount` | `G+QLTfyLMYk` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceGetAudioPathCount) = G+QLTfyLMYk
+ok   LIB_FUNC G+QLTfyLMYk -> sceAudioPropagationSourceGetAudioPathCount
+ok   block of sceAudioPropagationSourceGetAudioPathCount matches F6a "не разрешён"
+| 1249 | `ht-QXT3zGxo` | `sceAudioPropagationSystemGetRays` | `ht-QXT3zGxo` | old | HLE |
+ok   hash(sceAudioPropagationSystemGetRays) = ht-QXT3zGxo
+ok   LIB_FUNC ht-QXT3zGxo -> sceAudioPropagationSystemGetRays
+ok   block of sceAudioPropagationSystemGetRays matches F6a "HLE"
+| 1250 | `wkseM3LWPuc` | `sceAudioPropagationSourceDestroy` | `wkseM3LWPuc` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceDestroy) = wkseM3LWPuc
+ok   LIB_FUNC wkseM3LWPuc -> sceAudioPropagationSourceDestroy
+ok   block of sceAudioPropagationSourceDestroy matches F6a "не разрешён"
+| 1251 | `hhz9pITnC8k` | `sceAudioPropagationSourceRender` | `hhz9pITnC8k` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceRender) = hhz9pITnC8k
+ok   LIB_FUNC hhz9pITnC8k -> sceAudioPropagationSourceRender
+ok   block of sceAudioPropagationSourceRender matches F6a "не разрешён"
+| 1252 | `eEeKqFeNI3o` | `sceAudioPropagationSourceGetAudioPath` | `eEeKqFeNI3o` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceGetAudioPath) = eEeKqFeNI3o
+ok   LIB_FUNC eEeKqFeNI3o -> sceAudioPropagationSourceGetAudioPath
+ok   block of sceAudioPropagationSourceGetAudioPath matches F6a "не разрешён"
+| 1253 | `8bI5h8req30` | `sceAudioPropagationRoomCreate` | `8bI5h8req30` | old | HLE |
+ok   hash(sceAudioPropagationRoomCreate) = 8bI5h8req30
+ok   LIB_FUNC 8bI5h8req30 -> sceAudioPropagationRoomCreate
+ok   block of sceAudioPropagationRoomCreate matches F6a "HLE"
+| 1254 | `PBcrVpEqUVY` | `sceAudioPropagationSourceCalculateAudioPaths` | `PBcrVpEqUVY` | new (=1) | не разрешён |
+ok   hash(sceAudioPropagationSourceCalculateAudioPaths) = PBcrVpEqUVY
+ok   LIB_FUNC PBcrVpEqUVY -> sceAudioPropagationSourceCalculateAudioPaths
+ok   block of sceAudioPropagationSourceCalculateAudioPaths matches F6a "не разрешён"
+
+16 new: sceAudioPropagationPortalCreate, sceAudioPropagationPortalDestroy, sceAudioPropagationPortalSetAttributes, sceAudioPropagationRoomDestroy, sceAudioPropagationSourceCalculateAudioPaths, sceAudioPropagationSourceCreate, sceAudioPropagationSourceDestroy, sceAudioPropagationSourceGetAudioPath, sceAudioPropagationSourceGetAudioPathCount, sceAudioPropagationSourceGetRays, sceAudioPropagationSourceRender, sceAudioPropagationSourceSetAttributes, sceAudioPropagationSourceSetAudioPaths, sceAudioPropagationSystemDestroy, sceAudioPropagationSystemSetRays, sceAudioPropagationSystemUnregisterMaterial
+diff files: ['CMakeLists.txt', 'src/libs/libAudio.cpp', 'tests/AudioPropagationTests.cpp']
+ok   src/ files of the diff: only src/libs/libAudio.cpp
+signature parent 56189185f9e9f9a0ea5174f3f85206e6d099db3d (101 files), commit 56189185f9e9f9a0ea5174f3f85206e6d099db3d (101 files), build header 56189185f9e9f9a0ea5174f3f85206e6d099db3d
+ok   signature parent = commit = build header
+F6C RECOUNT ALL OK

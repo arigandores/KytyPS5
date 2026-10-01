@@ -1,0 +1,27 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 5f67f829)
+Updating files:  54% (2043/3732)Updating files:  55% (2053/3732)Updating files:  56% (2090/3732)Updating files:  57% (2128/3732)Updating files:  58% (2165/3732)Updating files:  59% (2202/3732)Updating files:  60% (2240/3732)Updating files:  61% (2277/3732)Updating files:  62% (2314/3732)Updating files:  63% (2352/3732)Updating files:  64% (2389/3732)Updating files:  65% (2426/3732)Updating files:  66% (2464/3732)Updating files:  67% (2501/3732)Updating files:  68% (2538/3732)Updating files:  69% (2576/3732)Updating files:  70% (2613/3732)Updating files:  71% (2650/3732)Updating files:  72% (2688/3732)Updating files:  73% (2725/3732)Updating files:  74% (2762/3732)Updating files:  75% (2799/3732)Updating files:  76% (2837/3732)Updating files:  77% (2874/3732)Updating files:  78% (2911/3732)Updating files:  79% (2949/3732)Updating files:  80% (2986/3732)Updating files:  81% (3023/3732)Updating files:  82% (3061/3732)Updating files:  83% (3098/3732)Updating files:  84% (3135/3732)Updating files:  85% (3173/3732)Updating files:  86% (3210/3732)Updating files:  87% (3247/3732)Updating files:  88% (3285/3732)Updating files:  89% (3322/3732)Updating files:  90% (3359/3732)Updating files:  91% (3397/3732)Updating files:  92% (3434/3732)Updating files:  93% (3471/3732)Updating files:  94% (3509/3732)Updating files:  95% (3546/3732)Updating files:  96% (3583/3732)Updating files:  97% (3621/3732)Updating files:  98% (3658/3732)Updating files:  99% (3695/3732)Updating files: 100% (3732/3732)Updating files: 100% (3732/3732), done.
+HEAD is now at 5f67f829 track F link F6c (HPP-375, ROADMAP s122 p.287(c)): B9a V1 under KYTY_FIX_B9A (default 0)
+--- worktree HEAD
+5f67f829d714b9f75204c74e0cc3692a08256550 track F link F6c (HPP-375, ROADMAP s122 p.287(c)): B9a V1 under KYTY_FIX_B9A (d
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- git status --short (worktree vs its HEAD, literal; empty = clean)
+0
+--- git diff --stat (literal, worktree vs HEAD)
+--- CR bytes in src/ (worktree files)
+files 452 with CR 0
+WT OK

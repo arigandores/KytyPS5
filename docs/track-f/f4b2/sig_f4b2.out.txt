@@ -1,0 +1,22 @@
+set files 101
+work tree bytes: signature 699c1e4b7db359067b461e029b913c4b6e78dc90 files with CRLF 27
+blobs of 4fc501f4 signature 95d30c5c8062d73b96b5f66a0ec64026e9109591
+  files differing from the blob 27 of which only by CRLF 27
+blobs of HEAD signature 95d30c5c8062d73b96b5f66a0ec64026e9109591
+  files differing from the blob 27 of which only by CRLF 27
+set files changed 4fc501f4..HEAD: none
+== generated kytyGitVersion.h of the build tree
+#define KYTY_GIT_VERSION "KytyPS5-2026-09-15-6a2987a-1374-g06f049f2-dirty"
+#define KYTY_GIT_REVISION "06f049f252b4f374f9489a8a8fedb14c054e88f6"
+#define KYTY_SHADER_SOURCE_HASH "699c1e4b7db359067b461e029b913c4b6e78dc90"
+== mtimes (UTC)
+2026-10-01T06:45:38Z C:/kyty/f287/f4a2/build/kytyGitVersion.h
+2026-10-01T06:46:05Z C:/kyty/f287/f4a2/build/install/kyty_emulator.exe
+2026-10-01T06:46:27Z C:/kyty/f287/bin/kyty_emulator_c9a5e198.exe
+== newest set file mtime
+<stdin>:3: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+<stdin>:5: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+2026-10-01T06:43:01.867363Z C:/kyty/f287/f4a2/wt/src/graphics/shader\shaderVertexMetadata.h
+2026-10-01T06:42:41.296782Z shaders.cpp
+2026-10-01T06:42:41.296255Z pipelineCache.cpp
+2026-10-01T06:42:41.294687Z dualSrcBlend.h

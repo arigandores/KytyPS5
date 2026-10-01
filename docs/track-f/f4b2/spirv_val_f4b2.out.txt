@@ -1,0 +1,40 @@
+== spirv-val --target-env vulkan1.3  own_in.spv rc=1
+error: line N: Structure id 46 decorated as Block for variable in Uniform storage class must follow relaxed uniform buffer layout rules: member 0 contains an array with stride 4 not satisfying alignment to 16
+This is may be allowed if you enable the uniformBufferStandardLayout feature (or use the --uniform-buffer-standard-layout command line flag)
+  %_struct_46 = OpTypeStruct %_arr_uint_uint_16384
+   msgset sha 49415893d4b67021f86650d7fb70c7f52f46226095dd491c33d08efa9312adb3 *-
+== spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout own_in.spv rc=0
+   msgset sha e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 *-
+== spirv-val --target-env vulkan1.3  own_out.spv rc=1
+error: line N: Structure id 46 decorated as Block for variable in Uniform storage class must follow relaxed uniform buffer layout rules: member 0 contains an array with stride 4 not satisfying alignment to 16
+This is may be allowed if you enable the uniformBufferStandardLayout feature (or use the --uniform-buffer-standard-layout command line flag)
+  %_struct_46 = OpTypeStruct %_arr_uint_uint_16384
+   msgset sha 49415893d4b67021f86650d7fb70c7f52f46226095dd491c33d08efa9312adb3 *-
+== spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout own_out.spv rc=0
+   msgset sha e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 *-
+== spirv-val vulkan1.3 --uniform-buffer-standard-layout --scalar-block-layout? not used
+== spirv-dis diff own_in vs own_out
+51c51,52
+<                OpDecorate %19 Location 1
+---
+>                OpDecorate %19 Location 0
+>                OpDecorate %19 Index 1
+== dis lines for outputs (own_out)
+16:               OpEntryPoint Fragment %83 "main" %5 %6 %9 %12 %14 %16 %18 %19
+17:               OpExecutionMode %83 SignedZeroInfNanPreserve 32
+18:               OpExecutionMode %83 OriginUpperLeft
+19:               OpExecutionMode %83 DepthReplacing
+25:               OpName %16 "gl_FragDepth"
+26:               OpName %18 "out_mrt_0"
+27:               OpName %19 "out_mrt_1"
+49:               OpDecorate %16 BuiltIn FragDepth
+50:               OpDecorate %18 Location 0
+51:               OpDecorate %19 Location 0
+52:               OpDecorate %19 Index 1
+117:         %16 = OpVariable %15 Output
+119:         %18 = OpVariable %17 Output
+120:         %19 = OpVariable %17 Output
+== dualSrcBlend.h main 65a09c82 vs wt 06f049f2
+3ed44de524c68c4717762298acb9dd5b22d285b48275e57d89ea24860bc8d9d0 *-
+3ed44de524c68c4717762298acb9dd5b22d285b48275e57d89ea24860bc8d9d0 *-
+3ed44de524c68c4717762298acb9dd5b22d285b48275e57d89ea24860bc8d9d0 *-

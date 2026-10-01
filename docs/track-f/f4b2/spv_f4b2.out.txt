@@ -1,0 +1,26 @@
+file ps_5514e10f1a60df83_9b732ff0184ad6c1.bin bytes 95272 sha256 39182e008b606493018cb15005bd8b879c3a60eae768b5b717b7fba3e8a372e8
+magic word offsets [8633] unaligned []
+module at word 8633 byte 34532 walk end 23818 words 15185 size-prefix word 15185
+own_in.spv words 15185 sha256 db1e2d053238d4d7e2c9e3717e537da680ea8fd6348be744abaa810a86c7a376
+header version 0x00010300 generator 0x00000000 bound 2901
+entry point model 4 (4=Fragment) name main interface ['%5 gl_FragCoord', '%6 in_param_0', '%9 gl_HelperInvocation', '%12 gl_BaryCoordKHR', '%14 gl_SubgroupInvocationID', '%16 gl_FragDepth', '%18 out_mrt_0', '%19 out_mrt_1']
+execution modes [[83, 4461, 32], [83, 7], [83, 12]]
+decoration groups []
+outputs (id, name, type, Location, Index, BuiltIn, OpStore count):
+   (16, 'gl_FragDepth', 'ptr(Output,f32)', [], [], [22], 1)
+   (18, 'out_mrt_0', 'ptr(Output,vec4<f32>)', [0], [], [], 1)
+   (19, 'out_mrt_1', 'ptr(Output,vec4<f32>)', [1], [], [], 1)
+own rewrite outcome patched
+own_out.spv words 15189 sha256 97bc3434070fa00b3fa5b2f3b018c6a6ae26e22f6a2d9ba30206e260873be541
+rewritten outputs:
+   (16, 'gl_FragDepth', 'ptr(Output,f32)', [], [], [22], 1)
+   (18, 'out_mrt_0', 'ptr(Output,vec4<f32>)', [0], [], [], 1)
+   (19, 'out_mrt_1', 'ptr(Output,vec4<f32>)', [0], [1], [], 1)
+first differing word 226 in 0x00000001 out 0x00000000
+differing words outside the Location literal and the 4 inserted: []
+inserted ['0x00040047', '0x00000013', '0x00000020', '0x00000001']
+entry point equal True modes equal True bound equal True stores equal True
+compare fn_out.spv sha256 97bc3434070fa00b3fa5b2f3b018c6a6ae26e22f6a2d9ba30206e260873be541 byte-equal to own_out True
+compare ps_5514_out.spv sha256 97bc3434070fa00b3fa5b2f3b018c6a6ae26e22f6a2d9ba30206e260873be541 byte-equal to own_out True
+compare ps_5514_in.spv sha256 db1e2d053238d4d7e2c9e3717e537da680ea8fd6348be744abaa810a86c7a376 byte-equal to own_out False
+ALL OK

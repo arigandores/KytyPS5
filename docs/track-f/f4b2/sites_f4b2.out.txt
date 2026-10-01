@@ -1,0 +1,62 @@
+main pipelineCache.cpp 2198 permutations\.push_back | source.permutations.push_back({
+main pipelineCache.cpp 2255 permutations\.push_back | permutations.push_back({.specialization = p.specialization,
+main pipelineCache.cpp 3972 permutations\.push_back | entry->second.permutations.push_back(CompilePermutation(
+main pipelineCache.cpp 4584 permutations\.push_back | source.permutations.push_back({
+main pipelineCache.cpp 2019 AdoptDmaLayout\( | static void AdoptDmaLayout(Permutation& permutation) {
+main pipelineCache.cpp 2204 AdoptDmaLayout\( | AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+main pipelineCache.cpp 3974 AdoptDmaLayout\( | AdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+main pipelineCache.cpp 4590 AdoptDmaLayout\( | AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+main pipelineCache.cpp 2030 AdoptSpirvView\( | static void AdoptSpirvView(Permutation& permutation) {
+main pipelineCache.cpp 2205 AdoptSpirvView\( | AdoptSpirvView(source.permutations.back()); // track F, F4a2
+main pipelineCache.cpp 3975 AdoptSpirvView\( | AdoptSpirvView(entry->second.permutations.back()); // track F, F4a2
+main pipelineCache.cpp 4591 AdoptSpirvView\( | AdoptSpirvView(source.permutations.back()); // track F, F4a2
+main pipelineCache.cpp 5459 CreatePipelineInternal\( | CreatePipelineInternal(
+main pipelineCache.cpp 5506 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vertex_info,
+main pipelineCache.cpp 5727 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, *job, module, m_driver_cache);
+main pipelineCache.cpp 5791 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module,
+main pipelineCache.cpp 6614 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, key.rendering, key.vertex_input,
+main pipelineCache.cpp 6689 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, *info, module, m_driver_cache);
+main pipelineCache.cpp 2031 handle\.spirv | permutation.handle.spirv = &permutation.spirv;
+main pipelineCache.cpp 2031 \.spirv\s*= | permutation.handle.spirv = &permutation.spirv;
+main pipelineCache.cpp 2149 \.spirv\s*= | result.spirv = std::move(words);
+main pipelineCache.cpp 2171 \.spirv\s*= | .spirv          = translation_cache.Enabled() ? std::move(result.spirv)
+main pipelineCache.cpp 2202 \.spirv\s*= | .spirv          = std::move(p.spirv),
+main pipelineCache.cpp 2257 \.spirv\s*= | .spirv          = p.spirv});
+main pipelineCache.cpp 4588 \.spirv\s*= | .spirv          = std::move(p.spirv),
+main pipelineCache.cpp 2103 Permutation\s+\w+\s*[{(=] | Permutation CompilePermutation(const ShaderParams&                          params,
+main shaders.cpp 363 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+main shaders.cpp 758 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+main shaders.cpp 343 \.spirv\s*= | } else if (pixel_program.spirv == nullptr || pixel_program.spirv->empty()) {
+main pipelineCache.h 394 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+main pipelineCache.h 402 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+wt pipelineCache.cpp 2125 permutations\.push_back | source.permutations.push_back({
+wt pipelineCache.cpp 2182 permutations\.push_back | permutations.push_back({.specialization = p.specialization,
+wt pipelineCache.cpp 3899 permutations\.push_back | entry->second.permutations.push_back(CompilePermutation(
+wt pipelineCache.cpp 4511 permutations\.push_back | source.permutations.push_back({
+wt pipelineCache.cpp 1946 AdoptDmaLayout\( | static void AdoptDmaLayout(Permutation& permutation) {
+wt pipelineCache.cpp 2131 AdoptDmaLayout\( | AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+wt pipelineCache.cpp 3901 AdoptDmaLayout\( | AdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+wt pipelineCache.cpp 4517 AdoptDmaLayout\( | AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
+wt pipelineCache.cpp 1957 AdoptSpirvView\( | static void AdoptSpirvView(Permutation& permutation) {
+wt pipelineCache.cpp 2132 AdoptSpirvView\( | AdoptSpirvView(source.permutations.back()); // track F, F4a2
+wt pipelineCache.cpp 3902 AdoptSpirvView\( | AdoptSpirvView(entry->second.permutations.back()); // track F, F4a2
+wt pipelineCache.cpp 4518 AdoptSpirvView\( | AdoptSpirvView(source.permutations.back()); // track F, F4a2
+wt pipelineCache.cpp 5357 CreatePipelineInternal\( | CreatePipelineInternal(
+wt pipelineCache.cpp 5403 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vertex_info,
+wt pipelineCache.cpp 5621 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, *job, module, m_driver_cache);
+wt pipelineCache.cpp 5684 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module,
+wt pipelineCache.cpp 6315 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, key.rendering, key.vertex_input,
+wt pipelineCache.cpp 6390 CreatePipelineInternal\( | CreatePipelineInternal(m_graphics, *target, *info, module, m_driver_cache);
+wt pipelineCache.cpp 1958 handle\.spirv | permutation.handle.spirv = &permutation.spirv;
+wt pipelineCache.cpp 1958 \.spirv\s*= | permutation.handle.spirv = &permutation.spirv;
+wt pipelineCache.cpp 2076 \.spirv\s*= | result.spirv = std::move(words);
+wt pipelineCache.cpp 2098 \.spirv\s*= | .spirv          = translation_cache.Enabled() ? std::move(result.spirv)
+wt pipelineCache.cpp 2129 \.spirv\s*= | .spirv          = std::move(p.spirv),
+wt pipelineCache.cpp 2184 \.spirv\s*= | .spirv          = p.spirv});
+wt pipelineCache.cpp 4515 \.spirv\s*= | .spirv          = std::move(p.spirv),
+wt pipelineCache.cpp 2030 Permutation\s+\w+\s*[{(=] | Permutation CompilePermutation(const ShaderParams&                          params,
+wt shaders.cpp 363 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+wt shaders.cpp 758 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+wt shaders.cpp 343 \.spirv\s*= | } else if (pixel_program.spirv == nullptr || pixel_program.spirv->empty()) {
+wt pipelineCache.h 366 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+wt pipelineCache.h 374 CreatePipelineInternal\( | void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,

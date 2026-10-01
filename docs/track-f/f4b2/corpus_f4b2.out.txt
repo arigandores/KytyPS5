@@ -1,0 +1,5 @@
+files 443 modules 503 modules per file {1: 389, 2: 50, 5: 1, 3: 3}
+outcome location_above1 155
+outcome no_location1 221
+outcome patched 127
+patched with Location 0 / Index 1 type mismatch: 0

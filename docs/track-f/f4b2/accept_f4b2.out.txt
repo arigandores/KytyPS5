@@ -1,0 +1,18 @@
+F4c copy C:/kyty/f287/bin/kyty_emulator_c9a5e198.exe bytes 24271360 sha256 c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b
+F4c build C:/kyty/f287/f4a2/build/install/kyty_emulator.exe bytes 24271360 sha256 c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b
+installed C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe bytes 24264192 sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+string                                                  F4c     want 9235a7ac ok
+699c1e4b7db359067b461e029b913c4b6e78dc90                  1        1        1 OK
+846a041a                                                  0        -        0 OK
+DualSrcBlend: supported=                                  1        1        0 OK
+DualSrcBlend: patched                                     1        1        0 OK
+DualSrcBlend: skip ps=                                    1        -        0 OK
+KYTY_FIX_DUALSRC                                          1        -        0 OK
+KYTY_FIX_B26                                              0        0        0 OK
+KYTY_S_PCW                                                0        0        0 OK
+KYTY_BIND_LEAN                                            0        -        0 OK
+KytyPS5-2026-09-15-6a2987a-1374-g06f049f2-dirty           1        1        0 OK
+06f049f252b4f374f9489a8a8fedb14c054e88f6                  0        -        0 OK
+no_spirv                                                  1        -        0 OK
+location_above1                                           1        -        0 OK
+ACCEPT ALL OK

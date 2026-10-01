@@ -1,0 +1,26 @@
+OK   C:/kyty/s143/pred/02_sc143.md 43e72cbeb4a1931d
+OK   C:/kyty/s143/step2/times.txt 536c4316530b2394
+OK   C:/kyty/scripts/s51_vidglitch.py 6afe4e3335da68f2
+OK   cachemf144.py d010db667541ea6b
+OK   enter_scene.py 2cce107bea0a2ebd
+OK   fgcpu144.py ea2cbdea9293821c
+OK   gates_default.txt e3b0c44298fc1c14
+OK   go144a.sh 5225138ca7d7a99a
+OK   idle142.py c5ee7dc26d2a6d28
+OK   launch_run.py c750e62ae3d63549
+OK   lockcheck144.py 4b9cf6edef03e5d2
+OK   mut_sc144.py bf0014245bb87ee8
+OK   procload.py d9e7a777404f1aa9
+OK   run_safety99.py 77e685e5543d90a0
+OK   sc144.py 26b61e75f8deb4fb
+OK   sheet142.py c1bf9e2903c7db7a
+OK   step2/apichk144.py 3e5270224ce13a5d
+OK   step2/call_one.sh 69a546426c7e5171
+OK   step2/next_one.sh 32664c5acbd0a43b
+OK   step2/wait_one.sh 17293204299e6f85
+OK   test_fgcpu144.py 1da4f659d2ab0013
+OK   test_go144a.py e605a6049ffa7f94
+OK   test_sc144.py ba35d78af7363267
+OK   test_tools144.py f9e571e81da0ee0f
+OK   this scorer in the seal 26b61e75f8deb4fb
+SEAL: PASS

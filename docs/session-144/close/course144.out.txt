@@ -1,0 +1,5 @@
+course 142 (register s4): [2, 1, 6, 17, 7] 33 defects 12
+course 143 recount: [2, 3, 7, 15, 7] 34 defects 13 (p.254(z) printed 35: 2/3/6/17/7)
+course 144: [2, 3, 7, 19, 8] 39 defects 15
+defects: Б1а, Б1б, Б2, Б24, Б25, Б31, Б32, Б33, Б35, Б36, Б37, Б4, Б5, Б5а, Ф9
+ALL OK

@@ -1,0 +1,28 @@
+suite test_go_s.py sha256 4713b9908cd0f5b2f785d88317a217fefaa3a172defbfcf94e9a3e15b94e185c target go_s.sh sha256 fbd61a3c1f84d15ef37210b08ed0b9a3b5759619da2fce1811eac3b54a2c14a4
+PASS G1 go_s.sh is ASCII only (item 175 (v))
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 PLWAIT not a number -> rc 2
+PASS G6 PLWAIT above 540 -> rc 2
+PASS G7 an unknown tag (sc_s.py --plan) -> rc 2
+PASS G8 no seal call line -> rc 1
+PASS G9 the seal call line with another PLWAIT -> rc 1
+PASS G10 two call lines -> rc 1
+PASS G11 DRY=1 of every S4 arm kind -> rc 0 with a DRY line
+PASS G12 M arm: the pinned 9235a7ac, restore snap0 and snap0_drv, video, hold 120, no trace, no salt
+PASS G13 T arm: KYTY_AV_TRACE=1 KYTY_SHADER_REGISTER_TRACE=1, no KYTY_DUMP_GCN
+PASS G14 G arm: + KYTY_DUMP_GCN=1; g_3_2 on cymbal_party_land
+PASS G15 C2 restores GLCache from glc_post/c1_0, C4 from glc_post/c3_0; C1 and C3 from snap0_drv
+PASS G16 the salt only on C4 (KYTY_PIPELINE_SALT=c4_0), timeout 900 there
+PASS G17 every arm restores the app caches from snap0 (S4)
+PASS G18 no validation on S4 arms
+PASS G19 an attempt already made -> rc 1, no repeat
+PASS G20 S6 without the "pcw binary:" line of pred/02_s.md -> rc 1
+PASS G21 S6 DRY: the pcw binary installed, KYTY_S_PCW and the stand 15000, Sky Garden, stable 300
+PASS G22 pcw_int: no snapshot - app and GLCache from pcw_3 post copies, hold 120
+PASS G23 pcw_val: --vulkan-validation true with VK_LAYER_PATH, hold 310, timeout 600, video too
+PASS G24 DRY=2 prints the plan before any seal check (pcw_4 has no call line)
+PASS G25 no lock file was created by any DRY call
+checks: 25
+ALL OK

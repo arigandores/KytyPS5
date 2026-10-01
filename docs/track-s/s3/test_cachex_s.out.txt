@@ -1,0 +1,28 @@
+suite test_cachex_s.py sha256 899ebcfe184410e7fa90fc172e1b78688ff88e860037cf6f84f419edbe6e8f9e target cachex_s.py sha256 12e93bf361df3a60276250324091fa389d09e09b3a53e39570d4a59c58dbb2eb
+PASS X1 paths come from the fixture environment
+PASS X2 the path map of RC12
+PASS X3 the app manifest of snap0 = d8ca8c8e... (S0 3.1, S1 RC12)
+PASS X4 the GLCache manifest of snap0_drv (its MANIFEST.txt excluded) = 1767ca0a... (item 238 (b))
+PASS X5 app manifest lines: mapped path, size, sha256; sorted; another title is not in the set
+PASS X6 GLCache manifest lines: rel, size, mtime UTC, sha256 (tab separated)
+PASS X7 man app prints the sha without the lock
+PASS X8 copy without the lock -> rc 3, nothing written
+PASS X9 copy under the lock of another tag -> rc 3
+PASS X10 copy app under its lock: the snapshot layout, MANIFEST.txt with the same sha
+PASS X11 a second copy into an existing directory without --replace -> rc 1
+PASS X12 copy glc keeps mtime; its MANIFEST.txt sha = the live GLCache sha
+PASS X13 restore with an expected sha that is not the copy manifest -> rc 1, nothing changed
+PASS X14 restore app mirrors: the salted file removed, the changed file back, the deleted file back; live sha = expected; another title untouched
+PASS X15 restore glc mirrors (an extra file removed, mtime restored): live sha = expected
+PASS X16 restore from a directory without MANIFEST.txt -> rc 1
+PASS X17 a corrupt copy: the live sha after the mirror differs from the expected -> rc 1
+PASS X18 restore without the lock -> rc 3
+PASS X19 note writes and merges keys of the arm cache json
+PASS X20 note with a pair without "=" -> rc 2
+PASS X21 copy gcn: the GCN dumps with a manifest of the same sha
+PASS X22 gcn is never restored -> rc 2
+PASS X23 no other set (DXCache is never touched) -> rc 2
+PASS X24 man glc prints the live GLCache sha
+PASS X25 ASCII output
+checks: 25
+ALL OK

@@ -1,0 +1,12 @@
+2026-10-01T00:53:39Z start HPP-313 S3 wake; inputs 20b39318 p.241, fedcf271 s0, 1c7cfc8c s1
+2026-10-01T01:26:22Z mutants pre-run (not counted) start: 222 mutants, forecast 222 x 13 s / 12 x 1.3 = 313 s + control
+2026-10-01T01:30:13Z mutants pre-run end rc 0
+2026-10-01T01:34:55Z mutants --only 33 former survivors start (not counted)
+2026-10-01T01:36:38Z obrv note: previous --only aborted at 23/33 (shell exit 255, no report); rerun --only
+2026-10-01T01:38:36Z mutants --only rerun end rc 0
+2026-10-01T01:40:41Z final suites: regress, test_sc_s, test_cachex_s, test_go_s, inherited test_sc142
+2026-10-01T01:40:50Z COUNTED mutants full run start: 221 mutants, forecast 270 s (pre-run 231 s x 255/230 checks); sc_s 438d8ca517ebf096 test 02000a172785a8c7 mut c79fd47ea1f11ad3
+2026-10-01T01:44:54Z COUNTED mutants full run end rc 0 report 7294eed6e9e24b989ea16a4fa33152783efb62071c219c6aeb7968832f2f1d56
+2026-10-01T01:45:55Z seal written: seal C:/kyty/s288/pred/01_s.md sha256 90e3de0b38e2462d4364b42de6e0388051909d205268ed7f0fbac25dce0f19ea lines 147 call lines 31 seal lines 20
+2026-10-01T01:47:43Z doc docs/track-s/s3/s3-harness.md and copies written, privacy 0
+2026-10-01T01:48:23Z FACTS section S3 appended

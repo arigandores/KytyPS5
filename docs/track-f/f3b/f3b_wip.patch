@@ -1,0 +1,268 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index 0e616255..f578da41 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -573,9 +573,12 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	// signature, so a variant run would otherwise overwrite the default cache and pipelines.bin.
+ 	// Track F, F2a (RC5 of the F1b review): KYTY_FIX_B26=1 (the default) adds ":fixb26", so the
+ 	// translations of =1 and =0 never share a signature or a directory.
++	// Track F, F3b (ROADMAP p.259(e)(3)): KYTY_FIX_B1B=1 (the default) adds ":fixb1b" the same way;
++	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
+ 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+ 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+-	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "");
++	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
++	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "");
+ 	if (!variant.empty()) {
+ 		std::string folder = "variant" + variant;
+ 		std::replace(folder.begin(), folder.end(), ':', '_');
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+index 2ea06444..8973a23d 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+@@ -3,6 +3,7 @@
+ #include "common/envFlag.h"
+ #include "graphics/host_gpu/renderer/cache/bufferCache.h"
+ #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
++#include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
+ 
+ #include <algorithm>
+ #include <array>
+@@ -2213,7 +2214,15 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
+ 		node_addr = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, node_hi),
+ 		                   ConstantDeviceAddress(state, 3));
+ 	} else {
+-		const auto base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu)));
++		// Track F, F3b (ROADMAP p.259(e)(3)): base_address is a 40-bit field in 256-byte units
++		// (dword0, dword1[7:0]) -> << 8; KYTY_FIX_B1B=0 keeps the pre-fix byte address (same ids).
++		uint32_t base = 0;
++		if (Decoder::FixB1BEnabled()) {
++			const auto field = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffu)));
++			base             = Binary(state, OpShiftLeftLogical, addrt, field, ConstantDeviceAddress(state, 8));
++		} else {
++			base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu)));
++		}
+ 		const auto off  = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWords(state, node_off, U(0)),
+ 		                         ConstantDeviceAddress(state, 3));
+ 		node_addr       = Binary(state, OpIAdd, addrt, base, off);
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+index fe9cb7bc..393ba54f 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+@@ -341,6 +341,14 @@ Opcode GateFixB26(Opcode opcode) {
+ 	return opcode;
+ }
+ 
++bool FixB1BEnabled() {
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_B1B");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
+ Family GetInstructionFamily(uint32_t word) {
+ 	if ((word & 0x80000000u) == 0u) {
+ 		switch ((word >> 25u) & 0x3fu) {
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+index 3e22451b..6b0f9834 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+@@ -749,6 +749,13 @@ void SetUnsupported(Instruction& inst, Family family, uint32_t opcode_id, const
+ // translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+ bool   FixB26Enabled();
+ Opcode GateFixB26(Opcode opcode);
++// Track F, F3b (HPP-340, ROADMAP p.259(e)(3)): KYTY_FIX_B1B, default ON (unset or empty = on; 0, false,
++// off, no = off, as Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY takes the BVH descriptor base as
++// the 40-bit field base_address (dword0, dword1[7:0]) in 256-byte units, i.e. field << 8 (PAL
++// sq_bvh_rsrc_t; the game builds it with S_BFE_U64 X, 0x00280008). Off: the address is computed
++// exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
++// the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
++bool   FixB1BEnabled();
+ std::string OperandToString(const Operand& operand);
+ const char* ImageDimensionToString(ImageDimension dimension);
+ std::string InstructionToString(const Instruction& inst);
+diff --git a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+index f2976834..0592dff4 100644
+--- a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
++++ b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+@@ -830,8 +830,9 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 	}
+ 
+ 	// --- BVH descriptor (T#, 128-bit):
+-	//   dword0        = base_address[31:0]
+-	//   dword1[15:0]  = base_address[47:32]
++	//   dword0        = base_address[31:0]   (KYTY_FIX_B1B=1: base_address[39:0] is the BVH
++	//   dword1[7:0]   = base_address[39:32]   address >> 8, PAL sq_bvh_rsrc_t, 40 bits)
++	//   (KYTY_FIX_B1B=0, before the fix: dword0 | dword1[15:0] << 32 as a byte address)
+ 	//   dword1[22:21] = box sort heuristic (0 closest, 1 largest, 2 midpoint, 3 disabled)
+ 	//   dword1[30:23] = box grow value (ulps)
+ 	//   dword1[31]    = box sort enable
+@@ -869,7 +870,13 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 		node_addr = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
+ 		                            {ir.ConstructU64(node_off, node_hi), U32C(3u)}));
+ 	} else {
+-		const IR::U64 base64 = ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu)));
++		// Track F, F3b: the base is the 40-bit field base_address in 256-byte units (<< 8);
++		// KYTY_FIX_B1B=0 keeps the pre-fix byte address.
++		const IR::U64 base64 =
++		    Decoder::FixB1BEnabled()
++		        ? IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
++		                          {ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffu))), U32C(8u)}))
++		        : ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu)));
+ 		const IR::U64 off64  = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64,
+ 		                                       {ir.ConstructU64(node_off, U32C(0u)), U32C(3u)}));
+ 		node_addr            = IR::U64(ir.Emit(IR::ValueOpcode::IAdd64, {base64, off64}));
+diff --git a/tests/ShaderRecompilerComputeTests.cpp b/tests/ShaderRecompilerComputeTests.cpp
+index 705a40c0..89d0139a 100644
+--- a/tests/ShaderRecompilerComputeTests.cpp
++++ b/tests/ShaderRecompilerComputeTests.cpp
+@@ -21001,6 +21001,106 @@ void CheckB26Decode(bool fix_on) {
+ }
+ 
+ 
++// Track F, F3b (HPP-340, ROADMAP p.259(e)(3)): the node address of IMAGE_BVH_INTERSECT_RAY under
++// KYTY_FIX_B1B. The game builds the BVH descriptor base as S_BFE_U64 X, 0x00280008 - base_address = X >> 8,
++// a 40-bit field (dword0, dword1[7:0]) in 256-byte units (PAL sq_bvh_rsrc_t, gfx9Device.cpp:5334). One
++// buffer backs three guest mappings: page 0 (the null page, zeros), the BVH at X = 0x110000000 (the true
++// node at X + 0x100: root pointer 37 = fp32 box node, 64-byte unit 32) and the page X >> 8 = 0x01100000
++// (a decoy node at (X >> 8) + 0x100, where the pre-fix address points). The four boxes of a node contain
++// the ray, so the result is that node's four child pointers in order (equal sort keys never swap); a
++// missing page reads the null page, whose fp32 box node gives four zero children. dword1 carries the
++// bits above the field that the game sets (box_sort_en bit 31 by S_BITSET1_B32, box_grow_value 30:23).
++// Run with KYTY_BVH_NATIVE=1 (default, SPIR-V path) and 0 (IR path).
++constexpr uint64_t B1bBvhBase = 0x0000000110000000ull;
++constexpr u32 B1bTrueBacking = 0x4000u;
++constexpr u32 B1bDecoyBacking = 0x8000u;
++constexpr u32 B1bBufferBytes = 0x8200u;
++constexpr u32 B1bWord1High = 0x80000000u | (0xffu << 23u);
++constexpr std::array<u32, 4> B1bTrueChildren{0xa0000010u, 0xa0000020u, 0xa0000030u,
++                                             0xa0000040u};
++constexpr std::array<u32, 4> B1bDecoyChildren{0xd0000010u, 0xd0000020u, 0xd0000030u,
++                                              0xd0000040u};
++constexpr std::array<u32, 4> B1bNullChildren{0u, 0u, 0u, 0u};
++
++std::vector<u32> B1bMemory() {
++  std::vector<u32> memory(B1bBufferBytes / 4u, 0u);
++  const auto put_node = [&](u32 byte_offset, const std::array<u32, 4> &children) {
++    const u32 at = byte_offset / 4u;
++    for (u32 child = 0; child < 4u; child++) {
++      memory[at + child] = children[child];
++      const u32 box = at + 4u + child * 6u;
++      for (u32 axis = 0; axis < 3u; axis++) {
++        memory[box + axis] = 0xbf800000u;      // min -1.0
++        memory[box + 3u + axis] = 0x3f800000u; // max +1.0
++      }
++    }
++  };
++  put_node(B1bTrueBacking + 0x100u, B1bTrueChildren);
++  put_node(B1bDecoyBacking + 0x100u, B1bDecoyChildren);
++  return memory;
++}
++
++TestCase B1bBvhCase(const char *name, bool node64, u32 word1,
++                    const std::array<u32, 4> &expected) {
++  using O = ShaderOpcode;
++  std::vector<u32> code;
++  AppendSMovLiteral(&code, 16, static_cast<u32>(B1bBvhBase >> 8u)); // dword0 = X >> 8
++  AppendSMovLiteral(&code, 17, word1);
++  AppendSMovLiteral(&code, 18, 0xffffffffu); // size
++  AppendSMovLiteral(&code, 19, 0x81000000u); // type 8, triangle_return_mode 1 (as the game)
++  u32 vgpr = 4;
++  if (node64) {
++    // 64-bit node pointer: the node address is the pointer itself (<< 3), the base is not used.
++    const uint64_t pointer = ((B1bBvhBase + 0x100u) >> 3u) | 5u;
++    AppendVMovU32(&code, vgpr++, static_cast<u32>(pointer));
++    AppendVMovU32(&code, vgpr++, static_cast<u32>(pointer >> 32u));
++  } else {
++    AppendVMovU32(&code, vgpr++, 37u); // fp32 box node, offset (37 & ~7) * 8 = 0x100
++  }
++  AppendVMovU32(&code, vgpr++, 0x7149f2cau); // ray extent 1e30
++  for (u32 i = 0; i < 3u; i++) {
++    AppendVMovU32(&code, vgpr++, 0u); // origin
++  }
++  for (u32 i = 0; i < 6u; i++) {
++    AppendVMovU32(&code, vgpr++, 0x3f800000u); // direction, inverse direction
++  }
++  code.push_back(EncodeMimg0(node64 ? 0xe7u : 0xe6u, 0xf, 0, false, 0, true));
++  code.push_back(EncodeMimg1(0, 4, 16u / 4u));
++  for (u32 i = 0; i < 4u; i++) {
++    AppendStoreVgpr(&code, i, i);
++  }
++  AppendEnd(&code);
++
++  TestCase test;
++  test.name = name;
++  test.code = std::move(code);
++  test.initial = B1bMemory();
++  test.expected.assign(expected.begin(), expected.end());
++  test.bda_mappings = {{0, 0},
++                       {B1bBvhBase, B1bTrueBacking},
++                       {B1bBvhBase >> 8u, B1bDecoyBacking}};
++  test.opcodes = {O::S_MOV_B32, O::V_MOV_B32,
++                  node64 ? O::IMAGE_BVH64_INTERSECT_RAY : O::IMAGE_BVH_INTERSECT_RAY,
++                  O::BUFFER_STORE_DWORD, O::S_ENDPGM};
++  return test;
++}
++
++// =1: the base is the field << 8 - the true node; bits 40..47 (dword1[15:8], padding) do not enter the
++// address; bit 32 of the field (dword1[0]) does (address 2^40 + X + 0x100 is outside the page table:
++// null page). =0: the pre-fix byte address dword0 | dword1[15:0] << 32 - the decoy, then a missing page,
++// then a missing page. The 64-bit node pointer path reads the true node at both values.
++void RunB1bCases(VulkanHarness *vulkan, bool fix_on) {
++  RunCase(vulkan, B1bBvhCase("B1bBvhNodeAddress", false, B1bWord1High,
++                             fix_on ? B1bTrueChildren : B1bDecoyChildren));
++  RunCase(vulkan, B1bBvhCase("B1bBvhPaddingBitsIgnored", false, B1bWord1High | 0x0000ab00u,
++                             fix_on ? B1bTrueChildren : B1bNullChildren));
++  RunCase(vulkan, B1bBvhCase("B1bBvhFieldBit32", false, B1bWord1High | 0x00000001u,
++                             B1bNullChildren));
++  RunCase(vulkan, B1bBvhCase("B1bBvh64NodePointer", true, B1bWord1High | 0x00000001u,
++                             B1bTrueChildren));
++}
++
++
+ TestCase VectorVop3CompareEqI64OnGpu() {
+   using O = ShaderOpcode;
+ 
+@@ -31581,6 +31681,41 @@ int main(int argc, char **argv) {
+     std::printf("ALL OK\n");
+     return 0;
+   }
++  if (argc == 2 && std::strcmp(argv[1], "--fix-b1b-only") == 0) {
++    // Track F, F3b (HPP-340): the B1b/F9 node address at the knob values of this process
++    // (KYTY_FIX_B1B, KYTY_BVH_NATIVE; both read once per process).
++    const bool fix_on = ShaderRecompiler::Decoder::FixB1BEnabled();
++    const bool fix_b26 = ShaderRecompiler::Decoder::FixB26Enabled();
++    const char *native = std::getenv("KYTY_BVH_NATIVE");
++    std::printf("[b1b] KYTY_FIX_B1B effective=%d KYTY_FIX_B26 effective=%d KYTY_BVH_NATIVE=%s\n",
++                fix_on ? 1 : 0, fix_b26 ? 1 : 0, native != nullptr ? native : "(unset)");
++    {
++      // =0 and =1 never share a signature or a directory, with either value of KYTY_FIX_B26.
++      const ShaderTranslationCache cache("PPSA21564");
++      const auto directory = Common::PathToString(cache.Directory());
++      std::string signature = cache.Signature();
++      while (!signature.empty() && (signature.back() == '\n' || signature.back() == '\r')) {
++        signature.pop_back();
++      }
++      const bool b1b_sig = signature.find(":fixb1b") != std::string::npos;
++      const bool b1b_dir = directory.find("fixb1b") != std::string::npos;
++      const bool b26_sig = signature.find(":fixb26") != std::string::npos;
++      const bool b26_dir = directory.find("fixb26") != std::string::npos;
++      std::printf("[b1b]     cache signature=%s\n", signature.c_str());
++      std::printf("[b1b]     cache dir=%s fixb1b_in_signature=%d fixb1b_in_dir=%d "
++                  "fixb26_in_signature=%d fixb26_in_dir=%d\n",
++                  directory.c_str(), b1b_sig ? 1 : 0, b1b_dir ? 1 : 0, b26_sig ? 1 : 0,
++                  b26_dir ? 1 : 0);
++      Require("B1bCache", "translation cache key",
++              cache.Enabled() && b1b_sig == fix_on && b1b_dir == fix_on && b26_sig == fix_b26 &&
++                  b26_dir == fix_b26,
++              "fixb1b/fixb26 tokens of the signature or directory do not follow the knobs");
++    }
++    VulkanHarness vulkan;
++    RunB1bCases(&vulkan, fix_on);
++    std::printf("ALL OK\n");
++    return 0;
++  }
+   if (argc == 3 && std::strcmp(argv[1], "--b26-pass") == 0) {
+     return RunB26DecodePass(argv[2]);
+   }

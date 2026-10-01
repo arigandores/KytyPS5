@@ -1,0 +1,35 @@
+  if (argc == 2 && std::strcmp(argv[1], "--fix-b1b-only") == 0) {
+    // Track F, F3b (HPP-340): the B1b/F9 node address at the knob values of this process
+    // (KYTY_FIX_B1B, KYTY_BVH_NATIVE; both read once per process).
+    const bool fix_on = ShaderRecompiler::Decoder::FixB1BEnabled();
+    const bool fix_b26 = ShaderRecompiler::Decoder::FixB26Enabled();
+    const char *native = std::getenv("KYTY_BVH_NATIVE");
+    std::printf("[b1b] KYTY_FIX_B1B effective=%d KYTY_FIX_B26 effective=%d KYTY_BVH_NATIVE=%s\n",
+                fix_on ? 1 : 0, fix_b26 ? 1 : 0, native != nullptr ? native : "(unset)");
+    {
+      // =0 and =1 never share a signature or a directory, with either value of KYTY_FIX_B26.
+      const ShaderTranslationCache cache("PPSA21564");
+      const auto directory = Common::PathToString(cache.Directory());
+      std::string signature = cache.Signature();
+      while (!signature.empty() && (signature.back() == '\n' || signature.back() == '\r')) {
+        signature.pop_back();
+      }
+      const bool b1b_sig = signature.find(":fixb1b") != std::string::npos;
+      const bool b1b_dir = directory.find("fixb1b") != std::string::npos;
+      const bool b26_sig = signature.find(":fixb26") != std::string::npos;
+      const bool b26_dir = directory.find("fixb26") != std::string::npos;
+      std::printf("[b1b]     cache signature=%s\n", signature.c_str());
+      std::printf("[b1b]     cache dir=%s fixb1b_in_signature=%d fixb1b_in_dir=%d "
+                  "fixb26_in_signature=%d fixb26_in_dir=%d\n",
+                  directory.c_str(), b1b_sig ? 1 : 0, b1b_dir ? 1 : 0, b26_sig ? 1 : 0,
+                  b26_dir ? 1 : 0);
+      Require("B1bCache", "translation cache key",
+              cache.Enabled() && b1b_sig == fix_on && b1b_dir == fix_on && b26_sig == fix_b26 &&
+                  b26_dir == fix_b26,
+              "fixb1b/fixb26 tokens of the signature or directory do not follow the knobs");
+    }
+    VulkanHarness vulkan;
+    RunB1bCases(&vulkan, fix_on);
+    std::printf("ALL OK\n");
+    return 0;
+  }

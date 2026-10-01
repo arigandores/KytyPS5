@@ -7,7 +7,10 @@ Reads only what p.237(g) adds to the sealed s142 reading (sc142.py is not change
   - positive control of the knob: the 'Shader translation cache:' line - variant_fixb26 at =1, the root PPSA21564 at =0 (RC3(4));
   - 'lowered its phi to a host-evaluated select' lines - expected, not a marker (RC3(5));
   - B26a reopen check p.237(v)(2): 'CsPretranslate: miss|hit' with a hash of the 96, 'shader CFG build failed' outside
-    'CsPretranslate:', death of the process from the translator (RC3(6)).
+    'CsPretranslate:', death of the process from the translator (RC3(6));
+  - form of the run p.254(e) (KytyPS5 d3a8d951): '--arm W' (validation run, KYTY_PIPELINE_PRECACHE=0) - the log has no
+    'PipelinePrecache: N recipes ->' line; '--arm V' (run without validation, precache by default) - the line is there;
+    a violation makes the verdict 'FAIL (form ...)'. Without --arm the count is printed, no form verdict.
 Output: ASCII only.
 """
 import hashlib
@@ -31,6 +34,8 @@ RX_CSP = re.compile(rb'CsPretranslate: (ready|skipped|miss|hit|enqueue skipped) 
 RX_PC_CFG = re.compile(rb'in CFG at pc 0x([0-9a-fA-F]+)')
 RX_PC_ANY = re.compile(rb'pc[= ]0x([0-9a-fA-F]+)')
 RX_SRC = re.compile(rb'([A-Za-z_]+\.cpp):(\d+)')
+M_PRECACHE = b'PipelinePrecache: '
+RX_PRECACHE = re.compile(rb'PipelinePrecache: \d+ recipes -> ')
 
 
 def load_hashes(path=TSV):
@@ -70,7 +75,7 @@ def parse_skip(rest):
 
 def scan(path, h96, h5):
     res = dict(path=path, profile={}, per5={h: [] for h in h5}, reopen_mh=[], cfg_outside=0, deaths=[], translator_deaths=0,
-               cache_lines=[], phi=0, csp_kinds={})
+               cache_lines=[], phi=0, csp_kinds={}, precache_lines=0)
     sha = hashlib.sha256()
     off = 0
     tail = b''
@@ -127,6 +132,12 @@ def scan(path, h96, h5):
                 res['cache_lines'].append(whole[s:e][whole[s:e].find(M_CACHE) + len(M_CACHE):].strip().decode('latin1'))
                 i = whole.find(M_CACHE, e)
             res['phi'] += whole.count(M_PHI)
+            # form p.254(e): startup precache summary line
+            i = whole.find(M_PRECACHE)
+            while i >= 0:
+                s, e = _line(whole, i)
+                res['precache_lines'] += 1 if RX_PRECACHE.search(whole[s:e]) else 0
+                i = whole.find(M_PRECACHE, e)
             # deaths; 'from the translator' = the line or the 4 KB before it names the translator
             for mk in M_DEATH:
                 i = whole.find(mk)
@@ -157,10 +168,18 @@ def knob_of(cache_lines):
     return None
 
 
-def judge(res, fix, h5):
+def form_of(n_precache, arm):
+    """p.254(e): W - no 'PipelinePrecache: N recipes ->' line; V - the line is there. arm None -> no form verdict."""
+    if arm is None:
+        return None
+    return n_precache == 0 if arm == 'W' else n_precache >= 1
+
+
+def judge(res, fix, h5, arm=None):
     """Reading of one log run with KYTY_FIX_B26=<fix> ('1' or '0'). Letter of p.237(g)(4) and the F2b RC1 reviewer variant
     side by side; the RC1 rule itself is the lead's."""
-    out = dict(fix=fix, knob=knob_of(res['cache_lines']))
+    out = dict(fix=fix, knob=knob_of(res['cache_lines']), arm=arm, precache_lines=res.get('precache_lines', 0))
+    out['form_ok'] = form_of(out['precache_lines'], arm)
     out['knob_ok'] = out['knob'] == fix
     prof = res['profile']
     out['n21'] = prof.get(('SOP1', '0x21'), 0)
@@ -208,6 +227,9 @@ def judge(res, fix, h5):
         out['verdict_letter'] = out['verdict_variant'] = 'CONTROL RETURNS' if out['knob_ok'] and out['profile_ok'] else 'CONTROL FAILS'
     if not out['knob_ok']:
         out['verdict_letter'] = out['verdict_variant'] = 'INVALID RUN (knob control %s, want %s)' % (out['knob'], fix)
+    elif out['form_ok'] is False:
+        out['verdict_letter'] = out['verdict_variant'] = 'FAIL (form p.254(e): arm %s, precache lines %d)' % (
+            arm, out['precache_lines'])
     return out
 
 
@@ -217,6 +239,8 @@ def report(res, out):
          'profile SOP1 0x21 %d / SOP1 0x0c %d / VOPC 0xe3 %d / VOPC 0xf3 %d / other %s' % (
              out['n21'], out['n0c'], out['ne3'], out['nf3'], out['other_ops']),
          'profile ok %s' % out['profile_ok'],
+         'form p.254(e): arm %s, PipelinePrecache recipes lines %d -> %s' % (
+             out['arm'], out['precache_lines'], 'not judged' if out['form_ok'] is None else ('ok' if out['form_ok'] else 'FAIL')),
          'CsPretranslate kinds %s' % sorted(res['csp_kinds'].items())]
     for h, st in sorted(out['per5'].items()):
         L.append('hash %s fix place %s : %s letter %s variant %s' % (h, st['fix_place'], st['state'], st['letter'], st['variant']))
@@ -234,11 +258,17 @@ def report(res, out):
 def main(argv=None):
     a = list(sys.argv[1:] if argv is None else argv)
     if len(a) < 2 or a[1] not in ('0', '1'):
-        print('usage: f2c_b26.py <log> <0|1> [--json out.json]')
+        print('usage: f2c_b26.py <log> <0|1> [--arm V|W] [--json out.json]')
         return 2
+    arm = None
+    if '--arm' in a:
+        arm = a[a.index('--arm') + 1] if a.index('--arm') + 1 < len(a) else None
+        if arm not in ('V', 'W'):
+            print('usage: f2c_b26.py <log> <0|1> [--arm V|W] [--json out.json]')
+            return 2
     h96, h5 = load_hashes()
     res = scan(a[0], h96, h5)
-    out = judge(res, a[1], h5)
+    out = judge(res, a[1], h5, arm)
     print(report(res, out))
     if '--json' in a:
         with open(a[a.index('--json') + 1], 'w', encoding='ascii') as f:

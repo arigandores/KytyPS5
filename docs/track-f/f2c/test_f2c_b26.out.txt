@@ -1,4 +1,4 @@
-suite test_f2c_b26.py sha256 ffe959461ec2a5553accb3a5a720a2e9930e1cf5cb9ee03cb98fa8780a024a10 target f2c_b26.py sha256 e2371c59b59c104ce97c37a8f5c566aa49547bdc00cba99de4ed230876fe99d9
+suite test_f2c_b26.py sha256 4c14b1d7f7224b98b4ffba64b861e2805f8f4abff3d09608eb6a8deb3bf9cffd target f2c_b26.py sha256 ec19f7120b26b62050638bc3b5e0a21f7ed122984495de392b77824e7c6f95bd
 ok   tsv: 96 hashes of SOP1 0x21 96
 ok   tsv: 5 B26b hashes (1 SOP1 0x0c + 4 VOPC 0xe3) 
 ok   tsv: VOPC fix places 0x24/0x1d4/0x264/0x24 
@@ -37,10 +37,21 @@ ok   miss of a non-96 hash -> no reopen
 ok   CFG failed outside CsPretranslate -> counted 
 ok   death right after translator lines -> translator death 1 
 ok   death 10 KB after the last translator line -> death 1, translator 0 
+ok   form: no --arm -> not judged, verdict unchanged 
+ok   form W: 0 precache lines -> ok, PASS kept PASS
+ok   form W: precache line present -> FAIL (form) FAIL (form p.254(e): arm W, precache lines 1)
+ok   form V: precache line present -> ok, PASS 
+ok   form V: no precache line -> FAIL (form) also on control =0 
+ok   form V: two precache lines -> ok, CONTROL RETURNS 
+ok   form W: other PipelinePrecache line (no "N recipes ->") is not the summary -> ok 
+ok   form W: knob invalid wins over form 
+ok   main --arm W on a log with the precache line -> FAIL (form) printed 0
+ok   main --arm X -> rc 2 
+ok   main --arm without value -> rc 2 
 ok   CRLF log reads the same 
 ok   chunk boundary 97 B = 64 MB reading 
 ok   97 x 0x21 lines counted (dup line) 
 ok   main output: rc 0, ASCII, strict cp1250, no PYTHONIOENCODING 0
 ok   main: bad knob value -> rc 2 
-checks 43
+checks 54
 ALL OK

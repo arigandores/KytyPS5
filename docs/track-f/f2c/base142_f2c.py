@@ -12,8 +12,8 @@ for p in sorted(glob.glob('C:/kyty/s142/log_*.txt')):
     o = F.judge(r, '0', h5)
     if o['verdict_letter'] != 'CONTROL RETURNS' or o['reopen_any']:
         bad += 1
-    print('%s %s profile %d/%d/%d f3 %d knob %s letter %d variant %d reopen %s deaths %d phi %d -> %s' % (
+    print('%s %s profile %d/%d/%d f3 %d knob %s letter %d variant %d reopen %s deaths %d phi %d precache %d -> %s' % (
         os.path.basename(p), r['sha256'][:8], o['n21'], o['n0c'], o['ne3'], o['nf3'], o['knob'], o['letter5'],
-        o['variant5'], o['reopen'], o['deaths'], o['phi'], o['verdict_letter']))
+        o['variant5'], o['reopen'], o['deaths'], o['phi'], r['precache_lines'], o['verdict_letter']))
 print('logs not CONTROL RETURNS or with reopen: %d' % bad)
 print('ALL OK' if bad == 0 else 'SOME FAILED')

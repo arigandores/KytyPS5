@@ -171,6 +171,45 @@ check('death right after translator lines -> translator death 1', o['reopen']['t
 r, o = run('r6', log0() + ['FILLER', '--- Fatal Error ---'], '0', filler=100)
 check('death 10 KB after the last translator line -> death 1, translator 0', o['deaths'] == 1 and o['reopen']['translator_deaths'] == 0)
 
+# form p.254(e): W without the precache line, V with it
+PRE = ('PipelinePrecache: 1604 recipes -> 1500 graphics + 90 compute pipelines queued, 14 skipped, 300 sources loaded, '
+       'complete, 812 ms (scratch: 3 pipelines, max 64 dwords/thread)')
+r, o = run('fw0', log1_ideal(), '1')
+check('form: no --arm -> not judged, verdict unchanged', o['form_ok'] is None and o['verdict_letter'] == 'PASS')
+r, o = run('fw1', log1_ideal(), '1')
+o = F.judge(r, '1', H5, 'W')
+check('form W: 0 precache lines -> ok, PASS kept', o['form_ok'] is True and o['verdict_letter'] == 'PASS', o['verdict_letter'])
+r, o = run('fw2', [PRE] + log1_ideal(), '1')
+o = F.judge(r, '1', H5, 'W')
+check('form W: precache line present -> FAIL (form)', o['form_ok'] is False and o['verdict_letter'].startswith('FAIL (form')
+      and o['verdict_variant'].startswith('FAIL (form') and o['precache_lines'] == 1, o['verdict_letter'])
+o = F.judge(r, '1', H5, 'V')
+check('form V: precache line present -> ok, PASS', o['form_ok'] is True and o['verdict_letter'] == 'PASS')
+r, o = run('fv0', log0(), '0')
+o = F.judge(r, '0', H5, 'V')
+check('form V: no precache line -> FAIL (form) also on control =0', o['form_ok'] is False and o['verdict_letter'].startswith('FAIL (form'))
+r, o = run('fv1', [PRE, PRE] + log0(), '0')
+o = F.judge(r, '0', H5, 'V')
+check('form V: two precache lines -> ok, CONTROL RETURNS', o['form_ok'] is True and o['precache_lines'] == 2
+      and o['verdict_letter'] == 'CONTROL RETURNS')
+r, o = run('fw3', ['PipelinePrecache: disabled (recipes file absent)'] + log1_ideal(), '1')
+o = F.judge(r, '1', H5, 'W')
+check('form W: other PipelinePrecache line (no "N recipes ->") is not the summary -> ok', o['form_ok'] is True
+      and o['precache_lines'] == 0)
+r, o = run('fw4', [PRE] + log1_ideal()[1:] + [ROOT], '1')
+o = F.judge(r, '1', H5, 'W')
+check('form W: knob invalid wins over form', o['verdict_letter'].startswith('INVALID RUN'))
+p = subprocess.run([sys.executable, os.path.join(HERE, 'f2c_b26.py'), os.path.join(FX, 'fw2.txt'), '1', '--arm', 'W'],
+                   capture_output=True)
+check('main --arm W on a log with the precache line -> FAIL (form) printed', p.returncode == 0
+      and b'verdict letter: FAIL (form' in p.stdout, p.returncode)
+p = subprocess.run([sys.executable, os.path.join(HERE, 'f2c_b26.py'), os.path.join(FX, 'fw2.txt'), '1', '--arm', 'X'],
+                   capture_output=True)
+check('main --arm X -> rc 2', p.returncode == 2)
+p = subprocess.run([sys.executable, os.path.join(HERE, 'f2c_b26.py'), os.path.join(FX, 'fw2.txt'), '1', '--arm'],
+                   capture_output=True)
+check('main --arm without value -> rc 2', p.returncode == 2)
+
 # reading form
 r, o = run('crlf', log1_pred(), '1', crlf=True)
 check('CRLF log reads the same', (o['n21'], o['nf3'], o['letter5'], o['variant5'], o['knob']) == (96, 4, 4, 5, '1'))

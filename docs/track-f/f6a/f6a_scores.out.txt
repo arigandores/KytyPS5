@@ -1,0 +1,4 @@
+C:/kyty/s142/runs142: 12 score files
+C:/kyty/s143/runs143: 20 score files
+C:/kyty/s144/runs144: 33 score files
+score files 65, with non-empty stubs 0

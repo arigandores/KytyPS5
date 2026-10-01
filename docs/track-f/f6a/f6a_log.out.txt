@@ -1,0 +1,120 @@
+log C:/kyty/s142/log_c142_03.txt lines 952602 sha256 9aaa83b0c73e66b13c8d40d6433bce23ded53aaa579e3dd1be00d539892ed3cb
+stub LOGF lines total 1024, max index 1023
+      2  first    239572 last    239575  STUB b-dYXrjSNZU AudioPropagation patch=0x0000000908e36f50  tids={}
+          | Unresolved import stub called [0]: patch_vaddr=0x0000000908e36f50 jmprela_index=1241 symbol=b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+          | Unresolved import stub called [1]: patch_vaddr=0x0000000908e36f50 jmprela_index=1241 symbol=b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+    295  first    242025 last    311296  STUB WXMhENV2NcA AudioPropagation patch=0x0000000908e36f48  tids={}
+          | Unresolved import stub called [2]: patch_vaddr=0x0000000908e36f48 jmprela_index=1240 symbol=WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+          | Unresolved import stub called [3]: patch_vaddr=0x0000000908e36f48 jmprela_index=1240 symbol=WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+    365  first    282260 last    311390  STUB d84otraxt2s AudioPropagation patch=0x0000000908e36f68  tids={}
+          | Unresolved import stub called [63]: patch_vaddr=0x0000000908e36f68 jmprela_index=1244 symbol=d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+          | Unresolved import stub called [65]: patch_vaddr=0x0000000908e36f68 jmprela_index=1244 symbol=d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+    362  first    282261 last    311389  STUB G+QLTfyLMYk AudioPropagation patch=0x0000000908e36f88  tids={}
+          | Unresolved import stub called [64]: patch_vaddr=0x0000000908e36f88 jmprela_index=1248 symbol=G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+          | Unresolved import stub called [66]: patch_vaddr=0x0000000908e36f88 jmprela_index=1248 symbol=G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func] type=Func bind=Global program=C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+--- relocation lines with AudioPropagation: 16
+     4684 Relocate: unresolved PLT import patched to stub [1233] [0000000908e36f10] <- 0000000200008339, XKCN4gpeYsM[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4685 Relocate: unresolved PLT import patched to stub [1234] [0000000908e36f18] <- 00000002000083de, VlBT16890mA[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4686 Relocate: unresolved PLT import patched to stub [1235] [0000000908e36f20] <- 0000000200008483, ZQXE-xS6MTE[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4687 Relocate: unresolved PLT import patched to stub [1237] [0000000908e36f30] <- 0000000200008528, 5vzOS2pHMFc[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4688 Relocate: unresolved PLT import patched to stub [1240] [0000000908e36f48] <- 00000002000085cd, WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4689 Relocate: unresolved PLT import patched to stub [1241] [0000000908e36f50] <- 0000000200008672, b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4690 Relocate: unresolved PLT import patched to stub [1242] [0000000908e36f58] <- 0000000200008717, S0JwP2AFTTE[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4691 Relocate: unresolved PLT import patched to stub [1243] [0000000908e36f60] <- 00000002000087bc, x5VPqg5iyAk[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4692 Relocate: unresolved PLT import patched to stub [1244] [0000000908e36f68] <- 0000000200008861, d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4693 Relocate: unresolved PLT import patched to stub [1245] [0000000908e36f70] <- 0000000200008906, -wsUTr31yeg[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4694 Relocate: unresolved PLT import patched to stub [1246] [0000000908e36f78] <- 00000002000089ab, aKJZx7wCma8[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4695 Relocate: unresolved PLT import patched to stub [1248] [0000000908e36f88] <- 0000000200008a50, G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4696 Relocate: unresolved PLT import patched to stub [1250] [0000000908e36f98] <- 0000000200008af5, wkseM3LWPuc[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4697 Relocate: unresolved PLT import patched to stub [1251] [0000000908e36fa0] <- 0000000200008b9a, hhz9pITnC8k[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4698 Relocate: unresolved PLT import patched to stub [1252] [0000000908e36fa8] <- 0000000200008c3f, eEeKqFeNI3o[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+     4699 Relocate: unresolved PLT import patched to stub [1254] [0000000908e36fb8] <- 0000000200008ce4, PBcrVpEqUVY[AudioPropagation_v1][AudioPropagation_v1.0][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+--- events in order
+   200089 level  GuestOut: Level has started:
+   239572 first  STUB b-dYXrjSNZU AudioPropagation patch=0x0000000908e36f50
+   241438 level  GuestOut: Level has started: timestop_casino
+   242025 first  STUB WXMhENV2NcA AudioPropagation patch=0x0000000908e36f48
+   282260 first  STUB d84otraxt2s AudioPropagation patch=0x0000000908e36f68
+   282261 first  STUB G+QLTfyLMYk AudioPropagation patch=0x0000000908e36f88
+--- stub call sequence (run-length), first 60 runs and last 10
+runs 446
+   b-dYXrjSNZU x2 lines 239572..239575
+   WXMhENV2NcA x61 lines 242025..282161
+   d84otraxt2s x1 lines 282260..282260
+   G+QLTfyLMYk x1 lines 282261..282261
+   d84otraxt2s x1 lines 282277..282277
+   G+QLTfyLMYk x1 lines 282278..282278
+   WXMhENV2NcA x1 lines 282287..282287
+   d84otraxt2s x1 lines 282435..282435
+   G+QLTfyLMYk x1 lines 282438..282438
+   WXMhENV2NcA x1 lines 282459..282459
+   d84otraxt2s x1 lines 282600..282600
+   G+QLTfyLMYk x1 lines 282601..282601
+   WXMhENV2NcA x1 lines 282610..282610
+   d84otraxt2s x1 lines 282751..282751
+   G+QLTfyLMYk x1 lines 282752..282752
+   WXMhENV2NcA x1 lines 282768..282768
+   d84otraxt2s x1 lines 282923..282923
+   G+QLTfyLMYk x1 lines 282931..282931
+   WXMhENV2NcA x1 lines 282933..282933
+   d84otraxt2s x1 lines 283067..283067
+   G+QLTfyLMYk x1 lines 283068..283068
+   WXMhENV2NcA x1 lines 283077..283077
+   d84otraxt2s x1 lines 283218..283218
+   G+QLTfyLMYk x1 lines 283219..283219
+   WXMhENV2NcA x1 lines 283228..283228
+   d84otraxt2s x1 lines 283359..283359
+   G+QLTfyLMYk x1 lines 283360..283360
+   WXMhENV2NcA x1 lines 283369..283369
+   d84otraxt2s x1 lines 284961..284961
+   G+QLTfyLMYk x1 lines 284962..284962
+   WXMhENV2NcA x1 lines 284971..284971
+   d84otraxt2s x1 lines 285098..285098
+   G+QLTfyLMYk x1 lines 285106..285106
+   WXMhENV2NcA x1 lines 285108..285108
+   d84otraxt2s x1 lines 285284..285284
+   G+QLTfyLMYk x1 lines 285292..285292
+   WXMhENV2NcA x1 lines 285299..285299
+   d84otraxt2s x1 lines 285421..285421
+   G+QLTfyLMYk x1 lines 285422..285422
+   WXMhENV2NcA x1 lines 285431..285431
+   d84otraxt2s x1 lines 285573..285573
+   G+QLTfyLMYk x1 lines 285574..285574
+   WXMhENV2NcA x1 lines 285576..285576
+   d84otraxt2s x1 lines 285711..285711
+   G+QLTfyLMYk x1 lines 285719..285719
+   WXMhENV2NcA x1 lines 285721..285721
+   d84otraxt2s x1 lines 285865..285865
+   G+QLTfyLMYk x1 lines 285866..285866
+   WXMhENV2NcA x1 lines 285875..285875
+   d84otraxt2s x1 lines 285988..285988
+   G+QLTfyLMYk x1 lines 285989..285989
+   WXMhENV2NcA x1 lines 285991..285991
+   d84otraxt2s x1 lines 286092..286092
+   G+QLTfyLMYk x1 lines 286093..286093
+   WXMhENV2NcA x1 lines 286154..286154
+   d84otraxt2s x1 lines 286416..286416
+   G+QLTfyLMYk x1 lines 286430..286430
+   WXMhENV2NcA x1 lines 286574..286574
+   d84otraxt2s x1 lines 286963..286963
+   G+QLTfyLMYk x1 lines 286964..286964
+   ...
+   G+QLTfyLMYk x6 lines 311191..311196
+   WXMhENV2NcA x1 lines 311198..311198
+   d84otraxt2s x6 lines 311283..311288
+   G+QLTfyLMYk x6 lines 311289..311294
+   WXMhENV2NcA x1 lines 311296..311296
+   d84otraxt2s x3 lines 311382..311384
+   G+QLTfyLMYk x1 lines 311385..311385
+   d84otraxt2s x2 lines 311386..311387
+   G+QLTfyLMYk x2 lines 311388..311389
+   d84otraxt2s x1 lines 311390..311390
+--- most common 3-run patterns
+   77 x ('WXMhENV2NcA', 1, 'd84otraxt2s', 1, 'G+QLTfyLMYk', 1)
+   74 x ('d84otraxt2s', 1, 'G+QLTfyLMYk', 1, 'WXMhENV2NcA', 1)
+   72 x ('G+QLTfyLMYk', 1, 'WXMhENV2NcA', 1, 'd84otraxt2s', 1)
+   16 x ('d84otraxt2s', 2, 'G+QLTfyLMYk', 2, 'WXMhENV2NcA', 1)
+   15 x ('WXMhENV2NcA', 1, 'd84otraxt2s', 2, 'G+QLTfyLMYk', 2)
+   15 x ('WXMhENV2NcA', 1, 'd84otraxt2s', 6, 'G+QLTfyLMYk', 6)
+   15 x ('d84otraxt2s', 6, 'G+QLTfyLMYk', 6, 'WXMhENV2NcA', 1)
+   14 x ('G+QLTfyLMYk', 2, 'WXMhENV2NcA', 1, 'd84otraxt2s', 2)

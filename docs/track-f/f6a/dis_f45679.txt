@@ -1,0 +1,81 @@
+=== site 0xf45679 function start 0xf455f0 (site +0x89)
+     f455f0  push       rbp
+     f455f1  mov        rbp, rsp
+     f455f4  push       r15
+     f455f6  push       r14
+     f455f8  push       r12
+     f455fa  push       rbx
+     f455fb  sub        rsp, 0x60
+     f455ff  mov        r12, qword ptr [rip + 0x7eeef02]   ; ->0x8e34508
+     f45606  vxorps     xmm0, xmm0, xmm0
+     f4560a  lea        r15, [rsi + 8]
+     f4560e  mov        rbx, rdi
+     f45611  mov        r14, rsi
+     f45614  lea        rdi, [rbp - 0x60]
+     f45618  mov        rax, qword ptr [r12]
+     f4561c  mov        qword ptr [rbp - 0x28], rax
+     f45620  vmovups    ymmword ptr [rbp - 0x70], ymm0
+     f45625  vmovups    ymmword ptr [rbp - 0x50], ymm0
+     f4562a  mov        dword ptr [rbp - 0x70], 0x10107d1
+     f45631  mov        qword ptr [rbp - 0x68], 0x40
+     f45639  mov        dword ptr [rbp - 0x38], 0x3f800000
+     f45640  cmp        qword ptr [rsi + 0x20], 0x10
+     f45645  mov        rsi, r15
+     f45648  jb         0xf4564e
+     f4564a  mov        rsi, qword ptr [r14 + 8]
+     f4564e  mov        edx, 0xf
+     f45653  call       0x74ec600
+     f45658  vmovups    xmm0, xmmword ptr [r14 + 0x28]
+     f4565e  lea        rsi, [rbp - 0x70]
+     f45662  lea        rdx, [rbp - 0x78]
+     f45666  vmovups    xmmword ptr [rbp - 0x50], xmm0
+     f4566b  vmovsd     xmm0, qword ptr [r14 + 0x38]
+     f45671  vmovsd     qword ptr [rbp - 0x40], xmm0
+     f45676  mov        rdi, qword ptr [rbx]
+>>   f45679  call       0x74ebf00   ; sceAudioPropagationSystemRegisterMaterial
+     f4567e  test       eax, eax
+     f45680  jne        0xf456ea
+     f45682  cmp        qword ptr [r14 + 0x20], 0x10
+     f45687  mov        rsi, qword ptr [r14 + 0x18]
+     f4568b  jb         0xf45691
+     f4568d  mov        r15, qword ptr [r14 + 8]
+     f45691  mov        rdi, r15
+     f45694  call       0x140
+     f45699  mov        r14, qword ptr [rbp - 0x78]
+     f4569d  lea        rdi, [rbx + 8]
+     f456a1  lea        rsi, [rbp - 0x7c]
+     f456a5  mov        dword ptr [rbp - 0x7c], eax
+     f456a8  call       0xf45730
+     f456ad  add        rbx, 0x58
+     f456b1  lea        rsi, [rbp - 0x78]
+     f456b5  mov        qword ptr [rax], r14
+     f456b8  mov        rdi, rbx
+     f456bb  call       0xf458c0
+     f456c0  vmovups    ymm0, ymmword ptr [rbp - 0x70]
+     f456c5  vmovups    ymm1, ymmword ptr [rbp - 0x50]
+     f456ca  vmovups    ymmword ptr [rax], ymm0
+     f456ce  vmovups    ymmword ptr [rax + 0x20], ymm1
+     f456d3  mov        rax, qword ptr [r12]
+     f456d7  cmp        rax, qword ptr [rbp - 0x28]
+     f456db  jne        0xf45722
+     f456dd  add        rsp, 0x60
+     f456e1  pop        rbx
+     f456e2  pop        r12
+     f456e4  pop        r14
+     f456e6  pop        r15
+     f456e8  pop        rbp
+     f456e9  ret        
+     f456ea  mov        r9d, eax
+     f456ed  lea        rdi, [rip + 0x73ac80b]   ; ->0x82f1eff "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationMaterialSet.cpp"
+     f456f4  lea        rcx, [rip + 0x71303c7]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f456fb  lea        r8, [rip + 0x71cc5aa]   ; ->0x8111cac "sceAudioPropagationSystemRegisterMaterial failed : 0x%08x
+"
+     f45702  mov        esi, 0x4a
+     f45707  mov        edx, 1
+     f4570c  xor        eax, eax
+     f4570e  call       0x1aa0
+     f45713  test       eax, eax
+     f45715  je         0xf45682
+     f4571b  int        0x41
+     f4571d  jmp        0xf45682
+     f45722  call       0x74ec090

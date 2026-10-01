@@ -1,0 +1,54 @@
+=== site 0xf4c681 function start 0xf4c670 (site +0x11)
+     f4c670  push       rbp
+     f4c671  mov        rbp, rsp
+     f4c674  push       r14
+     f4c676  push       rbx
+     f4c677  mov        rbx, rdi
+     f4c67a  mov        rdi, qword ptr [rdi]
+     f4c67d  mov        rsi, qword ptr [rbx + 0x10]
+>>   f4c681  call       0x74ebec0   ; ZQXE-xS6MTE
+     f4c686  mov        qword ptr [rbx + 0x10], 0
+     f4c68e  mov        r14, qword ptr [rbx + 0x80]
+     f4c695  test       r14, r14
+     f4c698  je         0xf4c6db
+     f4c69a  lea        rdi, [r14 + 8]
+     f4c69e  mov        esi, 1
+     f4c6a3  mov        edx, 4
+     f4c6a8  call       0x74ec710
+     f4c6ad  cmp        eax, 1
+     f4c6b0  jne        0xf4c6db
+     f4c6b2  mov        rax, qword ptr [r14]
+     f4c6b5  mov        rdi, r14
+     f4c6b8  call       qword ptr [rax]
+     f4c6ba  lea        rdi, [r14 + 0xc]
+     f4c6be  mov        esi, 1
+     f4c6c3  mov        edx, 4
+     f4c6c8  call       0x74ec710
+     f4c6cd  cmp        eax, 1
+     f4c6d0  jne        0xf4c6db
+     f4c6d2  mov        rax, qword ptr [r14]
+     f4c6d5  mov        rdi, r14
+     f4c6d8  call       qword ptr [rax + 8]
+     f4c6db  mov        rbx, qword ptr [rbx + 0x68]
+     f4c6df  test       rbx, rbx
+     f4c6e2  je         0xf4c729
+     f4c6e4  lea        rdi, [rbx + 8]
+     f4c6e8  mov        esi, 1
+     f4c6ed  mov        edx, 4
+     f4c6f2  call       0x74ec710
+     f4c6f7  cmp        eax, 1
+     f4c6fa  jne        0xf4c729
+     f4c6fc  mov        rax, qword ptr [rbx]
+     f4c6ff  mov        rdi, rbx
+     f4c702  call       qword ptr [rax]
+     f4c704  lea        rdi, [rbx + 0xc]
+     f4c708  mov        esi, 1
+     f4c70d  mov        edx, 4
+     f4c712  call       0x74ec710
+     f4c717  cmp        eax, 1
+     f4c71a  jne        0xf4c729
+     f4c71c  mov        rax, qword ptr [rbx]
+     f4c71f  mov        rdi, rbx
+     f4c722  pop        rbx
+     f4c723  pop        r14
+     f4c725  pop        rbp

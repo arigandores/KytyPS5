@@ -1,0 +1,55 @@
+=== site 0xf526c9 function start 0xf52650 (site +0x79)
+     f52650  push       rbp
+     f52651  mov        rbp, rsp
+     f52654  push       r15
+     f52656  push       r14
+     f52658  push       rbx
+     f52659  sub        rsp, 0x18
+     f5265d  mov        r15, qword ptr [rip + 0x7ee1ea4]   ; ->0x8e34508
+     f52664  lea        rbx, [rdi + 0x23f0]
+     f5266b  mov        r14, rdi
+     f5266e  lea        rdi, [rbp - 0x24]
+     f52672  mov        rsi, rbx
+     f52675  mov        rax, qword ptr [r15]
+     f52678  mov        qword ptr [rbp - 0x20], rax
+     f5267c  call       0x640
+     f52681  cmp        qword ptr [r14 + 0xb0], 0
+     f52689  je         0xf526e7
+     f5268b  cmp        byte ptr [r14 + 0x23e8], 0
+     f52693  jne        0xf526e7
+     f52695  mov        rdx, qword ptr [r14 + 0x23e0]
+     f5269c  mov        rdi, qword ptr [r14 + 0x23d8]
+     f526a3  xor        esi, esi
+     f526a5  shl        rdx, 6
+     f526a9  call       0x74ec320
+     f526ae  cmp        byte ptr [r14 + 0x23c4], 0
+     f526b6  je         0xf526ce
+     f526b8  mov        rsi, qword ptr [r14 + 0x23c8]
+     f526bf  mov        rdx, qword ptr [r14 + 0x23d8]
+     f526c6  mov        rdi, r14
+>>   f526c9  call       0xf52710
+     f526ce  mov        rdx, qword ptr [r14 + 0x23d0]
+     f526d5  mov        rdi, qword ptr [r14 + 0x23c8]
+     f526dc  xor        esi, esi
+     f526de  shl        rdx, 2
+     f526e2  call       0x74ec320
+     f526e7  lea        rdi, [rbp - 0x24]
+     f526eb  mov        rsi, rbx
+     f526ee  call       0x8c0
+     f526f3  mov        rax, qword ptr [r15]
+     f526f6  cmp        rax, qword ptr [rbp - 0x20]
+     f526fa  jne        0xf52707
+     f526fc  add        rsp, 0x18
+     f52700  pop        rbx
+     f52701  pop        r14
+     f52703  pop        r15
+     f52705  pop        rbp
+     f52706  ret        
+     f52707  call       0x74ec090
+     f5270c  ud2        
+     f5270e  int3       
+     f5270f  int3       
+     f52710  push       rbp
+     f52711  mov        rbp, rsp
+     f52714  push       r15
+     f52716  push       r14

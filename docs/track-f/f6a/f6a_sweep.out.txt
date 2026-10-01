@@ -1,0 +1,7 @@
+files 76
+log_c142_03.txt levels=timestop_casino: AudioPropagation/G+QLTfyLMYk=362 AudioPropagation/WXMhENV2NcA=295 AudioPropagation/b-dYXrjSNZU=2 AudioPropagation/d84otraxt2s=365
+log_v143_03.txt levels=mini_astro_clock_tower: AudioPropagation/WXMhENV2NcA=1022 AudioPropagation/b-dYXrjSNZU=2
+log_v144_13.txt levels=timestop_casino: AudioPropagation/G+QLTfyLMYk=361 AudioPropagation/WXMhENV2NcA=296 AudioPropagation/b-dYXrjSNZU=2 AudioPropagation/d84otraxt2s=365
+log_w144_03.txt levels=mini_astro_clock_tower: AudioPropagation/WXMhENV2NcA=1022 AudioPropagation/b-dYXrjSNZU=2
+log_w144_13.txt levels=timestop_casino: AudioPropagation/G+QLTfyLMYk=363 AudioPropagation/WXMhENV2NcA=295 AudioPropagation/b-dYXrjSNZU=2 AudioPropagation/d84otraxt2s=364
+swept 76 of 76 logs, with stub calls 5, wall 19.6 s

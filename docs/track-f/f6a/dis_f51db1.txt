@@ -1,0 +1,63 @@
+=== site 0xf51db1 function start 0xf51d80 (site +0x31)
+     f51d80  push       rbp
+     f51d81  mov        rbp, rsp
+     f51d84  push       r15
+     f51d86  push       r14
+     f51d88  push       r13
+     f51d8a  push       r12
+     f51d8c  push       rbx
+     f51d8d  sub        rsp, 0x18
+     f51d91  mov        r15, qword ptr [rip + 0x7ee2770]   ; ->0x8e34508
+     f51d98  mov        rbx, rdi
+     f51d9b  mov        rax, qword ptr [r15]
+     f51d9e  mov        qword ptr [rbp - 0x30], rax
+     f51da2  mov        rsi, qword ptr [rdi + 0xb0]
+     f51da9  test       rsi, rsi
+     f51dac  je         0xf51dc9
+     f51dae  mov        rdi, qword ptr [rbx]
+>>   f51db1  call       0x74ebfb0   ; sceAudioPropagationSourceDestroy
+     f51db6  test       eax, eax
+     f51db8  jne        0xf51f90
+     f51dbe  mov        qword ptr [rbx + 0xb0], 0
+     f51dc9  mov        rdi, qword ptr [rbx + 0x23c8]
+     f51dd0  test       rdi, rdi
+     f51dd3  je         0xf51dda
+     f51dd5  call       0x74e74c0
+     f51dda  lea        r14, [rbx + 0x23f0]
+     f51de1  lea        rdi, [rbp - 0x34]
+     f51de5  mov        rsi, r14
+     f51de8  call       0x590
+     f51ded  mov        rdi, r14
+     f51df0  call       0x430
+     f51df5  mov        rdi, qword ptr [rbx + 0x23d8]
+     f51dfc  test       rdi, rdi
+     f51dff  je         0xf51e06
+     f51e01  call       0x74e74c0
+     f51e06  mov        r14, qword ptr [rbx + 0x2198]
+     f51e0d  test       r14, r14
+     f51e10  je         0xf51e53
+     f51e12  lea        rdi, [r14 + 8]
+     f51e16  mov        esi, 1
+     f51e1b  mov        edx, 4
+     f51e20  call       0x74ec710
+     f51e25  cmp        eax, 1
+     f51e28  jne        0xf51e53
+     f51e2a  mov        rax, qword ptr [r14]
+     f51e2d  mov        rdi, r14
+     f51e30  call       qword ptr [rax]
+     f51e32  lea        rdi, [r14 + 0xc]
+     f51e36  mov        esi, 1
+     f51e3b  mov        edx, 4
+     f51e40  call       0x74ec710
+     f51e45  cmp        eax, 1
+     f51e48  jne        0xf51e53
+     f51e4a  mov        rax, qword ptr [r14]
+     f51e4d  mov        rdi, r14
+     f51e50  call       qword ptr [rax + 8]
+     f51e53  mov        r14, qword ptr [rbx + 0x98]
+     f51e5a  test       r14, r14
+     f51e5d  je         0xf51ee4
+     f51e63  mov        r13, qword ptr [rbx + 0xa0]
+     f51e6a  lea        r12, [rbx + 0x98]
+     f51e71  cmp        r14, r13
+     f51e74  jne        0xf51e90

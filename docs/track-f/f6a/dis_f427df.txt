@@ -1,0 +1,127 @@
+=== site 0xf427df function start 0xf42610 (site +0x1cf)
+     f42610  push       rbp
+     f42611  mov        rbp, rsp
+     f42614  push       r15
+     f42616  push       r14
+     f42618  push       r13
+     f4261a  push       r12
+     f4261c  push       rbx
+     f4261d  sub        rsp, 0x168
+     f42624  mov        rax, qword ptr [rip + 0x7ef1edd]   ; ->0x8e34508
+     f4262b  mov        qword ptr [rbp - 0x120], rcx
+     f42632  mov        dword ptr [rbp - 0xec], edx
+     f42638  movabs     rdx, 0xc00000000000000
+     f42642  mov        rcx, r8
+     f42645  mov        r14, rdi
+     f42648  mov        rbx, r8
+     f4264b  mov        r15, rsi
+     f4264e  vxorps     xmm0, xmm0, xmm0
+     f42652  and        rdx, r8
+     f42655  shl        rcx, 6
+     f42659  neg        rdx
+     f4265c  sbb        rdi, rdi
+     f4265f  mov        rax, qword ptr [rax]
+     f42662  or         rdi, rcx
+     f42665  mov        qword ptr [rbp - 0x30], rax
+     f42669  vmovups    xmmword ptr [r14], xmm0
+     f4266e  call       0x74e74b0
+     f42673  vmovss     xmm5, dword ptr [rip + 0x740c855]   ; ->0x834eed0
+     f4267b  vmovups    xmm1, xmmword ptr [rip + 0x74061ad]   ; ->0x8348830
+     f42683  vmovups    xmm2, xmmword ptr [rip + 0x73fab25]   ; ->0x833d1b0
+     f4268b  vmovups    xmm3, xmmword ptr [rip + 0x73f5a1d]   ; ->0x83380b0
+     f42693  lea        rdi, [r14 + 0x1738]
+     f4269a  mov        qword ptr [r14 + 0x18], rax
+     f4269e  mov        qword ptr [r14 + 0x20], rbx
+     f426a2  vxorps     xmm0, xmm0, xmm0
+     f426a6  vmovups    xmmword ptr [r14 + 0x28], xmm0
+     f426ac  mov        dword ptr [r14 + 0x38], 0
+     f426b4  vmovups    xmmword ptr [r14 + 0x40], xmm0
+     f426ba  mov        dword ptr [r14 + 0x50], 0
+     f426c2  vmovups    xmmword ptr [r14 + 0x58], xmm0
+     f426c8  mov        dword ptr [r14 + 0x68], 0
+     f426d0  vmovups    xmmword ptr [r14 + 0x70], xmm0
+     f426d6  mov        dword ptr [r14 + 0x80], 0
+     f426e1  vxorps     xmm4, xmm4, xmm4
+     f426e5  xor        esi, esi
+     f426e7  xor        edx, edx
+     f426e9  mov        qword ptr [rbp - 0x168], rdi
+     f426f0  vmovups    xmmword ptr [r14 + 0x90], xmm5
+     f426f9  vmovups    xmmword ptr [r14 + 0xa0], xmm1
+     f42702  vmovups    xmmword ptr [r14 + 0xb0], xmm2
+     f4270b  vmovups    xmmword ptr [r14 + 0xc0], xmm3
+     f42714  vmovups    xmmword ptr [r14 + 0xd0], xmm5
+     f4271d  vmovups    xmmword ptr [r14 + 0xe0], xmm1
+     f42726  vmovups    xmmword ptr [r14 + 0xf0], xmm2
+     f4272f  vmovups    xmmword ptr [r14 + 0x100], xmm3
+     f42738  vmovups    xmmword ptr [r14 + 0x1718], xmm4
+     f42741  mov        dword ptr [r14 + 0x1728], 0
+     f4274c  mov        byte ptr [r14 + 0x1730], 0
+     f42754  call       0x370
+     f42759  mov        rdx, qword ptr [r14 + 0x20]
+     f4275d  mov        rdi, qword ptr [r14 + 0x18]
+     f42761  xor        esi, esi
+     f42763  shl        rdx, 6
+     f42767  call       0x74ec320
+     f4276c  vxorps     xmm0, xmm0, xmm0
+     f42770  vmovups    ymmword ptr [rbp - 0xa0], ymm0
+     f42778  vmovups    ymmword ptr [rbp - 0x90], ymm0
+     f42780  mov        dword ptr [rbp - 0xa0], 0x10107d4
+     f4278a  mov        qword ptr [rbp - 0x98], 0x30
+     f42795  lea        rdi, [rbp - 0xe0]
+     f4279c  lea        rsi, [rbp - 0xa0]
+     f427a3  mov        qword ptr [rbp - 0x140], r15
+     f427aa  mov        eax, dword ptr [r15 + 0x1c]
+     f427ae  mov        dword ptr [r14 + 0x10], eax
+     f427b2  vmovss     xmm0, dword ptr [r15 + 0x28]
+     f427b8  vmovss     dword ptr [r14 + 0x14], xmm0
+     f427be  vmovups    ymm0, ymmword ptr [r15]
+     f427c3  vmovups    ymm1, ymmword ptr [r15 + 0x18]
+     f427c9  vmovups    ymmword ptr [rbp - 0xc8], ymm1
+     f427d1  vmovups    ymmword ptr [rbp - 0xe0], ymm0
+     f427d9  mov        dword ptr [rbp - 0xc0], ebx
+>>   f427df  call       0x74ebf80   ; sceAudioPropagationSystemQueryMemory
+     f427e4  test       eax, eax
+     f427e6  jne        0xf4304d
+     f427ec  mov        ebx, dword ptr [rbp - 0x88]
+     f427f2  movzx      eax, byte ptr [rip + 0xdc5c87f]   ; ->0xeb9f078
+     f427f9  lea        r15, [r14 + 8]
+     f427fd  test       al, al
+     f427ff  je         0xf430bd
+     f42805  mov        edi, ebx
+     f42807  mov        esi, 0x10
+     f4280c  mov        edx, 9
+     f42811  call       0x2170
+     f42816  mov        qword ptr [r14], rax
+     f42819  mov        rdi, rax
+     f4281c  xor        esi, esi
+     f4281e  mov        rdx, qword ptr [rbp - 0x88]
+     f42825  call       0x74ec320
+     f4282a  mov        rax, qword ptr [r14]
+     f4282d  lea        rdi, [rbp - 0xe0]
+     f42834  lea        rsi, [rbp - 0xa0]
+     f4283b  mov        rdx, r15
+     f4283e  mov        qword ptr [rbp - 0x90], rax
+     f42845  call       0x74ebef0   ; sceAudioPropagationSystemCreate
+     f4284a  test       eax, eax
+     f4284c  jne        0xf43085
+     f42852  mov        edi, 0xb8
+     f42857  call       0x74e73e0
+     f4285c  mov        rbx, rax
+     f4285f  movabs     rcx, 0x100000001
+     f42869  lea        r13, [rax + 8]
+     f4286d  mov        qword ptr [rbp - 0x100], r15
+     f42874  mov        qword ptr [rbx + 8], rcx
+     f42878  lea        rcx, [rip + 0x79d8519]   ; ->0x891ad98
+     f4287f  lea        r12, [rbx + 0x10]
+     f42883  lea        rdx, [rbx + 0xc]
+     f42887  mov        qword ptr [rbx], rcx
+     f4288a  mov        rdi, r12
+     f4288d  mov        qword ptr [rbp - 0xe8], rdx
+     f42894  mov        rsi, qword ptr [r15]
+     f42897  call       0xf44f00
+     f4289c  mov        rdi, r13
+     f4289f  mov        esi, 1
+     f428a4  xor        edx, edx
+     f428a6  call       0x74ec720
+     f428ab  vmovq      xmm0, rbx
+     f428b0  vmovq      xmm1, r12

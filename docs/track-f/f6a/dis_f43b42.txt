@@ -1,0 +1,78 @@
+=== site 0xf43b42 function start 0xf43ad0 (site +0x72)
+     f43ad0  push       rbp
+     f43ad1  mov        rbp, rsp
+     f43ad4  push       r15
+     f43ad6  push       r14
+     f43ad8  push       r12
+     f43ada  push       rbx
+     f43adb  sub        rsp, 0x10
+     f43adf  mov        r12, qword ptr [rip + 0x7ef0a22]   ; ->0x8e34508
+     f43ae6  lea        rbx, [rdi + 0x1738]
+     f43aed  mov        r14, rdi
+     f43af0  lea        rdi, [rbp - 0x2c]
+     f43af4  mov        rsi, rbx
+     f43af7  mov        rax, qword ptr [r12]
+     f43afb  mov        qword ptr [rbp - 0x28], rax
+     f43aff  call       0x640
+     f43b04  mov        rdi, r14
+     f43b07  call       0xf435d0
+     f43b0c  mov        edx, dword ptr [r14 + 0x1710]
+     f43b13  test       edx, edx
+     f43b15  je         0xf43b4b
+     f43b17  mov        rax, qword ptr [r14 + 0x40]
+     f43b1b  vmovss     xmm0, dword ptr [r14 + 0x14]
+     f43b21  lea        r15, [r14 + 0x110]
+     f43b28  mov        rsi, r15
+     f43b2b  mov        rdi, qword ptr [rax]
+     f43b2e  mov        rax, qword ptr [rdi]
+     f43b31  call       qword ptr [rax + 0x10]
+     f43b34  mov        rdi, qword ptr [r14 + 8]
+     f43b38  mov        edx, dword ptr [r14 + 0x1710]
+     f43b3f  mov        rsi, r15
+>>   f43b42  call       0x74ebeb0   ; sceAudioPropagationSystemSetRays
+     f43b47  test       eax, eax
+     f43b49  jne        0xf43b77
+     f43b4b  mov        rdi, qword ptr [r14 + 0x58]
+     f43b4f  call       0xf4d1f0
+     f43b54  lea        rdi, [rbp - 0x2c]
+     f43b58  mov        rsi, rbx
+     f43b5b  call       0x8c0
+     f43b60  mov        rax, qword ptr [r12]
+     f43b64  cmp        rax, qword ptr [rbp - 0x28]
+     f43b68  jne        0xf43ba8
+     f43b6a  add        rsp, 0x10
+     f43b6e  pop        rbx
+     f43b6f  pop        r12
+     f43b71  pop        r14
+     f43b73  pop        r15
+     f43b75  pop        rbp
+     f43b76  ret        
+     f43b77  mov        r9d, eax
+     f43b7a  lea        rdi, [rip + 0x737ea99]   ; ->0x82c261a "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationContext.cpp"
+     f43b81  lea        rcx, [rip + 0x7131f3a]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f43b88  lea        r8, [rip + 0x716dde9]   ; ->0x80b1978 "sceAudioPropagationSystemSetRays failed : 0x%08x
+"
+     f43b8f  mov        esi, 0x8e
+     f43b94  mov        edx, 1
+     f43b99  xor        eax, eax
+     f43b9b  call       0x1aa0
+     f43ba0  test       eax, eax
+     f43ba2  je         0xf43b4b
+     f43ba4  int        0x41
+     f43ba6  jmp        0xf43b4b
+     f43ba8  call       0x74ec090
+     f43bad  ud2        
+     f43baf  int3       
+     f43bb0  push       rbp
+     f43bb1  mov        rbp, rsp
+     f43bb4  push       r15
+     f43bb6  push       r14
+     f43bb8  push       r13
+     f43bba  push       r12
+     f43bbc  push       rbx
+     f43bbd  sub        rsp, 0x78
+     f43bc1  mov        rax, qword ptr [rip + 0x7ef0940]   ; ->0x8e34508
+     f43bc8  mov        qword ptr [rbp - 0x80], rdi
+     f43bcc  mov        r12, rsi
+     f43bcf  add        rsi, 0x1738
+     f43bd6  lea        rdi, [rbp - 0x74]

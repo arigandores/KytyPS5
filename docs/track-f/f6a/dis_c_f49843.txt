@@ -1,0 +1,62 @@
+=== site 0xf49843 function start 0xf497a0 (site +0xa3)
+     f497a0  push       rbp
+     f497a1  mov        rbp, rsp
+     f497a4  push       r15
+     f497a6  push       r14
+     f497a8  push       r13
+     f497aa  push       r12
+     f497ac  push       rbx
+     f497ad  push       rax
+     f497ae  mov        r12, qword ptr [rdi + 0x60]
+     f497b2  mov        r13, qword ptr [r12]
+     f497b6  cmp        r13, r12
+     f497b9  jne        0xf497cd
+     f497bb  jmp        0xf49855
+     f497c0  mov        r13, qword ptr [r13]
+     f497c4  cmp        r13, r12
+     f497c7  je         0xf49855
+     f497cd  mov        r14, qword ptr [r13 + 0x18]
+     f497d1  mov        rbx, qword ptr [r13 + 0x20]
+     f497d5  test       rbx, rbx
+     f497d8  je         0xf49840
+     f497da  lea        r15, [rbx + 8]
+     f497de  mov        esi, 1
+     f497e3  xor        edx, edx
+     f497e5  mov        rdi, r15
+     f497e8  call       0x74ec720
+     f497ed  mov        rdi, r14
+     f497f0  call       0xf4ca20
+     f497f5  mov        rdi, r15
+     f497f8  mov        esi, 1
+     f497fd  mov        edx, 4
+     f49802  call       0x74ec710
+     f49807  cmp        eax, 1
+     f4980a  jne        0xf497c0
+     f4980c  mov        rax, qword ptr [rbx]
+     f4980f  mov        rdi, rbx
+     f49812  call       qword ptr [rax]
+     f49814  lea        rdi, [rbx + 0xc]
+     f49818  mov        esi, 1
+     f4981d  mov        edx, 4
+     f49822  call       0x74ec710
+     f49827  cmp        eax, 1
+     f4982a  jne        0xf497c0
+     f4982c  mov        rax, qword ptr [rbx]
+     f4982f  mov        rdi, rbx
+     f49832  call       qword ptr [rax + 8]
+     f49835  jmp        0xf497c0
+     f49837  nop        word ptr [rax + rax]
+     f49840  mov        rdi, r14
+>>   f49843  call       0xf4ca20
+     f49848  mov        r13, qword ptr [r13]
+     f4984c  cmp        r13, r12
+     f4984f  jne        0xf497cd
+     f49855  add        rsp, 8
+     f49859  pop        rbx
+     f4985a  pop        r12
+     f4985c  pop        r13
+     f4985e  pop        r14
+     f49860  pop        r15
+     f49862  pop        rbp
+     f49863  ret        
+     f49864  int3       

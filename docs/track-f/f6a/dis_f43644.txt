@@ -1,0 +1,71 @@
+=== site 0xf43644 function start 0xf435d0 (site +0x74)
+     f435d0  push       rbp
+     f435d1  mov        rbp, rsp
+     f435d4  push       r14
+     f435d6  push       rbx
+     f435d7  mov        dword ptr [rdi + 0x1710], 0x40
+     f435e1  mov        rbx, rdi
+     f435e4  lea        r14, [rdi + 0x1710]
+     f435eb  mov        rdi, qword ptr [rdi + 0x70]
+     f435ef  call       0xf497a0
+     f435f4  lea        rsi, [rbx + 0x110]
+     f435fb  xor        eax, eax
+     f435fd  vxorps     xmm0, xmm0, xmm0
+     f43601  nop        word ptr cs:[rax + rax]
+     f43610  vmovups    ymmword ptr [rsi + rax], ymm0
+     f43615  vmovups    ymmword ptr [rsi + rax + 0x38], ymm0
+     f4361b  vmovups    ymmword ptr [rsi + rax + 0x20], ymm0
+     f43621  mov        dword ptr [rsi + rax], 0x10107d7
+     f43628  mov        qword ptr [rsi + rax + 8], 0x58
+     f43631  add        rax, 0x58
+     f43635  cmp        rax, 0x1600
+     f4363b  jne        0xf43610
+     f4363d  mov        rdi, qword ptr [rbx + 8]
+     f43641  mov        rdx, r14
+>>   f43644  call       0x74ebfa0   ; sceAudioPropagationSystemGetRays
+     f43649  mov        edx, 0x138
+     f4364e  mov        dword ptr [rbx + 0x1710], 0
+     f43658  xor        ecx, ecx
+     f4365a  vxorps     xmm0, xmm0, xmm0
+     f4365e  jmp        0xf43672
+     f43660  inc        ecx
+     f43662  mov        dword ptr [r14], ecx
+     f43665  add        rdx, 0x58
+     f43669  cmp        rdx, 0x1738
+     f43670  je         0xf4369d
+     f43672  vmovss     xmm1, dword ptr [rbx + rdx - 8]
+     f43678  vucomiss   xmm1, xmm0
+     f4367c  jne        0xf43660
+     f4367e  jp         0xf43660
+     f43680  vmovss     xmm1, dword ptr [rbx + rdx - 4]
+     f43686  vucomiss   xmm1, xmm0
+     f4368a  jne        0xf43660
+     f4368c  jp         0xf43660
+     f4368e  vmovss     xmm1, dword ptr [rbx + rdx]
+     f43693  vucomiss   xmm1, xmm0
+     f43697  jne        0xf43660
+     f43699  jnp        0xf43665
+     f4369b  jmp        0xf43660
+     f4369d  test       eax, eax
+     f4369f  jne        0xf436a6
+     f436a1  pop        rbx
+     f436a2  pop        r14
+     f436a4  pop        rbp
+     f436a5  ret        
+     f436a6  mov        r9d, eax
+     f436a9  lea        rdi, [rip + 0x737ef6a]   ; ->0x82c261a "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationContext.cpp"
+     f436b0  lea        rcx, [rip + 0x713240b]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f436b7  lea        r8, [rip + 0x71b68a2]   ; ->0x80f9f60 "sceAudioPropagationSystemGetRays failed : 0x%08x
+"
+     f436be  mov        esi, 0x88
+     f436c3  mov        edx, 1
+     f436c8  xor        eax, eax
+     f436ca  call       0x1aa0
+     f436cf  test       eax, eax
+     f436d1  je         0xf436a1
+     f436d3  int        0x41
+     f436d5  jmp        0xf436a1
+     f436d7  int3       
+     f436d8  int3       
+     f436d9  int3       
+     f436da  int3       

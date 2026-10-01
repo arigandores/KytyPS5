@@ -1,0 +1,108 @@
+=== site 0xf437ca function start 0xf436e0 (site +0xea)
+     f436e0  push       rbp
+     f436e1  mov        rbp, rsp
+     f436e4  push       r15
+     f436e6  push       r14
+     f436e8  push       r13
+     f436ea  push       r12
+     f436ec  push       rbx
+     f436ed  sub        rsp, 0x38
+     f436f1  mov        r15, qword ptr [rip + 0x7ef0e10]   ; ->0x8e34508
+     f436f8  mov        rax, qword ptr [r15]
+     f436fb  mov        qword ptr [rbp - 0x30], rax
+     f436ff  mov        r12, qword ptr [rsi]
+     f43702  cmp        qword ptr [rdi + 0x1718], r12
+     f43709  je         0xf437d3
+     f4370f  mov        r13, qword ptr [rsi + 8]
+     f43713  mov        rbx, rdi
+     f43716  test       r13, r13
+     f43719  je         0xf4372b
+     f4371b  lea        rdi, [r13 + 8]
+     f4371f  mov        esi, 1
+     f43724  xor        edx, edx
+     f43726  call       0x74ec720
+     f4372b  mov        r14, qword ptr [rbx + 0x1720]
+     f43732  mov        qword ptr [rbx + 0x1720], r13
+     f43739  mov        qword ptr [rbx + 0x1718], r12
+     f43740  test       r14, r14
+     f43743  je         0xf4378d
+     f43745  lea        rdi, [r14 + 8]
+     f43749  mov        esi, 1
+     f4374e  mov        edx, 4
+     f43753  call       0x74ec710
+     f43758  cmp        eax, 1
+     f4375b  jne        0xf43786
+     f4375d  mov        rax, qword ptr [r14]
+     f43760  mov        rdi, r14
+     f43763  call       qword ptr [rax]
+     f43765  lea        rdi, [r14 + 0xc]
+     f43769  mov        esi, 1
+     f4376e  mov        edx, 4
+     f43773  call       0x74ec710
+     f43778  cmp        eax, 1
+     f4377b  jne        0xf43786
+     f4377d  mov        rax, qword ptr [r14]
+     f43780  mov        rdi, r14
+     f43783  call       qword ptr [rax + 8]
+     f43786  mov        r12, qword ptr [rbx + 0x1718]
+     f4378d  test       r12, r12
+     f43790  je         0xf43799
+     f43792  mov        rax, qword ptr [r12 + 8]
+     f43797  jmp        0xf4379b
+     f43799  xor        eax, eax
+     f4379b  mov        qword ptr [rbp - 0x58], rax
+     f4379f  lea        rax, [rbp - 0x58]
+     f437a3  mov        dword ptr [rbp - 0x50], 0x20000
+     f437aa  lea        rsi, [rbp - 0x50]
+     f437ae  mov        edx, 1
+     f437b3  mov        qword ptr [rbp - 0x48], rax
+     f437b7  mov        qword ptr [rbp - 0x40], 8
+     f437bf  mov        dword ptr [rbp - 0x38], 0
+     f437c6  mov        rdi, qword ptr [rbx + 8]
+>>   f437ca  call       0x74ebed0   ; sceAudioPropagationSystemSetAttributes
+     f437cf  test       eax, eax
+     f437d1  jne        0xf437eb
+     f437d3  mov        rax, qword ptr [r15]
+     f437d6  cmp        rax, qword ptr [rbp - 0x30]
+     f437da  jne        0xf4381c
+     f437dc  add        rsp, 0x38
+     f437e0  pop        rbx
+     f437e1  pop        r12
+     f437e3  pop        r13
+     f437e5  pop        r14
+     f437e7  pop        r15
+     f437e9  pop        rbp
+     f437ea  ret        
+     f437eb  mov        r9d, eax
+     f437ee  lea        rdi, [rip + 0x737ee25]   ; ->0x82c261a "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationContext.cpp"
+     f437f5  lea        rcx, [rip + 0x71322c6]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f437fc  lea        r8, [rip + 0x72eedd1]   ; ->0x82325d4 "sceAudioPropagationSystemSetAttributes failed : 0x%08x
+"
+     f43803  mov        esi, 0xa4
+     f43808  mov        edx, 1
+     f4380d  xor        eax, eax
+     f4380f  call       0x1aa0
+     f43814  test       eax, eax
+     f43816  je         0xf437d3
+     f43818  int        0x41
+     f4381a  jmp        0xf437d3
+     f4381c  call       0x74ec090
+     f43821  ud2        
+     f43823  int3       
+     f43824  int3       
+     f43825  int3       
+     f43826  int3       
+     f43827  int3       
+     f43828  int3       
+     f43829  int3       
+     f4382a  int3       
+     f4382b  int3       
+     f4382c  int3       
+     f4382d  int3       
+     f4382e  int3       
+     f4382f  int3       
+     f43830  push       rbp
+     f43831  mov        rbp, rsp
+     f43834  push       r15
+     f43836  push       r14
+     f43838  push       r13

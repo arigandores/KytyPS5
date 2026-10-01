@@ -1,0 +1,12 @@
+7xyAxrusLko sceAudioPropagationSystemQueryMemory OK
+aNEqtSHdUSo sceAudioPropagationSystemCreate OK
+8bI5h8req30 sceAudioPropagationRoomCreate OK
+CPLV6G-eXmk sceAudioPropagationSystemRegisterMaterial OK
+kIdb+iQUzCs sceAudioPropagationSystemSetAttributes OK
+ht-QXT3zGxo sceAudioPropagationSystemGetRays OK
+fgxnMeTNUtY sceKernelGetProcessTimeCounter OK
+formula check: 7 of 7
+candidates tried: 387
+MATCH ZQXE-xS6MTE sceAudioPropagationPortalDestroy
+MATCH x5VPqg5iyAk sceAudioPropagationSystemDestroy
+ALL OK

@@ -1,0 +1,175 @@
+=== site 0xf432bc function start 0xf430f0 (site +0x1cc)
+     f430f0  push       rbp
+     f430f1  mov        rbp, rsp
+     f430f4  push       r15
+     f430f6  push       r14
+     f430f8  push       rbx
+     f430f9  sub        rsp, 0x18
+     f430fd  mov        r15, qword ptr [rip + 0x7ef1404]   ; ->0x8e34508
+     f43104  mov        rbx, rdi
+     f43107  vxorps     xmm0, xmm0, xmm0
+     f4310b  mov        rax, qword ptr [r15]
+     f4310e  mov        qword ptr [rbp - 0x20], rax
+     f43112  mov        r14, qword ptr [rdi + 0x1720]
+     f43119  vmovups    xmmword ptr [rdi + 0x1718], xmm0
+     f43121  test       r14, r14
+     f43124  je         0xf43167
+     f43126  lea        rdi, [r14 + 8]
+     f4312a  mov        esi, 1
+     f4312f  mov        edx, 4
+     f43134  call       0x74ec710
+     f43139  cmp        eax, 1
+     f4313c  jne        0xf43167
+     f4313e  mov        rax, qword ptr [r14]
+     f43141  mov        rdi, r14
+     f43144  call       qword ptr [rax]
+     f43146  lea        rdi, [r14 + 0xc]
+     f4314a  mov        esi, 1
+     f4314f  mov        edx, 4
+     f43154  call       0x74ec710
+     f43159  cmp        eax, 1
+     f4315c  jne        0xf43167
+     f4315e  mov        rax, qword ptr [r14]
+     f43161  mov        rdi, r14
+     f43164  call       qword ptr [rax + 8]
+     f43167  mov        r14, qword ptr [rbx + 0x78]
+     f4316b  vxorps     xmm0, xmm0, xmm0
+     f4316f  vmovups    xmmword ptr [rbx + 0x70], xmm0
+     f43174  test       r14, r14
+     f43177  je         0xf431ba
+     f43179  lea        rdi, [r14 + 8]
+     f4317d  mov        esi, 1
+     f43182  mov        edx, 4
+     f43187  call       0x74ec710
+     f4318c  cmp        eax, 1
+     f4318f  jne        0xf431ba
+     f43191  mov        rax, qword ptr [r14]
+     f43194  mov        rdi, r14
+     f43197  call       qword ptr [rax]
+     f43199  lea        rdi, [r14 + 0xc]
+     f4319d  mov        esi, 1
+     f431a2  mov        edx, 4
+     f431a7  call       0x74ec710
+     f431ac  cmp        eax, 1
+     f431af  jne        0xf431ba
+     f431b1  mov        rax, qword ptr [r14]
+     f431b4  mov        rdi, r14
+     f431b7  call       qword ptr [rax + 8]
+     f431ba  mov        r14, qword ptr [rbx + 0x60]
+     f431be  vxorps     xmm0, xmm0, xmm0
+     f431c2  vmovups    xmmword ptr [rbx + 0x58], xmm0
+     f431c7  test       r14, r14
+     f431ca  je         0xf4320d
+     f431cc  lea        rdi, [r14 + 8]
+     f431d0  mov        esi, 1
+     f431d5  mov        edx, 4
+     f431da  call       0x74ec710
+     f431df  cmp        eax, 1
+     f431e2  jne        0xf4320d
+     f431e4  mov        rax, qword ptr [r14]
+     f431e7  mov        rdi, r14
+     f431ea  call       qword ptr [rax]
+     f431ec  lea        rdi, [r14 + 0xc]
+     f431f0  mov        esi, 1
+     f431f5  mov        edx, 4
+     f431fa  call       0x74ec710
+     f431ff  cmp        eax, 1
+     f43202  jne        0xf4320d
+     f43204  mov        rax, qword ptr [r14]
+     f43207  mov        rdi, r14
+     f4320a  call       qword ptr [rax + 8]
+     f4320d  mov        r14, qword ptr [rbx + 0x48]
+     f43211  vxorps     xmm0, xmm0, xmm0
+     f43215  vmovups    xmmword ptr [rbx + 0x40], xmm0
+     f4321a  test       r14, r14
+     f4321d  je         0xf43260
+     f4321f  lea        rdi, [r14 + 8]
+     f43223  mov        esi, 1
+     f43228  mov        edx, 4
+     f4322d  call       0x74ec710
+     f43232  cmp        eax, 1
+     f43235  jne        0xf43260
+     f43237  mov        rax, qword ptr [r14]
+     f4323a  mov        rdi, r14
+     f4323d  call       qword ptr [rax]
+     f4323f  lea        rdi, [r14 + 0xc]
+     f43243  mov        esi, 1
+     f43248  mov        edx, 4
+     f4324d  call       0x74ec710
+     f43252  cmp        eax, 1
+     f43255  jne        0xf43260
+     f43257  mov        rax, qword ptr [r14]
+     f4325a  mov        rdi, r14
+     f4325d  call       qword ptr [rax + 8]
+     f43260  mov        r14, qword ptr [rbx + 0x30]
+     f43264  vxorps     xmm0, xmm0, xmm0
+     f43268  vmovups    xmmword ptr [rbx + 0x28], xmm0
+     f4326d  test       r14, r14
+     f43270  je         0xf432b3
+     f43272  lea        rdi, [r14 + 8]
+     f43276  mov        esi, 1
+     f4327b  mov        edx, 4
+     f43280  call       0x74ec710
+     f43285  cmp        eax, 1
+     f43288  jne        0xf432b3
+     f4328a  mov        rax, qword ptr [r14]
+     f4328d  mov        rdi, r14
+     f43290  call       qword ptr [rax]
+     f43292  lea        rdi, [r14 + 0xc]
+     f43296  mov        esi, 1
+     f4329b  mov        edx, 4
+     f432a0  call       0x74ec710
+     f432a5  cmp        eax, 1
+     f432a8  jne        0xf432b3
+     f432aa  mov        rax, qword ptr [r14]
+     f432ad  mov        rdi, r14
+     f432b0  call       qword ptr [rax + 8]
+     f432b3  mov        rdi, qword ptr [rbx + 8]
+     f432b7  test       rdi, rdi
+     f432ba  je         0xf432c9
+>>   f432bc  call       0x74ebf40   ; x5VPqg5iyAk
+     f432c1  mov        qword ptr [rbx + 8], 0
+     f432c9  mov        r14, qword ptr [rbx]
+     f432cc  test       r14, r14
+     f432cf  je         0xf432f4
+     f432d1  movzx      eax, byte ptr [rip + 0xdc5bda0]   ; ->0xeb9f078
+     f432d8  test       al, al
+     f432da  je         0xf434ad
+     f432e0  mov        rdi, r14
+     f432e3  mov        esi, 9
+     f432e8  call       0x2260
+     f432ed  mov        qword ptr [rbx], 0
+     f432f4  lea        r14, [rbx + 0x1738]
+     f432fb  lea        rdi, [rbp - 0x24]
+     f432ff  mov        rsi, r14
+     f43302  call       0x590
+     f43307  mov        rdi, r14
+     f4330a  call       0x430
+     f4330f  mov        r14, qword ptr [rbx + 0x1720]
+     f43316  test       r14, r14
+     f43319  je         0xf4335c
+     f4331b  lea        rdi, [r14 + 8]
+     f4331f  mov        esi, 1
+     f43324  mov        edx, 4
+     f43329  call       0x74ec710
+     f4332e  cmp        eax, 1
+     f43331  jne        0xf4335c
+     f43333  mov        rax, qword ptr [r14]
+     f43336  mov        rdi, r14
+     f43339  call       qword ptr [rax]
+     f4333b  lea        rdi, [r14 + 0xc]
+     f4333f  mov        esi, 1
+     f43344  mov        edx, 4
+     f43349  call       0x74ec710
+     f4334e  cmp        eax, 1
+     f43351  jne        0xf4335c
+     f43353  mov        rax, qword ptr [r14]
+     f43356  mov        rdi, r14
+     f43359  call       qword ptr [rax + 8]
+     f4335c  mov        r14, qword ptr [rbx + 0x78]
+     f43360  test       r14, r14
+     f43363  je         0xf433a6
+     f43365  lea        rdi, [r14 + 8]
+     f43369  mov        esi, 1
+     f4336e  mov        edx, 4
+     f43373  call       0x74ec710

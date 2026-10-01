@@ -1,0 +1,39 @@
+--- disp 0x23d8
+  f3b0e1  mov edi, dword ptr [rsp + 0x23d8]
+  f3b107  mov edx, dword ptr [rsp + 0x23d8]
+  f44dc5  mov ecx, dword ptr [rsp + 0x23d8]
+  f50fe1  mov dword ptr [rbx + 0x23d8], eax
+  f51395  mov edi, dword ptr [rsi + 0x23d8]
+  f51b18  mov dword ptr [rbx + 0x23d8], eax
+  f51df6  mov edi, dword ptr [rbx + 0x23d8]
+  f5269d  mov edi, dword ptr [rsi + 0x23d8]
+  f526c0  mov edx, dword ptr [rsi + 0x23d8]
+  f52922  mov ecx, dword ptr [rdi + 0x23d8]
+--- disp 0x23c8
+  f3b0ff  mov esi, dword ptr [rsp + 0x23c8]
+  f3b11f  mov edi, dword ptr [rsp + 0x23c8]
+  f50f9f  mov dword ptr [rbx + 0x23c8], 0
+  f51030  mov dword ptr [rbx + 0x23c8], eax
+  f51375  mov edi, dword ptr [rsi + 0x23c8]
+  f51aea  mov dword ptr [rbx + 0x23c8], 0
+  f51b67  mov dword ptr [rbx + 0x23c8], eax
+  f51dca  mov edi, dword ptr [rbx + 0x23c8]
+  f524b0  mov ebx, dword ptr [rbp + 0x23c8]
+  f526b9  mov esi, dword ptr [rsi + 0x23c8]
+  f526d6  mov edi, dword ptr [rsi + 0x23c8]
+--- disp 0x23e8
+  f3b0ce  cmp byte ptr [rsp + 0x23e8], 0
+  f4d6b9  cmp byte ptr [rsi + 0x23e8], 0
+  f4e019  mov byte ptr [rbx + 0x23e8], 1
+  f4effa  mov byte ptr [rsi + 0x23e8], 1
+  f4f041  mov byte ptr [rsi + 0x23e8], 1
+  f50fee  mov byte ptr [rbx + 0x23e8], 0
+  f51b25  mov byte ptr [rbx + 0x23e8], 0
+  f5268c  cmp byte ptr [rsi + 0x23e8], 0
+  f537bb  cmp byte ptr [rdi + 0x23e8], 0
+--- disp 0x23c4
+  f3b0f4  cmp byte ptr [rsp + 0x23c4], 0
+  f50f97  mov byte ptr [rbx + 0x23c4], 0
+  f51ae2  mov byte ptr [rbx + 0x23c4], 0
+  f5239f  mov byte ptr [rbx + 0x23c4], 1
+  f526af  cmp byte ptr [rsi + 0x23c4], 0

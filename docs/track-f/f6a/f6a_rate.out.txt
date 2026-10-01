@@ -1,0 +1,13 @@
+FrameTrace lines before level line: 249; at first SourceCreate: 319; at stub call #1023: 553
+frames between first SourceCreate and call #1023: 234; sum dt_us of them 3902112 us
+  d84otraxt2s: 359 calls, 1.534 per frame
+  G+QLTfyLMYk: 359 calls, 1.534 per frame
+  WXMhENV2NcA: 234 calls, 1.000 per frame
+     99 frames with {'WXMhENV2NcA': 1}
+     65 frames with {'G+QLTfyLMYk': 1, 'WXMhENV2NcA': 1, 'd84otraxt2s': 1}
+     18 frames with {'G+QLTfyLMYk': 2, 'WXMhENV2NcA': 1, 'd84otraxt2s': 2}
+     17 frames with {'G+QLTfyLMYk': 6, 'WXMhENV2NcA': 1, 'd84otraxt2s': 6}
+     11 frames with {'G+QLTfyLMYk': 3, 'WXMhENV2NcA': 1, 'd84otraxt2s': 3}
+      6 frames with {'G+QLTfyLMYk': 4, 'WXMhENV2NcA': 1, 'd84otraxt2s': 4}
+      6 frames with {'G+QLTfyLMYk': 8, 'WXMhENV2NcA': 1, 'd84otraxt2s': 8}
+      3 frames with {'G+QLTfyLMYk': 1, 'd84otraxt2s': 1}

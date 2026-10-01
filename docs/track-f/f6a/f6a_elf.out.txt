@@ -1,0 +1,33 @@
+eboot.elf sha256 1f063c0cbf45123d367e77611d1a5c2145a88e86d6cce6a16db34e20a3955591 size 251414288
+DT_JMPREL 0xee09630 DT_PLTRELSZ 0xa020 (1708 entries) DT_SYMTAB 0xedff3a0 DT_STRTAB 0xedf7e10 DT_PLTGOT 0x8e34870
+names sceAudioPropagation* in eboot strings: 20
+emulator LIB_FUNC AudioPropagation: 6
+jmprela entries of library libSceAudioPropagation: 22
+idx   slot        nid          name                                              emulator        stub        c142_03  call sites
+1233  0x8e36f10  XKCN4gpeYsM  sceAudioPropagationSystemUnregisterMaterial       unresolved      0x74ebea0        0  0xf45174 0xf45bd0
+1234  0x8e36f18  VlBT16890mA  sceAudioPropagationSystemSetRays                  unresolved      0x74ebeb0        0  0xf43b42
+1235  0x8e36f20  ZQXE-xS6MTE  ?                                                 unresolved      0x74ebec0        0  0xf4c681
+1236  0x8e36f28  kIdb+iQUzCs  sceAudioPropagationSystemSetAttributes            HLE             0x74ebed0        -  0xf437ca
+1237  0x8e36f30  5vzOS2pHMFc  sceAudioPropagationSourceSetAudioPaths            unresolved      0x74ebee0        0  0xf52396
+1238  0x8e36f38  aNEqtSHdUSo  sceAudioPropagationSystemCreate                   HLE             0x74ebef0        -  0xf42845
+1239  0x8e36f40  CPLV6G-eXmk  sceAudioPropagationSystemRegisterMaterial         HLE             0x74ebf00        -  0xf45679 0xf45e5b
+1240  0x8e36f48  WXMhENV2NcA  sceAudioPropagationPortalSetAttributes            unresolved      0x74ebf10      295  0xf4cba6
+1241  0x8e36f50  b-dYXrjSNZU  sceAudioPropagationPortalCreate                   unresolved      0x74ebf20        2  0xf4c4c8
+1242  0x8e36f58  S0JwP2AFTTE  sceAudioPropagationRoomDestroy                    unresolved      0x74ebf30        0  0xf4b3c9
+1243  0x8e36f60  x5VPqg5iyAk  ?                                                 unresolved      0x74ebf40        0  0xf432bc
+1244  0x8e36f68  d84otraxt2s  sceAudioPropagationSourceCreate                   unresolved      0x74ebf50      365  0xf513b0
+1245  0x8e36f70  -wsUTr31yeg  sceAudioPropagationSourceSetAttributes            unresolved      0x74ebf60        0  0xf51665 0xf52107 0xf527c8
+1246  0x8e36f78  aKJZx7wCma8  sceAudioPropagationSourceGetRays                  unresolved      0x74ebf70        0  0xf5224f
+1247  0x8e36f80  7xyAxrusLko  sceAudioPropagationSystemQueryMemory              HLE             0x74ebf80        -  0xf427df
+1248  0x8e36f88  G+QLTfyLMYk  sceAudioPropagationSourceGetAudioPathCount        unresolved      0x74ebf90      362  0xf513ce
+1249  0x8e36f90  ht-QXT3zGxo  sceAudioPropagationSystemGetRays                  HLE             0x74ebfa0        -  0xf43644
+1250  0x8e36f98  wkseM3LWPuc  sceAudioPropagationSourceDestroy                  unresolved      0x74ebfb0        0  0xf51561 0xf51db1
+1251  0x8e36fa0  hhz9pITnC8k  sceAudioPropagationSourceRender                   unresolved      0x74ebfc0        0  0xf5283e
+1252  0x8e36fa8  eEeKqFeNI3o  sceAudioPropagationSourceGetAudioPath             unresolved      0x74ebfd0        0  0xf5140d
+1253  0x8e36fb0  8bI5h8req30  sceAudioPropagationRoomCreate                     HLE             0x74ebfe0        -  0xf4b177
+1254  0x8e36fb8  PBcrVpEqUVY  sceAudioPropagationSourceCalculateAudioPaths      unresolved      0x74ebff0        0  0xf52328
+named by hash: 20 of 22; HLE: 6; unresolved: 16
+CALLED b-dYXrjSNZU = sceAudioPropagationPortalCreate
+CALLED WXMhENV2NcA = sceAudioPropagationPortalSetAttributes
+CALLED d84otraxt2s = sceAudioPropagationSourceCreate
+CALLED G+QLTfyLMYk = sceAudioPropagationSourceGetAudioPathCount

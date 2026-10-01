@@ -1,0 +1,129 @@
+=== site 0xf45bd0 function start 0xf45a80 (site +0x150)
+     f45a80  push       rbp
+     f45a81  mov        rbp, rsp
+     f45a84  push       r15
+     f45a86  push       r14
+     f45a88  push       r13
+     f45a8a  push       r12
+     f45a8c  push       rbx
+     f45a8d  sub        rsp, 0x88
+     f45a94  mov        r14, qword ptr [rip + 0x7eeea6d]   ; ->0x8e34508
+     f45a9b  mov        r15, rsi
+     f45a9e  mov        rbx, rdi
+     f45aa1  movabs     r13, 0x100000001b3
+     f45aab  lea        r12, [r15 + 8]
+     f45aaf  mov        rdi, r12
+     f45ab2  mov        rax, qword ptr [r14]
+     f45ab5  mov        qword ptr [rbp - 0x30], rax
+     f45ab9  cmp        qword ptr [r15 + 0x20], 0x10
+     f45abe  mov        rsi, qword ptr [rsi + 0x18]
+     f45ac2  jb         0xf45ac8
+     f45ac4  mov        rdi, qword ptr [r15 + 8]
+     f45ac8  call       0x140
+     f45acd  movzx      edx, al
+     f45ad0  movabs     rsi, 0xcbf29ce484222325
+     f45ada  mov        ecx, eax
+     f45adc  mov        rdi, qword ptr [rbx + 0x28]
+     f45ae0  xor        rdx, rsi
+     f45ae3  movzx      esi, ah
+     f45ae6  shr        ecx, 0x18
+     f45ae9  imul       rdx, r13
+     f45aed  xor        rsi, rdx
+     f45af0  mov        edx, 0x810
+     f45af5  imul       rsi, r13
+     f45af9  bextr      edx, eax, edx
+     f45afe  xor        rdx, rsi
+     f45b01  imul       rdx, r13
+     f45b05  xor        rcx, rdx
+     f45b08  mov        rdx, qword ptr [rbx + 0x10]
+     f45b0c  imul       rcx, r13
+     f45b10  and        rcx, qword ptr [rbx + 0x40]
+     f45b14  lea        rsi, [rcx + rcx*2]
+     f45b18  lea        rcx, [rcx + rcx + 1]
+     f45b1d  shl        rsi, 4
+     f45b21  lea        rcx, [rcx + rcx*2]
+     f45b25  lea        r13, [rdi + rsi + 0x10]
+     f45b2a  mov        rsi, qword ptr [rdi + rsi + 0x10]
+     f45b2f  lea        rcx, [rdi + rcx*8 + 0x10]
+     f45b34  nop        word ptr cs:[rax + rax]
+     f45b40  mov        rdi, rdx
+     f45b43  cmp        rsi, rdx
+     f45b46  je         0xf45b4e
+     f45b48  mov        rdi, qword ptr [rcx]
+     f45b4b  mov        rdi, qword ptr [rdi]
+     f45b4e  mov        r13, qword ptr [r13]
+     f45b52  cmp        r13, rdi
+     f45b55  je         0xf45e9a
+     f45b5b  cmp        dword ptr [r13 + 0x10], eax
+     f45b5f  jne        0xf45b40
+     f45b61  cmp        r13, rdx
+     f45b64  je         0xf45e9a
+     f45b6a  mov        qword ptr [rbp - 0xa8], r12
+     f45b71  mov        r12, qword ptr [r13 + 0x18]
+     f45b75  mov        qword ptr [rbp - 0xb0], r15
+     f45b7c  mov        rax, r12
+     f45b7f  mov        r15, r12
+     f45b82  mov        r14, r12
+     f45b85  mov        rdi, r12
+     f45b88  shr        rax, 0x18
+     f45b8c  shr        r15, 8
+     f45b90  shr        r14, 0x10
+     f45b94  mov        qword ptr [rbp - 0xa0], rax
+     f45b9b  mov        rax, r12
+     f45b9e  shr        rax, 0x20
+     f45ba2  mov        qword ptr [rbp - 0x80], rax
+     f45ba6  mov        rax, r12
+     f45ba9  shr        rax, 0x28
+     f45bad  mov        qword ptr [rbp - 0x88], rax
+     f45bb4  mov        rax, r12
+     f45bb7  shr        rax, 0x30
+     f45bbb  mov        qword ptr [rbp - 0x90], rax
+     f45bc2  mov        rax, r12
+     f45bc5  shr        rax, 0x38
+     f45bc9  mov        qword ptr [rbp - 0x98], rax
+>>   f45bd0  call       0x74ebea0   ; sceAudioPropagationSystemUnregisterMaterial
+     f45bd5  test       eax, eax
+     f45bd7  jne        0xf45ee6
+     f45bdd  movzx      r10d, r12b
+     f45be1  movabs     rax, 0xcbf29ce484222325
+     f45beb  movabs     rcx, 0x100000001b3
+     f45bf5  movzx      edi, r14b
+     f45bf9  movzx      esi, byte ptr [rbp - 0xa0]
+     f45c00  movzx      r8d, byte ptr [rbp - 0x80]
+     f45c05  movzx      r9d, byte ptr [rbp - 0x90]
+     f45c0d  movabs     r11, 0xff00000000000000
+     f45c17  mov        rdx, r10
+     f45c1a  and        r11, r12
+     f45c1d  mov        r12, qword ptr [rbx + 0x78]
+     f45c21  xor        rdx, rax
+     f45c24  movzx      eax, r15b
+     f45c28  movzx      r15d, byte ptr [rbp - 0x88]
+     f45c30  imul       rdx, rcx
+     f45c34  mov        r14, r9
+     f45c37  mov        qword ptr [rbp - 0x88], r8
+     f45c3e  mov        qword ptr [rbp - 0x90], rsi
+     f45c45  shl        r14, 0x30
+     f45c49  xor        rdx, rax
+     f45c4c  mov        qword ptr [rbp - 0x80], r15
+     f45c50  shl        rax, 8
+     f45c54  imul       rdx, rcx
+     f45c58  xor        rdx, rdi
+     f45c5b  shl        rdi, 0x10
+     f45c5f  imul       rdx, rcx
+     f45c63  or         rax, rdi
+     f45c66  xor        rdx, rsi
+     f45c69  shl        rsi, 0x18
+     f45c6d  imul       rdx, rcx
+     f45c71  xor        rdx, r8
+     f45c74  shl        r8, 0x20
+     f45c78  imul       rdx, rcx
+     f45c7c  or         rsi, r8
+     f45c7f  xor        rdx, r15
+     f45c82  shl        r15, 0x28
+     f45c86  imul       rdx, rcx
+     f45c8a  or         r15, r11
+     f45c8d  mov        r11, qword ptr [rbx + 0x60]
+     f45c91  or         r15, r14
+     f45c94  or         rsi, r15
+     f45c97  xor        rdx, r9
+     f45c9a  or         rax, rsi

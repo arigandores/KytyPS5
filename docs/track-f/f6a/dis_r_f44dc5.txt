@@ -1,0 +1,69 @@
+=== site 0xf44dc4 function start 0xf44d70 (site +0x54)
+     f44d70  push       rbp
+     f44d71  mov        rbp, rsp
+     f44d74  push       r15
+     f44d76  push       r14
+     f44d78  push       r12
+     f44d7a  push       rbx
+     f44d7b  sub        rsp, 0x10
+     f44d7f  mov        r14, qword ptr [rip + 0x7eef782]   ; ->0x8e34508
+     f44d86  mov        rax, qword ptr [r14]
+     f44d89  mov        qword ptr [rbp - 0x28], rax
+     f44d8d  mov        r12, qword ptr [rsi]
+     f44d90  mov        r15, qword ptr [rdi + 8]
+     f44d94  lea        rdi, [rbp - 0x2c]
+     f44d98  lea        rbx, [r12 + 0x23f0]
+     f44da0  mov        rsi, rbx
+     f44da3  call       0x640
+     f44da8  cmp        qword ptr [r12 + 0xb0], 0
+     f44db1  je         0xf44dfa
+     f44db3  mov        rdi, qword ptr [r12 + 0x23d0]
+     f44dbb  mov        rax, rdi
+     f44dbe  shl        rax, 4
+     f44dc2  je         0xf44dfa
+>>   f44dc4  mov        rcx, qword ptr [r12 + 0x23d8]
+     f44dcc  mov        rdx, qword ptr [r15 + 0x18]
+     f44dd0  cmp        rax, 0x20
+     f44dd4  jae        0xf44e20
+     f44dd6  xor        esi, esi
+     f44dd8  xor        r8d, r8d
+     f44ddb  inc        r8d
+     f44dde  nop        
+     f44de0  vmovss     xmm0, dword ptr [rcx + rsi*4]
+     f44de5  vaddss     xmm0, xmm0, dword ptr [rdx + rsi*4]
+     f44dea  vmovss     dword ptr [rdx + rsi*4], xmm0
+     f44def  mov        esi, r8d
+     f44df2  inc        r8d
+     f44df5  cmp        rax, rsi
+     f44df8  ja         0xf44de0
+     f44dfa  lea        rdi, [rbp - 0x2c]
+     f44dfe  mov        rsi, rbx
+     f44e01  call       0x8c0
+     f44e06  mov        rax, qword ptr [r14]
+     f44e09  cmp        rax, qword ptr [rbp - 0x28]
+     f44e0d  jne        0xf44ebf
+     f44e13  add        rsp, 0x10
+     f44e17  pop        rbx
+     f44e18  pop        r12
+     f44e1a  pop        r14
+     f44e1c  pop        r15
+     f44e1e  pop        rbp
+     f44e1f  ret        
+     f44e20  lea        r8, [rax - 1]
+     f44e24  xor        esi, esi
+     f44e26  mov        r9, r8
+     f44e29  shr        r9, 0x20
+     f44e2d  jne        0xf44dd8
+     f44e2f  mov        r9d, r8d
+     f44e32  mov        r8d, 0
+     f44e38  cmp        r9d, -1
+     f44e3c  je         0xf44ddb
+     f44e3e  shl        rdi, 6
+     f44e42  lea        rsi, [rcx + rdi]
+     f44e46  cmp        rdx, rsi
+     f44e49  jae        0xf44e53
+     f44e4b  add        rdi, rdx
+     f44e4e  cmp        rcx, rdi
+     f44e51  jb         0xf44dd6
+     f44e53  mov        rsi, rax
+     f44e56  xor        edi, edi

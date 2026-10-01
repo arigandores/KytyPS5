@@ -1,0 +1,82 @@
+=== site 0xf4b177 function start 0xf4b0e0 (site +0x97)
+     f4b0e0  push       rbp
+     f4b0e1  mov        rbp, rsp
+     f4b0e4  push       r15
+     f4b0e6  push       r14
+     f4b0e8  push       r13
+     f4b0ea  push       r12
+     f4b0ec  push       rbx
+     f4b0ed  sub        rsp, 0x18
+     f4b0f1  mov        rax, qword ptr [rip + 0x7ee9410]   ; ->0x8e34508
+     f4b0f8  lea        r13, [rdi + 0xf8]
+     f4b0ff  mov        r14, rdi
+     f4b102  lea        r12, [rdi + 8]
+     f4b106  vxorps     xmm0, xmm0, xmm0
+     f4b10a  mov        r15, rdx
+     f4b10d  mov        rbx, rcx
+     f4b110  xor        edx, edx
+     f4b112  mov        rax, qword ptr [rax]
+     f4b115  mov        qword ptr [rbp - 0x30], rax
+     f4b119  mov        qword ptr [rdi], rsi
+     f4b11c  mov        qword ptr [rdi + 8], 0
+     f4b124  vmovups    ymmword ptr [rdi + 0x88], ymm0
+     f4b12c  vmovups    ymmword ptr [rdi + 0xa8], ymm0
+     f4b134  vmovups    ymmword ptr [rdi + 0xc8], ymm0
+     f4b13c  mov        qword ptr [rdi + 0xf0], 0xf
+     f4b147  mov        qword ptr [rdi + 0xe8], 0
+     f4b152  mov        rdi, r13
+     f4b155  xor        esi, esi
+     f4b157  call       0x370
+     f4b15c  lea        rdx, [rip + 0x73d6b51]   ; ->0x8321cb4 "PropagationRoomMutex"
+     f4b163  lea        rdi, [rbp - 0x34]
+     f4b167  mov        rsi, r13
+     f4b16a  xor        ecx, ecx
+     f4b16c  call       0x440
+     f4b171  mov        rdi, qword ptr [r14]
+     f4b174  mov        rsi, r12
+>>   f4b177  call       0x74ebfe0   ; sceAudioPropagationRoomCreate
+     f4b17c  test       eax, eax
+     f4b17e  jne        0xf4b349
+     f4b184  vmovups    ymm0, ymmword ptr [r15]
+     f4b189  vmovups    ymm1, ymmword ptr [r15 + 0x10]
+     f4b18f  vbroadcastss xmm7, dword ptr [rip + 0x7403d38]   ; ->0x834eed0
+     f4b198  mov        rcx, qword ptr [rip + 0x7ee9369]   ; ->0x8e34508
+     f4b19f  vmovups    ymmword ptr [r14 + 0x20], ymm1
+     f4b1a5  vmovups    ymmword ptr [r14 + 0x10], ymm0
+     f4b1ab  vmovups    xmm0, xmmword ptr [r15 + 0x10]
+     f4b1b1  vbroadcastss xmm2, dword ptr [r15 + 0x1c]
+     f4b1b7  vaddps     xmm1, xmm0, xmm0
+     f4b1bb  vshufps    xmm3, xmm0, xmm0, 0xc9
+     f4b1c0  vshufps    xmm0, xmm0, xmm0, 0xd2
+     f4b1c5  vshufps    xmm4, xmm1, xmm1, 0xc9
+     f4b1ca  vshufps    xmm5, xmm1, xmm1, 0xd2
+     f4b1cf  vfnmadd231ps xmm7, xmm3, xmm4
+     f4b1d4  vmulps     xmm6, xmm2, xmm4
+     f4b1d8  vmulps     xmm3, xmm3, xmm1
+     f4b1dc  vxorps     xmm4, xmm4, xmm4
+     f4b1e0  vfmadd231ps xmm6, xmm0, xmm1
+     f4b1e5  vfnmadd231ps xmm3, xmm5, xmm2
+     f4b1ea  vfnmadd231ps xmm7, xmm5, xmm0
+     f4b1ef  vbroadcastss xmm5, dword ptr [r15 + 4]
+     f4b1f5  vblendps   xmm2, xmm3, xmm6, 1
+     f4b1fb  vblendps   xmm0, xmm6, xmm7, 1
+     f4b201  vblendps   xmm1, xmm7, xmm3, 1
+     f4b207  vblendps   xmm2, xmm2, xmm7, 4
+     f4b20d  vbroadcastss xmm7, dword ptr [r15 + 8]
+     f4b213  vblendps   xmm0, xmm0, xmm3, 4
+     f4b219  vblendps   xmm3, xmm1, xmm6, 4
+     f4b21f  vbroadcastss xmm1, dword ptr [r15]
+     f4b224  vmulps     xmm6, xmm0, xmm4
+     f4b228  vfmadd213ps xmm5, xmm3, xmm6
+     f4b22d  vfmadd231ps xmm6, xmm3, xmm4
+     f4b232  vmulps     xmm1, xmm1, xmm0
+     f4b236  vfmadd213ps xmm0, xmm4, xmmword ptr [r15 + 0x20]
+     f4b23c  vfmadd231ps xmm5, xmm2, xmm4
+     f4b241  vfmadd231ps xmm6, xmm2, xmm7
+     f4b246  vfmadd231ps xmm1, xmm3, xmm4
+     f4b24b  vshufps    xmm8, xmm6, xmm6, 0xc9
+     f4b250  vfmadd231ps xmm1, xmm2, xmm4
+     f4b255  vfmadd231ps xmm0, xmm4, xmm3
+     f4b25a  vshufps    xmm3, xmm5, xmm5, 0xc9
+     f4b25f  vfmadd231ps xmm0, xmm2, xmm4
+     f4b264  vmulps     xmm4, xmm1, xmm3

@@ -1,0 +1,124 @@
+=== site 0xf4c4c8 function start 0xf4c340 (site +0x188)
+     f4c340  push       rbp
+     f4c341  mov        rbp, rsp
+     f4c344  push       r15
+     f4c346  push       r14
+     f4c348  push       r13
+     f4c34a  push       r12
+     f4c34c  push       rbx
+     f4c34d  sub        rsp, 0x88
+     f4c354  mov        r8, qword ptr [rip + 0x7ee81ad]   ; ->0x8e34508
+     f4c35b  mov        rax, rdx
+     f4c35e  mov        r14, rcx
+     f4c361  vxorps     xmm0, xmm0, xmm0
+     f4c365  mov        rcx, rsi
+     f4c368  mov        rbx, rdi
+     f4c36b  lea        r12, [rdi + 0x20]
+     f4c36f  lea        r15, [r14 + 0x10]
+     f4c373  lea        r13, [r14 + 0x20]
+     f4c377  mov        rdx, qword ptr [r8]
+     f4c37a  mov        qword ptr [rbp - 0x30], rdx
+     f4c37e  mov        qword ptr [rdi], rsi
+     f4c381  mov        qword ptr [rdi + 8], rax
+     f4c385  mov        qword ptr [rdi + 0x10], 0
+     f4c38d  vmovups    xmmword ptr [rdi + 0x60], xmm0
+     f4c392  mov        dword ptr [rdi + 0x70], 0
+     f4c399  vmovups    xmmword ptr [rdi + 0x78], xmm0
+     f4c39e  mov        dword ptr [rdi + 0x88], 0
+     f4c3a8  mov        dword ptr [rdi + 0x90], 0
+     f4c3b2  mov        qword ptr [rbp - 0x90], 0x10107d8
+     f4c3bd  mov        qword ptr [rbp - 0x88], 0x60
+     f4c3c8  lea        rsi, [rdi + 0x30]
+     f4c3cc  lea        rdx, [rdi + 0x10]
+     f4c3d0  vbroadcastss xmm0, dword ptr [r14]
+     f4c3d5  vmovups    xmm3, xmmword ptr [rax]
+     f4c3d9  vbroadcastss xmm1, dword ptr [r14 + 4]
+     f4c3df  vmovups    xmm4, xmmword ptr [rax + 0x10]
+     f4c3e4  vbroadcastss xmm2, dword ptr [r14 + 8]
+     f4c3ea  vmovups    xmm5, xmmword ptr [rax + 0x20]
+     f4c3ef  vfmadd213ps xmm1, xmm4, xmmword ptr [rax + 0x30]
+     f4c3f5  vbroadcastss xmm8, dword ptr [r14 + 0x24]
+     f4c3fb  vbroadcastss xmm6, dword ptr [r14 + 0x18]
+     f4c401  vbroadcastss xmm7, dword ptr [r14 + 0x28]
+     f4c407  mov        qword ptr [rbp - 0xa0], rsi
+     f4c40e  lea        rsi, [rdi + 0x40]
+     f4c412  mov        rdi, rcx
+     f4c415  mov        qword ptr [rbp - 0xa8], rsi
+     f4c41c  lea        rsi, [rbp - 0x90]
+     f4c423  vmulps     xmm0, xmm0, xmm3
+     f4c427  vfmadd231ps xmm0, xmm5, xmm2
+     f4c42c  vbroadcastss xmm2, dword ptr [r14 + 0x14]
+     f4c432  vaddps     xmm0, xmm1, xmm0
+     f4c436  vbroadcastss xmm1, dword ptr [r14 + 0x10]
+     f4c43c  vmulps     xmm1, xmm3, xmm1
+     f4c440  vfmadd231ps xmm1, xmm4, xmm2
+     f4c445  vbroadcastss xmm2, dword ptr [r14 + 0x20]
+     f4c44b  vmovlps    qword ptr [rbp - 0x80], xmm0
+     f4c450  vextractps dword ptr [rbp - 0x78], xmm0, 2
+     f4c457  mov        dword ptr [rbp - 0x74], 0
+     f4c45e  vfmadd231ps xmm1, xmm5, xmm6
+     f4c463  vmulps     xmm2, xmm3, xmm2
+     f4c467  vfmadd231ps xmm2, xmm4, xmm8
+     f4c46c  vmovlps    qword ptr [rbp - 0x70], xmm1
+     f4c471  vextractps dword ptr [rbp - 0x68], xmm1, 2
+     f4c478  mov        dword ptr [rbp - 0x64], 0
+     f4c47f  vfmadd231ps xmm2, xmm5, xmm7
+     f4c484  vmovlps    qword ptr [rbp - 0x60], xmm2
+     f4c489  vextractps dword ptr [rbp - 0x58], xmm2, 2
+     f4c490  mov        dword ptr [rbp - 0x54], 0
+     f4c497  vmovups    xmm0, xmmword ptr [r14 + 0x30]
+     f4c49d  vmovlps    qword ptr [rbp - 0x50], xmm0
+     f4c4a2  vextractps dword ptr [rbp - 0x48], xmm0, 2
+     f4c4a9  mov        dword ptr [rbp - 0x44], 0
+     f4c4b0  mov        rax, qword ptr [r14 + 0x40]
+     f4c4b4  mov        rax, qword ptr [rax + 8]
+     f4c4b8  mov        qword ptr [rbp - 0x40], rax
+     f4c4bc  mov        rax, qword ptr [r14 + 0x58]
+     f4c4c0  mov        rax, qword ptr [rax + 8]
+     f4c4c4  mov        qword ptr [rbp - 0x38], rax
+>>   f4c4c8  call       0x74ebf20   ; sceAudioPropagationPortalCreate
+     f4c4cd  test       eax, eax
+     f4c4cf  jne        0xf4c62f
+     f4c4d5  vmovups    xmm0, xmmword ptr [r14]
+     f4c4da  mov        rax, qword ptr [rbp - 0xa0]
+     f4c4e1  lea        rcx, [rbp - 0x50]
+     f4c4e5  vmovups    xmmword ptr [r12], xmm0
+     f4c4eb  vmovups    xmm0, xmmword ptr [r15]
+     f4c4f0  vmovups    xmmword ptr [rax], xmm0
+     f4c4f4  mov        rax, qword ptr [rbp - 0xa8]
+     f4c4fb  vmovups    xmm0, xmmword ptr [r13]
+     f4c501  vmovups    xmmword ptr [rax], xmm0
+     f4c505  vmovups    xmm0, xmmword ptr [rcx]
+     f4c509  vmovups    xmmword ptr [rbx + 0x50], xmm0
+     f4c50e  vmovups    xmm0, xmmword ptr [r14 + 0x40]
+     f4c514  mov        rdi, qword ptr [r14 + 0x48]
+     f4c518  test       rdi, rdi
+     f4c51b  je         0xf4c53d
+     f4c51d  add        rdi, 8
+     f4c521  mov        esi, 1
+     f4c526  xor        edx, edx
+     f4c528  vmovaps    xmmword ptr [rbp - 0xa0], xmm0
+     f4c530  call       0x74ec720
+     f4c535  vmovaps    xmm0, xmmword ptr [rbp - 0xa0]
+     f4c53d  mov        r15, qword ptr [rbx + 0x68]
+     f4c541  vmovups    xmmword ptr [rbx + 0x60], xmm0
+     f4c546  test       r15, r15
+     f4c549  je         0xf4c58c
+     f4c54b  lea        rdi, [r15 + 8]
+     f4c54f  mov        esi, 1
+     f4c554  mov        edx, 4
+     f4c559  call       0x74ec710
+     f4c55e  cmp        eax, 1
+     f4c561  jne        0xf4c58c
+     f4c563  mov        rax, qword ptr [r15]
+     f4c566  mov        rdi, r15
+     f4c569  call       qword ptr [rax]
+     f4c56b  lea        rdi, [r15 + 0xc]
+     f4c56f  mov        esi, 1
+     f4c574  mov        edx, 4
+     f4c579  call       0x74ec710
+     f4c57e  cmp        eax, 1
+     f4c581  jne        0xf4c58c
+     f4c583  mov        rax, qword ptr [r15]
+     f4c586  mov        rdi, r15
+     f4c589  call       qword ptr [rax + 8]

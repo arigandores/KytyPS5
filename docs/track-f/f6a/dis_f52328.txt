@@ -1,0 +1,65 @@
+=== site 0xf52328 function start 0xf522e0 (site +0x48)
+     f522e0  push       rbp
+     f522e1  mov        rbp, rsp
+     f522e4  push       r15
+     f522e6  push       r14
+     f522e8  push       rbx
+     f522e9  sub        rsp, 0x5a8
+     f522f0  mov        r15, qword ptr [rip + 0x7ee2211]   ; ->0x8e34508
+     f522f7  mov        rbx, rdi
+     f522fa  mov        ecx, esi
+     f522fc  lea        r14, [rbx + 0xf0]
+     f52303  lea        rsi, [rbx + 0x21b0]
+     f5230a  mov        r8, r14
+     f5230d  mov        rax, qword ptr [r15]
+     f52310  mov        qword ptr [rbp - 0x20], rax
+     f52314  mov        rdi, qword ptr [rdi + 0xb0]
+     f5231b  mov        edx, dword ptr [rbx + 0x23c0]
+     f52321  mov        r9d, dword ptr [rbx + 0x21ac]
+>>   f52328  call       0x74ebff0   ; sceAudioPropagationSourceCalculateAudioPaths
+     f5232d  test       eax, eax
+     f5232f  jne        0xf523bd
+     f52335  mov        edx, dword ptr [rbx + 0x21ac]
+     f5233b  test       rdx, rdx
+     f5233e  je         0xf52388
+     f52340  lea        rax, [rbp - 0x5a0]
+     f52347  xor        ecx, ecx
+     f52349  nop        dword ptr [rax]
+     f52350  mov        dword ptr [rax - 0x20], 0x10107d9
+     f52357  mov        qword ptr [rax - 0x18], 0x28
+     f5235f  mov        dword ptr [rax], 0x3f800000
+     f52365  mov        rsi, qword ptr [rbx + rcx*8 + 0x2070]
+     f5236d  inc        rcx
+     f52370  mov        qword ptr [rax - 0x10], rsi
+     f52374  mov        qword ptr [rax - 8], r14
+     f52378  add        rax, 0x28
+     f5237c  add        r14, 0xe0
+     f52383  cmp        rdx, rcx
+     f52386  jne        0xf52350
+     f52388  mov        rdi, qword ptr [rbx + 0xb0]
+     f5238f  lea        rsi, [rbp - 0x5c0]
+     f52396  call       0x74ebee0   ; sceAudioPropagationSourceSetAudioPaths
+     f5239b  test       eax, eax
+     f5239d  jne        0xf523f5
+     f5239f  mov        byte ptr [rbx + 0x23c4], 1
+     f523a6  mov        rax, qword ptr [r15]
+     f523a9  cmp        rax, qword ptr [rbp - 0x20]
+     f523ad  jne        0xf5242d
+     f523af  add        rsp, 0x5a8
+     f523b6  pop        rbx
+     f523b7  pop        r14
+     f523b9  pop        r15
+     f523bb  pop        rbp
+     f523bc  ret        
+     f523bd  mov        r9d, eax
+     f523c0  lea        rdi, [rip + 0x71171fb]   ; ->0x80695c2 "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationSource.cpp"
+     f523c7  lea        rcx, [rip + 0x71236f4]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f523ce  lea        r8, [rip + 0x7280096]   ; ->0x81d246b "sceAudioPropagationSourceCalculateAudioPaths failed : 0x%08x
+"
+     f523d5  mov        esi, 0x12f
+     f523da  mov        edx, 1
+     f523df  xor        eax, eax
+     f523e1  call       0x1aa0
+     f523e6  test       eax, eax
+     f523e8  je         0xf52335
+     f523ee  int        0x41

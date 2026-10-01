@@ -1,0 +1,64 @@
+=== site 0xf52921 function start 0xf528d0 (site +0x51)
+     f528d0  push       rbp
+     f528d1  mov        rbp, rsp
+     f528d4  push       r15
+     f528d6  push       r14
+     f528d8  push       r12
+     f528da  push       rbx
+     f528db  sub        rsp, 0x10
+     f528df  mov        r12, qword ptr [rip + 0x7ee1c22]   ; ->0x8e34508
+     f528e6  lea        rbx, [rdi + 0x23f0]
+     f528ed  mov        r14, rsi
+     f528f0  mov        r15, rdi
+     f528f3  lea        rdi, [rbp - 0x2c]
+     f528f7  mov        rsi, rbx
+     f528fa  mov        rax, qword ptr [r12]
+     f528fe  mov        qword ptr [rbp - 0x28], rax
+     f52902  call       0x640
+     f52907  cmp        qword ptr [r15 + 0xb0], 0
+     f5290f  je         0xf5295a
+     f52911  mov        rdi, qword ptr [r15 + 0x23d0]
+     f52918  mov        rax, rdi
+     f5291b  shl        rax, 4
+     f5291f  je         0xf5295a
+>>   f52921  mov        rcx, qword ptr [r15 + 0x23d8]
+     f52928  mov        rdx, qword ptr [r14]
+     f5292b  cmp        rax, 0x20
+     f5292f  jae        0xf52981
+     f52931  xor        esi, esi
+     f52933  xor        r8d, r8d
+     f52936  inc        r8d
+     f52939  nop        dword ptr [rax]
+     f52940  vmovss     xmm0, dword ptr [rcx + rsi*4]
+     f52945  vaddss     xmm0, xmm0, dword ptr [rdx + rsi*4]
+     f5294a  vmovss     dword ptr [rdx + rsi*4], xmm0
+     f5294f  mov        esi, r8d
+     f52952  inc        r8d
+     f52955  cmp        rax, rsi
+     f52958  ja         0xf52940
+     f5295a  lea        rdi, [rbp - 0x2c]
+     f5295e  mov        rsi, rbx
+     f52961  call       0x8c0
+     f52966  mov        rax, qword ptr [r12]
+     f5296a  cmp        rax, qword ptr [rbp - 0x28]
+     f5296e  jne        0xf52a2f
+     f52974  add        rsp, 0x10
+     f52978  pop        rbx
+     f52979  pop        r12
+     f5297b  pop        r14
+     f5297d  pop        r15
+     f5297f  pop        rbp
+     f52980  ret        
+     f52981  lea        r8, [rax - 1]
+     f52985  xor        esi, esi
+     f52987  mov        r9, r8
+     f5298a  shr        r9, 0x20
+     f5298e  jne        0xf52933
+     f52990  mov        r9d, r8d
+     f52993  mov        r8d, 0
+     f52999  cmp        r9d, -1
+     f5299d  je         0xf52936
+     f5299f  shl        rdi, 6
+     f529a3  lea        rsi, [rcx + rdi]
+     f529a7  cmp        rdx, rsi
+     f529aa  jae        0xf529b8

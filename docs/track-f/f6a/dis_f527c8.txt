@@ -1,0 +1,83 @@
+=== site 0xf527c8 function start 0xf52710 (site +0xb8)
+     f52710  push       rbp
+     f52711  mov        rbp, rsp
+     f52714  push       r15
+     f52716  push       r14
+     f52718  push       rbx
+     f52719  sub        rsp, 0xb8
+     f52720  mov        r15, qword ptr [rip + 0x7ee1de1]   ; ->0x8e34508
+     f52727  lea        rcx, [rdi + 0xb8]
+     f5272e  mov        rbx, rdi
+     f52731  mov        r14, rdx
+     f52734  mov        edx, 3
+     f52739  mov        rax, qword ptr [r15]
+     f5273c  mov        qword ptr [rbp - 0x20], rax
+     f52740  mov        qword ptr [rbp - 0x98], rsi
+     f52747  lea        rsi, [rbp - 0x98]
+     f5274e  mov        eax, dword ptr [rdi + 0x23d0]
+     f52754  mov        dword ptr [rbp - 0x80], 4
+     f5275b  mov        qword ptr [rbp - 0x78], rsi
+     f5275f  mov        qword ptr [rbp - 0x70], 0x18
+     f52767  mov        dword ptr [rbp - 0x68], 0
+     f5276e  mov        dword ptr [rbp - 0x60], 2
+     f52775  mov        qword ptr [rbp - 0x58], rcx
+     f52779  mov        qword ptr [rbp - 0x50], 0x10
+     f52781  mov        dword ptr [rbp - 0x48], 0
+     f52788  mov        dword ptr [rbp - 0x40], 3
+     f5278f  lea        rsi, [rbp - 0x80]
+     f52793  shl        eax, 2
+     f52796  mov        dword ptr [rbp - 0x90], eax
+     f5279c  lea        rax, [rdi + 0xc8]
+     f527a3  mov        qword ptr [rbp - 0x8c], 0
+     f527ae  mov        qword ptr [rbp - 0x38], rax
+     f527b2  mov        qword ptr [rbp - 0x30], 0x10
+     f527ba  mov        dword ptr [rbp - 0x28], 0
+     f527c1  mov        rdi, qword ptr [rdi + 0xb0]
+>>   f527c8  call       0x74ebf60   ; sceAudioPropagationSourceSetAttributes
+     f527cd  test       eax, eax
+     f527cf  jne        0xf5285e
+     f527d5  vxorps     xmm0, xmm0, xmm0
+     f527d9  vmovups    ymmword ptr [rbp - 0xd0], ymm0
+     f527e1  vmovups    ymmword ptr [rbp - 0xc0], ymm0
+     f527e9  mov        dword ptr [rbp - 0xd0], 0x10107d6
+     f527f3  mov        qword ptr [rbp - 0xc8], 0x30
+     f527fe  lea        rsi, [rbp - 0xd0]
+     f52805  mov        edx, 1
+     f5280a  mov        rax, qword ptr [rbx + 0xb0]
+     f52811  mov        qword ptr [rbp - 0xc0], rax
+     f52818  mov        qword ptr [rbp - 0xb8], r14
+     f5281f  mov        rax, qword ptr [rbx + 0x23d0]
+     f52826  shl        rax, 6
+     f5282a  mov        qword ptr [rbp - 0xb0], rax
+     f52831  mov        dword ptr [rbp - 0xa8], 2
+     f5283b  mov        rdi, qword ptr [rbx]
+     f5283e  call       0x74ebfc0   ; sceAudioPropagationSourceRender
+     f52843  test       eax, eax
+     f52845  jne        0xf52896
+     f52847  mov        rax, qword ptr [r15]
+     f5284a  cmp        rax, qword ptr [rbp - 0x20]
+     f5284e  jne        0xf528c7
+     f52850  add        rsp, 0xb8
+     f52857  pop        rbx
+     f52858  pop        r14
+     f5285a  pop        r15
+     f5285c  pop        rbp
+     f5285d  ret        
+     f5285e  mov        r9d, eax
+     f52861  lea        rdi, [rip + 0x7116d5a]   ; ->0x80695c2 "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationSource.cpp"
+     f52868  lea        rcx, [rip + 0x7123253]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f5286f  lea        r8, [rip + 0x70fe761]   ; ->0x8050fd7 "sceAudioPropagationSourceSetAttributes failed : 0x%08x
+"
+     f52876  mov        esi, 0x1a3
+     f5287b  mov        edx, 1
+     f52880  xor        eax, eax
+     f52882  call       0x1aa0
+     f52887  test       eax, eax
+     f52889  je         0xf527d5
+     f5288f  int        0x41
+     f52891  jmp        0xf527d5
+     f52896  mov        r9d, eax
+     f52899  lea        rdi, [rip + 0x7116d22]   ; ->0x80695c2 "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationSource.cpp"
+     f528a0  lea        rcx, [rip + 0x712321b]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f528a7  lea        r8, [rip + 0x724f4b7]   ; ->0x81a1d65 "sceAudioPropagationSourceRender failed : 0x%08x
+"

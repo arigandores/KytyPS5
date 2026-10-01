@@ -1,0 +1,65 @@
+=== site 0xf45174 function start 0xf45140 (site +0x34)
+     f45140  push       rbp
+     f45141  mov        rbp, rsp
+     f45144  push       r15
+     f45146  push       r14
+     f45148  push       r13
+     f4514a  push       r12
+     f4514c  push       rbx
+     f4514d  push       rax
+     f4514e  mov        r13, qword ptr [rdi + 0x10]
+     f45152  mov        rbx, rdi
+     f45155  mov        r14, qword ptr [r13]
+     f45159  cmp        r14, r13
+     f4515c  je         0xf451b0
+     f4515e  lea        r15, [rip + 0x713095d]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f45165  lea        r12, [rip + 0x72143de]   ; ->0x815954a "sceAudioPropagationSystemUnregisterMaterial failed : 0x%08x
+"
+     f4516c  nop        dword ptr [rax]
+     f45170  mov        rdi, qword ptr [r14 + 0x18]
+>>   f45174  call       0x74ebea0   ; sceAudioPropagationSystemUnregisterMaterial
+     f45179  test       eax, eax
+     f4517b  jne        0xf45187
+     f4517d  mov        r14, qword ptr [r14]
+     f45180  cmp        r14, r13
+     f45183  jne        0xf45170
+     f45185  jmp        0xf451b0
+     f45187  mov        r9d, eax
+     f4518a  lea        rdi, [rip + 0x73acd6e]   ; ->0x82f1eff "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationMaterialSet.cpp"
+     f45191  mov        esi, 0x19
+     f45196  mov        edx, 1
+     f4519b  mov        rcx, r15
+     f4519e  mov        r8, r12
+     f451a1  xor        eax, eax
+     f451a3  call       0x1aa0
+     f451a8  test       eax, eax
+     f451aa  je         0xf4517d
+     f451ac  int        0x41
+     f451ae  jmp        0xf4517d
+     f451b0  mov        rdi, qword ptr [rbx + 0x78]
+     f451b4  test       rdi, rdi
+     f451b7  je         0xf451d7
+     f451b9  lea        rax, [rip + 0x808ee70]   ; ->0x8fd4030
+     f451c0  lea        r14, [rbx + 0x78]
+     f451c4  call       qword ptr [rax]
+     f451c6  vxorps     xmm0, xmm0, xmm0
+     f451ca  vmovups    xmmword ptr [r14], xmm0
+     f451cf  mov        qword ptr [r14 + 0x10], 0
+     f451d7  mov        rax, qword ptr [rbx + 0x60]
+     f451db  mov        rdi, qword ptr [rax]
+     f451de  mov        qword ptr [rax], rax
+     f451e1  mov        rax, qword ptr [rbx + 0x60]
+     f451e5  mov        qword ptr [rax + 8], rax
+     f451e9  mov        qword ptr [rbx + 0x68], 0
+     f451f1  cmp        rdi, qword ptr [rbx + 0x60]
+     f451f5  je         0xf45211
+     f451f7  lea        r15, [rip + 0x808ee32]   ; ->0x8fd4030
+     f451fe  nop        
+     f45200  mov        r14, qword ptr [rdi]
+     f45203  call       qword ptr [r15]
+     f45206  mov        rdi, r14
+     f45209  cmp        r14, qword ptr [rbx + 0x60]
+     f4520d  jne        0xf45200
+     f4520f  jmp        0xf45214
+     f45211  mov        r14, rdi
+     f45214  lea        r15, [rip + 0x808ee15]   ; ->0x8fd4030

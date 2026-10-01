@@ -1,0 +1,61 @@
+=== site 0xf4b3c9 function start 0xf4b3a0 (site +0x29)
+     f4b3a0  push       rbp
+     f4b3a1  mov        rbp, rsp
+     f4b3a4  push       r15
+     f4b3a6  push       r14
+     f4b3a8  push       r13
+     f4b3aa  push       r12
+     f4b3ac  push       rbx
+     f4b3ad  sub        rsp, 0x18
+     f4b3b1  mov        r15, qword ptr [rip + 0x7ee9150]   ; ->0x8e34508
+     f4b3b8  mov        rbx, rdi
+     f4b3bb  mov        rax, qword ptr [r15]
+     f4b3be  mov        qword ptr [rbp - 0x30], rax
+     f4b3c2  mov        rdi, qword ptr [rdi]
+     f4b3c5  mov        rsi, qword ptr [rbx + 8]
+>>   f4b3c9  call       0x74ebf30   ; sceAudioPropagationRoomDestroy
+     f4b3ce  test       eax, eax
+     f4b3d0  jne        0xf4b5e6
+     f4b3d6  lea        r14, [rbx + 0xf8]
+     f4b3dd  lea        rdi, [rbp - 0x34]
+     f4b3e1  mov        qword ptr [rbx + 8], 0
+     f4b3e9  mov        rsi, r14
+     f4b3ec  call       0x590
+     f4b3f1  mov        rdi, r14
+     f4b3f4  call       0x430
+     f4b3f9  cmp        qword ptr [rbx + 0xf0], 0x10
+     f4b401  jb         0xf4b413
+     f4b403  mov        rdi, qword ptr [rbx + 0xd8]
+     f4b40a  lea        rax, [rip + 0x8088c1f]   ; ->0x8fd4030
+     f4b411  call       qword ptr [rax]
+     f4b413  mov        qword ptr [rbx + 0xf0], 0xf
+     f4b41e  mov        qword ptr [rbx + 0xe8], 0
+     f4b429  mov        byte ptr [rbx + 0xd8], 0
+     f4b430  mov        r14, qword ptr [rbx + 0xb8]
+     f4b437  test       r14, r14
+     f4b43a  je         0xf4b4de
+     f4b440  mov        r12, qword ptr [rbx + 0xc0]
+     f4b447  lea        r13, [rbx + 0xb8]
+     f4b44e  cmp        r14, r12
+     f4b451  jne        0xf4b469
+     f4b453  jmp        0xf4b4c0
+     f4b455  nop        word ptr cs:[rax + rax]
+     f4b460  add        r14, 0x18
+     f4b464  cmp        r14, r12
+     f4b467  je         0xf4b4b5
+     f4b469  mov        r15, qword ptr [r14 + 8]
+     f4b46d  test       r15, r15
+     f4b470  je         0xf4b460
+     f4b472  lea        rdi, [r15 + 8]
+     f4b476  mov        esi, 1
+     f4b47b  mov        edx, 4
+     f4b480  call       0x74ec710
+     f4b485  cmp        eax, 1
+     f4b488  jne        0xf4b460
+     f4b48a  mov        rax, qword ptr [r15]
+     f4b48d  mov        rdi, r15
+     f4b490  call       qword ptr [rax]
+     f4b492  lea        rdi, [r15 + 0xc]
+     f4b496  mov        esi, 1
+     f4b49b  mov        edx, 4
+     f4b4a0  call       0x74ec710

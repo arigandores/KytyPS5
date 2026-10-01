@@ -1,0 +1,253 @@
+commit d281153592b70f84f01c1aaf8e8ea3e50b4b172c
+Author: Emu Engineer <noreply@anthropic.com>
+Date:   Thu Oct 1 14:55:02 2026 +0200
+
+    track F link F5a (HPP-355): B37 - under KYTY_FIX_MINIMIZE=1 (default 0) a swapchain recreate at currentExtent 0 creates no swapchain, presents drop frames without blocking until the extent is non-zero (SwapchainZeroExtent: begin/end lines); stand KYTY_TEST_MINIMIZE=<s>:<dur> (ROADMAP p.273(e)) - WIP: not installed, no smoke
+    
+    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+
+diff --git a/src/graphics/presentation/window.h b/src/graphics/presentation/window.h
+index a3e3dee0..2e42b429 100644
+--- a/src/graphics/presentation/window.h
++++ b/src/graphics/presentation/window.h
+@@ -13,6 +13,8 @@ void                     WindowRun();
+ // Pumps window events while preparing known pipelines; false if the user closes the window.
+ [[nodiscard]] bool       WindowPrepareShaders();
+ void                     WindowShutdown();
++// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): the stand KYTY_TEST_MINIMIZE - fed the game's log text.
++void                     WindowTestMinimizeNoteGuestText(const char* text, size_t size);
+ 
+ } // namespace Libs::Graphics
+ 
+diff --git a/src/graphics/presentation/window/swapchain.cpp b/src/graphics/presentation/window/swapchain.cpp
+index 892fe5a9..8ca24a6a 100644
+--- a/src/graphics/presentation/window/swapchain.cpp
++++ b/src/graphics/presentation/window/swapchain.cpp
+@@ -301,6 +301,21 @@ void Presenter::Frame::Clear(CommandBuffer& command_buffer, const vk::ClearColor
+ 	Transit(command, vk::ImageLayout::eTransferSrcOptimal, vk::AccessFlagBits2::eTransferRead);
+ }
+ 
++// Track F, F5 (ROADMAP s122 item 273(e)(1), B37): KYTY_FIX_MINIMIZE (default 0 until F5d; 0 - the old path byte for
++// byte).  1: a swapchain recreate that finds currentExtent 0 on either axis (a minimized window) creates no swapchain;
++// Presenter::Present drops its frames without blocking and retries on each later present until the extent is non-zero.
++// Read once; "FixMinimize: on" is logged only when on.
++static bool FixMinimizeEnabled() {
++	static const bool enabled = [] {
++		const bool on = Common::EnvFlagOn("KYTY_FIX_MINIMIZE");
++		if (on) {
++			LOGF("FixMinimize: on\n");
++		}
++		return on;
++	}();
++	return enabled;
++}
++
+ class Swapchain final {
+ public:
+ 	enum class Status : uint8_t { Success, Recreate, SurfaceLost };
+@@ -322,6 +337,10 @@ public:
+ 		return static_cast<uint32_t>(m_images.size());
+ 	}
+ 	[[nodiscard]] vk::Format Format() const noexcept { return m_format; }
++	// F5 (B37): no swapchain - only after a recreate at a zero extent under KYTY_FIX_MINIMIZE=1 (Create exits on failure).
++	[[nodiscard]] bool Missing() const noexcept { return m_handle == nullptr; }
++	// F5 (B37): the last refreshed surface capabilities have currentExtent 0 on either axis.
++	[[nodiscard]] bool SurfaceExtentZero();
+ 
+ private:
+ 	void Destroy();
+@@ -348,15 +367,49 @@ struct Presenter::Impl {
+ 		EXIT_IF(owner.render_context == nullptr);
+ 		swapchain.Create();
+ 		frames.Initialize(swapchain.ImageCount(), swapchain.Format());
++		static_cast<void>(FixMinimizeEnabled());
+ 	}
+ 
+ 	void RecoverSwapchain(Swapchain::Status status) {
+ 		LOGF("Recovering Vulkan swapchain%s\n",
+ 		     status == Swapchain::Status::SurfaceLost ? " and surface" : "");
+ 		swapchain.Recreate(status == Swapchain::Status::SurfaceLost);
++		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
++			BeginZeroExtent();
++			return;
++		}
+ 		frames.SetFormat(swapchain.Format());
+ 	}
+ 
++	// F5 (B37): one zero-extent episode - it begins when a recreate leaves no swapchain and ends when a later present
++	// finds a non-zero extent and creates the swapchain.  Present thread only (Present is single-threaded by design,
++	// the PresentOverlap detector); the fields below are touched nowhere else.
++	void BeginZeroExtent() {
++		if (zero_extent_active) {
++			return;
++		}
++		zero_extent_active  = true;
++		zero_extent_dropped = 0;
++		zero_extent_t0_ns   = Common::FrameStats::NowNs();
++		LOGF("SwapchainZeroExtent: begin\n");
++	}
++
++	// False - the extent is still zero, the caller drops the frame.  True - the swapchain exists again.
++	bool TryEndZeroExtent() {
++		window.RefreshSurfaceCapabilities();
++		if (swapchain.SurfaceExtentZero()) {
++			return false;
++		}
++		swapchain.Create();
++		frames.SetFormat(swapchain.Format());
++		const auto ms = (Common::FrameStats::NowNs() - zero_extent_t0_ns) / 1000000ull;
++		LOGF("SwapchainZeroExtent: end frames_dropped=%llu ms=%llu\n",
++		     static_cast<unsigned long long>(zero_extent_dropped), static_cast<unsigned long long>(ms));
++		zero_extent_active  = false;
++		zero_extent_dropped = 0;
++		return true;
++	}
++
+ 	Image& ResolveSurface(const ImageInfo& info) {
+ 		TextureCache::ImageDesc desc {};
+ 		desc.info                  = info;
+@@ -386,6 +439,10 @@ struct Presenter::Impl {
+ 	ScreenshotGrabber     screenshot;
+ 	InputScript           input_script;
+ 	std::atomic<uint64_t> presented_overlay_revision {0};
++	// F5 (B37) episode state, present thread only (see BeginZeroExtent).
++	bool                  zero_extent_active  = false;
++	uint64_t              zero_extent_dropped = 0;
++	uint64_t              zero_extent_t0_ns   = 0;
+ };
+ 
+ void Swapchain::Create() {
+@@ -576,9 +633,18 @@ void Swapchain::Recreate(bool surface_lost) {
+ #endif
+ 	}
+ 	m_window.RefreshSurfaceCapabilities();
++	if (FixMinimizeEnabled() && SurfaceExtentZero()) {
++		return; // F5 (B37): no swapchain at a zero extent; Presenter::Present retries on a later present
++	}
+ 	Create();
+ }
+ 
++bool Swapchain::SurfaceExtentZero() {
++	Common::LockGuard lock(m_window.mutex);
++	const auto&       extent = m_window.surface_capabilities.capabilities.currentExtent;
++	return extent.width == 0 || extent.height == 0;
++}
++
+ Swapchain::Status Swapchain::AcquireNextImage(CommandScheduler& scheduler) {
+ 	EXIT_IF(m_handle == nullptr || m_frame_index >= m_image_acquired.size());
+ 	// Track acquire semaphore retirement independently of prepared image ownership:
+@@ -879,6 +945,13 @@ void Presenter::Present(Frame& frame, bool reuse) {
+ 	const bool screenshot = !preparing && m_impl->screenshot.Poll();
+ 	if (!preparing) m_impl->input_script.Poll();
+ 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
++		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
++			if (!m_impl->TryEndZeroExtent()) {
++				m_impl->zero_extent_dropped++;
++				m_impl->frames.Release(&frame, reuse);
++				return;
++			}
++		}
+ 		const auto trace_start = PresentTraceEnabled() ? Common::FrameStats::NowNs() : 0;
+ 		auto status = swapchain.AcquireNextImage(m_impl->present_scheduler);
+ 		const auto acquired = trace_start ? Common::FrameStats::NowNs() : 0;
+diff --git a/src/graphics/presentation/window/window.cpp b/src/graphics/presentation/window/window.cpp
+index 9e2d0738..f757835f 100644
+--- a/src/graphics/presentation/window/window.cpp
++++ b/src/graphics/presentation/window/window.cpp
+@@ -51,6 +51,7 @@
+ #include <fmt/format.h>
+ #include <memory>
+ #include <string>
++#include <string_view>
+ #include <vector>
+ #include <vulkan/vk_platform.h>
+ 
+@@ -1035,6 +1036,68 @@ void WindowShutdown() {
+ 	}
+ }
+ 
++// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
++// game's first "Level has started:" line the emulator minimizes its own window (SDL_MinimizeWindow on the main thread)
++// and restores it <dur> seconds later (SDL_RestoreWindow); lines "TestMinimize: minimize" / "TestMinimize: restore".
++// Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
++// sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
++void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
++	struct TestMinimize {
++		bool   on      = false;
++		double delay_s = 0.0;
++		double dur_s   = 0.0;
++	};
++	static const TestMinimize cfg = [] {
++		TestMinimize c;
++		const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
++		if (value == nullptr || value[0] == '\0') {
++			return c;
++		}
++		char* end = nullptr;
++		c.delay_s = std::strtod(value, &end);
++		if (end != value && end != nullptr && *end == ':') {
++			const char* dur = end + 1;
++			c.dur_s         = std::strtod(dur, &end);
++			c.on            = end != dur && *end == '\0' && c.delay_s >= 0.0 && c.dur_s >= 0.0;
++		}
++		LOGF("TestMinimize: config %s delay_s=%.3f dur_s=%.3f\n", c.on ? "on" : "invalid", c.delay_s, c.dur_s);
++		return c;
++	}();
++	static std::atomic<bool> armed {false};
++	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
++		return;
++	}
++	if (std::string_view(text, size).find("Level has started: ") == std::string_view::npos ||
++	    armed.exchange(true, std::memory_order_acq_rel)) {
++		return;
++	}
++	LOGF("TestMinimize: armed delay_s=%.3f dur_s=%.3f\n", cfg.delay_s, cfg.dur_s);
++	std::thread([] {
++		const auto post = [](bool minimize) {
++			auto* context = g_window.get();
++			if (context == nullptr) {
++				return;
++			}
++			context->PostToMainThread([context, minimize] {
++				if (context->window == nullptr) {
++					return;
++				}
++				if (minimize) {
++					LOGF("TestMinimize: minimize\n");
++					SDL_MinimizeWindow(context->window);
++				} else {
++					LOGF("TestMinimize: restore\n");
++					SDL_RestoreWindow(context->window);
++				}
++			});
++		};
++		std::this_thread::sleep_for(std::chrono::duration<double>(cfg.delay_s));
++		post(true);
++		std::this_thread::sleep_for(std::chrono::duration<double>(cfg.dur_s));
++		post(false);
++	}).detach();
++}
++
+ static int WindowIconRead(void* user, char* data, int size) {
+ 	auto*    src        = static_cast<Common::File*>(user);
+ 	uint32_t bytes_read = 0;
+diff --git a/src/libs/libC.cpp b/src/libs/libC.cpp
+index f68e1c96..da3a142d 100644
+--- a/src/libs/libC.cpp
++++ b/src/libs/libC.cpp
+@@ -7,6 +7,7 @@
+ #include "common/stringUtils.h"
+ #include "graphics/host_gpu/hostMemory.h"
+ #include "graphics/presentation/renderDoc.h"
++#include "graphics/presentation/window.h"
+ #include "kernel/pthread.h"
+ #include "libs/errno.h"
+ #include "libs/guestPrintf.h"
+@@ -650,6 +651,7 @@ size_t KYTY_SYSV_ABI fwrite(const void* ptr, size_t size, size_t nmemb, FILE* /*
+ 		LOGF_COLOR(Log::Color::BrightMagenta, "GuestOut: %s%s", text.c_str(),
+ 		           (text.back() == '\n' ? "" : "\n"));
+ 		Libs::Graphics::RenderDocNoteGuestText(text.data(), text.size());
++		Libs::Graphics::WindowTestMinimizeNoteGuestText(text.data(), text.size()); // F5, KYTY_TEST_MINIMIZE
+ 	}
+ 	return nmemb;
+ }

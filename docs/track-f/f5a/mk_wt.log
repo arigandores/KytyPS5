@@ -1,0 +1,53 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 4fc501f4)
+Updating files:  40% (943/2349)Updating files:  41% (964/2349)Updating files:  42% (987/2349)Updating files:  43% (1011/2349)Updating files:  44% (1034/2349)Updating files:  45% (1058/2349)Updating files:  46% (1081/2349)Updating files:  47% (1105/2349)Updating files:  48% (1128/2349)Updating files:  49% (1152/2349)Updating files:  50% (1175/2349)Updating files:  51% (1198/2349)Updating files:  52% (1222/2349)Updating files:  53% (1245/2349)Updating files:  54% (1269/2349)Updating files:  55% (1292/2349)Updating files:  56% (1316/2349)Updating files:  57% (1339/2349)Updating files:  58% (1363/2349)Updating files:  59% (1386/2349)Updating files:  60% (1410/2349)Updating files:  61% (1433/2349)Updating files:  62% (1457/2349)Updating files:  63% (1480/2349)Updating files:  64% (1504/2349)Updating files:  65% (1527/2349)Updating files:  66% (1551/2349)Updating files:  67% (1574/2349)Updating files:  68% (1598/2349)Updating files:  69% (1621/2349)Updating files:  70% (1645/2349)Updating files:  71% (1668/2349)Updating files:  72% (1692/2349)Updating files:  73% (1715/2349)Updating files:  74% (1739/2349)Updating files:  75% (1762/2349)Updating files:  76% (1786/2349)Updating files:  77% (1809/2349)Updating files:  78% (1833/2349)Updating files:  79% (1856/2349)Updating files:  80% (1880/2349)Updating files:  81% (1903/2349)Updating files:  82% (1927/2349)Updating files:  83% (1950/2349)Updating files:  84% (1974/2349)Updating files:  85% (1997/2349)Updating files:  86% (2021/2349)Updating files:  87% (2044/2349)Updating files:  88% (2068/2349)Updating files:  89% (2091/2349)Updating files:  90% (2115/2349)Updating files:  91% (2138/2349)Updating files:  92% (2162/2349)Updating files:  93% (2185/2349)Updating files:  93% (2188/2349)Updating files:  94% (2209/2349)Updating files:  95% (2232/2349)Updating files:  96% (2256/2349)Updating files:  97% (2279/2349)Updating files:  98% (2303/2349)Updating files:  99% (2326/2349)Updating files: 100% (2349/2349)Updating files: 100% (2349/2349), done.
+HEAD is now at 4fc501f4 s128 step 0 (HPP-116): ship rtskip=1 - default of KYTY_RT_SKIP 0 -> 1 (ROADMAP s122 p.87(e)(1); k3p127 RTSKIP_GAIN, arm 1 vs arm 0 of 98d98eee, NEW), gates.h comment, dead t_rts_a removed (p.81(g))
+[detached HEAD bf8f90e4] track F link F5a (HPP-355): B37 - under KYTY_FIX_MINIMIZE=1 (default 0) a swapchain recreate at currentExtent 0 creates no swapchain, presents drop frames without blocking until the extent is non-zero (SwapchainZeroExtent: begin/end lines); stand KYTY_TEST_MINIMIZE=<s>:<dur> (ROADMAP p.273(e)) - WIP: not installed, no smoke
+ Date: Thu Oct 1 14:55:02 2026 +0200
+ 4 files changed, 140 insertions(+)
+--- worktree HEAD
+bf8f90e47ceec11597d6392751d76beb383866cb track F link F5a (HPP-355): B37 - under KYTY_FIX_MINIMIZE=1 (default 0) a swapc
+4fc501f4f6c3c5638f472ee6d9c59523d67e472c s128 step 0 (HPP-116): ship rtskip=1 - default of KYTY_RT_SKIP 0 -> 1 (ROADMAP 
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+files 101
+unchanged with known form 92 of which CRLF 27
+enumerated (changed since 4fc501f4 or unknown form) 9 unknown-form unchanged 0
+  var src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+  var src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+  var src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+LF model 95d30c5c8062d73b96b5f66a0ec64026e9109591
+CRLF model af80129ff866bc1a2b4d787f1f77653ae1fcc48e
+FOUND 699c1e4b7db359067b461e029b913c4b6e78dc90 combo LLLLLLLLL
+wrote 27 files under C:/kyty/f287/f5a/wt
+tree signature now 699c1e4b7db359067b461e029b913c4b6e78dc90
+--- git diff --stat 4fc501f4 (worktree, literal)
+ src/graphics/shader/shaderVertexMetadata.h         |   48 +-
+ src/libs/libC.cpp                                  |    2 +
+ 31 files changed, 1955 insertions(+), 1815 deletions(-)
+--- git diff --stat 4fc501f4 --ignore-cr-at-eol
+ src/graphics/presentation/window.h             |  2 +
+ src/graphics/presentation/window/swapchain.cpp | 73 ++++++++++++++++++++++++++
+ src/graphics/presentation/window/window.cpp    | 63 ++++++++++++++++++++++
+ src/libs/libC.cpp                              |  2 +
+ 4 files changed, 140 insertions(+)
+WT OK

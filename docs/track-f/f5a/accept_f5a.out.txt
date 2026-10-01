@@ -1,0 +1,20 @@
+wt abce7916 (4fc501f4 + F5a)     sha256 abce7916ebd03b317829d98d9d4f13bc8be81305a6d405a92c5ceff185f66c21 bytes 24272896
+main ea870d6e (d2811535)         sha256 ea870d6ea309b1b462c9b172d806deb0f31d307a6614dbda91e40ffb8ccd8809 bytes 24572928
+installed 9235a7ac               sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7 bytes 24264192
+
+string                                       wt abce7916 (4fc501f4 + F5a) | main ea870d6e (d2811535) | installed 9235a7ac
+699c1e4b7db359067b461e029b913c4b6e78dc90     1 | 0 | 1  required 1 OK
+KYTY_FIX_MINIMIZE                            1 | 1 | 0  required 1 OK
+FixMinimize: on                              1 | 1 | 0  required 1 OK
+SwapchainZeroExtent: begin                   1 | 1 | 0  required 1 OK
+SwapchainZeroExtent: end frames_dropped=     1 | 1 | 0  required 1 OK
+KYTY_TEST_MINIMIZE                           1 | 1 | 0  required 1 OK
+TestMinimize: minimize                       1 | 1 | 0  required 1 OK
+TestMinimize: restore                        1 | 1 | 0  required 1 OK
+Level has started:                           1 | 1 | 1
+KYTY_FIX_B1B                                 0 | 1 | 0  required 0 OK
+KYTY_FIX_B26                                 0 | 1 | 0  required 0 OK
+KYTY_FIX_DUALSRC                             0 | 1 | 0  required 0 OK
+KYTY_S_PCW                                   0 | 4 | 0  required 0 OK
+
+ACCEPT ALL OK

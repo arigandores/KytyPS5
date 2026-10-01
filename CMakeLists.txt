@@ -528,6 +528,10 @@ target_include_directories(event_queue_lifetime_tests PRIVATE ${inc_headers})
 add_kyty_full_emulator_test(kernel_file_system_tests
 	"${KYTY_TESTS_DIR}/KernelFileSystemTests.cpp")
 
+# Track F, F6 (ROADMAP s122 item 287(c)(4), B9a): the AudioPropagation NIDs through the symbol database, no game.
+add_kyty_full_emulator_test(audio_propagation_tests
+	"${KYTY_TESTS_DIR}/AudioPropagationTests.cpp")
+
 add_executable(sync_on_address_tests EXCLUDE_FROM_ALL
 	"${KYTY_TESTS_DIR}/SyncOnAddressTests.cpp"
 	"${KYTY_SOURCE_DIR}/kernel/syncOnAddress.cpp"

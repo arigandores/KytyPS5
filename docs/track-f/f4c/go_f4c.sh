@@ -6,8 +6,8 @@
 # Port of C:/kyty/f287/f2c/go_f2c.sh (itself a port of C:/kyty/s143/go143a.sh): lock first, guards, one attempt, seal call
 # line, stop file, lock.log UTC, times lines, cache copy/return by content lists, GLCache copy/return.
 # ASCII only (item 175 (v)).  No emulator code, no build.
-#   TAGS (item 254 (zh)(2); one attempt each, a failure is data, no repeat); the order SEQ is the executor variant B4
-#   (the cheap control first) until the lead's answer:
+#   TAGS (item 254 (zh)(2); one attempt each, a failure is data, no repeat); the order SEQ - item 262 (e) (B4 accepted)
+#   for STAND=A; STAND=Bp (item 262 (g), only by a lead line in HPP-337) - (g) -> (b) -> (a) -> (v):
 #     f4c_b  (b) control: W Sky Garden -lvl underwater_aerial_garden, --vulkan-validation true, precache by default,
 #            KYTY_FIX_DUALSRC=0 - the stop with the text of w143 before the first GuestOut line is expected (rc 1)
 #     f4c_a  (a) the same entry with KYTY_FIX_DUALSRC=1; hold WHOLD s
@@ -17,7 +17,10 @@
 #     subject of the check, item 254 (zh)(2)(a)); before every tag the recipe file is parsed (recipes143.py ->
 #     runs/recipes_<tag>.json, a times line with its count, sha and dual-source records) - the reader checks the precache line
 #     against it (F4b RC4).
-#   SERIES STOP (f4c_read.py --stop-check): (b) without the stop of the same text -> the stand is empty, later tags not run;
+#   PRE-CHECK (item 262 (g)): before (b) and (a) the recipe file must hold a dual-source record (f4c_read.py --pre-check),
+#     else series stop before the tag, NOT EVALUABLE, question to the lead.
+#   SERIES STOP (f4c_read.py --stop-check): (b) without the stop of the same text -> NOT EVALUABLE, later tags not run
+#     (item 262 (e)); any NOT EVALUABLE (controls of item 262 (d));
 #     a tag not admitted or without a log; a death marker without a [Vulkan][E] line (first reproduction of a K1/K2 - the
 #     question goes to the lead).  A validation stop of (a)/(v) is data: the series goes on.
 #   CACHES (item 228 (v), F4b RC4): inside the lock, before the install: _ShaderCache/PPSA21564 (root, variant dirs,
@@ -25,9 +28,12 @@
 #     (cachemf143.py) before and after and a copy glcache_snap/; EXIT trap: the run's cache MOVED to cache_run/<UTC>/, the
 #     snapshot copied back, its list must equal the list before (else RESTORE FAILED, rc 1); GLCache back from its copy when
 #     GLRESTORE=1.  A failed return writes the stop file C:/kyty/f287/STOP.
-#   BINARY: BIN_F4C / BIN_EXPECT / FIXB26 - the lead's answer to B1 (F4b RC1); empty -> rc 2 (not configured).
-#   LOCK WINDOW (as item 256 (e)): right before the lock - no lock file, no stop file, HPP-332 neither in_progress nor done
-#     and without a run by the API answer (win332_f2c.py, a times line with the answer); else BUSY rc 4.
+#   BINARY: BIN_F4C / BIN_EXPECT - item 268 (v) (F4a2 report, c9a5e198); KYTY_FIX_B26 never passed (the binary does not
+#     read it); before the lock and the install the binary must hold the translation signature 699c1e4b... (STAND=A) and
+#     the string "DualSrcBlend: patched" (item 262 (v)); else rc 1.
+#   LOCK WINDOW (item 268 (d), 270 (d); variant of the executor for the P queue): right before the lock - no lock file, no
+#     stop file, HPP-333 and HPP-347 done without a run, HPP-328 (P10) neither todo nor in_progress and without a run, by
+#     the API answer (win_f4c.py, a times line with the answer); else BUSY rc 4.
 #   STOP FILE (general rule 26): C:/kyty/f287/STOP -> rc 4 before anything, before the lock and before every tag.
 #   THE SEAL'S CALL (item 105 (v)): the seal carries exactly one line "go_f4c call: PLWAIT=<n> bash
 #     C:/kyty/f287/f4c/go_f4c.sh series"; f4c_read.py --check-seal checks every "seal:" line before the lock.
@@ -44,10 +50,10 @@ STOPF=/c/kyty/f287/STOP
 GAME="/c/kyty/KytyPS5/ps5 em/kyty_emulator.exe"
 BUILD_EXPECT="9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7"
 BUILD_PINNED="/c/kyty/s128/kyty_emulator_9235a7ac.exe"
-BIN_F4C=""
-BIN_EXPECT=""
-FIXB26_SET=""
-FIXB26=""
+BIN_F4C="C:/kyty/f287/bin/kyty_emulator_c9a5e198.exe"
+BIN_EXPECT="c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b"
+SIGSTR="699c1e4b7db359067b461e029b913c4b6e78dc90"
+STAND="A"
 GLRESTORE="1"
 GATESHA="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
@@ -59,9 +65,13 @@ SNAP=$ROOT/cache_snap/PPSA21564
 GLSNAP=$ROOT/glcache_snap
 SKY=underwater_aerial_garden
 MGG=mini_giants_garden
-VHOLD="345"
-WHOLD="320"
-SEQ="f4c_b f4c_a f4c_v f4c_g"
+VHOLD="330"
+WHOLD="310"
+case "$STAND" in
+  A) SEQ="f4c_b f4c_a f4c_v f4c_g";;
+  Bp) SEQ="f4c_g f4c_b f4c_a f4c_v";;
+  *) SEQ="";;
+esac
 RSLEEP=5
 PLMAX=540
 PLWAIT=${PLWAIT:-$PLMAX}
@@ -88,13 +98,11 @@ lockheld() {
 lockheld
 WINPID=""
 read -r WINPID < /proc/$$/winpid 2>/dev/null
-unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_PIPELINE_PRECACHE KYTY_GPU_CHECKPOINTS
-if [ -z "$BIN_F4C" ] || [ -z "$BIN_EXPECT" ] || [ -z "$GLRESTORE" ]; then
-  log "go_f4c.sh refused: not configured (BIN_F4C/BIN_EXPECT/FIXB26 - lead's answer to B1, F4b RC1)"
+unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA KYTY_FIX_B26 KYTY_FIX_DUALSRC KYTY_PIPELINE_PRECACHE KYTY_GPU_CHECKPOINTS KYTY_S_PCW
+if [ -z "$BIN_F4C" ] || [ -z "$BIN_EXPECT" ] || [ -z "$GLRESTORE" ] || [ -z "$SEQ" ]; then
+  log "go_f4c.sh refused: not configured (BIN_F4C/BIN_EXPECT/GLRESTORE/STAND - item 262 (v), (g), 268 (v))"
   echo "not configured"; exit 2
 fi
-B26X=""
-if [ "$FIXB26_SET" = "1" ]; then B26X="KYTY_FIX_B26=$FIXB26"; fi
 case "$PLWAIT" in
   ''|*[!0-9]*) log "go_f4c.sh refused: PLWAIT '$PLWAIT' is not a number of seconds"; echo "bad PLWAIT"; exit 2;;
 esac
@@ -121,7 +129,7 @@ if [ "$NL" != "1" ] || [ "$SEALPL" != "$PLWAIT" ]; then
   echo "PLWAIT differs from the seal"; exit 1
 fi
 if [ "${DRY:-0}" = "1" ]; then
-  echo "DRY series: tags $SEQ; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; f4c_read --check-seal; cpu < 15; idle142; procload --wait-s 0; stop file?; HPP-332 window (win332_f2c); lock (lock.log UTC); shader cache list + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F4C ($BIN_EXPECT); per tag: stop file?, recipes143 runs/recipes_<tag>.json, enter_scene.py <tag> --attempts 1 --no-install --require-idle --pred $ROOT/$PRED (b: $SKY W KYTY_FIX_DUALSRC=0; a: $SKY W =1; v: $MGG W =1; W: --emu-arg=--vulkan-validation true --hold $WHOLD VK_LAYER_PATH, precache by default; g: $MGG V --rec --hold $VHOLD =1) $B26X KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, glitch+sheet (g), f4c_read --tag, f4c_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (list = before), GLCache manifest after (+ restore if GLRESTORE=1), fgcpu143 row, unlock"
+  echo "DRY series: stand $STAND tags $SEQ; stop file?; lock?; PLWAIT=$PLWAIT; binary sha + strings (signature $SIGSTR if A, DualSrcBlend: patched); procload --wait-s $PLWAIT; f4c_read --check-seal; cpu < 15; idle142; procload --wait-s 0; stop file?; window HPP-333/HPP-347 done, HPP-328 not waiting (win_f4c); lock (lock.log UTC); shader cache list + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F4C ($BIN_EXPECT); per tag: stop file?, recipes143 runs/recipes_<tag>.json, pre-check dual-source record (b, a), enter_scene.py <tag> --attempts 1 --no-install --require-idle --pred $ROOT/$PRED (b: $SKY W KYTY_FIX_DUALSRC=0; a: $SKY W =1; v: $MGG W =1; W: --emu-arg=--vulkan-validation true --hold $WHOLD VK_LAYER_PATH, precache by default; g: $MGG V --rec --hold $VHOLD =1) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, glitch+sheet (g), f4c_read --tag, f4c_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (list = before), GLCache manifest after (+ restore if GLRESTORE=1), fgcpu143 row, unlock"
   exit 0
 fi
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
@@ -130,6 +138,12 @@ if [ ! -f "$BUILD_PINNED" ] || [ "$(sha "$BUILD_PINNED")" != "$BUILD_EXPECT" ]; 
 fi
 if [ ! -f "$BIN_F4C" ] || [ "$(sha "$BIN_F4C")" != "$BIN_EXPECT" ]; then
   log "go_f4c.sh refused: fix binary $BIN_F4C missing or its sha != $BIN_EXPECT"; echo "fix binary bad"; exit 1
+fi
+NSIG=$(LC_ALL=C grep -a -F -c "$SIGSTR" "$BIN_F4C")
+NPAT=$(LC_ALL=C grep -a -F -c "DualSrcBlend: patched" "$BIN_F4C")
+if [ "$NPAT" = "0" ] || { [ "$STAND" = "A" ] && [ "$NSIG" = "0" ]; }; then
+  log "go_f4c.sh refused: fix binary strings - signature $SIGSTR lines $NSIG, DualSrcBlend: patched lines $NPAT (stand $STAND)"
+  echo "fix binary strings bad"; exit 1
 fi
 if [ "$(sha "$GAME")" != "$BUILD_EXPECT" ]; then
   log "go_f4c.sh refused: the installed $GAME is not $BUILD_EXPECT before the series - not starting"; echo "installed build bad"; exit 1
@@ -155,7 +169,7 @@ guards() {
   if [ -z "$NAMES" ] || [ "$NAMES" != "0" ]; then log "a mutant/fixture/emulator process lives ($NAMES)"; return 1; fi
   return 0
 }
-log "go_f4c.sh series requested (fix binary $BIN_EXPECT, installed $BUILD_EXPECT, PLWAIT=$PLWAIT, seq $SEQ, b26 '$B26X')"
+log "go_f4c.sh series requested (fix binary $BIN_EXPECT, installed $BUILD_EXPECT, PLWAIT=$PLWAIT, stand $STAND seq $SEQ)"
 lockheld
 guards $PLWAIT || busy "procload / name guard not clean within $PLWAIT s"
 lockheld
@@ -176,11 +190,11 @@ if [ "$IDLE_RC" -ne 0 ]; then busy "machine not idle by idle142 (rc $IDLE_RC)"; 
 lockheld
 guards 0 || busy "procload / name guard not clean before the lock"
 if [ -e $STOPF ]; then busy "stop file $STOPF appeared before the lock"; fi
-W332=$(python $ROOT/win332_f2c.py 2>&1 | tail -1 | tr -d '\r')
-tl "lock window (as p.256(e)): $W332"
-case "$W332" in
+WIN=$(python $ROOT/win_f4c.py 2>&1 | tail -1 | tr -d '\r')
+tl "lock window (p.268(d), 270(d)): $WIN"
+case "$WIN" in
   *"-> open") ;;
-  *) busy "lock window closed or unknown: $W332";;
+  *) busy "lock window closed or unknown: $WIN";;
 esac
 lockheld
 set -o noclobber
@@ -282,12 +296,21 @@ INSTALLED=1
 cp "$BIN_F4C" "$GAME" || { log "install copy failed - stop"; exit 1; }
 [ "$(sha "$GAME")" = "$BIN_EXPECT" ] || { log "installed sha != $BIN_EXPECT - stop"; tl "install failed"; exit 1; }
 tl "installed fix binary sha256 $BIN_EXPECT"
-log "files: $(sha256sum f4c_read.py recipes143.py shalist_f2c.py win332_f2c.py $PRED gates_default.txt enter_scene.py idle142.py procload.py go_f4c.sh sheet142.py fgcpu143.py cachemf143.py C:/kyty/s142/sc142.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
+log "files: $(sha256sum f4c_read.py recipes143.py shalist_f2c.py win_f4c.py $PRED gates_default.txt enter_scene.py idle142.py procload.py go_f4c.sh sheet142.py fgcpu143.py cachemf143.py C:/kyty/s142/sc142.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
 SERIES_RC=0
 for C in $SEQ; do
   if [ -e $STOPF ]; then tl "stop file before $C: $(head -1 $STOPF) - series stopped"; SERIES_RC=1; break; fi
   python $ROOT/recipes143.py runs/recipes_$C.json "cur=$CACHE/pipelines.bin" > runs/recipes_$C.out.txt 2>&1
   tl "$C recipe file before the tag: $(head -1 runs/recipes_$C.out.txt | cut -c1-200); dual-source lines $(grep -c 'DUAL-SOURCE' runs/recipes_$C.out.txt)"
+  case "$C" in
+    f4c_b|f4c_a)
+      PC=$(python $ROOT/f4c_read.py --pre-check $C 2>&1 | tail -1 | tr -d '\r')
+      tl "$C pre-check (p.262(g)): $PC"
+      case "$PC" in
+        "continue"*) ;;
+        *) tl "$C series stop before the tag: $PC"; SERIES_RC=1; break;;
+      esac;;
+  esac
   REC=""; EMUX=""; EXTRA=""
   WX="KYTY_FIX_DUALSRC=1"
   case "$C" in
@@ -300,9 +323,9 @@ for C in $SEQ; do
     f4c_g) SD="--stable-draws 300 --timeout 480"; HOLD=$VHOLD; REC="--rec"; LV=$MGG; EXTRA="$WX";;
   esac
   echo "go_f4c.sh $C pid $$ attempt started $(date +%Y-%m-%dT%H:%M:%S) fix binary $BIN_EXPECT" > attempt_$C.txt
-  tl "$C enter_scene start (level $LV, hold $HOLD, extra '$EXTRA $B26X', emu '$EMUX')"
+  tl "$C enter_scene start (level $LV, hold $HOLD, extra '$EXTRA', emu '$EMUX')"
   python $ROOT/enter_scene.py $C --level $LV --attempts 1 $SD --no-install --require-idle --gates-file $ROOT/gates_default.txt \
-    --pred $ROOT/$PRED $REC $EMUX --hold $HOLD $EXTRA $B26X KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $C.stdout.txt 2>&1
+    --pred $ROOT/$PRED $REC $EMUX --hold $HOLD $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $C.stdout.txt 2>&1
   RC=$?
   tl "$C enter_scene end rc $RC log_$C.txt sha256 $(sha log_$C.txt)"
   if [ -n "$REC" ]; then

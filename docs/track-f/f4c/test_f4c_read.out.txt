@@ -1,58 +1,79 @@
-suite test_f4c_read.py sha256 cff21dd8f7f807b1747ac13cac00af6bfec6814e9bfc9cfa20b2e16b44ac9ae8 target f4c_read.py sha256 2147387599cf93e04ae84972435f73accf99d51773569dfb89282c69bbeaf0f4
-ok   a pass, executor members ok
+suite test_f4c_read.py sha256 9447e6c0eecde5e221d20dbdd2dfbffcf826b472a636e4e1bf958cf0209b99f8 target f4c_read.py sha256 3629be79fd4619caddc1353b863cdab104636039b0752434c0e617f9d20bb282
+ok   a pass, controls and executor members ok
 ok   a text ascii
-ok   a text names executor members apart from the verdict
-ok   a two dual lines
-ok   a dual enabled=0
-ok   a dual supported=0
-ok   a no dual line
-ok   a dual after GuestOut -> letter PASS, executor member FAIL
-ok   a stale line -> executor member FAIL only
-ok   a noyet line -> executor member FAIL only
-ok   a precache N != count -> executor member FAIL only
-ok   a no precache line -> executor member FAIL only
-ok   a two precache lines -> executor member FAIL only
-ok   a no dual record -> executor member FAIL only
-ok   a vke in game
-ok   a death marker
-ok   a not entered
-ok   a scene change
-ok   a json hold 309.9 -> letter FAIL, executor members ok
-ok   a json hold 310.0 edge -> PASS
-ok   a sum dt 309.9 s -> letter PASS, executor member FAIL
-ok   a sum dt 310.0 s edge -> executor member ok
-ok   a validation not active
-ok   a precache env set
-ok   a fix env 0
-ok   a fix env absent
-ok   a fix env "true" (not exactly 1)
-ok   a KYTY_FIX_B26 set while FIXB26 None
-ok   a checkpoints env
-ok   a clock pin absent
-ok   a video set
-ok   a recipes json missing
-ok   a guest args other level
-ok   a vulkan-validation false
+ok   a text names controls and executor members apart from the verdict
+ok   a pass -> continue
+ok   a two dual lines -> NE
+ok   a dual enabled=0 -> NE
+ok   a dual supported=0 -> NE
+ok   a no dual line -> NE
+ok   a dual after GuestOut -> NE
+ok   a stale line -> NE
+ok   a noyet line -> NE
+ok   a precache N != count -> NE
+ok   a no precache line, no vke -> NE
+ok   a two precache lines -> NE
+ok   a no dual record -> NE
+ok   a no patched line -> NE
+ok   a NE -> series stop
+ok   a patched only after GuestOut -> NE
+ok   a patched of another PS only -> NE
+ok   a skip of 5514 instead of patched -> NE
+ok   a two patched lines incl. 5514 -> PASS
+ok   a 5514 patched twice -> PASS (>= 1)
+ok   a vke in game -> FAIL
+ok   a vke in game -> continue (data)
+ok   a validation stop inside precache (no N line) -> letter FAIL, control not applicable
+ok   a first vke line cut to 300 chars
+ok   a death marker -> FAIL
+ok   a not entered -> FAIL
+ok   a scene change -> FAIL
+ok   a json hold 309.9 is a reference only -> PASS
+ok   a sum dt 309.9 s -> letter FAIL
+ok   a sum dt 310.0 s edge -> PASS
+ok   a validation not active -> NA
+ok   a precache env set -> NA
+ok   a fix env 0 -> NA
+ok   a fix env absent -> NA
+ok   a fix env "true" (not exactly 1) -> NA
+ok   a KYTY_FIX_B26 set while FIXB26 None -> NA
+ok   a KYTY_S_PCW set -> NA
+ok   a other binary -> NA
+ok   a checkpoints env -> NA
+ok   a clock pin absent -> NA
+ok   a video set -> NA
+ok   a recipes json missing -> NA
+ok   a guest args other level -> NA
+ok   a vulkan-validation false -> NA
+ok   a not admitted beats NE
 ok   a FIXB26=0 configured and passed
 ok   a FIXB26=0 configured, absent
-ok   b stop same text
+ok   b stop same text, controls ok
 ok   b stop -> continue
-ok   b no stop
+ok   b no stop -> NE
 ok   b no stop -> series stop
-ok   b other text
-ok   b same text after GuestOut
-ok   b stale line -> executor member FAIL only
-ok   b no dual record -> executor member FAIL only
-ok   b dual enabled=1 -> executor member FAIL only
+ok   b other text -> NE
+ok   b same text after GuestOut -> NE
+ok   b stale line -> NE
+ok   b no dual record -> NE
+ok   b dual enabled=1 -> NE
+ok   b dual after the stop -> NE
+ok   b one patched line -> NE
+ok   b noyet line is not a (b) control -> STOP SAME TEXT
 ok   b env =1 -> NOT ADMITTED
 ok   b validation inactive -> NOT ADMITTED
 ok   b not admitted -> series stop
-ok   v pass without a dual record (not required)
+ok   v pass
+ok   v no dual record -> NE
+ok   v no patched line -> NE
+ok   v stale -> NE
 ok   v predicted 09239 -> FAIL
 ok   v validation stop -> continue (data)
 ok   v other level -> NOT ADMITTED
 ok   v death not in the letter of (v) -> letter PASS, executor member FAIL
 ok   v death without vke -> series stop
+ok   v sum dt 309.9 -> FAIL
+ok   v sum dt 310.0 -> PASS
 ok   g pass
 ok   g pass -> continue
 ok   g video 2999 frames
@@ -69,11 +90,20 @@ ok   g no KYTY_REC
 ok   g validation on
 ok   g precache N mismatch -> executor member FAIL only
 ok   g stale -> executor member FAIL only
+ok   g no patched -> executor member FAIL only
+ok   g dual line enabled=0 -> NE
+ok   pre-check dual record -> continue
+ok   pre-check no dual record -> stop
+ok   pre-check no recipe json -> stop
+ok   pre-check parse error -> stop
 ok   c142_04 base: K2 0, kinds empty, first scene frame n 260
 ok   c142_04 log sha bd5f5477
 ok   real w143_01 stop (+dual line) -> STOP SAME TEXT
 ok   real recipe json: count 2457, 1 dual record
-ok   real w143_01 without the dual line (9235a7ac) -> letter STOP SAME TEXT, executor member FAIL
+ok   real recipe json pre-check -> continue
+ok   real w143_01 without the dual line (9235a7ac) -> NE
+ok   real w143_01 json binary 9235a7ac -> NOT ADMITTED
+ok   SEALED names win_f4c.py, not win332_f2c.py
 ok   seal ok
 ok   seal mismatch
 ok   seal two lines of one name
@@ -82,6 +112,8 @@ ok   seal file missing
 ok   cli --c14204 cp1250 strict rc 0
 ok   cli bad tag rc 2
 ok   cli stop-check missing json -> stop
+ok   cli pre-check missing json -> stop rc 0 cp1250
+ok   cli pre-check bad tag rc 2
 ok   cli no log rc 1
-checks 84 failed 0 []
+checks 116 failed 0 []
 ALL OK

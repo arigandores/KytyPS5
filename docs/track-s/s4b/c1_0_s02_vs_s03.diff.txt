@@ -1,0 +1,30 @@
+1c1
+< ARM c1_0 level shuriken_ninja_castle class T link s4: FAIL; sc142 outcome HOLDS_120 (held); log 49d0a5222ef56855
+---
+> ARM c1_0 level shuriken_ninja_castle class T link s4: PASS; sc142 outcome HOLDS_120 (held); log 49d0a5222ef56855
+13c13
+<   PASS admit prereg = the seal now (829ac684)
+---
+>   PASS admit prereg = the seal of its run 02_s.md (item 265 (g)) (829ac684)
+36c36
+<   FAIL ident T-3 AvTrace: shader lines = stdout Shaders: lines (0 / 17)
+---
+>   PASS ident T-3 AvTrace: shader lines = stdout Shaders: lines (17 / 17)
+43c43
+<   entered yes; first scene frame (n, dt, draws) (231, 39927, 269); attribution UNDETERMINED (not a T arm or T-3/T-4 broken)
+---
+>   entered yes; first scene frame (n, dt, draws) (231, 39927, 269); attribution DETERMINED (T arm, T-3 and T-4 hold)
+52,55c52,55
+<   frames dt >= 100 ms (n dt part class attribution PREP TR PL prio_next prio_prev cpu_gpu held): 233 113262 window GPUTHR undetermined 313 0 313 0 0 104966 h
+<   attributed frames (item 241 (v)(2), item 250 (g)): >= 100 ms undetermined (of them PCW undetermined), >= 1 s undetermined (of them PCW undetermined); (v)(2) before item 250: >= 100 ms undetermined, >= 1 s undetermined
+<   not attributed (RC8): >= 100 ms undetermined; >= 1 s undetermined; sc142 outcome HOLDS_120
+<   gates: {'cold': False, 'cold_word': 'undetermined (T-3/T-4)', 'perm_after': 0, 'rec_new_after': 37, 'skip_after': 4, 'warm': False, 'stdout_shaders': 17, 'rec_start': 1842, 'rec_end': 1879}; cold gate word: undetermined (T-3/T-4); skipped pairs {'pairs': 2, 'both_any': 2, 'both_cur': 2, 'recipe': 2}
+---
+>   frames dt >= 100 ms (n dt part class attribution PREP TR PL prio_next prio_prev cpu_gpu held): 233 113262 window SHADER SHADER-partly 62950 62637 313 0 0 104966 h
+>   attributed frames (item 241 (v)(2), item 250 (g)): >= 100 ms 1 (of them PCW 0), >= 1 s 0 (of them PCW 0); (v)(2) before item 250: >= 100 ms 1, >= 1 s 0
+>   not attributed (RC8): >= 100 ms 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; >= 1 s 0 (WAIT 0, GPUTHR 0, PRIO 0; attribution "not" on all); series gap >= X with gap_pipe < X 0; sc142 outcome HOLDS_120
+>   gates: {'cold': True, 'cold_word': 'cold', 'perm_after': 17, 'rec_new_after': 37, 'skip_after': 4, 'warm': False, 'stdout_shaders': 17, 'rec_start': 1842, 'rec_end': 1879}; cold gate word: cold; skipped pairs {'pairs': 2, 'both_any': 2, 'both_cur': 2, 'recipe': 2}
+60c60
+<   S-early: undetermined
+---
+>   S-early: registers 1103, first uses 248, leads 244; events 2, known 2, lead < cost 0

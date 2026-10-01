@@ -1,0 +1,39 @@
+suite test_cachex_s.py sha256 c237fe22b2bff0da1dbc2f4a6d0113369d9876a586888bfcbbc53362a5c39e5b target cachex_s.py sha256 0f8179c81dbd3ab0cfdf97c123233bcf8cb724351058fd4be25b02a46f16d950
+PASS X1 paths come from the fixture environment
+PASS X2 the path map of RC12
+PASS X3 the app manifest of snap0 = d8ca8c8e... (S0 3.1, S1 RC12)
+PASS X4 the GLCache manifest of snap0_drv (its MANIFEST.txt excluded) = 1767ca0a... (item 238 (b))
+PASS X5 app manifest lines: mapped path, size, sha256; sorted; another title is not in the set
+PASS X6 GLCache manifest lines: rel, size, mtime UTC, sha256 (tab separated)
+PASS X7 man app prints the sha without the lock
+PASS X8 copy without the lock -> rc 3, nothing written
+PASS X9 copy under the lock of another tag -> rc 3
+PASS X10 copy app under its lock: the snapshot layout, MANIFEST.txt with the same sha
+PASS X11 a second copy into an existing directory without --replace -> rc 1
+PASS X12 copy glc keeps mtime; its MANIFEST.txt sha = the live GLCache sha
+PASS X13 restore with an expected sha that is not the copy manifest -> rc 1, nothing changed
+PASS X14 restore app mirrors: the salted file removed, the changed file back, the deleted file back; live sha = expected; another title untouched
+PASS X15 restore glc mirrors (an extra file removed, mtime restored): live sha = expected
+PASS X16 restore from a directory without MANIFEST.txt -> rc 1
+PASS X17 a corrupt copy: the live sha after the mirror differs from the expected -> rc 1
+PASS X18 restore without the lock -> rc 3
+PASS X19 note writes and merges keys of the arm cache json
+PASS X20 note with a pair without "=" -> rc 2
+PASS X21 copy gcn: the GCN dumps with a manifest of the same sha
+PASS X22 gcn is never restored -> rc 2
+PASS X23 no other set (DXCache is never touched) -> rc 2
+PASS X24 man glc prints the live GLCache sha
+PASS X25 ASCII output
+PASS X26 where glc: %%LOCALAPPDATA%% = the known folder -> rc 0, the line names the path and "ok"
+PASS X27 the same folder with other slashes, case and a trailing slash -> rc 0 (normalised)
+PASS X28 %%LOCALAPPDATA%% != the known folder -> where / man / copy / restore glc rc 1, nothing written, the live GLCache unchanged
+PASS X29 the app set does not depend on the GLCache path check
+PASS X30 no %%LOCALAPPDATA%% in the environment -> rc 1
+PASS X31 the known folder without the fixture override is the real FOLDERID_LocalAppData (...\AppData\Local)
+PASS X32 restore glc when the live root does not exist -> rc 1, the root is not created
+PASS X33 copy glc of a missing live root -> rc 1, no copy directory left
+PASS X34 man --save without the lock of the tag -> rc 3, no file
+PASS X35 man glc --save under its lock writes the manifest text whose sha is printed
+PASS X36 --save without a file -> rc 2
+checks: 36
+ALL OK

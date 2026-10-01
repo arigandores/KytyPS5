@@ -1,0 +1,37 @@
+suite test_go_s.py sha256 059d41d25271bcf26ef88b5f46602976597a9c3331fb953a323910e4577ce070 target go_s.sh sha256 4a323fb94ce3bbedd313985dd06bfa67f625bceacd5f88fd1f965f2f4c15ee28
+PASS G1 go_s.sh is ASCII only (item 175 (v))
+PASS G2 a tag with other characters -> rc 2 usage
+PASS G3 the stop file -> rc 4 BUSY before anything
+PASS G4 a foreign lock -> rc 4 BUSY (lock held) before any process
+PASS G5 PLWAIT not a number -> rc 2
+PASS G6 PLWAIT above 540 -> rc 2
+PASS G7 an unknown tag (sc_s.py --plan) -> rc 2
+PASS G8 no seal call line -> rc 1
+PASS G9 the seal call line with another PLWAIT -> rc 1
+PASS G10 two call lines -> rc 1
+PASS G11 DRY=1 of every S4 arm kind -> rc 0 with a DRY line
+PASS G12 M arm: the pinned 9235a7ac, restore snap0 and snap0_drv, video, hold 120, no trace, no salt
+PASS G13 T arm: KYTY_AV_TRACE=1 KYTY_SHADER_REGISTER_TRACE=1, no KYTY_DUMP_GCN
+PASS G14 G arm: + KYTY_DUMP_GCN=1; g_3_2 on cymbal_party_land
+PASS G15 C2 restores GLCache from glc_post/c1_0, C4 from glc_post/c3_0; C1 and C3 from snap0_drv
+PASS G16 the salt only on C4 (KYTY_PIPELINE_SALT=c4_0), timeout 900 there
+PASS G17 every arm restores the app caches from snap0 (S4)
+PASS G18 no validation on S4 arms
+PASS G19 an attempt already made -> rc 1, no repeat
+PASS G20 S6 without the "pcw binary:" line of pred/04_s.md -> rc 1
+PASS G21 S6 DRY: the pcw binary installed, KYTY_S_PCW and the stand 15000, Sky Garden, stable 300
+PASS G22 pcw_int: no snapshot - app and GLCache from pcw_3 post copies, hold 120
+PASS G23b form W (item 254 (e)): pcw_val runs with KYTY_PIPELINE_PRECACHE=0; no other arm of S4 / S6 does
+PASS G23 pcw_val: --vulkan-validation true with VK_LAYER_PATH, hold 310, timeout 600, video too
+PASS G24 DRY=2 prints the plan before any seal check (pcw_4 has no call line)
+PASS G25 no lock file was created by any DRY call
+PASS GL1 RC1: installed != pinned -> after the arm the INSTALLED build is back (not the pinned one); json installed_before = installed_after = its sha; the copy installed_bin_pre.exe kept
+PASS GL2 the arm restored snap0 and snap0_drv, the caches and GLCache came back to the state before the arm
+PASS GL3 RC10 / RC2 rows in the json: man_launch_glc = restore_glc.got, glc_launch.txt / glc_post.txt written, return_prev ok 1, arm_start utc
+PASS GL4 the lock taken and released (lock.log UTC rows), no lock file left, no RETURN_FAILED guard
+PASS GL5 RC2: a failed GLCache return -> the guard RETURN_FAILED (tag, both manifests, the binary) written before the unlock, a times.txt line, a stdout line for the comment; rc 1; the lock released; the binary still back
+PASS GL6 RC2: the next call refuses rc 1 while the guard exists - before any process (no lock taken), DRY too
+PASS GL7 RC9: %LOCALAPPDATA% of the environment != the known folder -> rc 1 before the lock, nothing installed
+PASS GL8 RC1 + RC2: the copy of the installed binary corrupted during the arm -> the return refuses it (sha), RETURN_FAILED names the binary, rc 1
+checks: 34
+ALL OK

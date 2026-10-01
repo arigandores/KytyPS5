@@ -1,0 +1,9 @@
+2026-10-01T06:28:39Z S4b start (HPP-349, ROADMAP p.265 d4be1c33); lock absent, STOP absent; comments 0
+2026-10-01T06:34:20Z patch_s4b.py applied (RX_SHADER (.+?), seal names 03/04, seal 02 arms admitted against seal 02, --json-out; fixtures section 12; mutants)
+2026-10-01T06:36:27Z counted full mutants start (final texts sc_s cee4cf1a / test_sc_s 16327a23 / mut_sc_s 08d597de): forecast 271 mutants + 3 controls; measured suite 24.2 s; x 1.3 / 12 workers = 718 s without early exit, ~355 s by the S3b wall (340.5 s for 263 jobs); prior runs of this link 0 s
+2026-10-01T06:43:25Z counted full mutants end: s4b/mut_sc_s.txt sha256 689f7a7a9f633396a2b1a1bc8c2c1d5d565e0ee3930ff1785bafeb0f3e2e6bae: ALL KILLED 271 of 271, controls 3 of 3 survived, wall 365.0 s (the only mutant run of this link; sum 365.0 s)
+2026-10-01T06:44:11Z seal pred/03_s.md written: sha256 f5814e16a436b8b2f96dfe1f713f4027be2590f54d7a7c7b2567d64ed81cbca7
+2026-10-01T06:44:20Z c1_0 recount: log sha256 49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902 checked before the read (want 49d0a522...2d902)
+2026-10-01T06:44:22Z c1_0 recount rc 0: s4/score_c1_0.s03.txt sha256 2e2dd70e3bff5b507a6039584ad662bbf3ab022aa60ed10ecf2121c5bec82252, s4/c1_0.s03.json sha256 a29379329931e7155c7318bcaefe4f4775b54511899d543ed5b793a23fc2e735
+2026-10-01T06:45:44Z FACTS.md section S4b written
+2026-10-01T06:46:01Z correction: the line 06:45:44Z was written although the append failed (assert); FACTS.md section S4b actually appended now (s4b/put_facts.py)

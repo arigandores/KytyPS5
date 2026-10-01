@@ -1,0 +1,1 @@
+ALLOWED c2_0: yes (ok)

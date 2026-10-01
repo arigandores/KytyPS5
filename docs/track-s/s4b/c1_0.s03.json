@@ -1,0 +1,612 @@
+{
+ "tag": "c1_0",
+ "level": "shuriken_ninja_castle",
+ "cls": "T",
+ "link": "s4",
+ "group": "c",
+ "outcome142": "HOLDS_120",
+ "reason142": "held",
+ "marks": [],
+ "ended": false,
+ "exited": false,
+ "attempt": "ok",
+ "hold_s": 120.1,
+ "val": {
+  "noval": 0,
+  "valfeat": 0,
+  "vkany": 0,
+  "ok": false
+ },
+ "vke": 0,
+ "glitch": {
+  "video_frames": 4184,
+  "glitches": 0
+ },
+ "cover": true,
+ "derive142": {
+  "level": "shuriken_ninja_castle",
+  "entered": true,
+  "entry_pos": 18601734,
+  "first": [
+   231,
+   39927,
+   269
+  ],
+  "window": 599,
+  "hold": 3344,
+  "k2": [],
+  "k3w": [
+   [
+    233,
+    113262
+   ]
+  ],
+  "k3h": [],
+  "dt_after_entry_us": 122464081,
+  "dt_after_first_us": 122142398,
+  "frames_after_first": 3943,
+  "n_gaps": 0,
+  "other_starts": [],
+  "change_pos": null,
+  "after_change": {
+   "rows": 0,
+   "dt_us": 0,
+   "k2": 0
+  },
+  "dt_median_us": 32346,
+  "dt_max_us": 113262,
+  "vx": {
+   "k2": [],
+   "k3w": [
+    [
+     233,
+     113262
+    ]
+   ],
+   "k3h": [],
+   "dt_after_first_us": 122095252,
+   "frames_after_first": 3942
+  }
+ },
+ "log_sha": "49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902",
+ "admit": [
+  [
+   "one attempt (--attempts 1, no warmup)",
+   true,
+   "1"
+  ],
+  [
+   "binary 9235a7ac",
+   true,
+   "9235a7ac"
+  ],
+  [
+   "guest args -lvl shuriken_ninja_castle",
+   true,
+   "-lvl shuriken_ninja_castle"
+  ],
+  [
+   "gates empty (shipped defaults)",
+   true,
+   "''"
+  ],
+  [
+   "no KYTY_GPU_CHECKPOINTS",
+   true,
+   ""
+  ],
+  [
+   "no KYTY_GATE_SCHEDULE",
+   true,
+   ""
+  ],
+  [
+   "video KYTY_REC rec_c1_0.mp4",
+   true,
+   "C:\\kyty\\s288\\s4\\rec_c1_0.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ],
+  [
+   "KYTY_* families = the seal (item 241 (v)(6), letter)",
+   true,
+   "-"
+  ],
+  [
+   "every KYTY_* key = the seal (executor variant, stricter)",
+   true,
+   "-"
+  ],
+  [
+   "hold --hold 120",
+   true,
+   "120"
+  ],
+  [
+   "prereg = the seal of its run 02_s.md (item 265 (g))",
+   true,
+   "829ac684"
+  ],
+  [
+   "no pipeline-cache retry",
+   true,
+   ""
+  ],
+  [
+   "restore of the app caches = snap0 d8ca8c8e",
+   true,
+   "d8ca8c8efb60b43b / d8ca8c8efb60b43b"
+  ],
+  [
+   "restore of GLCache = snap0_drv 1767ca0a",
+   true,
+   "1767ca0a975f26c1 / 1767ca0a975f26c1"
+  ],
+  [
+   "return_app after the arm = its copy",
+   true,
+   "afda4f702e869c12 / afda4f702e869c12"
+  ],
+  [
+   "return_glc after the arm = its copy",
+   true,
+   "ce7b805e1908e350 / ce7b805e1908e350"
+  ],
+  [
+   "installed binary after the arm = installed before the arm (copy and return, item 250 (b))",
+   true,
+   "9235a7ac61f1affb / 9235a7ac61f1affb"
+  ],
+  [
+   "return_prev_ok (no RETURN_FAILED guard before the arm, item 250 (v))",
+   true,
+   "1"
+  ],
+  [
+   "man_launch_glc right before the game = restore_glc.got (item 250 (zh))",
+   true,
+   "1767ca0a975f26c1 / 1767ca0a975f26c1"
+  ],
+  [
+   "manifest man_pre_app recorded",
+   true,
+   "afda4f702e869c12"
+  ],
+  [
+   "manifest man_pre_glc recorded",
+   true,
+   "ce7b805e1908e350"
+  ],
+  [
+   "manifest man_post_app recorded",
+   true,
+   "f7dda87b17df0cc0"
+  ],
+  [
+   "manifest man_post_glc recorded",
+   true,
+   "1767ca0a975f26c1"
+  ],
+  [
+   "manifest glc_pre_copy recorded",
+   true,
+   "ce7b805e1908e350"
+  ],
+  [
+   "glc_post copy recorded (a later arm restores it)",
+   true,
+   "1767ca0a975f26c1"
+  ]
+ ],
+ "cache": {
+  "arm_start": {
+   "utc": "2026-10-01T06:19:20Z"
+  },
+  "glc_post_copy": {
+   "path": "C:/kyty/s288/s4/glc_post/c1_0",
+   "sha": "1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028"
+  },
+  "glc_pre_copy": {
+   "path": "C:/kyty/s288/s4/glc_pre",
+   "sha": "ce7b805e1908e35036a7061fc1d4d5e2d650e05aab504f2c80823aad62382c07"
+  },
+  "installed_after": {
+   "sha": "9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7"
+  },
+  "installed_before": {
+   "path": "C:/kyty/s288/s4/installed_bin_pre.exe",
+   "sha": "9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7"
+  },
+  "installed_pre_copy": {
+   "first": "afda4f702e869c123b82e2dc9a645cb53d9c700a5a9877d9481376c784c83ce5",
+   "sha": "afda4f702e869c123b82e2dc9a645cb53d9c700a5a9877d9481376c784c83ce5"
+  },
+  "man_launch_glc": {
+   "sha": "1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028"
+  },
+  "man_post_app": {
+   "sha": "f7dda87b17df0cc06117ce1d3b60ce31a1cce82af87a7fecc06be627a789e545"
+  },
+  "man_post_glc": {
+   "sha": "1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028"
+  },
+  "man_pre_app": {
+   "sha": "afda4f702e869c123b82e2dc9a645cb53d9c700a5a9877d9481376c784c83ce5"
+  },
+  "man_pre_glc": {
+   "sha": "ce7b805e1908e35036a7061fc1d4d5e2d650e05aab504f2c80823aad62382c07"
+  },
+  "restore_app": {
+   "expected": "d8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4",
+   "got": "d8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4",
+   "source": "C:/kyty/s288/snap0"
+  },
+  "restore_glc": {
+   "expected": "1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028",
+   "got": "1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028",
+   "source": "C:/kyty/s288/snap0_drv"
+  },
+  "return_app": {
+   "expected": "afda4f702e869c123b82e2dc9a645cb53d9c700a5a9877d9481376c784c83ce5",
+   "got": "afda4f702e869c123b82e2dc9a645cb53d9c700a5a9877d9481376c784c83ce5"
+  },
+  "return_glc": {
+   "expected": "ce7b805e1908e35036a7061fc1d4d5e2d650e05aab504f2c80823aad62382c07",
+   "got": "ce7b805e1908e35036a7061fc1d4d5e2d650e05aab504f2c80823aad62382c07"
+  },
+  "return_prev": {
+   "ok": "1"
+  }
+ },
+ "continuity": [
+  "same as the return of sw_t1",
+  "sw_t1"
+ ],
+ "entered": true,
+ "first": [
+  231,
+  39927,
+  269
+ ],
+ "attr_ok": true,
+ "prep": {
+  "queued": [
+   1842,
+   1660,
+   141,
+   41
+  ],
+  "created_ms": 482,
+  "ready": [
+   1842,
+   1842,
+   41
+  ],
+  "waited_ms": 77,
+  "dload": [
+   94435637
+  ],
+  "disabled": 0,
+  "coldns": 0,
+  "seed_installed": 0,
+  "seed_ignored": 0,
+  "cache_test": 0
+ },
+ "create": {
+  "all": [
+   "WARM",
+   233
+  ],
+  "all_n": 37,
+  "after": [
+   "WARM",
+   233
+  ],
+  "after_n": 37
+ },
+ "saves": {
+  "driver": 2,
+  "recipes": 2,
+  "fail": 0,
+  "incomplete": 0,
+  "last_bytes": 94435637,
+  "forced": 0
+ },
+ "pcw_trace": null,
+ "att100": 1,
+ "att1s": 0,
+ "att_pcw100": 0,
+ "att_pcw1s": 0,
+ "att100_old": 1,
+ "att1s_old": 0,
+ "unatt100": {
+  "n": 0,
+  "series": 0,
+  "WAIT": 0,
+  "GPUTHR": 0,
+  "PRIO": 0
+ },
+ "unatt1s": {
+  "n": 0,
+  "series": 0,
+  "WAIT": 0,
+  "GPUTHR": 0,
+  "PRIO": 0
+ },
+ "gates": {
+  "cold": true,
+  "cold_word": "cold",
+  "perm_after": 17,
+  "rec_new_after": 37,
+  "skip_after": 4,
+  "warm": false,
+  "stdout_shaders": 17,
+  "rec_start": 1842,
+  "rec_end": 1879
+ },
+ "snap_pairs": {
+  "pairs": 2,
+  "both_any": 2,
+  "both_cur": 2,
+  "recipe": 2
+ },
+ "early": {
+  "events": [
+   {
+    "kind": "frame",
+    "n": 233,
+    "cost": 62950,
+    "lead": 2336683
+   },
+   {
+    "kind": "series",
+    "n": 233,
+    "cost": 770,
+    "lead": 2336683
+   }
+  ],
+  "known": 2,
+  "short": 0,
+  "regs": 1103,
+  "firsts": 248,
+  "leads": 244,
+  "share": 0.0
+ },
+ "pcw": {
+  "writes": 1,
+  "forced": 0,
+  "frames": 0,
+  "frames_n": [],
+  "last_bytes": 94435637,
+  "fail": 0,
+  "incomplete": 0,
+  "loaded": 94435637,
+  "disabled": 0
+ },
+ "ident": [
+  [
+   "T-1 sum skc_ap_skip = skipped-draw lines",
+   true,
+   "4 / 4"
+  ],
+  [
+   "T-2 min(64, sum skc_held_inc) = flip held lines",
+   true,
+   "1 / 1"
+  ],
+  [
+   "T-6 distinct frame= of skipped draws = sum skc_held_inc (main)",
+   true,
+   "1 / 1"
+  ],
+  [
+   "sum skc_held (skip-ceil holds) = 0",
+   true,
+   0
+  ],
+  [
+   "rows without FrameTrace-x or a field = 0",
+   true,
+   0
+  ],
+  [
+   "torn FrameTrace rows = 0",
+   true,
+   0
+  ],
+  [
+   "gaps of n = 0",
+   true,
+   0
+  ],
+  [
+   "T-3 AvTrace: shader lines = stdout Shaders: lines",
+   true,
+   "17 / 17"
+  ],
+  [
+   "T-4 AvTrace pipeline precache lines = G + C queued",
+   true,
+   "1801 / 1801"
+  ],
+  [
+   "info skc_bad (unreachable by code, RC5; printed, no control)",
+   null,
+   0
+  ],
+  [
+   "info shown_skip by the +-2 rows rule (secondary to T-6, RC5)",
+   null,
+   0
+  ],
+  [
+   "first scene frame and rows after it = the inherited sc142.derive",
+   true,
+   "(231, 39927, 269) / (231, 39927, 269)"
+  ],
+  [
+   "T-5 partition (reading 1)",
+   true,
+   "122142398 / 122142398"
+  ],
+  [
+   "T-5 partition (reading 2)",
+   true,
+   "122142398 / 122142398"
+  ]
+ ],
+ "fail": [],
+ "f1": {
+  "lo": 230,
+  "hi": 4173,
+  "series": [
+   {
+    "n0": 233,
+    "n1": 233,
+    "flips": 1,
+    "gap_us": 132105,
+    "gap_pipe_us": 132105,
+    "gap_pipe_old_us": 132105,
+    "part": "window",
+    "closed": true,
+    "a": 231,
+    "b": 232,
+    "async_us": 770,
+    "async_n": 3,
+    "async_cold": 0
+   }
+  ],
+  "T5": [
+   122142398,
+   122142398
+  ],
+  "window": {
+   "rows": 599,
+   "skip_rows": 2,
+   "skip_draws": 3,
+   "held": 1,
+   "dt100": 1,
+   "dt1s": 0,
+   "shown100": 0,
+   "shown1s": 0,
+   "gap100": 1,
+   "gap1s": 0,
+   "pipe100": 1,
+   "pipe1s": 0,
+   "pipe100_old": 1,
+   "pipe1s_old": 0
+  },
+  "hold": {
+   "rows": 3344,
+   "skip_rows": 0,
+   "skip_draws": 0,
+   "held": 0,
+   "dt100": 0,
+   "dt1s": 0,
+   "shown100": 0,
+   "shown1s": 0,
+   "gap100": 0,
+   "gap1s": 0,
+   "pipe100": 0,
+   "pipe1s": 0,
+   "pipe100_old": 0,
+   "pipe1s_old": 0
+  },
+  "long": [
+   {
+    "n": 233,
+    "dt": 113262,
+    "part": "window",
+    "cls": "SHADER",
+    "attr": "SHADER-partly",
+    "prep": 62950,
+    "tr": 62637,
+    "pl": 313,
+    "prio_next": 0,
+    "prio_prev": 0,
+    "cpu_gpu": 104966,
+    "held": true,
+    "i": 231,
+    "line": 244911
+   }
+  ]
+ },
+ "f2": {
+  "lo": 230,
+  "hi": 4173,
+  "series": [
+   {
+    "n0": 233,
+    "n1": 233,
+    "flips": 1,
+    "gap_us": 132105,
+    "gap_pipe_us": 132105,
+    "gap_pipe_old_us": 132105,
+    "part": "window",
+    "closed": true,
+    "a": 231,
+    "b": 232,
+    "async_us": 770,
+    "async_n": 3,
+    "async_cold": 0
+   }
+  ],
+  "T5": [
+   122142398,
+   122142398
+  ],
+  "window": {
+   "rows": 599,
+   "skip_rows": 2,
+   "skip_draws": 3,
+   "held": 1,
+   "dt100": 1,
+   "dt1s": 0,
+   "shown100": 0,
+   "shown1s": 0,
+   "gap100": 1,
+   "gap1s": 0,
+   "pipe100": 1,
+   "pipe1s": 0,
+   "pipe100_old": 1,
+   "pipe1s_old": 0
+  },
+  "hold": {
+   "rows": 3344,
+   "skip_rows": 0,
+   "skip_draws": 0,
+   "held": 0,
+   "dt100": 0,
+   "dt1s": 0,
+   "shown100": 0,
+   "shown1s": 0,
+   "gap100": 0,
+   "gap1s": 0,
+   "pipe100": 0,
+   "pipe1s": 0,
+   "pipe100_old": 0,
+   "pipe1s_old": 0
+  },
+  "long": [
+   {
+    "n": 233,
+    "dt": 113262,
+    "part": "window",
+    "cls": "SHADER",
+    "attr": "SHADER-partly",
+    "prep": 62950,
+    "tr": 62637,
+    "pl": 313,
+    "prio_next": 0,
+    "prio_prev": 0,
+    "cpu_gpu": 104966,
+    "held": true,
+    "i": 231,
+    "line": 244911
+   }
+  ]
+ }
+}

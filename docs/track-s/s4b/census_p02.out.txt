@@ -1,0 +1,94 @@
+census_rx scorer s4b/orig/sc_s.py sha256 f43f016dd34e58f1b6b7eec24aa721050c2a7eae9848e1763db388c21d0530c4
+RX_SHADER pattern: AvTrace: shader (\S+) hash=0x([0-9a-fA-F]+) translate_us=(\d+) compile_us=(\d+)
+log s4/log_c1_0.txt sha256 49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902 want 49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902: OK (checked before the census)
+== log s4/log_c1_0.txt sha256 49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902 lines 639222
+  RX_SKIP       4fc501f4:src/graphics/host_gpu/renderer/renderDraw.cpp:4439 form "AsyncPipelines: skipped draw" (search): lines of the form 4, matched 4 (first at line 232429), form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6028 (ShaderRegister) form "ShaderRegister:" (search): lines of the form 1636, matched 1636 (first at line 7195), form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3516 (ShaderFirstUse) form "ShaderFirstUse:" (search): lines of the form 248, matched 248 (first at line 19713), form not at line start 0
+  RX_DSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 (PipelineCacheLog) form "Vulkan pipeline cache: saved" (search): lines of the form 2, matched 2 (first at line 6178), form not at line start 0
+  RX_RSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5963 form "PipelinePrecache: saved" (search): lines of the form 2, matched 2 (first at line 232503), form not at line start 0
+  RX_QUEUED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (search): lines of the form 1, matched 1 (first at line 2465), form not at line start 0
+  RX_CREATED    4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6431 form "PipelinePrecache: all pipelines created" (search): lines of the form 1, matched 1 (first at line 2469), form not at line start 0
+  RX_READY      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6050 (PipelineCacheLog) form "ShaderPreparation: ready" (search): lines of the form 1, matched 1 (first at line 6179), form not at line start 0
+  RX_WAITED     4fc501f4:src/graphics/presentation/window/window.cpp:1025 form "ShaderPreparation: startup wait finished" (search): lines of the form 1, matched 1 (first at line 6180), form not at line start 0
+  RX_LOADED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4647 (PipelineCacheLog) form "Vulkan pipeline cache: loaded" (search): lines of the form 1, matched 1 (first at line 79), form not at line start 0
+  RX_SHADER     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3916 form "AvTrace: shader " (search): lines of the form 17, matched 0 (first at line 232419), form not at line start 0  <-- MISMATCH
+  RX_VSPS       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5356, :5394, :6312 (gfx; cs lines 5617/5675/5710/6384 carry no vs=) form "AvTrace: pipeline gfx" (search): lines of the form 1697, matched 1697 (first at line 158), form not at line start 0
+  RX_PCWOV      2ce6326e:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6252 (S5c; not in 4fc501f4) form "AvTrace: pcw overlap " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED_ANY 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (match): lines of the form 1, matched 1 (first at line 2465), form not at line start 0
+  sibling form "AvTrace: shader-cache": lines 17, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-spec": lines 17, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-emit": lines 17, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+== log s4/log_sw_m1.txt sha256 71a2e3fea3f78d53b17c42a1706576b39163322f573511233bf15f9debef6887 lines 636226
+  RX_SKIP       4fc501f4:src/graphics/host_gpu/renderer/renderDraw.cpp:4439 form "AsyncPipelines: skipped draw" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6028 (ShaderRegister) form "ShaderRegister:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3516 (ShaderFirstUse) form "ShaderFirstUse:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_DSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 (PipelineCacheLog) form "Vulkan pipeline cache: saved" (search): lines of the form 1, matched 1 (first at line 4377), form not at line start 0
+  RX_RSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5963 form "PipelinePrecache: saved" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (search): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  RX_CREATED    4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6431 form "PipelinePrecache: all pipelines created" (search): lines of the form 1, matched 1 (first at line 668), form not at line start 0
+  RX_READY      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6050 (PipelineCacheLog) form "ShaderPreparation: ready" (search): lines of the form 1, matched 1 (first at line 4378), form not at line start 0
+  RX_WAITED     4fc501f4:src/graphics/presentation/window/window.cpp:1025 form "ShaderPreparation: startup wait finished" (search): lines of the form 1, matched 1 (first at line 4379), form not at line start 0
+  RX_LOADED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4647 (PipelineCacheLog) form "Vulkan pipeline cache: loaded" (search): lines of the form 1, matched 1 (first at line 79), form not at line start 0
+  RX_SHADER     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3916 form "AvTrace: shader " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_VSPS       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5356, :5394, :6312 (gfx; cs lines 5617/5675/5710/6384 carry no vs=) form "AvTrace: pipeline gfx" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_PCWOV      2ce6326e:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6252 (S5c; not in 4fc501f4) form "AvTrace: pcw overlap " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED_ANY 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (match): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  sibling form "AvTrace: shader-cache": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-spec": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-emit": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+== log s4/log_sw_m2.txt sha256 337a67b0b49e6daa60b48f5cfcbf01855e4d38f3d2198d7b0b924ecd1f6be353 lines 805870
+  RX_SKIP       4fc501f4:src/graphics/host_gpu/renderer/renderDraw.cpp:4439 form "AsyncPipelines: skipped draw" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6028 (ShaderRegister) form "ShaderRegister:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3516 (ShaderFirstUse) form "ShaderFirstUse:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_DSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 (PipelineCacheLog) form "Vulkan pipeline cache: saved" (search): lines of the form 1, matched 1 (first at line 4377), form not at line start 0
+  RX_RSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5963 form "PipelinePrecache: saved" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (search): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  RX_CREATED    4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6431 form "PipelinePrecache: all pipelines created" (search): lines of the form 1, matched 1 (first at line 668), form not at line start 0
+  RX_READY      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6050 (PipelineCacheLog) form "ShaderPreparation: ready" (search): lines of the form 1, matched 1 (first at line 4378), form not at line start 0
+  RX_WAITED     4fc501f4:src/graphics/presentation/window/window.cpp:1025 form "ShaderPreparation: startup wait finished" (search): lines of the form 1, matched 1 (first at line 4379), form not at line start 0
+  RX_LOADED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4647 (PipelineCacheLog) form "Vulkan pipeline cache: loaded" (search): lines of the form 1, matched 1 (first at line 79), form not at line start 0
+  RX_SHADER     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3916 form "AvTrace: shader " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_VSPS       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5356, :5394, :6312 (gfx; cs lines 5617/5675/5710/6384 carry no vs=) form "AvTrace: pipeline gfx" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_PCWOV      2ce6326e:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6252 (S5c; not in 4fc501f4) form "AvTrace: pcw overlap " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED_ANY 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (match): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  sibling form "AvTrace: shader-cache": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-spec": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-emit": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+== log s4/log_sw_m3.txt sha256 9e832b32907282a66fa09defd446febef42c212306e546c78d1face219d4fecd lines 905374
+  RX_SKIP       4fc501f4:src/graphics/host_gpu/renderer/renderDraw.cpp:4439 form "AsyncPipelines: skipped draw" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6028 (ShaderRegister) form "ShaderRegister:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3516 (ShaderFirstUse) form "ShaderFirstUse:" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_DSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 (PipelineCacheLog) form "Vulkan pipeline cache: saved" (search): lines of the form 1, matched 1 (first at line 4377), form not at line start 0
+  RX_RSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5963 form "PipelinePrecache: saved" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (search): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  RX_CREATED    4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6431 form "PipelinePrecache: all pipelines created" (search): lines of the form 1, matched 1 (first at line 668), form not at line start 0
+  RX_READY      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6050 (PipelineCacheLog) form "ShaderPreparation: ready" (search): lines of the form 1, matched 1 (first at line 4378), form not at line start 0
+  RX_WAITED     4fc501f4:src/graphics/presentation/window/window.cpp:1025 form "ShaderPreparation: startup wait finished" (search): lines of the form 1, matched 1 (first at line 4379), form not at line start 0
+  RX_LOADED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4647 (PipelineCacheLog) form "Vulkan pipeline cache: loaded" (search): lines of the form 1, matched 1 (first at line 79), form not at line start 0
+  RX_SHADER     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3916 form "AvTrace: shader " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_VSPS       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5356, :5394, :6312 (gfx; cs lines 5617/5675/5710/6384 carry no vs=) form "AvTrace: pipeline gfx" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_PCWOV      2ce6326e:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6252 (S5c; not in 4fc501f4) form "AvTrace: pcw overlap " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED_ANY 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (match): lines of the form 1, matched 1 (first at line 665), form not at line start 0
+  sibling form "AvTrace: shader-cache": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-spec": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-emit": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+== log s4/log_sw_t1.txt sha256 92b7a30cab7981840a84ce9c0430c6034a90dbc9450df6cea905d2a7130b2edd lines 661998
+  RX_SKIP       4fc501f4:src/graphics/host_gpu/renderer/renderDraw.cpp:4439 form "AsyncPipelines: skipped draw" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6028 (ShaderRegister) form "ShaderRegister:" (search): lines of the form 1626, matched 1626 (first at line 7195), form not at line start 0
+  RX_HASH       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3516 (ShaderFirstUse) form "ShaderFirstUse:" (search): lines of the form 250, matched 250 (first at line 19713), form not at line start 0
+  RX_DSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 (PipelineCacheLog) form "Vulkan pipeline cache: saved" (search): lines of the form 1, matched 1 (first at line 6178), form not at line start 0
+  RX_RSAVE      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5963 form "PipelinePrecache: saved" (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (search): lines of the form 1, matched 1 (first at line 2466), form not at line start 0
+  RX_CREATED    4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6431 form "PipelinePrecache: all pipelines created" (search): lines of the form 1, matched 1 (first at line 2469), form not at line start 0
+  RX_READY      4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6050 (PipelineCacheLog) form "ShaderPreparation: ready" (search): lines of the form 1, matched 1 (first at line 6179), form not at line start 0
+  RX_WAITED     4fc501f4:src/graphics/presentation/window/window.cpp:1025 form "ShaderPreparation: startup wait finished" (search): lines of the form 1, matched 1 (first at line 6180), form not at line start 0
+  RX_LOADED     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4647 (PipelineCacheLog) form "Vulkan pipeline cache: loaded" (search): lines of the form 1, matched 1 (first at line 79), form not at line start 0
+  RX_SHADER     4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3916 form "AvTrace: shader " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_VSPS       4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5356, :5394, :6312 (gfx; cs lines 5617/5675/5710/6384 carry no vs=) form "AvTrace: pipeline gfx" (search): lines of the form 1660, matched 1660 (first at line 158), form not at line start 0
+  RX_PCWOV      2ce6326e:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6252 (S5c; not in 4fc501f4) form "AvTrace: pcw overlap " (search): lines of the form 0, matched 0, form not at line start 0
+  RX_QUEUED_ANY 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 form "PipelinePrecache:  ...  recipes -> " (match): lines of the form 1, matched 1 (first at line 2466), form not at line start 0
+  sibling form "AvTrace: shader-cache": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-spec": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+  sibling form "AvTrace: shader-emit": lines 0, matched by RX_SHADER 0 (the scorer never applies RX_SHADER to them: branch "AvTrace: shader " with a space)
+CENSUS: MISMATCH

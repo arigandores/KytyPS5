@@ -1,0 +1,10 @@
+reg_sw_s4b sc_s.py sha256 cee4cf1a723457da52b087a6179cf47a8ffe0000ca42e23253ccf7418dc56eb1
+sw_m1: seal 02 C:/kyty/s288/s4/score_sw_m1.txt sha256 1d6f1dd3e66e0cd308aeaa35e1ca6f43954a1d855a34b2eebd45a80e464b98b3 (60 lines); seal 03 C:/kyty/s288/s4b/reg/score_sw_m1.s03.txt sha256 652b66d7ee527ea9dd0e37a12dadbd2cd969880dfef4495564fb8226b5ab33ab (60 lines); differing lines [13]
+  line 13: seal 02 "PASS admit prereg = the seal now (829ac684)" -> seal 03 "PASS admit prereg = the seal of its run 02_s.md (item 265 (g)) (829ac684)"
+sw_m2: seal 02 C:/kyty/s288/s4/score_sw_m2.txt sha256 1feeefcac6647920127cdc89886036dc514fc0c2531f608dfb2d566d92f5f914 (60 lines); seal 03 C:/kyty/s288/s4b/reg/score_sw_m2.s03.txt sha256 66105eec4bd034d6887fe44ee9ccebb4a0597ee26f4690adb5acc45b2ef8a433 (60 lines); differing lines [13]
+  line 13: seal 02 "PASS admit prereg = the seal now (829ac684)" -> seal 03 "PASS admit prereg = the seal of its run 02_s.md (item 265 (g)) (829ac684)"
+sw_m3: seal 02 C:/kyty/s288/s4/score_sw_m3.txt sha256 4a7e6e5e2c67b78617364ac28624222db12f5ec4529848c1c5186db6bdb72a68 (60 lines); seal 03 C:/kyty/s288/s4b/reg/score_sw_m3.s03.txt sha256 e2f1d3798246343bd61629ea1b92af5eb5d3b5e20496fbefc37a1a42275e9236 (60 lines); differing lines [13]
+  line 13: seal 02 "PASS admit prereg = the seal now (829ac684)" -> seal 03 "PASS admit prereg = the seal of its run 02_s.md (item 265 (g)) (829ac684)"
+sw_t1: seal 02 C:/kyty/s288/s4/score_sw_t1.txt sha256 41025a1109e71dff6a3485f6a79368214d03c38fc2eeb253803029091f366a63 (61 lines); seal 03 C:/kyty/s288/s4b/reg/score_sw_t1.s03.txt sha256 846872a889226ba1b8e5f9eee1e7e669c58c25239aac5835663214fe2cc6e0e6 (61 lines); differing lines [13]
+  line 13: seal 02 "PASS admit prereg = the seal now (829ac684)" -> seal 03 "PASS admit prereg = the seal of its run 02_s.md (item 265 (g)) (829ac684)"
+SW REGRESSION: ALL OK (only the prereg row name differs, line 13 of each)

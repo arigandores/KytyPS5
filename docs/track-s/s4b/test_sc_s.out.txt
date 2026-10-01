@@ -1,0 +1,322 @@
+suite test_sc_s.py sha256 16327a236e3532519f9df2a425394fb2e2871a7be065b32c6b5132aff23ae4a9 target sc_s.py sha256 cee4cf1a723457da52b087a6179cf47a8ffe0000ca42e23253ccf7418dc56eb1
+PASS A1 load142 refuses a sc142.py whose sha256 is not the pinned one
+PASS A2 the pinned sc142.py is the s142 file (sha 1ce612cd...) and B is it
+PASS A3 the arms of item 241: S-warm 3 M + sw_t1, C1-C4 x3 L0 candidates, T2 10, G 2 + 3, S6 6
+PASS A4 levels: S-warm (e), L0 and reserves (d), T2 base and reserves (zh), G, Sky Garden for S6
+PASS A5 classes and modes: sw_m* M, sw_t1/C/T2 T, g G; C2/C4 GLCache from C1/C3; C4 salted; pcw_int integrity
+PASS A6 S6 knob values ABBA 0 1 1 0, integrity and validation 1, holds 330 / 120 / 310; S4 holds 120
+PASS A7 plan lines: c4_0 salt and 900 s; pcw_val validation 600 s; sw_m1 100 / 480
+PASS A7c pcw_int is a T arm (RC5, item 247 (b) V3): the trace environment, T-3 / T-4 apply
+PASS A7b the sealed environments literally: M base, T + traces, G + DUMP_GCN=1, C4 + its tag as the salt, S6 + the knob and the stand
+PASS A8 constants of item 241: snap0 d8ca8c8e, snap0_drv 1767ca0a, 20 000 / 5 000 / 10, [0.5; 2], 0.25, 6 760, 50 % / 5, 15 / 50 %, force 15000
+PASS A9 seal paths and links (item 265: S4 seal 03 of S4b, the seal 02 arms sw_m1..sw_t1 + c1_0 by seal 02 829ac684, S6 a later seal 04)
+PASS B env M arm exactly as sealed: family True strict True
+PASS B env C4 with its salt: family True strict True
+PASS B env a salt on C3 (only C4 is salted, item 241 (g)(4)): family False strict False
+PASS B env C4 without the salt: family False strict False
+PASS B env KYTY_ASYNC_PIPELINE_WAIT_US=900000 (RC6): family False strict False
+PASS B env KYTY_CACHE_MODE (RC3 / RC6): family False strict False
+PASS B env KYTY_CS_PRETRANSLATE=0 (RC15): family False strict False
+PASS B env G arm without KYTY_DUMP_GCN (RC14): family False strict False
+PASS B env G arm with KYTY_DUMP_GCN=2: family False strict False
+PASS B env T arm without the register trace: family False strict False
+PASS B env T arm without KYTY_AV_TRACE: not a family - strict row only: family True strict False
+PASS B env pcw_1 with KYTY_S_PCW=1: family False strict False
+PASS B env the stand at 20000 ms: family False strict False
+PASS B env a KYTY_DUMP_* knob: family False strict False
+PASS B env KYTY_GPU_CHECKPOINTS - strict row: family True strict False
+PASS B env no KYTY_REC - strict row (path key present): family True strict False
+PASS B env KYTY_FIX_B26=0 - a family since S3b (RC7, item 245 (a)): family False strict False
+PASS B env KYTY_FIX_B26=1 on an S6 arm (RC7): family False strict False
+PASS B env families: KYTY_ASYNC_ KYTY_PIPELINE_ KYTY_SHADER_ KYTY_S_ KYTY_DUMP_ + KYTY_CACHE_MODE KYTY_CS_PRETRANSLATE
+PASS C1 locate: entry group, first scene frame = draws >= 100 after the entry line (rows with draws >= 100 before the entry are not it)
+PASS C2 counters read from FrameTrace-x by n: skip 1 / held 1 / held 0
+PASS C3 a torn FrameTrace line is counted and is an identity FAIL
+PASS C3b skc_bad read from the scan (printed 1)
+PASS C3c draws 99 is not the first scene frame, draws 100 is; a later start line ends the rows of the scene
+PASS C4 header lines: queued (R, G, C, skipped), created ms, ready, startup wait ms, loaded bytes
+PASS C5 a row without FrameTrace-x -> identity FAIL
+PASS C6 a FrameTrace-x without the skc_held_inc field -> identity FAIL
+PASS C7 a gap of n -> identity FAIL
+PASS C8 T-1 at 199 999 lines holds and is checked; at 200 000 lines not applicable (None)
+PASS C9 T-6 below 200 000 lines: 3 distinct frames = 3 held; at 200 000 lines not applicable
+PASS C10 T-6 +1 (4 distinct frames, 3 held) -> FAIL (RC5)
+PASS C11 T-6 -1 (2 distinct frames, 3 held) -> FAIL
+PASS C12 T-2: 64 held and 64 lines; 65 held and 64 lines -> hold; 65 held and 65 lines -> FAIL
+PASS C13 T-1 and T-6 hold on 3 lines, 3 frames, 3 held
+PASS C14 T-1 3 lines vs sum 2 -> FAIL
+PASS C15 sum skc_held = 1 -> FAIL (RC5)
+PASS C16 skc_bad 1 is printed, never a FAIL (RC5: unreachable)
+PASS C17 null control of an M arm: one AvTrace line -> FAIL; 0 -> PASS
+PASS C17b shown_skip +-2: the next row held -> 0 (printed, secondary)
+PASS C17b shown_skip +-2: held through one row -> 0 (printed, secondary)
+PASS C17b shown_skip +-2: neither of the two next rows held (violation) -> 1 (printed, secondary)
+PASS C18 T-3 AvTrace shader 2 vs stdout 2 -> True
+PASS C18 T-3 AvTrace shader 2 vs stdout 1 -> False
+PASS C18 T-3 AvTrace shader 2 vs stdout 3 -> False
+PASS C19 T-3 without the emulator stdout -> FAIL
+PASS C19b T-3 with 0 AvTrace shader lines and no stdout -> FAIL (the stdout must be there)
+PASS C20 T-4 2 precache lines vs G 1 + C 1 -> True
+PASS C20 T-4 2 precache lines vs G 2 + C 1 -> False
+PASS C20 T-4 2 precache lines vs G 0 + C 1 -> False
+PASS C20 T-4 2 precache lines vs G 1 + C 2 -> False
+PASS C21 T-4 without a queued line -> FAIL
+PASS D1 a series of length 1: gap = its dt + the next row dt (70 000); closed
+PASS D2 a series to the end of the log: gap = sum of its rows (70 000), open
+PASS D3 a series starting at the 599th row after the first frame is in the window, at the 600th in the hold
+PASS D4 a series at the 600th row is a hold series; held flips counted in the hold
+PASS D5 a held first scene frame: reading 1 (letter) starts the series at it (gap 532 000, held 2), reading 2 from the next row (gap 32 000, held 1)
+PASS D6 a first scene frame that is not held: both readings start after it
+PASS D7 two series one presented row apart: two series, the row between closes the first (gap 36 000 / 32 000)
+PASS D8 visible gap 99999 -> >= 100 ms 0, >= 1 s 0
+PASS D8 visible gap 100000 -> >= 100 ms 1, >= 1 s 0
+PASS D8 visible gap 999999 -> >= 100 ms 1, >= 1 s 0
+PASS D8 visible gap 1000000 -> >= 100 ms 1, >= 1 s 1
+PASS D9 a presented row dt 99999 -> dt >= 100 ms 0, presented 0, >= 1 s 0
+PASS D9 a presented row dt 100000 -> dt >= 100 ms 1, presented 1, >= 1 s 0
+PASS D9 a presented row dt 999999 -> dt >= 100 ms 1, presented 1, >= 1 s 0
+PASS D9 a presented row dt 1000000 -> dt >= 100 ms 1, presented 1, >= 1 s 1
+PASS D10 a held row with dt >= 100 ms counts in dt100 but not as presented
+PASS D11 T-5 partition holds (gaps + presented rows outside series = sum dt of the domain)
+PASS D12 gap_pipe = gap - PRIO rows (the held row and the closing row, both robust PRIO): 600 000 - 600 000 = 0
+PASS D13 a GPUTHR closing row is not subtracted; PRIO by group i only is not robust -> 600 000 kept
+PASS D14 a PCW row in the series (a driver write in group i or i+1) is NOT subtracted by the governing gap_pipe (item 250 (g)(2): 600 000 kept); the second reading (v)(2) before item 250 subtracts it -> 0
+PASS D14b RC3: a held PCW row of 1.2 s in a series -> governing gap_pipe 1 216 000 >= 1 s (pipe1s 1, attributed 1); (v)(2) before item 250 16 000 (pipe1s_old 0, attributed_old 0)
+PASS D14c a row that is PCW and stalls stays PCW (PCW before PRIO): not subtracted by the governing gap_pipe
+PASS D14d RC3: a presented PCW row of 1.2 s with attribution "not" -> attributed >= 1 s 1, of them PCW 1; the old reading 0; not in the not attributed rows
+PASS D14e the PCW count and the old reading are undetermined (None) without the attribution
+PASS D14f RC8: presented rows of 1.3 s WAIT, GPUTHR, PRIO -> not attributed 3 (WAIT 1, GPUTHR 1, PRIO 1); attributed 0
+PASS D14g RC8: a series of gap 1 116 000 whose PRIO row is subtracted (gap_pipe 16 000) is printed as not attributed series 1
+PASS D14g2 RC8 edge: a series of gap 1 116 000 with no PRIO row (gap_pipe 1 116 000 >= 1 s) is attributed, NOT a not attributed series
+PASS D14h RC8 edge: a WAIT row of 999 999 is not counted at 1 s, counted at 100 ms
+PASS D15 >= 1 s by gap 1 116 000 but gap_pipe 16 000 -> pipe1s 0, gap1s 1
+PASS D17 async gfx in the series groups: count 2, cold 1 (20 000 is cold), us 39 999
+PASS D18 a PRIO row of exactly 100 000 us in the series is subtracted: gap_pipe 16 000
+PASS E1 PCW: a driver write in group i
+PASS E2 PCW: a recipe write in group i+1
+PASS E3 a write in group i+2 is not PCW
+PASS E4 PCW stands before PRIO
+PASS E5 PRIO robust: stall dt/2 in group i and in group i+1, cpu_gpu 0 -> PRIO
+PASS E6 stall dt/2 - 1 in group i -> not PRIO (WAIT)
+PASS E7 stall dt/2 - 1 in group i+1 -> not PRIO (RC8: both conventions)
+PASS E8 cpu_gpu dt/2 - 1 with robust stalls -> PRIO
+PASS E9 cpu_gpu dt/2 -> GPUTHR, not PRIO
+PASS E10 cpu_gpu dt/2 - 1, no stall -> WAIT
+PASS E11 a stall line without us (-1) adds nothing
+PASS E12 dt - PREP = 99 999 -> SHADER (PREP = translate + compile = 100 001); partly (PREP >= dt/2)
+PASS E13 dt - PREP = 100 000 -> not SHADER (attribution "not"), PREP = dt/2
+PASS E14 PREP 249 999 of dt 300 000: SHADER (dt - PREP < 100 000), partly; TR 149 999, PL 100 000 (sync gfx)
+PASS E15 the same frame on a non-T arm: attribution undetermined, class by the rest (RC7)
+PASS E13b PREP = dt/2 exactly (75 000 of 150 000): SHADER and partly
+PASS E13c PREP = dt/2 - 1: SHADER, not partly
+PASS E16 PREP small, no skip, no async: not SHADER
+PASS E17 a skipped-draw line in group i -> SHADER (burden on the route, RC6(3))
+PASS E18 a skipped draw in group i-2 -> SHADER
+PASS E19 a skipped draw in group i-3 -> not SHADER
+PASS E20 an async gfx completion in group i+1 -> SHADER
+PASS E21 an async gfx completion in group i+2 -> not SHADER
+PASS E22 precache gfx and async cs completions are not "pipeline gfx async" -> not SHADER
+PASS E23 an AvTrace line in group i-2 is assigned to row i (largest dt of i-3 .. i): PREP 120 000
+PASS E24 an AvTrace line in group i+1 is assigned to row i
+PASS E25 an AvTrace line in group i+2 is not assigned to row i
+PASS E26 one line, one row: the larger dt (row i+2, 300 000) takes it, row i gets 0; counted once
+PASS E27 a tie of dt: the earliest row takes the line
+PASS E28 compile_us and shader-emit are not added (PREP 3 000)
+PASS E29 PREP kinds: gfx without suffix, cs sync, waited_us, shader-cache load (4 000 + 16 000 + 64 000 + 128 000); not async, not precache
+PASS E30 pipeline kinds parsed: gfx async / precache / none, cs async / sync / precache / waited
+PASS E31 in-game creations = gfx async + none, cs async + sync (not precache, not waited)
+PASS E32 creations after a group: only lines at or after it
+PASS F1 creations 10 x 4999 -> WARM
+PASS F1 creations 10 x 5000 -> WARM
+PASS F1 creations 10 x 5001 -> MID
+PASS F1 creations 10 x 19999 -> MID
+PASS F1 creations 10 x 20000 -> COLD
+PASS F1 creations 9 x 20000 -> NOTHING
+PASS F2 median: odd middle, even mean of the two middles, empty None
+PASS F3 the median decides, not the mean: 5 x 100 000 + 5 x 1 000 -> mean of 1 000 and 100 000 = 50 500 COLD
+PASS G1 lead = FirstUse - min Register = 1 000 < cost PREP 200 000 -> short 1 of 1
+PASS G2 FirstUse before Register in the text, two Registers of one hash (min 500): lead 899 500 >= cost -> short 0
+PASS G3 a hash without registration: lead unknown, not in the denominator
+PASS G4 S-early on a non-T arm: undetermined (None)
+PASS G4b lead = cost (200 000) is not short (lead < cost)
+PASS G5 a series with gap_pipe >= 100 ms is one event: cost = async us 250 000, lead = min over its pair 30
+PASS H1 a clean T arm: PASS, attribution determined, cold gate (perm 1, recipe +1, skip 2)
+PASS H2 the snap0 pairs (RC12): 2 skipped pairs, both shaders in snap0 (any) 2, current 1, in recipes 1
+PASS H3 creations of the arm: 10 x 30 000 -> COLD (letter); after the entry the same
+PASS H4 attributed (item 241 (v)(2)) on a T arm: numbers, not None
+PASS H4b a held SHADER row >= 100 ms is not counted as a presented row; its series (gap_pipe 166 000) is: 1
+PASS H4c a series of gap 316 000 whose held row is PCW (before SHADER): governing gap_pipe 316 000 -> 1 attributed series (item 250 (g)); (v)(2) before item 250: gap_pipe 16 000 -> 0
+PASS H5 the first scene frame agrees with the inherited sc142.derive (identity row)
+PASS H6 the arm text names PASS, the attribution, both readings and the gates
+PASS H7 no new permutation after the entry -> not cold (RC12); recipes +0 -> not cold
+PASS H7b a skip and a new recipe but no new permutation after the entry -> not cold
+PASS H8 no skipped draw after the entry -> not cold
+PASS H9 a new recipe saved only BEFORE the entry line -> not cold
+PASS H10 T-3 broken (1 AvTrace shader vs 2 Shaders:) -> FAIL and attribution undetermined, gate not cold (RC7)
+PASS H11 a clean M arm: PASS, attribution undetermined, warm gate (0 Shaders:, recipes 100 -> 100)
+PASS H12 a recipe added -> not warm
+PASS H13 a stdout Shaders: line -> not warm
+PASS H14 an AvTrace line on an M arm -> null control FAIL
+PASS H15 KYTY_ASYNC_PIPELINE_WAIT_US in the json env -> admission FAIL (RC6)
+PASS H16 admission FAIL: another binary
+PASS H16 admission FAIL: other guest args
+PASS H16 admission FAIL: gates not empty
+PASS H16 admission FAIL: hold 110
+PASS H16 admission FAIL: another seal
+PASS H16 admission FAIL: the S6 binary on an S4 arm
+PASS H16 admission FAIL: another seal path
+PASS H16 admission FAIL: pipeline-cache retry
+PASS H16 admission FAIL: two attempts
+PASS H16 admission FAIL: validation on an S4 arm
+PASS H17 no video -> admission FAIL
+PASS H17b a video file of another tag -> admission FAIL
+PASS H18 KYTY_GPU_CHECKPOINTS -> admission FAIL
+PASS H19 the same arm clean -> PASS
+PASS H20 cache protocol FAIL: snap0 not reached
+PASS H20 cache protocol FAIL: another app source
+PASS H20 cache protocol FAIL: GLCache not at snap0_drv
+PASS H20 cache protocol FAIL: another GLCache source on a full arm
+PASS H20 cache protocol FAIL: the app return failed
+PASS H20 cache protocol FAIL: the GLCache return without a result
+PASS H20 cache protocol FAIL: the app return not recorded at all
+PASS H20 cache protocol FAIL: the binary not back (after != before, RC1)
+PASS H20 cache protocol FAIL: installed_after not a note (a bare string)
+PASS H20 cache protocol FAIL: no installed_before (RC1)
+PASS H20 cache protocol FAIL: installed_before not a sha256
+PASS H20 cache protocol FAIL: no return_prev_ok (RC2)
+PASS H20 cache protocol FAIL: return_prev ok 0 (RC2)
+PASS H20 cache protocol FAIL: no man_launch_glc (RC10)
+PASS H20 cache protocol FAIL: man_launch_glc != restore_glc.got (RC10)
+PASS H20 cache protocol FAIL: a missing manifest after the arm
+PASS H20 cache protocol FAIL: no GLCache copy before the arm
+PASS H20b RC1 edge: neither installed_before nor installed_after (None = None is not a return) -> the binary row FAIL
+PASS H20b RC1 edge: installed_before = installed_after but not a sha256 -> the binary row FAIL
+PASS H20c GLCache not at snap0_drv while man_launch_glc = restore_glc.got (RC10 row clean) -> the restore of GLCache row FAIL alone
+PASS H21 an empty cache json -> FAIL
+PASS H22 no cache json -> FAIL (present row)
+PASS H23 C2 restores GLCache from glc_post of c1_0 (bb...) -> PASS
+PASS H24 C2 restored to snap0_drv instead of the C1 post copy -> FAIL
+PASS H25 C1 without its glc_post copy: C1 FAIL (a later arm restores it) and C2 cannot match
+PASS H26 a missing arm -> score_arm None
+PASS H27 video frames (5) far below the rows: no FAIL - video is a picture check (RC17)
+PASS H27b a broken T-5 partition (fault injected) -> identity FAIL of both readings
+PASS H28 Cache test mode in the stdout is counted
+PASS H29 a log without the entry line: not entered, no freeze reading, the arm text says so
+PASS H30 RC1: installed before = after = another build (ab...) -> PASS (the constant 9235a7ac is gone)
+PASS H31 RC2: the live manifests before the arm = the returns of the previous arm (sw_m1 by arm_start) -> "same"
+PASS H32 RC2: GLCache differs from the previous return -> "foreign chain between arms (glc)", the arm still PASS
+PASS H33 RC2: the earliest arm -> "no previous arm of S"; no arm_start -> undetermined
+PASS I1 C1 40 000, C2 5 000, C3 40 000, C4 40 000 prep 7 000: neutral YES, GLCache warm YES, salt YES
+PASS I2 the reading prints the ms per recipe (7 000 / 100 = 70.00) and the band over 114 levels [I] (RC10)
+PASS I3 C1 median 19 999 -> neutral NO, salt NO (absolute thresholds, RC2)
+PASS I4 C1 20 000, C3 40 000 (ratio 2.0) -> neutral YES
+PASS I5 C3/C1 = 2.00005 -> neutral NO
+PASS I6 C3/C1 = 0.5 -> neutral YES
+PASS I7 C3 19 999 -> neutral NO
+PASS I7b C1 19 999, C3 20 000 (ratio in the corridor) -> neutral NO (C1 below 20 000)
+PASS I7c C1 20 000, C3 19 999 (ratio in the corridor) -> neutral NO (C3 below 20 000)
+PASS I12b C1 20 000, C4 19 999 (ratio in the corridor, prep 7 000) -> salt NO (C4 below 20 000)
+PASS I14b C2 with 9 creations -> "GLCache keeps warmth" undetermined (nothing to classify)
+PASS I8 C2 = 0.25 x C1 -> GLCache keeps warmth YES
+PASS I9 C2 = 0.25 x C1 + 1 -> NO
+PASS I10 prep_ms C4 6 760 -> salt YES
+PASS I11 prep_ms C4 6 759 -> salt NO (RC2: the ratio alone is tautological)
+PASS I12 C4 median 19 999 -> salt NO
+PASS I13 C4/C1 > 2 -> salt NO
+PASS I14 only C1: every reading undetermined (None), T2 may not go
+PASS I15 C1 with 9 creations -> L0 0 rejected, the reserve L0 1 (jack_in_the_box) is next
+PASS I16 l0_choice: candidate 1 not made -> k 1
+PASS I17 all three L0 candidates with < 10 creations -> L0 exhausted, undetermined
+PASS N1 C3 "level not cold" -> out of the count: "return neutralises" undetermined (None), the word printed; GLCache and salt still read
+PASS N2 C2 not cold -> "GLCache keeps warmth" undetermined; neutral YES
+PASS N3 C4 not cold -> "salt neutralises" undetermined
+PASS N4 C3 with T-3 broken: arm FAIL, the gate word "undetermined (T-3/T-4)" (not "level not cold"); neutral None
+PASS N5 C1 "level not cold" with 10 creations -> L0 0 to the reserve (lead addition of item 250 (d)); L0 1 not made -> k 1
+PASS N6 C1 with T-3 broken and 10 creations: L0 stays 0 (gate undetermined (T-3/T-4), not a reserve); every reading undetermined
+PASS N7 C1-C4 with C1 undetermined: T2 refused rc 6 (no "return neutralises")
+PASS N8 cold_word: no gates (no scene frame) -> "undetermined (no scene frame)"; gates without a word -> by cold
+PASS N9 all four cold -> the readings as before (neutral, warm, salt YES) and "counted" printed
+PASS N10 the C reading names the unprotected GLCache during the arm and the stop of T2 only (item 250 (e), (zh))
+PASS N11 RC10 glc_post bases: a/b changed inside c1_0 -> c1_0 1 of 3 files never changed in the S arms
+PASS N12 without the post manifest of the arm no base counts as changed (3 of 3); without glc_post -> undetermined
+PASS W1 held 5 of base 10 -> (i) STAYS (>= 50 %); dt100 7 of 14 -> (ii) STAYS
+PASS W2 held 3 of base 5 -> STAYS; dt100 4 of base 7 -> STAYS; ice_iceberg (ii) base 3 < 5 -> undetermined
+PASS W3 (i) stays in 3 of 3; (ii) stays in all 2 determined -> the narrowing sentence
+PASS W4 held 4 of 10, 2 of 5, 22 of 45 -> goes; dt100 6 of 14, 3 of 7 -> goes
+PASS W5 a not warm arm (a Shaders: line) is out of the count
+PASS W6 base 4 events -> undetermined on that level for both components (RC9: base >= 5)
+PASS W7 the reading names the regression to the mean (RC9(g))
+PASS W6b a base of exactly 5 events is determined: dt100 3 of 5 -> STAYS
+PASS W6c (ii) stays on one of two determined levels -> "not all stay"
+PASS W8 the trace-cost row T - M on big_hand_pirate_island (RC7 null control)
+PASS J1 order: sw_m1 first allowed; sw_m2 needs sw_m1; C1 needs S-warm
+PASS J2 an attempt marker counts as made (no repeat): sw_m1 refused, sw_m2 allowed
+PASS J3 S-warm done: c1_0 allowed, c1_1 refused rc 6 (L0 is 0), c2_0 needs c1_0
+PASS J4 C1-C4 made without "return neutralises": T2 refused rc 6 (item 241 (d): report and stop)
+PASS J5 g_1 allowed after C1-C4 without the T2 base (no neutralisation)
+PASS J6 with neutralisation: t2_01 allowed, t2_02 needs t2_01, g_1 waits for the T2 base
+PASS J7 five counted T2 arms: the reserve t2_06 refused rc 6; g_1 allowed
+PASS J8 the T2 reading: 5 counted; S-early denominator 0 -> undetermined (RC11)
+PASS J9 one T2 arm not cold: the reserve t2_06 allowed; t2_07 needs t2_06
+PASS J9b the T2 reading counts only cold arms: 4 of 5
+PASS J9c S-early first half: lead < cost in 1 of 2 events -> ">= 50 %" (the edge)
+PASS J10 g_2 after g_1; g_3_0 needs g_2; g_3_1 refused (L0 is 0)
+PASS J11 S6 order: pcw_1 first, pcw_int needs pcw_3, pcw_val needs pcw_4
+PASS K1 15 writes, 8 frames (>= 50 %) on arms 0; 15 writes, 0 frames on arms 1; integrity 777 = 777; validation clean; video ok -> MACHINE_PASS_PENDING_SHEET
+PASS K1b arms 0 with 8 frames of 16 writes (exactly 50 %) -> positive control PASS
+PASS K1c arms 0 with 49 frames of 100 writes (49 %) -> POSCTRL_FAIL
+PASS K2 arms 0 with 7 frames of 15 writes (< 50 %) -> POSCTRL_FAIL (counts toward the kill rule (z)(7))
+PASS K3 arms 0 with 14 writes -> POSCTRL_FAIL
+PASS K4 an arm 1 with one frame >= 100 ms with a write -> ARM1_FAIL
+PASS K5 arms 1 with 14 writes -> ARM1_FAIL
+PASS K6 a save failure on an arm 1 -> ARM1_FAIL
+PASS K7 integrity: loaded 778 != last write 777 -> ARM1_FAIL (c)
+PASS K7b integrity with a "disabled" line -> ARM1_FAIL (c)
+PASS K7c pcw_4 (the second arm 0) below 50 % -> POSCTRL_FAIL (both arms 0 are the positive control)
+PASS K8 one [Vulkan][E] in the validation arm -> ARM1_FAIL (d)
+PASS K9 a video of 2 999 frames -> ARM1_FAIL (e)
+PASS K10 one glitch -> ARM1_FAIL (e)
+PASS K11 an arm not made -> NOT_EVALUABLE
+PASS K12 pcw_arm counts writes only on the hold (after 599 rows), forced writes, frames with a write in i-1..i+1
+PASS K13 a write in group i+1 counts for frame i; a write in group i+3 does not (the window i-1..i+1)
+PASS K14 a write in the window is not counted; a write in group i-1 counts for frame i; one in group i+2 does not
+PASS K15 pcw overlap lines parsed by kind (wait gfx / cs / wait cs / gfx), wait_us (a line without it kept), the recipes line lock_us / hold_us; max only (not added)
+PASS K16 the pcw lines are not PREP (a 150 000 us overlap line in group i leaves PREP 0) and not pipe events
+PASS K17 the S-pcw reading prints (z)(1) on pcw_int by number: 2 overlap lines, wait_us max 2 500 "upper bound, not added", 2 recipes lines, lock_us max 40, hold_us max 1 200
+PASS K18 0 pcw lines on pcw_int -> (z)(1) undetermined, the word MACHINE_UNDETERMINED (never above it)
+PASS K18b only the recipes line on pcw_int (0 overlap) -> (z)(1) determined: overlap 0
+PASS K19 pcw_int with T-4 broken (a precache line missing) -> identity FAIL -> NOT_EVALUABLE (T rows apply)
+PASS K20 "save failed (Incomplete" on pcw_3 -> ARM1_CODE_DEFECT (not ARM1_FAIL), the line names the defect of the iteration code, once per route
+PASS K20b Incomplete together with a frame on an arm 1 -> ARM1_CODE_DEFECT (the arm is repeated after the fix)
+PASS K21 Incomplete on the arms 0 is not the defect of arms 1 -> MACHINE_PASS_PENDING_SHEET
+PASS K22 the scan counts Incomplete apart from the other save failures (2 / 1)
+PASS K23 pcw_val stopped by validation before the entry line -> VALIDATION_STOP_PRE_LEVEL: (d) undetermined, not FAIL, out of the hold / video / admission checks; word MACHINE_UNDETERMINED
+PASS K24 pcw_val not entered WITHOUT a [Vulkan][E] line is not a validation stop -> NOT_EVALUABLE (hold)
+PASS K25 pcw_val entered with one [Vulkan][E] -> (d) FAIL -> ARM1_FAIL (the stop after the entry is a FAIL)
+PASS K26 form W: the expected environment of pcw_val carries KYTY_PIPELINE_PRECACHE=0 (a family key), no other arm does
+PASS K26b the scan counts every "PipelinePrecache: N recipes ->" line (the short and the full form: 2), not the saved / created lines
+PASS K26c form W clean (no recipes line in pcw_val) -> the positive control row PASS, word unchanged
+PASS K26d a "PipelinePrecache: 100 recipes ->" line in pcw_val (the start precache ran) -> admission FAIL of pcw_val -> NOT_EVALUABLE
+PASS K26e pcw_val without KYTY_PIPELINE_PRECACHE=0 -> the family row FAIL -> NOT_EVALUABLE
+PASS L1 check_seal: a sealed file that differs -> FAIL; the pcw binary line is read
+PASS L2 check_seal of a missing seal -> FAIL, no binary
+PASS L3 a seal without the other sealed names -> FAIL (no seal line rows)
+PASS L4 the sealed names carry the harness, scorer, fixtures, mutants, cache tool, index, sc142 and its fixtures
+PASS L5 main --plan prints the plan rc 0; unknown tags rc 2; no option rc 2
+PASS L6 main --tag a clean arm rc 0 and the score json written; a missing arm rc 1 (NO_RUN)
+PASS L7 main --allowed prints the reason and returns the rc
+PASS L8 main --tag on an arm sealed by another seal -> rc 1
+PASS L9 main --read-c --read-t2 rc 0 with both headers
+PASS L10 load_index: any / current hash sets and pairs; a missing index -> None
+PASS S4b-1 RX_SHADER reads the real line 232419 of log_c1_0.txt (label with a space, 4fc501f4 pipelineCache.cpp:3916): label ShaderRecompiler VS, hash, translate_us 11705, compile_us 6169
+PASS S4b-2 a one-word label (the former form) still reads: label VS, translate 7, compile 8
+PASS S4b-3 order of the branches: of the real shader-emit / shader-cache save / shader-spec / shader lines only the "AvTrace: shader " line enters s[sh] (label, hash, translate, compile, line 4); shader-cache load goes to s[load]
+PASS S4b-4 a T arm with the real lines: T-3 1 / 1 PASS, attribution determined, cold gate "cold" (perm 1, recipe +1, skip 1), arm PASS
+PASS S4b-5 an arm of the earlier seal: row "prereg = the seal of its run prev_s.md (item 265 (g))" PASS, arm PASS; an arm after it: row "prereg = the seal now" PASS
+PASS S4b-5b the earlier seal whose sha256 is not the pinned one admits none: prereg row FAIL
+PASS S4b-5c an arm of the earlier seal list whose json names the seal now -> prereg row FAIL (routed to its run)
+PASS S4b-6 main --tag --json-out: rc 0, the json at the given path, runs_s/<tag>.score.json not written
+PASS S4b-7 main under the production seal routes the seal 02 arms to the real pred/02_s.md (pinned 829ac684): prereg row PASS, rc 0
+PASS L11 every printed line is ASCII (strict cp1250 and ascii, item 175 (v))
+checks: 319
+ALL OK

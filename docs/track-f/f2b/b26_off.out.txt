@@ -1,0 +1,8 @@
+[host]    LeastRecentlyUsedCache           ok
+[b26] KYTY_FIX_B26 effective=0
+[b26]     B26Decode fix=0
+      0x00000000: unsupported family=SOP1 opcode=0x0c raw=[0xbe8a0cff] reason=SOP1 opcode is not implemented words=1
+      0x00000000: unsupported family=VOPC opcode=0xe3 raw=[0x7dc60004] reason=VOPC opcode is not implemented words=1
+      0x00000000: unsupported family=VOP3 opcode=0xe3 raw=[0xd4e30016 0x00020404] reason=VOP3 opcode is not implemented words=2
+[b26]     cache dir=_ShaderCache\PPSA21564 fixb26_in_signature=0 fixb26_in_dir=0
+ALL OK

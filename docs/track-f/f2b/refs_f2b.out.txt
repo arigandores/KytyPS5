@@ -1,0 +1,20 @@
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:329 | anchor: bool FixB26Enabled() { | +1: static const bool enabled = [] {
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:337 | anchor: Opcode GateFixB26(Opcode opcode) { | +1: if ((opcode == Opcode::S_BREV_B64 || opcode == Opcode::V_CMP_LE_U64) && !FixB26E
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:150 | anchor: inst.opcode    = GateFixB26(Detail::LookupOpcode(SOP1_OPS, opcode)); | +1: SetRawWords(inst, code, word_index, 1);
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:372 | anchor: return GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode)); | +1: }
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1115 | anchor: if (!SupportsVopcSdwa(inst.opcode)) { | +1: SetUnsupported(inst, Family::VOPC, opcode,
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1147 | anchor: if (inst.opcode == Opcode::UNSUPPORTED) { | +1: SetUnsupported(inst, Family::VOPC, opcode, "VOPC opcode is not implemented");
+OK  ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1539 | anchor: inst.opcode    = GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode)); | +1: inst.dst.kind  = IsVopcCompareExec(inst.opcode) ? OperandKind::ExecLo : OperandK
+OK  ba3be480:src/graphics/shader/recompiler/frontend/translate/Scalar.cpp:172 | anchor: case O::S_BREV_B64: { | +1: // Track F, F2a: D.u64[63:0] = S0.u64[0:63] (ISA RDNA2 12.3). ReadU32Pair zero-e
+OK  ba3be480:src/graphics/shader/recompiler/frontend/translate/Vector.cpp:109 | anchor: case O::V_CMP_LE_U64: { | +1: // Track F, F2a: lane bit = (S0.u64 <= S1.u64) (ISA RDNA2 12.9) as NOT (S0 > S1)
+OK  ba3be480:src/graphics/shader/recompiler/frontend/translate/Compare.cpp:11 | anchor: const auto masked = ir.LogicalAnd(ir.GetExec(), value); | +1: if (cmpx) {
+OK  ba3be480:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:451 | anchor: std::array<IR::U32, 2> Translator::ReadU32Pair(const Decoder::Operand& operand) { | +1: if (operand.kind == Decoder::OperandKind::ExecLo) {
+OK  ba3be480:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:578 | anchor: (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : ""); | +1: if (!variant.empty()) {
+OK  ba3be480:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:595 | anchor: LOGF("Shader translation cache: %s\n", Common::PathToString(m_directory).c_str()); | +1: }
+OK  ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:232 | anchor: LOGF("CsPretranslate: skipped hash=%016" PRIx64 " reason=%s\n", job->key.hash, error.what()); | +1: } catch (...) {
+OK  ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:242 | anchor: if (result && !stopping && !job->discard && cost <= limits.ready_bytes) { | +1: for (auto it = entries.begin(); it != entries.end();) {
+OK  ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:255 | anchor: LOGF("CsPretranslate: ready hash=%016" PRIx64 " us=%" PRIu64 " kb=%zu ready_kb=%zu\n", | +1: job->key.hash, us, cost / 1024, ready_bytes / 1024);
+OK  ba3be480:src/graphics/shader/recompiler/frontend/translate/Dispatch.cpp:15 | anchor: EXIT("unsupported decoded instruction: %s", Decoder::InstructionToString(inst).c_str()); | +1: default: break;
+OK  a78a0ea0:tests/ShaderRecompilerComputeTests.cpp:20884 | anchor: code.push_back(EncodeVopc(0xe3, 4, 2)); // 0: 31 <= lane | +1: store_vcc_lanes(14, 0);
+OK  a78a0ea0:tests/ShaderRecompilerComputeTests.cpp:32062 | anchor: CheckImageTransitionState(vulkan.RuntimeRenderer()); | +1: CheckSampledDepthResource();
+ALL OK

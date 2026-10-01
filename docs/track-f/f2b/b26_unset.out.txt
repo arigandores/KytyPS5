@@ -1,0 +1,11 @@
+[host]    LeastRecentlyUsedCache           ok
+[b26] KYTY_FIX_B26 effective=1
+[b26]     B26Decode fix=1
+      0x00000000: S_BREV_B64 s10, 0x20468000 words=2
+      0x00000000: V_CMP_LE_U64 vcc_lo, s4, v0 words=1
+      0x00000000: V_CMP_LE_U64 s22, s4, v2 words=2
+[b26]     cache dir=_ShaderCache\PPSA21564\variant_fixb26 fixb26_in_signature=1 fixb26_in_dir=1
+[compute] B26ScalarBrevB64                 ok
+[compute] B26VectorCmpLeU64Wave32          ok
+[compute] B26VectorCmpLeU64Wave64          ok
+ALL OK

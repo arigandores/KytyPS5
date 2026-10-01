@@ -1,0 +1,14 @@
+[host]    LeastRecentlyUsedCache           ok
+[host]    RenderTargetFormat               ok
+[host]    SampledColorRenderTargetViews    ok
+ShaderRecompilerComputeTests: ImageTransitionState failed at initial full state: initial transition did not record or retain pinned state
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+--- Build ---
+Fork build arigandores/KytyPS5 d31e0c4-dirty
+--- abort() ---
+SIGABRT in abort:0

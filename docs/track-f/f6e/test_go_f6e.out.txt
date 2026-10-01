@@ -1,0 +1,3 @@
+suite test_go_f6e.py sha256 e2745f920a95b1005a03d0a54802265708445db86a6d62a82d509bc3cb61550e target go_f6e.sh sha256 ebba1df1abf12b4ef2424c13cebccfd5e400318b4213307b8e570bb373c365b7
+checks 60 failed 0
+ALL OK

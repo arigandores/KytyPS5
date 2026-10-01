@@ -1,0 +1,8 @@
+NID==hash(name): 22 of 22 []
+HLE in libAudio.cpp (AudioPropagation): 6 ['7xyAxrusLko', '8bI5h8req30', 'CPLV6G-eXmk', 'aNEqtSHdUSo', 'ht-QXT3zGxo', 'kIdb+iQUzCs'] subset of 22: True
+c142_03 [('b-dYXrjSNZU', 2), ('WXMhENV2NcA', 295), ('d84otraxt2s', 365), ('G+QLTfyLMYk', 362)] other: {}
+v144_13 [('b-dYXrjSNZU', 2), ('WXMhENV2NcA', 296), ('d84otraxt2s', 365), ('G+QLTfyLMYk', 361)] other: {}
+w144_13 [('b-dYXrjSNZU', 2), ('WXMhENV2NcA', 295), ('d84otraxt2s', 364), ('G+QLTfyLMYk', 363)] other: {}
+v143_03 [('b-dYXrjSNZU', 2), ('WXMhENV2NcA', 1022), ('d84otraxt2s', 0), ('G+QLTfyLMYk', 0)] other: {}
+w144_03 [('b-dYXrjSNZU', 2), ('WXMhENV2NcA', 1022), ('d84otraxt2s', 0), ('G+QLTfyLMYk', 0)] other: {}
+F6B RECOUNT ALL OK

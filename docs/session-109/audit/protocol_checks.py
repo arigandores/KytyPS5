@@ -15,7 +15,7 @@ MK = [b'gpuhangabort', b'gpuwaitslow', b'gpumarkerhung', b'errordevicelost', b's
       b'unhandled exception', b'--- error ---', b'asyncpipelines: skipped draw', b'exception']
 envs = {}
 SUS = ('python', 'cmake', 'ninja', 'clang', 'kyty', 'renderdoc', 'ffmpeg', 'node', 'git', 'msbuild', 'link', 'steam',
-       'game', 'obs', 'chrome', 'msedge', 'code')
+       'game', 'obs', 'chrome', '<app>', 'code')
 for t in tags:
     m = json.loads((R / (t + '.json')).read_text(encoding='utf-8'))
     g = ' '.join((m.get('gates') or '').split())

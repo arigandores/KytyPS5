@@ -92,7 +92,7 @@ followed by `enter_scene.py`.
 | request | outcome | how far it got |
 |---|---|---|
 | 13:15:13 `smk121` | procload waited on `a foreign application` (pid 2936, 2.5–4.6 CPU s/s); the lead killed the chain at 13:36:30–36; log line "stays busy" 13:36:37 | stopped in the first `procload`, before the lock, before install |
-| 16:31:56 `vfy121` | procload waited on the fixer's leftover Monitor `tail -n 0 -F …mutlib_shp121_run.log` (started by `agent-aa428a45…` at 15:35:54, killed by the lead at 16:46:07); then the second procload saw `msedge` at 0.62 CPU s/s → refused 16:46:36 | **took the lock, verified and INSTALLED the pinned `0bd21ec2` into the game folder** (the `files:` line at 16:46:23 comes after `cp`), then refused; the lock was released by the trap |
+| 16:31:56 `vfy121` | procload waited on the fixer's leftover Monitor `tail -n 0 -F …mutlib_shp121_run.log` (started by `agent-aa428a45…` at 15:35:54, killed by the lead at 16:46:07); then the second procload saw `<app>` at 0.62 CPU s/s → refused 16:46:36 | **took the lock, verified and INSTALLED the pinned `0bd21ec2` into the game folder** (the `files:` line at 16:46:23 comes after `cp`), then refused; the lock was released by the trap |
 | 16:47:32 `vfy121` | name guard counted 2. These were the lead's own background command, whose command line contained `mutlib` inside the LOOP_STATE text. The item-6 claim is confirmed. | stopped before the lock and install |
 | 16:47:59 `vfy121` | started at 16:48:36 | — |
 

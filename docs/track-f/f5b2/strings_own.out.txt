@@ -1,0 +1,21 @@
+6f495a65 sha256 6f495a65388a90a0 bytes 24273920
+abce7916 sha256 abce7916ebd03b31 bytes 24272896
+9235a7ac sha256 9235a7ac61f1affb bytes 24264192
+pattern 6f495a65 abce7916 9235a7ac
+699c1e4b7db359067b461e029b913c4b6e78dc90 1 1 1
+KYTY_FIX_MINIMIZE 1 1 0
+FixMinimize: on 1 1 0
+SwapchainZeroExtent: begin 1 1 0
+SwapchainZeroExtent: end frames_dropped= 1 1 0
+KYTY_TEST_MINIMIZE 1 1 0
+TestMinimize: minimize 1 1 0
+TestMinimize: restore 1 1 0
+TestMinimize: armed 1 1 0
+TestMinimize: config 1 1 0
+Level has started:  1 1 1
+KYTY_FIX_B1B 0 0 0
+KYTY_FIX_B26 0 0 0
+KYTY_FIX_DUALSRC 0 0 0
+KYTY_S_PCW 0 0 0
+gaf7e5ff9 2 0 0
+Vulkan presentation retry exhausted 1 1 1

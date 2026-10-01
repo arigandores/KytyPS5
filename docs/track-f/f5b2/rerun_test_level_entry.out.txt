@@ -1,0 +1,19 @@
+empty name, newline                          want=0 got=0 ok
+level name, newline                          want=1 got=1 ok
+level name rocket_hourglass                  want=1 got=1 ok
+empty name, no newline                       want=0 got=0 ok
+name, no newline                             want=1 got=1 ok
+name with trailing spaces                    want=1 got=1 ok
+name with trailing CR LF                     want=1 got=1 ok
+blanks only (spaces, tab, CR)                want=0 got=0 ok
+name after extra spaces                      want=1 got=1 ok
+empty line, text on next line                want=0 got=0 ok
+empty then named in one text                 want=1 got=1 ok
+named then empty in one text                 want=1 got=1 ok
+prefixed named line                          want=1 got=1 ok
+prefixed empty line                          want=0 got=0 ok
+no prefix                                    want=0 got=0 ok
+prefix without space                         want=0 got=0 ok
+empty text                                   want=0 got=0 ok
+cases=17 fail=0
+ALL OK

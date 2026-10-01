@@ -1,0 +1,8 @@
+C:/kyty/f287/f5a2/cfg_tests_min0.txt raw a074f1b3 norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a2/cfg_tests_min1.txt raw a074f1b3 norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a2/cfg_tests_wt_min0.txt raw 416e769e norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a2/cfg_tests_wt_min1.txt raw b50929d4 norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a\cfg_tests_min0.txt raw 5a60758a norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a\cfg_tests_min1.txt raw 5a60758a norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a\cfg_tests_wt_min0.txt raw a074f1b3 norm c7459fae lines 134 FAIL-lines 0
+C:/kyty/f287/f5a\cfg_tests_wt_min1.txt raw 5a60758a norm c7459fae lines 134 FAIL-lines 0

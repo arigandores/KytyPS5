@@ -1,0 +1,20 @@
+== sha256
+6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd *C:/kyty/f287/bin/kyty_emulator_6f495a65.exe
+6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd *C:/kyty/f287/f5a2/build/install/kyty_emulator.exe
+9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7 *C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+-rwxr-xr-x 1 <owner> <group> 24273920 2026-10-01 16:27:09.036445700 +0200 C:/kyty/f287/bin/kyty_emulator_6f495a65.exe
+-rwxr-xr-x 1 <owner> <group> 24273920 2026-10-01 16:26:53.027734900 +0200 C:/kyty/f287/f5a2/build/install/kyty_emulator.exe
+== patch-id
+b6608c04f48dfc575a3c55d9949617dd44cb5275 d281153592b70f84f01c1aaf8e8ea3e50b4b172c
+ec4d3478569dfeb5e8e785abd25b47935974adf9 01ca15d151851af0f048ab0eaea0e90cae112f88
+b6608c04f48dfc575a3c55d9949617dd44cb5275 c723e5aec502efffb76d343a605f5ad411b1e914
+ec4d3478569dfeb5e8e785abd25b47935974adf9 af7e5ff91aff2c899a99bf06c6997fd8c0ed519a
+== main ancestry
+d2811535 ancestor of 01ca15d1
+01ca15d1 track F link F5a2 (HPP-366): RC1 and RC2 of F5b by ROADMAP p.280(v),(g)
+== wt status
+     27 M
+diff_ignore_cr_bytes=0
+== wt vs 4fc501f4 + main commits
+ 5 files changed, 184 insertions(+), 2 deletions(-)
+ 5 files changed, 184 insertions(+), 2 deletions(-)

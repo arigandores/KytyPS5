@@ -1,0 +1,10 @@
+ring_model rc=0
+ring_model output == author's
+level_entry rc=0
+cases=17 fail=0
+ALL OK
+level_entry output == author's
+4:#include "graphics/presentation/window/testMinimizeLine.h"
+6:#include <cstdio>
+7:#include <string>
+8:#include <string_view>

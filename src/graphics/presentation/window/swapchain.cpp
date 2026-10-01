@@ -301,6 +301,21 @@ void Presenter::Frame::Clear(CommandBuffer& command_buffer, const vk::ClearColor
 	Transit(command, vk::ImageLayout::eTransferSrcOptimal, vk::AccessFlagBits2::eTransferRead);
 }
 
+// Track F, F5 (ROADMAP s122 item 273(e)(1), B37): KYTY_FIX_MINIMIZE (default 0 until F5d; 0 - the old path byte for
+// byte).  1: a swapchain recreate that finds currentExtent 0 on either axis (a minimized window) creates no swapchain;
+// Presenter::Present drops its frames without blocking and retries on each later present until the extent is non-zero.
+// Read once; "FixMinimize: on" is logged only when on.
+static bool FixMinimizeEnabled() {
+	static const bool enabled = [] {
+		const bool on = Common::EnvFlagOn("KYTY_FIX_MINIMIZE");
+		if (on) {
+			LOGF("FixMinimize: on\n");
+		}
+		return on;
+	}();
+	return enabled;
+}
+
 class Swapchain final {
 public:
 	enum class Status : uint8_t { Success, Recreate, SurfaceLost };
@@ -322,6 +337,10 @@ public:
 		return static_cast<uint32_t>(m_images.size());
 	}
 	[[nodiscard]] vk::Format Format() const noexcept { return m_format; }
+	// F5 (B37): no swapchain - only after a recreate at a zero extent under KYTY_FIX_MINIMIZE=1 (Create exits on failure).
+	[[nodiscard]] bool Missing() const noexcept { return m_handle == nullptr; }
+	// F5 (B37): the last refreshed surface capabilities have currentExtent 0 on either axis.
+	[[nodiscard]] bool SurfaceExtentZero();
 
 private:
 	void Destroy();
@@ -348,13 +367,47 @@ struct Presenter::Impl {
 		EXIT_IF(owner.render_context == nullptr);
 		swapchain.Create();
 		frames.Initialize(swapchain.ImageCount(), swapchain.Format());
+		static_cast<void>(FixMinimizeEnabled());
 	}
 
 	void RecoverSwapchain(Swapchain::Status status) {
 		LOGF("Recovering Vulkan swapchain%s\n",
 		     status == Swapchain::Status::SurfaceLost ? " and surface" : "");
 		swapchain.Recreate(status == Swapchain::Status::SurfaceLost);
+		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+			BeginZeroExtent();
+			return;
+		}
 		frames.SetFormat(swapchain.Format());
+	}
+
+	// F5 (B37): one zero-extent episode - it begins when a recreate leaves no swapchain and ends when a later present
+	// finds a non-zero extent and creates the swapchain.  Present thread only (Present is single-threaded by design,
+	// the PresentOverlap detector); the fields below are touched nowhere else.
+	void BeginZeroExtent() {
+		if (zero_extent_active) {
+			return;
+		}
+		zero_extent_active  = true;
+		zero_extent_dropped = 0;
+		zero_extent_t0_ns   = Common::FrameStats::NowNs();
+		LOGF("SwapchainZeroExtent: begin\n");
+	}
+
+	// False - the extent is still zero, the caller drops the frame.  True - the swapchain exists again.
+	bool TryEndZeroExtent() {
+		window.RefreshSurfaceCapabilities();
+		if (swapchain.SurfaceExtentZero()) {
+			return false;
+		}
+		swapchain.Create();
+		frames.SetFormat(swapchain.Format());
+		const auto ms = (Common::FrameStats::NowNs() - zero_extent_t0_ns) / 1000000ull;
+		LOGF("SwapchainZeroExtent: end frames_dropped=%llu ms=%llu\n",
+		     static_cast<unsigned long long>(zero_extent_dropped), static_cast<unsigned long long>(ms));
+		zero_extent_active  = false;
+		zero_extent_dropped = 0;
+		return true;
 	}
 
 	Image& ResolveSurface(const ImageInfo& info) {
@@ -386,6 +439,10 @@ struct Presenter::Impl {
 	ScreenshotGrabber     screenshot;
 	InputScript           input_script;
 	std::atomic<uint64_t> presented_overlay_revision {0};
+	// F5 (B37) episode state, present thread only (see BeginZeroExtent).
+	bool                  zero_extent_active  = false;
+	uint64_t              zero_extent_dropped = 0;
+	uint64_t              zero_extent_t0_ns   = 0;
 };
 
 void Swapchain::Create() {
@@ -576,7 +633,16 @@ void Swapchain::Recreate(bool surface_lost) {
 #endif
 	}
 	m_window.RefreshSurfaceCapabilities();
+	if (FixMinimizeEnabled() && SurfaceExtentZero()) {
+		return; // F5 (B37): no swapchain at a zero extent; Presenter::Present retries on a later present
+	}
 	Create();
+}
+
+bool Swapchain::SurfaceExtentZero() {
+	Common::LockGuard lock(m_window.mutex);
+	const auto&       extent = m_window.surface_capabilities.capabilities.currentExtent;
+	return extent.width == 0 || extent.height == 0;
 }
 
 Swapchain::Status Swapchain::AcquireNextImage(CommandScheduler& scheduler) {
@@ -879,6 +945,13 @@ void Presenter::Present(Frame& frame, bool reuse) {
 	const bool screenshot = !preparing && m_impl->screenshot.Poll();
 	if (!preparing) m_impl->input_script.Poll();
 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
+		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+			if (!m_impl->TryEndZeroExtent()) {
+				m_impl->zero_extent_dropped++;
+				m_impl->frames.Release(&frame, reuse);
+				return;
+			}
+		}
 		const auto trace_start = PresentTraceEnabled() ? Common::FrameStats::NowNs() : 0;
 		auto status = swapchain.AcquireNextImage(m_impl->present_scheduler);
 		const auto acquired = trace_start ? Common::FrameStats::NowNs() : 0;

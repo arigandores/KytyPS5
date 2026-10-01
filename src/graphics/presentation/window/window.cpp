@@ -51,6 +51,7 @@
 #include <fmt/format.h>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 #include <vulkan/vk_platform.h>
 
@@ -1033,6 +1034,68 @@ void WindowShutdown() {
 		Controller::EmergencyShutdown();
 		g_window.reset();
 	}
+}
+
+// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
+// game's first "Level has started:" line the emulator minimizes its own window (SDL_MinimizeWindow on the main thread)
+// and restores it <dur> seconds later (SDL_RestoreWindow); lines "TestMinimize: minimize" / "TestMinimize: restore".
+// Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
+// sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
+void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
+	struct TestMinimize {
+		bool   on      = false;
+		double delay_s = 0.0;
+		double dur_s   = 0.0;
+	};
+	static const TestMinimize cfg = [] {
+		TestMinimize c;
+		const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+		if (value == nullptr || value[0] == '\0') {
+			return c;
+		}
+		char* end = nullptr;
+		c.delay_s = std::strtod(value, &end);
+		if (end != value && end != nullptr && *end == ':') {
+			const char* dur = end + 1;
+			c.dur_s         = std::strtod(dur, &end);
+			c.on            = end != dur && *end == '\0' && c.delay_s >= 0.0 && c.dur_s >= 0.0;
+		}
+		LOGF("TestMinimize: config %s delay_s=%.3f dur_s=%.3f\n", c.on ? "on" : "invalid", c.delay_s, c.dur_s);
+		return c;
+	}();
+	static std::atomic<bool> armed {false};
+	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
+		return;
+	}
+	if (std::string_view(text, size).find("Level has started: ") == std::string_view::npos ||
+	    armed.exchange(true, std::memory_order_acq_rel)) {
+		return;
+	}
+	LOGF("TestMinimize: armed delay_s=%.3f dur_s=%.3f\n", cfg.delay_s, cfg.dur_s);
+	std::thread([] {
+		const auto post = [](bool minimize) {
+			auto* context = g_window.get();
+			if (context == nullptr) {
+				return;
+			}
+			context->PostToMainThread([context, minimize] {
+				if (context->window == nullptr) {
+					return;
+				}
+				if (minimize) {
+					LOGF("TestMinimize: minimize\n");
+					SDL_MinimizeWindow(context->window);
+				} else {
+					LOGF("TestMinimize: restore\n");
+					SDL_RestoreWindow(context->window);
+				}
+			});
+		};
+		std::this_thread::sleep_for(std::chrono::duration<double>(cfg.delay_s));
+		post(true);
+		std::this_thread::sleep_for(std::chrono::duration<double>(cfg.dur_s));
+		post(false);
+	}).detach();
 }
 
 static int WindowIconRead(void* user, char* data, int size) {

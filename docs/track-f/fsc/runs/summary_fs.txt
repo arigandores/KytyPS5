@@ -1,0 +1,9 @@
+FS SERIES TABLE (p.282(g)(3); one attempt each; binary dac02fb9)
+tag   level                     arm knob verdict        entered hold_sum wall   meandt   K2 deaths trips vke limit dual patched video/glitch
+fs_a  underwater_aerial_garden  W   -    PASS           True       324.5  310.2   129419    0      0     0   0     0    1       0 -
+fs_b  underwater_aerial_garden  V   -    PASS           True       334.3  330.2    34281    0      0     0   0     0    1       0 9951/0
+fs_v  mini_giants_garden        W   -    PASS           True       315.8  310.1    53790    0      0     0   0     0    1       1 -
+fs_g  mini_giants_garden        V   -    PASS           True       332.5  330.2    16703    0      0     0   0     0    1       1 20158/0
+fs_d  underwater_aerial_garden  I   0    INFO           True       334.6  330.1    33626    0      0     0   0     0    1       0 -
+(d) information: fs_d INFO, sum dt 334.6 s, mean dt_us 33625.9
+FS SERIES VERDICT p.282(g)(3): PASS; FAIL tags none; not PASS / not FAIL tags none

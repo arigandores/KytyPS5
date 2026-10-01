@@ -1,0 +1,44 @@
+fs_read tag fs_b (b) level underwater_aerial_garden arm V knob defaults log sha256 a11728c0173e0f7421ff6d6732f0b0fe9c165ccf4c70965221170b392818671f binary dac02fb9d6fd32b3
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   binary sha256 = FSa copy dac02fb9 (p.286(v) N1) [dac02fb9d6fd32b3]
+admit ok   KYTY_FIX_B26 not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_B1B not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_DUALSRC not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_MINIMIZE not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   video KYTY_REC rec_fs_b.mp4 [C:\kyty\f287\fsc\rec_fs_b.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   no VK_LAYER_MESSAGE_ID_FILTER [None]
+knob control: want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+DualSrcBlend supported lines [(1, 1)]; supported=1 enabled=1 before the first GuestOut (byte 536413): 1
+DualSrcBlend patched lines 0; ps=5514e10f1a60df83 0 (before the first GuestOut 0)
+PipelinePrecache lines 4: ['PipelinePrecache: 429 recipes -> 331 graphics + 98 compute pipelines queued, 0 skipped, 738 sources loaded, complete, 137 ms (scratch: 0 pipelines, max 0 dwords', 'PipelinePrecache: all pipelines created, 137 ms', 'PipelinePrecache: saved 430 recipes (3957194 bytes)', 'PipelinePrecache: saved 433 recipes (3993415 bytes)']
+entered True first scene frame (189, 20851, 478) scene change False enter_scene outcome ok
+hold: sum dt after the first scene frame 334.3 s (named 300); wall hold_s 330.2 (named None); hold_exit None
+death markers 0 []
+frames >= 1 s after the first scene frame 0 []; max dt_us 183385; AsyncPipelines skipped draw lines 18
+BvhLoopCapTrip lines 0
+mean dt_us after the first scene frame (a number, not a gate): 34281.0 over 9753 frames
+video: frames 9951 glitches 0; sheetpair_fs_b.png True (reference C:/kyty/s142/rec_v142.mp4)
+letter p.282(g)(3)(b) ok   video >= 3000 frames
+letter p.282(g)(3)(b) ok   s51_vidglitch.py 4 6: 0 glitches
+letter p.282(g)(3)(b) ok   0 death markers
+letter p.282(g)(3)(b) ok   0 frames >= 1 s after the first scene frame
+letter p.282(g)(3)(b) ok   0 BvhLoopCapTrip lines
+letter p.282(g)(3)(b) ok   pair sheet v142 / FSc sheetpair_fs_b.png
+executor member [I] (p.258(d)) ok   no scene change
+executor member [I] (p.258(d)) ok   game alive at the end of the hold (hold_exit None)
+FS VERDICT fs_b: PASS
+FS EXECUTOR MEMBERS fs_b [I] (not the verdict): all ok

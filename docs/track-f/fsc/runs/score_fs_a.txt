@@ -1,0 +1,48 @@
+fs_read tag fs_a (a) level underwater_aerial_garden arm W knob defaults log sha256 2b20970b9f53a177dc50194e8552c7e42946a3e60ddc88f95d4e54859bcba018 binary dac02fb9d6fd32b3
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   binary sha256 = FSa copy dac02fb9 (p.286(v) N1) [dac02fb9d6fd32b3]
+admit ok   KYTY_FIX_B26 not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_B1B not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_DUALSRC not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_MINIMIZE not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no video [None]
+admit ok   --vulkan-validation true [true]
+admit ok   VK_LAYER_MESSAGE_ID_FILTER=Undefined-Value-ShaderOutputNotConsumed-DynamicRendering (F6, as sc145) [Undefined-Value-ShaderOutputNotConsumed-DynamicRendering]
+admit ok   VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000 (as sc145) [1000000]
+admit ok   validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][) [0/1/1]
+knob control: want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+DualSrcBlend supported lines [(1, 1)]; supported=1 enabled=1 before the first GuestOut (byte 505621): 1
+DualSrcBlend patched lines 0; ps=5514e10f1a60df83 0 (before the first GuestOut 0)
+PipelinePrecache lines 9: ['PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet', 'PipelinePrecache: saved 3 recipes (1023 bytes)', 'PipelinePrecache: saved 384 recipes (3438016 bytes)', 'PipelinePrecache: saved 389 recipes (3473471 bytes)', 'PipelinePrecache: saved 395 recipes (3543549 bytes)', 'PipelinePrecache: saved 397 recipes (3567463 bytes)']
+entered True first scene frame (320, 5914847, 6115) scene change False enter_scene outcome ok
+hold: sum dt after the first scene frame 324.5 s (named 300); wall hold_s 310.2 (named None); hold_exit None
+death markers 0 []
+frames >= 1 s after the first scene frame 0 []; max dt_us 618050; AsyncPipelines skipped draw lines 838
+BvhLoopCapTrip lines 0
+mean dt_us after the first scene frame (a number, not a gate): 129419.2 over 2507 frames
+validation noval/valfeat/vkany 0/1/1 active True; [Vulkan][E] 0 []
+layer limit lines "last time reporting it" 0
+letter p.282(g)(3)(a) ok   positive control: a line DualSrcBlend: supported=1 enabled=1 before the first GuestOut line (p.281(g))
+letter p.282(g)(3)(a) ok   0 [Vulkan][E] (log and stdout)
+letter p.282(g)(3)(a) ok   0 layer limit lines "last time reporting it"
+executor member [I] (p.258(d)) ok   0 death markers (W)
+executor member [I] (p.258(d)) ok   exactly one DualSrcBlend: supported= line
+executor member [I] (p.258(d)) ok   0 BvhLoopCapTrip lines (a line reopens B1b, p.282(d))
+executor member [I] (p.258(d)) ok   0 frames >= 1 s after the first scene frame (K2)
+executor member [I] (p.258(d)) ok   no scene change
+executor member [I] (p.258(d)) ok   game alive at the end of the hold (hold_exit None)
+FS VERDICT fs_a: PASS
+FS EXECUTOR MEMBERS fs_a [I] (not the verdict): all ok

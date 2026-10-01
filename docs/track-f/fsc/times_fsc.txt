@@ -1,3 +1,103 @@
 2026-10-01T14:57:39Z FSc start (HPP-370): wake issue_blockers_resolved, FSb accepted p.286 (c5e6a3f4); harness dir C:/kyty/f287/fsc created, support files copied from f3d/f4c (same sha); no lock, no STOP
 2026-10-01T15:11:18Z FSc seal pred/01_fs.md written (2026-10-01T15:11:16Z, ROADMAP at 2c5be07a) sha256 fa04ea8369cbe4498db12364cb6ad0627f12353e0d73789dbe082367fed3392a; suites test_fs_read 173 ALL OK (out c3719e2f6d57c1c6), test_go_fs 61 ALL OK (out 2f914b73884a5953); comments after 4236176f: none; no lock, no STOP
 2026-10-01T15:13:22Z FSc queue p.282(g)(3) 'F5c first when both wait': HPP-357 blockers -> HPP-350 only (HPP-370 removed); HPP-370 -> blocked on HPP-357 (next call)
+2026-10-01T15:13:30Z FSc FACTS section (wake 1) appended; git mirror docs/track-f/fsc/ written; privacy check exprs.txt
+2026-10-01T15:13:37Z FSc privacy grep -P -f exprs.txt (CR-stripped) over docs/track-f/fsc
+2026-10-01T15:13:59Z FSc privacy: git grep --no-index -P -f exprs.txt (19 patterns, CR-stripped) docs/track-f/fsc - hits 0 (rc 1); positive control file with the user name - hit, removed
+2026-10-01T15:14:13Z FSc privacy (correct list): python re over C:/kyty/scrub/checks.txt patterns, positive control ok
+2026-10-01T15:15:26Z FSc INCIDENT: C:/kyty/normalize_eol.py (run 15:14:27Z before the FSc commit) rewrote the HPP-350 working file docs/session-145/step0/step0/f6scan145.out.txt to pure LF (removed one CR); restored the CR at line index 57 (HEAD position, lines 1:1 by difflib, insert only at the end) 15:1xZ; comment to HPP-350
+2026-10-01T15:15:49Z FSc commit KytyPS5 64caf290 (docs/track-f/fsc.md, docs/track-f/fsc/; --only; no push)
+2026-10-01T15:16:09Z FSc HPP-370 -> blocked on HPP-357, comment posted
+2026-10-01T16:14:43Z FSc HPP-370 wake issue_blockers_resolved: HPP-357 done 16:12:57Z (API), HPP-352 blocked, HPP-364 blocked, HPP-377 in_progress (F6e, inside F FSc first by p.294), HPP-379 in_progress (s145 step 1b, no game); no lock, no f287/STOP, no s145/STOP; comments after efd739b5: none new; points 286-296 reread: p.295 changes the sc145 W form (no F6 filter, limit 100000000), p.295(i) leaves the track F form to F5c/F5d acceptance, p.296 accepted F5c with the F6 filter form; FSc keeps the seal 01_fs.md form (letter of p.282(g)(3) names the F6 filter) - question to the lead in the report
+2026-10-01T16:14:43Z FSc next_fs STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/fsc/go_fs.sh series
+2026-10-01T16:17:39Z FSc go_fs pre-lock idle142 IDLE after 0 s of wait
+2026-10-01T16:17:57Z FSc go_fs lock window (p.282(g)(3), 286(v)): win_fs HPP-369 done run None; HPP-357 done run None; HPP-352 blocked run None; HPP-364 blocked run None -> open
+2026-10-01T16:17:57Z FSc go_fs lock taken (winpid 70024)
+2026-10-01T16:18:01Z FSc go_fs shader cache before the series: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c; dirs [] sha e3b0c44298fc1c14
+2026-10-01T16:18:05Z FSc go_fs shader cache copy = before (C:/kyty/f287/fsc/cache_snap)
+2026-10-01T16:18:07Z FSc go_fs cache manifest before the series: cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 170096586 bytes; glcache 16 files 98780153 bytes; cache_series.before.json sha256 efd309ebb0e237031dc9f1687bc331061a27a08b716dcf94aa62328ffc937365
+2026-10-01T16:18:09Z FSc go_fs GLCache before the series: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 (copy equal, GLRESTORE=1)
+2026-10-01T16:18:09Z FSc go_fs _PipelineCache before the series: files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75 (copy equal)
+2026-10-01T16:18:10Z FSc go_fs installed shipment binary sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:18:11Z FSc go_fs fs_a binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:18:11Z FSc go_fs fs_a recipe file variant_fixb26_fixb1b/pipelines.bin before the tag (information): absent
+2026-10-01T16:24:08Z FSc go_fs fs_a idle142 still BUSY after 300 s of wait
+2026-10-01T16:24:08Z FSc go_fs fs_a series stop BUSY before the tag (not an attempt) - question to the lead
+2026-10-01T16:24:08Z FSc go_fs summary rc 0 summary_fs.txt sha256 68e56de67247eb39fdc44d4567d2177dbeb3a75c2346f611ed3cae0be54d60e9: FS SERIES VERDICT p.282(g)(3): NOT EVALUABLE; FAIL tags none; not PASS / not FAIL tags fs_a=NO READING,fs_b=NO READING,fs_v=NO READING,fs_g=NO READING
+2026-10-01T16:24:09Z FSc go_fs restore binary ok sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+2026-10-01T16:24:11Z FSc go_fs shader cache at the end of the series (before the return): files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c; dirs [] sha e3b0c44298fc1c14
+2026-10-01T16:24:13Z FSc go_fs shader cache returned: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c = before; dirs [] sha e3b0c44298fc1c14 = before (p.277(b)(2)); run cache kept in C:/kyty/f287/fsc/cache_run/20261001T162411Z
+2026-10-01T16:24:15Z FSc go_fs cache manifest after the series (before any GLCache return): cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 170096586 bytes; glcache 16 files 98780153 bytes; cache_series.after.json sha256 e977938a5b519858eeef29a7fad5514c98dd0cdd74885e4abb9621315602fa68
+2026-10-01T16:24:17Z FSc go_fs GLCache returned: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 = before
+2026-10-01T16:24:17Z FSc go_fs _PipelineCache at the end of the series (before the return): files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75
+2026-10-01T16:24:18Z FSc go_fs _PipelineCache returned: files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75 = before
+2026-10-01T16:24:28Z FSc go_fs foreign cpu at the end inside the lock: fgcpu143: run 368.5 s: (1) alive at both ends: foreign 1.225 CPU s/s = 3.8 % of 32 logical CPUs over 434 processes; top <app>:4528:0.327, node:38000:0.207, <app>:74808:0.172, <app>:57436:0.119, PhoneExperienceHost:37780:0.070 | (2) new at the end: foreign 0.012 CPU s/s = 0.0 % over 16 processes; top bash:56796:0.005, postgres:36612:0.002, bash:76116:0.001, <app>:74064:0.001, RadeonSoftware:25492:0.001 | (3) system (GetSystemTimes) 2.672 CPU s/s = 8.3 % | game 0.000, chain (pid 70024 and its descendants alive at the end) 0.004 over 6 | (4) residual = (3) - (1) - (2) - game - chain = 1.431 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member || now 10.0 s: (1) alive at both ends: foreign 1.600 CPU s/s = 5.0 % of 32 logical CPUs over 444 processes; top <app>:4528:0.669, <app>:74808:0.303, node:38000:0.120, <app>:57436:0.097, explorer:7304:0.045 | (2) new at the end: foreign 0.000 CPU s/s = 0.0 % over 2 processes; top git:58192:0.000, sleep:53672:0.000 | (3) system (GetSystemTimes) 2.958 CPU s/s = 9.2 % | game 0.000, chain (pid 70024 and its descendants alive at the end) 0.003 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 1.355 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member
+2026-10-01T16:24:28Z FSc go_fs lock released (rc 1)
+2026-10-01T16:24:28Z FSc go_fs series call returned rc=1
+2026-10-01T16:24:52Z F6e RULE-27 BREACH: three read-only commands without the lock check (git log, grep and sed of docs/ROADMAP.md p.295-296) ran around the FSc lock take 16:17:57Z (go_fs lock file) - at least one of them probably under it; no file written; the FSc stop at 16:24:08Z is idle142 BUSY by GPU util 38-40 % from 16:18:11Z (go_fs.log), my processes used no GPU
+2026-10-01T16:25:38Z FSc stop 1 of the series (16:24:08Z, BUSY before fs_a, not an attempt - no emulator start, no attempt file; 9235a7ac and caches returned = before): GPU load is a user application pid 4528 (Get-Counter GPU Engine 3d 35.2 % at 16:2xZ; nvidia-smi 38 %), not an agent process - not touched; executor decision by analogy with p.279(e) (question to the lead from the second stop): wait for idle142 IDLE outside the lock, then one verbatim repeat of the seal call; go_series.out.txt -> go_series.busy1.out.txt
+2026-10-01T16:29:13Z F6e HPP-377 -> blocked on HPP-370 (FSc, lock window closed: in_progress with a run); comment posted; no processes left
+2026-10-01T16:29:18Z FSc idle142 IDLE outside the lock 16:29:13Z (median 0.0); repeat 1 of the seal call (verbatim)
+2026-10-01T16:29:18Z FSc next_fs STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/fsc/go_fs.sh series
+2026-10-01T16:29:46Z FSc go_fs pre-lock idle142 IDLE after 0 s of wait
+2026-10-01T16:30:02Z FSc go_fs lock window (p.282(g)(3), 286(v)): win_fs HPP-369 done run None; HPP-357 done run None; HPP-352 blocked run None; HPP-364 blocked run None -> open
+2026-10-01T16:30:02Z FSc go_fs lock taken (winpid 62948)
+2026-10-01T16:30:05Z FSc go_fs shader cache before the series: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c; dirs [] sha e3b0c44298fc1c14
+2026-10-01T16:30:09Z FSc go_fs shader cache copy = before (C:/kyty/f287/fsc/cache_snap)
+2026-10-01T16:30:11Z FSc go_fs cache manifest before the series: cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 170096586 bytes; glcache 16 files 98780153 bytes; cache_series.before.json sha256 3e94d39f0cb880155398aedf4b20c6dcbca4d193483ea4b0dc5b84e3b20a0b4a
+2026-10-01T16:30:12Z FSc go_fs GLCache before the series: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 (copy equal, GLRESTORE=1)
+2026-10-01T16:30:13Z FSc go_fs _PipelineCache before the series: files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75 (copy equal)
+2026-10-01T16:30:13Z FSc go_fs installed shipment binary sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:30:15Z FSc go_fs fs_a binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:30:15Z FSc go_fs fs_a recipe file variant_fixb26_fixb1b/pipelines.bin before the tag (information): absent
+2026-10-01T16:30:17Z FSc go_fs fs_a idle142 IDLE after 0 s of wait
+2026-10-01T16:30:17Z FSc go_fs fs_a enter_scene start (level underwater_aerial_garden, hold 310, sd '--stable-draws 300 --timeout 600', extra 'VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000 VK_LAYER_MESSAGE_ID_FILTER=Undefined-Value-ShaderOutputNotConsumed-DynamicRendering', emu '--emu-arg=--vulkan-validation --emu-arg=true', rec '')
+2026-10-01T16:36:18Z FSc go_fs fs_a enter_scene end rc 0 log_fs_a.txt sha256 2b20970b9f53a177dc50194e8552c7e42946a3e60ddc88f95d4e54859bcba018
+2026-10-01T16:36:20Z FSc go_fs fs_a reader rc 0 score_fs_a.txt sha256 cf82a0f9f90ef3e12cb07abd9e3fbc544178783c48ec57956c11e0de7a934041: FS VERDICT fs_a: PASS;
+2026-10-01T16:36:20Z FSc go_fs fs_a stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T16:36:20Z FSc go_fs fs_b binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:36:20Z FSc go_fs fs_b recipe file variant_fixb26_fixb1b/pipelines.bin before the tag (information): cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/pipelines.bin size 3945007 sha256 1591e6863f294daa count 429 parsed 429 (graphics 331 compute 98) at_end True ; dual-source lines 0
+2026-10-01T16:36:23Z FSc go_fs fs_b idle142 IDLE after 0 s of wait
+2026-10-01T16:36:23Z FSc go_fs fs_b enter_scene start (level underwater_aerial_garden, hold 330, sd '--stable-draws 300 --timeout 480', extra '', emu '', rec '--rec')
+2026-10-01T16:42:20Z FSc go_fs fs_b enter_scene end rc 0 log_fs_b.txt sha256 a11728c0173e0f7421ff6d6732f0b0fe9c165ccf4c70965221170b392818671f
+2026-10-01T16:42:45Z FSc go_fs fs_b s51_vidglitch rc 0 glitch_fs_b.txt sha256 936fa417f63e3df86cf59ce24ceda708b2ccbe549e61288742f0c283886c7012 rec_fs_b.mp4 sha256 4697e175d53f9212ff5bc18d749cea370726e6828efe4144248aa52ddf651235
+2026-10-01T16:43:18Z FSc go_fs fs_b pair sheet rec_v142.mp4 / FSc rc 0 sheetpair_fs_b.png sha256 b160479323d6680ed44d3a6948573ac9b4182eeb0ccd1e6dce2b0bf3e8691540: sheetpair: sheetpair_fs_b.png ref 10567 new 9951 step 414 positions 0,414,828,1242,1656,2070,2484,2898,3312,3726,4140,4554,4968,5382,5796,6210,6624,7038,7452,7866,8280,8694,9108,9522
+2026-10-01T16:43:20Z FSc go_fs fs_b reader rc 0 score_fs_b.txt sha256 704be8bcc41f4c8b2efc3ae3b04f977668b8fc25840376efaba68645b4b0e3cc: FS VERDICT fs_b: PASS;
+2026-10-01T16:43:20Z FSc go_fs fs_b stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T16:43:21Z FSc go_fs fs_v binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:43:21Z FSc go_fs fs_v recipe file variant_fixb26_fixb1b/pipelines.bin before the tag (information): cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/pipelines.bin size 3993415 sha256 536911b624f0737e count 433 parsed 433 (graphics 335 compute 98) at_end True ; dual-source lines 0
+2026-10-01T16:43:25Z FSc go_fs fs_v idle142 IDLE after 0 s of wait
+2026-10-01T16:43:25Z FSc go_fs fs_v enter_scene start (level mini_giants_garden, hold 310, sd '--stable-draws 300 --timeout 600', extra 'VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000 VK_LAYER_MESSAGE_ID_FILTER=Undefined-Value-ShaderOutputNotConsumed-DynamicRendering', emu '--emu-arg=--vulkan-validation --emu-arg=true', rec '')
+2026-10-01T16:49:10Z FSc go_fs fs_v enter_scene end rc 0 log_fs_v.txt sha256 eb49dd5a6d09b45e852af05cfdd3177e4dae73bde067c6e54ac1754952d1c5f8
+2026-10-01T16:49:11Z FSc go_fs fs_v reader rc 0 score_fs_v.txt sha256 df9d8faa2d0a9b85f9a5e2d18a256d4b2716d8082356891589135705fdbc612e: FS VERDICT fs_v: PASS;
+2026-10-01T16:49:11Z FSc go_fs fs_v stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T16:49:12Z FSc go_fs fs_g binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:49:12Z FSc go_fs fs_g recipe file variant_fixb26_fixb1b/pipelines.bin before the tag (information): cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/pipelines.bin size 4863800 sha256 7cb604caaa9ae608 count 520 parsed 520 (graphics 408 compute 112) at_end True ; dual-source lines 1
+2026-10-01T16:49:15Z FSc go_fs fs_g idle142 IDLE after 0 s of wait
+2026-10-01T16:49:15Z FSc go_fs fs_g enter_scene start (level mini_giants_garden, hold 330, sd '--stable-draws 300 --timeout 480', extra '', emu '', rec '--rec')
+2026-10-01T16:55:12Z FSc go_fs fs_g enter_scene end rc 0 log_fs_g.txt sha256 775332c0986ee6c4458297a2028939054dcebaade9c668f6b08f54e194170042
+2026-10-01T16:55:57Z FSc go_fs fs_g s51_vidglitch rc 0 glitch_fs_g.txt sha256 6291baeb1ecc99302328b6e81b46d50a4b1b55ecdc6957bbc296395a76c30b71 rec_fs_g.mp4 sha256 c7cfabcd03f5f8bfa9a21659e56e5f6241fbed49e0686dbc17ed16422f7d25c3
+2026-10-01T16:56:41Z FSc go_fs fs_g pair sheet rec_f4c_g.mp4 / FSc rc 0 sheetpair_fs_g.png sha256 b0b80ee8abb63a049ceeee28c5d8733b3a14411c2ebfa6b9d23f334e8e929bb3: sheetpair: sheetpair_fs_g.png ref 19708 new 20158 step 821 positions 0,821,1642,2463,3284,4105,4926,5747,6568,7389,8210,9031,9852,10673,11494,12315,13136,13957,14778,15599,16420,17241,18062,18883
+2026-10-01T16:57:07Z FSc go_fs fs_g sheet rc 0 sheet_fs_g.png sha256 9172b0d41ac374b418d28969678f273f7b749bc20da8397b593bcc615f66fd6a
+2026-10-01T16:57:11Z FSc go_fs fs_g reader rc 0 score_fs_g.txt sha256 fc6f962963b7b7bcb1000beccd8c5f7474385e372c6f803d9f4c92bd6840c7be: FS VERDICT fs_g: PASS;
+2026-10-01T16:57:11Z FSc go_fs fs_g stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T16:57:11Z FSc go_fs fs_d binary check ok (p.286(v) N1): copy and installed sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-01T16:57:11Z FSc go_fs fs_d recipe file variant_fixb26/pipelines.bin before the tag (information): absent
+2026-10-01T16:57:14Z FSc go_fs fs_d idle142 IDLE after 0 s of wait
+2026-10-01T16:57:14Z FSc go_fs fs_d enter_scene start (level underwater_aerial_garden, hold 330, sd '--stable-draws 300 --timeout 480', extra 'KYTY_FIX_B1B=0', emu '', rec '')
+2026-10-01T17:03:17Z FSc go_fs fs_d enter_scene end rc 0 log_fs_d.txt sha256 23c7406952e1bee8ecc9fa2528714508f065d3bf062c45bb1a98293fa76c82ca
+2026-10-01T17:03:20Z FSc go_fs fs_d reader rc 0 score_fs_d.txt sha256 efaf8b5abdf2dc80767fba02266df51334a94ddbed4cc07aee9f5d08573acc38: FS VERDICT fs_d: INFO;
+2026-10-01T17:03:20Z FSc go_fs fs_d stop check (enter_scene rc 0): continue: INFO 
+2026-10-01T17:03:32Z FSc go_fs summary rc 0 summary_fs.txt sha256 5ac9ce6ad6526139fb8e00e87cd989d53ceb6fd86b4cce81f56749c90858e012: FS SERIES VERDICT p.282(g)(3): PASS; FAIL tags none; not PASS / not FAIL tags none
+2026-10-01T17:03:32Z FSc go_fs restore binary ok sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+2026-10-01T17:03:36Z FSc go_fs shader cache at the end of the series (before the return): files 2144 bytes 325426499 listsha afa6ffb508651355227bd8bf6aacf0b6def0afb5ac4e16161e4d3d05c3574850; dirs [variant_fixb26,variant_fixb26_fixb1b,] sha e208cbed88c943d6
+2026-10-01T17:03:40Z FSc go_fs shader cache returned: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c = before; dirs [] sha e3b0c44298fc1c14 = before (p.277(b)(2)); run cache kept in C:/kyty/f287/fsc/cache_run/20261001T170336Z
+2026-10-01T17:03:41Z FSc go_fs cache manifest after the series (before any GLCache return): cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 170096586 bytes; glcache 16 files 101533286 bytes; cache_series.after.json sha256 b2c3ed8d30a5b67fb7e2433e2aba3ba3e1f812568d65dee2bafc1b5d6e23bbd1
+2026-10-01T17:03:43Z FSc go_fs GLCache returned: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 = before
+2026-10-01T17:03:44Z FSc go_fs _PipelineCache at the end of the series (before the return): files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75
+2026-10-01T17:03:44Z FSc go_fs _PipelineCache returned: files 4 bytes 170096586 listsha 663cce3046db7e703c147712ae570e7a9472e897974c5f0ab36d25e667f24b75 = before
+2026-10-01T17:03:54Z FSc go_fs foreign cpu at the end inside the lock: fgcpu143: run 2011.2 s: (1) alive at both ends: foreign 0.766 CPU s/s = 2.4 % of 32 logical CPUs over 383 processes; top node:38000:0.242, <app>:57436:0.135, PhoneExperienceHost:37780:0.088, explorer:7304:0.040, audiodg:23460:0.035 | (2) new at the end: foreign 0.042 CPU s/s = 0.1 % over 47 processes; top <app>:68080:0.013, postgres:63276:0.005, postgres:58176:0.005, <app>:64984:0.005, postgres:57756:0.004 | (3) system (GetSystemTimes) 8.258 CPU s/s = 25.8 % | game 0.000, chain (pid 62948 and its descendants alive at the end) 0.002 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 7.449 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member || now 10.0 s: (1) alive at both ends: foreign 0.884 CPU s/s = 2.8 % of 32 logical CPUs over 427 processes; top nvcontainer:10308:0.544, node:38000:0.059, bash:64444:0.039, <app>:57436:0.036, claude:77400:0.031 | (2) new at the end: foreign 0.009 CPU s/s = 0.0 % over 3 processes; top <app>:66356:0.009, sleep:69136:0.000, sleep:72288:0.000 | (3) system (GetSystemTimes) 2.635 CPU s/s = 8.2 % | game 0.000, chain (pid 62948 and its descendants alive at the end) 0.006 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 1.735 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member
+2026-10-01T17:03:54Z FSc go_fs lock released (rc 0)
+2026-10-01T17:03:54Z FSc go_fs series call returned rc=0
+2026-10-01T17:05:38Z FSc process note: facts_fsc_2.md written by the Write tool directly into fsc/ without a lock check in the same command (no lock: own lock released 17:03:54Z)
+2026-10-01T17:05:38Z FSc FACTS section (series) appended; mirror docs/track-f/fsc.md and docs/track-f/fsc/runs/ written

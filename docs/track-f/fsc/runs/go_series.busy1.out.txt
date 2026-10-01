@@ -1,0 +1,2 @@
+bash.exe: warning: could not find /tmp, please create!
+rc=1

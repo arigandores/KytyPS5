@@ -1,0 +1,38 @@
+fs_read tag fs_d (d) level underwater_aerial_garden arm I knob KYTY_FIX_B1B=0 log sha256 23c7406952e1bee8ecc9fa2528714508f065d3bf062c45bb1a98293fa76c82ca binary dac02fb9d6fd32b3
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   binary sha256 = FSa copy dac02fb9 (p.286(v) N1) [dac02fb9d6fd32b3]
+admit ok   KYTY_FIX_B26 not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_B1B=0 exactly (p.282(g)(3)(d)) ['0']
+admit ok   KYTY_FIX_DUALSRC not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_MINIMIZE not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no video [None]
+admit ok   --vulkan-validation false [false]
+admit ok   no VK_LAYER_MESSAGE_ID_FILTER [None]
+knob control: want variant_fixb26, lines ['_ShaderCache\\PPSA21564\\variant_fixb26'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+DualSrcBlend supported lines [(1, 1)]; supported=1 enabled=1 before the first GuestOut (byte 505182): 1
+DualSrcBlend patched lines 0; ps=5514e10f1a60df83 0 (before the first GuestOut 0)
+PipelinePrecache lines 5: ['PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26\\pipelines.bin yet', 'PipelinePrecache: saved 9 recipes (2822 bytes)', 'PipelinePrecache: saved 388 recipes (3484661 bytes)', 'PipelinePrecache: saved 400 recipes (3614799 bytes)', 'PipelinePrecache: saved 415 recipes (3780030 bytes)']
+entered True first scene frame (214, 4435579, 6112) scene change False enter_scene outcome ok
+hold: sum dt after the first scene frame 334.6 s (named 300); wall hold_s 330.1 (named None); hold_exit None
+death markers 0 []
+frames >= 1 s after the first scene frame 0 []; max dt_us 427830; AsyncPipelines skipped draw lines 397
+BvhLoopCapTrip lines 0
+mean dt_us after the first scene frame (a number, not a gate): 33625.9 over 9950 frames
+executor member [I] (p.258(d)) ok   0 frames >= 1 s after the first scene frame (K2)
+executor member [I] (p.258(d)) ok   no scene change
+executor member [I] (p.258(d)) ok   game alive at the end of the hold (hold_exit None)
+FS VERDICT fs_d: INFO
+FS EXECUTOR MEMBERS fs_d [I] (not the verdict): all ok

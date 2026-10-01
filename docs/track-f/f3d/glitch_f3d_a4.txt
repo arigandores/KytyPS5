@@ -1,0 +1,2 @@
+rec_f3d_a4.mp4: 7510 frames 960x540, index entries 7510
+one-frame glitches: 0

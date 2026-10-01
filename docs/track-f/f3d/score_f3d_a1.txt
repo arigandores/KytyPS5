@@ -1,0 +1,29 @@
+f3d_read tag f3d_a1 level big_hand_pirate_island KYTY_FIX_B1B=1 kind cold log sha256 c0ef9f475f53a89d9f131dfd8ee31f12f2d0c902a0f8c695664539d7bc689ddf binary 2e6df8f09f006ef8
+admit ok   one attempt [1]
+admit ok   guest args -lvl big_hand_pirate_island [-lvl big_hand_pirate_island]
+admit ok   KYTY_FIX_B1B=1 exactly (p.277(b)(3)) ['1']
+admit ok   KYTY_FIX_B26 not set (default, p.277(b)(1)) [None]
+admit ok   binary sha256 = F3b copy 2e6df8f0 (p.277(b)(4)) [2e6df8f09f006ef8]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   no video [None]
+admit ok   --vulkan-validation false [false]
+knob control (p.277(b)(1)): want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+entered True first scene frame (500, 4737163, 2361) scene change False
+hold: sum dt after first scene frame 122.2 s (named None), json hold_s 120.0, hold_exit None
+(4) fault lines 2, distinct pages 2: 0x401b54000, 0x402508000
+(4) pairs X >= 4 GiB with (X >> 8) & ~0x3fff faulted: 0 []
+(4) low fault pages (< 4 GiB): 0
+(4) BvhLoopCapTrip lines: 0
+death markers 0 []
+K2 frames after the first scene frame 0; K3 in the entry window 19; AsyncPipelines skipped draw lines 2048
+hold frames >= 100 ms after the entry window (information): 5
+  frame n=1258 dt_us=116080 K3 interval [122810862,123474125]
+  frame n=1375 dt_us=182513 K3 interval [127079172,127153287]
+  frame n=1377 dt_us=170675 K3 interval [127290067,128183466]
+  frame n=2748 dt_us=148382 K3 interval [174159906,174235282]
+  frame n=2749 dt_us=201195 K3 interval [174235282,176306891]
+mean dt_us after the first scene frame (a number, not a gate): 41488.3
+F3D VERDICT f3d_a1: PASS

@@ -1,0 +1,27 @@
+f3d_read tag f3d_bv level underwater_aerial_garden KYTY_FIX_B1B=1 kind skyv log sha256 9f35e4af2b82ab83dcd79fb8f50e48a08cce2c610d719f6dfb2cf6a1a780a94b binary 2e6df8f09f006ef8
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_B1B=1 exactly (p.277(b)(3)) ['1']
+admit ok   KYTY_FIX_B26 not set (default, p.277(b)(1)) [None]
+admit ok   binary sha256 = F3b copy 2e6df8f0 (p.277(b)(4)) [2e6df8f09f006ef8]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   video KYTY_REC rec_f3d_bv.mp4 [C:\kyty\f287\f3d\rec_f3d_bv.mp4]
+admit ok   --vulkan-validation false [false]
+knob control (p.277(b)(1)): want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+entered True first scene frame (295, 2000703, 6260) scene change False
+hold: sum dt after first scene frame 334.4 s (named 300), json hold_s 330.1, hold_exit None
+(4) fault lines 36, distinct pages 36: 0x401b54000, 0x401c08000, 0x401c0c000, 0x401c10000, 0x401c14000, 0x401c18000, 0x401c1c000, 0x401c20000, 0x401c24000, 0x401c28000, 0x401c2c000, 0x401c38000
+(4) pairs X >= 4 GiB with (X >> 8) & ~0x3fff faulted: 0 []
+(4) low fault pages (< 4 GiB): 0
+(4) BvhLoopCapTrip lines: 0
+death markers 0 []
+K2 frames after the first scene frame 0; K3 in the entry window 2; AsyncPipelines skipped draw lines 8
+hold frames >= 100 ms after the entry window (information): 2
+  frame n=1069 dt_us=212664 K3 interval [65884249,66411683]
+  frame n=2422 dt_us=174020 K3 interval [106204362,106247945]
+mean dt_us after the first scene frame (a number, not a gate): 40415.9
+video: frames 8574 glitches 0 sheet sheetpair_f3d_bv.png True
+F3D VERDICT f3d_bv: PASS

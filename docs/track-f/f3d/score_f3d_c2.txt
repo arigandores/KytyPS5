@@ -1,0 +1,28 @@
+f3d_read tag f3d_c2 level voxel_world KYTY_FIX_B1B=0 kind ctl log sha256 ced0424dd3b07d6d3d9e9880f48421a0dd57c467bcc544c713cfc9da7d82c973 binary 2e6df8f09f006ef8
+admit ok   one attempt [1]
+admit ok   guest args -lvl voxel_world [-lvl voxel_world]
+admit ok   KYTY_FIX_B1B=0 exactly (p.277(b)(3)) ['0']
+admit ok   KYTY_FIX_B26 not set (default, p.277(b)(1)) [None]
+admit ok   binary sha256 = F3b copy 2e6df8f0 (p.277(b)(4)) [2e6df8f09f006ef8]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   no video [None]
+admit ok   --vulkan-validation false [false]
+knob control (p.277(b)(1)): want variant_fixb26, lines ['_ShaderCache\\PPSA21564\\variant_fixb26'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+entered True first scene frame (271, 25828, 143) scene change False
+hold: sum dt after first scene frame 122.9 s (named 120), json hold_s 120.0, hold_exit None
+(4) fault lines 4, distinct pages 4: 0x4018000, 0x4024000, 0x401bc0000, 0x4024c0000
+(4) pairs X >= 4 GiB with (X >> 8) & ~0x3fff faulted: 2 [('0x401bc0000', '0x4018000'), ('0x4024c0000', '0x4024000')]
+(4) low fault pages (< 4 GiB): 2
+  low fault page 0x4018000
+  low fault page 0x4024000
+(4) BvhLoopCapTrip lines: 0
+death markers 0 []
+K2 frames after the first scene frame 0; K3 in the entry window 1; AsyncPipelines skipped draw lines 11
+hold frames >= 100 ms after the entry window (information): 2
+  frame n=1791 dt_us=121461 K3 interval [68990344,69017445]
+  frame n=1792 dt_us=131515 K3 interval [69017445,70332046]
+mean dt_us after the first scene frame (a number, not a gate): 16831.2
+F3D VERDICT f3d_c2: CONTROL RETURNS

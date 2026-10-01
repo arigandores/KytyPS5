@@ -1,0 +1,3 @@
+suite test_go_f3d.py sha256 c86635450b3231f3eddfd6cbe6355476d7d1b9e12a443f0ab2481658afafde82 target go_f3d.sh sha256 f6599ce20027e95b173e1db60fe6ab37eee4fc8c9b55a6019ded84446d35271c
+checks 56 failed 0
+ALL OK

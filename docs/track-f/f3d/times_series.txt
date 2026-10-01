@@ -1,0 +1,76 @@
+2026-10-01T05:50:08Z F2d chain F3 created: HPP-340 F3b todo, HPP-341 F3c, HPP-342 F3d (blocked on F3c and HPP-333), HPP-343 F3e; executionPolicy stages=1 review checked; HPP-287 blocked on HPP-343 and HPP-338; FACTS section F2d
+2026-10-01T13:10:51Z F3d wake comment b146397d read (p.277 RC1 to the seal); HPP-341 done, HPP-333 done; F4c HPP-337 in_progress - first in the F queue; harness dir C:/kyty/f287/f3d created (support files copied from f4c, enter_scene root moved)
+2026-10-01T13:36:26Z F3d rule 27 event (noticed 13:18:14Z, written now): file test_f3d_read.py written 13:18:04Z (mtime) under the F4c lock taken 13:16:19Z (f4c/lock.log) by the Write tool without a lock check; also under that lock: one command cat lock/date/tail 13:18:14Z and two wait loops (sleep, [ -e lock ]) until 13:36:07Z - no game, no GPU, no other write; go_f3d.sh written 13:16:01Z (before the lock)
+2026-10-01T13:40:10Z F3d seal pred/01_f3d.md sha256 f46bee05766fc8229a94cfdc09539a023129973557de0a478d8af02db66df1a1 written 13:39:47Z (p.259(e) and p.277(b) verbatim from 9a3de197); check-seal OK; test_f3d_read 143 ALL OK (out 6096852e), test_go_f3d 56 ALL OK (out 0d407b67); no mutants (task); comments after b146397d: 0 []; no STOP; win_f3d at 13:39:55Z: open (HPP-337 done, HPP-352 blocked, HPP-364 blocked)
+2026-10-01T13:40:13Z F3d next_f3d STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/f3d/go_f3d.sh series
+2026-10-01T13:40:43Z F3d go_f3d pre-lock idle142 IDLE after 0 s of wait
+2026-10-01T13:40:59Z F3d go_f3d lock window (p.259(e)(5), 277(z)): win_f3d HPP-333 done run None; HPP-341 done run None; HPP-337 done run None; HPP-352 blocked run None; HPP-364 blocked run None -> open
+2026-10-01T13:40:59Z F3d go_f3d lock taken (winpid 67896)
+2026-10-01T13:41:02Z F3d go_f3d shader cache before the series: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c; dirs [] sha e3b0c44298fc1c14
+2026-10-01T13:41:05Z F3d go_f3d shader cache copy = before (C:/kyty/f287/f3d/cache_snap)
+2026-10-01T13:41:06Z F3d go_f3d cache manifest before the series: cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 167371569 bytes; glcache 16 files 98780153 bytes; cache_series.before.json sha256 921568d66326618d342bc54e538b605be8005ecc0d2659cb44dcc4f4faaae829
+2026-10-01T13:41:07Z F3d go_f3d GLCache before the series: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 (copy equal, GLRESTORE=1)
+2026-10-01T13:41:07Z F3d go_f3d installed fix binary sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:41:08Z F3d go_f3d f3d_a1 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:41:10Z F3d go_f3d f3d_a1 idle142 IDLE after 0 s of wait
+2026-10-01T13:41:10Z F3d go_f3d f3d_a1 enter_scene start (level big_hand_pirate_island, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=1', emu '', rec '')
+2026-10-01T13:43:47Z F3d go_f3d f3d_a1 enter_scene end rc 0 log_f3d_a1.txt sha256 c0ef9f475f53a89d9f131dfd8ee31f12f2d0c902a0f8c695664539d7bc689ddf
+2026-10-01T13:43:48Z F3d go_f3d f3d_a1 reader rc 0 score_f3d_a1.txt sha256 90c30e2e1c3b3e7fec8c7897b6df2d216a97e1fd50f82b52790a61efc5028e8e: F3D VERDICT f3d_a1: PASS;
+2026-10-01T13:43:48Z F3d go_f3d f3d_a1 stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T13:43:50Z F3d go_f3d f3d_a2 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:43:52Z F3d go_f3d f3d_a2 idle142 IDLE after 0 s of wait
+2026-10-01T13:43:52Z F3d go_f3d f3d_a2 enter_scene start (level big_hand_pirate_island, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=1', emu '', rec '--rec')
+2026-10-01T13:46:22Z F3d go_f3d f3d_a2 enter_scene end rc 0 log_f3d_a2.txt sha256 4ab06aed88996bd7287b34fcb4bf74eeee59c50d9eb5266beeff8932f384ba23
+2026-10-01T13:46:34Z F3d go_f3d f3d_a2 s51_vidglitch rc 0 glitch_f3d_a2.txt sha256 65677e3309825c5d5fa76378c30d430f5fdeb5b4a0014e229457a566f88de6b7 rec_f3d_a2.mp4 sha256 c64bf52e63c1faf5b6a215435a64b5e28888bfec8697824848e93f39cd65f72b
+2026-10-01T13:46:40Z F3d go_f3d f3d_a2 sheet rc 0 sheet_f3d_a2.png sha256 029692f3679ec636589f2b848b552ff067d53a2b9a6c598b3b95d4a00529b711
+2026-10-01T13:46:41Z F3d go_f3d f3d_a2 reader rc 0 score_f3d_a2.txt sha256 363d18968bf50bf1ed4e4d9c4dee3d2132386f0adb5cc423ab74ec7615f8a2dc: F3D VERDICT f3d_a2: PASS;
+2026-10-01T13:46:41Z F3d go_f3d f3d_a2 stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T13:46:42Z F3d go_f3d f3d_a3 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:46:45Z F3d go_f3d f3d_a3 idle142 IDLE after 0 s of wait
+2026-10-01T13:46:45Z F3d go_f3d f3d_a3 enter_scene start (level voxel_world, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=1', emu '', rec '')
+2026-10-01T13:49:13Z F3d go_f3d f3d_a3 enter_scene end rc 0 log_f3d_a3.txt sha256 8d2bd3d026a1dd45b52a2db9afc8b014dc1b28274506451b7769350989331b38
+2026-10-01T13:49:15Z F3d go_f3d f3d_a3 reader rc 0 score_f3d_a3.txt sha256 44dc52fd52df3e78f8567f981f2412d78395973a6b5dd294df21e837de655075: F3D VERDICT f3d_a3: PASS;
+2026-10-01T13:49:15Z F3d go_f3d f3d_a3 stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T13:49:15Z F3d go_f3d f3d_a4 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:49:17Z F3d go_f3d f3d_a4 idle142 IDLE after 0 s of wait
+2026-10-01T13:49:18Z F3d go_f3d f3d_a4 enter_scene start (level voxel_world, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=1', emu '', rec '--rec')
+2026-10-01T13:51:42Z F3d go_f3d f3d_a4 enter_scene end rc 0 log_f3d_a4.txt sha256 3db1eb6d4b3589308c117299d3759a4e2ecbedeba465301f2b14ac7ae8219ad2
+2026-10-01T13:52:02Z F3d go_f3d f3d_a4 s51_vidglitch rc 0 glitch_f3d_a4.txt sha256 b8076e3863448f8193397d91a1a0290f280a39633a19fb732bca667721603e3f rec_f3d_a4.mp4 sha256 4aa2f3d2068a6dba81ead0682b648bb7007aa89cf2d845cf216b2c63a1ac3b46
+2026-10-01T13:52:11Z F3d go_f3d f3d_a4 sheet rc 0 sheet_f3d_a4.png sha256 1631a1154b1d9be8cd64f0061b3b16a70d86b6ebfb23b229705095ef8dde8f7e
+2026-10-01T13:52:14Z F3d go_f3d f3d_a4 reader rc 0 score_f3d_a4.txt sha256 f9931471869942a1997e05c6e2694613c46cf50213899ecd8a7e61a75e4ca9f5: F3D VERDICT f3d_a4: PASS;
+2026-10-01T13:52:14Z F3d go_f3d f3d_a4 stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T13:52:14Z F3d go_f3d f3d_bv binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:52:16Z F3d go_f3d f3d_bv idle142 IDLE after 0 s of wait
+2026-10-01T13:52:16Z F3d go_f3d f3d_bv enter_scene start (level underwater_aerial_garden, hold 330, sd '--stable-draws 300 --timeout 480', extra 'KYTY_FIX_B1B=1', emu '', rec '--rec')
+2026-10-01T13:58:16Z F3d go_f3d f3d_bv enter_scene end rc 0 log_f3d_bv.txt sha256 9f35e4af2b82ab83dcd79fb8f50e48a08cce2c610d719f6dfb2cf6a1a780a94b
+2026-10-01T13:58:37Z F3d go_f3d f3d_bv s51_vidglitch rc 0 glitch_f3d_bv.txt sha256 ee2b23b1714eaf987ee5f624d1fd33b09d7ad1aad3bcc97bb95ae024cd687ccb rec_f3d_bv.mp4 sha256 8258935ccfcd5f8ae772a7360067e6dfb6e12c2316b53c3ebaa644a37a94012f
+2026-10-01T13:59:07Z F3d go_f3d f3d_bv pair sheet v142 / F3d rc 0 sheetpair_f3d_bv.png sha256 5d3a55e5610ef421fb09747ab9eb3de19a3d30c4dc3ae2d54f86ef22ef19372a: sheetpair: sheetpair_f3d_bv.png ref 10567 new 8574 step 357 positions 0,357,714,1071,1428,1785,2142,2499,2856,3213,3570,3927,4284,4641,4998,5355,5712,6069,6426,6783,7140,7497,7854,8211
+2026-10-01T13:59:10Z F3d go_f3d f3d_bv reader rc 0 score_f3d_bv.txt sha256 bfb6fd481b7d07f4878475e9541a46a6b1aef45eed25a9a92972d290565ef15b: F3D VERDICT f3d_bv: PASS;
+2026-10-01T13:59:10Z F3d go_f3d f3d_bv stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T13:59:11Z F3d go_f3d f3d_bw binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T13:59:13Z F3d go_f3d f3d_bw idle142 IDLE after 0 s of wait
+2026-10-01T13:59:13Z F3d go_f3d f3d_bw enter_scene start (level underwater_aerial_garden, hold 310, sd '--stable-draws 300 --timeout 600', extra 'KYTY_FIX_B1B=1 KYTY_PIPELINE_PRECACHE=0 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000', emu '--emu-arg=--vulkan-validation --emu-arg=true', rec '')
+2026-10-01T14:05:08Z F3d go_f3d f3d_bw enter_scene end rc 0 log_f3d_bw.txt sha256 954520f5239e8c8d9a918510208ca519899c3504f04e217f56c683939b5969af
+2026-10-01T14:05:11Z F3d go_f3d f3d_bw reader rc 0 score_f3d_bw.txt sha256 026002cba57798e4cab97e6289101f9a455445621809ddc46a144cf5283e84de: F3D VERDICT f3d_bw: PASS;
+2026-10-01T14:05:11Z F3d go_f3d f3d_bw stop check (enter_scene rc 0): continue: PASS 
+2026-10-01T14:05:11Z F3d go_f3d f3d_c1 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T14:05:14Z F3d go_f3d f3d_c1 idle142 IDLE after 0 s of wait
+2026-10-01T14:05:14Z F3d go_f3d f3d_c1 enter_scene start (level big_hand_pirate_island, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=0', emu '', rec '')
+2026-10-01T14:07:54Z F3d go_f3d f3d_c1 enter_scene end rc 0 log_f3d_c1.txt sha256 cc77801ae758825fc87f30d93a49c1e101077756896f545b4963922227f08205
+2026-10-01T14:07:58Z F3d go_f3d f3d_c1 reader rc 0 score_f3d_c1.txt sha256 3b89e3d1d41623908f4324aa5d2578861e45416cbf3bbace13670586bac4a96b: F3D VERDICT f3d_c1: CONTROL RETURNS;
+2026-10-01T14:07:58Z F3d go_f3d f3d_c1 stop check (enter_scene rc 0): continue: CONTROL RETURNS 
+2026-10-01T14:07:58Z F3d go_f3d f3d_c2 binary check ok (p.277(b)(4)): copy and installed sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+2026-10-01T14:08:01Z F3d go_f3d f3d_c2 idle142 IDLE after 0 s of wait
+2026-10-01T14:08:02Z F3d go_f3d f3d_c2 enter_scene start (level voxel_world, hold 120, sd '--stable-draws 100 --timeout 480', extra 'KYTY_FIX_B1B=0', emu '', rec '')
+2026-10-01T14:10:30Z F3d go_f3d f3d_c2 enter_scene end rc 0 log_f3d_c2.txt sha256 ced0424dd3b07d6d3d9e9880f48421a0dd57c467bcc544c713cfc9da7d82c973
+2026-10-01T14:10:31Z F3d go_f3d f3d_c2 reader rc 0 score_f3d_c2.txt sha256 1797046eed78593bb6b8b820833d066320e8efee1d0ada5ae7e04a8a38b49937: F3D VERDICT f3d_c2: CONTROL RETURNS;
+2026-10-01T14:10:32Z F3d go_f3d f3d_c2 stop check (enter_scene rc 0): continue: CONTROL RETURNS 
+2026-10-01T14:10:44Z F3d go_f3d summary rc 0 summary_f3d.txt sha256 313b2de557c628916897ec504d108671d3fbdf036a335d56e459f75c3c129d6c: F3D SERIES VERDICT p.259(e)(4)-(6): PASS; FAIL tags none; not evaluable/invalid tags none; low-page tags none
+2026-10-01T14:10:45Z F3d go_f3d restore binary ok sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+2026-10-01T14:10:48Z F3d go_f3d shader cache at the end of the series (before the return): files 2139 bytes 352843915 listsha e330f56af3ef0688965a4ff71f79f5c59094080b5a130f434fe0ddb9f59c2cb9; dirs [variant_fixb26,variant_fixb26_fixb1b,] sha e208cbed88c943d6
+2026-10-01T14:10:51Z F3d go_f3d shader cache returned: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c = before; dirs [] sha e3b0c44298fc1c14 = before (p.277(b)(2)); run cache kept in C:/kyty/f287/f3d/cache_run/20261001T141048Z
+2026-10-01T14:10:53Z F3d go_f3d cache manifest after the series (before any GLCache return): cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 170096586 bytes; glcache 16 files 102596013 bytes; cache_series.after.json sha256 3b96ff5faf5bcbc041c0ddfadeb6f7dec881ed2f1622b3a7d3483b1e8d9e07ce
+2026-10-01T14:10:55Z F3d go_f3d GLCache returned: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 = before
+2026-10-01T14:11:05Z F3d go_f3d foreign cpu at the end inside the lock: fgcpu143: run 1788.3 s: (1) alive at both ends: foreign 1.269 CPU s/s = 4.0 % of 32 logical CPUs over 515 processes; top node:38000:0.251, <foreign app>:47132:0.238, <foreign app>:57436:0.130, PhoneExperienceHost:37780:0.089, <foreign app>:77384:0.061 | (2) new at the end: foreign 0.025 CPU s/s = 0.1 % over 35 processes; top <foreign app>:66548:0.005, postgres:69788:0.004, postgres:39220:0.004, postgres:65612:0.003, postgres:76448:0.002 | (3) system (GetSystemTimes) 9.081 CPU s/s = 28.4 % | game 0.000, chain (pid 67896 and its descendants alive at the end) 0.002 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 7.785 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member || now 10.0 s: (1) alive at both ends: foreign 1.054 CPU s/s = 3.3 % of 32 logical CPUs over 546 processes; top node:38000:0.363, <foreign app>:47132:0.109, <foreign app>:57436:0.098, <foreign app>:77384:0.065, <foreign app>_agent:28096:0.041 | (2) new at the end: foreign 0.002 CPU s/s = 0.0 % over 3 processes; top sleep:17744:0.002, sleep:75636:0.000, sleep:77500:0.000 | (3) system (GetSystemTimes) 2.538 CPU s/s = 7.9 % | game 0.000, chain (pid 67896 and its descendants alive at the end) 0.012 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 1.470 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member
+2026-10-01T14:11:05Z F3d go_f3d lock released (rc 0)
+2026-10-01T14:11:05Z F3d go_f3d series call returned rc=0

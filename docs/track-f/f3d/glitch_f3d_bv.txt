@@ -1,0 +1,2 @@
+rec_f3d_bv.mp4: 8574 frames 960x540, index entries 8574
+one-frame glitches: 0

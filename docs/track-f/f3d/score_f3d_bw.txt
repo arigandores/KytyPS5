@@ -1,0 +1,67 @@
+f3d_read tag f3d_bw level underwater_aerial_garden KYTY_FIX_B1B=1 kind skyw log sha256 954520f5239e8c8d9a918510208ca519899c3504f04e217f56c683939b5969af binary 2e6df8f09f006ef8
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_B1B=1 exactly (p.277(b)(3)) ['1']
+admit ok   KYTY_FIX_B26 not set (default, p.277(b)(1)) [None]
+admit ok   binary sha256 = F3b copy 2e6df8f0 (p.277(b)(4)) [2e6df8f09f006ef8]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE =0 (p.254(e)) ['0']
+admit ok   no video [None]
+admit ok   --vulkan-validation true [true]
+admit ok   validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][) [0/1/822726]
+knob control (p.277(b)(1)): want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+entered True first scene frame (285, 2394043, 6092) scene change False
+hold: sum dt after first scene frame 326.1 s (named 300), json hold_s 310.1, hold_exit None
+(4) fault lines 36, distinct pages 36: 0x401b54000, 0x401c08000, 0x401c0c000, 0x401c10000, 0x401c14000, 0x401c18000, 0x401c1c000, 0x401c20000, 0x401c24000, 0x401c28000, 0x401c2c000, 0x401c38000
+(4) pairs X >= 4 GiB with (X >> 8) & ~0x3fff faulted: 0 []
+(4) low fault pages (< 4 GiB): 0
+(4) BvhLoopCapTrip lines: 0
+death markers 0 []
+K2 frames after the first scene frame 0; K3 in the entry window 599; AsyncPipelines skipped draw lines 395
+hold frames >= 100 ms after the entry window (information): 1609
+  frame n=885 dt_us=133888 K3 interval [110511378,110653806]
+  frame n=886 dt_us=136837 K3 interval [110653806,110797337]
+  frame n=887 dt_us=148528 K3 interval [110797337,110945683]
+  frame n=888 dt_us=135669 K3 interval [110945683,111089256]
+  frame n=889 dt_us=145911 K3 interval [111089256,111237342]
+  frame n=890 dt_us=133460 K3 interval [111237342,111381637]
+  frame n=891 dt_us=166316 K3 interval [111381637,111529240]
+  frame n=892 dt_us=151740 K3 interval [111529240,111674487]
+  frame n=893 dt_us=150287 K3 interval [111674487,111821103]
+  frame n=894 dt_us=136156 K3 interval [111821103,111966308]
+  frame n=895 dt_us=145116 K3 interval [111966308,112112003]
+  frame n=896 dt_us=134311 K3 interval [112112003,112258798]
+  frame n=897 dt_us=148842 K3 interval [112258798,112407317]
+  frame n=898 dt_us=133377 K3 interval [112407317,112551000]
+  frame n=899 dt_us=136960 K3 interval [112551000,112696779]
+  frame n=900 dt_us=145874 K3 interval [112696779,112845659]
+  frame n=901 dt_us=152486 K3 interval [112845659,112993612]
+  frame n=902 dt_us=150907 K3 interval [112993612,113143484]
+  frame n=903 dt_us=132085 K3 interval [113143484,113287724]
+  frame n=904 dt_us=149253 K3 interval [113287724,113435593]
+  frame n=905 dt_us=149010 K3 interval [113435593,113585306]
+  frame n=906 dt_us=137486 K3 interval [113585306,113731949]
+  frame n=907 dt_us=148852 K3 interval [113731949,113880109]
+  frame n=908 dt_us=150709 K3 interval [113880109,114030424]
+  frame n=909 dt_us=152388 K3 interval [114030424,114177463]
+  frame n=910 dt_us=164012 K3 interval [114177463,114324637]
+  frame n=911 dt_us=140027 K3 interval [114324637,114471477]
+  frame n=912 dt_us=157547 K3 interval [114471477,114618155]
+  frame n=913 dt_us=149286 K3 interval [114618155,114765132]
+  frame n=914 dt_us=149294 K3 interval [114765132,114912936]
+  frame n=915 dt_us=151940 K3 interval [114912936,115061955]
+  frame n=916 dt_us=148628 K3 interval [115061955,115214013]
+  frame n=917 dt_us=149176 K3 interval [115214013,115365116]
+  frame n=918 dt_us=144409 K3 interval [115365116,115515746]
+  frame n=919 dt_us=156597 K3 interval [115515746,115670182]
+  frame n=920 dt_us=152673 K3 interval [115670182,115820069]
+  frame n=921 dt_us=155629 K3 interval [115820069,115970762]
+  frame n=922 dt_us=159649 K3 interval [115970762,116121532]
+  frame n=923 dt_us=141816 K3 interval [116121532,116265502]
+  frame n=924 dt_us=146675 K3 interval [116265502,116413005]
+mean dt_us after the first scene frame (a number, not a gate): 147360.5
+validation noval/valfeat/vkany 0/1/822726 active True; [Vulkan][E] 0 []
+member of the executor [I] (p.258(d)): layer limit lines "last time reporting it" 0
+F3D VERDICT f3d_bw: PASS

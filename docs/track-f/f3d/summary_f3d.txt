@@ -1,0 +1,15 @@
+F3D SERIES TABLE (p.259(e)(5); one attempt each)
+tag     level                     fix kind verdict          pairs low trips deaths K2 hold_s  meandt  K3hold video/glitch
+f3d_a1  big_hand_pirate_island    1   cold PASS                 0   0     0      0  0   122.2   41488      5 -
+f3d_a2  big_hand_pirate_island    1   warm PASS                 0   0     0      0  0   121.7   40863      0 3454/0
+f3d_a3  voxel_world               1   cold PASS                 0   0     0      0  0   123.0   16832      1 -
+f3d_a4  voxel_world               1   warm PASS                 0   0     0      0  0   122.1   16714      0 7510/0
+f3d_bv  underwater_aerial_garden  1   skyv PASS                 0   0     0      0  0   334.4   40416      2 8574/0
+f3d_bw  underwater_aerial_garden  1   skyw PASS                 0   0     0      0  0   326.1  147360   1609 -
+f3d_c1  big_hand_pirate_island    0   ctl  CONTROL RETURNS      1   2     0      0  0   128.9   46233      5 -
+f3d_c2  voxel_world               0   ctl  CONTROL RETURNS      2   2     0      0  0   122.9   16831      2 -
+(4) pairs on the six =1 entries: f3d_a1 0, f3d_a2 0, f3d_a3 0, f3d_a4 0, f3d_bv 0, f3d_bw 0
+(4) pairs on the =0 controls: f3d_c1 1, f3d_c2 2
+(6) =1 entries of (a) without a BvhLoopCapTrip line: 4 of 4 (N >= 4)
+(6) =1 entries of (a) with 0 pairs: 4 of 4 (N >= 2 per level)
+F3D SERIES VERDICT p.259(e)(4)-(6): PASS; FAIL tags none; not evaluable/invalid tags none; low-page tags none

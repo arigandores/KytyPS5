@@ -1,0 +1,37 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s145\step2\gate145.py sha256 acf00444b4c38cda56334b401895deb08a8bbc37257a277be95111b08ac69673
+test    C:\kyty\s145\step2\test_gate145.py sha256 f2a8395d5798ffcbe6ae13af3c5bb3c3777ccc1a2f14f8229b373fcd8b4be723
+mutants C:\kyty\s145\step2\mut_gate145.py sha256 ba60bb5b4ba9118ca8cd968ff1e63a934510202ac796f737d58d45e9d06f1a9d
+mutants: format list, 15 defined (strict: every use of MUTANTS checked; statements evaluated at lines 10)
+selection: --only, 15 mutants
+suite: family V; fast on (73 guarded updates of ok); end of suite: the final exit call at line 619
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['fresh', 'link', 'mf', 'put_tag', 'rows', 'run', 'seal144', 'synth_v', 'synth_w', 'wscore'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 18 (spawn, one process per job), work dir C:\kyty\s145\mutwork_1b2g\gate145_66848_1790876412
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.03 s in the baseline (21 of 211 calls validated; not validated: 75 x it printed; 72 x the two baselines differ (pre, post); 43 x a scorer function (sha_file))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (35.7 s)
+BASELINE#2  SURVIVED  (35.3 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (72.7 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (72.5 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (73.1 s)
+g_pred  KILLED by test line 588  (72.4 s)
+g_refseal  KILLED by test line 252  (31.3 s)
+g_minfree  KILLED by test line 581  (71.7 s)
+g_disk  KILLED by test line 581  (73.2 s)
+g_rx  KILLED by test line 537  (68.4 s)
+g_wab_none  KILLED by test line 549  (70.3 s)
+g_wab_noline  KILLED by test line 553  (71.7 s)
+g_f4  KILLED by test line 189  (5.0 s)
+g_f4_nojson  KILLED by test line 613  (75.4 s)
+g_wb_none  KILLED by test line 549  (70.4 s)
+g_wb  KILLED by test line 537  (69.2 s)
+g_ref_cmp  KILLED by test line 596  (73.9 s)
+g_ref_none  KILLED by test line 606  (74.6 s)
+g_free_cmp  KILLED by test line 581  (72.3 s)
+g_early  KILLED (crash: FileNotFoundError: [Errno 2] No such file or directory: 'C:/kyty/s145/mutwork_1b2g/gate145_66848_1790876412/j00020/fx/g17/none.json' [gate145.py:436])  (73.7 s)
+15 mutants: 15 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 14 kill(s) ended at their first failing case; they skipped a median 13 % / mean 22 % of the suite's 85 checks, about 6.1 s of the baseline's suite time per job (86 s in all)
+wall 114.5 s, worker time 1262.6 s, 18 workers
+ALL KILLED (15 of 15 selected mutants killed; 15 defined in the mutant script)

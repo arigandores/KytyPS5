@@ -1,0 +1,33 @@
+== log_ack129.txt
+  line 337656 n 954 dt_us 183252 draws 15678 | interval lines 265 io/blank 258
+        5 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_ack130.txt
+  line 347229 n 954 dt_us 194034 draws 17377 | interval lines 231 io/blank 223
+        7 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_s12s130.txt
+  line 346996 n 951 dt_us 194568 draws 16455 | interval lines 279 io/blank 272
+        6 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_s3s130.txt
+  line 473319 n 2980 dt_us 100276 draws 710 | interval lines 72 io/blank 66
+        4 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+== log_lw3s131.txt
+  line 325377 n 1060 dt_us 155753 draws 16155 | interval lines 178 io/blank 172
+        5 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_lw4s131.txt
+  line 332368 n 950 dt_us 189871 draws 16102 | interval lines 171 io/blank 164
+        6 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_lw5s131.txt
+  line 346682 n 949 dt_us 188648 draws 16202 | interval lines 171 io/blank 164
+        6 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+== log_rs135.txt
+  line 1082583 n 7445 dt_us 235598 draws 9103 | interval lines 134 io/blank 131
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-

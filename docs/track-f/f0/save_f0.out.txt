@@ -1,0 +1,14 @@
+s142\log_c142_01.txt | save@4297 bytes=88734760 save_us=75800 -> frame n=2 dt_us=20388
+s142\log_c142_02.txt | save@4310 bytes=90186782 save_us=74362 -> frame n=2 dt_us=20314 ; save@496947 bytes=90591072 save_us=93261 -> frame n=795 dt_us=165920 ; save@557303 bytes=90629860 save_us=92638 -> frame n=1358 dt_us=149651 ; save@724494 bytes=90629860 save_us=86465 -> frame n=2557 dt_us=151746
+s142\log_c142_03.txt | save@4323 bytes=90629860 save_us=77980 -> frame n=2 dt_us=19431 ; save@423789 bytes=92136273 save_us=87008 -> frame n=1042 dt_us=115028 ; save@565427 bytes=92136273 save_us=80536 -> frame n=2626 dt_us=93171
+s142\log_c142_04.txt | save@4327 bytes=92136273 save_us=71973 -> frame n=2 dt_us=19056
+s142\log_c142_05.txt | save@4359 bytes=92372771 save_us=87852 -> frame n=2 dt_us=21227 ; save@423006 bytes=92984474 save_us=92793 -> frame n=1002 dt_us=131181
+s142\log_c142_06.txt | save@4359 bytes=93008722 save_us=75811 -> frame n=2 dt_us=10761
+s142\log_c142_07.txt | save@4373 bytes=93360825 save_us=87691 -> frame n=2 dt_us=19425
+s142\log_c142_08.txt | save@4377 bytes=93477912 save_us=70191 -> frame n=2 dt_us=20739
+s142\log_c142_09.txt | save@4377 bytes=93973356 save_us=74391 -> frame n=2 dt_us=16197
+s142\log_c142_10.txt | save@4377 bytes=94249535 save_us=138213 -> frame n=2 dt_us=20513
+s142\log_v142.txt | save@4297 bytes=88734760 save_us=80044 -> frame n=2 dt_us=22368
+s142\log_w142.txt | save@4300 bytes=88734760 save_us=84715 -> frame n=2 dt_us=14890
+log_kp137h.txt | save@4296 bytes=88734760 save_us=96814 -> frame n=2 dt_us=16048
+log_lw5s131.txt | save@4296 bytes=88734760 save_us=91152 -> frame n=2 dt_us=16285

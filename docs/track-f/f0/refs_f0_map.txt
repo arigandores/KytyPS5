@@ -1,0 +1,102 @@
+26457dd7:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:232 | anchor: LOGF("CsPretranslate: skipped hash=%016" PRIx64 " reason=%s | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:212 | anchor: Common::ScopedFatalInterceptor recover | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:130 | anchor: LOGF("CsPretranslate: miss hash= | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3869 | anchor: prepared = pretranslation.Take(params.code | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3874 | anchor: ShaderRecompiler::TranslateProgram(params.code, options); | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5969 | anchor: if (ComputePretranslation::Enabled() && mapped.type == Prospero::ShaderBinaryType::kCs | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/frontend/cfg/ShaderCFG.cpp:44 | anchor: EXIT("shader CFG build failed: %s" | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:153 | anchor: "SOP1 opcode is not implemented" | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1147 | anchor: "VOPC opcode is not implemented" | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1475 | anchor: "VOP2 opcode is not implemented" | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/cache/faultManager.cpp:204 | anchor: LOGF("BvhLoopCapTrip: trips=+%u | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/commandScheduler.cpp:655 | anchor: LOGF("PriorityStall: tick= | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/renderDraw.cpp:4449 | anchor: LOGF("AsyncPipelines: skipped draw %s | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/presentation/videoOut.cpp:1203 | anchor: held (incomplete frame) | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4658 | anchor: void PipelineCache::MaybeWriteDriverCache() { | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4655 | anchor: // Called with m_mutex held right after a new pipeline was created. | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4665 | anchor: if (now - m_driver_cache_saved_us < 20000000u) { | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806 | anchor: PipelineCacheLog("Vulkan pipeline cache: saved {} bytes | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5645 | anchor: LOGF("CsStall: kind=%s | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/loader/runtimeLinker.cpp:408 | anchor: LOGF("Unresolved import stub called [%u]: patch_vaddr | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/loader/runtimeLinker.cpp:1156 | anchor: LOGF("Relocate: unresolved PLT import patched to stub | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/loader/runtimeLinker.cpp:1214 | anchor: LOGF("=== Stubbed function, returning OK | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/kernel/fileSystem.cpp:724 | anchor: LOGF("KernelRead: direct read failed | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/kernel/fileSystem.cpp:191 | anchor: m_files[index] == nullptr | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/presentation/window/window.cpp:830 | anchor: LOGF("MainTaskLate: us=%llu | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/debug.cpp:226 | anchor: ignoring PS5 color metadata | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/debug.cpp:246 | anchor: ignoring PS5 color round mode | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/debug.cpp:313 | anchor: ignoring PS5 metadata addresses | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/depthRenderTarget.cpp:358 | anchor: ignoring enabled depth/stencil state without a bound attachment | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/renderCompute.cpp:939 | anchor: skipping zero-sized dispatch | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/guest_gpu/command_processor/pm4Handlers.cpp:4017 | anchor: ignoring indirect uc reg GE_STEREO_CNTL | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/libs/agc.cpp:3071 | anchor: size_bytes is not 256-byte aligned | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:171 | anchor: shader resource tracking: hash=0x | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/TranslationBudget.h:21 | anchor: speculative translation budget exceeded | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/shader/recompiler/ShaderRecompiler.cpp:72 | anchor: CFG dispatcher fallback: stage= | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5221 | anchor: accepting EXEC_ON_NOOP | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/cache/textureCache.cpp:3256 | anchor: stale pending DCC fill ignored | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/host_gpu/renderer/commandRecorder.cpp:326 | anchor: m_producer != self | anchor in line: OK | +1 control: NOT OK
+26457dd7:src/graphics/presentation/window/window.cpp:378 | anchor: SDL_GameControllerClose | anchor in line: OK | +1 control: NOT OK
+beb36ab0:docs/ROADMAP.md:12074 | anchor: 228. **Трек F | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12152 | anchor: (б) **Граница с треком F (п. 228).** | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12294 | anchor: (г) **Новые и изменённые строки (Б) по классам** | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12306 | anchor: (д) **p форм на установленной сборке** | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:11689 | anchor: **Б32 | K3 | | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12295 | anchor: (1) **Б33 — K3 на удержании | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12298 | anchor: (2) **Б34 — наблюдение | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12302 | anchor: класс K4 не меняется, пометка | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/ROADMAP.md:12495 | anchor: (б) **Поправка лида RC-L1 | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/track-f/f1-review.md:37 | anchor: RC1. Без сцены-свидетеля | anchor in line: OK | +1 control: NOT OK
+455b3a25:docs/track-f/f1-review.md:50 | anchor: RC2. Критерий (е)(3) | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:207 | anchor: | Б1а | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:208 | anchor: | Б1б | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:209 | anchor: | Б2 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:210 | anchor: | Б3а | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:211 | anchor: | Б3б | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:212 | anchor: | Б4 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:213 | anchor: | Б5 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:214 | anchor: | Б5а | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:215 | anchor: | Б6 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:216 | anchor: | Б7 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:217 | anchor: | Б8 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:218 | anchor: | Б9 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:219 | anchor: | Б10 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:220 | anchor: | Б11 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:221 | anchor: | Б12 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:222 | anchor: | Б13 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:223 | anchor: | Б14 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:224 | anchor: | Б15 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:225 | anchor: | Б16 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:226 | anchor: | Б17 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:227 | anchor: | Б18 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:228 | anchor: | Б19 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:229 | anchor: | Б20 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:230 | anchor: | Б22 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:231 | anchor: | Б24 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:232 | anchor: | Б25 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:233 | anchor: | Б26 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:234 | anchor: | Б27 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:235 | anchor: | Б28 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:236 | anchor: | Б29 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:237 | anchor: | Б30 | | anchor in line: OK | +1 control: NOT OK
+2c65eb41:docs/session-141/inventory141.md:238 | anchor: | Б31 | | anchor in line: OK | +1 control: NOT OK
+C:/kyty/s142/FACTS.md:4 | anchor: 9235a7ac61f1affb | anchor in line: OK | +1 control: NOT OK | sha256 3856d3a01e9194fb186c2c262b7673e613d7f9147a8b214c16d73e4a740b5f07
+C:/kyty/s142/FACTS.md:25 | anchor: Б20 | anchor in line: OK | +1 control: NOT OK | sha256 3856d3a01e9194fb186c2c262b7673e613d7f9147a8b214c16d73e4a740b5f07
+C:/kyty/s142/FACTS.md:219 | anchor: маркеров смерти 0 | anchor in line: OK | +1 control: NOT OK | sha256 3856d3a01e9194fb186c2c262b7673e613d7f9147a8b214c16d73e4a740b5f07
+C:/kyty/s142/FACTS.md:221 | anchor: форма Б5а | anchor in line: OK | +1 control: NOT OK | sha256 3856d3a01e9194fb186c2c262b7673e613d7f9147a8b214c16d73e4a740b5f07
+C:/kyty/s142/log_c142_01.txt:350295 | anchor: CsStall: kind=wait us=689831 | anchor in line: OK | +1 control: NOT OK | sha256 66b4ff7e0e50a8a445a3820b27976eef93b32bf81afc72e8efeef571057ec738
+C:/kyty/s142/log_c142_02.txt:9989 | anchor: opcode=0x21 | anchor in line: OK | +1 control: NOT OK | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:15230 | anchor: size_bytes is not | anchor in line: OK | +1 control: repeats | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:30109 | anchor: file not found | anchor in line: OK | +1 control: NOT OK | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:207786 | anchor: skipping zero-sized dispatch | anchor in line: OK | +1 control: repeats | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:269177 | anchor: BvhLoopCapTrip: | anchor in line: OK | +1 control: NOT OK | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:490948 | anchor: shader resource tracking | anchor in line: OK | +1 control: NOT OK | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_02.txt:557303 | anchor: Vulkan pipeline cache: saved 90629860 bytes | anchor in line: OK | +1 control: NOT OK | sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c
+C:/kyty/s142/log_c142_03.txt:239572 | anchor: Unresolved import stub called | anchor in line: OK | +1 control: NOT OK | sha256 9aaa83b0c73e66b13c8d40d6433bce23ded53aaa579e3dd1be00d539892ed3cb
+C:/kyty/s142/log_c142_05.txt:414100 | anchor: KernelRead: direct read failed | anchor in line: OK | +1 control: NOT OK | sha256 9ea02549b36c01009255f63b420cafee8ad7c6e0018caffac2d9590282d94969
+C:/kyty/s142/log_c142_09.txt:206646 | anchor: BvhLoopCapTrip: | anchor in line: OK | +1 control: NOT OK | sha256 eadf72b5b79ac09679ac8ae028ba2d391a77ccb829c16bfae30681405d5f9d17
+C:/kyty/s131/log_dds131.txt:718963 | anchor: m_files[index] == nullptr | anchor in line: OK | +1 control: NOT OK | sha256 17d350016adafeacc44d58a15d8bb1229f81dd6995d14dfd20ae73e4225968f5
+C:/kyty/log_s14_s42_merged_cold.txt:4407364 | anchor: too many objects/batches | anchor in line: OK | +1 control: NOT OK | sha256 a949f595f708ab57b58b0b8057ba718f6e7690013f6d2c16a35351481ad3c80b
+C:/kyty/s59/log_sig1.txt:627192 | anchor: too many objects/batches | anchor in line: OK | +1 control: NOT OK | sha256 6e7c5514f0a1cffabadc9a441f679883c4d37fc7058a4a4ef5b4202227e5e03d
+refs 82, OK 82, +1 NOT OK 82
+ALL OK

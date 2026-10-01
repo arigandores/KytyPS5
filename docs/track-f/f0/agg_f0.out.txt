@@ -1,0 +1,4 @@
+logs in scope 1738 aggregated 1738 missing 0 unique sha 1574 dups 164
+bytes 288015732915 lines 5006003490
+unique logs by session band {'none': 7, '<50': 347, '50-112': 839, '113-127': 297, '128-141': 72, '142+': 12}
+distinct signatures 820

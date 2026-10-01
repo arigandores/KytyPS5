@@ -1,0 +1,255 @@
+== log_c142_01.txt
+  line 363469 n 204 dt_us 816566 draws 14627 | interval lines 15647 io/blank 2489
+        1774 %X   = BitCastFXUX %X (FX; uses=X)
+        1086 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        720 X: V_MAC_FX vX, vX, vX
+        473 %X   = CompositeExtractUXxX %X, X (UX; uses=X)
+        458 %X  = BitCastFXUX %X (FX; uses=X)
+        428 X: V_MUL_FX vX, vX, vX
+        374 %X   = FPMulX %X, %X (FX; uses=X)
+        273 %X    = ReadConstBuffer %X, X (UX; uses=X)
+        235 X: V_MAD_FX vX, vX, vX, vX
+  line 380442 n 206 dt_us 101796 draws 4493 | interval lines 6776 io/blank 468
+        748 %X  = BitCastFXUX %X (FX; uses=X)
+        708 %X   = BitCastFXUX %X (FX; uses=X)
+        580 X: V_MAC_FX vX, vX, vX
+        456 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        432 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        242 X: V_MAD_FX vX, vX, vX, vX
+        228 X: V_MUL_FX vX, vX, vX
+        220 %X  = CompositeExtractUXxX %X, X (UX; uses=X)
+        218 %X   = CompositeExtractUXxX %X, X (UX; uses=X)
+== log_c142_02.txt
+  line 267075 n 330 dt_us 165677 draws 2534 | interval lines 16324 io/blank 758
+        1057 %X  = BitCastFXUX %X (FX; uses=X)
+        730 %X   = BitCastFXUX %X (FX; uses=X)
+        426 %X  = Phi [%X, $X], [%X, $X] (UX; uses=X)
+        416 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        341 %X  = BitCastUXFX %X (UX; uses=X)
+        316 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        309 X: V_MUL_FX vX, vX, vX
+        295 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        293 %X  = GetSrtResource (SrtResource; uses=X)
+  line 269168 n 332 dt_us 299442 draws 4134 | interval lines 1104 io/blank 1087
+        6 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        5 RenderColorTarget: slot=X addr=X size=X extent=XxXxX view_mip=X view_e
+        4 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        1 TextureCache: stale pending DCC fill ignored image=X dcc=X fill=X size
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 270377 n 333 dt_us 299580 draws 2066 | interval lines 1200 io/blank 1193
+        3 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 271604 n 334 dt_us 284617 draws 743 | interval lines 1218 io/blank 1211
+        2 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 273244 n 335 dt_us 300409 draws 3590 | interval lines 1631 io/blank 1622
+        4 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X Xa X] R=X[X X Xa X] ok=X sent=X
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+  line 273564 n 336 dt_us 298800 draws 2254 | interval lines 311 io/blank 302
+        3 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        3 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        2 PadTriggerEffect: #X mask=X L=X[X X Xc X] R=X[X X Xc X] ok=X sent=X
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 273882 n 337 dt_us 299220 draws 2185 | interval lines 309 io/blank 302
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X Xd X] R=X[X X Xd X] ok=X sent=X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 557383 n 1358 dt_us 149651 draws 9512 | interval lines 170 io/blank 165
+        3 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 Vulkan pipeline cache: saved X bytes to _PipelineCache\PPSAX.bin (X us
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 725366 n 2557 dt_us 151746 draws 5294 | interval lines 873 io/blank 77
+        157 %X   = BitCastFXUX %X (FX; uses=X)
+        70 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        33 %X    = ReadConstBuffer %X, X (UX; uses=X)
+        24 %X   = FPMulX %X, %X (FX; uses=X)
+        23 %X   = ReadConstBuffer %X, X (UX; uses=X)
+        22 X: V_MAC_FX vX, vX, vX
+        20 %X   = CompositeExtractUXxX %X, X (UX; uses=X)
+        20 %X   = BitCastUXFX %X (UX; uses=X)
+        19 X: V_MAC_FX vX, sX, vX
+== log_c142_03.txt
+  line 262553 n 265 dt_us 130020 draws 1714 | interval lines 17048 io/blank 231
+        1807 %X  = BitCastFXUX %X (FX; uses=X)
+        855 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        712 %X  = Phi [%X, $X], [%X, $X] (UX; uses=X)
+        587 X: V_MUL_FX vX, vX, vX
+        583 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        564 %X  = BitCastUXFX %X (UX; uses=X)
+        560 X: V_MAC_FX vX, vX, vX
+        485 %X  = FPMulX %X, %X (FX; uses=X)
+        450 %X   = BitCastFXUX %X (FX; uses=X)
+  line 349499 n 784 dt_us 432339 draws 4041 | interval lines 18097 io/blank 86
+        2767 %X   = BitCastFXUX %X (FX; uses=X)
+        1492 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        1066 X: V_MAC_FX vX, vX, vX
+        776 %X   = CompositeExtractUXxX %X, X (UX; uses=X)
+        644 X: V_MUL_FX vX, vX, vX
+        609 %X   = FPMulX %X, %X (FX; uses=X)
+        524 %X  = BitCastFXUX %X (FX; uses=X)
+        392 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        361 X: S_WAITCNT X
+  line 399618 n 843 dt_us 164501 draws 2951 | interval lines 22590 io/blank 91
+        2614 %X  = BitCastFXUX %X (FX; uses=X)
+        1189 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        1094 %X  = Phi [%X, $X], [%X, $X] (UX; uses=X)
+        833 %X  = BitCastUXFX %X (UX; uses=X)
+        689 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        675 %X  = FPMulX %X, %X (FX; uses=X)
+        601 X: V_MUL_FX vX, vX, vX
+        488 %X  = GetSrtResource (SrtResource; uses=X)
+        488 %X  = ReadConst %X, X (UX; uses=X)
+  line 423866 n 1042 dt_us 115028 draws 2460 | interval lines 1466 io/blank 75
+        327 %X   = BitCastFXUX %X (FX; uses=X)
+        164 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        80 %X   = FPMulX %X, %X (FX; uses=X)
+        55 X: V_MUL_FX vX, vX, vX
+        54 X: V_MAC_FX vX, sX, vX
+        52 %X   = ReadConstBuffer %X, X (UX; uses=X)
+        46 X: V_MAC_FX vX, vX, vX
+        30 %X   = FPNegX %X (FX; uses=X)
+        22 X: S_WAITCNT X
+== log_c142_05.txt
+  line 287605 n 232 dt_us 448789 draws 5425 | interval lines 74097 io/blank 1830
+        6961 %X  = BitCastFXUX %X (FX; uses=X)
+        4864 %X   = BitCastFXUX %X (FX; uses=X)
+        3062 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        2896 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        2822 X: V_MAC_FX vX, vX, vX
+        2344 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        2043 X: V_MUL_FX vX, vX, vX
+        1812 %X  = FPMulX %X, %X (FX; uses=X)
+        1665 %X  = BitCastUXFX %X (UX; uses=X)
+  line 331180 n 240 dt_us 133372 draws 5210 | interval lines 22115 io/blank 489
+        2917 %X  = BitCastFXUX %X (FX; uses=X)
+        2480 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        1763 %X  = IEqualX %X, X (UX; uses=X)
+        1085 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        849 %X  = FPMulX %X, %X (FX; uses=X)
+        806 %X   = SelectUX %X, %X, %X (UX; uses=X)
+        797 %X   = IEqualX %X, X (UX; uses=X)
+        784 %X  = BitCastUXFX %X (UX; uses=X)
+        478 %X  = Phi [%X, $X], [%X, $X] (UX; uses=X)
+  line 373184 n 526 dt_us 143602 draws 1304 | interval lines 79 io/blank 76
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+  line 423092 n 1002 dt_us 131181 draws 2133 | interval lines 906 io/blank 81
+        144 %X   = BitCastFXUX %X (FX; uses=X)
+        137 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        64 %X   = FPMulX %X, %X (FX; uses=X)
+        48 X: V_MUL_FX vX, vX, vX
+        41 X: V_MAC_FX vX, vX, vX
+        41 %X   = FPNegX %X (FX; uses=X)
+        34 X: V_MAC_FX vX, sX, vX
+        21 %X    = BitCastFXUX %X (FX; uses=X)
+        20 %X   = BitCastUXFX %X (UX; uses=X)
+== log_c142_06.txt
+  line 315708 n 262 dt_us 465210 draws 10956 | interval lines 67112 io/blank 1822
+        5029 %X  = BitCastFXUX %X (FX; uses=X)
+        4261 %X   = BitCastFXUX %X (FX; uses=X)
+        2719 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        1915 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        1857 X: V_MUL_FX vX, vX, vX
+        1598 X: V_MAC_FX vX, vX, vX
+        1590 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        1535 %X  = BitCastUXFX %X (UX; uses=X)
+        1489 %X  = FPMulX %X, %X (FX; uses=X)
+  line 369564 n 455 dt_us 149912 draws 7467 | interval lines 19400 io/blank 75
+        3284 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        2778 %X  = IEqualX %X, X (UX; uses=X)
+        1944 %X  = BitCastFXUX %X (FX; uses=X)
+        722 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        638 %X   = BitCastFXUX %X (FX; uses=X)
+        566 %X  = FPMulX %X, %X (FX; uses=X)
+        542 %X  = BitCastUXFX %X (UX; uses=X)
+        496 X: V_MAC_FX vX, vX, vX
+        452 X: V_MUL_FX vX, vX, vX
+== log_c142_09.txt
+  line 206324 n 180 dt_us 113999 draws 2154 | interval lines 9834 io/blank 76
+        1043 %X  = BitCastFXUX %X (FX; uses=X)
+        934 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        680 %X  = IEqualX %X, X (UX; uses=X)
+        387 %X  = FPFmaX %X, %X, %X (FX; uses=X)
+        306 %X  = FPMulX %X, %X (FX; uses=X)
+        283 %X   = SelectUX %X, %X, %X (UX; uses=X)
+        274 %X  = BitCastUXFX %X (UX; uses=X)
+        261 %X   = BitCastFXUX %X (FX; uses=X)
+        237 %X   = IEqualX %X, X (UX; uses=X)
+  line 206637 n 182 dt_us 316631 draws 3864 | interval lines 221 io/blank 148
+        52 AsyncPipelines: skipped draw DrawIndex frame=X vs=X ps=X pending=X tot
+        6 RenderColorTarget: slot=X addr=X size=X extent=XxXxX view_mip=X view_e
+        5 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        4 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        2 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 Accessed non-GPU cached memory at X
+        1 TextureCache: stale pending DCC fill ignored image=X dcc=X fill=X size
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+        1 AsyncPipelines: flip X held (incomplete frame)
+  line 206728 n 183 dt_us 283174 draws 1341 | interval lines 82 io/blank 74
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+        1 AsyncPipelines: flip X held (incomplete frame)
+  line 206818 n 184 dt_us 266420 draws 1353 | interval lines 81 io/blank 74
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X X X] R=X[X X X X] ok=X sent=X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+        1 AsyncPipelines: flip X held (incomplete frame)
+  line 206908 n 185 dt_us 285526 draws 1346 | interval lines 81 io/blank 74
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 PadTriggerEffect: #X mask=X L=X[X X Xa X] R=X[X X Xa X] ok=X sent=X
+        1 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+  line 207271 n 186 dt_us 298651 draws 1342 | interval lines 354 io/blank 69
+        32 CsPretranslate phase begin: stage=CS hash=X code_words=X decode
+        32 CsPretranslate phase end: stage=CS hash=X decode instructions=X elapse
+        32 CsPretranslate phase begin: stage=CS hash=X CFG BuildGraph
+        24 CsPretranslate phase end: stage=CS hash=X CFG Structurize blocks=X loo
+        24 CsPretranslate phase begin: stage=CS hash=X IR TranslateProgram
+        24 CsPretranslate phase end: stage=CS hash=X CFG BuildGraph blocks=X loop
+        24 CsPretranslate phase begin: stage=CS hash=X CFG Structurize
+        23 CsPretranslate structured CFG success: blocks=X
+        23 CsPretranslate phase end: stage=CS hash=X IR TranslateProgram blocks=X
+  line 207363 n 187 dt_us 283939 draws 1036 | interval lines 83 io/blank 74
+        2 BvhLoopCapTrip: trips=+X total=X near=+X near_total=X max_spent=X cap=
+        2 PadTriggerEffect: #X mask=X L=X[X X Xd X] R=X[X X Xd X] ok=X sent=X
+        1 PriorityStall: tick=X unsub=X us=X site=+X
+        1 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        1 FaultTrace-gpu: addr=X rip=+X access=X us=X site=-
+        1 TextureCache: stale pending DCC fill ignored image=X dcc=X fill=X size
+        1 DepthTarget: ignoring enabled depth/stencil state without a bound atta
+== log_c142_10.txt
+  line 224047 n 225 dt_us 217657 draws 4695 | interval lines 23024 io/blank 780
+        2066 %X  = BitCastFXUX %X (FX; uses=X)
+        1349 %X   = BitCastFXUX %X (FX; uses=X)
+        744 %X  = GetSrtResource (SrtResource; uses=X)
+        744 %X  = ReadConst %X, X (UX; uses=X)
+        709 %X  = SelectUX %X, %X, %X (UX; uses=X)
+        670 %X  = Phi [%X, $X], [%X, $X] (UX; uses=X)
+        658 X: V_MAC_FX vX, vX, vX
+        638 %X   = FPFmaX %X, %X, %X (FX; uses=X)
+        637 X: V_MUL_FX vX, vX, vX
+== log_v142.txt
+  line 236004 n 382 dt_us 180521 draws 6662 | interval lines 408 io/blank 371
+        16 RenderColorTarget: slot=X addr=X size=X extent=XxXxX view_mip=X view_e
+        6 Pipeline: temporary: accepting EXEC_ON_NOOP with depth test enabled
+        4 [X][X:X:X.X] libkernel::libkernel::PthreadCondWait()
+        2 [X][X:X:X.X] libkernel::libkernel::PthreadRwlockDestroy()
+        2 PadTriggerEffect: #X mask=X L=X[X X Xe X] R=X[X X Xe X] ok=X sent=X
+        2 Accessed non-GPU cached memory at X
+        1 [X][X:X:X.X] libkernel::libkernel::PthreadRwlockattrInit()
+        1 [X][X:X:X.X] libkernel::libkernel::PthreadRwlockattrSettype()
+        1 [X][X:X:X.X] libkernel::libkernel::PthreadRwlockInitNamed()

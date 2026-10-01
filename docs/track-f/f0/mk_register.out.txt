@@ -1,0 +1,4 @@
+rows 41 K1-K4 34 new 7 checks 33 refs 82 sigs 43 levels with profile 19 stall levels 10
+rank: Б25 > Б24 > Б5 > Б33 > Б32 > Б34 > Б31 > Б2 > Б6 > Б4 > Б26 > Ф5 > Ф3 > Ф7 > Б3б > Б1б > Б9а > Ф6 > Б30 > Ф4 > Б5а > Б1а > Б7 > Б11 > Б14 > Б13 > Б12 > Б28 > Б29 > Б8 > Б10 > Б27 > Б9 > Ф8 > Б22 > Б16 > Б20 > Б19 > Б15 > Б17 > Б18
+doc bytes 89363 sha256 d0f5edfe3bf3891aeaadbf77d23414f996e16e00f03dbc25b8ccd8e6a43d29cb
+ALL OK

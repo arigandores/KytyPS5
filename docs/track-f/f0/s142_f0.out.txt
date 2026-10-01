@@ -1,0 +1,186 @@
+== log_c142_01.txt level ('bumper_enemy_snowy_canyon', 186343) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   CsStall: [(191529, 'CsStall: kind=wait us=43191 id=791 hash=0x5fae811e126cdeec'), (350295, 'CsStall: kind=wait us=689831 id=860 hash=0x1ea15069ca94b660')]
+   None
+== log_c142_02.txt level ('big_hand_pirate_island', 241928) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+== log_c142_03.txt level ('timestop_casino', 241438) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   STUB CALLED: {'b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func]': (2, 239572), 'WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func]': (295, 242025), 'd84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func]': (365, 282260), 'G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func]': (362, 282261)}
+   None
+== log_c142_04.txt level ('mini_giants_garden', 213072) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   CsStall: [(243989, 'CsStall: kind=wait us=89859 id=1049 hash=0x7b4078750f32db50')]
+   None
+== log_c142_05.txt level ('ice_iceberg', 209708) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   KernelRead direct read failed: 1 first line 414100
+   None
+== log_c142_06.txt level ('sponge_dirty_bath', 245717) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   CsStall: [(248439, 'CsStall: kind=wait us=31586 id=1105 hash=0x2c49e0c39e6e8973')]
+   None
+== log_c142_07.txt level ('hoover_beach', 220166) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   CsStall: [(225605, 'CsStall: kind=wait us=66045 id=1155 hash=0xdb722eba8ad74a9f')]
+   None
+== log_c142_08.txt level ('volcano_mountain', 203760) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+== log_c142_09.txt level ('voxel_world', 175317) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+== log_c142_10.txt level ('enemy_gorilla', 194381) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+== log_v142.txt level ('underwater_aerial_garden', 228908) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+== log_w142.txt level ('underwater_aerial_garden', 223944) skipped hashes 137 {'OP SOP1 0x21': 96, 'BUDGET': 4, 'RESTRACK': 32, 'OP SOP1 0x0c': 1, 'OP VOPC 0xe3': 4}
+   skipped hashes seen on any other line: 137 of 137
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+      96 hashes | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase begin: stage=CS
+      32 hashes | RESTRACK | CsPretranslate phase end: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase begin: stage=CS
+      4 hashes | BUDGET | CsPretranslate phase end: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+      4 hashes | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+      1 hashes | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+      1 hashes | OP SOP1 0x0c | CsPretranslate phase end: stage=CS
+   None
+TOTAL over 12 logs (class, kind of other line) -> hashes:
+   1152 | OP SOP1 0x21 | CsPretranslate phase begin: stage=CS
+   1152 | OP SOP1 0x21 | CsPretranslate phase end: stage=CS
+   384 | RESTRACK | CsPretranslate phase begin: stage=CS
+   384 | RESTRACK | CsPretranslate phase end: stage=CS
+   48 | BUDGET | CsPretranslate phase begin: stage=CS
+   48 | BUDGET | CsPretranslate phase end: stage=CS
+   48 | OP VOPC 0xe3 | CsPretranslate phase begin: stage=CS
+   48 | OP VOPC 0xe3 | CsPretranslate phase end: stage=CS
+   12 | BUDGET | CsPretranslate CFG dispatcher fallback: stage=CS
+   12 | OP SOP1 0x0c | CsPretranslate phase begin: stage=CS
+   12 | OP SOP1 0x0c | CsPretranslate phase end: stage=CS

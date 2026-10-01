@@ -1,0 +1,254 @@
+unique logs 1574 {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+with a non-empty level start: 1068  with FrameTrace: 1456
+(0) levels started (unique logs): {'ps_logo': 432, 'title_controller_ship': 430, 'intro_next': 419, 'worldmap': 69, 'transition_next': 69, 'underwater_aerial_garden': 652, 'penguin_atlantis': 2, 'rotating_level_day_and_night': 2, 'time_stopper_ghost_world': 3, 'bumper_enemy_snowy_canyon': 1, 'big_hand_pirate_island': 1, 'timestop_casino': 1, 'mini_giants_garden': 1, 'ice_iceberg': 1, 'sponge_dirty_bath': 1, 'hoover_beach': 1, 'volcano_mountain': 1, 'voxel_world': 1, 'enemy_gorilla': 1}
+    on s128+: {'underwater_aerial_garden': 65, 'intro_next': 9, 'bumper_enemy_snowy_canyon': 1, 'big_hand_pirate_island': 1, 'timestop_casino': 1, 'mini_giants_garden': 1, 'ice_iceberg': 1, 'sponge_dirty_bath': 1, 'hoover_beach': 1, 'volcano_mountain': 1, 'voxel_world': 1, 'enemy_gorilla': 1}
+
+(1) opcode profile per log (OPCODE_NI lines by family/opcode)
+   733 logs; sessions (14, 142) ; s128+: 83 | (('family=SOP1 opcode=0x0c', 1), ('family=SOP1 opcode=0x21', 96), ('family=VOPC opcode=0xe3', 4)) | e.g. s99/log_vis99base.txt
+   75 logs; sessions (38, 105) ; s128+: 0 | (('family=SOP1 opcode=0x21', 88),) | e.g. s82/log_bk82a.txt
+   25 logs; sessions (40, 128) ; s128+: 1 | (('family=SOP1 opcode=0x21', 20),) | e.g. s98/log_trig98a.txt
+   7 logs; sessions (38, 103) ; s128+: 0 | (('family=SOP1 opcode=0x21', 72),) | e.g. s67/log_sav67b.txt
+   3 logs; sessions (105, 105) ; s128+: 0 | (('family=SOP1 opcode=0x0c', 1), ('family=SOP1 opcode=0x21', 96)) | e.g. s105/log_ect105_07.txt
+   3 logs; sessions (68, 68) ; s128+: 0 | (('family=SOP1 opcode=0x21', 12),) | e.g. s68/log_bat68smoke_a2.txt
+   logs with FrameTrace and no OPCODE_NI line, s113+: ['s106_stage/shn113/fx/abab/log_shn113.txt', 's106_stage/shn113/fx/abab1/log_shn113.txt', 's106_stage/shn113/fx/amin7/log_shn113.txt', 's106_stage/shn113/fx/amin8/log_shn113.txt', 's106_stage/shn113/fx/area/log_shn113.txt', 's106_stage/shn113/fx/armededge/log_shn113.txt', 's106_stage/shn113/fx/asel/log_shn113.txt', 's106_stage/shn113/fx/avsplit/log_shn113.txt', 's106_stage/shn113/fx/avwork/log_shn113.txt', 's106_stage/shn113/fx/bands/log_shn113.txt', 's106_stage/shn113/fx/bandsgpu/log_shn113.txt', 's106_stage/shn113/fx/bandsrec/log_shn113.txt', 's106_stage/shn113/fx/binary/log_shn113.txt', 's106_stage/shn113/fx/ckdiag/log_shn113.txt', 's106_stage/shn113/fx/ckline/log_shn113.txt', 's106_stage/shn113/fx/ckoff/log_shn113.txt', 's106_stage/shn113/fx/contig/log_shn113.txt', 's106_stage/shn113/fx/cpunet/log_shn113.txt', 's106_stage/shn113/fx/csstall/log_shn113.txt', 's106_stage/shn113/fx/defarm0/log_shn113.txt', 's106_stage/shn113/fx/defarm0l/log_shn113.txt', 's106_stage/shn113/fx/defarm1/log_shn113.txt', 's106_stage/shn113/fx/defbad/log_shn113.txt', 's106_stage/shn113/fx/defbadk/log_shn113.txt', 's106_stage/shn113/fx/defhitout0/log_shn113.txt', 's106_stage/shn113/fx/defhitout1/log_shn113.txt', 's106_stage/shn113/fx/defqfree0/log_shn113.txt', 's106_stage/shn113/fx/defqfree1/log_shn113.txt', 's106_stage/shn113/fx/defqfreelag0/log_shn113.txt', 's106_stage/shn113/fx/defqfreelag1/log_shn113.txt', 's106_stage/shn113/fx/defqfreeout0/log_shn113.txt', 's106_stage/shn113/fx/defqfreeout1/log_shn113.txt', 's106_stage/shn113/fx/defslotbad/log_shn113.txt', 's106_stage/shn113/fx/defslotbadk/log_shn113.txt', 's106_stage/shn113/fx/dk_a_hold_us/log_shn113.txt', 's106_stage/shn113/fx/dk_a_mut_us/log_shn113.txt', 's106_stage/shn113/fx/dk_mw_n/log_shn113.txt', 's106_stage/shn113/fx/dk_pl_em_n/log_shn113.txt', 's106_stage/shn113/fx/dk_pl_proc_n/log_shn113.txt', 's106_stage/shn113/fx/dk_sh_jobs/log_shn113.txt']
+
+(2a) --- Fatal Error ---
+   logs by band: {'<50': 6, '50-102': 9, '113-127': 5, '128-141': 3}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [113-127] s114/log_boot114.txt lv=- | 1x@4290 --- Fatal Error ---
+     [113-127] s114/log_boot114b.txt lv=- | 1x@4290 --- Fatal Error ---
+     [113-127] s114/log_boot114c.txt lv=- | 1x@4290 --- Fatal Error ---
+     [113-127] s115/check_draft/real_b/log_boot115b.txt lv=- | 1x@4291 --- Fatal Error ---
+     [113-127] s115/log_boot115b.txt lv=- | 1x@4290 --- Fatal Error ---
+     [128-141] s128/log_s1s128.txt lv=underwater_aerial_garden | 1x@450441 --- Fatal Error ---
+     [128-141] s128/log_s2s128.txt lv=underwater_aerial_garden | 1x@239631 --- Fatal Error ---
+     [128-141] s131/log_dds131.txt lv=underwater_aerial_garden | 1x@718962 --- Fatal Error ---
+
+(2b) --- Error ---
+   logs by band: {'none': 1, '<50': 149, '50-102': 31}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [none] log_frame3.txt lv=- | 1x@7556141 --- Error ---
+
+(2c) Error: condition
+   logs by band: {'<50': 1, '50-102': 4, '113-127': 5, '128-141': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] s45/log_assert_levelpath_tail.txt lv=- | 1x@218407 Assertion failed: m_points.size() == n
+     [50-102] s102/log_m5cap102.txt lv=- | 1x@3874 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [50-102] s68/log_bat68smoke.txt lv=- | 1x@17404 Error: condition (m_records != 0 && m_producer != std::this_thread::get_id()) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorde
+     [50-102] s68/log_bat68smoke_a1.txt lv=- | 1x@17664 Error: condition (m_records != 0 && m_producer != std::this_thread::get_id()) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorde
+     [50-102] s68/log_bat68smoke_a2.txt lv=- | 1x@18789 Error: condition (m_records != 0 && m_producer != std::this_thread::get_id()) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorde
+     [113-127] s114/log_boot114.txt lv=- | 1x@4291 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [113-127] s114/log_boot114b.txt lv=- | 1x@4291 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [113-127] s114/log_boot114c.txt lv=- | 1x@4291 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [113-127] s115/check_draft/real_b/log_boot115b.txt lv=- | 1x@4292 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [113-127] s115/log_boot115b.txt lv=- | 1x@4291 Error: condition (m_producer != self || m_open_slot != nullptr) is true in C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\commandRecorder.cpp:326
+     [128-141] s131/log_dds131.txt lv=underwater_aerial_garden | 1x@718963 Error: condition (m_files[index] == nullptr) is true in C:\kyty\KytyPS5\src\kernel\fileSystem.cpp:207
+
+(2d) GpuHangAbort
+   logs by band: {'50-102': 28, '103-112': 2, '113-127': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [103-112] s106_stage/prof/fx/hang/log_net112.txt lv=- | 1x@61014 GpuHangAbort: no progress for 8 s acopy=1/1/1 acopy_pending=0
+     [103-112] s106_stage/shp111/fx/hang/log_shp111.txt lv=- | 1x@61014 GpuHangAbort: no progress for 8 s acopy=1/1/1 acopy_pending=0
+     [113-127] s106_stage/shn113/fx/hang/log_shn113.txt lv=- | 1x@61014 GpuHangAbort: no progress for 8 s acopy=1/1/1 acopy_pending=0
+
+(2e) ErrorDeviceLost
+   logs by band: {'<50': 6, '50-102': 5, '128-141': 2}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] log_s12_rd2.txt lv=ps_logo,title_controller_ship,intro_next | 1x@11588164 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=212508
+     [<50] s47/log_restart_device_lost.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@8806200 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=16829
+     [<50] s49/log_foliage_rd_failed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 1x@8843487 vkQueueSubmit failed: ErrorDeviceLost (-4), tick=17542 debug_op=0 debug_submit=0 args=0,0,0,0,0x0000000000000000
+     [<50] s49/log_lifetime_failed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@8336432 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=15785
+     [<50] s49/log_native_failed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@9293148 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=391830
+     [<50] s49/log_preserve_gpu_failed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 1x@9376862 vkQueueSubmit failed: ErrorDeviceLost (-4), tick=17075 debug_op=0 debug_submit=0 args=0,0,0,0,0x0000000000000000
+     [50-102] s54/log_play1.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@2228561 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=15975
+     [50-102] s57/log_head1.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@2706863 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=589198
+     [50-102] s57/log_sky2_crash.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@2497167 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=23962
+     [50-102] s58/log_sky58a.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@1971113 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=16480
+     [50-102] s61/log_sky61a_crash.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 2x@1872692 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=15449
+     [128-141] s128/log_s1s128.txt lv=underwater_aerial_garden | 1x@450438 vkQueueSubmit failed: ErrorDeviceLost (-4), tick=1955 debug_op=0 debug_submit=0 args=0,0,0,0,0x0000000000000000
+     [128-141] s128/log_s2s128.txt lv=underwater_aerial_garden | 1x@239628 vkWaitSemaphores failed: ErrorDeviceLost (-4), tick=4561
+
+(2f) Unhandled host exception / too many objects
+   logs by band: {'<50': 11, '50-102': 2}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] log_s14_s15_np1.txt lv=ps_logo,title_controller_ship,intro_next | 1x@3811032 Unhandled host exception: type=1 code=3221225477 pc=0x000000090103b2e8 access=1 address=0xffffffffffffffff
+     [<50] log_s14_s21_pf2.txt lv=ps_logo,title_controller_ship | 1x@1318200 Unhandled host exception: type=1 code=3221225477 pc=0x000000090706b5be access=1 address=0x0000000000000000
+     [<50] log_s14_s27_fin1.txt lv=- | 1x@17724 Unhandled host exception: type=1 code=3221225477 pc=0x00000001401738e7 access=1 address=0x000000ffeca40000
+     [<50] log_s14_s42_merged_cold.txt lv=ps_logo,title_controller_ship,intro_next | 1x@4407364 There are too many objects/batches in this scene.; 1x@4407368 Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+     [<50] log_s20_async1.txt lv=ps_logo,title_controller_ship,intro_next | 1x@5541446 Unhandled host exception: type=1 code=3221225477 pc=0x00007ffe60a5974f access=1 address=0x0000000000000024
+     [<50] log_s20_async6.txt lv=ps_logo,title_controller_ship,intro_next | 1x@5672642 Unhandled host exception: type=1 code=3221225477 pc=0x000000090103b2e8 access=1 address=0xffffffffffffffff
+     [<50] log_s45_fixed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 1x@12804512 Unhandled host exception: type=1 code=3221225477 pc=0x00000009012211dc access=1 address=0x0000000000000000
+     [<50] log_s8_b.txt lv=- | 1x@7655192 Unhandled host exception: type=1 code=3221225477 pc=0x00000001402a0ab4 access=1 address=0x0000000700000040
+     [<50] log_s8_c.txt lv=- | 1x@4345 Unhandled host exception: type=1 code=3221225477 pc=0x00007ffdf4cb2a96 access=1 address=0x0000000000000028
+     [<50] s45/log_assert_levelpath_tail.txt lv=- | 1x@218453 Unhandled host exception: type=1 code=3221225477 pc=0x000000090121fce0 access=1 address=0xffffffffffffffff
+     [<50] s45/log_crash_roomload_tail.txt lv=- | 1x@1349707 Unhandled host exception: type=1 code=3221225477 pc=0x00000009012211dc access=1 address=0x0000000000000000
+     [50-102] s55/log_v3.txt lv=ps_logo,title_controller_ship,intro_next | 1x@1426923 Unhandled host exception: type=1 code=3221225477 pc=0x00007fff0f8237e5 access=2 address=0x00000007d25a6380
+     [50-102] s59/log_sig1.txt lv=ps_logo,title_controller_ship,intro_next | 2x@627192 There are too many objects/batches in this scene.; 1x@627200 Unhandled host exception: type=1 code=3221225477 pc=0x00000009004a020e access=1 address=0xffffffffffffffff
+
+(2g) [Vulkan][E]
+   logs by band: {'<50': 5}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] log_s14_s38_validate.txt lv=ps_logo,title_controller_ship | 1x@492157 [Vulkan][E][2]: vkCmdDispatch(): the sampled image descriptor [Set 0, Binding 24, Index 0, variable "image_24"] has VkImageView 0x1cf70000001cf7 with
+     [<50] log_s14_s38_validate_control.txt lv=ps_logo,title_controller_ship | 1x@486443 [Vulkan][E][2]: vkCmdDrawIndexed(): the sampled image descriptor [VkDescriptorSet 0x1d090000001d09, Set 0, Binding 75, Index 0, variable "image_24"] h
+     [<50] log_s14_s38_validate_full.txt lv=ps_logo,title_controller_ship | 1x@489718 [Vulkan][E][2]: vkCmdDrawMeshTasksEXT(): the sampled image descriptor [VkDescriptorSet 0x203b000000203b, Set 0, Binding 75, Index 0, variable "image_2
+     [<50] log_s14_s38_validate_wsi.txt lv=ps_logo,title_controller_ship | 1x@488840 [Vulkan][E][2]: vkCmdDrawIndexed(): the sampled image descriptor [VkDescriptorSet 0x1dd70000001dd7, Set 0, Binding 75, Index 0, variable "image_24"] h
+     [<50] log_s20_async_val.txt lv=ps_logo,title_controller_ship | 1x@1056119 [Vulkan][E][2]: vkCreateShaderModule(): pCreateInfo->pCode (spirv-val produced an error):
+
+(2h) Stubbed function / stub called
+   logs by band: {'<50': 2, '142+': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] log_s45_fixed.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next | 13x@12772914 Unresolved import stub called [0]: patch_vaddr=0x0000000908e36ad0 jmprela_index=1097 symbol=bcH5EnFE2xY[Json2_v1][Json_v1.1][Func] type=Func bind=Glob; 13x@12772922 Unresolved import stub called [1]: patch_vaddr=0x0000000908e36b00 jmprela_index=1103 symbol=WXF2ihRF+B8[Json2_v1][Json_v1.1][Func] type=Func bind=Glob; 13x@12772923 Unresolved import stub called [2]: patch_vaddr=0x0000000908e36990 jmprela_index=1057 symbol=5AZPp99ogrc[Json2_v1][Json_v1.1][Func] type=Func bind=Glob
+     [<50] s45/log_crash_roomload_tail.txt lv=- | 13x@1318109 Unresolved import stub called [0]: patch_vaddr=0x0000000908e36ad0 jmprela_index=1097 symbol=bcH5EnFE2xY[Json2_v1][Json_v1.1][Func] type=Func bind=Glob; 13x@1318117 Unresolved import stub called [1]: patch_vaddr=0x0000000908e36b00 jmprela_index=1103 symbol=WXF2ihRF+B8[Json2_v1][Json_v1.1][Func] type=Func bind=Glob; 13x@1318118 Unresolved import stub called [2]: patch_vaddr=0x0000000908e36990 jmprela_index=1057 symbol=5AZPp99ogrc[Json2_v1][Json_v1.1][Func] type=Func bind=Glob
+     [142+] s142/log_c142_03.txt lv=timestop_casino | 2x@239572 Unresolved import stub called [0]: patch_vaddr=0x0000000908e36f50 jmprela_index=1241 symbol=b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Fu; 295x@242025 Unresolved import stub called [2]: patch_vaddr=0x0000000908e36f48 jmprela_index=1240 symbol=WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Fu; 365x@282260 Unresolved import stub called [63]: patch_vaddr=0x0000000908e36f68 jmprela_index=1244 symbol=d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][F
+
+(2i) BvhLoopCapTrip
+   logs by band: {'103-112': 17, '113-127': 5, '142+': 2}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [103-112] s103/log_ent103_05.txt lv=underwater_aerial_garden | 6x@228740 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [103-112] s103/log_ent103_22.txt lv=underwater_aerial_garden | 6x@228184 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [103-112] s103/log_ent103_30.txt lv=underwater_aerial_garden | 6x@227443 BvhLoopCapTrip: trips=+18496 total=18496 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=18496 slot1=0
+     [103-112] s103/log_ent103_32.txt lv=underwater_aerial_garden | 5x@228484 BvhLoopCapTrip: trips=+58368 total=58368 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=58368 slot1=0
+     [103-112] s103/log_ent103_36.txt lv=underwater_aerial_garden | 5x@228050 BvhLoopCapTrip: trips=+25344 total=25344 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=25344 slot1=0
+     [103-112] s103/log_ent103_42.txt lv=underwater_aerial_garden | 6x@228736 BvhLoopCapTrip: trips=+129024 total=129024 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=129024 slot1=0
+     [103-112] s103/log_ent103_49.txt lv=underwater_aerial_garden | 6x@228611 BvhLoopCapTrip: trips=+64512 total=64512 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=64512 slot1=0
+     [103-112] s105/log_ect105_09.txt lv=underwater_aerial_garden | 6x@228570 BvhLoopCapTrip: trips=+128480 total=128480 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=128480 slot1=0
+     [103-112] s105/log_lead105.txt lv=underwater_aerial_garden | 6x@228512 BvhLoopCapTrip: trips=+128480 total=128480 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=128480 slot1=0
+     [103-112] s105/log_reg105a.txt lv=underwater_aerial_garden | 6x@228455 BvhLoopCapTrip: trips=+121824 total=121824 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=121824 slot1=0
+     [103-112] s106/log_gw106.txt lv=underwater_aerial_garden | 2x@227555 BvhLoopCapTrip: trips=+1952 total=1952 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=1952 slot1=0
+     [103-112] s109/log_ent109_1.txt lv=underwater_aerial_garden | 6x@228480 BvhLoopCapTrip: trips=+65536 total=65536 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=65536 slot1=0
+     [103-112] s109/log_ent109b_2.txt lv=underwater_aerial_garden | 6x@228548 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [103-112] s109/log_ent109b_3.txt lv=underwater_aerial_garden | 6x@228728 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [103-112] s109/log_ent109b_7.txt lv=underwater_aerial_garden | 6x@228417 BvhLoopCapTrip: trips=+65536 total=65536 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=65536 slot1=0
+     [103-112] s110/log_stl110b_5.txt lv=underwater_aerial_garden | 6x@228288 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [103-112] s111/log_vss111.txt lv=underwater_aerial_garden | 3x@229490 BvhLoopCapTrip: trips=+20480 total=20480 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=20480 slot1=0
+     [113-127] s113/log_vbn113.txt lv=underwater_aerial_garden | 6x@233305 BvhLoopCapTrip: trips=+96 total=96 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=96 slot1=0
+     [113-127] s114/log_vtt114b.txt lv=underwater_aerial_garden | 6x@228583 BvhLoopCapTrip: trips=+65536 total=65536 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=65536 slot1=0
+     [113-127] s118/check_parse/log_spk118.txt lv=underwater_aerial_garden | 6x@228735 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [113-127] s118/check_spk118/root/log_spk118.txt lv=underwater_aerial_garden | 6x@228736 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [113-127] s126/log_s2s126.txt lv=underwater_aerial_garden | 6x@228438 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [142+] s142/log_c142_02.txt lv=big_hand_pirate_island | 6x@269177 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+     [142+] s142/log_c142_09.txt lv=voxel_world | 6x@206646 BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+
+(2j) KernelRead direct read failed
+   logs by band: {'<50': 146, '50-102': 59, '103-112': 1, '142+': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [142+] s142/log_c142_05.txt lv=ice_iceberg | 1x@414100 KernelRead: direct read failed, dst=0x0000001025b1f900 size=0x98290: reading through a host buffer
+
+(2k) CsStall kind=wait
+   logs by band: {'103-112': 243, '113-127': 157, '142+': 4}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [142+] s142/log_c142_01.txt lv=bumper_enemy_snowy_canyon | 2x@191529 CsStall: kind=wait us=43191 id=791 hash=0x5fae811e126cdeec
+     [142+] s142/log_c142_04.txt lv=mini_giants_garden | 1x@243989 CsStall: kind=wait us=89859 id=1049 hash=0x7b4078750f32db50
+     [142+] s142/log_c142_06.txt lv=sponge_dirty_bath | 1x@248439 CsStall: kind=wait us=31586 id=1105 hash=0x2c49e0c39e6e8973
+     [142+] s142/log_c142_07.txt lv=hoover_beach | 1x@225605 CsStall: kind=wait us=66045 id=1155 hash=0xdb722eba8ad74a9f
+
+(2l) LossWin overflow / TextureCache failed / failed to create image
+   logs by band: {'<50': 1, '50-102': 2, '128-141': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] s49/log_resident.txt lv=ps_logo,title_controller_ship,intro_next,worldmap,transition_next,underwater_aerial_garden | 1x@10490174 failed to create image: extent=2432x1368x1 format=97 layers=1 levels=1
+     [50-102] s96/log_bf96a.txt lv=underwater_aerial_garden | 1x@474446 TextureCache: failed to map reusable download buffer
+     [50-102] s96/log_bf96a_warmup.txt lv=underwater_aerial_garden | 1x@438079 TextureCache: failed to map reusable download buffer
+     [128-141] s131/log_lw6s131.txt lv=underwater_aerial_garden | 1x@243527 LossWin: overflow kind=open
+
+(2m) hold_exit / game ENDED
+   logs by band: {}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+
+(2n) AudioOut SDL_QueueAudio failed
+   logs by band: {'<50': 1, '50-102': 18, '103-112': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [50-102] s100/log_cen100b.txt lv=underwater_aerial_garden | 364656x@1984357 AudioOut: SDL_QueueAudio failed: Invalid audio device ID
+     [50-102] s100/log_mov100b_entry1.txt lv=underwater_aerial_garden | 367574x@1955452 AudioOut: SDL_QueueAudio failed: Invalid audio device ID
+     [50-102] s101/log_cm101d.txt lv=underwater_aerial_garden | 432507x@2801576 AudioOut: SDL_QueueAudio failed: Invalid audio device ID
+     [103-112] s105/log_abb105.txt lv=underwater_aerial_garden | 438760x@2871038 AudioOut: SDL_QueueAudio failed: Invalid audio device ID
+
+(2o) Controller disconnect
+   logs by band: {'<50': 1, '113-127': 1}  denominators: {'none': 7, '<50': 347, '50-102': 457, '103-112': 382, '113-127': 297, '128-141': 72, '142+': 12}
+     [<50] log_s14_d65a.txt lv=ps_logo,title_controller_ship,intro_next | 1x@4002 Controller: disconnect of unknown id 0 ignored
+     [113-127] s116/log_obs116.txt lv=underwater_aerial_garden | 1x@4490 Controller: disconnect of unknown id 0 ignored
+
+(3) frames after the first scene frame, logs without validation (vk_w < 100); K2 = dt >= 1 s, K3 = 100 ms <= dt < 1 s
+   band | level | entries | logs K2 window | logs K2 hold | logs K3 window | logs K3 hold
+   103-112 | intro_next | 2 | 0 | 0 | 0 | 0
+   103-112 | underwater_aerial_garden | 151 | 0 | 0 | 151 | 11
+   113-127 | intro_next | 3 | 0 | 1 | 0 | 0
+   113-127 | penguin_atlantis | 2 | 1 | 0 | 1 | 0
+   113-127 | rotating_level_day_and_night | 2 | 0 | 0 | 1 | 1
+   113-127 | time_stopper_ghost_world | 3 | 0 | 0 | 2 | 0
+   113-127 | underwater_aerial_garden | 68 | 0 | 2 | 68 | 2
+   128-141 | intro_next | 9 | 0 | 0 | 0 | 1
+   128-141 | underwater_aerial_garden | 56 | 0 | 0 | 54 | 8
+   142+ | big_hand_pirate_island | 1 | 0 | 0 | 1 | 1
+   142+ | bumper_enemy_snowy_canyon | 1 | 0 | 0 | 1 | 0
+   142+ | enemy_gorilla | 1 | 0 | 0 | 1 | 0
+   142+ | hoover_beach | 1 | 0 | 0 | 0 | 0
+   142+ | ice_iceberg | 1 | 0 | 0 | 1 | 1
+   142+ | mini_giants_garden | 1 | 0 | 0 | 0 | 0
+   142+ | sponge_dirty_bath | 1 | 0 | 0 | 1 | 0
+   142+ | timestop_casino | 1 | 0 | 0 | 1 | 1
+   142+ | underwater_aerial_garden | 1 | 0 | 0 | 1 | 0
+   142+ | volcano_mountain | 1 | 0 | 0 | 0 | 0
+   142+ | voxel_world | 1 | 0 | 0 | 1 | 0
+   K2 frames, s113+:
+      s113/log_vbn113k.txt underwater_aerial_garden first_n 174 k2 [[9672, 3032310, 'h', 1258720]] late_max 0 sha 6a54e332
+      s114/log_ctl114a.txt underwater_aerial_garden first_n 326 k2 [[2972, 3034886, 'h', 501474]] late_max 3001715 sha aa4bb358
+      s122/log_eatl122.txt penguin_atlantis first_n 189 k2 [[191, 1391088, 'w', 483671]] late_max 262149 sha 56dde051
+      s122/log_edes122.txt intro_next first_n 232 k2 [[4945, 23796476, 'h', 642532]] late_max 23812688 sha 42830f04
+   K3 on hold, s128+:
+      s129/log_ack129.txt underwater_aerial_garden first_n 177 k3h 1 [[954, 183252, 337656]] frames 8439 sha c2bb6ff3
+      s130/log_ack130.txt underwater_aerial_garden first_n 177 k3h 1 [[954, 194034, 347229]] frames 8285 sha 2075039d
+      s130/log_s12s130.txt underwater_aerial_garden first_n 176 k3h 1 [[951, 194568, 346996]] frames 4061 sha ceaf5abd
+      s130/log_s3s130.txt intro_next first_n 163 k3h 1 [[2980, 100276, 473319]] frames 10629 sha 1388348f
+      s131/log_lw3s131.txt underwater_aerial_garden first_n 283 k3h 1 [[1060, 155753, 325377]] frames 4137 sha 2c1c17a6
+      s131/log_lw4s131.txt underwater_aerial_garden first_n 175 k3h 1 [[950, 189871, 332368]] frames 4053 sha 30383de7
+      s131/log_lw5s131.txt underwater_aerial_garden first_n 172 k3h 1 [[949, 188648, 346682]] frames 8125 sha e8b34e91
+      s131/log_lw6s131.txt underwater_aerial_garden first_n 177 k3h 26 [[954, 197021, 341602], [983, 103754, 345063], [1069, 106292, 356094], [1072, 106929, 356479], [1523, 107871, 405663], [1527, 109773, 406060]] frames 3027 sha 81a20cb2
+      s135/log_rs135.txt underwater_aerial_garden first_n 188 k3h 1 [[7445, 235598, 1082583]] frames 8532 sha 81a7f407
+      s142/log_c142_02.txt big_hand_pirate_island first_n 328 k3h 2 [[1358, 149651, 557383], [2557, 151746, 725366]] frames 3471 sha bb6655d3
+      s142/log_c142_03.txt timestop_casino first_n 263 k3h 1 [[1042, 115028, 423866]] frames 6893 sha 9aaa83b0
+      s142/log_c142_05.txt ice_iceberg first_n 231 k3h 1 [[1002, 131181, 423092]] frames 7071 sha 9ea02549
+
+(4) PriorityStall > 50 ms and the frame that contains it (next FrameTrace line): logs without validation
+   113-127: logs with level+FrameTrace 78, with stall>50ms 13; stalls 101, in a frame dt>=100ms 98, dt>=1s 0; max us 2975859; sites {'+0x90a231 unsub=1': 65, '+0x8cc7e1 unsub=0': 10, '+0x8deb61 unsub=1': 8, '+0x8c36c1 unsub=0': 5, '+0x904151 unsub=0': 5, '+0x8c36c1 unsub=1': 4}
+      after the first scene frame: window stalls 94 (in frame>=100ms 93), hold stalls 3 (in frame>=100ms 1); logs with a hold stall: 3
+   128-141: logs with level+FrameTrace 65, with stall>50ms 14; stalls 105, in a frame dt>=100ms 29, dt>=1s 0; max us 4677544; sites {'+0x91c491 unsub=1': 71, '+0x91c491 unsub=0': 8, '+0x915b81 unsub=1': 6, '+0x912cb1 unsub=1': 5, '+0x9123b1 unsub=0': 4, '+0x912cb1 unsub=0': 4}
+      after the first scene frame: window stalls 38 (in frame>=100ms 12), hold stalls 50 (in frame>=100ms 9); logs with a hold stall: 13
+   142+: logs with level+FrameTrace 11, with stall>50ms 8; stalls 28, in a frame dt>=100ms 28, dt>=1s 0; max us 686428; sites {'+0x90a231 unsub=1': 17, '+0x90a231 unsub=0': 11}
+      after the first scene frame: window stalls 20 (in frame>=100ms 20), hold stalls 3 (in frame>=100ms 3); logs with a hold stall: 2
+       s142/log_c142_01.txt ['bumper_enemy_snowy_canyon'] prio_n 2 max 686428 frames>=100ms/1s [2, 2, 0]
+       s142/log_c142_02.txt ['big_hand_pirate_island'] prio_n 11 max 286003 frames>=100ms/1s [11, 11, 0]
+       s142/log_c142_03.txt ['timestop_casino'] prio_n 2 max 104272 frames>=100ms/1s [2, 2, 0]
+       s142/log_c142_04.txt ['mini_giants_garden'] prio_n 3 max 142903 frames>=100ms/1s [3, 3, 0]
+       s142/log_c142_05.txt ['ice_iceberg'] prio_n 2 max 130635 frames>=100ms/1s [2, 2, 0]
+       s142/log_c142_06.txt ['sponge_dirty_bath'] prio_n 0 max 0 frames>=100ms/1s [0, 0, 0]
+       s142/log_c142_07.txt ['hoover_beach'] prio_n 0 max 0 frames>=100ms/1s [0, 0, 0]
+       s142/log_c142_08.txt ['volcano_mountain'] prio_n 1 max 57724 frames>=100ms/1s [1, 1, 0]
+       s142/log_c142_09.txt ['voxel_world'] prio_n 6 max 270313 frames>=100ms/1s [6, 6, 0]
+       s142/log_c142_10.txt ['enemy_gorilla'] prio_n 1 max 175624 frames>=100ms/1s [1, 1, 0]
+       s142/log_v142.txt ['underwater_aerial_garden'] prio_n 0 max 0 frames>=100ms/1s [0, 0, 0]
+
+(5) AsyncPipelines: skipped draw - logs by band and level (unique logs, any gate)
+    ('113-127', '-') 2
+    ('113-127', 'penguin_atlantis') 1
+    ('113-127', 'rotating_level_day_and_night') 1
+    ('113-127', 'time_stopper_ghost_world') 1
+    ('142+', 'big_hand_pirate_island') 1
+    ('142+', 'bumper_enemy_snowy_canyon') 1
+    ('142+', 'enemy_gorilla') 1
+    ('142+', 'hoover_beach') 1
+    ('142+', 'ice_iceberg') 1
+    ('142+', 'mini_giants_garden') 1
+    ('142+', 'sponge_dirty_bath') 1
+    ('142+', 'timestop_casino') 1
+    ('142+', 'volcano_mountain') 1
+    ('142+', 'voxel_world') 1
+
+(6) MainTaskLate >= 1 s, s113+
+    s114/log_ctl114a.txt ['underwater_aerial_garden'] n 1 max 3001715 validation False
+    s114/log_ctl114b.txt ['underwater_aerial_garden'] n 1 max 3000429 validation False
+    s115/log_boot115a.txt ['underwater_aerial_garden'] n 1 max 10341415 validation False
+    s115/log_boot115c.txt ['underwater_aerial_garden'] n 1 max 10268377 validation False
+    s122/log_edes122.txt ['intro_next'] n 1 max 23812688 validation False
+
+(7) s142 logs
+    s142/log_c142_01.txt 66b4ff7e0e50a8a4 lines 979791 lvl ['bumper_enemy_snowy_canyon'] first_n 203 frames 5050 sum_s 123.5 k2 [] k3w/h (2, 0) max_w/h (816566, 50020) k3h_ex [] k3w_ex [[204, 816566, 363469], [206, 101796, 380442]] prio>50 w/h (1, 0) in frame>=100ms w/h (1, 0) | skip 225 3 prio 2 686428 trip 0 0 late 2 244908 vkE 0 vkW 0
+    s142/log_c142_02.txt bb6655d3d30c0bc7 lines 887497 lvl ['big_hand_pirate_island'] first_n 328 frames 3471 sum_s 123.6 k2 [] k3w/h (14, 2) max_w/h (300409, 151746) k3h_ex [[1358, 149651, 557383], [2557, 151746, 725366]] k3w_ex [[330, 165677, 267075], [332, 299442, 269168], [333, 299580, 270377], [334, 284617, 271604], [335, 300409, 273244], [336, 298800, 273564], [337, 299220, 273882], [474, 100019, 323927], [482, 135990, 348859], [488, 148505, 389171]] prio>50 w/h (9, 2) in frame>=100ms w/h (9, 2) | skip 41 13 prio 11 286003 trip 6 131072 late 1 249918 vkE 0 vkW 0
+    s142/log_c142_03.txt 9aaa83b0c73e66b1 lines 952602 lvl ['timestop_casino'] first_n 263 frames 6893 sum_s 122.3 k2 [] k3w/h (3, 1) max_w/h (432339, 115028) k3h_ex [[1042, 115028, 423866]] k3w_ex [[265, 130020, 262553], [784, 432339, 349499], [843, 164501, 399618]] prio>50 w/h (2, 0) in frame>=100ms w/h (2, 0) | skip 2203 68 prio 2 104272 trip 0 0 late 2 256672 vkE 0 vkW 0
+    s142/log_c142_04.txt bd5f547706caad1d lines 883868 lvl ['mini_giants_garden'] first_n 260 frames 7295 sum_s 121.8 k2 [] k3w/h (0, 0) max_w/h (33664, 31838) k3h_ex [] k3w_ex [] prio>50 w/h (0, 0) in frame>=100ms w/h (0, 0) | skip 37 12 prio 3 142903 trip 0 0 late 1 236150 vkE 0 vkW 0
+    s142/log_c142_05.txt 9ea02549b36c0100 lines 1030146 lvl ['ice_iceberg'] first_n 231 frames 7071 sum_s 123.0 k2 [] k3w/h (3, 1) max_w/h (448789, 131181) k3h_ex [[1002, 131181, 423092]] k3w_ex [[232, 448789, 287605], [240, 133372, 331180], [526, 143602, 373184]] prio>50 w/h (1, 1) in frame>=100ms w/h (1, 1) | skip 240 49 prio 2 130635 trip 0 0 late 1 255784 vkE 0 vkW 0
+    s142/log_c142_06.txt a511e5d4af7a0f0a lines 710991 lvl ['sponge_dirty_bath'] first_n 261 frames 4126 sum_s 123.8 k2 [] k3w/h (2, 0) max_w/h (465210, 52825) k3h_ex [] k3w_ex [[262, 465210, 315708], [455, 149912, 369564]] prio>50 w/h (0, 0) in frame>=100ms w/h (0, 0) | skip 56 6 prio 0 0 trip 0 0 late 1 230938 vkE 0 vkW 0
+    s142/log_c142_07.txt 5e1bd731e2e5d345 lines 892197 lvl ['hoover_beach'] first_n 229 frames 7247 sum_s 122.0 k2 [] k3w/h (0, 0) max_w/h (81631, 50311) k3h_ex [] k3w_ex [] prio>50 w/h (0, 0) in frame>=100ms w/h (0, 0) | skip 19 10 prio 0 0 trip 0 0 late 1 296533 vkE 0 vkW 0
+    s142/log_c142_08.txt 358be0e0d44d729e lines 1053547 lvl ['volcano_mountain'] first_n 201 frames 7260 sum_s 122.3 k2 [] k3w/h (0, 0) max_w/h (52909, 36209) k3h_ex [] k3w_ex [] prio>50 w/h (0, 0) in frame>=100ms w/h (0, 0) | skip 140 30 prio 1 57724 trip 0 0 late 1 245564 vkE 0 vkW 0
+    s142/log_c142_09.txt eadf72b5b79ac096 lines 832182 lvl ['voxel_world'] first_n 178 frames 7427 sum_s 125.8 k2 [] k3w/h (7, 0) max_w/h (316631, 41895) k3h_ex [] k3w_ex [[180, 113999, 206324], [182, 316631, 206637], [183, 283174, 206728], [184, 266420, 206818], [185, 285526, 206908], [186, 298651, 207271], [187, 283939, 207363]] prio>50 w/h (6, 0) in frame>=100ms w/h (6, 0) | skip 90 5 prio 6 270313 trip 6 131072 late 1 243940 vkE 0 vkW 0
+    s142/log_c142_10.txt d78e0342fa2186f4 lines 769242 lvl ['enemy_gorilla'] first_n 223 frames 6386 sum_s 122.3 k2 [] k3w/h (1, 0) max_w/h (217657, 39678) k3h_ex [] k3w_ex [[225, 217657, 224047]] prio>50 w/h (1, 0) in frame>=100ms w/h (1, 0) | skip 77 6 prio 1 175624 trip 0 0 late 1 330595 vkE 0 vkW 0
+    s142/log_v142.txt 565707122e53bb50 lines 1192238 lvl ['underwater_aerial_garden'] first_n 380 frames 10176 sum_s 334.1 k2 [] k3w/h (1, 0) max_w/h (180521, 69048) k3h_ex [] k3w_ex [[382, 180521, 236004]] prio>50 w/h (0, 0) in frame>=100ms w/h (0, 0) | skip 0 0 prio 0 0 trip 0 0 late 1 334956 vkE 0 vkW 0
+    s142/log_w142.txt 7f42a2d3e1a151a2 lines 2389043 lvl ['underwater_aerial_garden'] first_n 187 frames 2479 sum_s 324.1 k2 [] k3w/h (594, 1846) max_w/h (400429, 201722) k3h_ex [[787, 133551, 764971], [788, 111580, 765699], [789, 135016, 766580]] k3w_ex [[188, 400429, 228471], [189, 167245, 230269], [190, 166474, 231332], [191, 236054, 232309], [192, 163774, 233213], [193, 166945, 235229], [194, 152127, 236453], [195, 165969, 237747], [196, 181724, 238711], [197, 166959, 240229]] prio>50 w/h (64, 0) in frame>=100ms w/h (64, 0) | skip 0 0 prio 64 94421 trip 0 0 late 1 284079 vkE 0 vkW 916988
+
+(8) emulator folder logs: [('KytyPS5/ps5 em/_kyty.prev.txt', 143, 'C:/kyty/s142/log_c142_09.txt', ['voxel_world']), ('KytyPS5/ps5 em/_kyty.txt', 143, 'C:/kyty/s142/log_c142_10.txt', ['enemy_gorilla'])]
+(9) overflow of signature cap: 0 lines in 0 logs

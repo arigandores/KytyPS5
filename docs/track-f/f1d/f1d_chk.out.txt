@@ -1,0 +1,9 @@
+register sha256 d0f5edfe3bf3891aeaadbf77d23414f996e16e00f03dbc25b8ccd8e6a43d29cb
+rows 41 unique 41
+key1 counts {'K4': 24, 'K12_in': 2, 'K3': 7, 'K12_out': 1, 'K5': 7}
+K1-K4 34
+defect/observation/out {'def': 14, 'obs': 20, 'out': 7}
+ranked 41
+order by keys 1-3 (+P) is sorted: True
+sec5 ids == sec4 ids as sets: True
+ALL OK

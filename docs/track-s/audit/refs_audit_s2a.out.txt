@@ -1,0 +1,15 @@
+db6a8ff2:docs/ROADMAP.md:12139 anchor OK; control +1 NOT OK
+db6a8ff2:docs/ROADMAP.md:12168 anchor OK; control +1 NOT OK
+455b3a25:docs/ROADMAP.md:12480 anchor OK; control +1 NOT OK
+88453c81:docs/ROADMAP.md:12628 anchor OK; control +1 NOT OK
+88453c81:docs/ROADMAP.md:12640 anchor OK; control +1 NOT OK
+20b39318:docs/ROADMAP.md:12727 anchor OK; control +1 NOT OK
+20b39318:docs/ROADMAP.md:12731 anchor OK; control +1 NOT OK
+20b39318:docs/ROADMAP.md:12757 anchor OK; control +1 NOT OK
+20b39318:docs/ROADMAP.md:12761 anchor OK; control +1 NOT OK
+20b39318:docs/ROADMAP.md:12796 anchor OK; control +1 NOT OK
+57729aed:docs/track-f/register.md:148 anchor OK; control +1 NOT OK
+a2849aec:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4754 anchor OK; control +1 NOT OK
+2c65eb41:docs/session-141/inventory141.md:208 anchor OK; control +1 NOT OK
+refs 13
+ALL OK

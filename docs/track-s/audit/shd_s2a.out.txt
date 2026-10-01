@@ -1,0 +1,32 @@
+c142_02 n 330 dt 165677 skip 6 held_inc 1
+c142_02 n 331 dt 51348 skip 0 held_inc 0
+c142_02 n 332 dt 299442 skip 0 held_inc 0
+c142_02 n 333 dt 299580 skip 0 held_inc 0
+c142_02 n 334 dt 284617 skip 0 held_inc 0
+c142_02 n 335 dt 300409 skip 0 held_inc 0
+c142_02 n 336 dt 298800 skip 0 held_inc 0
+c142_02 n 337 dt 299220 skip 0 held_inc 0
+c142_02 n 338 dt 17832 skip 0 held_inc 0
+c142_02 B1b frame 332 rows with skipped draw in i-2..i+1: [330] -> SHADER by p.241(v)(4) second clause
+c142_02 B1b frame 333 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_02 B1b frame 334 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_02 B1b frame 335 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_02 B1b frame 336 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_02 B1b frame 337 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_02 B1b frames that the second clause of (v)(4) would class SHADER: 1 of 6
+c142_09 n 180 dt 113999 skip 31 held_inc 1
+c142_09 n 181 dt 16546 skip 0 held_inc 1
+c142_09 n 182 dt 316631 skip 52 held_inc 1
+c142_09 n 183 dt 283174 skip 0 held_inc 1
+c142_09 n 184 dt 266420 skip 0 held_inc 1
+c142_09 n 185 dt 285526 skip 0 held_inc 0
+c142_09 n 186 dt 298651 skip 0 held_inc 0
+c142_09 n 187 dt 283939 skip 0 held_inc 0
+c142_09 n 188 dt 17212 skip 0 held_inc 0
+c142_09 B1b frame 182 rows with skipped draw in i-2..i+1: [180, 182] -> SHADER by p.241(v)(4) second clause
+c142_09 B1b frame 183 rows with skipped draw in i-2..i+1: [182] -> SHADER by p.241(v)(4) second clause
+c142_09 B1b frame 184 rows with skipped draw in i-2..i+1: [182] -> SHADER by p.241(v)(4) second clause
+c142_09 B1b frame 185 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_09 B1b frame 186 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_09 B1b frame 187 rows with skipped draw in i-2..i+1: [] -> not by this clause
+c142_09 B1b frames that the second clause of (v)(4) would class SHADER: 3 of 6

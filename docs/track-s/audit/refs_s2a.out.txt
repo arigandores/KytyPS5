@@ -1,0 +1,46 @@
+OK   235(a) 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6092 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+OK   235(a) 4fc501f4:src/emulator.cpp:209 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+NOANCHOR 235(b) 4fc501f4:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:116
+      line: 'LOGF("CsPretranslate: hit hash=%016" PRIx64 " saved_us=%" PRIu64 " hits=%zu\\n",'
+      +1  : 'hash, job->translate_us, stats.hits);'
+NOANCHOR 235(b) 4fc501f4:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:130
+      line: 'LOGF("CsPretranslate: miss hash=%016" PRIx64 " reason=%s\\n", hash, reason);'
+      +1  : 'return std::nullopt;'
+OK   238(a) 4fc501f4:src/graphics/presentation/videoOut.cpp:1191 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+OK   238(a) 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6008 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+OK   241(a) 57729aed:docs/track-f/register.md:148 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=2
+OK   241(b)(5) a2849aec:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4764 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+OK   241(b)(5) a2849aec:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4655 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=1
+OK   241(b)(5) a2849aec:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5362 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=4
+OK   241(b)(5) a2849aec:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5399 anchor=True control+1=True anchor_not_on_+1=True anchor_hits_in_file=4
+NOANCHOR S1 RC5 (238(a) text) 4fc501f4:src/graphics/presentation/videoOut.cpp:1206
+      line: 'if (!r.skip_ceil && !r.incomplete) {'
+      +1  : 'Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // held without a reason'
+NOANCHOR S1 RC5 (238(a) text) 4fc501f4:src/graphics/presentation/videoOut.cpp:1211
+      line: 'if (r.skip_ceil) {'
+      +1  : 'Common::FrameStats::Add(Common::FrameStats::Counter::SkcBad, 1); // a skipceil request presented'
+NOANCHOR S1 RC3 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4660
+      line: 'if (m_driver_cache == nullptr) {'
+      +1  : 'return;'
+NOANCHOR S1 RC3 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4806
+      line: 'PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {} ({} us)", payload.size(),'
+      +1  : 'Common::PathToString(m_driver_cache_path), HostMicros() - write_begin);'
+NOANCHOR S1 RC3 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5354
+      line: 'Common::LockGuard lock(m_mutex);'
+      +1  : 'if (AvTraceEnabled()) {'
+NOANCHOR S1 RC6 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5127
+      line: 'm_ready_cv.wait_for(lock, std::chrono::microseconds(AsyncPipelineWaitUs()),'
+      +1  : '[entry] { return entry->ready.load(std::memory_order_acquire); });'
+NOANCHOR S1 RC1/RC2 4fc501f4:src/emulator.cpp:215
+      line: 'SetCacheTestEnvironment("KYTY_PIPELINE_SALT", salt.c_str());'
+      +1  : 'std::fprintf(stdout, "Cache test mode: %s (fresh driver namespace %s)\\n", selected.c_str(), salt.c_str());'
+NOANCHOR S1 RC12 4fc501f4:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:639
+      line: 'if (std::memcmp(data.data(), m_signature.data(), m_signature.size()) != 0) {'
+      +1  : 'return false;'
+NOANCHOR S1 RC15 4fc501f4:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:38
+      line: "return value == nullptr || value[0] != '0';"
+      +1  : '}();'
+anchored refs: 9 of 9 OK
+last src/ commit reachable from 20b39318: a2849aec 2026-09-30T11:44:20+02:00
+diff 4fc501f4..a2849aec on the referenced files: 'src/graphics/presentation/videoOut.cpp | 367 ++++++++++++++++++++++++++++++++-\n 1 file changed, 365 insertions(+), 2 deletions(-)'
+ALL OK

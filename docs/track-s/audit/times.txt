@@ -1,0 +1,4 @@
+2026-10-01T00:54:23Z start HPP-312 S2a wake; inputs fedcf271 s0, 1c7cfc8c s1, 455b3a25 p.235, 88453c81 p.238, 20b39318 p.241; lock absent, STOP absent
+2026-10-01T01:02:43Z recounts done: prio_s2a (10 logs), refs_s2a 9/9 anchored ALL OK, lock_s2a, aux_s2a; lock absent at every command
+2026-10-01T01:08:26Z AUDIT_S1.md written (sha f229fb85), refs_audit 13/13 ALL OK, privacy 25 expressions blocking 0, copies to git docs/track-s/audit (LF, CR 0)
+2026-10-01T01:08:26Z FACTS section S2a appended via facts_s2a.py

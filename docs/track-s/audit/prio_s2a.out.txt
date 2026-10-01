@@ -1,0 +1,264 @@
+====================================================================================================
+log C:/kyty/s142/log_c142_01.txt
+sha256 66b4ff7e0e50a8a445a3820b27976eef93b32bf81afc72e8efeef571057ec738 lines 979791 FrameTrace rows 5252
+entry line (Level has started: bumper_enemy_snowy_canyon) 186343
+n gaps 0
+first scene frame n 203 line 347813 dt 785741
+events total: PRIO 2 BVH 0 PCW 4
+  ev line 347062 PRIO us=188006 next_n=203 prev_n=202 | PriorityStall: tick=3076 unsub=1 us=188006 site=+0x90a231
+  ev line 350299 PRIO us=686428 next_n=204 prev_n=203 | PriorityStall: tick=3094 unsub=1 us=686428 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 204 363469 816566 110405 0 | 1 686428 0 0 | 0 0 0 0 | 22 1 | PRIO WAIT
+win 206 380442 101796 89605 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+frames >= 100 ms: window 2 hold 0
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 1
+  class (part, next-convention, prev-convention) ('win', 'PRIO', 'WAIT') 1
+====================================================================================================
+log C:/kyty/s142/log_c142_02.txt
+sha256 bb6655d3d30c0bc7ffc9673ece8128b56028293d0a98f770a42168624f97695c lines 887497 FrameTrace rows 3798
+entry line (Level has started: big_hand_pirate_island) 241928
+n gaps 0
+first scene frame n 328 line 250256 dt 15232
+events total: PRIO 11 BVH 6 PCW 9
+  ev line 266218 PRIO us=64156 next_n=330 prev_n=329 | PriorityStall: tick=4873 unsub=1 us=64156 site=+0x90a231
+  ev line 269097 PRIO us=283539 next_n=332 prev_n=331 | PriorityStall: tick=4952 unsub=1 us=283539 site=+0x90a231
+  ev line 269177 BVH us=None next_n=333 prev_n=332 | BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+  ev line 270257 PRIO us=284444 next_n=333 prev_n=332 | PriorityStall: tick=4978 unsub=0 us=284444 site=+0x90a231
+  ev line 270386 BVH us=None next_n=334 prev_n=333 | BvhLoopCapTrip: trips=+129024 total=260096 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=260096 slot1=0
+  ev line 271465 PRIO us=282785 next_n=334 prev_n=333 | PriorityStall: tick=5007 unsub=0 us=282785 site=+0x90a231
+  ev line 271498 BVH us=None next_n=334 prev_n=333 | BvhLoopCapTrip: trips=+128000 total=388096 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=388096 slot1=0
+  ev line 272934 PRIO us=286003 next_n=335 prev_n=334 | PriorityStall: tick=5031 unsub=0 us=286003 site=+0x90a231
+  ev line 272946 BVH us=None next_n=335 prev_n=334 | BvhLoopCapTrip: trips=+122880 total=510976 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=510976 slot1=0
+  ev line 273563 PRIO us=285677 next_n=336 prev_n=335 | PriorityStall: tick=5059 unsub=0 us=285677 site=+0x90a231
+  ev line 273573 BVH us=None next_n=337 prev_n=336 | BvhLoopCapTrip: trips=+122848 total=633824 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=633824 slot1=0
+  ev line 273881 PRIO us=285620 next_n=337 prev_n=336 | PriorityStall: tick=5085 unsub=0 us=285620 site=+0x90a231
+  ev line 273891 BVH us=None next_n=338 prev_n=337 | BvhLoopCapTrip: trips=+117760 total=751584 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=751584 slot1=0
+  ev line 483504 PRIO us=79825 next_n=661 prev_n=660 | PriorityStall: tick=14663 unsub=1 us=79825 site=+0x90a231
+  ev line 483517 PRIO us=85542 next_n=661 prev_n=660 | PriorityStall: tick=14664 unsub=1 us=85542 site=+0x90a231
+  ev line 557304 PRIO us=95090 next_n=1358 prev_n=1357 | PriorityStall: tick=36773 unsub=1 us=95090 site=+0x90a231
+  ev line 724495 PRIO us=106539 next_n=2557 prev_n=2556 | PriorityStall: tick=76086 unsub=1 us=106539 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 330 267075 165677 74476 0 | 1 64156 0 1 | 0 0 0 0 | 6 1 | WAIT WAIT
+win 332 269168 299442 26865 0 | 1 283539 0 0 | 1 284444 1 0 | 0 0 | PRIO PRIO
+win 333 270377 299580 11591 0 | 1 284444 1 0 | 1 282785 2 0 | 0 0 | PRIO PRIO
+win 334 271604 284617 6296 0 | 1 282785 2 0 | 1 286003 1 0 | 0 0 | PRIO PRIO
+win 335 273244 300409 18422 0 | 1 286003 1 0 | 1 285677 0 0 | 0 0 | PRIO PRIO
+win 336 273564 298800 19063 0 | 1 285677 0 0 | 1 285620 1 0 | 0 0 | PRIO PRIO
+win 337 273882 299220 13313 0 | 1 285620 1 0 | 0 0 1 0 | 0 0 | PRIO WAIT
+win 474 323927 100019 89502 0 | 0 0 0 0 | 0 0 0 0 | 3 1 | GPUTHR GPUTHR
+win 482 348859 135990 121600 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+win 488 389171 148505 130219 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+win 496 428970 116380 103589 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+win 529 461759 111102 97955 0 | 0 0 0 0 | 0 0 0 0 | 1 0 | GPUTHR GPUTHR
+win 661 483584 218174 213980 0 | 2 165367 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+win 795 497191 165920 139884 0 | 0 0 0 1 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+hold 1358 557383 149651 118994 0 | 1 95090 0 1 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+hold 2557 725366 151746 126770 0 | 1 106539 0 2 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+frames >= 100 ms: window 14 hold 2
+  class (part, next-convention, prev-convention) ('hold', 'GPUTHR', 'GPUTHR') 2
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 7
+  class (part, next-convention, prev-convention) ('win', 'PRIO', 'PRIO') 5
+  class (part, next-convention, prev-convention) ('win', 'PRIO', 'WAIT') 1
+  class (part, next-convention, prev-convention) ('win', 'WAIT', 'WAIT') 1
+====================================================================================================
+log C:/kyty/s142/log_c142_03.txt
+sha256 9aaa83b0c73e66b13c8d40d6433bce23ded53aaa579e3dd1be00d539892ed3cb lines 952602 FrameTrace rows 7155
+entry line (Level has started: timestop_casino) 241438
+n gaps 0
+first scene frame n 263 line 245280 dt 13967
+events total: PRIO 2 BVH 0 PCW 7
+  ev line 259579 PRIO us=65901 next_n=265 prev_n=264 | PriorityStall: tick=3917 unsub=1 us=65901 site=+0x90a231
+  ev line 399554 PRIO us=104272 next_n=843 prev_n=842 | PriorityStall: tick=19408 unsub=1 us=104272 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 265 262553 130020 119023 0 | 1 65901 0 1 | 0 0 0 0 | 17 1 | GPUTHR GPUTHR
+win 784 349499 432339 409322 0 | 0 0 0 0 | 0 0 0 0 | 19 1 | GPUTHR GPUTHR
+win 843 399618 164501 156276 0 | 1 104272 0 0 | 0 0 0 0 | 68 1 | GPUTHR GPUTHR
+hold 1042 423866 115028 19784 0 | 0 0 0 1 | 0 0 0 0 | 1 1 | WAIT WAIT
+frames >= 100 ms: window 3 hold 1
+  class (part, next-convention, prev-convention) ('hold', 'WAIT', 'WAIT') 1
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 3
+====================================================================================================
+log C:/kyty/s142/log_c142_04.txt
+sha256 bd5f547706caad1df9470af8265711dbc86e1bdde7f19dfdb1f9a2b30a0f6133 lines 883868 FrameTrace rows 7555
+entry line (Level has started: mini_giants_garden) 213072
+n gaps 0
+first scene frame n 260 line 259215 dt 469352
+events total: PRIO 3 BVH 0 PCW 4
+  ev line 240306 PRIO us=142903 next_n=260 prev_n=259 | PriorityStall: tick=3903 unsub=1 us=142903 site=+0x90a231
+  ev line 244510 PRIO us=87100 next_n=260 prev_n=259 | PriorityStall: tick=3929 unsub=1 us=87100 site=+0x90a231
+  ev line 259071 PRIO us=54428 next_n=260 prev_n=259 | PriorityStall: tick=3933 unsub=1 us=54428 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+frames >= 100 ms: window 0 hold 0
+====================================================================================================
+log C:/kyty/s142/log_c142_05.txt
+sha256 9ea02549b36c01009255f63b420cafee8ad7c6e0018caffac2d9590282d94969 lines 1030146 FrameTrace rows 7301
+entry line (Level has started: ice_iceberg) 209708
+n gaps 0
+first scene frame n 231 line 213499 dt 10015
+events total: PRIO 2 BVH 0 PCW 5
+  ev line 280457 PRIO us=130635 next_n=232 prev_n=231 | PriorityStall: tick=3503 unsub=1 us=130635 site=+0x90a231
+  ev line 423007 PRIO us=113160 next_n=1002 prev_n=1001 | PriorityStall: tick=27885 unsub=1 us=113160 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 232 287605 448789 409153 0 | 1 130635 0 0 | 0 0 0 0 | 83 1 | GPUTHR GPUTHR
+win 240 331180 133372 119729 0 | 0 0 0 0 | 0 0 0 0 | 1 1 | GPUTHR GPUTHR
+win 526 373184 143602 143372 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+hold 1002 423092 131181 22261 0 | 1 113160 0 1 | 0 0 0 0 | 1 1 | PRIO WAIT
+frames >= 100 ms: window 3 hold 1
+  class (part, next-convention, prev-convention) ('hold', 'PRIO', 'WAIT') 1
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 3
+====================================================================================================
+log C:/kyty/s142/log_c142_06.txt
+sha256 a511e5d4af7a0f0a7f462b097c9a5f48ba58cff1b96194e176f76e404c71034b lines 710991 FrameTrace rows 4386
+entry line (Level has started: sponge_dirty_bath) 245717
+n gaps 0
+first scene frame n 261 line 248587 dt 18198
+events total: PRIO 0 BVH 0 PCW 4
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 262 315708 465210 411388 0 | 0 0 0 0 | 0 0 0 0 | 50 1 | GPUTHR GPUTHR
+win 455 369564 149912 134915 0 | 0 0 0 0 | 0 0 0 0 | 0 0 | GPUTHR GPUTHR
+frames >= 100 ms: window 2 hold 0
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 2
+====================================================================================================
+log C:/kyty/s142/log_c142_07.txt
+sha256 5e1bd731e2e5d34530821d73677a6522a60f2759e43a5544453665ec6b0928ea lines 892197 FrameTrace rows 7475
+entry line (Level has started: hoover_beach) 220166
+n gaps 0
+first scene frame n 229 line 225827 dt 19767
+events total: PRIO 0 BVH 0 PCW 4
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+frames >= 100 ms: window 0 hold 0
+====================================================================================================
+log C:/kyty/s142/log_c142_08.txt
+sha256 358be0e0d44d729e5e4c8a87d7bcbf4eab67dc54986f3928c661368a7ca13135 lines 1053547 FrameTrace rows 7460
+entry line (Level has started: volcano_mountain) 203760
+n gaps 0
+first scene frame n 201 line 261427 dt 328992
+events total: PRIO 1 BVH 0 PCW 4
+  ev line 258109 PRIO us=57724 next_n=201 prev_n=200 | PriorityStall: tick=3062 unsub=1 us=57724 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+frames >= 100 ms: window 0 hold 0
+====================================================================================================
+log C:/kyty/s142/log_c142_09.txt
+sha256 eadf72b5b79ac09679ac8ae028ba2d391a77ccb829c16bfae30681405d5f9d17 lines 832182 FrameTrace rows 7604
+entry line (Level has started: voxel_world) 175317
+n gaps 0
+first scene frame n 178 line 178319 dt 28782
+events total: PRIO 6 BVH 6 PCW 4
+  ev line 206635 PRIO us=266184 next_n=182 prev_n=181 | PriorityStall: tick=2805 unsub=0 us=266184 site=+0x90a231
+  ev line 206646 BVH us=None next_n=183 prev_n=182 | BvhLoopCapTrip: trips=+131072 total=131072 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=131072 slot1=0
+  ev line 206726 PRIO us=268979 next_n=183 prev_n=182 | PriorityStall: tick=2832 unsub=0 us=268979 site=+0x90a231
+  ev line 206737 BVH us=None next_n=184 prev_n=183 | BvhLoopCapTrip: trips=+131072 total=262144 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=262144 slot1=0
+  ev line 206816 PRIO us=260947 next_n=184 prev_n=183 | PriorityStall: tick=2863 unsub=0 us=260947 site=+0x90a231
+  ev line 206827 BVH us=None next_n=185 prev_n=184 | BvhLoopCapTrip: trips=+131072 total=393216 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=393216 slot1=0
+  ev line 206907 PRIO us=268614 next_n=185 prev_n=184 | PriorityStall: tick=2891 unsub=0 us=268614 site=+0x90a231
+  ev line 206929 BVH us=None next_n=186 prev_n=185 | BvhLoopCapTrip: trips=+131072 total=524288 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=524288 slot1=0
+  ev line 207270 PRIO us=270313 next_n=186 prev_n=185 | PriorityStall: tick=2918 unsub=0 us=270313 site=+0x90a231
+  ev line 207280 BVH us=None next_n=187 prev_n=186 | BvhLoopCapTrip: trips=+131072 total=655360 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=655360 slot1=0
+  ev line 207281 PRIO us=269833 next_n=187 prev_n=186 | PriorityStall: tick=2945 unsub=0 us=269833 site=+0x90a231
+  ev line 207294 BVH us=None next_n=187 prev_n=186 | BvhLoopCapTrip: trips=+131072 total=786432 near=+0 near_total=0 max_spent=65537 cap=65536 slot0=786432 slot1=0
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 180 206324 113999 97188 0 | 0 0 0 0 | 0 0 0 0 | 31 1 | GPUTHR GPUTHR
+win 182 206637 316631 50788 0 | 1 266184 0 0 | 1 268979 1 0 | 52 1 | PRIO PRIO
+win 183 206728 283174 14420 0 | 1 268979 1 0 | 1 260947 1 0 | 0 1 | PRIO PRIO
+win 184 206818 266420 14362 0 | 1 260947 1 0 | 1 268614 1 0 | 0 1 | PRIO PRIO
+win 185 206908 285526 12957 0 | 1 268614 1 0 | 1 270313 1 0 | 0 0 | PRIO PRIO
+win 186 207271 298651 13608 0 | 1 270313 1 0 | 1 269833 2 0 | 0 0 | PRIO PRIO
+win 187 207363 283939 11313 0 | 1 269833 2 0 | 0 0 0 0 | 0 0 | PRIO WAIT
+frames >= 100 ms: window 7 hold 0
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 1
+  class (part, next-convention, prev-convention) ('win', 'PRIO', 'PRIO') 5
+  class (part, next-convention, prev-convention) ('win', 'PRIO', 'WAIT') 1
+====================================================================================================
+log C:/kyty/s142/log_c142_10.txt
+sha256 d78e0342fa2186f45fe7b470c15965e0278c4fae3fd4d365318b48ddd4519e70 lines 769242 FrameTrace rows 6608
+entry line (Level has started: enemy_gorilla) 194381
+n gaps 0
+first scene frame n 223 line 195309 dt 17209
+events total: PRIO 1 BVH 0 PCW 4
+  ev line 215285 PRIO us=175624 next_n=225 prev_n=224 | PriorityStall: tick=3454 unsub=1 us=175624 site=+0x90a231
+-- frames dt >= 100000 us after the first scene frame (window = 599 rows after it, then hold)
+part n line dt cpu_gpu prio_us(lite) | NEXT: prio_n prio_us_sum bvh_n pcw_n | PREV: prio_n prio_us_sum bvh_n pcw_n | skip held | class_next class_prev
+win 225 224047 217657 177229 0 | 1 175624 0 1 | 0 0 0 0 | 60 1 | GPUTHR GPUTHR
+frames >= 100 ms: window 1 hold 0
+  class (part, next-convention, prev-convention) ('win', 'GPUTHR', 'GPUTHR') 1
+====================================================================================================
+SUMMARY (window frames, class PRIO under the S0 convention = event belongs to the next main row)
+C:/kyty/s142/log_c142_01.txt
+  PRIO(next) window frames n: [204]
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: [816566]
+C:/kyty/s142/log_c142_02.txt
+  PRIO(next) window frames n: [332, 333, 334, 335, 336, 337]
+  of them with >=1 BvhLoopCapTrip line in the group (next): [333, 334, 335, 337]
+  of them with >=1 BvhLoopCapTrip line in the group (prev): [332, 333, 334, 336, 337]
+  of them with BvhLoopCapTrip in next OR prev group: [332, 333, 334, 335, 336, 337]
+  of them PRIO under both conventions: [332, 333, 334, 335, 336]
+  dt: [299442, 299580, 284617, 300409, 298800, 299220]
+C:/kyty/s142/log_c142_03.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_04.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_05.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_06.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_07.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_08.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []
+C:/kyty/s142/log_c142_09.txt
+  PRIO(next) window frames n: [182, 183, 184, 185, 186, 187]
+  of them with >=1 BvhLoopCapTrip line in the group (next): [183, 184, 185, 186, 187]
+  of them with >=1 BvhLoopCapTrip line in the group (prev): [182, 183, 184, 185, 186]
+  of them with BvhLoopCapTrip in next OR prev group: [182, 183, 184, 185, 186, 187]
+  of them PRIO under both conventions: [182, 183, 184, 185, 186]
+  dt: [316631, 283174, 266420, 285526, 298651, 283939]
+C:/kyty/s142/log_c142_10.txt
+  PRIO(next) window frames n: []
+  of them with >=1 BvhLoopCapTrip line in the group (next): []
+  of them with >=1 BvhLoopCapTrip line in the group (prev): []
+  of them with BvhLoopCapTrip in next OR prev group: []
+  of them PRIO under both conventions: []
+  dt: []

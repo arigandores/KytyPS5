@@ -1,0 +1,18 @@
+c142_01 first n=203 first_row_skip=181 first_row_held_inc=1 skip_sum_after_excl=28 incl=209 held_inc_after=2
+c142_02 first n=328 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=41 incl=41 held_inc_after=13
+c142_03 first n=263 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=2203 incl=2203 held_inc_after=68
+c142_04 first n=260 first_row_skip=26 first_row_held_inc=1 skip_sum_after_excl=11 incl=37 held_inc_after=11
+c142_05 first n=231 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=239 incl=239 held_inc_after=49
+c142_06 first n=261 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=56 incl=56 held_inc_after=6
+c142_07 first n=229 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=19 incl=19 held_inc_after=10
+c142_08 first n=201 first_row_skip=83 first_row_held_inc=1 skip_sum_after_excl=56 incl=139 held_inc_after=29
+c142_09 first n=178 first_row_skip=3 first_row_held_inc=0 skip_sum_after_excl=87 incl=90 held_inc_after=5
+c142_10 first n=223 first_row_skip=0 first_row_held_inc=0 skip_sum_after_excl=77 incl=77 held_inc_after=6
+TOTAL skc_ap_skip after first scene frame: excl first row 2817, incl first row 3110, diff 293
+-- frames >= 100 ms with a driver cache save line in group i or i+1 (after the first scene frame)
+c142_02 n=795 win dt=165920 save_us=93261 dt-us=72659 group=i save_line=496947 bytes=90591072
+c142_02 n=1358 hold dt=149651 save_us=92638 dt-us=57013 group=i save_line=557303 bytes=90629860
+c142_02 n=2557 hold dt=151746 save_us=86465 dt-us=65281 group=i save_line=724494 bytes=90629860
+c142_03 n=1042 hold dt=115028 save_us=87008 dt-us=28020 group=i save_line=423789 bytes=92136273
+c142_05 n=1002 hold dt=131181 save_us=92793 dt-us=38388 group=i save_line=423006 bytes=92984474
+count 5 all dt-us < 100000: True

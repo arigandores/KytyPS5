@@ -216,16 +216,20 @@ def read_tag(tag, root=ROOT, sc142=None, b26=None):
         hold_vx = r['dt_after_first_s'] >= cfg['hold_s']
     r['hold_ok'], r['hold_vx'] = hold_ok, hold_vx
     base = r['admitted'] and d['entered'] and not r['scene_change'] and r['deaths'] == 0 and r['hold_exit'] is None
+
+    def held(ok, hold):
+        # p.256(d): (a) and (b) with a hold below 300 s (and nothing else failed) -> NOT EVALUABLE, a repeat only by the lead
+        return 'FAIL' if not ok else ('PASS' if hold else 'NOT EVALUABLE')
     if tag == 'f2c_a':
         vid = g is not None and g['video_frames'] >= FRAMES_V and g['glitches'] == 0 and r['sheet']
         r['video_ok'] = vid
         crit = base and vid and not bout['reopen_any']
-        r['verdict_letter'] = 'PASS' if crit and hold_ok and bout['verdict_letter'] == 'PASS' else 'FAIL'
-        r['verdict_variant'] = 'PASS' if crit and hold_ok and bout['verdict_variant'] == 'PASS' else 'FAIL'
+        r['verdict_letter'] = held(crit and bout['verdict_letter'] == 'PASS', hold_ok)
+        r['verdict_variant'] = held(crit and bout['verdict_variant'] == 'PASS', hold_ok)
     elif tag == 'f2c_b':
         crit = base and val['ok'] and r['vke'] == 0 and bout['knob_ok'] and bout['form_ok'] is True and not bout['reopen_any']
-        r['verdict_letter'] = 'PASS' if crit and hold_ok else 'FAIL'
-        r['verdict_variant'] = 'PASS' if crit and hold_vx else 'FAIL'
+        r['verdict_letter'] = held(crit, hold_ok)
+        r['verdict_variant'] = held(crit, hold_vx)
     else:
         crit = base and bout['verdict_letter'] == 'CONTROL RETURNS' and not bout['reopen_any']
         r['verdict_letter'] = 'PASS' if crit and hold_ok else 'FAIL'
@@ -265,11 +269,12 @@ def text(r):
     L.append('--- B26 profile (f2c_b26.py) ---')
     L.append(r['b26_text'])
     L.append('F2C VERDICT %s letter: %s' % (r['tag'], r['verdict_letter']))
-    L.append('F2C VERDICT %s RC1/executor variant: %s' % (r['tag'], r['verdict_variant']))
+    L.append('F2C VERDICT %s RC1/executor variant (rule of p.256(a),(d) - verdict of record): %s' % (r['tag'], r['verdict_variant']))
     return '\n'.join(L)
 
 
-SEALED = ('go_f2c.sh', 'f2c_read.py', 'f2c_b26.py', 'shalist_f2c.py', 'test_f2c_read.py', 'test_f2c_b26.py', 'enter_scene.py',
+SEALED = ('go_f2c.sh', 'f2c_read.py', 'f2c_b26.py', 'shalist_f2c.py', 'win332_f2c.py', 'test_f2c_read.py', 'test_f2c_b26.py',
+          'test_go_f2c.py', 'enter_scene.py',
           'launch_run.py', 'run_safety99.py', 'idle142.py', 'procload.py', 'sheet142.py', 'cachemf143.py', 'fgcpu143.py',
           'gates_default.txt', SC142, 'C:/kyty/scripts/s51_vidglitch.py', 'C:/kyty/f287/f1a/b26_shaders.tsv')
 RX_SEAL = re.compile(r'^seal: ([0-9a-f]{64}) (\S+)$')

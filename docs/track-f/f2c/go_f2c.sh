@@ -20,6 +20,11 @@
 #     deleted), the snapshot copied back, its list must equal the list before (else RESTORE FAILED, rc 1); GLCache comes
 #     back from its copy only when GLRESTORE=1 (decision of the lead, F2b RC4; the value is in the seal).
 #   BINARY: BIN_F2C / BIN_EXPECT - the binary of the lead's decision on F2b RC2 (item 237 (g)(3)); empty -> rc 2.
+#     Item 256 (b): 5821482a (= 4fc501f4 + 22 knob commits + F2a); item 256 (v): GLRESTORE=1.
+#   FAILED RETURN (item 256 (v)): a shader cache or GLCache return that does not equal the list before writes the stop
+#     file C:/kyty/f287/STOP (track F stops; the comment in HPP-330 goes before HPP-332 starts).
+#   LOCK WINDOW (item 256 (e)): right before the lock, in the same command - no lock file, no stop file, and HPP-332
+#     neither in_progress nor done by the API answer (win332_f2c.py, a times line with the answer); else BUSY rc 4.
 #   STOP FILE (general rule 26): C:/kyty/f287/STOP -> rc 4 before anything, before the lock and before every tag.
 #   THE SEAL'S CALL (item 105 (v)): the seal carries exactly one line "go_f2c call: PLWAIT=<n> bash
 #     C:/kyty/f287/f2c/go_f2c.sh series"; f2c_read.py --check-seal checks every "seal:" line before the lock.
@@ -36,9 +41,9 @@ STOPF=/c/kyty/f287/STOP
 GAME="/c/kyty/KytyPS5/ps5 em/kyty_emulator.exe"
 BUILD_EXPECT="9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7"
 BUILD_PINNED="/c/kyty/s128/kyty_emulator_9235a7ac.exe"
-BIN_F2C=""
-BIN_EXPECT=""
-GLRESTORE=""
+BIN_F2C="/c/kyty/f287/bin/kyty_emulator_5821482a.exe"
+BIN_EXPECT="5821482a13a38bb9e42719b75fbd7b6e308a08c8e98caab02afb5398aac368dd"
+GLRESTORE="1"
 GATESHA="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
 VKLAYER="C:/VulkanSDK/1.4.357.0/Bin"
@@ -109,7 +114,7 @@ if [ "$NL" != "1" ] || [ "$SEALPL" != "$PLWAIT" ]; then
   echo "PLWAIT differs from the seal"; exit 1
 fi
 if [ "${DRY:-0}" = "1" ]; then
-  echo "DRY series: level $LEVEL; tags $SEQ; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; f2c_read --check-seal; cpu < 15; idle142; procload --wait-s 0; stop file?; lock (lock.log UTC); shader cache list + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F2C ($BIN_EXPECT); per tag: stop file?, enter_scene.py <tag> --level $LEVEL --attempts 1 --no-install --require-idle --pred $ROOT/$PRED (a: --rec --hold $VHOLD KYTY_FIX_B26=1; b: --emu-arg=--vulkan-validation true --hold $WHOLD KYTY_FIX_B26=1 KYTY_PIPELINE_PRECACHE=0 VK_LAYER_PATH; c: --hold $CHOLD KYTY_FIX_B26=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, glitch+sheet (a), f2c_read --tag; series stop on a death marker or rc != 0; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (list = before), GLCache manifest after (+ restore if GLRESTORE=1), fgcpu143 row, unlock"
+  echo "DRY series: level $LEVEL; tags $SEQ; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; f2c_read --check-seal; cpu < 15; idle142; procload --wait-s 0; stop file?; HPP-332 window (win332_f2c, p.256(e)); lock (lock.log UTC); shader cache list + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F2C ($BIN_EXPECT); per tag: stop file?, enter_scene.py <tag> --level $LEVEL --attempts 1 --no-install --require-idle --pred $ROOT/$PRED (a: --rec --hold $VHOLD KYTY_FIX_B26=1; b: --emu-arg=--vulkan-validation true --hold $WHOLD KYTY_FIX_B26=1 KYTY_PIPELINE_PRECACHE=0 VK_LAYER_PATH; c: --hold $CHOLD KYTY_FIX_B26=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, glitch+sheet (a), f2c_read --tag; series stop on a death marker or rc != 0; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (list = before), GLCache manifest after (+ restore if GLRESTORE=1), fgcpu143 row, unlock"
   exit 0
 fi
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
@@ -164,6 +169,13 @@ if [ "$IDLE_RC" -ne 0 ]; then busy "machine not idle by idle142 (rc $IDLE_RC)"; 
 lockheld
 guards 0 || busy "procload / name guard not clean before the lock"
 if [ -e $STOPF ]; then busy "stop file $STOPF appeared before the lock"; fi
+W332=$(python $ROOT/win332_f2c.py 2>&1 | tail -1 | tr -d '\r')
+tl "lock window p.256(e): $W332"
+case "$W332" in
+  *"-> open") ;;
+  *) busy "lock window p.256(e) closed or unknown: $W332";;
+esac
+lockheld
 set -o noclobber
 if ! { echo "go_f2c.sh series pid $$ winpid $WINPID started $(date +%Y-%m-%dT%H:%M:%S)" > $LOCK; } 2>/dev/null; then
   set +o noclobber
@@ -173,6 +185,7 @@ set +o noclobber
 echo "lock taken series $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $LOCKLOG
 tl "lock taken (winpid $WINPID)"
 INSTALLED=0
+RETFAIL=0
 SNAPPED=0
 GLSNAPPED=0
 LIST_BEFORE=""
@@ -203,10 +216,10 @@ finish() {
       if [ "$LIST_BACK" = "$LIST_BEFORE" ]; then
         tl "shader cache returned: $LIST_BACK = before; run cache kept in $KEEP"
       else
-        tl "SHADER CACHE RESTORE FAILED: back '$LIST_BACK' != before '$LIST_BEFORE'"; echo "cache restore failed"; RCX=1
+        tl "SHADER CACHE RESTORE FAILED: back '$LIST_BACK' != before '$LIST_BEFORE'"; echo "cache restore failed"; RCX=1; RETFAIL=1
       fi
     else
-      tl "SHADER CACHE RESTORE FAILED: move/copy error ($CACHE, $KEEP, $SNAP)"; echo "cache restore failed"; RCX=1
+      tl "SHADER CACHE RESTORE FAILED: move/copy error ($CACHE, $KEEP, $SNAP)"; echo "cache restore failed"; RCX=1; RETFAIL=1
     fi
   fi
   if [ "$GLSNAPPED" = "1" ]; then
@@ -217,11 +230,15 @@ finish() {
       mkdir -p "$GLKEEP"
       if mv "$GLDIR" "$GLKEEP/" && cp -a "$GLSNAP/GLCache" "$GLDIR"; then
         GLB=$(python $ROOT/shalist_f2c.py "$GLDIR" 2>&1 | tail -1 | tr -d '\r')
-        if [ "$GLB" = "$GL_BEFORE" ]; then tl "GLCache returned: $GLB = before"; else tl "GLCACHE RESTORE FAILED: '$GLB' != '$GL_BEFORE'"; RCX=1; fi
+        if [ "$GLB" = "$GL_BEFORE" ]; then tl "GLCache returned: $GLB = before"; else tl "GLCACHE RESTORE FAILED: '$GLB' != '$GL_BEFORE'"; RCX=1; RETFAIL=1; fi
       else
-        tl "GLCACHE RESTORE FAILED: move/copy error"; RCX=1
+        tl "GLCACHE RESTORE FAILED: move/copy error"; RCX=1; RETFAIL=1
       fi
     fi
+  fi
+  if [ "$RETFAIL" = "1" ]; then
+    echo "p.256(v) F2c cache return failed $(date -u +%Y-%m-%dT%H:%M:%SZ) - track F stopped, comment in HPP-330" > $STOPF
+    tl "stop file written: cache return failed (p.256(v))"
   fi
   FG=$(python $ROOT/fgcpu143.py --since runs/fgcpu_series.a.json --chain-pid $WINPID 2>&1 | tail -1 | tr -d '\r')
   tl "foreign cpu at the end inside the lock: $FG"
@@ -256,7 +273,7 @@ INSTALLED=1
 cp "$BIN_F2C" "$GAME" || { log "install copy failed - stop"; exit 1; }
 [ "$(sha "$GAME")" = "$BIN_EXPECT" ] || { log "installed sha != $BIN_EXPECT - stop"; tl "install failed"; exit 1; }
 tl "installed fix binary sha256 $BIN_EXPECT"
-log "files: $(sha256sum f2c_read.py f2c_b26.py shalist_f2c.py $PRED gates_default.txt enter_scene.py idle142.py procload.py go_f2c.sh sheet142.py fgcpu143.py cachemf143.py C:/kyty/s142/sc142.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
+log "files: $(sha256sum f2c_read.py f2c_b26.py shalist_f2c.py win332_f2c.py $PRED gates_default.txt enter_scene.py idle142.py procload.py go_f2c.sh sheet142.py fgcpu143.py cachemf143.py C:/kyty/s142/sc142.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
 SERIES_RC=0
 for C in $SEQ; do
   if [ -e $STOPF ]; then tl "stop file before $C: $(head -1 $STOPF) - series stopped"; SERIES_RC=1; break; fi

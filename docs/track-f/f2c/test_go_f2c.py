@@ -3,6 +3,7 @@ attempt, lock held, stop file, DRY plan.  A copy of the script with LOCK, STOPF 
 no guard, no install, no game.  Last line: ALL OK."""
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -41,6 +42,23 @@ check('RC6 exact knob values', 'EXTRA="KYTY_FIX_B26=1"' in src and 'EXTRA="KYTY_
 check('no mutlib word in a command', 'mutlib ' not in src.replace("'mut_[a-z0-9_]*|test_[a-z0-9_]*f2c|mutlib'", ''))
 check('no tail -F', 'tail -F' not in src)
 check('restore in the EXIT trap', 'trap finish EXIT' in src and 'restore_bin' in src)
+check('p.256(b) binary constant', 'BIN_F2C="/c/kyty/f287/bin/kyty_emulator_5821482a.exe"\n' in src
+      and 'BIN_EXPECT="5821482a13a38bb9e42719b75fbd7b6e308a08c8e98caab02afb5398aac368dd"\n' in src)
+check('p.256(v) GLRESTORE=1', 'GLRESTORE="1"\n' in src)
+check('p.256(v) failed return writes the stop file', src.count('RETFAIL=1') == 4 and '> $STOPF' in src)
+check('p.256(e) HPP-332 window right before the lock', src.index('win332_f2c.py 2>&1') < src.index('set -o noclobber')
+      and src.index('busy "stop file $STOPF appeared before the lock"') < src.index('win332_f2c.py 2>&1'))
+check('p.256(e) window closed or unknown -> busy', '*"-> open") ;;' in src and 'busy "lock window p.256(e) closed or unknown' in src)
+sys.path.insert(0, HERE)
+import win332_f2c as W  # noqa: E402
+check('win332 in_progress closed rc 5', W.decide('in_progress') == (5, 'closed'))
+check('win332 done closed rc 5', W.decide('done') == (5, 'closed'))
+check('win332 blocked open rc 0', W.decide('blocked') == (0, 'open'))
+check('win332 todo open rc 0', W.decide('todo') == (0, 'open'))
+check('win332 no answer rc 6', W.decide(None) == (6, 'error') and W.decide('') == (6, 'error'))
+pw = subprocess.run([sys.executable, os.path.join(HERE, 'win332_f2c.py')], capture_output=True,
+                    env={k: v for k, v in os.environ.items() if not k.startswith('PAPERCLIP_') and k != 'PYTHONIOENCODING'})
+check('win332 without API env refuses rc 6, ASCII line (cp1250)', pw.returncode == 6 and pw.stdout.decode('cp1250').startswith('win332 HPP-332 status None'), pw)
 check('cache is moved, never rm -rf on the game cache', 'rm -rf "$CACHE"' not in src and 'mv "$CACHE" "$KEEP/"' in src)
 
 
@@ -51,8 +69,9 @@ def make(binf='', bexp='', glr='', pred=None):
     s = s.replace('LOCK=/c/kyty/SEALED_RUN.lock', 'LOCK=%s/LOCK' % unix(FX))
     s = s.replace('STOPF=/c/kyty/f287/STOP', 'STOPF=%s/STOP' % unix(FX))
     s = s.replace('TIMES=/c/kyty/f287/times.txt', 'TIMES=%s/times.txt' % unix(FX))
-    s = s.replace('BIN_F2C=""', 'BIN_F2C="%s"' % binf).replace('BIN_EXPECT=""', 'BIN_EXPECT="%s"' % bexp)
-    s = s.replace('GLRESTORE=""', 'GLRESTORE="%s"' % glr)
+    s = re.sub(r'(?m)^BIN_F2C=".*"$', 'BIN_F2C="%s"' % binf, s, count=1)
+    s = re.sub(r'(?m)^BIN_EXPECT=".*"$', 'BIN_EXPECT="%s"' % bexp, s, count=1)
+    s = re.sub(r'(?m)^GLRESTORE=".*"$', 'GLRESTORE="%s"' % glr, s, count=1)
     open(os.path.join(FX, 'go_f2c.sh'), 'wb').write(s.encode('ascii'))
     if pred is not None:
         os.makedirs(os.path.join(FX, 'pred'))

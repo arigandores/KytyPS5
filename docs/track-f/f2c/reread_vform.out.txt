@@ -1,0 +1,9 @@
+f2c_a arm V: PipelinePrecache lines any kind 5, "N recipes ->" 0
+  sealed (verdict of record): letter FAIL, p.256 rule FAIL
+  executor variant (V form = any PipelinePrecache line): letter FAIL, p.256 rule PASS; B26 FAIL / PASS
+f2c_b arm W: PipelinePrecache lines any kind 0, "N recipes ->" 0
+  sealed (verdict of record): letter PASS, p.256 rule PASS
+  executor variant (V form = any PipelinePrecache line): letter PASS, p.256 rule PASS; B26 FAIL / PASS
+f2c_c arm V: PipelinePrecache lines any kind 6, "N recipes ->" 0
+  sealed (verdict of record): letter FAIL, p.256 rule FAIL
+  executor variant (V form = any PipelinePrecache line): letter PASS, p.256 rule PASS; B26 CONTROL RETURNS / CONTROL RETURNS

@@ -1,0 +1,41 @@
+f2c_read tag f2c_c arm V fix 0 log sha256 1c731fbb1c6b1f7454cd7b71a22a9da66a23160e54a856053b4fff82617c8ab5 binary 5821482a13a38bb9
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_B26=0 exactly (RC6) ['0']
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   no video [None]
+admit ok   --vulkan-validation false [false]
+entered True first scene frame (187, 4605766, 6113) scene change False
+hold: sum dt after first 124.8 s, after entry 129.6 s, json hold_s 120.0, hold_exit None -> letter True, variant True
+death markers 0 (before quit 0) []
+K2 frames after first scene frame 0; AsyncPipelines skipped draw lines 385; FrameTrace rows 3788
+validation noval/valfeat/vkany 0/0/0 active False; [Vulkan][E] 0 []
+knob print lines of the 22 commits (RC2, expect 0): 0 []
+lines naming one of the 5 B26b hashes: 20
+hold frames >= 100 ms (after the entry window): 3, with a 5-hash line in the interval: 0
+  frame n=909 dt_us=150868 K3 interval [105501573,105684833] 5-hash lines 0 []
+  frame n=1080 dt_us=101035 K3 interval [111950925,112614397] 5-hash lines 0 []
+  frame n=2318 dt_us=236963 K3 interval [152013165,153183069] 5-hash lines 0 []
+video: None glitches None sheet False
+--- B26 profile (f2c_b26.py) ---
+log C:/kyty/f287/f2c\log_f2c_c.txt sha256 1c731fbb1c6b1f7454cd7b71a22a9da66a23160e54a856053b4fff82617c8ab5 bytes 198828898
+knob KYTY_FIX_B26=0 cache line(s) ['_ShaderCache\\PPSA21564'] -> 0 ok True
+profile SOP1 0x21 96 / SOP1 0x0c 1 / VOPC 0xe3 4 / VOPC 0xf3 0 / other []
+profile ok True
+form p.254(e): arm V, PipelinePrecache recipes lines 0 -> FAIL
+CsPretranslate kinds [('miss', 98), ('ready', 465), ('skipped', 137)]
+hash 433e4cede34ca4c3 fix place VOPC 0xe3 pc 0x24 : skipped opcode VOPC 0xe3 pc 0x24 letter False variant False
+hash 4468d53059c03cba fix place VOPC 0xe3 pc 0x1d4 : skipped opcode VOPC 0xe3 pc 0x1d4 letter False variant False
+hash 57c4d5848e02ecdc fix place SOP1 0x0c pc 0x168 : skipped opcode SOP1 0x0c pc 0x168 letter False variant False
+hash 7bb50479b3a32c7c fix place VOPC 0xe3 pc 0x264 : skipped opcode VOPC 0xe3 pc 0x264 letter False variant False
+hash f8e350383290ff7b fix place VOPC 0xe3 pc 0x24 : skipped opcode VOPC 0xe3 pc 0x24 letter False variant False
+positive count p.237(g)(4): letter 0 of 5, F2b RC1 reviewer variant 0 of 5
+phi lines (expected at =1, not a marker): 0
+B26a reopen p.237(v)(2): miss|hit of the 96 0, CFG failed outside CsPretranslate 0, translator deaths 0 -> no reopen
+death lines (any) 0
+verdict letter: FAIL (form p.254(e): arm V, precache lines 0)
+verdict RC1 reviewer variant: FAIL (form p.254(e): arm V, precache lines 0)
+F2C VERDICT f2c_c letter: FAIL
+F2C VERDICT f2c_c RC1/executor variant (rule of p.256(a),(d) - verdict of record): FAIL

@@ -1,0 +1,28 @@
+2026-10-01T05:22:15Z F2c seal pred/01_f2c.md written sha256 c3801fcfc3c10bd648910539421b9874089e4a45da05f5cf495cb07d3b9131f4
+2026-10-01T05:22:44Z F2c next_f2c STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/f2c/go_f2c.sh series
+2026-10-01T05:23:26Z F2c go_f2c lock window p.256(e): win332 HPP-332 status blocked executionRunId None -> open
+2026-10-01T05:23:26Z F2c go_f2c lock taken (winpid 18068)
+2026-10-01T05:23:27Z F2c go_f2c shader cache before the series: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c
+2026-10-01T05:23:29Z F2c go_f2c shader cache copy = before (C:/kyty/f287/f2c/cache_snap)
+2026-10-01T05:23:30Z F2c go_f2c cache manifest before the series: cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 167293423 bytes; glcache 16 files 97027449 bytes; cache_series.before.json sha256 4023c04cf5924980c7beb6aa0f62f2a0696872c9e977e0fa872714a3f0221c28
+2026-10-01T05:23:31Z F2c go_f2c GLCache before the series: files 16 bytes 97027449 listsha 87e798e7c9ae3bb4ad41e4ba61762fd0676120e64139932907d8f6cdc7f5508a (copy equal, GLRESTORE=1)
+2026-10-01T05:23:31Z F2c go_f2c installed fix binary sha256 5821482a13a38bb9e42719b75fbd7b6e308a08c8e98caab02afb5398aac368dd
+2026-10-01T05:23:31Z F2c go_f2c f2c_a enter_scene start (hold 330, extra 'KYTY_FIX_B26=1', emu '')
+2026-10-01T05:29:38Z F2c go_f2c f2c_a enter_scene end rc 0 log_f2c_a.txt sha256 7ee3f092cec6b5caaa4fa2fa8446e30db455ac6458c339e5f8d9bccb1a6958e4
+2026-10-01T05:30:01Z F2c go_f2c f2c_a s51_vidglitch rc 0 glitch_f2c_a.txt sha256 4e305fb4285bb750292069590dbfb6a630d4f9e79321c64fb925bbaafc8bb0ba rec_f2c_a.mp4 sha256 28539a1892222aab04c04784aaed29afa56b4ffca9e05e8729c1974d01852f6a
+2026-10-01T05:30:19Z F2c go_f2c f2c_a sheet rc 0 sheet_f2c_a.png sha256 03872efd4deaf58cb85d761ddd77b01e3e2ee3b362fdfd36c2412a5ad25d2143
+2026-10-01T05:30:26Z F2c go_f2c f2c_a reader rc 0 score_f2c_a.txt sha256 65401a175cca044eff383febd587bd58a671c27500ae268716d7716a72071b50: F2C VERDICT f2c_a letter: FAIL;F2C VERDICT f2c_a RC1/executor variant (rule of p.256(a),(d) - verdict of record): FAIL;
+2026-10-01T05:30:26Z F2c go_f2c f2c_b enter_scene start (hold 310, extra 'KYTY_FIX_B26=1 KYTY_PIPELINE_PRECACHE=0 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000', emu '--emu-arg=--vulkan-validation --emu-arg=true')
+2026-10-01T05:36:17Z F2c go_f2c f2c_b enter_scene end rc 0 log_f2c_b.txt sha256 b85553e509a0fab9f79207a5435f770ffa72c673fdac384275a83ff4169b5802
+2026-10-01T05:36:25Z F2c go_f2c f2c_b reader rc 0 score_f2c_b.txt sha256 9a79acc66752148c5156cd8c84472652d7117cdd53cbeafe217756d4d4251790: F2C VERDICT f2c_b letter: PASS;F2C VERDICT f2c_b RC1/executor variant (rule of p.256(a),(d) - verdict of record): PASS;
+2026-10-01T05:36:25Z F2c go_f2c f2c_c enter_scene start (hold 120, extra 'KYTY_FIX_B26=0', emu '')
+2026-10-01T05:38:58Z F2c go_f2c f2c_c enter_scene end rc 0 log_f2c_c.txt sha256 1c731fbb1c6b1f7454cd7b71a22a9da66a23160e54a856053b4fff82617c8ab5
+2026-10-01T05:39:02Z F2c go_f2c f2c_c reader rc 0 score_f2c_c.txt sha256 f37371b603428a2f33c9c434b13c78c7a7704dd98734c37111bdaff60d98c066: F2C VERDICT f2c_c letter: FAIL;F2C VERDICT f2c_c RC1/executor variant (rule of p.256(a),(d) - verdict of record): FAIL;
+2026-10-01T05:39:03Z F2c go_f2c restore binary ok sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+2026-10-01T05:39:05Z F2c go_f2c shader cache at the end of the series (before the return): files 1699 bytes 224677116 listsha 34869d383eafd8e8631391b6feeefbd5b8cb461cd277ebd8ab272be8fcfe6c91
+2026-10-01T05:39:08Z F2c go_f2c shader cache returned: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c = before; run cache kept in C:/kyty/f287/f2c/cache_run/20261001T053905Z
+2026-10-01T05:39:09Z F2c go_f2c cache manifest after the series (before any GLCache return): cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 167293423 bytes; glcache 16 files 97027449 bytes; cache_series.after.json sha256 b3583cd17eddcf436b63f70cbcd6ee968843f5ca9de0b172419787ffe6152a8b
+2026-10-01T05:39:10Z F2c go_f2c GLCache returned: files 16 bytes 97027449 listsha 87e798e7c9ae3bb4ad41e4ba61762fd0676120e64139932907d8f6cdc7f5508a = before
+2026-10-01T05:39:20Z F2c go_f2c foreign cpu at the end inside the lock: fgcpu143: run 939.0 s: (1) alive at both ends: foreign 0.556 CPU s/s = 1.7 % of 32 logical CPUs over 382 processes; top list omitted in git (names of other applications)
+2026-10-01T05:39:20Z F2c go_f2c lock released (rc 0)
+2026-10-01T05:39:20Z F2c go_f2c series call returned rc=0

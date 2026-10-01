@@ -134,7 +134,11 @@ check('a first hold row (index 599 after first) is a hold frame', len(r['hold_fr
 r = rd('a_edge_win2', 'f2c_a', k3=(600,))
 check('a last window row (index 598) is not a hold frame', r['hold_frames'] == [], r['hold_frames'])
 r = rd('a_short', 'f2c_a', rows=17990)
-check('a hold 299.8 s FAIL', r['verdict_letter'] == 'FAIL' and not r['hold_ok'], r['dt_after_first_s'])
+check('a hold 299.8 s NOT EVALUABLE (p.256(d))', r['verdict_letter'] == 'NOT EVALUABLE' and r['verdict_variant'] == 'NOT EVALUABLE' and not r['hold_ok'], r['dt_after_first_s'])
+r = rd('a_short_death', 'f2c_a', rows=17990, death=True)
+check('a hold 299.8 s with a death marker FAIL', r['verdict_variant'] == 'FAIL', r['verdict_variant'])
+r = rd('a_short_e3', 'f2c_a', rows=17990, ops={('SOP1', '0x21'): 96, ('VOPC', '0xe3'): 1})
+check('a hold 299.8 s with 0xe3 left FAIL', r['verdict_variant'] == 'FAIL', r['verdict_variant'])
 r = rd('a_edge_hold', 'f2c_a', rows=18000, dt=16667)
 check('a hold 300.006 s PASS', r['hold_ok'] and r['verdict_letter'] == 'PASS', r['dt_after_first_s'])
 r = rd('a_death', 'f2c_a', death=True)
@@ -189,12 +193,12 @@ check('b validation not on cmdline NOT ADMITTED', r['verdict_letter'] == 'NOT AD
 kb4 = dict(kb)
 kb4['hold_s'] = 299.0
 r = rd('b_hold', 'f2c_b', **kb4)
-check('b json hold 299 letter FAIL, variant PASS', r['verdict_letter'] == 'FAIL' and r['verdict_variant'] == 'PASS',
+check('b json hold 299 letter NOT EVALUABLE, variant PASS', r['verdict_letter'] == 'NOT EVALUABLE' and r['verdict_variant'] == 'PASS',
       (r['verdict_letter'], r['verdict_variant']))
 kb5 = dict(kb)
 kb5['hold_s'] = 300.0
 r = rd('b_hold300', 'f2c_b', rows=17000, **kb5)
-check('b json hold 300 letter PASS, dt 283 s variant FAIL', r['verdict_letter'] == 'PASS' and r['verdict_variant'] == 'FAIL',
+check('b json hold 300 letter PASS, dt 283 s variant NOT EVALUABLE', r['verdict_letter'] == 'PASS' and r['verdict_variant'] == 'NOT EVALUABLE',
       (r['verdict_letter'], r['verdict_variant']))
 r = rd('b_video', 'f2c_b', val=True, precache=False, rec=True, vframes=None, sheet=False, hold_s=310.0)
 check('b with KYTY_REC NOT ADMITTED', r['verdict_letter'] == 'NOT ADMITTED')

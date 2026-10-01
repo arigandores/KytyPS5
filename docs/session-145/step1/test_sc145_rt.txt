@@ -1,0 +1,463 @@
+suite test_sc145.py sha256 066f61e10588f84c13fe2108d3b568da134027606286825fc5e3af9edb93ab97 target sc145.py sha256 dd93bb1ec601d158c4f4d92eff7b1ab78572f2f712205ab7d130bc62aa113180
+PASS d1 the first scene frame is the first row after the entry line with draws >= 100 (99 skipped, row before the entry out)
+PASS d2 the first frame dt 2 s is neither K2 nor K3; the 1.5 s loading row before it is not K2
+PASS d3 window = 599 rows after the first frame, hold = the rest
+PASS d1b with the entry line before n 2 the first scene frame is n 2 (draws 3000)
+PASS d4 frame 599 after the first frame -> K3 window; frame 600 -> K3 hold
+PASS d5 dt 1 000 000 -> K2 (entry and hold located); 999 999 -> K3 not K2
+PASS d6 dt 100 000 -> K3; 99 999 -> nothing
+PASS d6b a K2 frame (dt 1 000 000) is not also a K3 frame
+PASS d6c K2 at frame 599 after the first frame is "entry", at frame 600 "hold"
+PASS d7 only another level whose name contains the target (and the empty start) -> not entered
+PASS d8 the first entry line of the level is used
+PASS d9 no row with draws >= 100 -> no first frame; the sum after the entry line counts rows after it only
+PASS d10 n gaps are counted
+PASS d11 letter: rows after Event: quit and the last row count (K2 30, 31); variant vx: neither
+PASS d12 variant vx drops the last row of the log (a K3 there), the letter keeps it
+PASS s1 rows across chunk boundaries of 37 bytes (64 rows) and the sha of the file
+PASS s2 skipped draw lines 3, frames 2
+PASS s3 the stubbed function name is read from the next line
+PASS s4 the last line without a newline is read (GpuHangAbort)
+PASS s5 --- Fatal Error --- is not also --- Error ---
+PASS s6 [Vulkan][E] 1, [Vulkan][W] not counted; BvhLoopCapTrip 1
+PASS s7 a FrameTrace row without draws= is never the first scene frame; the first Event: quit is the exit line
+PASS e1 a census entry: admitted, entered, HOLDS_120
+PASS e2 opcode profile 96/1/4 (case of the hex folded) -> equal
+PASS e3 PriorityStall: us 50000 is not > 50 ms, 50001 is
+PASS e4 per-entry rows: 3 skipped draw lines, 1 stub, 1 BvhLoopCapTrip, 1 [Vulkan][E] (census: not a gate)
+PASS e5 opcode difference: SOP1 0x21 96 (90+6+1 = 97, +1; after entry 7), a new VOP2 0x3b +1
+PASS e5b opcode difference: SOP1 0x21 95 (-1), VOPC 0xe3 absent (-4), SOP1 0x0c equal
+PASS o1 sum dt after the entry line = 120 000 000 -> HOLDS_120
+PASS o1b one us less -> NOT_EVALUABLE
+PASS o2 death marker Unhandled exception: in the log -> K1
+PASS o3 death marker Unhandled exception: in the emulator stdout -> K1
+PASS o2 death marker --- Fatal Error --- in the log -> K1
+PASS o3 death marker --- Fatal Error --- in the emulator stdout -> K1
+PASS o2 death marker --- Error --- in the log -> K1
+PASS o3 death marker --- Error --- in the emulator stdout -> K1
+PASS o2 death marker GpuHangAbort: reques in the log -> K2
+PASS o3 death marker GpuHangAbort: reques in the emulator stdout -> K2
+PASS o2 death marker [Vulkan] ErrorDevice in the log -> K2
+PASS o3 death marker [Vulkan] ErrorDevice in the emulator stdout -> K2
+PASS o4 hold_exit set -> K1
+PASS o5 the ENDED line of enter_scene -> K1
+PASS o6 an attempt that exited before stable -> K1
+PASS o7 ft_tail 0 at the end of the hold -> K2 (tail stall)
+PASS o7c ft_tail 0 without a hold (hold_s None) -> no tail stall; no stable -> NOT_EVALUABLE (item 224 (a)(4))
+PASS o7d ft_tail None with a hold -> no tail stall
+PASS o8 a frame dt 1 s after the first scene frame -> K2
+PASS o9 no entry line -> NOT_ENTERED, key = the first marker
+PASS o9b no entry line, no marker -> key attempt:timeout
+PASS o10 a marker after Event: quit: letter K1, variant vx HOLDS_120, flagged at exit
+PASS o11 entered without a scene frame -> NOT_EVALUABLE
+PASS o12 a made run without its log -> NOT_ENTERED
+PASS a1 good jsons of V, W and a census tag are admitted
+PASS a2 refused: two attempts
+PASS a2 refused: a warmup
+PASS a2 refused: another build
+PASS a2 refused: another level
+PASS a2 refused: a non-empty gate file
+PASS a2 refused: no clock pin
+PASS a2 refused: markers 1
+PASS a2 refused: checkpoints
+PASS a2 refused: a schedule
+PASS a2 refused: ABBA
+PASS a2 refused: no video in the census
+PASS a2 refused: a video of another tag
+PASS a2 refused: a video in W
+PASS a2 refused: validation in V
+PASS a2 refused: no validation in W
+PASS a2 refused: no VK_LAYER_PATH in W
+PASS a2 refused: another seal sha
+PASS a2 refused: another seal path
+PASS a2 refused: no prereg
+PASS a2 refused: a pipeline-cache retry
+PASS a3 the last --vulkan-validation value counts (false then true = W)
+PASS a4 a seal sha None refuses
+PASS a4b a seal sha None and a prereg without sha refuses
+PASS k1 every condition true (sum after the first frame = 300 000 000, 3 100 frames, first frame 2 s out) + sheet viewed -> YES
+PASS k1b the sheet row unfilled -> PENDING_SHEET
+PASS k1c the sheet row not-viewed -> NO
+PASS k1d W with [Vulkan][W] only and slow frames (dt rule not applied to W) is fine
+PASS k2 V missing -> NO, the V row fails
+PASS k2b W missing -> NO, the W row fails
+PASS k3 V not admitted (another build)
+PASS k4 V not entered -> NO, the entry row fails
+PASS k5 V a death marker in the emulator stdout
+PASS k6 V hold_exit -> the death row and the attempt row (item 224 (a)(4)) fail
+PASS k7 V a frame dt 1 s after the first scene frame
+PASS k7b V first frame dt 5 s is out of the rule
+PASS k8 V tail stall
+PASS k9 V sum after the first frame 299 999 999
+PASS k10 V 3 000 frames after the first frame pass the frame row, 2 999 fail it
+PASS k11 V one glitch
+PASS k11b V glitch file missing -> the glitch, video and coverage rows fail
+PASS k11c V glitch file without the glitch line -> the glitch row fails
+PASS k12 W one [Vulkan][E] line
+PASS k12b W one [Vulkan][E] line in the emulator stdout -> the row fails
+PASS k13 W stopped early by the validation (hold_exit, hold_s 42): hold row and marker row fail
+PASS k13b W hold_s 299.9 -> the hold row fails
+PASS k13c W hold_s 300.0 -> passes
+PASS k13d W timeout of the entry -> the hold row fails
+PASS k13e W ENDED line -> death and hold rows fail
+PASS k14 W without its log -> NO: not entered and the [Vulkan][E] row fails (no count without a log)
+PASS k15 W death marker
+PASS t1 three in a row not entered with one marker -> stop
+PASS t2 two -> no stop
+PASS t3 three with different markers -> no stop
+PASS t4 broken by an entered level -> no stop
+PASS t5 a different marker then three alike -> stop on the last three
+PASS t6 main --stop-check: before c142_04 three timeouts -> rc 5; before c142_03 two -> rc 0; unknown tag -> rc 2
+PASS e6 the seal check passes on every sha line (scorer included)
+PASS e7 a changed sealed file fails the seal check
+PASS e8 a sealed name without its line fails
+PASS e9 a scorer whose sha is not the seal line fails
+PASS e10 a missing seal file fails
+PASS e11 main --check-seal on a good seal -> rc 0, SEAL: PASS
+PASS e12 main --check-seal on a broken seal -> rc 1, SEAL: FAIL
+PASS c1 calibration logic 5 of 5 on synthetic forms (K2 191 entry, K2 4945 hold, none, K3 hold 1826, K3 window 389)
+PASS c2 a K3 in the atl122 form -> 4 of 5
+PASS c3 eatl122 form with K2 on the hold -> fails
+PASS c4 each calibration form fails on its near miss (eatl K2 191 on the hold; edes K2 4945 in the window; atl K3 on the hold; ednn K3 in the window; eght K3 at 390 not 389)
+PASS m1 main --tag: the score json carries the outcome K2; rc 1 without the seal (prereg), not admitted rc 1, NO_RUN rc 1, unknown tag rc 2, no mode rc 2
+PASS m2 an admitted census tag -> rc 0; the K3 of its window is printed with "no warm base"
+PASS m3 summary: SCENE_OK PENDING_SHEET without the sheet row, YES with it
+PASS m4 summary: FORM B5a 1/10 (c142_01), FORM B5 2/10 (c142_01 K2 in the window, c142_02; c142_04 of another build is not admitted and not counted), census made 4, admitted 3
+PASS m5 summary: the tags not made are printed
+PASS m6 every printed line is ASCII (strict cp1250 and ascii)
+PASS m7 the constants: 10 census levels in the order of item 221 (g)(1); V, W first
+PASS m8 the build is 9235a7ac and the seal path is s142
+PASS x1 the seal must name the harness, the scorer, the fixtures, the mutants, enter_scene.py and s51_vidglitch.py (item 221 (g)(4))
+PASS x2 W with an attempt outcome other than ok -> the hold row fails even with hold_s 310
+PASS x3 forms: B5a 2/10 (K2 in the window c142_01, K2 on the hold c142_06), B5 2/10 (c142_01, K3 in the window c142_02)
+PASS m8b the seal of link 1b is pred/02_sc142.md
+PASS b0 the check logs of item 224 (b)(2): s1s128, s2s128 of s128; s6s137 log and stdout of s137
+PASS f3 dt median and max after the first scene frame (10 20 30 40 50 -> 30, 50)
+PASS n1 ErrorDeviceLost -> --- Fatal Error --- + hold_exit -> K2 (the crash is the consequence), markers in order
+PASS n2 GpuHangAbort: -> --- Error --- + exited -> K2
+PASS n3 --- Error --- -> GpuHangAbort: -> K1
+PASS n3b --- Fatal Error --- -> ErrorDeviceLost -> K1
+PASS n4 a crash in the log, a hang only in the stdout -> K1 (stdout markers after the log ones)
+PASS n4b a hang in the log, a crash only in the stdout -> K2
+PASS n4c stdout only: hang then crash -> K2
+PASS n4d stdout only: crash then hang -> K1
+PASS n5 a hang in the log + the ENDED line (attempt markers after the log) -> K2
+PASS n6 not entered: the stop key is the first marker by position (GpuHangAbort:)
+PASS n6b not entered: a log crash before a stdout hang -> key --- Error ---
+PASS n7 the markers are printed in order with class, source and position
+PASS n8 markers after Event: quit: letter K2 by the first, variant vx HOLDS_120
+PASS v0 the W of k1 carries the admission row validation active and it passes; V has no such row
+PASS v1a a "no validation layer:" line -> W not admitted
+PASS v1b no VK_EXT_validation_features line -> W not admitted
+PASS v1c no [Vulkan][ line -> W not admitted
+PASS v1d another extension of the layer only -> W not admitted
+PASS v1e "no validation layer:" in the W stdout -> W not admitted
+PASS v1f the layer lines in the W stdout count -> admitted, YES
+PASS v1g exactly one layer line and one [Vulkan][ line (the edges >= 1) -> YES
+PASS v1h W without its log -> validation not active even with the stdout lines
+PASS r1 V video 2 999 frames -> the video row fails (coverage still holds)
+PASS r1b V video 3 000 frames -> YES
+PASS r2 the V log carries 3 114 FrameTrace rows
+PASS r2b V video 3 013 frames against 3 114 rows -> the coverage row fails
+PASS r2c V video 3 014 frames against 3 114 rows -> YES
+PASS r3 an unreadable video (s51_vidglitch.py traceback) -> the video, coverage and glitch rows fail, NO
+PASS r4 census: a failed coverage prints "glitches not conclusive" and does not change the outcome
+PASS r5 .idx records are counted (lines of >= 3 fields) and printed with the video and FrameTrace counts
+PASS r5b without the .idx file the record count is None
+PASS h1 (replaces o7b) a timeout of enter_scene with 120 s shown -> NOT_EVALUABLE, no stable (timeout)
+PASS h2 hold_s 119.9 -> NOT_EVALUABLE
+PASS h2b hold_s 120.0 -> HOLDS_120
+PASS h2c attempt ok without hold_s -> NOT_EVALUABLE
+PASS h3 V timeout (no hold) -> the V attempt row fails
+PASS h4 V hold_s 329.9 -> the V attempt row fails
+PASS h5 V ENDED line -> the attempt and death rows fail, NO
+PASS s1 viewed without sheet_v142.png -> NO; unset -> PENDING_SHEET (by the letter)
+PASS s2 an empty sheet -> NO
+PASS s3 a sheet whose sha is not the times.txt line -> NO
+PASS s4 a video whose sha is not the times.txt line -> NO
+PASS s5 no step2/times.txt -> NO
+PASS s6 no video and no video line -> NO
+PASS s7 an empty sheet and no sheet line -> NO
+PASS s8 the last matching times.txt lines count (a stale line before them) -> YES
+PASS s9 a later sheet line with another sha -> NO
+PASS w1 W ft_tail 0 -> the W ft_tail row fails
+PASS w2 W ft_tail None -> the W ft_tail row fails
+PASS w3 W ft_tail 1 -> YES
+PASS q1 another level started after the entry -> NOT_EVALUABLE scene change; the 2 s row after it is not K2, printed apart
+PASS q2 the same level started again -> NOT_EVALUABLE
+PASS q3 an empty name started -> NOT_EVALUABLE
+PASS q4 a K2 frame before the change -> K2
+PASS q5 a log crash before the change -> K1 (the hang after it does not decide)
+PASS q5c two log markers before the change: the first (hang) decides -> K2
+PASS q10 two changes: the first one cuts (a 1 s row between them is not classified) -> NOT_EVALUABLE
+PASS q5b a log marker only after the change -> NOT_EVALUABLE
+PASS q6 a stdout marker with a change -> NOT_EVALUABLE (stdout is after the log)
+PASS q6b hold_exit and tail stall with a change -> NOT_EVALUABLE
+PASS q6c exited with a change -> NOT_EVALUABLE
+PASS q7 the change is printed with the name and the last n before it
+PASS q8 V with a later start -> the V change row fails
+PASS q8b W with a later start -> the W change row fails
+PASS q9 the sum after the entry line stops at the change
+PASS j1 --tag of an attempt without json -> ATTEMPT MADE, NO JSON (instrument), rc 1; without the marker NO_RUN
+PASS j2 summary: the attempt without json in the tag list and the census map, made 4 (1 without json), not admitted
+PASS j3 the stop rule: not entered, no json, not entered, not entered -> no stop (--stop-check rc 0, summary not met)
+PASS j4 census without the emulator stdout -> printed MISSING
+PASS j5 V without the emulator stdout -> the V stdout row fails
+PASS j6 W without the emulator stdout -> the W stdout row fails
+PASS g1 V one n gap after the first scene frame -> the gap row fails
+PASS g2 a gap before the first scene frame is not counted -> YES
+PASS g3 a torn FrameTrace line is counted and printed
+PASS f1 the forms by the order: first five B5a 1/5 B5 2/5, last five B5a 1/5 B5 0/5
+PASS f2 the summary prints the dt median and max of V and W
+PASS b1 check lines: device lost and hang before the crash -> K2, validation active -> 3 of 3
+PASS b2 a crash before the device lost and a "no validation layer" line -> 1 of 3
+PASS b3 main --check1b: rc 1 on a failed check, rc 0 on 3 of 3
+PASS m6b the new printed lines are ASCII (strict cp1250)
+PASS y1 the forms by the order at the edge: c142_05 (K2 in the window) is of the first five, c142_06 (K3) of the last five
+PASS y2 V attempt outcome timeout with hold_s 330 -> the V attempt row fails
+PASS y3 main --tag alone on an attempt without json prints ATTEMPT MADE, NO JSON and not NO_RUN, rc 1
+PASS B1 the ten levels of item 231 (i)(1) in that order
+PASS B2 pairs v143_NN / w143_NN per level; SEQ = V then W per level; census = the V tags; W tags
+PASS B3 the seal path, chain name, runs dir and scorer name of session 143; the s142 lines are printed in 143 only
+PASS B4 the constants of sc142 after item 224 are unchanged (item 231 (i)(3)); the harness W hold 310 is info only
+PASS B5 level_of: V and W of a level; a tag of session 142 is unknown in profile 143
+PASS B6 good V (v143_04) and W (w143_04) jsons are admitted
+PASS B7 refused: V of level 02 with the guest args of level 01
+PASS B7 refused: W with a video
+PASS B7 refused: V without a video
+PASS B7 refused: V with the video of its W
+PASS B7 refused: W without validation
+PASS B7 refused: V with validation
+PASS B7 refused: W without VK_LAYER_PATH
+PASS B7 refused: the seal path of session 142
+PASS B8 a good pair of level 01 -> YES; every row PASS, the pair row and the sheet row of sheet_v143_01.png among them
+PASS B8b the same pair: sheet row unfilled -> PENDING_SHEET; not-viewed -> NO
+PASS B9 a level with V and no W -> NO: W made FAIL and the pair row FAIL
+PASS B10 a level with W and no V -> NO: V made FAIL, the sheet row FAIL (no V)
+PASS B11 W stopped early (hold_exit, hold_s 120.3) -> NO: the W hold and death rows fail
+PASS B11b W not stable (timeout) -> NO
+PASS B11c W hold_s 305.0 (>= 300 of item 221 (g)(3), < 310 of the harness) -> YES by the letter
+PASS B12 the W of level 02 run with the guest args of level 01 -> NO: W not admitted, the pair row fails
+PASS B12b the entries of level 01 offered as the pair of level 02 -> NO by the pair row
+PASS B12c scene_ok without a pair reads the first pair of the profile
+PASS B12d an entry under another V tag with the right guest args -> NO by the pair row only
+PASS B12e the V of level 01 run with the guest args of level 02 -> the pair row fails (and V not admitted)
+PASS B13 two levels in one summary do not mix: level 01 YES with every row PASS; level 02 (V, no W) NO by W made only; level 03 (V with a K2 frame, W good) NO by the dt row only
+PASS B14 the levels line: YES 1, PENDING_SHEET 0, NO 9 of 10; the not-made levels are NO with V and W made FAIL
+PASS B15 the census of 143 reads the V tags only: made 3, admitted 3; B5a 1/10 (v143_03), B5 1/10; W tags not in it
+PASS B16 the W 310 s info row: yes for a W at 310.0; "W not made" without a W
+PASS B16b W hold_s 309.9: the info row says NO (309.9), the verdict by the letter is YES
+PASS B17 --sheet-tags: the sheet row applies to the named V only (level 01 -> PENDING_SHEET); a W tag -> rc 2
+PASS B18 the sheet lines of times.txt must carry the chain name go143a (go142a lines do not count) -> NO
+PASS B18b only V tags carry a sheet state; W does not
+PASS B19 the stop rule over V tags: three V not entered before w143_03 -> rc 5 (its own V counts), before v143_03 and w143_02 -> rc 0 (the W not entered are not census), before v143_04 -> rc 5, v143_01 -> rc 0, unknown -> rc 2
+PASS B19b an entered V breaks the run: NE, NE, entered, NE before w143_04 -> rc 0
+PASS B20 B33 variant edge: the K3 hold row at exactly 120 000 000 us after the entry line is within 120 s; 1 us later it is not; the letter counts it both times
+PASS B20c a hold row of exactly 100 000 us within 120 s is K3 of both readings
+PASS B20b K3 in the entry window is not B33
+PASS B21 FORM B33 over admitted V: v143_01 (K3 at 120 s, both readings), v143_02 (K3 past 120 s, letter only); v143_04 of another build not counted -> letter 2/10 with tags, variant 1/10
+PASS B21b the levels line with no W made: YES 0, PENDING_SHEET 0, NO 10 of 10
+PASS B22 the K3 hold line of 120 s is printed per entry in profile 143
+PASS B23 main --tag of 143 writes runs143/<tag>.score.json (rc 0 when admitted) with the 120 s K3 list
+PASS B24 the seal of 143 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, the CPU row and s51_vidglitch.py (item 231 (i)(4))
+PASS B25 the seal check of 143 passes on its names (the scorer by sc143.py) and fails with the scorer named sc142.py
+PASS B26 regress142 on a synthetic profile 142: byte-identical, 0 differing lines, B33 c142_02 -> PASS; the summary of profile 142 has no line of 143 (no pair row, no B33, no levels line); the profile is restored after it
+PASS B27 one changed line -> FAIL with the DIFF line pair printed (line 6)
+PASS B28 the same text with LF only -> not byte-identical -> FAIL (0 differing lines)
+PASS B29 B33 tags other than item 231 (g)(1) -> FAIL
+PASS B30 a missing expected file -> FAIL
+PASS B31 main --regress142 -> rc 1 against the default expected file of the real s142 summary (the fixture root differs), rc of a PASS is 0
+PASS B32 the real profile 142 and the regression constants of item 231 (g)(1)
+PASS B33 profile() sets the values and returns the old ones
+PASS B34 every new printed line is ASCII (strict cp1250 and ascii)
+PASS C1 a K2 frame ending at 119 s of presented time after the entry line is within 120 s; at 121 s it is not; the whole-V K2 list holds both (place hold)
+PASS C1b the edge: a K2 frame ending at exactly 120 000 000 us is within; 1 us later it is not; the cut is the first row past 120 s
+PASS C1c a log that never passes 120 s has no cut
+PASS C1e K2 of exactly 1 000 000 us within 120 s is in the 120 s list; frame 598 after the first frame is entry, 599 is hold
+PASS C2 B5a by the letter on the whole V: 3/10 (v143_01 at 119 s, v143_02 at 121 s, v143_03 in the window)
+PASS C2b the variant 120 s: 2/10 v143_01,v143_03; K2 by place on the whole V: entry 1 v143_03, hold 2 v143_01,v143_02
+PASS C2c K2 only after 120 s: v143_02 (a separate row (B), form edes122)
+PASS C2d the map (A) rows carry both outcomes: v143_01 K2 / K2, v143_02 HOLDS_120 on 120 s / K2 on the whole V, v143_04 HOLDS_120 / HOLDS_120
+PASS C2e the entry print of a V: the K2 frames within 120 s and both outcomes
+PASS C3 a log death marker after 120 s (row 3500, 143.5 s): on 120 s HOLDS_120, on the whole V K1
+PASS C3b a log death marker before 120 s (row 2000, 83.5 s): K1 on 120 s and on the whole V
+PASS C3c a stdout marker with a cut: not on 120 s (no time), K1 on the whole V
+PASS C3d without a cut (the log never passes 120 s) a stdout marker counts on 120 s too: K1
+PASS C3e hold_exit with a cut: on 120 s HOLDS_120, on the whole V K1
+PASS C3f the tail stall with a cut: on 120 s HOLDS_120, on the whole V K2
+PASS C3g the tail stall without a cut: K2 on 120 s
+PASS C3h hold_exit without a cut: K1 on 120 s
+PASS C3i not entered: NOT_ENTERED on 120 s
+PASS C3j a scene change after 120 s: on 120 s HOLDS_120 (the change is not seen), on the whole V NOT_EVALUABLE
+PASS C3k a scene change before 120 s: NOT_EVALUABLE on 120 s
+PASS C3l a K2 frame before a scene change before 120 s: K2 on 120 s
+PASS C3m a log marker before a scene change before 120 s: its class on 120 s
+PASS C3n an exited attempt is K1 on 120 s
+PASS C3o an attempt not stable is NOT_EVALUABLE on 120 s
+PASS C3p hold_s 119.9 is NOT_EVALUABLE on 120 s
+PASS C3q presented time after the entry line < 120 s: NOT_EVALUABLE on 120 s
+PASS C3r no first scene frame: NOT_EVALUABLE on 120 s
+PASS C3s hold_s exactly 120 is enough on 120 s: HOLDS_120
+PASS C3t exactly 120 000 000 us presented after the entry line: no cut, HOLDS_120 on 120 s
+PASS C4 a W with a frame dt 1.2 s: the outcome has no dt rule (HOLDS_120), the frame is an info line; the V with the same frame is K2; the W has no outcome on 120 s
+PASS C4b a W with the tail stall stays K2
+PASS C4c the W SCENE_OK has no dt row: a W with a frame dt 1.2 s and a good V -> YES
+PASS C5 "--- Error ---" with [Vulkan][E] in its report -> VALIDATION_STOP (not K1), outcome VALIDATION_STOP
+PASS C5b such a W fails SCENE_OK by its death-marker row and its [Vulkan][E] row only
+PASS C5c a [Vulkan][E] line after the location line is not in the report -> K1
+PASS C5d a [Vulkan][E] line after the next "--- Build ---" is not in the report -> K1
+PASS C5e the report is at most 50 lines after the title: line 50 counts, line 51 does not
+PASS C5g the report in the emulator stdout -> VALIDATION_STOP (src stdout)
+PASS C5h "--- Fatal Error ---" with [Vulkan][E] stays K1 (only "--- Error ---" is the validation exit)
+PASS C5i the class is read by the report in profile 143 for a V too
+PASS C5l a report with a [Vulkan][W] line (not E) is not a validation stop -> K1
+PASS C5m a line carrying GpuHangAbort: and --- Error ---: only the --- Error --- mark becomes VALIDATION_STOP
+PASS C5j profile 142 keeps the reading of s142: the same report -> K1 (the scan still finds it)
+PASS C5k err_reports on a file: the position of the "--- Error ---" line whose report carries [Vulkan][E]
+PASS C6 the pair row passes with the log sha of times.txt and the json level of both
+PASS C6b a replaced V log (its sha != the enter_scene end line of times.txt) -> the pair row FAIL
+PASS C6c a replaced W log -> FAIL
+PASS C6d the W json level of another level -> FAIL
+PASS C6e the V json without a level -> FAIL
+PASS C6f no enter_scene end line in times.txt -> FAIL
+PASS C6g the LAST enter_scene end line of the chain go143a counts (a go142a line does not)
+PASS C6h no log sha on either side is not equal -> FAIL
+PASS C7 equal manifests: one "same" line per adjacent pair of made tags (4), the run of v143_01 adds one file, no break
+PASS C7b an mtime changed between w143_01 and v143_02 -> "cache changed between tags" with the root counts; the forms without v143_02 and later are printed over v143_01 only
+PASS C7c a root absent (GLCache gone) between v143_02 and w143_02 -> a break with "presence changed"; the first break decides the forms
+PASS C7d a missing manifest -> NOT EVALUABLE, counted as a break (executor variant)
+PASS C7e a broken manifest reads as missing
+PASS C7f a pair with a tag not made has no line (v143_03 -> w143_03)
+PASS C7h two breaks (before v143_02 and before w143_02): the FIRST decides the forms
+PASS C7i only the sha256 of a file differs -> changed (~1)
+PASS C7g the forms without the tags after the break count the kept V: B5a 1/10 and its variant 1/10 over v143_01
+PASS C8 the seal of 143 names the cache manifest, the lock check, their suite and the three call wrappers of step 2
+PASS C9 every line new in link 1b is ASCII
+PASS C10 profile 142 prints no line of link 1b (no 120 s outcome, no map (A) row, no B5a variant, no cache continuity, no W info line)
+PASS D1 the 33 tags of item 254 (k)(1) in that order; the pairs: the eight v143 V with w144_01..08, then v144_NN / w144_NN of the twelve levels (mini_giants_garden last); the census = the twelve v144 V; W tags = control + 20
+PASS D2 the root, seal, chain, runs dir, scorer of 144; the V of another session: root s143, chain go143a, seal pred/02_sc143.md; their sheet rows are fixed viewed (item 254 (a)); W stop run 2; halves of six
+PASS D3 the constants of sc143 after items 242, 246 are unchanged in profile 144 (item 254 (k)(3))
+PASS D4 level_of in 144: control -> Sky Garden; v143_09 and w144_07 -> booster_magic_lamp; v144_20 / w144_20 -> mini_giants_garden; v143_07 (not a pair of 144), w143_01, v144_08 -> unknown
+PASS D5 the profiles 143 and 142 set every key the profile 144 changes (FORM144 off, no control, no other-session V, halves of five)
+PASS D6 good control W, W-only tag, V and W of a pair are admitted; the W carries the env and line rows of the form, the V the env and positive-control rows (one each)
+PASS D7 the W form violated -> the tag is not admitted (FAIL): W without KYTY_PIPELINE_PRECACHE in the env
+PASS D7 the W form violated -> the tag is not admitted (FAIL): W with KYTY_PIPELINE_PRECACHE=1
+PASS D7 the W form violated -> the tag is not admitted (FAIL): W with the precache line in its log
+PASS D7 the W form violated -> the tag is not admitted (FAIL): W stopped during the startup precache (no line) without the env
+PASS D7c the precache line in the emulator stdout of a W only: an executor member [I] (item 258 (d)) - printed, the tag stays admitted
+PASS D7b only the line "PipelinePrecache: N recipes ->" is the form line by the letter: a "saved" line passes and is printed as "any" 1
+PASS D8 refused V: V without the precache line (the positive control)
+PASS D8 refused V: V run in the W form (KYTY_PIPELINE_PRECACHE=0)
+PASS D9 main --tag: a W out of the form -> rc 1 (admission FAIL names the form row); a good V -> rc 0; the score json goes to runs144
+PASS D10 a W of s144 with the V of s143 (its root, chain go143a, its seal) -> YES; the V is read from the other root with that seal; the pair row names its own session
+PASS D10b the sheet row of a v143 V is viewed by item 254 (a) whatever --sheet says (unset, not-viewed): YES; its detail names the item
+PASS D10c the V of another session is printed in its own block (root, chain, seal); a V without its json is named
+PASS D11 a replaced V log of s143 (sha != its enter_scene end line of the s143 times.txt) -> the pair row FAIL, NO
+PASS D12 the enter_scene end line of the V written under the chain go144a (not its own go143a) -> no times sha, FAIL
+PASS D13 the V of s143 run for another level (guest args) -> V not admitted and the pair row FAIL
+PASS D14 the V of s143 must carry the seal of s143: a json with the seal of 144 -> V not admitted, NO
+PASS D15 the seal of s143 changed after the V ran (its sha now != the json) -> V not admitted
+PASS D16 a v143 V lying in the s144 root is not read (the V of another session comes from its own root only) -> V made FAIL
+PASS D17 the V of level 01 of s143 offered as the pair of level 02 (w144_02) -> NO by the pair row
+PASS D18 a W stopped by validation before the first GuestOut line -> stop key "VALIDATION_STOP --- Error ---", no GuestOut position, outcome NOT_ENTERED (no entry line)
+PASS D18b a W stopped in the game after GuestOut (the B35 expectation for mini_giants_garden) -> VALIDATION_STOP, entered, NO stop key (it does not count for the two-W rule)
+PASS D18c no GuestOut line in the log and the stop report in the emulator stdout -> key from the stdout marker
+PASS D18d a GuestOut line in the log and a marker in the stdout only (no position against the log) -> no key
+PASS D18e no GuestOut, no marker: exited -> key "K1 hold_exit / ENDED / exited"; a timeout (no marker) -> no key
+PASS D18g the first marker before the GuestOut line decides the key (GpuHangAbort before, the report after) -> K2
+PASS D18h a W without its log has no key and fails the form line row itself (no log is no proof of the form)
+PASS D18i the W print carries the form line and the stop-before-GuestOut line with its key
+PASS D19 stop_check_w: two in a row with one key -> stop; different keys or a keyless W between -> no; the last two of three
+PASS D20 two W in a row stopped before GuestOut with one key: before w144_03 -> rc 5 naming them; before w144_02 (one) -> rc 0; the control good -> not met
+PASS D21 one W stopped before GuestOut and the next stopped in the game after GuestOut -> rc 0 before w144_03
+PASS D22 two W separated by a V (w144_09, v144_10, w144_10) count as two W in a row -> rc 5 before v144_11; rc 0 before w144_10
+PASS D23 the control W stopped by validation -> rc 5 before the first tag; both readings say stop
+PASS D24 the control W out of the form only (no env, otherwise clean) -> letter pass, the gate (item 254 (k)(7)) stop rc 5
+PASS D25 the control W not entered without a marker (timeout) -> letter pass, gate stop rc 5 (W entered FAIL)
+PASS D26 a [Vulkan][E] line in the control W without a death marker -> letter stop rc 5; an attempt of the control without json -> gate stop rc 5; a control not made -> "not made", rc 0
+PASS D26d the summary of a series whose control W attempt has no json: the control line says STOP by the gate
+PASS D28 three census V in a row not entered with one key -> rc 5 before w144_11 (the W not entered without a marker have no key); two of them -> rc 0 before v144_11
+PASS D28b stop-check of an unknown tag (a v143 V, a 143 tag) -> rc 2
+PASS D29 the levels line over 20 pairs: level 01 (v143_01 + w144_01) YES, level 02 (w144_02 stopped) NO, v144_09 pair PENDING_SHEET without --sheet, YES with viewed
+PASS D30 the control line PASS, the W form line (V 4 of 4 made with the line incl. the two v143, W 10 of 10), the census header of repeated entries, the map row marked "repeated entry", the halves of six, the W stop line
+PASS D31 the census forms read the repeated-entry V only (v144_10 K3 on the hold -> B33 1/12); the W and the v143 V are not in it
+PASS D32 the skipped draws of a V: 3 lines, 2 frames by distinct frame= ids (debt D-7), the reading named in the print
+PASS D33 the v143 V without its json -> "NO JSON" line and level 01 NO (V made FAIL)
+PASS D34 a W out of the form in the summary: the W FORM line names it, its level is NO by "W admitted"
+PASS D35 --sheet-tags v144_10: the v144_09 pair falls back to PENDING_SHEET / NO by its rows; the v143 V stay viewed
+PASS D18j the first GuestOut line is kept across chunks (64-byte chunks, two GuestOut lines): its line start
+PASS D18k two markers before the GuestOut line: the FIRST by position gives the key (K2 GpuHangAbort:, not the report)
+PASS D18l a GuestOut line, no marker, exited -> no key (the attempt markers count only without a GuestOut line)
+PASS D18m no log, exited -> no key (a W without its log never counts for the two-W rule)
+PASS D22b an attempt of a W without json is a made W without a key: it breaks the run of the last two made W (w144_08 key, w144_09 none) -> rc 0 before v144_10
+PASS D26b the control W exited (attempt marker) -> letter stop; the control without its log -> gate stop naming "log missing"
+PASS D34b a V without the precache line in the summary: the W FORM line names it before the W
+PASS D34c a W with the precache line in its emulator stdout: the W FORM line names it as the executor member [I] (a question to the lead), it is not among the violated
+PASS D36 the seal of 144 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, s51_vidglitch.py, the tools, the step 2 wrappers with the API check, and the s143 times.txt and seal the pairs read
+PASS D37 the seal check of 144: the scorer by sc144.py; an outside file (C:/...) is hashed at its own path - a wrong sha of the s143 times.txt fails the check
+PASS D38 regress143 on a synthetic profile 143: byte-identical, B33 v143_02 -> PASS; the profile 144 is restored; the profile 143 summary has no line of 144 (no control, no W FORM, no repeated entry, no stop-W line)
+PASS D39 regress143 fails on a changed line (DIFF line 4 printed), on LF only, on other B33 tags, on a missing file
+PASS D40 main --regress143 -> rc 1 against the real s143 summary from the fixture root
+PASS D41 the real profile 143 and the regression constants of item 254 (g)(4), (k)(5)
+PASS D42 every line new in profile 144 is ASCII (strict cp1250 and ascii)
+PASS E1 the 34 tags of item 273 (k)(1) in that order; the pairs: v144_09 with w145_01, then v145_NN / w145_NN of the sixteen levels (enemy_final last); the census = the sixteen v145 V; W tags = control + 17
+PASS E2 the root, seal, chain, runs dir, scorer of 145; the V of another session: v144_09 from root s144, chain go144a, seal pred/01_sc144.md; its sheet row fixed viewed by item 273 (a); halves of eight; the filter id; the flags
+PASS E3 the constants of sc144 are unchanged in profile 145 (item 273 (k)(3))
+PASS E3b the new constants: the gap 60 ms and the margin 12 ms of AUDIT144 s1.3, the window keys, the limit, F6 and Recovering texts
+PASS E4 level_of in 145: control -> Sky Garden; v144_09 and w145_01 -> rocket_hourglass; v145_17 / w145_17 -> enemy_final; v145_01, w144_09, v144_10 -> unknown
+PASS E5 the profiles 144, 143 and 142 set every key the profile 145 changes; P144 keeps the values of sc144 (root s144, go144a, control w144_00, 33 tags, the v143 V of another session, halves of six, FORM145 off, repeated entries)
+PASS E6 the seal of 145 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, s51_vidglitch.py, the tools, the step 2 wrappers with the API check and the gate, and the s144 times.txt and seal the pair reads; no name of 144
+PASS E7 good control W, W repeat and the V and W of a pair are admitted; each W carries one filter row and the window row, the V the filter row of the shipped defaults and the window row
+PASS E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: W without the filter
+PASS E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: W filtering another id
+PASS E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: W filtering the id and another one
+PASS E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: W filtering the id with a blank
+PASS E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: W filtering the hashed number
+PASS E9 a V with the filter of the W -> not admitted by "V shipped defaults: no VK_LAYER_MESSAGE_ID_FILTER" only
+PASS E10 a W with "Window 1 minimized" and the Recovering line -> the admission row "window event" fails alone; the print says it is not an outcome of the level and names the gate stop
+PASS E11 "Recovering Vulkan swapchain" without any "minimized" line -> a window event (the admission row fails); the print names minimized 0 and Recovering 1
+PASS E11b the Recovering line in the emulator stdout only -> counted, a window event
+PASS E12 the "minimized" line in the emulator stdout only -> counted, a window event
+PASS E13 only other window lines (restored, resized, size changed, lost focus twice; gained, moved, exposed not counted) -> counted, no event, admitted, the print says "no event"
+PASS E13b "Window minimized" without an id and "minimizedX" are not the line of window.cpp; "the window 1 minimized" (lower case) is not either -> no event
+PASS E14 a V with a window event -> V not admitted, its level NO by "V admitted", not admitted in the census; the WINDOW EVENTS line names it
+PASS E15 the window, Recovering, limit and F6 lines are counted once each across 37-byte chunks
+PASS E16 the control W with one layer limit line -> a letter term of the control stop (item 273 (k)(2)), rc 5 before w145_01; the control with 0 limit lines -> rc 0; the print and the LAYER LIMIT line name the control rule
+PASS E17 the limit line in the emulator stdout of the control W -> counted (1), letter stop
+PASS E18 a non-control W with two limit lines -> admitted, printed LAYER TRUNCATED, the outcome by the letter: the pair (V v144_09 + W w145_01) YES; the LAYER LIMIT line names it; the control PASS
+PASS E19 the F6 text lines (2) and the validation-type lines (bit 2 of the type: [2] x5 incl. the 3 of wl and F6 x2, [3]; not [1], [4]) are counted for the print, not the verdict
+PASS E20 vcont: rows ending at 0.3 and 0.4 inside the record gap 0.2..0.5 -> after the first scene frame n 3: 2 rows in 1 gap, the longest (2, 4, 5, 0.3 s, record 2); first frame n 4: 1 after, 1 before; n 5: none after, 2 before
+PASS E20b the margin of 12 ms: row ends 11 ms after the gap start and 11 ms before its end are taken as the edge records; 13 ms inside are counted
+PASS E20c the gap of the records must exceed 60 ms: a 60 ms gap is not examined, a 61 ms one is
+PASS E20d three gaps hold rows (0.1..0.25: n 3; 0.25..0.4: n 4; 0.5..0.95: n 7..10), a 50 ms gap is not examined: the longest run is the gap with the most rows, the counts add up
+PASS E20e vcont None without rows, without records or without a first scene frame
+PASS E21 idx_times: lines of >= 3 fields with a number in the third; others skipped; a missing file -> None
+PASS E22 a V whose .idx lacks the records of the three frames after the first scene frame -> continuity 3 rows in 1 gap, longest 3 rows n fn+1..fn+3; printed as data; the V stays admitted (not a gate)
+PASS E22b the summary names the V with a run of >= 2 rows without a record (3 rows) next to SCENE_OK
+PASS E23 the W repeat w145_01 with the V v144_09 of s144 (its root, chain go144a, its seal) -> the pair row names its own session; the sheet row of v144_09 is viewed by item 273 (a) whatever --sheet says
+PASS E23b a replaced V log of s144 (sha != its enter_scene end line of the s144 times.txt) -> the pair row FAIL, NO
+PASS E23c the enter_scene end line of v144_09 written under the chain go145a (not its own go144a) -> no times sha, FAIL
+PASS E23d the V of s144 run for another level (guest args) -> V not admitted, the pair row FAIL
+PASS E23e the V of s144 must carry the seal of s144: a json with the seal of 145 -> V not admitted, NO
+PASS E23f a v144_09 lying in the s145 root is not read (the V of another session comes from its own root only)
+PASS E23g the V v144_09 offered as the pair of level 02 (w145_02) -> NO by the pair row
+PASS E24 the summary of 145: the cold census header (no repeated entry), the map rows marked "cold first entry", halves of eight, YES of the cross-session pair, PENDING_SHEET / YES of a new pair, the levels line over 17
+PASS E24b the new summary lines: window events none, layer limit (control PASS, w145_02 truncated), the W filter 3 of 3 and V 3 of 3, the video continuity line; the W FORM line of 254 (e) still printed
+PASS E24c a W without the filter in the summary: the W FILTER line names it, its level NO by "W admitted"
+PASS E24d a V with the filter in the summary: the W FILTER line counts it among the V and names it after the W
+PASS E25 the made tag right before has a window event -> rc 5 naming it; before w145_01 (the control clean) -> not met
+PASS E25b the control W with only "Recovering Vulkan swapchain" -> rc 5 (window event and the gate reading of the control); the control with lost focus and restored only -> rc 0
+PASS E25c the tag right before made without json -> the window rule "not met (no json of w145_01)"; the first tag -> "not met (no tag made)"
+PASS E25d the window rule reads the made tag right before only: an event two tags back is not its stop (the control rule still stops on the control: its admission row fails)
+PASS E26 stop-check of an unknown tag (v144_09, a 144 tag, v145_01) -> rc 2
+PASS E27 vcont_audit reads the VCONT lines of vidcont144.out.txt (none and a run); a missing file -> {}
+PASS E28 regress144 on a synthetic profile 144: byte-identical; the new rows apart (window event w144_09, layer limit w144_09, control 0, the continuity of the V equal to the audit line) -> PASS; the profile 145 is restored; the profile 144 summary has no line of 145
+PASS E28b the profile 144 summary prints no line of 145 (no window, layer limit, filter, continuity, cold census)
+PASS E29 regress144 fails on a changed line (DIFF line 4), on LF only, on a continuity different from the audit line, on another window-event set, on another layer-limit set, on a missing file, without the audit file
+PASS E29b the control w144_00 with a limit line fails the layer-limit row even when the expected set names it
+PASS E30 main --regress144 -> rc 1 against the real s144 summary from the fixture root
+PASS E31 the real regression constants of item 273 (k)(5): the s144 summary viewed, the audit continuity file, the window event of w144_09, the 13 W with limit lines
+PASS E32 main --tag of a W with a window event -> rc 1 (admission FAIL names the window row); the score json goes to runs145
+PASS E33 every line new in profile 145 is ASCII (strict cp1250 and ascii)
+checks: 460
+ALL OK

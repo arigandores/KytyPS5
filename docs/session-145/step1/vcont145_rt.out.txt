@@ -1,0 +1,20 @@
+v143_07 log sha256 03999be4890bf7c046f1300553e3d45bc15bfec17e0c0bdf6bf449eb334ab442 idx sha256 83a2b518a07a836cb660407628709f826d1bd0e14a647bac0a42774acc364f42 rows 17129 records 17005; idx rows with field2 != field1+1: 0; entry (17308705, '')
+  FrameTrace n breaks: 0 []
+  first scene frame n 278 (draws 367)
+  END ANCHOR: after first scene frame 135 rows in 7 gaps; longest (37, 471, 507, 1.459, 414); at/before 0; rows within 8 ms of a record 16990 of 17129
+  local alignment, 600 rows from the first scene frame: within 8 ms 463 of 600
+  BEST OFFSET -4 ms (rows within 8 ms 16994): after first scene frame 133 rows in 7 gaps; longest (36, 472, 507, 1.459, 414)
+  offset -20 ms: after 140 in 11 gaps longest (37, 472, 508, 1.459, 414)
+  offset -10 ms: after 133 in 7 gaps longest (36, 472, 507, 1.459, 414)
+  offset +10 ms: after 144 in 11 gaps longest (38, 469, 506, 1.459, 414)
+  offset +20 ms: after 139 in 11 gaps longest (37, 469, 505, 1.459, 414)
+v143_08 log sha256 88d81bd41fe0f4480744ba44fb7c8f707227e0d3e8a9afa2a86c950155d8ec12 idx sha256 8de9d3279f338e4c81a2bb0496b95879897d1444f4b1b1fbcf987cfb1635aebd rows 19059 records 19071; idx rows with field2 != field1+1: 0; entry (15112566, '')
+  FrameTrace n breaks: 0 []
+  first scene frame n 239 (draws 386)
+  END ANCHOR: after first scene frame 17 rows in 3 gaps; longest (11, 743, 753, 0.284, 763); at/before 0; rows within 8 ms of a record 17948 of 19059
+  local alignment, 600 rows from the first scene frame: within 8 ms 320 of 600
+  BEST OFFSET -4 ms (rows within 8 ms 19042): after first scene frame 17 rows in 3 gaps; longest (11, 743, 753, 0.284, 763)
+  offset -20 ms: after 21 in 7 gaps longest (10, 744, 753, 0.284, 763)
+  offset -10 ms: after 18 in 4 gaps longest (11, 743, 753, 0.284, 763)
+  offset +10 ms: after 24 in 8 gaps longest (12, 742, 753, 0.284, 763)
+  offset +20 ms: after 23 in 8 gaps longest (11, 742, 752, 0.284, 763)

@@ -1,0 +1,57 @@
+suite test_go145a.py sha256 fc40eee1c40c8b0f3748aad07cb0fc92ea95a76af1ede88a546f0e3d3e1698fd target go145a.sh sha256 cf164bc2972ef337edf80f2da10e9b1e73f3b40a489ad4b80fcf5280b9492c75
+PASS g1 an unknown tag (a tag of session 142, 143 or 144 - the V v144_09 of the pair is no chain tag -, a V of the control or of the W repeat, a tag past 17) -> rc 2 usage
+PASS g2 the stop file -> rc 4 before DRY
+PASS g3 a held lock -> rc 4 before DRY
+PASS g4 PLWAIT not a number -> rc 2; PLWAIT 541 -> rc 2
+PASS g5 one attempt: the marker or <tag>.json -> rc 1
+PASS g6 order: w145_01 before w145_00 -> rc 1; after the w145_00 marker -> DRY rc 0; v145_02 before w145_01 -> rc 1, after w145_01.json -> rc 0; w145_02 before v145_02 -> rc 1; v145_03 before w145_02 -> rc 1
+PASS g7 the seal call line: no seal, another PLWAIT, two lines, a trailing blank, a go142a line -> rc 1; PLWAIT=0 as sealed -> DRY rc 0
+PASS g8 DRY rc 0 for every one of the 34 tags once its previous call is made
+PASS g9 every plan: one attempt, clock pin, markers 0, the empty gate file, the seal 02_sc145, no checkpoints/schedule, the stop check of its tag, the foreign-CPU snapshot at the lock and its row at the end
+PASS g10 every V (the 16 of the census): its level of item 273 (k)(1), video, hold 330, stable-draws 300, timeout 480, no validation, no KYTY_PIPELINE_PRECACHE, no message filter (shipped defaults)
+PASS g11 every W (the control, the W repeat and the 16 of the pairs): its level, validation true with the layer path and the duplicate limit, the form KYTY_PIPELINE_PRECACHE=0 and the one message filter of item 273 (k)(2) positional before the clock pin, hold 310, stable-draws 300, timeout 600, no video
+PASS g13 SEQ of the chain = sc145.SEQ (the control W, the W repeat, then V then W per level, item 273 (k)(1))
+PASS g14 the chain tag -> level map: the control W and the W repeat = sc145 (CONTROL, the W of the v144_09 pair), the sixteen V/W pairs = sc145.PAIRS[1:]
+PASS g15 constants: the installed build 9235a7ac and its pinned copy, the empty-file sha, s51_vidglitch.py of scripts
+PASS g16 holds: V 330 (as v142), W 310 (item 231 (i)(2)); no census hold of 120
+PASS g17 the stop file and the lock are checked before any process
+PASS g18 the stop file is checked again right before the lock is taken
+PASS g19 the stop rule: EVERY call (V and W) refuses rc 5 on sc145.py --stop-check rc 5, before the lock
+PASS g20 the lock log lines are UTC; every event line of step2/times.txt is written with date -u
+PASS g21 the seal check runs before the lock
+PASS g22 the script is ASCII and LF only
+PASS g23 the word of the mutation harness is not a command of the chain (only its guard pattern)
+PASS g24 item 224 (a)(10): the shader cache count goes into step2/times.txt before the lock and after the run
+PASS g25 the chain reads the seal pred/02_sc145.md and the scorer sc145.py
+PASS g26 debt D-4 (item 231 (i)(4)): the snapshot fgcpu145.py --save is taken after the lock and the EXIT trap and before the install; the trap writes the foreign-CPU row (--since, date -u) into step2/times.txt after the restore and BEFORE the lock is removed
+PASS g27 item 231 (z)(5): a procload refusal writes a BUSY row of step2/times.txt whose process name comes from the last "procload: busy" line of go145a.log, read by the same command
+PASS g28 the name guard pattern watches the mutants and fixtures of 145 and the emulator
+PASS g29 the levels of the chain are exactly sc145.LEVELS after the control level
+PASS g30 no times.txt row prints "rc $?" after a $(date ...) substitution (it would print the rc of date): the rc of s51_vidglitch.py and sheet142.py is captured on the next line (GRC, SHRC) and printed
+PASS g31 item 242 (b): the cache manifest before the lock (after the shader cache count, before noclobber) and after the run (after the enter_scene end row, before the idle-refusal branch), each with a date -u row of times.txt; the stale list moves an old after-manifest, never the fresh before-manifest
+PASS g32 the lock line carries the Windows pid of the shell (read by the builtin read from /proc/$$/winpid before any process); the foreign-CPU row gets --chain-pid $WINPID (item 242 (a), (d))
+PASS g33 every DRY plan names both manifests and the chain pid of the CPU row
+PASS g34 a held lock of the new form is printed whole in the BUSY line
+PASS g35 the step 2 wrappers (item 242 (d)): ASCII and LF; next_one checks the tag, the stop file and the lock before anything else, writes its call row, starts call_one detached (nohup ... & disown) and waits in the foreground with wait_one; call_one runs exactly the seal call "PLWAIT=540 bash C:/kyty/s145/go145a.sh $T" and writes the rc; wait_one waits at most 56 x 10 s = 560 s (< 600 s of a tool command)
+PASS g36 next_one.sh refuses an unknown tag rc 2 before the stop file, the lock or any call
+PASS g37 next_one.sh (MINOR-4 of audit 143): the API check apichk145.py runs after the tag, the stop file and the lock and before the call row and the detached call; its NO GO exits rc 4 without a call; the call row says "api GO"
+PASS g38 next_one.sh refuses v145_01 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g38 next_one.sh refuses w145_18 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g38 next_one.sh refuses v144_09 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g38 next_one.sh refuses w144_09 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g38 next_one.sh refuses v143_01 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g38 next_one.sh refuses w143_01 rc 2 (no V of the W repeat, no tag past 17, no tag of 144 or 143)
+PASS g39 apichk: in progress, only own comments -> GO rc 0 with the issue, status, run, count and the last comment
+PASS g40 apichk: an unread comment of another author -> NO GO rc 4 naming the id to pass; after it is read (--after c2) -> GO; a newer one of a user -> NO GO again (sorted by time, not by the order of the answer)
+PASS g41 apichk: the issue cancelled or done -> NO GO; blocked alone (a status, not the state of a run) -> GO
+PASS g42 apichk: no answer (issue or comments) -> NO GO; an --after id not among the comments -> NO GO
+PASS g43 apichk main: two GETs (issue, comments) on the base without /api doubled; one UTC row per call appended to the times file; a failing GET -> rc 4 and a "no answer" row
+PASS g44 apichk in a child without PYTHONIOENCODING (console cp1250): ASCII line and row, rc 4 on a foreign comment with a Cyrillic body (the body is never printed)
+PASS g45 apichk145.py is ASCII and LF, starts no process and is in the seal list of sc145
+PASS g46 the filter of item 273 (k)(2): one constant VKFILTER = the VUID string of sc145.VKFILTER, used once, in the W EXTRA only; no other VK_LAYER_MESSAGE_ID_FILTER in the code lines (comments aside); no V plan carries it, every W plan exactly once
+PASS g47 the W EXTRA case is the w145_* branch, the V branch has no EXTRA (shipped defaults)
+PASS g48 pre_one.sh: ASCII and LF; the stop file and the lock first, then sc145.py --stop-check <tag> (its output and a times row with rc and sha), rc 5 on a stop, the lock again, then step2/gate145.py --before <tag>, rc 5 on its STOP
+PASS g49 next_one.sh accepts exactly the 34 tags of the chain (its case pattern matches every SEQ tag and none of the bad tags)
+PASS g50 the command lines of the wrappers name only session 145 (no 144 outside the comment lines); apichk145 writes the s145 times
+checks: 54
+ALL OK

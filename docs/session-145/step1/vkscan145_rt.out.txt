@@ -1,0 +1,127 @@
+s144\log_w144_00.txt sha=2698b03decde184a vk_lines={'W': 936280} f6_by_sev={'W': 936279} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_01.txt sha=280636d7ae05f940 vk_lines={'W': 951148} f6_by_sev={'W': 951147} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_02.txt sha=3f83a47e48af1c5f vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_03.txt sha=a146ae165f424fd6 vk_lines={'W': 496684} f6_by_sev={'W': 496683} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_04.txt sha=b0b1c20fe446a543 vk_lines={'W': 668730} f6_by_sev={'W': 668729} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_05.txt sha=202033f4e7e013d5 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_06.txt sha=80dcc8947e6d5f2b vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_07.txt sha=1fe11b676a5bc99f vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_08.txt sha=6c567d954a8f9ed0 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_09.txt sha=08c3a71f11ab48fa vk_lines={'E': 1, 'W': 722001} f6_by_sev={'W': 722000} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_10.txt sha=a15ff15222355e58 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_11.txt sha=a6cb2c3bcbf3b5f8 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_12.txt sha=c4cc4451bd5397f4 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_13.txt sha=b1831b72047e49aa vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_14.txt sha=02f2c2629a9b1239 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_15.txt sha=dc4a51be7beea7b6 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_16.txt sha=8c3b987f9765109e vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_17.txt sha=5951e5ca2c670dc9 vk_lines={'W': 1000001} f6_by_sev={'W': 999999} f6_without_prefix=1 limit_lines=1 id_string_hits=0
+s144\log_w144_18.txt sha=1d75b73e455e9a65 vk_lines={'W': 402918} f6_by_sev={'W': 402917} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_19.txt sha=5266a235bc813af7 vk_lines={'W': 383433} f6_by_sev={'W': 383432} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_20.txt sha=516d801a05776cf0 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\log_w144_20_a1.txt sha=516d801a05776cf0 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_00.txt sha=04776b010168919b vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_01.txt sha=9721d78cf35a03a6 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_02.txt sha=e168ef2bb45b7339 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_03.txt sha=f78376be64fed0ba vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_04.txt sha=bdfaedd0d29db1ca vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_05.txt sha=8a4a364f2a0ddd5c vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_06.txt sha=ca9d5e64ca0f3184 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_07.txt sha=a3f51183a5326f39 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_08.txt sha=c1487503278e8e1a vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_09.txt sha=582734268e5c3d58 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_10.txt sha=ba3be82600260fc7 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_11.txt sha=a5aecc13375ad112 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_12.txt sha=219c47c1ec56bac5 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_13.txt sha=92ed77a71a2082b1 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_14.txt sha=6d21d8b75f5e9776 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_15.txt sha=43d41683db8dea9e vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_16.txt sha=7c179f5e56af82ce vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_17.txt sha=5e3cd382f8cab09e vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_18.txt sha=1ce7e040b679d761 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_19.txt sha=bfd330c6b31a2f2d vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_20.txt sha=0602b722d1362315 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\stdout_w144_20_a1.txt sha=0602b722d1362315 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_00.stdout.txt sha=4c2a5ecc1db9f08c vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_01.stdout.txt sha=6b9d044e6a61d217 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_02.stdout.txt sha=a1165787ea8b1b8d vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_03.stdout.txt sha=b332854f4d76a3dd vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_04.stdout.txt sha=4e50ca5009dbe827 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_05.stdout.txt sha=4a089b294e5e0f17 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_06.stdout.txt sha=6f32b2fec9459ec4 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_07.stdout.txt sha=32661baca80cde9d vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_08.stdout.txt sha=7f5b46fa80c307fd vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_09.stdout.txt sha=88e5e60949253fd0 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_10.stdout.txt sha=0cb470170e6f9516 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_11.stdout.txt sha=c56683f981f95bda vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_12.stdout.txt sha=dadbf0e8d1139621 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_13.stdout.txt sha=720965964e6bff0c vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_14.stdout.txt sha=6c4475680d82f58f vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_15.stdout.txt sha=1115d096f8da717a vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_16.stdout.txt sha=296ca76d1958edbf vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_17.stdout.txt sha=ddb1a9dfa8ddf89f vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_18.stdout.txt sha=8f8ff0a360d9e808 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_19.stdout.txt sha=637a54f073448a41 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s144\w144_20.stdout.txt sha=6406beeadb443f0a vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_01.txt sha=7851fa47d1612b6c vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_01_a1.txt sha=7851fa47d1612b6c vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_02.txt sha=a42ca54eb1cac832 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_02_a1.txt sha=a42ca54eb1cac832 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_03.txt sha=f7857e0c7078b8c2 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_03_a1.txt sha=f7857e0c7078b8c2 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_04.txt sha=00c151d9fa4b825d vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_04_a1.txt sha=00c151d9fa4b825d vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_05.txt sha=a484f58768611519 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_05_a1.txt sha=a484f58768611519 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_06.txt sha=9c12781a4e972b5e vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_06_a1.txt sha=9c12781a4e972b5e vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_07.txt sha=8a9553a1a94fe7b6 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_07_a1.txt sha=8a9553a1a94fe7b6 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_08.txt sha=0997e63c0891cc98 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_08_a1.txt sha=0997e63c0891cc98 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_09.txt sha=cf1eded5d1365929 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_09_a1.txt sha=cf1eded5d1365929 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_10.txt sha=45d4d85d9459a980 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\log_w143_10_a1.txt sha=45d4d85d9459a980 vk_lines={'E': 1, 'W': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_01.txt sha=905b90f0909c4dda vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_01_a1.txt sha=905b90f0909c4dda vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_02.txt sha=243e617fe3e4de7f vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_02_a1.txt sha=243e617fe3e4de7f vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_03.txt sha=a475b1eb6d2bb47c vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_03_a1.txt sha=a475b1eb6d2bb47c vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_04.txt sha=7cb6c9f9aa5027ad vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_04_a1.txt sha=7cb6c9f9aa5027ad vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_05.txt sha=cad0c8e1e578358c vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_05_a1.txt sha=cad0c8e1e578358c vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_06.txt sha=5940eb2cf97a2eb8 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_06_a1.txt sha=5940eb2cf97a2eb8 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_07.txt sha=bd348d2726e79b9a vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_07_a1.txt sha=bd348d2726e79b9a vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_08.txt sha=9ef8b7eafb10f909 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_08_a1.txt sha=9ef8b7eafb10f909 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_09.txt sha=089aab143f1ffb1d vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_09_a1.txt sha=089aab143f1ffb1d vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_10.txt sha=4509494f63ce6035 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\stdout_w143_10_a1.txt sha=4509494f63ce6035 vk_lines={'E': 1} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_01.stdout.txt sha=2c198f9431c1bcb8 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_02.stdout.txt sha=9fa910490fa22370 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_03.stdout.txt sha=10f987a5e45d710d vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_04.stdout.txt sha=55a3e3ea86614ef7 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_05.stdout.txt sha=9a2eabd6a6bd7677 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_06.stdout.txt sha=4fc7a65c29684825 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_07.stdout.txt sha=be11b9da11127e1e vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_08.stdout.txt sha=3e768f4cda39ac5e vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_09.stdout.txt sha=e5011cae157aa0e3 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s143\w143_10.stdout.txt sha=dd8fcd8c8ca3f550 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s142/log_w142.txt sha=7f42a2d3e1a151a2 vk_lines={'W': 916988} f6_by_sev={'W': 916987} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s142\stdout_w142.txt sha=114872224446f06b vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+s142\w142.stdout.txt sha=dc4a457799760102 vk_lines={} f6_by_sev={} f6_without_prefix=0 limit_lines=0 id_string_hits=0
+TOTAL vk lines by severity: {'E': 46, 'W': 18478217}
+DISTINCT non-F6 message keys (severity, prefix, normalized text) : count
+  E E][2]     44  vkCreateGraphicsPipelines(): pCreateInfos[N].pColorBlendState->pAttachments[N].srcColorBlendFactor (VK_BLEND_F
+  E E][2]      1  vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = N, height = N) is invalid.
+  E E][2]      1  vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = N, height = N) is invalid.
+  W W][1]     43  Removing layer <app> (<app>) because it is a duplic
+  W W][2]     13  (Warning - This VUID has now been reported N times, which is the duplicate_message_limit value, this will be t
+files scanned: 118
+(copy for git: 1 third-party layer names replaced by <app>; sha256 of the local original b315133f7777fd9c60eec58b7384974fcda7309daa6a4303722a17a99d01e5b9)

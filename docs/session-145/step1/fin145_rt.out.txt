@@ -1,0 +1,11 @@
+RM пункты после 291 перечитаны перед сдачей (KytyPS5 `508bd07f`): Приёмка звена P15 трека P (`HPP-362`, Harness Engineer) лидом: Доработать (1 из 2). Правило целой пары `qv_` с; Приёмка звена P15 трека P (`HPP-362`, Harness Engineer) лидом после доработки 1 из 2 (п. 292): Принято — печат; Приёмка звена F6d трека F (`HPP-376`, Red Team) лидом: Принято — вердикт PASS_WITH_FIXES (код `5f67f829` правк
+SCDIFF копия в git `b25ef509:docs/session-145/step0/sc145.py` — sha256 `001cb6af…` (= 001cb6af); против нынешнего `dd93bb1e…` — 2 строк разности: -PRED_PATH = 'C:/kyty/s145/pred/01_sc145.md' / +PRED_PATH = 'C:/kyty/s145/pred/02_sc145.md'
+V14409 sha256 `C:/kyty/s144/log_v144_09.txt` `a51ac48a8e0cad18…` = последней строке `go144a v144_09 enter_scene end` (`a51ac48a8e0cad18…`); видео `6bfcc79fee3ebd52…` = строке `s51_vidglitch`; лист `f5373287cf43e402…` = строке `sheet`; `times.txt` с. 144 `6867bf88104448d6…` = строке печати `6867bf88…`
+FGCPU `fgcpu145.py` против `C:/kyty/s144/fgcpu144.py` при замене 144 → 145: 2 строк разности (-"""fgcpuNNN.py - the foreign-CPU row of every run of the chain goNNNa.sh (sessi / +"""fgcpuNNN.py - the foreign-CPU row of every run of the chain goNNNa.sh (sessi); `cachemf145.py` против `cachemf144.py`: 2 (-"""cachemfNNN.py - the cache manifest of one call of goNNNa.sh (session 143 (po / +"""cachemfNNN.py - the cache manifest of one call of goNNNa.sh (session 143 (po)
+VKSCAN b315133f7777fd9c60eec58b7384974fcda7309daa6a4303722a17a99d01e5b9
+VUIDH 2fb960322fe410801331ef875b885ae16218e586c7432b4d6ab6b69f178278c3
+VCONT a3907fd1036c763ab69139929493103a064ea071c2bf30bc37af5e10edf8cffb
+F6TIME 5b6d0525ea6a088786adcbcef6d26a205f596433a4210eb5b9bb51146ad16479
+review sha256 0ae0d4d4c44f9263f230b55c5645a4a093f01e5f4330c70ccc420260f985b86d
+copies 21
+FACTS sha256 c96e36f1cf2ed6419c954af1e21a76631256f1035b1a3a440afc98c75588d4d2

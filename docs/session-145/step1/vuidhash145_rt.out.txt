@@ -1,0 +1,9 @@
+test vector b'' seed 0: 02cc5d05 want 02cc5d05 OK
+test vector b'Nobody inspects the ' seed 0: e2293b2f want e2293b2f OK
+dll sha256 9725ce7a9225f42f8961c433dacae4cc8fae3a16e95ef1d0a7c7e8bc09132c40
+id-like strings: prefixed 28022, any dash-joined nul-terminated 28374, union 28381
+filter string present: True occurrences in dll: 1
+seed 8: filter hash 46877e3e (1183284798); other strings with the same hash: 0 []
+seed 0: filter hash 2419e79d (605677469); other strings with the same hash: 0 []
+filter token digits: []
+strings with the filter prefix: ['Undefined-Value-ShaderOutputNotConsumed', 'Undefined-Value-ShaderOutputNotConsumed-DynamicRendering']

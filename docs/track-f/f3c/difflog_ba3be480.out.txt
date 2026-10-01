@@ -1,0 +1,5 @@
+478868b5 track F link F3b (HPP-340): F9/B1b - IMAGE_BVH_INTERSECT_RAY takes the BVH descriptor base as the 40-bit field in 256-byte units under KYTY_FIX_B1B (default 1)
+65a09c82 track F link F4a2 (HPP-346): ROADMAP p.262(b) - under KYTY_FIX_DUALSRC=1 a graphics pipeline with a SRC1 blend factor on a blended attachment gets its own fragment module with the Location 1 output rewritten to Location 0 Index 1
+1713a8be track F link F4a (HPP-335): B35 - KYTY_FIX_DUALSRC enables dualSrcBlend at device creation when supported (ROADMAP p.254(zh)(1)), default 0
+2ce6326e track S link S5c (HPP-323): RC2-RC6 of review S5b on S-pcw (ROADMAP p.245(b)-(c))
+e11a297b track S link S5a (HPP-316): S-pcw under KYTY_S_PCW, the KYTY_S_PCW_FORCE_MS stand and KYTY_DUMP_GCN=2 (ROADMAP p.241(h)(1)-(3))

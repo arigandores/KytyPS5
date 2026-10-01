@@ -1,0 +1,12 @@
+ src/graphics/host_gpu/graphicContext.h             |   4 +
+ .../host_gpu/renderer/pipeline/dualSrcBlend.h      | 139 +++++++++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   | 338 ++++++++++++++++++++-
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |  33 +-
+ .../renderer/pipeline/shaderTranslationCache.cpp   |   5 +-
+ .../host_gpu/renderer/pipeline/shaders.cpp         |  73 +++++
+ src/graphics/presentation/window/vulkanWindow.cpp  |  16 +
+ .../backend/spirv/spirvEmitterMemory.cpp           |  11 +-
+ .../recompiler/frontend/decode/ShaderDecoder.cpp   |   8 +
+ .../recompiler/frontend/decode/ShaderDecoder.h     |   7 +
+ .../recompiler/frontend/translate/Memory.cpp       |  13 +-
+ 11 files changed, 628 insertions(+), 19 deletions(-)

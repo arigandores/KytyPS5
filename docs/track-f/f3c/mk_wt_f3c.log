@@ -1,0 +1,21 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 478868b5)
+Updating files:  47% (1620/3420)Updating files:  48% (1642/3420)Updating files:  49% (1676/3420)Updating files:  50% (1710/3420)Updating files:  51% (1745/3420)Updating files:  52% (1779/3420)Updating files:  53% (1813/3420)Updating files:  54% (1847/3420)Updating files:  55% (1881/3420)Updating files:  56% (1916/3420)Updating files:  57% (1950/3420)Updating files:  58% (1984/3420)Updating files:  59% (2018/3420)Updating files:  60% (2052/3420)Updating files:  61% (2087/3420)Updating files:  62% (2121/3420)Updating files:  63% (2155/3420)Updating files:  64% (2189/3420)Updating files:  65% (2223/3420)Updating files:  66% (2258/3420)Updating files:  67% (2292/3420)Updating files:  68% (2326/3420)Updating files:  69% (2360/3420)Updating files:  70% (2394/3420)Updating files:  71% (2429/3420)Updating files:  72% (2463/3420)Updating files:  73% (2497/3420)Updating files:  74% (2531/3420)Updating files:  75% (2565/3420)Updating files:  76% (2600/3420)Updating files:  77% (2634/3420)Updating files:  78% (2668/3420)Updating files:  79% (2702/3420)Updating files:  80% (2736/3420)Updating files:  81% (2771/3420)Updating files:  82% (2805/3420)Updating files:  83% (2839/3420)Updating files:  84% (2873/3420)Updating files:  85% (2907/3420)Updating files:  86% (2942/3420)Updating files:  87% (2976/3420)Updating files:  88% (3010/3420)Updating files:  89% (3044/3420)Updating files:  90% (3078/3420)Updating files:  91% (3113/3420)Updating files:  92% (3147/3420)Updating files:  93% (3181/3420)Updating files:  94% (3215/3420)Updating files:  95% (3249/3420)Updating files:  96% (3284/3420)Updating files:  97% (3318/3420)Updating files:  98% (3352/3420)Updating files:  99% (3386/3420)Updating files: 100% (3420/3420)Updating files: 100% (3420/3420), done.
+HEAD is now at 478868b5 track F link F3b (HPP-340): F9/B1b - IMAGE_BVH_INTERSECT_RAY takes the BVH descriptor base as the 40-bit field in 256-byte units under KYTY_FIX_B1B (default 1)
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+478868b549569ade7196e8b31862398f629ff88d
+WT OK

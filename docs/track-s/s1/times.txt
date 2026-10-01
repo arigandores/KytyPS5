@@ -1,0 +1,13 @@
+2026-10-01T00:19:11Z start HPP-295 S1 wake; inputs fedcf271 s0-design, 455b3a25 p.235
+2026-10-01T00:24:26Z rt_s1 start sha 491d6ec0
+2026-10-01T00:25:20Z rt_s1 end out 76f9b6c6 json 0502de38
+2026-10-01T00:27:09Z rt_s1b out ef0e4b14 script 3afeeb7c
+2026-10-01T00:31:02Z man_s1 out f242a91e script 477cc0af
+2026-10-01T00:33:48Z refs_s1 out 4d604109
+2026-10-01T00:33:59Z refs_s1 30/30 ALL OK out a1e04a7e
+2026-10-01T00:34:28Z vid_s1 out 94b5ef73; glcache/dxcache listing read (PowerShell, no file)
+2026-10-01T00:34:45Z drvcache listing out 74315839
+2026-10-01T00:37:44Z refs_s1 37/37 out 65321c21
+2026-10-01T00:38:06Z review doc written, copies to git docs/track-s/s1, privacy 0
+2026-10-01T00:38:30Z FACTS append attempt FAILED (heredoc backslash, nothing written); retried via facts_s1.py
+2026-10-01T00:38:58Z FACTS section S1 append via facts_s1.py

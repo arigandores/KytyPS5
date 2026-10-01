@@ -1,0 +1,3 @@
+snap0 files 1186 bytes 338998443 sha_text d8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4 eq_S0_lines True only_here 0 only_S0 0
+installed files 1186 bytes 338998443 sha_text d8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4 eq_S0_lines True only_here 0 only_S0 0
+installed == snap0 lines: True

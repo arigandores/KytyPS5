@@ -1,0 +1,155 @@
+[
+{
+"tag": "v142",
+"saves_total": 1,
+"saves_after_first": 0,
+"save_us_after": [],
+"recipe_saves_after": 0,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_01",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+79668
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_02",
+"saves_total": 5,
+"saves_after_first": 4,
+"save_us_after": [
+93261,
+92638,
+86465,
+80789
+],
+"recipe_saves_after": 4,
+"frames100_with_save_in_group_i_or_i+1": [
+[
+795,
+165920,
+93261
+],
+[
+1358,
+149651,
+92638
+],
+[
+2557,
+151746,
+86465
+]
+],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_03",
+"saves_total": 4,
+"saves_after_first": 3,
+"save_us_after": [
+87008,
+80536,
+92621
+],
+"recipe_saves_after": 3,
+"frames100_with_save_in_group_i_or_i+1": [
+[
+1042,
+115028,
+87008
+]
+],
+"saves_in_held_series": 1
+},
+{
+"tag": "c142_04",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+79227
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_05",
+"saves_total": 3,
+"saves_after_first": 2,
+"save_us_after": [
+92793,
+82729
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [
+[
+1002,
+131181,
+92793
+]
+],
+"saves_in_held_series": 1
+},
+{
+"tag": "c142_06",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+83941
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_07",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+82835
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_08",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+81029
+],
+"recipe_saves_after": 1,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_09",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+95600
+],
+"recipe_saves_after": 2,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+},
+{
+"tag": "c142_10",
+"saves_total": 2,
+"saves_after_first": 1,
+"save_us_after": [
+98951
+],
+"recipe_saves_after": 2,
+"frames100_with_save_in_group_i_or_i+1": [],
+"saves_in_held_series": 0
+}
+]

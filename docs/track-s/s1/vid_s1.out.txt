@@ -1,0 +1,12 @@
+c142_01 rows 5252 held_total 3 shown_rows 5249 {'.glitch.video_frames': 5261}
+c142_02 rows 3798 held_total 13 shown_rows 3785 {'.glitch.video_frames': 3810}
+c142_03 rows 7155 held_total 68 shown_rows 7087 {'.glitch.video_frames': 7100}
+c142_04 rows 7555 held_total 12 shown_rows 7543 {'.glitch.video_frames': 7553}
+c142_05 rows 7301 held_total 49 shown_rows 7252 {'.glitch.video_frames': 7266}
+c142_06 rows 4386 held_total 6 shown_rows 4380 {'.glitch.video_frames': 4391}
+c142_07 rows 7475 held_total 10 shown_rows 7465 {'.glitch.video_frames': 7475}
+c142_08 rows 7460 held_total 30 shown_rows 7430 {'.glitch.video_frames': 7444}
+c142_09 rows 7604 held_total 5 shown_rows 7599 {'.glitch.video_frames': 7616}
+c142_10 rows 6608 held_total 6 shown_rows 6602 {'.glitch.video_frames': 6634}
+v142 rows 10555 held_total 0 shown_rows 10555 {'.glitch.video_frames': 10567}
+w142 rows 2665 held_total 0 shown_rows 2665 {}

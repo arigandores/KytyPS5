@@ -1,0 +1,44 @@
+diff145 old step0b/regress144.out.txt sha256 15e26fa5b87d1de6c15ca98c2895e78b3334df897ccdb63152ce827a36e549f7 (expected 15e26fa5b87d1de6: yes) lines 48; new step1b/regress144.out.txt sha256 133a2b482c59c695d0aeedcbdeb5d67de1478e42e1394b28adf39c7318b12531 lines 94
+DIFF145 SUMMARY: old lines 48 all kept byte for byte and in order (48); inserted 46 = NEW295 lines of W tags 21, of V tags 20, NEW295 ROWS 5, unnamed 0; replaced or deleted blocks 0 -> PASS
+ne 14: W - w144_05 W
+INSERTED new line 16: W - w144_06 W
+INSERTED new line 18: W - w144_07 W
+INSERTED new line 20: W - w144_08 W
+INSERTED new line 22: V - v144_09 V
+INSERTED new line 24: W - w144_09 W
+INSERTED new line 26: V - v144_10 V
+INSERTED new line 28: W - w144_10 W
+INSERTED new line 30: V - v144_11 V
+INSERTED new line 32: W - w144_11 W
+INSERTED new line 34: V - v144_12 V
+INSERTED new line 36: W - w144_12 W
+INSERTED new line 38: V - v144_13 V
+INSERTED new line 40: W - w144_13 W
+INSERTED new line 42: V - v144_14 V
+INSERTED new line 44: W - w144_14 W
+INSERTED new line 46: V - v144_15 V
+INSERTED new line 48: W - w144_15 W
+INSERTED new line 50: V - v144_16 V
+INSERTED new line 52: W - w144_16 W
+INSERTED new line 54: V - v144_17 V
+INSERTED new line 56: W - w144_17 W
+INSERTED new line 58: V - v144_18 V
+INSERTED new line 60: W - w144_18 W
+INSERTED new line 62: V - v144_19 V
+INSERTED new line 64: W - w144_19 W
+INSERTED new line 66: V - v144_20 V
+INSERTED new line 68: W - w144_20 W
+INSERTED new line 70: V - v143_01 V
+INSERTED new line 72: V - v143_02 V
+INSERTED new line 74: V - v143_03 V
+INSERTED new line 76: V - v143_04 V
+INSERTED new line 78: V - v143_05 V
+INSERTED new line 80: V - v143_06 V
+INSERTED new line 82: V - v143_09 V
+INSERTED new line 84: V - v143_10 V
+INSERTED new line 88: ROWS - held
+INSERTED new line 89: ROWS - (b)(1) layer limit lines 0
+INSERTED new line 90: ROWS - (b)(2) validation active by [W][2] / [E][2] lines
+INSERTED new line 91: ROWS - (b)(3) the last layer line within 10 s of the hold end
+INSERTED new line 92: ROWS - (b)(4) the form line
+DIFF145 SUMMARY: old lines 48 all kept byte for byte and in order (48); inserted 46 = NEW295 lines of W tags 21, of V tags 20, NEW295 ROWS 5, unnamed 0; replaced or deleted blocks 0 -> PASS

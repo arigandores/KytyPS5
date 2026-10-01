@@ -1,0 +1,52 @@
+CH_OLD = S.CHUNK
+S.CHUNK = 64
+pj = mk144(BASE / 'D18j', 'w144_09', lines=[VF, VW, ft(1, 20000, 5)] + ['filler line %d' % i for i in range(20)] +
+           [start(''), ft(2, 20000, 5)] + ['filler line %d' % i for i in range(20)] + [start('')] + REP)
+gj = S.scan(pj + '/log_w144_09.txt')['guestout']
+S.CHUNK = CH_OLD
+rawj = Path(pj, 'log_w144_09.txt').read_bytes()
+ok &= case('D18j the first GuestOut line is kept across chunks (64-byte chunks, two GuestOut lines): its line start',
+           gj == rawj.find(b'GuestOut') and gj is not None and rawj.find(b'GuestOut', gj + 1) > gj)
+e = S.entry_of('w144_09', mk144(BASE / 'D18k', 'w144_09', lines=[VF, ft(1, 20000, 5), 'GpuHangAbort: x'] + REP + [start('')]),
+               SH4)
+ok &= case('D18k two markers before the GuestOut line: the FIRST by position gives the key (K2 GpuHangAbort:, not the report)',
+           e['wkey'] == 'K2 GpuHangAbort:')
+e = S.entry_of('w144_09', mk144(BASE / 'D18l', 'w144_09', js=js144('w144_09', attempt=dict(outcome='exited', hold_s=None))),
+               SH4)
+ok &= case('D18l a GuestOut line, no marker, exited -> no key (the attempt markers count only without a GuestOut line)',
+           e['wkey'] is None and e['exited'])
+lm = BASE / 'D18m'
+mk144(lm, 'w144_09', lines=STOPW, js=js144('w144_09', attempt=dict(outcome='exited', hold_s=None)))
+(lm / 'log_w144_09.txt').unlink()
+e = S.entry_of('w144_09', str(lm), SH4)
+ok &= case('D18m no log, exited -> no key (a W without its log never counts for the two-W rule)', e['wkey'] is None)
+R22b = BASE / 'D22b'
+for t in ['w144_%02d' % i for i in range(0, 7)] + ['v144_09']:
+    mk144(R22b, t)
+mk144(R22b, 'w144_07', lines=STOPW)
+mk144(R22b, 'w144_08', lines=STOPW)
+(R22b / 'attempt_w144_09.txt').write_text('made\n')
+r22b = sc_main(R22b, 'v144_10')
+ok &= case('D22b an attempt of a W without json is a made W without a key: it breaks the run of the last two made W '
+           '(w144_08 key, w144_09 none) -> rc 0 before v144_10', r22b[0] == 0 and 'keys w144_08 VALIDATION_STOP --- Error ---, '
+           'w144_09 None' in r22b[1])
+R26b = BASE / 'D26b'
+mk144(R26b, 'w144_00', js=js144('w144_00', attempt=dict(outcome='exited')))
+r26b = sc_main(R26b, 'w144_01')
+R26c = BASE / 'D26c'
+mk144(R26c, 'w144_00')
+(R26c / 'log_w144_00.txt').unlink()
+r26c = sc_main(R26c, 'w144_01')
+ok &= case('D26b the control W exited (attempt marker) -> letter stop; the control without its log -> gate stop naming '
+           '"log missing"', r26b[0] == 5 and 'letter stop (hold_exit / ENDED / exited)' in r26b[1] and r26c[0] == 5 and
+           'log missing' in r26c[1])
+mk144(R29, 'v144_10', lines=scene_lines('pot_treasure_cave', v_post()), js=dict(js144('v144_10'),
+                                                                                prereg=dict(path=S.PRED_PATH, sha256=SH29)))
+o29g = S.summary(str(R29), SH29, 'viewed')[0]
+ok &= case('D34b a V without the precache line in the summary: the W FORM line names it before the W',
+           any(x.startswith('W FORM (item 254 (e)):') and 'violated: v144_10,w144_09;' in x for x in o29g))
+mk144(R29, 'w144_10', std=[PRE], js=dict(js144('w144_10'), prereg=dict(path=S.PRED_PATH, sha256=SH29)))
+o29h = S.summary(str(R29), SH29, 'viewed')[0]
+ok &= case('D34c a W with the precache line in its emulator stdout: the W FORM line names it as the executor member [I] '
+           '(a question to the lead), it is not among the violated', any(x.startswith('W FORM (item 254 (e)):') and
+           x.endswith('W with the line in the emulator stdout: w144_10') and 'violated: v144_10,w144_09;' in x for x in o29h))

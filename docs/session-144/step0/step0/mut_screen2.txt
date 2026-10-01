@@ -1,0 +1,21 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s144\sc144.py sha256 b61d505c23c87a195d735567bcecc2a35a9232b8d419417222f8285491e75bd8
+test    C:\kyty\s144\test_sc144.py sha256 806188605c1b5d38fb39014ad24dfbb8d4a092cc5f18762b6a7aa719aa7713a0
+mutants C:\kyty\s144\mut_sc144.py sha256 2fb8d52a7c7326d812323c87c7ce0970fc344915e06d2c97c70e41204f0873f9
+mutants: format list, 506 defined (strict: every use of MUTANTS checked; statements evaluated at lines 53)
+selection: --only, 3 mutants
+suite: family V; fast on (361 guarded updates of ok); end of suite: the final exit call at line 2303
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'manifest', 'mk143', 'mk144', 'mkrun', 'pair', 'pair143', 's6', 's7', 's8', 's9', 'sheet_case', 'wstop', 'xroot'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 3 (spawn, one process per job), work dir C:\kyty\s144\mutwork_screen\sc144_39672_1790833673
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.05 s in the baseline (50 of 388 calls validated; not validated: 189 x a scorer function (level_of); 67 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (30.8 s)
+BASELINE#2  SURVIVED  (30.6 s)  [fixture replay validation]
+rg3_adm  KILLED by test line 2260  (7.1 s)
+n_bd_pl  KILLED by test line 2003  (5.8 s)
+n_su_ctrl_nojs  KILLED by test line 2081  (6.2 s)
+3 mutants: 3 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 3 kill(s) ended at their first failing case; they skipped a median 6 % / mean 5 % of the suite's 400 checks, about 4.6 s of the baseline's suite time per job (14 s in all)
+wall 39.7 s, worker time 80.5 s, 3 workers
+ALL KILLED (3 of 3 selected mutants killed; 506 defined in the mutant script)

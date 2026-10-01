@@ -1,0 +1,523 @@
+# ================= PART D (session 144, HPP-330; ROADMAP item 254 (e), (k)(1)-(5)): the profile of session 144 - the 33 tags
+# and their order, the control W, the cross-session pair (a W of s144 with the V of s143), the W form and its violations,
+# the W stopped before / after the first GuestOut line, the stop rules (control, two W, three V), the repeated-entry V, the
+# skipped-draw frames by distinct frame= (debt D-7), the regression of profile 143 on a synthetic profile, ASCII.
+S.profile(P144)
+OLD8 = ('v143_01', 'v143_02', 'v143_03', 'v143_04', 'v143_05', 'v143_06', 'v143_09', 'v143_10')
+LV8 = ('spring_punch_sky_aztec', 'booster_construction', 'mini_astro_clock_tower', 'path_maker_mana_tree',
+       'spring_punch_monster_cave', 'gulliver_island', 'booster_magic_lamp', 'rocket_space_station')
+LV12 = ('rocket_hourglass', 'pot_treasure_cave', 'bumper_enemy_snowy_canyon', 'big_hand_pirate_island', 'timestop_casino',
+        'ice_iceberg', 'sponge_dirty_bath', 'hoover_beach', 'volcano_mountain', 'voxel_world', 'enemy_gorilla',
+        'mini_giants_garden')
+SEQ144 = (['w144_00'] + ['w144_%02d' % i for i in range(1, 9)] +
+          [x for i in range(9, 21) for x in ('v144_%02d' % i, 'w144_%02d' % i)])
+ok &= case('D1 the 33 tags of item 254 (k)(1) in that order; the pairs: the eight v143 V with w144_01..08, then v144_NN / '
+           'w144_NN of the twelve levels (mini_giants_garden last); the census = the twelve v144 V; W tags = control + 20',
+           list(S.SEQ) == SEQ144 and len(S.SEQ) == 33 and S.CONTROL == ('w144_00', SKY) and
+           S.PAIRS[:8] == tuple((v, 'w144_%02d' % (i + 1), lv) for i, (v, lv) in enumerate(zip(OLD8, LV8))) and
+           S.PAIRS[8:] == tuple(('v144_%02d' % (i + 9), 'w144_%02d' % (i + 9), lv) for i, lv in enumerate(LV12)) and
+           S.CENSUS == tuple(('v144_%02d' % (i + 9), lv) for i, lv in enumerate(LV12)) and S.LEVELS == LV8 + LV12 and
+           S.V_TAGS == OLD8 + tuple('v144_%02d' % i for i in range(9, 21)) and
+           S.W_TAGS == tuple('w144_%02d' % i for i in range(0, 21)))
+ok &= case('D2 the root, seal, chain, runs dir, scorer of 144; the V of another session: root s143, chain go143a, seal '
+           'pred/02_sc143.md; their sheet rows are fixed viewed (item 254 (a)); W stop run 2; halves of six',
+           S.ROOT == 'C:/kyty/s144' and S.PRED_PATH == 'C:/kyty/s144/pred/01_sc144.md' and S.CHAIN == 'go144a' and
+           S.RUNS == 'runs144' and S.SCORER == 'sc144.py' and S.EXTRA is True and S.FORM144 is True and
+           sorted(S.XSRC) == sorted(OLD8) and all(S.XSRC[v] == dict(root='C:/kyty/s143', chain='go143a',
+                                                                    pred='C:/kyty/s143/pred/02_sc143.md') for v in OLD8)
+           and S.XSHEET == OLD8 and S.W_STOP_RUN == 2 and S.HALF == 6 and S.NUMW == {5: 'five', 6: 'six'})
+ok &= case('D3 the constants of sc143 after items 242, 246 are unchanged in profile 144 (item 254 (k)(3))',
+           (S.SCENE_DRAWS, S.ENTRY_WIN, S.K2_US, S.K3_US, S.HOLD_CENSUS_US, S.HOLD_CENSUS_S, S.HOLD_SCENE_US, S.HOLD_W_S,
+            S.HOLD_V_S, S.FRAMES_V, S.COVER_SLACK, S.PRIO_US, S.STOP_RUN, S.HOLD_W_HARNESS_S, S.REPORT_LINES) ==
+           (100, 599, 1000000, 100000, 120000000, 120, 300000000, 300, 330, 3000, 100, 50000, 3, 310, 50)
+           and S.OPCODE_BASE == {('SOP1', '0x21'): 96, ('SOP1', '0x0c'): 1, ('VOPC', '0xe3'): 4} and S.BUILD_SHA == BUILD
+           and S.CACHE_ROOTS == ('shader', 'pipeline', 'glcache') and S.VSTOP == 'VALIDATION_STOP')
+ok &= case('D4 level_of in 144: control -> Sky Garden; v143_09 and w144_07 -> booster_magic_lamp; v144_20 / w144_20 -> '
+           'mini_giants_garden; v143_07 (not a pair of 144), w143_01, v144_08 -> unknown',
+           S.level_of('w144_00') == SKY and S.level_of('v143_09') == 'booster_magic_lamp' and
+           S.level_of('w144_07') == 'booster_magic_lamp' and S.level_of('v144_20') == 'mini_giants_garden' and
+           S.level_of('w144_20') == 'mini_giants_garden' and S.level_of('v143_07') is None and
+           S.level_of('w143_01') is None and S.level_of('v144_08') is None)
+K144 = ('ROOT', 'PRED_PATH', 'CHAIN', 'RUNS', 'SCORER', 'EXTRA', 'FORM144', 'LEVELS', 'PAIRS', 'CENSUS', 'SEQ', 'V_TAGS',
+        'W_TAGS', 'SEALED_NAMES', 'CONTROL', 'XSRC', 'XSHEET', 'HALF')
+ok &= case('D5 the profiles 143 and 142 set every key the profile 144 changes (FORM144 off, no control, no other-session V, '
+           'halves of five)', all(set(K144) <= set(p) for p in (S.P143, S.P142)) and
+           all(p['FORM144'] is False and p['CONTROL'] is None and p['XSRC'] == {} and p['XSHEET'] == () and p['HALF'] == 5
+               for p in (S.P143, S.P142)) and S.P143['SEQ'][0] == 'v143_01' and len(S.P143['SEQ']) == 20)
+PR4 = BASE / 'pred144.md'
+PR4.write_text('fixture seal 144 part D\n', encoding='utf-8')
+SH4 = hashlib.sha256(PR4.read_bytes()).hexdigest()
+PRE = ('PipelinePrecache: 1842 recipes -> 1660 graphics + 141 compute pipelines queued, 41 skipped, 3456 sources loaded, '
+       'complete, 492 ms')
+
+
+def js144(tag, attempt=None, form=True, **over):
+    is_w = tag in S.W_TAGS
+    cmd = ['kyty_emulator.exe', '--vulkan-validation', 'false', '--game', 'x'] + (['--vulkan-validation', 'true'] if is_w else [])
+    env = {'KYTY_FRAME_TRACE': 'lite', 'KYTY_GUEST_ARGS': '-lvl %s' % S.level_of(tag), 'KYTY_GPU_CLOCK_PIN': '1',
+           'KYTY_GPU_MARKERS': '0'}
+    if is_w:
+        env['VK_LAYER_PATH'] = 'C:/VulkanSDK/1.4.357.0/Bin'
+        if form:
+            env['KYTY_PIPELINE_PRECACHE'] = '0'
+    else:
+        env['KYTY_REC'] = 'C:\\kyty\\s144\\rec_%s.mp4' % tag
+    a = dict(label='attempt 1', attempt=1, outcome='ok', hold_s=310.0 if is_w else 330.0, hold_exit=None, ft_tail=300,
+             pipeline_cache_off=False, level=S.level_of(tag))
+    a.update(attempt or {})
+    js = dict(tag=tag, binary_sha256=BUILD, guest_args='-lvl %s' % S.level_of(tag), gates='', env=env, cmdline=cmd,
+              prereg=dict(path=S.PRED_PATH, sha256=SH4), attempts=[a])
+    js.update(over)
+    return js
+
+
+def wl(lv, post=None):
+    return [VF] + scene_lines(lv, [150000] * 2000 if post is None else post) + [VW] * 3
+
+
+def mk144(root, tag, lines=None, js=None, glitch=(3200, 0), sheet=True, chain='go144a', std=()):
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    is_w = tag in S.W_TAGS
+    lv = S.level_of(tag)
+    if lines is None:
+        lines = wl(lv) if is_w else [PRE] + scene_lines(lv, v_post())
+    (root / ('%s.json' % tag)).write_text(json.dumps(js if js is not None else js144(tag)), encoding='utf-8')
+    (root / ('log_%s.txt' % tag)).write_bytes(('\n'.join(lines) + '\n').encode('utf-8'))
+    (root / 'step2').mkdir(exist_ok=True)
+    with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+        f.write('2026-10-01T00:00:00Z %s %s enter_scene end rc 0 log_%s.txt sha256 %s\n' % (
+            chain, tag, tag, _h.sha256((root / ('log_%s.txt' % tag)).read_bytes()).hexdigest()))
+    (root / ('stdout_%s.txt' % tag)).write_bytes(('\n'.join(std) + '\n').encode('utf-8'))
+    (root / ('%s.stdout.txt' % tag)).write_bytes(b'VERDICT: x\n')
+    if is_w:
+        return str(root)
+    if glitch is not None:
+        (root / ('glitch_%s.txt' % tag)).write_text('C:/kyty/s144/rec_%s.mp4: %d frames 960x540, index entries %d\n'
+                                                    'one-frame glitches: %d\n' % (tag, glitch[0], glitch[0], glitch[1]))
+    if sheet:
+        (root / ('sheet_%s.png' % tag)).write_bytes(b'png')
+        (root / ('rec_%s.mp4' % tag)).write_bytes(('mp4 ' + tag).encode())
+        with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+            f.write('2026-10-01T00:00:00Z %s %s s51_vidglitch rc 0 glitch_%s.txt sha256 %s rec_%s.mp4 sha256 %s\n' % (
+                chain, tag, tag, 'ab' * 32, tag, _h.sha256(('mp4 ' + tag).encode()).hexdigest()))
+            f.write('2026-10-01T00:00:00Z %s %s sheet rc 0 sheet_%s.png sha256 %s\n' % (
+                chain, tag, tag, _h.sha256(b'png').hexdigest()))
+    return str(root)
+
+
+XSRC_REAL = dict(S.XSRC)
+
+
+def xroot(name, tags=OLD8, js_over=None, lines=None):
+    """A fixture root of 'session 143' with the given v143 V (chain go143a, its own seal), and S.XSRC pointed at it."""
+    xr = BASE / name / 'x143'
+    xr.mkdir(parents=True, exist_ok=True)
+    xp = xr / 'pred143.md'
+    xp.write_text('fixture seal 143\n', encoding='utf-8')
+    xs = hashlib.sha256(xp.read_bytes()).hexdigest()
+    for v in tags:
+        js = js144(v, prereg=dict(path=xp.as_posix(), sha256=xs))
+        js.update((js_over or {}).get(v, {}))
+        mk144(xr, v, None if lines is None else lines.get(v), js, chain='go143a')
+    S.XSRC = dict((v, dict(root=xr.as_posix(), chain='go143a', pred=xp.as_posix())) for v in OLD8)
+    return xr, xp
+
+
+def adm_rows(e, prefix):
+    return [a for a in e['admit'] if a[0].startswith(prefix)]
+
+
+def adm_ok(e):
+    return all(a[1] for a in e['admit'])
+
+
+RD = BASE / 'D6'
+for t in ('w144_00', 'w144_01', 'v144_09', 'w144_09'):
+    mk144(RD, t)
+eD = dict((t, S.entry_of(t, str(RD), SH4)) for t in ('w144_00', 'w144_01', 'v144_09', 'w144_09'))
+ok &= case('D6 good control W, W-only tag, V and W of a pair are admitted; the W carries the env and line rows of the form, the '
+           'V the env and positive-control rows (one each)',
+           all(adm_ok(e) for e in eD.values()) and
+           all(len(adm_rows(eD[t], 'W form: ')) == 2 for t in ('w144_00', 'w144_01', 'w144_09')) and
+           len(adm_rows(eD['v144_09'], 'V positive control')) == 1 and len(adm_rows(eD['v144_09'], 'V shipped')) == 1
+           and eD['v144_09']['precache'] == dict(log=1, stdout=0, any=1) and eD['w144_09']['precache']['log'] == 0)
+BADW = [('W without KYTY_PIPELINE_PRECACHE in the env', dict(js=js144('w144_09', form=False))),
+        ('W with KYTY_PIPELINE_PRECACHE=1', dict(js=dict(js144('w144_09'), env=dict(js144('w144_09')['env'],
+                                                                                       KYTY_PIPELINE_PRECACHE='1')))),
+        ('W with the precache line in its log', dict(lines=[PRE] + wl('rocket_hourglass'))),
+        ('W stopped during the startup precache (no line) without the env', dict(
+            js=js144('w144_09', form=False), lines=[VF, VW, ft(1, 20000, 5), '--- Fatal Error ---']))]
+for i, (name, kw) in enumerate(BADW):
+    e = S.entry_of('w144_09', mk144(BASE / ('D7_%d' % i), 'w144_09', **kw), SH4)
+    ok &= case('D7 the W form violated -> the tag is not admitted (FAIL): %s' % name,
+               not adm_ok(e) and [a[0][:7] for a in e['admit'] if not a[1]] == ['W form:'])
+e = S.entry_of('w144_09', mk144(BASE / 'D7o', 'w144_09', std=[PRE]), SH4)
+ok &= case('D7c the precache line in the emulator stdout of a W only: an executor member [I] (item 258 (d)) - printed, the tag '
+           'stays admitted', adm_ok(e) and e['precache']['stdout'] == 1 and any(
+               'executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 1,' in x
+               for x in S.fmt_entry(e)))
+e = S.entry_of('w144_09', mk144(BASE / 'D7s', 'w144_09', lines=['PipelinePrecache: saved 5 recipes (9 bytes)'] +
+                                wl('rocket_hourglass')), SH4)
+ok &= case('D7b only the line "PipelinePrecache: N recipes ->" is the form line by the letter: a "saved" line passes and is '
+           'printed as "any" 1', adm_ok(e) and e['precache'] == dict(log=0, stdout=0, any=1) and
+           any('any "PipelinePrecache:" line 1' in x for x in S.fmt_entry(e)))
+BADV = [('V without the precache line (the positive control)', dict(lines=scene_lines('rocket_hourglass', v_post()))),
+        ('V run in the W form (KYTY_PIPELINE_PRECACHE=0)', dict(js=dict(js144('v144_09'), env=dict(
+            js144('v144_09')['env'], KYTY_PIPELINE_PRECACHE='0'))))]
+for i, (name, kw) in enumerate(BADV):
+    e = S.entry_of('v144_09', mk144(BASE / ('D8_%d' % i), 'v144_09', **kw), SH4)
+    ok &= case('D8 refused V: %s' % name, not adm_ok(e) and len([a for a in e['admit'] if not a[1]]) == 1)
+PRD = BASE / 'D9' / 'pred.md'
+(BASE / 'D9').mkdir(parents=True, exist_ok=True)
+PRD.write_text('fixture seal 144\n', encoding='utf-8')
+SHD = hashlib.sha256(PRD.read_bytes()).hexdigest()
+mk144(BASE / 'D9', 'w144_09', js=dict(js144('w144_09', form=False), prereg=dict(path=S.PRED_PATH, sha256=SHD)))
+mk144(BASE / 'D9', 'v144_09', js=dict(js144('v144_09'), prereg=dict(path=S.PRED_PATH, sha256=SHD)))
+_b = io.StringIO()
+with contextlib.redirect_stdout(_b):
+    rw = S.main(['--tag', 'w144_09'], root=str(BASE / 'D9'), pred=str(PRD))
+    rv = S.main(['--tag', 'v144_09'], root=str(BASE / 'D9'), pred=str(PRD))
+ok &= case('D9 main --tag: a W out of the form -> rc 1 (admission FAIL names the form row); a good V -> rc 0; the score json '
+           'goes to runs144', rw == 1 and rv == 0 and 'FAIL W form: KYTY_PIPELINE_PRECACHE=0' in _b.getvalue() and
+           (BASE / 'D9' / 'runs144' / 'w144_09.score.json').is_file())
+# the cross-session pair
+R10 = BASE / 'D10'
+xr, xp = xroot('D10')
+mk144(R10, 'w144_01')
+v10 = S.entry_of('v143_01', str(R10), SH4)
+w10 = S.entry_of('w144_01', str(R10), SH4)
+word, rows = S.scene_ok(v10, w10, 'viewed', S.PAIRS[0])
+ok &= case('D10 a W of s144 with the V of s143 (its root, chain go143a, its seal) -> YES; the V is read from the other root with '
+           'that seal; the pair row names its own session', word == 'YES' and v10 is not None and adm_ok(v10) and
+           v10['times_log_sha'] == v10['log_sha'] and row_ok(rows, 'V v143_01 and W w144_01 are the pair of one level') is True
+           and any('step2/times.txt of its own session; item 254 (e)' in r[0] for r in rows) and len(rows) == 27)
+o10 = S.summary(str(R10), SH4, None)[0]
+o10b = S.summary(str(R10), SH4, 'not-viewed')[0]
+ok &= case('D10b the sheet row of a v143 V is viewed by item 254 (a) whatever --sheet says (unset, not-viewed): YES; its detail '
+           'names the item', 'SCENE_OK spring_punch_sky_aztec: YES' in o10 and 'SCENE_OK spring_punch_sky_aztec: YES' in o10b
+           and any(x.endswith('(viewed (item 254 (a): viewed at the close of s143))') for x in o10))
+ok &= case('D10c the V of another session is printed in its own block (root, chain, seal); a V without its json is named',
+           any(x.startswith('V OF ANOTHER SESSION v143_01 (the pair of item 254 (e); root %s, chain go143a, seal %s)'
+                            % (xr.as_posix(), xp.as_posix())) for x in o10) and
+           'TAG v143_10 (V of another session, root %s): NO JSON' % xr.as_posix() not in o10 and
+           any(x.startswith('TAG v143_') and 'not made' in x for x in o10) is False)
+Path(xr, 'log_v143_01.txt').write_bytes(Path(xr, 'log_v143_01.txt').read_bytes() + b'x\n')
+v11 = S.entry_of('v143_01', str(R10), SH4)
+ok &= case('D11 a replaced V log of s143 (sha != its enter_scene end line of the s143 times.txt) -> the pair row FAIL, NO',
+           S.scene_ok(v11, w10, 'viewed', S.PAIRS[0])[0] == 'NO' and
+           row_ok(S.scene_ok(v11, w10, 'viewed', S.PAIRS[0])[1], 'V v143_01 and W w144_01') is False)
+xr, xp = xroot('D12')
+tp = xr / 'step2' / 'times.txt'
+tp.write_text(tp.read_text(encoding='utf-8').replace(' go143a v143_01 enter_scene end ', ' go144a v143_01 enter_scene end '),
+              encoding='utf-8')
+v12 = S.entry_of('v143_01', str(R10), SH4)
+ok &= case('D12 the enter_scene end line of the V written under the chain go144a (not its own go143a) -> no times sha, FAIL',
+           v12['times_log_sha'] is None and row_ok(S.scene_ok(v12, w10, 'viewed', S.PAIRS[0])[1], 'V v143_01 and W w144_01')
+           is False)
+xr, xp = xroot('D13', js_over={'v143_01': dict(guest_args='-lvl booster_construction')})
+v13 = S.entry_of('v143_01', str(R10), SH4)
+ok &= case('D13 the V of s143 run for another level (guest args) -> V not admitted and the pair row FAIL',
+           not adm_ok(v13) and row_ok(S.scene_ok(v13, w10, 'viewed', S.PAIRS[0])[1], 'V v143_01 and W w144_01') is False)
+xr, xp = xroot('D14', js_over={'v143_01': dict(prereg=dict(path=S.PRED_PATH, sha256=SH4))})
+v14 = S.entry_of('v143_01', str(R10), SH4)
+ok &= case('D14 the V of s143 must carry the seal of s143: a json with the seal of 144 -> V not admitted, NO',
+           not adm_ok(v14) and S.scene_ok(v14, w10, 'viewed', S.PAIRS[0])[0] == 'NO')
+xr, xp = xroot('D15')
+xp.write_text('the seal of 143 changed\n', encoding='utf-8')
+v15 = S.entry_of('v143_01', str(R10), SH4)
+ok &= case('D15 the seal of s143 changed after the V ran (its sha now != the json) -> V not admitted', not adm_ok(v15))
+R16 = BASE / 'D16'
+mk144(R16, 'v143_01', js=js144('v143_01'))
+mk144(R16, 'w144_01')
+S.XSRC = dict((v, dict(root=(BASE / 'D16' / 'none').as_posix(), chain='go143a', pred='none.md')) for v in OLD8)
+ok &= case('D16 a v143 V lying in the s144 root is not read (the V of another session comes from its own root only) -> V made '
+           'FAIL', S.entry_of('v143_01', str(R16), SH4) is None and
+           row_ok(S.scene_ok(None, S.entry_of('w144_01', str(R16), SH4), 'viewed', S.PAIRS[0])[1], 'V made') is False)
+xr, xp = xroot('D17')
+v17 = S.entry_of('v143_02', str(R10), SH4)
+ok &= case('D17 the V of level 01 of s143 offered as the pair of level 02 (w144_02) -> NO by the pair row',
+           S.scene_ok(S.entry_of('v143_01', str(R10), SH4), S.entry_of('w144_01', str(R10), SH4), 'viewed',
+                      S.PAIRS[1])[0] == 'NO' and v17 is not None)
+# the W stop key: before / after the first GuestOut line
+STOPW = [VF, ft(1, 20000, 5)] + REP
+e = S.entry_of('w144_09', mk144(BASE / 'D18a', 'w144_09', lines=STOPW), SH4)
+ok &= case('D18 a W stopped by validation before the first GuestOut line -> stop key "VALIDATION_STOP --- Error ---", no '
+           'GuestOut position, outcome NOT_ENTERED (no entry line)', e['wkey'] == 'VALIDATION_STOP --- Error ---' and
+           e['guestout'] is None and e['outcome'] == 'NOT_ENTERED')
+e = S.entry_of('w144_09', mk144(BASE / 'D18b', 'w144_09', lines=wl('rocket_hourglass', [150000] * 300) + REP), SH4)
+ok &= case('D18b a W stopped in the game after GuestOut (the B35 expectation for mini_giants_garden) -> VALIDATION_STOP, '
+           'entered, NO stop key (it does not count for the two-W rule)',
+           e['wkey'] is None and e['derive']['entered'] and e['outcome'] == 'VALIDATION_STOP' and e['guestout'] is not None)
+e = S.entry_of('w144_09', mk144(BASE / 'D18c', 'w144_09', lines=[VF, ft(1, 20000, 5)], std=REP), SH4)
+ok &= case('D18c no GuestOut line in the log and the stop report in the emulator stdout -> key from the stdout marker',
+           e['wkey'] == 'VALIDATION_STOP --- Error ---')
+e = S.entry_of('w144_09', mk144(BASE / 'D18d', 'w144_09', std=REP), SH4)
+ok &= case('D18d a GuestOut line in the log and a marker in the stdout only (no position against the log) -> no key',
+           e['wkey'] is None and e['outcome'] == 'VALIDATION_STOP')
+e = S.entry_of('w144_09', mk144(BASE / 'D18e', 'w144_09', lines=[VF, ft(1, 20000, 5)],
+                                js=js144('w144_09', attempt=dict(outcome='exited', hold_s=None))), SH4)
+e2 = S.entry_of('w144_09', mk144(BASE / 'D18f', 'w144_09', lines=[VF, ft(1, 20000, 5)],
+                                 js=js144('w144_09', attempt=dict(outcome='timeout', hold_s=None))), SH4)
+ok &= case('D18e no GuestOut, no marker: exited -> key "K1 hold_exit / ENDED / exited"; a timeout (no marker) -> no key',
+           e['wkey'] == 'K1 hold_exit / ENDED / exited' and e2['wkey'] is None)
+e = S.entry_of('w144_09', mk144(BASE / 'D18g', 'w144_09', lines=[VF, ft(1, 20000, 5), 'GpuHangAbort: x', start('')] + REP),
+               SH4)
+ok &= case('D18g the first marker before the GuestOut line decides the key (GpuHangAbort before, the report after) -> K2',
+           e['wkey'] == 'K2 GpuHangAbort:')
+lg = BASE / 'D18h'
+mk144(lg, 'w144_09', lines=STOPW)
+(lg / 'log_w144_09.txt').unlink()
+e = S.entry_of('w144_09', str(lg), SH4)
+ok &= case('D18h a W without its log has no key and fails the form line row itself (no log is no proof of the form)',
+           e['wkey'] is None and [a[1] for a in e['admit'] if a[0].startswith('W form: no')] == [False])
+fw = S.fmt_entry(S.entry_of('w144_09', str(BASE / 'D18a'), SH4))
+ok &= case('D18i the W print carries the form line and the stop-before-GuestOut line with its key',
+           any(x.startswith('  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 0; executor member [I]')
+               for x in fw)
+           and '  W stop before the first GuestOut line (item 254 (k)(4)): first GuestOut at None; stop key VALIDATION_STOP '
+           '--- Error ---' in fw)
+ok &= case('D19 stop_check_w: two in a row with one key -> stop; different keys or a keyless W between -> no; the last two of '
+           'three', S.stop_check_w([('a', 'K'), ('b', 'K')]) == (True, ['a', 'b']) and
+           S.stop_check_w([('a', 'K'), ('b', 'L')]) == (False, []) and
+           S.stop_check_w([('a', 'K'), ('b', None), ('c', 'K')]) == (False, []) and
+           S.stop_check_w([('a', 'L'), ('b', 'K'), ('c', 'K')]) == (True, ['b', 'c']) and S.stop_check_w([]) == (False, []))
+
+
+def sc_main(root, tag):
+    b = io.StringIO()
+    with contextlib.redirect_stdout(b):
+        rc = S.main(['--stop-check', tag], root=str(root), pred=str(PR4))
+    return rc, b.getvalue()
+
+
+R20 = BASE / 'D20'
+mk144(R20, 'w144_00')
+mk144(R20, 'w144_01', lines=STOPW)
+mk144(R20, 'w144_02', lines=STOPW)
+r20a = sc_main(R20, 'w144_02')
+r20b = sc_main(R20, 'w144_03')
+ok &= case('D20 two W in a row stopped before GuestOut with one key: before w144_03 -> rc 5 naming them; before w144_02 (one) '
+           '-> rc 0; the control good -> not met',
+           r20a[0] == 0 and r20b[0] == 5 and 'STOP RULE W before w144_03 (two W in a row stopped before the first GuestOut line '
+           'with one key): STOP w144_01,w144_02' in r20b[1] and 'STOP RULE CONTROL before w144_03: not met' in r20b[1])
+R21 = BASE / 'D21'
+mk144(R21, 'w144_00')
+mk144(R21, 'w144_01', lines=STOPW)
+mk144(R21, 'w144_02', lines=wl('booster_construction', [150000] * 300) + REP)
+ok &= case('D21 one W stopped before GuestOut and the next stopped in the game after GuestOut -> rc 0 before w144_03',
+           sc_main(R21, 'w144_03')[0] == 0)
+R22 = BASE / 'D22'
+for t in ['w144_%02d' % i for i in range(0, 9)]:
+    mk144(R22, t)
+mk144(R22, 'v144_09')
+mk144(R22, 'w144_09', lines=STOPW)
+mk144(R22, 'v144_10')
+mk144(R22, 'w144_10', lines=STOPW)
+ok &= case('D22 two W separated by a V (w144_09, v144_10, w144_10) count as two W in a row -> rc 5 before v144_11; rc 0 before '
+           'w144_10', sc_main(R22, 'v144_11')[0] == 5 and sc_main(R22, 'w144_10')[0] == 0)
+R23 = BASE / 'D23'
+mk144(R23, 'w144_00', lines=STOPW)
+r23 = sc_main(R23, 'w144_01')
+ok &= case('D23 the control W stopped by validation -> rc 5 before the first tag; both readings say stop',
+           r23[0] == 5 and 'STOP RULE CONTROL before w144_01: STOP; letter stop (death marker VALIDATION_STOP --- Error ---; '
+           '[Vulkan][E] 1); executor reading [I] (the gate) stop' in r23[1])
+R24 = BASE / 'D24'
+mk144(R24, 'w144_00', js=js144('w144_00', form=False))
+r24 = sc_main(R24, 'w144_01')
+ok &= case('D24 the control W out of the form only (no env, otherwise clean) -> letter pass, the gate (item 254 (k)(7)) stop rc 5',
+           r24[0] == 5 and 'letter pass (none); executor reading [I] (the gate) stop (W admitted (W form: KYTY_PIPELINE_PRECACHE=0'
+           in r24[1])
+R25 = BASE / 'D25'
+mk144(R25, 'w144_00', lines=[VF] + [ft(i, 16667, 5) for i in range(1, 50)],
+      js=js144('w144_00', attempt=dict(outcome='timeout', hold_s=None, ft_tail=None)))
+r25 = sc_main(R25, 'w144_01')
+ok &= case('D25 the control W not entered without a marker (timeout) -> letter pass, gate stop rc 5 (W entered FAIL)',
+           r25[0] == 5 and 'letter pass (none)' in r25[1] and 'W entered' in r25[1])
+R26 = BASE / 'D26'
+mk144(R26, 'w144_00', lines=wl(SKY) + ['[Vulkan][E][1]: Validation Error: x'])
+r26 = sc_main(R26, 'w144_01')
+R27 = BASE / 'D27'
+R27.mkdir(parents=True, exist_ok=True)
+(R27 / 'attempt_w144_00.txt').write_text('made\n')
+r27 = sc_main(R27, 'w144_01')
+r27b = sc_main(BASE / 'D27none', 'w144_01')
+ok &= case('D26 a [Vulkan][E] line in the control W without a death marker -> letter stop rc 5; an attempt of the control '
+           'without json -> gate stop rc 5; a control not made -> "not made", rc 0',
+           r26[0] == 5 and 'letter stop ([Vulkan][E] 1)' in r26[1] and r27[0] == 5 and
+           'attempt made without json (instrument)' in r27[1] and r27b[0] == 0 and
+           'STOP RULE CONTROL before w144_01: not made' in r27b[1])
+o27 = S.summary(str(R27), SH4, None)[0]
+ok &= case('D26d the summary of a series whose control W attempt has no json: the control line says STOP by the gate',
+           any(x.startswith('CONTROL W w144_00 (underwater_aerial_garden, item 254 (k)(4)): STOP; letter (death marker or '
+                            '[Vulkan][E]) pass (none); executor reading [I] (any W row or admission row failing; the gate) stop '
+                            '(attempt made without json (instrument))') for x in o27))
+R28 = BASE / 'D28'
+for t in ['w144_%02d' % i for i in range(0, 9)]:
+    mk144(R28, t)
+for t in ('v144_09', 'w144_09', 'v144_10', 'w144_10', 'v144_11'):
+    mk144(R28, t, lines=[ft(i, 16667) for i in range(1, 50)], js=js144(t, attempt=dict(outcome='timeout', hold_s=None)))
+r28 = sc_main(R28, 'w144_11')
+r28b = sc_main(R28, 'v144_11')
+ok &= case('D28 three census V in a row not entered with one key -> rc 5 before w144_11 (the W not entered without a marker '
+           'have no key); two of them -> rc 0 before v144_11',
+           r28[0] == 5 and 'STOP RULE before w144_11: STOP v144_09,v144_10,v144_11' in r28[1] and r28b[0] == 0)
+ok &= case('D28b stop-check of an unknown tag (a v143 V, a 143 tag) -> rc 2',
+           sc_main(R28, 'v143_01')[0] == 2 and sc_main(R28, 'w143_01')[0] == 2)
+# the summary of profile 144
+R29 = BASE / 'D29'
+PR29 = R29 / 'pred.md'
+R29.mkdir(parents=True, exist_ok=True)
+PR29.write_text('fixture seal 144 summary\n', encoding='utf-8')
+SH29 = hashlib.sha256(PR29.read_bytes()).hexdigest()
+xr, xp = xroot('D29x', tags=('v143_01', 'v143_02'))
+SKIP = ['AsyncPipelines: skipped draw (pipeline not ready) frame=5', 'AsyncPipelines: skipped draw (pipeline not ready) frame=5',
+        'AsyncPipelines: skipped draw (pipeline not ready) frame=7']
+for t in ['w144_%02d' % i for i in range(0, 9)] + ['v144_09', 'w144_09', 'v144_10']:
+    lines = None
+    if t == 'v144_09':
+        lines = [PRE] + scene_lines('rocket_hourglass', v_post()) + SKIP
+    if t == 'v144_10':
+        lines = [PRE] + scene_lines('pot_treasure_cave', [16667] * 700 + [150000] + list(v_post()))
+    if t == 'w144_02':
+        lines = STOPW
+    mk144(R29, t, lines=lines, js=dict(js144(t), prereg=dict(path=S.PRED_PATH, sha256=SH29)))
+o29 = S.summary(str(R29), SH29, None)[0]
+o29v = S.summary(str(R29), SH29, 'viewed')[0]
+ok &= case('D29 the levels line over 20 pairs: level 01 (v143_01 + w144_01) YES, level 02 (w144_02 stopped) NO, v144_09 pair '
+           'PENDING_SHEET without --sheet, YES with viewed',
+           'SCENE_OK spring_punch_sky_aztec: YES' in o29 and 'SCENE_OK booster_construction: NO' in o29 and
+           'SCENE_OK rocket_hourglass: PENDING_SHEET' in o29 and 'SCENE_OK LEVELS: YES 1, PENDING_SHEET 1, NO 18 of 20' in o29
+           and 'SCENE_OK rocket_hourglass: YES' in o29v and 'SCENE_OK LEVELS: YES 2, PENDING_SHEET 0, NO 18 of 20' in o29v)
+ok &= case('D30 the control line PASS, the W form line (V 4 of 4 made with the line incl. the two v143, W 10 of 10), the census '
+           'header of repeated entries, the map row marked "repeated entry", the halves of six, the W stop line',
+           'CONTROL W w144_00 (underwater_aerial_garden, item 254 (k)(4)): PASS; letter (death marker or [Vulkan][E]) pass '
+           '(none); executor reading [I] (any W row or admission row failing; the gate) pass (none)' in o29 and
+           'W FORM (item 254 (e)): V with the "PipelinePrecache: N recipes ->" line and no KYTY_PIPELINE_PRECACHE 4 of 4 made; '
+           'W with KYTY_PIPELINE_PRECACHE=0 and no such line in the log 10 of 10 made; violated: none; executor member [I] (item 258 '
+           '(d), not in the verdict; a hit is a question to the lead): W with the line in the emulator stdout: none' in o29 and
+           'CENSUS = the V tags v144_09..v144_20, REPEATED entries (item 254 (k)(2)): the map rows and the forms B5 / B5a / B33 '
+           'below are of repeated entries, apart from the cold entries of s142 / s143' in o29 and
+           'CENSUS made 2 of 12 (of them attempt made without json 0), admitted 2' in o29 and
+           any(x.startswith('    map (A) row rocket_hourglass (repeated entry): outcome on 120 s HOLDS_120') for x in o29) and
+           'FORMS second reading by the order (shared caches warm from earlier runs): first six B5a 0/6 B5 0/6; last six B5a '
+           '0/6 B5 0/6' in o29 and
+           'STOP RULE W (item 254 (k)(4): two W in a row stopped before the first GuestOut line with one key): not met; keys '
+           'w144_02 VALIDATION_STOP --- Error ---' in o29)
+ok &= case('D31 the census forms read the repeated-entry V only (v144_10 K3 on the hold -> B33 1/12); the W and the v143 V are '
+           'not in it', 'FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 1/12 [c] (admitted and entered 2) '
+           'v144_10; executor variant (the hold within 120 s of presented time after the entry line): 1/12' in o29 and
+           not any(x.startswith('  v143_') or x.startswith('  w144_') for x in o29 if ' first ' in x and ' K2 ' in x))
+ok &= case('D32 the skipped draws of a V: 3 lines, 2 frames by distinct frame= ids (debt D-7), the reading named in the print',
+           '  AsyncPipelines skipped draw: 3 lines, 2 frames (distinct frame= ids, debt D-7; counted, not fatal)' in o29)
+xr2 = BASE / 'D29x' / 'x143'
+(xr2 / 'v143_01.json').unlink()
+o29n = S.summary(str(R29), SH29, None)[0]
+ok &= case('D33 the v143 V without its json -> "NO JSON" line and level 01 NO (V made FAIL)',
+           'TAG v143_01 (V of another session, root %s): NO JSON' % xr2.as_posix() in o29n and
+           'SCENE_OK spring_punch_sky_aztec: NO' in o29n)
+mk144(R29, 'w144_09', lines=wl('rocket_hourglass'), js=dict(js144('w144_09', form=False),
+                                                           prereg=dict(path=S.PRED_PATH, sha256=SH29)))
+o29f = S.summary(str(R29), SH29, 'viewed')[0]
+ok &= case('D34 a W out of the form in the summary: the W FORM line names it, its level is NO by "W admitted"',
+           any(x.startswith('W FORM (item 254 (e)):') and 'violated: w144_09;' in x for x in o29f) and
+           'SCENE_OK rocket_hourglass: NO' in o29f and
+           any(x.startswith('  FAIL W admitted (') and 'W form' in x for x in block(o29f, 'SCENE_OK rocket_hourglass: NO')))
+_b = io.StringIO()
+with contextlib.redirect_stdout(_b):
+    rsh = S.main(['--summary', '--sheet', 'viewed', '--sheet-tags', 'v144_10'], root=str(R29), pred=str(PR29))
+o35 = _b.getvalue().split('\n')
+ok &= case('D35 --sheet-tags v144_10: the v144_09 pair falls back to PENDING_SHEET / NO by its rows; the v143 V stay viewed',
+           rsh == 0 and 'SCENE_OK rocket_hourglass: NO' in o35 and 'SCENE_OK spring_punch_sky_aztec: NO' in o35 and
+           any(x.endswith('(viewed (item 254 (a): viewed at the close of s143))') for x in o35))
+S.XSRC = dict(XSRC_REAL)
+REQ144 = ('go144a.sh', 'sc144.py', 'test_sc144.py', 'mut_sc144.py', 'enter_scene.py', 'sheet142.py', 'fgcpu144.py',
+          'test_fgcpu144.py', 'test_go144a.py', 'C:/kyty/scripts/s51_vidglitch.py', 'cachemf144.py', 'lockcheck144.py',
+          'test_tools144.py', 'step2/next_one.sh', 'step2/call_one.sh', 'step2/wait_one.sh', 'step2/apichk144.py',
+          'C:/kyty/s143/step2/times.txt', 'C:/kyty/s143/pred/02_sc143.md')
+ok &= case('D36 the seal of 144 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, s51_vidglitch.py, '
+           'the tools, the step 2 wrappers with the API check, and the s143 times.txt and seal the pairs read',
+           all(n in S.SEALED_NAMES for n in REQ144) and len(S.SEALED_NAMES) == 24)
+rs4 = BASE / 'seal144'
+rs4.mkdir()
+shutil.copyfile(SRC, rs4 / 'sc144.py')
+ls4 = []
+for name in S.SEALED_NAMES:
+    if name.startswith('C:/kyty/s143/'):
+        sh = 'cd' * 32
+    elif name.startswith('C:/'):
+        sh = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+    elif name != 'sc144.py':
+        (rs4 / name).parent.mkdir(parents=True, exist_ok=True)
+        (rs4 / name).write_bytes(('fixture ' + name).encode())
+        sh = hashlib.sha256((rs4 / name).read_bytes()).hexdigest()
+    else:
+        sh = hashlib.sha256(Path(SRC).read_bytes()).hexdigest()
+    ls4.append('seal: %s %s' % (sh, name))
+(rs4 / 'pred.md').write_text('seal 144\n' + '\n'.join(ls4) + '\n', encoding='utf-8')
+g4, r4 = S.check_seal(str(rs4 / 'pred.md'), str(rs4), SRC)
+ok &= case('D37 the seal check of 144: the scorer by sc144.py; an outside file (C:/...) is hashed at its own path - a wrong '
+           'sha of the s143 times.txt fails the check', not g4 and
+           [r[0] for r in r4 if not r[1]] == ['C:/kyty/s143/pred/02_sc143.md', 'C:/kyty/s143/step2/times.txt'] and
+           [r for r in r4 if r[0] == 'this scorer in the seal'][0][1] is True)
+# the regression of item 254 (k)(5) on a synthetic profile 143
+RG3 = BASE / 'rg143'
+RG3.mkdir()
+P143_REAL = dict(S.P143)
+B33_143 = S.REGRESS143_B33
+S.P143 = dict(S.P143, ROOT=RG3.as_posix(), PRED_PATH=(RG3 / 'pred.md').as_posix())
+(RG3 / 'pred.md').write_text('fixture 143 regress\n', encoding='utf-8')
+SH3 = hashlib.sha256((RG3 / 'pred.md').read_bytes()).hexdigest()
+old = S.profile(S.P143)
+mk143(RG3, 'v143_01', None, dict(js143('v143_01'), prereg=dict(path=S.PRED_PATH, sha256=SH3)))
+mk143(RG3, 'w143_01', None, dict(js143('w143_01'), prereg=dict(path=S.PRED_PATH, sha256=SH3)))
+mk143(RG3, 'v143_02', scene_lines(LV2, [16667] * 700 + [150000] + [16667] * 7300),
+      dict(js143('v143_02'), prereg=dict(path=S.PRED_PATH, sha256=SH3)))
+mk143(RG3, 'v143_03', scene_lines(LV3, [16667] * 700 + [150000] + [16667] * 7300),
+      dict(js143('v143_03'), prereg=dict(path=S.PRED_PATH, sha256=SH3), binary_sha256=OTHER))
+out3 = S.summary(str(RG3), SH3, 'viewed')[0]
+S.profile(old)
+EX3 = RG3 / 'expected.txt'
+EX3.write_bytes(('\r\n'.join(out3) + '\r\n').encode('ascii'))
+S.REGRESS143_B33 = ('v143_02',)
+ok3, l3 = S.regress143(str(EX3))
+ok &= case('D38 regress143 on a synthetic profile 143: byte-identical, B33 v143_02 -> PASS; the profile 144 is restored; the '
+           'profile 143 summary has no line of 144 (no control, no W FORM, no repeated entry, no stop-W line)',
+           ok3 and l3[-1] == 'REGRESS143: PASS' and 'byte-identical yes; differing lines 0' in l3[0] and S.ROOT == 'C:/kyty/s144'
+           and S.CHAIN == 'go144a' and S.FORM144 is True and S.SEQ[0] == 'w144_00' and S.XSRC == XSRC_REAL and
+           'SCENE_OK spring_punch_sky_aztec: YES' in out3 and
+           not any(s in x for x in out3 for s in ('CONTROL W', 'W FORM', 'repeated entry', 'STOP RULE W', 'precache form',
+                                                 'distinct frame=', 'of its own session', 'V OF ANOTHER SESSION')))
+EX3.write_bytes(('\r\n'.join(out3[:3] + ['changed'] + out3[4:]) + '\r\n').encode('ascii'))
+ok3b, l3b = S.regress143(str(EX3))
+EX3.write_bytes(('\n'.join(out3) + '\n').encode('ascii'))
+ok3c, l3c = S.regress143(str(EX3))
+EX3.write_bytes(('\r\n'.join(out3) + '\r\n').encode('ascii'))
+S.REGRESS143_B33 = ('v143_01',)
+ok3d = S.regress143(str(EX3))[0]
+S.REGRESS143_B33 = ('v143_02',)
+ok3e = S.regress143(str(BASE / 'none143.txt'))[0]
+ok &= case('D39 regress143 fails on a changed line (DIFF line 4 printed), on LF only, on other B33 tags, on a missing file',
+           not ok3b and 'DIFF line 4 expected: changed' in l3b and not ok3c and 'byte-identical NO; differing lines 0' in l3c[0]
+           and not ok3d and not ok3e)
+_b = io.StringIO()
+with contextlib.redirect_stdout(_b):
+    rr3 = S.main(['--regress143'])
+ok &= case('D40 main --regress143 -> rc 1 against the real s143 summary from the fixture root', rr3 == 1 and
+           'REGRESS143: FAIL' in _b.getvalue())
+S.P143 = P143_REAL
+S.REGRESS143_B33 = B33_143
+ok &= case('D41 the real profile 143 and the regression constants of item 254 (g)(4), (k)(5)',
+           S.P143['ROOT'] == 'C:/kyty/s143' and S.P143['PRED_PATH'] == 'C:/kyty/s143/pred/02_sc143.md' and
+           S.P143['CHAIN'] == 'go143a' and S.P143['RUNS'] == 'runs143' and S.P143['SCORER'] == 'sc143.py' and
+           S.REGRESS143_B33 == ('v143_02', 'v143_07', 'v143_08', 'v143_09') and
+           S.REGRESS143_FILE == 'C:/kyty/s143/step4/summary143_viewed.txt' and S.REGRESS_FILE ==
+           'C:/kyty/s142/step4/summary142_viewed.txt')
+try:
+    ('\n'.join(o10 + o29 + o29v + o29n + o29f + o35 + fw + l3 + l3b + r20b[1].split('\n') + r23[1].split('\n') +
+               r24[1].split('\n'))).encode('cp1250', errors='strict')
+    ('\n'.join(o10 + o29 + o29f + fw + l3)).encode('ascii', errors='strict')
+    encd = True
+except UnicodeError:
+    encd = False
+ok &= case('D42 every line new in profile 144 is ASCII (strict cp1250 and ascii)', encd)

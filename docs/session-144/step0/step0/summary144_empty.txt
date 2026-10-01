@@ -1,0 +1,536 @@
+TAG w144_00: not made
+TAG w144_01: not made
+TAG w144_02: not made
+TAG w144_03: not made
+TAG w144_04: not made
+TAG w144_05: not made
+TAG w144_06: not made
+TAG w144_07: not made
+TAG w144_08: not made
+TAG v144_09: not made
+TAG w144_09: not made
+TAG v144_10: not made
+TAG w144_10: not made
+TAG v144_11: not made
+TAG w144_11: not made
+TAG v144_12: not made
+TAG w144_12: not made
+TAG v144_13: not made
+TAG w144_13: not made
+TAG v144_14: not made
+TAG w144_14: not made
+TAG v144_15: not made
+TAG w144_15: not made
+TAG v144_16: not made
+TAG w144_16: not made
+TAG v144_17: not made
+TAG w144_17: not made
+TAG v144_18: not made
+TAG w144_18: not made
+TAG v144_19: not made
+TAG w144_19: not made
+TAG v144_20: not made
+TAG w144_20: not made
+V OF ANOTHER SESSION v143_01 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_01 level spring_punch_sky_aztec outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log fa9d5a277a8428ed
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 156
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (364, 15691, 230); window 599 rows, hold 9944 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.0 s; after the first scene frame 333.6 s over 10543 frames; dt_us median 32926 max 317536
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(366, 317536)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(366, 317536)]; K3 hold none; 333.6 s over 10542 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 4
+  AsyncPipelines skipped draw: 796 lines, 6 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 267847 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 10911, .idx records 10911, FrameTrace rows in all 10906, after the first scene frame 10543; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 10911 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 3065825 sha 8419049ea6909b8e0f303292189220329aa6b2163a60006ce53800ae7f4c7265 (times.txt 8419049ea6909b8e0f303292189220329aa6b2163a60006ce53800ae7f4c7265); rec sha 2e59cb25fc7cc7d6f71cd13fc21b4050a587c30370d0f23b374668be0b49087f (times.txt 2e59cb25fc7cc7d6f71cd13fc21b4050a587c30370d0f23b374668be0b49087f); match yes
+V OF ANOTHER SESSION v143_02 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_02 level booster_construction outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log e1ced3960dc51a72
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 212
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (314, 18460, 231); window 599 rows, hold 13262 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.7 s; after the first scene frame 333.6 s over 13861 frames; dt_us median 19040 max 500792
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(316, 493705)]
+  K3 hold: [(1248, 500792)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1248, 500792)]
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(316, 493705)]; K3 hold [(1248, 500792)]; 333.5 s over 13860 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 5
+  AsyncPipelines skipped draw: 251 lines, 23 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 4 (lines 4, max 199115 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 14168, .idx records 14168, FrameTrace rows in all 14174, after the first scene frame 13861; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 14168 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2250676 sha 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33 (times.txt 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33); rec sha a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff (times.txt a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff); match yes
+V OF ANOTHER SESSION v143_03 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_03 level mini_astro_clock_tower outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log 507e16c582c26cfb
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 155
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (239, 15943, 265); window 599 rows, hold 9905 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.9 s; after the first scene frame 333.7 s over 10504 frames; dt_us median 33102 max 281471
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(241, 281471)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(241, 281471)]; K3 hold none; 333.7 s over 10503 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 4
+  AsyncPipelines skipped draw: 125 lines, 17 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 65098 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 10747, .idx records 10747, FrameTrace rows in all 10742, after the first scene frame 10504; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 10747 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2405363 sha 492c3b599a64f3a72a33365e5e133504b3d23611ed21048ee2fbaed8a579eb0e (times.txt 492c3b599a64f3a72a33365e5e133504b3d23611ed21048ee2fbaed8a579eb0e); rec sha 89e5b46c7931b3c46dc4297cadf011cdcd522cf6b6fd06076f01069be1b3b81b (times.txt 89e5b46c7931b3c46dc4297cadf011cdcd522cf6b6fd06076f01069be1b3b81b); match yes
+V OF ANOTHER SESSION v143_04 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_04 level path_maker_mana_tree outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log c16bd4213f29ca96
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 185
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (263, 26670, 267); window 599 rows, hold 11613 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.4 s; after the first scene frame 334.1 s over 12212 frames; dt_us median 31693 max 534733
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(265, 398312), (266, 534733), (486, 135864), (694, 143332)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(265, 398312), (266, 534733), (486, 135864), (694, 143332)]; K3 hold none; 334.1 s over 12211 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 5
+  AsyncPipelines skipped draw: 136 lines, 3 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 2 (lines 2, max 191601 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 12495, .idx records 12495, FrameTrace rows in all 12474, after the first scene frame 12212; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 12495 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 3241719 sha 6c56a6ace83bb4ae2570cecba886c1b9ac7bae4a98695cbdd51cd29315af7dc2 (times.txt 6c56a6ace83bb4ae2570cecba886c1b9ac7bae4a98695cbdd51cd29315af7dc2); rec sha 7e22e457b64531c6f9094e47d53582d9e8533551f144a8ecf518dd2da326e8f5 (times.txt 7e22e457b64531c6f9094e47d53582d9e8533551f144a8ecf518dd2da326e8f5); match yes
+V OF ANOTHER SESSION v143_05 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_05 level spring_punch_monster_cave outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log b90860585fed5e49
+  admission: PASS
+  attempt: outcome ok hold_s 330.2 hold_exit None ft_tail 188
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (211, 15391, 2288); window 599 rows, hold 11766 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.0 s; after the first scene frame 333.8 s over 12365 frames; dt_us median 31481 max 478545
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(213, 478545)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(213, 478545)]; K3 hold none; 333.8 s over 12364 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 4
+  AsyncPipelines skipped draw: 206 lines, 14 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 94601 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 12572, .idx records 12572, FrameTrace rows in all 12575, after the first scene frame 12365; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 12572 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2648330 sha 3892ea6f6ed379c9152ddf180592a9068ad817f0babb9ae8d299af9af5803829 (times.txt 3892ea6f6ed379c9152ddf180592a9068ad817f0babb9ae8d299af9af5803829); rec sha 97f24470a1a7fe86df78480a9a370e6618a84fc085a0952aa909af3e1604aced (times.txt 97f24470a1a7fe86df78480a9a370e6618a84fc085a0952aa909af3e1604aced); match yes
+V OF ANOTHER SESSION v143_06 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_06 level gulliver_island outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log ab2f365f70e526cf
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 251
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (211, 20348, 295); window 599 rows, hold 16414 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.1 s; after the first scene frame 333.0 s over 17013 frames; dt_us median 17569 max 365913
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(213, 365913)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(213, 365913)]; K3 hold none; 332.9 s over 17012 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 4
+  AsyncPipelines skipped draw: 57 lines, 9 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 2 (lines 2, max 151816 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 17239, .idx records 17239, FrameTrace rows in all 17223, after the first scene frame 17013; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 17239 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2631101 sha f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb (times.txt f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb); rec sha 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3 (times.txt 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3); match yes
+V OF ANOTHER SESSION v143_09 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_09 level booster_magic_lamp outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log 9e88d44686c24c7f
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 233
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (328, 656684, 10213); window 599 rows, hold 14656 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.4 s; after the first scene frame 332.4 s over 15255 frames; dt_us median 17823 max 152187
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): none
+  K3 hold: [(1148, 152187)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1148, 152187)]
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold [(1148, 152187)]; 332.4 s over 15254 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 5
+  AsyncPipelines skipped draw: 46 lines, 9 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 5 (lines 5, max 226711 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 15587, .idx records 15587, FrameTrace rows in all 15582, after the first scene frame 15255; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 15587 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2156781 sha 80a87d5ba45ee554ed472f5c6a1f6e294b7930b9fbf57003e4a93fa1024faf45 (times.txt 80a87d5ba45ee554ed472f5c6a1f6e294b7930b9fbf57003e4a93fa1024faf45); rec sha 584ce991b5ff32862e1b29d6d6bad343fe4e176ba1762f4c7d16bf56f2ebe803 (times.txt 584ce991b5ff32862e1b29d6d6bad343fe4e176ba1762f4c7d16bf56f2ebe803); match yes
+V OF ANOTHER SESSION v143_10 (the pair of item 254 (e); root C:/kyty/s143, chain go143a, seal C:/kyty/s143/pred/02_sc143.md):
+TAG v143_10 level rocket_space_station outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log d6d5dd4ad3db351b
+  admission: PASS
+  attempt: outcome ok hold_s 330.2 hold_exit None ft_tail 210
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (388, 16976, 1544); window 599 rows, hold 13044 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.8 s; after the first scene frame 334.0 s over 13643 frames; dt_us median 19353 max 746834
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(390, 746834), (912, 117288)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(390, 746834), (912, 117288)]; K3 hold none; 334.0 s over 13642 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  precache form (item 254 (e)): "PipelinePrecache: N recipes ->" lines log 1; executor member [I] (item 258 (d), not in the verdict): the same line in the emulator stdout 0, any "PipelinePrecache:" line 4
+  AsyncPipelines skipped draw: 109 lines, 34 frames (distinct frame= ids, debt D-7; counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 60965 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 14022, .idx records 14022, FrameTrace rows in all 14030, after the first scene frame 13643; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 14022 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2319230 sha 9146a27dff557fcc47259a3d8c793159892a327afda9b9677306b0bf65b3fbd7 (times.txt 9146a27dff557fcc47259a3d8c793159892a327afda9b9677306b0bf65b3fbd7); rec sha 3e9af0cb5c49c0bf264bbc48fed856ffc0db999e0fbec5c1a6bfcdd378c11857 (times.txt 3e9af0cb5c49c0bf264bbc48fed856ffc0db999e0fbec5c1a6bfcdd378c11857); match yes
+SCENE_OK spring_punch_sky_aztec: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((364, 15691, 230))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333630585)
+  PASS V >= 3000 presented frames after the first scene frame (10543)
+  PASS V video >= 3000 frames (10911)
+  PASS V video frames >= FrameTrace rows in all - 100 (10911 vs 10906)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_01 and W w144_01 are the pair of one level (guest args -lvl spring_punch_sky_aztec and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl spring_punch_sky_aztec, level spring_punch_sky_aztec, log fa9d5a277a8428ed, times.txt fa9d5a277a8428ed / W none)
+  PASS V sheet file sheet_v143_01.png present, non-empty; its sha256 and the sha256 of rec_v143_01.mp4 = step2/times.txt (size 3065825 sha 8419049ea6909b8e times 8419049ea6909b8e rec 2e59cb25fc7cc7d6 times 2e59cb25fc7cc7d6)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 32926 max 317536; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK booster_construction: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((314, 18460, 231))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333575862)
+  PASS V >= 3000 presented frames after the first scene frame (13861)
+  PASS V video >= 3000 frames (14168)
+  PASS V video frames >= FrameTrace rows in all - 100 (14168 vs 14174)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_02 and W w144_02 are the pair of one level (guest args -lvl booster_construction and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl booster_construction, level booster_construction, log e1ced3960dc51a72, times.txt e1ced3960dc51a72 / W none)
+  PASS V sheet file sheet_v143_02.png present, non-empty; its sha256 and the sha256 of rec_v143_02.mp4 = step2/times.txt (size 2250676 sha 4965266b37d5600a times 4965266b37d5600a rec a1baa2963fa82634 times a1baa2963fa82634)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 19040 max 500792; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK mini_astro_clock_tower: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((239, 15943, 265))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333743905)
+  PASS V >= 3000 presented frames after the first scene frame (10504)
+  PASS V video >= 3000 frames (10747)
+  PASS V video frames >= FrameTrace rows in all - 100 (10747 vs 10742)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_03 and W w144_03 are the pair of one level (guest args -lvl mini_astro_clock_tower and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl mini_astro_clock_tower, level mini_astro_clock_tower, log 507e16c582c26cfb, times.txt 507e16c582c26cfb / W none)
+  PASS V sheet file sheet_v143_03.png present, non-empty; its sha256 and the sha256 of rec_v143_03.mp4 = step2/times.txt (size 2405363 sha 492c3b599a64f3a7 times 492c3b599a64f3a7 rec 89e5b46c7931b3c4 times 89e5b46c7931b3c4)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 33102 max 281471; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK path_maker_mana_tree: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((263, 26670, 267))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (334117673)
+  PASS V >= 3000 presented frames after the first scene frame (12212)
+  PASS V video >= 3000 frames (12495)
+  PASS V video frames >= FrameTrace rows in all - 100 (12495 vs 12474)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_04 and W w144_04 are the pair of one level (guest args -lvl path_maker_mana_tree and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl path_maker_mana_tree, level path_maker_mana_tree, log c16bd4213f29ca96, times.txt c16bd4213f29ca96 / W none)
+  PASS V sheet file sheet_v143_04.png present, non-empty; its sha256 and the sha256 of rec_v143_04.mp4 = step2/times.txt (size 3241719 sha 6c56a6ace83bb4ae times 6c56a6ace83bb4ae rec 7e22e457b64531c6 times 7e22e457b64531c6)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 31693 max 534733; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK spring_punch_monster_cave: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((211, 15391, 2288))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.2)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333845317)
+  PASS V >= 3000 presented frames after the first scene frame (12365)
+  PASS V video >= 3000 frames (12572)
+  PASS V video frames >= FrameTrace rows in all - 100 (12572 vs 12575)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_05 and W w144_05 are the pair of one level (guest args -lvl spring_punch_monster_cave and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl spring_punch_monster_cave, level spring_punch_monster_cave, log b90860585fed5e49, times.txt b90860585fed5e49 / W none)
+  PASS V sheet file sheet_v143_05.png present, non-empty; its sha256 and the sha256 of rec_v143_05.mp4 = step2/times.txt (size 2648330 sha 3892ea6f6ed379c9 times 3892ea6f6ed379c9 rec 97f24470a1a7fe86 times 97f24470a1a7fe86)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 31481 max 478545; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK gulliver_island: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((211, 20348, 295))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (332958138)
+  PASS V >= 3000 presented frames after the first scene frame (17013)
+  PASS V video >= 3000 frames (17239)
+  PASS V video frames >= FrameTrace rows in all - 100 (17239 vs 17223)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_06 and W w144_06 are the pair of one level (guest args -lvl gulliver_island and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl gulliver_island, level gulliver_island, log ab2f365f70e526cf, times.txt ab2f365f70e526cf / W none)
+  PASS V sheet file sheet_v143_06.png present, non-empty; its sha256 and the sha256 of rec_v143_06.mp4 = step2/times.txt (size 2631101 sha f11573db55bf25f3 times f11573db55bf25f3 rec 87f324b5d4946146 times 87f324b5d4946146)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 17569 max 365913; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK booster_magic_lamp: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((328, 656684, 10213))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (332379309)
+  PASS V >= 3000 presented frames after the first scene frame (15255)
+  PASS V video >= 3000 frames (15587)
+  PASS V video frames >= FrameTrace rows in all - 100 (15587 vs 15582)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_09 and W w144_07 are the pair of one level (guest args -lvl booster_magic_lamp and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl booster_magic_lamp, level booster_magic_lamp, log 9e88d44686c24c7f, times.txt 9e88d44686c24c7f / W none)
+  PASS V sheet file sheet_v143_09.png present, non-empty; its sha256 and the sha256 of rec_v143_09.mp4 = step2/times.txt (size 2156781 sha 80a87d5ba45ee554 times 80a87d5ba45ee554 rec 584ce991b5ff3286 times 584ce991b5ff3286)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 17823 max 152187; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK rocket_space_station: NO
+  PASS V made ()
+  FAIL W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((388, 16976, 1544))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.2)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333976179)
+  PASS V >= 3000 presented frames after the first scene frame (13643)
+  PASS V video >= 3000 frames (14022)
+  PASS V video frames >= FrameTrace rows in all - 100 (14022 vs 14030)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  FAIL V v143_10 and W w144_08 are the pair of one level (guest args -lvl rocket_space_station and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V -lvl rocket_space_station, level rocket_space_station, log d6d5dd4ad3db351b, times.txt d6d5dd4ad3db351b / W none)
+  PASS V sheet file sheet_v143_10.png present, non-empty; its sha256 and the sha256 of rec_v143_10.mp4 = step2/times.txt (size 2319230 sha 9146a27dff557fcc times 9146a27dff557fcc rec 3e9af0cb5c49c0bf times 3e9af0cb5c49c0bf)
+  PASS sheet of V viewed by the lead (filled by the close) (viewed (item 254 (a): viewed at the close of s143))
+  info dt_us after the first scene frame: V median 19353 max 746834; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK rocket_hourglass: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_09 and W w144_09 are the pair of one level (guest args -lvl rocket_hourglass and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_09.png present, non-empty; its sha256 and the sha256 of rec_v144_09.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK pot_treasure_cave: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_10 and W w144_10 are the pair of one level (guest args -lvl pot_treasure_cave and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_10.png present, non-empty; its sha256 and the sha256 of rec_v144_10.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK bumper_enemy_snowy_canyon: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_11 and W w144_11 are the pair of one level (guest args -lvl bumper_enemy_snowy_canyon and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_11.png present, non-empty; its sha256 and the sha256 of rec_v144_11.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK big_hand_pirate_island: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_12 and W w144_12 are the pair of one level (guest args -lvl big_hand_pirate_island and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_12.png present, non-empty; its sha256 and the sha256 of rec_v144_12.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK timestop_casino: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_13 and W w144_13 are the pair of one level (guest args -lvl timestop_casino and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_13.png present, non-empty; its sha256 and the sha256 of rec_v144_13.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK ice_iceberg: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_14 and W w144_14 are the pair of one level (guest args -lvl ice_iceberg and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_14.png present, non-empty; its sha256 and the sha256 of rec_v144_14.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK sponge_dirty_bath: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_15 and W w144_15 are the pair of one level (guest args -lvl sponge_dirty_bath and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_15.png present, non-empty; its sha256 and the sha256 of rec_v144_15.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK hoover_beach: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_16 and W w144_16 are the pair of one level (guest args -lvl hoover_beach and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_16.png present, non-empty; its sha256 and the sha256 of rec_v144_16.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK volcano_mountain: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_17 and W w144_17 are the pair of one level (guest args -lvl volcano_mountain and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_17.png present, non-empty; its sha256 and the sha256 of rec_v144_17.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK voxel_world: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_18 and W w144_18 are the pair of one level (guest args -lvl voxel_world and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_18.png present, non-empty; its sha256 and the sha256 of rec_v144_18.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK enemy_gorilla: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_19 and W w144_19 are the pair of one level (guest args -lvl enemy_gorilla and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_19.png present, non-empty; its sha256 and the sha256 of rec_v144_19.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK mini_giants_garden: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v144_20 and W w144_20 are the pair of one level (guest args -lvl mini_giants_garden and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v144_20.png present, non-empty; its sha256 and the sha256 of rec_v144_20.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+SCENE_OK LEVELS: YES 0, PENDING_SHEET 0, NO 20 of 20
+CONTROL W w144_00 (underwater_aerial_garden, item 254 (k)(4)): not made; letter (death marker or [Vulkan][E]) pass (none); executor reading [I] (any W row or admission row failing; the gate) pass (none)
+W FORM (item 254 (e)): V with the "PipelinePrecache: N recipes ->" line and no KYTY_PIPELINE_PRECACHE 8 of 8 made; W with KYTY_PIPELINE_PRECACHE=0 and no such line in the log 0 of 0 made; violated: none; executor member [I] (item 258 (d), not in the verdict; a hit is a question to the lead): W with the line in the emulator stdout: none
+CENSUS = the V tags v144_09..v144_20, REPEATED entries (item 254 (k)(2)): the map rows and the forms B5 / B5a / B33 below are of repeated entries, apart from the cold entries of s142 / s143
+CENSUS made 0 of 12 (of them attempt made without json 0), admitted 0
+FORM B5a (a frame dt >= 1 s after the first scene frame): 0/12 [c] (admitted and entered 0)
+FORM B5 (a frame dt >= 100 ms in the entry window, no warm base): 0/12 [c] (admitted and entered 0)
+FORM B5a variant 120 s (a frame dt >= 1 s within 120 s of presented time after the entry line; the class decision and pooling with s142 use this one, item 242 (c)): 0/12 [c] none; K2 by place on the whole V: entry 0 none, hold 0 none
+K2 ON THE HOLD AFTER 120 s ONLY (a separate row (B) of register F per level, form edes122, not B5a; item 242 (c)): none
+FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 0/12 [c] (admitted and entered 0) none; executor variant (the hold within 120 s of presented time after the entry line): 0/12
+FORMS second reading by the order (shared caches warm from earlier runs): first six B5a 0/6 B5 0/6; last six B5a 0/6 B5 0/6
+STOP RULE W (item 254 (k)(4): two W in a row stopped before the first GuestOut line with one key): not met; keys none
+STOP RULE (item 221 (g)(4)): not met
+CACHE CONTINUITY (item 242 (b): manifest after N = manifest before N+1; roots shader, pipeline, glcache)
+FORMS without the tags after the first cache break (item 242 (b)): no break - the forms above stand

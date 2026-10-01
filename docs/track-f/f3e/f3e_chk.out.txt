@@ -1,0 +1,45 @@
+== f3d_a1 big_hand_pirate_island log sha256 c0ef9f475f53a89d9f131dfd8ee31f12f2d0c902a0f8c695664539d7bc689ddf
+  fault pages 2; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 2945; sum dt 122.2 s; mean dt 41488; frames >= 1 s 0; max dt 537875; frames >= 100 ms after 600 5
+== f3d_a2 big_hand_pirate_island log sha256 4ab06aed88996bd7287b34fcb4bf74eeee59c50d9eb5266beeff8932f384ba23
+  fault pages 2; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 2977; sum dt 121.7 s; mean dt 40863; frames >= 1 s 0; max dt 85335; frames >= 100 ms after 600 0
+== f3d_a3 voxel_world log sha256 8d2bd3d026a1dd45b52a2db9afc8b014dc1b28274506451b7769350989331b38
+  fault pages 21; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 7306; sum dt 123.0 s; mean dt 16832; frames >= 1 s 0; max dt 843146; frames >= 100 ms after 600 1
+== f3d_a4 voxel_world log sha256 3db1eb6d4b3589308c117299d3759a4e2ecbedeba465301f2b14ac7ae8219ad2
+  fault pages 21; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 7306; sum dt 122.1 s; mean dt 16714; frames >= 1 s 0; max dt 112462; frames >= 100 ms after 600 0
+== f3d_bv underwater_aerial_garden log sha256 9f35e4af2b82ab83dcd79fb8f50e48a08cce2c610d719f6dfb2cf6a1a780a94b
+  fault pages 36; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 8274; sum dt 334.4 s; mean dt 40416; frames >= 1 s 0; max dt 212664; frames >= 100 ms after 600 2
+== f3d_bw underwater_aerial_garden log sha256 954520f5239e8c8d9a918510208ca519899c3504f04e217f56c683939b5969af
+  fault pages 36; pairs []; low pages []
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26_fixb1b']; entry True; frames after first scene frame 2213; sum dt 326.1 s; mean dt 147360; frames >= 1 s 0; max dt 360237; frames >= 100 ms after 600 1608
+== f3d_c1 big_hand_pirate_island log sha256 cc77801ae758825fc87f30d93a49c1e101077756896f545b4963922227f08205
+  fault pages 3; pairs ['0x40253c000/0x4024000']; low pages ['0x4018000', '0x4024000']
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26']; entry True; frames after first scene frame 2788; sum dt 128.9 s; mean dt 46233; frames >= 1 s 0; max dt 483435; frames >= 100 ms after 600 5
+== f3d_c2 voxel_world log sha256 ced0424dd3b07d6d3d9e9880f48421a0dd57c467bcc544c713cfc9da7d82c973
+  fault pages 4; pairs ['0x401bc0000/0x4018000', '0x4024c0000/0x4024000']; low pages ['0x4018000', '0x4024000']
+  BvhLoopCapTrip 0; death markers 0 (err 0 lost 0 fatal 0); [Vulkan][E] 0; limit lines 0; minimized 0; recovering 0
+  translation cache lines 1 dirs ['variant_fixb26']; entry True; frames after first scene frame 7301; sum dt 122.9 s; mean dt 16831; frames >= 1 s 0; max dt 874668; frames >= 100 ms after 600 2
+rec_f3d_a2.mp4 c64bf52e63c1faf5b6a215435a64b5e28888bfec8697824848e93f39cd65f72b
+rec_f3d_a4.mp4 4aa2f3d2068a6dba81ead0682b648bb7007aa89cf2d845cf216b2c63a1ac3b46
+rec_f3d_bv.mp4 8258935ccfcd5f8ae772a7360067e6dfb6e12c2316b53c3ebaa644a37a94012f
+sheet_f3d_a2.png 029692f3679ec636589f2b848b552ff067d53a2b9a6c598b3b95d4a00529b711
+sheet_f3d_a4.png 1631a1154b1d9be8cd64f0061b3b16a70d86b6ebfb23b229705095ef8dde8f7e
+sheetpair_f3d_bv.png 5d3a55e5610ef421fb09747ab9eb3de19a3d30c4dc3ae2d54f86ef22ef19372a
+glitch_f3d_a2.txt 65677e3309825c5d5fa76378c30d430f5fdeb5b4a0014e229457a566f88de6b7
+glitch_f3d_a4.txt b8076e3863448f8193397d91a1a0290f280a39633a19fb732bca667721603e3f
+glitch_f3d_bv.txt ee2b23b1714eaf987ee5f624d1fd33b09d7ad1aad3bcc97bb95ae024cd687ccb
+glitch_f3d_a2.txt rec_f3d_a2.mp4: 3454 frames 960x540, index entries 3454 | one-frame glitches: 0
+glitch_f3d_a4.txt rec_f3d_a4.mp4: 7510 frames 960x540, index entries 7510 | one-frame glitches: 0
+glitch_f3d_bv.txt rec_f3d_bv.mp4: 8574 frames 960x540, index entries 8574 | one-frame glitches: 0
+F3E RECOUNT ALL OK

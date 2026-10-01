@@ -1,0 +1,23 @@
+WVAL w144_00 underwater_aerial_garden: lines E 0 W 936280 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 390979784; presented after the entry line at the limit [] s of 326.8 s
+WVAL w144_01 spring_punch_sky_aztec: lines E 0 W 951148 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 398011245; presented after the entry line at the limit [] s of 323.7 s
+WVAL w144_02 booster_construction: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [392282033] of 439143901; presented after the entry line at the limit ['167.0'] s of 322.3 s
+WVAL w144_03 mini_astro_clock_tower: lines E 0 W 496684 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 257777962; presented after the entry line at the limit [] s of 323.7 s
+WVAL w144_04 path_maker_mana_tree: lines E 0 W 668730 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 346120934; presented after the entry line at the limit [] s of 322.9 s
+WVAL w144_05 spring_punch_monster_cave: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [394161739] of 441241749; presented after the entry line at the limit ['142.3'] s of 324.0 s
+WVAL w144_06 gulliver_island: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [401690402] of 453376944; presented after the entry line at the limit ['164.1'] s of 319.4 s
+WVAL w144_07 booster_magic_lamp: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [429174146] of 450099377; presented after the entry line at the limit ['255.8'] s of 321.8 s
+WVAL w144_08 rocket_space_station: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [382237156] of 431810129; presented after the entry line at the limit ['139.1'] s of 324.6 s
+WVAL w144_09 rocket_hourglass: lines E 1 W 722001 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 288183319; presented after the entry line at the limit [] s of 89.2 s
+WVAL w144_10 pot_treasure_cave: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [393041088] of 456066254; presented after the entry line at the limit ['152.0'] s of 320.7 s
+WVAL w144_11 bumper_enemy_snowy_canyon: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [371641672] of 435447974; presented after the entry line at the limit ['101.4'] s of 319.5 s
+WVAL w144_12 big_hand_pirate_island: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [380580802] of 415077235; presented after the entry line at the limit ['167.2'] s of 318.7 s
+WVAL w144_13 timestop_casino: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [426338685] of 475466222; presented after the entry line at the limit ['200.5'] s of 316.1 s
+WVAL w144_14 ice_iceberg: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [443805115] of 490211276; presented after the entry line at the limit ['216.0'] s of 319.1 s
+WVAL w144_15 sponge_dirty_bath: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [372544788] of 414471331; presented after the entry line at the limit ['138.7'] s of 323.4 s
+WVAL w144_16 hoover_beach: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [438678947] of 521864681; presented after the entry line at the limit ['169.6'] s of 315.3 s
+WVAL w144_17 volcano_mountain: lines E 0 W 1000001 I 0 V 0 ?0; duplicate-limit lines 1 at bytes [393731921] of 492384566; presented after the entry line at the limit ['94.2'] s of 317.9 s
+WVAL w144_18 voxel_world: lines E 0 W 402918 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 383246210; presented after the entry line at the limit [] s of 315.4 s
+WVAL w144_19 enemy_gorilla: lines E 0 W 383433 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 253209569; presented after the entry line at the limit [] s of 318.8 s
+WVAL w144_20 mini_giants_garden: lines E 1 W 1 I 0 V 0 ?0; duplicate-limit lines 0 at bytes [] of 22149107; presented after the entry line at the limit [] s of 0.3 s
+W with the duplicate message limit reached: 13 of 21
+ALL DONE

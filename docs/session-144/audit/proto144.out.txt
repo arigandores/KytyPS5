@@ -1,0 +1,200 @@
+LOCK WINDOWS 33: first taken 2026-10-01T06:51:57Z, last released 2026-10-01T11:18:06Z; sum held 12385 s; gaps between tags min 64 s max 532 s median 86 s
+LOCK ORDER: w144_00 w144_01 w144_02 w144_03 w144_04 w144_05 w144_06 w144_07 w144_08 v144_09 w144_09 v144_10 w144_10 v144_11 w144_11 v144_12 w144_12 v144_13 w144_13 v144_14 w144_14 v144_15 w144_15 v144_16 w144_16 v144_17 w144_17 v144_18 w144_18 v144_19 w144_19 v144_20 w144_20
+RULE27 p283: files 9014; mtime inside a lock window 1; created inside a window (mtime outside) 0
+   IN-LOCK dir C:/kyty/p283/p8: 1 files, 2026-10-01T06:52:36Z (w144_00) .. 2026-10-01T06:52:36Z (w144_00); e.g. mkpred_p8b.py
+RULE27 f287: files 17224; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 s288: files 16908; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 KytyPS5/docs: files 2815; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 KytyPS5/src: files 451; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 ps5 em/docs: files 8; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 s144/lead: files 1; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 s144/step1: files 21; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 s143: files 2812; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 s142: files 1787; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 build: files 2665; mtime inside a lock window 0; created inside a window (mtime outside) 0
+RULE27 kyty root files: files 2765; mtime inside a lock window 0; created inside a window (mtime outside) 0
+TOPDIR C:/kyty/p283 mtime 2026-10-01T07:52:02Z in window None
+COMMIT KytyPS5 b8270604 2026-10-01T04:41:07Z - track P link P7 (HPP-306): ROADMAP p.252 - stage 1 read by the lead: sheets of four arms and own strips - jump
+COMMIT KytyPS5 d31de12b 2026-10-01T04:42:11Z - s143 step 3 audit (HPP-300): docs/session-143/audit/AUDIT143.md - own recount of the sc143 outputs by aud143.p
+COMMIT KytyPS5 615fca21 2026-10-01T04:45:29Z - s143 step 3 acceptance (HPP-300): ROADMAP p.253 - audit AUDIT143 d31de12b accepted (recount CONFIRMED, 0 MAJOR
+COMMIT KytyPS5 d3a8d951 2026-10-01T04:54:15Z - s143 close (HPP-301): ROADMAP p.254 - sheets of 10 videos viewed, no visible defects; SCENE_OK 0 of 10 (all W 
+COMMIT KytyPS5 522d2ec7 2026-10-01T04:56:12Z - s143 close (HPP-301): brief docs/next-session-144.md (sc144: control W Sky Garden, 8 W of sc143 levels in the 
+COMMIT KytyPS5 e83afd8e 2026-10-01T05:01:38Z - s143 close (HPP-301): docs/local-session-143.md (mirror of FACTS with the Close section), docs/session-143/clo
+COMMIT KytyPS5 5558b64c 2026-10-01T05:01:57Z - s143 close (HPP-301): ROADMAP p.255 - execution fact of p.254: order (instruction sha table, p.254, Process 1-
+COMMIT KytyPS5 21962461 2026-10-01T05:02:00Z - track F link F2c (HPP-310): W form by ROADMAP p.254(e) - f2c_b26.py --arm V|W positive control (W: no 'Pipelin
+COMMIT KytyPS5 1713a8be 2026-10-01T05:02:27Z - track F link F4a (HPP-335): B35 - KYTY_FIX_DUALSRC enables dualSrcBlend at device creation when supported (ROA
+COMMIT KytyPS5 df12abe5 2026-10-01T05:05:59Z - track F link F4a (HPP-335): report docs/track-f/f4a.md - B35 fix 1713a8be built 34d293ad (not installed, no sm
+COMMIT KytyPS5 c5520765 2026-10-01T05:13:39Z - track F link F2c (HPP-310): series harness without lock - go_f2c.sh (port of go143a.sh: f2c_a/f2c_b/f2c_c unde
+COMMIT KytyPS5 080fcf05 2026-10-01T05:15:16Z - track F link F4b (HPP-336): code review of F4a (B35, KYTY_FIX_DUALSRC) - PASS_WITH_FIXES, RC1-RC4
+COMMIT KytyPS5 21d432d5 2026-10-01T05:17:07Z - track S link S3b (HPP-325): harness/scorer/seal by the S3r review RC1-RC11 (ROADMAP p.250) and form W (p.254(e
+COMMIT KytyPS5 b1703ae6 2026-10-01T05:17:29Z - track F link F2c (HPP-310): ROADMAP p.256 - lead answers Q1-Q5 / F2b RC1, RC2, RC4: binary 5821482a with cavea
+COMMIT KytyPS5 49a6f77d 2026-10-01T05:19:13Z - track P link P8 (HPP-326): stage 2 harness gop8.sh (6 tags of ROADMAP p.252(e)(4); pw_C in the W form of p.254
+COMMIT KytyPS5 d05d261d 2026-10-01T05:21:42Z - track P link P8 (HPP-326): ROADMAP p.257 - lead answers Q1-Q8 of seal 01_p8.md (executor variants accepted: le
+COMMIT KytyPS5 9b3cc7e3 2026-10-01T05:42:15Z - track F link F2c (HPP-310): series under lock on 5821482a (ROADMAP p.256) - harness filled (binary, GLRESTORE=
+COMMIT KytyPS5 9dc3ce8f 2026-10-01T05:44:18Z - track F link F2c (HPP-310): ROADMAP p.258 - lead answer Q6: verdict of record for F2d = rule of p.256(a) with 
+COMMIT KytyPS5 f8396bed 2026-10-01T05:48:40Z - track F link F2d (HPP-311): ROADMAP p.259 - F2 accepted: B26b FIXED (track F count, not a (B) shipment; rule o
+COMMIT KytyPS5 e71ae5e6 2026-10-01T05:49:09Z - track P link P9 (HPP-327): adversarial review of the P8 harness, scorer and seal 01_p8.md - SOUND_WITH_CHANGES
+COMMIT KytyPS5 38f45e8d 2026-10-01T05:49:32Z - track S link S3c (HPP-339): ROADMAP p.260 - S3b (HPP-325) accepted by the lead: sha of 8 working files = repor
+COMMIT KytyPS5 9a0bff0a 2026-10-01T05:50:08Z - track F link F2d (HPP-311): chain F3 created per ROADMAP p.259(zh) - HPP-340 F3b (Emu Engineer, todo), HPP-341
+COMMIT KytyPS5 269eb9ba 2026-10-01T05:54:22Z - track P link P9 (HPP-327): ROADMAP p.261 - P9 accepted (lead recount rc_p9.py byte-equal 25469b3c; code quotes
+COMMIT KytyPS5 8a381312 2026-10-01T05:55:21Z - track F link F4c (HPP-337): harness without lock - go_f4c.sh (port of go_f2c.sh: series f4c_b/a/v/g under one 
+COMMIT KytyPS5 919f43e0 2026-10-01T05:59:40Z - s144 step 0 (HPP-330): harness go144a.sh (33 tags of ROADMAP p.254(k)(1), W form KYTY_PIPELINE_PRECACHE=0), sc
+COMMIT KytyPS5 4c45777b 2026-10-01T05:59:53Z - track F link F4c (HPP-337): ROADMAP p.262 - lead answers B1-B4 and F4b RC1-RC4 accepted: no F4c series on 34d2
+COMMIT KytyPS5 4d7e26c9 2026-10-01T06:00:39Z - track S link S4a (HPP-345): ROADMAP p.263 - variant (A) accepted: one write C:/kyty/s288/snap0/MANIFEST.txt as
+COMMIT KytyPS5 de2c87af 2026-10-01T06:06:14Z - s144 step 0 acceptance (HPP-330): ROADMAP p.264 - accepted; lead recount byte-equal (check-seal PASS, regress1
+COMMIT KytyPS5 df8d2df3 2026-10-01T06:11:03Z - track F link F3b (HPP-340): WIP - before-code map of ROADMAP p.259(e)(2) and the unbuilt V1 patch
+COMMIT KytyPS5 d4be1c33 2026-10-01T06:27:11Z - track S link S4 (HPP-348): ROADMAP p.265 - variant (A) accepted: sealed sc_s.py f43f016d RX_SHADER '(\S+)' mis
+COMMIT KytyPS5 206ffda0 2026-10-01T06:32:45Z - s144 step 1 (HPP-331): Red Team review of go144a.sh / sc144.py / seal pred/01_sc144.md - SOUND_WITH_CHANGES, R
+COMMIT KytyPS5 43fc0b63 2026-10-01T06:35:30Z - s144 step 1 acceptance (HPP-331): ROADMAP p.266 - accepted; RC1-RC5 accepted and answer to B1 (W key attempt:t
+COMMIT KytyPS5 65a09c82 2026-10-01T06:40:31Z - track F link F4a2 (HPP-346): ROADMAP p.262(b) - under KYTY_FIX_DUALSRC=1 a graphics pipeline with a SRC1 blend
+COMMIT KytyPS5 4de7b932 2026-10-01T06:46:24Z - track S link S4b (HPP-349): ROADMAP p.265 - RX_SHADER label group (\S+) -> (.+?) (emulator label 'ShaderRecomp
+COMMIT KytyPS5 6e2baf46 2026-10-01T06:49:29Z - track S link S4b acceptance (HPP-349): ROADMAP p.267 - accepted; lead replay byte-equal (test_sc_s 319 ALL OK,
+COMMIT KytyPS5 708cf1ff 2026-10-01T06:50:54Z - track F link F4a2 (HPP-346): report - code 65a09c82 (KYTY_FIX_DUALSRC=1: SRC1 blend pipelines get a fragment m
+COMMIT KytyPS5 0ded465b 2026-10-01T07:42:23Z - track F link F4a2 acceptance (HPP-346): ROADMAP p.268 - accepted; lead replay: source PS 39182e00 = task, spir
+COMMIT KytyPS5 ceeab186 2026-10-01T07:52:14Z - track P link P8b (HPP-344): fixes of the P8 harness and scorer by the P9 review (ROADMAP p.261 (v)(1)-(11), (g
+COMMIT KytyPS5 54c57a85 2026-10-01T08:00:21Z - track P link P8b acceptance (HPP-344): ROADMAP p.269 - accepted; lead replay: work file sha = report, test_scp
+COMMIT KytyPS5 075fe845 2026-10-01T11:22:01Z - s144 step 2 (HPP-332): series sc144 - 33 of 33 tags under the lock, one attempt each (5 BUSY refusals before t
+COMMIT KytyPS5 bacd57cc 2026-10-01T11:28:16Z - s144 step 2 acceptance (HPP-332): ROADMAP p.270 - accepted by the letter of seal 01_sc144 and p.266; lead chec
+COMMIT KytyPS5 2031ef31 2026-10-01T11:37:01Z - track F link F4c (HPP-337) wake 4: harness under ROADMAP p.262 (d)-(g), 268 (v), 270 (d) without lock, no run 
+COMMIT KytyPS5 ac94c821 2026-10-01T11:41:14Z - track F link F4b2 (HPP-347): Red Team review of F4a2 and F4c binary acceptance - PASS, 0 RC (ROADMAP p.262(b),
+COMMIT KytyPS5 e2275b68 2026-10-01T11:43:22Z - track F link F4b2 acceptance (HPP-347): ROADMAP p.271 - accepted, PASS 0 RC; lead replay: binary copy = build 
+COMMITS KytyPS5 since 04:40Z: 44; committed inside a lock window: 0
+COMMIT ps5-em 7d828489 2026-10-01T04:43:29Z - track P link P7 (HPP-306): status line - stage 1 read (ROADMAP p.252, KytyPS5 b8270604): patch acts on the clo
+COMMIT ps5-em a41019e9 2026-10-01T05:01:38Z - s143 close (HPP-301): CLAUDE.md == AGENTS.md - status of s144 (sc144 series, W form KYTY_PIPELINE_PRECACHE=0),
+COMMIT ps5-em 650fe551 2026-10-01T05:50:08Z - track F link F2d (HPP-311): status line - F2 and F3a accepted (ROADMAP p.259, KytyPS5 f8396bed): B26b FIXED (t
+COMMIT ps5-em 9eae5ba9 2026-10-01T05:55:49Z - track P link P9 (HPP-327): status line - P9 accepted (ROADMAP p.261, KytyPS5 269eb9ba): RC1-RC11, VALIDATION_S
+COMMIT ps5-em f471c8f2 2026-10-01T06:01:11Z - track F link F4c (HPP-337): status line - p.262 (KytyPS5 4c45777b): F4b RC1-RC4 accepted, F4a fix extended by 
+COMMITS ps5-em since 04:40Z: 5; committed inside a lock window: 0
+TIMES step2: rows 495; rows without a leading UTC stamp 0 []
+ORDER lock.log = the seal order (33 tags): True
+TAG w144_00 lock 2026-10-01T06:51:57Z..2026-10-01T06:58:06Z (369 s) calls 3 refused before the lock 2 (2026-10-01T06:44:44Z,2026-10-01T06:48:37Z) gate PASS 3 api GO 3 stop-check 3 starts 1 json attempts 1 rc 0 ok
+TAG w144_01 lock 2026-10-01T06:59:10Z..2026-10-01T07:05:14Z (364 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_02 lock 2026-10-01T07:06:23Z..2026-10-01T07:12:29Z (366 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_03 lock 2026-10-01T07:14:53Z..2026-10-01T07:20:59Z (366 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_04 lock 2026-10-01T07:22:03Z..2026-10-01T07:28:07Z (364 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_05 lock 2026-10-01T07:29:15Z..2026-10-01T07:35:23Z (368 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_06 lock 2026-10-01T07:44:15Z..2026-10-01T07:50:24Z (369 s) calls 3 refused before the lock 2 (2026-10-01T07:36:28Z,2026-10-01T07:41:22Z) gate PASS 3 api GO 3 stop-check 3 starts 1 json attempts 1 rc 0 ok
+TAG w144_07 lock 2026-10-01T07:52:46Z..2026-10-01T07:58:57Z (371 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_08 lock 2026-10-01T08:01:21Z..2026-10-01T08:07:31Z (370 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_09 lock 2026-10-01T08:08:46Z..2026-10-01T08:16:03Z (437 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_09 lock 2026-10-01T08:17:16Z..2026-10-01T08:19:28Z (132 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_10 lock 2026-10-01T08:23:14Z..2026-10-01T08:30:37Z (443 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_10 lock 2026-10-01T08:31:58Z..2026-10-01T08:38:02Z (364 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_11 lock 2026-10-01T08:39:17Z..2026-10-01T08:46:17Z (420 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_11 lock 2026-10-01T08:47:44Z..2026-10-01T08:53:46Z (362 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_12 lock 2026-10-01T08:55:15Z..2026-10-01T09:02:14Z (419 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_12 lock 2026-10-01T09:03:38Z..2026-10-01T09:09:41Z (363 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_13 lock 2026-10-01T09:10:57Z..2026-10-01T09:18:32Z (455 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_13 lock 2026-10-01T09:19:52Z..2026-10-01T09:25:51Z (359 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_14 lock 2026-10-01T09:27:10Z..2026-10-01T09:34:40Z (450 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_14 lock 2026-10-01T09:36:06Z..2026-10-01T09:42:09Z (363 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_15 lock 2026-10-01T09:43:30Z..2026-10-01T09:50:32Z (422 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_15 lock 2026-10-01T09:51:51Z..2026-10-01T09:57:58Z (367 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_16 lock 2026-10-01T09:59:24Z..2026-10-01T10:07:03Z (459 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_16 lock 2026-10-01T10:08:29Z..2026-10-01T10:14:27Z (358 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_17 lock 2026-10-01T10:15:53Z..2026-10-01T10:23:18Z (445 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_17 lock 2026-10-01T10:24:40Z..2026-10-01T10:30:41Z (361 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_18 lock 2026-10-01T10:32:08Z..2026-10-01T10:39:33Z (445 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_18 lock 2026-10-01T10:40:54Z..2026-10-01T10:46:55Z (361 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_19 lock 2026-10-01T10:48:22Z..2026-10-01T10:55:41Z (439 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_19 lock 2026-10-01T10:58:20Z..2026-10-01T11:04:22Z (362 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG v144_20 lock 2026-10-01T11:05:48Z..2026-10-01T11:13:14Z (446 s) calls 1 refused before the lock 0 () gate PASS 1 api GO 1 stop-check 1 starts 1 json attempts 1 rc 0 ok
+TAG w144_20 lock 2026-10-01T11:17:20Z..2026-10-01T11:18:06Z (46 s) calls 2 refused before the lock 1 (2026-10-01T11:14:26Z) gate PASS 2 api GO 2 stop-check 2 starts 1 json attempts 1 rc 1 ok
+PAIR-V v143_01: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_02: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_03: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_04: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_05: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_06: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_09: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V v143_10: rows 1, sha of the last row = the log now True; json prereg 43e72cbe (seal 02 of s143 now 43e72cbe); binary 9235a7ac; attempts 1
+PAIR-V CHECK (8 logs of s143 against their own times.txt): ALL OK; s143 step2/times.txt sha256 536c4316530b2394e6196c324bd240ed1455fb112f98c81d97e60b87131699ad
+REFUSALS by tag (refused calls, seconds from the first call row to the accepted call row): {'w144_00': (2, 494), 'w144_06': (2, 465), 'w144_20': (1, 159)}; total 1118 s
+REFUSED CALLS (rc != 0, no attempt made): 5; BUSY rows 3 at ['2026-10-01T06:44:43Z w144_00', '2026-10-01T06:48:37Z w144_00', '2026-10-01T07:36:27Z w144_06']
+OLD DIR (stale moves of a second attempt): False
+STOP FILE now: False
+PER-ATTEMPT COPIES (_aN): ['log_w144_20_a1.txt', 'stdout_w144_20_a1.txt']
+   log_w144_20_a1.txt sha 516d801a0577 = log_w144_20.txt sha 516d801a0577: True
+   stdout_w144_20_a1.txt sha 0602b722d136 = stdout_w144_20.txt sha 0602b722d136: True
+TIMES/LOCK CHECK: ALL OK
+CPU ROW: tags 33; member (1) foreign CPU s/s min 0.567 max 1.591 (w144_20); member (2) processes born inside the window: min 3 max 41, CPU s/s max 0.242 (w144_07)
+   CPU w144_00 member1 0.623 CPU s/s member2 6 processes 0.010 CPU s/s
+   CPU w144_01 member1 0.567 CPU s/s member2 9 processes 0.005 CPU s/s
+   CPU w144_02 member1 0.627 CPU s/s member2 10 processes 0.002 CPU s/s
+   CPU w144_03 member1 0.603 CPU s/s member2 7 processes 0.003 CPU s/s
+   CPU w144_04 member1 0.712 CPU s/s member2 34 processes 0.042 CPU s/s
+   CPU w144_05 member1 0.736 CPU s/s member2 20 processes 0.018 CPU s/s
+   CPU w144_06 member1 1.122 CPU s/s member2 34 processes 0.193 CPU s/s
+   CPU w144_07 member1 0.889 CPU s/s member2 41 processes 0.242 CPU s/s
+   CPU w144_08 member1 0.752 CPU s/s member2 11 processes 0.002 CPU s/s
+   CPU v144_09 member1 0.849 CPU s/s member2 13 processes 0.010 CPU s/s
+   CPU w144_09 member1 0.682 CPU s/s member2 3 processes 0.004 CPU s/s
+   CPU v144_10 member1 0.822 CPU s/s member2 11 processes 0.005 CPU s/s
+   CPU w144_10 member1 0.602 CPU s/s member2 15 processes 0.012 CPU s/s
+   CPU v144_11 member1 0.825 CPU s/s member2 8 processes 0.005 CPU s/s
+   CPU w144_11 member1 0.668 CPU s/s member2 8 processes 0.004 CPU s/s
+   CPU v144_12 member1 0.864 CPU s/s member2 20 processes 0.070 CPU s/s
+   CPU w144_12 member1 0.730 CPU s/s member2 6 processes 0.003 CPU s/s
+   CPU v144_13 member1 0.839 CPU s/s member2 10 processes 0.002 CPU s/s
+   CPU w144_13 member1 0.725 CPU s/s member2 14 processes 0.164 CPU s/s
+   CPU v144_14 member1 0.921 CPU s/s member2 13 processes 0.012 CPU s/s
+   CPU w144_14 member1 0.667 CPU s/s member2 11 processes 0.005 CPU s/s
+   CPU v144_15 member1 0.938 CPU s/s member2 12 processes 0.003 CPU s/s
+   CPU w144_15 member1 0.608 CPU s/s member2 9 processes 0.005 CPU s/s
+   CPU v144_16 member1 0.821 CPU s/s member2 11 processes 0.007 CPU s/s
+   CPU w144_16 member1 1.009 CPU s/s member2 13 processes 0.009 CPU s/s
+   CPU v144_17 member1 1.032 CPU s/s member2 16 processes 0.005 CPU s/s
+   CPU w144_17 member1 0.721 CPU s/s member2 14 processes 0.064 CPU s/s
+   CPU v144_18 member1 1.052 CPU s/s member2 15 processes 0.089 CPU s/s
+   CPU w144_18 member1 0.986 CPU s/s member2 16 processes 0.012 CPU s/s
+   CPU v144_19 member1 1.038 CPU s/s member2 12 processes 0.011 CPU s/s
+   CPU w144_19 member1 1.133 CPU s/s member2 8 processes 0.006 CPU s/s
+   CPU v144_20 member1 1.570 CPU s/s member2 16 processes 0.017 CPU s/s
+   CPU w144_20 member1 1.591 CPU s/s member2 7 processes 0.014 CPU s/s
+SEAL 01 sha256 9ca8c16ebbed17af92198d76388fa5d3ec9777a6ef443567b36f5179a7458042 mtime 2026-10-01T05:58:20Z (first lock 2026-10-01T06:51:57Z) before the first lock: True
+SEAL LINES 24: every file = its seal line and not modified after the seal: ALL OK
+STEP2 FILE step2/gate144.py sha256 5fe5ca3088a6d5f940645eac07b4e9a9961a1fc77ee9e9ba70a0214c9e5b3135 mtime 2026-10-01T06:39:58Z before the first lock True in a lock window None
+STEP2 FILE step2/test_gate144.py sha256 521bd3b1830ee3b3d89be0757878df402050ad8e277d6d662419813ef0e9e350 mtime 2026-10-01T06:41:05Z before the first lock True in a lock window None
+STEP2 FILE step2/pre_one.sh sha256 022271ebc8f5e30f4e1f8c4fc006bea75edf50ad2db7a11beaf8f9868f611886 mtime 2026-10-01T06:42:52Z before the first lock True in a lock window None
+STEP2 FILE step2/table144.py sha256 6adeca18f06b24c12001add06983fdeb505ec9b9ccc92a0ebf2a41206661a208 mtime 2026-10-01T11:20:27Z before the first lock False in a lock window None
+STEP2 FILE step2/test_gate144.out.txt sha256 58ac710cdb879547e3f22232b0a9973d1a13a811f20221ce8d5dc44969a0c148 mtime 2026-10-01T06:41:48Z before the first lock True in a lock window None
+OUTPUT SHA s144: 69 file rows (glitch, rec, sheet, score) against the files now: ALL OK
+FILE step2/summary144.txt sha256 6fc76b88852772ab3d68d311afded05574e6f0bdfdbdbb61d66ad4ae6f3e1729 mtime 2026-10-01T11:19:55Z
+FILE step2/table144.txt sha256 1c20ea3cab0e068f9e47022f3e7dfdaf43794ee5d8516d6c518adbe5fcecf3e3 mtime 2026-10-01T11:20:27Z
+FILE step2/checkseal_final.txt sha256 3b2767bc2f98382a925c522356096696249cb123e588117623a5fa9ecff5b243 mtime 2026-10-01T11:18:22Z
+FILE step2/sheets144.txt sha256 94a07bbd4296c295b6c6df7cf095280cbc2b1746826d1c518a805d8cc0dc86e4 mtime 2026-10-01T11:20:50Z
+FILE FACTS.md sha256 b111452dcddbef271d13ed962c5e8b060eb045ccf802eb72bc445eaa4cd9f40d mtime 2026-10-01T11:21:50Z
+FILE runs144/lock.log sha256 1fa2d183318370942f6b13c61d5543424c4a0b365493890095f80fe56f7e2cde mtime 2026-10-01T11:18:06Z
+FILE step2/times.txt sha256 6867bf88104448d62ab2a01feb14f3747daad25157b52e3af8deb2eb89e01bae mtime 2026-10-01T11:22:07Z
+FILE step0/times.txt sha256 e8993da3e8b3be4c3815149f8d590e17fa15c936588a38a7903134d4577fdc1d mtime 2026-10-01T05:59:49Z
+FILE step1/times.txt sha256 7c3577b8de3c8946a22fdbe9afa9fdea3e2d1802013888c85e6cb2730735e8e7 mtime 2026-10-01T06:33:23Z
+CLOSE KytyPS5 d31de12b 2026-10-01T04:42:11Z s143 step 3 audit (HPP-300): docs/session-143/audit/AUDIT143.md - own recount of the sc143 outputs by aud143.py (no code
+CLOSE KytyPS5 d3a8d951 2026-10-01T04:54:15Z s143 close (HPP-301): ROADMAP p.254 - sheets of 10 videos viewed, no visible defects; SCENE_OK 0 of 10 (all W stopped by
+CLOSE KytyPS5 522d2ec7 2026-10-01T04:56:12Z s143 close (HPP-301): brief docs/next-session-144.md (sc144: control W Sky Garden, 8 W of sc143 levels in the no-precach
+CLOSE KytyPS5 e83afd8e 2026-10-01T05:01:38Z s143 close (HPP-301): docs/local-session-143.md (mirror of FACTS with the Close section), docs/session-143/close/ (summa
+CLOSE KytyPS5 5558b64c 2026-10-01T05:01:57Z s143 close (HPP-301): ROADMAP p.255 - execution fact of p.254: order (instruction sha table, p.254, Process 1-5, registe
+CLOSE KytyPS5 919f43e0 2026-10-01T05:59:40Z s144 step 0 (HPP-330): harness go144a.sh (33 tags of ROADMAP p.254(k)(1), W form KYTY_PIPELINE_PRECACHE=0), scorer sc144
+CLOSE KytyPS5 de2c87af 2026-10-01T06:06:14Z s144 step 0 acceptance (HPP-330): ROADMAP p.264 - accepted; lead recount byte-equal (check-seal PASS, regress143/142 byt
+CLOSE KytyPS5 206ffda0 2026-10-01T06:32:45Z s144 step 1 (HPP-331): Red Team review of go144a.sh / sc144.py / seal pred/01_sc144.md - SOUND_WITH_CHANGES, RC1-RC5 + q
+CLOSE KytyPS5 43fc0b63 2026-10-01T06:35:30Z s144 step 1 acceptance (HPP-331): ROADMAP p.266 - accepted; RC1-RC5 accepted and answer to B1 (W key attempt:timeout), a
+CLOSE KytyPS5 075fe845 2026-10-01T11:22:01Z s144 step 2 (HPP-332): series sc144 - 33 of 33 tags under the lock, one attempt each (5 BUSY refusals before the lock, n
+CLOSE KytyPS5 bacd57cc 2026-10-01T11:28:16Z s144 step 2 acceptance (HPP-332): ROADMAP p.270 - accepted by the letter of seal 01_sc144 and p.266; lead check: summary
+CLOSE ps5-em a41019e9 2026-10-01T05:01:38Z s143 close (HPP-301): CLAUDE.md == AGENTS.md - status of s144 (sc144 series, W form KYTY_PIPELINE_PRECACHE=0), s143 clos
+INSTR agent 06386e1c.. sha256 4ed1877f mtime 2026-10-01T04:54:50Z size 14741 in a lock window None; You are agent **Session Auditor** (?????
+INSTR agent 2f5a0935.. sha256 8c93c4f6 mtime 2026-10-01T04:54:50Z size 22650 in a lock window None; You are agent **Harness Engineer** (????
+INSTR agent 641ba04e.. sha256 ca226dd3 mtime 2026-09-30T22:30:05Z size 6104 in a lock window None; # Role
+INSTR agent 8e98843f.. sha256 9844cefa mtime 2026-09-30T23:56:09Z size 13809 in a lock window None; You are agent **Probe Designer** (??????
+INSTR agent 9cac1833.. sha256 193b43fe mtime 2026-09-26T17:18:56Z size 9811 in a lock window None; You are agent **Roadmap Lead** (??? ????
+INSTR agent aabc0a15.. sha256 92e128c1 mtime 2026-09-30T23:56:09Z size 16148 in a lock window None; You are agent **Lever Researcher** (????
+INSTR agent dc34de0a.. sha256 b6b612b2 mtime 2026-09-30T23:56:09Z size 16082 in a lock window None; You are agent **Red Team** (?????????? ?
+INSTR agent dc8a3c28.. sha256 ee077e21 mtime 2026-09-26T16:24:58Z size 2941 in a lock window None; # Role
+INSTR agent eb15eb75.. sha256 96942b1c mtime 2026-09-30T23:56:09Z size 15129 in a lock window None; You are agent **Emu Engineer** (??????? 
+INSTR agent f1276629.. sha256 e8ab9ad0 mtime 2026-10-01T04:54:50Z size 18224 in a lock window None; You are agent **Roadmap Lead** (??? ????
+INSTR files 10
+DOC agent-team.md sha256 6ad68ac9c6b67b469da69b67bd574c4957dbacf58437d3d03e32d4101173afd8 size 52689 mtime 2026-10-01T05:01:04Z
+DOC platform-traps.md sha256 2a2c5a6b6ef9d5444bfda7b653e3495bb2fff431a0c9b63b1330d413d6f088a5 size 14245 mtime 2026-09-30T23:56:09Z
+DOC CLAUDE.md sha256 d70e0eb001c4e083ac365db878966d1c850063083b28870ec972f92458f4c8e6 size 68952 mtime 2026-10-01T06:01:11Z
+DOC AGENTS.md sha256 d70e0eb001c4e083ac365db878966d1c850063083b28870ec972f92458f4c8e6 size 68952 mtime 2026-10-01T06:01:11Z
+PS5EM a41019e: CLAUDE.md 048c04c1 (67395 B) AGENTS.md 048c04c1 (67395 B) equal True; agent-team.md 6ad68ac9; platform-traps.md 2a2c5a6b
+PS5EM HEAD: CLAUDE.md d70e0eb0 (68952 B) AGENTS.md d70e0eb0 (68952 B) equal True; agent-team.md 6ad68ac9; platform-traps.md 2a2c5a6b
+ALL DONE

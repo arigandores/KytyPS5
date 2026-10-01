@@ -1,0 +1,186 @@
+REV 4fc501f4f6c3c5638f472ee6d9c59523d67e472c 2026-09-28 12:40:38 +0200 s128 step 0 (HPP-116): ship rtskip=1 - default of KYTY_RT_SKIP 0 -> 1 (ROADMAP s122 p.87(e)(1
+--- (a) the window event: only a log line
+  4fc501f4:src/graphics/presentation/window/window.cpp:421 | void WindowContext::Resize(uint32_t new_width, uint32_t new_height) {
+  4fc501f4:src/graphics/presentation/window/window.cpp:422 |     EXIT_IF(new_width == 0 || new_height == 0);
+  4fc501f4:src/graphics/presentation/window/window.cpp:423 |     Common::LockGuard lock(mutex);
+  4fc501f4:src/graphics/presentation/window/window.cpp:424 |     graphic_ctx.screen_width  = new_width;
+  4fc501f4:src/graphics/presentation/window/window.cpp:425 |     graphic_ctx.screen_height = new_height;
+  4fc501f4:src/graphics/presentation/window/window.cpp:426 | }
+  4fc501f4:src/graphics/presentation/window/window.cpp:457 |         case SDL_WINDOWEVENT_SIZE_CHANGED:
+  4fc501f4:src/graphics/presentation/window/window.cpp:458 |             LOGF("Window %" PRIu32 " size changed to %" PRId32 "x%" PRId32 "\n",
+  4fc501f4:src/graphics/presentation/window/window.cpp:459 |                  window_event.windowID, window_event.data1, window_event.data2);
+  4fc501f4:src/graphics/presentation/window/window.cpp:460 | 
+  4fc501f4:src/graphics/presentation/window/window.cpp:461 |             LOGF("m: %d\n", static_cast<int>(SDL_ThreadID()));
+  4fc501f4:src/graphics/presentation/window/window.cpp:462 |             Resize(window_event.data1, window_event.data2);
+  4fc501f4:src/graphics/presentation/window/window.cpp:463 | 
+  4fc501f4:src/graphics/presentation/window/window.cpp:464 |             break;
+  4fc501f4:src/graphics/presentation/window/window.cpp:465 | 
+  4fc501f4:src/graphics/presentation/window/window.cpp:466 |         case SDL_WINDOWEVENT_MINIMIZED:
+  4fc501f4:src/graphics/presentation/window/window.cpp:467 |             LOGF("Window %" PRIu32 " minimized\n", window_event.windowID);
+  4fc501f4:src/graphics/presentation/window/window.cpp:468 |             break;
+  4fc501f4:src/graphics/presentation/window/window.cpp:469 |         case SDL_WINDOWEVENT_MAXIMIZED:
+  4fc501f4:src/graphics/presentation/window/window.cpp:470 |             LOGF("Window %" PRIu32 " maximized\n", window_event.windowID);
+  4fc501f4:src/graphics/presentation/window/window.cpp:471 |             break;
+  4fc501f4:src/graphics/presentation/window/window.cpp:472 |         case SDL_WINDOWEVENT_RESTORED:
+  4fc501f4:src/graphics/presentation/window/window.cpp:473 |             LOGF("Window %" PRIu32 " restored\n", window_event.windowID);
+  4fc501f4:src/graphics/presentation/window/window.cpp:474 |             break;
+--- (b) present: OutOfDate -> Status::Recreate -> RecoverSwapchain -> continue (2 attempts, no wait)
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:727 |     switch (result) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:728 |         case vk::Result::eSuccess: break;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:729 |         case vk::Result::eSuboptimalKHR:
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:730 |             LOGF("vkQueuePresentKHR returned vk::Result::eSuboptimalKHR\n");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:731 |             return Status::Recreate;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:732 |         case vk::Result::eErrorOutOfDateKHR:
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:733 |             LOGF("vkQueuePresentKHR returned vk::Result::eErrorOutOfDateKHR\n");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:734 |             return Status::Recreate;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:735 |         case vk::Result::eErrorSurfaceLostKHR:
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:736 |             LOGF("vkQueuePresentKHR returned vk::Result::eErrorSurfaceLostKHR\n");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:737 |             return Status::SurfaceLost;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:738 |         default: EXIT("vkQueuePresentKHR failed: %s\n", vk::to_string(result).c_str());
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:739 |     }
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:881 |     for (uint32_t attempt = 0; attempt < 2; attempt++) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:882 |         const auto trace_start = PresentTraceEnabled() ? Common::FrameStats::NowNs() : 0;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:883 |         auto status = swapchain.AcquireNextImage(m_impl->present_scheduler);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:884 |         const auto acquired = trace_start ? Common::FrameStats::NowNs() : 0;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:885 |         uint64_t locked = 0;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:886 |         if (status != Swapchain::Status::Success) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:887 |             m_impl->RecoverSwapchain(status);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:888 |             continue;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:889 |         }
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:927 |         if (status != Swapchain::Status::Success) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:928 |             m_impl->RecoverSwapchain(status);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:929 |             continue;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:930 |         }
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:945 |     LOGF("Vulkan presentation retry exhausted; dropping frame\n");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:946 |     m_impl->frames.Release(&frame, reuse);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:353 |     void RecoverSwapchain(Swapchain::Status status) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:354 |         LOGF("Recovering Vulkan swapchain%s\n",
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:355 |              status == Swapchain::Status::SurfaceLost ? " and surface" : "");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:356 |         swapchain.Recreate(status == Swapchain::Status::SurfaceLost);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:357 |         frames.SetFormat(swapchain.Format());
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:358 |     }
+--- (c) Recreate: Destroy, RefreshSurfaceCapabilities, Create
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:567 | void Swapchain::Recreate(bool surface_lost) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:568 |     Destroy();
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:569 |     if (surface_lost) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:570 | #if defined(__APPLE__)
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:571 |         // Surface recreation goes through SDL_Vulkan_CreateSurface, which touches the
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:572 |         // window's view/layer and must run on the main thread on macOS.
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:573 |         m_window.RunOnMainThread([this] { m_window.RecreateSurface(); });
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:574 | #else
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:575 |         m_window.RecreateSurface();
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:576 | #endif
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:577 |     }
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:578 |     m_window.RefreshSurfaceCapabilities();
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:579 |     Create();
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:580 | }
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:1249 | void WindowContext::RefreshSurfaceCapabilities() {
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:1250 |     EXIT_IF(graphic_ctx.physical_device == nullptr || surface == nullptr);
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:1251 |     GetSurfaceCapabilities(graphic_ctx.physical_device, surface, surface_capabilities);
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:1252 | }
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:103 | static void GetSurfaceCapabilities(vk::PhysicalDevice physical_device, vk::SurfaceKHR surface,
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:104 |                                    SurfaceCapabilities& r) {
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:105 |     RequireVulkanSuccess(physical_device.getSurfaceCapabilitiesKHR(surface, &r.capabilities),
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:106 |                          "vkGetPhysicalDeviceSurfaceCapabilitiesKHR");
+--- (d) Create: where the extent comes from
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:391 | void Swapchain::Create() {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:392 |     auto& graphics = m_window.graphic_ctx;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:393 |     EXIT_IF(graphics.device == nullptr);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:394 |     EXIT_IF(m_window.surface == nullptr);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:395 | 
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:396 |     Common::LockGuard lock(m_window.mutex);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:397 |     EXIT_IF(graphics.screen_width == 0);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:398 |     EXIT_IF(graphics.screen_height == 0);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:399 |     const auto&       surface = m_window.surface_capabilities;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:400 |     EXIT_NOT_IMPLEMENTED(surface.formats.empty());
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:401 | 
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:402 |     m_extent = surface.capabilities.currentExtent;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:403 |     if (m_extent.width == std::numeric_limits<uint32_t>::max()) {
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:404 |         m_extent.width =
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:405 |             std::clamp(graphics.screen_width, surface.capabilities.minImageExtent.width,
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:406 |                        surface.capabilities.maxImageExtent.width);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:407 |         m_extent.height =
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:408 |             std::clamp(graphics.screen_height, surface.capabilities.minImageExtent.height,
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:409 |                        surface.capabilities.maxImageExtent.height);
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:410 |     }
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:443 |     vk::SwapchainCreateInfoKHR create_info {};
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:444 |     create_info.sType            = vk::StructureType::eSwapchainCreateInfoKHR;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:445 |     create_info.surface          = m_window.surface;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:446 |     create_info.minImageCount    = image_count;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:447 |     create_info.imageFormat      = format.format;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:448 |     create_info.imageColorSpace  = format.colorSpace;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:449 |     create_info.imageExtent      = m_extent;
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:472 |     RequireVulkanSuccess(graphics.device.createSwapchainKHR(&create_info, nullptr, &m_handle),
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:473 |                          "vkCreateSwapchainKHR");
+  4fc501f4:src/graphics/presentation/window/swapchain.cpp:474 |     EXIT_IF(m_handle == nullptr);
+--- (e) a validation error is fatal
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:903 |             // Only validation errors are fatal; GENERAL-type errors can come
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:904 |             // from unrelated loader/layer issues (e.g. a broken overlay).
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:905 |             error = static_cast<bool>(message_types &
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:906 |                                       vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation);
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:907 |             break;
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:908 |         default: severity_str = "?";
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:909 |     }
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:910 | 
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:911 |     if (error) {
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:912 |         EXIT_COLOR(severity_style, "[Vulkan][%s][%u]: %s\n", severity_str,
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:913 |                    static_cast<uint32_t>(message_types), callback_data->pMessage);
+  4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:914 |     }
+--- (f) searches over src/
+GREP 'SDL_WINDOWEVENT_MINIMIZED' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/window.cpp:466:  case SDL_WINDOWEVENT_MINIMIZED:
+GREP 'SDL_WINDOWEVENT_RESTORED' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/window.cpp:472:  case SDL_WINDOWEVENT_RESTORED:
+GREP 'SDL_WINDOW_MINIMIZED' in 4fc501f4:src: 0 lines
+GREP 'SDL_GetWindowFlags' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/window.cpp:229: const auto flags = static_cast<uint32_t>(SDL_GetWindowFlags(g_window->window));
+GREP 'Recovering Vulkan swapchain' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:354:  LOGF("Recovering Vulkan swapchain%s\n",
+GREP 'currentExtent' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:402: m_extent = surface.capabilities.currentExtent;
+GREP 'minImageExtent' in 4fc501f4:src: 2 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:405:      std::clamp(graphics.screen_width, surface.capabilities.minImageExtent.width,
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:408:      std::clamp(graphics.screen_height, surface.capabilities.minImageExtent.height,
+GREP 'SDL_Vulkan_GetDrawableSize' in 4fc501f4:src: 0 lines
+GREP 'SDL_GetWindowSize' in 4fc501f4:src: 0 lines
+GREP 'RecoverSwapchain' in 4fc501f4:src: 3 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:353: void RecoverSwapchain(Swapchain::Status status) {
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:887:   m_impl->RecoverSwapchain(status);
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:928:   m_impl->RecoverSwapchain(status);
+GREP 'Recreate(' in 4fc501f4:src: 3 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:313: void                 Recreate(bool surface_lost = false);
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:356:  swapchain.Recreate(status == Swapchain::Status::SurfaceLost);
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:567:void Swapchain::Recreate(bool surface_lost) {
+GREP 'RefreshSurfaceCapabilities' in 4fc501f4:src: 3 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:578: m_window.RefreshSurfaceCapabilities();
+   4fc501f4:src/graphics/presentation/window/vulkanWindow.cpp:1249:void WindowContext::RefreshSurfaceCapabilities() {
+   4fc501f4:src/graphics/presentation/window/windowInternal.h:44: void                                                    RefreshSurfaceCapabilities();
+GREP 'SDL_WaitEvent' in 4fc501f4:src: 4 lines
+   4fc501f4:src/graphics/presentation/window/hostInput.cpp:424:  if (SDL_WaitEvent(event) == 0) {
+   4fc501f4:src/graphics/presentation/window/hostInput.cpp:432: if (SDL_WaitEventTimeout(event, timeout_ms) != 0) {
+   4fc501f4:src/graphics/presentation/window/window.cpp:786: // Wake the main loop in case it is blocked in SDL_WaitEvent.
+   4fc501f4:src/graphics/presentation/window/window.cpp:804: // Wake the main loop in case it is blocked in SDL_WaitEvent.
+GREP 'imageExtent' in 4fc501f4:src: 14 lines
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:222:  copy.imageExtent       = {info.extent.width, info.extent.height, 1};
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:791:  depth_copies[layer].imageExtent       = depth.info.extent;
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:796:  color_copies[layer].imageExtent       = color.info.extent;
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1319: region.imageExtent      = {image->backing.extent.width, image->backing.extent.height, 1};
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1367:      region.imageOffset.z != 0 || region.imageExtent.depth != 1 ||
+   4fc501f4:src/graphics/host_gpu/renderer/cache/textureCache.cpp:1369:      // tile_info.height would exceed imageExtent.height and the dispatch would write rows
+   4fc501f4:src/graphics/host_gpu/renderer/image/image.cpp:593:    source_copy.imageExtent           = {width, copy_height, 1};
+   4fc501f4:src/graphics/host_gpu/renderer/image/textureCommon.cpp:259:  region.imageExtent      = {mip_width, mip_height, 1};
+   4fc501f4:src/graphics/host_gpu/renderer/image/textureCommon.cpp:353:       region.bufferRowLength != 0 ? region.bufferRowLength : region.imageExtent.width;
+   4fc501f4:src/graphics/host_gpu/renderer/image/textureCommon.cpp:355:                                                           : region.imageExtent.height;
+   4fc501f4:src/graphics/host_gpu/renderer/image/textureCommon.cpp:357:       (region.imageExtent.width + texture.texel_width - 1u) / texture.texel_width, 1u);
+   4fc501f4:src/graphics/presentation/window/screenshot.cpp:306: region.imageExtent                     = {m_width, m_height, 1};
+GREP 'presentation retry exhausted' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:945: LOGF("Vulkan presentation retry exhausted; dropping frame\n");
+GREP '(extent|m_extent)\\.(width|height) == 0' in 4fc501f4:src: 5 lines
+   4fc501f4:src/graphics/host_gpu/renderer/image/image.cpp:664:  if (info.data.Empty() || info.HasStencil() || !metadata_empty || info.extent.width == 0 ||
+   4fc501f4:src/graphics/host_gpu/renderer/image/image.cpp:665:      info.extent.height == 0 || info.extent.depth == 0 || info.resources.levels != 1 ||
+   4fc501f4:src/graphics/host_gpu/renderer/image/image.cpp:673: if (info.extent.width == 0 || info.extent.height == 0 || info.extent.depth == 0 ||
+   4fc501f4:src/graphics/host_gpu/renderer/image/imageInfo.h:384:     (info.data.address & 0xffffu) != 0 || info.extent.width == 0 || info.extent.height == 0 ||
+   4fc501f4:src/graphics/presentation/window/swapchain.cpp:202: if (extent.width == 0 || extent.height == 0 || format == vk::Format::eUndefined) {
+GREP 'static .*RequireVulkanSuccess|void RequireVulkanSuccess' in 4fc501f4:src: 1 lines
+   4fc501f4:src/graphics/host_gpu/vulkanCommon.cpp:119:void RequireVulkanSuccess(vk::Result result, const char* operation) {
+ALL DONE

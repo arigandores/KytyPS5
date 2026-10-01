@@ -1,0 +1,29 @@
+LOCKLOG C:/kyty/f287/f2c/lock.log: windows since 04:40Z 1; taken without release []
+LOCKLOG C:/kyty/p283/p4/runs/lock.log: windows since 04:40Z 0; taken without release []
+LOCKLOG C:/kyty/p283/p6/runs/lock.log: windows since 04:40Z 0; taken without release []
+LOCKLOG C:/kyty/s143/fx_tools143/lroot/runs143/lock.log: windows since 04:40Z 0; taken without release []
+LOCKLOG C:/kyty/s143/runs143/lock.log: windows since 04:40Z 0; taken without release []
+LOCKLOG C:/kyty/s144/fx_tools144/lroot/runs144/lock.log: windows since 04:40Z 0; taken without release []
+LOCKLOG C:/kyty/s144/runs144/lock.log: windows since 04:40Z 33; taken without release []
+LOCKLOG C:/kyty/s288/s3b/fx_go_lock/s4/runs_s/lock.log: windows since 04:40Z 3; taken without release []
+LOCKLOG C:/kyty/s288/s4/runs_s/lock.log: windows since 04:40Z 6; taken without release []
+WINDOW 2026-10-01T05:23:26Z..2026-10-01T05:39:20Z  954 s series (f287/f2c/lock.log)
+WINDOW 2026-10-01T05:57:12Z..2026-10-01T05:57:35Z   23 s sw_m1 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:02:40Z..2026-10-01T06:05:51Z  191 s sw_m1 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:06:48Z..2026-10-01T06:10:11Z  203 s sw_m2 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:11:08Z..2026-10-01T06:14:29Z  201 s sw_m3 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:15:18Z..2026-10-01T06:18:25Z  187 s sw_t1 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:19:20Z..2026-10-01T06:22:27Z  187 s c1_0 (s288/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:35:04Z..2026-10-01T06:35:09Z    5 s sw_m1 (s288/s3b/fx_go_lock/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:35:10Z..2026-10-01T06:35:15Z    5 s sw_m2 (s288/s3b/fx_go_lock/s4/runs_s/lock.log)
+WINDOW 2026-10-01T06:35:17Z..2026-10-01T06:35:24Z    7 s sw_t1 (s288/s3b/fx_go_lock/s4/runs_s/lock.log)
+TRACK WINDOWS since 04:40Z: 10; session windows 33
+S144 FILES 3839 (without mutant work folders and video frame folders); mtime inside a track lock window: 5
+   IN-TRACK-LOCK 2026-10-01T05:36:11Z series C:/kyty/s144/step2/fx_gate/g3/log_w144_01.txt
+   IN-TRACK-LOCK 2026-10-01T05:36:11Z series C:/kyty/s144/step2/fx_gate/g3/stdout_w144_01.txt
+   IN-TRACK-LOCK 2026-10-01T05:36:16Z series C:/kyty/s144/step2/fx_gate/g3/w144_01.stdout.txt
+   IN-TRACK-LOCK 2026-10-01T05:57:31Z sw_m1 C:/kyty/s144/step0/seal_template.md
+   IN-TRACK-LOCK 2026-10-01T06:19:28Z c1_0 C:/kyty/s144/step1/rt144.py
+COMMITS KytyPS5 inside a track lock window: 0
+COMMITS ps5-em inside a track lock window: 0
+ALL DONE

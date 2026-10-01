@@ -1,0 +1,78 @@
+w144_00 s144 2698b03decde184a size 390979784 rows 2832 entry True first [336, 2152233, 6138] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_01 s144 280636d7ae05f940 size 398011245 rows 2910 entry True first [235, 20111, 118] k2 [[237, 2079322, 'entry']] vkE 0 marks 0 minimized 0 recover 0
+w144_02 s144 3f83a47e48af1c5f size 439143901 rows 3611 entry True first [289, 1882456, 3848] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_03 s144 a146ae165f424fd6 size 257777962 rows 3103 entry True first [230, 1794956, 7809] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_04 s144 b0b1c20fe446a543 size 346120934 rows 3981 entry True first [248, 30526, 188] k2 [[249, 1684295, 'entry']] vkE 0 marks 0 minimized 0 recover 0
+w144_05 s144 202033f4e7e013d5 size 441241749 rows 3048 entry True first [211, 1906612, 8996] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_06 s144 80dcc8947e6d5f2b size 453376944 rows 4446 entry True first [332, 2141555, 2915] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_07 s144 1fe11b676a5bc99f size 450099377 rows 4260 entry True first [420, 2146607, 7425] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_08 s144 6c567d954a8f9ed0 size 431810129 rows 3314 entry True first [416, 1922691, 6492] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_09 s144 a51ac48a8e0cad18 size 449468897 rows 16716 entry True first [349, 18925, 313] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_09 s144 08c3a71f11ab48fa size 288183319 rows 1430 entry True first [285, 40632, 158] k2 [] vkE 1 marks 1 minimized 1 recover 1
+v144_10 s144 16ee50b691e648bf size 487072688 rows 18910 entry True first [291, 17322, 408] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_10 s144 a15ff15222355e58 size 456066254 rows 4795 entry True first [275, 14949, 361] k2 [[276, 1565373, 'entry']] vkE 0 marks 0 minimized 0 recover 0
+v144_11 s144 c882a6fe94d6f917 size 376697483 rows 13528 entry True first [265, 18589, 3010] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_11 s144 a6cb2c3bcbf3b5f8 size 435447974 rows 3627 entry True first [244, 1599096, 10736] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_12 s144 9a5d79509c7cda0e size 275479777 rows 10108 entry True first [462, 16739, 290] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_12 s144 c4cc4451bd5397f4 size 415077235 rows 2822 entry True first [396, 988907, 2368] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_13 s144 91444f708135047a size 521195007 rows 20054 entry True first [365, 16863, 239] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_13 s144 b1831b72047e49aa size 475466222 rows 5583 entry True first [349, 16687, 171] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_14 s144 65075c931008603e size 520959295 rows 19842 entry True first [328, 15055, 1310] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_14 s144 02f2c2629a9b1239 size 490211276 rows 5591 entry True first [302, 1758281, 4623] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_15 s144 00d5c5297b69b1ee size 305059876 rows 11443 entry True first [379, 22936, 1401] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_15 s144 dc4a51be7beea7b6 size 414471331 rows 3059 entry True first [354, 1814304, 9185] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_16 s144 78a9c0b43aa986e6 size 519206833 rows 19955 entry True first [326, 14875, 123] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_16 s144 8c3b987f9765109e size 521864681 rows 7187 entry True first [315, 1319599, 1460] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_17 s144 006933f56b4359ed size 520509182 rows 20060 entry True first [289, 19656, 206] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_17 s144 5951e5ca2c670dc9 size 492384566 rows 5273 entry True first [253, 1514626, 2222] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_18 s144 1669f88745510f39 size 516518792 rows 20150 entry True first [252, 14967, 116] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_18 s144 1d75b73e455e9a65 size 383246210 rows 9702 entry True first [256, 1189251, 1275] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_19 s144 f8a5a701fae89435 size 457375658 rows 17747 entry True first [277, 19923, 166] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_19 s144 5266a235bc813af7 size 253209569 rows 4676 entry True first [267, 1380944, 3447] k2 [] vkE 0 marks 0 minimized 0 recover 0
+v144_20 s144 ea7e3094a6aa99e9 size 520606289 rows 20207 entry True first [369, 19900, 193] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w144_20 s144 516d801a05776cf0 size 22149107 rows 368 entry True first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_01 s143 fa9d5a277a8428ed size 292158641 rows 10906 entry True first [364, 15691, 230] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_01 s143 7851fa47d1612b6c size 52138 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_02 s143 e1ced3960dc51a72 size 384963637 rows 14174 entry True first [314, 18460, 231] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_02 s143 a42ca54eb1cac832 size 52139 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_03 s143 507e16c582c26cfb size 293076648 rows 10742 entry True first [239, 15943, 265] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_03 s143 f7857e0c7078b8c2 size 52141 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_04 s143 c16bd4213f29ca96 size 358523740 rows 12474 entry True first [263, 26670, 267] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_04 s143 00c151d9fa4b825d size 53097 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_05 s143 b90860585fed5e49 size 338152080 rows 12575 entry True first [211, 15391, 2288] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_05 s143 a484f58768611519 size 58227 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_06 s143 ab2f365f70e526cf size 452978451 rows 17223 entry True first [211, 20348, 295] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_06 s143 9c12781a4e972b5e size 52140 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_07 s143 03999be4890bf7c0 size 484355753 rows 17129 entry True first [278, 27447, 367] k2 [[280, 1780488, 'entry']] vkE 0 marks 0 minimized 0 recover 0
+w143_07 s143 8a9553a1a94fe7b6 size 52141 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_08 s143 88d81bd41fe0f448 size 492123040 rows 19059 entry True first [239, 39601, 386] k2 [[14701, 6614314, 'hold']] vkE 0 marks 0 minimized 0 recover 0
+w143_08 s143 0997e63c0891cc98 size 59505 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_09 s143 9e88d44686c24c7f size 412483212 rows 15582 entry True first [328, 656684, 10213] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_09 s143 cf1eded5d1365929 size 53673 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v143_10 s143 d6d5dd4ad3db351b size 377321262 rows 14030 entry True first [388, 16976, 1544] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w143_10 s143 45d4d85d9459a980 size 53560 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+v142 s142 565707122e53bb50 size 283599695 rows 10555 entry True first [380, 15370, 249] k2 [] vkE 0 marks 0 minimized 0 recover 0
+w142 s142 7f42a2d3e1a151a2 size 382575230 rows 2665 entry True first [187, 11187, 255] k2 [] vkE 0 marks 0 minimized 0 recover 0
+c142_01 s142 66b4ff7e0e50a8a4 size 166710755 rows 5252 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_02 s142 bb6655d3d30c0bc7 size 131656150 rows 3798 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_03 s142 9aaa83b0c73e66b1 size 201982581 rows 7155 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_04 s142 bd5f547706caad1d size 205772834 rows 7555 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_05 s142 9ea02549b36c0100 size 208800174 rows 7301 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_06 s142 a511e5d4af7a0f0a size 131737318 rows 4386 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_07 s142 5e1bd731e2e5d345 size 204366736 rows 7475 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_08 s142 358be0e0d44d729e size 213495349 rows 7460 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_09 s142 eadf72b5b79ac096 size 203031472 rows 7604 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+c142_10 s142 d78e0342fa2186f4 size 179353122 rows 6608 entry False first None k2 None vkE 0 marks 0 minimized 0 recover 0
+w143_01_a1 s143 7851fa47d1612b6c size 52138 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_02_a1 s143 a42ca54eb1cac832 size 52139 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_03_a1 s143 f7857e0c7078b8c2 size 52141 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_04_a1 s143 00c151d9fa4b825d size 53097 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_05_a1 s143 a484f58768611519 size 58227 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_06_a1 s143 9c12781a4e972b5e size 52140 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_07_a1 s143 8a9553a1a94fe7b6 size 52141 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_08_a1 s143 0997e63c0891cc98 size 59505 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_09_a1 s143 cf1eded5d1365929 size 53673 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w143_10_a1 s143 45d4d85d9459a980 size 53560 rows 0 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+w144_20_a1 s144 516d801a05776cf0 size 22149107 rows 368 entry False first None k2 None vkE 1 marks 1 minimized 0 recover 0
+LOGS 76
+ALL DONE

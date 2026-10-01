@@ -1,0 +1,28 @@
+TRACK LOGS 915 files, 6.64 GB
+ROOT C:/kyty/p283: logs 662, 3.91 GB; with a "minimized" line 0; with "Recovering Vulkan swapchain" 0; with eErrorOutOfDateKHR 0; with eSuboptimalKHR 0; with the swapchain extent error 0
+ROOT C:/kyty/f287: logs 47, 1.95 GB; with a "minimized" line 0; with "Recovering Vulkan swapchain" 0; with eErrorOutOfDateKHR 0; with eSuboptimalKHR 0; with the swapchain extent error 0
+ROOT C:/kyty/s288: logs 206, 0.78 GB; with a "minimized" line 0; with "Recovering Vulkan swapchain" 0; with eErrorOutOfDateKHR 0; with eSuboptimalKHR 0; with the swapchain extent error 0
+HIT C:/kyty/f287/f2c/fx/real/log_f2c_a.txt size 283599695 mtime 2026-09-30T22:17:46Z sha256 565707122e53bb50c8bd1ff73cfa956388a9e86ba18a2f64ba4a49ecb3b46aad {'keyboard focus': (1, 198651)}
+HIT C:/kyty/f287/f2c/fx/real/log_f2c_b.txt size 382575230 mtime 2026-09-30T22:40:26Z sha256 7f42a2d3e1a151a2afeac6e75da6fa2085808b9c747aed65145aff7483a29924 {'keyboard focus': (7, 30382215)}
+HIT C:/kyty/f287/f2c/fx/real/log_f2c_c.txt size 283599695 mtime 2026-09-30T22:17:46Z sha256 565707122e53bb50c8bd1ff73cfa956388a9e86ba18a2f64ba4a49ecb3b46aad {'keyboard focus': (1, 198651)}
+HIT C:/kyty/f287/f2c/log_f2c_a.txt size 374199369 mtime 2026-10-01T05:29:31Z sha256 7ee3f092cec6b5caaa4fa2fa8446e30db455ac6458c339e5f8d9bccb1a6958e4 {'keyboard focus': (1, 150059)}
+HIT C:/kyty/f287/f2c/log_f2c_b.txt size 399500972 mtime 2026-10-01T05:36:11Z sha256 b85553e509a0fab9f79207a5435f770ffa72c673fdac384275a83ff4169b5802 {'keyboard focus': (1, 158823)}
+HIT C:/kyty/f287/f2c/log_f2c_c.txt size 198828898 mtime 2026-10-01T05:38:51Z sha256 1c731fbb1c6b1f7454cd7b71a22a9da66a23160e54a856053b4fff82617c8ab5 {'keyboard focus': (1, 158122)}
+HIT C:/kyty/p283/lead/p6chk/log_pa0_A0.txt size 284853254 mtime 2026-10-01T04:33:08Z sha256 84cef80e6571cd77a97ce4c908f83d4746994775445f51b8c0647ed6c3a5154d {'keyboard focus': (1, 203742)}
+HIT C:/kyty/p283/lead/p6chk/log_pa_A.txt size 289233938 mtime 2026-10-01T04:33:08Z sha256 4235eea70ebc0ac8e7121dadb5dc43d5be20edfd2b4d5fdb0755e82559c1d1be {'keyboard focus': (1, 203739)}
+HIT C:/kyty/p283/lead/p6chk/log_pb0_B0.txt size 310399681 mtime 2026-10-01T04:33:08Z sha256 985223b0cbbdb856df01fdc1bd58165783aa00e3470d49ca813e5f9cdd394f24 {'keyboard focus': (1, 211942)}
+HIT C:/kyty/p283/lead/p6chk/log_pb_B.txt size 268008993 mtime 2026-10-01T04:33:08Z sha256 ddd3b0da9ebbda260f44e925f4ff823666448b414e11d6f2b8c695898cd9a0b6 {'keyboard focus': (1, 211337)}
+HIT C:/kyty/p283/p4/log_pa0_A0.txt size 284853254 mtime 2026-10-01T04:20:56Z sha256 84cef80e6571cd77a97ce4c908f83d4746994775445f51b8c0647ed6c3a5154d {'keyboard focus': (1, 203742)}
+HIT C:/kyty/p283/p4/log_pa_A.txt size 289233938 mtime 2026-10-01T04:04:43Z sha256 4235eea70ebc0ac8e7121dadb5dc43d5be20edfd2b4d5fdb0755e82559c1d1be {'keyboard focus': (1, 203739)}
+HIT C:/kyty/p283/p4/log_pb0_B0.txt size 310399681 mtime 2026-10-01T04:28:49Z sha256 985223b0cbbdb856df01fdc1bd58165783aa00e3470d49ca813e5f9cdd394f24 {'keyboard focus': (1, 211942)}
+HIT C:/kyty/p283/p4/log_pb_B.txt size 268008993 mtime 2026-10-01T04:12:47Z sha256 ddd3b0da9ebbda260f44e925f4ff823666448b414e11d6f2b8c695898cd9a0b6 {'keyboard focus': (1, 211337)}
+HIT C:/kyty/p283/p6/runs/log_pa0_A0.txt size 284853254 mtime 2026-10-01T04:20:56Z sha256 84cef80e6571cd77a97ce4c908f83d4746994775445f51b8c0647ed6c3a5154d {'keyboard focus': (1, 203742)}
+HIT C:/kyty/p283/p6/runs/log_pa_A.txt size 289233938 mtime 2026-10-01T04:04:43Z sha256 4235eea70ebc0ac8e7121dadb5dc43d5be20edfd2b4d5fdb0755e82559c1d1be {'keyboard focus': (1, 203739)}
+HIT C:/kyty/p283/p6/runs/log_pb0_B0.txt size 310399681 mtime 2026-10-01T04:28:49Z sha256 985223b0cbbdb856df01fdc1bd58165783aa00e3470d49ca813e5f9cdd394f24 {'keyboard focus': (1, 211942)}
+HIT C:/kyty/p283/p6/runs/log_pb_B.txt size 268008993 mtime 2026-10-01T04:12:47Z sha256 ddd3b0da9ebbda260f44e925f4ff823666448b414e11d6f2b8c695898cd9a0b6 {'keyboard focus': (1, 211337)}
+HIT C:/kyty/s288/s4/log_c1_0.txt size 123385313 mtime 2026-10-01T06:21:45Z sha256 49d0a5222ef568553808c8c34989b1a743e860a2bc39fd2c33ee7a8b9032d902 {'keyboard focus': (1, 304905)}
+HIT C:/kyty/s288/s4/log_sw_m1.txt size 119621332 mtime 2026-10-01T06:05:11Z sha256 71a2e3fea3f78d53b17c42a1706576b39163322f573511233bf15f9debef6887 {'keyboard focus': (1, 195085)}
+HIT C:/kyty/s288/s4/log_sw_m2.txt size 203039092 mtime 2026-10-01T06:09:19Z sha256 337a67b0b49e6daa60b48f5cfcbf01855e4d38f3d2198d7b0b924ecd1f6be353 {'keyboard focus': (1, 195083)}
+HIT C:/kyty/s288/s4/log_sw_m3.txt size 205426015 mtime 2026-10-01T06:13:34Z sha256 9e832b32907282a66fa09defd446febef42c212306e546c78d1face219d4fecd {'keyboard focus': (1, 202680)}
+HIT C:/kyty/s288/s4/log_sw_t1.txt size 120007147 mtime 2026-10-01T06:17:45Z sha256 92b7a30cab7981840a84ce9c0430c6034a90dbc9450df6cea905d2a7130b2edd {'keyboard focus': (1, 304991)}
+ALL DONE

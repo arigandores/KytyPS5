@@ -1,0 +1,12 @@
+C:/kyty/f287/f5c/log_f5c_b.txt sha256 b53ea355bd67376fcc87071ac714107be2508bc64fb02b490f0ac3a52235068e bytes 30643543
+ minimize 30639250 Window1min 30640089 first [Vulkan][E] 30643161 count E 1 VUID 30643415 count VUID 1
+ E line has VUID: False | E line: b'[Vulkan][E][2]: vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = 0, height = 0) is invalid.'
+ VUID line: b'The Vulkan spec states: imageExtent members width and height must both be non-zero (https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#VUID-VkSwapchainCreateInfoKHR-imageExtent-01689'
+ lines between E and VUID: 1
+ last line: b' in C:\\kyty\\f287\\f5a2\\wt\\src\\graphics\\presentation\\window\\vulkanWindow.cpp:913'
+C:/kyty/s144/log_w144_09.txt sha256 08c3a71f11ab48fae635f2d6ca8cdf63a5bad878bb72bbc2bcc3bc022451c8c4 bytes 288183319
+ minimize -1 Window1min 288006876 first [Vulkan][E] 288182942 count E 1 VUID 288183196 count VUID 1
+ E line has VUID: False | E line: b'[Vulkan][E][2]: vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = 0, height = 0) is invalid.'
+ VUID line: b'The Vulkan spec states: imageExtent members width and height must both be non-zero (https://docs.vulkan.org/spec/latest/chapters/VK_KHR_surface/wsi.html#VUID-VkSwapchainCreateInfoKHR-imageExtent-01689'
+ lines between E and VUID: 1
+ last line: b' in C:\\kyty\\KytyPS5\\src\\graphics\\presentation\\window\\vulkanWindow.cpp:913'

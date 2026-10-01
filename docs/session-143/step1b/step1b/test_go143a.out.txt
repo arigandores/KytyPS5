@@ -1,0 +1,38 @@
+suite test_go143a.py sha256 41529d9bbaed622f1a828e008934739aa02c195f0ee667986b7cfa2eb3677474 target go143a.sh sha256 de60edda0f6b8235fad87def0747dd514aa6b889c2f46056696b0a1672419b41
+PASS g1 an unknown tag (and a tag of session 142) -> rc 2 usage
+PASS g2 the stop file -> rc 4 before DRY
+PASS g3 a held lock -> rc 4 before DRY
+PASS g4 PLWAIT not a number -> rc 2; PLWAIT 541 -> rc 2
+PASS g5 one attempt: the marker or <tag>.json -> rc 1
+PASS g6 order: w143_01 before v143_01 -> rc 1; after the v143_01 marker -> DRY rc 0; v143_02 before w143_01 -> rc 1, after w143_01.json -> rc 0; v143_03 before w143_02 -> rc 1; w143_02 before v143_02 -> rc 1
+PASS g7 the seal call line: no seal, another PLWAIT, two lines, a trailing blank, a go142a line -> rc 1; PLWAIT=0 as sealed -> DRY rc 0
+PASS g8 DRY rc 0 for every one of the 20 tags once its previous call is made
+PASS g9 every plan: one attempt, clock pin, markers 0, the empty gate file, the seal 02_sc143, no checkpoints/schedule, the stop check of its tag, the foreign-CPU snapshot at the lock and its row at the end
+PASS g10 every V: its level of item 231 (i)(1), video, hold 330, stable-draws 300, timeout 480, no validation
+PASS g11 every W: the level of its V, validation true with the layer path and the duplicate limit, hold 310, stable-draws 300, timeout 600, no video
+PASS g13 SEQ of the chain = sc143.SEQ (V then W per level, item 231 (i)(1) order)
+PASS g14 the chain tag -> level map = sc143.PAIRS (ten pairs)
+PASS g15 constants: the installed build 9235a7ac and its pinned copy, the empty-file sha, s51_vidglitch.py of scripts
+PASS g16 holds: V 330 (as v142), W 310 (item 231 (i)(2)); no census hold of 120
+PASS g17 the stop file and the lock are checked before any process
+PASS g18 the stop file is checked again right before the lock is taken
+PASS g19 the stop rule: EVERY call (V and W) refuses rc 5 on sc143.py --stop-check rc 5, before the lock
+PASS g20 the lock log lines are UTC; every event line of step2/times.txt is written with date -u
+PASS g21 the seal check runs before the lock
+PASS g22 the script is ASCII and LF only
+PASS g23 the word of the mutation harness is not a command of the chain (only its guard pattern)
+PASS g24 item 224 (a)(10): the shader cache count goes into step2/times.txt before the lock and after the run
+PASS g25 the chain reads the seal pred/02_sc143.md and the scorer sc143.py
+PASS g26 debt D-4 (item 231 (i)(4)): the snapshot fgcpu143.py --save is taken after the lock and the EXIT trap and before the install; the trap writes the foreign-CPU row (--since, date -u) into step2/times.txt after the restore and BEFORE the lock is removed
+PASS g27 item 231 (z)(5): a procload refusal writes a BUSY row of step2/times.txt whose process name comes from the last "procload: busy" line of go143a.log, read by the same command
+PASS g28 the name guard pattern watches the mutants and fixtures of 143 and the emulator
+PASS g29 the levels of the chain are exactly sc143.LEVELS
+PASS g30 no times.txt row prints "rc $?" after a $(date ...) substitution (it would print the rc of date): the rc of s51_vidglitch.py and sheet142.py is captured on the next line (GRC, SHRC) and printed
+PASS g31 item 242 (b): the cache manifest before the lock (after the shader cache count, before noclobber) and after the run (after the enter_scene end row, before the idle-refusal branch), each with a date -u row of times.txt; the stale list moves an old after-manifest, never the fresh before-manifest
+PASS g32 the lock line carries the Windows pid of the shell (read by the builtin read from /proc/$$/winpid before any process); the foreign-CPU row gets --chain-pid $WINPID (item 242 (a), (d))
+PASS g33 every DRY plan names both manifests and the chain pid of the CPU row
+PASS g34 a held lock of the new form is printed whole in the BUSY line
+PASS g35 the step 2 wrappers (item 242 (d)): ASCII and LF; next_one checks the tag, the stop file and the lock before anything else, writes its call row, starts call_one detached (nohup ... & disown) and waits in the foreground with wait_one; call_one runs exactly the seal call "PLWAIT=540 bash C:/kyty/s143/go143a.sh $T" and writes the rc; wait_one waits at most 56 x 10 s = 560 s (< 600 s of a tool command)
+PASS g36 next_one.sh refuses an unknown tag rc 2 before the stop file, the lock or any call
+checks: 35
+ALL OK

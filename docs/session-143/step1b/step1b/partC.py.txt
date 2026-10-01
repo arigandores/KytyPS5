@@ -1,0 +1,315 @@
+# ================= PART C (session 143 link 1b, HPP-321; ROADMAP item 242 (b)-(e)): one case per new term and per new edge -
+# (c) B5a on the whole V and its variant 120 s, K2 by place, K2 only after 120 s, the outcome on 120 s of the map (A) row
+# (K2 at 119 s / 121 s / exactly 120 s / 1 us later; markers, hold_exit and the tail stall before / after the cut); (d) W
+# without the dt rule and the class VALIDATION_STOP (the report edges: the next "--- Build ---", the location line, 50
+# lines; log and stdout; profile 142 keeps K1); (e) the pair row by the json level and the log sha of step2/times.txt;
+# (b) the cache continuity lines and the forms without the tags after the first break.
+FILL = 40000          # a filler row: 40 ms, neither K2 nor K3
+PRE_US = 1500000 + 20000 + 2000000     # the loading rows and the first scene frame of scene_lines: 3.52 s after the entry
+
+
+def k2_at(level, end_us, k2=1200000, tail=7000, fill=FILL):
+    """A V log whose K2 frame (dt k2) ends at end_us of presented time after the entry line (end_us - PRE_US - k2 must be a
+    multiple of fill), then tail rows of 40 ms."""
+    n = (end_us - PRE_US - k2) // fill
+    assert PRE_US + n * fill + k2 == end_us, end_us
+    return scene_lines(level, [fill] * n + [k2] + [fill] * tail)
+
+
+LV4 = 'path_maker_mana_tree'
+d119 = S.derive(S.scan(mk143(BASE / 'C1a', 'v143_01', k2_at(LV1, 119000000)) + '/log_v143_01.txt'), LV1)
+d121 = S.derive(S.scan(mk143(BASE / 'C1b', 'v143_01', k2_at(LV1, 121000000)) + '/log_v143_01.txt'), LV1)
+d120 = S.derive(S.scan(mk143(BASE / 'C1c', 'v143_01', k2_at(LV1, 120000000)) + '/log_v143_01.txt'), LV1)
+d120b = S.derive(S.scan(mk143(BASE / 'C1d', 'v143_01', k2_at(LV1, 120000001, k2=1200001)) + '/log_v143_01.txt'), LV1)
+ok &= case('C1 a K2 frame ending at 119 s of presented time after the entry line is within 120 s; at 121 s it is not; '
+           'the whole-V K2 list holds both (place hold)',
+           d119['k2_120'] == [(2853, 1200000, 'hold')] and d119['k2'] == [(2853, 1200000, 'hold')]
+           and d121['k2_120'] == [] and d121['k2'] == [(2903, 1200000, 'hold')])
+ok &= case('C1b the edge: a K2 frame ending at exactly 120 000 000 us is within; 1 us later it is not; the cut is the first '
+           'row past 120 s', d120['k2_120'] == [(2878, 1200000, 'hold')] and d120b['k2_120'] == [] and
+           d120['cut120_pos'] is not None and d120b['cut120_pos'] is not None and d120b['cut120_pos'] < d120['cut120_pos'])
+ok &= case('C1c a log that never passes 120 s has no cut', S.derive(S.scan(mk143(BASE / 'C1e', 'v143_01', scene_lines(
+    LV1, [FILL] * 100)) + '/log_v143_01.txt'), LV1)['cut120_pos'] is None)
+RC = BASE / 'C2'
+mk143(RC, 'v143_01', k2_at(LV1, 119000000))
+mk143(RC, 'v143_02', k2_at(LV2, 121000000))
+mk143(RC, 'v143_03', scene_lines(LV3, [16667] * 10 + [1500000] + [FILL] * 8000))
+mk143(RC, 'v143_04', scene_lines(LV4, [FILL] * 8000))
+oc = S.summary(str(RC), PRED_SHA, None)[0]
+ec = dict((t, S.entry_of(t, str(RC), PRED_SHA)) for t in ('v143_01', 'v143_02', 'v143_03', 'v143_04'))
+ok &= case('C2 B5a by the letter on the whole V: 3/10 (v143_01 at 119 s, v143_02 at 121 s, v143_03 in the window)',
+           'FORM B5a (a frame dt >= 1 s after the first scene frame): 3/10 [c] (admitted and entered 4)' in oc)
+ok &= case('C2b the variant 120 s: 2/10 v143_01,v143_03; K2 by place on the whole V: entry 1 v143_03, hold 2 v143_01,v143_02',
+           'FORM B5a variant 120 s (a frame dt >= 1 s within 120 s of presented time after the entry line; the class '
+           'decision and pooling with s142 use this one, item 242 (c)): 2/10 [c] v143_01,v143_03; K2 by place on the whole '
+           'V: entry 1 v143_03, hold 2 v143_01,v143_02' in oc)
+ok &= case('C2c K2 only after 120 s: v143_02 (a separate row (B), form edes122)',
+           'K2 ON THE HOLD AFTER 120 s ONLY (a separate row (B) of register F per level, form edes122, not B5a; item 242 '
+           '(c)): v143_02' in oc)
+ok &= case('C2d the map (A) rows carry both outcomes: v143_01 K2 / K2, v143_02 HOLDS_120 on 120 s / K2 on the whole V, '
+           'v143_04 HOLDS_120 / HOLDS_120',
+           ec['v143_01']['outcome120'][0] == 'K2' and ec['v143_01']['outcome'] == 'K2' and
+           ec['v143_02']['outcome120'] == ('HOLDS_120', 'held') and ec['v143_02']['outcome'] == 'K2' and
+           ec['v143_04']['outcome120'][0] == 'HOLDS_120' and ec['v143_04']['outcome'] == 'HOLDS_120' and
+           '    map (A) row %s: outcome on 120 s HOLDS_120 (held); outcome on the whole V K2 (frame dt >= 1 s or tail stall)'
+           % LV2 in oc)
+ok &= case('C2e the entry print of a V: the K2 frames within 120 s and both outcomes',
+           any(x.startswith('  K2 frames within 120 s of presented time after the entry line (item 242 (c)): [(2853, '
+                            '1200000, \'hold\')]; outcome on 120 s: K2') for x in oc))
+LATE = [FILL] * 8000
+BOOM = 'Unhandled exception: access violation'
+cut_lines = scene_lines(LV1, LATE[:3500] + ['MARK'] + LATE[3500:])
+cut_lines = [BOOM if x == ft(3515, 'MARK') else x for x in cut_lines] if False else None
+
+
+def with_marker(at, line, level=LV1):
+    """scene_lines with the line inserted after post row `at` (cumulative 3.52 s + 40 ms per row)."""
+    out = scene_lines(level, LATE)
+    i = out.index(ft(14 + at, FILL))
+    return out[:i + 1] + [line] + out[i + 1:]
+
+
+e = S.entry_of('v143_01', mk143(BASE / 'C3a', 'v143_01', with_marker(3500, BOOM)), PRED_SHA)
+ok &= case('C3 a log death marker after 120 s (row 3500, 143.5 s): on 120 s HOLDS_120, on the whole V K1',
+           e['outcome120'][0] == 'HOLDS_120' and e['outcome'] == 'K1')
+e = S.entry_of('v143_01', mk143(BASE / 'C3b', 'v143_01', with_marker(2000, BOOM)), PRED_SHA)
+ok &= case('C3b a log death marker before 120 s (row 2000, 83.5 s): K1 on 120 s and on the whole V',
+           e['outcome120'][0] == 'K1' and e['outcome'] == 'K1')
+R3 = BASE / 'C3c'
+mk143(R3, 'v143_01', scene_lines(LV1, LATE))
+(R3 / 'stdout_v143_01.txt').write_bytes(b'--- Fatal Error ---\n')
+e = S.entry_of('v143_01', str(R3), PRED_SHA)
+ok &= case('C3c a stdout marker with a cut: not on 120 s (no time), K1 on the whole V',
+           e['outcome120'][0] == 'HOLDS_120' and e['outcome'] == 'K1')
+R3d = BASE / 'C3d'
+mk143(R3d, 'v143_01', scene_lines(LV1, [FILL] * 100), js143('v143_01', attempt=dict(hold_s=130.0)))
+(R3d / 'stdout_v143_01.txt').write_bytes(b'--- Fatal Error ---\n')
+e = S.entry_of('v143_01', str(R3d), PRED_SHA)
+ok &= case('C3d without a cut (the log never passes 120 s) a stdout marker counts on 120 s too: K1',
+           e['outcome120'][0] == 'K1' and e['derive']['cut120_pos'] is None)
+e = S.entry_of('v143_01', mk143(BASE / 'C3e', 'v143_01', scene_lines(LV1, LATE),
+                                js143('v143_01', attempt=dict(hold_exit=3221225477))), PRED_SHA)
+ok &= case('C3e hold_exit with a cut: on 120 s HOLDS_120, on the whole V K1', e['outcome120'][0] == 'HOLDS_120'
+           and e['outcome'] == 'K1')
+e = S.entry_of('v143_01', mk143(BASE / 'C3f', 'v143_01', scene_lines(LV1, LATE),
+                                js143('v143_01', attempt=dict(ft_tail=0))), PRED_SHA)
+ok &= case('C3f the tail stall with a cut: on 120 s HOLDS_120, on the whole V K2', e['outcome120'][0] == 'HOLDS_120'
+           and e['outcome'] == 'K2')
+e = S.entry_of('v143_01', mk143(BASE / 'C3g', 'v143_01', scene_lines(LV1, [FILL] * 100),
+                                js143('v143_01', attempt=dict(ft_tail=0))), PRED_SHA)
+ok &= case('C3g the tail stall without a cut: K2 on 120 s', e['outcome120'] == ('K2', 'tail stall'))
+e = S.entry_of('v143_01', mk143(BASE / 'C3h', 'v143_01', scene_lines(LV1, [FILL] * 100),
+                                js143('v143_01', attempt=dict(hold_exit=3221225477))), PRED_SHA)
+ok &= case('C3h hold_exit without a cut: K1 on 120 s', e['outcome120'][0] == 'K1')
+e = S.entry_of('v143_01', mk143(BASE / 'C3i', 'v143_01', [ft(i, 16667) for i in range(1, 50)],
+                                js143('v143_01', attempt=dict(outcome='timeout', hold_s=None))), PRED_SHA)
+ok &= case('C3i not entered: NOT_ENTERED on 120 s', e['outcome120'][0] == 'NOT_ENTERED')
+sc_lines = scene_lines(LV1, LATE[:3500]) + [start('other_level')] + [ft(9000 + i, FILL) for i in range(10)]
+e = S.entry_of('v143_01', mk143(BASE / 'C3j', 'v143_01', sc_lines), PRED_SHA)
+ok &= case('C3j a scene change after 120 s: on 120 s HOLDS_120 (the change is not seen), on the whole V NOT_EVALUABLE',
+           e['outcome120'][0] == 'HOLDS_120' and e['outcome'] == 'NOT_EVALUABLE')
+sc_lines = scene_lines(LV1, LATE[:1000]) + [start('other_level')] + [ft(9000 + i, FILL) for i in range(4000)]
+e = S.entry_of('v143_01', mk143(BASE / 'C3k', 'v143_01', sc_lines), PRED_SHA)
+ok &= case('C3k a scene change before 120 s: NOT_EVALUABLE on 120 s', e['outcome120'] == ('NOT_EVALUABLE', 'scene change'))
+sc_lines = scene_lines(LV1, LATE[:100] + [1200000] + LATE[:100]) + [start('other_level')] + [ft(9000 + i, FILL)
+                                                                                               for i in range(4000)]
+e = S.entry_of('v143_01', mk143(BASE / 'C3l', 'v143_01', sc_lines), PRED_SHA)
+ok &= case('C3l a K2 frame before a scene change before 120 s: K2 on 120 s', e['outcome120'][0] == 'K2')
+sc_lines = with_marker(500, BOOM)
+sc_lines = sc_lines[:sc_lines.index(ft(14 + 1000, FILL))] + [start('other_level')] + [ft(9000 + i, FILL) for i in range(4000)]
+e = S.entry_of('v143_01', mk143(BASE / 'C3m', 'v143_01', sc_lines), PRED_SHA)
+ok &= case('C3m a log marker before a scene change before 120 s: its class on 120 s', e['outcome120'][0] == 'K1')
+e = S.entry_of('v143_01', mk143(BASE / 'C3n', 'v143_01', scene_lines(LV1, LATE),
+                                js143('v143_01', attempt=dict(outcome='exited'))), PRED_SHA)
+ok &= case('C3n an exited attempt is K1 on 120 s', e['outcome120'][0] == 'K1')
+e = S.entry_of('v143_01', mk143(BASE / 'C3o', 'v143_01', scene_lines(LV1, LATE),
+                                js143('v143_01', attempt=dict(outcome='timeout'))), PRED_SHA)
+ok &= case('C3o an attempt not stable is NOT_EVALUABLE on 120 s', e['outcome120'] == ('NOT_EVALUABLE', 'no stable (timeout)'))
+e = S.entry_of('v143_01', mk143(BASE / 'C3p', 'v143_01', scene_lines(LV1, LATE),
+                                js143('v143_01', attempt=dict(hold_s=119.9))), PRED_SHA)
+ok &= case('C3p hold_s 119.9 is NOT_EVALUABLE on 120 s', e['outcome120'][0] == 'NOT_EVALUABLE')
+e = S.entry_of('v143_01', mk143(BASE / 'C3q', 'v143_01', scene_lines(LV1, [FILL] * 100)), PRED_SHA)
+ok &= case('C3q presented time after the entry line < 120 s: NOT_EVALUABLE on 120 s',
+           e['outcome120'] == ('NOT_EVALUABLE', 'presented time after the entry line < 120 s'))
+e = S.entry_of('v143_01', mk143(BASE / 'C3r', 'v143_01', scene_lines(LV1, [FILL] * 100, first_draws=50)), PRED_SHA)
+ok &= case('C3r no first scene frame: NOT_EVALUABLE on 120 s', e['outcome120'] == ('NOT_EVALUABLE', 'no first scene frame'))
+RW = BASE / 'C4'
+WK2 = [VF] + scene_lines(LV1, [16667] * 700 + [1200000] + [150000] * 2000) + [VW] * 3
+mk143(RW, 'w143_01', WK2)
+mk143(RW, 'v143_01', scene_lines(LV1, [16667] * 700 + [1200000] + list(v_post())))
+ew = S.entry_of('w143_01', str(RW), PRED_SHA)
+ev = S.entry_of('v143_01', str(RW), PRED_SHA)
+fw = S.fmt_entry(ew)
+ok &= case('C4 a W with a frame dt 1.2 s: the outcome has no dt rule (HOLDS_120), the frame is an info line; the V with the '
+           'same frame is K2; the W has no outcome on 120 s',
+           ew['outcome'] == 'HOLDS_120' and ew['outcome_vx'] == 'HOLDS_120' and ev['outcome'] == 'K2'
+           and ew['outcome120'] is None and
+           any(x.startswith('  frames dt >= 1 s after the first scene frame: [(715, 1200000, \'hold\')] (info, under '
+                            'validation, not classified') for x in fw) and not any(x.startswith('  K2 frames') for x in fw))
+mk143(RW / 'b', 'w143_01', WK2, js143('w143_01', attempt=dict(ft_tail=0)))
+ok &= case('C4b a W with the tail stall stays K2', S.entry_of('w143_01', str(RW / 'b'), PRED_SHA)['outcome'] == 'K2')
+REP = ['--- Build ---', 'v0.0.0 label', '--- Error ---', '[Vulkan][E][1]: Validation Error: [ VUID-x ] bad', ' in vulkanWindow.cpp:912']
+ok &= case('C4c the W SCENE_OK reads the dt-free W: a W with a frame dt 1.2 s is still YES', S.scene_ok(
+    ev and S.entry_of('v143_01', mk143(RW / 'c', 'v143_01'), PRED_SHA), S.entry_of('w143_01', mk143(RW / 'c', 'w143_01', WK2),
+                                                                                    PRED_SHA), 'viewed')[0] == 'YES')
+
+
+def wstop(name, rep, tag='w143_01', std=False):
+    lines = [VF] + scene_lines(LV1, [150000] * 300) + [VW]
+    if not std:
+        lines = lines + rep
+    root = mk143(BASE / name, tag, lines if tag in S.W_TAGS else scene_lines(LV1, LATE) + ([] if std else rep))
+    if std:
+        Path(root, 'stdout_%s.txt' % tag).write_bytes(('\n'.join(rep) + '\n').encode())
+    return S.entry_of(tag, root, PRED_SHA)
+
+
+e = wstop('C5a', REP)
+ok &= case('C5 "--- Error ---" with [Vulkan][E] in its report -> VALIDATION_STOP (not K1), outcome VALIDATION_STOP',
+           [m['cls'] for m in e['marks']] == ['VALIDATION_STOP'] and e['outcome'] == 'VALIDATION_STOP'
+           and e['outcome_vx'] == 'VALIDATION_STOP' and 'first death marker --- Error ---' in e['reason'])
+w5, rows5 = S.scene_ok(S.entry_of('v143_01', mk143(BASE / 'C5a', 'v143_01'), PRED_SHA), e, 'viewed')
+ok &= case('C5b such a W fails SCENE_OK by its death-marker row and its [Vulkan][E] row only',
+           w5 == 'NO' and sorted(r[0][:22] for r in rows5 if not r[1]) == ['W 0 . death markers'[:0] + 'W 0 [Vulkan][E] lines',
+                                                                          'W 0 death markers (inc'])
+e = wstop('C5c', ['--- Build ---', 'v0', '--- Error ---', 'Error: something', ' in graphicsRun.cpp:77', '[Vulkan][E][1]: x'])
+ok &= case('C5c a [Vulkan][E] line after the location line is not in the report -> K1', e['outcome'] == 'K1')
+e = wstop('C5d', ['--- Build ---', 'v0', '--- Error ---', 'Error: one', '--- Build ---', '[Vulkan][E][1]: x'])
+ok &= case('C5d a [Vulkan][E] line after the next "--- Build ---" is not in the report -> K1', e['outcome'] == 'K1')
+e = wstop('C5e', ['--- Error ---'] + ['filler %d' % i for i in range(49)] + ['[Vulkan][E][1]: x'])
+e2 = wstop('C5f', ['--- Error ---'] + ['filler %d' % i for i in range(50)] + ['[Vulkan][E][1]: x'])
+ok &= case('C5e the report is at most 50 lines after the title: line 50 counts, line 51 does not',
+           e['outcome'] == 'VALIDATION_STOP' and e2['outcome'] == 'K1')
+e = wstop('C5g', REP, std=True)
+ok &= case('C5g the report in the emulator stdout -> VALIDATION_STOP (src stdout)',
+           [(m['cls'], m['src']) for m in e['marks']] == [('VALIDATION_STOP', 'stdout')])
+e = wstop('C5h', ['--- Build ---', 'v0', '--- Fatal Error ---', '[Vulkan][E][1]: x', ' in a.cpp:1'])
+ok &= case('C5h "--- Fatal Error ---" with [Vulkan][E] stays K1 (only "--- Error ---" is the validation exit)',
+           e['outcome'] == 'K1')
+e = wstop('C5i', REP, tag='v143_01')
+ok &= case('C5i the class is read by the report in profile 143 for a V too', e['marks'][0]['cls'] == 'VALIDATION_STOP')
+old = S.profile(S.P142)
+r142 = S.build('w142', SKY, js_for('w142'), S.scan(Path(wstop('C5j', REP)['tag'] and BASE / 'C5j' / 'log_w143_01.txt')),
+               None, None, str(BASE / 'C5j'), PRED_SHA)
+S.profile(old)
+ok &= case('C5j profile 142 keeps the reading of s142: the same report -> K1', r142['outcome'] == 'K1'
+           and r142['marks'][0]['cls'] == 'K1')
+ok &= case('C5k err_reports on a file: the position of the "--- Error ---" line whose report carries [Vulkan][E]',
+           len(S.scan(str(BASE / 'C5a' / 'log_w143_01.txt'))['err_vk']) == 1 and
+           S.scan(str(BASE / 'C5c' / 'log_w143_01.txt'))['err_vk'] == set())
+RP = BASE / 'C6'
+v6, w6, p6 = pair143('C6')
+ok &= case('C6 the pair row passes with the log sha of times.txt and the json level of both',
+           row_ok(S.scene_ok(v6, w6, 'viewed', p6)[1], 'V v143_01 and W w143_01 are the pair of one level') is True)
+Path(BASE / 'C6' / 'log_v143_01.txt').write_bytes(Path(BASE / 'C6' / 'log_v143_01.txt').read_bytes() + b'x\n')
+v6b = S.entry_of('v143_01', str(BASE / 'C6'), PRED_SHA)
+ok &= case('C6b a replaced V log (its sha != the enter_scene end line of times.txt) -> the pair row FAIL',
+           row_ok(S.scene_ok(v6b, w6, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False and v6b['times_log_sha'] is not None)
+v6c, w6c, _ = pair143('C6c')
+Path(BASE / 'C6c' / 'log_w143_01.txt').write_bytes(b'other\n')
+w6c = S.entry_of('w143_01', str(BASE / 'C6c'), PRED_SHA)
+ok &= case('C6c a replaced W log -> FAIL', row_ok(S.scene_ok(v6c, w6c, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False)
+v6d, w6d, _ = pair143('C6d', w_js=js143('w143_01', attempt=dict(level=LV2)))
+ok &= case('C6d the W json level of another level -> FAIL',
+           row_ok(S.scene_ok(v6d, w6d, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False)
+v6e, w6e, _ = pair143('C6e', v_js=js143('v143_01', attempt=dict(level=None)))
+ok &= case('C6e the V json without a level -> FAIL',
+           row_ok(S.scene_ok(v6e, w6e, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False)
+v6f, w6f, _ = pair143('C6f')
+(BASE / 'C6f' / 'step2' / 'times.txt').write_text('', encoding='utf-8')
+v6f = S.entry_of('v143_01', str(BASE / 'C6f'), PRED_SHA)
+ok &= case('C6f no enter_scene end line in times.txt -> FAIL', v6f['times_log_sha'] is None and
+           row_ok(S.scene_ok(v6f, w6f, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False)
+v6g, w6g, _ = pair143('C6g')
+with open(BASE / 'C6g' / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+    f.write('2026-10-01T00:00:01Z go142a v143_01 enter_scene end rc 0 log_v143_01.txt sha256 %s\n' % ('cd' * 32))
+    f.write('2026-10-01T00:00:01Z go143a v143_01 enter_scene end rc 0 log_v143_01.txt sha256 %s\n' % ('ef' * 32))
+v6g = S.entry_of('v143_01', str(BASE / 'C6g'), PRED_SHA)
+ok &= case('C6g the LAST enter_scene end line of the chain go143a counts (a go142a line does not)',
+           v6g['times_log_sha'] == 'ef' * 32 and row_ok(S.scene_ok(v6g, w6g, 'viewed', p6)[1], 'V v143_01 and W w143_01')
+           is False)
+v6h, w6h, _ = pair143('C6h')
+v6h['log_sha'] = None
+v6h['times_log_sha'] = None
+ok &= case('C6h no log sha on either side is not equal -> FAIL',
+           row_ok(S.scene_ok(v6h, w6h, 'viewed', p6)[1], 'V v143_01 and W w143_01') is False)
+
+
+def manifest(root, tag, when, files, roots=('shader', 'pipeline', 'glcache'), absent=()):
+    (Path(root) / 'runs143').mkdir(parents=True, exist_ok=True)
+    (Path(root) / 'runs143' / ('cache_%s.%s.json' % (tag, when))).write_text(json.dumps(dict(
+        roots=[[r, 'C:/x/' + r, r not in absent] for r in roots], files=[list(f) for f in files])), encoding='utf-8')
+
+
+F0 = [('shader', 'a.bin', 10, 1, 'aa' * 32), ('pipeline', 'p.bin', 20, 2, 'bb' * 32), ('glcache', 'd/x.toc', 5, 3, 'cc' * 32)]
+F1 = F0 + [('shader', 'b.bin', 11, 4, 'dd' * 32)]
+RK = BASE / 'C7'
+for t in ('v143_01', 'w143_01', 'v143_02', 'w143_02', 'v143_03'):
+    mk143(RK, t)
+manifest(RK, 'v143_01', 'before', F0)
+manifest(RK, 'v143_01', 'after', F1)
+manifest(RK, 'w143_01', 'before', F1)
+manifest(RK, 'w143_01', 'after', F1)
+manifest(RK, 'v143_02', 'before', F1)
+manifest(RK, 'v143_02', 'after', F1)
+manifest(RK, 'w143_02', 'before', F1)
+manifest(RK, 'w143_02', 'after', F1)
+manifest(RK, 'v143_03', 'before', F1)
+manifest(RK, 'v143_03', 'after', F1)
+o7 = S.summary(str(RK), PRED_SHA, None)[0]
+ok &= case('C7 equal manifests: one "same" line per adjacent pair of made tags (4), the run of v143_01 adds one file, '
+           'no break',
+           sum(1 for x in o7 if x.endswith(': same (shader 2 files, pipeline 1 files, glcache 1 files)')) == 4 and
+           '  within v143_01 (before the lock -> after the run): shader +1 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0' in o7
+           and 'FORMS without the tags after the first cache break (item 242 (b)): no break - the forms above stand' in o7
+           and o7[o7.index('STOP RULE (item 221 (g)(4)): not met') + 1].startswith('CACHE CONTINUITY (item 242 (b)'))
+F2 = [('shader', 'a.bin', 10, 9, 'aa' * 32)] + F1[1:]
+manifest(RK, 'v143_02', 'before', F2)
+o7b = S.summary(str(RK), PRED_SHA, None)[0]
+ok &= case('C7b an mtime changed between w143_01 and v143_02 -> "cache changed between tags" with the root counts; the forms '
+           'without v143_02 and later are printed over v143_01 only',
+           '  w143_01 -> v143_02: cache changed between tags (shader +0 -0 ~1; pipeline +0 -0 ~0; glcache +0 -0 ~0)' in o7b and
+           'FORMS without the tags after the first cache break (before v143_02; item 242 (b)): over V v143_01: B5a 0/10, '
+           'B5a variant 120 s 0/10, B5 0/10, B33 0/10 (variant 120 s 0/10)' in o7b)
+manifest(RK, 'v143_02', 'before', F1)
+F3 = [x for x in F1 if x[0] != 'glcache']
+manifest(RK, 'w143_02', 'before', F3, absent=('glcache',))
+o7c = S.summary(str(RK), PRED_SHA, None)[0]
+ok &= case('C7c a root absent (GLCache gone) between v143_02 and w143_02 -> a break with "presence changed"; the first break '
+           'decides the forms',
+           '  v143_02 -> w143_02: cache changed between tags (shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -1 ~0 presence '
+           'changed)' in o7c and 'FORMS without the tags after the first cache break (before w143_02; item 242 (b)): over V '
+           'v143_01,v143_02:' in ' '.join(o7c))
+manifest(RK, 'w143_02', 'before', F1)
+(RK / 'runs143' / 'cache_w143_02.after.json').unlink()
+o7d = S.summary(str(RK), PRED_SHA, None)[0]
+ok &= case('C7d a missing manifest -> NOT EVALUABLE, counted as a break (executor variant)',
+           '  w143_02 -> v143_03: NOT EVALUABLE (manifest missing: after w143_02) - counted as a break (executor variant)'
+           in o7d and any(x.startswith('FORMS without the tags after the first cache break (before v143_03;') for x in o7d))
+(RK / 'runs143' / 'cache_w143_02.after.json').write_text('{broken', encoding='utf-8')
+ok &= case('C7e a broken manifest reads as missing', S.cache_manifest(str(RK), 'w143_02', 'after') is None and
+           S.cache_manifest(str(RK), 'w143_02', 'before') is not None)
+ok &= case('C7f a pair with a tag not made has no line (v143_03 -> w143_03)',
+           not any(x.startswith('  v143_03 -> w143_03') for x in o7d))
+mk143(RK / 'k2', 'v143_01', k2_at(LV1, 119000000))
+mk143(RK / 'k2', 'w143_01')
+mk143(RK / 'k2', 'v143_02', k2_at(LV2, 119000000))
+manifest(RK / 'k2', 'v143_01', 'after', F0)
+manifest(RK / 'k2', 'w143_01', 'before', F0)
+manifest(RK / 'k2', 'w143_01', 'after', F0)
+manifest(RK / 'k2', 'v143_02', 'before', F1)
+o7g = S.summary(str(RK / 'k2'), PRED_SHA, None)[0]
+ok &= case('C7g the forms without the tags after the break count the kept V: B5a 1/10 and its variant 1/10 over v143_01',
+           'FORMS without the tags after the first cache break (before v143_02; item 242 (b)): over V v143_01: B5a 1/10, '
+           'B5a variant 120 s 1/10, B5 0/10, B33 0/10 (variant 120 s 0/10)' in o7g and
+           'FORM B5a (a frame dt >= 1 s after the first scene frame): 2/10 [c] (admitted and entered 2)' in o7g)
+ok &= case('C8 the seal of 143 names the cache manifest, the lock check, their suite and the three call wrappers of step 2',
+           all(n in S.SEALED_NAMES for n in ('cachemf143.py', 'lockcheck143.py', 'test_tools143.py', 'step2/next_one.sh',
+                                             'step2/call_one.sh', 'step2/wait_one.sh')) and S.CACHE_ROOTS ==
+           ('shader', 'pipeline', 'glcache') and S.VSTOP == 'VALIDATION_STOP' and S.REPORT_LINES == 50)
+try:
+    ('\n'.join(oc + o7 + o7b + o7c + o7d + o7g + fw)).encode('ascii', errors='strict')
+    encc = True
+except UnicodeError:
+    encc = False
+ok &= case('C9 every line new in link 1b is ASCII', encc)

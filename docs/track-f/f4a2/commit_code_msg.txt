@@ -1,0 +1,9 @@
+track F link F4a2 (HPP-346): ROADMAP p.262(b) - under KYTY_FIX_DUALSRC=1 a graphics pipeline with a SRC1 blend factor on a blended attachment gets its own fragment module with the Location 1 output rewritten to Location 0 Index 1
+
+- dualSrcBlend.h (new, header-only, no Vulkan): DualSrcBlend::RewriteLocation1ToIndex1 - Location literal 1 -> 0 of the one Output variable at Location 1, OpDecorate Index 1 inserted after it, every other word unchanged; skip outcomes malformed / member_decoration / has_index / no_location1 / multiple_location1 / no_location0 / location_above1
+- shaders.cpp CreatePipelineInternal (the one creation function of the game path and of precache): variant module for the pipeline only, destroyed after vkCreateGraphicsPipelines; lines "DualSrcBlend: patched ps=<hash>" / "DualSrcBlend: skip ps=<hash> reason=<reason>" once per PS hash (reasons also attachments, no_spirv)
+- ShaderProgram::spirv - view of Permutation::spirv set next to AdoptDmaLayout at its three sites; GraphicContext dual_src_blend_enabled / max_fragment_dual_src_attachments set in vulkanWindow.cpp
+- =0: no new call, log line DualSrcBlend: supported= of F4a unchanged; outside the translation signature set (KYTY_SHADER_SOURCE_HASH of the build stays 846a041a); recipe key and file unchanged
+- proof without the game, tests, worktree binary: docs/track-f/f4a2.md
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

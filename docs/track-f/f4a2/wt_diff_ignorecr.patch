@@ -1,0 +1,365 @@
+diff --git a/src/graphics/host_gpu/graphicContext.h b/src/graphics/host_gpu/graphicContext.h
+index e8c1f355..c045185b 100644
+--- a/src/graphics/host_gpu/graphicContext.h
++++ b/src/graphics/host_gpu/graphicContext.h
+@@ -57,6 +57,10 @@ struct GraphicContext {
+ 	bool                               gpu_markers_enabled                   = false;
+ 	bool                               attachment_feedback_loop_enabled      = false;
+ 	bool                               provoking_vertex_last_enabled         = false;
++	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): dualSrcBlend enabled on the device (KYTY_FIX_DUALSRC=1 and
++	// supported) and its limit; CreatePipelineInternal builds the Location 0 Index 1 variant of the pixel module.
++	bool                               dual_src_blend_enabled                = false;
++	uint32_t                           max_fragment_dual_src_attachments     = 0;
+ 	// VK_EXT_external_memory_host (KYTY_HOST_IMPORT, default on): guest direct memory imported
+ 	// as Vulkan buffers, so texture uploads read guest memory over PCIe without a host copy.
+ 	bool                               external_memory_host_enabled          = false;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h b/src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h
+new file mode 100644
+index 00000000..7948ea2a
+--- /dev/null
++++ b/src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h
+@@ -0,0 +1,139 @@
++#pragma once
++
++// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the translated pixel shader writes the MRT1 export as an
++// output at Location 1; the second blend source of the guest is taken to be MRT1 ([I] of p.262(b), not verified).
++// Vulkan reads the SRC1 factors from the output at Location 0 Index 1. Under KYTY_FIX_DUALSRC=1 a
++// pipeline with SRC1 factors gets its own fragment module rewritten by RewriteLocation1ToIndex1; the
++// translated module, its cache file and its other pipelines are untouched. Header-only, no Vulkan:
++// the proof executable of p.262(b)(3) includes this same function. Outside the translation cache
++// signature set (src/graphics/shader/** and the three files of CMakeLists.txt SHADER_CACHE_EXTRA_FILES).
++
++#include <cstddef>
++#include <cstdint>
++#include <span>
++#include <vector>
++
++namespace Libs::Graphics::DualSrcBlend {
++
++enum class Outcome : uint8_t {
++	Patched,            // out: Location 1 -> Location 0, OpDecorate Index 1 inserted after it
++	Malformed,          // not a SPIR-V module this parser can walk
++	MemberDecoration,   // a Location or Index decoration on a struct member
++	HasIndex,           // the module already decorates something with Index
++	NoLocation1,        // no Output variable at Location 1
++	MultipleLocation1,  // more than one Output variable at Location 1
++	NoLocation0,        // no Output variable at Location 0
++	LocationAbove1,     // an Output variable at Location >= 2
++};
++
++inline const char* OutcomeName(Outcome outcome) {
++	switch (outcome) {
++		case Outcome::Patched: return "patched";
++		case Outcome::Malformed: return "malformed";
++		case Outcome::MemberDecoration: return "member_decoration";
++		case Outcome::HasIndex: return "has_index";
++		case Outcome::NoLocation1: return "no_location1";
++		case Outcome::MultipleLocation1: return "multiple_location1";
++		case Outcome::NoLocation0: return "no_location0";
++		case Outcome::LocationAbove1: return "location_above1";
++	}
++	return "unknown";
++}
++
++// `out` is written only for Outcome::Patched: `in` with the literal of the one OpDecorate <var>
++// Location 1 of an Output variable set to 0 and OpDecorate <var> Index 1 inserted right after it.
++// No new id, so the header bound stays; every other word is copied unchanged.
++inline Outcome RewriteLocation1ToIndex1(std::span<const uint32_t> in, std::vector<uint32_t>& out) {
++	constexpr uint32_t kMagic             = 0x07230203u;
++	constexpr uint32_t kOpVariable        = 59u;
++	constexpr uint32_t kOpDecorate        = 71u;
++	constexpr uint32_t kOpMemberDecorate  = 72u;
++	constexpr uint32_t kStorageOutput     = 3u;
++	constexpr uint32_t kDecorationLoc     = 30u;
++	constexpr uint32_t kDecorationIndex   = 32u;
++	constexpr size_t   kHeaderWords       = 5;
++	constexpr size_t   kNone              = static_cast<size_t>(-1);
++
++	if (in.size() < kHeaderWords || in[0] != kMagic) {
++		return Outcome::Malformed;
++	}
++	const uint32_t bound = in[3];
++	if (bound == 0 || bound > (1u << 22u)) {
++		return Outcome::Malformed;
++	}
++	// Pass 1: storage class of every OpVariable, Location decorations, Index decorations.
++	std::vector<uint8_t> is_output(bound, 0);
++	struct LocationDecoration {
++		size_t   word;     // offset of the OpDecorate instruction
++		uint32_t target;
++		uint32_t location;
++	};
++	std::vector<LocationDecoration> locations;
++	for (size_t i = kHeaderWords; i < in.size();) {
++		const uint32_t count = in[i] >> 16u;
++		const uint32_t op    = in[i] & 0xffffu;
++		if (count == 0 || count > in.size() - i) {
++			return Outcome::Malformed;
++		}
++		if (op == kOpVariable && count >= 4) {
++			if (in[i + 2] >= bound) {
++				return Outcome::Malformed;
++			}
++			if (in[i + 3] == kStorageOutput) {
++				is_output[in[i + 2]] = 1;
++			}
++		} else if (op == kOpDecorate && count >= 3) {
++			if (in[i + 2] == kDecorationIndex) {
++				return Outcome::HasIndex;
++			}
++			if (in[i + 2] == kDecorationLoc) {
++				if (count != 4) {
++					return Outcome::Malformed;
++				}
++				locations.push_back({i, in[i + 1], in[i + 3]});
++			}
++		} else if (op == kOpMemberDecorate && count >= 4) {
++			if (in[i + 3] == kDecorationLoc || in[i + 3] == kDecorationIndex) {
++				return Outcome::MemberDecoration;
++			}
++		}
++		i += count;
++	}
++	// Pass 2: the Output variables by location.
++	size_t location1 = kNone;
++	bool   location0 = false;
++	for (const auto& d: locations) {
++		if (d.target >= bound || is_output[d.target] == 0) {
++			continue;
++		}
++		if (d.location >= 2) {
++			return Outcome::LocationAbove1;
++		}
++		if (d.location == 0) {
++			location0 = true;
++		} else if (location1 != kNone) {
++			return Outcome::MultipleLocation1;
++		} else {
++			location1 = d.word;
++		}
++	}
++	if (location1 == kNone) {
++		return Outcome::NoLocation1;
++	}
++	if (!location0) {
++		return Outcome::NoLocation0;
++	}
++	const uint32_t target = in[location1 + 1];
++	out.clear();
++	out.reserve(in.size() + 4);
++	out.insert(out.end(), in.begin(), in.begin() + static_cast<std::ptrdiff_t>(location1 + 4));
++	out[location1 + 3] = 0;
++	out.push_back((4u << 16u) | kOpDecorate);
++	out.push_back(target);
++	out.push_back(kDecorationIndex);
++	out.push_back(1);
++	out.insert(out.end(), in.begin() + static_cast<std::ptrdiff_t>(location1 + 4), in.end());
++	return Outcome::Patched;
++}
++
++} // namespace Libs::Graphics::DualSrcBlend
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index 536347e7..7be4fd08 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -1949,6 +1949,15 @@ struct PipelineCache::ProgramCache {
+ 		}
+ 	}
+ 
++	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the handle points at the permutation's own SPIR-V, set
++	// at the same three sites as AdoptDmaLayout, right after the push_back and before the handle is indexed or
++	// handed out. The element never moves: deque::push_back does not relocate elements, and moving the
++	// SourceEntry (try_emplace of a local source) moves the deque, which keeps pointers to its elements
++	// (LWG 2321); retired sources are never freed. `spirv` is not written again after this point.
++	static void AdoptSpirvView(Permutation& permutation) {
++		permutation.handle.spirv = &permutation.spirv;
++	}
++
+ 	// Gate "daclass": static variants of programs whose plans are canonically equal
+ 	// (CanonicalPlanBytes). Never freed: slots and source entries keep pointers to it.
+ 	struct PlanClass {
+@@ -2120,6 +2129,7 @@ struct PipelineCache::ProgramCache {
+ 			    .spirv          = std::move(p.spirv),
+ 			});
+ 			AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
++			AdoptSpirvView(source.permutations.back()); // track F, F4a2
+ 		}
+ 		source.from_cache = true;
+ 		entry             = programs.try_emplace(key, std::move(source)).first;
+@@ -3889,6 +3899,7 @@ struct PipelineCache::ProgramCache {
+ 		entry->second.permutations.push_back(CompilePermutation(
+ 		    params, options, std::move(translated), std::move(specialization), push_data_cursor));
+ 		AdoptDmaLayout(entry->second.permutations.back()); // session 102, KYTY_DMA_LAYOUT
++		AdoptSpirvView(entry->second.permutations.back()); // track F, F4a2
+ 		by_id[entry->second.permutations.back().handle.id] = {
+ 		    &entry->first, static_cast<uint32_t>(entry->second.permutations.size() - 1)};
+ 		SaveToTranslationCache(entry->first, entry->second);
+@@ -4504,6 +4515,7 @@ struct PipelineCache::ProgramCache {
+ 				    .spirv          = std::move(p.spirv),
+ 				});
+ 				AdoptDmaLayout(source.permutations.back()); // session 102, KYTY_DMA_LAYOUT
++				AdoptSpirvView(source.permutations.back()); // track F, F4a2
+ 			}
+ 			source.from_cache = true;
+ 			entry             = programs.try_emplace(ProgramKeyOf(key), std::move(source)).first;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.h b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+index 1228bf71..a62b7783 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+@@ -108,6 +108,9 @@ struct PipelineVertexInputState {
+ struct ShaderProgram {
+ 	uint64_t         id     = 0;
+ 	vk::ShaderModule module = nullptr;
++	// Track F, F4a2 (HPP-346): the SPIR-V the module was created from (Permutation::spirv; empty when the
++	// translation cache is off), read only by CreatePipelineInternal under KYTY_FIX_DUALSRC=1.
++	const std::vector<uint32_t>* spirv = nullptr;
+ 
+ 	explicit operator bool() const { return id != 0 && module != nullptr; }
+ };
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+index 4b6efd3c..10e38535 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaders.cpp
+@@ -6,6 +6,7 @@
+ #include "graphics/guest_gpu/gpu_defs.h"
+ #include "graphics/host_gpu/graphicContext.h"
+ #include "graphics/host_gpu/renderer/debug.h"
++#include "graphics/host_gpu/renderer/pipeline/dualSrcBlend.h"
+ #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
+ #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
+ #include "graphics/host_gpu/renderer/pipeline/shaderResourceBarrier.h"
+@@ -22,7 +23,9 @@
+ #include <cinttypes>
+ #include <cstdio>
+ #include <limits>
++#include <mutex>
+ #include <string>
++#include <unordered_set>
+ #include <vector>
+ #include <span>
+ #include <vector>
+@@ -312,6 +315,50 @@ static void CreateDescriptorLayout(GraphicContext& graphics, PipelineCache::Pipe
+ 	            &create, nullptr, &pipeline.descriptor_set_layout) != vk::Result::eSuccess);
+ }
+ 
++// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the blend factors that read the second source.
++static bool IsSecondSourceFactor(vk::BlendFactor factor) {
++	return factor == vk::BlendFactor::eSrc1Color || factor == vk::BlendFactor::eOneMinusSrc1Color ||
++	       factor == vk::BlendFactor::eSrc1Alpha || factor == vk::BlendFactor::eOneMinusSrc1Alpha;
++}
++
++// One "patched" and one "skip" line per PS hash for the whole run (pipelines are created on the draw,
++// worker and precache threads).
++static bool DualSourceFirstLine(uint64_t ps_hash, bool patched) {
++	static std::mutex                   mutex;
++	static std::unordered_set<uint64_t> seen[2];
++	std::lock_guard                     lock(mutex);
++	return seen[patched ? 1 : 0].insert(ps_hash).second;
++}
++
++// KYTY_FIX_DUALSRC=1 and a blended attachment with a SRC1 factor: the fragment module of this pipeline only,
++// with the output at Location 1 rewritten to Location 0 Index 1 (DualSrcBlend::RewriteLocation1ToIndex1).
++// nullptr: the pipeline keeps the translated module (skip line with the reason). The caller destroys the
++// returned module after vkCreateGraphicsPipelines. Not salted by KYTY_PIPELINE_SALT.
++static vk::ShaderModule CreateDualSourceVariant(GraphicContext& graphics, const ShaderProgram& pixel_program,
++                                                uint64_t ps_hash, uint32_t color_count) {
++	std::vector<uint32_t> words;
++	const char*           reason = nullptr;
++	if (color_count > graphics.max_fragment_dual_src_attachments) {
++		reason = "attachments";
++	} else if (pixel_program.spirv == nullptr || pixel_program.spirv->empty()) {
++		reason = "no_spirv";
++	} else if (const auto outcome = DualSrcBlend::RewriteLocation1ToIndex1(*pixel_program.spirv, words);
++	           outcome != DualSrcBlend::Outcome::Patched) {
++		reason = DualSrcBlend::OutcomeName(outcome);
++	}
++	if (reason != nullptr) {
++		if (DualSourceFirstLine(ps_hash, false)) {
++			LOGF("DualSrcBlend: skip ps=%016" PRIx64 " reason=%s\n", ps_hash, reason);
++		}
++		return nullptr;
++	}
++	const auto module = CompileSPV(words, graphics.device);
++	if (DualSourceFirstLine(ps_hash, true)) {
++		LOGF("DualSrcBlend: patched ps=%016" PRIx64 "\n", ps_hash);
++	}
++	return module;
++}
++
+ // NOLINTNEXTLINE(readability-function-cognitive-complexity)
+ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& pipeline,
+                             const PipelineRenderingState&          rendering,
+@@ -375,6 +422,7 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
+ 		                                       .module = tess_eval_shader_module,
+ 		                                       .pName  = "main"};
+ 	}
++	const uint32_t ps_stage_index = shader_stage_count; // F4a2: the fragment stage, when ps_active
+ 	if (ps_active) {
+ 		shader_stages[shader_stage_count++] = {.stage  = vk::ShaderStageFlagBits::eFragment,
+ 		                                       .module = pixel_program.module,
+@@ -519,6 +567,28 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
+ 		                                           : color_blend_attachment[i].colorBlendOp);
+ 	}
+ 
++	// Track F, F4a2 (HPP-346, ROADMAP s122 p.262(b)): the game path and precache both create here.
++	vk::ShaderModule dual_src_module = nullptr;
++	if (graphics.dual_src_blend_enabled && ps_active) {
++		bool second_source = false;
++		for (uint32_t i = 0; i < rendering.color_count; i++) {
++			const auto& a = color_blend_attachment[i];
++			second_source |= a.blendEnable == VK_TRUE &&
++			                 (IsSecondSourceFactor(a.srcColorBlendFactor) ||
++			                  IsSecondSourceFactor(a.dstColorBlendFactor) ||
++			                  IsSecondSourceFactor(a.srcAlphaBlendFactor) ||
++			                  IsSecondSourceFactor(a.dstAlphaBlendFactor));
++		}
++		if (second_source) {
++			dual_src_module = CreateDualSourceVariant(graphics, pixel_program,
++			                                          ps_input_info->stage.program->shader_hash,
++			                                          rendering.color_count);
++			if (dual_src_module != nullptr) {
++				shader_stages[ps_stage_index].module = dual_src_module;
++			}
++		}
++	}
++
+ 	vk::Bool32 color_write_enable[RENDER_COLOR_ATTACHMENTS_MAX] = {};
+ 	for (uint32_t i = 0; i < rendering.color_count; i++) {
+ 		color_write_enable[i] = VK_TRUE;
+@@ -679,6 +749,9 @@ void CreatePipelineInternal(GraphicContext& graphics, PipelineCache::Pipeline& p
+ 	if (tess_eval_shader_module != nullptr) {
+ 		graphics.device.destroyShaderModule(tess_eval_shader_module, nullptr);
+ 	}
++	if (dual_src_module != nullptr) {
++		graphics.device.destroyShaderModule(dual_src_module, nullptr);
++	}
+ }
+ 
+ // NOLINTNEXTLINE(readability-function-cognitive-complexity)
+diff --git a/src/graphics/presentation/window/vulkanWindow.cpp b/src/graphics/presentation/window/vulkanWindow.cpp
+index 453b8e85..f75b0411 100644
+--- a/src/graphics/presentation/window/vulkanWindow.cpp
++++ b/src/graphics/presentation/window/vulkanWindow.cpp
+@@ -656,6 +656,22 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
+ 	device_features.vertexPipelineStoresAndAtomics       = VK_TRUE;
+ 	graphics.sample_rate_shading_enabled                 = true;
+ 	device_features.shaderInt64 = VK_TRUE;
++	// Track F, F4 (HPP-335, ROADMAP s122 p.254(zh)(1), row B35): pipelines with SRC1 blend factors
++	// (recipe 1592: SRC1_ALPHA / ONE_MINUS_SRC1_ALPHA) are created without dualSrcBlend. KYTY_FIX_DUALSRC
++	// (Common::EnvFlagOn: unset, "", 0/false/off/no = OFF; default OFF) enables it when supported; OFF leaves
++	// device_features as before. Outside the translation cache signature (not under src/graphics/shader).
++	{
++		const bool dual_src_supported = supported_features2.features.dualSrcBlend == VK_TRUE;
++		const bool dual_src_enabled   = dual_src_supported && Common::EnvFlagOn("KYTY_FIX_DUALSRC");
++		if (dual_src_enabled) {
++			device_features.dualSrcBlend = VK_TRUE;
++		}
++		LOGF("DualSrcBlend: supported=%d enabled=%d\n", dual_src_supported ? 1 : 0,
++		     dual_src_enabled ? 1 : 0);
++		// F4a2 (HPP-346, p.262(b)): read by CreatePipelineInternal for the Location 0 Index 1 variant.
++		graphics.dual_src_blend_enabled            = dual_src_enabled;
++		graphics.max_fragment_dual_src_attachments = properties2.properties.limits.maxFragmentDualSrcAttachments;
++	}
+ 
+ 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};
+ #if defined(__APPLE__)

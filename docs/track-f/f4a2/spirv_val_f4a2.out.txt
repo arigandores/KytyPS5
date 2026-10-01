@@ -1,0 +1,16 @@
+== spirv-val --target-env vulkan1.3 ps_5514_in.spv
+error: line 141: Structure id 46 decorated as Block for variable in Uniform storage class must follow relaxed uniform buffer layout rules: member 0 contains an array with stride 4 not satisfying alignment to 16
+This is may be allowed if you enable the uniformBufferStandardLayout feature (or use the --uniform-buffer-standard-layout command line flag)
+  %_struct_46 = OpTypeStruct %_arr_uint_uint_16384
+
+rc=1
+== spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout ps_5514_in.spv
+rc=0
+== spirv-val --target-env vulkan1.3 ps_5514_out.spv
+error: line 142: Structure id 46 decorated as Block for variable in Uniform storage class must follow relaxed uniform buffer layout rules: member 0 contains an array with stride 4 not satisfying alignment to 16
+This is may be allowed if you enable the uniformBufferStandardLayout feature (or use the --uniform-buffer-standard-layout command line flag)
+  %_struct_46 = OpTypeStruct %_arr_uint_uint_16384
+
+rc=1
+== spirv-val --target-env vulkan1.3 --uniform-buffer-standard-layout ps_5514_out.spv
+rc=0

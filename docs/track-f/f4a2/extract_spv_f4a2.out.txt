@@ -1,0 +1,9 @@
+file ps_5514e10f1a60df83_9b732ff0184ad6c1.bin size 95272 sha256 39182e008b606493018cb15005bd8b879c3a60eae768b5b717b7fba3e8a372e8
+magic at [34532]
+prefix word at -4: 15185 
+prefix word at -8: 0 65219078389760
+prefix word at -12: 48 48
+prefix word at -16: 2 206158430210
+walk words 15185
+size prefix (words) = 15185
+wrote ps_5514_in.spv words 15185 sha256 db1e2d053238d4d7e2c9e3717e537da680ea8fd6348be744abaa810a86c7a376

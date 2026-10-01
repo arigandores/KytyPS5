@@ -1,0 +1,16 @@
+in words 15185 outcome patched out words 15189
+first differing word 226: in 0x00000001 out 0x00000000
+diff in[226]=0x00000001 out[226]=0x00000000
+inserted out[227..230] = 0x00040047 0x00000013 0x00000020 0x00000001
+changed words (excluding the 4 inserted): 1
+selftest original                 want patched            got patched            OK
+selftest rewritten_again          want has_index          got has_index          OK
+selftest location1_to_2           want location_above1    got location_above1    OK
+selftest location1_to_0           want no_location1       got no_location1       OK
+selftest location1_target_bad     want no_location1       got no_location1       OK
+selftest truncated                want malformed          got malformed          OK
+selftest bad_magic                want malformed          got malformed          OK
+selftest location0_to_1           want multiple_location1 got multiple_location1 OK
+selftest location0_target_bad     want no_location0       got no_location0       OK
+selftest member_location          want member_decoration  got member_decoration  OK
+selftest ALL OK

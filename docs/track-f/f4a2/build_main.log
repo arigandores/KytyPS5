@@ -1,0 +1,517 @@
+[0/2] Re-checking globbed directories...
+-- GLOB mismatch!
+The following files were added:
+  +C:/kyty/KytyPS5/src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h
+[1/2] Re-running CMake...
+CMake Warning (deprecated) at C:/kyty/build/_deps/zydis-src/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (deprecated) at C:/kyty/build/_deps/zydis-src/dependencies/zycore/CMakeLists.txt:5 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+CMake Warning (deprecated) at 3rdparty/SDL2/CMakeLists.txt:3312 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- 
+-- SDL2 was configured with the following options:
+-- 
+-- Platform: Windows-10.0.26200
+-- 64-bit:   TRUE
+-- Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/x64/bin/clang-cl.exe
+-- Revision: SDL-2.33.0-g4b69833
+-- 
+-- Subsystems:
+--   Atomic:	ON
+--   Audio:	ON
+--   Video:	ON
+--   Render:	ON
+--   Events:	ON
+--   Joystick:	ON
+--   Haptic:	ON
+--   Hidapi:	ON
+--   Power:	ON
+--   Threads:	ON
+--   Timers:	ON
+--   File:	ON
+--   Loadso:	ON
+--   CPUinfo:	ON
+--   Filesystem:	ON
+--   Sensor:	ON
+--   Locale:	ON
+--   Misc:	ON
+-- 
+-- Options:
+--   SDL2_DISABLE_INSTALL        (Wanted: ON): OFF
+--   SDL2_DISABLE_SDL2MAIN       (Wanted: OFF): OFF
+--   SDL2_DISABLE_UNINSTALL      (Wanted: OFF): OFF
+--   SDL_3DNOW                   (Wanted: OFF): OFF
+--   SDL_ALSA                    (Wanted: OFF): OFF
+--   SDL_ALSA_SHARED             (Wanted: OFF): OFF
+--   SDL_ALTIVEC                 (Wanted: ON): OFF
+--   SDL_ARMNEON                 (Wanted: OFF): OFF
+--   SDL_ARMSIMD                 (Wanted: OFF): OFF
+--   SDL_ARTS                    (Wanted: OFF): OFF
+--   SDL_ARTS_SHARED             (Wanted: OFF): OFF
+--   SDL_ASAN                    (Wanted: OFF): OFF
+--   SDL_ASSEMBLY                (Wanted: ON): ON
+--   SDL_ASSERTIONS              (Wanted: auto): auto
+--   SDL_BACKGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_CCACHE                  (Wanted: ON): OFF
+--   SDL_CLOCK_GETTIME           (Wanted: OFF): OFF
+--   SDL_COCOA                   (Wanted: OFF): OFF
+--   SDL_DBUS                    (Wanted: OFF): OFF
+--   SDL_DIRECTFB                (Wanted: OFF): OFF
+--   SDL_DIRECTFB_SHARED         (Wanted: OFF): OFF
+--   SDL_DIRECTX                 (Wanted: ON): ON
+--   SDL_DISKAUDIO               (Wanted: ON): ON
+--   SDL_DUMMYAUDIO              (Wanted: ON): ON
+--   SDL_DUMMYVIDEO              (Wanted: ON): ON
+--   SDL_ESD                     (Wanted: OFF): OFF
+--   SDL_ESD_SHARED              (Wanted: OFF): OFF
+--   SDL_FOREGROUNDING_SIGNAL    (Wanted: OFF): OFF
+--   SDL_FUSIONSOUND             (Wanted: OFF): OFF
+--   SDL_FUSIONSOUND_SHARED      (Wanted: OFF): OFF
+--   SDL_GCC_ATOMICS             (Wanted: ON): ON
+--   SDL_HIDAPI                  (Wanted: ON): ON
+--   SDL_HIDAPI_JOYSTICK         (Wanted: ON): ON
+--   SDL_HIDAPI_LIBUSB           (Wanted: OFF): OFF
+--   SDL_IBUS                    (Wanted: OFF): OFF
+--   SDL_INSTALL_TESTS           (Wanted: OFF): OFF
+--   SDL_JACK                    (Wanted: OFF): OFF
+--   SDL_JACK_SHARED             (Wanted: OFF): OFF
+--   SDL_KMSDRM                  (Wanted: OFF): OFF
+--   SDL_KMSDRM_SHARED           (Wanted: OFF): OFF
+--   SDL_LASX                    (Wanted: OFF): OFF
+--   SDL_LIBC                    (Wanted: OFF): OFF
+--   SDL_LIBICONV                (Wanted: OFF): OFF
+--   SDL_LIBSAMPLERATE           (Wanted: OFF): OFF
+--   SDL_LIBSAMPLERATE_SHARED    (Wanted: OFF): OFF
+--   SDL_LIBUDEV                 (Wanted: ON): OFF
+--   SDL_LSX                     (Wanted: OFF): OFF
+--   SDL_METAL                   (Wanted: OFF): OFF
+--   SDL_MMX                     (Wanted: ON): ON
+--   SDL_NAS                     (Wanted: OFF): OFF
+--   SDL_NAS_SHARED              (Wanted: OFF): OFF
+--   SDL_OFFSCREEN               (Wanted: ON): ON
+--   SDL_OPENGL                  (Wanted: ON): ON
+--   SDL_OPENGLES                (Wanted: ON): ON
+--   SDL_OSS                     (Wanted: OFF): OFF
+--   SDL_PIPEWIRE                (Wanted: OFF): OFF
+--   SDL_PIPEWIRE_SHARED         (Wanted: OFF): OFF
+--   SDL_PTHREADS                (Wanted: OFF): OFF
+--   SDL_PTHREADS_SEM            (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO              (Wanted: OFF): OFF
+--   SDL_PULSEAUDIO_SHARED       (Wanted: OFF): OFF
+--   SDL_RENDER_D3D              (Wanted: ON): ON
+--   SDL_RENDER_METAL            (Wanted: OFF): OFF
+--   SDL_RPATH                   (Wanted: OFF): OFF
+--   SDL_RPI                     (Wanted: OFF): OFF
+--   SDL_SNDIO                   (Wanted: OFF): OFF
+--   SDL_SNDIO_SHARED            (Wanted: OFF): OFF
+--   SDL_SSE                     (Wanted: ON): ON
+--   SDL_SSE2                    (Wanted: ON): ON
+--   SDL_SSE3                    (Wanted: ON): ON
+--   SDL_SSEMATH                 (Wanted: ON): ON
+--   SDL_STATIC_PIC              (Wanted: OFF): OFF
+--   SDL_SYSTEM_ICONV            (Wanted: OFF): OFF
+--   SDL_TESTS                   (Wanted: OFF): OFF
+--   SDL_VENDOR_INFO             (Wanted: ): OFF
+--   SDL_VIRTUAL_JOYSTICK        (Wanted: ON): ON
+--   SDL_VIVANTE                 (Wanted: OFF): OFF
+--   SDL_VULKAN                  (Wanted: ON): ON
+--   SDL_WASAPI                  (Wanted: ON): ON
+--   SDL_WAYLAND                 (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR        (Wanted: OFF): OFF
+--   SDL_WAYLAND_LIBDECOR_SHARED (Wanted: OFF): OFF
+--   SDL_WAYLAND_QT_TOUCH        (Wanted: OFF): OFF
+--   SDL_WAYLAND_SHARED          (Wanted: OFF): OFF
+--   SDL_X11                     (Wanted: OFF): OFF
+--   SDL_X11_SHARED              (Wanted: OFF): OFF
+--   SDL_X11_XCURSOR             (Wanted: OFF): OFF
+--   SDL_X11_XDBE                (Wanted: OFF): OFF
+--   SDL_X11_XFIXES              (Wanted: OFF): OFF
+--   SDL_X11_XINPUT              (Wanted: OFF): OFF
+--   SDL_X11_XRANDR              (Wanted: OFF): OFF
+--   SDL_X11_XSCRNSAVER          (Wanted: OFF): OFF
+--   SDL_X11_XSHAPE              (Wanted: OFF): OFF
+--   SDL_XINPUT                  (Wanted: ON): ON
+-- 
+--  CFLAGS:        /DWIN32 /D_WINDOWS  /utf-8 /Oy- /wd4244 /wd4305 /wd4800 /wd4345
+--  EXTRA_CFLAGS:   /W3 -Wundef -fno-strict-aliasing -Wdocumentation -Wdocumentation-unknown-command /clang:-fcomment-block-commands=threadsafety /clang:-fcomment-block-commands=deprecated -Wdeclaration-after-statement -Wshadow -Wno-unused-local-typedefs -fcolor-diagnostics -mmmx -msse -msse2 -msse3
+--  EXTRA_LDFLAGS:  
+--  EXTRA_LIBS:    kernel32;user32;gdi32;winmm;imm32;ole32;oleaut32;version;uuid;advapi32;setupapi;shell32;dinput8
+-- 
+--  Build Shared Library: OFF
+--  Build Static Library: ON
+--  Build Static Library with Position Independent Code: OFF
+-- 
+-- xxHash build type: Release
+-- Architecture: AMD64
+-- {fmt} version: 12.2.0
+-- Build type: Release
+-- Using the multi-header code from C:/kyty/KytyPS5/3rdparty/nlohmann_json/include/
+-- Build spdlog: 1.17.0
+-- Build type: Release
+Parsing public/common/TracyVersion.hpp file
+VERSION 0.13.1
+-- Could NOT find rocprofiler-sdk (missing: rocprofiler-sdk_DIR)
+-- TRACY_ENABLE: ON
+-- TRACY_ON_DEMAND: ON
+-- TRACY_CALLSTACK: OFF
+-- TRACY_NO_CALLSTACK: OFF
+-- TRACY_NO_CALLSTACK_INLINES: OFF
+-- TRACY_ONLY_LOCALHOST: OFF
+-- TRACY_NO_BROADCAST: OFF
+-- TRACY_ONLY_IPV4: OFF
+-- TRACY_NO_CODE_TRANSFER: OFF
+-- TRACY_NO_CONTEXT_SWITCH: OFF
+-- TRACY_NO_EXIT: OFF
+-- TRACY_NO_SAMPLING: OFF
+-- TRACY_NO_VERIFY: OFF
+-- TRACY_NO_VSYNC_CAPTURE: OFF
+-- TRACY_NO_FRAME_IMAGE: OFF
+-- TRACY_NO_SYSTEM_TRACING: OFF
+-- TRACY_PATCHABLE_NOPSLEDS: OFF
+-- TRACY_DELAYED_INIT: ON
+-- TRACY_MANUAL_LIFETIME: ON
+-- TRACY_FIBERS: OFF
+-- TRACY_NO_CRASH_HANDLER: OFF
+-- TRACY_TIMER_FALLBACK: OFF
+-- TRACY_LIBUNWIND_BACKTRACE: OFF
+-- TRACY_SYMBOL_OFFLINE_RESOLVE: OFF
+-- TRACY_LIBBACKTRACE_ELF_DYNLOAD_SUPPORT: OFF
+-- TRACY_DEBUGINFOD: OFF
+-- TRACY_IGNORE_MEMORY_FAULTS: OFF
+-- TRACY_VERBOSE: OFF
+-- TRACY_DEMANGLE: OFF
+-- Configuring done (4.1s)
+CMake Warning (policy) at 3rdparty/SDL2/CMakeLists.txt:3405 (add_library):
+  Policy CMP0069 is not set: INTERPROCEDURAL_OPTIMIZATION is enforced when
+  enabled.  Run "cmake --help-policy CMP0069" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2main'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at 3rdparty/SDL2/CMakeLists.txt:3534 (add_library):
+  Policy CMP0069 is not set: INTERPROCEDURAL_OPTIMIZATION is enforced when
+  enabled.  Run "cmake --help-policy CMP0069" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2-static'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at 3rdparty/SDL2/CMakeLists.txt:3572 (add_library):
+  Policy CMP0069 is not set: INTERPROCEDURAL_OPTIMIZATION is enforced when
+  enabled.  Run "cmake --help-policy CMP0069" for policy details.  Use the
+  cmake_policy command to set the policy and suppress this warning.
+
+  INTERPROCEDURAL_OPTIMIZATION property will be ignored for target
+  'SDL2_test'.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Generating done (0.6s)
+-- Build files have been written to: C:/kyty/build
+[0/4] Re-checking globbed directories...
+[1/96] Generate kytyGitVersion.h
+[2/96] Building CXX object common\CMakeFiles\common.dir\assert.cpp.obj
+[3/96] Linking CXX static library common\common.lib
+[4/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\main.cpp.obj
+In file included from C:\kyty\KytyPS5\src\main.cpp:5:
+In file included from C:\kyty\KytyPS5\src\common/magicEnum.h:5:
+C:\kyty\KytyPS5\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\KytyPS5\src\main.cpp:5:
+In file included from C:\kyty\KytyPS5\src\common/magicEnum.h:5:
+C:\kyty\KytyPS5\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[5/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[6/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\imageView.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\imageView.cpp:1:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\imageView.cpp(297,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  297 | }
+      | ^
+2 warnings generated.
+[7/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp.obj
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\pipeline\shaderResourceBarrier.cpp(25,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   25 | }
+      | ^
+1 warning generated.
+[8/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\samplerCache.cpp.obj
+[9/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\faultManager.cpp.obj
+[10/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderContext.cpp.obj
+[11/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\blitHelper.cpp.obj
+[12/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\indirectArgsSanitizer.cpp.obj
+[13/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\debug.cpp.obj
+[14/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\hostImport.cpp.obj
+[15/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\gpuCheckpoints.cpp.obj
+[16/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\streamBuffer.cpp.obj
+[17/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandScheduler.cpp.obj
+[18/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\gpuTimeProfiler.cpp.obj
+[19/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\descriptorHeap.cpp.obj
+[20/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\bufferCache.cpp.obj
+[21/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\sync.cpp.obj
+[22/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaders.cpp.obj
+[23/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp.obj
+C:\kyty\KytyPS5\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1595,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1595 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\guest_gpu\command_processor\pm4Handlers.cpp(1611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+ 1611 | }
+      | ^
+2 warnings generated.
+[24/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\vma.cpp.obj
+[25/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\context.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\context.cpp:14:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[26/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\shadowResolve.cpp.obj
+[27/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\masterSemaphore.cpp.obj
+[28/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\cache\textureCache.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\cache\textureCache.cpp:18:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[29/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\depthRenderTarget.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\depthRenderTarget.cpp:1:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\depthRenderTarget.cpp(46,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   46 | }
+      | ^
+2 warnings generated.
+[30/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\image.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\image.cpp:10:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\image.cpp(30,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   30 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\image.cpp(706,10): warning: enumeration value 'Cmask' not handled in switch [-Wswitch]
+  706 |         switch (info.metadata.kind) {
+      |                 ^~~~~~~~~~~~~~~~~~
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\image\image.cpp(741,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  741 | }
+      | ^
+4 warnings generated.
+[31/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAlu.cpp.obj
+[32/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ShaderRecompiler.cpp.obj
+[33/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp:13:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\pipeline\descriptors.cpp(611,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  611 | }
+      | ^
+2 warnings generated.
+[34/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderDraw.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\renderDraw.cpp:27:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[35/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp.obj
+C:\kyty\KytyPS5\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAnalysis.cpp(115,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  115 | }
+      | ^
+1 warning generated.
+[36/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\colorRenderTarget.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\colorRenderTarget.cpp:16:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/renderMemo.h:7:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+1 warning generated.
+[37/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\Tessellation.cpp.obj
+[38/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterHelpers.cpp.obj
+[39/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\systemOverlay.cpp.obj
+[40/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterFlow.cpp.obj
+[41/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterAluHelpers.cpp.obj
+[42/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\SpirvEmitter.cpp.obj
+[43/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\commandRecorder.cpp.obj
+[44/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\guest_gpu\graphicsRun.cpp.obj
+[45/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemoryHelpers.cpp.obj
+[46/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMesh.cpp.obj
+[47/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ScalarAluOps.cpp.obj
+[48/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ImageOps.cpp.obj
+[49/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterTessellation.cpp.obj
+[50/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp.obj
+C:\kyty\KytyPS5\src\graphics\shader\recompiler\backend\spirv\spirvEmitterImage.cpp(220,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  220 | }
+      | ^
+1 warning generated.
+[51/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Compare.cpp.obj
+[52/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\VectorAluOps.cpp.obj
+[53/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\image\tiler.cpp.obj
+[54/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ExportOps.cpp.obj
+[55/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterProgram.cpp.obj
+[56/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\MemoryOps.cpp.obj
+[57/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterModule.cpp.obj
+[58/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp.obj
+[59/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Attribute.cpp.obj
+[60/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\renderCompute.cpp.obj
+[61/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\renderDoc.cpp.obj
+[62/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Dispatch.cpp.obj
+[63/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Convert.cpp.obj
+[64/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Control.cpp.obj
+[65/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Scalar.cpp.obj
+[66/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\decode\ShaderDecoder.cpp.obj
+[67/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\vulkanWindow.cpp.obj
+[68/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Integer.cpp.obj
+[69/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Float.cpp.obj
+[70/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Vector.cpp.obj
+[71/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Memory.cpp.obj
+[72/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\screenshot.cpp.obj
+[73/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\swapchain.cpp.obj
+[74/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\videoOut.cpp.obj
+[75/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\window.cpp.obj
+[76/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\PredicationElimination.cpp.obj
+[77/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\BindingLayout.cpp.obj
+[78/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\backend\spirv\spirvEmitterMemory.cpp.obj
+[79/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\rectListShader.cpp.obj
+[80/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ConstantPropagation.cpp.obj
+[81/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ReadLaneElimination.cpp.obj
+[82/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\frontend\translate\Translate.cpp.obj
+C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(20,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+   20 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\translate\Translate.cpp(148,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  148 | }
+      | ^
+2 warnings generated.
+[83/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ShaderInfoCollection.cpp.obj
+[84/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\emulator.cpp.obj
+[85/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ResourceMaterialization.cpp.obj
+[86/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\Program.cpp.obj
+[87/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp.obj
+[88/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:22:
+In file included from C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\KytyPS5\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\KytyPS5\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(401,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  401 | }
+      | ^
+2 warnings generated.
+[89/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp.obj
+In file included from C:\kyty\KytyPS5\src\graphics\shader\recompiler\ir\passes\SrtWalker.cpp:2104:
+C:\kyty\KytyPS5\src\graphics/shader/recompiler/ir/passes/SrtNative.inc(93,49): warning: suggest braces around initialization of subobject [-Wmissing-braces]
+   93 |                 m_unwind = {0, static_cast<DWORD>(code_size), static_cast<DWORD>(unwind_offset)};
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                               {                                }
+1 warning generated.
+[90/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\shader\shader.cpp.obj
+C:\kyty\KytyPS5\src\graphics\shader\shader.cpp(178,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  178 | }
+      | ^
+1 warning generated.
+[91/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\libs\agc.cpp.obj
+[92/96] Building CXX object CMakeFiles\kyty_emulator.dir\src\kernel\memory.cpp.obj
+[93/96] Linking CXX executable kyty_emulator.exe
+-- Install configuration: "Release"
+-- Up-to-date: C:\kyty\build\install/lib/cmake/xbyak/xbyak-config.cmake
+-- Up-to-date: C:\kyty\build\install/lib/cmake/xbyak/xbyak-config-version.cmake
+-- Up-to-date: C:\kyty\build\install/lib/cmake/xbyak/xbyak-targets.cmake
+-- Up-to-date: C:\kyty\build\install/include/xbyak/xbyak.h
+-- Up-to-date: C:\kyty\build\install/include/xbyak/xbyak_bin2hex.h
+-- Up-to-date: C:\kyty\build\install/include/xbyak/xbyak_mnemonic.h
+-- Up-to-date: C:\kyty\build\install/include/xbyak/xbyak_util.h
+-- Up-to-date: C:\kyty\build\install/lib/cmake/zydis/zydis-config.cmake
+-- Up-to-date: C:\kyty\build\install/lib/cmake/zydis/zydis-config-version.cmake
+-- Up-to-date: C:\kyty\build\install/lib/Zydis.lib
+-- Up-to-date: C:\kyty\build\install/lib/cmake/zydis/zydis-targets.cmake
+-- Up-to-date: C:\kyty\build\install/lib/cmake/zydis/zydis-targets-release.cmake
+-- Up-to-date: C:\kyty\build\install/include
+-- Up-to-date: C:\kyty\build\install/include/Zydis
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Decoder.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/DecoderTypes.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Defines.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Disassembler.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Encoder.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Formatter.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/FormatterBuffer.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated/EnumInstructionCategory.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated/EnumISAExt.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated/EnumISASet.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated/EnumMnemonic.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Generated/EnumRegister.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/DecoderData.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/EncoderData.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/FormatterATT.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/FormatterBase.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/FormatterIntel.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/SharedData.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Internal/String.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/MetaInfo.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Mnemonic.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Register.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Segment.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/SharedTypes.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/ShortString.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Status.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Utils.h
+-- Up-to-date: C:\kyty\build\install/include/Zydis/Zydis.h
+-- Installing: C:\kyty\build\install/kyty_emulator.exe
+-- Up-to-date: C:\kyty\build\install/libwinpthread-1.dll
+BUILD OK: C:\kyty\build\install\kyty_emulator.exe

@@ -1,0 +1,13 @@
+files 101
+unchanged with known form 94 of which CRLF 27
+enumerated (changed since 4fc501f4 or unknown form) 7 unknown-form unchanged 0
+  var src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+  var src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+LF model 95d30c5c8062d73b96b5f66a0ec64026e9109591
+CRLF model af80129ff866bc1a2b4d787f1f77653ae1fcc48e
+FOUND 699c1e4b7db359067b461e029b913c4b6e78dc90 combo LLLLLLL

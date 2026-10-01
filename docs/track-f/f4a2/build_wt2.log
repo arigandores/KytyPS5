@@ -1,0 +1,92 @@
+[0/2] Re-checking globbed directories...
+[1/12] Building C object 3rdparty\SDL2\CMakeFiles\SDL2-static.dir\src\SDL.c.obj
+[2/12] Generate kytyGitVersion.h
+[3/12] Linking C static library 3rdparty\SDL2\SDL2-static.lib
+[4/12] Building CXX object common\CMakeFiles\common.dir\assert.cpp.obj
+[5/12] Linking CXX static library common\common.lib
+[6/12] Building CXX object CMakeFiles\kyty_emulator.dir\src\main.cpp.obj
+In file included from C:\kyty\f287\f4a2\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\f4a2\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\f4a2\wt\src\common/stringUtils.h(323,28): warning: 'codecvt_utf8_utf16<char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |                                   ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\codecvt(442,7): note: 'codecvt_utf8_utf16<char16_t>' has been explicitly marked deprecated here
+  442 | class _CXX17_DEPRECATE_CODECVT_HEADER codecvt_utf8_utf16
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+In file included from C:\kyty\f287\f4a2\wt\src\main.cpp:5:
+In file included from C:\kyty\f287\f4a2\wt\src\common/magicEnum.h:5:
+C:\kyty\f287\f4a2\wt\src\common/stringUtils.h(323,7): warning: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' is deprecated: warning STL4017: std::wbuffer_convert, std::wstring_convert, and the <codecvt> header (containing std::codecvt_mode, std::codecvt_utf8, std::codecvt_utf16, and std::codecvt_utf8_utf16) are deprecated in C++17. (The std::codecvt class template is NOT deprecated.) The C++ Standard doesn't provide equivalent non-deprecated functionality; consider using MultiByteToWideChar() and WideCharToMultiByte() from <Windows.h> instead. You can define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING or _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS to suppress this warning. [-Wdeprecated-declarations]
+  323 |         std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t> convert;
+      |              ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\xlocbuf(303,7): note: 'wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>' has been explicitly marked deprecated here
+  303 | class _CXX17_DEPRECATE_CODECVT_HEADER wstring_convert { // converts between _Elem (wide) and char (byte) strings
+      |       ^
+C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.44.35207\include\yvals_core.h(1224,7): note: expanded from macro '_CXX17_DEPRECATE_CODECVT_HEADER'
+ 1224 |     [[deprecated(                                                                                              \
+      |       ^
+2 warnings generated.
+[7/12] Building CXX object CMakeFiles\kyty_emulator.dir\src\emulator.cpp.obj
+[8/12] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\shaderTranslationCache.cpp.obj
+[9/12] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\presentation\window\window.cpp.obj
+[10/12] Building CXX object CMakeFiles\kyty_emulator.dir\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp.obj
+In file included from C:\kyty\f287\f4a2\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp:22:
+In file included from C:\kyty\f287\f4a2\wt\src\graphics/host_gpu/renderer/depthRenderTarget.h:6:
+C:\kyty\f287\f4a2\wt\src\graphics/host_gpu/renderer/image/imageView.h(56,1): warning: function declared 'noreturn' should not return [-Winvalid-noreturn]
+   56 | }
+      | ^
+C:\kyty\f287\f4a2\wt\src\graphics\host_gpu\renderer\pipeline\pipelineCache.cpp(373,1): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+  373 | }
+      | ^
+2 warnings generated.
+[11/12] Linking CXX executable kyty_emulator.exe
+-- Install configuration: "Release"
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/xbyak/xbyak-config.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/xbyak/xbyak-config-version.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/xbyak/xbyak-targets.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/xbyak/xbyak.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/xbyak/xbyak_bin2hex.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/xbyak/xbyak_mnemonic.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/xbyak/xbyak_util.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/zydis/zydis-config.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/zydis/zydis-config-version.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/Zydis.lib
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/zydis/zydis-targets.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/lib/cmake/zydis/zydis-targets-release.cmake
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Decoder.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/DecoderTypes.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Defines.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Disassembler.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Encoder.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Formatter.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/FormatterBuffer.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated/EnumInstructionCategory.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated/EnumISAExt.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated/EnumISASet.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated/EnumMnemonic.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Generated/EnumRegister.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/DecoderData.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/EncoderData.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/FormatterATT.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/FormatterBase.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/FormatterIntel.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/SharedData.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Internal/String.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/MetaInfo.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Mnemonic.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Register.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Segment.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/SharedTypes.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/ShortString.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Status.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Utils.h
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/include/Zydis/Zydis.h
+-- Installing: C:\kyty\f287\f4a2\build\install/kyty_emulator.exe
+-- Up-to-date: C:\kyty\f287\f4a2\build\install/libwinpthread-1.dll
+BUILD OK: C:\kyty\f287\f4a2\build\install\kyty_emulator.exe

@@ -1,0 +1,7 @@
+== patch-id (stable) of the cherry-picks vs originals
+1713a8be 7cf3c5bacd015a882f2da4dba88a2b07ea4079f2 | ac309951 7cf3c5bacd015a882f2da4dba88a2b07ea4079f2 | EQUAL
+65a09c82 66605fbb399e142349999c78e422763541e5eacd | 06f049f2 66605fbb399e142349999c78e422763541e5eacd | EQUAL
+== worktree working tree vs its HEAD 06f049f2, ignoring CR at EOL (expect empty)
+== files differing literally from HEAD 06f049f2 (expect the 27 CRLF files)
+27
+== those 27 vs the CRLF list of sig_f4a2 (main working tree)

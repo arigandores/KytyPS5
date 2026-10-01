@@ -1,0 +1,59 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 4fc501f4)
+HEAD is now at 4fc501f4 s128 step 0 (HPP-116): ship rtskip=1 - default of KYTY_RT_SKIP 0 -> 1 (ROADMAP s122 p.87(e)(1); k3p127 RTSKIP_GAIN, arm 1 vs arm 0 of 98d98eee, NEW), gates.h comment, dead t_rts_a removed (p.81(g))
+[detached HEAD ac309951] track F link F4a (HPP-335): B35 - KYTY_FIX_DUALSRC enables dualSrcBlend at device creation when supported (ROADMAP p.254(zh)(1)), default 0
+ Date: Thu Oct 1 07:02:27 2026 +0200
+ 1 file changed, 13 insertions(+)
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+Auto-merging src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+[detached HEAD 06f049f2] track F link F4a2 (HPP-346): ROADMAP p.262(b) - under KYTY_FIX_DUALSRC=1 a graphics pipeline with a SRC1 blend factor on a blended attachment gets its own fragment module with the Location 1 output rewritten to Location 0 Index 1
+ Date: Thu Oct 1 08:40:31 2026 +0200
+ 6 files changed, 234 insertions(+)
+ create mode 100644 src/graphics/host_gpu/renderer/pipeline/dualSrcBlend.h
+--- worktree HEAD
+06f049f252b4f374f9489a8a8fedb14c054e88f6 track F link F4a2 (HPP-346): ROADMAP p.262(b) - under KYTY_FIX_DUALSRC=1 a grap
+ac309951f0e682ccf4e3c9f832b539de056be02f track F link F4a (HPP-335): B35 - KYTY_FIX_DUALSRC enables dualSrcBlend at devi
+4fc501f4f6c3c5638f472ee6d9c59523d67e472c s128 step 0 (HPP-116): ship rtskip=1 - default of KYTY_RT_SKIP 0 -> 1 (ROADMAP 
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+files 101
+unchanged with known form 94 of which CRLF 27
+enumerated (changed since 4fc501f4 or unknown form) 7 unknown-form unchanged 0
+  var src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+  var src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+  var src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+  var src/graphics/shader/recompiler/frontend/translate/Vector.cpp
+LF model 95d30c5c8062d73b96b5f66a0ec64026e9109591
+CRLF model af80129ff866bc1a2b4d787f1f77653ae1fcc48e
+FOUND 699c1e4b7db359067b461e029b913c4b6e78dc90 combo LLLLLLL
+wrote 27 files under C:/kyty/f287/f4a2/wt
+tree signature now 699c1e4b7db359067b461e029b913c4b6e78dc90
+--- git diff --stat 4fc501f4 (worktree, literal)
+ src/graphics/shader/shaderVertexMetadata.cpp       |  164 +--
+ src/graphics/shader/shaderVertexMetadata.h         |   48 +-
+ 33 files changed, 2062 insertions(+), 1815 deletions(-)
+--- git diff --stat 4fc501f4 --ignore-cr-at-eol
+ src/graphics/host_gpu/graphicContext.h             |   4 +
+ .../host_gpu/renderer/pipeline/dualSrcBlend.h      | 139 +++++++++++++++++++++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |  12 ++
+ .../host_gpu/renderer/pipeline/pipelineCache.h     |   3 +
+ .../host_gpu/renderer/pipeline/shaders.cpp         |  73 +++++++++++
+ src/graphics/presentation/window/vulkanWindow.cpp  |  16 +++
+ 6 files changed, 247 insertions(+)
+WT OK

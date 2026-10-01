@@ -1,0 +1,34 @@
+== f4a2 C:/kyty/f287/f4a2/build/install/kyty_emulator.exe size 24271360 sha256 c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b
+  699c1e4b7db359067b461e029b913c4b6e78dc90     1  want 1 OK
+  846a041a4d4902a2afc2ca8f1d7067c5d2ae982b     0
+  DualSrcBlend: supported=                     1  want 1 OK
+  DualSrcBlend: patched                        1  want 1 OK
+  DualSrcBlend: skip                           1
+  KYTY_FIX_DUALSRC                             1
+  KYTY_FIX_B26                                 0  want 0 OK
+  KYTY_S_PCW                                   0  want 0 OK
+  KYTY_BIND_LEAN                               0
+  06f049f252b4f374f9489a8a8fedb14c054e88f6     0
+== 9235a7ac (installed copy) C:/kyty/s128/kyty_emulator_9235a7ac.exe size 24264192 sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+  699c1e4b7db359067b461e029b913c4b6e78dc90     1
+  846a041a4d4902a2afc2ca8f1d7067c5d2ae982b     0
+  DualSrcBlend: supported=                     0
+  DualSrcBlend: patched                        0
+  DualSrcBlend: skip                           0
+  KYTY_FIX_DUALSRC                             0
+  KYTY_FIX_B26                                 0
+  KYTY_S_PCW                                   0
+  KYTY_BIND_LEAN                               0
+  06f049f252b4f374f9489a8a8fedb14c054e88f6     0
+== 34d293ad (F4a) C:/kyty/f287/bin/kyty_emulator_34d293ad.exe size 24557568 sha256 34d293adfc8938b835e029bc7088c1b9dbe687bd372f7f7e2facb1d603c3aae3
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  846a041a4d4902a2afc2ca8f1d7067c5d2ae982b     1
+  DualSrcBlend: supported=                     1
+  DualSrcBlend: patched                        0
+  DualSrcBlend: skip                           0
+  KYTY_FIX_DUALSRC                             1
+  KYTY_FIX_B26                                 1
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  06f049f252b4f374f9489a8a8fedb14c054e88f6     0
+ACCEPT ALL OK

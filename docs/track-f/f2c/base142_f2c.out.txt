@@ -1,0 +1,15 @@
+f2c_b26.py regression on the 12 s142 logs (9235a7ac, no knob) read as =0
+log_c142_01.txt 66b4ff7e profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_02.txt bb6655d3 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_03.txt 9aaa83b0 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_04.txt bd5f5477 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_05.txt 9ea02549 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_06.txt a511e5d4 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_07.txt 5e1bd731 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_08.txt 358be0e0 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_09.txt eadf72b5 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_c142_10.txt d78e0342 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_v142.txt 56570712 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+log_w142.txt 7f42a2d3 profile 96/1/4 f3 0 knob 0 letter 0 variant 0 reopen {'mh': 0, 'cfg_outside': 0, 'translator_deaths': 0} deaths 0 phi 0 -> CONTROL RETURNS
+logs not CONTROL RETURNS or with reopen: 0
+ALL OK

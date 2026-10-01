@@ -1,0 +1,46 @@
+suite test_f2c_b26.py sha256 ffe959461ec2a5553accb3a5a720a2e9930e1cf5cb9ee03cb98fa8780a024a10 target f2c_b26.py sha256 e2371c59b59c104ce97c37a8f5c566aa49547bdc00cba99de4ed230876fe99d9
+ok   tsv: 96 hashes of SOP1 0x21 96
+ok   tsv: 5 B26b hashes (1 SOP1 0x0c + 4 VOPC 0xe3) 
+ok   tsv: VOPC fix places 0x24/0x1d4/0x264/0x24 
+ok   =0 baseline profile 96/1/4, 0xf3 0 
+ok   =0 baseline knob 0 from the root cache line 
+ok   =0 baseline -> CONTROL RETURNS CONTROL RETURNS
+ok   =0 baseline letter count 0 of 5 
+ok   =0 with an extra 0xf3 line -> CONTROL FAILS 
+ok   =0 with 3 x 0xe3 -> CONTROL FAILS 
+ok   =0 with 95 x 0x21 -> CONTROL FAILS 
+ok   =0 with another family/opcode -> CONTROL FAILS, listed 
+ok   =1 ideal: 5 ready -> letter 5 of 5 PASS PASS
+ok   =1 ideal: knob 1 from variant_fixb26 
+ok   =1 predicted: profile 96/0/0, 0xf3 4 (pair, not family) 
+ok   =1 predicted: profile ok 
+ok   =1 predicted: letter 4 of 5 (ResourceTracking is not an opcode) -> FAIL 
+ok   =1 predicted: RC1 reviewer variant 5 of 5 -> PASS 
+ok   =1 predicted: 57c4 skip mechanism and pc printed skipped ResourceTracking.cpp:173 pc 0x1a0
+ok   =1 predicted: phi lines counted 3, not a marker 
+ok   =1 with a remaining 0xe3 -> profile fail, letter 3 (57c4 and that hash) (3, 1)
+ok   =1 run with the root cache line -> INVALID RUN (knob) INVALID RUN (knob control 0, want 1)
+ok   two cache lines -> knob None -> INVALID RUN 
+ok   other variant directory -> knob None 
+ok   =0 run with variant_fixb26 line -> INVALID RUN 
+ok   hash with ready + skipped -> NOT COUNTED 
+ok   hash without a line -> NOT COUNTED (no false success) 
+ok   hash with two ready lines -> NOT COUNTED 
+ok   0xf3 skip at pc == fix place: letter yes, variant no 
+ok   other mechanism without pc: letter no, variant no 
+ok   other mechanism at pc < fix place: variant no skipped ResourceTracking.cpp:173 pc 0x100
+ok   skip with the fixed opcode itself: letter no, variant no 
+ok   no reopen on the baseline 
+ok   miss of a 96 hash -> REOPEN 
+ok   hit of a 96 hash -> REOPEN 
+ok   miss of a non-96 hash -> no reopen 
+ok   CFG failed outside CsPretranslate -> counted 
+ok   death right after translator lines -> translator death 1 
+ok   death 10 KB after the last translator line -> death 1, translator 0 
+ok   CRLF log reads the same 
+ok   chunk boundary 97 B = 64 MB reading 
+ok   97 x 0x21 lines counted (dup line) 
+ok   main output: rc 0, ASCII, strict cp1250, no PYTHONIOENCODING 0
+ok   main: bad knob value -> rc 2 
+checks 43
+ALL OK

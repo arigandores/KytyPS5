@@ -1,0 +1,6 @@
+	apiVersion        = 1.4.351 (4211039)
+	driverVersion     = 616.56.0.0 (2584608768)
+	maxFragmentDualSrcAttachments                   = 1
+	driverInfo                                           = 616.56
+	dualSrcBlend                            = true
+427:	deviceName        = NVIDIA GeForce RTX 5080 Laptop GPU

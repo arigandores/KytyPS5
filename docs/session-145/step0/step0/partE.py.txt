@@ -1,0 +1,630 @@
+# ================= PART E (session 145, HPP-350; ROADMAP item 273 (k)(1)-(5)): the profile of session 145 - the 34 tags and
+# their order, the control W, the W repeat of rocket_hourglass paired with the V v144_09 of s144, the cold census, the W filter
+# of one message, the window event (minimized / Recovering without minimized / stdout / other window lines / chunks), the layer
+# limit (control 0 required, other W "layer truncated"), the video continuity of B38 (gap, margin, before/after the first scene
+# frame, longest run), the stop rule of the window event, the summary lines, the regression of profile 144 on a synthetic
+# profile, the real constants, ASCII.
+S.profile(P145)
+LV16 = ('small_pot_lava', 'spin_drill_natural_cave', 'enemy_taco', 'jack_in_the_box', 'final_shooting', 'picup_light',
+        'enemy_snake', 'light_gadget_graveyard', 'shuriken_ninja_castle', 'final_stage', 'mini_rocket_chain',
+        'enemy_chameleon', 'bonus_path_maker_mix', 'enemy_bird', 'cymbal_party_land', 'enemy_final')
+SEQ145 = ['w145_00', 'w145_01'] + [x for i in range(2, 18) for x in ('v145_%02d' % i, 'w145_%02d' % i)]
+FILT = 'Undefined-Value-ShaderOutputNotConsumed-DynamicRendering'
+ok &= case('E1 the 34 tags of item 273 (k)(1) in that order; the pairs: v144_09 with w145_01, then v145_NN / w145_NN of the '
+           'sixteen levels (enemy_final last); the census = the sixteen v145 V; W tags = control + 17',
+           list(S.SEQ) == SEQ145 and len(S.SEQ) == 34 and S.CONTROL == ('w145_00', SKY) and
+           S.PAIRS[0] == ('v144_09', 'w145_01', 'rocket_hourglass') and len(S.PAIRS) == 17 and
+           S.PAIRS[1:] == tuple(('v145_%02d' % (i + 2), 'w145_%02d' % (i + 2), lv) for i, lv in enumerate(LV16)) and
+           S.CENSUS == tuple(('v145_%02d' % (i + 2), lv) for i, lv in enumerate(LV16)) and
+           S.LEVELS == ('rocket_hourglass',) + LV16 and
+           S.V_TAGS == ('v144_09',) + tuple('v145_%02d' % i for i in range(2, 18)) and
+           S.W_TAGS == tuple('w145_%02d' % i for i in range(0, 18)))
+ok &= case('E2 the root, seal, chain, runs dir, scorer of 145; the V of another session: v144_09 from root s144, chain go144a, '
+           'seal pred/01_sc144.md; its sheet row fixed viewed by item 273 (a); halves of eight; the filter id; the flags',
+           S.ROOT == 'C:/kyty/s145' and S.PRED_PATH == 'C:/kyty/s145/pred/01_sc145.md' and S.CHAIN == 'go145a' and
+           S.RUNS == 'runs145' and S.SCORER == 'sc145.py' and S.EXTRA is True and S.FORM144 is True and
+           S.FORM145 is True and S.REPEAT is False and
+           S.XSRC == {'v144_09': dict(root='C:/kyty/s144', chain='go144a', pred='C:/kyty/s144/pred/01_sc144.md')} and
+           S.XSHEET == ('v144_09',) and S.XSHEET_NOTE == ' (item 273 (a): viewed at the close of s144)' and
+           S.W_STOP_RUN == 2 and S.HALF == 8 and S.NUMW == {5: 'five', 6: 'six'} and S.VKFILTER == FILT)
+ok &= case('E3 the constants of sc144 are unchanged in profile 145 (item 273 (k)(3))',
+           (S.SCENE_DRAWS, S.ENTRY_WIN, S.K2_US, S.K3_US, S.HOLD_CENSUS_US, S.HOLD_CENSUS_S, S.HOLD_SCENE_US, S.HOLD_W_S,
+            S.HOLD_V_S, S.FRAMES_V, S.COVER_SLACK, S.PRIO_US, S.STOP_RUN, S.HOLD_W_HARNESS_S, S.REPORT_LINES) ==
+           (100, 599, 1000000, 100000, 120000000, 120, 300000000, 300, 330, 3000, 100, 50000, 3, 310, 50)
+           and S.OPCODE_BASE == {('SOP1', '0x21'): 96, ('SOP1', '0x0c'): 1, ('VOPC', '0xe3'): 4} and S.BUILD_SHA == BUILD
+           and S.CACHE_ROOTS == ('shader', 'pipeline', 'glcache') and S.VSTOP == 'VALIDATION_STOP')
+ok &= case('E3b the new constants: the gap 60 ms and the margin 12 ms of AUDIT144 s1.3, the window keys, the limit, F6 and '
+           'Recovering texts', S.VC_GAP == 0.060 and S.VC_MARG == 0.012 and
+           S.WIN_KEYS == ('minimized', 'restored', 'resized', 'size changed', 'lost keyboard focus') and
+           S.M_LIMIT == b'this will be the last time reporting it' and S.M_F6 == b'and this write is unused.' and
+           S.M_REC == b'Recovering Vulkan swapchain')
+ok &= case('E4 level_of in 145: control -> Sky Garden; v144_09 and w145_01 -> rocket_hourglass; v145_17 / w145_17 -> '
+           'enemy_final; v145_01, w144_09, v144_10 -> unknown',
+           S.level_of('w145_00') == SKY and S.level_of('v144_09') == 'rocket_hourglass' and
+           S.level_of('w145_01') == 'rocket_hourglass' and S.level_of('v145_17') == 'enemy_final' and
+           S.level_of('w145_17') == 'enemy_final' and S.level_of('v145_02') == 'small_pot_lava' and
+           S.level_of('v145_01') is None and S.level_of('w144_09') is None and S.level_of('v144_10') is None)
+K145 = K144 + ('FORM145', 'REPEAT', 'XSHEET_NOTE')
+ok &= case('E5 the profiles 144, 143 and 142 set every key the profile 145 changes; P144 keeps the values of sc144 (root s144, '
+           'go144a, control w144_00, 33 tags, the v143 V of another session, halves of six, FORM145 off, repeated entries)',
+           all(set(K145) <= set(p) for p in (S.P144, S.P143, S.P142)) and
+           all(p['FORM145'] is False for p in (S.P144, S.P143, S.P142)) and S.P144['REPEAT'] is True and
+           S.P144['ROOT'] == 'C:/kyty/s144' and S.P144['CHAIN'] == 'go144a' and S.P144['CONTROL'] == ('w144_00', SKY) and
+           len(S.P144['SEQ']) == 33 and S.P144['SEQ'] == tuple(SEQ144) and S.P144['HALF'] == 6 and
+           S.P144['SCORER'] == 'sc144.py' and S.P144['PRED_PATH'] == 'C:/kyty/s144/pred/01_sc144.md' and
+           sorted(S.P144['XSRC']) == sorted(OLD8) and S.P144['XSHEET'] == OLD8 and
+           S.P144['XSHEET_NOTE'] == ' (item 254 (a): viewed at the close of s143)' and 'apichk144' in ' '.join(
+               S.P144['SEALED_NAMES']) and len(S.P144['SEALED_NAMES']) == 24)
+REQ145 = ('go145a.sh', 'sc145.py', 'test_sc145.py', 'mut_sc145.py', 'enter_scene.py', 'sheet142.py', 'fgcpu145.py',
+          'test_fgcpu145.py', 'test_go145a.py', 'C:/kyty/scripts/s51_vidglitch.py', 'cachemf145.py', 'lockcheck145.py',
+          'test_tools145.py', 'step2/next_one.sh', 'step2/call_one.sh', 'step2/wait_one.sh', 'step2/pre_one.sh',
+          'step2/apichk145.py', 'step2/gate145.py', 'step2/test_gate145.py', 'C:/kyty/s144/step2/times.txt',
+          'C:/kyty/s144/pred/01_sc144.md')
+ok &= case('E6 the seal of 145 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, s51_vidglitch.py, the '
+           'tools, the step 2 wrappers with the API check and the gate, and the s144 times.txt and seal the pair reads; no '
+           'name of 144', all(n in S.SEALED_NAMES for n in REQ145) and len(S.SEALED_NAMES) == 27 and
+           not any('144' in n and not n.startswith('C:/kyty/s144/') for n in S.SEALED_NAMES))
+PR5 = BASE / 'pred145.md'
+PR5.write_text('fixture seal 145 part E\n', encoding='utf-8')
+SH5 = hashlib.sha256(PR5.read_bytes()).hexdigest()
+
+
+def js145(tag, attempt=None, form=True, filt=FILT, **over):
+    is_w = tag in S.W_TAGS
+    cmd = ['kyty_emulator.exe', '--vulkan-validation', 'false', '--game', 'x'] + (['--vulkan-validation', 'true'] if is_w else [])
+    env = {'KYTY_FRAME_TRACE': 'lite', 'KYTY_GUEST_ARGS': '-lvl %s' % S.level_of(tag), 'KYTY_GPU_CLOCK_PIN': '1',
+           'KYTY_GPU_MARKERS': '0'}
+    if is_w:
+        env['VK_LAYER_PATH'] = 'C:/VulkanSDK/1.4.357.0/Bin'
+        if form:
+            env['KYTY_PIPELINE_PRECACHE'] = '0'
+        if filt is not None:
+            env['VK_LAYER_MESSAGE_ID_FILTER'] = filt
+    else:
+        env['KYTY_REC'] = 'C:\\kyty\\s145\\rec_%s.mp4' % tag
+    a = dict(label='attempt 1', attempt=1, outcome='ok', hold_s=310.0 if is_w else 330.0, hold_exit=None, ft_tail=300,
+             pipeline_cache_off=False, level=S.level_of(tag))
+    a.update(attempt or {})
+    js = dict(tag=tag, binary_sha256=BUILD, guest_args='-lvl %s' % S.level_of(tag), gates='', env=env, cmdline=cmd,
+              prereg=dict(path=S.PRED_PATH, sha256=SH5), attempts=[a])
+    js.update(over)
+    return js
+
+
+def mk145(root, tag, lines=None, js=None, glitch=(3200, 0), sheet=True, chain='go145a', std=(), idx=None, extra=()):
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    is_w = tag in S.W_TAGS
+    lv = S.level_of(tag)
+    if lines is None:
+        lines = (wl(lv) if is_w else [PRE] + scene_lines(lv, v_post())) + list(extra)
+    (root / ('%s.json' % tag)).write_text(json.dumps(js if js is not None else js145(tag)), encoding='utf-8')
+    (root / ('log_%s.txt' % tag)).write_bytes(('\n'.join(lines) + '\n').encode('utf-8'))
+    (root / 'step2').mkdir(exist_ok=True)
+    with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+        f.write('2026-10-01T00:00:00Z %s %s enter_scene end rc 0 log_%s.txt sha256 %s\n' % (
+            chain, tag, tag, _h.sha256((root / ('log_%s.txt' % tag)).read_bytes()).hexdigest()))
+    (root / ('stdout_%s.txt' % tag)).write_bytes(('\n'.join(std) + '\n').encode('utf-8'))
+    (root / ('%s.stdout.txt' % tag)).write_bytes(b'VERDICT: x\n')
+    if is_w:
+        return str(root)
+    if idx is not None:
+        (root / ('rec_%s.mp4.idx' % tag)).write_text(''.join('%d %d %.3f\n' % (i, i + 1, x) for i, x in enumerate(idx)))
+    if glitch is not None:
+        (root / ('glitch_%s.txt' % tag)).write_text('C:/kyty/s145/rec_%s.mp4: %d frames 960x540, index entries %d\n'
+                                                    'one-frame glitches: %d\n' % (tag, glitch[0], glitch[0], glitch[1]))
+    if sheet:
+        (root / ('sheet_%s.png' % tag)).write_bytes(b'png')
+        (root / ('rec_%s.mp4' % tag)).write_bytes(('mp4 ' + tag).encode())
+        with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+            f.write('2026-10-01T00:00:00Z %s %s s51_vidglitch rc 0 glitch_%s.txt sha256 %s rec_%s.mp4 sha256 %s\n' % (
+                chain, tag, tag, 'ab' * 32, tag, _h.sha256(('mp4 ' + tag).encode()).hexdigest()))
+            f.write('2026-10-01T00:00:00Z %s %s sheet rc 0 sheet_%s.png sha256 %s\n' % (
+                chain, tag, tag, _h.sha256(b'png').hexdigest()))
+    return str(root)
+
+
+XSRC145 = dict(S.XSRC)
+
+
+def x144root(name, js_over=None, lines=None):
+    """A fixture root of 'session 144' with v144_09 (chain go144a, its own seal), and S.XSRC pointed at it."""
+    xr = BASE / name / 'x144'
+    xr.mkdir(parents=True, exist_ok=True)
+    xp = xr / 'pred144.md'
+    xp.write_text('fixture seal 144\n', encoding='utf-8')
+    xs = hashlib.sha256(xp.read_bytes()).hexdigest()
+    js = js145('v144_09', prereg=dict(path=xp.as_posix(), sha256=xs))
+    js['env']['KYTY_REC'] = 'C:\\kyty\\s144\\rec_v144_09.mp4'
+    js.update(js_over or {})
+    mk145(xr, 'v144_09', lines, js, chain='go144a')
+    S.XSRC = {'v144_09': dict(root=xr.as_posix(), chain='go144a', pred=xp.as_posix())}
+    return xr, xp
+
+
+WMIN = 'Window 1 minimized'
+WREC = 'Recovering Vulkan swapchain (vkQueuePresentKHR: eErrorOutOfDateKHR)'
+LIM = ('[Vulkan][W][2]: (Warning - This VUID has now been reported 1000000 times, which is the duplicate_message_limit value, '
+       'this will be the last time reporting it).')
+F6L = ('[Vulkan][W][2]: vkCmdDrawIndexed(): Inside [VK_SHADER_STAGE_FRAGMENT_BIT] it writes to [Output variable, Location 1, '
+       '"out_mrt_1"] but there is no VkRenderingInfo::pColorAttachments[1] and this write is unused.')
+RE = BASE / 'E7'
+for t in ('w145_00', 'w145_01', 'v145_02', 'w145_02'):
+    mk145(RE, t)
+eE = dict((t, S.entry_of(t, str(RE), SH5)) for t in ('w145_00', 'w145_01', 'v145_02', 'w145_02'))
+ok &= case('E7 good control W, W repeat and the V and W of a pair are admitted; each W carries one filter row and the window '
+           'row, the V the filter row of the shipped defaults and the window row',
+           all(adm_ok(e) for e in eE.values()) and
+           all(len(adm_rows(eE[t], 'W filter: ')) == 1 and len(adm_rows(eE[t], 'window event: ')) == 1
+               for t in ('w145_00', 'w145_01', 'w145_02')) and
+           len([a for a in eE['v145_02']['admit'] if 'VK_LAYER_MESSAGE_ID_FILTER' in a[0]]) == 1 and
+           len(adm_rows(eE['v145_02'], 'window event: ')) == 1 and eE['w145_02']['winev'] is False and
+           eE['w145_02']['limit'] == 0 and eE['w145_02']['vcont'] is None)
+BADF = [('W without the filter', js145('w145_02', filt=None)),
+        ('W filtering another id', js145('w145_02', filt='VUID-VkSwapchainCreateInfoKHR-imageExtent-01689')),
+        ('W filtering the id and another one', js145('w145_02', filt=FILT + ',VUID-vkCmdDraw-None-02699')),
+        ('W filtering the id with a blank', js145('w145_02', filt=FILT + ' ')),
+        ('W filtering the hashed number', js145('w145_02', filt='0x5a3b6b9e'))]
+for i, (name, js) in enumerate(BADF):
+    e = S.entry_of('w145_02', mk145(BASE / ('E8_%d' % i), 'w145_02', js=js), SH5)
+    ok &= case('E8 the W filter of item 273 (k)(2) violated -> the tag is not admitted by the filter row only: %s' % name,
+               not adm_ok(e) and [a[0][:9] for a in e['admit'] if not a[1]] == ['W filter:'])
+jv = js145('v145_02')
+jv['env']['VK_LAYER_MESSAGE_ID_FILTER'] = FILT
+e = S.entry_of('v145_02', mk145(BASE / 'E9', 'v145_02', js=jv), SH5)
+ok &= case('E9 a V with the filter of the W -> not admitted by "V shipped defaults: no VK_LAYER_MESSAGE_ID_FILTER" only',
+           not adm_ok(e) and [a[0] for a in e['admit'] if not a[1]] ==
+           ['V shipped defaults: no VK_LAYER_MESSAGE_ID_FILTER in the env (item 273 (k)(2))'])
+e = S.entry_of('w145_02', mk145(BASE / 'E10', 'w145_02', lines=wl('small_pot_lava')[:40] + [WMIN, WREC] +
+                                wl('small_pot_lava')[40:]), SH5)
+fE10 = S.fmt_entry(e)
+ok &= case('E10 a W with "Window 1 minimized" and the Recovering line -> the admission row "window event" fails alone; the print '
+           'says it is not an outcome of the level and names the gate stop',
+           e['winev'] and not adm_ok(e) and [a[0][:13] for a in e['admit'] if not a[1]] == ['window event:'] and
+           e['win']['minimized'] == 1 and e['win']['recovering'] == 1 and
+           any(x.startswith('  window events (item 273 (k)(3)): minimized 1, restored 0, resized 0, size changed 0, lost '
+                            'keyboard focus 0, Recovering Vulkan swapchain 1 -> WINDOW EVENT: not an outcome of the level')
+               for x in fE10))
+e = S.entry_of('w145_02', mk145(BASE / 'E11', 'w145_02', extra=[WREC]), SH5)
+ok &= case('E11 "Recovering Vulkan swapchain" without any "minimized" line -> a window event (the admission row fails); the '
+           'print names minimized 0 and Recovering 1',
+           e['winev'] and e['win']['minimized'] == 0 and e['win']['recovering'] == 1 and not adm_ok(e) and
+           any(x.startswith('  window events (item 273 (k)(3)): minimized 0, restored 0, resized 0, size changed 0, lost '
+                            'keyboard focus 0, Recovering Vulkan swapchain 1 -> WINDOW EVENT') for x in S.fmt_entry(e)))
+e = S.entry_of('w145_02', mk145(BASE / 'E11b', 'w145_02', std=[WREC]), SH5)
+ok &= case('E11b the Recovering line in the emulator stdout only -> counted, a window event',
+           e['winev'] and e['win']['recovering'] == 1 and e['win']['minimized'] == 0 and not adm_ok(e))
+e = S.entry_of('w145_02', mk145(BASE / 'E12', 'w145_02', std=[WMIN]), SH5)
+ok &= case('E12 the "minimized" line in the emulator stdout only -> counted, a window event', e['winev'] and
+           e['win']['minimized'] == 1 and not adm_ok(e))
+OTH = ['Window 1 restored', 'Window 1 resized to 1280x720', 'Window 1 size changed to 1280x720', 'Window 1 lost keyboard focus',
+       'Window 1 gained keyboard focus', 'Window 1 moved to 10,10', 'Window 1 exposed', 'Window 12 lost keyboard focus']
+e = S.entry_of('w145_02', mk145(BASE / 'E13', 'w145_02', extra=OTH), SH5)
+ok &= case('E13 only other window lines (restored, resized, size changed, lost focus twice; gained, moved, exposed not counted) '
+           '-> counted, no event, admitted, the print says "no event"',
+           not e['winev'] and adm_ok(e) and e['win'] == dict(minimized=0, restored=1, resized=1, **{
+               'size changed': 1, 'lost keyboard focus': 2, 'recovering': 0}) and
+           any(x.endswith('Recovering Vulkan swapchain 0 -> no event') for x in S.fmt_entry(e)))
+e = S.entry_of('w145_02', mk145(BASE / 'E13b', 'w145_02', extra=['Window minimized', 'the window 1 minimized later',
+                                                                  'Window 1 minimizedX']), SH5)
+ok &= case('E13b "Window minimized" without an id and "minimizedX" are not the line of window.cpp; "the window 1 minimized" '
+           '(lower case) is not either -> no event', not e['winev'] and e['win']['minimized'] == 0)
+RE14 = BASE / 'E14'
+mk145(RE14, 'w145_00')
+mk145(RE14, 'w145_01')
+mk145(RE14, 'v145_02', extra=[WMIN])
+mk145(RE14, 'w145_02')
+e14 = S.entry_of('v145_02', str(RE14), SH5)
+o14 = S.summary(str(RE14), SH5, 'viewed')[0]
+ok &= case('E14 a V with a window event -> V not admitted, its level NO by "V admitted", not admitted in the census; the '
+           'WINDOW EVENTS line names it',
+           not adm_ok(e14) and 'SCENE_OK small_pot_lava: NO' in o14 and
+           row_ok(S.scene_ok(e14, S.entry_of('w145_02', str(RE14), SH5), 'viewed', S.PAIRS[1])[1], 'V admitted') is False
+           and any(x.startswith('  v145_02 small_pot_lava') and x.split(' admitted ')[1].startswith('NO') for x in o14) and
+           '  info W w145_02 layer limit lines 0; window events V yes, W no' in o14 and
+           any(x.startswith('WINDOW EVENTS (item 273 (k)(3)): tags with a "minimized" or "Recovering Vulkan swapchain" line '
+                            '(not an outcome of the level; the gate stops the series): v145_02;') for x in o14))
+CH5 = S.CHUNK
+S.CHUNK = 37
+pc = mk145(BASE / 'E15', 'w145_02', extra=[WMIN, LIM, F6L, WREC, 'Window 1 restored', LIM])
+sc15 = S.scan(pc + '/log_w145_02.txt')
+S.CHUNK = CH5
+ok &= case('E15 the window, Recovering, limit and F6 lines are counted once each across 37-byte chunks',
+           sc15['win']['minimized'] == 1 and sc15['win']['restored'] == 1 and sc15['rec'] == 1 and sc15['limit'] == 2 and
+           sc15['f6'] == 1)
+
+
+def sc5(root, tag):
+    b = io.StringIO()
+    with contextlib.redirect_stdout(b):
+        rc = S.main(['--stop-check', tag], root=str(root), pred=str(PR5))
+    return rc, b.getvalue()
+
+
+R16 = BASE / 'E16'
+mk145(R16, 'w145_00', extra=[LIM])
+r16 = sc5(R16, 'w145_01')
+c16 = S.control_state(S.entry_of('w145_00', str(R16), SH5))
+R16b = BASE / 'E16b'
+mk145(R16b, 'w145_00')
+r16b = sc5(R16b, 'w145_01')
+o16 = S.summary(str(R16), SH5, None)[0]
+f16 = S.fmt_entry(S.entry_of('w145_00', str(R16), SH5))
+f16b = S.fmt_entry(S.entry_of('w145_00', str(R16b), SH5))
+ok &= case('E16 the control W with one layer limit line -> a letter term of the control stop (item 273 (k)(2)), rc 5 before '
+           'w145_01; the control with 0 limit lines -> rc 0; the print and the LAYER LIMIT line name the control rule',
+           r16[0] == 5 and c16[1] is True and 'layer limit lines 1 (item 273 (k)(2): 0 required in the control W)' in c16[2]
+           and 'STOP RULE CONTROL before w145_01: STOP; letter stop (layer limit lines 1' in r16[1] and r16b[0] == 0 and
+           'STOP RULE CONTROL before w145_01: not met' in r16b[1] and
+           '  layer limit lines ("this will be the last time reporting it", item 273 (k)(2)): 1 - control W: 0 required -> '
+           'FAIL' in f16 and
+           '  layer limit lines ("this will be the last time reporting it", item 273 (k)(2)): 0 - control W: 0 required -> '
+           'PASS' in f16b and
+           'LAYER LIMIT (item 273 (k)(2)): control W w145_00: 1 lines -> FAIL (a letter term of the control stop); other W '
+           'with layer limit lines (layer truncated, the outcome by the letter): none' in o16)
+R17 = BASE / 'E17'
+mk145(R17, 'w145_00', std=[LIM])
+e17 = S.entry_of('w145_00', str(R17), SH5)
+ok &= case('E17 the limit line in the emulator stdout of the control W -> counted (1), letter stop',
+           e17['limit'] == 1 and S.control_state(e17)[1] is True and sc5(R17, 'w145_01')[0] == 5)
+R18 = BASE / 'E18'
+xr, xp = x144root('E18x')
+mk145(R18, 'w145_00')
+mk145(R18, 'w145_01', extra=[LIM, LIM])
+o18 = S.summary(str(R18), SH5, None)[0]
+e18 = S.entry_of('w145_01', str(R18), SH5)
+ok &= case('E18 a non-control W with two limit lines -> admitted, printed LAYER TRUNCATED, the outcome by the letter: the pair '
+           '(V v144_09 + W w145_01) YES; the LAYER LIMIT line names it; the control PASS',
+           adm_ok(e18) and e18['limit'] == 2 and any(x.endswith('2 - LAYER TRUNCATED (the outcome stands by the letter)')
+                                                     for x in S.fmt_entry(e18)) and
+           '  layer limit lines ("this will be the last time reporting it", item 273 (k)(2)): 0' in S.fmt_entry(
+               eE['w145_02']) and
+           'SCENE_OK rocket_hourglass: YES' in o18 and
+           'LAYER LIMIT (item 273 (k)(2)): control W w145_00: 0 lines -> PASS; other W with layer limit lines (layer truncated, '
+           'the outcome by the letter): w145_01' in o18 and
+           any(x == '  info W w145_01 layer limit lines 2 (layer truncated); window events V no, W no' for x in o18))
+e = S.entry_of('w145_02', mk145(BASE / 'E19', 'w145_02', extra=[F6L, F6L, '[Vulkan][W][1]: Removing layer X',
+                                                                '[Vulkan][W][3]: y', '[Vulkan][I][4]: z']), SH5)
+ok &= case('E19 the F6 text lines (2) and the validation-type lines (bit 2 of the type: [2] x5 incl. the 3 of wl and F6 x2, '
+           '[3]; not [1], [4]) are counted for the print, not the verdict',
+           e['f6'] == 2 and e['vkval'] == 6 and adm_ok(e) and any(
+               x == '  message filter (item 273 (k)(2)): lines of the filtered F6 text ("... and this write is unused.") 2; '
+               '[Vulkan][ lines of the validation type (bit 2) 6 (info, not in the verdict)' for x in S.fmt_entry(e)))
+
+
+def rows_at(ends, n0=1):
+    """FrameTrace rows (n, dt_us, draws, pos) whose ends lie at the given times when anchored at the last one."""
+    out = []
+    for i, x in enumerate(ends):
+        dt = 16667 if i == 0 else int(round((x - ends[i - 1]) * 1e6))
+        out.append((n0 + i, dt, 3000, i))
+    return out
+
+
+rr = rows_at([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6])
+it = [0.0, 0.1, 0.2, 0.5, 0.6]
+ok &= case('E20 vcont: rows ending at 0.3 and 0.4 inside the record gap 0.2..0.5 -> after the first scene frame n 3: 2 rows in '
+           '1 gap, the longest (2, 4, 5, 0.3 s, record 2); first frame n 4: 1 after, 1 before; n 5: none after, 2 before',
+           S.vcont(rr, it, 3) == dict(after=2, gaps=1, before=0, longest=(2, 4, 5, 0.3, 2)) and
+           S.vcont(rr, it, 4) == dict(after=1, gaps=1, before=1, longest=(2, 4, 5, 0.3, 2)) and
+           S.vcont(rr, it, 5) == dict(after=0, gaps=0, before=2, longest=None))
+rr = rows_at([0.0, 0.211, 0.213, 0.487, 0.489, 0.6])
+it = [0.0, 0.2, 0.5, 0.6]
+ok &= case('E20b the margin of 12 ms: row ends 11 ms after the gap start and 11 ms before its end are taken as the edge records; '
+           '13 ms inside are counted', S.vcont(rr, it, 1) == dict(after=2, gaps=1, before=0, longest=(2, 3, 4, 0.3, 1)))
+rr = rows_at([0.0, 0.03, 0.06])
+rr2 = rows_at([0.0, 0.03, 0.061])
+ok &= case('E20c the gap of the records must exceed 60 ms: a 60 ms gap is not examined, a 61 ms one is',
+           S.vcont(rr, [0.0, 0.0, 0.06], 1) == dict(after=0, gaps=0, before=0, longest=None) and
+           S.vcont(rr2, [0.0, 0.0, 0.061], 1) == dict(after=1, gaps=1, before=0, longest=(1, 2, 2, 0.061, 1)))
+rr = rows_at([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])
+it = [0.0, 0.1, 0.25, 0.4, 0.5, 0.95, 1.0]
+ok &= case('E20d three gaps hold rows (0.1..0.25: n 3; 0.25..0.4: n 4; 0.5..0.95: n 7..10), a 50 ms gap is not examined: '
+           'the longest run is the gap with the most rows, the counts add up',
+           S.vcont(rr, it, 1) == dict(after=6, gaps=3, before=0, longest=(4, 7, 10, 0.45, 4)))
+ok &= case('E20e vcont None without rows, without records or without a first scene frame',
+           S.vcont([], [0.0, 1.0], 1) is None and S.vcont(rows_at([0.0, 1.0]), [], 1) is None and
+           S.vcont(rows_at([0.0, 1.0]), None, 1) is None and S.vcont(rows_at([0.0, 1.0]), [0.0, 1.0], None) is None)
+ip = BASE / 'E21.idx'
+ip.write_text('0 1 0.000\n1 2\n2 3 x\n3 4 0.250 extra\n\n4 5 0.5\n')
+ok &= case('E21 idx_times: lines of >= 3 fields with a number in the third; others skipped; a missing file -> None',
+           S.idx_times(str(ip)) == [0.0, 0.25, 0.5] and S.idx_times(str(BASE / 'none.idx')) is None)
+vl = [PRE] + scene_lines('small_pot_lava', [16667] * 3100)
+nrow = sum(1 for x in vl if x.startswith('FrameTrace'))
+t_end = 0.0
+idx = []
+ftr = [x for x in vl if x.startswith('FrameTrace')]
+dts = [int(x.split('dt_us=')[1].split()[0]) for x in ftr]
+ends = []
+c = 0.0
+for d in reversed(dts):
+    ends.append(100.0 - c)
+    c += d / 1e6
+ends.reverse()
+fn = [int(x.split('n=')[1].split()[0]) for x in ftr if int(x.split('draws=')[1].split()[0]) >= 100 and
+      int(x.split('n=')[1].split()[0]) >= 14][0]
+gap_rows = [i for i in range(len(ftr)) if int(ftr[i].split('n=')[1].split()[0]) in (fn + 1, fn + 2, fn + 3)]
+idx = [x for i, x in enumerate(ends) if i not in gap_rows]
+R22 = BASE / 'E22'
+mk145(R22, 'v145_02', lines=vl, idx=idx, glitch=(3200, 0))
+e22 = S.entry_of('v145_02', str(R22), SH5)
+ok &= case('E22 a V whose .idx lacks the records of the three frames after the first scene frame -> continuity 3 rows in 1 gap, '
+           'longest 3 rows n fn+1..fn+3; printed as data; the V stays admitted (not a gate)',
+           e22['vcont'] == dict(after=3, gaps=1, before=0, longest=(3, fn + 1, fn + 3, e22['vcont']['longest'][3],
+                                                                     gap_rows[0] - 1)) and adm_ok(e22) and
+           any(x.startswith('  video continuity (B38, item 273 (k)(3), the method of AUDIT144 s1.3; data next to SCENE_OK, '
+                            'not a gate): FrameTrace rows after the first scene frame ending inside a .idx gap > 60 ms: 3 in 1 '
+                            'gaps; longest run 3 rows n %d..%d' % (fn + 1, fn + 3)) for x in S.fmt_entry(e22)))
+o22 = S.summary(str(R22), SH5, None)[0]
+ok &= case('E22b the summary names the V with a run of >= 2 rows without a record (3 rows) next to SCENE_OK',
+           'VIDEO CONTINUITY (B38, item 273 (k)(3); data, not a gate): V with a run of >= 2 rows without a video record after '
+           'the first scene frame: v145_02 3 rows' in o22 and any(
+               x.startswith('  info video continuity of V v145_02 (B38, item 273 (k)(3); data, not a gate - "0 glitches" '
+                            'covers the frames in the video): FrameTrace rows after the first scene frame ending inside a .idx '
+                            'gap > 60 ms: 3 in 1 gaps') for x in o22))
+# the cross-session pair: v144_09 of s144 with w145_01
+R23 = BASE / 'E23'
+xr, xp = x144root('E23')
+mk145(R23, 'w145_01')
+v23 = S.entry_of('v144_09', str(R23), SH5)
+w23 = S.entry_of('w145_01', str(R23), SH5)
+word, rows = S.scene_ok(v23, w23, 'not-viewed', S.PAIRS[0])
+o23 = S.summary(str(R23), SH5, None)[0]
+ok &= case('E23 the W repeat w145_01 with the V v144_09 of s144 (its root, chain go144a, its seal) -> the pair row names its own '
+           'session; the sheet row of v144_09 is viewed by item 273 (a) whatever --sheet says',
+           v23 is not None and adm_ok(v23) and v23['times_log_sha'] == v23['log_sha'] and
+           row_ok(rows, 'V v144_09 and W w145_01 are the pair of one level') is True and
+           'SCENE_OK rocket_hourglass: YES' in o23 and any(
+               x.endswith('(viewed (item 273 (a): viewed at the close of s144))') for x in o23) and
+           any(x.startswith('V OF ANOTHER SESSION v144_09 (the pair of item 254 (e); root %s, chain go144a, seal %s)' % (
+               xr.as_posix(), xp.as_posix())) for x in o23))
+Path(xr, 'log_v144_09.txt').write_bytes(Path(xr, 'log_v144_09.txt').read_bytes() + b'x\n')
+v23b = S.entry_of('v144_09', str(R23), SH5)
+ok &= case('E23b a replaced V log of s144 (sha != its enter_scene end line of the s144 times.txt) -> the pair row FAIL, NO',
+           S.scene_ok(v23b, w23, 'viewed', S.PAIRS[0])[0] == 'NO' and
+           row_ok(S.scene_ok(v23b, w23, 'viewed', S.PAIRS[0])[1], 'V v144_09 and W w145_01') is False)
+xr, xp = x144root('E23c')
+tp = xr / 'step2' / 'times.txt'
+tp.write_text(tp.read_text(encoding='utf-8').replace(' go144a v144_09 enter_scene end ', ' go145a v144_09 enter_scene end '),
+              encoding='utf-8')
+v23c = S.entry_of('v144_09', str(R23), SH5)
+ok &= case('E23c the enter_scene end line of v144_09 written under the chain go145a (not its own go144a) -> no times sha, FAIL',
+           v23c['times_log_sha'] is None and row_ok(S.scene_ok(v23c, w23, 'viewed', S.PAIRS[0])[1], 'V v144_09 and W w145_01')
+           is False)
+xr, xp = x144root('E23d', js_over=dict(guest_args='-lvl pot_treasure_cave'))
+v23d = S.entry_of('v144_09', str(R23), SH5)
+ok &= case('E23d the V of s144 run for another level (guest args) -> V not admitted, the pair row FAIL',
+           not adm_ok(v23d) and row_ok(S.scene_ok(v23d, w23, 'viewed', S.PAIRS[0])[1], 'V v144_09 and W w145_01') is False)
+xr, xp = x144root('E23e', js_over=dict(prereg=dict(path=S.PRED_PATH, sha256=SH5)))
+v23e = S.entry_of('v144_09', str(R23), SH5)
+ok &= case('E23e the V of s144 must carry the seal of s144: a json with the seal of 145 -> V not admitted, NO',
+           not adm_ok(v23e) and S.scene_ok(v23e, w23, 'viewed', S.PAIRS[0])[0] == 'NO')
+R23f = BASE / 'E23f'
+mk145(R23f, 'v144_09')
+mk145(R23f, 'w145_01')
+S.XSRC = {'v144_09': dict(root=(BASE / 'E23f' / 'none').as_posix(), chain='go144a', pred='none.md')}
+ok &= case('E23f a v144_09 lying in the s145 root is not read (the V of another session comes from its own root only)',
+           S.entry_of('v144_09', str(R23f), SH5) is None and
+           row_ok(S.scene_ok(None, S.entry_of('w145_01', str(R23f), SH5), 'viewed', S.PAIRS[0])[1], 'V made') is False)
+xr, xp = x144root('E23g')
+ok &= case('E23g the V v144_09 offered as the pair of level 02 (w145_02) -> NO by the pair row',
+           S.scene_ok(S.entry_of('v144_09', str(R23), SH5), S.entry_of('w145_01', str(R23), SH5), 'viewed',
+                      S.PAIRS[1])[0] == 'NO')
+# the summary of profile 145
+R24 = BASE / 'E24'
+xr, xp = x144root('E24x')
+for t in ('w145_00', 'w145_01', 'v145_02', 'w145_02', 'v145_03'):
+    lines = None
+    if t == 'v145_03':
+        lines = [PRE] + scene_lines('spin_drill_natural_cave', [16667] * 700 + [150000] + list(v_post())) + [
+            'Window 1 restored']
+    mk145(R24, t, lines=lines, extra=[LIM] if t == 'w145_02' else ())
+o24 = S.summary(str(R24), SH5, None)[0]
+o24v = S.summary(str(R24), SH5, 'viewed')[0]
+ok &= case('E24 the summary of 145: the cold census header (no repeated entry), the map rows marked "cold first entry", halves '
+           'of eight, YES of the cross-session pair, PENDING_SHEET / YES of a new pair, the levels line over 17',
+           'CENSUS = the V tags v145_02..v145_17, COLD first entries of never-entered levels (item 273 (k)(1)-(2)): the map '
+           'rows and the forms B5 / B5a / B33 below go into the cold pools' in o24 and
+           not any('REPEATED entries' in x or 'repeated entry' in x for x in o24) and
+           any(x.startswith('    map (A) row small_pot_lava (cold first entry): outcome on 120 s HOLDS_120') for x in o24) and
+           'FORMS second reading by the order (shared caches warm from earlier runs): first 8 B5a 0/8 B5 0/8; last 8 B5a 0/8 '
+           'B5 0/8' in o24 and 'SCENE_OK rocket_hourglass: YES' in o24 and 'SCENE_OK small_pot_lava: PENDING_SHEET' in o24 and
+           'SCENE_OK small_pot_lava: YES' in o24v and 'SCENE_OK LEVELS: YES 1, PENDING_SHEET 1, NO 15 of 17' in o24 and
+           'CENSUS made 2 of 16 (of them attempt made without json 0), admitted 2' in o24 and
+           'FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 1/16 [c] (admitted and entered 2) v145_03; '
+           'executor variant (the hold within 120 s of presented time after the entry line): 1/16' in o24)
+ok &= case('E24b the new summary lines: window events none, layer limit (control PASS, w145_02 truncated), the W filter 3 of 3 '
+           'and V 3 of 3, the video continuity line; the W FORM line of 254 (e) still printed',
+           'WINDOW EVENTS (item 273 (k)(3)): tags with a "minimized" or "Recovering Vulkan swapchain" line (not an outcome of '
+           'the level; the gate stops the series): none; tags with only other window lines (restored, resized, size changed, '
+           'lost keyboard focus): v145_03' in o24 and
+           'LAYER LIMIT (item 273 (k)(2)): control W w145_00: 0 lines -> PASS; other W with layer limit lines (layer truncated, '
+           'the outcome by the letter): w145_02' in o24 and
+           'W FILTER (item 273 (k)(2)): VK_LAYER_MESSAGE_ID_FILTER=%s in 3 of 3 made W; V without it 3 of 3 made; violated: '
+           'none; lines of the filtered F6 text in the W (info): w145_00 0, w145_01 0, w145_02 0' % FILT in o24 and
+           'VIDEO CONTINUITY (B38, item 273 (k)(3); data, not a gate): V with a run of >= 2 rows without a video record after '
+           'the first scene frame: none' in o24 and any(x.startswith('W FORM (item 254 (e)):') for x in o24) and
+           any(x.startswith('  info video continuity of V v145_02 (B38, item 273 (k)(3); data, not a gate - "0 glitches" '
+                            'covers the frames in the video): n/a') for x in o24) and
+           'CONTROL W w145_00 (underwater_aerial_garden, item 254 (k)(4)): PASS; letter (death marker or [Vulkan][E]) pass '
+           '(none); executor reading [I] (any W row or admission row failing; the gate) pass (none)' in o24)
+mk145(R24, 'w145_02', js=js145('w145_02', filt=None))
+o24f = S.summary(str(R24), SH5, 'viewed')[0]
+ok &= case('E24c a W without the filter in the summary: the W FILTER line names it, its level NO by "W admitted"',
+           any(x.startswith('W FILTER (item 273 (k)(2)):') and 'in 2 of 3 made W' in x and 'violated: w145_02;' in x
+               for x in o24f) and 'SCENE_OK small_pot_lava: NO' in o24f)
+jv3 = js145('v145_03')
+jv3['env']['VK_LAYER_MESSAGE_ID_FILTER'] = FILT
+mk145(R24, 'v145_03', js=jv3)
+o24g = S.summary(str(R24), SH5, 'viewed')[0]
+ok &= case('E24d a V with the filter in the summary: the W FILTER line counts it among the V and names it after the W',
+           any(x.startswith('W FILTER (item 273 (k)(2)):') and 'V without it 2 of 3 made' in x and
+               'violated: w145_02,v145_03;' in x for x in o24g))
+# the stop rule of the window event
+R25 = BASE / 'E25'
+mk145(R25, 'w145_00')
+mk145(R25, 'w145_01', extra=[WMIN, WREC])
+r25 = sc5(R25, 'v145_02')
+r25b = sc5(R25, 'w145_01')
+ok &= case('E25 the made tag right before has a window event -> rc 5 naming it; before w145_01 (the control clean) -> not met',
+           r25[0] == 5 and 'STOP RULE WINDOW EVENT before v145_02 (item 273 (k)(3)-(4): the made tag right before with a '
+           '"minimized" or "Recovering Vulkan swapchain" line; question to the lead about a repeat): STOP w145_01 (minimized 1,'
+           in r25[1] and r25b[0] == 0 and 'STOP RULE WINDOW EVENT before w145_01' in r25b[1] and
+           'not met (w145_00: minimized 0,' in r25b[1])
+R25c = BASE / 'E25c'
+mk145(R25c, 'w145_00', extra=[WREC])
+r25c = sc5(R25c, 'w145_01')
+R25d = BASE / 'E25d'
+mk145(R25d, 'w145_00', extra=['Window 1 lost keyboard focus', 'Window 1 restored'])
+r25d = sc5(R25d, 'w145_01')
+ok &= case('E25b the control W with only "Recovering Vulkan swapchain" -> rc 5 (window event and the gate reading of the '
+           'control); the control with lost focus and restored only -> rc 0',
+           r25c[0] == 5 and 'STOP w145_00 (' in r25c[1] and r25d[0] == 0 and 'not met (w145_00: ' in r25d[1])
+R25e = BASE / 'E25e'
+mk145(R25e, 'w145_00')
+(R25e / 'attempt_w145_01.txt').write_text('made\n')
+r25e = sc5(R25e, 'v145_02')
+r25f = sc5(BASE / 'E25none', 'w145_00')
+ok &= case('E25c the tag right before made without json -> the window rule "not met (no json of w145_01)"; the first tag -> '
+           '"not met (no tag made)"', 'STOP RULE WINDOW EVENT before v145_02' in r25e[1] and
+           'not met (no json of w145_01)' in r25e[1] and r25f[0] == 0 and 'not met (no tag made)' in r25f[1])
+R25g = BASE / 'E25g'
+mk145(R25g, 'w145_00', extra=[WMIN])
+mk145(R25g, 'w145_01')
+r25g = sc5(R25g, 'v145_02')
+ok &= case('E25d the window rule reads the made tag right before only: an event two tags back is not its stop (the control rule '
+           'still stops on the control: its admission row fails)', 'not met (w145_01: minimized 0,' in r25g[1] and
+           r25g[0] == 5 and 'STOP RULE CONTROL before v145_02: STOP' in r25g[1])
+ok &= case('E26 stop-check of an unknown tag (v144_09, a 144 tag, v145_01) -> rc 2',
+           sc5(R25, 'v144_09')[0] == 2 and sc5(R25, 'w144_09')[0] == 2 and sc5(R25, 'v145_01')[0] == 2)
+VA = BASE / 'E27.txt'
+VA.write_text('VCONT s144 v144_09: rows 5, records 6 (records - rows +1), rows with a record within 8 ms 5 (100.0 %); first '
+              'scene frame n 349; presented frames WITHOUT a video record: before / at the first scene frame 0, after it 0 in 0 '
+              'gaps; longest run after it: none; top runs []\n'
+              'VCONT s143 v143_10: rows 14030, records 14022 (records - rows -8), rows with a record within 8 ms 7539 (53.7 %); '
+              'first scene frame n 388; presented frames WITHOUT a video record: before / at the first scene frame 1, after it 35 '
+              'in 2 gaps; longest run after it: 34 rows n 390..423 over 0.567 s of dt (idx gap 2.182 s after record 389); top '
+              'runs [(34, 390, 423, 2.182)]\nALL DONE\n', encoding='ascii')
+ok &= case('E27 vcont_audit reads the VCONT lines of vidcont144.out.txt (none and a run); a missing file -> {}',
+           S.vcont_audit(str(VA)) == {('s144', 'v144_09'): ('349', 0, 0, 0, None),
+                                      ('s143', 'v143_10'): ('388', 1, 35, 2, (34, 390, 423, 389))} and
+           S.vcont_audit(str(BASE / 'none.txt')) == {})
+# the regression of item 273 (k)(5) on a synthetic profile 144
+RG4 = BASE / 'rg144'
+RG4.mkdir()
+P144_REAL = dict(S.P144)
+WINEV_REAL, LIMIT_REAL = S.REGRESS144_WINEV, S.REGRESS144_LIMIT
+(RG4 / 'pred.md').write_text('fixture 144 regress\n', encoding='utf-8')
+SH44 = hashlib.sha256((RG4 / 'pred.md').read_bytes()).hexdigest()
+S.P144 = dict(S.P144, ROOT=RG4.as_posix(), PRED_PATH=(RG4 / 'pred.md').as_posix(), SEQ=('w144_00', 'v144_09', 'w144_09'),
+              PAIRS=(('v144_09', 'w144_09', 'rocket_hourglass'),), CENSUS=(('v144_09', 'rocket_hourglass'),),
+              V_TAGS=('v144_09',), W_TAGS=('w144_00', 'w144_09'), LEVELS=('rocket_hourglass',), XSRC={}, XSHEET=(), HALF=1)
+old = S.profile(S.P144)
+mk144(RG4, 'w144_00', js=dict(js144('w144_00'), prereg=dict(path=S.PRED_PATH, sha256=SH44)))
+vl4 = [PRE] + scene_lines('rocket_hourglass', v_post())
+f4 = [x for x in vl4 if x.startswith('FrameTrace')]
+d4 = [int(x.split('dt_us=')[1].split()[0]) for x in f4]
+e4 = []
+c = 0.0
+for d in reversed(d4):
+    e4.append(400.0 - c)
+    c += d / 1e6
+e4.reverse()
+mk144(RG4, 'v144_09', lines=vl4, js=dict(js144('v144_09'), prereg=dict(path=S.PRED_PATH, sha256=SH44)))
+(RG4 / 'rec_v144_09.mp4.idx').write_text(''.join('%d %d %.4f\n' % (i, i + 1, x) for i, x in enumerate(e4)
+                                                 if i not in (20, 21)))
+mk144(RG4, 'w144_09', lines=wl('rocket_hourglass')[:30] + [WMIN, WREC, LIM] + wl('rocket_hourglass')[30:],
+      js=dict(js144('w144_09'), prereg=dict(path=S.PRED_PATH, sha256=SH44)))
+out4 = S.summary(str(RG4), SH44, 'viewed')[0]
+ev4 = S.entry_of('v144_09', str(RG4), SH44)
+S.profile(old)
+EX4 = RG4 / 'expected.txt'
+EX4.write_bytes(('\r\n'.join(out4) + '\r\n').encode('ascii'))
+vc4 = ev4['vcont']
+VX4 = RG4 / 'vcont.txt'
+
+
+def vline(vc, first, n_after=None):
+    lg = vc['longest']
+    return ('VCONT s144 v144_09: rows 1, records 1 (records - rows +0), rows with a record within 8 ms 1 (1.0 %%); first scene '
+            'frame n %s; presented frames WITHOUT a video record: before / at the first scene frame %d, after it %d in %d '
+            'gaps; longest run after it: %s; top runs []\n' % (first, vc['before'], vc['after'] if n_after is None else n_after,
+                                                               vc['gaps'], 'none' if lg is None else
+                                                               '%d rows n %d..%d over 0.033 s of dt (idx gap %.3f s after '
+                                                               'record %d)' % (lg[0], lg[1], lg[2], lg[3], lg[4])))
+
+
+VX4.write_text(vline(vc4, ev4['derive']['first'][0]), encoding='ascii')
+S.REGRESS144_WINEV, S.REGRESS144_LIMIT = ('w144_09',), ('w144_09',)
+XB = dict(S.XSRC)
+ok4, l4 = S.regress144(str(EX4), str(VX4))
+ok &= case('E28 regress144 on a synthetic profile 144: byte-identical; the new rows apart (window event w144_09, layer limit '
+           'w144_09, control 0, the continuity of the V equal to the audit line) -> PASS; the profile 145 is restored; the '
+           'profile 144 summary has no line of 145',
+           ok4 and l4[-1] == 'REGRESS144: PASS' and 'byte-identical yes; differing lines 0' in l4[0] and
+           vc4 is not None and vc4['after'] == 2 and
+           'NEW ROWS of profile 145 on the same logs (not in the regression file; item 273 (k)(2)-(3)):' in l4 and
+           S.ROOT == 'C:/kyty/s145' and S.CHAIN == 'go145a' and S.FORM145 is True and S.SEQ[0] == 'w145_00' and
+           S.XSRC == XB and S.P144['ROOT'] == RG4.as_posix())
+S.XSRC = dict(XSRC145)
+ok &= case('E28b the profile 144 summary prints no line of 145 (no window, layer limit, filter, continuity, cold census)',
+           not any(s in x for x in out4 for s in ('WINDOW EVENT', 'LAYER LIMIT', 'W FILTER', 'VIDEO CONTINUITY', 'window events',
+                                                 'layer limit', 'cold first entry', 'COLD first', 'video continuity',
+                                                 'message filter', 'item 273')) and
+           any('REPEATED entries' in x for x in out4))
+EX4.write_bytes(('\r\n'.join(out4[:3] + ['changed'] + out4[4:]) + '\r\n').encode('ascii'))
+ok4b, l4b = S.regress144(str(EX4), str(VX4))
+EX4.write_bytes(('\n'.join(out4) + '\n').encode('ascii'))
+ok4c, l4c = S.regress144(str(EX4), str(VX4))
+EX4.write_bytes(('\r\n'.join(out4) + '\r\n').encode('ascii'))
+VX4.write_text(vline(vc4, ev4['derive']['first'][0], n_after=vc4['after'] + 1), encoding='ascii')
+ok4d, l4d = S.regress144(str(EX4), str(VX4))
+VX4.write_text(vline(vc4, ev4['derive']['first'][0]), encoding='ascii')
+S.REGRESS144_WINEV = ()
+ok4e, l4e = S.regress144(str(EX4), str(VX4))
+S.REGRESS144_WINEV, S.REGRESS144_LIMIT = ('w144_09',), ()
+ok4f, l4f = S.regress144(str(EX4), str(VX4))
+S.REGRESS144_LIMIT = ('w144_09',)
+ok4g = S.regress144(str(BASE / 'none144.txt'), str(VX4))[0]
+ok4h, l4h = S.regress144(str(EX4), str(BASE / 'none_vc.txt'))
+ok &= case('E29 regress144 fails on a changed line (DIFF line 4), on LF only, on a continuity different from the audit line, on '
+           'another window-event set, on another layer-limit set, on a missing file, without the audit file',
+           not ok4b and 'DIFF line 4 expected: changed' in l4b and not ok4c and 'byte-identical NO; differing lines 0' in l4c[0]
+           and not ok4d and 'DIFFERENT' in '\n'.join(l4d) and 'NEW ROWS continuity: 0 of 1 V equal' in '\n'.join(l4d) and
+           not ok4e and 'NEW ROWS window event: tags w144_09 (expected , AUDIT144 s2 (2)) -> FAIL' in l4e and
+           not ok4f and any(x.startswith('NEW ROWS layer limit:') and x.endswith('-> FAIL') for x in l4f) and not ok4g and
+           not ok4h)
+old = S.profile(S.P144)
+mk144(RG4, 'w144_00', lines=wl(SKY) + [LIM], js=dict(js144('w144_00'), prereg=dict(path=S.PRED_PATH, sha256=SH44)))
+S.profile(old)
+S.REGRESS144_LIMIT = ('w144_00', 'w144_09')
+ok4i, l4i = S.regress144(str(EX4), str(VX4))
+ok &= case('E29b the control w144_00 with a limit line fails the layer-limit row even when the expected set names it',
+           not ok4i and any(x.startswith('NEW ROWS layer limit:') and 'control w144_00 1 lines -> FAIL' in x for x in l4i))
+_b = io.StringIO()
+with contextlib.redirect_stdout(_b):
+    rr4 = S.main(['--regress144'])
+ok &= case('E30 main --regress144 -> rc 1 against the real s144 summary from the fixture root', rr4 == 1 and
+           'REGRESS144: FAIL' in _b.getvalue())
+S.P144 = P144_REAL
+S.REGRESS144_WINEV, S.REGRESS144_LIMIT = WINEV_REAL, LIMIT_REAL
+ok &= case('E31 the real regression constants of item 273 (k)(5): the s144 summary viewed, the audit continuity file, the '
+           'window event of w144_09, the 13 W with limit lines', S.REGRESS144_FILE ==
+           'C:/kyty/s144/step4/summary144_viewed.txt' and S.VCONT144_FILE ==
+           'C:/kyty/KytyPS5/docs/session-144/audit/vidcont144.out.txt' and S.REGRESS144_WINEV == ('w144_09',) and
+           S.REGRESS144_LIMIT == tuple('w144_%02d' % i for i in (2, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17)) and
+           S.P144['ROOT'] == 'C:/kyty/s144' and S.P144['SEQ'] == tuple(SEQ144))
+_b = io.StringIO()
+with contextlib.redirect_stdout(_b):
+    rt = S.main(['--tag', 'w145_02'], root=str(BASE / 'E10'), pred=str(PR5))
+ok &= case('E32 main --tag of a W with a window event -> rc 1 (admission FAIL names the window row); the score json goes to '
+           'runs145', rt == 1 and 'FAIL window event: no "Window <id> minimized"' in _b.getvalue() and
+           (BASE / 'E10' / 'runs145' / 'w145_02.score.json').is_file())
+try:
+    ('\n'.join(o14 + o18 + o23 + o24 + o24f + fE10 + l4 + l4b + l4d + r16[1].split('\n') + r25[1].split('\n') +
+               S.fmt_entry(e22))).encode('cp1250', errors='strict')
+    ('\n'.join(o24 + fE10 + l4 + S.fmt_entry(e22))).encode('ascii', errors='strict')
+    ence = True
+except UnicodeError:
+    ence = False
+ok &= case('E33 every line new in profile 145 is ASCII (strict cp1250 and ascii)', ence)

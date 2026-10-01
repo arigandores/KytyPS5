@@ -1,0 +1,3 @@
+REGRESS143 expected C:/kyty/s143/step4/summary143_viewed.txt sha256 57621ed2624b740b291b2d7530875d64f5c9f2ba3fda8e90d84910d97d13ba5a lines 850; new lines 850 sha256 57621ed2624b740b291b2d7530875d64f5c9f2ba3fda8e90d84910d97d13ba5a; byte-identical yes; differing lines 0
+REGRESS143 B33 (K3 on the hold, item 254 (g)(4)): 4/10 v143_02,v143_07,v143_08,v143_09 (expected v143_02,v143_07,v143_08,v143_09) -> PASS; executor variant 120 s: 3/10
+REGRESS143: PASS

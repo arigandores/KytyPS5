@@ -1,0 +1,4 @@
+CHECK1B s1s128 log sha c9427f9427dc3795 level underwater_aerial_garden outcome K2 key None reason first death marker ErrorDeviceLost (log) markers ErrorDeviceLost log@67220450;--- Fatal Error --- log@67220621;ErrorDeviceLost stdout@15061;--- Fatal Error --- stdout@15235 -> PASS
+CHECK1B s2s128 log sha b9988b60c4fdcc1e level underwater_aerial_garden outcome K2 key None reason first death marker ErrorDeviceLost (log) markers ErrorDeviceLost log@21410236;--- Fatal Error --- log@21410352;ErrorDeviceLost stdout@2551;--- Fatal Error --- stdout@2670 -> PASS
+CHECK1B s6s137 log sha dced812bea6c0a30 validation: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 440084 -> active yes -> PASS
+CHECK1B 3 of 3

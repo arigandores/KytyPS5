@@ -1,0 +1,31 @@
+suite test_fgcpu145.py sha256 e499c413e95943b4075ef5b1f2e152372aef866737c795624f9c78ced7492612 target fgcpu145.py sha256 c167141401903539d60468f56d77138517bf6ac5d3cdbbdc96e2aa27f6fe35cb
+PASS f1 --save writes the time, every process (pid, name, cpu) and the system times
+  line: fgcpu145: run 20.0 s: (1) alive at both ends: foreign 1.050 CPU s/s = 3.3 % of 32 logical CPUs over 3 processes; top appA:1:1.000, appB:2:0.050, appD:8:0.000 | (2) new at the end: foreign 2.500 CPU s/s = 7.8 % over 1 processes; top appC:3:2.500 | (3) system (GetSystemTimes) 10.000 CPU s/s = 31.2 % | game 0.200, chain (pid 70 and its descendants alive at the end) 1.170 over 5 | (4) residual = (3) - (1) - (2) - game - chain = 5.080 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member || now 10.0 s: (1) alive at both ends: foreign 1.100 CPU s/s = 3.4 % of 32 logical CPUs over 3 processes; top appC:3:1.000, appA:1:0.100, appB:2:0.000 | (2) new at the end: foreign 0.000 CPU s/s = 0.0 % over 0 processes; top none | (3) system (GetSystemTimes) -8.000 CPU s/s = -25.0 % | game 0.000, chain (pid 70 and its descendants alive at the end) 0.010 over 2 | (4) residual = (3) - (1) - (2) - game - chain = -9.110 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member
+PASS f2 (1) alive at both ends: appA (30-10)/20 = 1.000, appB 0.050, appD clamped to 0 -> foreign 1.050 over 3
+PASS f3 (2) new at the end: appC with ALL its CPU 50/20 = 2.500, named; a newcomer kyty_emulator is the game, not (2)
+PASS f3b Idle, System, the gone process are out of (1) and (2)
+PASS f4b the chain = the chain pid 70 and its descendants alive at the end: bash 70 (4-2)/20 = 0.100, bash 71 0.050, python 99 (the sampler) 0.020, tail 72 0, kyty_emulator 7 (a child of 70) 1.000 -> chain 1.170 over 5; the other kyty_emulator 9 is the game 0.200
+PASS f5 top order by rate in (1): appA before appB before appD
+PASS f6 (3) system: ((1900-1300) + (300-200) - (1500-1000)) / 20 = 10.000 CPU s/s = 31.2 % of 32
+PASS f7 (4) residual = 10.000 - 1.050 - 2.500 - 0.200 - 1.170 = 5.080
+PASS f8 (5) the blind zone is written in the run part and in the now part
+PASS f9 the now part samples --span (default 10 s): appA 0.100, appC 1.000 alive at both ends of the sample; python 99 is the sampler (me) -> chain
+PASS f10 a negative residual is printed as it is, not clipped: (3) -8.000 - 1.100 - 0 - 0 - 0.010 = -9.110
+PASS f11 without --chain-pid the chain is the sampler and its descendants only: python 99 0.020 over 1; bash 70/71 and tail are (1)/(2); kyty_emulator 7 and 9 are the game 1.200
+PASS f11b a --chain-pid that is not a number reads as none
+PASS f12 without the --save file the run part is n/a and the now part still prints (span 2)
+PASS f13 a failing snapshot prints one unavailable line, rc 0 (a row, not a guard)
+PASS f13b the run part survives a failing second snapshot
+PASS f14 the system times unavailable at the end: (3) unavailable, (4) n/a; (1) and (2) still print
+PASS f14b a --save without system times: the save says so, the run part prints (3) unavailable
+PASS f15 a broken --save file reads n/a
+PASS f16 a --save that cannot write prints save unavailable, rc 0
+PASS f17 no mode -> usage rc 2
+PASS f18 the constants: span 10 s, top 5, the game name, the ignore set of procload
+PASS f19 descendants: roots and every descendant; a cycle and a self-parent do not loop; None roots are ignored
+PASS f20 sysrate: None when a reading is missing or the wall is 0
+PASS f21 a non-ASCII process name is printed as ASCII
+PASS k1 the real kernel32 snapshot (read only): this process with its parent pid, > 20 processes, CPU >= 0; GetSystemTimes: 3 values, kernel >= idle
+PASS f22 a child without PYTHONIOENCODING (console cp1250) prints its line, rc 0, no error
+checks: 27
+ALL OK

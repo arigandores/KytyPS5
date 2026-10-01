@@ -1,0 +1,27 @@
+vuid145: layer C:/VulkanSDK/1.4.357.0/Bin/VkLayer_khronos_validation.dll sha256 9725ce7a9225f42f8961c433dacae4cc8fae3a16e95ef1d0a7c7e8bc09132c40 bytes 21681592
+format strings ending " and this write is unused. Spec information ...fragmentoutput" (the VkRenderingInfo form of the F6 text): 2
+  before @13650152: (Tessellation Patch) 
+  before @13650176: (SPIR-V Interface) %s has a declared Input at Location %u Component %u %s but the previous stage (%s) has no Output declared there. The inpu
+  before @13650336: VUID-RuntimeSpirv-OpEntryPoint-08743
+  before @13650376:  Output Block { 
+  before @13650400:  Input Block { 
+  before @13650416: (SPIR-V Interface) Mismatch in BuiltIn blocks:  %s
+  THIS   @13650480: Inside %s, it writes to %s, but there is no VkSubpassDescription::pColorAttachments[%u] and this write is unused. Spec information at https:
+  after  @13650704: Undefined-Value-ShaderOutputNotConsumed
+  after  @13650752: Inside %s, %s was never written to. This means anything future VkSubpassDescription::pColorAttachments[%u] will have undefined values writte
+  after  @13651248: Undefined-Value-OutputNotWritten
+  before @13654168: VUID-VkGraphicsPipelineCreateInfo-pStages-00735
+  before @13654224: is using OutputVertices (patch size) %u, which is not between 1 and maxTessellationPatchSize (%u).
+  before @13654328:  (which was remapped to Location/attachment 
+  before @13654376: there is no VkRenderingInfo::pColorAttachments[
+  before @13654424:  (imageView is VK_NULL_HANDLE)
+  before @13654464: none of the attachments were mapped to that location (mapping was [
+  THIS   @13654544:  and this write is unused. Spec information at https://docs.vulkan.org/spec/latest/chapters/interfaces.html#interfaces-fragmentoutput
+  after  @13654680: Undefined-Value-ShaderOutputNotConsumed-DynamicRendering
+  after  @13654744: ) will have undefined values written to it. 
+  after  @13654792: ].imageView (
+format strings "there is no VkRenderingInfo::pColorAttachments[": 1
+string Undefined-Value-ShaderOutputNotConsumed-DynamicRendering: 1 occurrence(s)
+string Undefined-Value-ShaderOutputNotConsumed: 1 occurrence(s)
+manifest C:/VulkanSDK/1.4.357.0/Bin/VkLayer_khronos_validation.json sha256 20d3ef44fe96aa41fceefab2308892f9d4b346d23eebfe8b5e1690715f23f472: setting message_id_filter {"env": "VK_LAYER_MESSAGE_ID_FILTER", "type": "LIST", "description": "List of VUIDs which are to be IGNORED by the validation layer. The list is comma separated and can be either the entire VUID string, the hashed value, or the last 5 digit number of a VUID"}
+READING [I]: the string after the VkRenderingInfo form of the F6 format in .rdata is the VUID name passed with it - Undefined-Value-ShaderOutputNotConsumed-DynamicRendering (the subpass form is followed by Undefined-Value-ShaderOutputNotConsumed); the s144 W logs carry the VkRenderingInfo form only (f6scan145)

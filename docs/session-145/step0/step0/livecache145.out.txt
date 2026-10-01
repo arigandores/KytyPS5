@@ -1,0 +1,4 @@
+livecache145: live caches vs C:/kyty/s144/runs144/cache_w144_20.after.json (sha256 c9416fc1ecd9b4c2c8437bbb77158ef12d51161754423f90d5f2d5f593f64a21) at the end of the s144 series
+  shader 1301 files (ref 1301) +0 -0 changed 0; pipeline 4 files (ref 4) +0 -0 changed 1; glcache 16 files (ref 16) +0 -0 changed 2
+  (c) pipeline differs from the s144 end: +0 -0 changed 1 (PPSA21564.bin); (c) glcache differs from the s144 end: +0 -0 changed 2 (a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/523f3a9be0a95f6d.bin, a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/523f3a9be0a95f6d.toc)
+  live pipelines.bin 1886cd730c89f0c8697e67f687a57140f58ad176759de8dd7586e964e2883507

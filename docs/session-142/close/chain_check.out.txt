@@ -1,0 +1,198 @@
+I6: поля блокеров прочитаны: blockedBy; executionPolicy прочитан
+корень: HPP-3 [blocked] блокеры: HPP-301[blocked] | Цикл сессий KytyPS5: возобновить с. 122, дальше без остановки
+  HPP-78  [done        ] блокеры: HPP-77[done]
+  HPP-83  [done        ] блокеры: —
+  HPP-84  [done        ] блокеры: —
+  HPP-85  [done        ] блокеры: HPP-84[done]
+  HPP-86  [done        ] блокеры: HPP-85[done], HPP-94[done]
+  HPP-87  [done        ] блокеры: HPP-86[done]
+  HPP-88  [done        ] блокеры: HPP-83[done], HPP-97[done], HPP-87[done]
+  HPP-89  [done        ] блокеры: HPP-88[done]
+  HPP-90  [done        ] блокеры: HPP-89[done]
+  HPP-91  [done        ] блокеры: HPP-90[done]
+  HPP-92  [done        ] блокеры: HPP-99[done], HPP-91[done]
+  HPP-94  [done        ] блокеры: —
+  HPP-97  [done        ] блокеры: —
+  HPP-99  [done        ] блокеры: —
+  HPP-104 [done        ] блокеры: —
+  HPP-105 [done        ] блокеры: —
+  HPP-106 [done        ] блокеры: HPP-105[done]
+  HPP-107 [done        ] блокеры: HPP-106[done], HPP-114[done]
+  HPP-108 [done        ] блокеры: HPP-107[done]
+  HPP-109 [done        ] блокеры: HPP-104[done], HPP-108[done]
+  HPP-110 [done        ] блокеры: HPP-109[done]
+  HPP-111 [done        ] блокеры: HPP-110[done]
+  HPP-112 [done        ] блокеры: HPP-111[done]
+  HPP-113 [done        ] блокеры: HPP-112[done]
+  HPP-114 [done        ] блокеры: —
+  HPP-116 [done        ] блокеры: —
+  HPP-117 [done        ] блокеры: —
+  HPP-118 [done        ] блокеры: HPP-116[done]
+  HPP-119 [done        ] блокеры: HPP-117[done]
+  HPP-120 [done        ] блокеры: HPP-116[done], HPP-119[done]
+  HPP-121 [done        ] блокеры: HPP-120[done]
+  HPP-122 [done        ] блокеры: HPP-118[done], HPP-121[done]
+  HPP-123 [done        ] блокеры: HPP-129[done]
+  HPP-124 [done        ] блокеры: HPP-123[done]
+  HPP-125 [done        ] блокеры: HPP-124[done]
+  HPP-126 [done        ] блокеры: HPP-125[done]
+  HPP-127 [done        ] блокеры: —
+  HPP-128 [done        ] блокеры: HPP-127[done]
+  HPP-129 [done        ] блокеры: HPP-128[done]
+  HPP-130 [done        ] блокеры: —
+  HPP-131 [done        ] блокеры: —
+  HPP-132 [done        ] блокеры: HPP-131[done]
+  HPP-133 [done        ] блокеры: HPP-132[done], HPP-140[done]
+  HPP-134 [done        ] блокеры: HPP-133[done]
+  HPP-135 [done        ] блокеры: HPP-130[done], HPP-134[done]
+  HPP-136 [done        ] блокеры: HPP-135[done]
+  HPP-137 [done        ] блокеры: HPP-136[done]
+  HPP-138 [done        ] блокеры: HPP-137[done]
+  HPP-139 [done        ] блокеры: HPP-138[done]
+  HPP-140 [done        ] блокеры: —
+  HPP-141 [done        ] блокеры: —
+  HPP-142 [done        ] блокеры: —
+  HPP-143 [done        ] блокеры: —
+  HPP-144 [done        ] блокеры: HPP-141[done]
+  HPP-145 [done        ] блокеры: HPP-143[done]
+  HPP-146 [done        ] блокеры: HPP-144[done], HPP-158[done]
+  HPP-147 [cancelled   ] блокеры: HPP-146[done]
+  HPP-148 [done        ] блокеры: HPP-146[done], HPP-160[done], HPP-161[done], HPP-145[done], HPP-155[done]
+  HPP-149 [done        ] блокеры: HPP-148[done]
+  HPP-150 [done        ] блокеры: HPP-158[done], HPP-149[done]
+  HPP-151 [cancelled   ] блокеры: HPP-150[done]
+  HPP-152 [cancelled   ] блокеры: —
+  HPP-153 [done        ] блокеры: HPP-150[done]
+  HPP-154 [done        ] блокеры: HPP-153[done]
+  HPP-155 [done        ] блокеры: —
+  HPP-159 [done        ] блокеры: —
+  HPP-160 [done        ] блокеры: HPP-159[done]
+  HPP-161 [done        ] блокеры: —
+  HPP-162 [done        ] блокеры: —
+  HPP-163 [done        ] блокеры: —
+  HPP-164 [done        ] блокеры: —
+  HPP-165 [done        ] блокеры: —
+  HPP-166 [done        ] блокеры: HPP-164[done]
+  HPP-167 [done        ] блокеры: HPP-165[done]
+  HPP-168 [done        ] блокеры: HPP-166[done], HPP-167[done]
+  HPP-169 [done        ] блокеры: HPP-168[done]
+  HPP-170 [done        ] блокеры: HPP-162[done], HPP-169[done], HPP-176[done]
+  HPP-171 [done        ] блокеры: HPP-170[done]
+  HPP-172 [done        ] блокеры: HPP-171[done]
+  HPP-173 [done        ] блокеры: HPP-163[done], HPP-172[done]
+  HPP-174 [done        ] блокеры: HPP-173[done]
+  HPP-175 [done        ] блокеры: —
+  HPP-176 [done        ] блокеры: HPP-175[done]
+  HPP-177 [done        ] блокеры: —
+  HPP-178 [done        ] блокеры: —
+  HPP-179 [done        ] блокеры: —
+  HPP-180 [cancelled   ] блокеры: —
+  HPP-181 [cancelled   ] блокеры: —
+  HPP-182 [cancelled   ] блокеры: —
+  HPP-183 [cancelled   ] блокеры: —
+  HPP-184 [cancelled   ] блокеры: —
+  HPP-185 [cancelled   ] блокеры: —
+  HPP-186 [cancelled   ] блокеры: —
+  HPP-187 [done        ] блокеры: HPP-177[done], HPP-189[done]
+  HPP-188 [done        ] блокеры: HPP-190[done]
+  HPP-189 [done        ] блокеры: —
+  HPP-191 [done        ] блокеры: —
+  HPP-192 [done        ] блокеры: —
+  HPP-193 [done        ] блокеры: —
+  HPP-194 [done        ] блокеры: HPP-201[done]
+  HPP-195 [done        ] блокеры: HPP-194[done]
+  HPP-196 [done        ] блокеры: HPP-191[done], HPP-195[done]
+  HPP-197 [done        ] блокеры: HPP-196[done]
+  HPP-198 [done        ] блокеры: HPP-197[done]
+  HPP-199 [done        ] блокеры: HPP-198[done]
+  HPP-200 [done        ] блокеры: HPP-202[done]
+  HPP-201 [done        ] блокеры: —
+  HPP-203 [done        ] блокеры: —
+  HPP-204 [done        ] блокеры: —
+  HPP-205 [done        ] блокеры: HPP-204[done]
+  HPP-206 [done        ] блокеры: HPP-205[done]
+  HPP-207 [done        ] блокеры: HPP-206[done]
+  HPP-208 [done        ] блокеры: HPP-203[done], HPP-207[done], HPP-216[done]
+  HPP-209 [done        ] блокеры: HPP-208[done]
+  HPP-210 [done        ] блокеры: HPP-209[done]
+  HPP-211 [done        ] блокеры: HPP-210[done]
+  HPP-212 [done        ] блокеры: HPP-211[done]
+  HPP-213 [done        ] блокеры: —
+  HPP-214 [done        ] блокеры: HPP-213[done]
+  HPP-215 [done        ] блокеры: —
+  HPP-216 [done        ] блокеры: HPP-215[done]
+  HPP-217 [done        ] блокеры: —
+  HPP-218 [done        ] блокеры: —
+  HPP-219 [done        ] блокеры: HPP-218[done]
+  HPP-220 [done        ] блокеры: HPP-219[done], HPP-228[done]
+  HPP-221 [done        ] блокеры: HPP-220[done]
+  HPP-222 [done        ] блокеры: HPP-217[done], HPP-221[done], HPP-230[done]
+  HPP-223 [done        ] блокеры: HPP-222[done]
+  HPP-224 [done        ] блокеры: HPP-223[done]
+  HPP-225 [done        ] блокеры: HPP-224[done]
+  HPP-226 [done        ] блокеры: HPP-231[done]
+  HPP-228 [done        ] блокеры: —
+  HPP-229 [done        ] блокеры: —
+  HPP-230 [done        ] блокеры: HPP-229[done]
+  HPP-232 [done        ] блокеры: —
+  HPP-233 [done        ] блокеры: —
+  HPP-234 [done        ] блокеры: HPP-233[done]
+  HPP-235 [done        ] блокеры: HPP-234[done]
+  HPP-236 [done        ] блокеры: HPP-235[done]
+  HPP-237 [done        ] блокеры: HPP-232[done], HPP-236[done]
+  HPP-238 [done        ] блокеры: HPP-237[done]
+  HPP-239 [done        ] блокеры: HPP-238[done]
+  HPP-240 [done        ] блокеры: HPP-249[done], HPP-239[done]
+  HPP-241 [done        ] блокеры: HPP-240[done]
+  HPP-242 [done        ] блокеры: —
+  HPP-243 [done        ] блокеры: HPP-242[done]
+  HPP-244 [done        ] блокеры: HPP-246[done]
+  HPP-245 [done        ] блокеры: —
+  HPP-246 [done        ] блокеры: HPP-245[done]
+  HPP-247 [done        ] блокеры: —
+  HPP-248 [done        ] блокеры: HPP-247[done]
+  HPP-249 [done        ] блокеры: HPP-239[done]
+  HPP-250 [done        ] блокеры: —
+  HPP-251 [done        ] блокеры: HPP-250[done]
+  HPP-252 [done        ] блокеры: HPP-251[done], HPP-257[done]
+  HPP-253 [done        ] блокеры: HPP-251[done]
+  HPP-254 [done        ] блокеры: HPP-252[done], HPP-253[done]
+  HPP-255 [done        ] блокеры: HPP-254[done]
+  HPP-256 [done        ] блокеры: HPP-255[done]
+  HPP-257 [done        ] блокеры: —
+  HPP-258 [done        ] блокеры: —
+  HPP-259 [done        ] блокеры: HPP-258[done]
+  HPP-260 [done        ] блокеры: HPP-259[done]
+  HPP-262 [done        ] блокеры: —
+  HPP-263 [done        ] блокеры: HPP-262[done]
+  HPP-264 [done        ] блокеры: HPP-263[done]
+  HPP-265 [done        ] блокеры: HPP-264[done]
+  HPP-266 [done        ] блокеры: HPP-265[done]
+  HPP-267 [done        ] блокеры: HPP-266[done]
+  HPP-268 [done        ] блокеры: HPP-267[done]
+  HPP-269 [cancelled   ] блокеры: —
+  HPP-270 [cancelled   ] блокеры: —
+  HPP-271 [done        ] блокеры: HPP-268[done]
+  HPP-272 [done        ] блокеры: HPP-271[done]
+  HPP-273 [done        ] блокеры: HPP-272[done]
+  HPP-274 [done        ] блокеры: HPP-276[done]
+  HPP-275 [done        ] блокеры: HPP-274[done]
+  HPP-276 [done        ] блокеры: HPP-273[done]
+  HPP-277 [done        ] блокеры: HPP-275[done]
+  HPP-278 [done        ] блокеры: HPP-277[done]
+  HPP-279 [done        ] блокеры: —
+  HPP-280 [done        ] блокеры: HPP-279[done]
+  HPP-281 [in_progress ] блокеры: HPP-280[done]
+  HPP-282 [done        ] блокеры: HPP-278[done]
+  HPP-297 [blocked     ] блокеры: HPP-281[in_progress]
+  HPP-298 [blocked     ] блокеры: HPP-297[blocked]
+  HPP-299 [blocked     ] блокеры: HPP-298[blocked]
+  HPP-300 [blocked     ] блокеры: HPP-299[blocked]
+  HPP-301 [blocked     ] блокеры: HPP-300[blocked]
+
+  watchdog пропущены: HPP-35
+  I10: обращений к пользователю нет
+  I11: звеньев в backlog нет
+  I13: стадия review с лидом у HPP-300, HPP-299, HPP-298, HPP-297
+
+ALL OK

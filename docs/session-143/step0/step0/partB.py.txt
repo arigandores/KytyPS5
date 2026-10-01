@@ -1,0 +1,374 @@
+# ================= PART B (session 143, HPP-297; item 231 (i)(1)-(4)): the profile of session 143 - one case per new term
+# and per new edge: the constants (levels, pairs, order, seal, chain), admission of V / W tags, SCENE_OK per level over its
+# pair (V without W, W without V, W stopped early, a W of another level, two levels in one summary), the sheet per V tag
+# (--sheet-tags), the stop rule over V tags only (a W call included), B33 and its 120 s variant at the edge, the W 310 s
+# info row, the levels line, the score json of runs143, the seal of session 143, the regression of item 231 (i)(4) on a
+# synthetic profile 142, and ASCII in strict cp1250.
+S.profile(P143)
+LV1, LV2, LV3 = 'spring_punch_sky_aztec', 'booster_construction', 'mini_astro_clock_tower'
+ok &= case('B1 the ten levels of item 231 (i)(1) in that order', S.LEVELS == (
+    'spring_punch_sky_aztec', 'booster_construction', 'mini_astro_clock_tower', 'path_maker_mana_tree',
+    'spring_punch_monster_cave', 'gulliver_island', 'rocket_hourglass', 'pot_treasure_cave', 'booster_magic_lamp',
+    'rocket_space_station'))
+ok &= case('B2 pairs v143_NN / w143_NN per level; SEQ = V then W per level; census = the V tags; W tags',
+           S.PAIRS[0] == ('v143_01', 'w143_01', LV1) and S.PAIRS[9] == ('v143_10', 'w143_10', 'rocket_space_station')
+           and len(S.PAIRS) == 10 and S.SEQ[:4] == ('v143_01', 'w143_01', 'v143_02', 'w143_02') and len(S.SEQ) == 20
+           and S.SEQ[-1] == 'w143_10' and [t for t, _ in S.CENSUS] == ['v143_%02d' % i for i in range(1, 11)]
+           and [lv for _, lv in S.CENSUS] == list(S.LEVELS) and S.W_TAGS == tuple('w143_%02d' % i for i in range(1, 11))
+           and S.V_TAGS == tuple('v143_%02d' % i for i in range(1, 11)))
+ok &= case('B3 the seal path, chain name, runs dir and scorer name of session 143; the s142 lines are printed in 143 only',
+           S.PRED_PATH == 'C:/kyty/s143/pred/01_sc143.md' and S.CHAIN == 'go143a' and S.RUNS == 'runs143'
+           and S.SCORER == 'sc143.py' and S.EXTRA is True and S.ROOT == 'C:/kyty/s143' and S.P142['EXTRA'] is False)
+ok &= case('B4 the constants of sc142 after item 224 are unchanged (item 231 (i)(3)); the harness W hold 310 is info only',
+           (S.SCENE_DRAWS, S.ENTRY_WIN, S.K2_US, S.K3_US, S.HOLD_CENSUS_US, S.HOLD_CENSUS_S, S.HOLD_SCENE_US, S.HOLD_W_S,
+            S.HOLD_V_S, S.FRAMES_V, S.COVER_SLACK, S.PRIO_US, S.STOP_RUN, S.HALF, S.HOLD_W_HARNESS_S) ==
+           (100, 599, 1000000, 100000, 120000000, 120, 300000000, 300, 330, 3000, 100, 50000, 3, 5, 310)
+           and S.OPCODE_BASE == {('SOP1', '0x21'): 96, ('SOP1', '0x0c'): 1, ('VOPC', '0xe3'): 4} and S.BUILD_SHA == BUILD)
+ok &= case('B5 level_of: V and W of a level; a tag of session 142 is unknown in profile 143',
+           S.level_of('v143_03') == LV3 and S.level_of('w143_03') == LV3 and S.level_of('c142_01') is None
+           and S.level_of('v142') is None and S.level_of('w143_11') is None)
+
+
+def js143(tag, attempt=None, **over):
+    is_w = tag in S.W_TAGS
+    cmd = ['kyty_emulator.exe', '--vulkan-validation', 'false', '--game', 'x'] + (['--vulkan-validation', 'true'] if is_w else [])
+    env = {'KYTY_FRAME_TRACE': 'lite', 'KYTY_GUEST_ARGS': '-lvl %s' % S.level_of(tag), 'KYTY_GPU_CLOCK_PIN': '1',
+           'KYTY_GPU_MARKERS': '0'}
+    if is_w:
+        env['VK_LAYER_PATH'] = 'C:/VulkanSDK/1.4.357.0/Bin'
+    else:
+        env['KYTY_REC'] = 'C:\\kyty\\s143\\rec_%s.mp4' % tag
+    a = dict(label='attempt 1', attempt=1, outcome='ok', hold_s=310.0 if is_w else 330.0, hold_exit=None, ft_tail=300,
+             pipeline_cache_off=False)
+    a.update(attempt or {})
+    js = dict(tag=tag, binary_sha256=BUILD, guest_args='-lvl %s' % S.level_of(tag), gates='', env=env, cmdline=cmd,
+              prereg=dict(path=S.PRED_PATH, sha256=PRED_SHA), attempts=[a])
+    js.update(over)
+    return js
+
+
+def mk143(root, tag, lines=None, js=None, glitch=(3200, 0), sheet=True, log=True, chain='go143a'):
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    is_w = tag in S.W_TAGS
+    lv = S.level_of(tag)
+    if lines is None:
+        lines = ([VF] + scene_lines(lv, [150000] * 2000) + [VW] * 3) if is_w else scene_lines(lv, v_post())
+    (root / ('%s.json' % tag)).write_text(json.dumps(js if js is not None else js143(tag)), encoding='utf-8')
+    if log:
+        (root / ('log_%s.txt' % tag)).write_bytes(('\n'.join(lines) + '\n').encode('utf-8'))
+    (root / ('stdout_%s.txt' % tag)).write_bytes(b'\n')
+    (root / ('%s.stdout.txt' % tag)).write_bytes(b'VERDICT: x\n')
+    if is_w:
+        return str(root)
+    if glitch is not None:
+        (root / ('glitch_%s.txt' % tag)).write_text('C:/kyty/s143/rec_%s.mp4: %d frames 960x540, index entries %d\n'
+                                                    'one-frame glitches: %d\n' % (tag, glitch[0], glitch[0], glitch[1]))
+    if sheet:
+        (root / ('sheet_%s.png' % tag)).write_bytes(b'png')
+        (root / ('rec_%s.mp4' % tag)).write_bytes(('mp4 ' + tag).encode())
+        (root / 'step2').mkdir(exist_ok=True)
+        with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+            f.write('2026-10-01T00:00:00Z %s %s s51_vidglitch rc 0 glitch_%s.txt sha256 %s rec_%s.mp4 sha256 %s\n' % (
+                chain, tag, tag, 'ab' * 32, tag, _h.sha256(('mp4 ' + tag).encode()).hexdigest()))
+            f.write('2026-10-01T00:00:00Z %s %s sheet rc 0 sheet_%s.png sha256 %s\n' % (
+                chain, tag, tag, _h.sha256(b'png').hexdigest()))
+    return str(root)
+
+
+def adm143(tag, **over):
+    js = js143(tag)
+    for k, v in over.items():
+        if k == 'env_del':
+            for x in v:
+                js['env'].pop(x, None)
+        elif k == 'env_set':
+            js['env'].update(v)
+        else:
+            js[k] = v
+    return all(a[1] for a in S.admit(tag, js, PRED_SHA))
+
+
+ok &= case('B6 good V (v143_04) and W (w143_04) jsons are admitted', adm143('v143_04') and adm143('w143_04'))
+BAD143 = [('V of level 02 with the guest args of level 01', 'v143_02', dict(guest_args='-lvl %s' % LV1)),
+          ('W with a video', 'w143_01', dict(env_set={'KYTY_REC': 'C:/kyty/s143/rec_w143_01.mp4'})),
+          ('V without a video', 'v143_01', dict(env_del=['KYTY_REC'])),
+          ('V with the video of its W', 'v143_01', dict(env_set={'KYTY_REC': 'C:/kyty/s143/rec_w143_01.mp4'})),
+          ('W without validation', 'w143_05', dict(cmdline=['e', '--vulkan-validation', 'false'])),
+          ('V with validation', 'v143_05', dict(cmdline=['e', '--vulkan-validation', 'false', '--vulkan-validation', 'true'])),
+          ('W without VK_LAYER_PATH', 'w143_10', dict(env_del=['VK_LAYER_PATH'])),
+          ('the seal path of session 142', 'v143_01', dict(prereg=dict(path='C:/kyty/s142/pred/02_sc142.md', sha256=PRED_SHA)))]
+for name, tag, over in BAD143:
+    ok &= case('B7 refused: %s' % name, not adm143(tag, **over))
+
+
+def pair143(name, n=1, v=True, w=True, v_lines=None, w_lines=None, v_js=None, w_js=None, v_glitch=(3200, 0)):
+    root = BASE / name
+    vt, wt, lv = S.PAIRS[n - 1]
+    if v:
+        mk143(root, vt, v_lines, v_js, glitch=v_glitch)
+    if w:
+        mk143(root, wt, w_lines, w_js)
+    return S.entry_of(vt, str(root), PRED_SHA), S.entry_of(wt, str(root), PRED_SHA), S.PAIRS[n - 1]
+
+
+v, w, p = pair143('P1')
+word, rows = S.scene_ok(v, w, 'viewed', p)
+ok &= case('B8 a good pair of level 01 -> YES; every row PASS, the pair row and the sheet row of sheet_v143_01.png among them',
+           word == 'YES' and all(r[1] for r in rows) and row_ok(rows, 'V v143_01 and W w143_01 are the pair of one level')
+           is True and row_ok(rows, 'V sheet file sheet_v143_01.png present') is True and len(rows) == 27)
+ok &= case('B8b the same pair: sheet row unfilled -> PENDING_SHEET; not-viewed -> NO',
+           S.scene_ok(v, w, None, p)[0] == 'PENDING_SHEET' and S.scene_ok(v, w, 'not-viewed', p)[0] == 'NO')
+v, w, p = pair143('P2', w=False)
+word, rows = S.scene_ok(v, w, 'viewed', p)
+ok &= case('B9 a level with V and no W -> NO: W made FAIL and the pair row FAIL',
+           word == 'NO' and row_ok(rows, 'W made') is False and row_ok(rows, 'V v143_01 and W w143_01') is False)
+v, w, p = pair143('P3', v=False)
+word, rows = S.scene_ok(v, w, 'viewed', p)
+ok &= case('B10 a level with W and no V -> NO: V made FAIL, the sheet row FAIL (no V)',
+           word == 'NO' and row_ok(rows, 'V made') is False and row_ok(rows, 'V sheet file') is False)
+v, w, p = pair143('P4', w_js=js143('w143_01', attempt=dict(hold_exit=3221225477, hold_s=120.3)))
+word, rows = S.scene_ok(v, w, 'viewed', p)
+ok &= case('B11 W stopped early (hold_exit, hold_s 120.3) -> NO: the W hold and death rows fail',
+           word == 'NO' and row_ok(rows, 'W hold reached') is False and row_ok(rows, 'W 0 death markers') is False)
+v, w, p = pair143('P5', w_js=js143('w143_01', attempt=dict(outcome='timeout', hold_s=None, ft_tail=None)))
+ok &= case('B11b W not stable (timeout) -> NO', S.scene_ok(v, w, 'viewed', p)[0] == 'NO')
+v, w, p = pair143('P6', w_js=js143('w143_01', attempt=dict(hold_s=305.0)))
+ok &= case('B11c W hold_s 305.0 (>= 300 of item 221 (g)(3), < 310 of the harness) -> YES by the letter',
+           S.scene_ok(v, w, 'viewed', p)[0] == 'YES')
+v, w, p = pair143('P7', n=2, w_js=dict(js143('w143_02'), guest_args='-lvl %s' % LV1))
+word, rows = S.scene_ok(v, w, 'viewed', p)
+ok &= case('B12 the W of level 02 run with the guest args of level 01 -> NO: W not admitted, the pair row fails',
+           word == 'NO' and row_ok(rows, 'W admitted') is False and row_ok(rows, 'V v143_02 and W w143_02') is False)
+v, w, p = pair143('P7b', n=1)
+w2 = S.entry_of('w143_01', str(BASE / 'P7b'), PRED_SHA)
+word, rows = S.scene_ok(v, w2, 'viewed', S.PAIRS[1])
+ok &= case('B12b the entries of level 01 offered as the pair of level 02 -> NO by the pair row',
+           word == 'NO' and row_ok(rows, 'V v143_02 and W w143_02') is False)
+ok &= case('B12c scene_ok without a pair reads the first pair of the profile',
+           row_ok(S.scene_ok(v, w2, 'viewed')[1], 'V v143_01 and W w143_01') is True)
+word, rows = S.scene_ok(dict(v, tag='v143_09'), w2, 'viewed', S.PAIRS[0])
+ok &= case('B12d an entry under another V tag with the right guest args -> NO by the pair row only',
+           word == 'NO' and [r[0][:30] for r in rows if not r[1]] == ['V v143_01 and W w143_01 are th'])
+v, w, p = pair143('P7c', n=1, v_js=dict(js143('v143_01'), guest_args='-lvl %s' % LV2))
+ok &= case('B12e the V of level 01 run with the guest args of level 02 -> the pair row fails (and V not admitted)',
+           row_ok(S.scene_ok(v, w, 'viewed', p)[1], 'V v143_01 and W w143_01') is False)
+R2 = BASE / 'P8'
+PR8 = R2 / 'pred.md'
+R2.mkdir(parents=True, exist_ok=True)
+PR8.write_text('fixture 143\n', encoding='utf-8')
+SH8 = hashlib.sha256(PR8.read_bytes()).hexdigest()
+K2V = scene_lines(LV3, [16667] * 100 + [1200000] + list(v_post()))
+for t, lines in (('v143_01', None), ('w143_01', None), ('v143_02', None), ('v143_03', K2V), ('w143_03', None)):
+    mk143(R2, t, lines, dict(js143(t), prereg=dict(path=S.PRED_PATH, sha256=SH8)))
+out8, ents8, words8 = S.summary(str(R2), SH8, 'viewed')
+T8 = '\n'.join(out8)
+
+
+def block(lines, head):
+    i = lines.index(head)
+    j = i + 1
+    while j < len(lines) and lines[j].startswith('  '):
+        j += 1
+    return lines[i + 1:j]
+
+
+b1 = block(out8, 'SCENE_OK %s: YES' % LV1) if 'SCENE_OK %s: YES' % LV1 in out8 else ['FAIL']
+b2 = block(out8, 'SCENE_OK %s: NO' % LV2) if 'SCENE_OK %s: NO' % LV2 in out8 else []
+b3 = block(out8, 'SCENE_OK %s: NO' % LV3) if 'SCENE_OK %s: NO' % LV3 in out8 else []
+ok &= case('B13 two levels in one summary do not mix: level 01 YES with every row PASS; level 02 (V, no W) NO by W made only;'
+           ' level 03 (V with a K2 frame, W good) NO by the dt row only',
+           all(not x.startswith('  FAIL') for x in b1) and
+           [x for x in b2 if x.startswith('  FAIL')] == ['  FAIL W made ()', '  FAIL V v143_02 and W w143_02 are the pair of '
+                                                         'one level (guest args -lvl booster_construction in both) '
+                                                         '(-lvl booster_construction / None)']
+           and [x.split(' (')[0] for x in b3 if x.startswith('  FAIL')] == ['  FAIL V no frame dt >= 1 s after the first scene frame'])
+ok &= case('B14 the levels line: YES 1, PENDING_SHEET 0, NO 9 of 10; the not-made levels are NO with V and W made FAIL',
+           'SCENE_OK LEVELS: YES 1, PENDING_SHEET 0, NO 9 of 10' in out8 and words8[0] == 'YES' and
+           '  FAIL V made ()' in block(out8, 'SCENE_OK rocket_space_station: NO'))
+ok &= case('B15 the census of 143 reads the V tags only: made 3, admitted 3; B5a 1/10 (v143_03), B5 1/10; W tags not in it',
+           'CENSUS made 3 of 10 (of them attempt made without json 0), admitted 3' in out8 and
+           'FORM B5a (a frame dt >= 1 s after the first scene frame): 1/10 [c] (admitted and entered 3)' in out8 and
+           'FORM B5 (a frame dt >= 100 ms in the entry window, no warm base): 1/10 [c] (admitted and entered 3)' in out8
+           and not any(x.startswith('  w143_') for x in out8))
+ok &= case('B16 the W 310 s info row: yes for a W at 310.0; "W not made" without a W',
+           '  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): yes' in b1
+           and '  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made'
+           in b2)
+v, w, p = pair143('P9', w_js=js143('w143_01', attempt=dict(hold_s=309.9)))
+o9 = []
+for t, e in (('v143_01', v), ('w143_01', w)):
+    (BASE / 'P9' / ('%s.json' % t)).write_text(json.dumps(dict(json.loads((BASE / 'P9' / ('%s.json' % t)).read_text()),
+                                                                prereg=dict(path=S.PRED_PATH, sha256=SH8))))
+o9 = S.summary(str(BASE / 'P9'), SH8, 'viewed')[0]
+ok &= case('B16b W hold_s 309.9: the info row says NO (309.9), the verdict by the letter is YES',
+           any(x.endswith('executor reading, not in the verdict): NO (309.9)') for x in o9) and 'SCENE_OK %s: YES' % LV1 in o9)
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rs1 = S.main(['--summary', '--sheet', 'viewed', '--sheet-tags', 'v143_03'], root=str(R2), pred=str(PR8))
+    rs2 = S.main(['--summary', '--sheet', 'viewed', '--sheet-tags', 'w143_01'], root=str(R2), pred=str(PR8))
+o10 = buf.getvalue().split('\n')
+ok &= case('B17 --sheet-tags: the sheet row applies to the named V only (level 01 -> PENDING_SHEET); a W tag -> rc 2',
+           rs1 == 0 and 'SCENE_OK %s: PENDING_SHEET' % LV1 in o10 and rs2 == 2
+           and 'usage: --sheet-tags takes V tags only: w143_01' in o10)
+v, w, p = pair143('P10')
+with open(BASE / 'P10' / 'step2' / 'times.txt', 'w', encoding='utf-8') as f:
+    f.write('2026-10-01T00:00:00Z go142a v143_01 s51_vidglitch rc 0 glitch_v143_01.txt sha256 %s rec_v143_01.mp4 sha256 %s\n'
+            '2026-10-01T00:00:00Z go142a v143_01 sheet rc 0 sheet_v143_01.png sha256 %s\n' % (
+                'ab' * 32, _h.sha256(b'mp4 v143_01').hexdigest(), _h.sha256(b'png').hexdigest()))
+v = S.entry_of('v143_01', str(BASE / 'P10'), PRED_SHA)
+ok &= case('B18 the sheet lines of times.txt must carry the chain name go143a (go142a lines do not count) -> NO',
+           S.scene_ok(v, w, 'viewed', p)[0] == 'NO' and not v['sheet']['ok'])
+ok &= case('B18b only V tags carry a sheet state; W does not', w['sheet'] is None and v['sheet'] is not None)
+R11 = BASE / 'P11'
+for t in ('v143_01', 'w143_01', 'v143_02', 'w143_02', 'v143_03'):
+    mk143(R11, t, [ft(i, 16667) for i in range(1, 50)], js143(t, attempt=dict(outcome='timeout', hold_s=None)))
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rk = [S.main(['--stop-check', t], root=str(R11), pred=str(BASE / 'nopred.md'))
+          for t in ('w143_03', 'v143_03', 'w143_02', 'v143_04', 'v143_01', 'x')]
+ok &= case('B19 the stop rule over V tags: three V not entered before w143_03 -> rc 5 (its own V counts), before v143_03 and '
+           'w143_02 -> rc 0 (the W not entered are not census), before v143_04 -> rc 5, v143_01 -> rc 0, unknown -> rc 2',
+           rk == [5, 0, 0, 5, 0, 2])
+R12 = BASE / 'P12'
+mk143(R12, 'v143_02', [ft(i, 16667) for i in range(1, 50)], js143('v143_02', attempt=dict(outcome='timeout', hold_s=None)))
+mk143(R12, 'v143_01', [ft(i, 16667) for i in range(1, 50)], js143('v143_01', attempt=dict(outcome='timeout', hold_s=None)))
+mk143(R12, 'v143_03', None)
+mk143(R12, 'v143_04', [ft(i, 16667) for i in range(1, 50)], js143('v143_04', attempt=dict(outcome='timeout', hold_s=None)))
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rk12 = S.main(['--stop-check', 'w143_04'], root=str(R12), pred=str(BASE / 'nopred.md'))
+ok &= case('B19b an entered V breaks the run: NE, NE, entered, NE before w143_04 -> rc 0', rk12 == 0)
+
+
+def b33_lines(rem):
+    """V of level 01: window 599 rows of 16 667, hold rows of 99 999 and one K3 row 150 000 whose cumulative presented time
+    after the entry line is 120 000 000 - 47 530 + rem (rem 47 530 -> exactly 120 s)."""
+    post = [16667] * 599 + [99999] * 1063 + [rem, 150000] + [16667] * 2000
+    return scene_lines(LV1, post)
+
+
+e = S.derive(S.scan(mk143(BASE / 'P13a', 'v143_01', b33_lines(47530)) + '/log_v143_01.txt'), LV1)
+e2 = S.derive(S.scan(mk143(BASE / 'P13b', 'v143_01', b33_lines(47531)) + '/log_v143_01.txt'), LV1)
+ok &= case('B20 B33 variant edge: the K3 hold row at exactly 120 000 000 us after the entry line is within 120 s; 1 us later '
+           'it is not; the letter counts it both times',
+           e['k3h'] == [(1678, 150000)] and e['k3h120'] == [(1678, 150000)] and e2['k3h'] == [(1678, 150000)]
+           and e2['k3h120'] == [])
+e3 = S.derive(S.scan(mk143(BASE / 'P13d', 'v143_01', scene_lines(LV1, [16667] * 700 + [100000] + [16667] * 3000))
+                     + '/log_v143_01.txt'), LV1)
+ok &= case('B20c a hold row of exactly 100 000 us within 120 s is K3 of both readings', e3['k3h'] == [(715, 100000)]
+           and e3['k3h120'] == [(715, 100000)])
+ok &= case('B20b K3 in the entry window is not B33', S.derive(S.scan(mk143(BASE / 'P13c', 'v143_01', scene_lines(
+    LV1, [16667] * 10 + [150000] + [16667] * 3000)) + '/log_v143_01.txt'), LV1)['k3h120'] == [])
+R14 = BASE / 'P14'
+PR14 = R14 / 'pred.md'
+R14.mkdir(parents=True, exist_ok=True)
+PR14.write_text('fixture 143 b33\n', encoding='utf-8')
+SH14 = hashlib.sha256(PR14.read_bytes()).hexdigest()
+mk143(R14, 'v143_01', b33_lines(47530), dict(js143('v143_01'), prereg=dict(path=S.PRED_PATH, sha256=SH14)))
+mk143(R14, 'v143_02', scene_lines(LV2, [16667] * 599 + [99999] * 1500 + [150000] + [16667] * 2000),
+      dict(js143('v143_02'), prereg=dict(path=S.PRED_PATH, sha256=SH14)))
+mk143(R14, 'v143_03', scene_lines(LV3, [16667] * 8000), dict(js143('v143_03'), prereg=dict(path=S.PRED_PATH, sha256=SH14)))
+mk143(R14, 'v143_04', scene_lines('path_maker_mana_tree', [16667] * 599 + [99999] * 100 + [150000] + [16667] * 8000),
+      dict(js143('v143_04'), prereg=dict(path=S.PRED_PATH, sha256=SH14), binary_sha256=OTHER))
+o14 = S.summary(str(R14), SH14, None)[0]
+ok &= case('B21 FORM B33 over admitted V: v143_01 (K3 at 120 s, both readings), v143_02 (K3 past 120 s, letter only); '
+           'v143_04 of another build not counted -> letter 2/10 with tags, variant 1/10',
+           'FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 2/10 [c] (admitted and entered 3) '
+           'v143_01,v143_02; executor variant (the hold within 120 s of presented time after the entry line): 1/10' in o14)
+ok &= case('B21b the levels line with no W made: YES 0, PENDING_SHEET 0, NO 10 of 10',
+           'SCENE_OK LEVELS: YES 0, PENDING_SHEET 0, NO 10 of 10' in o14)
+ok &= case('B22 the K3 hold line of 120 s is printed per entry in profile 143',
+           any(x.startswith('  K3 hold within 120 s of presented time after the entry line (executor variant') for x in o14))
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rt = S.main(['--tag', 'v143_03'], root=str(R14), pred=str(PR14))
+sj = json.loads((R14 / 'runs143' / 'v143_03.score.json').read_text(encoding='utf-8'))
+ok &= case('B23 main --tag of 143 writes runs143/<tag>.score.json (rc 0 when admitted) with the 120 s K3 list',
+           rt == 0 and sj['tag'] == 'v143_03' and sj['derive']['k3h120'] == [] and sj['outcome'] == 'HOLDS_120')
+REQ143 = ('go143a.sh', 'sc143.py', 'test_sc143.py', 'mut_sc143.py', 'enter_scene.py', 'sheet142.py', 'fgcpu143.py',
+          'test_fgcpu143.py', 'test_go143a.py', 'C:/kyty/scripts/s51_vidglitch.py')
+ok &= case('B24 the seal of 143 names the harness, scorer, fixtures, mutants, enter_scene.py, sheet142.py, the CPU row and '
+           's51_vidglitch.py (item 231 (i)(4))', all(n in S.SEALED_NAMES for n in REQ143))
+rs = BASE / 'seal143'
+rs.mkdir()
+shutil.copyfile(SRC, rs / 'sc143.py')
+ls143 = []
+for name in S.SEALED_NAMES:
+    if name.startswith('C:/'):
+        sh = hashlib.sha256(Path(name).read_bytes()).hexdigest()
+    elif name != 'sc143.py':
+        (rs / name).write_bytes(('fixture ' + name).encode())
+        sh = hashlib.sha256((rs / name).read_bytes()).hexdigest()
+    else:
+        sh = hashlib.sha256(Path(SRC).read_bytes()).hexdigest()
+    ls143.append('seal: %s %s' % (sh, name))
+(rs / 'pred.md').write_text('seal 143\n' + '\n'.join(ls143) + '\n', encoding='utf-8')
+g143, r143 = S.check_seal(str(rs / 'pred.md'), str(rs), SRC)
+(rs / 'pred2.md').write_text('seal 143\n' + '\n'.join(x.replace(' sc143.py', ' sc142.py') for x in ls143) + '\n',
+                             encoding='utf-8')
+ok &= case('B25 the seal check of 143 passes on its names (the scorer by sc143.py) and fails with the scorer named sc142.py',
+           g143 and len(r143) == len(S.SEALED_NAMES) + 1 and S.check_seal(str(rs / 'pred2.md'), str(rs), SRC)[0] is False)
+# the regression of item 231 (i)(4) on a synthetic profile 142
+RG = BASE / 'rg'
+RG.mkdir()
+P142_REAL = dict(S.P142)
+B33_REAL = S.REGRESS_B33
+S.P142 = dict(S.P142, ROOT=RG.as_posix(), PRED_PATH=(RG / 'pred.md').as_posix())
+(RG / 'pred.md').write_text('fixture 142\n', encoding='utf-8')
+SHR = hashlib.sha256((RG / 'pred.md').read_bytes()).hexdigest()
+old = S.profile(S.P142)
+mkrun(RG, 'v142', scene_lines(SKY, v_post()), js=js_for('v142', prereg=dict(path=S.PRED_PATH, sha256=SHR)))
+mkrun(RG, 'w142', W_LINES, js=js_for('w142', prereg=dict(path=S.PRED_PATH, sha256=SHR)), glitch=None, sheet=False)
+mkrun(RG, 'c142_01', scene_lines('bumper_enemy_snowy_canyon', [16667] * 7300),
+      js=js_for('c142_01', prereg=dict(path=S.PRED_PATH, sha256=SHR)))
+mkrun(RG, 'c142_02', scene_lines('big_hand_pirate_island', [16667] * 700 + [150000] + [16667] * 7300),
+      js=js_for('c142_02', prereg=dict(path=S.PRED_PATH, sha256=SHR)))
+mkrun(RG, 'c142_03', scene_lines('timestop_casino', [16667] * 700 + [150000] + [16667] * 7300),
+      js=js_for('c142_03', prereg=dict(path=S.PRED_PATH, sha256=SHR), binary_sha256=OTHER))
+outr = S.summary(str(RG), SHR, 'viewed')[0]
+S.profile(old)
+EXP = RG / 'expected.txt'
+EXP.write_bytes(('\r\n'.join(outr) + '\r\n').encode('ascii'))
+S.REGRESS_B33 = ('c142_02',)
+okr, lr = S.regress142(str(EXP))
+ok &= case('B26 regress142 on a synthetic profile 142: byte-identical, 0 differing lines, B33 c142_02 -> PASS; the summary '
+           'of profile 142 has no line of 143 (no pair row, no B33, no levels line); the profile is restored after it',
+           okr and lr[-1] == 'REGRESS142: PASS' and 'byte-identical yes; differing lines 0' in lr[0] and
+           not any('pair of one level' in x or 'FORM B33' in x or 'SCENE_OK LEVELS' in x or 'K3 hold within' in x
+                   for x in outr) and 'SCENE_OK underwater_aerial_garden: YES' in outr and S.ROOT == 'C:/kyty/s143'
+           and S.CHAIN == 'go143a' and S.EXTRA is True and S.SEQ[0] == 'v143_01')
+EXP.write_bytes(('\r\n'.join(outr[:5] + ['changed line'] + outr[6:]) + '\r\n').encode('ascii'))
+okr2, lr2 = S.regress142(str(EXP))
+ok &= case('B27 one changed line -> FAIL with the DIFF line pair printed (line 6)', not okr2 and
+           'DIFF line 6 expected: changed line' in lr2 and lr2[-1] == 'REGRESS142: FAIL')
+EXP.write_bytes(('\n'.join(outr) + '\n').encode('ascii'))
+okr3, lr3 = S.regress142(str(EXP))
+ok &= case('B28 the same text with LF only -> not byte-identical -> FAIL (0 differing lines)', not okr3 and
+           'byte-identical NO; differing lines 0' in lr3[0])
+EXP.write_bytes(('\r\n'.join(outr) + '\r\n').encode('ascii'))
+S.REGRESS_B33 = ('c142_01',)
+ok &= case('B29 B33 tags other than item 231 (g)(1) -> FAIL', S.regress142(str(EXP))[0] is False)
+S.REGRESS_B33 = ('c142_02',)
+ok &= case('B30 a missing expected file -> FAIL', S.regress142(str(RG / 'none.txt'))[0] is False)
+buf = io.StringIO()
+with contextlib.redirect_stdout(buf):
+    rr = S.main(['--regress142'])
+ok &= case('B31 main --regress142 -> rc 1 against the default expected file of the real s142 summary (the fixture root '
+           'differs), rc of a PASS is 0', rr == 1 and 'REGRESS142: FAIL' in buf.getvalue())
+S.P142 = P142_REAL
+S.REGRESS_B33 = B33_REAL
+ok &= case('B32 the real profile 142 and the regression constants of item 231 (g)(1)', S.P142['ROOT'] == 'C:/kyty/s142'
+           and S.P142['PRED_PATH'] == 'C:/kyty/s142/pred/02_sc142.md' and S.P142['CHAIN'] == 'go142a'
+           and S.P142['PAIRS'] == (('v142', 'w142', SKY),) and S.REGRESS_B33 == ('c142_02', 'c142_03', 'c142_05')
+           and S.REGRESS_FILE == 'C:/kyty/s142/step4/summary142_viewed.txt')
+x = S.profile(dict(CHAIN='zz'))
+ok &= case('B33 profile() sets the values and returns the old ones', S.CHAIN == 'zz' and x == dict(CHAIN='go143a'))
+S.profile(x)
+try:
+    ('\n'.join(out8 + o9 + o10 + o14 + lr + lr2 + lr3) + buf.getvalue()).encode('cp1250', errors='strict')
+    ('\n'.join(out8 + o14)).encode('ascii', errors='strict')
+    enc = True
+except UnicodeError:
+    enc = False
+ok &= case('B34 every new printed line is ASCII (strict cp1250 and ascii)', enc)

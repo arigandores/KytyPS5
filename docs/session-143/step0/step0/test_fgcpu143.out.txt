@@ -1,0 +1,20 @@
+suite test_fgcpu143.py sha256 3950418e42a62c116adc136121c043ca1c872ce245a1a156466adf898b022a1a target fgcpu143.py sha256 60ac669581c1425dd949ce381071615191efe323d8e296e8e84cb8c2c6a13672
+PASS f1 --save writes the time and every process (pid, name, cpu)
+  line: fgcpu143: run 20.0 s: foreign 1.050 CPU s/s = 3.3 % of 32 logical CPUs over 4 processes alive at both ends; top chrome:1:1.000, node:2:0.050, drift:8:0.000; game 1.000 | now 10.0 s: foreign 1.100 CPU s/s = 3.4 % of 32 logical CPUs over 3 processes alive at both ends; top newcomer:3:1.000, chrome:1:0.100, node:2:0.000; game 0.000
+PASS f2 run part: wall 20 s; chrome (30-10)/20 = 1.000, node 0.050; drift clamped to 0; foreign 1.050 CPU s/s
+PASS f3 the newcomer (not alive at --save), gone, Idle, System and the sampler pid are out of the run part; processes alive at both ends counted 4 (chrome, node, drift, the game)
+PASS f4 the game is apart (23-3)/20 = 1.000 and not foreign
+PASS f5 top order by rate: chrome before node before drift
+PASS f6 % of 32 logical CPUs: 1.050 / 32 = 3.3 %
+PASS f7 the now part samples --span (default 10 s) between two snapshots: newcomer 1.000, chrome 0.100
+PASS f8 without the --save file the run part is n/a and the now part still prints (span 2)
+PASS f9 a failing snapshot prints one unavailable line, rc 0 (a row, not a guard)
+PASS f9b the run part survives a failing second snapshot
+PASS f10 a broken --save file reads n/a
+PASS f11 a --save that cannot write prints save unavailable, rc 0
+PASS f12 no mode -> usage rc 2
+PASS f13 the constants: span 10 s, top 5, the game name, the ignore set of procload
+PASS f14 a non-ASCII process name is printed as ASCII
+PASS f15 a child without PYTHONIOENCODING (console cp1250) prints its line, rc 0, no error
+checks: 16
+ALL OK

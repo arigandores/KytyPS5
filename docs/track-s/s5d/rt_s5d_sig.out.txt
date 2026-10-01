@@ -1,0 +1,2 @@
+as_is 699c1e4b7db359067b461e029b913c4b6e78dc90 101 C:/kyty/s288/wt_s5c
+cr_removed 95d30c5c8062d73b96b5f66a0ec64026e9109591 101 C:/kyty/s288/wt_s5c

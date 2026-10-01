@@ -1,0 +1,2 @@
+DIFF 120000 android-project-ant/AndroidManifest.xml
+MISSING 120000 android-project-ant/src

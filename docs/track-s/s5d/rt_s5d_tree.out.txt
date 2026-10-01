@@ -1,0 +1,19 @@
+tree 142e3f13740857025d95c868a0773ef60cd8f249 files 2335 equal 2308 cr_only 27 diff 0 missing 0
+cr_only files: 27
+cr_only in signature set: 27 outside: []
+cr_only == crlf27 list: True
+cr_only files with R" : []
+sub 3rdparty/LibAtrac9 ec8899da files 58 equal 0 cr_only 58 diff 0 missing 0 extra 0 []
+sub 3rdparty/SDL2 4b69833b files 1762 equal 1760 cr_only 0 diff 1 missing 1 extra 9 ['android-project-ant\\src\\org\\libsdl\\app\\HIDDevice.java', 'android-project-ant\\src\\org\\libsdl\\app\\HIDDeviceBLESteamController.java', 'android-project-ant\\src\\org\\libsdl\\app\\HIDDeviceManager.java']
+sub 3rdparty/SPIRV-Headers 01e05779 files 113 equal 36 cr_only 77 diff 0 missing 0 extra 0 []
+sub 3rdparty/SPIRV-Tools 7f2d9ee9 files 1736 equal 1736 cr_only 0 diff 0 missing 0 extra 5 ['utils\\Table\\__pycache__\\Context.cpython-314.pyc', 'utils\\Table\\__pycache__\\IndexRange.cpython-314.pyc', 'utils\\Table\\__pycache__\\Operand.cpython-314.pyc']
+sub 3rdparty/Vulkan-Headers 2fa20342 files 88 equal 0 cr_only 88 diff 0 missing 0 extra 0 []
+sub 3rdparty/VulkanMemoryAllocator a1d43470 files 271 equal 271 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/ffmpeg-core 94dde08c files 952 equal 952 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/fmt 11ddbcb7 files 142 equal 142 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/imgui f1cc2ae1 files 281 equal 40 cr_only 241 diff 0 missing 0 extra 0 []
+sub 3rdparty/magic_enum 1384769c files 64 equal 64 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/nlohmann_json 272411c5 files 1205 equal 1205 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/spdlog 8671ca4d files 180 equal 180 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/tracy 05cceee0 files 413 equal 413 cr_only 0 diff 0 missing 0 extra 0 []
+sub 3rdparty/xxHash e573d4d2 files 91 equal 91 cr_only 0 diff 0 missing 0 extra 0 []

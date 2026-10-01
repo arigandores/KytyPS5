@@ -1,0 +1,35 @@
+C:\kyty\s288\s5d\rt_s5d_bin.py:7: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  def utc(p): return datetime.datetime.utcfromtimestamp(os.path.getmtime(p)).strftime('%Y-%m-%dT%H:%M:%SZ')
+C:\kyty\s288\s5d\rt_s5d_bin.py:27: DeprecationWarning: datetime.datetime.utcfromtimestamp() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.fromtimestamp(timestamp, datetime.UTC).
+  print('newest src file', datetime.datetime.utcfromtimestamp(newest[0]).strftime('%Y-%m-%dT%H:%M:%SZ'), newest[1])
+sha256 f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3 2026-10-01T02:00:51Z C:/kyty/s288/bin/kyty_emulator_f3b3aa3b.exe
+sha256 f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3 2026-10-01T02:00:18Z C:/kyty/s288/build_s5c/install/kyty_emulator.exe
+sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7 2026-10-01T04:29:45Z C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7 2026-09-28T10:41:54Z C:/kyty/s128/kyty_emulator_9235a7ac.exe
+bin  sig/hash ([], ['4fc501f-dirty', '4fc501f4', '4fc501f4-dirty'])
+9235 sig/hash ([], ['4fc501f-dirty', '4fc501f4-dirty'])
+699c1e4b... in bin: ['699c1e4b7db359067b461e029b913c4b6e78dc90']  in 9235: True
+S-pcw: KYTY_S_PCW                                       bin 1  9235 0
+KYTY_S_PCW_FORCE_MS                                     bin 2  9235 0
+GcnDumpReg: skip type=                                  bin 1  9235 0
+GcnDumpReg: type=                                       bin 1  9235 0
+wait gfx                                                bin 1  9235 0
+wait cs                                                 bin 1  9235 0
+ lock_us=                                               bin 2  9235 1
+ hold_us=                                               bin 1  9235 0
+AvTrace: pcw overlap %s                                 bin 1  9235 0
+AvTrace: pcw recipes copied=%zu count=%u lock_us=       bin 1  9235 0
+AvTrace: pcw recipes copied=%zu count=%u wait_us=       bin 0  9235 0
+KYTY_FIX_B26                                            bin 0  9235 0
+KYTY_FIX_                                               bin 0  9235 0
+['CMAKE_HOME_DIRECTORY:INTERNAL=C:/kyty/s288/wt_s5c']
+['CMAKE_BUILD_TYPE:STRING=Release']
+['CMAKE_INTERPROCEDURAL_OPTIMIZATION:UNINITIALIZED=ON']
+['CMAKE_CXX_COMPILER:STRING=C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/Llvm/x64/bin/clang-cl.exe']
+['KYTY_BUILD_LAUNCHER:BOOL=OFF']
+mtime 2026-10-01T01:50:48Z src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+mtime 2026-10-01T01:50:48Z src/graphics/host_gpu/renderer/pipeline/pipelineCache.h
+mtime 2026-10-01T01:59:25Z src/graphics/shader/shaderBindings.cpp
+mtime 2026-10-01T01:59:25Z src/graphics/guest_gpu/gpu_defs.h
+newest src file 2026-10-01T01:59:25Z C:/kyty/s288/wt_s5c/src\graphics\shader\shaderVertexMetadata.h
+gen C:/kyty/s288/build_s5c\kytyGitVersion.h ['#define KYTY_GIT_HASH "4fc501f-dirty"', '#define KYTY_SHADER_SOURCE_HASH "699c1e4b7db359067b461e029b913c4b6e78dc90"', '#define KYTY_BUILD_LABEL "Fork build " KYTY_BUILD_REPOSITORY " " KYTY_GIT_HASH', '#define KYTY_BUILD_LABEL "Source build " KYTY_GIT_HASH']

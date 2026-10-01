@@ -1,0 +1,15 @@
+2026-10-01T03:57:33Z start S5d read; HEAD d82d238c; blockers HPP-323 done, HPP-299 done (API 03:57:12Z)
+2026-10-01T04:06:43Z waited foreign lock 'gop4.sh pa_A' (P6): seen 03:59:30Z (first LOCKED exit of my command ~03:58:5xZ), free 04:06:30Z; read-only Read-tool review meanwhile, no processes/files
+2026-10-01T04:06:44Z patch sha/apply-check/tree recount done 752b9f19
+2026-10-01T04:31:07Z waited foreign locks P6 (pa0_A0, pb0_B0 presumably) 04:14:5xZ..04:30:15Z; free at 04:30:58Z
+2026-10-01T04:31:08Z wt status/ignorecr diff 752b9f19
+2026-10-01T04:31:37Z rt_s5d_tree.py out 2135f14d
+2026-10-01T04:32:05Z rt_s5d_bin.py out 5af0c32b
+2026-10-01T04:32:29Z rt_s5d_sig.py out e3b0c442
+2026-10-01T04:32:39Z rt_s5d_sig.py out e3b0c442
+2026-10-01T04:32:51Z rt_s5d_sig.py out 5fd1fbbf
+2026-10-01T04:33:04Z tests rerun A/B on build_s5c shader_cfg_tests 5a60758a 5a60758a
+2026-10-01T04:36:55Z review docs/track-s/s5d-review.md written (draft 1)
+2026-10-01T04:37:25Z rt_s5d_anchors.py out 6513693c
+2026-10-01T04:38:16Z FACTS.md section ## S5d appended 0e691244
+2026-10-01T04:38:29Z commit start (git.exe --only docs/track-s/s5d-review.md docs/track-s/s5d)

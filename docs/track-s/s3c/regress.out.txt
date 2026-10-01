@@ -1,0 +1,93 @@
+class_s0.txt sha256 1cd726fb53f70b0fc7eef2fe22b2e80b91656cb7aa048e6505c07bda6a6ac36a pinned
+REG v142 sha 565707122e53bb50: S0 1.3 MATCH
+    identities: T-6 0 / 0 ok (S1 0); broken (null control of M not applicable to lite logs): none
+    frame v142 n 382 dt 180521 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG w142 sha 7f42a2d3e1a151a2: S0 1.3 MATCH
+    identities: T-6 0 / 0 ok (S1 0); broken (null control of M not applicable to lite logs): none
+REG c142_01 sha 66b4ff7e0e50a8a4: S0 1.3 MATCH
+    identities: T-6 3 / 3 ok (S1 3); broken (null control of M not applicable to lite logs): none
+    series with the held first scene frame: 203-205 1804.1 ms (S1 1804.1) MATCH
+    frame c142_01 n 204 dt 816566 window: S0 PRIO (class_s0 PRIO) -> sc_s WAIT [PRIO only under the S0 convention (group i), WAIT under group i+1 (RC8)]
+    frame c142_01 n 206 dt 101796 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    gap_pipe series (reading 1): ['203-205 1804.1/1804.1']
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): ['203-205 1804.1/1804.1']
+REG c142_02 sha bb6655d3d30c0bc7: S0 1.3 MATCH
+    identities: T-6 13 / 13 ok (S1 13); broken (null control of M not applicable to lite logs): none
+    frame c142_02 n 330 dt 165677 window: S0 WAIT (class_s0 WAIT) -> sc_s PCW [PCW: a recipes write in group i or i+1 (RC3)]
+    frame c142_02 n 332 dt 299442 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_02 n 333 dt 299580 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_02 n 334 dt 284617 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_02 n 335 dt 300409 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_02 n 336 dt 298800 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_02 n 337 dt 299220 window: S0 PRIO (class_s0 PRIO) -> sc_s WAIT [PRIO only under the S0 convention (group i), WAIT under group i+1 (RC8)]
+    frame c142_02 n 474 dt 100019 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 482 dt 135990 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 488 dt 148505 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 496 dt 116380 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 529 dt 111102 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 661 dt 218174 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_02 n 795 dt 165920 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s PCW [PCW: a driver write in group i or i+1 (RC3)]
+    frame c142_02 n 1358 dt 149651 hold: S0 GPUTHR (class_s0 GPUTHR) -> sc_s PCW [PCW: a driver write in group i or i+1 (RC3)]
+    frame c142_02 n 2557 dt 151746 hold: S0 GPUTHR (class_s0 GPUTHR) -> sc_s PCW [PCW: a driver+recipes write in group i or i+1 (RC3)]
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG c142_03 sha 9aaa83b0c73e66b1: S0 1.3 MATCH
+    identities: T-6 68 / 68 ok (S1 68); broken (null control of M not applicable to lite logs): none
+    frame c142_03 n 265 dt 130020 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s PCW [PCW: a recipes write in group i or i+1 (RC3)]
+    frame c142_03 n 784 dt 432339 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_03 n 843 dt 164501 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_03 n 1042 dt 115028 hold: S0 WAIT (class_s0 WAIT) -> sc_s PCW [PCW: a driver write in group i or i+1 (RC3)]
+    gap_pipe series (reading 1): ['843-904 1535.8/1535.8']
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): ['843-904 1535.8/1535.8']
+REG c142_04 sha bd5f547706caad1d: S0 1.3 MATCH
+    identities: T-6 12 / 12 ok (S1 12); broken (null control of M not applicable to lite logs): none
+    series with the held first scene frame: 260-268 705.2 ms (S1 705.2) MATCH
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG c142_05 sha 9ea02549b36c0100: S0 1.3 MATCH
+    identities: T-6 49 / 49 ok (S1 49); broken (null control of M not applicable to lite logs): none
+    frame c142_05 n 232 dt 448789 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_05 n 240 dt 133372 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_05 n 526 dt 143602 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_05 n 1002 dt 131181 hold: S0 PRIO (class_s0 PRIO) -> sc_s PCW [PCW: a driver write in group i or i+1 (RC3)]
+    gap_pipe series (reading 1): ['232-275 1802.7/1802.7']
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): ['232-275 1802.7/1802.7']
+REG c142_06 sha a511e5d4af7a0f0a: S0 1.3 MATCH
+    identities: T-6 6 / 6 ok (S1 6); broken (null control of M not applicable to lite logs): none
+    frame c142_06 n 262 dt 465210 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_06 n 455 dt 149912 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG c142_07 sha 5e1bd731e2e5d345: S0 1.3 MATCH
+    identities: T-6 10 / 10 ok (S1 10); broken (null control of M not applicable to lite logs): none
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG c142_08 sha 358be0e0d44d729e: S0 1.3 MATCH
+    identities: T-6 30 / 30 ok (S1 30); broken (null control of M not applicable to lite logs): none
+    series with the held first scene frame: 201-230 984.4 ms (S1 984.4) MATCH
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG c142_09 sha eadf72b5b79ac096: S0 1.3 MATCH
+    identities: T-6 5 / 5 ok (S1 5); broken (null control of M not applicable to lite logs): none
+    frame c142_09 n 180 dt 113999 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s GPUTHR
+    frame c142_09 n 182 dt 316631 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_09 n 183 dt 283174 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_09 n 184 dt 266420 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_09 n 185 dt 285526 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_09 n 186 dt 298651 window: S0 PRIO (class_s0 PRIO) -> sc_s PRIO
+    frame c142_09 n 187 dt 283939 window: S0 PRIO (class_s0 PRIO) -> sc_s WAIT [PRIO only under the S0 convention (group i), WAIT under group i+1 (RC8)]
+    gap_pipe series (reading 1): ['180-184 1282.3/130.5']
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): ['180-184 1282.3/130.5']
+REG c142_10 sha d78e0342fa2186f4: S0 1.3 MATCH
+    identities: T-6 6 / 6 ok (S1 6); broken (null control of M not applicable to lite logs): none
+    frame c142_10 n 225 dt 217657 window: S0 GPUTHR (class_s0 GPUTHR) -> sc_s PCW [PCW: a recipes write in group i or i+1 (RC3)]
+    gap_pipe series (reading 1): []
+    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): []
+REG census sums: series (reading 2) 26 (S0 26), gap >= 100 ms 20 (20), >= 1 s 4 (4); with the first frame >= 1 s 4 (4); levels with gap_pipe >= 1 s: S1 RC4 reading (PRIO of group i) 2 (S1 2), item 241 letter (PRIO robust to both groups) 3 - c142_01 203-205: n 204 is PRIO only under group i, so it is not subtracted
+REG item 250 (g)(2): levels with gap_pipe >= 1 s by the governing reading (minus PRIO only, PCW "to the shaders") 3; by (v)(2) before item 250 (minus PCW and PRIO) 3
+REG PCW frames: by a driver write [('c142_02', 795), ('c142_02', 1358), ('c142_02', 2557), ('c142_03', 1042), ('c142_05', 1002)] (S1 RC3 table: 5 frames MATCH); by a recipe write only [('c142_02', 330), ('c142_03', 265), ('c142_10', 225)] (the letter of item 241 (v)(3) counts both writes; S1 RC3 listed the driver writes)
+REG classes of the 36 census frames: S0 convention [('GPUTHR', 20), ('PRIO', 14), ('WAIT', 2)] (S0 14/20/2), group i+1 [('GPUTHR', 20), ('PRIO', 10), ('WAIT', 6)] (S1 PRIO 10), sc_s final [('GPUTHR', 15), ('PCW', 8), ('PRIO', 10), ('WAIT', 3)]
+REG T-6 12 of 12
+REGRESSION: ALL OK

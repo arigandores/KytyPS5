@@ -1,0 +1,717 @@
+--- /dev/fd/63	2026-10-01 07:46:33.000000000 +0200
++++ /dev/fd/62	2026-10-01 07:46:33.000000000 +0200
+@@ -17,8 +17,11 @@
+       "AsyncPipelines: skipped draw" lines.  Rows with a skip and skipped draws are printed beside.  Reading 1 (the
+       letter): a held series counts WITH the first scene frame when that frame is held; reading 2: from the next row.
+   (2) freeze, three measures: dt of a presented row; the visible gap of a held series (sum dt of the series rows + dt of the
+-      next row); gap_pipe = gap - sum dt of the series rows (the closing row included) with dt >= 100 ms of class PCW or PRIO.
+-      Thresholds 100 ms and 1 s on each.  "A frame >= X" = a presented row with dt >= X or a series with gap_pipe >= X.
++      next row); gap_pipe = gap - sum dt of the series rows (the closing row included) with dt >= 100 ms of class PRIO ONLY
++      (item 250 (g)(2): PCW counts "to the shaders"); the former letter of (v)(2) (minus PCW and PRIO) is printed as the second
++      reading "(v)(2) before item 250" (gap_pipe_old).  Thresholds 100 ms and 1 s on each.  "Attributed >= X" (item 250 (g)(1))
++      = a presented row with dt >= X of attribution SHADER or of class PCW, or a series with gap_pipe >= X; the rows of
++      class PCW are printed apart ("of them PCW n"), and beside it the not attributed presented rows >= X by class (RC8).
+   (3) classes of a row with dt >= 100 ms in this order: PCW (a "Vulkan pipeline cache: saved" or "PipelinePrecache: saved"
+       line in group i or i+1) -> SHADER ((4)) -> PRIO (sum "PriorityStall: us" >= dt/2 and cpu_gpu_us < dt/2 under BOTH
+       conventions: the stall lines of group i (S0) and of group i+1; both printed) -> GPUTHR (cpu_gpu_us >= dt/2) -> WAIT.
+@@ -38,13 +41,23 @@
+       KYTY_CACHE_MODE, KYTY_S_*, KYTY_DUMP_*, KYTY_CS_PRETRANSLATE is FAIL (letter); the executor's stricter row - every
+       KYTY_* key equal (the three path keys only present) - is printed and is also an admission row (variant).
+   (7) cold gate (C and T2 arms): after the entry line >= 1 new permutation (AvTrace: shader lines), >= 1 new recipe and
+-      >= 1 skipped draw - else "level not cold", out of the count; the share of skipped pairs whose both shaders are in
+-      snap0 is printed.  Warm gate (S-warm arms): 0 stdout "Shaders:" lines and recipes end - start = 0, else "not warm".
++      >= 1 skipped draw - else "level not cold", out of the count; the gate is False also when T-3/T-4 are broken - that is
++      printed "undetermined (T-3/T-4)", apart from "level not cold" (item 250 (d)); C1-C4 count only with the gate (RC4); a C1
++      "level not cold" sends L0 to the next reserve like "< 10 creations".  The share of skipped pairs whose both shaders
++      are in snap0 is printed.  Warm gate (S-warm arms): 0 stdout "Shaders:" lines and recipes end - start = 0, else "not warm".
+   (8) creation cold: median us of the in-game creations (AvTrace: pipeline gfx async / no suffix, cs async / sync) >=
+       20 000 cold, <= 5 000 warm, < 10 creations "nothing to classify".  Letter: every in-game creation of the run; the
+       executor's variant (printed): only after the entry line.
+   (9) video checks the picture, not freezes; no identity "video frames = presented rows".
+   (10) the foreign-CPU row of the harness (times.txt) is not read here.
++  (11) S3b (HPP-325, item 250): the installed binary is copied before the arm and returned from that copy - the admission
++      row is installed_after = installed_before (RC1); return_prev_ok and the continuity of the live manifests with the
++      returns of the previous arm of S ("foreign chain between arms" - a data row, not FAIL; RC2); man_launch_glc =
++      restore_glc.got (RC10); pcw_int is a T arm and its "AvTrace: pcw overlap" / "AvTrace: pcw recipes" lines are read
++      (RC5); "save failed (Incomplete" is counted apart - ARM1_CODE_DEFECT (RC6); KYTY_FIX_ is a family (RC7); a pcw_val
++      stopped before the entry line by validation is VALIDATION_STOP_PRE_LEVEL, member (d) undetermined (RC11).
++  (12) item 254 (e) (form W until B35 ships): a validation arm runs with KYTY_PIPELINE_PRECACHE=0 (a family key of the
++      seal) and its admission row is the positive control - no "PipelinePrecache: N recipes ->" line in its log.
+ READINGS: --read-c (item 241 (d)), --read-warm ((e)), --read-t2 ((zh)), --read-pcw ((z)(5)), with "undetermined" instead
+ of PASS on every empty denominator.  Output is ASCII only.  Logs are read in binary, streaming, line by line.
+     python sc_s.py --tag <tag>          score one arm (rc 0 = arm PASS)
+@@ -79,8 +92,8 @@
+ B = load142()
+ 
+ ROOT = 'C:/kyty/s288'
+-PRED_PATH = 'C:/kyty/s288/pred/01_s.md'
+-PRED_S6 = 'C:/kyty/s288/pred/02_s.md'   # S6: a later seal with the line "pcw binary: <sha> <path>"
++PRED_PATH = 'C:/kyty/s288/pred/02_s.md'   # S4: seal 02 of S3b (item 250 (i)-(k)); seal 01 no longer holds for S4
++PRED_S6 = 'C:/kyty/s288/pred/03_s.md'     # S6: a later seal after S5d with the line "pcw binary: <sha> <path>" (variant)
+ INDEX_PATH = 'C:/kyty/s288/s3/snap0_index.json'
+ BUILD_SHA = '9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7'
+ SNAP_APP = 'd8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4'   # item 241 (g)(1)
+@@ -119,7 +132,7 @@
+ PREP_ENTERED = 19
+ PREP_PER_LEVEL = (6, 28, 83)     # S1 RC10: recipes per level, low / mid / high [I]
+ PREP_LIMIT_S = 180
+-FAMILIES = ('KYTY_ASYNC_', 'KYTY_PIPELINE_', 'KYTY_SHADER_', 'KYTY_S_', 'KYTY_DUMP_')
++FAMILIES = ('KYTY_ASYNC_', 'KYTY_PIPELINE_', 'KYTY_SHADER_', 'KYTY_S_', 'KYTY_DUMP_', 'KYTY_FIX_')   # FIX_: item 245 (a)
+ FAMILY_KEYS = ('KYTY_CACHE_MODE', 'KYTY_CS_PRETRANSLATE')
+ PATH_KEYS = ('KYTY_GATE_FILE', 'KYTY_SAMPLE_GATE', 'KYTY_REC')
+ 
+@@ -149,7 +162,7 @@
+     add('pcw_1', 's6', SKY, 'M', hold=330, pcw='0', group='pcw')
+     add('pcw_2', 's6', SKY, 'M', hold=330, pcw='1', group='pcw')
+     add('pcw_3', 's6', SKY, 'M', hold=330, pcw='1', group='pcw')
+-    add('pcw_int', 's6', SKY, 'M', mode='integrity', pcw='1', glc_from='pcw_3', app_from='pcw_3', group='pcw')
++    add('pcw_int', 's6', SKY, 'T', mode='integrity', pcw='1', glc_from='pcw_3', app_from='pcw_3', group='pcw')
+     add('pcw_4', 's6', SKY, 'M', hold=330, pcw='0', group='pcw')
+     add('pcw_val', 's6', SKY, 'M', hold=310, pcw='1', val=True, group='pcw')
+     return a
+@@ -171,6 +184,8 @@
+         e.update(KYTY_PIPELINE_SALT=spec['tag'])
+     if spec['pcw'] is not None:
+         e.update(KYTY_S_PCW=spec['pcw'], KYTY_S_PCW_FORCE_MS=PCW_FORCE_MS)
++    if spec['val']:
++        e.update(KYTY_PIPELINE_PRECACHE='0')      # form W of a validation arm, item 254 (e)
+     return e
+ 
+ 
+@@ -205,6 +220,8 @@
+ RX_LOADED = re.compile(rb'Vulkan pipeline cache: loaded (\d+) bytes')
+ RX_SHADER = re.compile(rb'AvTrace: shader (\S+) hash=0x([0-9a-fA-F]+) translate_us=(\d+) compile_us=(\d+)')
+ RX_VSPS = re.compile(rb' vs=(\d+) ps=(\d+)')
++RX_PCWOV = re.compile(rb'AvTrace: pcw overlap (.+?) id0=')
++RX_QUEUED_ANY = re.compile(rb'PipelinePrecache: \d+ recipes ->')     # item 254 (e): the start precache ran
+ 
+ 
+ def field(line, name):
+@@ -221,10 +238,10 @@
+ 
+ 
+ def new_scan():
+-    return dict(rows=[], x={}, up={}, skips=[], held_lines=0, prio=[], dsave=[], rsave=[], savefail=0, dload=[],
+-                disabled=0, coldns=0, sh=[], pipe=[], load=[], reg=[], first=[], queued=None, created_ms=None,
++    return dict(rows=[], x={}, up={}, skips=[], held_lines=0, prio=[], dsave=[], rsave=[], savefail=0, savefail_inc=0,
++                dload=[], disabled=0, coldns=0, sh=[], pipe=[], load=[], reg=[], first=[], queued=None, created_ms=None,
+                 ready=None, waited_ms=None, starts=[], avtrace=0, torn=0, seed_installed=0, seed_ignored=0, sha256=None,
+-                lines=0)
++                lines=0, pcw_ov=[], pcw_rec=[], queued_n=0)
+ 
+ 
+ def scan_s(path):
+@@ -285,6 +302,15 @@
+                                             int(m.group(3)), int(m.group(4)), s['lines']))
+                     elif line.startswith(b'AvTrace: shader-cache load'):
+                         s['load'].append((g, field(line, b'us') or 0))
++                    elif line.startswith(b'AvTrace: pcw overlap '):
++                        # S5c 2ce6326e PcwNoteOverlap: "AvTrace: pcw overlap <kind> id0= id1= wait_us= gen0= gen1=" (RC5);
++                        # never PREP (item 245 (b): wait_us is the creation time, an upper bound, not additive)
++                        m = RX_PCWOV.search(line)
++                        s['pcw_ov'].append((g, m.group(1).decode('latin1') if m else None, field(line, b'wait_us'),
++                                            field(line, b'gen0'), field(line, b'gen1')))
++                    elif line.startswith(b'AvTrace: pcw recipes'):
++                        s['pcw_rec'].append((g, field(line, b'copied'), field(line, b'count'), field(line, b'lock_us'),
++                                             field(line, b'hold_us')))
+                     elif line.startswith(b'AvTrace: pipeline '):
+                         kind = 'gfx' if line.startswith(b'AvTrace: pipeline gfx') else 'cs'
+                         body = line.rstrip()
+@@ -318,6 +344,8 @@
+                     if m and s['created_ms'] is None:
+                         s['created_ms'] = int(m.group(1))
+                 elif line.startswith(b'PipelinePrecache: '):
++                    if RX_QUEUED_ANY.match(line):
++                        s['queued_n'] += 1
+                     m = RX_QUEUED.search(line)
+                     if m and s['queued'] is None:
+                         s['queued'] = tuple(int(m.group(i)) for i in (1, 2, 3, 4))
+@@ -333,6 +361,8 @@
+                     s['dload'].append(int(m.group(1)) if m else -1)
+                 elif line.startswith(b'Vulkan pipeline cache: disabled'):
+                     s['disabled'] += 1
++                elif line.startswith(b'Vulkan pipeline cache: save failed (Incomplete'):
++                    s['savefail_inc'] += 1        # RC6, item 245 (v): a defect of the iteration code, counted apart
+                 elif line.startswith(b'Vulkan pipeline cache: save failed') or \
+                         line.startswith(b'Vulkan pipeline cache: failed to write'):
+                     s['savefail'] += 1
+@@ -597,9 +627,11 @@
+         in_series.update(range(a, b))
+         if close is not None:
+             closing.add(close)
+-        sub = sum(rows[k][1] for k in idx if rows[k][1] >= K3_US and cl(k)[0] in ('PCW', 'PRIO'))
++        sub = sum(rows[k][1] for k in idx if rows[k][1] >= K3_US and cl(k)[0] == 'PRIO')       # item 250 (g)(2)
++        sub_old = sum(rows[k][1] for k in idx if rows[k][1] >= K3_US and cl(k)[0] in ('PCW', 'PRIO'))   # (v)(2) before 250
+         asyn = [e for e in s['pipe'] if idx[0] <= e[0] <= idx[-1] and e[1] == 'gfx' and e[2] == 'async']
+         out['series'].append(dict(n0=rows[a][0], n1=rows[b - 1][0], flips=b - a, gap_us=gap, gap_pipe_us=gap - sub,
++                                  gap_pipe_old_us=gap - sub_old,
+                                   part='window' if a < wend else 'hold', closed=close is not None, a=a, b=b,
+                                   async_us=sum(e[3] for e in asyn), async_n=len(asyn),
+                                   async_cold=sum(1 for e in asyn if e[3] >= COLD_US)))
+@@ -622,7 +654,9 @@
+         ss = [x for x in out['series'] if x['part'] == part]
+         out[part].update(gap100=sum(1 for x in ss if x['gap_us'] >= K3_US), gap1s=sum(1 for x in ss if x['gap_us'] >= K2_US),
+                          pipe100=sum(1 for x in ss if x['gap_pipe_us'] >= K3_US),
+-                         pipe1s=sum(1 for x in ss if x['gap_pipe_us'] >= K2_US))
++                         pipe1s=sum(1 for x in ss if x['gap_pipe_us'] >= K2_US),
++                         pipe100_old=sum(1 for x in ss if x['gap_pipe_old_us'] >= K3_US),
++                         pipe1s_old=sum(1 for x in ss if x['gap_pipe_old_us'] >= K2_US))
+     long_rows = []
+     for i in range(fi + 1, end):
+         if rows[i][1] >= K3_US:
+@@ -634,14 +668,53 @@
+     return out
+ 
+ 
++def counted_row(x):
++    """Item 250 (g)(1): a presented row counts as attributed when its attribution is SHADER or its class is PCW."""
++    return x['attr'].startswith('SHADER') or x['cls'] == 'PCW'
++
++
+ def attributed(fz, attr_ok, x_us):
+-    """'0 attributed frames >= X' of item 241 (v)(2): SHADER rows (presented) with dt >= X + series with gap_pipe >= X."""
++    """'0 attributed frames >= X' of item 241 (v)(2) with item 250 (g): presented rows with dt >= X of attribution SHADER
++    or of class PCW + series with gap_pipe (minus PRIO only) >= X."""
+     if not attr_ok:
+         return None
+-    r = sum(1 for x in fz['long'] if x['attr'].startswith('SHADER') and x['dt'] >= x_us and not x['held'])
++    r = sum(1 for x in fz['long'] if counted_row(x) and x['dt'] >= x_us and not x['held'])
+     return r + sum(1 for x in fz['series'] if x['gap_pipe_us'] >= x_us)
+ 
+ 
++def attributed_pcw(fz, attr_ok, x_us):
++    """'of them PCW n' (item 250 (g)(1)): the presented rows of class PCW among the attributed rows >= X."""
++    if not attr_ok:
++        return None
++    return sum(1 for x in fz['long'] if x['cls'] == 'PCW' and x['dt'] >= x_us and not x['held'])
++
++
++def attributed_old(fz, attr_ok, x_us):
++    """The second reading '(v)(2) before item 250': SHADER rows + series with gap_pipe_old (minus PCW and PRIO) >= X."""
++    if not attr_ok:
++        return None
++    r = sum(1 for x in fz['long'] if x['attr'].startswith('SHADER') and x['dt'] >= x_us and not x['held'])
++    return r + sum(1 for x in fz['series'] if x['gap_pipe_old_us'] >= x_us)
++
++
++def unattributed(fz, attr_ok, x_us):
++    """RC8: presented rows dt >= X that are not attributed, by class (WAIT / GPUTHR / PRIO; their attribution is 'not'),
++    and the series with gap >= X whose gap_pipe < X (a PRIO row subtracted)."""
++    if not attr_ok:
++        return None
++    rows = [x for x in fz['long'] if x['dt'] >= x_us and not x['held'] and not counted_row(x)]
++    by = dict((c, sum(1 for x in rows if x['cls'] == c)) for c in ('WAIT', 'GPUTHR', 'PRIO'))
++    ser = sum(1 for x in fz['series'] if x['gap_us'] >= x_us and x['gap_pipe_us'] < x_us)
++    return dict(n=len(rows), series=ser, **by)
++
++
++def fmt_unattr(u):
++    if u is None:
++        return 'undetermined'
++    return '%d (WAIT %d, GPUTHR %d, PRIO %d; attribution "not" on all); series gap >= X with gap_pipe < X %d' % (
++        u['n'], u['WAIT'], u['GPUTHR'], u['PRIO'], u['series'])
++
++
+ def early(s, fz, fi, attr_ok):
+     """S-early data (item 241 (b)(4), (zh)): per event lead = min over its hashes of FirstUse - min Register; cost =
+     PREP of an attributed frame >= 100 ms, or the async us of a series with gap_pipe >= 100 ms."""
+@@ -708,9 +781,12 @@
+     rec_new_after = rec_end - max(before)
+     perm_after = sum(1 for e in s['sh'] if e[5] > el)
+     skip_after = sum(1 for e in s['skips'] if e[5] > el)
+-    cold = attr_ok and perm_after >= 1 and rec_new_after >= 1 and skip_after >= 1
++    level_cold = perm_after >= 1 and rec_new_after >= 1 and skip_after >= 1
++    cold = attr_ok and level_cold
++    # item 250 (d): "undetermined (T-3/T-4)" is apart from "level not cold" (they lead to different L0 reserves)
++    word = 'cold' if cold else ('undetermined (T-3/T-4)' if not attr_ok else 'level not cold')
+     warm = std['present'] and std['shaders'] == 0 and rec_end - (s['queued'][0] if s['queued'] else 0) == 0
+-    return dict(cold=cold, perm_after=perm_after, rec_new_after=rec_new_after, skip_after=skip_after, warm=warm,
++    return dict(cold=cold, cold_word=word, perm_after=perm_after, rec_new_after=rec_new_after, skip_after=skip_after, warm=warm,
+                 stdout_shaders=std['shaders'], rec_start=s['queued'][0] if s['queued'] else None, rec_end=rec_end)
+ 
+ 
+@@ -737,6 +813,12 @@
+         spec['app_from'] or '-', sd, to)
+ 
+ 
++def jget(d, key, sub):
++    """d[key][sub] of a cache json entry; None when the entry is missing or is not a {k: v} note."""
++    v = (d or {}).get(key)
++    return v.get(sub) if isinstance(v, dict) else None
++
++
+ def cache_rows(spec, cj, cjs_of):
+     """Admission rows of the cache protocol (item 241 (g)(1)-(3)) from runs_s/<tag>.cache.json."""
+     rows = []
+@@ -768,8 +850,18 @@
+         r = cj.get(key) or {}
+         add('%s after the arm = its copy' % key, r.get('got') is not None and r.get('got') == r.get('expected'),
+             '%s / %s' % ((r.get('got') or '-')[:16], (r.get('expected') or '-')[:16]))
+-    add('installed binary after the arm = 9235a7ac', cj.get('installed_after') == BUILD_SHA,
+-        (cj.get('installed_after') or '-')[:16])
++    # RC1 (item 250 (b)): the binary installed before the arm is copied and returned; the constant 9235a7ac is gone
++    ib = jget(cj, 'installed_before', 'sha')
++    ia = jget(cj, 'installed_after', 'sha')     # go_s.sh notes it as {"sha": ...} (S3 compared the dict to a string)
++    add('installed binary after the arm = installed before the arm (copy and return, item 250 (b))',
++        ib is not None and len(ib) == 64 and ia == ib, '%s / %s' % ((ia or '-')[:16], (ib or '-')[:16]))
++    # RC2 (item 250 (v)): no RETURN_FAILED guard was there when the arm started
++    add('return_prev_ok (no RETURN_FAILED guard before the arm, item 250 (v))',
++        jget(cj, 'return_prev', 'ok') == '1', jget(cj, 'return_prev', 'ok') or '-')
++    # RC10 (item 250 (zh)): the GLCache manifest right before the game = the result of the restore before the arm
++    ml = jget(cj, 'man_launch_glc', 'sha')
++    add('man_launch_glc right before the game = restore_glc.got (item 250 (zh))', ml is not None and ml == rg.get('got'),
++        '%s / %s' % ((ml or '-')[:16], (rg.get('got') or '-')[:16]))
+     for key in ('man_pre_app', 'man_pre_glc', 'man_post_app', 'man_post_glc', 'glc_pre_copy'):
+         add('manifest %s recorded' % key, bool((cj.get(key) or {}).get('sha')), ((cj.get(key) or {}).get('sha') or '-')[:16])
+     if spec['tag'] in [x['glc_from'] for x in ARMS if x['glc_from']]:
+@@ -781,6 +873,29 @@
+     return rows
+ 
+ 
++def continuity(tag, cj, cjs_of):
++    """RC2 (item 250 (v)): the live manifests before installed_pre (man_pre_app / man_pre_glc) against return_*.got of the
++    previous arm of S (by arm_start.utc over both links).  A difference is the data row "foreign chain between arms", not
++    FAIL (V1, item 247 (b)).  Returns (word, detail)."""
++    me = ((cj or {}).get('arm_start') or {}).get('utc')
++    if not me:
++        return 'undetermined', 'no arm_start of this arm'
++    prev = None
++    for t in SPEC:
++        if t == tag:
++            continue
++        o = cjs_of(t)
++        u = ((o or {}).get('arm_start') or {}).get('utc')
++        if u and u < me and (prev is None or u > prev[0]):
++            prev = (u, t, o)
++    if prev is None:
++        return 'no previous arm of S', '-'
++    _, pt, po = prev
++    diff = [k for k, m, r in (('app', 'man_pre_app', 'return_app'), ('glc', 'man_pre_glc', 'return_glc'))
++            if ((cj.get(m) or {}).get('sha') or 'x') != ((po.get(r) or {}).get('got') or 'y')]
++    return ('foreign chain between arms (%s)' % '+'.join(diff) if diff else 'same as the return of %s' % pt), pt
++
++
+ def admit(spec, js, pred_sha, bin_sha, cj, cjs_of, pred_path=PRED_PATH):
+     env = js.get('env') or {}
+     at = js.get('attempts') or []
+@@ -844,11 +959,16 @@
+              derive142=base['derive'], log_sha=base.get('log_sha'))
+     r['admit'] = admit(spec, js, pred_sha, bin_sha, cj, cjs_of, pred_path or pred_for(spec))
+     r['cache'] = cj
++    r['continuity'] = continuity(tag, cj or {}, cjs_of)
+     if log142 is None:
+         r.update(entered=False, ident=[], fail=['no log'])
+         return r
+     s = scan_s(lp)
+     std = scan_stdout(sp)
++    if spec['val']:
++        # item 254 (e): form W - the positive control of KYTY_PIPELINE_PRECACHE=0 is no "recipes ->" line in the log
++        r['admit'].append(('form W positive control: no "PipelinePrecache: N recipes ->" line (item 254 (e))',
++                           s['queued_n'] == 0, s['queued_n']))
+     eg, end, fi = locate(s, spec['level'])
+     r['entered'] = eg is not None
+     r['first'] = None if fi is None else (s['rows'][fi][0], s['rows'][fi][1], s['rows'][fi][2])
+@@ -867,8 +987,9 @@
+     allc = creations(s)
+     r['create'] = dict(all=cold_class(allc), all_n=len(allc), after=cold_class(creations(s, eg)) if eg is not None else None,
+                        after_n=len(creations(s, eg)) if eg is not None else 0)
+-    r['saves'] = dict(driver=len(s['dsave']), recipes=len(s['rsave']), fail=s['savefail'],
++    r['saves'] = dict(driver=len(s['dsave']), recipes=len(s['rsave']), fail=s['savefail'], incomplete=s['savefail_inc'],
+                       last_bytes=s['dsave'][-1][1] if s['dsave'] else None, forced=sum(1 for e in s['dsave'] if e[3]))
++    r['pcw_trace'] = pcw_trace(s)
+     if fi is not None:
+         prep = assign_prep(s)
+         r['f1'] = freeze(s, fi, end, prep, attr_ok, 1)
+@@ -879,6 +1000,12 @@
+         ident.append(('T-5 partition (reading 2)', t5a == t5b, '%d / %d' % (t5a, t5b)))
+         r['att100'] = attributed(r['f1'], attr_ok, K3_US)
+         r['att1s'] = attributed(r['f1'], attr_ok, K2_US)
++        r['att_pcw100'] = attributed_pcw(r['f1'], attr_ok, K3_US)
++        r['att_pcw1s'] = attributed_pcw(r['f1'], attr_ok, K2_US)
++        r['att100_old'] = attributed_old(r['f1'], attr_ok, K3_US)
++        r['att1s_old'] = attributed_old(r['f1'], attr_ok, K2_US)
++        r['unatt100'] = unattributed(r['f1'], attr_ok, K3_US)
++        r['unatt1s'] = unattributed(r['f1'], attr_ok, K2_US)
+         r['gates'] = gates(s, std, eg, spec, attr_ok)
+         r['snap_pairs'] = pairs_in_snap(s, entry_line(s, spec['level']), ix)
+         r['early'] = early(s, r['f1'], fi, attr_ok)
+@@ -896,10 +1023,28 @@
+     w = [e for e in s['dsave'] if hs <= e[0] <= end]
+     fr = [i for i in range(hs, end) if s['rows'][i][1] >= K3_US and any(i - 1 <= e[0] <= i + 1 for e in s['dsave'])]
+     return dict(writes=len(w), forced=sum(1 for e in w if e[3]), frames=len(fr), frames_n=[s['rows'][i][0] for i in fr],
+-                last_bytes=s['dsave'][-1][1] if s['dsave'] else None, fail=s['savefail'],
++                last_bytes=s['dsave'][-1][1] if s['dsave'] else None, fail=s['savefail'], incomplete=s['savefail_inc'],
+                 loaded=s['dload'][0] if s['dload'] else None, disabled=s['disabled'])
+ 
+ 
++def pcw_trace(s):
++    """RC5 (item 247 (b) V3/V6, item 245 (b)): the "AvTrace: pcw overlap <kind>" and "AvTrace: pcw recipes" lines of the
++    whole log by number; wait_us is the creation time - an upper bound, never added as a wait (max only); None when the log
++    has neither kind (undetermined, never PASS)."""
++    ov, rc = s['pcw_ov'], s['pcw_rec']
++    if not ov and not rc:
++        return None
++    kinds = {}
++    for e in ov:
++        kinds[e[1]] = kinds.get(e[1], 0) + 1
++    waits = [e[2] for e in ov if e[2] is not None]
++    lk = [e[3] for e in rc if e[3] is not None]
++    hd = [e[4] for e in rc if e[4] is not None]
++    return dict(overlap=len(ov), kinds=kinds, wait_us_max=max(waits) if waits else None, recipes=len(rc),
++                lock_us_max=max(lk) if lk else None, hold_us_max=max(hd) if hd else None,
++                hold_us_med=med(hd))
++
++
+ # ---------------------------------------------------------------------------------------------------------- readings
+ def ok_arm(r):
+     return r is not None and not r['fail']
+@@ -909,9 +1054,19 @@
+     return None if a is None or b in (None, 0) else a / float(b)
+ 
+ 
++def cold_word(r):
++    """Item 250 (d): the cold gate word of a C / T2 arm - 'cold', 'level not cold', 'undetermined (T-3/T-4)' or
++    'undetermined (no scene frame)' when the arm has no first scene frame (no gate)."""
++    g = r.get('gates')
++    if not g:
++        return 'undetermined (no scene frame)'
++    return g.get('cold_word') or ('cold' if g.get('cold') else 'level not cold')
++
++
+ def l0_choice(get):
+-    """Item 241 (d): L0 and reserves in order; a candidate fails when its C1 did not enter or had < 10 creations
+-    (letter: every in-game creation).  Returns (k or None, rows)."""
++    """Item 241 (d) with the lead's addition of item 250 (d): L0 and reserves in order; a candidate fails when its C1 did
++    not enter, had < 10 creations (letter: every in-game creation) or is "level not cold" (by the level, not by
++    T-3/T-4).  Returns (k or None, rows)."""
+     rows = []
+     for k in range(len(L0S)):
+         r = get('c1_%d' % k)
+@@ -920,7 +1075,11 @@
+             return k, rows
+         n = r['create']['all_n'] if r.get('create') else 0
+         if r.get('entered') and n >= MIN_CREATE:
+-            rows.append('L0 %d %s: C1 entered, %d creations -> L0' % (k, L0S[k], n))
++            cw = cold_word(r)
++            if cw == 'level not cold':
++                rows.append('L0 %d %s: C1 entered, %d creations, level not cold -> reserve (item 250 (d))' % (k, L0S[k], n))
++                continue
++            rows.append('L0 %d %s: C1 entered, %d creations, gate %s -> L0' % (k, L0S[k], n, cw))
+             return k, rows
+         rows.append('L0 %d %s: C1 entered %s, %d creations -> reserve' % (k, L0S[k], r.get('entered'), n))
+     return None, rows
+@@ -936,32 +1095,45 @@
+         return res, out
+     c = [get('c%d_%d' % (j, k)) for j in (1, 2, 3, 4)]
+     meds = []
++    good = []
++    words = []
+     for j, r in enumerate(c):
+         if r is None:
+             out.append('C%d (%s): not made' % (j + 1, L0S[k]))
+             meds.append(None)
++            good.append(False)
++            words.append('not made')
+             continue
+         cc = r['create']['all']
+         meds.append(cc[1] if cc[0] != 'NOTHING' else None)
+-        out.append('C%d %s: arm %s; creations %d median %s -> %s; after entry: %s; prep_ms %s; recipes %s; T-4 %s' % (
+-            j + 1, r['tag'], 'PASS' if ok_arm(r) else 'FAIL', r['create']['all_n'], cc[1], cc[0],
+-            r['create']['after'], r['prep']['created_ms'], r['prep']['queued'],
+-            [x[1] for x in r['ident'] if x[0].startswith('T-4')]))
+-    good = [ok_arm(x) for x in c]
++        cw = cold_word(r)
++        # RC4 (item 250 (d)): a C arm counts only with its cold gate; else "out of the count", the reading "undetermined"
++        g = ok_arm(r) and cw == 'cold'
++        good.append(g)
++        words.append('counted' if g else ('arm FAIL' if not ok_arm(r) else 'out of the count: %s' % cw))
++        out.append('C%d %s: arm %s; cold gate %s -> %s; creations %d median %s -> %s; after entry: %s; prep_ms %s; '
++                   'recipes %s; T-4 %s' % (
++                       j + 1, r['tag'], 'PASS' if ok_arm(r) else 'FAIL', cw, words[-1], r['create']['all_n'], cc[1], cc[0],
++                       r['create']['after'], r['prep']['created_ms'], r['prep']['queued'],
++                       [x[1] for x in r['ident'] if x[0].startswith('T-4')]))
+     m1, m2, m3, m4 = meds
++
++    def why(*js):
++        return '; '.join('C%d %s' % (j + 1, words[j]) for j in js if words[j] != 'counted') or \
++            'fewer than %d creations' % MIN_CREATE
+     if good[0] and good[2] and m1 is not None and m3 is not None:
+         q = ratio(m3, m1)
+         res['neutral'] = m1 >= COLD_US and m3 >= COLD_US and RET_LO <= q <= RET_HI
+         out.append('return neutralises: median C1 %s >= %d, C3 %s >= %d, C3/C1 %.3f in [%.1f; %.1f] -> %s' % (
+             m1, COLD_US, m3, COLD_US, q, RET_LO, RET_HI, 'YES' if res['neutral'] else 'NO'))
+     else:
+-        out.append('return neutralises: undetermined (C1/C3 missing, failed or < %d creations)' % MIN_CREATE)
++        out.append('return neutralises: undetermined (%s)' % why(0, 2))
+     if good[0] and good[1] and m1 is not None and m2 is not None:
+         res['glc_warm'] = m2 <= GLC_WARM * m1
+         out.append('GLCache keeps warmth: median C2 %s <= %.2f x C1 %s -> %s' % (m2, GLC_WARM, m1,
+                                                                                  'YES' if res['glc_warm'] else 'NO'))
+     else:
+-        out.append('GLCache keeps warmth: undetermined')
++        out.append('GLCache keeps warmth: undetermined (%s)' % why(0, 1))
+     r4 = c[3]
+     if good[0] and good[3] and m1 is not None and m4 is not None and r4['prep']['created_ms'] is not None:
+         q = ratio(m4, m1)
+@@ -970,7 +1142,7 @@
+         out.append('salt neutralises: prep_ms C4 %d >= %d, median C4 %s >= %d, C4/C1 %.3f in [%.1f; %.1f] -> %s' % (
+             pm, SALT_PREP_MS, m4, COLD_US, q, RET_LO, RET_HI, 'YES' if res['salt'] else 'NO'))
+     else:
+-        out.append('salt neutralises: undetermined')
++        out.append('salt neutralises: undetermined (%s)' % why(0, 3))
+     if r4 is not None and r4['prep']['created_ms'] is not None and r4['prep']['queued']:
+         rec = r4['prep']['queued'][0]
+         mpr = r4['prep']['created_ms'] / float(rec) if rec else None
+@@ -984,10 +1156,44 @@
+                            PREP_LIMIT_S, r4['prep']['waited_ms']))
+     else:
+         out.append('ms per recipe: undetermined (no C4 preparation line)')
+-    out.append('T2 base may go: %s (item 241 (d): only with "return neutralises")' % ('YES' if res['neutral'] else 'NO'))
++    out.append('T2 base may go: %s (item 241 (d): only with "return neutralises"; item 250 (e): the stop holds the T2 base '
++               'only - S-warm and the G arms go)' % ('YES' if res['neutral'] else 'NO'))
++    out.append('GLCache during the arm: not protected (item 250 (zh)) - files of glc_post whose base did not change in the S '
++               'arms (the "game bases" rule of item 246 (v)): %s' % glc_foreign(getattr(get, 'root_map', None), k))
+     return res, out
+ 
+ 
++def glc_lines(p):
++    """The relative paths of a GLCache manifest file (lines '<rel>\\t<size>\\t<mtime>\\t<sha>'); None when missing."""
++    if not os.path.isfile(p):
++        return None
++    with open(p, 'rb') as f:
++        return set(x.decode('utf-8', 'replace') for x in f.read().split(b'\n') if x.strip())
++
++
++def glc_base(line):
++    rel = line.split('\t', 1)[0]
++    return rel.rsplit('.', 1)[0] if '.' in rel.rsplit('/', 1)[-1] else rel
++
++
++def glc_foreign(root_map, k):
++    """RC10 (item 250 (zh)): the files of glc_post/<C1|C3> whose base (rel path without .bin/.toc) never changed inside a
++    S arm - "changed inside" = a line that differs between runs_s/<tag>.glc_launch.txt (right before the game) and
++    runs_s/<tag>.glc_post.txt (after it) of any arm (the "game bases" rule of item 246 (v)); printed by number."""
++    seen = set()
++    for t in SPEC:
++        d = os.path.join(link_dir(SPEC[t], root_map), 'runs_s')
++        a, b = glc_lines(os.path.join(d, '%s.glc_launch.txt' % t)), glc_lines(os.path.join(d, '%s.glc_post.txt' % t))
++        if a is not None and b is not None:
++            seen.update(glc_base(x) for x in a ^ b)
++    out = []
++    for t in ('c1_%d' % k, 'c3_%d' % k):
++        m = glc_lines(os.path.join(link_dir(SPEC[t], root_map), 'glc_post', t, 'MANIFEST.txt'))
++        if m is not None:
++            out.append('%s %d of %d files' % (t, sum(1 for x in m if glc_base(x) not in seen), len(m)))
++    return '; '.join(out) or 'undetermined (no glc_post copy)'
++
++
+ def window_comp(r):
+     """(i) held flips of the window (reading 1), (ii) window rows dt >= 100 ms, their classes."""
+     f = r['f1']
+@@ -1068,11 +1274,14 @@
+         f = r.get('f1') or {}
+         sp = r.get('snap_pairs') or {}
+         e = r.get('early')
+-        out.append('%s %s: %s; gate %s; held (reading 1) %s; skip rows %s; attributed >= 100 ms %s, >= 1 s %s; pairs %s '
+-                   '(both shaders in snap0: any %s, current %s); S-early lead<cost %s of %s' % (
+-                       tag, lv, word, g, (f.get('window') or {}).get('held'), (f.get('window') or {}).get('skip_rows'),
+-                       r.get('att100'), r.get('att1s'), sp.get('pairs'), sp.get('both_any'), sp.get('both_cur'),
+-                       e['short'] if e else None, e['known'] if e else None))
++        out.append('%s %s: %s (%s); gate %s; held (reading 1) %s; skip rows %s; attributed >= 100 ms %s (of them PCW %s), '
++                   '>= 1 s %s (of them PCW %s) [(v)(2) before item 250: %s, %s]; not attributed >= 100 ms %s, >= 1 s %s; '
++                   'sc142 outcome %s (%s); pairs %s (both shaders in snap0: any %s, current %s); S-early lead<cost %s of %s'
++                   % (tag, lv, word, cold_word(r), g, (f.get('window') or {}).get('held'),
++                      (f.get('window') or {}).get('skip_rows'), r.get('att100'), r.get('att_pcw100'), r.get('att1s'),
++                      r.get('att_pcw1s'), r.get('att100_old'), r.get('att1s_old'), fmt_unattr(r.get('unatt100')),
++                      fmt_unattr(r.get('unatt1s')), r.get('outcome142'), r.get('reason142'), sp.get('pairs'),
++                      sp.get('both_any'), sp.get('both_cur'), e['short'] if e else None, e['known'] if e else None))
+     out.append('T2 counted %d of %d needed' % (len(counted), T2_NEED))
+     kn = sum(r['early']['known'] for r in counted if r.get('early'))
+     sh = sum(r['early']['short'] for r in counted if r.get('early'))
+@@ -1091,42 +1300,71 @@
+     if any(v is None for v in rs.values()):
+         out.append('S-pcw: not every arm made - NOT_EVALUABLE')
+         return 'NOT_EVALUABLE', out
+-    bad = [t for t, v in rs.items() if not ok_arm(v)]
+-    held300 = dict((t, rs[t]['derive142']['dt_after_first_us'] >= HOLD_PCW_US) for t in zero + one + ('pcw_val',))
++    v = rs['pcw_val']
++    # RC11 (item 250 (z)): pcw_val stopped by validation before the entry line -> VALIDATION_STOP_PRE_LEVEL: member (d)
++    # undetermined, not FAIL, not counted toward the kill rule (z)(7); the arm leaves the admission / hold / video checks
++    vstop = not v.get('entered') and (v.get('vke') or 0) >= 1
++    chk = zero + one + ('pcw_int',) + (() if vstop else ('pcw_val',))
++    bad = [t for t in chk if not ok_arm(rs[t])]
++    held300 = dict((t, rs[t]['derive142']['dt_after_first_us'] >= HOLD_PCW_US) for t in zero + one +
++                   (() if vstop else ('pcw_val',)))
+     a = all(rs[t]['pcw']['writes'] >= PCW_MIN_WRITES and rs[t]['pcw']['frames'] >= PCW_POS_FRAC * rs[t]['pcw']['writes']
+             for t in zero)
+     b = all(rs[t]['pcw']['writes'] >= PCW_MIN_WRITES and rs[t]['pcw']['frames'] == 0 and rs[t]['pcw']['fail'] == 0
+             for t in one)
++    inc = dict((t, rs[t]['saves']['incomplete']) for t in one)          # RC6: arms 1 (item 245 (v))
+     last = rs['pcw_3']['saves']['last_bytes']
+     c = rs['pcw_int']['pcw']['loaded'] is not None and rs['pcw_int']['pcw']['loaded'] == last and \
+         rs['pcw_int']['pcw']['disabled'] == 0
+-    v = rs['pcw_val']
+-    d = v['val']['ok'] and v.get('vke') == 0
+-    e = all((x['glitch'] or {}).get('video_frames', 0) >= FRAMES_VIDEO and (x['glitch'] or {}).get('glitches') == 0
+-            and not x['marks'] and not x['ended'] and not x['exited'] for x in rs.values())
++    d = None if vstop else bool(v['val']['ok'] and v.get('vke') == 0 and v.get('entered'))
++    e = all((rs[t]['glitch'] or {}).get('video_frames', 0) >= FRAMES_VIDEO and (rs[t]['glitch'] or {}).get('glitches') == 0
++            and not rs[t]['marks'] and not rs[t]['ended'] and not rs[t]['exited'] for t in chk)
++    z1 = rs['pcw_int'].get('pcw_trace')                                  # RC5: (z)(1) on pcw_int (environment T)
+     for t in zero + one:
+         p = rs[t]['pcw']
+         out.append('%s KYTY_S_PCW=%s: writes on the hold %d (forced %d), frames >= 100 ms with a write in i-1..i+1 %d %s, '
+-                   'save failures %d, presented >= 300 s %s' % (t, SPEC[t]['pcw'], p['writes'], p['forced'], p['frames'],
+-                                                               p['frames_n'][:8], p['fail'], held300[t]))
++                   'save failures %d, Incomplete %d, presented >= 300 s %s' % (
++                       t, SPEC[t]['pcw'], p['writes'], p['forced'], p['frames'], p['frames_n'][:8], p['fail'],
++                       rs[t]['saves']['incomplete'], held300[t]))
+     out.append('(a) positive control (arms 0: writes >= %d and frames >= %.0f %% of writes): %s' % (
+         PCW_MIN_WRITES, 100 * PCW_POS_FRAC, 'PASS' if a else 'FAIL'))
+     out.append('(b) arms 1 (writes >= %d, 0 frames, 0 save failures): %s' % (PCW_MIN_WRITES, 'PASS' if b else 'FAIL'))
+     out.append('(c) integrity: loaded %s = last write of pcw_3 %s, disabled %d: %s' % (
+         rs['pcw_int']['pcw']['loaded'], last, rs['pcw_int']['pcw']['disabled'], 'PASS' if c else 'FAIL'))
+-    out.append('(d) validation: active %s, [Vulkan][E] %s: %s' % (v['val']['ok'], v.get('vke'), 'PASS' if d else 'FAIL'))
+-    out.append('(e) video >= %d frames, 0 glitches, 0 death markers on every arm: %s; the lead sheet - filled by S8' % (
+-        FRAMES_VIDEO, 'PASS' if e else 'FAIL'))
++    if vstop:
++        out.append('(d) validation: VALIDATION_STOP_PRE_LEVEL - pcw_val stopped by validation before the entry line '
++                   '([Vulkan][E] %s, entered %s): member (d) undetermined, not FAIL, not counted toward the kill rule (z)(7) '
++                   '(item 250 (z))' % (v.get('vke'), v.get('entered')))
++    else:
++        out.append('(d) validation: active %s, entered %s, [Vulkan][E] %s: %s (PASS only with the entry, the hold >= 300 s '
++                   'and 0 [Vulkan][E])' % (v['val']['ok'], v.get('entered'), v.get('vke'), 'PASS' if d else 'FAIL'))
++    out.append('(e) video >= %d frames, 0 glitches, 0 death markers on every arm%s: %s; the lead sheet - filled by S8' % (
++        FRAMES_VIDEO, ' but the stopped pcw_val' if vstop else '', 'PASS' if e else 'FAIL'))
++    if z1 is None:
++        out.append('(z)(1) waits of GuestGpu on pcw_int: undetermined - 0 "AvTrace: pcw overlap" and 0 "AvTrace: pcw recipes" '
++                   'lines (item 247 (b) V3/V6: never PASS)')
++    else:
++        out.append('(z)(1) waits of GuestGpu on pcw_int: overlap lines %d %s, wait_us max %s (the creation time - an upper '
++                   'bound, not added as a wait, item 245 (b)); recipes lines %d, lock_us max %s, hold_us max %s median %s' % (
++                       z1['overlap'], sorted(z1['kinds'].items()), z1['wait_us_max'], z1['recipes'], z1['lock_us_max'],
++                       z1['hold_us_max'], z1['hold_us_med']))
++    out.append('save failed (Incomplete on arms 1: %s%s' % (
++        inc, ' - a defect of the iteration code (item 245 (v)): (5)(b) not met, the arm is repeated after the fix, not '
++             'counted toward the kill rule (z)(7) - once per route' if any(inc.values()) else ''))
+     out.append('arms failing admission or an identity: %s; hold >= 300 s on arms 0/1/validation: %s' % (
+         bad or 'none', all(held300.values())))
+     if bad or not all(held300.values()):
+         word = 'NOT_EVALUABLE'
+     elif not a:
+         word = 'POSCTRL_FAIL'
+-    elif a and b and c and d and e:
+-        word = 'MACHINE_PASS_PENDING_SHEET'
+-    else:
++    elif any(inc.values()):
++        word = 'ARM1_CODE_DEFECT'
++    elif not (b and c and e) or d is False:
+         word = 'ARM1_FAIL'
++    elif d is None or z1 is None:
++        word = 'MACHINE_UNDETERMINED'
++    else:
++        word = 'MACHINE_PASS_PENDING_SHEET'
+     out.append('S-pcw A/B: %s (FIXED only by the lead after (1)-(5) and the sheet; killed by rule (z)(7))' % word)
+     return word, out
+ 
+@@ -1212,6 +1450,8 @@
+         (r.get('log_sha') or 'MISSING')[:16]))
+     for name, ok, det in r['admit']:
+         o.append('  %-4s admit %s (%s)' % ('PASS' if ok else 'FAIL', name, det))
++    o.append('  data  continuity of the live caches with the previous arm of S (item 250 (v), not an admission row): %s (%s)'
++             % r.get('continuity', ('undetermined', '-')))
+     for name, ok, det in r.get('ident', []):
+         o.append('  %-4s ident %s (%s)' % ('n/a' if ok is None else ('PASS' if ok else 'FAIL'), name, det))
+     if 'f1' not in r:
+@@ -1226,20 +1466,27 @@
+         for part in ('window', 'hold'):
+             p = f[part]
+             o.append('    %s: rows %d, held flips %d, skip rows %d, skipped draws %d; dt >= 100 ms %d (presented %d), '
+-                     '>= 1 s %d (presented %d); series gap >= 100 ms %d, >= 1 s %d; gap_pipe >= 100 ms %d, >= 1 s %d' % (
++                     '>= 1 s %d (presented %d); series gap >= 100 ms %d, >= 1 s %d; gap_pipe (minus PRIO, item 250) >= 100 ms '
++                     '%d, >= 1 s %d; gap_pipe (v)(2) before item 250 (minus PCW and PRIO) >= 100 ms %d, >= 1 s %d' % (
+                          part, p['rows'], p['held'], p['skip_rows'], p['skip_draws'], p['dt100'], p['shown100'], p['dt1s'],
+-                         p['shown1s'], p['gap100'], p['gap1s'], p['pipe100'], p['pipe1s']))
+-        o.append('    series (n0-n1 flips gap_ms gap_pipe_ms part async_n async_cold): %s' % (
+-            '; '.join('%d-%d %d %.1f %.1f %s %d %d' % (x['n0'], x['n1'], x['flips'], x['gap_us'] / 1e3, x['gap_pipe_us'] / 1e3,
+-                                                       x['part'], x['async_n'], x['async_cold']) for x in f['series'])
+-            or 'none'))
++                         p['shown1s'], p['gap100'], p['gap1s'], p['pipe100'], p['pipe1s'], p['pipe100_old'], p['pipe1s_old']))
++        o.append('    series (n0-n1 flips gap_ms gap_pipe_ms gap_pipe_old_ms part async_n async_cold): %s' % (
++            '; '.join('%d-%d %d %.1f %.1f %.1f %s %d %d' % (
++                x['n0'], x['n1'], x['flips'], x['gap_us'] / 1e3, x['gap_pipe_us'] / 1e3, x['gap_pipe_old_us'] / 1e3,
++                x['part'], x['async_n'], x['async_cold']) for x in f['series']) or 'none'))
+     o.append('  frames dt >= 100 ms (n dt part class attribution PREP TR PL prio_next prio_prev cpu_gpu held): %s' % (
+         '; '.join('%d %d %s %s %s %d %d %d %d %d %d %s' % (x['n'], x['dt'], x['part'], x['cls'], x['attr'], x['prep'],
+                                                           x['tr'], x['pl'], x['prio_next'], x['prio_prev'], x['cpu_gpu'],
+                                                           'h' if x['held'] else '-') for x in r['f1']['long']) or 'none'))
+-    o.append('  attributed frames (item 241 (v)(2)): >= 100 ms %s, >= 1 s %s' % (
+-        'undetermined' if r['att100'] is None else r['att100'], 'undetermined' if r['att1s'] is None else r['att1s']))
+-    o.append('  gates: %s; skipped pairs %s' % (r['gates'], r['snap_pairs']))
++    def u(v):
++        return 'undetermined' if v is None else v
++    o.append('  attributed frames (item 241 (v)(2), item 250 (g)): >= 100 ms %s (of them PCW %s), >= 1 s %s (of them PCW %s); '
++             '(v)(2) before item 250: >= 100 ms %s, >= 1 s %s' % (
++                 u(r['att100']), u(r['att_pcw100']), u(r['att1s']), u(r['att_pcw1s']), u(r['att100_old']),
++                 u(r['att1s_old'])))
++    o.append('  not attributed (RC8): >= 100 ms %s; >= 1 s %s; sc142 outcome %s' % (
++        fmt_unattr(r['unatt100']), fmt_unattr(r['unatt1s']), r['outcome142']))
++    o.append('  gates: %s; cold gate word: %s; skipped pairs %s' % (r['gates'], cold_word(r), r['snap_pairs']))
+     o.append('  creations (in game, letter): %s of %d; after the entry line (variant): %s of %d' % (
+         r['create']['all'], r['create']['all_n'], r['create']['after'], r['create']['after_n']))
+     p = r['prep']
+@@ -1247,9 +1494,10 @@
+              'disabled %d, cold-test namespace %d, seed installed %d ignored %d, Cache test mode %d' % (
+                  p['queued'], p['created_ms'], p['ready'], p['waited_ms'], p['dload'], p['disabled'], p['coldns'],
+                  p['seed_installed'], p['seed_ignored'], p['cache_test']))
+-    o.append('  cache writes: driver %d (forced %d, last %s bytes), recipes %d, failures %d; S-pcw hold: %s' % (
++    o.append('  cache writes: driver %d (forced %d, last %s bytes), recipes %d, failures %d, Incomplete %d; S-pcw hold: %s' % (
+         r['saves']['driver'], r['saves']['forced'], r['saves']['last_bytes'], r['saves']['recipes'], r['saves']['fail'],
+-        dict((k, v) for k, v in r['pcw'].items() if k != 'frames_n')))
++        r['saves']['incomplete'], dict((k, v) for k, v in r['pcw'].items() if k != 'frames_n')))
++    o.append('  AvTrace pcw lines (RC5): %s' % ('none' if r['pcw_trace'] is None else r['pcw_trace']))
+     e = r['early']
+     o.append('  S-early: %s' % ('undetermined' if e is None else 'registers %d, first uses %d, leads %d; events %d, known %d, '
+                                 'lead < cost %d' % (e['regs'], e['firsts'], e['leads'], len(e['events']), e['known'],
+@@ -1320,7 +1568,7 @@
+             p = line.split()
+             if len(p) == 12 and p[1].isdigit():
+                 s0rows[(p[0], int(p[1]))] = p
+-    tot = dict(cls_next={}, cls_prev={}, final={}, t6=0, pipe1s=0, ser=0, g100=0, g1s=0, with1s=0, pipe1s_s1=0, drv=set(),
++    tot = dict(cls_next={}, cls_prev={}, final={}, t6=0, pipe1s=0, pipe1s_old=0, ser=0, g100=0, g1s=0, with1s=0, pipe1s_s1=0, drv=set(),
+                rec=set())
+     for tag in tags:
+         r = regress_one(tag)
+@@ -1348,6 +1596,7 @@
+             tot['g1s'] += sum(1 for x in r['f2']['series'] if x['gap_us'] >= K2_US)
+             tot['with1s'] += sum(1 for x in r['f1']['series'] if x['gap_us'] >= K2_US)
+             tot['pipe1s'] += 1 if any(x['gap_pipe_us'] >= K2_US for x in r['f1']['series']) else 0
++            tot['pipe1s_old'] += 1 if any(x['gap_pipe_old_us'] >= K2_US for x in r['f1']['series']) else 0
+             # the S1 RC4 reading: PRIO by the S0 convention (stall lines of group i) only, PCW by any write
+             s1 = 0
+             for x in r['f1']['series']:
+@@ -1392,10 +1641,15 @@
+         out('    gap_pipe series (reading 1): %s' % ['%d-%d %.1f/%.1f' % (x['n0'], x['n1'], x['gap_us'] / 1e3,
+                                                                      x['gap_pipe_us'] / 1e3) for x in r['f1']['series']
+                                                     if x['gap_us'] >= K2_US])
++        out('    gap_pipe series (reading 1), (v)(2) before item 250 (minus PCW and PRIO): %s' % [
++            '%d-%d %.1f/%.1f' % (x['n0'], x['n1'], x['gap_us'] / 1e3, x['gap_pipe_old_us'] / 1e3) for x in r['f1']['series']
++            if x['gap_us'] >= K2_US])
+     out('REG census sums: series (reading 2) %d (S0 26), gap >= 100 ms %d (20), >= 1 s %d (4); with the first frame '
+         '>= 1 s %d (4); levels with gap_pipe >= 1 s: S1 RC4 reading (PRIO of group i) %d (S1 2), item 241 letter (PRIO '
+         'robust to both groups) %d - c142_01 203-205: n 204 is PRIO only under group i, so it is not subtracted' % (
+-            tot['ser'], tot['g100'], tot['g1s'], tot['with1s'], tot['pipe1s_s1'], tot['pipe1s']))
++            tot['ser'], tot['g100'], tot['g1s'], tot['with1s'], tot['pipe1s_s1'], tot['pipe1s_old']))
++    out('REG item 250 (g)(2): levels with gap_pipe >= 1 s by the governing reading (minus PRIO only, PCW "to the shaders") '
++        '%d; by (v)(2) before item 250 (minus PCW and PRIO) %d' % (tot['pipe1s'], tot['pipe1s_old']))
+     ok &= (tot['ser'], tot['g100'], tot['g1s'], tot['with1s'], tot['pipe1s_s1']) == (26, 20, 4, 4, 2)
+     out('REG PCW frames: by a driver write %s (S1 RC3 table: 5 frames %s); by a recipe write only %s (the letter of item '
+         '241 (v)(3) counts both writes; S1 RC3 listed the driver writes)' % (
+@@ -1462,6 +1716,7 @@
+             sha, bsha, p = info[SPEC[t]['link']]
+             memo[t] = score_arm(t, root_map, sha, bsha, ix, p)
+         return memo[t]
++    get.root_map = root_map
+     return get
+ 
+ 

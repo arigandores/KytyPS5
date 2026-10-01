@@ -1,0 +1,171 @@
+--- /dev/fd/63	2026-10-01 07:49:31.000000000 +0200
++++ /dev/fd/62	2026-10-01 07:49:31.000000000 +0200
+@@ -24,13 +24,24 @@
+ #       (1767ca0a...) or, for c2_K / c4_K / pcw_int, to glc_post/<c1_K | c3_K | pcw_3>; a times.txt line with both
+ #     after: log, stdout, json, video; manifests "after"; glc_post/<tag> for c1_K, c3_K, pcw_3 and app_post/pcw_3; the
+ #       GCN dumps of a G arm into gcn/<tag>; the return of installed_pre/ and glc_pre/ with their manifests; the binary
+-#       9235a7ac back and its sha; DXCache is never touched.  Every value goes into runs_s/<tag>.cache.json (the scorer
++#       installed before the arm back from installed_bin_pre.exe and its sha (S3b RC1); DXCache is never touched.  Every value goes into runs_s/<tag>.cache.json (the scorer
+ #       admits the arm by it).
+ #   ONE ATTEMPT: attempt_<tag>.txt inside the lock right before enter_scene.py; while it or <tag>.json exists the tag
+ #     refuses rc 1 (the idle refusal inside enter_scene.py moves the marker to old/ and ends rc 4).
+ #   STOP FILE (general rule 26): C:/kyty/s288/STOP -> rc 4 before anything and again right before the lock.
+ #   THE SEAL'S CALL (item 105 (v)): exactly one line "go_s call: PLWAIT=<n> bash C:/kyty/s288/go_s.sh <tag>" in the seal of
+-#     the link (S4 pred/01_s.md, S6 pred/02_s.md); sc_s.py --check-seal --seal <seal> before the lock.
++#     the link (S4 pred/02_s.md of S3b - seal 01 no longer holds for S4, item 250 (i); S6 pred/03_s.md, the later seal
++#     after S5d, item 250 (k) - executor's variant of its name); sc_s.py --check-seal --seal <seal> before the lock.
++#   S3b (HPP-325, ROADMAP item 250): RC1 the installed binary is copied into <link>/installed_bin_pre.exe before the arm
++#     binary goes in (installed_before in the json) and returned from that copy with a sha check (installed_after);
++#     RC2 a failed return (any rc != 0) writes the guard <link>/RETURN_FAILED (tag, UTC, both manifests, the binary) BEFORE
++#     the lock is released, a times.txt line and a stdout line for the link comment; while a guard of s4 or s6 exists every
++#     call refuses rc 1 before any process (only the lead removes it, by a line, after the return by hand); return_prev_ok
++#     and arm_start go into the json; RC9 "cachex_s.py where glc" before the lock: %LOCALAPPDATA% must be the known folder
++#     (rc 1); RC10 the GLCache manifest right before the game (man_launch_glc) and the manifest texts launch / post of
++#     GLCache in runs_s/<tag>.glc_launch.txt / .glc_post.txt.
++#   S3b, item 254 (e) (form W until B35 ships): a validation arm runs with KYTY_PIPELINE_PRECACHE=0 (no start precache,
++#     no recipe writes); its positive control (no "PipelinePrecache: N recipes ->" line) is read by sc_s.py.
+ #   THE LOCK is checked before any process (DRY included) and before every guard stage; "lock taken|released <tag> <UTC>"
+ #     into <link>/runs_s/lock.log; every event one UTC line into <link>/times.txt at its moment (general rule 23).
+ # Every run: KYTY_GPU_CLOCK_PIN=1, KYTY_GPU_MARKERS=0, --pred of the seal; KYTY_GPU_CHECKPOINTS never passed.
+@@ -76,6 +87,15 @@
+   fi
+ }
+ lockheld
++# item 250 (v), RC2: a failed return of a former arm stops every call before any process (bash builtins only).
++for G in $ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED; do
++  if [ -e $G ]; then
++    GT=""
++    read -r GT < $G 2>/dev/null
++    log0 "go_s.sh $T refused (rc 1): the guard $G exists ($GT) - the caches / binary of a former arm were not returned; the lead removes it after the return by hand"
++    echo "return failed guard $G: $GT"; exit 1
++  fi
++done
+ unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA
+ case "$PLWAIT" in
+   ''|*[!0-9]*) log0 "go_s.sh $T refused: PLWAIT '$PLWAIT' is not a number of seconds"; echo "bad PLWAIT"; exit 2;;
+@@ -88,8 +108,8 @@
+ set -- $PLAN
+ LINK=$1; LEVEL=$2; CLS=$3; MODE=$4; HOLD=$5; SALT=$6; PCW=$7; VAL=$8; GLCFROM=$9; APPFROM=${10}; SDRAWS=${11}; TOUT=${12}
+ case "$LINK" in
+-  s4) PRED="pred/01_s.md";;
+-  s6) PRED="pred/02_s.md";;
++  s4) PRED="pred/02_s.md";;
++  s6) PRED="pred/03_s.md";;
+   *) log0 "go_s.sh $T refused: unknown tag ($PLAN)"; echo "usage: unknown tag $T"; exit 2;;
+ esac
+ LD=$ROOT/$LINK
+@@ -101,7 +121,7 @@
+ EMUX=""; EXTRA=""
+ if [ "$VAL" = "1" ]; then
+   EMUX="--emu-arg=--vulkan-validation --emu-arg=true"
+-  EXTRA="VK_LAYER_PATH=$VKLAYER VK_LAYER_DUPLICATE_MESSAGE_LIMIT=$VKDUP"
++  EXTRA="VK_LAYER_PATH=$VKLAYER VK_LAYER_DUPLICATE_MESSAGE_LIMIT=$VKDUP KYTY_PIPELINE_PRECACHE=0"   # form W, item 254 (e)
+ fi
+ if [ "$MODE" = "integrity" ]; then RSRC_APP="$LD/app_post/$APPFROM"; else RSRC_APP="C:/kyty/s288/snap0"; fi
+ if [ "$MODE" = "full" ]; then RSRC_GLC="C:/kyty/s288/snap0_drv"; else RSRC_GLC="$LD/glc_post/$GLCFROM"; fi
+@@ -154,7 +174,7 @@
+   fi
+ fi
+ if [ "${DRY:-0}" = "1" ]; then
+-  echo "DRY $T: link $LINK level $LEVEL class $CLS mode $MODE; stop file?; lock?; PLWAIT=$PLWAIT; procload --wait-s $PLWAIT; $SC --check-seal --seal $PRED; $SC --allowed $T; cpu < 15; idle142; procload --wait-s 0; stop file?; lock ($LINK/runs_s/lock.log UTC); fgcpu143 --save; install $RUNBIN ($RUNSHA); manifests app+glc; installed_caches (first arm) + installed_pre; glc_pre; restore app <- $RSRC_APP; restore glc <- $RSRC_GLC; $ENTER; manifests after; post copies; return installed_pre + glc_pre; restore $BUILD_PINNED; glitch+sheet; $SC --tag $T; fgcpu143 --since; unlock"
++  echo "DRY $T: link $LINK level $LEVEL class $CLS mode $MODE; stop file?; lock?; RETURN_FAILED guards?; PLWAIT=$PLWAIT; cachex where glc; procload --wait-s $PLWAIT; $SC --check-seal --seal $PRED; $SC --allowed $T; cpu < 15; idle142; procload --wait-s 0; stop file?; lock ($LINK/runs_s/lock.log UTC); arm_start, return_prev_ok; fgcpu143 --save; copy the installed binary -> $LINK/installed_bin_pre.exe (installed_before); install $RUNBIN ($RUNSHA); manifests app+glc; installed_caches (first arm) + installed_pre; glc_pre; restore app <- $RSRC_APP; restore glc <- $RSRC_GLC; man_launch_glc (glc_launch.txt); $ENTER; manifests after (glc_post.txt); post copies; return installed_pre + glc_pre; return the installed binary from installed_bin_pre.exe (installed_after); any failed return -> RETURN_FAILED before unlock; glitch+sheet; $SC --tag $T; fgcpu143 --since; unlock"
+   exit 0
+ fi
+ sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
+@@ -173,6 +193,13 @@
+ export ProgramData="${ProgramData:-C:\ProgramData}"
+ export LOCALAPPDATA="${LOCALAPPDATA:-$USERPROFILE\AppData\Local}"
+ export APPDATA="${APPDATA:-$USERPROFILE\AppData\Roaming}"
++# item 250 (zh), RC9: GLCache lives in the known folder FOLDERID_LocalAppData; the exported %LOCALAPPDATA% must be it.
++X=$(python $ROOT/cachex_s.py where glc 2>&1); WRC=$?
++log "$X"
++if [ "$WRC" != "0" ]; then
++  log "go_s.sh $T refused (rc 1): the GLCache path of the environment is not the known folder (RC9) - not starting"
++  echo "glcache path: $X"; exit 1
++fi
+ names_alive() {
+   powershell -NoProfile -Command "@(Get-CimInstance Win32_Process | Where-Object { (\$_.CommandLine -match 'mut_[a-z0-9_]*_s|test_[a-z0-9_]*_s|mutlib' -or \$_.Name -eq 'kyty_emulator.exe') -and \$_.ProcessId -ne \$PID }).Count" | tr -d '\r'
+ }
+@@ -230,13 +257,28 @@
+ tline() { echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) go_s $T $*" >> $TIMES; }
+ shaof() { echo "$1" | sed -n 's/.* sha \([0-9a-f]\{64\}\).*/\1/p' | tail -1; }
+ mansha() { sha "$1/MANIFEST.txt"; }
++BINPRE=$LD/installed_bin_pre.exe
++INST_SHA=""
+ restore_bin() {
++  # item 250 (b), RC1: the binary installed before the arm comes back from its copy, checked by sha
+   for i in 1 2 3; do
+-    if cp "$BUILD_PINNED" "$GAME" 2>/dev/null && [ "$(sha "$GAME")" = "$BUILD_EXPECT" ]; then return 0; fi
++    if [ -n "$INST_SHA" ] && [ "$(sha "$BINPRE")" = "$INST_SHA" ] && cp "$BINPRE" "$GAME" 2>/dev/null && \
++       [ "$(sha "$GAME")" = "$INST_SHA" ]; then return 0; fi
+     sleep $RSLEEP
+   done
+   return 1
+ }
++return_failed() {
++  # item 250 (v), RC2: the guard before the lock is released; every later call refuses rc 1 while it exists
++  {
++    echo "RETURN_FAILED $T $(date -u +%Y-%m-%dT%H:%M:%SZ) rc $1"
++    echo "app: restore by hand from $LD/installed_pre (MANIFEST.txt sha $(mansha $LD/installed_pre))"
++    echo "glc: restore by hand from $LD/glc_pre (MANIFEST.txt sha $(mansha $LD/glc_pre))"
++    echo "binary: $GAME must be $INST_SHA (copy $BINPRE), now $(sha "$GAME")"
++  } > $LD/RETURN_FAILED
++  tline "RETURN FAILED rc $1: guard $LD/RETURN_FAILED written before the unlock - comment the link; every go_s.sh call refuses rc 1 until the lead removes it"
++  echo "RETURN FAILED: guard $LD/RETURN_FAILED - comment the link (item 250 (v))"
++}
+ do_return() {
+   # item 241 (g)(3): the installed caches and GLCache "before the arm" back, with their manifests; then the binary.
+   local rc=0 X
+@@ -250,10 +292,11 @@
+     [ "$rc" = "0" ] || log "RETURN FAILED: restore the caches from $LD/installed_pre and $LD/glc_pre by hand before any run"
+   fi
+   if [ "$INSTALLED" = "1" ]; then
+-    if restore_bin; then log "restored $BUILD_PINNED ($BUILD_EXPECT) into $GAME"; INSTALLED=0
+-    else log "RESTORE FAILED: $GAME sha $(sha "$GAME") != $BUILD_EXPECT - restore it by hand before any run"; rc=1; fi
++    if restore_bin; then log "returned the installed binary $INST_SHA from $BINPRE into $GAME"; INSTALLED=0
++    else log "RESTORE FAILED: $GAME sha $(sha "$GAME") != $INST_SHA - restore it by hand from $BINPRE before any run"; rc=1; fi
+     $CX note $CJ installed_after sha=$(sha "$GAME") >> $L 2>&1
+   fi
++  [ "$rc" = "0" ] || return_failed $rc
+   return $rc
+ }
+ finish() {
+@@ -267,8 +310,19 @@
+   exit $RCX
+ }
+ trap finish EXIT
++$CX note $CJ arm_start utc=$(date -u +%Y-%m-%dT%H:%M:%SZ) >> $L 2>&1
++$CX note $CJ return_prev ok=1 >> $L 2>&1
+ python $ROOT/fgcpu143.py --save $OUT/fgcpu_$T.a.json >> $L 2>&1
+-log "installed before: $(sha "$GAME")"
++# item 250 (b), RC1: a copy of the installed binary before the arm binary goes in
++INST_SHA=$(sha "$GAME")
++if [ -z "$INST_SHA" ]; then log "no installed binary $GAME - stop"; INST_SHA=""; exit 1; fi
++rm -f "$BINPRE"
++if ! cp "$GAME" "$BINPRE" 2>/dev/null || [ "$(sha "$BINPRE")" != "$INST_SHA" ]; then
++  log "copy of the installed binary into $BINPRE failed - stop (nothing installed)"; INST_SHA=""; exit 1
++fi
++$CX note $CJ installed_before sha=$INST_SHA path=$BINPRE >> $L 2>&1
++log "installed before: $INST_SHA (copy $BINPRE)"
++tline "installed binary before the arm: $INST_SHA copied to $BINPRE"
+ INSTALLED=1
+ cp "$RUNBIN" "$GAME" || { log "install copy failed - stop"; exit 1; }
+ [ "$(sha "$GAME")" = "$RUNSHA" ] || { log "installed sha != $RUNSHA - stop"; exit 1; }
+@@ -303,6 +357,8 @@
+ echo "go_s.sh $T pid $$ attempt started $(date +%Y-%m-%dT%H:%M:%S) binary $RUNSHA" > $MARK
+ tline "enter_scene start (level $LEVEL, class $CLS, mode $MODE, hold $HOLD)"
+ log "$T start: $ENTER"
++# item 250 (zh), RC10: the GLCache manifest right before the game (admission: = restore_glc.got)
++X=$($CX man glc --save $OUT/$T.glc_launch.txt 2>&1); $CX note $CJ man_launch_glc sha=$(shaof "$X") >> $L 2>&1
+ $ENTER > $LD/$T.stdout.txt 2>&1
+ RC=$?
+ tline "enter_scene end rc $RC log_$T.txt sha256 $(sha $LD/log_$T.txt)"
+@@ -315,7 +371,7 @@
+ fi
+ # ---- after the arm (item 241 (g)(3))
+ X=$($CX man app 2>&1); log "$X"; $CX note $CJ man_post_app sha=$(shaof "$X") >> $L 2>&1
+-X=$($CX man glc 2>&1); log "$X"; $CX note $CJ man_post_glc sha=$(shaof "$X") >> $L 2>&1
++X=$($CX man glc --save $OUT/$T.glc_post.txt 2>&1); log "$X"; $CX note $CJ man_post_glc sha=$(shaof "$X") >> $L 2>&1
+ tline "manifests after the arm: app $(grep 'man app' $L | tail -1 | sed 's/.*sha //') glc $(grep 'man glc' $L | tail -1 | sed 's/.*sha //')"
+ case "$T" in
+   c1_*|c3_*|pcw_3)

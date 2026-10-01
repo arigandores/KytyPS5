@@ -268,6 +268,34 @@ bool AvTraceEnabled() {
 	return enabled;
 }
 
+// Track S, route S-pcw (ROADMAP "SESSION 122" item 241(h)(1), HPP-316): KYTY_S_PCW=1 moves the periodic driver
+// pipeline cache write (vkGetPipelineCacheData + the file) and the pipelines.bin rewrite off m_mutex and off the
+// GuestGpu thread to one writer thread (PipelineCache::PcwLoop).  Default 0 (any value but exactly "1") = the old path.
+// Read ONCE per process; the value is logged by the PipelineCache constructor ("S-pcw:").
+bool SPcwMode() {
+	static const bool mode = [] {
+		const char* value = std::getenv("KYTY_S_PCW");
+		return value != nullptr && value[0] == '1' && value[1] == '\0';
+	}();
+	return mode;
+}
+
+// MEASUREMENT ONLY (item 241(h)(2)): KYTY_S_PCW_FORCE_MS=<ms> (default off, 0 = off) - the writer thread also writes
+// the driver cache every <ms>, without the growth condition, by the path KYTY_S_PCW selects (0: under m_mutex as in
+// production, 1: the new one); the save line ends with " forced".  Read ONCE per process.
+uint32_t SPcwForceMs() {
+	static const uint32_t ms = [] {
+		const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+		return value != nullptr ? static_cast<uint32_t>(std::strtoul(value, nullptr, 10)) : 0u;
+	}();
+	return ms;
+}
+
+// "AvTrace: pcw overlap" lines of the synchronous creations (KYTY_S_PCW=1 with KYTY_AV_TRACE=1 only).
+bool PcwOverlapTrace() {
+	return SPcwMode() && AvTraceEnabled();
+}
+
 // Session 102, KYTY_DMA_LAYOUT=1 - MEASUREMENT ONLY (route E, M5: the RenderDoc stand).  Every
 // translated program the host adopts - ProgramCache: a fresh permutation (Compile), a
 // translation-cache load (LoadFromTranslationCache) and a pipeline precache resolve (Resolve) -
@@ -1259,6 +1287,48 @@ void DumpShaderGcn(ShaderType stage, uint64_t shader_hash, std::span<const uint3
 		return;
 	}
 	file.Write(code.data(), code.size_bytes());
+}
+
+// Track S, S5a (ROADMAP "SESSION 122" item 241(h)(3), RC14; HPP-316): KYTY_DUMP_GCN=2 also writes the raw GCN code of
+// every shader the guest registers through AGC (libs/agc.cpp -> TraceShaderRegistration), used or not, to
+// <shader log folder>/gcn/reg/<binary type>_<hash16>.bin, once per (type, hash), with a line "GcnDumpReg:".  The
+// first-use dump above stays on at 2 (its reader takes any value but '0'); =1 is unchanged.  MEASUREMENT ONLY.
+bool DumpGcnAtRegistration() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_DUMP_GCN");
+		return value != nullptr && value[0] == '2' && value[1] == '\0';
+	}();
+	return enabled;
+}
+
+void DumpShaderGcnRegistered(uint8_t binary_type, uint64_t shader_hash, const void* code, uint32_t size_bytes) {
+	if (code == nullptr || size_bytes == 0 || size_bytes % 4 != 0) {
+		return;
+	}
+	static std::mutex                   mutex;
+	static std::unordered_set<uint64_t> written;
+	{
+		std::lock_guard lock(mutex);
+		if (!written.insert(shader_hash ^ (static_cast<uint64_t>(binary_type) << 56u)).second) {
+			return;
+		}
+	}
+	// Prospero::ShaderBinaryType order.
+	static constexpr std::array<const char*, 9> NAMES = {"cs", "ps", "gs", "hs", "gsf", "hsf", "gsb", "hsb", "fs"};
+	const auto type_name = binary_type < NAMES.size() ? std::string(NAMES[binary_type])
+	                                                  : fmt::format("t{}", binary_type);
+	const auto path = Config::GetShaderLogFolder() / "gcn" / "reg" /
+	                  fmt::format("{}_{:016x}.bin", type_name, shader_hash);
+	Common::File::CreateDirectories(path.parent_path());
+	Common::File file(path);
+	if (file.IsInvalid()) {
+		const auto path_text = Common::PathToString(path);
+		LOGF_COLOR(Log::Color::BrightRed, "Can't create file: %s\n", path_text.c_str());
+		return;
+	}
+	file.Write(code, size_bytes);
+	LOGF("GcnDumpReg: type=%u hash=%016" PRIx64 " words=%u\n", static_cast<uint32_t>(binary_type), shader_hash,
+	     size_bytes / 4u);
 }
 
 bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
@@ -4545,6 +4615,10 @@ PipelineCache::PipelineCache(GraphicContext& graphics)
 		StartWorkers();
 		StartPrecache();
 	}
+	LOGF("S-pcw: KYTY_S_PCW=%d KYTY_S_PCW_FORCE_MS=%u\n", SPcwMode() ? 1 : 0, SPcwForceMs());
+	if (SPcwMode() || SPcwForceMs() != 0) {
+		PcwStart();
+	}
 }
 
 PipelineCache::~PipelineCache() {
@@ -4661,8 +4735,17 @@ void PipelineCache::MaybeWriteDriverCache() {
 		return;
 	}
 	m_driver_cache_unsaved++;
+	if (SPcwMode()) {
+		m_pcw_created.fetch_add(1);
+	}
 	const auto now = HostMicros();
 	if (now - m_driver_cache_saved_us < 20000000u) {
+		return;
+	}
+	if (SPcwMode()) {
+		// S-pcw: the same 20 s period; the write goes to the writer thread (one flag: requests merge).
+		m_pcw_want_driver.store(true);
+		m_driver_cache_saved_us = now;
 		return;
 	}
 	if (WriteDriverCache()) {
@@ -4737,21 +4820,24 @@ void PipelineCache::WaitForPendingPipelines() {
 }
 
 void PipelineCache::Save() {
+	// S-pcw: the writer thread finishes its write and exits before m_mutex is taken (its KYTY_S_PCW=0 stand takes
+	// m_mutex); without a writer this returns at once.
+	PcwStop();
 	Common::LockGuard lock(m_mutex);
-	if (m_recipes_unsaved != 0) {
+	if (m_recipes_unsaved != 0 && !PcwRecipesSaved()) {
 		WriteRecipes();
 	}
 	if (m_driver_cache == nullptr) {
 		return;
 	}
-	if (m_driver_cache_unsaved != 0 || m_driver_cache_saved_us == 0) {
+	if ((m_driver_cache_unsaved != 0 || m_driver_cache_saved_us == 0) && !PcwDriverSaved()) {
 		WriteDriverCache();
 	}
 	m_graphics.device.destroyPipelineCache(m_driver_cache, nullptr);
 	m_driver_cache = nullptr;
 }
 
-bool PipelineCache::WriteDriverCache() {
+bool PipelineCache::WriteDriverCache(const char* suffix) {
 	if (m_driver_cache == nullptr) {
 		return false;
 	}
@@ -4803,8 +4889,8 @@ bool PipelineCache::WriteDriverCache() {
 		                 Common::PathToString(m_driver_cache_path));
 		return false;
 	}
-	PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {} ({} us)", payload.size(),
-	                 Common::PathToString(m_driver_cache_path), HostMicros() - write_begin);
+	PipelineCacheLog("Vulkan pipeline cache: saved {} bytes to {} ({} us){}", payload.size(),
+	                 Common::PathToString(m_driver_cache_path), HostMicros() - write_begin, suffix);
 	return true;
 }
 
@@ -5387,7 +5473,8 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 
 	auto cached = std::make_unique<GraphicsPipelineEntry>();
 	LogPipelineTrace("CreatePipelineInternal begin", vs_id, ps_id);
-	const auto create_begin = HostMicros();
+	const uint64_t pcw_gen0     = PcwOverlapTrace() ? m_pcw_gen.load() : 0;
+	const auto     create_begin = HostMicros();
 	CreatePipelineInternal(m_graphics, *cached, rendering, key.vertex_input, vertex_info,
 	                       ps_input_info, programs, static_params, m_driver_cache);
 	if (AvTraceEnabled()) {
@@ -5396,6 +5483,9 @@ PipelineCache::GraphicsPipelineEntry* PipelineCache::CreateGraphicsPipelineLocke
 		     static_cast<uint64_t>(m_graphics_pipelines.size() + 1));
 	}
 	LogPipelineTrace("CreatePipelineInternal done", vs_id, ps_id);
+	if (PcwOverlapTrace()) {
+		PcwNoteOverlap("gfx", vs_id, ps_id, pcw_gen0, HostMicros() - create_begin);
+	}
 	MaybeWriteDriverCache();
 
 	EXIT_NOT_IMPLEMENTED(cached->pipeline == nullptr);
@@ -5667,8 +5757,9 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 			}
 
 			RecordComputeRecipe(input_info, compute_program.id);
-			auto       cached       = std::make_unique<ComputePipelineEntry>();
-			const auto create_begin = HostMicros();
+			auto           cached       = std::make_unique<ComputePipelineEntry>();
+			const uint64_t pcw_gen0     = PcwOverlapTrace() ? m_pcw_gen.load() : 0;
+			const auto     create_begin = HostMicros();
 			CreatePipelineInternal(m_graphics, *cached, input_info, compute_program.module,
 			                       m_driver_cache);
 			if (AvTraceEnabled()) {
@@ -5677,6 +5768,9 @@ PipelineCache::GetComputePipeline(const ShaderComputeInputInfo& input_info,
 				     compute_program.id, HostMicros() - create_begin,
 				     static_cast<uint64_t>(m_compute_pipelines.size() + 1),
 				     input_info.stage.program->shader_hash);
+			}
+			if (PcwOverlapTrace()) {
+				PcwNoteOverlap("cs", compute_program.id, 0, pcw_gen0, HostMicros() - create_begin);
 			}
 			MaybeWriteDriverCache();
 
@@ -5927,6 +6021,10 @@ void PipelineCache::MaybeWriteRecipes() {
 		return;
 	}
 	last_us = now;
+	if (SPcwMode()) {
+		m_pcw_want_recipes.store(true); // S-pcw: written by the writer thread
+		return;
+	}
 	WriteRecipes();
 }
 
@@ -5965,7 +6063,174 @@ bool PipelineCache::WriteRecipes() {
 	return true;
 }
 
+// Track S, S-pcw (ROADMAP "SESSION 122" item 241(h)(1)-(2), HPP-316).  The writer thread: started by the constructor
+// when KYTY_S_PCW=1 or KYTY_S_PCW_FORCE_MS is set, stopped and joined by Save() before Save() takes m_mutex.  It polls
+// every 100 ms: the request sites (MaybeWriteDriverCache, MaybeWriteRecipes, FinishPreparation) only store an atomic
+// flag - no lock and no wait on the GuestGpu thread; requests between two polls merge into one write; one thread means
+// at most one write in flight.  Thread safety of vkGetPipelineCacheData on m_driver_cache while workers and GuestGpu
+// create pipelines with it: the cache is created with flags 0 (InitializeDriverCache, "vk::PipelineCacheCreateInfo
+// create {}"), i.e. without VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT, so host access to it in
+// vkCreateGraphicsPipelines / vkCreateComputePipelines needs no external synchronization (vk.xml: pipelineCache
+// externsync="maybe"; VUID-vkCreateGraphicsPipelines-pipelineCache-02876, VUID-vkCreateComputePipelines-pipelineCache-02873),
+// and vkGetPipelineCacheData has no externally synchronized parameter.  vkDestroyPipelineCache (externsync="true") runs
+// in Save() after the join.
+void PipelineCache::PcwStart() {
+	m_pcw_thread = std::thread([this] { PcwLoop(); });
+}
+
+void PipelineCache::PcwStop() {
+	if (!m_pcw_thread.joinable()) {
+		return;
+	}
+	{
+		std::lock_guard<std::mutex> lock(m_pcw_mutex);
+		m_pcw_stop = true;
+	}
+	m_pcw_cv.notify_all();
+	m_pcw_thread.join();
+}
+
+// Save(), m_mutex held, after PcwStop(): what the writer thread already wrote is not written again.
+bool PipelineCache::PcwRecipesSaved() const {
+	return SPcwMode() && m_pcw_rec_saved_epoch == m_recipes_epoch && m_pcw_rec_saved_count == m_recipe_count;
+}
+
+bool PipelineCache::PcwDriverSaved() const {
+	return SPcwMode() && m_pcw_saved_any && m_pcw_saved_created == m_pcw_created.load();
+}
+
+void PipelineCache::PcwLoop() {
+#if defined(_WIN32)
+	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
+#endif
+	const uint64_t force_us    = static_cast<uint64_t>(SPcwForceMs()) * 1000u;
+	uint64_t       next_forced = force_us != 0 ? HostMicros() + force_us : 0;
+	for (;;) {
+		{
+			std::unique_lock<std::mutex> lock(m_pcw_mutex);
+			m_pcw_cv.wait_for(lock, std::chrono::milliseconds(100), [this] { return m_pcw_stop; });
+			if (m_pcw_stop) {
+				return; // Save() writes what is left
+			}
+		}
+		const auto now    = HostMicros();
+		const bool forced = force_us != 0 && now >= next_forced;
+		if (forced) {
+			next_forced = now + force_us;
+		}
+		if (!SPcwMode()) {
+			// KYTY_S_PCW=0 stand: the production write, under m_mutex (a thread that is not GuestGpu holds it).
+			if (forced) {
+				Common::LockGuard lock(m_mutex);
+				if (WriteDriverCache(" forced")) {
+					m_driver_cache_unsaved = 0;
+				}
+			}
+			continue;
+		}
+		if (m_pcw_want_recipes.exchange(false)) {
+			PcwWriteRecipes();
+		}
+		if (m_pcw_want_driver.exchange(false) || forced) {
+			// Every creation counted before this load is in the data read below.
+			const auto created = m_pcw_created.load();
+			m_pcw_gen.fetch_add(1); // odd: a write is in flight
+			const bool saved = WriteDriverCache(forced ? " forced" : "");
+			m_pcw_gen.fetch_add(1);
+			if (saved) {
+				m_pcw_saved_created = created;
+				m_pcw_saved_any     = true;
+			}
+		}
+	}
+}
+
+// KYTY_S_PCW=1: pipelines.bin from the writer's copy of the records.  m_mutex is held only to copy the records added
+// since the last copy (all of them once after PrecachePipelines rebuilds m_recipes; within one m_recipes_epoch
+// AppendRecipe only appends); "AvTrace: pcw recipes" prints that hold as wait_us, the bound of any GuestGpu wait it
+// causes.  The file is written as WriteRecipes writes it; the saved line also carries the write time.
+void PipelineCache::PcwWriteRecipes() {
+	std::string signature;
+	uint32_t    count      = 0;
+	uint64_t    epoch      = 0;
+	size_t      copied     = 0;
+	const auto  hold_begin = HostMicros();
+	{
+		Common::LockGuard lock(m_mutex);
+		if (m_recipes_path.empty() || m_recipe_count == 0) {
+			return;
+		}
+		if (m_pcw_rec_epoch != m_recipes_epoch || m_pcw_rec_body.size() > m_recipes.size()) {
+			m_pcw_rec_body.assign(m_recipes.begin(), m_recipes.end());
+			copied          = m_recipes.size();
+			m_pcw_rec_epoch = m_recipes_epoch;
+		} else if (m_pcw_rec_body.size() < m_recipes.size()) {
+			copied = m_recipes.size() - m_pcw_rec_body.size();
+			m_pcw_rec_body.insert(m_pcw_rec_body.end(),
+			                      m_recipes.begin() + static_cast<std::ptrdiff_t>(m_pcw_rec_body.size()),
+			                      m_recipes.end());
+		}
+		count     = m_recipe_count;
+		epoch     = m_recipes_epoch;
+		signature = m_program_cache->translation_cache.Signature() + RecipeLayoutSignature();
+	}
+	if (AvTraceEnabled()) {
+		LOGF("AvTrace: pcw recipes copied=%zu count=%u wait_us=%" PRIu64 "\n", copied, count,
+		     HostMicros() - hold_begin);
+	}
+	if (epoch == m_pcw_rec_saved_epoch && count == m_pcw_rec_saved_count) {
+		return; // merged: nothing new since the last file
+	}
+	const auto   write_begin = HostMicros();
+	RecipeWriter w;
+	w.Bytes(RECIPES_MAGIC, sizeof(RECIPES_MAGIC) - 1);
+	w.U32(static_cast<uint32_t>(signature.size()));
+	w.Bytes(signature.data(), signature.size());
+	w.U32(count);
+	w.Bytes(m_pcw_rec_body.data(), m_pcw_rec_body.size());
+	const auto& payload = w.Data();
+	if (!Common::File::CreateDirectories(m_recipes_path.parent_path())) {
+		return;
+	}
+	auto temp_path = m_recipes_path;
+	temp_path += ".tmp";
+	Common::File file;
+	uint32_t     written = 0;
+	if (file.Create(temp_path)) {
+		file.Write(payload.data(), static_cast<uint32_t>(payload.size()), &written);
+	}
+	const bool flushed = !file.IsInvalid() && file.Flush();
+	file.Close();
+	if (written != payload.size() || !flushed ||
+	    !Common::File::RenameFile(temp_path, m_recipes_path)) {
+		LOGF("PipelinePrecache: failed to write %s\n", Common::PathToString(m_recipes_path).c_str());
+		return;
+	}
+	LOGF("PipelinePrecache: saved %u recipes (%zu bytes) (%" PRIu64 " us)\n", count, payload.size(),
+	     HostMicros() - write_begin);
+	m_pcw_rec_saved_epoch = epoch;
+	m_pcw_rec_saved_count = count;
+}
+
+// KYTY_S_PCW=1 with KYTY_AV_TRACE=1: a synchronous creation that overlapped a driver cache write of the writer thread
+// (vkGetPipelineCacheData may hold the driver's own lock of the cache); wait_us is the creation time, the bound of the
+// wait.  m_pcw_gen is odd while the writer is in WriteDriverCache.
+void PipelineCache::PcwNoteOverlap(const char* kind, uint64_t id0, uint64_t id1, uint64_t gen0,
+                                   uint64_t wait_us) const {
+	const uint64_t gen1 = m_pcw_gen.load();
+	if ((gen0 & 1u) == 0 && gen1 == gen0) {
+		return;
+	}
+	LOGF("AvTrace: pcw overlap %s id0=%" PRIu64 " id1=%" PRIu64 " wait_us=%" PRIu64 " gen0=%" PRIu64
+	     " gen1=%" PRIu64 "\n",
+	     kind, id0, id1, wait_us, gen0, gen1);
+}
+
 void PipelineCache::TraceShaderRegistration(const Shader& header, const ShaderMappedData& mapped) {
+	if (DumpGcnAtRegistration()) {
+		DumpShaderGcnRegistered(static_cast<uint8_t>(mapped.type), mapped.hash, const_cast<const void*>(header.code),
+		                        mapped.code_size_bytes);
+	}
 	if (ComputePretranslation::Enabled() && mapped.type == Prospero::ShaderBinaryType::kCs &&
 	    header.specials != nullptr && header.special_sizes_bytes >= sizeof(ShaderSpecialRegs) &&
 	    header.sh_registers != nullptr && header.code != nullptr &&
@@ -6042,7 +6307,13 @@ void PipelineCache::FinishPreparation() {
 	}
 	// Do not use Save(): it destroys the VkPipelineCache used by later guest draws.
 	Common::LockGuard lock(m_mutex);
-	if (m_precache_completed.load() > m_precache_skipped.load() && WriteDriverCache()) {
+	if (SPcwMode()) {
+		// S-pcw: the same condition; the writer thread writes it, off m_mutex.
+		if (m_precache_completed.load() > m_precache_skipped.load() && m_driver_cache != nullptr) {
+			m_pcw_want_driver.store(true);
+			m_driver_cache_saved_us = HostMicros();
+		}
+	} else if (m_precache_completed.load() > m_precache_skipped.load() && WriteDriverCache()) {
 		m_driver_cache_unsaved = 0;
 		m_driver_cache_saved_us = HostMicros();
 	}
@@ -6409,6 +6680,7 @@ void PipelineCache::PrecachePipelines() {
 			std::vector<uint32_t> current_sizes;
 			current.swap(m_recipes);
 			current_sizes.swap(m_recipe_sizes);
+			m_recipes_epoch++; // S-pcw: m_recipes is rebuilt, the writer's copy is stale
 			m_recipe_hashes.clear();
 			m_recipe_count = 0;
 			for (const auto& [begin, end]: record_spans) {

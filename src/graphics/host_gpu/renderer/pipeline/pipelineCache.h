@@ -321,8 +321,35 @@ private:
 	uint32_t      m_driver_cache_unsaved     = 0;
 
 	void InitializeDriverCache();
-	bool WriteDriverCache();
+	// suffix: appended to the "saved" line (" forced" for the KYTY_S_PCW_FORCE_MS stand).
+	bool WriteDriverCache(const char* suffix = "");
 	void MaybeWriteDriverCache();
+
+	// Track S, S-pcw (KYTY_S_PCW / KYTY_S_PCW_FORCE_MS, ROADMAP "SESSION 122" item 241(h), HPP-316): the writer thread
+	// (PcwLoop).  It never holds m_mutex while it reads or writes the driver cache; it takes m_mutex only to copy new
+	// recipe records and, for the KYTY_S_PCW=0 stand, for the whole forced write (as production does).
+	std::thread             m_pcw_thread;
+	std::mutex              m_pcw_mutex; // m_pcw_stop
+	std::condition_variable m_pcw_cv;
+	bool                    m_pcw_stop = false;
+	std::atomic<bool>       m_pcw_want_driver {false};  // request flags, stored by the request sites
+	std::atomic<bool>       m_pcw_want_recipes {false};
+	std::atomic<uint64_t>   m_pcw_created {0};          // MaybeWriteDriverCache calls with a cache (KYTY_S_PCW=1)
+	std::atomic<uint64_t>   m_pcw_gen {0};              // odd while the writer is in WriteDriverCache
+	// Written by the writer thread only; read by Save() after the join.
+	uint64_t                m_pcw_saved_created   = 0;
+	bool                    m_pcw_saved_any       = false;
+	std::vector<uint8_t>    m_pcw_rec_body;             // the writer's copy of m_recipes
+	uint64_t                m_pcw_rec_epoch       = ~0ull;
+	uint64_t                m_pcw_rec_saved_epoch = ~0ull;
+	uint32_t                m_pcw_rec_saved_count = 0;
+	void PcwStart();
+	void PcwStop();
+	void PcwLoop();
+	void PcwWriteRecipes();
+	[[nodiscard]] bool PcwRecipesSaved() const;
+	[[nodiscard]] bool PcwDriverSaved() const;
+	void PcwNoteOverlap(const char* kind, uint64_t id0, uint64_t id1, uint64_t gen0, uint64_t wait_us) const;
 
 	// Pipeline precache (session 25): recipes of every pipeline created in a run, replayed on the
 	// worker pool at the next start (_ShaderCache/<title>/pipelines.bin).
@@ -331,6 +358,7 @@ private:
 	std::unordered_set<uint64_t> m_recipe_hashes; // XXH3 of each record (no duplicates)
 	uint32_t              m_recipe_count   = 0;
 	uint32_t              m_recipes_unsaved = 0;
+	uint64_t              m_recipes_epoch   = 0; // m_mutex; +1 when PrecachePipelines rebuilds m_recipes (S-pcw)
 	std::filesystem::path m_recipes_path;
 	std::thread           m_precache_thread;
 	std::atomic<bool>     m_precache_stop {false};

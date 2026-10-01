@@ -1,0 +1,73 @@
+# git diff --stat 4fc501f4 ba3be480 -- src/
+ src/common/frameStats.cpp                          |  427 ++++
+ src/common/frameStats.h                            | 1122 +++++++++
+ src/common/gates.cpp                               |   38 +-
+ src/common/gates.h                                 |   77 +-
+ src/common/parallelCopy.cpp                        |  103 +-
+ src/common/parallelCopy.h                          |   31 +
+ .../guest_gpu/command_processor/pm4Handlers.cpp    |   22 +
+ src/graphics/guest_gpu/graphicsRun.cpp             |   12 +
+ src/graphics/host_gpu/memoryTracker.cpp            |   32 +
+ src/graphics/host_gpu/memoryTracker.h              |   46 +-
+ src/graphics/host_gpu/pageManager.cpp              | 2373 +++++++++++++++++++-
+ src/graphics/host_gpu/pageManager.h                |  158 +-
+ src/graphics/host_gpu/regionManager.h              |   61 +-
+ .../host_gpu/renderer/cache/bufferCache.cpp        |  534 ++++-
+ src/graphics/host_gpu/renderer/cache/bufferCache.h |   47 +-
+ .../host_gpu/renderer/cache/streamBuffer.cpp       |   10 +
+ .../host_gpu/renderer/commandScheduler.cpp         |    1 +
+ src/graphics/host_gpu/renderer/image/image.h       |    2 +
+ .../host_gpu/renderer/pipeline/descriptors.cpp     |  850 ++++++-
+ .../renderer/pipeline/shaderTranslationCache.cpp   |    6 +-
+ src/graphics/host_gpu/renderer/renderCompute.cpp   |  164 ++
+ src/graphics/host_gpu/renderer/renderContext.cpp   |    9 +
+ src/graphics/host_gpu/renderer/renderContext.h     |    5 +
+ src/graphics/host_gpu/renderer/renderDraw.cpp      |   20 +
+ src/graphics/presentation/videoOut.cpp             |  367 ++-
+ .../recompiler/frontend/decode/ScalarAluOps.cpp    |    3 +-
+ .../recompiler/frontend/decode/ShaderDecoder.cpp   |   18 +
+ .../recompiler/frontend/decode/ShaderDecoder.h     |    9 +
+ .../recompiler/frontend/decode/VectorAluOps.cpp    |    7 +-
+ .../recompiler/frontend/translate/Scalar.cpp       |    8 +
+ .../recompiler/frontend/translate/Vector.cpp       |   10 +
+ src/kernel/memory.cpp                              |    1 +
+ src/kernel/memoryAddressSpace.inc                  |   18 +-
+ 33 files changed, 6481 insertions(+), 110 deletions(-)
+
+# git log --oneline 4fc501f4..ba3be480 -- src/
+ba3be480 2026-10-01 track F link F2a (HPP-307): B26b fix under KYTY_FIX_B26 - S_BREV_B64 (SOP1 0x0c) and V_CMP_LE_U64 (VOPC 0xe3, VOP3 form) by ROADMAP p.237(g)
+a2849aec 2026-09-30 s136 step 5a'' (HPP-247): control build of bindlean - at 3 no Reset cause moves the generation (ROADMAP p.186(c)) - WIP: one measuring build, NOT installed, no smoke
+ae8f30e5 2026-09-30 s136 step 5a' (HPP-245): control build of bindlean - at 3 an unreadable End() read is a line without bln_bad (ROADMAP p.185(b)) - WIP: one measuring build, NOT installed, no smoke
+e967df69 2026-09-30 s136 step 5a (HPP-242): value-3-only control build of bindlean - End() byte read at 3 - WIP: one measuring build, NOT installed, no smoke
+5b972f56 2026-09-30 s136 step 3 (HPP-235): prototype knob bindlean (KYTY_BIND_LEAN 0..3, default 0, LAST knob row) - WIP: built as one measuring build, NOT installed, no smoke
+32cd9fb3 2026-09-30 s135 step 3b (HPP-229): CF1 of codereview135.md s.1 by ROADMAP p.171(a)-(b) - rbslow census table touch_tick moved from RsPre to RsPost step 4 (under rs.would inside rs.elig and oc
+ae093d70 2026-09-30 s135 step 3 (HPP-220): WIP knob rbslow (KYTY_REBIND_SLOW_CENSUS, 0..1, default 0, LAST knob row) by design135.md rev 2
+cf5fd876 2026-09-30 s134 step 5v (HPP-215): CR5b-1 fix of b2reuse - nomap cleared in Probe() at the state rewrite and in Insert() next to pend = None (ROADMAP s122 item 160(a)(1)-(2)); ~CallScope and 
+5680c2ad 2026-09-30 s134 step 5a (HPP-213): CR1 fix of b2reuse - TLS flag nomap, counter b2r_nomap - WIP, not installed, no smoke yet
+99468a52 2026-09-30 s134 step 4 (HPP-206): prototype knob b2reuse (KYTY_B2_REUSE 0..3, default 0, LAST knob) - WIP, not installed, no smoke yet
+0f539e02 2026-09-29 s133 step 3 (HPP-194, ROADMAP p.141(v), 142(b), 143(b)-(v)): knob rbcen (KYTY_REBIND_CENSUS 0..2, default 0, last knob row) - MEASUREMENT ONLY census per design133.md rev 2 s.15
+9bb1e2ef 2026-09-29 s131 step 5b (HPP-175): CR1 by ROADMAP s122 item 130(b)(1)-(5) - lwin classifier reason xr=unk
+8f88d44e 2026-09-29 s131 step 5 (3/3, HPP-168): knob dispceil (KYTY_DISP_CEILING 0..1, default 0, LAST knob row) + census of mh_disp_us
+ce08b8ca 2026-09-29 s131 step 5 (2/3, HPP-168): knob lwin (KYTY_ARM_LOSS_WIN 0..3, default 0) - classifier of armcopy H events by page stamps
+f339ce10 2026-09-29 s131 step 5 (1/3, HPP-168): stale ARMCOPY_HOLD comment -> ARMCOPY_INCORRECT in gates.{h,cpp} (ROADMAP s122 item 123(i)); comments only
+abb0aa9d 2026-09-29 s130 step 4 (HPP-148), commit (2) by ROADMAP s122 items 116(l), 117-119: ac_cbad attribution by cbad130.md rev 2 - PROTOTYPE, WIP until smoke
+fb55d93b 2026-09-29 s130 step 4 (HPP-148): knob acinline (KYTY_ARM_INLINE, 0..1, default 0) - PROTOTYPE, WIP until smoke
+12f0b62b 2026-09-29 s130 step 4 (HPP-148), first commit by ROADMAP s122 item 116(c): default of armcopy (KYTY_ARM_IN_COPY) 1 -> 0
+76e2a5a3 2026-09-28 s130 step 0a (HPP-141): shipping code of armcopy - F1-F4, content check at 4, ac_jstale, default armcopy 0 -> 1
+67962c18 2026-09-28 s129 step 3 (HPP-133): knob armcopy (KYTY_ARM_IN_COPY, 0..4, default 0) - PROTOTYPE, WIP until smoke
+04ae3390 2026-09-28 s128 step 6a (HPP-127): knob protceil value 2 - the dose at the call site (ROADMAP s122 item 93(g)(1))
+252b0c76 2026-09-28 s128 step 4 (HPP-120): knob protceil - FrameTrace-x rows of the 33 counters (videoOut.cpp; left out of 55841100)
+55841100 2026-09-28 s128 step 4 (HPP-120): knob protceil (KYTY_PROT_CEILING, 0..1, default 0, MEASUREMENT ONLY)
+
+# F2a only: git diff --stat 20b39318 ba3be480 -- src/
+ .../renderer/pipeline/shaderTranslationCache.cpp       |  6 +++++-
+ .../shader/recompiler/frontend/decode/ScalarAluOps.cpp |  3 ++-
+ .../recompiler/frontend/decode/ShaderDecoder.cpp       | 18 ++++++++++++++++++
+ .../shader/recompiler/frontend/decode/ShaderDecoder.h  |  9 +++++++++
+ .../shader/recompiler/frontend/decode/VectorAluOps.cpp |  7 ++++---
+ .../shader/recompiler/frontend/translate/Scalar.cpp    |  8 ++++++++
+ .../shader/recompiler/frontend/translate/Vector.cpp    | 10 ++++++++++
+ 7 files changed, 56 insertions(+), 5 deletions(-)
+
+# src/ unchanged between a2849aec and 20b39318:
+yes

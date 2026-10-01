@@ -31,6 +31,7 @@
 #include "graphics/host_gpu/renderer/image/tiler.h"
 #include "graphics/host_gpu/renderer/pipeline/descriptors.h"
 #include "graphics/host_gpu/renderer/pipeline/pipelineCache.h"
+#include "graphics/host_gpu/renderer/pipeline/shaderTranslationCache.h"
 #include "graphics/host_gpu/renderer/debug.h"
 #include "graphics/host_gpu/renderer/render.h"
 #include "graphics/host_gpu/renderer/renderContext.h"
@@ -31559,6 +31560,18 @@ int main(int argc, char **argv) {
     const bool fix_on = ShaderRecompiler::Decoder::FixB26Enabled();
     std::printf("[b26] KYTY_FIX_B26 effective=%d\n", fix_on ? 1 : 0);
     CheckB26Decode(fix_on);
+    {
+      // RC5 of the F1b review: =1 and =0 never share a signature or a directory.
+      const ShaderTranslationCache cache("PPSA21564");
+      const auto directory = Common::PathToString(cache.Directory());
+      const bool signed_fix = cache.Signature().find(":fixb26") != std::string::npos;
+      const bool folder_fix = directory.find("fixb26") != std::string::npos;
+      std::printf("[b26]     cache dir=%s fixb26_in_signature=%d fixb26_in_dir=%d\n",
+                  directory.c_str(), signed_fix ? 1 : 0, folder_fix ? 1 : 0);
+      Require("B26Cache", "translation cache key", cache.Enabled() && signed_fix == fix_on &&
+                                                     folder_fix == fix_on,
+              "fixb26 token of the signature or directory does not follow the knob");
+    }
     if (fix_on) {
       VulkanHarness vulkan;
       RunCase(&vulkan, B26ScalarBrevB64());

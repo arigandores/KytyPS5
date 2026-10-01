@@ -1,0 +1,25 @@
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:329` | bool FixB26Enabled() { | +1: static const bool enabled = [] {
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:337` | Opcode GateFixB26(Opcode opcode) { | +1: if ((opcode == Opcode::S_BREV_B64 || opcode == Opcode::V_CMP_LE_U64) &
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h:750` | bool   FixB26Enabled(); | +1: Opcode GateFixB26(Opcode opcode);
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h:599` | S_BREV_B64, | +1: V_CMP_LE_U64,
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:48` | {0x0cu, Opcode::S_BREV_B64}, | +1: {0x0fu, Opcode::S_BCNT1_I32_B32},
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.cpp:150` | inst.opcode    = GateFixB26(Detail::LookupOpcode(SOP1_OPS, opcode)); | +1: SetRawWords(inst, code, word_index, 1);
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:248` | {0xe2u, Opcode::V_CMP_EQ_U64, false},  {0xe3u, Opcode::V_CMP_LE_U64, false}, | +1: {0xe4u, Opcode::V_CMP_GT_U64, false},
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:372` | return GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode)); | +1: }
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1539` | inst.opcode    = GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode)); | +1: inst.dst.kind  = IsVopcCompareExec(inst.opcode) ? OperandKind::ExecLo 
+`ba3be480:src/graphics/shader/recompiler/frontend/decode/VectorAluOps.cpp:1151` | const auto* info = Detail::FindOpcode(VOPC_OPS, opcode); | +1: if (info == nullptr || !info->supports_dpp) {
+`ba3be480:src/graphics/shader/recompiler/frontend/translate/Scalar.cpp:172` | case O::S_BREV_B64: { | +1: // Track F, F2a: D.u64[63:0] = S0.u64[0:63] (ISA RDNA2 12.3). ReadU32P
+`ba3be480:src/graphics/shader/recompiler/frontend/translate/Vector.cpp:109` | case O::V_CMP_LE_U64: { | +1: // Track F, F2a: lane bit = (S0.u64 <= S1.u64) (ISA RDNA2 12.9) as NOT
+`ba3be480:src/graphics/shader/recompiler/frontend/translate/Translate.cpp:451` | std::array<IR::U32, 2> Translator::ReadU32Pair(const Decoder::Operand& operand) { | +1: if (operand.kind == Decoder::OperandKind::ExecLo) {
+`ba3be480:src/graphics/shader/recompiler/frontend/translate/Compare.cpp:11` | const auto masked = ir.LogicalAnd(ir.GetExec(), value); | +1: if (cmpx) {
+`ba3be480:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:578` | (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : ""); | +1: if (!variant.empty()) {
+`ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:232` | LOGF("CsPretranslate: skipped hash=%016" PRIx64 " reason=%s\n", job->key.hash, error.what( | +1: } catch (...) {
+`ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:242` | if (result && !stopping && !job->discard && cost <= limits.ready_bytes) { | +1: for (auto it = entries.begin(); it != entries.end();) {
+`ba3be480:src/graphics/host_gpu/renderer/pipeline/computePretranslation.h:255` | LOGF("CsPretranslate: ready hash=%016" PRIx64 " us=%" PRIu64 " kb=%zu ready_kb=%zu\n", | +1: job->key.hash, us, cost / 1024, ready_bytes / 1024);
+`ba3be480:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:169` | [[noreturn]] void Fail(uint32_t pc, const std::string& reason) const { | +1: const auto message =
+`ba3be480:tests/ShaderRecompilerComputeTests.cpp:20815` | TestCase B26ScalarBrevB64() { | +1: using O = ShaderOpcode;
+`ba3be480:tests/ShaderRecompilerComputeTests.cpp:20861` | TestCase B26VectorCmpLeU64(u32 wave_size) { | +1: using O = ShaderOpcode;
+`ba3be480:tests/ShaderRecompilerComputeTests.cpp:20962` | void CheckB26Decode(bool fix_on) { | +1: const char *name = "B26Decode";
+`ba3be480:tests/ShaderRecompilerComputeTests.cpp:31417` | static int RunB26DecodePass(const char *eboot_path) { | +1: namespace SR = Libs::Graphics::ShaderRecompiler;
+`ba3be480:tests/ShaderRecompilerComputeTests.cpp:31557` | if (argc == 2 && std::strcmp(argv[1], "--fix-b26-only") == 0) { | +1: // Track F, F2a (HPP-307): the B26b cases at the knob value of this pr
+ALL OK

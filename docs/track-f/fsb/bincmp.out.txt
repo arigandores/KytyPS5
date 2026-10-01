@@ -1,0 +1,16 @@
+A C:/kyty/f287/fsb/build/install/kyty_emulator.exe 2fc78597e4d953d879d746d8785ae79466da40ab8074e66794ba9bf5dffe6100 24574464
+B C:/kyty/f287/bin/kyty_emulator_dac02fb9.exe dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e 24573952
+timestamp 0x6abe71ad 0x6abe6ebf
+section .text A vsize 0x113f8b6 B vsize 0x113f8b6 equal
+section .rdata A vsize 0x4be590 B vsize 0x4be590 equal
+section .data A vsize 0x22e2760 B vsize 0x22e2620 DIFF
+section .pdata A vsize 0x6e9a0 B vsize 0x6e9a0 equal
+section .retplne A vsize 0xa4 B vsize 0xa4 equal
+section .tls A vsize 0x75002 B vsize 0x75002 equal
+section .rsrc A vsize 0x1a8 B vsize 0x1a8 equal
+section .reloc A vsize 0xa3c0 B vsize 0xa3b4 DIFF
+worktree path occurrences A 139 B 139
+strings>=12 only A 194 only B 194 path-like only A 0 only B 0
+first .data diff at 0x391d2
+  A b'o_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0x78F2A4A9@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@XW4spv_message_level_t@@PEBDAEBUspv_position_t@@PEBD@std@@\x00\x00\x00\x00\x00\x00\x00\x80R\x15A\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0x78F2A4A9@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@\x00\x00\x00\x00\x00\x00\x00\x00\x80R\x15A\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+  B b'o_alloc@V<lambda_4>@?0??ValidateShaderSpirv@?A0x5A7ADB96@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@XW4spv_message_level_t@@PEBDAEBUspv_position_t@@PEBD@std@@\x00\x00\x00\x00\x00\x00\x00\x80R\x15A\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00.?AV<lambda_4>@?0??ValidateShaderSpirv@?A0x5A7ADB96@Graphics@Libs@@YA_NPEBD_KAEBV?$vector@IV?$allocator@I@std@@@std@@@Z@\x00\x00\x00\x00\x00\x00\x00\x00\x80R\x15A\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00'

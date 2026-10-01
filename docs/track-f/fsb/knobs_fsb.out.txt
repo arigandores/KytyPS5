@@ -1,0 +1,52 @@
+added lines with an env read call (code part, comments stripped): 11
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:277 const char* value = std::getenv("KYTY_S_PCW");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:288 const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1298 const char* value = std::getenv("KYTY_DUMP_GCN");
+  + src/graphics/presentation/window/swapchain.cpp:310 const bool on = Common::EnvFlagOn("KYTY_FIX_MINIMIZE");
+  + src/graphics/presentation/window/vulkanWindow.cpp:666 const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
+  + src/graphics/presentation/window/vulkanWindow.cpp:668 Common::EnvValueOn(dual_src_value));
+  + src/graphics/presentation/window/window.cpp:1055 const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331 const char* value = std::getenv("KYTY_FIX_B26");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:332 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346 const char* value = std::getenv("KYTY_FIX_B1B");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:347 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+removed lines with an env read call: 0
+KYTY_* names on +/- lines: 27
+  KYTY_ARM_INLINE            +2 (in code part 1) -0
+  KYTY_ARM_IN_COPY           +2 (in code part 1) -0
+  KYTY_ARM_LOSS_WIN          +2 (in code part 1) -0
+  KYTY_ASYNC_COPY            +4 (in code part 0) -0
+  KYTY_ASYNC_PROTECT         +1 (in code part 0) -0
+  KYTY_AV_TRACE              +4 (in code part 0) -0
+  KYTY_B2_REUSE              +2 (in code part 1) -0
+  KYTY_BIND_LEAN             +2 (in code part 1) -0
+  KYTY_CLASS_NO_COPY         +3 (in code part 3) -0
+  KYTY_DISP_CEILING          +2 (in code part 1) -0
+  KYTY_DUMP_GCN              +2 (in code part 1) -0
+  KYTY_FIX_B1B               +7 (in code part 1) -0
+  KYTY_FIX_B26               +6 (in code part 1) -0
+  KYTY_FIX_DUALSRC           +6 (in code part 1) -0
+  KYTY_FIX_MINIMIZE          +6 (in code part 1) -0
+  KYTY_FRAME_TRACE           +9 (in code part 0) -0
+  KYTY_PARALLEL_COPY         +2 (in code part 0) -0
+  KYTY_PIPELINE_SALT         +1 (in code part 0) -0
+  KYTY_PLATFORM              +5 (in code part 5) -0
+  KYTY_PLATFORM_WINDOWS      +5 (in code part 5) -0
+  KYTY_PROT_CEILING          +2 (in code part 1) -0
+  KYTY_REBIND_CENSUS         +2 (in code part 1) -0
+  KYTY_REBIND_SLOW_CENSUS    +2 (in code part 1) -0
+  KYTY_SKIP_CS               +1 (in code part 0) -0
+  KYTY_S_PCW                 +16 (in code part 2) -0
+  KYTY_S_PCW_FORCE_MS        +6 (in code part 2) -0
+  KYTY_TEST_MINIMIZE         +4 (in code part 1) -0
+KNOB_DEFINITIONS rows added:
+   KYTY_PROT_CEILING protceil fallback 0 max 2
+   KYTY_ARM_IN_COPY armcopy fallback 0 max 4
+   KYTY_ARM_INLINE acinline fallback 0 max 1
+   KYTY_ARM_LOSS_WIN lwin fallback 0 max 3
+   KYTY_DISP_CEILING dispceil fallback 0 max 1
+   KYTY_REBIND_CENSUS rbcen fallback 0 max 2
+   KYTY_B2_REUSE b2reuse fallback 0 max 3
+   KYTY_REBIND_SLOW_CENSUS rbslow fallback 0 max 1
+   KYTY_BIND_LEAN bindlean fallback 0 max 3
+KNOB_DEFINITIONS rows removed (changed old rows):

@@ -1,0 +1,15 @@
+.rdata strings>=8 total A 29527 B 29527 only A 1 only B 1
+   A b'LLD PDB.'
+   B b'T%<LLD PDB.'
+.rdata anon hashes A 0 B 0
+.data strings>=8 total A 782 B 782 only A 0 only B 0
+.data anon hashes A 13 B 13
+.text bytes 18086070 differing runs 60786 differing bytes 121846
+.text run length histogram [(1, 16), (2, 60480), (3, 290)]
+  small delta 1 at .text+ 0x10cb234 len 1 cccccccccccccccc488d05891c5b00c3cccccccc cccccccccccccccc488d05891b5b00c3cccccccc
+  small delta 1 at .text+ 0x10cbc04 len 1 cccccccccccccccc488d0589145b00c3cccccccc cccccccccccccccc488d0589135b00c3cccccccc
+  small delta 1 at .text+ 0x10ccdf4 len 1 5e415e415f5dc3cc488d0579045b00c3cccccccc 5e415e415f5dc3cc488d0579035b00c3cccccccc
+  small delta 1 at .text+ 0x10cd294 len 1 5e415e415f5dc3cc488d05a9015b00c3cccccccc 5e415e415f5dc3cc488d05a9005b00c3cccccccc
+  small delta 1 at .text+ 0x10cd734 len 1 5e415e415f5dc3cc488d05d9fe5a00c3cccccccc 5e415e415f5dc3cc488d05d9fd5a00c3cccccccc
+.text displacement deltas (top 20) [(320, 60726), (240, 13), (304, 12), (48, 6), (112, 5), (1, 5), (80, 4), (64, 2), (160, 2), (192, 2), (272, 2), (16, 1), (32, 1), (128, 1), (144, 1), (208, 1), (224, 1), (288, 1)]
+.text distinct deltas 18

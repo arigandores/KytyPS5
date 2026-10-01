@@ -1,0 +1,15 @@
+F6E SERIES TABLE (p.287(v)(5)-(6); one attempt each; repeats r (K3) and f (form) where made)
+tag      level                   fix verdict        stubs(log/AP/std) deaths K2 K3h K3h120 hold_s  freq    wake ASSERT(l/s) umsg video/glitch
+f6e_a1   timestop_casino         1   NOT ADMITTED       0/   0/   0      0  1   2      2   129.4  0.0070  yes     0/0        0 7581/0
+f6e_a2   timestop_casino         1   NO READING     (not run or no reading)
+f6e_b1   mini_astro_clock_tower  1   NO READING     (not run or no reading)
+f6e_c1   timestop_casino         0   NO READING     (not run or no reading)
+f6e_c2   mini_astro_clock_tower  0   NO READING     (not run or no reading)
+(5) f6e_a1: NOT ADMITTED; K3 hold None <= limit None (max of base 1 and control f6e_c1); user_msg_param None <= control None; repeat None - precache by default: >= 1 line "PipelinePrecache: <N> recipes ->" in the log (form V sc144, p.281(g))
+(5) f6e_a2: NO READING; K3 hold None <= limit None (max of base 1 and control f6e_c1); user_msg_param None <= control None; repeat None - no reading
+(5) f6e_b1: NO READING; K3 hold None <= limit None (max of base 0 and control f6e_c2); user_msg_param None <= control None; repeat None - no reading
+(6) f6e_c1: NO READING
+(6) f6e_c2: NO READING
+(7) N: timestop_casino =1 entries PASS 0 of 2; mini_astro_clock_tower =1 entries PASS 0 of 1
+repeats due (K3, p.287(v)(5)): none
+F6E SERIES VERDICT p.287(v)(5)-(7) + p.294(b): NOT EVALUABLE; =1 f6e_a1=NOT ADMITTED, f6e_a2=NO READING, f6e_b1=NO READING; controls NO READING, NO READING

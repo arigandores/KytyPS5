@@ -38,6 +38,7 @@
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/systemOverlay.h"
 #include "graphics/presentation/window/hostInput.h"
+#include "graphics/presentation/window/testMinimizeLine.h"
 #include "graphics/presentation/window/windowInternal.h"
 #include "kytyGitVersion.h"
 #include "libs/controller.h"
@@ -1037,7 +1038,9 @@ void WindowShutdown() {
 }
 
 // Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
-// game's first "Level has started:" line the emulator minimizes its own window (SDL_MinimizeWindow on the main thread)
+// game's first level entry line "Level has started: <level>" with a non-blank level name (F5a2, item 280(v): the
+// earlier line with an empty name does not arm; TestMinimizeIsLevelEntry) the emulator minimizes its own window
+// (SDL_MinimizeWindow on the main thread)
 // and restores it <dur> seconds later (SDL_RestoreWindow); lines "TestMinimize: minimize" / "TestMinimize: restore".
 // Unset or empty - nothing (one getenv, then a static flag per guest log write).  The timer is a detached thread that
 // sleeps; the SDL calls are posted to the main thread.  A process that ends inside the window never restores it.
@@ -1067,7 +1070,7 @@ void WindowTestMinimizeNoteGuestText(const char* text, size_t size) {
 	if (!cfg.on || text == nullptr || armed.load(std::memory_order_relaxed)) {
 		return;
 	}
-	if (std::string_view(text, size).find("Level has started: ") == std::string_view::npos ||
+	if (!TestMinimizeIsLevelEntry(std::string_view(text, size)) ||
 	    armed.exchange(true, std::memory_order_acq_rel)) {
 		return;
 	}

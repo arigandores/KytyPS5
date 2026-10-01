@@ -944,6 +944,13 @@ void Presenter::Present(Frame& frame, bool reuse) {
 	const bool preparing = ShaderPreparationOverlayActive();
 	const bool screenshot = !preparing && m_impl->screenshot.Poll();
 	if (!preparing) m_impl->input_script.Poll();
+	// F5a2 (ROADMAP s122 item 280(g), RC1 of F5b; KYTY_FIX_MINIMIZE=1 only): one call records the frame into the
+	// screenshot/video ring at most once and finishes it exactly once if recorded - on success, or right after a failed
+	// present (its submit was made, the slot gets that tick), so the zero-extent drop and "retry exhausted" exits leave
+	// no ring slot pending without a tick.  0 - the old path: Record on every attempt, Finish on success only.
+	const bool fix_minimize = FixMinimizeEnabled();
+	bool       recorded     = false;
+	bool       finished     = false;
 	for (uint32_t attempt = 0; attempt < 2; attempt++) {
 		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
 			if (!m_impl->TryEndZeroExtent()) {
@@ -979,8 +986,9 @@ void Presenter::Present(Frame& frame, bool reuse) {
 			auto&             command          = m_impl->present_scheduler.BeginCommand();
 			const bool        draw_system_overlay =
 			    overlay_visual.active && swapchain.PrepareSystemOverlay();
-			if (screenshot) {
+			if (screenshot && !(fix_minimize && recorded)) {
 				m_impl->screenshot.Record(command, frame.image);
+				recorded = true;
 			}
 			swapchain.RecordPresentCommands(command, frame.image, draw_system_overlay);
 			frame.present_tick = swapchain.Submit(m_impl->present_scheduler);
@@ -998,10 +1006,14 @@ void Presenter::Present(Frame& frame, bool reuse) {
 			     (unsigned long long)((end-submitted)/1000), pending);
 		}
 		if (status != Swapchain::Status::Success) {
+			if (fix_minimize && recorded && !finished) { // F5a2 RC1: the recorded slot gets this submit's tick
+				m_impl->screenshot.Finish(frame.present_tick);
+				finished = true;
+			}
 			m_impl->RecoverSwapchain(status);
 			continue;
 		}
-		if (screenshot) {
+		if (screenshot && !(fix_minimize && finished)) {
 			m_impl->screenshot.Finish(frame.present_tick);
 		}
 

@@ -1,0 +1,6 @@
+log w143_01 52138
+658 --- Error ---
+659 [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature was not enabled.
+log w143_10 53560
+676 --- Error ---
+677 [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature was not enabled.

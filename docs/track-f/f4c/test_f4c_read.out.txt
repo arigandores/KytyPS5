@@ -1,0 +1,87 @@
+suite test_f4c_read.py sha256 cff21dd8f7f807b1747ac13cac00af6bfec6814e9bfc9cfa20b2e16b44ac9ae8 target f4c_read.py sha256 2147387599cf93e04ae84972435f73accf99d51773569dfb89282c69bbeaf0f4
+ok   a pass, executor members ok
+ok   a text ascii
+ok   a text names executor members apart from the verdict
+ok   a two dual lines
+ok   a dual enabled=0
+ok   a dual supported=0
+ok   a no dual line
+ok   a dual after GuestOut -> letter PASS, executor member FAIL
+ok   a stale line -> executor member FAIL only
+ok   a noyet line -> executor member FAIL only
+ok   a precache N != count -> executor member FAIL only
+ok   a no precache line -> executor member FAIL only
+ok   a two precache lines -> executor member FAIL only
+ok   a no dual record -> executor member FAIL only
+ok   a vke in game
+ok   a death marker
+ok   a not entered
+ok   a scene change
+ok   a json hold 309.9 -> letter FAIL, executor members ok
+ok   a json hold 310.0 edge -> PASS
+ok   a sum dt 309.9 s -> letter PASS, executor member FAIL
+ok   a sum dt 310.0 s edge -> executor member ok
+ok   a validation not active
+ok   a precache env set
+ok   a fix env 0
+ok   a fix env absent
+ok   a fix env "true" (not exactly 1)
+ok   a KYTY_FIX_B26 set while FIXB26 None
+ok   a checkpoints env
+ok   a clock pin absent
+ok   a video set
+ok   a recipes json missing
+ok   a guest args other level
+ok   a vulkan-validation false
+ok   a FIXB26=0 configured and passed
+ok   a FIXB26=0 configured, absent
+ok   b stop same text
+ok   b stop -> continue
+ok   b no stop
+ok   b no stop -> series stop
+ok   b other text
+ok   b same text after GuestOut
+ok   b stale line -> executor member FAIL only
+ok   b no dual record -> executor member FAIL only
+ok   b dual enabled=1 -> executor member FAIL only
+ok   b env =1 -> NOT ADMITTED
+ok   b validation inactive -> NOT ADMITTED
+ok   b not admitted -> series stop
+ok   v pass without a dual record (not required)
+ok   v predicted 09239 -> FAIL
+ok   v validation stop -> continue (data)
+ok   v other level -> NOT ADMITTED
+ok   v death not in the letter of (v) -> letter PASS, executor member FAIL
+ok   v death without vke -> series stop
+ok   g pass
+ok   g pass -> continue
+ok   g video 2999 frames
+ok   g video 3000 frames edge
+ok   g glitch 1
+ok   g no glitch file
+ok   g no sheet
+ok   g K2 frame vs base 0 -> FAIL
+ok   g new K2 marker -> FAIL
+ok   g death -> series stop
+ok   g sum dt 329.9 s -> FAIL
+ok   g sum dt 330.0 s edge -> PASS
+ok   g no KYTY_REC
+ok   g validation on
+ok   g precache N mismatch -> executor member FAIL only
+ok   g stale -> executor member FAIL only
+ok   c142_04 base: K2 0, kinds empty, first scene frame n 260
+ok   c142_04 log sha bd5f5477
+ok   real w143_01 stop (+dual line) -> STOP SAME TEXT
+ok   real recipe json: count 2457, 1 dual record
+ok   real w143_01 without the dual line (9235a7ac) -> letter STOP SAME TEXT, executor member FAIL
+ok   seal ok
+ok   seal mismatch
+ok   seal two lines of one name
+ok   seal missing name
+ok   seal file missing
+ok   cli --c14204 cp1250 strict rc 0
+ok   cli bad tag rc 2
+ok   cli stop-check missing json -> stop
+ok   cli no log rc 1
+checks 84 failed 0 []
+ALL OK

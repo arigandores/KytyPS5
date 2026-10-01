@@ -1,0 +1,3 @@
+suite test_go_f4c.py sha256 32dd01d96a3b5db8f3a2620ee80e2f796d822e1ff96849ba8a518679047aa7be target go_f4c.sh sha256 8e2c41cda748b724902d59a8959d78ba5e04ffc73b001d3ae1073dfa217aca10
+checks 41 failed 0
+ALL OK

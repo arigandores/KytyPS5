@@ -1,0 +1,20 @@
+bin 9235a7ac sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7 has699c1e4b 1 has846a041a 0 DualSrcBlend 0 stale 2
+bin 34d293ad sha256 34d293adfc8938b835e029bc7088c1b9dbe687bd372f7f7e2facb1d603c3aae3 has699c1e4b 0 has846a041a 1 DualSrcBlend 1 stale 2
+bin 5821482a sha256 5821482a13a38bb9e42719b75fbd7b6e308a08c8e98caab02afb5398aac368dd has699c1e4b 0 has846a041a 1 DualSrcBlend 0 stale 2
+pipelines.bin sha256 1886cd730c89f0c8697e67f687a57140f58ad176759de8dd7586e964e2883507 bytes 26977015
+pipelines.bin head sig KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank
+10288:376:216:44:516:125?	
+log f2c_a precache lines 5
+    PipelinePrecache: no _ShaderCache\PPSA21564\variant_fixb26\pipelines.bin yet
+    PipelinePrecache: saved 2 recipes (715 bytes)
+    PipelinePrecache: saved 388 recipes (3473163 bytes)
+    PipelinePrecache: saved 401 recipes (3615100 bytes)
+    PipelinePrecache: saved 415 recipes (3780030 bytes)
+log f2c_b precache lines 0
+log f2c_c precache lines 6
+    PipelinePrecache: stale recipes (signature mismatch), ignored
+    PipelinePrecache: saved 3 recipes (1009 bytes)
+    PipelinePrecache: saved 389 recipes (3473457 bytes)
+    PipelinePrecache: saved 401 recipes (3615093 bytes)
+    PipelinePrecache: saved 415 recipes (3780303 bytes)
+    PipelinePrecache: saved 429 recipes (3944993 bytes)

@@ -1,0 +1,25 @@
+C:/kyty/s142/log_c142_03.txt 201982581 ASSERT: 0 user_msg_param 0
+C:/kyty/s144/log_v144_13.txt 521195007 ASSERT: 0 user_msg_param 0
+C:/kyty/s143/log_v143_03.txt 293076648 ASSERT: 0 user_msg_param 0
+C:/kyty/s144/log_w144_13.txt 475466222 ASSERT: 0 user_msg_param 0
+C:/kyty/s144/log_w144_03.txt 257777962 ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_01.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_02.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_03.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_04.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_05.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_06.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_07.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_08.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_09.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\c142_10.stdout.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_01.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_02.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_03.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_04.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_05.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_06.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_07.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_08.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_09.txt ASSERT: 0 user_msg_param 0
+C:/kyty\s142\stdout_c142_10.txt ASSERT: 0 user_msg_param 0

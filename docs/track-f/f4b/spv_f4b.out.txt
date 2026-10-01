@@ -1,0 +1,8 @@
+file C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/ps_5514e10f1a60df83_9b732ff0184ad6c1.bin size 95272 sha256 39182e008b606493
+magic at (4-aligned) [34532]
+magic at (any) [34532]
+module at 34532 version 10300 bound 2901 words 15185 stop None entry [('Fragment',)]
+  OpDecorate Index count 0 Location count 3
+  Output var % 16 gl_FragDepth decor [('BuiltIn', 22)]
+  Output var % 18 out_mrt_0 decor [('Location', 0)]
+  Output var % 19 out_mrt_1 decor [('Location', 1)]

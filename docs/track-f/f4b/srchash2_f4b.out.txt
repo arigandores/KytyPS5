@@ -1,0 +1,4 @@
+HEAD files where worktree == crlf(blob): 27 of 101
+HEAD crlf-model e6824a9c05546edf5eff21d1e1bf949ee1df2cfd
+1713a8be crlf-model e6824a9c05546edf5eff21d1e1bf949ee1df2cfd
+4fc501f4 crlf-model af80129ff866bc1a2b4d787f1f77653ae1fcc48e

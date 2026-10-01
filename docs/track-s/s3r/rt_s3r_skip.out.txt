@@ -1,0 +1,5 @@
+c142_01 lines g>fi 28 lines g>=fi 209 sum ap_skip rows>fi 28
+c142_02 lines g>fi 41 lines g>=fi 41 sum ap_skip rows>fi 41
+c142_03 lines g>fi 2203 lines g>=fi 2203 sum ap_skip rows>fi 2203
+c142_05 lines g>fi 239 lines g>=fi 239 sum ap_skip rows>fi 239
+c142_09 lines g>fi 87 lines g>=fi 90 sum ap_skip rows>fi 87

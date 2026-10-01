@@ -1,0 +1,5 @@
+AudioPropagationTests: KYTY_FIX_B9A=0 resolved 6 of 22
+AudioPropagationTests: KYTY_FIX_B9A=1 resolved 22 of 22
+AudioPropagationTests: KYTY_FIX_B9A=1 calls 36 handles 7
+AudioPropagationTests: checks 210, failures 0
+ALL OK

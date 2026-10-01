@@ -1,0 +1,11 @@
+file size 24608768 24608768
+.text vsize 18113510 18113510 raw 18113536 18113536 diffbytes 0
+.rdata vsize 4980112 4980112 raw 4980224 4980224 diffbytes 149
+.data vsize 36579488 36579488 raw 537088 537088 diffbytes 1874
+.pdata vsize 454092 454092 raw 454144 454144 diffbytes 0
+.retplne vsize 164 164 raw 512 512 diffbytes 0
+.tls vsize 479234 479234 raw 479744 479744 diffbytes 0
+.rsrc vsize 424 424 raw 512 512 diffbytes 0
+.reloc vsize 41964 41964 raw 41984 41984 diffbytes 0
+PE timestamp 0x6abe7cb6 0x6abe782e
+total differing bytes 2025

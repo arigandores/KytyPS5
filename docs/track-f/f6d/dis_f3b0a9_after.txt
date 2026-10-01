@@ -1,0 +1,294 @@
+=== site 0xf3b0a9 function start 0xf3adf0 (site +0x2b9)
+     f3adf0  push       rbp
+     f3adf1  mov        rbp, rsp
+     f3adf4  push       r15
+     f3adf6  push       r14
+     f3adf8  push       r13
+     f3adfa  push       r12
+     f3adfc  push       rbx
+     f3adfd  sub        rsp, 0x68
+     f3ae01  mov        rax, qword ptr [rip + 0x7ef9700]   ; ->0x8e34508
+     f3ae08  mov        rax, qword ptr [rax]
+     f3ae0b  mov        qword ptr [rbp - 0x30], rax
+     f3ae0f  mov        rax, qword ptr [rdx]
+     f3ae12  vmovss     xmm0, dword ptr [r9]
+     f3ae17  mov        r14d, dword ptr [rsi]
+     f3ae1a  mov        r15, qword ptr [rdi + 8]
+     f3ae1e  mov        qword ptr [rbp - 0x70], rax
+     f3ae22  mov        eax, dword ptr [rcx]
+     f3ae24  mov        dword ptr [rbp - 0x64], eax
+     f3ae27  mov        eax, dword ptr [r8]
+     f3ae2a  mov        dword ptr [rbp - 0x60], eax
+     f3ae2d  mov        eax, r14d
+     f3ae30  vmovss     dword ptr [rbp - 0x5c], xmm0
+     f3ae35  shr        eax, 8
+     f3ae38  mov        qword ptr [rbp - 0x78], rax
+     f3ae3c  mov        eax, r14d
+     f3ae3f  shr        eax, 0x10
+     f3ae42  mov        qword ptr [rbp - 0x80], rax
+     f3ae46  mov        eax, r14d
+     f3ae49  shr        eax, 0x18
+     f3ae4c  mov        qword ptr [rbp - 0x88], rax
+     f3ae53  lea        rax, [r15 + 0x408]
+     f3ae5a  mov        qword ptr [rbp - 0x58], rax
+     f3ae5e  call       0x74e7610
+     f3ae63  lea        r12, [r15 + 0x40c]
+     f3ae6a  lea        rsi, [rbp - 0x34]
+     f3ae6e  lea        rdx, [rbp - 0x38]
+     f3ae72  lea        rcx, [rbp - 0x3c]
+     f3ae76  mov        ebx, eax
+     f3ae78  mov        qword ptr [rbp - 0x50], r15
+     f3ae7c  mov        dword ptr [rbp - 0x34], eax
+     f3ae7f  mov        dword ptr [rbp - 0x38], 0
+     f3ae86  mov        rdi, r12
+     f3ae89  call       0x2a0
+     f3ae8e  cmp        dword ptr [rbp - 0x3c], 0
+     f3ae92  je         0xf3aee7
+     f3ae94  lea        r13, [rbp - 0x3c]
+     f3ae98  xor        r15d, r15d
+     f3ae9b  jmp        0xf3aec3
+     f3ae9d  nop        dword ptr [rax]
+     f3aea0  mov        rdi, r12
+     f3aea3  lea        rsi, [rbp - 0x34]
+     f3aea7  lea        rdx, [rbp - 0x38]
+     f3aeab  mov        rcx, r13
+     f3aeae  mov        dword ptr [rbp - 0x34], ebx
+     f3aeb1  mov        dword ptr [rbp - 0x38], 0
+     f3aeb8  call       0x2a0
+     f3aebd  cmp        dword ptr [rbp - 0x3c], 0
+     f3aec1  je         0xf3aee7
+     f3aec3  mov        rax, qword ptr [rbp - 0x58]
+     f3aec7  cmp        dword ptr [rax], 0
+     f3aeca  je         0xf3aed4
+     f3aecc  mov        eax, dword ptr [r12]
+     f3aed0  cmp        eax, ebx
+     f3aed2  je         0xf3aee7
+     f3aed4  inc        r15d
+     f3aed7  and        r15d, 0x3ff
+     f3aede  jne        0xf3aea0
+     f3aee0  call       0x1380
+     f3aee5  jmp        0xf3aea0
+     f3aee7  mov        rdi, qword ptr [rbp - 0x58]
+     f3aeeb  lea        rsi, [rbp - 0x34]
+     f3aeef  call       0x270
+     f3aef4  movzx      eax, r14b
+     f3aef8  movabs     rcx, 0xcbf29ce484222325
+     f3af02  movabs     rdi, 0x100000001b3
+     f3af0c  movzx      edx, byte ptr [rbp - 0x78]
+     f3af10  movzx      esi, byte ptr [rbp - 0x80]
+     f3af14  xor        rcx, rax
+     f3af17  imul       rcx, rdi
+     f3af1b  xor        rdx, rcx
+     f3af1e  imul       rdx, rdi
+     f3af22  xor        rsi, rdx
+     f3af25  mov        rdx, qword ptr [rbp - 0x50]
+     f3af29  imul       rsi, rdi
+     f3af2d  xor        rsi, qword ptr [rbp - 0x88]
+     f3af34  mov        rcx, qword ptr [rdx + 0x3a0]
+     f3af3b  imul       rsi, rdi
+     f3af3f  and        rsi, qword ptr [rdx + 0x3d0]
+     f3af46  mov        rdi, qword ptr [rdx + 0x3b8]
+     f3af4d  lea        rdx, [rsi + rsi*2]
+     f3af51  lea        rsi, [rsi + rsi + 1]
+     f3af56  shl        rdx, 4
+     f3af5a  lea        rsi, [rsi + rsi*2]
+     f3af5e  lea        rax, [rdi + rdx + 0x10]
+     f3af63  mov        rdx, qword ptr [rdi + rdx + 0x10]
+     f3af68  lea        rsi, [rdi + rsi*8 + 0x10]
+     f3af6d  nop        dword ptr [rax]
+     f3af70  mov        rdi, rcx
+     f3af73  cmp        rdx, rcx
+     f3af76  je         0xf3af7e
+     f3af78  mov        rdi, qword ptr [rsi]
+     f3af7b  mov        rdi, qword ptr [rdi]
+     f3af7e  mov        rax, qword ptr [rax]
+     f3af81  cmp        rax, rdi
+     f3af84  je         0xf3afbf
+     f3af86  cmp        dword ptr [rax + 0x10], r14d
+     f3af8a  jne        0xf3af70
+     f3af8c  vxorps     xmm0, xmm0, xmm0
+     f3af90  vmovaps    xmmword ptr [rbp - 0x50], xmm0
+     f3af95  cmp        rax, rcx
+     f3af98  je         0xf3afc8
+     f3af9a  vmovups    xmm0, xmmword ptr [rax + 0x18]
+     f3af9f  mov        rdi, qword ptr [rax + 0x20]
+     f3afa3  vmovaps    xmmword ptr [rbp - 0x50], xmm0
+     f3afa8  test       rdi, rdi
+     f3afab  je         0xf3afc8
+     f3afad  add        rdi, 8
+     f3afb1  mov        esi, 1
+     f3afb6  xor        edx, edx
+     f3afb8  call       0x74ec720
+     f3afbd  jmp        0xf3afc8
+     f3afbf  vxorps     xmm0, xmm0, xmm0
+     f3afc3  vmovaps    xmmword ptr [rbp - 0x50], xmm0
+     f3afc8  mov        rdi, qword ptr [rbp - 0x58]
+     f3afcc  lea        rsi, [rbp - 0x34]
+     f3afd0  call       0x280
+     f3afd5  cmp        dword ptr [rbp - 0x34], 0
+     f3afd9  jne        0xf3aff2
+     f3afdb  lea        rsi, [rbp - 0x34]
+     f3afdf  lea        rdx, [rbp - 0x38]
+     f3afe3  mov        rdi, r12
+     f3afe6  mov        dword ptr [rbp - 0x34], 0
+     f3afed  call       0x290
+     f3aff2  vmovdqa    xmm0, xmmword ptr [rbp - 0x50]
+     f3aff7  vmovq      r12, xmm0
+     f3affc  test       r12, r12
+     f3afff  je         0xf3b142
+     f3b005  movzx      eax, byte ptr [rip + 0xdc63f84]   ; ->0xeb9ef90
+     f3b00c  test       al, al
+     f3b00e  je         0xf3b219
+     f3b014  mov        rcx, qword ptr [rip + 0xdc63f7d]   ; ->0xeb9ef98
+     f3b01b  test       byte ptr [rcx + 0x575], 1
+     f3b022  lea        rax, [rcx + 0x550]
+     f3b029  jne        0xf3b06e
+     f3b02b  mov        rdx, qword ptr [rcx + 0x558]
+     f3b032  test       rdx, rdx
+     f3b035  je         0xf3b06e
+     f3b037  cmp        byte ptr [rdx + 0x22], 1
+     f3b03b  jne        0xf3b06e
+     f3b03d  mov        rdx, qword ptr [rdx + 0x28]
+     f3b041  test       rdx, rdx
+     f3b044  je         0xf3b06e
+     f3b046  mov        rbx, qword ptr [rdx + 0x30]
+     f3b04a  test       rbx, rbx
+     f3b04d  je         0xf3b06e
+     f3b04f  mov        edx, dword ptr [rcx + 0x568]
+     f3b055  nop        word ptr cs:[rax + rax]
+     f3b060  cmp        dword ptr [rbx + 0x18], edx
+     f3b063  je         0xf3b07d
+     f3b065  mov        rbx, qword ptr [rbx + 0x10]
+     f3b069  test       rbx, rbx
+     f3b06c  jne        0xf3b060
+     f3b06e  mov        rbx, rax
+     f3b071  cmp        byte ptr [rbx + 0x26], 0
+     f3b075  jne        0xf3b142
+     f3b07b  jmp        0xf3b097
+     f3b07d  movzx      eax, byte ptr [rbx + 0x22]
+     f3b081  cmp        al, byte ptr [rcx + 0x572]
+     f3b087  jne        0xf3b1cb
+     f3b08d  cmp        byte ptr [rbx + 0x26], 0
+     f3b091  jne        0xf3b142
+     f3b097  vmovss     xmm0, dword ptr [rbp - 0x5c]
+     f3b09c  mov        rsi, qword ptr [rbp - 0x70]
+     f3b0a0  mov        edx, dword ptr [rbp - 0x64]
+     f3b0a3  mov        ecx, dword ptr [rbp - 0x60]
+     f3b0a6  mov        rdi, r12
+>>   f3b0a9  call       0xf52440
+     f3b0ae  lea        rbx, [r12 + 0x23f0]
+     f3b0b6  lea        rdi, [rbp - 0x34]
+     f3b0ba  mov        rsi, rbx
+     f3b0bd  call       0x640
+     f3b0c2  cmp        qword ptr [r12 + 0xb0], 0
+     f3b0cb  je         0xf3b131
+     f3b0cd  cmp        byte ptr [r12 + 0x23e8], 0
+     f3b0d6  jne        0xf3b131
+     f3b0d8  mov        rdx, qword ptr [r12 + 0x23e0]
+     f3b0e0  mov        rdi, qword ptr [r12 + 0x23d8]
+     f3b0e8  xor        esi, esi
+     f3b0ea  shl        rdx, 6
+     f3b0ee  call       0x74ec320
+     f3b0f3  cmp        byte ptr [r12 + 0x23c4], 0
+     f3b0fc  je         0xf3b116
+     f3b0fe  mov        rsi, qword ptr [r12 + 0x23c8]
+     f3b106  mov        rdx, qword ptr [r12 + 0x23d8]
+     f3b10e  mov        rdi, r12
+     f3b111  call       0xf52710
+     f3b116  mov        rdx, qword ptr [r12 + 0x23d0]
+     f3b11e  mov        rdi, qword ptr [r12 + 0x23c8]
+     f3b126  xor        esi, esi
+     f3b128  shl        rdx, 2
+     f3b12c  call       0x74ec320
+     f3b131  lea        rdi, [rbp - 0x34]
+     f3b135  mov        rsi, rbx
+     f3b138  call       0x8c0
+     f3b13d  vmovdqa    xmm0, xmmword ptr [rbp - 0x50]
+     f3b142  vpextrq    rbx, xmm0, 1
+     f3b148  test       rbx, rbx
+     f3b14b  je         0xf3b1ac
+     f3b14d  lea        rdi, [rbx + 8]
+     f3b151  mov        esi, 1
+     f3b156  mov        edx, 4
+     f3b15b  call       0x74ec710
+     f3b160  cmp        eax, 1
+     f3b163  jne        0xf3b1ac
+     f3b165  mov        rax, qword ptr [rbx]
+     f3b168  mov        rdi, rbx
+     f3b16b  call       qword ptr [rax]
+     f3b16d  lea        rdi, [rbx + 0xc]
+     f3b171  mov        esi, 1
+     f3b176  mov        edx, 4
+     f3b17b  call       0x74ec710
+     f3b180  cmp        eax, 1
+     f3b183  jne        0xf3b1ac
+     f3b185  mov        rax, qword ptr [rbx]
+     f3b188  mov        rcx, qword ptr [rip + 0x7ef9379]   ; ->0x8e34508
+     f3b18f  mov        rcx, qword ptr [rcx]
+     f3b192  cmp        rcx, qword ptr [rbp - 0x30]
+     f3b196  jne        0xf3b212
+     f3b198  mov        rdi, rbx
+     f3b19b  add        rsp, 0x68
+     f3b19f  pop        rbx
+     f3b1a0  pop        r12
+     f3b1a2  pop        r13
+     f3b1a4  pop        r14
+     f3b1a6  pop        r15
+     f3b1a8  pop        rbp
+     f3b1a9  jmp        qword ptr [rax + 8]
+     f3b1ac  mov        rax, qword ptr [rip + 0x7ef9355]   ; ->0x8e34508
+     f3b1b3  mov        rax, qword ptr [rax]
+     f3b1b6  cmp        rax, qword ptr [rbp - 0x30]
+     f3b1ba  jne        0xf3b212
+     f3b1bc  add        rsp, 0x68
+     f3b1c0  pop        rbx
+     f3b1c1  pop        r12
+     f3b1c3  pop        r13
+     f3b1c5  pop        r14
+     f3b1c7  pop        r15
+     f3b1c9  pop        rbp
+     f3b1ca  ret        
+     f3b1cb  lea        rdi, [rip + 0x714380a]   ; ->0x807e9dc "D:\asobi\6.0\source\engine\app\Build\Props\\..\..\..\app\Module/System/Property.h"
+     f3b1d2  lea        rcx, [rip + 0x713a8e9]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f3b1d9  lea        r8, [rip + 0x719b021]   ; ->0x80d6201
+     f3b1e0  lea        r9, [rip + 0x7263e20]   ; ->0x819f007 "pBaseProp->GetType() == GetType()"
+     f3b1e7  mov        esi, 0x25b
+     f3b1ec  mov        edx, 1
+     f3b1f1  xor        eax, eax
+     f3b1f3  call       0x1aa0
+     f3b1f8  test       eax, eax
+     f3b1fa  je         0xf3b1fe
+     f3b1fc  int        0x41
+     f3b1fe  vmovdqa    xmm0, xmmword ptr [rbp - 0x50]
+     f3b203  cmp        byte ptr [rbx + 0x26], 0
+     f3b207  jne        0xf3b142
+     f3b20d  jmp        0xf3b097
+     f3b212  call       0x74ec090
+     f3b217  ud2        
+     f3b219  lea        rdi, [rip + 0xdc63d70]   ; ->0xeb9ef90
+     f3b220  call       0x74e7370
+     f3b225  vmovdqa    xmm0, xmmword ptr [rbp - 0x50]
+     f3b22a  test       eax, eax
+     f3b22c  je         0xf3b014
+     f3b232  mov        edi, 0x3968
+     f3b237  mov        byte ptr [rip + 0xdc63d62], 1   ; ->0xeb9efa0
+     f3b23e  call       0x74e73e0
+     f3b243  mov        rdi, rax
+     f3b246  mov        rbx, rax
+     f3b249  call       0xf55a80
+     f3b24e  lea        rdx, [rip + 0x8098dbb]   ; ->0x8fd4010
+     f3b255  lea        rdi, [rip - 0x128c]   ; ->0xf39fd0
+     f3b25c  lea        rsi, [rip + 0xdc63d25]   ; ->0xeb9ef88
+     f3b263  mov        qword ptr [rip + 0xdc63d2e], rbx   ; ->0xeb9ef98
+     f3b26a  mov        byte ptr [rip + 0xdc63d2f], 0   ; ->0xeb9efa0
+     f3b271  call       0x74e7360
+     f3b276  lea        rdi, [rip + 0xdc63d13]   ; ->0xeb9ef90
+     f3b27d  call       0x74e7380
+     f3b282  vmovdqa    xmm0, xmmword ptr [rbp - 0x50]
+     f3b287  jmp        0xf3b014
+     f3b28c  int3       
+     f3b28d  int3       
+     f3b28e  int3       
+     f3b28f  int3       
+     f3b290  xor        eax, eax
+     f3b292  ret        

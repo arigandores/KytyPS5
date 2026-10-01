@@ -1,0 +1,8 @@
+.rdata strings>=8 total A 29601 B 29601 only A 0 only B 0
+.rdata anon hashes A 0 B 0
+.data strings>=8 total A 782 B 782 only A 0 only B 0
+.data anon hashes A 13 B 13
+.text bytes 18113510 differing runs 0 differing bytes 0
+.text run length histogram []
+.text displacement deltas (top 20) []
+.text distinct deltas 0

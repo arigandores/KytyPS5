@@ -1,0 +1,143 @@
+=== site 0xf52441 function start 0xf52440 (site +0x1)
+     f52440  push       rbp
+>>   f52441  mov        rbp, rsp
+     f52444  push       r15
+     f52446  push       r14
+     f52448  push       r13
+     f5244a  push       r12
+     f5244c  push       rbx
+     f5244d  sub        rsp, 0x38
+     f52451  mov        rax, qword ptr [rip + 0x7ee20b0]   ; ->0x8e34508
+     f52458  vmovaps    xmmword ptr [rbp - 0x50], xmm0
+     f5245d  mov        r14, rsi
+     f52460  mov        r13, rdi
+     f52463  lea        rsi, [rdi + 0x23f0]
+     f5246a  lea        rdi, [rbp - 0x34]
+     f5246e  mov        ebx, ecx
+     f52470  mov        r12d, edx
+     f52473  mov        rax, qword ptr [rax]
+     f52476  mov        qword ptr [rbp - 0x30], rax
+     f5247a  mov        qword ptr [rbp - 0x60], rsi
+     f5247e  call       0x640
+     f52483  vmovaps    xmm5, xmmword ptr [rbp - 0x50]
+     f52488  cmp        qword ptr [r13 + 0xb0], 0
+     f52490  je         0xf525d4
+     f52496  movsxd     rax, ebx
+     f52499  cmp        qword ptr [r13 + 0x23d0], rax
+     f524a0  jne        0xf52600
+     f524a6  test       r12d, r12d
+     f524a9  je         0xf525d4
+     f524af  mov        r11, qword ptr [r13 + 0x23c8]
+     f524b6  mov        edi, ebx
+     f524b8  vbroadcastss ymm0, xmm5
+     f524bd  lea        eax, [rbx - 1]
+     f524c0  mov        r15d, ebx
+     f524c3  mov        ecx, r12d
+     f524c6  xor        r12d, r12d
+     f524c9  mov        r8d, edi
+     f524cc  lea        rdx, [rax*4 + 4]
+     f524d4  and        r8d, 0xffffffe0
+     f524d8  lea        r10, [r8*4]
+     f524e0  sub        r15d, r8d
+     f524e3  lea        rsi, [r11 + rax*4 + 4]
+     f524e8  lea        r9, [r11 + r8*4]
+     f524ec  mov        dword ptr [rbp - 0x50], r15d
+     f524f0  mov        qword ptr [rbp - 0x58], r9
+     f524f4  jmp        0xf5250c
+     f524f6  nop        word ptr cs:[rax + rax]
+     f52500  inc        r12
+     f52503  cmp        r12, rcx
+     f52506  je         0xf525d4
+     f5250c  test       ebx, ebx
+     f5250e  je         0xf52500
+     f52510  mov        r13, qword ptr [r14 + r12*8]
+     f52514  cmp        ebx, 0x1f
+     f52517  jbe        0xf52528
+     f52519  cmp        r13, rsi
+     f5251c  jae        0xf5255d
+     f5251e  lea        rax, [r13 + rdx]
+     f52523  cmp        r11, rax
+     f52526  jae        0xf5255d
+     f52528  mov        r9d, ebx
+     f5252b  mov        rax, r11
+     f5252e  mov        r15d, r9d
+     f52531  xor        r9d, r9d
+     f52534  nop        word ptr cs:[rax + rax]
+     f52540  vmovss     xmm1, dword ptr [r13 + r9*4]
+     f52547  vfmadd213ss xmm1, xmm5, dword ptr [rax + r9*4]
+     f5254d  vmovss     dword ptr [rax + r9*4], xmm1
+     f52553  inc        r9
+     f52556  cmp        r15d, r9d
+     f52559  jne        0xf52540
+     f5255b  jmp        0xf52500
+     f5255d  xor        eax, eax
+     f5255f  nop        
+     f52560  vmovups    ymm1, ymmword ptr [r13 + rax]
+     f52567  vmovups    ymm2, ymmword ptr [r13 + rax + 0x20]
+     f5256e  vmovups    ymm3, ymmword ptr [r13 + rax + 0x40]
+     f52575  vmovups    ymm4, ymmword ptr [r13 + rax + 0x60]
+     f5257c  vfmadd213ps ymm1, ymm0, ymmword ptr [r11 + rax]
+     f52582  vfmadd213ps ymm2, ymm0, ymmword ptr [r11 + rax + 0x20]
+     f52589  vfmadd213ps ymm3, ymm0, ymmword ptr [r11 + rax + 0x40]
+     f52590  vfmadd213ps ymm4, ymm0, ymmword ptr [r11 + rax + 0x60]
+     f52597  vmovups    ymmword ptr [r11 + rax], ymm1
+     f5259d  vmovups    ymmword ptr [r11 + rax + 0x20], ymm2
+     f525a4  vmovups    ymmword ptr [r11 + rax + 0x40], ymm3
+     f525ab  vmovups    ymmword ptr [r11 + rax + 0x60], ymm4
+     f525b2  sub        rax, -0x80
+     f525b6  cmp        r10, rax
+     f525b9  jne        0xf52560
+     f525bb  cmp        r8, rdi
+     f525be  je         0xf52500
+     f525c4  mov        r9d, dword ptr [rbp - 0x50]
+     f525c8  mov        rax, qword ptr [rbp - 0x58]
+     f525cc  add        r13, r10
+     f525cf  jmp        0xf5252e
+     f525d4  mov        rsi, qword ptr [rbp - 0x60]
+     f525d8  lea        rdi, [rbp - 0x34]
+     f525dc  call       0x8c0
+     f525e1  mov        rax, qword ptr [rip + 0x7ee1f20]   ; ->0x8e34508
+     f525e8  mov        rax, qword ptr [rax]
+     f525eb  cmp        rax, qword ptr [rbp - 0x30]
+     f525ef  jne        0xf52641
+     f525f1  add        rsp, 0x38
+     f525f5  pop        rbx
+     f525f6  pop        r12
+     f525f8  pop        r13
+     f525fa  pop        r14
+     f525fc  pop        r15
+     f525fe  pop        rbp
+     f525ff  ret        
+     f52600  lea        rdi, [rip + 0x7116fbb]   ; ->0x80695c2 "D:\asobi\6.0\source\engine\app\Module\Audio\AudioPropagationSource.cpp"
+     f52607  lea        rcx, [rip + 0x71234b4]   ; ->0x8075ac2 "[Asobi Dbg]"
+     f5260e  lea        r8, [rip + 0x7183bec]   ; ->0x80d6201
+     f52615  lea        r9, [rip + 0x727fe8d]   ; ->0x81d24a9 "numSamples == m_numOfGrains"
+     f5261c  mov        esi, 0x15b
+     f52621  mov        edx, 1
+     f52626  xor        eax, eax
+     f52628  call       0x1aa0
+     f5262d  vmovaps    xmm5, xmmword ptr [rbp - 0x50]
+     f52632  test       eax, eax
+     f52634  je         0xf524a6
+     f5263a  int        0x41
+     f5263c  jmp        0xf524a6
+     f52641  call       0x74ec090
+     f52646  ud2        
+     f52648  int3       
+     f52649  int3       
+     f5264a  int3       
+     f5264b  int3       
+     f5264c  int3       
+     f5264d  int3       
+     f5264e  int3       
+     f5264f  int3       
+     f52650  push       rbp
+     f52651  mov        rbp, rsp
+     f52654  push       r15
+     f52656  push       r14
+     f52658  push       rbx
+     f52659  sub        rsp, 0x18
+     f5265d  mov        r15, qword ptr [rip + 0x7ee1ea4]   ; ->0x8e34508
+     f52664  lea        rbx, [rdi + 0x23f0]
+     f5266b  mov        r14, rdi
+     f5266e  lea        rdi, [rbp - 0x24]

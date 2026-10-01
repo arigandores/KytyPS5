@@ -1,0 +1,2 @@
+rec_f4c_g.mp4: 19708 frames 960x540, index entries 19708
+one-frame glitches: 0

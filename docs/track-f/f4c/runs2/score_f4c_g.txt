@@ -1,0 +1,34 @@
+f4c_read tag f4c_g level mini_giants_garden arm V KYTY_FIX_DUALSRC=1 log sha256 c19675196edfb1f7a3e6b4505ab0693054fa99c886ffddb8de5636e06765e0a8 binary c9a5e1986e254132
+admit ok   one attempt [1]
+admit ok   binary sha256 = F4c binary (p.268(v)) [c9a5e1986e254132]
+admit ok   guest args -lvl mini_giants_garden [-lvl mini_giants_garden]
+admit ok   KYTY_FIX_DUALSRC=1 exactly ['1']
+admit ok   KYTY_FIX_B26 not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no KYTY_GPU_CHECKPOINTS []
+admit ok   KYTY_PIPELINE_PRECACHE not set (precache by default, p.254(zh)(2)) [None]
+admit ok   video KYTY_REC rec_f4c_g.mp4 [C:\kyty\f287\f4c\rec_f4c_g.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   recipe file parsed before the tag (runs/recipes_f4c_g.json) [(2457, '1886cd730c89f0c8', None)]
+control p.262(d) ok   exactly one DualSrcBlend line = supported=1 enabled=1 [[(1, 1)]]
+control p.262(d) ok   the DualSrcBlend line before the first GuestOut line [([(5319, (1, 1))], 534486)]
+executor member [I] ok   one "PipelinePrecache: N recipes ->" line with N = count of the file before the tag [([2457], 2457, '')]
+executor member [I] ok   no stale recipes line [0]
+executor member [I] ok   no "no ... pipelines.bin yet" line [0]
+executor member [I] ok   >= 1 line DualSrcBlend: patched ps=5514e10f1a60df83 [(1, 1)]
+recipe file before the tag: count 2457 sha256 1886cd730c89f0c8697e67f687a57140f58ad176759de8dd7586e964e2883507 dual-source records 1 KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank|10288:376:216:44:516:125
+DualSrcBlend patched lines 1 (5514 before the first GuestOut 1) ['5514e10f1a60df83']; skip lines 0 []
+entered True first scene frame (402, 28233, 201) scene change False first GuestOut at byte 534486 enter_scene outcome ok
+hold: sum dt after first 332.4 s (the letter, p.262(e)); json hold_s 330.1 (reference), hold_exit None
+death markers 0 []
+validation noval/valfeat/vkany 0/0/0 active False; [Vulkan][E] 0
+first [Vulkan][E] line (<= 300 chars): []
+stop text lines 0, first before the first GuestOut False
+K2 frames after first scene frame 0 []; AsyncPipelines skipped draw lines 0
+video: 19708 glitches 0 sheet True -> ok True
+c142_04 base: log sha256 bd5f547706caad1d kinds [] K2 0 sum dt after first 121.8 s
+new K1/K2 against c142_04: kinds [], K2 0 vs 0 -> new K2 False
+hold >= 330 s by the sum of dt after the first scene frame: True
+F4C VERDICT f4c_g letter: PASS
+F4C EXECUTOR MEMBERS f4c_g [I] (p.258(d), not the verdict): all ok

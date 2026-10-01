@@ -1,0 +1,174 @@
+{
+ "tag": "f4c_v",
+ "cfg": {
+  "level": "mini_giants_garden",
+  "fix": "1",
+  "arm": "W",
+  "val": true,
+  "video": false,
+  "hold_s": 310,
+  "precache": true,
+  "need_dual": true,
+  "patched": ">=1"
+ },
+ "log_sha": "f9a9bab1a87804bd2803471e6da79866f88a74366f05629c43d006f4e93eba93",
+ "binary": "c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = F4c binary (p.268(v))",
+   true,
+   "c9a5e1986e254132"
+  ],
+  [
+   "guest args -lvl mini_giants_garden",
+   true,
+   "-lvl mini_giants_garden"
+  ],
+  [
+   "KYTY_FIX_DUALSRC=1 exactly",
+   true,
+   "'1'"
+  ],
+  [
+   "KYTY_FIX_B26 not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "no KYTY_GPU_CHECKPOINTS",
+   true,
+   ""
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (precache by default, p.254(zh)(2))",
+   true,
+   "None"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation true",
+   true,
+   "true"
+  ],
+  [
+   "validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][)",
+   true,
+   "0/1/843000"
+  ],
+  [
+   "recipe file parsed before the tag (runs/recipes_f4c_v.json)",
+   true,
+   "(2457, '1886cd730c89f0c8', None)"
+  ]
+ ],
+ "admitted": true,
+ "entered": true,
+ "first": [
+  394,
+  17239,
+  178
+ ],
+ "guest_pos": 557523,
+ "dt_after_first_s": 316.664138,
+ "hold_s_json": 310.1,
+ "hold_exit": null,
+ "outcome": "ok",
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "vke": 0,
+ "vke_first": [],
+ "stop_lines": 0,
+ "stop_before_guest": false,
+ "patched": [
+  "5514e10f1a60df83"
+ ],
+ "patched_1592_before_guest": 1,
+ "skip": [],
+ "val": {
+  "noval": 0,
+  "valfeat": 1,
+  "vkany": 843000,
+  "ok": true
+ },
+ "k2_after_first": 0,
+ "k2_list": [],
+ "skip_lines": 0,
+ "recipes": {
+  "count": 2457,
+  "sha": "1886cd730c89f0c8697e67f687a57140f58ad176759de8dd7586e964e2883507",
+  "dual": 1,
+  "sig": "KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank|10288:376:216:44:516:125",
+  "error": null
+ },
+ "glitch": null,
+ "sheet": false,
+ "not_evaluable_why": null,
+ "hold_letter": true,
+ "verdict_letter": "PASS",
+ "controls": [
+  [
+   "exactly one DualSrcBlend line = supported=1 enabled=1",
+   true,
+   "[(1, 1)]"
+  ],
+  [
+   "the DualSrcBlend line before the first GuestOut line",
+   true,
+   "([(5729, (1, 1))], 557523)"
+  ],
+  [
+   ">= 1 line DualSrcBlend: patched ps=5514e10f1a60df83 before the first GuestOut line",
+   true,
+   "(1, 1)"
+  ],
+  [
+   "one \"PipelinePrecache: N recipes ->\" line with N = count of the file before the tag (not applicable after a validation stop inside the precache - variant of the executor)",
+   true,
+   "([2457], 2457, '')"
+  ],
+  [
+   "no stale recipes line",
+   true,
+   "0"
+  ],
+  [
+   "no \"no ... pipelines.bin yet\" line",
+   true,
+   "0"
+  ],
+  [
+   "the recipe file before the tag holds a dual-source record",
+   true,
+   "1"
+  ]
+ ],
+ "controls_ok": true,
+ "exec_members": [
+  [
+   "0 death markers (v)",
+   true,
+   "0"
+  ]
+ ],
+ "exec_ok": true
+}

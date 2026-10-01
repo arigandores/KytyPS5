@@ -1,0 +1,43 @@
+2026-10-01T13:13:55Z F4c wake8: comment cac1b135 (p.279, febe6b72) read; seal pred/f4c2.md written (copy C:/kyty/f287/pred/f4c2.md) sha256 326cb7be2d8b92ea7eb82996ea5d4954cde8e7d8ca9dfe48edfe2db07062f30b / 326cb7be2d8b92ea7eb82996ea5d4954cde8e7d8ca9dfe48edfe2db07062f30b; check-seal OK; test_go_f4c2 67 ALL OK out 6b58c24b, test_go_f4c rerun 57 ALL OK
+2026-10-01T13:14:18Z F4c next_f4c2 STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/f4c/go_f4c2.sh series
+2026-10-01T13:14:35Z F4c go_f4c2 series call returned rc=4
+2026-10-01T13:15:32Z F4c wake8: call 1 of go_f4c2 refused BUSY rc 4 before the lock (13:14:34 local 15:14:34: names guard 'a mutant/fixture/emulator process lives (2)' after procload clean; no lock, no install, no tag - not an attempt, precedent of the first series call 1); output moved to go_series2.busy1.out.txt; at 13:14:56Z no matching process (Win32_Process scan); call 2
+2026-10-01T13:15:33Z F4c next_f4c2 STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/f4c/go_f4c2.sh series
+2026-10-01T13:16:19Z F4c go_f4c2 lock window (p.268(d), 270(d)): win_f4c2 HPP-333 done run None; HPP-347 done run None; HPP-328 done run None; HPP-352 blocked run None -> open
+2026-10-01T13:16:20Z F4c go_f4c2 lock taken (winpid 65884)
+2026-10-01T13:16:20Z F4c go_f4c2 f4c_a refused marker set of the first series (call 2) moved to *f4c_a.busy1* (BUSY before the emulator start, not an attempt)
+2026-10-01T13:16:22Z F4c go_f4c2 shader cache before the series: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c
+2026-10-01T13:16:25Z F4c go_f4c2 shader cache copy = before (C:/kyty/f287/f4c/cache_snap)
+2026-10-01T13:16:28Z F4c go_f4c2 cache manifest before the series: cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 167343493 bytes; glcache 16 files 98780153 bytes; cache_series.before.json sha256 25500f56861c40924b0ad6047fd2389a335c7be276df111c031d6394ffd14cbd
+2026-10-01T13:16:30Z F4c go_f4c2 GLCache before the series: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 (copy equal, GLRESTORE=1)
+2026-10-01T13:16:30Z F4c go_f4c2 installed fix binary sha256 c9a5e1986e254132f776f0c7f1c9446d0bdc862e199bbbc1d57aedf17d4c9f9b
+2026-10-01T13:16:31Z F4c go_f4c2 f4c_a recipe file before the tag: cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 26977015 sha256 1886cd730c89f0c8 count 2457 parsed 2457 (graphics 2258 compute 199) at_end True ; dual-source lines 1
+2026-10-01T13:16:31Z F4c go_f4c2 f4c_a pre-check (p.262(g)): continue: 1 dual-source record(s) in the recipe file before f4c_a (count 2457)
+2026-10-01T13:16:34Z F4c go_f4c2 f4c_a idle142 IDLE after 0 s of wait
+2026-10-01T13:16:34Z F4c go_f4c2 f4c_a enter_scene start (level underwater_aerial_garden, hold 310, extra 'KYTY_FIX_DUALSRC=1 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000', emu '--emu-arg=--vulkan-validation --emu-arg=true')
+2026-10-01T13:22:33Z F4c go_f4c2 f4c_a enter_scene end rc 0 log_f4c_a.txt sha256 1184c6f163a3d68569d45a9955df4e3f62ef538d9046382b806ad368d6969a79
+2026-10-01T13:22:35Z F4c go_f4c2 f4c_a reader rc 0 score_f4c_a.txt sha256 5e8dad66e455591e187ec28e840d2468fa28345a0743fe5ac313ff44e7812fde: F4C VERDICT f4c_a letter: PASS;
+2026-10-01T13:22:36Z F4c go_f4c2 f4c_a stop check (enter_scene rc 0): continue
+2026-10-01T13:22:37Z F4c go_f4c2 f4c_v recipe file before the tag: cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 26977015 sha256 1886cd730c89f0c8 count 2457 parsed 2457 (graphics 2258 compute 199) at_end True ; dual-source lines 1
+2026-10-01T13:22:39Z F4c go_f4c2 f4c_v idle142 IDLE after 0 s of wait
+2026-10-01T13:22:40Z F4c go_f4c2 f4c_v enter_scene start (level mini_giants_garden, hold 310, extra 'KYTY_FIX_DUALSRC=1 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000', emu '--emu-arg=--vulkan-validation --emu-arg=true')
+2026-10-01T13:28:24Z F4c go_f4c2 f4c_v enter_scene end rc 0 log_f4c_v.txt sha256 f9a9bab1a87804bd2803471e6da79866f88a74366f05629c43d006f4e93eba93
+2026-10-01T13:28:27Z F4c go_f4c2 f4c_v reader rc 0 score_f4c_v.txt sha256 ae61294eec338f5ec883d646135afb0071af4570745aa2dc945f0073c96827a7: F4C VERDICT f4c_v letter: PASS;
+2026-10-01T13:28:27Z F4c go_f4c2 f4c_v stop check (enter_scene rc 0): continue
+2026-10-01T13:28:29Z F4c go_f4c2 f4c_g recipe file before the tag: cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 26977015 sha256 1886cd730c89f0c8 count 2457 parsed 2457 (graphics 2258 compute 199) at_end True ; dual-source lines 1
+2026-10-01T13:28:31Z F4c go_f4c2 f4c_g idle142 IDLE after 0 s of wait
+2026-10-01T13:28:32Z F4c go_f4c2 f4c_g enter_scene start (level mini_giants_garden, hold 330, extra 'KYTY_FIX_DUALSRC=1', emu '')
+2026-10-01T13:34:30Z F4c go_f4c2 f4c_g enter_scene end rc 0 log_f4c_g.txt sha256 c19675196edfb1f7a3e6b4505ab0693054fa99c886ffddb8de5636e06765e0a8
+2026-10-01T13:35:18Z F4c go_f4c2 f4c_g s51_vidglitch rc 0 glitch_f4c_g.txt sha256 bd908c802ece2ef8220c246cd76c617e4179da07dc15bcdac629b4df41db58e6 rec_f4c_g.mp4 sha256 265c420cc503d9b57ae3fd6362fd1387ac5c1954f44f774e881af7c710da8cda
+2026-10-01T13:35:42Z F4c go_f4c2 f4c_g sheet rc 0 sheet_f4c_g.png sha256 e16f77161f2e33457f2ea64c8c71703e3aff6e685582adbf3315d2bfc8726319
+2026-10-01T13:35:47Z F4c go_f4c2 f4c_g reader rc 0 score_f4c_g.txt sha256 f8a45d91ca2d8b6ddcada6523be89c1b54c6cd90222829233214613fc0ae0a7f: F4C VERDICT f4c_g letter: PASS;
+2026-10-01T13:35:47Z F4c go_f4c2 f4c_g stop check (enter_scene rc 0): continue
+2026-10-01T13:35:47Z F4c go_f4c2 restore binary ok sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+2026-10-01T13:35:49Z F4c go_f4c2 shader cache at the end of the series (before the return): files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c
+2026-10-01T13:35:51Z F4c go_f4c2 recipe file at the end of the series: cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 26977015 sha256 1886cd730c89f0c8 count 2457 parsed 2457 (graphics 2258 compute 199) at_end True 
+2026-10-01T13:35:53Z F4c go_f4c2 shader cache returned: files 1301 bytes 215573383 listsha bd7aa754b45adeb9774af5f8c42d215d3dc555aa4bff17a85d28d90042be7b6c = before; run cache kept in C:/kyty/f287/f4c/cache_run/20261001T133551Z
+2026-10-01T13:35:56Z F4c go_f4c2 cache manifest after the series (before any GLCache return): cachemf143: shader 1301 files 215573383 bytes; pipeline 4 files 167371569 bytes; glcache 16 files 98808233 bytes; cache_series.after.json sha256 0964ced6d43bd05289f278ab4e6a72878ec7c1a222660e57065f237b5d027ba6
+2026-10-01T13:35:56Z F4c go_f4c2 GLCache returned: files 16 bytes 98780153 listsha 3cdb7b0d1b6ade219218f1aefde5dd15dcd30fd75e7dbed1f81bd71b53be4747 = before
+2026-10-01T13:36:07Z F4c go_f4c2 foreign cpu at the end inside the lock: fgcpu143: run 1166.7 s: (1) alive at both ends: foreign 1.362 CPU s/s = 4.3 % of 32 logical CPUs over 490 processes; top <desktop processes, names removed in the git copy>| (2) new at the end: foreign 0.108 CPU s/s = 0.3 % over 65 processes; top <desktop processes, names removed in the git copy>| (3) system (GetSystemTimes) 8.741 CPU s/s = 27.3 % | game 0.000, chain (pid 65884 and its descendants alive at the end) 0.002 over 5 | (4) residual = (3) - (1) - (2) - game - chain = 7.269 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member || now 10.0 s: (1) alive at both ends: foreign 0.892 CPU s/s = 2.8 % of 32 logical CPUs over 550 processes; top <desktop processes, names removed in the git copy>| (2) new at the end: foreign 0.017 CPU s/s = 0.1 % over 6 processes; top <desktop processes, names removed in the git copy>| (3) system (GetSystemTimes) 2.220 CPU s/s = 6.9 % | game 0.000, chain (pid 65884 and its descendants alive at the end) 0.002 over 4 | (4) residual = (3) - (1) - (2) - game - chain = 1.310 CPU s/s (the game and the chain's processes dead at the end are in it) | blind zone: processes born and dead inside the run: only in the system member
+2026-10-01T13:36:07Z F4c go_f4c2 lock released (rc 0)
+2026-10-01T13:36:07Z F4c go_f4c2 series call returned rc=0

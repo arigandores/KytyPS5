@@ -656,6 +656,19 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 	device_features.vertexPipelineStoresAndAtomics       = VK_TRUE;
 	graphics.sample_rate_shading_enabled                 = true;
 	device_features.shaderInt64 = VK_TRUE;
+	// Track F, F4 (HPP-335, ROADMAP s122 p.254(zh)(1), row B35): pipelines with SRC1 blend factors
+	// (recipe 1592: SRC1_ALPHA / ONE_MINUS_SRC1_ALPHA) are created without dualSrcBlend. KYTY_FIX_DUALSRC
+	// (Common::EnvFlagOn: unset, "", 0/false/off/no = OFF; default OFF) enables it when supported; OFF leaves
+	// device_features as before. Outside the translation cache signature (not under src/graphics/shader).
+	{
+		const bool dual_src_supported = supported_features2.features.dualSrcBlend == VK_TRUE;
+		const bool dual_src_enabled   = dual_src_supported && Common::EnvFlagOn("KYTY_FIX_DUALSRC");
+		if (dual_src_enabled) {
+			device_features.dualSrcBlend = VK_TRUE;
+		}
+		LOGF("DualSrcBlend: supported=%d enabled=%d\n", dual_src_supported ? 1 : 0,
+		     dual_src_enabled ? 1 : 0);
+	}
 
 	vk::PhysicalDeviceRobustness2FeaturesEXT robustness2 {};
 #if defined(__APPLE__)

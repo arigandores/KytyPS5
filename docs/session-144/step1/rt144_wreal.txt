@@ -1,0 +1,51 @@
+PART B - profile 144 on real W logs: w143_NN (precache by default, stopped at the start, s143) as w144_0N of the same level; w142 (Sky Garden, precache by default, held 310 s, s142) as the control w144_00. Root b1: the jsons as run; root b2: the same jsons with KYTY_PIPELINE_PRECACHE=0 added to env (what the W form member reads).
+b1 w144_00 <- w142: outcome HOLDS_120; wkey None; guestout 545368; precache {'log': 1, 'stdout': 0, 'any': 2}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=FAIL(log 1)
+b1 w144_01 <- w143_01: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_02 <- w143_02: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_03 <- w143_03: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_04 <- w143_04: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_05 <- w143_05: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 1, 'stdout': 0, 'any': 1}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=FAIL(log 1)
+b1 w144_06 <- w143_06: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_07 <- w143_09: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 w144_08 <- w143_10: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=FAIL(None); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b1 stop_check144(w144_01) -> STOP rc 5
+b1   STOP RULE CONTROL before w144_01: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: KYTY_PIPELINE_PRECACHE=0 in the env (item 254 (e));W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b1   STOP RULE W before w144_01 (two W in a row stopped before the first GuestOut line with one key): not met; keys w144_00 None
+b1   STOP RULE before w144_01: not met
+b1 stop_check144(w144_02) -> STOP rc 5
+b1   STOP RULE CONTROL before w144_02: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: KYTY_PIPELINE_PRECACHE=0 in the env (item 254 (e));W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b1   STOP RULE W before w144_02 (two W in a row stopped before the first GuestOut line with one key): not met; keys w144_00 None, w144_01 VALIDATION_STOP --- Error ---
+b1   STOP RULE before w144_02: not met
+b1 stop_check144(w144_03) -> STOP rc 5
+b1   STOP RULE CONTROL before w144_03: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: KYTY_PIPELINE_PRECACHE=0 in the env (item 254 (e));W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b1   STOP RULE W before w144_03 (two W in a row stopped before the first GuestOut line with one key): STOP w144_01,w144_02; keys w144_01 VALIDATION_STOP --- Error ---, w144_02 VALIDATION_STOP --- Error ---
+b1   STOP RULE before w144_03: not met
+b1 stop_check144(w144_04) -> STOP rc 5
+b1   STOP RULE CONTROL before w144_04: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: KYTY_PIPELINE_PRECACHE=0 in the env (item 254 (e));W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b1   STOP RULE W before w144_04 (two W in a row stopped before the first GuestOut line with one key): STOP w144_02,w144_03; keys w144_02 VALIDATION_STOP --- Error ---, w144_03 VALIDATION_STOP --- Error ---
+b1   STOP RULE before w144_04: not met
+b2 w144_00 <- w142: outcome HOLDS_120; wkey None; guestout 545368; precache {'log': 1, 'stdout': 0, 'any': 2}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=FAIL(log 1)
+b2 w144_01 <- w143_01: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_02 <- w143_02: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_03 <- w143_03: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_04 <- w143_04: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_05 <- w143_05: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 1, 'stdout': 0, 'any': 1}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=FAIL(log 1)
+b2 w144_06 <- w143_06: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_07 <- w143_09: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 w144_08 <- w143_10: outcome NOT_ENTERED; wkey VALIDATION_STOP --- Error ---; guestout None; precache {'log': 0, 'stdout': 0, 'any': 0}; form rows: W form: KYTY_PIPELINE_PRECACHE=0 in the env=ok(0); W form: no "PipelinePrecache: N recipes ->" line in the log=ok(log 0)
+b2 stop_check144(w144_01) -> STOP rc 5
+b2   STOP RULE CONTROL before w144_01: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b2   STOP RULE W before w144_01 (two W in a row stopped before the first GuestOut line with one key): not met; keys w144_00 None
+b2   STOP RULE before w144_01: not met
+b2 stop_check144(w144_02) -> STOP rc 5
+b2   STOP RULE CONTROL before w144_02: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b2   STOP RULE W before w144_02 (two W in a row stopped before the first GuestOut line with one key): not met; keys w144_00 None, w144_01 VALIDATION_STOP --- Error ---
+b2   STOP RULE before w144_02: not met
+b2 stop_check144(w144_03) -> STOP rc 5
+b2   STOP RULE CONTROL before w144_03: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b2   STOP RULE W before w144_03 (two W in a row stopped before the first GuestOut line with one key): STOP w144_01,w144_02; keys w144_01 VALIDATION_STOP --- Error ---, w144_02 VALIDATION_STOP --- Error ---
+b2   STOP RULE before w144_03: not met
+b2 stop_check144(w144_04) -> STOP rc 5
+b2   STOP RULE CONTROL before w144_04: STOP; letter pass (none); executor reading [I] (the gate) stop (W admitted (prereg = the seal now;W form: no "PipelinePrecache: N recipes ->" line in the log (item 254 (e))))
+b2   STOP RULE W before w144_04 (two W in a row stopped before the first GuestOut line with one key): STOP w144_02,w144_03; keys w144_02 VALIDATION_STOP --- Error ---, w144_03 VALIDATION_STOP --- Error ---
+b2   STOP RULE before w144_04: not met

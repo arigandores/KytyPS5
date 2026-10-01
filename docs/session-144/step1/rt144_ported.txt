@@ -1,0 +1,157 @@
+PART E - diffs of the ported files s144 against s143 (changed lines only)
+enter_scene.py (2cce107bea0a2ebd) vs s143/enter_scene.py (51f1dae3cee0ceca): 4 changed lines
+    -# Session 143 step 0 (HPP-297): the session-142 file of this role with the root moved (s142 to s143) - no change of meaning.
+    +# Session 144 step 0 (HPP-330): the session-143 file of this role with the root moved (s143 to s144) - no change of meaning.
+    -ROOT = pathlib.Path('C:/kyty/s143')
+    +ROOT = pathlib.Path('C:/kyty/s144')
+fgcpu144.py (ea2cbdea9293821c) vs s143/fgcpu143.py (95ca04859e4955db): 18 changed lines
+    -"""fgcpu143.py - the foreign-CPU row of every run of the chain go143a.sh (session 143 step 0, HPP-297; link 1b HPP-321,
+    +"""fgcpu144.py - the foreign-CPU row of every run of the chain go144a.sh (session 143 (ported to s144 by HPP-330, names 143 -> 144) step 0, HPP-297; link 1b HPP-321,
+    -    python fgcpu143.py --save <a.json>                                right after the lock is taken
+    -    python fgcpu143.py --since <a.json> [--span S] [--chain-pid P]   at the end of the run, inside the lock: ONE ASCII line
+    +    python fgcpu144.py --save <a.json>                                right after the lock is taken
+    +    python fgcpu144.py --since <a.json> [--span S] [--chain-pid P]   at the end of the run, inside the lock: ONE ASCII line
+    -      beside it the game (kyty_emulator alive at the end) and the chain (P - the Windows pid of the go143a.sh shell - and
+    +      beside it the game (kyty_emulator alive at the end) and the chain (P - the Windows pid of the go144a.sh shell - and
+    -            print('fgcpu143: saved %d processes into %s (system times %s)' % (
+    +            print('fgcpu144: saved %d processes into %s (system times %s)' % (
+    -            print(ascii_line('fgcpu143: save unavailable (%s: %s)' % (type(e).__name__, str(e)[:120])))
+    +            print(ascii_line('fgcpu144: save unavailable (%s: %s)' % (type(e).__name__, str(e)[:120])))
+    -            print(ascii_line('fgcpu143: unavailable (%s: %s)' % (type(e).__name__, str(e)[:120])))
+    +            print(ascii_line('fgcpu144: unavailable (%s: %s)' % (type(e).__name__, str(e)[:120])))
+    -        print(ascii_line('fgcpu143: %s || %s' % (run, now)))
+    +        print(ascii_line('fgcpu144: %s || %s' % (run, now)))
+    -    print('usage: fgcpu143.py --save <a.json> | --since <a.json> [--span S] [--chain-pid P]')
+    +    print('usage: fgcpu144.py --save <a.json> | --since <a.json> [--span S] [--chain-pid P]')
+cachemf144.py (d010db667541ea6b) vs s143/cachemf143.py (e196ac063a7e359f): 14 changed lines
+    -"""cachemf143.py - the cache manifest of one call of go143a.sh (session 143 link 1b, HPP-321; ROADMAP s122 item 242 (b)):
+    -written before the lock and after the run, read by sc143.py --summary (one continuity line per adjacent pair of tags:
+    +"""cachemf144.py - the cache manifest of one call of go144a.sh (session 143 (ported to s144 by HPP-330, names 143 -> 144) link 1b, HPP-321; ROADMAP s122 item 242 (b)):
+    +written before the lock and after the run, read by sc144.py --summary (one continuity line per adjacent pair of tags:
+    -    python cachemf143.py <out.json> [--root <name>=<dir> ...]
+    +    python cachemf144.py <out.json> [--root <name>=<dir> ...]
+    -        print('usage: cachemf143.py <out.json> [--root <name>=<dir> ...]')
+    +        print('usage: cachemf144.py <out.json> [--root <name>=<dir> ...]')
+    -            print('usage: cachemf143.py <out.json> [--root <name>=<dir> ...]')
+    +            print('usage: cachemf144.py <out.json> [--root <name>=<dir> ...]')
+    -        print('cachemf143: manifest not written (%s)' % type(e).__name__)
+    +        print('cachemf144: manifest not written (%s)' % type(e).__name__)
+    -    print('cachemf143: %s; %s sha256 %s' % ('; '.join(parts), os.path.basename(argv[0]), sha_of(argv[0])))
+    +    print('cachemf144: %s; %s sha256 %s' % ('; '.join(parts), os.path.basename(argv[0]), sha_of(argv[0])))
+lockcheck144.py (4b9cf6edef03e5d2) vs s143/lockcheck143.py (7c8c544b5776c9a5): 38 changed lines
+    -"""lockcheck143.py - the dangling-lock rule of step 2 of session 143 (link 1b, HPP-321; ROADMAP s122 item 242 (d)/(RC5)):
+    -only the Harness Engineer runs it, only when a call of go143a.sh did not end by itself (its EXIT trap did not run).
+    +"""lockcheck144.py - the dangling-lock rule of step 2 of session 143 (ported to s144 by HPP-330, names 143 -> 144) (link 1b, HPP-321; ROADMAP s122 item 242 (d)/(RC5)):
+    +only the Harness Engineer runs it, only when a call of go144a.sh did not end by itself (its EXIT trap did not run).
+    -    python lockcheck143.py                      read only: the verdict on C:/kyty/SEALED_RUN.lock
+    -    python lockcheck143.py --remove --tag <T>   remove a DANGLING lock of the tag T, with the two lines below
+    +    python lockcheck144.py                      read only: the verdict on C:/kyty/SEALED_RUN.lock
+    +    python lockcheck144.py --remove --tag <T>   remove a DANGLING lock of the tag T, with the two lines below
+    -The lock line of go143a.sh is "go143a.sh <tag> pid <msys pid> winpid <windows pid> started <local time>".  Verdicts:
+    +The lock line of go144a.sh is "go144a.sh <tag> pid <msys pid> winpid <windows pid> started <local time>".  Verdicts:
+    -  (rc 0) and two lines are written: step2/times.txt "<UTC now> lockcheck143 <T> dangling lock removed by the Harness
+    -  Engineer: noticed <UTC now>, lock mtime <UTC> (source: mtime of the lock file); lock line: <line>" and runs143/lock.log
+    -  "lock released <T> <UTC now> (dangling, removed by lockcheck143)".
+    +  (rc 0) and two lines are written: step2/times.txt "<UTC now> lockcheck144 <T> dangling lock removed by the Harness
+    +  Engineer: noticed <UTC now>, lock mtime <UTC> (source: mtime of the lock file); lock line: <line>" and runs144/lock.log
+    +  "lock released <T> <UTC now> (dangling, removed by lockcheck144)".
+    -ROOT = 'C:/kyty/s143'
+    +ROOT = 'C:/kyty/s144'
+    -RX = re.compile(r'^go143a\.sh (\S+) pid \S+ winpid (\d+) started ')
+    +RX = re.compile(r'^go144a\.sh (\S+) pid \S+ winpid (\d+) started ')
+    -        print('lockcheck143: NO LOCK; %s' % build)
+    +        print('lockcheck144: NO LOCK; %s' % build)
+    -        print('lockcheck143: UNKNOWN OWNER (lock line: %s; --tag %s) - not removed; %s' % (line, a.tag, build))
+    +        print('lockcheck144: UNKNOWN OWNER (lock line: %s; --tag %s) - not removed; %s' % (line, a.tag, build))
+test_fgcpu144.py (1da4f659d2ab0013) vs s143/test_fgcpu143.py (782e92aa77534cc5): 16 changed lines
+    -"""Fixtures of fgcpu143.py (the foreign-CPU row of go143a.sh; session 143 step 0, HPP-297, link 1b HPP-321; ROADMAP s122
+    +"""Fixtures of fgcpu144.py (the foreign-CPU row of go144a.sh; session 143 (ported to s144 by HPP-330, names 143 -> 144) step 0, HPP-297, link 1b HPP-321; ROADMAP s122
+    -    python C:/kyty/s143/test_fgcpu143.py [<fgcpu143.py under test>]
+    +    python C:/kyty/s144/test_fgcpu144.py [<fgcpu144.py under test>]
+    -SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'fgcpu143.py')
+    -print('suite test_fgcpu143.py sha256 %s target fgcpu143.py sha256 %s' % (
+    +SRC = sys.argv[1] if len(sys.argv) > 1 else os.path.join(HERE, 'fgcpu144.py')
+    +print('suite test_fgcpu144.py sha256 %s target fgcpu144.py sha256 %s' % (
+    -_spec = importlib.util.spec_from_file_location('fgcpu143_under_test', SRC)
+    +_spec = importlib.util.spec_from_file_location('fgcpu144_under_test', SRC)
+    -FX = Path('C:/kyty/s143/fx_fgcpu143')
+    +FX = Path('C:/kyty/s144/fx_fgcpu144')
+    -           rc == 0 and out.startswith('fgcpu143: unavailable (RuntimeError'))
+    +           rc == 0 and out.startswith('fgcpu144: unavailable (RuntimeError'))
+    -    enc = p.returncode == 0 and b'fgcpu143:' in p.stdout and not p.stderr
+    +    enc = p.returncode == 0 and b'fgcpu144:' in p.stdout and not p.stderr
+test_tools144.py (f9e571e81da0ee0f) vs s143/test_tools143.py (0833bc6ed81de76a): 82 changed lines
+    -"""Fixtures of cachemf143.py (the cache manifest, ROADMAP s122 item 242 (b)) and lockcheck143.py (the dangling-lock rule,
+    -item 242 (d)) - session 143 link 1b, HPP-321.  Fixture directories only: the caches of the emulator and of the driver and the
+    +"""Fixtures of cachemf144.py (the cache manifest, ROADMAP s122 item 242 (b)) and lockcheck144.py (the dangling-lock rule,
+    +item 242 (d)) - session 143 (ported to s144 by HPP-330, names 143 -> 144) link 1b, HPP-321.  Fixture directories only: the caches of the emulator and of the driver and the
+    -line, the round trip into sc143.cache_manifest / cache_diff / continuity (same, a changed file, a new file), an unknown root,
+    +line, the round trip into sc144.cache_manifest / cache_diff / continuity (same, a changed file, a new file), an unknown root,
+    -    python C:/kyty/s143/test_tools143.py
+    +    python C:/kyty/s144/test_tools144.py
+    -print('suite test_tools143.py sha256 %s target cachemf143.py sha256 %s target lockcheck143.py sha256 %s' % (
+    -    sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'cachemf143.py')), sha(os.path.join(HERE, 'lockcheck143.py'))))
+    -M = load('cachemf143')
+    -L = load('lockcheck143')
+    -S = load('sc143')
+    -FX = Path('C:/kyty/s143/fx_tools143')
+    +print('suite test_tools144.py sha256 %s target cachemf144.py sha256 %s target lockcheck144.py sha256 %s' % (
+    +    sha(os.path.abspath(__file__)), sha(os.path.join(HERE, 'cachemf144.py')), sha(os.path.join(HERE, 'lockcheck144.py'))))
+    +M = load('cachemf144')
+    +L = load('lockcheck144')
+    +S = load('sc144')
+    +FX = Path('C:/kyty/s144/fx_tools144')
+    -RUNS = FX / 'runs143'
+    +RUNS = FX / 'runs144'
+    -o1 = RUNS / 'cache_v143_01.after.json'
+    +o1 = RUNS / 'cache_w144_00.after.json'
+step2/next_one.sh (32664c5acbd0a43b) vs s143/step2/next_one.sh (eca3fa57398df9a0): 32 changed lines
+    -# Session 143 step 2 call wrapper (link 1b HPP-321, ROADMAP s122 item 242 (d)/(RC5); port of C:/kyty/s142/step2/next_one.sh):
+    -# the stop file and the lock first, then ONE detached verbatim seal call (call_one.sh), then a foreground wait (wait_one.sh,
+    -# < 600 s per invocation).  The call survives the end of the tool command; a still-running call is waited for again with
+    -#   bash C:/kyty/s143/step2/wait_one.sh <tag>      (never a second next_one.sh for the same tag while it runs)
+    -# ASCII only.  usage: next_one.sh <tag>
+    +# Session 144 step 2 call wrapper (step 0 HPP-330, ROADMAP s122 item 254 (i), (k); port of C:/kyty/s143/step2/next_one.sh):
+    +# the tag, the stop file and the lock first, then the API check row (step2/apichk144.py, MINOR-4 of audit 143: one GET of
+    +# the step's issue and its comments, a times.txt row with the answer; NO GO -> rc 4, no call), then ONE detached verbatim
+    +# seal call (call_one.sh), then a foreground wait (wait_one.sh, < 600 s per invocation).  The call survives the end of the
+    +# tool command; a still-running call is waited for again with
+    +#   bash C:/kyty/s144/step2/wait_one.sh <tag>      (never a second next_one.sh for the same tag while it runs)
+    +# ASCII only.  usage: next_one.sh <tag> [<id of the last comment read>]
+    -TIMES=C:/kyty/s143/step2/times.txt
+    +AFTER=${2:-}
+    +TIMES=C:/kyty/s144/step2/times.txt
+    -  v143_0[1-9]|w143_0[1-9]|v143_10|w143_10) ;;
+    -  *) echo "usage: next_one.sh v143_NN|w143_NN"; exit 2;;
+    +  w144_0[0-8]|v144_09|w144_09|v144_1[0-9]|w144_1[0-9]|v144_20|w144_20) ;;
+    +  *) echo "usage: next_one.sh w144_00..w144_08|v144_NN|w144_NN (NN 09..20) [<last comment id read>]"; exit 2;;
+    -[ -e C:/kyty/s143/STOP ] && { echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) next_one STOP file found before $T" >> $TIMES; exit 4; }
+    +[ -e C:/kyty/s144/STOP ] && { echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) next_one STOP file found before $T" >> $TIMES; exit 4; }
+    -echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) next_one STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/s143/go143a.sh $T" >> $TIMES
+    -nohup bash C:/kyty/s143/step2/call_one.sh $T > /dev/null 2>&1 & disown
+    +if [ -n "$AFTER" ]; then
+step2/call_one.sh (69a546426c7e5171) vs s143/step2/call_one.sh (30aa30e3d766a591): 10 changed lines
+    -# Session 143 step 2 (link 1b HPP-321, ROADMAP s122 item 242 (d)/(RC5); port of C:/kyty/s142/step2/call_one.sh): ONE verbatim
+    -# seal call "PLWAIT=540 bash C:/kyty/s143/go143a.sh <tag>" (pred/02_sc143.md), its output into step2/go_<tag>.out.txt, the rc
+    +# Session 144 step 2 (step 0 HPP-330, ROADMAP s122 item 254 (k); port of the session-143 file, names moved to s144): ONE verbatim
+    +# seal call "PLWAIT=540 bash C:/kyty/s144/go144a.sh <tag>" (pred/01_sc144.md), its output into step2/go_<tag>.out.txt, the rc
+    -cd C:/kyty/s143 || exit 1
+    -PLWAIT=540 bash C:/kyty/s143/go143a.sh $T > step2/go_$T.out.txt 2>&1
+    +cd C:/kyty/s144 || exit 1
+    +PLWAIT=540 bash C:/kyty/s144/go144a.sh $T > step2/go_$T.out.txt 2>&1
+    -echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) call_one go143a $T call returned rc=$RC" >> step2/times.txt
+    +echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) call_one go144a $T call returned rc=$RC" >> step2/times.txt
+step2/wait_one.sh (17293204299e6f85) vs s143/step2/wait_one.sh (303b4ba965fe6ab9): 8 changed lines
+    -# Session 143 step 2 (link 1b HPP-321, ROADMAP s122 item 242 (d)/(RC5); port of C:/kyty/s142/step2/wait_one.sh): a foreground
+    +# Session 144 step 2 (step 0 HPP-330, ROADMAP s122 item 254 (k); port of the session-143 file, names moved to s144): a foreground
+    -F=C:/kyty/s143/step2/go_$T.out.txt
+    +F=C:/kyty/s144/step2/go_$T.out.txt
+    -  [ -e C:/kyty/s143/STOP ] && { S="STOP file seen $(date -u +%H:%M:%SZ)"; break; }
+    +  [ -e C:/kyty/s144/STOP ] && { S="STOP file seen $(date -u +%H:%M:%SZ)"; break; }
+    -tail -4 C:/kyty/s143/go143a.log
+    +tail -4 C:/kyty/s144/go144a.log
+procload.py (d9e7a777404f1aa9) vs s143/procload.py (d9e7a777404f1aa9): 0 changed lines
+idle142.py (c5ee7dc26d2a6d28) vs s143/idle142.py (c5ee7dc26d2a6d28): 0 changed lines
+sheet142.py (c1bf9e2903c7db7a) vs s143/sheet142.py (c1bf9e2903c7db7a): 0 changed lines
+launch_run.py (c750e62ae3d63549) vs s143/launch_run.py (c750e62ae3d63549): 0 changed lines
+run_safety99.py (77e685e5543d90a0) vs s143/run_safety99.py (77e685e5543d90a0): 0 changed lines

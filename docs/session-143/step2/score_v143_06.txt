@@ -1,0 +1,25 @@
+TAG v143_06 level gulliver_island outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log ab2f365f70e526cf
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 251
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (211, 20348, 295); window 599 rows, hold 16414 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.1 s; after the first scene frame 333.0 s over 17013 frames; dt_us median 17569 max 365913
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(213, 365913)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(213, 365913)]; K3 hold none; 332.9 s over 17012 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 57 lines, 9 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 2 (lines 2, max 151816 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 17239, .idx records 17239, FrameTrace rows in all 17223, after the first scene frame 17013; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 17239 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2631101 sha f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb (times.txt f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb); rec sha 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3 (times.txt 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3); match yes

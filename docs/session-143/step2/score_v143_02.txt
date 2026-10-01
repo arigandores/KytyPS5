@@ -1,0 +1,25 @@
+TAG v143_02 level booster_construction outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log e1ced3960dc51a72
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 212
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (314, 18460, 231); window 599 rows, hold 13262 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.7 s; after the first scene frame 333.6 s over 13861 frames; dt_us median 19040 max 500792
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(316, 493705)]
+  K3 hold: [(1248, 500792)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1248, 500792)]
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(316, 493705)]; K3 hold [(1248, 500792)]; 333.5 s over 13860 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 251 lines, 23 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 4 (lines 4, max 199115 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 14168, .idx records 14168, FrameTrace rows in all 14174, after the first scene frame 13861; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 14168 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2250676 sha 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33 (times.txt 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33); rec sha a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff (times.txt a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff); match yes

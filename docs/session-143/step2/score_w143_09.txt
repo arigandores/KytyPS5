@@ -1,0 +1,23 @@
+TAG w143_09 level booster_magic_lamp outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log cf1eded5d1365929
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@53003; VALIDATION_STOP --- Error --- stdout@616
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)

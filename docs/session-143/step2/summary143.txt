@@ -1,0 +1,850 @@
+TAG v143_01 level spring_punch_sky_aztec outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log fa9d5a277a8428ed
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 156
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (364, 15691, 230); window 599 rows, hold 9944 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.0 s; after the first scene frame 333.6 s over 10543 frames; dt_us median 32926 max 317536
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(366, 317536)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(366, 317536)]; K3 hold none; 333.6 s over 10542 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 796 lines, 6 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 267847 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 10911, .idx records 10911, FrameTrace rows in all 10906, after the first scene frame 10543; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 10911 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 3065825 sha 8419049ea6909b8e0f303292189220329aa6b2163a60006ce53800ae7f4c7265 (times.txt 8419049ea6909b8e0f303292189220329aa6b2163a60006ce53800ae7f4c7265); rec sha 2e59cb25fc7cc7d6f71cd13fc21b4050a587c30370d0f23b374668be0b49087f (times.txt 2e59cb25fc7cc7d6f71cd13fc21b4050a587c30370d0f23b374668be0b49087f); match yes
+TAG w143_01 level spring_punch_sky_aztec outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 7851fa47d1612b6c
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@51468; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_02 level booster_construction outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log e1ced3960dc51a72
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 212
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (314, 18460, 231); window 599 rows, hold 13262 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.7 s; after the first scene frame 333.6 s over 13861 frames; dt_us median 19040 max 500792
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(316, 493705)]
+  K3 hold: [(1248, 500792)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1248, 500792)]
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(316, 493705)]; K3 hold [(1248, 500792)]; 333.5 s over 13860 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 251 lines, 23 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 4 (lines 4, max 199115 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 14168, .idx records 14168, FrameTrace rows in all 14174, after the first scene frame 13861; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 14168 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2250676 sha 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33 (times.txt 4965266b37d5600a6eec63420be226d967fd8fd7e94e4d933387bf7450632a33); rec sha a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff (times.txt a1baa2963fa82634d165135a546304264bd144f7fe1e7359815412c6fd03f3ff); match yes
+TAG w143_02 level booster_construction outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log a42ca54eb1cac832
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@51469; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_03 level mini_astro_clock_tower outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log 507e16c582c26cfb
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 155
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (239, 15943, 265); window 599 rows, hold 9905 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.9 s; after the first scene frame 333.7 s over 10504 frames; dt_us median 33102 max 281471
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(241, 281471)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(241, 281471)]; K3 hold none; 333.7 s over 10503 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 125 lines, 17 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 65098 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 10747, .idx records 10747, FrameTrace rows in all 10742, after the first scene frame 10504; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 10747 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2405363 sha 492c3b599a64f3a72a33365e5e133504b3d23611ed21048ee2fbaed8a579eb0e (times.txt 492c3b599a64f3a72a33365e5e133504b3d23611ed21048ee2fbaed8a579eb0e); rec sha 89e5b46c7931b3c46dc4297cadf011cdcd522cf6b6fd06076f01069be1b3b81b (times.txt 89e5b46c7931b3c46dc4297cadf011cdcd522cf6b6fd06076f01069be1b3b81b); match yes
+TAG w143_03 level mini_astro_clock_tower outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log f7857e0c7078b8c2
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@51471; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_04 level path_maker_mana_tree outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log c16bd4213f29ca96
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 185
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (263, 26670, 267); window 599 rows, hold 11613 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.4 s; after the first scene frame 334.1 s over 12212 frames; dt_us median 31693 max 534733
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(265, 398312), (266, 534733), (486, 135864), (694, 143332)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(265, 398312), (266, 534733), (486, 135864), (694, 143332)]; K3 hold none; 334.1 s over 12211 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 136 lines, 3 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 2 (lines 2, max 191601 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 12495, .idx records 12495, FrameTrace rows in all 12474, after the first scene frame 12212; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 12495 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 3241719 sha 6c56a6ace83bb4ae2570cecba886c1b9ac7bae4a98695cbdd51cd29315af7dc2 (times.txt 6c56a6ace83bb4ae2570cecba886c1b9ac7bae4a98695cbdd51cd29315af7dc2); rec sha 7e22e457b64531c6f9094e47d53582d9e8533551f144a8ecf518dd2da326e8f5 (times.txt 7e22e457b64531c6f9094e47d53582d9e8533551f144a8ecf518dd2da326e8f5); match yes
+TAG w143_04 level path_maker_mana_tree outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 00c151d9fa4b825d
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@52427; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_05 level spring_punch_monster_cave outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log b90860585fed5e49
+  admission: PASS
+  attempt: outcome ok hold_s 330.2 hold_exit None ft_tail 188
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (211, 15391, 2288); window 599 rows, hold 11766 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.0 s; after the first scene frame 333.8 s over 12365 frames; dt_us median 31481 max 478545
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(213, 478545)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(213, 478545)]; K3 hold none; 333.8 s over 12364 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 206 lines, 14 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 94601 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 12572, .idx records 12572, FrameTrace rows in all 12575, after the first scene frame 12365; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 12572 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2648330 sha 3892ea6f6ed379c9152ddf180592a9068ad817f0babb9ae8d299af9af5803829 (times.txt 3892ea6f6ed379c9152ddf180592a9068ad817f0babb9ae8d299af9af5803829); rec sha 97f24470a1a7fe86df78480a9a370e6618a84fc085a0952aa909af3e1604aced (times.txt 97f24470a1a7fe86df78480a9a370e6618a84fc085a0952aa909af3e1604aced); match yes
+TAG w143_05 level spring_punch_monster_cave outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log a484f58768611519
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@57557; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_06 level gulliver_island outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log ab2f365f70e526cf
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 251
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (211, 20348, 295); window 599 rows, hold 16414 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.1 s; after the first scene frame 333.0 s over 17013 frames; dt_us median 17569 max 365913
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(213, 365913)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(213, 365913)]; K3 hold none; 332.9 s over 17012 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 57 lines, 9 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 2 (lines 2, max 151816 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 17239, .idx records 17239, FrameTrace rows in all 17223, after the first scene frame 17013; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 17239 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2631101 sha f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb (times.txt f11573db55bf25f3e091e03f03e11412dcbb94a7c3dbf2a1b1baeb15d85017fb); rec sha 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3 (times.txt 87f324b5d4946146596beb6593002cab93c62027b507b6dd728b74f1b4f43ab3); match yes
+TAG w143_06 level gulliver_island outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 9c12781a4e972b5e
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@51470; VALIDATION_STOP --- Error --- stdout@615
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_07 level rocket_hourglass outcome K2 (variant vx: K2) reason: frame dt >= 1 s or tail stall; log 03999be4890bf7c0
+  admission: PASS
+  attempt: outcome ok hold_s 330.1 hold_exit None ft_tail 256
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (278, 27447, 367); window 599 rows, hold 16253 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 338.8 s; after the first scene frame 338.3 s over 16852 frames; dt_us median 17460 max 1780488
+  K2 frames (dt >= 1 s after the first scene frame): [(280, 1780488, 'entry')]; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): [(280, 1780488, 'entry')]; outcome on 120 s: K2 (frame dt >= 1 s within 120 s); outcome on the whole V: K2
+  K3 entry window (no warm base): [(281, 117020), (403, 121436), (472, 199623), (483, 150181)]
+  K3 hold: [(1290, 181384), (1462, 215029)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1290, 181384), (1462, 215029)]
+  variant vx (before Event: quit, last row out): K2 [(280, 1780488, 'entry')]; K3 window [(281, 117020), (403, 121436), (472, 199623), (483, 150181)]; K3 hold [(1290, 181384), (1462, 215029)]; 338.2 s over 16851 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 897 lines, 136 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 10 (lines 10, max 445828 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 17005, .idx records 17005, FrameTrace rows in all 17129, after the first scene frame 16852; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: 0 of 17005 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2574297 sha 45e15643fda02492c9f7c3e916bcb58bf8f78a9a3a33a5e850562234ca3ca2de (times.txt 45e15643fda02492c9f7c3e916bcb58bf8f78a9a3a33a5e850562234ca3ca2de); rec sha 23aa4f25a0560c6da38dc7242d1a67346241786ed31feb57af2ddd7398100605 (times.txt 23aa4f25a0560c6da38dc7242d1a67346241786ed31feb57af2ddd7398100605); match yes
+TAG w143_07 level rocket_hourglass outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 8a9553a1a94fe7b6
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@51471; VALIDATION_STOP --- Error --- stdout@616
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_08 level pot_treasure_cave outcome K2 (variant vx: K2) reason: frame dt >= 1 s or tail stall; log 88d81bd41fe0f448
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 301
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (239, 39601, 386); window 599 rows, hold 18222 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 332.8 s; after the first scene frame 332.5 s over 18821 frames; dt_us median 16724 max 6614314
+  K2 frames (dt >= 1 s after the first scene frame): [(14701, 6614314, 'hold')]; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: K2
+  K3 entry window (no warm base): [(241, 191544)]
+  K3 hold: [(14588, 199167), (14669, 170713)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 [(14701, 6614314, 'hold')]; K3 window [(241, 191544)]; K3 hold [(14588, 199167), (14669, 170713)]; 332.5 s over 18820 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 99 lines, 16 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 3 (lines 3, max 6607732 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 19071, .idx records 19071, FrameTrace rows in all 19059, after the first scene frame 18821; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 19071 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2340358 sha 5aa357a2fff78eda4341d34395f5dba721bc58aaaa08daac8b6d6d2ce3a4ae3a (times.txt 5aa357a2fff78eda4341d34395f5dba721bc58aaaa08daac8b6d6d2ce3a4ae3a); rec sha 5653a533a2f4fb196eb0b103771a6a1a46d03bef5f04da0e07aab431a4ccb1cc (times.txt 5653a533a2f4fb196eb0b103771a6a1a46d03bef5f04da0e07aab431a4ccb1cc); match yes
+TAG w143_08 level pot_treasure_cave outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 0997e63c0891cc98
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@58835; VALIDATION_STOP --- Error --- stdout@616
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_09 level booster_magic_lamp outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log 9e88d44686c24c7f
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 233
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (328, 656684, 10213); window 599 rows, hold 14656 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 333.4 s; after the first scene frame 332.4 s over 15255 frames; dt_us median 17823 max 152187
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): none
+  K3 hold: [(1148, 152187)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): [(1148, 152187)]
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold [(1148, 152187)]; 332.4 s over 15254 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 46 lines, 9 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 5 (lines 5, max 226711 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 15587, .idx records 15587, FrameTrace rows in all 15582, after the first scene frame 15255; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 15587 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2156781 sha 80a87d5ba45ee554ed472f5c6a1f6e294b7930b9fbf57003e4a93fa1024faf45 (times.txt 80a87d5ba45ee554ed472f5c6a1f6e294b7930b9fbf57003e4a93fa1024faf45); rec sha 584ce991b5ff32862e1b29d6d6bad343fe4e176ba1762f4c7d16bf56f2ebe803 (times.txt 584ce991b5ff32862e1b29d6d6bad343fe4e176ba1762f4c7d16bf56f2ebe803); match yes
+TAG w143_09 level booster_magic_lamp outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log cf1eded5d1365929
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@53003; VALIDATION_STOP --- Error --- stdout@616
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+TAG v143_10 level rocket_space_station outcome HOLDS_120 (variant vx: HOLDS_120) reason: held; log d6d5dd4ad3db351b
+  admission: PASS
+  attempt: outcome ok hold_s 330.2 hold_exit None ft_tail 210
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (388, 16976, 1544); window 599 rows, hold 13044 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 334.8 s; after the first scene frame 334.0 s over 13643 frames; dt_us median 19353 max 746834
+  K2 frames (dt >= 1 s after the first scene frame): none; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: HOLDS_120
+  K3 entry window (no warm base): [(390, 746834), (912, 117288)]
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window [(390, 746834), (912, 117288)]; K3 hold none; 334.0 s over 13642 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 109 lines, 34 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 1 (lines 1, max 60965 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 14022, .idx records 14022, FrameTrace rows in all 14030, after the first scene frame 13643; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 14022 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2319230 sha 9146a27dff557fcc47259a3d8c793159892a327afda9b9677306b0bf65b3fbd7 (times.txt 9146a27dff557fcc47259a3d8c793159892a327afda9b9677306b0bf65b3fbd7); rec sha 3e9af0cb5c49c0bf264bbc48fed856ffc0db999e0fbec5c1a6bfcdd378c11857 (times.txt 3e9af0cb5c49c0bf264bbc48fed856ffc0db999e0fbec5c1a6bfcdd378c11857); match yes
+TAG w143_10 level rocket_space_station outcome NOT_ENTERED (variant vx: NOT_ENTERED) reason: no entry line; log 45d4d85d9459a980
+  admission: PASS
+  attempt: outcome exited hold_s None hold_exit None ft_tail None
+  emulator stdout: present
+  entry line: NO; first scene frame (n, dt_us, draws): None; window 0 rows, hold 0 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 0.0 s; after the first scene frame 0.0 s over 0 frames; dt_us median None max None
+  frames dt >= 1 s after the first scene frame: none (info, under validation, not classified - item 224 (a)(6), 242 (d)); tail stall (ft_tail 0): no
+  K3 entry window (no warm base): none
+  K3 hold: none
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 none; K3 window none; K3 hold none; 0.0 s over 0 frames
+  death markers (in order): VALIDATION_STOP --- Error --- log@52890; VALIDATION_STOP --- Error --- stdout@616
+  hold_exit / game ended: no; exited before stable: yes
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 1, [Vulkan][ 3 -> active yes
+  AsyncPipelines skipped draw: 0 lines, 0 frames (counted, not fatal)
+  opcode not implemented: 0 lines; against 96/1/4: SOP1 0x0c 0 (base 1, -1, after entry 0), SOP1 0x21 0 (base 96, -96, after entry 0), VOPC 0xe3 0 (base 4, -4, after entry 0)
+  Stubbed function: 0
+  PriorityStall > 50 ms: 0 (lines 0, max 0 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 2 first: [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature  | [Vulkan][E][2]: vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a dual-source blend factor, but dualSrcBlend feature 
+  video: frames n/a, .idx records None, FrameTrace rows in all 0, after the first scene frame 0; coverage (video >= rows - 100): NO - glitches not conclusive
+  glitches s51_vidglitch.py 4 6: n/a; sheet file: no (viewed by the lead at the close)
+SCENE_OK spring_punch_sky_aztec: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((364, 15691, 230))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333630585)
+  PASS V >= 3000 presented frames after the first scene frame (10543)
+  PASS V video >= 3000 frames (10911)
+  PASS V video frames >= FrameTrace rows in all - 100 (10911 vs 10906)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_01 and W w143_01 are the pair of one level (guest args -lvl spring_punch_sky_aztec and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl spring_punch_sky_aztec, level spring_punch_sky_aztec, log fa9d5a277a8428ed, times.txt fa9d5a277a8428ed / W -lvl spring_punch_sky_aztec, level spring_punch_sky_aztec, log 7851fa47d1612b6c, times.txt 7851fa47d1612b6c)
+  PASS V sheet file sheet_v143_01.png present, non-empty; its sha256 and the sha256 of rec_v143_01.mp4 = step2/times.txt (size 3065825 sha 8419049ea6909b8e times 8419049ea6909b8e rec 2e59cb25fc7cc7d6 times 2e59cb25fc7cc7d6)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 32926 max 317536; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK booster_construction: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((314, 18460, 231))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333575862)
+  PASS V >= 3000 presented frames after the first scene frame (13861)
+  PASS V video >= 3000 frames (14168)
+  PASS V video frames >= FrameTrace rows in all - 100 (14168 vs 14174)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_02 and W w143_02 are the pair of one level (guest args -lvl booster_construction and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl booster_construction, level booster_construction, log e1ced3960dc51a72, times.txt e1ced3960dc51a72 / W -lvl booster_construction, level booster_construction, log a42ca54eb1cac832, times.txt a42ca54eb1cac832)
+  PASS V sheet file sheet_v143_02.png present, non-empty; its sha256 and the sha256 of rec_v143_02.mp4 = step2/times.txt (size 2250676 sha 4965266b37d5600a times 4965266b37d5600a rec a1baa2963fa82634 times a1baa2963fa82634)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 19040 max 500792; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK mini_astro_clock_tower: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((239, 15943, 265))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333743905)
+  PASS V >= 3000 presented frames after the first scene frame (10504)
+  PASS V video >= 3000 frames (10747)
+  PASS V video frames >= FrameTrace rows in all - 100 (10747 vs 10742)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_03 and W w143_03 are the pair of one level (guest args -lvl mini_astro_clock_tower and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl mini_astro_clock_tower, level mini_astro_clock_tower, log 507e16c582c26cfb, times.txt 507e16c582c26cfb / W -lvl mini_astro_clock_tower, level mini_astro_clock_tower, log f7857e0c7078b8c2, times.txt f7857e0c7078b8c2)
+  PASS V sheet file sheet_v143_03.png present, non-empty; its sha256 and the sha256 of rec_v143_03.mp4 = step2/times.txt (size 2405363 sha 492c3b599a64f3a7 times 492c3b599a64f3a7 rec 89e5b46c7931b3c4 times 89e5b46c7931b3c4)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 33102 max 281471; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK path_maker_mana_tree: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((263, 26670, 267))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (334117673)
+  PASS V >= 3000 presented frames after the first scene frame (12212)
+  PASS V video >= 3000 frames (12495)
+  PASS V video frames >= FrameTrace rows in all - 100 (12495 vs 12474)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_04 and W w143_04 are the pair of one level (guest args -lvl path_maker_mana_tree and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl path_maker_mana_tree, level path_maker_mana_tree, log c16bd4213f29ca96, times.txt c16bd4213f29ca96 / W -lvl path_maker_mana_tree, level path_maker_mana_tree, log 00c151d9fa4b825d, times.txt 00c151d9fa4b825d)
+  PASS V sheet file sheet_v143_04.png present, non-empty; its sha256 and the sha256 of rec_v143_04.mp4 = step2/times.txt (size 3241719 sha 6c56a6ace83bb4ae times 6c56a6ace83bb4ae rec 7e22e457b64531c6 times 7e22e457b64531c6)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 31693 max 534733; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK spring_punch_monster_cave: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((211, 15391, 2288))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.2)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333845317)
+  PASS V >= 3000 presented frames after the first scene frame (12365)
+  PASS V video >= 3000 frames (12572)
+  PASS V video frames >= FrameTrace rows in all - 100 (12572 vs 12575)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_05 and W w143_05 are the pair of one level (guest args -lvl spring_punch_monster_cave and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl spring_punch_monster_cave, level spring_punch_monster_cave, log b90860585fed5e49, times.txt b90860585fed5e49 / W -lvl spring_punch_monster_cave, level spring_punch_monster_cave, log a484f58768611519, times.txt a484f58768611519)
+  PASS V sheet file sheet_v143_05.png present, non-empty; its sha256 and the sha256 of rec_v143_05.mp4 = step2/times.txt (size 2648330 sha 3892ea6f6ed379c9 times 3892ea6f6ed379c9 rec 97f24470a1a7fe86 times 97f24470a1a7fe86)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 31481 max 478545; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK gulliver_island: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((211, 20348, 295))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (332958138)
+  PASS V >= 3000 presented frames after the first scene frame (17013)
+  PASS V video >= 3000 frames (17239)
+  PASS V video frames >= FrameTrace rows in all - 100 (17239 vs 17223)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_06 and W w143_06 are the pair of one level (guest args -lvl gulliver_island and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl gulliver_island, level gulliver_island, log ab2f365f70e526cf, times.txt ab2f365f70e526cf / W -lvl gulliver_island, level gulliver_island, log 9c12781a4e972b5e, times.txt 9c12781a4e972b5e)
+  PASS V sheet file sheet_v143_06.png present, non-empty; its sha256 and the sha256 of rec_v143_06.mp4 = step2/times.txt (size 2631101 sha f11573db55bf25f3 times f11573db55bf25f3 rec 87f324b5d4946146 times 87f324b5d4946146)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 17569 max 365913; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK rocket_hourglass: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((278, 27447, 367))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.1)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  FAIL V no frame dt >= 1 s after the first scene frame ([(280, 1780488, 'entry')])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (338267743)
+  PASS V >= 3000 presented frames after the first scene frame (16852)
+  PASS V video >= 3000 frames (17005)
+  FAIL V video frames >= FrameTrace rows in all - 100 (17005 vs 17129)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_07 and W w143_07 are the pair of one level (guest args -lvl rocket_hourglass and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl rocket_hourglass, level rocket_hourglass, log 03999be4890bf7c0, times.txt 03999be4890bf7c0 / W -lvl rocket_hourglass, level rocket_hourglass, log 8a9553a1a94fe7b6, times.txt 8a9553a1a94fe7b6)
+  PASS V sheet file sheet_v143_07.png present, non-empty; its sha256 and the sha256 of rec_v143_07.mp4 = step2/times.txt (size 2574297 sha 45e15643fda02492 times 45e15643fda02492 rec 23aa4f25a0560c6d times 23aa4f25a0560c6d)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 17460 max 1780488; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK pot_treasure_cave: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((239, 39601, 386))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  FAIL V no frame dt >= 1 s after the first scene frame ([(14701, 6614314, 'hold')])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (332519989)
+  PASS V >= 3000 presented frames after the first scene frame (18821)
+  PASS V video >= 3000 frames (19071)
+  PASS V video frames >= FrameTrace rows in all - 100 (19071 vs 19059)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_08 and W w143_08 are the pair of one level (guest args -lvl pot_treasure_cave and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl pot_treasure_cave, level pot_treasure_cave, log 88d81bd41fe0f448, times.txt 88d81bd41fe0f448 / W -lvl pot_treasure_cave, level pot_treasure_cave, log 0997e63c0891cc98, times.txt 0997e63c0891cc98)
+  PASS V sheet file sheet_v143_08.png present, non-empty; its sha256 and the sha256 of rec_v143_08.mp4 = step2/times.txt (size 2340358 sha 5aa357a2fff78eda times 5aa357a2fff78eda rec 5653a533a2f4fb19 times 5653a533a2f4fb19)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 16724 max 6614314; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK booster_magic_lamp: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((328, 656684, 10213))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.0)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (332379309)
+  PASS V >= 3000 presented frames after the first scene frame (15255)
+  PASS V video >= 3000 frames (15587)
+  PASS V video frames >= FrameTrace rows in all - 100 (15587 vs 15582)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_09 and W w143_09 are the pair of one level (guest args -lvl booster_magic_lamp and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl booster_magic_lamp, level booster_magic_lamp, log 9e88d44686c24c7f, times.txt 9e88d44686c24c7f / W -lvl booster_magic_lamp, level booster_magic_lamp, log cf1eded5d1365929, times.txt cf1eded5d1365929)
+  PASS V sheet file sheet_v143_09.png present, non-empty; its sha256 and the sha256 of rec_v143_09.mp4 = step2/times.txt (size 2156781 sha 80a87d5ba45ee554 times 80a87d5ba45ee554 rec 584ce991b5ff3286 times 584ce991b5ff3286)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 17823 max 152187; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK rocket_space_station: NO
+  PASS V made ()
+  PASS W made ()
+  PASS V admitted ()
+  PASS V entered ()
+  PASS V first scene frame ((388, 16976, 1544))
+  PASS V no scene change after the entry line ([])
+  PASS V emulator stdout present ()
+  PASS V attempt ok, hold_s >= 330, no hold_exit / ENDED (330.2)
+  PASS V 0 death markers (incl. hold_exit, exited) ()
+  PASS V no frame dt >= 1 s after the first scene frame ([])
+  PASS V n gaps after the first scene frame = 0 (0)
+  PASS V sum dt_us after the first scene frame >= 300 s (333976179)
+  PASS V >= 3000 presented frames after the first scene frame (13643)
+  PASS V video >= 3000 frames (14022)
+  PASS V video frames >= FrameTrace rows in all - 100 (14022 vs 14030)
+  PASS V 0 one-frame glitches (s51_vidglitch.py 4 6) (0)
+  PASS W admitted ()
+  FAIL W entered ()
+  PASS W no scene change after the entry line ([])
+  PASS W emulator stdout present ()
+  FAIL W 0 death markers (incl. hold_exit, exited) (--- Error ---;--- Error ---)
+  FAIL W 0 [Vulkan][E] lines (2)
+  FAIL W ft_tail > 0 (None)
+  FAIL W hold reached its end (ok, hold_s >= 300, no hold_exit) (None)
+  PASS V v143_10 and W w143_10 are the pair of one level (guest args -lvl rocket_space_station and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt) (V -lvl rocket_space_station, level rocket_space_station, log d6d5dd4ad3db351b, times.txt d6d5dd4ad3db351b / W -lvl rocket_space_station, level rocket_space_station, log 45d4d85d9459a980, times.txt 45d4d85d9459a980)
+  PASS V sheet file sheet_v143_10.png present, non-empty; its sha256 and the sha256 of rec_v143_10.mp4 = step2/times.txt (size 2319230 sha 9146a27dff557fcc times 9146a27dff557fcc rec 3e9af0cb5c49c0bf times 3e9af0cb5c49c0bf)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median 19353 max 746834; W median None max None; W presented 0.0 s over 0 frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): NO (None)
+SCENE_OK LEVELS: YES 0, PENDING_SHEET 0, NO 10 of 10
+CENSUS made 10 of 10 (of them attempt made without json 0), admitted 10
+  v143_01 spring_punch_sky_aztec       HOLDS_120     vx HOLDS_120     first (364, 15691, 230) K2 0 K3w 1 K3h 0 admitted yes reason held
+    map (A) row spring_punch_sky_aztec: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_02 booster_construction         HOLDS_120     vx HOLDS_120     first (314, 18460, 231) K2 0 K3w 1 K3h 1 admitted yes reason held
+    map (A) row booster_construction: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_03 mini_astro_clock_tower       HOLDS_120     vx HOLDS_120     first (239, 15943, 265) K2 0 K3w 1 K3h 0 admitted yes reason held
+    map (A) row mini_astro_clock_tower: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_04 path_maker_mana_tree         HOLDS_120     vx HOLDS_120     first (263, 26670, 267) K2 0 K3w 4 K3h 0 admitted yes reason held
+    map (A) row path_maker_mana_tree: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_05 spring_punch_monster_cave    HOLDS_120     vx HOLDS_120     first (211, 15391, 2288) K2 0 K3w 1 K3h 0 admitted yes reason held
+    map (A) row spring_punch_monster_cave: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_06 gulliver_island              HOLDS_120     vx HOLDS_120     first (211, 20348, 295) K2 0 K3w 1 K3h 0 admitted yes reason held
+    map (A) row gulliver_island: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_07 rocket_hourglass             K2            vx K2            first (278, 27447, 367) K2 1 K3w 4 K3h 2 admitted yes reason frame dt >= 1 s or tail stall
+    map (A) row rocket_hourglass: outcome on 120 s K2 (frame dt >= 1 s within 120 s); outcome on the whole V K2 (frame dt >= 1 s or tail stall)
+  v143_08 pot_treasure_cave            K2            vx K2            first (239, 39601, 386) K2 1 K3w 1 K3h 2 admitted yes reason frame dt >= 1 s or tail stall
+    map (A) row pot_treasure_cave: outcome on 120 s HOLDS_120 (held); outcome on the whole V K2 (frame dt >= 1 s or tail stall)
+  v143_09 booster_magic_lamp           HOLDS_120     vx HOLDS_120     first (328, 656684, 10213) K2 0 K3w 0 K3h 1 admitted yes reason held
+    map (A) row booster_magic_lamp: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+  v143_10 rocket_space_station         HOLDS_120     vx HOLDS_120     first (388, 16976, 1544) K2 0 K3w 2 K3h 0 admitted yes reason held
+    map (A) row rocket_space_station: outcome on 120 s HOLDS_120 (held); outcome on the whole V HOLDS_120 (held)
+FORM B5a (a frame dt >= 1 s after the first scene frame): 2/10 [c] (admitted and entered 10)
+FORM B5 (a frame dt >= 100 ms in the entry window, no warm base): 9/10 [c] (admitted and entered 10)
+FORM B5a variant 120 s (a frame dt >= 1 s within 120 s of presented time after the entry line; the class decision and pooling with s142 use this one, item 242 (c)): 1/10 [c] v143_07; K2 by place on the whole V: entry 1 v143_07, hold 1 v143_08
+K2 ON THE HOLD AFTER 120 s ONLY (a separate row (B) of register F per level, form edes122, not B5a; item 242 (c)): v143_08
+FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 4/10 [c] (admitted and entered 10) v143_02,v143_07,v143_08,v143_09; executor variant (the hold within 120 s of presented time after the entry line): 3/10
+FORMS second reading by the order (shared caches warm from earlier runs): first five B5a 0/5 B5 5/5; last five B5a 2/5 B5 4/5
+STOP RULE (item 221 (g)(4)): not met
+CACHE CONTINUITY (item 242 (b): manifest after N = manifest before N+1; roots shader, pipeline, glcache)
+  within v143_01 (before the lock -> after the run): shader +18 -0 ~2; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_01 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_02 (before the lock -> after the run): shader +23 -0 ~5; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_02 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_03 (before the lock -> after the run): shader +6 -0 ~5; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_03 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_04 (before the lock -> after the run): shader +9 -0 ~12; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_04 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_05 (before the lock -> after the run): shader +9 -0 ~10; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_05 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_06 (before the lock -> after the run): shader +7 -0 ~3; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_06 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_07 (before the lock -> after the run): shader +24 -0 ~13; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_07 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_08 (before the lock -> after the run): shader +5 -0 ~1; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_08 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_09 (before the lock -> after the run): shader +9 -0 ~6; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_09 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  within v143_10 (before the lock -> after the run): shader +9 -0 ~10; pipeline +0 -0 ~1; glcache +0 -0 ~2
+  within w143_10 (before the lock -> after the run): shader +0 -0 ~0; pipeline +0 -0 ~0; glcache +0 -0 ~0
+  v143_01 -> w143_01: same (shader 1200 files, pipeline 4 files, glcache 16 files)
+  w143_01 -> v143_02: same (shader 1200 files, pipeline 4 files, glcache 16 files)
+  v143_02 -> w143_02: same (shader 1223 files, pipeline 4 files, glcache 16 files)
+  w143_02 -> v143_03: same (shader 1223 files, pipeline 4 files, glcache 16 files)
+  v143_03 -> w143_03: same (shader 1229 files, pipeline 4 files, glcache 16 files)
+  w143_03 -> v143_04: same (shader 1229 files, pipeline 4 files, glcache 16 files)
+  v143_04 -> w143_04: same (shader 1238 files, pipeline 4 files, glcache 16 files)
+  w143_04 -> v143_05: same (shader 1238 files, pipeline 4 files, glcache 16 files)
+  v143_05 -> w143_05: same (shader 1247 files, pipeline 4 files, glcache 16 files)
+  w143_05 -> v143_06: same (shader 1247 files, pipeline 4 files, glcache 16 files)
+  v143_06 -> w143_06: same (shader 1254 files, pipeline 4 files, glcache 16 files)
+  w143_06 -> v143_07: same (shader 1254 files, pipeline 4 files, glcache 16 files)
+  v143_07 -> w143_07: same (shader 1278 files, pipeline 4 files, glcache 16 files)
+  w143_07 -> v143_08: same (shader 1278 files, pipeline 4 files, glcache 16 files)
+  v143_08 -> w143_08: same (shader 1283 files, pipeline 4 files, glcache 16 files)
+  w143_08 -> v143_09: same (shader 1283 files, pipeline 4 files, glcache 16 files)
+  v143_09 -> w143_09: same (shader 1292 files, pipeline 4 files, glcache 16 files)
+  w143_09 -> v143_10: same (shader 1292 files, pipeline 4 files, glcache 16 files)
+  v143_10 -> w143_10: same (shader 1301 files, pipeline 4 files, glcache 16 files)
+FORMS without the tags after the first cache break (item 242 (b)): no break - the forms above stand

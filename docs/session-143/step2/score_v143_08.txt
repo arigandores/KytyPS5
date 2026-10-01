@@ -1,0 +1,25 @@
+TAG v143_08 level pot_treasure_cave outcome K2 (variant vx: K2) reason: frame dt >= 1 s or tail stall; log 88d81bd41fe0f448
+  admission: PASS
+  attempt: outcome ok hold_s 330.0 hold_exit None ft_tail 301
+  emulator stdout: present
+  entry line: yes; first scene frame (n, dt_us, draws): (239, 39601, 386); window 599 rows, hold 18222 rows; n gaps 0; torn FrameTrace lines 0
+  scene change (Level has started after the entry line; name, last n before it): none; rows after it 0 (0.0 s, dt >= 1 s 0; not classified)
+  presented time: after the entry line 332.8 s; after the first scene frame 332.5 s over 18821 frames; dt_us median 16724 max 6614314
+  K2 frames (dt >= 1 s after the first scene frame): [(14701, 6614314, 'hold')]; tail stall (ft_tail 0): no
+  K2 frames within 120 s of presented time after the entry line (item 242 (c)): none; outcome on 120 s: HOLDS_120 (held); outcome on the whole V: K2
+  K3 entry window (no warm base): [(241, 191544)]
+  K3 hold: [(14588, 199167), (14669, 170713)]
+  K3 hold within 120 s of presented time after the entry line (executor variant, the s142 census hold): none
+  variant vx (before Event: quit, last row out): K2 [(14701, 6614314, 'hold')]; K3 window [(241, 191544)]; K3 hold [(14588, 199167), (14669, 170713)]; 332.5 s over 18820 frames
+  death markers (in order): none
+  hold_exit / game ended: no; exited before stable: no
+  validation layer lines: no validation layer 0, VK_EXT_validation_features 0, [Vulkan][ 0 -> active no
+  AsyncPipelines skipped draw: 99 lines, 16 frames (counted, not fatal)
+  opcode not implemented: 101 lines; against 96/1/4: equal
+  Stubbed function: 0
+  PriorityStall > 50 ms: 3 (lines 3, max 6607732 us)
+  BvhLoopCapTrip: 0
+  [Vulkan][E]: 0
+  video: frames 19071, .idx records 19071, FrameTrace rows in all 19059, after the first scene frame 18821; coverage (video >= rows - 100): yes
+  glitches s51_vidglitch.py 4 6: 0 of 19071 video frames; sheet file: yes (viewed by the lead at the close)
+  sheet and video sha256 (item 224 (a)(5)): sheet size 2340358 sha 5aa357a2fff78eda4341d34395f5dba721bc58aaaa08daac8b6d6d2ce3a4ae3a (times.txt 5aa357a2fff78eda4341d34395f5dba721bc58aaaa08daac8b6d6d2ce3a4ae3a); rec sha 5653a533a2f4fb196eb0b103771a6a1a46d03bef5f04da0e07aab431a4ccb1cc (times.txt 5653a533a2f4fb196eb0b103771a6a1a46d03bef5f04da0e07aab431a4ccb1cc); match yes

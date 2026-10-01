@@ -1,0 +1,258 @@
+{
+ "tag": "f5c_v",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "fix": "1",
+  "arm": "V",
+  "val": false,
+  "video": true,
+  "hold_s": 330,
+  "letter": "v"
+ },
+ "log_sha": "ecf3fd449d4a2d4053b8981e18672ea7bab2cda785914a28333c8450ba436abc",
+ "binary": "6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = F5c binary 6f495a65 (p.285(v))",
+   true,
+   "6f495a65388a90a0"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE=1 exactly",
+   true,
+   "'1'"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B26 not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (V: shipped defaults)",
+   true,
+   "None"
+  ],
+  [
+   "no VK_LAYER_MESSAGE_ID_FILTER (V)",
+   true,
+   "None"
+  ],
+  [
+   "video KYTY_REC rec_f5c_v.mp4",
+   true,
+   "C:\\kyty\\f287\\f5c\\rec_f5c_v.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ]
+ ],
+ "admitted": true,
+ "shift": {
+  "start_pos": 17610746,
+  "armed_pos": 17610800,
+  "bytes": 54,
+  "rows": 0,
+  "dt_s": 0.0,
+  "blank_before": 1
+ },
+ "entered": true,
+ "first": [
+  194,
+  22234,
+  479
+ ],
+ "first_pos": 17835561,
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "(('underwater_aerial_garden', 17610746), 'blank start lines before armed 1')"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [60276329], 17610800)"
+  ],
+  [
+   "exactly one line TestMinimize: restore, after minimize",
+   true,
+   "(1, [68270290])"
+  ],
+  [
+   "FixMinimize: on lines = 1 (arm 1)",
+   true,
+   "1"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(17835561, 60276329)"
+  ]
+ ],
+ "controls_ok": true,
+ "episode": {
+  "begin": 1,
+  "end": 1,
+  "begin_pos": 60277423,
+  "end_pos": 68275201,
+  "end_val": [
+   300,
+   9997
+  ]
+ },
+ "t": {
+  "armed": 3.114748,
+  "minimize": 63.095464,
+  "restore": 73.098129,
+  "begin": 63.095464,
+  "end": 73.098129,
+  "total": 337.64168
+ },
+ "delay_s": 59.980716,
+ "dur_s": 10.002665,
+ "late_log": false,
+ "late_ms": false,
+ "late_disagree": false,
+ "rows_after_restore": 7389,
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "deaths_out": [],
+ "vke": 0,
+ "vke_first": [],
+ "vuid": 0,
+ "vuid_after_min": false,
+ "vuid_in_stdout": false,
+ "limit": 0,
+ "win": {
+  "minimized": 1,
+  "lost keyboard focus": 1,
+  "restored": 1
+ },
+ "win1_min": 1,
+ "recover": 1,
+ "exhaust": 0,
+ "last_log": "Event: quit",
+ "last_stdout": "AvPlayer video stopped",
+ "dt_after_first_s": 334.390287,
+ "hold_s_json": 330.1,
+ "hold_exit": null,
+ "outcome": "ok",
+ "detail": null,
+ "val": {
+  "noval": 0,
+  "valfeat": 0,
+  "vkany": 0,
+  "ok": false
+ },
+ "k2": [],
+ "k2_out": 0,
+ "skip_lines": 0,
+ "video": {
+  "records": 9152,
+  "rec_frames_consecutive": true,
+  "win_anchored": [
+   64.50778399999996,
+   76.51044899999997
+  ],
+  "win_gap": [
+   64.571,
+   76.586,
+   10.015
+  ],
+  "glitches_all": 0,
+  "glitches_out_anchored": [],
+  "glitches_out_gap": [],
+  "after_end_records": 7388,
+  "after_end_bad": [],
+  "all_bad": [],
+  "rows_without_record_outside": 6,
+  "longest_run_outside": 1,
+  "win_disagree": false
+ },
+ "sheet": true,
+ "glitch": {
+  "video_frames": 9152,
+  "glitches": 0
+ },
+ "not_evaluable_why": null,
+ "hold_letter": true,
+ "parts": {
+  "entered": true,
+  "no_scene_change": true,
+  "no_hold_exit": true,
+  "hold": true,
+  "video_frames": true,
+  "sheet": true,
+  "glitches_outside0": true,
+  "n1_present_order_after_end": true,
+  "no_k1k2_outside": true,
+  "begin_end": true,
+  "end_not_late": true
+ },
+ "verdict_letter": "PASS",
+ "exec_members": [],
+ "exec_ok": true
+}

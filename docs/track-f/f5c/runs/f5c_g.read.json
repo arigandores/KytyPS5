@@ -1,0 +1,224 @@
+{
+ "tag": "f5c_g",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "fix": "0",
+  "arm": "V",
+  "val": false,
+  "video": false,
+  "hold_s": 330,
+  "letter": "g"
+ },
+ "log_sha": "736b1b763783ac924a853a1bc01d6a3beee09e3f697159c308e706e4eb3335d7",
+ "binary": "6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = F5c binary 6f495a65 (p.285(v))",
+   true,
+   "6f495a65388a90a0"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE=0 exactly",
+   true,
+   "'0'"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B26 not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (V: shipped defaults)",
+   true,
+   "None"
+  ],
+  [
+   "no VK_LAYER_MESSAGE_ID_FILTER (V)",
+   true,
+   "None"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ]
+ ],
+ "admitted": true,
+ "shift": {
+  "start_pos": 17913667,
+  "armed_pos": 17913774,
+  "bytes": 107,
+  "rows": 0,
+  "dt_s": 0.0,
+  "blank_before": 1
+ },
+ "entered": true,
+ "first": [
+  206,
+  17151,
+  418
+ ],
+ "first_pos": 18111359,
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "(('underwater_aerial_garden', 17913667), 'blank start lines before armed 1')"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [62950516], 17913774)"
+  ],
+  [
+   "FixMinimize: on lines = 0 (arm 0)",
+   true,
+   "0"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(18111359, 62950516)"
+  ],
+  [
+   "no SwapchainZeroExtent line at =0",
+   true,
+   "(0, 0)"
+  ]
+ ],
+ "controls_ok": true,
+ "episode": {
+  "begin": 0,
+  "end": 0,
+  "begin_pos": null,
+  "end_pos": null,
+  "end_val": null
+ },
+ "t": {
+  "armed": 3.299834,
+  "minimize": 63.282861,
+  "restore": 73.282588,
+  "begin": null,
+  "end": null,
+  "total": 337.646154
+ },
+ "delay_s": 59.983027,
+ "dur_s": 9.999727000000007,
+ "late_log": null,
+ "late_ms": null,
+ "late_disagree": false,
+ "rows_after_restore": 7701,
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "deaths_out": [],
+ "vke": 0,
+ "vke_first": [],
+ "vuid": 0,
+ "vuid_after_min": false,
+ "vuid_in_stdout": false,
+ "limit": 0,
+ "win": {
+  "minimized": 1,
+  "restored": 1
+ },
+ "win1_min": 1,
+ "recover": 2,
+ "exhaust": 0,
+ "last_log": "Event: quit",
+ "last_stdout": "AvPlayer video stopped",
+ "dt_after_first_s": 334.228965,
+ "hold_s_json": 330.1,
+ "hold_exit": null,
+ "outcome": "ok",
+ "detail": null,
+ "val": {
+  "noval": 0,
+  "valfeat": 0,
+  "vkany": 0,
+  "ok": false
+ },
+ "k2": [],
+ "k2_out": 0,
+ "skip_lines": 0,
+ "video": null,
+ "sheet": false,
+ "glitch": null,
+ "not_evaluable_why": null,
+ "hold_letter": true,
+ "parts": {},
+ "verdict_letter": "DATA",
+ "exec_members": [
+  [
+   "restore lines (b, g: data; the process may end inside the episode)",
+   true,
+   "1"
+  ]
+ ],
+ "exec_ok": true
+}

@@ -1,0 +1,257 @@
+{
+ "tag": "f5c_b",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "fix": "0",
+  "arm": "W",
+  "val": true,
+  "video": false,
+  "hold_s": 0,
+  "letter": "b"
+ },
+ "log_sha": "b53ea355bd67376fcc87071ac714107be2508bc64fb02b490f0ac3a52235068e",
+ "binary": "6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = F5c binary 6f495a65 (p.285(v))",
+   true,
+   "6f495a65388a90a0"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE=0 exactly",
+   true,
+   "'0'"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B26 not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE=0 (form W p.273(k)(2))",
+   true,
+   "'0'"
+  ],
+  [
+   "VK_LAYER_MESSAGE_ID_FILTER = the F6 VUID exactly",
+   true,
+   "'Undefined-Value-ShaderOutputNotConsumed-DynamicRendering'"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation true",
+   true,
+   "true"
+  ],
+  [
+   "validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][)",
+   true,
+   "0/1/3"
+  ]
+ ],
+ "admitted": true,
+ "shift": {
+  "start_pos": 17357365,
+  "armed_pos": 17357591,
+  "bytes": 226,
+  "rows": 0,
+  "dt_s": 0.0,
+  "blank_before": 1
+ },
+ "entered": true,
+ "first": [
+  185,
+  2305563,
+  6136
+ ],
+ "first_pos": 17855861,
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "(('underwater_aerial_garden', 17357365), 'blank start lines before armed 1')"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [30639250], 17357591)"
+  ],
+  [
+   "FixMinimize: on lines = 0 (arm 0)",
+   true,
+   "0"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(17855861, 30639250)"
+  ],
+  [
+   "no SwapchainZeroExtent line at =0",
+   true,
+   "(0, 0)"
+  ]
+ ],
+ "controls_ok": true,
+ "episode": {
+  "begin": 0,
+  "end": 0,
+  "begin_pos": null,
+  "end_pos": null,
+  "end_val": null
+ },
+ "t": {
+  "armed": 2.966118,
+  "minimize": 62.967009,
+  "restore": null,
+  "begin": null,
+  "end": null,
+  "total": 62.967009
+ },
+ "delay_s": 60.000890999999996,
+ "dur_s": null,
+ "late_log": null,
+ "late_ms": null,
+ "late_disagree": false,
+ "rows_after_restore": 0,
+ "scene_change": false,
+ "marks": [
+  [
+   "--- Error ---",
+   "K1",
+   "log",
+   false,
+   30643147
+  ],
+  [
+   "--- Error ---",
+   "K1",
+   "stdout",
+   false,
+   36807
+  ]
+ ],
+ "deaths": 2,
+ "deaths_out": [
+  [
+   "--- Error ---",
+   "K1",
+   "stdout",
+   false,
+   36807
+  ]
+ ],
+ "vke": 2,
+ "vke_first": [
+  "[Vulkan][E][2]: vkCreateSwapchainKHR(): pCreateInfo->imageExtent (width = 0, height = 0) is invalid."
+ ],
+ "vuid": 0,
+ "vuid_after_min": false,
+ "vuid_in_stdout": false,
+ "limit": 0,
+ "win": {
+  "minimized": 1,
+  "lost keyboard focus": 1
+ },
+ "win1_min": 1,
+ "recover": 1,
+ "exhaust": 0,
+ "last_log": " in C:\\kyty\\f287\\f5a2\\wt\\src\\graphics\\presentation\\window\\vulkanWindow.cpp:913",
+ "last_stdout": "SIGABRT in abort:0",
+ "dt_after_first_s": 57.490877,
+ "hold_s_json": 47.4,
+ "hold_exit": 3221226505,
+ "outcome": "ok",
+ "detail": null,
+ "val": {
+  "noval": 0,
+  "valfeat": 1,
+  "vkany": 3,
+  "ok": true
+ },
+ "k2": [],
+ "k2_out": 0,
+ "skip_lines": 0,
+ "video": null,
+ "sheet": false,
+ "glitch": null,
+ "not_evaluable_why": null,
+ "hold_letter": true,
+ "parts": {
+  "vuid_01689_after_minimize": false,
+  "emulator_ended": true
+ },
+ "verdict_letter": "NO STOP",
+ "exec_members": [
+  [
+   "restore lines (b, g: data; the process may end inside the episode)",
+   true,
+   "0"
+  ]
+ ],
+ "exec_ok": true
+}

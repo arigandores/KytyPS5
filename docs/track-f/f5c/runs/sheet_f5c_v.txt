@@ -1,0 +1,1 @@
+sheet: sheet_f5c_v.png frames 9152 step 190 tiles 8x6

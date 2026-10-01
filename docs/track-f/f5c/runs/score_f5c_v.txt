@@ -1,0 +1,48 @@
+f5c_read tag f5c_v level underwater_aerial_garden arm V KYTY_FIX_MINIMIZE=1 stand 60:10 log sha256 ecf3fd449d4a2d4053b8981e18672ea7bab2cda785914a28333c8450ba436abc binary 6f495a65388a90a0
+admit ok   one attempt [1]
+admit ok   binary sha256 = F5c binary 6f495a65 (p.285(v)) [6f495a65388a90a0]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_MINIMIZE=1 exactly ['1']
+admit ok   KYTY_TEST_MINIMIZE=60:10 exactly ['60:10']
+admit ok   KYTY_FIX_DUALSRC not set [None]
+admit ok   KYTY_FIX_B26 not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_FIX_B1B not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   KYTY_PIPELINE_PRECACHE not set (V: shipped defaults) [None]
+admit ok   no VK_LAYER_MESSAGE_ID_FILTER (V) [None]
+admit ok   video KYTY_REC rec_f5c_v.mp4 [C:\kyty\f287\f5c\rec_f5c_v.mp4]
+admit ok   --vulkan-validation false [false]
+control ok   exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000 [[('on', 60.0, 10.0)]]
+control ok   exactly one line TestMinimize: armed [1]
+control ok   N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank) [(('underwater_aerial_garden', 17610746), 'blank start lines before armed 1')]
+control ok   exactly one line TestMinimize: minimize, after armed [(1, [60276329], 17610800)]
+control ok   exactly one line TestMinimize: restore, after minimize [(1, [68270290])]
+control ok   FixMinimize: on lines = 1 (arm 1) [1]
+control ok   >= 1 line Window 1 minimized (the stand reached the window) [1]
+control ok   the first scene frame lies before TestMinimize: minimize [(17835561, 60276329)]
+stand shift (N2 p.285(v), control): start line byte 17610746 -> armed byte 17610800: 54 bytes, 0 FrameTrace rows, 0.000 s of dt; blank start lines before 1
+log clock (s of dt): armed 3.115 minimize 63.095 restore 73.098 begin 63.095 end 73.098 total 337.642; armed->minimize 59.981 (stand 60), minimize->restore 10.003 (stand 10)
+episode: begin lines 1 end lines 1; end frames_dropped/ms (300, 9997) (frames_dropped is not compared with the video, p.280(e)(3))
+end later than restore + 2 s (p.278(v)): log clock False; variant of the executor by ms= False
+FrameTrace rows after TestMinimize: restore 7389 (>= 1000 for (a))
+window events (p.280(e)(2), expected, not a stop): [('lost keyboard focus', 1), ('minimized', 1), ('restored', 1)]; Window 1 minimized 1; Recovering Vulkan swapchain 1; retry exhausted 0
+entered True first scene frame (194, 22234, 479) (byte 17835561) scene change False enter_scene outcome ok detail None
+hold: sum dt after first 334.4 s (>= 330); json hold_s 330.1 (reference), hold_exit (exit code) None
+death markers 0 []; outside the window 0
+K2 after the first scene frame 0 []; outside the window 0
+validation noval/valfeat/vkany 0/0/0 active False; [Vulkan][E] 0; VUID 01689 lines 0 (first after minimize False, stdout False); layer limit lines 0
+first [Vulkan][E] line (<= 300 chars): []
+last log line: Event: quit
+last stdout line: AvPlayer video stopped
+AsyncPipelines skipped draw lines 0 (data)
+video: frames 9152 glitches (all) 0 sheet True
+video window (p.278(v)) anchored log window on the idx clock (64.50778399999996, 76.51044899999997); variant idx gap (64.571, 76.586, 10.015)
+glitches outside the window: anchored 0 []; variant idx gap 0
+N1 (p.280(e)(1), p.285(v)): records after end 7388, present order breaks after end 0 []; whole file breaks 0; rec_frames consecutive True; records 9152
+continuity (vidcont144 method, data, not a gate): presented frames without a record outside the window 6, longest run 1
+letter members: entered=True, no_scene_change=True, no_hold_exit=True, hold=True, video_frames=True, sheet=True, glitches_outside0=True, n1_present_order_after_end=True, no_k1k2_outside=True, begin_end=True, end_not_late=True
+F5C VERDICT f5c_v letter (v): PASS
+F5C EXECUTOR MEMBERS f5c_v [I] (not the verdict): all ok

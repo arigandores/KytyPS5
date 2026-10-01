@@ -1,0 +1,244 @@
+{
+ "tag": "f5c_a",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "fix": "1",
+  "arm": "W",
+  "val": true,
+  "video": false,
+  "hold_s": 310,
+  "letter": "a"
+ },
+ "log_sha": "e0b28937efb15021fa33593d827200f6840097ae181dae7361df6bc0b6235f6d",
+ "binary": "6f495a65388a90a0381c9170f224777e84cb07d657115ad2a8662fa0bae168dd",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = F5c binary 6f495a65 (p.285(v))",
+   true,
+   "6f495a65388a90a0"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE=1 exactly",
+   true,
+   "'1'"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B26 not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE=0 (form W p.273(k)(2))",
+   true,
+   "'0'"
+  ],
+  [
+   "VK_LAYER_MESSAGE_ID_FILTER = the F6 VUID exactly",
+   true,
+   "'Undefined-Value-ShaderOutputNotConsumed-DynamicRendering'"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation true",
+   true,
+   "true"
+  ],
+  [
+   "validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][)",
+   true,
+   "0/1/1"
+  ]
+ ],
+ "admitted": true,
+ "shift": {
+  "start_pos": 21113121,
+  "armed_pos": 21113175,
+  "bytes": 54,
+  "rows": 0,
+  "dt_s": 0.0,
+  "blank_before": 1
+ },
+ "entered": true,
+ "first": [
+  375,
+  2302889,
+  6150
+ ],
+ "first_pos": 22605140,
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "(('underwater_aerial_garden', 21113121), 'blank start lines before armed 1')"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [35815852], 21113175)"
+  ],
+  [
+   "exactly one line TestMinimize: restore, after minimize",
+   true,
+   "(1, [38059877])"
+  ],
+  [
+   "FixMinimize: on lines = 1 (arm 1)",
+   true,
+   "1"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(22605140, 35815852)"
+  ]
+ ],
+ "controls_ok": true,
+ "episode": {
+  "begin": 1,
+  "end": 1,
+  "begin_pos": 35837838,
+  "end_pos": 38062681,
+  "end_val": [
+   71,
+   9965
+  ]
+ },
+ "t": {
+  "armed": 5.86569,
+  "minimize": 65.786963,
+  "restore": 75.768292,
+  "begin": 65.786963,
+  "end": 75.768292,
+  "total": 333.098229
+ },
+ "delay_s": 59.921273,
+ "dur_s": 9.981329000000002,
+ "late_log": false,
+ "late_ms": false,
+ "late_disagree": false,
+ "rows_after_restore": 2039,
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "deaths_out": [],
+ "vke": 0,
+ "vke_first": [],
+ "vuid": 0,
+ "vuid_after_min": false,
+ "vuid_in_stdout": false,
+ "limit": 0,
+ "win": {
+  "lost keyboard focus": 1,
+  "minimized": 1,
+  "restored": 1
+ },
+ "win1_min": 1,
+ "recover": 1,
+ "exhaust": 0,
+ "last_log": "Vulkan pipeline cache: saved 105688889 bytes to _PipelineCache\\PPSA21564.bin (95261 us)",
+ "last_stdout": "Vulkan pipeline cache: saved 105688889 bytes to _PipelineCache\\PPSA21564.bin (95261 us)",
+ "dt_after_first_s": 324.466696,
+ "hold_s_json": 310.2,
+ "hold_exit": null,
+ "outcome": "ok",
+ "detail": null,
+ "val": {
+  "noval": 0,
+  "valfeat": 1,
+  "vkany": 1,
+  "ok": true
+ },
+ "k2": [],
+ "k2_out": 0,
+ "skip_lines": 1108,
+ "video": null,
+ "sheet": false,
+ "glitch": null,
+ "not_evaluable_why": null,
+ "hold_letter": true,
+ "parts": {
+  "entered": true,
+  "no_scene_change": true,
+  "no_hold_exit": true,
+  "one_window1_minimized": true,
+  "begin_end": true,
+  "vke0": true,
+  "deaths0": true,
+  "hold": true,
+  "rows_after_restore": true,
+  "end_not_late": true
+ },
+ "verdict_letter": "PASS",
+ "exec_members": [
+  [
+   "exactly one begin and one end line (executor)",
+   true,
+   "(1, 1)"
+  ]
+ ],
+ "exec_ok": true
+}

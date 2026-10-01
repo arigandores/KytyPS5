@@ -1,0 +1,22 @@
+diff --git a/src/graphics/presentation/window/vulkanWindow.cpp b/src/graphics/presentation/window/vulkanWindow.cpp
+index f75b0411..c7289679 100644
+--- a/src/graphics/presentation/window/vulkanWindow.cpp
++++ b/src/graphics/presentation/window/vulkanWindow.cpp
+@@ -658,11 +658,14 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
+ 	device_features.shaderInt64 = VK_TRUE;
+ 	// Track F, F4 (HPP-335, ROADMAP s122 p.254(zh)(1), row B35): pipelines with SRC1 blend factors
+ 	// (recipe 1592: SRC1_ALPHA / ONE_MINUS_SRC1_ALPHA) are created without dualSrcBlend. KYTY_FIX_DUALSRC
+-	// (Common::EnvFlagOn: unset, "", 0/false/off/no = OFF; default OFF) enables it when supported; OFF leaves
+-	// device_features as before. Outside the translation cache signature (not under src/graphics/shader).
++	// (default ON since FSa, HPP-368, p.282(g)(1): unset or "" = ON as KYTY_FIX_B26; 0/false/off/no = OFF)
++	// enables it when supported; OFF leaves device_features as before. Outside the translation cache
++	// signature (not under src/graphics/shader).
+ 	{
+ 		const bool dual_src_supported = supported_features2.features.dualSrcBlend == VK_TRUE;
+-		const bool dual_src_enabled   = dual_src_supported && Common::EnvFlagOn("KYTY_FIX_DUALSRC");
++		const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
++		const bool dual_src_enabled   = dual_src_supported && (dual_src_value == nullptr || dual_src_value[0] == '\0' ||
++		                                                     Common::EnvValueOn(dual_src_value));
+ 		if (dual_src_enabled) {
+ 			device_features.dualSrcBlend = VK_TRUE;
+ 		}

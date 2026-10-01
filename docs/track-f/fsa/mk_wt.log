@@ -1,0 +1,27 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 95eec776)
+Updating files:  15% (550/3553)Updating files:  16% (569/3553)Updating files:  17% (605/3553)Updating files:  18% (640/3553)Updating files:  19% (676/3553)Updating files:  20% (711/3553)Updating files:  21% (747/3553)Updating files:  22% (782/3553)Updating files:  23% (818/3553)Updating files:  24% (853/3553)Updating files:  25% (889/3553)Updating files:  26% (924/3553)Updating files:  27% (960/3553)Updating files:  28% (995/3553)Updating files:  29% (1031/3553)Updating files:  30% (1066/3553)Updating files:  31% (1102/3553)Updating files:  32% (1137/3553)Updating files:  33% (1173/3553)Updating files:  34% (1209/3553)Updating files:  35% (1244/3553)Updating files:  36% (1280/3553)Updating files:  37% (1315/3553)Updating files:  38% (1351/3553)Updating files:  38% (1365/3553)Updating files:  39% (1386/3553)Updating files:  40% (1422/3553)Updating files:  41% (1457/3553)Updating files:  42% (1493/3553)Updating files:  43% (1528/3553)Updating files:  44% (1564/3553)Updating files:  45% (1599/3553)Updating files:  46% (1635/3553)Updating files:  47% (1670/3553)Updating files:  48% (1706/3553)Updating files:  49% (1741/3553)Updating files:  50% (1777/3553)Updating files:  51% (1813/3553)Updating files:  52% (1848/3553)Updating files:  53% (1884/3553)Updating files:  54% (1919/3553)Updating files:  55% (1955/3553)Updating files:  56% (1990/3553)Updating files:  56% (2004/3553)Updating files:  57% (2026/3553)Updating files:  58% (2061/3553)Updating files:  59% (2097/3553)Updating files:  60% (2132/3553)Updating files:  61% (2168/3553)Updating files:  62% (2203/3553)Updating files:  63% (2239/3553)Updating files:  64% (2274/3553)Updating files:  65% (2310/3553)Updating files:  66% (2345/3553)Updating files:  67% (2381/3553)Updating files:  68% (2417/3553)Updating files:  69% (2452/3553)Updating files:  70% (2488/3553)Updating files:  71% (2523/3553)Updating files:  72% (2559/3553)Updating files:  73% (2594/3553)Updating files:  74% (2630/3553)Updating files:  75% (2665/3553)Updating files:  76% (2701/3553)Updating files:  77% (2736/3553)Updating files:  78% (2772/3553)Updating files:  78% (2800/3553)Updating files:  79% (2807/3553)Updating files:  80% (2843/3553)Updating files:  81% (2878/3553)Updating files:  82% (2914/3553)Updating files:  83% (2949/3553)Updating files:  84% (2985/3553)Updating files:  85% (3021/3553)Updating files:  86% (3056/3553)Updating files:  86% (3065/3553)Updating files:  87% (3092/3553)Updating files:  88% (3127/3553)Updating files:  89% (3163/3553)Updating files:  90% (3198/3553)Updating files:  91% (3234/3553)Updating files:  92% (3269/3553)Updating files:  93% (3305/3553)Updating files:  94% (3340/3553)Updating files:  95% (3376/3553)Updating files:  96% (3411/3553)Updating files:  97% (3447/3553)Updating files:  98% (3482/3553)Updating files:  99% (3518/3553)Updating files: 100% (3553/3553)Updating files: 100% (3553/3553), done.
+HEAD is now at 95eec776 track F link FSa (HPP-368): default KYTY_FIX_DUALSRC 0 -> 1 - ROADMAP p.282(g)(1), p.281(v)(1)
+--- worktree HEAD
+95eec776e194910d21595a6f26da8f3cd233abc8 track F link FSa (HPP-368): default KYTY_FIX_DUALSRC 0 -> 1 - ROADMAP p.282(g)(
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- git status --short (worktree vs its HEAD, literal; empty = clean)
+0
+--- git diff --stat (literal, worktree vs HEAD)
+--- CR bytes in src/ (worktree files)
+files 452 with CR 0
+WT OK

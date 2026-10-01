@@ -1,0 +1,49 @@
+== fsa build/install/kyty_emulator.exe size 24573952 sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     1  want 1 OK
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    2  want >=1 OK
+  fba4fbfd                                     0
+  DualSrcBlend: supported=                     1  want 1 OK
+  DualSrcBlend: patched                        1  want 1 OK
+  KYTY_FIX_DUALSRC                             1  want 1 OK
+  KYTY_FIX_B26                                 1  want 1 OK
+  KYTY_FIX_B1B                                 1  want 1 OK
+  KYTY_FIX_MINIMIZE                            1  want 1 OK
+  KYTY_TEST_MINIMIZE                           1  want 1 OK
+  SwapchainZeroExtent: begin                   1
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  KYTY_RT_SKIP                                 1
+== 2e6df8f0 (F3d) C:/kyty/f287/bin/kyty_emulator_2e6df8f0.exe size 24565760 sha256 2e6df8f09f006ef8d49173bd4abccea074da94769c5c31b9caeeaadc3eaf74ae
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     0
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    0
+  fba4fbfd                                     1
+  DualSrcBlend: supported=                     1
+  DualSrcBlend: patched                        1
+  KYTY_FIX_DUALSRC                             1
+  KYTY_FIX_B26                                 1
+  KYTY_FIX_B1B                                 1
+  KYTY_FIX_MINIMIZE                            0
+  KYTY_TEST_MINIMIZE                           0
+  SwapchainZeroExtent: begin                   0
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  KYTY_RT_SKIP                                 1
+== 9235a7ac (installed copy) C:/kyty/s128/kyty_emulator_9235a7ac.exe size 24264192 sha256 9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     0
+  699c1e4b7db359067b461e029b913c4b6e78dc90     1
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    0
+  fba4fbfd                                     0
+  DualSrcBlend: supported=                     0
+  DualSrcBlend: patched                        0
+  KYTY_FIX_DUALSRC                             0
+  KYTY_FIX_B26                                 0
+  KYTY_FIX_B1B                                 0
+  KYTY_FIX_MINIMIZE                            0
+  KYTY_TEST_MINIMIZE                           0
+  SwapchainZeroExtent: begin                   0
+  KYTY_S_PCW                                   0
+  KYTY_BIND_LEAN                               0
+  KYTY_RT_SKIP                                 1
+ACCEPT ALL OK

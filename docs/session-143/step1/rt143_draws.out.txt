@@ -1,0 +1,11 @@
+v142 underwater_aerial_garden sha 565707122e53bb50 first n 380; draws first600 p1 2982 p10 5078 p50 5485; all p1 2632 p50 5208 min 384; rows < 300: 0 of 10176; 90-run >=300 at n 470, >=100 at n 469
+c142_01 bumper_enemy_snowy_canyon sha 66b4ff7e0e50a8a4 first n 203; draws first600 p1 1567 p10 2110 p50 2817; all p1 1683 p50 3430 min 871; rows < 300: 0 of 5050; 90-run >=300 at n 292, >=100 at n 292
+c142_02 big_hand_pirate_island sha bb6655d3d30c0bc7 first n 328; draws first600 p1 743 p10 2084 p50 5455; all p1 2040 p50 5358 min 87; rows < 300: 1 of 3471; 90-run >=300 at n 419, >=100 at n 419
+c142_03 timestop_casino sha 9aaa83b0c73e66b1 first n 263; draws first600 p1 836 p10 1420 p50 1899; all p1 1388 p50 2577 min 1; rows < 300: 4 of 6893; 90-run >=300 at n 354, >=100 at n 352
+c142_04 mini_giants_garden sha bd5f547706caad1d first n 260; draws first600 p1 1338 p10 1997 p50 2118; all p1 1746 p50 2061 min 334; rows < 300: 0 of 7296; 90-run >=300 at n 349, >=100 at n 349
+c142_05 ice_iceberg sha 9ea02549b36c0100 first n 231; draws first600 p1 1136 p10 1790 p50 2239; all p1 1492 p50 2100 min 0; rows < 300: 2 of 7071; 90-run >=300 at n 320, >=100 at n 320
+c142_06 sponge_dirty_bath sha a511e5d4af7a0f0a first n 261; draws first600 p1 1987 p10 2839 p50 4894; all p1 1977 p50 5015 min 1808; rows < 300: 0 of 4126; 90-run >=300 at n 350, >=100 at n 350
+c142_07 hoover_beach sha 5e1bd731e2e5d345 first n 229; draws first600 p1 496 p10 1523 p50 1864; all p1 884 p50 1820 min 0; rows < 300: 40 of 7247; 90-run >=300 at n 319, >=100 at n 318
+c142_08 volcano_mountain sha 358be0e0d44d729e first n 201; draws first600 p1 1176 p10 1326 p50 2456; all p1 1345 p50 2545 min 0; rows < 300: 1 of 7260; 90-run >=300 at n 290, >=100 at n 290
+c142_09 voxel_world sha eadf72b5b79ac096 first n 178; draws first600 p1 298 p10 1320 p50 1422; all p1 1283 p50 1314 min 0; rows < 300: 9 of 7427; 90-run >=300 at n 391, >=100 at n 390
+c142_10 enemy_gorilla sha d78e0342fa2186f4 first n 223; draws first600 p1 1794 p10 2339 p50 3322; all p1 1769 p50 3317 min 9; rows < 300: 1 of 6386; 90-run >=300 at n 314, >=100 at n 314

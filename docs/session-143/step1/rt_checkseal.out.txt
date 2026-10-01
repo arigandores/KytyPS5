@@ -1,0 +1,17 @@
+OK   C:/kyty/scripts/s51_vidglitch.py 6afe4e3335da68f2
+OK   enter_scene.py 51f1dae3cee0ceca
+OK   fgcpu143.py 60ac669581c1425d
+OK   gates_default.txt e3b0c44298fc1c14
+OK   go143a.sh 039cd74a46aad60a
+OK   idle142.py c5ee7dc26d2a6d28
+OK   launch_run.py c750e62ae3d63549
+OK   mut_sc143.py 52be62b10613a949
+OK   procload.py d9e7a777404f1aa9
+OK   run_safety99.py 77e685e5543d90a0
+OK   sc143.py ff8dd94fecbd5aeb
+OK   sheet142.py c1bf9e2903c7db7a
+OK   test_fgcpu143.py 3950418e42a62c11
+OK   test_go143a.py e4aa28ae0d43bb6a
+OK   test_sc143.py 53122b594e439a48
+OK   this scorer in the seal ff8dd94fecbd5aeb
+SEAL: PASS

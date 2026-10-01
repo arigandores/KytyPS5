@@ -1,0 +1,30 @@
+SCAN v142 log sha 565707122e53bb50
+SCAN w142 log sha 7f42a2d3e1a151a2
+SCAN c142_01 log sha 66b4ff7e0e50a8a4
+SCAN c142_05 log sha 9ea02549b36c0100
+SCAN c142_06 log sha a511e5d4af7a0f0a
+SCAN c142_07 log sha 5e1bd731e2e5d345
+SCAN c142_08 log sha 358be0e0d44d729e
+SCAN c142_09 log sha eadf72b5b79ac096
+SCAN c142_10 log sha d78e0342fa2186f4
+S1a underwater_aerial_garden sheet=None -> PENDING_SHEET (expect PENDING_SHEET) OK; failing rows: sheet of V viewed by the lead (filled by the close)
+S1b underwater_aerial_garden sheet=viewed -> YES (expect YES) OK; failing rows: none
+S1c underwater_aerial_garden sheet=not-viewed -> NO (expect NO) OK; failing rows: sheet of V viewed by the lead (filled by the close)
+S2 bumper_enemy_snowy_canyon sheet=viewed -> NO (expect NO) OK; failing rows: V attempt ok, hold_s >= 330, no hold_exit / ENDED | V sum dt_us after the first scene frame >= 300 s | W admitted | W entered | V v143_02 and W w143_02 are the pair of one level (guest args -lvl bumper_enemy_snowy_canyon in both) | V sheet file sheet_v143_02.png present, non-empty; its sha256 and the sha256 of rec_v143_02.mp4 = step2/times.txt
+S3 underwater_aerial_garden sheet=viewed -> NO (expect NO) OK; failing rows: W hold reached its end (ok, hold_s >= 300, no hold_exit)
+S4 underwater_aerial_garden sheet=viewed -> NO (expect NO) OK; failing rows: V made | V v143_04 and W w143_04 are the pair of one level (guest args -lvl underwater_aerial_garden in both) | V sheet file sheet_v143_04.png present, non-empty; its sha256 and the sha256 of rec_v143_04.mp4 = step2/times.txt
+S6 underwater_aerial_garden sheet=viewed -> YES (expect YES) OK; failing rows: none
+S6 info: W hold_s 305.0 -> info line would print NO (305.0)
+S5 c142_05 as v143_05: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_05 k3h (letter) 1, k3h120 (variant) 1, k2 none
+S5 c142_06 as v143_06: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_06 k3h (letter) 0, k3h120 (variant) 0, k2 none
+S5 c142_07 as v143_07: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_07 k3h (letter) 0, k3h120 (variant) 0, k2 none
+S5 c142_08 as v143_08: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_08 k3h (letter) 0, k3h120 (variant) 0, k2 none
+S5 c142_09 as v143_09: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_09 k3h (letter) 0, k3h120 (variant) 0, k2 none
+S5 c142_10 as v143_10: block lines 22 vs s142 22 -> IDENTICAL
+S5 v143_10 k3h (letter) 0, k3h120 (variant) 0, k2 none
+V v142 as v143_01: frames after first 10176, 334.1 s; K2 none; K3 hold 0; K3 hold within 120 s 0

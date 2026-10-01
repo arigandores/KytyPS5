@@ -1,0 +1,3 @@
+suite test_f2c_read.py sha256 999cf7453702ba81d0f0508c465eeaac92a43478a0a6c175050f1b07138fd4f3 target f2c_read.py sha256 c1642bd480cbc2dd4f2a2201cbda2fdd2ee71220ed6abd48fa7da139af1d7c22
+checks 70 failed 0
+ALL OK

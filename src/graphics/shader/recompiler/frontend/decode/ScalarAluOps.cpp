@@ -45,6 +45,7 @@ constexpr OpcodeMap SOP1_OPCODE_LIST[] = {
     {0x09u, Opcode::S_WQM_B32},
     {0x0au, Opcode::S_WQM_B64},
     {0x0bu, Opcode::S_BREV_B32},
+    {0x0cu, Opcode::S_BREV_B64},
     {0x0fu, Opcode::S_BCNT1_I32_B32},
     {0x10u, Opcode::S_BCNT1_I32_B64},
     {0x13u, Opcode::S_FF1_I32_B32},
@@ -146,7 +147,7 @@ void DecodeSop1(uint32_t pc, std::span<const uint32_t> code, uint32_t word_index
 	inst.pc        = pc;
 	inst.family    = Family::SOP1;
 	inst.opcode_id = opcode;
-	inst.opcode    = Detail::LookupOpcode(SOP1_OPS, opcode);
+	inst.opcode    = GateFixB26(Detail::LookupOpcode(SOP1_OPS, opcode));
 	SetRawWords(inst, code, word_index, 1);
 
 	if (inst.opcode == Opcode::UNSUPPORTED) {

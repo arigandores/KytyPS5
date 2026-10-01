@@ -595,6 +595,9 @@ enum class Opcode {
 	S_INST_PREFETCH,
 	S_ENDPGM,
 	EXP,
+	// Track F, F2a (ROADMAP p.237): decoded only while KYTY_FIX_B26 is on (GateFixB26).
+	S_BREV_B64,
+	V_CMP_LE_U64,
 	COUNT
 };
 
@@ -740,6 +743,12 @@ void ReadLiteralOperands(std::span<const uint32_t> code, uint32_t word_index, In
 void SetRawWords(Instruction& inst, std::span<const uint32_t> code, uint32_t word_index,
                  uint32_t word_count);
 void SetUnsupported(Instruction& inst, Family family, uint32_t opcode_id, const char* reason);
+// Track F, F2a (HPP-307, ROADMAP p.237(g)(3)): KYTY_FIX_B26, default ON (unset or empty = on; 0, false,
+// off, no = off, as Common::EnvValueOn). Off: SOP1 0x0c (S_BREV_B64) and VOPC 0xe3 (V_CMP_LE_U64, also
+// its VOP3 form) decode as UNSUPPORTED exactly as before the fix. Read once per process; the
+// translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+bool   FixB26Enabled();
+Opcode GateFixB26(Opcode opcode);
 std::string OperandToString(const Operand& operand);
 const char* ImageDimensionToString(ImageDimension dimension);
 std::string InstructionToString(const Instruction& inst);

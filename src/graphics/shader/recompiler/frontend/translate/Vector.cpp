@@ -106,6 +106,16 @@ bool Translator::EmitVector(const Decoder::Instruction& inst) {
 		case O::V_CMP_GT_U64:
 			EmitIntegerCompare(inst, IR::ValueOpcode::UGreaterThan64, IR::Type::U64, false, false);
 			return true;
+		case O::V_CMP_LE_U64: {
+			// Track F, F2a: lane bit = (S0.u64 <= S1.u64) (ISA RDNA2 12.9) as NOT (S0 > S1). The negation is
+			// per lane and BEFORE EmitCompareResult ANDs with EXEC, so a lane off in EXEC writes 0.
+			const auto lhs = ReadOperand(inst.src0, IR::Type::U64);
+			const auto rhs = ReadOperand(inst.src1, IR::Type::U64);
+			EmitCompareResult(
+			    inst, ir.LogicalNot(IR::U1(ir.Emit(IR::ValueOpcode::UGreaterThan64, {lhs, rhs}))), false,
+			    false);
+			return true;
+		}
 		case O::V_CMP_NE_U64:
 			EmitIntegerCompare(inst, IR::ValueOpcode::INotEqual64, IR::Type::U64, false, false);
 			return true;

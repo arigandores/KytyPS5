@@ -1,6 +1,7 @@
 #include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
 
 #include "common/assert.h"
+#include "common/envFlag.h"
 #include "graphics/shader/recompiler/frontend/decode/ExportOps.h"
 #include "graphics/shader/recompiler/frontend/decode/ImageOps.h"
 #include "graphics/shader/recompiler/frontend/decode/MemoryOps.h"
@@ -9,6 +10,7 @@
 
 #include <algorithm>
 #include <bit>
+#include <cstdlib>
 #include <fmt/format.h>
 
 namespace Libs::Graphics::ShaderRecompiler::Decoder {
@@ -324,6 +326,21 @@ void SetUnsupported(Instruction& inst, Family family, uint32_t opcode_id, const 
 	inst.unsupported_reason = reason;
 }
 
+bool FixB26Enabled() {
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_B26");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
+	return enabled;
+}
+
+Opcode GateFixB26(Opcode opcode) {
+	if ((opcode == Opcode::S_BREV_B64 || opcode == Opcode::V_CMP_LE_U64) && !FixB26Enabled()) {
+		return Opcode::UNSUPPORTED;
+	}
+	return opcode;
+}
+
 Family GetInstructionFamily(uint32_t word) {
 	if ((word & 0x80000000u) == 0u) {
 		switch ((word >> 25u) & 0x3fu) {
@@ -501,6 +518,7 @@ std::string InstructionToString(const Instruction& inst) {
 			                                               OperandToString(inst.src0).c_str()));
 		case Opcode::S_ABS_I32:
 		case Opcode::S_BREV_B32:
+		case Opcode::S_BREV_B64:
 		case Opcode::S_BCNT1_I32_B32:
 		case Opcode::S_FLBIT_I32_B32:
 		case Opcode::S_FF1_I32_B32:

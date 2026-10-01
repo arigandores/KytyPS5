@@ -245,7 +245,8 @@ constexpr VopcOpcodeInfo VOPC_OPCODE_LIST[] = {
     {0xd2u, Opcode::V_CMPX_EQ_U32},        {0xd3u, Opcode::V_CMPX_LE_U32},
     {0xd4u, Opcode::V_CMPX_GT_U32},        {0xd5u, Opcode::V_CMPX_NE_U32},
     {0xd6u, Opcode::V_CMPX_GE_U32},        {0xe1u, Opcode::V_CMP_LT_U64, false},
-    {0xe2u, Opcode::V_CMP_EQ_U64, false},  {0xe4u, Opcode::V_CMP_GT_U64, false},
+    {0xe2u, Opcode::V_CMP_EQ_U64, false},  {0xe3u, Opcode::V_CMP_LE_U64, false},
+    {0xe4u, Opcode::V_CMP_GT_U64, false},
     {0xe5u, Opcode::V_CMP_NE_U64, false},
     {0xf5u, Opcode::V_CMPX_NE_U64, false}, {0xc9u, Opcode::V_CMP_LT_F16},
     {0xcau, Opcode::V_CMP_EQ_F16},         {0xcbu, Opcode::V_CMP_LE_F16},
@@ -368,7 +369,7 @@ Opcode LookupVop3Opcode(uint32_t opcode) {
 		return direct;
 	}
 	if (opcode <= 0xffu) {
-		return Detail::LookupOpcode(VOPC_OPS, opcode);
+		return GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode));
 	}
 	if (opcode >= 0x100u && opcode <= 0x13fu) {
 		if (IsUnsupportedVop3EncodedVop2Alias(opcode - 0x100u)) {
@@ -1535,7 +1536,7 @@ void DecodeVopc(uint32_t pc, std::span<const uint32_t> code, uint32_t word_index
 	inst.pc        = pc;
 	inst.family    = Family::VOPC;
 	inst.opcode_id = opcode;
-	inst.opcode    = Detail::LookupOpcode(VOPC_OPS, opcode);
+	inst.opcode    = GateFixB26(Detail::LookupOpcode(VOPC_OPS, opcode));
 	inst.dst.kind  = IsVopcCompareExec(inst.opcode) ? OperandKind::ExecLo : OperandKind::VccLo;
 	SetRawWords(inst, code, word_index, 1);
 

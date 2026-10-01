@@ -4,6 +4,7 @@
 #include "common/logging/log.h"
 #include "common/stringUtils.h"
 #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
+#include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
 #include "graphics/shader/recompiler/ir/Value.h"
 #include "kytyGitVersion.h"
 
@@ -570,8 +571,11 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	// Session 103: a non-default translator variant (KYTY_BVH_LOOP_CAP override, KYTY_BDA_LEAN)
 	// gets its own signature token AND its own directory - file names do not carry the
 	// signature, so a variant run would otherwise overwrite the default cache and pipelines.bin.
+	// Track F, F2a (RC5 of the F1b review): KYTY_FIX_B26=1 (the default) adds ":fixb26", so the
+	// translations of =1 and =0 never share a signature or a directory.
 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
-	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "");
+	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "");
 	if (!variant.empty()) {
 		std::string folder = "variant" + variant;
 		std::replace(folder.begin(), folder.end(), ':', '_');

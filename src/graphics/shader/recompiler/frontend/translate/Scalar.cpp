@@ -169,6 +169,14 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 		case O::S_BREV_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::BitReverse32, IR::Type::U32, false, false,
 			                     false);
+		case O::S_BREV_B64: {
+			// Track F, F2a: D.u64[63:0] = S0.u64[0:63] (ISA RDNA2 12.3). ReadU32Pair zero-extends a
+			// literal (6.2.1, unsigned 64-bit) and sign-extends a negative inline constant; SCC is kept.
+			const auto source = ReadU32Pair(inst.src0);
+			WriteU32Pair(inst.dst, {IR::U32(ir.Emit(IR::ValueOpcode::BitReverse32, {source[1]})),
+			                        IR::U32(ir.Emit(IR::ValueOpcode::BitReverse32, {source[0]}))});
+			return true;
+		}
 		case O::S_BCNT1_I32_B32:
 			return SimpleInteger(inst, IR::ValueOpcode::BitCount32, IR::Type::U32, false, false,
 			                     true);

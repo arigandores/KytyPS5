@@ -146,3 +146,63 @@
 (в), (г), «вход не состоялся» у (б)) — вне замка после 12:20:06Z. Строки `C:/kyty/f287/times.txt` 12:20:41Z.
 
 **Дальше:** серия F4c — после `done` P10 (`HPP-328`) по `win_f4c.py`; звено `blocked` на `HPP-328`.
+
+## F4c, пробуждение 6 (2026-10-01 12:56–13:1xZ, Harness Engineer): серия по печати — (б) `STOP SAME TEXT`, (а) отказ шлюза до старта, стоп серии; вопрос В5
+
+Вход: пробуждение `issue_blockers_resolved` — `HPP-328` (P10) `done`. Замка нет, стоп-файлов нет. `win_f4c.py` в 12:57:57Z: `HPP-333 done`,
+`HPP-347 done`, `HPP-328 done`, без прогонов → `open`. Пункты `ROADMAP.md` 272–275 перечитаны до прогона: форма и печать F4c не меняются
+(п. 272(в)); очередь F — F4c раньше F3d и F5c. Цепочка с. 145: шаг прогонов `HPP-352` — `blocked`.
+
+**Ход [c]** (строки `C:/kyty/f287/times.txt` 12:57:57Z–13:03Z; `f4c/go_f4c.log`; `f4c/lock.log` `5e727a30…`):
+- Обёртки вызова `next_f4c.sh` (`2005dec5…`) / `wait_f4c.sh` (`77b5b594…`) — порт `f2c/next_f2c.sh` / `wait_f2c.sh` (не запечатаны,
+  как в F2c); вызов — дословная строка печати `PLWAIT=540 bash C:/kyty/f287/f4c/go_f4c.sh series`.
+- Вызов 1 (12:58:05Z): отказ BUSY до замка — `idle142` медиана GPU 11,0 > 10. Не попытка, бинарь не ставился. Вывод —
+  `go_series.busy1.out.txt`.
+- Вызов 2 (13:00:13Z): шлюзы чисты (`idle142` 2,0), печать `check-seal OK`; замок 13:01:06Z–13:02:02Z; окно `win_f4c` `open`.
+  Кэши до серии: `_ShaderCache/PPSA21564` 1301 файл, список `bd7aa754…`; GLCache 16 файлов, список `3cdb7b0d…`. Установлен `c9a5e198…`.
+  - **(б) `f4c_b`** — W Sky Garden, `KYTY_FIX_DUALSRC=0`, precache по умолчанию; файл рецептов перед тегом `1886cd73…`, 2457 записей,
+    1 dual-source; `--pre-check` — `continue`. `enter_scene` rc 1 через 19 с: вход не состоялся; `[Vulkan][E]`
+    `vkCreateGraphicsPipelines(): pCreateInfos[0].pColorBlendState->pAttachments[0].srcColorBlendFactor (VK_BLEND_FACTOR_SRC1_ALPHA) is a
+    dual-source blend factor, but dualSrcBlend feature was not enabled.` (строка лога 679) до первой `GuestOut`. Допуск — все `ok`
+    (бинарь, `-lvl`, `=0`, без `KYTY_FIX_B26`/`KYTY_S_PCW`, пин, без checkpoints, precache не задан, валидация активна, файл разобран).
+    Контроли п. 262(д) — все `ok`: одна `DualSrcBlend: supported=1 enabled=0` (строка 76) до `GuestOut`; 0 `patched`; нет `stale`;
+    запись dual-source в файле есть. **Вердикт по букве: `STOP SAME TEXT`.** Лог `log_f4c_b.txt`
+    `242965587e923a2b393d3e2556f5b6347eeda45460d9e24935142bfe1fa31bcb`; чтение `score_f4c_b.txt`
+    `3fd26aa442f29e1a78025397e2a5c0e94043ba3edbbb6fdee9f9f39a3a499398`; `runs/f4c_b.read.json` `b39d79c2…`.
+  - **(а) `f4c_a`** — через 4 с после выхода эмулятора (б): `enter_scene.py --require-idle` `pre_run: REFUSED (BUSY: gpu_util_median
+    11.0, admission <= 10) - the emulator was not started` (`f4c_a.refused.json` `f0a29834…`; на GPU — только процессы рабочего стола).
+    Лога и json нет; запечатанная стоп-проверка — `stop: no reading (no log or no json)` → стоп серии. (в) и (г) не шли.
+  - Возврат в ловушке выхода: бинарь `9235a7ac…` (sha совпал); `_ShaderCache` — список = до (`bd7aa754…`), кэш прогона —
+    `f4c/cache_run/20261001T130147Z`; файл рецептов после (б) не изменился (`1886cd73…`, 2457); GLCache — список = до (`3cdb7b0d…`).
+    Посторонний CPU под замком 6,0 % (`fgcpu143`).
+- Фон GPU рабочего стола на пороге [c] (12:59–13:00, шаг 5 с): 11, 11, 11, 11, 11, 8, 1, 1, 1, 10, 10, 4 %.
+
+**Дефект звена (харнесс F4c, мой) [c]:** `go_f4c.sh` проверяет простой GPU один раз до замка; `enter_scene` проверяет его перед каждым
+тегом без ожидания; отказ шлюза до старта эмулятора стоп-проверка не отличает от потери лога. Прогон F2c прошёл с тем же харнессом
+без такого отказа.
+
+**Вопрос В5 лиду** (комментарий `30e2d337`, 13:03:36Z): отказ (а) — не попытка (эмулятор не запускался; прецедент п. 275(б)); (б) не
+повторяется. Вариант исполнителя — один вызов продолжения под новым замком с печатью `pred/f4c2.md`, порядок (а) → (в) → (г).
+
+**Черновик продолжения без замка, НЕ запечатан [c]:** `mk_f4c2.py` (`b5006e21…`) строит из запечатанных файлов точными заменами
+(у каждой проверяется счёт попаданий): `go_f4c2.sh` (`1bc01a17…`), `win_f4c2.py` (`ce1c1a7c…`), `test_go_f4c2.py` (`c8881e07…`),
+`next_f4c2.sh` (`527a53ac…`), `wait_f4c2.sh` (`6b4fc3f4…`). Запечатанные `go_f4c.sh`, `win_f4c.py`, `test_go_f4c.py`, `f4c_read.py`,
+`pred/f4c.md` не менялись.
+- `go_f4c2.sh` = `go_f4c.sh` плюс:
+  1. `SEQ = f4c_a f4c_v f4c_g`, только стенд A.
+  2. Набор отказа `f4c_a` (`attempt_f4c_a.txt` + `f4c_a.refused.json`, без лога и json) не запрещает вызов. Внутри замка он переносится
+     в `*f4c_a.busy1*` строкой `times.txt`.
+  3. Перед каждым `enter_scene` — ожидание `idle142` до 300 с с шагом 15 с. Не дождался — стоп серии, тег не попытка.
+  4. `enter_scene` rc 3 с `<tag>.refused.json` без лога — не попытка: файлы → `*.busyr1.*`, ещё одно ожидание и один повтор. Второй
+     отказ — стоп серии.
+  5. Окно `win_f4c2.py` — плюс `HPP-352` (шаг прогонов с. 145) не `todo`/`in_progress` и без прогона (очередь «сессия > F»).
+- Чтение, буква, контроли, бинарь, стенд, кэши, `--hold` и порог `idle142` ≤ 10 не меняются.
+- Набор `test_go_f4c2.py` — 67 проверок, `ALL OK`. Вывод `f4c/test_go_f4c2.out.txt`
+  `6b58c24bb635ba3a…`, первая строка `suite test_go_f4c2.py sha256 c8881e07… target go_f4c2.sh sha256 1bc01a17…`. Новые фикстуры:
+  набор отказа (а) пропускается; (а) с логом — rc 1; второе продолжение (`busy1` есть) — rc 1; `attempt` (а) без `refused.json` — rc 1;
+  старая строка вызова — rc 1; окно уступает `HPP-352` `todo`/`in_progress`.
+- Запечатанный `test_go_f4c.py` после правок повторён: `ALL OK`.
+
+**Дальше:** ответ лида на В5 пунктом `ROADMAP.md` → печать `pred/f4c2.md` (sha, строка `go_f4c2 call: PLWAIT=540 bash
+C:/kyty/f287/f4c/go_f4c2.sh series`, строки `seal:` с `go_f4c2.sh`, `win_f4c2.py`, `test_go_f4c2.py`) → вызов `next_f4c2.sh` по очереди
+замка (сессия > P > F > S). Статус — `blocked`, разблокирует лид ответом на В5.

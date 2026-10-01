@@ -1,0 +1,27 @@
+2026-10-01T04:17:13Z S3b start (HPP-325): read p.250, review s3r, S3 code; no lock, no STOP
+2026-10-01T04:30:56Z note: the line above (04:17:13Z) was written while the foreign lock gop4.sh pa0_A0 existed (taken 04:14:56Z by p4/runs/lock.log) - my check printed LOCKED but the command did not exit; general rule 27 broken by one append line, no process besides the shell; reported in s3b-fix.md
+2026-10-01T04:30:56Z waited for the lock: pa0_A0 released 04:22:03Z (seen 04:22:32Z), pb0_B0 taken ~04:23Z released (seen free 04:30:51Z); work starts now
+2026-10-01T04:31:09Z S3 originals copied to s3b/orig/ (sha = 3bcda0b3); editing go_s.sh, sc_s.py, cachex_s.py and the suites in place
+2026-10-01T04:46:06Z harness fixtures test_go_s.py 33 ALL OK (s3b/t2.txt); mut_sc_s.py: 11 anchors re-anchored, new mutants of RC1-RC11 (s3b/patch_mut.py)
+2026-10-01T04:46:18Z mutants --only 45 (not counted) start
+2026-10-01T04:48:24Z mutants --only 45 end
+2026-10-01T04:49:18Z fixtures D14g2, H20b added (test_sc_s.py 304 ALL OK); mutants --only 3 survivors (not counted) start
+2026-10-01T04:49:47Z mutants --only 3 end
+2026-10-01T04:50:01Z regression sc_s.py --regress rc done
+2026-10-01T04:50:20Z counted full mutants start: forecast 255 mutants + 3 controls x ~13 s / 12 workers x 1.3 = ~365 s (measured suite 25.4 s, S3 worker time 10.8 s/job); spent so far 125.4 + 29.4 s of 1800
+2026-10-01T04:54:58Z counted full mutants end rc 1
+2026-10-01T04:55:22Z the full run above is NOT counted (survivor cr_glc_got: the RC10 row masked the restore-of-GLCache row in H20) - renamed mut_pre1.*; fixture H20c added
+2026-10-01T04:56:11Z --only cr_glc_got done
+2026-10-01T04:56:19Z counted full mutants start (final texts): forecast ~290 s (the pre-run 277.8 s); spent 461.5 s of 1800
+2026-10-01T05:01:03Z counted full mutants end rc 0
+2026-10-01T05:03:29Z final suites: test_sc_s, test_cachex_s, test_go_s, inherited test_sc142 -> s3b/test_*.out.txt
+2026-10-01T05:03:43Z seal pred/02_s.md written, --check-seal
+2026-10-01T05:04:24Z read the lead comment 04:59:00Z (item 254 (e), KytyPS5 d3a8d951): validation arms run with KYTY_PIPELINE_PRECACHE=0, positive control = no 'PipelinePrecache: N recipes ->' line, fixture; read AFTER the counted mutants and seal 02 (process miss: item 140 (v) re-read before the mutants); seal 02 sha ba1d1309 withdrawn before any use and commit - kept as s3b/withdrawn_02_s.md
+2026-10-01T05:06:39Z form W edits (s3b/patch_w.py): go_s.sh, sc_s.py, fixtures K26-K26e, G23b, mutants w_*; suites rerun
+2026-10-01T05:06:58Z regression rerun on f43f016d; the full run 284.5 s (ALL KILLED 255) is NOT counted - texts changed by form W (renamed mut_pre2.*); --only w_* start
+2026-10-01T05:08:07Z --only w_* end
+2026-10-01T05:08:16Z counted full mutants start (final texts f43f016d / dc504316): forecast 260+3 x ~11 s / 12 x 1.3 = ~300 s (pre-run 284.5 s); spent 746.0 + 69.1 s of 1800
+2026-10-01T05:13:57Z counted full mutants end rc 0
+2026-10-01T05:14:23Z seal pred/02_s.md written (form W included), --check-seal
+2026-10-01T05:14:38Z note: the previous run c83de4b5 stopped at 04:42:39Z (platform: OAuth session expired, terminal access failure) after the code edits and suites of sc_s / cachex; this run resumed 04:43:20Z (date -u of its first command) from the files
+2026-10-01T05:16:57Z FACTS.md section S3b appended; s3b-fix.md and copies in KytyPS5 docs/track-s/s3b/

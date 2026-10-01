@@ -1,0 +1,1 @@
+seal C:/kyty/s288/pred/02_s.md sha256 829ac684f2de5311cda035b5135d6bb262448bf282f5a2e803a2e73e447c6515 lines 164 call lines 31 seal lines 20

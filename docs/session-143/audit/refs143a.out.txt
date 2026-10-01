@@ -1,0 +1,33 @@
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5725
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5883
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6039
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6141
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6146
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6161
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6232
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6303
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6071
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.h:44
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.h:204
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:260
+REF ok 4fc501f4:src/graphics/host_gpu/renderer/pipeline/shaders.cpp:505
+REF ok 4fc501f4:src/graphics/guest_gpu/gpu_defs.h:232
+REF ok d82d238c:docs/ROADMAP.md:12368
+REF ok d82d238c:docs/ROADMAP.md:12375
+REF ok d82d238c:docs/ROADMAP.md:12319
+REF ok d82d238c:docs/ROADMAP.md:12337
+REF ok d82d238c:docs/ROADMAP.md:12657
+REF ok d82d238c:docs/ROADMAP.md:12680
+REF ok d82d238c:docs/ROADMAP.md:12853
+REF ok d82d238c:docs/ROADMAP.md:13045
+REF ok d82d238c:docs/ROADMAP.md:13084
+REF ok d82d238c:docs/ROADMAP.md:13132
+REF ok d82d238c:docs/ROADMAP.md:13136
+REF ok d82d238c:docs/ROADMAP.md:13142
+REF ok d82d238c:docs/ROADMAP.md:13156
+REFS 27: ALL OK
+dualSrcBlend in 4fc501f4:src : rc 1 (1 = no match), lines ''
+StartPrecache call: 4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4546:		StartPrecache();
+ORDER "ShaderPreparation: ready" before the first GuestOut line: 10 of 10 V logs
+W logs with 0 GuestOut lines: 10 of 10; W logs without "ShaderPreparation: ready": 10 of 10
+ALL DONE

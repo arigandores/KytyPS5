@@ -1,0 +1,33 @@
+v143_01 fa9d5a277a8428ed rows 10906 entry True first [364, 15691, 230] k2 [] vkE 0 marks 0
+w143_01 7851fa47d1612b6c rows 0 entry False first None k2 None vkE 1 marks 1
+v143_02 e1ced3960dc51a72 rows 14174 entry True first [314, 18460, 231] k2 [] vkE 0 marks 0
+w143_02 a42ca54eb1cac832 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_03 507e16c582c26cfb rows 10742 entry True first [239, 15943, 265] k2 [] vkE 0 marks 0
+w143_03 f7857e0c7078b8c2 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_04 c16bd4213f29ca96 rows 12474 entry True first [263, 26670, 267] k2 [] vkE 0 marks 0
+w143_04 00c151d9fa4b825d rows 0 entry False first None k2 None vkE 1 marks 1
+v143_05 b90860585fed5e49 rows 12575 entry True first [211, 15391, 2288] k2 [] vkE 0 marks 0
+w143_05 a484f58768611519 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_06 ab2f365f70e526cf rows 17223 entry True first [211, 20348, 295] k2 [] vkE 0 marks 0
+w143_06 9c12781a4e972b5e rows 0 entry False first None k2 None vkE 1 marks 1
+v143_07 03999be4890bf7c0 rows 17129 entry True first [278, 27447, 367] k2 [[280, 1780488, 'entry']] vkE 0 marks 0
+w143_07 8a9553a1a94fe7b6 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_08 88d81bd41fe0f448 rows 19059 entry True first [239, 39601, 386] k2 [[14701, 6614314, 'hold']] vkE 0 marks 0
+w143_08 0997e63c0891cc98 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_09 9e88d44686c24c7f rows 15582 entry True first [328, 656684, 10213] k2 [] vkE 0 marks 0
+w143_09 cf1eded5d1365929 rows 0 entry False first None k2 None vkE 1 marks 1
+v143_10 d6d5dd4ad3db351b rows 14030 entry True first [388, 16976, 1544] k2 [] vkE 0 marks 0
+w143_10 45d4d85d9459a980 rows 0 entry False first None k2 None vkE 1 marks 1
+v142 565707122e53bb50 rows 10555 entry True first [380, 15370, 249] k2 [] vkE 0 marks 0
+w142 7f42a2d3e1a151a2 rows 2665 entry True first [187, 11187, 255] k2 [] vkE 0 marks 0
+c142_01 66b4ff7e0e50a8a4 rows 5252 entry False first None k2 None vkE 0 marks 0
+c142_02 bb6655d3d30c0bc7 rows 3798 entry False first None k2 None vkE 0 marks 0
+c142_03 9aaa83b0c73e66b1 rows 7155 entry False first None k2 None vkE 0 marks 0
+c142_04 bd5f547706caad1d rows 7555 entry False first None k2 None vkE 0 marks 0
+c142_05 9ea02549b36c0100 rows 7301 entry False first None k2 None vkE 0 marks 0
+c142_06 a511e5d4af7a0f0a rows 4386 entry False first None k2 None vkE 0 marks 0
+c142_07 5e1bd731e2e5d345 rows 7475 entry False first None k2 None vkE 0 marks 0
+c142_08 358be0e0d44d729e rows 7460 entry False first None k2 None vkE 0 marks 0
+c142_09 eadf72b5b79ac096 rows 7604 entry False first None k2 None vkE 0 marks 0
+c142_10 d78e0342fa2186f4 rows 6608 entry False first None k2 None vkE 0 marks 0
+ALL DONE

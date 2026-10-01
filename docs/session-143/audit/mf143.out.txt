@@ -1,0 +1,55 @@
+snap0 (1842 records) rebuilt sha = snap0 sha: True
+seed (638 records) rebuilt sha = seed sha: True
+v143_01 before taken 2026-10-01T02:14:25Z pipelines.bin 19810316 bytes -> 1842 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 94435713 bytes
+v143_01 after taken 2026-10-01T02:20:24Z pipelines.bin 20122410 bytes -> 1868 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 95104892 bytes
+w143_01 before taken 2026-10-01T02:22:24Z pipelines.bin 20122410 bytes -> 1868 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 95104892 bytes = previous manifest
+w143_01 after taken 2026-10-01T02:22:41Z pipelines.bin 20122410 bytes -> 1868 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 95104892 bytes
+v143_02 before taken 2026-10-01T02:23:55Z pipelines.bin 20122410 bytes -> 1868 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 95104892 bytes = previous manifest
+v143_02 after taken 2026-10-01T02:29:54Z pipelines.bin 20423000 bytes -> 1904 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96049815 bytes
+w143_02 before taken 2026-10-01T02:31:48Z pipelines.bin 20423000 bytes -> 1904 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96049815 bytes = previous manifest
+w143_02 after taken 2026-10-01T02:32:05Z pipelines.bin 20423000 bytes -> 1904 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96049815 bytes
+v143_03 before taken 2026-10-01T02:34:00Z pipelines.bin 20423000 bytes -> 1904 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96049815 bytes = previous manifest
+v143_03 after taken 2026-10-01T02:39:59Z pipelines.bin 21080602 bytes -> 1960 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96400669 bytes
+w143_03 before taken 2026-10-01T02:41:43Z pipelines.bin 21080602 bytes -> 1960 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96400669 bytes = previous manifest
+w143_03 after taken 2026-10-01T02:42:00Z pipelines.bin 21080602 bytes -> 1960 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96400669 bytes
+v143_04 before taken 2026-10-01T02:43:12Z pipelines.bin 21080602 bytes -> 1960 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96400669 bytes = previous manifest
+v143_04 after taken 2026-10-01T02:49:11Z pipelines.bin 22573046 bytes -> 2084 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96894373 bytes
+w143_04 before taken 2026-10-01T02:51:05Z pipelines.bin 22573046 bytes -> 2084 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96894373 bytes = previous manifest
+w143_04 after taken 2026-10-01T02:51:22Z pipelines.bin 22573046 bytes -> 2084 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96894373 bytes
+v143_05 before taken 2026-10-01T02:52:32Z pipelines.bin 22573046 bytes -> 2084 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 96894373 bytes = previous manifest
+v143_05 after taken 2026-10-01T02:58:31Z pipelines.bin 23403501 bytes -> 2153 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97422485 bytes
+w143_05 before taken 2026-10-01T03:00:24Z pipelines.bin 23403501 bytes -> 2153 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97422485 bytes = previous manifest
+w143_05 after taken 2026-10-01T03:00:41Z pipelines.bin 23403501 bytes -> 2153 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97422485 bytes
+v143_06 before taken 2026-10-01T03:01:52Z pipelines.bin 23403501 bytes -> 2153 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97422485 bytes = previous manifest
+v143_06 after taken 2026-10-01T03:07:50Z pipelines.bin 23606564 bytes -> 2170 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97872088 bytes
+w143_06 before taken 2026-10-01T03:10:08Z pipelines.bin 23606564 bytes -> 2170 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97872088 bytes = previous manifest
+w143_06 after taken 2026-10-01T03:10:25Z pipelines.bin 23606564 bytes -> 2170 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97872088 bytes
+v143_07 before taken 2026-10-01T03:11:34Z pipelines.bin 23606564 bytes -> 2170 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 97872088 bytes = previous manifest
+v143_07 after taken 2026-10-01T03:17:38Z pipelines.bin 24959391 bytes -> 2287 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101499320 bytes
+w143_07 before taken 2026-10-01T03:20:03Z pipelines.bin 24959391 bytes -> 2287 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101499320 bytes = previous manifest
+w143_07 after taken 2026-10-01T03:20:20Z pipelines.bin 24959391 bytes -> 2287 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101499320 bytes
+v143_08 before taken 2026-10-01T03:21:39Z pipelines.bin 24959391 bytes -> 2287 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101499320 bytes = previous manifest
+v143_08 after taken 2026-10-01T03:27:37Z pipelines.bin 25078949 bytes -> 2297 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101671639 bytes
+w143_08 before taken 2026-10-01T03:30:05Z pipelines.bin 25078949 bytes -> 2297 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101671639 bytes = previous manifest
+w143_08 after taken 2026-10-01T03:30:23Z pipelines.bin 25078949 bytes -> 2297 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101671639 bytes
+v143_09 before taken 2026-10-01T03:31:43Z pipelines.bin 25078949 bytes -> 2297 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 101671639 bytes = previous manifest
+v143_09 after taken 2026-10-01T03:37:43Z pipelines.bin 25722068 bytes -> 2352 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102064051 bytes
+w143_09 before taken 2026-10-01T03:39:58Z pipelines.bin 25722068 bytes -> 2352 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102064051 bytes = previous manifest
+w143_09 after taken 2026-10-01T03:40:17Z pipelines.bin 25722068 bytes -> 2352 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102064051 bytes
+v143_10 before taken 2026-10-01T03:41:34Z pipelines.bin 25722068 bytes -> 2352 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102064051 bytes = previous manifest
+v143_10 after taken 2026-10-01T03:47:39Z pipelines.bin 26977015 bytes -> 2457 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102885802 bytes
+w143_10 before taken 2026-10-01T03:51:02Z pipelines.bin 26977015 bytes -> 2457 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102885802 bytes = previous manifest
+w143_10 after taken 2026-10-01T03:51:21Z pipelines.bin 26977015 bytes -> 2457 records, rebuilt sha = manifest sha True, holds record 1592: True; driver cache 102885802 bytes
+MANIFEST CHAIN: ALL OK
+SKIP v143_01 lines 796 distinct frame= ids 6 (lines without id 0) scorer frames 6 EQUAL
+SAMPLE AsyncPipelines: skipped draw DrawIndex frame=368 vs=0x58f24a53c168f6c5 ps=0x8ddc98682cf03c05 pending=1 total_skipped=1
+SKIP v143_02 lines 251 distinct frame= ids 23 (lines without id 0) scorer frames 23 EQUAL
+SKIP v143_03 lines 125 distinct frame= ids 17 (lines without id 0) scorer frames 17 EQUAL
+SKIP v143_04 lines 136 distinct frame= ids 3 (lines without id 0) scorer frames 3 EQUAL
+SKIP v143_05 lines 206 distinct frame= ids 14 (lines without id 0) scorer frames 14 EQUAL
+SKIP v143_06 lines 57 distinct frame= ids 9 (lines without id 0) scorer frames 9 EQUAL
+SKIP v143_07 lines 897 distinct frame= ids 136 (lines without id 0) scorer frames 136 EQUAL
+SKIP v143_08 lines 99 distinct frame= ids 16 (lines without id 0) scorer frames 16 EQUAL
+SKIP v143_09 lines 46 distinct frame= ids 9 (lines without id 0) scorer frames 9 EQUAL
+SKIP v143_10 lines 109 distinct frame= ids 34 (lines without id 0) scorer frames 34 EQUAL
+ALL DONE

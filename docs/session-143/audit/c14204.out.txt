@@ -1,0 +1,10 @@
+c142_04 log size 205772834 sha bd5f547706caad1df9470af8265711dbc86e1bdde7f19dfdb1f9a2b30a0f6133
+starts [[16582213, ''], [18747048, 'mini_giants_garden']]
+46825 PipelinePrecache: 1563 recipes -> 1393 graphics + 129 compute pipelines queued, 41 skipped
+47223 PipelinePrecache: all pipelines created, 474 ms
+19181980 PipelinePrecache: saved 1565 recipes (16623541 bytes)
+205772693 PipelinePrecache: saved 1604 recipes (17018974 bytes)
+first GuestOut pos 546368 rows 7555
+w143_01 size 52138 vke_pos [51482] marks [[51468, '--- Error ---']]
+w143_05 size 58227 vke_pos [57571] marks [[57557, '--- Error ---']]
+   57099 PipelinePrecache: 2153 recipes -> 1959 graphics + 153 compute pipelines queued, 41 skipped, 4064 sou

@@ -1,0 +1,89 @@
+DIFF v143_01 skip frames: mine 7 scorer 6
+SAMPLE PriorityStall line: PriorityStall: tick=5369 unsub=1 us=267847 site=+0x90a231
+ROW v143_01 rows 10906 first [364, 15691, 230] shown 333.6 s / 10543 frames K2 [] K3w 1 K3h 0 skipF 7 prio 1/267847 bvh 0 vkE 0+0 GuestOut 30 cs 141 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_01 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 137 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+ROW v143_02 rows 14174 first [314, 18460, 231] shown 333.6 s / 13861 frames K2 [] K3w 1 K3h 1 skipF 23 prio 4/199115 bvh 0 vkE 0+0 GuestOut 26 cs 152 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_02 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 137 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+ROW v143_03 rows 10742 first [239, 15943, 265] shown 333.7 s / 10504 frames K2 [] K3w 1 K3h 0 skipF 17 prio 1/65098 bvh 0 vkE 0+0 GuestOut 28 cs 153 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_03 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 137 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+DIFF v143_04 dt_median_us: mine 31692.5 scorer 31693
+ROW v143_04 rows 12474 first [263, 26670, 267] shown 334.1 s / 12212 frames K2 [] K3w 4 K3h 0 skipF 3 prio 2/191601 bvh 0 vkE 0+0 GuestOut 44 cs 153 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_04 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 140 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+ROW v143_05 rows 12575 first [211, 15391, 2288] shown 333.8 s / 12365 frames K2 [] K3w 1 K3h 0 skipF 14 prio 1/94601 bvh 0 vkE 0+0 GuestOut 34 cs 153 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_05 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 153 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+ROW v143_06 rows 17223 first [211, 20348, 295] shown 333.0 s / 17013 frames K2 [] K3w 1 K3h 0 skipF 9 prio 2/151816 bvh 0 vkE 0+0 GuestOut 24 cs 153 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_06 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 137 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+DIFF v143_07 skip frames: mine 126 scorer 136
+ROW v143_07 rows 17129 first [278, 27447, 367] shown 338.3 s / 16852 frames K2 [[280, 1780488, 'entry']] K3w 4 K3h 2 skipF 126 prio 10/445828 bvh 0 vkE 0+0 GuestOut 32 cs 157 marks [] outcome K2|['K2', 'frame dt >= 1 s within 120 s']
+ROW w143_07 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 137 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+DIFF v143_08 skip frames: mine 13 scorer 16
+ROW v143_08 rows 19059 first [239, 39601, 386] shown 332.5 s / 18821 frames K2 [[14701, 6614314, 'hold']] K3w 1 K3h 2 skipF 13 prio 3/6607732 bvh 0 vkE 0+0 GuestOut 32 cs 157 marks [] outcome K2|['HOLDS_120', 'held']
+ROW w143_08 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 157 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+ROW v143_09 rows 15582 first [328, 656684, 10213] shown 332.4 s / 15255 frames K2 [] K3w 0 K3h 1 skipF 9 prio 5/226711 bvh 0 vkE 0+0 GuestOut 28 cs 158 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_09 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 141 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+DIFF v143_10 skip frames: mine 35 scorer 34
+ROW v143_10 rows 14030 first [388, 16976, 1544] shown 334.0 s / 13643 frames K2 [] K3w 2 K3h 0 skipF 35 prio 1/60965 bvh 0 vkE 0+0 GuestOut 26 cs 158 marks [] outcome HOLDS_120|['HOLDS_120', 'held']
+ROW w143_10 rows 0 first None shown 0.0 s / 0 frames K2 [] K3w 0 K3h 0 skipF 0 prio 0/0 bvh 0 vkE 1+1 GuestOut 0 cs 141 marks ['--- Error ---', '--- Error ---'] outcome NOT_ENTERED|None
+FIELDS compared 680 over 20 logs; DIFFS 5
+SCENE_OK own spring_punch_sky_aztec v/w143_01: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own booster_construction v/w143_02: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own mini_astro_clock_tower v/w143_03: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own path_maker_mana_tree v/w143_04: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own spring_punch_monster_cave v/w143_05: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own gulliver_island v/w143_06: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own rocket_hourglass v/w143_07: NO (V: V frame >= 1 s [[280, 1780488, 'entry']]; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own pot_treasure_cave v/w143_08: NO (V: V frame >= 1 s [[14701, 6614314, 'hold']]; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own booster_magic_lamp v/w143_09: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SCENE_OK own rocket_space_station v/w143_10: NO (V: log rows pass; W: W not entered; W [Vulkan][E] 1 in the log; W stop markers 1; W shown < 300 s)
+SUMMARY| SCENE_OK spring_punch_sky_aztec: NO
+SUMMARY| SCENE_OK booster_construction: NO
+SUMMARY| SCENE_OK mini_astro_clock_tower: NO
+SUMMARY| SCENE_OK path_maker_mana_tree: NO
+SUMMARY| SCENE_OK spring_punch_monster_cave: NO
+SUMMARY| SCENE_OK gulliver_island: NO
+SUMMARY| SCENE_OK rocket_hourglass: NO
+SUMMARY| SCENE_OK pot_treasure_cave: NO
+SUMMARY| SCENE_OK booster_magic_lamp: NO
+SUMMARY| SCENE_OK rocket_space_station: NO
+SUMMARY| SCENE_OK LEVELS: YES 0, PENDING_SHEET 0, NO 10 of 10
+SUMMARY| CENSUS made 10 of 10 (of them attempt made without json 0), admitted 10
+SUMMARY| FORM B5a (a frame dt >= 1 s after the first scene frame): 2/10 [c] (admitted and entered 10)
+SUMMARY| FORM B5 (a frame dt >= 100 ms in the entry window, no warm base): 9/10 [c] (admitted and entered 10)
+SUMMARY| FORM B5a variant 120 s (a frame dt >= 1 s within 120 s of presented time after the entry line; the class decision and pooling with s142 use this one, item 242 (c)): 1/10 [c] v143_07; K2 by place on the whole V: entry 1 v143_07, ho
+SUMMARY| K2 ON THE HOLD AFTER 120 s ONLY (a separate row (B) of register F per level, form edes122, not B5a; item 242 (c)): v143_08
+SUMMARY| FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 4/10 [c] (admitted and entered 10) v143_02,v143_07,v143_08,v143_09; executor variant (the hold within 120 s of presented time after the entry line): 3/10
+SUMMARY| STOP RULE (item 221 (g)(4)): not met
+TIMELINE v142 sha 565707122e53 starts ['', 'underwater_aerial_garden'] start_recipes [1013] saved [] all_created True drv_loaded [88734760] vkE 0 cs_begin 123 GuestOut 34
+TIMELINE w142 sha 7f42a2d3e1a1 starts ['', 'underwater_aerial_garden'] start_recipes [1013] saved [] all_created True drv_loaded [88734760] vkE 0 cs_begin 123 GuestOut 32
+TIMELINE c142_01 sha 66b4ff7e0e50 starts ['', 'bumper_enemy_snowy_canyon'] start_recipes [1013] saved [(1015, 10130037), (1200, 12319984)] all_created True drv_loaded [88734760] vkE 0 cs_begin 126 GuestOut 24
+TIMELINE c142_02 sha bb6655d3d30c starts ['', 'big_hand_pirate_island'] start_recipes [1200] saved [(1201, 12331731), (1393, 14597741), (1411, 14811267), (1416, 14870702)] all_created True drv_loaded [90186782] vkE 0 cs_begin 129 GuestOut 24
+TIMELINE c142_03 sha 9aaa83b0c73e starts ['', 'timestop_casino'] start_recipes [1416] saved [(1417, 14882285), (1558, 16561724), (1563, 16622939)] all_created True drv_loaded [90629860] vkE 0 cs_begin 129 GuestOut 36
+TIMELINE c142_04 sha bd5f547706ca starts ['', 'mini_giants_garden'] start_recipes [1563] saved [(1565, 16623541), (1604, 17018974)] all_created True drv_loaded [92136273] vkE 0 cs_begin 137 GuestOut 32
+TIMELINE c142_05 sha 9ea02549b36c starts ['', 'ice_iceberg'] start_recipes [1604] saved [(1605, 17030605), (1701, 18174217)] all_created True drv_loaded [92372771] vkE 0 cs_begin 137 GuestOut 44
+TIMELINE c142_06 sha a511e5d4af7a starts ['', 'sponge_dirty_bath'] start_recipes [1701] saved [(1704, 18175120), (1793, 19236195)] all_created True drv_loaded [93008722] vkE 0 cs_begin 140 GuestOut 30
+TIMELINE c142_07 sha 5e1bd731e2e5 starts ['', 'hoover_beach'] start_recipes [1793] saved [(1794, 19236496), (1807, 19391503)] all_created True drv_loaded [93360825] vkE 0 cs_begin 141 GuestOut 24
+TIMELINE c142_08 sha 358be0e0d44d starts ['', 'volcano_mountain'] start_recipes [1807] saved [(1808, 19403502), (1825, 19607665)] all_created True drv_loaded [93477912] vkE 0 cs_begin 141 GuestOut 24
+TIMELINE c142_09 sha eadf72b5b79a starts ['', 'voxel_world'] start_recipes [1825] saved [(1826, 19619572), (1831, 19679119)] all_created True drv_loaded [93973356] vkE 0 cs_begin 141 GuestOut 24
+TIMELINE c142_10 sha d78e0342fa21 starts ['', 'enemy_gorilla'] start_recipes [1831] saved [(1834, 19715036), (1842, 19810316)] all_created True drv_loaded [94249535] vkE 0 cs_begin 141 GuestOut 26
+TIMELINE v143_01 sha fa9d5a277a84 starts ['', 'spring_punch_sky_aztec'] start_recipes [1842] saved [(1843, 19822399), (1868, 20122410)] all_created True drv_loaded [94435637] vkE 0 cs_begin 141 GuestOut 30
+TIMELINE w143_01 sha 7851fa47d161 starts [] start_recipes [] saved [] all_created False drv_loaded [95104816] vkE 1 cs_begin 137 GuestOut 0
+TIMELINE v143_02 sha e1ced3960dc5 starts ['', 'booster_construction'] start_recipes [1868] saved [(1869, 20134493), (1897, 20387539), (1904, 20423000)] all_created True drv_loaded [95104816] vkE 0 cs_begin 152 GuestOut 26
+TIMELINE w143_02 sha a42ca54eb1ca starts [] start_recipes [] saved [] all_created False drv_loaded [96049739] vkE 1 cs_begin 137 GuestOut 0
+TIMELINE v143_03 sha 507e16c582c2 starts ['', 'mini_astro_clock_tower'] start_recipes [1904] saved [(1906, 20435264), (1960, 21080602)] all_created True drv_loaded [96049739] vkE 0 cs_begin 153 GuestOut 28
+TIMELINE w143_03 sha f7857e0c7078 starts [] start_recipes [] saved [] all_created False drv_loaded [96400593] vkE 1 cs_begin 137 GuestOut 0
+TIMELINE v143_04 sha c16bd4213f29 starts ['', 'path_maker_mana_tree'] start_recipes [1960] saved [(1961, 21092497), (2073, 22441505), (2084, 22573046)] all_created True drv_loaded [96400593] vkE 0 cs_begin 153 GuestOut 44
+TIMELINE w143_04 sha 00c151d9fa4b starts [] start_recipes [] saved [] all_created False drv_loaded [96894297] vkE 1 cs_begin 140 GuestOut 0
+TIMELINE v143_05 sha b90860585fed starts ['', 'spring_punch_monster_cave'] start_recipes [2084] saved [(2088, 22621746), (2153, 23403501)] all_created True drv_loaded [96894297] vkE 0 cs_begin 153 GuestOut 34
+TIMELINE w143_05 sha a484f5876861 starts [] start_recipes [2153] saved [] all_created False drv_loaded [97422409] vkE 1 cs_begin 153 GuestOut 0
+TIMELINE v143_06 sha ab2f365f70e5 starts ['', 'gulliver_island'] start_recipes [2153] saved [(2154, 23415640), (2170, 23606564)] all_created True drv_loaded [97422409] vkE 0 cs_begin 153 GuestOut 24
+TIMELINE w143_06 sha 9c12781a4e97 starts [] start_recipes [] saved [] all_created False drv_loaded [97872012] vkE 1 cs_begin 137 GuestOut 0
+TIMELINE v143_07 sha 03999be4890b starts ['', 'rocket_hourglass'] start_recipes [2170] saved [(2171, 23618259), (2281, 24887337), (2287, 24959391)] all_created True drv_loaded [97872012] vkE 0 cs_begin 157 GuestOut 32
+TIMELINE w143_07 sha 8a9553a1a94f starts [] start_recipes [] saved [] all_created False drv_loaded [101499244] vkE 1 cs_begin 137 GuestOut 0
+TIMELINE v143_08 sha 88d81bd41fe0 starts ['', 'pot_treasure_cave'] start_recipes [2287] saved [(2288, 24971286), (2297, 25078949)] all_created True drv_loaded [101499244] vkE 0 cs_begin 157 GuestOut 32
+TIMELINE w143_08 sha 0997e63c0891 starts [] start_recipes [2297] saved [] all_created False drv_loaded [101671563] vkE 1 cs_begin 157 GuestOut 0
+TIMELINE v143_09 sha 9e88d44686c2 starts ['', 'booster_magic_lamp'] start_recipes [2297] saved [(2298, 25079250), (2350, 25698350), (2352, 25722068)] all_created True drv_loaded [101671563] vkE 0 cs_begin 158 GuestOut 28
+TIMELINE w143_09 sha cf1eded5d136 starts [] start_recipes [] saved [] all_created False drv_loaded [102063975] vkE 1 cs_begin 141 GuestOut 0
+TIMELINE v143_10 sha d6d5dd4ad3db starts ['', 'rocket_space_station'] start_recipes [2352] saved [(2353, 25734263), (2457, 26977015)] all_created True drv_loaded [102063975] vkE 0 cs_begin 158 GuestOut 26
+TIMELINE w143_10 sha 45d4d85d9459 starts [] start_recipes [] saved [] all_created False drv_loaded [102885726] vkE 1 cs_begin 141 GuestOut 0
+FLAGGED recipe index 1592 (0-based) bytes [16876890, 16888577) of cur -> added in run c142_04 (start 1563, end 1604); first save holding it: [(1604, 17018974)]
+ALL DONE

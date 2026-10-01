@@ -1,0 +1,5 @@
+p283 mtime-in-lock group p4/cache/pa0_A0.before: 166 files, created 2026-10-01T04:15:01Z .. 2026-10-01T04:15:02Z
+p283 mtime-in-lock group p4/cache/pa_A.before: 167 files, created 2026-10-01T03:58:49Z .. 2026-10-01T03:58:49Z
+p283 mtime-in-lock group p4/cache/pb0_B0.before: 166 files, created 2026-10-01T04:22:57Z .. 2026-10-01T04:22:58Z
+p283 mtime-in-lock group p4/cache/pb_B.before: 166 files, created 2026-10-01T04:06:55Z .. 2026-10-01T04:06:56Z
+p283 files with mtime in a sc143 lock window AND creation time in a sc143 lock window: 0 []

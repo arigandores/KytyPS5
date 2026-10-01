@@ -1,0 +1,109 @@
+LOCK WINDOWS 20: first taken 2026-10-01T02:14:25Z, last released 2026-10-01T03:51:32Z; sum held 4523 s; gaps between tags min 52 s max 143 s
+RULE27 p283: files 7744; mtime inside a lock window 665; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6372db585b2decfc.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6372db585b2decfc.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6372db585b2decfc.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6372db585b2decfc.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6dee6a77e01a1b02.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6dee6a77e01a1b02.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6dee6a77e01a1b02.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_58f24a53c168f6c5_6dee6a77e01a1b02.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/ps_bed231cd6418e61a_fbe38bca109e3800.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/ps_bed231cd6418e61a_fbe38bca109e3800.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/ps_bed231cd6418e61a_fbe38bca109e3800.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/ps_bed231cd6418e61a_fbe38bca109e3800.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_ad072cc1be7695c8_71f53783468d17d7.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_ad072cc1be7695c8_71f53783468d17d7.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_ad072cc1be7695c8_71f53783468d17d7.bin
+   IN-LOCK 2026-10-01T02:14:42Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_ad072cc1be7695c8_71f53783468d17d7.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_06c0b6a2f0f5743e_65b182f409977ad6.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_06c0b6a2f0f5743e_65b182f409977ad6.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_06c0b6a2f0f5743e_65b182f409977ad6.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_06c0b6a2f0f5743e_65b182f409977ad6.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_b835efa546c2d585.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_b835efa546c2d585.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_b835efa546c2d585.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_b835efa546c2d585.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_2c99c881ee75f9f9.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_2c99c881ee75f9f9.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_2c99c881ee75f9f9.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_2c99c881ee75f9f9.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_dae0fd533ad11a7b.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_dae0fd533ad11a7b.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_dae0fd533ad11a7b.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_dae0fd533ad11a7b.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_307272f7529159a8.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_307272f7529159a8.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_307272f7529159a8.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_930cd598855bb2b9_307272f7529159a8.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa0_A0.before/_ShaderCache/PPSA21564/vs_04e7f84bca841dde_b83be1a37a448896.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pa_A.before/_ShaderCache/PPSA21564/vs_04e7f84bca841dde_b83be1a37a448896.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb0_B0.before/_ShaderCache/PPSA21564/vs_04e7f84bca841dde_b83be1a37a448896.bin
+   IN-LOCK 2026-10-01T02:14:43Z v143_01 C:/kyty/p283/p4/cache/pb_B.before/_ShaderCache/PPSA21564/vs_04e7f84bca841dde_b83be1a37a448896.bin
+RULE27 f287: files 2818; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 s288: files 13998; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 2
+   PRE-LOCK 2026-10-01T02:06:14Z C:/kyty/s288/s3r/s3r-review.md
+   PRE-LOCK 2026-10-01T02:06:39Z C:/kyty/s288/FACTS.md
+RULE27 KytyPS5/docs: files 2504; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 5
+   PRE-LOCK 2026-10-01T02:05:56Z C:/kyty/KytyPS5/docs/track-s/s3r-review.md
+   PRE-LOCK 2026-10-01T02:06:14Z C:/kyty/KytyPS5/docs/track-s/s3r/rt_s3r.py
+   PRE-LOCK 2026-10-01T02:06:14Z C:/kyty/KytyPS5/docs/track-s/s3r/rt_s3r_skip.py
+   PRE-LOCK 2026-10-01T02:06:14Z C:/kyty/KytyPS5/docs/track-s/s3r/rt_s3r.out.txt
+   PRE-LOCK 2026-10-01T02:06:14Z C:/kyty/KytyPS5/docs/track-s/s3r/rt_s3r_skip.out.txt
+RULE27 KytyPS5/src: files 450; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 ps5 em/docs: files 8; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 s143/lead: files 9; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 s143/step4: files 1; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 s142: files 1787; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 build: files 2665; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+RULE27 kyty root files: files 2765; mtime inside a lock window 0; created inside a window (mtime outside) 0; mtime in 2026-10-01T02:04:28Z..2026-10-01T02:14:25Z (after the API start row, before the first lock) 0
+TIMES step2: rows 228; rows without a leading UTC stamp 0 []
+TAG v143_01 lock 2026-10-01T02:14:25Z..2026-10-01T02:21:18Z (413 s) calls 2 busy 1 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_01 lock 2026-10-01T02:22:24Z..2026-10-01T02:22:52Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_02 lock 2026-10-01T02:23:55Z..2026-10-01T02:30:56Z (421 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_02 lock 2026-10-01T02:31:48Z..2026-10-01T02:32:16Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_03 lock 2026-10-01T02:34:00Z..2026-10-01T02:40:49Z (409 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_03 lock 2026-10-01T02:41:43Z..2026-10-01T02:42:11Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_04 lock 2026-10-01T02:43:12Z..2026-10-01T02:50:11Z (419 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_04 lock 2026-10-01T02:51:05Z..2026-10-01T02:51:32Z (27 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_05 lock 2026-10-01T02:52:32Z..2026-10-01T02:59:27Z (415 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_05 lock 2026-10-01T03:00:24Z..2026-10-01T03:00:52Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_06 lock 2026-10-01T03:01:52Z..2026-10-01T03:09:04Z (432 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_06 lock 2026-10-01T03:10:08Z..2026-10-01T03:10:36Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_07 lock 2026-10-01T03:11:34Z..2026-10-01T03:18:53Z (439 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_07 lock 2026-10-01T03:20:03Z..2026-10-01T03:20:31Z (28 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_08 lock 2026-10-01T03:21:39Z..2026-10-01T03:28:56Z (437 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_08 lock 2026-10-01T03:30:05Z..2026-10-01T03:30:35Z (30 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_09 lock 2026-10-01T03:31:43Z..2026-10-01T03:38:52Z (429 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_09 lock 2026-10-01T03:39:58Z..2026-10-01T03:40:28Z (30 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+TAG v143_10 lock 2026-10-01T03:41:35Z..2026-10-01T03:48:39Z (424 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 0 ok
+TAG w143_10 lock 2026-10-01T03:51:02Z..2026-10-01T03:51:32Z (30 s) calls 1 busy 0 starts 1 attempt file True json attempts 1 rc 1 ok
+OLD DIR (stale moves of a second attempt): False
+STOP FILE now: False
+TIMES/LOCK CHECK: ALL OK
+SEAL 02 sha256 43e72cbeb4a1931d658bd6df0c2f4b53c5ee25074abf24428a7b57b5de6b0828 mtime 2026-10-01T01:43:09Z (first lock 2026-10-01T02:14:25Z) before the first lock: True
+SEAL LINES 21: every file = its seal line and not modified after the seal: ALL OK
+OUTPUT SHA C:/kyty/s142: 45 file rows (glitch, rec, sheet, score) against the files now: ALL OK
+   glitch_c142_01.txt last line: one-frame glitches: 0
+   glitch_c142_02.txt last line: one-frame glitches: 0
+   glitch_c142_03.txt last line: one-frame glitches: 0
+   glitch_c142_04.txt last line: one-frame glitches: 0
+   glitch_c142_05.txt last line: one-frame glitches: 0
+   glitch_c142_06.txt last line: one-frame glitches: 0
+   glitch_c142_07.txt last line: one-frame glitches: 0
+   glitch_c142_08.txt last line: one-frame glitches: 0
+   glitch_c142_09.txt last line: one-frame glitches: 0
+   glitch_c142_10.txt last line: one-frame glitches: 0
+   glitch_v142.txt last line: one-frame glitches: 0
+OUTPUT SHA C:/kyty/s143: 50 file rows (glitch, rec, sheet, score) against the files now: ALL OK
+   glitch_v143_01.txt last line: one-frame glitches: 0
+   glitch_v143_02.txt last line: one-frame glitches: 0
+   glitch_v143_03.txt last line: one-frame glitches: 0
+   glitch_v143_04.txt last line: one-frame glitches: 0
+   glitch_v143_05.txt last line: one-frame glitches: 0
+   glitch_v143_06.txt last line: one-frame glitches: 0
+   glitch_v143_07.txt last line: one-frame glitches: 0
+   glitch_v143_08.txt last line: one-frame glitches: 0
+   glitch_v143_09.txt last line: one-frame glitches: 0
+   glitch_v143_10.txt last line: one-frame glitches: 0
+ALL DONE

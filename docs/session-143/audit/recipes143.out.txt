@@ -1,0 +1,15 @@
+cur: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/pipelines.bin size 26977015 sha256 1886cd730c89f0c8 count 2457 parsed 2457 (graphics 2258 compute 199) at_end True 
+   layout [10288, 376, 216, 44, 516, 125] signature KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank|10288:376:216:44:516:125
+   DUAL-SOURCE recipe index 1592 bytes [16876890, 16888577) graphics_before 1414 compute_before 178 vs e234ee6bc9c2fb00#0 ps 5514e10f1a60df83#0 color_count 1 hit [0] (within count [0]) src [17, 0, 0, 0, 0, 0, 0, 0] dst [18, 0, 0, 0, 0, 0, 0, 0] fcn [0, 0, 0, 0, 0, 0, 0, 0] sep [1, 0, 0, 0, 0, 0, 0, 0] asrc [1, 0, 0, 0, 0, 0, 0, 0] adst [0, 0, 0, 0, 0, 0, 0, 0] enable [1, 0, 0, 0, 0, 0, 0, 0] fmt [97, 0, 0, 0, 0, 0, 0, 0] sha1 b6488dc909d8
+snap0: C:/kyty/s288/snap0/ShaderCache_PPSA21564/pipelines.bin size 19810316 sha256 b462896a50e0735c count 1842 parsed 1842 (graphics 1660 compute 182) at_end True 
+   layout [10288, 376, 216, 44, 516, 125] signature KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank|10288:376:216:44:516:125
+   DUAL-SOURCE recipe index 1592 bytes [16876890, 16888577) graphics_before 1414 compute_before 178 vs e234ee6bc9c2fb00#0 ps 5514e10f1a60df83#0 color_count 1 hit [0] (within count [0]) src [17, 0, 0, 0, 0, 0, 0, 0] dst [18, 0, 0, 0, 0, 0, 0, 0] fcn [0, 0, 0, 0, 0, 0, 0, 0] sep [1, 0, 0, 0, 0, 0, 0, 0] asrc [1, 0, 0, 0, 0, 0, 0, 0] adst [0, 0, 0, 0, 0, 0, 0, 0] enable [1, 0, 0, 0, 0, 0, 0, 0] fmt [97, 0, 0, 0, 0, 0, 0, 0] sha1 b6488dc909d8
+seed: C:/kyty/KytyPS5/ps5 em/_ShaderSeeds/PPSA21564/pipelines.bin size 6149106 sha256 b5f88e59717a18de count 638 parsed 638 (graphics 517 compute 121) at_end True 
+   layout [10288, 376, 216, 44, 516, 125] signature KytySC3:699c1e4b7db359067b461e029b913c4b6e78dc90:robust:ftz:cbank|10288:376:216:44:516:125
+REL cur in snap0: common prefix 1842 of 2457 / 1842; present anywhere 1842
+REL cur in seed: common prefix 638 of 2457 / 638; present anywhere 638
+REL snap0 in cur: common prefix 1842 of 1842 / 2457; present anywhere 1842
+REL snap0 in seed: common prefix 638 of 1842 / 638; present anywhere 638
+REL seed in cur: common prefix 638 of 638 / 2457; present anywhere 638
+REL seed in snap0: common prefix 638 of 638 / 1842; present anywhere 638
+ALL DONE

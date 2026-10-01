@@ -1,0 +1,13 @@
+HPP-281 done created 2026-09-30T20:34:13.459Z started 2026-09-30T23:46:14.067Z completed 2026-10-01T00:03:23.527Z updated 2026-10-01T00:03:23.555Z policy None | с.142 шаг 4: закрытие сессии 142 (листы видео, SCE
+HPP-297 done created 2026-09-30T23:58:12.191Z started 2026-10-01T00:03:23.738Z completed 2026-10-01T00:47:03.728Z updated 2026-10-01T00:47:03.750Z policy None | с.143 шаг 0: харнесс go143a.sh, скорер sc143.py (п
+HPP-298 done created 2026-09-30T23:58:12.299Z started 2026-10-01T00:47:03.885Z completed 2026-10-01T01:04:20.903Z updated 2026-10-01T01:04:20.932Z policy None | с.143 шаг 1: враждебный отзыв харнесса, скорера, р
+HPP-321 done created 2026-10-01T01:03:56.277Z started 2026-10-01T01:04:21.052Z completed 2026-10-01T01:44:54.486Z updated 2026-10-01T01:54:20.596Z policy None | с.143 звено 1б: правки RC1–RC7 отзыва sc143 — стро
+HPP-322 done created 2026-10-01T01:46:00.788Z started 2026-10-01T01:46:00.881Z completed 2026-10-01T01:54:25.311Z updated 2026-10-01T01:54:25.333Z policy None | с.143 приёмка звена 1б HPP-321 (лид): печать pred/
+HPP-299 done created 2026-09-30T23:58:12.412Z started 2026-10-01T02:04:22.177Z completed 2026-10-01T03:57:00.226Z updated 2026-10-01T03:57:00.248Z policy None | с.143 шаг 2: прогоны v143_01…w143_10 (20 тегов) по
+HPP-300 in_progress created 2026-09-30T23:58:12.529Z started 2026-10-01T03:57:27.287Z completed None updated 2026-10-01T03:57:27.287Z policy None | с.143 шаг 3: аудит протокола закрытия с. 142 и шаг
+HPP-301 blocked created 2026-09-30T23:58:12.761Z started None completed None updated 2026-09-30T23:58:12.761Z policy None | с.143 шаг 4: закрытие сессии 143 (листы видео, SCE
+HPP-305 done created 2026-10-01T00:14:14.728Z started 2026-10-01T03:57:00.356Z completed 2026-10-01T04:34:20.334Z updated 2026-10-01T04:34:20.356Z policy None | трек P, звено P6: прогоны pa_A, pb_B под замком (S
+HPP-314 done created 2026-10-01T00:53:09.536Z started 2026-10-01T03:57:00.397Z completed 2026-10-01T04:14:15.190Z updated 2026-10-01T04:14:15.233Z policy None | трек S, звено S3r: враждебный отзыв харнесса, скор
+HPP-323 done created 2026-10-01T01:47:59.937Z started 2026-10-01T01:48:00.044Z completed 2026-10-01T02:04:07.584Z updated 2026-10-01T02:04:07.601Z policy None | трек S, звено S5c: правки RC2–RC6 S-pcw и бинарь S
+HPP-315 blocked created 2026-10-01T00:53:09.632Z started None completed None updated 2026-10-01T04:14:29.971Z policy None | трек S, звено S4: прогоны под замком — S-warm, кон
+HPP-310 blocked created 2026-10-01T00:40:15.082Z started 2026-10-01T01:19:00.575Z completed None updated 2026-10-01T01:25:10.642Z policy None | трек F, звено F2c: доказательные прогоны Б26б под 

@@ -1,0 +1,72 @@
+suite test_f5c_read.py sha256 e9876948bf089dde4a646889a495f8c7d4bc400d05ff132aedacbba20eaeef8a target f5c_read.py sha256 0cc8b3cdef53acd66a270a83d50bde9c409f339c5e7d3115ecb9cd51c6fc18fe
+ok   a good -> PASS ('PASS', {'entered': True, 'no_scene_change': True, 'no_hold_exit': True, 'one_window1_minimized': True, 'begin_end': True, 'vke0': True, 'deaths0': True, 'hold': True, 'rows_after_restore': True, 'end_not_late': True}, None)
+ok   a good: late_log False, late_ms False (False, False)
+ok   a good: shift printed, rows > 0 {'start_pos': 350, 'armed_pos': 404, 'bytes': 54, 'rows': 0, 'dt_s': 0.0, 'blank_before': 1}
+ok   a good: delay ~60 s, dur ~10 s (60.032733, 9.999900000000004)
+ok   a good: stop-check continue 
+ok   a two Window 1 minimized -> FAIL 
+ok   a no end line -> FAIL 
+ok   a no begin line -> FAIL 
+ok   a end 3 s after restore -> FAIL late True
+ok   a end just under restore + 2 s -> PASS (False, {'armed': 0.099999, 'minimize': 60.132732, 'restore': 70.132632, 'begin': 60.132732, 'end': 72.132612, 'total': 340.129932})
+ok   a end 2.1 s after restore -> FAIL (True, {'armed': 0.099999, 'minimize': 60.132732, 'restore': 70.132632, 'begin': 60.132732, 'end': 72.232611, 'total': 340.129932})
+ok   a one [Vulkan][E] -> FAIL 
+ok   a death marker -> FAIL 
+ok   a death marker without [Vulkan][E] -> stop 
+ok   a hold 300 s -> FAIL 299.997
+ok   a hold just above 310 s -> PASS 310.196898
+ok   a < 1000 rows after restore -> FAIL 750
+ok   a hold_exit set -> FAIL 
+ok   a no rows inside the episode -> still PASS (log clock skips the episode) (False, False, False)
+ok   N2: armed after a blank start line only -> NOT EVALUABLE controls failed: ['N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)', 'the first scene frame lies before TestMinimize: minimize']
+ok   a no FixMinimize: on -> NOT EVALUABLE 
+ok   a config delay 30 -> NOT EVALUABLE 
+ok   a first scene frame after minimize -> NOT EVALUABLE None
+ok   a no restore line -> NOT EVALUABLE 
+ok   NOT EVALUABLE -> stop 
+ok   a other binary -> NOT ADMITTED 
+ok   NOT ADMITTED -> stop 
+ok   a filter not exactly the F6 VUID -> NOT ADMITTED 
+ok   a no KYTY_PIPELINE_PRECACHE=0 -> NOT ADMITTED 
+ok   a stand 60:5 -> NOT ADMITTED 
+ok   a KYTY_FIX_DUALSRC set -> NOT ADMITTED 
+ok   a KYTY_GPU_CHECKPOINTS present -> NOT ADMITTED 
+ok   b VUID 01689 after minimize, ended -> STOP VUID-01689 ('STOP VUID-01689', {'vuid_01689_after_minimize': True, 'emulator_ended': True}, None)
+ok   b stop-check continue 
+ok   b VUID before minimize -> NO STOP 
+ok   b emulator not ended -> NO STOP 
+ok   b no VUID at all -> NO STOP 
+ok   b SwapchainZeroExtent lines at =0 -> NOT EVALUABLE 
+ok   b FixMinimize: on at =0 -> NOT EVALUABLE 
+ok   v good -> PASS ('PASS', {'entered': True, 'no_scene_change': True, 'no_hold_exit': True, 'hold': True, 'video_frames': True, 'sheet': True, 'glitches_outside0': True, 'n1_present_order_after_end': True, 'no_k1k2_outside': True, 'begin_end': True, 'end_not_late': True}, None)
+ok   v good: anchored window ~ [60, 72.5] after armed ((59.999800000000015, 72.49969500000002), (59.999, 72.533, 10.533999999999999))
+ok   v good: N1 records after end > 0, no break 
+ok   v glitch inside the window -> PASS []
+ok   v glitch at end + 1.8 s -> PASS ((59.999800000000015, 72.49969500000002), [])
+ok   v glitch at end + 2.5 s -> FAIL 
+ok   v glitch 1 s before minimize -> FAIL 
+ok   v present permutation after end -> FAIL (N1) [(2685, 3002, 3001)]
+ok   v permutation before minimize -> letter PASS, whole-file break printed [(900, 902, 901)]
+ok   v 2999 video frames -> FAIL 
+ok   v no sheet -> FAIL 
+ok   v K2 outside the window -> FAIL [(4504, 1200000, 'outside')]
+ok   v K2 inside the window -> PASS [(2134, 1200000, 'window')]
+ok   v K1 inside the window -> PASS []
+ok   v K1 outside the window -> FAIL 
+ok   v hold < 330 s -> FAIL 
+ok   v end 3 s after restore -> FAIL 
+ok   v KYTY_PIPELINE_PRECACHE set -> NOT ADMITTED 
+ok   g crash -> DATA, death marker counted, exit code kept (1, 3221225477, 'last line here')
+ok   g stop-check continue 
+ok   g held -> DATA 
+ok   text output in strict cp1250 rc 0 and ASCII (0, b'')
+ok   text output has the verdict line 
+ok   text output without PYTHONIOENCODING rc 0 b''
+ok   usage rc 2 
+ok   no log rc 1 
+ok   seal ok 
+ok   seal mismatch refused 
+ok   seal missing name refused 
+ok   stop-check no reading -> stop 
+checks 69 failed 0 []
+ALL OK

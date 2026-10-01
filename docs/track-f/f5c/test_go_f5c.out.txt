@@ -1,0 +1,68 @@
+suite test_go_f5c.py sha256 498a56a9156bc9767f6cc54fc3d7b403f52375d182e04993d92bf678e739acdc target go_f5c.sh sha256 2f9775cdd0ef463e4b7e5dfefa8efe90f3655b97e15892209b9d9d89da36e376
+ok   go_f5c.sh is ASCII and LF
+ok   win_f5c.py is ASCII and LF
+ok   next_f5c.sh is ASCII and LF
+ok   wait_f5c.sh is ASCII and LF
+ok   f5c_read.py is ASCII and LF
+ok   test_f5c_read.py is ASCII and LF
+ok   KYTY_GPU_CHECKPOINTS never set
+ok   every run stand + KYTY_GPU_CLOCK_PIN=1
+ok   unset at start: fix knobs, precache, stand, filter
+ok   other fix knobs never passed
+ok   hold W 310 / V 330 (p.273(e)(3)(a), (v))
+ok   order (a) (b) (v) (g)
+ok   form W p.273(k)(2): validation + precache 0 + one filter
+ok   exact knob values
+ok   video only in (v)
+ok   V tags without precache knob and filter (outside the DRY text)
+ok   binary constants of p.285(v)
+ok   binary strings before the lock
+ok   stop check after every tag
+ok   glitch, idx sha and sheet after the video tag
+ok   no mutlib word in a command
+ok   no tail -F
+ok   restore in the EXIT trap
+ok   GLRESTORE=1
+ok   failed binary or cache return writes the stop file
+ok   window right before the lock
+ok   window closed or unknown -> busy
+ok   cache is moved, never rm -rf on the game cache
+ok   idle wait before every tag, one retry of a BUSY refusal
+ok   lock.log UTC lines
+ok   next_f5c: stop file and lock first, the seal call verbatim
+ok   win open
+ok   win open: s145 step 0 in_review without a run
+ok   win closed: s145 step 0 in_progress
+ok   win closed: s145 step 0 blocked with a run
+ok   win closed: s145 series todo
+ok   win closed: s145 series in_progress
+ok   win open: s145 series done
+ok   win closed: P17 todo (P before F)
+ok   win closed: FSc in_progress
+ok   win closed: F5b2 in_review
+ok   win closed: F3d done with a run
+ok   win error: an answer missing
+ok   win_f5c without API env refuses rc 6, ASCII line (cp1250)
+ok   usage rc 2
+ok   a tag instead of series rc 2
+ok   not configured rc 2
+ok   GLRESTORE empty -> not configured rc 2
+ok   configured, no seal -> rc 1
+ok   DRY with the seal line rc 0
+ok   DRY plan names the tags, the stand, the filter and win_f5c
+ok   PLWAIT other than the seal rc 1
+ok   PLWAIT above 540 rc 2
+ok   PLWAIT not a number rc 2
+ok   two seal call lines rc 1
+ok   a foreign call line rc 1
+ok   attempt_f5c_v.txt -> rc 1 (one attempt)
+ok   f5c_g.json -> rc 1 (one attempt)
+ok   lock held -> rc 4 before anything
+ok   stop file -> rc 4
+ok   real path: missing fix binary -> rc 1 before any lock
+ok   strings: signature missing -> rc 1
+ok   strings: zero-extent missing -> rc 1
+ok   strings: armed missing -> rc 1
+ok   strings: all three -> passes the strings (gate file next)
+checks 65 failed 0
+ALL OK

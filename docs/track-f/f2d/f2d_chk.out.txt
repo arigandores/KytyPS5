@@ -1,0 +1,28 @@
+f2c_a sha256 7ee3f092cec6b5caaa4fa2fa8446e30db455ac6458c339e5f8d9bccb1a6958e4
+  profile 0x21/0x0c/0xe3/0xf3 = (96, 0, 0, 4) (expect (96, 0, 0, 4)) other={}
+  B26a reopen: miss|hit of 96 = 0, CFG failed outside CsPretranslate = 0, deaths = 0, [Vulkan][E] = 0, BvhLoopCapTrip = 0
+  cache line: Shader translation cache: _ShaderCache\PPSA21564\variant_fixb26
+   433e4cede34ca4c3 ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   4468d53059c03cba ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   57c4d5848e02ecdc ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 ']
+   7bb50479b3a32c7c ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   f8e350383290ff7b ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+f2c_b sha256 b85553e509a0fab9f79207a5435f770ffa72c673fdac384275a83ff4169b5802
+  profile 0x21/0x0c/0xe3/0xf3 = (96, 0, 0, 4) (expect (96, 0, 0, 4)) other={}
+  B26a reopen: miss|hit of 96 = 0, CFG failed outside CsPretranslate = 0, deaths = 0, [Vulkan][E] = 0, BvhLoopCapTrip = 0
+  cache line: Shader translation cache: _ShaderCache\PPSA21564\variant_fixb26
+   433e4cede34ca4c3 ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   4468d53059c03cba ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   57c4d5848e02ecdc ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\ir\\passes\\ResourceTracking.cpp:173 ']
+   7bb50479b3a32c7c ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   f8e350383290ff7b ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+f2c_c sha256 1c731fbb1c6b1f7454cd7b71a22a9da66a23160e54a856053b4fff82617c8ab5
+  profile 0x21/0x0c/0xe3/0xf3 = (96, 1, 4, 0) (expect (96, 1, 4, 0)) other={}
+  B26a reopen: miss|hit of 96 = 0, CFG failed outside CsPretranslate = 0, deaths = 0, [Vulkan][E] = 0, BvhLoopCapTrip = 0
+  cache line: Shader translation cache: _ShaderCache\PPSA21564
+   433e4cede34ca4c3 ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   4468d53059c03cba ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   57c4d5848e02ecdc ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   7bb50479b3a32c7c ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+   f8e350383290ff7b ['skipped reason=C:\\kyty\\KytyPS5\\src\\graphics\\shader\\recompiler\\frontend\\cfg\\ShaderCFG.cpp:44 shade']
+ALL OK

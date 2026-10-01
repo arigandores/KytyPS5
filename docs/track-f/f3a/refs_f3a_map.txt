@@ -1,0 +1,26 @@
+| ссылка | якорь (строка содержит) | контроль +1 (начало следующей строки) |
+|---|---|---|
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2216` | const auto base = DeviceAddressFromWords(state, desc0, Binary(state, OpBitwiseAnd, u32t, desc1, U(0xffffu))); | const auto off  = Binary(state, OpShiftLeftLogical, addrt, DeviceAddressFromWord |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2219` | node_addr       = Binary(state, OpIAdd, addrt, base, off); | } |
+| `20b39318:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:872` | const IR::U64 base64 = ir.ConstructU64(desc0, ir.BitwiseAnd(desc1, U32C(0xffffu))); | const IR::U64 off64  = IR::U64(ir.Emit(IR::ValueOpcode::ShiftLeftLogical64, |
+| `20b39318:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:833` | //   dword0        = base_address[31:0] | //   dword1[15:0]  = base_address[47:32] |
+| `20b39318:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:714` | static const bool stub = Common::EnvFlagOn("KYTY_BVH_STUB"); | if (stub) { |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2223` | const auto is_tri   = Binary(state, OpULessThan, boolt, node_type, U(2u)); | const auto is_tri1  = ieq(node_type, U(1u)); |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2035` | const auto base = Select(state, type, missing, null_base, loaded); | // Remember an in-table miss (page 0 is the null page itself and never misses). |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:1938` | void EmitLoopCapTrip(EmitterState& state, uint32_t budget) { | if (state.fault_buffer_variable == 0) { |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:568` | constexpr uint64_t BvhLoopCapDefaultHash = 0x380bb9d636390baeull; | constexpr uint32_t BvhLoopCapDefault     = 65536; |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:599` | result.token = ":bvhcap" + std::to_string(result.cap); | for (const auto hash: result.set) { |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:207` | state.builder.AddFunction(spv::OpUGreaterThan, TypeBool(state), over, next, | ConstantU32(state, guards.limit)); |
+| `20b39318:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:222` | EmitLoopCapTrip(state, next); | EmitReturnTail(ctx); |
+| `20b39318:src/graphics/host_gpu/renderer/cache/faultManager.cpp:204` | LOGF("BvhLoopCapTrip: trips=+%u total=%u near=+%u near_total=%u max_spent=%u " | "cap=%u slot0=%u slot1=%u\n", |
+| `20b39318:src/graphics/host_gpu/renderer/cache/faultManager.cpp:220` | (void)m_buffer_cache.FindBuffer(start, end - start); | }); |
+| `20b39318:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:270` | std::memcpy(staging, reinterpret_cast<const void*>(vaddr), static_cast<size_t>(size)); | } |
+| `20b39318:src/graphics/host_gpu/renderer/cache/bufferCache.h:53` | static constexpr uint32_t CACHING_PAGEBITS  = 14; | static constexpr uint64_t CACHING_PAGESIZE  = uint64_t {1} << CACHING_PAGEBITS; |
+| `20b39318:src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp:905` | if (op == ValueOpcode::BvhIntersectRay) { | m_info.uses_dma = true; |
+| `20b39318:src/graphics/shader/recompiler/frontend/translate/Scalar.cpp:231` | case O::S_TRAP: EmitControlNop(); return true; | case O::S_WAITCNT_DEPCTR: EmitWaitcnt(); return true; |
+| `20b39318:src/common/gates.h:672` | RtSkip,           // KYTY_RT_SKIP,     file name "rtskip" (0 off, 1 skip, 2 self-check | // Session 128, MEASUREMENT ONLY, never shipped (docs/session-128/design128.md r |
+| `20b39318:src/graphics/host_gpu/renderer/renderCompute.cpp:630` | static const char* dump_cs      = std::getenv("KYTY_DUMP_CS"); | static const bool  sync_dispatch = Common::EnvFlagOn("KYTY_SYNC_DISPATCH"); |
+| `20b39318:src/graphics/host_gpu/renderer/renderCompute.cpp:778` | if (base == 0 \|\| size == 0 \|\| size > (64u << 10)) { | continue; |
+| `20b39318:src/graphics/host_gpu/renderer/renderCompute.cpp:521` | static const char* skip_cs = std::getenv("KYTY_SKIP_CS"); | if (skip_cs != nullptr && program.shader_hash == std::strtoull(skip_cs, nullptr, |
+| `57729aed:docs/ROADMAP.md:12609` | (д) **F3 = Б1б (+ Б1а)** | пользователя. Порядок F0 §6 принят с отступлением: Б26б впереди как продолжение  |
+| `20b39318:docs/local-session-98.md:110` | `cs=0x380bb9d636390bae args=1,2048,1 | sealed rule: the counted attempt's hang was on entry, and — a defect of `trig98. |

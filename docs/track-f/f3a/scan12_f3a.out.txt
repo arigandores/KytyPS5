@@ -1,0 +1,86 @@
+logs 12
+== c142_01 bumper_enemy_snowy_canyon lines 979791 faults 4 distinct 4 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401bd4000', '0x4018000'), ('0x4024d4000', '0x4024000')]
+   fault line 350296 after frame 203 0x401bd4000 
+   fault line 350297 after frame 203 0x4018000 <- X>>8 of a faulted page
+   fault line 405263 after frame 210 0x4024d4000 
+   fault line 405264 after frame 210 0x4024000 <- X>>8 of a faulted page
+== c142_02 big_hand_pirate_island lines 887497 faults 5 distinct 5 trips 6 trip frames [332, 333, 334, 336, 337]
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000', '0xda98000']
+   pairs (X, X>>8 page) both faulted: [('0x40253c000', '0x4024000')]
+   fault line 267086 after frame 330 0x4018000 
+   fault line 267951 after frame 330 0xda98000 
+   fault line 267952 after frame 330 0xc019a4000 
+   fault line 273904 after frame 337 0x40253c000 
+   fault line 273905 after frame 337 0x4024000 <- X>>8 of a faulted page
+== c142_03 timestop_casino lines 952602 faults 1 distinct 1 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000']
+   pairs (X, X>>8 page) both faulted: []
+   fault line 273523 after frame 266 0x4018000 
+== c142_04 mini_giants_garden lines 883868 faults 3 distinct 3 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x402478000', '0x4024000')]
+   fault line 259192 after frame 259 0x4018000 
+   fault line 260600 after frame 267 0x402478000 
+   fault line 260601 after frame 267 0x4024000 <- X>>8 of a faulted page
+== c142_05 ice_iceberg lines 1030146 faults 3 distinct 3 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x402518000', '0x4024000')]
+   fault line 287602 after frame 231 0x4018000 
+   fault line 331084 after frame 239 0x402518000 
+   fault line 331085 after frame 239 0x4024000 <- X>>8 of a faulted page
+== c142_06 sponge_dirty_bath lines 710991 faults 4 distinct 4 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x401c000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401c3c000', '0x401c000'), ('0x40253c000', '0x4024000')]
+   fault line 315068 after frame 261 0x401c3c000 
+   fault line 315069 after frame 261 0x401c000 <- X>>8 of a faulted page
+   fault line 327898 after frame 269 0x40253c000 
+   fault line 327899 after frame 269 0x4024000 <- X>>8 of a faulted page
+== c142_07 hoover_beach lines 892197 faults 5 distinct 5 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401b54000', '0x4018000'), ('0x401be4000', '0x4018000'), ('0x4024e4000', '0x4024000')]
+   fault line 226271 after frame 229 0x401be4000 
+   fault line 226272 after frame 229 0x4018000 <- X>>8 of a faulted page
+   fault line 226956 after frame 233 0x401b54000 
+   fault line 227377 after frame 236 0x4024e4000 
+   fault line 227378 after frame 236 0x4024000 <- X>>8 of a faulted page
+== c142_08 volcano_mountain lines 1053547 faults 5 distinct 5 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401b54000', '0x4018000'), ('0x401b78000', '0x4018000'), ('0x40253c000', '0x4024000')]
+   fault line 261359 after frame 200 0x4018000 <- X>>8 of a faulted page
+   fault line 261514 after frame 201 0x401b78000 
+   fault line 261627 after frame 202 0x401b54000 
+   fault line 262592 after frame 208 0x40253c000 
+   fault line 262593 after frame 208 0x4024000 <- X>>8 of a faulted page
+== c142_09 voxel_world lines 832182 faults 5 distinct 5 trips 6 trip frames [182, 183, 184, 185, 186]
+   low (<4 GiB) fault pages: ['0x4018000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401bc0000', '0x4018000'), ('0x4024c0000', '0x4024000')]
+   fault line 206302 after frame 179 0x401bc0000 
+   fault line 206303 after frame 179 0x4018000 <- X>>8 of a faulted page
+   fault line 206417 after frame 181 0xb53c58000 
+   fault line 207387 after frame 187 0x4024000 <- X>>8 of a faulted page
+   fault line 207388 after frame 187 0x4024c0000 
+== c142_10 enemy_gorilla lines 769242 faults 4 distinct 4 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x401c000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401c3c000', '0x401c000'), ('0x40253c000', '0x4024000')]
+   fault line 223991 after frame 224 0x401c3c000 
+   fault line 223992 after frame 224 0x401c000 <- X>>8 of a faulted page
+   fault line 225364 after frame 232 0x40253c000 
+   fault line 225365 after frame 232 0x4024000 <- X>>8 of a faulted page
+== v142 underwater_aerial_garden lines 1192238 faults 4 distinct 4 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x401c000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401c3c000', '0x401c000'), ('0x40253c000', '0x4024000')]
+   fault line 235945 after frame 381 0x401c3c000 
+   fault line 235946 after frame 381 0x401c000 <- X>>8 of a faulted page
+   fault line 237775 after frame 389 0x40253c000 
+   fault line 237776 after frame 389 0x4024000 <- X>>8 of a faulted page
+== w142 underwater_aerial_garden lines 2389043 faults 4 distinct 4 trips 0 trip frames []
+   low (<4 GiB) fault pages: ['0x401c000', '0x4024000']
+   pairs (X, X>>8 page) both faulted: [('0x401c3c000', '0x401c000'), ('0x40253c000', '0x4024000')]
+   fault line 228384 after frame 187 0x401c3c000 
+   fault line 228385 after frame 187 0x401c000 <- X>>8 of a faulted page
+   fault line 238605 after frame 195 0x40253c000 
+   fault line 238606 after frame 195 0x4024000 <- X>>8 of a faulted page
+== programs with IMAGE_BVH whose translation dump is in the logs: 1
+   380bb9d636390bae ('c142_02', 'ShaderRecompiler', 1917)

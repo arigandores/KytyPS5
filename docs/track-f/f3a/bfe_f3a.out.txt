@@ -1,0 +1,6 @@
+eboot.bin bytes 251850759
+occurrences of the literal 0x00280008: 342 aligned to 4: 41
+word before the literal, SOP2 (op, src1 is literal, src0 is literal) -> count: {(41, True, False): 40}
+SOP2 opcodes with the literal as src1: {41: 40}
+MIMG words with op 0xe6 / 0xe7 at 4-byte alignment (upper bound, data words may match): {'0xe6': 201, '0xe7': 266}
+BVH words with such a BFE within 0x1000 bytes before: 0 of 467

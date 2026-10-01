@@ -1,0 +1,4 @@
+S_BFE_U64 sites with literal 0x00280008 (offset 8, width 40): 40
+of them followed by an IMAGE_BVH(64)_INTERSECT_RAY word (MIMG op 0xe6/0xe7, same alignment) within 0x800 bytes: 0
+groups of sites closer than 0x3000 bytes (programs or permutations): 20 sizes Counter({2: 20})
+BVH words around the groups: op 0xe6 = 0  op 0xe7 (BVH64) = 0

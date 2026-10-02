@@ -1,0 +1,66 @@
+ISSUES read 114 (HPP-3, HPP-283..HPP-400)
+ISSUE HPP-3 [] status blocked assignee Roadmap Lead created 2026-09-26T17:28:18 started 2026-09-26T17:57:05 completed None review stages [] monitor None blockedBy [('HPP-390', 'blocked')]
+ISSUE HPP-283 [] status blocked assignee Roadmap Lead created 2026-09-30T23:14:13 started 2026-09-30T23:17:09 completed None review stages [] monitor None blockedBy [('HPP-394', 'blocked')]
+ISSUE HPP-287 [] status blocked assignee Roadmap Lead created 2026-09-30T23:37:23 started 2026-09-30T23:37:23 completed None review stages [] monitor None blockedBy [('HPP-378', 'blocked'), ('HPP-384', 'blocked'), ('HPP-371', 'done')]
+ISSUE HPP-288 [] status blocked assignee Roadmap Lead created 2026-09-30T23:38:54 started 2026-09-30T23:39:04 completed None review stages [] monitor None blockedBy [('HPP-320', 'blocked')]
+ISSUE HPP-315 [] status blocked assignee Harness Engineer created 2026-10-01T00:53:09 started 2026-10-02T15:56:08 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-377', 'blocked'), ('HPP-370', 'done')]
+ISSUE HPP-318 [] status blocked assignee Harness Engineer created 2026-10-01T00:53:09 started 2026-10-02T15:56:11 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-301', 'done'), ('HPP-325', 'done'), ('HPP-314', 'done'), ('HPP-315', 'blocked'), ('HPP-317', 'done'), ('HPP-324', 'done')]
+ISSUE HPP-319 [] status blocked assignee Harness Engineer created 2026-10-01T00:53:09 started 2026-10-02T15:56:11 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-315', 'blocked')]
+ISSUE HPP-320 [] status blocked assignee Roadmap Lead created 2026-10-01T00:53:09 started None completed None review stages [] monitor None blockedBy [('HPP-312', 'done'), ('HPP-315', 'blocked'), ('HPP-318', 'blocked'), ('HPP-319', 'blocked')]
+ISSUE HPP-354 [s145 4] status done assignee Roadmap Lead created 2026-10-01T12:37:03 started 2026-10-02T05:45:43 completed 2026-10-02T06:45:10 review stages [] monitor None blockedBy [('HPP-353', 'done')]
+ISSUE HPP-364 [P17] status done assignee Roadmap Lead created 2026-10-01T13:06:29 started 2026-10-02T05:45:44 completed 2026-10-02T06:48:53 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-353', 'done'), ('HPP-380', 'done'), ('HPP-363', 'done')]
+ISSUE HPP-365 [P18] status done assignee Roadmap Lead created 2026-10-01T13:06:29 started 2026-10-02T06:48:53 completed 2026-10-02T07:02:45 review stages [] monitor None blockedBy [('HPP-364', 'done')]
+ISSUE HPP-375 [F6c] status done assignee Roadmap Lead created 2026-10-01T15:00:27 started 2026-10-01T15:00:27 completed 2026-10-01T15:21:43 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy []
+ISSUE HPP-376 [F6d] status done assignee Roadmap Lead created 2026-10-01T15:00:27 started 2026-10-01T15:21:43 completed 2026-10-01T15:44:09 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-375', 'done')]
+ISSUE HPP-377 [F6e] status blocked assignee Harness Engineer created 2026-10-01T15:00:27 started 2026-10-02T15:56:13 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-388', 'done'), ('HPP-389', 'in_progress')]
+ISSUE HPP-378 [F6f] status blocked assignee Roadmap Lead created 2026-10-01T15:00:27 started None completed None review stages [] monitor None blockedBy [('HPP-377', 'blocked')]
+ISSUE HPP-381 [FS2a] status blocked assignee Emu Engineer created 2026-10-01T16:26:23 started None completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-378', 'blocked')]
+ISSUE HPP-382 [FS2b] status blocked assignee Red Team created 2026-10-01T16:26:23 started None completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-381', 'blocked')]
+ISSUE HPP-383 [FS2c] status blocked assignee Harness Engineer created 2026-10-01T16:26:23 started None completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-382', 'blocked'), ('HPP-370', 'done')]
+ISSUE HPP-384 [FS2d] status blocked assignee Roadmap Lead created 2026-10-01T16:26:23 started None completed None review stages [] monitor None blockedBy [('HPP-383', 'blocked'), ('HPP-371', 'done')]
+ISSUE HPP-386 [s146 0] status done assignee Roadmap Lead created 2026-10-02T06:15:21 started 2026-10-02T06:45:11 completed 2026-10-02T08:38:19 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-354', 'done')]
+ISSUE HPP-387 [s146 1] status done assignee Roadmap Lead created 2026-10-02T06:15:21 started 2026-10-02T08:38:19 completed 2026-10-02T09:06:20 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-386', 'done')]
+ISSUE HPP-388 [s146 2] status done assignee Roadmap Lead created 2026-10-02T06:15:21 started 2026-10-02T09:25:09 completed 2026-10-02T15:51:25 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-395', 'done')]
+ISSUE HPP-389 [s146 3] status in_progress assignee Session Auditor created 2026-10-02T06:15:21 started 2026-10-02T15:51:27 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-388', 'done')]
+ISSUE HPP-390 [s146 4] status blocked assignee Roadmap Lead created 2026-10-02T06:15:21 started None completed None review stages [] monitor None blockedBy [('HPP-389', 'in_progress')]
+ISSUE HPP-391 [P19] status in_progress assignee Harness Engineer created 2026-10-02T07:01:42 started 2026-10-02T15:51:27 completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-388', 'done')]
+ISSUE HPP-392 [P20] status blocked assignee Red Team created 2026-10-02T07:01:42 started None completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-391', 'in_progress')]
+ISSUE HPP-393 [P21] status blocked assignee Harness Engineer created 2026-10-02T07:01:42 started None completed None review stages [('review', ['Roadmap Lead'])] monitor None blockedBy [('HPP-389', 'in_progress'), ('HPP-392', 'blocked')]
+ISSUE HPP-394 [P22] status blocked assignee Roadmap Lead created 2026-10-02T07:01:42 started None completed None review stages [] monitor None blockedBy [('HPP-393', 'blocked')]
+ISSUE HPP-395 [s146 1b] status done assignee Roadmap Lead created 2026-10-02T09:06:06 started 2026-10-02T09:06:06 completed 2026-10-02T09:25:09 review stages [('review', ['Roadmap Lead'])] monitor None blockedBy []
+ISSUES HPP-386.. of an executor (assignee not the lead) WITHOUT a review stage now: 0 []
+COMMENTS of 114 issues: 515 in all; created inside a session lock window of s146 (warm-up and series): 0; by author {}
+COMMENTS inside the series window but outside the locks, by author and issue: [(('Harness Engineer', 'HPP-3'), 3), (('Harness Engineer', 'HPP-388'), 6), (('Roadmap Lead', 'HPP-3'), 3), (('Roadmap Lead', 'HPP-388'), 6)]
+ACTIVITY HPP-386: events 26; policy / reviewer events 0
+ACTIVITY HPP-387: events 17; policy / reviewer events 0
+ACTIVITY HPP-395: events 11; policy / reviewer events 0
+ACTIVITY HPP-388: events 75; policy / reviewer events 3
+   2026-10-02T11:26:16 issue.updated by Harness Engineer stages after 1 (before 1) monitor lead answer to the sc146 gate STOP question (HPP-388 comment 79517fd4)
+   2026-10-02T12:14:33 issue.updated by Harness Engineer stages after 1 (before 1) monitor roadmap-lead-answer
+   2026-10-02T13:00:07 issue.updated by Harness Engineer stages after 1 (before 1) monitor procload busy holder pid 42548
+ACTIVITY HPP-389: events 8; policy / reviewer events 0
+ACTIVITY HPP-377: events 183; policy / reviewer events 16
+   2026-10-01T17:21:55 issue.reviewers_updated by Harness Engineer stages after None (before None) monitor None
+   2026-10-01T17:21:55 issue.updated by Harness Engineer stages after 0 (before 1) monitor roadmap-lead-answer
+   2026-10-01T17:56:20 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T18:58:20 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T19:56:20 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T20:56:47 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T21:56:21 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T22:55:52 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-01T23:19:03 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T00:23:06 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T01:20:55 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T02:28:06 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T03:38:18 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T04:32:13 issue.updated by Harness Engineer stages after 0 (before None) monitor roadmap-lead-answer
+   2026-10-02T05:07:21 issue.reviewers_updated by Roadmap Lead stages after None (before None) monitor None
+   2026-10-02T05:07:21 issue.updated by Roadmap Lead stages after 1 (before 0) monitor None
+ACTIVITY HPP-391: events 11; policy / reviewer events 0
+ACTIVITY HPP-392: events 2; policy / reviewer events 0
+ACTIVITY HPP-393: events 2; policy / reviewer events 0
+ACTIVITY HPP-383: events 1; policy / reviewer events 0
+ACTIVITY HPP-364: events 26; policy / reviewer events 0
+ACTIVITY HPP-365: events 9; policy / reviewer events 0
+ACTIVITY HPP-315: events 154; policy / reviewer events 0
+ALL DONE

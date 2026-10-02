@@ -1,0 +1,31 @@
+INVENTORY C:/kyty/s141/step1b/inventory141_r2.md sha256 4e13daa41f946079: map rows 114; entry column: yes 9, no 105, other 0
+LOG FILES (*.txt, *.log > 1 MB, mtime >= 2026-09-30) under C:/kyty: 822, 110.3 GB; of them in fixture folders 572; written before the list moment 2026-10-02T07:02:15Z: 777
+UNREADABLE 0 []
+POOL by reading (A) on real logs before the list moment: never-entered scene levels 59 (with final_shooting: True); non-scenes of item 217 (g) in the map 12
+FIRST 15 own: [(4, 'robot_builder_next'), (5, 'interactive_credit_00'), (6, 'non_interactive_credit'), (7, 'ending_boss_after_credit'), (14, 'collectible_viewer'), (22, 'hub_crashsite_diorama'), (23, 'diorama_controller_skin'), (24, 'diorama_astro_skin'), (25, 'diorama_zoo'), (60, 'fragile_battle_1'), (61, 'voxel_challenge_1'), (62, 'armadillo_challenge_1'), (63, 'fragile_battle_2'), (64, 'voxel_challenge_2'), (65, 'fragile_battle_3')]
+FIRST 15 own = the sealed list (order and names): True
+POOL by reading (B) (the inventory column ignored): 65
+MAP levels with inventory entry "yes" and no entry line since 2026-09-30 before the list moment: 6
+LEVEL robot_builder_next (v146_05/w146_05): files with the entry line 2: own sc146 2 (first 2026-10-02T10:17:45Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL interactive_credit_00 (v146_06/w146_06): files with the entry line 2: own sc146 2 (first 2026-10-02T10:34:06Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL non_interactive_credit (v146_07/w146_07): files with the entry line 2: own sc146 2 (first 2026-10-02T10:53:34Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL ending_boss_after_credit (v146_08/w146_08): files with the entry line 2: own sc146 2 (first 2026-10-02T11:14:10Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL collectible_viewer (v146_09/w146_09): files with the entry line 4: own sc146 4 (first 2026-10-02T11:40:45Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL hub_crashsite_diorama (v146_10/w146_10): files with the entry line 2: own sc146 2 (first 2026-10-02T12:02:52Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL diorama_controller_skin (v146_11/w146_11): files with the entry line 4: own sc146 4 (first 2026-10-02T12:28:26Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL diorama_astro_skin (v146_12/w146_12): files with the entry line 4: own sc146 4 (first 2026-10-02T13:24:20Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL diorama_zoo (v146_13/w146_13): files with the entry line 4: own sc146 4 (first 2026-10-02T13:48:42Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL fragile_battle_1 (v146_14/w146_14): files with the entry line 2: own sc146 2 (first 2026-10-02T14:11:17Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL voxel_challenge_1 (v146_15/w146_15): files with the entry line 2: own sc146 2 (first 2026-10-02T14:28:07Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL armadillo_challenge_1 (v146_16/w146_16): files with the entry line 2: own sc146 2 (first 2026-10-02T14:44:22Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL fragile_battle_2 (v146_17/w146_17): files with the entry line 2: own sc146 2 (first 2026-10-02T15:00:34Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL voxel_challenge_2 (v146_18/w146_18): files with the entry line 2: own sc146 2 (first 2026-10-02T15:16:45Z), fixtures 0, other real 0 []; other real EARLIER than the first sc146 file: 0
+LEVEL fragile_battle_3 (v146_19/w146_19): files with the entry line 4: own sc146 2 (first 2026-10-02T15:32:54Z), fixtures 0, other real 2 [('2026-10-02T15:32:54Z', 'KytyPS5/ps5 em/_kyty.prev.txt'), ('2026-10-02T15:41:43Z', 'KytyPS5/ps5 em/_kyty.txt')]; other real EARLIER than the first sc146 file: 0
+ENTRY LINES OF THE 15 LEVELS IN REAL LOGS EARLIER THAN THEIR FIRST sc146 FILE: 0
+RECHECK LEVEL hoover_beach: real logs with the entry line since 2026-09-30: 14; written after the install moment 2026-10-02T06:52:29Z: 1 [('2026-10-02T09:41:13Z', 'log_r146_01.txt')]
+RECHECK LEVEL sponge_dirty_bath: real logs with the entry line since 2026-09-30: 14; written after the install moment 2026-10-02T06:52:29Z: 1 [('2026-10-02T09:50:47Z', 'log_r146_02.txt')]
+RECHECK LEVEL timestop_casino: real logs with the entry line since 2026-09-30: 5; written after the install moment 2026-10-02T06:52:29Z: 1 [('2026-10-02T09:59:28Z', 'log_r146_03.txt')]
+RECHECK LEVEL bonus_path_maker_mix: real logs with the entry line since 2026-09-30: 3; written after the install moment 2026-10-02T06:52:29Z: 1 [('2026-10-02T10:08:52Z', 'log_r146_04.txt')]
+RECHECK LEVEL underwater_aerial_garden: real logs with the entry line since 2026-09-30: 77; written after the install moment 2026-10-02T06:52:29Z: 2 [('2026-10-02T06:58:35Z', 'log_i146_v.txt'), ('2026-10-02T09:33:35Z', 'log_w146_00.txt')]
+LEVEL NAMES in entry lines (real logs, before the list moment): 38
+ALL DONE

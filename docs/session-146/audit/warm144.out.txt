@@ -1,0 +1,9 @@
+MANIFEST v144_13 timestop_casino: new translation-cache files in the run 0; K2 []; K3 entry window 0; skipped-draw lines 0 / frames 0; outcome HOLDS_120
+MANIFEST v144_15 sponge_dirty_bath: new translation-cache files in the run 0; K2 []; K3 entry window 1; skipped-draw lines 0 / frames 0; outcome HOLDS_120
+MANIFEST v144_16 hoover_beach: new translation-cache files in the run 0; K2 []; K3 entry window 0; skipped-draw lines 0 / frames 0; outcome HOLDS_120
+MANIFEST r146_03 timestop_casino: new translation-cache files in the run 25; K2 [[931, 1844729, 'entry']]; K3 entry window 3; skipped-draw lines 33 / frames 3; outcome K2
+MANIFEST r146_02 sponge_dirty_bath: new translation-cache files in the run 31; K2 [[370, 1771238, 'entry']]; K3 entry window 5; skipped-draw lines 0 / frames 0; outcome K2
+MANIFEST r146_01 hoover_beach: new translation-cache files in the run 38; K2 []; K3 entry window 2; skipped-draw lines 0 / frames 0; outcome HOLDS_120
+MANIFEST v145_14 bonus_path_maker_mix: new translation-cache files in the run 5; K2 [[7249, 4624510, 'hold']]; K3 entry window 2; skipped-draw lines 197 / frames 33; outcome K2
+MANIFEST r146_04 bonus_path_maker_mix: new translation-cache files in the run 26; K2 []; K3 entry window 0; skipped-draw lines 10 / frames 2; outcome HOLDS_120
+ALL DONE

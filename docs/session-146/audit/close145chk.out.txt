@@ -1,0 +1,24 @@
+PROCESS 1 (agent-team.md, general rule 27): agent-team.md: verbatim True; first 60 characters True
+PROCESS 2 (Harness Engineer): instructions: verbatim True; first 60 characters True
+PROCESS 2 (Emu Engineer): instructions: verbatim True; first 60 characters True
+PROCESS 2 (Red Team): instructions: verbatim True; first 60 characters True
+PROCESS 2 (Probe Designer): instructions: verbatim True; first 60 characters True
+PROCESS 2 (Lever Researcher): instructions: verbatim True; first 60 characters True
+PROCESS 2 (Session Auditor): instructions: verbatim True; first 60 characters True
+PROCESS 3 (Roadmap Lead): instructions: verbatim True; first 60 characters True
+PROCESS 4 (Harness Engineer): instructions: verbatim True; first 60 characters True
+PROCESS 5 (agent-team.md, general rule 28): agent-team.md: verbatim True; first 60 characters True
+P17 LOCK WINDOWS during the s145 close: 8, 2026-10-02T05:49:55Z .. 2026-10-02T06:41:47Z
+FILES of the s145 close (step4, emulator docs, close folder, state documents, instruction files): 88; mtime inside a P17 lock window: 0
+step4/times.txt of the s145 close: 12 rows, first 2026-10-02T05:47:09Z, last 2026-10-02T06:45:11Z, sha256 45244fa7df29a07a
+   ROW 2026-10-02T05:47:09Z HPP-354 lead start of close: instr_sha.txt sha256 c6a1e6cc74cda061b22d7850eb29d6b90c458952c94995243e024b70342b4e18 (P17 lock: None)
+   ROW 2026-10-02T05:59:49Z HPP-354 lead sc145.py --check-seal rc 0 (SEAL: PASS); sc145.py --summary --sheet viewed --sheet-tags v145_02,v145_03,v145_04,v145_05,v145_07,v145_08,v145_09,v145_10,v145_11,v145_12,v145_13,v145_14,v145_15,v145 (P17 lock: qv_1)
+   ROW 2026-10-02T06:14:46Z HPP-354 lead: drafts copied from the run scratch dir (prepared under P17 locks, rule 27 form); course145.py rc 0 -> course145.out.txt sha256 a10e9b5fa74315793521fd9c3b81a2f801143a2eeb042bd7f128cca023aad00a. Co (P17 lock: None)
+   ROW 2026-10-02T06:14:47Z HPP-354 lead p.309 inserted (p.309 header ts 2026-10-02 06:14:46), course row 145, privacy git grep docs/ROADMAP.md 0 hits, commit KytyPS5 6aaff10f (P17 lock: None)
+   ROW 2026-10-02T06:15:11Z HPP-354 lead Process 1-5 applied (proc309.py rc 0) -> proc309.out.txt sha256 274bad356312087c00b792a2607b67a1a7c119a367f77e01804177f734aa25b0 - BEFORE the s146 chain (P17 lock: None)
+   ROW 2026-10-02T06:15:12Z HPP-354 lead register F section 21 appended (docs/track-f/register.md sha256 03ffb301575f156b25de43778a9806337a02c1ee6cbb622cffae9c49686bcfc6), brief next-session-146.md; privacy 0 hits; commit KytyPS5 62bd7f2 (P17 lock: None)
+   ROW 2026-10-02T06:15:22Z HPP-354 lead chain s146 created (mk_chain146.py rc 0) -> mk_chain146.out.txt sha256 b991a8646aee95bac297e177a4e7f54e67eacca711a76ad704383ca25bee57d7 (P17 lock: None)
+   ROW 2026-10-02T06:24:16Z HPP-354 lead privacy blocking 0 (privacy_close145.out.txt sha256 7ff67a43b58b4b52a41e6a5fa1362faeb9be745f4c3a87255664b4d4622c2a10); commits ps5-em 57680b29, KytyPS5 5ef50069; chain_check.py HPP-3 rc 0 -> chain (P17 lock: None)
+   ROW 2026-10-02T06:44:44Z HPP-354 lead sc145.py --summary --sheet viewed --sheet-tags v145_02,v145_03,v145_04,v145_05,v145_07,v145_08,v145_09,v145_10,v145_11,v145_12,v145_13,v145_14,v145_15,v145_16 rc 0 (2026-10-02T06:41:53Z - 2026-10- (P17 lock: None)
+   ROW 2026-10-02T06:44:57Z HPP-354 lead p.310 inserted, FACTS summary line, mirror refreshed, privacy 0, commit KytyPS5 23d64824 (P17 lock: None)
+ALL DONE

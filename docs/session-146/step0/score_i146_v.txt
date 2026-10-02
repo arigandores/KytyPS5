@@ -1,0 +1,46 @@
+fs_read tag i146_v (i) level underwater_aerial_garden arm V knob defaults log sha256 37d42b3e92384193abf6fcbd15b5df46ea3775648f237f71b807e9601506ec56 binary dac02fb9d6fd32b3
+admit ok   one attempt [1]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   binary sha256 = FSa copy dac02fb9 (p.286(v) N1) [dac02fb9d6fd32b3]
+admit ok   KYTY_FIX_B26 not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_B1B not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_DUALSRC not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_FIX_MINIMIZE not set (defaults, p.282(g)(3)) [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   video KYTY_REC rec_i146_v.mp4 [C:\kyty\s146\rec_i146_v.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   no VK_LAYER_MESSAGE_ID_FILTER [None]
+knob control: want variant_fixb26_fixb1b, lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] -> ok
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 1, Recovering Vulkan swapchain 0 -> none
+DualSrcBlend supported lines [(1, 1)]; supported=1 enabled=1 before the first GuestOut (byte 505274): 1
+DualSrcBlend patched lines 0; ps=5514e10f1a60df83 0 (before the first GuestOut 0)
+PipelinePrecache lines 6: ['PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet', 'PipelinePrecache: saved 4 recipes (1324 bytes)', 'PipelinePrecache: saved 387 recipes (3461587 bytes)', 'PipelinePrecache: saved 397 recipes (3567463 bytes)', 'PipelinePrecache: saved 415 recipes (3780317 bytes)', 'PipelinePrecache: saved 429 recipes (3945007 bytes)']
+entered True first scene frame (376, 4840461, 6102) scene change False enter_scene outcome ok
+hold: sum dt after the first scene frame 334.6 s (named 300); wall hold_s 330.0 (named None); hold_exit None
+death markers 0 []
+frames >= 1 s after the first scene frame 0 []; max dt_us 461979; AsyncPipelines skipped draw lines 1096
+BvhLoopCapTrip lines 0
+mean dt_us after the first scene frame (a number, not a gate): 35045.3 over 9549 frames
+video: frames 9932 glitches 0; sheetpair_i146_v.png True (reference C:/kyty/f287/fsc/rec_fs_b.mp4)
+letter p.221(g)(3) V ok   sum dt after the first scene frame >= 300 s
+letter p.221(g)(3) V ok   >= 3000 shown frames after the first scene frame
+letter p.221(g)(3) V ok   s51_vidglitch.py 4 6: 0 glitches
+letter p.221(g)(3) V ok   0 death markers
+letter p.221(g)(3) V ok   0 frames dt >= 1 s after the first scene frame
+letter p.221(g)(3) V ok   sheet for the lead against fs_b sheetpair_i146_v.png exists
+executor member [I] (p.258(d)) ok   0 BvhLoopCapTrip lines
+executor member [I] (p.258(d)) ok   video frames 9932 >= rows after the first scene frame 9549 - 100
+executor member [I] (p.258(d)) ok   no scene change
+executor member [I] (p.258(d)) ok   game alive at the end of the hold (hold_exit None)
+WARMUP VERDICT i146_v: PASS
+WARMUP EXECUTOR MEMBERS i146_v [I] (not the verdict): all ok

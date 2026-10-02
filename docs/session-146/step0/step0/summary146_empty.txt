@@ -1,0 +1,217 @@
+TAG w146_00: not made
+TAG r146_01: not made
+TAG r146_02: not made
+TAG r146_03: not made
+TAG r146_04: not made
+TAG v146_05: not made
+TAG w146_05: not made
+TAG v146_06: not made
+TAG w146_06: not made
+TAG v146_07: not made
+TAG w146_07: not made
+TAG v146_08: not made
+TAG w146_08: not made
+TAG v146_09: not made
+TAG w146_09: not made
+TAG v146_10: not made
+TAG w146_10: not made
+TAG v146_11: not made
+TAG w146_11: not made
+TAG v146_12: not made
+TAG w146_12: not made
+TAG v146_13: not made
+TAG w146_13: not made
+TAG v146_14: not made
+TAG w146_14: not made
+TAG v146_15: not made
+TAG w146_15: not made
+TAG v146_16: not made
+TAG w146_16: not made
+TAG v146_17: not made
+TAG w146_17: not made
+TAG v146_18: not made
+TAG w146_18: not made
+TAG v146_19: not made
+TAG w146_19: not made
+SCENE_OK robot_builder_next: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_05 and W w146_05 are the pair of one level (guest args -lvl robot_builder_next and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_05.png present, non-empty; its sha256 and the sha256 of rec_v146_05.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_05 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_05 layer limit lines W not made; window events V no, W no
+SCENE_OK interactive_credit_00: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_06 and W w146_06 are the pair of one level (guest args -lvl interactive_credit_00 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_06.png present, non-empty; its sha256 and the sha256 of rec_v146_06.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_06 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_06 layer limit lines W not made; window events V no, W no
+SCENE_OK non_interactive_credit: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_07 and W w146_07 are the pair of one level (guest args -lvl non_interactive_credit and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_07.png present, non-empty; its sha256 and the sha256 of rec_v146_07.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_07 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_07 layer limit lines W not made; window events V no, W no
+SCENE_OK ending_boss_after_credit: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_08 and W w146_08 are the pair of one level (guest args -lvl ending_boss_after_credit and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_08.png present, non-empty; its sha256 and the sha256 of rec_v146_08.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_08 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_08 layer limit lines W not made; window events V no, W no
+SCENE_OK collectible_viewer: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_09 and W w146_09 are the pair of one level (guest args -lvl collectible_viewer and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_09.png present, non-empty; its sha256 and the sha256 of rec_v146_09.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_09 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_09 layer limit lines W not made; window events V no, W no
+SCENE_OK hub_crashsite_diorama: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_10 and W w146_10 are the pair of one level (guest args -lvl hub_crashsite_diorama and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_10.png present, non-empty; its sha256 and the sha256 of rec_v146_10.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_10 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_10 layer limit lines W not made; window events V no, W no
+SCENE_OK diorama_controller_skin: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_11 and W w146_11 are the pair of one level (guest args -lvl diorama_controller_skin and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_11.png present, non-empty; its sha256 and the sha256 of rec_v146_11.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_11 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_11 layer limit lines W not made; window events V no, W no
+SCENE_OK diorama_astro_skin: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_12 and W w146_12 are the pair of one level (guest args -lvl diorama_astro_skin and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_12.png present, non-empty; its sha256 and the sha256 of rec_v146_12.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_12 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_12 layer limit lines W not made; window events V no, W no
+SCENE_OK diorama_zoo: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_13 and W w146_13 are the pair of one level (guest args -lvl diorama_zoo and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_13.png present, non-empty; its sha256 and the sha256 of rec_v146_13.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_13 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_13 layer limit lines W not made; window events V no, W no
+SCENE_OK fragile_battle_1: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_14 and W w146_14 are the pair of one level (guest args -lvl fragile_battle_1 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_14.png present, non-empty; its sha256 and the sha256 of rec_v146_14.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_14 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_14 layer limit lines W not made; window events V no, W no
+SCENE_OK voxel_challenge_1: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_15 and W w146_15 are the pair of one level (guest args -lvl voxel_challenge_1 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_15.png present, non-empty; its sha256 and the sha256 of rec_v146_15.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_15 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_15 layer limit lines W not made; window events V no, W no
+SCENE_OK armadillo_challenge_1: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_16 and W w146_16 are the pair of one level (guest args -lvl armadillo_challenge_1 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_16.png present, non-empty; its sha256 and the sha256 of rec_v146_16.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_16 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_16 layer limit lines W not made; window events V no, W no
+SCENE_OK fragile_battle_2: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_17 and W w146_17 are the pair of one level (guest args -lvl fragile_battle_2 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_17.png present, non-empty; its sha256 and the sha256 of rec_v146_17.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_17 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_17 layer limit lines W not made; window events V no, W no
+SCENE_OK voxel_challenge_2: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_18 and W w146_18 are the pair of one level (guest args -lvl voxel_challenge_2 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_18.png present, non-empty; its sha256 and the sha256 of rec_v146_18.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_18 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_18 layer limit lines W not made; window events V no, W no
+SCENE_OK fragile_battle_3: NO
+  FAIL V made ()
+  FAIL W made ()
+  FAIL V v146_19 and W w146_19 are the pair of one level (guest args -lvl fragile_battle_3 and json level in both; sha256 of the log read = the enter_scene end line of step2/times.txt of its own session; item 254 (e)) (V none / W none)
+  FAIL V sheet file sheet_v146_19.png present, non-empty; its sha256 and the sha256 of rec_v146_19.mp4 = step2/times.txt (missing)
+  FAIL sheet of V viewed by the lead (filled by the close) (UNSET)
+  info dt_us after the first scene frame: V median None max None; W median None max None; W presented None s over None frames
+  info W hold_s >= 310 (item 231 (i)(2), the harness hold; executor reading, not in the verdict): W not made
+  info video continuity of V v146_19 (B38, item 273 (k)(3); data, not a gate - "0 glitches" covers the frames in the video): V not made
+  info W w146_19 layer limit lines W not made; window events V no, W no
+SCENE_OK LEVELS: YES 0, PENDING_SHEET 0, NO 15 of 15
+RECHECK hoover_beach (r146_01; item 300 (g), 309 (l)(2)): not made
+RECHECK sponge_dirty_bath (r146_02; item 300 (g), 309 (l)(2)): not made
+RECHECK timestop_casino (r146_03; item 300 (g), 309 (l)(2)): not made
+B40 SECOND HOLD bonus_path_maker_mix (r146_04; item 309 (e)(2), (l)(2)): not made
+SKY GARDEN ON dac02fb9 (item 300 (d); information for the lead, not a SCENE_OK word of this scorer): warm-up V i146_v WARMUP VERDICT i146_v: PASS (score_i146_v.txt sha256 23f4256da64aa088); control W w146_00 not made
+DATA stubs (F13; "Unresolved import stub called" log/stdout): none
+DATA asserts (F14; "ASSERT:" / "user_msg_param" lines, log and stdout): tags with != 0 (a row of the close in register F): none
+DATA tile events (D-4, T 4; frames with an event per V; the frames go to the lead as triples): none
+DATA DualSrcBlend control per W (supported=1 enabled=1 before the first GuestOut): none
+SKIPPED_V_NOT_ENTERED (item 309 (k)(1); W not called, not attempts): none
+CONTROL W w146_00 (underwater_aerial_garden, item 254 (k)(4)): not made; letter (death marker or [Vulkan][E]) pass (none); executor reading [I] (any W row or admission row failing; the gate) pass (none)
+W FORM (item 300 (b)(4), 281 (g)): V with the "PipelinePrecache: N recipes ->" line and no KYTY_PIPELINE_PRECACHE 0 of 0 made; W without KYTY_PIPELINE_PRECACHE (precache by default) 0 of 0 made; violated: none; data: W with the precache line in the log none
+WINDOW EVENTS (item 273 (k)(3)): tags with a "minimized" or "Recovering Vulkan swapchain" line (not an outcome of the level; the gate stops the series): none; tags with only other window lines (restored, resized, size changed, lost keyboard focus): none
+LAYER LIMIT (item 273 (k)(2)): control W w146_00: not made -> n/a; other W with layer limit lines (layer truncated, the outcome by the letter): none
+W FORM 295 (item 295 (b)(1)-(4): 0 layer limit lines, validation active by [W][2] / [E][2] lines, the last one within 10 s of the hold end, the form line W form: limit=100000000 filter=none): every row passed by 0 of 0 made W; failing: none; not held (rows (1)-(3) n/a): none; V without VK_LAYER_MESSAGE_ID_FILTER 0 of 0 made, violated: none; F6 text lines in the W (info): none
+WINDOW LINES BY KIND (item 295 (g); log and stdout; data): none
+WINDOW LINE NEAR A K2 / K3 FRAME (item 295 (g); within 2 s; data): none
+VIDEO CONTINUITY ALIGNMENT (item 295 (d); data, not a gate): V whose count at the best anchor shift differs by more than 10 % [I]: none
+VIDEO CONTINUITY (B38, item 273 (k)(3); data, not a gate): V with a run of >= 2 rows without a video record after the first scene frame: none
+CENSUS = the V tags v146_05..v146_19, COLD first entries of never-entered levels on dac02fb9 (item 309 (l)(2)-(3)): the map rows and the forms B5 / B5a / B33 below go into the cold pools; the re-check and second-hold V are outside the census
+CENSUS made 0 of 15 (of them attempt made without json 0), admitted 0
+FORM B5a (a frame dt >= 1 s after the first scene frame): 0/15 [c] (admitted and entered 0)
+FORM B5 (a frame dt >= 100 ms in the entry window, no warm base): 0/15 [c] (admitted and entered 0)
+FORM B5a variant 120 s (a frame dt >= 1 s within 120 s of presented time after the entry line; the class decision and pooling with s142 use this one, item 242 (c)): 0/15 [c] none; K2 by place on the whole V: entry 0 none, hold 0 none
+K2 ON THE HOLD AFTER 120 s ONLY (a separate row (B) of register F per level, form edes122, not B5a; item 242 (c)): none
+FORM B33 (a frame 100 ms <= dt < 1 s on the hold after the window): 0/15 [c] (admitted and entered 0) none; executor variant (the hold within 120 s of presented time after the entry line): 0/15
+FORMS second reading by the order (shared caches warm from earlier runs): first 8 B5a 0/8 B5 0/8; last 7 B5a 0/7 B5 0/7
+STOP RULE W (item 254 (k)(4): two W in a row stopped before the first GuestOut line with one key): not met; keys none
+STOP RULE (item 221 (g)(4)): not met
+CACHE CONTINUITY (item 242 (b): manifest after N = manifest before N+1; roots shader, pipeline, glcache)
+FORMS without the tags after the first cache break (item 242 (b)): no break - the forms above stand

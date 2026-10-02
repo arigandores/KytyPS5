@@ -1,0 +1,44 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s146\sc146.py sha256 452c5bb10b9bae5be958a9816d58bab2672325b8151161dfd7da0831f13864dd
+test    C:\kyty\s146\test_sc146.py sha256 6ef95d412cda54d0b8b14273c1f2b453c5cbf16b57f71f2d130a246958b3934e
+mutants C:\kyty\s146\mut_sc146.py sha256 f49f91976aa9588dadb2d25bd0e5244277972fff0e0bf5f4193a6deb2dda6bf6
+mutants: format list, 796 defined (strict: every use of MUTANTS checked; statements evaluated at lines 96)
+selection: --only, 12 mutants
+suite: family V; fast on (480 guarded updates of ok); end of suite: the final exit call at line 3613
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'manifest', 'mk143', 'mk144', 'mk145', 'mk146', 'mkrun', 'pair', 'pair143', 's6', 's7', 's8', 's9', 'sheet_case', 'w34', 'wstop', 'x144root', 'xroot'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 12 (spawn, one process per job), work dir C:\kyty\s146\mutwork_s\sc146_58024_1790928647
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.06 s in the baseline (50 of 511 calls validated; not validated: 288 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+BASELINE passed in 71.1 s (memo off); mutant timeout 213 s; workers 12
+[1/12] g_p145_rck  KILLED (crash: NameError: name 'RECHECK146' is not defined [sc146.py:297])  (0.0 s)
+[2/12] build_sha  KILLED by test line 282  (0.1 s)
+[3/12] g_f146_def  KILLED by test line 2503  (10.1 s)
+[4/12] g_half145  KILLED by test line 2358  (10.1 s)
+[5/12] extra143  KILLED by test line 2358  (10.1 s)
+[6/12] e_form145  KILLED by test line 2358  (9.9 s)
+[7/12] e_half  KILLED by test line 2358  (10.0 s)
+[8/12] e_repeat  KILLED by test line 2358  (10.3 s)
+[9/12] n_form_off  KILLED by test line 2358  (10.6 s)
+[10/12] g_p145_build  KILLED by test line 2367  (10.1 s)
+[11/12] g_p145_f146  KILLED by test line 2503  (10.4 s)
+[12/12] ma_regress_rc  KILLED by test line 3015  (24.5 s)
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.06 s in the baseline (50 of 511 calls validated; not validated: 288 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (71.1 s)
+BASELINE#2  SURVIVED  (71.0 s)  [fixture replay validation]
+g_p145_f146  KILLED by test line 2503  (10.4 s)
+g_p145_build  KILLED by test line 2367  (10.1 s)
+g_p145_rck  KILLED (crash: NameError: name 'RECHECK146' is not defined [sc146.py:297])  (0.0 s)
+g_f146_def  KILLED by test line 2503  (10.1 s)
+g_half145  KILLED by test line 2358  (10.1 s)
+build_sha  KILLED by test line 282  (0.1 s)
+extra143  KILLED by test line 2358  (10.1 s)
+ma_regress_rc  KILLED by test line 3015  (24.5 s)
+n_form_off  KILLED by test line 2358  (10.6 s)
+e_form145  KILLED by test line 2358  (9.9 s)
+e_repeat  KILLED by test line 2358  (10.3 s)
+e_half  KILLED by test line 2358  (10.0 s)
+12 mutants: 12 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 11 kill(s) ended at their first failing case; they skipped a median 25 % / mean 31 % of the suite's 540 checks, about 36.8 s of the baseline's suite time per job (405 s in all)
+wall 99.3 s, worker time 258.5 s, 12 workers
+ALL KILLED (12 of 12 selected mutants killed; 796 defined in the mutant script)

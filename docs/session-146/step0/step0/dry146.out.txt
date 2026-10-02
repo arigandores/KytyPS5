@@ -1,0 +1,8 @@
+bash.exe: warning: could not find /tmp, please create!
+DRY w146_00: level underwater_aerial_garden; stop file?; lock?; PLWAIT=540; procload --wait-s 540; sc146.py --check-seal; sc146.py --stop-check w146_00; W of a pair: sc146.py --skip-w w146_00 (rc 0 -> skipped_w146_00.txt, SKIPPED_V_NOT_ENTERED, no lock); cpu < 15; idle142; procload --wait-s 0; stop file?; shader cache count; cache manifest before (cachemf146); lock with winpid (runs146/lock.log UTC); fgcpu146 --save; install /c/kyty/s146/kyty_emulator_dac02fb9.exe (dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e); enter_scene.py w146_00 --level underwater_aerial_garden --attempts 1 --stable-draws 300 --timeout 600 --no-install --require-idle --gates-file C:/kyty/s146/gates_default.txt --pred C:/kyty/s146/pred/01_sc146.md  --emu-arg=--vulkan-validation --emu-arg=true --hold 310 VK_LAYER_PATH=C:/VulkanSDK/1.4.357.0/Bin VK_LAYER_DUPLICATE_MESSAGE_LIMIT=100000000 KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0; log sha; cache manifest after (cachemf146); glitch+sheet+tiles146 none; sc146.py --tag w146_00; restore /c/kyty/s146/kyty_emulator_dac02fb9.exe; fgcpu146 --since --chain-pid (times.txt row); unlock
+bash.exe: warning: could not find /tmp, please create!
+previous call not made
+bash.exe: warning: could not find /tmp, please create!
+previous call not made
+bash.exe: warning: could not find /tmp, please create!
+previous call not made

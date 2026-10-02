@@ -1,0 +1,40 @@
+suite test_gate146.py sha256 7d924761fa96b9342af412dd903aebe82f60f28d0c770acf9468d753c4142bf8 target gate146.py sha256 b467874091dd6b48eb863f9c071ef53265065c8504b8aeb8036e7de0e2c659dc
+PASS k1 --start with the live manifest = the reference -> PASS; it writes the start manifest (its files = the manifest read) and names its sha256
+PASS k2 --start: a shader root file changed -> rc 5 (c)(1) STOP
+PASS k2 --start: the variant pipelines.bin changed -> rc 5 (c)(1) STOP
+PASS k2 --start: a shader file added -> rc 5 (c)(1) STOP
+PASS k2 --start: a shader file removed -> rc 5 (c)(1) STOP
+PASS k2 --start: a GLCache file changed -> rc 0 with the driver info naming the file
+PASS k2 --start: a GLCache file added -> rc 0 with the driver info naming the file
+PASS k2 --start: a _PipelineCache file removed -> rc 0 with the driver info naming the file
+PASS k3 --start (r): the reference sha != its seal line, a seal without the line, a missing reference -> STOP (r); no start manifest without the reference
+PASS k4 --start (s): 60 GiB free -> PASS; 1 byte less -> STOP (s); the row prints bytes, GiB and GB
+PASS k5 --before w146_00: no start row -> STOP; with the start row -> PASS
+PASS k6 (b) the control W with KYTY_PIPELINE_PRECACHE=0 -> rc 5
+PASS k6 (b) the control W with KYTY_PIPELINE_PRECACHE=1 -> rc 5
+PASS k6 (b) the control W with KYTY_PIPELINE_PRECACHE empty -> rc 5
+PASS k6 (b) the control W with the form of item 300 (b)(4) with ShaderSeed / PipelinePrecache lines -> rc 0
+PASS k6n (b) a made W without json -> STOP (b) not evaluable
+PASS k7 (f) the W form line with limit 1000000 -> STOP (f)
+PASS k7 (f) the W form line with a message filter -> STOP (f)
+PASS k7 (f) the W form line with no limit -> STOP (f)
+PASS k8 (v) one row W 295(b)(2) failing -> STOP (v)
+PASS k8 (v) two rows -> STOP (v)
+PASS k8 (v) the score missing -> STOP (v)
+PASS k8 (v) no admission line -> STOP (v)
+PASS k9 (l) the control with a layer limit line in its log -> STOP (l)
+PASS k9 (l) the control with a layer limit line in its stdout -> STOP (l)
+PASS k10 (c)(2): the control before manifest = the start manifest -> PASS; one shader file differs -> STOP; the start manifest rewritten -> STOP; missing -> STOP
+PASS k11 (w) Window 1 minimized in the log on the V right before -> rc 5
+PASS k11 (w) Recovering Vulkan swapchain in the stdout on the V right before -> rc 5
+PASS k11 (w) lost keyboard focus only on the V right before -> rc 0
+PASS k12 V 0 ShaderSeed lines -> STOP
+PASS k12 V V positive control failing -> STOP
+PASS k12 V the score missing -> STOP
+PASS k13 item 309 (k)(1): the skipped W right before is passed over to the made V before it (its window event STOPs, clean -> PASS); the W neither made nor skipped -> STOP "not made"
+PASS k14 a made tag without its GATE row -> STOP (ungated call)
+PASS k15 (g): two W in a row with json outcome timeout before any GuestOut line -> STOP; the second after GuestOut -> PASS
+PASS k16 the constants: root s146, times, the reference runs146/cache_i146_v.after.json and its seal name, the seal pred/01_sc146.md, 60 GiB, the start manifest runs146/cache_start.json, strict = shader, driver = pipeline + glcache; no name of 145 in the code; ASCII and LF
+PASS k17 the gate in a child without PYTHONIOENCODING (console cp1250): ASCII row, rc 5 (no start row)
+checks: 37
+ALL OK

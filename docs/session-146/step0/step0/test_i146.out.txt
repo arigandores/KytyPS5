@@ -1,0 +1,21 @@
+suite test_i146.py sha256 3e4627b7bcb7246484bc37d1d882e7cd438d48ef4f46766706b9e6af33adc172 target i146_read.py sha256 d7df21a8a87f339a98a3d68600721cd8fd71c45d8162c819cafff8b39ca4eded go146i.sh sha256 fd08865f114f71a46288e7996cdb6c4d19fb7083e383fec358fdfdd2c99407ac
+ok   positive fs_b as i146_v: rc 0 and WARMUP VERDICT PASS
+ok   positive: six letter lines ok
+ok   positive: admission binary dac02fb9 ok
+ok   edge: 1 glitch -> FAIL
+ok   edge: no pair sheet -> FAIL
+ok   edge: binary 9235a7ac -> NOT ADMITTED
+ok   edge: KYTY_PIPELINE_PRECACHE=0 -> NOT ADMITTED
+ok   edge: a frame dt 1000000 us after the first scene frame -> FAIL
+ok   edge: no log -> rc 1
+ok   edge: another tag -> usage rc 2
+ok   cp1250 strict output: rc 0
+ok   i146_read.py is ASCII
+ok   go146i.sh is ASCII
+ok   go146i.sh usage -> rc 2
+ok   go146i.sh PLWAIT not the seal line -> rc 1
+ok   go146i.sh PLWAIT above 540 -> rc 2
+ok   go146i.sh DRY with the seal line -> rc 0 and the plan
+ok   i146_read.py --check-seal of the seal -> OK
+checks 18
+ALL OK

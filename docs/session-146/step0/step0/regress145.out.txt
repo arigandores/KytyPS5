@@ -1,0 +1,39 @@
+REGRESS145 expected C:/kyty/s145/step4/summary145_viewed.txt sha256 94b37b656d138c08354114c3ee965d210f94bdd0d2ac32e26d1096820059590f lines 1695; new lines 1695 sha256 94b37b656d138c08354114c3ee965d210f94bdd0d2ac32e26d1096820059590f; byte-identical yes; differing lines 0
+REGRESS145 stop-check from score.json = from the log (item 309 (k)(2)): 33 of 33 tags equal -> PASS
+NEW146 ROWS of profile 146 on the same logs (data rows; not in the regression file):
+NEW146 w145_00: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_01: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_02: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_02: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_03: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_03: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_04: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_04: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_05: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_05: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_06: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_06: no json
+NEW146 v145_07: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_07: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_08: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_08: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_09: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_09: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_10: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_10: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_11: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_11: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_12: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_12: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_13: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_13: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_14: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_14: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_15: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_15: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_16: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_16: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v145_17: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 w145_17: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+NEW146 v144_09: stubs log 0 stdout 0; ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; DualSrcBlend lines 0, supported=1 enabled=1 before the first GuestOut 0
+REGRESS145: PASS

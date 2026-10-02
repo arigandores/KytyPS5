@@ -1,0 +1,12 @@
+copy C:/kyty/s145/procload.py d9e7a777404f1aa9 -> C:/kyty/s146/procload.py d9e7a777404f1aa9
+copy C:/kyty/s145/idle142.py c5ee7dc26d2a6d28 -> C:/kyty/s146/idle142.py c5ee7dc26d2a6d28
+copy C:/kyty/s145/sheet142.py c1bf9e2903c7db7a -> C:/kyty/s146/sheet142.py c1bf9e2903c7db7a
+copy C:/kyty/s145/launch_run.py c750e62ae3d63549 -> C:/kyty/s146/launch_run.py c750e62ae3d63549
+copy C:/kyty/s145/run_safety99.py 77e685e5543d90a0 -> C:/kyty/s146/run_safety99.py 77e685e5543d90a0
+copy C:/kyty/s145/gates_default.txt e3b0c44298fc1c14 -> C:/kyty/s146/gates_default.txt e3b0c44298fc1c14
+copy C:/kyty/s145/enter_scene.py 0c630efb61ceb333 -> C:/kyty/s146/enter_scene.py 9fe7d62878cf20af
+copy C:/kyty/s145/cachemf145.py f1ec8328ca5e3a44 -> C:/kyty/s146/cachemf146.py 0e3e88a2dacc5d02
+copy C:/kyty/s145/fgcpu145.py c167141401903539 -> C:/kyty/s146/fgcpu146.py 18d85a3e4b46ec23
+copy C:/kyty/f287/fsc/shalist_f2c.py a5fe790abf14e7f8 -> C:/kyty/s146/shalist_f2c.py a5fe790abf14e7f8
+copy C:/kyty/f287/fsc/sheetpair_f3d.py b192ade2d95985b8 -> C:/kyty/s146/sheetpair_f3d.py b192ade2d95985b8
+ALL OK

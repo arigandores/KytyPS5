@@ -1,0 +1,9 @@
+TILEREG rec_v145_11.mp4 mine ('18051', '16', '2') auditor (18051, 16, 2) -> equal
+TILEREG rec_v145_12.mp4 mine ('20121', '2', '2') auditor (20121, 2, 2) -> equal
+TILEREG rec_v145_13.mp4 mine ('19899', '7', '7') auditor (19899, 7, 7) -> equal
+TILEREG rec_v145_14.mp4 mine ('17025', '0', '0') auditor (17025, 0, 0) -> equal
+TILEREG rec_v145_15.mp4 mine ('20152', '1', '1') auditor (20152, 1, 1) -> equal
+TILEREG rec_v145_16.mp4 mine ('12842', '0', '0') auditor (12842, 0, 0) -> equal
+TILEREG rec_v145_17.mp4 mine ('20239', '0', '0') auditor (20239, 0, 0) -> equal
+TILEREG rec_v144_09.mp4 mine ('16726', '1', '0') auditor (16726, 1, 0) -> equal
+TILEREG part 2: ALL EQUAL

@@ -1,0 +1,357 @@
+# ---------------- PART F (session 146 step 0, HPP-386; ROADMAP s122 item 309 (k), (l)(1)-(7), item 300 (b)(4), item 281 (g)):
+# the profile of session 146 - the 35 tags and their order, the re-check and second-hold V, the W form on the shipment binary
+# (precache by default), the DualSrcBlend control (control stop term, data row of every W, variant [I] of item 281 (g)), the
+# stubs (F13) and asserts (F14) rows, the tile events (D-4), SKIPPED_V_NOT_ENTERED (--skip-w and the summary), the stop-check
+# from score.json (its source line, the fall back to the log), the three-V rule over every made V, RECHECK / B40 / Sky Garden
+# lines, ASCII.
+S.profile(P146)
+BUILD6 = 'dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e'
+LV15 = ('robot_builder_next', 'interactive_credit_00', 'non_interactive_credit', 'ending_boss_after_credit',
+        'collectible_viewer', 'hub_crashsite_diorama', 'diorama_controller_skin', 'diorama_astro_skin', 'diorama_zoo',
+        'fragile_battle_1', 'voxel_challenge_1', 'armadillo_challenge_1', 'fragile_battle_2', 'voxel_challenge_2',
+        'fragile_battle_3')
+RCK = (('r146_01', 'hoover_beach'), ('r146_02', 'sponge_dirty_bath'), ('r146_03', 'timestop_casino'),
+       ('r146_04', 'bonus_path_maker_mix'))
+SEQ146 = ['w146_00'] + [r for r, _ in RCK] + [x for i in range(5, 20) for x in ('v146_%02d' % i, 'w146_%02d' % i)]
+ok &= case('F1 the 35 tags of item 309 (l)(2) in that order; control w146_00 on Sky Garden; the re-check r146_01..03 and the '
+           'second hold r146_04 (V only, outside the census); the 15 pairs v146_NN / w146_NN of the list of step 0; no V of '
+           'another session',
+           list(S.SEQ) == SEQ146 and len(S.SEQ) == 35 and S.CONTROL == ('w146_00', SKY) and S.RECHECK == RCK and
+           S.PAIRS == tuple(('v146_%02d' % (i + 5), 'w146_%02d' % (i + 5), lv) for i, lv in enumerate(LV15)) and
+           S.CENSUS == tuple(('v146_%02d' % (i + 5), lv) for i, lv in enumerate(LV15)) and S.LEVELS == LV15 and
+           S.V_TAGS == tuple(r for r, _ in RCK) + tuple('v146_%02d' % i for i in range(5, 20)) and
+           S.W_TAGS == ('w146_00',) + tuple('w146_%02d' % i for i in range(5, 20)) and S.XSRC == {} and S.XSHEET == ())
+ok &= case('F2 the root, seal, chain, runs dir, scorer of 146; the build dac02fb9; the flags (FORM146 on, REPEAT off); halves '
+           'of eight; the W form line of item 295 unchanged; B40 and warm-up names',
+           S.ROOT == 'C:/kyty/s146' and S.PRED_PATH == 'C:/kyty/s146/pred/01_sc146.md' and S.CHAIN == 'go146a' and
+           S.RUNS == 'runs146' and S.SCORER == 'sc146.py' and S.EXTRA is True and S.FORM144 is True and
+           S.FORM145 is True and S.FORM146 is True and S.REPEAT is False and S.BUILD_SHA == BUILD6 and S.HALF == 8 and
+           S.W_FORM_LINE == 'W form: limit=100000000 filter=none' and S.B40_TAG == 'r146_04' and
+           S.B40_FIRST == 'v145_14' and S.WARMUP == ('i146_v', 'score_i146_v.txt'))
+ok &= case('F3 the constants of sc145 are unchanged in profile 146 (item 309 (l)(4))',
+           (S.SCENE_DRAWS, S.ENTRY_WIN, S.K2_US, S.K3_US, S.HOLD_CENSUS_US, S.HOLD_CENSUS_S, S.HOLD_SCENE_US, S.HOLD_W_S,
+            S.HOLD_V_S, S.FRAMES_V, S.COVER_SLACK, S.PRIO_US, S.STOP_RUN, S.HOLD_W_HARNESS_S, S.REPORT_LINES, S.W_STOP_RUN,
+            S.LAYER_END_US, S.WIN_NEAR_US, S.VQ_NEAR, S.VQ_SHIFT_MS, S.VQ_ROWS, S.VQ_MARK, S.VC_GAP, S.VC_MARG) ==
+           (100, 599, 1000000, 100000, 120000000, 120, 300000000, 300, 330, 3000, 100, 50000, 3, 310, 50, 2, 10000000,
+            2000000, 0.008, 50, 600, 0.10, 0.060, 0.012) and
+           S.OPCODE_BASE == {('SOP1', '0x21'): 96, ('SOP1', '0x0c'): 1, ('VOPC', '0xe3'): 4} and
+           S.M_STUBCALL == b'Unresolved import stub called' and S.M_ASSERT == b'ASSERT:' and S.M_UMP == b'user_msg_param')
+ok &= case('F4 level_of in 146: control -> Sky Garden; r146_01..04 -> the re-check levels; v146_05 / w146_19 -> the list; '
+           'v145_02, w146_04, r146_05, i146_v -> unknown',
+           S.level_of('w146_00') == SKY and [S.level_of(r) for r, _ in RCK] == [lv for _, lv in RCK] and
+           S.level_of('v146_05') == 'robot_builder_next' and S.level_of('w146_19') == 'fragile_battle_3' and
+           S.level_of('v145_02') is None and S.level_of('w146_04') is None and S.level_of('r146_05') is None and
+           S.level_of('i146_v') is None)
+K146 = ('ROOT', 'PRED_PATH', 'CHAIN', 'RUNS', 'SCORER', 'EXTRA', 'FORM144', 'FORM145', 'FORM146', 'REPEAT', 'BUILD_SHA',
+        'RECHECK', 'LEVELS', 'PAIRS', 'CENSUS', 'SEQ', 'V_TAGS', 'W_TAGS', 'SEALED_NAMES', 'CONTROL', 'XSRC', 'XSHEET',
+        'XSHEET_NOTE', 'HALF')
+ok &= case('F5 P145 and P146 set every key profile 146 changes; P145 keeps sc145 (root s145, go145a, 9235a7ac, FORM146 off, 34 '
+           'tags, the v144_09 of another session); the profiles 144, 143, 142 carry FORM146 off and the build 9235a7ac',
+           set(K146) <= set(S.P145) and set(K146) <= set(S.P146) and S.P145['FORM146'] is False and
+           S.P145['BUILD_SHA'] == BUILD and S.P145['ROOT'] == 'C:/kyty/s145' and len(S.P145['SEQ']) == 34 and
+           S.P145['CHAIN'] == 'go145a' and S.P145['RECHECK'] == () and 'v144_09' in S.P145['XSRC'] and
+           all(p['FORM146'] is False and p['BUILD_SHA'] == BUILD and p['RECHECK'] == () for p in (S.P144, S.P143, S.P142)))
+REQ146 = ('go146a.sh', 'sc146.py', 'test_sc146.py', 'mut_sc146.py', 'enter_scene.py', 'sheet142.py', 'fgcpu146.py',
+          'cachemf146.py', 'lockcheck146.py', 'tiles146.py', 'test_tools146.py', 'C:/kyty/scripts/s51_vidglitch.py',
+          'step2/next_one.sh', 'step2/call_one.sh', 'step2/wait_one.sh', 'step2/pre_one.sh', 'step2/apichk146.py',
+          'step2/gate146.py', 'step2/test_gate146.py', 'runs146/cache_i146_v.after.json', 'score_i146_v.txt',
+          'pred/00_i146.md', 'step0/lvl146.py', 'step0/lvl146.out.txt')
+ok &= case('F6 the seal of 146 names the chain, scorer, fixtures, mutants, enter_scene.py, sheet142.py, s51_vidglitch.py, the '
+           'tile tool, the step 2 wrappers with the API check and the gate, the warm-up manifest, reading and seal, the list '
+           'script and its output; no name of 145',
+           all(n in S.SEALED_NAMES for n in REQ146) and not any('145' in n for n in S.SEALED_NAMES))
+PR6 = BASE / 'pred146.md'
+PR6.write_text('fixture seal 146 part F\n', encoding='utf-8')
+SH6 = hashlib.sha256(PR6.read_bytes()).hexdigest()
+DUAL11 = 'DualSrcBlend: supported=1 enabled=1'
+
+
+def js146(tag, attempt=None, precache=None, dup='100000000', **over):
+    is_w = tag in S.W_TAGS
+    cmd = ['kyty_emulator.exe', '--vulkan-validation', 'false', '--game', 'x'] + (['--vulkan-validation', 'true'] if is_w else [])
+    env = {'KYTY_FRAME_TRACE': 'lite', 'KYTY_GUEST_ARGS': '-lvl %s' % S.level_of(tag), 'KYTY_GPU_CLOCK_PIN': '1',
+           'KYTY_GPU_MARKERS': '0'}
+    if is_w:
+        env['VK_LAYER_PATH'] = 'C:/VulkanSDK/1.4.357.0/Bin'
+        if precache is not None:
+            env['KYTY_PIPELINE_PRECACHE'] = precache
+        if dup is not None:
+            env['VK_LAYER_DUPLICATE_MESSAGE_LIMIT'] = dup
+    else:
+        env['KYTY_REC'] = 'C:\\kyty\\s146\\rec_%s.mp4' % tag
+    a = dict(label='attempt 1', attempt=1, outcome='ok', hold_s=310.0 if is_w else 330.0, hold_exit=None, ft_tail=300,
+             pipeline_cache_off=False, level=S.level_of(tag))
+    a.update(attempt or {})
+    js = dict(tag=tag, binary_sha256=BUILD6, guest_args='-lvl %s' % S.level_of(tag), gates='', env=env, cmdline=cmd,
+              prereg=dict(path=S.PRED_PATH, sha256=SH6), attempts=[a])
+    js.update(over)
+    return js
+
+
+def wl6(lv, dual=True, post=None):
+    return ([DUAL11] if dual else []) + [VF, PRE] + scene_lines(lv, [150000] * 2000 if post is None else post) + [VW] * 3
+
+
+def mk146(root, tag, lines=None, js=None, glitch=(3200, 0), sheet=True, std=(), extra=(), tiles=None):
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    is_w = tag in S.W_TAGS
+    lv = S.level_of(tag)
+    if lines is None:
+        lines = (wl6(lv) if is_w else [PRE] + scene_lines(lv, v_post())) + list(extra)
+    (root / ('%s.json' % tag)).write_text(json.dumps(js if js is not None else js146(tag)), encoding='utf-8')
+    (root / ('log_%s.txt' % tag)).write_bytes(('\n'.join(lines) + '\n').encode('utf-8'))
+    (root / 'step2').mkdir(exist_ok=True)
+    with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+        f.write('2026-10-02T00:00:00Z go146a %s enter_scene end rc 0 log_%s.txt sha256 %s\n' % (
+            tag, tag, _h.sha256((root / ('log_%s.txt' % tag)).read_bytes()).hexdigest()))
+    (root / ('stdout_%s.txt' % tag)).write_bytes(('\n'.join(std) + '\n').encode('utf-8'))
+    (root / ('%s.stdout.txt' % tag)).write_bytes(b'VERDICT: x\n')
+    if is_w:
+        return str(root)
+    if tiles is not None:
+        (root / ('tiles_%s.txt' % tag)).write_text(tiles)
+    if glitch is not None:
+        (root / ('glitch_%s.txt' % tag)).write_text('C:/kyty/s146/rec_%s.mp4: %d frames 960x540, index entries %d\n'
+                                                    'one-frame glitches: %d\n' % (tag, glitch[0], glitch[0], glitch[1]))
+    if sheet:
+        (root / ('sheet_%s.png' % tag)).write_bytes(b'png')
+        (root / ('rec_%s.mp4' % tag)).write_bytes(('mp4 ' + tag).encode())
+        with open(root / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+            f.write('2026-10-02T00:00:00Z go146a %s s51_vidglitch rc 0 glitch_%s.txt sha256 %s rec_%s.mp4 sha256 %s\n' % (
+                tag, tag, 'ab' * 32, tag, _h.sha256(('mp4 ' + tag).encode()).hexdigest()))
+            f.write('2026-10-02T00:00:00Z go146a %s sheet rc 0 sheet_%s.png sha256 %s\n' % (
+                tag, tag, _h.sha256(b'png').hexdigest()))
+    return str(root)
+
+
+def run6(args, root):
+    b = io.StringIO()
+    with contextlib.redirect_stdout(b):
+        rc = S.main(args, root=str(root), pred=str(PR6))
+    return rc, b.getvalue()
+
+
+RF = BASE / 'F7'
+for t in ('w146_00', 'r146_01', 'v146_05', 'w146_05'):
+    mk146(RF, t)
+eF = dict((t, S.entry_of(t, str(RF), SH6)) for t in ('w146_00', 'r146_01', 'v146_05', 'w146_05'))
+ok &= case('F7 good control W, re-check V, and the V and W of a pair are admitted; the build row names dac02fb9; every W has the '
+           'row "W form on the shipment binary" and NOT the row of the precache lines of profile 144-145; the V keeps "V positive '
+           'control"',
+           all(adm_ok(e) for e in eF.values()) and
+           all(len(adm_rows(eF[t], 'W form on the shipment binary: no KYTY_PIPELINE_PRECACHE')) == 1 and
+               not adm_rows(eF[t], 'W form: no "PipelinePrecache') and not adm_rows(eF[t], 'W form: KYTY_PIPELINE_PRECACHE=0')
+               for t in ('w146_00', 'w146_05')) and
+           all(len(adm_rows(eF[t], 'build dac02fb9')) == 1 for t in eF) and
+           len(adm_rows(eF['v146_05'], 'V positive control')) == 1 and len(adm_rows(eF['r146_01'], 'V positive control')) == 1)
+for i, (name, pc) in enumerate((('KYTY_PIPELINE_PRECACHE=0', '0'), ('KYTY_PIPELINE_PRECACHE=1', '1'),
+                                ('KYTY_PIPELINE_PRECACHE empty', ''))):
+    e = S.entry_of('w146_05', mk146(BASE / ('F8_%d' % i), 'w146_05', js=js146('w146_05', precache=pc)), SH6)
+    ok &= case('F8 a W with %s in its env -> not admitted by the shipment-binary form row only' % name,
+               not adm_ok(e) and [a[0][:30] for a in e['admit'] if not a[1]] == ['W form on the shipment binary:'])
+e = S.entry_of('w146_05', mk146(BASE / 'F9', 'w146_05', lines=[x for x in wl6(S.level_of('w146_05')) if x != PRE]), SH6)
+e9b = S.entry_of('w146_05', mk146(BASE / 'F9b', 'w146_05', lines=wl6(S.level_of('w146_05')) + [PRE]), SH6)
+ok &= case('F9 a W without a "PipelinePrecache: N recipes ->" line is still admitted (a data row in 146); the print gives 0; a W '
+           'with two such lines prints 2',
+           adm_ok(e) and e['precache']['log'] == 0 and adm_ok(e9b) and e9b['precache']['log'] == 2 and
+           '  W precache by default (item 300 (b)(4); data): "PipelinePrecache: N recipes ->" lines log 0, stdout 0' in
+           S.fmt_entry(e))
+DCASES = (('the line before the first GuestOut', [DUAL11] + wl6(SKY, dual=False), True),
+          ('the line after the first GuestOut only', wl6(SKY, dual=False)[:8] + [DUAL11] + wl6(SKY, dual=False)[8:], False),
+          ('supported=1 enabled=0', ['DualSrcBlend: supported=1 enabled=0'] + wl6(SKY, dual=False), False),
+          ('supported=0 enabled=1', ['DualSrcBlend: supported=0 enabled=1'] + wl6(SKY, dual=False), False),
+          ('no line', wl6(SKY, dual=False), False),
+          ('a W without any GuestOut line, the line present', [DUAL11, VF, PRE, ft(1, 20000, 5)], True),
+          ('two lines, the second one 1/1', ['DualSrcBlend: supported=0 enabled=0', DUAL11] + wl6(SKY, dual=False), True),
+          ('supported=1 enabled=10 (two digits)', ['DualSrcBlend: supported=1 enabled=10'] + wl6(SKY, dual=False), False))
+for i, (name, lines, want) in enumerate(DCASES):
+    root = mk146(BASE / ('F10_%d' % i), 'w146_00', lines=lines)
+    e = S.entry_of('w146_00', root, SH6)
+    c = S.control_state(e)
+    rc, out = run6(['--stop-check', 'r146_01'], root)
+    fm = [x for x in S.fmt_entry(e) if x.startswith('  W DualSrcBlend control')]
+    ok &= case('F10 DualSrcBlend %s -> %s; the control letter %s; rc of the stop-check before r146_01 %s; the print' % (
+        name, 'present' if want else 'ABSENT', 'pass' if want else 'stop', 0 if want else 5),
+        e['dual_ok'] is want and (('no line "DualSrcBlend: supported=1 enabled=1" before the first GuestOut line (item 300 '
+                                   '(b)(4))' in c[2]) is (not want)) and (rc == (0 if want else 5) or (i == 5 and rc == 5))
+        and len(fm) == 1 and (('-> present;' in fm[0]) if want else ('-> ABSENT;' in fm[0] and fm[0].endswith('FAIL'))))
+e = S.entry_of('w146_05', mk146(BASE / 'F10b', 'w146_05', lines=wl6(S.level_of('w146_05'), dual=False)), SH6)
+ok &= case('F10b a non-control W without the DualSrcBlend line is admitted (a data row, item 309 (l)(4)); the print names the '
+           'variant of item 281 (g) FAIL',
+           adm_ok(e) and e['dual_ok'] is False and
+           any(x.startswith('  W DualSrcBlend control') and x.endswith('; not in the verdict): FAIL') for x in S.fmt_entry(e)))
+STUB = 'Unresolved import stub called: b-dYXrjSNZU'
+ASR = 'ASSERT: failed something'
+UMP = '\t user_msg_param = 0x0000000000000000'
+CH6 = S.CHUNK
+S.CHUNK = 37
+root = mk146(BASE / 'F11', 'v146_05', extra=[STUB, STUB, ASR, UMP], std=[STUB, ASR, UMP, UMP])
+e11 = S.entry_of('v146_05', root, SH6)
+S.CHUNK = CH6
+f11 = S.fmt_entry(e11)
+ok &= case('F11 stubs (F13) and asserts (F14) counted in log and stdout across 37-byte chunks; the print rows; a V with them is '
+           'still admitted (data rows)',
+           e11['stubcall'] == dict(log=2, stdout=1) and e11['asserts'] == dict(log=1, stdout=1, ump_log=1, ump_stdout=2) and
+           adm_ok(e11) and
+           '  stubs (F13, item 309 (l)(4); data): "Unresolved import stub called" lines log 2, stdout 1' in f11 and
+           '  asserts (F14, item 309 (l)(4); data): "ASSERT:" lines log 1, stdout 1; "user_msg_param" lines log 1, stdout 2 - != '
+           '0: a row of the close in register F' in f11)
+e11b = S.entry_of('v146_05', mk146(BASE / 'F11b', 'v146_05'), SH6)
+ok &= case('F11b no stub / assert lines -> zeros, no register note',
+           e11b['stubcall'] == dict(log=0, stdout=0) and e11b['asserts'] == dict(log=0, stdout=0, ump_log=0, ump_stdout=0) and
+           '  asserts (F14, item 309 (l)(4); data): "ASSERT:" lines log 0, stdout 0; "user_msg_param" lines log 0, stdout 0' in
+           S.fmt_entry(e11b))
+TL = 'TILES rec_v146_05.mp4 sha256 %s: frames 12000; tile events T4 2, T12 1; events [[10, 0, 0, 6.2, 6.3, 0.6, 1], [20, 3, 3, 14.0, 13.0, 1.0, 2]]\n' % ('ab' * 32)
+e12 = S.entry_of('v146_05', mk146(BASE / 'F12', 'v146_05', tiles=TL), SH6)
+e12b = S.entry_of('v146_05', mk146(BASE / 'F12b', 'v146_05', tiles='TILES rec_v146_05.mp4 ERROR size\n'), SH6)
+e12c = S.entry_of('v146_05', mk146(BASE / 'F12c', 'v146_05'), SH6)
+e12d = S.entry_of('v146_05', mk146(BASE / 'F12d', 'v146_05', tiles='TILES rec_v146_05.mp4 sha256 %s: frames 5; tile events T4 0, '
+                                   'T12 0; events \n' % ('ab' * 32)), SH6)
+ok &= case('F12 tile events read from tiles_<V>.txt (T4 2, T12 1, the events printed); an error line or no file -> n/a; never '
+           'an admission row',
+           e12['tiles']['t4'] == 2 and e12['tiles']['t12'] == 1 and e12['tiles']['frames'] == 12000 and
+           e12b['tiles'] is None and e12c['tiles'] is None and adm_ok(e12) and adm_ok(e12b) and
+           e12d['tiles'] is not None and e12d['tiles']['t4'] == 0 and e12d['tiles']['events'] == '' and
+           any(x.startswith('  tile events (D-4, the auditor tile rule of AUDIT145 s1.4, threshold 4; data): frames 12000; frames '
+                            'with a tile event T4 2, T12 1; events') for x in S.fmt_entry(e12)) and
+           '  tile events (D-4, the auditor tile rule of AUDIT145 s1.4, threshold 4; data): n/a (no tiles_<tag>.txt)' in
+           S.fmt_entry(e12c))
+# SKIPPED_V_NOT_ENTERED: --skip-w from the json of --tag and from the log
+R13 = BASE / 'F13'
+mk146(R13, 'v146_05', lines=[PRE] + [ft(i, 20000, 5) for i in range(1, 50)])
+rcA, outA = run6(['--skip-w', 'w146_05'], R13)
+run6(['--tag', 'v146_05'], R13)
+rcB, outB = run6(['--skip-w', 'w146_05'], R13)
+mk146(R13, 'v146_06')
+run6(['--tag', 'v146_06'], R13)
+rcC, outC = run6(['--skip-w', 'w146_06'], R13)
+rcD, outD = run6(['--skip-w', 'w146_07'], R13)
+rcE, outE = run6(['--skip-w', 'w146_00'], R13)
+rcF, outF = run6(['--skip-w', 'v146_05'], R13)
+ok &= case('F13 --skip-w: a V without its entry line -> rc 0 SKIPPED_V_NOT_ENTERED (from the log before --tag, from score.json '
+           'after it); an entered V -> rc 1 RUN; a V not made -> rc 1 (no reading); the control W and a V tag -> usage rc 2',
+           rcA == 0 and outA.startswith('SKIPPED_V_NOT_ENTERED w146_05: its V v146_05 outcome NOT_ENTERED (log (no score.json)') and
+           rcB == 0 and outB.startswith('SKIPPED_V_NOT_ENTERED w146_05: its V v146_05 outcome NOT_ENTERED (json;') and
+           rcC == 1 and outC.startswith('RUN w146_06: its V v146_06 outcome HOLDS_120 (json)') and
+           rcD == 1 and outD.startswith('RUN w146_07: its V v146_07 has no reading') and rcE == 2 and rcF == 2)
+(R13 / 'skipped_w146_05.txt').write_text('SKIPPED_V_NOT_ENTERED w146_05 x\n')
+o13 = S.summary(str(R13), SH6, None)[0]
+ok &= case('F14 the summary of a skipped W: the TAG line, the pair NO by "W made", the SKIPPED line names it; the W is not a made '
+           'W of the stop rules',
+           'TAG w146_05: SKIPPED_V_NOT_ENTERED (item 309 (k)(1): the V of its pair is NOT_ENTERED; not an attempt)' in o13 and
+           'SCENE_OK robot_builder_next: NO' in o13 and
+           'SKIPPED_V_NOT_ENTERED (item 309 (k)(1); W not called, not attempts): w146_05' in o13 and
+           not S.made('w146_05', str(R13)))
+# the stop-check source (item 309 (k)(2)): json when its log sha = times.txt, else the log
+R15 = BASE / 'F15'
+mk146(R15, 'w146_00')
+run6(['--tag', 'w146_00'], R15)
+rc15, out15 = run6(['--stop-check', 'r146_01'], R15)
+sj = json.load(open(R15 / 'runs146' / 'w146_00.score.json', encoding='utf-8'))
+sj['log_sha'] = 'cd' * 32
+json.dump(sj, open(R15 / 'runs146' / 'w146_00.score.json', 'w', encoding='utf-8'))
+rc15b, out15b = run6(['--stop-check', 'r146_01'], R15)
+(R15 / 'runs146' / 'w146_00.score.json').write_text('{broken')
+rc15c, out15c = run6(['--stop-check', 'r146_01'], R15)
+(R15 / 'runs146' / 'w146_00.score.json').unlink()
+rc15d, out15d = run6(['--stop-check', 'r146_01'], R15)
+st = lambda o: [x for x in o.split('\n') if x.startswith('STOP RULE')]
+ok &= case('F15 the stop-check reads the control from score.json when its log sha = times.txt (source "json"); a json with '
+           'another log sha, a broken json, no json -> the log (source named); the decision lines are the same in all four',
+           rc15 == rc15b == rc15c == rc15d == 0 and
+           'STOP CHECK SOURCES before r146_01 (item 309 (k)(2)): w146_00 json' in out15 and
+           'w146_00 log (score.json log sha cdcdcdcdcdcdcdcd != times.txt ' in out15b and
+           'w146_00 log (score.json broken)' in out15c and 'w146_00 log (no score.json)' in out15d and
+           st(out15) == st(out15b) == st(out15c) == st(out15d) and len(st(out15)) == 4)
+# the three-V rule over every made V of SEQ (re-check, second hold, census) with one key
+R16 = BASE / 'F16'
+mk146(R16, 'w146_00')
+NOENT = [PRE] + [ft(i, 20000, 5) for i in range(1, 50)]
+for t in ('r146_01', 'r146_02', 'r146_03'):
+    mk146(R16, t, lines=NOENT)
+rc16, out16 = run6(['--stop-check', 'r146_04'], R16)
+mk146(R16, 'r146_04')
+rc16b, out16b = run6(['--stop-check', 'v146_05'], R16)
+ok &= case('F16 three V in a row NOT_ENTERED with one key (the three re-check V) -> STOP rc 5 before r146_04; one entered V after '
+           'them breaks the run -> rc 0 before v146_05',
+           rc16 == 5 and 'STOP RULE before r146_04: STOP r146_01,r146_02,r146_03' in out16 and rc16b == 0 and
+           'STOP RULE before v146_05: not met' in out16b)
+# RECHECK words and the B40 line
+R17 = BASE / 'F17'
+mk146(R17, 'w146_00')
+mk146(R17, 'r146_01')
+mk146(R17, 'r146_02', lines=[PRE] + scene_lines('sponge_dirty_bath', v_post()[:1000] + [1000000] + v_post()[1001:]))
+mk146(R17, 'r146_03', glitch=(3200, 1))
+mk146(R17, 'r146_04', lines=[PRE] + scene_lines('bonus_path_maker_mix', v_post()[:1000] + [4624510] + v_post()[1001:]))
+o17v = S.summary(str(R17), SH6, 'viewed')[0]
+o17n = S.summary(str(R17), SH6, None)[0]
+o17x = S.summary(str(R17), SH6, 'not-viewed')[0]
+o17t = S.summary(str(R17), SH6, 'viewed', ['r146_02'])[0]
+rl = lambda o, lv: [x for x in o if x.startswith('RECHECK %s ' % lv)]
+ok &= case('F17 RECHECK: every V row of item 221 (g)(3) and the sheet viewed -> PASSES; sheet unset -> PENDING_SHEET; not-viewed '
+           '-> REMOVES SCENE_OK; a frame dt 1 s on the hold -> REMOVES; one glitch -> REMOVES; --sheet-tags limits the sheet '
+           'row to the named V',
+           rl(o17v, 'hoover_beach')[0].endswith(': PASSES') and rl(o17n, 'hoover_beach')[0].endswith(': PENDING_SHEET') and
+           rl(o17x, 'hoover_beach')[0].endswith(': REMOVES SCENE_OK') and
+           rl(o17v, 'sponge_dirty_bath')[0].endswith(': REMOVES SCENE_OK') and
+           rl(o17v, 'timestop_casino')[0].endswith(': REMOVES SCENE_OK') and
+           rl(o17t, 'hoover_beach')[0].endswith(': PENDING_SHEET') and
+           not any(x.startswith('RECHECK bonus_path_maker_mix') for x in o17v))
+R17b = BASE / 'F17b'
+mk146(R17b, 'r146_01', sheet=False)
+o17b = S.summary(str(R17b), SH6, 'viewed')[0]
+R17c = BASE / 'F17c'
+mk146(R17c, 'r146_01')
+with open(R17c / 'step2' / 'times.txt', 'a', encoding='utf-8') as f:
+    f.write('2026-10-02T00:00:01Z go146a r146_01 enter_scene end rc 0 log_r146_01.txt sha256 %s\n' % ('ef' * 32))
+o17c = S.summary(str(R17c), SH6, 'viewed')[0]
+ok &= case('F17b RECHECK with the sheet viewed but no sheet file -> REMOVES SCENE_OK; with the log sha != the last enter_scene '
+           'end line of times.txt -> REMOVES SCENE_OK (the guest-args / json level / log sha row)',
+           rl(o17b, 'hoover_beach')[0].endswith(': REMOVES SCENE_OK') and rl(o17c, 'hoover_beach')[0].endswith(': REMOVES SCENE_OK')
+           and any(x.startswith('  FAIL V guest args -lvl hoover_beach') for x in o17c))
+b40 = [x for x in o17v if x.startswith('B40 SECOND HOLD bonus_path_maker_mix (r146_04;')]
+ok &= case('F18 the B40 line of r146_04 names its K2 frame (n, dt 4 624 510) and the first hold v145_14',
+           len(b40) == 1 and '4624510' in b40[0] and 'the first hold v145_14 had K2 n 7249' in b40[0])
+(R17 / 'score_i146_v.txt').write_text('fs_read tag i146_v\nWARMUP VERDICT i146_v: PASS\n')
+o19 = S.summary(str(R17), SH6, None)[0]
+sky = [x for x in o19 if x.startswith('SKY GARDEN ON dac02fb9 (item 300 (d)')]
+ok &= case('F19 the Sky Garden line reads the WARMUP VERDICT line of score_i146_v.txt and the control W PASS',
+           len(sky) == 1 and 'warm-up V i146_v WARMUP VERDICT i146_v: PASS (score_i146_v.txt sha256 ' in sky[0] and
+           sky[0].endswith('control W w146_00 PASS'))
+R19c = BASE / 'F19c'
+mk146(R19c, 'w146_00', lines=wl6(SKY, dual=False))
+(R19c / 'score_i146_v.txt').write_text('WARMUP VERDICT i146_v: FAIL (x)\nFS VERDICT i146_v: PASS\n')
+o19c = S.summary(str(R19c), SH6, None)[0]
+ok &= case('F19c the Sky Garden line: a control W without the DualSrcBlend line -> STOP; the WARMUP VERDICT line (not another '
+           'verdict line) is quoted',
+           any(x.startswith('SKY GARDEN ON dac02fb9') and x.endswith('control W w146_00 STOP') and
+               'warm-up V i146_v WARMUP VERDICT i146_v: FAIL (x)' in x for x in o19c))
+o19b = S.summary(str(R16), SH6, None)[0]
+ok &= case('F19b without score_i146_v.txt the Sky Garden line says so; the DATA lines name every made tag',
+           any(x.startswith('SKY GARDEN ON dac02fb9') and 'no WARMUP VERDICT line' in x for x in o19b) and
+           any(x.startswith('DATA stubs (F13; "Unresolved import stub called" log/stdout): w146_00 0/0; r146_01 0/0') for x in
+               o19b) and
+           'DATA asserts (F14; "ASSERT:" / "user_msg_param" lines, log and stdout): tags with != 0 (a row of the close in '
+           'register F): none' in o19b and
+           any(x.startswith('DATA DualSrcBlend control per W (supported=1 enabled=1 before the first GuestOut): w146_00 present')
+               for x in o19b))
+CEN = [x for x in S.summary(str(RF), SH6, None)[0] if x.startswith('CENSUS = ')]
+ok &= case('F20 the census header of 146 names v146_05..v146_19 and item 309 (l)(2)-(3); the re-check V are outside it',
+           len(CEN) == 1 and CEN[0].startswith('CENSUS = the V tags v146_05..v146_19, COLD first entries of never-entered levels '
+                                               'on dac02fb9 (item 309 (l)(2)-(3))'))
+REAL = 'C:/kyty/s146/log_i146_v.txt'
+if os.path.isfile(REAL):
+    sr = S.scan(REAL)
+    gp = sr['guestout']
+    ok &= case('F21 the real log of the warm-up i146_v (dac02fb9): one DualSrcBlend line 1/1 before the first GuestOut; 0 stub, '
+               '0 assert lines (positive control of the reader on the installed binary)',
+               len(sr['dual']) == 1 and sr['dual'][0][1] == (1, 1) and gp is not None and sr['dual'][0][0] < gp and
+               sr['stubcall'] == 0 and sr['asserts'] == 0)
+try:
+    ('\n'.join(f11 + S.fmt_entry(e12) + o13 + o17v + o19 + o19b + [out15, out15b, outA, outB, outC])).encode('cp1250',
+                                                                                                             errors='strict')
+    enc6 = True
+except UnicodeError:
+    enc6 = False
+ok &= case('F22 every line new in profile 146 is ASCII (strict cp1250)', enc6)

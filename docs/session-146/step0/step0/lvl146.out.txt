@@ -1,0 +1,64 @@
+lvl146 inventory C:/kyty/s141/step1b/inventory141_r2.md sha256 4e13daa41f94607929af4a2b6899c017c7ad44de94e246649781ac1a7817728c rows 114
+logs since 2026-09-30 (> 1 MB): 778 files, 76.8 GB
+unreadable logs: 0 []
+names with an entry line since 2026-09-30: 38
+  entered  in 234 logs, first C:/kyty/KytyPS5/ps5 em/_kyty.prev.txt
+  entered big_hand_pirate_island in 9 logs, first C:/kyty/f287/f3d/fx/real/log_f3d_c1.txt
+  entered bonus_path_maker_mix in 2 logs, first C:/kyty/s145/log_v145_14.txt
+  entered booster_construction in 2 logs, first C:/kyty/s143/log_v143_02.txt
+  entered booster_magic_lamp in 2 logs, first C:/kyty/s143/log_v143_09.txt
+  entered bumper_enemy_snowy_canyon in 3 logs, first C:/kyty/s142/log_c142_01.txt
+  entered cymbal_party_land in 2 logs, first C:/kyty/s145/log_v145_16.txt
+  entered enemy_bird in 2 logs, first C:/kyty/s145/log_v145_15.txt
+  entered enemy_chameleon in 2 logs, first C:/kyty/s145/log_v145_13.txt
+  entered enemy_final in 2 logs, first C:/kyty/s145/log_v145_17.txt
+  entered enemy_gorilla in 3 logs, first C:/kyty/s142/log_c142_10.txt
+  entered enemy_snake in 2 logs, first C:/kyty/s145/log_v145_08.txt
+  entered enemy_taco in 2 logs, first C:/kyty/s145/log_v145_04.txt
+  entered final_stage in 5 logs, first C:/kyty/s145/log_v145_06.txt
+  entered gulliver_island in 2 logs, first C:/kyty/s143/log_v143_06.txt
+  entered hoover_beach in 13 logs, first C:/kyty/p283/lead/p10chk/log_pc_hoover_beach.txt
+  entered ice_iceberg in 4 logs, first C:/kyty/s142/log_c142_05.txt
+  entered intro_next in 2 logs, first C:/kyty/s134/log_s3s134.txt
+  entered jack_in_the_box in 2 logs, first C:/kyty/s145/log_v145_05.txt
+  entered light_gadget_graveyard in 2 logs, first C:/kyty/s145/log_v145_09.txt
+  entered mini_astro_clock_tower in 3 logs, first C:/kyty/f287/f6e/fx/real/log_f6e_c2.txt
+  entered mini_giants_garden in 8 logs, first C:/kyty/f287/f4c/log_f4c_g.txt
+  entered mini_rocket_chain in 2 logs, first C:/kyty/s145/log_v145_12.txt
+  entered path_maker_mana_tree in 2 logs, first C:/kyty/s143/log_v143_04.txt
+  entered picup_light in 2 logs, first C:/kyty/s145/log_v145_07.txt
+  entered pot_treasure_cave in 3 logs, first C:/kyty/s143/log_v143_08.txt
+  entered rocket_hourglass in 5 logs, first C:/kyty/s143/log_v143_07.txt
+  entered rocket_space_station in 2 logs, first C:/kyty/s143/log_v143_10.txt
+  entered shuriken_ninja_castle in 3 logs, first C:/kyty/s145/log_v145_10.txt
+  entered small_pot_lava in 2 logs, first C:/kyty/s145/log_v145_02.txt
+  entered spin_drill_natural_cave in 2 logs, first C:/kyty/s145/log_v145_03.txt
+  entered sponge_dirty_bath in 13 logs, first C:/kyty/p283/lead/p10chk/log_pc_sponge_dirty_bath.txt
+  entered spring_punch_monster_cave in 2 logs, first C:/kyty/s143/log_v143_05.txt
+  entered spring_punch_sky_aztec in 6 logs, first C:/kyty/s143/log_v143_01.txt
+  entered timestop_casino in 6 logs, first C:/kyty/f287/f6e/fx/real/log_f6e_c1.txt
+  entered underwater_aerial_garden in 99 logs, first C:/kyty/KytyPS5/ps5 em/_kyty.prev.txt
+  entered volcano_mountain in 3 logs, first C:/kyty/s142/log_c142_08.txt
+  entered voxel_world in 8 logs, first C:/kyty/f287/f3d/fx/real/log_f3d_c2.txt
+non-scenes of item 217 (g): 12 ['ui_pause_next', 'ui_pause_hub', 'ui_pause_simple', 'ui_pause_cinematics', 'ps_logo', 'team_logo', 'bot_character_data', 'astro_skin_data', 'controller_skin_data', 'ui_photo_mode', 'ui_blueprint', 'ui_camera_reset']
+inventory column "entry" = net: 105
+reading (A): never-entered scene levels (with final_shooting) 59 - item 309 (d) says 59 -> ok
+reading (B) (letter alone, inventory column ignored): pool 64; first 15 differ from (A): ['title_controller_ship', 'worldmap', 'hub_crashsite', 'penguin_atlantis', 'time_stopper_ghost_world', 'rotating_level_day_and_night']
+LIST146 (reading A, map order):
+  v146_05/w146_05  map   4  Meta           robot_builder_next
+  v146_06/w146_06  map   5  Meta           interactive_credit_00
+  v146_07/w146_07  map   6  Meta           non_interactive_credit
+  v146_08/w146_08  map   7  Meta           ending_boss_after_credit
+  v146_09/w146_09  map  14  Meta           collectible_viewer
+  v146_10/w146_10  map  22  Hub            hub_crashsite_diorama
+  v146_11/w146_11  map  23  Hub            diorama_controller_skin
+  v146_12/w146_12  map  24  Hub            diorama_astro_skin
+  v146_13/w146_13  map  25  Hub            diorama_zoo
+  v146_14/w146_14  map  60  Mini Levels    fragile_battle_1
+  v146_15/w146_15  map  61  Mini Levels    voxel_challenge_1
+  v146_16/w146_16  map  62  Mini Levels    armadillo_challenge_1
+  v146_17/w146_17  map  63  Mini Levels    fragile_battle_2
+  v146_18/w146_18  map  64  Mini Levels    voxel_challenge_2
+  v146_19/w146_19  map  65  Mini Levels    fragile_battle_3
+LIST146 names: robot_builder_next interactive_credit_00 non_interactive_credit ending_boss_after_credit collectible_viewer hub_crashsite_diorama diorama_controller_skin diorama_astro_skin diorama_zoo fragile_battle_1 voxel_challenge_1 armadillo_challenge_1 fragile_battle_2 voxel_challenge_2 fragile_battle_3
+ALL DONE

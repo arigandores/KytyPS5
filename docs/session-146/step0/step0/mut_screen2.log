@@ -1,0 +1,28 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s146\sc146.py sha256 baecbd6da2054471e9009e32f35113df72c31d0416a255532091eb617bf1cf97
+test    C:\kyty\s146\test_sc146.py sha256 6ef95d412cda54d0b8b14273c1f2b453c5cbf16b57f71f2d130a246958b3934e
+mutants C:\kyty\s146\mut_sc146.py sha256 03a85f540d4874fb322feb3a7a7c132c10a35a856587bd7cdf782ccd3ccb661e
+mutants: format list, 793 defined (strict: every use of MUTANTS checked; statements evaluated at lines 96)
+selection: --only, 4 mutants
+suite: family V; fast on (480 guarded updates of ok); end of suite: the final exit call at line 3613
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'manifest', 'mk143', 'mk144', 'mk145', 'mk146', 'mkrun', 'pair', 'pair143', 's6', 's7', 's8', 's9', 'sheet_case', 'w34', 'wstop', 'x144root', 'xroot'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 4 (spawn, one process per job), work dir C:\kyty\s146\mutwork_s\sc146_17840_1790927376
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.09 s in the baseline (50 of 511 calls validated; not validated: 288 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+BASELINE passed in 76.4 s (memo off); mutant timeout 229 s; workers 4
+[1/4] g_rx_tiles  KILLED by test line 3463  (25.6 s)
+[2/4] g_rx_dual  KILLED by PASS  (26.0 s)
+[3/4] b_ump_std  KILLED by test line 3445  (25.8 s)
+[4/4] u_sky_line  KILLED by test line 3578  (27.4 s)
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.09 s in the baseline (50 of 511 calls validated; not validated: 288 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (76.4 s)
+BASELINE#2  SURVIVED  (76.5 s)  [fixture replay validation]
+g_rx_dual  KILLED by PASS  (26.0 s)
+g_rx_tiles  KILLED by test line 3463  (25.6 s)
+b_ump_std  KILLED by test line 3445  (25.8 s)
+u_sky_line  KILLED by test line 3578  (27.4 s)
+4 mutants: 4 killed (0 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 0 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+early exit: 4 kill(s) ended at their first failing case; they skipped a median 3 % / mean 2 % of the suite's 540 checks, about 7.0 s of the baseline's suite time per job (28 s in all)
+wall 108.2 s, worker time 257.8 s, 4 workers
+ALL KILLED (4 of 4 selected mutants killed; 793 defined in the mutant script)

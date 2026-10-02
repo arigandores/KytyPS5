@@ -1,0 +1,42 @@
+f6e_read tag f6e_b1 level mini_astro_clock_tower KYTY_FIX_B9A=1 log sha256 7bd3efe7f0f7a0dd4b0e1f80d4452f5ae9ca4084e34e2620b375461a5fe4345d binary d8756dce0662fb31
+admit ok   one attempt [1]
+admit ok   guest args -lvl mini_astro_clock_tower [-lvl mini_astro_clock_tower]
+admit ok   KYTY_FIX_B9A=1 exactly (p.287(v)(5)) ['1']
+admit ok   KYTY_FIX_B26 not set (default of the binary) [None]
+admit ok   KYTY_FIX_B1B not set (default of the binary) [None]
+admit ok   KYTY_FIX_DUALSRC not set (default of the binary) [None]
+admit ok   KYTY_FIX_MINIMIZE not set (default of the binary) [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set (p.281(g)) [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_PRINT_NAMES not set (p.294(g) N4) [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   binary sha256 = F6c copy d8756dce (p.287(v)(5)) [d8756dce0662fb31]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   video KYTY_REC rec_f6e_b1.mp4 (form V sc144) [C:\kyty\f287\f6e\rec_f6e_b1.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   precache by default (I10, p.306(g) B1): >= 1 line "PipelinePrecache: <N> recipes ->" OR (>= 1 "PipelinePrecache: no <variant dir>\pipelines.bin yet" AND >= 1 "PipelinePrecache: saved <N> recipes") in the log (form V sc144, p.281(g)) [recipes-> 1, no-variant 0, saved 0]
+form (p.290(b)(2)): FixB9a: on lines 1 (want 1) -> ok
+member of the executor [I]: translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b'] (defaults of the binary)
+window lines: minimized 0, restored 0, resized 0, size changed 0, lost keyboard focus 0, Recovering Vulkan swapchain 0 -> none
+entered True first scene frame (201, 16744, 862) scene change False
+hold: sum dt after the first scene frame 128.8 s (named 120), json hold_s 125.1, hold_exit None
+stubs (log only, p.294(v)): lines "Unresolved import stub called [" 0 (parsed 0); AudioPropagation_v1 0 []
+stubs by library []; by symbol (F13) []
+stdout printf stub lines (not added, p.294(v)): 0
+counter lines "AudioPropagation: calls" 51; last {'SourceSetAttributes': 0, 'SourceRender': 0, 'SourceCreate': 0, 'SourceDestroy': 0, 'handles': 36, 'total': 11008}
+frequency (p.287(v)(3)): L0 (18705176, 0, 44) L1 (131897576, 0, 11008) delta SourceCreate 0 rows 3657 -> 0.0000 per frame (< 0.1)
+wake control (SourceSetAttributes >= 1 or SourceRender >= 1, last counter line): False
+p.294(b): ASSERT: lines log 0 stdout 0 []; user_msg_param lines log 0 (stdout 0, information)
+death markers 0 []
+K2 frames after the first scene frame 0; K3 entry window 1; K3 hold 0 []
+K3 hold within 120 s of shown time after the first scene frame (variant of the executor [I]): 0
+mean dt_us after the first scene frame (a number, not a gate): 34483.7
+video: frames 3968 glitches 0 sheet_f6e_b1.png True; lead sheet reference C:/kyty/s143/sheet_v143_03.png
+F6E VERDICT f6e_b1: PASS

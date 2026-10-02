@@ -1,0 +1,214 @@
+{
+ "tag": "f6e_a1",
+ "cfg": {
+  "level": "timestop_casino",
+  "fix": "1",
+  "mech": true,
+  "ref": null,
+  "base": "f6e_a1",
+  "suffix": ""
+ },
+ "log_sha": "04127ee76396cbf726263ca4a1c082405e48d4fe8f3b4c0ed3b9fdab0e615780",
+ "binary": "d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "guest args -lvl timestop_casino",
+   true,
+   "-lvl timestop_casino"
+  ],
+  [
+   "KYTY_FIX_B9A=1 exactly (p.287(v)(5))",
+   true,
+   "'1'"
+  ],
+  [
+   "KYTY_FIX_B26 not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (p.281(g))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set (p.294(g) N4)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "binary sha256 = F6c copy d8756dce (p.287(v)(5))",
+   true,
+   "d8756dce0662fb31"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "video KYTY_REC rec_f6e_a1.mp4 (form V sc144)",
+   true,
+   "C:\\kyty\\f287\\f6e\\rec_f6e_a1.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 line \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log (form V sc144, p.281(g))",
+   true,
+   "recipes-> 1, no-variant 0, saved 2"
+  ]
+ ],
+ "admitted": true,
+ "fixon": 1,
+ "form_ok": true,
+ "tcache": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b"
+ ],
+ "win": {
+  "minimized": 0,
+  "restored": 0,
+  "resized": 0,
+  "size changed": 0,
+  "lost keyboard focus": 0
+ },
+ "recovering": 0,
+ "winev": false,
+ "stub_lines": 0,
+ "stub_parsed": 0,
+ "stub_by_sym": {},
+ "stub_by_lib": {},
+ "stub_ap": {},
+ "stub_ap_lines": 0,
+ "stub_std": 0,
+ "calls_lines": 225,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "assert_first": [],
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "entered": true,
+ "first": [
+  205,
+  20535,
+  302
+ ],
+ "hold_s": 126.978127,
+ "hold_s_json": 125.2,
+ "hold_exit": null,
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "rips": [],
+ "k2": 0,
+ "k3_window": 0,
+ "k3_hold": 1,
+ "k3_hold_rows": [
+  [
+   2566,
+   160676
+  ]
+ ],
+ "k3_hold120": 1,
+ "mean_dt_us": 17764.147593732512,
+ "freq": {
+  "l0": [
+   20242277,
+   0,
+   44
+  ],
+  "l1": [
+   228991932,
+   48,
+   53504
+  ],
+  "d_create": 48,
+  "rows": 7148,
+  "freq": 0.006715165081141578,
+  "var": null
+ },
+ "wake": true,
+ "last_calls": {
+  "SourceSetAttributes": 11482,
+  "SourceRender": 6954,
+  "SourceCreate": 48,
+  "SourceDestroy": 48,
+  "handles": 84,
+  "total": 53504
+ },
+ "glitch": {
+  "video_frames": 7363,
+  "glitches": 0
+ },
+ "sheet": true,
+ "verdict": "PASS",
+ "why": []
+}

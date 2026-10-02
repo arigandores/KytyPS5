@@ -1,0 +1,73 @@
+2026-10-02T16:32:20Z F6e (HPP-377) wake issue_blockers_resolved (HPP-389 done): port to seal 03 without game - go_f6e.sh returns installed dac02fb9 (pinned C:/kyty/s146/kyty_emulator_dac02fb9.exe) by sha, win_f6e + HPP-388/HPP-389 done, HPP-393 (P21) yield (p.309(l)(5), p.322(g)); seal-02 files backed up in seal02_bak/
+2026-10-02T16:36:17Z F6e (HPP-377) seal 03 pred/03_f6e.md written at 2026-10-02T16:36:16Z by mk_seal_f6e3.py (p.309(l)(5), p.322(g), KytyPS5 dd510288): sha256 69aa023b0e7b6c75c42df513f3c9c6673a0f0a417338ded01848f53df9b842ac; check-seal check-seal OK; suites test_f6e_read 221/0 out 070ebaf0cc835b3c, test_go_f6e 74/0 out a3aa6b921bb23ab2
+2026-10-02T16:36:46Z F6e (HPP-377) series 2 start comment posted; window > open; STOP absent, no lock -> next_f6e.sh
+2026-10-02T16:36:54Z F6e next_f6e STOP absent, no lock; call: PLWAIT=540 bash C:/kyty/f287/f6e/go_f6e.sh series
+2026-10-02T16:38:39Z F6e go_f6e pre-lock idle142 IDLE after 0 s of wait
+2026-10-02T16:38:58Z F6e go_f6e lock window (p.287(d)): win_f6e HPP-376 done run None; HPP-353 done run None; HPP-388 done run None; HPP-389 done run None; HPP-357 done run None; HPP-370 done run None; HPP-352 done run None; HPP-364 done run None; HPP-393 blocked run None -> open
+2026-10-02T16:38:58Z F6e go_f6e lock taken (winpid 53812)
+2026-10-02T16:38:59Z F6e go_f6e installed build at the start of the series sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e (BUILD_EXPECT dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e; returned to it by sha, p.309(l)(5))
+2026-10-02T16:39:05Z F6e go_f6e shader cache before the series: files 1961 bytes 337556319 listsha ec8d52c1d5d912b6e89f6d6ec4942dc9b582135bebd6e0ab6695fdc8567d26ad; dirs [variant_fixb26_fixb1b,] sha c0cdc28cae7c1d92; cachesig .: files 1345 sig 1693ffd7=1,2db9065a=24,646b501f=5,699c1e4b=875,780ea8ac=438,8347ce22=1 other 1; variant_fixb26_fixb1b: files 616 sig 56189185=615 other 1; files of signature 56189185: 615
+2026-10-02T16:39:08Z F6e go_f6e shader cache copy = before (C:/kyty/f287/f6e/cache_snap)
+2026-10-02T16:39:11Z F6e go_f6e cache manifest before the series: cachemf143: shader 1961 files 337556319 bytes; pipeline 4 files 176648821 bytes; glcache 16 files 121559772 bytes; cache_series.before.json sha256 b750aa09da04305e031c3f1e0cf42f367f6c7381f9a9117dd626c4d443fde736
+2026-10-02T16:39:12Z F6e go_f6e GLCache before the series: files 16 bytes 121559772 listsha ff2bd8d663761c793c7c717779d69c7e90b2e62bd504ca430fc873d41c832488 (copy equal, GLRESTORE=1)
+2026-10-02T16:39:12Z F6e go_f6e installed fix binary sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:39:13Z F6e go_f6e f6e_w1 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:39:16Z F6e go_f6e f6e_w1 idle142 IDLE after 0 s of wait
+2026-10-02T16:39:16Z F6e go_f6e f6e_w1 enter_scene start (level timestop_casino, hold 60, extra 'KYTY_FIX_B9A=0', rec '')
+2026-10-02T16:40:45Z F6e go_f6e f6e_w1 enter_scene end rc 0 log_f6e_w1.txt sha256 2afd178370c371577d9a7b587e2b4b7a79a3bb9da85e56ec7ad5d42e7ca071ae
+2026-10-02T16:40:46Z F6e go_f6e f6e_w1 warm-up (not read, p.306(g) B2): death/window lines 0 -> continue: warm-up f6e_w1 not read (p.306(g) B2)
+2026-10-02T16:40:46Z F6e go_f6e f6e_w2 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:40:48Z F6e go_f6e f6e_w2 idle142 IDLE after 0 s of wait
+2026-10-02T16:40:49Z F6e go_f6e f6e_w2 enter_scene start (level mini_astro_clock_tower, hold 60, extra 'KYTY_FIX_B9A=0', rec '')
+2026-10-02T16:42:19Z F6e go_f6e f6e_w2 enter_scene end rc 0 log_f6e_w2.txt sha256 f438ffac6f35f331795ed2357ed122a84111c8873751bd19b455b5e82b760b3e
+2026-10-02T16:42:19Z F6e go_f6e f6e_w2 warm-up (not read, p.306(g) B2): death/window lines 0 -> continue: warm-up f6e_w2 not read (p.306(g) B2)
+2026-10-02T16:42:20Z F6e go_f6e f6e_a1 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:42:23Z F6e go_f6e f6e_a1 idle142 IDLE after 0 s of wait
+2026-10-02T16:42:24Z F6e go_f6e f6e_a1 enter_scene start (level timestop_casino, hold 125, extra 'KYTY_FIX_B9A=1', rec '--rec')
+2026-10-02T16:44:56Z F6e go_f6e f6e_a1 enter_scene end rc 0 log_f6e_a1.txt sha256 04127ee76396cbf726263ca4a1c082405e48d4fe8f3b4c0ed3b9fdab0e615780
+2026-10-02T16:45:14Z F6e go_f6e f6e_a1 s51_vidglitch rc 0 glitch_f6e_a1.txt sha256 412598eb7dcfbdab68f29136b5c8c88df8b2ffaa6e1dfb252686f25997d1be4b rec_f6e_a1.mp4 sha256 7cca05376cc0a6909f5ec8acd5f9d9053a67bed65074a39bea05557ce5a062a1
+2026-10-02T16:45:28Z F6e go_f6e f6e_a1 sheet rc 0 sheet_f6e_a1.png sha256 7b662a6d2d3693657a3a3e8c41d5d5def9fc0eb388d6c2ad145ab9fa831a6506
+2026-10-02T16:45:30Z F6e go_f6e f6e_a1 reader rc 0 score_f6e_a1.txt sha256 1282cba683bc5826ab35bcaadef2334d7540581bf8e17553e832b6c71f600ae1: F6E VERDICT f6e_a1: PASS;
+2026-10-02T16:45:30Z F6e go_f6e f6e_a1 stop check (enter_scene rc 0): continue: PASS 
+2026-10-02T16:45:32Z F6e go_f6e f6e_a2 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:45:35Z F6e go_f6e f6e_a2 idle142 IDLE after 0 s of wait
+2026-10-02T16:45:35Z F6e go_f6e f6e_a2 enter_scene start (level timestop_casino, hold 125, extra 'KYTY_FIX_B9A=1', rec '--rec')
+2026-10-02T16:48:06Z F6e go_f6e f6e_a2 enter_scene end rc 0 log_f6e_a2.txt sha256 3925f46a1c1c3292cd4002a21ed75896adb8827897ba87cbfcbae6e588bbea08
+2026-10-02T16:48:25Z F6e go_f6e f6e_a2 s51_vidglitch rc 0 glitch_f6e_a2.txt sha256 6d49b25197d8e751aadf14fab903c095d64da0abe64fcdc8512718f8c3b862d7 rec_f6e_a2.mp4 sha256 7c28bffd63c644a869b33a7901fbe93ed959c1b47d9d3de239d62f62ca4edef1
+2026-10-02T16:48:38Z F6e go_f6e f6e_a2 sheet rc 0 sheet_f6e_a2.png sha256 13c310bded6d83f3e456c9c6ce90b39e65ee98e61326c65dc4ca0c068c1c13c5
+2026-10-02T16:48:40Z F6e go_f6e f6e_a2 reader rc 0 score_f6e_a2.txt sha256 3e359b6c7fbb50858e7f184a20814b6db9e805829678d2458efc3dd031b0ad27: F6E VERDICT f6e_a2: PASS;
+2026-10-02T16:48:40Z F6e go_f6e f6e_a2 stop check (enter_scene rc 0): continue: PASS 
+2026-10-02T16:48:42Z F6e go_f6e f6e_b1 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:48:44Z F6e go_f6e f6e_b1 idle142 IDLE after 0 s of wait
+2026-10-02T16:48:44Z F6e go_f6e f6e_b1 enter_scene start (level mini_astro_clock_tower, hold 125, extra 'KYTY_FIX_B9A=1', rec '--rec')
+2026-10-02T16:51:16Z F6e go_f6e f6e_b1 enter_scene end rc 0 log_f6e_b1.txt sha256 7bd3efe7f0f7a0dd4b0e1f80d4452f5ae9ca4084e34e2620b375461a5fe4345d
+2026-10-02T16:51:27Z F6e go_f6e f6e_b1 s51_vidglitch rc 0 glitch_f6e_b1.txt sha256 68489ec1ae25814e518bc20415b784b0f923d4c439de81ed310d15e46404dd54 rec_f6e_b1.mp4 sha256 649b86a6b78d4bb0b64bdddd758f5841503636158be62ab1d61ce5e61cd1701b
+2026-10-02T16:51:33Z F6e go_f6e f6e_b1 sheet rc 0 sheet_f6e_b1.png sha256 4fab48d913182559ed55ad4dd85167df7399a6926ffc5107b5bf92227e1eaac0
+2026-10-02T16:51:35Z F6e go_f6e f6e_b1 reader rc 0 score_f6e_b1.txt sha256 3516d5e87c2d7e97d1ae070e00e09ac68db19df0c42bec3b04ff809bb31f0502: F6E VERDICT f6e_b1: PASS;
+2026-10-02T16:51:35Z F6e go_f6e f6e_b1 stop check (enter_scene rc 0): continue: PASS 
+2026-10-02T16:51:37Z F6e go_f6e f6e_c1 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:51:39Z F6e go_f6e f6e_c1 idle142 IDLE after 0 s of wait
+2026-10-02T16:51:40Z F6e go_f6e f6e_c1 enter_scene start (level timestop_casino, hold 125, extra 'KYTY_FIX_B9A=0', rec '--rec')
+2026-10-02T16:54:10Z F6e go_f6e f6e_c1 enter_scene end rc 0 log_f6e_c1.txt sha256 d41cdfdb95dcd2360663fb1c4e078fe8324eec7f5bae16906e2042b41dfd7a61
+2026-10-02T16:54:29Z F6e go_f6e f6e_c1 s51_vidglitch rc 0 glitch_f6e_c1.txt sha256 f6cfa25e414fc1757e3409aa70ed3f68b58a1e6c11b5140965be1a3f7c38d1f6 rec_f6e_c1.mp4 sha256 a32cb75f6f008cf1ed608fa4fb3c185337b358670b889de46e9271aaae85910f
+2026-10-02T16:54:42Z F6e go_f6e f6e_c1 sheet rc 0 sheet_f6e_c1.png sha256 421138b9174e646c909bf025df820a1deeb37dc64d70e141d15bbbebe6e4e5ad
+2026-10-02T16:54:44Z F6e go_f6e f6e_c1 reader rc 0 score_f6e_c1.txt sha256 3ff35117d5dcf20bddc7293a8dab74c1116e322d0b76967687e1f82cbb69f38f: F6E VERDICT f6e_c1: CONTROL OK;
+2026-10-02T16:54:44Z F6e go_f6e f6e_c1 stop check (enter_scene rc 0): continue: CONTROL OK 
+2026-10-02T16:54:44Z F6e go_f6e f6e_c2 binary check ok: copy and installed sha256 d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d
+2026-10-02T16:54:47Z F6e go_f6e f6e_c2 idle142 IDLE after 0 s of wait
+2026-10-02T16:54:47Z F6e go_f6e f6e_c2 enter_scene start (level mini_astro_clock_tower, hold 125, extra 'KYTY_FIX_B9A=0', rec '--rec')
+2026-10-02T16:57:22Z F6e go_f6e f6e_c2 enter_scene end rc 0 log_f6e_c2.txt sha256 8fd8c0095fbd30499bdeceacaaa336a34df490f46ab0fe60c9ca53402f53b027
+2026-10-02T16:57:32Z F6e go_f6e f6e_c2 s51_vidglitch rc 0 glitch_f6e_c2.txt sha256 8c7ca33969b621df04d3942c12f555a4bf624839fcc16675d7ed349bd198de38 rec_f6e_c2.mp4 sha256 d9502be9b75f1fa2497db1e6547523a1ef64089ab212a9bb210d6d626adca962
+2026-10-02T16:57:39Z F6e go_f6e f6e_c2 sheet rc 0 sheet_f6e_c2.png sha256 23e08516158e4ab602ee4aa18a4639af2f233dd0db7df662609609583ff337ff
+2026-10-02T16:57:41Z F6e go_f6e f6e_c2 reader rc 0 score_f6e_c2.txt sha256 a9a5d5def01c5e37a1978f8f072fac55b6453869c3aedf8bb521b48a6f0906fd: F6E VERDICT f6e_c2: CONTROL OK;
+2026-10-02T16:57:41Z F6e go_f6e f6e_c2 stop check (enter_scene rc 0): continue: CONTROL OK 
+2026-10-02T16:57:49Z F6e go_f6e K3 repeats (p.287(v)(5), executor line): repeat: none
+2026-10-02T16:57:58Z F6e go_f6e summary rc 0 summary_f6e.txt sha256 95b990e048f775941e0408bdd8501bdd6c3b08ee2d05e51db1c75ad66bb0929a: F6E SERIES VERDICT p.287(v)(5)-(7) + p.294(b): PASS; =1 f6e_a1=PASS, f6e_a2=PASS, f6e_b1=PASS; controls CONTROL OK, CONTROL OK
+2026-10-02T16:57:58Z F6e go_f6e restore binary ok sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+2026-10-02T16:58:02Z F6e go_f6e shader cache at the end of the series (before the return): files 1983 bytes 342903857 listsha e2a8bcdc1e6e24405ce5ea32cea9483df9b16dcb9403aa54bf7073791b83786c; dirs [variant_fixb26_fixb1b,] sha c0cdc28cae7c1d92; cachesig .: files 1345 sig 1693ffd7=1,2db9065a=24,646b501f=5,699c1e4b=875,780ea8ac=438,8347ce22=1 other 1; variant_fixb26_fixb1b: files 638 sig 56189185=637 other 1; files of signature 56189185: 637
+2026-10-02T16:58:08Z F6e go_f6e shader cache returned: files 1961 bytes 337556319 listsha ec8d52c1d5d912b6e89f6d6ec4942dc9b582135bebd6e0ab6695fdc8567d26ad = before; dirs [variant_fixb26_fixb1b,] sha c0cdc28cae7c1d92 = before (p.287(d)); run cache kept in C:/kyty/f287/f6e/cache_run/20261002T165802Z
+2026-10-02T16:58:10Z F6e go_f6e cache manifest after the series (before any GLCache return): cachemf143: shader 1961 files 337556319 bytes; pipeline 4 files 176648821 bytes; glcache 16 files 121559772 bytes; cache_series.after.json sha256 c56bfce34a2b67ea37006cf9b1cff0cd06a188e8829604b081a47af467c82e73
+2026-10-02T16:58:12Z F6e go_f6e GLCache returned: files 16 bytes 121559772 listsha ff2bd8d663761c793c7c717779d69c7e90b2e62bd504ca430fc873d41c832488 = before
+2026-10-02T16:58:23Z F6e go_f6e lock released (rc 0)
+2026-10-02T16:58:24Z F6e go_f6e series call returned rc=0
+2026-10-02T16:58:48Z F6e (HPP-377) pair sheets for the lead (reference on top, F6e below, ffmpeg vstack): 8c507a8e2d9386cf *pair_f6e_a2_vs_c142_03.png;ccda1d92804453b2 *pair_f6e_b1_vs_v143_03.png;

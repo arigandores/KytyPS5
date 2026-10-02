@@ -79,7 +79,14 @@ check('window closed or unknown -> busy', '*"-> open") ;;' in src and 'busy "loc
 check('seq of p.287(v)(5)', 'SEQ="f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2"\n' in src)
 check('every possible tag guarded by the one-attempt rule', 'ALLT="f6e_w1 f6e_w2 f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2 f6e_a1f f6e_a2f f6e_b1f f6e_c1f f6e_c2f f6e_a1r f6e_a2r f6e_b1r"\n' in src
       and 'for C in $ALLT; do' in src)
-check('seal 02 (p.306(g))', 'PRED="pred/02_f6e.md"\n' in src and 'pred/01_f6e.md' not in src)
+check('seal 03 (p.309(l)(5))', 'PRED="pred/03_f6e.md"\n' in src and 'pred/01_f6e.md' not in src and 'pred/02_f6e.md' not in src)
+check('installed build to return = dac02fb9 shipment binary, pinned copy of session 146 (p.309(l)(5), p.300(b))',
+      'BUILD_EXPECT="dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e"\n' in src
+      and 'BUILD_PINNED="/c/kyty/s146/kyty_emulator_dac02fb9.exe"\n' in src and '9235a7ac' not in body)
+check('installed sha checked before the lock and written inside the lock', src.index('the installed $GAME is not $BUILD_EXPECT before the series')
+      < src.index('set -o noclobber') < src.index('tl "installed build at the start of the series sha256 $(sha "$GAME")')
+      < src.index('trap finish EXIT'))
+check('restore compares to BUILD_EXPECT', 'cp "$BUILD_PINNED" "$GAME" 2>/dev/null && [ "$(sha "$GAME")" = "$BUILD_EXPECT" ]' in src)
 check('warm-up tags and hold (p.306(g) B2)', 'WARM="f6e_w1 f6e_w2"\n' in src and 'HOLDW="60"\n' in src)
 b = case_body(src, 'f6e_w1')
 check('w1: timestop_casino =0, no video, hold HOLDW', 'LV=$TC; EXTRA="KYTY_FIX_B9A=0"; WU=1; RECF=""; HH=$HOLDW' in b, b)
@@ -129,7 +136,7 @@ def make(binf='', bexp='', glr='', pred=None):
     open(os.path.join(FX, 'go_f6e.sh'), 'wb').write(s.encode('ascii'))
     if pred is not None:
         os.makedirs(os.path.join(FX, 'pred'))
-        open(os.path.join(FX, 'pred', '02_f6e.md'), 'wb').write(pred.encode('ascii'))
+        open(os.path.join(FX, 'pred', '03_f6e.md'), 'wb').write(pred.encode('ascii'))
 
 
 def run(*args, env_add=None):
@@ -161,6 +168,8 @@ check('DRY with the seal line rc 0', rc == 0 and out.startswith('DRY series'), (
 check('DRY plan names the knob values, precache default and the window', 'KYTY_FIX_B9A=1' in out and 'KYTY_FIX_B9A=0' in out and
       'win_f6e' in out and 'cachesig_f6e' in out and '--repeats' in out, out)
 check('DRY plan names the warm-ups and HPP-353 (p.306(d), (g))', 'warm-up f6e_w1' in out and 'f6e_w2' in out and 'HPP-353' in out, out)
+check('DRY plan names HPP-388, HPP-389, HPP-393 and the installed build check (seal 03)', 'HPP-388' in out and 'HPP-389' in out
+      and 'HPP-393' in out and 'installed build sha' in out, out)
 rc, out = run('series', env_add=dict(DRY='1', PLWAIT='100'))
 check('PLWAIT other than the seal rc 1', rc == 1, (rc, out))
 rc, out = run('series', env_add=dict(DRY='1', PLWAIT='600'))

@@ -3,10 +3,12 @@ F5c and FSc first; general rule 27; p.277(g)).  Port of C:/kyty/f287/f3d/win_f3d
 Open only when, by the API answer right before the lock:
   HPP-376 (F6d, code review)                              status done and executionRunId empty
   HPP-353 (audit of session 145, p.306(d) of seal 02)     status done and executionRunId empty
+  HPP-388, HPP-389 (session 146 runs and audit, p.309(l)(5); seal 03)  status done and executionRunId empty
   HPP-357 (F5c, track F runs - first inside F)            status done or in_review and executionRunId empty
   HPP-370 (FSc, track F runs - first inside F)            status done or in_review and executionRunId empty
   HPP-352 (run step of session 145 - before track F)      not todo / in_progress and executionRunId empty
   HPP-364 (P17, run link of track P - before track F)     not todo / in_progress and executionRunId empty
+  HPP-393 (P21, run link of track P - before track F, p.322(g); seal 03)  not todo / in_progress and executionRunId empty
 Prints one ASCII line 'win_f6e <issue> <status> run <id>; ... -> open|closed|error'.
 rc 0 open; rc 5 closed; rc 6 no answer (refuse - the window is not proven open).
   python win_f6e.py            (PAPERCLIP_API_URL, PAPERCLIP_API_KEY from the environment)
@@ -16,10 +18,10 @@ import os
 import sys
 import urllib.request
 
-NEED_DONE = ('HPP-376', 'HPP-353')
+NEED_DONE = ('HPP-376', 'HPP-353', 'HPP-388', 'HPP-389')
 NEED_DELIVERED = ('HPP-357', 'HPP-370')
 DELIVERED = ('done', 'in_review')
-YIELD_TO = ('HPP-352', 'HPP-364')
+YIELD_TO = ('HPP-352', 'HPP-364', 'HPP-393')
 YIELD_STATUS = ('todo', 'in_progress')
 ALL = NEED_DONE + NEED_DELIVERED + YIELD_TO
 

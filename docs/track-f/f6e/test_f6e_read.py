@@ -513,8 +513,20 @@ check('win audit HPP-353 in_progress closed (p.306(d))', W.decide(s) == (5, 'clo
 s = dict(ok)
 s['HPP-353'] = ('in_review', None)
 check('win audit HPP-353 in_review closed (needs done)', W.decide(s) == (5, 'closed'))
-check('win names F6d, audit s145, F5c, FSc, session run step, P17', W.NEED_DONE == ('HPP-376', 'HPP-353') and set(W.NEED_DELIVERED) == {'HPP-357', 'HPP-370'}
-      and set(W.YIELD_TO) == {'HPP-352', 'HPP-364'})
+check('win names F6d, audit s145, s146 runs and audit, F5c, FSc, session run step, P17, P21',
+      W.NEED_DONE == ('HPP-376', 'HPP-353', 'HPP-388', 'HPP-389') and set(W.NEED_DELIVERED) == {'HPP-357', 'HPP-370'}
+      and set(W.YIELD_TO) == {'HPP-352', 'HPP-364', 'HPP-393'})
+for i in ('HPP-388', 'HPP-389'):
+    for st in ('in_progress', 'in_review', 'blocked', 'todo'):
+        s = dict(ok)
+        s[i] = (st, None)
+        check('win s146 %s %s closed (needs done, p.309(l)(5))' % (i, st), W.decide(s) == (5, 'closed'))
+    s = dict(ok)
+    s[i] = ('done', 'run-3')
+    check('win s146 %s done with a run closed' % i, W.decide(s) == (5, 'closed'))
+s = dict(ok)
+s['HPP-393'] = ('in_progress', None)
+check('win P21 in_progress closed (P > F, p.322(g))', W.decide(s) == (5, 'closed'))
 pw = subprocess.run([sys.executable, os.path.join(HERE, 'win_f6e.py')], capture_output=True,
                     env={k: v for k, v in os.environ.items() if not k.startswith('PAPERCLIP_') and k != 'PYTHONIOENCODING'})
 check('win without API env refuses rc 6, ASCII line (cp1250)', pw.returncode == 6 and pw.stdout.decode('cp1250').startswith('win_f6e HPP-376 None'), pw)

@@ -1,0 +1,202 @@
+{
+ "tag": "f6e_c2",
+ "cfg": {
+  "level": "mini_astro_clock_tower",
+  "fix": "0",
+  "mech": false,
+  "ref": null,
+  "base": "f6e_c2",
+  "suffix": ""
+ },
+ "log_sha": "8fd8c0095fbd30499bdeceacaaa336a34df490f46ab0fe60c9ca53402f53b027",
+ "binary": "d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d",
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "guest args -lvl mini_astro_clock_tower",
+   true,
+   "-lvl mini_astro_clock_tower"
+  ],
+  [
+   "KYTY_FIX_B9A=0 exactly (p.287(v)(5))",
+   true,
+   "'0'"
+  ],
+  [
+   "KYTY_FIX_B26 not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_B1B not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_DUALSRC not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_FIX_MINIMIZE not set (default of the binary)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (p.281(g))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set (p.294(g) N4)",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "binary sha256 = F6c copy d8756dce (p.287(v)(5))",
+   true,
+   "d8756dce0662fb31"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "video KYTY_REC rec_f6e_c2.mp4 (form V sc144)",
+   true,
+   "C:\\kyty\\f287\\f6e\\rec_f6e_c2.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 line \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log (form V sc144, p.281(g))",
+   true,
+   "recipes-> 1, no-variant 0, saved 0"
+  ]
+ ],
+ "admitted": true,
+ "fixon": 0,
+ "form_ok": true,
+ "tcache": [
+  "_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b"
+ ],
+ "win": {
+  "minimized": 0,
+  "restored": 0,
+  "resized": 0,
+  "size changed": 0,
+  "lost keyboard focus": 0
+ },
+ "recovering": 0,
+ "winev": false,
+ "stub_lines": 1024,
+ "stub_parsed": 1024,
+ "stub_by_sym": {
+  "b-dYXrjSNZU": 2,
+  "WXMhENV2NcA": 1022
+ },
+ "stub_by_lib": {
+  "AudioPropagation_v1": 1024
+ },
+ "stub_ap": {
+  "b-dYXrjSNZU": 2,
+  "WXMhENV2NcA": 1022
+ },
+ "stub_ap_lines": 1024,
+ "stub_std": 1023,
+ "calls_lines": 0,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "assert_first": [],
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "entered": true,
+ "first": [
+  194,
+  19060,
+  879
+ ],
+ "hold_s": 128.779077,
+ "hold_s_json": 125.1,
+ "hold_exit": null,
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "rips": [],
+ "k2": 0,
+ "k3_window": 1,
+ "k3_hold": 0,
+ "k3_hold_rows": [],
+ "k3_hold120": 0,
+ "mean_dt_us": 35672.87451523546,
+ "freq": {
+  "l0": null,
+  "l1": null,
+  "d_create": null,
+  "rows": null,
+  "freq": null,
+  "var": "no counter line on the hold: < 256 library calls on 3610 hold rows -> SourceCreate per frame < 0.0709"
+ },
+ "wake": false,
+ "last_calls": null,
+ "glitch": {
+  "video_frames": 3834,
+  "glitches": 0
+ },
+ "sheet": true,
+ "verdict": "CONTROL OK",
+ "why": []
+}

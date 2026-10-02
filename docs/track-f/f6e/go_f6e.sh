@@ -1,7 +1,7 @@
 #!/bin/bash
 # Track F link F6e (HPP-377; ROADMAP "SESSION 122" item 287 (v)(5)-(7), (d); item 290 (b)(1)-(2); item 294 (b)-(g)): the runs of
 # item 287 (v)(5) on the copy of the F6c binary (B9a V1, d8756dce, PASS_WITH_FIXES of F6d without a code change) as ONE series
-# under ONE lock - the fix binary is installed once and the installed build 9235a7ac and the caches come back in the same
+# under ONE lock - the fix binary is installed once and the installed build (dac02fb9 since seal 03) and the caches come back in the same
 # command (EXIT trap), so no other run can meet the fix binary or the caches written by it.
 # Port of C:/kyty/f287/f3d/go_f3d.sh: lock first, guards, one attempt, seal call line, stop file, lock.log UTC, times lines,
 # cache copy/return by content lists and the variant directory list, GLCache copy/return, idle wait before every tag with one
@@ -13,6 +13,13 @@
 #   held to the end of the series and returned with the caches (B2 (3)).  A warm-up stops the series only on enter_scene
 #   rc != 0 or a death marker / window line in its log or stdout [I12].  I10 of the reader by B1.  The lock window also
 #   needs HPP-353 (audit of session 145) done (item 306 (d)).
+# SEAL 03 (ROADMAP item 309 (l)(5), item 300 (b), item 322 (g)): since step 0 of session 146 the INSTALLED build is the track F
+#   shipment binary dac02fb9 (pinned copy C:/kyty/s146/kyty_emulator_dac02fb9.exe), not 9235a7ac - the series checks the
+#   installed sha = BUILD_EXPECT before the lock, writes it as a times line inside the lock and returns exactly that build
+#   by sha in the EXIT trap.  The variant directory of signature 56189185 (variant_fixb26_fixb1b, written by the series
+#   sc146 on dac02fb9 - the same translation signature as the F6c copy) is part of the cache snapshot and comes back to its
+#   state before the series (item 309 (l)(5)).  Lock window: also HPP-388 and HPP-389 (session 146 runs and audit) done
+#   and HPP-393 (P21, run link of track P - before F) not waiting (item 322 (g): queue P > F > S after session 146).
 #   TAGS AND ORDER (item 287 (v)(5); one attempt each, a failure is data): form V of sc144 - no validation, precache by
 #     default (KYTY_PIPELINE_PRECACHE not passed, item 281 (g)), video (KYTY_REC), FrameTrace, hold HOLD s wall from "stable"
 #     (the reader: sum dt_us after the first scene frame >= 120 s):
@@ -40,7 +47,8 @@
 #     stop file C:/kyty/f287/STOP.
 #   LOCK WINDOW (item 287 (d)): right before the lock - no lock file, no stop file, by the API answer (win_f6e.py, a times line
 #     with the answer): HPP-376 done, HPP-357 (F5c) and HPP-370 (FSc) done or in_review, HPP-352 (session run step) and HPP-364
-#     (P17) neither todo nor in_progress, all without a run; else BUSY rc 4.
+#     (P17) neither todo nor in_progress, all without a run; else BUSY rc 4.  Seal 03: + HPP-388, HPP-389 done,
+#     HPP-393 (P21) neither todo nor in_progress.
 #   STOP FILE (general rule 26): C:/kyty/f287/STOP -> rc 4 before anything, before the lock and before every tag.
 #   THE SEAL'S CALL (item 105 (v)): the seal carries exactly one line "go_f6e call: PLWAIT=<n> bash
 #     C:/kyty/f287/f6e/go_f6e.sh series"; f6e_read.py --check-seal checks every "seal:" line before the lock.
@@ -55,15 +63,15 @@ ROOT=C:/kyty/f287/f6e
 LOCK=/c/kyty/SEALED_RUN.lock
 STOPF=/c/kyty/f287/STOP
 GAME="/c/kyty/KytyPS5/ps5 em/kyty_emulator.exe"
-BUILD_EXPECT="9235a7ac61f1affb684c6c4440fce2bdbc99d6131a91c50eefaccd8a32fc72b7"
-BUILD_PINNED="/c/kyty/s128/kyty_emulator_9235a7ac.exe"
+BUILD_EXPECT="dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e"
+BUILD_PINNED="/c/kyty/s146/kyty_emulator_dac02fb9.exe"
 BIN_F6E="C:/kyty/f287/bin/kyty_emulator_d8756dce.exe"
 BIN_EXPECT="d8756dce0662fb318a24a3fb52a3260d31ea84628372fa9a438ca46ed6a6e43d"
 SIGSTR="56189185f9e9f9a0ea5174f3f85206e6d099db3d"
 GLRESTORE="1"
 GATESHA="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
-PRED="pred/02_f6e.md"
+PRED="pred/03_f6e.md"
 CACHE="/c/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564"
 SNAP=$ROOT/cache_snap/PPSA21564
 GLSNAP=$ROOT/glcache_snap
@@ -133,7 +141,7 @@ if [ "$NL" != "1" ] || [ "$SEALPL" != "$PLWAIT" ]; then
   echo "PLWAIT differs from the seal"; exit 1
 fi
 if [ "${DRY:-0}" = "1" ]; then
-  echo "DRY series: tags $SEQ (+ one form repeat <tag>f on INVALID, + K3 repeats <tag>r by f6e_read --repeats after the controls); stop file?; lock?; PLWAIT=$PLWAIT; binary copy sha ($BIN_EXPECT) + strings FixB9a/AudioPropagation/$SIGSTR; procload --wait-s $PLWAIT; f6e_read --check-seal; cpu < 15; idle142 wait up to $IDLEMAX s; procload --wait-s 0; stop file?; window HPP-376 and HPP-353 done, HPP-357/HPP-370 done or in_review, HPP-352/HPP-364 not waiting (win_f6e); lock (lock.log UTC); shader cache content list + variant directory list + signature manifest (cachesig_f6e) + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F6E; warm-up f6e_w1 ($TC) and f6e_w2 ($MA) KYTY_FIX_B9A=0 hold $HOLDW no video NOT READ (stop on rc != 0, death or window lines; p.306(g) B2); per tag: stop file?, binary copy and installed sha = $BIN_EXPECT, idle142 wait (one retry of a BUSY refusal), enter_scene.py <tag> --level <L> --attempts 1 --stable-draws 100 --timeout 480 --no-install --require-idle --pred $ROOT/$PRED --rec --hold $HOLD (a1,a2: $TC KYTY_FIX_B9A=1; b1: $MA KYTY_FIX_B9A=1; c1: $TC KYTY_FIX_B9A=0; c2: $MA KYTY_FIX_B9A=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, s51_vidglitch 4 6 + sheet142, f6e_read --tag, f6e_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (content list and directory list = before), GLCache manifest after + restore (GLRESTORE=$GLRESTORE), fgcpu143 row, unlock; f6e_read --summary"
+  echo "DRY series: tags $SEQ (+ one form repeat <tag>f on INVALID, + K3 repeats <tag>r by f6e_read --repeats after the controls); stop file?; lock?; PLWAIT=$PLWAIT; binary copy sha ($BIN_EXPECT) + strings FixB9a/AudioPropagation/$SIGSTR; procload --wait-s $PLWAIT; f6e_read --check-seal; cpu < 15; idle142 wait up to $IDLEMAX s; procload --wait-s 0; stop file?; window HPP-376, HPP-353, HPP-388, HPP-389 done, HPP-357/HPP-370 done or in_review, HPP-352/HPP-364/HPP-393 not waiting (win_f6e); installed build sha = $BUILD_EXPECT (times line); lock (lock.log UTC); shader cache content list + variant directory list + signature manifest (cachesig_f6e) + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F6E; warm-up f6e_w1 ($TC) and f6e_w2 ($MA) KYTY_FIX_B9A=0 hold $HOLDW no video NOT READ (stop on rc != 0, death or window lines; p.306(g) B2); per tag: stop file?, binary copy and installed sha = $BIN_EXPECT, idle142 wait (one retry of a BUSY refusal), enter_scene.py <tag> --level <L> --attempts 1 --stable-draws 100 --timeout 480 --no-install --require-idle --pred $ROOT/$PRED --rec --hold $HOLD (a1,a2: $TC KYTY_FIX_B9A=1; b1: $MA KYTY_FIX_B9A=1; c1: $TC KYTY_FIX_B9A=0; c2: $MA KYTY_FIX_B9A=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, s51_vidglitch 4 6 + sheet142, f6e_read --tag, f6e_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (content list and directory list = before), GLCache manifest after + restore (GLRESTORE=$GLRESTORE), fgcpu143 row, unlock; f6e_read --summary"
   exit 0
 fi
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
@@ -222,6 +230,7 @@ fi
 set +o noclobber
 echo "lock taken series $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $LOCKLOG
 tl "lock taken (winpid $WINPID)"
+tl "installed build at the start of the series sha256 $(sha "$GAME") (BUILD_EXPECT $BUILD_EXPECT; returned to it by sha, p.309(l)(5))"
 INSTALLED=0
 RETFAIL=0
 SNAPPED=0

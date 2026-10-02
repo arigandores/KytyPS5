@@ -1,0 +1,325 @@
+{
+ "tag": "fs2_w0",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "kind": "W",
+  "val": true,
+  "video": false,
+  "stand": true,
+  "fixenv": {
+   "KYTY_FIX_MINIMIZE": "0"
+  },
+  "hold_s": 0,
+  "letter": "b"
+ },
+ "log_sha": "04c04f121dbc90b278f99270cb09572776165b1ab8547de58dc70ff4c21f74d7",
+ "binary": "bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55",
+ "layer_end_us": 0,
+ "limit": 0,
+ "vk2": 151564,
+ "held": false,
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a))",
+   true,
+   "bbad499c56b744df"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_* in the env = {'KYTY_FIX_MINIMIZE': '0'} exactly (p.298(g)(1): none at the defaults)",
+   true,
+   "{'KYTY_FIX_MINIMIZE': '0'}"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_NATIVE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation true",
+   true,
+   "true"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log",
+   true,
+   "recipes-> 1, no-variant 0, saved 0"
+  ],
+  [
+   "VK_LAYER_PATH = C:/VulkanSDK/1.4.357.0/Bin",
+   true,
+   "C:/VulkanSDK/1.4.357.0/Bin"
+  ],
+  [
+   "W 295(b)(4) the form line \"W form: limit=100000000 filter=none\" from the json env, no VK_LAYER_MESSAGE_ID_FILTER key",
+   true,
+   "W form: limit=100000000 filter=none"
+  ],
+  [
+   "validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][)",
+   true,
+   "0/1/151565"
+  ],
+  [
+   "W 295(b)(1) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b))",
+   true,
+   "n/a"
+  ],
+  [
+   "W 295(b)(2) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b))",
+   true,
+   "n/a"
+  ],
+  [
+   "W 295(b)(3) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b))",
+   true,
+   "n/a"
+  ]
+ ],
+ "admitted": true,
+ "fixb9a": 1,
+ "fixmin": 0,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "apstub_log": 0,
+ "apstub_std": 0,
+ "calls": 7,
+ "calls_last": "AudioPropagation: calls total=256 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 SystemDestroy=0 SourceCreate=0 SourceSetAttributes=0 SourceG",
+ "dual": [
+  [
+   5729,
+   1,
+   1
+  ]
+ ],
+ "guest": 542322,
+ "dual_ok": true,
+ "form_ok": true,
+ "vke": 2,
+ "entered": true,
+ "first": [
+  195,
+  21125,
+  132
+ ],
+ "scene_change": false,
+ "marks": [
+  [
+   "--- Error ---",
+   "K1",
+   "log",
+   false,
+   82361076
+  ],
+  [
+   "--- Error ---",
+   "K1",
+   "stdout",
+   false,
+   13854
+  ]
+ ],
+ "deaths": 2,
+ "hold_s_json": 48.8,
+ "hold_exit": 3221226505,
+ "outcome": "ok",
+ "dt_after_first_s": 59.812067,
+ "win": {
+  "minimized": 1
+ },
+ "minw": 1,
+ "recovering": 1,
+ "minw_std": 0,
+ "recovering_std": 0,
+ "skip_lines": 0,
+ "glitch": null,
+ "sheet": false,
+ "exec_members": [
+  [
+   "the emulator ended after the stop line (hold_exit / exited / a death marker)",
+   true,
+   "(3221226505, 'ok', 2)"
+  ]
+ ],
+ "first_pos": 18574771,
+ "episode": {
+  "begin": 0,
+  "end": 0,
+  "begin_pos": null,
+  "end_pos": null,
+  "end_val": null
+ },
+ "t": {
+  "armed": 3.149114,
+  "minimize": 63.099224,
+  "restore": null,
+  "begin": null,
+  "end": null,
+  "total": 63.099224
+ },
+ "late_log": null,
+ "late_ms": null,
+ "rows_after_restore": 0,
+ "window_out": [],
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "('underwater_aerial_garden', 18319080)"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [82233969], 18319134)"
+  ],
+  [
+   "FixMinimize: on lines = 0 (arm KYTY_FIX_MINIMIZE=0)",
+   true,
+   "0"
+  ],
+  [
+   "no SwapchainZeroExtent line at =0",
+   true,
+   "(0, 0)"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(18574771, 82233969)"
+  ],
+  [
+   "no window event outside the stand window (p.273(z): Window <id> minimized / Recovering Vulkan swapchain outside minimize .. max(restore, end) + 2 s)",
+   true,
+   "[]"
+  ]
+ ],
+ "controls_ok": true,
+ "deaths_out": [
+  [
+   "--- Error ---",
+   "K1",
+   "stdout",
+   false,
+   13854
+  ]
+ ],
+ "k2": [],
+ "k2_out": 0,
+ "video": null,
+ "b9a": {
+  "b9a_assert0_log_stdout": true,
+  "b9a_user_msg_param0": true,
+  "b9a_audiopropagation_stub_lines0": true
+ },
+ "stop_rule": {
+  "stop": true,
+  "anchor": 82233969,
+  "anchor_kind": "TestMinimize: minimize (letter)",
+  "extent_after": [
+   82361090
+  ],
+  "vuid": [
+   [
+    82361090,
+    1
+   ]
+  ]
+ },
+ "parts": {
+  "stop_rule": true
+ },
+ "verdict": "STOP",
+ "why": [],
+ "exec_ok": true
+}

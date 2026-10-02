@@ -1,0 +1,53 @@
+fs2_read tag fs2_w0 level underwater_aerial_garden kind W letter b log sha256 04c04f121dbc90b278f99270cb09572776165b1ab8547de58dc70ff4c21f74d7 binary bbad499c56b744df
+admit ok   one attempt [1]
+admit ok   binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a)) [bbad499c56b744df]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_* in the env = {'KYTY_FIX_MINIMIZE': '0'} exactly (p.298(g)(1): none at the defaults) [{'KYTY_FIX_MINIMIZE': '0'}]
+admit ok   KYTY_TEST_MINIMIZE=60:10 exactly ['60:10']
+admit ok   KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4)) [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_PRINT_NAMES not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_BVH_NATIVE not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   no video [None]
+admit ok   --vulkan-validation true [true]
+admit ok   precache by default (I10, p.306(g) B1): >= 1 "PipelinePrecache: <N> recipes ->" OR (>= 1 "PipelinePrecache: no <variant dir>\pipelines.bin yet" AND >= 1 "PipelinePrecache: saved <N> recipes") in the log [recipes-> 1, no-variant 0, saved 0]
+admit ok   VK_LAYER_PATH = C:/VulkanSDK/1.4.357.0/Bin [C:/VulkanSDK/1.4.357.0/Bin]
+admit ok   W 295(b)(4) the form line "W form: limit=100000000 filter=none" from the json env, no VK_LAYER_MESSAGE_ID_FILTER key [W form: limit=100000000 filter=none]
+admit ok   validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][) [0/1/151565]
+admit ok   W 295(b)(1) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b)) [n/a]
+admit ok   W 295(b)(2) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b)) [n/a]
+admit ok   W 295(b)(3) - n/a (W not held: marks 2, hold_exit 3221226505, outcome ok; read on a held W, p.295(b)) [n/a]
+control ok   exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000 [[('on', 60.0, 10.0)]]
+control ok   exactly one line TestMinimize: armed [1]
+control ok   N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank) [('underwater_aerial_garden', 18319080)]
+control ok   exactly one line TestMinimize: minimize, after armed [(1, [82233969], 18319134)]
+control ok   FixMinimize: on lines = 0 (arm KYTY_FIX_MINIMIZE=0) [0]
+control ok   no SwapchainZeroExtent line at =0 [(0, 0)]
+control ok   >= 1 line Window 1 minimized (the stand reached the window) [1]
+control ok   the first scene frame lies before TestMinimize: minimize [(18574771, 82233969)]
+control ok   no window event outside the stand window (p.273(z): Window <id> minimized / Recovering Vulkan swapchain outside minimize .. max(restore, end) + 2 s) [[]]
+executor member [I] ok   the emulator ended after the stop line (hold_exit / exited / a death marker) [(3221226505, 'ok', 2)]
+defaults: FixMinimize: on 0; FixB9a: on 1 (want 1 on fs2_w, fs2_v, fs2_t); DualSrcBlend lines [(5729, 1, 1)] (first GuestOut byte 542322) -> supported=1 enabled=1 before the first GuestOut True
+B9a (p.327(g)(1)): ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; stub lines with [AudioPropagation_v1] log 0 stdout 0; AudioPropagation: calls lines 7, last (information): AudioPropagation: calls total=256 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 SystemDestroy=0 SourceCreate=0 SourceSetAttributes=0 SourceG
+window lines [('minimized', 1)]; Window <id> minimized 1; Recovering Vulkan swapchain 1
+entered True first scene frame (195, 21125, 132) scene change False outcome ok hold_exit 3221226505
+hold: sum dt after the first scene frame 59.8 s (>= 0); json hold_s 48.8
+death markers 2 [('--- Error ---', 'K1', 'log', False, 82361076), ('--- Error ---', 'K1', 'stdout', False, 13854)]; [Vulkan][E] lines 2; AsyncPipelines skipped draw lines 0 (data)
+form W p.295(b): held False; layer limit lines 0; validation-layer lines [W][2]/[E][2] 151564; last one before the end of the hold 0 us (<= 10000000)
+log clock (s of dt): armed 3.149 minimize 63.099 restore none begin none end none total 63.099
+episode: begin lines 0 end lines 0; end frames_dropped/ms None; end later than restore + 2 s: log clock None, ms= None
+FrameTrace rows after TestMinimize: restore 0 (>= 1000 for (a)); window events outside the stand []
+K2 after the first scene frame 0 []; outside the window 0; deaths outside the window 1
+stop rule (p.298(g)(2)): anchor TestMinimize: minimize (letter) at byte 82233969; [Vulkan][E] zero-extent lines after it 1; VUID 01689 line index (0 same, 1..3 next) [(82361090, 1)] -> STOP
+video: frames None glitches (all) None sheet False
+letter members: stop_rule=True
+FS2 VERDICT fs2_w0: STOP
+FS2 EXECUTOR MEMBERS fs2_w0 [I] (not the verdict): all ok

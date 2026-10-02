@@ -1,0 +1,49 @@
+fs2_read tag fs2_v level underwater_aerial_garden kind V letter v log sha256 2a2c5e5a9f7099c33e719c8d21af7eb062c3f59314f1d4dc5baeef27b3aab7a4 binary bbad499c56b744df
+admit ok   one attempt [1]
+admit ok   binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a)) [bbad499c56b744df]
+admit ok   guest args -lvl underwater_aerial_garden [-lvl underwater_aerial_garden]
+admit ok   KYTY_FIX_* in the env = {} exactly (p.298(g)(1): none at the defaults) [{}]
+admit ok   KYTY_TEST_MINIMIZE=60:10 exactly ['60:10']
+admit ok   KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4)) [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_PRINT_NAMES not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_BVH_NATIVE not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   video KYTY_REC rec_fs2_v.mp4 [C:\kyty\f287\fs2c\rec_fs2_v.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   precache by default (I10, p.306(g) B1): >= 1 "PipelinePrecache: <N> recipes ->" OR (>= 1 "PipelinePrecache: no <variant dir>\pipelines.bin yet" AND >= 1 "PipelinePrecache: saved <N> recipes") in the log [recipes-> 1, no-variant 0, saved 0]
+control ok   exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000 [[('on', 60.0, 10.0)]]
+control ok   exactly one line TestMinimize: armed [1]
+control ok   N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank) [('underwater_aerial_garden', 18778179)]
+control ok   exactly one line TestMinimize: minimize, after armed [(1, [69272798], 18778233)]
+control ok   exactly one line TestMinimize: restore, after minimize [(1, [78742628])]
+control ok   FixMinimize: on lines = 1 (positive control of the default, arm V) [1]
+control ok   >= 1 line Window 1 minimized (the stand reached the window) [1]
+control ok   the first scene frame lies before TestMinimize: minimize [(19055042, 69272798)]
+control ok   no window event outside the stand window (p.273(z): Window <id> minimized / Recovering Vulkan swapchain outside minimize .. max(restore, end) + 2 s) [[]]
+executor member [I] ok   the two video windows agree (anchored vs idx gap) [(0, 0)]
+executor member [I] ok   stdout: user_msg_param 0 and AudioPropagation stub lines 0 [(0, 0)]
+executor member [I] ok   end later than restore + 2 s: the log clock and the ms= reading agree [(False, False)]
+defaults: FixMinimize: on 1; FixB9a: on 1 (want 1 on fs2_w, fs2_v, fs2_t); DualSrcBlend lines [(5319, 1, 1)] (first GuestOut byte 541009) -> supported=1 enabled=1 before the first GuestOut True
+B9a (p.327(g)(1)): ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; stub lines with [AudioPropagation_v1] log 0 stdout 0; AudioPropagation: calls lines 44, last (information): AudioPropagation: calls total=9728 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 SystemDestroy=0 SourceCreate=0 SourceSetAttributes=0 Source
+window lines [('lost keyboard focus', 2), ('minimized', 1), ('restored', 1)]; Window <id> minimized 1; Recovering Vulkan swapchain 1
+entered True first scene frame (213, 28130, 419) scene change False outcome ok hold_exit None
+hold: sum dt after the first scene frame 335.1 s (>= 330); json hold_s 330.2
+death markers 0 []; [Vulkan][E] lines 0; AsyncPipelines skipped draw lines 0 (data)
+log clock (s of dt): armed 3.399 minimize 63.383 restore 73.401 begin 63.383 end 73.401 total 338.613
+episode: begin lines 1 end lines 1; end frames_dropped/ms (315, 10013); end later than restore + 2 s: log clock False, ms= False
+FrameTrace rows after TestMinimize: restore 8002 (>= 1000 for (a)); window events outside the stand []
+K2 after the first scene frame 0 []; outside the window 0; deaths outside the window 0
+video window anchored (64.80732800000001, 76.824782); idx gap (64.837, 76.862, 10.024999999999991); glitches outside: anchored 0 [], idx gap 0
+N1: records after end 8002, present order breaks after end 0 []; whole file breaks 0; records 9822; continuity (data) rows without a record outside 1, longest run 1
+video: frames 9822 glitches (all) 0 sheet True
+letter members: entered=True, no_scene_change=True, no_hold_exit=True, hold=True, video_frames=True, sheet=True, glitches_outside0=True, n1_present_order_after_end=True, no_k1k2_outside=True, begin_end=True, end_not_late=True, b9a_assert0_log_stdout=True, b9a_user_msg_param0=True, b9a_audiopropagation_stub_lines0=True
+FS2 VERDICT fs2_v: PASS
+FS2 EXECUTOR MEMBERS fs2_v [I] (not the verdict): all ok

@@ -1,0 +1,3 @@
+suite test_go_fs2.py sha256 9e6efd9269cb8917ee036c75730fbb6820ad96d5e4d88c5bb17b9033ea496ec6 target go_fs2.sh sha256 c205ea58809fab2824a3ce7807f1fa596c268c2261306ee6d9ca2052d8a371df
+checks 90 failed 0
+ALL OK

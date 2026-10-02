@@ -1,0 +1,13 @@
+FS2 SERIES TABLE (p.298(g)(1)-(4), p.327(g)(1)-(3); one attempt each; fs2_tr only when fs2_t is K3 OVER)
+tag     level                     verdict        hold_s  vke deaths K2  FixMin FixB9a ASSERT(l/s) umsg(l/s) APstub(l/s) Dual video/glitch
+fs2_w   underwater_aerial_garden  PASS            323.9    0      0   0      1      1     0/0        0/0        0/0       ok -
+fs2_w0  underwater_aerial_garden  STOP             59.8    2      2   0      0      1     0/0        0/0        0/0       ok -
+fs2_v   underwater_aerial_garden  PASS            335.1    0      0   0      1      1     0/0        0/0        0/0       ok 9822/0
+fs2_t   timestop_casino           PASS            126.9    0      0   0      1      1     0/0        0/0        0/0       ok 7703/0
+fs2_tr  timestop_casino           NO READING (not run or no log)
+(1) fs2_w: PASS
+(2) fs2_w0: STOP (anchor TestMinimize: minimize (letter); extent lines after it 1; vuid [(82361090, 1)])
+(3) fs2_v: PASS
+(4) p.327(g)(2) timestop_casino (fs2_t / fs2_tr): PASS
+p.327(g)(3): B9a members (1) PASS, (2) PASS -> PASS
+FS2 SERIES VERDICT p.298(g) + p.327(g)(3): PASS; fs2_w=PASS fs2_w0=STOP fs2_v=PASS timestop=PASS; B9a PASS

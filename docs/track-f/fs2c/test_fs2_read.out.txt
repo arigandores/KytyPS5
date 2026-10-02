@@ -1,0 +1,151 @@
+suite test_fs2_read.py sha256 30b3e8547ff7b065944f2abd3fb70e97da26588326b539b367a5e95b895802ac target fs2_read.py sha256 b2392850329e36ee93344beead498930f7fdf7f70f82c329131acd6d1c9e27ad
+ok   reference log_w144_09.txt -> STOP (anchor Window 1 minimized, no stand line; VUID one line after)
+ok   reference log_f5c_b.txt -> STOP (anchor TestMinimize: minimize; VUID one line after)
+ok   real log_f5c_a.txt (=1) -> NO STOP
+ok   real log_f5c_g.txt (=0, no validation) -> NO STOP
+ok   stop rule: VUID in the same line -> STOP
+ok   stop rule: VUID 1 line after -> STOP
+ok   stop rule: VUID 3 lines after (edge) -> STOP
+ok   stop rule: VUID 4 lines after (edge+1) -> NO STOP
+ok   stop rule: the [Vulkan][E] zero-extent line before the anchor -> NO STOP
+ok   stop rule: [Vulkan][E] without the zero extent -> NO STOP
+ok   stop rule: the zero-extent text in a [Vulkan][W] line -> NO STOP
+ok   stop rule: no stand line and no Window 1 minimized -> NO STOP (no anchor)
+ok   stop rule: no stand line, Window 1 minimized -> STOP (reading of the executor [I])
+ok   stop rule: a stand line anywhere is the anchor (letter) - E before it -> NO STOP
+ok   stop rule: VUID on the 4th line but a second E line within 3 -> STOP
+ok   real f5c_a as fs2_w: letter (a) members true except DualSrcBlend (binary 6f495a65, precache 0) and NOT ADMITTED
+ok   real f5c_a: hold 324.5 s, rows after restore 2039, Recovering 1, window events outside the stand 0
+ok   real f5c_b as fs2_w0: controls ok, stop rule STOP, W not held -> 295(b)(1)-(3) n/a
+ok   real f5c_v as fs2_v: letter (v) members all true (334.4 s, 9152 frames, N1 7388 records after end)
+ok   real f6e_a2 as fs2_t: SourceCreate 48 / 7033 rows = 0.0068, wake yes, K3 hold 0, 0 stubs, 0 ASSERT
+ok   real f6e_a1 as fs2_t: K3 hold 1 (= limit 1, not over)
+ok   real f6e_c1 (=0 control) as fs2_t: FixB9a: on 0 -> NOT ADMITTED first (env KYTY_FIX_B9A=0); user_msg_param 0 (UMSG_T basis)
+ok   fs2_w base -> PASS
+ok   fs2_w base: stop-check continue
+ok   fs2_w: binary sha other -> NOT ADMITTED
+ok   fs2_w: KYTY_FIX_B9A=1 in the env -> NOT ADMITTED
+ok   fs2_w: KYTY_FIX_MINIMIZE=1 in the env -> NOT ADMITTED
+ok   fs2_w: KYTY_PIPELINE_PRECACHE=0 -> NOT ADMITTED
+ok   fs2_w: VK_LAYER_MESSAGE_ID_FILTER set -> NOT ADMITTED (295(b)(4))
+ok   fs2_w: VK_LAYER_DUPLICATE_MESSAGE_LIMIT=1000000 -> NOT ADMITTED (295(b)(4))
+ok   fs2_w: VK_LAYER_PATH missing -> NOT ADMITTED
+ok   fs2_w: KYTY_TEST_MINIMIZE=60:9 -> NOT ADMITTED
+ok   fs2_w: KYTY_GPU_CLOCK_PIN missing -> NOT ADMITTED
+ok   fs2_w: KYTY_REC set -> NOT ADMITTED (no video on W)
+ok   fs2_w: two attempts -> NOT ADMITTED
+ok   fs2_w: no precache line -> NOT ADMITTED (I10)
+ok   fs2_w: precache alt (no-variant + saved) -> PASS (I10 B1)
+ok   fs2_w: one layer limit line -> NOT ADMITTED (295(b)(1))
+ok   fs2_w: limit line in the stdout -> NOT ADMITTED (295(b)(1))
+ok   fs2_w: no validation-layer line [W][2] -> NOT ADMITTED (295(b)(2), (3))
+ok   fs2_w: last [W][2] line exactly 10.0 s before the end (edge) -> PASS
+ok   fs2_w: last [W][2] line 10.05 s before the end -> NOT ADMITTED
+ok   fs2_w: an [E][2] line counts as a validation-layer line but fails vke0 -> FAIL
+ok   fs2_w: a death marker -> W not held, 295(b)(1)-(3) n/a; letter FAIL (deaths0)
+ok   fs2_w: death without [Vulkan][E] -> stop-check stop
+ok   fs2_w: FixB9a: on 0 -> INVALID (form error, p.327(g)(1))
+ok   fs2_w: INVALID -> stop-check stop
+ok   fs2_w: FixB9a: on 2 -> INVALID
+ok   fs2_w: FixMinimize: on 0 -> FAIL (fixminimize_on)
+ok   fs2_w: FixMinimize: on 2 -> FAIL
+ok   fs2_w: no DualSrcBlend line -> FAIL
+ok   fs2_w: DualSrcBlend supported=1 enabled=0 -> FAIL
+ok   fs2_w: DualSrcBlend 1/1 and a second line 0/0 -> FAIL
+ok   fs2_w: DualSrcBlend 1/1 after the first GuestOut -> FAIL (p.300(b)(4))
+ok   fs2_w: ASSERT: in the log -> FAIL (B9a)
+ok   fs2_w: ASSERT: in the stdout -> FAIL (B9a)
+ok   fs2_w: user_msg_param in the log -> FAIL (B9a)
+ok   fs2_w: user_msg_param only in the stdout -> PASS, member of the executor FAILED
+ok   fs2_w: an AudioPropagation stub line in the log -> FAIL (B9a)
+ok   fs2_w: a stub line of another library -> PASS
+ok   fs2_w: an AudioPropagation stub line only in the stdout -> PASS, member of the executor FAILED
+ok   fs2_w: a [Vulkan][E] line -> FAIL (vke0)
+ok   fs2_w: a second Window 1 minimized inside the stand window -> FAIL (one_window1_minimized)
+ok   fs2_w: Window minimized outside the stand window -> NOT EVALUABLE (p.273(z))
+ok   fs2_w: window event outside -> stop-check stop
+ok   fs2_w: Window 2 minimized before the stand -> NOT EVALUABLE
+ok   fs2_w: Recovering outside the stand window -> NOT EVALUABLE
+ok   fs2_w: Recovering 1.95 s after restore (edge inside +2 s) -> PASS
+ok   fs2_w: Recovering 2.1 s after restore -> NOT EVALUABLE
+ok   fs2_w: lost keyboard focus outside the stand -> PASS (data only)
+ok   fs2_w: hold exactly 310.0 s (edge) -> PASS
+ok   fs2_w: hold 309.95 s -> FAIL (hold)
+ok   fs2_w: no SwapchainZeroExtent lines -> FAIL (begin_end, end_not_late)
+ok   fs2_w: end 2.05 s after restore -> FAIL (end_not_late), both readings late
+ok   fs2_w: end 2.00 s after restore (edge) -> PASS
+ok   fs2_w: no config line -> NOT EVALUABLE
+ok   fs2_w: KYTY_FIX_* none, but the stand config line missing -> stop-check stop
+ok   fs2_w0 base -> STOP
+ok   fs2_w0: stop-check continue: data
+ok   fs2_w0: no zero-extent line -> NO STOP, stop-check continue
+ok   fs2_w0: VUID 4 lines after -> NO STOP
+ok   fs2_w0: KYTY_FIX_MINIMIZE missing from the env -> NOT ADMITTED
+ok   fs2_w0: KYTY_FIX_MINIMIZE=1 -> NOT ADMITTED
+ok   fs2_w0: FixMinimize: on 1 -> NOT EVALUABLE (arm control)
+ok   fs2_w0: FixB9a: on 0 -> not a form error on w0 (STOP)
+ok   fs2_v base -> PASS
+ok   fs2_v: a glitch outside the window -> FAIL
+ok   fs2_v: a glitch inside the window (minimize .. end + 2 s) -> PASS
+ok   fs2_v: video 3000 frames (edge) -> PASS
+ok   fs2_v: video 2999 frames -> FAIL
+ok   fs2_v: no sheet -> FAIL
+ok   fs2_v: K2 frame outside the window -> FAIL
+ok   fs2_v: K2 frame inside the window -> PASS
+ok   fs2_v: K2 999 999 us outside -> PASS (edge below 1 s)
+ok   fs2_v: present order break after end (N1) -> FAIL
+ok   fs2_v: FixMinimize: on 0 -> NOT EVALUABLE
+ok   fs2_v: ASSERT: -> FAIL (B9a)
+ok   fs2_v: FixB9a: on 0 -> INVALID
+ok   fs2_v: --vulkan-validation true -> NOT ADMITTED
+ok   fs2_v: hold 329.95 s -> FAIL
+ok   fs2_v: a death marker in the stand window only -> PASS (no K1 outside)
+ok   fs2_t base -> PASS
+ok   fs2_t: K3 hold 1 (= limit) -> PASS
+ok   fs2_t: K3 hold 2 -> K3 OVER, stop-check repeat-k3: fs2_tr
+ok   fs2_t: K3 in the entry window (row < 599) not counted -> PASS
+ok   fs2_t: K3 99 999 us not counted (edge) -> PASS
+ok   judge: fs2_t K3 OVER + fs2_tr PASS -> PASS (the repeat decides)
+ok   judge: fs2_tr K3 OVER too -> FAIL
+ok   judge: fs2_tr FAIL on another member -> FAIL
+ok   judge: fs2_t K3 OVER, fs2_tr not run -> REPEAT DUE
+ok   judge: fs2_t FAIL (ASSERT) is not lifted by a repeat -> FAIL
+ok   fs2_t: ASSERT: in the stdout -> FAIL
+ok   fs2_t: user_msg_param 1 > 0 -> FAIL (p.294(b), UMSG_T 0)
+ok   fs2_t: a stub line of any library -> FAIL
+ok   fs2_t: K2 frame -> FAIL
+ok   fs2_t: a glitch -> FAIL
+ok   fs2_t: video 2999 frames -> FAIL
+ok   fs2_t: no sheet -> FAIL
+ok   fs2_t: a death marker -> FAIL and stop-check stop
+ok   fs2_t: SourceCreate per frame 660 / 6599 = 0.1000+ -> FAIL
+ok   fs2_t: SourceCreate per frame 659 / 6599 < 0.1 -> PASS (edge)
+ok   fs2_t: wake control 0 / 0 -> FAIL
+ok   fs2_t: wake by SourceRender only -> PASS
+ok   fs2_t: no counter line on the hold -> NOT EVALUABLE
+ok   fs2_t: hold 119.95 s -> NOT EVALUABLE
+ok   fs2_t: hold 120.0 s (edge) -> PASS
+ok   fs2_t: Window minimized -> WINDOW EVENT, stop
+ok   fs2_t: Recovering in the stdout -> WINDOW EVENT
+ok   fs2_t: FixB9a: on 0 -> INVALID
+ok   fs2_t: KYTY_FIX_B9A=1 in the env -> NOT ADMITTED
+ok   fs2_t: KYTY_TEST_MINIMIZE set -> NOT ADMITTED
+ok   summary: all as named -> PASS, B9a PASS
+ok   summary: fs2_w0 NO STOP -> FAIL
+ok   summary: B9a member fails on fs2_v -> FAIL and "FS2d does not install FS2"
+ok   summary: timestop FAIL -> FAIL and "FS2d does not install FS2"
+ok   summary: fs2_v missing -> NOT EVALUABLE
+ok   summary: fs2_w INVALID -> NOT EVALUABLE, B9a (1) NOT EVALUABLE
+ok   summary: fs2_w FAIL (FixMinimize) -> FAIL, B9a PASS
+ok   summary: fs2_t K3 OVER, fs2_tr PASS -> PASS
+ok   --stop-check by file (subprocess) -> continue: fs2_w PASS
+ok   --stop-check missing file -> stop: no reading
+ok   check-seal: every name present with its sha -> OK (files present now: missing [])
+ok   check-seal: a second line for one name / a wrong sha -> FAILED
+ok   --stop-rule under cp1250:strict -> rc 0, ASCII
+ok   --tag without a log under cp1250:strict -> rc 1, ASCII
+ok   usage under cp1250:strict -> rc 2, ASCII
+ok   text() of a read is ASCII
+ok   text() of a timestop read is ASCII
+checks 148
+ALL OK

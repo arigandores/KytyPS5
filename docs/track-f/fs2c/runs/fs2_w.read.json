@@ -1,0 +1,310 @@
+{
+ "tag": "fs2_w",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "kind": "W",
+  "val": true,
+  "video": false,
+  "stand": true,
+  "fixenv": {},
+  "hold_s": 310,
+  "letter": "a"
+ },
+ "log_sha": "c78d4a4dab292bcdec6c7a45d6c6373c6fab927e444b10e1c5bda40a767f3e9c",
+ "binary": "bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55",
+ "layer_end_us": 114665,
+ "limit": 0,
+ "vk2": 911994,
+ "held": true,
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a))",
+   true,
+   "bbad499c56b744df"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_* in the env = {} exactly (p.298(g)(1): none at the defaults)",
+   true,
+   "{}"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_NATIVE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "no video",
+   true,
+   "None"
+  ],
+  [
+   "--vulkan-validation true",
+   true,
+   "true"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log",
+   true,
+   "recipes-> 1, no-variant 0, saved 0"
+  ],
+  [
+   "VK_LAYER_PATH = C:/VulkanSDK/1.4.357.0/Bin",
+   true,
+   "C:/VulkanSDK/1.4.357.0/Bin"
+  ],
+  [
+   "W 295(b)(4) the form line \"W form: limit=100000000 filter=none\" from the json env, no VK_LAYER_MESSAGE_ID_FILTER key",
+   true,
+   "W form: limit=100000000 filter=none"
+  ],
+  [
+   "validation active (p.224: 0 no-layer, >= 1 validation_features, >= 1 [Vulkan][)",
+   true,
+   "0/1/911995"
+  ],
+  [
+   "W 295(b)(1) 0 layer limit lines (log and stdout)",
+   true,
+   "0"
+  ],
+  [
+   "W 295(b)(2) validation active: >= 1 validation-layer line [Vulkan][W][2] / [Vulkan][E][2] (log and stdout)",
+   true,
+   "911994"
+  ],
+  [
+   "W 295(b)(3) the last validation-layer line of the log at most 10 s of presented time before the last FrameTrace row of the hold",
+   true,
+   "114665 us"
+  ]
+ ],
+ "admitted": true,
+ "fixb9a": 1,
+ "fixmin": 1,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "apstub_log": 0,
+ "apstub_std": 0,
+ "calls": 15,
+ "calls_last": "AudioPropagation: calls total=2304 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 SystemDestroy=0 SourceCreate=0 SourceSetAttributes=0 Source",
+ "dual": [
+  [
+   5729,
+   1,
+   1
+  ]
+ ],
+ "guest": 542333,
+ "dual_ok": true,
+ "form_ok": true,
+ "vke": 0,
+ "entered": true,
+ "first": [
+  219,
+  21156,
+  117
+ ],
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "hold_s_json": 310.0,
+ "hold_exit": null,
+ "outcome": "ok",
+ "dt_after_first_s": 323.911668,
+ "win": {
+  "minimized": 1,
+  "restored": 1,
+  "lost keyboard focus": 1
+ },
+ "minw": 1,
+ "recovering": 1,
+ "minw_std": 0,
+ "recovering_std": 0,
+ "skip_lines": 0,
+ "glitch": null,
+ "sheet": false,
+ "exec_members": [
+  [
+   "exactly one begin and one end line",
+   true,
+   "(1, 1)"
+  ],
+  [
+   "stdout: user_msg_param 0 and AudioPropagation stub lines 0",
+   true,
+   "(0, 0)"
+  ],
+  [
+   "end later than restore + 2 s: the log clock and the ms= reading agree",
+   true,
+   "(False, False)"
+  ]
+ ],
+ "first_pos": 19127621,
+ "episode": {
+  "begin": 1,
+  "end": 1,
+  "begin_pos": 84232247,
+  "end_pos": 95574354,
+  "end_val": [
+   74,
+   10005
+  ]
+ },
+ "t": {
+  "armed": 3.532652,
+  "minimize": 63.482798,
+  "restore": 73.518695,
+  "begin": 63.482798,
+  "end": 73.518695,
+  "total": 327.5655
+ },
+ "late_log": false,
+ "late_ms": false,
+ "rows_after_restore": 1983,
+ "window_out": [],
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "('underwater_aerial_garden', 18917503)"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [84108242], 18917557)"
+  ],
+  [
+   "exactly one line TestMinimize: restore, after minimize",
+   true,
+   "(1, [95450439])"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(19127621, 84108242)"
+  ],
+  [
+   "no window event outside the stand window (p.273(z): Window <id> minimized / Recovering Vulkan swapchain outside minimize .. max(restore, end) + 2 s)",
+   true,
+   "[]"
+  ]
+ ],
+ "controls_ok": true,
+ "deaths_out": [],
+ "k2": [],
+ "k2_out": 0,
+ "video": null,
+ "b9a": {
+  "b9a_assert0_log_stdout": true,
+  "b9a_user_msg_param0": true,
+  "b9a_audiopropagation_stub_lines0": true
+ },
+ "parts": {
+  "entered": true,
+  "no_scene_change": true,
+  "no_hold_exit": true,
+  "one_window1_minimized": true,
+  "begin_end": true,
+  "vke0": true,
+  "deaths0": true,
+  "hold": true,
+  "rows_after_restore": true,
+  "end_not_late": true,
+  "dualsrcblend_1_1": true,
+  "fixminimize_on": true,
+  "b9a_assert0_log_stdout": true,
+  "b9a_user_msg_param0": true,
+  "b9a_audiopropagation_stub_lines0": true
+ },
+ "verdict": "PASS",
+ "why": [],
+ "exec_ok": true
+}

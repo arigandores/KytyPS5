@@ -1,0 +1,213 @@
+{
+ "tag": "fs2_t",
+ "cfg": {
+  "level": "timestop_casino",
+  "kind": "T",
+  "val": false,
+  "video": true,
+  "stand": false,
+  "fixenv": {},
+  "hold_s": 120,
+  "letter": "t"
+ },
+ "log_sha": "9b7193bcfc688caeba298da19c5035b2cf1a38cf795371cadd12b8e6e681cd5e",
+ "binary": "bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55",
+ "held": null,
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a))",
+   true,
+   "bbad499c56b744df"
+  ],
+  [
+   "guest args -lvl timestop_casino",
+   true,
+   "-lvl timestop_casino"
+  ],
+  [
+   "KYTY_FIX_* in the env = {} exactly (p.298(g)(1): none at the defaults)",
+   true,
+   "{}"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_NATIVE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "video KYTY_REC rec_fs2_t.mp4",
+   true,
+   "C:\\kyty\\f287\\fs2c\\rec_fs2_t.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log",
+   true,
+   "recipes-> 1, no-variant 0, saved 2"
+  ]
+ ],
+ "admitted": true,
+ "fixb9a": 1,
+ "fixmin": 1,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "apstub_log": 0,
+ "apstub_std": 0,
+ "calls": 233,
+ "calls_last": "AudioPropagation: calls total=55552 handles=86 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=3 SourceSetAudioPaths=4652 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=14842 PortalCreate=2 RoomDestroy=0 SystemDestroy=0 SourceCreate=50 SourceSetAttributes",
+ "dual": [
+  [
+   5319,
+   1,
+   1
+  ]
+ ],
+ "guest": 541016,
+ "dual_ok": true,
+ "form_ok": true,
+ "vke": 0,
+ "entered": true,
+ "first": [
+  198,
+  15339,
+  289
+ ],
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "hold_s_json": 125.2,
+ "hold_exit": null,
+ "outcome": "ok",
+ "dt_after_first_s": 126.91353,
+ "win": {},
+ "minw": 0,
+ "recovering": 0,
+ "minw_std": 0,
+ "recovering_std": 0,
+ "skip_lines": 1,
+ "glitch": {
+  "video_frames": 7703,
+  "glitches": 0
+ },
+ "sheet": true,
+ "exec_members": [
+  [
+   "stdout: user_msg_param 0 and AudioPropagation stub lines 0",
+   true,
+   "(0, 0)"
+  ]
+ ],
+ "controls": [],
+ "controls_ok": true,
+ "winev": false,
+ "stub_lines": 0,
+ "stub_ap": {},
+ "stub_std": 0,
+ "k2": 0,
+ "k3_window": 0,
+ "k3_hold": 0,
+ "k3_hold_rows": [],
+ "k3_hold120": 0,
+ "freq": {
+  "l0": [
+   20036486,
+   0,
+   44
+  ],
+  "l1": [
+   237327994,
+   50,
+   55552
+  ],
+  "d_create": 50,
+  "rows": 7422,
+  "freq": 0.006736728644570197,
+  "var": null
+ },
+ "wake": true,
+ "last_calls": {
+  "SourceSetAttributes": 11920,
+  "SourceRender": 7218,
+  "SourceCreate": 50,
+  "SourceDestroy": 50,
+  "handles": 86,
+  "total": 55552
+ },
+ "rips": [],
+ "mean_dt_us": 16985.215471092077,
+ "k3_over": false,
+ "verdict": "PASS",
+ "why": [],
+ "exec_ok": true
+}

@@ -1,0 +1,304 @@
+{
+ "tag": "fs2_v",
+ "cfg": {
+  "level": "underwater_aerial_garden",
+  "kind": "V",
+  "val": false,
+  "video": true,
+  "stand": true,
+  "fixenv": {},
+  "hold_s": 330,
+  "letter": "v"
+ },
+ "log_sha": "2a2c5e5a9f7099c33e719c8d21af7eb062c3f59314f1d4dc5baeef27b3aab7a4",
+ "binary": "bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55",
+ "held": null,
+ "admit": [
+  [
+   "one attempt",
+   true,
+   "1"
+  ],
+  [
+   "binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a))",
+   true,
+   "bbad499c56b744df"
+  ],
+  [
+   "guest args -lvl underwater_aerial_garden",
+   true,
+   "-lvl underwater_aerial_garden"
+  ],
+  [
+   "KYTY_FIX_* in the env = {} exactly (p.298(g)(1): none at the defaults)",
+   true,
+   "{}"
+  ],
+  [
+   "KYTY_TEST_MINIMIZE=60:10 exactly",
+   true,
+   "'60:10'"
+  ],
+  [
+   "KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4))",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CHECKPOINTS not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PRINT_NAMES not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_S_PCW not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_PVAR not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GATE_SCHEDULE_ABBA not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_STUB not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_LOOP_CAP not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_BVH_NATIVE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_SHADER_CACHE not set",
+   true,
+   "None"
+  ],
+  [
+   "KYTY_GPU_CLOCK_PIN=1",
+   true,
+   "1"
+  ],
+  [
+   "video KYTY_REC rec_fs2_v.mp4",
+   true,
+   "C:\\kyty\\f287\\fs2c\\rec_fs2_v.mp4"
+  ],
+  [
+   "--vulkan-validation false",
+   true,
+   "false"
+  ],
+  [
+   "precache by default (I10, p.306(g) B1): >= 1 \"PipelinePrecache: <N> recipes ->\" OR (>= 1 \"PipelinePrecache: no <variant dir>\\pipelines.bin yet\" AND >= 1 \"PipelinePrecache: saved <N> recipes\") in the log",
+   true,
+   "recipes-> 1, no-variant 0, saved 0"
+  ]
+ ],
+ "admitted": true,
+ "fixb9a": 1,
+ "fixmin": 1,
+ "asserts_log": 0,
+ "asserts_std": 0,
+ "umsg_log": 0,
+ "umsg_std": 0,
+ "apstub_log": 0,
+ "apstub_std": 0,
+ "calls": 44,
+ "calls_last": "AudioPropagation: calls total=9728 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 SystemDestroy=0 SourceCreate=0 SourceSetAttributes=0 Source",
+ "dual": [
+  [
+   5319,
+   1,
+   1
+  ]
+ ],
+ "guest": 541009,
+ "dual_ok": true,
+ "form_ok": true,
+ "vke": 0,
+ "entered": true,
+ "first": [
+  213,
+  28130,
+  419
+ ],
+ "scene_change": false,
+ "marks": [],
+ "deaths": 0,
+ "hold_s_json": 330.2,
+ "hold_exit": null,
+ "outcome": "ok",
+ "dt_after_first_s": 335.051863,
+ "win": {
+  "lost keyboard focus": 2,
+  "minimized": 1,
+  "restored": 1
+ },
+ "minw": 1,
+ "recovering": 1,
+ "minw_std": 0,
+ "recovering_std": 0,
+ "skip_lines": 0,
+ "glitch": {
+  "video_frames": 9822,
+  "glitches": 0
+ },
+ "sheet": true,
+ "exec_members": [
+  [
+   "the two video windows agree (anchored vs idx gap)",
+   true,
+   "(0, 0)"
+  ],
+  [
+   "stdout: user_msg_param 0 and AudioPropagation stub lines 0",
+   true,
+   "(0, 0)"
+  ],
+  [
+   "end later than restore + 2 s: the log clock and the ms= reading agree",
+   true,
+   "(False, False)"
+  ]
+ ],
+ "first_pos": 19055042,
+ "episode": {
+  "begin": 1,
+  "end": 1,
+  "begin_pos": 69277312,
+  "end_pos": 78744945,
+  "end_val": [
+   315,
+   10013
+  ]
+ },
+ "t": {
+  "armed": 3.399462,
+  "minimize": 63.383113,
+  "restore": 73.400567,
+  "begin": 63.383113,
+  "end": 73.400567,
+  "total": 338.612785
+ },
+ "late_log": false,
+ "late_ms": false,
+ "rows_after_restore": 8002,
+ "window_out": [],
+ "controls": [
+  [
+   "exactly one line TestMinimize: config on delay_s=60.000 dur_s=10.000",
+   true,
+   "[('on', 60.0, 10.0)]"
+  ],
+  [
+   "exactly one line TestMinimize: armed",
+   true,
+   "1"
+  ],
+  [
+   "N2 p.285(v): the start line before armed carries the level name underwater_aerial_garden (not blank)",
+   true,
+   "('underwater_aerial_garden', 18778179)"
+  ],
+  [
+   "exactly one line TestMinimize: minimize, after armed",
+   true,
+   "(1, [69272798], 18778233)"
+  ],
+  [
+   "exactly one line TestMinimize: restore, after minimize",
+   true,
+   "(1, [78742628])"
+  ],
+  [
+   "FixMinimize: on lines = 1 (positive control of the default, arm V)",
+   true,
+   "1"
+  ],
+  [
+   ">= 1 line Window 1 minimized (the stand reached the window)",
+   true,
+   "1"
+  ],
+  [
+   "the first scene frame lies before TestMinimize: minimize",
+   true,
+   "(19055042, 69272798)"
+  ],
+  [
+   "no window event outside the stand window (p.273(z): Window <id> minimized / Recovering Vulkan swapchain outside minimize .. max(restore, end) + 2 s)",
+   true,
+   "[]"
+  ]
+ ],
+ "controls_ok": true,
+ "deaths_out": [],
+ "k2": [],
+ "k2_out": 0,
+ "video": {
+  "records": 9822,
+  "rec_frames_consecutive": true,
+  "win_anchored": [
+   64.80732800000001,
+   76.824782
+  ],
+  "win_gap": [
+   64.837,
+   76.862,
+   10.024999999999991
+  ],
+  "glitches_all": 0,
+  "glitches_out_anchored": [],
+  "glitches_out_gap": [],
+  "after_end_records": 8002,
+  "after_end_bad": [],
+  "all_bad": [],
+  "rows_without_record_outside": 1,
+  "longest_run_outside": 1
+ },
+ "b9a": {
+  "b9a_assert0_log_stdout": true,
+  "b9a_user_msg_param0": true,
+  "b9a_audiopropagation_stub_lines0": true
+ },
+ "parts": {
+  "entered": true,
+  "no_scene_change": true,
+  "no_hold_exit": true,
+  "hold": true,
+  "video_frames": true,
+  "sheet": true,
+  "glitches_outside0": true,
+  "n1_present_order_after_end": true,
+  "no_k1k2_outside": true,
+  "begin_end": true,
+  "end_not_late": true,
+  "b9a_assert0_log_stdout": true,
+  "b9a_user_msg_param0": true,
+  "b9a_audiopropagation_stub_lines0": true
+ },
+ "verdict": "PASS",
+ "why": [],
+ "exec_ok": true
+}

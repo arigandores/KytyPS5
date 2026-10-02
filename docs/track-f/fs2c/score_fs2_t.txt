@@ -1,0 +1,33 @@
+fs2_read tag fs2_t level timestop_casino kind T letter t log sha256 9b7193bcfc688caeba298da19c5035b2cf1a38cf795371cadd12b8e6e681cd5e binary bbad499c56b744df
+admit ok   one attempt [1]
+admit ok   binary sha256 = FS2 copy bbad499c (p.298(g), p.329(a)) [bbad499c56b744df]
+admit ok   guest args -lvl timestop_casino [-lvl timestop_casino]
+admit ok   KYTY_FIX_* in the env = {} exactly (p.298(g)(1): none at the defaults) [{}]
+admit ok   KYTY_TEST_MINIMIZE not set [None]
+admit ok   KYTY_PIPELINE_PRECACHE not set (precache by default, p.281(g), p.300(b)(4)) [None]
+admit ok   KYTY_GPU_CHECKPOINTS not set [None]
+admit ok   KYTY_PRINT_NAMES not set [None]
+admit ok   KYTY_S_PCW not set [None]
+admit ok   KYTY_PVAR not set [None]
+admit ok   KYTY_GATE_SCHEDULE not set [None]
+admit ok   KYTY_GATE_SCHEDULE_ABBA not set [None]
+admit ok   KYTY_BVH_STUB not set [None]
+admit ok   KYTY_BVH_LOOP_CAP not set [None]
+admit ok   KYTY_BVH_NATIVE not set [None]
+admit ok   KYTY_SHADER_CACHE not set [None]
+admit ok   KYTY_GPU_CLOCK_PIN=1 [1]
+admit ok   video KYTY_REC rec_fs2_t.mp4 [C:\kyty\f287\fs2c\rec_fs2_t.mp4]
+admit ok   --vulkan-validation false [false]
+admit ok   precache by default (I10, p.306(g) B1): >= 1 "PipelinePrecache: <N> recipes ->" OR (>= 1 "PipelinePrecache: no <variant dir>\pipelines.bin yet" AND >= 1 "PipelinePrecache: saved <N> recipes") in the log [recipes-> 1, no-variant 0, saved 2]
+executor member [I] ok   stdout: user_msg_param 0 and AudioPropagation stub lines 0 [(0, 0)]
+defaults: FixMinimize: on 1; FixB9a: on 1 (want 1 on fs2_w, fs2_v, fs2_t); DualSrcBlend lines [(5319, 1, 1)] (first GuestOut byte 541016) -> supported=1 enabled=1 before the first GuestOut True
+B9a (p.327(g)(1)): ASSERT: log 0 stdout 0; user_msg_param log 0 stdout 0; stub lines with [AudioPropagation_v1] log 0 stdout 0; AudioPropagation: calls lines 233, last (information): AudioPropagation: calls total=55552 handles=86 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=3 SourceSetAudioPaths=4652 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=14842 PortalCreate=2 RoomDestroy=0 SystemDestroy=0 SourceCreate=50 SourceSetAttributes
+window lines []; Window <id> minimized 0; Recovering Vulkan swapchain 0
+entered True first scene frame (198, 15339, 289) scene change False outcome ok hold_exit None
+hold: sum dt after the first scene frame 126.9 s (>= 120); json hold_s 125.2
+death markers 0 []; [Vulkan][E] lines 0; AsyncPipelines skipped draw lines 1 (data)
+stubs (log) 0, AudioPropagation_v1 []; counter: L0 (20036486, 0, 44) L1 (237327994, 50, 55552) delta SourceCreate 50 rows 7422 -> 0.0067 per frame (< 0.1)
+wake control True (last counter line {'SourceSetAttributes': 11920, 'SourceRender': 7218, 'SourceCreate': 50, 'SourceDestroy': 50, 'handles': 86, 'total': 55552}); K2 0; K3 entry window 0; K3 hold 0 (limit 1) []; K3 hold within 120 s [I] 0; mean dt_us 16985.2; rips []
+video: frames 7703 glitches (all) 0 sheet True
+FS2 VERDICT fs2_t: PASS
+FS2 EXECUTOR MEMBERS fs2_t [I] (not the verdict): all ok

@@ -1,0 +1,2 @@
+stop rule C:/kyty/s144/log_w144_09.txt: anchor Window 1 minimized (no stand line in the log - reading of the executor [I]) at 288006876; zero-extent lines after 1; vuid [(288182942, 1)] -> STOP
+stop rule C:/kyty/f287/f5c/log_f5c_b.txt: anchor TestMinimize: minimize (letter) at 30639250; zero-extent lines after 1; vuid [(30643161, 1)] -> STOP

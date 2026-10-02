@@ -1,0 +1,27 @@
+bash.exe: warning: could not find /tmp, please create!
+Preparing worktree (detached HEAD 9c9d86ae)
+Updating files:  51% (2187/4206)Updating files:  52% (2188/4206)Updating files:  53% (2230/4206)Updating files:  54% (2272/4206)Updating files:  55% (2314/4206)Updating files:  56% (2356/4206)Updating files:  57% (2398/4206)Updating files:  58% (2440/4206)Updating files:  59% (2482/4206)Updating files:  60% (2524/4206)Updating files:  61% (2566/4206)Updating files:  62% (2608/4206)Updating files:  63% (2650/4206)Updating files:  64% (2692/4206)Updating files:  65% (2734/4206)Updating files:  66% (2776/4206)Updating files:  67% (2819/4206)Updating files:  68% (2861/4206)Updating files:  69% (2903/4206)Updating files:  70% (2945/4206)Updating files:  71% (2987/4206)Updating files:  72% (3029/4206)Updating files:  73% (3071/4206)Updating files:  74% (3113/4206)Updating files:  75% (3155/4206)Updating files:  76% (3197/4206)Updating files:  77% (3239/4206)Updating files:  78% (3281/4206)Updating files:  79% (3323/4206)Updating files:  80% (3365/4206)Updating files:  81% (3407/4206)Updating files:  82% (3449/4206)Updating files:  83% (3491/4206)Updating files:  84% (3534/4206)Updating files:  85% (3576/4206)Updating files:  86% (3618/4206)Updating files:  87% (3660/4206)Updating files:  88% (3702/4206)Updating files:  89% (3744/4206)Updating files:  90% (3786/4206)Updating files:  91% (3828/4206)Updating files:  92% (3870/4206)Updating files:  92% (3887/4206)Updating files:  93% (3912/4206)Updating files:  94% (3954/4206)Updating files:  95% (3996/4206)Updating files:  96% (4038/4206)Updating files:  97% (4080/4206)Updating files:  98% (4122/4206)Updating files:  99% (4164/4206)Updating files: 100% (4206/4206)Updating files: 100% (4206/4206), done.
+HEAD is now at 9c9d86ae track F link FS2a (HPP-381): defaults KYTY_FIX_MINIMIZE 0 -> 1 and KYTY_FIX_B9A 0 -> 1 - ROADMAP p.298(v), p.327(g)
+--- worktree HEAD
+9c9d86ae82fdcd79875879f4c17fc08da8c802bc track F link FS2a (HPP-381): defaults KYTY_FIX_MINIMIZE 0 -> 1 and KYTY_FIX_B9A
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- git status --short (worktree vs its HEAD, literal; empty = clean)
+0
+--- git diff --stat (literal, worktree vs HEAD)
+--- CR bytes in src/ (worktree files)
+files 452 with CR 0
+WT OK

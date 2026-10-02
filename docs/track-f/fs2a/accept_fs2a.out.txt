@@ -1,0 +1,61 @@
+== fs2a build/install/kyty_emulator.exe size 24609792 sha256 bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     1  want 1 OK
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  KytyPS5-2026-09-15-6a2987a-1854-g9c9d86ae    2  want >=1 OK
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    0
+  DualSrcBlend: supported=                     1  want 1 OK
+  DualSrcBlend: patched                        1  want 1 OK
+  KYTY_FIX_DUALSRC                             1  want 1 OK
+  KYTY_FIX_B26                                 1  want 1 OK
+  KYTY_FIX_B1B                                 1  want 1 OK
+  KYTY_FIX_MINIMIZE                            1  want 1 OK
+  KYTY_TEST_MINIMIZE                           1  want 1 OK
+  FixMinimize: on                              1  want 1 OK
+  SwapchainZeroExtent: begin                   1
+  KYTY_FIX_B9A                                 1  want 1 OK
+  FixB9a: on                                   1  want 1 OK
+  AudioPropagation: calls                      1  want 1 OK
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  KYTY_RT_SKIP                                 1
+== dac02fb9 (FS copy) C:/kyty/f287/bin/kyty_emulator_dac02fb9.exe size 24573952 sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     1
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  KytyPS5-2026-09-15-6a2987a-1854-g9c9d86ae    0
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    2
+  DualSrcBlend: supported=                     1
+  DualSrcBlend: patched                        1
+  KYTY_FIX_DUALSRC                             1
+  KYTY_FIX_B26                                 1
+  KYTY_FIX_B1B                                 1
+  KYTY_FIX_MINIMIZE                            1
+  KYTY_TEST_MINIMIZE                           1
+  FixMinimize: on                              1
+  SwapchainZeroExtent: begin                   1
+  KYTY_FIX_B9A                                 0
+  FixB9a: on                                   0
+  AudioPropagation: calls                      0
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  KYTY_RT_SKIP                                 1
+== installed C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe size 24573952 sha256 dac02fb9d6fd32b3e812bb4cce6468375e746f8724a222d7f9b4073f49d1200e
+  56189185f9e9f9a0ea5174f3f85206e6d099db3d     1
+  699c1e4b7db359067b461e029b913c4b6e78dc90     0
+  KytyPS5-2026-09-15-6a2987a-1854-g9c9d86ae    0
+  KytyPS5-2026-09-15-6a2987a-1766-g95eec776    2
+  DualSrcBlend: supported=                     1
+  DualSrcBlend: patched                        1
+  KYTY_FIX_DUALSRC                             1
+  KYTY_FIX_B26                                 1
+  KYTY_FIX_B1B                                 1
+  KYTY_FIX_MINIMIZE                            1
+  KYTY_TEST_MINIMIZE                           1
+  FixMinimize: on                              1
+  SwapchainZeroExtent: begin                   1
+  KYTY_FIX_B9A                                 0
+  FixB9a: on                                   0
+  AudioPropagation: calls                      0
+  KYTY_S_PCW                                   4
+  KYTY_BIND_LEAN                               1
+  KYTY_RT_SKIP                                 1
+ACCEPT ALL OK

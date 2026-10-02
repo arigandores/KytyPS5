@@ -1,0 +1,62 @@
+diff 4fc501f4 9c9d86ae :  47 files changed, 7580 insertions(+), 130 deletions(-)
+KYTY_* names on +/- lines: 18
+KYTY_ARM_INLINE  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:449
+   tip src/common/gates.cpp:449:{"KYTY_ARM_INLINE", "acinline", 0, 1}, | table row fallback 0
+KYTY_ARM_IN_COPY  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:445
+   tip src/common/gates.cpp:445:{"KYTY_ARM_IN_COPY", "armcopy", 0, 4}, | table row fallback 0
+KYTY_ARM_LOSS_WIN  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:453
+   tip src/common/gates.cpp:453:{"KYTY_ARM_LOSS_WIN", "lwin", 0, 3}, | table row fallback 0
+KYTY_B2_REUSE  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:465
+   tip src/common/gates.cpp:465:{"KYTY_B2_REUSE", "b2reuse", 0, 3}, | table row fallback 0
+KYTY_BIND_LEAN  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:473
+   tip src/common/gates.cpp:473:{"KYTY_BIND_LEAN", "bindlean", 0, 3}, | table row fallback 0
+KYTY_DISP_CEILING  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:457
+   tip src/common/gates.cpp:457:{"KYTY_DISP_CEILING", "dispceil", 0, 1}, | table row fallback 0
+KYTY_DUMP_GCN  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1298
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1254:const char* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1298:const char* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3593:const auto* value = std::getenv("KYTY_DUMP_GCN"); | default-off/other (read by hand)
+KYTY_FIX_B1B  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346
+   tip src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346:const char* value = std::getenv("KYTY_FIX_B1B"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B26  added_lines=1 removed_lines=0
+   + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331
+   tip src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331:const char* value = std::getenv("KYTY_FIX_B26"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_B9A  added_lines=1 removed_lines=0
+   + src/libs/libAudio.cpp:374
+   tip src/libs/libAudio.cpp:374:const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_DUALSRC  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/vulkanWindow.cpp:666
+   tip src/graphics/presentation/window/vulkanWindow.cpp:666:const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC"); | DEFAULT-ON (unset = ON)
+KYTY_FIX_MINIMIZE  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/swapchain.cpp:311
+   tip src/graphics/presentation/window/swapchain.cpp:311:const char* value = std::getenv("KYTY_FIX_MINIMIZE"); | DEFAULT-ON (unset = ON)
+KYTY_PROT_CEILING  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:440
+   tip src/common/gates.cpp:440:{"KYTY_PROT_CEILING", "protceil", 0, 2}, | table row fallback 0
+KYTY_REBIND_CENSUS  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:461
+   tip src/common/gates.cpp:461:{"KYTY_REBIND_CENSUS", "rbcen", 0, 2}, | table row fallback 0
+KYTY_REBIND_SLOW_CENSUS  added_lines=1 removed_lines=0
+   + src/common/gates.cpp:469
+   tip src/common/gates.cpp:469:{"KYTY_REBIND_SLOW_CENSUS", "rbslow", 0, 1}, | table row fallback 0
+KYTY_S_PCW  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:277
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:277:const char* value = std::getenv("KYTY_S_PCW"); | default-off/other (read by hand)
+KYTY_S_PCW_FORCE_MS  added_lines=1 removed_lines=0
+   + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:288
+   tip src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:288:const char* value = std::getenv("KYTY_S_PCW_FORCE_MS"); | default-off/other (read by hand)
+KYTY_TEST_MINIMIZE  added_lines=1 removed_lines=0
+   + src/graphics/presentation/window/window.cpp:1055
+   tip src/graphics/presentation/window/window.cpp:1055:const char*  value = std::getenv("KYTY_TEST_MINIMIZE"); | default-off/other (read by hand)
+DEFAULT-ON names (unset = ON): KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+expected (p.298(v) + p.327(g)): KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+DEFAULT-ON == expected: True
+ALL OK

@@ -1,0 +1,9 @@
+track F link FS2a (HPP-381): defaults KYTY_FIX_MINIMIZE 0 -> 1 and KYTY_FIX_B9A 0 -> 1 - ROADMAP p.298(v), p.327(g)
+
+Second shipment binary of track F (FS2): the readings of KYTY_FIX_MINIMIZE (FixMinimizeEnabled,
+swapchain.cpp) and KYTY_FIX_B9A (InitAudio_1_AudioPropagation, libAudio.cpp) take unset or "" as
+ON (the form of FSa 95eec776 for KYTY_FIX_DUALSRC); 0/false/off/no = OFF, the old path. B9a is
+FIXED by p.327 (F6f), so its default goes in with the B37 one. Only the two knob readings and
+their comments change; the stand KYTY_TEST_MINIMIZE stays unset by default.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

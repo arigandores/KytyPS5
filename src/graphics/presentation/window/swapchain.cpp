@@ -301,13 +301,15 @@ void Presenter::Frame::Clear(CommandBuffer& command_buffer, const vk::ClearColor
 	Transit(command, vk::ImageLayout::eTransferSrcOptimal, vk::AccessFlagBits2::eTransferRead);
 }
 
-// Track F, F5 (ROADMAP s122 item 273(e)(1), B37): KYTY_FIX_MINIMIZE (default 0 until F5d; 0 - the old path byte for
-// byte).  1: a swapchain recreate that finds currentExtent 0 on either axis (a minimized window) creates no swapchain;
-// Presenter::Present drops its frames without blocking and retries on each later present until the extent is non-zero.
+// Track F, F5 (ROADMAP s122 item 273(e)(1), B37): KYTY_FIX_MINIMIZE (default ON since FS2a, HPP-381, item 298(v):
+// unset or "" = ON as KYTY_FIX_DUALSRC; 0/false/off/no = OFF - the old path byte for byte).  ON: a swapchain
+// recreate that finds currentExtent 0 on either axis (a minimized window) creates no swapchain; Presenter::Present
+// drops its frames without blocking and retries on each later present until the extent is non-zero.
 // Read once; "FixMinimize: on" is logged only when on.
 static bool FixMinimizeEnabled() {
 	static const bool enabled = [] {
-		const bool on = Common::EnvFlagOn("KYTY_FIX_MINIMIZE");
+		const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+		const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
 		if (on) {
 			LOGF("FixMinimize: on\n");
 		}

@@ -31,9 +31,10 @@ struct AudioPropagationSystemMemory {
 	size_t                           size_gpu_mem;
 };
 
-// Track F, F6 (ROADMAP s122 item 287(c), B9a): KYTY_FIX_B9A (default 0 until the shipment link; 0 - the old path byte
-// for byte: the 16 NIDs of the second block of InitAudio_1_AudioPropagation are not registered, nothing is counted
-// or logged).  1: V1 of the F6a design (docs/track-f/f6a-b9a.md section 5) - the 16 functions the game imports and the
+// Track F, F6 (ROADMAP s122 item 287(c), B9a): KYTY_FIX_B9A (default ON since FS2a, HPP-381, items 298(v) and 327(g):
+// unset or "" = ON as KYTY_FIX_DUALSRC; 0/false/off/no = OFF - the old path byte for byte: the 16 NIDs of the second
+// block of InitAudio_1_AudioPropagation are not registered, nothing is counted or logged).  ON: V1 of the F6a design
+// (docs/track-f/f6a-b9a.md section 5) - the 16 functions the game imports and the
 // emulator did not resolve return 0 with a consistent empty state: PortalCreate and SourceCreate write a new non-zero
 // handle (while the handle reads 0 the game creates the source again on every update), SourceGetAudioPathCount and
 // SourceGetRays write a zero count, SourceGetAudioPath and SourceRender leave their output alone (no paths; the render
@@ -369,7 +370,9 @@ LIB_DEFINE(InitAudio_1_AudioPropagation) {
 	LIB_FUNC("ht-QXT3zGxo", LibAudioPropagation::AudioPropagationSystemGetRays);
 
 	// F6 (B9a): read on each registration (the emulator registers once; the test registers with 0 and with 1).
-	const bool fix_b9a = Common::EnvFlagOn("KYTY_FIX_B9A");
+	// Default ON since FS2a (HPP-381, ROADMAP s122 items 298(v), 327(g)): unset or "" = ON.
+	const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+	const bool  fix_b9a       = fix_b9a_value == nullptr || fix_b9a_value[0] == '\0' || Common::EnvValueOn(fix_b9a_value);
 	g_b9a_enabled.store(fix_b9a, std::memory_order_relaxed);
 	if (fix_b9a) {
 		LOGF("FixB9a: on\n");

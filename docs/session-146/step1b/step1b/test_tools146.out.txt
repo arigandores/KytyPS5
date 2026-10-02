@@ -1,0 +1,23 @@
+suite test_tools146.py sha256 a0afebfd97358341aa08b5884039b14163006bd10e85946c7e6445b097d4a65f target cachemf146.py sha256 0e3e88a2dacc5d0277e0adc6f7fcdd433cb894f136e17cd50b7dd841f7c22ffe target lockcheck146.py sha256 86118cb0b5f1bfb0799517e2146edfff8ce795f1d01dfaea6ac6c5085b3120ad
+PASS t1 every file of every root: relative path with "/", size, mtime ns, sha256; the absent root is listed absent
+PASS t2 the line: counts and bytes per root, "absent", the sha256 of the json; no directory printed
+PASS t3 the round trip into sc146: two manifests of the same caches are equal (continuity "same")
+PASS t4 a rewritten file (same size, new content) and a new driver file -> changed between tags, the break at r146_01
+PASS t5 a root that appears (an empty pipeline cache) is a presence change
+PASS t6 an unknown root, no output path, a --root without a value -> usage rc 2
+PASS t7 a json that cannot be written -> rc 1 with one line
+PASS t8 the default roots: the emulator caches and LOCALAPPDATA/NVIDIA/GLCache (USERPROFILE/AppData/Local without it)
+PASS t9 the real roots read only: the translation cache is present and listed with sha256 (counts only printed)
+  real roots: shader 1742, pipeline 4, glcache 16
+PASS l1 no lock -> NO LOCK rc 0, with the installed sha against the pinned build
+PASS l2 the holder pid alive or a kyty_emulator.exe alive -> HELD rc 1, never removed (even with --remove)
+PASS l3 no holder and no emulator -> DANGLING rc 2, read only without --remove; the lock mtime in UTC
+PASS l4 --remove with another tag -> UNKNOWN OWNER rc 1; --remove without --tag -> rc 2; the lock stays
+PASS l5 --remove --tag of the lock: the lock is removed, rc 0; times.txt carries both times (noticed, lock mtime) with the source and the lock line; lock.log the release line
+PASS l6 a lock line without winpid (the old form) or of another chain -> UNKNOWN OWNER rc 1, never removed
+PASS l7 the constants: the real lock, the s146 root, the installed emulator, the pinned build
+PASS l8 the real kernel32 checks: this process is alive, a finished process is not; the emulator check is a bool
+PASS t10 both tools in a child without PYTHONIOENCODING (console cp1250): their lines, rc 0, no error (a non-ASCII file name under a root is kept in the json, not in the line)
+PASS t11 the json of a non-ASCII file name is ASCII (escaped)
+checks: 19
+ALL OK

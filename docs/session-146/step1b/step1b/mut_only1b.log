@@ -1,0 +1,72 @@
+mutlib 4.1  harness C:\kyty\KytyPS5\docs\session-116\mutlib_v41\mutlib.py sha256 db82ef4bcf05ddea365f50c403029bfc5d2a7a4400a12d254a6b0cc6ab3e6dde
+scorer  C:\kyty\s146\sc146.py sha256 eef4b31ed867617a60e84bef707754be16c35e4ae85860af8c1f504859e13c0a
+test    C:\kyty\s146\test_sc146.py sha256 baca7587479be2847dd87827e138eeb65ee8904ba9abb0465e70f95f58b4c86d
+mutants C:\kyty\s146\mut_sc146.py sha256 eaa64497b66467c97dea7e9e0c774915acc01dbb94c76d3084a7448cfd47ac4c
+mutants: format list, 812 defined (strict: every use of MUTANTS checked; statements evaluated at lines 102)
+selection: --only, 22 mutants
+suite: family V; fast on (490 guarded updates of ok); end of suite: the final exit call at line 3729
+isolation: one fresh spawned process per job; a crash outside the scorer or a dead job process is confirmed by a rerun; old console encoding cp1250 (noted, not emulated)
+fixtures: replay candidates ['cal_log', 'cb_run', 'census', 'changed', 'fails', 'manifest', 'mk143', 'mk144', 'mk145', 'mk146', 'mkrun', 'pair', 'pair143', 's6', 's7', 's8', 's9', 'sheet_case', 'tline', 'w34', 'wstop', 'x144root', 'xroot'] (validated by two baselines before any job uses them); every job runs with PYTHONHASHSEED=0
+workers 12 (spawn, one process per job), work dir C:\kyty\s146\step1b\mutwork\sc146_60064_1790932664
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.07 s in the baseline (52 of 527 calls validated; not validated: 302 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+BASELINE passed in 57.3 s (memo off); mutant timeout 172 s; workers 12
+[1/25] g_pred  KILLED by test line 3280  (22.7 s)
+[2/25] k_file  KILLED by test line 3501  (23.2 s)
+[3/25] k_pairv  KILLED by test line 3491  (22.9 s)
+[4/25] k_ne2  KILLED by test line 3491  (23.0 s)
+[5/25] k_head  KILLED by test line 3491  (23.5 s)
+[6/25] k_ne_off  KILLED by test line 3491  (23.8 s)
+[7/25] k_key_src  KILLED by test line 3597  (23.7 s)
+[8/25] k_lp  KILLED by test line 3491  (23.3 s)
+k_nolog: KILLED (crash: FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\kyty\\s146\\step1b\\mutwork\\sc146_60064_1790932664\\j000... [<frozen genericpath>:86]) - confirming in a fresh process
+[9/25] CONTROL CONTROL_comment_after_docstring  SURVIVED  (27.7 s)
+[10/25] CONTROL CONTROL_pass_end_of_main  SURVIVED  (27.6 s)
+[11/25] CONTROL CONTROL_module_pass_at_end  SURVIVED  (28.0 s)
+[12/25] k_nolog_rc  KILLED by test line 3529  (27.5 s)
+[13/25] k_size_src  KILLED by test line 3491  (28.2 s)
+[14/25] k_fs_src  KILLED by test line 3562  (28.0 s)
+[15/25] k_ts  KILLED by test line 3552  (27.9 s)
+[16/25] k_size  KILLED by test line 3540  (27.7 s)
+[17/25] k_size_rc  KILLED by test line 3540  (27.6 s)
+[18/25] k_sha  KILLED by test line 3552  (27.6 s)
+[19/25] k_nolog  KILLED (crash: FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\kyty\\s146\\step1b\\mutwork\\sc146_60064_1790932664\\j000... [<frozen genericpath>:86])  (28.1 s)  [rerun in a fresh process to confirm; first run: KILLED (crash: FileNotFoundError: [WinError 2] The system cannot find the file specifie...]
+[20/25] k_sha_rc  KILLED by test line 3552  (27.9 s)
+[21/25] k_skip_rc  KILLED by test line 3491  (26.3 s)
+[22/25] k_key_rc  KILLED by test line 3597  (27.0 s)
+[23/25] k_key  KILLED by test line 3597  (27.4 s)
+[24/25] k_none  KILLED by test line 3491  (22.9 s)
+[25/25] k_main_rc  KILLED by test line 3491  (22.6 s)
+fixtures: replay OFF after the baselines: the validated generator calls took only 0.07 s in the baseline (52 of 527 calls validated; not validated: 302 x a scorer function (level_of); 84 x it returns a dict (only immutable values are replayed); 40 x it returns a tuple (only immutable values are replayed))
+fast: confirmed by the baseline (the final exit with ok=False gives 1)
+BASELINE  SURVIVED  (57.3 s)
+BASELINE#2  SURVIVED  (57.4 s)  [fixture replay validation]
+CONTROL CONTROL_comment_after_docstring  SURVIVED  (27.7 s)
+CONTROL CONTROL_pass_end_of_main  SURVIVED  (27.6 s)
+CONTROL CONTROL_module_pass_at_end  SURVIVED  (28.0 s)
+g_pred  KILLED by test line 3280  (22.7 s)
+k_file  KILLED by test line 3501  (23.2 s)
+k_pairv  KILLED by test line 3491  (22.9 s)
+k_ne2  KILLED by test line 3491  (23.0 s)
+k_ne_off  KILLED by test line 3491  (23.8 s)
+k_key_src  KILLED by test line 3597  (23.7 s)
+k_head  KILLED by test line 3491  (23.5 s)
+k_lp  KILLED by test line 3491  (23.3 s)
+k_nolog  KILLED (crash: FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\kyty\\s146\\step1b\\mutwork\\sc146_60064_1790932664\\j000... [<frozen genericpath>:86])  (28.1 s)  [rerun in a fresh process to confirm; first run: KILLED (crash: FileNotFoundError: [WinError 2] The system cannot find the file specifie...]
+k_nolog_rc  KILLED by test line 3529  (27.5 s)
+k_size_src  KILLED by test line 3491  (28.2 s)
+k_fs_src  KILLED by test line 3562  (28.0 s)
+k_ts  KILLED by test line 3552  (27.9 s)
+k_size  KILLED by test line 3540  (27.7 s)
+k_size_rc  KILLED by test line 3540  (27.6 s)
+k_sha  KILLED by test line 3552  (27.6 s)
+k_sha_rc  KILLED by test line 3552  (27.9 s)
+k_key  KILLED by test line 3597  (27.4 s)
+k_key_rc  KILLED by test line 3597  (27.0 s)
+k_skip_rc  KILLED by test line 3491  (26.3 s)
+k_none  KILLED by test line 3491  (22.9 s)
+k_main_rc  KILLED by test line 3491  (22.6 s)
+22 mutants: 22 killed (1 by a crash of the suite), 0 survived, 0 unresolved (timeout / harness error / environment / not reproduced); 1 confirmed by a rerun in a fresh process, 0 rerun without the memo, 0 rerun alone, 0 rerun isolated (they touched the shared fixtures)
+controls: 3 of 3 survived
+early exit: 21 kill(s) ended at their first failing case; they skipped a median 4 % / mean 4 % of the suite's 550 checks, about 6.8 s of the baseline's suite time per job (143 s in all)
+wall 135.3 s, worker time 760.7 s, 12 workers
+ALL KILLED (22 of 22 selected mutants killed; 812 defined in the mutant script)

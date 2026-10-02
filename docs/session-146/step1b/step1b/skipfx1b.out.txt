@@ -1,0 +1,9 @@
+sc146.py sha256 eef4b31ed867617a60e84bef707754be16c35e4ae85860af8c1f504859e13c0a
+case A: V json present, log_v146_05.txt ABSENT, no score.json, no step2/times.txt
+rc 1 | RUN w146_05: its V v146_05 outcome NOT_ENTERED key attempt:ok (log (no score.json)); no log_v146_05.txt - no positive evidence (item 316 (b))
+case B: log_v146_05.txt present, 0 bytes
+rc 1 | RUN w146_05: its V v146_05 outcome NOT_ENTERED key attempt:ok (log (no score.json)); log_v146_05.txt 0 bytes - no positive evidence (item 316 (b))
+case C: the log present (99 bytes) = its enter_scene end line of step2/times.txt, no entry line, no marker
+rc 0 | SKIPPED_V_NOT_ENTERED w146_05: its V v146_05 outcome NOT_ENTERED key attempt:ok (log (no score.json)); log_v146_05.txt 99 bytes sha256 82a634284239b1e6 = the enter_scene end line of step2/times.txt, no entry line (item 309 (k)(1), 316 (b)-(d))
+case D: the same with a "--- Error ---" line before any entry line (its times.txt line renewed)
+rc 1 | RUN w146_05: its V v146_05 outcome NOT_ENTERED key --- Error --- (log (no score.json)); a death marker before the entry line - the W runs (item 316 (c))

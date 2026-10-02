@@ -14,6 +14,7 @@
 #include "kernel/memory.h"
 #include "libs/errno.h"
 #include "libs/libs.h"
+#include "loader/gamePatchFile.h"
 #include "loader/runtimeLinker.h"
 #include "loader/timer.h"
 
@@ -181,7 +182,10 @@ bool GuestSpeedEnabled() {
 		const char* value = std::getenv("KYTY_AUDIO_SYNC");
 		return value == nullptr || std::atoi(value) != 0;
 	}();
-	return enabled;
+	// Track P, the patch file (loader/gamePatchFile.h, ROADMAP s122 item 333(g)): an applied "audio_sync 0" turns the
+	// guest speed off as KYTY_AUDIO_SYNC=0 does. An atomic flag read on every call, not folded into the static: the
+	// window and present threads may read the guest TSC before the file is loaded; false without KYTY_GAME_PATCH.
+	return enabled && !Loader::GamePatchFile::AudioSyncOff();
 }
 
 // Base guest ticks: raw TSC minus the time spent inside freezes. Caller holds state.mutex.

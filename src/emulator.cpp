@@ -23,6 +23,7 @@
 #include "libs/libSaveData.h"
 #include "libs/libs.h"
 #include "libs/network.h"
+#include "loader/gamePatchFile.h"
 #include "loader/runtimeLinker.h"
 #include "loader/systemContent.h"
 #include "loader/timer.h"
@@ -246,6 +247,14 @@ void Run(const RunOptions& options) {
 	Libs::LibKernel::FileSystem::Mount(options.app0_dir, "/hostapp");
 
 	MountSandboxDirs();
+
+	// Track P, KYTY_GAME_PATCH (loader/gamePatchFile.h, ROADMAP s122 item 333(d)): the decision before Libs::InitAll,
+	// whose registration reads PVar::Mode(); without the variable nothing is called.
+	if (const char* game_patch_file = std::getenv("KYTY_GAME_PATCH");
+	    game_patch_file != nullptr && game_patch_file[0] != '\0') {
+		Loader::GamePatchFile::Load(
+		    Libs::LibKernel::FileSystem::GetRealFilename(Common::PathToGenericString(options.elf)));
+	}
 
 	auto* rt = Common::Singleton<Loader::RuntimeLinker>::Instance();
 	Libs::InitAll(rt->Symbols());

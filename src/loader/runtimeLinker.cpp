@@ -20,6 +20,7 @@
 #include "kernel/pvar.h"
 #include "loader/elf.h"
 #include "loader/gamePatch.h"
+#include "loader/gamePatchFile.h"
 #include "loader/jit.h"
 #include "loader/redZonePatcher.h"
 #include "loader/symbolDatabase.h"
@@ -1537,6 +1538,19 @@ void RuntimeLinker::Execute(const std::filesystem::path& game_patch) {
 		}
 	}
 	StartAllModules();
+
+	// Track P, KYTY_GAME_PATCH (loader/gamePatchFile.h, ROADMAP s122 item 333(d)): the pokes of the applied file, written
+	// as the KYTY_POKE loop below writes them (offsets from the main module base), before it; no file - no pokes.
+	if (GamePatchFile::Active() && !m_programs.empty()) {
+		const auto base = m_programs.front()->base_vaddr;
+		for (const auto& poke: GamePatchFile::Pokes()) {
+			const auto addr = base + poke.offset;
+			for (size_t i = 0; i < poke.bytes.size(); i++) {
+				*reinterpret_cast<uint8_t*>(addr + i) = poke.bytes[i];
+			}
+			LOGF("GamePatch: poke 0x%016" PRIx64 " <- %s\n", addr, poke.hex.c_str());
+		}
+	}
 
 	// KYTY_POKE=<hex addr>:<hex bytes>[,<addr>:<bytes>...] - write bytes into guest memory before the entry
 	// point runs (addresses below 0x100000000 are relative to the main module base).

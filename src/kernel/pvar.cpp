@@ -5,6 +5,7 @@
 #include "common/logging/log.h"
 #include "common/threads.h"
 #include "kernel/pthread.h"
+#include "loader/gamePatchFile.h"
 
 #include <atomic>
 #include <cinttypes>
@@ -160,6 +161,11 @@ void OnM0() {
 
 int Mode() {
 	static const int mode = [] {
+		// Track P, the patch file (loader/gamePatchFile.h, ROADMAP s122 item 333(d)): an applied "pvar 2" is mode 2
+		// (an explicit KYTY_PVAR other than "2" refuses the file, so the two never disagree).
+		if (Loader::GamePatchFile::PvarOn()) {
+			return 2;
+		}
 		const char* value = std::getenv("KYTY_PVAR");
 		if (value == nullptr || value[0] == '\0' || std::strcmp(value, "0") == 0) {
 			return 0;

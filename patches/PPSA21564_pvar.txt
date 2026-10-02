@@ -1,0 +1,15 @@
+# ASTRO BOT (PPSA21564): track P, P-var iteration 1 - the opt-in patch file (ROADMAP s122 item 333(d)).
+# Use: KYTY_GAME_PATCH=<path of this file>. Without the variable the emulator does not look for it.
+# Bound to one eboot.bin by its sha256: another eboot - "GamePatch: refused reason=sha", nothing applied.
+# Only the sha256 of the eboot and our own new bytes are here; no bytes of the game.
+sha256 3b5100797fe83663e18a650f82f901d066acf1029ae80cfb1be638fe0839debd
+
+# The frame limiter decoupled from the step cell (item 283(v)(6)): 25 new bytes at base + 0x2a470b.
+poke 2a470b:c5fb10051ddd0a08c5fb5905b5c40a08c5f25a8d40ffffff90
+# Havok inertia takes the constant 0x8340460 instead of the step cell (item 283(v)(5)(a)).
+poke 687375:e790cb07
+
+# The step k/60 written at the start of the main thread's frame (KYTY_PVAR=2, items 283(v)(1), 284(v)).
+pvar 2
+# The guest speed (audio tempo) off, as KYTY_AUDIO_SYNC=0 (item 333(g)).
+audio_sync 0

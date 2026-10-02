@@ -1,0 +1,34 @@
+f6e_a1 fix=1 log 04127ee76396cbf7
+  stubs log 0 (AudioPropagation 0) by symbol []; stdout stub-like 0
+  ASSERT: log 0 stdout 0; user_msg_param 0; FixB9a: on 1; death-like {}
+  FrameTrace rows 7352; frames >= 1 s (whole log) 0; >= 100 ms (whole log, incl. entry) 1; max dt 160676 us
+  last AudioPropagation: calls total=53504 handles=84 SourceCreate=48 SourceDestroy=48 SourceRender=6954 SourceSetAttributes=11482 SourceGetRays=4480 SourceCalculateAudioPaths=4480 PortalCreate=2
+  rough rate after Level has started: dSourceCreate 48 / rows 7195 = 0.0067
+  lead check ok
+f6e_a2 fix=1 log 3925f46a1c1c3292
+  stubs log 0 (AudioPropagation 0) by symbol []; stdout stub-like 0
+  ASSERT: log 0 stdout 0; user_msg_param 0; FixB9a: on 1; death-like {}
+  FrameTrace rows 7307; frames >= 1 s (whole log) 0; >= 100 ms (whole log, incl. entry) 0; max dt 56296 us
+  last AudioPropagation: calls total=54016 handles=84 SourceCreate=48 SourceDestroy=48 SourceRender=7142 SourceSetAttributes=11790 SourceGetRays=4600 SourceCalculateAudioPaths=4600 PortalCreate=2
+  rough rate after Level has started: dSourceCreate 48 / rows 7148 = 0.0067
+  lead check ok
+f6e_b1 fix=1 log 7bd3efe7f0f7a0dd
+  stubs log 0 (AudioPropagation 0) by symbol []; stdout stub-like 0
+  ASSERT: log 0 stdout 0; user_msg_param 0; FixB9a: on 1; death-like {}
+  FrameTrace rows 3936; frames >= 1 s (whole log) 0; >= 100 ms (whole log, incl. entry) 1; max dt 184453 us
+  last AudioPropagation: calls total=11008 handles=36 SourceCreate=0 SourceDestroy=0 SourceRender=0 SourceSetAttributes=0 SourceGetRays=0 SourceCalculateAudioPaths=0 PortalCreate=2
+  rough rate after Level has started: dSourceCreate 0 / rows 3785 = 0.0000
+  lead check ok
+f6e_c1 fix=0 log d41cdfdb95dcd236
+  stubs log 1024 (AudioPropagation 1024) by symbol [('d84otraxt2s[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 363), ('G+QLTfyLMYk[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 363), ('WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 296), ('b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 2)]; stdout stub-like 0
+  ASSERT: log 0 stdout 0; user_msg_param 0; FixB9a: on 0; death-like {}
+  FrameTrace rows 7560; frames >= 1 s (whole log) 0; >= 100 ms (whole log, incl. entry) 0; max dt 49943 us
+  AudioPropagation: calls lines 0
+  lead check ok
+f6e_c2 fix=0 log 8fd8c0095fbd3049
+  stubs log 1024 (AudioPropagation 1024) by symbol [('WXMhENV2NcA[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 1022), ('b-dYXrjSNZU[AudioPropagation_v1][AudioPropagation_v1.0][Func]', 2)]; stdout stub-like 0
+  ASSERT: log 0 stdout 0; user_msg_param 0; FixB9a: on 0; death-like {}
+  FrameTrace rows 3803; frames >= 1 s (whole log) 0; >= 100 ms (whole log, incl. entry) 1; max dt 198754 us
+  AudioPropagation: calls lines 0
+  lead check ok
+F6F RECOUNT ALL OK

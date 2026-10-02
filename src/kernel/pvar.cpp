@@ -35,6 +35,31 @@ std::atomic<uint64_t> g_n {0};
 std::atomic<int64_t>  g_writer {0};
 std::atomic<uint32_t> g_bad_logged {0};
 std::atomic<uint32_t> g_foreign_logged {0};
+// Item 346(g): KYTY_PVAR_HOLD=1 accepted by Arm (mode 2 armed); set before g_m0_ra, never cleared.
+std::atomic<bool>     g_hold {false};
+// The time (KernelGetProcessTime, us) of the vblank in g_vb; g_vb and g_vb_t are published together under the seqlock
+// g_vb_seq (odd - a write in progress; the Present thread is the only writer).
+std::atomic<uint64_t> g_vb_t {0};
+std::atomic<uint64_t> g_vb_seq {0};
+
+struct Vblank {
+	uint64_t v = 0;
+	uint64_t t = 0;
+};
+
+Vblank ReadVblank() {
+	for (;;) {
+		const uint64_t s1 = g_vb_seq.load(std::memory_order_acquire);
+		Vblank         vb;
+		vb.v = g_vb.load(std::memory_order_relaxed);
+		vb.t = g_vb_t.load(std::memory_order_relaxed);
+		std::atomic_thread_fence(std::memory_order_acquire);
+		const uint64_t s2 = g_vb_seq.load(std::memory_order_relaxed);
+		if ((s1 & 1u) == 0 && s1 == s2) {
+			return vb;
+		}
+	}
+}
 
 struct Writer {
 	bool     started = false; // the first M0 only remembers v
@@ -44,6 +69,8 @@ struct Writer {
 	uint32_t k_prev  = 1; // the image's k
 	uint64_t w       = 0;
 	Cells    last {};
+	uint32_t kt      = HOLD_KT_START; // item 346(g): the hold target, used only with g_hold
+	uint32_t fit     = 0;
 };
 
 Writer g_writer_state; // the writer thread only
@@ -80,6 +107,23 @@ void Refuse(const char* reason) {
 	LOGF("PVar: refused reason=%s\n", reason);
 }
 
+// Item 346(g): KYTY_PVAR_HOLD, read once per process: 0 - unset, empty or "0"; 1 - "1"; -1 - anything else.
+int HoldMode() {
+	static const int mode = [] {
+		const char* value = std::getenv("KYTY_PVAR_HOLD");
+		if (value == nullptr || value[0] == '\0' || std::strcmp(value, "0") == 0) {
+			return 0;
+		}
+		return std::strcmp(value, "1") == 0 ? 1 : -1;
+	}();
+	return mode;
+}
+
+// Item 346(g): the hold is refused - one line, no counter, the P23 path goes on (or nothing, without P-var).
+void RefuseHold() {
+	LOGF("PVar: refused reason=hold\n");
+}
+
 // The write at M0 (item 284(v)); the caller is the M0 call of the armed process.
 void OnM0() {
 	const int64_t self     = static_cast<int64_t>(Common::Thread::GetThreadIdUnique()) + 1;
@@ -92,17 +136,56 @@ void OnM0() {
 		return;
 	}
 	auto&          st = g_writer_state;
-	const uint64_t v  = g_vb.load(std::memory_order_acquire);
+	const uint64_t t0 = KernelGetProcessTime();
+	Vblank         vb = ReadVblank();
 	const uint64_t n  = g_n.load(std::memory_order_relaxed);
 	if (!st.started) {
 		st.started = true;
-		st.v_prev  = v;
+		st.v_prev  = vb.v;
 		return;
 	}
+	// Item 346(g)(1), (4): kt = 0 without the hold (no wait); the slack is to the vblank v_prev + kt in both modes.
+	const bool     hold    = g_hold.load(std::memory_order_relaxed);
+	const uint32_t kt      = hold ? st.kt : 0;
+	const uint64_t target  = st.v_prev + kt;
+	const int64_t  slack   = VblankTimeUs(vb.t, vb.v, target) - static_cast<int64_t>(t0);
+	int64_t        wait_us = 0;
+	int64_t        exit_us = 0; // after the target vblank; -1 - the wait ended at the deadline
+	if (hold && vb.v < target) {
+		const int64_t deadline = static_cast<int64_t>(t0) + static_cast<int64_t>(kt) * 1000000 / 60 + HOLD_CAP_US;
+		int64_t       now      = static_cast<int64_t>(t0);
+		bool          timeout  = false;
+		for (;;) {
+			const int64_t sleep = HoldSleepUs(now, VblankTimeUs(vb.t, vb.v, target), deadline);
+			if (sleep <= 0) {
+				timeout = true;
+				break;
+			}
+			Common::Thread::SleepMicro(static_cast<uint32_t>(sleep));
+			vb  = ReadVblank();
+			now = static_cast<int64_t>(KernelGetProcessTime());
+			if (vb.v >= target) {
+				break;
+			}
+		}
+		wait_us = now - static_cast<int64_t>(t0);
+		exit_us = timeout ? -1 : now - VblankTimeUs(vb.t, vb.v, target);
+	}
+	const uint64_t v    = vb.v;
 	const uint64_t d    = v - st.v_prev;
 	st.v_prev           = v;
 	const Step     step = Advance(d, st.c);
 	st.c                = step.c;
+	// Item 346(g)(2)-(3): up on a late frame, down after 30 fitting frames; the fields: kt - the target of this M0,
+	// fit - after this M0.
+	HoldStep hs;
+	hs.kt  = 0;
+	hs.fit = 0;
+	if (hold) {
+		hs     = Hold(st.kt, st.fit, d, slack);
+		st.kt  = hs.kt;
+		st.fit = hs.fit;
+	}
 
 	const uint64_t base = g_base.load(std::memory_order_relaxed);
 
@@ -153,8 +236,8 @@ void OnM0() {
 	// mode 2 write is at the frame boundary, ph = 0 by construction, so these counters are never added.
 
 	LOGF("PVar: n=%" PRIu64 " w=%" PRIu64 " d=%" PRIu64 " kraw=%" PRIu64 " c=%d k=%u s_us=%" PRIu64 " vb=%" PRIu64
-	     " ph=0 mode=2\n",
-	     n, st.w, d, d, st.c, step.k, cells.step_us, v);
+	     " ph=0 mode=2 kt=%u fit=%u wait_us=%" PRId64 " slack_us=%" PRId64 " late=%u t_us=%" PRIu64 " exit_us=%" PRId64 "\n",
+	     n, st.w, d, d, st.c, step.k, cells.step_us, v, kt, hs.fit, wait_us, slack, hs.late, t0, exit_us);
 }
 
 } // namespace
@@ -183,34 +266,37 @@ uint64_t KYTY_SYSV_ABI GetProcessTimeCounter() {
 	return KernelGetProcessTimeCounter();
 }
 
-void Arm(uint64_t base) {
+namespace {
+
+// The P23 arming; true - armed (the "PVar: armed" line printed), the caller publishes g_m0_ra.
+bool ArmMode2(uint64_t base) {
 	const int mode = Mode();
 	if (mode == 0) {
-		return;
+		return false;
 	}
 	if (mode != 2) {
 		Refuse("value");
-		return;
+		return false;
 	}
 	const Cells image = CellsFor(1);
 	if (base == 0 || Load<uint64_t>(base + CELL_FPS) != image.fps_bits ||
 	    Load<uint32_t>(base + CELL_STEP) != image.step_f32 || Load<uint64_t>(base + CELL_STEP_US) != image.step_us ||
 	    Load<uint32_t>(base + CELL_LIT) != image.step_f32) {
 		Refuse("image");
-		return;
+		return false;
 	}
 	const uint32_t vbl = Config::GetVblankFrequency();
 	if (vbl != 60) {
 		Refuse("vbl");
-		return;
+		return false;
 	}
 	if (std::memcmp(reinterpret_cast<const void*>(base + LIMITER), LIMITER_BYTES, sizeof(LIMITER_BYTES)) != 0) {
 		Refuse("limiter");
-		return;
+		return false;
 	}
 	if (std::memcmp(reinterpret_cast<const void*>(base + HAVOK), HAVOK_BYTES, sizeof(HAVOK_BYTES)) != 0) {
 		Refuse("havok");
-		return;
+		return false;
 	}
 	// Probe (design section 3.3): cell 4 lies in a read-only guest segment; write its own value before the armed line.
 	Store<uint32_t>(base + CELL_LIT, Load<uint32_t>(base + CELL_LIT));
@@ -222,6 +308,26 @@ void Arm(uint64_t base) {
 	     base, vbl, FpsOf(Load<uint64_t>(base + CELL_FPS)), Load<uint32_t>(base + CELL_STEP),
 	     Load<uint64_t>(base + CELL_STEP_US), Load<uint32_t>(base + CELL_LIT), Hex(base + LIMITER, 25).c_str(),
 	     Hex(base + HAVOK, 4).c_str());
+	return true;
+}
+
+} // namespace
+
+void Arm(uint64_t base) {
+	const int  hold  = HoldMode();
+	const bool armed = ArmMode2(base);
+	if (!armed) {
+		// Item 346(g): KYTY_PVAR_HOLD set (any value but 0) without armed mode 2 - one line, nothing else.
+		if (hold != 0) {
+			RefuseHold();
+		}
+		return;
+	}
+	if (hold == 1) {
+		g_hold.store(true, std::memory_order_relaxed);
+	} else if (hold != 0) {
+		RefuseHold();
+	}
 	// Last: from here the wrapper writes (seq_cst - the stores above are visible to the thread that sees it).
 	g_m0_ra.store(base + M0_RETURN);
 }
@@ -231,7 +337,14 @@ bool Publishing() {
 }
 
 void PublishVblank(uint64_t count) {
-	g_vb.store(count, std::memory_order_release);
+	// Item 346(g): the count and its time under the seqlock (the only writer - the Present thread).
+	const uint64_t t = KernelGetProcessTime();
+	const uint64_t s = g_vb_seq.load(std::memory_order_relaxed);
+	g_vb_seq.store(s + 1, std::memory_order_relaxed);
+	std::atomic_thread_fence(std::memory_order_release);
+	g_vb.store(count, std::memory_order_relaxed);
+	g_vb_t.store(t, std::memory_order_relaxed);
+	g_vb_seq.store(s + 2, std::memory_order_release);
 }
 
 void PublishFlip(uint64_t count) {

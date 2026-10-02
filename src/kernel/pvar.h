@@ -10,6 +10,12 @@
 //
 // The arithmetic part needs only the standard library: the P14 fixture (C:/kyty/p283/p14/test_pvar.cpp) compiles this
 // header with KYTY_PVAR_ARITHMETIC_ONLY, without the project configuration.
+//
+// Track P, iteration D1-1 (ROADMAP s122 item 346(g); docs/track-p/p30-hold.md): KYTY_PVAR_HOLD=1 - "cadence with a hold
+// at M0", only with mode 2 armed. The writer keeps the target step kt (in [1, 3], 2 at the start) and the counter fit; at
+// M0 the main guest thread waits until the vblank counter reaches v_prev + kt; k and the carry are Advance(d, c) as
+// before. KYTY_PVAR_HOLD unset or 0 - the P23 path (no wait), the "PVar:" line only gains the K4 fields (kt=0 wait_us=0).
+// Any other value, or 1 without armed mode 2 - "PVar: refused reason=hold" once and nothing else.
 
 #ifndef KYTY_PVAR_ARITHMETIC_ONLY
 #include "common/abi.h"
@@ -46,6 +52,74 @@ constexpr Step Advance(uint64_t d, int32_t c) {
 	s.lost = static_cast<uint64_t>(rest > 0 ? rest : 0);
 	s.over = static_cast<uint64_t>(c_new - c_raw);
 	return s;
+}
+
+// Item 346(g)(2)-(3): the hold arithmetic. kt, fit - the writer state before this M0; d - vblanks between the two M0
+// after the wait; slack_us - the time from this M0 (before the wait) to the vblank v_prev + kt.
+//   d > kt (the frame is late)       -> kt = min(d, 3), fit = 0 (up at once; kt 3 stays 3);
+//   else slack_us >= 18 667 (fits)  -> fit + 1, else fit = 0;
+//        fit reaches 30 and kt > 1   -> kt - 1, fit = 0 (down at most once per 30 frames; at kt 1 fit stays at 30).
+inline constexpr uint32_t HOLD_KT_START = 2;
+inline constexpr uint32_t HOLD_KT_MAX   = 3;
+inline constexpr uint32_t HOLD_FIT_N    = 30;
+inline constexpr int64_t  HOLD_SLACK_US = 18667; // 1 vblank + 2 000 us
+
+struct HoldStep {
+	uint32_t kt   = HOLD_KT_START;
+	uint32_t fit  = 0;
+	uint32_t late = 0; // d > kt
+	int32_t  move = 0; // +1 kt went up, -1 down, 0 unchanged
+};
+
+constexpr HoldStep Hold(uint32_t kt, uint32_t fit, uint64_t d, int64_t slack_us) {
+	HoldStep s;
+	s.kt  = kt;
+	s.fit = fit;
+	if (d > kt) {
+		s.late = 1;
+		s.kt   = d < HOLD_KT_MAX ? static_cast<uint32_t>(d) : HOLD_KT_MAX;
+		s.fit  = 0;
+		s.move = s.kt > kt ? 1 : 0;
+		return s;
+	}
+	if (slack_us >= HOLD_SLACK_US) {
+		s.fit = fit < HOLD_FIT_N ? fit + 1 : HOLD_FIT_N;
+	} else {
+		s.fit = 0;
+	}
+	if (s.fit >= HOLD_FIT_N && s.kt > 1) {
+		s.kt   = s.kt - 1;
+		s.fit  = 0;
+		s.move = -1;
+	}
+	return s;
+}
+
+// The emulator time (us) of vblank `target` on the 60 Hz grid (Arm refuses other frequencies) from the last published
+// vblank v at time t_v: t_v + (target - v) * 1 000 000 / 60, the quotient truncated toward zero; target may be below v.
+constexpr int64_t VblankTimeUs(uint64_t t_v, uint64_t v, uint64_t target) {
+	const auto dv = static_cast<int64_t>(target - v);
+	return static_cast<int64_t>(t_v) + dv * 1000000 / 60;
+}
+
+// The wait at M0 (item 346(g)(1)): a sleep with polling of the published counter (the choice of the implementation).
+// Returns 0 when the deadline has passed (the wait ends without the target vblank); otherwise the sleep before the next
+// look at the counter: far from the predicted vblank - until HOLD_EARLY_US before it, near or past it - HOLD_POLL_US;
+// never past the deadline. The deadline is M0 + kt vblanks + HOLD_CAP_US (vblanks stop at pause and exit).
+inline constexpr int64_t HOLD_POLL_US  = 200;
+inline constexpr int64_t HOLD_EARLY_US = 1000;
+inline constexpr int64_t HOLD_CAP_US   = 50000;
+
+constexpr int64_t HoldSleepUs(int64_t now, int64_t predicted, int64_t deadline) {
+	if (now >= deadline) {
+		return 0;
+	}
+	const int64_t rem   = predicted - now;
+	int64_t       sleep = rem > HOLD_EARLY_US + HOLD_POLL_US ? rem - HOLD_EARLY_US : HOLD_POLL_US;
+	if (sleep > deadline - now) {
+		sleep = deadline - now;
+	}
+	return sleep;
 }
 
 // The step cells for k (the formulas of the game's SetFrameRate 0x34c0, design section 3.3): fps = 60.0 / k;
@@ -99,7 +173,8 @@ void Arm(uint64_t base);
 
 // Present thread: whether the two publications below are wanted (armed only).
 bool Publishing();
-// VideoOutDriver::Impl::VblankEnd, after vblank_status.count++ of the first opened handle.
+// VideoOutDriver::Impl::VblankEnd, after vblank_status.count++ of the first opened handle; also stores the time of
+// the vblank (KernelGetProcessTime, us) for the hold (item 346(g)).
 void PublishVblank(uint64_t count);
 // FlipQueue::Flip, after flip_status.count++ (the key "n" of the PVar line, = "FrameTrace: n=").
 void PublishFlip(uint64_t count);

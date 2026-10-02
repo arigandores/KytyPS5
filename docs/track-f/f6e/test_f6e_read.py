@@ -77,7 +77,9 @@ def write_run(root, tag, rows=7300, dt=16667, k3=(), k2=(), death=False, death_s
     os.makedirs(root, exist_ok=True)
     one = cfg['fix'] == '1'
     L = ['Shader translation cache: _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']
-    if pre_line:
+    if isinstance(pre_line, (list, tuple)):
+        L.extend(pre_line)
+    elif pre_line:
         L.append('PipelinePrecache: 310 recipes -> 310 pipelines in 12.0 s')
     nfix = (1 if one else 0) if fixon == 'auto' else fixon
     for _ in range(nfix):
@@ -301,6 +303,34 @@ for name, kw in (('b9a_true', dict(env_over=dict(KYTY_FIX_B9A='true'))), ('b9a_s
     r = rd('ad_' + name, 'f6e_a1', **kw)
     check('admission %s -> NOT ADMITTED' % name, r['verdict'] == 'NOT ADMITTED', (r['verdict'], r['why']))
     check('admission %s -> stop' % name, R.stop_check(r).startswith('stop: NOT ADMITTED'), R.stop_check(r))
+# --- I10 by p.306(g) B1 (seal 02): a cold variant directory ---
+BSL = chr(92)
+NO_V = 'PipelinePrecache: no _ShaderCache' + BSL + 'PPSA21564' + BSL + 'variant_fixb26_fixb1b' + BSL + 'pipelines.bin yet'
+NO_R = 'PipelinePrecache: no _ShaderCache' + BSL + 'PPSA21564' + BSL + 'pipelines.bin yet'
+SAVED = 'PipelinePrecache: saved 405 recipes (3959437 bytes)'
+for name, lines, want in (('cold', [NO_V, SAVED], 'PASS'), ('cold_slash', [NO_V.replace(BSL, '/'), SAVED], 'PASS'),
+                          ('cold_us', [NO_V, 'PipelinePrecache: saved 2 recipes (722 bytes) (1500 us)'], 'PASS'),
+                          ('no_only', [NO_V], 'NOT ADMITTED'), ('saved_only', [SAVED], 'NOT ADMITTED'),
+                          ('root_no', [NO_R, SAVED], 'NOT ADMITTED'), ('both', [NO_V, SAVED, 'PipelinePrecache: 310 recipes -> 310 pipelines'], 'PASS'),
+                          ('stale', ['PipelinePrecache: stale recipes (signature mismatch), ignored', SAVED], 'NOT ADMITTED'),
+                          ('failed', [NO_V, 'PipelinePrecache: failed to write x'], 'NOT ADMITTED')):
+    r = rd('i10_' + name, 'f6e_a1', pre_line=lines)
+    check('I10 (p.306(g) B1) %s -> %s' % (name, want), r['verdict'] == want, (r['verdict'], r['why'], [a for a in r['admit'] if not a[1]]))
+r = rd('i10_cold_c1', 'f6e_c1', pre_line=[NO_V, SAVED])
+check('I10 cold variant at the control =0 -> CONTROL OK', r['verdict'] == 'CONTROL OK', (r['verdict'], r['why']))
+# the real lines of series 1 (C:/kyty/f287/f6e/series1/log_f6e_a1.txt, p.296(d)): the first 37 000 lines hold line 84 'no ...
+# variant_fixb26_fixb1b...pipelines.bin yet' and line 36886 'saved 2 recipes'
+S1 = os.path.join(HERE, 'series1', 'log_f6e_a1.txt')
+ex_p = os.path.join(FX, 's1_head.txt')
+os.makedirs(FX, exist_ok=True)
+with open(S1, 'rb') as fi, open(ex_p, 'wb') as fo:
+    for k, line in enumerate(fi):
+        if k >= 37000:
+            break
+        fo.write(line)
+e1 = R.scan_f6e(ex_p)
+check('real series 1 head: recipes-> 0, no-variant 1, saved 1 -> I10 by B1', e1['pre'] == 0 and e1['pre_no'] == 1 and e1['pre_saved'] == 1,
+      (e1['pre'], e1['pre_no'], e1['pre_saved']))
 r = rd('ad_ctl1', 'f6e_c1', env_over=dict(KYTY_FIX_B9A='1'))
 check('control with KYTY_FIX_B9A=1 -> NOT ADMITTED', r['verdict'] == 'NOT ADMITTED', r['verdict'])
 # --- form line (p.290(b)(2)) ---
@@ -477,7 +507,13 @@ check('win F6d not done closed', W.decide(s) == (5, 'closed'))
 s = dict(ok)
 s['HPP-370'] = (None, None)
 check('win no answer rc 6', W.decide(s) == (6, 'error'))
-check('win names F6d, F5c, FSc, session run step, P17', W.NEED_DONE == ('HPP-376',) and set(W.NEED_DELIVERED) == {'HPP-357', 'HPP-370'}
+s = dict(ok)
+s['HPP-353'] = ('in_progress', None)
+check('win audit HPP-353 in_progress closed (p.306(d))', W.decide(s) == (5, 'closed'))
+s = dict(ok)
+s['HPP-353'] = ('in_review', None)
+check('win audit HPP-353 in_review closed (needs done)', W.decide(s) == (5, 'closed'))
+check('win names F6d, audit s145, F5c, FSc, session run step, P17', W.NEED_DONE == ('HPP-376', 'HPP-353') and set(W.NEED_DELIVERED) == {'HPP-357', 'HPP-370'}
       and set(W.YIELD_TO) == {'HPP-352', 'HPP-364'})
 pw = subprocess.run([sys.executable, os.path.join(HERE, 'win_f6e.py')], capture_output=True,
                     env={k: v for k, v in os.environ.items() if not k.startswith('PAPERCLIP_') and k != 'PYTHONIOENCODING'})
@@ -552,6 +588,8 @@ p = subprocess.run([sys.executable, os.path.join(HERE, 'cachesig_f6e.py'), croot
 check('cp1250 strict: cachesig rc 0 ASCII', p.returncode == 0 and all(b < 128 for b in p.stdout), p.stderr[-300:])
 p = subprocess.run([sys.executable, os.path.join(HERE, 'f6e_read.py'), '--tag', 'f6e_zz'], capture_output=True, env=env)
 check('usage rc 2', p.returncode == 2, p.stdout)
+p = subprocess.run([sys.executable, os.path.join(HERE, 'f6e_read.py'), '--tag', 'f6e_w1'], capture_output=True, env=env)
+check('warm-up f6e_w1 is not read (p.306(g) B2): rc 2', p.returncode == 2, p.stdout)
 p = subprocess.run([sys.executable, os.path.join(HERE, 'f6e_read.py'), '--tag', 'f6e_c1r'], capture_output=True, env=env)
 check('K3 repeat of a control is not a tag: rc 2', p.returncode == 2, p.stdout)
 p = subprocess.run([sys.executable, os.path.join(HERE, 'f6e_read.py'), '--tag', 'f6e_a2', '--root', root], capture_output=True, env=env)

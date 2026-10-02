@@ -1,3 +1,3 @@
-suite test_go_f6e.py sha256 e2745f920a95b1005a03d0a54802265708445db86a6d62a82d509bc3cb61550e target go_f6e.sh sha256 ebba1df1abf12b4ef2424c13cebccfd5e400318b4213307b8e570bb373c365b7
-checks 60 failed 0
+suite test_go_f6e.py sha256 3b42591de851133f886a567423262fda297f7284a2cb3a14c9f3a94145d81df4 target go_f6e.sh sha256 53fafc3eeb141e29d3dbfbdfe9c93df81a9515359ca72199a09fb7138f8d9dac
+checks 70 failed 0
 ALL OK

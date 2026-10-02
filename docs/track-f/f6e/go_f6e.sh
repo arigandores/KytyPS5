@@ -6,6 +6,13 @@
 # Port of C:/kyty/f287/f3d/go_f3d.sh: lock first, guards, one attempt, seal call line, stop file, lock.log UTC, times lines,
 # cache copy/return by content lists and the variant directory list, GLCache copy/return, idle wait before every tag with one
 # retry of a BUSY refusal of enter_scene.py.  ASCII only (item 175 (v)).  No emulator code, no build.
+# SEAL 02 (ROADMAP item 306 (g), (d)): series 1 (lock 2026-10-01 17:11:39-17:15:31Z, f6e_a1 NOT ADMITTED by I10) is kept in
+#   series1/ as information (item 306 (g) B2 (1)); this series first makes TWO WARM-UP entries on the F6c copy at
+#   KYTY_FIX_B9A=0 - f6e_w1 timestop_casino, f6e_w2 mini_astro_clock_tower, hold HOLDW s wall, no video, NOT READ (B2 (2)) -
+#   so the variant directory of the translation cache (cold on this binary) is warm before f6e_a1; the variant directory is
+#   held to the end of the series and returned with the caches (B2 (3)).  A warm-up stops the series only on enter_scene
+#   rc != 0 or a death marker / window line in its log or stdout [I12].  I10 of the reader by B1.  The lock window also
+#   needs HPP-353 (audit of session 145) done (item 306 (d)).
 #   TAGS AND ORDER (item 287 (v)(5); one attempt each, a failure is data): form V of sc144 - no validation, precache by
 #     default (KYTY_PIPELINE_PRECACHE not passed, item 281 (g)), video (KYTY_REC), FrameTrace, hold HOLD s wall from "stable"
 #     (the reader: sum dt_us after the first scene frame >= 120 s):
@@ -56,15 +63,17 @@ SIGSTR="56189185f9e9f9a0ea5174f3f85206e6d099db3d"
 GLRESTORE="1"
 GATESHA="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
-PRED="pred/01_f6e.md"
+PRED="pred/02_f6e.md"
 CACHE="/c/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564"
 SNAP=$ROOT/cache_snap/PPSA21564
 GLSNAP=$ROOT/glcache_snap
 TC=timestop_casino
 MA=mini_astro_clock_tower
 HOLD="125"
+HOLDW="60"
+WARM="f6e_w1 f6e_w2"
 SEQ="f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2"
-ALLT="f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2 f6e_a1f f6e_a2f f6e_b1f f6e_c1f f6e_c2f f6e_a1r f6e_a2r f6e_b1r"
+ALLT="f6e_w1 f6e_w2 f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2 f6e_a1f f6e_a2f f6e_b1f f6e_c1f f6e_c2f f6e_a1r f6e_a2r f6e_b1r"
 RSLEEP=5
 PLMAX=540
 IDLEMAX=300
@@ -124,7 +133,7 @@ if [ "$NL" != "1" ] || [ "$SEALPL" != "$PLWAIT" ]; then
   echo "PLWAIT differs from the seal"; exit 1
 fi
 if [ "${DRY:-0}" = "1" ]; then
-  echo "DRY series: tags $SEQ (+ one form repeat <tag>f on INVALID, + K3 repeats <tag>r by f6e_read --repeats after the controls); stop file?; lock?; PLWAIT=$PLWAIT; binary copy sha ($BIN_EXPECT) + strings FixB9a/AudioPropagation/$SIGSTR; procload --wait-s $PLWAIT; f6e_read --check-seal; cpu < 15; idle142 wait up to $IDLEMAX s; procload --wait-s 0; stop file?; window HPP-376 done, HPP-357/HPP-370 done or in_review, HPP-352/HPP-364 not waiting (win_f6e); lock (lock.log UTC); shader cache content list + variant directory list + signature manifest (cachesig_f6e) + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F6E; per tag: stop file?, binary copy and installed sha = $BIN_EXPECT, idle142 wait (one retry of a BUSY refusal), enter_scene.py <tag> --level <L> --attempts 1 --stable-draws 100 --timeout 480 --no-install --require-idle --pred $ROOT/$PRED --rec --hold $HOLD (a1,a2: $TC KYTY_FIX_B9A=1; b1: $MA KYTY_FIX_B9A=1; c1: $TC KYTY_FIX_B9A=0; c2: $MA KYTY_FIX_B9A=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, s51_vidglitch 4 6 + sheet142, f6e_read --tag, f6e_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (content list and directory list = before), GLCache manifest after + restore (GLRESTORE=$GLRESTORE), fgcpu143 row, unlock; f6e_read --summary"
+  echo "DRY series: tags $SEQ (+ one form repeat <tag>f on INVALID, + K3 repeats <tag>r by f6e_read --repeats after the controls); stop file?; lock?; PLWAIT=$PLWAIT; binary copy sha ($BIN_EXPECT) + strings FixB9a/AudioPropagation/$SIGSTR; procload --wait-s $PLWAIT; f6e_read --check-seal; cpu < 15; idle142 wait up to $IDLEMAX s; procload --wait-s 0; stop file?; window HPP-376 and HPP-353 done, HPP-357/HPP-370 done or in_review, HPP-352/HPP-364 not waiting (win_f6e); lock (lock.log UTC); shader cache content list + variant directory list + signature manifest (cachesig_f6e) + copy to $SNAP (lists equal); GLCache manifest + copy (GLRESTORE=$GLRESTORE); fgcpu143 --save; install $BIN_F6E; warm-up f6e_w1 ($TC) and f6e_w2 ($MA) KYTY_FIX_B9A=0 hold $HOLDW no video NOT READ (stop on rc != 0, death or window lines; p.306(g) B2); per tag: stop file?, binary copy and installed sha = $BIN_EXPECT, idle142 wait (one retry of a BUSY refusal), enter_scene.py <tag> --level <L> --attempts 1 --stable-draws 100 --timeout 480 --no-install --require-idle --pred $ROOT/$PRED --rec --hold $HOLD (a1,a2: $TC KYTY_FIX_B9A=1; b1: $MA KYTY_FIX_B9A=1; c1: $TC KYTY_FIX_B9A=0; c2: $MA KYTY_FIX_B9A=0) KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0, log sha, s51_vidglitch 4 6 + sheet142, f6e_read --tag, f6e_read --stop-check; EXIT: restore $BUILD_PINNED ($BUILD_EXPECT), move run cache to cache_run/, copy snapshot back (content list and directory list = before), GLCache manifest after + restore (GLRESTORE=$GLRESTORE), fgcpu143 row, unlock; f6e_read --summary"
   exit 0
 fi
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
@@ -309,9 +318,9 @@ tl "installed fix binary sha256 $BIN_EXPECT"
 log "files: $(sha256sum f6e_read.py win_f6e.py cachesig_f6e.py shalist_f2c.py $PRED gates_default.txt enter_scene.py idle142.py procload.py go_f6e.sh sheet142.py fgcpu143.py cachemf143.py C:/kyty/s142/sc142.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
 runtag() {
   echo "go_f6e.sh $C pid $$ attempt started $(date +%Y-%m-%dT%H:%M:%S) fix binary $BIN_EXPECT" > attempt_$C.txt
-  tl "$C enter_scene start$1 (level $LV, hold $HOLD, extra '$EXTRA', rec --rec)"
+  tl "$C enter_scene start$1 (level $LV, hold $HH, extra '$EXTRA', rec '$RECF')"
   python $ROOT/enter_scene.py $C --level $LV --attempts 1 --stable-draws 100 --timeout 480 --no-install --require-idle \
-    --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED --rec --hold $HOLD $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $C.stdout.txt 2>&1
+    --gates-file $ROOT/gates_default.txt --pred $ROOT/$PRED $RECF --hold $HH $EXTRA KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 > $C.stdout.txt 2>&1
 }
 refused() { [ "$1" = "3" ] && [ -e $C.refused.json ] && [ ! -e log_$C.txt ] && [ ! -e $C.json ]; }
 # one tag: binary check, idle wait, enter_scene (one retry of a BUSY refusal), video, reader; sets SC (stop check line) and RC
@@ -324,7 +333,10 @@ onetag() {
     return 1
   fi
   tl "$C binary check ok: copy and installed sha256 $BIN_EXPECT"
+  WU=0; RECF="--rec"; HH=$HOLD
   case "$C" in
+    f6e_w1) LV=$TC; EXTRA="KYTY_FIX_B9A=0"; WU=1; RECF=""; HH=$HOLDW;;
+    f6e_w2) LV=$MA; EXTRA="KYTY_FIX_B9A=0"; WU=1; RECF=""; HH=$HOLDW;;
     f6e_a1|f6e_a1f|f6e_a1r|f6e_a2|f6e_a2f|f6e_a2r) LV=$TC; EXTRA="KYTY_FIX_B9A=1";;
     f6e_b1|f6e_b1f|f6e_b1r) LV=$MA; EXTRA="KYTY_FIX_B9A=1";;
     f6e_c1|f6e_c1f) LV=$TC; EXTRA="KYTY_FIX_B9A=0";;
@@ -343,6 +355,12 @@ onetag() {
     if refused $RC; then tl "$C second BUSY refusal before the emulator start (not an attempt) - series stop, question to the lead"; return 1; fi
   fi
   tl "$C enter_scene end rc $RC log_$C.txt sha256 $(sha log_$C.txt)"
+  if [ "$WU" = "1" ]; then
+    WD=$(cat log_$C.txt stdout_$C.txt 2>/dev/null | grep -a -c -E 'Unhandled exception:|--- Fatal Error ---|--- Error ---|GpuHangAbort:|ErrorDeviceLost|Window [0-9]+ minimized|Recovering Vulkan swapchain')
+    if [ "$WD" = "0" ]; then SC="continue: warm-up $C not read (p.306(g) B2)"; else SC="stop: warm-up $C death or window lines $WD [I12]"; fi
+    tl "$C warm-up (not read, p.306(g) B2): death/window lines $WD -> $SC"
+    return 0
+  fi
   if [ -f "rec_$C.mp4" ]; then
     python $VIDGLITCH rec_$C.mp4 4 6 $ROOT/vidframes_$C > glitch_$C.txt 2>&1
     tl "$C s51_vidglitch rc $? glitch_$C.txt sha256 $(sha glitch_$C.txt) rec_$C.mp4 sha256 $(sha rec_$C.mp4)"
@@ -358,7 +376,7 @@ onetag() {
   return 0
 }
 SERIES_RC=0
-for B in $SEQ; do
+for B in $WARM $SEQ; do
   C=$B
   onetag || { SERIES_RC=1; break; }
   case "$SC" in

@@ -54,7 +54,7 @@ check('KYTY_FIX_B26/B1B/DUALSRC/MINIMIZE never passed, all unset', all('%s=' % k
       ('KYTY_FIX_B26', 'KYTY_FIX_B1B', 'KYTY_FIX_DUALSRC', 'KYTY_FIX_MINIMIZE')) and
       all(re.search(r'(?m)^unset .*\b%s\b' % k, src) for k in ('KYTY_FIX_B26', 'KYTY_FIX_B1B', 'KYTY_FIX_DUALSRC', 'KYTY_FIX_MINIMIZE', 'KYTY_FIX_B9A')))
 check('every run KYTY_GPU_CLOCK_PIN=1 and --rec', src.count('KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0 >') == 1 and
-      '--pred $ROOT/$PRED --rec --hold $HOLD $EXTRA' in src)
+      '--pred $ROOT/$PRED $RECF --hold $HH $EXTRA' in src and '  WU=0; RECF="--rec"; HH=$HOLD\n' in src)
 check('no mutlib word in a command', 'mutlib ' not in src.replace("'mut_[a-z0-9_]*|test_[a-z0-9_]*f6e|mutlib'", ''))
 check('no tail -F, no nohup in the series script', 'tail -F' not in src and 'nohup' not in src)
 check('restore in the EXIT trap', 'trap finish EXIT' in src and 'restore_bin' in src)
@@ -77,8 +77,21 @@ check('lock window right before the lock', src.index('win_f6e.py 2>&1') < src.in
       and src.index('busy "stop file $STOPF appeared before the lock"') < src.index('win_f6e.py 2>&1'))
 check('window closed or unknown -> busy', '*"-> open") ;;' in src and 'busy "lock window closed or unknown' in src)
 check('seq of p.287(v)(5)', 'SEQ="f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2"\n' in src)
-check('every possible tag guarded by the one-attempt rule', 'ALLT="f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2 f6e_a1f f6e_a2f f6e_b1f f6e_c1f f6e_c2f f6e_a1r f6e_a2r f6e_b1r"\n' in src
+check('every possible tag guarded by the one-attempt rule', 'ALLT="f6e_w1 f6e_w2 f6e_a1 f6e_a2 f6e_b1 f6e_c1 f6e_c2 f6e_a1f f6e_a2f f6e_b1f f6e_c1f f6e_c2f f6e_a1r f6e_a2r f6e_b1r"\n' in src
       and 'for C in $ALLT; do' in src)
+check('seal 02 (p.306(g))', 'PRED="pred/02_f6e.md"\n' in src and 'pred/01_f6e.md' not in src)
+check('warm-up tags and hold (p.306(g) B2)', 'WARM="f6e_w1 f6e_w2"\n' in src and 'HOLDW="60"\n' in src)
+b = case_body(src, 'f6e_w1')
+check('w1: timestop_casino =0, no video, hold HOLDW', 'LV=$TC; EXTRA="KYTY_FIX_B9A=0"; WU=1; RECF=""; HH=$HOLDW' in b, b)
+b = case_body(src, 'f6e_w2')
+check('w2: mini_astro_clock_tower =0, no video, hold HOLDW', 'LV=$MA; EXTRA="KYTY_FIX_B9A=0"; WU=1; RECF=""; HH=$HOLDW' in b, b)
+i_w = src.index('  if [ "$WU" = "1" ]; then')
+check('warm-up returns after the run, before video and reader (not read)', src.index('  runtag ""') < i_w
+      < src.index('python $VIDGLITCH') and src.index('    return 0', i_w) < src.index('python $VIDGLITCH')
+      and src.index('    return 0', i_w) < src.index('f6e_read.py --tag $C'))
+check('warm-up stop on death or window lines [I12]', "Unhandled exception:|--- Fatal Error ---|--- Error ---|GpuHangAbort:|ErrorDeviceLost|Window [0-9]+ minimized|Recovering Vulkan swapchain" in src
+      and 'SC="continue: warm-up $C not read (p.306(g) B2)"' in src and 'SC="stop: warm-up $C death or window lines $WD [I12]"' in src)
+check('warm-ups first, then the tags of p.287(v)(5)', 'for B in $WARM $SEQ; do' in src)
 check('levels', 'TC=timestop_casino\n' in src and 'MA=mini_astro_clock_tower\n' in src)
 check('hold 125 s wall [I] (reader: sum dt >= 120 s)', 'HOLD="125"\n' in src)
 b = case_body(src, 'f6e_a1|f6e_a1f|f6e_a1r|f6e_a2|f6e_a2f|f6e_a2r')
@@ -94,7 +107,7 @@ check('glitch 4 6 and sheet for every video', 'python $VIDGLITCH rec_$C.mp4 4 6'
 check('stop check after every tag', 'f6e_read.py --stop-check runs/$C.read.json' in src)
 check('form repeat once, then the stop check of the repeat (p.290(b)(2))', '"repeat-form: "*)' in src and 'C=${B}f' in src
       and src.count('onetag ||') == 3)
-check('K3 repeats only after the series, by f6e_read --repeats with a times line', src.index('python $ROOT/f6e_read.py --repeats') > src.index('for B in $SEQ; do')
+check('K3 repeats only after the series, by f6e_read --repeats with a times line', src.index('python $ROOT/f6e_read.py --repeats') > src.index('for B in $WARM $SEQ; do')
       and 'tl "K3 repeats (p.287(v)(5), executor line): $REP"' in src)
 check('enter_scene rc != 0 stops', 'series stop: enter_scene rc $RC' in src)
 check('summary at the end', 'f6e_read.py --summary > summary_f6e.txt' in src)
@@ -116,7 +129,7 @@ def make(binf='', bexp='', glr='', pred=None):
     open(os.path.join(FX, 'go_f6e.sh'), 'wb').write(s.encode('ascii'))
     if pred is not None:
         os.makedirs(os.path.join(FX, 'pred'))
-        open(os.path.join(FX, 'pred', '01_f6e.md'), 'wb').write(pred.encode('ascii'))
+        open(os.path.join(FX, 'pred', '02_f6e.md'), 'wb').write(pred.encode('ascii'))
 
 
 def run(*args, env_add=None):
@@ -147,6 +160,7 @@ rc, out = run('series', env_add=dict(DRY='1'))
 check('DRY with the seal line rc 0', rc == 0 and out.startswith('DRY series'), (rc, out))
 check('DRY plan names the knob values, precache default and the window', 'KYTY_FIX_B9A=1' in out and 'KYTY_FIX_B9A=0' in out and
       'win_f6e' in out and 'cachesig_f6e' in out and '--repeats' in out, out)
+check('DRY plan names the warm-ups and HPP-353 (p.306(d), (g))', 'warm-up f6e_w1' in out and 'f6e_w2' in out and 'HPP-353' in out, out)
 rc, out = run('series', env_add=dict(DRY='1', PLWAIT='100'))
 check('PLWAIT other than the seal rc 1', rc == 1, (rc, out))
 rc, out = run('series', env_add=dict(DRY='1', PLWAIT='600'))
@@ -159,7 +173,7 @@ check('two seal call lines rc 1', rc == 1, (rc, out))
 make('x.exe', 'ab', '1', pred='# seal\n' + CALL.replace('f6e/go_f6e.sh', 'f3d/go_f3d.sh'))
 rc, out = run('series', env_add=dict(DRY='1'))
 check('another call line rc 1', rc == 1, (rc, out))
-for t in ('f6e_a1', 'f6e_c2', 'f6e_b1r', 'f6e_c1f'):
+for t in ('f6e_w1', 'f6e_w2', 'f6e_a1', 'f6e_c2', 'f6e_b1r', 'f6e_c1f'):
     make('x.exe', 'ab', '1', pred='# seal\n' + CALL)
     open(os.path.join(FX, 'attempt_%s.txt' % t), 'w').write('x')
     rc, out = run('series', env_add=dict(DRY='1'))

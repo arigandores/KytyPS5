@@ -2,6 +2,7 @@
 F5c and FSc first; general rule 27; p.277(g)).  Port of C:/kyty/f287/f3d/win_f3d.py.
 Open only when, by the API answer right before the lock:
   HPP-376 (F6d, code review)                              status done and executionRunId empty
+  HPP-353 (audit of session 145, p.306(d) of seal 02)     status done and executionRunId empty
   HPP-357 (F5c, track F runs - first inside F)            status done or in_review and executionRunId empty
   HPP-370 (FSc, track F runs - first inside F)            status done or in_review and executionRunId empty
   HPP-352 (run step of session 145 - before track F)      not todo / in_progress and executionRunId empty
@@ -15,7 +16,7 @@ import os
 import sys
 import urllib.request
 
-NEED_DONE = ('HPP-376',)
+NEED_DONE = ('HPP-376', 'HPP-353')
 NEED_DELIVERED = ('HPP-357', 'HPP-370')
 DELIVERED = ('done', 'in_review')
 YIELD_TO = ('HPP-352', 'HPP-364')

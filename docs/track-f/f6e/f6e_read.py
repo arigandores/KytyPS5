@@ -2,7 +2,9 @@
 B9a), p.290(b)(1)-(2) (K3 base; the line 'FixB9a: on' - a member of the run form), p.294(b) (RC1 of F6d: 0 game asserts at =1),
 p.294(v) (RC2 of F6d: the counter line by exact key=value tokens, no monotonicity of total, stubs from the log only), p.294(g) N4
 (no KYTY_PRINT_NAMES), p.281(g) (precache by default), p.221(v) (first scene frame), p.273(z) (window event), p.258(d) (member
-of the executor [I]: printed on its own line, it does not set the verdict).
+of the executor [I]: printed on its own line, it does not set the verdict); seal 02 (p.306(g)): I10 by B1 (a cold variant
+directory: 'no <variant>/pipelines.bin yet' + 'saved <N> recipes' also admit), two warm-up entries f6e_w1 / f6e_w2 at =0 are not
+read (B2).
 
 The s142 reading is NOT copied and NOT changed: sc142.py is imported from C:/kyty/s142 after its sha256 is checked (SC142_SHA;
 another sha -> rc 2, no reading); only scan / derive / markers / read_glitch / last_value and the constants K2_US / K3_US /
@@ -85,6 +87,9 @@ M_UMSG = b'user_msg_param'
 M_TCACHE = b'Shader translation cache:'
 M_REC = b'Recovering Vulkan swapchain'
 RX_PRE = re.compile(rb'PipelinePrecache: \d+ recipes ->')
+# p.306(g) B1 (I10 of seal 02): or >= 1 'PipelinePrecache: no <variant directory>\pipelines.bin yet' AND >= 1 'saved <N> recipes'
+RX_PRE_NO = re.compile(rb'PipelinePrecache: no [^\n]*?[\\/]variant_[^\n\\/]*[\\/]pipelines\.bin yet')
+RX_PRE_SAVED = re.compile(rb'PipelinePrecache: saved \d+ recipes')
 RX_WIN = re.compile(rb'Window \d+ (minimized|restored|resized|size changed|lost keyboard focus)\b')
 WIN_KEYS = ('minimized', 'restored', 'resized', 'size changed', 'lost keyboard focus')
 RX_RIP = re.compile(r'rip=0x([0-9a-fA-F]+)')
@@ -139,7 +144,7 @@ def scan_f6e(path):
     """One streaming pass: stub lines (index, symbol, library suffix, position), stdout-form stub lines, counter lines
     (position, fields), 'FixB9a: on', 'ASSERT:', 'user_msg_param', translation cache, precache, window lines."""
     res = dict(stub_lines=0, stubs=[], stub_std=0, calls=[], fixon=0, asserts=0, assert_first=[], umsg=0, tcache=[], pre=0,
-               win={k: 0 for k in WIN_KEYS}, recovering=0)
+               pre_no=0, pre_saved=0, win={k: 0 for k in WIN_KEYS}, recovering=0)
     if path is None or not os.path.isfile(path):
         return res
     off = 0
@@ -194,6 +199,8 @@ def scan_f6e(path):
                 res['tcache'].append(whole[i + len(M_TCACHE):e if e >= 0 else len(whole)].strip().decode('latin1'))
                 i = whole.find(M_TCACHE, i + 1)
             res['pre'] += len(RX_PRE.findall(whole))
+            res['pre_no'] += len(RX_PRE_NO.findall(whole))
+            res['pre_saved'] += len(RX_PRE_SAVED.findall(whole))
             for m in RX_WIN.finditer(whole):
                 res['win'][m.group(1).decode()] += 1
             res['recovering'] += whole.count(M_REC)
@@ -338,7 +345,10 @@ def read_tag(tag, root=ROOT, sc142=None):
     add('video KYTY_REC rec_%s.mp4 (form V sc144)' % tag, rec is not None and rec.replace('\\', '/').endswith('/rec_%s.mp4' % tag), rec)
     vv = sc142.last_value(js.get('cmdline') or [], '--vulkan-validation')
     add('--vulkan-validation false', vv == 'false', vv)
-    add('precache by default: >= 1 line "PipelinePrecache: <N> recipes ->" in the log (form V sc144, p.281(g))', ex['pre'] >= 1, ex['pre'])
+    add('precache by default (I10, p.306(g) B1): >= 1 line "PipelinePrecache: <N> recipes ->" OR (>= 1 "PipelinePrecache: no '
+        '<variant dir>\\pipelines.bin yet" AND >= 1 "PipelinePrecache: saved <N> recipes") in the log (form V sc144, p.281(g))',
+        ex['pre'] >= 1 or (ex['pre_no'] >= 1 and ex['pre_saved'] >= 1),
+        'recipes-> %d, no-variant %d, saved %d' % (ex['pre'], ex['pre_no'], ex['pre_saved']))
     r['admit'] = adm
     r['admitted'] = all(ok for _, ok, _ in adm)
     want_on = 1 if cfg['fix'] == '1' else 0

@@ -1,0 +1,2 @@
+C:/kyty/play/20261002T221534Z/rec.mp4: 24456 frames 960x540, index entries 24456
+one-frame glitches: 0

@@ -1,0 +1,3 @@
+present@189 after 7 draws | present@471 after 2 draws | tail 0 draws
+capture C:/kyty/f287/f9/runs/f9a_rd3/rd3_a.rdc draws 9 dispatches 24 clears 2 copies 7 presents 2 other 44 eid 8..471
+done

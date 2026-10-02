@@ -1,0 +1,2 @@
+started pid 67272 env KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/1500 @1380:w/1500 @1500:w/2500 @1650:h/20000 @2600:f/20000 @3550:w/500 @3600:d/500 @3650:s/500 @3700:a/500 @3750:w/800 KYTY_REC=C:/kyty/f287/f9/runs/f9a_1/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1 rd 0 secs 170
+ended: timeout, WM_CLOSE rc 0 wall 174.2 s

@@ -1,0 +1,79 @@
+video_s  frame  present  host_s  log_line(FrameTrace)  n  | segment
+  34.00-  35.75 f 2040- 2145 p 2041- 2146 t  46.01-  48.77 L 377404- 399009 n  869-  956 approach walk on the path, pond comes into view
+    [start-2s, end+2s] lines 377404-413616: AsyncPipelines=1 BvhLoopCapTrip=0 CsStall=0 PriorityStall=2 Vulkan=0 opcode=0
+    start +-2s       lines 377404-395076: AsyncPipelines=1 BvhLoopCapTrip=0 CsStall=0 PriorityStall=2 Vulkan=0 opcode=0
+  36.00-  38.00 f 2160- 2280 p 2161- 2281 t  49.02-  51.07 L 401379- 415329 n  972- 1091 GLITCH G1 pond far, camera turning to the pond
+    [start-2s, end+2s] lines 390878-432103: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 390878-415068: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  39.25-  39.75 f 2355- 2385 p 2356- 2386 t  53.07-  53.67 L 432103- 437649 n 1167- 1197 norm N1 Astro at the pond edge
+    [start-2s, end+2s] lines 415329-461201: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 415329-452783: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  40.00-  41.25 f 2400- 2475 p 2401- 2476 t  53.92-  55.37 L 440813- 459386 n 1212- 1294 GLITCH G2 pond seen from the bank
+    [start-2s, end+2s] lines 421113-472678: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 421113-462711: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  41.50-  42.00 f 2490- 2520 p 2491- 2521 t  55.72-  56.37 L 461448- 465644 n 1309- 1339 norm N2 in water, camera above
+    [start-2s, end+2s] lines 438102-484667: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 438102-477652: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  42.25-  49.00 f 2535- 2940 p 2536- 2941 t  56.62-  63.70 L 467360- 530855 n 1354- 1758 GLITCH G3 flash, then in water, side camera
+    [start-2s, end+2s] lines 448745-549764: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 448745-488260: AsyncPipelines=7 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  49.25-  52.50 f 2955- 3150 p 2956- 3151 t  64.07-  68.97 L 536463- 570202 n 1773- 1969 norm N3 in water, camera above, steps in water
+    [start-2s, end+2s] lines 522412-583643: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 522412-551858: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  52.75-  55.25 f 3165- 3315 p 3166- 3316 t  69.24-  71.82 L 572480- 589548 n 1984- 2134 GLITCH G4 in water, side camera
+    [start-2s, end+2s] lines 558933-605956: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 558933-585294: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  55.50-  57.75 f 3330- 3465 p 3331- 3466 t  72.07-  74.32 L 591484- 609328 n 2149- 2284 norm N4 in water, the same side camera as G4
+    [start-2s, end+2s] lines 578471-620593: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 578471-607948: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+  60.00-  95.00 f 3600- 5700 p 3601- 5701 t  76.77- 111.77 L 623961- 624206 n 2413- 2414 norm N5 standing in the stream, camera along the stream
+    [start-2s, end+2s] lines 611982-624336: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 611982-623961: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 194.50- 195.75 f11670-11745 p11671-11746 t 252.50- 253.82 L1273030-1279783 n 8169- 8244 GLITCH G5 approach from the path, pond far
+    [start-2s, end+2s] lines 1263597-1289463: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1263597-1282997: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 197.25- 199.25 f11835-11955 p11836-11956 t 255.54- 257.89 L1287912-1304467 n 8334- 8454 GLITCH G6 flash, entering the pond
+    [start-2s, end+2s] lines 1278259-1322008: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1278259-1302478: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 199.50- 200.75 f11970-12045 p11971-12046 t 258.24- 259.81 L1306431-1321096 n 8468- 8544 norm N6 in water with flamingos, camera above
+    [start-2s, end+2s] lines 1291503-1339455: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1291503-1325448: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 201.00- 201.75 f12060-12105 p12061-12106 t 260.06- 260.87 L1323455-1332574 n 8559- 8603 GLITCH G7 in water, camera swings
+    [start-2s, end+2s] lines 1305276-1345128: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1305276-1341142: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 202.00- 208.00 f12120-12480 p12121-12481 t 261.19- 267.95 L1334917-1374677 n 8618- 8979 norm N7 in water with flamingos, steps
+    [start-2s, end+2s] lines 1316154-1386932: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1316154-1346740: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 208.25- 212.50 f12495-12750 p12496-12751 t 268.20- 273.04 L1376862-1403690 n 8994- 9249 GLITCH G8 camera swings to the tree side
+    [start-2s, end+2s] lines 1363800-1416480: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1363800-1388071: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 212.75- 215.25 f12765-12915 p12766-12916 t 273.31- 277.02 L1405112-1427292 n 9264- 9414 norm N8 in water, camera above
+    [start-2s, end+2s] lines 1393345-1442295: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1393345-1417663: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 215.50- 266.25 f12930-15975 p12931-15976 t 277.27- 330.62 L1429413-1715697 n 9429-12474 GLITCH G9 long: standing in water at the tree side, low camera
+    [start-2s, end+2s] lines 1417562-1729995: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1417562-1443979: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 266.50- 268.00 f15990-16080 p15991-16081 t 330.97- 333.77 L1719704-1733806 n12489-12578 norm N9 leaves the pond
+    [start-2s, end+2s] lines 1703417-1740619: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 1703417-1731208: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 380.00- 385.00 f22800-23100 p22801-23101 t 524.65- 533.17 L2456821-2484900 n19298-19553 norm N10 walking in the stream
+    [start-2s, end+2s] lines 2450126-2492430: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 2450126-2463009: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+ 389.25- 407.50 f23355-24450 p23356-24451 t 538.62- 557.74 L2511044-2613834 n19809-20904 GLITCH G10 pond from the far bank (to the end of the recording)
+    [start-2s, end+2s] lines 2500039-2614277: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+    start +-2s       lines 2500039-2527428: AsyncPipelines=0 BvhLoopCapTrip=0 CsStall=0 PriorityStall=0 Vulkan=0 opcode=0
+level started line 292395 next FrameTrace n 379 end 8.744 nearest idx present (421, 422)
+rows 20908 idx 24456 clock span rows 555.41 idx span 557.82
+all hits per key (whole log): AsyncPipelines: skipped draw=8 BvhLoopCapTrip:=0 CsStall=0 PriorityStall=4 [Vulkan]=0 opcode is not implemented=100
+  AsyncPipelines line 388834 -> video 34.35 s (frame 2061, present 2062): AsyncPipelines: skipped draw DrawIndex frame=874 vs=0xd8564aff95cfcecf ps=0x447c6dea12137768 pending=1 total_s
+  AsyncPipelines line 457337 -> video 41.20 s (frame 2472, present 2473): AsyncPipelines: skipped draw DrawIndex frame=1286 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 457542 -> video 41.20 s (frame 2472, present 2473): AsyncPipelines: skipped draw DrawIndex frame=1287 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 457783 -> video 41.20 s (frame 2472, present 2473): AsyncPipelines: skipped draw DrawIndex frame=1288 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 457879 -> video 41.20 s (frame 2472, present 2473): AsyncPipelines: skipped draw DrawIndex frame=1289 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 458069 -> video 41.22 s (frame 2473, present 2474): AsyncPipelines: skipped draw DrawIndex frame=1290 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 458291 -> video 41.22 s (frame 2473, present 2474): AsyncPipelines: skipped draw DrawIndex frame=1291 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  AsyncPipelines line 458580 -> video 41.22 s (frame 2473, present 2474): AsyncPipelines: skipped draw DrawIndex frame=1292 vs=0xd9d6d72f1dc35033 ps=0x0000000000000000 pending=1 total_
+  PriorityStall line 388835 -> video 34.35 s (frame 2061, present 2062): PriorityStall: tick=22809 unsub=1 us=56844 site=+0x92a181
+  PriorityStall line 388848 -> video 34.37 s (frame 2062, present 2063): PriorityStall: tick=22810 unsub=1 us=98851 site=+0x92a181
+  PriorityStall line 636741 -> video 99.00 s (frame 5940, present 5941): PriorityStall: tick=73478 unsub=1 us=112682 site=+0x92a181
+  PriorityStall line 755404 -> video 115.60 s (frame 6936, present 6937): PriorityStall: tick=103719 unsub=1 us=100991 site=+0x92a181

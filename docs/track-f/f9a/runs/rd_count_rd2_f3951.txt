@@ -1,0 +1,3 @@
+present@34189 after 4783 draws | present@34191 after 0 draws | tail 0 draws
+capture C:/kyty/f287/f9/runs/f9a_rd2/rd2_f3951.rdc draws 4783 dispatches 354 clears 139 copies 225 presents 2 other 857 eid 1891..34191
+done

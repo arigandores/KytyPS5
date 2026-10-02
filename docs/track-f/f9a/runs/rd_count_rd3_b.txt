@@ -1,0 +1,3 @@
+present@17 after 0 draws | present@15316 after 1827 draws | present@15318 after 0 draws | tail 0 draws
+capture C:/kyty/f287/f9/runs/f9a_rd3/rd3_b.rdc draws 1827 dispatches 220 clears 61 copies 135 presents 3 other 543 eid 6..15318
+done

@@ -1,0 +1,2 @@
+capture C:/kyty/f287/f9/runs/f9a_rd2/rd2_f4191.rdc draws 5232 dispatches 368 clears 124 copies 223 presents 2 other 925 eid 2381..37535
+done

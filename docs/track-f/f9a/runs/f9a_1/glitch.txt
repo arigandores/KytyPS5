@@ -1,0 +1,2 @@
+runs/f9a_1/rec.mp4: 7018 frames 960x540, index entries 7018
+one-frame glitches: 0

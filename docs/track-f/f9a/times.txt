@@ -1,0 +1,56 @@
+2026-10-02T22:42:32Z F9a (HPP-410) start; S6 pcw_2 rc=0 at 22:42:21Z (s288/s6/times.txt), no lock
+2026-10-02T22:42:43Z step1 s51_vidglitch (streaming form of s20_vidglitch, same test) start on C:/kyty/play/20261002T221534Z/rec.mp4
+2026-10-02T22:43:49Z step1 s51_vidglitch done
+2026-10-02T22:48:32Z step1 done: s51 0 one-frame glitches; sheets1s 9, sheets4 16; table_user.txt; full/ pairs; G1-G10 segments, two guest frames >=1 s at focus events (19.15 s n=869, 37.08 s n=2414)
+2026-10-02T22:51:44Z API before a1: HPP-410 status in_progress comments 0 by others 0; no lock; STOP absent; S6 last line: 2026-10-02T22:42:54Z S6 read the lead comment c45f725d (22:42:32Z; ROADMAP p.344
+2026-10-02T22:52:05Z go_f9 f9a_1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-02T22:52:06Z go_f9 f9a_1 installed binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac; args: KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/1500 @1380:w/1500 @1500:w/2500 @1650:h/20000 @2600:f/20000 @3550:w/500 @3600:d/500 @3650:s/500 @3700:a/500 @3750:w/800 KYTY_REC=C:/kyty/f287/f9/runs/f9a_1/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1
+2026-10-02T22:52:09Z go_f9 f9a_1 caches and saves copied: _ShaderCache _PipelineCache _SaveData (470/169/5/ MB)
+2026-10-02T22:55:05Z go_f9 f9a_1 run: ended: timeout, WM_CLOSE rc 0 wall 174.2 s
+2026-10-02T22:55:07Z go_f9 f9a_1 caches and saves returned
+2026-10-02T22:55:07Z go_f9 f9a_1 installed binary after: 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+2026-10-02T22:55:08Z go_f9 f9a_1 lock released
+2026-10-02T22:56:30Z a1 read: REPRO_YES on the 1 fps and 4 fps sheets (f3735 pond black/red tiles, f3780 white blob, f3795..f6700 pond filled with green tiles, f6720..end white blob + black tiles); Astro on the bank, not in water -> a2 same route + into the water + camera rotation in water
+2026-10-02T22:56:31Z API before a2: HPP-410 comments 1; no lock; STOP absent
+2026-10-02T22:56:47Z go_f9 f9a_2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-02T22:56:47Z go_f9 f9a_2 installed binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac; args: KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/1500 @1380:w/1500 @1500:w/2500 @1650:h/20000 @2600:f/20000 @3550:w/500 @3600:d/500 @3650:s/500 @3700:a/500 @3750:w/800 @3800:w/1500 @3900:h/20000 @4850:f/20000 @5800:w/400 @5830:d/400 @5860:s/400 @5890:a/400 @5920:w/400 KYTY_REC=C:/kyty/f287/f9/runs/f9a_2/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1
+2026-10-02T22:56:49Z go_f9 f9a_2 caches and saves copied: _ShaderCache _PipelineCache _SaveData (470/169/5/ MB)
+2026-10-02T23:00:31Z go_f9 f9a_2 run: ended: timeout, WM_CLOSE rc 0 wall 219.4 s
+2026-10-02T23:00:31Z go_f9 f9a_2 caches and saves returned
+2026-10-02T23:00:32Z go_f9 f9a_2 installed binary after: 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+2026-10-02T23:00:32Z go_f9 f9a_2 lock released
+2026-10-02T23:03:20Z a2 read: REPRO_YES (in water, camera rotation h/f 20 s each: top views clean 1:06,1:14,1:24,1:28,1:32,1:36; side views tiles 1:10,1:13,1:15,1:19,1:21,1:23,1:27,1:31,1:35; static side view 1:38..end tiles throughout); present = n+10, capture frame ~ n+3; go_f9.sh patched to move new _RenderDoc captures; rd1 = a2 keys + --rd + KYTY_RD_LEVEL_FRAME=3900,4300,4700,5100,5500,6200,6600 KYTY_RD_FLIPS=2 (executor variant: level-relative multi-capture instead of one KYTY_RD_FRAME)
+2026-10-02T23:03:30Z API before rd1: HPP-410 comments 1; no lock; STOP absent
+2026-10-02T23:03:46Z go_f9 f9a_rd1 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-02T23:03:46Z go_f9 f9a_rd1 installed binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac; args: --rd KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/1500 @1380:w/1500 @1500:w/2500 @1650:h/20000 @2600:f/20000 @3550:w/500 @3600:d/500 @3650:s/500 @3700:a/500 @3750:w/800 @3800:w/1500 @3900:h/20000 @4850:f/20000 @5800:w/400 @5830:d/400 @5860:s/400 @5890:a/400 @5920:w/400 KYTY_REC=C:/kyty/f287/f9/runs/f9a_rd1/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1 KYTY_RD_LEVEL_FRAME=3900,4300,4700,5100,5500,6200,6600 KYTY_RD_FLIPS=2
+2026-10-02T23:03:47Z go_f9 f9a_rd1 caches and saves copied: _ShaderCache _PipelineCache _SaveData (470/169/5/ MB)
+2026-10-02T23:10:50Z go_f9 f9a_rd1 run: ended: timeout, WM_CLOSE rc 0 wall 422.3 s
+2026-10-02T23:10:50Z go_f9 f9a_rd1 caches and saves returned
+2026-10-02T23:10:51Z go_f9 f9a_rd1 installed binary after: 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+2026-10-02T23:10:51Z go_f9 f9a_rd1 lock released
+2026-10-02T23:11:15Z rd1 MISS (executor error): no 'RenderDoc: level started' line - KYTY_RD_LEVEL not passed (trigger arms on 'Level has started: <KYTY_RD_LEVEL>', default intro_next); 0 captures; video 14326 frames kept for the route check
+2026-10-02T23:11:44Z rd1 route check: under --rd (~33 presents/s) the ms holds moved Astro less, he never reached the pond (sheets f3600..f10740 - pond far, clean); rd2 = holds in presents (/@N) taken from the a2 log + KYTY_RD_LEVEL=underwater_aerial_garden
+2026-10-02T23:12:04Z API before rd2: HPP-410 comments 1; no lock; STOP absent; targets level+ 3758,3998,4238,5018,5078,6998 (a2 video f3960 norm, f4200 tiles, f4440 norm, f5220 tiles, f5280 norm, f7200 static tiles; level+ = video - 202)
+2026-10-02T23:12:17Z go_f9 f9a_rd2 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-02T23:12:18Z go_f9 f9a_rd2 installed binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac; args: --rd KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/@45 @1380:w/@45 @1500:w/@96 @1650:h/@975 @2600:f/@1003 @3550:w/@18 @3600:d/@30 @3650:s/@31 @3700:a/@31 @3750:w/@49 @3800:w/@90 @3900:h/@966 @4850:f/@984 @5800:w/@17 @5830:d/@25 @5860:s/@25 @5890:a/@25 @5920:w/@25 KYTY_REC=C:/kyty/f287/f9/runs/f9a_rd2/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1 KYTY_RD_LEVEL=underwater_aerial_garden KYTY_RD_LEVEL_FRAME=3758,3998,4238,5018,5078,6998 KYTY_RD_FLIPS=2
+2026-10-02T23:12:19Z go_f9 f9a_rd2 caches and saves copied: _ShaderCache _PipelineCache _SaveData (470/169/5/ MB)
+2026-10-02T23:15:48Z go_f9 f9a_rd2 capture moved: kyty_1790982896348953_capture.rdc bytes 5907107201
+2026-10-02T23:15:49Z go_f9 f9a_rd2 capture moved: kyty_1790982916713533_capture.rdc bytes 5890894313
+2026-10-02T23:15:49Z go_f9 f9a_rd2 run: ended: exit rc 321 wall 205.1 s
+2026-10-02T23:15:51Z go_f9 f9a_rd2 caches and saves returned
+2026-10-02T23:15:54Z go_f9 f9a_rd2 installed binary after: 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+2026-10-02T23:15:54Z go_f9 f9a_rd2 lock released
+2026-10-02T23:16:19Z rd2: 2 captures (frame 3951 level+3758, frame 4191 level+3998, 5.9 GB each); 3rd capture (frame 4431) aborted: vkQueueSubmit ErrorDeviceLost tick=4588, Fatal commandScheduler.cpp:969, exit rc 321 at 205 s; caches/saves returned from the copy
+2026-10-02T23:17:05Z rd2 read: thumbnails of both captures = NORM (Astro in water, camera above, gravel + petals clean); glitch capture missing -> rd3 (last repeat) static phase level+6998,7300 (2 captures). API before rd3: HPP-410 comments 1; no lock
+2026-10-02T23:17:19Z go_f9 f9a_rd3 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-02T23:17:19Z go_f9 f9a_rd3 installed binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac; args: --rd KYTY_GUEST_ARGS=-lvl underwater_aerial_garden KYTY_KEYS=@1300:a/@45 @1380:w/@45 @1500:w/@96 @1650:h/@975 @2600:f/@1003 @3550:w/@18 @3600:d/@30 @3650:s/@31 @3700:a/@31 @3750:w/@49 @3800:w/@90 @3900:h/@966 @4850:f/@984 @5800:w/@17 @5830:d/@25 @5860:s/@25 @5890:a/@25 @5920:w/@25 KYTY_REC=C:/kyty/f287/f9/runs/f9a_rd3/rec.mp4 KYTY_FRAME_TRACE=lite KYTY_GPU_CLOCK_PIN=1 KYTY_RD_LEVEL=underwater_aerial_garden KYTY_RD_LEVEL_FRAME=6998,7300 KYTY_RD_FLIPS=2
+2026-10-02T23:17:22Z go_f9 f9a_rd3 caches and saves copied: _ShaderCache _PipelineCache _SaveData (470/169/5/ MB)
+2026-10-02T23:24:26Z go_f9 f9a_rd3 capture moved: kyty_1790983269452841_capture.rdc bytes 4690928828
+2026-10-02T23:24:26Z go_f9 f9a_rd3 capture moved: kyty_1790983281952575_capture.rdc bytes 6248150124
+2026-10-02T23:24:27Z go_f9 f9a_rd3 run: ended: timeout, WM_CLOSE rc 0 wall 422.5 s
+2026-10-02T23:24:29Z go_f9 f9a_rd3 caches and saves returned
+2026-10-02T23:24:31Z go_f9 f9a_rd3 installed binary after: 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+2026-10-02T23:24:31Z go_f9 f9a_rd3 lock released
+2026-10-02T23:24:58Z rd3: captures frame 7291 (level+6998, 4690928828 B) and 7593 (level+7300, 6248150124 B), run ended by WM_CLOSE rc 0; both thumbnails = GLITCH (pond filled with tiles: flowers, grass, parts of Astro)
+2026-10-02T23:36:13Z rd counts: rd2_f3951 4783 draws (1 frame), rd2_f4191 5232, rd3_b 1827 draws between presents 17 and 15316 (1 frame), rd3_a 9 draws (near-empty). rd_list.py full listing of rd2_f3951 hit the 520 s watchdog (partial 9940 lines); rd_count.py (action flags only) used
+2026-10-02T23:41:01Z report docs/track-f/f9a.md written; FACTS.md section F9a appended

@@ -1,0 +1,27 @@
+A C:/kyty/f287/fs2b/build/install/kyty_emulator.exe 2255a45f388ef4b69aaae565b99590095efcb5563a01a4cc8a99208d657de3bc 24609280
+B C:/kyty/f287/bin/kyty_emulator_bbad499c.exe bbad499c56b744dfcef85b7556735c025ebb3db185b6bb9b02e7a0b3a228eb55 24609792
+B sha256 == FS2a report True
+(i) kytyGitVersion.h without comments equal: True lines 12 12
+    signature line: ['#define KYTY_SHADER_SOURCE_HASH "56189185f9e9f9a0ea5174f3f85206e6d099db3d"']
+    A: signature 56189185f9e9... occurrences in exe 1
+    B: signature 56189185f9e9... occurrences in exe 1
+(ii) PE timestamp A 6abfebf4 B 6abfe6e8
+     sections A ['.text', '.rdata', '.data', '.pdata', '.retplne', '.tls', '.rsrc', '.reloc']
+     sections B ['.text', '.rdata', '.data', '.pdata', '.retplne', '.tls', '.rsrc', '.reloc']
+     .text    vsize A   18113558 B   18113558 equal
+     .rdata   vsize A    4980368 B    4980368 equal
+     .data    vsize A   36579168 B   36579488 DIFF
+     .pdata   vsize A     454092 B     454092 equal
+     .retplne vsize A        164 B        164 equal
+     .tls     vsize A     479234 B     479234 equal
+     .rsrc    vsize A        424 B        424 equal
+     .reloc   vsize A      41900 B      41912 DIFF
+(iii) .rdata strings>=8 A 29601 B 29601 only A 1 only B 1
+      A only b'!OLLD PDB.'
+      B only b'RLLD PDB.'
+(iii) .data strings>=8 A 782 B 782 only A 0 only B 0
+(iii) .text bytes 18113558 differing runs 61110 differing bytes 122478
+      run length histogram [(1, 25), (2, 60802), (3, 283)]
+      displacement deltas (top 10) [(-320, 61050), (-240, 13), (-304, 12), (-48, 6), (-112, 5), (-1, 5), (-80, 4), (-64, 2), (-160, 2), (-192, 2)]
+      distinct deltas 18
+BINCMP ALL OK

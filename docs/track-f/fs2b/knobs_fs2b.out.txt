@@ -1,0 +1,170 @@
+diff 4fc501f4 9c9d86ae -- src/: files 47 +7580 -130
+added lines with an env read call (code part): 14
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:277 const char* value = std::getenv("KYTY_S_PCW");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:288 const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+  + src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1298 const char* value = std::getenv("KYTY_DUMP_GCN");
+  + src/graphics/presentation/window/swapchain.cpp:311 const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+  + src/graphics/presentation/window/swapchain.cpp:312 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/presentation/window/vulkanWindow.cpp:666 const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
+  + src/graphics/presentation/window/vulkanWindow.cpp:668 Common::EnvValueOn(dual_src_value));
+  + src/graphics/presentation/window/window.cpp:1055 const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331 const char* value = std::getenv("KYTY_FIX_B26");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:332 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346 const char* value = std::getenv("KYTY_FIX_B1B");
+  + src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:347 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+  + src/libs/libAudio.cpp:374 const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+  + src/libs/libAudio.cpp:375 const bool  fix_b9a       = fix_b9a_value == nullptr || fix_b9a_value[0] == '\0' || Common::EnvValueOn(fix_b9a_value);
+removed lines with an env read call: 0
+KYTY_* names on +/- lines: 29
+  KYTY_ARM_INLINE            +2 (code 1) -0
+  KYTY_ARM_IN_COPY           +2 (code 1) -0
+  KYTY_ARM_LOSS_WIN          +2 (code 1) -0
+  KYTY_ASYNC_COPY            +4 (code 0) -0
+  KYTY_ASYNC_PROTECT         +1 (code 0) -0
+  KYTY_AV_TRACE              +4 (code 0) -0
+  KYTY_B2_REUSE              +2 (code 1) -0
+  KYTY_BIND_LEAN             +2 (code 1) -0
+  KYTY_CLASS_NO_COPY         +3 (code 3) -0
+  KYTY_DISP_CEILING          +2 (code 1) -0
+  KYTY_DUMP_GCN              +2 (code 1) -0
+  KYTY_FIX_B1B               +7 (code 1) -0
+  KYTY_FIX_B26               +6 (code 1) -0
+  KYTY_FIX_B9A               +3 (code 1) -0
+  KYTY_FIX_DUALSRC           +8 (code 1) -0
+  KYTY_FIX_MINIMIZE          +6 (code 1) -0
+  KYTY_FRAME_TRACE           +9 (code 0) -0
+  KYTY_PARALLEL_COPY         +2 (code 0) -0
+  KYTY_PIPELINE_SALT         +1 (code 0) -0
+  KYTY_PLATFORM              +5 (code 5) -0
+  KYTY_PLATFORM_WINDOWS      +5 (code 5) -0
+  KYTY_PROT_CEILING          +2 (code 1) -0
+  KYTY_REBIND_CENSUS         +2 (code 1) -0
+  KYTY_REBIND_SLOW_CENSUS    +2 (code 1) -0
+  KYTY_SKIP_CS               +1 (code 0) -0
+  KYTY_SYSV_ABI              +16 (code 16) -0
+  KYTY_S_PCW                 +16 (code 2) -0
+  KYTY_S_PCW_FORCE_MS        +6 (code 2) -0
+  KYTY_TEST_MINIMIZE         +4 (code 1) -0
+KNOB_DEFINITIONS rows added: 9
+    KYTY_PROT_CEILING protceil fallback 0 max 2
+    KYTY_ARM_IN_COPY armcopy fallback 0 max 4
+    KYTY_ARM_INLINE acinline fallback 0 max 1
+    KYTY_ARM_LOSS_WIN lwin fallback 0 max 3
+    KYTY_DISP_CEILING dispceil fallback 0 max 1
+    KYTY_REBIND_CENSUS rbcen fallback 0 max 2
+    KYTY_B2_REUSE b2reuse fallback 0 max 3
+    KYTY_REBIND_SLOW_CENSUS rbslow fallback 0 max 1
+    KYTY_BIND_LEAN bindlean fallback 0 max 3
+KNOB_DEFINITIONS rows removed: 0
+
+per name: tip readings (code part, git grep -n at 9c9d86ae)
+== KYTY_ARM_INLINE : KNOB_DEFINITIONS fallback 0
+== KYTY_ARM_IN_COPY : KNOB_DEFINITIONS fallback 0
+== KYTY_ARM_LOSS_WIN : KNOB_DEFINITIONS fallback 0
+== KYTY_ASYNC_COPY : only in comments on + lines
+== KYTY_ASYNC_PROTECT : only in comments on + lines
+== KYTY_AV_TRACE : only in comments on + lines
+== KYTY_B2_REUSE : KNOB_DEFINITIONS fallback 0
+== KYTY_BIND_LEAN : KNOB_DEFINITIONS fallback 0
+   class: 
+== KYTY_DISP_CEILING : KNOB_DEFINITIONS fallback 0
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1254
+      1254 const char* value = std::getenv("KYTY_DUMP_GCN");
+      1255 return value != nullptr && value[0] != '0';
+      1256 }();
+      1257 if (!enabled || code.empty()) {
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1298
+      1298 const char* value = std::getenv("KYTY_DUMP_GCN");
+      1299 return value != nullptr && value[0] == '2' && value[1] == '\0';
+      1300 }();
+      1301 return enabled;
+== KYTY_DUMP_GCN src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:3593
+      3593 const auto* value = std::getenv("KYTY_DUMP_GCN");
+      3594 return value != nullptr && value[0] != '0';
+      3595 }();
+      3596 if (!tolerant && (register_trace || dump_gcn) &&
+   class: OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (!= nullptr &&), UNDECIDED
+== KYTY_FIX_B1B src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:346
+      346 const char* value = std::getenv("KYTY_FIX_B1B");
+      347 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      348 }();
+      349 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B26 src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:331
+      331 const char* value = std::getenv("KYTY_FIX_B26");
+      332 return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      333 }();
+      334 return enabled;
+   class: ON-IF-UNSET
+== KYTY_FIX_B9A src/libs/libAudio.cpp:374
+      374 const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+      375 const bool  fix_b9a       = fix_b9a_value == nullptr || fix_b9a_value[0] == '\0' || Common::EnvValueOn(fix_b9a_value);
+      376 g_b9a_enabled.store(fix_b9a, std::memory_order_relaxed);
+      377 if (fix_b9a) {
+   class: ON-IF-UNSET
+== KYTY_FIX_DUALSRC src/graphics/presentation/window/vulkanWindow.cpp:666
+      666 const char* dual_src_value    = std::getenv("KYTY_FIX_DUALSRC");
+      667 const bool dual_src_enabled   = dual_src_supported && (dual_src_value == nullptr || dual_src_value[0] == '\0' ||
+      668 Common::EnvValueOn(dual_src_value));
+      669 if (dual_src_enabled) {
+   class: ON-IF-UNSET
+== KYTY_FIX_MINIMIZE src/graphics/presentation/window/swapchain.cpp:311
+      311 const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+      312 const bool  on    = value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+      313 if (on) {
+      314 LOGF("FixMinimize: on\n");
+   class: ON-IF-UNSET
+== KYTY_FRAME_TRACE : only in comments on + lines
+== KYTY_PARALLEL_COPY : only in comments on + lines
+== KYTY_PIPELINE_SALT : only in comments on + lines
+   class: 
+   class: 
+== KYTY_PROT_CEILING : KNOB_DEFINITIONS fallback 0
+== KYTY_REBIND_CENSUS : KNOB_DEFINITIONS fallback 0
+== KYTY_REBIND_SLOW_CENSUS : KNOB_DEFINITIONS fallback 0
+== KYTY_SKIP_CS : only in comments on + lines
+   class: 
+== KYTY_S_PCW src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:277
+      277 const char* value = std::getenv("KYTY_S_PCW");
+      278 return value != nullptr && value[0] == '1' && value[1] == '\0';
+      279 }();
+      280 return mode;
+   class: OFF-IF-UNSET (!= nullptr &&)
+== KYTY_S_PCW_FORCE_MS src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:288
+      288 const char* value = std::getenv("KYTY_S_PCW_FORCE_MS");
+      289 return value != nullptr ? static_cast<uint32_t>(std::strtoul(value, nullptr, 10)) : 0u;
+      290 }();
+      291 return ms;
+   class: UNDECIDED
+== KYTY_TEST_MINIMIZE src/graphics/presentation/window/window.cpp:1055
+      1055 const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+      1056 if (value == nullptr || value[0] == '\0') {
+      1057 return c;
+      1058 }
+   class: OFF-IF-UNSET (nullptr -> exit)
+
+DEFAULT CLASS SUMMARY
+  KYTY_ARM_INLINE            TABLE fallback 0
+  KYTY_ARM_IN_COPY           TABLE fallback 0
+  KYTY_ARM_LOSS_WIN          TABLE fallback 0
+  KYTY_B2_REUSE              TABLE fallback 0
+  KYTY_BIND_LEAN             TABLE fallback 0
+  KYTY_CLASS_NO_COPY         
+  KYTY_DISP_CEILING          TABLE fallback 0
+  KYTY_DUMP_GCN              OFF-IF-UNSET (!= nullptr &&), OFF-IF-UNSET (!= nullptr &&), UNDECIDED
+  KYTY_FIX_B1B               ON-IF-UNSET
+  KYTY_FIX_B26               ON-IF-UNSET
+  KYTY_FIX_B9A               ON-IF-UNSET
+  KYTY_FIX_DUALSRC           ON-IF-UNSET
+  KYTY_FIX_MINIMIZE          ON-IF-UNSET
+  KYTY_PLATFORM              
+  KYTY_PLATFORM_WINDOWS      
+  KYTY_PROT_CEILING          TABLE fallback 0
+  KYTY_REBIND_CENSUS         TABLE fallback 0
+  KYTY_REBIND_SLOW_CENSUS    TABLE fallback 0
+  KYTY_SYSV_ABI              
+  KYTY_S_PCW                 OFF-IF-UNSET (!= nullptr &&)
+  KYTY_S_PCW_FORCE_MS        UNDECIDED
+  KYTY_TEST_MINIMIZE         OFF-IF-UNSET (nullptr -> exit)
+ON-IF-UNSET: KYTY_FIX_B1B KYTY_FIX_B26 KYTY_FIX_B9A KYTY_FIX_DUALSRC KYTY_FIX_MINIMIZE
+UNDECIDED: KYTY_DUMP_GCN KYTY_S_PCW_FORCE_MS

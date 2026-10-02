@@ -1,0 +1,36 @@
+== KYTY_FIX_MINIMIZE
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:304:// Track F, F5 (ROADMAP s122 item 273(e)(1), B37): KYTY_FIX_MINIMIZE (default ON since FS2a, HPP-381, item 298(v):
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:311:		const char* value = std::getenv("KYTY_FIX_MINIMIZE");
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:342:	// F5 (B37): no swapchain - only after a recreate at a zero extent under KYTY_FIX_MINIMIZE=1 (Create exits on failure).
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:379:		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:949:	// F5a2 (ROADMAP s122 item 280(g), RC1 of F5b; KYTY_FIX_MINIMIZE=1 only): one call records the frame into the
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:957:		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+== KYTY_FIX_B9A
+9c9d86ae:src/libs/libAudio.cpp:34:// Track F, F6 (ROADMAP s122 item 287(c), B9a): KYTY_FIX_B9A (default ON since FS2a, HPP-381, items 298(v) and 327(g):
+9c9d86ae:src/libs/libAudio.cpp:211:// F6 (B9a) V1: the 16 functions below are registered only with KYTY_FIX_B9A=1.  Arguments - the call sites of the
+9c9d86ae:src/libs/libAudio.cpp:374:	const char* fix_b9a_value = std::getenv("KYTY_FIX_B9A");
+9c9d86ae:tests/AudioPropagationTests.cpp:2:// symbol database the loader uses (no game, no Vulkan device).  KYTY_FIX_B9A=0: 6 resolve (the old HLE), the 16 V1
+9c9d86ae:tests/AudioPropagationTests.cpp:3:// functions do not, nothing is counted.  KYTY_FIX_B9A=1: 22 of 22 resolve; every function returns 0; PortalCreate and
+9c9d86ae:tests/AudioPropagationTests.cpp:36:	bool        v1; // registered only with KYTY_FIX_B9A=1
+9c9d86ae:tests/AudioPropagationTests.cpp:106:	_putenv_s("KYTY_FIX_B9A", value);
+9c9d86ae:tests/AudioPropagationTests.cpp:108:	setenv("KYTY_FIX_B9A", value, 1);
+9c9d86ae:tests/AudioPropagationTests.cpp:195:	std::printf("AudioPropagationTests: KYTY_FIX_B9A=0 resolved %d of 22\n", resolved);
+9c9d86ae:tests/AudioPropagationTests.cpp:221:	std::printf("AudioPropagationTests: KYTY_FIX_B9A=1 resolved %d of 22\n", resolved);
+9c9d86ae:tests/AudioPropagationTests.cpp:409:	std::printf("AudioPropagationTests: KYTY_FIX_B9A=1 calls %llu handles %llu\n",
+== KYTY_TEST_MINIMIZE
+9c9d86ae:src/graphics/presentation/window.h:16:// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): the stand KYTY_TEST_MINIMIZE - fed the game's log text.
+9c9d86ae:src/graphics/presentation/window/window.cpp:1040:// Track F, F5 (ROADMAP s122 item 273(e)(2), MEASUREMENT ONLY): KYTY_TEST_MINIMIZE=<s>:<dur> - <s> seconds after the
+9c9d86ae:src/graphics/presentation/window/window.cpp:1055:		const char*  value = std::getenv("KYTY_TEST_MINIMIZE");
+9c9d86ae:src/libs/libC.cpp:654:		Libs::Graphics::WindowTestMinimizeNoteGuestText(text.data(), text.size()); // F5, KYTY_TEST_MINIMIZE
+== FixMinimizeEnabled
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:309:static bool FixMinimizeEnabled() {
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:372:		static_cast<void>(FixMinimizeEnabled());
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:379:		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:638:	if (FixMinimizeEnabled() && SurfaceExtentZero()) {
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:953:	const bool fix_minimize = FixMinimizeEnabled();
+9c9d86ae:src/graphics/presentation/window/swapchain.cpp:957:		if (FixMinimizeEnabled() && swapchain.Missing()) [[unlikely]] { // F5 (B37): KYTY_FIX_MINIMIZE=1, zero extent
+== g_b9a_enabled
+9c9d86ae:src/libs/libAudio.cpp:83:static std::atomic_bool                                     g_b9a_enabled {false};
+9c9d86ae:src/libs/libAudio.cpp:102:	if (!g_b9a_enabled.load(std::memory_order_relaxed)) {
+9c9d86ae:src/libs/libAudio.cpp:131:	if (g_b9a_enabled.load(std::memory_order_relaxed)) {
+9c9d86ae:src/libs/libAudio.cpp:376:	g_b9a_enabled.store(fix_b9a, std::memory_order_relaxed);

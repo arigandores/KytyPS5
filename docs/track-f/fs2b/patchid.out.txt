@@ -1,0 +1,45 @@
+== d2811535 parent d9a5b73e files:
+src/graphics/presentation/window.h
+src/graphics/presentation/window/swapchain.cpp
+src/graphics/presentation/window/window.cpp
+src/libs/libC.cpp
+patch-id: b6608c04f48dfc575a3c55d9949617dd44cb5275 d281153592b70f84f01c1aaf8e8ea3e50b4b172c
+== 01ca15d1 parent cc9880e6 files:
+src/graphics/presentation/window/swapchain.cpp
+src/graphics/presentation/window/testMinimizeLine.h
+src/graphics/presentation/window/window.cpp
+patch-id: ec4d3478569dfeb5e8e785abd25b47935974adf9 01ca15d151851af0f048ab0eaea0e90cae112f88
+== c723e5ae parent 4fc501f4 files:
+src/graphics/presentation/window.h
+src/graphics/presentation/window/swapchain.cpp
+src/graphics/presentation/window/window.cpp
+src/libs/libC.cpp
+patch-id: b6608c04f48dfc575a3c55d9949617dd44cb5275 c723e5aec502efffb76d343a605f5ad411b1e914
+== af7e5ff9 parent c723e5ae files:
+src/graphics/presentation/window/swapchain.cpp
+src/graphics/presentation/window/testMinimizeLine.h
+src/graphics/presentation/window/window.cpp
+patch-id: ec4d3478569dfeb5e8e785abd25b47935974adf9 af7e5ff91aff2c899a99bf06c6997fd8c0ed519a
+== 5f67f829 parent 378a869d files:
+CMakeLists.txt
+src/libs/libAudio.cpp
+tests/AudioPropagationTests.cpp
+patch-id: c518271e6d60d79d39242c714b72d2ed6d4bd320 5f67f829d714b9f75204c74e0cc3692a08256550
+== 9c9d86ae parent 2e6cfec2 files:
+src/graphics/presentation/window/swapchain.cpp
+src/libs/libAudio.cpp
+patch-id: 7aff6ae3802709151d51554df4dc7c150d4d955b 9c9d86ae82fdcd79875879f4c17fc08da8c802bc
+== commits touching F5 files after 01ca15d1 up to 9c9d86ae:
+9c9d86ae track F link FS2a (HPP-381): defaults KYTY_FIX_MINIMIZE 0 -> 1 and KYTY_FIX_B9A 0 -> 1 - ROADMAP p.298(v), p.327(g)
+== diff af7e5ff9 (F5c tree) vs 9c9d86ae on F5 src files (ignore-cr):
+ src/graphics/presentation/window/swapchain.cpp | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+== diff 01ca15d1 vs 9c9d86ae on same files:
+ src/graphics/presentation/window/swapchain.cpp | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+== diff 5f67f829 vs 9c9d86ae libAudio:
+ src/graphics/presentation/window/swapchain.cpp | 10 ++++++----
+ src/libs/libAudio.cpp                          | 11 +++++++----
+ 2 files changed, 13 insertions(+), 8 deletions(-)
+== commits touching src/libs/libAudio.cpp after 5f67f829:
+9c9d86ae track F link FS2a (HPP-381): defaults KYTY_FIX_MINIMIZE 0 -> 1 and KYTY_FIX_B9A 0 -> 1 - ROADMAP p.298(v), p.327(g)

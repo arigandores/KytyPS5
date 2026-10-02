@@ -1,0 +1,8 @@
+C:/kyty/f287/fs2b/cfgtests_defaults.log raw a074f1b3c0bf3317 norm 7cf2585908822343 tests 127 failed lines 2
+C:/kyty/f287/fs2a/cfgtests_defaults.log raw 5a60758aab7abd57 norm 7cf2585908822343 tests 127 failed lines 2
+C:/kyty/f287/fsb/cfgtests_defaults.log raw b50929d47aca6285 norm 7cf2585908822343 tests 127 failed lines 2
+fs2b == fs2a normalized: True
+C:/kyty/f287/fs2b/audio_propagation_tests.log 9919aa663ce4658a
+C:/kyty/f287/fs2a/audio_propagation_tests.log 9919aa663ce4658a
+fail in [test] TestNewShaderRecompilerPixelImageSampleLodSelection | ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod
+fail in [test] TestNewShaderRecompilerPixelImageSampleLodSelection | ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod

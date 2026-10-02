@@ -1,0 +1,25 @@
+gcn empty dumps (not members) 1 ['g_2/cs_900aba8df9448d3d.bin']
+gcn files unique 337 conflicts 0 by stage {'cs': 90, 'ms': 5, 'ps': 141, 'vs': 101}
+cache_cur files 615 not current signature 0
+snap0 files 1181 signatures {'KytySC3:699c1e4b': 707, 'KytySC3:2db9065a': 29, 'KytySC3:780ea8ac': 438, 'KytySC3:8347ce22': 1, 'KytySC3:1693ffd7': 1, 'KytySC3:646b501f': 5}
+cache_root files 1344 signatures {'KytySC3:699c1e4b': 875, 'KytySC3:2db9065a': 24, 'KytySC3:780ea8ac': 438, 'KytySC3:8347ce22': 1, 'KytySC3:1693ffd7': 1, 'KytySC3:646b501f': 5}
+jobs: A rows 840 bench 13 alt rows 19 C files 104
+tests binary C:/kyty/s288/s7/bin/shader_cfg_tests_949f8e51.exe 949f8e5130ad86c1d0773988d424218bd4134fe6b39c5a69d0616b53aac4ff21
+current signature KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b
+t1_base.tsv rows 2154 sha256 d4d80994176891c36afc2267231fd38ce6fb67526d39ed8528a5298d78b2d19a
+  OK                     269   dev   269
+  EXIT                     0   dev     0
+  UNIMPL                   0   dev     0
+  VAL_FAIL                 0   dev     0
+  NONDET                   0   dev     0
+  STORED_DIFF              0   dev     0
+  HARNESS_UNSUPPORTED    571   dev   571
+  NO_GCN                 120   dev   120
+  NO_CACHE_FILE           13   dev    13
+  OLD_SIGNATURE         1181   dev  1181
+  old signatures in snap0 {'699c1e4b': 707, '2db9065a': 29, '780ea8ac': 438, '8347ce22': 1, '1693ffd7': 1, '646b501f': 5}
+keys (stage,hash,perm) of rows A 474 with >1 outcome over key16 0
+t1_alt.tsv rows 19 sha256 b5669f94110f60b3c0d074c54c5cf97004ff2068ef6ec9e189185760b8dd5e30 {'OK': 9, 'HARNESS_UNSUPPORTED': 10} dev {'OK': 9, 'HARNESS_UNSUPPORTED': 10}
+corpus does not contain registered but unused shaders (dump at first use, KYTY_DUMP_GCN=1 on 9235a7ac)
+T1 does not catch a wrong picture: spirv-val without errors and identity are not correctness of the image
+wall 141.4 s

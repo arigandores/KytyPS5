@@ -1,0 +1,28 @@
+2026-10-02 20:15:54 UTC start S7 (HPP-319), run c8971c1b-de85-41c9-ae02-95f965f1b8c9; HPP-315 done (accepted p.335 b1db56f2); no lock, no STOP
+2026-10-02 20:15:55 UTC tests build start (build_tests.cmd, C:/kyty/build, HEAD b1db56f2)
+2026-10-02 20:16:03 UTC tests build end rc=1
+2026-10-02 20:17:30 UTC build rc=1: 3rdparty submodule files of the main work tree replaced by .xz (mtime 2026-10-02 18:08-18:13Z, not in _cleanup401 manifest); restored 46 tracked files by git checkout (list restored_submodule_files.txt), .xz left in place
+2026-10-02 20:17:53 UTC tests build start #2 (after restore; work tree clean, HEAD b1db56f2)
+2026-10-02 20:18:31 UTC tests build #2 end rc=0
+2026-10-02 20:19:49 UTC 27 translator sources CRLF-only vs HEAD rewritten with HEAD blobs (eol_s7.py --apply); disk hash now = git HEAD 56189185; tests build #3 start
+2026-10-02 20:20:27 UTC tests build #3 end rc=0
+2026-10-02 20:21:54 UTC tests binary frozen bin/shader_cfg_tests_949f8e51.exe; suite run start
+2026-10-02 20:21:55 UTC suite run end
+2026-10-02 20:22:18 UTC copied installed cache (read only): variant_fixb26_fixb1b -> cache_cur, root -> cache_root, pipelines_*.bin
+2026-10-02 20:23:59 UTC t1_s7.py --plan-only start
+2026-10-02 20:24:00 UTC t1_s7.py --plan-only end
+2026-10-02 20:24:16 UTC t1_s7.py --plan-only #2 start
+2026-10-02 20:24:39 UTC t1_s7.py --plan-only #2 end
+2026-10-02 20:24:47 UTC t1_s7.py run #1 start (workers 6)
+2026-10-02 20:25:27 UTC t1_s7.py run #1 end rc=0
+2026-10-02 20:27:01 UTC run #1 moved to old_run1 (VAL_FAIL 151 = PS identical=1, spirv-val without device layout flag); driver patched: three spirv-val forms, outcome + outcome_dev; run #2 start (workers 6)
+2026-10-02 20:29:22 UTC t1_s7.py run #2 end rc=0
+2026-10-02 20:51:27 UTC waited foreign lock 'go_fs2.sh series' (FS2c): seen 2026-10-02 20:31:59 UTC at recipes_s7 start (exit 5, nothing run), free 20:51:18 UTC
+2026-10-02 20:51:27 UTC recipes_s7.py snap0 start
+2026-10-02 20:52:45 UTC recipes_s7.py snap0 end
+2026-10-02 20:54:27 UTC bench_s7.py start
+2026-10-02 20:54:55 UTC bench_s7.py end rc=0
+2026-10-02 20:56:58 UTC git add of the 27 LF files (blob = HEAD) to clear stat-dirty status; staged diff empty
+2026-10-02 21:00:35 UTC waited foreign lock 'gop24.sh ix_sha' (P24): seen 20:58:30 UTC, free 21:00:31 UTC; nothing run under it
+2026-10-02 21:09:18 UTC RULE 27 VIOLATION (own): docs/track-s/s7-corpus.md written by the Write tool at 2026-10-02 21:01:48 UTC (mtime) under the foreign lock 'gop24.sh ia_A3' (P24) taken 21:01:28 UTC (lock file text, local 23:01:28); lock check before it was at 21:00:35 UTC; one file write, no process; lock freed 21:09:06 UTC
+2026-10-02 21:10:00 UTC FACTS section S7 written

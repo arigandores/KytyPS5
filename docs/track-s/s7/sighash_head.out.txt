@@ -1,0 +1,45 @@
+files 101
+disk_hash fba4fbfd3f4ea976edd12ad4c186a430b0e25766
+crlf_files 27
+  crlf C:/kyty/KytyPS5/src/graphics/guest_gpu/gpu_defs.h
+  crlf C:/kyty/KytyPS5/src/graphics/guest_gpu/gpu_format.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/ExportOps.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/MemoryOps.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/OpcodeTable.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/VectorAluOps.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/translate/Compare.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Block.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/IREmitter.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/IREmitter.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Type.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Type.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/BindingLayout.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/DeadCodeElimination.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/DeadCodeElimination.h
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp
+  crlf C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.h
+git_hash HEAD 56189185f9e9f9a0ea5174f3f85206e6d099db3d
+disk_ne_git 27
+  diff C:/kyty/KytyPS5/src/graphics/guest_gpu/gpu_defs.h
+  diff C:/kyty/KytyPS5/src/graphics/guest_gpu/gpu_format.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/ExportOps.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/MemoryOps.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/OpcodeTable.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/ScalarAluOps.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/decode/VectorAluOps.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/frontend/translate/Compare.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Block.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/IREmitter.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/IREmitter.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Type.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/Type.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/BindingLayout.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ConstantPropagation.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/DeadCodeElimination.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/DeadCodeElimination.h
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.cpp
+  diff C:/kyty/KytyPS5/src/graphics/shader/recompiler/ir/passes/ReadLaneElimination.h

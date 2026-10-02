@@ -1,0 +1,15 @@
+cs info size 216
+dup 641 first 8 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+dup 642 first 9 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+dup 643 first 10 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+dup 644 first 37 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+dup 645 first 39 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+dup 646 first 36 differing byte offsets [53]
+   off   52 first 00000100 dup 00000000
+pairs 41
+  offsets [53] pairs 41

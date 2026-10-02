@@ -1,0 +1,6 @@
+t1_bench.tsv rows 337 sha256 6403f5e2155ef6f3442b025df66bbb6911562b7cdaa6814ca070a3293de78c32
+  cs CFG_OK     90
+  ms BENCH_EXIT 4
+  ms CFG_OK     1
+  ps CFG_OK     141
+  vs CFG_OK     101

@@ -1,0 +1,18 @@
+suite refs_s7 sha256 8d15a0de0f9d35ba03d4fb7a7b766ba3354b47504f6e2f7b7b532cfd779ce72d
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5751 void Info(const T& info) {
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5756 std::array<uint8_t, sizeof(T)> bytes {};
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6358 if (m_compute_pipelines.contains(program.id)) {
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6276 if (m_graphics_pipelines.contains(key)) {
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6262 if (!m_program_cache->Resolve(vs_key, vs_index, vs_loaded ? &vs_entry 
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:6425 LOGF("PipelinePrecache: %u recipes -> %u graphics + %u compute pipelin
+OK   4fc501f4:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:4514 if (index >= entry->second.permutations.size()) {
+OK   4fc501f4:src/graphics/shader/shader.h:181 bool               tg_size_en                 = false;
+OK   8f6b6be2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:5877 void Info(const T& info) {
+OK   8f6b6be2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:1342 spvtools::SpirvTools tools(SPV_ENV_VULKAN_1_3);
+OK   8f6b6be2:src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp:2124 if (!ValidateShaderSpirv(options.dump_label, options.shader_hash, resu
+OK   8f6b6be2:src/launcher/include/configuration.h:98 bool                   shader_validation_enabled   = true;
+OK   8f6b6be2:src/graphics/presentation/window/vulkanWindow.cpp:705 features12.uniformBufferStandardLayout = supported_features12.uniformB
+OK   8f6b6be2:tests/shaderCfgTests.cpp:14256 (is_vertex && key.static_state.size() != 8) ||
+OK   8f6b6be2:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:270 default: EXIT("unsupported scalar source operand 0x%08x at pc 0x%08x",
+OK   8f6b6be2:src/generate_version.cmake:52 file(SHA1 "${SHADER_SOURCE}" SHADER_DIGEST)
+ALL OK

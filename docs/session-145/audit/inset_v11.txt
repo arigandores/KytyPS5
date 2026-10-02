@@ -1,0 +1,1 @@
+INSET /rec_v145_11.mp4 rect x 20 y 10 190x195 T 4.0: frames 18051; one-frame events 7; first 40: [(4016, 6.4, 6.3, 1.6), (5230, 8.2, 8.1, 1.6), (9141, 8.9, 8.8, 0.7), (9975, 5.4, 5.5, 0.6), (11313, 7.2, 7.1, 0.5), (12553, 7.4, 7.5, 0.6), (15187, 4.6, 4.7, 0.5)]; frame distance between consecutive events: min 834 max 3911

@@ -1,0 +1,3 @@
+glx/syn_half.mp4: 300 frames 960x540, index entries 0
+one-frame glitches: 1
+  video   150 present     -1 t=  -1.00s diff_prev= 71.3 diff_next= 71.4 neighbours= 3.2 changed_px= 260082 bbox=(0, 0, 959, 528)

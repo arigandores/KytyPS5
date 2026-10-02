@@ -1,0 +1,21 @@
+K2 v145_14 n 7249 dt 4624510 us (hold): ends 142.79 s of presented time after the first scene frame (n 234), 143.41 s after the entry line; rows after it 9789
+K2 w145_07 n 133 dt 1131012 us (entry): ends 1.14 s of presented time after the first scene frame (n 131), 1.25 s after the entry line; rows after it 6783
+K2 w145_08 n 231 dt 1196067 us (entry): ends 1.21 s of presented time after the first scene frame (n 229), 1.37 s after the entry line; rows after it 11056
+K2 w145_15 n 149 dt 1290307 us (entry): ends 1.29 s of presented time after the first scene frame (n 148), 1.43 s after the entry line; rows after it 7972
+W held 17: layer_end_us max 70364 min 0; [W][2] lines min 179181 max 2790241; limit lines sum 0; [Vulkan][E] sum 0; hold_s min 310.0 max 310.2; shown after the first scene frame min 311.9 max 323.9 s
+V entered 15: hold_s min 330.0 max 330.2; shown after the first scene frame min 331.9 max 337.2 s; frames after first min 10695 max 19922; skipped-draw lines min 0 max 1268; prio>50ms tags [('v145_03', 2, 76555), ('v145_04', 1, 107956), ('v145_08', 4, 103429), ('v145_11', 3, 170451), ('v145_12', 1, 57803), ('v145_13', 1, 107736), ('v145_14', 2, 92213), ('v145_15', 2, 74448), ('v145_16', 2, 129338)]; bvh sum 0; ops [101]
+  V v145_02 first [265, 15438, 331] K3w 0 K3h 1 (within 120 s 1) K2 []
+  V v145_03 first [223, 14579, 205] K3w 2 K3h 0 (within 120 s 0) K2 []
+  V v145_04 first [225, 18016, 414] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_05 first [170, 19389, 110] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_07 first [234, 17390, 286] K3w 0 K3h 0 (within 120 s 0) K2 []
+  V v145_08 first [279, 17401, 146] K3w 2 K3h 1 (within 120 s 1) K2 []
+  V v145_09 first [219, 16264, 2271] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_10 first [253, 41925, 264] K3w 1 K3h 1 (within 120 s 0) K2 []
+  V v145_11 first [429, 18911, 126] K3w 0 K3h 2 (within 120 s 2) K2 []
+  V v145_12 first [230, 18447, 433] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_13 first [204, 51280, 223] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_14 first [234, 19764, 238] K3w 2 K3h 2 (within 120 s 0) K2 [[7249, 4624510, 'hold']]
+  V v145_15 first [218, 15953, 239] K3w 1 K3h 0 (within 120 s 0) K2 []
+  V v145_16 first [217, 16031, 608] K3w 0 K3h 5 (within 120 s 5) K2 []
+  V v145_17 first [315, 20910, 314] K3w 0 K3h 0 (within 120 s 0) K2 []

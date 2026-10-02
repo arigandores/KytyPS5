@@ -1,0 +1,2 @@
+glx/syn_box1.mp4: 300 frames 960x540, index entries 0
+one-frame glitches: 0

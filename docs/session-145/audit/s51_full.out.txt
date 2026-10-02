@@ -1,0 +1,3 @@
+glx/syn_full.mp4: 300 frames 960x540, index entries 0
+one-frame glitches: 1
+  video   150 present     -1 t=  -1.00s diff_prev=161.8 diff_next=161.7 neighbours= 3.5 changed_px= 518366 bbox=(0, 0, 959, 539)

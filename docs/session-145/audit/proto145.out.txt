@@ -1,0 +1,101 @@
+SESSION LOCK WINDOWS 34 (distinct tags 34; taken without release []; odd lines 0): first taken 2026-10-01T17:50:37Z, last released 2026-10-02T04:56:39Z; sum held 13851 s; gaps between tags min 91 s, median 124 s, max 15202 s (v145_05 -> w145_05)
+   GAP  15202 s between v145_05 (released 2026-10-01T19:07:00Z) and w145_05 (taken 2026-10-01T23:20:22Z)
+   GAP   7062 s between w145_06 (released 2026-10-01T23:48:18Z) and v145_07 (taken 2026-10-02T01:46:00Z)
+   GAP    189 s between v145_04 (released 2026-10-01T18:48:09Z) and w145_04 (taken 2026-10-01T18:51:18Z)
+   GAP    144 s between w145_14 (released 2026-10-02T04:03:44Z) and v145_15 (taken 2026-10-02T04:06:08Z)
+TRACK LOCKLOG p283/lead/p10chk/lock.log: windows since 2026-10-01T12:30:00Z: 3; taken without release []
+TRACK LOCKLOG p283/p10/runs/lock.log: windows since 2026-10-01T12:30:00Z: 3; taken without release []
+TRACK LOCKLOG p283/p4/runs/lock.log: windows since 2026-10-01T12:30:00Z: 0; taken without release []
+TRACK LOCKLOG p283/p6/runs/lock.log: windows since 2026-10-01T12:30:00Z: 0; taken without release []
+TRACK LOCKLOG p283/p8/runs/lock.log: windows since 2026-10-01T12:30:00Z: 3; taken without release []
+TRACK LOCKLOG f287/f2c/lock.log: windows since 2026-10-01T12:30:00Z: 0; taken without release []
+TRACK LOCKLOG f287/f3d/lock.log: windows since 2026-10-01T12:30:00Z: 1; taken without release []
+TRACK LOCKLOG f287/f4c/lock.log: windows since 2026-10-01T12:30:00Z: 2; taken without release []
+TRACK LOCKLOG f287/f5c/lock.log: windows since 2026-10-01T12:30:00Z: 1; taken without release []
+TRACK LOCKLOG f287/f6e/lock.log: windows since 2026-10-01T12:30:00Z: 1; taken without release []
+TRACK LOCKLOG f287/fsc/lock.log: windows since 2026-10-01T12:30:00Z: 2; taken without release []
+TRACK LOCKLOG s288/s4/runs_s/lock.log: windows since 2026-10-01T12:30:00Z: 0; taken without release []
+   TRACK WINDOW 2026-10-01T12:33:17Z..2026-10-01T12:36:56Z  219 s pn_hoover_beach (p283/lead/p10chk/lock.log)
+   TRACK WINDOW 2026-10-01T12:33:17Z..2026-10-01T12:36:56Z  219 s pn_hoover_beach (p283/p10/runs/lock.log)
+   TRACK WINDOW 2026-10-01T12:33:17Z..2026-10-01T12:36:56Z  219 s pn_hoover_beach (p283/p8/runs/lock.log)
+   TRACK WINDOW 2026-10-01T12:38:27Z..2026-10-01T12:41:58Z  211 s pc_hoover_beach (p283/lead/p10chk/lock.log)
+   TRACK WINDOW 2026-10-01T12:38:27Z..2026-10-01T12:41:58Z  211 s pc_hoover_beach (p283/p10/runs/lock.log)
+   TRACK WINDOW 2026-10-01T12:38:27Z..2026-10-01T12:41:58Z  211 s pc_hoover_beach (p283/p8/runs/lock.log)
+   TRACK WINDOW 2026-10-01T12:42:56Z..2026-10-01T12:49:43Z  407 s pw_C (p283/lead/p10chk/lock.log)
+   TRACK WINDOW 2026-10-01T12:42:56Z..2026-10-01T12:49:43Z  407 s pw_C (p283/p10/runs/lock.log)
+   TRACK WINDOW 2026-10-01T12:42:56Z..2026-10-01T12:49:43Z  407 s pw_C (p283/p8/runs/lock.log)
+   TRACK WINDOW 2026-10-01T13:01:06Z..2026-10-01T13:02:02Z   56 s series (f287/f4c/lock.log)
+   TRACK WINDOW 2026-10-01T13:16:19Z..2026-10-01T13:36:07Z 1188 s series (f287/f4c/lock.log)
+   TRACK WINDOW 2026-10-01T13:40:59Z..2026-10-01T14:11:05Z 1806 s series (f287/f3d/lock.log)
+   TRACK WINDOW 2026-10-01T15:44:42Z..2026-10-01T16:05:31Z 1249 s series (f287/f5c/lock.log)
+   TRACK WINDOW 2026-10-01T16:17:57Z..2026-10-01T16:24:28Z  391 s series (f287/fsc/lock.log)
+   TRACK WINDOW 2026-10-01T16:30:02Z..2026-10-01T17:03:54Z 2032 s series (f287/fsc/lock.log)
+   TRACK WINDOW 2026-10-01T17:11:39Z..2026-10-01T17:15:31Z  232 s series (f287/f6e/lock.log)
+TRACK WINDOWS since the s144 close: 16; inside the series window 2026-10-01T17:50:37Z..2026-10-02T04:56:39Z: 0
+FILES track P: 14232; mtime inside a SESSION lock window: 2; inside the series window but outside the locks: 10
+   IN-SESSION-LOCK 2026-10-01T17:52:22Z under w145_00 p283/p15b/wip/scp15.py (82122 bytes)
+   IN-SESSION-LOCK 2026-10-01T18:15:42Z under w145_02 p283/p15b/wip/mut_scp15.py (32759 bytes)
+   IN-SERIES-WINDOW p283/p15b/test_wip1.txt: 1 files, 2026-10-01T18:14:16Z..2026-10-01T18:14:16Z, 15261 bytes
+   IN-SERIES-WINDOW p283/p15b/test_wip2.txt: 1 files, 2026-10-01T18:14:33Z..2026-10-01T18:14:33Z, 15261 bytes
+   IN-SERIES-WINDOW p283/p15b/wip: 1 files, 2026-10-01T18:14:45Z..2026-10-01T18:14:45Z, 72425 bytes
+   IN-SERIES-WINDOW p283/p15b/test_wip3.txt: 1 files, 2026-10-01T18:14:49Z..2026-10-01T18:14:49Z, 15269 bytes
+   IN-SERIES-WINDOW p283/p15b/test_wip_on_v02.txt: 1 files, 2026-10-01T18:14:57Z..2026-10-01T18:14:57Z, 1151 bytes
+   IN-SERIES-WINDOW p283/p15/mut_scp15.py: 1 files, 2026-10-01T18:21:56Z..2026-10-01T18:21:56Z, 32759 bytes
+   IN-SERIES-WINDOW p283/p15/scp15.py: 1 files, 2026-10-01T18:21:56Z..2026-10-01T18:21:56Z, 82122 bytes
+   IN-SERIES-WINDOW p283/p15/gop15.sh: 1 files, 2026-10-01T18:21:56Z..2026-10-01T18:21:56Z, 25063 bytes
+   IN-SERIES-WINDOW p283/p15b/patch_test_gop15.py: 1 files, 2026-10-01T18:22:03Z..2026-10-01T18:22:03Z, 566 bytes
+   IN-SERIES-WINDOW p283/p15/test_gop15.py: 1 files, 2026-10-01T18:22:08Z..2026-10-01T18:22:08Z, 37952 bytes
+FILES track F: 24995; mtime inside a SESSION lock window: 0; inside the series window but outside the locks: 0
+FILES track S: 4326; mtime inside a SESSION lock window: 0; inside the series window but outside the locks: 0
+FILES lead (s145/lead, s145/step4_lead, s144/step4): 37; mtime inside a SESSION lock window: 0; inside the series window but outside the locks: 1
+   IN-SERIES-WINDOW s145/step4_lead/p304.py: 1 files, 2026-10-02T01:38:32Z..2026-10-02T01:38:32Z, 6546 bytes
+FILES repository docs (KytyPS5/docs/track-p, track-f, track-s, session-145, agent): 940; mtime inside a SESSION lock window: 0; inside the series window but outside the locks: 0
+FILES emulator folder docs: 8; mtime inside a SESSION lock window: 0; inside the series window but outside the locks: 0
+S145 STEP FILES 322 (without run outputs, mutant work folders, fixtures); mtime inside a TRACK lock window: 3
+   IN-TRACK-LOCK 2026-10-01T13:16:22Z under series s145/step0/tmp/tools.txt
+   IN-TRACK-LOCK 2026-10-01T13:16:22Z under series s145/step0/tmp/fg.txt
+   IN-TRACK-LOCK 2026-10-01T13:16:56Z under series s145/step0/mk_go145a.py
+COMMITS KytyPS5 since 2026-10-01T12:30:00Z: 81; inside a session lock window 0; inside a track lock window 0; inside the series window 3
+COMMITS ps5-em since 2026-10-01T12:30:00Z: 12; inside a session lock window 0; inside a track lock window 0; inside the series window 0
+TIMES step2: lines 519, rows with a leading UTC time 519; non-monotonic rows 0
+GATE rows 41: start 1, PASS 37 (of them "by ROADMAP item" 2), STOP 4
+   2026-10-02T00:08:14Z GATE v145_07 STOP (w) w145_06: log and stdout missing - the window event not evaluable; (b) W w145_06: log or stdout missing - member not evaluable; (
+   2026-10-02T00:12:02Z GATE v145_07 STOP the tag w145_06 before v145_07 was not made; w145_00 layer limit lines 0 | cache_w145_00.before 6c789468bf25f5b4 vs start manifest 0
+   2026-10-02T01:39:55Z GATE v145_07 STOP the tag w145_06 before v145_07 was not made; w145_00 layer limit lines 0 | cache_w145_00.before 6c789468bf25f5b4 vs start manifest 0
+   2026-10-02T01:40:06Z GATE v145_07 PASS by ROADMAP item 304 (one-time; only STOP member: the tag w145_06 before v145_07 was not made; w145_06 ABORT_EXECUTOR by item 303 (c)
+   2026-10-02T01:44:38Z GATE v145_07 STOP (w) w145_06: log and stdout missing - the window event not evaluable; (b) W w145_06: log or stdout missing - member not evaluable; (
+   2026-10-02T01:44:54Z GATE v145_07 PASS by ROADMAP item 305 (one-time; STOP members exactly four, all of w145_06 ABORT_EXECUTOR by item 303 (c): (w) log and stdout missing,
+   TAG w145_05: lock taken 2026-10-01T23:20:22Z; last gate row before it 2026-10-01T23:18:59Z "GATE w145_05 PASS; v145_05 window minimized/Recovering 0/0 |"; call rows ['2026-10-01T19:07:46Z', '2026-10-01T23:19:03Z'] -> ok
+   TAG v145_07: lock taken 2026-10-02T01:46:00Z; last gate row before it 2026-10-02T01:44:54Z "GATE v145_07 PASS by ROADMAP item 305 (one-time; STOP member"; call rows ['2026-10-02T01:40:07Z', '2026-10-02T01:44:55Z'] -> ok
+EVERY LOCK PRECEDED BY A GATE PASS ROW AND A CALL ROW OF ITS TAG: True; order of the locks = the sealed order: True
+ATTEMPT FILES 34 of 34; json present 33 (missing ['w145_06']); attempts per json [1]; locks per tag max 1
+go145a.log: "enter_scene start" rows 0; "procload: busy" rows 10; refusal rows (rc 1 / order) 4
+runs145/old: []
+SEAL 03 sha256 f37e20253b1e93639ed953b2b727bcc5d52408eaeb1bdd5ba17ba93bb2622638 mtime 2026-10-01T17:33:19Z; first lock 2026-10-01T17:50:37Z; seal before the first lock: True
+SEAL LINES 29: files differing now 0; files with mtime after the seal 0
+JSON prereg = seal 03: 33 of 33; binary 9235a7ac: 33 of 33
+STEP step0: first row 2026-10-01T12:52:42Z; last row 2026-10-01T14:57:35Z; commits named in the first row: e7d0e45f committed 2026-10-01T12:32:43Z (+1199 s before the start); 55da2103 committed 2026-10-01T12:49:47Z (+175 s before the start)
+STEP step0b: first row 2026-10-01T15:07:24Z; last row 2026-10-01T15:22:26Z; commits named in the first row: 9bfb26bc committed 2026-10-01T15:04:22Z (+182 s before the start)
+STEP step1: first row 2026-10-01T15:25:38Z; last row 2026-10-01T16:06:49Z; commits named in the first row: 92f2f0d1 committed 2026-10-01T15:25:23Z (+15 s before the start); bd0c607e committed 2026-10-01T15:24:26Z (+72 s before the start)
+STEP step1b: first row 2026-10-01T16:16:32Z; last row 2026-10-01T17:45:10Z; commits named in the first row: c9cd9181 committed 2026-10-01T16:10:37Z (+355 s before the start)
+STEP step2: first row 2026-10-01T17:48:04Z; last row 2026-10-02T05:03:40Z; commits named in the first row: 72f67ade committed 2026-10-01T17:46:15Z (+109 s before the start)
+CLOSE144 COMMIT KytyPS5 717b12a7 2026-10-01T12:32:26Z: s144 close (HPP-334): ROADMAP p.273 - sheets of 12 V viewed (no visible defect); SCENE_OK YES 18 / NO 2 of 20 
+CLOSE144 COMMIT KytyPS5 e7d0e45f 2026-10-01T12:32:43Z: s144 close (HPP-334): brief docs/next-session-145.md (sc145 series: control W, W repeat rocket_hourglass, 16 V
+CLOSE144 COMMIT KytyPS5 05da9fda 2026-10-01T12:42:30Z: s144 close (HPP-334): docs/local-session-144.md (mirror of C:/kyty/s144/FACTS.md with the Close section), docs
+CLOSE144 COMMIT ps5-em c15da20 2026-10-01T12:42:30Z: s144 close (HPP-334): CLAUDE.md == AGENTS.md - status of s145 (sc145 series: control W, W repeat rocket_hourgl
+INSTR 06386e1c (Session Auditor): sha256 fd7e34ee mtime 2026-10-01T12:32:42Z size 15111 -> = item 274 (b)
+INSTR 2f5a0935 (Harness Engineer): sha256 c6ab2111 mtime 2026-10-01T12:32:42Z size 23263 -> = item 274 (b)
+INSTR 641ba04e (First agent): sha256 ca226dd3 mtime 2026-09-30T22:30:05Z size 6104 -> in the unchanged seven of item 274 (b)
+INSTR 8e98843f (Probe Designer): sha256 9844cefa mtime 2026-09-30T23:56:09Z size 13809 -> in the unchanged seven of item 274 (b)
+INSTR 9cac1833 (agent 9cac1833): sha256 193b43fe mtime 2026-09-26T17:18:56Z size 9811 -> in the unchanged seven of item 274 (b)
+INSTR aabc0a15 (Lever Researcher): sha256 92e128c1 mtime 2026-09-30T23:56:09Z size 16148 -> in the unchanged seven of item 274 (b)
+INSTR dc34de0a (Red Team): sha256 b6b612b2 mtime 2026-09-30T23:56:09Z size 16082 -> in the unchanged seven of item 274 (b)
+INSTR dc8a3c28 (?): sha256 ee077e21 mtime 2026-09-26T16:24:58Z size 2941 -> in the unchanged seven of item 274 (b)
+INSTR eb15eb75 (Emu Engineer): sha256 96942b1c mtime 2026-09-30T23:56:09Z size 15129 -> in the unchanged seven of item 274 (b)
+INSTR f1276629 (Roadmap Lead): sha256 b21f5b64 mtime 2026-10-01T12:32:42Z size 18945 -> = item 274 (b)
+DOC docs/agent-team.md: sha256 588eb81a mtime 2026-10-01T13:07:00Z (item 274 (b): 38c23579) -> changed
+DOC docs/platform-traps.md: sha256 157c61c3 mtime 2026-10-02T05:07:37Z (item 274 (b): 2a2c5a6b) -> changed
+CLAUDE.md sha256 d32597b48e8407a6d6df5942128e8c7ac50b3106f6680cee5f722e01b75359b3 size 77617; AGENTS.md sha256 d32597b48e8407a6d6df5942128e8c7ac50b3106f6680cee5f722e01b75359b3 size 77617; identical: True
+STATUS KytyPS5: 8 lines [' m 3rdparty/nlohmann_json', '?? .claude/', '?? docs/session-120/seal01/__pycache__/', '?? docs/session-121/seal01/__pycache__/', '?? docs/session-134/audit/__pycache__/', '?? docs/session-99/__pycache__/', '?? docs/track-f/f6a/callers1.txt', '?? docs/track-f/f6a/mk_f6a.py']
+STATUS ps5-em: 0 lines []
+ALL DONE

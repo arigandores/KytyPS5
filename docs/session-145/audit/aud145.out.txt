@@ -1,0 +1,39 @@
+w145_00 s145 85973479da1e029d size 389015811 rows 2836 entry True first [340, 2410099, 6113] k2 [] vkE 0 W2 922748 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+w145_01 s145 c4bcfc62ad884335 size 841029170 rows 4625 entry True first [290, 41386, 107] k2 [] vkE 0 W2 2137238 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_02 s145 3306e8e5734fc764 size 353646712 rows 12693 entry True first [265, 15438, 331] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_02 s145 c2d2787da68c1896 size 516143030 rows 3426 entry True first [184, 898703, 1456] k2 [] vkE 0 W2 1267105 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_03 s145 6cb174ab187ea66b size 501825680 rows 19426 entry True first [223, 14579, 205] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_03 s145 f6186a172626c270 size 424529363 rows 6730 entry True first [250, 1629972, 2102] k2 [] vkE 0 W2 756787 limit 0 layer_end_us 50622 marks 0 minimized 0 recover 0
+v145_04 s145 592675ddfd889e4a size 524881474 rows 20138 entry True first [225, 18016, 414] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_04 s145 8edd81fb0c5b3daa size 539952042 rows 5922 entry True first [188, 1427555, 2469] k2 [] vkE 0 W2 1162347 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_05 s145 02a1f8dfa887ee32 size 515110852 rows 20042 entry True first [170, 19389, 110] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_05 s145 b82cfd91db51382f size 454729495 rows 9485 entry True first [135, 1625060, 3322] k2 [] vkE 0 W2 639160 limit 0 layer_end_us 32524 marks 0 minimized 0 recover 0
+v145_06 s145 eced8967af479c9d size 475404608 rows 17748 entry False first None k2 None vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_06 s145 FileNotFoundErro size None rows None entry False first None k2 None vkE None W2 None limit None layer_end_us None marks None minimized None recover None
+v145_07 s145 a7869bf5ce41c847 size 513017477 rows 20155 entry True first [234, 17390, 286] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_07 s145 81cd4651668cc472 size 241688288 rows 6915 entry True first [131, 29680, 216] k2 [[133, 1131012, 'entry']] vkE 0 W2 179181 limit 0 layer_end_us 34076 marks 0 minimized 0 recover 0
+v145_08 s145 fb081c778d5f2c6d size 452024871 rows 17426 entry True first [279, 17401, 146] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_08 s145 efe82ccbb1fb6432 size 797775813 rows 11286 entry True first [229, 35164, 119] k2 [[231, 1196067, 'entry']] vkE 0 W2 1555843 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_09 s145 acb4f62333f5f18f size 394666817 rows 14900 entry True first [219, 16264, 2271] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_09 s145 21e4a3ac7a866144 size 468560148 rows 4106 entry True first [171, 1779533, 11475] k2 [] vkE 0 W2 1086275 limit 0 layer_end_us 70364 marks 0 minimized 0 recover 0
+v145_10 s145 ab4da89df2d5b40a size 292759993 rows 10947 entry True first [253, 41925, 264] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_10 s145 69e4e584eb172035 size 600495642 rows 3069 entry True first [182, 1198487, 2651] k2 [] vkE 0 W2 1590123 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_11 s145 393e1536bc6abdfb size 478883980 rows 18056 entry True first [429, 18911, 126] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_11 s145 40156adae8e085a5 size 969808993 rows 14680 entry True first [299, 542094, 121] k2 [] vkE 0 W2 1787709 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_12 s145 67a888b30f48dae2 size 522842797 rows 20120 entry True first [230, 18447, 433] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_12 s145 f9d09d2ac6a2fd55 size 574942254 rows 8862 entry True first [159, 1490064, 2393] k2 [] vkE 0 W2 1033837 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_13 s145 5b913a6c3a95665f size 513289495 rows 19894 entry True first [204, 51280, 223] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_13 s145 66244ff9614e1aa3 size 444322822 rows 4818 entry True first [157, 1262574, 1974] k2 [] vkE 0 W2 961412 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_14 s145 d7ed7266871ce45f size 456353443 rows 17037 entry True first [234, 19764, 238] k2 [[7249, 4624510, 'hold']] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_14 s145 ad56b63125647958 size 1022477871 rows 4043 entry True first [156, 953353, 928] k2 [] vkE 0 W2 2790241 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_15 s145 b38f1cf896bf5c0d size 517596198 rows 20139 entry True first [218, 15953, 239] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_15 s145 9467a31b3f7a0bbc size 576501985 rows 8120 entry True first [148, 24766, 126] k2 [[149, 1290307, 'entry']] vkE 0 W2 1035676 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_16 s145 1eee30a2fd0542fa size 343091784 rows 12913 entry True first [217, 16031, 608] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_16 s145 bb2d455dbeb58a55 size 367415246 rows 3740 entry True first [173, 24202, 524] k2 [] vkE 0 W2 811701 limit 0 layer_end_us 0 marks 0 minimized 0 recover 0
+v145_17 s145 bfcd5df634922619 size 517730857 rows 20228 entry True first [315, 20910, 314] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+w145_17 s145 a1b5246d43186f34 size 575910136 rows 18896 entry True first [190, 758256, 367] k2 [] vkE 0 W2 277701 limit 0 layer_end_us 16600 marks 0 minimized 0 recover 0
+v144_09 s144 a51ac48a8e0cad18 size 449468897 rows 16716 entry True first [349, 18925, 313] k2 [] vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+v145_06_a1 s145 eced8967af479c9d size 475404608 rows 17748 entry False first None k2 None vkE 0 W2 0 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+abort_w145_06 s145 860a78764a41c1bf size 1234309995 rows 18658 entry False first None k2 None vkE 0 W2 2295438 limit 0 layer_end_us None marks 0 minimized 0 recover 0
+LOGS 37
+ALL DONE

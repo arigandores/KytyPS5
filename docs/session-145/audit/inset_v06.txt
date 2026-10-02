@@ -1,0 +1,7 @@
+[h264 @ 0000000002cad4c0] Invalid NAL unit size (12579 > 6916).
+[h264 @ 0000000002cad4c0] missing picture in access unit with size 6932
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0000000000f20740] stream 0, offset 0xee417c0: partial file
+[h264 @ 0000000000fae000] Invalid NAL unit size (12579 > 6916).
+[h264 @ 0000000000fae000] Error splitting the input into NAL units.
+[vist#0:0/h264 @ 0000000000f27c80] [dec:h264 @ 0000000000f33d80] Decoding error: Invalid data found when processing input
+INSET /rec_v145_06.mp4 rect x 20 y 10 190x195 T 4.0: frames 17640; one-frame events 0; first 40: []; frame distance between consecutive events: min None max None

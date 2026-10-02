@@ -1,0 +1,27 @@
+bash.exe: warning: could not find /tmp, please create!
+--- tree outside docs/ of 827fcef49464b991175821ec8a282184eb0679eb against FS2a 9c9d86ae (empty = equal)
+Preparing worktree (detached HEAD 827fcef4)
+Updating files:  57% (2451/4253)Updating files:  58% (2467/4253)Updating files:  59% (2510/4253)Updating files:  60% (2552/4253)Updating files:  61% (2595/4253)Updating files:  62% (2637/4253)Updating files:  63% (2680/4253)Updating files:  64% (2722/4253)Updating files:  65% (2765/4253)Updating files:  66% (2807/4253)Updating files:  67% (2850/4253)Updating files:  68% (2893/4253)Updating files:  69% (2935/4253)Updating files:  70% (2978/4253)Updating files:  71% (3020/4253)Updating files:  72% (3063/4253)Updating files:  73% (3105/4253)Updating files:  74% (3148/4253)Updating files:  75% (3190/4253)Updating files:  76% (3233/4253)Updating files:  77% (3275/4253)Updating files:  78% (3318/4253)Updating files:  79% (3360/4253)Updating files:  80% (3403/4253)Updating files:  81% (3445/4253)Updating files:  82% (3488/4253)Updating files:  83% (3530/4253)Updating files:  84% (3573/4253)Updating files:  85% (3616/4253)Updating files:  86% (3658/4253)Updating files:  87% (3701/4253)Updating files:  88% (3743/4253)Updating files:  89% (3786/4253)Updating files:  90% (3828/4253)Updating files:  91% (3871/4253)Updating files:  92% (3913/4253)Updating files:  93% (3956/4253)Updating files:  94% (3998/4253)Updating files:  95% (4041/4253)Updating files:  96% (4083/4253)Updating files:  97% (4126/4253)Updating files:  98% (4168/4253)Updating files:  99% (4211/4253)Updating files: 100% (4253/4253)Updating files: 100% (4253/4253), done.
+HEAD is now at 827fcef4 track P link P22 (HPP-394): status line - ROADMAP p.333 (KytyPS5 fd7ac5bd): FIXED by p.226(g)(1)-(4) on the P-var binary 56ee1914; opt-in patch file KYTY_GAME_PATCH; installer links HPP-404..HPP-408; HPP-283 blocked on HPP-408; rule 27 amendment (platform scratch dir); CLAUDE.md == AGENTS.md
+--- worktree HEAD
+827fcef49464b991175821ec8a282184eb0679eb track P link P22 (HPP-394): status line - ROADMAP p.333 (KytyPS5 fd7ac5bd): FIX
+submodule 3rdparty/LibAtrac9 ec8899dadf393f655f2871a94e0fe4b3d6220c9a
+submodule 3rdparty/SDL2 4b69833bc54abf3dd3288d4aa7afbba527775e5b
+submodule 3rdparty/SPIRV-Headers 01e0577914a75a2569c846778c2f93aa8e6feddd
+submodule 3rdparty/SPIRV-Tools 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+submodule 3rdparty/Vulkan-Headers 2fa203425eb4af9dfc6b03f97ef72b0b5bcb8350
+submodule 3rdparty/VulkanMemoryAllocator a1d434708c217b2a6c7b365f1fe41fa03a562e59
+bash.exe: warning: could not find /tmp, please create!
+submodule 3rdparty/ffmpeg-core 94dde08c8a9e4271a93a2a7e4159e9fb05d30c0a
+submodule 3rdparty/fmt 11ddbcb7898d2d3445d431a54814367b21dee6ad
+submodule 3rdparty/imgui f1cc2ae15e53a861a874c3034aae6798fde194ab
+submodule 3rdparty/magic_enum 1384769c66bd16ec9bb1353f45fe8ec8ccc12dbd
+submodule 3rdparty/nlohmann_json 272411c5e6ea45919af7673524e74e60c62116df
+submodule 3rdparty/spdlog 8671ca4d492c8ee1cdfd3dd88afb9f88dd268178
+submodule 3rdparty/tracy 05cceee0df3b8d7c6fa87e9638af311dbabc63cb
+submodule 3rdparty/xxHash e573d4d2aaeaba0f3e5a0a9a54144a1f2b4b56e7
+--- git status --short (worktree vs its HEAD; 0 = clean)
+0
+--- CR bytes in src/ (worktree files)
+files 452 with CR 0
+WT OK

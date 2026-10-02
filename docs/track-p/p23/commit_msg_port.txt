@@ -1,0 +1,14 @@
+track P link P23 (HPP-404): port of P-var 4b7665e5 onto the FS2 tree (FS2a 9c9d86ae) without edits - ROADMAP s122 p.333(e)
+
+The diff of 4b7665e5 (track P link P14, P-var under KYTY_PVAR, default 0) applied
+to main, whose tree outside docs/ equals FS2a 9c9d86ae (binary FS2 bbad499c,
+p.329). Every "+" and "-" line is the one of 4b7665e5; only the context of two
+hunks differs: on the FS2 tree the counter enum (src/common/frameStats.h) and
+the named counter list (src/graphics/presentation/videoOut.cpp) end with the
+bindlean counters, not with RtsEarly / rts_early, so the eleven pvar_* counters
+go at the end of the same two lists, as P14 put them on 4fc501f4.
+git patch-id --stable of the -U0 diffs is equal (docs/track-p/p23-code.md).
+
+No game run: WIP until P25 review and P26 runs.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

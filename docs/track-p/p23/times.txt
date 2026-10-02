@@ -1,0 +1,11 @@
+2026-10-02T19:35:53Z P23 start (HPP-404), lock/STOP absent
+2026-10-02T19:44:42Z port 0d98550d + loader committed in worktree; fixtures 104 ALL OK; gate order clean
+2026-10-02T19:45:14Z configure+build start
+2026-10-02T19:50:04Z configure done before lock go_s c4_0 (19:45:54Z-19:49:40Z by S4 times.txt); waited without processes; build start
+2026-10-02T19:51:14Z build end
+2026-10-02T19:51:33Z binary 4aa62e95 copied; tests build start
+2026-10-02T19:52:08Z shader_cfg_tests done
+2026-10-02T19:52:29Z main fast-forwarded 827fcef4 -> 4414e235
+2026-10-02T19:53:04Z INCIDENT recorded now: configure (started 19:45:14Z after the lock check) ended 2026-10-02T19:46:24Z (source: mtime of configure.log / build.ninja 19:46:24Z), overlapping the foreign lock go_s c4_0 created 19:45:54Z (source: SEALED_RUN.lock text 21:45:54 local; S4 times.txt arm 19:45:56Z, enter_scene start 19:46:06Z) by 30 s - violation of general rule 27 (process under a foreign lock); the build itself started after the lock was gone (19:50:04Z)
+2026-10-02T19:57:26Z INCIDENT recorded now: docs/track-p/p23-code.md written by the Write tool at 2026-10-02T19:54:36Z (source: mtime) under the foreign lock go_s g_1 (lock text 21:53:21 local = 19:53:21Z; S4 times.txt: g_1 call returned 19:56:46Z) - a write into C:/kyty under a foreign lock, general rule 27; no process
+2026-10-02T19:57:26Z lock absent; finish: report addendum, artifacts, FACTS, commit

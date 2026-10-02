@@ -1,0 +1,33 @@
+track P link P23 (HPP-404): opt-in patch file KYTY_GAME_PATCH bound to the sha256 of eboot.bin, patches/PPSA21564_pvar.txt - ROADMAP s122 p.333(d),(g)
+
+KYTY_GAME_PATCH=<path> (unset or empty: no file is looked for, nothing is
+called) names a text file: "sha256 <64 hex>" (exactly one, the first),
+"poke <offset hex>:<bytes hex>" (offset from the main module base, below
+0x100000000), "pvar 2", "audio_sync 0" (each at most once), "#" comments.
+loader/gamePatchFile.{h,cpp}: the decision runs once in Emulator::Run after the
+mounts and before Libs::InitAll (whose registration reads PVar::Mode()):
+an unreadable file, an unknown directive or argument, bad hex or overlapping
+pokes refuse the whole file (reason=open|directive|hex|overlap); otherwise the
+loaded eboot.bin is hashed and a different sha256 refuses it (reason=sha,
+nothing of the file applied); an explicit KYTY_PVAR other than "2", a
+KYTY_AUDIO_SYNC that turns the tempo on, a KYTY_POKE item overlapping a poke of
+the file or at an absolute address refuse it (reason=env / overlap). Lines
+"GamePatch: refused reason=<r>" + "GamePatch: detail ...", or
+"GamePatch: applied sha=<16 hex> pokes=<N> pvar=2 audio_sync=0".
+Applied file: its pokes are written in RuntimeLinker::Execute right before the
+KYTY_POKE loop by the same byte writes ("GamePatch: poke 0x... <- hex"),
+PVar::Mode() returns 2, GuestSpeedEnabled() returns false (the audio tempo off
+by code, p.333(g)). Without KYTY_GAME_PATCH: Mode() and the KYTY_POKE loop as
+before; GuestSpeedEnabled() adds one relaxed load of a flag that stays false.
+
+patches/PPSA21564_pvar.txt: the sha256 of the game's eboot.bin, the 25 new bytes
+of the limiter decoupling at 2a470b and the Havok patch 687375:e790cb07 (the
+bytes PVar::Arm checks), pvar 2, audio_sync 0; no bytes of the game, no 27e46c.
+
+Fixtures (docs/track-p/p23/test_gamepatchfile.cpp, the real header without the
+project): 104 checks ALL OK - SHA-256 vectors, every directive and edge, the
+file against the real eboot.bin and the PVar constants. No src/graphics/shader
+change (translation cache signature unchanged). No game run: WIP until P25
+review and P26 runs.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

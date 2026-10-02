@@ -1,0 +1,5 @@
+patched src/emulator.cpp LF
+patched src/kernel/pvar.cpp LF
+patched src/kernel/pthread.cpp LF
+patched src/loader/runtimeLinker.cpp LF
+ALL PATCHED

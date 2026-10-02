@@ -1,0 +1,3 @@
+shader before 1345 after 1742 removed 0 changed 0 [] added 397 added outside variant dir []
+pipeline before 4 after 4 removed 0 changed 0 [] added 0 added outside variant dir []
+glcache before 16 after 16 removed 0 changed 2 ['a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/3335da028d3bb8a0.bin', 'a5b98c7ed42c997333c17893d7aeb05a/06243430c577c784/3335da028d3bb8a0.toc'] added 0 added outside variant dir []

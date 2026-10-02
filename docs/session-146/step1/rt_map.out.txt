@@ -1,0 +1,6 @@
+SEQ equal True 35
+level map go146a vs sc146 level_of: mismatches []
+PAIRS 15 True
+V_TAGS 19 W_TAGS 16 CONTROL ('w146_00', 'underwater_aerial_garden') RECHECK (('r146_01', 'hoover_beach'), ('r146_02', 'sponge_dirty_bath'), ('r146_03', 'timestop_casino'), ('r146_04', 'bonus_path_maker_mix')) STOP_RUN 3 W_STOP_RUN 2
+HOLD_V_S 330 HOLD_W_S 300 HOLD_SCENE_US 300000000 FRAMES_V 3000 COVER_SLACK 100 BUILD dac02fb9
+pairs list = rt146_lvl list True

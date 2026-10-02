@@ -1,0 +1,4 @@
+case A: V json present, log_v146_05.txt ABSENT, no score.json
+rc 0 | SKIPPED_V_NOT_ENTERED w146_05: its V v146_05 outcome NOT_ENTERED (log (no score.json); item 309 (k)(1))
+case B: log_v146_05.txt present, 0 bytes
+rc 0 | SKIPPED_V_NOT_ENTERED w146_05: its V v146_05 outcome NOT_ENTERED (log (no score.json); item 309 (k)(1))

@@ -1,0 +1,16 @@
+2026-10-02T08:38:48Z step1 start: read inputs after lead accept HPP-386 08:38:19Z, ROADMAP p.315 KytyPS5 0e14c879 0e537fa6
+2026-10-02T08:44:33Z rt146_lvl.py 2a340a38 -> rt146_lvl.out.txt cdf72e90
+2026-10-02T08:45:50Z rt146_lvl2.py 38b64575 (fixture dirs fx*/mutwork*/mutcache* excluded) -> rt146_lvl2.out.txt e676f3f2
+2026-10-02T08:46:05Z rt146_skipfx (sc146.py 452c5bb1 --skip-w on a V json without log) -> rt146_skipfx.out.txt bb003909
+2026-10-02T08:49:53Z sc146.py --regress145 (own call) -> step1/rt_regress145.out.txt 8a89e5c3
+2026-10-02T08:50:42Z test_sc146.py (own call) rc 0 -> step1/rt_test_sc146.out.txt d6d18f50
+2026-10-02T08:50:47Z step2/test_gate146.py (own call) rc 0 -> step1/rt_test_gate146.out.txt c20852f9
+2026-10-02T08:51:02Z test_go146a.py (own call) rc 0 -> step1/rt_test_go146a.out.txt 24d431f0
+2026-10-02T08:51:03Z test_fgcpu146.py (own call) rc 0 -> step1/rt_test_fgcpu146.out.txt 6cb5c6ae
+2026-10-02T08:51:06Z test_tools146.py (own call) rc 0 -> step1/rt_test_tools146.out.txt ce8d8bbf
+2026-10-02T08:52:21Z own cache manifest now vs runs146/cache_i146_v.after.json d07da24a (cachemf146.py, scratch)
+2026-10-02T08:53:20Z own --check-seal / --stop-check r146_01 / --skip-w w146_05 -> step1/rt_seal_now.out.txt b06d6335
+2026-10-02T08:56:38Z own map check go146a vs sc146 constants -> step1/rt_map.out.txt f6042245
+2026-10-02T08:56:51Z own diff cache_i146_v.before 56d21d55 vs after d07da24a -> step1/rt_cache.out.txt 1017912b
+2026-10-02T09:02:47Z pool diff run1 vs run2 (scratch copies of rt146_lvl/rt146_lvl2 with a pool print; removed): run1 56, run2 59, only in run2 robot_builder_next interactive_credit_00 hero_kratos (s288 fixture log 29 lines)
+2026-10-02T09:03:28Z review146.md e1f80c61 written; FACTS.md Step 1 appended 767b2005

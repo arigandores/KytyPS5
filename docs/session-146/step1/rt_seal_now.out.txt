@@ -1,0 +1,14 @@
+OK   tiles146.py 1a1578091c24be2c
+OK   this scorer in the seal 452c5bb10b9bae5b
+SEAL: PASS
+rc=0
+STOP RULE CONTROL before r146_01: not made; letter pass (none); executor reading [I] (the gate) pass (none)
+STOP RULE W before r146_01 (two W in a row stopped before the first GuestOut line with one key): not met; keys none
+STOP RULE before r146_01: not met
+STOP RULE WINDOW EVENT before r146_01 (item 273 (k)(3)-(4): the made tag right before with a "minimized" or "Recovering Vulkan swapchain" line; question to the lead about a repeat): not met (no tag made)
+STOP CHECK SOURCES before r146_01 (item 309 (k)(2)): w146_00 log (no score.json)
+rc=0
+RUN w146_05: its V v146_05 has no reading (log (no score.json))
+rc=1
+attempt_i146_v.txt
+i146_v.json

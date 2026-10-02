@@ -22,6 +22,7 @@
 #include "graphics/presentation/presenter.h"
 #include "graphics/presentation/renderDoc.h"
 #include "kernel/pthread.h"
+#include "kernel/pvar.h"
 #include "libs/errno.h"
 #include "libs/libs.h"
 
@@ -788,11 +789,17 @@ void VideoOutDriver::Impl::VblankBegin() {
 void VideoOutDriver::Impl::VblankEnd() {
 	Common::LockGuard lock(m_mutex);
 
+	bool pvar_published = false;
 	for (int i = 1; i < VIDEO_OUT_NUM_MAX; i++) {
 		auto& ctx = m_video_out_ctx[i];
 		if (ctx.opened) {
 			ctx.mutex.Lock();
 			ctx.vblank_status.count++;
+			// Track P, KYTY_PVAR=2 (kernel/pvar.h): the vblank count of the first opened handle for the M0 writer.
+			if (!pvar_published && LibKernel::PVar::Publishing()) {
+				LibKernel::PVar::PublishVblank(ctx.vblank_status.count);
+				pvar_published = true;
+			}
 			ctx.vblank_status.processTime        = LibKernel::KernelGetProcessTime();
 			ctx.vblank_status.reserved           = LibKernel::KernelReadTsc();
 			ctx.vblank_status.processTimeCounter = LibKernel::KernelGetProcessTimeCounter();
@@ -1227,6 +1234,10 @@ bool FlipQueue::Flip(uint32_t micros) {
 	m_requests.pop_front();
 
 	r.cfg->flip_status.count++;
+	// Track P, KYTY_PVAR=2 (kernel/pvar.h): the key n of the PVar line (= FrameTrace: n= of this flip).
+	if (LibKernel::PVar::Publishing()) {
+		LibKernel::PVar::PublishFlip(r.cfg->flip_status.count);
+	}
 	Graphics::GpuTimeProfiler::SetFrame(static_cast<uint32_t>(r.cfg->flip_status.count));
 	const uint64_t poll_t0 = Common::FrameStats::NowNs();
 	Common::Gates::Poll(static_cast<uint32_t>(r.cfg->flip_status.count));
@@ -3451,6 +3462,17 @@ bool FlipQueue::Flip(uint32_t micros) {
 				    {"bln_rst_cpu", FS::Counter::BlnRstCpu, false},
 				    {"bln_rst_cpuw", FS::Counter::BlnRstCpuw, false},
 				    {"bln_srace_a", FS::Counter::BlnSraceA, false},
+				    {"pvar_w", FS::Counter::PvarW, false},
+				    {"pvar_k", FS::Counter::PvarK, false},
+				    {"pvar_kraw", FS::Counter::PvarKraw, false},
+				    {"pvar_lost", FS::Counter::PvarLost, false},
+				    {"pvar_over", FS::Counter::PvarOver, false},
+				    {"pvar_chg", FS::Counter::PvarChg, false},
+				    {"pvar_inupd", FS::Counter::PvarInupd, false},
+				    {"pvar_tear", FS::Counter::PvarTear, false},
+				    {"pvar_tail", FS::Counter::PvarTail, false},
+				    {"pvar_foreign", FS::Counter::PvarForeign, false},
+				    {"pvar_bad", FS::Counter::PvarBad, false},
 				};
 				std::string text;
 				for (const auto& counter: named) {

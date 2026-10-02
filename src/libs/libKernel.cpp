@@ -13,6 +13,7 @@
 #include "kernel/fileSystem.h"
 #include "kernel/memory.h"
 #include "kernel/pthread.h"
+#include "kernel/pvar.h"
 #include "kernel/semaphore.h"
 #include "kernel/syncOnAddress.h"
 #include "libs/errno.h"
@@ -3349,7 +3350,12 @@ LIB_DEFINE(InitLibKernel_1_Pthread) {
 	LIB_FUNC("1j3S3n-tTW4", LibKernel::KernelGetTscFrequency);
 	LIB_FUNC("4J2sUJmuHZQ", LibKernel::KernelGetProcessTime);
 	LIB_FUNC("BNowx2l588E", LibKernel::KernelGetProcessTimeCounterFrequency);
-	LIB_FUNC("fgxnMeTNUtY", LibKernel::KernelGetProcessTimeCounter);
+	// Track P, KYTY_PVAR=2 (kernel/pvar.h): the M0 wrapper; unset or 0 (and a refused value) - the old function.
+	if (LibKernel::PVar::Mode() == 2) {
+		LIB_FUNC("fgxnMeTNUtY", LibKernel::PVar::GetProcessTimeCounter);
+	} else {
+		LIB_FUNC("fgxnMeTNUtY", LibKernel::KernelGetProcessTimeCounter);
+	}
 
 	LIB_FUNC("7H0iTOciTLo", Posix::pthread_mutex_lock);
 	LIB_FUNC("2Z+PpY6CaJg", Posix::pthread_mutex_unlock);

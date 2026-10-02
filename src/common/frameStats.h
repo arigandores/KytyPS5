@@ -2783,6 +2783,19 @@ enum class Counter : uint32_t {
 	BlnRstCpu,               // bln_rst_cpu: generation moves by a clear of a CPU-dirty mask at bindlean 1/2, b2reuse 0
 	BlnRstCpuw,              // bln_rst_cpuw: generation moves by an announced CPU write at bindlean 1/2, b2reuse 0
 	BlnSraceA,               // bln_srace_a: 2/3, a divergence of part (a) with the witness moved (item 178(b); a row)
+	// Track P, KYTY_PVAR=2 (kernel/pvar.h; ROADMAP s122 items 283(v), 284(v)): raw counts, added by the M0 writer
+	// (the guest main thread) and, for pvar_bad, by the loader thread at arming.
+	PvarW,                   // pvar_w: writes
+	PvarK,                   // pvar_k: sum of k of the writes, vblanks
+	PvarKraw,                // pvar_kraw: sum of d (vblanks between two M0) of the writes
+	PvarLost,                // pvar_lost: vblanks the clamp k <= 3 dropped
+	PvarOver,                // pvar_over: vblanks the carry dropped below -3 (given to the game in excess)
+	PvarChg,                 // pvar_chg: writes whose k differs from the previous k (the image's 1 before the first)
+	PvarInupd,               // pvar_inupd: mode 1 only, not implemented - never added
+	PvarTear,                // pvar_tear: mode 1 only, not implemented - never added
+	PvarTail,                // pvar_tail: mode 1 only, not implemented - never added
+	PvarForeign,             // pvar_foreign: writes that found a cell other than the last written (image first)
+	PvarBad,                 // pvar_bad: refused arming; M0 on a thread other than the first M0's
 	Count
 };
 

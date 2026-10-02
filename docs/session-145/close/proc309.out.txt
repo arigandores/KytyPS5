@@ -1,0 +1,15 @@
+Harness Engineer Process 2: before HPP-279
+Emu Engineer Process 2: before HPP-279
+Red Team Process 2: before HPP-279
+Probe Designer Process 2: before HPP-279
+Lever Researcher Process 2: before HPP-279
+Session Auditor Process 2: before HPP-279
+agent-team.md 588eb81a -> b91af77c
+Roadmap Lead b21f5b64 -> e7d85565
+Harness Engineer c6ab2111 -> d148f802
+Session Auditor fd7e34ee -> 054d84d3
+Emu Engineer 96942b1c -> 87c251a1
+Red Team b6b612b2 -> 6aebc723
+Probe Designer 9844cefa -> e43a22e0
+Lever Researcher 92e128c1 -> 8133de87
+OK

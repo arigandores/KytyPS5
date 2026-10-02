@@ -1,0 +1,5 @@
+course 144 (reproduced): [2, 3, 7, 19, 8] 39 defects 15
+course 145: [2, 4, 6, 18, 11] 41 defects 15
+defects: Б1а, Б2, Б24, Б25, Б31, Б32, Б33, Б36, Б4, Б40, Б5, Б5а, Ф12, Ф13, Ф14
+on the installed 9235a7ac (FIXED awaiting install: Б1б, Б35, Б37, Ф9): [2, 4, 7, 21, 11] 45 defects 19
+ALL OK

@@ -1,0 +1,1 @@
+PATCH OK C:/kyty/f287/f9/f9e2c/wt/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp lf

@@ -1,0 +1,31 @@
+diff --git a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+index e9586eed..f07b44c5 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp
+@@ -3634,7 +3634,9 @@ namespace {
+ // not both axes 1024-multiples) whose CMASK address holds a fill of value 0 covering width*height*layers/128 bytes -
+ // a code-0 CMASK in every tile, i.e. the whole surface is the clear colour whatever the tile layout - kept either as a
+ // PendingDcc fill or (F9e2b, RC2: a re-fill of a live target after its first clear) as a CMask entry with clear-mask
+-// bits set (`rearm`), and the target was not acquired as a draw-path colour target after that fill (F9e2b, RC1: the
++// bits set (`rearm`; F9e2c, RC1 of F9f2: only the bits of the view layers count - the ones PrepareCmaskClear can
++// consume; a fill of 0 sets the whole mask and a clear drops only the view layers), and the target was not acquired
++// as a draw-path colour target after that fill (F9e2b, RC1: the
+ // hardware FCE writes the clear colour only into tiles no draw touched; TextureCache::QueryMetaFill, drawn <=>
+ // b42_draw_seq > b42_fill_seq). Every member but the last one holding is `drawn`: not a hit, the descriptor is not
+ // touched, the old path runs. Counted with the fix on and off. ON: the descriptor of a hit gets the CMASK metadata the
+@@ -3665,7 +3667,14 @@ FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const Ren
+ 	}
+ 	const auto size  = static_cast<uint64_t>(info.extent.width) * info.extent.height * info.resources.layers / 128u;
+ 	const auto fill  = cache.QueryMetaFill(rt.cmask.addr, color.image_id);
+-	const bool armed = fill.pending || (fill.cmask && fill.clear_mask != 0);
++	// F9e2c: the layer bits of the view FindRenderTarget gets below - as PrepareCmaskClear reads them (no bits where
++	// it returns without a clear).
++	const auto& view       = color.desc.view_info;
++	const bool  view_ok    = view.base_level == 0 && view.base_layer < 32 && view.layer_count <= 32 - view.base_layer;
++	const auto  layer_bits = !view_ok ? 0u
++	                                  : (view.layer_count >= 32 ? UINT32_MAX : (1u << view.layer_count) - 1u)
++	                                        << view.base_layer;
++	const bool armed = fill.pending || (fill.cmask && (fill.clear_mask & layer_bits) != 0);
+ 	if (size == 0 || !fill.found || !armed || fill.fill_value != 0 || fill.fill_size < size) {
+ 		return probe;
+ 	}

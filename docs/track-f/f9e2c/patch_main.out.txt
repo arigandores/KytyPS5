@@ -1,0 +1,1 @@
+PATCH OK C:/kyty/KytyPS5/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp lf

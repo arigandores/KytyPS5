@@ -1,0 +1,47 @@
+S1 =1: fill, FCE x4
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    fce: none (clear_mask=0xfffffffe)
+    fce: none (clear_mask=0xfffffffe)
+    fce: none (clear_mask=0xfffffffe)
+    total hit=1 applied=1 rearm=0 drawn=0; want hit=1 applied=1 rearm=0 drawn=0 -> OK
+S2 =1: fill, FCE, re-fill, FCE
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    fill: clear_mask=0xffffffff
+    fce: hit=2 applied=2 rearm=1 clear_mask=0xfffffffe
+    total hit=2 applied=2 rearm=1 drawn=0; want hit=2 applied=2 rearm=1 drawn=0 -> OK
+S3 =1: fill, FCE, draw, FCE
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    draw
+    fce: none (clear_mask=0xfffffffe)
+    total hit=1 applied=1 rearm=0 drawn=0; want hit=1 applied=1 rearm=0 drawn=0 -> OK
+S4 =1: fill, draw, FCE
+    fill: clear_mask=0xffffffff
+    draw
+    fce: drawn=1
+    total hit=0 applied=0 rearm=0 drawn=1; want hit=0 applied=0 rearm=0 drawn=1 -> OK
+ref S1 =1 with the F9e2b member (2da00d80, RC1 of F9f2)
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    fce: hit=2 applied=1 rearm=1 clear_mask=0xfffffffe
+    fce: hit=3 applied=1 rearm=2 clear_mask=0xfffffffe
+    fce: hit=4 applied=1 rearm=3 clear_mask=0xfffffffe
+    total hit=4 applied=1 rearm=3 drawn=0; want hit=4 applied=1 rearm=3 drawn=0 -> OK
+ref S1 =0: no CMask entry, every FCE is a hit (p.353(d) N2)
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=0 rearm=0 clear_mask=0xffffffff
+    fce: hit=2 applied=0 rearm=0 clear_mask=0xffffffff
+    fce: hit=3 applied=0 rearm=0 clear_mask=0xffffffff
+    fce: hit=4 applied=0 rearm=0 clear_mask=0xffffffff
+    total hit=4 applied=0 rearm=0 drawn=0; want hit=4 applied=0 rearm=0 drawn=0 -> OK
+layer_bits(base_level=0, base_layer=0, layer_count=1) = 0x00000001 want 0x00000001 -> OK
+layer_bits(base_level=0, base_layer=0, layer_count=32) = 0xffffffff want 0xffffffff -> OK
+layer_bits(base_level=0, base_layer=31, layer_count=1) = 0x80000000 want 0x80000000 -> OK
+layer_bits(base_level=0, base_layer=1, layer_count=31) = 0xfffffffe want 0xfffffffe -> OK
+layer_bits(base_level=1, base_layer=0, layer_count=1) = 0x00000000 want 0x00000000 -> OK
+layer_bits(base_level=0, base_layer=32, layer_count=1) = 0x00000000 want 0x00000000 -> OK
+layer_bits(base_level=0, base_layer=31, layer_count=2) = 0x00000000 want 0x00000000 -> OK
+layer_bits(base_level=0, base_layer=0, layer_count=0) = 0x00000000 want 0x00000000 -> OK
+ALL OK

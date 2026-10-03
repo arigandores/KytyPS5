@@ -1,0 +1,16 @@
+track F link F9e2c (HPP-436): KYTY_FIX_B42 M2c - CMask entry armed by the view layer bits (RC1 of F9f2, ROADMAP s122 item 357(g)(1)-(3)), default 0
+
+descriptors.cpp, FixB42Probe only: a CMask entry is armed only when (clear_mask & layer_bits) != 0, layer_bits = the
+bits [base_layer, base_layer + layer_count) of color.desc.view_info (the desc that goes to FindRenderTarget of the FCE
+branch) - the bits PrepareCmaskClear can consume. With base_level != 0, base_layer >= 32 or layer_count > 32 - base_layer
+(PrepareCmaskClear returns without a clear) the CMask entry is not armed. A fill of 0 sets the whole mask and a clear
+drops only the view layers, so before this every FCE after the first clear and without a new fill was a hit and a
+rearm without applied (and a false drawn after a draw). PendingDcc arming, the drawn split, rearm, applied, the line
+and the counters are unchanged.
+Unset / 0 / false / off / no = OFF: the probe only decides hit / drawn for the line; no value going to Vulkan or to the
+metadata state changes. Translator untouched (translation signature unchanged).
+
+Not claimed: that the RC1 case happens in this game, that the CMASK clear is the only cause, the T6 clear colour, that
+the fix will work. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

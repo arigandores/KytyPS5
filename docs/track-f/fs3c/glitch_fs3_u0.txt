@@ -1,0 +1,2 @@
+C:/kyty/f287/fs3/fs3c/runs/fs3_u0/rec.mp4: 9896 frames 960x540, index entries 9896
+one-frame glitches: 0

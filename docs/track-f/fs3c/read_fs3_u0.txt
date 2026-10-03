@@ -1,0 +1,21 @@
+FS3C fs3_u0 kind u0 level underwater_aerial_garden log sha256 6d8a06998db9f18f853e4591dc70ea1c4ae0a4be8ec482b643ec141e1f3d58c7 lines 1195174
+  form: FixB42 mode values [0], FixB42Ext mode values [0] (expected 0) -> OK; GamePatch lines 0 (applied 0, refused 0; expected 0); torn FixB42 lines 0, torn FixB42Ext lines 0
+  entry line 224574; scene change line None; first scene frame n 192; hold (sum dt after it) 203.2 s
+  frames >= 1 s after the first scene frame: 0 (max dt_us 215203); all rows 0 (max 215203) - reference
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0
+  video index records 9896; FrameTrace rows 9886; InputScript lines 36, release present 5945 True; present offset 10; last present 9897
+  FixB42 lines 272; per extent (last counters): 480x270 hit 2 applied 0 drawn 0 rearm 0; 608x342 hit 4 applied 0 drawn 0 rearm 0; 832x468 hit 2 applied 0 drawn 0 rearm 0; 960x540 hit 1 applied 0 drawn 0 rearm 0; 1920x1080 hit 4 applied 0 drawn 2438 rearm 0; 2432x1368 hit 12 applied 0 drawn 12 rearm 0; 3328x1872 hit 6 applied 0 drawn 64 rearm 0; 3840x2160 hit 171 applied 0 drawn 6148 rearm 0; hit_all max 348
+  FixB42Ext lines 36; per extent (lines, last counters): 480x270 lines 7 hit 18 applied 0 drawn 0 rearm 0; 608x342 lines 8 hit 70 applied 0 drawn 0 rearm 0; 832x468 lines 9 hit 40 applied 0 drawn 0 rearm 0; 960x540 lines 8 hit 22 applied 0 drawn 0 rearm 0; 1920x1080 lines 1 hit 1 applied 0 drawn 0 rearm 0; 2432x1368 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3328x1872 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3840x2160 lines 1 hit 1 applied 0 drawn 0 rearm 0
+  FixB42Ext extent=960x540 lines: [{'line': 47201, 'present': 31, 'phase': 'approach', 'hit': 1, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 20}, {'line': 444991, 'present': 1758, 'phase': 'approach', 'hit': 2, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 1747}, {'line': 515653, 'present': 2487, 'phase': 'approach', 'hit': 6, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 2476}, {'line': 583484, 'present': 3145, 'phase': 'approach', 'hit': 9, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 3134}, {'line': 662636, 'present': 3889, 'phase': 'rotation', 'hit': 13, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 3878}, {'line': 726851, 'present': 4534, 'phase': 'rotation', 'hit': 16, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 4523}, {'line': 807910, 'present': 5356, 'phase': 'rotation', 'hit': 19, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 5345}, {'line': 896307, 'present': 6315, 'phase': 'static', 'hit': 22, 'applied': 0, 'drawn': 0, 'rearm': 0, 'frame': 6304}]
+  extent 960x540: FixB42 lines 1, hit max 22, drawn max 0; violations (growth hit > growth applied, per kind of line) 9 [{'kind': 'fix', 'line': 47202, 'present': 31, 'phase': 'approach', 'd_hit': 1, 'd_applied': 0}, {'kind': 'ext', 'line': 47201, 'present': 31, 'phase': 'approach', 'd_hit': 1, 'd_applied': 0}, {'kind': 'ext', 'line': 444991, 'present': 1758, 'phase': 'approach', 'd_hit': 1, 'd_applied': 0}]
+  clear (reference, item 351 (g)(3)): ['480x270 00000000/00000000', '960x540 00000000/00000000']; cmask of 960x540: ['571728000']
+  AsyncPipelines: skipped draw 2 (reference)
+  ROW FixB42 lines mode=0 (>= 1 line, all of the expected mode): YES
+  ROW C0 line: mode=0 extent=960x540 hit >= 1 applied=0: YES
+  ROW 0 death markers: YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW 0 frames >= 1 s after the first scene frame: YES
+  ROW video index records >= 3000: YES
+  ROW GamePatch lines 0: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

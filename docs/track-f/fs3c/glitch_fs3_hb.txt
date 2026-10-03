@@ -1,0 +1,2 @@
+C:/kyty/f287/fs3/fs3c/rec_fs3_hb.mp4: 20096 frames 960x540, index entries 20096
+one-frame glitches: 0

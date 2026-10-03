@@ -1,0 +1,24 @@
+FS3C fs3_pu kind pu level underwater_aerial_garden log sha256 613d5e6b3948c080980560f7e1f252258edd1a85b4dba8911bb83cde15d0068c lines 1237587
+  form: FixB42 mode values [1], FixB42Ext mode values [1] (expected 1) -> OK; GamePatch lines 4 (applied 1, refused 0; expected >= 1 applied, 0 refused); torn FixB42 lines 0, torn FixB42Ext lines 0
+  entry line 224852; scene change line None; first scene frame n 195; hold (sum dt after it) 202.9 s
+  frames >= 1 s after the first scene frame: 0 (max dt_us 237520); all rows 0 (max 237520) - reference
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0
+  video index records 10594; FrameTrace rows 10527; InputScript lines 36, release present 5945 True; present offset 67; last present 10595
+  FixB42 lines 273; per extent (last counters): 480x270 hit 2 applied 2 drawn 0 rearm 1; 608x342 hit 4 applied 4 drawn 0 rearm 2; 832x468 hit 2 applied 2 drawn 0 rearm 1; 960x540 hit 1 applied 1 drawn 0 rearm 0; 1920x1080 hit 4 applied 3 drawn 1295 rearm 3; 2432x1368 hit 12 applied 10 drawn 12 rearm 10; 3328x1872 hit 6 applied 5 drawn 6 rearm 5; 3840x2160 hit 174 applied 174 drawn 7489 rearm 173; hit_all max 373
+  FixB42Ext lines 40; per extent (lines, last counters): 480x270 lines 8 hit 21 applied 21 drawn 0 rearm 20; 608x342 lines 9 hit 85 applied 85 drawn 0 rearm 63; 832x468 lines 10 hit 45 applied 45 drawn 0 rearm 23; 960x540 lines 9 hit 24 applied 24 drawn 0 rearm 2; 1920x1080 lines 1 hit 1 applied 0 drawn 0 rearm 0; 2432x1368 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3328x1872 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3840x2160 lines 1 hit 1 applied 1 drawn 0 rearm 0
+  FixB42Ext extent=960x540 lines: [{'line': 44886, 'present': 88, 'phase': 'approach', 'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0, 'frame': 20}, {'line': 379827, 'present': 1365, 'phase': 'approach', 'hit': 2, 'applied': 2, 'drawn': 0, 'rearm': 0, 'frame': 1297}, {'line': 460666, 'present': 2162, 'phase': 'approach', 'hit': 6, 'applied': 6, 'drawn': 0, 'rearm': 1, 'frame': 2094}, {'line': 525930, 'present': 2772, 'phase': 'approach', 'hit': 9, 'applied': 9, 'drawn': 0, 'rearm': 1, 'frame': 2704}, {'line': 582817, 'present': 3402, 'phase': 'approach', 'hit': 12, 'applied': 12, 'drawn': 0, 'rearm': 1, 'frame': 3334}, {'line': 650360, 'present': 4033, 'phase': 'rotation', 'hit': 14, 'applied': 14, 'drawn': 0, 'rearm': 1, 'frame': 3965}, {'line': 711953, 'present': 4642, 'phase': 'rotation', 'hit': 17, 'applied': 17, 'drawn': 0, 'rearm': 1, 'frame': 4574}, {'line': 791694, 'present': 5418, 'phase': 'rotation', 'hit': 21, 'applied': 21, 'drawn': 0, 'rearm': 1, 'frame': 5350}, {'line': 918871, 'present': 6818, 'phase': 'static', 'hit': 24, 'applied': 24, 'drawn': 0, 'rearm': 2, 'frame': 6750}]
+  extent 960x540: FixB42 lines 1, hit max 24, drawn max 0; violations (growth hit > growth applied, per kind of line) 0 []
+  clear (reference, item 351 (g)(3)): ['480x270 00000000/00000000', '960x540 00000000/00000000']; cmask of 960x540: ['571728000']
+  AsyncPipelines: skipped draw 1 (reference)
+  EXT reference (lead line 417cc2d8): growth of applied of 960x540 in the static phase: SHOWN {'base': 21, 'line': {'line': 918871, 'present': 6818, 'phase': 'static', 'hit': 24, 'applied': 24, 'frame': 6750}}; executor variant (base = any 960x540 line before the phase): SHOWN {'base': 21, 'line': {'line': 918871, 'present': 6818, 'phase': 'static', 'hit': 24, 'applied': 24, 'frame': 6750}}
+  ROW FixB42 lines mode=1 (>= 1 line, all of the expected mode): YES
+  ROW reference: no FixB42 line with hit_all >= 1 (hit = 0 at the default) - question to the lead: NO
+  ROW reference: FixB42Ext extent=960x540 line present: YES
+  ROW item 353 (d)(3): drawn > 0 on 960x540 -> read so: T6 got a draw; question to the lead: NO
+  ROW reference: GamePatch applied >= 1 and refused 0: YES
+  ROW 0 death markers: YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW 0 frames >= 1 s after the first scene frame: YES
+  ROW video index records >= 3000: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

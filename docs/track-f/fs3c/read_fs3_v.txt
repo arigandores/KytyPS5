@@ -1,0 +1,22 @@
+FS3C fs3_v kind v level underwater_aerial_garden log sha256 b4e66e3a59926f43d7d2a73f2b96335a453255a68b291cfe1cd41ba301790824 lines 1345915
+  form: FixB42 mode values [1], FixB42Ext mode values [1] (expected 1) -> OK; GamePatch lines 0 (applied 0, refused 0; expected 0); torn FixB42 lines 0, torn FixB42Ext lines 0
+  entry line 224620; scene change line None; first scene frame n 192; hold (sum dt after it) 334.2 s
+  frames >= 1 s after the first scene frame: 0 (max dt_us 182388); all rows 0 (max 182388) - reference
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0
+  video index records 10186; FrameTrace rows 10160; InputScript lines 0, release present 5945 False; present offset None; last present None
+  FixB42 lines 272; per extent (last counters): 480x270 hit 2 applied 2 drawn 0 rearm 1; 608x342 hit 4 applied 4 drawn 0 rearm 2; 832x468 hit 2 applied 2 drawn 0 rearm 1; 960x540 hit 1 applied 1 drawn 0 rearm 0; 1920x1080 hit 4 applied 3 drawn 9633 rearm 3; 2432x1368 hit 12 applied 10 drawn 12 rearm 10; 3328x1872 hit 6 applied 5 drawn 6 rearm 5; 3840x2160 hit 171 applied 171 drawn 3 rearm 170; hit_all max 202
+  FixB42Ext lines 8; per extent (lines, last counters): 480x270 lines 1 hit 1 applied 1 drawn 0 rearm 0; 608x342 lines 1 hit 1 applied 1 drawn 0 rearm 0; 832x468 lines 1 hit 1 applied 1 drawn 0 rearm 0; 960x540 lines 1 hit 1 applied 1 drawn 0 rearm 0; 1920x1080 lines 1 hit 1 applied 0 drawn 0 rearm 0; 2432x1368 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3328x1872 lines 1 hit 1 applied 0 drawn 0 rearm 0; 3840x2160 lines 1 hit 1 applied 1 drawn 0 rearm 0
+  FixB42Ext extent=960x540 lines: [{'line': 47336, 'present': None, 'phase': 'unknown', 'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0, 'frame': 20}]
+  extent 960x540: FixB42 lines 1, hit max 1, drawn max 0; violations (growth hit > growth applied, per kind of line) 0 []
+  clear (reference, item 351 (g)(3)): ['480x270 00000000/00000000', '960x540 00000000/00000000']; cmask of 960x540: ['571728000']
+  AsyncPipelines: skipped draw 0 (reference)
+  ROW FixB42 lines mode=1 (>= 1 line, all of the expected mode): YES
+  ROW reference: no FixB42 line with hit_all >= 1 (hit = 0 at the default) - question to the lead: NO
+  ROW 0 death markers: YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW 0 frames >= 1 s after the first scene frame: YES
+  ROW video index records >= 3000: YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES
+  ROW GamePatch lines 0: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

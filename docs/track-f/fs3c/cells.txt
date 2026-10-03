@@ -1,0 +1,18 @@
+FS3c (HPP-449) - count of cells with tiles by sheet (seal docs/track-f/fs3c.md section 5); executor's count, the lead counts independently.
+Sheets: C:/kyty/f287/fs3/fs3c/runs/<tag>/sheets/ (sheets_f9d.py <rec> <out> <u|u0|pu> 3840 5850 5950), pairs C:/kyty/f287/fs3/fs3c/runs/cmp/.
+
+tag     sheet          phase                      cells  with tiles  no pond  cells with tiles (v)
+fs3_u   u_rot4_01..04  rotation v [3840,5850)       134      0          0      -
+fs3_u   u_static4_01..08 static v >= 5950           268      0          0      -
+fs3_u   u_1fps_01..04  whole video 1 frame/s        166      0          (approach and flight cells without the pond, not counted apart)
+fs3_u   total                                       568      0
+fs3_u0  u0_static4_01  static v [5950,6475]          36     36          0      every cell (blocks of foreign screen content / flowers in the pond; f6310 white cloud)
+fs3_u0  u0_static4_08  static v [9730,9895]          12     12          0      every cell
+fs3_u0  u0_static4_02..07, rot4, 1fps - not marked cell by cell (the member needs >= 1 cell)
+fs3_pu  pu_1fps_02..03 1 frame/s v [2880,8580]      96      -          -      Astro does not enter the pond: from f3840 he walks onto the flower island behind the tree;
+                                                                                the pond is in frame only as a distant background (f3600-f3720), no tiles seen there
+                                                                                -> line "entry into the water not reached by the input form"
+cmp_u0_u_static_01 (v 5950-6205, 18 pairs): left u0 tiles in every pair, right u - the same scene without tiles (reference for the lead)
+
+Items of the game in the pond at =1 (not tiles): a dark round object with a cyan ring right of the pond (u f5950-f9955) - the same object is in
+F9g V1 v1_static4_01 (f5950-f6475) next to clean water [I].

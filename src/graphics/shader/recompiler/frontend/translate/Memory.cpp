@@ -699,8 +699,8 @@ bool Translator::IMAGE_GATHER(const Decoder::Instruction& inst) {
 // The hardware tests one ray against one BVH node and returns 4 dwords:
 //   box node (types 4 = fp16 boxes, 5 = fp32 boxes): the 4 child node pointers whose boxes
 //     were hit, optionally sorted by the descriptor box sort heuristic, misses = 0xffffffff;
-//   triangle node (types 0 and 1): {t_num, t_denom, i_num, j_num} as raw floats, a miss is
-//     encoded as {+inf, 1.0, ...};
+//   triangle node (types 0 and 1; KYTY_FIX_F10=1: types 0..3): {t_num, t_denom, i_num, j_num} as
+//     raw floats, a miss is encoded as {+inf, 1.0, ...};
 //   anything else: 0xffffffff x4.
 // The node layouts and the intersection math follow the software fallback in the AMD GPURT
 // library (IntersectCommon.hlsl), which is what the closed hardware implements.
@@ -886,7 +886,15 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 
 	const IR::U1 is_box16 = ir.IEqual(node_type, U32C(4u));
 	const IR::U1 is_box32 = ir.IEqual(node_type, U32C(5u));
-	const IR::U1 is_tri   = ir.ULessThan(node_type, U32C(2u));
+	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
+	// IsTriangleNode, F12a section 1.2); =0 keeps the pre-fix lines.
+	const bool   fix_f10 = Decoder::FixF10Enabled();
+	IR::U1       is_tri;
+	if (fix_f10) {
+		is_tri = ir.ULessThan(node_type, U32C(4u));
+	} else {
+		is_tri = ir.ULessThan(node_type, U32C(2u));
+	}
 
 	// --- Node memory: dwords 0..15 cover fp16 box nodes (64 bytes) and triangle nodes (64
 	// bytes); fp32 box nodes are 128 bytes, so dwords 16..27 are only read for them.
@@ -1011,9 +1019,28 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	const Vec3 v1    = vertex(1);
 	const Vec3 v2    = vertex(2);
 	const Vec3 v3    = vertex(3);
-	const Vec3 tri_a = vsel(is_tri1, v1, v0);
-	const Vec3 tri_b = vsel(is_tri1, v3, v1);
-	const Vec3 tri_c = v2;
+	Vec3       tri_a {};
+	Vec3       tri_b {};
+	Vec3       tri_c {};
+	if (fix_f10) {
+		// Type 2 = (v2, v3, v4), type 3 = (v2, v4, v0), v4 = dwords 12..14 (GPURT b89f22aa
+		// CalcTriangleVertexOffsets; F12a section 1.2).
+		const IR::U1 is_tri2  = ir.IEqual(node_type, U32C(2u));
+		const IR::U1 is_tri3  = ir.IEqual(node_type, U32C(3u));
+		const IR::U1 is_tri23 = ir.LogicalOr(is_tri2, is_tri3);
+		const IR::U1 is_tri12 = ir.LogicalOr(is_tri1, is_tri2);
+		const Vec3   v4       = vertex(4);
+		const Vec3   a01      = vsel(is_tri1, v1, v0);
+		tri_a                 = vsel(is_tri23, v2, a01);
+		const Vec3   b012     = vsel(is_tri12, v3, v1);
+		tri_b                 = vsel(is_tri3, v4, b012);
+		const Vec3   c013     = vsel(is_tri3, v0, v2);
+		tri_c                 = vsel(is_tri2, v4, c013);
+	} else {
+		tri_a = vsel(is_tri1, v1, v0);
+		tri_b = vsel(is_tri1, v3, v1);
+		tri_c = v2;
+	}
 
 	const Vec3    e1     = vsub(tri_b, tri_a);
 	const Vec3    e2     = vsub(tri_c, tri_a);

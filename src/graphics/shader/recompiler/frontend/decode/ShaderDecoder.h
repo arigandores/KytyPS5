@@ -756,6 +756,13 @@ Opcode GateFixB26(Opcode opcode);
 // exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
 // the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
 bool   FixB1BEnabled();
+// Track F, F12d (HPP-477, ROADMAP p.391(v)): KYTY_FIX_F10, default OFF (unset, empty, 0, false, off, no = off, as
+// Common::EnvValueOn). On: IMAGE_BVH_INTERSECT_RAY treats node types 2 and 3 as triangles, as the GPURT software
+// path of the instruction does (b89f22aa IsTriangleNode / CalcTriangleVertexOffsets): type 2 = (V2, V3, V4), type
+// 3 = (V2, V4, V0), V4 at node dwords 12..14. Off: types 2 and 3 answer 0xffffffff x4 exactly as before the fix.
+// Read once per process; the translation cache keys the value in its signature and directory
+// (shaderTranslationCache.cpp).
+bool   FixF10Enabled();
 std::string OperandToString(const Operand& operand);
 const char* ImageDimensionToString(ImageDimension dimension);
 std::string InstructionToString(const Instruction& inst);

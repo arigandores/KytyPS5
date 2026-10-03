@@ -2229,7 +2229,15 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
 	}
 	const auto is_box16 = ieq(node_type, U(4u));
 	const auto is_box32 = ieq(node_type, U(5u));
-	const auto is_tri   = Binary(state, OpULessThan, boolt, node_type, U(2u));
+	// Track F, F12d (ROADMAP p.391(v)): KYTY_FIX_F10=1 - node types 2 and 3 are triangles too (GPURT b89f22aa
+	// IsTriangleNode, F12a section 1.2); =0 keeps the pre-fix lines (same calls, same ids).
+	const bool fix_f10  = Decoder::FixF10Enabled();
+	uint32_t   is_tri   = 0;
+	if (fix_f10) {
+		is_tri = Binary(state, OpULessThan, boolt, node_type, U(4u));
+	} else {
+		is_tri = Binary(state, OpULessThan, boolt, node_type, U(2u));
+	}
 	const auto is_tri1  = ieq(node_type, U(1u));
 
 	// --- Loads: `dwords` consecutive dwords from `address` (64-byte aligned) as 128-bit loads.
@@ -2378,9 +2386,28 @@ uint32_t EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst) {
 		const Vec3 v1    = vertex(1);
 		const Vec3 v2    = vertex(2);
 		const Vec3 v3    = vertex(3);
-		const Vec3 tri_a = vsel(is_tri1, v1, v0);
-		const Vec3 tri_b = vsel(is_tri1, v3, v1);
-		const Vec3 tri_c = v2;
+		Vec3       tri_a {};
+		Vec3       tri_b {};
+		Vec3       tri_c {};
+		if (fix_f10) {
+			// Type 0 = (V0, V1, V2), 1 = (V1, V3, V2), 2 = (V2, V3, V4), 3 = (V2, V4, V0) (GPURT b89f22aa
+			// CalcTriangleVertexOffsets; F12a section 1.2); V4 is dwords 12..14 of the 16 loaded above.
+			const auto is_tri2  = ieq(node_type, U(2u));
+			const auto is_tri3  = ieq(node_type, U(3u));
+			const auto is_tri23 = lor(is_tri2, is_tri3);
+			const auto is_tri12 = lor(is_tri1, is_tri2);
+			const Vec3 v4       = vertex(4);
+			const Vec3 a01      = vsel(is_tri1, v1, v0);
+			tri_a               = vsel(is_tri23, v2, a01);
+			const Vec3 b012     = vsel(is_tri12, v3, v1);
+			tri_b               = vsel(is_tri3, v4, b012);
+			const Vec3 c013     = vsel(is_tri3, v0, v2);
+			tri_c               = vsel(is_tri2, v4, c013);
+		} else {
+			tri_a = vsel(is_tri1, v1, v0);
+			tri_b = vsel(is_tri1, v3, v1);
+			tri_c = v2;
+		}
 		const Vec3 e1    = vsub(tri_b, tri_a);
 		const Vec3 e2    = vsub(tri_c, tri_a);
 		const Vec3 e3    = vsub(origin, tri_a);

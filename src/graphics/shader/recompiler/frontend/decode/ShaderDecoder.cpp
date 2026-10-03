@@ -349,6 +349,11 @@ bool FixB1BEnabled() {
 	return enabled;
 }
 
+bool FixF10Enabled() {
+	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F10"));
+	return enabled;
+}
+
 Family GetInstructionFamily(uint32_t word) {
 	if ((word & 0x80000000u) == 0u) {
 		switch ((word >> 25u) & 0x3fu) {

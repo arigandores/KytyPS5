@@ -1,0 +1,32 @@
+OK   C:/kyty/s142/sc142.py 1ce612cdd036e238
+OK   C:/kyty/scripts/s51_vidglitch.py 6afe4e3335da68f2
+OK   cachex_s.py 7080ddb52879cace
+OK   fgcpu143.py b91d696dfd8ebce9
+OK   gates_default.txt e3b0c44298fc1c14
+OK   idle142.py c5ee7dc26d2a6d28
+OK   launch_run.py c750e62ae3d63549
+OK   lead/haze_s8.py b5d52b31da900796
+OK   procload.py 2666971ee4ce615e
+OK   run_safety99.py 77e685e5543d90a0
+OK   s3/snap0_index.json 1b7395fb6de7d859
+OK   s9/enter_scene_s9.py 246b579b8022f6fe
+OK   s9/fx/haze_pcw_1.json 2d2b028379c5a387
+OK   s9/fx/haze_pcw_int.json 8699e1b70929c5b2
+OK   s9/go_s9.sh 17653e57acac320b
+OK   s9/lvl_s9.out.txt 95be9a278dd16a88
+OK   s9/lvl_s9.py 2e25bd095c53b190
+OK   s9/mut_sc_s9.py 1db22f6c874726b3
+OK   s9/sc_s9.py fc6dc21e959aa981
+OK   s9/seedexp_s9.out.txt 30c399382bd7a9c4
+OK   s9/seedexp_s9.py c1845b841d280758
+OK   s9/seeds_manifest.txt 72605a65d15470f8
+OK   s9/test_go_s9.py 69802808dc8bd653
+OK   s9/test_sc_s9.py c02212ae644384da
+OK   sc_s.py 8b0e0aff407cc82a
+OK   sheet142.py c1bf9e2903c7db7a
+OK   snapidx_s.py 05e66c4216fbb2c9
+OK   test_cachex_s.py a1880b1fbbeb2a97
+OK   test_mask_s.py d4740bc15e9486d7
+OK   this scorer in the seal fc6dc21e959aa981
+OK   binary lines s = f3b3aa3b, u = 4aa62e95 f3b3aa3b / 4aa62e95
+SEAL: PASS

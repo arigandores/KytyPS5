@@ -1,0 +1,113 @@
+lvl_s9 start 2026-10-03T01:56:45Z; T0 2026-09-30T23:41:52Z; self sha256 2e25bd095c53b1904eeb49bb974d13f5681f5b0991a7041fc1476dd4ae18b531
+inventory C:/kyty/s141/step1b/inventory141_r2.md sha256 4e13daa41f94607929af4a2b6899c017c7ad44de94e246649781ac1a7817728c rows 114
+summary146_viewed C:/kyty/s146/step4/summary146_viewed.txt sha256 352535d2f5b7a25901ab4185b47571a0a749fc87bab018ab461f75a32b6e6c45; lvl146.out.txt sha256 d1b21ea88ae59c3ff9fc7ebeee7138457001c00db8b146a2520dae41fe85fa1c
+logs since T0 (> 1 MiB, .txt/.log): 275 files, 109.1 GB; .xz files not read (mtime = compression time, HPP-401): 8977
+unreadable logs: 0 []
+names with an entry line since T0: 54
+  entered <empty>                      in 272 logs, first C:/kyty/KytyPS5/ps5 em/_kyty.prev.txt
+  entered armadillo_challenge_1        in   2 logs, first C:/kyty/s146/log_v146_16.txt
+  entered big_hand_pirate_island       in   8 logs, first C:/kyty/f287/f3d/log_f3d_a1.txt
+  entered bonus_path_maker_mix         in   3 logs, first C:/kyty/s145/log_v145_14.txt
+  entered booster_construction         in   2 logs, first C:/kyty/s143/log_v143_02.txt
+  entered booster_magic_lamp           in   2 logs, first C:/kyty/s143/log_v143_09.txt
+  entered bumper_enemy_snowy_canyon    in   2 logs, first C:/kyty/s144/log_v144_11.txt
+  entered collectible_viewer           in   4 logs, first C:/kyty/s146/log_v146_09.txt
+  entered cymbal_party_land            in   2 logs, first C:/kyty/s145/log_v145_16.txt
+  entered diorama_astro_skin           in   4 logs, first C:/kyty/s146/log_v146_12.txt
+  entered diorama_controller_skin      in   4 logs, first C:/kyty/s146/log_v146_11.txt
+  entered diorama_zoo                  in   4 logs, first C:/kyty/s146/log_v146_13.txt
+  entered ending_boss_after_credit     in   2 logs, first C:/kyty/s146/log_v146_08.txt
+  entered enemy_bird                   in   2 logs, first C:/kyty/s145/log_v145_15.txt
+  entered enemy_chameleon              in   2 logs, first C:/kyty/s145/log_v145_13.txt
+  entered enemy_final                  in   3 logs, first C:/kyty/f287/f7a/log_f7a_1.txt
+  entered enemy_gorilla                in   2 logs, first C:/kyty/s144/log_v144_19.txt
+  entered enemy_snake                  in   2 logs, first C:/kyty/s145/log_v145_08.txt
+  entered enemy_taco                   in   2 logs, first C:/kyty/s145/log_v145_04.txt
+  entered final_stage                  in   5 logs, first C:/kyty/s145/log_v145_06.txt
+  entered fragile_battle_1             in   2 logs, first C:/kyty/s146/log_v146_14.txt
+  entered fragile_battle_2             in   2 logs, first C:/kyty/s146/log_v146_17.txt
+  entered fragile_battle_3             in   2 logs, first C:/kyty/s146/log_v146_19.txt
+  entered gulliver_island              in   2 logs, first C:/kyty/s143/log_v143_06.txt
+  entered hoover_beach                 in  15 logs, first C:/kyty/p283/lead/p10chk/log_pc_hoover_beach.txt
+  entered hub_crashsite_diorama        in   2 logs, first C:/kyty/s146/log_v146_10.txt
+  entered ice_iceberg                  in   3 logs, first C:/kyty/s144/log_v144_14.txt
+  entered interactive_credit_00        in   2 logs, first C:/kyty/s146/log_v146_06.txt
+  entered jack_in_the_box              in   2 logs, first C:/kyty/s145/log_v145_05.txt
+  entered light_gadget_graveyard       in   2 logs, first C:/kyty/s145/log_v145_09.txt
+  entered mini_astro_clock_tower       in   6 logs, first C:/kyty/f287/f6e/fx/real/log_f6e_c2.txt
+  entered mini_giants_garden           in   7 logs, first C:/kyty/f287/f4c/log_f4c_g.txt
+  entered mini_rocket_chain            in   2 logs, first C:/kyty/s145/log_v145_12.txt
+  entered non_interactive_credit       in   2 logs, first C:/kyty/s146/log_v146_07.txt
+  entered path_maker_mana_tree         in   2 logs, first C:/kyty/s143/log_v143_04.txt
+  entered picup_light                  in   2 logs, first C:/kyty/s145/log_v145_07.txt
+  entered pot_treasure_cave            in   3 logs, first C:/kyty/s143/log_v143_08.txt
+  entered robot_builder_next           in   2 logs, first C:/kyty/s146/log_v146_05.txt
+  entered rocket_hourglass             in   5 logs, first C:/kyty/s143/log_v143_07.txt
+  entered rocket_space_station         in   2 logs, first C:/kyty/s143/log_v143_10.txt
+  entered shuriken_ninja_castle        in   7 logs, first C:/kyty/s145/log_v145_10.txt
+  entered small_pot_lava               in   2 logs, first C:/kyty/s145/log_v145_02.txt
+  entered spin_drill_natural_cave      in   2 logs, first C:/kyty/s145/log_v145_03.txt
+  entered sponge_dirty_bath            in  15 logs, first C:/kyty/p283/lead/p10chk/log_pc_sponge_dirty_bath.txt
+  entered spring_punch_monster_cave    in   2 logs, first C:/kyty/s143/log_v143_05.txt
+  entered spring_punch_sky_aztec       in   6 logs, first C:/kyty/s143/log_v143_01.txt
+  entered timestop_casino              in  11 logs, first C:/kyty/f287/f6e/fx/real2/log_f6e_c1.txt
+  entered transition_next              in   2 logs, first C:/kyty/s146/log_v146_07.txt
+  entered underwater_aerial_garden     in  91 logs, first C:/kyty/KytyPS5/ps5 em/_kyty.prev.txt
+  entered volcano_mountain             in   2 logs, first C:/kyty/s144/log_v144_17.txt
+  entered voxel_challenge_1            in   2 logs, first C:/kyty/s146/log_v146_15.txt
+  entered voxel_challenge_2            in   2 logs, first C:/kyty/s146/log_v146_18.txt
+  entered voxel_world                  in   6 logs, first C:/kyty/f287/f3d/log_f3d_a3.txt
+  entered worldmap                     in   2 logs, first C:/kyty/s146/log_v146_07.txt
+T2 (item 355 (d)):
+  241(zh) small_pot_lava               entered since T0 in 2 logs (first C:/kyty/s145/log_v145_02.txt) -> out
+  241(zh) spin_drill_natural_cave      entered since T0 in 2 logs (first C:/kyty/s145/log_v145_03.txt) -> out
+  241(zh) light_gadget_graveyard       entered since T0 in 2 logs (first C:/kyty/s145/log_v145_09.txt) -> out
+  241(zh) enemy_taco                   entered since T0 in 2 logs (first C:/kyty/s145/log_v145_04.txt) -> out
+  241(zh) hero_kratos                  no entry line since T0 -> T2
+  241(zh) picup_light                  entered since T0 in 2 logs (first C:/kyty/s145/log_v145_07.txt) -> out
+  241(zh) enemy_snake                  entered since T0 in 2 logs (first C:/kyty/s145/log_v145_08.txt) -> out
+  241(zh) mini_rocket_chain            entered since T0 in 2 logs (first C:/kyty/s145/log_v145_12.txt) -> out
+  241(zh) hero_drake                   no entry line since T0 -> T2
+  241(zh) bonus_path_maker_mix         entered since T0 in 3 logs (first C:/kyty/s145/log_v145_14.txt) -> out
+  pool(A) map  66 Mini Levels    voxel_challenge_3            no entry line since T0 -> T2
+  pool(A) map  67 Mini Levels    armadillo_challenge_2        no entry line since T0 -> T2
+  pool(A) map  68 Mini Levels    fragile_battle_4             no entry line since T0 -> T2
+  pool(A) map  69 Mini Levels    voxel_challenge_4            no entry line since T0 -> T2
+  pool(A) map  70 Mini Levels    fragile_battle_5             no entry line since T0 -> T2
+  pool(A) map  71 Mini Levels    voxel_challenge_5            no entry line since T0 -> T2
+  pool(A) map  72 Mini Levels    miniboss_challenge_genie     no entry line since T0 -> T2
+  pool(A) map  73 Symbol Levels  symbol_triangle              no entry line since T0 -> T2
+pool (A) (lvl146.py rule): 93 levels; LIST146 (lvl146.out.txt): robot_builder_next interactive_credit_00 non_interactive_credit ending_boss_after_credit collectible_viewer hub_crashsite_diorama diorama_controller_skin diorama_astro_skin diorama_zoo fragile_battle_1 voxel_challenge_1 armadillo_challenge_1 fragile_battle_2 voxel_challenge_2 fragile_battle_3
+reading "LIST146 alone" (printed beside): names of LIST146 without an entry line since T0: 0 []
+T2 from item 241 (zh) alone: 2 of 10
+T2LIST t2_1 hero_kratos
+T2LIST t2_2 hero_drake
+T2LIST t2_3 voxel_challenge_3
+T2LIST t2_4 armadillo_challenge_2
+T2LIST t2_5 fragile_battle_4
+T2LIST t2_6 voxel_challenge_4 (reserve)
+T2LIST t2_7 fragile_battle_5 (reserve)
+T2LIST t2_8 voxel_challenge_5 (reserve)
+T2LIST t2_9 miniboss_challenge_genie (reserve)
+T2LIST t2_10 symbol_triangle (reserve)
+T2NAMES hero_kratos hero_drake voxel_challenge_3 armadillo_challenge_2 fragile_battle_4 voxel_challenge_4 fragile_battle_5 voxel_challenge_5 miniboss_challenge_genie symbol_triangle
+U (item 355 (e)): logs whose compatibility line carries the signature KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b:: 85, of them with writes (not a returning root): 51
+  underwater_aerial_garden     in the catalogue: 9 logs with writes on the signature (first C:/kyty/s146/fx_i146/neg/log_i146_v.txt)
+  hoover_beach                 in the catalogue: 1 logs with writes on the signature (first C:/kyty/s146/log_r146_01.txt)
+  mini_giants_garden           NOT in the catalogue (no log with writes on the signature carries its entry line)
+  robot_builder_next           in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_05.txt)
+  interactive_credit_00        in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_06.txt)
+  fragile_battle_1             in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_14.txt)
+  voxel_challenge_1            in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_15.txt) - beyond the five
+  armadillo_challenge_1        in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_16.txt) - beyond the five
+  fragile_battle_2             in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_17.txt) - beyond the five
+  voxel_challenge_2            in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_18.txt) - beyond the five
+  fragile_battle_3             in the catalogue: 2 logs with writes on the signature (first C:/kyty/s146/log_v146_19.txt) - beyond the five
+ULIST u_1 underwater_aerial_garden
+ULIST u_2 hoover_beach
+ULIST u_3 robot_builder_next
+ULIST u_4 interactive_credit_00
+ULIST u_5 fragile_battle_1
+UNAMES underwater_aerial_garden hoover_beach robot_builder_next interactive_credit_00 fragile_battle_1
+lvl_s9 end 2026-10-03T01:57:15Z
+ALL DONE

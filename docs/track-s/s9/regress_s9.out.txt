@@ -1,0 +1,17 @@
+REG c1_0 in-game creations (item 355 (d) letter) 37 median 233 (item 355 (v): 37 / 233) MATCH
+REG c2_0 in-game creations (item 355 (d) letter) 37 median 247 (item 355 (v): 37 / 247) MATCH
+REG c3_0 in-game creations (item 355 (d) letter) 37 median 230 (item 355 (v): 37 / 230) MATCH
+REG c4_0 in-game creations (item 355 (d) letter) 37 median 231 (item 355 (v): 37 / 231) MATCH
+REG c4_0 prep_ms / recipes / wait (33782, 1842, 25318) (item 335 (g): (33782, 1842, 25318)); ms per recipe 18.34 MATCH
+REG pcw_1 writes / frames >= 100 ms with a write / video frames (21, 21, 9923) (item 354 (b): (21, 21, 9923)) MATCH
+REG pcw_2 writes / frames >= 100 ms with a write / video frames (20, 0, 10153) (item 354 (b): (20, 0, 10153)) MATCH
+REG pcw_3 writes / frames >= 100 ms with a write / video frames (20, 0, 10132) (item 354 (b): (20, 0, 10132)) MATCH
+REG pcw_4 writes / frames >= 100 ms with a write / video frames (20, 20, 10127) (item 354 (b): (20, 20, 10127)) MATCH
+REG pcw_int loaded / disabled / video (94435637, 0, 3749) = last write of pcw_3 94435637 (item 354 (b): (94435637, 0, 3749)) MATCH
+REG haze s6/rec_pcw_1.mp4 sha 518df1a033bc5962 frames 9923 series [[300, 331], [453, 549], [606, 633], [793, 1002]] after 1002 [] (item 355 (g): []) MATCH
+REG haze s6/rec_pcw_2.mp4 sha e641107d1a0a2ce9 frames 10153 series [[339, 435], [491, 519], [679, 904]] after 1002 [] (item 355 (g): []) MATCH
+REG haze s6/rec_pcw_3.mp4 sha ff37f265e59ec4ea frames 10132 series [[301, 308], [312, 420], [477, 504], [663, 853]] after 1002 [] (item 355 (g): []) MATCH
+REG haze s6/rec_pcw_4.mp4 sha 25a206cc079d4bc8 frames 10127 series [[319, 415], [469, 498], [657, 883]] after 1002 [] (item 355 (g): []) MATCH
+REG haze s6/rec_pcw_int.mp4 sha 705cb5fd93be7b23 frames 3749 series [[311, 320], [327, 423], [481, 507], [667, 867], [1928, 1946]] after 1002 [[1928, 1946]] (item 355 (g): [[1928, 1946]]) MATCH
+REG haze s4/rec_g_1.mp4 sha 9aef13da46787fc5 frames 3875 series [[339, 463], [491, 499], [503, 546], [705, 899]] after 1002 [] (item 355 (g): []) MATCH
+REGRESSION: ALL OK

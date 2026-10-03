@@ -1,0 +1,137 @@
+suite test_sc_s9.py sha256 c02212ae644384dac903b543df1ec931b737937e2c0ab60fc5dcb14f3a858695 target sc_s9.py sha256 fc6dc21e959aa981cd74b7f28bb3d853996a95b8e9a3b0432a238e19fe1e860e
+PASS A1 load_sc_s refuses a sc_s.py whose sha256 is not the pinned one
+PASS A2 the inherited sc_s.py is the scorer of seals 03 / 04 (8b0e0aff) and A.B is sc142
+PASS A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65
+PASS A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, stand 15000, gate reading letter
+PASS A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, after 1 002
+PASS A6 paths: link C:/kyty/s288/s10, seal pred/05_s.md, Sky Garden, L0 shuriken_ninja_castle
+PASS A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)
+PASS A8 the order of S10 (item 355 (k); t2_cs0 right after t2_1, item 355 (d))
+PASS A9 pi arms: W M full hold 330, R T integrity from their W hold 120; knobs 1 1 0 0; binary s
+PASS A10 c5_0: T full on L0, salt and PRECACHE=0, binary s, not a T2 form arm
+PASS A11 T2 arms: T full, the level of the list, the form slot, binary s; t2_cs0 on the level of t2_1 with cs0
+PASS A12 u arms: T, form U, binary u, the U list in order, no knob, no salt
+PASS A13 resolved(): T2 form C5 -> salt and PRECACHE=0; APP -> neither; a non-T2 arm keeps its spec, form None
+PASS B1 pi_w1 env = base + KYTY_S_PCW=1 + the stand 15000 (M, no trace)
+PASS B2 pi_r0 env = base + T + KYTY_S_PCW=0 + 15000
+PASS B3 c5_0 env = base + T + KYTY_PIPELINE_SALT=c5_0 + KYTY_PIPELINE_PRECACHE=0
+PASS B4 t2_3 form C5 env: the salt of its tag + PRECACHE=0; form APP: neither
+PASS B5 t2_cs0 env: + KYTY_CS_PRETRANSLATE=0 in both forms
+PASS B6 u_2 env: + KYTY_SHADER_SEED_PATH=C:/kyty/s288/s9/seeds + KYTY_CACHE_MODE=prepare-cold
+PASS B7 env pi_w1 as sealed: family True strict True
+PASS B7 env t2_cs0 without KYTY_CS_PRETRANSLATE: family False strict False
+PASS B7 env a T2 arm with KYTY_CACHE_MODE: family False strict False
+PASS B7 env u_1 without the seed path: family False strict False
+PASS B7 env u_1 with another seed path: family False strict False
+PASS B7 env a T2 form C5 salt of another tag: family False strict False
+PASS B7 env c5_0 with the precache: family False strict False
+PASS B7 env pi_r1 without KYTY_AV_TRACE: strict row only: family True strict False
+PASS B7 env no KYTY_REC: strict row only: family True strict False
+PASS B7 env KYTY_FIX_B1B on an S10 arm (family KYTY_FIX_): family False strict False
+PASS B8 families are the inherited ones (+ KYTY_CACHE_MODE, KYTY_CS_PRETRANSLATE)
+PASS C1 plan pi_w1 / pi_r1
+PASS C2 plan c5_0 / t2_2 C5 / t2_2 APP / t2_cs0 APP / u_1
+PASS C3 a T2 arm without a form -> UNDETERMINED (go_s9.sh rc 6)
+PASS D1 scan_x rows = valid FrameTrace rows (a torn row is not a row)
+PASS D2 BvhLoopCapTrip: lines with the group index (the number of rows before them); a line not at the start ignored
+PASS D3 CsPretranslate: by kind, "enqueue skipped" one kind
+PASS D4 GamePatch: lines at the start of a line counted
+PASS D5 in-game creations: AvTrace pipeline lines without "precache" - us of async / none / sync kept, a waited line without a us field counted apart, precache lines excluded
+PASS D6 the scan_x row count equals the inherited scan_s rows on the same log
+PASS D7 stdout: "Cache test mode: prepare-cold" counted apart from every "Cache test mode:" line; a missing file absent
+PASS D8 BvhLoopCapTrip column: lines in groups i-1 and i of a frame counted, i-2 and i+1 not
+PASS E1 T-4 under PRECACHE=0: no queue and 0 precache lines holds; a precache line or a queue breaks it
+PASS E2 T-4 without PRECACHE=0 = the inherited letter: precache lines = G + C queued, no queue -> broken
+PASS E3 gate letter: new permutation AND new recipe AND skipped draw
+PASS E4 gate variant: the recipe member dropped only under PRECACHE=0
+PASS E5 gate: no gate dict -> undetermined (no scene frame); attribution broken -> undetermined (T-3/T-4); the default reading is the constant
+PASS E6 S-early cost of a frame = PREP + async creations of groups i-2 .. i+1 (not i-3, not i+2, not sync / precache)
+PASS E7 S-early lead = FirstUse - Register (50 000 / 40 000): short by the letter 1 of 2 (40 000 = cost is not short), by PREP only 0 of 2
+PASS E8 S-early without attribution -> None
+PASS H1 the ffmpeg command of the lead detector
+PASS H2 saturation of a frame = mean of (max - min) / (max + 1) over 60x12 pixels; a partial frame dropped
+PASS H3 the median over frames >= 300 (odd and even counts); <= 300 frames -> 0
+PASS H4 haze_runs: below 0.75 x median low, gap <= 3 merges, kept when end - start >= 5, frames < 300 ignored
+PASS H5 after frame 1 002: letter = start > 1 002, variant = any frame > 1 002
+PASS H6 POSITIVE: the cached saturations of rec_pcw_int.mp4 (sha 705cb5fd, 3 749 frames): the series 1 928 - 1 946 is the only one after frame 1 002
+PASS H7 NEGATIVE: rec_pcw_1.mp4 (sha 518df1a0, 9 923 frames): series up to frame 1 002 only, none after it
+PASS H8 haze_of reads the cache of the same video sha and crop (no ffmpeg); a missing video -> None
+PASS H8b a cache of another video sha is not used (the detector runs again and rewrites the cache)
+PASS F1 cache rows pass as sealed: pi_w1 (full + post copies), pi_r1 (integrity), u_1 (form U), t2_2 (full)
+PASS F2 full: the app restore must be snap0, GLCache snap0_drv, launch = restore
+PASS F3 integrity: the restores must be the post copies of its W
+PASS F4 form U: the app restore must be the empty set; a GLCache restore before the arm fails; launch = man_pre_glc; the catalogue sha = the sealed one
+PASS F5 returns, the installed binary, return_prev, the manifests and the post copies of W are rows
+PASS F6 no cache json -> one failing row
+PASS G1 admission passes as sealed (pi_w1, t2_4 C5, u_3)
+PASS G2 the binary: s arms need f3b3aa3b, u arms 4aa62e95
+PASS G3 KYTY_GAME_PATCH in the env, validation true, another hold, a retry, a wrong seal, gates, guest args, 2 attempts
+PASS G4 a T2 arm admitted against its form: an APP env under the C5 form fails the family row and the strict row
+PASS I1 pi_w1 and pi_r1 admitted and readable: the knob lines, last write 94 435 637, R loaded it, the R T-4 letter
+PASS I2 haze read from the cache of the fake video on pi arms
+PASS I3 read_pi: no series anywhere, both R loaded the last write of their W -> READ_2
+PASS I4 a series after 1 002 in pi_r1 only -> READ_1
+PASS I5 series in both R and both loaded -> READ_2
+PASS I6 series in both R but pi_r1 loaded another size -> READ_OTHER
+PASS I7 a series only in pi_r0 -> READ_3
+PASS I8 a series only in a W arm -> READ_3
+PASS I9 a W series across frame 1 002 (1 000 - 1 010): letter READ_2, the variant READ_3 printed as DIFFERS
+PASS I10 a W arm presented < 300 s -> NOT_EVALUABLE
+PASS I11 a pi arm with a video < 3 000 frames -> NOT_EVALUABLE
+PASS I11b a pi arm with exactly 3 000 video frames is readable
+PASS I12 a pi arm with a one-frame glitch -> NOT_EVALUABLE
+PASS I13 the knob line missing on a pi arm -> admission FAIL -> NOT_EVALUABLE
+PASS I14 a death marker on a pi arm -> NOT_EVALUABLE
+PASS I15 an arm not made -> NOT_EVALUABLE
+PASS I16 a disabled line on an R arm -> loaded FAIL -> READ_OTHER (no series)
+PASS I17 pi_word table: (r1, r0, w, loaded)
+PASS J1 c5_0 under PRECACHE=0: T-4 holds with no queue, attribution determined, the knob line 0 / 0, admitted
+PASS J2 10 creations median 25 000 -> YES -> form C5
+PASS J3 9 creations -> NO -> form APP
+PASS J4 median exactly 20 000 -> YES (>=)
+PASS J5 median 19 999 -> NO
+PASS J6 precache lines and waited lines are not in-game creations of the letter (median stays 25 000); a precache line breaks T-4 under PRECACHE=0 -> the arm FAILs -> UNDETERMINED
+PASS J7 c5_0 not entered -> UNDETERMINED, no T2 form
+PASS J8 c5_0 not made -> NOT_MADE
+PASS J9 c5_0 without the knob line 0 / 0 of f3b3aa3b -> FAIL -> UNDETERMINED
+PASS J10 a GamePatch: line in the log -> admission FAIL (item 342 (e))
+PASS K1 a T2 arm in form C5: admitted, attribution, the gate letter "level not cold" (no recipe under PRECACHE=0), the variant "cold"
+PASS K2 t2_counted: letter False, variant True on that arm; a failing arm never counts
+PASS K3 read_t2 prints the form, OUT by the letter, the variant count, the S-early row
+PASS K4 t2_cs0 against t2_1: the deltas and the CsPretranslate lines as data rows
+PASS K5 the BvhLoopCapTrip column, skip / held rows of a T2 arm
+PASS K6 a presented frame >= 100 ms on the hold counts in dt100 (window + hold); its BvhLoopCapTrip line of group i in the column
+PASS L1 order: pi_w1 .. pi_r0 and c5_0 made -> t2_1 allowed (form C5 decided), t2_2 waits for t2_cs0, made tags refused
+PASS L2 t2_cs0 right after t2_1; t2_2 before t2_cs0 refused (order); t2_cs0 before t2_1 refused
+PASS L3 without c5_0 the T2 arms wait (rc 1); an unknown tag rc 2
+PASS L4 c5_0 made but UNDETERMINED -> T2 refused rc 6
+PASS L5 the pi order: pi_r1 needs pi_w1 ... c5_0 needs pi_r0
+PASS L6 a death marker in an earlier arm stops every later tag (rc 6)
+PASS L7 by the letter none of five counted -> the reserve t2_6 allowed; u_1 waits for T2
+PASS L9 every T2 tag made -> T2 done -> u_1 allowed, u_2 waits for u_1
+PASS L10 form APP: five T2 arms cold by the letter (a recipe saved after the entry) -> T2 done with exactly five, the reserve t2_6 refused rc 6
+PASS L11 four counted -> T2 not done, the reserve t2_6 allowed, u_1 waits
+PASS M1 five U arms with both gates, no skip, no attributed frame, screens 31 s -> ALIVE_BY_PROBE_5
+PASS M2 one arm with a skipped draw after the first scene frame -> still alive (kill at 2)
+PASS M3 a second arm with an attributed frame >= 100 ms -> KILLED
+PASS M4 a screen of 181 s (the later of the two lines) -> KILLED
+PASS M5 a screen of exactly 180 s -> not over (alive)
+PASS M6 one screen line not seen -> the screen undetermined -> UNDETERMINED
+PASS M7 no "ShaderSeed: installed" -> CATALOGUE NOT INSTALLED, undetermined member
+PASS M8 no "Cache test mode: prepare-cold" -> CATALOGUE NOT INSTALLED
+PASS M9 u_5 is allowed after u_4 when every earlier U arm installed the catalogue
+PASS M10 u_3 refused rc 6 when u_2 had no catalogue
+PASS M11 u_eval of a not made arm -> undetermined
+PASS N1 check_seal: the binary lines read, a missing file fails its row only
+PASS N2 check_seal: no u binary line -> the binary row fails
+PASS N3 check_seal: a sealed name without its line fails its row and the whole check
+PASS N4 check_seal: a missing seal file fails
+PASS N5 the sealed names include the harness, the scorer, the suites, the lists, the export, the detector, sc_s, cachex
+PASS O1 main --plan: the form from the C5 reading (APP now) or --form
+PASS O2 main --allowed prints the ALLOWED line and returns the rc
+PASS O3 main --tag: the arm printed, the json written, rc 0 for an admitted arm
+PASS O4 main --tag of a failing arm rc 1; an unknown tag rc 2
+PASS O5 --summary runs, the output is ASCII (strict cp1250)
+PASS O6 seeds_sha: the manifest of seedexp_s9.py ("<name> <bytes> <sha256>" sorted); a missing dir -> None
+checks: 134
+ALL OK

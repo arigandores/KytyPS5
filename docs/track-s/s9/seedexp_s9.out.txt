@@ -1,0 +1,19 @@
+seedexp_s9 start 2026-10-03T01:58:15Z self sha256 c1845b841d280758376f1d820020d2e20a59937e5491855196a4f7df386c7c9b
+tool C:/kyty/KytyPS5/tools/shader_seed.py sha256 7d77839f17784127b1e57f8a69809098420a9b48fea2176ca2ad81d720073a05
+log C:/kyty/p283/p24/log_ia_A3.txt sha256 058692fd83292f64dceef88abb277763f92af3a1133dd800e8a502d4b7b83b4d; json binary 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac KYTY_GAME_PATCH None
+installed binary now 4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac (the seal value)
+source C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b files 616 sha bc7d48c6a68ee48ff4796fbfa4ceb7c33504907a603a41afa0929b64d03d2fc1
+stage C:/kyty/s288/s9/stage/PPSA21564 files 616 sha bc7d48c6a68ee48ff4796fbfa4ceb7c33504907a603a41afa0929b64d03d2fc1; source again sha bc7d48c6a68ee48ff4796fbfa4ceb7c33504907a603a41afa0929b64d03d2fc1 -> EQUAL
+tool rc 0 stdout: Exported 615 shaders, 1357 recipes to C:\kyty\s288\s9\seeds\PPSA21564 stderr tail: 
+compatibility.txt: KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59
+log line         : KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59
+compatibility of the export = the line of the installed binary log: EQUAL
+shaders by stage: cs 109 ps 184 vs 322; total 615 (manifest.json shaders 615); recipes (manifest.json) 1357
+pipelines.bin of the export = the staged one (byte for byte): True -> removed duplicates (F17): 0 (the tool copies the recipe file unchanged)
+recipes_s7.py sha256 ace0d3e2681bcb9ebf90dd20d2beb694d9528cb4dc34239add11342afa2891b9; recipes parsed 1357 (header 1357, at_end True): graphics 1234, compute 123; duplicate keys in the export (F17 kinds): R_DUP_GFX 0, R_DUP_CS 0
+shader files referenced by recipes 614; exported shader files not referenced 1; referenced but absent 0
+offline install check (InstallShaderSeed): shader files with a bad signature or checksum 0 []; recipe header magic True, signature+layout KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b|10288:376:216:44:516:125
+SEEDS manifest C:/kyty/s288/s9/seeds_manifest.txt files 618 sha256 72605a65d15470f8e60a8a4d16c3a4b4d34cd557bbe6e8c17c9ba6441892f098 (= sha256 of the file 72605a65d15470f8e60a8a4d16c3a4b4d34cd557bbe6e8c17c9ba6441892f098)
+compatibility.txt sha256 2ff6aa36d65a968ee44b39655f78d155328e25f65a901ba9a9755ebaba74a5d7 manifest.json sha256 0589be3fcacba786c21901d96e31a1e018f518a73bebdb3e4e5b1ce40968d413 pipelines.bin sha256 c7b31ec1ae194604fd53c9040650aef07ea0376da594491eeaf2219c1f9b665a
+seedexp_s9 end 2026-10-03T01:58:19Z
+EXPORT: OK

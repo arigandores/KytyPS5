@@ -1,0 +1,20 @@
+2026-10-03T01:56:00Z S9 start (HPP-431): s9/ created, reading p.355 and the S3-S6 harness done
+2026-10-03T01:57:15Z lvl_s9.py rc 0 lvl_s9.out.txt sha256 95be9a278dd16a8883d01cdf99b51457b24c4efef79f483d50f9600caa6b7cff
+2026-10-03T01:58:19Z seedexp_s9.py rc 0 seedexp_s9.out.txt sha256 30c399382bd7a9c40ef2dc666685508d6372876a2692b7386381378365bc68fc
+2026-10-03T02:07:20Z waited the lock of gop31.sh hx_sha (track P) 02:05:01Z-02:07:12Z (seen by date -u); sc_s9.py written just before the lock (Write at ~02:04Z, lock line 04:04:08 local)
+2026-10-03T02:08:09Z sc_s9.py --regress rc 0 regress_s9.out.txt sha256 8444d16522828a63cce31cbe0cd8e5b184fd7932e4659652cb8f466fbb20ffd4 (draft scorer)
+2026-10-03T02:26:54Z waited the P locks hv_0/ha_A4 02:09:31Z-02:26:46Z; go_s9.sh was written by the Write tool at ~02:12Z UNDER the lock of gop31.sh ha_A4 (taken 02:09:31Z) - the Write tool has no lock check; since 02:15Z drafts go to the run scratch dir and are moved by a Bash command with the lock check
+2026-10-03T02:27:02Z drafts moved into s9/, patch a applied, fx haze caches made by sc_s9.haze_of
+2026-10-03T02:47:24Z go_s9.sh: the rc of --seeds-check was the rc of tr (caught by GL8) - fixed; test_go_s9.py rerun
+2026-10-03T02:50:37Z OVERLAP (rule 27, own error): test_go_s9.py (~2 min, bash + python fixtures, no game) ran ~02:36:4xZ-02:38:5xZ and ~02:45:5xZ-02:47:5xZ, started without a lock, but the P locks hv_2 (02:37:03Z, p33/times.txt:98) and hn_sponge_dirty_bath (02:46:45Z, :121) were taken during them; since 02:48Z no command longer than ~10 s runs while the P33 series lasts
+2026-10-03T03:13:57Z the P33 series ended (hw_V4 released 03:12:50Z, p33/times.txt); S9 fixtures and mutants from now
+2026-10-03T03:14:23Z mutant prognosis (screening run, not counted): 211 mutants x 14.6 s (test_sc_s9.py wall 03:14Z) / 12 workers x 1.3 = 334 s + baseline/control ~60 s; < 900 s
+2026-10-03T03:17:25Z screening mutant run rc 1 wall 181 s mut_screen1.txt sha256 c9065ffef44de3cad9007df341931279fa99e47b1e3cd163ceb2041db2e66266
+2026-10-03T03:18:20Z screening --only cr_glc,ad_gp,tc_fail rc 0 mut_screen2.txt sha256 cd8f40f80a22c439a66245c527095a30fcf597000fb8bec2939bbe1f74ef4e29 wall 
+2026-10-03T03:19:34Z screening --only cr_glc,ad_gp,tc_fail rc 0 mut_screen3.txt sha256 31558a62f1ef7dc922c2b907bfe3aa36c8ce5c5d6319dea32c35d8bc247cd249
+2026-10-03T03:19:45Z COUNTED full mutant run start: prognosis 211 x 14.6 s / 12 x 1.3 = 334 s (+ baseline); screening runs so far 181 s + 41 s (refused run ~10 s)
+2026-10-03T03:22:44Z COUNTED full mutant run rc 0 wall 179 s mut_sc_s9.txt sha256 d5b2e63b902354c914867184b7250314224449e8662fc842d3a6350dee753bca
+2026-10-03T03:23:24Z sc_s9.py --regress (final scorer fc6dc21e) rc 0 regress_s9.out.txt sha256 8444d16522828a63cce31cbe0cd8e5b184fd7932e4659652cb8f466fbb20ffd4
+2026-10-03T03:23:51Z seal pred/05_s.md written sha256 21c985954668baa403c3383248b8944a06559abced5e73f9ec9e7d7007f060b6; --check-seal SEAL: PASS; fx provenance fx/provenance.out.txt sha256 8053dbcbc866f2638ee51ff4890d6ddfec3675ad93318ab28339f96313cde1b1
+2026-10-03T03:24:20Z seal pred/05_s.md rewritten (provenance and the mutant walls in section 5, the heading of section 6) sha256 d56e2e645ca7f0be60266c25bfa87869e94c4f3e0e9146796625fda000605784; --check-seal SEAL: PASS checkseal_s05.out.txt sha256 18147f0eb9b03c36accf19ac3b114ff419e3673a2b2ced60879f7c6bfddfee03
+2026-10-03T03:25:47Z FACTS section S9 appended and git copies made by mkfacts_s9.py (run scratch); report next

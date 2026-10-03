@@ -38,6 +38,37 @@ std::string BvhLoopCapSignatureToken();
 inline constexpr uint32_t LoopTripWordBase = 1u << 21;
 inline constexpr uint32_t LoopTripWords    = 16;
 inline constexpr uint32_t LoopTripSlots    = 8;
+// Track F, F11d (HPP-466, ROADMAP p.376(v)), KYTY_DIAG_BVHNODES=1 (Decoder::DiagBvhNodesEnabled): the
+// diagnostic words follow the loop-cap words; the fault-buffer tail grows by DiagWords u32 only at =1.
+// Every IMAGE_BVH_INTERSECT_RAY execution adds, per host subgroup (ballot bit counts, one elected
+// invocation), the active lanes by node type ([DiagT0 + type]); for 32-bit pointers the lanes past the
+// descriptor size field ([DiagSizeViol]: idx = ptr >> 3 > size64 = dword2 | (dword3 & 0x3ff) << 32), their
+// largest excess over = idx - size64 ([DiagOverMax]) and a histogram of it ([DiagBuckets + 4 * class +
+// bucket], classes 0 triangle (types 0-3), 1 box (4-6), 2 type 7; bucket 3 = idx > 2 * size64 + 1, else
+// 0 = over 1, 1 = over 2..16, 2 = over 17 or more; the buckets of all classes sum to [DiagSizeViol]); the
+// lanes with size64 = 2^42 - 1 ([DiagSizeOff]); the 64-bit pointers ([DiagNode64], never in DiagSizeViol);
+// the active lanes of the program ([DiagLanes + DiagBvhSlot(hash)]) and the subgroups ([DiagGroups]).
+// Every S_TRAP adds the subgroups that reach it, whatever exec holds ([DiagTraps]), and its active lanes
+// ([DiagTrapLanes]). The u32 counters wrap; the host diffs them modulo 2^32 (faultManager.cpp).
+inline constexpr uint32_t DiagWordBase  = LoopTripWordBase + LoopTripWords;
+inline constexpr uint32_t DiagWords     = 64;
+inline constexpr uint32_t DiagSlotCount = 20; // the BVH programs of eboot.bin; slot DiagSlotCount = other
+enum DiagWord : uint32_t {
+	DiagT0        = 0, // .. 7: lanes by node type
+	DiagSizeViol  = 8,
+	DiagSizeOff   = 9,
+	DiagNode64    = 10,
+	DiagOverMax   = 11,
+	DiagTraps     = 12,
+	DiagTrapLanes = 13,
+	DiagGroups    = 14,
+	DiagBuckets   = 16, // .. 27: 3 classes x 4 buckets
+	DiagLanes     = 28, // .. 48: DiagSlotCount program slots, then other
+};
+static_assert(DiagLanes + DiagSlotCount < DiagWords, "the diagnostic words fit the tail");
+// Slot of a program in the DiagLanes words: its index in the BVH program table, DiagSlotCount = other.
+uint32_t DiagBvhSlot(uint64_t shader_hash);
+uint64_t DiagBvhSlotHash(uint32_t slot); // 0 for slot >= DiagSlotCount
 // Session 103, KYTY_BDA_LEAN (M5', measurement only, default off): the BDA path as design G would
 // build it - no fault-buffer store in pixel shaders, one page-table read per lookup (the null-page
 // base read once per invocation), read-only PSB views (NonWritable, Restrict when the program

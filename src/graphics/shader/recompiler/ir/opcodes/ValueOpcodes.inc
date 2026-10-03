@@ -304,3 +304,8 @@ VALUE_OPCODE(BvhIntersectRay, U32x4, U32, U32, F32, F32, F32, F32, F32, F32, F32
 // DS_INC_RTN_U32 / DS_DEC_RTN_U32 (upstream e04007a), appended for cache compatibility.
 VALUE_OPCODE(SharedAtomicInc32, U32, U32, U32, U1)
 VALUE_OPCODE(SharedAtomicDec32, U32, U32, U32, U1)
+// Track F, F11d (KYTY_DIAG_BVHNODES=1 only), appended for cache compatibility: the node pointer of an
+// IMAGE_BVH_INTERSECT_RAY - node_lo, node_hi, descriptor dwords 2-3 (size field), exec - and an S_TRAP
+// reached - exec. Both write the fault-buffer tail (uses_dma).
+VALUE_OPCODE(BvhNodeDiag, Void, U32, U32, U32, U32, U1)
+VALUE_OPCODE(DiagTrap, Void, U1)

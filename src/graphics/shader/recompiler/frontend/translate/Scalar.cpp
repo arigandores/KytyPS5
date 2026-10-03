@@ -235,8 +235,15 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
 
 		case O::S_NOP:
 		case O::S_SLEEP:
-		case O::S_SETPRIO:
-		case O::S_TRAP: EmitControlNop(); return true;
+		case O::S_SETPRIO: EmitControlNop(); return true;
+		case O::S_TRAP:
+			// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 counts the subgroups and lanes that
+			// reach the trap, which stays a no-op; =0 emits only the no-op, as before.
+			if (Decoder::DiagBvhNodesEnabled()) {
+				ir.Emit(IR::ValueOpcode::DiagTrap, {ir.GetExec()});
+			}
+			EmitControlNop();
+			return true;
 		case O::S_WAITCNT_DEPCTR: EmitWaitcnt(); return true;
 		case O::S_BARRIER: S_BARRIER(); return true;
 		case O::S_SENDMSG: S_SENDMSG(inst); return true;

@@ -367,6 +367,9 @@ Emitter::SpirvRequirements Emitter::AnalyzeProgramRequirements(const IR::Program
 			}
 			switch (inst.GetOpcode()) {
 				case IR::ValueOpcode::Ballot: requirements.subgroup_ballot = true; break;
+				// Track F, F11d: KYTY_DIAG_BVHNODES counters (ballot bit counts, elect).
+				case IR::ValueOpcode::BvhNodeDiag:
+				case IR::ValueOpcode::DiagTrap: requirements.subgroup_ballot = true; break;
 				case IR::ValueOpcode::DppMoveU32:
 				case IR::ValueOpcode::ReadFirstLane:
 				case IR::ValueOpcode::ReadLane: {

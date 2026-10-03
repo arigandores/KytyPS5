@@ -826,6 +826,32 @@ uint32_t ValueEmitContext::Label(const IR::Block* block) const {
 	std::abort();
 }
 
+namespace {
+
+// Track F, F11d (ROADMAP p.376(v), RC4 of F11b): at KYTY_DIAG_BVHNODES=1 a translation of a program with
+// diagnostic sites names them - the BVH and trap sites left in the program, and whether the dispatcher
+// fallback emits it (its blocks run the same diagnostic opcodes).
+void LogDiagBvhNodes(const IR::Program& program) {
+	if (!Decoder::DiagBvhNodesEnabled()) {
+		return;
+	}
+	size_t bvh_sites  = 0;
+	size_t trap_sites = 0;
+	for (const auto* block: program.blocks) {
+		for (const auto& inst: *block) {
+			bvh_sites += inst.GetOpcode() == IR::ValueOpcode::BvhNodeDiag ? 1 : 0;
+			trap_sites += inst.GetOpcode() == IR::ValueOpcode::DiagTrap ? 1 : 0;
+		}
+	}
+	if (bvh_sites + trap_sites == 0) {
+		return;
+	}
+	LOGF("DiagBvhNodes: shader=%016" PRIx64 " bvh_sites=%zu trap_sites=%zu fallback=%d\n",
+	     program.shader_hash, bvh_sites, trap_sites, program.dispatcher_fallback ? 1 : 0);
+}
+
+} // namespace
+
 void EmitProgram(EmitterState& state) {
 	const auto&      program = state.program;
 	ValueEmitContext ctx(state);
@@ -844,6 +870,7 @@ void EmitProgram(EmitterState& state) {
 		const auto label = state.builder.AllocateId();
 		state.labels.emplace(block, label);
 	}
+	LogDiagBvhNodes(program);
 	LoopGuards loop_guards;
 	const int  cap_slot = BvhLoopCap() != 0 ? BvhLoopCapSlot(program.shader_hash) : -1;
 	if (cap_slot >= 0 && state.program.dispatcher_fallback) {

@@ -575,10 +575,12 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
 	// translations of =1 and =0 never share a signature or a directory.
 	// Track F, F3b (ROADMAP p.259(e)(3)): KYTY_FIX_B1B=1 (the default) adds ":fixb1b" the same way;
 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
+	// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 adds ":diagbvh" the same way (default 0: none).
 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
-	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "");
+	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "") +
+	                            (ShaderRecompiler::Decoder::DiagBvhNodesEnabled() ? ":diagbvh" : "");
 	if (!variant.empty()) {
 		std::string folder = "variant" + variant;
 		std::replace(folder.begin(), folder.end(), ':', '_');

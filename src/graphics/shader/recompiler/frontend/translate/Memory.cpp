@@ -845,6 +845,14 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool 
 	const IR::U1 sort_enabled =
 	    ir.LogicalAnd(ir.INotEqual(ir.BitwiseAnd(desc1, U32C(0x80000000u)), U32C(0u)),
 	                  ir.INotEqual(sort_mode, U32C(3u)));
+	// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 counts the node pointer that reaches the
+	// instruction - type, size field (descriptor dwords 2-3), lanes - ahead of the native / IR fork, so
+	// both paths count the same. =0 emits nothing.
+	if (Decoder::DiagBvhNodesEnabled()) {
+		ir.Emit(IR::ValueOpcode::BvhNodeDiag,
+		        {node_lo, node_hi, GetResourceDword(memory.resource, 2),
+		         GetResourceDword(memory.resource, 3), ir.GetExec()});
+	}
 
 	// KYTY_BVH_NATIVE=0: the IR expansion below (every node type evaluated, selected at the
 	// end). Default: one opcode, the SPIR-V backend branches on the node type.

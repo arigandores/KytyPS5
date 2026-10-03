@@ -349,6 +349,11 @@ bool FixB1BEnabled() {
 	return enabled;
 }
 
+bool DiagBvhNodesEnabled() {
+	static const bool enabled = Common::EnvFlagOn("KYTY_DIAG_BVHNODES");
+	return enabled;
+}
+
 Family GetInstructionFamily(uint32_t word) {
 	if ((word & 0x80000000u) == 0u) {
 		switch ((word >> 25u) & 0x3fu) {

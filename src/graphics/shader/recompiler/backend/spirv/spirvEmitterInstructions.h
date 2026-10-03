@@ -258,6 +258,8 @@ inline constexpr auto EmitDataAppend            = EmitAppendConsume;
 inline constexpr auto EmitDataConsume           = EmitAppendConsume;
 uint32_t              EmitSwizzleU32(ValueEmitContext& ctx, const IR::Inst& inst);
 uint32_t              EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst);
+void                  EmitBvhNodeDiag(ValueEmitContext& ctx, const IR::Inst& inst);
+void                  EmitDiagTrap(ValueEmitContext& ctx, const IR::Inst& inst);
 void                  EmitImage(ValueEmitContext& ctx, const IR::Inst& inst);
 inline constexpr auto EmitImageQueryDimensions = EmitImage;
 inline constexpr auto EmitImageQueryLod        = EmitImage;

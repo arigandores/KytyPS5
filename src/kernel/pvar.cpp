@@ -8,6 +8,7 @@
 #include "loader/gamePatchFile.h"
 
 #include <atomic>
+#include <chrono>
 #include <cinttypes>
 #include <cstdint>
 #include <cstdlib>
@@ -37,15 +38,20 @@ std::atomic<uint32_t> g_bad_logged {0};
 std::atomic<uint32_t> g_foreign_logged {0};
 // Item 346(g): KYTY_PVAR_HOLD=1 accepted by Arm (mode 2 armed); set before g_m0_ra, never cleared.
 std::atomic<bool>     g_hold {false};
-// The time (KernelGetProcessTime, us) of the vblank in g_vb; g_vb and g_vb_t are published together under the seqlock
+// The time (HostUs) of the vblank in g_vb; g_vb and g_vb_t are published together under the seqlock
 // g_vb_seq (odd - a write in progress; the Present thread is the only writer).
 std::atomic<uint64_t> g_vb_t {0};
 std::atomic<uint64_t> g_vb_seq {0};
 
-struct Vblank {
-	uint64_t v = 0;
-	uint64_t t = 0;
-};
+// Item 348(v)(1): the one clock of the hold and of the "PVar:" line - the monotonic host clock (steady_clock,
+// QueryPerformanceCounter in the MSVC library), us from the process start (the static initialization of this file,
+// before main). No lock, no freezes, no guest speed - unlike KernelGetProcessTime.
+const std::chrono::steady_clock::time_point g_host_start = std::chrono::steady_clock::now();
+
+uint64_t HostUs() {
+	return static_cast<uint64_t>(
+	    std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - g_host_start).count());
+}
 
 Vblank ReadVblank() {
 	for (;;) {
@@ -136,7 +142,7 @@ void OnM0() {
 		return;
 	}
 	auto&          st = g_writer_state;
-	const uint64_t t0 = KernelGetProcessTime();
+	const uint64_t t0 = HostUs();
 	Vblank         vb = ReadVblank();
 	const uint64_t n  = g_n.load(std::memory_order_relaxed);
 	if (!st.started) {
@@ -151,25 +157,14 @@ void OnM0() {
 	const int64_t  slack   = VblankTimeUs(vb.t, vb.v, target) - static_cast<int64_t>(t0);
 	int64_t        wait_us = 0;
 	int64_t        exit_us = 0; // after the target vblank; -1 - the wait ended at the deadline
-	if (hold && vb.v < target) {
-		const int64_t deadline = static_cast<int64_t>(t0) + static_cast<int64_t>(kt) * 1000000 / 60 + HOLD_CAP_US;
-		int64_t       now      = static_cast<int64_t>(t0);
-		bool          timeout  = false;
-		for (;;) {
-			const int64_t sleep = HoldSleepUs(now, VblankTimeUs(vb.t, vb.v, target), deadline);
-			if (sleep <= 0) {
-				timeout = true;
-				break;
-			}
-			Common::Thread::SleepMicro(static_cast<uint32_t>(sleep));
-			vb  = ReadVblank();
-			now = static_cast<int64_t>(KernelGetProcessTime());
-			if (vb.v >= target) {
-				break;
-			}
-		}
-		wait_us = now - static_cast<int64_t>(t0);
-		exit_us = timeout ? -1 : now - VblankTimeUs(vb.t, vb.v, target);
+	if (hold) {
+		// Item 348(v)(3): the wait (pvar.h HoldWait) on the host clock; no wait when the target is already reached.
+		const HoldWaitResult r = HoldWait(
+		    static_cast<int64_t>(t0), vb, target, kt, [] { return static_cast<int64_t>(HostUs()); },
+		    [](int64_t us) { Common::Thread::SleepMicro(static_cast<uint32_t>(us)); }, [] { return ReadVblank(); });
+		vb      = r.vb;
+		wait_us = r.wait_us;
+		exit_us = r.exit_us;
 	}
 	const uint64_t v    = vb.v;
 	const uint64_t d    = v - st.v_prev;
@@ -338,7 +333,7 @@ bool Publishing() {
 
 void PublishVblank(uint64_t count) {
 	// Item 346(g): the count and its time under the seqlock (the only writer - the Present thread).
-	const uint64_t t = KernelGetProcessTime();
+	const uint64_t t = HostUs();
 	const uint64_t s = g_vb_seq.load(std::memory_order_relaxed);
 	g_vb_seq.store(s + 1, std::memory_order_relaxed);
 	std::atomic_thread_fence(std::memory_order_release);

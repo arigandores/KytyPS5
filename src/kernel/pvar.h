@@ -16,6 +16,9 @@
 // M0 the main guest thread waits until the vblank counter reaches v_prev + kt; k and the carry are Advance(d, c) as
 // before. KYTY_PVAR_HOLD unset or 0 - the P23 path (no wait), the "PVar:" line only gains the K4 fields (kt=0 wait_us=0).
 // Any other value, or 1 without armed mode 2 - "PVar: refused reason=hold" once and nothing else.
+// Item 348(v) (P30b): all the times of the hold and of the "PVar:" line (the vblank time, M0, the wait, the deadline,
+// slack_us, wait_us, exit_us, t_us) are one monotonic host clock in us from the process start, not the guest clock
+// (KernelGetProcessTime stands still in the freezes and runs at the guest speed; the vblanks and the sleep are host time).
 
 #ifndef KYTY_PVAR_ARITHMETIC_ONLY
 #include "common/abi.h"
@@ -122,6 +125,52 @@ constexpr int64_t HoldSleepUs(int64_t now, int64_t predicted, int64_t deadline) 
 	return sleep;
 }
 
+// Item 348(v)(3): the wait at M0 as a pure function. vb - the last published vblank (count v, host time t, us);
+// t0 - the host time of M0; target = v_prev + kt. now_us() - the host clock, sleep_us(us) - the sleep, read_vblank() -
+// the published vblank (the emulator: steady_clock, Common::Thread::SleepMicro, the seqlock read). The target reached at
+// M0 - no sleep, wait_us 0, exit_us 0. Otherwise sleep (HoldSleepUs), read the counter, read the clock, until the counter
+// reaches the target (exit_us = the exit time minus the predicted time of the target vblank) or HoldSleepUs gives 0 at
+// the deadline t0 + kt vblanks + HOLD_CAP_US (exit_us -1). wait_us - the exit time minus t0.
+struct Vblank {
+	uint64_t v = 0;
+	uint64_t t = 0;
+};
+
+struct HoldWaitResult {
+	Vblank  vb;          // the last read: d = vb.v - v_prev
+	int64_t wait_us = 0; // 0 - no wait
+	int64_t exit_us = 0; // after the target vblank; -1 - the wait ended at the deadline
+};
+
+template <typename NowFn, typename SleepFn, typename ReadFn>
+HoldWaitResult HoldWait(int64_t t0, Vblank vb, uint64_t target, uint32_t kt, NowFn now_us, SleepFn sleep_us,
+                        ReadFn read_vblank) {
+	HoldWaitResult r;
+	r.vb = vb;
+	if (vb.v >= target) {
+		return r;
+	}
+	const int64_t deadline = t0 + static_cast<int64_t>(kt) * 1000000 / 60 + HOLD_CAP_US;
+	int64_t       now      = t0;
+	bool          timeout  = false;
+	for (;;) {
+		const int64_t sleep = HoldSleepUs(now, VblankTimeUs(r.vb.t, r.vb.v, target), deadline);
+		if (sleep <= 0) {
+			timeout = true;
+			break;
+		}
+		sleep_us(sleep);
+		r.vb = read_vblank();
+		now  = now_us();
+		if (r.vb.v >= target) {
+			break;
+		}
+	}
+	r.wait_us = now - t0;
+	r.exit_us = timeout ? -1 : now - VblankTimeUs(r.vb.t, r.vb.v, target);
+	return r;
+}
+
 // The step cells for k (the formulas of the game's SetFrameRate 0x34c0, design section 3.3): fps = 60.0 / k;
 // cell 1 (base + 0x8fd4040) double fps; cell 2 (base + 0x8fd4048) float (float)(1.0 / fps); cell 3 (base + 0x8fd4050)
 // u64 (u64)(1e6 / fps); cell 4 (base + 0x834f34c) and the two static copies (base + 0xe7d65e8, base + 0xeb9ef4c) - the
@@ -174,7 +223,7 @@ void Arm(uint64_t base);
 // Present thread: whether the two publications below are wanted (armed only).
 bool Publishing();
 // VideoOutDriver::Impl::VblankEnd, after vblank_status.count++ of the first opened handle; also stores the time of
-// the vblank (KernelGetProcessTime, us) for the hold (item 346(g)).
+// the vblank (the host clock, us from the process start, item 348(v)(1)) for the hold (item 346(g)).
 void PublishVblank(uint64_t count);
 // FlipQueue::Flip, after flip_status.count++ (the key "n" of the PVar line, = "FrameTrace: n=").
 void PublishFlip(uint64_t count);

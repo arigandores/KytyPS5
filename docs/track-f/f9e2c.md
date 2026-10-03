@@ -103,7 +103,7 @@ F9e2c + F9e2b + F9e2 от `4414e235` при `=0` — прежние: строк�
 ## Файлы
 
 `C:/kyty/f287/f9/f9e2c/`, копии в `docs/track-f/f9e2c/`: `patch_f9e2c.py`, `patch_main.out.txt`, `patch_wt.out.txt`, `f9e2c_vs_2da00d80.diff`,
-`f9e2c_vs_4414e235.diff`, `gate_order.out.txt`, `cfgtests_defaults.log` (копия в git — LF), `model_rearm.py`, `model_rearm.out.txt`, `mk_wt_f9e2c.sh`,
+`f9e2c_vs_4414e235.diff`, `gate_order.out.txt`, `cfgtests_defaults.log` (копии в git этого и `build_f9e2c.cmd`, `gate_order.out.txt`, `model_rearm.out.txt`, `patch_*.out.txt` — с окончаниями LF, sha256 в `SHA256SUMS_f9e2c.txt` — у локальных CRLF-оригиналов), `model_rearm.py`, `model_rearm.out.txt`, `mk_wt_f9e2c.sh`,
 `mk_wt.log`, `mk_scripts.py`, `build_f9e2c.cmd`, `lockrun.sh`, `commit_msg_code.txt`, `SHA256SUMS_f9e2c.txt`.
 
 ## Не заявляется

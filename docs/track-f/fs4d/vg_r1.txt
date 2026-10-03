@@ -1,0 +1,2 @@
+C:/kyty/f287/fs4c/rec_fs4_r1.mp4: 10176 frames 960x540, index entries 10176
+one-frame glitches: 0

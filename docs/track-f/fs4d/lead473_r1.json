@@ -1,0 +1,87 @@
+{
+ "fs4_r1": {
+  "installed_sha": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T10:24:44Z; the other entries of _ShaderCache/PPSA21564: 1345",
+  "manifest_cmp": "manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88",
+  "idx_lines": 10176,
+  "sha_log": "45bd88b9051253f75df86414f8f3f1fb3ac4193868aa5bb86e92d010483ad7ed",
+  "sha_out": "f8355e34e744624bd06407b62a4cf91189c437b81249d6324011952946b90fe6",
+  "sha_mp4": "83e28dc1df5caa5187d93f087fba23805027280be7fc8b0ca6065a096a193640",
+  "sha_idx": "335b0ca18ffd6a8b5461ed5022779304b1f44600a7e724202cee939a780c42ab",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 1,
+   "st_last": [
+    749815,
+    256,
+    0
+   ],
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11893,
+   "entry": 348440,
+   "first_scene": 1309512,
+   "hold_us": 334930235,
+   "max_dt": 518936,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 919,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet",
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 2605178
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "lines": 908
+  },
+  "attempt": {
+   "level": "underwater_aerial_garden",
+   "started_s": 14.2,
+   "stable_s": 25.1,
+   "outcome": "ok",
+   "hold_s": 330.1,
+   "hold_exit": null
+  }
+ }
+}

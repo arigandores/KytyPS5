@@ -1,0 +1,89 @@
+{
+ "fs4_r0": {
+  "installed_sha": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T08:37:25Z; the other entries of _ShaderCache/PPSA21564: 1345",
+  "manifest_cmp": "manifest cmp EQUAL files 2920 listsha 951942c4b2e4403d03a439a487c03f1cf228cd9aa3f310153a5b97d55a280f2b",
+  "run": {
+   "how": "exit rc 321",
+   "exit_s": 12.1,
+   "rc": 321,
+   "sval": true,
+   "val": false
+  },
+  "sha_log": "e7d8cb848b76d3a4ed4a3e153e3e3999c91b6a3e298aabbb14605f97a6171a3c",
+  "sha_out": "b11cd59ece35acd71680660d39956d9deead6cf255a2dd991d04533896cce516",
+  "log": {
+   "svf": 2,
+   "svf_hash": [
+    "c33dc20535a2cebf"
+   ],
+   "fs": [
+    [
+     79,
+     0,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {
+    "--- Error ---": 1
+   },
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11892,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet",
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 56000
+  },
+  "out": {
+   "svf": 1,
+   "svf_hash": [
+    "c33dc20535a2cebf"
+   ],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {
+    "--- Error ---": 1
+   },
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 49
+  }
+ }
+}

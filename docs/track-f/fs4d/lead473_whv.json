@@ -1,0 +1,246 @@
+{
+ "fs4_hb": {
+  "installed_sha": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T10:38:32Z; the other entries of _ShaderCache/PPSA21564: 1345",
+  "manifest_cmp": "manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88",
+  "idx_lines": 19966,
+  "sha_log": "2081884a088bdb6704a16644d90a8932611829400d3f10101680302792dad0ac",
+  "sha_out": "373710459ec12a8a116e34f9783c8e9d4d8f62509367a84f7d947adc25f29a0a",
+  "sha_mp4": "3bcbb817c418de9a3b126e92a69349d270982a977b1b54ae4d9f41d2acca18ee",
+  "sha_idx": "a25b6125364edae6992b873ac6d5f9b839889658be8fae5bd1e9329f28ad6b01",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 1,
+   "st_last": [
+    983044,
+    256,
+    0
+   ],
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 11893,
+   "entry": 345794,
+   "first_scene": 852127,
+   "hold_us": 335874116,
+   "max_dt": 435144,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 1,
+   "skipped": 173,
+   "pc_first": "PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet",
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 2787595
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "lines": 739
+  },
+  "attempt": {
+   "level": "hoover_beach",
+   "started_s": 13.0,
+   "stable_s": 22.1,
+   "outcome": "ok",
+   "hold_s": 330.1,
+   "hold_exit": null
+  }
+ },
+ "fs4_w": {
+  "installed_sha": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b present at 2026-10-03T11:56:50Z; files 616; pipelines.bin 14703945 bytes",
+  "manifest_cmp": "manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88",
+  "sha_log": "5b4a0a0d753d9a720e6cb000ab16589d1d9e843196eab10c36c966b1bfafce20",
+  "sha_out": "06ed864a9f69e7ddf4a1e28e3a8696708729f857c26398195ba3c248676a7002",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     83,
+     1,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 899186,
+   "last": 0,
+   "dual": [
+    76,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 12405,
+   "entry": 223694,
+   "first_scene": 225374,
+   "hold_us": 324373672,
+   "max_dt": 400803,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 1,
+   "skipped": 0,
+   "pc_first": "PipelinePrecache: 1357 recipes -> 1234 graphics + 123 compute pipelines queued, 0 skipped, 2551 sources loaded, complete",
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 2364574
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "lines": 160
+  },
+  "attempt": {
+   "level": "underwater_aerial_garden",
+   "started_s": 14.7,
+   "stable_s": 28.8,
+   "outcome": "ok",
+   "hold_s": 310.1,
+   "hold_exit": null
+  }
+ },
+ "fs4_v": {
+  "installed_sha": "31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5",
+  "cold": "warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b present at 2026-10-03T15:14:35Z; files 616; pipelines.bin 14703945 bytes",
+  "manifest_cmp": "manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3",
+  "idx_lines": 10287,
+  "sha_log": "7ec2b2de288dd671635dc38be03c3acc6687b3d5603724c41fbe4e5b35e413f8",
+  "sha_out": "19f57557a9cbf7f179a4b4add22c23ac37795b1b58b7004d837e247aa41d8dff",
+  "sha_mp4": "0d6e55df87584814c42aacb2ff2a4e8ae755d8ee60658a896f2a0600bf6efae2",
+  "sha_idx": "9791d3b8877beaaba0171034c579f914dbc713b2e631df9ab34b213c37d8e1d5",
+  "log": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [
+    [
+     79,
+     1,
+     1
+    ]
+   ],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": [
+    72,
+    "DualSrcBlend: supported=1 enabled=1"
+   ],
+   "first_guest": 12404,
+   "entry": 228942,
+   "first_scene": 235225,
+   "hold_us": 334374014,
+   "max_dt": 201571,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": "PipelinePrecache: 1357 recipes -> 1234 graphics + 123 compute pipelines queued, 0 skipped, 2551 sources loaded, complete",
+   "rev": [
+    "3d0e46d"
+   ],
+   "lines": 1168780
+  },
+  "out": {
+   "svf": 0,
+   "svf_hash": [],
+   "fs": [],
+   "st_n": 0,
+   "st_last": null,
+   "death": {},
+   "ve": 0,
+   "vw": 0,
+   "last": 0,
+   "dual": null,
+   "first_guest": null,
+   "entry": null,
+   "first_scene": null,
+   "hold_us": 0,
+   "max_dt": 0,
+   "k1s": 0,
+   "change": null,
+   "win": 0,
+   "recov": 0,
+   "focus": 0,
+   "skipped": 0,
+   "pc_first": null,
+   "rev": [],
+   "lines": 160
+  },
+  "attempt": {
+   "level": "underwater_aerial_garden",
+   "started_s": 15.3,
+   "stable_s": 19.9,
+   "outcome": "ok",
+   "hold_s": 330.1,
+   "hold_exit": null
+  }
+ }
+}

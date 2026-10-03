@@ -1,0 +1,103 @@
+3d0e46da env absent   None       -> getenv=null on=1               want 1 ok
+3d0e46da env empty    ''         -> getenv=str:[] on=1             want 1 ok
+3d0e46da arg empty    ''         -> arg=[] on=1                    want 1 ok
+3d0e46da env off-word '0'        -> getenv=str:[0] on=0            want 0 ok
+3d0e46da arg off-word '0'        -> arg=[0] on=0                   want 0 ok
+3d0e46da env off-word 'false'    -> getenv=str:[false] on=0        want 0 ok
+3d0e46da arg off-word 'false'    -> arg=[false] on=0               want 0 ok
+3d0e46da env off-word 'FALSE'    -> getenv=str:[FALSE] on=0        want 0 ok
+3d0e46da arg off-word 'FALSE'    -> arg=[FALSE] on=0               want 0 ok
+3d0e46da env off-word 'False'    -> getenv=str:[False] on=0        want 0 ok
+3d0e46da arg off-word 'False'    -> arg=[False] on=0               want 0 ok
+3d0e46da env off-word 'off'      -> getenv=str:[off] on=0          want 0 ok
+3d0e46da arg off-word 'off'      -> arg=[off] on=0                 want 0 ok
+3d0e46da env off-word 'OFF'      -> getenv=str:[OFF] on=0          want 0 ok
+3d0e46da arg off-word 'OFF'      -> arg=[OFF] on=0                 want 0 ok
+3d0e46da env off-word 'Off'      -> getenv=str:[Off] on=0          want 0 ok
+3d0e46da arg off-word 'Off'      -> arg=[Off] on=0                 want 0 ok
+3d0e46da env off-word 'no'       -> getenv=str:[no] on=0           want 0 ok
+3d0e46da arg off-word 'no'       -> arg=[no] on=0                  want 0 ok
+3d0e46da env off-word 'NO'       -> getenv=str:[NO] on=0           want 0 ok
+3d0e46da arg off-word 'NO'       -> arg=[NO] on=0                  want 0 ok
+3d0e46da env off-word 'No'       -> getenv=str:[No] on=0           want 0 ok
+3d0e46da arg off-word 'No'       -> arg=[No] on=0                  want 0 ok
+3d0e46da env other    '1'        -> getenv=str:[1] on=1            want 1 ok
+3d0e46da arg other    '1'        -> arg=[1] on=1                   want 1 ok
+3d0e46da env other    '00'       -> getenv=str:[00] on=1           want 1 ok
+3d0e46da arg other    '00'       -> arg=[00] on=1                  want 1 ok
+3d0e46da env other    ' 0'       -> getenv=str:[ 0] on=1           want 1 ok
+3d0e46da arg other    ' 0'       -> arg=[ 0] on=1                  want 1 ok
+3d0e46da env other    '0 '       -> getenv=str:[0 ] on=1           want 1 ok
+3d0e46da arg other    '0 '       -> arg=[0 ] on=1                  want 1 ok
+3d0e46da env other    'yes'      -> getenv=str:[yes] on=1          want 1 ok
+3d0e46da arg other    'yes'      -> arg=[yes] on=1                 want 1 ok
+3d0e46da env other    'on'       -> getenv=str:[on] on=1           want 1 ok
+3d0e46da arg other    'on'       -> arg=[on] on=1                  want 1 ok
+3d0e46da env other    'true'     -> getenv=str:[true] on=1         want 1 ok
+3d0e46da arg other    'true'     -> arg=[true] on=1                want 1 ok
+3d0e46da env other    '2'        -> getenv=str:[2] on=1            want 1 ok
+3d0e46da arg other    '2'        -> arg=[2] on=1                   want 1 ok
+3d0e46da env other    'nv'       -> getenv=str:[nv] on=1           want 1 ok
+3d0e46da arg other    'nv'       -> arg=[nv] on=1                  want 1 ok
+3d0e46da env other    'offf'     -> getenv=str:[offf] on=1         want 1 ok
+3d0e46da arg other    'offf'     -> arg=[offf] on=1                want 1 ok
+3d0e46da env other    'n'        -> getenv=str:[n] on=1            want 1 ok
+3d0e46da arg other    'n'        -> arg=[n] on=1                   want 1 ok
+3d0e46da env other    '-0'       -> getenv=str:[-0] on=1           want 1 ok
+3d0e46da arg other    '-0'       -> arg=[-0] on=1                  want 1 ok
+3d0e46da env other    '0x0'      -> getenv=str:[0x0] on=1          want 1 ok
+3d0e46da arg other    '0x0'      -> arg=[0x0] on=1                 want 1 ok
+3d0e46da env other    'fals'     -> getenv=str:[fals] on=1         want 1 ok
+3d0e46da arg other    'fals'     -> arg=[fals] on=1                want 1 ok
+92d11340 env absent   None       -> getenv=null on=0               want 0 ok
+92d11340 env empty    ''         -> getenv=str:[] on=0             want 0 ok
+92d11340 arg empty    ''         -> arg=[] on=0                    want 0 ok
+92d11340 env off-word '0'        -> getenv=str:[0] on=0            want 0 ok
+92d11340 arg off-word '0'        -> arg=[0] on=0                   want 0 ok
+92d11340 env off-word 'false'    -> getenv=str:[false] on=0        want 0 ok
+92d11340 arg off-word 'false'    -> arg=[false] on=0               want 0 ok
+92d11340 env off-word 'FALSE'    -> getenv=str:[FALSE] on=0        want 0 ok
+92d11340 arg off-word 'FALSE'    -> arg=[FALSE] on=0               want 0 ok
+92d11340 env off-word 'False'    -> getenv=str:[False] on=0        want 0 ok
+92d11340 arg off-word 'False'    -> arg=[False] on=0               want 0 ok
+92d11340 env off-word 'off'      -> getenv=str:[off] on=0          want 0 ok
+92d11340 arg off-word 'off'      -> arg=[off] on=0                 want 0 ok
+92d11340 env off-word 'OFF'      -> getenv=str:[OFF] on=0          want 0 ok
+92d11340 arg off-word 'OFF'      -> arg=[OFF] on=0                 want 0 ok
+92d11340 env off-word 'Off'      -> getenv=str:[Off] on=0          want 0 ok
+92d11340 arg off-word 'Off'      -> arg=[Off] on=0                 want 0 ok
+92d11340 env off-word 'no'       -> getenv=str:[no] on=0           want 0 ok
+92d11340 arg off-word 'no'       -> arg=[no] on=0                  want 0 ok
+92d11340 env off-word 'NO'       -> getenv=str:[NO] on=0           want 0 ok
+92d11340 arg off-word 'NO'       -> arg=[NO] on=0                  want 0 ok
+92d11340 env off-word 'No'       -> getenv=str:[No] on=0           want 0 ok
+92d11340 arg off-word 'No'       -> arg=[No] on=0                  want 0 ok
+92d11340 env other    '1'        -> getenv=str:[1] on=1            want 1 ok
+92d11340 arg other    '1'        -> arg=[1] on=1                   want 1 ok
+92d11340 env other    '00'       -> getenv=str:[00] on=1           want 1 ok
+92d11340 arg other    '00'       -> arg=[00] on=1                  want 1 ok
+92d11340 env other    ' 0'       -> getenv=str:[ 0] on=1           want 1 ok
+92d11340 arg other    ' 0'       -> arg=[ 0] on=1                  want 1 ok
+92d11340 env other    '0 '       -> getenv=str:[0 ] on=1           want 1 ok
+92d11340 arg other    '0 '       -> arg=[0 ] on=1                  want 1 ok
+92d11340 env other    'yes'      -> getenv=str:[yes] on=1          want 1 ok
+92d11340 arg other    'yes'      -> arg=[yes] on=1                 want 1 ok
+92d11340 env other    'on'       -> getenv=str:[on] on=1           want 1 ok
+92d11340 arg other    'on'       -> arg=[on] on=1                  want 1 ok
+92d11340 env other    'true'     -> getenv=str:[true] on=1         want 1 ok
+92d11340 arg other    'true'     -> arg=[true] on=1                want 1 ok
+92d11340 env other    '2'        -> getenv=str:[2] on=1            want 1 ok
+92d11340 arg other    '2'        -> arg=[2] on=1                   want 1 ok
+92d11340 env other    'nv'       -> getenv=str:[nv] on=1           want 1 ok
+92d11340 arg other    'nv'       -> arg=[nv] on=1                  want 1 ok
+92d11340 env other    'offf'     -> getenv=str:[offf] on=1         want 1 ok
+92d11340 arg other    'offf'     -> arg=[offf] on=1                want 1 ok
+92d11340 env other    'n'        -> getenv=str:[n] on=1            want 1 ok
+92d11340 arg other    'n'        -> arg=[n] on=1                   want 1 ok
+92d11340 env other    '-0'       -> getenv=str:[-0] on=1           want 1 ok
+92d11340 arg other    '-0'       -> arg=[-0] on=1                  want 1 ok
+92d11340 env other    '0x0'      -> getenv=str:[0x0] on=1          want 1 ok
+92d11340 arg other    '0x0'      -> arg=[0x0] on=1                 want 1 ok
+92d11340 env other    'fals'     -> getenv=str:[fals] on=1         want 1 ok
+92d11340 arg other    'fals'     -> arg=[fals] on=1                want 1 ok
+FIXTURE ALL OK

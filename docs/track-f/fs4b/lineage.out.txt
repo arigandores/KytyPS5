@@ -1,0 +1,68 @@
+bash.exe: warning: could not find /tmp, please create!
+--- parents
+3d0e46daf83ff77584b88fb9a786ed64320cb3b4 92d11340ae1a4fc34445b6e886fd55a201953d00
+92d11340ae1a4fc34445b6e886fd55a201953d00 d515b9016933a8df081f93a0056c2eca35b8fb4c
+d515b9016933a8df081f93a0056c2eca35b8fb4c 722c5e7f45a2b0fa22a4a1f786216b021a29ea10
+722c5e7f45a2b0fa22a4a1f786216b021a29ea10 64de099c8834316a500007f7e313b7eb45e3b009
+--- diff --stat d515b901 3d0e46da (whole tree, not only src/)
+ src/graphics/host_gpu/graphicContext.h             |  3 ++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   | 46 +++++++++++++++++++++-
+ src/graphics/presentation/window/vulkanWindow.cpp  |  2 +
+ 3 files changed, 50 insertions(+), 1 deletion(-)
+--- diff --name-only d515b901 3d0e46da
+src/graphics/host_gpu/graphicContext.h
+src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+src/graphics/presentation/window/vulkanWindow.cpp
+--- base of F10c equal to FS3 on the three files: git diff --quiet 68602c4f^ d515b901 -- <3 files>
+EQUAL
+--- three files of 3d0e46da == main 17adaf80: git diff --quiet 17adaf80 3d0e46da -- <3 files>
+EQUAL
+--- three files of 92d11340 == 68602c4f: git diff --quiet 68602c4f 92d11340 -- <3 files>
+EQUAL
+--- 17adaf80 touches
+17adaf801069088b68275276c96574b7f8bf5dc3 8449030a9d44c4d3db413b70c560adb48c7382e0
+
+ src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
+--- 68602c4f touches
+68602c4f301e8d424af0581d11039437ec4a958f a922ffed30cab5d34881eb10b0b95bfeb7bec6b2
+
+ src/graphics/host_gpu/graphicContext.h             |  3 ++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   | 41 +++++++++++++++++++++-
+ src/graphics/presentation/window/vulkanWindow.cpp  |  2 ++
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+--- patch-id
+68602c4f 8be6b8b1ce742859
+92d11340 8be6b8b1ce742859
+17adaf80 738f74d8eb1a1ff9
+3d0e46da 738f74d8eb1a1ff9
+4e72289e c6e8d25874736760
+d515b901 c6e8d25874736760
+--- is-ancestor of 3d0e46da
+d515b901 ancestor yes
+722c5e7f ancestor yes
+4414e235 ancestor yes
+92d11340 ancestor yes
+4e72289e ancestor no
+68602c4f ancestor no
+17adaf80 ancestor no
+741e3312 ancestor no
+c9b4268e ancestor no
+--- git cherry -v 3d0e46da X X^ (- = equal change in history, + = absent)
+4e72289e: - 4e72289e879b6a8375eada8fb0359037388e5d8c track F link FS3a
+68602c4f: - 68602c4f301e8d424af0581d11039437ec4a958f track F link F10c
+17adaf80: - 17adaf801069088b68275276c96574b7f8bf5dc3 track F link FS4a
+741e3312: + 741e3312ab005ece2587cec0410ba7607116aa76 track P link P35 
+c9b4268e: + c9b4268e0b47625ff4ec556057b4c0267601ddd0 track P link P40 
+--- P-var / loader / B42 files untouched d515b901..3d0e46da
+pvar.cpp (tree matches 1) unchanged
+gamePatchFile.cpp (tree matches 1) unchanged
+descriptors.cpp (tree matches 1) unchanged
+textureCache.cpp (tree matches 1) unchanged
+textureCache.h (tree matches 1) unchanged
+--- src/graphics/shader touched d515b901..3d0e46da (signature)
+0
+--- worktree fs4b status
+0
+3d0e46daf83ff77584b88fb9a786ed64320cb3b4
+LINEAGE DONE

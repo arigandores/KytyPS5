@@ -38,6 +38,12 @@ installed `dac02fb9` 44); sessions without a shipping under (B): 0. 60 FPS is no
 7. **`SCENE_OK` re-check of `enemy_final`** (item 370 (в), rule item 366 (г)): B39 is `НЕ ДЕФЕКТ` (material) after the F7d review; the closing re-reads
    the s145 data (`v145_17`, `w145_17`) — a sheet without B39 drops the sheet member, the other members as in item 309; not fixed now, read the course
    line as unchanged until that closing. Snapshot `C:/kyty/f287/f7a/enemy_final_600.rdc` is kept locally until then (item 370 (д)).
+8. **`SCENE_OK` re-check of `ending_boss_after_credit`** (item 397 (в), rule item 395 (в)): B41 is `НЕ ДЕФЕКТ` after the F13d review (register §38) — the
+   picture is the guest frame reproduced, the stall after the "THE END" card is the behaviour of a sub-level (parent `non_interactive_credit`) entered by
+   `-lvl` without its parent; the `-lvl` entry checks the picture only on the card window (≈ 21 s), the hold after the card is a property of the entry
+   form, and through the parent with a new save the scene is not reached (`v146_07`). The closing reads the s146 and F13a data and decides whether the
+   scene goes to the class "not evaluable by `-lvl` entry" (neither `SCENE_OK` "yes" nor K4); read item 2 together with this item; not fixed now, read
+   the course line as unchanged until that closing.
 
 ## Rules that stay in force on resume
 

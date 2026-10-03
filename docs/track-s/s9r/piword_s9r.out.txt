@@ -1,0 +1,1 @@
+pi_word cases 64, differences 0 -> ALL OK

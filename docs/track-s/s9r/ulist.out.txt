@@ -1,0 +1,26 @@
+lvl_rest.tsv # files scanned 15237 bytes 9152788676
+lvl_s144.tsv # files scanned 3262 bytes 14887051601
+lvl_s14x.tsv # files scanned 8640 bytes 61171063231
+files with a hit 3367
+T2 names (any file, any extension):
+  hero_kratos                10 ['C:/kyty/s288/s3/fx_sc_s/s4/log_t2_05.txt', 'C:/kyty/s288/s3/mutwork/sc_s_45232_1790818495/j00011/fx/s4/log_t2_05.txt', 'C:/kyty/s288/s3/mutwork/sc_s_45232_1790818495/j00012/fx/s4/log_t2_05.txt', 'C:/kyty/s288/s3/mutwork/sc_s_45232_1790818495/j00013/fx/s4/log_t2_05.txt']
+  hero_drake                 1 ['C:/kyty/s288/s9/fx_sc_s9/s10/log_t2_2.txt']
+  voxel_challenge_3          1 ['C:/kyty/s288/s9/fx_sc_s9/s10/log_t2_3.txt']
+  armadillo_challenge_2      1 ['C:/kyty/s288/s9/fx_sc_s9/s10/log_t2_4.txt']
+  fragile_battle_4           1 ['C:/kyty/s288/s9/fx_sc_s9/s10/log_t2_5.txt']
+  voxel_challenge_4          0 []
+  fragile_battle_5           0 []
+  voxel_challenge_5          0 []
+  miniboss_challenge_genie   0 []
+  symbol_triangle            0 []
+compat strings with the signature seen: ['KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59', 'KytySeed1:PPSA21564:01.007.000:KytySC3:56189185f9e9f9a0ea5174f3f85206e6d099db3d:robust:ftz:cbank:fixb26:fixb1b::10288:376:216:44:516:125:000010de:00002c59"']
+U rule (log with the signature, not under a return root, carries the entry line):
+  underwater_aerial_garden   qualifying 9 ['C:/kyty/s146/log_i146_v.txt', 'C:/kyty/s146/log_w146_00.txt', 'C:/kyty/s146/fx_i146/neg/log_i146_v.txt']; with the signature in any root 11
+  hoover_beach               qualifying 1 ['C:/kyty/s146/log_r146_01.txt']; with the signature in any root 2
+  mini_giants_garden         qualifying 0 []; with the signature in any root 0
+  robot_builder_next         qualifying 2 ['C:/kyty/s146/log_v146_05.txt', 'C:/kyty/s146/log_w146_05.txt']; with the signature in any root 2
+  interactive_credit_00      qualifying 2 ['C:/kyty/s146/log_v146_06.txt', 'C:/kyty/s146/log_w146_06.txt']; with the signature in any root 2
+  non_interactive_credit     qualifying 2 ['C:/kyty/s146/log_v146_07.txt', 'C:/kyty/s146/log_w146_07.txt']; with the signature in any root 2
+  ending_boss_after_credit   qualifying 2 ['C:/kyty/s146/log_v146_08.txt', 'C:/kyty/s146/log_w146_08.txt']; with the signature in any root 2
+  collectible_viewer         qualifying 4 ['C:/kyty/s146/log_v146_09.txt', 'C:/kyty/s146/log_v146_09_a1.txt', 'C:/kyty/s146/log_w146_09.txt']; with the signature in any root 4
+  fragile_battle_1           qualifying 2 ['C:/kyty/s146/log_v146_14.txt', 'C:/kyty/s146/log_w146_14.txt']; with the signature in any root 2

@@ -1,0 +1,33 @@
+2026-10-03T04:28:34Z S9r start reading (HPP-431 accepted 04:28:09Z, ROADMAP p.364 KytyPS5 747a66d6)
+2026-10-03T04:37:56Z lvl_recount batch REST start
+2026-10-03T04:38:02Z correction: the REST start at 04:37:56Z failed before any scan (lockrun.py not copied yet)
+2026-10-03T04:38:02Z lvl_recount batch REST start
+2026-10-03T04:42:31Z lvl_recount batch REST end lvl_rest.tsv 2d682787
+2026-10-03T04:42:37Z lvl_recount batch s144 start
+2026-10-03T04:43:44Z lvl_recount batch s144 end lvl_s144.tsv e833e189
+2026-10-03T04:43:49Z lvl_recount batch s146+s145 start
+2026-10-03T04:47:32Z lvl_recount batch s146+s145 end lvl_s14x.tsv c0c33ed3
+2026-10-03T04:47:37Z lvl_recount batch p283+f287 start
+2026-10-03T04:57:47Z correction: batch p283+f287 started ~04:47:40Z was killed by the 600 s tool timeout, no output kept; split into p283 and f287
+2026-10-03T04:57:47Z lvl_recount batch p283 start
+2026-10-03T05:07:59Z correction: batch p283 started ~04:58Z was killed by the 600 s tool timeout; split by subdirectory
+2026-10-03T05:08:16Z lvl_recount batch p283a start
+2026-10-03T05:11:14Z batch p283a aborted at 05:08:18Z by the foreign lock 'gop36.sh jx_sha' (07:08:18 local; seen 05:08:23Z); waited with checks every 60 s, lock gone by 05:11:05Z
+2026-10-03T05:11:26Z rg probe p283/p31 start
+2026-10-03T05:11:29Z rg probe p283/p31 end
+2026-10-03T05:19:33Z waited the foreign lock 'gop36.sh ja_A5' (05:11:29Z..~05:19Z) with checks every 60 s, no process of the link inside it (Read-tool reading only)
+2026-10-03T05:19:34Z rg T2 names over p283+f287 start (all mtimes, superset)
+2026-10-03T05:20:06Z rg T2 names over p283+f287 end rg_pf.run.txt e3b0c442
+2026-10-03T05:20:19Z rg positive control (hoover_beach, mini_giants_garden) p283+f287 start
+2026-10-03T05:20:48Z rg positive control end rg_pos.run.txt 8f134afa
+2026-10-03T05:20:48Z rg T2 names over all C:/kyty (no games, no .xz) start
+2026-10-03T05:22:55Z rg T2 names all end rg_all.run.txt 7d5f6f13
+2026-10-03T05:36:46Z PROCESS (rule 27, self-reported): ulist.py (3 KB) was written by the Write tool at 05:28:11Z, 11 s after the foreign lock 'gop36.sh jv_0' was taken at 05:28:00Z (the check before it at 05:27:59Z saw no lock); from now on drafts go to the run folder and are moved by one Bash command with the lock check; waited jv_0 until 05:36:37Z
+2026-10-03T05:36:46Z ulist.out.txt 036340f4
+2026-10-03T05:37:04Z ulist.out.txt 914292d7
+2026-10-03T05:50:34Z gap: rg 'Cache test mode' in stdout files start
+2026-10-03T05:50:37Z rg Cache test mode end rg_ctm.run.txt 96932b5e
+2026-10-03T05:51:02Z own sc_s9.py --check-seal of 05b: SEAL: PASS checkseal_s9r.out.txt 5d5224cd
+2026-10-03T06:06:13Z piword_s9r.py: pi_word cases 64, differences 0 -> ALL OK piword_s9r.out.txt e4437aea
+2026-10-03T06:10:17Z own detector run skipped (P38 locks); port checked line by line against lead/haze_s8.py
+2026-10-03T06:10:17Z publish review + FACTS S9r (pub_s9r.py from the run folder)

@@ -1,0 +1,23 @@
+track F link F9e2 (HPP-426): KYTY_FIX_B42 variant M2c (ROADMAP s122 item 351(v)(1)-(3)), default 0
+
+B42 (Sky Garden water input T6): colorRenderTarget.cpp gives a single-sample CMASK target metadata only when width
+and height are multiples of 1024, so the fast-clear-eliminate register scan MaterializeBoundTargetDccClears never
+materializes the CMASK fast clear of the 960x540 / 480x270 target T6.
+
+- textureCache.h/.cpp: QueryMetaFill(address) - read-only copy of the metadata entry under m_lock (nothing
+  inserted, bumped or consumed).
+- descriptors.cpp, CMASK branch of MaterializeBoundTargetDccClears: hit = CMASK fast-clear target without DCC,
+  one sample, one level, not a volume, not both axes 1024-multiples, whose CMASK address holds a PendingDcc fill of
+  value 0 and size >= width*height*layers/128 (counted with the fix on and off). KYTY_FIX_B42=1: the descriptor
+  gets kind Cmask, range {cmask, w*h*layers/128} and the CLEAR_WORD0/1 pair as the 1024 branch of
+  colorRenderTarget.cpp does, then the existing FindRenderTarget -> PrepareCmaskClear; applied grows only when a
+  clear-mask bit was consumed with the fill value still 0 (dropped only right after ClearImage).
+- Line "FixB42: mode= hit= applied= last_frame= extent=WxH cmask=0x clear=w0/w1" on every hit for the first 256
+  lines, then at most once per 600 frames.
+- Unset / 0 / false / off / no = OFF: the old path by values (one locked read and the line). Shader translator,
+  renderCompute.cpp and colorRenderTarget.cpp untouched (translation signature unchanged).
+
+Not claimed: that the CMASK clear is the only cause, the T6 clear colour, that the CMASK layout of a non-1024
+extent is right, that the fix will work. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

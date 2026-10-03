@@ -1,0 +1,4 @@
+patched src/graphics/host_gpu/renderer/cache/textureCache.h lf
+patched src/graphics/host_gpu/renderer/cache/textureCache.cpp lf
+patched src/graphics/host_gpu/renderer/pipeline/descriptors.cpp lf
+PATCH OK

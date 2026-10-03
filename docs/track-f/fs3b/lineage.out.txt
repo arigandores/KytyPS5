@@ -1,0 +1,9 @@
+parent of d515b901: 722c5e7f45a2b0fa22a4a1f786216b021a29ea10
+patch-id 4e72289e: c6e8d25874736760b8eb46b9fee7ec83fed0569b 4e72289e879b6a8375eada8fb0359037388e5d8c
+patch-id d515b901: c6e8d25874736760b8eb46b9fee7ec83fed0569b d515b9016933a8df081f93a0056c2eca35b8fb4c
+src/graphics d515b901 vs 4e72289e quiet: equal
+ancestors: 4414e235 yes 722c5e7f yes
+ .../host_gpu/renderer/cache/textureCache.cpp       |  32 ++++-
+ .../host_gpu/renderer/cache/textureCache.h         |  34 ++++-
+ .../host_gpu/renderer/pipeline/descriptors.cpp     | 149 ++++++++++++++++++++-
+ 3 files changed, 212 insertions(+), 3 deletions(-)

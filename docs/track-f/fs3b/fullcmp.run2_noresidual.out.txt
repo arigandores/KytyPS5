@@ -1,0 +1,24 @@
+sizes 24660992 24660992 differing runs 597
+  run off 0x80 len 2 region PE TimeDateStamp A b' in DOS mode.$\x00\x00PE\x00\x00d\x86\x08\x00[\x8a\xc0j\x00\x00\x00\x00\x00\x00' B b' in DOS mode.$\x00\x00PE\x00\x00d\x86\x08\x00\xf4\x87\xc0j\x00\x00\x00\x00\x00\x00'
+  run off 0x1187081 len 1 region .rdata A b'5-2026-09-15-6a2987a-1872-gd515b9' B b'5-2026-09-15-6a2987a-1871-g722c5e'
+  run off 0x1187084 len 8 region .rdata A b'026-09-15-6a2987a-1872-gd515b901\x00\x00\x00\x00\x00\x00\x00\x00' B b'026-09-15-6a2987a-1871-g722c5e7f\x00\x00\x00\x00\x00\x00\x00\x00'
+  run off 0x1271938 len 1 region .rdata A b'ure\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\3rdp' B b'ure\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\3rdp'
+  run off 0x1271f87 len 1 region .rdata A b'rer\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\3rdp' B b'rer\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\3rdp'
+  run off 0x127251f len 1 region .rdata A b')0)\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\3rdp' B b')0)\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\3rdp'
+  run off 0x1301fe4 len 1 region .rdata A b'0000C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'0000C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x13067c4 len 1 region .rdata A b'\x00\x00\x00\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'\x00\x00\x00\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x1308c7c len 1 region .rdata A b'- \n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'- \n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x1309cfc len 1 region .rdata A b'\x00\x00\x00\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'\x00\x00\x00\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130a622 len 1 region .rdata A b'ge\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'ge\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130a6f3 len 1 region .rdata A b'ck\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'ck\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130a75e len 1 region .rdata A b'er\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'er\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130b398 len 1 region .rdata A b'py\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'py\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130cb1e len 1 region .rdata A b'ace\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'ace\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130cba2 len 1 region .rdata A b'ze\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'ze\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130cbef len 1 region .rdata A b'TEX\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'TEX\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x130d5de len 1 region .rdata A b'lx\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'lx\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x13120ee len 1 region .rdata A b'8x\n\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'8x\n\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+  run off 0x131225b len 1 region .rdata A b'fer\x00C:\\kyty\\f287\\fs3\\fs3b\\wt\\src\\' B b'fer\x00C:\\kyty\\f287\\fs3\\fs3a\\wt\\src\\'
+SDL string count A 1 B 1
+equal after SDL string mapping and timestamp zeroing: False 886436497d583924 db33b97491d21930
+FULLCMP FAILED

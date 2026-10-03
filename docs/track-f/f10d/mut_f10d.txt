@@ -1,0 +1,8 @@
+base: last line ALL OK; PASS gates 25, FAIL gates 0; summary = F10c True; f10c_out.tsv = F10c True (sha256 f0c2617c)
+M1_no_option: last line FAIL; FAIL gates ['r_1-S151', 'r_1-C51']; expected ['r_1-S151', 'r_1-C51'] -> KILLED
+M2_ubo_ignored: last line FAIL; FAIL gates ['r_1u0-asF10a', 'r_1u0-S151']; expected ['r_1u0-S151', 'r_1u0-asF10a'] -> KILLED
+M3_mode_ignored: last line FAIL; FAIL gates ['r_1-S151', 'r_1-C51', 'r_1-stat', 'r_1u0-stat']; expected ['r_1-S151', 'r_1-stat'] -> KILLED
+M4_stat_period: last line FAIL; FAIL gates ['r_1-stat', 'r_1u0-stat']; expected ['r_1-stat', 'r_1u0-stat'] -> KILLED
+M5_env_presence: last line FAIL; FAIL gates ['r_0-S151', 'r_0-nostat', 'r_0-asF10a', 'envflag']; expected ['envflag', 'r_0-S151'] -> KILLED
+M6_no_reject_count: last line FAIL; FAIL gates ['r_1u0-stat']; expected ['r_1u0-stat'] -> KILLED
+ALL OK

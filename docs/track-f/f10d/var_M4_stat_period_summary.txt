@@ -1,0 +1,43 @@
+F10c (HPP-451) offline check, ROADMAP s122 item 369(v)(1)
+sets: S151 151, C51 51, K4 23, CS 111, D442 442; module sha256 != F10a table: 0
+PASS inputs: sets as F10a, every module sha256 = F10a table
+SDK spirv-val: SPIRV-Tools v2026.3 v2026.3.rc1-0-gb707790a | Targets: | SPIR-V 1.0 | SPIR-V 1.1 | SPIR-V 1.2 | SPIR-V 1.3 | SPIR-V 1.4 | SPIR-V 1.5 | SPIR-V 1.6 | SPIR-V 1.2 (under OpenCL 2.2 Full Profile semantics) | SPIR-V 1.0 (under Vulkan 1.0 semantics) | SPIR-V 1.3 (under Vulkan 1.1 semantics) | SPIR-V 1.4 (under Vulkan 1.1 semantics) | SPIR-V 1.5 (under Vulkan 1.2 semantics) | SPIR-V 1.6 (under Vulkan 1.3 semantics) SPIR-V 1.6 (under Vulkan 1.4 semantics)
+D442: SDK vulkan1.3 + ubsl accepts 442, rejects 0
+synthetic NEG synthetic_stride3_first: word 238 (ArrayStride of id 22) 4 -> 3; SDK + ubsl rc 1
+PASS neg-synthetic_stride3_first: SDK with the option rejects the synthetic module
+synthetic NEG synthetic_stride3_ubo: word 307 (ArrayStride of id 42) 4 -> 3; SDK + ubsl rc 1
+PASS neg-synthetic_stride3_ubo: SDK with the option rejects the synthetic module
+synthetic NEG source: S151 00dc898289bb924f_047bcdb28f560319_0 (structure id 43, member 0 array id 42)
+PASS neg-exists: negative control modules (synthetic): 2
+tool SPIRV-Tools: SPIRV-Tools v2025.4 7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458
+PASS r_unset-run: rc 0, count 780 of 780, mode 0, ubo 1
+PASS r_0-run: rc 0, count 780 of 780, mode 0, ubo 1
+PASS r_1-run: rc 0, count 780 of 780, mode 1, ubo 1
+PASS r_1u0-run: rc 0, count 780 of 780, mode 1, ubo 0
+r_unset: S151 ACCEPT 0 REJECT 151 of 151, C51 ACCEPT 0 REJECT 51 of 51, K4 ACCEPT 23 REJECT 0 of 23, CS ACCEPT 111 REJECT 0 of 111, D442 ACCEPT 0 REJECT 442 of 442, NEG ACCEPT 0 REJECT 2 of 2
+r_0: S151 ACCEPT 0 REJECT 151 of 151, C51 ACCEPT 0 REJECT 51 of 51, K4 ACCEPT 23 REJECT 0 of 23, CS ACCEPT 111 REJECT 0 of 111, D442 ACCEPT 0 REJECT 442 of 442, NEG ACCEPT 0 REJECT 2 of 2
+r_1: S151 ACCEPT 151 REJECT 0 of 151, C51 ACCEPT 51 REJECT 0 of 51, K4 ACCEPT 23 REJECT 0 of 23, CS ACCEPT 111 REJECT 0 of 111, D442 ACCEPT 442 REJECT 0 of 442, NEG ACCEPT 0 REJECT 2 of 2
+r_1u0: S151 ACCEPT 0 REJECT 151 of 151, C51 ACCEPT 0 REJECT 51 of 51, K4 ACCEPT 23 REJECT 0 of 23, CS ACCEPT 111 REJECT 0 of 111, D442 ACCEPT 0 REJECT 442 of 442, NEG ACCEPT 0 REJECT 2 of 2
+PASS r_unset-S151: mode 0, S151 REJECT 151 of 151
+PASS r_unset-nostat: FixSvalStat lines: 0
+PASS r_0-S151: mode 0, S151 REJECT 151 of 151
+PASS r_0-nostat: FixSvalStat lines: 0
+PASS r_unset-asF10a: verdict = F10a built-in on 778 of 778 modules; message differs (label aside) on 0
+PASS r_0-asF10a: verdict = F10a built-in on 778 of 778 modules; message differs (label aside) on 0
+PASS r_1u0-asF10a: verdict = F10a built-in on 778 of 778 modules; message differs (label aside) on 0
+PASS r_1-S151: S151 ACCEPT 151 of 151
+PASS r_1-C51: C51 ACCEPT 51 of 51
+PASS r_1-K4: K4 ACCEPT 23 of 23
+PASS r_1-CS: CS ACCEPT 111 of 111
+PASS r_1-NEG: NEG REJECT 2 of 2
+  NEG synthetic_stride3_first_00dc898289bb924f_047bcdb28f560319_0: SDK+ubsl: error: line 119: Structure id 23 decorated as Block for variable in StorageBuffer storage class must follow relaxed storage buffer layout rules: member 0 contains an array with stride 3 not satisfying
+  NEG synthetic_stride3_first_00dc898289bb924f_047bcdb28f560319_0: built-in =1: f10c SPIR-V validation failed hash=0x0000000000000000: | 0: 0 (119) Structure id 23 decorated as Block for variable in StorageBuffer storage class must follow relaxed storage buffer layout rules: memb
+  NEG synthetic_stride3_ubo_00dc898289bb924f_047bcdb28f560319_0: SDK+ubsl: error: line 139: Structure id 43 decorated as Block for variable in Uniform storage class must follow relaxed storage buffer layout rules: member 0 contains an array with stride 3 not satisfying align
+  NEG synthetic_stride3_ubo_00dc898289bb924f_047bcdb28f560319_0: built-in =1: f10c SPIR-V validation failed hash=0x0000000000000000: | 0: 0 (139) Structure id 43 decorated as Block for variable in Uniform storage class must follow relaxed storage buffer layout rules: member 0 c
+count (not a gate) D442 at =1: ACCEPT 442, REJECT 0 of 442; agrees with SDK + ubsl on 442 of 442
+FAIL r_1-stat: lines 3 (expected 3): #255 FixSvalStat: validated=255 rejected=0; #510 FixSvalStat: validated=510 rejected=0; #765 FixSvalStat: validated=765 rejected=0
+FAIL r_1u0-stat: lines 3 (expected 3): #255 FixSvalStat: validated=255 rejected=202; #510 FixSvalStat: validated=510 rejected=376; #765 FixSvalStat: validated=765 rejected=631
+PASS r_1u0-S151: device without uniformBufferStandardLayout: S151 REJECT 151 of 151 (no option)
+PASS envflag: 20 cases, mismatches []; None->0 ''->0 '0'->0 'false'->0 'FALSE'->0 'False'->0 'off'->0 'OFF'->0 'no'->0 'No'->0 '1'->1 'yes'->1 'true'->1 'on'->1 '2'->1 'nv'->1 '00'->1 ' 0'->1 '0 '->1 'offx'->1
+PASS read-once: unset: mode-once 0 0; =1: mode-once 1 1 (env flipped between the two calls)
+FAIL

@@ -1,0 +1,56 @@
+2026-10-03T05:27:49Z
+#ifndef KYTY_COMMON_ASSERT_H_
+#define KYTY_COMMON_ASSERT_H_
+
+#include "common/common.h"
+#include "common/logging/log.h"
+
+#include <cstdlib>
+#include <string_view>
+
+namespace Common {
+
+// Only the calling thread is intercepted. The callback must throw; returning retains the
+// ordinary fatal policy. Used by speculative CPU translation, never around guest execution.
+using FatalInterceptor = void (*)(const char*, int, std::string_view);
+inline thread_local FatalInterceptor fatal_interceptor = nullptr;
+class ScopedFatalInterceptor {
+public:
+	explicit ScopedFatalInterceptor(FatalInterceptor callback)
+	    : previous(fatal_interceptor) { fatal_interceptor = callback; }
+	~ScopedFatalInterceptor() { fatal_interceptor = previous; }
+	ScopedFatalInterceptor(const ScopedFatalInterceptor&) = delete;
+	ScopedFatalInterceptor& operator=(const ScopedFatalInterceptor&) = delete;
+private:
+	FatalInterceptor previous;
+};
+
+#ifdef __clang__
+int DbgExitHandler(char const* file, int line, std::string_view text)
+    __attribute__((analyzer_noreturn));
+int DbgExitHandler(char const* file, int line, fmt::text_style style, std::string_view text)
+    __attribute__((analyzer_noreturn));
+int DbgExitIfHandler(char const* expr, char const* file, int line)
+    __attribute__((analyzer_noreturn));
+int DbgNotImplementedHandler(char const* expr, char const* file, int line)
+    __attribute__((analyzer_noreturn));
+void DbgExit(int status) __attribute__((analyzer_noreturn));
+#else
+int  DbgExitHandler(char const* file, int line, std::string_view text);
+int  DbgExitHandler(char const* file, int line, fmt::text_style style, std::string_view text);
+int  DbgExitIfHandler(char const* expr, char const* file, int line);
+---diff d515b901..68602c4f src
+commit
+ src/graphics/host_gpu/graphicContext.h             |   3 +
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   |  41 ++++++-
+ src/graphics/presentation/window/vulkanWindow.cpp  |   2 +
+ src/kernel/pvar.cpp                                | 132 +++++++++++++++++++--
+ src/kernel/pvar.h                                  | 127 +++++++++++++++++++-
+ 5 files changed, 291 insertions(+), 14 deletions(-)
+---diff 4e72289e..68602c4f
+ src/graphics/host_gpu/graphicContext.h             |  3 ++
+ .../host_gpu/renderer/pipeline/pipelineCache.cpp   | 41 +++++++++++++++++++++-
+ src/graphics/presentation/window/vulkanWindow.cpp  |  2 ++
+ 3 files changed, 45 insertions(+), 1 deletion(-)
+---submodules d515b901 vs 68602c4f
+SAME

@@ -1,0 +1,20 @@
+# node: V0..V4 (dwords 0..14) = [(0, -8, 1), (8, 0, 2), (0, 0, 0), (0, 8, 3), (-8, 0, 4)]  triangle ID (dword 15) = 0x09040209
+# ray: origin (x, y, -4), direction (0, 0, 1); inverse direction and extent unused by triangles
+type	case	origin	KYTY_FIX_F10=1 (first source)	KYTY_FIX_F10=0 (emulator now)
+0	hit	(2, -2, -4)	c3980000 c2800000 c1800000 c2000000	c3980000 c2800000 c1800000 c2000000
+0	miss	(-2, 2, -4)	7f800000 3f800000 41800000 c2c00000	7f800000 3f800000 41800000 c2c00000
+1	hit	(2, 2, -4)	c3a80000 c2800000 c2000000 c1800000	c3a80000 c2800000 c2000000 c1800000
+1	miss	(-2, -2, -4)	7f800000 3f800000 c2c00000 42a20000	7f800000 3f800000 c2c00000 42a20000
+2	hit	(-2, 2, -4)	c3b80000 c2800000 c2000000 c1800000	ffffffff ffffffff ffffffff ffffffff
+2	miss	(2, -2, -4)	7f800000 3f800000 c1f80000 41800000	ffffffff ffffffff ffffffff ffffffff
+3	hit	(-2, -2, -4)	c3a80000 c2800000 c1800000 c1800000	ffffffff ffffffff ffffffff ffffffff
+3	miss	(2, 2, -4)	7f800000 3f800000 41800000 41800000	ffffffff ffffffff ffffffff ffffffff
+6	any	(2, -2, -4)	ffffffff ffffffff ffffffff ffffffff	ffffffff ffffffff ffffffff ffffffff
+7	any	(2, -2, -4)	ffffffff ffffffff ffffffff ffffffff	ffffffff ffffffff ffffffff ffffffff
+# game accept logic at pc 0x474 for v0 = 0xffffffff (emulator answer on types 2-3):
+#   instance bit24=0 bit25=0 -> hitmask=1 accepted=0 (best t := NaN if accepted)
+#   instance bit24=0 bit25=1 -> hitmask=1 accepted=1 (best t := NaN if accepted)
+#   instance bit24=1 bit25=0 -> hitmask=1 accepted=1 (best t := NaN if accepted)
+#   instance bit24=1 bit25=1 -> hitmask=1 accepted=1 (best t := NaN if accepted)
+checks 63, failed 0
+ALL OK

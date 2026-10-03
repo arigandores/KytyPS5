@@ -1,0 +1,91 @@
+=== amdgpu_isa_rdna2.xml lines=174806
+amdgpu_isa_rdna2.xml:41541:                     <IsImmediatelyExecuted>FALSE</IsImmediatelyExecuted>
+amdgpu_isa_rdna2.xml:41542:                 </InstructionFlags>
+amdgpu_isa_rdna2.xml:41543:                 <InstructionName>IMAGE_BVH_INTERSECT_RAY</InstructionName>
+amdgpu_isa_rdna2.xml:41544:                 <Description>Test the intersection of rays with either box nodes or triangle nodes within a bounded volume hierarchy using 32 bit node pointers. Store the results of the test into a vector register. This instruction does not take a sampler constant.</Description>
+amdgpu_isa_rdna2.xml:41545:                 <InstructionEncodings>
+--
+amdgpu_isa_rdna2.xml:41546:                     <InstructionEncoding>
+--
+amdgpu_isa_rdna2.xml:41563:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41564:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41565:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41566:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41567:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41588:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41589:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41590:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41591:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41592:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41613:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41614:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41615:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41616:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41617:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41638:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41639:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41640:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41641:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41642:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41649:                     <FunctionalSubgroups>
+amdgpu_isa_rdna2.xml:41650:                         <Subgroup>TEXTURE</Subgroup>
+amdgpu_isa_rdna2.xml:41651:                         <Subgroup>BVH</Subgroup>
+amdgpu_isa_rdna2.xml:41652:                     </FunctionalSubgroups>
+amdgpu_isa_rdna2.xml:41653:                 </FunctionalGroup>
+--
+amdgpu_isa_rdna2.xml:41661:                     <IsImmediatelyExecuted>FALSE</IsImmediatelyExecuted>
+amdgpu_isa_rdna2.xml:41662:                 </InstructionFlags>
+amdgpu_isa_rdna2.xml:41663:                 <InstructionName>IMAGE_BVH64_INTERSECT_RAY</InstructionName>
+amdgpu_isa_rdna2.xml:41664:                 <Description>Test the intersection of rays with either box nodes or triangle nodes within a bounded volume hierarchy using 64 bit node pointers. Store the results of the test into a vector register. This instruction does not take a sampler constant.</Description>
+amdgpu_isa_rdna2.xml:41665:                 <InstructionEncodings>
+--
+amdgpu_isa_rdna2.xml:41666:                     <InstructionEncoding>
+--
+amdgpu_isa_rdna2.xml:41683:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41684:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41685:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41686:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41687:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41708:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41709:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41710:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41711:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41712:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41733:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41734:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41735:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41736:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41737:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41758:                             <Operand Input="true" Output="false" IsImplicit="false" IsBinaryMicrocodeRequired="true" Order="3">
+amdgpu_isa_rdna2.xml:41759:                                 <FieldName>SRSRC</FieldName>
+amdgpu_isa_rdna2.xml:41760:                                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:41761:                                 <OperandType>OPR_SREG_NONULL</OperandType>
+amdgpu_isa_rdna2.xml:41762:                                 <OperandSize>128</OperandSize>
+--
+amdgpu_isa_rdna2.xml:41769:                     <FunctionalSubgroups>
+amdgpu_isa_rdna2.xml:41770:                         <Subgroup>TEXTURE</Subgroup>
+amdgpu_isa_rdna2.xml:41771:                         <Subgroup>BVH</Subgroup>
+amdgpu_isa_rdna2.xml:41772:                     </FunctionalSubgroups>
+amdgpu_isa_rdna2.xml:41773:                 </FunctionalGroup>
+--
+amdgpu_isa_rdna2.xml:153519:             </DataFormat>
+amdgpu_isa_rdna2.xml:153520:             <DataFormat>
+amdgpu_isa_rdna2.xml:153521:                 <DataFormatName>FMT_IMG_BVH</DataFormatName>
+amdgpu_isa_rdna2.xml:153522:                 <Description>128-bit BVH resource constant.</Description>
+amdgpu_isa_rdna2.xml:153523:                 <DataType>descriptor</DataType>
+--
+amdgpu_isa_rdna2.xml:153524:                 <BitCount>128</BitCount>
+--
+amdgpu_isa_rdna2.xml:174778:             </FunctionalSubgroup>
+amdgpu_isa_rdna2.xml:174779:             <FunctionalSubgroup>
+amdgpu_isa_rdna2.xml:174780:                 <Name>BVH</Name>
+amdgpu_isa_rdna2.xml:174781:             </FunctionalSubgroup>
+amdgpu_isa_rdna2.xml:174782:             <FunctionalSubgroup>
+--

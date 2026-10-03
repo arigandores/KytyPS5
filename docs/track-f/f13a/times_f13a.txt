@@ -1,0 +1,44 @@
+2026-10-03T13:07:27Z F12c links F12d HPP-477 (todo), F12e HPP-478, F13a HPP-479, F12f HPP-480, F12g HPP-481, F12h HPP-482, F13b HPP-483, F13c HPP-484 created (stages ok); HPP-287 blocked on HPP-482, HPP-484, HPP-473; fact ROADMAP p.392 (written 2026-10-03T13:08:20Z)
+2026-10-03T15:31:07Z F13a HPP-479 start: lock free, STOP absent; HPP-472 done (exec None); installed 540c035a; harness dir C:/kyty/f287/f13a from fs4c/f7a
+2026-10-03T15:37:26Z F13a seal committed KytyPS5 e0ede9ad (docs/track-f/f13a.md sec.1-4, pred/f13a_seal.md a608ce77; fixtures test_f13a_read 44 ALL OK out e0778449). API before f13_rd: HPP-473:blocked:None HPP-433:blocked:c652e178-f054-410b-bf44-d362ec01f7d5 HPP-480:blocked:None HPP-477:done:None HPP-283:done:None; HPP-479 comments 1; lock free; STOP absent
+2026-10-03T15:37:26Z F13a launch_f13a detached call: bash C:/kyty/f287/f13a/go_f13a.sh f13_rd
+2026-10-03T15:37:34Z F13a lead comment 4691c816 (15:36:51Z, ROADMAP p.394 KytyPS5 22632474) read at this time: FS4 install deferred until done of S10, F13a, F12f; installed stays 540c035a; no action
+2026-10-03T15:37:40Z F13a go_f13a f13_rd lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T15:37:41Z F13a go_f13a f13_rd installed binary inside the lock: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 (no install in F13a)
+2026-10-03T15:37:44Z F13a go_f13a f13_rd manifest before: manifest C:/kyty/f287/f13a/runs/f13_rd/manifest_before.tsv files 2922 bytes 840292292 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+2026-10-03T15:37:46Z F13a go_f13a f13_rd caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (166/169/5/470/ MB)
+2026-10-03T15:37:46Z F13a go_f13a f13_rd variant entries of _ShaderCache/PPSA21564: cs_001028ba8efc6ae1_2f3c81c006374a39.bin cs_0078153a1c1fb171_fbc2c50361ddac2d.bin cs_0192b89f529d8bcb_df3a32b931ca22a5.bin cs_01d6f21611218e74_65b10fcc86e03be1.bin cs_03d8402a8c5446ce_949ffcaf071c81ce.bin cs_054d647c2c9f8394_636b22d32d8cfc6c.bin cs_0781d68f43284868_c5a55a369e830056.bin cs_0b6cfe063c
+2026-10-03T15:37:48Z F13a go_f13a f13_rd enter_scene start (level ending_boss_after_credit, --rd, KYTY_RD_LEVEL_FRAME=2400, KYTY_RD_FLIPS=2, hold 240)
+2026-10-03T15:42:05Z F13a go_f13a f13_rd enter_scene rc 0
+2026-10-03T15:42:05Z F13a go_f13a f13_rd run: VERDICT: ending_boss_after_credit in 8.3 s - PASS (acceptance <= 90 s)
+2026-10-03T15:42:06Z F13a go_f13a f13_rd log_f13_rd.txt sha256 f4a2beac3ff5d40acc2d3d1c347a46d547e3730a5ffa99d3be7d8428d42c1fde
+2026-10-03T15:42:07Z F13a go_f13a f13_rd new captures in _RenderDoc: 1 (kyty_1791041917686991_capture.rdc)
+2026-10-03T15:42:09Z F13a go_f13a f13_rd capture moved to C:/kyty/f287/f13a/f13_rd.rdc bytes 1331833036 sha256 766880cf54d2d80f101e2612d61612377490145d6c3fc43c746764b6389c20f0
+2026-10-03T15:42:09Z F13a go_f13a f13_rd thumbnail rc 0 f13_rd.png sha256 905c48b5e543f58fa9811d3e96c909bd633c7ee092a097ffd3639cde639b8e23
+2026-10-03T15:42:10Z F13a go_f13a f13_rd rd_list.py start (qrenderdoc --python, watchdog 1800 s)
+2026-10-03T15:42:21Z F13a go_f13a f13_rd rd_list end after ~10 s: rd_list_f13_rd.txt lines 361 sha256 35da6eec69d17ad15c61a870a6b9a2767036f363a183ab4249a96e6aa9ed8e71
+2026-10-03T15:42:21Z F13a go_f13a f13_rd rdsum rc 0: RDSUM: draws 14, dispatches 174, clears 39, copies 89, presents 2, passes 14, targets 9, done marker yes; rdsum_f13_rd.txt sha256 fb1a2a0f97aa80d22cce6c39a3197bda4c62191919c30df5e15f055fe2cb3bf6
+2026-10-03T15:42:22Z F13a go_f13a f13_rd installed binary at the end: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 (unchanged)
+2026-10-03T15:42:24Z F13a go_f13a f13_rd manifest of the run state (before the return): manifest C:/kyty/f287/f13a/runs/f13_rd/manifest_run.tsv files 2922 bytes 841565821 listsha 78be36c2f5aa7547e314035bfefd47748b700cbf3f277500c6540a27ef88a52c; run vs before: manifest cmp DIFFER only-before 2 only-after 2
+2026-10-03T15:42:26Z F13a go_f13a f13_rd caches, saves and GLCache returned
+2026-10-03T15:42:28Z F13a go_f13a f13_rd manifest after: manifest C:/kyty/f287/f13a/runs/f13_rd/manifest_after.tsv files 2922 bytes 840292292 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3; cmp: manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+2026-10-03T15:42:28Z F13a go_f13a f13_rd lock released (rc 0)
+2026-10-03T15:42:49Z F13a post_f13a f13_rd: read.txt 131edbd7a127d6b7, ROWS entry=YES rows_after_entry=14221 card_end_k=211 card_end_s_from_entry=3.6 hold_after_card_120s=YES death_lines=0 skipped_draw_lines=0 rd_after_card_10s=YES; glitch: 
+2026-10-03T15:43:50Z F13a f13_rd read (post_f13a): seal letter card_end_k 211 (one-row dip draws 6 at 3.60 s) -> rd t_card 36.499 YES; VARIANT OF THE EXECUTOR f13a_variant.py 9adb7159 written before the f13_k call (card end = first row < 100 starting a run >= 600 rows < 100 after >= 90 rows >= 300): card_end_k 1261 (21.083 s), rd t_card 19.016 YES; v146_08 by the variant 1259 (= seal reference). Capture f13_rd.rdc 766880cf, thumbnail black, RDSUM draws 14 dispatches 174 clears 39 copies 89 presents 2. API before f13_k: HPP-473:blocked:None HPP-433:blocked:None HPP-480:blocked:None HPP-283:done:None; HPP-479 comments 1 (last read 4691c816); lock free; STOP absent
+2026-10-03T15:43:50Z F13a launch_f13a detached call: bash C:/kyty/f287/f13a/go_f13a.sh f13_k
+2026-10-03T15:44:06Z F13a go_f13a f13_k lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T15:44:06Z F13a go_f13a f13_k installed binary inside the lock: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 (no install in F13a)
+2026-10-03T15:44:08Z F13a go_f13a f13_k manifest before: manifest C:/kyty/f287/f13a/runs/f13_k/manifest_before.tsv files 2922 bytes 840292292 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+2026-10-03T15:44:11Z F13a go_f13a f13_k caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (166/169/5/470/ MB)
+2026-10-03T15:44:11Z F13a go_f13a f13_k variant entries of _ShaderCache/PPSA21564: cs_001028ba8efc6ae1_2f3c81c006374a39.bin cs_0078153a1c1fb171_fbc2c50361ddac2d.bin cs_0192b89f529d8bcb_df3a32b931ca22a5.bin cs_01d6f21611218e74_65b10fcc86e03be1.bin cs_03d8402a8c5446ce_949ffcaf071c81ce.bin cs_054d647c2c9f8394_636b22d32d8cfc6c.bin cs_0781d68f43284868_c5a55a369e830056.bin cs_0b6cfe063c
+2026-10-03T15:44:12Z F13a go_f13a f13_k enter_scene start (level ending_boss_after_credit, --rec, KYTY_KEYS=75:J,90:J,105:J,120:L,135:L,150:L, hold 240)
+2026-10-03T15:48:36Z F13a go_f13a f13_k enter_scene rc 0
+2026-10-03T15:48:36Z F13a go_f13a f13_k run: VERDICT: ending_boss_after_credit in 12.9 s - PASS (acceptance <= 90 s)
+2026-10-03T15:48:37Z F13a go_f13a f13_k log_f13_k.txt sha256 0e2692c10a8d8e77d83f75e88e68395caeaa3e97de065943e5173e8ec56e4267
+2026-10-03T15:48:40Z F13a go_f13a f13_k installed binary at the end: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 (unchanged)
+2026-10-03T15:48:42Z F13a go_f13a f13_k manifest of the run state (before the return): manifest C:/kyty/f287/f13a/runs/f13_k/manifest_run.tsv files 2922 bytes 840292292 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3; run vs before: manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+2026-10-03T15:48:45Z F13a go_f13a f13_k caches, saves and GLCache returned
+2026-10-03T15:48:46Z F13a go_f13a f13_k manifest after: manifest C:/kyty/f287/f13a/runs/f13_k/manifest_after.tsv files 2922 bytes 840292292 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3; cmp: manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+2026-10-03T15:48:47Z F13a go_f13a f13_k lock released (rc 0)
+2026-10-03T15:49:35Z F13a post_f13a f13_k: read.txt b7c8b4d812bea6a5, ROWS entry=YES rows_after_entry=14527 card_end_k=1253 card_end_s_from_entry=20.882 hold_after_card_120s=YES death_lines=0 skipped_draw_lines=0 presses_J_ge3_L_ge3=YES keys_after_card_10s=YES keys_pause_10s=YES video_records=14660 video_glitches=0; glitch: one-frame glitches: 0
+2026-10-03T15:51:16Z F13a report docs/track-f/f13a.md sec.5 written; FACTS.md section F13a appended

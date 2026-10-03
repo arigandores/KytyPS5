@@ -1,0 +1,31 @@
+variant f13a_variant.py sha256 9adb71590a3c3e4074244929c853f0c826b684ca2399a93b86ea7e2646412dc1 reader f13a_read.py sha256 a61e6b1fd4bf29aeddc69d85d239fe54e6360333370d25b3bb5064cb8d057e47
+kind: "rd"
+log_sha256: "f4a2beac3ff5d40acc2d3d1c347a46d547e3730a5ffa99d3be7d8428d42c1fde"
+entry: "YES"
+rows_after_entry: 14221
+card_end_k: 1261
+card_end_s_from_entry: 21.083
+card_draws_median: 1018.0
+draws_after_card_top: [[22, 12957], [1, 2], [43, 2]]
+rows_after_card: 12961
+hold_after_card_s: 221.776
+hold_after_card_120s: "YES"
+scene_lines: 1
+  {"k": 0, "t_card": -21.083, "line": "GuestOut: Level has started: ending_boss_after_credit"}
+scene_lines_after_card: 0
+frames_ge_1s: 2
+  {"k": 2402, "dt_us": 1017975, "t_card": 19.016}
+  {"k": 2404, "dt_us": 4219890, "t_card": 20.075}
+death_lines: 0
+death_first: []
+skipped_draw_lines: 0
+window_events: {}
+recovering_swapchain: 0
+rd_lines: ["RenderDoc: level started at frame 196, capture at frame 2596 (+0 more)", "RenderDoc: auto capture at frame 2596 (level+2400)", "RenderDoc: capture requested", "RenderDoc: capture started", "RenderDoc: captured guest flip 1/2", "RenderDoc: captured guest flip 2/2", "RenderDoc: capture finished"]
+rd_capture_k: 2401
+rd_capture_t_card: 19.016
+rd_capture_draws_next3: [22, 1, 43]
+rd_after_card_10s: "YES"
+rd_finished: "YES"
+card_rule: "VARIANT (first row < 100 starting a run >= 600 rows < 100, after >= 90 rows >= 300)"
+ROWS entry=YES rows_after_entry=14221 card_end_k=1261 card_end_s_from_entry=21.083 hold_after_card_120s=YES death_lines=0 skipped_draw_lines=0 rd_after_card_10s=YES

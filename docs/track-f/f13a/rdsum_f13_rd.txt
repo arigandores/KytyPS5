@@ -1,0 +1,28 @@
+capture: C:/kyty/f287/f13a/f13_rd.rdc
+actions: DRAW 14, DISPATCH 174, CLEAR 39, COPY 89, PRESENT 2
+passes (runs of consecutive DRAW with one RT/DS set): 14
+  pass 0: EID 80..80 draws 1 | RT: tex ResourceId::5788 3840x2160x1 mips=1 fmt=B10G10R10A2_UNORM name=2D Color Attachment 5788
+  pass 1: EID 226..226 draws 1 | RT:  | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  pass 2: EID 761..761 draws 1 | RT: tex ResourceId::6675 3840x2160x1 mips=1 fmt=R8G8B8A8_UNORM name=2D Color Attachment 6675
+  pass 3: EID 927..927 draws 1 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702; tex ResourceId::6718 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6718 | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  pass 4: EID 938..938 draws 1 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702
+  pass 5: EID 972..972 draws 1 | RT: tex ResourceId::6650 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6650
+  pass 6: EID 1073..1073 draws 1 | RT: tex ResourceId::6471 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6471; tex ResourceId::10851 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 10851
+  pass 7: EID 1247..1247 draws 1 | RT: tex ResourceId::5692 3840x2160x1 mips=1 fmt=B10G10R10A2_UNORM name=2D Color Attachment 5692
+  pass 8: EID 1373..1373 draws 1 | RT:  | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  pass 9: EID 1871..1871 draws 1 | RT: tex ResourceId::6675 3840x2160x1 mips=1 fmt=R8G8B8A8_UNORM name=2D Color Attachment 6675
+  pass 10: EID 2001..2001 draws 1 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702; tex ResourceId::6718 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6718 | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  pass 11: EID 2012..2012 draws 1 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702
+  pass 12: EID 2046..2046 draws 1 | RT: tex ResourceId::6650 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6650
+  pass 13: EID 2143..2143 draws 1 | RT: tex ResourceId::6471 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6471; tex ResourceId::10849 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 10849
+targets (distinct RT/DS sets): 9
+  draws 2 | RT:  | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  draws 2 | RT: tex ResourceId::6675 3840x2160x1 mips=1 fmt=R8G8B8A8_UNORM name=2D Color Attachment 6675
+  draws 2 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702; tex ResourceId::6718 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6718 | DS: tex ResourceId::6638 3840x2160x1 mips=1 fmt=D32S8 name=2D Depth/Stencil Attachment 6638
+  draws 2 | RT: tex ResourceId::6702 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6702
+  draws 2 | RT: tex ResourceId::6650 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6650
+  draws 1 | RT: tex ResourceId::5788 3840x2160x1 mips=1 fmt=B10G10R10A2_UNORM name=2D Color Attachment 5788
+  draws 1 | RT: tex ResourceId::6471 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6471; tex ResourceId::10851 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 10851
+  draws 1 | RT: tex ResourceId::5692 3840x2160x1 mips=1 fmt=B10G10R10A2_UNORM name=2D Color Attachment 5692
+  draws 1 | RT: tex ResourceId::6471 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 6471; tex ResourceId::10849 3840x2160x1 mips=1 fmt=R16G16B16A16_FLOAT name=2D Color Attachment 10849
+RDSUM: draws 14, dispatches 174, clears 39, copies 89, presents 2, passes 14, targets 9, done marker yes

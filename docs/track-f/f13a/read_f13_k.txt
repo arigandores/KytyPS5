@@ -1,0 +1,40 @@
+kind: "k"
+log_sha256: "0e2692c10a8d8e77d83f75e88e68395caeaa3e97de065943e5173e8ec56e4267"
+entry: "YES"
+rows_after_entry: 14527
+card_end_k: 1253
+card_end_s_from_entry: 20.882
+card_draws_median: 1018.0
+draws_after_card_top: [[22, 13273], [4, 1], [40, 1]]
+rows_after_card: 13275
+hold_after_card_s: 221.243
+hold_after_card_120s: "YES"
+scene_lines: 1
+  {"k": 0, "t_card": -20.882, "line": "GuestOut: Level has started: ending_boss_after_credit"}
+scene_lines_after_card: 0
+frames_ge_1s: 0
+death_lines: 0
+death_first: []
+skipped_draw_lines: 0
+window_events: {}
+recovering_swapchain: 0
+presses: 6
+  {"key": "J", "s": 75.01, "present": 4437, "k": 4302, "t_card": 50.833, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 4436}
+  {"key": "J", "s": 90.01, "present": 5337, "k": 5202, "t_card": 65.831, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 5336}
+  {"key": "J", "s": 105.01, "present": 6237, "k": 6102, "t_card": 80.832, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 6236}
+  {"key": "L", "s": 120.01, "present": 7137, "k": 7002, "t_card": 95.832, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 7136}
+  {"key": "L", "s": 135.01, "present": 8037, "k": 7902, "t_card": 110.831, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 8036}
+  {"key": "L", "s": 150.01, "present": 8937, "k": 8802, "t_card": 125.829, "draws_med_before": 22.0, "draws_med_after": 22.0, "draws_set_until_next": [22], "scene_lines_until_next": [], "video_frame": 8936}
+presses_J: 3
+presses_L: 3
+presses_J_ge3_L_ge3: "YES"
+keys_after_card_10s: "YES"
+keys_pause_10s: "YES"
+draws_card_to_first_press_top: [[22, 3048], [4, 1], [40, 1]]
+draws_after_last_press_top: [[22, 5725]]
+video_records: 14660
+video_glitches: 0
+video_sheet: "YES"
+installed_sha: "YES"
+manifest_cmp: "manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3"
+ROWS entry=YES rows_after_entry=14527 card_end_k=1253 card_end_s_from_entry=20.882 hold_after_card_120s=YES death_lines=0 skipped_draw_lines=0 presses_J_ge3_L_ge3=YES keys_after_card_10s=YES keys_pause_10s=YES video_records=14660 video_glitches=0

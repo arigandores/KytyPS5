@@ -1,0 +1,31 @@
+kind: "rd"
+log_sha256: "f4a2beac3ff5d40acc2d3d1c347a46d547e3730a5ffa99d3be7d8428d42c1fde"
+entry: "YES"
+rows_after_entry: 14221
+card_end_k: 211
+card_end_s_from_entry: 3.6
+card_draws_median: 861.0
+draws_after_card_top: [[22, 12957], [1018, 296], [915, 223], [927, 95], [1019, 48], [1031, 38]]
+rows_after_card: 14011
+hold_after_card_s: 239.26
+hold_after_card_120s: "YES"
+scene_lines: 1
+  {"k": 0, "t_card": -3.6, "line": "GuestOut: Level has started: ending_boss_after_credit"}
+scene_lines_after_card: 0
+frames_ge_1s: 2
+  {"k": 2402, "dt_us": 1017975, "t_card": 36.499}
+  {"k": 2404, "dt_us": 4219890, "t_card": 37.559}
+death_lines: 0
+death_first: []
+skipped_draw_lines: 0
+window_events: {}
+recovering_swapchain: 0
+rd_lines: ["RenderDoc: level started at frame 196, capture at frame 2596 (+0 more)", "RenderDoc: auto capture at frame 2596 (level+2400)", "RenderDoc: capture requested", "RenderDoc: capture started", "RenderDoc: captured guest flip 1/2", "RenderDoc: captured guest flip 2/2", "RenderDoc: capture finished"]
+rd_capture_k: 2401
+rd_capture_t_card: 36.499
+rd_capture_draws_next3: [22, 1, 43]
+rd_after_card_10s: "YES"
+rd_finished: "YES"
+installed_sha: "YES"
+manifest_cmp: "manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3"
+ROWS entry=YES rows_after_entry=14221 card_end_k=211 card_end_s_from_entry=3.6 hold_after_card_120s=YES death_lines=0 skipped_draw_lines=0 rd_after_card_10s=YES

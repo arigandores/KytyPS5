@@ -44,6 +44,9 @@ installed `dac02fb9` 44); sessions without a shipping under (B): 0. 60 FPS is no
    form, and through the parent with a new save the scene is not reached (`v146_07`). The closing reads the s146 and F13a data and decides whether the
    scene goes to the class "not evaluable by `-lvl` entry" (neither `SCENE_OK` "yes" nor K4); read item 2 together with this item; not fixed now, read
    the course line as unchanged until that closing.
+9. **F3 witness re-scan** (item 400 (г)): F3 (36 CS without speculative translation) and B26г are parked until a witness scene — the closing runs
+   `docs/track-f/f14a/f14a_f3.py` over the logs of the series: a `CsPretranslate: miss|hit` line with one of the 37 hashes or `shader CFG build failed`
+   outside `CsPretranslate:` gives the witness scene and the class (K1 if the path ends in `EXIT`) for track F; 0 such lines — the row keeps the count.
 
 ## Rules that stay in force on resume
 

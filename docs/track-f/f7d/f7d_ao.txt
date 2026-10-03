@@ -1,0 +1,22 @@
+== EID 3277: tex 6649 min 0.5608 max 1.0000 mean 0.9919; AO at UV (0,0) = 1.0000
+  F1 ( 900,1560) AO@screen 0.9937 | out 0.9937 out=AO | post 0.9922 vs min(pre,AO@screen) 0.9937 ok | vs min(pre,AO@0) 1.0000 NO
+  F2 (2850,1440) AO@screen 0.9948 | out 0.9199 out!=AO | post 0.9961 vs min(pre,AO@screen) 0.9948 ok | vs min(pre,AO@0) 1.0000 ok
+  F3 (1920,2010) AO@screen 0.9897 | out 0.8232 out!=AO | post 0.9882 vs min(pre,AO@screen) 0.9897 ok | vs min(pre,AO@0) 1.0000 NO
+  F4 ( 450,1260) AO@screen 0.9961 | out 0.9956 out=AO | post 0.9961 vs min(pre,AO@screen) 0.9961 ok | vs min(pre,AO@0) 1.0000 ok
+  F5 (3450,1800) AO@screen 0.9907 | out 0.9473 out!=AO | post 0.9922 vs min(pre,AO@screen) 0.9907 ok | vs min(pre,AO@0) 1.0000 NO
+  F6 (2460,1170) AO@screen 0.9995 | out 0.9937 out=AO | post 1.0000 vs min(pre,AO@screen) 0.9995 ok | vs min(pre,AO@0) 1.0000 ok
+  A1 (1920,1695) AO@screen 0.9624 | out 0.9624 out=AO | post 0.9608 vs min(pre,AO@screen) 0.9624 ok | vs min(pre,AO@0) 0.9882 NO
+  U1 (1920, 900) AO@screen 1.0000 | out 1.0000 out=AO | post 1.0000 vs min(pre,AO@screen) 1.0000 ok | vs min(pre,AO@0) 1.0000 ok
+  R1 (1920,2100) AO@screen 0.8593 | out 0.8599 out=AO | post 0.1490 vs min(pre,AO@screen) 0.1490 ok | vs min(pre,AO@0) 0.1490 ok
+== EID 7146: tex 6649 min 0.5686 max 1.0000 mean 0.9919; AO at UV (0,0) = 1.0000
+  F1 ( 900,1560) AO@screen 0.9946 | out 0.9941 out=AO | post 0.9961 vs min(pre,AO@screen) 0.9946 ok | vs min(pre,AO@0) 1.0000 ok
+  F2 (2850,1440) AO@screen 0.9961 | out 0.9243 out!=AO | post 0.9961 vs min(pre,AO@screen) 0.9961 ok | vs min(pre,AO@0) 1.0000 ok
+  F3 (1920,2010) AO@screen 0.9879 | out 0.8252 out!=AO | post 0.9882 vs min(pre,AO@screen) 0.9879 ok | vs min(pre,AO@0) 1.0000 NO
+  F4 ( 450,1260) AO@screen 0.9939 | out 0.9937 out=AO | post 0.9922 vs min(pre,AO@screen) 0.9939 ok | vs min(pre,AO@0) 1.0000 NO
+  F5 (3450,1800) AO@screen 0.9917 | out 0.9502 out!=AO | post 0.9922 vs min(pre,AO@screen) 0.9917 ok | vs min(pre,AO@0) 1.0000 NO
+  F6 (2460,1170) AO@screen 1.0000 | out 0.9951 out=AO | post 1.0000 vs min(pre,AO@screen) 1.0000 ok | vs min(pre,AO@0) 1.0000 ok
+  A1 (1920,1695) AO@screen 0.9583 | out 0.7363 out!=AO | post 0.9569 vs min(pre,AO@screen) 0.9583 ok | vs min(pre,AO@0) 0.9882 NO
+  U1 (1920, 900) AO@screen 1.0000 | out 1.0000 out=AO | post 1.0000 vs min(pre,AO@screen) 1.0000 ok | vs min(pre,AO@0) 1.0000 ok
+  R1 (1920,2100) AO@screen 0.8552 | out 0.8574 out=AO | post 0.1333 vs min(pre,AO@screen) 0.1333 ok | vs min(pre,AO@0) 0.1333 ok
+point-events 18: out = AO@screen 11; post = min(pre, AO@screen) 18; post = min(pre, AO@(0,0)) 10
+ALL OK

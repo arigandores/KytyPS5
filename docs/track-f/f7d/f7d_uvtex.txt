@@ -1,0 +1,15 @@
+inputs sha256: 12226 275463081c4d7da0 / 12222 7c901c47b8f007c1 / 15244 e859ded40bfc3ddd / 15245 0ce308f58775ff7e
+image min/max: [0] 0.020..1.000  [3].r 0.000..0.831 [3].g 0.145..1.000  [1] 0.357..0.663  [4].r 0.478..0.522
+== draw 950: triangles 8675, samples 789425 (UV of out_param_1, wrap, nearest texel of mip0)
+image_3[0] 12226 BC4 R             n=789425 mode=151/255 within+-2=0.8716 distinct=26 p1/p5/p50/p95/p99=0.486 0.579 0.591 0.600 0.604 std=0.0158
+image_3[3] 12222 BC5 R             n=789425 mode=127/255 within+-2=0.7681 distinct=65 p1/p5/p50/p95/p99=0.471 0.485 0.500 0.514 0.529 std=0.0111
+image_3[3] 12222 BC5 G             n=789425 mode=127/255 within+-2=0.7574 distinct=52 p1/p5/p50/p95/p99=0.463 0.482 0.500 0.518 0.561 std=0.0135
+== draw 960: triangles 8431, samples 767221 (UV of out_param_1, wrap, nearest texel of mip0)
+image_3[0] 12226 BC4 R             n=767221 mode=151/255 within+-2=0.8892 distinct=17 p1/p5/p50/p95/p99=0.576 0.580 0.591 0.600 0.604 std=0.0061
+image_3[3] 12222 BC5 R             n=767221 mode=127/255 within+-2=0.7628 distinct=65 p1/p5/p50/p95/p99=0.471 0.484 0.500 0.514 0.529 std=0.0112
+image_3[3] 12222 BC5 G             n=767221 mode=127/255 within+-2=0.7517 distinct=52 p1/p5/p50/p95/p99=0.463 0.482 0.500 0.518 0.561 std=0.0137
+wrote n3_floor_region.png sha256 1cef7cee36a47fb0
+wrote n3_floor_region_x8.png sha256 8d124b103eca37e5
+wrote i0_floor_region.png sha256 0c8597bcadc712ab
+fixtures bc4 ok
+ALL OK

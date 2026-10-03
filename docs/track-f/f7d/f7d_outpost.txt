@@ -1,0 +1,2 @@
+passed floor fragments (points F1-F6 x targets x draws): 120, out != post beyond tolerance: 0, worst |d|/tol 0.50
+ALL OK

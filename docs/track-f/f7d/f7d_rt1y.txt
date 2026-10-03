@@ -1,0 +1,29 @@
+image_3[0] 12226 sha256 275463081c4d7da0; texel (0,0) = 0.5944, bilinear at UV (0,0) = 0.3321
+F1 UV (0.26880, 0.33179): image_3[0] bilinear 0.5932 | RT1.y draw 950 out 0.5879 post 0.5882 | diff post-tex -0.0050
+F2 UV (0.25487, 0.16748): image_3[0] bilinear 0.5939 | RT1.y draw 950 out 0.5923 post 0.5922 | diff post-tex -0.0017
+F3 UV (0.32566, 0.24961): image_3[0] bilinear 0.5901 | RT1.y draw 950 out 0.6011 post 0.6000 | diff post-tex +0.0099
+F4 UV (0.19199, 0.41921): image_3[0] bilinear 0.5855 | RT1.y draw 950 out 0.5845 post 0.5843 | diff post-tex -0.0012
+F5 UV (0.31359, 0.15714): image_3[0] bilinear 0.5897 | RT1.y draw 950 out 0.5928 post 0.5922 | diff post-tex +0.0025
+F6 UV (0.14315, 0.17268): image_3[0] bilinear 0.5863 | RT1.y draw 950 out 0.5845 post 0.5843 | diff post-tex -0.0020
+points 6, corr(image_3[0] at UV, post RT1.y) = 0.493, max |post - tex| = 0.0099, spread tex 0.0084, spread post 0.0157
+== AO pass on RT1.b (blend MIN, mask 4): post vs min(out, pre)
+  F1 eid 3277 pre 1.0000 out 0.9937 post 0.9922 expected 0.9937 ok
+  F1 eid 7146 pre 1.0000 out 0.9941 post 0.9961 expected 0.9941 ok
+  F2 eid 3277 pre 1.0000 out 0.9199 post 0.9961 expected 0.9199 MISMATCH
+  F2 eid 7146 pre 1.0000 out 0.9243 post 0.9961 expected 0.9243 MISMATCH
+  F3 eid 3277 pre 1.0000 out 0.8232 post 0.9882 expected 0.8232 MISMATCH
+  F3 eid 7146 pre 1.0000 out 0.8252 post 0.9882 expected 0.8252 MISMATCH
+  F4 eid 3277 pre 1.0000 out 0.9956 post 0.9961 expected 0.9956 ok
+  F4 eid 7146 pre 1.0000 out 0.9937 post 0.9922 expected 0.9937 ok
+  F5 eid 3277 pre 1.0000 out 0.9473 post 0.9922 expected 0.9473 MISMATCH
+  F5 eid 7146 pre 1.0000 out 0.9502 post 0.9922 expected 0.9502 MISMATCH
+  F6 eid 3277 pre 1.0000 out 0.9937 post 1.0000 expected 0.9937 MISMATCH
+  F6 eid 7146 pre 1.0000 out 0.9951 post 1.0000 expected 0.9951 ok
+  A1 eid 3277 pre 0.9882 out 0.9624 post 0.9608 expected 0.9624 ok
+  A1 eid 7146 pre 0.9882 out 0.7363 post 0.9569 expected 0.7363 MISMATCH
+  U1 eid 3277 pre 1.0000 out 1.0000 post 1.0000 expected 1.0000 ok
+  U1 eid 7146 pre 1.0000 out 1.0000 post 1.0000 expected 1.0000 ok
+  R1 eid 3277 pre 0.1490 out 0.8599 post 0.1490 expected 0.1490 ok
+  R1 eid 7146 pre 0.1333 out 0.8574 post 0.1333 expected 0.1333 ok
+AO point-events 18, mismatches 8
+ALL OK

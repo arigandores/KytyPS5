@@ -1,0 +1,69 @@
+== C:/kyty/f287/f7a/log_f7a_1.txt lines 1112928 sha256 b43ce0ecb4d2290a
+  Skipping draw with unknown primitive type        0
+  BindFloor: skipped draw                          0
+  AsyncPipelines: skipped draw                     0
+  skipping CS                                      0
+  BindFloor: skipped dispatch                      0
+  RtSkip: refused                                  0
+  BvhLoopCapTrip                                   0
+  Bvh                                              1
+      BvhLoopCap: cap=65536 token='' default_slot0=0
+  BVH                                              0
+  ASSERT                                           0
+  not implemented                                  100
+      CsPretranslate: skipped hash=970c618aa1f4e005 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+      CsPretranslate: skipped hash=d79d0edd75e84025 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+      CsPretranslate: skipped hash=f7dde2f86aee83c7 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+  NOT IMPLEMENTED                                  0
+  Not implemented                                  0
+  unsupported                                      103
+      CsPretranslate: skipped hash=970c618aa1f4e005 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+      CsPretranslate: skipped hash=d79d0edd75e84025 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+      CsPretranslate: skipped hash=f7dde2f86aee83c7 reason=C:\kyty\f287\fsa\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at
+  Unsupported                                      0
+  stub                                             87
+      Relocate: unresolved PLT import patched to stub [129] [0000000908e34c90] <- 0000000200000000, 304ooNZxWDY[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+      Relocate: unresolved PLT import patched to stub [131] [0000000908e34ca0] <- 00000002000000a5, 9wO9XrMsNhc[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+      Relocate: unresolved PLT import patched to stub [132] [0000000908e34ca8] <- 000000020000014a, gvD1greCu0A[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+  STUB                                             0
+  Level has started                                2
+      GuestOut: Level has started:
+      GuestOut: Level has started: enemy_final
+  [Vulkan][E]                                      0
+  TRAP                                             0
+  unknown                                          0
+== C:/kyty/s145/log_v145_17.txt lines 1894115 sha256 bfcd5df634922619
+  Skipping draw with unknown primitive type        0
+  BindFloor: skipped draw                          0
+  AsyncPipelines: skipped draw                     0
+  skipping CS                                      0
+  BindFloor: skipped dispatch                      0
+  RtSkip: refused                                  0
+  BvhLoopCapTrip                                   0
+  Bvh                                              1
+      BvhLoopCap: cap=65536 token='' default_slot0=0
+  BVH                                              0
+  ASSERT                                           0
+  not implemented                                  101
+      CsPretranslate: skipped hash=970c618aa1f4e005 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+      CsPretranslate: skipped hash=d79d0edd75e84025 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+      CsPretranslate: skipped hash=f7dde2f86aee83c7 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+  NOT IMPLEMENTED                                  0
+  Not implemented                                  0
+  unsupported                                      101
+      CsPretranslate: skipped hash=970c618aa1f4e005 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+      CsPretranslate: skipped hash=d79d0edd75e84025 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+      CsPretranslate: skipped hash=f7dde2f86aee83c7 reason=C:\kyty\KytyPS5\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc
+  Unsupported                                      0
+  stub                                             87
+      Relocate: unresolved PLT import patched to stub [129] [0000000908e34c90] <- 0000000200000000, 304ooNZxWDY[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+      Relocate: unresolved PLT import patched to stub [131] [0000000908e34ca0] <- 00000002000000a5, 9wO9XrMsNhc[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+      Relocate: unresolved PLT import patched to stub [132] [0000000908e34ca8] <- 000000020000014a, gvD1greCu0A[Net_v1][Net_v1.1][Func], Func, Global, C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app/eboot.bin
+  STUB                                             0
+  Level has started                                2
+      GuestOut: Level has started:
+      GuestOut: Level has started: enemy_final
+  [Vulkan][E]                                      0
+  TRAP                                             0
+  unknown                                          0
+ALL OK

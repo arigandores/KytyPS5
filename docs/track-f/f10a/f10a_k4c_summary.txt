@@ -1,0 +1,7 @@
+F10a k4 within the base: rows C ps (stored SPIR-V, signature 56189185)
+calibration on rows A: 269 of 269
+rows C ps: 51; module extracted: 51; cache file sha256 == base: 51
+SDK vulkan1.3 accepts 0; built-in ValidateShaderSpirv accepts 0 of them
+SDK vulkan1.3 rejects 51; built-in rejects 51 of them
+SDK vulkan1.3 + ubsl accepts 51; built-in + layout option accepts 51
+tool rc 0

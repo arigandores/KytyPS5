@@ -1,0 +1,5 @@
+8f6b6be2: lines 1337-1365, 1460 bytes, sha256 6e1efeb8c30f6567f9a3efe793f84890e6a7c5b035bd2c04b2f0caade4e5b2c2, last "namespace {" before it at line 69, last "} // namespace" before it at line None
+HEAD 17b4aed6: lines 1337-1365, 1460 bytes, sha256 6e1efeb8c30f6567f9a3efe793f84890e6a7c5b035bd2c04b2f0caade4e5b2c2, last "namespace {" before it at line 69, last "} // namespace" before it at line None
+region 8f6b6be2 == HEAD: True
+sval_body.inc sha256 6e1efeb8c30f6567f9a3efe793f84890e6a7c5b035bd2c04b2f0caade4e5b2c2 equal to blob region: True
+ALL OK

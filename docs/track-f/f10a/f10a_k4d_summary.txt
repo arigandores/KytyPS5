@@ -1,0 +1,11 @@
+F10a k4 within the base: rows D ps (stored SPIR-V of old signatures, snap0)
+files 408 (sha256 == base cache_sha256: 408); modules 458
+SDK vulkan1.3 accepts 16 modules; built-in ValidateShaderSpirv accepts 16 of them
+SDK vulkan1.3 rejects 442 modules; built-in rejects 442 of them
+  sig 1693ffd7: SDK accepts 0 (built-in accepts 0), SDK rejects 1 (built-in rejects 1)
+  sig 2db9065a: SDK accepts 0 (built-in accepts 0), SDK rejects 11 (built-in rejects 11)
+  sig 646b501f: SDK accepts 0 (built-in accepts 0), SDK rejects 1 (built-in rejects 1)
+  sig 699c1e4b: SDK accepts 9 (built-in accepts 9), SDK rejects 238 (built-in rejects 238)
+  sig 780ea8ac: SDK accepts 7 (built-in accepts 7), SDK rejects 190 (built-in rejects 190)
+  sig 8347ce22: SDK accepts 0 (built-in accepts 0), SDK rejects 1 (built-in rejects 1)
+tool rc 0

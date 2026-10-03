@@ -1,0 +1,19 @@
+selftest ok
+Q950_1 (2979,1105) prim 8626: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7365 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_2 (3016,1108) prim 8625: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7360 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_3 (3004,1107) prim 8625: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7368 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_4 (2992,1106) prim 8625: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7365 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_5 (3039,1112) prim 8638: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7360 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_6 (3105,1106) prim 8534: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7359 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_7 (3051,1106) prim 8520: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7362 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+Q950_8 (2962,1105) prim 8628: RT0 out (0.0177, 0.0212, 0.0273, 0.0) flags [depthFail] expected (0.0176, 0.0212, 0.0273) -> a; front prim 7365 out (0.6055, 0.6094, 0.6797, 0.0)
+   max |out - expected texel| = 0.0001
+points 8, (a) 8, (b) 0, (3) 0 -> verdict a
+ALL OK

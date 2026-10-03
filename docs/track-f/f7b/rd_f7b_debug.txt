@@ -1,0 +1,14 @@
+capture: C:/kyty/f287/f7a/enemy_final_600.rdc phase debug
+presents: [(13, 'vkQueuePresentKHR(ResourceId::4005)'), (7984, 'vkQueuePresentKHR(ResourceId::4005)')]
+frame 2 = events (13, 7984]
+---- DEBUG eid 950 pixel 900,1560
+  debug failed (no trace)
+---- DEBUG eid 950 pixel 2850,1440
+  debug failed (no trace)
+---- DEBUG eid 960 pixel 900,1560
+  debug failed (no trace)
+---- DEBUG eid 1028 pixel 1920,2100
+  debug failed (no trace)
+---- DEBUG eid 1197 pixel 1920,1695
+  debug failed (no trace)
+done

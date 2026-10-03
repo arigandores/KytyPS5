@@ -13,7 +13,11 @@ threshold; the order of S10; the seal; main; ASCII output in strict cp1250.  Rew
 in-game creations, the gate p362 (form C5: a creation after the entry line instead of the recipe; form APP: the letter) with a
 creation before / right after / after the entry line, a line without " us=", the APP form with and without a recipe, the T2 counts
 of the three readings, the order with counted C5 arms; READ_3 with and without the loaded member of each R and the executor's
-reading printed beside.  Synthetic logs only, no process is started.
+reading printed beside.  S9b (item 371): the video member of the repeat (the detector read with frames after 1 002; a series in
+pi_r1 with a glitch in pi_w0 -> READ_1, the executor variant NOT_EVALUABLE; <= 1 003 frames -> NOT_EVALUABLE), the row
+installed_before = 4aa62e95, the lower bound of the U screen (progress 181 000 / 179 000 / 180 000 ms, the maximum not the last,
+timeout without lines, no line at all), the letter word and the executor variant beside, the RC4 data, the sheet frames of
+RC5.  Synthetic logs only, no process is started.
 The mutlib early-exit form (item 85 (v)(2)): the only bindings of the flag are `ok = True` and `ok &= ...`, the last statement
 is `sys.exit(0 if ok else 1)`.  The first output line names this suite and the scorer under test by sha256; the output ends
 with ALL OK.
@@ -293,8 +297,8 @@ ok &= case('A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5,
 ok &= case('A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, '
            'after 1 002', S.HAZE_CROP == 'crop=300:60:660:60' and (S.HAZE_W, S.HAZE_H) == (60, 12) and S.HAZE_FROM == 300
            and S.HAZE_FRAC == 0.75 and S.HAZE_GAP == 3 and S.HAZE_LEN == 5 and S.HAZE_AFTER == 1002)
-ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/05b_s.md (item 362 (d)), Sky Garden, L0 shuriken_ninja_castle',
-           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/05b_s.md' and S.SKY == 'underwater_aerial_garden'
+ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/06_s.md (item 371 (g)), Sky Garden, L0 shuriken_ninja_castle',
+           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/06_s.md' and S.SKY == 'underwater_aerial_garden'
            and S.L0 == 'shuriken_ninja_castle')
 ok &= case('A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)',
            S.T2_LIST == ('hero_kratos', 'hero_drake', 'voxel_challenge_3', 'armadillo_challenge_2', 'fragile_battle_4',
@@ -553,11 +557,17 @@ ok &= case('F4 form U: the app restore must be the empty set; a GLCache restore 
 ok &= case('F5 returns, the installed binary, return_prev, the manifests and the post copies of W are rows', crow(
     'pi_w1', return_app=dict(expected='16' * 32, got='99' * 32)) and crow('pi_w1', return_glc=dict(expected='17' * 32)) and
     crow('pi_w1', installed_after=dict(sha=BIN_S)) and crow('pi_w1', installed_before=dict(sha='ab')) and
-    crow('pi_w1', installed_before=dict(sha='ab'), installed_after=dict(sha='ab')) and
+    'installed binary after the arm = installed before the arm (item 250 (b))' in
+    [r[0] for r in crow('pi_w1', installed_before=dict(sha='ab'), installed_after=dict(sha='ab'))] and
     crow('pi_w1', return_prev=dict(ok='0')) and crow('pi_w1', man_post_glc={}) and crow('pi_w1', glc_post_copy={}) and
     crow('pi_w0', app_post_copy={}) and not crow('pi_r1', glc_post_copy={}))
 ok &= case('F6 no cache json -> one failing row', S.cache_rows(S.SPEC['u_1'], None, lambda t: None) ==
            [('cache protocol json present', False, 'missing')])
+ok &= case('F7 item 371 (g), RC1: installed_before must be the installed 4aa62e95 of item 342 - before = after = f3b3aa3b fails that '
+           'row only', [r[0] for r in crow('pi_w1', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))] ==
+           ['installed binary before the arm = the installed 4aa62e95 of item 342 (item 371 (g), RC1)'] and
+           [r[0] for r in crow('u_2', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))] ==
+           ['installed binary before the arm = the installed 4aa62e95 of item 342 (item 371 (g), RC1)'])
 
 
 def adm(tag, form=None, **over):
@@ -637,13 +647,23 @@ ok &= case('I9 a W series across frame 1 002 (1 000 - 1 010): letter READ_2, the
            w6 == 'READ_2' and any('READ_3 - DIFFERS (edge 1 002)' in x for x in rd6))
 mkarm('pi_w0', scene(S.SKY, rows(30) + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M))
 w7, rd7 = S.read_pi(getter())
-ok &= case('I10 a W arm presented < 300 s -> NOT_EVALUABLE', w7 == 'NOT_EVALUABLE')
+ok &= case('I10 a W arm presented < 300 s -> NOT_EVALUABLE; the executor variant NOT_EVALUABLE too (no DIFFERS)',
+           w7 == 'NOT_EVALUABLE' and any(x.startswith('executor variant (seal 05b') and x.endswith('): NOT_EVALUABLE')
+                                         for x in rd7))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), glitch=(2999, 0))
-ok &= case('I11 a pi arm with a video < 3 000 frames -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NOT_EVALUABLE')
+w11, rd11 = S.read_pi(getter())
+ok &= case('I11 item 371 (b): a pi arm with a video < 3 000 frames is readable by the letter (READ_2); the executor variant '
+           'NOT_EVALUABLE - DIFFERS (video rule)', w11 == 'READ_2' and any(
+               x.startswith('executor variant (seal 05b') and x.endswith(': NOT_EVALUABLE - DIFFERS (video rule)') for x in rd11))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), glitch=(3000, 0))
-ok &= case('I11b a pi arm with exactly 3 000 video frames is readable', S.read_pi(getter())[0] == 'READ_2')
+w11b, rd11b = S.read_pi(getter())
+ok &= case('I11b a pi arm with exactly 3 000 video frames: READ_2 in both readings, no DIFFERS (video rule)', w11b == 'READ_2' and
+           any(x.startswith('executor variant (seal 05b') and x.endswith(': READ_2') for x in rd11b))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), glitch=(3200, 1))
-ok &= case('I12 a pi arm with a one-frame glitch -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NOT_EVALUABLE')
+w12, rd12 = S.read_pi(getter())
+ok &= case('I12 item 371 (b): a pi arm with a one-frame glitch is readable by the letter (READ_2); the executor variant '
+           'NOT_EVALUABLE - DIFFERS (video rule)', w12 == 'READ_2' and any(
+               x.startswith('executor variant (seal 05b') and x.endswith(': NOT_EVALUABLE - DIFFERS (video rule)') for x in rd12))
 mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), knob=False)
 ok &= case('I13 the knob line missing on a pi arm -> admission FAIL -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NOT_EVALUABLE'
            and any('knob line' in x for x in getter()('pi_w0')['fail']))
@@ -668,6 +688,46 @@ ok &= case('I17 pi_word table: (r1, r0, w, loaded) - READ_3 needs both R loaded 
            S.pi_word(dict(pi_r1=False, pi_r0=False, pi_w1=False, pi_w0=True), {'a': False}, False) == 'READ_3' and
            S.pi_word(dict(pi_r1=True, pi_r0=True, pi_w1=False, pi_w0=False), {'a': True, 'b': False}) == 'READ_OTHER' and
            S.pi_word(dict(pi_r1=True, pi_r0=False, pi_w1=False, pi_w0=False), {'a': False}, False) == 'READ_1')
+
+# ---- item 371 (b) (RC3 of S9r): the video member of the repeat = the video read by the detector with frames after 1 002
+mkarm('pi_r1', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(94435637)]), sat=sat_for([(1928, 1946)]))
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), glitch=(3200, 1))
+w18, rd18 = S.read_pi(getter())
+ok &= case('I18 item 371 (b): a series in pi_r1 and 1 one-frame glitch in pi_w0 -> by the letter READ_1, the executor variant '
+           'NOT_EVALUABLE - DIFFERS (video rule); the video frames, present rows and glitches printed per arm', w18 == 'READ_1'
+           and any(x.startswith('executor variant (seal 05b') and x.endswith(': NOT_EVALUABLE - DIFFERS (video rule)')
+                   for x in rd18) and
+           any(x.startswith('pi_w0: readable (executor variant: NOT readable); video frames 3200, present rows ') and
+               'one-frame glitches 1;' in x for x in rd18) and
+           any(x.startswith('pi_r1: readable (executor variant: readable); video frames 3200, present rows ') and
+               'one-frame glitches 0;' in x for x in rd18))
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), sat=sat_for(n=1002))
+w19, rd19 = S.read_pi(getter())
+ok &= case('I19 a pi video of 1 002 frames (none after frame 1 002) -> NOT_EVALUABLE by the letter', w19 == 'NOT_EVALUABLE' and
+           any(x.startswith('arms not readable (admission, identity, entry, the video read by the detector') and "['pi_w0']" in x
+               for x in rd19))
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), sat=sat_for(n=1003))
+ok &= case('I19b 1 003 frames (0-based: the last is frame 1 002) -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NOT_EVALUABLE')
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), sat=sat_for(n=1004))
+ok &= case('I19c 1 004 frames (frame 1 003 after the edge) -> readable, READ_1', S.read_pi(getter())[0] == 'READ_1')
+rm_arm('pi_w0')
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M), video=False)
+ok &= case('I20 a pi arm without a video (no detector reading) -> NOT_EVALUABLE', S.read_pi(getter())[0] == 'NOT_EVALUABLE')
+mkarm('pi_w0', scene(S.SKY, W_POST + [(16000, dict(ev=[DSAVE(5000)]))], header=HEADER_M))
+mkarm('pi_r1', scene(S.SKY, rows(20), header=HEADER_T[:-1] + [LOADED(94435637)]))
+ok &= case('I21 restored: READ_2', S.read_pi(getter())[0] == 'READ_2')
+ok &= case('I22 RC5 sheet frames: a 19-frame series a-2 .. b+2 contiguous; 20 frames contiguous (24); 21 frames -> 24 spread '
+           'evenly with both ends; a long series 1 930 - 2 010 -> 24 frames 1 928 .. 2 012; clipped at the end of the video',
+           S.sheet_frames(1928, 1946, 3749) == list(range(1926, 1949)) and
+           S.sheet_frames(1000, 1019, 3749) == list(range(998, 1022)) and
+           S.sheet_frames(1000, 1020, 3749) == [998 + 24 * k // 23 for k in range(24)] and
+           S.sheet_frames(1930, 2010, 3749) == [1928 + 84 * k // 23 for k in range(24)] and
+           len(S.sheet_frames(1930, 2010, 3749)) == 24 and S.sheet_frames(3700, 3760, 3749)[-1] == 3748 and
+           S.sheet_frames(3700, 3760, 3749)[0] == 3698 and len(S.sheet_frames(3700, 3760, 3749)) == 24 and
+           S.sheet_frames(1, 5, 100)[0] == 0)
+ok &= case('I23 RC5 sheet filter: the frames by eq(n), 6 wide, rows = ceil(n / 6)', S.sheet_vf([1, 2]) ==
+           "select='eq(n\\,1)+eq(n\\,2)',scale=480:-1,tile=6x1" and S.sheet_vf(list(range(6))).endswith('tile=6x1') and
+           S.sheet_vf(list(range(7))).endswith('tile=6x2'))
 
 # ---- c5_0 and the C5 reading
 C5_EV = [GFX(30000, 'async') for _ in range(5)] + [GFX(20000, 'none') for _ in range(5)]
@@ -862,14 +922,16 @@ U_HDR = ['ShaderSeed: compatibility=x', 'ShaderSeed: installed (615 shaders)'] +
 U_STD = ['Cache test mode: prepare-cold (fresh driver namespace 1)']
 
 
-def u_arm(tag, skip=False, att=False, gates=True, std=True, created=30.0, ready=31.0, lv=None):
-    hdr = U_HDR if gates else HEADER_T
+def u_arm(tag, skip=False, att=False, gates=True, std=True, created=30.0, ready=31.0, lv=None, prog=(), outcome='ok'):
+    hdr = (U_HDR if gates else HEADER_T) + ['ShaderPreparation: progress %d/100 skipped=0 elapsed_ms=%d' % (i + 1, ms)
+                                            for i, ms in enumerate(prog)]
     post = [(16000, dict(ev=[SKIP(8)] if skip else [], skip=1 if skip else 0, held=1 if skip else 0))]
     if att:
         post += [(150000, dict(ev=[SH(0x55, 140000, 1000)]))]
     post += rows(10)
     mkarm(tag, scene(lv or S.SPEC[tag]['level'], post, header=hdr), stdout_shaders=1 if att else 0,
-          extra_stdout=U_STD if std else (), js=js_for(tag, attempt=dict(prep_created_s=created, prep_ready_s=ready)))
+          extra_stdout=U_STD if std else (), js=js_for(tag, attempt=dict(prep_created_s=created, prep_ready_s=ready,
+                                                                         outcome=outcome)))
 
 
 for j in range(1, 6):
@@ -890,7 +952,12 @@ ok &= case('M4 a screen of 181 s (the later of the two lines) -> KILLED', S.read
 u_arm('u_5', created=180.0, ready=179.0)
 ok &= case('M5 a screen of exactly 180 s -> not over (alive)', S.read_u(getter())[0] == 'ALIVE_BY_PROBE_5')
 u_arm('u_5', created=None, ready=30.0)
-ok &= case('M6 one screen line not seen -> the screen undetermined -> UNDETERMINED', S.read_u(getter())[0] == 'UNDETERMINED')
+w6u, l6u = S.read_u(getter())
+ok &= case('M6 one screen line not seen, no progress line, no timeout -> the screen undetermined, not an S-cat member -> '
+           'UNDETERMINED; the letter of item 355 (e) ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)', w6u == 'UNDETERMINED' and
+           any(x.startswith('by the letter of item 355 (e)') and x.endswith(': ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)')
+               for x in l6u) and any(x.startswith('u_5 fragile_battle_1:') and 'preparation screen undetermined (no line' in x
+                                     for x in l6u))
 u_arm('u_5', gates=False)
 f_, gw_, _, _ = S.u_eval(getter()('u_5'))
 ok &= case('M7 no "ShaderSeed: installed" -> CATALOGUE NOT INSTALLED, undetermined member', f_ is None and
@@ -907,6 +974,54 @@ ok &= case('M10 u_3 refused rc 6 when u_2 had no catalogue', S.allowed('u_3', la
 u_arm('u_2')
 u_arm('u_5')
 ok &= case('M11 u_eval of a not made arm -> undetermined', S.u_eval(None)[0] is None and S.u_eval(None)[1] == 'not made')
+u_arm('u_5', ready=None, prog=(1000, 181000))
+wq1, lq1 = S.read_u(getter())
+ok &= case('MU1 item 371 (v): no ready line, the last progress 181 000 ms -> the lower bound 181 s > 180 -> KILLED, printed '
+           '"screen > 181.0 s (lower bound)"', wq1 == 'KILLED' and any(
+               x.startswith('u_5 fragile_battle_1:') and 'preparation screen > 181.0 s (lower bound)' in x and
+               'progress lines 2, max elapsed_ms 181000' in x for x in lq1))
+u_arm('u_5', ready=None, prog=(181000, 1000))
+ok &= case('MU2 the bound is the maximum of elapsed_ms, not the last line -> KILLED', S.read_u(getter())[0] == 'KILLED')
+u_arm('u_5', ready=None, prog=(1000, 179000))
+wq3, lq3 = S.read_u(getter())
+ok &= case('MU3 the last progress 179 000 ms -> the bound 179 s not above 180 -> not a member -> UNDETERMINED; the letter '
+           'ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)', wq3 == 'UNDETERMINED' and any(
+               x.startswith('by the letter of item 355 (e)') and x.endswith(': ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)')
+               for x in lq3) and any('>= 179.0 s (lower bound, not above 180 s' in x for x in lq3))
+u_arm('u_5', ready=None, prog=(180000,))
+wq3b, lq3b = S.read_u(getter())
+ok &= case('MU3b the bound exactly 180 s -> not above -> UNDETERMINED, printed as not above', wq3b == 'UNDETERMINED' and
+           any('>= 180.0 s (lower bound, not above 180 s' in x for x in lq3b))
+u_arm('u_5', created=None, ready=None, outcome='timeout')
+wq4, lq4 = S.read_u(getter())
+ok &= case('MU4 the attempt ended by timeout without both lines and without progress -> the bound = --timeout 600 s -> KILLED, '
+           '"screen > 600.0 s (lower bound)"', wq4 == 'KILLED' and any(
+               x.startswith('u_5 fragile_battle_1:') and 'preparation screen > 600.0 s (lower bound)' in x for x in lq4))
+u_arm('u_5', created=None, ready=None, outcome='timeout', prog=(700000,))
+ok &= case('MU4b timeout with a progress line of 700 s -> the bound is the maximum 700 s (not the timeout term appended last)',
+           any('preparation screen > 700.0 s (lower bound)' in x for x in S.read_u(getter())[1]))
+u_arm('u_5', created=None, ready=None)
+ok &= case('MU5 no line, no progress, outcome ok -> UNDETERMINED', S.read_u(getter())[0] == 'UNDETERMINED')
+u_arm('u_2', skip=True)
+u_arm('u_5', skip=True, created=None, ready=None)
+wq7, lq7 = S.read_u(getter())
+ok &= case('MU7 a failing arm with a screen (u_2) and a failing arm without a screen measure (u_5): 1 failing member -> '
+           'UNDETERMINED; the letter of item 355 (e) KILLED - DIFFERS (screen undetermined); the executor variant KILLED - '
+           'DIFFERS (a failing arm without a screen measure)', wq7 == 'UNDETERMINED' and any(
+               x.startswith('by the letter of item 355 (e)') and x.endswith(': KILLED - DIFFERS (screen undetermined)')
+               for x in lq7) and any(x.startswith('executor variant (a failing arm without a screen measure counts')
+                                     and x.endswith(': KILLED - DIFFERS (a failing arm without a screen measure)') for x in lq7))
+u_arm('u_5')
+u_arm('u_4', att=True)
+wq8, lq8 = S.read_u(getter())
+ok &= case('MU8 RC4: the line of every U arm carries stdout Shaders:, rec_new_after, perm_after and the skip lines after the '
+           'first scene frame (u_2 0 / 0 / 0 / 1, u_4 1 / 0 / 1 / 0); KILLED with two failing members', wq8 == 'KILLED' and any(
+               x.startswith('u_2 hoover_beach:') and 'stdout Shaders: 0, rec_new_after 0, perm_after 0, skip lines after the '
+               'first scene frame 1;' in x for x in lq8) and any(
+               x.startswith('u_4 interactive_credit_00:') and 'stdout Shaders: 1, rec_new_after 0, perm_after 1, skip lines '
+               'after the first scene frame 0;' in x for x in lq8))
+u_arm('u_2')
+u_arm('u_4')
 
 # ================================================================================================ 11 seal and main
 seal = BASE / 'pred' / 'seal.md'

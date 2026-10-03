@@ -7,7 +7,10 @@ every arm, holds and timeouts; a T2 tag before C5 -> rc 6).  Part 2: a second co
 with stubs (the game, procload, idle142, fgcpu143, powershell; sc_s9.py real for --plan, a stub for the rest; cachex_s.py real):
 the full return of pi_w1 and its post copies, the integrity restore of pi_r1 from them, the form U of u_1 (the app caches empty
 for the game, GLCache untouched before, both returned after, the catalogue checked), the binary copy and return, the lock rows,
-the GamePatch interference.  The first output line names this suite and the harness by sha256; the output ends with ALL OK.
+the GamePatch interference.  S9b (item 371 (g), RC1 of S9r): the guard s10/IN_ARM written before the install (the game sees
+it with the tag, the installed sha and the pre manifests) and removed by the successful return; a hanging IN_ARM (a hard kill)
+refuses the next arm rc 1 before the lock; an installed binary other than INST_WANT -> rc 1 inside the lock, nothing installed,
+no IN_ARM, no attempt.  The first output line names this suite and the harness by sha256; the output ends with ALL OK.
     python C:/kyty/s288/s9/test_go_s9.py
 """
 import hashlib
@@ -40,7 +43,7 @@ SC9 = os.path.join(HERE, 'sc_s9.py').replace('\\', '/')
 (BASE / 's9' / 'sc_s9.py').write_bytes(("import importlib.util, sys\n"
                                         "s = importlib.util.spec_from_file_location('sc9', %r)\nm = importlib.util.module_from_spec(s)\n"
                                         "s.loader.exec_module(m)\nsys.exit(m.main(sys.argv[1:], %r, %r))\n" % (
-                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '05b_s.md').as_posix())
+                                            SC9, (BASE / 's10').as_posix(), (BASE / 'pred' / '06_s.md').as_posix())
                                         ).encode('ascii'))
 BASH = shutil.which('bash') or 'C:/Program Files/Git/bin/bash.exe'
 N = [0]
@@ -66,7 +69,7 @@ def go(tag, dry='1', plwait='540', form=None, base=BASE):
 
 
 def seal(lines):
-    (BASE / 'pred' / '05b_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
+    (BASE / 'pred' / '06_s.md').write_text('\n'.join(lines) + '\n', encoding='ascii')
 
 
 ok = True
@@ -152,6 +155,10 @@ ok &= case('G22 the shipped harness unsets KYTY_GAME_PATCH, guards s4 / s6 / s10
            'cachex_s.py', 'unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA VK_LAYER_MESSAGE_ID_FILTER KYTY_GAME_PATCH\n' in src_t
            and '$ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED $ROOT/s10/RETURN_FAILED' in src_t and
            'echo "go_s.sh $T pid $$ started' in src_t)
+ok &= case('G23 item 371 (g): the shipped harness guards s10/IN_ARM with the RETURN_FAILED guards and pins INST_WANT = 4aa62e95 '
+           '(item 342); the seal is pred/06_s.md', '$ROOT/s10/RETURN_FAILED $ROOT/s10/IN_ARM; do' in src_t and
+           'INST_WANT="4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac"\n' in src_t and
+           'PRED=pred/06_s.md\n' in src_t and src_t.count('guardfiles\n') == 2)
 
 # ============================================================== part 2: the path INSIDE the lock, stubbed
 B2 = Path('C:/kyty/s288/s9/fx_go_lock9')
@@ -210,7 +217,8 @@ put2(B2 / 's9' / 'enter_scene_s9.py', (
     "emu, glc = os.environ['CACHEX_EMU'], os.environ['CACHEX_GLC']\n"
     "seen = sorted(os.path.relpath(os.path.join(d, f), emu).replace(os.sep, '/') for d, _, fs in os.walk(emu) for f in fs)\n"
     "open(os.path.join(root, 'log_%s.txt' % tag), 'w').write('log of the stub')\n"
-    "json.dump({'tag': tag, 'gp': os.environ.get('KYTY_GAME_PATCH'), 'seen': seen, "
+    "ia = open(os.path.join(root, 'IN_ARM')).read() if os.path.exists(os.path.join(root, 'IN_ARM')) else None\n"
+    "json.dump({'tag': tag, 'gp': os.environ.get('KYTY_GAME_PATCH'), 'seen': seen, 'in_arm': ia, "
     "'glc': sorted(os.listdir(os.path.join(glc, 'x')))}, open(os.path.join(root, '%s.json' % tag), 'w'))\n"
     "os.makedirs(os.path.join(emu, '_PipelineCache'), exist_ok=True)\n"
     "open(os.path.join(emu, '_PipelineCache', 'PPSA21564.bin'), 'wb').write(b'the game wrote the driver cache')\n"
@@ -226,12 +234,13 @@ for a, b in (('ROOT=C:/kyty/s288\n', 'ROOT=%s\n' % B2.as_posix()), ('LOCK=/c/kyt
              ('SNAP_DRV="1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028"\n', 'SNAP_DRV="%s"\n' % SNAPD),
              ('SNAPDIR="C:/kyty/s288/snap0"\n', 'SNAPDIR="%s"\n' % (B2 / 'snap0').as_posix()),
              ('SNAPDRVDIR="C:/kyty/s288/snap0_drv"\n', 'SNAPDRVDIR="%s"\n' % (B2 / 'snap0_drv').as_posix()),
-             ('RSLEEP=5\n', 'RSLEEP=0\n')):
+             ('RSLEEP=5\n', 'RSLEEP=0\n'),
+             ('INST_WANT="4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac"\n', 'INST_WANT="%s"\n' % sha2(PINU))):
     assert text2.count(a) == 1, a
     text2 = text2.replace(a, b)
 (B2 / 's9' / 'go_s9.sh').write_bytes(text2.encode('ascii'))
-TAGS2 = ('pi_w1', 'pi_r1', 'u_1', 'c5_0')
-(B2 / 'pred' / '05b_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
+TAGS2 = ('pi_w1', 'pi_r1', 'u_1', 'c5_0', 'pi_w0')
+(B2 / 'pred' / '06_s.md').write_bytes((''.join('go_s9 call: PLWAIT=540 bash C:/kyty/s288/s9/go_s9.sh %s\n' % t for t in TAGS2) +
                                        's binary: %s %s\nu binary: %s %s\n' % (sha2(PINS), PINS.as_posix(), sha2(PINU),
                                                                                PINU.as_posix())).encode('ascii'))
 BINP = '/' + B2.as_posix()[0].lower() + B2.as_posix()[2:] + '/bin'
@@ -315,6 +324,32 @@ ok &= case('GL9 KYTY_GAME_PATCH of the caller not seen by the game; a GamePatch:
            rc == 7 and js2('u_1').get('gp') is None and 'GAMEPATCH interference: 1 lines' in o and
            'item 342 (e): lines beginning GamePatch: in log_u_1.txt: 1' in t3 and CX.app_manifest(None)[1] == PRE_APP and
            GAME2.read_bytes() == b'installed build X' and not Path(LOCK2).exists())
+ia1 = js2('pi_w1').get('in_arm') or ''
+t4 = (B2 / 's10' / 'times.txt').read_text()
+ok &= case('GL10 IN_ARM (item 371 (g)): the game saw it - the tag, the installed sha, man_pre_app / man_pre_glc of the arm - and '
+           'the successful return removed it', ia1.startswith('IN_ARM pi_w1 ') and ('installed: %s (copy' % sha2(PINU)) in ia1
+           and ('man_pre_app: %s ' % cj2('pi_w1').get('man_pre_app', {}).get('sha', 'x')) in ia1 and
+           ('man_pre_glc: %s ' % cj2('pi_w1').get('man_pre_glc', {}).get('sha', 'x')) in ia1 and
+           len(cj2('pi_w1').get('man_pre_app', {}).get('sha', '')) == 64 and
+           not (B2 / 's10' / 'IN_ARM').exists() and t4.count('guard ') >= 2 and 'removed after the successful return' in t4)
+(B2 / 's10' / 'IN_ARM').write_text('IN_ARM pi_w0 2026-10-03T00:00:00Z pid 1 - a hard kill left it\n')
+n_lock = len(lockrows())
+rc, o = go2('pi_w0')
+ok &= case('GL11 a hanging IN_ARM (a hard kill of an earlier arm) -> rc 1 "return failed guard" before the lock: no lock row, '
+           'no attempt, the installed binary untouched, the guard kept', rc == 1 and 'return failed guard' in o and 'IN_ARM' in o
+           and len(lockrows()) == n_lock and not (B2 / 's10' / 'attempt_pi_w0.txt').exists() and
+           GAME2.read_bytes() == b'installed build X' and (B2 / 's10' / 'IN_ARM').exists())
+(B2 / 's10' / 'IN_ARM').unlink()
+put2(GAME2, b'another installed build')
+n_lock = len(lockrows())
+rc, o = go2('pi_w0')
+t5 = (B2 / 's10' / 'times.txt').read_text()
+ok &= case('GL12 an installed binary other than INST_WANT -> rc 1 inside the lock: nothing installed, no IN_ARM, no attempt, the '
+           'lock taken and released, the row in times.txt', rc == 1 and 'installed binary not' in o and
+           GAME2.read_bytes() == b'another installed build' and not (B2 / 's10' / 'IN_ARM').exists() and
+           not (B2 / 's10' / 'attempt_pi_w0.txt').exists() and len(lockrows()) == n_lock + 2 and not Path(LOCK2).exists() and
+           ('!= %s (item 342) - no arm' % sha2(PINU)) in t5)
+put2(GAME2, b'installed build X')
 print('checks: %d' % N[0])
 if ok:
     print('ALL OK')

@@ -26,7 +26,10 @@ READINGS (words of this scorer; the decisions are the lead's, S11):
              READ_1 (a series in pi_r1, none in pi_r0), READ_2 (no series in the four, or in both R; both R loaded N bytes = the
              last write of their own W, 0 disabled), READ_3 (a series only in pi_r0 among the R arms, or only in the W arms; AND
              the loaded member of READ_2 on both R - item 362 (v)), READ_OTHER; the executor's reading (READ_3 without the loaded
-             member) printed beside.
+             member) printed beside.  Item 371 (b): an arm is read with its admission, its entry, no death marker and the video
+             member = the video read by the detector (haze not None) with frames after frame 1 002 (0-based: >= 1 004 frames);
+             the video frames, the present rows and the one-frame glitches are data per arm; the word of seal 05b (+ >= 3 000
+             frames and 0 one-frame glitches as members) is printed beside as the executor variant ("DIFFERS (video rule)").
   --read-c5  item 355 (d): "salt without precache neutralises" = >= 10 in-game creations (lines "AvTrace: pipeline" without
              "precache") and their median us >= 20 000 -> YES -> T2 form C5; NO -> T2 form APP; the arm not admitted / not
              entered -> UNDETERMINED (no T2).
@@ -38,6 +41,14 @@ READINGS (words of this scorer; the decisions are the lead's, S11):
              draw line after the first scene frame or an attributed frame >= 100 ms; the preparation screen (process start to the
              later of "ShaderPreparation: ready" and "PipelinePrecache: all pipelines created", both printed); S-cat KILLED when
              >= 2 of 5 arms fail or a screen > 180 s, else ALIVE_BY_PROBE_5 (UNDETERMINED while an arm is not evaluable).
+             Item 371 (v): a screen without both lines has the lower bound max(elapsed_ms of "ShaderPreparation: progress",
+             --timeout when the attempt ended by timeout); a bound > 180 s is the kill member ("screen > N s (lower bound)"); an
+             arm with neither both lines nor a bound > 180 s is not an S-cat member: with >= 1 such arm and < 2 failing members
+             the word is UNDETERMINED; the letter of item 355 (e) ("else alive") is printed beside ("DIFFERS (screen
+             undetermined)"), and the executor variant counting a failing arm without a screen measure ("DIFFERS (a failing arm
+             without a screen measure)").  RC4: per U arm stdout Shaders:, rec_new_after, perm_after and the skip lines after the
+             first scene frame (data, item 371 (g)).  The lead sheet of a series longer than 20 frames: 24 frames spread evenly
+             over [start-2, end+2] (RC5).
 Output is ASCII only.  Logs are read in binary, streaming.
     python sc_s9.py --tag <tag> | --read-pi | --read-c5 | --read-t2 | --read-u | --summary | --allowed <tag> | --plan <tag>
              [--form c5|app] | --check-seal [--seal <p>] | --haze <video> | --haze-sheet <tag> | --regress
@@ -71,7 +82,7 @@ B = A.B
 
 ROOT = 'C:/kyty/s288'
 LINK_DIR = 'C:/kyty/s288/s10'
-PRED_PATH = 'C:/kyty/s288/pred/05b_s.md'                       # item 362 (d)
+PRED_PATH = 'C:/kyty/s288/pred/06_s.md'                        # item 371 (g)
 BIN_S = 'f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3'   # S5c, item 340 (v), item 355 (g)
 BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'   # installed, item 342, item 355 (e)
 SNAP_APP = 'd8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4'   # item 241 (g)(1)
@@ -103,6 +114,8 @@ HAZE_FRAC = 0.75
 HAZE_GAP = 3
 HAZE_LEN = 5
 HAZE_AFTER = 1002
+SHEET_LONG = 20                  # item 371 (g), RC5: a series longer than 20 frames -> 24 frames spread evenly
+SHEET_N = 24
 FFMPEG = 'ffmpeg'
 NL = chr(10)
 FAMILIES = A.FAMILIES
@@ -187,11 +200,16 @@ def env_rows(spec, env):
     return (fam_w == fam_h, ','.join(diff) or '-'), (rest_h == want and all(k in have for k in PATH_KEYS), ','.join(sdiff) or '-')
 
 
+def stable_timeout(spec):
+    """(stable draws, --timeout s) of an arm: pi 300 / 480, u 100 / 600, the rest 100 / 480."""
+    return (300, 480) if spec['group'] == 'pi' else (100, 600 if spec['u'] else 480)
+
+
 def plan(spec):
     """One line for go_s9.sh: link level cls mode hold salt pcw src sdraws timeout pre0 cs0 u binkind form."""
     if spec['t2form'] and spec.get('form') not in ('c5', 'app'):
         return 'UNDETERMINED'
-    sd, to = (300, 480) if spec['group'] == 'pi' else (100, 600 if spec['u'] else 480)
+    sd, to = stable_timeout(spec)
     return 's10 %s %s %s %d %d %s %s %d %d %d %d %d %s %s' % (
         spec['level'], spec['cls'], spec['mode'], spec['hold'], 1 if spec['salt'] else 0,
         spec['pcw'] if spec['pcw'] is not None else '-', spec['src'] or '-', sd, to, 1 if spec['pre0'] else 0,
@@ -203,8 +221,9 @@ def scan_x(path):
     """The lines sc_s.scan_s does not keep, with the same group index (the number of main FrameTrace rows before the line):
     BvhLoopCapTrip:, CsPretranslate: by kind, GamePatch:, in-game creation lines (AvTrace: pipeline without "precache") with
     their us field and their log line number (counted as sc_s.scan_s counts s['lines'], item 362 (b)), the row count (=
-    len(scan_s rows)) and the line count (= scan_s lines) - identities of this scan."""
-    r = dict(rows=0, lines=0, bvh=[], csp={}, gamepatch=0, create=[], create_nous=0, create_ln=[])
+    len(scan_s rows)) and the line count (= scan_s lines) - identities of this scan; the lines "ShaderPreparation: progress":
+    their count and the maximum of their elapsed_ms (item 371 (v): the lower bound of the preparation screen)."""
+    r = dict(rows=0, lines=0, bvh=[], csp={}, gamepatch=0, create=[], create_nous=0, create_ln=[], prog_ms=None, prog_n=0)
     with open(path, 'rb') as f:
         for line in f:
             r['lines'] += 1
@@ -226,6 +245,12 @@ def scan_x(path):
             elif c0 == b'G':
                 if line.startswith(b'GamePatch:'):
                     r['gamepatch'] += 1
+            elif c0 == b'S':
+                if line.startswith(b'ShaderPreparation: progress '):
+                    v = A.field(line.rstrip(), b'elapsed_ms')
+                    r['prog_n'] += 1
+                    if v is not None and (r['prog_ms'] is None or v > r['prog_ms']):
+                        r['prog_ms'] = v
             elif c0 == b'A':
                 if line.startswith(b'AvTrace: pipeline ') and b'precache' not in line:
                     us = A.field(line.rstrip(), b'us')
@@ -453,6 +478,8 @@ def cache_rows(spec, cj, cjs_of):
     ib, ia = jget(cj, 'installed_before', 'sha'), jget(cj, 'installed_after', 'sha')
     add('installed binary after the arm = installed before the arm (item 250 (b))', ib is not None and len(ib) == 64 and ia == ib,
         '%s / %s' % ((ia or '-')[:16], (ib or '-')[:16]))
+    add('installed binary before the arm = the installed %s of item 342 (item 371 (g), RC1)' % BIN_U[:8], ib == BIN_U,
+        (ib or '-')[:16])
     add('return_prev_ok (no RETURN_FAILED guard before the arm, item 250 (v))', jget(cj, 'return_prev', 'ok') == '1',
         jget(cj, 'return_prev', 'ok') or '-')
     for key in ('man_pre_app', 'man_pre_glc', 'man_post_app', 'man_post_glc', 'glc_pre_copy'):
@@ -530,6 +557,7 @@ def score_arm(tag, form=None, root=LINK_DIR, pred_sha=None, pred_path=PRED_PATH,
     sox = scan_stdout_x(sp)
     eg, end, fi = A.locate(s, spec['level'])
     r['entered'] = eg is not None
+    r['present_rows'] = len(s['rows'])
     r['first'] = None if fi is None else (s['rows'][fi][0], s['rows'][fi][1], s['rows'][fi][2])
     ident = [x for x in A.identities(s, std, spec['cls']) if not x[0].startswith('T-4')]
     if spec['cls'] == 'T':
@@ -555,7 +583,8 @@ def score_arm(tag, form=None, root=LINK_DIR, pred_sha=None, pred_path=PRED_PATH,
     r['admit'].append(('0 lines GamePatch: in the log (item 342 (e))', sx['gamepatch'] == 0, sx['gamepatch']))
     r['prep'] = dict(queued=s['queued'], created_ms=s['created_ms'], ready=s['ready'], waited_ms=s['waited_ms'],
                      dload=s['dload'], disabled=s['disabled'], seed_installed=s['seed_installed'],
-                     seed_ignored=s['seed_ignored'], cache_test=sox['any'], prepare_cold=sox['prepare_cold'])
+                     seed_ignored=s['seed_ignored'], cache_test=sox['any'], prepare_cold=sox['prepare_cold'],
+                     prog_ms=sx['prog_ms'], prog_n=sx['prog_n'])
     r['create'] = dict(n=len(sx['create']), med=A.med(sx['create']), nous=sx['create_nous'],
                        all=A.cold_class(A.creations(s)), all_n=len(A.creations(s)))
     r['saves'] = dict(driver=len(s['dsave']), last_bytes=s['dsave'][-1][1] if s['dsave'] else None, fail=s['savefail'],
@@ -602,10 +631,25 @@ def ok_arm(r):
 
 
 def clean_arm(r):
-    """Admitted, entered, video of >= 3 000 frames with 0 glitches and 0 death markers (the arm is readable)."""
+    """Item 371 (b): the arm is readable - admitted, entered, the video read by the detector (haze not None) with frames after
+    frame 1 002 (0-based), no death marker; the video frames, the present rows and the one-frame glitches are data, not members."""
+    h = r.get('haze')
+    return ok_arm(r) and r.get('entered') and h is not None and h['frames'] - 1 > HAZE_AFTER and not r['marks'] and \
+        not r['ended'] and not r['exited']
+
+
+def clean_arm_x(r):
+    """The executor variant of seal 05b (printed beside, item 371 (b)): admitted, entered, a video of >= 3 000 frames with 0
+    one-frame glitches, read by the detector, no death marker."""
     g = r.get('glitch') or {}
     return ok_arm(r) and r.get('entered') and r.get('video') and g.get('video_frames', 0) >= FRAMES_VIDEO and \
-        g.get('glitches') == 0 and not r['marks'] and not r['ended'] and not r['exited']
+        g.get('glitches') == 0 and not r['marks'] and not r['ended'] and not r['exited'] and r.get('haze') is not None
+
+
+def video_rule_line(word, wordx):
+    """Item 371 (b): the word of seal 05b printed beside."""
+    return 'executor variant (seal 05b: + video >= %d frames and 0 one-frame glitches as members; not members by item 371 (b)): ' \
+           '%s%s' % (FRAMES_VIDEO, wordx, '' if wordx == word else ' - DIFFERS (video rule)')
 
 
 # ---------------------------------------------------------------------------------------------------------- readings
@@ -616,32 +660,39 @@ def read_pi(get):
     if any(v is None for v in rs.values()):
         out.append('repeat of integrity: not every arm made - NOT_EVALUABLE')
         return 'NOT_EVALUABLE', out
-    bad = [t for t in PI_ORDER if not clean_arm(rs[t]) or rs[t].get('haze') is None]
+    bad = [t for t in PI_ORDER if not clean_arm(rs[t])]
+    bad_x = [t for t in PI_ORDER if not clean_arm_x(rs[t])]
     hz = {}
     for t in PI_ORDER:
         h = rs[t].get('haze')
+        g = rs[t].get('glitch') or {}
         hz[t] = None if h is None else bool(h['after'])
-        out.append('%s: %s; video %s; haze frames %s median %s low %s series %s; after frame %d (letter: start > %d) %s; '
-                   'variant (any frame > %d) %s' % (
-                       t, 'clean' if clean_arm(rs[t]) else 'NOT clean (%s)' % (rs[t]['fail'] or 'video/markers'),
-                       rs[t].get('glitch'), h and h['frames'], h and round(h['med'], 4), h and h['low'],
-                       h and h['runs'], HAZE_AFTER, HAZE_AFTER, h and h['after'], HAZE_AFTER, h and h['after_var']))
+        out.append('%s: %s (executor variant: %s); video frames %s, present rows %s, one-frame glitches %s; haze frames %s median %s '
+                   'low %s series %s; after frame %d (letter: start > %d) %s; variant (any frame > %d) %s' % (
+                       t, 'readable' if clean_arm(rs[t]) else 'NOT readable (%s)' % (rs[t]['fail'] or 'entry/video/markers'),
+                       'readable' if clean_arm_x(rs[t]) else 'NOT readable', g.get('video_frames'), rs[t].get('present_rows'),
+                       g.get('glitches'), h and h['frames'], h and round(h['med'], 4), h and h['low'], h and h['runs'],
+                       HAZE_AFTER, HAZE_AFTER, h and h['after'], HAZE_AFTER, h and h['after_var']))
     held = dict((t, rs[t]['derive142']['dt_after_first_us'] >= HOLD_W_US) for t in ('pi_w1', 'pi_w0'))
     out.append('W arms presented >= 300 s after the first scene frame: %s' % held)
     loaded = {}
     for rt, wt in PI_W.items():
-        lb = rs[rt]['loaded']
-        wb = rs[wt]['saves']['last_bytes']
-        loaded[rt] = lb is not None and lb == wb and rs[rt]['prep']['disabled'] == 0
-        out.append('%s loaded %s bytes = last write of %s %s, disabled %d -> %s' % (
-            rt, lb, wt, wb, rs[rt]['prep']['disabled'], 'PASS' if loaded[rt] else 'FAIL'))
+        lb = rs[rt].get('loaded')
+        wb = (rs[wt].get('saves') or {}).get('last_bytes')
+        dis = (rs[rt].get('prep') or {}).get('disabled')
+        loaded[rt] = lb is not None and lb == wb and dis == 0
+        out.append('%s loaded %s bytes = last write of %s %s, disabled %s -> %s' % (
+            rt, lb, wt, wb, dis, 'PASS' if loaded[rt] else 'FAIL'))
     z1 = rs['pi_r1'].get('pcw_trace')
     out.append('(z)(1) on pi_r1: %s' % ('undetermined (RC1 S5d: 0 "AvTrace: pcw overlap wait gfx|cs" lines; printed beside '
                                         'FIXED, not a member - item 355 (g))' if z1 is None or z1['waits_n'] == 0 else
                                         '%d wait lines - a lower bound of overlaps, GuestGpu waits only' % z1['waits_n']))
     var = dict((t, bool(rs[t]['haze']['after_var'])) if rs[t].get('haze') else (t, None) for t in PI_ORDER)
+    wordx = 'NOT_EVALUABLE' if bad_x or not all(held.values()) else pi_word(hz, loaded)
     if bad or not all(held.values()):
-        out.append('arms not readable (admission, identity, entry, video, markers, haze, hold): %s' % (bad or 'hold'))
+        out.append('arms not readable (admission, identity, entry, the video read by the detector with frames after %d, markers, '
+                   'hold - item 371 (b)): %s' % (HAZE_AFTER, bad or 'hold'))
+        out.append(video_rule_line('NOT_EVALUABLE', wordx))
         return 'NOT_EVALUABLE', out
     word = pi_word(hz, loaded)
     wv = pi_word(var, loaded)
@@ -652,6 +703,7 @@ def read_pi(get):
                                                                              '' if wv == word else ' - DIFFERS (edge 1 002)'))
     out.append('reading of the executor (READ_3 without the loaded member of (2), rejected by item 362 (v)): %s%s' % (
         wx, '' if wx == word else ' - DIFFERS (the loaded member)'))
+    out.append(video_rule_line(word, wordx))
     if word == 'READ_3' and hz['pi_r0'] and (hz['pi_w1'] or hz['pi_w0']):
         out.append('note: a series in pi_r0 and in a W arm, none in pi_r1 - READ_3 ("only in pi_r0" among the R arms, item 362 (v))')
     meaning = {'READ_1': '(1) the sign with the blob =1 - a defect of S-pcw: iteration 2, B33 not FIXED (decision S11)',
@@ -768,17 +820,37 @@ def read_t2(get):
     return out
 
 
-def u_eval(r):
-    """One U arm: (fails S-cat True / False / None undetermined, the gate word, the screen seconds or None, detail)."""
+def u_screen(r):
+    """Item 355 (e), item 371 (v): (seconds, kind) of the preparation screen of a U arm.  'measured' - both lines seen: the later of
+    prep_created_s and prep_ready_s (from the Popen); 'lower bound' - a line missing: the maximum of elapsed_ms of the lines
+    "ShaderPreparation: progress" (the startup wait loop, 4414e235 window.cpp:1015) and, when the attempt ended by timeout, the
+    --timeout of the arm; 'none' - neither."""
     if r is None:
-        return None, 'not made', None, ''
-    gates = r['prep']['seed_installed'] >= 1 and r['prep']['prepare_cold'] >= 1
+        return None, 'none'
+    xs = [x for x in (r.get('prep_created_s'), r.get('prep_ready_s')) if x is not None]
+    if len(xs) == 2:
+        return max(xs), 'measured'
+    lb = []
+    pm = (r.get('prep') or {}).get('prog_ms')
+    if pm is not None:
+        lb.append(pm / 1000.0)
+    if r.get('attempt') == 'timeout':
+        lb.append(float(stable_timeout(SPEC[r['tag']])[1]))
+    return (max(lb), 'lower bound') if lb else (None, 'none')
+
+
+def u_eval(r):
+    """One U arm: (fails S-cat True / False / None undetermined, the gate word, (screen seconds, kind) of u_screen, detail)."""
+    if r is None:
+        return None, 'not made', (None, 'none'), ''
+    p = r.get('prep') or {}
+    gates = p.get('seed_installed', 0) >= 1 and p.get('prepare_cold', 0) >= 1
     if not gates:
         return None, 'CATALOGUE NOT INSTALLED (ShaderSeed: installed %d, Cache test mode: prepare-cold %d) - not an S-cat ' \
-                     'attempt, stop of the U series, a question to the lead' % (r['prep']['seed_installed'],
-                                                                                 r['prep']['prepare_cold']), None, ''
-    xs = [x for x in (r.get('prep_created_s'), r.get('prep_ready_s')) if x is not None]
-    screen = max(xs) if len(xs) == 2 else None
+                     'attempt (a form interference, not counted among the S-cat arms, a repeat only by a lead item, item 371 ' \
+                     '(g)), stop of the U series, a question to the lead' % (p.get('seed_installed', 0),
+                                                                              p.get('prepare_cold', 0)), (None, 'none'), ''
+    screen = u_screen(r)
     if not ok_arm(r) or not r.get('entered') or 'f1' not in r:
         return None, 'gates ok', screen, 'arm %s entered %s' % ('PASS' if ok_arm(r) else 'FAIL', r.get('entered'))
     if r['att100'] is None:
@@ -788,35 +860,60 @@ def u_eval(r):
                                       '%d' % (r['skips_after'], r['skips_after_scene'], r['att100'])
 
 
+def screen_text(sec, kind):
+    if kind == 'measured':
+        return '%.1f s' % sec
+    if kind == 'lower bound':
+        return ('> %.1f s (lower bound)' % sec) if sec > PREP_LIMIT_S else \
+            '>= %.1f s (lower bound, not above %d s - the screen undetermined, not an S-cat member)' % (sec, PREP_LIMIT_S)
+    return 'undetermined (no line, no progress line, no timeout - not an S-cat member)'
+
+
 def read_u(get):
-    """Item 355 (e): KILLED / ALIVE_BY_PROBE_5 / UNDETERMINED."""
+    """Item 355 (e), item 371 (v): KILLED / ALIVE_BY_PROBE_5 / UNDETERMINED; the letter of item 355 (e) and the executor variant
+    beside."""
     out = []
     nf = 0
+    nf_m = 0
     und = 0
+    und_scr = 0
     over = False
     for j in range(U_N):
         tag = 'u_%d' % (j + 1)
         r = get(tag)
-        f, gw, screen, det = u_eval(r)
-        nf += f is True
-        und += f is None
-        if screen is not None and screen > PREP_LIMIT_S:
+        f, gw, (sec, kind), det = u_eval(r)
+        if sec is not None and sec > PREP_LIMIT_S:
             over = True
-        if screen is None:
-            und += 0 if f is None else 1
-        out.append('%s %s: %s; S-cat member %s; preparation screen %s s (PipelinePrecache: all pipelines created %s s, '
-                   'ShaderPreparation: ready %s s; log created %s ms, startup wait %s ms); %s' % (
-                       tag, U_LIST[j], gw, {True: 'FAILS', False: 'holds', None: 'undetermined'}[f], screen,
-                       r and r.get('prep_created_s'), r and r.get('prep_ready_s'), r and r['prep']['created_ms'],
-                       r and r['prep']['waited_ms'], det))
-    if nf >= U_KILL or over:
+        member = kind == 'measured' or (kind == 'lower bound' and sec > PREP_LIMIT_S)
+        nf += f is True
+        nf_m += f is True and member
+        und += f is None
+        if not member and f is not None:
+            und_scr += 1
+        p = (r or {}).get('prep') or {}
+        g = (r or {}).get('gates') or {}
+        out.append('%s %s: %s; S-cat member %s; stdout Shaders: %s, rec_new_after %s, perm_after %s, skip lines after the first '
+                   'scene frame %s; preparation screen %s (PipelinePrecache: all pipelines created %s s, ShaderPreparation: ready '
+                   '%s s; progress lines %s, max elapsed_ms %s; attempt %s; log created %s ms, startup wait %s ms); %s' % (
+                       tag, U_LIST[j], gw, {True: 'FAILS', False: 'holds', None: 'undetermined'}[f],
+                       g.get('stdout_shaders', '-'), g.get('rec_new_after', '-'), g.get('perm_after', '-'),
+                       (r or {}).get('skips_after', '-'), screen_text(sec, kind), r and r.get('prep_created_s'),
+                       r and r.get('prep_ready_s'), p.get('prog_n'), p.get('prog_ms'), r and r.get('attempt'),
+                       p.get('created_ms'), p.get('waited_ms'), det))
+    if nf_m >= U_KILL or over:
         word = 'KILLED'
-    elif und:
+    elif und or und_scr:
         word = 'UNDETERMINED'
     else:
         word = 'ALIVE_BY_PROBE_5'
-    out.append('S-cat (item 229 (d)(2), item 355 (e)): arms failing %d of %d (kill at >= %d), a screen > %d s %s -> %s' % (
-        nf, U_N, U_KILL, PREP_LIMIT_S, over, word))
+    letter = 'KILLED' if nf >= U_KILL or over else ('UNDETERMINED' if und else 'ALIVE_BY_PROBE_5')
+    varx = 'KILLED' if nf >= U_KILL or over else ('UNDETERMINED' if und or und_scr else 'ALIVE_BY_PROBE_5')
+    out.append('S-cat (item 229 (d)(2), item 355 (e), item 371 (v)): failing members %d of %d (kill at >= %d), a screen > %d s %s, '
+               'arms without a screen measure %d -> %s' % (nf_m, U_N, U_KILL, PREP_LIMIT_S, over, und_scr, word))
+    out.append('by the letter of item 355 (e) ("else alive": an arm without a screen measure is alive, its failure counts): %s%s' % (
+        letter, '' if letter == word else ' - DIFFERS (screen undetermined)'))
+    out.append('executor variant (a failing arm without a screen measure counts among the failing, %d failing): %s%s' % (
+        nf, varx, '' if varx == word else ' - DIFFERS (a failing arm without a screen measure)'))
     return word, out
 
 
@@ -1049,9 +1146,23 @@ def make_get(root=LINK_DIR, pred=PRED_PATH, haze=True):
     return get
 
 
+def sheet_frames(a, b, frames):
+    """Item 371 (g), RC5: the frames of the lead sheet of the series a .. b - a-2 .. b+2 clipped to the video; a series longer than
+    20 frames -> 24 frames spread evenly over [a-2, b+2] (both ends kept)."""
+    lo, hi = max(0, a - 2), min(frames - 1, b + 2)
+    if b - a + 1 <= SHEET_LONG:
+        return list(range(lo, hi + 1))
+    return sorted(set(lo + (hi - lo) * k // (SHEET_N - 1) for k in range(SHEET_N)))
+
+
+def sheet_vf(idx):
+    """The ffmpeg filter of the sheet: the frames idx tiled 6 wide at 480 px."""
+    return "select='%s',scale=480:-1,tile=6x%d" % ('+'.join('eq(n\\,%d)' % i for i in idx), (len(idx) + 5) // 6)
+
+
 def haze_sheet(tag, root=LINK_DIR, ffmpeg=FFMPEG):
-    """The lead sheet of every series after frame 1 002 of a pi arm: frames start-2 .. end+2 (at most 24) tiled 6 wide at
-    480 px, into <root>/haze_<tag>_<start>-<end>.png; prints the files."""
+    """The lead sheet of every series after frame 1 002 of a pi arm: the frames of sheet_frames() tiled 6 wide at 480 px, into
+    <root>/haze_<tag>_<start>-<end>.png; prints the files and the frame numbers."""
     vid = os.path.join(root, 'rec_%s.mp4' % tag)
     h = haze_of(vid, os.path.join(root, 'runs_s', '%s.haze.json' % tag))
     if h is None:
@@ -1061,14 +1172,12 @@ def haze_sheet(tag, root=LINK_DIR, ffmpeg=FFMPEG):
         print('HAZE SHEET %s: no series after frame %d - no sheet' % (tag, HAZE_AFTER))
         return 0
     for a, b in h['after_var']:
-        lo, hi = max(0, a - 2), min(h['frames'] - 1, b + 2, a - 2 + 23)
+        idx = sheet_frames(a, b, h['frames'])
         outp = os.path.join(root, 'haze_%s_%d-%d.png' % (tag, a, b))
-        n = hi - lo + 1
-        rows = (n + 5) // 6
-        vf = "select='between(n\\,%d\\,%d)',scale=480:-1,tile=6x%d" % (lo, hi, rows)
-        subprocess.run([ffmpeg, '-loglevel', 'error', '-y', '-i', vid, '-vf', vf, '-frames:v', '1', '-vsync', '0', outp])
-        print('HAZE SHEET %s series %d-%d frames %d-%d -> %s sha256 %s' % (
-            tag, a, b, lo, hi, outp, A.sha_file(outp) if os.path.isfile(outp) else 'MISSING'))
+        subprocess.run([ffmpeg, '-loglevel', 'error', '-y', '-i', vid, '-vf', sheet_vf(idx), '-frames:v', '1', '-vsync', '0',
+                        outp])
+        print('HAZE SHEET %s series %d-%d frames %s -> %s sha256 %s' % (
+            tag, a, b, ','.join(str(i) for i in idx), outp, A.sha_file(outp) if os.path.isfile(outp) else 'MISSING'))
     return 0
 
 

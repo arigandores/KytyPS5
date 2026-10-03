@@ -1,0 +1,20 @@
+2026-10-03T06:38:04Z S9b start: read item 371, review s9r, s9 files (no lock at 06:38:04Z by date -u)
+2026-10-03T06:51:36Z RULE 27 VIOLATION (own error, recorded at 2026-10-03T06:51:36Z): the lock of gop36.sh jh_hoover_beach (lock line: started 2026-10-03T08:38:12 local = 06:38:12Z) was taken while this link ran read-only commands without a lock check at their start: grep/sed/python reads of enter_scene_s9.py and sc_s.py and three curl GET of HPP-441/449/453 with ls (06:39:54Z, found LOCKED in that same command), echo/cat of the lock and ls of the run folder (~06:40Z), a python edit of the draft in the run folder (06:49:58Z, under 1 s, file outside C:/kyty); no file under C:/kyty was written under the lock; since 06:50Z the lock checked by Glob only, no process
+2026-10-03T06:51:36Z lock free (Glob 06:5xZ); patch371.py and mk06.py copied from the run folder and applied (originals in s9b/orig/)
+2026-10-03T07:02:54Z window without a series (HPP-441 done, HPP-449 in_review, HPP-453 blocked; API 07:02:47Z); test_sc_s9.py draft 06:51Z rc 0 checks 166 ALL OK (s9b/t1.txt); test_go_s9.py draft start
+2026-10-03T07:03:33Z test_go_s9.py draft rc 0 wall 39 s (s9b/tgo.txt)
+2026-10-03T07:03:50Z screening --only of the 57 new and changed mutants start: prognosis 57 x 17 s / 12 x 1.3 = 105 s + baselines ~40 s; budget used before S9b about 689 s (seal 05b section 5)
+2026-10-03T07:06:59Z screening --only rc 1 wall 189 s: SURVIVORS: ['hs_long'] (56 of 57 selected mutants killed; 269 defined in the mutant script)
+2026-10-03T07:07:28Z hs_long removed from mut_sc_s9.py as equivalent (a 20-frame series: a-2 .. b+2 = 24 frames in both branches); 268 mutants defined
+2026-10-03T07:07:28Z COUNTED full mutant run (S9b) start: prognosis 268 x 25.2 s (baseline of the screening run) / 12 x 1.3 = 731 s + baselines ~50 s; budget used before it about 689 + 189 = 878 s of 1800 s
+2026-10-03T07:13:43Z COUNTED full mutant run (S9b) rc 1 wall 375 s: SURVIVORS: ['cr_inst'] (267 of 268 selected mutants killed; 268 defined in the mutant script) mut_sc_s9c.txt sha256 23a52d86d32687d8869f93125f982e2f1472609932fb5c3edf5b202d50cb41e1
+2026-10-03T07:14:07Z survivor cr_inst = a fixture gap opened by the new row installed_before (F5 'ab'/'ab' now fails that row too); F5 checks the name of the row 'installed binary after the arm = installed before the arm' (test only, the scorer unchanged)
+2026-10-03T07:14:27Z test_sc_s9.py rc 0 ALL OK checks: 166
+2026-10-03T07:14:34Z --only of the 17 cache-row mutants on the strengthened F5 start: prognosis 17 x 25 s / 12 x 1.3 = 46 s + baselines ~50 s; budget used 878 + 375 = 1253 s
+2026-10-03T07:15:29Z --only cache rows rc 0 wall 55 s: ALL KILLED (17 of 17 selected mutants killed; 268 defined in the mutant script) mut_screen6.txt sha256 1f0cd8f78635e4d906db9c2d2cb1a648db4760ae32052041c0cd95e1caf3b348
+2026-10-03T07:16:01Z final test_sc_s9.py rc 0 checks: 166 ALL OK test_sc_s9.out.txt sha256 f8d28a5da7a8057ba490f3fb0105c515d9c5279cb5c5424248a5dd5548e09f49 (API HPP-449 done - HPP-453 blocked 6257168c-49cd-4d43-89e2-0c4adbf2c20b )
+2026-10-03T07:17:29Z final test_go_s9.py rc 0 checks: 35 ALL OK test_go_s9.out.txt sha256 30939da11c157ed742e20306f7ba5dbf6806e2c862da8f347ecfe36945d531be
+2026-10-03T07:18:16Z installation changed: FS3 540c035a installed 07:11:12Z (lead note HPP-453 07:14:06Z, items 374-375) - by item 371 (g) installed_before = 4aa62e95 fails, S10 stands until a lead item; line added to seal06_tail.md section 6; INST_WANT / BIN_U not changed; F10e series (HPP-453 in_progress) - the regression waits
+2026-10-03T07:39:41Z F10e series over (HPP-453 in_review 07:39:35Z by API); regression start
+2026-10-03T07:40:13Z sc_s9.py --regress (scorer 1578cce0) rc 0 wall 32 s: REGRESSION: ALL OK regress_s9.out.txt sha256 8444d16522828a63cce31cbe0cd8e5b184fd7932e4659652cb8f466fbb20ffd4
+2026-10-03T07:40:30Z fin_s9b.py rc 0: seal pred/06_s.md sha256 0fb11c0e703248bee62ce6f0f9fe40604c8c1526cc36ead8e738398152949c20; SEAL: PASS checkseal_s06.out.txt sha256 b234a1e8d613c7c2e99953ea45d08b02e15ee7bb9cafe96b78bc2ee901ab3527; FACTS section S9b appended, git copies made

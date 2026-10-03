@@ -1,10 +1,10 @@
-suite test_sc_s9.py sha256 31fa783a7647dd7f0a0452734f250248f5af96252a63f04126fadb69fa4f5a07 target sc_s9.py sha256 950bf006393d76929704904e4d099589bdfb104220f3ebe18d334978896014f5
+suite test_sc_s9.py sha256 a4644c581c8c970cc5b7141359f8c2c8900119ae13032057361e5c0e833057c8 target sc_s9.py sha256 1578cce0c09194be732fd0ab8194bca662894cd8be948448d9ff08ae7f6086ff
 PASS A1 load_sc_s refuses a sc_s.py whose sha256 is not the pinned one
 PASS A2 the inherited sc_s.py is the scorer of seals 03 / 04 (8b0e0aff) and A.B is sc142
 PASS A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65
 PASS A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, stand 15000, gate reading p362 (item 362 (b))
 PASS A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, after 1 002
-PASS A6 paths: link C:/kyty/s288/s10, seal pred/05b_s.md (item 362 (d)), Sky Garden, L0 shuriken_ninja_castle
+PASS A6 paths: link C:/kyty/s288/s10, seal pred/06_s.md (item 371 (g)), Sky Garden, L0 shuriken_ninja_castle
 PASS A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)
 PASS A8 the order of S10 (item 355 (k); t2_cs0 right after t2_1, item 355 (d))
 PASS A9 pi arms: W M full hold 330, R T integrity from their W hold 120; knobs 1 1 0 0; binary s
@@ -67,6 +67,7 @@ PASS F3 integrity: the restores must be the post copies of its W
 PASS F4 form U: the app restore must be the empty set; a GLCache restore before the arm fails; launch = man_pre_glc; the catalogue sha = the sealed one
 PASS F5 returns, the installed binary, return_prev, the manifests and the post copies of W are rows
 PASS F6 no cache json -> one failing row
+PASS F7 item 371 (g), RC1: installed_before must be the installed 4aa62e95 of item 342 - before = after = f3b3aa3b fails that row only
 PASS G1 admission passes as sealed (pi_w1, t2_4 C5, u_3)
 PASS G2 the binary: s arms need f3b3aa3b, u arms 4aa62e95
 PASS G3 KYTY_GAME_PATCH in the env, validation true, another hold, a retry, a wrong seal, gates, guest args, 2 attempts
@@ -83,15 +84,23 @@ PASS I8 a series only in a W arm, both R loaded -> READ_3
 PASS I8c a series in pi_r0 and in a W arm, none in pi_r1, both loaded -> READ_3 with the note of item 362 (v)
 PASS I8b a series only in a W arm but pi_r1 has a disabled line (loaded member FAIL) -> READ_OTHER; the executor reading READ_3 printed as DIFFERS
 PASS I9 a W series across frame 1 002 (1 000 - 1 010): letter READ_2, the variant READ_3 printed as DIFFERS
-PASS I10 a W arm presented < 300 s -> NOT_EVALUABLE
-PASS I11 a pi arm with a video < 3 000 frames -> NOT_EVALUABLE
-PASS I11b a pi arm with exactly 3 000 video frames is readable
-PASS I12 a pi arm with a one-frame glitch -> NOT_EVALUABLE
+PASS I10 a W arm presented < 300 s -> NOT_EVALUABLE; the executor variant NOT_EVALUABLE too (no DIFFERS)
+PASS I11 item 371 (b): a pi arm with a video < 3 000 frames is readable by the letter (READ_2); the executor variant NOT_EVALUABLE - DIFFERS (video rule)
+PASS I11b a pi arm with exactly 3 000 video frames: READ_2 in both readings, no DIFFERS (video rule)
+PASS I12 item 371 (b): a pi arm with a one-frame glitch is readable by the letter (READ_2); the executor variant NOT_EVALUABLE - DIFFERS (video rule)
 PASS I13 the knob line missing on a pi arm -> admission FAIL -> NOT_EVALUABLE
 PASS I14 a death marker on a pi arm -> NOT_EVALUABLE
 PASS I15 an arm not made -> NOT_EVALUABLE
 PASS I16 a disabled line on an R arm -> loaded FAIL -> READ_OTHER (no series)
 PASS I17 pi_word table: (r1, r0, w, loaded) - READ_3 needs both R loaded (item 362 (v)), the executor reading does not
+PASS I18 item 371 (b): a series in pi_r1 and 1 one-frame glitch in pi_w0 -> by the letter READ_1, the executor variant NOT_EVALUABLE - DIFFERS (video rule); the video frames, present rows and glitches printed per arm
+PASS I19 a pi video of 1 002 frames (none after frame 1 002) -> NOT_EVALUABLE by the letter
+PASS I19b 1 003 frames (0-based: the last is frame 1 002) -> NOT_EVALUABLE
+PASS I19c 1 004 frames (frame 1 003 after the edge) -> readable, READ_1
+PASS I20 a pi arm without a video (no detector reading) -> NOT_EVALUABLE
+PASS I21 restored: READ_2
+PASS I22 RC5 sheet frames: a 19-frame series a-2 .. b+2 contiguous; 20 frames contiguous (24); 21 frames -> 24 spread evenly with both ends; a long series 1 930 - 2 010 -> 24 frames 1 928 .. 2 012; clipped at the end of the video
+PASS I23 RC5 sheet filter: the frames by eq(n), 6 wide, rows = ceil(n / 6)
 PASS J1 c5_0 under PRECACHE=0: T-4 holds with no queue, attribution determined, the knob line 0 / 0, admitted
 PASS J2 10 creations median 25 000 -> YES -> form C5
 PASS J3 9 creations -> NO -> form APP
@@ -130,12 +139,21 @@ PASS M2 one arm with a skipped draw after the first scene frame -> still alive (
 PASS M3 a second arm with an attributed frame >= 100 ms -> KILLED
 PASS M4 a screen of 181 s (the later of the two lines) -> KILLED
 PASS M5 a screen of exactly 180 s -> not over (alive)
-PASS M6 one screen line not seen -> the screen undetermined -> UNDETERMINED
+PASS M6 one screen line not seen, no progress line, no timeout -> the screen undetermined, not an S-cat member -> UNDETERMINED; the letter of item 355 (e) ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)
 PASS M7 no "ShaderSeed: installed" -> CATALOGUE NOT INSTALLED, undetermined member
 PASS M8 no "Cache test mode: prepare-cold" -> CATALOGUE NOT INSTALLED
 PASS M9 u_5 is allowed after u_4 when every earlier U arm installed the catalogue
 PASS M10 u_3 refused rc 6 when u_2 had no catalogue
 PASS M11 u_eval of a not made arm -> undetermined
+PASS MU1 item 371 (v): no ready line, the last progress 181 000 ms -> the lower bound 181 s > 180 -> KILLED, printed "screen > 181.0 s (lower bound)"
+PASS MU2 the bound is the maximum of elapsed_ms, not the last line -> KILLED
+PASS MU3 the last progress 179 000 ms -> the bound 179 s not above 180 -> not a member -> UNDETERMINED; the letter ALIVE_BY_PROBE_5 - DIFFERS (screen undetermined)
+PASS MU3b the bound exactly 180 s -> not above -> UNDETERMINED, printed as not above
+PASS MU4 the attempt ended by timeout without both lines and without progress -> the bound = --timeout 600 s -> KILLED, "screen > 600.0 s (lower bound)"
+PASS MU4b timeout with a progress line of 700 s -> the bound is the maximum 700 s (not the timeout term appended last)
+PASS MU5 no line, no progress, outcome ok -> UNDETERMINED
+PASS MU7 a failing arm with a screen (u_2) and a failing arm without a screen measure (u_5): 1 failing member -> UNDETERMINED; the letter of item 355 (e) KILLED - DIFFERS (screen undetermined); the executor variant KILLED - DIFFERS (a failing arm without a screen measure)
+PASS MU8 RC4: the line of every U arm carries stdout Shaders:, rec_new_after, perm_after and the skip lines after the first scene frame (u_2 0 / 0 / 0 / 1, u_4 1 / 0 / 1 / 0); KILLED with two failing members
 PASS N1 check_seal: the binary lines read, a missing file fails its row only
 PASS N2 check_seal: no u binary line -> the binary row fails
 PASS N3 check_seal: a sealed name without its line fails its row and the whole check
@@ -147,5 +165,5 @@ PASS O3 main --tag: the arm printed, the json written, rc 0 for an admitted arm
 PASS O4 main --tag of a failing arm rc 1; an unknown tag rc 2
 PASS O5 --summary runs, the output is ASCII (strict cp1250)
 PASS O6 seeds_sha: the manifest of seedexp_s9.py ("<name> <bytes> <sha256>" sorted); a missing dir -> None
-checks: 148
+checks: 166
 ALL OK

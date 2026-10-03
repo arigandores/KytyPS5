@@ -14,7 +14,11 @@
 #     u_k            T, form U: the app caches mirrored from s10/empty_app (empty, MANIFEST sha EMPTY_SHA), GLCache NOT
 #                    restored (copied before, returned after), KYTY_SHADER_SEED_PATH=C:/kyty/s288/s9/seeds
 #                    KYTY_CACHE_MODE=prepare-cold, binary u (the installed 4aa62e95), the catalogue checked by sha before
-#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/05b_s.md (item 362 (d)).
+#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/06_s.md (item 371 (g)).
+#   GUARD s10/IN_ARM (item 371 (g), RC1 of S9r): written before INSTALLED=1 / TOUCHED=1 (the tag, the installed sha, man_pre_app,
+#     man_pre_glc), removed only by a successful do_return; while it exists go_s9.sh refuses rc 1 as with RETURN_FAILED (a hard kill
+#     of an arm leaves it; the lead returns by hand).  ADMISSION: the installed binary before the arm = INST_WANT (4aa62e95, item
+#     342), else no arm (rc 1) - a new installation stops S10 until a lead item names the new sha.
 #   THE LOCK line begins "go_s.sh <tag> " (cachex_s.py, unchanged, admits a write only from that prefix) and names go_s9.sh.
 # EXIT CODES: 0 run done; 1 hard refusal / failed run / failed return; 2 usage; 4 BUSY (lock, stop file, idle) - no run;
 #   6 a condition of item 355 is not met (sc_s9.py --allowed rc 6 or the plan UNDETERMINED) - no run, report to the lead;
@@ -36,7 +40,8 @@ SNAPDRVDIR="C:/kyty/s288/snap0_drv"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
 S9=$ROOT/s9
 SC=$S9/sc_s9.py
-PRED=pred/05b_s.md
+PRED=pred/06_s.md
+INST_WANT="4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac"
 RSLEEP=5
 PLMAX=540
 PLWAIT=${PLWAIT:-$PLMAX}
@@ -58,14 +63,17 @@ lockheld() {
   fi
 }
 lockheld
-for G in $ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED $ROOT/s10/RETURN_FAILED; do
-  if [ -e $G ]; then
-    GT=""
-    read -r GT < $G 2>/dev/null
-    log0 "go_s9.sh $T refused (rc 1): the guard $G exists ($GT) - the lead removes it after the return by hand"
-    echo "return failed guard $G: $GT"; exit 1
-  fi
-done
+guardfiles() {
+  for G in $ROOT/s4/RETURN_FAILED $ROOT/s6/RETURN_FAILED $ROOT/s10/RETURN_FAILED $ROOT/s10/IN_ARM; do
+    if [ -e $G ]; then
+      GT=""
+      read -r GT < $G 2>/dev/null
+      log0 "go_s9.sh $T refused (rc 1): the guard $G exists ($GT) - the lead removes it after the return by hand"
+      echo "return failed guard $G: $GT"; exit 1
+    fi
+  done
+}
+guardfiles
 # item 342 (e): no S10 arm names a patch file
 unset KYTY_GATE_SCHEDULE KYTY_GATE_SCHEDULE_ABBA VK_LAYER_MESSAGE_ID_FILTER KYTY_GAME_PATCH
 case "$PLWAIT" in
@@ -207,8 +215,9 @@ if [ "$IDLE_RC" -ne 0 ]; then busy "machine not idle by idle142 (rc $IDLE_RC)"; 
 lockheld
 guards 0 || busy "procload / name guard not clean before the lock"
 if [ -e $STOPF ]; then busy "stop file $STOPF appeared before the lock"; fi
+guardfiles
 set -o noclobber
-if ! { echo "go_s.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S) (go_s9.sh seal 05b)" > $LOCK; } 2>/dev/null; then
+if ! { echo "go_s.sh $T pid $$ started $(date +%Y-%m-%dT%H:%M:%S) (go_s9.sh seal 06)" > $LOCK; } 2>/dev/null; then
   set +o noclobber
   busy "lock taken by someone else: $(cat $LOCK 2>/dev/null)"
 fi
@@ -219,6 +228,7 @@ CJ=$OUT/$T.cache.json
 INSTALLED=0
 TOUCHED=0
 RETURNED=0
+INARM_MINE=0
 tline() { echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) go_s9 $T $*" >> $TIMES; }
 shaof() { echo "$1" | sed -n 's/.* sha \([0-9a-f]\{64\}\).*/\1/p' | tail -1; }
 mansha() { sha "$1/MANIFEST.txt"; }
@@ -258,6 +268,9 @@ do_return() {
     $CX note $CJ installed_after sha=$(sha "$GAME") >> $L 2>&1
   fi
   [ "$rc" = "0" ] || return_failed $rc
+  if [ "$rc" = "0" ] && [ "$INARM_MINE" = "1" ] && [ "$INSTALLED" = "0" ] && { [ "$TOUCHED" = "0" ] || [ "$RETURNED" = "1" ]; }; then
+    rm -f $LD/IN_ARM && INARM_MINE=0 && tline "guard $LD/IN_ARM removed after the successful return"
+  fi
   return $rc
 }
 finish() {
@@ -281,12 +294,25 @@ if ! cp "$GAME" "$BINPRE" 2>/dev/null || [ "$(sha "$BINPRE")" != "$INST_SHA" ]; 
 fi
 $CX note $CJ installed_before sha=$INST_SHA path=$BINPRE >> $L 2>&1
 tline "installed binary before the arm: $INST_SHA copied to $BINPRE"
+if [ "$INST_SHA" != "$INST_WANT" ]; then
+  log "the installed binary before the arm $INST_SHA != the installed of item 342 $INST_WANT - no arm (item 371 (g))"
+  tline "installed binary before the arm $INST_SHA != $INST_WANT (item 342) - no arm; S10 stands until a lead item names the new sha"
+  INST_SHA=""; echo "installed binary not $INST_WANT"; exit 1
+fi
+X=$($CX man app 2>&1); log "$X"; MPA=$(shaof "$X"); $CX note $CJ man_pre_app sha=$MPA >> $L 2>&1
+X=$($CX man glc 2>&1); log "$X"; MPG=$(shaof "$X"); $CX note $CJ man_pre_glc sha=$MPG >> $L 2>&1
+if ! { echo "IN_ARM $T $(date -u +%Y-%m-%dT%H:%M:%SZ) pid $$ - an arm is inside the lock; a successful return removes this file"
+       echo "installed: $INST_SHA (copy $BINPRE)"
+       echo "man_pre_app: $MPA (copy $LD/installed_pre after this line)"
+       echo "man_pre_glc: $MPG (copy $LD/glc_pre after this line)"; } > $LD/IN_ARM; then
+  log "the guard $LD/IN_ARM not written - no arm"; echo "IN_ARM not written"; exit 1
+fi
+INARM_MINE=1
+tline "guard $LD/IN_ARM written (installed $INST_SHA, man_pre_app $MPA, man_pre_glc $MPG) before the install"
 INSTALLED=1
 cp "$RUNBIN" "$GAME" || { log "install copy failed - stop"; exit 1; }
 [ "$(sha "$GAME")" = "$RUNSHA" ] || { log "installed sha != $RUNSHA - stop"; exit 1; }
 log "files: $(sha256sum $SC $S9/test_sc_s9.py $S9/mut_sc_s9.py $S9/enter_scene_s9.py $S9/go_s9.sh cachex_s.py sc_s.py $PRED gates_default.txt idle142.py procload.py sheet142.py fgcpu143.py $VIDGLITCH | cut -c1-16,65- | tr '\n' ';')"
-X=$($CX man app 2>&1); log "$X"; $CX note $CJ man_pre_app sha=$(shaof "$X") >> $L 2>&1
-X=$($CX man glc 2>&1); log "$X"; $CX note $CJ man_pre_glc sha=$(shaof "$X") >> $L 2>&1
 X=$($CX copy app $LD/installed_pre --replace 2>&1) || { log "$X"; exit 1; }; log "$X"
 X=$($CX copy glc $LD/glc_pre --replace 2>&1) || { log "$X"; exit 1; }; log "$X"
 $CX note $CJ glc_pre_copy sha=$(mansha $LD/glc_pre) path=$LD/glc_pre >> $L 2>&1

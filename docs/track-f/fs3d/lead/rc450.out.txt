@@ -1,0 +1,24 @@
+fs3_u: lines 1162632 sha 0983d5517b934dbc FixB42 272 (ragged 0) FixB42Ext 36 (ragged 0) modes ['1'] expect 1 | VulkanE 0 VulkanW2 0 | DualSrcBlend line 72 firstGuestOut 12421 | GamePatch 0 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: underwater_aerial_garden']
+  ext960 rows 8 last (888315, 26, 26, 0, 6662)
+  ext960 all (line,hit,applied,drawn,frame): [(32695, 1, 1, 0, 20), (404320, 2, 2, 0, 1748), (467233, 7, 7, 0, 2472), (533708, 10, 10, 0, 3137), (638288, 15, 15, 0, 4038), (705683, 19, 19, 0, 4764), (787509, 23, 23, 0, 5580), (888315, 26, 26, 0, 6662)]
+fs3_u0: lines 1195174 sha 6d8a06998db9f18f FixB42 272 (ragged 0) FixB42Ext 36 (ragged 0) modes ['0'] expect 0 | VulkanE 0 VulkanW2 0 | DualSrcBlend line 72 firstGuestOut 12421 | GamePatch 0 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: underwater_aerial_garden']
+  ext960 rows 8 last (896307, 22, 0, 0, 6304)
+  ext960 all (line,hit,applied,drawn,frame): [(47201, 1, 0, 0, 20), (444991, 2, 0, 0, 1747), (515653, 6, 0, 0, 2476), (583484, 9, 0, 0, 3134), (662636, 13, 0, 0, 3878), (726851, 16, 0, 0, 4523), (807910, 19, 0, 0, 5345), (896307, 22, 0, 0, 6304)]
+fs3_w: lines 2491630 sha 0bfc15f5e7dd94bf FixB42 260 (ragged 0) FixB42Ext 8 (ragged 0) modes ['1'] expect 1 | VulkanE 0 VulkanW2 943624 | DualSrcBlend line 76 firstGuestOut 12406 | GamePatch 0 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: underwater_aerial_garden']
+  ext960 rows 1 last (46907, 1, 1, 0, 20)
+  ext960 all (line,hit,applied,drawn,frame): [(46907, 1, 1, 0, 20)]
+fs3_v: lines 1345915 sha b4e66e3a59926f43 FixB42 272 (ragged 0) FixB42Ext 8 (ragged 0) modes ['1'] expect 1 | VulkanE 0 VulkanW2 0 | DualSrcBlend line 72 firstGuestOut 12403 | GamePatch 0 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: underwater_aerial_garden']
+  ext960 rows 1 last (47336, 1, 1, 0, 20)
+  ext960 all (line,hit,applied,drawn,frame): [(47336, 1, 1, 0, 20)]
+fs3_hb: lines 1983530 sha ffd573cfbe12ecc4 FixB42 289 (ragged 0) FixB42Ext 24 (ragged 0) modes ['1'] expect 1 | VulkanE 0 VulkanW2 0 | DualSrcBlend line 72 firstGuestOut 12403 | GamePatch 0 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: hoover_beach']
+  ext960 rows 3 last (354276, 5, 5, 0, 1446)
+  ext960 all (line,hit,applied,drawn,frame): [(46226, 1, 1, 0, 20), (277317, 4, 4, 0, 622), (354276, 5, 5, 0, 1446)]
+fs3_pu: lines 1237587 sha 613d5e6b3948c080 FixB42 273 (ragged 0) FixB42Ext 40 (ragged 0) modes ['1'] expect 1 | VulkanE 0 VulkanW2 0 | DualSrcBlend line 72 firstGuestOut 12426 | GamePatch 4 | death log 0 stdout 0
+  levels ['GuestOut: Level has started:', 'GuestOut: Level has started: underwater_aerial_garden']
+  ext960 rows 9 last (918871, 24, 24, 0, 6750)
+  ext960 all (line,hit,applied,drawn,frame): [(44886, 1, 1, 0, 20), (379827, 2, 2, 0, 1297), (460666, 6, 6, 0, 2094), (525930, 9, 9, 0, 2704), (582817, 12, 12, 0, 3334), (650360, 14, 14, 0, 3965), (711953, 17, 17, 0, 4574), (791694, 21, 21, 0, 5350), (918871, 24, 24, 0, 6750)]

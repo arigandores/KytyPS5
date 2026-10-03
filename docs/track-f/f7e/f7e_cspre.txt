@@ -1,0 +1,6 @@
+log sha256 b43ce0ecb4d2290a29333a4243a7ee3ba03a1b19d4dc60028d900bfa0376cd4a
+skipped hashes 137
+profile {'SOP1 0x21': 96, 'VOPC 0xf3': 4, 'budget': 4, 'resource': 33}
+lines with these hashes outside the speculative thread 0 (+ dispatcher fallback of the same thread 1 )
+shader CFG build failed outside CsPretranslate 0
+ALL OK

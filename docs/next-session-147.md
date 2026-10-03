@@ -35,6 +35,9 @@ installed `dac02fb9` 44); sessions without a shipping under (B): 0. 60 FPS is no
    recorder to close; until then the sheets of `timeout` tags are reference only.
 6. **Fixes under (B) stay with the tracks:** F — FS2 (B37, B9a) install after the s146 close by item 309 (л)(5), F7 = B39 (`enemy_final` floor), then B41
    (`ending_boss_after_credit` black screen) by the same diagnosis; S — cold entry B5 / B5a / B33; P — iteration P-var by its own chain.
+7. **`SCENE_OK` re-check of `enemy_final`** (item 370 (в), rule item 366 (г)): B39 is `НЕ ДЕФЕКТ` (material) after the F7d review; the closing re-reads
+   the s145 data (`v145_17`, `w145_17`) — a sheet without B39 drops the sheet member, the other members as in item 309; not fixed now, read the course
+   line as unchanged until that closing. Snapshot `C:/kyty/f287/f7a/enemy_final_600.rdc` is kept locally until then (item 370 (д)).
 
 ## Rules that stay in force on resume
 

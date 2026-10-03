@@ -1,0 +1,9 @@
+F14a F3 summary (HPP-487); logs 12 (mtime before 2026-10-03T16:34:59Z)
+  C:/kyty/s142: logs 12; (RESTRACK, BUDGET) profile {(32, 4): 12}; normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+target hashes (union RESTRACK+BUDGET over all logs): 36
+kinds of lines carrying a target hash (hash x line):
+  1728 | CsPretranslate phase begin
+  1680 | CsPretranslate phase end
+  432 | CsPretranslate: skipped
+  12 | CsPretranslate CFG dispatcher fallback
+TOTAL normal-path requests (CsPretranslate: miss|hit) of target hashes: 0; shader CFG build failed outside CsPretranslate: 0; logs without any skipped line: 0

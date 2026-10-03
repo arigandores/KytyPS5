@@ -1,0 +1,19 @@
+F14a F3 summary (HPP-487); logs 162 (mtime before 2026-10-03T16:34:59Z)
+  C:/kyty/s142: logs 12; (RESTRACK, BUDGET) profile {(32, 4): 12}; levels 11; control: miss/hit lines of any hash 18 (logs with >= 1: 5); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/s143: logs 30; (RESTRACK, BUDGET) profile {(32, 4): 10, (0, 0): 20}; levels 10; control: miss/hit lines of any hash 17 (logs with >= 1: 4); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/s144: logs 34; (RESTRACK, BUDGET) profile {(32, 4): 32, (0, 1): 2}; levels 21; control: miss/hit lines of any hash 0 (logs with >= 1: 0); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/s145: logs 34; (RESTRACK, BUDGET) profile {(32, 4): 34}; levels 17; control: miss/hit lines of any hash 3 (logs with >= 1: 3); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/s146: logs 44; (RESTRACK, BUDGET) profile {(33, 4): 44}; levels 20; control: miss/hit lines of any hash 124 (logs with >= 1: 9); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/f287/f13a: logs 2; (RESTRACK, BUDGET) profile {(33, 4): 2}; levels 1; control: miss/hit lines of any hash 0 (logs with >= 1: 0); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/f287/fs4c: logs 4; (RESTRACK, BUDGET) profile {(33, 4): 4}; levels 2; control: miss/hit lines of any hash 181 (logs with >= 1: 2); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+  C:/kyty/f287/f12f: logs 2; (RESTRACK, BUDGET) profile {(33, 4): 2}; levels 1; control: miss/hit lines of any hash 0 (logs with >= 1: 0); normal-path miss/hit lines with these hashes 0; 'shader CFG build failed' outside CsPretranslate: 0
+target hashes (union RESTRACK+BUDGET over all logs): 37
+kinds of lines carrying a target hash (hash x line):
+  20376 | CsPretranslate phase begin
+  19814 | CsPretranslate phase end
+  5094 | CsPretranslate: skipped
+  142 | CsPretranslate CFG dispatcher fallback
+TOTAL normal-path requests (CsPretranslate: miss|hit) of target hashes: 0; shader CFG build failed outside CsPretranslate: 0; logs without any skipped line: 20
+cache tree C:/kyty/KytyPS5/ps5 em/_ShaderCache: file names 2896; files of target hashes 0 
+cache tree C:/kyty/s288/s7/cache_root: file names 1344; files of target hashes 0 
+cache tree C:/kyty/s288/snap0: file names 1187; files of target hashes 0 

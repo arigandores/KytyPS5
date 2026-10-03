@@ -1,0 +1,8 @@
+[test] TestNewShaderRecompilerPixelImageSampleLodSelection
+[spv] C:/kyty/f287/f14a/spv/ctl_base/0.spv (613 words)
+[spv] C:/kyty/f287/f14a/spv/ctl_base/1.spv (619 words)
+[spv] C:/kyty/f287/f14a/spv/ctl_base/2.spv (619 words)
+[spv] C:/kyty/f287/f14a/spv/ctl_base/3.spv (577 words)
+ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod
+[spv] C:/kyty/f287/f14a/spv/ctl_base/4.spv (579 words)
+ShaderCfgTests: failed: pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod

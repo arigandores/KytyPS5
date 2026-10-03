@@ -1,0 +1,12 @@
+diff --git a/tests/shaderCfgTests.cpp b/tests/shaderCfgTests.cpp
+index 4da0b2ed..7a4d7972 100644
+--- a/tests/shaderCfgTests.cpp
++++ b/tests/shaderCfgTests.cpp
+@@ -5331,6 +5331,7 @@ void TestNewShaderRecompilerPixelImageSampleLodSelection() {
+     auto ps_info = RegressionPixelInputInfo();
+ 
+     auto user_data = ImageTestUserData();
++    if (std::getenv("F14A_K32F") != nullptr) { SetImageTestFormat(&user_data, 0, Prospero::BufferFormat::k32Float); }
+     auto options = MakeCompileOptions(ShaderType::Pixel);
+     options.input_info.pixel = &ps_info;
+     options.dump_ir = true;

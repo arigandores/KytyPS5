@@ -1,0 +1,143 @@
+; SPIR-V
+; Version: 1.3
+; Generator: Khronos; 0
+; Bound: 102
+; Schema: 0
+               OpCapability Shader
+               OpCapability SignedZeroInfNanPreserve
+               OpExtension "SPV_KHR_float_controls"
+               OpMemoryModel Logical GLSL450
+               OpEntryPoint Fragment %main "main" %gl_HelperInvocation %out_mrt_0
+               OpExecutionMode %main SignedZeroInfNanPreserve 32
+               OpExecutionMode %main OriginUpperLeft
+               OpName %gl_HelperInvocation "gl_HelperInvocation"
+               OpName %out_mrt_0 "out_mrt_0"
+               OpName %BufferResource "BufferResource"
+               OpName %vsharp "vsharp"
+               OpName %image_24 "image_24"
+               OpName %samplers "samplers"
+               OpName %main "main"
+               OpName %pixel_valid_mask_active "pixel_valid_mask_active"
+               OpDecorate %gl_HelperInvocation BuiltIn HelperInvocation
+               OpDecorate %out_mrt_0 Location 0
+               OpDecorate %_arr_uint_uint_32 ArrayStride 4
+               OpMemberDecorate %BufferResource 0 Offset 0
+               OpDecorate %BufferResource Block
+               OpDecorate %image_24 DescriptorSet 0
+               OpDecorate %image_24 Binding 75
+               OpDecorate %samplers DescriptorSet 0
+               OpDecorate %samplers Binding 95
+       %uint = OpTypeInt 32 0
+       %bool = OpTypeBool
+%_ptr_Input_bool = OpTypePointer Input %bool
+%gl_HelperInvocation = OpVariable %_ptr_Input_bool Input
+      %float = OpTypeFloat 32
+    %v4float = OpTypeVector %float 4
+%_ptr_Output_v4float = OpTypePointer Output %v4float
+  %out_mrt_0 = OpVariable %_ptr_Output_v4float Output
+    %uint_32 = OpConstant %uint 32
+%_arr_uint_uint_32 = OpTypeArray %uint %uint_32
+%BufferResource = OpTypeStruct %_arr_uint_uint_32
+%_ptr_PushConstant_BufferResource = OpTypePointer PushConstant %BufferResource
+     %vsharp = OpVariable %_ptr_PushConstant_BufferResource PushConstant
+         %14 = OpTypeImage %float 2D 1 0 0 1 Unknown
+     %uint_1 = OpConstant %uint 1
+%_arr_14_uint_1 = OpTypeArray %14 %uint_1
+%_ptr_UniformConstant__arr_14_uint_1 = OpTypePointer UniformConstant %_arr_14_uint_1
+   %image_24 = OpVariable %_ptr_UniformConstant__arr_14_uint_1 UniformConstant
+         %19 = OpTypeSampler
+%_arr_19_uint_1 = OpTypeArray %19 %uint_1
+%_ptr_UniformConstant__arr_19_uint_1 = OpTypePointer UniformConstant %_arr_19_uint_1
+   %samplers = OpVariable %_ptr_UniformConstant__arr_19_uint_1 UniformConstant
+       %void = OpTypeVoid
+         %29 = OpTypeFunction %void
+%_ptr_Function_uint = OpTypePointer Function %uint
+     %uint_0 = OpConstant %uint 0
+%_ptr_PushConstant_uint = OpTypePointer PushConstant %uint
+     %uint_2 = OpConstant %uint 2
+     %uint_3 = OpConstant %uint 3
+     %uint_4 = OpConstant %uint 4
+     %uint_5 = OpConstant %uint 5
+     %uint_6 = OpConstant %uint 6
+     %uint_7 = OpConstant %uint 7
+    %v2float = OpTypeVector %float 2
+    %float_0 = OpConstant %float 0
+%_ptr_UniformConstant_14 = OpTypePointer UniformConstant %14
+%_ptr_UniformConstant_19 = OpTypePointer UniformConstant %19
+         %71 = OpTypeSampledImage %14
+    %float_1 = OpConstant %float 1
+     %v4uint = OpTypeVector %uint 4
+       %true = OpConstantTrue %bool
+%uint_1065353216 = OpConstant %uint 1065353216
+       %main = OpFunction %void None %29
+         %24 = OpLabel
+%pixel_valid_mask_active = OpVariable %_ptr_Function_uint Function
+               OpStore %pixel_valid_mask_active %uint_1
+               OpBranch %26
+         %26 = OpLabel
+         %31 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_0
+         %32 = OpLoad %uint %31
+         %35 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_1
+         %36 = OpLoad %uint %35
+         %37 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_2
+         %38 = OpLoad %uint %37
+         %40 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_3
+         %41 = OpLoad %uint %40
+         %43 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_4
+         %44 = OpLoad %uint %43
+         %46 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_5
+         %47 = OpLoad %uint %46
+         %49 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_6
+         %50 = OpLoad %uint %49
+         %52 = OpAccessChain %_ptr_PushConstant_uint %vsharp %uint_0 %uint_7
+         %53 = OpLoad %uint %52
+         %55 = OpLoad %bool %gl_HelperInvocation
+         %56 = OpSelect %uint %55 %uint_1 %uint_0
+         %57 = OpIEqual %bool %56 %uint_0
+               OpBranch %27
+         %27 = OpLabel
+         %58 = OpBitcast %float %uint_0
+         %59 = OpBitcast %float %uint_0
+         %60 = OpCompositeConstruct %v2float %58 %59
+         %63 = OpBitcast %float %uint_0
+         %65 = OpAccessChain %_ptr_UniformConstant_14 %image_24 %uint_0
+         %66 = OpLoad %14 %65
+         %68 = OpAccessChain %_ptr_UniformConstant_19 %samplers %uint_0
+         %69 = OpLoad %19 %68
+         %70 = OpSampledImage %71 %66 %69
+         %72 = OpImageSampleImplicitLod %v4float %70 %60
+         %73 = OpCompositeExtract %float %72 0
+         %74 = OpFOrdLessThan %bool %63 %73
+         %75 = OpSelect %float %74 %float_1 %float_0
+         %77 = OpBitcast %uint %75
+         %78 = OpCompositeConstruct %v4uint %77 %uint_0 %uint_0 %uint_0
+         %80 = OpCompositeExtract %uint %78 0
+         %81 = OpSelect %uint %57 %80 %uint_0
+         %82 = OpCompositeConstruct %v4uint %81 %uint_0 %uint_0 %uint_0
+         %83 = OpSelect %uint %57 %uint_1 %uint_0
+               OpStore %pixel_valid_mask_active %83
+               OpSelectionMerge %86 None
+               OpBranchConditional %57 %85 %86
+         %85 = OpLabel
+         %88 = OpCompositeExtract %uint %82 0
+         %89 = OpCompositeExtract %uint %82 1
+         %90 = OpCompositeExtract %uint %82 2
+         %91 = OpCompositeExtract %uint %82 3
+         %92 = OpBitcast %float %88
+         %93 = OpBitcast %float %89
+         %94 = OpBitcast %float %90
+         %95 = OpBitcast %float %91
+         %96 = OpCompositeConstruct %v4float %92 %93 %94 %95
+               OpStore %out_mrt_0 %96
+               OpBranch %86
+         %86 = OpLabel
+         %97 = OpLoad %uint %pixel_valid_mask_active
+         %98 = OpINotEqual %bool %97 %uint_0
+        %101 = OpLogicalNot %bool %98
+               OpSelectionMerge %100 None
+               OpBranchConditional %101 %99 %100
+         %99 = OpLabel
+               OpKill
+        %100 = OpLabel
+               OpReturn
+               OpFunctionEnd

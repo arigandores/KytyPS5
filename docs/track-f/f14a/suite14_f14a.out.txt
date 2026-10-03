@@ -1,0 +1,6 @@
+tests run: 127 distinct: 127
+failing tests: 1
+   TestNewShaderRecompilerPixelImageSampleLodSelection | pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod | pixel IMAGE_SAMPLE_C_LZ must use explicit dref lod
+historical 14: run now 14 of 14; failing now 1: PixelImageSampleLodSelection
+missing from the run: -
+ALL OK

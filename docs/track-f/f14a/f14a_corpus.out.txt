@@ -1,0 +1,63 @@
+F14a corpus summary (HPP-487); test binary d3697275 (sha256 ok: True)
+GCN files decoded: 337 (rc != 0: 4)
+  cs: programs 90, with compare ops 12; ops image_sample_c_lz 130
+  ps: programs 141, with compare ops 32; ops image_sample_c_lz 594
+  vs: programs 101, with compare ops 0; ops 
+  ms: programs 5, with compare ops 0; ops 
+  scene underwater_aerial_garden: programs with compare ops 31
+  scene big_hand_pirate_island: programs with compare ops 40
+  scene shuriken_ninja_castle: programs with compare ops 44
+SPIR-V A rows (OK) analysed: 269 (sha mismatch/missing 0)
+  rows with native Dref sites: 13 (sites 234); rows with manual compare sites: 48 (sites 884); both: 0
+  A rows whose GCN has compare ops: 61; of them with neither native nor manual sites: 0; rows with sites but no compare op in GCN: 0
+  manual programs (stage, hash): 42 (CS 12, PS 30); of them with a native permutation too: 13; native programs: 13; compare ops of manual sites: FOrdLessThanEqual 884
+    manual row: cs 1f16e50eea0c89e3_f69183983bf9a738_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 380bb9d636390bae_fe70c334a8301128_0 manual 4 (FOrdLessThanEqual:4) native-sibling no gcn image_sample_c_lz:2 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 380bb9d636390bae_fe70c334a8301128_1 manual 4 (FOrdLessThanEqual:4) native-sibling no gcn image_sample_c_lz:2 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 380bb9d636390bae_fe70c334a8301128_2 manual 4 (FOrdLessThanEqual:4) native-sibling no gcn image_sample_c_lz:2 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 503d7f066a496c3c_70975964c3b7a9c4_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 5323c4ef4f785055_c1ed6df4a815e257_0 manual 36 (FOrdLessThanEqual:36) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 56a15431999c5a2d_7ee8623d978266cd_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 5c118936a885e49b_1a1eaeb240e018df_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 657ad04626bf9d55_cfbef5e3a22d77f3_0 manual 4 (FOrdLessThanEqual:4) native-sibling no gcn image_sample_c_lz:2 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs 657ad04626bf9d55_cfbef5e3a22d77f3_1 manual 4 (FOrdLessThanEqual:4) native-sibling no gcn image_sample_c_lz:2 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs a5315d3bb530aee7_0f37d56bcf5be3b4_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs cd94166bf3f2bb81_29e5bf3a282c2956_0 manual 36 (FOrdLessThanEqual:36) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs ea8e2d64dfe34ed9_e80959018cfda528_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:9 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs f88d0f630ac5b35d_a7c7d34503e28f20_0 manual 36 (FOrdLessThanEqual:36) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: cs ff8ee744ffa4dcdc_8d9a17f42a196301_0 manual 36 (FOrdLessThanEqual:36) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 09bbe18686d987f7_6933e0bbe6a2418b_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 0d12d410cec0c50d_5644cb7c7caf8c6d_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 11acd4c05adcba5c_ba78e7ace43f2e1f_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 13db9f7200632c02_0c61102f299c1e03_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 13db9f7200632c02_0c61102f299c1e03_1 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 16f9df575a3aa74f_71b463adb6567809_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 1974d0d59ab6429f_780deb1c70e772a8_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes shuriken_ninja_castle
+    manual row: ps 2190adcc312b2e6e_343eba2007ed8101_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes shuriken_ninja_castle
+    manual row: ps 255ce6193a9e7938_b13d2b99efccf6b0_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 2e2ae33a4d374e8f_61162655bd1b2fe2_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 32ecf7344a6cc938_5e54fbfa2d85a654_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 3f494f02a1b0b483_35a245eeb539e81c_0 manual 27 (FOrdLessThanEqual:27) native-sibling no gcn image_sample_c_lz:27 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 52276fe1ba080bea_7f8c90f0cbcd12a2_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 52276fe1ba080bea_7f8c90f0cbcd12a2_1 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 52d7f981a9506915_2e38d4a537c70b8a_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 5457609506174517_2db34e0fa3da652b_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 57611e7a373cf2d1_6058ce60606514ba_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 6d289d31eb63a3a4_34b50236f5179805_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 74bb8628d64f534c_8cd67b755d1959e0_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 7a46be05e11e081b_c61039671745e4f1_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 7a46be05e11e081b_c61039671745e4f1_1 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 82e0dd90a5b657bc_6acb27e557e18b81_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 845e6beb25c48d83_c71f91eb8ec7e695_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 9221b45c14fbe20b_a02c4c8cddc63998_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps 99c16b687dc7a74e_729f94d892d93eba_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps ab3583abbc20f2ae_4e3820ee2d157004_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps be4c35a2031fd3f4_a772ac521fadeb8a_0 manual 27 (FOrdLessThanEqual:27) native-sibling no gcn image_sample_c_lz:27 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps c68f1c9a103b140c_ebea8799c8292255_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps e224ba09c832a7db_ce5d604b6d313267_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps e3c32a8c5b12bc41_4651243e7011d6e0_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps eadf3bbe9e2416a0_ba1b5d8d65b459f9_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes underwater_aerial_garden,big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps f6d0ec662d8faadc_36398b47fafc8ae0_0 manual 18 (FOrdLessThanEqual:18) native-sibling yes gcn image_sample_c_lz:18 scenes big_hand_pirate_island,shuriken_ninja_castle
+    manual row: ps fc4314dad69463cc_9ae077ed95681ce8_0 manual 18 (FOrdLessThanEqual:18) native-sibling no gcn image_sample_c_lz:18 scenes shuriken_ninja_castle
+GCN rc != 0: ms_3f716cc2835a4c3f.bin,ms_4e555b0ebf3b53f8.bin,ms_b6dbdd5904905160.bin,ms_c739f9614016bed4.bin (allowed: the 4 MS of S7 5)
+ALL OK

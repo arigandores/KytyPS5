@@ -1,0 +1,14 @@
+[host]    LeastRecentlyUsedCache           ok
+[host]    SampledDepthResource             ok
+[host]    DepthTextureEncoding             ok
+ShaderRecompilerComputeTests: ComparisonDepthTexture failed at SPIR-V disassembly: missing required text: OpImageSampleDrefExplicitLod
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+
+--- abort() ---
+abort() was called: std::terminate on a thread without a report, or an explicit abort
+--- Build ---
+Fork build arigandores/KytyPS5 ded0daf
+--- abort() ---
+SIGABRT in abort:0

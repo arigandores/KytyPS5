@@ -1,0 +1,134 @@
+capture C:/kyty/f287/f12f/f12_rd_k02.rdc
+mark 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6,9099e4268d3db232aa7a51a00d9f1b8e331648d3f2c25bcec16d3cd9dc37001e,b5fdfdfae35384dfe019dd1eb8406a8ea2e3549abb42fb032a118d8443c2522e,c30f0c0f86b11bf18f9e4ce7932b888ecf2cac8affb01c86925cbe6ef118d825
+chunks 137989 buffers 8623
+FIRST vkCreateShaderModule children ['device', 'CreateInfo', 'pAllocator', 'ShaderModule']
+FIRST vkCreateComputePipelines children ['device', 'pipelineCache', 'count', 'CreateInfo', 'pAllocator', 'Pipeline', 'InlineShaderID']
+CS sha=0bd4994043e4eec7dfc19567b87b68ec46310d42aba4f8dadf35be78fd735f78 dispatches=19 mark=-
+CS sha=0c52b97b8ef730bb9b4ebd219717f09471350b2ed8a9607a70a56a35dadcc1b5 dispatches=2 mark=-
+CS sha=1024ffb6821ad6157b2023dbd3c0808e0c3e9f5da178ef090eb4963267197430 dispatches=2 mark=-
+CS sha=149e8f9afbd5ced4495c77de846775e912250d138cbedb0d934987cc6ec59adb dispatches=4 mark=-
+CS sha=16ae190d35bd2d5d26a5da0221d211a248b1875e2d76a762f7156885c16bc34a dispatches=6 mark=-
+CS sha=19674d304bd31c02e9beacc7ead91b58a75400d6bd9a625929775fbed83f0df0 dispatches=1 mark=-
+CS sha=197e39094ec984dd02d0d48e6968ee286b4d09c064f12c62fc6d52acc3cc41f2 dispatches=8 mark=-
+CS sha=1d7cd8703eb7000ab278b7e6cebe72737207b48b9aaa27cd5b3346ff91ad0b9c dispatches=29 mark=-
+CS sha=224820f63b084916c41df69908680b858af9420e09a756b1599f0b6792c802c7 dispatches=6 mark=-
+CS sha=2262b795a191e5d303bf46e195b22406951039ef1d4779f37083c05efad14989 dispatches=2 mark=-
+CS sha=2cd362d19cafd7ceb32b55b1ce24d7f8ba0f11c29f462d2dced627ec6b70e96d dispatches=2 mark=-
+CS sha=2ecea06d2fb37aacf28dcf95f9de76b35dfeec9c898d88dce01c0fa444b9d74c dispatches=1 mark=-
+CS sha=2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e dispatches=10 mark=-
+CS sha=2fc1119d63eac2d7a1e07999d3ffbc9bfff7f19221f49240812da8c611869f07 dispatches=21 mark=-
+CS sha=32e9bacbd04bfb8572867e5eabbb9f65a9a77aaa0646d616de63a7d940589815 dispatches=1 mark=-
+CS sha=343acbc24a48bd7ab3befb1309486d7c337c23429daa10a6a06cc6edde0b2f8d dispatches=1 mark=-
+CS sha=3599816a059c61184b6a7d176bf3202ee7bb5ad9c54d5eebb043b591d04e4168 dispatches=1 mark=-
+CS sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 dispatches=64 mark=380b
+CS sha=4133b50c1a76b8d4e765afb79d6e83849d05f1aad33c5d17115a5ece34a127b4 dispatches=42 mark=-
+CS sha=49cced821f1c7e3ddb077bcc3e41dd65fff7899d8930323efa6b756d9fc9f19e dispatches=10914 mark=-
+CS sha=4cb4f9f729e34977c6dd472a7fd1785668525b3d9ed2e4c5f3f26388f2d0c70a dispatches=2 mark=-
+CS sha=4e181cdfd38cecdabafce1ef31f60227142ed4a9c1457194df88a6882a13fb0c dispatches=1 mark=-
+CS sha=5404dcff380644ef4239af8833aeb1d000869c10a43fb85be4ece127868fb733 dispatches=2 mark=-
+CS sha=5660cc2a8695da53e4901cc55646451901297f6d0ca8451d287c86b9203c0d78 dispatches=4 mark=-
+CS sha=5f152def3685fa4627cf2619dcd8dc8bc7c26a5c4327bc8486e58a4732f3c2d6 dispatches=7 mark=-
+CS sha=6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6 dispatches=8 mark=-
+CS sha=6db36a2634c5a79fbe82fa752ebfee33546a1c9565638b83ba035060c3a40076 dispatches=1 mark=-
+CS sha=7160dffd792a87390bcbc96e239091d618bab9c64cd07e2638e407c5d61d2a55 dispatches=1 mark=-
+CS sha=7992385e8dfc8623c27b76b4f041a2b9e52141c92e320e6b1dc44f3ab54c64f6 dispatches=4 mark=-
+CS sha=7bf528a296ccbbd8ee5bdc6689a7f25ea8f79f6f9dc17a4c53153031e8cde442 dispatches=6 mark=-
+CS sha=7f1f01509ce5a9195ba514cc3300928717c14f509754df81a3a9005af00f17db dispatches=7 mark=-
+CS sha=84d2ca3550ce1d577dd845248ebcad99afb0d2a1cac28e5335af16e25267af52 dispatches=1 mark=-
+CS sha=850c77048ac35fb3cac8439201f93c6dcdee76d466869bdfe8f90fb789a663e2 dispatches=3 mark=-
+CS sha=898acbe4af31f8eeb85bf1e762cb306751693522e0a909d83fcb96d0e5da91c3 dispatches=1 mark=-
+CS sha=8a5c34535199abfb4eb09befebcda31d2445cdb63cf6f6d444c6aaf8027b23b6 dispatches=64 mark=-
+CS sha=95bd8109d81b2bb3c5d9857b5cb8e04503e7d89a3d7b3a7d25f6a6d06e792bf9 dispatches=1 mark=-
+CS sha=99a91d62384dcd3efdf9e467c8dba8f6ae11047a4fe0b516665429f0c010f47f dispatches=6 mark=-
+CS sha=9ec7d738e630542e2349555323b8405a5d402df77eea75080ea73e49803a4ffd dispatches=1 mark=-
+CS sha=a1064aa34c4b0266c0faba4d92bd6fb71f01829bbb3a61a2b4739b3a46a6508e dispatches=6 mark=-
+CS sha=a18aa0a344343a1c1c04c36aaa38c564f0b89a478a823cc6acd506401a1abec8 dispatches=1 mark=-
+CS sha=a6a523217ccba5b001617c7c47c2324dff1aabc612857b0bc6a23e98fdf2ba9c dispatches=1 mark=-
+CS sha=aeed851a3e5eb82223451fcdefc39a1e69138a62b93af508a132eaf71692ab26 dispatches=43 mark=-
+CS sha=af9448f848cdc0fc5b003a9bbb4663043fdf78aaa55c8a4fa66198bec7f8851f dispatches=1 mark=-
+CS sha=afff09aa7200864d7d5db8a15ffdc1c9d3db278a9b148d9c859d75a55e224820 dispatches=1 mark=-
+CS sha=b98b99519fa1e7fd345cb7ae46f32b4c66ef3a03b6944aea4d62e4fed5f7a007 dispatches=1 mark=-
+CS sha=bd5a35a7c6d5c383bdbd9b743a5874e9e80faba75529fd303067371d24adaa57 dispatches=1 mark=-
+CS sha=c3964cdc78d77bc12d0e2c2ebe4e19edb78be99e7a864013b626b7b71a118aba dispatches=2 mark=-
+CS sha=c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633 dispatches=1 mark=-
+CS sha=cae8f949a923ea0259f16acf46f83edc2766269d82027ab59f7e37aea039e347 dispatches=2 mark=-
+CS sha=caee3bc4806ab80f0d85b5212acbd4754601af69ec40437829fd3d6dad7b835d dispatches=1 mark=-
+CS sha=cbfd96e906235005637446e34bfa3b73f850a024cfed51a10d1c32d63f3ee25a dispatches=1 mark=-
+CS sha=d4fe575be8e8524ff6b4a4fc1d24e04da6980dc1be10db2b1a537646c8f98d38 dispatches=24 mark=-
+CS sha=d81fe172ebfda96e574882ca2e7e1686f202d5d647246a6734149d740f530bb1 dispatches=2 mark=-
+CS sha=db9663865767b61821db2db14db37b27ed4d637d32d3fc7c153f6d03a17480f2 dispatches=6 mark=-
+CS sha=e632b8e3c9c8d8be991e6d82e7dc4f1131bb443e8005756c3643c321e7009b2e dispatches=1 mark=-
+CS sha=e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85 dispatches=18 mark=-
+CS sha=eb78aa5e546728d49a3f45c75018e456edeef4affcdb571505ccdca897267484 dispatches=1 mark=-
+CS sha=f2d0396ddc242add8f6b85f74336a085123c603c259da6709f0d37a517ec71d9 dispatches=13 mark=-
+CS sha=f80e436edfc766302bd66b5c07b89739fa79ccdb849e433d4f20b2f9de0328bb dispatches=3 mark=-
+CS sha=fa6d1fc2467434d95cc6d07d62478b7a57458fdb0e2dc35f399e9f0accd9803c dispatches=8 mark=-
+MODULES total 387 marked_380b 1; compute pipelines 75
+SUMMARY dispatches 11394 distinct_cs 60 marked_380b 64 marked_eids chunk:98280,98314,98347,98375,98403,98436,98464,98492,98525,98553,98581,98609,98642,98670,98698,98726,98759,98787,98815,98843,98871,98904,98932,98960,98993,99021,99049,99077,99110,99138,99171,99199,99227,99255,99288,99316,99344,99372,99400,99433,99461,99489,99522,99550,99578,99611,99639,99667,99695,99723,99756,99784,99812,99840,99868,99896,99929,99957,99985,100013,100041,100074,100102,100130
+done
+MODULE ResourceId::1251 sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 via=buffer mark=380b
+DISPATCH chunk=98280 ord=7679 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98314 ord=7681 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98347 ord=7683 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98375 ord=7685 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98403 ord=7687 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98436 ord=7689 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98464 ord=7691 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98492 ord=7693 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98525 ord=7695 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98553 ord=7697 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98581 ord=7699 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98609 ord=7701 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98642 ord=7703 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98670 ord=7705 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98698 ord=7707 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98726 ord=7709 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98759 ord=7711 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98787 ord=7713 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98815 ord=7715 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98843 ord=7717 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98871 ord=7719 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98904 ord=7721 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98932 ord=7723 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98960 ord=7725 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=98993 ord=7727 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99021 ord=7729 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99049 ord=7731 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99077 ord=7733 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99110 ord=7735 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99138 ord=7737 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99171 ord=7739 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99199 ord=7741 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99227 ord=7743 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99255 ord=7745 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99288 ord=7747 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99316 ord=7749 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99344 ord=7751 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99372 ord=7753 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99400 ord=7755 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99433 ord=7757 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99461 ord=7759 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99489 ord=7761 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99522 ord=7763 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99550 ord=7765 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99578 ord=7767 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99611 ord=7769 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99639 ord=7771 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99667 ord=7773 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99695 ord=7775 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99723 ord=7777 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99756 ord=7779 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99784 ord=7781 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99812 ord=7783 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99840 ord=7785 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99868 ord=7787 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99896 ord=7789 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99929 ord=7791 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99957 ord=7793 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=99985 ord=7795 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=100013 ord=7797 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=100041 ord=7799 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=100074 ord=7801 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=100102 ord=7803 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=100130 ord=7805 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+CS sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 dispatches=64 mark=380b

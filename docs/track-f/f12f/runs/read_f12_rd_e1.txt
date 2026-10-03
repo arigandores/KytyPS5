@@ -1,0 +1,39 @@
+F12F f12_rd kind rd level underwater_aerial_garden log sha256 2dcd02dde29e70e6272f3de5084ce12125fbca4b46d5475b44d14e478acd2959 lines 262826 stdout sha256 349cfe176a45d4a5c88469303ce3eb5fa07307a4451a6c42577f524e031981f7
+  binary: tag 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 (expected 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1); installed before 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 after 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1; revision texts [('log', 532, 'd515b90'), ('log', 262824, 'd515b90'), ('stdout', 163, 'd515b90')]
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; form: installed form: variant_fixb26_fixb1b
+  process end before the timeout: YES (outcome exited detail exit code 321 hold_exit None hold_s None stable_s None)
+  entry line 233128; scene change line None; first scene frame n 396; hold (sum dt after it) 102.1 s; frames >= 1 s after it 17 (max dt_us 14118553)
+  death markers: 2 [('log', '--- Fatal Error ---', 262825), ('stdout', '--- Fatal Error ---', 164)]; emulator stdout present
+  window: {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 0 (reference)
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+  manifest: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; vs the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+  RenderDoc: level started at frame 392; auto captures (frame, level+X) [(395, 3), (398, 6), (401, 9), (404, 12), (407, 15), (410, 18), (413, 21), (416, 24), (419, 27)]; captured flip 2/2 8; capture finished 8; captures moved 8
+  rdcs rdcs_f12_rd_k01.txt: done YES dispatches 86 distinct CS 23 marked_380b 0 eids -
+  rdcs rdcs_f12_rd_k01.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k02.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k02.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k03.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k03.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k04.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k04.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k05.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k05.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k06.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k06.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k07.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k07.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k08.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  rdcs rdcs_f12_rd_k08.txt.qrd.txt: done NO dispatches None distinct CS None marked_380b None eids None
+  ROW binary sha256 of the tag = 540c035a (installed, no fix): YES
+  ROW installed 540c035a before the tag: YES
+  ROW installed 540c035a after the return: YES
+  ROW revision text without 1833ee2 (reference): YES
+  ROW control: translation cache line(s) variant_fixb26_fixb1b, no _fixf10 (else interference): YES
+  ROW entered (entry line of underwater_aerial_garden): YES
+  ROW >= 1 capture made and moved (data): YES
+  ROW every capture read by rdcs (done line): NO
+  ROW captures with >= 1 dispatch of 380bb9d6 by SPIR-V sha (DATA for F12g, no gate): 0 of 16: NO
+  ROW 0 death markers (data): NO
+  ROW manifest of the caches before = after the return: YES
+  ROW manifest after the return = reference of the first tag (RC6): YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

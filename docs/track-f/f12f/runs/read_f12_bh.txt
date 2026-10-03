@@ -1,0 +1,27 @@
+F12F f12_bh kind bh level big_hand_pirate_island log sha256 e1e19afe8401b8db3f1c60dcec384567a380883563cb2c1f8be8fe19450a733a lines 2753041 stdout sha256 a5cdfbf4df4a18e88d157f533c3b9027bd95f254296b13c59f2e3bee59144ec7
+  binary: tag b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e (expected b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e); installed before 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 after 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1; revision texts [('log', 121, '1833ee2')]
+  Shader translation cache lines ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b_fixf10']; form: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T17:27:55Z; entries of _ShaderCache/PPSA21564: 1346
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.1 stable_s 24.3)
+  entry line 365500; scene change line None; first scene frame n 367; hold (sum dt after it) 332.2 s; frames >= 1 s after it 0 (max dt_us 397868)
+  death markers: 0 []; emulator stdout present
+  window: {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0; GamePatch lines 0; AsyncPipelines: skipped draw 1948 (reference)
+  video: index records 9404; one-frame glitches 0; sheet: C:/kyty/f287/f12f/runs/f12_bh/sheet_f12_bh.png frames 9404 step 195 tiles 8x6
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)]
+  manifest: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; vs the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+  ROW binary sha256 of the tag = b714f5c4 (F12d copy): YES
+  ROW installed 540c035a before the tag: YES
+  ROW installed 540c035a after the return: YES
+  ROW revision text names 1833ee2 (reference): YES
+  ROW translation cache directory variant_fixb26_fixb1b_fixf10 in every line (member, item 393 (v)): YES
+  ROW cold form: variant_fixb26_fixb1b_fixf10 absent before the start (reference): YES
+  ROW entered (entry line of big_hand_pirate_island): YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES
+  ROW no process end before the timeout: YES
+  ROW frames >= 1 s after the first scene frame = 0 (REPORT, not a gate - cold entry): YES
+  ROW 0 death markers: YES
+  ROW video index records >= 3000: YES
+  ROW 0 one-frame glitches: YES
+  ROW sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW manifest after the return = reference of the first tag (RC6): YES
+  ROW no interference: window minimized / Recovering Vulkan swapchain / GamePatch line (else not read as an outcome, question to the lead): YES

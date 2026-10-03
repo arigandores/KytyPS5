@@ -1,0 +1,171 @@
+2026-10-03T13:07:27Z F12c links F12d HPP-477 (todo), F12e HPP-478, F13a HPP-479, F12f HPP-480, F12g HPP-481, F12h HPP-482, F13b HPP-483, F13c HPP-484 created (stages ok); HPP-287 blocked on HPP-482, HPP-484, HPP-473; fact ROADMAP p.392 (written 2026-10-03T13:08:20Z)
+2026-10-03T14:02:22Z F12f HPP-480: lead line p.393(v) read (comment 335a6a6b 14:01:40Z); binary b714f5c4 sha256 verified; link stays blocked on HPP-479
+2026-10-03T15:55:32Z F12f wake issue_blockers_resolved (HPP-478 done, HPP-479 done); HPP-433 S10 yields (comment 15:53:49Z); no lock, no STOP; start of the seal docs/track-f/f12f.md, harness C:/kyty/f287/f12f/
+2026-10-03T15:56:20Z F12f probe of the reader rd_cs_f12f.py on the F9a capture f9/runs/f9a_rd2/rd2_f3951.rdc (no lock, S10 yields; offline, before the seal)
+2026-10-03T16:09:17Z F12f seal committed KytyPS5 2f1dafec (docs/track-f/f12f.md sec.0-7, docs/track-f/f12f/; privacy grep 0 hits; pred/f12f_seal.md sha256 3a8e22c8)
+2026-10-03T16:09:27Z F12f API before f12_rd: HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 new comments after ce43bbe3: 0; lock free; STOP absent
+2026-10-03T16:09:28Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_rd
+2026-10-03T16:09:38Z F12f correction to the line 'API before f12_rd': the comments call returned 3 comments (dcaac3c8, e5f29b88, 335a6a6b - all read before; the after= filter by id does not filter); new comments after ce43bbe3: 0 by createdAt
+2026-10-03T16:09:44Z F12f go_f12f f12_rd lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T16:09:44Z F12f go_f12f f12_rd installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T16:09:46Z F12f go_f12f f12_rd manifest before: manifest C:/kyty/f287/f12f/runs/f12_rd/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:09:46Z F12f go_f12f f12_rd reference manifest of the first tag written: runs/ref_manifest.tsv sha256 c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:09:48Z F12f go_f12f f12_rd standing copy cache_ref/ made (683 MB)
+2026-10-03T16:09:50Z F12f go_f12f f12_rd before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:09:52Z F12f go_f12f f12_rd caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T16:09:53Z F12f go_f12f f12_rd enter_scene start (level underwater_aerial_garden, --rd, KYTY_RD_LEVEL_FRAME=3,6,9,12,15,18,21,24,27,33,40,50, KYTY_RD_FLIPS=2, hold 120)
+2026-10-03T16:12:12Z F12f go_f12f f12_rd enter_scene rc 1
+2026-10-03T16:12:12Z F12f go_f12f f12_rd run: VERDICT: no attempt reached underwater_aerial_garden
+2026-10-03T16:12:12Z F12f go_f12f f12_rd log_f12_rd.txt sha256 2dcd02dde29e70e6272f3de5084ce12125fbca4b46d5475b44d14e478acd2959
+2026-10-03T16:12:13Z F12f go_f12f f12_rd new captures in _RenderDoc: 8
+2026-10-03T16:12:13Z F12f go_f12f f12_rd capture k01 kyty_1791043807016722_capture.rdc moved to f12_rd_k01.rdc bytes 412466903
+2026-10-03T16:12:42Z F12f go_f12f f12_rd rdcs k01 rc 0: SUMMARY dispatches 86 distinct_cs 23 marked_380b 0 marked_eids -
+2026-10-03T16:12:42Z F12f go_f12f f12_rd capture k02 kyty_1791043812467195_capture.rdc moved to f12_rd_k02.rdc bytes 1966798955
+2026-10-03T16:29:40Z F12f go_f12f f12_rd rdcs k02 rc 1: 
+2026-10-03T16:29:41Z F12f go_f12f f12_rd capture k03 kyty_1791043826227512_capture.rdc moved to f12_rd_k03.rdc bytes 3996466020
+2026-10-03T16:30:51Z F12f f12_rd: rdcs of k02 hit the 900 s watchdog without done (3476 dispatch rows written: SetFrameEvent per dispatch ~0.26 s on a load-frame capture), k03 qrenderdoc at 17.8 GB; decision of the executor: the in-lock reads of k03..k08 are cut (qrenderdoc taskkill as it appears) so the tag ends and returns the caches; the captures are read after the series by a faster reader with GLCache returned from cache_ref (manifest = reference); seal section 8 records this deviation from section 3
+2026-10-03T16:30:59Z F12f go_f12f f12_rd rdcs k03 rc 1: 
+2026-10-03T16:31:01Z F12f go_f12f f12_rd capture k04 kyty_1791043842993182_capture.rdc moved to f12_rd_k04.rdc bytes 4549356757
+2026-10-03T16:31:14Z F12f go_f12f f12_rd rdcs k04 rc 1: 
+2026-10-03T16:31:14Z F12f go_f12f f12_rd capture k05 kyty_1791043859219886_capture.rdc moved to f12_rd_k05.rdc bytes 4116153577
+2026-10-03T16:31:27Z F12f go_f12f f12_rd rdcs k05 rc 1: 
+2026-10-03T16:31:27Z F12f go_f12f f12_rd capture k06 kyty_1791043874017340_capture.rdc moved to f12_rd_k06.rdc bytes 5200554775
+2026-10-03T16:31:35Z F12f go_f12f f12_rd rdcs k06 rc 1: 
+2026-10-03T16:31:35Z F12f go_f12f f12_rd capture k07 kyty_1791043888821607_capture.rdc moved to f12_rd_k07.rdc bytes 5782542522
+2026-10-03T16:31:45Z F12f go_f12f f12_rd rdcs k07 rc 1: 
+2026-10-03T16:31:45Z F12f go_f12f f12_rd capture k08 kyty_1791043904226368_capture.rdc moved to f12_rd_k08.rdc bytes 5442246679
+2026-10-03T16:32:03Z F12f go_f12f f12_rd rdcs k08 rc 1: 
+2026-10-03T16:33:09Z F12f go_f12f f12_rd capture sha256 list runs/f12_rd/rdc_sha.txt lines 8
+2026-10-03T16:33:11Z F12f go_f12f f12_rd installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T16:33:15Z F12f go_f12f f12_rd manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_rd/manifest_run.tsv files 2924 bytes 873017156 listsha ec6037b0564b08d3b85ea37d2b535e99e96b279efe7741d27eb65f2e1ac570b7; run vs before: manifest cmp DIFFER only-before 2 only-after 2
+2026-10-03T16:33:16Z F12f go_f12f f12_rd caches, saves and GLCache returned
+2026-10-03T16:33:20Z F12f go_f12f f12_rd manifest after: manifest C:/kyty/f287/f12f/runs/f12_rd/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:33:20Z F12f go_f12f f12_rd lock released (rc 0)
+2026-10-03T16:33:39Z F12f post_f12f f12_rd: read.txt 3db0c3997293e5f8, ROWS NO/NOT_READ: 3, glitch: 
+2026-10-03T16:33:52Z F12f API before f12_v: HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 comments after ce43bbe3 by createdAt: 0; lock free; STOP absent
+2026-10-03T16:33:52Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_v
+2026-10-03T16:09:38Z HPP-484 F13c start: lock F12f f12_rd present - read only
+2026-10-03T16:35:23Z F12f go_f12f f12_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T16:35:23Z F12f go_f12f f12_v installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T16:35:25Z F12f go_f12f f12_v manifest before: manifest C:/kyty/f287/f12f/runs/f12_v/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:35:25Z F12f go_f12f f12_v before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:35:28Z F12f go_f12f f12_v caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T16:35:28Z F12f go_f12f f12_v cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T16:35:28Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-03T16:35:30Z F12f go_f12f f12_v installed the F12d copy: b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+2026-10-03T16:35:30Z F12f go_f12f f12_v enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_FIX_F10=1)
+2026-10-03T16:35:35Z F12f go_f12f f12_v enter_scene rc 3
+2026-10-03T16:35:35Z F12f go_f12f f12_v run: pre_run: REFUSED (BUSY: gpu_util_median 39.0, admission <= 10) - the emulator was not started
+2026-10-03T16:35:37Z F12f go_f12f f12_v installed binary returned from the pinned copy
+2026-10-03T16:35:38Z F12f go_f12f f12_v installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T16:35:41Z F12f go_f12f f12_v manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_v/manifest_run.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; run vs before: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:35:42Z F12f go_f12f f12_v caches, saves and GLCache returned
+2026-10-03T16:35:47Z F12f go_f12f f12_v manifest after: manifest C:/kyty/f287/f12f/runs/f12_v/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:35:47Z F12f go_f12f f12_v lock released (rc 0)
+2026-10-03T16:37:19Z F12f f12_v call refused before the emulator start (enter_scene pre_run: BUSY gpu_util_median 39.0 > 10; procload saw '<app>' pid 47284 0.677 CPU s/s then clean); not an attempt (seal section 3); lock released 16:35:47Z, caches EQUAL, installed 540c035a; runs/f12_v moved to runs/f12_v.busy_163716, output to old/; GPU util now ~40 % - waiting without processes
+2026-10-03T16:39:24Z F12f edition 2 tools written (no lock, waiting for the GPU): f12f_read.py cd9deca6 (exact read file names, rdsd fallback), test 149 ALL OK, go_f12f.sh 4ccfa541 (exit 6 when caches before differ from the reference), rd_sd_f12f.py + rdsd_f12f.sh (structured data, no replay); test of rd_sd on f12_rd_k01.rdc (412 MB) against the in-lock rdcs k01 (86 dispatches, 23 CS, 0 marked)
+2026-10-03T16:39:47Z F12f rd_sd reads of f12_rd k01..k08 start (no lock, no replay; caches = reference checked 16:4xZ)
+2026-10-03T16:39:52Z F14a HPP-487 start (Emu Engineer); main ded0daf2a982508518a8da644d2d2af1e15aa8ac; F12f series in progress (BUSY wait), no lock at 2026-10-03T16:39:52Z
+2026-10-03T16:41:34Z F12f rd_sd reads done: k01:86/23/0 k02:11394/60/64 k03:1624/69/3 k04:1728/67/66 k05:2098/71/0 k06:1368/67/0 k07:2350/70/0 k08:1234/67/0 
+2026-10-03T16:51:19Z F12f post_f12f f12_rd: read.txt 570dd7ea9e5f519c, ROWS NO/NOT_READ: 1, glitch: 
+2026-10-03T16:53:38Z F12f API before f12_v (2nd call): HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 foreign comments after 16:45Z: 0; GPU util 3 %; lock free; STOP absent; go_f12f.sh edition 2 4ccfa541
+2026-10-03T16:53:39Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_v
+2026-10-03T16:54:21Z F13d HPP-485 start recorded late: first command 2026-10-03T16:34:59Z (date -u seen then; HEAD c5bff245, no lock, no STOP); lock F12f f12_v (file time 16:35:23Z) refused a command (exit 3), absent at 16:36:31Z; only small-file reads in between
+2026-10-03T16:55:08Z F12f go_f12f f12_v procload busy: procload: busy [('<app>', 47284, 0.622)]
+2026-10-03T16:55:49Z F12f f12_v call refused by procload (rc 5, 16:55:08Z): '<app>' pid 47284 0.622 CPU s/s, created 16:02:10Z, parent alive (not an orphan - not removed); not an attempt; waiting without processes
+2026-10-03T16:55:59Z F12f f12_v 3rd call (gpu 0 %, <app> 0.219 CPU s/s at 16:55:55Z); API unchanged since 16:53Z (HPP-433/HPP-473 blocked, no foreign comments)
+2026-10-03T16:56:00Z F12f launch_f12f previous output of f12_v moved to f12f/old/
+2026-10-03T16:56:00Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_v
+2026-10-03T16:56:18Z F12f go_f12f f12_v lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T16:56:19Z F12f go_f12f f12_v installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T16:56:23Z F12f go_f12f f12_v manifest before: manifest C:/kyty/f287/f12f/runs/f12_v/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:56:23Z F12f go_f12f f12_v before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T16:56:25Z F12f go_f12f f12_v caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T16:56:26Z F12f go_f12f f12_v cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T16:56:25Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-03T16:56:27Z F12f go_f12f f12_v installed the F12d copy: b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+2026-10-03T16:56:28Z F12f go_f12f f12_v enter_scene start (level underwater_aerial_garden, SD 300, --rec, hold 330, KYTY_FIX_F10=1)
+2026-10-03T17:02:40Z F12f go_f12f f12_v enter_scene rc 0
+2026-10-03T17:02:40Z F12f go_f12f f12_v run: VERDICT: underwater_aerial_garden in 31.5 s - PASS (acceptance <= 90 s)
+2026-10-03T17:02:42Z F12f go_f12f f12_v log_f12_v.txt sha256 70b8e3d3a1191396c35631110766feb841a6671cd82af6d93d23312b500b8f64
+2026-10-03T17:02:44Z F12f go_f12f f12_v installed binary returned from the pinned copy
+2026-10-03T17:02:44Z F12f go_f12f f12_v installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:02:48Z F12f go_f12f f12_v manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_v/manifest_run.tsv files 3312 bytes 919918125 listsha 51d13a82d9443f8e9ba3f77341ff1d175957322c0026ae9ea9964d006ca26612; run vs before: manifest cmp DIFFER only-before 3 only-after 391
+2026-10-03T17:02:49Z F12f go_f12f f12_v caches, saves and GLCache returned
+2026-10-03T17:02:50Z F12f go_f12f f12_v manifest after: manifest C:/kyty/f287/f12f/runs/f12_v/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:02:51Z F12f go_f12f f12_v lock released (rc 0)
+2026-10-03T17:03:46Z F14a rule 27 note (event 16:56:18Z, source C:/kyty/f287/f12f/lock.log 'lock taken f12_v 2026-10-03T16:56:18Z'): f14a_f3.py over all log dirs started 16:52:51Z, ended 16:56:18Z (start + real 3m26.959s) with 'HALT lock' at its per-log lock check; the grep of the log being read when the lock appeared overlapped the F12f lock by <= 1 s; no write under the lock; output of that run discarded (rerun after the F12f series); before it the patch heredoc failed (AssertionError: heredoc turned the two-char newline escape into a newline) - script unchanged
+2026-10-03T17:03:46Z F14a decision: heavy F3 scan (68 GB logs, grep > 0.5 CPU s/s would make F12f procload refuse its next tag) waits until the F12f series f12_w/f12_vw/f12_bh ends
+2026-10-03T17:03:46Z F12f post_f12f f12_v: read.txt 1650de85ce5cb47d, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-03T17:03:57Z F12f API before f12_w: HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 foreign comments after 16:45Z: 0; GPU util 0 %; lock free; STOP absent
+2026-10-03T17:03:57Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_w
+2026-10-03T17:04:14Z F12f go_f12f f12_w lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T17:04:16Z F12f go_f12f f12_w installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:04:18Z F12f go_f12f f12_w manifest before: manifest C:/kyty/f287/f12f/runs/f12_w/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:04:18Z F12f go_f12f f12_w before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:04:23Z F12f go_f12f f12_w caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T17:04:23Z F12f go_f12f f12_w cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T17:04:23Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-03T17:04:24Z F12f go_f12f f12_w installed the F12d copy: b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+2026-10-03T17:04:24Z F12f go_f12f f12_w enter_scene start (level underwater_aerial_garden, W of item 295 (b), hold 310, KYTY_FIX_F10=1)
+2026-10-03T17:10:26Z F12f go_f12f f12_w enter_scene rc 0
+2026-10-03T17:10:26Z F12f go_f12f f12_w run: VERDICT: underwater_aerial_garden in 40.4 s - PASS (acceptance <= 90 s)
+2026-10-03T17:10:28Z F12f go_f12f f12_w log_f12_w.txt sha256 80ea585dc64b8bf01215c1319851b0e74773060109b95d0d1b18b1d0a6aaecf2
+2026-10-03T17:10:29Z F12f go_f12f f12_w installed binary returned from the pinned copy
+2026-10-03T17:10:29Z F12f go_f12f f12_w installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:10:32Z F12f go_f12f f12_w manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_w/manifest_run.tsv files 3312 bytes 919918121 listsha 2683ec07dd50242529453cc382793a956826d1de34f90e7b5c43630ffa3b525f; run vs before: manifest cmp DIFFER only-before 3 only-after 391
+2026-10-03T17:10:35Z F12f go_f12f f12_w caches, saves and GLCache returned
+2026-10-03T17:10:38Z F12f go_f12f f12_w manifest after: manifest C:/kyty/f287/f12f/runs/f12_w/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:10:40Z F12f go_f12f f12_w lock released (rc 0)
+2026-10-03T17:10:56Z F12f post_f12f f12_w: read.txt 0b68fa73ee76a41c, ROWS NO/NOT_READ: 0, glitch: 
+2026-10-03T17:11:07Z F12f API before f12_vw: HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 foreign comments after 16:45Z: 0; GPU util 7 %; lock free; STOP absent
+2026-10-03T17:11:07Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_vw
+2026-10-03T17:12:37Z F12f go_f12f f12_vw procload busy: procload: busy [('<app>', 47284, 0.694)]
+2026-10-03T17:12:53Z F12f f12_vw call refused by procload (rc 5, 17:12:37Z): '<app>' pid 47284 0.694 CPU s/s (parent alive); not an attempt; waiting without processes
+2026-10-03T17:17:16Z F12f f12_vw 2nd call (<app> 0.162 CPU s/s at 17:17:10Z, gpu 2 %); API unchanged since 17:11Z
+2026-10-03T17:17:17Z F12f launch_f12f previous output of f12_vw moved to f12f/old/
+2026-10-03T17:17:17Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_vw
+2026-10-03T17:17:49Z F14a F3 full scan done 17:16:59Z (rc 0, 4m07.9s; started while F12f f12_vw was refused for '<app>', no lock during it; F12f 2nd call 17:17:17Z after it): 162 logs, 37 target hashes (33 RESTRACK incl. 57c4d5848e02ecdc = former OP SOP1 0x0c of B26b on 9235a7ac logs, 4 BUDGET), normal-path miss/hit of them 0 (control: 342 miss/hit lines of other hashes in 23 logs), 'shader CFG build failed' outside CsPretranslate 0, cache files of them 0 in 3 trees
+2026-10-03T17:18:46Z F12f go_f12f f12_vw procload busy: procload: busy [('<app>', 18388, 0.517)]
+2026-10-03T17:19:00Z F12f f12_vw 2nd call refused by procload (rc 5, 17:18:46Z): '<app>' pid 18388 0.517 CPU s/s; not an attempt. 3rd call with PLWAIT=1500 (procload retries every 60 s up to 1500 s before the lock; gate unchanged)
+2026-10-03T17:19:01Z F12f launch_f12f previous output of f12_vw moved to f12f/old/
+2026-10-03T17:19:01Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_vw
+2026-10-03T17:19:12Z F14a corpus rerun start (edit 2; F12f f12_vw waits for '<app>', no lock)
+2026-10-03T17:19:21Z F12f go_f12f f12_vw lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T17:19:22Z F12f go_f12f f12_vw installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:19:24Z F12f go_f12f f12_vw manifest before: manifest C:/kyty/f287/f12f/runs/f12_vw/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:19:26Z F12f go_f12f f12_vw before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:19:29Z F12f go_f12f f12_vw caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T17:19:29Z F12f go_f12f f12_vw cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T17:19:29Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-03T17:19:30Z F12f go_f12f f12_vw installed the F12d copy: b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+2026-10-03T17:19:30Z F12f go_f12f f12_vw enter_scene start (level voxel_world, SD 100, --rec, hold 330, KYTY_FIX_F10=1)
+2026-10-03T17:25:35Z F12f go_f12f f12_vw enter_scene rc 0
+2026-10-03T17:25:35Z F12f go_f12f f12_vw run: VERDICT: voxel_world in 24.2 s - PASS (acceptance <= 90 s)
+2026-10-03T17:25:37Z F12f go_f12f f12_vw log_f12_vw.txt sha256 58c4831cb3ef4fc4398d3367e88426281612800ab370e0b86dbd0527b9449317
+2026-10-03T17:25:38Z F12f go_f12f f12_vw installed binary returned from the pinned copy
+2026-10-03T17:25:38Z F12f go_f12f f12_vw installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:25:40Z F12f go_f12f f12_vw manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_vw/manifest_run.tsv files 3139 bytes 898922893 listsha 1d67aa543c5c2183112248f97f61cbb26f40fcaaa005f0caf92a1edc47d94696; run vs before: manifest cmp DIFFER only-before 3 only-after 218
+2026-10-03T17:25:42Z F12f go_f12f f12_vw caches, saves and GLCache returned
+2026-10-03T17:25:45Z F12f go_f12f f12_vw manifest after: manifest C:/kyty/f287/f12f/runs/f12_vw/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:25:45Z F12f go_f12f f12_vw lock released (rc 0)
+2026-10-03T17:27:16Z F12f post_f12f f12_vw: read.txt 67d2685855910a67, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-03T17:27:19Z F14a corpus rerun 2 start (no lock; F12f between f12_vw and f12_bh)
+2026-10-03T17:27:29Z F12f API before f12_bh: HPP-433:blocked:None HPP-473:blocked:None HPP-283:done:None ; HPP-480 foreign comments after 16:45Z: 0; GPU util 0 %; lock free; STOP absent; call with PLWAIT=1500
+2026-10-03T17:27:29Z F12f launch_f12f detached call: bash C:/kyty/f287/f12f/go_f12f.sh f12_bh
+2026-10-03T17:27:49Z F12f go_f12f f12_bh lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T17:27:49Z F12f go_f12f f12_bh installed binary inside the lock before the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:27:51Z F12f go_f12f f12_bh manifest before: manifest C:/kyty/f287/f12f/runs/f12_bh/manifest_before.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:27:51Z F12f go_f12f f12_bh before vs reference: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:27:54Z F12f go_f12f f12_bh caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (189/169/5/470/ MB)
+2026-10-03T17:27:56Z F12f go_f12f f12_bh cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b_fixf10 absent at 2026-10-03T17:27:55Z; entries of _ShaderCache/PPSA21564: 1346
+2026-10-03T17:27:57Z F12f go_f12f f12_bh installed the F12d copy: b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+2026-10-03T17:27:57Z F12f go_f12f f12_bh enter_scene start (level big_hand_pirate_island, SD 100, --rec, hold 330, KYTY_FIX_F10=1)
+2026-10-03T17:34:02Z F12f go_f12f f12_bh enter_scene rc 0
+2026-10-03T17:34:02Z F12f go_f12f f12_bh run: VERDICT: big_hand_pirate_island in 24.3 s - PASS (acceptance <= 90 s)
+2026-10-03T17:34:03Z F12f go_f12f f12_bh log_f12_bh.txt sha256 e1e19afe8401b8db3f1c60dcec384567a380883563cb2c1f8be8fe19450a733a
+2026-10-03T17:34:04Z F12f go_f12f f12_bh installed binary returned from the pinned copy
+2026-10-03T17:34:06Z F12f go_f12f f12_bh installed binary after the tag: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T17:34:08Z F12f go_f12f f12_bh manifest of the run state (before the return): manifest C:/kyty/f287/f12f/runs/f12_bh/manifest_run.tsv files 3254 bytes 926248145 listsha 49763bd23ada373c7e9940ff28dd1b2ec17d5f4b1b5decfd0a0aa34be5607d32; run vs before: manifest cmp DIFFER only-before 3 only-after 333
+2026-10-03T17:34:10Z F12f go_f12f f12_bh caches, saves and GLCache returned
+2026-10-03T17:34:13Z F12f go_f12f f12_bh manifest after: manifest C:/kyty/f287/f12f/runs/f12_bh/manifest_after.tsv files 2924 bytes 863941690 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393; cmp with the reference of the first tag: manifest cmp EQUAL files 2924 listsha c931d57ab9966822e97eff5eadedf58192addf3d86cebb54def243d7d2830393
+2026-10-03T17:34:14Z F12f go_f12f f12_bh lock released (rc 0)
+2026-10-03T17:34:25Z F14a rule 27 note (event 17:27:47Z, source C:/kyty/SEALED_RUN.lock line 'F12f HPP-480 go_f12f.sh f12_bh ... 2026-10-03T17:27:47Z'): corpus rerun 2 started 17:27:19Z halted 'HALT lock' at 17:27:49Z (date after); overlap <= 2 s of short decode processes; F12f procload 'clean' at 17:27:49Z; no write under the lock; waited with harness reads until 'f12_bh lock released' 17:34:14Z (times line)
+2026-10-03T17:35:18Z F12f post_f12f f12_bh: read.txt b75443000aaaa17d, ROWS NO/NOT_READ: 0, glitch: one-frame glitches: 0
+2026-10-03T17:37:25Z F12f FACTS.md section F12f appended; report docs/track-f/f12f.md sec.8 written

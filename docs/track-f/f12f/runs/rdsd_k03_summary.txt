@@ -1,0 +1,82 @@
+capture C:/kyty/f287/f12f/f12_rd_k03.rdc
+mark 3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6,9099e4268d3db232aa7a51a00d9f1b8e331648d3f2c25bcec16d3cd9dc37001e,b5fdfdfae35384dfe019dd1eb8406a8ea2e3549abb42fb032a118d8443c2522e,c30f0c0f86b11bf18f9e4ce7932b888ecf2cac8affb01c86925cbe6ef118d825
+chunks 158609 buffers 24693
+FIRST vkCreateShaderModule children ['device', 'CreateInfo', 'pAllocator', 'ShaderModule']
+FIRST vkCreateComputePipelines children ['device', 'pipelineCache', 'count', 'CreateInfo', 'pAllocator', 'Pipeline', 'InlineShaderID']
+CS sha=0670452bcbcba1f68688b44194f7ce97e2b7e7b3897474d3b8b8b5de0d3d6e2c dispatches=1 mark=-
+CS sha=0c52b97b8ef730bb9b4ebd219717f09471350b2ed8a9607a70a56a35dadcc1b5 dispatches=6 mark=-
+CS sha=1024ffb6821ad6157b2023dbd3c0808e0c3e9f5da178ef090eb4963267197430 dispatches=6 mark=-
+CS sha=149e8f9afbd5ced4495c77de846775e912250d138cbedb0d934987cc6ec59adb dispatches=11 mark=-
+CS sha=16ae190d35bd2d5d26a5da0221d211a248b1875e2d76a762f7156885c16bc34a dispatches=18 mark=-
+CS sha=19674d304bd31c02e9beacc7ead91b58a75400d6bd9a625929775fbed83f0df0 dispatches=3 mark=-
+CS sha=197e39094ec984dd02d0d48e6968ee286b4d09c064f12c62fc6d52acc3cc41f2 dispatches=8 mark=-
+CS sha=1d7cd8703eb7000ab278b7e6cebe72737207b48b9aaa27cd5b3346ff91ad0b9c dispatches=51 mark=-
+CS sha=1d85bf8d7c19148067ebf275e4fa09a7691bb8ae5628b1b960d6e7fa62c3bbd5 dispatches=12 mark=-
+CS sha=224820f63b084916c41df69908680b858af9420e09a756b1599f0b6792c802c7 dispatches=12 mark=-
+CS sha=2262b795a191e5d303bf46e195b22406951039ef1d4779f37083c05efad14989 dispatches=6 mark=-
+CS sha=2cd362d19cafd7ceb32b55b1ce24d7f8ba0f11c29f462d2dced627ec6b70e96d dispatches=3 mark=-
+CS sha=2ecea06d2fb37aacf28dcf95f9de76b35dfeec9c898d88dce01c0fa444b9d74c dispatches=2 mark=-
+CS sha=2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e dispatches=36 mark=-
+CS sha=2f391772ee6d70706a8fee64f46d0356feb8df0d6dd9c1dfd779827321560f27 dispatches=2 mark=-
+CS sha=2f4c901ab71ae855ed2c6788d9074fa27ff74963a6d5dc61e21fa2c172cb4f38 dispatches=1 mark=-
+CS sha=2fc1119d63eac2d7a1e07999d3ffbc9bfff7f19221f49240812da8c611869f07 dispatches=4 mark=-
+CS sha=32e9bacbd04bfb8572867e5eabbb9f65a9a77aaa0646d616de63a7d940589815 dispatches=3 mark=-
+CS sha=343acbc24a48bd7ab3befb1309486d7c337c23429daa10a6a06cc6edde0b2f8d dispatches=3 mark=-
+CS sha=3599816a059c61184b6a7d176bf3202ee7bb5ad9c54d5eebb043b591d04e4168 dispatches=3 mark=-
+CS sha=3dd1ec0fcb24a72c3b15967949f5f9235f9784afd53dd0f41308c451ab5bb667 dispatches=12 mark=-
+CS sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 dispatches=3 mark=380b
+CS sha=4133b50c1a76b8d4e765afb79d6e83849d05f1aad33c5d17115a5ece34a127b4 dispatches=74 mark=-
+CS sha=49cced821f1c7e3ddb077bcc3e41dd65fff7899d8930323efa6b756d9fc9f19e dispatches=955 mark=-
+CS sha=4cb4f9f729e34977c6dd472a7fd1785668525b3d9ed2e4c5f3f26388f2d0c70a dispatches=6 mark=-
+CS sha=4e181cdfd38cecdabafce1ef31f60227142ed4a9c1457194df88a6882a13fb0c dispatches=3 mark=-
+CS sha=5404dcff380644ef4239af8833aeb1d000869c10a43fb85be4ece127868fb733 dispatches=3 mark=-
+CS sha=5660cc2a8695da53e4901cc55646451901297f6d0ca8451d287c86b9203c0d78 dispatches=12 mark=-
+CS sha=5f152def3685fa4627cf2619dcd8dc8bc7c26a5c4327bc8486e58a4732f3c2d6 dispatches=21 mark=-
+CS sha=6a9e2511c65c50280083deaf27dd23a71265d34ca7498806ba119f75b8fe10a6 dispatches=16 mark=-
+CS sha=6db36a2634c5a79fbe82fa752ebfee33546a1c9565638b83ba035060c3a40076 dispatches=3 mark=-
+CS sha=7160dffd792a87390bcbc96e239091d618bab9c64cd07e2638e407c5d61d2a55 dispatches=3 mark=-
+CS sha=7992385e8dfc8623c27b76b4f041a2b9e52141c92e320e6b1dc44f3ab54c64f6 dispatches=12 mark=-
+CS sha=7bf528a296ccbbd8ee5bdc6689a7f25ea8f79f6f9dc17a4c53153031e8cde442 dispatches=12 mark=-
+CS sha=7f1f01509ce5a9195ba514cc3300928717c14f509754df81a3a9005af00f17db dispatches=14 mark=-
+CS sha=82fb76a25f04160961b17e8aca2f7b139b9a19af58004b5545ad98f8dd5b9f37 dispatches=2 mark=-
+CS sha=84d2ca3550ce1d577dd845248ebcad99afb0d2a1cac28e5335af16e25267af52 dispatches=3 mark=-
+CS sha=850c77048ac35fb3cac8439201f93c6dcdee76d466869bdfe8f90fb789a663e2 dispatches=3 mark=-
+CS sha=898acbe4af31f8eeb85bf1e762cb306751693522e0a909d83fcb96d0e5da91c3 dispatches=3 mark=-
+CS sha=8a5c34535199abfb4eb09befebcda31d2445cdb63cf6f6d444c6aaf8027b23b6 dispatches=3 mark=-
+CS sha=9560aa0f3e1bc33c7948b412cd7d5508541bfcb39ee36d62027122d4f3240349 dispatches=3 mark=-
+CS sha=95bd8109d81b2bb3c5d9857b5cb8e04503e7d89a3d7b3a7d25f6a6d06e792bf9 dispatches=3 mark=-
+CS sha=99a91d62384dcd3efdf9e467c8dba8f6ae11047a4fe0b516665429f0c010f47f dispatches=12 mark=-
+CS sha=9ec7d738e630542e2349555323b8405a5d402df77eea75080ea73e49803a4ffd dispatches=3 mark=-
+CS sha=a1064aa34c4b0266c0faba4d92bd6fb71f01829bbb3a61a2b4739b3a46a6508e dispatches=12 mark=-
+CS sha=a18aa0a344343a1c1c04c36aaa38c564f0b89a478a823cc6acd506401a1abec8 dispatches=3 mark=-
+CS sha=a6a523217ccba5b001617c7c47c2324dff1aabc612857b0bc6a23e98fdf2ba9c dispatches=5 mark=-
+CS sha=aeed851a3e5eb82223451fcdefc39a1e69138a62b93af508a132eaf71692ab26 dispatches=76 mark=-
+CS sha=af9448f848cdc0fc5b003a9bbb4663043fdf78aaa55c8a4fa66198bec7f8851f dispatches=3 mark=-
+CS sha=afff09aa7200864d7d5db8a15ffdc1c9d3db278a9b148d9c859d75a55e224820 dispatches=3 mark=-
+CS sha=b98b99519fa1e7fd345cb7ae46f32b4c66ef3a03b6944aea4d62e4fed5f7a007 dispatches=3 mark=-
+CS sha=bd5a35a7c6d5c383bdbd9b743a5874e9e80faba75529fd303067371d24adaa57 dispatches=3 mark=-
+CS sha=c3964cdc78d77bc12d0e2c2ebe4e19edb78be99e7a864013b626b7b71a118aba dispatches=3 mark=-
+CS sha=c7707a78b908fac5b0f6d3284def33f9ece9f097b9ce7cbfc0958d90f578d6a8 dispatches=2 mark=-
+CS sha=c8c18863305162849f17e7a861764ba38f8b6138396e2ef72403d3cc4bbb8633 dispatches=3 mark=-
+CS sha=cae8f949a923ea0259f16acf46f83edc2766269d82027ab59f7e37aea039e347 dispatches=6 mark=-
+CS sha=cbfd96e906235005637446e34bfa3b73f850a024cfed51a10d1c32d63f3ee25a dispatches=3 mark=-
+CS sha=d4fe575be8e8524ff6b4a4fc1d24e04da6980dc1be10db2b1a537646c8f98d38 dispatches=27 mark=-
+CS sha=d56009a45dc1d8285aed1b8160b1024c42e8b5f2faa964dd62c32ff6f1ea85f4 dispatches=6 mark=-
+CS sha=d81fe172ebfda96e574882ca2e7e1686f202d5d647246a6734149d740f530bb1 dispatches=3 mark=-
+CS sha=db9663865767b61821db2db14db37b27ed4d637d32d3fc7c153f6d03a17480f2 dispatches=12 mark=-
+CS sha=e632b8e3c9c8d8be991e6d82e7dc4f1131bb443e8005756c3643c321e7009b2e dispatches=3 mark=-
+CS sha=e802df5c6edf4036f96a255addb341b3895a74275c04deb38d7723d74bdfeb85 dispatches=36 mark=-
+CS sha=e87279bdd92eab89456dbc1351fc3baf385162444eaae8277e50aff9e68722a8 dispatches=2 mark=-
+CS sha=e91217d802b407960bf9a5898350ee840f367421fa9e2dc8a8c1e6a95c51b485 dispatches=3 mark=-
+CS sha=eb78aa5e546728d49a3f45c75018e456edeef4affcdb571505ccdca897267484 dispatches=3 mark=-
+CS sha=f005d2d76fe93db37dbc4bf937c60e0afc62e718c10c8f86b439150b99f15fb3 dispatches=2 mark=-
+CS sha=f80e436edfc766302bd66b5c07b89739fa79ccdb849e433d4f20b2f9de0328bb dispatches=3 mark=-
+CS sha=fa6d1fc2467434d95cc6d07d62478b7a57458fdb0e2dc35f399e9f0accd9803c dispatches=24 mark=-
+MODULES total 350 marked_380b 1; compute pipelines 83
+SUMMARY dispatches 1624 distinct_cs 69 marked_380b 3 marked_eids chunk:61159,104876,152371
+done
+MODULE ResourceId::1251 sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 via=buffer mark=380b
+DISPATCH chunk=61159 ord=154 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=104876 ord=464 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+DISPATCH chunk=152371 ord=1552 call=vkCmdDispatch dims=indirect cs_sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 bytes=462744 mark=380b
+CS sha=3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 dispatches=3 mark=380b

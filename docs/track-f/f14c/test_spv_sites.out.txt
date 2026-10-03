@@ -1,0 +1,6 @@
+rows 269 mismatches 0 unresolved sites 0
+CENSUS cs manual ExplicitLod depth=1 dim=2D img_idx=const smp_idx=const 272
+CENSUS ps manual ExplicitLod depth=1 dim=2D img_idx=const smp_idx=const 612
+CENSUS ps native DrefExplicitLod depth=1 dim=2D img_idx=const smp_idx=const 234
+probe files 0
+ALL OK

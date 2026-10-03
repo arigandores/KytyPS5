@@ -1,0 +1,1588 @@
+capture C:/kyty/f287/f12f/f12_rd_k01.rdc chunks 2391 buffers 242
+CHUNK 17 vkCreateDescriptorSetLayout
+vkCreateDescriptorSetLayout : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkDescriptorSetLayoutCreateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO rid=ResourceId::32
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkDescriptorSetLayoutCreateFlags/SDBasic.Enum n=0 = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT rid=ResourceId::1
+    bindingCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+    pBindings : VkDescriptorSetLayoutBinding/SDBasic.Array n=2
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  SetLayout : VkDescriptorSetLayout/SDBasic.Resource n=0 =  rid=ResourceId::145
+CHUNK 18 vkCreateShaderModule
+vkCreateShaderModule : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkShaderModuleCreateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO rid=ResourceId::16
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkShaderModuleCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+    codeSize : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1832
+    pCode : Byte Buffer/SDBasic.Buffer n=0 =  rid=ResourceId::1
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  ShaderModule : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::146
+CHUNK 19 vkCreatePipelineLayout
+vkCreatePipelineLayout : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkPipelineLayoutCreateInfo/SDBasic.Struct n=7
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO rid=ResourceId::30
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkPipelineLayoutCreateFlags/SDBasic.Enum n=0 = VkPipelineLayoutCreateFlagBits(0) rid=ResourceId::0
+    setLayoutCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    pSetLayouts : VkDescriptorSetLayout/SDBasic.Array n=1
+      $el : VkDescriptorSetLayout/SDBasic.Resource n=0 =  rid=ResourceId::145
+    pushConstantRangeCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pPushConstantRanges : VkPushConstantRange/SDBasic.Array n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  PipelineLayout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::147
+CHUNK 20 vkCreateComputePipelines
+vkCreateComputePipelines : Chunk/SDBasic.Chunk n=7
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  pipelineCache : VkPipelineCache/SDBasic.Resource n=0 =  rid=ResourceId::0
+  count : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  CreateInfo : VkComputePipelineCreateInfo/SDBasic.Struct n=7
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO rid=ResourceId::29
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkPipelineCreateFlags/SDBasic.Enum n=0 = VkPipelineCreateFlagBits(0) rid=ResourceId::0
+    stage : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+      stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+      module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::146
+      pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+      pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::147
+    basePipelineHandle : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::0
+    basePipelineIndex : int32_t/SDBasic.SignedInteger n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::148
+  InlineShaderID : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+CHUNK 25 vkCreateShaderModule
+vkCreateShaderModule : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkShaderModuleCreateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO rid=ResourceId::16
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkShaderModuleCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+    codeSize : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::123420
+    pCode : Byte Buffer/SDBasic.Buffer n=0 =  rid=ResourceId::2
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  ShaderModule : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::153
+CHUNK 26 vkCreateDescriptorSetLayout
+vkCreateDescriptorSetLayout : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkDescriptorSetLayoutCreateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO rid=ResourceId::32
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkDescriptorSetLayoutCreateFlags/SDBasic.Enum n=0 = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT rid=ResourceId::1
+    bindingCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::4
+    pBindings : VkDescriptorSetLayoutBinding/SDBasic.Array n=4
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::6
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::44
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLER rid=ResourceId::0
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+      $el : VkDescriptorSetLayoutBinding/SDBasic.Struct n=5
+        binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::48
+        descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+        descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        pImmutableSamplers : VkSampler/SDBasic.Array n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  SetLayout : VkDescriptorSetLayout/SDBasic.Resource n=0 =  rid=ResourceId::154
+CHUNK 27 vkCreatePipelineLayout
+vkCreatePipelineLayout : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkPipelineLayoutCreateInfo/SDBasic.Struct n=7
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO rid=ResourceId::30
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkPipelineLayoutCreateFlags/SDBasic.Enum n=0 = VkPipelineLayoutCreateFlagBits(0) rid=ResourceId::0
+    setLayoutCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    pSetLayouts : VkDescriptorSetLayout/SDBasic.Array n=1
+      $el : VkDescriptorSetLayout/SDBasic.Resource n=0 =  rid=ResourceId::154
+    pushConstantRangeCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    pPushConstantRanges : VkPushConstantRange/SDBasic.Array n=1
+      $el : VkPushConstantRange/SDBasic.Struct n=3
+        stageFlags : VkShaderStageFlags/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+        offset : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        size : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::128
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  PipelineLayout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::155
+CHUNK 45 vkCreateComputePipelines
+vkCreateComputePipelines : Chunk/SDBasic.Chunk n=7
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  pipelineCache : VkPipelineCache/SDBasic.Resource n=0 =  rid=ResourceId::137
+  count : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  CreateInfo : VkComputePipelineCreateInfo/SDBasic.Struct n=7
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO rid=ResourceId::29
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkPipelineCreateFlags/SDBasic.Enum n=0 = VkPipelineCreateFlagBits(0) rid=ResourceId::0
+    stage : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+      stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_COMPUTE_BIT rid=ResourceId::32
+      module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::153
+      pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+      pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::155
+    basePipelineHandle : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::0
+    basePipelineIndex : int32_t/SDBasic.SignedInteger n=0 =  rid=ResourceId::18446744073709551615
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::169
+  InlineShaderID : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+CHUNK 106 vkCreateGraphicsPipelines
+vkCreateGraphicsPipelines : Chunk/SDBasic.Chunk n=7
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  pipelineCache : VkPipelineCache/SDBasic.Resource n=0 =  rid=ResourceId::137
+  count : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  CreateInfo : VkGraphicsPipelineCreateInfo/SDBasic.Struct n=20
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO rid=ResourceId::28
+    pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO rid=ResourceId::1000044002
+    pNext : VkPipelineRenderingCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO rid=ResourceId::1000044002
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      viewMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      colorAttachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pColorAttachmentFormats : VkFormat/SDBasic.Array n=0 =  rid=ResourceId::0
+      depthAttachmentFormat : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_D32_SFLOAT_S8_UINT rid=ResourceId::130
+      stencilAttachmentFormat : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_D32_SFLOAT_S8_UINT rid=ResourceId::130
+    flags : VkPipelineCreateFlags/SDBasic.Enum n=0 = VkPipelineCreateFlagBits(0) rid=ResourceId::0
+    stageCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+    pStages : VkPipelineShaderStageCreateInfo/SDBasic.Array n=2
+      $el : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+        stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_VERTEX_BIT rid=ResourceId::1
+        module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::201
+        pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+        pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+      $el : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+        stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_FRAGMENT_BIT rid=ResourceId::16
+        module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::202
+        pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+        pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    pVertexInputState : VkPipelineVertexInputStateCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO rid=ResourceId::19
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineVertexInputStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      vertexBindingDescriptionCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      pVertexBindingDescriptions : VkVertexInputBindingDescription/SDBasic.Array n=1
+        $el : VkVertexInputBindingDescription/SDBasic.Struct n=3
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          stride : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::24
+          inputRate : VkVertexInputRate/SDBasic.Enum n=0 = VK_VERTEX_INPUT_RATE_VERTEX rid=ResourceId::0
+      vertexAttributeDescriptionCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      pVertexAttributeDescriptions : VkVertexInputAttributeDescription/SDBasic.Array n=2
+        $el : VkVertexInputAttributeDescription/SDBasic.Struct n=4
+          location : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R32G32B32A32_SFLOAT rid=ResourceId::109
+          offset : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        $el : VkVertexInputAttributeDescription/SDBasic.Struct n=4
+          location : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R32G32_SFLOAT rid=ResourceId::103
+          offset : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::16
+    pInputAssemblyState : VkPipelineInputAssemblyStateCreateInfo/SDBasic.Struct n=5
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO rid=ResourceId::20
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineInputAssemblyStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      topology : VkPrimitiveTopology/SDBasic.Enum n=0 = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP rid=ResourceId::4
+      primitiveRestartEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pTessellationState : VkPipelineTessellationStateCreateInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    pViewportState : VkPipelineViewportStateCreateInfo/SDBasic.Struct n=8
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO rid=ResourceId::22
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT rid=ResourceId::1000355001
+      pNext : VkPipelineViewportDepthClipControlCreateInfoEXT/SDBasic.Struct n=3
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT rid=ResourceId::1000355001
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        negativeOneToOne : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      flags : VkPipelineViewportStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      viewportCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pViewports : VkViewport/SDBasic.Array n=0 =  rid=ResourceId::0
+      scissorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pScissors : VkRect2D/SDBasic.Array n=0 =  rid=ResourceId::0
+    pRasterizationState : VkPipelineRasterizationStateCreateInfo/SDBasic.Struct n=14
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO rid=ResourceId::23
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT rid=ResourceId::1000254001
+      pNext : VkPipelineRasterizationProvokingVertexStateCreateInfoEXT/SDBasic.Struct n=4
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT rid=ResourceId::1000254001
+        pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT rid=ResourceId::1000102001
+        pNext : VkPipelineRasterizationDepthClipStateCreateInfoEXT/SDBasic.Struct n=4
+          sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT rid=ResourceId::1000102001
+          pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+          flags : VkPipelineRasterizationDepthClipStateCreateFlagsEXT/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+          depthClipEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        provokingVertexMode : VkProvokingVertexModeEXT/SDBasic.Enum n=0 = VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT rid=ResourceId::0
+      flags : VkPipelineRasterizationStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      depthClampEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      rasterizerDiscardEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      polygonMode : VkPolygonMode/SDBasic.Enum n=0 = VK_POLYGON_MODE_FILL rid=ResourceId::0
+      cullMode : VkCullModeFlags/SDBasic.Enum n=0 = VK_CULL_MODE_NONE rid=ResourceId::0
+      frontFace : VkFrontFace/SDBasic.Enum n=0 = VK_FRONT_FACE_COUNTER_CLOCKWISE rid=ResourceId::0
+      depthBiasEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      depthBiasConstantFactor : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      depthBiasClamp : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      depthBiasSlopeFactor : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      lineWidth : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+    pMultisampleState : VkPipelineMultisampleStateCreateInfo/SDBasic.Struct n=9
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO rid=ResourceId::24
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineMultisampleStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      rasterizationSamples : VkSampleCountFlagBits/SDBasic.Enum n=0 = VK_SAMPLE_COUNT_1_BIT rid=ResourceId::1
+      sampleShadingEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      minSampleShading : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+      pSampleMask : uint32_t/SDBasic.Null n=0 =  rid=ResourceId::0
+      alphaToCoverageEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      alphaToOneEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pDepthStencilState : VkPipelineDepthStencilStateCreateInfo/SDBasic.Struct n=12
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO rid=ResourceId::25
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineDepthStencilStateCreateFlags/SDBasic.Enum n=0 = VkPipelineDepthStencilStateCreateFlagBits(0) rid=ResourceId::0
+      depthTestEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      depthWriteEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      depthCompareOp : VkCompareOp/SDBasic.Enum n=0 = VK_COMPARE_OP_NEVER rid=ResourceId::0
+      depthBoundsTestEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      stencilTestEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      front : VkStencilOpState/SDBasic.Struct n=7
+        failOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        passOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        depthFailOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        compareOp : VkCompareOp/SDBasic.Enum n=0 = VK_COMPARE_OP_NEVER rid=ResourceId::0
+        compareMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        writeMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        reference : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      back : VkStencilOpState/SDBasic.Struct n=7
+        failOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        passOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        depthFailOp : VkStencilOp/SDBasic.Enum n=0 = VK_STENCIL_OP_KEEP rid=ResourceId::0
+        compareOp : VkCompareOp/SDBasic.Enum n=0 = VK_COMPARE_OP_NEVER rid=ResourceId::0
+        compareMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        writeMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        reference : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      minDepthBounds : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      maxDepthBounds : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+    pColorBlendState : VkPipelineColorBlendStateCreateInfo/SDBasic.Struct n=9
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO rid=ResourceId::26
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT rid=ResourceId::1000381001
+      pNext : VkPipelineColorWriteCreateInfoEXT/SDBasic.Struct n=4
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT rid=ResourceId::1000381001
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        attachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        pColorWriteEnables : uint32_t/SDBasic.Array n=0 =  rid=ResourceId::0
+      flags : VkPipelineColorBlendStateCreateFlags/SDBasic.Enum n=0 = VkPipelineColorBlendStateCreateFlagBits(0) rid=ResourceId::0
+      logicOpEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      logicOp : VkLogicOp/SDBasic.Enum n=0 = VK_LOGIC_OP_COPY rid=ResourceId::3
+      attachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pAttachments : VkPipelineColorBlendAttachmentState/SDBasic.Array n=0 =  rid=ResourceId::0
+      blendConstants : float/SDBasic.Array n=4
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    pDynamicState : VkPipelineDynamicStateCreateInfo/SDBasic.Struct n=5
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO rid=ResourceId::27
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineDynamicStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      dynamicStateCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::15
+      pDynamicStates : VkDynamicState/SDBasic.Array n=15
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT rid=ResourceId::1000267003
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT rid=ResourceId::1000267004
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_LINE_WIDTH rid=ResourceId::2
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE rid=ResourceId::1000267006
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE rid=ResourceId::1000267007
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_COMPARE_OP rid=ResourceId::1000267008
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE rid=ResourceId::1000377002
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_BIAS rid=ResourceId::3
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE rid=ResourceId::1000267010
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_OP rid=ResourceId::1000267011
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK rid=ResourceId::6
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_REFERENCE rid=ResourceId::8
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_WRITE_MASK rid=ResourceId::7
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_BLEND_CONSTANTS rid=ResourceId::4
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT rid=ResourceId::1000524000
+    layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::237
+    renderPass : VkRenderPass/SDBasic.Resource n=0 =  rid=ResourceId::0
+    subpass : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    basePipelineHandle : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::0
+    basePipelineIndex : int32_t/SDBasic.SignedInteger n=0 =  rid=ResourceId::18446744073709551615
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::238
+  InlineShaderIDs : ResourceId/SDBasic.Array n=2
+    $el : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+    $el : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+CHUNK 134 vkCreateGraphicsPipelines
+vkCreateGraphicsPipelines : Chunk/SDBasic.Chunk n=7
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  pipelineCache : VkPipelineCache/SDBasic.Resource n=0 =  rid=ResourceId::137
+  count : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  CreateInfo : VkGraphicsPipelineCreateInfo/SDBasic.Struct n=20
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO rid=ResourceId::28
+    pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO rid=ResourceId::1000044002
+    pNext : VkPipelineRenderingCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO rid=ResourceId::1000044002
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      viewMask : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      colorAttachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      pColorAttachmentFormats : VkFormat/SDBasic.Array n=1
+        $el : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R8G8B8A8_UNORM rid=ResourceId::37
+      depthAttachmentFormat : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_UNDEFINED rid=ResourceId::0
+      stencilAttachmentFormat : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_UNDEFINED rid=ResourceId::0
+    flags : VkPipelineCreateFlags/SDBasic.Enum n=0 = VkPipelineCreateFlagBits(0) rid=ResourceId::0
+    stageCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+    pStages : VkPipelineShaderStageCreateInfo/SDBasic.Array n=2
+      $el : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+        stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_VERTEX_BIT rid=ResourceId::1
+        module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::258
+        pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+        pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+      $el : VkPipelineShaderStageCreateInfo/SDBasic.Struct n=7
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO rid=ResourceId::18
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        flags : VkPipelineShaderStageCreateFlags/SDBasic.Enum n=0 = VkPipelineShaderStageCreateFlagBits(0) rid=ResourceId::0
+        stage : VkShaderStageFlagBits/SDBasic.Enum n=0 = VK_SHADER_STAGE_FRAGMENT_BIT rid=ResourceId::16
+        module : VkShaderModule/SDBasic.Resource n=0 =  rid=ResourceId::259
+        pName : string/SDBasic.String n=0 = main rid=ResourceId::0
+        pSpecializationInfo : VkSpecializationInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    pVertexInputState : VkPipelineVertexInputStateCreateInfo/SDBasic.Struct n=7
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO rid=ResourceId::19
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineVertexInputStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      vertexBindingDescriptionCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      pVertexBindingDescriptions : VkVertexInputBindingDescription/SDBasic.Array n=1
+        $el : VkVertexInputBindingDescription/SDBasic.Struct n=3
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          stride : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::24
+          inputRate : VkVertexInputRate/SDBasic.Enum n=0 = VK_VERTEX_INPUT_RATE_VERTEX rid=ResourceId::0
+      vertexAttributeDescriptionCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      pVertexAttributeDescriptions : VkVertexInputAttributeDescription/SDBasic.Array n=2
+        $el : VkVertexInputAttributeDescription/SDBasic.Struct n=4
+          location : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R32G32B32A32_SFLOAT rid=ResourceId::109
+          offset : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+        $el : VkVertexInputAttributeDescription/SDBasic.Struct n=4
+          location : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+          binding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R32G32_SFLOAT rid=ResourceId::103
+          offset : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::16
+    pInputAssemblyState : VkPipelineInputAssemblyStateCreateInfo/SDBasic.Struct n=5
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO rid=ResourceId::20
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineInputAssemblyStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      topology : VkPrimitiveTopology/SDBasic.Enum n=0 = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP rid=ResourceId::4
+      primitiveRestartEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pTessellationState : VkPipelineTessellationStateCreateInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    pViewportState : VkPipelineViewportStateCreateInfo/SDBasic.Struct n=8
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO rid=ResourceId::22
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT rid=ResourceId::1000355001
+      pNext : VkPipelineViewportDepthClipControlCreateInfoEXT/SDBasic.Struct n=3
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_DEPTH_CLIP_CONTROL_CREATE_INFO_EXT rid=ResourceId::1000355001
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        negativeOneToOne : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      flags : VkPipelineViewportStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      viewportCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pViewports : VkViewport/SDBasic.Array n=0 =  rid=ResourceId::0
+      scissorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      pScissors : VkRect2D/SDBasic.Array n=0 =  rid=ResourceId::0
+    pRasterizationState : VkPipelineRasterizationStateCreateInfo/SDBasic.Struct n=14
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO rid=ResourceId::23
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT rid=ResourceId::1000254001
+      pNext : VkPipelineRasterizationProvokingVertexStateCreateInfoEXT/SDBasic.Struct n=4
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT rid=ResourceId::1000254001
+        pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT rid=ResourceId::1000102001
+        pNext : VkPipelineRasterizationDepthClipStateCreateInfoEXT/SDBasic.Struct n=4
+          sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT rid=ResourceId::1000102001
+          pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+          flags : VkPipelineRasterizationDepthClipStateCreateFlagsEXT/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+          depthClipEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        provokingVertexMode : VkProvokingVertexModeEXT/SDBasic.Enum n=0 = VK_PROVOKING_VERTEX_MODE_FIRST_VERTEX_EXT rid=ResourceId::0
+      flags : VkPipelineRasterizationStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      depthClampEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      rasterizerDiscardEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      polygonMode : VkPolygonMode/SDBasic.Enum n=0 = VK_POLYGON_MODE_FILL rid=ResourceId::0
+      cullMode : VkCullModeFlags/SDBasic.Enum n=0 = VK_CULL_MODE_NONE rid=ResourceId::0
+      frontFace : VkFrontFace/SDBasic.Enum n=0 = VK_FRONT_FACE_COUNTER_CLOCKWISE rid=ResourceId::0
+      depthBiasEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      depthBiasConstantFactor : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      depthBiasClamp : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      depthBiasSlopeFactor : float/SDBasic.Float n=0 =  rid=ResourceId::0
+      lineWidth : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+    pMultisampleState : VkPipelineMultisampleStateCreateInfo/SDBasic.Struct n=9
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO rid=ResourceId::24
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineMultisampleStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      rasterizationSamples : VkSampleCountFlagBits/SDBasic.Enum n=0 = VK_SAMPLE_COUNT_1_BIT rid=ResourceId::1
+      sampleShadingEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      minSampleShading : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+      pSampleMask : uint32_t/SDBasic.Null n=0 =  rid=ResourceId::0
+      alphaToCoverageEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      alphaToOneEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pDepthStencilState : VkPipelineDepthStencilStateCreateInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+    pColorBlendState : VkPipelineColorBlendStateCreateInfo/SDBasic.Struct n=9
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO rid=ResourceId::26
+      pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT rid=ResourceId::1000381001
+      pNext : VkPipelineColorWriteCreateInfoEXT/SDBasic.Struct n=4
+        sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_COLOR_WRITE_CREATE_INFO_EXT rid=ResourceId::1000381001
+        pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+        attachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+        pColorWriteEnables : uint32_t/SDBasic.Array n=1
+          $el : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      flags : VkPipelineColorBlendStateCreateFlags/SDBasic.Enum n=0 = VkPipelineColorBlendStateCreateFlagBits(0) rid=ResourceId::0
+      logicOpEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      logicOp : VkLogicOp/SDBasic.Enum n=0 = VK_LOGIC_OP_COPY rid=ResourceId::3
+      attachmentCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      pAttachments : VkPipelineColorBlendAttachmentState/SDBasic.Array n=1
+        $el : VkPipelineColorBlendAttachmentState/SDBasic.Struct n=8
+          blendEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+          srcColorBlendFactor : VkBlendFactor/SDBasic.Enum n=0 = VK_BLEND_FACTOR_ONE rid=ResourceId::1
+          dstColorBlendFactor : VkBlendFactor/SDBasic.Enum n=0 = VK_BLEND_FACTOR_ONE rid=ResourceId::1
+          colorBlendOp : VkBlendOp/SDBasic.Enum n=0 = VK_BLEND_OP_MIN rid=ResourceId::3
+          srcAlphaBlendFactor : VkBlendFactor/SDBasic.Enum n=0 = VK_BLEND_FACTOR_ONE rid=ResourceId::1
+          dstAlphaBlendFactor : VkBlendFactor/SDBasic.Enum n=0 = VK_BLEND_FACTOR_ZERO rid=ResourceId::0
+          alphaBlendOp : VkBlendOp/SDBasic.Enum n=0 = VK_BLEND_OP_ADD rid=ResourceId::0
+          colorWriteMask : VkColorComponentFlags/SDBasic.Enum n=0 = VK_COLOR_COMPONENT_B_BIT rid=ResourceId::4
+      blendConstants : float/SDBasic.Array n=4
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+        $el : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    pDynamicState : VkPipelineDynamicStateCreateInfo/SDBasic.Struct n=5
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO rid=ResourceId::27
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      flags : VkPipelineDynamicStateCreateFlags/SDBasic.Enum n=0 = 0 rid=ResourceId::0
+      dynamicStateCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::16
+      pDynamicStates : VkDynamicState/SDBasic.Array n=16
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_VIEWPORT_WITH_COUNT rid=ResourceId::1000267003
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_SCISSOR_WITH_COUNT rid=ResourceId::1000267004
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_LINE_WIDTH rid=ResourceId::2
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE rid=ResourceId::1000267006
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE rid=ResourceId::1000267007
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_COMPARE_OP rid=ResourceId::1000267008
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE rid=ResourceId::1000377002
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_DEPTH_BIAS rid=ResourceId::3
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE rid=ResourceId::1000267010
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_OP rid=ResourceId::1000267011
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK rid=ResourceId::6
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_REFERENCE rid=ResourceId::8
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_STENCIL_WRITE_MASK rid=ResourceId::7
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_BLEND_CONSTANTS rid=ResourceId::4
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_COLOR_WRITE_ENABLE_EXT rid=ResourceId::1000381000
+        $el : VkDynamicState/SDBasic.Enum n=0 = VK_DYNAMIC_STATE_ATTACHMENT_FEEDBACK_LOOP_ENABLE_EXT rid=ResourceId::1000524000
+    layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::271
+    renderPass : VkRenderPass/SDBasic.Resource n=0 =  rid=ResourceId::0
+    subpass : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    basePipelineHandle : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::0
+    basePipelineIndex : int32_t/SDBasic.SignedInteger n=0 =  rid=ResourceId::18446744073709551615
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::273
+  InlineShaderIDs : ResourceId/SDBasic.Array n=2
+    $el : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+    $el : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::0
+CHUNK 207 vkCreateImage
+vkCreateImage : Chunk/SDBasic.Chunk n=5
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkImageCreateInfo/SDBasic.Struct n=15
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO rid=ResourceId::14
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkImageCreateFlags/SDBasic.Enum n=0 = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT | VK_IMAGE_CREATE_EXTENDED_USAGE_BIT rid=ResourceId::264
+    imageType : VkImageType/SDBasic.Enum n=0 = VK_IMAGE_TYPE_2D rid=ResourceId::1
+    format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R16G16B16A16_SFLOAT rid=ResourceId::97
+    extent : VkExtent3D/SDBasic.Struct n=3
+      width : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+      height : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+      depth : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    mipLevels : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    arrayLayers : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    samples : VkSampleCountFlagBits/SDBasic.Enum n=0 = VK_SAMPLE_COUNT_1_BIT rid=ResourceId::1
+    tiling : VkImageTiling/SDBasic.Enum n=0 = VK_IMAGE_TILING_OPTIMAL rid=ResourceId::0
+    usage : VkImageUsageFlags/SDBasic.Enum n=0 = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORA
+    sharingMode : VkSharingMode/SDBasic.Enum n=0 = VK_SHARING_MODE_EXCLUSIVE rid=ResourceId::0
+    queueFamilyIndexCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pQueueFamilyIndices : uint32_t/SDBasic.Array n=0 =  rid=ResourceId::0
+    initialLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Image : VkImage/SDBasic.Resource n=0 =  rid=ResourceId::5349
+  memoryRequirements : VkMemoryRequirements/SDBasic.Struct n=3
+    size : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8388608
+    alignment : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+    memoryTypeBits : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+CHUNK 210 vkCreateImage
+vkCreateImage : Chunk/SDBasic.Chunk n=5
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkImageCreateInfo/SDBasic.Struct n=15
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO rid=ResourceId::14
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkImageCreateFlags/SDBasic.Enum n=0 = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT | VK_IMAGE_CREATE_EXTENDED_USAGE_BIT rid=ResourceId::264
+    imageType : VkImageType/SDBasic.Enum n=0 = VK_IMAGE_TYPE_2D rid=ResourceId::1
+    format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R16G16B16A16_SFLOAT rid=ResourceId::97
+    extent : VkExtent3D/SDBasic.Struct n=3
+      width : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+      height : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+      depth : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    mipLevels : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    arrayLayers : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+    samples : VkSampleCountFlagBits/SDBasic.Enum n=0 = VK_SAMPLE_COUNT_1_BIT rid=ResourceId::1
+    tiling : VkImageTiling/SDBasic.Enum n=0 = VK_IMAGE_TILING_OPTIMAL rid=ResourceId::0
+    usage : VkImageUsageFlags/SDBasic.Enum n=0 = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORA
+    sharingMode : VkSharingMode/SDBasic.Enum n=0 = VK_SHARING_MODE_EXCLUSIVE rid=ResourceId::0
+    queueFamilyIndexCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    pQueueFamilyIndices : uint32_t/SDBasic.Array n=0 =  rid=ResourceId::0
+    initialLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Image : VkImage/SDBasic.Resource n=0 =  rid=ResourceId::5351
+  memoryRequirements : VkMemoryRequirements/SDBasic.Struct n=3
+    size : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8388608
+    alignment : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+    memoryTypeBits : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+CHUNK 215 vkCreateImageView
+vkCreateImageView : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkImageViewCreateInfo/SDBasic.Struct n=9
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO rid=ResourceId::15
+    pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO rid=ResourceId::1000117002
+    pNext : VkImageViewUsageCreateInfo/SDBasic.Struct n=3
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO rid=ResourceId::1000117002
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      usage : VkImageUsageFlags/SDBasic.Enum n=0 = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR
+    flags : VkImageViewCreateFlags/SDBasic.Enum n=0 = VkImageViewCreateFlagBits(0) rid=ResourceId::0
+    image : VkImage/SDBasic.Resource n=0 =  rid=ResourceId::5349
+    viewType : VkImageViewType/SDBasic.Enum n=0 = VK_IMAGE_VIEW_TYPE_2D rid=ResourceId::1
+    format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R16G16B16A16_SFLOAT rid=ResourceId::97
+    components : VkComponentMapping/SDBasic.Struct n=4
+      r : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_R rid=ResourceId::3
+      g : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_G rid=ResourceId::4
+      b : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_B rid=ResourceId::5
+      a : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_A rid=ResourceId::6
+    subresourceRange : VkImageSubresourceRange/SDBasic.Struct n=5
+      aspectMask : VkImageAspectFlags/SDBasic.Enum n=0 = VK_IMAGE_ASPECT_COLOR_BIT rid=ResourceId::1
+      baseMipLevel : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      levelCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      baseArrayLayer : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      layerCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  View : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5357
+CHUNK 216 vkCreateImageView
+vkCreateImageView : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkImageViewCreateInfo/SDBasic.Struct n=9
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO rid=ResourceId::15
+    pNextType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO rid=ResourceId::1000117002
+    pNext : VkImageViewUsageCreateInfo/SDBasic.Struct n=3
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO rid=ResourceId::1000117002
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      usage : VkImageUsageFlags/SDBasic.Enum n=0 = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR
+    flags : VkImageViewCreateFlags/SDBasic.Enum n=0 = VkImageViewCreateFlagBits(0) rid=ResourceId::0
+    image : VkImage/SDBasic.Resource n=0 =  rid=ResourceId::5351
+    viewType : VkImageViewType/SDBasic.Enum n=0 = VK_IMAGE_VIEW_TYPE_2D rid=ResourceId::1
+    format : VkFormat/SDBasic.Enum n=0 = VK_FORMAT_R16G16B16A16_SFLOAT rid=ResourceId::97
+    components : VkComponentMapping/SDBasic.Struct n=4
+      r : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_R rid=ResourceId::3
+      g : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_G rid=ResourceId::4
+      b : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_B rid=ResourceId::5
+      a : VkComponentSwizzle/SDBasic.Enum n=0 = VK_COMPONENT_SWIZZLE_A rid=ResourceId::6
+    subresourceRange : VkImageSubresourceRange/SDBasic.Struct n=5
+      aspectMask : VkImageAspectFlags/SDBasic.Enum n=0 = VK_IMAGE_ASPECT_COLOR_BIT rid=ResourceId::1
+      baseMipLevel : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      levelCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      baseArrayLayer : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      layerCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  View : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5360
+CHUNK 225 vkCreateSampler
+vkCreateSampler : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkSamplerCreateInfo/SDBasic.Struct n=18
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO rid=ResourceId::31
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkSamplerCreateFlags/SDBasic.Enum n=0 = VkSamplerCreateFlagBits(0) rid=ResourceId::0
+    magFilter : VkFilter/SDBasic.Enum n=0 = VK_FILTER_LINEAR rid=ResourceId::1
+    minFilter : VkFilter/SDBasic.Enum n=0 = VK_FILTER_LINEAR rid=ResourceId::1
+    mipmapMode : VkSamplerMipmapMode/SDBasic.Enum n=0 = VK_SAMPLER_MIPMAP_MODE_NEAREST rid=ResourceId::0
+    addressModeU : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_REPEAT rid=ResourceId::0
+    addressModeV : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_REPEAT rid=ResourceId::0
+    addressModeW : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_REPEAT rid=ResourceId::0
+    mipLodBias : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    anisotropyEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    maxAnisotropy : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+    compareEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    compareOp : VkCompareOp/SDBasic.Enum n=0 = VK_COMPARE_OP_NEVER rid=ResourceId::0
+    minLod : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    maxLod : float/SDBasic.Float n=0 =  rid=ResourceId::4625194618286243840
+    borderColor : VkBorderColor/SDBasic.Enum n=0 = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK rid=ResourceId::1
+    unnormalizedCoordinates : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5376
+CHUNK 234 vkCreateSampler
+vkCreateSampler : Chunk/SDBasic.Chunk n=4
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  CreateInfo : VkSamplerCreateInfo/SDBasic.Struct n=18
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO rid=ResourceId::31
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkSamplerCreateFlags/SDBasic.Enum n=0 = VkSamplerCreateFlagBits(0) rid=ResourceId::0
+    magFilter : VkFilter/SDBasic.Enum n=0 = VK_FILTER_LINEAR rid=ResourceId::1
+    minFilter : VkFilter/SDBasic.Enum n=0 = VK_FILTER_LINEAR rid=ResourceId::1
+    mipmapMode : VkSamplerMipmapMode/SDBasic.Enum n=0 = VK_SAMPLER_MIPMAP_MODE_NEAREST rid=ResourceId::0
+    addressModeU : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE rid=ResourceId::2
+    addressModeV : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE rid=ResourceId::2
+    addressModeW : VkSamplerAddressMode/SDBasic.Enum n=0 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE rid=ResourceId::2
+    mipLodBias : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    anisotropyEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    maxAnisotropy : float/SDBasic.Float n=0 =  rid=ResourceId::4607182418800017408
+    compareEnable : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+    compareOp : VkCompareOp/SDBasic.Enum n=0 = VK_COMPARE_OP_NEVER rid=ResourceId::0
+    minLod : float/SDBasic.Float n=0 =  rid=ResourceId::0
+    maxLod : float/SDBasic.Float n=0 =  rid=ResourceId::4625194618286243840
+    borderColor : VkBorderColor/SDBasic.Enum n=0 = VK_BORDER_COLOR_INT_TRANSPARENT_BLACK rid=ResourceId::1
+    unnormalizedCoordinates : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pAllocator : VkAllocationCallbacks/SDBasic.Null n=0 =  rid=ResourceId::0
+  Sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+CHUNK 703 vkBeginCommandBuffer
+vkBeginCommandBuffer : Chunk/SDBasic.Chunk n=5
+  CommandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  BeginInfo : VkCommandBufferBeginInfo/SDBasic.Struct n=4
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO rid=ResourceId::42
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkCommandBufferUsageFlags/SDBasic.Enum n=0 = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT rid=ResourceId::1
+    pInheritanceInfo : VkCommandBufferInheritanceInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+  BakedCommandBuffer : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::13489
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  AllocateInfo : VkCommandBufferAllocateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO rid=ResourceId::40
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    commandPool : VkCommandPool/SDBasic.Resource n=0 =  rid=ResourceId::133
+    level : VkCommandBufferLevel/SDBasic.Enum n=0 = VK_COMMAND_BUFFER_LEVEL_PRIMARY rid=ResourceId::0
+    commandBufferCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+CHUNK 706 vkBeginCommandBuffer
+vkBeginCommandBuffer : Chunk/SDBasic.Chunk n=5
+  CommandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::3272
+  BeginInfo : VkCommandBufferBeginInfo/SDBasic.Struct n=4
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO rid=ResourceId::42
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    flags : VkCommandBufferUsageFlags/SDBasic.Enum n=0 = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT rid=ResourceId::1
+    pInheritanceInfo : VkCommandBufferInheritanceInfo/SDBasic.Null n=0 =  rid=ResourceId::0
+  BakedCommandBuffer : ResourceId/SDBasic.Resource n=0 =  rid=ResourceId::13508
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  AllocateInfo : VkCommandBufferAllocateInfo/SDBasic.Struct n=5
+    sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO rid=ResourceId::40
+    pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+    commandPool : VkCommandPool/SDBasic.Resource n=0 =  rid=ResourceId::215
+    level : VkCommandBufferLevel/SDBasic.Enum n=0 = VK_COMMAND_BUFFER_LEVEL_PRIMARY rid=ResourceId::0
+    commandBufferCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+CHUNK 722 vkCmdPushDescriptorSet
+vkCmdPushDescriptorSet : Chunk/SDBasic.Chunk n=7
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_COMPUTE rid=ResourceId::1
+  layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::199
+  set : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  descriptorWriteCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+  pDescriptorWrites : VkWriteDescriptorSet/SDBasic.Array n=3
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5699
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::65536
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13509
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1024
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER rid=ResourceId::6
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896320
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::56
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 723 vkCmdBindPipeline
+vkCmdBindPipeline : Chunk/SDBasic.Chunk n=4
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_COMPUTE rid=ResourceId::1
+  pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::5709
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 724 vkCmdDispatch
+vkCmdDispatch : Chunk/SDBasic.Chunk n=5
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  x : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  y : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  z : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 736 vkCmdPushDescriptorSet
+vkCmdPushDescriptorSet : Chunk/SDBasic.Chunk n=7
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_GRAPHICS rid=ResourceId::0
+  layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::326
+  set : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  descriptorWriteCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8
+  pDescriptorWrites : VkWriteDescriptorSet/SDBasic.Array n=8
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896384
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::160
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::50
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER rid=ResourceId::6
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896384
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::160
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::51
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896576
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::160
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::101
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER rid=ResourceId::6
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896576
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::160
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::52
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=2
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5710
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5588
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::54
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6743
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::95
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLER rid=ResourceId::0
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::0
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::100
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8896768
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::132
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 749 vkCmdBindPipeline
+vkCmdBindPipeline : Chunk/SDBasic.Chunk n=4
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_GRAPHICS rid=ResourceId::0
+  pipeline : VkPipeline/SDBasic.Resource n=0 =  rid=ResourceId::341
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 750 vkCmdDraw
+vkCmdDraw : Chunk/SDBasic.Chunk n=6
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::6566
+  vertexCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+  instanceCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  firstVertex : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  firstInstance : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 770 vkCmdDispatch
+vkCmdDispatch : Chunk/SDBasic.Chunk n=5
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5314
+  x : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::32768
+  y : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  z : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 886 vkCmdDraw
+vkCmdDraw : Chunk/SDBasic.Chunk n=6
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5408
+  vertexCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+  instanceCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  firstVertex : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  firstInstance : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1205 vkUpdateDescriptorSets
+vkUpdateDescriptorSets : Chunk/SDBasic.Chunk n=6
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  writeCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::11
+  pDescriptorWrites : VkWriteDescriptorSet/SDBasic.Array n=11
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=8
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5745
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::259216
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::129604
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::37136
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::17904
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::15088
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::112
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5527
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::800
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::64
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5499
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::11728
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::96
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5527
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::800
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::64
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8909008
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::16
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::6080
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::576
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::9
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=9
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6680
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6705
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6715
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6695
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6730
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6712
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5476
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5765
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6731
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::4
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=3
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5503
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5534
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5534
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::7
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5507
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::10
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6795
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::25
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5503
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::31
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE rid=ResourceId::3
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=2
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6733
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_GENERAL rid=ResourceId::1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6735
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_GENERAL rid=ResourceId::1
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::44
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::6
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLER rid=ResourceId::0
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=6
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5438
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5498
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5498
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5526
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::46
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::152
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::536870912
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::47
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::138
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8388672
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::48
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8909056
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1212
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+  copyCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pDescriptorCopies : VkCopyDescriptorSet/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1206 vkCmdBindDescriptorSets
+vkCmdBindDescriptorSets : Chunk/SDBasic.Chunk n=9
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5678
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_COMPUTE rid=ResourceId::1
+  layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::243
+  firstSet : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  setCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  pDescriptorSets : VkDescriptorSet/SDBasic.Array n=1
+    $el : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5554
+  dynamicOffsetCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pDynamicOffsets : uint32_t/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1236 vkUpdateDescriptorSets
+vkUpdateDescriptorSets : Chunk/SDBasic.Chunk n=6
+  device : VkDevice/SDBasic.Resource n=0 =  rid=ResourceId::10
+  writeCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::11
+  pDescriptorWrites : VkWriteDescriptorSet/SDBasic.Array n=11
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::10
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=10
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5745
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::388832
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::129604
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::37136
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::17904
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::15088
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::112
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5557
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1152
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::64
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5499
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::10944
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::96
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5557
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1152
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::64
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5745
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::129616
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::129600
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5478
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::33177600
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8910272
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::16
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::13387
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::6080
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::576
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::9
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=9
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6680
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6705
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6715
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6695
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6730
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6712
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5476
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5765
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6731
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::4
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::3
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=3
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5503
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5534
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5534
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::7
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5507
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL rid=ResourceId::5
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::10
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6795
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::25
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE rid=ResourceId::2
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::5503
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL rid=ResourceId::4
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::31
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::2
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE rid=ResourceId::3
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=2
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6733
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_GENERAL rid=ResourceId::1
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::6735
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_GENERAL rid=ResourceId::1
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::44
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::6
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_SAMPLER rid=ResourceId::0
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=6
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5438
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5498
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5498
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5526
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+        $el : VkDescriptorImageInfo/SDBasic.Struct n=3
+          sampler : VkSampler/SDBasic.Resource n=0 =  rid=ResourceId::5389
+          imageView : VkImageView/SDBasic.Resource n=0 =  rid=ResourceId::0
+          imageLayout : VkImageLayout/SDBasic.Enum n=0 = VK_IMAGE_LAYOUT_UNDEFINED rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::46
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::152
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::536870912
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::47
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::138
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8388672
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+    $el : VkWriteDescriptorSet/SDBasic.Struct n=10
+      sType : VkStructureType/SDBasic.Enum n=0 = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET rid=ResourceId::35
+      pNext : void */SDBasic.Null n=0 =  rid=ResourceId::0
+      dstSet : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+      dstBinding : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::48
+      dstArrayElement : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+      descriptorCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+      descriptorType : VkDescriptorType/SDBasic.Enum n=0 = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER rid=ResourceId::7
+      pImageInfo : VkDescriptorImageInfo/SDBasic.Array n=0 =  rid=ResourceId::0
+      pBufferInfo : VkDescriptorBufferInfo/SDBasic.Array n=1
+        $el : VkDescriptorBufferInfo/SDBasic.Struct n=3
+          buffer : VkBuffer/SDBasic.Resource n=0 =  rid=ResourceId::165
+          offset : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::8910336
+          range : uint64_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1248
+      pTexelBufferView : VkBufferView/SDBasic.Array n=0 =  rid=ResourceId::0
+  copyCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pDescriptorCopies : VkCopyDescriptorSet/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1237 vkCmdBindDescriptorSets
+vkCmdBindDescriptorSets : Chunk/SDBasic.Chunk n=9
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5678
+  pipelineBindPoint : VkPipelineBindPoint/SDBasic.Enum n=0 = VK_PIPELINE_BIND_POINT_COMPUTE rid=ResourceId::1
+  layout : VkPipelineLayout/SDBasic.Resource n=0 =  rid=ResourceId::247
+  firstSet : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  setCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  pDescriptorSets : VkDescriptorSet/SDBasic.Array n=1
+    $el : VkDescriptorSet/SDBasic.Resource n=0 =  rid=ResourceId::5559
+  dynamicOffsetCount : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::0
+  pDynamicOffsets : uint32_t/SDBasic.Array n=0 =  rid=ResourceId::0
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1405 vkCmdDrawMeshTasksEXT
+vkCmdDrawMeshTasksEXT : Chunk/SDBasic.Chunk n=5
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5682
+  groupCountX : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  groupCountY : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  groupCountZ : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+CHUNK 1409 vkCmdDrawMeshTasksEXT
+vkCmdDrawMeshTasksEXT : Chunk/SDBasic.Chunk n=5
+  commandBuffer : VkCommandBuffer/SDBasic.Resource n=0 =  rid=ResourceId::5682
+  groupCountX : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  groupCountY : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  groupCountZ : uint32_t/SDBasic.UnsignedInteger n=0 =  rid=ResourceId::1
+  DebugMessages : DebugMessage/SDBasic.Array n=0 =  rid=ResourceId::0
+HIST Internal::Beginning of Capture 1
+HIST Internal::Coherent Mapped Memory Write 7
+HIST Internal::Device Memory References 1
+HIST Internal::End of Capture 1
+HIST Internal::Frame Metadata 1
+HIST Internal::Initial Contents 73
+HIST Internal::List of Initial Contents Resources 1
+HIST vkAllocateCommandBuffers 35
+HIST vkAllocateDescriptorSets 8
+HIST vkAllocateMemory 50
+HIST vkBeginCommandBuffer 35
+HIST vkBindBufferMemory 95
+HIST vkBindImageMemory 49
+HIST vkCmdBeginRendering 32
+HIST vkCmdBindDescriptorSets 8
+HIST vkCmdBindPipeline 108
+HIST vkCmdBindVertexBuffers2 28
+HIST vkCmdBlitImage 2
+HIST vkCmdClearColorImage 10
+HIST vkCmdClearDepthStencilImage 4
+HIST vkCmdCopyBuffer 77
+HIST vkCmdCopyBufferToImage 4
+HIST vkCmdCopyImage 2
+HIST vkCmdDispatch 78
+HIST vkCmdDispatchIndirect 8
+HIST vkCmdDraw 30
+HIST vkCmdDrawMeshTasksEXT 4
+HIST vkCmdEndRendering 32
+HIST vkCmdFillBuffer 16
+HIST vkCmdPipelineBarrier 354
+HIST vkCmdPipelineBarrier2 190
+HIST vkCmdPushConstants 118
+HIST vkCmdPushDescriptorSet 112
+HIST vkCmdResetQueryPool 35
+HIST vkCmdSetAttachmentFeedbackLoopEnableEXT 11
+HIST vkCmdSetBlendConstants 13
+HIST vkCmdSetColorWriteEnableEXT 9
+HIST vkCmdSetDepthBiasEnable 11
+HIST vkCmdSetDepthCompareOp 13
+HIST vkCmdSetDepthTestEnable 13
+HIST vkCmdSetDepthWriteEnable 13
+HIST vkCmdSetLineWidth 11
+HIST vkCmdSetScissorWithCount 23
+HIST vkCmdSetStencilCompareMask 4
+HIST vkCmdSetStencilOp 4
+HIST vkCmdSetStencilReference 4
+HIST vkCmdSetStencilTestEnable 11
+HIST vkCmdSetStencilWriteMask 4
+HIST vkCmdSetViewportWithCount 23
+HIST vkCmdWriteTimestamp 70
+HIST vkCreateBuffer 95
+HIST vkCreateCommandPool 2
+HIST vkCreateComputePipelines 24
+HIST vkCreateDescriptorPool 1
+HIST vkCreateDescriptorSetLayout 34
+HIST vkCreateDevice 1
+HIST vkCreateGraphicsPipelines 11
+HIST vkCreateImage 49
+HIST vkCreateImageView 74
+HIST vkCreateInstance 1
+HIST vkCreatePipelineCache 1
+HIST vkCreatePipelineLayout 34
+HIST vkCreateQueryPool 2
+HIST vkCreateSampler 7
+HIST vkCreateSemaphore 7
+HIST vkCreateShaderModule 40
+HIST vkCreateSwapchainKHR 1
+HIST vkEndCommandBuffer 35
+HIST vkEnumeratePhysicalDevices 1
+HIST vkGetDeviceQueue 1
+HIST vkGetSemaphoreCounterValue 35
+HIST vkGetSwapchainImagesKHR 3
+HIST vkQueuePresentKHR 2
+HIST vkQueueSubmit 35
+HIST vkSignalSemaphore 16
+HIST vkUpdateDescriptorSets 8
+HIST vkWaitSemaphores 25
+done

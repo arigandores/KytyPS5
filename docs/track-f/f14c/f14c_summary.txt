@@ -1,0 +1,29 @@
+F14c table summary (HPP-489); records = site x draw/dispatch; captures 11
+  f12_rd_k01       done=True unresolved=0 | draws_dispatches 120 with_compare_sites 10 modules 40 modules_with_sites 5 samplers 7 views 74 pipelines 35 agg_rows 7 records 252 unresolved 0 descriptor_copies 0
+  f12_rd_k02       done=True unresolved=0 | draws_dispatches 18973 with_compare_sites 399 modules 387 modules_with_sites 26 samplers 27 views 1454 pipelines 341 agg_rows 48 records 6340 unresolved 0 descriptor_copies 0
+  f12_rd_k03       done=True unresolved=0 | draws_dispatches 19283 with_compare_sites 1005 modules 350 modules_with_sites 26 samplers 35 views 1316 pipelines 316 agg_rows 48 records 18210 unresolved 0 descriptor_copies 0
+  f12_rd_k04       done=True unresolved=0 | draws_dispatches 19623 with_compare_sites 1074 modules 390 modules_with_sites 26 samplers 35 views 1286 pipelines 344 agg_rows 48 records 18570 unresolved 0 descriptor_copies 0
+  f12_rd_k05       done=True unresolved=0 | draws_dispatches 19783 with_compare_sites 1017 modules 361 modules_with_sites 26 samplers 36 views 1321 pipelines 323 agg_rows 48 records 18426 unresolved 0 descriptor_copies 0
+  f12_rd_k06       done=True unresolved=0 | draws_dispatches 19058 with_compare_sites 1016 modules 354 modules_with_sites 26 samplers 36 views 1288 pipelines 317 agg_rows 48 records 18408 unresolved 0 descriptor_copies 0
+  f12_rd_k07       done=True unresolved=0 | draws_dispatches 20024 with_compare_sites 1011 modules 362 modules_with_sites 26 samplers 36 views 1316 pipelines 324 agg_rows 48 records 18318 unresolved 0 descriptor_copies 0
+  f12_rd_k08       done=True unresolved=0 | draws_dispatches 19017 with_compare_sites 1017 modules 355 modules_with_sites 26 samplers 36 views 1274 pipelines 318 agg_rows 48 records 18426 unresolved 0 descriptor_copies 0
+  f13_rd           done=True unresolved=0 | draws_dispatches 192 with_compare_sites 10 modules 56 modules_with_sites 5 samplers 6 views 112 pipelines 49 agg_rows 7 records 252 unresolved 0 descriptor_copies 0
+  rd2_f3951        done=True unresolved=0 | draws_dispatches 5285 with_compare_sites 327 modules 219 modules_with_sites 13 samplers 20 views 553 pipelines 186 agg_rows 22 records 5952 unresolved 0 descriptor_copies 0
+  enemy_final_600  done=True unresolved=0 | draws_dispatches 1058 with_compare_sites 30 modules 128 modules_with_sites 11 samplers 18 views 357 pipelines 102 agg_rows 19 records 584 unresolved 0 descriptor_copies 0
+manual: records 123738, captures with records 11, distinct modules 33, distinct (module, site) 60
+  CS mag=LINEAR min=LINEAR mip=NEAREST cmpEnable=0 aniso=0 view=D16_UNORM/DEPTH_BIT : 3198
+  CS mag=LINEAR min=LINEAR mip=NEAREST cmpEnable=0 aniso=0 view=D32_SFLOAT/DEPTH_BIT : 1308
+  FRAGMENT mag=LINEAR min=LINEAR mip=NEAREST cmpEnable=0 aniso=0 view=D16_UNORM/DEPTH_BIT : 59787
+  FRAGMENT mag=LINEAR min=LINEAR mip=NEAREST cmpEnable=0 aniso=0 view=D32_SFLOAT/DEPTH_BIT : 59445
+  scene ending_boss_after_credit filter LINEAR/LINEAR : 252
+  scene enemy_final filter LINEAR/LINEAR : 584
+  scene underwater_aerial_garden filter LINEAR/LINEAR : 122902
+  src fresh/fresh : 1482
+  src set1/set1 : 122256
+native: records 0, captures with records 0, distinct modules 0, distinct (module, site) 0
+manual records with LINEAR in mag or min: 123738 (of them with src fresh/set1 on both bindings: 123738) in captures enemy_final_600,f12_rd_k01,f12_rd_k02,f12_rd_k03,f12_rd_k04,f12_rd_k05,f12_rd_k06,f12_rd_k07,f12_rd_k08,f13_rd,rd2_f3951
+manual records NEAREST/NEAREST: 0; other: 0
+manual LINEAR records by view format: D16_UNORM 62985, D32_SFLOAT 60753
+manual LINEAR distinct modules: 33; with a corpus name: cs_1f16e50eea0c89e3_p0,cs_380bb9d636390bae_p1,cs_503d7f066a496c3c_p0,cs_5323c4ef4f785055_p0,cs_56a15431999c5a2d_p0,cs_5c118936a885e49b_p0,cs_657ad04626bf9d55_p0,cs_a5315d3bb530aee7_p0,cs_cd94166bf3f2bb81_p0,cs_ea8e2d64dfe34ed9_p0,cs_f88d0f630ac5b35d_p0,cs_ff8ee744ffa4dcdc_p0,ps_09bbe18686d987f7_p0,ps_0d12d410cec0c50d_p0,ps_11acd4c05adcba5c_p0,ps_13db9f7200632c02_p0,ps_255ce6193a9e7938_p0,ps_2e2ae33a4d374e8f_p0,ps_52276fe1ba080bea_p0,ps_52d7f981a9506915_p0,ps_5457609506174517_p0,ps_57611e7a373cf2d1_p0,ps_6d289d31eb63a3a4_p0,ps_74bb8628d64f534c_p0,ps_7a46be05e11e081b_p0,ps_7a46be05e11e081b_p1,ps_82e0dd90a5b657bc_p0,ps_9221b45c14fbe20b_p0,ps_ab3583abbc20f2ae_p0,ps_be4c35a2031fd3f4_p0,ps_e3c32a8c5b12bc41_p0
+OUTCOME DEFECT_FOR_F14D (rule 400(v)(1): >= 1 manual site with LINEAR)
+ALL OK

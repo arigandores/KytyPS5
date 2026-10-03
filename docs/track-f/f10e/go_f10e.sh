@@ -50,7 +50,8 @@ u() { date -u +%Y-%m-%dT%H:%M:%SZ; }
 log() { echo "$(u) F10e go_f10e $T $*" | tee -a $TIMES; }
 mask() { sed -E "s/\('[^']*'/('<app>'/g"; }
 sha() { sha256sum "$1" 2>/dev/null | cut -c1-64; }
-mfpairs() { echo "_ShaderCache=$EMU/_ShaderCache" "_PipelineCache=$EMU/_PipelineCache" "_SaveData=$EMU/_SaveData" "GLCache=$GLDIR"; }
+# the cache dirs of the manifest as an array (the emulator path has a space; seal edition 3)
+MF=("_ShaderCache=$EMU/_ShaderCache" "_PipelineCache=$EMU/_PipelineCache" "_SaveData=$EMU/_SaveData" "GLCache=$GLDIR")
 [ -e $F/STOP ] && { log "STOP file: $(head -1 $F/STOP)"; exit 4; }
 [ -e $G/RETURN_FAILED ] && { echo "RETURN_FAILED exists"; exit 1; }
 [ -e $LOCK ] && { echo "lock held: $(head -1 $LOCK)"; exit 3; }
@@ -93,7 +94,7 @@ finish() {
     [ $OK = 1 ] && log "caches, saves and GLCache returned"
   fi
   if [ -f $OUT/manifest_before.tsv ]; then
-    python $G/manifest_f10e.py $OUT/manifest_after.tsv $(mfpairs) > $OUT/manifest_after.txt 2>&1
+    python $G/manifest_f10e.py $OUT/manifest_after.tsv "${MF[@]}" > $OUT/manifest_after.txt 2>&1
     python $G/manifest_f10e.py --cmp $OUT/manifest_before.tsv $OUT/manifest_after.tsv > $OUT/manifest_cmp.txt 2>&1
     MC=$?
     log "manifest after: $(head -1 $OUT/manifest_after.txt | cut -c1-200); cmp: $(head -1 $OUT/manifest_cmp.txt)"
@@ -107,7 +108,7 @@ finish() {
   exit $RCX
 }
 trap finish EXIT
-python $G/manifest_f10e.py $OUT/manifest_before.tsv $(mfpairs) > $OUT/manifest_before.txt 2>&1 || { log "manifest before failed - not starting"; rm -f $OUT/manifest_before.tsv; exit 1; }
+python $G/manifest_f10e.py $OUT/manifest_before.tsv "${MF[@]}" > $OUT/manifest_before.txt 2>&1 || { log "manifest before failed - not starting"; rm -f $OUT/manifest_before.tsv; exit 1; }
 log "manifest before: $(head -1 $OUT/manifest_before.txt | cut -c1-200)"
 for d in $DIRS GLCache; do
   if [ "$d" = "GLCache" ]; then SRC="$GLDIR"; else SRC="$EMU/$d"; fi

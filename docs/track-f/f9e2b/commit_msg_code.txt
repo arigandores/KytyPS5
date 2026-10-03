@@ -1,0 +1,22 @@
+track F link F9e2b (HPP-429): KYTY_FIX_B42 M2c - RC1/RC2 of F9f (ROADMAP s122 item 353(g)(1)-(3)), default 0
+
+RC1: hit excludes a target acquired as a draw-path colour target after its CMASK fill (on hardware the FCE writes the
+clear colour only into tiles no draw touched; the FCE of M2c clears the whole image).
+- textureCache.h/.cpp: one monotonic sequence m_b42_seq under m_lock. TrackDccFill writes it into
+  MetaDataInfo::b42_fill_seq on every fill that sets fill_value; FindRenderTarget writes it into m_b42_draw_seq[id]
+  unless called with fce_materialize = true (new defaulted parameter; only MaterializeBoundTargetDccClears passes
+  true); DeleteImage erases the stamp of the id. QueryMetaFill(address, image) returns both under one acquisition.
+  Nothing else reads them; no epoch bump.
+- descriptors.cpp: drawn <=> b42_draw_seq > b42_fill_seq. "drawn" = every member of hit but this one: not a hit,
+  descriptor untouched, old path.
+RC2: a CMask entry re-armed by a later fill (clear_mask != 0) enters hit as well as a PendingDcc fill (rearm).
+Line: "FixB42: mode= hit= applied= drawn= rearm= hit_all= last_frame= extent=WxH cmask=0x clear=w0/w1" - hit, applied,
+drawn, rearm per extent of the line, hit_all over all extents; on every growth of hit or drawn for the first 256
+lines, then at most once per 600 frames.
+Unset / 0 / false / off / no = OFF: no value going to Vulkan or to the metadata state changes (the sequence and the
+draw-stamp map are written and read only by the probe). Translator untouched (translation signature unchanged).
+
+Not claimed: that the CMASK clear is the only cause, the T6 clear colour, that the CMASK layout of a non-1024 extent
+is right, that the fix will work. Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

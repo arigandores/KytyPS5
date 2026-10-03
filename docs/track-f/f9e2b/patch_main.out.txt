@@ -1,0 +1,4 @@
+patched C:/kyty/KytyPS5/src/graphics/host_gpu/renderer/cache/textureCache.h edits 4 lf
+patched C:/kyty/KytyPS5/src/graphics/host_gpu/renderer/cache/textureCache.cpp edits 5 lf
+patched C:/kyty/KytyPS5/src/graphics/host_gpu/renderer/pipeline/descriptors.cpp edits 3 lf
+PATCH OK

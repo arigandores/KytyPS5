@@ -67,8 +67,13 @@ public:
 	static constexpr uint32_t kRegStencilClear   = 1u << 6u; // ... STENCIL_CLEAR, as resolved
 
 	[[nodiscard]] vk::ImageView FindTexture(ImageId id, const ImageDesc& desc);
+	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): `fce_materialize` - the acquisition of the
+	// fast-clear-eliminate register scan RenderExecutor::MaterializeBoundTargetDccClears (descriptors.cpp), the only
+	// caller that passes true. Every other acquisition is a draw-path colour target and stamps the image with the B42
+	// sequence (m_b42_draw_seq); the flag changes nothing else.
 	[[nodiscard]] vk::ImageView FindRenderTarget(ImageId id, const ImageDesc& desc,
-	                                             uint32_t guest_clear_regs = 0);
+	                                             uint32_t guest_clear_regs = 0,
+	                                             bool     fce_materialize  = false);
 	[[nodiscard]] vk::ImageView FindDepthTarget(ImageId id, const ImageDesc& desc,
 	                                            uint32_t guest_clear_regs = 0);
 	// Gate "rtfast": see m_meta_epoch.
@@ -118,16 +123,21 @@ public:
 	// Track F, F9e2 (KYTY_FIX_B42, ROADMAP s122 item 351(v)(1)): a read-only copy of the metadata entry at `address`,
 	// taken under m_lock. Nothing is inserted, bumped, stamped or consumed - the answer is the same with and without
 	// the fix. `pending`: the entry is a PendingDcc fill (TrackDccFill) no image binding has classified yet; `cmask`:
-	// a binding classified it as CMASK (PrepareCmaskClear).
+	// a binding classified it as CMASK (PrepareCmaskClear). F9e2b (item 353(g)(1)), in the same acquisition:
+	// `b42_fill_seq` - the B42 sequence of the last fill that set fill_value at `address`; `b42_draw_seq` - that of
+	// the last draw-path FindRenderTarget of `image` (0: none since the image was created). Drawn after the fill
+	// <=> b42_draw_seq > b42_fill_seq.
 	struct MetaFillQuery {
-		bool     found      = false;
-		bool     pending    = false;
-		bool     cmask      = false;
-		uint32_t clear_mask = 0;
-		uint32_t fill_value = 0xffffffffu;
-		uint64_t fill_size  = 0;
+		bool     found        = false;
+		bool     pending      = false;
+		bool     cmask        = false;
+		uint32_t clear_mask   = 0;
+		uint32_t fill_value   = 0xffffffffu;
+		uint64_t fill_size    = 0;
+		uint64_t b42_fill_seq = 0;
+		uint64_t b42_draw_seq = 0;
 	};
-	[[nodiscard]] MetaFillQuery QueryMetaFill(uint64_t address);
+	[[nodiscard]] MetaFillQuery QueryMetaFill(uint64_t address, ImageId image);
 	// Cleared layers of one surface in a single acquisition (bit per layer, 0 when the address
 	// is not a finished metadata clear). IsMetaCleared answers the same question one layer at a
 	// time and is kept for the callers that only look at a single layer.
@@ -180,6 +190,9 @@ private:
 		uint32_t fill_value = 0xffffffffu;
 		uint64_t fill_size  = 0;
 		uint64_t fill_seq   = 0; // GPU write sequence of the fill dispatch (PendingDcc)
+		// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): m_b42_seq at the last TrackDccFill that set
+		// fill_value. Read only by QueryMetaFill.
+		uint64_t b42_fill_seq = 0;
 	};
 
 	struct OverlapResult {
@@ -318,6 +331,12 @@ private:
 	// HTile work FindRenderTarget / FindDepthTarget would do is never skipped past a change.
 	std::atomic<uint64_t>                             m_meta_epoch {0};
 	void BumpMetaEpoch() noexcept { m_meta_epoch.fetch_add(1, std::memory_order_relaxed); }
+	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)), under m_lock: one monotonic sequence. TrackDccFill
+	// writes it into MetaDataInfo::b42_fill_seq, a draw-path FindRenderTarget into m_b42_draw_seq[id] (erased in
+	// DeleteImage, so a recycled slot id starts unstamped). Read only by QueryMetaFill: no Vulkan value, no metadata
+	// state and no epoch depends on them, with KYTY_FIX_B42 on or off.
+	uint64_t                                          m_b42_seq = 0;
+	std::unordered_map<ImageId, uint64_t>             m_b42_draw_seq;
 	uint64_t                                          m_total_used_memory  = 0;
 	uint64_t                                          m_trigger_gc_memory  = 0;
 	uint64_t                                          m_pressure_gc_memory = 1536ull * 1024 * 1024;

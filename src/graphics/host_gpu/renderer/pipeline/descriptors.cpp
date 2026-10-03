@@ -3625,26 +3625,34 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 
 namespace {
 
-// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)), KYTY_FIX_B42 (default 0: unset, "", 0/false/off/no = OFF).
+// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)) and F9e2b (item 353(g)(1)-(3)), KYTY_FIX_B42 (default 0: unset,
+// "", 0/false/off/no = OFF).
 // colorRenderTarget.cpp gives a single-sample CMASK target metadata only when its width and height are multiples of
 // 1024, so the fast-clear-eliminate register scan below never materializes the CMASK fast clear of a smaller target
 // (the Sky Garden water input T6, 960x540 / 480x270): the image keeps whatever guest memory or buffer bytes it was
 // created from. `hit`: a CMASK fast-clear target the old path skips (no DCC, one sample, one level, not a volume,
-// not both axes 1024-multiples) whose CMASK address holds a PendingDcc fill of value 0 covering
-// width*height*layers/128 bytes - a code-0 CMASK in every tile, i.e. the whole surface is the clear colour whatever
-// the tile layout. Counted with the fix on and off. ON: the target's descriptor gets the CMASK metadata the 1024
-// branch of colorRenderTarget.cpp would give it, and the existing FindRenderTarget -> PrepareCmaskClear clears it.
-// `applied` grows only when PrepareCmaskClear cleared at least one layer (a clear-mask bit consumed while the fill
+// not both axes 1024-multiples) whose CMASK address holds a fill of value 0 covering width*height*layers/128 bytes -
+// a code-0 CMASK in every tile, i.e. the whole surface is the clear colour whatever the tile layout - kept either as a
+// PendingDcc fill or (F9e2b, RC2: a re-fill of a live target after its first clear) as a CMask entry with clear-mask
+// bits set (`rearm`), and the target was not acquired as a draw-path colour target after that fill (F9e2b, RC1: the
+// hardware FCE writes the clear colour only into tiles no draw touched; TextureCache::QueryMetaFill, drawn <=>
+// b42_draw_seq > b42_fill_seq). Every member but the last one holding is `drawn`: not a hit, the descriptor is not
+// touched, the old path runs. Counted with the fix on and off. ON: the descriptor of a hit gets the CMASK metadata the
+// 1024 branch of colorRenderTarget.cpp would give it, and the existing FindRenderTarget -> PrepareCmaskClear clears
+// it. `applied` grows only when PrepareCmaskClear cleared at least one layer (a clear-mask bit consumed while the fill
 // value stayed 0: that bit is dropped only right after ClearImage). OFF: the query and the line only - the old path.
 bool FixB42Enabled() {
 	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_B42");
 	return enabled;
 }
 
+enum class FixB42Kind : uint8_t { None, Hit, Drawn };
+
 struct FixB42Hit {
-	bool     hit        = false;
-	uint64_t cmask_size = 0;
-	uint32_t clear_mask = 0; // PendingDcc clear mask seen before the acquisition
+	FixB42Kind kind       = FixB42Kind::None;
+	bool       rearm      = false; // a hit on a CMask entry (re-armed by a later fill)
+	uint64_t   cmask_size = 0;
+	uint32_t   clear_mask = 0; // clear mask of the entry seen before the acquisition
 };
 
 FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const RenderColorInfo& color) {
@@ -3655,38 +3663,63 @@ FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const Ren
 	    (info.extent.width % 1024u == 0 && info.extent.height % 1024u == 0)) {
 		return probe;
 	}
-	const auto size = static_cast<uint64_t>(info.extent.width) * info.extent.height * info.resources.layers / 128u;
-	const auto fill = cache.QueryMetaFill(rt.cmask.addr);
-	if (size == 0 || !fill.found || !fill.pending || fill.fill_value != 0 || fill.fill_size < size) {
+	const auto size  = static_cast<uint64_t>(info.extent.width) * info.extent.height * info.resources.layers / 128u;
+	const auto fill  = cache.QueryMetaFill(rt.cmask.addr, color.image_id);
+	const bool armed = fill.pending || (fill.cmask && fill.clear_mask != 0);
+	if (size == 0 || !fill.found || !armed || fill.fill_value != 0 || fill.fill_size < size) {
 		return probe;
 	}
-	probe.hit        = true;
 	probe.cmask_size = size;
 	probe.clear_mask = fill.clear_mask;
+	if (fill.b42_draw_seq > fill.b42_fill_seq) {
+		probe.kind = FixB42Kind::Drawn;
+		return probe;
+	}
+	probe.kind  = FixB42Kind::Hit;
+	probe.rearm = fill.cmask;
 	return probe;
 }
 
-// The line: on every hit for the first 256 lines, then at most once per 600 frames (still only on a hit).
-void FixB42Note(bool applied, uint32_t width, uint32_t height, uint64_t cmask, uint32_t word0, uint32_t word1) {
-	static std::mutex m;
-	static uint64_t   hits         = 0;
-	static uint64_t   applies      = 0;
-	static uint32_t   lines        = 0;
-	static uint32_t   printed_at   = 0;
-	const auto        frame        = GpuTimeProfiler::Frame();
-	std::scoped_lock  lock {m};
-	hits++;
-	if (applied) {
-		applies++;
+// The line: on every growth of hit or drawn for the first 256 lines, then at most once per 600 frames (still only on a
+// growth of hit or drawn). hit / applied / drawn / rearm are the counters of the line's extent; hit_all - the hits of
+// all extents.
+void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t height, uint64_t cmask, uint32_t word0,
+                uint32_t word1) {
+	struct Counts {
+		uint64_t hit     = 0;
+		uint64_t applied = 0;
+		uint64_t drawn   = 0;
+		uint64_t rearm   = 0;
+	};
+	static std::mutex                                      m;
+	static std::map<std::pair<uint32_t, uint32_t>, Counts> by_extent;
+	static uint64_t                                        hit_all    = 0;
+	static uint32_t                                        lines      = 0;
+	static uint32_t                                        printed_at = 0;
+	const auto                                             frame      = GpuTimeProfiler::Frame();
+	std::scoped_lock                                       lock {m};
+	auto&                                                  counts     = by_extent[{width, height}];
+	if (probe.kind == FixB42Kind::Hit) {
+		counts.hit++;
+		hit_all++;
+		if (probe.rearm) {
+			counts.rearm++;
+		}
+		if (applied) {
+			counts.applied++;
+		}
+	} else {
+		counts.drawn++;
 	}
 	if (lines >= 256 && frame - printed_at < 600u) {
 		return;
 	}
 	lines++;
 	printed_at = frame;
-	LOGF("FixB42: mode=%d hit=%" PRIu64 " applied=%" PRIu64 " last_frame=%u extent=%ux%u cmask=0x%" PRIx64
-	     " clear=%08x/%08x\n",
-	     FixB42Enabled() ? 1 : 0, hits, applies, frame, width, height, cmask, word0, word1);
+	LOGF("FixB42: mode=%d hit=%" PRIu64 " applied=%" PRIu64 " drawn=%" PRIu64 " rearm=%" PRIu64 " hit_all=%" PRIu64
+	     " last_frame=%u extent=%ux%u cmask=0x%" PRIx64 " clear=%08x/%08x\n",
+	     FixB42Enabled() ? 1 : 0, counts.hit, counts.applied, counts.drawn, counts.rearm, hit_all, frame, width, height,
+	     cmask, word0, word1);
 }
 
 } // namespace
@@ -3706,9 +3739,9 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		    !rt.info.dcc_compression_enable) {
 			RenderColorInfo color {};
 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
-			// Track F, F9e2 (B42): see FixB42Probe. With the fix off nothing below changes.
+			// Track F, F9e2 / F9e2b (B42): see FixB42Probe. With the fix off nothing below changes.
 			const auto b42 = FixB42Probe(cache, rt, color);
-			if (b42.hit && FixB42Enabled()) {
+			if (b42.kind == FixB42Kind::Hit && FixB42Enabled()) {
 				color.desc.info.metadata.kind              = ImageMetadataKind::Cmask;
 				color.desc.info.metadata.range             = {rt.cmask.addr, b42.cmask_size};
 				color.desc.info.metadata.cmask_clear_words = {rt.clear_word0.word0, rt.clear_word1.word1};
@@ -3727,16 +3760,17 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				        (rt.cmask.addr != 0 ? TextureCache::kRegColorCmaskAddr : 0u) |
 				        (rt.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
 				        (rt.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
-				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u));
+				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u),
+				    true); // Track F, F9e2b (B42): the FCE acquisition - no draw stamp
 			}
-			if (b42.hit) {
+			if (b42.kind != FixB42Kind::None) {
 				bool applied = false;
-				if (FixB42Enabled()) {
-					const auto after = cache.QueryMetaFill(rt.cmask.addr);
+				if (b42.kind == FixB42Kind::Hit && FixB42Enabled()) {
+					const auto after = cache.QueryMetaFill(rt.cmask.addr, color.image_id);
 					applied = after.found && after.cmask && after.fill_value == 0 &&
 					          (b42.clear_mask & ~after.clear_mask) != 0;
 				}
-				FixB42Note(applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
+				FixB42Note(b42, applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
 				           rt.clear_word0.word0, rt.clear_word1.word1);
 			}
 			continue;

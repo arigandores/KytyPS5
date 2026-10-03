@@ -448,6 +448,7 @@ void TextureCache::DeleteImage(ImageId id) {
 		EXIT("TextureCache: deleting a GPU-modified image without resolving its contents\n");
 	}
 	m_download_images.erase(id);
+	m_b42_draw_seq.erase(id); // Track F, F9e2b (KYTY_FIX_B42): a recycled slot id starts without a draw stamp
 	if (image->info.HasMetadata()) {
 		const auto metadata = m_surface_metas.find(image->info.metadata.range.address);
 		if (metadata != m_surface_metas.end() &&
@@ -2343,7 +2344,7 @@ vk::ImageView TextureCache::FindTexture(ImageId id, const ImageDesc& desc) {
 }
 
 vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
-                                             uint32_t guest_clear_regs) {
+                                             uint32_t guest_clear_regs, bool fce_materialize) {
 	if (desc.type != BindingType::RenderTarget) {
 		EXIT("TextureCache: invalid color-target binding\n");
 	}
@@ -2355,6 +2356,12 @@ vk::ImageView TextureCache::FindRenderTarget(ImageId id, const ImageDesc& desc,
 	TouchImage(image);
 	image.MarkGpuModified();
 	image.usage.render_target = true;
+	// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): a draw-path acquisition stamps the image with the B42
+	// sequence; the fast-clear-eliminate acquisition of MaterializeBoundTargetDccClears does not. Read only by
+	// QueryMetaFill.
+	if (!fce_materialize) {
+		m_b42_draw_seq[id] = ++m_b42_seq;
+	}
 	// Session 71, candidate C3 (counters only). Observed HERE, before PrepareDccClear and
 	// PrepareCmaskClear: when they succeed on a whole image, ClearImage ends in CommitGpuWrite,
 	// which drops m_buffer_modified, and the upload this is about to size no longer exists.
@@ -3128,20 +3135,24 @@ bool TextureCache::IsMeta(uint64_t address) {
 	return found != m_surface_metas.end() && found->second.type != MetaDataInfo::Type::PendingDcc;
 }
 
-// Track F, F9e2 (KYTY_FIX_B42, ROADMAP s122 item 351(v)(1)): read-only, see textureCache.h.
-TextureCache::MetaFillQuery TextureCache::QueryMetaFill(uint64_t address) {
+// Track F, F9e2 / F9e2b (KYTY_FIX_B42, ROADMAP s122 items 351(v)(1), 353(g)(1)): read-only, see textureCache.h.
+TextureCache::MetaFillQuery TextureCache::QueryMetaFill(uint64_t address, ImageId image) {
 	std::scoped_lock lock {m_lock};
 	MetaFillQuery    answer {};
-	const auto       found = m_surface_metas.find(address);
+	if (const auto stamp = m_b42_draw_seq.find(image); stamp != m_b42_draw_seq.end()) {
+		answer.b42_draw_seq = stamp->second;
+	}
+	const auto found = m_surface_metas.find(address);
 	if (found == m_surface_metas.end()) {
 		return answer;
 	}
-	answer.found      = true;
-	answer.pending    = found->second.type == MetaDataInfo::Type::PendingDcc;
-	answer.cmask      = found->second.type == MetaDataInfo::Type::CMask;
-	answer.clear_mask = found->second.clear_mask;
-	answer.fill_value = found->second.fill_value;
-	answer.fill_size  = found->second.fill_size;
+	answer.found        = true;
+	answer.pending      = found->second.type == MetaDataInfo::Type::PendingDcc;
+	answer.cmask        = found->second.type == MetaDataInfo::Type::CMask;
+	answer.clear_mask   = found->second.clear_mask;
+	answer.fill_value   = found->second.fill_value;
+	answer.fill_size    = found->second.fill_size;
+	answer.b42_fill_seq = found->second.b42_fill_seq;
 	return answer;
 }
 
@@ -3226,6 +3237,8 @@ void TextureCache::TrackDccFill(uint64_t address, uint64_t size, uint32_t fill_v
 		Common::SkipCeil::NoteOffThread3(); // ROADMAP s122 item 47(z), N1
 		found->second.fill_value = fill_value;
 		found->second.fill_size  = size;
+		// Track F, F9e2b (KYTY_FIX_B42, ROADMAP s122 item 353(g)(1)): this fill's place in the B42 sequence.
+		found->second.b42_fill_seq = ++m_b42_seq;
 		if (found->second.type == MetaDataInfo::Type::PendingDcc) {
 			found->second.fill_seq = 0;
 			m_fill_stamp_address   = address;

@@ -3623,6 +3623,74 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 	cache.MarkGpuWritten(id);
 }
 
+namespace {
+
+// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)), KYTY_FIX_B42 (default 0: unset, "", 0/false/off/no = OFF).
+// colorRenderTarget.cpp gives a single-sample CMASK target metadata only when its width and height are multiples of
+// 1024, so the fast-clear-eliminate register scan below never materializes the CMASK fast clear of a smaller target
+// (the Sky Garden water input T6, 960x540 / 480x270): the image keeps whatever guest memory or buffer bytes it was
+// created from. `hit`: a CMASK fast-clear target the old path skips (no DCC, one sample, one level, not a volume,
+// not both axes 1024-multiples) whose CMASK address holds a PendingDcc fill of value 0 covering
+// width*height*layers/128 bytes - a code-0 CMASK in every tile, i.e. the whole surface is the clear colour whatever
+// the tile layout. Counted with the fix on and off. ON: the target's descriptor gets the CMASK metadata the 1024
+// branch of colorRenderTarget.cpp would give it, and the existing FindRenderTarget -> PrepareCmaskClear clears it.
+// `applied` grows only when PrepareCmaskClear cleared at least one layer (a clear-mask bit consumed while the fill
+// value stayed 0: that bit is dropped only right after ClearImage). OFF: the query and the line only - the old path.
+bool FixB42Enabled() {
+	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_B42");
+	return enabled;
+}
+
+struct FixB42Hit {
+	bool     hit        = false;
+	uint64_t cmask_size = 0;
+	uint32_t clear_mask = 0; // PendingDcc clear mask seen before the acquisition
+};
+
+FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const RenderColorInfo& color) {
+	FixB42Hit   probe {};
+	const auto& info = color.desc.info;
+	if (!color.image_id || info.metadata.kind != ImageMetadataKind::None || info.samples != 1 ||
+	    info.resources.levels != 1 || info.IsVolume() ||
+	    (info.extent.width % 1024u == 0 && info.extent.height % 1024u == 0)) {
+		return probe;
+	}
+	const auto size = static_cast<uint64_t>(info.extent.width) * info.extent.height * info.resources.layers / 128u;
+	const auto fill = cache.QueryMetaFill(rt.cmask.addr);
+	if (size == 0 || !fill.found || !fill.pending || fill.fill_value != 0 || fill.fill_size < size) {
+		return probe;
+	}
+	probe.hit        = true;
+	probe.cmask_size = size;
+	probe.clear_mask = fill.clear_mask;
+	return probe;
+}
+
+// The line: on every hit for the first 256 lines, then at most once per 600 frames (still only on a hit).
+void FixB42Note(bool applied, uint32_t width, uint32_t height, uint64_t cmask, uint32_t word0, uint32_t word1) {
+	static std::mutex m;
+	static uint64_t   hits         = 0;
+	static uint64_t   applies      = 0;
+	static uint32_t   lines        = 0;
+	static uint32_t   printed_at   = 0;
+	const auto        frame        = GpuTimeProfiler::Frame();
+	std::scoped_lock  lock {m};
+	hits++;
+	if (applied) {
+		applies++;
+	}
+	if (lines >= 256 && frame - printed_at < 600u) {
+		return;
+	}
+	lines++;
+	printed_at = frame;
+	LOGF("FixB42: mode=%d hit=%" PRIu64 " applied=%" PRIu64 " last_frame=%u extent=%ux%u cmask=0x%" PRIx64
+	     " clear=%08x/%08x\n",
+	     FixB42Enabled() ? 1 : 0, hits, applies, frame, width, height, cmask, word0, word1);
+}
+
+} // namespace
+
 // A fast-clear-eliminate / DCC-decompress draw (CB_COLOR_CONTROL.MODE 2/6) binds the surface as
 // a colour target with the CLEAR_WORD registers of its fast clear still loaded. Kyty skips the
 // draw itself (host images are never compressed), but this is the last point where a
@@ -3638,6 +3706,13 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 		    !rt.info.dcc_compression_enable) {
 			RenderColorInfo color {};
 			ResolveRenderColorTarget(buffer, color, 0, slot, true, true);
+			// Track F, F9e2 (B42): see FixB42Probe. With the fix off nothing below changes.
+			const auto b42 = FixB42Probe(cache, rt, color);
+			if (b42.hit && FixB42Enabled()) {
+				color.desc.info.metadata.kind              = ImageMetadataKind::Cmask;
+				color.desc.info.metadata.range             = {rt.cmask.addr, b42.cmask_size};
+				color.desc.info.metadata.cmask_clear_words = {rt.clear_word0.word0, rt.clear_word1.word1};
+			}
 			if (color.image_id && color.desc.info.metadata.kind == ImageMetadataKind::Cmask) {
 				// Session 71, candidate C3 (counters only): the second entrance into
 				// FindRenderTarget, which rt_fast_no never sees. Hand it the same registers the
@@ -3653,6 +3728,16 @@ void RenderExecutor::MaterializeBoundTargetDccClears(CommandBuffer& buffer) {
 				        (rt.info.dcc_compression_enable ? TextureCache::kRegColorDccEnable : 0u) |
 				        (rt.dcc_addr.addr != 0 ? TextureCache::kRegColorDccAddr : 0u) |
 				        (rt.dcc.dcc_clear_key_enable ? TextureCache::kRegColorDccKey : 0u));
+			}
+			if (b42.hit) {
+				bool applied = false;
+				if (FixB42Enabled()) {
+					const auto after = cache.QueryMetaFill(rt.cmask.addr);
+					applied = after.found && after.cmask && after.fill_value == 0 &&
+					          (b42.clear_mask & ~after.clear_mask) != 0;
+				}
+				FixB42Note(applied, color.desc.info.extent.width, color.desc.info.extent.height, rt.cmask.addr,
+				           rt.clear_word0.word0, rt.clear_word1.word1);
 			}
 			continue;
 		}

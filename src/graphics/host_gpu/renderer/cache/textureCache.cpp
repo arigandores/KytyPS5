@@ -3128,6 +3128,23 @@ bool TextureCache::IsMeta(uint64_t address) {
 	return found != m_surface_metas.end() && found->second.type != MetaDataInfo::Type::PendingDcc;
 }
 
+// Track F, F9e2 (KYTY_FIX_B42, ROADMAP s122 item 351(v)(1)): read-only, see textureCache.h.
+TextureCache::MetaFillQuery TextureCache::QueryMetaFill(uint64_t address) {
+	std::scoped_lock lock {m_lock};
+	MetaFillQuery    answer {};
+	const auto       found = m_surface_metas.find(address);
+	if (found == m_surface_metas.end()) {
+		return answer;
+	}
+	answer.found      = true;
+	answer.pending    = found->second.type == MetaDataInfo::Type::PendingDcc;
+	answer.cmask      = found->second.type == MetaDataInfo::Type::CMask;
+	answer.clear_mask = found->second.clear_mask;
+	answer.fill_value = found->second.fill_value;
+	answer.fill_size  = found->second.fill_size;
+	return answer;
+}
+
 uint32_t TextureCache::MetaClearMask(uint64_t address, uint32_t* fill_value) {
 	std::scoped_lock lock {m_lock};
 	const auto       found = m_surface_metas.find(address);

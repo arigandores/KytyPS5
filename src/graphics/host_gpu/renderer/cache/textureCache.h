@@ -115,6 +115,19 @@ public:
 	[[nodiscard]] bool IsRegionGpuModified(uint64_t address, uint64_t size);
 
 	[[nodiscard]] bool IsMeta(uint64_t address);
+	// Track F, F9e2 (KYTY_FIX_B42, ROADMAP s122 item 351(v)(1)): a read-only copy of the metadata entry at `address`,
+	// taken under m_lock. Nothing is inserted, bumped, stamped or consumed - the answer is the same with and without
+	// the fix. `pending`: the entry is a PendingDcc fill (TrackDccFill) no image binding has classified yet; `cmask`:
+	// a binding classified it as CMASK (PrepareCmaskClear).
+	struct MetaFillQuery {
+		bool     found      = false;
+		bool     pending    = false;
+		bool     cmask      = false;
+		uint32_t clear_mask = 0;
+		uint32_t fill_value = 0xffffffffu;
+		uint64_t fill_size  = 0;
+	};
+	[[nodiscard]] MetaFillQuery QueryMetaFill(uint64_t address);
 	// Cleared layers of one surface in a single acquisition (bit per layer, 0 when the address
 	// is not a finished metadata clear). IsMetaCleared answers the same question one layer at a
 	// time and is kept for the callers that only look at a single layer.

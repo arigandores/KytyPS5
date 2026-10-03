@@ -3625,8 +3625,8 @@ void RenderExecutor::MaterializeDeferredDccClear(CommandBuffer& buffer, ImageId 
 
 namespace {
 
-// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)) and F9e2b (item 353(g)(1)-(3)), KYTY_FIX_B42 (default 0: unset,
-// "", 0/false/off/no = OFF).
+// Track F, F9e2 (B42, ROADMAP s122 item 351(v)(1)-(3)) and F9e2b (item 353(g)(1)-(3)), KYTY_FIX_B42 (default ON since
+// FS3a, item 367(g)(1): unset or "" = ON, 0/false/off/no = OFF).
 // colorRenderTarget.cpp gives a single-sample CMASK target metadata only when its width and height are multiples of
 // 1024, so the fast-clear-eliminate register scan below never materializes the CMASK fast clear of a smaller target
 // (the Sky Garden water input T6, 960x540 / 480x270): the image keeps whatever guest memory or buffer bytes it was
@@ -3644,7 +3644,12 @@ namespace {
 // it. `applied` grows only when PrepareCmaskClear cleared at least one layer (a clear-mask bit consumed while the fill
 // value stayed 0: that bit is dropped only right after ClearImage). OFF: the query and the line only - the old path.
 bool FixB42Enabled() {
-	static const bool enabled = Common::EnvFlagOn("KYTY_FIX_B42");
+	// Track F, FS3a (HPP-447, ROADMAP s122 item 367(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FSa / FS2a).
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_B42");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 
@@ -3692,6 +3697,10 @@ FixB42Hit FixB42Probe(TextureCache& cache, const HW::RenderTarget& rt, const Ren
 // The line: on every growth of hit or drawn for the first 256 lines, then at most once per 600 frames (still only on a
 // growth of hit or drawn). hit / applied / drawn / rearm are the counters of the line's extent; hit_all - the hits of
 // all extents.
+// Track F, FS3a (ROADMAP s122 item 367(g)(1), debt of item 363(v)): the line FixB42Ext of an extent - on a growth of its
+// hit or applied (applied grows only with hit, so: on a hit), the first one at once, then at most once per 600 frames
+// of that extent, at most 64 lines per extent; outside the 256-line budget of FixB42 (that line and its rate are
+// unchanged). It reads the counters only: no state of the fix or of the cache depends on it.
 void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t height, uint64_t cmask, uint32_t word0,
                 uint32_t word1) {
 	struct Counts {
@@ -3699,6 +3708,8 @@ void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t h
 		uint64_t applied = 0;
 		uint64_t drawn   = 0;
 		uint64_t rearm   = 0;
+		uint32_t ext_lines      = 0; // FS3a: FixB42Ext lines of this extent
+		uint32_t ext_printed_at = 0; // FS3a: frame of the last FixB42Ext line of this extent
 	};
 	static std::mutex                                      m;
 	static std::map<std::pair<uint32_t, uint32_t>, Counts> by_extent;
@@ -3719,6 +3730,14 @@ void FixB42Note(const FixB42Hit& probe, bool applied, uint32_t width, uint32_t h
 		}
 	} else {
 		counts.drawn++;
+	}
+	if (probe.kind == FixB42Kind::Hit && counts.ext_lines < 64 &&
+	    (counts.ext_lines == 0 || frame - counts.ext_printed_at >= 600u)) {
+		counts.ext_lines++;
+		counts.ext_printed_at = frame;
+		LOGF("FixB42Ext: mode=%d extent=%ux%u hit=%" PRIu64 " applied=%" PRIu64 " drawn=%" PRIu64 " rearm=%" PRIu64
+		     " frame=%u\n",
+		     FixB42Enabled() ? 1 : 0, width, height, counts.hit, counts.applied, counts.drawn, counts.rearm, frame);
 	}
 	if (lines >= 256 && frame - printed_at < 600u) {
 		return;

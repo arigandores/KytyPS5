@@ -1,0 +1,16 @@
+prereg: f11f_seal.md  18777 bytes  sha256 61a07476221c3c57  mtime 2026-10-03T10:39:28  mtime-ctime +0.000 s
+pre_run: host 405 processes, top by CPU: PhoneExperienceHost 17547s, node 16785s, explorer 10188s, audiodg 7587s, nvcontainer 4011s, WindowsTerminal 2789s
+pre_run: GPU 0.0 % busy, 20.5 W, 2231 MiB used, SM 1470.0 MHz, 25 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f11f\cpuclk.py is not there
+--- attempt 1: launching
+10.7 s  LevelDocument Loaded: voxel_world
+12.3 s  Level has started: voxel_world
+14.9 s  scene stable at frame 278 (90 frames with draws >= 100)
+holding the run for 330 s
+hold end: ft_total 20098, ft_tail 302 (last 5 s)
+hold_gpu: median 83.0 % busy over 650 rows (2026/10/03 13:50:20.866 .. 2026/10/03 13:55:51.071), a row, not a guard
+copied C:\kyty\f287\f11f\log_d11_vw.txt
+copied C:\kyty\f287\f11f\stdout_d11_vw.txt
+
+attempt 1  ok               document=10.7 s started=12.3 s stable=14.9 s 
+VERDICT: voxel_world in 14.9 s - PASS (acceptance <= 90 s)

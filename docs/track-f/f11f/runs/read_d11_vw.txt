@@ -1,0 +1,18 @@
+reader f11f_read.py sha256 3ea9f911334103aa1f59cbfc463343d3600fac2ee51e343ab1c6a6391c6216e3
+tag d11_vw level voxel_world log_lines 1971493 log_sha256 8d450eb615ece5e24e9b81d74aa0b498cc7660ce91d899fedf7ff343d4d1933b
+admission: OK; hold after the first scene frame 332.8 s
+mode lines 1 [[1, 64, 320]]; lanes lines 2; identities (RC2) OK
+last: lanes=45732598 t0=938464 t1=703848 t2=469232 t3=703848 t4=0 t5=42917206 t6=0 t7=0 size_viol=0 size_off=33646 node64=0 over_max=0 max_step=16777216
+buckets: b_tri=0/0/0/0 b_box=0/0/0/0 b_t7=0/0/0/0
+size violation (RC1: last field, idx > 2*size64+1): tri 0 box 0 t7 0 sum 0; fields 2-3 (within twice the unit) tri 0 box 0 t7 0; field 1 tri 0 box 0 t7 0
+traps>0 no (value not cited, Z1); trap_lanes 0; groups not cited (Z1)
+slots: 380bb9d636390bae=45732598 other=0
+programs with lanes > 0 (by slots, Z2): 1 380bb9d636390bae; untested of 20: 19
+enemy_final lighting programs (item 376 (a)): 56a15431999c5a2d=0 ea8e2d64dfe34ed9=0 5323c4ef4f785055=0 cd94166bf3f2bb81=0
+translation lines 0 (fallback=1: 0) - not read by the rule (Z2)
+BvhLoopCapTrip: lines 0 total 0 (sum of +trips 0); cap 65536
+dispatch skip lines: BVH programs 0; all 32 (skipping CS 0, zero-sized 32, BindFloor 0)
+data: AsyncPipelines skipped draw 47; [Vulkan][E] 0; ASSERT 0; GamePatch 0; window lost keyboard focus=0,minimized=0,resized=0,restored=0,size changed=0; Recovering 0; death 0; None
+t6 0 t7 0 (item 376 (zh)(4): t6 > 0 -> register row by F11g, 0 -> report row)
+WORD369 REACHED (TYPES23)
+WORD376 REACHED (TYPES23)

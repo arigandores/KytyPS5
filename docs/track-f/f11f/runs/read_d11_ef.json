@@ -1,0 +1,116 @@
+{
+ "level": "enemy_final",
+ "admitted": true,
+ "admission": [],
+ "hold_after_start_s": 332.20000000000005,
+ "lanes": 0,
+ "last": null,
+ "last_slots": null,
+ "size_violation": null,
+ "within_twice": null,
+ "reached": [],
+ "control_box_4_6": false,
+ "control_box_4_5": false,
+ "control_t01": false,
+ "ident_fail": [],
+ "ident_fail_n": 0,
+ "lanes_lines": 0,
+ "mode_lines": [
+  [
+   1,
+   64,
+   320
+  ]
+ ],
+ "trans_n": 0,
+ "trans_fallback": 0,
+ "trans": [],
+ "programs_tested": [],
+ "programs_untested": [
+  "092754e7ae8bac9a",
+  "0af122d5ac62c4c5",
+  "1f16e50eea0c89e3",
+  "1f3219e5899a66f2",
+  "380bb9d636390bae",
+  "3d27502d0a809c72",
+  "503d7f066a496c3c",
+  "5323c4ef4f785055",
+  "559a0fa9def7a691",
+  "56a15431999c5a2d",
+  "7ede18ae55120a48",
+  "8175abf0855222db",
+  "99012529f9a27ba3",
+  "a763fb769f3167ec",
+  "b76e569142635733",
+  "cd94166bf3f2bb81",
+  "d234cf2781dabb34",
+  "ea8e2d64dfe34ed9",
+  "f88d0f630ac5b35d",
+  "ff8ee744ffa4dcdc"
+ ],
+ "ef4": [
+  [
+   "56a15431999c5a2d",
+   0
+  ],
+  [
+   "ea8e2d64dfe34ed9",
+   0
+  ],
+  [
+   "5323c4ef4f785055",
+   0
+  ],
+  [
+   "cd94166bf3f2bb81",
+   0
+  ]
+ ],
+ "other": null,
+ "traps_pos": false,
+ "trap_lanes": null,
+ "t6": null,
+ "t7": null,
+ "trips_lines": 0,
+ "trips_total": 0,
+ "trips_sum": 0,
+ "cap": 65536,
+ "skip_bvh": 0,
+ "skip_all": 32,
+ "skip_cs": 0,
+ "skip_zero": 32,
+ "skip_floor": 0,
+ "skipped_draw": 0,
+ "vk_err": 0,
+ "asserts": 0,
+ "game_patch": 0,
+ "window": {
+  "minimized": 0,
+  "restored": 0,
+  "resized": 0,
+  "size changed": 0,
+  "lost keyboard focus": 0
+ },
+ "recovering": 0,
+ "death": [],
+ "log_lines": 1966333,
+ "log_sha256": "1a623b2d994dcf26f905cdbf723f7bc57885534715d96562355734e4dc878d60",
+ "git": null,
+ "word369": [
+  "UNDETERMINED",
+  "positive control FAIL (box False, t0+t1 False)"
+ ],
+ "word376": [
+  "NO_BVH",
+  "lanes = 0 with the mode line (item 376 (zh)(1))"
+ ],
+ "word376_box45": [
+  "NO_BVH",
+  "lanes = 0 with the mode line (item 376 (zh)(1))"
+ ],
+ "word376_skipB": [
+  "NO_BVH",
+  "lanes = 0 with the mode line (item 376 (zh)(1))"
+ ],
+ "tag": "d11_ef"
+}

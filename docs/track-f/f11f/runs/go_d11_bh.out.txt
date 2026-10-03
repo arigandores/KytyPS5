@@ -1,0 +1,14 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T12:03:26Z F11f go_f11f d11_bh lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T12:03:28Z F11f go_f11f d11_bh manifest before: manifest C:/kyty/f287/f11f/runs/d11_bh/manifest_before.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T12:03:32Z F11f go_f11f d11_bh caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (165/169/5/470/ MB)
+2026-10-03T12:03:33Z F11f go_f11f d11_bh kept diagbvh dir variant_fixb26_fixb1b_diagbvh moved into the live cache: manifest C:/kyty/f287/f11f/runs/d11_bh/diagbvh_before.tsv files 440 bytes 57682505 listsha 00b0b9dddd78a6f193b05678e2776aea11a60b60684faffcf4f29129790c86ab
+2026-10-03T12:03:34Z F11f go_f11f d11_bh installed the F11d copy: b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359
+2026-10-03T12:09:34Z F11f go_f11f d11_bh enter_scene rc 0 log_d11_bh.txt sha256 5323027ddb60080b885f31e7ba132864f9a51a22d557e8c66ee7e5833c79844f
+2026-10-03T12:09:34Z F11f go_f11f d11_bh run: VERDICT: big_hand_pirate_island in 18.5 s - PASS (acceptance <= 90 s)
+2026-10-03T12:09:38Z F11f go_f11f d11_bh installed binary returned: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T12:09:39Z F11f go_f11f d11_bh diagbvh dir variant_fixb26_fixb1b_diagbvh kept in keep_diagbvh: manifest C:/kyty/f287/f11f/runs/d11_bh/diagbvh_after.tsv files 492 bytes 78720095 listsha 66b54ee19370574e89ca43c9a6441e85df096e34e8c9e41fb0ee51ed216760f9
+2026-10-03T12:09:40Z F11f go_f11f d11_bh caches, saves and GLCache returned
+2026-10-03T12:09:44Z F11f go_f11f d11_bh manifest after: manifest C:/kyty/f287/f11f/runs/d11_bh/manifest_after.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88; cmp: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T12:09:44Z F11f go_f11f d11_bh lock released (rc 0)
+rc=0

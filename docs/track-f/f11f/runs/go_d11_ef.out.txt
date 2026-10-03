@@ -1,0 +1,14 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T11:42:41Z F11f go_f11f d11_ef lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T11:42:43Z F11f go_f11f d11_ef manifest before: manifest C:/kyty/f287/f11f/runs/d11_ef/manifest_before.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T11:42:46Z F11f go_f11f d11_ef caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (165/169/5/470/ MB)
+2026-10-03T11:42:49Z F11f go_f11f d11_ef kept diagbvh dir variant_fixb26_fixb1b_diagbvh moved into the live cache: manifest C:/kyty/f287/f11f/runs/d11_ef/diagbvh_before.tsv files 388 bytes 50829379 listsha 0571a7b11e72941f965c67f93f8f0c9bb19a4d84e61685e5f11caa9018c0537b
+2026-10-03T11:42:50Z F11f go_f11f d11_ef installed the F11d copy: b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359
+2026-10-03T11:48:57Z F11f go_f11f d11_ef enter_scene rc 0 log_d11_ef.txt sha256 1a623b2d994dcf26f905cdbf723f7bc57885534715d96562355734e4dc878d60
+2026-10-03T11:48:58Z F11f go_f11f d11_ef run: VERDICT: enemy_final in 20.7 s - PASS (acceptance <= 90 s)
+2026-10-03T11:49:00Z F11f go_f11f d11_ef installed binary returned: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T11:49:03Z F11f go_f11f d11_ef diagbvh dir variant_fixb26_fixb1b_diagbvh kept in keep_diagbvh: manifest C:/kyty/f287/f11f/runs/d11_ef/diagbvh_after.tsv files 408 bytes 53239090 listsha 88094f115ef6a360b76a62222203d876eaae7df99fefbc844fd1a65d5f6d337a
+2026-10-03T11:49:03Z F11f go_f11f d11_ef caches, saves and GLCache returned
+2026-10-03T11:49:05Z F11f go_f11f d11_ef manifest after: manifest C:/kyty/f287/f11f/runs/d11_ef/manifest_after.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88; cmp: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T11:49:05Z F11f go_f11f d11_ef lock released (rc 0)
+rc=0

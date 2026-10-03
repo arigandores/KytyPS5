@@ -1,0 +1,6 @@
+SET369 REACHED on underwater_aerial_garden,voxel_world,big_hand_pirate_island
+SET376 REACHED underwater_aerial_garden:TYPES23 voxel_world:TYPES23 big_hand_pirate_island:TYPES23
+NO_BVH (out of the set) enemy_final
+programs with lanes > 0 (item 376 (zh)(3)) 1: 380bb9d636390bae; untested 19
+t6 > 0 (item 376 (zh)(4)) on underwater_aerial_garden
+S_TRAP (item 376 (zh)(5)): traps = 0 on all scenes with lanes > 0: underwater_aerial_garden,voxel_world,big_hand_pirate_island

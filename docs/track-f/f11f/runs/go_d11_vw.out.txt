@@ -1,0 +1,14 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T11:49:53Z F11f go_f11f d11_vw lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T11:49:54Z F11f go_f11f d11_vw manifest before: manifest C:/kyty/f287/f11f/runs/d11_vw/manifest_before.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T11:49:58Z F11f go_f11f d11_vw caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (165/169/5/470/ MB)
+2026-10-03T11:49:59Z F11f go_f11f d11_vw kept diagbvh dir variant_fixb26_fixb1b_diagbvh moved into the live cache: manifest C:/kyty/f287/f11f/runs/d11_vw/diagbvh_before.tsv files 408 bytes 53239090 listsha 88094f115ef6a360b76a62222203d876eaae7df99fefbc844fd1a65d5f6d337a
+2026-10-03T11:50:00Z F11f go_f11f d11_vw installed the F11d copy: b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359
+2026-10-03T11:55:58Z F11f go_f11f d11_vw enter_scene rc 0 log_d11_vw.txt sha256 8d450eb615ece5e24e9b81d74aa0b498cc7660ce91d899fedf7ff343d4d1933b
+2026-10-03T11:55:59Z F11f go_f11f d11_vw run: VERDICT: voxel_world in 14.9 s - PASS (acceptance <= 90 s)
+2026-10-03T11:56:01Z F11f go_f11f d11_vw installed binary returned: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T11:56:03Z F11f go_f11f d11_vw diagbvh dir variant_fixb26_fixb1b_diagbvh kept in keep_diagbvh: manifest C:/kyty/f287/f11f/runs/d11_vw/diagbvh_after.tsv files 440 bytes 57682505 listsha 00b0b9dddd78a6f193b05678e2776aea11a60b60684faffcf4f29129790c86ab
+2026-10-03T11:56:05Z F11f go_f11f d11_vw caches, saves and GLCache returned
+2026-10-03T11:56:06Z F11f go_f11f d11_vw manifest after: manifest C:/kyty/f287/f11f/runs/d11_vw/manifest_after.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88; cmp: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T11:56:07Z F11f go_f11f d11_vw lock released (rc 0)
+rc=0

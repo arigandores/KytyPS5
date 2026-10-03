@@ -1,0 +1,14 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T10:31:38Z F11f go_f11f d11_sg lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T10:31:42Z F11f go_f11f d11_sg manifest before: manifest C:/kyty/f287/f11f/runs/d11_sg/manifest_before.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T10:31:44Z F11f go_f11f d11_sg caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (165/169/5/470/ MB)
+2026-10-03T10:31:45Z F11f go_f11f d11_sg no kept diagbvh dir: the run makes it new (first tag)
+2026-10-03T10:31:45Z F11f go_f11f d11_sg installed the F11d copy: b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359
+2026-10-03T10:37:53Z F11f go_f11f d11_sg enter_scene rc 0 log_d11_sg.txt sha256 edfc2d2107c3fb970738a1bcbc65f076b09487371b1102c4e337457d1235912d
+2026-10-03T10:37:53Z F11f go_f11f d11_sg run: VERDICT: underwater_aerial_garden in 25.9 s - PASS (acceptance <= 90 s)
+2026-10-03T10:37:54Z F11f go_f11f d11_sg installed binary returned: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T10:37:56Z F11f go_f11f d11_sg diagbvh dir variant_fixb26_fixb1b_diagbvh kept in keep_diagbvh: manifest C:/kyty/f287/f11f/runs/d11_sg/diagbvh_after.tsv files 388 bytes 50829379 listsha 0571a7b11e72941f965c67f93f8f0c9bb19a4d84e61685e5f11caa9018c0537b
+2026-10-03T10:37:57Z F11f go_f11f d11_sg caches, saves and GLCache returned
+2026-10-03T10:37:58Z F11f go_f11f d11_sg manifest after: manifest C:/kyty/f287/f11f/runs/d11_sg/manifest_after.tsv files 2920 bytes 839116579 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88; cmp: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+2026-10-03T10:37:59Z F11f go_f11f d11_sg lock released (rc 0)
+rc=0

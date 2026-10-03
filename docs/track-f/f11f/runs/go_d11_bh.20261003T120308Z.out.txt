@@ -1,0 +1,3 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T11:58:03Z F11f go_f11f d11_bh procload busy: procload: busy [('<app>', 66620, 3.545)]
+rc=5

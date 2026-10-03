@@ -1,0 +1,174 @@
+{
+ "level": "big_hand_pirate_island",
+ "admitted": true,
+ "admission": [],
+ "hold_after_start_s": 332.8,
+ "lanes": 19235385,
+ "last": {
+  "lanes": 19235385,
+  "t0": 109048,
+  "t1": 81786,
+  "t2": 54524,
+  "t3": 81786,
+  "t4": 0,
+  "t5": 18908241,
+  "t6": 0,
+  "t7": 0,
+  "size_viol": 0,
+  "size_off": 6611,
+  "node64": 0,
+  "over_max": 0,
+  "b_tri": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "b_box": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "b_t7": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "traps": 0,
+  "trap_lanes": 0,
+  "groups": 460823,
+  "max_step": 16777216
+ },
+ "last_slots": {
+  "slots": {
+   "380bb9d636390bae": 19235385
+  },
+  "other": 0
+ },
+ "size_violation": 0,
+ "within_twice": [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0
+ ],
+ "reached": [
+  "TYPES23"
+ ],
+ "control_box_4_6": true,
+ "control_box_4_5": true,
+ "control_t01": true,
+ "ident_fail": [],
+ "ident_fail_n": 0,
+ "lanes_lines": 2,
+ "mode_lines": [
+  [
+   1,
+   64,
+   320
+  ]
+ ],
+ "trans_n": 1,
+ "trans_fallback": 0,
+ "trans": [
+  [
+   "380bb9d636390bae",
+   3,
+   1,
+   0
+  ]
+ ],
+ "programs_tested": [
+  "380bb9d636390bae"
+ ],
+ "programs_untested": [
+  "092754e7ae8bac9a",
+  "0af122d5ac62c4c5",
+  "1f16e50eea0c89e3",
+  "1f3219e5899a66f2",
+  "3d27502d0a809c72",
+  "503d7f066a496c3c",
+  "5323c4ef4f785055",
+  "559a0fa9def7a691",
+  "56a15431999c5a2d",
+  "7ede18ae55120a48",
+  "8175abf0855222db",
+  "99012529f9a27ba3",
+  "a763fb769f3167ec",
+  "b76e569142635733",
+  "cd94166bf3f2bb81",
+  "d234cf2781dabb34",
+  "ea8e2d64dfe34ed9",
+  "f88d0f630ac5b35d",
+  "ff8ee744ffa4dcdc"
+ ],
+ "ef4": [
+  [
+   "56a15431999c5a2d",
+   0
+  ],
+  [
+   "ea8e2d64dfe34ed9",
+   0
+  ],
+  [
+   "5323c4ef4f785055",
+   0
+  ],
+  [
+   "cd94166bf3f2bb81",
+   0
+  ]
+ ],
+ "other": 0,
+ "traps_pos": false,
+ "trap_lanes": 0,
+ "t6": 0,
+ "t7": 0,
+ "trips_lines": 0,
+ "trips_total": 0,
+ "trips_sum": 0,
+ "cap": 65536,
+ "skip_bvh": 0,
+ "skip_all": 32,
+ "skip_cs": 0,
+ "skip_zero": 32,
+ "skip_floor": 0,
+ "skipped_draw": 3,
+ "vk_err": 0,
+ "asserts": 0,
+ "game_patch": 0,
+ "window": {
+  "minimized": 0,
+  "restored": 0,
+  "resized": 0,
+  "size changed": 0,
+  "lost keyboard focus": 3
+ },
+ "recovering": 0,
+ "death": [],
+ "log_lines": 2040894,
+ "log_sha256": "5323027ddb60080b885f31e7ba132864f9a51a22d557e8c66ee7e5833c79844f",
+ "git": null,
+ "word369": [
+  "REACHED",
+  "TYPES23"
+ ],
+ "word376": [
+  "REACHED",
+  "TYPES23"
+ ],
+ "word376_box45": [
+  "REACHED",
+  "TYPES23"
+ ],
+ "word376_skipB": [
+  "REACHED",
+  "TYPES23"
+ ],
+ "tag": "d11_bh"
+}

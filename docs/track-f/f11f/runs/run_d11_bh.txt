@@ -1,0 +1,16 @@
+prereg: f11f_seal.md  18777 bytes  sha256 61a07476221c3c57  mtime 2026-10-03T10:39:28  mtime-ctime +0.000 s
+pre_run: host 387 processes, top by CPU: PhoneExperienceHost 17627s, node 17030s, explorer 10227s, audiodg 7606s, nvcontainer 4024s, WindowsTerminal 2794s
+pre_run: GPU 0.0 % busy, 20.8 W, 2235 MiB used, SM 1485.0 MHz, 27 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f11f\cpuclk.py is not there
+--- attempt 1: launching
+12.7 s  LevelDocument Loaded: big_hand_pirate_island
+15.9 s  Level has started: big_hand_pirate_island
+18.5 s  scene stable at frame 393 (90 frames with draws >= 100)
+holding the run for 330 s
+hold end: ft_total 9676, ft_tail 140 (last 5 s)
+hold_gpu: median 38.0 % busy over 649 rows (2026/10/03 14:03:57.731 .. 2026/10/03 14:09:27.956), a row, not a guard
+copied C:\kyty\f287\f11f\log_d11_bh.txt
+copied C:\kyty\f287\f11f\stdout_d11_bh.txt
+
+attempt 1  ok               document=12.7 s started=15.9 s stable=18.5 s 
+VERDICT: big_hand_pirate_island in 18.5 s - PASS (acceptance <= 90 s)

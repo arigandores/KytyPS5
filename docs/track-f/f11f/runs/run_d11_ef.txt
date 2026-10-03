@@ -1,0 +1,16 @@
+prereg: f11f_seal.md  18777 bytes  sha256 61a07476221c3c57  mtime 2026-10-03T10:39:28  mtime-ctime +0.000 s
+pre_run: host 402 processes, top by CPU: PhoneExperienceHost 17512s, node 16660s, explorer 10166s, audiodg 7578s, nvcontainer 4004s, WindowsTerminal 2788s
+pre_run: GPU 1.0 % busy, 23.2 W, 2113 MiB used, SM 1477.0 MHz, 25 process(es) on the GPU
+cpuclk not started: C:\kyty\f287\f11f\cpuclk.py is not there
+--- attempt 1: launching
+14.5 s  LevelDocument Loaded: enemy_final
+18.6 s  Level has started: enemy_final
+20.7 s  scene stable at frame 497 (90 frames with draws >= 300)
+holding the run for 330 s
+hold end: ft_total 20306, ft_tail 302 (last 5 s)
+hold_gpu: median 51.0 % busy over 649 rows (2026/10/03 13:43:19.795 .. 2026/10/03 13:48:49.876), a row, not a guard
+copied C:\kyty\f287\f11f\log_d11_ef.txt
+copied C:\kyty\f287\f11f\stdout_d11_ef.txt
+
+attempt 1  ok               document=14.5 s started=18.6 s stable=20.7 s 
+VERDICT: enemy_final in 20.7 s - PASS (acceptance <= 90 s)

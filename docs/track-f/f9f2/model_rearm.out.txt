@@ -1,0 +1,20 @@
+S1 =1: fill, FCE x4 (FCE each frame, one fill per layout change)
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    fce: hit=2 applied=1 rearm=1 clear_mask=0xfffffffe
+    fce: hit=3 applied=1 rearm=2 clear_mask=0xfffffffe
+    fce: hit=4 applied=1 rearm=3 clear_mask=0xfffffffe
+    total hit=4 applied=1 rearm=3 drawn=0; hit-applied=3
+S2 =1: fill, FCE, re-fill, FCE (the RC2 case of F9f)
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    fill: clear_mask=0xffffffff
+    fce: hit=2 applied=2 rearm=1 clear_mask=0xfffffffe
+    total hit=2 applied=2 rearm=1 drawn=0; hit-applied=0
+S3 =1: fill, FCE, draw, FCE (no re-fill)
+    fill: clear_mask=0xffffffff
+    fce: hit=1 applied=1 rearm=0 clear_mask=0xfffffffe
+    draw
+    fce: drawn=1
+    total hit=1 applied=1 rearm=0 drawn=1; hit-applied=0
+MODEL AS EXPECTED

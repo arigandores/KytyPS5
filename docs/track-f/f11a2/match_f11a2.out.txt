@@ -1,0 +1,12 @@
+EIDs with SPIR-V from the replay: 8 of 8
+indexed: cache files 894 modules (cache + S7 out.spv) 1326 distinct sha256 323
+BVH programs of eboot.bin (t1scan_f11a.py --all): 20
+EID 3399 spv_sha256 2f2ab3f807a56a1b guest hash - verdict NOT_MATCHED source -
+EID 3413 spv_sha256 af9448f848cdc0fc guest hash 56a15431999c5a2d verdict BVH source C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_56a15431999c5a2d_7ee8623d978266cd.bin module 0
+EID 3419 spv_sha256 2f2ab3f807a56a1b guest hash - verdict NOT_MATCHED source -
+EID 3427 spv_sha256 95bd8109d81b2bb3 guest hash ea8e2d64dfe34ed9 verdict BVH source C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_ea8e2d64dfe34ed9_e80959018cfda528.bin module 0
+EID 3433 spv_sha256 2f2ab3f807a56a1b guest hash - verdict NOT_MATCHED source -
+EID 3441 spv_sha256 e632b8e3c9c8d8be guest hash 5323c4ef4f785055 verdict BVH source C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_5323c4ef4f785055_c1ed6df4a815e257.bin module 0
+EID 3447 spv_sha256 2f2ab3f807a56a1b guest hash - verdict NOT_MATCHED source -
+EID 3455 spv_sha256 cbfd96e906235005 guest hash cd94166bf3f2bb81 verdict BVH source C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b/cs_cd94166bf3f2bb81_29e5bf3a282c2956.bin module 0
+SUMMARY 3399=NOT_MATCHED 3413=BVH 3419=NOT_MATCHED 3427=BVH 3433=NOT_MATCHED 3441=BVH 3447=NOT_MATCHED 3455=BVH

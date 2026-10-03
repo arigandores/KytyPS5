@@ -1,0 +1,10 @@
+capture: C:/kyty/f287/f7a/enemy_final_600.rdc
+EID 3399 action vkCmdDispatch() dispatch (1, 1, 1) cs ResourceId::5542 name Shader Module 5542 entry main encoding ShaderEncoding.SPIRV spv_bytes 3384 sha256 2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e
+EID 3413 action vkCmdDispatchIndirect(<17633, 1, 1>) dispatch (17633, 1, 1) cs ResourceId::824 name Shader Module 824 entry main encoding ShaderEncoding.SPIRV spv_bytes 709716 sha256 af9448f848cdc0fc5b003a9bbb4663043fdf78aaa55c8a4fa66198bec7f8851f
+EID 3419 action vkCmdDispatch() dispatch (1, 1, 1) cs ResourceId::5542 name Shader Module 5542 entry main encoding ShaderEncoding.SPIRV spv_bytes 3384 sha256 2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e
+EID 3427 action vkCmdDispatchIndirect(<1, 1, 1>) dispatch (1, 1, 1) cs ResourceId::825 name Shader Module 825 entry main encoding ShaderEncoding.SPIRV spv_bytes 749352 sha256 95bd8109d81b2bb3c5d9857b5cb8e04503e7d89a3d7b3a7d25f6a6d06e792bf9
+EID 3433 action vkCmdDispatch() dispatch (1, 1, 1) cs ResourceId::5542 name Shader Module 5542 entry main encoding ShaderEncoding.SPIRV spv_bytes 3384 sha256 2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e
+EID 3441 action vkCmdDispatchIndirect(<444, 1, 1>) dispatch (444, 1, 1) cs ResourceId::826 name Shader Module 826 entry main encoding ShaderEncoding.SPIRV spv_bytes 775384 sha256 e632b8e3c9c8d8be991e6d82e7dc4f1131bb443e8005756c3643c321e7009b2e
+EID 3447 action vkCmdDispatch() dispatch (1, 1, 1) cs ResourceId::5542 name Shader Module 5542 entry main encoding ShaderEncoding.SPIRV spv_bytes 3384 sha256 2f2ab3f807a56a1b8537670482645d2a5baeb7d8657e232cbd301db5af52850e
+EID 3455 action vkCmdDispatchIndirect(<1, 1, 1>) dispatch (1, 1, 1) cs ResourceId::827 name Shader Module 827 entry main encoding ShaderEncoding.SPIRV spv_bytes 798152 sha256 cbfd96e906235005637446e34bfa3b73f850a024cfed51a10d1c32d63f3ee25a
+done

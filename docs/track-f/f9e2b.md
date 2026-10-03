@@ -140,8 +140,9 @@ draw-пути (`:2363`). Обе записи берут **новое** знач�
 
 `C:/kyty/f287/f9/f9e2b/build/shader_cfg_tests.exe` из worktree-сборки, без `KYTY_*` в окружении, кроме `KYTY_TESTS_CONTINUE=1`
 `KYTY_TESTS_VERBOSE=1`: rc 0, 127 `[test]`, падения: `pixel IMAGE_SAMPLE_C must use OpImageSampleDrefImplicitLod`, `pixel IMAGE_SAMPLE_C_LZ must use
-explicit dref lod` (Б11, известно); лог `docs/track-f/f9e2b/cfgtests_defaults.log` (sha256 `5a60758aab7abd5736f04e5710da32aaaeb12698922eeb58f979f2ab1f2f8f3f`)
-= `C:/kyty/p283/p23/cfgtests_defaults.log` = F9e2 (`diff` пуст).
+explicit dref lod` (Б11, известно); лог `C:/kyty/f287/f9/f9e2b/cfgtests_defaults.log` (sha256 `5a60758aab7abd5736f04e5710da32aaaeb12698922eeb58f979f2ab1f2f8f3f`)
+= `C:/kyty/p283/p23/cfgtests_defaults.log` = F9e2 (`diff` пуст); копия в git `docs/track-f/f9e2b/cfgtests_defaults.log` — с окончаниями строк LF
+(sha256 копии другой, содержимое то же).
 
 ## Сборка
 

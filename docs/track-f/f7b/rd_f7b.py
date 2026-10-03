@@ -4,6 +4,8 @@
 #   RD_OUT   output dir (default C:/kyty/f287/f7b/rd)
 #   RD_PHASE "hist" (pixel history + state of the found draws) | "debug" (RD_DBG="eid:x,y;eid:x,y" pixel debug traces)
 #   RD_PHASE "vsout" (RD_VS="eid,eid": post-VS outputs, raw vertex/index bytes and signatures)
+#   RD_PHASE "probe" (rework after the lead review 2026-10-03: pixel history of every fragment on the G-buffer targets at the
+#                     full-resolution points of rd/probe_pts.json written by probe_f7b.py)
 # Points are given in 1280x720 thumbnail space and scaled to every texture's size.
 import os, sys, glob, traceback, struct, json
 
@@ -306,6 +308,25 @@ def main():
             sigs[e] = {'stride': mesh.vertexByteStride, 'numIndices': mesh.numIndices, 'istride': mesh.indexByteStride,
                        'sig': sig, 'psig': psig}
         json.dump(sigs, open(os.path.join(OUTDIR, 'vsout.json'), 'w'), indent=1)
+    elif PHASE == 'probe':
+        pts = json.load(open(os.path.join(OUTDIR, 'probe_pts.json')))
+        ctrl.SetFrameEvent(last, True)
+        for tid in [k for k in textures if rid_int(k) in (6683, 6657, 6647)]:
+            for p in pts:
+                X, Y = p['x'], p['y']
+                hist = ctrl.PixelHistory(tid, X, Y, rd.Subresource(0, 0, 0), rd.CompType.Typeless)
+                mods = [m for m in hist if first2 < m.eventId <= last]
+                P('-- PROBE %s (%d,%d) on %s : %d mods in frame 2 (%d total); predicted prim %d front-most prim %d' % (
+                    p['name'], X, Y, texdesc(tid), len(mods), len(hist), p['prim'], p['front_prim']))
+                for m in mods:
+                    a = byeid.get(m.eventId)
+                    P('   eid %d %s passed=%s prim=%d frag=%d pre=%s out=%s post=%s depth pre=%.6f post=%.6f shaderOutDepth=%.6f flags:%s%s%s%s%s%s' % (
+                        m.eventId, a.GetName(sf) if a else '?', m.Passed(), m.primitiveID, m.fragIndex, pv(m.preMod.col),
+                        pv(m.shaderOut.col), pv(m.postMod.col), m.preMod.depth, m.postMod.depth, m.shaderOut.depth,
+                        ' depthFail' if m.depthTestFailed else '', ' stencilFail' if m.stencilTestFailed else '',
+                        ' discard' if m.shaderDiscarded else '', ' culled' if m.backfaceCulled else '',
+                        ' clip' if m.depthClipped or m.viewClipped or m.scissorClipped else '',
+                        ' direct' if m.directShaderWrite else ''))
     elif PHASE == 'debug':
         for item in os.environ.get('RD_DBG', '').split(';'):
             if not item.strip():

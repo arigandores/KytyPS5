@@ -1,0 +1,34 @@
+== atlas tex 12274 mip0 2048x2048, non-plain texels 2224700 (53.04%), texel (0,0) (np.int32(204), np.int32(205), np.int32(215))
+== (c) calibration: floor points of the pixel history (RT0 6683) vs projected primitive (screen y = (-y/w*0.5+0.5)*H, depth z/w)
+  F1 eid 950 px (900,1560) prim 5691 inside True depth proj 0.975420 hist 0.975420 uv (0.26880,0.33179) texel (550,679) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F1 eid 960 px (900,1560) prim 5616 inside True depth proj 0.975420 hist 0.975420 uv (0.26880,0.33179) texel (550,679) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F2 eid 950 px (2850,1440) prim 4643 inside True depth proj 0.977228 hist 0.977228 uv (0.25487,0.16748) texel (521,343) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F2 eid 960 px (2850,1440) prim 4570 inside True depth proj 0.977228 hist 0.977228 uv (0.25487,0.16748) texel (521,343) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F3 eid 950 px (1920,2010) prim 4710 inside True depth proj 0.963765 hist 0.963765 uv (0.32566,0.24961) texel (666,511) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F3 eid 960 px (1920,2010) prim 4637 inside True depth proj 0.963765 hist 0.963765 uv (0.32566,0.24961) texel (666,511) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F4 eid 950 px (450,1260) prim 6109 inside True depth proj 0.982849 hist 0.982849 uv (0.19199,0.41921) texel (393,858) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F4 eid 960 px (450,1260) prim 6036 inside True depth proj 0.982849 hist 0.982849 uv (0.19199,0.41921) texel (393,858) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F5 eid 950 px (3450,1800) prim 4667 inside True depth proj 0.966903 hist 0.966903 uv (0.31359,0.15714) texel (642,321) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F5 eid 960 px (3450,1800) prim 4594 inside True depth proj 0.966903 hist 0.966903 uv (0.31359,0.15714) texel (642,321) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F6 eid 950 px (2460,1170) prim 4522 inside True depth proj 0.985749 hist 0.985749 uv (0.14315,0.17268) texel (293,353) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  F6 eid 960 px (2460,1170) prim 4449 inside True depth proj 0.985749 hist 0.985749 uv (0.14315,0.17268) texel (293,353) (np.int32(204), np.int32(205), np.int32(215)) plain True
+  calibrated 12 of 12; signed screen area of the passed (front-facing, cull Back) primitives: sign [-1]
+== (t) floor triangles whose UV triangle touches non-plain texels (barycentric grid 24)
+  eid 950 triangles 8675; touching non-plain 173; of them in front of the camera 173, on screen 173; screen area of those on screen 1611 px (signed sum -277)
+  eid 950 of the on-screen ones front-facing (sign -1) 119, area 944 px
+  eid 960 triangles 8431; touching non-plain 2; of them in front of the camera 2, on screen 2; screen area of those on screen 597 px (signed sum 585)
+  eid 960 of the on-screen ones front-facing (sign -1) 1, area 6 px
+== (p) candidate pixels (every pixel centre of the front-facing candidate triangles): front-most triangle of the same draw, footprint <= 64 texels, neighbourhood radius ceil(footprint)+2 all non-plain and uniform
+  eid 950 candidate triangles on screen 119 -> pixels passing footprint and uniform non-plain 1003, spread <= 0.06: 1003; of them the candidate is the front-most triangle of the draw: 0; front-most texel plain at 1003
+  eid 960 candidate triangles on screen 1 -> pixels passing footprint and uniform non-plain 0, spread <= 0.06: 0; of them the candidate is the front-most triangle of the draw: 0; front-most texel plain at 0
+  Q950_1 eid 950 px (2979,1105) prim 8626 uv (0.46834,0.09655) texel (959,197) sRGB (36, 40, 46) footprint 0.73 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989201; front-most prim 7365 depth 0.988342 texel sRGB (204, 205, 215)
+  Q950_2 eid 950 px (3016,1108) prim 8625 uv (0.45866,0.09285) texel (939,190) sRGB (36, 40, 46) footprint 2.08 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 5 depth 0.988986; front-most prim 7360 depth 0.988159 texel sRGB (204, 205, 215)
+  Q950_3 eid 950 px (3004,1107) prim 8625 uv (0.46173,0.09405) texel (945,192) sRGB (36, 40, 46) footprint 2.10 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989055; front-most prim 7368 depth 0.988221 texel sRGB (204, 205, 215)
+  Q950_4 eid 950 px (2992,1106) prim 8625 uv (0.46485,0.09526) texel (952,195) sRGB (36, 40, 46) footprint 2.12 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989124; front-most prim 7365 depth 0.988281 texel sRGB (204, 205, 215)
+  Q950_5 eid 950 px (3039,1112) prim 8638 uv (0.44849,0.09293) texel (918,190) sRGB (36, 40, 46) footprint 5.29 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.988752; front-most prim 7360 depth 0.987921 texel sRGB (204, 205, 215)
+  Q950_6 eid 950 px (3105,1106) prim 8534 uv (0.46228,0.07012) texel (946,143) sRGB (36, 40, 46) footprint 6.75 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989067; front-most prim 7359 depth 0.988204 texel sRGB (204, 205, 215)
+  Q950_7 eid 950 px (3051,1106) prim 8520 uv (0.46359,0.08206) texel (949,168) sRGB (36, 40, 46) footprint 6.91 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989096; front-most prim 7362 depth 0.988244 texel sRGB (204, 205, 215)
+  Q950_8 eid 950 px (2962,1105) prim 8628 uv (0.46856,0.10048) texel (959,205) sRGB (36, 40, 46) footprint 7.01 spread 0.0000 expected linear mean (0.0176 0.0212 0.0273) covering triangles of the draw 3 depth 0.989206; front-most prim 7365 depth 0.988345 texel sRGB (204, 205, 215)
+  points written: 8 -> rd/probe_pts.json
+== picture rd/probe_pick.png (red 950, green 960)
+ALL OK

@@ -1334,14 +1334,19 @@ void DumpShaderGcnRegistered(uint8_t binary_type, uint64_t shader_hash, const vo
 	     size_bytes / 4u);
 }
 
-// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): KYTY_FIX_SVAL (default OFF: unset, "", 0/false/off/no = OFF,
-// as Common::EnvValueOn; read once). ON: ValidateShaderSpirv validates with spvtools::ValidatorOptions where
+// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): KYTY_FIX_SVAL (default ON since FS4a, item 378(g)(1):
+// unset or "" = ON, 0/false/off/no = OFF; read once). ON: ValidateShaderSpirv validates with spvtools::ValidatorOptions where
 // SetUniformBufferStandardLayout(true) is set if and only if the device enabled uniformBufferStandardLayout
 // (g_fix_sval_ubo_std_layout: stored by the PipelineCache constructor from GraphicContext before its workers start and
 // before any translation), and logs "FixSvalStat: validated=<n> rejected=<m>" on every 256th check (n - checks made,
 // m - checks rejected). OFF: the old call tools.Validate(spirv) without options, no counters, no line.
 bool FixSvalEnabled() {
-	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_SVAL"));
+	// Track F, FS4a (HPP-470, ROADMAP s122 item 378(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
+	// other value as EnvValueOn (the form of FSa / FS2a / FS3a).
+	static const bool enabled = [] {
+		const char* value = std::getenv("KYTY_FIX_SVAL");
+		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
+	}();
 	return enabled;
 }
 

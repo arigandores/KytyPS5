@@ -1,0 +1,47 @@
+suite test_f13a_read.py sha256 a3573d6a3d17c11a230c795e65e203e91301a8f4d84a88ccb286de9f464d7b65 target f13a_read.py sha256 a61e6b1fd4bf29aeddc69d85d239fe54e6360333370d25b3bb5064cb8d057e47
+OK   card_end_k = 101 after 100 card rows
+OK   card_end_s_from_entry = 100 rows x 16667 us
+OK   card_draws_median 1018
+OK   card of 89 rows -> NOT_FOUND
+OK   card of 90 rows -> card_end_k 91
+OK   early dip ignored; rows of 100..299 after the card run do not end it, the first row < 100 does (k 110)
+OK   early dip ignored, card end = row 107
+OK   rd capture t_card = 600 rows = 10.0002 s
+OK   rd_after_card_10s YES at 10.0002 s
+OK   rd capture draws next 3 = 22
+OK   rd_finished YES
+OK   rd level-started line before entry kept
+OK   rd_after_card_10s NO at 599 rows (9.983 s)
+OK   rd_finished NO without the line
+OK   rd_after_card_10s NOT_DETERMINED without a capture line
+OK   rd capture inside the card -> negative t_card, NO
+OK   presses J 3 L 3 -> YES
+OK   keys_after_card_10s YES (first at 45 s after the card)
+OK   first press t_card = 2700 rows
+OK   keys_pause_10s YES at 15 s
+OK   video frame of a press = first idx frame with present >= press present
+OK   video rows read (records, glitches 0, sheet YES)
+OK   installed_sha YES, manifest EQUAL line
+OK   hold_after_card_120s YES (9000 rows = 150 s)
+OK   draws window card..first press = only 22
+OK   keys_after_card_10s NO for a press 599 rows after the card
+OK   keys_pause_10s NO for 9.9 s
+OK   presses_J_ge3_L_ge3 NO for 2 + 2
+OK   keys_after_card_10s YES at exactly 600 rows (10.0002 s); pause 10.0 s YES
+OK   no presses -> NOT_DETERMINED both
+OK   scene lines after a press belong to its window (2)
+OK   scene_lines_after_card counts them (2)
+OK   draws median after the second press = 500
+OK   hold 7199 rows -> NO
+OK   hold 7200 rows -> YES
+OK   death line counted
+OK   frame dt 1 000 000 counted (edge >=)
+OK   frame dt 999 999 not counted
+OK   skipped draw 1, window minimized 1, recovering 1
+OK   no entry line of the level -> entry NO, no rows
+OK   reader rc 0 under cp1250 strict
+OK   reader stdout is ASCII and ends with the ROWS line
+OK   json written and parses
+OK   regression v146_08: card_end_k 1259, 20.98 s, hold 311.459 s, 0 presses, 0 scene lines after the card
+FAILED: []
+ALL OK

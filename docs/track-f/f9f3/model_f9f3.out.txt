@@ -1,0 +1,12 @@
+part1: 336200 (view, mask) cases, mismatches 0 -> OK
+S1 fill, FCE x4                               =1 -> {'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0} want {'hit': 1, 'applied': 1, 'rearm': 0} -> OK
+S2 fill, FCE, fill, FCE                       =1 -> {'hit': 2, 'applied': 2, 'drawn': 0, 'rearm': 1} want {'hit': 2, 'applied': 2, 'rearm': 1} -> OK
+S3 fill, FCE, draw, FCE                       =1 -> {'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0} want {'hit': 1, 'applied': 1, 'drawn': 0} -> OK
+S4 fill, draw, FCE                            =1 -> {'hit': 0, 'applied': 0, 'drawn': 1, 'rearm': 0} want {'hit': 0, 'drawn': 1} -> OK
+X1 draw, fill, FCE (draw before the fill)     =1 -> {'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0} want {'hit': 1, 'applied': 1, 'drawn': 0} -> OK
+X2 fill, FCE, fill(nonzero), FCE              =1 -> {'hit': 1, 'applied': 1, 'drawn': 0, 'rearm': 0} want {'hit': 1, 'applied': 1, 'drawn': 0} -> OK
+X3 fill, FCE, FCE, fill, FCE, FCE             =1 -> {'hit': 2, 'applied': 2, 'drawn': 0, 'rearm': 1} want {'hit': 2, 'applied': 2, 'rearm': 1} -> OK
+S1 at =0 (p.353(d) N2)                        =0 -> {'hit': 4, 'applied': 0, 'drawn': 0, 'rearm': 0} -> OK
+invariants I1-I3 over 20000 random sequences: fails 0 -> OK
+note: PendingDcc + bad view (0,32,1), 2 FCE -> {'hit': 1, 'applied': 0, 'drawn': 0, 'rearm': 0} (hit without applied once; letter of (g)(1))
+ALL OK

@@ -1,0 +1,17 @@
+READ S-pcw (item 241 (z)(5))
+pcw_1 KYTY_S_PCW=0: writes on the hold 21 (forced 21), frames >= 100 ms with a write in i-1..i+1 21 [1112, 1528, 1961, 2421, 2866, 3303, 3747, 4171], save failures 0, Incomplete 0, presented >= 300 s True
+pcw_4 KYTY_S_PCW=0: writes on the hold 20 (forced 20), frames >= 100 ms with a write in i-1..i+1 20 [1059, 1499, 1946, 2416, 2879, 3343, 3797, 4243], save failures 0, Incomplete 0, presented >= 300 s True
+pcw_2 KYTY_S_PCW=1: writes on the hold 20 (forced 20), frames >= 100 ms with a write in i-1..i+1 0 [], save failures 0, Incomplete 0, presented >= 300 s True
+pcw_3 KYTY_S_PCW=1: writes on the hold 20 (forced 20), frames >= 100 ms with a write in i-1..i+1 0 [], save failures 0, Incomplete 0, presented >= 300 s True
+(a) positive control (arms 0: writes >= 15 and frames >= 50 % of writes): PASS
+(b) arms 1 (writes >= 15, 0 frames, 0 save failures): PASS
+(c) integrity: loaded 94435637 = last write of pcw_3 94435637, disabled 0: PASS
+(d) validation: active True, entered True, [Vulkan][E] 0: PASS (PASS only with the entry, the hold >= 300 s, 0 [Vulkan][E] and every admission member of the form W, item 340 (d))
+    PASS W 295(b)(1) 0 layer limit lines ("this will be the last time reporting it", log and stdout) (0)
+    PASS W 295(b)(2) validation active: >= 1 validation-layer line [Vulkan][W][2] / [Vulkan][E][2] (log and stdout; the loader lines [1] not counted) (927446)
+    PASS W 295(b)(3) the last validation-layer line of the log at most 10 s of presented time before the last FrameTrace row of the hold (0 us)
+(e) video >= 3000 frames, 0 glitches, 0 death markers on every arm: FAIL; the lead sheet - filled by S8
+(z)(1) waits of GuestGpu on pcw_int: undetermined (RC1 S5d: an overlap through a worker is not seen by a line; item 340 (g)) - 0 "AvTrace: pcw overlap wait gfx|cs" lines, never PASS; data: none (0 "AvTrace: pcw overlap" and 0 "AvTrace: pcw recipes" lines)
+save failed (Incomplete on arms 1: {'pcw_2': 0, 'pcw_3': 0}
+arms failing admission or an identity: none; hold >= 300 s on arms 0/1/validation: True
+S-pcw A/B: ARM1_FAIL (FIXED only by the lead after (1)-(5) and the sheet; killed by rule (z)(7))

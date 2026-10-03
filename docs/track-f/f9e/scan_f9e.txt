@@ -1,0 +1,323 @@
+log C:/kyty/f287/f9/runs/f9d_2/log.txt
+ImageWatchDraw lines: 0
+RenderColorTarget at T6 addresses: 2
+  16645 RenderColorTarget: slot=0 addr=0x0538bc0000 size=0x0000000000140000 extent=480x270x1 view_mip=0 view_extent=480x270 levels=1 pitch=512 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+  35748 RenderColorTarget: slot=0 addr=0x053cc10000 size=0x0000000000480000 extent=960x540x1 view_mip=0 view_extent=960x540 levels=1 pitch=1024 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=tiled
+fills of the metadata addresses (kind, size, value, outcome): count
+  ('480', '0x1000', '0x00000000', 'none') 18
+  ('960', '0x2000', '0x00000000', 'none') 20
+  480 frames 0@16640 369@246419 1883@480387 2123@509939 2363@539391 2608@569107 2787@596322 3027@630098 3267@660457 3507@693840 3929@756389 4169@789088 4409@818834 4649@848235 4994@893477 5227@925482 5473@956022 5692@982855
+  960 frames 20@35747 1732@462356 1974@492573 2217@522394 2462@552465 2634@572605 2878@613030 3120@643429 3369@676362 3603@707131 3717@724114 4037@773615 4269@802491 4509@831970 4748@861668 5081@909027 5324@938920 5566@968646 5808@999432 5847@1003988
+CmaskClear by (image, meta): count
+  ('0x0000000516830000', '0x000000056c05e000') 2531
+  ('0x0000000519df0000', '0x0000000570783000') 233
+  ('0x0000000519df0000', '0x0000000570b42000') 257
+  ('0x00000005219a0000', '0x000000057103e000') 237
+  ('0x0000000526bf0000', '0x000000057160c000') 6955
+T6 creates: line kind frame | fill of META[kind] among the 6 non-tab lines before
+  16646 480 frame=0 fill_before=16640
+  35750 960 frame=20 fill_before=35747
+  241212 960 frame=349 fill_before=-
+  246420 480 frame=369 fill_before=246419
+  462358 960 frame=1732 fill_before=462356
+  480388 480 frame=1883 fill_before=480387
+  492575 960 frame=1974 fill_before=492573
+  509940 480 frame=2123 fill_before=509939
+  522396 960 frame=2217 fill_before=522394
+  539392 480 frame=2363 fill_before=539391
+  552467 960 frame=2462 fill_before=552465
+  569108 480 frame=2608 fill_before=569107
+  572607 960 frame=2634 fill_before=572605
+  596323 480 frame=2787 fill_before=596322
+  613032 960 frame=2878 fill_before=613030
+  630099 480 frame=3027 fill_before=630098
+  643431 960 frame=3120 fill_before=643429
+  660458 480 frame=3267 fill_before=660457
+  676364 960 frame=3369 fill_before=676362
+  693841 480 frame=3507 fill_before=693840
+  707133 960 frame=3603 fill_before=707131
+  724116 960 frame=3717 fill_before=724114
+  756390 480 frame=3929 fill_before=756389
+  773617 960 frame=4037 fill_before=773615
+  789089 480 frame=4169 fill_before=789088
+  802493 960 frame=4269 fill_before=802491
+  818835 480 frame=4409 fill_before=818834
+  831972 960 frame=4509 fill_before=831970
+  848236 480 frame=4649 fill_before=848235
+  861670 960 frame=4748 fill_before=861668
+  893478 480 frame=4994 fill_before=893477
+  909029 960 frame=5081 fill_before=909027
+  925483 480 frame=5227 fill_before=925482
+  938922 960 frame=5324 fill_before=938920
+  956023 480 frame=5473 fill_before=956022
+  968648 960 frame=5566 fill_before=968646
+  982856 480 frame=5692 fill_before=982855
+  999434 960 frame=5808 fill_before=999432
+T6 creates 38, with the fill right before 37
+context (6 non-tab lines before each create):
+== 16646 480 frame=0
+   16640 BufferFillTrace: frame=0 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+   16641 GraphicsRenderDispatchDirect: metadata fill shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x0000000000001000 value=0x00000000
+   16642 GraphicsRenderDispatchDirect: use-thread-dimensions 256x1x1 / 64x1x1 -> groups 4x1x1
+   16643 warning: ignoring indirect uc reg GE_STEREO_CNTL at 0x25f, value = 0x00000000
+   16644 RtSkip: mode 1 ctx_slots=8 groups=11 rec_bytes=7192
+   16645 RenderColorTarget: slot=0 addr=0x0538bc0000 size=0x0000000000140000 extent=480x270x1 view_mip=0 view_extent=480x270 levels=1 pitch=512 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=ti
+== 35750 960 frame=20
+   35744 GuestOut: Transition Load end 0.001000s
+   35745 ImageWatch: frame=20 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   35746 ImageWatch: frame=20 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   35747 BufferFillTrace: frame=20 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   35748 RenderColorTarget: slot=0 addr=0x053cc10000 size=0x0000000000480000 extent=960x540x1 view_mip=0 view_extent=960x540 levels=1 pitch=1024 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 tile=t
+   35749 ImageLife: event=free reason=ResolveOverlap line=1104 frame=20 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=13
+== 241212 960 frame=349
+   241206 ImageLife: event=create reason=InsertImage line=374 frame=349 guest=0x00000010cbc70000 bytes=2818048 w=2048 h=2048 d=1 mips=12 layers=1 fmt=139 tile=9 pitch=2048 bpp=8 last_frame=4294967295
+   241207 ImageSource: frame=349 guest=0x00000010cbc70000 first=3 bytes=65536 logical=2818048
+   241208 ImageLife: event=create reason=InsertImage line=374 frame=349 guest=0x00000010d2d90000 bytes=2818048 w=2048 h=2048 d=1 mips=12 layers=1 fmt=139 tile=9 pitch=2048 bpp=8 last_frame=4294967295
+   241209 ImageSource: frame=349 guest=0x00000010d2d90000 first=3 bytes=65536 logical=2818048
+   241210 RenderColorTarget: slot=1 addr=0x0513bf0000 size=0x0000000003fc0000 extent=3840x2160x1 view_mip=0 view_extent=3840x2160 levels=1 pitch=3840 fmt=0x0000000c nfmt=0x00000007 order=0x00000000 samples=1 ti
+   241211 ImageSource: frame=349 guest=0x00000010c9690000 first=1 bytes=65536 logical=131072
+== 246420 480 frame=369
+   246407 BufferFillTrace: frame=369 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   246408 BufferFillTrace: frame=369 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   246409 BufferFillTrace: frame=369 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   246410 BufferFillTrace: frame=369 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   246411 ImageLife: event=create reason=InsertImage line=374 frame=369 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   246419 BufferFillTrace: frame=369 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 462358 960 frame=1732
+   462352 BufferFillTrace: frame=1732 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   462353 BufferFillTrace: frame=1732 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   462354 BufferFillTrace: frame=1732 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   462355 ImageWatch: frame=1732 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   462356 BufferFillTrace: frame=1732 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   462357 ImageLife: event=free reason=ResolveOverlap line=1104 frame=1732 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=1725
+== 480388 480 frame=1883
+   480382 BufferFillTrace: frame=1883 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   480383 BufferFillTrace: frame=1883 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   480384 BufferFillTrace: frame=1883 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   480385 BufferFillTrace: frame=1883 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   480386 ImageLife: event=create reason=InsertImage line=374 frame=1883 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   480387 BufferFillTrace: frame=1883 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 492575 960 frame=1974
+   492569 BufferFillTrace: frame=1974 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   492570 BufferFillTrace: frame=1974 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   492571 BufferFillTrace: frame=1974 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   492572 ImageWatch: frame=1974 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   492573 BufferFillTrace: frame=1974 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   492574 ImageLife: event=free reason=ResolveOverlap line=1104 frame=1974 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=1967
+== 509940 480 frame=2123
+   509934 BufferFillTrace: frame=2123 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   509935 BufferFillTrace: frame=2123 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   509936 BufferFillTrace: frame=2123 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   509937 BufferFillTrace: frame=2123 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   509938 ImageLife: event=create reason=InsertImage line=374 frame=2123 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   509939 BufferFillTrace: frame=2123 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 522396 960 frame=2217
+   522390 BufferFillTrace: frame=2217 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   522391 BufferFillTrace: frame=2217 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   522392 BufferFillTrace: frame=2217 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   522393 ImageWatch: frame=2217 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   522394 BufferFillTrace: frame=2217 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   522395 ImageLife: event=free reason=ResolveOverlap line=1104 frame=2217 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=2209
+== 539392 480 frame=2363
+   539386 BufferFillTrace: frame=2363 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   539387 BufferFillTrace: frame=2363 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   539388 BufferFillTrace: frame=2363 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   539389 BufferFillTrace: frame=2363 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   539390 ImageLife: event=create reason=InsertImage line=374 frame=2363 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   539391 BufferFillTrace: frame=2363 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 552467 960 frame=2462
+   552461 BufferFillTrace: frame=2462 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   552462 BufferFillTrace: frame=2462 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   552463 BufferFillTrace: frame=2462 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   552464 ImageWatch: frame=2462 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   552465 BufferFillTrace: frame=2462 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   552466 ImageLife: event=free reason=ResolveOverlap line=1104 frame=2462 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=2455
+== 569108 480 frame=2608
+   569102 BufferFillTrace: frame=2608 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   569103 BufferFillTrace: frame=2608 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   569104 BufferFillTrace: frame=2608 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   569105 BufferFillTrace: frame=2608 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   569106 ImageLife: event=create reason=InsertImage line=374 frame=2608 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   569107 BufferFillTrace: frame=2608 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 572607 960 frame=2634
+   572601 BufferFillTrace: frame=2634 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   572602 BufferFillTrace: frame=2634 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   572603 ImageWatch: frame=2634 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   572604 ImageWatch: frame=2634 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   572605 BufferFillTrace: frame=2634 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   572606 ImageLife: event=free reason=ResolveOverlap line=1104 frame=2634 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=2627
+== 596323 480 frame=2787
+   596317 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x30000 value=0xfffffff0 outcome=none
+   596318 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   596319 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   596320 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   596321 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   596322 BufferFillTrace: frame=2787 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 613032 960 frame=2878
+   613026 BufferFillTrace: frame=2878 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   613027 BufferFillTrace: frame=2878 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   613028 ImageWatch: frame=2878 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   613029 ImageWatch: frame=2878 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   613030 BufferFillTrace: frame=2878 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   613031 ImageLife: event=free reason=ResolveOverlap line=1104 frame=2878 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=2871
+== 630099 480 frame=3027
+   630093 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x30000 value=0xfffffff0 outcome=none
+   630094 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   630095 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   630096 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   630097 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   630098 BufferFillTrace: frame=3027 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 643431 960 frame=3120
+   643425 BufferFillTrace: frame=3120 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   643426 BufferFillTrace: frame=3120 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   643427 BufferFillTrace: frame=3120 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   643428 ImageWatch: frame=3120 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   643429 BufferFillTrace: frame=3120 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   643430 ImageLife: event=free reason=ResolveOverlap line=1104 frame=3120 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=3113
+== 660458 480 frame=3267
+   660452 [23][00:01:30.532] libkernel::libkernel::PthreadCondWait()
+   660453 BufferFillTrace: frame=3267 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   660454 BufferFillTrace: frame=3267 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   660455 BufferFillTrace: frame=3267 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   660456 BufferFillTrace: frame=3267 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   660457 BufferFillTrace: frame=3267 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 676364 960 frame=3369
+   676358 BufferFillTrace: frame=3369 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   676359 BufferFillTrace: frame=3369 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   676360 ImageWatch: frame=3369 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   676361 ImageWatch: frame=3369 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   676362 BufferFillTrace: frame=3369 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   676363 ImageLife: event=free reason=ResolveOverlap line=1104 frame=3369 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=3362
+== 693841 480 frame=3507
+   693835 FaultTrace-gpu: addr=0x00000005048dadc0 rip=+0x749e2a access=2 us=316 site=-
+   693836 BufferFillTrace: frame=3507 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   693837 BufferFillTrace: frame=3507 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   693838 BufferFillTrace: frame=3507 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   693839 BufferFillTrace: frame=3507 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   693840 BufferFillTrace: frame=3507 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 707133 960 frame=3603
+   707127 BufferFillTrace: frame=3603 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   707128 BufferFillTrace: frame=3603 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   707129 ImageWatch: frame=3603 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   707130 ImageWatch: frame=3603 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   707131 BufferFillTrace: frame=3603 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   707132 ImageLife: event=free reason=ResolveOverlap line=1104 frame=3603 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=3596
+== 724116 960 frame=3717
+   724110 BufferFillTrace: frame=3717 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   724111 BufferFillTrace: frame=3717 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   724112 BufferFillTrace: frame=3717 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   724113 ImageWatch: frame=3717 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   724114 BufferFillTrace: frame=3717 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   724115 ImageLife: event=free reason=ResolveOverlap line=1104 frame=3717 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=3710
+== 756390 480 frame=3929
+   756384 BufferFillTrace: frame=3929 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   756385 BufferFillTrace: frame=3929 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   756386 BufferFillTrace: frame=3929 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   756387 BufferFillTrace: frame=3929 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   756388 ImageLife: event=create reason=InsertImage line=374 frame=3929 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   756389 BufferFillTrace: frame=3929 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 773617 960 frame=4037
+   773611 BufferFillTrace: frame=4037 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   773612 BufferFillTrace: frame=4037 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   773613 BufferFillTrace: frame=4037 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   773614 ImageWatch: frame=4037 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   773615 BufferFillTrace: frame=4037 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   773616 ImageLife: event=free reason=ResolveOverlap line=1104 frame=4037 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=4030
+== 789089 480 frame=4169
+   789083 BufferFillTrace: frame=4169 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   789084 BufferFillTrace: frame=4169 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   789085 BufferFillTrace: frame=4169 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   789086 BufferFillTrace: frame=4169 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   789087 ImageLife: event=create reason=InsertImage line=374 frame=4169 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   789088 BufferFillTrace: frame=4169 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 802493 960 frame=4269
+   802487 BufferFillTrace: frame=4269 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   802488 BufferFillTrace: frame=4269 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   802489 ImageWatch: frame=4269 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   802490 ImageWatch: frame=4269 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   802491 BufferFillTrace: frame=4269 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   802492 ImageLife: event=free reason=ResolveOverlap line=1104 frame=4269 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=4262
+== 818835 480 frame=4409
+   818829 BufferFillTrace: frame=4409 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   818830 BufferFillTrace: frame=4409 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   818831 BufferFillTrace: frame=4409 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   818832 BufferFillTrace: frame=4409 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   818833 ImageLife: event=create reason=InsertImage line=374 frame=4409 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   818834 BufferFillTrace: frame=4409 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 831972 960 frame=4509
+   831966 BufferFillTrace: frame=4509 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   831967 BufferFillTrace: frame=4509 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   831968 ImageWatch: frame=4509 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   831969 ImageWatch: frame=4509 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   831970 BufferFillTrace: frame=4509 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   831971 ImageLife: event=free reason=ResolveOverlap line=1104 frame=4509 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=4502
+== 848236 480 frame=4649
+   848230 BufferFillTrace: frame=4649 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   848231 BufferFillTrace: frame=4649 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   848232 BufferFillTrace: frame=4649 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   848233 BufferFillTrace: frame=4649 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   848234 ImageLife: event=create reason=InsertImage line=374 frame=4649 guest=0x0000000538a80000 bytes=1310720 w=480 h=270 d=1 mips=1 layers=1 fmt=97 tile=27 pitch=512 bpp=8 last_frame=4294967295
+   848235 BufferFillTrace: frame=4649 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 861670 960 frame=4748
+   861664 BufferFillTrace: frame=4748 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   861665 BufferFillTrace: frame=4748 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   861666 BufferFillTrace: frame=4748 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   861667 ImageWatch: frame=4748 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   861668 BufferFillTrace: frame=4748 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   861669 ImageLife: event=free reason=ResolveOverlap line=1104 frame=4748 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=4741
+== 893478 480 frame=4994
+   893472 [23][00:02:04.754] libkernel::libkernel::PthreadCondWait()
+   893473 BufferFillTrace: frame=4994 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   893474 BufferFillTrace: frame=4994 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   893475 BufferFillTrace: frame=4994 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   893476 BufferFillTrace: frame=4994 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   893477 BufferFillTrace: frame=4994 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 909029 960 frame=5081
+   909023 BufferFillTrace: frame=5081 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   909024 BufferFillTrace: frame=5081 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   909025 BufferFillTrace: frame=5081 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   909026 ImageWatch: frame=5081 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   909027 BufferFillTrace: frame=5081 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   909028 ImageLife: event=free reason=ResolveOverlap line=1104 frame=5081 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=5074
+== 925483 480 frame=5227
+   925477 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x30000 value=0xfffffff0 outcome=none
+   925478 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   925479 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   925480 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   925481 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   925482 BufferFillTrace: frame=5227 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 938922 960 frame=5324
+   938916 BufferFillTrace: frame=5324 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   938917 BufferFillTrace: frame=5324 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   938918 ImageWatch: frame=5324 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   938919 ImageWatch: frame=5324 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   938920 BufferFillTrace: frame=5324 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   938921 ImageLife: event=free reason=ResolveOverlap line=1104 frame=5324 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=5317
+== 956023 480 frame=5473
+   956017 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x30000 value=0xfffffff0 outcome=none
+   956018 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   956019 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   956020 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   956021 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   956022 BufferFillTrace: frame=5473 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 968648 960 frame=5566
+   968642 BufferFillTrace: frame=5566 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   968643 BufferFillTrace: frame=5566 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   968644 ImageWatch: frame=5566 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   968645 ImageWatch: frame=5566 event=gpu-invalidate image=0x000000053cb60000 size=0xc0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=2:0x0000000570857000+0x1000
+   968646 BufferFillTrace: frame=5566 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   968647 ImageLife: event=free reason=ResolveOverlap line=1104 frame=5566 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=5559
+== 982856 480 frame=5692
+   982850 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x0000000514050000 size=0x30000 value=0xfffffff0 outcome=none
+   982851 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x000000056d898000 size=0x14000 value=0x20202020 outcome=none
+   982852 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x0000000556759000 size=0x6000 value=0xffffffff outcome=none
+   982853 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x000000056c058000 size=0x6000 value=0x00000000 outcome=none
+   982854 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x000000056d8ac000 size=0xc000 value=0x00000000 outcome=none
+   982855 BufferFillTrace: frame=5692 shader=0xa572ee17a880e71c addr=0x000000055675f000 size=0x1000 value=0x00000000 outcome=none
+== 999434 960 frame=5808
+   999428 BufferFillTrace: frame=5808 shader=0xa572ee17a880e71c addr=0x000000057152c000 size=0x14000 value=0xffffffff outcome=none
+   999429 BufferFillTrace: frame=5808 shader=0xa572ee17a880e71c addr=0x00000005715b0000 size=0x14000 value=0x00000000 outcome=none
+   999430 BufferFillTrace: frame=5808 shader=0xa572ee17a880e71c addr=0x0000000571588000 size=0x28000 value=0x00000000 outcome=none
+   999431 ImageWatch: frame=5808 event=gpu-invalidate image=0x000000053c8e0000 size=0x3c0000 affected=0x000000053c790000+0x480000 cpu=0 buffer=0 gpu=1 meta=0:0x0000000000000000+0x0
+   999432 BufferFillTrace: frame=5808 shader=0xa572ee17a880e71c addr=0x0000000571728000 size=0x2000 value=0x00000000 outcome=none
+   999433 ImageLife: event=free reason=ResolveOverlap line=1104 frame=5808 guest=0x000000053c8e0000 bytes=3932160 w=1216 h=684 d=1 mips=1 layers=1 fmt=83 tile=27 pitch=1280 bpp=4 last_frame=5801

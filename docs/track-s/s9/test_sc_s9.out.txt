@@ -1,10 +1,10 @@
-suite test_sc_s9.py sha256 a4644c581c8c970cc5b7141359f8c2c8900119ae13032057361e5c0e833057c8 target sc_s9.py sha256 1578cce0c09194be732fd0ab8194bca662894cd8be948448d9ff08ae7f6086ff
+suite test_sc_s9.py sha256 104626d1fb34e0134a1da1ec1dca677a26a547722b4e46a84afbbacf24df344e target sc_s9.py sha256 b8f5e3faed8c512873553293372e509e4ccfafaedb5d0e4d216da3ead580e39a
 PASS A1 load_sc_s refuses a sc_s.py whose sha256 is not the pinned one
 PASS A2 the inherited sc_s.py is the scorer of seals 03 / 04 (8b0e0aff) and A.B is sc142
-PASS A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65
+PASS A3 binaries s = f3b3aa3b, u = 4aa62e95, installed 540c035a (item 374 (g)) apart from u; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65
 PASS A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, stand 15000, gate reading p362 (item 362 (b))
 PASS A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, after 1 002
-PASS A6 paths: link C:/kyty/s288/s10, seal pred/06_s.md (item 371 (g)), Sky Garden, L0 shuriken_ninja_castle
+PASS A6 paths: link C:/kyty/s288/s10, seal pred/06b_s.md (item 377 (b)(4)), Sky Garden, L0 shuriken_ninja_castle
 PASS A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)
 PASS A8 the order of S10 (item 355 (k); t2_cs0 right after t2_1, item 355 (d))
 PASS A9 pi arms: W M full hold 330, R T integrity from their W hold 120; knobs 1 1 0 0; binary s
@@ -67,7 +67,8 @@ PASS F3 integrity: the restores must be the post copies of its W
 PASS F4 form U: the app restore must be the empty set; a GLCache restore before the arm fails; launch = man_pre_glc; the catalogue sha = the sealed one
 PASS F5 returns, the installed binary, return_prev, the manifests and the post copies of W are rows
 PASS F6 no cache json -> one failing row
-PASS F7 item 371 (g), RC1: installed_before must be the installed 4aa62e95 of item 342 - before = after = f3b3aa3b fails that row only
+PASS F7 item 371 (g), RC1: installed_before must be the installed 540c035a of item 374 (g) - before = after = f3b3aa3b fails that row only
+PASS F7b item 377 (b)(2): installed 540c035a -> the row passes (pi_w1, u_2); installed 4aa62e95 (the pinned u binary, the installed of item 342) -> that row only fails, for an s arm and a u arm
 PASS G1 admission passes as sealed (pi_w1, t2_4 C5, u_3)
 PASS G2 the binary: s arms need f3b3aa3b, u arms 4aa62e95
 PASS G3 KYTY_GAME_PATCH in the env, validation true, another hold, a retry, a wrong seal, gates, guest args, 2 attempts
@@ -165,5 +166,5 @@ PASS O3 main --tag: the arm printed, the json written, rc 0 for an admitted arm
 PASS O4 main --tag of a failing arm rc 1; an unknown tag rc 2
 PASS O5 --summary runs, the output is ASCII (strict cp1250)
 PASS O6 seeds_sha: the manifest of seedexp_s9.py ("<name> <bytes> <sha256>" sorted); a missing dir -> None
-checks: 166
+checks: 167
 ALL OK

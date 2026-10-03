@@ -1,4 +1,4 @@
-suite test_go_s9.py sha256 7c9757ae56da6b467343d0170d3e2825415474877150ecab80b210631e84083d target go_s9.sh sha256 3f6703f363a8cc257d61a116c07b30e36e4b72820cc532bbb39273b65275efc1
+suite test_go_s9.py sha256 bf755259fa510b9fa1e07e5cdc222a1d8ad17e1ce545d8e3fbe38a51c4dd2e55 target go_s9.sh sha256 a44064841674012aeb30033648f6728a4b1a9a527e37f1240f5db78eb8888c2c
 PASS G1 go_s9.sh is ASCII only (item 175 (v))
 PASS G2 a tag with other characters -> rc 2 usage
 PASS G3 the stop file -> rc 4 BUSY before anything
@@ -21,12 +21,13 @@ PASS G19 no arm runs validation; no arm names KYTY_GAME_PATCH
 PASS G20 an attempt already made -> rc 1, no repeat
 PASS G21 no lock file was created by any DRY call
 PASS G22 the shipped harness unsets KYTY_GAME_PATCH, guards s4 / s6 / s10, writes the lock line "go_s.sh <tag> " for cachex_s.py
-PASS G23 item 371 (g): the shipped harness guards s10/IN_ARM with the RETURN_FAILED guards and pins INST_WANT = 4aa62e95 (item 342); the seal is pred/06_s.md
+PASS G23 item 371 (g), item 377 (b): the shipped harness guards s10/IN_ARM with the RETURN_FAILED guards and pins INST_WANT = 540c035a (item 374 (g)), not 4aa62e95; the seal is pred/06b_s.md
 PASS GL1 pi_w1 inside the lock: the binary s installed for the game and the installed build back after it
 PASS GL2 pi_w1: the game saw snap0 (not the installed variant file), restore rows snap0 / snap0_drv, the caches and GLCache back to the state before the arm
 PASS GL3 pi_w1: the post copies app_post/pi_w1 and glc_post/pi_w1 hold what the game left (its driver cache file)
 PASS GL4 pi_r1: the game saw the app caches pi_w1 left (no snapshot) and GLCache of pi_w1; restore = the post copies; everything back after
 PASS GL5 u_1 form U: the game saw NO app cache file, GLCache as found (no restore before), the catalogue sha noted; the installed caches and GLCache back after
+PASS GL5b item 377 (b)(1): INST_WANT (the installed) is not the u binary - the game of u_1 ran the pinned u stand-in, installed_before = the installed build, the installed build back after
 PASS GL6 three arms - three taken / released pairs in lock.log, no lock file, no guard
 PASS GL7 the catalogue check runs only for u arms (c5_0 with a bad catalogue sha still runs)
 PASS GL8 a u arm with a catalogue sha other than the sealed one -> rc 1 "seeds bad" before the lock
@@ -34,5 +35,6 @@ PASS GL9 KYTY_GAME_PATCH of the caller not seen by the game; a GamePatch: log li
 PASS GL10 IN_ARM (item 371 (g)): the game saw it - the tag, the installed sha, man_pre_app / man_pre_glc of the arm - and the successful return removed it
 PASS GL11 a hanging IN_ARM (a hard kill of an earlier arm) -> rc 1 "return failed guard" before the lock: no lock row, no attempt, the installed binary untouched, the guard kept
 PASS GL12 an installed binary other than INST_WANT -> rc 1 inside the lock: nothing installed, no IN_ARM, no attempt, the lock taken and released, the row in times.txt
-checks: 35
+PASS GL12b item 377 (b)(2): the installed = 4aa62e95 (the pinned u stand-in, the installed of item 342) -> rc 1 inside the lock: nothing installed, no IN_ARM, no attempt, the lock taken and released
+checks: 37
 ALL OK

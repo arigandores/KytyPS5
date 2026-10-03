@@ -15,7 +15,8 @@ Not mutated (equivalent - no input can tell the mutant): the identity "scan_x ro
 lines; a line one counts and the other does not crashes sc_s.scan_s first) and the video / haze members of clean_arm_x() (a pi
 arm without a video has no haze reading, so it is NOT_EVALUABLE in both readings).  S9b (item 371): mutants of the video member
 of the repeat, the executor variant of seal 05b, the row installed_before, the progress scan, the lower bound of the U screen,
-the member rule and the three words of U, the RC4 data and the RC5 sheet frames.  Not mutated (equivalent, the screening run s9b/mut_screen5.txt):
+the member rule and the three words of U, the RC4 data and the RC5 sheet frames.  S9b rework 1 (item 377 (b)(3)): the constant
+INST_WANT (540c035a, item 374 (g)) apart from BIN_U and the row installed_before on it (--only, s9b/r1).  Not mutated (equivalent, the screening run s9b/mut_screen5.txt):
 "b - a + 1 <= SHEET_LONG" -> "<" (a series of exactly 20 frames spans a-2 .. b+2 = 24 frames, so the even spread of 24 is the same
 frames) and "member = kind == 'measured'" (a lower bound > 180 s is the kill member "over" either way).  Not mutated: report texts no fixture reads; the regression (--regress reads the real S4 / S6 logs and videos; its output sha
 is the proof).  The cheap failures (constants) stand before the full paths (item 112 (a)).
@@ -52,6 +53,8 @@ MUTANTS = [
     ('hz_after_down', 'HAZE_AFTER = 1002\n', 'HAZE_AFTER = 1001\n'),
     ('bin_s', "BIN_S = 'f3b3aa3b", "BIN_S = 'f3b3aa3c"),
     ('bin_u', "BIN_U = '4aa62e95", "BIN_U = '4aa62e96"),
+    ('inst_want', "INST_WANT = '540c035a", "INST_WANT = '540c035b"),
+    ('inst_is_u', "INST_WANT = '540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1'", "INST_WANT = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'"),
     ('snap_app', "SNAP_APP = 'd8ca8c8e", "SNAP_APP = 'd8ca8c8f"),
     ('snap_drv', "SNAP_DRV = '1767ca0a", "SNAP_DRV = '1767ca0b"),
     ('empty', "EMPTY_SHA = 'e3b0c442", "EMPTY_SHA = 'e3b0c443"),
@@ -63,7 +66,7 @@ MUTANTS = [
     ('t2_last', "'miniboss_challenge_genie', 'symbol_triangle')", "'miniboss_challenge_genie', 'symbol_square')"),
     ('u_order', "U_LIST = ('underwater_aerial_garden', 'hoover_beach',", "U_LIST = ('hoover_beach', 'underwater_aerial_garden',"),
     ('u_last', "'interactive_credit_00', 'fragile_battle_1')", "'interactive_credit_00', 'voxel_challenge_1')"),
-    ('pred', "PRED_PATH = 'C:/kyty/s288/pred/06_s.md'", "PRED_PATH = 'C:/kyty/s288/pred/05b_s.md'"),
+    ('pred', "PRED_PATH = 'C:/kyty/s288/pred/06b_s.md'", "PRED_PATH = 'C:/kyty/s288/pred/06_s.md'"),
     ('sheet_long', 'SHEET_LONG = 20 ', 'SHEET_LONG = 21 '),
     ('sheet_n', 'SHEET_N = 24\n', 'SHEET_N = 25\n'),
     ('link', "LINK_DIR = 'C:/kyty/s288/s10'", "LINK_DIR = 'C:/kyty/s288/s9'"),
@@ -175,8 +178,10 @@ MUTANTS = [
     ('cr_ret', "add('%s after the arm = its copy' % key, r.get('got') is not None and r.get('got') == r.get('expected'),",
      "add('%s after the arm = its copy' % key, True,"),
     ('cr_inst', "ib is not None and len(ib) == 64 and ia == ib,", "ia == ib,"),
-    ('cr_ib', "ib == BIN_U,\n        (ib or '-')[:16])", "True,\n        (ib or '-')[:16])"),
-    ('cr_ib_s', "ib == BIN_U,\n        (ib or '-')[:16])", "ib in (BIN_U, BIN_S),\n        (ib or '-')[:16])"),
+    ('cr_ib', "        ib == INST_WANT,\n        (ib or '-')[:16])", "        True,\n        (ib or '-')[:16])"),
+    ('cr_ib_s', "        ib == INST_WANT,\n        (ib or '-')[:16])", "        ib in (INST_WANT, BIN_S),\n        (ib or '-')[:16])"),
+    ('cr_ib_u', "        ib == INST_WANT,\n        (ib or '-')[:16])", "        ib == BIN_U,\n        (ib or '-')[:16])"),
+    ('cr_ib_old', "        ib == INST_WANT,\n        (ib or '-')[:16])", "        ib in (INST_WANT, BIN_U),\n        (ib or '-')[:16])"),
     ('cr_prev', "jget(cj, 'return_prev', 'ok') == '1',", "True,"),
     ('cr_man', "add('manifest %s recorded' % key, bool(jget(cj, key, 'sha')),", "add('manifest %s recorded' % key, True,"),
     ('cr_post', "    if spec['tag'] in PI_W.values():", "    if False:"),

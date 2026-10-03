@@ -15,7 +15,7 @@ creation before / right after / after the entry line, a line without " us=", the
 of the three readings, the order with counted C5 arms; READ_3 with and without the loaded member of each R and the executor's
 reading printed beside.  S9b (item 371): the video member of the repeat (the detector read with frames after 1 002; a series in
 pi_r1 with a glitch in pi_w0 -> READ_1, the executor variant NOT_EVALUABLE; <= 1 003 frames -> NOT_EVALUABLE), the row
-installed_before = 4aa62e95, the lower bound of the U screen (progress 181 000 / 179 000 / 180 000 ms, the maximum not the last,
+installed_before (S9b rework 1, item 377 (b): 540c035a passes, the pinned u binary 4aa62e95 fails), the lower bound of the U screen (progress 181 000 / 179 000 / 180 000 ms, the maximum not the last,
 timeout without lines, no line at all), the letter word and the executor variant beside, the RC4 data, the sheet frames of
 RC5.  Synthetic logs only, no process is started.
 The mutlib early-exit form (item 85 (v)(2)): the only bindings of the flag are `ok = True` and `ok &= ...`, the last statement
@@ -43,6 +43,8 @@ _spec.loader.exec_module(S)
 
 BIN_S = 'f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3'
 BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'
+INST = '540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1'
+ROW_IB = 'installed binary before the arm = the installed 540c035a of item 374 (g) (item 371 (g), RC1)'
 SNAP_APP = 'd8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4'
 SNAP_DRV = '1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028'
 EMPTY = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
@@ -196,7 +198,7 @@ def cj_for(tag, **over):
     d = dict(man_pre_app=dict(sha='11' * 32), man_pre_glc=dict(sha='12' * 32), man_post_app=dict(sha='13' * 32),
              man_post_glc=dict(sha='14' * 32), glc_pre_copy=dict(sha='15' * 32),
              return_app=dict(expected='16' * 32, got='16' * 32), return_glc=dict(expected='17' * 32, got='17' * 32),
-             installed_before=dict(sha=BIN_U), installed_after=dict(sha=BIN_U), return_prev=dict(ok='1'))
+             installed_before=dict(sha=INST), installed_after=dict(sha=INST), return_prev=dict(ok='1'))
     if spec['mode'] == 'integrity':
         d['restore_app'] = dict(expected='aa' * 32, got='aa' * 32)
         d['restore_glc'] = dict(expected='bb' * 32, got='bb' * 32)
@@ -286,8 +288,9 @@ ok &= case('A1 load_sc_s refuses a sc_s.py whose sha256 is not the pinned one', 
 ok &= case('A2 the inherited sc_s.py is the scorer of seals 03 / 04 (8b0e0aff) and A.B is sc142', S.SC_S_PATH ==
            'C:/kyty/s288/sc_s.py' and S.SHA_SC_S == '8b0e0aff407cc82ad0a98542676764b5a0c8a867266075aa81a92a09316dc5a4'
            and S.B.ENTRY_WIN == 599 and S.A.SHA142.startswith('1ce612cd'))
-ok &= case('A3 binaries s = f3b3aa3b, u = 4aa62e95; snapshots d8ca8c8e / 1767ca0a; empty set e3b0c442; catalogue 72605a65',
-           S.BIN_S == BIN_S and S.BIN_U == BIN_U and S.SNAP_APP == SNAP_APP and S.SNAP_DRV == SNAP_DRV and S.EMPTY_SHA == EMPTY
+ok &= case('A3 binaries s = f3b3aa3b, u = 4aa62e95, installed 540c035a (item 374 (g)) apart from u; snapshots d8ca8c8e / '
+           '1767ca0a; empty set e3b0c442; catalogue 72605a65',
+           S.BIN_S == BIN_S and S.BIN_U == BIN_U and S.INST_WANT == INST and S.INST_WANT != S.BIN_U and S.SNAP_APP == SNAP_APP and S.SNAP_DRV == SNAP_DRV and S.EMPTY_SHA == EMPTY
            and S.SEEDS_SHA == '72605a65d15470f8e60a8a4d16c3a4b4d34cd557bbe6e8c17c9ba6441892f098'
            and S.SEEDS_PATH == 'C:/kyty/s288/s9/seeds')
 ok &= case('A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5, T2 5, holds 330 / 120, W >= 300 s, video 3 000, '
@@ -297,8 +300,8 @@ ok &= case('A4 constants of item 355: C5 10 / 20 000, screen 180 s, kill 2 of 5,
 ok &= case('A5 the detector constants of item 355 (g): crop 300x60 at (660, 60), 60x12, frames >= 300, 0.75, gap 3, length 5, '
            'after 1 002', S.HAZE_CROP == 'crop=300:60:660:60' and (S.HAZE_W, S.HAZE_H) == (60, 12) and S.HAZE_FROM == 300
            and S.HAZE_FRAC == 0.75 and S.HAZE_GAP == 3 and S.HAZE_LEN == 5 and S.HAZE_AFTER == 1002)
-ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/06_s.md (item 371 (g)), Sky Garden, L0 shuriken_ninja_castle',
-           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/06_s.md' and S.SKY == 'underwater_aerial_garden'
+ok &= case('A6 paths: link C:/kyty/s288/s10, seal pred/06b_s.md (item 377 (b)(4)), Sky Garden, L0 shuriken_ninja_castle',
+           S.LINK_DIR == 'C:/kyty/s288/s10' and S.PRED_PATH == 'C:/kyty/s288/pred/06b_s.md' and S.SKY == 'underwater_aerial_garden'
            and S.L0 == 'shuriken_ninja_castle')
 ok &= case('A7 lists of lvl_s9.out.txt: T2 hero_kratos .. symbol_triangle (10), U underwater .. fragile_battle_1 (5)',
            S.T2_LIST == ('hero_kratos', 'hero_drake', 'voxel_challenge_3', 'armadillo_challenge_2', 'fragile_battle_4',
@@ -563,11 +566,16 @@ ok &= case('F5 returns, the installed binary, return_prev, the manifests and the
     crow('pi_w0', app_post_copy={}) and not crow('pi_r1', glc_post_copy={}))
 ok &= case('F6 no cache json -> one failing row', S.cache_rows(S.SPEC['u_1'], None, lambda t: None) ==
            [('cache protocol json present', False, 'missing')])
-ok &= case('F7 item 371 (g), RC1: installed_before must be the installed 4aa62e95 of item 342 - before = after = f3b3aa3b fails that '
-           'row only', [r[0] for r in crow('pi_w1', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))] ==
-           ['installed binary before the arm = the installed 4aa62e95 of item 342 (item 371 (g), RC1)'] and
-           [r[0] for r in crow('u_2', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))] ==
-           ['installed binary before the arm = the installed 4aa62e95 of item 342 (item 371 (g), RC1)'])
+ok &= case('F7 item 371 (g), RC1: installed_before must be the installed 540c035a of item 374 (g) - before = after = f3b3aa3b '
+           'fails that row only', [r[0] for r in crow('pi_w1', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))]
+           == [ROW_IB] and
+           [r[0] for r in crow('u_2', installed_before=dict(sha=BIN_S), installed_after=dict(sha=BIN_S))] == [ROW_IB])
+ok &= case('F7b item 377 (b)(2): installed 540c035a -> the row passes (pi_w1, u_2); installed 4aa62e95 (the pinned u binary, the '
+           'installed of item 342) -> that row only fails, for an s arm and a u arm',
+           ROW_IB not in [r[0] for r in crow('pi_w1')] and ROW_IB not in [r[0] for r in crow('u_2')] and
+           not crow('pi_w1') and not crow('u_2') and
+           [r[0] for r in crow('pi_w1', installed_before=dict(sha=BIN_U), installed_after=dict(sha=BIN_U))] == [ROW_IB] and
+           [r[0] for r in crow('u_2', installed_before=dict(sha=BIN_U), installed_after=dict(sha=BIN_U))] == [ROW_IB])
 
 
 def adm(tag, form=None, **over):

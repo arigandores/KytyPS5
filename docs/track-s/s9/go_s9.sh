@@ -13,12 +13,12 @@
 #                    APP: nothing more; the plan is UNDETERMINED before c5_0 - rc 6); t2_cs0 + KYTY_CS_PRETRANSLATE=0
 #     u_k            T, form U: the app caches mirrored from s10/empty_app (empty, MANIFEST sha EMPTY_SHA), GLCache NOT
 #                    restored (copied before, returned after), KYTY_SHADER_SEED_PATH=C:/kyty/s288/s9/seeds
-#                    KYTY_CACHE_MODE=prepare-cold, binary u (the installed 4aa62e95), the catalogue checked by sha before
-#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/06_s.md (item 371 (g)).
+#                    KYTY_CACHE_MODE=prepare-cold, binary u (the pinned copy 4aa62e95), the catalogue checked by sha before
+#   BINARIES: the seal lines "s binary: <sha> <path>" (f3b3aa3b) and "u binary: <sha> <path>" (4aa62e95) of pred/06b_s.md (item 377 (b)).
 #   GUARD s10/IN_ARM (item 371 (g), RC1 of S9r): written before INSTALLED=1 / TOUCHED=1 (the tag, the installed sha, man_pre_app,
 #     man_pre_glc), removed only by a successful do_return; while it exists go_s9.sh refuses rc 1 as with RETURN_FAILED (a hard kill
-#     of an arm leaves it; the lead returns by hand).  ADMISSION: the installed binary before the arm = INST_WANT (4aa62e95, item
-#     342), else no arm (rc 1) - a new installation stops S10 until a lead item names the new sha.
+#     of an arm leaves it; the lead returns by hand).  ADMISSION: the installed binary before the arm = INST_WANT (540c035a, FS3,
+#     item 374 (g), item 377 (b)), else no arm (rc 1); INST_WANT is not the binary u (the pinned 4aa62e95 of the seal line).
 #   THE LOCK line begins "go_s.sh <tag> " (cachex_s.py, unchanged, admits a write only from that prefix) and names go_s9.sh.
 # EXIT CODES: 0 run done; 1 hard refusal / failed run / failed return; 2 usage; 4 BUSY (lock, stop file, idle) - no run;
 #   6 a condition of item 355 is not met (sc_s9.py --allowed rc 6 or the plan UNDETERMINED) - no run, report to the lead;
@@ -40,8 +40,8 @@ SNAPDRVDIR="C:/kyty/s288/snap0_drv"
 VIDGLITCH=C:/kyty/scripts/s51_vidglitch.py
 S9=$ROOT/s9
 SC=$S9/sc_s9.py
-PRED=pred/06_s.md
-INST_WANT="4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac"
+PRED=pred/06b_s.md
+INST_WANT="540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1"
 RSLEEP=5
 PLMAX=540
 PLWAIT=${PLWAIT:-$PLMAX}
@@ -295,8 +295,8 @@ fi
 $CX note $CJ installed_before sha=$INST_SHA path=$BINPRE >> $L 2>&1
 tline "installed binary before the arm: $INST_SHA copied to $BINPRE"
 if [ "$INST_SHA" != "$INST_WANT" ]; then
-  log "the installed binary before the arm $INST_SHA != the installed of item 342 $INST_WANT - no arm (item 371 (g))"
-  tline "installed binary before the arm $INST_SHA != $INST_WANT (item 342) - no arm; S10 stands until a lead item names the new sha"
+  log "the installed binary before the arm $INST_SHA != the installed of item 374 (g) $INST_WANT - no arm (item 371 (g))"
+  tline "installed binary before the arm $INST_SHA != $INST_WANT (item 374 (g)) - no arm; a new installation needs a lead item"
   INST_SHA=""; echo "installed binary not $INST_WANT"; exit 1
 fi
 X=$($CX man app 2>&1); log "$X"; MPA=$(shaof "$X"); $CX note $CJ man_pre_app sha=$MPA >> $L 2>&1

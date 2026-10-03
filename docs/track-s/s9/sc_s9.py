@@ -8,7 +8,7 @@ assign_prep(), attributed*(), unattributed(), gates(), early(), pcw_arm(), pcw_t
 logic are used as they are; this file only adds the arms of S10, their admission and the readings of item 355.
 
 ARMS (item 355 (k), order of S10): pi_w1 pi_r1 pi_w0 pi_r0 (item 355 (g), binary f3b3aa3b), c5_0 (item 355 (d), binary f3b3aa3b),
-t2_1 .. t2_10 (t2_6 .. t2_10 reserves) and t2_cs0 (item 355 (d), binary f3b3aa3b), u_1 .. u_5 (item 355 (e), the installed 4aa62e95
+t2_1 .. t2_10 (t2_6 .. t2_10 reserves) and t2_cs0 (item 355 (d), binary f3b3aa3b), u_1 .. u_5 (item 355 (e), the pinned 4aa62e95
 without KYTY_GAME_PATCH).  Environment M = the base of enter_scene.py + KYTY_GPU_CLOCK_PIN=1 KYTY_GPU_MARKERS=0; T = M +
 KYTY_AV_TRACE=1 KYTY_SHADER_REGISTER_TRACE=1 (item 241 (g)(5)).  Video on every arm.
   pi_w1 M full return, KYTY_S_PCW=1 KYTY_S_PCW_FORCE_MS=15000, hold 330 (>= 300 s presented, the pcw form of seal 04)
@@ -82,9 +82,10 @@ B = A.B
 
 ROOT = 'C:/kyty/s288'
 LINK_DIR = 'C:/kyty/s288/s10'
-PRED_PATH = 'C:/kyty/s288/pred/06_s.md'                        # item 371 (g)
+PRED_PATH = 'C:/kyty/s288/pred/06b_s.md'                       # item 371 (g), item 377 (b)(4)
 BIN_S = 'f3b3aa3bef3f0ceadf668d0fc8bd68230ab1e3158d87bbc0b4c66b92a6651ca3'   # S5c, item 340 (v), item 355 (g)
-BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'   # installed, item 342, item 355 (e)
+BIN_U = '4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac'   # binary u: the pinned copy, item 342, item 355 (e)
+INST_WANT = '540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1'   # installed before every arm, item 374 (g), item 377 (b)(1)
 SNAP_APP = 'd8ca8c8efb60b43b37c14a274a4738c83a9dc5866cc784e649e97314c5fd45c4'   # item 241 (g)(1)
 SNAP_DRV = '1767ca0a975f26c1cb90eff80e6cccb959dc507f2a1178506a6ef1dbcac97028'
 EMPTY_SHA = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'  # the manifest of an empty set (form U)
@@ -478,7 +479,8 @@ def cache_rows(spec, cj, cjs_of):
     ib, ia = jget(cj, 'installed_before', 'sha'), jget(cj, 'installed_after', 'sha')
     add('installed binary after the arm = installed before the arm (item 250 (b))', ib is not None and len(ib) == 64 and ia == ib,
         '%s / %s' % ((ia or '-')[:16], (ib or '-')[:16]))
-    add('installed binary before the arm = the installed %s of item 342 (item 371 (g), RC1)' % BIN_U[:8], ib == BIN_U,
+    add('installed binary before the arm = the installed %s of item 374 (g) (item 371 (g), RC1)' % INST_WANT[:8],
+        ib == INST_WANT,
         (ib or '-')[:16])
     add('return_prev_ok (no RETURN_FAILED guard before the arm, item 250 (v))', jget(cj, 'return_prev', 'ok') == '1',
         jget(cj, 'return_prev', 'ok') or '-')

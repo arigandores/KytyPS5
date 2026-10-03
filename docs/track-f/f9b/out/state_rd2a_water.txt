@@ -1,0 +1,42 @@
+capture C:/kyty/f287/f9/runs/f9a_rd2/rd2_f3951.rdc mode state
+==== E33093
+ VS 1602 Shader Module 1602 entry=main
+  RW bind=0 buf29300 len=17645568 Buffer 29300 off=8348640 len=64
+  CB bind=2 res271022 Command Buffer 271022 off=0 len=128
+  CB bind=0 buf202 len=67108864 Buffer 202 off=1674560 len=16
+  CB bind=0 buf29300 len=17645568 Buffer 29300 off=8346048 len=832
+  CB bind=1 buf202 len=67108864 Buffer 202 off=1673984 len=576
+  CB bind=1 buf29300 len=17645568 Buffer 29300 off=8347392 len=208
+ PS 1604 Shader Module 1604 entry=main
+  RO bind=0 tex171325 256x256x1 a1 m9 BC5_UNORM 2D Image 171325 view=BC5_UNORM mip=0+9
+  RO bind=0 tex38420 256x256x1 a1 m9 BC5_UNORM 2D Image 38420 view=BC5_UNORM mip=0+9
+  RO bind=0 tex263817 480x270x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 263817 view=R16G16B16A16_FLOAT mip=0+1
+  RO bind=0 tex264039 1920x1080x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 264039 view=R16G16B16A16_FLOAT mip=0+1
+  RO bind=0 tex18116 1x1x1 a1 m1 R8G8B8A8_SRGB 2D Color Attachment 18116 view=R8G8B8A8_SRGB mip=0+1
+  RO bind=0 tex10584 1x1x1 a1 m1 R8G8B8A8_SRGB 2D Color Attachment 10584 view=R8G8B8A8_SRGB mip=0+1
+  RO bind=0 tex263820 480x270x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 263820 view=R16G16B16A16_FLOAT mip=0+1
+  RO bind=1 tex5623 256x256x1 a192 m9 BC6_UFLOAT 2D Array Image 5623 view=BC6_UFLOAT mip=0+9
+  RO bind=1 tex5623 256x256x1 a192 m9 BC6_UFLOAT 2D Array Image 5623 view=BC6_UFLOAT mip=0+9
+  RO bind=2 tex17186 2048x2048x1 a3 m1 D16 2D Depth Attachment 17186 view=D16 mip=0+1
+  RW bind=1 buf202 len=67108864 Buffer 202 off=1675520 len=464
+  RW bind=2 buf202 len=67108864 Buffer 202 off=1676032 len=132
+  RW bind=0 buf18117 len=16384 Buffer 18117 off=11840 len=64
+  RW bind=0 buf5855 len=37486592 Buffer 5855 off=129616 len=129600
+  CB bind=0 buf202 len=67108864 Buffer 202 off=1675200 len=112
+  CB bind=0 buf29300 len=17645568 Buffer 29300 off=8346944 len=32
+  CB bind=0 buf29300 len=17645568 Buffer 29300 off=6776064 len=17920
+  CB bind=0 buf202 len=67108864 Buffer 202 off=1675328 len=16
+  CB bind=0 buf202 len=67108864 Buffer 202 off=1675392 len=112
+  CB bind=1 buf202 len=67108864 Buffer 202 off=1674624 len=576
+  CB bind=1 buf202 len=67108864 Buffer 202 off=1675200 len=112
+  CB bind=1 buf29300 len=17645568 Buffer 29300 off=6776064 len=17920
+  CB bind=1 buf202 len=67108864 Buffer 202 off=1675392 len=112
+ CS 5464 Shader Module 5464 entry=main
+  RW bind=0 buf25439 len=261750784 Buffer 25439 off=58720256 len=203030528
+  RW bind=1 tex264039 1920x1080x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 264039 off=1 len=0
+  CB bind=0 buf202 len=67108864 Buffer 202 off=1673920 len=56
+  OUT tex5630 1920x1080x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 5630 view=R16G16B16A16_FLOAT
+  OUT tex254335 1920x1080x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 254335 view=R16G16B16A16_FLOAT
+  DEPTH tex263828 1920x1080x1 a1 m1 D32S8 2D Depth/Stencil Attachment 263828
+  VP 0 1080 1920 -1080
+done

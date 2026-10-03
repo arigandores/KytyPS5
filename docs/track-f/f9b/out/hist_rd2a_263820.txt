@@ -1,0 +1,3 @@
+capture C:/kyty/f287/f9/runs/f9a_rd2/rd2_f3951.rdc mode hist
+hist tex263820 480x270x1 a1 m1 R16G16B16A16_FLOAT 2D Color Attachment 263820 px 250 200 at 34191
+done

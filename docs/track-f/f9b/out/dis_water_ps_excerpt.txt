@@ -1,0 +1,101 @@
+# lines 1-4: header
+capture C:/kyty/f287/f9/runs/f9a_rd3/rd3_b.rdc mode dis
+targets ['SPIR-V (RenderDoc)', 'KHR_pipeline_executable_properties', 'AMDIL', 'GCN (gfx804)', 'GCN (gfx900)', 'GCN (gfx902)', 'GCN (gfx906)', 'RDNA (gfx1010)', 'RDNA (gfx1012)', 'RDNA2 (gfx1030)', 'RDNA2 (gfx1031)', 'RDNA2 (gfx1032)', 'RDNA2 (gfx1034)', 'RDNA2 (gfx1035)']
+ro [('image_3', 54, 0, 'TextureType.Texture2D'), ('image_4', 55, 0, 'TextureType.Texture2DArray'), ('image_25', 76, 0, 'TextureType.Texture2DArray')]
+rw [('buffers', 51, 0, 'TextureType.Buffer'), ('flattened_srt', 99, 0, 'TextureType.Buffer'), ('shader_data', 100, 0, 'TextureType.Buffer')]
+
+# lines 76-79: image_3 declaration
+}
+Uniform struct54[7]* cbuffers_u32x4 : [[DescriptorSet(0), Binding(101)]];
+UniformConstant Image<float, 2D>[7]* image_3 : [[DescriptorSet(0), Binding(54)]];
+UniformConstant Image<float, 2DArray>[2]* image_4 : [[DescriptorSet(0), Binding(55)]];
+
+# lines 284-308: screen UV: in_param * 1/size -> _441,_469
+  uint _417 = _415.y;
+  float _418 = Bitcast(_416);
+  float _419 = 1.0000 / _418;
+  float4 _420 = *in_param_1;
+  float _421 = _420.x;
+  uint _422 = Bitcast(_421);
+  uint _423 = Select(_408, _422, 0);
+  float4 _424 = *in_param_1;
+  float _425 = _424.y;
+  uint _426 = Bitcast(_425);
+  uint _427 = Select(_408, _426, 0);
+  float _428 = Bitcast(_417);
+  float _429 = 1.0000 / _428;
+  float4 _430 = *in_param_1;
+  float _431 = _430.z;
+  uint _432 = Bitcast(_431);
+  uint _433 = Select(_408, _432, 0);
+  float4 _434 = *in_param_1;
+  float _435 = _434.w;
+  uint _436 = Bitcast(_435);
+  uint _437 = Select(_408, _436, 0);
+  float _438 = Bitcast(_333);
+  float _439 = _438 * _419;
+  uint _440 = Bitcast(_439);
+  uint _441 = Select(_408, _440, 0);
+
+# lines 7176-7197: image_3[6] (T6) sampled at screen UV
+  float _7356 = Bitcast(_441);
+  float _7357 = Bitcast(_469);
+  float2 _7358 = CompositeConstruct({_7356, _7357});
+  Image<float, 2D>* _7359 = &image_3[6];
+  Image<float, 2D> _7360 = *_7359;
+  sampler* _7361 = &samplers[0];
+  sampler _7362 = *_7361;
+  SampledImage<float, 2D> _7363 = SampledImage(_7360, _7362);
+  float4 _7364 = ImageSampleImplicitLod(_7363, _7358);
+  float _7365 = _7364.x;
+  uint _7366 = Bitcast(_7365);
+  float _7367 = _7364.y;
+  uint _7368 = Bitcast(_7367);
+  float _7369 = _7364.z;
+  uint _7370 = Bitcast(_7369);
+  float _7371 = _7364.w;
+  uint _7372 = Bitcast(_7371);
+  uint4 _7373 = CompositeConstruct({_7366, _7368, _7370, _7372});
+  uint _7374 = _7373.x;
+  uint _7375 = _7373.y;
+  uint _7376 = _7373.z;
+  uint _7377 = _7373.w;
+
+# lines 7395-7412: mix(color, T6.rgb, T6.a)
+  float _7582 = Bitcast(_7374);
+  float _7583 = Bitcast(_7313);
+  float _7584 = _7582 - _7583;
+  float _7585 = Bitcast(_7375);
+  float _7586 = Bitcast(_7312);
+  float _7587 = _7585 - _7586;
+  float _7588 = Bitcast(_7376);
+  float _7589 = Bitcast(_7311);
+  float _7590 = _7588 - _7589;
+  float _7591 = Bitcast(_7377);
+  float _7592 = Bitcast(_7313);
+  float _7593 = GLSL.std.450::Fma(_7584, _7591, _7592);
+  float _7594 = Bitcast(_7377);
+  float _7595 = Bitcast(_7312);
+  float _7596 = GLSL.std.450::Fma(_7587, _7594, _7595);
+  float _7597 = Bitcast(_7377);
+  float _7598 = Bitcast(_7311);
+  float _7599 = GLSL.std.450::Fma(_7590, _7597, _7598);
+
+# lines 7560-7575: out_mrt_0
+  uint4 _7747 = CompositeConstruct({_7672, _7746, 0, 0});
+  uint _7748 = Select(_320, 1, 0);
+  *pixel_valid_mask_active = _7748;
+  
+  if(_320) {
+    uint _7751 = _7747.x;
+    float2 _7752 = GLSL.std.450::UnpackHalf2x16(_7751);
+    float _7753 = _7752.x;
+    float _7754 = _7752.y;
+    uint _7755 = _7747.y;
+    float2 _7756 = GLSL.std.450::UnpackHalf2x16(_7755);
+    float _7757 = _7756.x;
+    float _7758 = _7756.y;
+    float4 _7759 = CompositeConstruct({_7753, _7754, _7757, _7758});
+    *out_mrt_0 = _7759;
+  }
+

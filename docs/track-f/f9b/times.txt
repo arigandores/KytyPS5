@@ -1,0 +1,3 @@
+2026-10-02T23:44:01Z F9b (HPP-411) start; F9a done (REPRO_YES), captures rd3_b (glitch), rd2_f3951 (norm); no lock
+2026-10-02T23:47:26Z rd3_b: water draw E14441 (PS 1596, 160245 idx) reads tex386148 960x540 RGBA16F = mosaic of 4K scene tiles at 1:1; no writer of 386148 inside the capture
+2026-10-03T00:05:30Z report docs/track-f/f9b.md written; artifacts docs/track-f/f9b/

@@ -1,0 +1,28 @@
+FS4C fs4_hb kind hb level hoover_beach log sha256 2081884a088bdb6704a16644d90a8932611829400d3f10101680302792dad0ac lines 2787595 stdout sha256 373710459ec12a8a116e34f9783c8e9d4d8f62509367a84f7d947adc25f29a0a
+  binary: installed sha256 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5 (expected 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5); revision texts [('log', 121, '3d0e46d')]
+  cold: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T10:38:32Z; the other entries of _ShaderCache/PPSA21564: 1345; Shader translation cache ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet'
+  FixSval lines [(79, 1, 1)] (expected mode=1 ubo_std_layout=1, first before the first GuestOut line 11893)
+  FixSvalStat lines 1, last (983044, 256, 0) (validated = ALL checks of ValidateShaderSpirv, all stages)
+  SPIR-V validation failed: log lines 0 (first []), stdout lines 0, hashes []
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.1 stable_s 22.1)
+  entry line 345794; scene change line None; first scene frame n 211; hold (sum dt after it) 335.9 s; frames >= 1 s after it 0 (max dt_us 435144)
+  death markers: 0 []; emulator stdout present
+  window: {'lost keyboard focus': 1}, Recovering Vulkan swapchain 0; AsyncPipelines: skipped draw 173 (reference)
+  video: index records 19966; one-frame glitches 0; sheet: C:/kyty/f287/fs4c/runs/fs4_hb/sheet_fs4_hb.png frames 19966 step 415 tiles 8x6
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)], supported=1 enabled=1 before the first GuestOut: True
+  manifest: manifest cmp EQUAL files 2920 listsha e86f72338ab576b4575abb377623f825141e8a26df57f4df8df707c9d404ac88
+  ROW binary sha256 = 31cbfee8: YES
+  ROW revision text names 3d0e46d (KYTY_GIT_REVISION; NOT_PRESENT - no such text; reference): YES
+  ROW cold form (variant dir absent, translation cache path, PipelinePrecache: no ... yet): YES
+  ROW FixSval mode=1 ubo_std_layout=1 before the first GuestOut: YES
+  ROW HB (reference): 0 lines SPIR-V validation failed: YES
+  ROW HB (reference): no process end before the timeout: YES
+  ROW HB (reference): 0 death markers: YES
+  ROW HB (reference): validated of the last FixSvalStat >= 151 (no line - NOT_DETERMINED): YES
+  ROW HB (reference): entered (entry line of hoover_beach): YES
+  ROW HB (reference): hold >= 300 s (sum dt after the first scene frame): YES
+  ROW HB (reference): video index records >= 3000: YES
+  ROW HB (reference): 0 one-frame glitches: YES
+  ROW HB (reference): sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

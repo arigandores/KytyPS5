@@ -1,0 +1,23 @@
+FS4C fs4_r0 kind r0 level underwater_aerial_garden log sha256 e7d8cb848b76d3a4ed4a3e153e3e3999c91b6a3e298aabbb14605f97a6171a3c lines 56000 stdout sha256 b11cd59ece35acd71680660d39956d9deead6cf255a2dd991d04533896cce516
+  binary: installed sha256 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5 (expected 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5); revision texts [('log', 121, '3d0e46d'), ('log', 55997, '3d0e46d'), ('stdout', 46, '3d0e46d')]
+  cold: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T08:37:25Z; the other entries of _ShaderCache/PPSA21564: 1345; Shader translation cache ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet'
+  FixSval lines [(79, 0, 1)] (expected mode=0 ubo_std_layout=1, first before the first GuestOut line 11892)
+  FixSvalStat lines 0, last None (validated = ALL checks of ValidateShaderSpirv, all stages)
+  SPIR-V validation failed: log lines 2 (first [55724, 55999]), stdout lines 1, hashes ['c33dc20535a2cebf']
+  process end before the timeout: YES (how 'exit rc 321' rc 321 exit_s 12.1 wall_s 12.1)
+  entry line None; scene change line None; first scene frame n None; hold (sum dt after it) 0.0 s; frames >= 1 s after it 0 (max dt_us 0)
+  death markers: 2 [('log', '--- Error ---', 55998), ('stdout', '--- Error ---', 47)]; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; AsyncPipelines: skipped draw 0 (reference)
+  video: index records None; one-frame glitches None; None
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)], supported=1 enabled=1 before the first GuestOut: True
+  manifest: manifest cmp EQUAL files 2920 listsha 951942c4b2e4403d03a439a487c03f1cf228cd9aa3f310153a5b97d55a280f2b
+  ROW binary sha256 = 31cbfee8: YES
+  ROW revision text names 3d0e46d (KYTY_GIT_REVISION; NOT_PRESENT - no such text; reference): YES
+  ROW cold form (variant dir absent, translation cache path, PipelinePrecache: no ... yet): YES
+  ROW FixSval mode=0 ubo_std_layout=1 before the first GuestOut: YES
+  ROW R0: >= 1 line SPIR-V validation failed: YES
+  ROW R0: the process ended before 300 s: YES
+  ROW R0: 0 FixSvalStat lines at =0 (reference): YES
+  ROW R0: defect reproduced in the game (both rows above; else - not reproduced in the game): YES
+  ROW manifest of the caches before = after the return: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

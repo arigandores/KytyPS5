@@ -1,0 +1,27 @@
+FS4C fs4_v kind v level underwater_aerial_garden log sha256 7ec2b2de288dd671635dc38be03c3acc6687b3d5603724c41fbe4e5b35e413f8 lines 1168780 stdout sha256 19f57557a9cbf7f179a4b4add22c23ac37795b1b58b7004d837e247aa41d8dff
+  binary: installed sha256 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5 (expected 31cbfee8261f7ea51d5552670359b07682d2524954d2e828b2097ae091e2eaa5); revision texts [('log', 630, '3d0e46d')]
+  warm: warm form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b present at 2026-10-03T15:14:35Z; files 616; pipelines.bin 14703945 bytes; Shader translation cache ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: 1357 recipes -> 1234 graphics + 123 compute pipelines queued, 0 skipped, 2551 sources loaded, complete, 406 ms (scratch: 0 pipelines, max 0 dwords/thread)'
+  FixSval lines [(79, 1, 1)] (expected mode=1 ubo_std_layout=1, first before the first GuestOut line 12404)
+  FixSvalStat lines 0, last None (validated = ALL checks of ValidateShaderSpirv, all stages)
+  SPIR-V validation failed: log lines 0 (first []), stdout lines 0, hashes []
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.1 stable_s 19.9)
+  entry line 228942; scene change line None; first scene frame n 371; hold (sum dt after it) 334.4 s; frames >= 1 s after it 0 (max dt_us 201571)
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; AsyncPipelines: skipped draw 0 (reference)
+  video: index records 10287; one-frame glitches 0; sheet: C:/kyty/f287/fs4c/runs/fs4_v/sheet_fs4_v.png frames 10287 step 214 tiles 8x6
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)], supported=1 enabled=1 before the first GuestOut: True
+  manifest: manifest cmp EQUAL files 2922 listsha cffd41b331d03992bc4ef1a5b909108a2459d2442a6976399144cfb9c499fbb3
+  ROW binary sha256 = 31cbfee8: YES
+  ROW revision text names 3d0e46d (KYTY_GIT_REVISION; NOT_PRESENT - no such text; reference): YES
+  ROW warm form (variant dir present, translation cache path, PipelinePrecache replayed): YES
+  ROW FixSval mode=1 ubo_std_layout=1 before the first GuestOut: YES
+  ROW V: entered (entry line of underwater_aerial_garden): YES
+  ROW V: hold >= 300 s (sum dt after the first scene frame): YES
+  ROW V: 0 death markers: YES
+  ROW V: 0 frames >= 1 s after the first scene frame: YES
+  ROW V: no process end before the timeout: YES
+  ROW V: video index records >= 3000: YES
+  ROW V: 0 one-frame glitches: YES
+  ROW V: sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

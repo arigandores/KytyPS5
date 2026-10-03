@@ -902,9 +902,7 @@ private:
 
 	void Collect(Inst& inst) {
 		const auto op           = inst.GetOpcode();
-		// Track F, F11d: the KYTY_DIAG_BVHNODES opcodes write the fault-buffer tail as well.
-		if (op == ValueOpcode::BvhIntersectRay || op == ValueOpcode::BvhNodeDiag ||
-		    op == ValueOpcode::DiagTrap) {
+		if (op == ValueOpcode::BvhIntersectRay) {
 			m_info.uses_dma = true;
 			return;
 		}

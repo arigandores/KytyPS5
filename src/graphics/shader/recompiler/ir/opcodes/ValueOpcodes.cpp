@@ -92,8 +92,6 @@ bool HasSideEffects(ValueOpcode opcode) {
 		case ValueOpcode::SetAttribute:
 		case ValueOpcode::SetTessellationAttribute:
 		case ValueOpcode::MeshAllocate:
-		case ValueOpcode::BvhNodeDiag:
-		case ValueOpcode::DiagTrap:
 		case ValueOpcode::Barrier: return true;
 		default: return false;
 	}

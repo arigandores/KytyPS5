@@ -756,12 +756,6 @@ Opcode GateFixB26(Opcode opcode);
 // exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
 // the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
 bool   FixB1BEnabled();
-// Track F, F11d (HPP-466, ROADMAP p.376(v)): KYTY_DIAG_BVHNODES, default OFF (Common::EnvFlagOn: unset,
-// "", 0, false, off, no = off). On: IMAGE_BVH_INTERSECT_RAY and S_TRAP also emit the diagnostic opcodes
-// BvhNodeDiag / DiagTrap (node pointer counts by type and size field, traps; fault-buffer tail words,
-// SpirvEmitter.h DiagWordBase). Off: no new IR instruction, the SPIR-V is the same as without the code.
-// Read once per process; the translation cache keys the value (":diagbvh") in its signature and directory.
-bool   DiagBvhNodesEnabled();
 std::string OperandToString(const Operand& operand);
 const char* ImageDimensionToString(ImageDimension dimension);
 std::string InstructionToString(const Instruction& inst);

@@ -1,0 +1,9 @@
+[host]    LeastRecentlyUsedCache           ok
+[diag-dump] B1bBvhNodeAddress            words=14451
+[diag-dump] B1bBvhPaddingBitsIgnored     words=14451
+[diag-dump] B1bBvhFieldBit32             words=14455
+[diag-dump] B1bBvh64NodePointer          words=14646
+[diag-dump] DiagTrapExec0Wave32          words=364
+[diag-dump] DiagTrapExecAllWave32        words=364
+[diag-dump] DiagTrapExec0Wave64          words=522
+ALL OK

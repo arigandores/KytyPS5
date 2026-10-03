@@ -1,0 +1,15 @@
+[32m	 guest address-space self-test: ok
+[0m[32m	 direct-memory sub-64K placeholder self-test: ok
+[0m[host]    LeastRecentlyUsedCache           ok
+[diag] KYTY_DIAG_BVHNODES effective=0 KYTY_BVH_NATIVE=0 tail_offset=8388608 tail_bytes=64
+Shader translation cache: _ShaderCache\PPSA21564\variant_fixb26_fixb1b
+[diag]     cache signature=KytySC3:23f2e9d0a210e47e1f500eba542cd9c2b2c4795d:fixb26:fixb1b
+[diag]     cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b diagbvh_in_signature=0 diagbvh_in_dir=0
+Shader translation cache: disabled (unknown title or translator hash)
+FixSval: mode=1 ubo_std_layout=0
+AsyncPipelines: mode=1 workers=4
+S-pcw: KYTY_S_PCW=0 KYTY_S_PCW_FORCE_MS=0
+BvhLoopCap: cap=65536 token='' default_slot0=0
+[diag]     emulator fault buffer bytes=8388672
+ALL OK
+CsPretranslate: summary queued=0 ready=0 failed=0 hits=0 missed=0 evicted=0

@@ -1,0 +1,44 @@
+sha256 copy b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359 C:/kyty/f287/bin/kyty_emulator_b97efad4.exe
+sha256 install b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359 C:/kyty/f287/f11d/build/install/kyty_emulator.exe
+sha256 build_exe b97efad46a27b66b9999d9b788d3cf09f2d817a29592ea73060fd91744d2a359 C:/kyty/f287/f11d/build/kyty_emulator.exe
+sha256 tests_diag 6219ff38342680935cd907d4afd4a3391c1f4ee9fcb3753f202b72aba00d45f8 C:/kyty/f287/f11d/build/shader_recompiler_compute_tests.exe
+sha256 tests_base dd767f188203de0ed55fe8caa87753f546c8bc37f6a28af3c7bec28ed00bc1c2 C:/kyty/f287/f11d/tests_base.exe
+sha256 installed 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1 C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe
+copy contains c01451b0 1
+copy contains 23f2e9d0a210e47e1f500eba542cd9c2b2c4795d 1
+copy contains 56189185f9e9f9a0ea5174f3f85206e6d099db3d 0
+copy contains :diagbvh 1
+copy contains DiagBvhNodes: mode=1 1
+copy contains KYTY_DIAG_BVHNODES 1
+git parent c01451b0 (0, 'eecd671cbc2308cf848ae33ac3d82b9347c52dd6')
+git parent befeb824 (0, 'c01451b051bd13a0a0deb14b79892daa16779d45')
+git times (0, 'c01451b051bd13a0a0deb14b79892daa16779d45 2026-10-03T09:58:34+02:00\nbefeb824e384fb8863a0a05c406144c1bdc19a4c 2026-10-03T09:58:35+02:00')
+first-parent after eecd671c: n 10 pos c01451b0 [0] pos befeb824 [1]
+git diff --quiet eecd671c befeb824 (whole tree) rc 0
+git diff --quiet eecd671c befeb824 -- sigset rc 0
+git diff --quiet befeb824 HEAD -- src tests rc 0
+git diff --shortstat eecd671c c01451b0 (0, '16 files changed, 840 insertions(+), 16 deletions(-)')
+git diff --name-only b0a18f9d eecd671c -- src (0, 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp')
+git diff --name-only b0a18f9d eecd671c -- tests (0, '')
+ancestor 4e72289e of c01451b0 rc 0
+ancestor 68602c4f of c01451b0 rc 0
+ancestor 17adaf80 of c01451b0 rc 0
+wt HEAD (0, 'c01451b051bd13a0a0deb14b79892daa16779d45')
+wt status lines 0
+run base_nat0 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diagunset_nat0 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diag0_nat0 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diag1_nat0 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 7
+run base_nat1 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diagunset_nat1 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diag0_nat1 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 0
+run diag1_nat1 rc 0 ALL_OK True files 7 DiagBvhNodes_lines 7
+nat 0 unset equal to base 7 of 7
+nat 0 d0 equal to base 7 of 7
+nat 0 d1 differs from base 7 of 7
+nat 0 own base = F11d spv_base 7 of 7
+nat 1 unset equal to base 7 of 7
+nat 1 d0 equal to base 7 of 7
+nat 1 d1 differs from base 7 of 7
+nat 1 own base = F11d spv_base 7 of 7
+SPIRV0 ALL OK

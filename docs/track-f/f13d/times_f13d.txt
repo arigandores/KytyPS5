@@ -1,0 +1,8 @@
+2026-10-03T16:47:10Z F13d HPP-485 scans f13d_scan.py (327a1df9): markers.txt ff7578d0, trans.txt e17a0696, ramp_f13_k.txt 5b972d06, level_local.txt 1a02db2e (Red Team; offline, no game, no Vulkan)
+2026-10-03T16:49:18Z F13d HPP-485 scans rerun with save-memory markers f13d_scan.py (327a1df9): markers.txt ff7578d0, trans.txt e17a0696, ramp_f13_k.txt 5b972d06, level_local.txt 1a02db2e
+2026-10-03T16:50:17Z F13d HPP-485 scans v2 (+ save-memory markers slot_id/data_num/icon_memory_size; line 16:49:18 was a no-op rerun of v1 after a failed patch) f13d_scan.py (9c33110c): markers.txt b344a746, trans.txt e17a0696, ramp_f13_k.txt 5b972d06, level_local.txt 1a02db2e
+2026-10-03T16:50:36Z F13d HPP-485 save-memory writes of the parent non_interactive_credit (v146_07): f13d_peek07.py (e2f48a99) -> savek_v146_07.txt c332df20: 12 lines data_num at k 12396..12468 (worldmap load from k 12398)
+2026-10-03T16:54:21Z F13d HPP-485 start recorded late: first command 2026-10-03T16:34:59Z (date -u seen then; HEAD c5bff245, no lock, no STOP); lock F12f f12_v (file time 16:35:23Z) refused a command (exit 3), absent at 16:36:31Z; only small-file reads in between
+2026-10-03T16:54:24Z F13d HPP-485 report docs/track-f/f13d-review.md 5425c75f written: SOUND_WITH_CHANGES, 7 RC all textual, no data RC
+2026-10-03T16:54:24Z F13d HPP-485 FACTS.md section written (4e28c3ce)
+2026-10-03T16:54:38Z F13d HPP-485 CRLF->LF of refs_f13d.txt (9f8cc2a3) and savek_v146_07.txt (e0af74cd, was c332df20 with CRLF); sha_f13d_scan.txt rewritten

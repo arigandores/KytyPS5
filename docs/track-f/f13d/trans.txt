@@ -1,0 +1,54 @@
+== f13_k last_k_after_entry 14527
+       0 GuestOut: Level has started: ending_boss_after_credit
+  opens per 300 frames after entry: [(0, 988)]
+== f13_rd last_k_after_entry 14221
+       0 GuestOut: Level has started: ending_boss_after_credit
+  opens per 300 frames after entry: [(0, 1004)]
+== v146_08 last_k_after_entry 19945
+       0 GuestOut: Level has started: ending_boss_after_credit
+  opens per 300 frames after entry: [(0, 1000)]
+== w146_08 last_k_after_entry 18627
+       0 GuestOut: Level has started: ending_boss_after_credit
+  opens per 300 frames after entry: [(0, 968)]
+== v146_07 last_k_after_entry 31042
+       0 GuestOut: Level has started: non_interactive_credit
+   12406 LevelDocument Loaded: worldmap [worldmap]
+   12455 GuestOut: GAME:
+   12455 GuestOut: LoadLevelResources: worldmap : 0.805 sec.
+   12456 GuestOut: PLAY:
+   12456 GuestOut: [3:30] StartLevel worldmap : Heap Used 864.323MB, 887482
+   12462 GuestOut: GAME:
+   12462 GuestOut: Level has started:
+   12467 GuestOut: PLAY:
+   12467 GuestOut: SubLevelLocator silhouette_sublevel_locator1 [105122B6-4752-C9F0-DE1D-3E9666F8625D], restore to 7 (current: 6)
+   12467 GuestOut: PLAY:
+   12467 GuestOut: SubLevelLocator silhouette_sublevel_locator2 [000B6301-4D41-8586-0A26-5D86B140B016], restore to 7 (current: 6)
+   12467 GuestOut: PLAY:
+   12467 GuestOut: SubLevelLocator silhouette_sublevel_locator3 [A97D21EB-48C6-829F-309C-30B6DAE9B6CF], restore to 7 (current: 6)
+   12467 GuestOut: PLAY:
+   12467 GuestOut: SubLevelLocator silhouette_sublevel_locator4 [AD4D3442-40C0-3255-F3F7-EE85C693C24D], restore to 7 (current: 6)
+   12467 GuestOut: PLAY:
+   12467 GuestOut: SubLevelLocator silhouette_sublevel_locator5 [61323AF5-4F27-6873-5967-4B8B6B4F723D], restore to 7 (current: 6)
+   12468 GuestOut: PLAY:
+   12468 GuestOut: SubLevelLocator silhouette_sublevel_locator1 [105122B6-4752-C9F0-DE1D-3E9666F8625D], state changed 6->7
+   12468 GuestOut: PLAY:
+   12468 GuestOut: SubLevelLocator silhouette_sublevel_locator2 [000B6301-4D41-8586-0A26-5D86B140B016], state changed 6->7
+   12468 GuestOut: PLAY:
+   12468 GuestOut: SubLevelLocator silhouette_sublevel_locator3 [A97D21EB-48C6-829F-309C-30B6DAE9B6CF], state changed 6->7
+   12468 GuestOut: PLAY:
+   12468 GuestOut: SubLevelLocator silhouette_sublevel_locator4 [AD4D3442-40C0-3255-F3F7-EE85C693C24D], state changed 6->7
+   12468 GuestOut: PLAY:
+   12468 GuestOut: SubLevelLocator silhouette_sublevel_locator5 [61323AF5-4F27-6873-5967-4B8B6B4F723D], state changed 6->7
+   12469 GuestOut: GAME:
+   12469 GuestOut: Level has started: worldmap
+   12518 GuestOut: PLAY:
+   12518 GuestOut: SubLevelLocator sublevel_for_boss_cinematics [AC161DAD-4657-FA8B-590D-4CA760C6EABB], state changed 1->4
+   12547 LevelDocument Loaded: transition_next [transition_next]
+   12548 GuestOut: GAME:
+   12548 GuestOut: Level has started:
+   12555 GuestOut: GAME:
+   12555 GuestOut: Level has started: transition_next
+   12886 GuestOut: PLAY:
+   12886 GuestOut: SubLevelLocator silhouette_sublevel_locator1 [105122B6-4752-C9F0-DE1D-3E9666F8625D], state changed 7->6
+   13356 LevelDocument Loaded: hub_crashsite [hub_crashsite]
+  opens per 300 frames after entry: [(0, 913), (37, 357), (41, 5808), (42, 4), (44, 9861), (45, 4160)]

@@ -1,0 +1,80 @@
+== f13_k C:/kyty/f287/f13a/log_f13_k.txt (entry marker: Level has started: ending_boss_after_credit)
+  Unresolved import stub called    before_entry        0  after_entry        0
+  Late-resolved import             before_entry        0  after_entry        0
+  Relocate: unresolved             before_entry       71  after_entry        0
+  event_name =                     before_entry        2  after_entry        0
+  context =                        before_entry        5  after_entry        0
+  mount_point                      before_entry        0  after_entry        0
+  sync_param                       before_entry        0  after_entry        0
+  event_param                      before_entry        0  after_entry        0
+  SavePersist:                     before_entry        1  after_entry        0
+  GuestOut:                        before_entry       23  after_entry        0
+  LevelDocument Loaded:            before_entry        8  after_entry        0
+  Open:                            before_entry     8337  after_entry      988
+  slot_id                          before_entry        7  after_entry        0
+  data_num =                       before_entry        2  after_entry        0
+  icon_memory_size                 before_entry        1  after_entry        0
+== f13_rd C:/kyty/f287/f13a/log_f13_rd.txt (entry marker: Level has started: ending_boss_after_credit)
+  Unresolved import stub called    before_entry        0  after_entry        0
+  Late-resolved import             before_entry        0  after_entry        0
+  Relocate: unresolved             before_entry       71  after_entry        0
+  event_name =                     before_entry        2  after_entry        0
+  context =                        before_entry        5  after_entry        0
+  mount_point                      before_entry        0  after_entry        0
+  sync_param                       before_entry        0  after_entry        0
+  event_param                      before_entry        0  after_entry        0
+  SavePersist:                     before_entry        1  after_entry        0
+  GuestOut:                        before_entry       25  after_entry        0
+  LevelDocument Loaded:            before_entry        8  after_entry        0
+  Open:                            before_entry     8132  after_entry     1004
+  slot_id                          before_entry        7  after_entry        0
+  data_num =                       before_entry        2  after_entry        0
+  icon_memory_size                 before_entry        1  after_entry        0
+== v146_08 C:/kyty/s146/log_v146_08.txt (entry marker: Level has started: ending_boss_after_credit)
+  Unresolved import stub called    before_entry        0  after_entry        0
+  Late-resolved import             before_entry        0  after_entry        0
+  Relocate: unresolved             before_entry       87  after_entry        0
+  event_name =                     before_entry        2  after_entry        0
+  context =                        before_entry        5  after_entry        0
+  mount_point                      before_entry        0  after_entry        0
+  sync_param                       before_entry        0  after_entry        0
+  event_param                      before_entry        0  after_entry        0
+  SavePersist:                     before_entry        1  after_entry        0
+  GuestOut:                        before_entry       25  after_entry        0
+  LevelDocument Loaded:            before_entry        8  after_entry        0
+  Open:                            before_entry     8137  after_entry     1000
+  slot_id                          before_entry        7  after_entry        0
+  data_num =                       before_entry        2  after_entry        0
+  icon_memory_size                 before_entry        1  after_entry        0
+== w146_08 C:/kyty/s146/log_w146_08.txt (entry marker: Level has started: ending_boss_after_credit)
+  Unresolved import stub called    before_entry        0  after_entry        0
+  Late-resolved import             before_entry        0  after_entry        0
+  Relocate: unresolved             before_entry       87  after_entry        0
+  event_name =                     before_entry        2  after_entry        0
+  context =                        before_entry        5  after_entry        0
+  mount_point                      before_entry        0  after_entry        0
+  sync_param                       before_entry        0  after_entry        0
+  event_param                      before_entry        0  after_entry        0
+  SavePersist:                     before_entry        1  after_entry        0
+  GuestOut:                        before_entry       21  after_entry        0
+  LevelDocument Loaded:            before_entry        8  after_entry        0
+  Open:                            before_entry     8360  after_entry      968
+  slot_id                          before_entry        7  after_entry        0
+  data_num =                       before_entry        2  after_entry        0
+  icon_memory_size                 before_entry        1  after_entry        0
+== v146_07 C:/kyty/s146/log_v146_07.txt (entry marker: Level has started: non_interactive_credit)
+  Unresolved import stub called    before_entry        0  after_entry        0
+  Late-resolved import             before_entry        0  after_entry        0
+  Relocate: unresolved             before_entry       87  after_entry        0
+  event_name =                     before_entry        2  after_entry        0
+  context =                        before_entry        5  after_entry        0
+  mount_point                      before_entry        0  after_entry        0
+  sync_param                       before_entry        0  after_entry        1
+  event_param                      before_entry        0  after_entry        0
+  SavePersist:                     before_entry        1  after_entry        0
+  GuestOut:                        before_entry       27  after_entry       42
+  LevelDocument Loaded:            before_entry        8  after_entry        3
+  Open:                            before_entry     8155  after_entry    21103
+  slot_id                          before_entry        7  after_entry       12
+  data_num =                       before_entry        2  after_entry       12
+  icon_memory_size                 before_entry        1  after_entry        0

@@ -1,0 +1,130 @@
+== 1. binary provenance
+sha256 copy b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+sha256 build b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+sha256 install b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+sha256 final copy b714f5c4af578928243c1f1028e7b2acd65b733fce90f2e3cda5b6ae46d5eb5e
+sha256 installed 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+OK   copy = build = install = final copy
+OK   copy sha starts b714f5c4
+OK   installed is 540c035a
+OK   worktree HEAD = F12d code commit | 1833ee280ec177b65feb6c4a97f626b0d4ce1b9f
+OK   worktree status --porcelain empty | ''
+OK   CMakeCache home = worktree | C:/kyty/f287/f12d/wt
+CMAKE_BUILD_TYPE Release
+OK   kytyGitVersion revision
+OK   kytyGitVersion no -dirty
+KYTY_SHADER_SOURCE_HASH of the build e248e4a81f15bab54ff50e2617334c712f054412
+OK   copy contains e248e4a81f15bab54ff50e2617334c712f054412 x1 | 1
+OK   copy contains KYTY_FIX_F10 x1 | 1
+OK   copy contains :fixf10 x1 | 1
+OK   copy contains g1833ee28 x1 | 1
+OK   copy contains 56189185f9e9 x0 | 0
+OK   copy contains g1833ee28-dirty x0 | 0
+OK   copy contains 1833ee2-dirty x0 | 0
+== 2. git
+OK   parent of 1833ee28 = 01c8981b | 01c8981b6edbef929d85709909e3ef5a551d968a
+OK   ancestor 4e72289e of 1833ee28
+OK   ancestor 68602c4f of 1833ee28
+files of 1833ee28: src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h src/graphics/shader/recompiler/frontend/translate/Memory.cpp tests/ShaderRecompilerComputeTests.cpp
+OK   6 files
+OK   HEAD src/tests/CMakeLists = 1833ee28
+OK   one getenv("KYTY_FIX_F10") in src | ['1833ee280ec177b65feb6c4a97f626b0d4ce1b9f:src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:353:\tstatic const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_F10"));']
+FixF10Enabled() sites:
+    src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:584:	                            (ShaderRecompiler::Decoder::FixF10Enabled() ? ":fi
+    src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2234:	const bool fix_f10  = Decoder::FixF10Enabled();
+    src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp:352:bool FixF10Enabled() {
+    src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h:765:bool   FixF10Enabled();
+    src/graphics/shader/recompiler/frontend/translate/Memory.cpp:891:	const bool   fix_f10 = Decoder::FixF10Enabled();
+== 3. translator signature
+own hash 1833ee28 e248e4a81f15bab54ff50e2617334c712f054412 files 101
+own hash 01c8981b 56189185f9e9f9a0ea5174f3f85206e6d099db3d files 101
+OK   own hash 1833ee28 = build e248e4a8
+OK   own hash 01c8981b = 56189185
+== 4. =0 path by text
+OK   spirvEmitterMemory.cpp: every removed code line is an added line (else branch) | []
+OK   Memory.cpp: every removed code line is an added line (else branch) | []
+== 5. vertex selection formulas (code as written) vs GPURT b89f22aa
+OK   GPURT source table = F12a 1.2 table | {0: (0, 1, 2), 1: (1, 3, 2), 2: (2, 3, 4), 3: (2, 4, 0)}
+OK   =1 type 0 -> (0, 1, 2)
+OK   =1 type 1 -> (1, 3, 2)
+OK   =1 type 2 -> (2, 3, 4)
+OK   =1 type 3 -> (2, 4, 0)
+OK   =0 type 0 -> (0, 1, 2) (unchanged)
+OK   =0 type 1 -> (1, 3, 2) (unchanged)
+OK   is_tri =1 is t<4 = GPURT <= TRIANGLE_3
+== 6. own reference (float32, GPURT fast_intersect_triangle + SwizzleBarycentrics)
+OK   10 rays parsed from the test | 10
+OK   F10Type0Hit    =1 own ref | c3980000 c2800000 c1800000 c2000000
+OK   F10Type0Hit    =0 own ref
+OK   F10Type0Miss   =1 own ref | 7f800000 3f800000 41800000 c2c00000
+OK   F10Type0Miss   =0 own ref
+OK   F10Type1Hit    =1 own ref | c3a80000 c2800000 c2000000 c1800000
+OK   F10Type1Hit    =0 own ref
+OK   F10Type1Miss   =1 own ref | 7f800000 3f800000 c2c00000 42a20000
+OK   F10Type1Miss   =0 own ref
+OK   F10Type2Hit    =1 own ref | c3b80000 c2800000 c2000000 c1800000
+OK   F10Type2Hit    =0 own ref
+OK   F10Type2Hit    no other vertex triple gives the same words | 0
+   F10Type2Hit: ID byte of type 0 instead of 2 gives the same words: False
+   F10Type2Hit: ID byte of type 1 instead of 2 gives the same words: False
+   F10Type2Hit: ID byte of type 3 instead of 2 gives the same words: False
+OK   F10Type2Miss   =1 own ref | 7f800000 3f800000 c1f80000 41800000
+OK   F10Type2Miss   =0 own ref
+OK   F10Type3Hit    =1 own ref | c3a80000 c2800000 c1800000 c1800000
+OK   F10Type3Hit    =0 own ref
+OK   F10Type3Hit    no other vertex triple gives the same words | 0
+   F10Type3Hit: ID byte of type 0 instead of 3 gives the same words: True
+   F10Type3Hit: ID byte of type 1 instead of 3 gives the same words: False
+   F10Type3Hit: ID byte of type 2 instead of 3 gives the same words: False
+OK   F10Type3Miss   =1 own ref | 7f800000 3f800000 41800000 41800000
+OK   F10Type3Miss   =0 own ref
+OK   F10Type6       =1 own ref | ffffffff ffffffff ffffffff ffffffff
+OK   F10Type6       =0 own ref
+OK   F10Type7       =1 own ref | ffffffff ffffffff ffffffff ffffffff
+OK   F10Type7       =0 own ref
+OK   mix: active lanes 8 of each type 0..3
+OK   mix: in each host subgroup of 32 all four types
+OK   mix: exec 0x55555555 lo and hi in the case
+== 7. SPIR-V of the 15 test cases
+OK   base nat0 has 15 files | 15
+OK   f100 nat0: 15 of 15 equal base
+OK   f10unset nat0: 15 of 15 equal base
+OK   f101 nat0: 0 of 15 equal base (want 0)
+OK   base nat1 has 15 files | 15
+OK   f100 nat1: 15 of 15 equal base
+OK   f10unset nat1: 15 of 15 equal base
+OK   f101 nat1: 0 of 15 equal base (want 0)
+== 8. corpus T1 from the files
+BVH programs in t1scan 14
+corpus {'rows': 280, 'eq0': 280, 'equ': 280, 'bvh_rows': 22, 'bvh_ne1': 22, 'non_ne1': 0, 'missing': 0}
+OK   corpus rows 280, none missing
+OK   =0 = base on all rows
+OK   unset = base on all rows
+OK   =1 differs on every BVH row (22)
+OK   =1 = base on every non-BVH row
+OK   programs with a =1 difference = 9, all BVH | ['1f16e50eea0c89e3', '380bb9d636390bae', '503d7f066a496c3c', '5323c4ef4f785055', '56a15431999c5a2d', 'cd94166bf3f2bb81', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'ff8ee744ffa4dcdc']
+BVH programs without a translated row: ['559a0fa9def7a691', '7ede18ae55120a48', 'a763fb769f3167ec', 'b76e569142635733', 'd234cf2781dabb34'] [('C', 'cs', 'NO_GCN'), ('D', 'cs', 'OLD_SIGNATURE')]
+A rows HARNESS_UNSUPPORTED (vs/ms, not translated by either build): 571
+OK   no BVH program among HARNESS_UNSUPPORTED A rows
+spv380 files 19
+    3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 cs_380bb9d636390bae_fe70c334a8301128_0_base.spv
+    9099e4268d3db232aa7a51a00d9f1b8e331648d3f2c25bcec16d3cd9dc37001e cs_380bb9d636390bae_fe70c334a8301128_0_base_ir.spv
+    3e034e543b3c8d5cac27a617bcc2c0ac6282f71556b8c5cbdf2122daf305d6f6 cs_380bb9d636390bae_fe70c334a8301128_0_f0.spv
+    9099e4268d3db232aa7a51a00d9f1b8e331648d3f2c25bcec16d3cd9dc37001e cs_380bb9d636390bae_fe70c334a8301128_0_f0_ir.spv
+    111713caa4076d3d7973f956994c66ba91764ec581030839a7b008cac8f605b3 cs_380bb9d636390bae_fe70c334a8301128_0_f1.spv
+    51436162006f70c6545ae2189ef6f34b481c84410e5e5a2fdb5e3abae3393e56 cs_380bb9d636390bae_fe70c334a8301128_0_f1_ir.spv
+== 9. gate logs
+OK   gate f100 nat0: 15 ok, ALL OK, effective 0, token ('0', '0', '0', '0')
+OK   gate f100 nat1: 15 ok, ALL OK, effective 0, token ('0', '0', '0', '0')
+OK   gate f101 nat0: 15 ok, ALL OK, effective 1, token ('1', '1', '1', '1')
+OK   gate f101 nat1: 15 ok, ALL OK, effective 1, token ('1', '1', '1', '1')
+OK   gate f10unset nat0: 15 ok, ALL OK, effective 0, token ('0', '0', '0', '0')
+OK   gate f10unset nat1: 15 ok, ALL OK, effective 0, token ('0', '0', '0', '0')
+== cfg tests
+f100 tests 127 ShaderCfgTests: failed lines 2
+f101 tests 127 ShaderCfgTests: failed lines 2
+f10unset tests 127 ShaderCfgTests: failed lines 2
+OK   cfg logs equal across unset/0/1
+== verdict
+FAILED: []
+ALL OK

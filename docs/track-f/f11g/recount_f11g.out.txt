@@ -1,0 +1,11 @@
+d11_sg lanes_lines 2 mode_lines 1 BvhLoopCapTrip 0 level_lines 2
+   {'lanes': '140956303', 't0': '5075932', 't1': '3806949', 't2': '2537966', 't3': '3806949', 't4': '0', 't5': '125681284', 't6': '47223', 't7': '0', 'size_viol': '0', 'b_tri': '0/0/0/0', 'b_box': '0/0/0/0', 'b_t7': '0/0/0/0', 'traps': '0', 'trap_lanes': '0'}
+   sum_ok True t0==2*t2 True 2*t1==3*t2 True t1==t3 True
+d11_ef lanes_lines 0 mode_lines 1 BvhLoopCapTrip 0 level_lines 2
+  no lanes= line
+d11_vw lanes_lines 2 mode_lines 1 BvhLoopCapTrip 0 level_lines 2
+   {'lanes': '45732598', 't0': '938464', 't1': '703848', 't2': '469232', 't3': '703848', 't4': '0', 't5': '42917206', 't6': '0', 't7': '0', 'size_viol': '0', 'b_tri': '0/0/0/0', 'b_box': '0/0/0/0', 'b_t7': '0/0/0/0', 'traps': '0', 'trap_lanes': '0'}
+   sum_ok True t0==2*t2 True 2*t1==3*t2 True t1==t3 True
+d11_bh lanes_lines 2 mode_lines 1 BvhLoopCapTrip 0 level_lines 2
+   {'lanes': '19235385', 't0': '109048', 't1': '81786', 't2': '54524', 't3': '81786', 't4': '0', 't5': '18908241', 't6': '0', 't7': '0', 'size_viol': '0', 'b_tri': '0/0/0/0', 'b_box': '0/0/0/0', 'b_t7': '0/0/0/0', 'traps': '0', 'trap_lanes': '0'}
+   sum_ok True t0==2*t2 True 2*t1==3*t2 True t1==t3 True

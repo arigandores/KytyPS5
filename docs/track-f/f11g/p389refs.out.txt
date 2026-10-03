@@ -1,0 +1,9 @@
+e442ec59:docs/ROADMAP.md:20096 anchor=OK +1=OK
+e442ec59:docs/ROADMAP.md:20434 anchor=OK +1=OK
+e442ec59:docs/ROADMAP.md:20486 anchor=OK +1=OK
+e442ec59:docs/track-f/f11f.md:178 anchor=OK +1=OK
+e442ec59:docs/track-f/f11f.md:51 anchor=OK +1=OK
+e442ec59:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2232 anchor=OK +1=OK
+e442ec59:docs/track-f/register.md:585 anchor=OK +1=OK
+7 refs
+ALL OK

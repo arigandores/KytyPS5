@@ -1334,6 +1334,19 @@ void DumpShaderGcnRegistered(uint8_t binary_type, uint64_t shader_hash, const vo
 	     size_bytes / 4u);
 }
 
+// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): KYTY_FIX_SVAL (default OFF: unset, "", 0/false/off/no = OFF,
+// as Common::EnvValueOn; read once). ON: ValidateShaderSpirv validates with spvtools::ValidatorOptions where
+// SetUniformBufferStandardLayout(true) is set if and only if the device enabled uniformBufferStandardLayout
+// (g_fix_sval_ubo_std_layout: stored by the PipelineCache constructor from GraphicContext before its workers start and
+// before any translation), and logs "FixSvalStat: validated=<n> rejected=<m>" on every 256th check (n - checks made,
+// m - checks rejected). OFF: the old call tools.Validate(spirv) without options, no counters, no line.
+bool FixSvalEnabled() {
+	static const bool enabled = Common::EnvValueOn(std::getenv("KYTY_FIX_SVAL"));
+	return enabled;
+}
+
+std::atomic<bool> g_fix_sval_ubo_std_layout {false};
+
 bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
                          const std::vector<uint32_t>& spirv) {
 	if (!Config::ShaderValidationEnabled()) {
@@ -1347,7 +1360,28 @@ bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
 		                        static_cast<int>(position.column), static_cast<int>(position.index),
 		                        message);
 	});
-	if (tools.Validate(spirv)) {
+	// Track F, F10c (KYTY_FIX_SVAL, see FixSvalEnabled): ON - the options of the device; OFF - the old call.
+	bool valid = false;
+	if (FixSvalEnabled()) {
+		spvtools::ValidatorOptions options;
+		if (g_fix_sval_ubo_std_layout.load(std::memory_order_acquire)) {
+			options.SetUniformBufferStandardLayout(true);
+		}
+		valid = tools.Validate(spirv.data(), spirv.size(), options);
+		static std::atomic<uint64_t> validated {0};
+		static std::atomic<uint64_t> rejected {0};
+		if (!valid) {
+			rejected.fetch_add(1, std::memory_order_relaxed);
+		}
+		const uint64_t checks = validated.fetch_add(1, std::memory_order_relaxed) + 1;
+		if (checks % 256u == 0) {
+			LOGF("FixSvalStat: validated=%" PRIu64 " rejected=%" PRIu64 "\n", checks,
+			     rejected.load(std::memory_order_relaxed));
+		}
+	} else {
+		valid = tools.Validate(spirv);
+	}
+	if (valid) {
 		return true;
 	}
 	spvtools::SpirvTools disassembler(SPV_ENV_VULKAN_1_2);
@@ -4625,6 +4659,11 @@ struct PipelineCache::ProgramCache {
 PipelineCache::PipelineCache(GraphicContext& graphics)
     : m_graphics(graphics), m_program_cache(std::make_unique<ProgramCache>(graphics.device)) {
 	EXIT_NOT_IMPLEMENTED(!Common::Thread::IsMainThread());
+	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b)): the device value for ValidateShaderSpirv, stored before
+	// StartWorkers / StartPrecache below; CompilePermutation (the only caller) runs only through this object.
+	g_fix_sval_ubo_std_layout.store(graphics.uniform_buffer_standard_layout_enabled, std::memory_order_release);
+	LOGF("FixSval: mode=%d ubo_std_layout=%d\n", FixSvalEnabled() ? 1 : 0,
+	     graphics.uniform_buffer_standard_layout_enabled ? 1 : 0);
 	InitializeDriverCache();
 	if (AsyncPipelinesMode() != 0) {
 		StartWorkers();

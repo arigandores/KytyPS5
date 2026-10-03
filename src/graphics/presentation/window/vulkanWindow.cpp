@@ -703,6 +703,8 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
 	// Const bank: S_BUFFER_LOAD constants through uniform buffers (stride-4/8 arrays need
 	// uniformBufferStandardLayout; out-of-range zero-fill needs robustBufferAccess2).
 	features12.uniformBufferStandardLayout = supported_features12.uniformBufferStandardLayout;
+	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b)): the value enabled here, for the SPIR-V check (KYTY_FIX_SVAL=1).
+	graphics.uniform_buffer_standard_layout_enabled = features12.uniformBufferStandardLayout == VK_TRUE;
 	ShaderRecompiler::IR::SetConstBankSupported(features12.uniformBufferStandardLayout == VK_TRUE &&
 	                                            graphics.robust_buffer_access2_enabled);
 	LOGF("Vulkan uniformBufferStandardLayout: %s (const-bank constant loads %s)\n",

@@ -61,6 +61,9 @@ struct GraphicContext {
 	// supported) and its limit; CreatePipelineInternal builds the Location 0 Index 1 variant of the pixel module.
 	bool                               dual_src_blend_enabled                = false;
 	uint32_t                           max_fragment_dual_src_attachments     = 0;
+	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): uniformBufferStandardLayout as enabled on the device
+	// (set in VulkanCreateDevice next to features12); PipelineCache copies it for ValidateShaderSpirv (KYTY_FIX_SVAL=1).
+	bool                               uniform_buffer_standard_layout_enabled = false;
 	// VK_EXT_external_memory_host (KYTY_HOST_IMPORT, default on): guest direct memory imported
 	// as Vulkan buffers, so texture uploads read guest memory over PCIe without a host copy.
 	bool                               external_memory_host_enabled          = false;

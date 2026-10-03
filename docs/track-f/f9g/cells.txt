@@ -1,0 +1,40 @@
+# F9g cell table (executor, by eye; sign of seal section 5). sheet | cells | tiles | no pond | tile cells (video frame v)
+c0_rot4_01 | 36 | 14 | 10 | f3840 f3855 f3870 f3885 f3900 f3915 f3930 f3945 f4050 f4140 f4155 f4170 f4185 f4290
+c0_rot4_02 | 36 | 13 | 9 | f4380 f4395 f4410 f4425 f4530 f4545 f4620 f4635 f4650 f4665 f4770 f4845 f4860
+c0_rot4_03 | 36 | 16 | 9 | f4950 f4965 f4980 f4995 f5010 f5100 f5115 f5190 f5205 f5220 f5235 f5340 f5355 f5385 f5430 f5445
+c0_rot4_04 | 26 | 12 | 2 | f5460 f5475 f5580 f5595 f5610 f5625 f5670 f5685 f5700 f5715 f5820 f5835
+v1_rot4_01 | 36 | 0 | - | -
+v1_rot4_02 | 36 | 0 | - | -
+v1_rot4_03 | 36 | 0 | - | -
+v1_rot4_04 | 26 | 0 | - | - (f5460: red round game object in the pond - not the sign)
+v1_static4_01 | 36 | 0 | 0 | -
+v1_static4_02 | 36 | 0 | 0 | -
+v1_static4_03 | 36 | 0 | 0 | -
+v1_static4_04 | 36 | 0 | 0 | -
+v1_static4_05 | 36 | 0 | 0 | -
+v1_static4_06 | 36 | 0 | 0 | -
+v1_static4_07 | 36 | 0 | 0 | -
+v1_static4_08 | 19 | 0 | 0 | -
+v1_1fps_01 | 48 | 0 | - | -
+v1_1fps_02 | 48 | 0 | - | - (f5460: red round game object)
+v1_1fps_03 | 48 | 0 | - | -
+v1_1fps_04 | 23 | 0 | - | -
+v2_rot4_01 | 36 | 0 | - | -
+v2_rot4_02 | 36 | 0 | - | -
+v2_rot4_03 | 36 | 0 | - | -
+v2_rot4_04 | 26 | 0 | - | - (f5730: red object at the frame edge)
+v2_static4_01 | 36 | 0 | 0 | -
+v2_static4_02 | 36 | 0 | 0 | -
+v2_static4_03 | 36 | 0 | 0 | -
+v2_static4_04 | 36 | 0 | 0 | -
+v2_static4_05 | 36 | 0 | 0 | -
+v2_static4_06 | 36 | 0 | 0 | -
+v2_static4_07 | 36 | 0 | 0 | -
+v2_static4_08 | 21 | 0 | 0 | -
+c0_static4_01 | 36 | 36 | 0 | all cells (f5950..f6475)
+c0_static4_08 | 6 | 6 | 0 | all cells (f9730..f9805)
+c0_static4_02..07 | 216 | not counted cell by cell (member (g)(2) needs >= 1; the lead counts independently) | - | -
+v2_1fps_01 | 48 | 0 | - | -
+v2_1fps_02 | 48 | 0 | - | -
+v2_1fps_03 | 48 | 0 | - | -
+v2_1fps_04 | 24 | 0 | - | -

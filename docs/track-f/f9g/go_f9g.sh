@@ -32,6 +32,11 @@ WANT=4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
 SEAL=$G/pred/f9g_seal.md
 VKLAYER="C:/VulkanSDK/1.4.357.0/Bin"
 GLDIR="$USERPROFILE/AppData/Local/NVIDIA/GLCache"
+# nvidia-smi of enter_scene.py needs these in the env (platform trap 7; form of go_fs2.sh)
+export ProgramFiles="${ProgramFiles:-C:\Program Files}"
+export ProgramData="${ProgramData:-C:\ProgramData}"
+export LOCALAPPDATA="${LOCALAPPDATA:-$USERPROFILE\AppData\Local}"
+export APPDATA="${APPDATA:-$USERPROFILE\AppData\Roaming}"
 T=${1:-}
 case "$T" in
   f9g_v1|f9g_v2|f9g_v1r|f9g_v2r|f9g_c0|f9g_c0r|f9g_w|f9g_wr|f9g_sg|f9g_hb) ;;

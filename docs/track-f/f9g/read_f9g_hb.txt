@@ -1,0 +1,18 @@
+F9G f9g_hb kind hb level hoover_beach log sha256 3652a7c7ad0b6303a75498aef1d7a12fefcd50e2e7edccda61f3cff88960fc39 lines 1981055
+  form: FixB42 mode values [1] (expected 1) -> OK; GamePatch lines 0 (expected 0); torn FixB42 lines 0
+  entry line 221463; scene change line None; first scene frame n 257; hold (sum dt after it) 331.9 s
+  frames >= 1 s after the first scene frame: 0 (max dt_us 84390); all rows 0 (max 84390) - reference
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0
+  video index records 20075; FrameTrace rows 20065; InputScript lines 0, release present 5945 False; present offset None; last present None
+  FixB42 lines 289; per extent (last counters): 480x270 hit 1 applied 1 drawn 0 rearm 0; 608x342 hit 2 applied 2 drawn 0 rearm 0; 832x468 hit 1 applied 1 drawn 0 rearm 0; 960x540 hit 1 applied 1 drawn 0 rearm 0; 1920x1080 hit 4 applied 3 drawn 0 rearm 3; 2432x1368 hit 12 applied 10 drawn 263 rearm 10; 3328x1872 hit 6 applied 5 drawn 8477 rearm 5; 3840x2160 hit 236 applied 236 drawn 10357 rearm 235; hit_all max 322
+  extent 960x540: lines 1, hit max 1, drawn max 0; first line with growth of applied {'line': 46766, 'present': None, 'phase': 'unknown', 'hit': 1, 'applied': 1, 'last_frame': 20}; such lines in the static phase 0; violations (growth hit > growth applied) 0 []
+  clear (reference, item 351 (g)(3)): ['480x270 00000000/00000000', '960x540 00000000/00000000']; cmask of 960x540: ['571728000']
+  AsyncPipelines: skipped draw 0 (reference)
+  ROW hit=0 by the letter (no line hit_all >= 1) -> NOT READABLE, one repeat: NO
+  ROW executor variant: extent 960x540 hit = 0: NO
+  ROW 0 death markers: YES
+  ROW 0 frames >= 1 s after the first scene frame: YES
+  ROW entered (entry line of hoover_beach): YES
+  ROW video index records >= 3000: YES
+  ROW hold >= 300 s (sum dt after the first scene frame): YES

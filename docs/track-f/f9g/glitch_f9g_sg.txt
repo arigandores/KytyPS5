@@ -1,0 +1,2 @@
+rec_f9g_sg.mp4: 10205 frames 960x540, index entries 10205
+one-frame glitches: 0

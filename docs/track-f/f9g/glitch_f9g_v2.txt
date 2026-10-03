@@ -1,0 +1,2 @@
+rec.mp4: 10037 frames 960x540, index entries 10037
+one-frame glitches: 0

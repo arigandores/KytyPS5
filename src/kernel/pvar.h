@@ -19,6 +19,11 @@
 // Item 348(v) (P30b): all the times of the hold and of the "PVar:" line (the vblank time, M0, the wait, the deadline,
 // slack_us, wait_us, exit_us, t_us) are one monotonic host clock in us from the process start, not the guest clock
 // (KernelGetProcessTime stands still in the freezes and runs at the guest speed; the vblanks and the sleep are host time).
+//
+// Track P, iteration D1-3 (ROADMAP s122 item 373(d); docs/track-p/p40-backoff.md): the growing hold at kt 3 - the descent
+// 3 -> 2 after nh fitting frames, nh in {30, 60, 120}, doubled by a return to kt 3 within 60 lines of the descent and back
+// to 30 after 60 lines without it; the descent 2 -> 1 after 30. The "PVar:" line gains the last field nh= (after this
+// M0; nh=0 without the hold). The wait, the slack, the rise and Advance are those of D1-1/D1-2.
 
 #ifndef KYTY_PVAR_ARITHMETIC_ONLY
 #include "common/abi.h"
@@ -57,44 +62,85 @@ constexpr Step Advance(uint64_t d, int32_t c) {
 	return s;
 }
 
-// Item 346(g)(2)-(3): the hold arithmetic. kt, fit - the writer state before this M0; d - vblanks between the two M0
-// after the wait; slack_us - the time from this M0 (before the wait) to the vblank v_prev + kt.
+// Item 346(g)(2)-(3), item 373(d): the hold arithmetic. st - the writer state before this M0; d - vblanks between the
+// two M0 after the wait; slack_us - the time from this M0 (before the wait) to the vblank v_prev + kt.
 //   d > kt (the frame is late)       -> kt = min(d, 3), fit = 0 (up at once; kt 3 stays 3);
-//   else slack_us >= 18 667 (fits)  -> fit + 1, else fit = 0;
-//        fit reaches N and kt > 1    -> kt - 1, fit = 0 (down at most once per N frames; at kt 1 fit stays at N).
-// N = HOLD_FIT_N = 90 (item 361(g), iteration D1-2; 30 in D1-1).
+//   else slack_us >= 18 667 (fits)  -> fit + 1 (saturating at n), else fit = 0;
+//        fit reaches n and kt > 1    -> kt - 1, fit = 0 (down at most once per n frames; at kt 1 fit stays at n);
+//   n = HoldDescentN(kt, nh): nh at kt 3 (the descent 3 -> 2), HOLD_FIT_N = 30 at kt 2 and 1 (the descent 2 -> 1).
+// The growing hold at kt 3 (item 373(d)(2)): nh in {30, 60, 120}, 30 at the start. A descent 3 -> 2 opens a window of
+// HOLD_WINDOW = 60 lines - the next 60 M0 (one "PVar:" line each); left - the lines of the window still to come:
+//   a rise to kt 3 (from 2 or 1) on lines 1..60 of the window -> the return: nh = min(2 * nh, 120), the window closes;
+//   line 60 of the window without a rise to kt 3             -> the quiet: nh = 30, the window closes.
+// A rise to kt 3 outside a window (before the first descent 3 -> 2, or after the quiet) leaves nh as it is.
+// D1-1: N = 30 for both descents; D1-2: N = 90 for both (item 361(g)).
 inline constexpr uint32_t HOLD_KT_START = 2;
 inline constexpr uint32_t HOLD_KT_MAX   = 3;
-inline constexpr uint32_t HOLD_FIT_N    = 90;
+inline constexpr uint32_t HOLD_FIT_N    = 30;    // the descent 2 -> 1 (item 373(d)(1))
+inline constexpr uint32_t HOLD_NH_START = 30;    // nh at the start and after the quiet
+inline constexpr uint32_t HOLD_NH_MAX   = 120;
+inline constexpr uint32_t HOLD_WINDOW   = 60;    // the lines after a descent 3 -> 2: the return / the quiet
 inline constexpr int64_t  HOLD_SLACK_US = 18667; // 1 vblank + 2 000 us
+
+struct HoldState {
+	uint32_t kt   = HOLD_KT_START;
+	uint32_t fit  = 0;
+	uint32_t nh   = HOLD_NH_START;
+	uint32_t left = 0; // 0 - no window
+};
 
 struct HoldStep {
 	uint32_t kt   = HOLD_KT_START;
 	uint32_t fit  = 0;
+	uint32_t nh   = HOLD_NH_START;
+	uint32_t left = 0;
 	uint32_t late = 0; // d > kt
 	int32_t  move = 0; // +1 kt went up, -1 down, 0 unchanged
 };
 
-constexpr HoldStep Hold(uint32_t kt, uint32_t fit, uint64_t d, int64_t slack_us) {
+constexpr uint32_t HoldDescentN(uint32_t kt, uint32_t nh) {
+	return kt >= HOLD_KT_MAX ? nh : HOLD_FIT_N;
+}
+
+constexpr HoldStep Hold(HoldState st, uint64_t d, int64_t slack_us) {
 	HoldStep s;
-	s.kt  = kt;
-	s.fit = fit;
-	if (d > kt) {
+	s.kt   = st.kt;
+	s.fit  = st.fit;
+	s.nh   = st.nh;
+	s.left = st.left;
+	if (d > st.kt) {
 		s.late = 1;
 		s.kt   = d < HOLD_KT_MAX ? static_cast<uint32_t>(d) : HOLD_KT_MAX;
 		s.fit  = 0;
-		s.move = s.kt > kt ? 1 : 0;
-		return s;
-	}
-	if (slack_us >= HOLD_SLACK_US) {
-		s.fit = fit < HOLD_FIT_N ? fit + 1 : HOLD_FIT_N;
+		s.move = s.kt > st.kt ? 1 : 0;
 	} else {
-		s.fit = 0;
+		const uint32_t n = HoldDescentN(st.kt, st.nh);
+		if (slack_us >= HOLD_SLACK_US) {
+			s.fit = st.fit < n ? st.fit + 1 : n;
+		} else {
+			s.fit = 0;
+		}
+		if (s.fit >= n && s.kt > 1) {
+			s.kt   = s.kt - 1;
+			s.fit  = 0;
+			s.move = -1;
+		}
 	}
-	if (s.fit >= HOLD_FIT_N && s.kt > 1) {
-		s.kt   = s.kt - 1;
-		s.fit  = 0;
-		s.move = -1;
+	// The window of the last descent 3 -> 2: this M0 is its line HOLD_WINDOW - st.left + 1.
+	if (st.left > 0) {
+		if (s.move > 0 && s.kt == HOLD_KT_MAX) {
+			const uint32_t twice = 2 * st.nh;
+			s.nh                 = twice < HOLD_NH_MAX ? twice : HOLD_NH_MAX;
+			s.left               = 0;
+		} else {
+			s.left = st.left - 1;
+			if (s.left == 0) {
+				s.nh = HOLD_NH_START;
+			}
+		}
+	}
+	if (s.move < 0 && st.kt == HOLD_KT_MAX) {
+		s.left = HOLD_WINDOW;
 	}
 	return s;
 }

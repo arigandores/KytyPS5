@@ -77,6 +77,8 @@ struct Writer {
 	Cells    last {};
 	uint32_t kt      = HOLD_KT_START; // item 346(g): the hold target, used only with g_hold
 	uint32_t fit     = 0;
+	uint32_t nh      = HOLD_NH_START; // item 373(d)(2): the descent 3 -> 2 constant
+	uint32_t left    = 0;             // the lines left of the window after a descent 3 -> 2
 };
 
 Writer g_writer_state; // the writer thread only
@@ -171,15 +173,18 @@ void OnM0() {
 	st.v_prev           = v;
 	const Step     step = Advance(d, st.c);
 	st.c                = step.c;
-	// Item 346(g)(2)-(3): up on a late frame, down after 30 fitting frames; the fields: kt - the target of this M0,
-	// fit - after this M0.
+	// Item 346(g)(2)-(3), item 373(d): up on a late frame, down after HoldDescentN fitting frames (nh at kt 3, 30 at
+	// kt 2); the fields: kt - the target of this M0, fit and nh - after this M0 (kt, fit, nh 0 without the hold).
 	HoldStep hs;
 	hs.kt  = 0;
 	hs.fit = 0;
+	hs.nh  = 0;
 	if (hold) {
-		hs     = Hold(st.kt, st.fit, d, slack);
-		st.kt  = hs.kt;
-		st.fit = hs.fit;
+		hs      = Hold(HoldState {st.kt, st.fit, st.nh, st.left}, d, slack);
+		st.kt   = hs.kt;
+		st.fit  = hs.fit;
+		st.nh   = hs.nh;
+		st.left = hs.left;
 	}
 
 	const uint64_t base = g_base.load(std::memory_order_relaxed);
@@ -231,8 +236,9 @@ void OnM0() {
 	// mode 2 write is at the frame boundary, ph = 0 by construction, so these counters are never added.
 
 	LOGF("PVar: n=%" PRIu64 " w=%" PRIu64 " d=%" PRIu64 " kraw=%" PRIu64 " c=%d k=%u s_us=%" PRIu64 " vb=%" PRIu64
-	     " ph=0 mode=2 kt=%u fit=%u wait_us=%" PRId64 " slack_us=%" PRId64 " late=%u t_us=%" PRIu64 " exit_us=%" PRId64 "\n",
-	     n, st.w, d, d, st.c, step.k, cells.step_us, v, kt, hs.fit, wait_us, slack, hs.late, t0, exit_us);
+	     " ph=0 mode=2 kt=%u fit=%u wait_us=%" PRId64 " slack_us=%" PRId64 " late=%u t_us=%" PRIu64 " exit_us=%" PRId64
+	     " nh=%u\n",
+	     n, st.w, d, d, st.c, step.k, cells.step_us, v, kt, hs.fit, wait_us, slack, hs.late, t0, exit_us, hs.nh);
 }
 
 } // namespace

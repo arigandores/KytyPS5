@@ -1,0 +1,100 @@
+T6-format life windows (video frame v = present - 1; host s = .idx time)
+image              v_from   v_to p_from   p_to    s_from      s_to  end                    ImageWatch upload of 0x53cc10000 in window
+480x270@538bc0000      26     39     27     40     1.350     1.600  operator():3580        -
+960x540@53cc10000      44     46     45     47     1.683     1.717  operator():3580        -
+960x540@53cc10000     373    377    374    378     7.333     7.533  operator():3580        v373(line 241213)
+480x270@538bc0000     393   1739    394   1740     8.200    54.050  operator():3580        -
+960x540@53cc10000    1755   1894   1756   1895    54.316    56.666  ResolveOverlap:1104    v1755(line 462462)
+480x270@538bc0000    1906   1981   1907   1982    56.950    58.966  operator():3580        -
+960x540@53cc10000    1997   2134   1998   2135    59.233    61.550  ResolveOverlap:1104    v1997(line 492682)
+480x270@538bc0000    2146   2223   2147   2224    61.867    63.867  operator():3580        -
+960x540@53cc10000    2240   2374   2241   2375    64.150    66.416  ResolveOverlap:1104    v2240(line 522507)
+480x270@538bc0000    2386   2462   2387   2463    66.700    68.650  operator():3580        -
+960x540@53cc10000    2485   2619   2486   2620    69.033    71.301  ResolveOverlap:1104    v2485(line 552576)
+480x270@538bc0000    2631   2641   2632   2642    71.500    71.683  operator():3580        -
+960x540@53cc10000    2657   2799   2658   2800    71.950    74.350  ResolveOverlap:1104    v2657(line 572717)
+480x270@538bc0000    2810   2885   2811   2886    74.617    76.683  operator():3580        -
+960x540@53cc10000    2901   3039   2902   3040    76.950    79.267  ResolveOverlap:1104    v2901(line 613158)
+480x270@538bc0000    3050   3127   3051   3128    79.550    81.483  operator():3580        -
+960x540@53cc10000    3143   3278   3144   3279    81.750    84.016  ResolveOverlap:1104    v3143(line 643534)
+480x270@538bc0000    3290   3376   3291   3377    84.316    86.433  operator():3580        -
+960x540@53cc10000    3392   3518   3393   3519    86.700    88.816  ResolveOverlap:1104    v3392(line 676517)
+480x270@538bc0000    3530   3609   3531   3610    89.100    91.017  operator():3580        -
+960x540@53cc10000    3626   3703   3627   3704    91.300    92.633  ResolveOverlap:1104    v3626(line 707291)
+960x540@53cc10000    3740   3941   3741   3942    93.250    96.633  ResolveOverlap:1104    v3740(line 724226)
+480x270@538bc0000    3952   4033   3953   4034    96.967    99.183  operator():3580        -
+960x540@53cc10000    4060   4180   4061   4181    99.633   101.668  ResolveOverlap:1104    v4060(line 773730)
+480x270@538bc0000    4192   4270   4193   4271   101.984   104.150  operator():3580        -
+960x540@53cc10000    4292   4420   4293   4421   104.517   106.684  ResolveOverlap:1104    v4292(line 802606)
+480x270@538bc0000    4432   4508   4433   4509   107.000   109.033  operator():3580        -
+960x540@53cc10000    4532   4660   4533   4661   109.433   111.600  ResolveOverlap:1104    v4532(line 832079)
+480x270@538bc0000    4672   4750   4673   4751   111.900   113.933  operator():3580        -
+960x540@53cc10000    4771   5006   4772   5007   114.283   118.250  ResolveOverlap:1104    v4771(line 861775)
+480x270@538bc0000    5017   5088   5018   5089   118.534   120.466  operator():3580        -
+960x540@53cc10000    5104   5239   5105   5240   120.733   123.000  ResolveOverlap:1104    v5104(line 909132)
+480x270@538bc0000    5250   5331   5251   5332   123.267   125.416  operator():3580        -
+960x540@53cc10000    5347   5485   5348   5486   125.683   128.033  ResolveOverlap:1104    v5347(line 939034)
+480x270@538bc0000    5496   5573   5497   5574   128.317   130.266  operator():3580        -
+960x540@53cc10000    5589   5700   5590   5701   130.533   132.383  operator():3580        v5589(line 968758)
+480x270@538bc0000    5715   5815   5716   5816   132.633   135.067  operator():3580        -
+960x540@53cc10000    5831  10231   5832      -   135.333         -  alive at the end       v5831(line 999539)
+
+ImageWatch events by image and event (all lines; the knob filters images covering 0x53cc10000)
+  0x000000053b9f0000 size 0x1a20000 upload          1
+  0x000000053ba80000 size 0x1a20000 gpu-invalidate  306
+  0x000000053ba80000 size 0x1a20000 upload          228
+  0x000000053be90000 size 0x1a20000 gpu-invalidate  339
+  0x000000053be90000 size 0x1a20000 upload          373
+  0x000000053c420000 size 0x1a20000 gpu-invalidate  66
+  0x000000053c420000 size 0x1a20000 upload          66
+  0x000000053c560000 size 0x870000 gpu-invalidate  97
+  0x000000053c560000 size 0x870000 upload          83
+  0x000000053c8e0000 size 0x3c0000 gpu-invalidate  53
+  0x000000053c8e0000 size 0x3c0000 upload          37
+  0x000000053c96b700 size 0x3f4800 gpu-invalidate  6
+  0x000000053c96b700 size 0x3f4800 upload          6
+  0x000000053cb60000 size 0xc0000 gpu-invalidate  167
+  0x000000053cb60000 size 0xc0000 upload          112
+  0x000000053cc10000 size 0x480000 upload          19
+
+ImageWatch events on the image 0x53cc10000 itself by event: {'upload': 19}
+ImageWatchDraw lines: 0; DumpDraw lines: 0; DumpDispatch lines: 0
+
+DumpCS groups (KYTY_DUMP_ADDRS; head line = the line before the group): 303
+    handle = 1 shader  groups 1 v -..-
+  FrameTrace-direct: +0x96c185=22/1 +0x976 shader  groups 2 v -..-
+  FrameTrace-rp: n=5066 ends=105 restarts= shader  groups 1 v -..-
+  FrameTrace-wait: other=12136/21 shader  groups 1 v -..-
+  SyncDispatch: shader 0x1ab07462ad1bec74 groups 298 v 388..5818
+  DumpCS buffer usage=read-only addr=0x0005168c0000 size=0x1a20000 lines 301
+  DumpCS buffer usage=read-write addr=0x00053be90000 size=0x1a20000 lines 301
+
+BufferFillTrace lines whose range covers 0x53cc10000: 0; covers 0x538bc0000: 0; intersect a T6-format range: 6042
+
+ImageLife of other images covering 0x53cc10000 or 0x538bc0000 (variant of the executor): 510 lines
+  guest 0x0000000537500000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 create:InsertImage:374: 35
+  guest 0x0000000537500000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:ResolveOverlap:1104: 23
+  guest 0x0000000537500000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:operator():3580: 12
+  guest 0x0000000537500000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 create:InsertImage:374: 36
+  guest 0x0000000537500000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 free:ResolveOverlap:1104: 36
+  guest 0x0000000538050000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 create:InsertImage:374: 20
+  guest 0x0000000538050000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 free:ResolveOverlap:1104: 9
+  guest 0x0000000538050000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 free:operator():3580: 10
+  guest 0x00000005387d0000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 create:InsertImage:374: 19
+  guest 0x00000005387d0000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 free:ResolveOverlap:1104: 16
+  guest 0x00000005387d0000 bytes 0x3fc0000 3840x2160 fmt 97 tile 27 free:operator():3580: 2
+  guest 0x000000053b9f0000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 create:InsertImage:374: 1
+  guest 0x000000053b9f0000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:ResolveOverlap:1104: 1
+  guest 0x000000053ba80000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 create:InsertImage:374: 36
+  guest 0x000000053ba80000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:ResolveOverlap:1104: 36
+  guest 0x000000053be90000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 create:InsertImage:374: 36
+  guest 0x000000053be90000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:ResolveOverlap:1104: 36
+  guest 0x000000053c420000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 create:InsertImage:374: 19
+  guest 0x000000053c420000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:ResolveOverlap:1104: 14
+  guest 0x000000053c420000 bytes 0x1a20000 2432x1368 fmt 97 tile 27 free:operator():3580: 5
+  guest 0x000000053c560000 bytes 0x870000 1920x1080 fmt 126 tile 24 create:InsertImage:374: 17
+  guest 0x000000053c560000 bytes 0x870000 1920x1080 fmt 126 tile 24 free:ResolveOverlap:1104: 3
+  guest 0x000000053c560000 bytes 0x870000 1920x1080 fmt 126 tile 24 free:operator():3580: 14
+  guest 0x000000053c8e0000 bytes 0x3c0000 1216x684 fmt 83 tile 27 create:InsertImage:374: 37
+  guest 0x000000053c8e0000 bytes 0x3c0000 1216x684 fmt 83 tile 27 free:ResolveOverlap:1104: 30
+  guest 0x000000053c8e0000 bytes 0x3c0000 1216x684 fmt 83 tile 27 free:operator():3580: 7

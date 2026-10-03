@@ -1,0 +1,2 @@
+runs/f9d_2/rec.mp4: 10232 frames 960x540, index entries 10232
+one-frame glitches: 0

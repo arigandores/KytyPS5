@@ -1,0 +1,1631 @@
+capture: C:/kyty/f287/f13a/f13_rd.rdc phase flow
+presents: [(13, 'vkQueuePresentKHR(ResourceId::3329)'), (2285, 'vkQueuePresentKHR(ResourceId::3329)')]
+frame 2 = events (13, 2285]
+EID 47 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72745)
+EID 51 CLEAR vkCmdFillBuffer() src=- dst=res 72774
+  W buf 72774
+EID 55 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 10619
+  W buf 72774
+  cs shader 5704
+EID 58 COPY vkCmdCopyBufferToImage() src=res 72774 dst=tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+EID 78 OTHER vkCmdBeginRendering(Load)
+EID 80 DRAW vkCmdDraw()
+  W tex 5788 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM | after: (0 0 0 1)..(0 0 0 1)
+  ==== STATE EID 80 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 235 spirv bytes 3980
+    vs CB idx=0 buf 204 off=67014336 len=160
+    vs CB idx=1 buf 11174 off=0 len=128
+    bytes buf_e80_vs_204_67014336.bin 160
+    buffer read err 11174 11174
+    ps shader 237 spirv bytes 27164
+    ps RO idx=1 arr=0 tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.10266 0.43848 0.70898 0)..(0.10266 0.43848 0.70898 0)
+    ps RO idx=0 arr=0 tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 1)..(0 0 0 1)
+    ps RO idx=0 arr=1 tex 5580 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT view fmt=R32G32B32A32_FLOAT mip=0+1 | (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+    ps RW idx=0 buf 204 off=67014912 len=132
+    ps CB idx=0 buf 204 off=67014528 len=160
+    ps CB idx=1 buf 204 off=67014528 len=160
+    bytes buf_e80_ps_204_67014528.bin 160
+    bytes buf_e80_ps_204_67014528.bin 160
+EID 82 OTHER vkCmdEndRendering(Store)
+EID 83 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72745)
+EID 87 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72775)
+EID 92 COPY vkCmdCopyImage() src=tex 5788 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM dst=tex 5796 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM
+  W tex 5796 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM | after: (0 0 0 1)..(0 0 0 1)
+EID 95 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72775)
+EID 100 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72776)
+EID 106 DISPATCH vkCmdDispatch() groups=[32768, 1, 1]
+  W buf 138
+  W buf 141
+  W buf 141
+  cs shader 146
+EID 109 COPY vkCmdCopyBuffer() src=res 138 dst=res 144
+  W buf 144
+EID 112 COPY vkCmdCopyBuffer() src=res 5745 dst=res 219
+  W buf 219
+EID 115 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72776)
+EID 119 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72777)
+EID 123 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72777)
+EID 125 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72778)
+EID 129 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72778)
+EID 131 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72779)
+EID 135 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72779)
+EID 137 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72780)
+EID 144 DISPATCH vkCmdDispatch() groups=[288, 1, 1]
+  W buf 6621
+  cs shader 164
+EID 150 DISPATCH vkCmdDispatch() groups=[288, 1, 1]
+  W buf 6624
+  cs shader 164
+EID 156 DISPATCH vkCmdDispatch() groups=[80, 1, 1]
+  W buf 6625
+  cs shader 164
+EID 162 DISPATCH vkCmdDispatch() groups=[80, 1, 1]
+  W buf 6626
+  cs shader 164
+EID 168 DISPATCH vkCmdDispatch() groups=[160, 1, 1]
+  W buf 6627
+  cs shader 164
+EID 174 DISPATCH vkCmdDispatch() groups=[8, 1, 1]
+  W buf 6633
+  cs shader 164
+EID 180 DISPATCH vkCmdDispatch() groups=[32, 1, 1]
+  W buf 5341
+  cs shader 164
+EID 186 DISPATCH vkCmdDispatch() groups=[8, 1, 1]
+  W buf 5342
+  cs shader 164
+EID 189 CLEAR vkCmdClearColorImage() src=- dst=tex 5343 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 5343 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.5 0.5 101 0)..(0.5 0.5 101 0)
+EID 198 DISPATCH vkCmdDispatch() groups=[64, 64, 1]
+  W tex 5347 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.5 0.5 101 0)..(0.5 0.5 101 0)
+  W buf 204
+  W buf 5802
+  W buf 5802
+  cs shader 167
+EID 201 CLEAR vkCmdClearDepthStencilImage() src=- dst=tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (0 0 0 1)..(0 0 0 1)
+EID 224 OTHER vkCmdBeginRendering(D=Clear, S=Load)
+EID 226 DRAW vkCmdDraw()
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0.50196 0 1)
+  ==== STATE EID 226 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    depth test=False write=False func=CompareFunction.LessEqual stencil=True
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 171 spirv bytes 1920
+    ps shader 172 spirv bytes 4372
+    ps CB idx=0 buf 5802 off=8576 len=16
+    ps CB idx=1 buf 11207 off=0 len=128
+    bytes buf_e226_ps_5802_8576.bin 16
+    buffer read err 11207 11207
+EID 228 OTHER vkCmdEndRendering(DS=Store)
+EID 229 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72780)
+EID 233 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72781)
+EID 237 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72781)
+EID 242 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72782)
+EID 246 COPY vkCmdCopyBuffer() src=res 199 dst=res 10945
+  W buf 10945
+EID 253 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W tex 5378 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  W buf 5804
+  W buf 5804
+  W buf 10945
+  W buf 5804
+  W buf 204
+  W buf 5804
+  W buf 5804
+  W buf 10945
+  cs shader 168
+EID 261 DISPATCH vkCmdDispatch() groups=[30, 17, 8]
+  W buf 204
+  W buf 204
+  W tex 5378 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  cs shader 169
+EID 269 DISPATCH vkCmdDispatch() groups=[30, 17, 8]
+  W buf 204
+  W tex 5398 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  cs shader 170
+EID 272 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72782)
+EID 274 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72783)
+EID 278 CLEAR vkCmdClearColorImage() src=- dst=tex 10953 1920x1080x1 arr=1 mips=1 fmt=R16_UNORM
+  W tex 10953 1920x1080x1 arr=1 mips=1 fmt=R16_UNORM | after: (1 0 0 1)..(1 0 0 1)
+EID 280 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72783)
+EID 284 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72784)
+EID 288 CLEAR vkCmdClearColorImage() src=- dst=tex 6665 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6665 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 1 -1)..(0 0 1 -1)
+EID 290 CLEAR vkCmdClearColorImage() src=- dst=tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (-8.1658e-06 -7.2896e-05 0 0)..(-8.1658e-06 -7.2896e-05 0 0)
+EID 292 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72784)
+EID 296 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72785)
+EID 300 COPY vkCmdCopyBuffer() src=res 199 dst=res 14578
+  W buf 14578
+EID 306 DISPATCH vkCmdDispatch() groups=[3, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 14578
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 5745
+  cs shader 150
+EID 313 DISPATCH vkCmdDispatch() groups=[6, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 204
+  cs shader 1693
+EID 319 DISPATCH vkCmdDispatch() groups=[3, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 5745
+  W buf 204
+  cs shader 153
+EID 326 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 18584 1920x1080x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 334 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 6660 960x540x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 341 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 349 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 357 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 365 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 373 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 381 DISPATCH vkCmdDispatch() groups=[4, 2, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 389 DISPATCH vkCmdDispatch() groups=[2, 1, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 397 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 406 DISPATCH vkCmdDispatch() groups=[60, 135, 1]
+  W tex 6667 960x540x1 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 204
+  cs shader 159
+EID 414 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 6677 1920x1080x1 arr=1 mips=1 fmt=R16G16_FLOAT | after: (0.5 0.5 0 1)..(0.5 0.5 0 1)
+  W tex 6679 1920x1080x1 arr=1 mips=1 fmt=R8_UNORM | after: (0 0 0 1)..(1 0 0 1)
+  cs shader 161
+EID 417 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 420 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72785)
+EID 424 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72786)
+EID 428 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 438 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 204
+  W buf 204
+  cs shader 1694
+EID 441 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 444 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 447 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 450 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 457 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 5486
+  W buf 5486
+  cs shader 1695
+EID 460 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 463 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 469 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 477 DISPATCH vkCmdDispatchIndirect(<32400, 1, 1>) groups=[32400, 1, 1]
+  W buf 204
+  W buf 5745
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W tex 10961 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_UNORM | after: (0 0 0 0)..(0 0 0 0)
+  cs shader 1696
+EID 483 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 494 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 204
+  W buf 5745
+  cs shader 1697
+EID 500 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 508 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  W buf 5745
+  cs shader 1698
+EID 516 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 524 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 532 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 540 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 548 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 556 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 564 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 572 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 580 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 588 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 596 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 604 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10980 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 611 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W tex 5457 1920x1080x1 arr=1 mips=1 fmt=R8G8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 204
+  cs shader 163
+EID 614 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 617 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72786)
+EID 621 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72787)
+EID 625 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 628 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 631 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 634 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 641 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 204
+  W buf 204
+  cs shader 165
+EID 644 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 647 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 650 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 653 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 656 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 663 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 5486
+  W buf 5486
+  W buf 5745
+  W buf 5745
+  W buf 5745
+  W buf 5487
+  W buf 5745
+  W buf 5487
+  cs shader 166
+EID 666 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 669 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 672 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 675 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 678 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72787)
+EID 682 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72788)
+EID 689 DISPATCH vkCmdDispatch() groups=[2048, 1, 1]
+  W buf 9859
+  cs shader 255
+EID 695 DISPATCH vkCmdDispatch() groups=[4096, 1, 1]
+  W buf 204
+  W buf 9859
+  cs shader 262
+EID 698 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 701 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72788)
+EID 705 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72789)
+EID 712 DISPATCH vkCmdDispatch() groups=[256, 1, 1]
+  W buf 10667
+  cs shader 164
+EID 718 DISPATCH vkCmdDispatch() groups=[256, 1, 1]
+  W buf 10672
+  cs shader 164
+EID 721 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72789)
+EID 725 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72790)
+EID 733 DISPATCH vkCmdDispatch() groups=[6, 4, 8]
+  W tex 5495 48x27x64 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 5817
+  W buf 10945
+  W buf 5817
+  W buf 204
+  W buf 10945
+  cs shader 173
+EID 741 DISPATCH vkCmdDispatch() groups=[6, 4, 8]
+  W buf 204
+  W buf 204
+  W tex 5495 48x27x64 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 174
+EID 759 OTHER vkCmdBeginRendering(Load)
+EID 761 DRAW vkCmdDraw()
+  W tex 6675 3840x2160x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM | after: (0 0 0 0)..(1 1 1 0.49804)
+  ==== STATE EID 761 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.One op=BlendOperation.Minimum | a src=BlendMultiplier.One dst=BlendMultiplier.Zero op=BlendOperation.Add mask=4
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 184 spirv bytes 5132
+    vs CB idx=1 buf 11268 off=0 len=128
+    vs CB idx=0 buf 204 off=67035200 len=576
+    vs CB idx=0 buf 204 off=67035776 len=16
+    buffer read err 11268 11268
+    bytes buf_e761_vs_204_67035200.bin 576
+    bytes buf_e761_vs_204_67035776.bin 16
+    ps shader 185 spirv bytes 7156
+    ps RO idx=0 arr=0 tex 6667 960x540x1 arr=1 mips=1 fmt=R8_UNORM view fmt=R8_UNORM mip=0+1 | (1 0 0 1)..(1 0 0 1)
+    ps CB idx=0 buf 204 off=67035840 len=16
+    ps CB idx=1 buf 11268 off=0 len=128
+    bytes buf_e761_ps_204_67035840.bin 16
+    buffer read err 11268 11268
+EID 762 OTHER vkCmdEndRendering(Store)
+EID 764 COPY vkCmdCopyBuffer() src=res 199 dst=res 5814
+  W buf 5814
+EID 767 COPY vkCmdCopyBuffer() src=res 199 dst=res 5478
+  W buf 5478
+EID 770 COPY vkCmdCopyBuffer() src=res 199 dst=res 5804
+  W buf 5804
+EID 773 COPY vkCmdCopyBuffer() src=res 199 dst=res 5381
+  W buf 5381
+EID 776 COPY vkCmdCopyBuffer() src=res 199 dst=res 10101
+  W buf 10101
+EID 779 COPY vkCmdCopyBuffer() src=res 199 dst=res 14578
+  W buf 14578
+EID 782 COPY vkCmdCopyBuffer() src=res 199 dst=res 14578
+  W buf 14578
+EID 785 COPY vkCmdCopyBuffer() src=res 199 dst=res 14578
+  W buf 14578
+EID 788 COPY vkCmdCopyBuffer() src=res 199 dst=res 10137
+  W buf 10137
+EID 791 COPY vkCmdCopyBuffer() src=res 199 dst=res 17878
+  W buf 17878
+EID 794 COPY vkCmdCopyBuffer() src=res 199 dst=res 5820
+  W buf 5820
+EID 797 COPY vkCmdCopyBuffer() src=res 199 dst=res 5817
+  W buf 5817
+EID 800 COPY vkCmdCopyBuffer() src=res 199 dst=res 17910
+  W buf 17910
+EID 803 COPY vkCmdCopyBuffer() src=res 199 dst=res 5598
+  W buf 5598
+EID 806 COPY vkCmdCopyBuffer() src=res 199 dst=res 5497
+  W buf 5497
+EID 809 COPY vkCmdCopyBuffer() src=res 199 dst=res 41193
+  W buf 41193
+EID 812 COPY vkCmdCopyBuffer() src=res 199 dst=res 5783
+  W buf 5783
+EID 815 COPY vkCmdCopyBuffer() src=res 199 dst=res 5757
+  W buf 5757
+EID 818 COPY vkCmdCopyBuffer() src=res 199 dst=res 5351
+  W buf 5351
+EID 821 COPY vkCmdCopyBuffer() src=res 199 dst=res 11182
+  W buf 11182
+EID 824 COPY vkCmdCopyBuffer() src=res 199 dst=res 10945
+  W buf 10945
+EID 827 COPY vkCmdCopyBuffer() src=res 199 dst=res 10945
+  W buf 10945
+EID 830 COPY vkCmdCopyBuffer() src=res 199 dst=res 11166
+  W buf 11166
+EID 833 COPY vkCmdCopyBuffer() src=res 199 dst=res 10575
+  W buf 10575
+EID 836 CLEAR vkCmdClearColorImage() src=- dst=tex 6700 3840x2160x1 arr=1 mips=1 fmt=R11G11B10_FLOAT
+  W tex 6700 3840x2160x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+EID 838 CLEAR vkCmdClearColorImage() src=- dst=tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+EID 843 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 855 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 175
+EID 861 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 869 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 176
+EID 875 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5487
+  W buf 5545
+  cs shader 5547
+EID 883 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 177
+EID 889 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5487
+  W buf 5545
+  cs shader 5547
+EID 897 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 181
+EID 900 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72790)
+EID 904 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72791)
+EID 925 OTHER vkCmdBeginRendering(C=Load, DS=Load)
+EID 927 DRAW vkCmdDrawIndexed()
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+  W tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0.50196 0 1)
+  ==== STATE EID 927 vkCmdDrawIndexed() numIndices=2280 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    blend[1] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=3
+    depth test=True write=False func=CompareFunction.LessEqual stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.Back fill=FillMode.Solid
+    vs shader 1169 spirv bytes 21356
+    vs RW idx=1 buf 204 off=67042304 len=68
+    vs RW idx=0 buf 10945 off=33869504 len=64
+    vs RW idx=0 buf 10945 off=33869424 len=64
+    vs CB idx=0 buf 204 off=67042112 len=48
+    vs CB idx=1 buf 204 off=67042112 len=48
+    vs CB idx=1 buf 10945 off=33817152 len=592
+    bytes buf_e927_vs_204_67042112.bin 48
+    bytes buf_e927_vs_204_67042112.bin 48
+    bytes buf_e927_vs_10945_33817152.bin 592
+    ps shader 1170 spirv bytes 30760
+    ps RO idx=0 arr=0 tex 10839 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB view fmt=R8G8B8A8_SRGB mip=0+1 | (0.14453 0.61719 1 1)..(0.14453 0.61719 1 1)
+    ps CB idx=2 buf 11270 off=0 len=128
+    ps CB idx=0 buf 10945 off=33869312 len=112
+    ps CB idx=0 buf 10945 off=33847424 len=17952
+    ps CB idx=1 buf 10945 off=33869312 len=112
+    ps CB idx=1 buf 10945 off=33847424 len=17952
+    buffer read err 11270 11270
+    bytes buf_e927_ps_10945_33869312.bin 112
+    bytes buf_e927_ps_10945_33847424.bin 17952
+    bytes buf_e927_ps_10945_33869312.bin 112
+    bytes buf_e927_ps_10945_33847424.bin 17952
+EID 928 OTHER vkCmdEndRendering(C=Store, DS=Store)
+EID 936 OTHER vkCmdBeginRendering(Load)
+EID 938 DRAW vkCmdDraw()
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+  ==== STATE EID 938 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.SrcAlpha op=BlendOperation.Add | a src=BlendMultiplier.One dst=BlendMultiplier.Zero op=BlendOperation.Add mask=7
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 187 spirv bytes 3724
+    vs RW idx=0 buf 5576 off=11200 len=72
+    vs CB idx=0 buf 11270 off=0 len=128
+    buffer read err 11270 11270
+    ps shader 194 spirv bytes 19876
+    ps RO idx=0 arr=0 tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 view fmt=D32S8 mip=0+1 | (1 0 0 1)..(1 0.50196 0 1)
+    ps RO idx=1 arr=0 tex 5398 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 1)..(0 0 0 1)
+    ps RW idx=0 buf 204 off=67057920 len=132
+    ps CB idx=0 buf 10945 off=33817152 len=592
+    ps CB idx=0 buf 204 off=67057664 len=128
+    ps CB idx=1 buf 204 off=67057600 len=32
+    ps CB idx=1 buf 10945 off=33817152 len=592
+    ps CB idx=1 buf 204 off=67057664 len=128
+    bytes buf_e938_ps_10945_33817152.bin 592
+    bytes buf_e938_ps_204_67057664.bin 128
+    bytes buf_e938_ps_204_67057600.bin 32
+    bytes buf_e938_ps_10945_33817152.bin 592
+    bytes buf_e938_ps_204_67057664.bin 128
+EID 939 OTHER vkCmdEndRendering(Store)
+EID 944 DISPATCH vkCmdDispatch() groups=[64, 1, 1]
+  W buf 6715
+  cs shader 164
+EID 947 CLEAR vkCmdFillBuffer() src=- dst=res 72792
+  W buf 72792
+EID 951 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 6715
+  W buf 72792
+  cs shader 5583
+EID 954 COPY vkCmdCopyBufferToImage() src=res 72792 dst=tex 5581 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT
+  W tex 5581 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT | after: (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+EID 964 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W tex 5580 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT | after: (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 5745
+  cs shader 182
+EID 970 OTHER vkCmdBeginRendering(Load)
+EID 972 DRAW vkCmdDraw()
+  W tex 6650 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 500)..(0.09259 0.39551 0.64062 689.5)
+  ==== STATE EID 972 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 171 spirv bytes 1920
+    ps shader 197 spirv bytes 11992
+    ps RO idx=0 arr=0 tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 view fmt=D32S8 mip=0+1 | (1 0 0 1)..(1 0.50196 0 1)
+    ps RO idx=0 arr=1 tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+    ps CB idx=0 buf 10945 off=33817152 len=592
+    ps CB idx=1 buf 11270 off=0 len=128
+    bytes buf_e972_ps_10945_33817152.bin 592
+    buffer read err 11270 11270
+EID 973 OTHER vkCmdEndRendering(Store)
+EID 975 CLEAR vkCmdClearDepthStencilImage() src=- dst=tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0 0 1)
+EID 977 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72791)
+EID 981 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72793)
+EID 985 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 988 COPY vkCmdCopyBuffer() src=res 149 dst=res 10846
+  W buf 10846
+EID 994 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 10845
+  cs shader 979
+EID 997 COPY vkCmdCopyBuffer() src=res 10846 dst=res 149
+  W buf 149
+EID 1004 DISPATCH vkCmdDispatch() groups=[2048, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 10846
+  W buf 10845
+  cs shader 980
+EID 1007 COPY vkCmdCopyBuffer() src=res 199 dst=res 10137
+  W buf 10137
+EID 1010 COPY vkCmdCopyBuffer() src=res 199 dst=res 17878
+  W buf 17878
+EID 1013 COPY vkCmdCopyBuffer() src=res 199 dst=res 5820
+  W buf 5820
+EID 1016 COPY vkCmdCopyBuffer() src=res 199 dst=res 5817
+  W buf 5817
+EID 1019 COPY vkCmdCopyBuffer() src=res 199 dst=res 10945
+  W buf 10945
+EID 1036 OTHER vkCmdBeginRendering(C=Load, DS=Load)
+EID 1039 OTHER vkCmdDrawMeshTasksEXT()
+EID 1043 OTHER vkCmdDrawMeshTasksEXT()
+EID 1044 OTHER vkCmdEndRendering(C=Store, DS=Store)
+EID 1051 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 5820
+  W buf 5820
+  W tex 18584 1920x1080x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 1059 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 6660 960x540x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 1071 OTHER vkCmdBeginRendering(Load)
+EID 1073 DRAW vkCmdDraw()
+  W tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.092529 0.39551 0.64062 1)..(0.092529 0.39551 0.64062 1)
+  W tex 10851 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.092529 0.39551 0.64062 10000)..(0.092529 0.39551 0.64062 10000)
+  ==== STATE EID 1073 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    blend[1] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.Back fill=FillMode.Solid
+    vs shader 1690 spirv bytes 3084
+    vs RW idx=0 buf 10853 off=6864 len=48
+    vs CB idx=0 buf 11272 off=0 len=128
+    buffer read err 11272 11272
+    ps shader 1691 spirv bytes 37384
+    ps RO idx=0 arr=0 tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 0)..(0 0 0 0)
+    ps RO idx=0 arr=1 tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+    ps RO idx=0 arr=2 tex 10849 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.092529 0.39551 0.64062 10000)..(0.092529 0.39551 0.64062 10000)
+    ps RW idx=0 buf 204 off=67059968 len=132
+    ps CB idx=0 buf 204 off=67059776 len=64
+    ps CB idx=1 buf 204 off=67059776 len=64
+    bytes buf_e1073_ps_204_67059776.bin 64
+    bytes buf_e1073_ps_204_67059776.bin 64
+EID 1074 OTHER vkCmdEndRendering(Store)
+EID 1082 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 6750 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 983
+EID 1085 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72793)
+EID 1089 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72794)
+EID 1098 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W tex 6004 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1106 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W tex 6014 480x270x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1114 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W tex 6022 240x135x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1122 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W tex 6746 120x67x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1130 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W tex 10896 60x33x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1138 DISPATCH vkCmdDispatch() groups=[4, 2, 1]
+  W buf 204
+  W tex 10899 30x16x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 1147 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W tex 10896 60x33x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1156 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W tex 6746 120x67x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1165 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W tex 6022 240x135x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1174 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W tex 6014 480x270x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1183 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W tex 6004 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1192 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W tex 6750 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 1201 DISPATCH vkCmdDispatch() groups=[480, 270, 1]
+  W buf 204
+  W tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.10266 0.43848 0.70898 0)..(0.10266 0.43848 0.70898 0)
+  W buf 204
+  cs shader 996
+EID 1207 DISPATCH vkCmdDispatch() groups=[64, 1, 1]
+  W buf 10619
+  cs shader 164
+EID 1210 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72794)
+EID 1214 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72795)
+EID 1218 CLEAR vkCmdFillBuffer() src=- dst=res 72796
+  W buf 72796
+EID 1222 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 10619
+  W buf 72796
+  cs shader 5704
+EID 1225 COPY vkCmdCopyBufferToImage() src=res 72796 dst=tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+EID 1245 OTHER vkCmdBeginRendering(Load)
+EID 1247 DRAW vkCmdDraw()
+  W tex 5692 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM | after: (0 0 0 1)..(0 0 0 1)
+  ==== STATE EID 1247 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 235 spirv bytes 3980
+    vs CB idx=0 buf 204 off=67063744 len=160
+    vs CB idx=1 buf 5309 off=0 len=128
+    bytes buf_e1247_vs_204_67063744.bin 160
+    buffer read err 5309 5309
+    ps shader 237 spirv bytes 27164
+    ps RO idx=1 arr=0 tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.10266 0.43848 0.70898 0)..(0.10266 0.43848 0.70898 0)
+    ps RO idx=0 arr=0 tex 5702 1x1x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 1)..(0 0 0 1)
+    ps RO idx=0 arr=1 tex 5580 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT view fmt=R32G32B32A32_FLOAT mip=0+1 | (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+    ps RW idx=0 buf 204 off=67064320 len=132
+    ps CB idx=0 buf 204 off=67063936 len=160
+    ps CB idx=1 buf 204 off=67063936 len=160
+    bytes buf_e1247_ps_204_67063936.bin 160
+    bytes buf_e1247_ps_204_67063936.bin 160
+EID 1248 OTHER vkCmdEndRendering(Store)
+EID 1251 COPY vkCmdCopyImage() src=tex 5692 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM dst=tex 5825 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM
+  W tex 5825 3840x2160x1 arr=1 mips=1 fmt=B10G10R10A2_UNORM | after: (0 0 0 1)..(0 0 0 1)
+EID 1254 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72795)
+EID 1258 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72797)
+EID 1264 DISPATCH vkCmdDispatch() groups=[32768, 1, 1]
+  W buf 138
+  W buf 141
+  W buf 141
+  cs shader 146
+EID 1267 COPY vkCmdCopyBuffer() src=res 138 dst=res 144
+  W buf 144
+EID 1270 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72797)
+EID 1272 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72798)
+EID 1276 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72798)
+EID 1278 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72799)
+EID 1282 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72799)
+EID 1284 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72800)
+EID 1291 DISPATCH vkCmdDispatch() groups=[288, 1, 1]
+  W buf 6621
+  cs shader 164
+EID 1297 DISPATCH vkCmdDispatch() groups=[288, 1, 1]
+  W buf 6624
+  cs shader 164
+EID 1303 DISPATCH vkCmdDispatch() groups=[80, 1, 1]
+  W buf 6625
+  cs shader 164
+EID 1309 DISPATCH vkCmdDispatch() groups=[80, 1, 1]
+  W buf 6626
+  cs shader 164
+EID 1315 DISPATCH vkCmdDispatch() groups=[160, 1, 1]
+  W buf 6627
+  cs shader 164
+EID 1321 DISPATCH vkCmdDispatch() groups=[8, 1, 1]
+  W buf 6633
+  cs shader 164
+EID 1327 DISPATCH vkCmdDispatch() groups=[32, 1, 1]
+  W buf 5341
+  cs shader 164
+EID 1333 DISPATCH vkCmdDispatch() groups=[8, 1, 1]
+  W buf 5342
+  cs shader 164
+EID 1336 CLEAR vkCmdClearColorImage() src=- dst=tex 5343 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 5343 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.5 0.5 101 0)..(0.5 0.5 101 0)
+EID 1345 DISPATCH vkCmdDispatch() groups=[64, 64, 1]
+  W tex 5349 1024x1024x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.5 0.5 101 0)..(0.5 0.5 101 0)
+  W buf 204
+  W buf 5351
+  W buf 5351
+  cs shader 167
+EID 1348 CLEAR vkCmdClearDepthStencilImage() src=- dst=tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0 0 1)
+EID 1371 OTHER vkCmdBeginRendering(D=Clear, S=Load)
+EID 1373 DRAW vkCmdDraw()
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0.50196 0 1)
+  ==== STATE EID 1373 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    depth test=False write=False func=CompareFunction.LessEqual stencil=True
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 171 spirv bytes 1920
+    ps shader 172 spirv bytes 4372
+    ps CB idx=0 buf 5351 off=8576 len=16
+    ps CB idx=1 buf 5363 off=0 len=128
+    bytes buf_e1373_ps_5351_8576.bin 16
+    buffer read err 5363 5363
+EID 1375 OTHER vkCmdEndRendering(DS=Store)
+EID 1376 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72800)
+EID 1380 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72801)
+EID 1384 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72801)
+EID 1386 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72802)
+EID 1390 COPY vkCmdCopyBuffer() src=res 199 dst=res 11166
+  W buf 11166
+EID 1397 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W tex 5393 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  W buf 5381
+  W buf 5381
+  W buf 11166
+  W buf 5381
+  W buf 204
+  W buf 5381
+  W buf 5381
+  W buf 11166
+  cs shader 168
+EID 1405 DISPATCH vkCmdDispatch() groups=[30, 17, 8]
+  W buf 204
+  W buf 204
+  W tex 5393 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  cs shader 169
+EID 1413 DISPATCH vkCmdDispatch() groups=[30, 17, 8]
+  W buf 204
+  W tex 5398 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+  W buf 204
+  cs shader 170
+EID 1416 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72802)
+EID 1418 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72803)
+EID 1422 CLEAR vkCmdClearColorImage() src=- dst=tex 10953 1920x1080x1 arr=1 mips=1 fmt=R16_UNORM
+  W tex 10953 1920x1080x1 arr=1 mips=1 fmt=R16_UNORM | after: (1 0 0 1)..(1 0 0 1)
+EID 1424 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72803)
+EID 1428 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72804)
+EID 1432 CLEAR vkCmdClearColorImage() src=- dst=tex 6665 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6665 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 1 -1)..(0 0 1 -1)
+EID 1434 CLEAR vkCmdClearColorImage() src=- dst=tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (5.6982e-05 5.573e-05 0 0)..(5.6982e-05 5.573e-05 0 0)
+EID 1436 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72804)
+EID 1440 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72805)
+EID 1447 DISPATCH vkCmdDispatch() groups=[3, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 14578
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 5745
+  cs shader 150
+EID 1454 DISPATCH vkCmdDispatch() groups=[6, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 204
+  cs shader 1693
+EID 1460 DISPATCH vkCmdDispatch() groups=[3, 1, 1]
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 14578
+  W buf 14578
+  W buf 5745
+  W buf 204
+  cs shader 153
+EID 1467 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 18584 1920x1080x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 1475 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 6660 960x540x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 1482 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1490 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1498 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1506 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1514 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1522 DISPATCH vkCmdDispatch() groups=[4, 2, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1530 DISPATCH vkCmdDispatch() groups=[2, 1, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1538 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 204
+  W buf 204
+  W tex 10625 960x540x1 arr=1 mips=8 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 303
+EID 1547 DISPATCH vkCmdDispatch() groups=[60, 135, 1]
+  W tex 6667 960x540x1 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 204
+  cs shader 159
+EID 1555 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 6677 1920x1080x1 arr=1 mips=1 fmt=R16G16_FLOAT | after: (0.5 0.5 0 1)..(0.5 0.5 0 1)
+  W tex 6679 1920x1080x1 arr=1 mips=1 fmt=R8_UNORM | after: (0 0 0 1)..(1 0 0 1)
+  cs shader 161
+EID 1558 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1561 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1571 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 204
+  W buf 204
+  cs shader 1694
+EID 1574 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1577 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1580 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1583 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1590 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 5486
+  W buf 5486
+  cs shader 1695
+EID 1593 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1596 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1602 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 1610 DISPATCH vkCmdDispatchIndirect(<32400, 1, 1>) groups=[32400, 1, 1]
+  W buf 204
+  W buf 5745
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W tex 10961 1920x1080x1 arr=1 mips=1 fmt=R16G16B16A16_UNORM | after: (0 0 0 0)..(0 0 0 0)
+  cs shader 1696
+EID 1616 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 1627 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 204
+  W buf 5745
+  cs shader 1697
+EID 1633 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 1641 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  W buf 5745
+  cs shader 1698
+EID 1649 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1657 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1665 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1673 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1681 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1689 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1697 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1705 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1713 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1721 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1729 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 10966 960x540x1 arr=1 mips=6 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1699
+EID 1737 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 11190 1920x1080x1 arr=1 mips=7 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W buf 204
+  cs shader 1700
+EID 1744 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W tex 5461 1920x1080x1 arr=1 mips=1 fmt=R8G8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 204
+  cs shader 163
+EID 1747 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1750 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72805)
+EID 1754 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72806)
+EID 1758 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1761 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1764 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1767 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 1774 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 5745
+  W buf 5745
+  W buf 204
+  W buf 204
+  cs shader 165
+EID 1777 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1780 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1783 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1786 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1789 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1796 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 5486
+  W buf 5486
+  W buf 5745
+  W buf 5745
+  W buf 5745
+  W buf 5487
+  W buf 5745
+  W buf 5487
+  cs shader 166
+EID 1799 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1802 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1805 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1808 COPY vkCmdCopyBuffer() src=res 149 dst=res 5745
+  W buf 5745
+EID 1811 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72806)
+EID 1815 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72807)
+EID 1822 DISPATCH vkCmdDispatch() groups=[256, 1, 1]
+  W buf 10667
+  cs shader 164
+EID 1828 DISPATCH vkCmdDispatch() groups=[256, 1, 1]
+  W buf 10672
+  cs shader 164
+EID 1831 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72807)
+EID 1835 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72808)
+EID 1843 DISPATCH vkCmdDispatch() groups=[6, 4, 8]
+  W tex 5504 48x27x64 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  W buf 5497
+  W buf 11166
+  W buf 5497
+  W buf 204
+  W buf 11166
+  cs shader 173
+EID 1851 DISPATCH vkCmdDispatch() groups=[6, 4, 8]
+  W buf 204
+  W buf 204
+  W tex 5504 48x27x64 arr=1 mips=1 fmt=R8_UNORM | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 174
+EID 1869 OTHER vkCmdBeginRendering(Load)
+EID 1871 DRAW vkCmdDraw()
+  W tex 6675 3840x2160x1 arr=1 mips=1 fmt=R8G8B8A8_UNORM | after: (0 0 0 0)..(1 1 1 0.49804)
+  ==== STATE EID 1871 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.One op=BlendOperation.Minimum | a src=BlendMultiplier.One dst=BlendMultiplier.Zero op=BlendOperation.Add mask=4
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 184 spirv bytes 5132
+    vs CB idx=1 buf 5693 off=0 len=128
+    vs CB idx=0 buf 204 off=67084608 len=576
+    vs CB idx=0 buf 204 off=67085184 len=16
+    buffer read err 5693 5693
+    bytes buf_e1871_vs_204_67084608.bin 576
+    bytes buf_e1871_vs_204_67085184.bin 16
+    ps shader 185 spirv bytes 7156
+    ps RO idx=0 arr=0 tex 6667 960x540x1 arr=1 mips=1 fmt=R8_UNORM view fmt=R8_UNORM mip=0+1 | (1 0 0 1)..(1 0 0 1)
+    ps CB idx=0 buf 204 off=67085248 len=16
+    ps CB idx=1 buf 5693 off=0 len=128
+    bytes buf_e1871_ps_204_67085248.bin 16
+    buffer read err 5693 5693
+EID 1872 OTHER vkCmdEndRendering(Store)
+EID 1874 COPY vkCmdCopyBuffer() src=res 199 dst=res 5478
+  W buf 5478
+EID 1877 COPY vkCmdCopyBuffer() src=res 199 dst=res 5381
+  W buf 5381
+EID 1880 COPY vkCmdCopyBuffer() src=res 199 dst=res 14578
+  W buf 14578
+EID 1883 COPY vkCmdCopyBuffer() src=res 199 dst=res 17878
+  W buf 17878
+EID 1886 COPY vkCmdCopyBuffer() src=res 199 dst=res 5820
+  W buf 5820
+EID 1889 COPY vkCmdCopyBuffer() src=res 199 dst=res 5817
+  W buf 5817
+EID 1892 COPY vkCmdCopyBuffer() src=res 199 dst=res 17910
+  W buf 17910
+EID 1895 COPY vkCmdCopyBuffer() src=res 199 dst=res 5598
+  W buf 5598
+EID 1898 COPY vkCmdCopyBuffer() src=res 199 dst=res 5497
+  W buf 5497
+EID 1901 COPY vkCmdCopyBuffer() src=res 199 dst=res 10945
+  W buf 10945
+EID 1904 COPY vkCmdCopyBuffer() src=res 199 dst=res 11166
+  W buf 11166
+EID 1907 COPY vkCmdCopyBuffer() src=res 199 dst=res 11166
+  W buf 11166
+EID 1910 CLEAR vkCmdClearColorImage() src=- dst=tex 6700 3840x2160x1 arr=1 mips=1 fmt=R11G11B10_FLOAT
+  W tex 6700 3840x2160x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0 0 0 1)..(0 0 0 1)
+EID 1912 CLEAR vkCmdClearColorImage() src=- dst=tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+EID 1917 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 1929 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 175
+EID 1935 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5486
+  W buf 5545
+  cs shader 5547
+EID 1943 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 176
+EID 1949 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5487
+  W buf 5545
+  cs shader 5547
+EID 1957 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 177
+EID 1963 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 5487
+  W buf 5545
+  cs shader 5547
+EID 1971 DISPATCH vkCmdDispatchIndirect(<1, 1, 1>) groups=[1, 1, 1]
+  W buf 180
+  W buf 138
+  W buf 204
+  W buf 5745
+  cs shader 181
+EID 1974 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72808)
+EID 1978 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72809)
+EID 1999 OTHER vkCmdBeginRendering(C=Load, DS=Load)
+EID 2001 DRAW vkCmdDrawIndexed()
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+  W tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0 0 0 0)..(0 0 0 0)
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0.50196 0 1)
+  ==== STATE EID 2001 vkCmdDrawIndexed() numIndices=2280 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    blend[1] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=3
+    depth test=True write=False func=CompareFunction.LessEqual stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.Back fill=FillMode.Solid
+    vs shader 1169 spirv bytes 21356
+    vs RW idx=1 buf 204 off=67090944 len=68
+    vs RW idx=0 buf 11166 off=1380288 len=64
+    vs RW idx=0 buf 11166 off=1380208 len=64
+    vs CB idx=0 buf 204 off=67090752 len=48
+    vs CB idx=1 buf 204 off=67090752 len=48
+    vs CB idx=1 buf 11166 off=1327104 len=576
+    bytes buf_e2001_vs_204_67090752.bin 48
+    bytes buf_e2001_vs_204_67090752.bin 48
+    bytes buf_e2001_vs_11166_1327104.bin 576
+    ps shader 1170 spirv bytes 30760
+    ps RO idx=0 arr=0 tex 10839 1x1x1 arr=1 mips=1 fmt=R8G8B8A8_SRGB view fmt=R8G8B8A8_SRGB mip=0+1 | (0.14453 0.61719 1 1)..(0.14453 0.61719 1 1)
+    ps CB idx=2 buf 5695 off=0 len=128
+    ps CB idx=0 buf 11166 off=1380096 len=112
+    ps CB idx=0 buf 11166 off=1354176 len=17904
+    ps CB idx=1 buf 11166 off=1380096 len=112
+    ps CB idx=1 buf 11166 off=1354176 len=17904
+    buffer read err 5695 5695
+    bytes buf_e2001_ps_11166_1380096.bin 112
+    bytes buf_e2001_ps_11166_1354176.bin 17904
+    bytes buf_e2001_ps_11166_1380096.bin 112
+    bytes buf_e2001_ps_11166_1354176.bin 17904
+EID 2002 OTHER vkCmdEndRendering(C=Store, DS=Store)
+EID 2010 OTHER vkCmdBeginRendering(Load)
+EID 2012 DRAW vkCmdDraw()
+  W tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+  ==== STATE EID 2012 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=True src=BlendMultiplier.One dst=BlendMultiplier.SrcAlpha op=BlendOperation.Add | a src=BlendMultiplier.One dst=BlendMultiplier.Zero op=BlendOperation.Add mask=7
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 187 spirv bytes 3724
+    vs RW idx=0 buf 5576 off=11200 len=72
+    vs CB idx=0 buf 5695 off=0 len=128
+    buffer read err 5695 5695
+    ps shader 194 spirv bytes 19876
+    ps RO idx=0 arr=0 tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 view fmt=D32S8 mip=0+1 | (1 0 0 1)..(1 0.50196 0 1)
+    ps RO idx=1 arr=0 tex 5398 240x135x64 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 1)..(0 0 0 1)
+    ps RW idx=0 buf 204 off=67106560 len=132
+    ps CB idx=0 buf 11166 off=1327104 len=576
+    ps CB idx=0 buf 204 off=67106304 len=128
+    ps CB idx=1 buf 204 off=67106240 len=32
+    ps CB idx=1 buf 11166 off=1327104 len=576
+    ps CB idx=1 buf 204 off=67106304 len=128
+    bytes buf_e2012_ps_11166_1327104.bin 576
+    bytes buf_e2012_ps_204_67106304.bin 128
+    bytes buf_e2012_ps_204_67106240.bin 32
+    bytes buf_e2012_ps_11166_1327104.bin 576
+    bytes buf_e2012_ps_204_67106304.bin 128
+EID 2013 OTHER vkCmdEndRendering(Store)
+EID 2018 DISPATCH vkCmdDispatch() groups=[64, 1, 1]
+  W buf 6715
+  cs shader 164
+EID 2021 CLEAR vkCmdFillBuffer() src=- dst=res 72810
+  W buf 72810
+EID 2025 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 6715
+  W buf 72810
+  cs shader 5583
+EID 2028 COPY vkCmdCopyBufferToImage() src=res 72810 dst=tex 5581 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT
+  W tex 5581 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT | after: (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+EID 2038 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W tex 5580 1x1x1 arr=1 mips=1 fmt=R32G32B32A32_FLOAT | after: (1 -1 0.5 0.18)..(1 -1 0.5 0.18)
+  W buf 204
+  W buf 204
+  W buf 204
+  W buf 5745
+  cs shader 182
+EID 2044 OTHER vkCmdBeginRendering(Load)
+EID 2046 DRAW vkCmdDraw()
+  W tex 6650 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.09259 0.39551 0.64062 500)..(0.09259 0.39551 0.64062 689.5)
+  ==== STATE EID 2046 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.NoCull fill=FillMode.Solid
+    vs shader 171 spirv bytes 1920
+    ps shader 197 spirv bytes 11992
+    ps RO idx=0 arr=0 tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 view fmt=D32S8 mip=0+1 | (1 0 0 1)..(1 0.50196 0 1)
+    ps RO idx=0 arr=1 tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+    ps CB idx=0 buf 11166 off=1327104 len=576
+    ps CB idx=1 buf 5695 off=0 len=128
+    bytes buf_e2046_ps_11166_1327104.bin 576
+    buffer read err 5695 5695
+EID 2047 OTHER vkCmdEndRendering(Store)
+EID 2049 CLEAR vkCmdClearDepthStencilImage() src=- dst=tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8
+  W tex 6638 3840x2160x1 arr=1 mips=1 fmt=D32S8 | after: (1 0 0 1)..(1 0 0 1)
+EID 2051 CLEAR vkCmdFillBuffer() src=- dst=res 149
+  W buf 149
+EID 2054 COPY vkCmdCopyBuffer() src=res 149 dst=res 10846
+  W buf 10846
+EID 2060 DISPATCH vkCmdDispatch() groups=[1, 1, 1]
+  W buf 10845
+  cs shader 979
+EID 2063 COPY vkCmdCopyBuffer() src=res 10846 dst=res 149
+  W buf 149
+EID 2070 DISPATCH vkCmdDispatch() groups=[2048, 1, 1]
+  W buf 149
+  W buf 204
+  W buf 204
+  W buf 10846
+  W buf 10845
+  cs shader 980
+EID 2073 COPY vkCmdCopyBuffer() src=res 199 dst=res 17910
+  W buf 17910
+EID 2076 COPY vkCmdCopyBuffer() src=res 199 dst=res 5598
+  W buf 5598
+EID 2079 COPY vkCmdCopyBuffer() src=res 199 dst=res 5497
+  W buf 5497
+EID 2082 COPY vkCmdCopyBuffer() src=res 199 dst=res 11166
+  W buf 11166
+EID 2091 OTHER vkCmdBeginRendering(C=Load, DS=Load)
+EID 2094 OTHER vkCmdDrawMeshTasksEXT()
+EID 2098 OTHER vkCmdDrawMeshTasksEXT()
+EID 2100 OTHER vkCmdEndRendering(C=Store, DS=Store)
+EID 2101 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72809)
+EID 2105 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72811)
+EID 2114 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 5598
+  W buf 5598
+  W tex 18584 1920x1080x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 2122 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W buf 204
+  W tex 6660 960x540x1 arr=1 mips=1 fmt=R32_FLOAT | after: (1 0 0 1)..(1 0 0 1)
+  W buf 204
+  cs shader 155
+EID 2141 OTHER vkCmdBeginRendering(Load)
+EID 2143 DRAW vkCmdDraw()
+  W tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.092529 0.39551 0.64062 1)..(0.092529 0.39551 0.64062 1)
+  W tex 10849 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.092529 0.39551 0.64062 10000)..(0.092529 0.39551 0.64062 10000)
+  ==== STATE EID 2143 vkCmdDraw() numIndices=3 numInstances=1 indexOffset=0 vertexOffset=0
+    blend[0] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    blend[1] en=False src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add | a src=BlendMultiplier.Zero dst=BlendMultiplier.Zero op=BlendOperation.Add mask=f
+    depth test=False write=False func=CompareFunction.Never stencil=False
+    viewport x=0 y=2160 w=3840 h=-2160 scissor x=0 y=0 w=3840 h=2160
+    raster cull=CullMode.Back fill=FillMode.Solid
+    vs shader 1690 spirv bytes 3084
+    vs RW idx=0 buf 10853 off=6864 len=48
+    vs CB idx=0 buf 5697 off=0 len=128
+    buffer read err 5697 5697
+    ps shader 1691 spirv bytes 37384
+    ps RO idx=0 arr=0 tex 6718 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0 0 0 0)..(0 0 0 0)
+    ps RO idx=0 arr=1 tex 6702 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.09259 0.39551 0.64062 10000)..(0.09259 0.39551 0.64062 10000)
+    ps RO idx=0 arr=2 tex 10851 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT view fmt=R16G16B16A16_FLOAT mip=0+1 | (0.092529 0.39551 0.64062 10000)..(0.092529 0.39551 0.64062 10000)
+    ps RW idx=0 buf 204 off=67108608 len=132
+    ps CB idx=0 buf 204 off=67108416 len=64
+    ps CB idx=1 buf 204 off=67108416 len=64
+    bytes buf_e2143_ps_204_67108416.bin 64
+    bytes buf_e2143_ps_204_67108416.bin 64
+EID 2144 OTHER vkCmdEndRendering(Store)
+EID 2152 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W buf 204
+  W tex 6750 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 983
+EID 2160 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W tex 6004 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2168 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W tex 6014 480x270x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2176 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W tex 6022 240x135x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2184 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W tex 6746 120x67x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2192 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W tex 10896 60x33x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2200 DISPATCH vkCmdDispatch() groups=[4, 2, 1]
+  W buf 204
+  W tex 10899 30x16x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 993
+EID 2209 DISPATCH vkCmdDispatch() groups=[8, 5, 1]
+  W buf 204
+  W tex 10896 60x33x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2218 DISPATCH vkCmdDispatch() groups=[15, 9, 1]
+  W buf 204
+  W tex 6746 120x67x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2227 DISPATCH vkCmdDispatch() groups=[30, 17, 1]
+  W buf 204
+  W tex 6022 240x135x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2236 DISPATCH vkCmdDispatch() groups=[60, 34, 1]
+  W buf 204
+  W tex 6014 480x270x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2245 DISPATCH vkCmdDispatch() groups=[120, 68, 1]
+  W buf 204
+  W tex 6004 960x540x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2254 DISPATCH vkCmdDispatch() groups=[240, 135, 1]
+  W buf 204
+  W tex 6750 1920x1080x1 arr=1 mips=1 fmt=R11G11B10_FLOAT | after: (0.020264 0.085938 0.13672 1)..(0.020264 0.085938 0.13672 1)
+  W buf 204
+  cs shader 995
+EID 2263 DISPATCH vkCmdDispatch() groups=[480, 270, 1]
+  W buf 204
+  W tex 6471 3840x2160x1 arr=1 mips=1 fmt=R16G16B16A16_FLOAT | after: (0.10266 0.43848 0.70898 0)..(0.10266 0.43848 0.70898 0)
+  W buf 204
+  cs shader 996
+EID 2269 DISPATCH vkCmdDispatch() groups=[64, 1, 1]
+  W buf 10619
+  cs shader 164
+EID 2272 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72811)
+EID 2276 OTHER => vkQueueSubmit(1)[0]: vkBeginCommandBuffer(ResourceId::72813)
+EID 2280 RESOLVE vkCmdBlitImage()
+  W tex 3329 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM | after: (0 0 0 1)..(0 0 0 1)
+EID 2283 OTHER => vkQueueSubmit(1)[0]: vkEndCommandBuffer(ResourceId::72813)
+EID 2285 PRESENT vkQueuePresentKHR(ResourceId::3329)
+  present res tex 3329 1280x720x1 arr=1 mips=1 fmt=B8G8R8A8_UNORM | (0 0 0 1)..(0 0 0 1)
+done

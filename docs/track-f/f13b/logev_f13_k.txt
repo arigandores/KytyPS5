@@ -1,0 +1,483 @@
+card 1253 last k 14527
+=== unique lines with first k >= card-300 (or last k >= card)
+first      1 last  14526 n    2504 | FaultTrace-gpu: addr=0x0000000550aba000 rip=+0x7ffcd004bc5b access=2 us=132 site=-
+first      8 last  13333 n      27 | FixB42: mode=1 hit=6 applied=5 drawn=1 rearm=5 hit_all=126 last_frame=121 extent=3328x1872 cmask=0x570ff6000 clear=80d80333/00000000
+first     12 last  13933 n      26 | FixB42: mode=1 hit=6 applied=5 drawn=5 rearm=5 hit_all=126 last_frame=125 extent=3328x1872 cmask=0x570ff6000 clear=831702ab/00000000
+first     14 last   4333 n      10 | FixB42: mode=1 hit=98 applied=98 drawn=4 rearm=97 hit_all=127 last_frame=127 extent=3840x2160 cmask=0x5715b0000 clear=0048019a/00000000
+first    143 last   1453 n     426 | CsPretranslate phase end: stage=CS hash=0x995b65f5f7940958 CFG Structurize blocks=57 loops=2 elapsed_ms=3593
+first    143 last   1453 n     426 | CsPretranslate phase begin: stage=CS hash=0x995b65f5f7940958 IR TranslateProgram
+first    143 last   1453 n     513 | CsPretranslate phase begin: stage=CS hash=0x7553f194b4ecc34f code_words=356 decode
+first    143 last   1453 n     513 | CsPretranslate phase end: stage=CS hash=0x7553f194b4ecc34f decode instructions=173 elapsed_ms=0
+first    143 last   1453 n     513 | CsPretranslate phase begin: stage=CS hash=0x7553f194b4ecc34f CFG BuildGraph
+first    143 last   1453 n     425 | CsPretranslate phase end: stage=CS hash=0x7553f194b4ecc34f CFG BuildGraph blocks=4 loops=1 back_edges=1 elapsed_ms=0
+first    143 last   1453 n     425 | CsPretranslate phase begin: stage=CS hash=0x7553f194b4ecc34f CFG Structurize
+first    143 last   1453 n     425 | CsPretranslate structured CFG success: blocks=5
+first    143 last   1453 n     422 | CsPretranslate phase end: stage=CS hash=0x7553f194b4ecc34f IR TranslateProgram blocks=6 elapsed_ms=0
+first    143 last   1453 n     304 | CsPretranslate predication elimination: selects=73 chains=73
+first    186 last  14286 n      96 | MemStats: heap=0 flags=0x1 size=16780361728 usage=5577912320 budget=15975055360 allocation=4728403584 blocks=5297403904
+first    217 last  14297 n      56 | AudioPropagation: calls total=256 handles=33 SystemUnregisterMaterial=0 SystemSetRays=0 PortalDestroy=0 SystemSetAttributes=1 SourceSetAudioPaths=0 SystemCreate=5 SystemRegisterMaterial=23 PortalSetAttributes=0 PortalCreate=0 RoomDestroy=0 
+first    957 last    957 n       1 | CsPretranslate: skipped hash=7ecb3bf6217e9a30 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics/shader/recompiler/TranslationBudget.h:21 speculative translation budget exceeded
+first    957 last    957 n       1 | CsPretranslate: skipped hash=a928b67226b0de80 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=2c3fd789de3c3cb2 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=c65410a8d3e87566 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=34999ba26c563290 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    958 last    958 n       1 | CsPretranslate: ready hash=27b3be3dc5bda048 us=889 kb=386 ready_kb=77993
+first    958 last    958 n       1 | CsPretranslate: ready hash=c5c089b692dcd1e6 us=703 kb=324 ready_kb=78318
+first    958 last    958 n       1 | CsPretranslate: ready hash=1bc9ebdbe4d00d64 us=648 kb=327 ready_kb=78645
+first    958 last    958 n       1 | CsPretranslate: ready hash=1f5b0b1a8d2377c6 us=629 kb=327 ready_kb=78972
+first    958 last    958 n       1 | CsPretranslate: skipped hash=e8448fee7040bb35 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000044: 0x00000044: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=972918dff4d56d31 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000044: 0x00000044: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=7771a0e4ed8019f9 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000048: 0x00000048: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=f0787aa85ec37795 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000048: 0x00000048: unsuppo
+first    958 last    958 n       1 | CsPretranslate: ready hash=91017c752cd52fdc us=684 kb=326 ready_kb=79299
+first    958 last    958 n       1 | CsPretranslate: ready hash=2a0057227d77d643 us=616 kb=329 ready_kb=79628
+first    958 last    958 n       1 | CsPretranslate: ready hash=f750c08a2397467e us=596 kb=329 ready_kb=79957
+first    958 last    958 n       1 | CsPretranslate: skipped hash=3d3468f338ba5eec reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000004c: 0x0000004c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=5b1d7b5a77d7dbca reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000068: 0x00000068: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=5afa7175b95b6f2e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000008c: 0x0000008c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=c9045c94dd151676 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000094: 0x00000094: unsuppo
+first    958 last    958 n       1 | CsPretranslate: ready hash=e7360727b5e6ebef us=1366 kb=755 ready_kb=80713
+first    958 last    958 n       1 | CsPretranslate: ready hash=c74cc910a196abbb us=1305 kb=758 ready_kb=81471
+first    958 last    958 n       1 | CsPretranslate: skipped hash=f5364cf81e9ea38e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000008c: 0x0000008c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=e2b8786992559508 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000008c: 0x0000008c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=9642b07703d9f132 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000008c: 0x0000008c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=9015a90fa9bc470d reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000008c: 0x0000008c: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=2933c78993f34514 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000098: 0x00000098: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=6db25a08152595a0 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000098: 0x00000098: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=965d93938a5cfb6a reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000098: 0x00000098: unsuppo
+first    958 last    958 n       1 | CsPretranslate: skipped hash=5ad01da8d86f22e5 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000098: 0x00000098: unsuppo
+first    958 last    958 n       1 | CsPretranslate: ready hash=eedf85fce47e20f5 us=3273 kb=1361 ready_kb=82833
+first    959 last    959 n       1 | CsPretranslate: ready hash=22a4a1e68b865e16 us=3538 kb=1239 ready_kb=84073
+first    959 last    959 n       1 | CsPretranslate: ready hash=6b7be711098c0327 us=3605 kb=1239 ready_kb=85313
+first    959 last    959 n       1 | CsPretranslate: skipped hash=3654810bc81b6418 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    959 last    959 n       1 | CsPretranslate: skipped hash=3924a7517d71d0d7 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    959 last    959 n       1 | CsPretranslate: skipped hash=21fe8f6d4aef9ce1 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    959 last    959 n       1 | CsPretranslate: skipped hash=81593a315ed331a2 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000080: 0x00000080: unsuppo
+first    959 last    959 n       1 | CsPretranslate: ready hash=eca5aafd0f7b3ff7 us=144 kb=133 ready_kb=85447
+first    959 last    959 n       1 | CsPretranslate: ready hash=9422c00c16f6f1c6 us=4226 kb=1391 ready_kb=86839
+first    959 last    959 n       1 | CsPretranslate: ready hash=313169e8d7a1851b us=3882 kb=1401 ready_kb=88241
+first    960 last    960 n       1 | CsPretranslate: ready hash=3a2a2569603d8b90 us=4874 kb=1401 ready_kb=89643
+first    960 last    960 n       1 | CsPretranslate: ready hash=414b2f084bd5670e us=4381 kb=1433 ready_kb=91076
+first    960 last    960 n       1 | CsPretranslate: ready hash=dd6dc3e4dff6d376 us=4207 kb=1439 ready_kb=92515
+first    960 last    960 n       1 | CsPretranslate: ready hash=925869a6177c197b us=4308 kb=1439 ready_kb=93954
+first    960 last    960 n       1 | CsPretranslate: skipped hash=ba8e671415e87cc0 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=c1f7bf4bda97cb0f reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=837985a2bc1141aa reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=93004e88ee5f4676 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=c12da25598d4cb9e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=c37996de1fd92071 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=0290c0b82e1cbb98 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    960 last    960 n       1 | CsPretranslate: skipped hash=d1096bc27c03bd30 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000009c: 0x0000009c: unsuppo
+first    961 last    961 n       1 | CsPretranslate: ready hash=1bdf1ca81bd0629e us=6401 kb=1834 ready_kb=95788
+first    961 last    961 n       1 | CsPretranslate: ready hash=efcb6648db90a8b4 us=4658 kb=1836 ready_kb=97624
+first    961 last    961 n       1 | CsPretranslate: ready hash=2a464a2172c24d0d us=4569 kb=1836 ready_kb=99461
+first    961 last    961 n       1 | CsPretranslate: skipped hash=8973f8d6b1c481fa reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=ae449887c7cd920b reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=6a3e80218acbe4e8 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=201ea83ab851f90e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: ready hash=03f649cb5591c107 us=5312 kb=1897 ready_kb=101358
+first    962 last    962 n       1 | CsPretranslate: ready hash=c17ca52c356dcdce us=4909 kb=1898 ready_kb=103257
+first    962 last    962 n       1 | CsPretranslate: ready hash=8303d89f18383fa2 us=4839 kb=1898 ready_kb=105155
+first    962 last    962 n       1 | CsPretranslate: skipped hash=c6f849f06b2d4ab9 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=1696dafdacf0e605 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=a8364beb8419e163 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: skipped hash=f584224c8e4434a4 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000078: 0x00000078: unsuppo
+first    962 last    962 n       1 | CsPretranslate: ready hash=dda3d719a3a4cfd4 us=941 kb=464 ready_kb=105620
+first    963 last    963 n       1 | CsPretranslate: ready hash=31dd4d5eda0ca0f7 us=1808 kb=631 ready_kb=106251
+first    963 last    963 n       1 | CsPretranslate: ready hash=8ea650f9694f4c43 us=2225 kb=638 ready_kb=106889
+first    963 last    963 n       1 | CsPretranslate: ready hash=0d0fccd947cafd13 us=142 kb=66 ready_kb=106955
+first    963 last    963 n       1 | CsPretranslate: ready hash=95fcf1f2724d1470 us=120 kb=70 ready_kb=107025
+first    963 last    963 n       1 | CsPretranslate: ready hash=2f20978bad00e27b us=127 kb=70 ready_kb=107096
+first    963 last    963 n       1 | CsPretranslate: skipped hash=92e2f98755c14293 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000005c: 0x0000005c: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=98c824e40531626f reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000058: 0x00000058: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=ba4812ecc011569a reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000005c: 0x0000005c: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=4e150cec52ec64d8 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x0000005c: 0x0000005c: unsuppo
+first    963 last    963 n       1 | CsPretranslate: ready hash=46a1fa6ccd03e968 us=110 kb=68 ready_kb=107165
+first    963 last    963 n       1 | CsPretranslate: ready hash=fd0cd86551c9e364 us=108 kb=72 ready_kb=107237
+first    963 last    963 n       1 | CsPretranslate: ready hash=27eddf1b691735b4 us=109 kb=72 ready_kb=107310
+first    963 last    963 n       1 | CsPretranslate: skipped hash=49e99974995561aa reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000050: 0x00000050: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=47512831d00d7e3b reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000060: 0x00000060: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=5d7a9c3bd64c66cb reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000060: 0x00000060: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=9ae11dcbb469d22c reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000060: 0x00000060: unsuppo
+first    963 last    963 n       1 | CsPretranslate: ready hash=9a847ea49cc0d745 us=205 kb=81 ready_kb=107392
+first    963 last    963 n       1 | CsPretranslate: ready hash=ce536239df146f93 us=208 kb=83 ready_kb=107476
+first    963 last    963 n       1 | CsPretranslate: ready hash=fa690809b2fca4a0 us=1556 kb=628 ready_kb=108104
+first    963 last    963 n       1 | CsPretranslate: ready hash=b37b39538f83b721 us=1220 kb=511 ready_kb=108615
+first    963 last    963 n       1 | CsPretranslate: ready hash=c10e842816202e25 us=1277 kb=511 ready_kb=109126
+first    963 last    963 n       1 | CsPretranslate: skipped hash=0e77678d36575c03 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000070: 0x00000070: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=f9a860864a26d9f0 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000070: 0x00000070: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=fd406bbe507df2ad reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000070: 0x00000070: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=6b8cb0b4e702223e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000070: 0x00000070: unsuppo
+first    963 last    963 n       1 | CsPretranslate: skipped hash=fabc75e5191da1ce reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xfabc75e5191da1ce stage=compute pc=0x00000270 GetBufferResource 
+first    963 last    963 n       1 | CsPretranslate: ready hash=6fc61bb1e1cd16c8 us=1277 kb=844 ready_kb=109970
+first    963 last    963 n       1 | CsPretranslate: skipped hash=33b57ee7c2815d43 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x33b57ee7c2815d43 stage=compute pc=0x000002d0 GetBufferResource 
+first    963 last    963 n       1 | CsPretranslate: ready hash=fae22530578e2127 us=1541 kb=913 ready_kb=110884
+first    964 last    964 n       1 | CsPretranslate: ready hash=56ef8a28191be7f8 us=1145 kb=646 ready_kb=111531
+first    964 last    964 n       1 | CsPretranslate: ready hash=2e44504c25a5d1b8 us=1297 kb=658 ready_kb=112190
+first    964 last    964 n       1 | CsPretranslate: ready hash=d5920aa52b3c7fce us=1141 kb=655 ready_kb=112845
+first    964 last    964 n       1 | CsPretranslate: ready hash=d4df245ff4f109ec us=1207 kb=665 ready_kb=113510
+first    964 last    964 n       1 | CsPretranslate: ready hash=19e392d94084db08 us=1064 kb=618 ready_kb=114128
+first    964 last    964 n       1 | CsPretranslate: ready hash=eb0e4958f43afc85 us=471 kb=320 ready_kb=114449
+first    964 last    964 n       1 | CsPretranslate: ready hash=45f066969c38840b us=495 kb=322 ready_kb=114771
+first    964 last    964 n       1 | CsPretranslate: ready hash=28271bf7625765eb us=1875 kb=957 ready_kb=115729
+first    964 last    964 n       1 | CsPretranslate: ready hash=e8224b3df406de40 us=2592 kb=1309 ready_kb=117038
+first    964 last    964 n       1 | CsPretranslate: ready hash=889c18e4f3659a46 us=3078 kb=1160 ready_kb=118199
+first    964 last    964 n       1 | CsPretranslate: ready hash=89b2421dd7958ccc us=3444 kb=1496 ready_kb=119696
+first    965 last    965 n       1 | CsPretranslate: ready hash=997e009a96af60a2 us=2535 kb=1147 ready_kb=120843
+first    965 last    965 n       1 | CsPretranslate: ready hash=5a674eeba0975caf us=2711 kb=1302 ready_kb=122145
+first    965 last    965 n       1 | CsPretranslate: ready hash=3196fd648a7e51d6 us=918 kb=607 ready_kb=122752
+first    965 last    965 n       1 | CsPretranslate: ready hash=e6d714ea6683272d us=950 kb=617 ready_kb=123370
+first    965 last    965 n       1 | CsPretranslate: ready hash=e366cd5cccf6b7ab us=1462 kb=831 ready_kb=124202
+first    965 last    965 n       1 | CsPretranslate: ready hash=1199882f5f036761 us=1490 kb=784 ready_kb=124986
+first    965 last    965 n       1 | CsPretranslate: ready hash=a2ef80897065f892 us=1047 kb=649 ready_kb=125636
+first    966 last    966 n       1 | CsPretranslate: ready hash=a0869fdcf8940e83 us=5346 kb=2094 ready_kb=127730
+first    966 last    966 n       1 | CsPretranslate: ready hash=4536e7c5842cf7a5 us=6412 kb=2287 ready_kb=130018
+first    971 last    971 n       1 | CsPretranslate: ready hash=211f97fd88159ba9 us=78724 kb=5658 ready_kb=135677
+first    991 last    991 n       1 | CsPretranslate: ready hash=19b86fe7a6054750 us=339503 kb=10396 ready_kb=146073
+first    994 last    994 n       1 | CsPretranslate: ready hash=7e85a16c56694d27 us=51622 kb=4746 ready_kb=150820
+first   1008 last   1008 n       1 | CsPretranslate: ready hash=7e49a99329093577 us=237736 kb=9251 ready_kb=160071
+first   1010 last   1010 n       1 | CsPretranslate: ready hash=32ee982165ab6176 us=28570 kb=4017 ready_kb=164088
+first   1011 last   1011 n       1 | CsPretranslate: ready hash=4d5260530e4cf630 us=14360 kb=2915 ready_kb=167004
+first   1012 last   1012 n       1 | CsPretranslate: ready hash=36efb059bc072204 us=14346 kb=3094 ready_kb=170099
+first   1012 last   1012 n       1 | CsPretranslate: ready hash=330e5e9e669b6a55 us=5725 kb=2015 ready_kb=172114
+first   1018 last   1018 n       1 | CsPretranslate: ready hash=e5e926358bdef433 us=94990 kb=11270 ready_kb=183385
+first   1024 last   1024 n       1 | CsPretranslate: ready hash=7457a09d616e5bae us=107096 kb=11231 ready_kb=194616
+first   1030 last   1030 n       1 | CsPretranslate: ready hash=706022edbb5a48b1 us=99134 kb=10644 ready_kb=195075
+first   1036 last   1036 n       1 | CsPretranslate: ready hash=1f5ca3dfd1e7d5aa us=97652 kb=10956 ready_kb=196407
+first   1041 last   1041 n       1 | CsPretranslate: ready hash=81853f09942237c7 us=81473 kb=9765 ready_kb=193223
+first   1047 last   1047 n       1 | CsPretranslate: ready hash=5b55c9c5b190efaa us=89869 kb=10418 ready_kb=194300
+first   1052 last   1052 n       1 | CsPretranslate: ready hash=4e0adabc504af8ed us=88487 kb=10665 ready_kb=195613
+first   1057 last   1057 n       1 | CsPretranslate: ready hash=6372b725819d1955 us=87438 kb=10612 ready_kb=196524
+first   1062 last   1062 n       1 | CsPretranslate: ready hash=94f5c3f396b692f2 us=77727 kb=10109 ready_kb=196505
+first   1068 last   1068 n       1 | CsPretranslate: ready hash=a287b8f5ed1d6892 us=97071 kb=10344 ready_kb=195299
+first   1073 last   1073 n       1 | CsPretranslate: ready hash=7af7054bd7a049fc us=72969 kb=9416 ready_kb=196473
+first   1077 last   1077 n       1 | CsPretranslate: ready hash=8b77b321d5c501dd us=68006 kb=9736 ready_kb=195926
+first   1077 last   1077 n       1 | CsPretranslate: ready hash=984a7b30b671cc09 us=736 kb=294 ready_kb=196221
+first   1077 last   1077 n       1 | CsPretranslate: ready hash=c58ca699eeb8f019 us=637 kb=307 ready_kb=196528
+first   1077 last   1077 n       1 | CsPretranslate: ready hash=dbcf1994b706f87b us=1838 kb=758 ready_kb=195389
+first   1077 last   1077 n       1 | CsPretranslate: ready hash=0e619974e97304bd us=1965 kb=761 ready_kb=196151
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=be728f635f8740b1 us=2418 kb=752 ready_kb=195004
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=d4ae34a5721bd3da us=2111 kb=755 ready_kb=195760
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=71748b041aa82500 us=2197 kb=839 ready_kb=196599
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=78e6b523de1cf2cc us=1955 kb=839 ready_kb=196344
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=05d4796c9c5f20b6 us=2007 kb=814 ready_kb=196520
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=14bacd1f6297a843 us=1983 kb=817 ready_kb=196123
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=2d9c9b2185db21ce us=476 kb=318 ready_kb=196442
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=4c4daab4e48bef1e us=557 kb=329 ready_kb=196261
+first   1078 last   1078 n       1 | CsPretranslate: ready hash=28fe7fb8ad3b6002 us=693 kb=382 ready_kb=196133
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=42f58a670fa4e6be us=819 kb=385 ready_kb=196519
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=4893edfecdf50f8a us=4352 kb=1555 ready_kb=196316
+first   1079 last   1081 n       2 | CsPretranslate: ready hash=2370194073265477 us=1794 kb=933 ready_kb=196602
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=c78cba2904e63eab us=1838 kb=1127 ready_kb=196416
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=561913243c50e965 us=1559 kb=989 ready_kb=196122
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=4a45d14b69998b66 us=4439 kb=1763 ready_kb=196285
+first   1079 last   1079 n       1 | CsPretranslate: ready hash=07d00d928ae0f308 us=1970 kb=928 ready_kb=195904
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=fc651663b08a3995 us=5704 kb=1713 ready_kb=196456
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=f77d1a8e8ef735d7 us=356 kb=212 ready_kb=195171
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=ad634ec3e5cbcb6c us=458 kb=318 ready_kb=195490
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=1df0da2e8f8e2ec6 us=235 kb=208 ready_kb=195698
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=a3703ff1a822a962 us=146 kb=138 ready_kb=195837
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=6c2f8007f51329b6 us=602 kb=332 ready_kb=196169
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=584ee7356a6bf0a3 us=419 kb=284 ready_kb=196454
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=ac8cbc30042a53fc us=105 kb=68 ready_kb=196522
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=31dc15d3e1201be0 us=79 kb=98 ready_kb=195473
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=7dc4302e315fd3b4 us=177 kb=161 ready_kb=195634
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=8fbe788689915c46 us=67 kb=57 ready_kb=195691
+first   1080 last   1080 n       1 | CsPretranslate: ready hash=c2cf8dfc56bb22fa us=93 kb=62 ready_kb=195754
+first   1081 last   1081 n       1 | CsPretranslate: ready hash=9a0e7bb99da13c28 us=8326 kb=2814 ready_kb=196042
+first   1082 last   1082 n       1 | CsPretranslate: ready hash=5858ddda3b6a0074 us=9283 kb=2956 ready_kb=195393
+first   1082 last   1082 n       1 | CsPretranslate: ready hash=66b58e5026940d0c us=9236 kb=3192 ready_kb=192927
+first   1084 last   1084 n       1 | CsPretranslate: ready hash=5023120a87a3fd19 us=24718 kb=4810 ready_kb=187341
+first   1085 last   1085 n       1 | CsPretranslate: ready hash=c65bc03774c37e4b us=25788 kb=4821 ready_kb=192163
+first   1086 last   1086 n       1 | CsPretranslate: ready hash=90ae9bf3a080be57 us=14763 kb=3885 ready_kb=196048
+first   1087 last   1087 n       1 | CsPretranslate: ready hash=d3081f83965e49d6 us=18221 kb=3982 ready_kb=195284
+first   1087 last   1087 n       1 | CsPretranslate: ready hash=8c7456fb5748aaa6 us=533 kb=299 ready_kb=195584
+first   1087 last   1087 n       1 | CsPretranslate: ready hash=3a62036da55481c3 us=222 kb=122 ready_kb=195706
+first   1087 last   1087 n       1 | CsPretranslate: ready hash=2d797ec02ab98391 us=94 kb=71 ready_kb=195777
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=1f9a8fa94a41f39c us=266 kb=166 ready_kb=195944
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=c80fe4dc28c8e615 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xc80fe4dc28c8e615 stage=compute pc=0x000001a4 GetBufferResource 
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=f37b3fc0c493045b reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xf37b3fc0c493045b stage=compute pc=0x00000128 GetBufferResource 
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=46ada7c79b9f3ec9 us=454 kb=212 ready_kb=196156
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=ff2909a3f7cdfead us=79 kb=56 ready_kb=196213
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=0401c4b63f55aa21 us=84 kb=98 ready_kb=196311
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=9007921f935c276f us=79 kb=93 ready_kb=196404
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=5a813991aa693677 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x5a813991aa693677 stage=compute pc=0x00000080 GetBufferResource 
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=9895f6c0bb8e467c reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x9895f6c0bb8e467c stage=compute pc=0x00000090 GetBufferResource 
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=158c08b7b024e017 us=419 kb=308 ready_kb=187461
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=ab665aa59bc5705f us=636 kb=336 ready_kb=187797
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=7d9f5d064dc92d44 us=631 kb=338 ready_kb=188136
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=33f5f00037afc357 us=636 kb=306 ready_kb=188443
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=b68f2c0ed92f7ffc us=417 kb=337 ready_kb=188780
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=133238a813e8de79 us=75 kb=54 ready_kb=188835
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=f305354b127ce9c5 us=812 kb=234 ready_kb=189069
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=77412706ead53fba us=790 kb=251 ready_kb=189321
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=34b67da1407bb634 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000cc: 0x000000cc: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=9d0780e9a2b32279 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000cc: 0x000000cc: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=d9774a76cc18e6e6 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000c8: 0x000000c8: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=fcb940cbdbb90ece reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000cc: 0x000000cc: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=a752284076a6ca21 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000d8: 0x000000d8: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=2b58ffec24360b3f reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000d8: 0x000000d8: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=e842fa92796d0ff7 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000d4: 0x000000d4: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=bb398fbe40c1cf46 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000d8: 0x000000d8: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=4f2dbea9b308f67e us=511 kb=315 ready_kb=189636
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=b0b8dfc82bb0d60c us=520 kb=328 ready_kb=189965
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=1be8cdae3bfaff9b us=304 kb=152 ready_kb=190117
+first   1088 last   1088 n       1 | CsPretranslate: ready hash=22a9b66fc396681b us=348 kb=169 ready_kb=190287
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=5220002ac2dbf421 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000138: 0x00000138: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=88b058dc474b3b28 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000130: 0x00000130: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=7ef666a6148848a2 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000130: 0x00000130: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=9a7824789a9a5afb reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000134: 0x00000134: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=427c7b14cc469460 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000128: 0x00000128: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=d36a4df2073d055e reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000124: 0x00000124: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=86abd2e450d82998 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000124: 0x00000124: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=afe52df4bf169cf2 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000124: 0x00000124: unsuppo
+first   1088 last   1088 n       1 | CsPretranslate: skipped hash=06c29e2ccf89ce71 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x06c29e2ccf89ce71 stage=compute pc=0x00000334 GetBufferResource 
+first   1089 last   1089 n       1 | CsPretranslate: skipped hash=b2d06827515d177b reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xb2d06827515d177b stage=compute pc=0x00000324 GetBufferResource 
+first   1092 last   1092 n       1 | CsPretranslate: ready hash=a646204f5d2bcc48 us=57614 kb=5937 ready_kb=196224
+first   1095 last   1095 n       1 | CsPretranslate: ready hash=df037c519083bd2d us=56675 kb=6017 ready_kb=195308
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=02c21f888e4d0bcd us=2029 kb=641 ready_kb=195949
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=b817e005a3feaf3d us=1641 kb=641 ready_kb=196591
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=34bb11b904b76a80 us=1417 kb=645 ready_kb=194141
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=dad0c60bbf793db0 us=1315 kb=645 ready_kb=194787
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=755d2a9abff403dc us=1454 kb=760 ready_kb=195548
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=c177e09dc2135d7c us=1596 kb=815 ready_kb=196363
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=36fd832386ad6c18 us=1459 kb=774 ready_kb=195123
+first   1096 last   1096 n       1 | CsPretranslate: ready hash=1fa7c7eef9ea2f47 us=1794 kb=818 ready_kb=195941
+first   1097 last   1097 n       1 | CsPretranslate: ready hash=1e606fba7e357113 us=3236 kb=1315 ready_kb=185986
+first   1097 last   1097 n       1 | CsPretranslate: ready hash=1c8a109c32f1f2bd us=3386 kb=1468 ready_kb=187455
+first   1097 last   1097 n       1 | CsPretranslate: ready hash=10aa1588ff8f0876 us=2588 kb=1320 ready_kb=188776
+first   1097 last   1097 n       1 | CsPretranslate: ready hash=3edd85ecff1f2e9c us=3073 kb=1473 ready_kb=190249
+first   1142 last   1142 n       1 | CsPretranslate: ready hash=0c6b40d429e71ce8 us=752322 kb=18739 ready_kb=187113
+first   1188 last   1188 n       1 | CsPretranslate: ready hash=288b4106c83543ce us=756437 kb=18763 ready_kb=194921
+first   1234 last   1234 n       1 | CsPretranslate: ready hash=91157e586f0b5756 us=746386 kb=18739 ready_kb=193477
+first   1252 last  14452 n      23 | FixB42Ext: mode=1 extent=3840x2160 hit=99 applied=99 drawn=1241 rearm=97 frame=1365
+first   1280 last   1280 n       1 | CsPretranslate: ready hash=e1ad162483199ff4 us=765265 kb=18763 ready_kb=190962
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=24367c6372b5a689 us=801 kb=285 ready_kb=191248
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=49229c5eeefc3e00 us=632 kb=285 ready_kb=191534
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=6696a495f680165d us=367 kb=294 ready_kb=191829
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=b8e10c70bc44a472 us=50 kb=49 ready_kb=191878
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=77cdc629e1df9d7d us=222 kb=136 ready_kb=192014
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=43d6a6fa21e811f7 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x43d6a6fa21e811f7 stage=compute pc=0x00000050 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=cb9abb6788229cce reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xcb9abb6788229cce stage=compute pc=0x000000d8 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=0d2fba1e75f2570e us=142 kb=105 ready_kb=192120
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=c1ac1cc936f4e5de us=135 kb=110 ready_kb=192230
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=6a05ade1cdafab29 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x6a05ade1cdafab29 stage=compute pc=0x00000190 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=40926493e8fda115 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x40926493e8fda115 stage=compute pc=0x00000190 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=09152ee2e60cbdbc us=255 kb=125 ready_kb=192356
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=d71e5074f09e306c us=228 kb=125 ready_kb=192482
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=aa25420ff27a548c us=78 kb=90 ready_kb=192573
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=614091c020d5e0df us=80 kb=90 ready_kb=192663
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=0b238107822b2137 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x0b238107822b2137 stage=compute pc=0x00000128 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: skipped hash=49819ff3d8cf6f86 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x49819ff3d8cf6f86 stage=compute pc=0x00000128 GetBufferResource 
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=9e22582ebaa47267 us=3302 kb=1776 ready_kb=194440
+first   1281 last   1281 n       1 | CsPretranslate: ready hash=baaec022747c8ec9 us=3245 kb=1810 ready_kb=196251
+first   1282 last   1282 n       1 | CsPretranslate: ready hash=f82714bb65bedd50 us=4839 kb=2046 ready_kb=188188
+first   1282 last   1282 n       1 | CsPretranslate: skipped hash=0feb5b9bf0f8b349 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x0feb5b9bf0f8b349 stage=compute pc=0x0000035c GetBufferResource 
+first   1282 last   1282 n       1 | CsPretranslate: skipped hash=6695669155ce8188 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x6695669155ce8188 stage=compute pc=0x0000034c GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: skipped hash=8a1d410d3cba3f08 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x8a1d410d3cba3f08 stage=compute pc=0x000003e8 GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=f954c454ef44684d us=1158 kb=653 ready_kb=188842
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=582f858b06b82663 us=769 kb=539 ready_kb=189381
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=2fdd27ecb1e82c6f us=365 kb=220 ready_kb=189602
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=945562133b5ca4b1 us=2719 kb=1315 ready_kb=190917
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=9ec0195098622035 us=1593 kb=940 ready_kb=191858
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=ad128c1a4b286d5b us=204 kb=74 ready_kb=191932
+first   1283 last   1283 n       1 | CsPretranslate: skipped hash=6231f9bb7f08d10c reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x6231f9bb7f08d10c stage=compute pc=0x00000150 GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: skipped hash=c0f77151c2c0cecd reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xc0f77151c2c0cecd stage=compute pc=0x0000015c GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=7188db82ebae9714 us=337 kb=220 ready_kb=192153
+first   1283 last   1283 n       1 | CsPretranslate: skipped hash=4c30c17701a2e4a1 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x4c30c17701a2e4a1 stage=compute pc=0x00000184 GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: skipped hash=7378fe548d1a8a80 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x7378fe548d1a8a80 stage=compute pc=0x00000154 GetBufferResource 
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=17332a06be6c1899 us=823 kb=525 ready_kb=192678
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=4d02c60decfb4461 us=844 kb=534 ready_kb=193213
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=76667c57283e5b0f us=1190 kb=528 ready_kb=193741
+first   1283 last   1283 n       1 | CsPretranslate: ready hash=ce9ba8810324573f us=381 kb=197 ready_kb=193939
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=6f5d573d087f6e83 us=302 kb=86 ready_kb=194026
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=f65bb6e6f7c7e0b9 us=966 kb=362 ready_kb=194388
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=7dca722bdced8a2a us=468 kb=145 ready_kb=194533
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=8b6e6b394aeb9e32 us=764 kb=503 ready_kb=195037
+first   1284 last   1284 n       1 | CsPretranslate: skipped hash=83643d26a1004a06 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x83643d26a1004a06 stage=compute pc=0x0000015c GetBufferResource 
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=501af1d09f5ea1a2 us=93 kb=68 ready_kb=195105
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=aeea80b724102ac1 us=96 kb=58 ready_kb=195164
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=13e1719c7eb63fb1 us=92 kb=70 ready_kb=195234
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=2bca97ba69b7b895 us=76 kb=68 ready_kb=195303
+first   1284 last   1284 n       1 | CsPretranslate: ready hash=9f75c51986b9e74e us=152 kb=120 ready_kb=195424
+first   1284 last   1284 n       1 | CsPretranslate: skipped hash=cfdceef703c56553 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xcfdceef703c56553 stage=compute pc=0x000001a8 GetBufferResource 
+first   1284 last   1284 n       1 | CsPretranslate: skipped hash=92f9dd0d9be5c4f8 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x92f9dd0d9be5c4f8 stage=compute pc=0x0000012c GetBufferResource 
+first   1288 last   1288 n       1 | CsPretranslate: skipped hash=57c4d5848e02ecdc reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x57c4d5848e02ecdc stage=compute pc=0x000001a0 GetBufferResource 
+first   1288 last   1288 n       1 | CsPretranslate: skipped hash=6076621c96bb8e51 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x6076621c96bb8e51 stage=compute pc=0x00000084 GetBufferResource 
+first   1288 last   1288 n       1 | CsPretranslate: ready hash=179d1d8bfc84957b us=207 kb=155 ready_kb=195579
+first   1288 last   1288 n       1 | CsPretranslate: ready hash=07f001a2ae4f1479 us=3480 kb=1269 ready_kb=186504
+first   1289 last   1289 n       1 | CsPretranslate: ready hash=23c0bb13b7e438d8 us=3855 kb=1300 ready_kb=187805
+first   1289 last   1289 n       1 | CsPretranslate: ready hash=7c6fa1165c4362d2 us=3391 kb=1300 ready_kb=189106
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=ec10d99e0c84c01f reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000c0: 0x000000c0: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=2659eba9150fa177 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000b8: 0x000000b8: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=24d2a9e75fc411b5 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000bc: 0x000000bc: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=0e6936050cfa4b3a reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000bc: 0x000000bc: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=230ae73860c0e217 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x230ae73860c0e217 stage=compute pc=0x000001b8 GetBufferResource 
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=5cd7ada004f6e1f7 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x5cd7ada004f6e1f7 stage=compute pc=0x000001b8 GetBufferResource 
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=bd3163e5cf418f11 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xbd3163e5cf418f11 stage=compute pc=0x000001b8 GetBufferResource 
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=acfe6810f6834215 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000204: 0x00000204: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=b0adee121af0129f reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000204: 0x00000204: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=48400d5bcc4e6d0c reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000204: 0x00000204: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=b387173c274b6baf reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000204: 0x00000204: unsuppo
+first   1289 last   1289 n       1 | CsPretranslate: skipped hash=a62a37f2455315c4 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xa62a37f2455315c4 stage=compute pc=0x000001d0 GetBufferResource 
+first   1290 last   1290 n       1 | CsPretranslate: skipped hash=62051a9a5b17f037 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x62051a9a5b17f037 stage=compute pc=0x000002ac GetBufferResource 
+first   1290 last   1290 n       1 | CsPretranslate: skipped hash=0fd674b412730f37 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0x0fd674b412730f37 stage=compute pc=0x0000011c GetBufferResource 
+first   1290 last   1290 n       1 | CsPretranslate: ready hash=43cec25378f66258 us=379 kb=173 ready_kb=189279
+first   1290 last   1290 n       1 | CsPretranslate: ready hash=6f79ac82e66d4e36 us=12934 kb=3074 ready_kb=192353
+first   1291 last   1291 n       1 | CsPretranslate: ready hash=62acc030db4602bd us=5841 kb=1960 ready_kb=194314
+first   1291 last   1291 n       1 | CsPretranslate: ready hash=e353fa53ddac6f46 us=5612 kb=2463 ready_kb=187361
+first   1295 last   1295 n       1 | CsPretranslate: skipped hash=ee7048f4e20823c7 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\ir\passes\ResourceTracking.cpp:173 shader resource tracking: hash=0xee7048f4e20823c7 stage=compute pc=0x00000150 GetBufferResource 
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=1320b59d5060463a us=42452 kb=5266 ready_kb=192628
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=07ea53897b6e32aa us=464 kb=256 ready_kb=192885
+first   1297 last   1342 n       3 | CsPretranslate: ready hash=63e0772f51396118 us=320 kb=251 ready_kb=193136
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=3a6787b938f9a07e us=354 kb=256 ready_kb=193393
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=f4d708fb6cfc478d us=235 kb=202 ready_kb=193595
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=d1ee9a50d963f1e9 us=437 kb=264 ready_kb=193860
+first   1297 last   1297 n       1 | CsPretranslate: ready hash=cab5b94bcfce5fdc us=417 kb=259 ready_kb=194119
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=a47be1fac898a674 us=2764 kb=1243 ready_kb=195363
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=66d0a7450d4e3a46 us=3156 kb=1495 ready_kb=187122
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=6ed90e8895cbb9f1 us=1665 kb=1069 ready_kb=188192
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=cbc1aa18de012296 us=2455 kb=1380 ready_kb=189573
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=aaf9217aae9c03f3 us=900 kb=860 ready_kb=190433
+first   1298 last   1298 n       1 | CsPretranslate: ready hash=78afa95c10db8de6 us=660 kb=767 ready_kb=191200
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=df9d2b19a20299fa us=924 kb=860 ready_kb=192061
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=a54fd5cb143807f8 us=885 kb=767 ready_kb=192828
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=74720459b7b999d7 us=1278 kb=940 ready_kb=193769
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=1d409b2cbbabe054 us=1408 kb=1097 ready_kb=194866
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=74e403f1f8dca64f us=1248 kb=940 ready_kb=195807
+first   1299 last   1299 n       1 | CsPretranslate: ready hash=72665e5b8772913b us=1345 kb=1098 ready_kb=196303
+first   1299 last   1299 n       1 | CsPretranslate: skipped hash=433e4cede34ca4c3 reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000c0: 0x000000c0: unsuppo
+first   1299 last   1299 n       1 | CsPretranslate: skipped hash=f8e350383290ff7b reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x000000fc: 0x000000fc: unsuppo
+first   1300 last   1300 n       1 | CsPretranslate: ready hash=5e887afbc5b4d562 us=16853 kb=3430 ready_kb=195865
+first   1301 last   1301 n       1 | CsPretranslate: ready hash=7860a3b1aedfa2c0 us=15574 kb=3542 ready_kb=196287
+first   1302 last   1302 n       1 | CsPretranslate: ready hash=76663d0ea654f28d us=16697 kb=3532 ready_kb=196562
+first   1302 last   1302 n       1 | CsPretranslate: skipped hash=4468d53059c03cba reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000294: 0x00000294: unsuppo
+first   1302 last   1302 n       1 | CsPretranslate: skipped hash=7bb50479b3a32c7c reason=C:\kyty\f287\fs3\fs3a\wt\src\graphics\shader\recompiler\frontend\cfg\ShaderCFG.cpp:44 shader CFG build failed: unsupported decoded instruction in CFG at pc 0x00000324: 0x00000324: unsuppo
+first   1302 last   1302 n       1 | CsPretranslate: ready hash=94f5d96b1b0a5bdb us=5598 kb=2213 ready_kb=194895
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=72c62537566def7b us=7084 kb=2499 ready_kb=196466
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=76ea29cffd1143d3 us=102 kb=55 ready_kb=196521
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=444fa4e0a0c257dc us=66 kb=57 ready_kb=196579
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=56e425098c250398 us=69 kb=59 ready_kb=194926
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=180d3cd80a992065 us=67 kb=51 ready_kb=194977
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=deece3c283d6176a us=206 kb=111 ready_kb=195088
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=ceedb503d118956d us=82 kb=97 ready_kb=195185
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=ce8ef782f6205c09 us=60 kb=51 ready_kb=195237
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=803452c64c774239 us=143 kb=65 ready_kb=195303
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=15e08646dedb4f35 us=161 kb=73 ready_kb=195376
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=9a5dfb71d7008200 us=73 kb=56 ready_kb=195433
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=4089494bf8d84000 us=60 kb=55 ready_kb=195489
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=e2a3b4cfc4a3b50b us=85 kb=74 ready_kb=195563
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=6b9a643dbb94b5bd us=75 kb=70 ready_kb=195633
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=f5a5b476ddc7b124 us=65 kb=59 ready_kb=195692
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=3fd5608f34174917 us=64 kb=59 ready_kb=195752
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=edbfc0b8bca85193 us=63 kb=57 ready_kb=195809
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=e3afa433e53df837 us=90 kb=76 ready_kb=195886
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=b5d3da7dad2da9e8 us=85 kb=72 ready_kb=195958
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=0a2f01aa7430cf88 us=75 kb=61 ready_kb=196020
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=c22247bd53be9e87 us=67 kb=61 ready_kb=196081
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=665f03b3202ac52b us=110 kb=84 ready_kb=196166
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=fcc2c9638a434644 us=124 kb=103 ready_kb=196269
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=fdcc9e543c19135d us=124 kb=100 ready_kb=196370
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=559e4ca9e2a9200d us=195 kb=88 ready_kb=196458
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=229adff0f8367e06 us=110 kb=88 ready_kb=196547
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=067914fa2d8c5bd8 us=53 kb=51 ready_kb=196599
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=4a3893cb4b9005ef us=57 kb=53 ready_kb=196440
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=1b029437c2cc67fc us=57 kb=53 ready_kb=196493
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=e175a09a5e57c014 us=87 kb=56 ready_kb=196550
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=5a82dca2c9f58b95 us=120 kb=71 ready_kb=196303
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=f0ed4600a498fff5 us=69 kb=55 ready_kb=196359
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=c6ea3a02890598af us=409 kb=155 ready_kb=196514
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=d887a289f35c0a08 us=295 kb=123 ready_kb=196428
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=a572ee17a880e71c us=59 kb=48 ready_kb=196477
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=2973730d9cad62ef us=280 kb=213 ready_kb=196551
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=f92ef3ee9fe3ae81 us=192 kb=107 ready_kb=196327
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=5df8147c19550e62 us=174 kb=113 ready_kb=196441
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=95ffaca9d93369f2 us=555 kb=392 ready_kb=196549
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=f7cb8652a6d95e32 us=255 kb=201 ready_kb=196584
+first   1303 last   1303 n       1 | CsPretranslate: ready hash=fefd3af94696f77e us=345 kb=198 ready_kb=196564
+first   1303 last   1329 n       2 | CsPretranslate: ready hash=4e4cac41570e6a48 us=2871 kb=1305 ready_kb=194993
+first   1304 last   1330 n       2 | CsPretranslate: ready hash=ed9c7d9f3fd00582 us=10698 kb=2763 ready_kb=194714
+first   1304 last   1330 n       2 | CsPretranslate: ready hash=17f307c3ac26a9bd us=2701 kb=1306 ready_kb=196021
+first   1305 last   1331 n       2 | CsPretranslate: ready hash=e9e602477e23353d us=8839 kb=2761 ready_kb=195825
+first   1305 last   1331 n       2 | CsPretranslate: ready hash=b36a731590584c27 us=3970 kb=1726 ready_kb=194359
+first   1306 last   1332 n       2 | CsPretranslate: ready hash=5f272286bb42218d us=17155 kb=3875 ready_kb=193424
+first   1306 last   1332 n       2 | CsPretranslate: ready hash=72ce9a8089fcd7cd us=6406 kb=2625 ready_kb=196049
+first   1309 last   1335 n       2 | CsPretranslate: ready hash=c9b98b7ad9e024f8 us=37575 kb=6191 ready_kb=193534
+first   1309 last   1336 n       2 | CsPretranslate: ready hash=e6d68dfcd68bca7e us=8274 kb=3010 ready_kb=196544
+first   1313 last   1339 n       2 | CsPretranslate: ready hash=24136e66dfbe0801 us=58841 kb=7229 ready_kb=196503
+first   1313 last   1339 n       2 | CsPretranslate: ready hash=072e344d4fd0ae59 us=3008 kb=1373 ready_kb=190973
+first   1314 last   1340 n       2 | CsPretranslate: ready hash=b77e23184f88066d us=10913 kb=2871 ready_kb=193844
+first   1314 last   1340 n       2 | CsPretranslate: ready hash=7b2ae7f6a48116cf us=4119 kb=1824 ready_kb=195669
+first   1315 last   1341 n       2 | CsPretranslate: ready hash=67243bb78925d5b3 us=16740 kb=4049 ready_kb=193701
+first   1316 last   1343 n       2 | CsPretranslate: ready hash=768ccab4753ddfe3 us=18083 kb=4034 ready_kb=196231
+first   1317 last   1343 n       2 | CsPretranslate: ready hash=063beba4d2a2e76d us=7269 kb=2212 ready_kb=196035
+first   1319 last   1345 n       2 | CsPretranslate: ready hash=18d0435c19ec6639 us=27845 kb=5111 ready_kb=195568
+first   1319 last   1345 n       2 | CsPretranslate: ready hash=65d256cc173ef938 us=9821 kb=3126 ready_kb=179955
+first   1323 last   1349 n       2 | CsPretranslate: ready hash=5c2e36198ed9c4f9 us=61982 kb=7400 ready_kb=187355
+first   1324 last   1349 n       2 | CsPretranslate: ready hash=971e5d5084d38add us=11058 kb=3500 ready_kb=190856
+first   1329 last   1354 n       2 | CsPretranslate: ready hash=3464f61acc0d47ea us=83185 kb=8553 ready_kb=180646
+first   1354 last   1354 n       1 | CsPretranslate: ready hash=9195c1fc250a73a1 us=1931 kb=901 ready_kb=196460
+first   1354 last   1354 n       1 | CsPretranslate: ready hash=0ee8a51baca740db us=437 kb=269 ready_kb=191462
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=5fae811e126cdeec us=579 kb=342 ready_kb=191805
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=1ea15069ca94b660 us=691 kb=330 ready_kb=192136
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=2e999c488dfafe02 us=281 kb=138 ready_kb=192275
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=83bca594ea59ade5 us=95 kb=56 ready_kb=192332
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=24fef3567465ac1a us=160 kb=74 ready_kb=192406
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=083b00c3e7751820 us=67 kb=58 ready_kb=192464
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=d5ff62ae4c9de1f2 us=498 kb=209 ready_kb=192674
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=890fc2aedefdf5b6 us=170 kb=111 ready_kb=192786
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=f29c29a46fb398de us=172 kb=112 ready_kb=192898
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=ff655f8624612ab0 us=134 kb=111 ready_kb=193010
+first   1355 last   1355 n       1 | CsPretranslate: ready hash=36c3961ae84de726 us=89 kb=99 ready_kb=193109
+first   1357 last   1357 n       1 | CsPretranslate: ready hash=77076965e0344358 us=42706 kb=4649 ready_kb=196527
+first   1357 last   1357 n       1 | CsPretranslate: ready hash=45fc2015534a95ba us=377 kb=136 ready_kb=196404
+first   1357 last   1357 n       1 | CsPretranslate: ready hash=a6354f40329006b0 us=1505 kb=815 ready_kb=195976
+first   1358 last   1358 n       1 | CsPretranslate: ready hash=39a6ca4cd053153f us=1931 kb=861 ready_kb=195342
+first   1358 last   1358 n       1 | CsPretranslate: ready hash=f1bffeeccdd5faa8 us=6282 kb=2116 ready_kb=196389
+first   1358 last   1358 n       1 | CsPretranslate: ready hash=68dba4abdba273c1 us=352 kb=229 ready_kb=195237
+first   1358 last   1358 n       1 | CsPretranslate: ready hash=95392b40e1748347 us=742 kb=384 ready_kb=195622
+first   1358 last   1358 n       1 | CsPretranslate: ready hash=a5b26e4e9f0acb26 us=715 kb=384 ready_kb=196006
+first   1371 last   1371 n       1 | CsPretranslate: ready hash=99012529f9a27ba3 us=214036 kb=9047 ready_kb=194291
+first   1371 last   1371 n       1 | CsPretranslate: ready hash=f199f789d49e921d us=7103 kb=2471 ready_kb=193219
+first   1373 last   1373 n       1 | CsPretranslate: ready hash=23020dbb055fe734 us=21147 kb=4145 ready_kb=193832
+first   1373 last   1373 n       1 | CsPretranslate: ready hash=902dc8a6dd598d73 us=14877 kb=3637 ready_kb=195256
+first   1375 last   1375 n       1 | CsPretranslate: ready hash=001028ba8efc6ae1 us=27966 kb=5367 ready_kb=196607
+first   1389 last   1389 n       1 | CsPretranslate: ready hash=1f3219e5899a66f2 us=237135 kb=9593 ready_kb=195890
+first   1390 last   1390 n       1 | CsPretranslate: ready hash=ed7b0d6e8ea0f16b us=9998 kb=3064 ready_kb=193352
+first   1391 last   1391 n       1 | CsPretranslate: ready hash=9bf61e1d19025b36 us=18329 kb=4753 ready_kb=195480
+first   1393 last   1393 n       1 | CsPretranslate: ready hash=43c37f942e0ef297 us=19525 kb=4325 ready_kb=193614
+first   1395 last   1395 n       1 | CsPretranslate: ready hash=d19d4abdfaf5c2a4 us=32623 kb=5937 ready_kb=196542
+first   1411 last   1411 n       1 | CsPretranslate: ready hash=8175abf0855222db us=266711 kb=10380 ready_kb=195448
+first   1412 last   1412 n       1 | CsPretranslate: ready hash=567c96541dd6e75f us=13979 kb=3812 ready_kb=193387
+first   1413 last   1413 n       1 | CsPretranslate: ready hash=8d1ef965ee5b66e1 us=23720 kb=5025 ready_kb=196582
+first   1415 last   1415 n       1 | CsPretranslate: ready hash=fc3f409752745849 us=24872 kb=5013 ready_kb=195348
+first   1417 last   1417 n       1 | CsPretranslate: ready hash=e521027282ccc3af us=37626 kb=6259 ready_kb=196497
+first   1434 last   1434 n       1 | CsPretranslate: ready hash=3d27502d0a809c72 us=281071 kb=10720 ready_kb=193190
+first   1435 last   1435 n       1 | CsPretranslate: ready hash=4e2e760283627b87 us=16030 kb=4221 ready_kb=188857
+first   1437 last   1437 n       1 | CsPretranslate: ready hash=2ee865442e6af97e us=24615 kb=5326 ready_kb=194183
+first   1439 last   1439 n       1 | CsPretranslate: ready hash=e382f3a60b4b3e70 us=27998 kb=5356 ready_kb=195471
+first   1441 last   1441 n       1 | CsPretranslate: ready hash=d7f0d040b95caeb8 us=38454 kb=6566 ready_kb=196243
+first   1449 last   1449 n       1 | CsPretranslate: ready hash=0af122d5ac62c4c5 us=134233 kb=9644 ready_kb=193195
+first   1450 last   1450 n       1 | CsPretranslate: ready hash=2eb09ce1885a629b us=2930 kb=956 ready_kb=194152
+first   1450 last   1450 n       1 | CsPretranslate: ready hash=88f33fd28022c0ed us=412 kb=240 ready_kb=194392
+first   1450 last   1450 n       1 | CsPretranslate: ready hash=cffdb4660762c40b us=1111 kb=591 ready_kb=194984
+first   1450 last   1450 n       1 | CsPretranslate: ready hash=7b4078750f32db50 us=3521 kb=1417 ready_kb=196401
+first   1451 last   1451 n       1 | CsPretranslate: ready hash=b912bcf29000558d us=3020 kb=1118 ready_kb=194510
+first   1452 last   1452 n       1 | CsPretranslate: ready hash=4d9414c675e882dd us=31499 kb=5504 ready_kb=192785
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=8d71a50bb5e92cb5 us=3329 kb=1215 ready_kb=194001
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=4ed16284257c432a us=780 kb=329 ready_kb=194331
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=715955864de8f7e3 us=2078 kb=684 ready_kb=195015
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=72342a2895b35e0a us=343 kb=175 ready_kb=195191
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=9b222879ffc8ca77 us=241 kb=146 ready_kb=195337
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=1c31c3020f9956a9 us=53 kb=51 ready_kb=195389
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=75470dca0096d178 us=2993 kb=1151 ready_kb=196540
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=06b9600eb8450a8b us=508 kb=264 ready_kb=195431
+first   1453 last   1453 n       1 | CsPretranslate: ready hash=ec1dcc1c040a9e51 us=316 kb=264 ready_kb=195695
+first   4302 last   6102 n       3 | InputScript: press J at 75.01 s (present 4437)
+first   4312 last   6112 n       3 | InputScript: release J at 75.17 s (present 4447)
+first   7002 last   8802 n       3 | InputScript: press L at 120.01 s (present 7137)
+first   7012 last   8811 n       3 | InputScript: release L at 120.17 s (present 7147)
+first  14527 last  14527 n       1 | Window 1 closed
+first  14527 last  14527 n       1 | Event: quit
+=== GuestOut lines from card-300 (first 200)
+GuestOut total from card-300: 0

@@ -1,0 +1,27 @@
+opens after entry 1001 first k 0 last k 109 rows 19945
+opens per 60 rows (bucket: n): [(0, 679), (1, 322)]
+108 path = /app0/data/prein/bg/gfx/snake_boss_platform_p3_snake_d.gnfp
+108 path = /app0/data/prein/bg/gfx/building_concrete_bright_tile_b_d.gnfp
+108 path = /app0/data/prein/bg/gfx/birdsflight_woods_tile_01_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_octopusboss_metal_n.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_snake_boss_crystal_n.gnfp
+108 path = /app0/data/prein/bg/gfx/garden_soil_baseblock_cubeflat_and_curvehalf_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_earthworm_big_d.gnfp
+108 path = /app0/data/prein/bg/gfx/rock_mossy_tile_3v_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_octopusboss_metal_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_final_boss_gun_d.gnfp
+108 path = /app0/data/prein/bg/gfx/building_concrete_bright_tile_b_n.gnfp
+108 path = /app0/data/prein/bg/gfx/birdsflight_woods_tile_01_n.gnfp
+108 path = /app0/data/prein/bg/gfx/aztek_rock_tile_a_n.gnfp
+108 path = /app0/data/prein/bg/gfx/mup_bg_tex_graveyard_swanp_a_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_snake_boss_crystal_d.gnfp
+108 path = /app0/data/system/gfx/sys_water_stream_n.gnfp
+108 path = /app0/data/prein/bg/gfx/baseblock_mud_tile_d.gnfp
+108 path = /app0/data/prein/bg/gfx/veg_grass_blade_base_d.gnfp
+108 path = /app0/data/prein/bg/gfx/baseblock_snow_tile_d.gnfp
+108 path = /app0/data/prein/bg/gfx/snake_boss_platform_p3_snake_d.gnfp
+108 path = /app0/data/prein/bg/gfx/building_concrete_bright_tile_b_d.gnfp
+108 path = /app0/data/prein/bg/gfx/birdsflight_woods_tile_01_d.gnfp
+108 path = /app0/data/prein/bg/gfx/garden_soil_baseblock_cubeflat_and_curvehalf_d.gnfp
+108 path = /app0/data/prein/characters/gfx/enemy_earthworm_big_d.gnfp
+109 path = /app0/data/prein/bg/gfx/rock_mossy_tile_3v_d.gnfp

@@ -1,0 +1,10 @@
+capture: C:/kyty/f287/f13a/f13_rd.rdc phase debug
+presents: [(13, 'vkQueuePresentKHR(ResourceId::3329)'), (2285, 'vkQueuePresentKHR(ResourceId::3329)')]
+frame 2 = events (13, 2285]
+---- DEBUG eid 1247 pixel 1920,1080
+  debug failed (no trace)
+---- DEBUG eid 1247 pixel 100,100
+  debug failed (no trace)
+---- DEBUG eid 1073 pixel 1920,1080
+  debug failed (no trace)
+done

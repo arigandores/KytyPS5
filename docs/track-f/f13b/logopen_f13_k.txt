@@ -1,0 +1,27 @@
+opens after entry 988 first k 0 last k 191 rows 14527
+opens per 60 rows (bucket: n): [(0, 735), (1, 31), (3, 222)]
+189 path = /app0/data/prein/bg/gfx/garden_soil_baseblock_cubeflat_and_curvehalf_d.gnfp
+189 path = /app0/data/prein/characters/gfx/enemy_earthworm_big_d.gnfp
+189 path = /app0/data/prein/common/gfx/mup_co_tex_jetpack_d.gnfp
+189 path = /app0/data/prein/bg/gfx/rock_mossy_tile_3v_d.gnfp
+189 path = /app0/data/prein/characters/gfx/enemy_octopusboss_metal_d.gnfp
+189 path = /app0/data/prein/characters/gfx/enemy_final_boss_gun_d.gnfp
+189 path = /app0/data/prein/bg/gfx/building_concrete_bright_tile_b_n.gnfp
+189 path = /app0/data/prein/bg/gfx/birdsflight_woods_tile_01_n.gnfp
+189 path = /app0/data/prein/bg/gfx/aztek_rock_tile_a_n.gnfp
+189 path = /app0/data/prein/bg/gfx/mup_bg_tex_graveyard_swanp_a_d.gnfp
+189 path = /app0/data/prein/characters/gfx/enemy_snake_boss_crystal_d.gnfp
+189 path = /app0/data/prein/common/gfx/rocket_bottle_mask.gnfp
+189 path = /app0/data/prein/characters/gfx/enemy_chameleon_boss_metal_rubber_red_d.gnfp
+189 path = /app0/data/prein/bg/gfx/cpuplaza_skybox.gnfp
+189 path = /app0/data/prein/characters/gfx/hero_hands_m.gnfp
+189 path = /app0/data/prein/characters/gfx/hero_hands_n.gnfp
+189 path = /app0/data/prein/bg/gfx/artifact_PSP1000_n.gnfp
+189 path = /app0/data/prein/bg/gfx/mup_bg_tex_city_dancingflower_sunglasses_n.gnfp
+189 path = /app0/data/prein/bg/gfx/pirate_sand_decal_thick_n.gnfp
+189 path = /app0/data/prein/characters/gfx/ice_cube_hero2_art_n.gnfp
+190 path = /app0/data/prein/characters/gfx/mup_ch_tex_enemy_basic_m.gnfp
+190 path = /app0/data/prein/characters/gfx/hero_umbrella_stick_n.gnfp
+190 path = /app0/data/prein/characters/gfx/mup_ch_tex_npc_skeleton_n.gnfp
+190 path = /app0/data/prein/characters/gfx/mup_ch_tex_enemy_basic_n.gnfp
+191 path = /app0/data/prein/bg/gfx/cpuplaza_skybox.gnfp

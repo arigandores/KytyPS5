@@ -1,0 +1,103 @@
+suite test_f11f_read.py sha256 8f579719f886b173ed216edbb047ab623ab92609fc9f6219d9a704b445b65be5 target f11f_read.py sha256 3ea9f911334103aa1f59cbfc463343d3600fac2ee51e343ab1c6a6391c6216e3
+ok   base NOT_REACHED 369
+ok   base NOT_REACHED 376
+ok   base admitted
+ok   base identities ok
+ok   RC1 tri third field > 0, fourth 0 -> not violated
+ok   RC1 within twice row tri fields 2-3 = 6
+ok   RC1 tri fourth field > 0 -> REACHED SIZE
+ok   RC1 letter 369 also REACHED
+ok   RC1 box third field > 0 -> not violated
+ok   RC1 box fourth field > 0 -> REACHED SIZE
+ok   RC1 t7 third field > 0 -> not violated
+ok   RC1 t7 fourth field > 0 -> REACHED SIZE (type 7 class)
+ok   RC1 sum over three classes = 3
+ok   RC1 first field only -> not violated
+ok   t2 > 0 -> REACHED TYPES23
+ok   t3 > 0 -> REACHED TYPES23 (369 too)
+ok   t2 > 0 with control fail -> still REACHED
+ok   both kinds named
+ok   RC2 lanes != sum t -> UNDETERMINED
+ok   RC2 lanes != sum t named
+ok   RC2 size_viol != 12 fields -> UNDETERMINED
+ok   RC2 size_viol = 12 fields holds
+ok   RC2 size_viol + node64 > lanes -> UNDETERMINED
+ok   RC2 size_viol + node64 = lanes holds (edge)
+ok   RC2 slots + other != lanes -> UNDETERMINED
+ok   RC2 slots + other = lanes with two slots and other holds
+ok   RC2 max_step = 2^31 -> UNDETERMINED
+ok   RC2 max_step = 2^31 - 1 holds (edge)
+ok   RC2 missing slots line -> UNDETERMINED
+ok   RC2 truncated lanes line -> UNDETERMINED
+ok   RC2 earlier line failing -> UNDETERMINED
+ok   RC2 failure also gates the letter word
+ok   RC2 failure beats a positive count
+ok   RC2 interleaved line between lanes and slots ok
+ok   line with a prefix parsed
+ok   CRLF line ends parsed
+ok   last line is read (lanes 100)
+ok   (zh)(1) no lanes line with mode line -> NO_BVH
+ok   (zh)(1) letter 369 without lanes -> UNDETERMINED (control fails)
+ok   (zh)(1) lanes = 0 line with mode line -> NO_BVH
+ok   (zh)(1) no mode line -> UNDETERMINED
+ok   (zh)(1) no mode line with counts -> UNDETERMINED
+ok   (zh)(1) not entered and lanes 0 -> UNDETERMINED (admission)
+ok   control: box 0 -> UNDETERMINED
+ok   control: box 0 letter -> UNDETERMINED
+ok   control: t0+t1 = 0 -> UNDETERMINED
+ok   control edge: t1 = 1 and t5 = 1 -> NOT_REACHED
+ok   control box only t6: letter (4-6) passes -> 369 NOT_REACHED
+ok   control box only t6: 376 -> NOT_REACHED_ABOVE_T67
+ok   control box only t6: variant 4-5 -> UNDETERMINED
+ok   (zh)(2) t6 > 0 -> NOT_REACHED_ABOVE_T67
+ok   (zh)(2) letter 369 with t6 -> NOT_REACHED
+ok   (zh)(2) t7 > 0 -> NOT_REACHED_ABOVE_T67
+ok   (zh)(2) BvhLoopCapTrip > 0 -> UNDETERMINED
+ok   (zh)(2) cap trip: letter 369 stays NOT_REACHED
+ok   (zh)(2) trips_total read
+ok   (zh)(2) cap trip with t2 > 0 -> REACHED
+ok   cap line is not a trip
+ok   (zh)(2) BVH dispatch skip (BindFloor) -> UNDETERMINED
+ok   (zh)(2) BVH dispatch skip (skipping CS, upper hex) -> UNDETERMINED
+ok   (zh)(2) non-BVH dispatch skip -> NOT_REACHED (reading A)
+ok   (zh)(2) non-BVH skip: reading B -> UNDETERMINED
+ok   zero-sized skip counted, not attributed
+ok   AsyncPipelines skipped draw counted, not a dispatch skip
+ok   admission: not entered -> UNDETERMINED
+ok   admission: entered the named level
+ok   admission: hold 299.9 s -> FAIL
+ok   admission: hold 300.0 s edge -> OK
+ok   admission: no run json -> FAIL
+ok   admission: game ended in hold -> FAIL
+ok   admission: death marker -> FAIL
+ok   admission: window minimized -> FAIL
+ok   admission: lost focus only counted, admitted
+ok   admission: GamePatch line -> FAIL
+ok   admission fail with t3 > 0 -> REACHED (positive count)
+ok   (zh)(3) programs tested by slots = 2
+ok   (zh)(3) ef4 row for 56a15431999c5a2d = 60
+ok   Z2 translation lines counted, not read
+ok   (zh)(5) traps > 0 flagged
+ok   (zh)(5) traps do not change the word
+ok   (zh)(4) t6 printed
+ok   large counts (u64) parsed
+ok   set: all NOT_REACHED
+ok   set: one REACHED
+ok   set: empty set -> UNDETERMINED
+ok   set: empty set -> letter UNDETERMINED
+ok   set: S_TRAP with no lanes
+ok   set: NO_BVH leaves the set
+ok   set: one UNDETERMINED in the set
+ok   set: above t67
+ok   set: t6 row
+ok   set: programs union 2, untested 18
+ok   set: traps > 0 on b
+ok   set: traps 0 on all with lanes
+ok   CLI cp1250 strict rc 0
+ok   CLI output ASCII only
+ok   CLI WORD376 line
+ok   CLI traps value not cited
+ok   CLI --set rc 0, ASCII
+ok   CLI --set row
+checks 100 fails 0
+ALL OK

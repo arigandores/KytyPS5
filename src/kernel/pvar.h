@@ -61,10 +61,11 @@ constexpr Step Advance(uint64_t d, int32_t c) {
 // after the wait; slack_us - the time from this M0 (before the wait) to the vblank v_prev + kt.
 //   d > kt (the frame is late)       -> kt = min(d, 3), fit = 0 (up at once; kt 3 stays 3);
 //   else slack_us >= 18 667 (fits)  -> fit + 1, else fit = 0;
-//        fit reaches 30 and kt > 1   -> kt - 1, fit = 0 (down at most once per 30 frames; at kt 1 fit stays at 30).
+//        fit reaches N and kt > 1    -> kt - 1, fit = 0 (down at most once per N frames; at kt 1 fit stays at N).
+// N = HOLD_FIT_N = 90 (item 361(g), iteration D1-2; 30 in D1-1).
 inline constexpr uint32_t HOLD_KT_START = 2;
 inline constexpr uint32_t HOLD_KT_MAX   = 3;
-inline constexpr uint32_t HOLD_FIT_N    = 30;
+inline constexpr uint32_t HOLD_FIT_N    = 90;
 inline constexpr int64_t  HOLD_SLACK_US = 18667; // 1 vblank + 2 000 us
 
 struct HoldStep {

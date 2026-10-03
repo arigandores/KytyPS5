@@ -1,0 +1,243 @@
+{
+ "sha_r0_log": "c3a6dce9720fee8bad49524592391c3a7ca61648ef9e2bd7a1e6ef417b49249d",
+ "sha_r0_out": "2d6f32a3ffe80e7704e6dfe6c22494b499bdf85976880a0dc9b12378fb96c048",
+ "sha_r0_run": "698769272001344254305f2e6239074e22996423428b705301afa2e6d5343542",
+ "sha_r1_log": "216d73fdc4255732b229afc4529dc77a1947b4d49a9200974c09ef2e15bae6fc",
+ "sha_r1_out": "31f83e4119273a675697ca6db1eb7ac042e9e7268f8d3ae47100cba12c4e7aec",
+ "sha_r1_json": "f32581add51b0aeb1265028766899ef692c8976491e2e5af96b0abb428202510",
+ "sha_r1_mp4": "f3cb9ec89cfcbbc65e5913e307d4ad3a3c4f688a268412e030a73e1050058fd9",
+ "sha_r1_idx": "e5ae943537b06a40c3f9a2f2e48b2b2b3ef26f83d3a00bf200ecd94cb6ab9c62",
+ "sha_w_log": "4b655a65deabeb46b7a221193e1a5a567a5d6a666838a8631bb5e4ca5420175e",
+ "sha_w_out": "3676cd37d3bb1f5a49900bf026a0167b7ab58f56651877167ec4df00fed54107",
+ "sha_w_json": "14439661d84e1bb3889d5fa3fcbb8305746dc90b2ee9e2ac8a45a1cad12e072b",
+ "r0_log": {
+  "svf": 2,
+  "svf_hash": [
+   "c33dc20535a2cebf"
+  ],
+  "fs": [
+   [
+    79,
+    0,
+    1
+   ]
+  ],
+  "st": [],
+  "death": {
+   "--- Error ---": 1
+  },
+  "ve": 0,
+  "vw": 0,
+  "last": 0,
+  "dual": [
+   72,
+   "DualSrcBlend: supported=1 enabled=1"
+  ],
+  "first_guest": 11892,
+  "entry": null,
+  "first_scene": null,
+  "hold_us": 0,
+  "max_dt": 0,
+  "k1s": 0,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 55999
+ },
+ "r0_out": {
+  "svf": 1,
+  "svf_hash": [
+   "c33dc20535a2cebf"
+  ],
+  "fs": [],
+  "st": [],
+  "death": {
+   "--- Error ---": 1
+  },
+  "ve": 0,
+  "vw": 0,
+  "last": 0,
+  "dual": null,
+  "first_guest": null,
+  "entry": null,
+  "first_scene": null,
+  "hold_us": 0,
+  "max_dt": 0,
+  "k1s": 0,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 49
+ },
+ "r1_log": {
+  "svf": 0,
+  "svf_hash": [],
+  "fs": [
+   [
+    79,
+    1,
+    1
+   ]
+  ],
+  "st": [
+   [
+    758044,
+    256,
+    0
+   ]
+  ],
+  "death": {},
+  "ve": 0,
+  "vw": 0,
+  "last": 0,
+  "dual": [
+   72,
+   "DualSrcBlend: supported=1 enabled=1"
+  ],
+  "first_guest": 11893,
+  "entry": 351814,
+  "first_scene": 1317847,
+  "hold_us": 334646641,
+  "max_dt": 475371,
+  "k1s": 0,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 2393728
+ },
+ "r1_out": {
+  "svf": 0,
+  "svf_hash": [],
+  "fs": [],
+  "st": [],
+  "death": {},
+  "ve": 0,
+  "vw": 0,
+  "last": 0,
+  "dual": null,
+  "first_guest": null,
+  "entry": null,
+  "first_scene": null,
+  "hold_us": 0,
+  "max_dt": 0,
+  "k1s": 0,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 920
+ },
+ "w_log": {
+  "svf": 0,
+  "svf_hash": [],
+  "fs": [
+   [
+    83,
+    1,
+    1
+   ]
+  ],
+  "st": [
+   [
+    758573,
+    256,
+    0
+   ]
+  ],
+  "death": {},
+  "ve": 0,
+  "vw": 937205,
+  "last": 0,
+  "dual": [
+   76,
+   "DualSrcBlend: supported=1 enabled=1"
+  ],
+  "first_guest": 11896,
+  "entry": 348747,
+  "first_scene": 1308933,
+  "hold_us": 326493898,
+  "max_dt": 1027219,
+  "k1s": 1,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 3695124
+ },
+ "w_out": {
+  "svf": 0,
+  "svf_hash": [],
+  "fs": [],
+  "st": [],
+  "death": {},
+  "ve": 0,
+  "vw": 0,
+  "last": 0,
+  "dual": null,
+  "first_guest": null,
+  "entry": null,
+  "first_scene": null,
+  "hold_us": 0,
+  "max_dt": 0,
+  "k1s": 0,
+  "change": null,
+  "win": 0,
+  "recov": 0,
+  "lines": 923
+ },
+ "r0_run": {
+  "pid": 42032,
+  "how": "exit rc 321",
+  "wall_s": 13.3,
+  "release_seen_s": null,
+  "env": [
+   "KYTY_GUEST_ARGS=-lvl underwater_aerial_garden",
+   "KYTY_FIX_SVAL=0",
+   "KYTY_FRAME_TRACE=lite",
+   "KYTY_GPU_CLOCK_PIN=1"
+  ],
+  "val": false,
+  "sval": true,
+  "exit_s": 13.3,
+  "rc": 321,
+  "until": null,
+  "args": [
+   "C:/kyty/KytyPS5/ps5 em/kyty_emulator.exe",
+   "--screen-width",
+   "1280",
+   "--screen-height",
+   "720",
+   "--user-name",
+   "Player",
+   "--user-id",
+   "1000",
+   "--present-mode",
+   "Fifo",
+   "--vblank-frequency",
+   "60",
+   "--console-language",
+   "1",
+   "--vulkan-validation",
+   "false",
+   "--shader-validation",
+   "true",
+   "--shader-optimization-type",
+   "Size",
+   "--shader-log-direction",
+   "File",
+   "--shader-log-folder",
+   "_Shaders",
+   "--command-buffer-dump",
+   "false",
+   "--command-buffer-dump-folder",
+   "_Buffers",
+   "--printf-direction",
+   "File",
+   "--printf-output-file",
+   "_kyty.txt",
+   "--spirv-debug-printf",
+   "false",
+   "--game",
+   "C:/kyty/KytyPS5/ps5 em/games/PPSA21564-app"
+  ]
+ },
+ "r1_idx_lines": 10275
+}

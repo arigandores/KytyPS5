@@ -1,0 +1,17 @@
+changed 15
+  src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+  src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+  src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc
+  src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.cpp
+  src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp
+  src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+  src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+  src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
+  src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h
+  src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp
+  src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+  src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
+  src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+  src/graphics/host_gpu/renderer/cache/faultManager.h
+  src/graphics/host_gpu/renderer/cache/faultManager.cpp
+ALL OK

@@ -1,0 +1,655 @@
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.cpp b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+index dd119b2b..b715d59c 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.cpp
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.cpp
+@@ -10,12 +10,16 @@
+ #include "graphics/host_gpu/renderer/commandScheduler.h"
+ #include "graphics/host_gpu/vulkanCommon.h"
+ #include "graphics/shader/recompiler/backend/spirv/SpirvEmitter.h"
++#include "graphics/shader/recompiler/frontend/decode/ShaderDecoder.h"
+ 
+ #include <algorithm>
+ #include <bit>
++#include <chrono>
+ #include <cinttypes>
++#include <cstdio>
+ #include <cstring>
+ #include <limits>
++#include <string>
+ 
+ namespace Libs::Graphics {
+ 
+@@ -30,21 +34,38 @@ namespace LoopCap = ShaderRecompiler::Spirv::Emitter;
+ constexpr uint64_t LoopTripOffset = BufferCache::CACHING_NUMPAGES / 8;
+ constexpr uint64_t LoopTripBytes  = LoopCap::LoopTripWords * sizeof(uint32_t);
+ static_assert(LoopTripOffset == uint64_t {LoopCap::LoopTripWordBase} * sizeof(uint32_t));
++// Track F, F11d (ROADMAP p.376(v)): the KYTY_DIAG_BVHNODES words follow the loop-cap words; the tail, the
++// fault buffer and each readback area grow by DiagBytes only at =1.
++constexpr uint64_t DiagOffset = LoopTripOffset + LoopTripBytes;
++constexpr uint64_t DiagBytes  = LoopCap::DiagWords * sizeof(uint32_t);
++static_assert(DiagOffset == uint64_t {LoopCap::DiagWordBase} * sizeof(uint32_t));
++static_assert(LoopCap::DiagWords == 64, "faultManager.h keeps 64 diagnostic words");
+ 
+ } // namespace
+ 
++uint64_t FaultManager::TailOffset() {
++	return LoopTripOffset;
++}
++
++uint64_t FaultManager::TailBytes() {
++	return LoopTripBytes + (ShaderRecompiler::Decoder::DiagBvhNodesEnabled() ? DiagBytes : 0);
++}
++
+ FaultManager::FaultManager(GraphicContext& graphics, CommandScheduler& scheduler,
+                            BufferCache& buffer_cache)
+     : m_graphics(graphics), m_scheduler(scheduler), m_buffer_cache(buffer_cache),
+       m_fault_buffer(graphics, scheduler, MemoryUsage::DeviceLocal, 0, AllFlags,
+-                     LoopTripOffset + LoopTripBytes),
++                     LoopTripOffset + TailBytes()),
+       m_download_buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+                         MaxPendingFaults * PageFaultAreaSize),
+       m_trip_download(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+-                      MaxPendingFaults * LoopTripBytes) {
++                      MaxPendingFaults * TailBytes()) {
+ 	SetVulkanObjectNameF(m_graphics.device, m_fault_buffer.Handle(), "Fault Buffer");
+ 	LOGF("BvhLoopCap: cap=%u token='%s' default_slot0=%d\n", LoopCap::BvhLoopCap(),
+ 	     LoopCap::BvhLoopCapSignatureToken().c_str(), LoopCap::BvhLoopCapSlot(0x380bb9d636390baeull));
++	if (ShaderRecompiler::Decoder::DiagBvhNodesEnabled()) {
++		LOGF("DiagBvhNodes: mode=1 words=%u tail_bytes=%" PRIu64 "\n", LoopCap::DiagWords, TailBytes());
++	}
+ 
+ 	const vk::DescriptorSetLayoutBinding bindings[] {
+ 	    {0, vk::DescriptorType::eStorageBuffer, 1, vk::ShaderStageFlagBits::eCompute, nullptr},
+@@ -90,7 +111,10 @@ FaultManager::~FaultManager() {
+ }
+ 
+ void FaultManager::ClearLoopTripTail() {
+-	m_fault_buffer.Fill(LoopTripOffset, LoopTripBytes, 0);
++	// Track F, F11d (RC1 of F11b): the same command zeroes the diagnostic words at =1 (DeviceLocal memory
++	// starts undefined); the host takes them only from readbacks recorded after this (m_tail_cleared).
++	m_fault_buffer.Fill(TailOffset(), TailBytes(), 0);
++	m_tail_cleared.store(true, std::memory_order_release);
+ }
+ 
+ void FaultManager::ProcessFaultBuffer() {
+@@ -150,8 +174,13 @@ void FaultManager::ProcessFaultBuffer() {
+ 	// KYTY_BVH_LOOP_CAP: copy the counter tail next to the fault list; the counters only grow,
+ 	// so each readback is diffed against the largest values already seen.
+ 	const bool trips       = LoopCap::BvhLoopCap() != 0;
+-	const auto trip_offset = m_current_area * LoopTripBytes;
+-	if (trips) {
++	// Track F, F11d: at KYTY_DIAG_BVHNODES=1 the copy takes the whole tail (one region: loop-cap and
++	// diagnostic words) once ClearLoopTripTail has zeroed it; at =0 the tail is LoopTripBytes, as before.
++	const bool diag        = ShaderRecompiler::Decoder::DiagBvhNodesEnabled() &&
++	                  m_tail_cleared.load(std::memory_order_acquire);
++	const auto tail_bytes  = TailBytes();
++	const auto trip_offset = m_current_area * tail_bytes;
++	if (trips || diag) {
+ 		vk::BufferMemoryBarrier2 tail_barrier {};
+ 		tail_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eAllCommands;
+ 		tail_barrier.srcAccessMask = vk::AccessFlagBits2::eShaderWrite;
+@@ -159,7 +188,7 @@ void FaultManager::ProcessFaultBuffer() {
+ 		tail_barrier.dstAccessMask = vk::AccessFlagBits2::eTransferRead;
+ 		tail_barrier.buffer        = m_fault_buffer.Handle();
+ 		tail_barrier.offset        = LoopTripOffset;
+-		tail_barrier.size          = LoopTripBytes;
++		tail_barrier.size          = tail_bytes;
+ 		vk::BufferMemoryBarrier2 host_barrier {};
+ 		host_barrier.srcStageMask  = vk::PipelineStageFlagBits2::eCopy;
+ 		host_barrier.srcAccessMask = vk::AccessFlagBits2::eTransferWrite;
+@@ -167,19 +196,19 @@ void FaultManager::ProcessFaultBuffer() {
+ 		host_barrier.dstAccessMask = vk::AccessFlagBits2::eHostRead;
+ 		host_barrier.buffer        = m_trip_download.Handle();
+ 		host_barrier.offset        = trip_offset;
+-		host_barrier.size          = LoopTripBytes;
++		host_barrier.size          = tail_bytes;
+ 		vk::DependencyInfo tail_dependency {};
+ 		tail_dependency.bufferMemoryBarrierCount = 1;
+ 		tail_dependency.pBufferMemoryBarriers    = &tail_barrier;
+ 		command.pipelineBarrier2(tail_dependency);
+-		const vk::BufferCopy region {LoopTripOffset, trip_offset, LoopTripBytes};
++		const vk::BufferCopy region {LoopTripOffset, trip_offset, tail_bytes};
+ 		command.copyBuffer(m_fault_buffer.Handle(), m_trip_download.Handle(), 1, &region);
+ 		tail_dependency.pBufferMemoryBarriers = &host_barrier;
+ 		command.pipelineBarrier2(tail_dependency);
+ 	}
+ 
+ 	const auto area = m_current_area;
+-	m_scheduler.DeferOperation([this, mapped, offset, area, trips, trip_offset] {
++	m_scheduler.DeferOperation([this, mapped, offset, area, trips, diag, trip_offset] {
+ 		if (trips) {
+ 			m_trip_download.Invalidate(trip_offset, LoopTripBytes);
+ 			std::array<uint32_t, LoopCap::LoopTripWords> words {};
+@@ -207,6 +236,9 @@ void FaultManager::ProcessFaultBuffer() {
+ 				     LoopCap::BvhLoopCap(), m_trip_last[8], m_trip_last[9]);
+ 			}
+ 		}
++		if (diag) {
++			ProcessDiagWords(trip_offset + LoopTripBytes);
++		}
+ 		m_download_buffer.Invalidate(offset, PageFaultAreaSize);
+ 		RangeSet    fault_ranges;
+ 		const auto* faults = std::bit_cast<const uint64_t*>(mapped);
+@@ -226,4 +258,72 @@ void FaultManager::ProcessFaultBuffer() {
+ 	m_current_area %= MaxPendingFaults;
+ }
+ 
++// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1, the diagnostic words of one readback. The GPU
++// counters are u32 and wrap: each is diffed against its last value modulo 2^32, exact while one interval
++// (one readback, a frame with BDA work) adds less than 2^32 - max_step is the largest step seen. The last
++// values start at 0, the value the tail holds after ClearLoopTripTail. [DiagOverMax] is a maximum and is
++// taken as read. A line - cumulative totals - is printed when something grew, at most every 2 s and 1024
++// times per process; a growth within the 2 s is printed by a later readback (m_diag_pending), so only the
++// last 2 s before the process ends can go unprinted.
++void FaultManager::ProcessDiagWords(uint64_t download_offset) {
++	m_trip_download.Invalidate(download_offset, DiagBytes);
++	std::array<uint32_t, LoopCap::DiagWords> words {};
++	std::memcpy(words.data(), m_trip_download.Mapped().data() + download_offset, DiagBytes);
++	for (uint32_t index = 0; index < LoopCap::DiagWords; index++) {
++		if (index == LoopCap::DiagOverMax) {
++			m_diag_pending |= words[index] != m_diag_last[index];
++			m_diag_last[index]  = words[index];
++			m_diag_total[index] = words[index];
++			continue;
++		}
++		const uint32_t step = words[index] - m_diag_last[index];
++		m_diag_last[index]  = words[index];
++		m_diag_total[index] += step;
++		m_diag_max_step = std::max<uint64_t>(m_diag_max_step, step);
++		m_diag_pending |= step != 0;
++	}
++	const auto now_ms = static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
++	                                              std::chrono::steady_clock::now().time_since_epoch())
++	                                              .count());
++	if (!m_diag_pending || m_diag_lines >= 1024 ||
++	    (m_diag_lines != 0 && now_ms - m_diag_last_log_ms < 2000)) {
++		return;
++	}
++	m_diag_pending     = false;
++	m_diag_last_log_ms = now_ms;
++	m_diag_lines++;
++	const auto& total = m_diag_total;
++	uint64_t    lanes = 0;
++	for (uint32_t type = 0; type < 8; type++) {
++		lanes += total[LoopCap::DiagT0 + type];
++	}
++	const auto bucket = [&](uint32_t cls, uint32_t index) {
++		return total[LoopCap::DiagBuckets + 4 * cls + index];
++	};
++	LOGF("DiagBvhNodes: lanes=%" PRIu64 " t0=%" PRIu64 " t1=%" PRIu64 " t2=%" PRIu64 " t3=%" PRIu64
++	     " t4=%" PRIu64 " t5=%" PRIu64 " t6=%" PRIu64 " t7=%" PRIu64 " size_viol=%" PRIu64
++	     " size_off=%" PRIu64 " node64=%" PRIu64 " over_max=%" PRIu64 " b_tri=%" PRIu64 "/%" PRIu64
++	     "/%" PRIu64 "/%" PRIu64 " b_box=%" PRIu64 "/%" PRIu64 "/%" PRIu64 "/%" PRIu64 " b_t7=%" PRIu64
++	     "/%" PRIu64 "/%" PRIu64 "/%" PRIu64 " traps=%" PRIu64 " trap_lanes=%" PRIu64 " groups=%" PRIu64
++	     " max_step=%" PRIu64 "\n",
++	     lanes, total[LoopCap::DiagT0 + 0], total[LoopCap::DiagT0 + 1], total[LoopCap::DiagT0 + 2],
++	     total[LoopCap::DiagT0 + 3], total[LoopCap::DiagT0 + 4], total[LoopCap::DiagT0 + 5],
++	     total[LoopCap::DiagT0 + 6], total[LoopCap::DiagT0 + 7], total[LoopCap::DiagSizeViol],
++	     total[LoopCap::DiagSizeOff], total[LoopCap::DiagNode64], total[LoopCap::DiagOverMax],
++	     bucket(0, 0), bucket(0, 1), bucket(0, 2), bucket(0, 3), bucket(1, 0), bucket(1, 1), bucket(1, 2),
++	     bucket(1, 3), bucket(2, 0), bucket(2, 1), bucket(2, 2), bucket(2, 3), total[LoopCap::DiagTraps],
++	     total[LoopCap::DiagTrapLanes], total[LoopCap::DiagGroups], m_diag_max_step);
++	std::string slots;
++	for (uint32_t slot = 0; slot < LoopCap::DiagSlotCount; slot++) {
++		if (total[LoopCap::DiagLanes + slot] != 0) {
++			char text[64];
++			std::snprintf(text, sizeof(text), " %016" PRIx64 "=%" PRIu64, LoopCap::DiagBvhSlotHash(slot),
++			              total[LoopCap::DiagLanes + slot]);
++			slots += text;
++		}
++	}
++	LOGF("DiagBvhNodes: slots%s other=%" PRIu64 "\n", slots.c_str(),
++	     total[LoopCap::DiagLanes + LoopCap::DiagSlotCount]);
++}
++
+ } // namespace Libs::Graphics
+diff --git a/src/graphics/host_gpu/renderer/cache/faultManager.h b/src/graphics/host_gpu/renderer/cache/faultManager.h
+index 4209fac8..e83f5c51 100644
+--- a/src/graphics/host_gpu/renderer/cache/faultManager.h
++++ b/src/graphics/host_gpu/renderer/cache/faultManager.h
+@@ -5,6 +5,7 @@
+ #include "graphics/host_gpu/renderer/cache/streamBuffer.h"
+ 
+ #include <array>
++#include <atomic>
+ #include <cstdint>
+ 
+ namespace Libs::Graphics {
+@@ -24,8 +25,14 @@ public:
+ 	// KYTY_BVH_LOOP_CAP: zero the counter tail after the fault bitmap (needs a command buffer,
+ 	// so the buffer cache calls it at its first registration, like the null page).
+ 	void ClearLoopTripTail();
++	// Track F, F11d (ROADMAP p.376(v)): the counter tail after the fault bitmap - the loop-cap words and,
++	// at KYTY_DIAG_BVHNODES=1, the diagnostic words; ClearLoopTripTail zeroes all of it.
++	[[nodiscard]] static uint64_t TailOffset();
++	[[nodiscard]] static uint64_t TailBytes();
+ 
+ private:
++	void ProcessDiagWords(uint64_t download_offset);
++
+ 	GraphicContext&                            m_graphics;
+ 	CommandScheduler&                          m_scheduler;
+ 	BufferCache&                               m_buffer_cache;
+@@ -35,6 +42,16 @@ private:
+ 	Buffer                                     m_trip_download;
+ 	std::array<uint32_t, 16>                   m_trip_last {};
+ 	uint32_t                                   m_trip_lines = 0;
++	// Track F, F11d: KYTY_DIAG_BVHNODES host state - read and written by the readbacks (deferred operations
++	// of ProcessFaultBuffer), except m_tail_cleared: set by ClearLoopTripTail (buffer cache, first
++	// registration), read when a readback is recorded; the diagnostic words are diffed only after it.
++	std::array<uint32_t, 64>                   m_diag_last {};
++	std::array<uint64_t, 64>                   m_diag_total {};
++	uint64_t                                   m_diag_max_step    = 0;
++	uint64_t                                   m_diag_last_log_ms = 0;
++	uint32_t                                   m_diag_lines       = 0;
++	bool                                       m_diag_pending     = false;
++	std::atomic<bool>                          m_tail_cleared {false};
+ 	uint32_t                                   m_current_area = 0;
+ 	vk::DescriptorSetLayout                    m_fault_process_desc_layout = nullptr;
+ 	vk::Pipeline                               m_fault_process_pipeline = nullptr;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+index f578da41..2b4a9022 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp
+@@ -575,10 +575,12 @@ ShaderTranslationCache::ShaderTranslationCache(const std::string& title_id) {
+ 	// translations of =1 and =0 never share a signature or a directory.
+ 	// Track F, F3b (ROADMAP p.259(e)(3)): KYTY_FIX_B1B=1 (the default) adds ":fixb1b" the same way;
+ 	// with KYTY_FIX_B26 the four combinations get four distinct signatures and directories.
++	// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 adds ":diagbvh" the same way (default 0: none).
+ 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+ 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+ 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
+-	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "");
++	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "") +
++	                            (ShaderRecompiler::Decoder::DiagBvhNodesEnabled() ? ":diagbvh" : "");
+ 	if (!variant.empty()) {
+ 		std::string folder = "variant" + variant;
+ 		std::replace(folder.begin(), folder.end(), ':', '_');
+diff --git a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp
+index 189b1511..74072281 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.cpp
+@@ -367,6 +367,9 @@ Emitter::SpirvRequirements Emitter::AnalyzeProgramRequirements(const IR::Program
+ 			}
+ 			switch (inst.GetOpcode()) {
+ 				case IR::ValueOpcode::Ballot: requirements.subgroup_ballot = true; break;
++				// Track F, F11d: KYTY_DIAG_BVHNODES counters (ballot bit counts, elect).
++				case IR::ValueOpcode::BvhNodeDiag:
++				case IR::ValueOpcode::DiagTrap: requirements.subgroup_ballot = true; break;
+ 				case IR::ValueOpcode::DppMoveU32:
+ 				case IR::ValueOpcode::ReadFirstLane:
+ 				case IR::ValueOpcode::ReadLane: {
+diff --git a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
+index 34be3171..e34d2c3f 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
++++ b/src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h
+@@ -38,6 +38,37 @@ std::string BvhLoopCapSignatureToken();
+ inline constexpr uint32_t LoopTripWordBase = 1u << 21;
+ inline constexpr uint32_t LoopTripWords    = 16;
+ inline constexpr uint32_t LoopTripSlots    = 8;
++// Track F, F11d (HPP-466, ROADMAP p.376(v)), KYTY_DIAG_BVHNODES=1 (Decoder::DiagBvhNodesEnabled): the
++// diagnostic words follow the loop-cap words; the fault-buffer tail grows by DiagWords u32 only at =1.
++// Every IMAGE_BVH_INTERSECT_RAY execution adds, per host subgroup (ballot bit counts, one elected
++// invocation), the active lanes by node type ([DiagT0 + type]); for 32-bit pointers the lanes past the
++// descriptor size field ([DiagSizeViol]: idx = ptr >> 3 > size64 = dword2 | (dword3 & 0x3ff) << 32), their
++// largest excess over = idx - size64 ([DiagOverMax]) and a histogram of it ([DiagBuckets + 4 * class +
++// bucket], classes 0 triangle (types 0-3), 1 box (4-6), 2 type 7; bucket 3 = idx > 2 * size64 + 1, else
++// 0 = over 1, 1 = over 2..16, 2 = over 17 or more; the buckets of all classes sum to [DiagSizeViol]); the
++// lanes with size64 = 2^42 - 1 ([DiagSizeOff]); the 64-bit pointers ([DiagNode64], never in DiagSizeViol);
++// the active lanes of the program ([DiagLanes + DiagBvhSlot(hash)]) and the subgroups ([DiagGroups]).
++// Every S_TRAP adds the subgroups that reach it, whatever exec holds ([DiagTraps]), and its active lanes
++// ([DiagTrapLanes]). The u32 counters wrap; the host diffs them modulo 2^32 (faultManager.cpp).
++inline constexpr uint32_t DiagWordBase  = LoopTripWordBase + LoopTripWords;
++inline constexpr uint32_t DiagWords     = 64;
++inline constexpr uint32_t DiagSlotCount = 20; // the BVH programs of eboot.bin; slot DiagSlotCount = other
++enum DiagWord : uint32_t {
++	DiagT0        = 0, // .. 7: lanes by node type
++	DiagSizeViol  = 8,
++	DiagSizeOff   = 9,
++	DiagNode64    = 10,
++	DiagOverMax   = 11,
++	DiagTraps     = 12,
++	DiagTrapLanes = 13,
++	DiagGroups    = 14,
++	DiagBuckets   = 16, // .. 27: 3 classes x 4 buckets
++	DiagLanes     = 28, // .. 48: DiagSlotCount program slots, then other
++};
++static_assert(DiagLanes + DiagSlotCount < DiagWords, "the diagnostic words fit the tail");
++// Slot of a program in the DiagLanes words: its index in the BVH program table, DiagSlotCount = other.
++uint32_t DiagBvhSlot(uint64_t shader_hash);
++uint64_t DiagBvhSlotHash(uint32_t slot); // 0 for slot >= DiagSlotCount
+ // Session 103, KYTY_BDA_LEAN (M5', measurement only, default off): the BDA path as design G would
+ // build it - no fault-buffer store in pixel shaders, one page-table read per lookup (the null-page
+ // base read once per invocation), read-only PSB views (NonWritable, Restrict when the program
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h
+index 90065790..0df99709 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterInstructions.h
+@@ -258,6 +258,8 @@ inline constexpr auto EmitDataAppend            = EmitAppendConsume;
+ inline constexpr auto EmitDataConsume           = EmitAppendConsume;
+ uint32_t              EmitSwizzleU32(ValueEmitContext& ctx, const IR::Inst& inst);
+ uint32_t              EmitBvhIntersectRay(ValueEmitContext& ctx, const IR::Inst& inst);
++void                  EmitBvhNodeDiag(ValueEmitContext& ctx, const IR::Inst& inst);
++void                  EmitDiagTrap(ValueEmitContext& ctx, const IR::Inst& inst);
+ void                  EmitImage(ValueEmitContext& ctx, const IR::Inst& inst);
+ inline constexpr auto EmitImageQueryDimensions = EmitImage;
+ inline constexpr auto EmitImageQueryLod        = EmitImage;
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+index 8973a23d..2cf1dc4d 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp
+@@ -1935,6 +1935,154 @@ void AtomicTailU32(EmitterState& state, spv::Op op, uint32_t word, uint32_t valu
+ 
+ } // namespace
+ 
++// Track F, F11d (HPP-466, ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 counters in the fault-buffer tail
++// (SpirvEmitter.h, DiagWordBase). Per host subgroup a ballot bit count gives the lanes of a class and one
++// elected invocation adds the non-zero counts. With lane_count 2 (wave64 on a 32-wide subgroup) each half
++// is emitted on its own: each half counts its lanes, only half 0 counts the subgroup.
++namespace {
++
++// The 20 programs of eboot.bin with IMAGE_BVH_INTERSECT_RAY (track F, F3b bvhmap_f3b; F11a t1scan_f11a.py
++// --all), ascending: the slots of the DiagLanes words.
++constexpr std::array<uint64_t, DiagSlotCount> DiagBvhPrograms {
++    0x092754e7ae8bac9aull, 0x0af122d5ac62c4c5ull, 0x1f16e50eea0c89e3ull, 0x1f3219e5899a66f2ull,
++    0x380bb9d636390baeull, 0x3d27502d0a809c72ull, 0x503d7f066a496c3cull, 0x5323c4ef4f785055ull,
++    0x559a0fa9def7a691ull, 0x56a15431999c5a2dull, 0x7ede18ae55120a48ull, 0x8175abf0855222dbull,
++    0x99012529f9a27ba3ull, 0xa763fb769f3167ecull, 0xb76e569142635733ull, 0xcd94166bf3f2bb81ull,
++    0xd234cf2781dabb34ull, 0xea8e2d64dfe34ed9ull, 0xf88d0f630ac5b35dull, 0xff8ee744ffa4dcdcull,
++};
++
++// Lanes of the subgroup with the predicate set.
++uint32_t DiagLaneCount(EmitterState& state, uint32_t predicate) {
++	const auto ballot = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpGroupNonUniformBallot, TypeU32Vector(state, 4), ballot,
++	                          ConstantU32(state, spv::ScopeSubgroup), predicate);
++	const auto count = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpGroupNonUniformBallotBitCount, TypeU32(state), count,
++	                          ConstantU32(state, spv::ScopeSubgroup), spv::GroupOperationReduce,
++	                          ballot);
++	return count;
++}
++
++// One invocation of the subgroup (the lowest running one), whatever the guest exec holds.
++uint32_t DiagElect(EmitterState& state) {
++	const auto elected = state.builder.AllocateId();
++	state.builder.AddFunction(spv::OpGroupNonUniformElect, TypeBool(state), elected,
++	                          ConstantU32(state, spv::ScopeSubgroup));
++	return elected;
++}
++
++// The elected invocation adds a non-zero count to the diagnostic word.
++void DiagAdd(EmitterState& state, uint32_t elected, uint32_t word, uint32_t count) {
++	const auto nonzero =
++	    Binary(state, spv::OpINotEqual, TypeBool(state), count, ConstantU32(state, 0));
++	EmitIfCondition(state, AndCondition(state, elected, nonzero),
++	                [&]() { AtomicTailU32(state, spv::OpAtomicIAdd, DiagWordBase + word, count); });
++}
++
++} // namespace
++
++uint32_t DiagBvhSlot(uint64_t shader_hash) {
++	for (uint32_t slot = 0; slot < DiagSlotCount; slot++) {
++		if (DiagBvhPrograms[slot] == shader_hash) {
++			return slot;
++		}
++	}
++	return DiagSlotCount;
++}
++
++uint64_t DiagBvhSlotHash(uint32_t slot) {
++	return slot < DiagSlotCount ? DiagBvhPrograms[slot] : 0;
++}
++
++// BvhNodeDiag: node_lo, node_hi, descriptor dwords 2-3, exec (frontend Memory.cpp, ahead of the fork).
++void EmitBvhNodeDiag(ValueEmitContext& ctx, const IR::Inst& inst) {
++	auto& state = ctx.state;
++	if (state.fault_buffer_variable == 0) {
++		return;
++	}
++	const auto u32t  = TypeU32(state);
++	const auto boolt = TypeBool(state);
++	const auto U     = [&](uint32_t value) { return ConstantU32(state, value); };
++	const auto land  = [&](uint32_t a, uint32_t b) { return AndCondition(state, a, b); };
++	const auto lnot  = [&](uint32_t a) { return Unary(state, spv::OpLogicalNot, boolt, a); };
++	const auto ieq   = [&](uint32_t a, uint32_t b) { return Binary(state, spv::OpIEqual, boolt, a, b); };
++	const auto ugt   = [&](uint32_t a, uint32_t b) {
++		return Binary(state, spv::OpUGreaterThan, boolt, a, b);
++	};
++	const auto node_lo = ctx.Arg(inst, 0);
++	const auto desc2   = ctx.Arg(inst, 2);
++	const auto desc3   = ctx.Arg(inst, 3);
++	const auto active  = ctx.Arg(inst, 4);
++	// Same rule as EmitBvhIntersectRay: the 64-bit form has a high word that is not the constant 0.
++	const bool node64  = !inst.Arg(1).IsImmediate() || inst.Arg(1).U32() != 0u;
++	const auto elected = DiagElect(state);
++	const auto add     = [&](uint32_t word, uint32_t predicate) {
++		DiagAdd(state, elected, word, DiagLaneCount(state, predicate));
++	};
++	const auto type = Binary(state, spv::OpBitwiseAnd, u32t, node_lo, U(7u));
++	for (uint32_t index = 0; index < 8u; index++) {
++		add(DiagT0 + index, land(active, ieq(type, U(index))));
++	}
++	const auto size_hi = Binary(state, spv::OpBitwiseAnd, u32t, desc3, U(0x3ffu));
++	add(DiagSizeOff, land(active, land(ieq(desc2, U(0xffffffffu)), ieq(size_hi, U(0x3ffu)))));
++	if (node64) {
++		add(DiagNode64, active);
++	} else {
++		// idx (64-byte units from the base, 29 bits) violates when idx > size64; a size64 of 2^32 or more
++		// never is exceeded. There over = idx - size64 >= 1, and idx > 2 * size64 + 1 <=> over - 1 > size64.
++		const auto idx    = Binary(state, spv::OpShiftRightLogical, u32t, node_lo, U(3u));
++		const auto viol   = land(active, land(ieq(size_hi, U(0u)), ugt(idx, desc2)));
++		const auto over   = Binary(state, spv::OpISub, u32t, idx, desc2);
++		const auto beyond = land(viol, ugt(Binary(state, spv::OpISub, u32t, over, U(1u)), desc2));
++		const auto within = land(viol, lnot(beyond));
++		const std::array<uint32_t, 4> buckets {
++		    land(within, ieq(over, U(1u))),
++		    land(within, land(ugt(over, U(1u)), lnot(ugt(over, U(16u))))),
++		    land(within, ugt(over, U(16u))),
++		    beyond,
++		};
++		const auto is_t7 = ieq(type, U(7u));
++		const std::array<uint32_t, 3> classes {
++		    Binary(state, spv::OpULessThan, boolt, type, U(4u)),
++		    land(ugt(type, U(3u)), lnot(is_t7)),
++		    is_t7,
++		};
++		add(DiagSizeViol, viol);
++		for (uint32_t cls = 0; cls < 3u; cls++) {
++			for (uint32_t bucket = 0; bucket < 4u; bucket++) {
++				add(DiagBuckets + 4u * cls + bucket, land(buckets[bucket], classes[cls]));
++			}
++		}
++		// The largest excess: violations are rare, the violating lanes take the maximum one by one.
++		EmitIfCondition(state, viol, [&]() {
++			AtomicTailU32(state, spv::OpAtomicUMax, DiagWordBase + DiagOverMax, over);
++		});
++	}
++	add(DiagLanes + DiagBvhSlot(state.program.shader_hash), active);
++	if (state.lane_half == 0) {
++		EmitIfCondition(state, elected, [&]() {
++			AtomicTailU32(state, spv::OpAtomicIAdd, DiagWordBase + DiagGroups, U(1u));
++		});
++	}
++}
++
++// DiagTrap: exec (frontend Scalar.cpp). S_TRAP is a scalar instruction: every subgroup that reaches it
++// counts, also with exec = 0; the active lanes are counted apart.
++void EmitDiagTrap(ValueEmitContext& ctx, const IR::Inst& inst) {
++	auto& state = ctx.state;
++	if (state.fault_buffer_variable == 0) {
++		return;
++	}
++	const auto active  = ctx.Arg(inst, 0);
++	const auto elected = DiagElect(state);
++	if (state.lane_half == 0) {
++		EmitIfCondition(state, elected, [&]() {
++			AtomicTailU32(state, spv::OpAtomicIAdd, DiagWordBase + DiagTraps, ConstantU32(state, 1u));
++		});
++	}
++	DiagAdd(state, elected, DiagTrapLanes, DiagLaneCount(state, active));
++}
++
+ // KYTY_BVH_LOOP_CAP: this invocation spent its whole step budget and returns now.
+ void EmitLoopCapTrip(EmitterState& state, uint32_t budget) {
+ 	if (state.fault_buffer_variable == 0) {
+diff --git a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
+index ecda5035..22311c5f 100644
+--- a/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
++++ b/src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp
+@@ -826,6 +826,32 @@ uint32_t ValueEmitContext::Label(const IR::Block* block) const {
+ 	std::abort();
+ }
+ 
++namespace {
++
++// Track F, F11d (ROADMAP p.376(v), RC4 of F11b): at KYTY_DIAG_BVHNODES=1 a translation of a program with
++// diagnostic sites names them - the BVH and trap sites left in the program, and whether the dispatcher
++// fallback emits it (its blocks run the same diagnostic opcodes).
++void LogDiagBvhNodes(const IR::Program& program) {
++	if (!Decoder::DiagBvhNodesEnabled()) {
++		return;
++	}
++	size_t bvh_sites  = 0;
++	size_t trap_sites = 0;
++	for (const auto* block: program.blocks) {
++		for (const auto& inst: *block) {
++			bvh_sites += inst.GetOpcode() == IR::ValueOpcode::BvhNodeDiag ? 1 : 0;
++			trap_sites += inst.GetOpcode() == IR::ValueOpcode::DiagTrap ? 1 : 0;
++		}
++	}
++	if (bvh_sites + trap_sites == 0) {
++		return;
++	}
++	LOGF("DiagBvhNodes: shader=%016" PRIx64 " bvh_sites=%zu trap_sites=%zu fallback=%d\n",
++	     program.shader_hash, bvh_sites, trap_sites, program.dispatcher_fallback ? 1 : 0);
++}
++
++} // namespace
++
+ void EmitProgram(EmitterState& state) {
+ 	const auto&      program = state.program;
+ 	ValueEmitContext ctx(state);
+@@ -844,6 +870,7 @@ void EmitProgram(EmitterState& state) {
+ 		const auto label = state.builder.AllocateId();
+ 		state.labels.emplace(block, label);
+ 	}
++	LogDiagBvhNodes(program);
+ 	LoopGuards loop_guards;
+ 	const int  cap_slot = BvhLoopCap() != 0 ? BvhLoopCapSlot(program.shader_hash) : -1;
+ 	if (cap_slot >= 0 && state.program.dispatcher_fallback) {
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+index 393ba54f..5f1f45f5 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.cpp
+@@ -349,6 +349,11 @@ bool FixB1BEnabled() {
+ 	return enabled;
+ }
+ 
++bool DiagBvhNodesEnabled() {
++	static const bool enabled = Common::EnvFlagOn("KYTY_DIAG_BVHNODES");
++	return enabled;
++}
++
+ Family GetInstructionFamily(uint32_t word) {
+ 	if ((word & 0x80000000u) == 0u) {
+ 		switch ((word >> 25u) & 0x3fu) {
+diff --git a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+index 6b0f9834..1be4dee0 100644
+--- a/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
++++ b/src/graphics/shader/recompiler/frontend/decode/ShaderDecoder.h
+@@ -756,6 +756,12 @@ Opcode GateFixB26(Opcode opcode);
+ // exactly as before the fix (dword0 | (dword1 & 0xffff) << 32, no shift). Read once per process;
+ // the translation cache keys the value in its signature and directory (shaderTranslationCache.cpp).
+ bool   FixB1BEnabled();
++// Track F, F11d (HPP-466, ROADMAP p.376(v)): KYTY_DIAG_BVHNODES, default OFF (Common::EnvFlagOn: unset,
++// "", 0, false, off, no = off). On: IMAGE_BVH_INTERSECT_RAY and S_TRAP also emit the diagnostic opcodes
++// BvhNodeDiag / DiagTrap (node pointer counts by type and size field, traps; fault-buffer tail words,
++// SpirvEmitter.h DiagWordBase). Off: no new IR instruction, the SPIR-V is the same as without the code.
++// Read once per process; the translation cache keys the value (":diagbvh") in its signature and directory.
++bool   DiagBvhNodesEnabled();
+ std::string OperandToString(const Operand& operand);
+ const char* ImageDimensionToString(ImageDimension dimension);
+ std::string InstructionToString(const Instruction& inst);
+diff --git a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+index 0592dff4..4c31def3 100644
+--- a/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
++++ b/src/graphics/shader/recompiler/frontend/translate/Memory.cpp
+@@ -845,6 +845,14 @@ bool Translator::IMAGE_BVH_INTERSECT_RAY(const Decoder::Instruction& inst, bool
+ 	const IR::U1 sort_enabled =
+ 	    ir.LogicalAnd(ir.INotEqual(ir.BitwiseAnd(desc1, U32C(0x80000000u)), U32C(0u)),
+ 	                  ir.INotEqual(sort_mode, U32C(3u)));
++	// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 counts the node pointer that reaches the
++	// instruction - type, size field (descriptor dwords 2-3), lanes - ahead of the native / IR fork, so
++	// both paths count the same. =0 emits nothing.
++	if (Decoder::DiagBvhNodesEnabled()) {
++		ir.Emit(IR::ValueOpcode::BvhNodeDiag,
++		        {node_lo, node_hi, GetResourceDword(memory.resource, 2),
++		         GetResourceDword(memory.resource, 3), ir.GetExec()});
++	}
+ 
+ 	// KYTY_BVH_NATIVE=0: the IR expansion below (every node type evaluated, selected at the
+ 	// end). Default: one opcode, the SPIR-V backend branches on the node type.
+diff --git a/src/graphics/shader/recompiler/frontend/translate/Scalar.cpp b/src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+index d6d8add2..a9a33e77 100644
+--- a/src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
++++ b/src/graphics/shader/recompiler/frontend/translate/Scalar.cpp
+@@ -235,8 +235,15 @@ bool Translator::EmitScalar(const Decoder::Instruction& inst) {
+ 
+ 		case O::S_NOP:
+ 		case O::S_SLEEP:
+-		case O::S_SETPRIO:
+-		case O::S_TRAP: EmitControlNop(); return true;
++		case O::S_SETPRIO: EmitControlNop(); return true;
++		case O::S_TRAP:
++			// Track F, F11d (ROADMAP p.376(v)): KYTY_DIAG_BVHNODES=1 counts the subgroups and lanes that
++			// reach the trap, which stays a no-op; =0 emits only the no-op, as before.
++			if (Decoder::DiagBvhNodesEnabled()) {
++				ir.Emit(IR::ValueOpcode::DiagTrap, {ir.GetExec()});
++			}
++			EmitControlNop();
++			return true;
+ 		case O::S_WAITCNT_DEPCTR: EmitWaitcnt(); return true;
+ 		case O::S_BARRIER: S_BARRIER(); return true;
+ 		case O::S_SENDMSG: S_SENDMSG(inst); return true;
+diff --git a/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.cpp b/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.cpp
+index 2e360a8d..791557d5 100644
+--- a/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.cpp
++++ b/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.cpp
+@@ -92,6 +92,8 @@ bool HasSideEffects(ValueOpcode opcode) {
+ 		case ValueOpcode::SetAttribute:
+ 		case ValueOpcode::SetTessellationAttribute:
+ 		case ValueOpcode::MeshAllocate:
++		case ValueOpcode::BvhNodeDiag:
++		case ValueOpcode::DiagTrap:
+ 		case ValueOpcode::Barrier: return true;
+ 		default: return false;
+ 	}
+diff --git a/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc b/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc
+index a0fc585f..d9c2feb7 100644
+--- a/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc
++++ b/src/graphics/shader/recompiler/ir/opcodes/ValueOpcodes.inc
+@@ -304,3 +304,8 @@ VALUE_OPCODE(BvhIntersectRay, U32x4, U32, U32, F32, F32, F32, F32, F32, F32, F32
+ // DS_INC_RTN_U32 / DS_DEC_RTN_U32 (upstream e04007a), appended for cache compatibility.
+ VALUE_OPCODE(SharedAtomicInc32, U32, U32, U32, U1)
+ VALUE_OPCODE(SharedAtomicDec32, U32, U32, U32, U1)
++// Track F, F11d (KYTY_DIAG_BVHNODES=1 only), appended for cache compatibility: the node pointer of an
++// IMAGE_BVH_INTERSECT_RAY - node_lo, node_hi, descriptor dwords 2-3 (size field), exec - and an S_TRAP
++// reached - exec. Both write the fault-buffer tail (uses_dma).
++VALUE_OPCODE(BvhNodeDiag, Void, U32, U32, U32, U32, U1)
++VALUE_OPCODE(DiagTrap, Void, U1)
+diff --git a/src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp b/src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp
+index 2b978ba2..07268773 100644
+--- a/src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp
++++ b/src/graphics/shader/recompiler/ir/passes/ResourceTracking.cpp
+@@ -902,7 +902,9 @@ private:
+ 
+ 	void Collect(Inst& inst) {
+ 		const auto op           = inst.GetOpcode();
+-		if (op == ValueOpcode::BvhIntersectRay) {
++		// Track F, F11d: the KYTY_DIAG_BVHNODES opcodes write the fault-buffer tail as well.
++		if (op == ValueOpcode::BvhIntersectRay || op == ValueOpcode::BvhNodeDiag ||
++		    op == ValueOpcode::DiagTrap) {
+ 			m_info.uses_dma = true;
+ 			return;
+ 		}

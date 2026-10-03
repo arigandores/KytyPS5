@@ -1,0 +1,23 @@
+track F link F11d (HPP-466): KYTY_DIAG_BVHNODES (default 0) - BVH node and S_TRAP counters in the fault-buffer tail (ROADMAP s122 item 376(v), F11a variant E with RC1-RC8 of F11b); reverted by the next commit (signature window M3', item 376(d))
+
+KYTY_DIAG_BVHNODES read once (Common::EnvFlagOn: unset, "", 0/false/off/no = OFF).
+ON: IMAGE_BVH_INTERSECT_RAY emits BvhNodeDiag {node_lo, node_hi, T# dwords 2-3,
+exec} ahead of the native / IR fork; S_TRAP emits DiagTrap {exec} before its no-op.
+The emitter counts per host subgroup (ballot bit count, elected invocation, atomics
+in the fault-buffer tail after the loop-cap words, 64 words): lanes by node type
+0-7, size violations idx = ptr >> 3 > size64 (32-bit pointers), their largest
+excess and a histogram 3 classes x 4 buckets (bucket 3 = idx > 2 * size64 + 1),
+size64 = 2^42 - 1 lanes, 64-bit pointers, lanes per BVH program slot (20 programs
+of eboot.bin + other), subgroups; traps = subgroups reaching S_TRAP whatever exec,
+trap_lanes = active lanes. Host: FaultManager tail = loop-cap + diagnostic words at
+=1, zeroed by ClearLoopTripTail (same command), copied with the loop-cap words,
+diffed modulo 2^32; lines "DiagBvhNodes: mode=1 ...", "DiagBvhNodes: lanes=...",
+"DiagBvhNodes: slots ...", and at translation "DiagBvhNodes: shader=<hash16>
+bvh_sites=<n> trap_sites=<m> fallback=<0|1>". Translation cache token ":diagbvh".
+OFF: no new IR instruction; SPIR-V of the B1b and S_TRAP cases byte-equal to the
+build without the code; fault buffer size as before. Tests: --diag-bvh-only (GPU
+gate, every case of item 376(g)(2)) and --diag-dump-spirv <dir>.
+Not run in the game (WIP until F11f). The translator hash changes with this commit;
+the next commit restores the sources.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

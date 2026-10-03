@@ -1,0 +1,8 @@
+track F link F11d (HPP-466): revert the KYTY_DIAG_BVHNODES diagnostics - signature window M3' (ROADMAP s122 item 376(d))
+
+Restores the 16 files of the previous commit to its parent: the contents of
+main and the translation signature return at once. The diagnostics stay in the
+history of main; the F11 runs use the binary built from a clean worktree on the
+diagnostics commit (copy C:/kyty/f287/bin/kyty_emulator_<sha8>.exe).
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

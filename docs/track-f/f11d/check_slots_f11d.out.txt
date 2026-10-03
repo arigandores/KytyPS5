@@ -1,0 +1,12 @@
+table entries 20 sorted True unique True
+F3b bvhmap: table hashes found 20 of 20
+F3b report list 20 equal to table True
+F11a T1 BVH subset 14 all in table True
+slot of 380bb9d636390bae 4
+enum {'DiagT0': 0, 'DiagSizeViol': 8, 'DiagSizeOff': 9, 'DiagNode64': 10, 'DiagOverMax': 11, 'DiagTraps': 12, 'DiagTrapLanes': 13, 'DiagGroups': 14, 'DiagBuckets': 16, 'DiagLanes': 28}
+| words | bytes from the bitmap end | what |
+| 2097152..2097167 | 0..63 | LoopTrip* (0-2 counters, 8-15 slots) |
+| 2097168..2097231 | 64..319 | diagnostic words 0..63 |
+diagnostic words used 48 max 48 < DiagWords True
+no overlap with LoopTrip*: diag word 0 = tail word 16 > LoopTrip last 15
+ALL OK

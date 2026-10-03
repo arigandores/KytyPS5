@@ -1,0 +1,99 @@
+[32m	 guest address-space self-test: ok
+[0m[32m	 direct-memory sub-64K placeholder self-test: ok
+[0m[host]    LeastRecentlyUsedCache           ok
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=41 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=25 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=1
+ShaderRecompiler predication elimination: selects=7 chains=2
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=1 trap_sites=0 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=17403 elapsed_ms=0
+[diag-dump] B1bBvhNodeAddress            words=17403
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=41 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=25 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler predication elimination: selects=7 chains=2
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=1 trap_sites=0 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=17403 elapsed_ms=0
+[diag-dump] B1bBvhPaddingBitsIgnored     words=17403
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=41 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=25 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler predication elimination: selects=7 chains=2
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=1 trap_sites=0 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=17407 elapsed_ms=0
+[diag-dump] B1bBvhFieldBit32             words=17407
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=45 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=27 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler predication elimination: selects=7 chains=2
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=1 trap_sites=0 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=15994 elapsed_ms=0
+[diag-dump] B1bBvh64NodePointer          words=15994
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=8 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=7 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=0 trap_sites=1 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=758 elapsed_ms=0
+[diag-dump] DiagTrapExec0Wave32          words=758
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=9 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=8 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=0 trap_sites=2 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=835 elapsed_ms=0
+[diag-dump] DiagTrapExecAllWave32        words=835
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 code_words=8 decode
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 decode instructions=7 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG BuildGraph
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG BuildGraph blocks=1 loops=0 back_edges=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 CFG Structurize
+ShaderRecompiler structured CFG success: blocks=1
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 CFG Structurize blocks=1 loops=0 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 IR TranslateProgram
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 IR TranslateProgram blocks=2 elapsed_ms=0
+ShaderRecompiler phase begin: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram
+DiagBvhNodes: shader=0000000000000000 bvh_sites=0 trap_sites=1 fallback=0
+ShaderRecompiler phase end: stage=CS hash=0x0000000000000000 SPIR-V EmitProgram words=963 elapsed_ms=0
+[diag-dump] DiagTrapExec0Wave64          words=963
+ALL OK

@@ -1,0 +1,9 @@
+[host]    LeastRecentlyUsedCache           ok
+[b1b] KYTY_FIX_B1B effective=1 KYTY_FIX_B26 effective=1 KYTY_BVH_NATIVE=0
+[b1b]     cache signature=KytySC3:23f2e9d0a210e47e1f500eba542cd9c2b2c4795d:fixb26:fixb1b:diagbvh
+[b1b]     cache dir=_ShaderCache\PPSA21564\variant_fixb26_fixb1b_diagbvh fixb1b_in_signature=1 fixb1b_in_dir=1 fixb26_in_signature=1 fixb26_in_dir=1
+[compute] B1bBvhNodeAddress                ok
+[compute] B1bBvhPaddingBitsIgnored         ok
+[compute] B1bBvhFieldBit32                 ok
+[compute] B1bBvh64NodePointer              ok
+ALL OK

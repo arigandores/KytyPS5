@@ -1,0 +1,157 @@
+commit 3adc4573
+== 3adc4573:src/graphics/host_gpu/renderer/cache/faultManager.cpp:40-44 -- fault buffer size = LoopTripOffset + LoopTripBytes
+40:                      LoopTripOffset + LoopTripBytes),
+41:       m_download_buffer(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+42:                         MaxPendingFaults * PageFaultAreaSize),
+43:       m_trip_download(graphics, scheduler, MemoryUsage::Download, 0, AllFlags,
+44:                       MaxPendingFaults * LoopTripBytes) {
+== 3adc4573:src/graphics/host_gpu/renderer/cache/faultManager.cpp:92-94 -- ClearLoopTripTail fills only LoopTripBytes
+92: void FaultManager::ClearLoopTripTail() {
+93: 	m_fault_buffer.Fill(LoopTripOffset, LoopTripBytes, 0);
+94: }
+== 3adc4573:src/graphics/host_gpu/renderer/cache/faultManager.cpp:150-153 -- tail copy only when trips
+150: 	// KYTY_BVH_LOOP_CAP: copy the counter tail next to the fault list; the counters only grow,
+151: 	// so each readback is diffed against the largest values already seen.
+152: 	const bool trips       = LoopCap::BvhLoopCap() != 0;
+153: 	const auto trip_offset = m_current_area * LoopTripBytes;
+== 3adc4573:src/graphics/host_gpu/renderer/cache/faultManager.cpp:189-196 -- grown(): max logic
+189: 				const uint32_t delta =
+190: 				    words[index] > m_trip_last[index] ? words[index] - m_trip_last[index] : 0;
+191: 				m_trip_last[index] = std::max(m_trip_last[index], words[index]);
+192: 				return delta;
+193: 			};
+194: 			const auto trip_delta = grown(0);
+195: 			const auto near_delta = grown(1);
+196: 			(void)grown(2);
+== 3adc4573:src/graphics/host_gpu/renderer/cache/bufferCache.cpp:152-158 -- ClearLoopTripTail at first registration
+152: 		if (!m_bda_null_page_ready) {
+153: 			// Null-page BDA mode (shader emitter): page-table entry 0 (guest page 0, never
+154: 			// mapped) holds a zero-filled page that unmapped addresses resolve to. Written
+155: 			// here, at the first registration, because the constructor has no command buffer.
+156: 			m_bda_null_page_ready = true;
+157: 			m_bda_null_page.Fill(0, CACHING_PAGESIZE, 0);
+158: 			m_fault_manager.ClearLoopTripTail();
+== 3adc4573:tests/ShaderRecompilerComputeTests.cpp:15681-15682 -- test fault buffer has no tail
+15681:     m_fault_buffer = CreateDeviceBuffer(
+15682:         shader_name, BufferCache::CACHING_NUMPAGES / 8, usage);
+== 3adc4573:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:568-569 -- loop cap default on 380bb9d6
+568: constexpr uint64_t BvhLoopCapDefaultHash = 0x380bb9d636390baeull;
+569: constexpr uint32_t BvhLoopCapDefault     = 65536;
+== 3adc4573:src/graphics/shader/recompiler/backend/spirv/spirvEmitterProgram.cpp:848-852 -- cap slot / dispatcher fallback
+848: 	const int  cap_slot = BvhLoopCap() != 0 ? BvhLoopCapSlot(program.shader_hash) : -1;
+849: 	if (cap_slot >= 0 && state.program.dispatcher_fallback) {
+850: 		LOGF("BvhLoopCap: shader=0x%016" PRIx64 " UNCAPPED (dispatcher fallback)\n",
+851: 		     program.shader_hash);
+852: 	} else if (cap_slot >= 0) {
+== 3adc4573:src/graphics/shader/recompiler/backend/spirv/SpirvEmitter.h:38-40 -- LoopTrip words
+38: inline constexpr uint32_t LoopTripWordBase = 1u << 21;
+39: inline constexpr uint32_t LoopTripWords    = 16;
+40: inline constexpr uint32_t LoopTripSlots    = 8;
+== 3adc4573:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:713-721 -- KYTY_BVH_STUB returns before
+713: 	// Debug aid: KYTY_BVH_STUB=1 makes every ray miss without touching BVH memory.
+714: 	static const bool stub = Common::EnvFlagOn("KYTY_BVH_STUB");
+715: 	if (stub) {
+716: 		const IR::Value miss(0xffffffffu);
+717: 		WriteImageComponents(inst.dst,
+718: 		                     ir.Emit(IR::ValueOpcode::CompositeConstructU32x4, {miss, miss, miss, miss}),
+719: 		                     memory, 4u);
+720: 		return true;
+721: 	}
+== 3adc4573:src/graphics/shader/recompiler/frontend/translate/Memory.cpp:845-857 -- native fork, exec passed
+845: 	const IR::U1 sort_enabled =
+846: 	    ir.LogicalAnd(ir.INotEqual(ir.BitwiseAnd(desc1, U32C(0x80000000u)), U32C(0u)),
+847: 	                  ir.INotEqual(sort_mode, U32C(3u)));
+848: 
+849: 	// KYTY_BVH_NATIVE=0: the IR expansion below (every node type evaluated, selected at the
+850: 	// end). Default: one opcode, the SPIR-V backend branches on the node type.
+851: 	static const bool native_bvh = [] {
+852: 		const char* value = std::getenv("KYTY_BVH_NATIVE");
+853: 		return value == nullptr || value[0] != '0';
+854: 	}();
+855: 	if (native_bvh) {
+856: 		const auto result = ir.Emit(IR::ValueOpcode::BvhIntersectRay,
+857: 		                            {node_lo, node_hi, extent, origin[0], origin[1], origin[2],
+== 3adc4573:src/graphics/shader/recompiler/backend/spirv/spirvEmitterMemory.cpp:2141-2144 -- desc0, desc1, active, node64
+2141: 	const auto desc0  = arg(12);
+2142: 	const auto desc1  = arg(13);
+2143: 	const auto active = arg(14);
+2144: 	const bool node64 = !inst.Arg(1).IsImmediate() || inst.Arg(1).U32() != 0u;
+== 3adc4573:src/generate_version.cmake:44-56 -- translator content hash
+44: if(SHADER_SOURCE_DIR)
+45: 	file(GLOB_RECURSE SHADER_SOURCES LIST_DIRECTORIES false
+46: 		"${SHADER_SOURCE_DIR}/*.cpp" "${SHADER_SOURCE_DIR}/*.h" "${SHADER_SOURCE_DIR}/*.inc")
+47: 	list(APPEND SHADER_SOURCES ${SHADER_CACHE_EXTRA_FILES})
+48: 	list(SORT SHADER_SOURCES)
+49: 	set(SHADER_DIGESTS "")
+50: 	foreach(SHADER_SOURCE IN LISTS SHADER_SOURCES)
+51: 		if(EXISTS "${SHADER_SOURCE}")
+52: 			file(SHA1 "${SHADER_SOURCE}" SHADER_DIGEST)
+53: 			string(APPEND SHADER_DIGESTS "${SHADER_DIGEST}\n")
+54: 		endif()
+55: 	endforeach()
+56: 	string(SHA1 KYTY_SHADER_SOURCE_HASH "${SHADER_DIGESTS}")
+== 3adc4573:src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp:578-587 -- variant directory
+578: 	const std::string variant = ShaderRecompiler::Spirv::Emitter::BvhLoopCapSignatureToken() +
+579: 	                            (ShaderRecompiler::Spirv::Emitter::BdaLeanEnabled() ? ":bdalean" : "") +
+580: 	                            (ShaderRecompiler::Decoder::FixB26Enabled() ? ":fixb26" : "") +
+581: 	                            (ShaderRecompiler::Decoder::FixB1BEnabled() ? ":fixb1b" : "");
+582: 	if (!variant.empty()) {
+583: 		std::string folder = "variant" + variant;
+584: 		std::replace(folder.begin(), folder.end(), ':', '_');
+585: 		m_directory /= folder;
+586: 	}
+587: 	// Keyed by the translator sources, not the git revision: unrelated commits keep the cache.
+== C:/kyty/f287/f3a/asm_380b.txt sha256 d4b9a41d658cbdf7 -- game traversal 380bb9d6
+152: 0x000002c4: S_AND_B32 vcc_lo, s42, 7
+153: 0x000002c8: S_ADD_I32 vcc_lo, vcc_lo, -4
+154: 0x000002cc: S_CMP_LE_U32 vcc_lo, 2
+155: 0x000002d0: S_CBRANCH_SCC1 0x000008d8
+217: 0x0000040c: S_AND_B32 vcc_lo, s32, 7
+218: 0x00000410: S_ADD_I32 vcc_lo, vcc_lo, -4
+219: 0x00000414: S_CMP_LE_U32 vcc_lo, 2
+220: 0x00000418: S_CBRANCH_SCC1 0x0000050c
+221: 0x0000041c: S_CMP_LG_U32 -1, s32
+222: 0x00000420: S_CBRANCH_SCC0 0x00000508
+223: 0x00000424: S_AND_SAVEEXEC_B64 s24, s24
+224: 0x00000428: S_CBRANCH_EXECZ 0x00000504
+225: 0x0000042c: S_AND_B32 vcc_lo, s32, -5
+229: 0x00000440: S_AND_B32 vcc_lo, s26, 7
+230: 0x00000444: S_CMP_LG_U32 7, vcc_lo
+231: 0x00000448: S_CBRANCH_SCC0 0x00000504
+232: 0x0000044c: S_AND_B32 vcc_lo, s32, -7
+233: 0x00000450: S_ADD_I32 s45, vcc_hi, 1
+234: 0x00000454: S_BUFFER_LOAD_DWORD s27, s20, vcc_lo ; offset=4 offset2=0 dwords=1 bits=32 dfmt=0 nfmt=0 signed=0 typed=0 formatted=0 segment=0 glc=0 slc=0 idxen=0 offen=0
+235: 0x0000045c: S_WAITCNT 0x0000c07f
+236: 0x00000460: V_MOV_B32 v0, s26
+237: 0x00000464: S_BFM_B32 vcc_lo, 8, 23
+238: 0x00000468: S_CMP_LG_U32 0, s16
+239: 0x0000046c: S_NOP 0x00000000
+240: 0x00000470: S_CSELECT_B64 s28, exec_lo, 0
+241: 0x00000474: IMAGE_BVH_INTERSECT_RAY v0, v0, s40, s0 ; dmask=0xf image_dim=1d r128=1 sample_flags=none addr_components=11 nsa_dwords=3 nsa_addr=25,15,16,17,8,11,12,26,27,28,0,0
+148: 0x000002b0: S_ADD_U32 s60, s18, 0x00000080
+149: 0x000002b8: S_BITSET1_B32 s57, 31
+150: 0x000002bc: S_ADDC_U32 s61, s19, 0
+151: 0x000002c0: S_MOV_B64 s20, exec_lo
+== C:/kyty/KytyPS5/docs/track-f/f11a/t1scan_f11a.tsv sha256 939af24f07b62db2 -- NOT_FOUND rows (all CS)
+1: hash16	stage	rows	calib	s_trap	bvh	decode
+2: 0078153a1c1fb171	cs	AD	OK	0	0	
+3: 0192b89f529d8bcb	cs	AD	OK	0	0	
+4: 01d6f21611218e74	cs	AD	OK	0	0	
+5: 03d8402a8c5446ce	cs	AD	OK	0	0	
+6: 0781d68f43284868	cs	AD	OK	0	0	
+7: 0b6cfe063c9a740c	cs	AD	OK	0	0	
+8: 0c891023270da2a3	cs	AD	OK	0	0	
+== C:/kyty/f287/f3a/src_ext/gfx10_sq_ko_reg.h sha256 a7c82aa24c458c45 -- sq_bvh_rsrc_t
+99: union sq_bvh_rsrc_t {
+100:     struct {
+101:         uint64_t base_address                                                 : 40;
+102:         uint64_t                                                              : 15;
+103:         uint64_t box_grow_value                                               :  8;
+104:         uint64_t box_sort_en                                                  :  1;
+105:         uint64_t size                                                         : 42;
+106:         uint64_t                                                              : 14;
+107:         uint64_t triangle_return_mode                                         :  1;
+108:         uint64_t llc_noalloc                                                  :  2;
+109:         uint64_t big_page                                                     :  1;
+110:         uint64_t type                                                         :  4;
+111:     };

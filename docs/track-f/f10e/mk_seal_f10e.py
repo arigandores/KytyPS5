@@ -10,7 +10,7 @@ BODY = sys.argv[1]
 FILES = ['go_f10e.sh', 'launch_f10e.sh', 'wait_f10e.sh', 'post_f10e.sh', 'run_f10e.py', 'manifest_f10e.py', 'f10e_read.py', 'test_f10e_read.py',
          'test_f10e_read.out.txt', 'enter_scene.py', 'idle142.py', 'procload.py', 'gates_default.txt', 'sheet142.py', 'run_safety99.py',
          'launch_run.py', 'mk_seal_f10e.py']
-EXT = ['C:/kyty/f287/bin/kyty_emulator_36e2b042.exe', 'C:/kyty/f287/f10c/kyty_emulator_36e2b042.exe', 'C:/kyty/p283/bin/kyty_emulator_4aa62e95.exe',
+EXT = ['C:/kyty/f287/bin/kyty_emulator_36e2b042.exe', 'C:/kyty/f287/f10c/kyty_emulator_36e2b042.exe', 'C:/kyty/f287/bin/kyty_emulator_540c035a.exe',
        'C:/kyty/scripts/s51_vidglitch.py']
 REFS = [('18d9c792', 'docs/ROADMAP.md', 20029, '369. **Звено F10b трека F (`HPP-446`, лид): F10a (`HPP-445`) принят',
          '`KYTY_FIX_SVAL` (умолчание 0) с критерием «ИСПРАВЛЕНО Ф16» ниже; звенья F10c'),
@@ -21,6 +21,10 @@ REFS = [('18d9c792', 'docs/ROADMAP.md', 20029, '369. **Звено F10b трек�
         ('68602c4f', 'src/graphics/host_gpu/renderer/pipeline/shaderTranslationCache.cpp', 570,
          'm_directory = std::filesystem::path("_ShaderCache") / title_id;', None),
         ('68602c4f', 'src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp', 6498, 'LOGF("PipelinePrecache: no %s yet', None),
+        ('eb15b682', 'docs/ROADMAP.md', 20419, '375. **Звено FS3d трека F (`HPP-450`, лид): факт установки п. 374(д) — FS3 `540c035a` УСТАНОВЛЕН',
+         None),
+        ('eb15b682', 'docs/ROADMAP.md', 20405, 'который содержит коммиты Б42, если FS3 к тому времени отгружен») с этой установкой действует. **F10e**',
+         None),
         ('68602c4f', 'src/main.cpp', 273, '} else if (arg == "--shader-validation") {',
          'if (!ParseBool(value, options.config.shader_validation_enabled)) {')]
 

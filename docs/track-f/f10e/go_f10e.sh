@@ -2,8 +2,9 @@
 # F10e (HPP-453, ROADMAP s122 item 369 (c)(3)): ONE TAG = ONE LOCK (queue P > F > S, item 322 (g)).
 # usage: bash C:/kyty/f287/f10e/go_f10e.sh <tag>      tags: f10e_r0 f10e_r1 f10e_w
 # Port of C:/kyty/f287/fs3/fs3c/go_fs3.sh (FS3c: stop file, lock, live emulator, procload through the <app> mask, lock.log UTC, caches,
-# _SaveData and GLCache copied before and returned after, RETURN_FAILED keeps the lock, the installed 4aa62e95 put back from its pinned
-# copy by sha in the EXIT trap) with: the F10c copy 36e2b042 (F10c HPP-451, review F10d HPP-452 PASS_WITH_FIXES) installed; the binary is
+# _SaveData and GLCache copied before and returned after, RETURN_FAILED keeps the lock, the installed binary put back from its pinned
+# copy by sha in the EXIT trap; seal amendment before the first tag: the installed binary is FS3 540c035a since 2026-10-03 07:11:12Z,
+# ROADMAP s122 items 374 (zh) and 375) with: the F10c copy 36e2b042 (F10c HPP-451, review F10d HPP-452 PASS_WITH_FIXES) installed; the binary is
 # known ONLY by the sha256 of the copy (RC2 of F10d: the log line 'git = ...-1959-g465f0d8e' is the known label of this binary, not a fault);
 # the manifest sha256 of all caches before the tag and after their return (manifest_f10e.py, equality line); the COLD FORM of the
 # translation: the live variant directory _ShaderCache/PPSA21564/variant_fixb26_fixb1b (KYTY_FIX_B26=1, KYTY_FIX_B1B=1 - the defaults)
@@ -28,8 +29,8 @@ G=C:/kyty/f287/f10e; F=C:/kyty/f287; EMU="C:/kyty/KytyPS5/ps5 em"; LOCK=C:/kyty/
 GAME="$EMU/kyty_emulator.exe"
 BIN=C:/kyty/f287/bin/kyty_emulator_36e2b042.exe
 BIN_EXPECT=36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce
-PINNED=C:/kyty/p283/bin/kyty_emulator_4aa62e95.exe
-WANT=4aa62e95f74ecab749e1e096fd8fd54cc6bb27353346bad98cf3df5f77c1ffac
+PINNED=C:/kyty/f287/bin/kyty_emulator_540c035a.exe
+WANT=540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
 SEAL=$G/pred/f10e_seal.md
 VKLAYER="C:/VulkanSDK/1.4.357.0/Bin"
 GLDIR="$USERPROFILE/AppData/Local/NVIDIA/GLCache"
@@ -57,7 +58,7 @@ mfpairs() { echo "_ShaderCache=$EMU/_ShaderCache" "_PipelineCache=$EMU/_Pipeline
 [ -f "$SEAL" ] || { echo "no seal $SEAL"; exit 1; }
 [ "$(sha $BIN)" = "$BIN_EXPECT" ] || { log "F10c copy $BIN sha != $BIN_EXPECT - not starting"; exit 1; }
 [ "$(sha $PINNED)" = "$WANT" ] || { log "pinned copy $PINNED sha != $WANT - not starting"; exit 1; }
-[ "$(sha "$GAME")" = "$WANT" ] || { log "installed binary is not 4aa62e95 before the tag - not starting"; exit 1; }
+[ "$(sha "$GAME")" = "$WANT" ] || { log "installed binary is not 540c035a before the tag - not starting"; exit 1; }
 [ -d "$GLDIR" ] || { log "no GLCache dir - not starting"; exit 1; }
 [ -d "$COLD" ] || { log "no live variant dir $COLD - not starting"; exit 1; }
 tasklist //FI "IMAGENAME eq kyty_emulator.exe" | grep -qi kyty_emulator && { log "an emulator lives - not starting"; exit 3; }

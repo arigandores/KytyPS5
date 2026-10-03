@@ -1,0 +1,22 @@
+F10E f10e_r0 kind r0 log sha256 c3a6dce9720fee8bad49524592391c3a7ca61648ef9e2bd7a1e6ef417b49249d lines 55999
+  binary: installed sha256 36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce (expected 36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce); log line None (reference, RC2: not a gate)
+  cold: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T07:20:59Z; the other entries of _ShaderCache/PPSA21564: 1345; Shader translation cache ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet'
+  FixSval lines [(79, 0, 1)] (expected mode=0 ubo_std_layout=1, first before the first GuestOut line 11892)
+  FixSvalStat lines 0, last None (validated = ALL checks of ValidateShaderSpirv, all stages; RC3 (a))
+  SPIR-V validation failed: log lines 2 (first [55723, 55998]), stdout lines 1, hashes ['c33dc20535a2cebf']
+  process end before the timeout: YES (how 'exit rc 321' rc 321 exit_s 13.3 wall_s 13.3)
+  entry line None; scene change line None; first scene frame n None; hold (sum dt after it) 0.0 s; frames >= 1 s after it 0 (max dt_us 0) - reference
+  death markers: 2 [('log', '--- Error ---', 55997), ('stdout', '--- Error ---', 47)]; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; AsyncPipelines: skipped draw 0 (reference)
+  video: index records None; one-frame glitches None; None
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)], supported=1 enabled=1 before the first GuestOut: True
+  manifest: manifest cmp EQUAL files 2920 listsha 8442b5374137089534c07af70a01001e1768f85236e5f49bffb0a2e9d4a81bed
+  ROW binary sha256 = 36e2b042 (RC2): YES
+  ROW cold form (variant dir absent, translation cache path, PipelinePrecache: no ... yet): YES
+  ROW FixSval mode=0 ubo_std_layout=1 before the first GuestOut: YES
+  ROW R0: >= 1 line SPIR-V validation failed: YES
+  ROW R0: the process ended before 300 s: YES
+  ROW R0: 0 FixSvalStat lines at =0 (reference): YES
+  ROW R0: defect reproduced in the game (both rows above; else - not reproduced in the game): YES
+  ROW manifest of the caches before = after the return: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

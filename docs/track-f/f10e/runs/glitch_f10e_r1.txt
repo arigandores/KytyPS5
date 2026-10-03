@@ -1,0 +1,2 @@
+C:/kyty/f287/f10e/rec_f10e_r1.mp4: 10275 frames 960x540, index entries 10275
+one-frame glitches: 0

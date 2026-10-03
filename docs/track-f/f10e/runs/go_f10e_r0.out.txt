@@ -1,0 +1,12 @@
+bash.exe: warning: could not find /tmp, please create!
+2026-10-03T07:20:56Z F10e go_f10e f10e_r0 lock taken; procload: procload: clean (no process above 0.50 CPU s/s, total cap None)
+2026-10-03T07:20:57Z F10e go_f10e f10e_r0 manifest before: manifest C:/kyty/f287/f10e/runs/f10e_r0/manifest_before.tsv files 2920 bytes 837358633 listsha 8442b5374137089534c07af70a01001e1768f85236e5f49bffb0a2e9d4a81bed
+2026-10-03T07:20:59Z F10e go_f10e f10e_r0 caches, saves and GLCache copied: _ShaderCache _PipelineCache _SaveData GLCache (163/169/5/470/ MB)
+2026-10-03T07:21:00Z F10e go_f10e f10e_r0 cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T07:20:59Z; the other entries of _ShaderCache/PPSA21564: 1345
+2026-10-03T07:21:00Z F10e go_f10e f10e_r0 installed the F10c copy: 36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce
+2026-10-03T07:21:14Z F10e go_f10e f10e_r0 run: ended: exit rc 321 wall 13.3 s
+2026-10-03T07:21:15Z F10e go_f10e f10e_r0 installed binary returned: 540c035ac09f428a5b10617566627c71d79aacbeeafe0c8452db2c7ddd96f4a1
+2026-10-03T07:21:17Z F10e go_f10e f10e_r0 caches, saves and GLCache returned
+2026-10-03T07:21:19Z F10e go_f10e f10e_r0 manifest after: manifest C:/kyty/f287/f10e/runs/f10e_r0/manifest_after.tsv files 2920 bytes 837358633 listsha 8442b5374137089534c07af70a01001e1768f85236e5f49bffb0a2e9d4a81bed; cmp: manifest cmp EQUAL files 2920 listsha 8442b5374137089534c07af70a01001e1768f85236e5f49bffb0a2e9d4a81bed
+2026-10-03T07:21:19Z F10e go_f10e f10e_r0 lock released (rc 0)
+rc=0

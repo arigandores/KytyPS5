@@ -1,0 +1,27 @@
+F10E f10e_r1 kind r1 log sha256 216d73fdc4255732b229afc4529dc77a1947b4d49a9200974c09ef2e15bae6fc lines 2393728
+  binary: installed sha256 36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce (expected 36e2b0428e36233ab102aab7cdffc00139d45381f59a7bb51cb6967ce49760ce); log line None (reference, RC2: not a gate)
+  cold: cold form: C:/kyty/KytyPS5/ps5 em/_ShaderCache/PPSA21564/variant_fixb26_fixb1b absent at 2026-10-03T07:22:01Z; the other entries of _ShaderCache/PPSA21564: 1345; Shader translation cache ['_ShaderCache\\PPSA21564\\variant_fixb26_fixb1b']; first PipelinePrecache line 'PipelinePrecache: no _ShaderCache\\PPSA21564\\variant_fixb26_fixb1b\\pipelines.bin yet'
+  FixSval lines [(79, 1, 1)] (expected mode=1 ubo_std_layout=1, first before the first GuestOut line 11893)
+  FixSvalStat lines 1, last (758044, 256, 0) (validated = ALL checks of ValidateShaderSpirv, all stages; RC3 (a))
+  SPIR-V validation failed: log lines 0 (first []), stdout lines 0, hashes []
+  process end before the timeout: NO (outcome ok detail None hold_exit None hold_s 330.1 stable_s 27.7)
+  entry line 351814; scene change line None; first scene frame n 316; hold (sum dt after it) 334.6 s; frames >= 1 s after it 0 (max dt_us 475371) - reference
+  death markers: 0 []; emulator stdout present
+  window: none, Recovering Vulkan swapchain 0; AsyncPipelines: skipped draw 1029 (reference)
+  video: index records 10275; one-frame glitches 0; sheet: C:/kyty/f287/f10e/runs/f10e_r1/sheet_f10e_r1.png frames 10275 step 214 tiles 8x6
+  W: [Vulkan][E] 0; [Vulkan][W] 0; last-time-reporting lines 0; DualSrcBlend [(72, 1, 1)], supported=1 enabled=1 before the first GuestOut: True
+  manifest: manifest cmp EQUAL files 2920 listsha 8442b5374137089534c07af70a01001e1768f85236e5f49bffb0a2e9d4a81bed
+  ROW binary sha256 = 36e2b042 (RC2): YES
+  ROW cold form (variant dir absent, translation cache path, PipelinePrecache: no ... yet): YES
+  ROW FixSval mode=1 ubo_std_layout=1 before the first GuestOut: YES
+  ROW R1: 0 lines SPIR-V validation failed: YES
+  ROW R1: no process end before the timeout: YES
+  ROW R1: 0 death markers: YES
+  ROW R1: validated of the last FixSvalStat >= 151 (no line - NOT_DETERMINED, RC3 (b)): YES
+  ROW R1: entered (entry line of underwater_aerial_garden): YES
+  ROW R1: hold >= 300 s (sum dt after the first scene frame): YES
+  ROW R1: video index records >= 3000: YES
+  ROW R1: 0 one-frame glitches: YES
+  ROW R1: sheet for the lead made: YES
+  ROW manifest of the caches before = after the return: YES
+  ROW no window minimized / Recovering Vulkan swapchain (else not read as an outcome, question to the lead): YES

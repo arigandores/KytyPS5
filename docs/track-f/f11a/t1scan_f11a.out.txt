@@ -1,0 +1,71 @@
+source eboot.bin sha256 3b5100797fe83663 AMDGPU ELFs with .text: 6087
+source libSceNpCppWebApi.prx sha256 00ccfa02e5ab35af AMDGPU ELFs with .text: 0
+source libc.prx sha256 3d9f5aba64e9c8f8 AMDGPU ELFs with .text: 0
+programs: 6087 unique .text hashes: 5698
+ALL unique programs: with S_TRAP 20 (instructions 20 ) ; with IMAGE_BVH* 20 (instructions 60 ) ; reachable decode met UNKNOWN in 0
+t1_base.tsv sha256 d4d80994176891c36afc2267231fd38ce6fb67526d39ed8528a5298d78b2d19a rows 2154 by row class {'A': 840, 'B': 13, 'C': 120, 'D': 1181}
+T1 unique hash16: 538 by stage: {'cs': 119, 'cs,ms': 5, 'ps': 249, 'vs': 165}
+T1 unique hashes found among ELF programs: 532 of 538 ; calibration gcn_sha256 OK 331 MISMATCH 0 NA 201
+T1 shaders with S_TRAP: 14 ; with IMAGE_BVH*: 14
+T1 instructions S_TRAP: 14 ; IMAGE_BVH*: 42
+details (hash16 stage instruction pc context):
+  1f16e50eea0c89e3 cs S_TRAP pc=0x23e0 trap_id=1 ctx: 0x23d4 SOPP op12 bf8cc07f | 0x23d8 SOPC opNone bf0d926a | 0x23dc SOPP op4 bf840001 | 0x23e0 SOPP op18 bf920001 | 0x23e4 VOP1 opNone 7e7802c1
+  1f16e50eea0c89e3 cs IMAGE_BVH_INTERSECT_RAY pc=0x25f0 srsrc=s16
+  1f16e50eea0c89e3 cs IMAGE_BVH_INTERSECT_RAY pc=0x268c srsrc=s16
+  1f16e50eea0c89e3 cs IMAGE_BVH_INTERSECT_RAY pc=0x2a68 srsrc=s4
+  380bb9d636390bae cs S_TRAP pc=0x104 trap_id=1 ctx: 0xf8 SOP2 op2 81251917 | 0xfc SOPC opNone bf071580 | 0x100 SOPP op4 bf840001 | 0x104 SOPP op18 bf920001 | 0x108 VOP1 opNone 7e000b18
+  380bb9d636390bae cs IMAGE_BVH_INTERSECT_RAY pc=0x474 srsrc=s40
+  380bb9d636390bae cs IMAGE_BVH_INTERSECT_RAY pc=0x52c srsrc=s40
+  380bb9d636390bae cs IMAGE_BVH_INTERSECT_RAY pc=0x8f8 srsrc=s56
+  503d7f066a496c3c cs S_TRAP pc=0x1f80 trap_id=1 ctx: 0x1f74 SOPP op12 bf8cc07f | 0x1f78 SOPC opNone bf0d926a | 0x1f7c SOPP op4 bf840001 | 0x1f80 SOPP op18 bf920001 | 0x1f84 VOP1 opNone 7e7802c1
+  503d7f066a496c3c cs IMAGE_BVH_INTERSECT_RAY pc=0x2190 srsrc=s16
+  503d7f066a496c3c cs IMAGE_BVH_INTERSECT_RAY pc=0x222c srsrc=s16
+  503d7f066a496c3c cs IMAGE_BVH_INTERSECT_RAY pc=0x2608 srsrc=s4
+  5323c4ef4f785055 cs S_TRAP pc=0x26b0 trap_id=1 ctx: 0x26a4 SOPP op12 bf8cc07f | 0x26a8 SOPC opNone bf0d926a | 0x26ac SOPP op4 bf840001 | 0x26b0 SOPP op18 bf920001 | 0x26b4 VOP1 opNone 7e7802c1
+  5323c4ef4f785055 cs IMAGE_BVH_INTERSECT_RAY pc=0x28c0 srsrc=s16
+  5323c4ef4f785055 cs IMAGE_BVH_INTERSECT_RAY pc=0x295c srsrc=s16
+  5323c4ef4f785055 cs IMAGE_BVH_INTERSECT_RAY pc=0x2d38 srsrc=s4
+  56a15431999c5a2d cs S_TRAP pc=0x1f68 trap_id=1 ctx: 0x1f5c SOPP op12 bf8cc07f | 0x1f60 SOPC opNone bf0d926a | 0x1f64 SOPP op4 bf840001 | 0x1f68 SOPP op18 bf920001 | 0x1f6c VOP1 opNone 7e7802c1
+  56a15431999c5a2d cs IMAGE_BVH_INTERSECT_RAY pc=0x2178 srsrc=s16
+  56a15431999c5a2d cs IMAGE_BVH_INTERSECT_RAY pc=0x2214 srsrc=s16
+  56a15431999c5a2d cs IMAGE_BVH_INTERSECT_RAY pc=0x25f0 srsrc=s4
+  cd94166bf3f2bb81 cs S_TRAP pc=0x2a20 trap_id=1 ctx: 0x2a14 SOPP op12 bf8cc07f | 0x2a18 SOPC opNone bf0d926a | 0x2a1c SOPP op4 bf840001 | 0x2a20 SOPP op18 bf920001 | 0x2a24 VOP1 opNone 7e7802c1
+  cd94166bf3f2bb81 cs IMAGE_BVH_INTERSECT_RAY pc=0x2c30 srsrc=s16
+  cd94166bf3f2bb81 cs IMAGE_BVH_INTERSECT_RAY pc=0x2ccc srsrc=s16
+  cd94166bf3f2bb81 cs IMAGE_BVH_INTERSECT_RAY pc=0x30a8 srsrc=s4
+  ea8e2d64dfe34ed9 cs S_TRAP pc=0x23e8 trap_id=1 ctx: 0x23dc SOPP op12 bf8cc07f | 0x23e0 SOPC opNone bf0d926a | 0x23e4 SOPP op4 bf840001 | 0x23e8 SOPP op18 bf920001 | 0x23ec VOP1 opNone 7e7802c1
+  ea8e2d64dfe34ed9 cs IMAGE_BVH_INTERSECT_RAY pc=0x25f8 srsrc=s16
+  ea8e2d64dfe34ed9 cs IMAGE_BVH_INTERSECT_RAY pc=0x2694 srsrc=s16
+  ea8e2d64dfe34ed9 cs IMAGE_BVH_INTERSECT_RAY pc=0x2a70 srsrc=s4
+  f88d0f630ac5b35d cs S_TRAP pc=0x2a18 trap_id=1 ctx: 0x2a0c SOPP op12 bf8cc07f | 0x2a10 SOPC opNone bf0d926a | 0x2a14 SOPP op4 bf840001 | 0x2a18 SOPP op18 bf920001 | 0x2a1c VOP1 opNone 7e0802c1
+  f88d0f630ac5b35d cs IMAGE_BVH_INTERSECT_RAY pc=0x2c28 srsrc=s16
+  f88d0f630ac5b35d cs IMAGE_BVH_INTERSECT_RAY pc=0x2cc4 srsrc=s16
+  f88d0f630ac5b35d cs IMAGE_BVH_INTERSECT_RAY pc=0x30a0 srsrc=s4
+  ff8ee744ffa4dcdc cs S_TRAP pc=0x26a4 trap_id=1 ctx: 0x2698 SOPP op12 bf8cc07f | 0x269c SOPC opNone bf0d926a | 0x26a0 SOPP op4 bf840001 | 0x26a4 SOPP op18 bf920001 | 0x26a8 VOP1 opNone 7e0802c1
+  ff8ee744ffa4dcdc cs IMAGE_BVH_INTERSECT_RAY pc=0x28b4 srsrc=s16
+  ff8ee744ffa4dcdc cs IMAGE_BVH_INTERSECT_RAY pc=0x2950 srsrc=s16
+  ff8ee744ffa4dcdc cs IMAGE_BVH_INTERSECT_RAY pc=0x2d2c srsrc=s4
+  559a0fa9def7a691 cs S_TRAP pc=0x1c2c trap_id=1 ctx: 0x1c20 SOPP op12 bf8cc07f | 0x1c24 SOPC opNone bf0d926a | 0x1c28 SOPP op4 bf840001 | 0x1c2c SOPP op18 bf920001 | 0x1c30 VOP1 opNone 7e8602c1
+  559a0fa9def7a691 cs IMAGE_BVH_INTERSECT_RAY pc=0x1e54 srsrc=s16
+  559a0fa9def7a691 cs IMAGE_BVH_INTERSECT_RAY pc=0x1ef0 srsrc=s16
+  559a0fa9def7a691 cs IMAGE_BVH_INTERSECT_RAY pc=0x2450 srsrc=s4
+  7ede18ae55120a48 cs S_TRAP pc=0xcf8 trap_id=1 ctx: 0xcec SOPP op12 bf8cc07f | 0xcf0 SOPC opNone bf0d926a | 0xcf4 SOPP op4 bf840001 | 0xcf8 SOPP op18 bf920001 | 0xcfc VOP1 opNone 7e7a02c1
+  7ede18ae55120a48 cs IMAGE_BVH_INTERSECT_RAY pc=0xf20 srsrc=s16
+  7ede18ae55120a48 cs IMAGE_BVH_INTERSECT_RAY pc=0xfbc srsrc=s16
+  7ede18ae55120a48 cs IMAGE_BVH_INTERSECT_RAY pc=0x1508 srsrc=s4
+  a763fb769f3167ec cs S_TRAP pc=0x2a2c trap_id=1 ctx: 0x2a20 SOPP op12 bf8cc07f | 0x2a24 SOPC opNone bf0d926a | 0x2a28 SOPP op4 bf840001 | 0x2a2c SOPP op18 bf920001 | 0x2a30 VOP1 opNone 7e8a02c1
+  a763fb769f3167ec cs IMAGE_BVH_INTERSECT_RAY pc=0x2c3c srsrc=s16
+  a763fb769f3167ec cs IMAGE_BVH_INTERSECT_RAY pc=0x2cd8 srsrc=s16
+  a763fb769f3167ec cs IMAGE_BVH_INTERSECT_RAY pc=0x30b4 srsrc=s4
+  b76e569142635733 cs S_TRAP pc=0x18b0 trap_id=1 ctx: 0x18a4 SOPP op12 bf8cc07f | 0x18a8 SOPC opNone bf0d926a | 0x18ac SOPP op4 bf840001 | 0x18b0 SOPP op18 bf920001 | 0x18b4 VOP1 opNone 7e8602c1
+  b76e569142635733 cs IMAGE_BVH_INTERSECT_RAY pc=0x1ad8 srsrc=s16
+  b76e569142635733 cs IMAGE_BVH_INTERSECT_RAY pc=0x1b74 srsrc=s16
+  b76e569142635733 cs IMAGE_BVH_INTERSECT_RAY pc=0x20d4 srsrc=s4
+  d234cf2781dabb34 cs S_TRAP pc=0x1220 trap_id=1 ctx: 0x1214 SOPP op12 bf8cc07f | 0x1218 SOPC opNone bf0d926a | 0x121c SOPP op4 bf840001 | 0x1220 SOPP op18 bf920001 | 0x1224 VOP1 opNone 7e8602c1
+  d234cf2781dabb34 cs IMAGE_BVH_INTERSECT_RAY pc=0x1448 srsrc=s16
+  d234cf2781dabb34 cs IMAGE_BVH_INTERSECT_RAY pc=0x14e4 srsrc=s16
+  d234cf2781dabb34 cs IMAGE_BVH_INTERSECT_RAY pc=0x1a44 srsrc=s4
+T1 hashes among the BVH programs of all ELFs: ['1f16e50eea0c89e3', '380bb9d636390bae', '503d7f066a496c3c', '5323c4ef4f785055', '559a0fa9def7a691', '56a15431999c5a2d', '7ede18ae55120a48', 'a763fb769f3167ec', 'b76e569142635733', 'cd94166bf3f2bb81', 'd234cf2781dabb34', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'ff8ee744ffa4dcdc']
+T1 hashes among the S_TRAP programs of all ELFs: ['1f16e50eea0c89e3', '380bb9d636390bae', '503d7f066a496c3c', '5323c4ef4f785055', '559a0fa9def7a691', '56a15431999c5a2d', '7ede18ae55120a48', 'a763fb769f3167ec', 'b76e569142635733', 'cd94166bf3f2bb81', 'd234cf2781dabb34', 'ea8e2d64dfe34ed9', 'f88d0f630ac5b35d', 'ff8ee744ffa4dcdc']
+all-ELF S_TRAP program hashes: 092754e7ae8bac9a 0af122d5ac62c4c5 1f16e50eea0c89e3 1f3219e5899a66f2 380bb9d636390bae 3d27502d0a809c72 503d7f066a496c3c 5323c4ef4f785055 559a0fa9def7a691 56a15431999c5a2d 7ede18ae55120a48 8175abf0855222db 99012529f9a27ba3 a763fb769f3167ec b76e569142635733 cd94166bf3f2bb81 d234cf2781dabb34 ea8e2d64dfe34ed9 f88d0f630ac5b35d ff8ee744ffa4dcdc
+all-ELF BVH program hashes: 092754e7ae8bac9a 0af122d5ac62c4c5 1f16e50eea0c89e3 1f3219e5899a66f2 380bb9d636390bae 3d27502d0a809c72 503d7f066a496c3c 5323c4ef4f785055 559a0fa9def7a691 56a15431999c5a2d 7ede18ae55120a48 8175abf0855222db 99012529f9a27ba3 a763fb769f3167ec b76e569142635733 cd94166bf3f2bb81 d234cf2781dabb34 ea8e2d64dfe34ed9 f88d0f630ac5b35d ff8ee744ffa4dcdc

@@ -1,0 +1,98 @@
+diff --git a/src/graphics/host_gpu/graphicContext.h b/src/graphics/host_gpu/graphicContext.h
+index c045185b..15ae3a98 100644
+--- a/src/graphics/host_gpu/graphicContext.h
++++ b/src/graphics/host_gpu/graphicContext.h
+@@ -61,6 +61,9 @@ struct GraphicContext {
+ 	// supported) and its limit; CreatePipelineInternal builds the Location 0 Index 1 variant of the pixel module.
+ 	bool                               dual_src_blend_enabled                = false;
+ 	uint32_t                           max_fragment_dual_src_attachments     = 0;
++	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): uniformBufferStandardLayout as enabled on the device
++	// (set in VulkanCreateDevice next to features12); PipelineCache copies it for ValidateShaderSpirv (KYTY_FIX_SVAL=1).
++	bool                               uniform_buffer_standard_layout_enabled = false;
+ 	// VK_EXT_external_memory_host (KYTY_HOST_IMPORT, default on): guest direct memory imported
+ 	// as Vulkan buffers, so texture uploads read guest memory over PCIe without a host copy.
+ 	bool                               external_memory_host_enabled          = false;
+diff --git a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+index b9653e28..a8e45f5d 100644
+--- a/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
++++ b/src/graphics/host_gpu/renderer/pipeline/pipelineCache.cpp
+@@ -1334,6 +1334,24 @@ void DumpShaderGcnRegistered(uint8_t binary_type, uint64_t shader_hash, const vo
+ 	     size_bytes / 4u);
+ }
+ 
++// Track F, F10c (HPP-451, ROADMAP s122 item 369(b), row F16): KYTY_FIX_SVAL (default ON since FS4a, item 378(g)(1):
++// unset or "" = ON, 0/false/off/no = OFF; read once). ON: ValidateShaderSpirv validates with spvtools::ValidatorOptions where
++// SetUniformBufferStandardLayout(true) is set if and only if the device enabled uniformBufferStandardLayout
++// (g_fix_sval_ubo_std_layout: stored by the PipelineCache constructor from GraphicContext before its workers start and
++// before any translation), and logs "FixSvalStat: validated=<n> rejected=<m>" on every 256th check (n - checks made,
++// m - checks rejected). OFF: the old call tools.Validate(spirv) without options, no counters, no line.
++bool FixSvalEnabled() {
++	// Track F, FS4a (HPP-470, ROADMAP s122 item 378(g)(1)): default ON - unset or "" = ON, 0/false/off/no = OFF, any
++	// other value as EnvValueOn (the form of FSa / FS2a / FS3a).
++	static const bool enabled = [] {
++		const char* value = std::getenv("KYTY_FIX_SVAL");
++		return value == nullptr || value[0] == '\0' || Common::EnvValueOn(value);
++	}();
++	return enabled;
++}
++
++std::atomic<bool> g_fix_sval_ubo_std_layout {false};
++
+ bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
+                          const std::vector<uint32_t>& spirv) {
+ 	if (!Config::ShaderValidationEnabled()) {
+@@ -1347,7 +1365,28 @@ bool ValidateShaderSpirv(const char* label, uint64_t shader_hash,
+ 		                        static_cast<int>(position.column), static_cast<int>(position.index),
+ 		                        message);
+ 	});
+-	if (tools.Validate(spirv)) {
++	// Track F, F10c (KYTY_FIX_SVAL, see FixSvalEnabled): ON - the options of the device; OFF - the old call.
++	bool valid = false;
++	if (FixSvalEnabled()) {
++		spvtools::ValidatorOptions options;
++		if (g_fix_sval_ubo_std_layout.load(std::memory_order_acquire)) {
++			options.SetUniformBufferStandardLayout(true);
++		}
++		valid = tools.Validate(spirv.data(), spirv.size(), options);
++		static std::atomic<uint64_t> validated {0};
++		static std::atomic<uint64_t> rejected {0};
++		if (!valid) {
++			rejected.fetch_add(1, std::memory_order_relaxed);
++		}
++		const uint64_t checks = validated.fetch_add(1, std::memory_order_relaxed) + 1;
++		if (checks % 256u == 0) {
++			LOGF("FixSvalStat: validated=%" PRIu64 " rejected=%" PRIu64 "\n", checks,
++			     rejected.load(std::memory_order_relaxed));
++		}
++	} else {
++		valid = tools.Validate(spirv);
++	}
++	if (valid) {
+ 		return true;
+ 	}
+ 	spvtools::SpirvTools disassembler(SPV_ENV_VULKAN_1_2);
+@@ -4625,6 +4664,11 @@ struct PipelineCache::ProgramCache {
+ PipelineCache::PipelineCache(GraphicContext& graphics)
+     : m_graphics(graphics), m_program_cache(std::make_unique<ProgramCache>(graphics.device)) {
+ 	EXIT_NOT_IMPLEMENTED(!Common::Thread::IsMainThread());
++	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b)): the device value for ValidateShaderSpirv, stored before
++	// StartWorkers / StartPrecache below; CompilePermutation (the only caller) runs only through this object.
++	g_fix_sval_ubo_std_layout.store(graphics.uniform_buffer_standard_layout_enabled, std::memory_order_release);
++	LOGF("FixSval: mode=%d ubo_std_layout=%d\n", FixSvalEnabled() ? 1 : 0,
++	     graphics.uniform_buffer_standard_layout_enabled ? 1 : 0);
+ 	InitializeDriverCache();
+ 	if (AsyncPipelinesMode() != 0) {
+ 		StartWorkers();
+diff --git a/src/graphics/presentation/window/vulkanWindow.cpp b/src/graphics/presentation/window/vulkanWindow.cpp
+index c7289679..3c40fa18 100644
+--- a/src/graphics/presentation/window/vulkanWindow.cpp
++++ b/src/graphics/presentation/window/vulkanWindow.cpp
+@@ -703,6 +703,8 @@ static vk::Device VulkanCreateDevice(GraphicContext& graphics,
+ 	// Const bank: S_BUFFER_LOAD constants through uniform buffers (stride-4/8 arrays need
+ 	// uniformBufferStandardLayout; out-of-range zero-fill needs robustBufferAccess2).
+ 	features12.uniformBufferStandardLayout = supported_features12.uniformBufferStandardLayout;
++	// Track F, F10c (HPP-451, ROADMAP s122 item 369(b)): the value enabled here, for the SPIR-V check (KYTY_FIX_SVAL=1).
++	graphics.uniform_buffer_standard_layout_enabled = features12.uniformBufferStandardLayout == VK_TRUE;
+ 	ShaderRecompiler::IR::SetConstBankSupported(features12.uniformBufferStandardLayout == VK_TRUE &&
+ 	                                            graphics.robust_buffer_access2_enabled);
+ 	LOGF("Vulkan uniformBufferStandardLayout: %s (const-bank constant loads %s)\n",

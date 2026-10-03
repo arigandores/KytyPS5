@@ -1,0 +1,14 @@
+track F link FS4a (HPP-470): KYTY_FIX_SVAL default 0 -> 1 (ROADMAP s122 item 378(g)(1))
+
+FixSvalEnabled reads KYTY_FIX_SVAL in the form of FSa / FS2a / FS3a: unset or "" = ON, 0/false/off/no = OFF, any
+other value as EnvValueOn. The lines FixSval: / FixSvalStat:, the options path (SetUniformBufferStandardLayout iff the
+device enabled uniformBufferStandardLayout) and the OFF path (tools.Validate(spirv)) are unchanged; only the header
+comment and the reading change. Outside the translation signature set (pipelineCache.cpp): KYTY_SHADER_SOURCE_HASH
+stays 56189185.
+
+Shipping binary FS4: clean worktree of FS3 d515b901 + cherry-pick of F10c 68602c4f + cherry-pick of this commit; the
+track P code after 4414e235 and the track S code are not in it. Not claimed: that the user runs the game with shader
+validation, that the built-in validation accepts every PS of every level, that the SPIR-V is correct for the device.
+Not installed; no game run.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
